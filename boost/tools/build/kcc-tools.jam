@@ -4,10 +4,16 @@
 # express or implied warranty, and with no claim as to its suitability
 # for any purpose.
 
+# This file is /NOT/ up-to-date; please use other toolset description
+# files as examples.
+#
+# I've tried to bring it up-to-date. -jsiek
+
+
 
 flags kcc CFLAGS <debug-symbols>on : -g ;
 flags kcc LINKFLAGS <debug-symbols>on : -g ;
-flags kcc LINKFLAGS <debug-symbols>off : -s ;
+flags gcc LINKFLAGS <debug-symbols>off : -s ;
 flags kcc CFLAGS <optimization>off : +K0 ;
 flags kcc CFLAGS <optimization>speed : +K2 ;
 
@@ -30,9 +36,8 @@ flags kcc NEEDLIBS <library-file> ;
 flags kcc FINDLIBS <find-library> ;
 
 
-set-as-singleton kcc.root-directory ;
-kcc.bin-directory = $(kcc.root-directory)$(SLASH)bin$(SLASH) ;
-kcc.bin-directory ?= " " ;
+kcc.bin-directory = [ conditional $(kcc.root-directory) : $(kcc.root-directory)$(SLASH)bin$(SLASH) : " " ] ;
+detect-build-tools kcc : "KCC" ;
 
 #### Link ####
 
@@ -78,6 +83,6 @@ rule Archive-action
 
 actions updated together piecemeal kcc-Archive-action
 {
-    $(kcc.bin-directory)KCC -g $(ARFLAGS) -o "$(<)" "$(>)"
+    KCC -g $(ARFLAGS) -o "$(<)" "$(>)"
 }
 
