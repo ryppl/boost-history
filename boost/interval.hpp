@@ -82,6 +82,18 @@ struct interval_traits
   typedef Checking checking;
 };
 
+  namespace interval_lib {
+    namespace detail {
+
+template<class T, class Compare, class Rounding, class Checking>
+struct unprotect<interval_traits<T, Compare, Rounding, Checking> > {
+  typedef
+    interval_traits<T, Compare, unprotect<Rounding>::type, Checking> type;
+};
+
+    }
+  }
+
 template<class T, class Traits = interval_traits<T> >
 class interval
 #ifdef BOOST_INTERVAL_USE_FRIEND_OPERATORS

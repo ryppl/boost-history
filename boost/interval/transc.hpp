@@ -24,21 +24,23 @@
 namespace boost {
 
 template<class T, class Traits>
+interval<T, Traits> fmod(const interval<T, Traits>& x, const T& y)
+{
+  typename Traits::rounding rnd;
+  typedef interval<T, interval_lib::detail::unprotect<Traits>::type> I;
+  T n = rnd.int_down(rnd.div_down(x.lower(), y));
+  return (I)x - n * I(y);
+}
+
+template<class T, class Traits>
 inline interval<T, Traits> fmod(const interval<T, Traits>& x,
 				const interval<T, Traits>& y)
 {
   typename Traits::rounding rnd;
+  typedef interval<T, interval_lib::detail::unprotect<Traits>::type> I;
   const T& yb = detail::sign(x.lower()) ? y.lower() : y.upper();
   T n = rnd.int_down(rnd.div_down(x.lower(), yb));
-  return x - n * y;
-}
-
-template<class T, class Traits>
-interval<T, Traits> fmod(const interval<T, Traits>& x, const T& y)
-{
-  typename Traits::rounding rnd;
-  T n = rnd.int_down(rnd.div_down(x.lower(), y));
-  return x - n * y;
+  return (I)x - n * (I)y;
 }
 
 template<class T, class Traits>
@@ -74,13 +76,13 @@ interval<T, Traits> log(const interval<T, Traits>& x)
 template<class T, class Traits>
 interval<T, Traits> cos(const interval<T, Traits>& x)
 {
-  typedef interval<T, Traits> I;
   typename Traits::rounding rnd;
+  typedef interval<T, interval_lib::detail::unprotect<Traits>::type> I;
   I pi(rnd.pi_down(), rnd.pi_up(), true);
   I pi2(rnd.pi_2_1_down(), rnd.pi_2_1_up(), true);
 
   // get us within [0, pi]
-  I tmp = fmod(x, pi2);
+  I tmp = fmod((I)x, pi2);
   if (width(tmp) >= pi2.lower())
     return I(-1, 1, true);     // we are covering a full period
   if (tmp.lower() >= pi.upper())
@@ -90,31 +92,32 @@ interval<T, Traits> cos(const interval<T, Traits>& x)
 
   // separate into monotone subintervals
   if (u <= pi.lower())
-    return I(rnd.cos_down(u), rnd.cos_up(l), true);
-  else if (u <= pi2.lower())
-    return I(-1, rnd.cos_up(std::min(rnd.sub_down(pi2.lower(), u), l)),
-	     true);
-  else
-    return I(-1, 1, true);
+    return interval<T, Traits>(rnd.cos_down(u), rnd.cos_up(l), true);
+  else if (u <= pi2.lower()) {
+    T cu = rnd.cos_up(std::min(rnd.sub_down(pi2.lower(), u), l));
+    return interval<T, Traits>(-1, cu, true);
+  } else
+    return interval<T, Traits>(-1, 1, true);
 }
 
 template<class T, class Traits>
 inline interval<T, Traits> sin(const interval<T, Traits>& x)
 {
   typedef typename Traits::rounding rnd;
-  interval<T, Traits> pi_2(rnd::pi_1_2_down(), rnd::pi_1_2_up(), true);
-  return cos(x - pi_2);
+  typedef interval<T, interval_lib::detail::unprotect<Traits>::type> I;
+  I pi_2(rnd::pi_1_2_down(), rnd::pi_1_2_up(), true);
+  return cos((I)x - pi_2);
 }
 
 template<class T, class Traits>
 interval<T, Traits> tan(const interval<T, Traits>& x)
 {
-  typedef interval<T, Traits> I;
   typename Traits::rounding rnd;
+  typedef interval<T, interval_lib::detail::unprotect<Traits>::type> I;
 
   I pi(rnd.pi_down(), rnd.pi_up(), true);
   // get us within [-pi/2, pi/2]
-  I tmp = fmod(x, pi);
+  I tmp = fmod((I)x, pi);
   if (tmp.lower() >= rnd.pi_1_2_down())
     tmp -= pi;
   if (tmp.lower() <= -rnd.pi_1_2_down() || tmp.upper() >= rnd.pi_1_2_down()) {
@@ -122,7 +125,8 @@ interval<T, Traits> tan(const interval<T, Traits>& x)
     checking::trigonometric_inf();
     return I::entire();
   }
-  return I(rnd.tan_down(tmp.lower()), rnd.tan_up(tmp.upper()), true);
+  return interval<T, Traits>(rnd.tan_down(tmp.lower()),
+			     rnd.tan_up(tmp.upper()), true);
 }
 
 template<class T, class Traits>

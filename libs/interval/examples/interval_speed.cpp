@@ -444,7 +444,7 @@ int main(int argc, char *argv[])
 {
   //test_vector_size_effects();
   //run_test(8);
-  run_test(96);
+  //run_test(96);
   //run_test(1000);
 
   misc_arith_test<interval_type>(100, interval_name);

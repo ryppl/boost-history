@@ -41,15 +41,18 @@
 #include <boost/interval.hpp>
 using namespace boost;
 using namespace interval_lib;
-struct my_rounded_arith:
-    rounded_transc_opposite_trick
-      <double, rounded_arithmetic_opposite_trick
-	<double, save_state<rounding_control<double> > > >
-{};
 
-typedef boost::interval<double, interval_traits<double,
-						compare_certainly<double>,
-						my_rounded_arith> >
+typedef
+  save_state
+    <rounded_transc_opposite_trick
+       <double, rounded_arithmetic_opposite_trick
+	          <double, rounding_control<double> > > >
+  my_rounded_arith;
+
+typedef
+  boost::interval<double, interval_traits<double,
+					  compare_certainly<double>,
+					  my_rounded_arith> >
   interval_type;
 //typedef boost::interval<double, boost::interval_traits<double> > interval_type;
 static const std::string interval_name = "boost::interval<double>";

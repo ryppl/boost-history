@@ -24,11 +24,12 @@ static const int output_prec = 16;
 using namespace boost;
 using namespace interval_lib;
 
-struct my_rounded_arith:
-    rounded_transc_opposite_trick
-      <double, rounded_arithmetic_opposite_trick
-	<double, save_state<rounding_control<double> > > >
-{};
+typedef
+  save_state
+    <rounded_transc_opposite_trick
+       <double, rounded_arithmetic_opposite_trick
+                  <double, rounding_control<double> > > >
+  my_rounded_arith;
 
 typedef boost::interval<double, interval_traits<double,
 						compare_certainly<double>,

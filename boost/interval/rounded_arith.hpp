@@ -16,6 +16,7 @@ template<class T> inline bool is_nan(const T& x) { return x != x; }
 
 template<class T, class Rounding>
 struct rounded_arithmetic_standard: Rounding {
+  void init() { }
   T add_down(const T& x, const T& y)
   { return (downward(), force_rounding(x + y)); }
   T add_up(const T& x, const T& y)
@@ -44,7 +45,7 @@ struct rounded_arithmetic_standard: Rounding {
 
 template<class T, class Rounding>
 struct rounded_arithmetic_opposite_trick: Rounding {
-  rounded_arithmetic_opposite_trick() { upward(); }
+  void init() { upward(); }
   T add_down(const T& x, const T& y) { return -force_rounding((-x) - y); }
   T add_up  (const T& x, const T& y) { return force_rounding(x + y); }
   T sub_down(const T& x, const T& y) { return -force_rounding(y - x); }
@@ -64,9 +65,26 @@ template<class Rounding>
 struct save_state: Rounding
 {
   typename Rounding::rounding_mode mode;
-  save_state() { mode = get_rounding_mode(); }
+  save_state() {
+    mode = get_rounding_mode();
+    init();
+  }
   ~save_state() { set_rounding_mode(mode); }
 };
+
+    namespace detail {
+
+template<class T>
+struct unprotect {
+  typedef T type;
+};
+
+template<class Rounding>
+struct unprotect<save_state<Rounding> > {
+  typedef Rounding type;
+};
+
+    } // detail
 
 template<class T>
 struct rounding_control
@@ -105,21 +123,36 @@ template<class T>
 struct rounded_arithmetic:
     rounded_transc_dummy
       <T, rounded_arithmetic_standard<T, rounding_control<T> > >
-{};
-
-template<>
-struct rounded_arithmetic<float>:
+{
+  typedef
     rounded_transc_dummy
-      <float, rounded_arithmetic_opposite_trick
-        <float, save_state<rounding_control<float> > > >
-{};
+      <T, rounded_arithmetic_standard<T, rounding_control<T> > >
+    unprotected;
+};
 
-template<>
-struct rounded_arithmetic<double>:
+    namespace detail {
+
+template<class T>
+struct ra_aux:
+    save_state
+      <rounded_transc_dummy
+         <T, rounded_arithmetic_opposite_trick<T, rounding_control<T> > > >
+{
+  typedef
     rounded_transc_dummy
-      <double, rounded_arithmetic_opposite_trick
-	<double, save_state<rounding_control<double> > > >
-{};
+      <T, rounded_arithmetic_opposite_trick<T, rounding_control<T> > >
+    unprotected;
+};
+
+template<class T>
+struct unprotect<rounded_arithmetic<T> > {
+  typedef rounded_arithmetic<T>::unprotected type;
+};
+
+    } // namespace detail
+
+template<> struct rounded_arithmetic<float>: detail::ra_aux<float> {};
+template<> struct rounded_arithmetic<double>: detail::ra_aux<double> {};
 
   } // namespace interval
 } // namespace boost
