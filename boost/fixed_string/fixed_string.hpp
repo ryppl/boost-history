@@ -87,6 +87,9 @@
       template< typename CharT, class CharStringPolicy = std::char_traits< CharT > >
       struct fixed_string_base: public detail::basic_string_impl< detail::fixed_string_iface< CharT, CharStringPolicy > >
       {
+         public:
+            typedef detail::basic_string_impl< detail::fixed_string_iface< CharT, CharStringPolicy > >
+                                                                     impl_type;
          public: // extended interface
             inline                operator const CharT *() const
             {
@@ -112,7 +115,7 @@
             BOOST_STATIC_CONSTANT( size_t, storage_c  = n + 1 );
             BOOST_STATIC_CONSTANT( size_t, capacity_c = n );
          public:
-            typedef fixed_string_base< CharT, CharStringPolicy >     base_type;
+            typedef fixed_string_base< CharT, CharStringPolicy >::impl_type base_type;
             typedef fixed_string< n, CharT, CharStringPolicy >       this_type;
          private:
             CharT                      str[ storage_c ];
@@ -296,6 +299,19 @@
       
       // lhs + rhs
 
+      template< size_t n1, size_t n2, class C, class CSP >
+      inline fixed_string< ( n1 + n2 ), C, CSP > 
+                                  operator+
+                                  ( 
+                                     const fixed_string< n1, C, CSP > & lhs,
+                                     const fixed_string< n2, C, CSP > & rhs
+                                  )
+      {
+         fixed_string< ( n1 + n2 ), C, CSP > res( lhs );
+         res.append( rhs );
+         return( res );
+      }
+
       template< size_t n, class C, class CSP >
       inline fixed_string< n, C, CSP > 
                                   operator+
@@ -306,7 +322,49 @@
       {
          fixed_string< n, C, CSP > res( lhs );
          res.append( rhs );
-         return( fixed_string< n, C, CSP >( res ));
+         return( res );
+      }
+
+      template< size_t n, class C, class CSP >
+      inline fixed_string< n, C, CSP > 
+                                  operator+
+                                  ( 
+                                     const typename fixed_string< n, C, CSP >::value_type * lhs,
+                                     const fixed_string< n, C, CSP > & rhs
+                                  )
+      {
+         fixed_string< n, C, CSP > res( lhs );
+         res.append( rhs );
+         return( res );
+      }
+
+      // const CharT[ n ]( & s ) variants?
+
+      template< size_t n, class C, class CSP >
+      inline fixed_string< ( n + 1 ), C, CSP > 
+                                  operator+
+                                  ( 
+                                     const fixed_string< n, C, CSP > & lhs,
+                                     typename fixed_string< n, C, CSP >::value_type rhs
+                                  )
+      {
+         fixed_string< ( n + 1 ), C, CSP > res( lhs );
+         res.push_back( rhs );
+         return( res );
+      }
+
+      template< size_t n, class C, class CSP >
+      inline fixed_string< ( n + 1 ), C, CSP > 
+                                  operator+
+                                  ( 
+                                     typename fixed_string< n, C, CSP >::value_type lhs,
+                                     const fixed_string< n, C, CSP > & rhs
+                                  )
+      {
+         fixed_string< ( n + 1 ), C, CSP > res;
+         res.push_back( lhs );
+         res.append(    rhs );
+         return( res );
       }
    }
 #endif

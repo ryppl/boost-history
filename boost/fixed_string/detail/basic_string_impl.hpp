@@ -733,91 +733,6 @@
                assign( first, last );
             }
       };
-      
-      // lhs + rhs
-
-      template< class Base, class EP >
-      inline basic_string_impl< Base, EP > 
-                                  operator+
-                                  ( 
-                                     const basic_string_impl< Base, EP > & lhs,
-                                     const basic_string_impl< Base, EP > & rhs
-                                  )
-      {
-         basic_string_impl< Base, EP > res;
-         res.reserve( lhs.size() + rhs.size());
-         res.append( lhs );
-         res.append( rhs );
-         return( res );
-      }
-
-      template< class Base, class EP >
-      inline basic_string_impl< Base, EP > 
-                                  operator+
-                                  ( 
-                                     const typename basic_string_impl< Base, EP >::value_type * lhs,
-                                     const basic_string_impl< Base, EP > & rhs
-                                  )
-      {
-         typedef typename basic_string_impl< Base, EP >::size_type    size_type;
-         typedef typename basic_string_impl< Base, EP >::traits_type  traits_type;
-      
-         basic_string_impl< Base, EP > res;
-         const size_type                   len = traits_type::length( lhs );
-         res.reserve( len + rhs.size());
-         res.append( lhs, len );
-         res.append( rhs );
-         return( res );
-      }
-
-      template< class Base, class EP >
-      inline basic_string_impl< Base, EP > 
-                                  operator+
-                                  ( 
-                                     const basic_string_impl< Base, EP > & lhs,
-                                     const typename basic_string_impl< Base, EP >::value_type * rhs
-                                  )
-      {
-         typedef typename basic_string_impl< Base, EP >::size_type    size_type;
-         typedef typename basic_string_impl< Base, EP >::traits_type  traits_type;
-      
-         basic_string_impl< Base, EP > res;
-         const size_type                   len = traits_type::length( lhs );
-         res.reserve( lhs.size() + len );
-         res.append( lhs );
-         res.append( rhs, len );
-         return( res );
-      }
-
-      template< class Base, class EP >
-      inline basic_string_impl< Base, EP > 
-                                  operator+
-                                  ( 
-                                     const typename basic_string_impl< Base, EP >::value_type lhs,
-                                     const basic_string_impl< Base, EP > & rhs
-                                  )
-      {
-         basic_string_impl< Base, EP > res;
-         res.reserve( 1 + rhs.size());
-         res.push_back( lhs );
-         res.append( rhs );
-         return( res );
-      }
-
-      template< class Base, class EP >
-      inline basic_string_impl< Base, EP > 
-                                  operator+
-                                  ( 
-                                     const basic_string_impl< Base, EP > & lhs,
-                                     const typename basic_string_impl< Base, EP >::value_type rhs
-                                  )
-      {
-         basic_string_impl< Base, EP > res;
-         res.reserve( lhs.size() + 1 );
-         res.append( lhs );
-         res.push_back( rhs );
-         return( res );
-      }
 
       // lhs == rhs
 
@@ -965,7 +880,16 @@
                                      basic_string_impl< Base, EP > & str
                                   )
       {
-         return( getline( is, str, typename basic_string_impl< Base, EP >::value_type( ' ' )));
+         typedef typename typename basic_string_impl< Base, EP >::traits_type  traits_type;
+
+         typename basic_string_impl< Base, EP >::value_type
+                                       ch;
+         while( is >> ch && !std::isspace( ch ))
+         {
+            str.push_back( ch );
+         }
+         return( is );
+//         return( getline( is, str, typename basic_string_impl< Base, EP >::value_type( ' ' )));
       }
 
       template< class Base, class EP, typename CharT, class Traits >
