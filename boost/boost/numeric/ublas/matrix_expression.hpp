@@ -2386,7 +2386,10 @@ namespace boost { namespace numeric { namespace ublas {
             }
             BOOST_UBLAS_INLINE
             size_type index2 () const {
-                return BOOST_UBLAS_SAME (it1_.index2 (), it2_.index2 ());
+                // if (it1_ != it1_end_ && it2_ != it2_end_)
+                //    return BOOST_UBLAS_SAME (it1_.index2 (), it2_.index2 ());
+                // else
+                    return j_;
             }
 
             // Assignment
@@ -2615,14 +2618,17 @@ namespace boost { namespace numeric { namespace ublas {
             // Indices
             BOOST_UBLAS_INLINE
             size_type index1 () const {
-                return BOOST_UBLAS_SAME (it1_.index1 (), it2_.index1 ());
+                // if (it1_ != it1_end_ && it2_ != it2_end_)
+                //    return BOOST_UBLAS_SAME (it1_.index1 (), it2_.index1 ());
+                // else
+                    return i_;
             }
             BOOST_UBLAS_INLINE
             size_type index2 () const {
                 return j_;
             }
 
-            // Assignment 
+            // Assignment
             BOOST_UBLAS_INLINE
             const_iterator2 &operator = (const const_iterator2 &it) {
                 container_const_reference<matrix_binary>::assign (&it ());
