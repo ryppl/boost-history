@@ -23,6 +23,7 @@
 #include <boost/preprocessor/tuple/rem.hpp>
 #include <boost/preprocessor/control/expr_if.hpp>
 #include <boost/preprocessor/logical/not.hpp>
+#include <boost/preprocessor/cat.hpp>
 
 #define MPL_ASSERT( expr ) BOOST_STATIC_ASSERT( expr )
 #define MPL_ASSERT_EQUAL(arity, tuple) assert_equal< BOOST_PP_TUPLE_REM(arity)tuple >()
@@ -74,5 +75,53 @@ AUX_ASSERT_DEF(typename, not_same, 0)
 }
 
 #undef AUX_ASSERT_DEF
+
+
+
+template< typename T > struct MPL_ASSERTION_FAILED
+{ 
+#if BOOST_WORKAROUND(BOOST_INTEL_CXX_VERSION, BOOST_TESTED_AT(800))
+    int MESSAGE(MPL_ASSERTION_FAILED<T>); 
+#else
+    int MESSAGE(T); 
+#endif
+};
+
+struct MPL_ASSERTION_ARGUMENTS;
+
+namespace boost { namespace mpl {
+template< bool C > struct assert_msg
+{
+    int MESSAGE(...);
+    static assert_msg& arguments(...);
+};
+
+template<> struct assert_msg<false>
+{
+    template< typename Types > 
+    static MPL_ASSERTION_FAILED<Types>& arguments(Types*);
+};
+}}
+
+#if BOOST_WORKAROUND(__EDG_VERSION__, BOOST_TESTED_AT(303))
+#   define MPL_ASSERT_MSG( c, msg, types ) \
+    enum { \
+        BOOST_PP_CAT(MplAssertion,__LINE__) = sizeof(boost::mpl::assert_msg<(c)> \
+              ::arguments( (MPL_ASSERTION_ARGUMENTS (*) types)0 ) \
+                  .MESSAGE( (struct msg*)0 ) \
+            ) \
+    }\
+/**/
+#else
+#   define MPL_ASSERT_MSG( c, msg, types ) \
+    enum { \
+        BOOST_PP_CAT(MplAssertion,__LINE__) = sizeof(boost::mpl::assert_msg<(c)> \
+              ::arguments( (MPL_ASSERTION_ARGUMENTS (*) types)0 ) \
+                  .MESSAGE( (struct BOOST_PP_CAT(MPL_ASSERTION_FAILED_,msg)*)0 ) \
+            ) \
+    }\
+/**/
+#endif
+
 
 #endif // BOOST_MPL_AUX_TEST_ASSERT_HPP_INCLUDED

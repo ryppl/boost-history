@@ -15,31 +15,15 @@
 // $Revision$
 
 #include <boost/mpl/aux_/test/assert.hpp>
-#include <boost/preprocessor/cat.hpp>
+//#include <boost/preprocessor/cat.hpp>
 
+#define BOOST_MPL_ASSERT_MSG(c, msg, types)         MPL_ASSERT_MSG(c, msg, types)
+
+/*
 #define BOOST_MPL_ASSERT_EQUAL(arity, tuple)        MPL_ASSERT_EQUAL(arity, tuple)
 #define BOOST_MPL_ASSERT_NOT_EQUAL(arity, tuple)    MPL_ASSERT_NOT_EQUAL(arity, tuple)
 #define BOOST_MPL_ASSERT_SAME(arity, tuple)         MPL_ASSERT_SAME(arity, tuple)
 #define BOOST_MPL_ASSERT_NOT_SAME(arity, tuple)     MPL_ASSERT_NOT_SAME(arity, tuple)
-
-
-#if !defined(__BORLANDC__)
-template< bool C > struct ASSERT { enum { ASSERTION_FAILED }; };
-template<> struct ASSERT<false> {};
-
-#   define BOOST_MPL_ASSERT_MSG( c, msg ) \
-    struct BOOST_PP_CAT(ASSERTION_,msg) : ASSERT<c> {}; \
-    enum { BOOST_PP_CAT(BOOST_PP_CAT(msg,_in_line),__LINE__) \
-        = BOOST_PP_CAT(ASSERTION_,msg)::ASSERTION_FAILED } \
-/**/
-#else
-template< bool C > struct ASSERTION_FAILED { ASSERTION_FAILED(void const volatile*); };
-template<> struct ASSERTION_FAILED<false> {};
-
-#   define BOOST_MPL_ASSERT_MSG( c, msg ) \
-    void msg##_( ASSERTION_FAILED<c> = (struct BOOST_PP_CAT(ASSERTION_,msg)*)(0) ) \
-/**/
-#endif
-
+*/
 
 #endif // BOOST_MPL_ASSERT_HPP_INCLUDED
