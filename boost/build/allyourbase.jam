@@ -1229,22 +1229,40 @@ rule strip-grist
 # split-path <foo>bar/<bee>baz/mumble  => <foo>bar <bee>baz mumble 
 rule split-path
 {
+    local result ;
     local parent = $(<:P) ;
+    if $(NT)
+    {
+        switch $(<:G=)
+        {
+        # It turns out that to match a backslash, you need a /quadruple/ slash
+        # in the case clause! 
+        case *:\\\\*\\\\* :  # continue splitting
+        case *:/*\\\\* :  # continue splitting
+        case *:\\\\*/* :  # continue splitting
+        case *:/*/* :  # continue splitting
+        case *:/* : result = $(<) ;
+        case *:\\\\* : result = $(<) ;
+        case *: : result = $(<) ;
+        }
+    }
+
     if ( ! $(<:B) ) && ( $(<) != $(DOT) ) # handle the case where $(<) is all grist.
     {
-        return $(<:G) ;
+        result ?= $(<:G) ;
     }
-    else if ! $(parent:G=)
+    else if ( ! $(parent:G=) )
     {
-        return $(<) ;
+        result ?= $(<) ;
     }
     else
     {
         local p = [ split-path $(parent) ] ;
         local b = [ strip-grist $(<) ] ;
         p += $(b:D=) ; # can't use :B here because it destroys . and ..
-        return $(p) ;
+        result ?= $(p) ;
     }
+    return $(result) ;
 }
 
 # dwa 6/4/01 - added for boost

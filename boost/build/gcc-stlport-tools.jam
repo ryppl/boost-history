@@ -4,83 +4,20 @@
 # provided "as is" without express or implied warranty, and with no
 # claim as to its suitability for any purpose.
 
-# This file is /NOT/ up-to-date; please use other toolset description
-# files as examples.
+# this is simply an extension to the gcc toolset. 
+extends-toolset gcc ;
+
+STDHDRS = ;
+STDLIBPATH = ;
+flags gcc-stlport STDHDRS : $(STLPORT_ROOT)$(SLASH)stlport $(GCC_INCLUDE_DIRECTORY) ;
+flags gcc-stlport STDLIBPATH : $(STLPORT_ROOT)$(SLASH)lib $(GCC_STDLIB_DIRECTORY) ;
+
+flags gcc-stlport DEFINES <runtime-build>debug : _STLP_DEBUG ;
+flags gcc-stlport STLPORT_LIB <runtime-link>static/<runtime-build>debug    : stlport_cygwin_stldebug ;
+flags gcc-stlport STLPORT_LIB <runtime-link>static/<runtime-build>release  : stlport_cygwin ;
+flags gcc-stlport STLPORT_LIB <runtime-link>dynamic/<runtime-build>debug    : stlport_cygwin_stldebug.dll.4.5.b8 ;
+flags gcc-stlport STLPORT_LIB <runtime-link>dynamic/<runtime-build>release  : stlport_cygwin.dll.4.5.b8 ;
+flags gcc-stlport CFLAGS <runtime-link>dynamic    : -D_REENTRANT ;
 
 
-gcc.bin-directory = [ conditional $(gcc.root-directory) : $(gcc.root-directory)$(SLASH)bin$(SLASH) : " " ] ;
-detect-build-tools gcc : "g++ -v" ;
-
-flags gcc-stlport LINKFLAGS <runtime-link>static : -static ;
-flags gcc-stlport CFLAGS <debug-symbols>on : -g ;
-flags gcc-stlport LINKFLAGS <debug-symbols>on : -g ;
-flags gcc-stlport CFLAGS <optimization>off : -O0 ;
-flags gcc-stlport CFLAGS <optimization>speed : -O3 ;
-flags gcc-stlport CFLAGS <optimization>space : -O2 ;
-flags gcc-stlport CFLAGS <inlining>off : -fno-inline ;
-flags gcc-stlport CFLAGS <inlining>on : -Wno-inline ;
-flags gcc-stlport CFLAGS <inlining>full : -finline-functions -Wno-inline ;
-
-flags gcc-stlport DEFINES <define> ;
-flags gcc-stlport UNDEFS <undef> ;
-flags gcc-stlport HDRS <include> ;
-
-flags gcc-stlport STDHDRS : $(stl-port-root)$(SLASH)stlport $(gcc-stlport.root-directory)$(SLASH)include ;
-flags gcc-stlport STDLIBPATH :  $(gcc-stlport.root-directory)$(SLASH)lib ;
-
-flags gcc-stlport LINKFLAGS <runtime-link>static : -static ;
-flags gcc-stlport STLPORTPATH  : $(stl-port-root)$(SLASH)lib ;
-
-flags gcc-stlport CFLAGS     <runtime-build>debug    : -D_REENTRANT -D__STL_DEBUG ;
-flags gcc-stlport CFLAGS     <runtime-build>release  : -D_REENTRANT ;
-
-flags gcc-stlport STLPORTLIB <runtime-build>debug    : stlport_cygwin_stldebug ;
-flags gcc-stlport STLPORTLIB <runtime-build>release  : stlport_cygwin ;
-                              
-#### Link ####
-
-rule Link-action
-{
-    gcc-Link-action $(<) : $(>) ;
-}
-
-# for gcc, we repeat all libraries so that dependencies are always resolved
-actions gcc-Link-action bind NEEDLIBS
-{
-    $(gcc.bin-directory)g++ $(LINKFLAGS) -o "$(<)" $(UNDEFS) -L$(STLPORTPATH) -L$(STDLIBPATH) "$(>)" $(NEEDLIBS) $(NEEDLIBS) -l$(STLPORTLIB)
-}
-
-#### Cc #####
-
-rule Cc-action
-{
-    gcc-Cc-action $(<) : $(>) ;
-}
-
-actions gcc-Cc-action
-{
-    $(gcc.bin-directory)gcc -c  -U$(UNDEFS) -D$(DEFINES) $(CFLAGS) -I"$(HDRS)" -I"$(STDHDRS)" -o"$(<)" "$(>)"
-}
-
-#### C++ ####
-rule C++-action
-{
-    gcc-C++-action $(<) : $(>) ;
-}
-
-actions gcc-C++-action
-{
-    $(gcc.bin-directory)g++ -c  -U$(UNDEFS) -D$(DEFINES) $(CFLAGS) $(C++FLAGS) -I"$(HDRS)" -I"$(STDHDRS)" -o"$(<)" "$(>)"
-}
-
-#### Archive ####
-rule Archive-action
-{
-    gcc-Archive-action $(<) : $(>) ;
-}
-
-actions updated together piecemeal gcc-Archive-action
-{
-    ar ru "$(<)" "$(>)"
-}
 
