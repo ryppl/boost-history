@@ -12,6 +12,9 @@
 #     pragma option push -w-8060 -w-8004
 #  endif
 
+#  if defined(BOOST_XMLDOMLITE_DUMP_TOKENSTREAM)
+#     include <iostream>
+#  endif
 #  include "../xmllexer.hpp"
 
    xmldom::token::type xmldom::xmllexer::gettoken()
