@@ -11,8 +11,6 @@
 # ifndef GET_SIGNATURE_DWA2004917_HPP
 #  define GET_SIGNATURE_DWA2004917_HPP
 
-# include <boost/langbinding/function/config.hpp>
-
 # include <boost/mpl/if.hpp>
 # include <boost/type_traits/is_convertible.hpp>
 
