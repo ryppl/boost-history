@@ -39,7 +39,7 @@
  * output figure "million operations per second".
  */
 
-static void show_result(const std::string & s, int iter, double t)
+void show_result(const std::string & s, int iter, double t)
 {
   std::cout.precision(2);
   std::cout << s << " "
@@ -56,7 +56,7 @@ static void show_result(const std::string & s, int iter, double t)
 static boost::mt19937 base;
 static boost::uniform_real<boost::mt19937> rng(base, -2, 2);
 
-template<class T> static T random_element();
+template<class T> T random_element();
 
 #ifdef USE_POINT
 template<>
@@ -97,10 +97,10 @@ interval_type random_element<interval_type>()
 
 template<class UnaryFunction, class ForwardIterator, 
   class ConstForwardIterator>
-static double do_timing1(UnaryFunction func, int iter,
-			 ConstForwardIterator v1_first,
-			 ConstForwardIterator v1_last,
-			 ForwardIterator v2_first)
+double do_timing1(UnaryFunction func, int iter,
+		 ConstForwardIterator v1_first,
+		 ConstForwardIterator v1_last,
+		 ForwardIterator v2_first)
 {
   boost::timer t;
   for(int k = 0; k < iter; ++k) {
@@ -114,8 +114,8 @@ static double do_timing1(UnaryFunction func, int iter,
 }
 
 template<class UnaryFunction>
-static void mops1(UnaryFunction func, unsigned int vsize,
-		  const std::string & s)
+void mops1(UnaryFunction func, unsigned int vsize,
+	  const std::string & s)
 {
   typedef typename UnaryFunction::result_type base_type;
   unsigned iter = 5;
@@ -140,10 +140,10 @@ static void mops1(UnaryFunction func, unsigned int vsize,
 
 template<class BinaryFunction, class ForwardIterator,
   class ConstForwardIterator>
-static double do_timing2a(BinaryFunction func, int iter,
-			  ForwardIterator v1_first,
-			  ForwardIterator v1_last,
-			  ConstForwardIterator v2_first)
+double do_timing2a(BinaryFunction func, int iter,
+		  ForwardIterator v1_first,
+		  ForwardIterator v1_last,
+		  ConstForwardIterator v2_first)
 {
   boost::timer t;
   for(int k = 0; k < iter; ++k) {
@@ -157,8 +157,8 @@ static double do_timing2a(BinaryFunction func, int iter,
 }
 
 template<class BinaryFunction>
-static void mops2a(BinaryFunction func, unsigned int vsize,
-		   const std::string & s)
+void mops2a(BinaryFunction func, unsigned int vsize,
+	   const std::string & s)
 {
   unsigned int iter = 5;
   while(iter < 100000000/vsize) {
@@ -184,10 +184,10 @@ static void mops2a(BinaryFunction func, unsigned int vsize,
 }
 
 template<class FuncR, class ForwardIterator, class ConstForwardIterator>
-static double do_timing2(FuncR funcr, int iter, ConstForwardIterator v1_first,
-			 ConstForwardIterator v1_last,
-			 ConstForwardIterator v2_first,
-			 ForwardIterator v3_first)
+double do_timing2(FuncR funcr, int iter, ConstForwardIterator v1_first,
+		 ConstForwardIterator v1_last,
+		 ConstForwardIterator v2_first,
+		 ForwardIterator v3_first)
 {
   boost::timer t;
   for(int k = 0; k < iter; ++k) {
@@ -212,8 +212,7 @@ static double do_timing2(FuncR funcr, int iter, ConstForwardIterator v1_first,
 }
 
 template<class BinaryFunction>
-static void mops2(BinaryFunction func, unsigned int vsize,
-		  const std::string & s)
+void mops2(BinaryFunction func, unsigned int vsize, const std::string & s)
 {
   typedef typename BinaryFunction::result_type base_type;
   unsigned int iter = 5;
@@ -265,7 +264,7 @@ template<class T> struct divides_assign
  */
 
 template<class T>
-static void base_arith_test(unsigned int vsize, const std::string & s)
+void base_arith_test(unsigned int vsize, const std::string & s)
 {
   mops2(std::plus<T>(), vsize, s + " binary +");
   mops2(std::minus<T>(), vsize, s + " binary -");
@@ -345,7 +344,7 @@ private:
  */
 
 template<class T>
-static void misc_arith_test(unsigned int vsize)
+void misc_arith_test(unsigned int vsize)
 {
   mops1(std::negate<T>(), vsize, "unary -");
   mops1(math_unary_func<T>(abs), vsize, "abs");
@@ -362,7 +361,7 @@ static void misc_arith_test(unsigned int vsize)
  */
 
 template<class T>
-static void transc_test(unsigned int vsize)
+void transc_test(unsigned int vsize)
 {
   mops1(math_unary_func<T>(sqrt), vsize, "sqrt");
 #ifdef HAVE_TRANSCENDENTAL
@@ -413,7 +412,7 @@ static void transc_test(unsigned int vsize)
 #endif // HAVE_TRANSCENDENTAL
 }
 
-static void run_test(unsigned int vsize)
+void run_test(unsigned int vsize)
 {
   std::cout << "Testing with vector size = " << vsize << std::endl;
   base_arith_test<interval_type>(vsize, interval_name);
@@ -427,7 +426,7 @@ static void run_test(unsigned int vsize)
  * The speed differences between L1 cache, L2 cache and main memory
  * are usually clearly visible as sharp steps in the curve.
  */
-static void test_vector_size_effects()
+void test_vector_size_effects()
 {
   for(int i = 1; i < 1000000; i *= 2) {
     std::cout << "vector<> size: " << i << " ";

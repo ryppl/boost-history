@@ -54,24 +54,33 @@
 
 
 template<class T>
-T test_func2d(T x, T y)
+struct test_func2d
 {
-  return sin(x)*cos(y) - exp(x*y)/45.0 * (square(x+y)+100.0) - 
-    cos(sin(y))*y/4.0;
-}
+  T operator()(T x, T y) const
+  {
+    return sin(x)*cos(y) - exp(x*y)/45.0 * (square(x+y)+100.0) - 
+      cos(sin(y))*y/4.0;
+  }
+};
+
+template <class T>
+struct test_func1d
+{
+  T operator()(T x) const
+  {
+    return sin(x)/(x*x+1.0);
+  }
+};
 
 template<class T>
-T test_func1d(T x)
+struct test_func1d_2
 {
-  return sin(x)/(x*x+1.0);
-}
-
-template<class T>
-T test_func1d_2(T x)
-{
-  using std::sqrt;
-  return sqrt(x*x-1.0);
-}
+  T operator()(T x) const
+  {
+    using std::sqrt;
+    return sqrt(x*x-1.0);
+  }
+};
 
 template<class Function, class I>
 void find_zeros(std::ostream & os, Function f, I searchrange)
@@ -149,12 +158,13 @@ int main()
     compare_certainly<double>,
     save_state<rounded_transc_opp<double> >,
     checking_lax<double> > > I;
+
   std::cout << "Zero points of sin(x)/(x*x+1)\n";
-  find_zeros(std::cout, test_func1d<I>, I(-11, 10));
+  find_zeros(std::cout, test_func1d<I>(), I(-11, 10));
   std::cout << "Zero points of sqrt(x*x-1)\n";
-  find_zeros(std::cout, test_func1d_2<I>, I(-5, 6));
+  find_zeros(std::cout, test_func1d_2<I>(), I(-5, 6));
   std::cout << "Zero points of Van Iwaarden's 2D function\n";
   std::ofstream f("func2d.data");
-  find_zeros(f, test_func2d<I>, I(-20, 20), I(-20, 20));
+  find_zeros(f, test_func2d<I>(), I(-20, 20), I(-20, 20));
   std::cout << "Use gnuplot, command 'plot \"func2d.data\" with dots'   to plot\n";
 }
