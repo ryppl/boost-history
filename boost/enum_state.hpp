@@ -1,62 +1,135 @@
-/*
-  A generic class for storing and manipulating enum-based state
-  information.
-*/
+// A generic class for type-safe storage and manipulation of enum.
 
-#ifndef STATE_HH_INCLUDED
-#define STATE_HH_INCLUDED
+#ifndef SMART_ENUM_HPP_INCLUDED
+#define SMART_ENUM_HPP_INCLUDED
 
 #include <stdexcept>
+#include <functional>
 
-template<typename enumT>
-struct enum_traits { enum { min = 0, max = -1, init = 0 }; };
+//////////////////////////////////////////////////
+// Generic smart_enum<> class template.         //
+//////////////////////////////////////////////////
 
-template<typename enumT>
-class State
+template<typename enumT, class incrementorT>
+class smart_enum
     {
   public:
-    typedef enumT enum_type;
+    typedef enumT         enum_type;
+    typedef incrementorT  incrementor_type;
 
-    // Having an implicit constructor with parameter will also serve
-    // as assignment operator via implicit temporary objects and copy
-    // construction.
-
-    State(int init = enum_traits<enum_type>::init)
-        { current = State::checked_cast(init); }
-
-    // Add "typesafe" increment and decrement operators.
-
-    State& operator+= (int n)     { increment(n); return *this; }
-    State& operator-= (int n)     { increment(-n); return *this; }
-    State& operator++ ()          { increment(1); return *this; }
-    State& operator-- ()          { increment(-1); return *this; }
-    const State operator++ (int)  { State tmp(*this); increment(1); return tmp; }
-    const State operator-- (int)  { State tmp(*this); increment(-1); return tmp; }
-
-    // Allow implicit conversion to enum_type, which saves us the
-    // hastle of defining all those operators.
-
-    operator const enum_type () const { return current; }
-
-    // Disable bound checking for the default traits.
-
-    enum { is_bound_checked = (enum_traits<enum_type>::max > enum_traits<enum_type>::min) };
-
-    // The trait-based bound checker.
-
-    static enum_type checked_cast(int val)
+    smart_enum(const int i, const incrementor_type func = incrementor_type())
+            : incrementor(func)
         {
-        if (is_bound_checked)
-            {
-            if (val < enum_traits<enum_type>::min || val > enum_traits<enum_type>::max)
-                throw std::out_of_range("invalid state");
-            }
-        return enum_type(val);
+        val = incrementor(i, 0);
+        }
+    smart_enum(const enum_type i, const incrementor_type func = incrementor_type())
+            : incrementor(func), val(i)
+        {
         }
 
+    smart_enum&      operator++ ()      { return (*this = incrementor(val, 1)); }
+    smart_enum&      operator-- ()      { return (*this = incrementor(val, -1)); }
+    const smart_enum operator++ (int)   { enum_type tmp(val); ++(*this); return tmp; }
+    const smart_enum operator-- (int)   { enum_type tmp(val); --(*this); return tmp; }
+    smart_enum&      operator+= (int n) { return (*this = incrementor(val, n)); }
+    smart_enum&      operator-= (int n) { return (*this = incrementor(val, -n)); }
+
+    operator enum_type() const          { return val; }
+
   private:
-    void increment(int n) { current = checked_cast(current + n); }
-    enum_type current;
+    incrementor_type    incrementor;
+    enum_type           val;
     };
 
-#endif // !defined(STATE_HH_INCLUDED)
+//////////////////////////////////////////////////
+// sequential_smart_enum<> specialization.      //
+//////////////////////////////////////////////////
+
+template<typename enumT, enumT minVal, enumT maxVal>
+struct SequentialIncrementor : public std::binary_function<const int, const int, enumT>
+    {
+    enumT operator() (const int val, const int n) const
+        {
+        if (val + n >= minVal && val + n <= maxVal)
+            return enumT(val + n);
+        else
+            throw std::out_of_range("incrementation would yield invalid enum");
+        }
+    };
+
+template<typename enumT, enumT minVal, enumT maxVal>
+struct sequential_smart_enum : public smart_enum<enumT, SequentialIncrementor<enumT, minVal, maxVal> >
+    {
+    typedef smart_enum<enumT, SequentialIncrementor<enumT, minVal, maxVal> > smart_enum_type;
+    typedef typename smart_enum_type::enum_type         enum_type;
+    typedef typename smart_enum_type::incrementor_type  incrementor_type;
+    enum { min = minVal, max = maxVal };
+
+    sequential_smart_enum(const int i) : smart_enum_type(i, incrementor_type())
+        { }
+    sequential_smart_enum(const enum_type i) : smart_enum_type(i, incrementor_type())
+        { }
+    };
+
+
+//////////////////////////////////////////////////
+// wrapped_smart_enum<> specialization.         //
+//////////////////////////////////////////////////
+
+template<typename enumT, enumT minVal, enumT maxVal>
+struct WrappedIncrementor : public std::binary_function<const int, const int, enumT>
+    {
+    enumT operator() (const int val, const int n) const
+        {
+        return enumT(((val - minVal + n) % (maxVal - minVal + 1)) + minVal);
+        }
+    };
+
+template<typename enumT, enumT minVal, enumT maxVal>
+struct wrapped_smart_enum : public smart_enum<enumT, WrappedIncrementor<enumT, minVal, maxVal> >
+    {
+    typedef smart_enum<enumT, WrappedIncrementor<enumT, minVal, maxVal> > smart_enum_type;
+    typedef typename smart_enum_type::enum_type         enum_type;
+    typedef typename smart_enum_type::incrementor_type  incrementor_type;
+    enum { min = minVal, max = maxVal };
+
+    wrapped_smart_enum(const int i) : smart_enum_type(i, incrementor_type())
+        { }
+    wrapped_smart_enum(const enum_type i) : smart_enum_type(i, incrementor_type())
+        { }
+    };
+
+//////////////////////////////////////////////////
+// bounded_smart_enum<> specialization.         //
+//////////////////////////////////////////////////
+
+template<typename enumT, enumT minVal, enumT maxVal>
+struct BoundedIncrementor : public std::binary_function<const int, const int, enumT>
+    {
+    enumT operator() (const int val, const int n) const
+        {
+        int res = val + n;
+        if (res < minVal)
+            return minVal;
+        else if (res > maxVal)
+            return maxVal;
+        else
+            return enumT(res);
+        }
+    };
+
+template<typename enumT, enumT minVal, enumT maxVal>
+struct bounded_smart_enum : public smart_enum<enumT, BoundedIncrementor<enumT, minVal, maxVal> >
+    {
+    typedef smart_enum<enumT, BoundedIncrementor<enumT, minVal, maxVal> > smart_enum_type;
+    typedef typename smart_enum_type::enum_type         enum_type;
+    typedef typename smart_enum_type::incrementor_type  incrementor_type;
+    enum { min = minVal, max = maxVal };
+
+    bounded_smart_enum(const int i) : smart_enum_type(i, incrementor_type())
+        { }
+    bounded_smart_enum(const enum_type i) : smart_enum_type(i, incrementor_type())
+        { }
+    };
+
+#endif // !defined(SMART_ENUM_HPP_INCLUDED)
