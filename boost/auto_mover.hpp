@@ -69,14 +69,10 @@ public: // modifiers
 
     void swap(auto_mover& operand)
     {
-        // Move operand off to the side...
-        auto_mover temp(operand);
-
-        // ...in order to move *this into its place...
-        operand = move(*this);
-
-        // ...and finish by moving operand's _old_ value to *this:
-        *this = move(temp);
+        move_swap(
+              this->get()
+            , operand.get()
+            );
     }
 
     void reset(T& operand)
@@ -97,24 +93,30 @@ public: // queries
 
     T* operator->()
     {
-        return reinterpret_cast<T*>(storage_.address());
+        return static_cast<T*>(storage_.address());
     }
 
     const T* operator->() const
     {
-        return reinterpret_cast<T*>(storage_.address());
+        return static_cast<T*>(storage_.address());
     }
 
     T& get()
     {
-        return *reinterpret_cast<T*>(storage_.address());
+        return *static_cast<T*>(storage_.address());
     }
 
     const T& get() const
     {
-        return *reinterpret_cast<const T*>(storage_.address());
+        return *static_cast<const T*>(storage_.address());
     }
 };
+
+template <typename T>
+inline void swap(auto_mover<T>& lhs, auto_mover<T>& rhs)
+{
+    lhs.swap(rhs);
+}
 
 } // namespace boost
 

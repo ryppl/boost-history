@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-// boost swap.hpp header file
+// boost move_fwd.hpp header file
 // See http://www.boost.org for updates, documentation, and revision history.
 //-----------------------------------------------------------------------------
 //
@@ -14,52 +14,52 @@
 // suitability of this software for any purpose. It is provided "as is" 
 // without express or implied warranty.
 
-#ifndef BOOST_SWAP_HPP
-#define BOOST_SWAP_HPP
+#ifndef BOOST_MOVE_FWD_HPP
+#define BOOST_MOVE_FWD_HPP
 
-#include "boost/move.hpp"
+#include "boost/mpl/if.hpp"
+#include "boost/type_traits/is_base_and_derived.hpp"
 
 namespace boost {
 
 //////////////////////////////////////////////////////////////////////////
-// function template swap
+// forward declares
 //
-// Swaps using Koenig lookup but falls back to move-swap for primitive
-// types and on non-conforming compilers.
+template <typename Deriving> struct moveable;
+template <typename T>        struct move_source;
+
+//////////////////////////////////////////////////////////////////////////
+// function template move
+//
+// Takes a T& and returns, if T derives moveable<T>, a move_source<T> for
+// the object; else, returns the T&.
 //
 
-namespace detail { namespace move_swap {
+namespace detail {
 
 template <typename T>
-inline void swap(T& lhs, T& rhs)
+struct move_type
 {
-    T tmp( move(lhs) );
-    lhs = move(rhs);
-    rhs = move(tmp);
-}
+    typedef typename mpl::if_<
+          is_base_and_derived<moveable<T>, T>
+        , move_source<T>
+        , T&
+        >::type type;
+};
 
-#ifdef __GNUC__
-using boost::detail::move_swap::swap;
-#endif // __GNUC_ workaround
+} // namespace detail
 
 template <typename T>
-inline void swap_impl(T& lhs, T& rhs)
+inline
+    typename detail::move_type<T>::type
+move(T& source)
 {
-#ifndef __GNUC__
-    using boost::detail::move_swap::swap;
-#endif // __GNUC__ workaround
+    typedef typename detail::move_type<T>::type
+        move_t;
 
-    swap(lhs, rhs);
-}
-
-}} // namespace detail::move_swap
-
-template <typename T>
-inline void swap(T& lhs, T& rhs)
-{
-    detail::move_swap::swap_impl(lhs, rhs);
+    return move_t(source);
 }
 
 } // namespace boost
 
-#endif // BOOST_SWAP_HPP
+#endif // BOOST_MOVE_FWD_HPP

@@ -14,47 +14,46 @@
 // suitability of this software for any purpose. It is provided "as is" 
 // without express or implied warranty.
 
-#include "boost/auto_mover.hpp"
+#include "boost/move.hpp"
 #include "boost/test/minimal.hpp"
 
 #include <cstdlib> // for size_t
 #include <cstring> // for strlen, str(n)cpy
-
-#include "boost/swap.hpp"
+#include <algorithm> // for swap
+#include "boost/utility.hpp" // for boost::noncopyable
 
 //////////////////////////////////////////////////////////////////////////
-// class simple_string
+// class moveable_string
 //
-// Moveable std::string-like type.
+// Moveable std::string-like type. But look, no implicit copying allowed!
 //
-class simple_string
-    : public boost::moveable< simple_string >
+class moveable_string
+    : public boost::moveable< moveable_string >
+    , boost::noncopyable
 {
+public: // constants
+    BOOST_STATIC_CONSTANT(
+          std::size_t
+        , npos = static_cast<std::size_t>(-1)
+        );
+
 private: // representation
     size_t len_;
     char* str_;
 
 public: // structors
-    ~simple_string()
+    ~moveable_string()
     {
         clear();
     }
 
-    simple_string()
+    moveable_string()
         : len_(0)
         , str_(0)
     {
     }
 
-    simple_string(const simple_string& operand)
-        : len_(operand.len_)
-        , str_(len_ == 0 ? 0 : new char[len_ + 1])
-    {
-        if (len_)
-            std::strncpy(str_, operand.str_, len_);
-    }
-
-    simple_string(boost::move_source<simple_string> source)
+    moveable_string(boost::move_source<moveable_string> source)
         : len_(source.get().len_)
         , str_(source.get().str_)
     {
@@ -62,23 +61,18 @@ public: // structors
         source.get().str_ = 0;
     }
 
-    simple_string(const char* str)
-        : len_(std::strlen(str))
-        , str_(new char[len_ + 1])
+    moveable_string(const char* str, std::size_t len = npos)
+        : len_(len == npos ? std::strlen(str) : len)
+        , str_(len_ != 0 ? new char[len_ + 1] : 0)
     {
-        std::strcpy(str_, str);
+        if (str_ != 0)
+            std::strncpy(str_, str, len_);
     }
 
 public: // modifiers
-    simple_string& operator=(simple_string rhs)
+    moveable_string& operator=(boost::move_source<moveable_string> source)
     {
-        swap(rhs);
-        return *this;
-    }
-
-    simple_string& operator=(boost::move_source<simple_string> source)
-    {
-        simple_string& rhs = source.get();
+        moveable_string& rhs = source.get();
 
         clear();
 
@@ -89,10 +83,10 @@ public: // modifiers
         rhs.str_ = 0;        
     }
 
-    void swap(simple_string& rhs)
+    void swap(moveable_string& rhs)
     {
-        boost::swap(len_, rhs.len_);
-        boost::swap(str_, rhs.str_);
+        std::swap(len_, rhs.len_);
+        std::swap(str_, rhs.str_);
     }
 
     void clear()
@@ -106,12 +100,7 @@ public: // modifiers
     }
 
 public: // queries
-    bool empty() const
-    {
-        return str_ == 0;
-    }
-
-    std::size_t size() const
+    std::size_t length() const
     {
         return len_;
     }
@@ -122,30 +111,33 @@ public: // queries
     }
 
 public: // operators
-    simple_string& operator+=(const simple_string& rhs)
+    moveable_string& operator+=(const moveable_string& rhs)
     {
-        if (rhs.size() > 0)
+        if (rhs.length() > 0)
         {
-            char* newstr = new char[size() + rhs.size() + 1];
+            char* newstr = new char[length() + rhs.length() + 1];
 
-            std::strncpy(newstr,          str_,     size());
-            std::strncpy(newstr + size(), rhs.str_, rhs.size());
+            std::strncpy(newstr,            str_,     length());
+            std::strncpy(newstr + length(), rhs.str_, rhs.length());
 
             clear();
             str_ = newstr;
-            len_ = size() + rhs.size();
+            len_ = length() + rhs.length();
         }
         return *this;
     }
 };
 
-  boost::move_return<simple_string>
-operator+(simple_string lhs, const simple_string& rhs)
+  boost::move_return<moveable_string>
+operator+(const moveable_string& lhs, const moveable_string& rhs)
 {
-    return lhs += rhs;
+    // we *need* to do a copy here -- the only place though!
+    moveable_string lhs_copy(lhs.c_str(), lhs.length());
+
+    return lhs_copy += rhs;
 }
 
-bool operator==(const simple_string& lhs, const simple_string& rhs)
+bool operator==(const moveable_string& lhs, const moveable_string& rhs)
 {
     return std::strcmp(lhs.c_str(), rhs.c_str()) == 0;
 }
@@ -153,13 +145,12 @@ bool operator==(const simple_string& lhs, const simple_string& rhs)
 //////////////////////////////////////////////////////////////////////////
 // function source
 // 
-
-// Returns a simple_string via move (i.e. without deep copy).
+// Returns a moveable_string via move (i.e. without deep copy).
 //
-  boost::move_return<simple_string>
+  boost::move_return<moveable_string>
 source()
 {
-    simple_string str("efg");
+    moveable_string str("efg");
     return "abcd" + str;
 }
 
@@ -168,8 +159,8 @@ source()
 //
 int test_main( int, char *[] )
 {
-    simple_string sink(source());
-    BOOST_CHECK(sink == "abcdefg");
+    moveable_string sink(source());
+    BOOST_CHECK( sink == "abcdefg" );
 
     return boost::exit_success;
 }
