@@ -24,6 +24,7 @@
 #include <boost/mpl/set/aux_/erase_impl.hpp>
 #include <boost/mpl/set/aux_/erase_key_impl.hpp>
 #include <boost/mpl/set/aux_/has_key_impl.hpp>
+#include <boost/mpl/set/aux_/key_type_impl.hpp>
 #include <boost/mpl/set/aux_/begin_end_impl.hpp>
 #include <boost/mpl/set/aux_/iterator.hpp>
 #include <boost/mpl/set/aux_/item.hpp>

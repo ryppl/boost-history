@@ -1,6 +1,6 @@
 
-#ifndef BOOST_MPL_MAP_AUX_HAS_KEY_IMPL_HPP_INCLUDED
-#define BOOST_MPL_MAP_AUX_HAS_KEY_IMPL_HPP_INCLUDED
+#ifndef BOOST_MPL_MAP_AUX_KEY_TYPE_IMPL_HPP_INCLUDED
+#define BOOST_MPL_MAP_AUX_KEY_TYPE_IMPL_HPP_INCLUDED
 
 // Copyright (c) Aleksey Gurtovoy 2003-2004
 // Copyright (c) David Abrahams 2003-2004
@@ -15,26 +15,22 @@
 // $Date$
 // $Revision$
 
-#include <boost/mpl/has_key_fwd.hpp>
+#include <boost/mpl/key_type_fwd.hpp>
+#include <boost/mpl/pair.hpp>
 #include <boost/mpl/map/aux_/tag.hpp>
-#include <boost/mpl/map/aux_/at_impl.hpp>
-#include <boost/mpl/void.hpp>
 
 namespace boost {
 namespace mpl {
 
 template<>
-struct has_key_impl< aux::map_tag >
+struct key_type_impl< aux::map_tag >
 {
-    template< typename Map, typename Key > struct apply
-        : is_not_void_< 
-              typename at_impl<aux::map_tag>
-                ::apply<Map,Key>::type
-            >
+    template< typename Map, typename T > struct apply
+        : first<T>
     {
     };
 };
 
 }}
 
-#endif // BOOST_MPL_MAP_AUX_HAS_KEY_IMPL_HPP_INCLUDED
+#endif // BOOST_MPL_MAP_AUX_KEY_TYPE_IMPL_HPP_INCLUDED

@@ -22,6 +22,7 @@
 #include <boost/mpl/map/aux_/erase_impl.hpp>
 #include <boost/mpl/map/aux_/erase_key_impl.hpp>
 #include <boost/mpl/map/aux_/has_key_impl.hpp>
+#include <boost/mpl/map/aux_/key_type_impl.hpp>
 #include <boost/mpl/map/aux_/clear_impl.hpp>
 #include <boost/mpl/map/aux_/size_impl.hpp>
 #include <boost/mpl/map/aux_/empty_impl.hpp>
