@@ -14,28 +14,34 @@
 //
 // Usage:
 //
-// typedef typename select<
-//                      case1,  type1,
-//                      case2,  type2,
-//                      ...
-//                      true_,  typen
-//                  >::type selection;
+// (1) select.
 //
-// Here case1, case2, ... are models of MPL::IntegralConstant with value type
-// bool, and n <= 16.
+//     typedef typename select<
+//                          case1,  type1,
+//                          case2,  type2,
+//                          ...
+//                          true_,  typen
+//                      >::type selection;
 //
-// To get the effect of mpl::apply_if for a given type, wrap it with the
-// template lazy. E.g.:
+//     Here case1, case2, ... are models of MPL::IntegralConstant with value type
+//     bool, and n <= 16.
 //
-// typedef typename select<
-//                      case1,  type1,
-//                      case2,  type2,
-//                      case3,  lazy<type3>,
-//                      ...
-//                      true_,  typen
-//                  >::type selection;
+// (2) select_c. same as select, except that the cases should be boolean constant
+//     expressions.
 //
-// Here type3 is a metafunction which will be applied only if it is selected.
+// (3) Lazy evauation. To specify that certain types should be subject to lazy 
+//     evaluation, wrap them using the template mpl::lazy
+//
+//     typedef typename select<
+//                          case1,  type1,
+//                          case2,  type2,
+//                          case3,  lazy<type3>,
+//                          ...
+//                          true_,  typen
+//                      >::type selection;
+//
+//     Here type3 is a metafunction which will be applied only if it is selected.
+//     To specify lazy evalution for each type, use lazy_select or lazy_select_c.
 //
 // Notes:
 //    (1) For compilers which support partial specialization, the implementation
@@ -90,6 +96,8 @@
     defined(__GNUC__) && (__GNUC__ < 3) 
     #include <boost/utility/select_by_size.hpp>
 #endif
+                
+//--------------Macros--------------------------------------------------------//
 
 // BOOST_SELECT_C_PARAMS(n) expands to 
 //   bool B1 = true, typename T1 = select_default, ... , 
@@ -115,18 +123,28 @@
     BOOST_PP_REPEAT_FROM_TO(1, BOOST_PP_INC(n), BOOST_SELECT_PARAMS_N, _)      \
     /**/
 
-// BOOST_SELECT_PARAMS(n) expands to 
-//   BOOST_MPL_AUX_VALUE_WKND(B1)::value, T1, ... , 
-//   BOOST_MPL_AUX_VALUE_WKND(Bn)::value, Tn.
+// BOOST_SELECT_C_ARGS(n) expands to B1, T1, ..., Bn, Tn
 #define BOOST_SELECT_C_ARGS_N(z, n, text)                                      \
-    BOOST_PP_COMMA_IF(BOOST_PP_DEC(n))                                         \
-    BOOST_MPL_AUX_VALUE_WKND(BOOST_PP_CAT(B, n))::value, BOOST_PP_CAT(T, n)    \
+    BOOST_PP_COMMA_IF(BOOST_PP_DEC(n)) BOOST_PP_CAT(B, n), BOOST_PP_CAT(T, n)  \
     /**/
 #define BOOST_SELECT_C_ARGS(n)                                                 \
     BOOST_PP_REPEAT_FROM_TO(1, BOOST_PP_INC(n), BOOST_SELECT_C_ARGS_N, _)      \
     /**/
 
+// BOOST_SELECT_C_ARGS_WKND(n) expands to 
+//   BOOST_MPL_AUX_VALUE_WKND(B1)::value, T1, ... , 
+//   BOOST_MPL_AUX_VALUE_WKND(Bn)::value, Tn.
+#define BOOST_SELECT_C_ARGS_WKND_N(z, n, text)                                 \
+    BOOST_PP_COMMA_IF(BOOST_PP_DEC(n))                                         \
+    BOOST_MPL_AUX_VALUE_WKND(BOOST_PP_CAT(B, n))::value, BOOST_PP_CAT(T, n)    \
+    /**/
+#define BOOST_SELECT_C_ARGS_WKND(n)                                            \
+    BOOST_PP_REPEAT_FROM_TO(1, BOOST_PP_INC(n), BOOST_SELECT_C_ARGS_WKND_N, _) \
+    /**/
+
 namespace boost { namespace mpl {
+
+//--------------Lazy evaluation machinery-------------------------------------//
 
 namespace aux_ {
     struct lazy_base { };
@@ -183,6 +201,8 @@ namespace aux_ {
 #endif
 
 }               // End namespace aux_.
+
+//--------------Definition of select_c----------------------------------------//
 
 #ifndef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
 
@@ -319,9 +339,23 @@ namespace aux_ {
     };
 #endif // #ifndef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
 
+//--------------Definition of select, lazy_select_c and select_z--------------//
+
 template<BOOST_SELECT_PARAMS(16)>
 struct select {
-    typedef typename select_c<BOOST_SELECT_C_ARGS(16)>::type type;
+    typedef typename select_c<BOOST_SELECT_C_ARGS_WKND(16)>::type type;
+};
+
+template<BOOST_SELECT_C_PARAMS(16)>
+struct lazy_select_c {
+    typedef typename select_c<BOOST_SELECT_C_ARGS(16)>::type  result;
+    typedef typename result::type                             type;
+};
+
+template<BOOST_SELECT_PARAMS(16)>
+struct lazy_select {
+    typedef typename select_c<BOOST_SELECT_C_ARGS_WKND(16)>::type  result;
+    typedef typename result::type                                  type;
 };
 
 } }             // End namespaces mpl, boost.
