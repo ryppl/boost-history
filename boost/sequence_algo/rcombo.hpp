@@ -14,9 +14,9 @@
 #ifndef BOOST_RCOMBO_HPP
 #define BOOST_RCOMBO_HPP
 
-#include <algorithm>
-#include <functional>
-#include <boost/utility.hpp>
+#include <algorithm>			// sort(), rotate(), etc.
+#include <functional>			// greater<>(), not2()
+#include <boost/utility.hpp>	// next()
 
 namespace boost {
 
@@ -29,6 +29,8 @@ namespace boost {
     inline bool
     is_sorted(ForwardIterator first, ForwardIterator last)
     {
+    	if (first == last)
+    		return true;
         for(--last; first != last; first++)
             if (*next(first) < *first)
                 return false;
@@ -44,6 +46,8 @@ namespace boost {
     inline bool
     is_sorted(ForwardIterator first, ForwardIterator last, Compare comp)
     {
+    	if (first == last)
+    		return true;
         for(--last; first != last; first++)
             if (comp(*next(first), *first))
                 return false;
