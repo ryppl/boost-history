@@ -29,6 +29,8 @@ namespace boost {
         typedef typename boost::detail::
             iterator_traits<IteratorT>::value_type value_type;
         typedef typename boost::detail::
+            iterator_traits<IteratorT>::reference reference;
+	    typedef typename boost::detail::
             iterator_traits<IteratorT>::difference_type difference_type;
         typedef IteratorT const_iterator;
         typedef IteratorT iterator;

@@ -63,8 +63,9 @@
       Many algorithms working with sequences take a pair of iterators,
       delimiting a working range, as an arguments. <code>iterator_range</code>
       class is an encapsulation of a range identified by a pair of iterators. It
-      provides a minimal sequence interface, so it is possible to pass an
-      instance to an algorithm requiring a sequence as an input.&nbsp;
+      provides a subset of container ( see <a href="http://www.boost.org/libs/concept_check/reference.htm#container-concepts">ContainerConcept</a>
+      )&nbsp; interface, so it is possible to pass an instance to an algorithm
+      requiring a sequence as an input.&nbsp;
     </p>
     <h3><a name="iter_synopsis">Synopsis</a></h3>
     <pre>    <b>template</b>&lt; <b>typename</b> IteratorT &gt; 
@@ -327,11 +328,13 @@
       </tr>
       <tr>
         <td width="443" height="31" valign="top"><code><b>typename</b> InputT</code></td>
-        <td width="703" height="31" valign="top">Input sequence type</td>
+        <td width="703" height="31" valign="top">Input sequence type (must
+          satisfy the <a href="http://www.boost.org/libs/concept_check/reference.htm#container-concepts">ContainerConcept</a>)</td>
       </tr>
       <tr>
         <td width="443" height="31" valign="top"><code><b>typename </b>SearchT</code></td>
-        <td width="703" height="31" valign="top">Search sequence type</td>
+        <td width="703" height="31" valign="top">Search sequence type (must
+          satisfy the <a href="http://www.boost.org/libs/concept_check/reference.htm#container-concepts">ContainerConcept</a>)</td>
       </tr>
       <tr>
         <td width="443" height="31" valign="top"><code>InputIteratorT Begin</code></td>

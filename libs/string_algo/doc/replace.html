@@ -23,16 +23,16 @@
       </table>
     </div>
     <ul>
-      <li><a href="#fa_overview">Overview</a></li>
-      <li><a href="#replace">Replace Algorithms</a>
+      <li><a href="#overview">Overview</a></li>
+      <li><a href="#replace">Replace Algorithms</a></li>
+      <li><a href="#rationale">Rationale</a>
         <ul>
-          <li><a href="#description">Description</a></li>
-          <li><a href="#implementation">Implementation considerations</a></li>
+          <li><a href="#implementation">Design and Implementation</a></li>
         </ul>
       </li>
     </ul>
     <hr>
-    <h2><a name="fa_overview">Overview</a></h2>
+    <h2><a name="overview">Overview</a></h2>
     <p>
       String Algorithms Library contains a set of algorithms for replace and
       erase operations on sequences. Each algorithm finds a range in the input
@@ -43,7 +43,6 @@
     </p>
     <hr>
     <h2><a name="replace">Replace Algorithms</a></h2>
-    <h3><a name="description">Description</a></h3>
     <p align="left">
       Regular variants are included in <a href="../../../boost/string_algo/replace.hpp">&lt;boost/string_algo/replace.hpp&gt;</a>
       header and regex variants are included in <a href="../../../boost/string_algo/regex.hpp">&lt;boost/string_algo/regex.hpp&gt;</a>
@@ -152,17 +151,30 @@
           erase_all_regex(Input, str1, regex(&quot;([A-Z]).*xxx&quot;));</code></td>
       </tr>
     </table>
-    <h3><a name="implementation">Implementation considerations</a></h3>
+    <h2><a name="rationale">Rationale</a></h2>
+    <h3><a name="implementation">Design and Implementaion</a></h3>
     <p>
       Replace algoritms are implemented using layered structure. Lower layer
       implements generic substitution of a range in an input sequence with
       another sequence. This layer take an input in form of <b>find</b> and <b>format</b>
       functor. These two functors define what is to be replaced and what will be
       the replacement. Upper layer functions are just wrapping calls to lower
-      layer provided with specific functors.
+      layer provided with specific functors. Find functors are shared with the <a href="find.html">find
+      facility</a>. 
     </p>
     <p>
-      &nbsp;
+      Implementation of lower layer is designed to work with a generic sequence,
+      but taking an advantage of specific features if possible. <code>std::vector&lt;T&gt;
+      </code>is considered as a model for a generic sequence<code>.</code>&nbsp;
+      <code>container_traits&lt;C&gt;</code> class templace ( defined in <a href="../../../boost/string_algo/container_traits.hpp">&lt;boost/string_algo/container_traits.hpp&gt;</a>
+      ) is used to determine specific sequence features. Current implementaition
+      contains specializations for standard library's <code>std::list&lt;T&gt;</code>
+      , <code>std::basic_string&lt;T&gt;</code> and SGI's&nbsp; <code>std::rope&lt;T&gt;</code>
+      and <code>std::slist&lt;T&gt;.</code> For compilers supporting partial
+      specialization it is possible to add specialization for a new container by
+      specializing the <code>container_traits&lt;C&gt;</code> class templace.
+      For compilers without this feature it is not possible, and default
+      parameter set is used.
     </p>
     <hr>
     <p>
