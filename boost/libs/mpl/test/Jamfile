@@ -1,0 +1,13 @@
+subproject libs/mpl/test ;
+
+local tests = advance apply at back binary_function bind copy copy_if
+  count count_if distance empty equal erase erase_range find find_if
+  for_each for_loop front insert insert_sequence int_t iter_fold lambda
+  logical make_fun merge pop_back pop_front push_back push_front remove
+  remove_if replace replace_if size size_of switch_on transform
+  type_list type_vector unary_function unique value_list while_true ;
+
+for local name in $(tests)
+{
+    unit-test $(name) : $(name).cpp : <include>$(BOOST_ROOT) ;
+}
