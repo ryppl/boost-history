@@ -49,7 +49,8 @@ struct distance
 
  public:
     typedef typename loop_::executed::state type;
-    BOOST_STATIC_CONSTANT(long, value = type::value);
+    // dwa 2001/12/21 - explicit qualification helps MSVC
+    BOOST_STATIC_CONSTANT(long, value = distance::type::value);
 };
 
 } // namespace mpl
