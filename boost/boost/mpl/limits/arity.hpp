@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-// boost mpl/limits/apply.hpp header file
+// boost mpl/limits/arity.hpp header file
 // See http://www.boost.org for updates, documentation, and revision history.
 //-----------------------------------------------------------------------------
 //
@@ -14,11 +14,11 @@
 // suitability of this software for any purpose. It is provided "as is" 
 // without express or implied warranty.
 
-#ifndef BOOST_MPL_LIMITS_APPLY_HPP
-#define BOOST_MPL_LIMITS_APPLY_HPP
+#ifndef BOOST_MPL_LIMITS_ARITY_HPP_INCLUDED
+#define BOOST_MPL_LIMITS_ARITY_HPP_INCLUDED
 
-#if !defined(BOOST_MPL_APPLY_PARAMETERS_NUMBER)
-#   define BOOST_MPL_APPLY_PARAMETERS_NUMBER 5
+#if !defined(BOOST_MPL_FUNCTION_CLASS_MAX_ARITY)
+#   define BOOST_MPL_FUNCTION_CLASS_MAX_ARITY 5
 #endif
 
-#endif // BOOST_MPL_LIMITS_APPLY_HPP
+#endif // BOOST_MPL_LIMITS_ARITY_HPP_INCLUDED
