@@ -16,7 +16,7 @@
     <SPARELIBS value=""/>
     <PACKAGES value="VCL50.bpi VCLX50.bpi ZBuilder.bpi CodeLogic.bpi VCLDB50.bpi VCLBDE50.bpi 
       VCLDBX50.bpi VCLIE50.bpi INETDB50.bpi INET50.bpi bcbsmp50.bpi QRPT50.bpi"/>
-    <PATHCPP value=".;L:\boost\boost-sandbox\boost-sandbox\libs\policy_ptr\test\;L:\boost\boost\boost\libs\test\src\"/>
+    <PATHCPP value=".;I:\boost\libs\test\src\"/>
     <PATHPAS value=".;"/>
     <PATHRC value=".;"/>
     <PATHASM value=".;"/>
@@ -26,8 +26,8 @@
     <USERDEFINES value="_DEBUG"/>
     <SYSDEFINES value="NO_STRICT;_NO_VCL"/>
     <MAINSOURCE value="smart_ptr_test.bpf"/>
-    <INCLUDEPATH value="L:\boost\boost\boost\libs\test\src\;L:\boost\boost-sandbox\boost-sandbox\libs\policy_ptr\test\;$(BCB)\include;$(BCB)\include\vcl"/>
-    <LIBPATH value="L:\boost\boost\boost\libs\test\src\;L:\boost\boost-sandbox\boost-sandbox\libs\policy_ptr\test\;$(BCB)\lib\obj;$(BCB)\lib"/>
+    <INCLUDEPATH value="$(BCB)\include;$(BCB)\include\vcl;&quot;I:\boost\libs\test\src\&quot;"/>
+    <LIBPATH value="$(BCB)\lib\obj;$(BCB)\lib;&quot;I:\boost\libs\test\src\&quot;"/>
     <WARNINGS value="-w-par"/>
   </MACROS>
   <OPTIONS>
@@ -88,18 +88,32 @@ $(BCB)\Bin\dcltee50.bpl=TeeChart 5.0 Components
 $(BCB)\Bin\dcltqr50.bpl=TeeChart 5.0 for QuickReport Components Design Package
 
 [HistoryLists\hlIncludePath]
-Count=4
-Item0=L:\boost\boost\boost\libs\test\src;L:\boost\boost-sandbox\boost-sandbox\libs\policy_ptr\test;$(BCB)\include;$(BCB)\include\vcl
-Item1=$(BCB)\include;$(BCB)\include\vcl
-Item2=L:\boost\boost\boost\libs\test\src;L:\boost\boost-sandbox\boost-sandbox\libs\policy_ptr\test;..\..\..\..\..\boost\boost\libs\test\src;$(BCB)\include;$(BCB)\include\vcl
-Item3=..\..\..\..\..\boost\boost\libs\test\src;$(BCB)\include;$(BCB)\include\vcl
+Count=11
+Item0=$(BCB)\include;$(BCB)\include\vcl;I:\boost\libs\test\src
+Item1=I:\boost\libs\test\src;$(BCB)\include;$(BCB)\include\vcl
+Item2=$(BCB)\include;$(BCB)\include\vcl
+Item3=..\..\..\boost-sandbox\libs\policy_ptr\test;I:\boost\boost-sandbox\boost-sandbox\libs\policy_ptr\test;:\boost\boost-sandbox\boost-sandbox\libs\policy_ptr\test;$(BCB)\include;$(BCB)\include\vcl;L:\boost\boost-sandbox\boost-sandbox\libs\policy_ptr\test\;I:\boost\libs\test\src\
+Item4=$(BCB)\include;$(BCB)\include\vcl;L:\boost\boost-sandbox\boost-sandbox\libs\policy_ptr\test\;I:\boost\libs\test\src\
+Item5=L:\boost\boost-sandbox\boost-sandbox\libs\policy_ptr\test\;I:\boost\libs\test\src\;$(BCB)\include;$(BCB)\include\vcl
+Item6=L:\boost\boost-sandbox\boost-sandbox\libs\policy_ptr\test;I:\boost\libs\test\src\;$(BCB)\include;$(BCB)\include\vcl
+Item7=I:\boost\libs\test\src;I:\boost\boost\boost\libs\test\src;:\boost\boost\boost\libs\test\src;L:\boost\boost\boost\libs\test\src\;L:\boost\boost-sandbox\boost-sandbox\libs\policy_ptr\test\;$(BCB)\include;$(BCB)\include\vcl
+Item8=L:\boost\boost\boost\libs\test\src;L:\boost\boost-sandbox\boost-sandbox\libs\policy_ptr\test;$(BCB)\include;$(BCB)\include\vcl
+Item9=L:\boost\boost\boost\libs\test\src;L:\boost\boost-sandbox\boost-sandbox\libs\policy_ptr\test;..\..\..\..\..\boost\boost\libs\test\src;$(BCB)\include;$(BCB)\include\vcl
+Item10=..\..\..\..\..\boost\boost\libs\test\src;$(BCB)\include;$(BCB)\include\vcl
 
 [HistoryLists\hlLibraryPath]
-Count=4
-Item0=L:\boost\boost\boost\libs\test\src;L:\boost\boost-sandbox\boost-sandbox\libs\policy_ptr\test;$(BCB)\lib\obj;$(BCB)\lib
-Item1=$(BCB)\lib\obj;$(BCB)\lib
-Item2=L:\boost\boost\boost\libs\test\src;L:\boost\boost-sandbox\boost-sandbox\libs\policy_ptr\test;..\..\..\..\..\boost\boost\libs\test\src;$(BCB)\lib\obj;$(BCB)\lib
-Item3=..\..\..\..\..\boost\boost\libs\test\src;$(BCB)\lib\obj;$(BCB)\lib
+Count=11
+Item0=$(BCB)\lib\obj;$(BCB)\lib;I:\boost\libs\test\src
+Item1=I:\boost\libs\test\src;$(BCB)\lib\obj;$(BCB)\lib
+Item2=$(BCB)\lib\obj;$(BCB)\lib
+Item3=..\..\..\boost-sandbox\libs\policy_ptr\test;I:\boost\boost-sandbox\boost-sandbox\libs\policy_ptr\test;:\boost\boost-sandbox\boost-sandbox\libs\policy_ptr\test;$(BCB)\lib\obj;$(BCB)\lib;L:\boost\boost-sandbox\boost-sandbox\libs\policy_ptr\test\;I:\boost\libs\test\src\
+Item4=$(BCB)\lib\obj;$(BCB)\lib;L:\boost\boost-sandbox\boost-sandbox\libs\policy_ptr\test\;I:\boost\libs\test\src\
+Item5=I:\boost\libs\test\src\;L:\boost\boost-sandbox\boost-sandbox\libs\policy_ptr\test\;$(BCB)\lib\obj;$(BCB)\lib
+Item6=I:\boost\libs\test\src;L:\boost\boost-sandbox\boost-sandbox\libs\policy_ptr\test;$(BCB)\lib\obj;$(BCB)\lib
+Item7=I:\boost\libs\test\src;I:\boost\boost\boost\libs\test\src;:\boost\boost\boost\libs\test\src;L:\boost\boost\boost\libs\test\src\;L:\boost\boost-sandbox\boost-sandbox\libs\policy_ptr\test\;$(BCB)\lib\obj;$(BCB)\lib
+Item8=L:\boost\boost\boost\libs\test\src;L:\boost\boost-sandbox\boost-sandbox\libs\policy_ptr\test;$(BCB)\lib\obj;$(BCB)\lib
+Item9=L:\boost\boost\boost\libs\test\src;L:\boost\boost-sandbox\boost-sandbox\libs\policy_ptr\test;..\..\..\..\..\boost\boost\libs\test\src;$(BCB)\lib\obj;$(BCB)\lib
+Item10=..\..\..\..\..\boost\boost\libs\test\src;$(BCB)\lib\obj;$(BCB)\lib
 
 [HistoryLists\hlDebugSourcePath]
 Count=1

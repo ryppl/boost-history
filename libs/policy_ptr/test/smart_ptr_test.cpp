@@ -104,8 +104,9 @@ void copy_test(void)
             boost::smart_ptr<child> c(
                 boost::smart_static_cast<child>(q)
             );
-            boost::smart_ptr<child> d(q, boost::detail::static_cast_tag());
-//            BOOST_CHECK_EQUAL(boost::use_count(c), 2u );
+            BOOST_CHECK_EQUAL(boost::use_count(c), 2u );
+            boost::smart_ptr<child> d(boost::smart_dynamic_cast<child>(q));
+            BOOST_CHECK_EQUAL(boost::use_count(q), 3u );
         }
         BOOST_CHECK(dead_child);
         BOOST_CHECK_EQUAL(boost::use_count(p), 1u );
