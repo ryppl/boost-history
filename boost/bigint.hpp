@@ -37,7 +37,11 @@ namespace boost {
 
 class bigint : boost::operators<bigint> {
   BOOST_STATIC_CONSTANT(int, radix = 10000);
-  enum { chars_per_digit = 4}; // RG: gcc3 was giving trouble...
+#if 0
+  BOOST_STATIC_CONSTANT(int, chars_per_digit = 4);
+#else
+  enum { chars_per_digit = 4 };	// RG: gcc3 was giving trouble...
+#endif // 0 
   typedef std::vector<int> buffer_t;
   buffer_t buffer;
 
@@ -50,13 +54,16 @@ class bigint : boost::operators<bigint> {
 
     // Is the bigint negative?
     if(buffer.back() == -1)
-      return os << '-' << -(*this);
+      return os << '-' << -(*this); 
     
     for(buffer_t::const_reverse_iterator i = buffer.rbegin();
 	i != buffer.rend(); ++i) {
       assert(*i < radix);
+
+      // Don't print leading zeros
       if(i != buffer.rbegin())
 	os << std::setw(chars_per_digit) << std::setfill('0');
+
       os << *i;
     }
     return os;
@@ -69,14 +76,15 @@ class bigint : boost::operators<bigint> {
     
     // Read into an std::string, then set.
     std::string str;
+    char c;
 
     // skip whitespace
-    char c;
     is >> c;
+
     // check for minus sign.
     if(!(c == '-' || std::isdigit(c))) {
       is.putback(c);
-      // signal error
+      // RG signal error here!!
       return is;
     } else {
       str.push_back(c);
@@ -95,13 +103,14 @@ class bigint : boost::operators<bigint> {
   bigint& negate() {
     std::transform(buffer.begin(),buffer.end(),buffer.begin(),
 		   std::negate<int>());
-    normalize();
+    this->normalize();
     return *this;
   }
 
 
+  // Fix carries -> ensure that \forall i \in buffer (i < radix )
   void carry(buffer_t& buffer) {
-    // fix carries - \forall i \in buffer (i < radix )
+
     int carry = 0;
     for(buffer_t::iterator i = buffer.begin();
 	i != buffer.end(); ++i) {
@@ -117,13 +126,12 @@ class bigint : boost::operators<bigint> {
   void normalize() {
 
     // Adjust carries.
-    carry(buffer);
+    this->carry(buffer);
 
-    // remove excess leading zeros
-    while(!buffer.empty() && buffer.back() == 0)
+    // Remove excess leading zeros (Though a true zero is one 0-valued bigit)
+    while(buffer.size() > 1 && buffer.back() == 0)
       buffer.pop_back();
-    if (buffer.empty())
-      buffer.push_back(0);
+
   }
 
 
@@ -135,14 +143,14 @@ class bigint : boost::operators<bigint> {
 
   template <typename OP>
   bigint& operate(bigint const& other, OP op) {
-    align_to(other);
+    this->align_to(other);
 
     // other.buffer.size() <= buffer.size() 
     std::transform(other.buffer.begin(),other.buffer.end(),
 		   buffer.begin(),
 		   buffer.begin(),op);
 
-    normalize();
+    this->normalize();
 
     return *this;
   }
@@ -158,7 +166,6 @@ class bigint : boost::operators<bigint> {
     return (lhs - integral_mod(lhs,rhs)) / rhs;
   }
 
-  // This is adapted from the Tcl library source code.
   int integral_mod(int lhs, int rhs) {
     
     bool negative = false;
@@ -193,13 +200,14 @@ class bigint : boost::operators<bigint> {
     if(negative) 
       ++start;
 
-    std::string::size_type size = std::distance(start,str.end());
+    typedef std::string::difference_type diff_t;
+    diff_t len = std::distance(start,str.end());
     buffer.clear();
-    buffer.resize( (size + chars_per_digit - 1)/chars_per_digit, 0 );
+    buffer.resize( (len + chars_per_digit - 1)/chars_per_digit, 0 );
 
     // how many chars x go with the "first" bunch? (1 <= x <= 4)
-    int trailing_digits = size % chars_per_digit;
-    int first_marker = trailing_digits ? trailing_digits : chars_per_digit; 
+    diff_t trailing_digits = len % chars_per_digit;
+    diff_t first_marker = trailing_digits ? trailing_digits : chars_per_digit; 
 
     // invariant: [i,j) refers to the next "digit" to be processed
     // p points to the next bigit to be filled
@@ -219,7 +227,7 @@ class bigint : boost::operators<bigint> {
     }
 
     if(negative)
-      negate();
+      this->negate();
   }
 
 
