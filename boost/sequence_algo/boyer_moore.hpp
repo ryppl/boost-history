@@ -14,7 +14,6 @@
 
 #include <algorithm>
 #include <boost/config.hpp>
-#include <boost/type_traits.hpp>
 
 namespace boost {
 
