@@ -403,8 +403,7 @@ private:
 BOOST_DYN_BITSET_PRIVATE:
 
     void m_rearrange_extracted_bits(size_type num_bits);
-    static size_type calc_num_blocks(size_type num_bits)
-        { return (num_bits + (bits_per_block - 1)) / bits_per_block; }
+    static size_type calc_num_blocks(size_type num_bits);
     Block& m_highest_block();
 
 
@@ -1639,6 +1638,21 @@ operator-(const dynamic_bitset<Block, Allocator>& x,
 //-----------------------------------------------------------------------------
 // private member functions (on conforming compilers)
 
+
+// Note:
+// this implementation is equivalent to the classical
+//   return (num_bits + (bits_per_block - 1)) / bits_per_block
+// except that in practice it can't "overflow" (chances that the
+// above fails are small too, but if that happens the resulting bugs
+// are then more difficult to diagnose).
+//
+template <typename Block, typename Allocator>
+inline typename dynamic_bitset<Block, Allocator>::size_type
+dynamic_bitset<Block, Allocator>::calc_num_blocks(size_type num_bits)
+{
+    return num_bits / bits_per_block
+           + static_cast<int>( num_bits % bits_per_block != 0 );
+}
 
 // checked access to the highest block
 //
