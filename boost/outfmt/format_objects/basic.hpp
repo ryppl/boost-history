@@ -83,7 +83,7 @@
       {
          public:
             typedef void                                             traits_type;
-            typedef const char *                                           format_type;
+            typedef const char *                                     format_type;
             typedef seq_type< basic_type >                           formatter_type;
          public:
             template< typename T, class InputStream >
@@ -99,12 +99,14 @@
             template< typename T, class OutputStream >
             inline OutputStream &                write( OutputStream & os, const T & value ) const
             {
-                typedef BOOST_DEDUCED_TYPENAME select
-                        <
-                            is_std_string< T >, detail::string_object,
-                            mpl::true_,         detail::simple_object
-                        >::type writer;
-                return ( writer::write( os, value ) );
+                return
+                ( 
+                   BOOST_DEDUCED_TYPENAME select // BCB fix
+                   <
+                      is_std_string< T >, detail::string_object,
+                      mpl::true_,         detail::simple_object
+                   >::type::write( os, value )
+                );
             }
          public:
             inline           basic_object()
