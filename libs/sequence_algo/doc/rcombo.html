@@ -73,7 +73,7 @@ comparison operation provided at the call.
 Like the STL's permutation algorithms, input to these functions should be
 in lexicographical order (based on the less than operator) on the first call.
 <P>
-The input must define a strick weak ordering <A href="#Musser">[3]</A>.
+The input must define a strict weak ordering <A href="#Musser">[3]</A>.
 <P>
 <STRONG><A name="next_r_permutation">next_r_permutation</A></STRONG> - arranges
 the elements in [first, r), from the larger range [first, last) where first
@@ -125,7 +125,7 @@ in lexicographical order. The elements in [first, last) must be in ascending
 lexicographical order. When the function is called and a next combination
 exists, it arranges the next r-combination in [first, r) and returns true.
 If the next combination does not exist, the function sorts the entire range,
-[first, last) into ascending order, restarting the sequence, and returns
+[first, last) into ascending order, thus restarting the sequence, and returns
 false.
 <PRE>
 template&lt;class RandomAccessIterator&gt;
@@ -146,7 +146,7 @@ elements in lexicographical order. The elements in [first, last) must be
 in ascending lexicographical order. When the function is called and a prior
 combination exists, it arranges the previous r-combination in [first, r)
 and returns true. If the prior combination does not exist, the function arranges
-the sequence [first, last) into the last r-combination,thus restarting the
+the sequence [first, last) into the last r-combination, thus restarting the
 sequence at the end, and returns false.
 <PRE>
 template&lt;class RandomAccessIterator&gt;
@@ -163,16 +163,16 @@ prev_r_combination(RandomAccessIterator first, RandomAccessIterator r,
   -- Support Functions --
 </H4>
 <P>
-<STRONG>in_order</STRONG> - returns true if [first, last) is in sorted order,
+<STRONG>is_sorted</STRONG> - returns true if [first, last) is in sorted order,
 based on the less than operator or the compare operator.
 <PRE>
 template&lt;class ForwardIterator&gt;
 bool
-in_order(ForwardIterator first, ForwardIterator last)
+is_sorted(ForwardIterator first, ForwardIterator last)
 
 template&lt;class ForwardIterator, class Compare&gt;
 bool
-in_order(ForwardIterator first, ForwardIterator last, Compare comp)
+is_sorted(ForwardIterator first, ForwardIterator last, Compare comp)
 </PRE>
 <P>
 <STRONG>smallest_greater</STRONG> - returns an iterator pointing to the smallest
