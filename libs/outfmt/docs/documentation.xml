@@ -185,7 +185,7 @@
             </tr>
          </table>
       </paragraph>
-   </d:section><d:section title = "Output Manipulators" id = "iomanip.iomanip">
+   </d:section><d:section title = "Input/Output Manipulators" id = "iomanip.iomanip">
       <d:section title = "Sequence Formatters" id = "iomanip.seqfmt">
          <paragraph><table cellpadding = "0">
             <tr><td>include:  </td><td><link href = "../../../boost/outfmt/formatlist.hpp">boost/outfmt/formatlist.hpp</link></td></tr>
@@ -212,7 +212,7 @@
                </c:code>
             </example><paragraph>
                The manipulator conforms to the format object generator guidelines in
-               section <d:ref section = "fo.generator"/>.
+               section <d:ref section = "fogen.requirements"/>.
             </paragraph>
          </d:section><d:section title = "boost::io::format" id = "iomanip.format">
             <c:code indent = "true">
@@ -221,10 +221,9 @@
                   <c:line>Container &amp; c</c:line>
                </c:block>
             </c:code><paragraph>
-               This is a variant of the boost::io::formatlist manipulator that
-               takes a sequential container as its argument. It outputs the range
-               [begin(), end()), and requires that the elements in the sequence
-               have <d:ref section = "def.output">Output Facilities</d:ref>.
+               This manipulator takes a sequential container as its argument. It
+               outputs the range [begin(), end()), and requires that the elements
+               in the sequence have <d:ref section = "def.output">Output Facilities</d:ref>.
             </paragraph><example>
                <c:code indent = "true">
                   <c:line>std::vector&lt; int &gt; v;</c:line>
@@ -235,7 +234,7 @@
                </c:code>
             </example><paragraph>
                The manipulator conforms to the format object generator guidelines
-               in section <d:ref section = "fo.generator"/>.
+               in section <d:ref section = "fogen.requirements"/>.
             </paragraph>
          </d:section><d:section title = "boost::io::formatrange" id = "iomanip.formatrange">
             <c:code indent = "true">
@@ -244,10 +243,9 @@
                   <c:line>std::pair&lt; ForwardIterator, ForwardIterator &gt; &amp; ip</c:line>
                </c:block>
             </c:code><paragraph>
-               This is a variant of the boost::io::formatlist manipulator that
-               takes an iterator range as its argument in the form of a pair of
-               iterators. It outputs the range [ip.first, ip.second), and requires
-               that the elements in the sequence have
+               This manipulator takes an iterator range as its argument in the form
+               of a pair of iterators. It outputs the range [ip.first, ip.second),
+               and requires that the elements in the sequence have
                <d:ref section = "def.output">Output Facilities</d:ref>.
             </paragraph><example>
                <c:code indent = "true">
@@ -260,7 +258,7 @@
                </c:code>
             </example><paragraph>
                The manipulator conforms to the format object generator guidelines
-               in section <d:ref section = "fo.generator"/>.
+               in section <d:ref section = "fogen.requirements"/>.
             </paragraph>
          </d:section>
       </d:section><d:section title = "boost::io::formatob" id = "iomanip.formatob">
@@ -276,7 +274,8 @@
                </c:block>
             </c:code><paragraph>
                The manipulator conforms to the format object generator guidelines
-               in section <d:ref section = "fo.generator"/>.
+               in section <d:ref section = "fogen.requirements"/>. It supports input
+               and output semantics.
             </paragraph>
          </d:section><d:section title = "Automatic Type Deduction" id = "formatob.deduction">
             <paragraph><table cellpadding = "0">
@@ -291,10 +290,10 @@
             <paragraph>
                The library is capable of deducing the type being output, including
                complex nested types. The library uses this type information to
-               produce an outputter that can format that type.
+               produce a format object that can format that type.
             </paragraph><note>
                Type deduction is not present on <code>boost::io::formatob</code> when
-               an outputter is specified, since the format structure is provided by
+               a format object is specified, since the format structure is provided by
                the user.
             </note>
          </d:section>
@@ -592,103 +591,63 @@
             </d:section>
          </d:section>
       </d:section>
-   </d:section><d:section title = "Format Objects: Outputters" id = "fo.outputters">
+   </d:section><d:section title = "Format Objects" id = "fo.fo">
       <d:section title = "Requirements" id = "fo.requirements">
-         <d:section title = "Format Objects" id = "fo.fmtobj">
-            <d:section title = "Function Object" id = "fo.functor">
-               <paragraph>
-                  An outputter is required to have function object semantics by defining:
-               </paragraph>
+         <d:section title = "Output Facilities" id = "fo.functor">
+            <paragraph>
+               A format object is required to have function object semantics if
+               it supports output of a type to a stream by defining:
+            </paragraph>
 
-               <c:code indent = "true">
-                  <c:line>template&lt; typename T, class OutputStream &gt;</c:line>
-                  <c:line>inline OutputStream &amp; operator()( OutputStream &amp; os, const T &amp; value ) const</c:line>
-                  <c:block open = "(" close = ");">
-                     <c:comment>...</c:comment>
-                     <c:line>return( os );</c:line>
-                  </c:block>
-               </c:code>
+            <c:code indent = "true">
+               <c:line>template&lt; typename T, class OutputStream &gt;</c:line>
+               <c:line>inline OutputStream &amp; operator()( OutputStream &amp; os, const T &amp; value ) const</c:line>
+               <c:block open = "(" close = ");">
+                  <c:comment>...</c:comment>
+                  <c:line>return( os );</c:line>
+               </c:block>
+            </c:code>
 
-               <paragraph>
-                  T is the type being outputted using this outputter.
-               </paragraph><note>
-                  The type T here is a standin for the actual type being used. For
-                  example, the outputter can be implemented to accept
-                  <code>std::complex&lt; T &gt;</code>, allowing complex types to be
-                  formatted.
-               </note><paragraph>
-                  OutputStream is the stream type. This is not
-                  <code>std::basic_ostream&lt; CharT, Traits &gt;</code> here to
-                  simplify the implementation of the operator (it is easier to type!).
-                  If you want to use <code>std::basic_ostream&lt; CharT, Traits &gt;</code>
-                  instead, you can.
-               </paragraph><paragraph>
-                  The operator is const because the outputter is not modified. For
-                  state-based formatting that requires modification of the data,
-                  like position information, there is a special outputter. See
-                  <code>libs/outfmt/examples/john-torjo.cpp</code> for an example of this.
-               </paragraph>
-            </d:section><d:section title = "Formatting" id = "fo.formatting">
-               <paragraph>
-                  In order to be chained (when forming complex outputters for nested types),
-                  the outputter must define the type <code>format_type</code> to be the string
-                  or character type to be used for markers.
-               </paragraph><paragraph>
-                  In order to allow the user to customise the markers, an outputter should
-                  inherit from a formatter. See section <d:ref section = "fmt.fmt"/> for more
-                  information on formatters.
-                  <note>
-                     Formatters define the type <code>format_type</code>.
-                  </note>
-               </paragraph>
-            </d:section>
-         </d:section><d:section title = "Format Object Generators" id = "fo.generator">
-            <d:section title = "Requirements" id = "fogen.requirements">
-               <d:section title = "name" id = "fogen.name">
-                  <paragraph>
-                     This is the default format object generator. It uses the
-                     <code>char *</code> format type, and the default sub-element
-                     outputter used by the outputter.
-                  </paragraph>
-               </d:section><d:section title = "name-ex" id = "fogen.nameex">
-                  <paragraph>
-                     This generator allows the format type to be specified via function
-                     template syntax:
-                     <c:code indent = "true">
-                        <c:line>nameex&lt; type &gt;( ... )</c:line>
-                     </c:code>
-                  </paragraph><example>
-                     <c:code indent = "true">
-                        <c:line>std::string s = "Hello IO World!";</c:line>
-                        <c:line>std::cout &lt;&lt; boost::io::formatlistex&lt; char &gt;( s );</c:line>
-                     </c:code>
-                  </example><paragraph>
-                     It uses the default sub-element outputter used by the outputter.
-                  </paragraph>
-               </d:section><d:section title = "name-out" id = "fogen.nameout">
-                  <paragraph>
-                     This generator allows you to specify the sub-element outputter used
-                     by the outputter, allowing you to nest formatting for complex types.
-                     It will inherit the format type of the sub-element outputter.
-                  </paragraph><paragraph>
-                     The generator takes an additional parameter: an outputter object.
-                  </paragraph>
-               </d:section>
-            </d:section>
+            <paragraph>
+               T is the type being outputted using this format object.
+            </paragraph><note>
+               The type T here is a standin for the actual type being used. For
+               example, the format object can be implemented to accept
+               <code>std::complex&lt; T &gt;</code>, allowing complex types to be
+               formatted.
+            </note><paragraph>
+               OutputStream is the stream type. This is not
+               <code>std::basic_ostream&lt; CharT, Traits &gt;</code> here to
+               simplify the implementation of the operator (it is easier to type!).
+               If you want to use <code>std::basic_ostream&lt; CharT, Traits &gt;</code>
+               instead, you can, but this is not advised for compatibility with
+               older libraries that do not support <code>std::basic_string</code>.
+            </paragraph><paragraph>
+               The operator is const because the format object is not modified. For
+               state-based formatting that requires modification of the data,
+               like position information, there is a special format object. See
+               <code>libs/outfmt/examples/john-torjo.cpp</code> for an example of this.
+            </paragraph>
+         </d:section><d:section title = "Formatting" id = "fo.formatting">
+            <paragraph>
+               In order to be chained (when forming complex format objects for nested types),
+               the format object must define the type <code>format_type</code> to be the
+               string or character type to be used for markers.
+            </paragraph><paragraph>
+               In order to allow the user to customise the markers, a format object should
+               inherit from a formatter. See section <d:ref section = "fmt.fmt"/> for more
+               information on formatters.
+               <note>
+                  Formatters define the type <code>format_type</code>.
+               </note>
+            </paragraph>
          </d:section>
-      </d:section><d:section title = "Simple Type Outputters" id = "fo.simple">
+      </d:section><d:section title = "Simple Types" id = "fo.simple">
          <d:section title = "boost::io::basic_output" id = "fo.basic">
             <paragraph>
-               <code>boost::io::basic_output</code> is used as a generic outputter,
+               <code>boost::io::basic_output</code> is used as a generic format object,
                providing no specific formatting.
             </paragraph>
-            <d:section title = "boost::io::basicfmt" id = "fogen.basic">
-               <paragraph>
-                  This generator function creates a <code>boost::io::basic_output</code>
-                  object. It does not meets the requirements specified in section
-                  <d:ref section = "fo.generator"/>: it does not have any variants.
-               </paragraph>
-            </d:section>
          </d:section><d:section title = "boost::io::wrapped_output" id = "fo.wrapped">
             <paragraph>
                <code>boost::io::wrapped_output</code> inherits its formatting from
@@ -696,14 +655,8 @@
                formatting to be added around a type. This would be useful for things
                like outputting a complex type as XML data.
             </paragraph>
-            <d:section title = "boost::io::wrappedfmt" id = "fogen.wrapped">
-               <paragraph>
-                  This generator function creates a <code>boost::io::wrapped_output</code>
-                  object. It meets the requirements specified in section <d:ref section = "fo.generator"/>.
-               </paragraph>
-            </d:section>
          </d:section>
-      </d:section><d:section title = "N-ary Type Outputters" id = "fo.nary">
+      </d:section><d:section title = "N-ary Types" id = "fo.nary">
          <d:section title = "boost::io::pair_output" id = "fo.pair">
             <paragraph><table cellpadding = "0">
                <tr>
@@ -721,35 +674,6 @@
                <code>boost::numeric::interval</code>, <code>boost::rational</code>
                and <code>boost::compressed_pair</code> types.
             </paragraph>
-            <d:section title = "boost::io::pairfmt" id = "fogen.pair">
-               <paragraph>
-                  This generator function creates a <code>boost::io::pair_output</code>
-                  object. It meets the requirements specified in section <d:ref section = "fo.generator"/>.
-               </paragraph>
-
-               <c:code indent = "true">
-                  <c:line>boost::io::pairfmt</c:line>
-                  <c:block open = "(" close = ");">
-                     <c:line>const Outputter &amp; out</c:line>
-                  </c:block>
-               </c:code>
-               <paragraph>
-                  In this case, both types are outputted using the same outputter.
-               </paragraph>
-
-               <c:code indent = "true">
-                  <c:line>boost::io::pairfmt</c:line>
-                  <c:block open = "(" close = ");">
-                     <c:line>const Outputter1 &amp; out1,</c:line>
-                     <c:line>const Outputter2 &amp; out2</c:line>
-                  </c:block>
-               </c:code>
-
-               <paragraph>
-                  In this case, each type is outputted using its own outputter,
-                  allowing specialist formatting for each type.
-               </paragraph>
-            </d:section>
          </d:section><d:section title = "boost::io::static_nary_output" id = "fo.static_nary">
             <paragraph><table cellpadding = "0">
                <tr>
@@ -764,14 +688,8 @@
                <code>boost::math::quaternion</code> and
                <code>boost::math::octonion</code> types.
             </paragraph>
-            <d:section title = "boost::io::naryfmt" id = "fogen.static_nary">
-               <paragraph>
-                  This generator function creates a <code>boost::io::static_nary_output</code>
-                  object. It meets the requirements specified in section <d:ref section = "fo.generator"/>.
-               </paragraph>
-            </d:section>
          </d:section>
-      </d:section><d:section title = "Sequence Outputters" id = "fo.sequence">
+      </d:section><d:section title = "Sequences" id = "fo.sequence">
          <d:section title = "boost::io::detail::list_output" id = "fo.list_output">
             <paragraph>
                <code>boost::io::detail::list_output</code> is a helper class,
@@ -823,28 +741,6 @@
             <paragraph>
                Specify the range [off, off + len) to be outputted.
             </paragraph>
-            <d:section title = "boost::io::arrayfmt" id = "fogen.array">
-               <paragraph>
-                  This generator function creates a <code>boost::io::array_output</code>
-                  object. It meets the requirements specified in section <d:ref section = "fo.generator"/>.
-                  Each form has three sub-variants:
-               </paragraph>
-
-               <c:code indent = "true"><c:line>boost::io::arrayfmt( long off, long len )</c:line></c:code>
-               <paragraph>
-                  Construct an array formatter for the range [off, off + len).
-               </paragraph>
-
-               <c:code indent = "true"><c:line>boost::io::arrayfmt( long len )</c:line></c:code>
-               <paragraph>
-                  Construct an array formatter for the range [0, len).
-               </paragraph>
-
-               <c:code indent = "true"><c:line>boost::io::arrayfmt()</c:line></c:code>
-               <paragraph>
-                  Constructs an array formatter, no range specified.
-               </paragraph>
-            </d:section>
          </d:section><d:section title = "boost::io::container_output" id = "fo.container">
             <paragraph><table cellpadding = "0">
                <tr>
@@ -858,12 +754,6 @@
                from <code>boost::io::detail::list_output</code>, supporting the
                output of containers as defined in section <d:ref section = "def.container"/>.
             </paragraph>
-            <d:section title = "boost::io::containerfmt" id = "fogen.container">
-               <paragraph>
-                  This generator function creates a <code>boost::io::container_output</code>
-                  object. It meets the requirements specified in section <d:ref section = "fo.generator"/>.
-               </paragraph>
-            </d:section>
          </d:section><d:section title = "boost::io::range_output" id = "fo.range">
             <paragraph>
                <code>boost::io::range_output</code> inherits its functionality
@@ -874,19 +764,8 @@
                This is different from <code>boost::io::pair_output</code>, that outputs
                the elements in the pair as the first and last elements in a list.
             </note>
-            <d:section title = "boost::io::rangefmt" id = "fogen.range">
-               <paragraph>
-                  This generator function creates a <code>boost::io::range_output</code>
-                  object. It meets the requirements specified in section
-                  <d:ref section = "fo.generator"/>.
-               </paragraph>
-            </d:section><d:section title = "boost::io::range" id = "range.range">
-               <paragraph>
-                  [todo]
-               </paragraph>
-            </d:section>
          </d:section>
-      </d:section><d:section title = "Output Manipulators" id = "fo.iomanip">
+      </d:section><d:section title = "Input/Output Manipulators" id = "fo.iomanip">
          <d:section title = "boost::io::formatlist_t" id = "fo.fmtlist">
             <paragraph>
                <code>boost::io::formatlist_t</code> is the class that is used to implement
@@ -899,10 +778,11 @@
                <code>boost::io::formatob_t</code> is the class that is used to implement
                the <code>boost::io::formatob</code> manipulators. It is a hybrid between
                a format object and a manipulator, that inherits it's output capabilities
-               from another outputter. See section <d:ref section = "iomanip.formatob"/> for more details.
+               from another format object. See section <d:ref section = "iomanip.formatob"/>
+               for more details.
             </paragraph>
          </d:section>
-      </d:section><d:section title = "State Outputters" id = "fo.stateio">
+      </d:section><d:section title = "State Information" id = "fo.stateio">
          <paragraph><table cellpadding = "0">
             <tr>
                <td rowspan = "2" valign = "top">examples: </td>
@@ -931,38 +811,210 @@
                <paragraph>
                   A state object should only output state information to the stream.
                </paragraph>
-            </d:section><d:section title = "boost::io::statefmt" id = "fogen.state">
-               <paragraph>
-                  This generator function creates a <code>boost::io::state_output</code>
-                  object. It meets the requirements specified in section
-                  <d:ref section = "fo.generator"/>, but has slightly different semantics.
-               </paragraph>
-
-               <c:code indent = "true">
-                  <c:line>statefmt&lt; StateObject, bool pre &gt;()</c:line>
-               </c:code>
-               <paragraph>
-                  This version takes a state object and specifies whether the state object
-                  is outputted before (<code>pre = true</code>) or after
-                  (<code>pre = false</code>) the outputter hosted by
-                  <code>boost::io::state_output</code>.
-               </paragraph>
-
-               <c:code indent = "true">
-                  <c:line>statefmtex&lt; FormatType, StateObject, bool pre &gt;()</c:line>
-               </c:code>
-               <paragraph>
-                  This version allows the user to specify the format type used by the
-                  outputters.
-               </paragraph>
-
-               <c:code indent = "true">
-                  <c:line>statefmt&lt; StateObject, bool pre &gt;( const Outputter &amp; o )</c:line>
-               </c:code>
-               <paragraph>
-                  This version controls the outputter used to format the data type.
-               </paragraph>
             </d:section>
+         </d:section>
+      </d:section>
+   </d:section><d:section title = "Format Object Generators" id = "fogen.fogen">
+      <d:section title = "Requirements" id = "fogen.requirements">
+         <d:section title = "Default" id = "fogen.default">
+            <paragraph>
+               The default format object generator has the form:
+               <c:code indent = "true">
+                  <c:line>name()</c:line>
+               </c:code>
+               where <code>name</code> is the format object name for its generator,
+               unless otherwise noted.
+            </paragraph><paragraph>
+               It uses the <code>char *</code> format type, and the default sub-element
+               format object.
+            </paragraph>
+         </d:section><d:section title = "FormatType Specifier" id = "fogen.fmtspec">
+            <paragraph>
+               This format object generator has the form:
+               <c:code indent = "true">
+                  <c:line>nameex&lt; FormatType &gt;()</c:line>
+               </c:code>
+               where <code>name</code> is the format object name for its generator,
+               unless otherwise noted.
+            </paragraph><paragraph>
+               It uses the format type specified by <code>FormatType</code>, and the
+               default sub-element format object.
+            </paragraph>
+         </d:section><d:section title = "Format Object Specifier" id = "fogen.fospec">
+            <paragraph>
+               This format object generator has the form:
+               <c:code indent = "true">
+                  <c:line>name( const FormatObject &amp; )</c:line>
+               </c:code>
+               where <code>name</code> is the format object name for its generator,
+               unless otherwise noted.
+            </paragraph><paragraph>
+               It uses the format type specified by <code>FormatObject::format_type</code>,
+               and uses <code>FormatObject</code> to format its sub-elements.
+            </paragraph>
+         </d:section>
+      </d:section><d:section title = "Simple Types" id = "fogen.simple">
+         <d:section title = "boost::io::basicfmt" id = "fogen.basic">
+            <paragraph>
+               This generator function creates a <code>boost::io::basic_output</code>
+               object. It does not meets the requirements specified in section
+               <d:ref section = "fogen.requirements"/>: it does not have any variants.
+            </paragraph>
+         </d:section><d:section title = "boost::io::wrappedfmt" id = "fogen.wrapped">
+            <paragraph>
+               This generator function creates a <code>boost::io::wrapped_output</code>
+               object. It meets the requirements specified in section
+               <d:ref section = "fogen.requirements"/>.
+            </paragraph>
+         </d:section>
+      </d:section><d:section title = "N-ary Types" id = "fogen.nary">
+         <d:section title = "boost::io::pairfmt" id = "fogen.pair">
+            <paragraph><table cellpadding = "0">
+               <tr>
+                  <td rowspan = "2" valign = "top">examples: </td>
+                  <td><link href = "../examples/pair_output.cpp">libs/outfmt/examples/pair_output.cpp</link></td>
+               </tr><tr>
+                  <td><link href = "../examples/boost_output.cpp">libs/outfmt/examples/boost_output.cpp</link></td>
+               </tr>
+            </table></paragraph>
+
+            <paragraph>
+               This generator function creates a <code>boost::io::pair_output</code>
+               object. It meets the requirements specified in section
+               <d:ref section = "fogen.requirements"/>.
+            </paragraph>
+
+            <c:code indent = "true">
+               <c:line>boost::io::pairfmt</c:line>
+               <c:block open = "(" close = ");">
+                  <c:line>const Outputter &amp; out</c:line>
+               </c:block>
+            </c:code>
+            <paragraph>
+               In this case, both types are outputted using the same format object.
+            </paragraph>
+
+            <c:code indent = "true">
+               <c:line>boost::io::pairfmt</c:line>
+               <c:block open = "(" close = ");">
+                  <c:line>const Outputter1 &amp; out1,</c:line>
+                  <c:line>const Outputter2 &amp; out2</c:line>
+               </c:block>
+            </c:code>
+
+            <paragraph>
+               In this case, each type is outputted using its own format object,
+               allowing specialist formatting for each type.
+            </paragraph>
+         </d:section><d:section title = "boost::io::naryfmt" id = "fogen.static_nary">
+            <paragraph><table cellpadding = "0">
+               <tr>
+                  <td>examples: </td>
+                  <td><link href = "../examples/boost_output.cpp">libs/outfmt/examples/boost_output.cpp</link></td>
+               </tr>
+            </table></paragraph>
+
+            <paragraph>
+               This generator function creates a <code>boost::io::static_nary_output</code>
+               object. It meets the requirements specified in section
+               <d:ref section = "fogen.requirements"/>.
+            </paragraph>
+         </d:section>
+      </d:section><d:section title = "Sequences" id = "fogen.sequence">
+         <d:section title = "boost::io::arrayfmt" id = "fogen.array">
+            <paragraph><table cellpadding = "0">
+               <tr>
+                  <td rowspan = "2" valign = "top">examples: </td>
+                  <td><link href = "../examples/output-2D.cpp">libs/outfmt/examples/output-2D.cpp</link></td>
+               </tr><tr>
+                  <td><link href = "../examples/output-3D.cpp">libs/outfmt/examples/output-3D.cpp</link></td>
+               </tr>
+            </table></paragraph>
+
+            <paragraph>
+               This generator function creates a <code>boost::io::array_output</code>
+               object. It meets the requirements specified in section
+               <d:ref section = "fogen.requirements"/>. Each form has three sub-variants:
+            </paragraph>
+
+            <c:code indent = "true"><c:line>boost::io::arrayfmt( long off, long len )</c:line></c:code>
+            <paragraph>
+               Construct an array formatter for the range [off, off + len).
+            </paragraph>
+
+            <c:code indent = "true"><c:line>boost::io::arrayfmt( long len )</c:line></c:code>
+            <paragraph>
+               Construct an array formatter for the range [0, len).
+            </paragraph>
+
+            <c:code indent = "true"><c:line>boost::io::arrayfmt()</c:line></c:code>
+            <paragraph>
+               Constructs an array formatter, no range specified.
+            </paragraph>
+
+            <note>
+               The variants that specify a format object have <code>out</code> at the end
+               of their names.
+            </note>
+         </d:section><d:section title = "boost::io::containerfmt" id = "fogen.container">
+            <paragraph><table cellpadding = "0">
+               <tr>
+                  <td rowspan = "2" valign = "top">examples: </td>
+                  <td><link href = "../examples/output-2D.cpp">libs/outfmt/examples/output-2D.cpp</link></td>
+               </tr>
+            </table></paragraph>
+
+            <paragraph>
+               This generator function creates a <code>boost::io::container_output</code>
+               object. It meets the requirements specified in section
+               <d:ref section = "fogen.requirements"/>.
+            </paragraph>
+         </d:section><d:section title = "boost::io::rangefmt" id = "fogen.range">
+            <paragraph>
+               This generator function creates a <code>boost::io::range_output</code>
+               object. It meets the requirements specified in section
+               <d:ref section = "fogen.requirements"/>.
+            </paragraph>
+         </d:section>
+      </d:section><d:section title = "State Information" id = "fogen.stateio">
+         <paragraph><table cellpadding = "0">
+            <tr>
+               <td rowspan = "2" valign = "top">examples: </td>
+               <td><link href = "../examples/john-torjo.cpp">libs/outfmt/examples/john-torjo.cpp</link></td>
+            </tr>
+         </table></paragraph>
+
+         <d:section title = "boost::io::statefmt" id = "fogen.state">
+            <paragraph>
+               This generator function creates a <code>boost::io::state_output</code>
+               object. It meets the requirements specified in section
+               <d:ref section = "fo.generator"/>, but has slightly different semantics.
+            </paragraph>
+
+            <c:code indent = "true">
+               <c:line>statefmt&lt; StateObject, bool pre &gt;()</c:line>
+            </c:code>
+            <paragraph>
+               This version takes a state object and specifies whether the state object
+               is outputted before (<code>pre = true</code>) or after
+               (<code>pre = false</code>) the format object hosted by
+               <code>boost::io::state_output</code>.
+            </paragraph>
+
+            <c:code indent = "true">
+               <c:line>statefmtex&lt; FormatType, StateObject, bool pre &gt;()</c:line>
+            </c:code>
+            <paragraph>
+               This version allows the user to specify the format type used by the
+               format objects.
+            </paragraph>
+
+            <c:code indent = "true">
+               <c:line>statefmt&lt; StateObject, bool pre &gt;( const Outputter &amp; o )</c:line>
+            </c:code>
+            <paragraph>
+               This version controls the format object used to format the data type.
+            </paragraph>
          </d:section>
       </d:section>
    </d:section><d:section title = "Future Directions" id = "future.future">
@@ -995,13 +1047,7 @@
          </paragraph>
       </d:section><d:section title = "Input/Serialization" id = "future.serialize">
          <paragraph>
-            Add support for serialization and reading in from an input stream.
-            <note>
-               Add an input stream function to the outputters (name change?) to support reading
-               in the type. Create a composite structure, like with output (type deduction?!)
-               and support input (listreader; objectreader)? Use formatter to specify formatting
-               configuration. Helpers: read_formatting(open())?
-            </note>
+            Complete support for serialization and reading in from an input stream.
          </paragraph>
       </d:section>
    </d:section><d:section title = "Acknowledgements" id = "ack.ack">
@@ -1017,17 +1063,18 @@
                For giving me a reason to create the library in the first place!
             </li><li title = "Paul A. Bristow">
                For his comments and suggestions, especially getting me to think about supporting
-               nD constructs :-). Also, for the MSCV 7.1 tests.
+               nD constructs :-). 
             </li><li title = "Terje Sletteb&#xF8;">
                For his feedback on standard/boost issues in my code.
             </li><li title = "Gennadiy Rozental">
                For issues relating to the documentation.
             </li><li title = "John Torjo">
-               For feedback, ideas and comments, especially for getting me to consider outputter
-               deduction :-).
+               For feedback, ideas and comments, especially for getting me to consider format
+               object deduction :-).
             </li><li title = "Jonathan Turkanis">
-               For his excellent work on revamping the outputter/type deduction system, help
-               porting the library to broken compilers (VC6), Intel 7.1 support and much more!
+               For his excellent work on revamping the format object/type deduction system,
+               help porting the library to broken compilers (VC6), Intel 7.1 support and
+               much more!
             </li><li title = "Pavel Vozenilek">
                For feedback and comments about my library and the documentation.
             </li>
