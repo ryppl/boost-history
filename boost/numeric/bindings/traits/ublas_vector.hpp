@@ -242,4 +242,6 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
 
 }}}}  
 
+#endif // BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
+
 #endif // BOOST_NUMERIC_BINDINGS_TRAITS_UBLAS_VECTOR_H

@@ -22,6 +22,10 @@
 // Roldan Pozo's TNT (Template Numerical Toolkit)
 // see: http://math.nist.gov/tnt/index.html
 
+#include <boost/numeric/bindings/traits/config.hpp> 
+
+#ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
+
 #include <boost/numeric/bindings/traits/traits.hpp>
 #include <tnt/tnt_array1d.h>
 #include <tnt/tnt_fortran_array1d.h>
@@ -141,4 +145,10 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
 
 }}}}  
 
-#endif 
+#else // BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
+
+#error with your compiler TNT cannot be used in bindings
+
+#endif // BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
+
+#endif // BOOST_NUMERIC_BINDINGS_TRAITS_TNT_H

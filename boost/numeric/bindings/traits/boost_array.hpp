@@ -19,7 +19,17 @@
 #ifndef BOOST_NUMERIC_BINDINGS_TRAITS_BOOST_ARRAY_H
 #define BOOST_NUMERIC_BINDINGS_TRAITS_BOOST_ARRAY_H
 
+#include <boost/numeric/bindings/traits/config.hpp> 
+
+#ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
+
 #include <boost/numeric/bindings/traits/vector_traits.hpp>
 #include <boost/array.hpp>
+
+#else
+
+#error with your compiler boost::array<> cannot be used in bindings
+
+#endif 
 
 #endif 

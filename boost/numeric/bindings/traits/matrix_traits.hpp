@@ -19,6 +19,10 @@
 #ifndef BOOST_NUMERIC_BINDINGS_TRAITS_MATRIX_TRAITS_HPP
 #define BOOST_NUMERIC_BINDINGS_TRAITS_MATRIX_TRAITS_HPP
 
+#include <boost/numeric/bindings/traits/config.hpp> 
+
+#ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
+
 namespace boost { namespace numeric { namespace bindings { namespace traits {
 
   /// matrix_traits<> generic version: 
@@ -118,5 +122,11 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
   }
   
 }}}}  
+
+#else // BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
+
+#include <boost/numeric/bindings/traits/matrix_raw.hpp> 
+
+#endif // BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
 
 #endif // BOOST_NUMERIC_BINDINGS_TRAITS_MATRIX_TRAITS_HPP

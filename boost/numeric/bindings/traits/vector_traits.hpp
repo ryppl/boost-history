@@ -19,6 +19,10 @@
 
 #include <boost/numeric/bindings/traits/config.hpp>
 
+#include <boost/numeric/bindings/traits/config.hpp> 
+
+#ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
+
 namespace boost { namespace numeric { namespace bindings { namespace traits {
 
   /// default_vector_traits is just a base-class that can be
@@ -45,7 +49,7 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
 #ifndef BOOST_NO_CV_TEMPLATE_TEMPLATES
 
   /// Specialisation for const vectors, mainly because
-  /// of the effect on the pointer_type
+  /// of the effect on the pointer type
   template <typename V, typename T>
   struct default_vector_traits<V const, T> {
     typedef T value_type; 
@@ -87,5 +91,11 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
   }
 
 }}}}
+
+#else // BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
+
+#include <boost/numeric/bindings/traits/vector_raw.hpp> 
+
+#endif // BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
 
 #endif // BOOST_NUMERIC_BINDINGS_TRAITS_VECTOR_TRAITS_HPP

@@ -189,8 +189,11 @@ namespace boost { namespace numeric { namespace bindings {
 
       if (i.valid()) {
         info = -102; 
-        // VC 6 ?? 
+#ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
         typedef typename traits::matrix_traits<SymmA>::value_type val_t; 
+#else 
+        typedef typename SymmA::value_type val_t; 
+#endif 
         // std::vector<val_t> w (1); 
         traits::detail::array<val_t> w (1); 
         int lw = -1; 
@@ -226,8 +229,11 @@ namespace boost { namespace numeric { namespace bindings {
 
       if (i.valid()) {
         info = -102; 
-        // VC 6 ?? 
+#ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
         typedef typename traits::matrix_traits<SymmA>::value_type val_t; 
+#else 
+        typedef typename SymmA::value_type val_t; 
+#endif 
         // std::vector<val_t> w (1); 
         traits::detail::array<val_t> w (1); 
         int lw = -1; 
@@ -358,8 +364,11 @@ namespace boost { namespace numeric { namespace bindings {
 #endif
 
       int info = -101; 
-      // VC 6 ?? 
+#ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
       typedef typename traits::matrix_traits<SymmA>::value_type val_t; 
+#else 
+      typedef typename SymmA::value_type val_t; 
+#endif 
       // std::vector<val_t> w (1); 
       traits::detail::array<val_t> w (1); 
       int lw = -1; 
@@ -386,8 +395,11 @@ namespace boost { namespace numeric { namespace bindings {
       char uplo = traits::matrix_uplo_tag (a);
 
       int info = -101; 
-      // VC 6 ?? 
+#ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
       typedef typename traits::matrix_traits<SymmA>::value_type val_t; 
+#else 
+      typedef typename SymmA::value_type val_t; 
+#endif 
       // std::vector<val_t> w (1); 
       traits::detail::array<val_t> w (1); 
       int lw = -1; 
@@ -401,7 +413,7 @@ namespace boost { namespace numeric { namespace bindings {
 
     template <typename SymmA>
     inline
-    int sytrf_query (char const ul, SymmA& a) {
+    int sytrf_query (char const ul, SymmA const& a) {
 
       assert (ul == 'U' || ul == 'L'); 
 
@@ -414,17 +426,20 @@ namespace boost { namespace numeric { namespace bindings {
 
       // std::vector<int> i (1); 
       traits::detail::array<int> i (1); 
-      // VC 6 ?? 
+#ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
       typedef typename traits::matrix_traits<SymmA>::value_type val_t; 
+#else 
+      typedef typename SymmA::value_type val_t; 
+#endif 
       // std::vector<val_t> w (1); 
       traits::detail::array<val_t> w (1); 
-      detail::sytrf (ul, a, i, w, -1); 
+      detail::sytrf (ul, const_cast<SymmA&> (a), i, w, -1); 
       return traits::detail::to_int ((w [0])); 
     }
 
     template <typename SymmA> 
     inline
-    int sytrf_query (SymmA& a) {
+    int sytrf_query (SymmA const& a) {
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
       BOOST_STATIC_ASSERT((boost::is_same<
@@ -436,11 +451,14 @@ namespace boost { namespace numeric { namespace bindings {
       char uplo = traits::matrix_uplo_tag (a);
       // std::vector<int> i (1); 
       traits::detail::array<int> i (1); 
-      // VC 6 ?? 
+#ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
       typedef typename traits::matrix_traits<SymmA>::value_type val_t; 
+#else 
+      typedef typename SymmA::value_type val_t; 
+#endif 
       // std::vector<val_t> w (1); 
       traits::detail::array<val_t> w (1); 
-      detail::sytrf (uplo, a, i, w, -1); 
+      detail::sytrf (uplo, const_cast<SymmA&> (a), i, w, -1); 
       return traits::detail::to_int ((w [0])); 
     }
 
@@ -456,7 +474,7 @@ namespace boost { namespace numeric { namespace bindings {
 
       inline 
       void sytrs (char const uplo, int const n, int const nrhs,
-                  float* a, int const lda, int* ipiv, 
+                  float const* a, int const lda, int const* ipiv, 
                   float* b, int const ldb, int* info) 
       {
         LAPACK_SSYTRS (&uplo, &n, &nrhs, a, &lda, ipiv, b, &ldb, info);
@@ -464,7 +482,7 @@ namespace boost { namespace numeric { namespace bindings {
 
       inline 
       void sytrs (char const uplo, int const n, int const nrhs,
-                  double* a, int const lda, int* ipiv, 
+                  double const* a, int const lda, int const* ipiv, 
                   double* b, int const ldb, int* info) 
       {
         LAPACK_DSYTRS (&uplo, &n, &nrhs, a, &lda, ipiv, b, &ldb, info);
@@ -472,27 +490,29 @@ namespace boost { namespace numeric { namespace bindings {
 
       inline 
       void sytrs (char const uplo, int const n, int const nrhs,
-                  std::complex<float>* a, int const lda, int* ipiv,  
+                  std::complex<float> const* a, int const lda, 
+                  int const* ipiv,  
                   std::complex<float>* b, int const ldb, int* info) 
       {
         LAPACK_CSYTRS (&uplo, &n, &nrhs, 
-                      reinterpret_cast<fcomplex_t*> (a), &lda, ipiv, 
+                      reinterpret_cast<fcomplex_t const*> (a), &lda, ipiv, 
                       reinterpret_cast<fcomplex_t*> (b), &ldb, info);
       }
 
       inline 
       void sytrs (char const uplo, int const n, int const nrhs,
-                  std::complex<double>* a, int const lda, int* ipiv, 
+                  std::complex<double> const* a, int const lda, 
+                  int const* ipiv, 
                   std::complex<double>* b, int const ldb, int* info) 
       {
         LAPACK_ZSYTRS (&uplo, &n, &nrhs, 
-                       reinterpret_cast<dcomplex_t*> (a), &lda, ipiv, 
+                       reinterpret_cast<dcomplex_t const*> (a), &lda, ipiv, 
                        reinterpret_cast<dcomplex_t*> (b), &ldb, info);
       }
 
       template <typename SymmA, typename MatrB, typename IVec>
       inline
-      int sytrs (char const ul, SymmA& a, IVec& i, MatrB& b) {
+      int sytrs (char const ul, SymmA const& a, IVec const& i, MatrB& b) {
 
         int const n = traits::matrix_size1 (a);
         assert (n == traits::matrix_size2 (a)); 
@@ -501,9 +521,17 @@ namespace boost { namespace numeric { namespace bindings {
 
         int info; 
         sytrs (ul, n, traits::matrix_size2 (b), 
+#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
                traits::matrix_storage (a), 
+#else
+               traits::matrix_storage_const (a), 
+#endif 
                traits::leading_dimension (a),
+#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
                traits::vector_storage (i),  
+#else
+               traits::vector_storage_const (i),  
+#endif
                traits::matrix_storage (b),
                traits::leading_dimension (b), &info);
         return info; 
@@ -513,7 +541,7 @@ namespace boost { namespace numeric { namespace bindings {
 
     template <typename SymmA, typename MatrB, typename IVec>
     inline
-    int sytrs (char const ul, SymmA& a, IVec& i, MatrB& b) {
+    int sytrs (char const ul, SymmA const& a, IVec const& i, MatrB& b) {
 
       assert (ul == 'U' || ul == 'L'); 
 
@@ -533,7 +561,7 @@ namespace boost { namespace numeric { namespace bindings {
 
     template <typename SymmA, typename MatrB, typename IVec>
     inline
-    int sytrs (SymmA& a, IVec& i, MatrB& b) {
+    int sytrs (SymmA const& a, IVec const& i, MatrB& b) {
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
       BOOST_STATIC_ASSERT((boost::is_same<

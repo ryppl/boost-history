@@ -20,6 +20,9 @@
 #define BOOST_NUMERIC_BINDINGS_TRAITS_STD_VECTOR_H
 
 #include <boost/numeric/bindings/traits/vector_traits.hpp>
+
+#ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
+
 #include <vector>
 
 namespace boost { namespace numeric { namespace bindings { namespace traits {
@@ -52,4 +55,6 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
 
 }}}}  
 
-#endif 
+#endif // BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
+
+#endif // BOOST_NUMERIC_BINDINGS_TRAITS_STD_VECTOR_H

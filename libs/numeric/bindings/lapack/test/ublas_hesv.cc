@@ -9,6 +9,7 @@
 #include <boost/numeric/bindings/lapack/lapack.hpp>
 #include <boost/numeric/bindings/traits/ublas_matrix.hpp>
 #include <boost/numeric/bindings/traits/ublas_hermitian.hpp>
+#include <boost/numeric/bindings/traits/std_vector.hpp>
 #include "utils.h"
 
 namespace ublas = boost::numeric::ublas;

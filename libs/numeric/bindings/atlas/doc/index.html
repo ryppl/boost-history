@@ -1,0 +1,212 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="boost.css">
+<title>Boost.Numeric.Bindings.Atlas</title>
+</head>
+
+<body link="#0000ff" vlink="#800080">
+<table border="0" cellpadding="7" cellspacing="0" width="100%" summary="header">
+<tr>
+<td valign="top" width="300">
+<h3><a href="../../../index.htm"><img height="86" width="277" alt="C++ Boost" src="../../../c++boost.gif" border="0"></a></h3>
+</td>
+<td valign="top">
+<h1 align="center">Boost.Numeric.Bindings.Atlas</h1>
+</td>
+</tr>
+</table>
+<hr>
+<h2>Content</h2>
+<ol>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#using_atlas">Using the ATLAS bindings</a></li>
+<ol>
+<li><a href="#level1blas">Level 1 BLAS</a></li>
+<li><a href="#level2blas">Level 2 BLAS</a></li>
+<li><a href="#level3blas">Level 3 BLAS</a></li>
+<li><a href="#lapack">LAPACK functions</a></li>
+
+</ol>
+</ol>
+
+<hr>
+
+
+<h2><a name="introduction">1. Introduction</a></h2>
+
+``The <a href="http://math-atlas.sourceforge.net/">ATLAS</a>
+(Automatically Tuned Linear Algebra Software) project is an ongoing
+research effort focusing on applying empirical techniques in order to
+provide portable performance. At present, it provides C and Fortran77
+interfaces to a portably efficient <a href="http://www.netlib.org/blas/">BLAS</a> implementation, as well as a
+few routines from <a href="http://www.netlib.org/lapack/">LAPACK</a>.'' 
+[quote from the <a href="http://math-atlas.sourceforge.net/">ATLAS web page</a>]
+
+<p>
+``ATLAS is an approach for the automatic generation and optimization of numerical software for processors with deep memory hierarchies and pipelined functional units. The production of such software for machines ranging from desktop workstations to embedded processors can be a tedious and time consuming task. ATLAS has been designed to automate much of this process. We concentrate our efforts on the widely used linear algebra kernels called the Basic Linear Algebra Subroutines (BLAS).''
+[<a href="http://www.netlib.org/blas/faq.html">BLAS FAQ</a>: 
+<a href="http://www.netlib.org/blas/faq.html#1.5">What is ATLAS?</a>]
+
+<p>
+ATLAS Bindings Library provides generic, higher level interface to ATLAS C
+interface. By `generic' we mean that bindings can be used with
+various vector and matrix classes, and by `higher level' that some
+complexities of the C interface are hidden. For example, to compute
+the Euclidean norm of a vector, ATLAS provides four functions:
+<pre class="programlisting">
+  float cblas_snrm2 (const int N, const float *X, const int incX);
+  double cblas_dnrm2 (const int N, const double *X, const int incX);
+  float cblas_scnrm2 (const int N, const void *X, const int incX);
+  double cblas_dznrm2 (const int N, const void *X, const int incX);
+</pre>
+for <code>float</code>, <code>double</code>, <code>float</code>
+complex and <code>double</code> complex vectors. Parameters of these
+functions are the length of the vector <code>X</code>, pointer<sup>[<a name="bnd.atl.1" href="#ftn.bnd.atl.1">1</a>]</sup>
+to the first element of <code>X</code> and the so-called stride of <code>X</code>. 
+This interface is rather flexible: functions can be used not only for
+`complete' vectors, but also for vector ranges (if pointer points to
+the first element of a range) and vector slices (if pointer points to
+the first element of a slice and stride is not one); but it also leads
+to long parameter/argument lists. 
+Vectors, vector ranges and vector slices in C++, being object of
+classes, usually `carry' all required information and there is no need
+to supply them explicitly. Furthermore, overloading makes the encoding of
+vector component types in function names unnecessary. Using templates
+and <a href="../../traits/doc/index.html">traits classes</a>, 
+function can be written to manipulate various vector types: 
+<pre class="programlisting">
+  #include &lt;iostream&gt;
+  #include &lt;complex&gt;
+  #include &lt;boost/numeric/bindings/traits/std_vector.hpp&gt;
+  #include &lt;boost/numeric/bindings/traits/std_valarray.hpp&gt;
+  #include &lt;boost/numeric/bindings/traits/ublas_vector.hpp&gt;
+  #include &lt;boost/numeric/bindings/traits/ublas_matrix.hpp&gt;
+  #include &lt;boost/numeric/bindings/atlas/cblas1.hpp&gt; 
+
+  namespace ublas = boost::numeric::ublas; 
+  namespace atlas = boost::numeric::bindings::atlas;
+
+  int main() {
+    std::vector&lt;float&gt; sv (8);
+    // initialisation...
+    std::cout &lt;&lt; atlas::nrm2 (sv) &lt;&lt; std::endl; 
+
+    std::valarray&lt;std::complex&lt;double&gt; &gt; va (10); 
+    // ...
+    std::cout &lt;&lt; atlas::nrm2 (va) &lt;&lt; std::endl; 
+
+    ublas::vector&lt;double&gt; uv (18);
+    // ...
+    std::cout &lt;&lt; atlas::nrm2 (uv) &lt;&lt; std::endl; 
+    ublas::vector_range&lt;ublas::vector&lt;double&gt; &gt; ur (uv, ublas::range (3, 15));
+    std::cout &lt;&lt; atlas::nrm2 (ur) &lt;&lt; std::endl; 
+    ublas::vector_slice&lt;ublas::vector&lt;double&gt; &gt; us (uv, ublas::slice (1, 3, 5));
+    std::cout &lt;&lt; atlas::nrm2 (us) &lt;&lt; std::endl; 
+    ublas::vector_slice&lt;ublas::vector_range&lt;ublas::vector&lt;double&gt; &gt; &gt; 
+      usr (ur, ublas::slice (2, 2, 4));
+    std::cout &lt;&lt; atlas::nrm2 (usr) &lt;&lt; std::endl; 
+
+    ublas::matrix&lt;double&gt; um (5, 5); 
+    // ...
+    ublas::matrix_row&lt;ublas::matrix&lt;double&gt; &gt; umr (um, 1);
+    std::cout &lt;&lt; atlas::nrm2 (umr) &lt;&lt; std::endl; 
+    ublas::matrix_column&lt;ublas::matrix&lt;double&gt; &gt; umc (um, 2);
+    std::cout &lt;&lt; atlas::nrm2 (umc) &lt;&lt; std::endl; 
+  }
+</pre>
+
+<h2><a name="using_atlas">2. Using the ATLAS bindings</a></h2>
+
+ATLAS is an implementation of the BLAS (with C and Fortran 77
+interfaces). ``The BLAS (Basic Linear Algebra Subroutines) are high quality `building block' routines for performing basic vector and matrix operations.
+Level 1 BLAS do vector-vector operations, Level 2 BLAS do
+matrix-vector operations, and Level 3 BLAS do matrix-matrix
+operations.'' [quote from <a href="http://www.netlib.org/blas/faq.html">BLAS FAQ</a>: 
+<a href="http://www.netlib.org/blas/faq.html#1.1">What are BLAS?</a>]
+
+<p>
+ATLAS also contains some LAPACK routines for solving systems of simultaneous linear equations. 
+
+<h3><a name="level1blas">2.1 Level 1 BLAS</a></h3>
+
+Defined in <code>atlas/cblas1.hpp</code>. 
+
+<p>
+In the following table <code>x</code>, <code>y</code> are vectors,
+<code>a</code>, <code>b</code>, <code>c</code> are scalars and <code>i</code>,
+<code>k</code> integer indices. 
+
+<p>
+<table border=1>
+<tr><th>Expression<th>Semantics
+<tr><td><code>set(a,x)</code><td><code>x<sub>i</sub> &lt;- a</code>
+&nbsp; for all <code>i</code> &nbsp;&nbsp; [1]
+<tr><td><code>copy(x,y)</code><td><code>y &lt;- x</code>
+<tr><td><code>swap(x,y)</code><td><code>x &lt;-&gt; y</code>
+<tr><td><code>scal(a,x)</code><td><code>x &lt;- a x</code>
+<tr><td><code>axpy(a,x,y)</code><td><code>y &lt;- a x + y</code>
+<tr><td><code>xpy(x,y)</code><td><code>y &lt;- x + y</code> &nbsp;&nbsp; [2]
+<tr><td><code>axpby(a,x,b,y)</code><td><code>y &lt;- a x + b y</code> &nbsp;&nbsp; [1]
+<tr><td><code>dot(x,y)</code><td>returns <code>x<sup>T</sup> y</code> &nbsp;&nbsp; [3]
+<tr><td><code>dsdot(x,y)</code><td>returns <code>x<sup>T</sup> y</code> &nbsp;&nbsp; [4]
+<tr><td><code>sdsdot(x,y)</code><td>returns <code>a + x<sup>T</sup> y</code> &nbsp;&nbsp; [4]
+<tr><td><code>dotu(x,y)</code><td>returns <code>x<sup>T</sup> y</code> &nbsp;&nbsp; [5]
+<tr><td><code>dotu(x,y,c)</code><td><code>c &lt;- x<sup>T</sup> y</code> &nbsp;&nbsp; [5]
+<tr><td><code>dotc(x,y)</code><td>returns <code>x<sup>H</sup> y</code> &nbsp;&nbsp; [5]
+<tr><td><code>dotc(x,y,c)</code><td><code>c &lt;- x<sup>H</sup> y</code> &nbsp;&nbsp; [5]
+<tr><td><code>nrm2(x)</code><td>returns <code>||x||<sub>2</sub></code>
+<tr><td><code>asum(x)</code><td>returns <code>||re(x)||<sub>1</sub> + ||im(x)||<sub>1</sub></code>
+<tr><td><code>iamax(x)</code><td>returns 1st <code>k</code> such that 
+  <code>|re(x<sub>k</sub>)| + |im(x<sub>k</sub>)|
+  = max (|re(x<sub>i</sub>)| + |im(x<sub>i</sub>)|)
+  </code>
+</table>
+
+<p>
+[1] ATLAS extension (i.e. not mandated by the BLAS standard) 
+
+<p>
+[2] ATLAS bindings extension
+
+<p> 
+[3] in BLAS/ATLAS <code>float</code> and <code>double</code> vectors
+only, complex vectors ATLAS bindings extension
+
+<p>
+[4] <code>float</code> vectors only, with <code>double</code> accumulation
+
+<p>
+[5] complex types only
+
+
+<h3><a name="level2blas">2.2 Level 2 BLAS</a></h3>
+
+Defined in <code>atlas/cblas2.hpp</code>. 
+
+
+
+<h3><a name="level3blas">2.3 Level 3 BLAS</a></h3>
+
+Defined in <code>atlas/cblas3.hpp</code>. 
+
+
+ 
+<h3><a name="lapack">2.4 LAPACK functions</a></h3>
+
+Defined in <code>atlas/clapack.hpp</code>. 
+
+
+
+
+
+<div class="footnotes"><br><hr width="100" align="left"><div class="footnote"><p><sup>[<a name="ftn.bnd.atl.1" href="#bnd.atl.1">1</a>] </sup>
+Note that C prior to C99 didn't have complex data type. Parameters 
+of complex versions are therefore <code>void*</code> or <code>const void*</code>, and 
+it is assumed that ``a complex element consists of two consecutive
+memory locations of the underlying data type (i.e., <code>float</code>
+or <code>double</code>), where the first location contains the real
+component, and the second contains the imaginary component''. 
+
+
+</body>
+</html>

@@ -19,6 +19,10 @@
 #ifndef BOOST_NUMERIC_BINDINGS_TRAITS_C_ARRAY_H
 #define BOOST_NUMERIC_BINDINGS_TRAITS_C_ARRAY_H
 
+#include <boost/numeric/bindings/traits/config.hpp> 
+
+#ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
+
 #include <boost/numeric/bindings/traits/vector_traits.hpp>
 
 namespace boost { namespace numeric { namespace bindings { namespace traits {
@@ -42,4 +46,10 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
 
 }}}}
 
-#endif 
+#else // BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
+
+#error with your compiler plain C array cannot be used in bindings 
+
+#endif // BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
+
+#endif // BOOST_NUMERIC_BINDINGS_TRAITS_C_ARRAY_H

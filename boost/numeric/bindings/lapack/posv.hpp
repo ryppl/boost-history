@@ -19,10 +19,10 @@
 
 #include <complex>
 #include <boost/numeric/bindings/traits/traits.hpp>
-#include <boost/numeric/bindings/traits/detail/symm_herm_traits.hpp>
 #include <boost/numeric/bindings/lapack/lapack.h>
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK 
+#  include <boost/numeric/bindings/traits/detail/symm_herm_traits.hpp>
 #  include <boost/static_assert.hpp>
 #  include <boost/type_traits.hpp>
 #endif 
@@ -255,7 +255,7 @@ namespace boost { namespace numeric { namespace bindings {
 
       inline 
       void potrs (char const uplo, int const n, int const nrhs,
-                  float* a, int const lda, 
+                  float const* a, int const lda, 
                   float* b, int const ldb, int* info) 
       {
         LAPACK_SPOTRS (&uplo, &n, &nrhs, a, &lda, b, &ldb, info);
@@ -263,7 +263,7 @@ namespace boost { namespace numeric { namespace bindings {
 
       inline 
       void potrs (char const uplo, int const n, int const nrhs,
-                  double* a, int const lda, 
+                  double const* a, int const lda, 
                   double* b, int const ldb, int* info) 
       {
         LAPACK_DPOTRS (&uplo, &n, &nrhs, a, &lda, b, &ldb, info);
@@ -271,33 +271,37 @@ namespace boost { namespace numeric { namespace bindings {
 
       inline 
       void potrs (char const uplo, int const n, int const nrhs,
-                  std::complex<float>* a, int const lda, 
+                  std::complex<float> const* a, int const lda, 
                   std::complex<float>* b, int const ldb, int* info) 
       {
         LAPACK_CPOTRS (&uplo, &n, &nrhs, 
-                       reinterpret_cast<fcomplex_t*> (a), &lda, 
+                       reinterpret_cast<fcomplex_t const*> (a), &lda, 
                        reinterpret_cast<fcomplex_t*> (b), &ldb, info);
       }
 
       inline 
       void potrs (char const uplo, int const n, int const nrhs,
-                  std::complex<double>* a, int const lda, 
+                  std::complex<double> const* a, int const lda, 
                   std::complex<double>* b, int const ldb, int* info) 
       {
         LAPACK_ZPOTRS (&uplo, &n, &nrhs, 
-                       reinterpret_cast<dcomplex_t*> (a), &lda, 
+                       reinterpret_cast<dcomplex_t const*> (a), &lda, 
                        reinterpret_cast<dcomplex_t*> (b), &ldb, info);
       }
 
       template <typename SymmMatrA, typename MatrB>
       inline
-      int potrs (char const uplo, SymmMatrA& a, MatrB& b) {
+      int potrs (char const uplo, SymmMatrA const& a, MatrB& b) {
         int const n = traits::matrix_size1 (a);
         assert (n == traits::matrix_size2 (a));
         assert (n == traits::matrix_size1 (b));
         int info; 
         potrs (uplo, n, traits::matrix_size2 (b),
+#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
                traits::matrix_storage (a), 
+#else
+               traits::matrix_storage_const (a), 
+#endif 
                traits::leading_dimension (a),
                traits::matrix_storage (b), 
                traits::leading_dimension (b), 
@@ -309,7 +313,7 @@ namespace boost { namespace numeric { namespace bindings {
 
     template <typename SymmMatrA, typename MatrB>
     inline
-    int potrs (char const uplo, SymmMatrA& a, MatrB& b) {
+    int potrs (char const uplo, SymmMatrA const& a, MatrB& b) {
 
       assert (uplo == 'U' || uplo == 'L'); 
 
@@ -329,7 +333,7 @@ namespace boost { namespace numeric { namespace bindings {
 
     template <typename SymmMatrA, typename MatrB>
     inline
-    int potrs (SymmMatrA& a, MatrB& b) {
+    int potrs (SymmMatrA const& a, MatrB& b) {
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
       typedef traits::matrix_traits<SymmMatrA> matraits;

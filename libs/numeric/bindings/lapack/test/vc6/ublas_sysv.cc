@@ -3,6 +3,9 @@
 // A symmetric
 // driver function sysv()
 
+// #define BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
+// #define BOOST_NO_FUNCTION_TEMPLATE_ORDERING
+
 #include <cstddef>
 #include <iostream>
 #include <complex>
@@ -10,8 +13,7 @@
 #include <boost/numeric/bindings/traits/ublas_matrix.hpp>
 #include <boost/numeric/bindings/traits/ublas_symmetric.hpp>
 #include <boost/numeric/bindings/traits/ublas_hermitian.hpp>
-#include <boost/numeric/bindings/traits/std_vector.hpp>
-#include "utils.h"
+#include "utils2.h"
 
 namespace ublas = boost::numeric::ublas;
 namespace lapack = boost::numeric::bindings::lapack;

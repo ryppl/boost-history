@@ -19,8 +19,11 @@
 #ifndef BOOST_NUMERIC_BINDINGS_TRAITS_UBLAS_MATRIX_H
 #define BOOST_NUMERIC_BINDINGS_TRAITS_UBLAS_MATRIX_H
 
-#include <boost/numeric/ublas/matrix.hpp> 
 #include <boost/numeric/bindings/traits/traits.hpp>
+
+#ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
+
+#include <boost/numeric/ublas/matrix.hpp> 
 #include <boost/numeric/bindings/traits/detail/ublas_matrix_closure.hpp>
 #include <boost/numeric/bindings/traits/detail/ublas_ordering.hpp>
 
@@ -502,4 +505,6 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
 
 }}}}
 
-#endif 
+#endif // BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
+
+#endif // BOOST_NUMERIC_BINDINGS_TRAITS_UBLAS_MATRIX_H

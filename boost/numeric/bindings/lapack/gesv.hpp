@@ -20,8 +20,8 @@
 #include <complex>
 #include <boost/numeric/bindings/traits/traits.hpp>
 #include <boost/numeric/bindings/lapack/lapack.h>
-//#include <boost/numeric/bindings/traits/std_vector.hpp>
 #include <boost/numeric/bindings/traits/detail/array.hpp>
+// #include <boost/numeric/bindings/traits/std_vector.hpp>
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK 
 #  include <boost/static_assert.hpp>
@@ -224,7 +224,7 @@ namespace boost { namespace numeric { namespace bindings {
 
       inline 
       void getrs (char const trans, int const n, int const nrhs,
-                  float* a, int const lda, int* ipiv, 
+                  float const* a, int const lda, int const* ipiv, 
                   float* b, int const ldb, int* info) 
       {
         LAPACK_SGETRS (&trans, &n, &nrhs, a, &lda, ipiv, b, &ldb, info);
@@ -232,7 +232,7 @@ namespace boost { namespace numeric { namespace bindings {
 
       inline 
       void getrs (char const trans, int const n, int const nrhs,
-                  double* a, int const lda, int* ipiv, 
+                  double const* a, int const lda, int const* ipiv, 
                   double* b, int const ldb, int* info) 
       {
         LAPACK_DGETRS (&trans, &n, &nrhs, a, &lda, ipiv, b, &ldb, info);
@@ -240,21 +240,23 @@ namespace boost { namespace numeric { namespace bindings {
 
       inline 
       void getrs (char const trans, int const n, int const nrhs,
-                  std::complex<float>* a, int const lda, int* ipiv, 
+                  std::complex<float> const* a, int const lda, 
+                  int const* ipiv, 
                   std::complex<float>* b, int const ldb, int* info) 
       {
         LAPACK_CGETRS (&trans, &n, &nrhs, 
-                       reinterpret_cast<fcomplex_t*> (a), &lda, ipiv, 
+                       reinterpret_cast<fcomplex_t const*> (a), &lda, ipiv, 
                        reinterpret_cast<fcomplex_t*> (b), &ldb, info);
       }
 
       inline 
       void getrs (char const trans, int const n, int const nrhs,
-                  std::complex<double>* a, int const lda, int* ipiv, 
+                  std::complex<double> const* a, int const lda, 
+                  int const* ipiv, 
                   std::complex<double>* b, int const ldb, int* info) 
       {
         LAPACK_ZGETRS (&trans, &n, &nrhs, 
-                       reinterpret_cast<dcomplex_t*> (a), &lda, ipiv, 
+                       reinterpret_cast<dcomplex_t const*> (a), &lda, ipiv, 
                        reinterpret_cast<dcomplex_t*> (b), &ldb, info);
       }
 
@@ -262,7 +264,7 @@ namespace boost { namespace numeric { namespace bindings {
 
     template <typename MatrA, typename MatrB, typename IVec>
     inline
-    int getrs (char const trans, MatrA& a, IVec& ipiv, MatrB& b) {
+    int getrs (char const trans, MatrA const& a, IVec const& ipiv, MatrB& b) {
 
       assert (trans == 'N' || trans == 'T' || trans == 'C'); 
 
@@ -284,9 +286,17 @@ namespace boost { namespace numeric { namespace bindings {
 
       int info; 
       detail::getrs (trans, n, traits::matrix_size2 (b), 
+#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
                      traits::matrix_storage (a), 
+#else
+                     traits::matrix_storage_const (a), 
+#endif 
                      traits::leading_dimension (a),
+#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
                      traits::vector_storage (ipiv),  
+#else
+                     traits::vector_storage_const (ipiv),  
+#endif
                      traits::matrix_storage (b),
                      traits::leading_dimension (b),
                      &info);
@@ -295,7 +305,7 @@ namespace boost { namespace numeric { namespace bindings {
 
     template <typename MatrA, typename MatrB, typename IVec>
     inline
-    int getrs (MatrA& a, IVec& ipiv, MatrB& b) {
+    int getrs (MatrA const& a, IVec const& ipiv, MatrB& b) {
       char const no_transpose = 'N'; 
       return getrs (no_transpose, a, ipiv, b); 
     }

@@ -21,6 +21,9 @@
 
 #include <boost/numeric/ublas/symmetric.hpp> 
 #include <boost/numeric/bindings/traits/traits.hpp>
+
+#ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
+
 #include <boost/numeric/bindings/traits/ublas_matrix.hpp>
 #include <boost/numeric/bindings/traits/detail/ublas_ordering.hpp>
 #include <boost/numeric/bindings/traits/detail/ublas_uplo.hpp>
@@ -168,4 +171,10 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
 
 }}}}
 
-#endif 
+//#else // BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
+
+//#include <boost/numeric/bindings/traits/symm_herm_raw.hpp> 
+
+#endif // BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
+
+#endif // BOOST_NUMERIC_BINDINGS_TRAITS_UBLAS_SYMMETRIC_H

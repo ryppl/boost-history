@@ -48,16 +48,16 @@ extern "C" {
                       int* ipiv, int* info);
 
   void LAPACK_SGETRS (char const* trans, int const* n, int const* nrhs, 
-                      float* a, int const* lda, int* ipiv, 
+                      float const* a, int const* lda, int const* ipiv, 
                       float* b, int const* ldb, int* info);
   void LAPACK_DGETRS (char const* trans, int const* n, int const* nrhs, 
-                      double* a, int const* lda, int* ipiv, 
+                      double const* a, int const* lda, int const* ipiv, 
                       double* b, int const* ldb, int* info);
   void LAPACK_CGETRS (char const* trans, int const* n, int const* nrhs,
-                      fcomplex_t* a, int const* lda, int* ipiv, 
+                      fcomplex_t const* a, int const* lda, int const* ipiv, 
                       fcomplex_t* b, int const* ldb, int* info);
   void LAPACK_ZGETRS (char const* trans, int const* n, int const* nrhs,
-                      dcomplex_t* a, int const* lda, int* ipiv, 
+                      dcomplex_t const* a, int const* lda, int const* ipiv, 
                       dcomplex_t* b, int const* ldb, int* info);
 
 
@@ -84,16 +84,16 @@ extern "C" {
                       dcomplex_t* a, int const* lda, int* info);
 
   void LAPACK_SPOTRS (char const* uplo, int const* n, int const* nrhs, 
-                      float* a, int const* lda, 
+                      float const* a, int const* lda, 
                       float* b, int const* ldb, int* info);
   void LAPACK_DPOTRS (char const* uplo, int const* n, int const* nrhs, 
-                      double* a, int const* lda, 
+                      double const* a, int const* lda, 
                       double* b, int const* ldb, int* info);
   void LAPACK_CPOTRS (char const* uplo, int const* n, int const* nrhs,
-                      fcomplex_t* a, int const* lda,
+                      fcomplex_t const* a, int const* lda,
                       fcomplex_t* b, int const* ldb, int* info);
   void LAPACK_ZPOTRS (char const* uplo, int const* n, int const* nrhs,
-                      dcomplex_t* a, int const* lda,
+                      dcomplex_t const* a, int const* lda,
                       dcomplex_t* b, int const* ldb, int* info);
 
 
@@ -144,23 +144,23 @@ extern "C" {
                       dcomplex_t* w, int const* lw, int* info);
 
   void LAPACK_SSYTRS (char const* uplo, int const* n, int const* nrhs, 
-                      float* a, int const* lda, int* ipiv, 
+                      float const* a, int const* lda, int const* ipiv, 
                       float* b, int const* ldb, int* info);
   void LAPACK_DSYTRS (char const* uplo, int const* n, int const* nrhs, 
-                      double* a, int const* lda, int* ipiv, 
+                      double const* a, int const* lda, int const* ipiv, 
                       double* b, int const* ldb, int* info);
   void LAPACK_CSYTRS (char const* uplo, int const* n, int const* nrhs,
-                      fcomplex_t* a, int const* lda, int* ipiv, 
+                      fcomplex_t const* a, int const* lda, int const* ipiv, 
                       fcomplex_t* b, int const* ldb, int* info);
   void LAPACK_ZSYTRS (char const* uplo, int const* n, int const* nrhs,
-                      dcomplex_t* a, int const* lda, int* ipiv, 
+                      dcomplex_t const* a, int const* lda, int const* ipiv, 
                       dcomplex_t* b, int const* ldb, int* info);
 
   void LAPACK_CHETRS (char const* uplo, int const* n, int const* nrhs,
-                      fcomplex_t* a, int const* lda, int* ipiv, 
+                      fcomplex_t const* a, int const* lda, int const* ipiv, 
                       fcomplex_t* b, int const* ldb, int* info);
   void LAPACK_ZHETRS (char const* uplo, int const* n, int const* nrhs,
-                      dcomplex_t* a, int const* lda, int* ipiv, 
+                      dcomplex_t const* a, int const* lda, int const* ipiv, 
                       dcomplex_t* b, int const* ldb, int* info);
 
 }
