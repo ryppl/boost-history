@@ -55,6 +55,8 @@
 #     define BOOST_IOFM_NO_LIB_QUATERNION
 #     define BOOST_IOFM_NO_LIB_OCTONION
 #     define BOOST_IOFM_NO_LIB_INTERVAL
+#  elif defined(__COMO__)
+#     define BOOST_IOFM_NO_LIB_INTERVAL
 #  elif defined(__GNUC__)
 #     define BOOST_IOFM_NO_STD_WSTREAM
 

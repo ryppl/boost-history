@@ -32,8 +32,9 @@
       <
          int n,
          typename T1,              typename T2,
-         typename T3 = mpl::void_, typename T4 = mpl::void_, typename T5 = mpl::void_,
-         typename T6 = mpl::void_, typename T7 = mpl::void_, typename T8 = mpl::void_
+         typename T3 = mpl::void_, typename T4 = mpl::void_,
+         typename T5 = mpl::void_, typename T6 = mpl::void_,
+         typename T7 = mpl::void_, typename T8 = mpl::void_
       >
       struct sequential_switch_: public boost::mpl::if_
              <

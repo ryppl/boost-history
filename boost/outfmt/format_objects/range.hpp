@@ -6,10 +6,11 @@
 #     pragma once
 #  endif
 
+#  include <cstddef>
+#  include <utility> // std::pair
+
 #  include <boost/outfmt/format_objects/detail/list.hpp>
 #  include <boost/outfmt/detail/range.hpp>
-
-#  include <utility> // std::pair
 
    namespace boost { namespace io
    {

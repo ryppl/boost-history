@@ -6,6 +6,8 @@
 #     pragma once
 #  endif
 
+#  include <cstddef>
+
    namespace boost { namespace io
    {
       template< typename RangeT >
