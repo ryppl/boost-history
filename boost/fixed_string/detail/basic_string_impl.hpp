@@ -321,9 +321,9 @@
             }
             inline iterator                      erase( iterator pos )
             {
-               const size_type         pos = position - begin();
-               erase( pos, 1 );
-               return( begin() + pos );
+               const size_type         p = pos - begin();
+               erase( p, 1 );
+               return( begin() + p );
             }
             inline iterator                      erase( iterator first, iterator last )
             {
@@ -467,7 +467,7 @@
                if( pos > size())       ErrorPolicy::out_of_range();
                n = min_( n, size() - pos );
                traits_type::copy( s, offset( pos ), n );
-               s[ n ] = char_type( '\0' );
+               s[ n ] = char_type();
                return( n );
             }
             inline void                          swap( Base & s )
