@@ -1,4 +1,5 @@
 #include <boost/interval.hpp>
+#define BOOST_INCLUDE_MAIN
 #include <boost/test/test_tools.hpp>
 
 typedef enum { EXPR_VAR, EXPR_NEG, EXPR_UP, EXPR_DOWN, EXPR_ADD, EXPR_SUB } e_type;
@@ -110,7 +111,7 @@ typedef interval_traits<pexpr, compare_certainly<pexpr>, save_state<rounded_arit
 template<class I>
 bool test_neg() {
   I a(var(0), var(1));
-  return equal(-a, I(-var(1), -var(2)));
+  return equal(-a, I(-var(1), -var(0)));
 }
 
 template<class I>
