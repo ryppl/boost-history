@@ -30,7 +30,9 @@
 #include <boost/preprocessor/facilities/intercept.hpp>
 #include <boost/preprocessor/cat.hpp>
 
-#define BOOST_NAMED_PARAMS_MAX_ARITY 5
+#ifndef BOOST_NAMED_PARAMS_MAX_ARITY
+# define BOOST_NAMED_PARAMS_MAX_ARITY 5
+#endif
 
 #if defined(__GNUC__) && __GNUC__ < 3
 #   define BOOST_NAMED_PARAMS_GCC2 1
