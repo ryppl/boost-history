@@ -22,15 +22,42 @@ else 		{ LOCATE_TARGET ?= bin.$(OSFULL[1]:L) ; }
 # We have some different files for UNIX, VMS, and NT.
 #
 
-if $(NT) 	{ code = execunix.c filent.c pathunix.c ; } 
-else if $(OS2)	{ code = execunix.c fileos2.c pathunix.c ; } 
+if $(NT) 	{ code = execnt.c filent.c pathunix.c ; } 
+else if $(OS2)	
+{ 
+  # special case for OS/2. When building Jam with GCC/EMX
+  # we need to use the "fileunix.c" file
+  #
+  # when we build it with other toolsets, we use "fileos2.c"
+  #
+  code = execunix.c pathunix.c ;
+  if $(TOOLSET) = EMX
+  {
+    CCFLAGS += -D__OS2__ ;
+    code += fileunix.c ;
+  }
+  else
+  {
+    code += fileos2.c ;
+  }
+} 
 else if $(VMS) 	{ code = execvms.c filevms.c pathvms.c ; } 
 else if $(MAC)	{ code = execmac.c filemac.c pathmac.c ; }
 else 		{ code = execunix.c fileunix.c pathunix.c ; }
 
 # We have to signal jam.h for these
 
-if $(OS) = NT 			{ CCFLAGS += /DNT ; }
+if $(OS) = NT
+{
+  if $(TOOLSET) = MINGW || $(TOOLSET) = LCC 
+  {
+    CCFLAGS += -DNT ;
+  }
+  else
+  {
+    CCFLAGS += /DNT ;
+  }
+}
 
 # Do we know yacc?
 
@@ -45,7 +72,7 @@ else            { code += jamgram.c ; }
 
 if $(UNIX) && $(YACC)
 {
-	GenFile jamgram.y jamgramtab.h : yyacc jamgram.yy ;
+	GenFile jamgram.y jamgramtab.h : ./yyacc jamgram.yy ;
 }
 
 #
@@ -64,8 +91,8 @@ GenFile 	jambase.c : mkjambase Jambase ;
 
 Library         libjam.a : 
 		    command.c compile.c $(code) expand.c glob.c
-		    hash.c headers.c lists.c make.c make1.c newstr.c
-		    option.c parse.c regexp.c rules.c scan.c search.c
+		    hash.c headers.c hdrmacro.c lists.c make.c make1.c newstr.c
+		    option.c parse.c regexp.c rules.c scan.c search.c subst.c
 		    timestamp.c variable.c ;
 
 
@@ -78,50 +105,111 @@ if $(BINDIR) 	{ InstallBin $(BINDIR) : jam ; }
 ALLSOURCE =
 	Build.com Build.mpw Jam.html Jambase Jambase.html Jamfile
 	Jamfile.html Makefile Porting README RELNOTES command.c command.h
-	compile.c compile.h execcmd.h execmac.c execunix.c execvms.c
+	compile.c compile.h execcmd.h execmac.c execunix.c execnt.c execvms.c
 	expand.c expand.h filemac.c filent.c fileos2.c filesys.h fileunix.c
-	filevms.c glob.c hash.c hash.h headers.c headers.h jam.c jam.h
-	jambase.c jambase.h jamgram.c jamgram.h jamgram.y jamgram.yy
-	jamgramtab.h lists.c lists.h make.c make.h make1.c mkjambase.c
-	newstr.c newstr.h option.c option.h parse.c parse.h patchlevel.h
-	pathmac.c pathunix.c pathvms.c regexp.c regexp.h rules.c rules.h
-	scan.c scan.h search.c search.h timestamp.c timestamp.h variable.c
-	variable.h yyacc ;
+	filevms.c glob.c hash.c hash.h hdrmacro.c hdrmacro.h headers.c
+	headers.h jam.c jam.h jambase.c jambase.h jamgram.c jamgram.h
+	jamgram.y jamgram.yy jamgramtab.h lists.c lists.h make.c make.h
+	make1.c mkjambase.c newstr.c newstr.h option.c option.h parse.c
+	parse.h patchlevel.h pathmac.c pathunix.c pathvms.c regexp.c regexp.h
+	rules.c rules.h scan.c scan.h search.c search.h subst.c timestamp.c
+	timestamp.h variable.c variable.h yyacc
+	INSTALL
+	common.mk
+	builds/win32-visualc.mk
+	builds/win32-borlandc.mk
+	builds/win32-gcc.mk
+	;
 
-rule Ball
+
+rule Binary
 {
-	NotFile balls ;
-	Depends balls : $(<) ;
+    NotFile  package ;
+    Depends  package : $(<) ;
+    
+    DEPENDS $(<) : $(>) ;
+    
+    switch $(<)
+    {
+    case *-win32.zip       : Zip-Exe  $(<) : $(>) ;
+    case *-os2.zip         : Zip-Exe  $(<) : $(>) ;
+    case *-linux-libc6.gz  : GZip-Exe $(<) : $(>) ;
+    }
+}
+
+
+rule Package
+{
+	NotFile package ;
+	Depends package : $(<) ;
 
 	DEPENDS $(<) : $(>) ;
 
 	switch $(<) 
 	{
-	case *.tar : Tar $(<) : $(>) ;
+	case *.tar  : Tar  $(<) : $(>) ;
 	case *.shar : Shar $(<) : $(>) ;
-	case *.zip : Zip $(<) : $(>) ;
+	case *.zip  : Zip  $(<) : $(>) ;
 	}
 }
 
-VERSION = jam-2.3.2 ;
+VERSION = ftjam-2.3.5 ;
 
-actions Tar
+
+actions Tar-Gz
 {
-	ln -s . $(VERSION)
-	tar cvhf $(<) $(VERSION)/$(>)
-	rm $(VERSION)
+  ln -s . $(VERSION)
+  tar cvhf $(<) $(VERSION)/$(>)
+  rm $(VERSION)
+  gzip -9 $(<)
 }
 
-actions Shar
+actions Tar-Bz2
 {
-	shar $(>) > $(<)
+  ln -s . $(VERSION)
+  tar cvhf $(<) $(VERSION)/$(>)
+  rm $(VERSION)
+  bzip2 -9 $(<)
 }
+
 
 actions Zip
 {
-	zip $(<) $(>) 
+  zip -9r $(<) $(>) 
 }
 
-Ball $(VERSION).shar : $(ALLSOURCE) ;
-Ball $(VERSION).tar : $(ALLSOURCE) ;
-Ball $(VERSION).zip : $(ALLSOURCE) ;
+actions Zip-Exe
+{
+  zip -9j $(<) $(LOCATE_TARGET)\jam.exe
+}
+
+actions GZip-Exe
+{
+  strip $(LOCATE_TARGET)/jam
+  gzip -9c $(LOCATE_TARGET)/jam > $(<)
+}
+
+
+
+if $(NT)
+{
+  Binary  $(VERSION)-win32.zip : $(ALLSOURCE) ;
+  Package $(VERSION).zip       : $(ALLSOURCE) ;
+}
+else if $(OS2)
+{
+  Binary  $(VERSION)-os2.zip : $(ALLSOURCE) ;
+  Package $(VERSION).zip     : $(ALLSOURCE) ;
+}
+else if $(OS) = LINUX
+{
+  # how can we detect the C library version reliably ??
+  # for now, this should only be used for convenience
+  # purposes, until we add .rpm and .deb support in..
+  
+  Binary $(VERSION)-linux-libc6.gz : jam ;
+
+  Package $(VERSION).tar.gz        : jam ;
+  Package $(VERSION).tar.bz2       : jam ;
+  Package $(VERSION).zip           : jam ;
+}

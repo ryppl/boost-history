@@ -1,3 +1,31 @@
+Release notes for FTJam 2.3.5 (previous release was named "20010626")
+
+0. Bugs fixed since 20010626:
+
+    DEBUG OUTPUT FORMATTING: indentation was "wrapped" when too many levels
+    were reached, making debugging extremly difficult
+
+1. Release info:
+
+    FTJam 2.3.5 (based on Jam 2.3.2)
+    July 30, 2001
+    VERSION 2.3.5
+    PATCHLEVEL 3
+
+2. Compatibility
+
+   FTJam 2.3.5 is upward compatible with Jam 2.3 and 2.2
+   Only a few new builtin rules were added, and some small bugs fixed
+   
+3. Changes since 20010626:
+
+   Added a new builtin named FAIL_EXPECTED. It is used to invert the result
+   of a given action. Used by the Boost.Build sub-system.
+
+============================================================================
+============================================================================
+   
+
 Release notes for Jam/MR 2.3
 (aka Jam - make(1) redux)
 

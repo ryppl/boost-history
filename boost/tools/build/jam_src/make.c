@@ -89,7 +89,7 @@ static char *target_bind[] =
 	"exists",
 } ;
 
-# define spaces(x) ( "                " + 16 - ( x > 16 ? 16 : x ) )
+# define spaces(x) ( "                    " + ( x > 20 ? 0 : 20-x ) )
 
 /*
  * make() - make a target, given its name
@@ -117,15 +117,20 @@ make(
 	if( DEBUG_MAKE )
 	{
 	    if( counts->targets )
-		printf( "...found %d target(s)...\n", counts->targets );
+		printf( "...found %d target%s...\n", counts->targets,
+		        counts->targets > 1 ? "s" : "" );
 	    if( counts->temp )
-		printf( "...using %d temp target(s)...\n", counts->temp );
+		printf( "...using %d temp target%s...\n", counts->temp,
+		        counts->temp > 1 ? "s" : "" );
 	    if( counts->updating )
-		printf( "...updating %d target(s)...\n", counts->updating );
+		printf( "...updating %d target%s...\n", counts->updating,
+		        counts->updating > 1 ? "s" : "" );
 	    if( counts->cantfind )
-		printf( "...can't find %d target(s)...\n", counts->cantfind );
+		printf( "...can't find %d target%s...\n", counts->cantfind,
+		        counts->cantfind > 1 ? "s" : "" );
 	    if( counts->cantmake )
-		printf( "...can't make %d target(s)...\n", counts->cantmake );
+		printf( "...can't make %d target%s...\n", counts->cantmake,
+		        counts->cantmake > 1 ? "s" : "" );
 	}
 
 	status = counts->cantfind || counts->cantmake;

@@ -1,8 +1,17 @@
-# Makefile for jam
+# The following Makefile will build Jam on Unix systems
+# You can also modify it to compile the program on other
+# systems, or also use one of the specific Makefiles
+# located in the "builds" directory
+#
 
 CC = cc
 TARGET = -o jam0
 CFLAGS =
+
+# Borland C++ on Windows
+#CC = bcc32
+#TARGET = -ejam0
+#CFLAGS = /DNT -w- -q
 
 # Special flavors - uncomment appropriate lines
 
@@ -39,6 +48,11 @@ CFLAGS =
 #CC = gcc
 #CFLAGS = -D__cygwin__
 
+# MingW - gcc on Win32
+#
+#CC = gcc
+#CFLAGS = -DNT
+
 # MPEIX
 #CC = gcc
 #CFLAGS = -I/usr/include -D_POSIX_SOURCE
@@ -46,15 +60,29 @@ CFLAGS =
 # QNX rtp (neutrino)
 #CC = gcc
 
-SOURCES = \
-	command.c compile.c execunix.c execvms.c expand.c \
-	filent.c fileos2.c fileunix.c filevms.c glob.c hash.c \
-	headers.c jam.c jambase.c jamgram.c lists.c make.c make1.c \
-	newstr.c option.c parse.c pathunix.c pathvms.c regexp.c \
-	rules.c scan.c search.c timestamp.c variable.c
+include common.mk
 
+
+#
+#SOURCES = \
+#	command.c compile.c execnt.c execunix.c execvms.c expand.c \
+#	filent.c fileos2.c fileunix.c filevms.c glob.c hash.c \
+#	hdrmacro.c headers.c jam.c jambase.c jamgram.c lists.c make.c make1.c \
+#	newstr.c option.c parse.c pathunix.c pathvms.c regexp.c \
+#	rules.c scan.c search.c subst.c timestamp.c variable.c
+
+# for Unix systems
+#
+# we need to ensure that "jambase.c" has write permissions, since it is
+# going to be re-generated from "Jambase".
+#
 all: jam0
-	jam0
+	chmod a+w jambase.c
+	./jam0
 
-jam0:
-	$(CC) $(TARGET) $(CFLAGS) $(SOURCES) $(LINKLIBS)
+# for other systems
+#all: jam0
+#	jam0
+
+#jam0:
+#	$(CC) $(TARGET) $(CFLAGS) $(SOURCES) $(LINKLIBS)

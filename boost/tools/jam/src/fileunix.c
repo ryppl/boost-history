@@ -16,6 +16,11 @@
 # define PORTAR 1
 # endif
 
+# ifdef __EMX__
+# include <sys/types.h>
+# include <sys/stat.h>
+# endif
+
 # if defined( OS_RHAPSODY ) || \
      defined( OS_MACOSX ) || \
      defined( OS_NEXT )

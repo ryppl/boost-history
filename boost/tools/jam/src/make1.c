@@ -95,13 +95,16 @@ make1( TARGET *t )
 	/* Talk about it */
 
 	if( DEBUG_MAKE && counts->failed )
-	    printf( "...failed updating %d target(s)...\n", counts->failed );
+	    printf( "...failed updating %d target%s...\n", counts->failed,
+		        counts->failed > 1 ? "s" : "" );
 
 	if( DEBUG_MAKE && counts->skipped )
-	    printf( "...skipped %d target(s)...\n", counts->skipped );
+	    printf( "...skipped %d target%s...\n", counts->skipped,
+		        counts->skipped > 1 ? "s" : "" );
 
 	if( DEBUG_MAKE && counts->made )
-	    printf( "...updated %d target(s)...\n", counts->made );
+	    printf( "...updated %d target%s...\n", counts->made,
+		        counts->made > 1 ? "s" : "" );
 
 	return counts->total != counts->made;
 }
@@ -347,6 +350,18 @@ make1d(
 	/* status and signal our completion so make1c() can run the next */
 	/* command.  On interrupts, we bail heavily. */
 
+        if ( t->flags & T_FLAG_FAIL_EXPECTED )
+        {
+          /* invert execution result when FAIL_EXPECTED was applied */
+          switch (status)
+          {
+            case EXEC_CMD_FAIL: status = EXEC_CMD_OK; break;
+            case EXEC_CMD_OK:   status = EXEC_CMD_FAIL; break;
+            default:
+              ;
+          }
+        }
+        
 	if( status == EXEC_CMD_FAIL && ( cmd->rule->flags & RULE_IGNORE ) )
 	    status = EXEC_CMD_OK;
 

@@ -66,7 +66,10 @@
  *	expand.c - expand a buffer, given variable values
  *	fileunix.c - manipulate file names and scan directories on UNIX
  *	filevms.c - manipulate file names and scan directories on VMS
+ *  fileos2.c - manipulate file names and scan directories on OS/2
+ *  filent.c - manipulate file names and scan directories on Windows
  *	hash.c - simple in-memory hashing routines 
+ *  hdrmacro.c - handle header file parsing for filename macro definitions
  *	headers.c - handle #includes in source files
  *	jambase.c - compilable copy of Jambase
  *	jamgram.y - jam grammar
@@ -144,6 +147,12 @@ QDGlobals qd;
 # endif
 # endif
 
+/* on Win32-LCC */
+# if defined( OS_NT ) && defined( __LCC__ )
+#   define  use_environ _environ
+# endif
+
+
 # ifndef use_environ
 # define use_environ environ
 # if !defined( __WATCOM__ ) && !defined( OS_OS2 ) && !defined( OS_NT ) 
@@ -151,7 +160,8 @@ extern char **environ;
 # endif
 # endif
 
-main( int argc, char **argv, char **arg_environ )
+
+int  main( int argc, char **argv, char **arg_environ )
 {
 	int		n;
 	char		*s;

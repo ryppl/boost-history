@@ -15,6 +15,7 @@
 # include "newstr.h"
 # include "make.h"
 # include "search.h"
+# include "hdrmacro.h"
 
 /*
  * compile.c - compile parsed jam statements
@@ -76,6 +77,8 @@ static LIST *builtin_depends( PARSE *parse, LOL *args );
 static LIST *builtin_echo( PARSE *parse, LOL *args );
 static LIST *builtin_exit( PARSE *parse, LOL *args );
 static LIST *builtin_flags( PARSE *parse, LOL *args );
+static LIST *builtin_hdrmacro( PARSE *parse, LOL *args );
+static LIST *builtin_subst( PARSE  *parse, LOL  *args );
 
 int glob( char *s, char *c );
 
@@ -111,6 +114,10 @@ compile_builtins()
     bindrule( "INCLUDES" )->procedure = 
 	parse_make( builtin_depends, P0, P0, P0, C0, C0, T_DEPS_INCLUDES );
 
+    bindrule( "HdrMacro" )->procedure = 
+    bindrule( "HDRMACRO" )->procedure = 
+	parse_make( builtin_hdrmacro, P0, P0, P0, C0, C0, 0 );
+
     bindrule( "Leaves" )->procedure = 
     bindrule( "LEAVES" )->procedure = 
 	parse_make( builtin_flags, P0, P0, P0, C0, C0, T_FLAG_LEAVES );
@@ -131,6 +138,20 @@ compile_builtins()
     bindrule( "Temporary" )->procedure = 
     bindrule( "TEMPORARY" )->procedure = 
 	parse_make( builtin_flags, P0, P0, P0, C0, C0, T_FLAG_TEMP );
+
+  /* FAIL_EXPECTED is an experimental built-in that is used to indicate        */
+  /* that the result of a target build action should be inverted (ok <=> fail) */
+  /* this can be useful when performing test runs from Jamfiles..              */
+  /*                                                                           */
+  /* Beware that this rule might disappear or be renamed in the future..       */
+  /* contact david.turner@freetype.org for more details..                      */
+    bindrule( "FAIL_EXPECTED" )->procedure = 
+	parse_make( builtin_flags, P0, P0, P0, C0, C0, T_FLAG_FAIL_EXPECTED );
+
+
+    bindrule( "subst" )->procedure =
+    bindrule( "SUBST" )->procedure =
+        parse_make( builtin_subst, P0, P0, P0, C0, C0, 0 );
 }
 
 /*
@@ -485,13 +506,35 @@ evaluate_rule(
 	LOL	*args )
 {
 	LIST	*result = L0;
-	RULE	*rule = bindrule( rulename );
+	RULE	*rule;
+
+    /* special case, if the rulename begins with "$(", we try */
+    /* to expand it.. this is needed by Boost..               */
+    if ( rulename[0] == '$' && rulename[1] == '(' )
+    {
+        LIST*  l;
+        
+        l    = var_expand( L0, rulename, rulename+strlen(rulename), args, 0 );
+        if ( DEBUG_COMPILE )
+        {
+          debug_compile( 1, l->string );
+          lol_print( args );
+          printf( "\n" );
+        }
+        rule = bindrule( l->string );
+        
+        list_free( l );
+    }
+    else
+    {
+      rule = bindrule( rulename );
 
 	if( DEBUG_COMPILE )
 	{
 	    debug_compile( 1, rulename );
 	    lol_print( args );
 	    printf( "\n" );
+	  }
 	}
 
 	/* Check traditional targets $(<) and sources $(>) */
@@ -849,6 +892,67 @@ builtin_flags(
 	return L0;
 }
 
+
+static LIST *
+builtin_hdrmacro(
+    PARSE    *parse,
+    LOL      *args )
+{
+  LIST*  l = lol_get( args, 0 );
+  
+  for ( ; l; l = list_next(l) )
+  {
+    TARGET*  t = bindtarget( l->string );
+
+    /* scan file for header filename macro definitions */    
+    if ( DEBUG_HEADER )
+      printf( "scanning '%s' for header file macro definitions\n",
+              l->string );
+
+    macro_headers( t );
+  }
+  
+  return L0;
+}
+
+
+extern void substitute( const char* src, const char* pat, const char* rep,
+                        char* target );
+
+static LIST*
+builtin_subst(
+    PARSE    *parse,
+    LOL      *args )
+{
+  LIST*         result;
+  const char*   source;
+  const char*   pattern;
+  const char*   replacement;
+  char          target[ 4096 ];
+  LIST*         l;
+
+  result = L0;
+  
+  l = lol_get( args, 0 );
+  if (!l) goto Exit;
+  source = l->string;
+  
+  l = list_next( l );
+  if (!l) goto Exit;
+  pattern = l->string;
+  
+  l = list_next( l );
+  if (!l) goto Exit;
+  replacement = l->string;
+
+  substitute( source, pattern, replacement, target );
+  result = list_append( result, list_new( L0, newstr( target ) ) );
+
+Exit:  
+  return result;
+}
+
+
 /*
  * debug_compile() - printf with indent to show rule expansion.
  */
@@ -858,10 +962,19 @@ debug_compile( int which, char *s )
 {
 	static int level = 0;
 	static char indent[36] = ">>>>|>>>>|>>>>|>>>>|>>>>|>>>>|>>>>|";
-	int i = ((1+level) * 2) % 35;
-
-	if( which >= 0 )
-	    printf( "%*.*s ", i, i, indent );
+	
+    if ( which >= 0 )
+    {
+      int i;
+      
+      i = (level+1)*2;
+      while ( i > 35 )
+      {
+        printf( indent );
+        i -= 35;
+      }
+      printf( "%*.*s ", i, i, indent );
+    }
 
 	if( s )
 	    printf( "%s ", s );

@@ -12,6 +12,7 @@
 # include "variable.h"
 # include "regexp.h"
 # include "headers.h"
+# include "hdrmacro.h"
 # include "newstr.h"
 
 /*
@@ -35,7 +36,8 @@
  *		just to invoke a rule.
  */
 
-static LIST *headers1( LIST *l, char *file, int rec, regexp *re[] );
+static LIST *headers1( LIST *l, char *file, int rec, regexp *re[],
+                       regexp*  re_macros );
 
 /*
  * headers() - scan a target for include files and call HDRRULE
@@ -51,6 +53,7 @@ headers( TARGET *t )
 	LIST	*headlist = 0;
 	LOL	lol;
 	regexp	*re[ MAXINC ];
+        regexp  *re_macros;
 	int	rec = 0;
 
 	if( !( hdrscan = var_get( "HDRSCAN" ) ) || 
@@ -68,12 +71,17 @@ headers( TARGET *t )
 	    hdrscan = list_next( hdrscan );
 	}
 
+        /* the following regexp is used to detect cases where a  */
+        /* file is included through a line line "#include MACRO" */
+        re_macros = regcomp(
+           "^[ 	]*#[ 	]*include[ 	]*([A-Za-z][A-Za-z0-9_]*).*$" );
+
 	/* Doctor up call to HDRRULE rule */
 	/* Call headers1() to get LIST of included files. */
 
 	lol_init( &lol );
 	lol_add( &lol, list_new( L0, t->name ) );
-	lol_add( &lol, headers1( headlist, t->boundname, rec, re ) );
+	lol_add( &lol, headers1( headlist, t->boundname, rec, re, re_macros ) );
 
 	if( lol_get( &lol, 1 ) )
 	    evaluate_rule( hdrrule->string, &lol );
@@ -82,6 +90,7 @@ headers( TARGET *t )
 
 	lol_free( &lol );
 
+        free( re_macros );
 	while( rec )
 	    free( (char *)re[--rec] );
 }
@@ -95,7 +104,8 @@ headers1(
 	LIST	*l,
 	char	*file,
 	int	rec,
-	regexp	*re[] )
+	regexp	*re[],
+        regexp  *re_macros )
 {
 	FILE	*f;
 	char	buf[ 1024 ];
@@ -116,6 +126,30 @@ headers1(
 
 		l = list_new( l, newstr( re[i]->startp[1] ) );
 	    }
+            
+            /* special treatment for #include MACRO */
+            if ( regexec( re_macros, buf ) && re_macros->startp[1] )
+            {
+              char*  header_filename;
+              
+              re_macros->endp[1][0] = '\0';
+              
+              if ( DEBUG_HEADER )
+                printf( "macro header found: %s", re_macros->startp[1] );
+                
+              header_filename = macro_header_get( re_macros->startp[1] );
+              if (header_filename)
+              {
+	        if ( DEBUG_HEADER )
+                  printf( " resolved to '%s'\n", header_filename );
+                l = list_new( l, newstr( header_filename ) );
+              }
+              else
+              {
+	        if ( DEBUG_HEADER )
+                  printf( " ignored !!\n" );
+              }
+            }
 	}
 
 	fclose( f );

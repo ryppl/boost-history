@@ -1,3 +1,11 @@
+This is the FreeType version of Jam. For more information, please see
+  http://www.freetype.org/jam/index.html
+
+The complete and detailed list of changes is available at:
+  http://www.freetype.org/jam/changes.html
+
+------------------------------------------------------------------------------
+
 Jam/MR (aka "jam - make(1) redux") 
 
     /+\

@@ -7,7 +7,8 @@
 # include "jam.h"
 # include "filesys.h"
 
-# ifdef OS_OS2
+/* note that we use "fileunix.c" when compiling with EMX on OS/2 */
+# if defined(OS_OS2) && !defined(__EMX__)
 
 # include <io.h>
 # include <dos.h>
@@ -124,5 +125,5 @@ file_archscan(
 {
 }
 
-# endif /* OS2 */
+# endif /* OS2 && !__EMX__ */
 

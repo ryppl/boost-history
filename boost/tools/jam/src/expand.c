@@ -31,6 +31,7 @@ typedef struct {
 	char	downshift;	/* :L -- downshift result */
 	char	upshift;	/* :U -- upshift result */
 	char	parent;		/* :P -- go to parent directory */
+        char    to_slashes;     /* :T -- convert "\" to "/" */
 } VAR_ACTS ;
 
 static void var_edit( char *in, char *mods, char *out );
@@ -369,6 +370,13 @@ var_edit(
 	    for( ; *out; ++out )
 		*out = tolower( *out );
 	}
+        /* Handle conversion of "\" to "/" */
+        else if ( acts.to_slashes )
+        {
+          for ( ; *out; ++out )
+            if ( *out == '\\' )
+              *out = '/';
+        }
 }
 
 
@@ -413,7 +421,7 @@ var_mods(
 	FILENAME	*f,
 	VAR_ACTS	*acts )
 {
-	char *flags = "GRDBSM";
+	char *flags = "GRDBSMT";
 	int havezeroed = 0;
 	memset( (char *)f, 0, sizeof( *f ) );
 	memset( (char *)acts, 0, sizeof( *acts ) );
@@ -443,6 +451,12 @@ var_mods(
 		++mods;
 		continue;
 	    }
+            else if ( *mods == 'T' )
+            {
+              acts->to_slashes = 1;
+              ++mods;
+              continue;
+            }
 
 	    /* Now handle the file component flags */
 
