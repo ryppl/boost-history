@@ -9,6 +9,7 @@
 //  mem_fn.hpp - a generalization of std::mem_fun[_ref]
 //
 //  Copyright (c) 2001 Peter Dimov and Multi Media Ltd.
+//  Copyright (c) 2001 David Abrahams
 //
 //  Permission to copy, use, modify, sell and distribute this software
 //  is granted provided this copyright notice appears in all copies.

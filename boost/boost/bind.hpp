@@ -9,6 +9,7 @@
 //  bind.hpp - binds function objects to arguments
 //
 //  Copyright (c) 2001 Peter Dimov and Multi Media Ltd.
+//  Copyright (c) 2001 David Abrahams
 //
 //  Permission to copy, use, modify, sell and distribute this software
 //  is granted provided this copyright notice appears in all copies.
