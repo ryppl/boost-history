@@ -1,0 +1,4 @@
+project boost/fixed_string ;
+import boostbook : boostbook ;
+
+boostbook fixed_string : fixed_string.xml ;
