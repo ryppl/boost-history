@@ -31,20 +31,24 @@ namespace boost {
 namespace detail {
 
 #if !BOOST_WORKAROUND(__GNUC__, BOOST_TESTED_AT(3)) \
- && !BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x0551))
+ && !BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x0551)) \
+ && 1 //!BOOST_WORKAROUND(BOOST_MSVC, <= 1300)
 
 template <typename From, typename To1, typename To2>
 struct is_better_conversion_impl
 {
 private:
 
+    static ::boost::type_traits::no_type BOOST_TT_DECL check_(...);
+    static ::boost::type_traits::yes_type BOOST_TT_DECL check_(To1, int);
+
     // Alexander Nasonov suggested (comp.lang.c++.moderated, 4 Jul 2002)
-    // the following fix for the ambiguous conversion case:
+    // the following fix for the ambiguous conversion case.
+    //
+    // [MSVC6: Following must come *after* above overloads.]
+    //
     template <typename Int>
     static ::boost::type_traits::no_type BOOST_TT_DECL check_(To2, Int);
-    static ::boost::type_traits::no_type BOOST_TT_DECL check_(...);
-
-    static ::boost::type_traits::yes_type BOOST_TT_DECL check_(To1, int);
 
     static From from_;
 
