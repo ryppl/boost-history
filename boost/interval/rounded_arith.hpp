@@ -21,7 +21,26 @@ template<class T> T smallest()
 
   namespace interval_lib {
 
-template<class T, class Rounding>
+template<class T>
+struct rounding_control
+{
+  typedef void rounding_mode;
+  void upward() { }
+  void downward() { }
+  void tonearest() { }
+  rounding_mode get_rounding_mode() { }
+  void set_rounding_mode(rounding_mode) { }
+  static T pi_down() { return 3; }
+  static T pi_up()   { return 4; }
+  static T pi_2_1_down() { return 6; }
+  static T pi_2_1_up()   { return 7; }
+  static T pi_1_2_down() { return 1; }
+  static T pi_1_2_up()   { return 2; }
+  T to_int(const T& x) { return x; }
+  T force_rounding(const T& x) { return x; }
+};
+
+template<class T, class Rounding = rounding_control<T> >
 struct rounded_arithmetic_exact: Rounding {
   void init() { }
   T add_down(const T& x, const T& y) { return x + y; }
@@ -38,7 +57,7 @@ struct rounded_arithmetic_exact: Rounding {
   T int_up  (const T& x) { return std::ceil(x); }
 };
 
-template<class T, class Rounding>
+template<class T, class Rounding = rounding_control<T> >
 struct rounded_arithmetic_standard: Rounding {
   void init() { }
   T add_down(const T& x, const T& y)
@@ -67,7 +86,7 @@ struct rounded_arithmetic_standard: Rounding {
   { return (upward(), to_int(x)); }
 };
 
-template<class T, class Rounding>
+template<class T, class Rounding = rounding_control<T> >
 struct rounded_arithmetic_opposite_trick: Rounding {
   void init() { upward(); }
   T add_down(const T& x, const T& y) { return -force_rounding((-x) - y); }
@@ -153,25 +172,6 @@ struct unprotect<interval<T, Traits> >
   typedef interval<T, typename unprotect<Traits>::type> type;
 };
 
-template<class T>
-struct rounding_control
-{
-  typedef void rounding_mode;
-  void upward() { }
-  void downward() { }
-  void tonearest() { }
-  rounding_mode get_rounding_mode() { }
-  void set_rounding_mode(rounding_mode) { }
-  static T pi_down() { return 3; }
-  static T pi_up()   { return 4; }
-  static T pi_2_1_down() { return 6; }
-  static T pi_2_1_up()   { return 7; }
-  static T pi_1_2_down() { return 1; }
-  static T pi_1_2_up()   { return 2; }
-  T to_int(const T& x) { return x; }
-  T force_rounding(const T& x) { return x; }
-};
-
   } // namespace interval
 } // namespace boost
 
@@ -190,6 +190,8 @@ struct rounding_control
 #  error Please specify rounding control mechanism.
 #endif
 
+#include <boost/interval/rounded_transc.hpp>
+
 namespace boost {
   namespace interval_lib {
 
@@ -197,7 +199,7 @@ template<class T>
 struct rounded_arithmetic:
     save_state_nothing
       <rounded_transc_dummy
-         <T, rounded_arithmetic_exact<T, rounding_control<T> > > >
+         <T, rounded_arithmetic_exact<T> > >
 { };
 
     namespace detail {
@@ -206,7 +208,7 @@ template<class T>
 struct ra_aux:
     save_state
       <rounded_transc_dummy
-         <T, rounded_arithmetic_opposite_trick<T, rounding_control<T> > > >
+         <T, rounded_arithmetic_opposite_trick<T> > >
 { };
 
     } // namespace detail

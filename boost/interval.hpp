@@ -443,7 +443,6 @@ struct less<boost::interval<T, Traits> >
 } // namespace std
 #endif
 
-#include <boost/interval/rounded_transc.hpp>
 #include <boost/interval/rounded_arith.hpp>
 #include <boost/interval/checking.hpp>
 #include <boost/interval/compare.hpp>
