@@ -3,9 +3,10 @@
 // is granted provided this copyright notice appears in all copies.
 // This software is provided "as is" without express or implied
 // warranty, and with no claim as to its suitability for any purpose.
-#ifndef TUPPLE_PART_SPEC_HPP
-#define TUPPLE_PART_SPEC_HPP
+#ifndef BOOST_TUPPLE_DETAIL_TUPPLE_PART_SPEC_HPP
+#define BOOST_TUPPLE_DETAIL_TUPPLE_PART_SPEC_HPP
 #include "boost/tupple/detail/tupple_detail.hpp"
+#include <algorithm>
 
 
 
@@ -90,6 +91,22 @@ namespace boost
       {
         return tail_type(  );
       }
+      get_type0 front(  )
+      {
+        return m0;
+      }
+      const_get_type0 front(  ) const
+      {
+        return m0;
+      }
+      get_type0 back(  )
+      {
+        return m0;
+      }
+      const_get_type0 back(  ) const
+      {
+        return m0;
+      }
       const_get_type0 get0(  ) const
       {
         return m0;
@@ -166,6 +183,22 @@ namespace boost
       tail_type tail(  ) const
       {
         return tail_type( m1 );
+      }
+      get_type0 front(  )
+      {
+        return m0;
+      }
+      const_get_type0 front(  ) const
+      {
+        return m0;
+      }
+      get_type1 back(  )
+      {
+        return m1;
+      }
+      const_get_type1 back(  ) const
+      {
+        return m1;
       }
       const_get_type0 get0(  ) const
       {
@@ -253,6 +286,22 @@ namespace boost
       tail_type tail(  ) const
       {
         return tail_type( m1, m2 );
+      }
+      get_type0 front(  )
+      {
+        return m0;
+      }
+      const_get_type0 front(  ) const
+      {
+        return m0;
+      }
+      get_type2 back(  )
+      {
+        return m2;
+      }
+      const_get_type2 back(  ) const
+      {
+        return m2;
       }
       const_get_type0 get0(  ) const
       {
@@ -356,6 +405,22 @@ namespace boost
       tail_type tail(  ) const
       {
         return tail_type( m1, m2, m3 );
+      }
+      get_type0 front(  )
+      {
+        return m0;
+      }
+      const_get_type0 front(  ) const
+      {
+        return m0;
+      }
+      get_type3 back(  )
+      {
+        return m3;
+      }
+      const_get_type3 back(  ) const
+      {
+        return m3;
       }
       const_get_type0 get0(  ) const
       {
@@ -475,6 +540,22 @@ namespace boost
       tail_type tail(  ) const
       {
         return tail_type( m1, m2, m3, m4 );
+      }
+      get_type0 front(  )
+      {
+        return m0;
+      }
+      const_get_type0 front(  ) const
+      {
+        return m0;
+      }
+      get_type4 back(  )
+      {
+        return m4;
+      }
+      const_get_type4 back(  ) const
+      {
+        return m4;
       }
       const_get_type0 get0(  ) const
       {
@@ -610,6 +691,22 @@ namespace boost
       tail_type tail(  ) const
       {
         return tail_type( m1, m2, m3, m4, m5 );
+      }
+      get_type0 front(  )
+      {
+        return m0;
+      }
+      const_get_type0 front(  ) const
+      {
+        return m0;
+      }
+      get_type5 back(  )
+      {
+        return m5;
+      }
+      const_get_type5 back(  ) const
+      {
+        return m5;
       }
       const_get_type0 get0(  ) const
       {
@@ -761,6 +858,22 @@ namespace boost
       tail_type tail(  ) const
       {
         return tail_type( m1, m2, m3, m4, m5, m6 );
+      }
+      get_type0 front(  )
+      {
+        return m0;
+      }
+      const_get_type0 front(  ) const
+      {
+        return m0;
+      }
+      get_type6 back(  )
+      {
+        return m6;
+      }
+      const_get_type6 back(  ) const
+      {
+        return m6;
       }
       const_get_type0 get0(  ) const
       {
@@ -930,6 +1043,22 @@ namespace boost
       tail_type tail(  ) const
       {
         return tail_type( m1, m2, m3, m4, m5, m6, m7 );
+      }
+      get_type0 front(  )
+      {
+        return m0;
+      }
+      const_get_type0 front(  ) const
+      {
+        return m0;
+      }
+      get_type7 back(  )
+      {
+        return m7;
+      }
+      const_get_type7 back(  ) const
+      {
+        return m7;
       }
       const_get_type0 get0(  ) const
       {
@@ -1116,6 +1245,22 @@ namespace boost
       {
         return tail_type( m1, m2, m3, m4, m5, m6, m7, m8 );
       }
+      get_type0 front(  )
+      {
+        return m0;
+      }
+      const_get_type0 front(  ) const
+      {
+        return m0;
+      }
+      get_type8 back(  )
+      {
+        return m8;
+      }
+      const_get_type8 back(  ) const
+      {
+        return m8;
+      }
       const_get_type0 get0(  ) const
       {
         return m0;
@@ -1205,51 +1350,85 @@ namespace boost
     template < class T, int N > struct n_fold_tuple
     {
     };
-
-
-
-
-
-
     template < class T > struct n_fold_tuple <T, 0 >
     {
       typedef tuple <> type;
+      static type make( const T & arg )
+      {
+        return type(  );
+      }
     };
     template < class T > struct n_fold_tuple <T, 1 >
     {
       typedef tuple < T > type;
+      static type make( const T & arg )
+      {
+        return type( arg );
+      }
     };
     template < class T > struct n_fold_tuple <T, 2 >
     {
       typedef tuple < T, T > type;
+      static type make( const T & arg )
+      {
+        return type( arg, arg );
+      }
     };
     template < class T > struct n_fold_tuple <T, 3 >
     {
       typedef tuple < T, T, T > type;
+      static type make( const T & arg )
+      {
+        return type( arg, arg, arg );
+      }
     };
     template < class T > struct n_fold_tuple <T, 4 >
     {
       typedef tuple < T, T, T, T > type;
+      static type make( const T & arg )
+      {
+        return type( arg, arg, arg, arg );
+      }
     };
     template < class T > struct n_fold_tuple <T, 5 >
     {
       typedef tuple < T, T, T, T, T > type;
+      static type make( const T & arg )
+      {
+        return type( arg, arg, arg, arg, arg );
+      }
     };
     template < class T > struct n_fold_tuple <T, 6 >
     {
       typedef tuple < T, T, T, T, T, T > type;
+      static type make( const T & arg )
+      {
+        return type( arg, arg, arg, arg, arg, arg );
+      }
     };
     template < class T > struct n_fold_tuple <T, 7 >
     {
       typedef tuple < T, T, T, T, T, T, T > type;
+      static type make( const T & arg )
+      {
+        return type( arg, arg, arg, arg, arg, arg, arg );
+      }
     };
     template < class T > struct n_fold_tuple <T, 8 >
     {
       typedef tuple < T, T, T, T, T, T, T, T > type;
+      static type make( const T & arg )
+      {
+        return type( arg, arg, arg, arg, arg, arg, arg, arg );
+      }
     };
     template < class T > struct n_fold_tuple <T, 9 >
     {
       typedef tuple < T, T, T, T, T, T, T, T, T > type;
+      static type make( const T & arg )
+      {
+        return type( arg, arg, arg, arg, arg, arg, arg, arg, arg );
+      }
     };
     template < class TupleT > typename TupleT::get_type0 get0( TupleT & t )
     {
@@ -2520,6 +2699,83 @@ namespace boost
       return !( lhs == rhs );
     }
 #endif
+    template < class T > T minimal( const tuple < T > &t )
+    {
+      return t.head(  );
+    }
+    template < class T > T maximal( const tuple < T > &t )
+    {
+      return t.head(  );
+    }
+
+    template < class T > T minimal( const tuple < T, T > &t )
+    {
+      return std::min( t.head(  ), minimal( t.tail(  ) ) );
+    }
+    template < class T > T maximal( const tuple < T, T > &t )
+    {
+      return std::max( t.head(  ), maximal( t.tail(  ) ) );
+    }
+    template < class T > T minimal( const tuple < T, T, T > &t )
+    {
+      return std::min( t.head(  ), minimal( t.tail(  ) ) );
+    }
+    template < class T > T maximal( const tuple < T, T, T > &t )
+    {
+      return std::max( t.head(  ), maximal( t.tail(  ) ) );
+    }
+    template < class T > T minimal( const tuple < T, T, T, T > &t )
+    {
+      return std::min( t.head(  ), minimal( t.tail(  ) ) );
+    }
+    template < class T > T maximal( const tuple < T, T, T, T > &t )
+    {
+      return std::max( t.head(  ), maximal( t.tail(  ) ) );
+    }
+    template < class T > T minimal( const tuple < T, T, T, T, T > &t )
+    {
+      return std::min( t.head(  ), minimal( t.tail(  ) ) );
+    }
+    template < class T > T maximal( const tuple < T, T, T, T, T > &t )
+    {
+      return std::max( t.head(  ), maximal( t.tail(  ) ) );
+    }
+    template < class T > T minimal( const tuple < T, T, T, T, T, T > &t )
+    {
+      return std::min( t.head(  ), minimal( t.tail(  ) ) );
+    }
+    template < class T > T maximal( const tuple < T, T, T, T, T, T > &t )
+    {
+      return std::max( t.head(  ), maximal( t.tail(  ) ) );
+    }
+    template < class T > T minimal( const tuple < T, T, T, T, T, T, T > &t )
+    {
+      return std::min( t.head(  ), minimal( t.tail(  ) ) );
+    }
+    template < class T > T maximal( const tuple < T, T, T, T, T, T, T > &t )
+    {
+      return std::max( t.head(  ), maximal( t.tail(  ) ) );
+    }
+    template < class T > T minimal( const tuple < T, T, T, T, T, T, T,
+                                    T > &t )
+    {
+      return std::min( t.head(  ), minimal( t.tail(  ) ) );
+    }
+    template < class T > T maximal( const tuple < T, T, T, T, T, T, T,
+                                    T > &t )
+    {
+      return std::max( t.head(  ), maximal( t.tail(  ) ) );
+    }
+    template < class T > T minimal( const tuple < T, T, T, T, T, T, T, T,
+                                    T > &t )
+    {
+      return std::min( t.head(  ), minimal( t.tail(  ) ) );
+    }
+    template < class T > T maximal( const tuple < T, T, T, T, T, T, T, T,
+                                    T > &t )
+    {
+      return std::max( t.head(  ), maximal( t.tail(  ) ) );
+    }
   }                             // namespace tupple
 }                               // namespace boost
 

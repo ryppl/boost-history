@@ -3,9 +3,10 @@
 // is granted provided this copyright notice appears in all copies.
 // This software is provided "as is" without express or implied
 // warranty, and with no claim as to its suitability for any purpose.
-#ifndef TUPPLE_NO_PART_SPEC_HPP
-#define TUPPLE_NO_PART_SPEC_HPP
+#ifndef BOOST_TUPPLE_DETAIL_TUPPLE_NO_PART_SPEC_HPP
+#define BOOST_TUPPLE_DETAIL_TUPPLE_NO_PART_SPEC_HPP
 #include "boost/tupple/detail/tupple_detail.hpp"
+#include <algorithm>
 
 
 #include <boost/type_traits.hpp>
@@ -74,6 +75,22 @@ namespace boost
       tail_type tail(  ) const
       {
         return tail_type(  );
+      }
+      get_type0 front(  )
+      {
+        return m0;
+      }
+      const_get_type0 front(  ) const
+      {
+        return m0;
+      }
+      get_type0 back(  )
+      {
+        return m0;
+      }
+      const_get_type0 back(  ) const
+      {
+        return m0;
       }
       const_get_type0 get0(  ) const
       {
@@ -149,6 +166,22 @@ namespace boost
       tail_type tail(  ) const
       {
         return tail_type( m1 );
+      }
+      get_type0 front(  )
+      {
+        return m0;
+      }
+      const_get_type0 front(  ) const
+      {
+        return m0;
+      }
+      get_type1 back(  )
+      {
+        return m1;
+      }
+      const_get_type1 back(  ) const
+      {
+        return m1;
       }
       const_get_type0 get0(  ) const
       {
@@ -234,6 +267,22 @@ namespace boost
       tail_type tail(  ) const
       {
         return tail_type( m1, m2 );
+      }
+      get_type0 front(  )
+      {
+        return m0;
+      }
+      const_get_type0 front(  ) const
+      {
+        return m0;
+      }
+      get_type2 back(  )
+      {
+        return m2;
+      }
+      const_get_type2 back(  ) const
+      {
+        return m2;
       }
       const_get_type0 get0(  ) const
       {
@@ -336,6 +385,22 @@ namespace boost
       tail_type tail(  ) const
       {
         return tail_type( m1, m2, m3 );
+      }
+      get_type0 front(  )
+      {
+        return m0;
+      }
+      const_get_type0 front(  ) const
+      {
+        return m0;
+      }
+      get_type3 back(  )
+      {
+        return m3;
+      }
+      const_get_type3 back(  ) const
+      {
+        return m3;
       }
       const_get_type0 get0(  ) const
       {
@@ -453,6 +518,22 @@ namespace boost
       tail_type tail(  ) const
       {
         return tail_type( m1, m2, m3, m4 );
+      }
+      get_type0 front(  )
+      {
+        return m0;
+      }
+      const_get_type0 front(  ) const
+      {
+        return m0;
+      }
+      get_type4 back(  )
+      {
+        return m4;
+      }
+      const_get_type4 back(  ) const
+      {
+        return m4;
       }
       const_get_type0 get0(  ) const
       {
@@ -586,6 +667,22 @@ namespace boost
       tail_type tail(  ) const
       {
         return tail_type( m1, m2, m3, m4, m5 );
+      }
+      get_type0 front(  )
+      {
+        return m0;
+      }
+      const_get_type0 front(  ) const
+      {
+        return m0;
+      }
+      get_type5 back(  )
+      {
+        return m5;
+      }
+      const_get_type5 back(  ) const
+      {
+        return m5;
       }
       const_get_type0 get0(  ) const
       {
@@ -736,6 +833,22 @@ namespace boost
       tail_type tail(  ) const
       {
         return tail_type( m1, m2, m3, m4, m5, m6 );
+      }
+      get_type0 front(  )
+      {
+        return m0;
+      }
+      const_get_type0 front(  ) const
+      {
+        return m0;
+      }
+      get_type6 back(  )
+      {
+        return m6;
+      }
+      const_get_type6 back(  ) const
+      {
+        return m6;
       }
       const_get_type0 get0(  ) const
       {
@@ -904,6 +1017,22 @@ namespace boost
       tail_type tail(  ) const
       {
         return tail_type( m1, m2, m3, m4, m5, m6, m7 );
+      }
+      get_type0 front(  )
+      {
+        return m0;
+      }
+      const_get_type0 front(  ) const
+      {
+        return m0;
+      }
+      get_type7 back(  )
+      {
+        return m7;
+      }
+      const_get_type7 back(  ) const
+      {
+        return m7;
       }
       const_get_type0 get0(  ) const
       {
@@ -1089,6 +1218,22 @@ namespace boost
       {
         return tail_type( m1, m2, m3, m4, m5, m6, m7, m8 );
       }
+      get_type0 front(  )
+      {
+        return m0;
+      }
+      const_get_type0 front(  ) const
+      {
+        return m0;
+      }
+      get_type8 back(  )
+      {
+        return m8;
+      }
+      const_get_type8 back(  ) const
+      {
+        return m8;
+      }
       const_get_type0 get0(  ) const
       {
         return m0;
@@ -1185,38 +1330,74 @@ namespace boost
           template <> struct select <1 >
         {
           typedef tuple1 < T > type;
+          static type make( const T & arg )
+          {
+            return type( arg );
+          }
         };
           template <> struct select <2 >
         {
           typedef tuple2 < T, T > type;
+          static type make( const T & arg )
+          {
+            return type( arg, arg );
+          }
         };
-          template <> struct select <3 >
+        template <> struct select <3 >
         {
           typedef tuple3 < T, T, T > type;
+          static type make( const T & arg )
+          {
+            return type( arg, arg, arg );
+          }
         };
-          template <> struct select <4 >
+        template <> struct select <4 >
         {
           typedef tuple4 < T, T, T, T > type;
+          static type make( const T & arg )
+          {
+            return type( arg, arg, arg, arg );
+          }
         };
-          template <> struct select <5 >
+        template <> struct select <5 >
         {
           typedef tuple5 < T, T, T, T, T > type;
+          static type make( const T & arg )
+          {
+            return type( arg, arg, arg, arg, arg );
+          }
         };
-          template <> struct select <6 >
+        template <> struct select <6 >
         {
           typedef tuple6 < T, T, T, T, T, T > type;
+          static type make( const T & arg )
+          {
+            return type( arg, arg, arg, arg, arg, arg );
+          }
         };
-          template <> struct select <7 >
+        template <> struct select <7 >
         {
           typedef tuple7 < T, T, T, T, T, T, T > type;
+          static type make( const T & arg )
+          {
+            return type( arg, arg, arg, arg, arg, arg, arg );
+          }
         };
-          template <> struct select <8 >
+        template <> struct select <8 >
         {
           typedef tuple8 < T, T, T, T, T, T, T, T > type;
+          static type make( const T & arg )
+          {
+            return type( arg, arg, arg, arg, arg, arg, arg, arg );
+          }
         };
-          template <> struct select <9 >
+        template <> struct select <9 >
         {
           typedef tuple9 < T, T, T, T, T, T, T, T, T > type;
+          static type make( const T & arg )
+          {
+            return type( arg, arg, arg, arg, arg, arg, arg, arg, arg );
+          }
         };
       };
     }                           // namespace detail
@@ -1224,6 +1405,11 @@ namespace boost
     template < class T, int N > struct n_fold_tuple
     {
       typedef detail::n_fold_helper < T >::select < N >::type type;
+
+      static type make( const T & arg )
+      {
+        return detail::n_fold_helper < T >::select < N >::make( arg );
+      }
     };
 
 
@@ -2492,76 +2678,153 @@ namespace boost
       return !( lhs == rhs );
     }
 #endif
+    template < class T > T minimal( const tuple1 < T > &t )
+    {
+      return t.head(  );
+    }
+    template < class T > T maximal( const tuple1 < T > &t )
+    {
+      return t.head(  );
+    }
+
+    template < class T > T minimal( const tuple2 < T, T > &t )
+    {
+      return std::min( t.head(  ), minimal( t.tail(  ) ) );
+    }
+    template < class T > T maximal( const tuple2 < T, T > &t )
+    {
+      return std::max( t.head(  ), maximal( t.tail(  ) ) );
+    }
+    template < class T > T minimal( const tuple3 < T, T, T > &t )
+    {
+      return std::min( t.head(  ), minimal( t.tail(  ) ) );
+    }
+    template < class T > T maximal( const tuple3 < T, T, T > &t )
+    {
+      return std::max( t.head(  ), maximal( t.tail(  ) ) );
+    }
+    template < class T > T minimal( const tuple4 < T, T, T, T > &t )
+    {
+      return std::min( t.head(  ), minimal( t.tail(  ) ) );
+    }
+    template < class T > T maximal( const tuple4 < T, T, T, T > &t )
+    {
+      return std::max( t.head(  ), maximal( t.tail(  ) ) );
+    }
+    template < class T > T minimal( const tuple5 < T, T, T, T, T > &t )
+    {
+      return std::min( t.head(  ), minimal( t.tail(  ) ) );
+    }
+    template < class T > T maximal( const tuple5 < T, T, T, T, T > &t )
+    {
+      return std::max( t.head(  ), maximal( t.tail(  ) ) );
+    }
+    template < class T > T minimal( const tuple6 < T, T, T, T, T, T > &t )
+    {
+      return std::min( t.head(  ), minimal( t.tail(  ) ) );
+    }
+    template < class T > T maximal( const tuple6 < T, T, T, T, T, T > &t )
+    {
+      return std::max( t.head(  ), maximal( t.tail(  ) ) );
+    }
+    template < class T > T minimal( const tuple7 < T, T, T, T, T, T, T > &t )
+    {
+      return std::min( t.head(  ), minimal( t.tail(  ) ) );
+    }
+    template < class T > T maximal( const tuple7 < T, T, T, T, T, T, T > &t )
+    {
+      return std::max( t.head(  ), maximal( t.tail(  ) ) );
+    }
+    template < class T > T minimal( const tuple8 < T, T, T, T, T, T, T,
+                                    T > &t )
+    {
+      return std::min( t.head(  ), minimal( t.tail(  ) ) );
+    }
+    template < class T > T maximal( const tuple8 < T, T, T, T, T, T, T,
+                                    T > &t )
+    {
+      return std::max( t.head(  ), maximal( t.tail(  ) ) );
+    }
+    template < class T > T minimal( const tuple9 < T, T, T, T, T, T, T, T,
+                                    T > &t )
+    {
+      return std::min( t.head(  ), minimal( t.tail(  ) ) );
+    }
+    template < class T > T maximal( const tuple9 < T, T, T, T, T, T, T, T,
+                                    T > &t )
+    {
+      return std::max( t.head(  ), maximal( t.tail(  ) ) );
+    }
     namespace detail
     {
-// The initial case.
-      template < class T0 > struct base_type_selector1
+      // The initial case.
+      template < class T0 > struct tuple_base_type_selector1
       {
-        typedef boost::mpl::if_c <
-          boost::is_same < T0, null_type >::value,
+        typedef::boost::mpl::if_c <::boost::is_same < T0, null_type >::value,
           tuple0 < null_type >, tuple1 < T0 > >::type type;
       };
 
-        template < class T0, class T1 > struct base_type_selector2
+        template < class T0, class T1 > struct tuple_base_type_selector2
       {
-        typedef boost::mpl::if_c < boost::is_same < T1, null_type >::value,
-          base_type_selector1 < T0 >::type, tuple2 < T0, T1 > >::type type;
+        typedef::boost::mpl::if_c <::boost::is_same < T1, null_type >::value,
+          tuple_base_type_selector1 < T0 >::type, tuple2 < T0,
+          T1 > >::type type;
       };
-        template < class T0, class T1, class T2 > struct base_type_selector3
+        template < class T0, class T1, class T2 > struct tuple_base_type_selector3
       {
-        typedef boost::mpl::if_c < boost::is_same < T2, null_type >::value,
-          base_type_selector2 < T0, T1 >::type, tuple3 < T0, T1,
+        typedef::boost::mpl::if_c <::boost::is_same < T2, null_type >::value,
+          tuple_base_type_selector2 < T0, T1 >::type, tuple3 < T0, T1,
           T2 > >::type type;
       };
-        template < class T0, class T1, class T2, class T3 > struct base_type_selector4
+        template < class T0, class T1, class T2, class T3 > struct tuple_base_type_selector4
       {
-        typedef boost::mpl::if_c < boost::is_same < T3, null_type >::value,
-          base_type_selector3 < T0, T1, T2 >::type, tuple4 < T0, T1, T2,
+        typedef::boost::mpl::if_c <::boost::is_same < T3, null_type >::value,
+          tuple_base_type_selector3 < T0, T1, T2 >::type, tuple4 < T0, T1, T2,
           T3 > >::type type;
       };
-        template < class T0, class T1, class T2, class T3, class T4 > struct base_type_selector5
+        template < class T0, class T1, class T2, class T3, class T4 > struct tuple_base_type_selector5
       {
-        typedef boost::mpl::if_c < boost::is_same < T4, null_type >::value,
-          base_type_selector4 < T0, T1, T2, T3 >::type, tuple5 < T0, T1, T2,
-          T3, T4 > >::type type;
+        typedef::boost::mpl::if_c <::boost::is_same < T4, null_type >::value,
+          tuple_base_type_selector4 < T0, T1, T2, T3 >::type, tuple5 < T0, T1,
+          T2, T3, T4 > >::type type;
       };
         template < class T0, class T1, class T2, class T3, class T4,
-        class T5 > struct base_type_selector6
+        class T5 > struct tuple_base_type_selector6
       {
-        typedef boost::mpl::if_c < boost::is_same < T5, null_type >::value,
-          base_type_selector5 < T0, T1, T2, T3, T4 >::type, tuple6 < T0, T1,
-          T2, T3, T4, T5 > >::type type;
+        typedef::boost::mpl::if_c <::boost::is_same < T5, null_type >::value,
+          tuple_base_type_selector5 < T0, T1, T2, T3, T4 >::type, tuple6 < T0,
+          T1, T2, T3, T4, T5 > >::type type;
       };
         template < class T0, class T1, class T2, class T3, class T4, class T5,
-        class T6 > struct base_type_selector7
+        class T6 > struct tuple_base_type_selector7
       {
-        typedef boost::mpl::if_c < boost::is_same < T6, null_type >::value,
-          base_type_selector6 < T0, T1, T2, T3, T4, T5 >::type, tuple7 < T0,
-          T1, T2, T3, T4, T5, T6 > >::type type;
+        typedef::boost::mpl::if_c <::boost::is_same < T6, null_type >::value,
+          tuple_base_type_selector6 < T0, T1, T2, T3, T4, T5 >::type,
+          tuple7 < T0, T1, T2, T3, T4, T5, T6 > >::type type;
       };
         template < class T0, class T1, class T2, class T3, class T4, class T5,
-        class T6, class T7 > struct base_type_selector8
+        class T6, class T7 > struct tuple_base_type_selector8
       {
-        typedef boost::mpl::if_c < boost::is_same < T7, null_type >::value,
-          base_type_selector7 < T0, T1, T2, T3, T4, T5, T6 >::type,
+        typedef::boost::mpl::if_c <::boost::is_same < T7, null_type >::value,
+          tuple_base_type_selector7 < T0, T1, T2, T3, T4, T5, T6 >::type,
           tuple8 < T0, T1, T2, T3, T4, T5, T6, T7 > >::type type;
       };
         template < class T0, class T1, class T2, class T3, class T4, class T5,
-        class T6, class T7, class T8 > struct base_type_selector9
+        class T6, class T7, class T8 > struct tuple_base_type_selector9
       {
-        typedef boost::mpl::if_c < boost::is_same < T8, null_type >::value,
-          base_type_selector8 < T0, T1, T2, T3, T4, T5, T6, T7 >::type,
+        typedef::boost::mpl::if_c <::boost::is_same < T8, null_type >::value,
+          tuple_base_type_selector8 < T0, T1, T2, T3, T4, T5, T6, T7 >::type,
           tuple9 < T0, T1, T2, T3, T4, T5, T6, T7, T8 > >::type type;
       };
     }                           // namespace detail
     template < class T0 = null_type, class T1 = null_type, class T2 =
       null_type, class T3 = null_type, class T4 = null_type, class T5 =
       null_type, class T6 = null_type, class T7 = null_type, class T8 =
-      null_type > struct tuple:public detail::base_type_selector9 < T0, T1,
-      T2, T3, T4, T5, T6, T7, T8 >::type
+      null_type > struct tuple:public detail::tuple_base_type_selector9 < T0,
+      T1, T2, T3, T4, T5, T6, T7, T8 >::type
     {
-      typedef detail::base_type_selector9 < T0, T1, T2, T3, T4, T5, T6, T7,
-        T8 >::type base_type;
+      typedef detail::tuple_base_type_selector9 < T0, T1, T2, T3, T4, T5, T6,
+        T7, T8 >::type base_type;
 
         tuple(  ):self_type(  )
       {
@@ -2611,7 +2874,6 @@ namespace boost
         //BOOST_STATIC_ASSERT(  );
         return ( base_type::operator=( rhs ) );
       }
-
     };
   }                             // namespace tupple
 }                               // namespace boost

@@ -13,7 +13,6 @@
 #endif
 
 #include <boost/tupple/tupple.hpp>
-
 using namespace boost::tupple;
 
 #include <vector>
@@ -31,6 +30,7 @@ void head_tail_test()
 
   tuple<int, float> t(12, 5.5f);
 
+  BOOST_CHECK( t.size() == 2 );
   t.head() = 4;
   BOOST_CHECK( get0(t) == 4 );
 
@@ -42,6 +42,7 @@ void head_tail_test()
 
   tuple<char,long,double> u('a',t);
 
+  BOOST_CHECK( u.size() == 3 );
   BOOST_CHECK( get0(u) == 'a' );
   BOOST_CHECK( get1(u) == 6 );
   BOOST_CHECK( get2(u) > 5.4f && get2(u) < 5.6f );
@@ -52,12 +53,41 @@ void head_tail_test()
 }
 
 
+void front_back_test()
+{
+  tuple<int, float, long> t(12, 5.5f, 77);
+
+  BOOST_CHECK( t.size() == 3 );
+
+  BOOST_CHECK( get0(t) == 12 );
+  t.front() = 4;
+  BOOST_CHECK( get0(t) == 4 );
+  ++t.front();
+  BOOST_CHECK( get0(t) == 5 );
+  ++get0(t);
+  BOOST_CHECK( t.front() == 6 );
+
+  BOOST_CHECK( get2(t) == 77 );
+  t.back() = 4;
+  BOOST_CHECK( get2(t) == 4 );
+  ++t.back();
+  BOOST_CHECK( get2(t) == 5 );
+  ++get2(t);
+  BOOST_CHECK( t.back() == 6 );
+}
+
+
+
 void n_fold_test()
 {
   tuple<int,int,int> a(1,2,3);
   n_fold_tuple<int,3>::type b(1,2,3);
 
   BOOST_CHECK( a == b );
+
+  tuple<int,int,int> c(4,4,4);
+  tuple<int,int,int> d = n_fold_tuple<int,3>::make(4);
+  BOOST_CHECK( c == d );
 }
 
 
@@ -95,8 +125,8 @@ void min_max_test()
 {
   tuple<int,int,int> t( 5, -2, 3 );
 
-  //BOOST_CHECK( minimal(t) == -2 );
-  //BOOST_CHECK( maximal(t) == 5 );
+  BOOST_CHECK( minimal(t) == -2 );
+  BOOST_CHECK( maximal(t) == 5 );
 }
 
 #ifndef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
@@ -139,6 +169,7 @@ void algo_test()
 int test_main(int, char *[])
 {
   head_tail_test();
+  front_back_test();
   n_fold_test();
   swap_test();
   function_test();
