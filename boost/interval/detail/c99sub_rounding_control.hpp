@@ -1,4 +1,4 @@
-/* Boost interval/detail/isoc99_rounding_control.hpp file
+/* Boost interval/detail/c99sub_rounding_control.hpp file
  *
  * Copyright Jens Maurer 2000
  * Copyright Hervé Brönnimann, Guillaume Melquiond, Sylvain Pion 2002
@@ -13,15 +13,11 @@
  *
  * $Id$
  *
- * Revision history:
- *   2002-08-31	 Prepared for boost formal review
- *   2000-09-24	 Separated from interval.hpp
  */
 
-#ifndef BOOST_INTERVAL_DETAIL_ISOC99_ROUNDING_CONTROL_HPP
-#define BOOST_INTERVAL_DETAIL_ISOC99_ROUNDING_CONTROL_HPP
+#ifndef BOOST_INTERVAL_DETAIL_C99SUB_ROUNDING_CONTROL_HPP
+#define BOOST_INTERVAL_DETAIL_C99SUB_ROUNDING_CONTROL_HPP
 
-#include <cassert>
 #include <fenv.h>      // ISO C 99 rounding mode control
 
 namespace boost {
@@ -30,16 +26,11 @@ namespace boost {
 
 extern "C" { double rint(double); }
 
-struct isoc99_rounding_control
+struct c99_rounding
 {
   typedef int rounding_mode;
 
-  static void set_rounding_mode(const rounding_mode mode)
-  {
-    int ret = fesetround(mode);
-    assert(ret == 0);   // do not fold this with the fesetround()
-    (void) &ret;        // avoid "unused variable" warning if NDEBUG
-  }
+  static void set_rounding_mode(const rounding_mode mode) { fesetround(mode); }
   static void get_rounding_mode(rounding_mode &mode) { mode = fegetround(); }
   static void downward()    { set_rounding_mode(FE_DOWNWARD);   }
   static void upward()      { set_rounding_mode(FE_UPWARD);     }
@@ -47,28 +38,11 @@ struct isoc99_rounding_control
   static void toward_zero() { set_rounding_mode(FE_TOWARDZERO); }
 
   template<class T>
-  static T force_rounding(const T& r) { volatile T r_ = r; return r_; }
-
-  template<class T>
   static T to_int(const T& r) { return rint(r); }
 };
 
     } // namespace detail
-
-template<>
-struct rounding_control<float>:
-  detail::isoc99_rounding_control { };
-
-template<>
-struct rounding_control<double>:
-  detail::isoc99_rounding_control { };
-
-template<>
-struct rounding_control<long double>:
-  detail::isoc99_rounding_control { };
-
   } // namespace interval_lib
 } // namespace boost
 
-#endif /* BOOST_INTERVAL_DETAIL_ISOC99_ROUBDING_CONTROL_HPP */
-
+#endif // BOOST_INTERVAL_DETAIL_C99SUB_ROUBDING_CONTROL_HPP

@@ -15,7 +15,6 @@
  *
  * Revision history:
  *   2002-08-31	 Prepared for boost formal review
- *   2000-09-24	 Separated from interval.hpp
  */
 
 #ifndef BOOST_INTERVAL_DETAIL_X86_ROUNDING_CONTROL_HPP
@@ -27,8 +26,9 @@
 #  include <boost/interval/detail/bcc_rounding_control.hpp>
 #elif defined(_MSC_VER)
 #  include <boost/interval/detail/msvc_rounding_control.hpp>
-#elif defined(__MWERKS__)
-#  include <boost/interval/detail/x86mw_rounding_control.hpp>
+#elif defined(__MWERKS__) || defined(__ICC)
+#  define BOOST_INTERVAL_USE_C99_SUBSYSTEM
+#  include <boost/interval/detail/c99sub_rounding_control.hpp>
 #else
 #  error Unsupported C++ compiler.
 #endif
@@ -36,9 +36,12 @@
 namespace boost {
   namespace interval_lib {
 
-#ifndef __MWERKS__
     namespace detail {
 
+#ifdef BOOST_INTERVAL_USE_C99_SUBSYSTEM
+typedef c99_rounding x86_rounding_control;
+#undef BOOST_INTERVAL_USE_C99_SUBSYSTEM
+#else
 struct fpu_rounding_modes
 {
   unsigned short to_nearest;
@@ -58,9 +61,9 @@ struct x86_rounding_control: x86_rounding
   static void upward()      { set_rounding_mode(rnd_mode.upward);      }
   static void toward_zero() { set_rounding_mode(rnd_mode.toward_zero); }
 };
+#endif // BOOST_INTERVAL_USE_C99_SUBSYSTEM
 
     } // namespace detail
-#endif // __MWERKS__
 
 template<>
 struct rounding_control<float>: detail::x86_rounding_control

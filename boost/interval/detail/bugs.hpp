@@ -21,11 +21,11 @@
 #ifndef BOOST_INTERVAL_DETAIL_BUGS
 #define BOOST_INTERVAL_DETAIL_BUGS
 
-#if defined(__GLIBC__) && !defined(__GLIBCPP__) && (defined(__USE_MISC) || defined(__USE_XOPEN_EXTENDED) || defined(__USE_ISOC99))
+#if defined(__GLIBC__) && !defined(__GLIBCPP__) && (defined(__USE_MISC) || defined(__USE_XOPEN_EXTENDED) || defined(__USE_ISOC99)) && !defined(__ICC)
 #define BOOST_HAVE_INV_HYPERBOLIC
 #endif
 
-#ifdef BOOST_NO_STDC_NAMESPACE
+#if defined(BOOST_NO_STDC_NAMESPACE) && !defined(__ICC)
 namespace std {
   using ::min;
   using ::max;

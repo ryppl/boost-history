@@ -12,7 +12,7 @@
 #elif defined(sparc) || defined(__sparc__)
 #  include <boost/interval/detail/sparc_rounding_control.hpp>
 #elif defined(__USE_ISOC99)
-#  include <boost/interval/detail/isoc99_rounding_control.hpp>
+#  include <boost/interval/detail/c99_rounding_control.hpp>
 #else
 #  error Boost::interval: Please specify rounding control mechanism.
 #endif
