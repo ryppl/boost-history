@@ -22,9 +22,7 @@ namespace boost {
 //  erase_range -------------------------------------------------------//
 
     // erase_range iterator version
-    template< 
-        typename InputIteratorT, 
-        typename OutputIteratorT >
+    template< typename InputIteratorT, typename OutputIteratorT >
     inline OutputIteratorT erase_range_copy(
         OutputIteratorT Output,
         InputIteratorT Begin,
@@ -43,54 +41,51 @@ namespace boost {
                 typename boost::detail::iterator_traits<InputIteratorT>::value_type >() );
     }
 
-    // erase_range iterator version
-    template< 
-        typename InputT, 
-        typename OutputIteratorT >
+    template< typename InputT, typename OutputIteratorT >
     inline OutputIteratorT erase_range_copy(
         OutputIteratorT Output,
         const InputT& Input,
-		typename InputT::const_iterator SearchBegin,
-		typename InputT::const_iterator SearchEnd )
+        typename InputT::const_iterator SearchBegin,
+        typename InputT::const_iterator SearchEnd )
     {
         return string_algo::replace_copy(
             Output,
             Input,
             string_algo::detail::
                 create_find_rangeF< InputT >::create_const(
-					string_algo::make_range( SearchBegin, SearchEnd ) ),
+                    string_algo::make_range( SearchBegin, SearchEnd ) ),
             string_algo::detail::
                 empty_formatF<typename InputT::value_type>() );
     }
 
     // erase_range sequence version
     template< typename InputT >
-    InputT erase_range_copy( 
+    inline InputT erase_range_copy( 
         const InputT& Input,
-		typename InputT::const_iterator SearchBegin,
-		typename InputT::const_iterator SearchEnd )
+        typename InputT::const_iterator SearchBegin,
+        typename InputT::const_iterator SearchEnd )
     {
         return string_algo::replace_copy( 
             Input,
             string_algo::detail::
                 create_find_rangeF< InputT >::create_const(
-					string_algo::make_range( SearchBegin, SearchEnd ) ),
+                    string_algo::make_range( SearchBegin, SearchEnd ) ),
             string_algo::detail::
                 empty_formatF<typename InputT::value_type>() );
     }
 
     // replace_first in-place sequence version
     template< typename InputT >
-    InputT& erase_range( 
+    inline InputT& erase_range( 
         InputT& Input,
-		typename InputT::iterator SearchBegin,
-		typename InputT::iterator SearchEnd )
+        typename InputT::iterator SearchBegin,
+        typename InputT::iterator SearchEnd )
     {
         return string_algo::replace( 
             Input, 
             string_algo::detail::
                 create_find_rangeF< InputT >::create(
-					string_algo::make_range( SearchBegin, SearchEnd ) ),
+                    string_algo::make_range( SearchBegin, SearchEnd ) ),
             string_algo::detail::
                 empty_formatF<typename InputT::value_type>() );
     }
@@ -139,7 +134,7 @@ namespace boost {
 
     // erase_first sequence version
     template< typename InputT, typename SearchT >
-    InputT erase_first_copy( 
+    inline InputT erase_first_copy( 
         const InputT& Input,
         const SearchT& Search )
     {
@@ -153,7 +148,7 @@ namespace boost {
 
     // erase_first in-place sequence version
     template< typename InputT, typename SearchT >
-    InputT& erase_first( 
+    inline InputT& erase_first( 
         InputT& Input,
         const SearchT& Search )
     {
@@ -209,7 +204,7 @@ namespace boost {
 
     // erase_last sequence version
     template< typename InputT, typename SearchT >
-    InputT erase_last_copy( 
+    inline InputT erase_last_copy( 
         const InputT& Input,
         const SearchT& Search )
     {
@@ -223,7 +218,7 @@ namespace boost {
 
     // erase_last in-place sequence version
     template< typename InputT, typename SearchT >
-    InputT& erase_last( 
+    inline InputT& erase_last( 
         InputT& Input,
         const SearchT& Search )
     {
@@ -281,7 +276,7 @@ namespace boost {
 
     // erase_nth sequence version
     template< typename InputT, typename SearchT >
-    InputT erase_nth_copy( 
+    inline InputT erase_nth_copy( 
         const InputT& Input,
         const SearchT& Search,
         unsigned int Nth )
@@ -296,7 +291,7 @@ namespace boost {
 
     // erase_nth in-place sequence version
     template< typename InputT, typename SearchT >
-    InputT& erase_nth( 
+    inline InputT& erase_nth( 
         InputT& Input,
         const SearchT& Search,
         unsigned int Nth )
@@ -354,7 +349,7 @@ namespace boost {
 
     // erase_all sequence version
     template< typename InputT, typename SearchT >
-    InputT erase_all_copy( 
+    inline InputT erase_all_copy( 
         const InputT& Input,
         const SearchT& Search )
     {
@@ -368,7 +363,7 @@ namespace boost {
 
     // erase_all in-place sequence version
     template< typename InputT, typename SearchT >
-    InputT& erase_all( 
+    inline InputT& erase_all( 
         InputT& Input,
         const SearchT& Search )
     {

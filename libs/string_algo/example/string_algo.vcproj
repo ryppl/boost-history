@@ -121,6 +121,9 @@
 				RelativePath="predicate_example.cpp">
 			</File>
 			<File
+				RelativePath="replace_example.cpp">
+			</File>
+			<File
 				RelativePath="rle_example.cpp">
 			</File>
 			<File

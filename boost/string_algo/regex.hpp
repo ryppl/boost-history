@@ -121,7 +121,7 @@ namespace boost {
         typename CharT, 
         typename RegexTraitsT, typename RegexAllocatorT,
         typename FormatStringTraitsT, typename FormatStringAllocatorT >
-    InputT replace_regex_copy( 
+    inline InputT replace_regex_copy( 
         const InputT& Input,
         const reg_expression<CharT, RegexTraitsT, RegexAllocatorT>& Rx,
         const std::basic_string<CharT, FormatStringTraitsT, FormatStringAllocatorT>& Format,
@@ -142,7 +142,7 @@ namespace boost {
         typename CharT, 
         typename RegexTraitsT, typename RegexAllocatorT,
         typename FormatStringTraitsT, typename FormatStringAllocatorT >
-    InputT& replace_regex( 
+    inline InputT& replace_regex( 
         InputT& Input,
         const reg_expression<CharT, RegexTraitsT, RegexAllocatorT>& Rx,
         const std::basic_string<CharT, FormatStringTraitsT, FormatStringAllocatorT>& Format,
@@ -216,7 +216,7 @@ namespace boost {
         typename CharT, 
         typename RegexTraitsT, typename RegexAllocatorT,
         typename FormatStringTraitsT, typename FormatStringAllocatorT >
-    InputT replace_all_regex_copy( 
+    inline InputT replace_all_regex_copy( 
         const InputT& Input,
         const reg_expression<CharT, RegexTraitsT, RegexAllocatorT>& Rx,
         const std::basic_string<CharT, FormatStringTraitsT, FormatStringAllocatorT>& Format,
@@ -238,7 +238,7 @@ namespace boost {
         typename CharT, 
         typename RegexTraitsT, typename RegexAllocatorT,
         typename FormatStringTraitsT, typename FormatStringAllocatorT >
-    InputT& replace_all_regex( 
+    inline InputT& replace_all_regex( 
         InputT& Input,
         const reg_expression<CharT, RegexTraitsT, RegexAllocatorT>& Rx,
         const std::basic_string<CharT, FormatStringTraitsT, FormatStringAllocatorT>& Format,
@@ -302,7 +302,7 @@ namespace boost {
         typename InputT, 
         typename CharT, 
         typename RegexTraitsT, typename RegexAllocatorT >
-    InputT erase_regex_copy( 
+    inline InputT erase_regex_copy( 
         const InputT& Input,
         const reg_expression<CharT, RegexTraitsT, RegexAllocatorT>& Rx,
         unsigned int MatchFlags=match_default )
@@ -381,7 +381,7 @@ namespace boost {
         typename InputT, 
         typename CharT, 
         typename RegexTraitsT, typename RegexAllocatorT >
-    InputT erase_all_regex_copy( 
+    inline InputT erase_all_regex_copy( 
         const InputT& Input,
         const reg_expression<CharT, RegexTraitsT, RegexAllocatorT>& Rx,
         unsigned int MatchFlags=match_default )
@@ -398,7 +398,7 @@ namespace boost {
         typename InputT, 
         typename CharT, 
         typename RegexTraitsT, typename RegexAllocatorT>
-    InputT& erase_all_regex( 
+    inline InputT& erase_all_regex( 
         InputT& Input,
         const reg_expression<CharT, RegexTraitsT, RegexAllocatorT>& Rx,
         unsigned int MatchFlags=match_default )

@@ -1,3 +1,12 @@
+//  Boost string_algo library example file  ---------------------------------//
+
+//  (C) Copyright Pavol Droba 2003. Permission to copy, use, modify, sell and
+//  distribute this software is granted provided this copyright notice appears
+//  in all copies. This software is provided "as is" without express or implied
+//  warranty, and with no claim as to its suitability for any purpose.
+
+//  See http://www.boost.org for updates, documentation, and revision history.
+
 /*
     RLE compression using replace framwork. Goal is to compress a sequence of
     repeating characters into 3 bytes ( repeat mark, character and repetition count ).
@@ -210,7 +219,7 @@ void rle_example()
 
     string original("123_AA_*ZZZZZZZZZZZZZZ*34");
 
-	// copy compression
+    // copy compression
 
     string compress=string_algo::replace_all_copy( 
         original, 
@@ -226,16 +235,16 @@ void rle_example()
 
     cout << "Decompressed string: " << decompress << endl;
 
-	// in-place compression
+    // in-place compression
 
-	string_algo::replace_all( 
+    string_algo::replace_all( 
         original, 
         find_compressF<string,string_algo::mutable_input_policy>(), 
         format_compressF<string>() );
-	
+    
     cout << "Compressed string: " << original << endl;
 
-	string_algo::replace_all( 
+    string_algo::replace_all( 
         original, 
         find_decompressF<string,string_algo::mutable_input_policy>(), 
         format_decompressF<string>() );

@@ -27,11 +27,11 @@ void replace_test()
     list<char> list1( str1.begin(), str1.end() );
 
     // inmutable tests
-	iterator_range<string::const_iterator> const_range=
-		find_first( str1, string("abc" ) );
+    iterator_range<string::const_iterator> const_range=
+        find_first( str1, string("abc" ) );
 
     // basic tests
-	BOOST_CHECK( replace_first_copy( string("1abc3abc2"), string("abc"), string("YYY") )==string("1YYY3abc2") );
+    BOOST_CHECK( replace_first_copy( string("1abc3abc2"), string("abc"), string("YYY") )==string("1YYY3abc2") );
     BOOST_CHECK( replace_first_copy( string("1abc3abc2"), string("abc"), string("Z") )==string("1Z3abc2") );
     BOOST_CHECK( replace_first_copy( string("1abc3abc2"), string("abc"), string("XXXX") )==string("1XXXX3abc2") );
 
@@ -93,12 +93,12 @@ void replace_test()
     BOOST_CHECK( replace_all_copy( string(""), string("abc"), string("Z") )==string("") );
 
     // in-place test ( string )
-	iterator_range<string::iterator> range=find_first( str1, string("abc") );
-	
-	replace_range( str1, range.begin(), range.end(), string("abc#abc") );
-	BOOST_CHECK( str1==string("123abc#abcxxxabc321") );
+    iterator_range<string::iterator> range=find_first( str1, string("abc") );
+    
+    replace_range( str1, range.begin(), range.end(), string("abc#abc") );
+    BOOST_CHECK( str1==string("123abc#abcxxxabc321") );
     replace_first( str1, string("x"), string("yyyy") );
-	BOOST_CHECK( str1==string("123abc#abcyyyyxxabc321") );
+    BOOST_CHECK( str1==string("123abc#abcyyyyxxabc321") );
     replace_first( str1, string("yyyy"), string("zzz") );
     BOOST_CHECK( str1==string("123abc#abczzzxxabc321") );
     replace_first( str1, string("zzz"), string("456") );
@@ -107,15 +107,15 @@ void replace_test()
     BOOST_CHECK( str1==string("123abc#abc456x456abc321") );
 
     replace_all( str1, string("abc"), string("X") );
-	BOOST_CHECK( str1==string("123X#X456x456X321") );
+    BOOST_CHECK( str1==string("123X#X456x456X321") );
     replace_all( str1, string("X"), string("mno") );
-	BOOST_CHECK( str1==string("123mno#mno456x456mno321") );
+    BOOST_CHECK( str1==string("123mno#mno456x456mno321") );
     replace_all( str1, string("mno"), string("ZZZ") );
-	BOOST_CHECK( str1==string("123ZZZ#ZZZ456x456ZZZ321") );
+    BOOST_CHECK( str1==string("123ZZZ#ZZZ456x456ZZZ321") );
     erase_first( str1, string("ZZZ") );
-	BOOST_CHECK( str1==string("123#ZZZ456x456ZZZ321") );
+    BOOST_CHECK( str1==string("123#ZZZ456x456ZZZ321") );
     erase_all( str1, string("Z") );
-	BOOST_CHECK( str1==string("123#456x456321") );
+    BOOST_CHECK( str1==string("123#456x456321") );
 
     // in-place test ( vector )
     replace_first( vec1, string("x"), string("yyyy") );

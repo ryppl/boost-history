@@ -25,9 +25,9 @@ namespace boost {
 
             // find a range in the sequence ( functor )
             /*
-				This functor actually does not perform any find operation.
-				It always returns given iterator range as a result.
-			*/
+                This functor actually does not perform any find operation.
+                It always returns given iterator range as a result.
+            */
             template< typename InputT, typename InputPolicy=mutable_input_policy >
             struct find_rangeF : public find_baseF<InputT, InputPolicy>
             {
@@ -41,13 +41,13 @@ namespace boost {
 
                 // Construction
                 find_rangeF( 
-					input_iterator_type Begin, 
-					input_iterator_type End ) : m_Range(Begin, End) {}
+                    input_iterator_type Begin, 
+                    input_iterator_type End ) : m_Range(Begin, End) {}
 
                 find_rangeF(const iterator_range<input_iterator_type>& Range) : 
-					m_Range(Range) {}
+                    m_Range(Range) {}
 
-				// Operation
+                // Operation
                 result_type operator()( input_reference_type ) const
                 {
                     return m_Range;
@@ -62,7 +62,7 @@ namespace boost {
             struct create_find_rangeF 
             { 
                 static find_rangeF<InputT, mutable_input_policy> 
-				create(const iterator_range<typename InputT::iterator>& Range) 
+                create(const iterator_range<typename InputT::iterator>& Range) 
                 { 
                     return find_rangeF<InputT, mutable_input_policy>(Range); 
                 } 

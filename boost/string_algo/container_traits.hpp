@@ -219,15 +219,15 @@ namespace boost {
             template< typename T>
             struct is_selected
             {
-				template< typename SelectorT >
-				struct apply
-				{
-					typedef SelectorT::template selector<T> selector;
+                template< typename SelectorT >
+                struct apply
+                {
+                    typedef SelectorT::template selector<T> selector;
 
-					BOOST_STATIC_CONSTANT(bool, value=( selector::value ) );
-	                typedef boost::mpl::bool_c<value> type;
-				};
-			};
+                    BOOST_STATIC_CONSTANT(bool, value=( selector::value ) );
+                    typedef boost::mpl::bool_c<value> type;
+                };
+            };
 
             // Container traits selection implementation -----------------------//    
             
@@ -235,17 +235,17 @@ namespace boost {
             template< typename T, typename SelectorList >
             struct container_traits_selector
             {
-			private:
+            private:
                 typedef SelectorList selectors;
 
                 typedef typename boost::mpl::find_if< 
                     selectors,
-					is_selected<T> >::type iter;
+                    is_selected<T> >::type iter;
                 
                 typedef typename iter::type selector;
                 typedef typename selector::template selector<T> selector_type;
 
-			public:
+            public:
                 typedef typename selector_type::traits type;
             };                  
         
@@ -261,13 +261,13 @@ namespace boost {
         template< typename ContainerT >
         struct container_traits
         {
-		private:
+        private:
             // Container traits resolving
             typedef typename detail::container_traits_selector<
                 ContainerT,
                 detail::container_traits_selectors >::type traits_type;
 
-		public:
+        public:
             // Input types
             typedef typename traits_type::type type;
             typedef typename traits_type::iterator_type iterator_type;

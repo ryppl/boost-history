@@ -49,7 +49,7 @@ namespace boost {
 
 //  ends_with predicate  -----------------------------------------------//
 
-	template< typename InputIteratorT, typename SubIteratorT >
+    template< typename InputIteratorT, typename SubIteratorT >
     inline bool ends_with( 
         InputIteratorT Begin, 
         InputIteratorT End, 
@@ -57,11 +57,11 @@ namespace boost {
         SubIteratorT SubEnd )
     {
         typedef typename boost::detail::
-			iterator_traits<InputIteratorT>::iterator_category category;
+            iterator_traits<InputIteratorT>::iterator_category category;
 
-		return string_algo::detail::
-			ends_with_iter_select( 
-				Begin, End, SubBegin, SubEnd, category() );
+        return string_algo::detail::
+            ends_with_iter_select( 
+                Begin, End, SubBegin, SubEnd, category() );
     }
 
     // end_with sequence version

@@ -1,547 +1,170 @@
 <!doctype html public "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 
-<head>
-  <meta http-equiv="Content-Language" content="en-gb">
-  <meta name="author" content="Pavol Droba, mailto:droba@topmail.sk">
-  <meta name="GENERATOR" content="Microsoft FrontPage 4.0">
-  <meta name="ProgId" content="FrontPage.Editor.Document">
-  <title>String Algorithm Library</title>
-</head>
+  <head>
+    <meta http-equiv="Content-Language" content="en-gb">
+    <meta name="author" content="Pavol Droba, mailto:droba@topmail.sk">
+    <meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+    <meta name="ProgId" content="FrontPage.Editor.Document">
+    <title>String Algorithm Library</title>
+  </head>
 
-<body text="#000000" bgcolor="#ffffff">
+  <body text="#000000" bgcolor="#ffffff">
 
-  <div align="left">
-    <table border="0" width="799" height="134">
+    <div align="left">
+      <table border="0" width="799" height="134">
+        <tr>
+          <td width="288" height="134"><img id="IMG1" src="cboost.gif" align="middle" border="0" width="277" height="86"></td>
+          <td width="1152" height="134">
+            <h1 align="center">&nbsp;String Algorithm Library&nbsp;</h1>
+            <h2 align="center">Replace</h2>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <ul>
+      <li><a href="#fa_overview">Overview</a></li>
+      <li><a href="#replace">Replace Algorithms</a>
+        <ul>
+          <li><a href="#repl_description">Description</a></li>
+          <li><a href="#repl_synopsis">Synopsis</a>&nbsp;&nbsp;&nbsp;&nbsp;</li>
+          <li><a href="#repl_examples">Examples</a></li>
+        </ul>
+      </li>
+    </ul>
+    <hr>
+    <h2><a name="fa_overview">Overview</a></h2>
+    <p>
+      String Algorithms Library contains a set of algorithms for replace and
+      erase operations on sequences. Each algorithm finds a range in the input
+      sequence matching given criteria and injects a replacement sequence into
+      this range. Replacement sequence does not have to be contant.
+      Implementation allows generic formating used for example in variants using
+      regular expressions.
+    </p>
+    <hr>
+    <h2><a name="replace">Replace Algorithms</a></h2>
+    <h3><a name="repl_description">Description</a></h3>
+    <p align="left">
+      Regular variants are included in <a href="../../../boost/string_algo/replace.hpp">&lt;boost/string_algo/replace.hpp&gt;</a>
+      header and regex variants are included in <a href="../../../boost/string_algo/regex.hpp">&lt;boost/string_algo/regex.hpp&gt;</a>
+      header ( both in <code>boost</code> namespace ).
+    <p align="left">
+      Following table contains a summary of the replace algorithms and links to
+      their details.
+    </p>
+    <table border="1" height="28" width="829">
       <tr>
-        <td width="288" height="134"><img id="IMG1" src="cboost.gif"
-          align="middle" border="0" width="277" height="86"></td>
-        <td width="1152" height="134">
-          <h1 align="center">&nbsp;String Algorithm Library&nbsp;</h1>
-          <h2 align="center">Replace</h2>
-        </td>
+        <th height="30" valign="top" align="center" width="137">Function</th>
+        <th height="30" width="225">Description</th>
+        <th height="30" width="445">Example</th>
+      </tr>
+      <tr>
+        <td height="28" valign="top" align="center" width="137"><code><a href="replace_range.html">replace_range<br>
+          erase_range</a></code></td>
+        <td height="28" valign="top" align="center" width="225">Replace the
+          specified range with the format string /<br>
+          Remove the specified range from the sequence.</td>
+        <td height="28" valign="top" align="center" width="445"><code>replace_range_copy(str1,
+          Begin, End, string(&quot;23&quot;));<br>
+          replace_range(Input, Begin, End, string(&quot;23&quot;));<br>
+          erase_range_copy(str1, Begin, End);<br>
+          erase_range(Input, Begin, End);</code></td>
+      </tr>
+      <tr>
+        <td height="28" valign="top" align="center" width="137"><code><a href="replace_first.html">replace_first<br>
+          erase_first</a></code></td>
+        <td height="28" valign="top" align="center" width="225">Replace the
+          first occurence of the search string with the format string /<br>
+          Remove the occurence from the sequence.</td>
+        <td height="28" valign="top" align="center" width="445"><code>replace_first_copy(str1,
+          string(&quot;&lt;&gt;&quot;), string(&quot;23&quot;));<br>
+          replace_first(Input, string(&quot;&lt;&gt;&quot;),
+          string(&quot;23&quot;));<br>
+          erase_first_copy(str1, string(&quot;&lt;&gt;&quot;));<br>
+          erase_first(Input, string(&quot;&lt;&gt;&quot;));</code></td>
+      </tr>
+      <tr>
+        <td height="30" valign="top" align="center" width="137"><code><a href="replace_last.html">replace_last<br>
+          erase_last</a></code></td>
+        <td height="30" valign="top" align="center" width="225">Replace the last
+          occurence of the search string with the format string /<br>
+          Remove the occurence from the sequence.</td>
+        <td height="30" valign="top" align="center" width="445"><code>replace_last_copy(str1,
+          string(&quot;&lt;&gt;&quot;), string(&quot;23&quot;));<br>
+          replace_last(Input, string(&quot;&lt;&gt;&quot;),
+          string(&quot;23&quot;));<br>
+          erase_last_copy(str1, string(&quot;&lt;&gt;&quot;));<br>
+          erase_last(Input, string(&quot;&lt;&gt;&quot;));</code></td>
+      </tr>
+      <tr>
+        <td height="30" valign="top" align="center" width="137"><code><a href="replace_nth.html">replace_nth<br>
+          erase_nth</a></code></td>
+        <td height="28" valign="top" align="center" width="225">Replace the n-th
+          occurence of the search string with the format string /<br>
+          Remove the occurence from the sequence.<br>
+          Position is 0-based.</td>
+        <td height="28" valign="top" align="center" width="445"><code>replace_nth_copy(str1,
+          string(&quot;&lt;&gt;&quot;), 2, string(&quot;23&quot;));<br>
+          replace_nth(Input, string(&quot;&lt;&gt;&quot;), 2,
+          string(&quot;23&quot;));<br>
+          erase_nth_copy(str1, string(&quot;&lt;&gt;&quot;), 2);<br>
+          erase_nth(Input, string(&quot;&lt;&gt;&quot;), 2);</code></td>
+      </tr>
+      <tr>
+        <td height="30" valign="top" align="center" width="137"><code><a href="replace_all.html">replace_all<br>
+          erase_all</a></code></td>
+        <td height="28" valign="top" align="center" width="225">Replace all
+          occurences of the search string with the format string /<br>
+          Remove all the occurence from the sequence.</td>
+        <td height="28" valign="top" align="center" width="445"><code>replace_all_copy(str1,
+          string(&quot;&lt;&gt;&quot;), string(&quot;23&quot;));<br>
+          replace_all(Input, string(&quot;&lt;&gt;&quot;),
+          string(&quot;23&quot;));<br>
+          erase_all_copy(str1, string(&quot;&lt;&gt;&quot;));<br>
+          erase_all(Input, string(&quot;&lt;&gt;&quot;));</code></td>
+      </tr>
+      <tr>
+        <td height="30" valign="top" align="center" width="137"><code>replace_regex<br>
+          erase_regex</code></td>
+        <td height="30" valign="top" align="center" width="225">Format a
+          substring matching given regular expression with the specified format
+          /<br>
+          Remove the substring from the sequence.</td>
+        <td height="30" valign="top" align="center" width="445"><code>replace_regex_copy(str1,
+          regex(&quot;([A-Z]).*xxx&quot;), string(&quot;$1-yyy&quot;));<br>
+          replace_regex(Input, str1, regex(&quot;([A-Z]).*xxx&quot;),
+          string(&quot;$1-yyy&quot;));<br>
+          erase_regex_copy(str1, regex(&quot;([A-Z]).*xxx&quot;));
+          erase_regex(Input, str1, regex(&quot;([A-Z]).*xxx&quot;));</code></td>
+      </tr>
+      <tr>
+        <td height="30" valign="top" align="center" width="137"><code>replace_all_regex<br>
+          erase_all_regex</code></td>
+        <td height="30" valign="top" align="center" width="225">Format all
+          substrings matching given regular expression with the specified format
+          /<br>
+          Remove all the matching substrings from the sequence.</td>
+        <td height="30" valign="top" align="center" width="445"><code>replace_all_regex_copy(str1,
+          regex(&quot;([A-Z]).*xxx&quot;), string(&quot;$1-yyy&quot;));<br>
+          replace_all_regex(Input, str1, regex(&quot;([A-Z]).*xxx&quot;),
+          string(&quot;$1-yyy&quot;));<br>
+          erase_all_regex_copy(str1, regex(&quot;([A-Z]).*xxx&quot;));
+          erase_all_regex(Input, str1, regex(&quot;([A-Z]).*xxx&quot;));</code></td>
       </tr>
     </table>
-  </div>
-  <ul>
-    <li><a href="#fa_overview">Overview</a></li>
-    <li><a href="#replace">Replace Algorithms</a>
-      <ul>
-        <li><a href="#repl_description">Description</a></li>
-        <li><a href="#repl_synopsis">Synopsis</a>&nbsp;&nbsp;&nbsp;&nbsp;</li>
-        <li><a href="#repl_examples">Examples</a></li>
-      </ul>
-    </li>
-    <li><a href="#low_api">Erase Algorithms</a>
-      <ul>
-        <li><a href="#la_description">Description</a></li>
-        <li><a href="#la_synopsis">Synopsis</a>&nbsp;&nbsp;</li>
-      </ul>
-    </li>
-  </ul>
-  <hr>
-  <h2><a name="fa_overview">Overview</a></h2>
-  <p>
-    Each replace algorithm replaces an occurence of substring in the input
-    sequence. Selection of replaced substring and the substitutuion for it
-    depends on algorithm. Algorithms 
-  </p>
-  <hr>
-  <h2><a name="replace">Replace Algorithms</a></h2>
-  <h3><a name="repl_description">Description</a></h3>
-  <p align="left">
-    Regular variants are included in <a
-    href="../../../boost/string_algo/replace.hpp">&lt;boost/string_algo/replace.hpp&gt;</a>
-    header and regex variants are included in <a
-    href="../../../boost/string_algo/regex.hpp">&lt;boost/string_algo/regex.hpp&gt;</a>
-    header ( both in <code>boost namespace</code> ).
-  <p align="left">
-    &nbsp;
-  </p>
-  <table border="1" height="28" width="829">
-    <tr>
-      <th height="30" valign="top" align="center" width="137">Function</th>
-      <th height="30" width="225">Description</th>
-      <th height="30" width="445">Example</th>
-    </tr>
-    <tr>
-      <td height="28" valign="top" align="center" width="137"><code>replace_range</code></td>
-      <td height="28" valign="top" align="center" width="225">Replace the
-        specified range with the format string</td>
-      <td height="28" valign="top" align="center" width="445"><code>replace_range_copy(str1,
-        Begin, End, string(&quot;23&quot;));<br>
-        replace_range(Input, Begin, End, string(&quot;23&quot;));</code></td>
-    </tr>
-    <tr>
-      <td height="28" valign="top" align="center" width="137"><code>replace_first</code></td>
-      <td height="28" valign="top" align="center" width="225">Replace the first
-        occurence of the search string with the format string</td>
-      <td height="28" valign="top" align="center" width="445"><code>replace_first_copy(str1,
-        string(&quot;&lt;&gt;&quot;), string(&quot;23&quot;));<br>
-        replace_first(Input, string(&quot;&lt;&gt;&quot;),
-        string(&quot;23&quot;));</code></td>
-    </tr>
-    <tr>
-      <td height="30" valign="top" align="center" width="137"><code>replace_last</code></td>
-      <td height="30" valign="top" align="center" width="225">Replace the last
-        occurence of the search string with the format string</td>
-      <td height="30" valign="top" align="center" width="445"><code>replace_last_copy(str1,
-        string(&quot;&lt;&gt;&quot;), string(&quot;23&quot;));<br>
-        replace_last(Input, string(&quot;&lt;&gt;&quot;),
-        string(&quot;23&quot;));</code></td>
-    </tr>
-    <tr>
-      <td height="30" valign="top" align="center" width="137"><code>replace_nth</code></td>
-      <td height="28" valign="top" align="center" width="225">Replace the n-th
-        occurence of the search string with the format string.<br>
-        Position is 0-based.</td>
-      <td height="28" valign="top" align="center" width="445"><code>replace_nth_copy(str1,
-        string(&quot;&lt;&gt;&quot;), string(&quot;23&quot;), 2);<br>
-        replace_nth(Input, string(&quot;&lt;&gt;&quot;), string(&quot;23&quot;),
-        2);</code></td>
-    </tr>
-    <tr>
-      <td height="30" valign="top" align="center" width="137"><code>replace_all</code></td>
-      <td height="28" valign="top" align="center" width="225">Replace all
-        occurences of the search string with the format string</td>
-      <td height="28" valign="top" align="center" width="445"><code>replace_all_copy(str1,
-        string(&quot;&lt;&gt;&quot;), string(&quot;23&quot;));<br>
-        replace_all(Input, string(&quot;&lt;&gt;&quot;),
-        string(&quot;23&quot;));</code></td>
-    </tr>
-    <tr>
-      <td height="30" valign="top" align="center" width="137"><code>replace_regex</code></td>
-      <td height="30" valign="top" align="center" width="225">Format a substring
-        matching given regular expression with the specified format</td>
-      <td height="30" valign="top" align="center" width="445"><code>replace_regex_copy(str1,
-        regex(&quot;([A-Z]).*xxx&quot;), string(&quot;$1-yyy&quot;));<br>
-        replace_regex(Input, str1, regex(&quot;([A-Z]).*xxx&quot;),
-        string(&quot;$1-yyy&quot;));</code></td>
-    </tr>
-    <tr>
-      <td height="30" valign="top" align="center" width="137"><code>replace_all_regex</code></td>
-      <td height="30" valign="top" align="center" width="225">Format all
-        substrings matching given regular expression with the specified format</td>
-      <td height="30" valign="top" align="center" width="445"><code>replace_all_regex_copy(str1,
-        regex(&quot;([A-Z]).*xxx&quot;), string(&quot;$1-yyy&quot;));<br>
-        replace_all_regex(Input, str1, regex(&quot;([A-Z]).*xxx&quot;),
-        string(&quot;$1-yyy&quot;));</code></td>
-    </tr>
-  </table>
-  <h3><a name="repl_synopsis">Synopsis</a></h3>
-  <p>
-    Iterator based variants.
-  </p>
-  <pre>    <b>template</b>&lt; <b>typename</b> InputIteratorT, <b>typename</b> SearchIteratorT &gt;
-    <b>inline</b> iterator_range&lt;InputIteratorT&gt;
-    find_first( 
-        InputIteratorT Begin, 
-        InputIteratorT End, 
-        SearchIteratorT SearchBegin,
-        SearchIteratorT SearchEnd );
+    <p>
+      &nbsp;
+    </p>
+    <hr>
+    <p>
+      (C) Copyright Pavol Droba 2003. Permission to copy, use, modify, sell and
+      distribute this software is granted provided this copyright notice appears
+      in all copies. This software is provided &quot;as is&quot; without express
+      or implied warranty, and with no claim as to its suitability for any
+      purpose.
+    </p>
 
-    <b>template</b>&lt; <b>typename</b> InputIteratorT, <b>typename</b> SearchIteratorT &gt;
-    <b>inline</b> iterator_range&lt;InputIteratorT&gt;
-    find_last( 
-        InputIteratorT Begin, 
-        InputIteratorT End, 
-        SearchIteratorT SearchBegin,
-        SearchIteratorT SearchEnd );
-
-    <b>template</b>&lt; <b>typename</b> InputIteratorT, <b>typename</b> SearchIteratorT &gt;
-    <b>inline</b> iterator_range&lt;InputIteratorT&gt;
-    find_nth( 
-        InputIteratorT Begin, 
-        InputIteratorT End, 
-        SearchIteratorT SearchBegin,
-        SearchIteratorT SearchEnd,
-        <b>unsigned</b> <b>int</b> Nth );
-
-    <b>template</b>&lt; 
-        <b>typename</b> InputIteratorT, 
-        <b>typename</b> CharT, 
-        <b>typename</b> RegexTraitsT, <b>typename</b> RegexAllocatorT&gt;
-    <b>inline</b> string_algo::detail::regex_search_result&lt;InputIteratorT&gt;
-    find_regex( 
-        InputIteratorT Begin, 
-        InputIteratorT End, 
-        <b>const</b> reg_expression&lt;CharT, RegexTraitsT, RegexAllocatorT&gt;&amp; Rx,
-        <b>unsigned</b> <b>int</b> MatchFlags=match_default );</pre>
-  <p>
-    Sequence based variants.
-  </p>
-  <pre>    <b>template</b>&lt;<b>typename</b> InputT, <b>typename</b> SearchT&gt;
-    <b>inline</b> iterator_range&lt;<b>typename</b> string_algo::input_policy&lt;InputT&gt;::iterator_type&gt;
-    find_first( 
-	InputT&amp; Input, 
-        <b>const</b> SearchT&amp; Search );
-
-    <b>template</b>&lt;<b>typename</b> InputT, <b>typename</b> SearchT&gt;
-    <b>inline</b> iterator_range&lt;<b>typename</b> string_algo::input_policy&lt;InputT&gt;::iterator_type&gt;
-    find_last( 
-	InputT&amp; Input, 
-        <b>const</b> SearchT&amp; Search );
-
-    <b>template</b>&lt;<b>typename</b> InputT, <b>typename</b> SearchT&gt;
-    <b>inline</b> iterator_range&lt;<b>typename</b> string_algo::input_policy&lt;InputT&gt;::iterator_type&gt;
-    find_nth( 
-	InputT&amp; Input, 
-        <b>const</b> SearchT&amp; Search,
-	<b>unsigned</b> <b>int</b> Nth );</pre>
-  <pre>    <b>template</b>&lt; 
-        <b>typename</b> InputT, 
-        <b>typename</b> CharT, 
-        <b>typename</b> RegexTraitsT, <b>typename</b> RegexAllocatorT&gt;
-    <b>inline</b> string_algo::detail::
-        regex_search_result&lt;<b>typename</b> string_algo::input_policy&lt;InputT&gt;::iterator_type&gt;
-    find_regex( 
-        InputT&amp; Input, 
-        <b>const</b> reg_expression&lt;CharT, RegexTraitsT, RegexAllocatorT&gt;&amp; Rx,
-        <b>unsigned</b> <b>int</b> MatchFlags=match_default );
-</pre>
-  <table border="0" width="574" height="1">
-    <tr>
-      <td width="443" height="31" valign="top"><code><b>typename</b>
-        InputIteratorT</code></td>
-      <td width="703" height="31" valign="top">Forward iterator delimiting an
-        input</td>
-    </tr>
-    <tr>
-      <td width="443" height="31" valign="top"><code><b>typename</b>
-        SearchIteratorT</code></td>
-      <td width="703" height="31" valign="top">Forward iterator delimiting a
-        search sequence</td>
-    </tr>
-    <tr>
-      <td width="443" height="31" valign="top"><code><b>typename</b> InputT</code></td>
-      <td width="703" height="31" valign="top">Input sequence type</td>
-    </tr>
-    <tr>
-      <td width="443" height="31" valign="top"><code><b>typename </b>SearchT</code></td>
-      <td width="703" height="31" valign="top">Search sequence type</td>
-    </tr>
-    <tr>
-      <td width="443" height="31" valign="top"><code>InputIteratorT Begin</code></td>
-      <td width="703" height="31" valign="top">Begin of an input sequence</td>
-    </tr>
-    <tr>
-      <td width="443" height="31" valign="top"><code>InputIteratorT End</code></td>
-      <td width="703" height="31" valign="top">End of an input sequence</td>
-    </tr>
-    <tr>
-      <td width="443" height="31" valign="top"><code>SearchIteratorT SearchBegin</code></td>
-      <td width="703" height="31" valign="top">Begin of a search sequence</td>
-    </tr>
-    <tr>
-      <td width="443" height="31" valign="top"><code>SearchIteratorT SearchEnd</code></td>
-      <td width="703" height="31" valign="top">End of a search sequence</td>
-    </tr>
-    <tr>
-      <td width="443" height="31" valign="top"><code>InputT&amp; Input</code></td>
-      <td width="703" height="31" valign="top">An input sequence</td>
-    </tr>
-    <tr>
-      <td width="443" height="31" valign="top"><code><b>const</b> SearchT&amp;
-        Search</code></td>
-      <td width="703" height="31" valign="top">A search sequence</td>
-    </tr>
-    <tr>
-      <td width="443" height="31" valign="top"><code><b>unsigned</b> <b>int</b>
-        Nth</code></td>
-      <td width="703" height="31" valign="top">A number specifying which match
-        is to be searched for.</td>
-    </tr>
-    <tr>
-      <td width="443" height="31" valign="top"><code><b>const</b>
-        reg_expression&lt;CharT, RegexTraitsT, RegexAllocatorT&gt;&amp; Rx</code></td>
-      <td width="703" height="31" valign="top">Regular expression used for
-        searching</td>
-    </tr>
-    <tr>
-      <td width="443" height="31" valign="top"><code><b>unsigned</b> <b>int</b>
-        MatchFlags=match_default</code></td>
-      <td width="703" height="31" valign="top">Match flags defining some
-        properties of search algorithm.</td>
-    </tr>
-  </table>
-  <h4>Remark on <code>find_regex</code></h4>
-  <p>
-    <code>find_regex</code> returns <code>regex_search_result</code> instead of&nbsp;
-    <code>iterator_range</code>. <code>regex_search_result</code> is derived
-    from<code> iterator_range</code>, but in addition it contains a <code>match_results</code>
-    from <code>regex_search</code> (defined in Regex++) algorithm. It is defined
-    in <a href="../../../boost/string_algo/detail/find_regex.hpp">&lt;boost/string_algo/detail/find_regex.hpp&gt;</a>
-    header.
-  </p>
-  <h3><a name="repl_examples">Examples</a></h3>
-  <p>
-    Following example shows basic usage of predicate algorithms. More examples
-    can be found in the library tests in <a href="../test/find_test.cpp">&lt;libs/string_algo/test/predicate_test.cpp&gt;</a>.
-  </p>
-  <pre>#include &lt;string&gt;
-#include &lt;iostream&gt;
-#include &lt;boost/string_algo/conv.hpp&gt;
-#include &lt;boost/string_algo/find.hpp&gt;
-
-using namespace std;
-using namespace boost;
-
-void find_example()
-{  
-    cout &lt;&lt; &quot;* Find Example *&quot; &lt;&lt; endl &lt;&lt; endl;
-
-    string str1(&quot;abc___cde___efg&quot;);
-
-    // find &quot;cde&quot; substring
-    iterator_range&lt;string::iterator&gt; range=find_first( str1, string(&quot;cde&quot;) );
-
-    // convert a substring to upper case 
-    // note that iterator range can be directly passed to the algorithm
-    toupper( range );
-
-    cout &lt;&lt; &quot;str1 with upper-cased part matching cde: &quot; &lt;&lt; str1 &lt;&lt; endl;</pre>
-  <pre>    cout &lt;&lt; endl;
-}</pre>
-  <hr>
-  <h2><a name="low_api">Low-level API</a></h2>
-  <h3><a name="la_description">Description</a></h3>
-  <p>
-    Low-level API consist of only one function. Its purpose it to wrap a call to
-    a find functor.
-  </p>
-  <h3><a name="la_synopsis">Synopsis</a></h3>
-  <pre>    template&lt; typename FindF &gt;
-    <b>inline</b> <b>typename</b> FindF::result_type 
-    find( 
-        <b>typename</b> FindF::input_reference_type Input, 
-        <b>const</b> FindF&amp; Find );</pre>
-  <table border="0" width="574" height="1">
-    <tr>
-      <td width="418" height="31" valign="top"><code>InputIteratorT</code></td>
-      <td width="728" height="31" valign="top">Forward iterator delimiting an
-        input</td>
-    </tr>
-    <tr>
-      <td width="418" height="31" valign="top"><code>SearchIteratorT</code></td>
-      <td width="728" height="31" valign="top">Forward iterator delimiting a
-        search sequence</td>
-    </tr>
-    <tr>
-      <td width="418" height="31" valign="top">InputT</td>
-      <td width="728" height="31" valign="top">Input sequence type</td>
-    </tr>
-    <tr>
-      <td width="418" height="31" valign="top">SearchT</td>
-      <td width="728" height="31" valign="top">Search sequence type</td>
-    </tr>
-    <tr>
-      <td width="418" height="31" valign="top"><code>InputIteratorT Begin</code></td>
-      <td width="728" height="31" valign="top">Begin of an input sequence</td>
-    </tr>
-    <tr>
-      <td width="418" height="31" valign="top"><code>InputIteratorT End</code></td>
-      <td width="728" height="31" valign="top">End of an input sequence</td>
-    </tr>
-    <tr>
-      <td width="418" height="31" valign="top"><code>SearchIteratorT SearchBegin</code></td>
-      <td width="728" height="31" valign="top">Begin of a search sequence</td>
-    </tr>
-    <tr>
-      <td width="418" height="31" valign="top"><code>SearchIteratorT SearchEnd</code></td>
-      <td width="728" height="31" valign="top">End of a search sequence</td>
-    </tr>
-    <tr>
-      <td width="418" height="31" valign="top"><code>InputT&amp; Input</code></td>
-      <td width="728" height="31" valign="top">An input sequence</td>
-    </tr>
-  </table>
-  <hr>
-  <h2><a name="functors">Find Functors</a></h2>
-  <h3><a name="fun_description">Description</a></h3>
-  <h3><a name="fun_synopsis">Synopsis</a></h3>
-  <table border="0" width="601" height="21">
-  </table>
-  <table border="1" height="32" width="827">
-    <tr>
-      <th height="30" valign="top" align="center">Function</th>
-      <th height="30" width="234">Description</th>
-      <th height="30" width="464">Example</th>
-    </tr>
-    <tr>
-      <td height="28" valign="top" align="center"><code>trim_left_copy_if</code></td>
-      <td height="28" valign="top" align="center" width="234">Remove leading
-        spaces. Copy version with IsSpace predicate.</td>
-      <td height="28" valign="top" align="center" width="464"><code>trim_left_copy_if(ostream_iterator&lt;char&gt;(cout),
-        Begin, End, isfrom( string(&quot;&lt;&gt;&quot;) );<br>
-        str=trim_left_copy_if(str, isspace&lt;char&gt;() );</code></td>
-    </tr>
-    <tr>
-      <td height="30" valign="top" align="center"><code>trim_left_if</code></td>
-      <td height="30" valign="top" align="center" width="234">Remove leading
-        spaces. In-place version with IsSpace predicate.</td>
-      <td height="30" valign="top" align="center" width="464"><code>str=trim_left_if(str,
-        isspace&lt;char&gt;() );</code></td>
-    </tr>
-    <tr>
-      <td height="30" valign="top" align="center"><code>trim_left_copy</code></td>
-      <td height="28" valign="top" align="center" width="234">Remove leading
-        spaces. Copy version.</td>
-      <td height="28" valign="top" align="center" width="464"><code>trim_left_copy(ostream_iterator&lt;char&gt;(cout),
-        Begin, End, std::locale(&quot;German_germany&quot;) );<br>
-        str=trim_left_copy(str);</code></td>
-    </tr>
-    <tr>
-      <td height="30" valign="top" align="center"><code>trim_left</code></td>
-      <td height="30" valign="top" align="center" width="234">Remove leading
-        spaces. In-place version .</td>
-      <td height="30" valign="top" align="center" width="464"><code>trim_left(str);</code><br>
-      </td>
-    </tr>
-    <tr>
-      <td height="28" valign="top" align="center"><code>trim_right_copy_if</code></td>
-      <td height="28" valign="top" align="center" width="234">Remove trailing
-        spaces. Copy version with IsSpace predicate.</td>
-      <td height="28" valign="top" align="center" width="464"><code>trim_right_copy_if(ostream_iterator&lt;char&gt;(cout),
-        Begin, End, isfrom( string(&quot;&lt;&gt;&quot;) );<br>
-        str=trim_right_copy_if(str, isspace&lt;char&gt;() );</code></td>
-    </tr>
-    <tr>
-      <td height="30" valign="top" align="center"><code>trim_right_if</code></td>
-      <td height="30" valign="top" align="center" width="234">Remove trailing
-        spaces. In-place version with IsSpace predicate.</td>
-      <td height="30" valign="top" align="center" width="464"><code>str=trim_right_if(str,
-        isspace&lt;char&gt;() );</code></td>
-    </tr>
-    <tr>
-      <td height="30" valign="top" align="center"><code>trim_right_copy</code></td>
-      <td height="28" valign="top" align="center" width="234">Remove trailing
-        spaces. Copy version.</td>
-      <td height="28" valign="top" align="center" width="464"><code>trim_right_copy(ostream_iterator&lt;char&gt;(cout),
-        Begin, End, std::locale(&quot;German_germany&quot;) );<br>
-        str=trim_right_copy(str);</code></td>
-    </tr>
-    <tr>
-      <td height="30" valign="top" align="center"><code>trim_right</code></td>
-      <td height="30" valign="top" align="center" width="234">Remove trailing
-        spaces. In-place version .</td>
-      <td height="30" valign="top" align="center" width="464"><code>trim_right(str);</code><br>
-      </td>
-    </tr>
-    <tr>
-      <td height="28" valign="top" align="center"><code>trim_copy_if</code></td>
-      <td height="28" valign="top" align="center" width="234">Remove trailing
-        and leading spaces. Copy version with IsSpace predicate.</td>
-      <td height="28" valign="top" align="center" width="464"><code>trim_copy_if(ostream_iterator&lt;char&gt;(cout),
-        Begin, End, isfrom( string(&quot;&lt;&gt;&quot;) );<br>
-        str=trim_copy_if(str, isspace&lt;char&gt;() );</code></td>
-    </tr>
-    <tr>
-      <td height="30" valign="top" align="center"><code>trim_if</code></td>
-      <td height="30" valign="top" align="center" width="234">Remove trailing
-        and leading spaces. In-place version with IsSpace predicate.</td>
-      <td height="30" valign="top" align="center" width="464"><code>str=trim_if(str,
-        isspace&lt;char&gt;() );</code></td>
-    </tr>
-    <tr>
-      <td height="30" valign="top" align="center"><code>trim_copy</code></td>
-      <td height="28" valign="top" align="center" width="234">Remove trailing
-        and leading spaces. Copy version.</td>
-      <td height="28" valign="top" align="center" width="464"><code>trim_copy(ostream_iterator&lt;char&gt;(cout),
-        Begin, End, std::locale(&quot;German_germany&quot;) );<br>
-        str=trim_copy(str);</code></td>
-    </tr>
-    <tr>
-      <td height="34" valign="top" align="center"><code>trim</code></td>
-      <td height="34" valign="top" align="center" width="234">Remove trailing
-        and leading spaces. In-place version .</td>
-      <td height="34" valign="top" align="center" width="464"><code>trim(str);</code><br>
-      </td>
-    </tr>
-  </table>
-  <div align="left">
-    <table border="0" width="574" height="1">
-      <tr>
-        <td width="418" height="31" valign="top"><code>OutputIteratorT Output</code></td>
-        <td width="728" height="31" valign="top">Output iterator for the result.
-          The result of the operation will be sent to this iterator.</td>
-      </tr>
-      <tr>
-        <td width="418" height="31" valign="top"><code>InputIteratorT Begin</code></td>
-        <td width="728" height="31" valign="top">Begin of an input sequence</td>
-      </tr>
-      <tr>
-        <td width="418" height="31" valign="top"><code>InputIteratorT End</code></td>
-        <td width="728" height="31" valign="top">End of an input sequence</td>
-      </tr>
-      <tr>
-        <td width="418" height="31" valign="top"><code><b>const</b> SeqT&amp;
-          Input</code></td>
-        <td width="728" height="31" valign="top">An input sequence (const)</td>
-      </tr>
-      <tr>
-        <td width="418" height="31" valign="top"><code>SeqT&amp; Input</code></td>
-        <td width="728" height="31" valign="top">An input sequence (mutable)</td>
-      </tr>
-      <tr>
-        <td width="418" height="31" valign="top">PredicateT Predicate</td>
-        <td width="728" height="31" valign="top">Space selection predicate.</td>
-      </tr>
-      <tr>
-        <td width="418" height="31" valign="top"><code><b>const</b>
-          std::locale&amp; Loc</code></td>
-        <td width="728" height="31" valign="top">An instance of locales which
-          will be used for conversion</td>
-      </tr>
-    </table>
-  </div>
-  <p>
-    Table shows the functionality of provided functors.
-  </p>
-  <div align="left">
-    <table border="1" height="28" width="814">
-      <tr>
-        <th height="30" valign="top" align="center" width="101">Predicate</th>
-        <th height="30" width="237">Description</th>
-        <th height="30" width="162">Underlaying functor</th>
-        <th height="30" width="290">Example</th>
-      </tr>
-      <tr>
-        <td height="28" valign="top" align="center" width="101"><code>isclassified</code>&nbsp;</td>
-        <td height="28" valign="top" align="center" width="237">Match any
-          character matching a characted class defined by Type parameter and
-          locale.</td>
-        <td height="28" valign="top" align="center" width="162"><code>isclassifiedF&lt;CharT&gt;</code></td>
-        <td height="28" valign="top" align="center" width="290"><code>isclassified(std::ctype_base::digit)<br>
-          </code>Creates a functor, that matches all digits.</td>
-      </tr>
-      <tr>
-        <td height="30" valign="top" align="center" width="101">isspace</td>
-        <td height="30" valign="top" align="center" width="237">Match a space.
-          Instance of <code>isclassified</code> for <code>std::ctype_base::space</code>
-          type</td>
-        <td height="30" valign="top" align="center" width="162"><code>isclassifiedF&lt;CharT&gt;</code></td>
-        <td height="30" valign="top" align="center" width="290"><code>isspace()</code><br>
-          Creates a functore that matches all spaces.</td>
-      </tr>
-      <tr>
-        <td height="30" valign="top" align="center" width="101">isfrom</td>
-        <td height="30" valign="top" align="center" width="237">Match any
-          charater from the input sequence</td>
-        <td height="30" valign="top" align="center" width="162">isfromF&lt;SeqT&gt;</td>
-        <td height="30" valign="top" align="center" width="290"><code>isfrom(string(&quot;abc&quot;))<br>
-          </code>Creates a functor which matches any of the charaters a,b,c.</td>
-      </tr>
-    </table>
-  </div>
-  <hr>
-  <p>
-    (C) Copyright Pavol Droba 2003. Permission to copy, use, modify, sell and
-    distribute this software is granted provided this copyright notice appears
-    in all copies. This software is provided &quot;as is&quot; without express
-    or implied warranty, and with no claim as to its suitability for any
-    purpose.
-  </p>
-
-</body>
+  </body>
 
 </html>

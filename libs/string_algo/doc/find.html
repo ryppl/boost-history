@@ -1,69 +1,67 @@
 <!doctype html public "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 
-<head>
-  <meta http-equiv="Content-Language" content="en-gb">
-  <meta name="author" content="Pavol Droba, mailto:droba@topmail.sk">
-  <meta name="GENERATOR" content="Microsoft FrontPage 4.0">
-  <meta name="ProgId" content="FrontPage.Editor.Document">
-  <title>String Algorithm Library</title>
-</head>
+  <head>
+    <meta http-equiv="Content-Language" content="en-gb">
+    <meta name="author" content="Pavol Droba, mailto:droba@topmail.sk">
+    <meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+    <meta name="ProgId" content="FrontPage.Editor.Document">
+    <title>String Algorithm Library</title>
+  </head>
 
-<body text="#000000" bgcolor="#ffffff">
+  <body text="#000000" bgcolor="#ffffff">
 
-  <div align="left">
-    <table border="0" width="799" height="134">
-      <tr>
-        <td width="288" height="134"><img id="IMG1" src="cboost.gif"
-          align="middle" border="0" width="277" height="86"></td>
-        <td width="1152" height="134">
-          <h1 align="center">&nbsp;String Algorithm Library&nbsp;</h1>
-          <h2 align="center">Find</h2>
-        </td>
-      </tr>
-    </table>
-  </div>
-  <ul>
-    <li><a href="#overview">Overview</a></li>
-    <li><a href="#iterator_range">iterator_range class</a>
-      <ul>
-        <li><a href="#iter_description">Description</a></li>
-        <li><a href="#iter_synopsis">Synopsis</a></li>
-      </ul>
-    </li>
-    <li><a href="#find_algorithms">Find Algorithms</a>
-      <ul>
-        <li><a href="#fa_description">Description</a></li>
-        <li><a href="#fa_synopsis">Synopsis</a>&nbsp;&nbsp;&nbsp;&nbsp;</li>
-        <li><a href="#ua_examples">Examples</a></li>
-      </ul>
-    </li>
-  </ul>
-  <hr>
-  <h2><a name="overview">Overview</a></h2>
-  <p>
-    Find algorithms are used to search for a substring matching a specific
-    criteria. Result is given as a pair of iterators (represented by an instance
-    of <code>iterator_range</code>) pointing into input sequence. Matching
-    criteria is specific for each algorithm. Library includes searching for
-    first, last and n-th occurence of a substring as well as regular expression
-    matching.
-  </p>
-  <hr>
-  <h2><a name="iterator_range">iterator_range class</a></h2>
-  <h3><a name="iter_description">Description</a></h3>
-  <p>
-    <code>iterator_range</code> class included in <a
-    href="../../../boost/string_algo/trim.hpp">&lt;boost/string_algo/iterator_range.hpp&gt;</a>
-    header ( in <code>boost</code> namespace&nbsp; ).<br>
-    Many algorithms working with sequences take a pair of iterators, delimiting
-    a working range, as an arguments. <code>iterator_range</code> class is an
-    encapsulation of a range identified by a pair of iterators. It provides a
-    minimal sequence interface, so it is possible to pass an instance to an
-    algorithm requiring a sequence as an input.&nbsp;
-  </p>
-  <h3><a name="iter_synopsis">Synopsis</a></h3>
-  <pre>    <b>template</b>&lt; <b>typename</b> IteratorT &gt; 
+    <div align="left">
+      <table border="0" width="799" height="134">
+        <tr>
+          <td width="288" height="134"><img id="IMG1" src="cboost.gif" align="middle" border="0" width="277" height="86"></td>
+          <td width="1152" height="134">
+            <h1 align="center">&nbsp;String Algorithm Library&nbsp;</h1>
+            <h2 align="center">Find</h2>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <ul>
+      <li><a href="#overview">Overview</a></li>
+      <li><a href="#iterator_range">iterator_range class</a>
+        <ul>
+          <li><a href="#iter_description">Description</a></li>
+          <li><a href="#iter_synopsis">Synopsis</a></li>
+        </ul>
+      </li>
+      <li><a href="#find_algorithms">Find Algorithms</a>
+        <ul>
+          <li><a href="#fa_description">Description</a></li>
+          <li><a href="#fa_synopsis">Synopsis</a>&nbsp;&nbsp;&nbsp;&nbsp;</li>
+          <li><a href="#ua_examples">Examples</a></li>
+        </ul>
+      </li>
+    </ul>
+    <hr>
+    <h2><a name="overview">Overview</a></h2>
+    <p>
+      Find algorithms are used to search for a substring matching a specific
+      criteria. Result is given as a pair of iterators (represented by an
+      instance of <code>iterator_range</code>) pointing into input sequence.
+      Matching criteria is specific for each algorithm. Library includes
+      searching for first, last and n-th occurence of a substring as well as
+      regular expression matching.
+    </p>
+    <hr>
+    <h2><a name="iterator_range">iterator_range class</a></h2>
+    <h3><a name="iter_description">Description</a></h3>
+    <p>
+      <code>iterator_range</code> class included in <a href="../../../boost/string_algo/trim.hpp">&lt;boost/string_algo/iterator_range.hpp&gt;</a>
+      header ( in <code>boost</code> namespace&nbsp; ).<br>
+      Many algorithms working with sequences take a pair of iterators,
+      delimiting a working range, as an arguments. <code>iterator_range</code>
+      class is an encapsulation of a range identified by a pair of iterators. It
+      provides a minimal sequence interface, so it is possible to pass an
+      instance to an algorithm requiring a sequence as an input.&nbsp;
+    </p>
+    <h3><a name="iter_synopsis">Synopsis</a></h3>
+    <pre>    <b>template</b>&lt; <b>typename</b> IteratorT &gt; 
     <b>class</b> iterator_range
     {
     <b>public</b>:
@@ -74,7 +72,7 @@
             iterator_traits&lt;IteratorT&gt;::difference_type difference_type;
         <b>typedef</b> IteratorT const_iterator;
         <b>typedef</b> IteratorT iterator;</pre>
-  <pre>        iterator_range();
+    <pre>        iterator_range();
         iterator_range( iterator Begin, iterator End );
         <b>template</b>&lt; <b>typename</b> OtherItT &gt;
         iterator_range( <b>const</b> iterator_range&lt;OtherItT&gt;&amp; Other );
@@ -91,157 +89,154 @@
         <b>bool</b> empty() <b>const</b>;
         difference_type size() <b>const</b>;
     };</pre>
-  <p>
-    Class members:
-  </p>
-  <table border="0" width="704" height="1">
-    <tr>
-      <td width="528" height="31" valign="top"><code><b>typename</b> IteratorT</code></td>
-      <td width="748" height="31" valign="top">An iterator type, to be contained
-        by an&nbsp; <code>iteratator_range </code>class</td>
-    </tr>
-    <tr>
-      <td width="528" height="31" valign="top"><code>type</code></td>
-      <td width="748" height="31" valign="top">Self type</td>
-    </tr>
-    <tr>
-      <td width="528" height="31" valign="top"><code>value_type</code></td>
-      <td width="748" height="31" valign="top">value_type of the contained
-        iterator</td>
-    </tr>
-    <tr>
-      <td width="528" height="31" valign="top"><code>difference_type</code></td>
-      <td width="748" height="31" valign="top">difference_type of the container
-        iterator</td>
-    </tr>
-    <tr>
-      <td width="528" height="31" valign="top"><code>const_iterator</code></td>
-      <td width="748" height="31" valign="top">const_iterator type</td>
-    </tr>
-    <tr>
-      <td width="528" height="31" valign="top"><code>iterator</code></td>
-      <td width="748" height="31" valign="top">iterator type</td>
-    </tr>
-    <tr>
-      <td width="528" height="31" valign="top"><code>iterator_range()</code></td>
-      <td width="748" height="31" valign="top">Default contructor</td>
-    </tr>
-    <tr>
-      <td width="528" height="31" valign="top"><code>iterator_range(<br>
-        &nbsp;&nbsp;&nbsp; iterator Begin, iterator End )</code></td>
-      <td width="748" height="31" valign="top">Contructor from a pair of
-        iterators</td>
-    </tr>
-    <tr>
-      <td width="528" height="31" valign="top"><code>iterator_range(<b><br>
-        &nbsp; const</b> iterator_range&lt;OtherItT&gt;&amp;Other)</code></td>
-      <td width="748" height="31" valign="top">Copy constructor. Templated to
-        make possible a conversion between const_iterator and iterator types</td>
-    </tr>
-    <tr>
-      <td width="528" height="31" valign="top">i<code>terator_range&amp; <b>operator</b>=(<br>
-        &nbsp; <b>const</b> iterator_range&lt;OtherItT&gt;&amp; Other)</code></td>
-      <td width="748" height="31" valign="top">Assignment. Templated to make
-        possible a conversion between const_iterator and iterator types</td>
-    </tr>
-    <tr>
-      <td width="528" height="31" valign="top"><code><b>bool</b> <b>operator</b>==(<br>
-        &nbsp; <b>const</b> iterator_range&lt;OtherItT&gt;&amp; Other)<b><br>
-        bool</b> <b>operator</b>!=(<br>
-        &nbsp; <b>const</b> iterator_range&lt;OtherItT&gt;&amp; Other)</code></td>
-      <td width="748" height="31" valign="top">Comparison operators.</td>
-    </tr>
-    <tr>
-      <td width="528" height="31" valign="top"><code>IteratorT begin() <b>const</b></code></td>
-      <td width="748" height="31" valign="top">Returns first iterator from the
-        range</td>
-    </tr>
-    <tr>
-      <td width="528" height="31" valign="top"><code>IteratorT end() <b>const</b></code></td>
-      <td width="748" height="31" valign="top">Returns second iterator from the
-        range</td>
-    </tr>
-    <tr>
-      <td width="528" height="31" valign="top"><code><b>bool</b> empty() <b>const</b></code></td>
-      <td width="748" height="31" valign="top">Check if the range is empty.<br>
-        <code>begin()==end()</code></td>
-    </tr>
-    <tr>
-      <td width="528" height="31" valign="top"><code>difference_type size() <b>const</b></code></td>
-      <td width="748" height="31" valign="top">Returns the distance between
-        iterators.<br>
-        <code>std::distance(begin(), end())</code></td>
-    </tr>
-  </table>
-  <hr>
-  <h2><a name="find_algorithms">Find Algorithms</a></h2>
-  <h3><a name="fa_description">Description</a></h3>
-  <p>
-    Regular variants are included in <a
-    href="../../../boost/string_algo/find.hpp">&lt;boost/string_algo/find.hpp&gt;</a>
-    header and regex variants are included in <a
-    href="../../../boost/string_algo/regex.hpp">&lt;boost/string_algo/regex.hpp&gt;</a>
-    header ( both in <code>boost namespace</code> ).<br>
-    All find algorithms are returning an instance of <code>iterator_range</code>
-    as a result. It contains a pair of iterators delimiting the result pointing
-    into the input sequence. If a match is not found, result contains a pair of
-    iterators pointing at the end of the input sequence <code>&lt;Input.end(),Input.end()&gt;</code>
-    .
-  <p>
-    For algorithms taking a sequence as an input, constness of the input defines
-    the result of the find algorithm. For const input, a <code>const_iterator</code>
-    and for non-const input an <code>iterator</code> is used. Choice is
-    implemented by <code>input_policy</code> class (defined in&nbsp; <a
-    href="../../../boost/string_algo/traits.hpp">&lt;boost/string_algo/traits.hpp&gt;</a>).
-  </p>
-  <p>
-    &nbsp;
-  </p>
-  <table border="1" height="28" width="827">
-    <tr>
-      <th height="30" valign="top" align="center">Function</th>
-      <th height="30" width="234">Description</th>
-      <th height="30" width="464">Example</th>
-    </tr>
-    <tr>
-      <td height="28" valign="top" align="center"><code>find_first</code></td>
-      <td height="28" valign="top" align="center" width="234">Find the first
-        occurence of a substring in the input range.</td>
-      <td height="28" valign="top" align="center" width="464"><code>find_first(
-        Begin, End, SubstrBegin, SubstrEnd );<br>
-        find_first( Input, string(&quot;23&quot;) );</code></td>
-    </tr>
-    <tr>
-      <td height="30" valign="top" align="center"><code>find_last</code></td>
-      <td height="30" valign="top" align="center" width="234">Find the last
-        occurence of a substring.</td>
-      <td height="30" valign="top" align="center" width="464"><code>find_last(
-        Begin, End, SubstrBegin, SubstrEnd );<br>
-        find_last( Input, string(&quot;23&quot;) );</code></td>
-    </tr>
-    <tr>
-      <td height="30" valign="top" align="center"><code>find_nth</code></td>
-      <td height="28" valign="top" align="center" width="234">Find the n-th
-        occurence of a substring.<br>
-        Position is 0-based.</td>
-      <td height="28" valign="top" align="center" width="464"><code>find_nth(
-        Begin, End, SubstrBegin, SubstrEnd, 2 );<br>
-        find_nth( Input, string(&quot;12&quot;), 2 );</code></td>
-    </tr>
-    <tr>
-      <td height="30" valign="top" align="center"><code>find_regex</code></td>
-      <td height="30" valign="top" align="center" width="234">Find a first
-        substring mathing a given regex.</td>
-      <td height="30" valign="top" align="center" width="464"><code>find_regex(
-        Begin, End, Rx );<br>
-        find_regex( Input, regex(&quot;[A-Z].*xxx&quot;), match_any );</code></td>
-    </tr>
-  </table>
-  <h3><a name="fa_synopsis">Synopsis</a></h3>
-  <p>
-    Iterator based variants.
-  </p>
-  <pre>    <b>template</b>&lt; <b>typename</b> InputIteratorT, <b>typename</b> SearchIteratorT &gt;
+    <p>
+      Class members:
+    </p>
+    <table border="0" width="704" height="1">
+      <tr>
+        <td width="528" height="31" valign="top"><code><b>typename</b> IteratorT</code></td>
+        <td width="748" height="31" valign="top">An iterator type, to be
+          contained by an&nbsp; <code>iteratator_range </code>class</td>
+      </tr>
+      <tr>
+        <td width="528" height="31" valign="top"><code>type</code></td>
+        <td width="748" height="31" valign="top">Self type</td>
+      </tr>
+      <tr>
+        <td width="528" height="31" valign="top"><code>value_type</code></td>
+        <td width="748" height="31" valign="top">value_type of the contained
+          iterator</td>
+      </tr>
+      <tr>
+        <td width="528" height="31" valign="top"><code>difference_type</code></td>
+        <td width="748" height="31" valign="top">difference_type of the
+          container iterator</td>
+      </tr>
+      <tr>
+        <td width="528" height="31" valign="top"><code>const_iterator</code></td>
+        <td width="748" height="31" valign="top">const_iterator type</td>
+      </tr>
+      <tr>
+        <td width="528" height="31" valign="top"><code>iterator</code></td>
+        <td width="748" height="31" valign="top">iterator type</td>
+      </tr>
+      <tr>
+        <td width="528" height="31" valign="top"><code>iterator_range()</code></td>
+        <td width="748" height="31" valign="top">Default contructor</td>
+      </tr>
+      <tr>
+        <td width="528" height="31" valign="top"><code>iterator_range(<br>
+          &nbsp;&nbsp;&nbsp; iterator Begin, iterator End )</code></td>
+        <td width="748" height="31" valign="top">Contructor from a pair of
+          iterators</td>
+      </tr>
+      <tr>
+        <td width="528" height="31" valign="top"><code>iterator_range(<b><br>
+          &nbsp; const</b> iterator_range&lt;OtherItT&gt;&amp;Other)</code></td>
+        <td width="748" height="31" valign="top">Copy constructor. Templated to
+          make possible a conversion between const_iterator and iterator types</td>
+      </tr>
+      <tr>
+        <td width="528" height="31" valign="top">i<code>terator_range&amp; <b>operator</b>=(<br>
+          &nbsp; <b>const</b> iterator_range&lt;OtherItT&gt;&amp; Other)</code></td>
+        <td width="748" height="31" valign="top">Assignment. Templated to make
+          possible a conversion between const_iterator and iterator types</td>
+      </tr>
+      <tr>
+        <td width="528" height="31" valign="top"><code><b>bool</b> <b>operator</b>==(<br>
+          &nbsp; <b>const</b> iterator_range&lt;OtherItT&gt;&amp; Other)<b><br>
+          bool</b> <b>operator</b>!=(<br>
+          &nbsp; <b>const</b> iterator_range&lt;OtherItT&gt;&amp; Other)</code></td>
+        <td width="748" height="31" valign="top">Comparison operators.</td>
+      </tr>
+      <tr>
+        <td width="528" height="31" valign="top"><code>IteratorT begin() <b>const</b></code></td>
+        <td width="748" height="31" valign="top">Returns first iterator from the
+          range</td>
+      </tr>
+      <tr>
+        <td width="528" height="31" valign="top"><code>IteratorT end() <b>const</b></code></td>
+        <td width="748" height="31" valign="top">Returns second iterator from
+          the range</td>
+      </tr>
+      <tr>
+        <td width="528" height="31" valign="top"><code><b>bool</b> empty() <b>const</b></code></td>
+        <td width="748" height="31" valign="top">Check if the range is empty.<br>
+          <code>begin()==end()</code></td>
+      </tr>
+      <tr>
+        <td width="528" height="31" valign="top"><code>difference_type size() <b>const</b></code></td>
+        <td width="748" height="31" valign="top">Returns the distance between
+          iterators.<br>
+          <code>std::distance(begin(), end())</code></td>
+      </tr>
+    </table>
+    <hr>
+    <h2><a name="find_algorithms">Find Algorithms</a></h2>
+    <h3><a name="fa_description">Description</a></h3>
+    <p>
+      Regular variants are included in <a href="../../../boost/string_algo/find.hpp">&lt;boost/string_algo/find.hpp&gt;</a>
+      header and regex variants are included in <a href="../../../boost/string_algo/regex.hpp">&lt;boost/string_algo/regex.hpp&gt;</a>
+      header ( both in <code>boost namespace</code> ).<br>
+      All find algorithms are returning an instance of <code>iterator_range</code>
+      as a result. It contains a pair of iterators delimiting the result
+      pointing into the input sequence. If a match is not found, result contains
+      a pair of iterators pointing at the end of the input sequence <code>&lt;Input.end(),Input.end()&gt;</code>
+      .
+    <p>
+      For algorithms taking a sequence as an input, constness of the input
+      defines the result of the find algorithm. For const input, a <code>const_iterator</code>
+      and for non-const input an <code>iterator</code> is used. Choice is
+      implemented by <code>input_policy</code> class (defined in&nbsp; <a href="../../../boost/string_algo/traits.hpp">&lt;boost/string_algo/traits.hpp&gt;</a>).
+    </p>
+    <p>
+      &nbsp;
+    </p>
+    <table border="1" height="28" width="827">
+      <tr>
+        <th height="30" valign="top" align="center">Function</th>
+        <th height="30" width="234">Description</th>
+        <th height="30" width="464">Example</th>
+      </tr>
+      <tr>
+        <td height="28" valign="top" align="center"><code>find_first</code></td>
+        <td height="28" valign="top" align="center" width="234">Find the first
+          occurence of a substring in the input range.</td>
+        <td height="28" valign="top" align="center" width="464"><code>find_first(
+          Begin, End, SubstrBegin, SubstrEnd );<br>
+          find_first( Input, string(&quot;23&quot;) );</code></td>
+      </tr>
+      <tr>
+        <td height="30" valign="top" align="center"><code>find_last</code></td>
+        <td height="30" valign="top" align="center" width="234">Find the last
+          occurence of a substring.</td>
+        <td height="30" valign="top" align="center" width="464"><code>find_last(
+          Begin, End, SubstrBegin, SubstrEnd );<br>
+          find_last( Input, string(&quot;23&quot;) );</code></td>
+      </tr>
+      <tr>
+        <td height="30" valign="top" align="center"><code>find_nth</code></td>
+        <td height="28" valign="top" align="center" width="234">Find the n-th
+          occurence of a substring.<br>
+          Position is 0-based.</td>
+        <td height="28" valign="top" align="center" width="464"><code>find_nth(
+          Begin, End, SubstrBegin, SubstrEnd, 2 );<br>
+          find_nth( Input, string(&quot;12&quot;), 2 );</code></td>
+      </tr>
+      <tr>
+        <td height="30" valign="top" align="center"><code>find_regex</code></td>
+        <td height="30" valign="top" align="center" width="234">Find a first
+          substring mathing a given regex.</td>
+        <td height="30" valign="top" align="center" width="464"><code>find_regex(
+          Begin, End, Rx );<br>
+          find_regex( Input, regex(&quot;[A-Z].*xxx&quot;), match_any );</code></td>
+      </tr>
+    </table>
+    <h3><a name="fa_synopsis">Synopsis</a></h3>
+    <p>
+      Iterator based variants:
+    </p>
+    <pre>    <b>template</b>&lt; <b>typename</b> InputIteratorT, <b>typename</b> SearchIteratorT &gt;
     <b>inline</b> iterator_range&lt;InputIteratorT&gt;
     find_first( 
         InputIteratorT Begin, 
@@ -276,10 +271,10 @@
         InputIteratorT End, 
         <b>const</b> reg_expression&lt;CharT, RegexTraitsT, RegexAllocatorT&gt;&amp; Rx,
         <b>unsigned</b> <b>int</b> MatchFlags=match_default );</pre>
-  <p>
-    Sequence based variants.
-  </p>
-  <pre>    <b>template</b>&lt;<b>typename</b> InputT, <b>typename</b> SearchT&gt;
+    <p>
+      Sequence based variants:
+    </p>
+    <pre>    <b>template</b>&lt;<b>typename</b> InputT, <b>typename</b> SearchT&gt;
     <b>inline</b> iterator_range&lt;<b>typename</b> string_algo::input_policy&lt;InputT&gt;::iterator_type&gt;
     find_first( 
 	InputT&amp; Input, 
@@ -297,7 +292,7 @@
 	InputT&amp; Input, 
         <b>const</b> SearchT&amp; Search,
 	<b>unsigned</b> <b>int</b> Nth );</pre>
-  <pre>    <b>template</b>&lt; 
+    <pre>    <b>template</b>&lt; 
         <b>typename</b> InputT, 
         <b>typename</b> CharT, 
         <b>typename</b> RegexTraitsT, <b>typename</b> RegexAllocatorT&gt;
@@ -306,88 +301,91 @@
     find_regex( 
         InputT&amp; Input, 
         <b>const</b> reg_expression&lt;CharT, RegexTraitsT, RegexAllocatorT&gt;&amp; Rx,
-        <b>unsigned</b> <b>int</b> MatchFlags=match_default );
-</pre>
-  <table border="0" width="574" height="1">
-    <tr>
-      <td width="443" height="31" valign="top"><code><b>typename</b>
-        InputIteratorT</code></td>
-      <td width="703" height="31" valign="top">Forward iterator delimiting an
-        input</td>
-    </tr>
-    <tr>
-      <td width="443" height="31" valign="top"><code><b>typename</b>
-        SearchIteratorT</code></td>
-      <td width="703" height="31" valign="top">Forward iterator delimiting a
-        search sequence</td>
-    </tr>
-    <tr>
-      <td width="443" height="31" valign="top"><code><b>typename</b> InputT</code></td>
-      <td width="703" height="31" valign="top">Input sequence type</td>
-    </tr>
-    <tr>
-      <td width="443" height="31" valign="top"><code><b>typename </b>SearchT</code></td>
-      <td width="703" height="31" valign="top">Search sequence type</td>
-    </tr>
-    <tr>
-      <td width="443" height="31" valign="top"><code>InputIteratorT Begin</code></td>
-      <td width="703" height="31" valign="top">Begin of an input sequence</td>
-    </tr>
-    <tr>
-      <td width="443" height="31" valign="top"><code>InputIteratorT End</code></td>
-      <td width="703" height="31" valign="top">End of an input sequence</td>
-    </tr>
-    <tr>
-      <td width="443" height="31" valign="top"><code>SearchIteratorT SearchBegin</code></td>
-      <td width="703" height="31" valign="top">Begin of a search sequence</td>
-    </tr>
-    <tr>
-      <td width="443" height="31" valign="top"><code>SearchIteratorT SearchEnd</code></td>
-      <td width="703" height="31" valign="top">End of a search sequence</td>
-    </tr>
-    <tr>
-      <td width="443" height="31" valign="top"><code>InputT&amp; Input</code></td>
-      <td width="703" height="31" valign="top">An input sequence</td>
-    </tr>
-    <tr>
-      <td width="443" height="31" valign="top"><code><b>const</b> SearchT&amp;
-        Search</code></td>
-      <td width="703" height="31" valign="top">A search sequence</td>
-    </tr>
-    <tr>
-      <td width="443" height="31" valign="top"><code><b>unsigned</b> <b>int</b>
-        Nth</code></td>
-      <td width="703" height="31" valign="top">A number specifying which match
-        is to be searched for.</td>
-    </tr>
-    <tr>
-      <td width="443" height="31" valign="top"><code><b>const</b>
-        reg_expression&lt;CharT, RegexTraitsT, RegexAllocatorT&gt;&amp; Rx</code></td>
-      <td width="703" height="31" valign="top">Regular expression used for
-        searching</td>
-    </tr>
-    <tr>
-      <td width="443" height="31" valign="top"><code><b>unsigned</b> <b>int</b>
-        MatchFlags=match_default</code></td>
-      <td width="703" height="31" valign="top">Match flags defining some
-        properties of search algorithm.</td>
-    </tr>
-  </table>
-  <h4>Remark on <code>find_regex</code></h4>
-  <p>
-    <code>find_regex</code> returns <code>regex_search_result</code> instead of&nbsp;
-    <code>iterator_range</code>. <code>regex_search_result</code> is derived
-    from<code> iterator_range</code>, but in addition it contains a <code>match_results</code>
-    from <code>regex_search</code> (defined in Regex++) algorithm. It is defined
-    in <a href="../../../boost/string_algo/detail/find_regex.hpp">&lt;boost/string_algo/detail/find_regex.hpp&gt;</a>
-    header.
-  </p>
-  <h3><a name="ua_examples">Examples</a></h3>
-  <p>
-    Following example shows basic usage of predicate algorithms. More examples
-    can be found in the library tests in <a href="../test/find_test.cpp">&lt;libs/string_algo/test/find_test.cpp&gt;</a>.
-  </p>
-  <pre>#include &lt;string&gt;
+        <b>unsigned</b> <b>int</b> MatchFlags=match_default );</pre>
+    <p>
+      Parameters:
+    </p>
+    <table border="0" width="574" height="1">
+      <tr>
+        <td width="443" height="31" valign="top"><code><b>typename</b>
+          InputIteratorT</code></td>
+        <td width="703" height="31" valign="top">Forward iterator delimiting an
+          input</td>
+      </tr>
+      <tr>
+        <td width="443" height="31" valign="top"><code><b>typename</b>
+          SearchIteratorT</code></td>
+        <td width="703" height="31" valign="top">Forward iterator delimiting a
+          search sequence</td>
+      </tr>
+      <tr>
+        <td width="443" height="31" valign="top"><code><b>typename</b> InputT</code></td>
+        <td width="703" height="31" valign="top">Input sequence type</td>
+      </tr>
+      <tr>
+        <td width="443" height="31" valign="top"><code><b>typename </b>SearchT</code></td>
+        <td width="703" height="31" valign="top">Search sequence type</td>
+      </tr>
+      <tr>
+        <td width="443" height="31" valign="top"><code>InputIteratorT Begin</code></td>
+        <td width="703" height="31" valign="top">Begin of an input sequence</td>
+      </tr>
+      <tr>
+        <td width="443" height="31" valign="top"><code>InputIteratorT End</code></td>
+        <td width="703" height="31" valign="top">End of an input sequence</td>
+      </tr>
+      <tr>
+        <td width="443" height="31" valign="top"><code>SearchIteratorT
+          SearchBegin</code></td>
+        <td width="703" height="31" valign="top">Begin of a search sequence</td>
+      </tr>
+      <tr>
+        <td width="443" height="31" valign="top"><code>SearchIteratorT SearchEnd</code></td>
+        <td width="703" height="31" valign="top">End of a search sequence</td>
+      </tr>
+      <tr>
+        <td width="443" height="31" valign="top"><code>InputT&amp; Input</code></td>
+        <td width="703" height="31" valign="top">An input sequence</td>
+      </tr>
+      <tr>
+        <td width="443" height="31" valign="top"><code><b>const</b> SearchT&amp;
+          Search</code></td>
+        <td width="703" height="31" valign="top">A search sequence</td>
+      </tr>
+      <tr>
+        <td width="443" height="31" valign="top"><code><b>unsigned</b> <b>int</b>
+          Nth</code></td>
+        <td width="703" height="31" valign="top">A number specifying which match
+          is to be searched for.</td>
+      </tr>
+      <tr>
+        <td width="443" height="31" valign="top"><code><b>const</b>
+          reg_expression&lt;CharT, RegexTraitsT, RegexAllocatorT&gt;&amp; Rx</code></td>
+        <td width="703" height="31" valign="top">Regular expression used for
+          searching</td>
+      </tr>
+      <tr>
+        <td width="443" height="31" valign="top"><code><b>unsigned</b> <b>int</b>
+          MatchFlags=match_default</code></td>
+        <td width="703" height="31" valign="top">Match flags defining some
+          properties of search algorithm.</td>
+      </tr>
+    </table>
+    <h4>Remark on <code>find_regex</code></h4>
+    <p>
+      <code>find_regex</code> returns <code>regex_search_result</code> instead
+      of&nbsp; <code>iterator_range</code>. <code>regex_search_result</code> is
+      derived from<code> iterator_range</code>, but in addition it contains a <code>match_results</code>
+      from <code>regex_search</code> (defined in Regex++) algorithm. It is
+      defined in <a href="../../../boost/string_algo/detail/find_regex.hpp">&lt;boost/string_algo/detail/find_regex.hpp&gt;</a>
+      header.
+    </p>
+    <h3><a name="ua_examples">Examples</a></h3>
+    <p>
+      Following example shows basic usage of predicate algorithms. More examples
+      can be found in the library tests in <a href="../test/find_test.cpp">&lt;libs/string_algo/test/find_test.cpp&gt;</a>.
+    </p>
+    <pre>#include &lt;string&gt;
 #include &lt;iostream&gt;
 #include &lt;boost/string_algo/conv.hpp&gt;
 #include &lt;boost/string_algo/find.hpp&gt;
@@ -409,17 +407,17 @@ void find_example()
     toupper( range );
 
     cout &lt;&lt; &quot;str1 with upper-cased part matching cde: &quot; &lt;&lt; str1 &lt;&lt; endl;</pre>
-  <pre>    cout &lt;&lt; endl;
+    <pre>    cout &lt;&lt; endl;
 }</pre>
-  <hr>
-  <p>
-    (C) Copyright Pavol Droba 2003. Permission to copy, use, modify, sell and
-    distribute this software is granted provided this copyright notice appears
-    in all copies. This software is provided &quot;as is&quot; without express
-    or implied warranty, and with no claim as to its suitability for any
-    purpose.
-  </p>
+    <hr>
+    <p>
+      (C) Copyright Pavol Droba 2003. Permission to copy, use, modify, sell and
+      distribute this software is granted provided this copyright notice appears
+      in all copies. This software is provided &quot;as is&quot; without express
+      or implied warranty, and with no claim as to its suitability for any
+      purpose.
+    </p>
 
-</body>
+  </body>
 
 </html>
