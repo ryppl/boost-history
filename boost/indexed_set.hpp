@@ -57,7 +57,7 @@ class indexed_set:
       Allocator,
       typename detail::indexed_set_node_type<Value,IndexSpecifierList,Allocator>::type
     >::type>,
-  private detail::header_holder<
+  BOOST_INDEXED_SET_PRIVATE_IF_MEMBER_TEMPLATE_FRIENDS detail::header_holder<
     typename detail::indexed_set_node_type<Value,IndexSpecifierList,Allocator>::type,
     indexed_set<Value,IndexSpecifierList,Allocator> >,
   public detail::indexed_set_base_type<Value,IndexSpecifierList,Allocator>::type
