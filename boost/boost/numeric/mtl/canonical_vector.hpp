@@ -27,6 +27,7 @@
 #define MTL_CANONICAL_VECTOR_HPP
 
 #include <iterator>
+#include <mtl/expr.hpp>
 #include <boost/iterator_adaptors.hpp>
 
 namespace mtl {

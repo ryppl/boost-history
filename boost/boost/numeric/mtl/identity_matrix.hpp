@@ -26,27 +26,28 @@
 #ifndef MTL_IDENTITY_MATRIX_HPP
 #define MTL_IDENTITY_MATRIX_HPP
 
-#include <mtl/canonical_vector.hpp>
 #include <mtl/expr.hpp>
+#include <mtl/canonical_vector.hpp>
 
 // identity matrix is a column matrix of canonical vectors
 // nah, that's a bad idea. Need to implement expressions
 // with diagonal orientation
 
-template <class T>
-class identity_matrix
-  : public linalg_expr<matrix_tag, T, canonical_vector<T>,
-      identity_matrix<T>, column, sparse>
-{
+namespace mtl {
 
-public:
+  template <class T>
+  class identity_matrix
+    : public linalg_expr<matrix_tag, T, canonical_vector<T>,
+	identity_matrix<T>, column, sparse>
+  {
+  public:
 
+    identity_matrix(std::size_t n) : m_size(n) { }
 
-  identity_matrix(size_type n) : m_size(n) { }
-  
-private:
-  size_type m_size;
-};
+  private:
+    std::size_t m_size;
+  };
 
+} // namespace mtl
 
 #endif // MTL_IDENTITY_MATRIX_HPP
