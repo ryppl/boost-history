@@ -61,13 +61,13 @@ namespace detail
     template< typename M, typename T >
     struct map_config
     {
-        typedef M                                                                                         container_type;
-        typedef T                                                                                         value_type;
-        typedef typename ptr_container::detail::map_iterator<typename M::iterator, T>                     iterator;
-        typedef typename ptr_container::detail::map_iterator<typename M::const_iterator, const T>         const_iterator;
-        typedef typename ptr_container::detail::map_iterator<typename M::reverse_iterator, T>             reverse_iterator;
-        typedef typename ptr_container::detail::map_iterator<typename M::const_reverse_iterator, const T> const_reverse_iterator;
-        typedef std::pair<const typename M::key_type, T*>                                                 object_type;
+        typedef M                                                                                                               container_type;
+        typedef T                                                                                                               value_type;
+        typedef typename ptr_container::detail::map_iterator<typename M::iterator, typename M::key_type, T>                     iterator;
+        typedef typename ptr_container::detail::map_iterator<typename M::const_iterator, typename M::key_type, const T>         const_iterator;
+        typedef typename ptr_container::detail::map_iterator<typename M::reverse_iterator, typename M::key_type, T>             reverse_iterator;
+        typedef typename ptr_container::detail::map_iterator<typename M::const_reverse_iterator, typename M::key_type, const T> const_reverse_iterator;
+        typedef std::pair<const typename M::key_type, T*>                                                                       object_type;
     };
 
     template< typename Config >
