@@ -49,7 +49,11 @@ stream.</p>
 code to connect with their internal stream buffer.  This library
 provides base class templates that provide standard ways of using an
 internal stream buffer, accessing that stream buffer, and checking if
-the stream buffer's stream switched to an external stream buffer.</p>
+the stream buffer's stream switched to an external stream buffer.
+Streams built around combining custom stream buffers with these
+wrappers can enrich an I/O library, since the developer doesn't have
+to worry about all the issues of creating matching stream classes for
+a stream buffer class.</p>
 
 <h2><a name="header">Header Synopsis</a></h2>
 
