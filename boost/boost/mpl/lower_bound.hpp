@@ -82,7 +82,7 @@ struct lower_bound_step
     typedef typename eval_if<
           Distance
         , lower_bound_step_impl<Distance,Predicate,T,DeferredIterator>
-        , apply0<DeferredIterator>
+        , DeferredIterator
         >::type type;
 };
     
