@@ -11,6 +11,7 @@
 #include <boost/numeric/ublas/io.hpp>
 #include <boost/timer.hpp>
 #include <boost/numeric/bindings/traits/value_traits.hpp>
+#include <boost/numeric/bindings/traits/algorithm.hpp>
 
 namespace numerics = boost::numeric::ublas ;
 
@@ -112,7 +113,7 @@ struct peak
 template < typename value_type >
 void check(value_type a, value_type b)
 {
-  if ( ! boost::numeric::bindings::traits::eq( a, b, 1e-5 ) ) {
+  if ( ! boost::numeric::bindings::traits::is_equal< value_type >(1e-5)( a, b ) ) {
     std::cerr << "\n\nregression test failure : results are not identical" << std::endl;
     std::cerr << a << " != " << b << std::endl;
     exit( 1 );  
@@ -138,7 +139,7 @@ void check(Iterator0 begin0, Iterator0 end0, Iterator1 begin1)
     exit(1);
   }
 
-  if ( ! std::equal( begin0, end0, begin1, boost::numeric::bindings::traits::is_equal< value_type >( std::abs( *begin0 ) * 1e-5 ) ) ) {
+  if ( ! std::equal( begin0, end0, begin1, boost::numeric::bindings::traits::is_equal< value_type >( 1e-5 ) ) ) {
     std::cerr << "\n\nregression test failure : results are not identical" << std::endl;
     std::cerr << std::setprecision( 20 ) ;
     std::copy( begin0, end0, std::ostream_iterator< typename Iterator0::value_type >( std::cerr, " " ) ); std::cerr << std::endl;
@@ -156,7 +157,7 @@ void check(numerics::matrix< value_type > &a, numerics::matrix< value_type > &b)
 
   for(size_t i = 0 ; i < num_rows && ret ; ++i ) 
     for(size_t j = 0 ; j < num_cols && ret ; ++j ) 
-      ret = boost::numeric::bindings::traits::eq( a(i,j), b(i,j), 1e-5 );
+      ret = boost::numeric::bindings::traits::is_equal< value_type >(1e-5)( a(i,j), b(i,j) );
 
   if ( ! ret ) {
     std::cerr << "\n\nregression test failure : matrices not identical" << std::endl;
