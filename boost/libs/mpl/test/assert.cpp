@@ -21,14 +21,21 @@ BOOST_MPL_ASSERT_MSG( true, NAMESPACE_SCOPE_ERROR, () );
 BOOST_MPL_ASSERT_MSG( true, ANOTHER_NAMESPACE_SCOPE_ERROR, () );
 }
 
+template< typename T >
 struct her
 {
+    typedef her type;
     BOOST_MPL_ASSERT_MSG( true, CLASS_SCOPE_ERROR, () );
-    BOOST_MPL_ASSERT_MSG( false, ANOTHER_CLASS_SCOPE_ERROR, (int, long) );
+    BOOST_MPL_ASSERT_MSG( false, ANOTHER_CLASS_SCOPE_ERROR, (int, T) );
 };
 
 int main()
 {
+    typedef her<int>::type h;
+
+//    BOOST_MPL_ASSERT_SAME((T,void));
+//    BOOST_MPL_ASSERT_NOT_SAME((int,int const));
+    
     BOOST_MPL_ASSERT_MSG( true, FUNCTION_SCOPE_ERROR, () );
     BOOST_MPL_ASSERT_MSG( true, ANOTHER_FUNCTION_SCOPE_ERROR, () );
     return 0;

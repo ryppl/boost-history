@@ -89,41 +89,31 @@ template< typename T > struct MPL_ASSERTION_FAILED
 
 struct MPL_ASSERTION_ARGUMENTS;
 
-namespace boost { namespace mpl {
-template< bool C > struct assert_msg
-{
-    int MESSAGE(...);
-    static assert_msg& arguments(...);
-};
+namespace mpl_ {
+struct assert {};
+template< bool C > struct assert_msg_arg { typedef void* type; };
+template<> struct assert_msg_arg<false> { typedef assert type; };
 
-template<> struct assert_msg<false>
-{
-    template< typename Types > 
-// agurt 13/may/04: 'Types*' breaks template argument deducation on MSVC < 7.1
-#if !BOOST_WORKAROUND(BOOST_MSVC, < 1301)
-    static MPL_ASSERTION_FAILED<Types>& arguments(Types*);
-#else
-    static MPL_ASSERTION_FAILED<Types>& arguments(Types);
-#endif
-};
-}}
+template< bool C > int assert_msg(typename assert_msg_arg<C>::type );
+
+}
 
 #if !BOOST_WORKAROUND(__EDG_VERSION__, BOOST_TESTED_AT(303))
 #   define MPL_ASSERT_MSG( c, msg, types ) \
+    struct msg; \
+    typedef mpl_::assert BOOST_PP_CAT(assert,__LINE__) types; \
     enum { \
         BOOST_PP_CAT(MplAssertion,__LINE__) = sizeof( \
-            boost::mpl::assert_msg<(c)> \
-              ::arguments( (MPL_ASSERTION_ARGUMENTS (************(MPL_ASSERTION_ARGUMENTS (***************)())) types)0 ) \
-                  .MESSAGE( (struct msg*)0 ) \
+            mpl_::assert_msg<(c)>( (BOOST_PP_CAT(assert,__LINE__) **************** (msg::****************))0 ) \
             ) \
     }\
 /**/
 #else
 #   define MPL_ASSERT_MSG( c, msg, types ) \
+    struct msg; \
     enum { \
-        BOOST_PP_CAT(MplAssertion,__LINE__) = sizeof(boost::mpl::assert_msg<(c)> \
-              ::arguments( (MPL_ASSERTION_ARGUMENTS (*) types)0 ) \
-                  .MESSAGE( (struct BOOST_PP_CAT(MPL_ASSERTION_FAILED_,msg)*)0 ) \
+        BOOST_PP_CAT(MplAssertion,__LINE__) = sizeof( \
+            mpl_::assert_msg<(c)>( (mpl_::assert **************** (msg::****************) types )0 ) \
             ) \
     }\
 /**/
