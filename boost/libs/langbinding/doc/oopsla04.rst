@@ -27,9 +27,16 @@
 =========================
 
 Boost.Langbinding is a generalization of earlier attempts at binding 
-libraries, specifically Boost.Python and Luabind. The goals for this 
-project include: 
+libraries, specifically Boost.Python and Luabind.
+
+This library is spawned from the realization that the language specific
+code, which has previously been intertwined with the template generated
+wrappers, can be factored out into a separately compiled library. This
+means it is possible to define bindings that are agnostic to the
+target language, and later expose them without any need for recompilation.
  
+The goals for this project include:
+
 * Language neutral binding of classes and functions. 
 * Efficient wrapper code generation. 
 * Language-specific pluggable back ends. 
@@ -44,13 +51,264 @@ plugins.
  User Interface
 =========================
 
+Here we describe the interface authors that are adding a language binding to 
+their library or application use. This includes support for modules, 
+namespaces, classes, member functions, free functions and operators.
+
+Every entity is derived from ``module_description``, which is the abstract
+representation that is passed to the target language for binding.
+``module_description`` and it's derivatives are handle classes with deep copy
+value semantics.
+
+------------------------------
+ Modules
+------------------------------
+
+The ``module`` is the top level entity in a registration. Entities are
+added to the module using ``operator[]``.
+
+.. topic:: Synopsis
+
+ .. parsed-literal::
+
+    class **module** : public module_description
+    {
+    public:
+        module()
+        module(char const* name)
+        ...
+        module& operator[](module_description const&);
+    };
+
+------------------------------
+ Functions
+------------------------------
+
+Functions are exposing using ``def``.
+
+.. topic:: Synopsis
+
+ .. parsed-literal::
+
+    class **def** : public module_description
+    {
+    public:
+        template<class Fn>
+        def(char const* name, Fn fn);
+
+        template<class Fn, class CallPolicies>
+        def(char const* name, Fn fn, CallPolicies);
+
+        template<class Fn, class CallPolicies, class SignatureTransformation>
+        def(char const* name, Fn fn, CallPolicies, SignatureTransformation);
+    };
+
+ * ``fn`` is a function or member functoin pointer.
+ * ``CallPolicies`` and ``SignatureTransformation`` may be given in any
+   order.
+
+If a function named ``name`` has already been exposed, an overload is added to
+that function object.
+
+.. parsed-literal::
+
+    int timestwo(int x) { return x * 2; }
+
+    ..
+
+    def("timestwo", &timestwo)
+
+
+Parameters
+==========
+
+Parameters of all primitive types are automatically handled. Class types need to
+be registered. 
+
+For class types, ``derived->base`` conversions are handled. In the case of a
+polymorphic type, ``base->derived`` conversions are also considered, based on
+the dynamic type of the parameter.
+
+Return Values
+=============
+
+Again, primitive types are automatically converted and class types need to be 
+registered.
+
+Class types can be returned by value, or held in a smart pointer. If returned
+by value, the object will be copied into a new instance. If a smart pointer is
+returned, the smart pointer will be copied and held in a new instance.
+
+The return type is considered to be a smart pointer **iff** it has an overload of
+``get_pointer()`` that returns a raw pointer to a class type. In other words, 
+given that ``x`` is a smart pointer::
+
+    *get_pointer(x)
+
+Must be well formed, and the type of that expression is considered the pointee
+type that is converted to the target language.
+
+When references or pointers are returned, an ownership strategy need to be
+explicitly specified. This is to prevent dangling references and leaked
+objects. The ownership strategy is specified as the call policy parameter in 
+the ``def()`` call.
+
+.. parsed-literal::
+
+    def("f", &f, adopt(result)) // Manage the ownership over the returned pointer.
+    def("f", &f, reference_existing(result)) // Reference an existing object.
+    def("f", &f, internal_reference(result, _1)) // Returns a reference to something inside
+                                                 // the object given as parameter one, make sure
+                                                 // that object doesn't disappear leaving
+                                                 // a dangling reference.
+
+Notice how placeholders are used to indicate which elements are involved.
+
+Signature Transformations
+=========================
+
+.. parsed-literal::
+
+    def("f", &f, signature(_1, _1))
+    def("f", &f, signature(_1[_1], _1[_2]))
+
 ------------------------------
  Classes
 ------------------------------
 
+Classes are exposed using ``class_``.
+
+.. topic:: Synopsis
+
+ .. parsed-literal::
+
+    template<class TAndBases, class HolderType = */\* implementation defined \*/*>
+    class **class_** : public module_description
+    {
+    public:
+        class\_(char const* name);
+
+        template<class Fn>
+        class\_& def(char const\* name, Fn fn);
+
+        template<class Fn, class CallPolicies>
+        class\_& def(char const* name, Fn fn, CallPolicies);
+
+        template<class Fn, class CallPolicies, class SignatureTransformation>
+        class\_& def(char const* name, Fn fn, CallPolicies, SignatureTransformation);
+
+        class\_& scope(module_description const&);
+    };
+
+ TAndBases
+    This is the class type being exposed. Inheritance relationships are indicated
+    using a function type: ``Derived(Base)``.
+
+ HolderType
+    This is the pointer type used to hold instances of ``T``. Defaults to an owning pointer.
+
+.. parsed-literal::
+
+    class_<X>("X")
+        .def(init<>())
+
+Creates a wrapper for the class type ``X``, with a default constructor.
+
+.. parsed-literal::
+
+    class_<Y(X)>("X")
+
+Creates a wrapper for the class type ``Y``, derived from ``X``.
+
+.. parsed-literal::
+
+    class_<X, boost::shared_ptr<X> >("X")
+
+Creates a wrapper for the class type ``Y``, with new instances being held in
+a ``boost::shared_ptr<X>``.
+
+.. parsed-literal::
+
+    class_<XWrap, boost::shared_ptr<X> >("X")
+
+.. parsed-literal::
+
+    class_<YWrap(X), boost::shared_ptr<X> >("X")
+
+In addition to registering the class type it is also possible to express
+inheritance relationship and control how the class instances is held within
+the target language. This is discussed in greater depth in Inheritance_ and
+HolderTypes. For polymorphic types it is possible, with a little extra effort,
+to expose virtual functions to the target language, where they can be called
+and overridden. This is discussed in `Overridable Virtual Functions`_.
+
+
+Inheritance
+===========
+
+To express inheritance relationships between types we use the function type
+syntax, choosen to emulate the syntax used in Python.
+
+.. parsed-literal::
+
+    class\_<**X(Y)**>("X")
+    class\_<**X(Y,Z)**>("X")
+
+This will register the relationship in a cast-graph, with ``derived->base``, 
+and possibly ``base->derived`` conversions (if the registered class is 
+polymorphic). The derived class will also automatically inherit any registered
+member functions from it's base.
+
 ------------------------------
  Overridable Virtual Functions
 ------------------------------
+
+To be able to expose overridable virtual functions without being intrusive on
+the exposed class, we need to define a wrapper-class. This class inherits from
+``polymorphic<Base>`` and implements virtual dispatch overrides, as well as
+default implementation functions for every virtual function.
+
+A typical wrapper-class will look something like this:
+
+.. parsed-literal::
+
+    struct XWrap : polymorphic<X>
+    {
+        int f()
+        {
+            if (override f = this->find_override("f"))
+                return f();
+            else
+                return X::f();
+        }
+
+        int default_f()
+        {
+            return X::f();
+        }
+    };
+
+    ...
+
+    class_<BaseWrap>("Base")
+        .def("f", &Base::f, &BaseWrap::default_f)
+
+**Python code:**
+
+.. parsed-literal::
+
+    class Derived(Base):
+        def f():
+            return 10
+
+**Lua code:**
+
+.. parsed-literal::
+
+    class "Derived" (Base)
+        function Derived:f()
+            return 10
+        end
 
 =========================
  Backend Interface
@@ -233,9 +491,5 @@ encapsulates language-specific resources.
 ===========================
  Implementation Techniques
 ===========================
-
-
-
-
 
 
