@@ -33,18 +33,18 @@ typedef arg<-1> unknown;
 typedef unknown placeholder; // deprecated
 
 #define BOOST_MPL_AUX_ARG_N_DEF_BODY(n) \
-typedef arg<n> BOOST_PREPROCESSOR_CAT(_,n); \
+typedef arg<n> BOOST_PP_CAT(_,n); \
 namespace lambda_arg { \
-using boost::mpl::BOOST_PREPROCESSOR_CAT(_,n); \
+using boost::mpl::BOOST_PP_CAT(_,n); \
 } \
 /**/
 
 #define BOOST_MPL_AUX_ARG_N_DEF(n, unused) \
-    BOOST_MPL_AUX_ARG_N_DEF_BODY(BOOST_PREPROCESSOR_INC(n)) \
+    BOOST_MPL_AUX_ARG_N_DEF_BODY(BOOST_PP_INC(n)) \
 /**/
 
 // typedef arg<#> _#; namespace lambda_arg { using boost::mpl::_#; }
-BOOST_PREPROCESSOR_REPEAT(
+BOOST_PP_REPEAT(
       BOOST_MPL_FUNCTION_CLASS_MAX_ARITY
     , BOOST_MPL_AUX_ARG_N_DEF
     , unused

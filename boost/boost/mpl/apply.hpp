@@ -41,7 +41,7 @@ namespace mpl {
 #define BOOST_MPL_AUX_APPLY_PARAMS(param) \
     BOOST_MPL_TEMPLATE_PARAMETERS( \
           1 \
-        , BOOST_PREPROCESSOR_INC(BOOST_MPL_FUNCTION_CLASS_MAX_ARITY) \
+        , BOOST_PP_INC(BOOST_MPL_FUNCTION_CLASS_MAX_ARITY) \
         , param \
         ) \
 /**/
@@ -49,15 +49,15 @@ namespace mpl {
 #define BOOST_MPL_AUX_APPLY_DEFAULT_PARAMS(param, value) \
     BOOST_MPL_DEFAULT_TEMPLATE_PARAMETERS( \
           1 \
-        , BOOST_PREPROCESSOR_INC(BOOST_MPL_FUNCTION_CLASS_MAX_ARITY) \
+        , BOOST_PP_INC(BOOST_MPL_FUNCTION_CLASS_MAX_ARITY) \
         , param \
         , value \
         ) \
 /**/
 
 #define BOOST_MPL_AUX_APPLY_VARIABLE_PARAMS(sep, n, param) \
-    BOOST_PREPROCESSOR_IF(n, sep, BOOST_PREPROCESSOR_EMPTY)() \
-    BOOST_MPL_TEMPLATE_PARAMETERS(1, BOOST_PREPROCESSOR_INC(n), param) \
+    BOOST_PP_IF(n, sep, BOOST_PP_EMPTY)() \
+    BOOST_MPL_TEMPLATE_PARAMETERS(1, BOOST_PP_INC(n), param) \
 /**/
 
 
@@ -82,16 +82,16 @@ struct msvc_never_true
 #define BOOST_MPL_AUX_APPLY_N_TEMPLATE_DEF(n) \
 template< \
       typename F \
-      BOOST_MPL_AUX_APPLY_VARIABLE_PARAMS(BOOST_PREPROCESSOR_COMMA, n, typename T) \
+      BOOST_MPL_AUX_APPLY_VARIABLE_PARAMS(BOOST_PP_COMMA, n, typename T) \
     > \
-struct BOOST_PREPROCESSOR_CAT(apply, n) \
+struct BOOST_PP_CAT(apply, n) \
 { \
  private: \
     template<bool> struct F_wrapper : F {}; \
     template<> struct F_wrapper<true> \
     { \
         template< BOOST_MPL_AUX_APPLY_VARIABLE_PARAMS( \
-              BOOST_PREPROCESSOR_EMPTY \
+              BOOST_PP_EMPTY \
             , n \
             , typename P \
             ) > struct apply; \
@@ -99,7 +99,7 @@ struct BOOST_PREPROCESSOR_CAT(apply, n) \
     typedef F_wrapper< \
           aux::msvc_never_true<F>::value \
         >::template apply< BOOST_MPL_AUX_APPLY_VARIABLE_PARAMS( \
-                BOOST_PREPROCESSOR_EMPTY \
+                BOOST_PP_EMPTY \
               , n \
               , T \
               ) > applied; \
@@ -115,11 +115,11 @@ struct BOOST_PREPROCESSOR_CAT(apply, n) \
 #define BOOST_MPL_AUX_APPLY_N_TEMPLATE_DEF(n) \
 template< \
       typename F \
-      BOOST_MPL_AUX_APPLY_VARIABLE_PARAMS(BOOST_PREPROCESSOR_COMMA, n, typename T) \
+      BOOST_MPL_AUX_APPLY_VARIABLE_PARAMS(BOOST_PP_COMMA, n, typename T) \
     > \
-struct BOOST_PREPROCESSOR_CAT(apply,n) \
+struct BOOST_PP_CAT(apply,n) \
         : F::template apply< BOOST_MPL_AUX_APPLY_VARIABLE_PARAMS( \
-                BOOST_PREPROCESSOR_EMPTY \
+                BOOST_PP_EMPTY \
               , n \
               , T \
               ) > \
@@ -142,9 +142,9 @@ struct apply_impl_chooser<n> \
     template< typename F, BOOST_MPL_AUX_APPLY_PARAMS(typename T) > \
     struct result_ \
     { \
-        typedef typename mpl::BOOST_PREPROCESSOR_CAT(apply,n)< \
+        typedef typename mpl::BOOST_PP_CAT(apply,n)< \
               F \
-              BOOST_MPL_AUX_APPLY_VARIABLE_PARAMS(BOOST_PREPROCESSOR_COMMA, n, T) \
+              BOOST_MPL_AUX_APPLY_VARIABLE_PARAMS(BOOST_PP_COMMA, n, T) \
             >::type type; \
     }; \
 }; \
@@ -152,7 +152,7 @@ struct apply_impl_chooser<n> \
 /**/
 
 #define BOOST_MPL_AUX_APPLY_TEMPLATE_DEF(n, unused) \
-    BOOST_PREPROCESSOR_IF( \
+    BOOST_PP_IF( \
           n \
         , BOOST_MPL_AUX_APPLY_N_TEMPLATE_DEF \
         , BOOST_MPL_AUX_APPLY_0_TEMPLATE_DEF \
@@ -162,8 +162,8 @@ struct apply_impl_chooser<n> \
 
 
 // apply# 
-BOOST_PREPROCESSOR_REPEAT_2ND(
-      BOOST_PREPROCESSOR_INC(BOOST_MPL_FUNCTION_CLASS_MAX_ARITY)
+BOOST_PP_REPEAT_2ND(
+      BOOST_PP_INC(BOOST_MPL_FUNCTION_CLASS_MAX_ARITY)
     , BOOST_MPL_AUX_APPLY_TEMPLATE_DEF
     , unused
     )

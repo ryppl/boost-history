@@ -30,7 +30,7 @@ namespace mpl {
 #if !defined(BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS)
 
 #define BOOST_MPL_AUX_MAKE_FUN_PARAMS(n, param) \
-    BOOST_MPL_TEMPLATE_PARAMETERS(1, BOOST_PREPROCESSOR_INC(n), param) \
+    BOOST_MPL_TEMPLATE_PARAMETERS(1, BOOST_PP_INC(n), param) \
 /**/
 
 
@@ -39,9 +39,9 @@ namespace mpl {
 template< \
       template< BOOST_MPL_AUX_MAKE_FUN_PARAMS(n, typename P) > class Function \
     > \
-struct BOOST_PREPROCESSOR_CAT(make_f,n) \
+struct BOOST_PP_CAT(make_f,n) \
 { \
-    typedef BOOST_PREPROCESSOR_CAT(make_f,n) type; \
+    typedef BOOST_PP_CAT(make_f,n) type; \
     template<BOOST_MPL_AUX_MAKE_FUN_PARAMS(n, typename U)> struct apply \
     { \
         typedef typename Function< \
@@ -52,7 +52,7 @@ struct BOOST_PREPROCESSOR_CAT(make_f,n) \
 /**/
 
 #define BOOST_MPL_AUX_MAKE_FN_DEF(n, unused) \
-    BOOST_PREPROCESSOR_IF( \
+    BOOST_PP_IF( \
         n \
       , BOOST_MPL_AUX_MAKE_FN_TEMPLATE_DEF \
       , BOOST_MPL_AUX_MAKE_F0_TEMPLATE_DEF \
@@ -60,8 +60,8 @@ struct BOOST_PREPROCESSOR_CAT(make_f,n) \
 /**/
       
 // make_f#
-BOOST_PREPROCESSOR_REPEAT_2ND(
-      BOOST_PREPROCESSOR_INC(BOOST_MPL_FUNCTION_CLASS_MAX_ARITY)
+BOOST_PP_REPEAT_2ND(
+      BOOST_PP_INC(BOOST_MPL_FUNCTION_CLASS_MAX_ARITY)
     , BOOST_MPL_AUX_MAKE_FN_DEF
     , unused
     )

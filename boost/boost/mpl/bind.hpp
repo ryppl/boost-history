@@ -44,7 +44,7 @@ namespace boost {
 namespace mpl {
 
 #define BOOST_MPL_AUX_APPLY \
-    BOOST_PREPROCESSOR_CAT( \
+    BOOST_PP_CAT( \
           mpl::apply \
         , BOOST_MPL_FUNCTION_CLASS_MAX_ARITY \
         ) \
@@ -53,7 +53,7 @@ namespace mpl {
 #define BOOST_MPL_AUX_BIND_PARAMS(param) \
     BOOST_MPL_TEMPLATE_PARAMETERS( \
           1 \
-        , BOOST_PREPROCESSOR_INC(BOOST_MPL_FUNCTION_CLASS_MAX_ARITY) \
+        , BOOST_PP_INC(BOOST_MPL_FUNCTION_CLASS_MAX_ARITY) \
         , param \
         ) \
 /**/
@@ -61,15 +61,15 @@ namespace mpl {
 #define BOOST_MPL_AUX_BIND_DEFAULT_PARAMS(param, value) \
     BOOST_MPL_DEFAULT_TEMPLATE_PARAMETERS( \
           1 \
-        , BOOST_PREPROCESSOR_INC(BOOST_MPL_FUNCTION_CLASS_MAX_ARITY) \
+        , BOOST_PP_INC(BOOST_MPL_FUNCTION_CLASS_MAX_ARITY) \
         , param \
         , value \
         ) \
 /**/
 
 #define BOOST_MPL_AUX_BIND_VARIABLE_PARAMS(n, param) \
-    BOOST_PREPROCESSOR_COMMA_IF(n) \
-    BOOST_MPL_TEMPLATE_PARAMETERS(1, BOOST_PREPROCESSOR_INC(n), param) \
+    BOOST_PP_COMMA_IF(n) \
+    BOOST_MPL_TEMPLATE_PARAMETERS(1, BOOST_PP_INC(n), param) \
 /**/
 
 namespace aux {
@@ -121,7 +121,7 @@ struct resolve_bind_argument< mpl::arg<n> > \
 { \
     template<BOOST_MPL_AUX_BIND_PARAMS(typename U)> struct result_ \
     { \
-        typedef BOOST_PREPROCESSOR_CAT(U,n) type; \
+        typedef BOOST_PP_CAT(U,n) type; \
         typedef char arity_constraint[sizeof(aux::reject_if_none<type>)]; \
     }; \
 }; \
@@ -129,7 +129,7 @@ struct resolve_bind_argument< mpl::arg<n> > \
 /**/
 
 #define BOOST_MPL_AUX_RESOLVE_BIND_ARGUMENT_SPEC(n) \
-    BOOST_PREPROCESSOR_IF( \
+    BOOST_PP_IF( \
           n \
         , BOOST_MPL_AUX_RESOLVE_BIND_ARGUMENT_N_SPEC \
         , BOOST_MPL_AUX_RESOLVE_BIND_ARGUMENT_0_SPEC \
@@ -138,27 +138,27 @@ struct resolve_bind_argument< mpl::arg<n> > \
 
 #define BOOST_MPL_AUX_RESOLVE_ARGUMENT_INVOCATION(n, unused) \
 typedef typename aux::resolve_bind_argument< \
-      BOOST_PREPROCESSOR_CAT(T, BOOST_PREPROCESSOR_INC(n)) \
+      BOOST_PP_CAT(T, BOOST_PP_INC(n)) \
     >::template result_< BOOST_MPL_AUX_BIND_PARAMS(U) >::type \
-        BOOST_PREPROCESSOR_CAT(t, BOOST_PREPROCESSOR_INC(n)); \
+        BOOST_PP_CAT(t, BOOST_PP_INC(n)); \
 /**/
 
 #define BOOST_MPL_AUX_BIND_N_TEMPLATE_DEF(n) \
 template<typename F BOOST_MPL_AUX_BIND_VARIABLE_PARAMS(n, typename T) > \
-struct BOOST_PREPROCESSOR_CAT(bind,n) \
+struct BOOST_PP_CAT(bind,n) \
 { \
-    typedef BOOST_PREPROCESSOR_CAT(bind,n) type; \
+    typedef BOOST_PP_CAT(bind,n) type; \
     template< BOOST_MPL_AUX_BIND_DEFAULT_PARAMS(typename U, aux::none) > \
     struct apply \
     { \
      private: \
-        BOOST_PREPROCESSOR_REPEAT_3RD( \
+        BOOST_PP_REPEAT_3RD( \
               n \
             , BOOST_MPL_AUX_RESOLVE_ARGUMENT_INVOCATION \
             , unused \
             ) \
      public: \
-        typedef typename mpl::BOOST_PREPROCESSOR_CAT(apply,n)< \
+        typedef typename mpl::BOOST_PP_CAT(apply,n)< \
               F \
               BOOST_MPL_AUX_BIND_VARIABLE_PARAMS(n, t) \
             >::type type; \
@@ -181,7 +181,7 @@ struct is_nested_bind
 namespace aux { \
 template< typename F BOOST_MPL_AUX_BIND_VARIABLE_PARAMS(n, typename T) > \
 struct is_nested_bind< \
-      BOOST_PREPROCESSOR_CAT(bind,n)<F BOOST_MPL_AUX_BIND_VARIABLE_PARAMS(n, T)> \
+      BOOST_PP_CAT(bind,n)<F BOOST_MPL_AUX_BIND_VARIABLE_PARAMS(n, T)> \
     > \
 { \
     BOOST_STATIC_CONSTANT(bool, value = true); \
@@ -198,7 +198,7 @@ namespace aux { \
 template< typename F BOOST_MPL_AUX_BIND_VARIABLE_PARAMS(n, typename T) > \
 aux::yes_tag \
 is_nested_bind_helper( aux::type_wrapper< \
-      BOOST_PREPROCESSOR_CAT(bind,n)<F BOOST_MPL_AUX_BIND_VARIABLE_PARAMS(n, T)> \
+      BOOST_PP_CAT(bind,n)<F BOOST_MPL_AUX_BIND_VARIABLE_PARAMS(n, T)> \
     > ); \
 } \
 /**/
@@ -228,7 +228,7 @@ struct bind_impl_chooser<n> \
     template< typename F, BOOST_MPL_AUX_BIND_PARAMS(typename T) > \
     struct result_ \
     { \
-        typedef BOOST_PREPROCESSOR_CAT(bind,n)< \
+        typedef BOOST_PP_CAT(bind,n)< \
               F BOOST_MPL_AUX_BIND_VARIABLE_PARAMS(n, T) \
             > type; \
     }; \
@@ -244,8 +244,8 @@ struct bind_impl_chooser<n> \
 /**/
 
 // bind# 
-BOOST_PREPROCESSOR_REPEAT_2ND(
-      BOOST_PREPROCESSOR_INC(BOOST_MPL_FUNCTION_CLASS_MAX_ARITY)
+BOOST_PP_REPEAT_2ND(
+      BOOST_PP_INC(BOOST_MPL_FUNCTION_CLASS_MAX_ARITY)
     , BOOST_MPL_AUX_BIND_TEMPLATE_DEF
     , unused
     )

@@ -43,14 +43,14 @@ namespace mpl {
 /**/
 
 #define BOOST_MPL_AUX_IS_VECTOR_ARGUMENT(i, T) \
-    BOOST_PREPROCESSOR_IF(i \
+    BOOST_PP_IF(i \
         , BOOST_MPL_PREPROCESSOR_PLUS_TOKEN \
-        , BOOST_PREPROCESSOR_EMPTY)() \
+        , BOOST_PP_EMPTY)() \
     !::boost::is_same<T##i, mpl::null_argument>::value \
 /**/
 
 #define BOOST_MPL_AUX_VECTOR_SIZE(T) \
-    BOOST_PREPROCESSOR_REPEAT( \
+    BOOST_PP_REPEAT( \
         BOOST_MPL_VECTOR_MAX_SIZE \
       , BOOST_MPL_AUX_IS_VECTOR_ARGUMENT \
       , T \
@@ -72,7 +72,7 @@ struct type_vector
     //    typedef T1 value_type_1;
     //    ...
     //    typedef TN value_type_N;
-    BOOST_PREPROCESSOR_REPEAT(
+    BOOST_PP_REPEAT(
           BOOST_MPL_VECTOR_MAX_SIZE
         , BOOST_MPL_AUX_VECTOR_ELEMENT_TYPEDEF
         , T

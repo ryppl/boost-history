@@ -68,7 +68,7 @@ struct vector_element
 //    ...
 //    template<typename Vector> struct vector_element<Vector, N> { ... };
 
-BOOST_PREPROCESSOR_REPEAT(
+BOOST_PP_REPEAT(
       BOOST_MPL_VECTOR_MAX_SIZE
     , BOOST_MPL_TYPE_VECTOR_ELEMENT
     , unused

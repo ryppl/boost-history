@@ -35,9 +35,9 @@ namespace mpl {
 namespace aux {
 
 #define BOOST_MPL_AUX_PARAMETER_COUNT(i, param) \
-    BOOST_PREPROCESSOR_IF(i \
+    BOOST_PP_IF(i \
         , BOOST_MPL_PREPROCESSOR_PLUS_TOKEN \
-        , BOOST_PREPROCESSOR_EMPTY \
+        , BOOST_PP_EMPTY \
         )() \
     !::boost::is_same<T, param##i>::value \
 /**/
@@ -48,7 +48,7 @@ template<
     >
 struct count_if_not
 {
-    BOOST_STATIC_CONSTANT(long, value = BOOST_PREPROCESSOR_REPEAT(
+    BOOST_STATIC_CONSTANT(long, value = BOOST_PP_REPEAT(
           BOOST_MPL_TOP_PARAMETERS_NUMBER
         , BOOST_MPL_AUX_PARAMETER_COUNT
         , U

@@ -35,7 +35,7 @@ template<long N, typename Vector, typename T>
 struct type_vector_insert_algorithm;
 
 #define BOOST_MPL_AUX_LAST_VECTOR_PARAMETER \
-    BOOST_PREPROCESSOR_DEC(BOOST_MPL_VECTOR_MAX_SIZE) \
+    BOOST_PP_DEC(BOOST_MPL_VECTOR_MAX_SIZE) \
 /**/
 
 #define BOOST_MPL_AUX_VECTOR_INSERT_ALGORITHM(i, unused) \
@@ -48,9 +48,9 @@ struct type_vector_insert_algorithm;
                 , i \
                 , typename Vector::value_type_ \
                 ) \
-            BOOST_PREPROCESSOR_COMMA_IF(i) T \
-            BOOST_PREPROCESSOR_COMMA_IF( \
-                BOOST_PREPROCESSOR_SUB(BOOST_MPL_AUX_LAST_VECTOR_PARAMETER, i) \
+            BOOST_PP_COMMA_IF(i) T \
+            BOOST_PP_COMMA_IF( \
+                BOOST_PP_SUB(BOOST_MPL_AUX_LAST_VECTOR_PARAMETER, i) \
                 ) \
                 BOOST_MPL_TEMPLATE_PARAMETERS( \
                       i \
@@ -62,8 +62,8 @@ struct type_vector_insert_algorithm;
 /**/
 
 
-BOOST_PREPROCESSOR_REPEAT_2ND(
-      BOOST_PREPROCESSOR_DEC(BOOST_MPL_AUX_LAST_VECTOR_PARAMETER)
+BOOST_PP_REPEAT_2ND(
+      BOOST_PP_DEC(BOOST_MPL_AUX_LAST_VECTOR_PARAMETER)
     , BOOST_MPL_AUX_VECTOR_INSERT_ALGORITHM
     , unused
     )

@@ -30,16 +30,16 @@
 // BOOST_MPL_TEMPLATE_PARAMETERS(1, n, T): T1, T2, .., Tn-1
 
 #define BOOST_MPL_AUX_TEMPLATE_PARAMETER(i, op) \
-    BOOST_PREPROCESSOR_COMMA_IF(i) \
-    BOOST_PREPROCESSOR_CAT( \
-          BOOST_PREPROCESSOR_TUPLE_ELEM(2, 1, op) \
-        , BOOST_PREPROCESSOR_ADD(BOOST_PREPROCESSOR_TUPLE_ELEM(2, 0, op), i) \
+    BOOST_PP_COMMA_IF(i) \
+    BOOST_PP_CAT( \
+          BOOST_PP_TUPLE_ELEM(2, 1, op) \
+        , BOOST_PP_ADD(BOOST_PP_TUPLE_ELEM(2, 0, op), i) \
         ) \
 /**/
 
 #define BOOST_MPL_TEMPLATE_PARAMETERS(first, last, param) \
-    BOOST_PREPROCESSOR_REPEAT( \
-          BOOST_PREPROCESSOR_SUB(last, first) \
+    BOOST_PP_REPEAT( \
+          BOOST_PP_SUB(last, first) \
         , BOOST_MPL_AUX_TEMPLATE_PARAMETER \
         , (first, param) \
         ) \
@@ -51,16 +51,16 @@
 // BOOST_MPL_DEFAULT_TEMPLATE_PARAMETERS(1, n, T, int): T1 = int, T2 = int, .., Tn-1 = int
 
 #define BOOST_MPL_AUX_DEFAULT_TEMPLATE_PARAMETER(i, opv) \
-    BOOST_PREPROCESSOR_COMMA_IF(i) \
-    BOOST_PREPROCESSOR_CAT( \
-          BOOST_PREPROCESSOR_TUPLE_ELEM(3, 1, opv) \
-        , BOOST_PREPROCESSOR_ADD(BOOST_PREPROCESSOR_TUPLE_ELEM(3, 0, opv), i) \
-        ) = BOOST_PREPROCESSOR_TUPLE_ELEM(3, 2, opv) \
+    BOOST_PP_COMMA_IF(i) \
+    BOOST_PP_CAT( \
+          BOOST_PP_TUPLE_ELEM(3, 1, opv) \
+        , BOOST_PP_ADD(BOOST_PP_TUPLE_ELEM(3, 0, opv), i) \
+        ) = BOOST_PP_TUPLE_ELEM(3, 2, opv) \
 /**/
 
 #define BOOST_MPL_DEFAULT_TEMPLATE_PARAMETERS(first, last, param, value) \
-    BOOST_PREPROCESSOR_REPEAT( \
-          BOOST_PREPROCESSOR_SUB(last, first) \
+    BOOST_PP_REPEAT( \
+          BOOST_PP_SUB(last, first) \
         , BOOST_MPL_AUX_DEFAULT_TEMPLATE_PARAMETER \
         , (first, param, value) \
         ) \

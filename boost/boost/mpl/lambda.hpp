@@ -46,13 +46,13 @@ struct lambda
  && !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
 
 #define BOOST_MPL_AUX_LAMBDA_PARAMS(n, param) \
-    BOOST_MPL_TEMPLATE_PARAMETERS(1, BOOST_PREPROCESSOR_INC(n), param) \
+    BOOST_MPL_TEMPLATE_PARAMETERS(1, BOOST_PP_INC(n), param) \
 /**/
 
 #define BOOST_MPL_AUX_LAMBDA_INVOCATION(n, T) \
-    BOOST_PREPROCESSOR_COMMA_IF(n) \
+    BOOST_PP_COMMA_IF(n) \
     typename lambda< \
-        BOOST_PREPROCESSOR_CAT(T, BOOST_PREPROCESSOR_INC(n)) \
+        BOOST_PP_CAT(T, BOOST_PP_INC(n)) \
         >::type \
 /**/
 
@@ -64,15 +64,15 @@ template< \
     > \
 struct lambda< Function<BOOST_MPL_AUX_LAMBDA_PARAMS(n, T)> > \
 { \
-    typedef typename mpl::BOOST_PREPROCESSOR_CAT(bind,n)< \
-          typename mpl::BOOST_PREPROCESSOR_CAT(make_f,n)<Function>::type \
-        , BOOST_PREPROCESSOR_REPEAT(n, BOOST_MPL_AUX_LAMBDA_INVOCATION, T) \
+    typedef typename mpl::BOOST_PP_CAT(bind,n)< \
+          typename mpl::BOOST_PP_CAT(make_f,n)<Function>::type \
+        , BOOST_PP_REPEAT(n, BOOST_MPL_AUX_LAMBDA_INVOCATION, T) \
         >::type type; \
 }; \
 /**/
 
 #define BOOST_MPL_AUX_LAMBDA_SPEC(n, unused) \
-    BOOST_PREPROCESSOR_IF( \
+    BOOST_PP_IF( \
           n \
         , BOOST_MPL_AUX_LAMBDA_N_SPEC \
         , BOOST_MPL_AUX_LAMBDA_0_SPEC \
@@ -80,8 +80,8 @@ struct lambda< Function<BOOST_MPL_AUX_LAMBDA_PARAMS(n, T)> > \
 /**/
 
 // lambda<#-ary class template>
-BOOST_PREPROCESSOR_REPEAT_2ND(
-      BOOST_PREPROCESSOR_INC(BOOST_MPL_FUNCTION_CLASS_MAX_ARITY)
+BOOST_PP_REPEAT_2ND(
+      BOOST_PP_INC(BOOST_MPL_FUNCTION_CLASS_MAX_ARITY)
     , BOOST_MPL_AUX_LAMBDA_SPEC
     , unused
     )

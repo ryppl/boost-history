@@ -47,11 +47,11 @@ struct list_traits<value_list_tag>
 };
 
 #define BOOST_MPL_INT_VALUE_TEMPLATE_PARAMETER(i, param) \
-    BOOST_PREPROCESSOR_COMMA_IF(i) mpl::int_t<param##i> \
+    BOOST_PP_COMMA_IF(i) mpl::int_t<param##i> \
 /**/
 
 #define BOOST_MPL_ENUMERATE_INT_VALUE_PARAMS(param) \
-    BOOST_PREPROCESSOR_REPEAT( \
+    BOOST_PP_REPEAT( \
         BOOST_MPL_LIST_PARAMETERS_NUMBER \
       , BOOST_MPL_INT_VALUE_TEMPLATE_PARAMETER \
       , param \
