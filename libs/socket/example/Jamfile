@@ -21,6 +21,7 @@ rule socket-example ( example-name : sources + )
 	<bcc56><*><cxxflags>-Q
 	  <runtime-link>static
 	  <threading>single
+	  <bcc56><*><find-library>Ws2_32
 	  <msvc><*><find-library>Ws2_32
 	  <vc7><*><find-library>Ws2_32
 	  <gcc><*><find-library>Ws2_32
@@ -54,6 +55,7 @@ rule socket-test-example ( example-name : sources + )
 socket-test-example simple_client : client_test.cpp ;
 socket-test-example simple_server : server_test.cpp ;
 
+socket-example iface_list : iface_list.cpp ;
 socket-example http_get : http_get.cpp ;
 #socket-example async_server : async_server.cpp ;
 
