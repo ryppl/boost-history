@@ -1,8 +1,13 @@
 // (C) Copyright 2003: Reece H. Dunn
 
+#if defined(_MSC_VER) && (_MSC_VER >= 1200)
+#  pragma once
+#endif
+
 #ifndef BOOST_IOFM_DETAIL_SELECTOR_HPP
 #define BOOST_IOFM_DETAIL_SELECTOR_HPP
 #  include <boost/mpl/if.hpp>
+#  include <iostream>
 
    namespace boost { namespace io { namespace detail
    {
@@ -122,7 +127,7 @@
 
          struct get5
          {
-            static const T1 &                    value( const T1 &, const T2 &, const T3 &, const T4 &, const T5 & e, const T6 &, const T7 &, const T8 & )
+            static const T5 &                    value( const T1 &, const T2 &, const T3 &, const T4 &, const T5 & e, const T6 &, const T7 &, const T8 & )
             {
                return( e );
             }
@@ -130,7 +135,7 @@
 
          struct get6
          {
-            static const T1 &                    value( const T1 &, const T2 &, const T3 &, const T4 &, const T5 &, const T6 & f, const T7 &, const T8 & )
+            static const T6 &                    value( const T1 &, const T2 &, const T3 &, const T4 &, const T5 &, const T6 & f, const T7 &, const T8 & )
             {
                return( f );
             }
@@ -138,7 +143,7 @@
 
          struct get7
          {
-            static const T1 &                    value( const T1 &, const T2 &, const T3 &, const T4 &, const T5 &, const T6 &, const T7 & g, const T8 & )
+            static const T7 &                    value( const T1 &, const T2 &, const T3 &, const T4 &, const T5 &, const T6 &, const T7 & g, const T8 & )
             {
                return( g );
             }
@@ -146,18 +151,27 @@
 
          struct get8
          {
-            static const T1 &                    value( const T1 &, const T2 &, const T3 &, const T4 &, const T5 &, const T6 &, const T7 &, const T8 & h )
+            static const T8 &                    value( const T1 &, const T2 &, const T3 &, const T4 &, const T5 &, const T6 &, const T7 &, const T8 & h )
             {
                return( h );
             }
          };
 
-         typedef const typename switch_
+         // type selectors
+
+         typedef typename const switch_
                  <
                     n,
                     1, T1, 2, T2, 3, T3, 4, T4, 5, T5, 6, T6, 7, T7,
                     T8
                  >::type &                                           type;
+
+         typedef typename switch_
+                 <
+                    n,
+                    1, T1, 2, T2, 3, T3, 4, T4, 5, T5, 6, T6, 7, T7,
+                    T8
+                 >::type &                                           ref_type;
 
          typedef typename switch_
                  <
@@ -171,6 +185,10 @@
          static type                             value( const T1 & a, const T2 & b )
          {
             return( getter::value( a, b ));
+         }
+         static ref_type                         ref( const T1 & a, const T2 & b )
+         {
+            return( const_cast< ref_type >( getter::value( a, b )));
          }
 
          // nary< 4 > value selection

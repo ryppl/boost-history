@@ -1,5 +1,9 @@
 // (C) Copyright 2003: Reece H. Dunn
 
+#if defined(_MSC_VER) && (_MSC_VER >= 1200)
+#  pragma once
+#endif
+
 #ifndef BOOST_IOFM_DETAIL_InputHelper_HPP
 #define BOOST_IOFM_DETAIL_InputHelper_HPP
 #  include <boost/noncopyable.hpp>

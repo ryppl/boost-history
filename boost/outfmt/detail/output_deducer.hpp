@@ -1,5 +1,9 @@
 // (C) Copyright Jonathan Turkanis 2003.
 
+#if defined(_MSC_VER) && (_MSC_VER >= 1200)
+#  pragma once
+#endif
+
 #ifndef BOOST_IOFM_DETAIL_OUTPUT_DEDUCER_HPP
 #define BOOST_IOFM_DETAIL_OUTPUT_DEDUCER_HPP
 #  include <boost/mpl/apply_if.hpp>

@@ -1,5 +1,9 @@
 // (C) Copyright 2003: Reece H. Dunn 
 
+#if defined(_MSC_VER) && (_MSC_VER >= 1200)
+#  pragma once
+#endif
+
 #ifndef BOOST_IOFM_FormatObjects_RangeOutput_HPP
 #define BOOST_IOFM_FormatObjects_RangeOutput_HPP
 #  include <boost/outfmt/format_objects/detail/list_output.hpp>

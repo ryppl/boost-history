@@ -1,5 +1,9 @@
 // (C) Copyright 2003: Reece H. Dunn 
 
+#if defined(_MSC_VER) && (_MSC_VER >= 1200)
+#  pragma once
+#endif
+
 #ifndef BOOST_IOFM_FormatObjects_StateOutput_HPP
 #define BOOST_IOFM_FormatObjects_StateOutput_HPP
 #  include <boost/outfmt/formatter.hpp>

@@ -1,4 +1,8 @@
-// (C) Copyright 2003: Reece H. Dunn 
+// (C) Copyright 2003: Reece H. Dunn
+
+#if defined(_MSC_VER) && (_MSC_VER >= 1200)
+#  pragma once
+#endif
 
 #ifndef BOOST_IOFM_FormatObjects_PairOutput_HPP
 #define BOOST_IOFM_FormatObjects_PairOutput_HPP
@@ -39,78 +43,29 @@
          // input
 
          public:
-            template< typename T1, typename T2, class InputStream >
-            inline bool                          read
-                                                 (
-                                                    InputStream & is,
-                                                    std::pair< T1, T2 > & p
-                                                 ) const
-            {
-               return( in( is, p.first, p.second ));
-            }
             template< typename T, class InputStream >
-            inline bool                          read
-                                                 (
-                                                    InputStream & is,
-                                                    std::complex< T > & c
-                                                 ) const
+            inline bool                          read( InputStream & is, T & v ) const
             {
-               T                       r;
-               T                       i;
-               if( in( is, r, i ))
+               return( read( is, v, narytype( v )));
+            }
+         private: // internal implementation
+            template< typename T, class InputStream >
+            inline bool                          read( InputStream & is, T & v, seperable_pair ) const
+            {
+               return( in( is, refval< 1 >( v ), refval< 2 >( v )));
+            }
+            template< typename T, typename T1, typename T2, class InputStream >
+            inline bool                          read( InputStream & is, T & v, inseperable_pair< T1, T2 > ) const
+            {
+               T1                      a;
+               T2                      b;
+               if( in( is, a, b ))
                {
-                  c = std::complex< T >( r, i );
+                  assignval( v, a, b );
                   return( true );
                }
                return( false );
             }
-         public: // boost dual-valued types
-#           if !defined(BOOST_IOFM_NO_LIB_INTERVAL)
-               template< typename T, class Traits, class InputStream >
-               inline bool                       read
-                                                 (
-                                                    InputStream & is,
-                                                    boost::numeric::interval< T, Traits > & i
-                                                 ) const
-               {
-                  T                    a;
-                  T                    b;
-                  if( in( is, a, b ))
-                  {
-                     i.assign( a, b );
-                     return( true );
-                  }
-                  return( false );
-               }
-#           endif
-#           if !defined(BOOST_IOFM_NO_LIB_RATIONAL)
-               template< typename T, class InputStream >
-               inline bool                       read
-                                                 (
-                                                    InputStream & is,
-                                                    boost::rational< T > & r
-                                                 ) const
-               {
-                  T                    a;
-                  T                    b;
-                  if( in( is, a, b ))
-                  {
-                     r.assign( a, b );
-                     return( true );
-                  }
-                  return( false );
-               }
-#           endif
-            template< typename T1, typename T2, class InputStream >
-            inline bool                          read
-                                                 (
-                                                    InputStream & is,
-                                                    boost::compressed_pair< T1, T2 > & cp
-                                                 ) const
-            {
-               return( in( is, cp.first(), cp.second()));
-            }
-         private: // internal implementation
             template< typename T1, typename T2, class InputStream >
             inline bool                          in
                                                  (
@@ -126,8 +81,6 @@
                }
                return( false );
             }
-
-         public:
 
          // constructors
 

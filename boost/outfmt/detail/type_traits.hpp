@@ -1,5 +1,9 @@
 // (C) Copyright 2003: Jonathan Turkanis; Reece H. Dunn
 
+#if defined(_MSC_VER) && (_MSC_VER >= 1200)
+#  pragma once
+#endif
+
 // Permission to copy, use, modify, sell and distribute this software 
 // is granted provided this copyright notice appears in all copies. This 
 // software is provided "as is" without express or implied warranty, and 

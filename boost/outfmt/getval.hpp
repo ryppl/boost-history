@@ -1,5 +1,9 @@
 // (C) Copyright 2003: Reece H. Dunn
 
+#if defined(_MSC_VER) && (_MSC_VER >= 1200)
+#  pragma once
+#endif
+
 #ifndef BOOST_IOFM_GETVAL_HPP
 #define BOOST_IOFM_GETVAL_HPP
 #  include <boost/outfmt/detail/selector.hpp>
@@ -24,6 +28,49 @@
 
    namespace boost { namespace io
    {
+      // type classification:
+
+      struct seperable_pair{};
+
+      template< typename T1, typename T2 = T1 >
+      struct inseperable_pair
+      {
+         typedef T1                    base1_type;
+         typedef T2                    base2_type;
+      };
+
+      template< typename T >
+      struct nary4_type
+      {
+         typedef T                     base_type;
+      };
+
+      template< typename T >
+      struct nary8_type
+      {
+         typedef T                     base_type;
+      };
+
+      // macro helpers:
+
+#     define BOOST_IO_NARY_PARAM1( otype, ctype )\
+         template< typename T >                  \
+         ctype narytype( const otype< T > & )    \
+         {                                       \
+            return( ctype());                    \
+         }
+
+#     define BOOST_IO_NARY_PARAM2( otype, ctype )\
+         template< typename T, typename U >      \
+         ctype narytype( const otype< T, U > & ) \
+         {                                       \
+            return( ctype());                    \
+         }
+
+      // std::pair   
+
+      BOOST_IO_NARY_PARAM2( std::pair, seperable_pair )
+
       template< int n, typename T1, typename T2 >
       typename detail::selector< n, T1, T2 >::type
                                                  getval( const std::pair< T1, T2 > & p )
@@ -32,40 +79,70 @@
       }
 
       template< int n, typename T1, typename T2 >
+      typename detail::selector< n, T1, T2 >::ref_type
+                                                 refval( std::pair< T1, T2 > & p )
+      {
+         return( detail::selector< n, T1, T2 >::ref( p.first, p.second ));
+      }
+
+      // boost::compressed_pair
+
+      BOOST_IO_NARY_PARAM2( boost::compressed_pair, seperable_pair )
+
+      template< int n, typename T1, typename T2 >
       typename detail::selector< n, T1, T2 >::type
                                                  getval( const boost::compressed_pair< T1, T2 > & cp )
       {
          return( detail::selector< n, T1, T2 >::value( cp.first(), cp.second()));
       }
 
+      // std::complex
+
+      BOOST_IO_NARY_PARAM1( std::complex, inseperable_pair< T > )
+
       template< int n, typename T >
-      typename detail::selector< n, T >::type
-                                                 getval( const std::complex< T > & c )
+      T getval( const std::complex< T > & c )
       {
          return( detail::selector< n, T >::value( c.real(), c.imag()));
       }
 
+      template< typename T >
+      void assignval( std::complex< T > & c, const T & a, const T & b )
+      {
+         c = std::complex< T >( a, b );
+      }
+
+      // boost::numeric::interval
+
 #     if !defined(BOOST_IOFM_NO_LIB_INTERVAL)
+         BOOST_IO_NARY_PARAM2( boost::numeric::interval, inseperable_pair< T > )
+
          template< int n, typename T, class Traits >
-         typename detail::selector< n, T >::type
-                                                 getval( const boost::numeric::interval< T, Traits > & i )
+         T getval( const boost::numeric::interval< T, Traits > & i )
          {
             return( detail::selector< n, T >::value( i.lower(), i.upper()));
          }
 #     endif
+
+      // boost::rational
+
 #     if !defined(BOOST_IOFM_NO_LIB_RATIONAL)
+         BOOST_IO_NARY_PARAM1( boost::rational, inseperable_pair< T > )
+
          template< int n, typename T >
-         typename detail::selector< n, T >::type
-                                                 getval( const boost::rational< T > & r )
+         T getval( const boost::rational< T > & r )
          {
             return( detail::selector< n, T >::value( r.numerator(), r.denominator()));
          }
 #     endif
 
+      // boost::math::quaternion
+
 #     if !defined(BOOST_IOFM_NO_LIB_QUATERNION)
+         BOOST_IO_NARY_PARAM1( boost::math::quaternion, nary4_type< T > )
+
          template< int n, typename T >
-         typename detail::selector< n, T >::type
-                                                 getval( const boost::math::quaternion< T > & h )
+         T getval( const boost::math::quaternion< T > & h )
          {
             return( detail::selector< n, T >::value
             (
@@ -75,10 +152,13 @@
          }
 #     endif
 
+      // boost::math::octonion
+
 #     if !defined(BOOST_IOFM_NO_LIB_OCTONION)
+         BOOST_IO_NARY_PARAM1( boost::math::octonion, nary8_type< T > )
+
          template< int n, typename T >
-         typename detail::selector< n, T >::type
-                                                 getval( const boost::math::octonion< T > & o )
+         T getval( const boost::math::octonion< T > & o )
          {
             return( detail::selector< n, T >::value
             (

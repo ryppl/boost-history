@@ -1,5 +1,9 @@
 // (C) Copyright 2003: Reece H. Dunn
 
+#if defined(_MSC_VER) && (_MSC_VER >= 1200)
+#  pragma once
+#endif
+
 #ifndef BOOST_IOFM_FormatObjects_StaticNaryOutput_HPP
 #define BOOST_IOFM_FormatObjects_StaticNaryOutput_HPP
 #  include <boost/outfmt/formatter.hpp>
@@ -31,12 +35,10 @@
                                   ) const
             {
                os << open();
-            /*
                out( os, getval< 1 >( h )) << separator();
                out( os, getval< 2 >( h )) << separator();
                out( os, getval< 3 >( h )) << separator();
                return( out( os, getval< 4 >( h )) << close());
-            */
                return( os << close());
             }
 #        endif
@@ -49,14 +51,14 @@
                                   ) const 
             {
                os << open();
-               out( os, o.R_component_1()) << separator();
-               out( os, o.R_component_2()) << separator();
-               out( os, o.R_component_3()) << separator();
-               out( os, o.R_component_4()) << separator();
-               out( os, o.R_component_5()) << separator();
-               out( os, o.R_component_6()) << separator();
-               out( os, o.R_component_7()) << separator();
-               return( out( os, o.R_component_8()) << close());
+               out( os, getval< 1 >( o )) << separator();
+               out( os, getval< 2 >( o )) << separator();
+               out( os, getval< 3 >( o )) << separator();
+               out( os, getval< 4 >( o )) << separator();
+               out( os, getval< 5 >( o )) << separator();
+               out( os, getval< 6 >( o )) << separator();
+               out( os, getval< 7 >( o )) << separator();
+               return( out( os, getval< 8 >( o )) << close());
             }
 #        endif
          public:

@@ -1,6 +1,10 @@
 // (C) Copyright 2003: Reece H. Dunn 
 // (C) Copyright Jonathan Turkanis 2003.
 
+#if defined(_MSC_VER) && (_MSC_VER >= 1200)
+#  pragma once
+#endif
+
 #ifndef BOOST_IOFM_DETAIL_FormatTraits_HPP
 #define BOOST_IOFM_DETAIL_FormatTraits_HPP
 #  include <boost/outfmt/detail/config.hpp>

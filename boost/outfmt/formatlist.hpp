@@ -1,5 +1,9 @@
 // (C) Copyright 2003: Reece H. Dunn 
 
+#if defined(_MSC_VER) && (_MSC_VER >= 1200)
+#  pragma once
+#endif
+
 #ifndef BOOST_IOFM_FormatList_HPP
 #define BOOST_IOFM_FormatList_HPP
 #  include <boost/outfmt/formatob.hpp>
@@ -106,7 +110,7 @@
                                                  (
                                                     ForwardIterator first,
                                                     ForwardIterator last,
-                                                    Outputter       out //= boost::io::basic_output()
+                                                    const Outputter & out
                                                  )
       {
          return( formatlist_t< ForwardIterator, BOOST_DEDUCED_TYPENAME Outputter::format_type, Outputter >
@@ -144,7 +148,7 @@
                                                  formatout
                                                  (
                                                     Container & c,
-                                                    Outputter   out //= boost::io::basic_output()
+                                                    const Outputter & out 
                                                  )
       {
          return( formatlist_t< BOOST_DEDUCED_TYPENAME Container::iterator, BOOST_DEDUCED_TYPENAME Outputter::format_type, Outputter >
@@ -182,7 +186,7 @@
                                                  formatrangeout
                                                  (
                                                     std::pair< ForwardIterator, ForwardIterator > & ip,
-                                                    Outputter out //= boost::io::basic_output()
+                                                    const Outputter & out
                                                  )
       {
          return( formatlist_t< ForwardIterator, BOOST_DEDUCED_TYPENAME Outputter::format_type, Outputter >

@@ -1,5 +1,9 @@
 // (C) Copyright 2003: Reece H. Dunn
 
+#if defined(_MSC_VER) && (_MSC_VER >= 1200)
+#  pragma once
+#endif
+
 #ifndef BOOST_IOFM_STL_IO_BASIC_OSTREAM_HPP
 #define BOOST_IOFM_STL_IO_BASIC_OSTREAM_HPP
    // std::vector outputter
