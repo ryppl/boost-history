@@ -37,7 +37,7 @@ namespace boost {
 
 extern "C" { double rint(double); }
 
-struct x86_rounding_control
+struct x86_rounding
 {
   typedef unsigned int rounding_mode;
   static void get_rounding_mode(rounding_mode& mode)
