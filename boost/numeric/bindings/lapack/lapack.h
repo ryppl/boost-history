@@ -1,98 +1,168 @@
-#ifndef boost_numeric_bindings_lapack_lapack_h
-#define boost_numeric_bindings_lapack_lapack_h
+/*
+ * 
+ * Copyright (c) Toon Knapen & Kresimir Fresl 2003
+ *
+ * Permission to copy, modify, use and distribute this software 
+ * for any non-commercial or commercial purpose is granted provided 
+ * that this license appear on all copies of the software source code.
+ *
+ * Authors assume no responsibility whatsoever for its use and makes 
+ * no guarantees about its quality, correctness or reliability.
+ *
+ * KF acknowledges the support of the Faculty of Civil Engineering, 
+ * University of Zagreb, Croatia.
+ *
+ */
 
-#ifdef __cplusplus
-#ifndef boost_numeric_bindings_lapack_traits_hpp
-#error include lapack.hpp in C++ instead
-#endif
-#endif
+#ifndef BOOST_NUMERIC_BINDINGS_LAPACK_LAPACK_H
+#define BOOST_NUMERIC_BINDINGS_LAPACK_LAPACK_H
 
-#include <boost/numeric/bindings/traits/fortran.h>
+#include <boost/numeric/bindings/traits/detail/cmplx.h>
+#include <boost/numeric/bindings/lapack/lapack_names.h>
 
-#if defined (BIND_FORTRAN_LOWERCASE_UNDERSCORE)
 
-#define LAPACK_DGETRF dgetrf_
-#define LAPACK_ZGETRF zgetrf_
+extern "C" {
 
-#define LAPACK_DGETRS dgetrs_
-#define LAPACK_ZGETRS zgetrs_
+  void LAPACK_SGESV (int const* n, int const* nrhs, 
+                     float* a, int const* lda, int* ipiv, 
+                     float* b, int const* ldb, int* info);
+  void LAPACK_DGESV (int const* n, int const* nrhs, 
+                     double* a, int const* lda, int* ipiv, 
+                     double* b, int const* ldb, int* info);
+  void LAPACK_CGESV (int const* n, int const* nrhs,
+                     fcomplex_t* a, int const* lda, int* ipiv, 
+                     fcomplex_t* b, int const* ldb, int* info);
+  void LAPACK_ZGESV (int const* n, int const* nrhs,
+                     dcomplex_t* a, int const* lda, int* ipiv, 
+                     dcomplex_t* b, int const* ldb, int* info);
 
-#define LAPACK_DSYTRF dsytrf_
-#define LAPACK_ZSYTRF zsytrf_
+  void LAPACK_SGETRF (int const* n, int const* nrhs, 
+                      float* a, int const* lda, int* ipiv, int* info);
+  void LAPACK_DGETRF (int const* n, int const* nrhs, 
+                      double* a, int const* lda, int* ipiv, int* info);
+  void LAPACK_CGETRF (int const* n, int const* nrhs,
+                      fcomplex_t* a, int const* lda,
+                      int* ipiv, int* info);
+  void LAPACK_ZGETRF (int const* n, int const* nrhs,
+                      dcomplex_t* a, int const* lda,
+                      int* ipiv, int* info);
 
-#define LAPACK_DSYTRS dsytrs_
-#define LAPACK_ZSYTRS zsytrs_
+  void LAPACK_SGETRS (char const* trans, int const* n, int const* nrhs, 
+                      float* a, int const* lda, int* ipiv, 
+                      float* b, int const* ldb, int* info);
+  void LAPACK_DGETRS (char const* trans, int const* n, int const* nrhs, 
+                      double* a, int const* lda, int* ipiv, 
+                      double* b, int const* ldb, int* info);
+  void LAPACK_CGETRS (char const* trans, int const* n, int const* nrhs,
+                      fcomplex_t* a, int const* lda, int* ipiv, 
+                      fcomplex_t* b, int const* ldb, int* info);
+  void LAPACK_ZGETRS (char const* trans, int const* n, int const* nrhs,
+                      dcomplex_t* a, int const* lda, int* ipiv, 
+                      dcomplex_t* b, int const* ldb, int* info);
 
-#define LAPACK_DGEEV dgeev_
-#define LAPACK_ZGEEV zgeev_
 
-#define LAPACK_DGEES dgees_
-#define LAPACK_ZGEES zgees_
+  void LAPACK_SPOSV (char const* uplo, int const* n, int const* nrhs, 
+                     float* a, int const* lda, 
+                     float* b, int const* ldb, int* info);
+  void LAPACK_DPOSV (char const* uplo, int const* n, int const* nrhs, 
+                     double* a, int const* lda, 
+                     double* b, int const* ldb, int* info);
+  void LAPACK_CPOSV (char const* uplo, int const* n, int const* nrhs,
+                     fcomplex_t* a, int const* lda,
+                     fcomplex_t* b, int const* ldb, int* info);
+  void LAPACK_ZPOSV (char const* uplo, int const* n, int const* nrhs,
+                     dcomplex_t* a, int const* lda,
+                     dcomplex_t* b, int const* ldb, int* info);
 
-#define LAPACK_DPOTRF dpotrf_
-#define LAPACK_ZPOTRF zpotrf_
+  void LAPACK_SPOTRF (char const* uplo, int const* n, 
+                      float* a, int const* lda, int* info);
+  void LAPACK_DPOTRF (char const* uplo, int const* n, 
+                      double* a, int const* lda, int* info);
+  void LAPACK_CPOTRF (char const* uplo, int const* n, 
+                      fcomplex_t* a, int const* lda, int* info);
+  void LAPACK_ZPOTRF (char const* uplo, int const* n, 
+                      dcomplex_t* a, int const* lda, int* info);
 
-#define LAPACK_DPOTRS dpotrs_
-#define LAPACK_ZPOTRS zpotrs_
+  void LAPACK_SPOTRS (char const* uplo, int const* n, int const* nrhs, 
+                      float* a, int const* lda, 
+                      float* b, int const* ldb, int* info);
+  void LAPACK_DPOTRS (char const* uplo, int const* n, int const* nrhs, 
+                      double* a, int const* lda, 
+                      double* b, int const* ldb, int* info);
+  void LAPACK_CPOTRS (char const* uplo, int const* n, int const* nrhs,
+                      fcomplex_t* a, int const* lda,
+                      fcomplex_t* b, int const* ldb, int* info);
+  void LAPACK_ZPOTRS (char const* uplo, int const* n, int const* nrhs,
+                      dcomplex_t* a, int const* lda,
+                      dcomplex_t* b, int const* ldb, int* info);
 
-#elif defined(BIND_FORTRAN_LOWERCASE)
 
-#define LAPACK_DGETRF dgetrf
-#define LAPACK_ZGETRF zgetrf
+  void LAPACK_SSYSV (char const* uplo, int const* n, int const* nrhs, 
+                     float* a, int const* lda, int* ipiv, 
+                     float* b, int const* ldb, 
+                     float* w, int const* lw, int* info);
+  void LAPACK_DSYSV (char const* uplo, int const* n, int const* nrhs, 
+                     double* a, int const* lda, int* ipiv, 
+                     double* b, int const* ldb, 
+                     double* w, int const* lw, int* info);
+  void LAPACK_CSYSV (char const* uplo, int const* n, int const* nrhs,
+                     fcomplex_t* a, int const* lda, int* ipiv, 
+                     fcomplex_t* b, int const* ldb, 
+                     fcomplex_t* w, int const* lw, int* info);
+  void LAPACK_ZSYSV (char const* uplo, int const* n, int const* nrhs,
+                     dcomplex_t* a, int const* lda, int* ipiv, 
+                     dcomplex_t* b, int const* ldb, 
+                     dcomplex_t* w, int const* lw, int* info);
 
-#define LAPACK_DGETRS dgetrs
-#define LAPACK_ZGETRS zgetrs
+  void LAPACK_CHESV (char const* uplo, int const* n, int const* nrhs,
+                     fcomplex_t* a, int const* lda, int* ipiv, 
+                     fcomplex_t* b, int const* ldb, 
+                     fcomplex_t* w, int const* lw, int* info);
+  void LAPACK_ZHESV (char const* uplo, int const* n, int const* nrhs,
+                     dcomplex_t* a, int const* lda, int* ipiv, 
+                     dcomplex_t* b, int const* ldb, 
+                     dcomplex_t* w, int const* lw, int* info);
 
-#define LAPACK_DSYTRF dsytrf
-#define LAPACK_ZSYTRF zsytrf
+  void LAPACK_SSYTRF (char const* uplo, int const* n, 
+                      float* a, int const* lda, int* ipiv, 
+                      float* w, int const* lw, int* info);
+  void LAPACK_DSYTRF (char const* uplo, int const* n, 
+                      double* a, int const* lda, int* ipiv, 
+                      double* w, int const* lw, int* info);
+  void LAPACK_CSYTRF (char const* uplo, int const* n, 
+                      fcomplex_t* a, int const* lda, int* ipiv, 
+                      fcomplex_t* w, int const* lw, int* info);
+  void LAPACK_ZSYTRF (char const* uplo, int const* n, 
+                      dcomplex_t* a, int const* lda, int* ipiv, 
+                      dcomplex_t* w, int const* lw, int* info);
 
-#define LAPACK_DSYTRS dsytrs
-#define LAPACK_ZSYTRS zsytrs
+  void LAPACK_CHETRF (char const* uplo, int const* n, 
+                      fcomplex_t* a, int const* lda, int* ipiv, 
+                      fcomplex_t* w, int const* lw, int* info);
+  void LAPACK_ZHETRF (char const* uplo, int const* n, 
+                      dcomplex_t* a, int const* lda, int* ipiv, 
+                      dcomplex_t* w, int const* lw, int* info);
 
-#define LAPACK_DGEEV dgeev
-#define LAPACK_ZGEEV zgeev
+  void LAPACK_SSYTRS (char const* uplo, int const* n, int const* nrhs, 
+                      float* a, int const* lda, int* ipiv, 
+                      float* b, int const* ldb, int* info);
+  void LAPACK_DSYTRS (char const* uplo, int const* n, int const* nrhs, 
+                      double* a, int const* lda, int* ipiv, 
+                      double* b, int const* ldb, int* info);
+  void LAPACK_CSYTRS (char const* uplo, int const* n, int const* nrhs,
+                      fcomplex_t* a, int const* lda, int* ipiv, 
+                      fcomplex_t* b, int const* ldb, int* info);
+  void LAPACK_ZSYTRS (char const* uplo, int const* n, int const* nrhs,
+                      dcomplex_t* a, int const* lda, int* ipiv, 
+                      dcomplex_t* b, int const* ldb, int* info);
 
-#define LAPACK_DGEES dgees
-#define LAPACK_ZGEES zgees
+  void LAPACK_CHETRS (char const* uplo, int const* n, int const* nrhs,
+                      fcomplex_t* a, int const* lda, int* ipiv, 
+                      fcomplex_t* b, int const* ldb, int* info);
+  void LAPACK_ZHETRS (char const* uplo, int const* n, int const* nrhs,
+                      dcomplex_t* a, int const* lda, int* ipiv, 
+                      dcomplex_t* b, int const* ldb, int* info);
 
-#define LAPACK_DPOTRF dpotrf
-#define LAPACK_ZPOTRF zpotrf
-
-#define LAPACK_DPOTRS dpotrs
-#define LAPACK_ZPOTRS zpotrs
-
-#else
-#error do not know how to bind to fortran calling convention
-#endif
-
-#include <boost/numeric/bindings/traits/type.h>
-
-extern "C"
-{
-  typedef int (*fortran_function_type)(...) ;
-
-  void LAPACK_DGETRF(const int* m, const int* n, double*   a, const int* lda, int* ipiv, int* info) ;
-  void LAPACK_ZGETRF(const int* m, const int* n, dcomplex* a, const int* lda, int* ipiv, int* info) ;
-
-  void LAPACK_DGETRS(const char* trans, const int *n, const int* nrhs, const double*   a, const int* lda, const int* ipiv, double*   b, const int* ldb, int* info);
-  void LAPACK_ZGETRS(const char* trans, const int *n, const int* nrhs, const dcomplex* a, const int* lda, const int* ipiv, dcomplex* b, const int* ldb, int* info);
-
-  void LAPACK_DSYTRF(const char* uplo, const int* n, double*   a, const int* lda, int* ipiv, double* work, const int* lwork, int* info) ;
-  void LAPACK_ZSYTRF(const char* uplo, const int* n, dcomplex* a, const int* lda, int* ipiv, dcomplex* work, const int* lwork, int* info) ;
-
-  void LAPACK_DSYTRS(const char* uplo, const int *n, const int* nrhs, const double*   a, const int* lda, const int* ipiv, double*               b, const int* ldb, int* info);
-  void LAPACK_ZSYTRS(const char* uplo, const int *n, const int* nrhs, const dcomplex* a, const int* lda, const int* ipiv, dcomplex* b, const int* ldb, int* info);
-
-  void LAPACK_DGEEV(const char* jobvl, const char* jobvr, const int * n, double*   a, const int* lda, double* wr, double* wi, double* vl, const int* ldvl, double* vr, const int* ldvr, double* work, const int* lwork, int* info);
-  void LAPACK_ZGEEV(const char* jobvl, const char* jobvr, const int * n, dcomplex* a, const int* lda, dcomplex* w, dcomplex* vl, const int* ldvl, dcomplex* vr, const int* ldvr, dcomplex* work, const int* lwork, double* rwork, int* info);
-
-  void LAPACK_DPOTRF(const char* uplo, const int * n, double* a, const int* lda, int* info);
-  void LAPACK_ZPOTRF(const char* uplo, const int * n, dcomplex* a, const int* lda, int* info);
-
-  void LAPACK_DPOTRS(const char* uplo, const int * n, const int * nrhs, const double* a, const int* lda, double* b, const int* ldb, int* info);
-  void LAPACK_ZPOTRS(const char* uplo, const int * n, const int * nrhs, const dcomplex* a, const int* lda, dcomplex* b, const int* ldb, int* info);
-
-  // void LAPACK_DGEES(const char* jobvl, const char* sort, fortran_function_type select, const int* n, double*   a, const int* lda, int* sdim, double*   wr, double*   wi, double*   vs, const int* ldvs, double*   work, const int* lwork, int* bwork, int* info);
-  // void LAPACK_ZGEES(const char* jobvl, const char* sort, fortran_function_type select, const int* n, dcomplex* a, const int* lda, int* sdim, dcomplex* w, dcomplex* vs, int* ldvs, dcomplex* work, const int* lwork, double* rwork, int* bwork, int* info);
 }
-#endif // boost_numeric_bindings_lapack_lapack_h
+
+#endif 
