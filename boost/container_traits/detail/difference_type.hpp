@@ -107,7 +107,7 @@ namespace boost
     } 
     
     template< typename C >
-    class container_difference_type
+    class difference_type_of
     {
         typedef BOOST_DEDUCED_TYPENAME container_traits_detail::container<C>::type c_type;
     public:

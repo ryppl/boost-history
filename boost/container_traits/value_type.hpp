@@ -28,7 +28,7 @@ namespace boost
     //////////////////////////////////////////////////////////////////////////
     
     template< typename C >
-    struct container_value_type
+    struct value_type_of
     {
         typedef BOOST_DEDUCED_TYPENAME C::value_type type;
     };
@@ -38,14 +38,14 @@ namespace boost
     //////////////////////////////////////////////////////////////////////////
 
     template< typename Iterator >
-    struct container_value_type< std::pair<Iterator,Iterator> >
+    struct value_type_of< std::pair<Iterator,Iterator> >
     {
         typedef BOOST_DEDUCED_TYPENAME detail::iterator_traits<Iterator>::value_type type;
     };
     
     
     template< typename Iterator >
-    struct container_value_type< const std::pair<Iterator,Iterator> >
+    struct value_type_of< const std::pair<Iterator,Iterator> >
     {
         typedef BOOST_DEDUCED_TYPENAME detail::iterator_traits<Iterator>::value_type type;
     };
@@ -55,13 +55,13 @@ namespace boost
     //////////////////////////////////////////////////////////////////////////
 
     template< typename T, std::size_t sz >
-    struct container_value_type< T[sz] >
+    struct value_type_of< T[sz] >
     {
         typedef T type;
     };
 
     template< typename T, std::size_t sz >
-    struct container_value_type< const T[sz] >
+    struct value_type_of< const T[sz] >
     {
         typedef const T type;
     };
@@ -71,25 +71,25 @@ namespace boost
     //////////////////////////////////////////////////////////////////////////
 
     template<>
-    struct container_value_type< char* >
+    struct value_type_of< char* >
     {
         typedef char type;
     };
 
     template<>
-    struct container_value_type< wchar_t* >
+    struct value_type_of< wchar_t* >
     {
         typedef wchar_t type;
     };
 
     template<>
-    struct container_value_type< const char* >
+    struct value_type_of< const char* >
     {
         typedef const char type;
     };
 
     template<>
-    struct container_value_type< const wchar_t* >
+    struct value_type_of< const wchar_t* >
     {
         typedef const wchar_t type;
     };
@@ -99,14 +99,14 @@ namespace boost
     //////////////////////////////////////////////////////////////////////////
 
     template< typename C, typename T, typename D, typename P>
-    struct container_value_type< std::istream_iterator<C,T,D,P> >
+    struct value_type_of< std::istream_iterator<C,T,D,P> >
     {
         typedef BOOST_DEDUCED_TYPENAME detail::iterator_traits<std::istream_iterator<C,T,D,P> >::value_type type;
     };
 
 
     template< typename C, typename T, typename D, typename P>
-    struct container_value_type< const std::istream_iterator<C,T,D,P> >
+    struct value_type_of< const std::istream_iterator<C,T,D,P> >
     {
         typedef BOOST_DEDUCED_TYPENAME detail::iterator_traits<std::istream_iterator<C,T,D,P> >::value_type type;
     };

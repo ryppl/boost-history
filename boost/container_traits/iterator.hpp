@@ -26,7 +26,7 @@ namespace boost
     //////////////////////////////////////////////////////////////////////////
     
     template< typename C >
-    struct container_iterator
+    struct iterator_of
     {
         typedef BOOST_DEDUCED_TYPENAME C::iterator type;
     };
@@ -36,13 +36,13 @@ namespace boost
     //////////////////////////////////////////////////////////////////////////
 
     template< typename Iterator >
-    struct container_iterator< std::pair<Iterator,Iterator> >
+    struct iterator_of< std::pair<Iterator,Iterator> >
     {
         typedef Iterator type;
     };
     
     template< typename Iterator >
-    struct container_iterator< const std::pair<Iterator,Iterator> >
+    struct iterator_of< const std::pair<Iterator,Iterator> >
     {
         typedef Iterator type;
     };
@@ -52,13 +52,13 @@ namespace boost
     //////////////////////////////////////////////////////////////////////////
 
     template< typename T, std::size_t sz >
-    struct container_iterator< T[sz] >
+    struct iterator_of< T[sz] >
     {
         typedef T* type;
     };
 
     template< typename T, std::size_t sz >
-    struct container_iterator< const T[sz] >
+    struct iterator_of< const T[sz] >
     {
         typedef const T* type;
     };
@@ -68,25 +68,25 @@ namespace boost
     //////////////////////////////////////////////////////////////////////////
 
     template<>
-    struct container_iterator< char* >
+    struct iterator_of< char* >
     {
         typedef char* type;
     };
 
     template<>
-    struct container_iterator< wchar_t* >
+    struct iterator_of< wchar_t* >
     {
         typedef wchar_t* type;
     };
 
     template<>
-    struct container_iterator< const char* >
+    struct iterator_of< const char* >
     {
         typedef const char* type;
     };
 
     template<>
-    struct container_iterator< const wchar_t* >
+    struct iterator_of< const wchar_t* >
     {
         typedef const wchar_t* type;
     };
@@ -96,13 +96,13 @@ namespace boost
     //////////////////////////////////////////////////////////////////////////
 
     template< typename C, typename T, typename D, typename P >
-    struct container_iterator< std::istream_iterator<C,T,D,P> >
+    struct iterator_of< std::istream_iterator<C,T,D,P> >
     {
         typedef std::istream_iterator<C,T,D,P> type;
     };
 
     template< typename C, typename T, typename D, typename P >
-    struct container_iterator< const std::istream_iterator<C,T,D,P> >
+    struct iterator_of< const std::istream_iterator<C,T,D,P> >
     {
         typedef std::istream_iterator<C,T,D,P> type;
     };

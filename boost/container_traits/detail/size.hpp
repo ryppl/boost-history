@@ -20,7 +20,7 @@ namespace boost
         struct container_size<std_container_>
         {
             template< typename C >
-            static BOOST_DEDUCED_TYPENAME container_size_type<C>::type fun( C& c )
+            static BOOST_DEDUCED_TYPENAME C::size_type fun( const C& c )
             {
                 return c.size();
             };
@@ -34,7 +34,7 @@ namespace boost
         struct container_size<std_pair_>
         {
             template< typename P >
-            static BOOST_DEDUCED_TYPENAME container_size_type<P>::type fun( const P& p )
+            static BOOST_DEDUCED_TYPENAME size_type_of<P>::type fun( const P& p )
             {
                 return std::distance( p.first, p.second );
             }
@@ -112,7 +112,7 @@ namespace boost
         } // namespace 'container_traits_detail'
     
     template< typename C >
-    BOOST_DEDUCED_TYPENAME container_size_type<C>::type 
+    BOOST_DEDUCED_TYPENAME size_type_of<C>::type 
     size( const C& c )
     {
         return container_traits_detail::container_size<  BOOST_DEDUCED_TYPENAME container_traits_detail::container<C>::type >::fun( c );

@@ -20,7 +20,7 @@ namespace boost
         struct container_end<std_container_>
         {
             template< typename C >
-            static BOOST_DEDUCED_TYPENAME container_result_iterator<C>::type fun( C& c )
+            static BOOST_DEDUCED_TYPENAME result_iterator_of<C>::type fun( C& c )
             {
                 return c.end();
             };
@@ -34,7 +34,7 @@ namespace boost
         struct container_end<std_pair_>
         {
             template< typename P >
-            static BOOST_DEDUCED_TYPENAME container_result_iterator<P>::type fun( const P& p )
+            static BOOST_DEDUCED_TYPENAME result_iterator_of<P>::type fun( const P& p )
             {
                 return p.second;
             }
@@ -112,7 +112,7 @@ namespace boost
         struct container_end<iterator_>
         {
             template< typename I >
-            static BOOST_DEDUCED_TYPENAME container_result_iterator<I>::type fun( I& i )
+            static BOOST_DEDUCED_TYPENAME result_iterator_of<I>::type fun( I& i )
             {
                 return I();
             }
@@ -121,7 +121,7 @@ namespace boost
         } // namespace 'container_traits_detail'
     
     template< typename C >
-    inline BOOST_DEDUCED_TYPENAME container_result_iterator<C>::type 
+    inline BOOST_DEDUCED_TYPENAME result_iterator_of<C>::type 
     end( C& c )
     {
         return container_traits_detail::container_end<  BOOST_DEDUCED_TYPENAME container_traits_detail::container<C>::type >::fun( c );

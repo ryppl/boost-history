@@ -26,7 +26,7 @@ namespace boost
     //////////////////////////////////////////////////////////////////////////
     
     template< typename C >
-    struct container_size_type
+    struct size_type_of
     {
         typedef BOOST_DEDUCED_TYPENAME C::size_type type;
     };
@@ -36,13 +36,13 @@ namespace boost
     //////////////////////////////////////////////////////////////////////////
 
     template< typename Iterator >
-    struct container_size_type< std::pair<Iterator,Iterator> >
+    struct size_type_of< std::pair<Iterator,Iterator> >
     {
         typedef std::size_t type;
     };
     
     template< typename Iterator >
-    struct container_size_type< const std::pair<Iterator,Iterator> >
+    struct size_type_of< const std::pair<Iterator,Iterator> >
     {
         typedef std::size_t type;
     };
@@ -52,13 +52,13 @@ namespace boost
     //////////////////////////////////////////////////////////////////////////
 
     template< typename T, std::size_t sz >
-    struct container_size_type< T[sz] >
+    struct size_type_of< T[sz] >
     {
         typedef std::size_t type;
     };
 
     template< typename T, std::size_t sz >
-    struct container_size_type< const T[sz] >
+    struct size_type_of< const T[sz] >
     {
         typedef std::size_t type;
     };
@@ -68,25 +68,25 @@ namespace boost
     //////////////////////////////////////////////////////////////////////////
 
     template<>
-    struct container_size_type< char* >
+    struct size_type_of< char* >
     {
         typedef std::size_t type;
     };
 
     template<>
-    struct container_size_type< wchar_t* >
+    struct size_type_of< wchar_t* >
     {
         typedef std::size_t type;
     };
 
     template<>
-    struct container_size_type< const char* >
+    struct size_type_of< const char* >
     {
         typedef std::size_t type;
     };
 
     template<>
-    struct container_size_type< const wchar_t* >
+    struct size_type_of< const wchar_t* >
     {
         typedef std::size_t type;
     };
@@ -96,14 +96,14 @@ namespace boost
     //////////////////////////////////////////////////////////////////////////
 
     template< typename C, typename T, typename D, typename P >
-    struct container_size_type< std::istream_iterator<C,T,D,P> >
+    struct size_type_of< std::istream_iterator<C,T,D,P> >
     {
          typedef std::size_t type;
     };
 
     
     template< typename C, typename T, typename D, typename P >
-    struct container_size_type< const std::istream_iterator<C,T,D,P> >
+    struct size_type_of< const std::istream_iterator<C,T,D,P> >
     {
         typedef std::size_t type;
     };

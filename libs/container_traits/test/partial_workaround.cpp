@@ -16,6 +16,7 @@
 #include <boost/test/included/test_exec_monitor.hpp>
 #include <boost/test/test_tools.hpp>
 #include <iostream>
+#include <vector>
 
 using namespace boost;
 using namespace std;
@@ -51,41 +52,29 @@ void check_sfinae()
     BOOST_STATIC_ASSERT( sizeof( yes_type ) == sizeof( is_const_wchar_t_ptr_impl( w_ptr ) ) );
     BOOST_STATIC_ASSERT( sizeof( yes_type ) == sizeof( is_const_wchar_t_ptr_impl( cw_ptr ) ) );
 
-/*
-        //////////////////////////////////////////////////////////////////////
-        // pair
-        //////////////////////////////////////////////////////////////////////
+	BOOST_STATIC_ASSERT(( ::boost::is_same< ::boost::container_traits_detail::std_container_, 
+		                  ::boost::container_traits_detail::container< vector<int> >::type >::value ));
+    BOOST_STATIC_ASSERT(( ::boost::is_same< ::boost::container_traits_detail::std_pair_, 
+		                  ::boost::container_traits_detail::container< pair<int,int> >::type >::value ));
+	BOOST_STATIC_ASSERT(( ::boost::is_same< ::boost::container_traits_detail::array_, 
+		                  ::boost::container_traits_detail::container< int[42] >::type >::value ));
+	BOOST_STATIC_ASSERT(( ::boost::is_same< ::boost::container_traits_detail::char_ptr_, 
+		                  ::boost::container_traits_detail::container< char* >::type >::value ));
+	BOOST_STATIC_ASSERT(( ::boost::is_same< ::boost::container_traits_detail::const_char_ptr_, 
+		                  ::boost::container_traits_detail::container< const char* >::type >::value ));
+	BOOST_STATIC_ASSERT(( ::boost::is_same< ::boost::container_traits_detail::wchar_t_ptr_, 
+		                  ::boost::container_traits_detail::container< wchar_t* >::type >::value ));
+	BOOST_STATIC_ASSERT(( ::boost::is_same< ::boost::container_traits_detail::const_wchar_t_ptr_,
+		                  ::boost::container_traits_detail::container< const wchar_t* >::type >::value ));
+	BOOST_STATIC_ASSERT(( ::boost::is_same< ::boost::container_traits_detail::std_container_, 
+		                  ::boost::container_traits_detail::container< vector<int> >::type >::value ));
 
-        template< typename Iterator >
-        yes_type is_pair_impl( const std::pair<Iterator,Iterator>* );
-        no_type  is_pair_impl( ... );
+/* 
+        typedef mpl::int_<10>::type   iterator_;
+        typedef mpl::int_<11>::type   string_;
+  */    
 
-        //////////////////////////////////////////////////////////////////////
-        // iterator
-        //////////////////////////////////////////////////////////////////////
-        
-#ifdef BOOST_MSVC_STD_ITERATOR
-        template< typename T1, typename T2 >
-        yes_type is_iterator_impl( const std::iterator<T2,T2>* );
-        template< typename T1, typename T2 >
-        yes_type is_iterator_impl( const std::istream_iterator<T1,T2>* );
-#else        
-#if BOOST_DINKUMWARE_STDLIB == 1
-        template< typename C, typename T, typename D >
-        yes_type is_iterator_impl( const std::iterator<C,T,D>* );
-        template< typename C, typename T, typename D >
-        yes_type is_iterator_impl( const std::istream_iterator<C,T,D>* );
-#else
-        template< typename C, typename T, typename D, typename P, typename R >
-        yes_type is_iterator_impl( const std::iterator<C,T,D,P,R>* );
-        template< typename C, typename T, typename D, typename P, typename R >
-        yes_type is_iterator_impl( const std::istream_iterator<C,T,D,P>* );
-#endif
-#endif
-        no_type  is_iterator_impl( ... ); 
-        */
 }
-
 
 
 int test_main( int, char*[] )

@@ -110,7 +110,7 @@ namespace boost
     } 
     
     template< typename C >
-    class container_result_iterator
+    class result_iterator_of
     {
         typedef BOOST_DEDUCED_TYPENAME container_traits_detail::container<C>::type c_type;
     public:

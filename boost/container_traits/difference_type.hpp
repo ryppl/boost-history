@@ -27,7 +27,7 @@ namespace boost
     //////////////////////////////////////////////////////////////////////////
     
     template< typename C >
-    struct container_difference_type
+    struct difference_type_of
     {
         typedef BOOST_DEDUCED_TYPENAME C::difference_type type;
     };
@@ -37,13 +37,13 @@ namespace boost
     //////////////////////////////////////////////////////////////////////////
 
     template< typename Iterator >
-    struct container_difference_type< std::pair<Iterator,Iterator> >
+    struct difference_type_of< std::pair<Iterator,Iterator> >
     {
         typedef BOOST_DEDUCED_TYPENAME detail::iterator_traits<Iterator>::difference_type type;
     };
     
     template< typename Iterator >
-    struct container_difference_type< const std::pair<Iterator,Iterator> >
+    struct difference_type_of< const std::pair<Iterator,Iterator> >
     {
         typedef BOOST_DEDUCED_TYPENAME detail::iterator_traits<Iterator>::difference_type type;
     };
@@ -54,13 +54,13 @@ namespace boost
     //////////////////////////////////////////////////////////////////////////
 
     template< typename T, std::size_t sz >
-    struct container_difference_type< T[sz] >
+    struct difference_type_of< T[sz] >
     {
         typedef std::ptrdiff_t type;
     };
 
     template< typename T, std::size_t sz >
-    struct container_difference_type< const T[sz] >
+    struct difference_type_of< const T[sz] >
     {
         typedef std::ptrdiff_t type;
     };
@@ -70,25 +70,25 @@ namespace boost
     //////////////////////////////////////////////////////////////////////////
 
     template<>
-    struct container_difference_type< char* >
+    struct difference_type_of< char* >
     {
         typedef std::ptrdiff_t type;
     };
 
     template<>
-    struct container_difference_type< wchar_t* >
+    struct difference_type_of< wchar_t* >
     {
         typedef std::ptrdiff_t type;
     };
 
     template<>
-    struct container_difference_type< const char* >
+    struct difference_type_of< const char* >
     {
         typedef std::ptrdiff_t type;
     };
 
     template<>
-    struct container_difference_type< const wchar_t* >
+    struct difference_type_of< const wchar_t* >
     {
         typedef std::ptrdiff_t type;
     };
@@ -98,13 +98,13 @@ namespace boost
     //////////////////////////////////////////////////////////////////////////
 
     template< typename C, typename T, typename D, typename P >
-    struct container_difference_type< std::istream_iterator<C,T,D,P> >
+    struct difference_type_of< std::istream_iterator<C,T,D,P> >
     {
         typedef BOOST_DEDUCED_TYPENAME detail::iterator_traits< std::istream_iterator<C,T,D,P> >::difference_type type;
     };
     
     template< typename C, typename T, typename D, typename P >
-    struct container_difference_type< const std::istream_iterator<C,T,D,P> >
+    struct difference_type_of< const std::istream_iterator<C,T,D,P> >
     {
         typedef BOOST_DEDUCED_TYPENAME detail::iterator_traits< std::istream_iterator<C,T,D,P> >::difference_type type;
     };

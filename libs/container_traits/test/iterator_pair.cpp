@@ -21,30 +21,27 @@ void check_iterator_pair()
     pair_t                   pair       = std::make_pair( begin( vec ), end( vec ) );
     const_pair_t             const_pair = std::make_pair( begin( vec ), end( vec ) );
     const_pair_tt            constness_pair( pair );
-#ifndef BOOST_CT_NO_STATIC_ASSERT
 	
 
-    BOOST_STATIC_ASSERT(( is_same< container_value_type<pair_t>::type, 
+    BOOST_STATIC_ASSERT(( is_same< value_type_of<pair_t>::type, 
                           detail::iterator_traits<pair_t::first_type>::value_type>::value ));
-    BOOST_STATIC_ASSERT(( is_same< container_iterator<pair_t>::type, pair_t::first_type >::value ));
-    BOOST_STATIC_ASSERT(( is_same< container_const_iterator<pair_t>::type, pair_t::first_type >::value ));
-    BOOST_STATIC_ASSERT(( is_same< container_difference_type<pair_t>::type,                           
+    BOOST_STATIC_ASSERT(( is_same< iterator_of<pair_t>::type, pair_t::first_type >::value ));
+    BOOST_STATIC_ASSERT(( is_same< const_iterator_of<pair_t>::type, pair_t::first_type >::value ));
+    BOOST_STATIC_ASSERT(( is_same< difference_type_of<pair_t>::type,                           
                           detail::iterator_traits<pair_t::first_type>::difference_type >::value ));
-    BOOST_STATIC_ASSERT(( is_same< container_size_type<pair_t>::type, std::size_t >::value ));
-    BOOST_STATIC_ASSERT(( is_same< container_result_iterator<pair_t>::type, pair_t::first_type >::value ));
-    BOOST_STATIC_ASSERT(( is_same< container_result_iterator<const_pair_t>::type, const_pair_t::first_type >::value ));
+    BOOST_STATIC_ASSERT(( is_same< size_type_of<pair_t>::type, std::size_t >::value ));
+    BOOST_STATIC_ASSERT(( is_same< result_iterator_of<pair_t>::type, pair_t::first_type >::value ));
+    BOOST_STATIC_ASSERT(( is_same< result_iterator_of<const_pair_t>::type, const_pair_t::first_type >::value ));
     
-    BOOST_STATIC_ASSERT(( is_same< container_value_type<const_pair_tt>::type, 
+    BOOST_STATIC_ASSERT(( is_same< value_type_of<const_pair_tt>::type, 
                           detail::iterator_traits<const_pair_t::first_type>::value_type>::value ));
-    BOOST_STATIC_ASSERT(( is_same< container_iterator<const_pair_tt>::type, const_pair_tt::first_type >::value ));
-    BOOST_STATIC_ASSERT(( is_same< container_const_iterator<const_pair_tt>::type, const_pair_tt::first_type >::value ));
-    BOOST_STATIC_ASSERT(( is_same< container_difference_type<const_pair_tt>::type,                           
+    BOOST_STATIC_ASSERT(( is_same< iterator_of<const_pair_tt>::type, const_pair_tt::first_type >::value ));
+    BOOST_STATIC_ASSERT(( is_same< const_iterator_of<const_pair_tt>::type, const_pair_tt::first_type >::value ));
+    BOOST_STATIC_ASSERT(( is_same< difference_type_of<const_pair_tt>::type,                           
                           detail::iterator_traits<const_pair_tt::first_type>::difference_type >::value ));
-    BOOST_STATIC_ASSERT(( is_same< container_size_type<const_pair_tt>::type, std::size_t >::value ));
-    BOOST_STATIC_ASSERT(( is_same< container_result_iterator<const_pair_tt>::type, const_pair_tt::first_type >::value ));
-    BOOST_STATIC_ASSERT(( is_same< container_result_iterator<const_pair_tt>::type, const_pair_tt::first_type >::value ));
-
-#endif
+    BOOST_STATIC_ASSERT(( is_same< size_type_of<const_pair_tt>::type, std::size_t >::value ));
+    BOOST_STATIC_ASSERT(( is_same< result_iterator_of<const_pair_tt>::type, const_pair_tt::first_type >::value ));
+    BOOST_STATIC_ASSERT(( is_same< result_iterator_of<const_pair_tt>::type, const_pair_tt::first_type >::value ));
 
     BOOST_CHECK( begin( pair ) == pair.first );
     BOOST_CHECK( end( pair )   == pair.second );

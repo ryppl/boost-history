@@ -31,14 +31,14 @@ namespace boost
 //////////////////////////////////////////////////////////////////////
 
 template< typename C >
-inline BOOST_DEDUCED_TYPENAME container_const_iterator<C>::type
+inline BOOST_DEDUCED_TYPENAME const_iterator_of<C>::type
 begin( const C& c )
 {
     return c.begin(); 
 }
 
 template< typename C >
-inline BOOST_DEDUCED_TYPENAME container_iterator<C>::type
+inline BOOST_DEDUCED_TYPENAME iterator_of<C>::type
 begin( C& c )
 {
     return c.begin(); 

@@ -14,4 +14,11 @@
 #include <boost/container_traits/functions.hpp>
 #include <boost/container_traits/types.hpp>
 
+//
+// TODO:
+// 1) change >= 1020 to >= 1200
+// 2) Pavels suggestions
+//
+
+
 #endif
