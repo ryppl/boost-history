@@ -1,9 +1,9 @@
-//  (C) Copyright Pavol Droba 2003. Permission to copy, use, modify, sell and
+//  (C) Copyright Pavol Droba and Thorsten Ottosen 2003. Permission to copy, use, modify, sell and
 //  distribute this software is granted provided this copyright notice appears
 //  in all copies. This software is provided "as is" without express or implied
 //  warranty, and with no claim as to its suitability for any purpose.
 
-// (C) Copyright Thorsten Ottosen 2002-2003. Permission to copy, use, modify,
+// (C) Copyright Thorsten Ottosen 2002. Permission to copy, use, modify,
 // sell and distribute this software is granted provided this
 // copyright notice appears in all copies. This software is provided
 // "as is" without express or implied warranty, and with no claim as
@@ -18,7 +18,6 @@
 #ifndef BOOST_CONTAINER_TRAITS_HPP
 #define BOOST_CONTAINER_TRAITS_HPP
 
-#include <boost/container_traits/detail/config.hpp>
 #include <boost/type_traits/is_array.hpp>
 #include <boost/type_traits/is_pointer.hpp>
 #include <boost/mpl/apply_if.hpp>
@@ -47,12 +46,16 @@ namespace boost {
                             BOOST_DEDUCED_TYPENAME ::boost::mpl::apply_if<
                             ::boost::is_pointer<T>,
                                 detail::pointer_container_traits_selector<T>,
-                                detail::default_container_traits_selector<T>
-                            >
+                                BOOST_DEDUCED_TYPENAME ::boost::mpl::apply_if<
+                                detail::is_iterator<T>,
+                                    detail::iterator_container_traits_selector<T>,
+                                    detail::default_container_traits_selector<T>
+                                >
+                            >   
                         > 
                 >::type container_helper_type;
         public:
-            typedef container_helper_type function_type;        
+            typedef container_helper_type __function_type;        
             typedef BOOST_DEDUCED_TYPENAME 
                 container_helper_type::value_type value_type;
             typedef BOOST_DEDUCED_TYPENAME 
@@ -76,14 +79,14 @@ namespace boost {
         inline BOOST_DEDUCED_TYPENAME container_traits<C>::size_type
         size( const C& c )
         {
-            return container_traits<C>::function_type::size( c ); 
+            return container_traits<C>::__function_type::size( c ); 
         }
 
         template< typename C >
         inline bool 
         empty( const C& c )
         {
-            return container_traits<C>::function_type::empty( c );
+            return container_traits<C>::__function_type::empty( c );
         }
 
 #ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
@@ -92,28 +95,28 @@ namespace boost {
         inline BOOST_DEDUCED_TYPENAME container_traits<C>::iterator
         begin( C& c )
         {
-            return container_traits<C>::function_type::begin( c ); 
+            return container_traits<C>::__function_type::begin( c ); 
         }
 
         template< typename C >
         inline BOOST_DEDUCED_TYPENAME container_traits<C>::const_iterator
         begin( const C& c )
         {
-            return container_traits<C>::function_type::begin( c ); 
+            return container_traits<C>::__function_type::begin( c ); 
         }
 
         template< typename C >
         inline BOOST_DEDUCED_TYPENAME container_traits<C>::iterator
         end( C& c )
         {
-            return container_traits<C>::function_type::end( c );
+            return container_traits<C>::__function_type::end( c );
         }
 
         template< typename C >
         inline BOOST_DEDUCED_TYPENAME container_traits<C>::const_iterator
         end( const C& c )
         {
-            return container_traits<C>::function_type::end( c );
+            return container_traits<C>::__function_type::end( c );
         }
 
 #else // BOOST_NO_FUNCTION_TEMPLATE_ORDERING
@@ -122,18 +125,24 @@ namespace boost {
         inline BOOST_DEDUCED_TYPENAME container_traits<C>::result_iterator
         begin( C& c )
         {
-            return container_traits<C>::function_type::begin( c );
+            return container_traits<C>::__function_type::begin( c );
         }
 
         template< typename C >
         inline BOOST_DEDUCED_TYPENAME container_traits<C>::result_iterator
         end( C& c )
         {
-            return container_traits<C>::function_type::end( c );
+            return container_traits<C>::__function_type::end( c );
         }
 
 #endif // BOOST_NO_FUNCTION_TEMPLATE_ORDERING
  
+        template< typename T, std::size_t sz >
+        detail::size<sz> sizer( const T (&array)[sz] );
+          
+        template< typename T, std::size_t sz >
+        detail::size<sz> sizer( T (&array)[sz] );
+
 } // namespace boost
 
 #endif

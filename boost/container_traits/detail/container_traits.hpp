@@ -31,6 +31,9 @@
 namespace boost {
     namespace detail {
 
+        using type_traits::yes_type;
+        using type_traits::no_type;
+        
 // Default container traits -----------------------------------------------------------------
 
         // Default container helper 
@@ -521,6 +524,12 @@ namespace boost {
         template<typename T>
         struct pointer_container_traits
         {
+#ifdef BOOST_NO_INTRINSIC_WCHAR_T  
+            BOOST_STATIC_ASSERT(( ::boost::is_convertible<char*,T>::value ));
+#else
+            BOOST_STATIC_ASSERT(( ::boost::is_convertible<char*,T>::value ||
+                                  ::boost::is_convertible<wchar_t*,T>::value ));             
+#endif
             typedef BOOST_DEDUCED_TYPENAME
                 ::boost::remove_pointer<
                     BOOST_DEDUCED_TYPENAME 
@@ -613,6 +622,80 @@ namespace boost {
         struct pointer_container_traits_selector
         {
             typedef pointer_container_traits<T> type;
+        };
+
+// Iterator container traits ---------------------------------------------------------------
+        
+        template< typename C, typename T, typename D, typename P, typename R >
+        yes_type is_iterator_impl( const std::iterator<C,T,D,P,R>* );
+        no_type  is_iterator_impl( ... ); 
+        
+        template< typename T >
+        struct is_iterator
+        {
+        private:
+            static T* t;
+        public:
+            BOOST_STATIC_CONSTANT( bool, value = sizeof( is_iterator_impl(t) ) 
+                                   == sizeof( yes_type ) );
+        };
+        
+        
+        
+        template< typename IteratorT >
+        struct iterator_container_traits
+        {
+            typedef BOOST_DEDUCED_TYPENAME 
+                detail::iterator_traits<IteratorT>::value_type  value_type;
+            typedef IteratorT                                   iterator;
+            typedef IteratorT                                   const_iterator;
+            typedef BOOST_DEDUCED_TYPENAME
+                detail::iterator_traits<IteratorT>::difference_type
+                                                                difference_type;
+            typedef std::size_t                                 size_type;
+            typedef IteratorT                                   result_iterator;
+            
+            template< typename I >
+            static inline iterator
+            begin( const I& i )
+            {
+                return i;
+            }
+            
+            template< typename I >
+            static inline iterator
+            end( const I& i )
+            {
+                return I();
+            }
+            
+            template< typename I >
+            static inline bool
+            empty( const I& i )
+            {
+                return i == end( i );
+            }
+            
+            template< typename I >
+            static inline size_type 
+            size( const I& i );
+
+        };
+        
+        
+        
+        template<typename T>
+        struct iterator_container_traits_selector
+        {
+            typedef iterator_container_traits<T> type;
+        };
+
+// sizer helper -------------------------------------------------------------------------
+        
+        template< std::size_t sz >
+        class size
+        {
+            char give_size[sz];
         };
 
     } // namespace 'detail'
