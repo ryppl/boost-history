@@ -248,4 +248,18 @@ int main() {
     assert(o == 2147483647);
   }
 
+  // test out showpos
+  {
+    bigint x(78888888);
+    std::ostringstream o1;
+    o1 << std::showpos << x;
+    assert(o1.str() == "+78888888");
+
+    bigint y(-78888888);
+    std::ostringstream o2;
+    o2 << std::showpos << y;
+    assert(o2.str() == "-78888888");
+
+  }
+
 }
