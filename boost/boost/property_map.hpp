@@ -11,6 +11,7 @@
 #include <boost/config.hpp>
 #include <boost/pending/cstddef.hpp>
 #include <boost/concept_check.hpp>
+#include <boost/concept_archetype.hpp>
 
 namespace boost {
 
@@ -209,6 +210,17 @@ namespace boost {
     Key k;
     typename property_traits<PMap>::value_type val;
   };
+  template <typename KeyArchetype, typename ValueArchetype>
+  struct readable_property_map_archetype {
+    typedef KeyArchetype key_type;
+    typedef ValueArchetype value_type;
+    typedef readable_property_map_tag category;
+  };
+  template <typename K, typename V>
+  V get(const readable_property_map_archetype<K,V>&, const K&) {
+    return V(dummy_cons);
+  }
+
 
   template <class PMap, class Key>
   struct WritablePropertyMapConcept
@@ -224,6 +236,15 @@ namespace boost {
     Key k;
     typename property_traits<PMap>::value_type val;
   };
+  template <typename KeyArchetype, typename ValueArchetype>
+  struct writable_property_map_archetype {
+    typedef KeyArchetype key_type;
+    typedef ValueArchetype value_type;
+    typedef readable_property_map_tag category;
+  };
+  template <typename K, typename V>
+  void put(const writable_property_map_archetype<K,V>&, const K&, const V&) { }
+
 
   template <class PMap, class Key>
   struct ReadWritePropertyMapConcept
@@ -236,6 +257,16 @@ namespace boost {
       function_requires< ConvertibleConcept<Category, ReadWriteTag> >();
     }
   };
+  template <typename KeyArchetype, typename ValueArchetype>
+  struct read_write_property_map_archetype
+    : public readable_property_map_archetype<KeyArchetype, ValueArchetype>,
+      public writable_property_map_archetype<KeyArchetype, ValueArchetype>
+  {
+    typedef KeyArchetype key_type;
+    typedef ValueArchetype value_type;
+    typedef read_write_property_map_tag category;
+  };
+
 
   template <class PMap, class Key>
   struct LvaluePropertyMapConcept
@@ -252,6 +283,18 @@ namespace boost {
     PMap pmap;
     Key k;
   };
+  template <typename KeyArchetype, typename ValueArchetype>
+  struct lvalue_property_map_archetype
+    : public readable_property_map_archetype<KeyArchetype, ValueArchetype>
+  {
+    typedef KeyArchetype key_type;
+    typedef ValueArchetype value_type;
+    typedef lvalue_property_map_tag category;
+    const value_type& operator[](const key_type&) const {
+      static value_type s_v;
+      return s_v;
+    }
+  };
 
   template <class PMap, class Key>
   struct Mutable_LvaluePropertyMapConcept
@@ -260,13 +303,26 @@ namespace boost {
     typedef boost::lvalue_property_map_tag LvalueTag;
     typedef typename property_traits<PMap>::value_type& reference;
     void constraints() { 
-      function_requires< ReadWritePropertyMapConcept<PMap, Key> >();
-      function_requires<ConvertibleConcept<Category, LvalueTag> >();
+      boost::function_requires< ReadWritePropertyMapConcept<PMap, Key> >();
+      boost::function_requires<ConvertibleConcept<Category, LvalueTag> >();
 
       reference ref = pmap[k];
     }
     PMap pmap;
     Key k;
+  };
+  template <typename KeyArchetype, typename ValueArchetype>
+  struct mutable_lvalue_property_map_archetype
+    : public readable_property_map_archetype<KeyArchetype, ValueArchetype>,
+      public writable_property_map_archetype<KeyArchetype, ValueArchetype>
+  {
+    typedef KeyArchetype key_type;
+    typedef ValueArchetype value_type;
+    typedef lvalue_property_map_tag category;
+    value_type& operator[](const key_type&) const { 
+      static value_type s_v;
+      return s_v;
+    }
   };
 
   struct identity_property_map;
@@ -302,61 +358,98 @@ namespace boost {
   // Adapter to turn a RandomAccessIterator into a property map
 
   template <class RandomAccessIterator, 
+    class IndexMap
 #ifdef BOOST_NO_STD_ITERATOR_TRAITS
-     class T, class R,
+    , class T, class R
 #else
-     class T = typename std::iterator_traits<RandomAccessIterator>::value_type,
-     class R = typename std::iterator_traits<RandomAccessIterator>::reference,
+    , class T = typename std::iterator_traits<RandomAccessIterator>::value_type
+    , class R = typename std::iterator_traits<RandomAccessIterator>::reference
 #endif
-     class IDfunc = identity_property_map>
-  class random_access_iterator_property_map 
+     >
+  class iterator_property_map
     : public boost::put_get_at_helper< T, 
-        random_access_iterator_property_map<RandomAccessIterator,
-        T, R, IDfunc> >
+        iterator_property_map<RandomAccessIterator, IndexMap,
+        T, R> >
   {
   public:
     typedef void key_type; 
     typedef T value_type;
     typedef boost::lvalue_property_map_tag category;
 
-    inline random_access_iterator_property_map(
+    inline iterator_property_map(
       RandomAccessIterator cc = RandomAccessIterator(), 
-      const IDfunc& _id = IDfunc() ) 
-      : iter(cc), id(_id) { }
+      const IndexMap& _id = IndexMap() ) 
+      : iter(cc), index(_id) { }
     template <class Key>
-    inline R operator[](Key v) const { return *(iter + id[v]) ; }
+    inline R operator[](Key v) const { return *(iter + get(index, v)) ; }
   protected:
     RandomAccessIterator iter;
-    IDfunc id;
+    IndexMap index;
   };
 
 #if !defined BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
   template <class RAIter, class ID>
-  inline random_access_iterator_property_map<
-    RAIter,
+  inline iterator_property_map<
+    RAIter, ID,
     typename std::iterator_traits<RAIter>::value_type,
-    typename std::iterator_traits<RAIter>::reference,
-    ID >
+    typename std::iterator_traits<RAIter>::reference>
   make_iterator_property_map(RAIter iter, ID id) {
     function_requires< RandomAccessIteratorConcept<RAIter> >();
-    typedef random_access_iterator_property_map<
-    RAIter,
-    typename std::iterator_traits<RAIter>::value_type,
-    typename std::iterator_traits<RAIter>::reference,
-    ID >    PA;
+    typedef iterator_property_map<
+      RAIter, ID,
+      typename std::iterator_traits<RAIter>::value_type,
+      typename std::iterator_traits<RAIter>::reference> PA;
     return PA(iter, id);
   }
 #endif
   template <class RAIter, class Value, class ID>
-  inline random_access_iterator_property_map<
-    RAIter, Value, Value&, ID>
+  inline iterator_property_map<RAIter, ID, Value, Value&>
   make_iterator_property_map(RAIter iter, ID id, Value) {
     function_requires< RandomAccessIteratorConcept<RAIter> >();
-    typedef random_access_iterator_property_map<
-      RAIter, Value, Value&, ID> PMap;
+    typedef iterator_property_map<RAIter, ID, Value, Value&> PMap;
     return PMap(iter, id);
   }
 
+  //=========================================================================
+  // An adaptor to turn a Unique Pair Associative Container like std::map or
+  // std::hash_map into an Lvalue Property Map.
+
+  template <typename UniquePairAssociativeContainer>
+  class associative_property_map
+    : public boost::put_get_at_helper<
+       typename UniquePairAssociativeContainer::data_type,
+       associative_property_map<UniquePairAssociativeContainer> >
+  {
+    typedef UniquePairAssociativeContainer C;
+  public:
+    typedef typename C::key_type key_type;
+    typedef typename C::data_type value_type;
+    associative_property_map(C& c) : m_c(c) { }
+    value_type& operator[](const key_type& k) const {
+      return (*c.find(k)).second;
+    }
+  private:
+    C& m_c;
+  };
+
+  template <typename UniquePairAssociativeContainer>
+  class const_associative_property_map
+    : public boost::put_get_at_helper<
+       typename UniquePairAssociativeContainer::data_type,
+       const_associative_property_map<UniquePairAssociativeContainer> >
+  {
+    typedef UniquePairAssociativeContainer C;
+  public:
+    typedef typename C::key_type key_type;
+    typedef typename C::data_type value_type;
+    const_associative_property_map(const C& c) : m_c(c) { }
+    const value_type& operator[](const key_type& k) const {
+      return (*c.find(k)).second;
+    }
+  private:
+    C& m_c;
+  };
+  
 
   //=========================================================================
   // A property map that applies the identity function

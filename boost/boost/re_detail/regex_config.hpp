@@ -16,7 +16,7 @@
  /*
   *   LOCATION:    see http://www.boost.org for most recent version.
   *   FILE         regex_config.hpp
-  *   VERSION      3.03
+  *   VERSION      3.04
   *   DESCRIPTION: auto-configure options for regular expression code.
   */
 
@@ -290,8 +290,8 @@ Do not change this file unless you really really have to, add options to
    //
    // for now we'll always define these
    // unless we know that the platform can cope
-   // with woide character strings:
-   #if !defined(linux)
+   // with wide character strings:
+   #if !defined(linux) 
    	#define BOOST_RE_NO_WCTYPE_H
    	#define BOOST_RE_NO_WCSTRING
    #endif
@@ -319,28 +319,56 @@ Do not change this file unless you really really have to, add options to
    #define BOOST_RE_NO_TEMPLATE_FRIEND
 #endif
 
-#ifdef __HP_aCC
+#if defined(__HP_aCC) || defined(__hpux)
    // putative HP aCC support, run configure for
    // support tailored to your system....
+#   if (__HP_aCC < 31400)
+   // non-conformant aCC:
    #define BOOST_RE_NO_NAMESPACES
    #define BOOST_RE_NO_MUTABLE
-   #define BOOST_RE_NO_MEMBER_TEMPLATES
    #define BOOST_RE_OLD_IOSTREAM
    #ifndef __STL_USE_NAMESPACES
       #define BOOST_RE_NO_EXCEPTION_H
    #endif
-   #define BOOST_RE_INT64t long long
-   #define BOOST_RE_IMM64(val) val##LL
    #define BOOST_RE_NESTED_TEMPLATE_DECL
    #define BOOST_RE_NO_TEMPLATE_FRIEND
+#else
+   #if !defined(_NAMESPACE_STD)
+      #define BOOST_RE_OLD_IOSTREAM
+      #ifndef __STL_USE_NAMESPACES
+         #define BOOST_RE_NO_EXCEPTION_H
+      #endif
+   #endif
+   #define BOOST_RE_NESTED_TEMPLATE_DECL template
+#endif
+   #define BOOST_RE_NO_MEMBER_TEMPLATES
+   #define BOOST_RE_NO_MEMORY_H
+   #define BOOST_RE_INT64t long long
+   #define BOOST_RE_IMM64(val) val##LL
    #define BOOST_RE_NO_SWPRINTF
+   #define BOOST_RE_NO_CAT
 #endif
 
 #ifdef __sgi // SGI IRIX C++
 #define BOOST_RE_NO_SWPRINTF
+// bring in stl version:
+#include <memory> 
+#if defined(__SGI_STL_PORT)
+// STLPort on IRIX is misconfigured: <cwctype> does not compile
+// as a temporary fix include <wctype.h> instead and prevent inclusion
+// of STLPort version of <cwctype>
+#include <wctype.h>
+#define __STLPORT_CWCTYPE
+#define BOOST_RE_NO_WCTYPE_H
+#endif
 #endif
 
-
+#if defined __KCC
+// Kai 3.4 appears to have no wide character string support:
+#   if __KCC_VERSION <= 3499
+#    define BOOST_RE_NO_WCSTRING
+#   endif
+#endif
 
 #endif  // BOOST_RE_AUTO_CONFIGURE
 
@@ -491,9 +519,20 @@ typedef unsigned long jm_uintfast32_t;
          //#define BOOST_RE_NO_NOT_EQUAL
       #endif
 
-   #elif defined(__STD_ITERATOR__)
+   #elif defined(_RWSTD_VER) || defined(__STD_ITERATOR__)
 
       /* Rogue Wave STL */
+      // Sometimes we have a four figure version number, sometimes a
+      // six figure one (RW seems to omit trailing zeros from version number)
+      #ifndef _RWSTD_VER
+         #define BOOST_RWSTD_VER 0
+      #else
+         #if _RWSTD_VER < 0x10000
+            #define BOOST_RWSTD_VER (_RWSTD_VER << 8)
+         #else
+            #define BOOST_RWSTD_VER _RWSTD_VER
+         #endif
+      #endif
 
       #if defined(RWSTD_NO_MEMBER_TEMPLATES) || defined(RWSTD_NO_MEM_CLASS_TEMPLATES)
          #define BOOST_RE_NO_MEMBER_TEMPLATES
@@ -525,7 +564,7 @@ typedef unsigned long jm_uintfast32_t;
          #define BOOST_RE_NO_BOOL
       #endif
 
-      #if _RWSTD_VER > 0x020000
+      #if BOOST_RWSTD_VER > 0x020000
          #ifdef _RWSTD_NO_CLASS_PARTIAL_SPEC
           #define BOOST_RE_DISTANCE(i, j, n) do { n = 0; std::distance(i, j, n); } while(false)
          #else 
@@ -539,7 +578,7 @@ typedef unsigned long jm_uintfast32_t;
       #else 
          #define BOOST_RE_DISTANCE(i, j, n) std::distance(i, j, n)do { n = 0; std::distance(i, j, n); } while(false)
          #define BOOST_RE_OUTPUT_ITERATOR(T, D) std::output_iterator
-         #if _RWSTD_VER >= 0x0200
+         #if BOOST_RWSTD_VER >= 0x0200
             #define BOOST_RE_INPUT_ITERATOR(T, D) std::input_iterator<T>
          #else
             #define BOOST_RE_INPUT_ITERATOR(T, D) std::input_iterator<T, D>
@@ -551,7 +590,7 @@ typedef unsigned long jm_uintfast32_t;
 
       #include <memory>
 
-      #ifdef _RWSTD_ALLOCATOR
+      #if defined(_RWSTD_ALLOCATOR) && !defined(BOOST_RE_NO_MEMORY_H) && !defined(BOOST_RE_NO_MEMBER_TEMPLATES)
 
          /* new style allocator */
 
@@ -579,7 +618,7 @@ typedef unsigned long jm_uintfast32_t;
       #endif
 
       #define BOOST_RE_STL_DONE
-      #if _RWSTD_VER < 0x020100
+      #if BOOST_RWSTD_VER < 0x020100
          #define BOOST_RE_NO_OI_ASSIGN
       #endif
 
@@ -612,9 +651,9 @@ typedef unsigned long jm_uintfast32_t;
 
       #define BOOST_RE_STL_DONE
 
-   #elif defined (BOOST_MSVC)
+   #elif (defined(BOOST_MSVC) || defined(__ICL)) && (defined(_YVALS) || defined(_CPPLIB_VER))
 
-      /* assume we're using MS's own STL (VC++ 5/6) */
+      /* VC6 or Intel C++, with Dinkum STL */
       #define BOOST_RE_NO_OI_ASSIGN
 
       #define BOOST_RE_DISTANCE(i, j, n) n = std::distance(i, j)
@@ -1196,7 +1235,7 @@ namespace std{
    using ::wcsxfrm;
    using ::wcstombs;
    using ::mbstowcs;
-#ifndef BOOST_RE_NO_LOCALE_H
+#if !defined(BOOST_RE_NO_LOCALE_H) && !defined (__STL_NO_NATIVE_MBSTATE_T)
    using ::mbstate_t;
 #endif
    using ::fseek;
@@ -1231,6 +1270,7 @@ namespace std{
 
 
 #endif  // BOOST_REGEX_CONFIG_HPP
+
 
 
 
