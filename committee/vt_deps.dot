@@ -1,5 +1,5 @@
 digraph vt_deps {
-  size="6,3";
+#  size="6,6";
   node [shape="rectangle"];
   edge [dir="back"];  
 
@@ -10,7 +10,6 @@ digraph vt_deps {
   LengthOfPP [label="Length of parameter packs"];
   NthElement [label="Get Nth element for parameter packs"];
 
-  CVRefPatterns [label="[Yuck] const/volatile/reference patterns"];
   ArbitraryMatching [label="Arbitrary matching patterns"];
 
   ArbitraryExpansion [label="Arbitrary expansion"];
@@ -28,13 +27,13 @@ digraph vt_deps {
 
   FirstClassPP -> Initializers;
 
-  BasicVariadics -> CVRefPatterns;
+  BasicVariadics -> ArbitraryMatching;
 
   BasicVariadics -> EllipsisForClasses;
   EllipsisForClasses -> OverloadingEllipsis;
 
   BasicVariadics -> ArbitraryExpansion;
-  CVRefPatterns -> ArbitraryMatching;
+
   ArbitraryExpansion -> NestedExpansion;
   ArbitraryExpansion -> PairwiseExpansion;
 }

@@ -14,15 +14,16 @@
 
 \begin{document}
 
-\markboth{Doc. no: NXXXX=04-0XXX}{Doc. no: NXXXX=04-0XXX}
+\markboth{Doc. no: N1704=04-0144}{Doc. no: N1704=04-0144}
 \pagestyle{myheadings}
 
-\title{Variadic Templates}
+\title{Variadic Templates: Exploring the Design Space}
 \author{Douglas Gregor \and Jaakko J\"arvi \and Gary Powell}
 \date{}
 \maketitle
 
-\par\noindent Document number: NXXXX=04-XXXX
+\par\noindent Document number: N1704=04-0144
+\par\noindent Revises document number: N1603=04-0043
 \par\noindent Date: \today
 \par\noindent Project: Programming Language C++, Evolution Working Group
 \par\noindent Reply-to: Douglas Gregor $<${\tt gregod@cs.rpi.edu}$>$
@@ -37,7 +38,7 @@ This proposal directly addresses two problems:
 The proposed resolution is to introduce a syntax and semantics for
 variable-length template argument lists (usable with function templates
 via explicit template argument specification and with class templates)
-along with a method of argument ``bundling'' using the same mechanism to
+along with a method of argument ``packing'' using the same mechanism to
 pass an arbitrary number of function call arguments to a function in a
 typesafe manner.
 
@@ -67,7 +68,7 @@ shorter and would not suffer the limitations of the aforementioned
 implementation. The declaration of the {\tt list<>} template above may
 be:
 \begin{verbatim}
-template<...> class list;
+template<... Elements> class list;
 \end{verbatim}
 
 \subsection{Typesafe Variable-length Function Parameter Lists}
@@ -80,15 +81,13 @@ feature would be useful in many contexts, e.g., for implementing a
 typesafe C++ {\tt printf} that works for non-POD types.
 
 \section{Feature menu}
-Prior versions of this proposal~\cite{GJP03,GJP04a} described various
+Prior versions of this proposal~\cite{GPJ03,GJP04a} described various
 points in the design space of variadic templates. In this version of
 the proposal, we have chosen to enumerate the various potential design
 decisions (mainly features) and discuss the impact of each on users
 and compilers. Fig.~\ref{fig:dependencies} illustrates the
 dependencies between features, such that an edge $A \rightarrow B$
-indicates that feature $A$ requires acceptence of feature $B$, e.g.,
-``Arbitrary matching patterns'' subsumes (and therefore requires
-acceptence of) ``const/volatile/reference patterns''. 
+indicates that feature $A$ requires acceptence of feature $B$.
 
 \begin{figure}
 \center
@@ -98,7 +97,7 @@ acceptence of) ``const/volatile/reference patterns''.
 \end{figure}
 
 The following sections describe each feature listed in
-Fig.~\ref{fig:dependencies}. Sec.~\ref{sec:menu} then provides several
+Fig.~\ref{fig:dependencies}. Sec.~\ref{sec:specials} then provides several
 ``specials'': prepacked sets of features that work well together and
 represent some overall goal for variadic templates. It is our hope
 that the committee will select a special or a set of features
@@ -200,7 +199,7 @@ templates. For instance, a type-safe \texttt{printf} might be declared
 as:
 
 \begin{verbatim}
-template<... Args> void printf(const char* s, Args args...);
+template<... Args> void printf(const char* s, const Args& args...);
 \end{verbatim}
 
 This declaration indicates that \texttt{printf} accepts a variable
@@ -210,7 +209,24 @@ arguments, whereas the \texttt{args} template parameter pack contains
 the values. The ellipsis operator following ``\texttt{args}''
 indicates that extra arguments to \texttt{printf} should be bundled
 into the \texttt{args} parameter pack and their types deduced and
-placed into the \texttt{Args} template parameter pack.
+placed into the \texttt{Args} template parameter pack. In this basic
+version, the template parameter pack containing the types of the
+arguments may be a \textit{cv}-qualified template parameter pack or a
+reference to a \textit{cv}-qualified template parameter pack. 
+
+One can think of the typesafe variadic \texttt{printf} function as
+having an expansion to a family of overloads each having a different
+number of arguments:
+
+\begin{verbatim}
+void printf(const char* s);
+template<typename T1> void printf(const char* s, const T1& a1);
+template<typename T1, typename T2> 
+  void printf(const char* s, const T1& a1, const T2& a2);
+/* up to some arbitrary N */
+template<typename T1, typename T2, /* up to */, typename TN> 
+  void printf(const char* s, const T1& a1, const T2& a2, /* up to */, const TN& aN);
+\end{verbatim}
 
 The most basic formulation of variadic templates therefore consists
 of:
@@ -246,7 +262,7 @@ template<... Elements>
 class tuple
 {
 public:
-  tuple(Elements elements...) : elements(elements) { }
+  tuple(const Elements& elements...) : elements(elements) { }
 
 private:
   Elements elements;
@@ -274,7 +290,7 @@ unpacked one becomes very important. For instance, if one forgets to
 apply the ellipsis operator the compiler will pass the parameter pack
 itself, e.g.,
 \begin{verbatim}
-template<... Args> void debugout(const std::string& s, Args args...)
+template<... Args> void debugout(const std::string& s, const Args& args...)
 {
   printf(("Debug: " + s).c_str(), args); // oops, should be "args..."
 }
@@ -293,7 +309,7 @@ first-class parameter packs is that they can be emulated via recursive
 data structures. However, this emulation places an extra burden on
 users and compilers, and is known to result in poorer performance.
 
-\section{Initializer lists are parameter packs}
+\subsection{Initializer lists are parameter packs}
 Initializer lists are typeless entities stored in the compiler that
 can only be used in very restrictive ways for initializing
 aggregates. We could lift some of the restrictions on initializer
@@ -349,7 +365,7 @@ template<typename T>
 class vector
 {
 public:
-  template<... Elements> vector(Elements elements)
+  template<... Elements> vector(const Elements& elements)
   {
     reserve(pp_length<Elements...>::value);
     do_push_back(elements...);
@@ -368,6 +384,16 @@ private:
 };
 \end{verbatim}
 
+\paragraph{User impact}: The ability to accept initializer lists in
+the constructors and assignment allows us to make initialization of
+standard library data structures (and other user types) more natural,
+and may improve readability of the language. It also subsumes several
+of the ideas in~\cite{DoReStr03}.
+
+\paragraph{Compiler impact}: Implementation of this feature is not
+expected to require a great deal of effort beyond that of implementing
+first-class parameter packs because the extension is small and pure.
+
 \subsection{Ellipsis operator for classes}
 One extension of the ellipsis operator would permit it to be applied
 to any object of class type, which would have the effect of unpacking
@@ -375,6 +401,11 @@ all of the fields in that class type into separate arguments. This
 information could be used for compile-time reflective metaprogramming,
 e.g., to perform automatic marshalling or to construct property
 inspectors. 
+
+\paragraph{User impact}: 
+
+\paragraph{Compiler impact}: Implementation of this feature requires a
+small amount of parsing 
 
 \subsection{Overloading the expansion operator ...}
 This proposal introduces \texttt{...} as a full-fledged operator only
@@ -578,12 +609,73 @@ Prior versions of this proposal~\cite{GJP04a} contained more complete
 examples.
 
 \subsection{Pairwise expansion}
-TBD
+Arbitrary expansion requires that only a single parameter pack occur
+within the pattern. Nested expansion extends this notion to several
+parameter packs so long as the expansions are nested. Pairwise
+expansion, on the other hand, allows two or more parameter packs at
+the same nesting level so long as all parameter packs are of the same
+length $N$. In this case, the parameter packs are expanded together
+into $N$ arguments, with the $i^{\text{th}}$ argument having replaced
+each parameter pack with the $i^{\text{th}}$ value in that parameter
+pack.
 
-Use zipping tuples as the example
+Pairwise expansion permits, among other things, ``zipping'' two
+parameter packs into a single parameter pack containing
+pairs\footnote{Note that we also take advantage of first-class
+  parameter packs in this example}:
+
+\begin{verbatim}
+template<... Args> struct bundle_t { typedef Args type; };
+
+template<... Args> Args bundle(const Args& args...) { return args; }
+
+template<... Args1>
+class zipper
+{
+public:
+  zipper(const Args1& args1...) : args1(args1) {}
+
+  template<... Args2>
+  typename bundle_t<std::pair<Args1, Args2>...>::type
+  operator()(const Args2& args2...)
+  { return bundle(std::pair<Args1, Args2>(args1, args2)...); }
+
+private:
+  Args1 args1;
+};
+\end{verbatim}
+
+More importantly, pairwise expansion in conjunction with move
+semantics~\cite{Hinnant02} permits perfect argument
+forwarding~\cite{Dimov02} for an arbitrary number of
+arguments\footnote{Additionally, we use \texttt{decltype} to provide
+  perfect forwarding of the return type}:
+
+\begin{verbatim}
+template<typename F, ... Args>
+auto apply(F&& f, Args&& args...) -> decltype(f(static_cast<Args&&>(args)...))
+{ return f(static_cast<Args&&>(args)...); }
+\end{verbatim}
+
+
+%Finally, pairwise expansion gives a much more literal meaning to the
+%declaration of the parameter packs in typesafe variadic functions, e.g.,
+%
+%\begin{verbatim}
+%template<... Args> void foo(const Args& args...);
+%\end{verbatim}
+%
+%Here, the 
 
 \section{Revision history}
 \begin{itemize}
+
+\item \textbf{Since N1603=04-0043}:
+  \begin{itemize}
+  \item Moved to feature-based decomposition of the variadic templates
+    design space.
+  \end{itemize}
+
 \item \textbf{Since N1483=03-0066:} 
   \begin{itemize}
   \item Variadic templates no longer solve the forwarding problem for
@@ -601,9 +693,10 @@ Use zipping tuples as the example
 Discussions among Daveed Vandevoorde, David Abrahams, Mat Marcus, John
 Spicer, and Jaakko J\"arvi resulted in the new syntax for unpacking
 arguments using ``...''. This proposal has been greatly improved with
-their feedback. David Abrahams noticed that ``...''  could be used for
-metaprogramming if it could be applied to constructs other than
-parameter packs.
+their feedback. Mat Marcus suggested that the ellipsis operator could
+be applied to class types for marshalling, reflection, etc. David
+Abrahams noticed that ``...''  could be used for metaprogramming if we
+supported arbitrary expansion patterns.
 
 \bibliographystyle{abbrv}
 \bibliography{template_varargs}
