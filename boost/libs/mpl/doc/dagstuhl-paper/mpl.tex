@@ -18,7 +18,7 @@
 
 \begin{document}
 
-\articletitle{The Boost \Cpp\ Template Metaprogramming Library}
+\articletitle{The Boost \Cpp\ Metaprogramming Library}
 
 \author{Aleksey Gurtovoy} 
  \affil{MetaCommunications, Inc.}
@@ -102,8 +102,8 @@ possible to perform integer computations at compile-time. For example,
 the following template computes the factorial of its
 argument:
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 template <unsigned n>
 struct factorial
 {
@@ -116,6 +116,7 @@ struct factorial<0>
    static const unsigned value = 1;
 };
 \end{verbatim}
+\end{codesamp}
 }
 
 The program fragment above is called a \emph{\mfn}, and it is easy to
@@ -130,13 +131,14 @@ of the full \Cpp\ language is available to her: those expressions
 which can be evaluated at compile-time. Compare the above with a
 straightforward runtime definition of the factorial function:
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 unsigned factorial(unsigned N)
 {
    return N == 0 ? 1 : N * factorial(N - 1);
 }
 \end{verbatim}
+\end{codesamp}
 }
 
 While it is easy to see the analogy between the two recursive
@@ -171,8 +173,8 @@ How could we apply our \code{factorial<>} \mfn{}? We might, for example,
 produce an array type of an appropriate size to hold all permutations
 of instances of another type:
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 // permutation_holder<T>::type is an array type which can contain all
 // permutations of a given T.
 
@@ -188,6 +190,7 @@ template <class T, unsigned N> struct permutation_holder<T[N]>
    typedef T type[factorial<N>::value][N];
 };
 \end{verbatim}
+\end{codesamp}
 }
 
 Here we have introduced the notion of a \emph{type computation}.  Like
@@ -209,14 +212,15 @@ introduction to the basics here.
 First, we'd need a way to represent the collection. One
 idea might be to store the types in a structure:
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 struct types {
   int t1;
   long t2;
   std::vector<double> t3;
 };
 \end{verbatim}
+\end{codesamp}
 }
 
 Unfortunately, this arrangement is not susceptible to the compile-time
@@ -228,8 +232,8 @@ increase the uniformity of the representation. If we have a consistent
 way to get the first type of any sequence and the rest of the
 sequence, we can easily access all members:
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 template <class First, class Rest>
 struct cons
 {
@@ -243,6 +247,7 @@ typedef
   cons<int, cons<long, cons<std::vector<double>, nil> > >
 my_types;
 \end{verbatim}
+\end{codesamp}
 }
 
 The structure described by \code{types} above is the compile-time
@@ -252,8 +257,8 @@ let's examine a simple function which does so. Suppose a user wished
 to find the largest of an arbitrary collection of types. We can apply
 the recursive \mfn\ formula which should by now be familiar:
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 // Choose the larger of two types
 template <class T1, class T2
         , bool choose1 = (sizeof(T1) > sizeof(T2)) // hands off!
@@ -296,6 +301,7 @@ int main()
 }
 
 \end{verbatim}
+\end{codesamp}
 }
 
 There are several things worth noticing about this code:
@@ -343,8 +349,8 @@ esoteric. To show how the type computation can be put to work, let's
 examine a simple example. The following code produces an array
 containing all possible permutations of another array:
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 // Can't return an array in C++, so we need this wrapper
 template <class T>
 struct wrapper
@@ -374,6 +380,7 @@ all_permutations(T const& in)
    return result;
 }
 \end{verbatim}
+\end{codesamp}
 }
 
 
@@ -407,13 +414,15 @@ consequences be?
   analysis. After all, the size of arrays passed to
   \code{all\_\-permutations} are always known at compile-time, and
   thus can be known to its user. We could ask the user to supply the
-  result type explicitly: {\footnotesize
-  \begin{verbatim}
+  result type explicitly:
+{\small
+\begin{codesamp}\begin{verbatim}
 template <typename Result, typename T>
 Result
 all_permutations(T const& input);
-  \end{verbatim}
-  }
+\end{verbatim}
+\end{codesamp}
+}
   The costs to this approach are obvious: we give up expressivity (by
   requiring the user to explicitly specify implementation details),
   and correctness (by allowing the user to specify them
@@ -528,8 +537,8 @@ corresponding facility as follows:
 %%% It would be a good idea to introduce/motivate the use of true_c/false_c
 %%% types in place of bool parameters. 
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 // definition
 template<
       typename Condition
@@ -548,6 +557,7 @@ typedef mpl::select_if<mpl::false_c,char,long>::type t2;
 BOOST_MPL_ASSERT_IS_SAME(t1, char);
 BOOST_MPL_ASSERT_IS_SAME(t2, long);
 \end{verbatim}
+\end{codesamp}
 }
 
 The construct is important because template \mpgms{} often 
@@ -575,20 +585,21 @@ for a \code{T} that is either a plain pointer
 smart pointers, e.g. \code{boost::scoped\_ptr<U>}, will give you 
 the pointed type (\code{U}):
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 BOOST_MPL_ASSERT_IS_SAME(pointed_type<my*>::type, my);
 BOOST_MPL_ASSERT_IS_SAME(pointed_type< std::auto_ptr<my> >::type, my);
 BOOST_MPL_ASSERT_IS_SAME(pointed_type< boost::scoped_ptr<my> >::type, my);
 \end{verbatim}
+\end{codesamp}
 }
 
 An obvious way to implement \code{pointed\_type} would be to 
 use partial specialization to distinguish between plain 
 pointers and everything else:
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 // general case, handles std::auto_ptr and boost pointers
 template< typename T >
 struct pointed_type
@@ -603,14 +614,15 @@ struct pointed_type<T*>
     typedef T type;
 };
 \end{verbatim}
+\end{codesamp}
 }
 
 but if partial specialization is unavailable, then 
 \code{select\_if} seems to be the right tool. Unfortunately,
 the straightforward approach does not work:
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 template< typename T >
 struct pointed_type
 {
@@ -625,6 +637,7 @@ struct pointed_type
 // name followed by "::" must be a class or namespace name
 typedef pointed_type<char*>::type result;
 \end{verbatim}
+\end{codesamp}
 }
 
 Clearly, \code{typename T::element\_type} expression is not 
@@ -632,8 +645,8 @@ valid in case of \code{T == char*}, and that's what the
 compiler is complaining about. Implementing the selection code 
 manually solves the problem: 
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 namespace aux {
 // general case
 template< bool >
@@ -665,14 +678,15 @@ struct pointed_type
         >::template result<T>::type type;
 };
 \end{verbatim}
+\end{codesamp}
 }
 
 But this quickly becomes awkward if needs to be done 
 repeatedly. We can try to workaround the problem with 
 \code{select\_\-if} code as follows:
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 namespace aux {
 template< typename T >
 struct element_type
@@ -691,6 +705,7 @@ struct pointed_type
         >::type type;
 };
 \end{verbatim}
+\end{codesamp}
 }
 
 but this doesn't work either - the access to the 
@@ -703,20 +718,20 @@ gets always instantiated as well, and for the same reason
 (because we are accessing it's nested \code{type} member). 
 Such unnecessary instantiation that is not fatal from 
 compiler's point of view may or may be not a problem, 
-depending on the "weight" of the template (how much the 
+depending on the ``weight'' of the template (how much the 
 instantiation taxes the compiler), but a general rule of 
 thumb would be to avoid such code.
 
 Returning to our error, to make the above code compile, we 
-need to factor the act of "asking" \code{aux::element\_\-type<T>}
+need to factor the act of ``asking'' \code{aux::element\_\-type<T>}
 of its nested \code{type} out of the \code{select\_\-if} 
 invocation. The fact that both \code{boost::remove\_\-pointer<T>}
 trait template and \code{aux::element\_\-type<T>} use the same 
 naming convention for their result types makes the refactoring 
 easier:
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 template< typename T >
 struct pointed_type
 {
@@ -731,6 +746,7 @@ struct pointed_type
     typedef typename func_::type type;
 };
 \end{verbatim}
+\end{codesamp}
 }
 
 Now the compiler has no reasons instantiate both 
@@ -749,8 +765,8 @@ function class application) as a part of its invocation.  The \Mpl
 provides such template - it's called \code{apply\_if}. Using it, we
 can re-write the above code as simple as:
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 template< typename T >
 struct pointed_type
 {
@@ -761,6 +777,7 @@ struct pointed_type
         >::type type;
 };
 \end{verbatim}
+\end{codesamp}
 }
 
 To make our techniques review complete, let's consider a slightly 
@@ -769,8 +786,8 @@ around \code{boost::remove\_pointer} traits template [], which will
 strip the pointer qualification conditionally. We will call it 
 \code{remove\_pointer\_if}:
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 template<
       typename Condition
     , typename T
@@ -784,6 +801,7 @@ struct remove_pointer_if
         >::type type;
 };
 \end{verbatim}
+\end{codesamp}
 }
 
 Now the above works from the first time, but it suffers from the 
@@ -803,8 +821,8 @@ we just substitute \code{T} with \code{mpl::identity<T>},
 and \code{boost::select\_if} with more compact 
 \code{boost::apply\_if}:
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 template<
       typename Condition
     , typename T
@@ -818,6 +836,7 @@ struct remove_pointer_if
         >::type type;
 };
 \end{verbatim}
+\end{codesamp}
 }
 
 Which gives us exactly what we wanted.
@@ -835,13 +854,14 @@ bare class template is the simplest possible model we could choose for
 parameters and instantiation ``returns'' a new type. For example, the
 following produces a type derived from its arguments:
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 template<class N1, class N2>
 struct derive : N1, N2
 {
 };
 \end{verbatim}
+\end{codesamp}
 }
 
 However, this model is far too limiting: it restricts the \mfn\ result
@@ -853,8 +873,8 @@ from ``returning'', say, \code{int} is obviously not general
 enough. To meet this basic requirement, we must rely on a nested type
 to provide our return value:
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 template<class N1, class N2>
 struct derive
 {
@@ -867,6 +887,7 @@ struct derive<void,void>
   typedef int type;
 };
 \end{verbatim}
+\end{codesamp}
 }
 
 Veldhuizen [Vel95] was first to talk about class templates of this
@@ -888,8 +909,8 @@ higher--order functions difficult.
 In order to pass such a \mfn\ to another template, we need to
 use \emph{template template parameters}:
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 // Returns F(T1,F(T2,T3))
 template<template<typename>class F, class T1, class T2, class T3>
 struct apply_twice
@@ -906,6 +927,7 @@ struct derive3
   : apply_twice<derive,T1,T2,T3>
 {};
 \end{verbatim}
+\end{codesamp}
 }
 
 Because \Cpp\ makes a strict distinction between type and class
@@ -915,22 +937,24 @@ status of second-class citizens. For example, recalling our
 introduction to type sequences, there's no way to make a \code{cons}
 list of \mfns:
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 typedef cons<derive, cons<derive3, nil> > derive_functions; // error!
 \end{verbatim}
+\end{codesamp}
 }
 
 We might consider redefining our \code{cons} cell so we can pass
 \code{derive} as the head element:
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 template <
     template<template<class T,class U> class F
   , class Tail
 > struct cons;
 \end{verbatim}
+\end{codesamp}
 }
 
 However, now we have another problem: \Cpp\ strictly enforces the
@@ -943,8 +967,8 @@ Theorem of Software Engineering''} applies here. To elevate \mfns\ to
 the status of first-class objects, the MPL introduces the concept of a
 ``\mfn\ class'':
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 // metafunction class form of derive
 struct derive
 {
@@ -955,6 +979,7 @@ struct derive
   };
 };
 \end{verbatim}
+\end{codesamp}
 }
 
 This form should look familiar to anyone acquainted with function
@@ -963,8 +988,8 @@ role as the runtime function-call operator. In fact, compile-time
 metafunction classes have the same relationship to metafunctions that
 runtime function objects have to functions:
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 // function form of add
 template <class T> T add(T x, T y) { return x + y; }
 
@@ -975,6 +1000,7 @@ struct add
   T operator()(T x, T y) { return x + y; }
 };
 \end{verbatim}
+\end{codesamp}
 }
 
 These two forms exist because of some idiosyncrasy in 
@@ -987,8 +1013,8 @@ template \mfns\ that returns another class template
 
 %%% Should make the link between template typedefs and closures
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 // a compile-time equivalent of std::bind1st
 template<
       template< typename P1, typename P2 > class F
@@ -1037,6 +1063,7 @@ struct some_type_computation
     // ...
 };
 \end{verbatim}
+\end{codesamp}
 }
 
 %%% Can you make your case here with just bind1st? compose_f_gx is
@@ -1049,8 +1076,8 @@ In this example, passing the body of
 
 %%% What point are you trying to make here? Consider cutting this.
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 template< typename T >
 struct complex_type_computation
 {
@@ -1066,6 +1093,7 @@ struct complex_type_computation
     // ...
 };
 \end{verbatim}
+\end{codesamp}
 }
 
 but in general this doesn't scale. 
@@ -1077,8 +1105,8 @@ the ct-\mfns\ they are composing (\code{F} and
 \code{G}) \emph{changes the type of the result}. 
 For instance:
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 template< typename T1, typename T2 >
 struct my
 {
@@ -1091,13 +1119,14 @@ typedef my< int,long > expected_result;
 BOOST_MPL_ASSERT_IS_SAME(result, expected_result); // fails!
 BOOST_STATIC_ASSERT((boost::is_convertible<result,expected_result>::value));
 \end{verbatim}
+\end{codesamp}
 }
 
 This may or may be not a problem, depending on how you 
 want to use the result of a type computation algorithm 
 that applies higher-order \mfns\ internally. 
 Unfortunately, within the current language inheritance 
-is the only way to "return" a class template.
+is the only way to ``return'' a class template.
 
 %%% A marginal issue. We don't have true closures either but it
 %%% doesn't seem to cause problems... or maybe it does (we can't declare
@@ -1110,7 +1139,7 @@ is the only way to "return" a class template.
 \begin{glossary}
   \term{polymorphic} A function is \emph{polymorphic} if it can take
   arguments of an arbitrary type (a \Cpp\ term from run-time world
-  would be "generic")
+  would be ``generic'')
 \end{glossary}
 
 \Cpp\ templates are \emph{polymorphic} regarding the type 
@@ -1121,7 +1150,7 @@ rules dictate the compiler to enforce \emph{strict arity} of
 the class templates being passed as template template 
 parameters. Moreover, polymorphism \emph{between} types and 
 ct-\mfns\ is not supported, and the syntax of 
-"returning" ct-\mfns\ is different from syntax of 
+``returning'' ct-\mfns\ is different from syntax of 
 returning a type. All this seriously limits the 
 applicability of higher-order functions, leads to 
 unnecessary code duplication, and has an overall negative 
@@ -1144,8 +1173,8 @@ function's execution as the argument to another function:
 %%% similar: template typedef typename. I understand the theoretical
 %%% reasons for doing it this way.
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 // won't work if either F or G (or both) a higher-level functions
 template<
       template< typename > class F
@@ -1179,13 +1208,14 @@ struct f_gx3
     typedef typename F< G<X>::template type >::type type;
 };
 \end{verbatim}
+\end{codesamp}
 }
 
 Or, for example, that means that you cannot have a list of 
 ct-\mfns:
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 template< typename T1, typename T2 >
 struct my_func
 {
@@ -1198,6 +1228,7 @@ typedef mpl::list<
     , boost::is_convertible
     > func_list; // error!
 \end{verbatim}
+\end{codesamp}
 }
 
 You would need to have a special kind of list to do the above, 
@@ -1206,7 +1237,7 @@ ct-metafunction, etc.
 
 So, basically, representing \mfns\ as plain class 
 template would lead to duplication of almost every library 
-facility. "function class" metafunction form solves all these 
+facility. ``function class'' metafunction form solves all these 
 problems. On the other hand, it seems that accepting function 
 classes as \emph{the} form of representation of compile-time 
 function entities imposes code duplication danger in as well: 
@@ -1217,8 +1248,8 @@ functions, or you have to duplicate all algorithms in second
 form, so, for instance, there would be two versions of 
 \code{find}:
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 // user-friendly form
 template<
       typename Sequence
@@ -1239,26 +1270,29 @@ struct find
     };
 };
 \end{verbatim}
+\end{codesamp}
 }
 
 Of course, the third option is to eliminate 
-"user-friendly form" completely so one would always 
+``user-friendly form'' completely so one would always 
 have to write
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 typedef mpl::find::apply<list,long>::type iter;
 // or, if you prefer,
 // typedef mpl::apply< mpl::find,list,long >::type iter;
 \end{verbatim}
+\end{codesamp}
 }
 
 instead of 
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 typedef mpl::find<list,long>::type iter;
 \end{verbatim}
+\end{codesamp}
 }
 
 but that's would hurt usability, considering that the direct 
@@ -1272,19 +1306,21 @@ ct-\mfns\ and converting them into function classes,
 so when you want to pass \code{find} algorithm as an argument 
 to a higher-order function, you just write:
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 typedef mpl::apply< my_f, mpl::find<_1,_2> >::type result;
 \end{verbatim}
+\end{codesamp}
 }
 
 and then you want just use \code{find} directly in your code, 
 you still have the intuitive
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 typedef mpl::find<list,long>::type iter;
 \end{verbatim}
+\end{codesamp}
 }
 
 
@@ -1318,7 +1354,7 @@ on them, although the idea of representation common data
 structures like trees, lists, etc. at compile time using class 
 template composition has been around for a while (for example, 
 most of the expression template libraries build such trees as 
-a part of their expression "parsing" process [Vel95b]). 
+a part of their expression ``parsing'' process [Vel95b]). 
 [Ale00] used list of types and some algorithms on them to 
 implement several design patterns; the accompanying code 
 is known as the Loki library []. 
@@ -1343,11 +1379,12 @@ is known as the Loki library [].
 Most of algorithms in \Mpl\ operates on sequences. For example, 
 searching type in a list looks like this:
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 typedef mpl::list< char,short,int,long,float,double > types;
 typedef mpl::find< types,long >::type iter;
 \end{verbatim}
+\end{codesamp}
 }
 
 Here, \code{find} accepts two parameters - a sequence to search
@@ -1363,10 +1400,11 @@ much the same - the names are the same, the semantics is very close,
 there are iterators, and you can search not only by type, but also
 using a predicate:
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 typedef mpl::find_if< types,boost::is_float >::type iter;
 \end{verbatim}
+\end{codesamp}
 }
 
 This conceptual/syntactical similarity with the STL is not
@@ -1402,8 +1440,8 @@ and to retain the rest of the library at her disposal. For example,
 you can define a \code{tiny\_\-list} for dealing with sequences of 3
 types as follows:
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 template< typename TinyList, long Pos >
 struct tiny_list_item;
 
@@ -1437,27 +1475,29 @@ template< typename TinyList >
 struct tiny_list_item<TinyList,2>
 { typedef typename TinyList::type2 type; };
 \end{verbatim}
+\end{codesamp}
 }
 
 and then use it with any of the library algorithms as if it 
 was \code{mpl::list}:
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 typedef tiny_list< char,short,int > types;
 typedef mpl::transform<
       types
     , boost::add_pointer
     >::type pointers;
 \end{verbatim}
+\end{codesamp}
 }
 
 Note that \code{tiny\_list} is a model of 
 BidirectionalSequence (it would be RandomAccess if 
 we added \code{advance} member to \code{tiny\_\-list\_\-iterator}:
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 template< typename TinyList, long Pos >
 struct tiny_list_iterator
 {
@@ -1473,6 +1513,7 @@ struct tiny_list_iterator
     };
 };
 \end{verbatim}
+\end{codesamp}
 }
 
 ).
@@ -1504,8 +1545,8 @@ example to see if we can rewrite it in a better way with what
 much to look at, because implementation of it with MPL is a 
 one-liner:
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 template< typename Sequence >
 struct largest
 {
@@ -1518,6 +1559,7 @@ struct largest
         >::type type;
 };
 \end{verbatim}
+\end{codesamp}
 }
 
 %%% agurt: I sound like a sales person below :)
@@ -1537,8 +1579,8 @@ implemented. One might expect that \emph{now} we will again
 see all these awkward partial specializations, esoteric 
 patterns matching, etc. Well, let's see:
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 namespace aux {
 template< typename Predicate >
 struct select_max
@@ -1574,6 +1616,7 @@ struct max_element
         >::type type;
 };
 \end{verbatim}
+\end{codesamp}
 }
 
 First thing to notice here is that this algorithm is in fact 
@@ -1609,8 +1652,8 @@ be \code{std::accumulate} algorithm from the \Cpp\ standard
 library. \code{iter\_fold} is defined in \code{mpl} 
 as follows:
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 template<
       typename Sequence
     , typename InitialState
@@ -1622,6 +1665,7 @@ struct iter_fold
     typedef ... type;
 };
 \end{verbatim}
+\end{codesamp}
 }
 
 % it's not really ``implementation-defined'', but unspecified.
@@ -1671,8 +1715,8 @@ non-type template parameter - let's say \emph{long} -
 it's not possible to pass anything besides compile-time 
 integral constants to it:
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 template< long N1, long N2 >
 struct equal_to
 {
@@ -1682,14 +1726,16 @@ struct equal_to
 equal_to<5,5>::value; // ok
 equal_to<int,int>::value; // error!
 \end{verbatim}
+\end{codesamp}
 }
 
 And of course this doesn't work the other way around either:
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 typedef mpl::list<1,2,3,4,5> numbers; // error!
 \end{verbatim}
+\end{codesamp}
 }
 
 While this may be an obvious limitation, it imposes yet 
@@ -1705,8 +1751,8 @@ The solution for this issue is the same as well - we represent
 integral values by wrapping them in types, so, for example, to 
 create a list of numbers you write:
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 typedef mpl::list<
       mpl::int_c<1>
     , mpl::int_c<2>
@@ -1715,6 +1761,7 @@ typedef mpl::list<
     , mpl::int_c<5>
     > numbers;
 \end{verbatim}
+\end{codesamp}
 }
 
 Wrapping integral constants into types to make them 
@@ -1731,18 +1778,20 @@ for the convenience purposes, the library does provide users
 with a template that takes non-type template parameters, but 
 allows a more compact notation:
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 typedef mpl::list_c<long,1,2,3,4,5> numbers;
 \end{verbatim}
+\end{codesamp}
 }
 
 There is a similar \code{vector} counterpart as well:
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 typedef mpl::vector_c<long,1,2,3,4,5> numbers;
 \end{verbatim}
+\end{codesamp}
 }
 
 
@@ -1752,8 +1801,8 @@ typedef mpl::vector_c<long,1,2,3,4,5> numbers;
  \item while the nested functions notation in some cases is 
  less verbose, 
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 typedef mpl::list<char,short,int,long> types;
 typedef mpl::select_if<
       types::empty
@@ -1761,6 +1810,7 @@ typedef mpl::select_if<
     , types::back
     >::type t;
 \end{verbatim}
+\end{codesamp}
 }
 
 it is also less generic/more intrusive; requiring a sequence 
@@ -1768,7 +1818,7 @@ class to implement \code{size}, \code{empty}, \code{at}, etc.
 algorithms as members is often unnecessary and over restrictive. 
 In many cases the default implementations provided by the library 
 are sufficient.
-Currently the only requirement that a "foreign" sequence should 
+Currently the only requirement that a ``foreign'' sequence should 
 conform to in order to be used with the library algorithms is to 
 implement external \code{begin}/\code{end} \mfns; you 
 don't have to modify your sequence code; with the requirement to 
@@ -1779,8 +1829,8 @@ invoked on a sequence that is a template parameter, or depends
 on a template parameter, the notation actually becomes more 
 verbose, e.g. 
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 struct my_func
 {
     template< typename Sequence, typename N > struct apply
@@ -1790,12 +1840,13 @@ struct my_func
     };
 };
 \end{verbatim}
+\end{codesamp}
 }
 
 comparing to the current 
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 struct my_func
 {
     template< typename Sequence, typename N > struct apply
@@ -1804,23 +1855,25 @@ struct my_func
     };
 };
 \end{verbatim}
+\end{codesamp}
 }
 
 \item placing functions inside of a sequence class makes 
 impossible to pass them around as predicates/function classes: 
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 typedef mpl::list< seq1,seq2,seq3 > sequences; // list of sequences
 // find first non-empty sequence
 typedef mpl::find_if< sequences, mpl::size<_1> >::type itor;
 \end{verbatim}
+\end{codesamp}
 }
 
 instead, you have to write an explicit predicate for every such case, 
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 struct size_pred
 {
     template< typename Sequence > struct apply
@@ -1832,6 +1885,7 @@ struct size_pred
 // find first non-empty sequence
 typedef mpl::find_if< sequences,size_pred >::type itor;
 \end{verbatim}
+\end{codesamp}
 }
 
 \end{enumerate}
@@ -1902,8 +1956,8 @@ otherwise excellent compilers. To see how this works in action, let's
 examine a straightforward implementation of the \code{fold} \mfn,
 which combines some algorithm state with each element of a sequence:
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 // Unspecialized version combines the initial state and first element
 // and recurses to process the rest
 template<class Start, class Finish, class State, class BinaryFunction>
@@ -1921,6 +1975,7 @@ struct fold<Finish,Finish,State,BinaryFunction>
     typedef State type;
 };
 \end{verbatim}
+\end{codesamp}
 }
 
 Although simple and elegant, this implementation will always incur at
@@ -1933,8 +1988,8 @@ technique to our \code{fold} example, we begin by factoring out a
 single step of the algorithm. Our \code{fold\_\-step} \mfn\ has two
 results: \code{type} (the next state), and \code{iterator} (the next sequence position).
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 template <class BinaryFunction, class State, class Start, class Finish>
 struct fold_step
 {
@@ -1944,13 +1999,14 @@ struct fold_step
     typedef typename Start::next iterator;
 };
 \end{verbatim}
+\end{codesamp}
 }
 
 As with our main algorithm implementation, we specialize for the loop
 termination condition so that the step becomes a no-op:
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 template <class BinaryFunction, class State, class Finish>
 struct fold_step<BinaryFunction,State,Finish,Finish>
 {
@@ -1958,14 +2014,15 @@ struct fold_step<BinaryFunction,State,Finish,Finish>
     typedef Finish iterator;
 };
 \end{verbatim}
+\end{codesamp}
 }
 
 Now we can now reduce \code{fold}'s instantiation depth by any
 constant factor N simply by inserting N invocations of
 \code{fold\_\-step}. Here we've chosen a factor of 4:
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 template<
       typename Start
     , typename Finish
@@ -2000,6 +2057,7 @@ struct fold
     typedef typename recursion::type type;
 };
 \end{verbatim}
+\end{codesamp}
 }
 
 The \Mpl\ applies this unrolling technique across all algorithms with
@@ -2013,9 +2071,10 @@ naive algorithm implementations. Experiments also show a small
 increase in \mpgm\ instantiation speed on some compilers when loop
 unrolling is used.
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 \end{verbatim}
+\end{codesamp}
 }
 
   \subsubsection{numbered forms of \code{list}}
@@ -2031,8 +2090,8 @@ pass the results to a run-time part of the program for further
 processing. For example, suppose you've implemented a complex 
 compile-time algorithm that works with fixed-point arithmetics:
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 // fixed-point algorithm input
 typedef mpl::vector<
       mpl::fixed_c<-1,2345678>
@@ -2046,6 +2105,7 @@ typedef mpl::vector<
 */
 typedef /*...*/ result_data;
 \end{verbatim}
+\end{codesamp}
 }
 
 Suppose the \code{result\_\-data} here is a sequence of 
@@ -2053,8 +2113,8 @@ Suppose the \code{result\_\-data} here is a sequence of
 algorithm, and now you want to feed that result to run-time part 
 of the algorithm. With \code{boost::mpl} you can do it this way:
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 namespace aux {
 struct push_back
 {
@@ -2078,6 +2138,7 @@ double my_algorithm()
     // ...
 }
 \end{verbatim}
+\end{codesamp}
 }
 
 \code{for\_each<...>::\-execute} call there is what actually 
@@ -2086,8 +2147,8 @@ transfers the compile-time \code{result\_\-data} into run-time
 is one of the explicit facilities the library provides for run-time 
 code generation:
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 template<
       typename Sequence
     , typename Operation
@@ -2106,35 +2167,39 @@ struct for_each
     }
 };
 \end{verbatim}
+\end{codesamp}
 }
 
 The semantics of \code{for\_each::\-execute} is simple: it 
 iterates over a \code{Sequence} and applies the \code{Operation}
 for each element \code{E} of the sequence:
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 mpl::apply<Operation,E>::execute(x);
 \end{verbatim}
+\end{codesamp}
 }
 
 Applying this to our example, the 
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 mpl::for_each<result_data, aux::push_back>::execute(results);
 \end{verbatim}
+\end{codesamp}
 }
 
 line is equivalent to this:
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 mpl::apply< Operation, mpl::at_c<result_data,0>::type >::execute(results);
 mpl::apply< Operation, mpl::at_c<result_data,1>::type >::execute(results);
 // ...
 mpl::apply< Operation, mpl::at_c<result_data,n>::type >::execute(results);
 \end{verbatim}
+\end{codesamp}
 }
 
 There are other ways to generate an analogous code, 
@@ -2170,27 +2235,32 @@ the FSM is shown in Figure 1, and Table 1 present the
 corresponding state transition table (STT). The SST format 
 reflects the way one usually describes the behavior of a FSM 
 in plain English. For example, the first line of the table 
-can be read as follows: "If the model is in the \code{stopped}
+can be read as follows: ``If the model is in the \code{stopped}
 state, and the \code{play\_\-event} is received, then the 
 \code{do\_\-play} transition function is called, and the model 
-goes into the \code{playing} state".
+goes into the \code{playing} state''.
 
 \begin{figure}[t]
 \vskip.2in
 \caption{Player's state transition diagram.}
 \end{figure}
 
-\begin{table}[t]
-\caption{Player's state transition table with actions.}
-\centering
-\begin{verbatim}
-  State      Event     Next state  Transition function 
- stopped  play_event     playing   do_play 
- playing  stop_event     stopped   do_stop 
- playing  pause_event    paused    do_pause
- paused   play_event     playing   do_resume
- paused   stop_event     stopped   do_stop
-\end{verbatim}
+\begin{table}[ht]
+\begin{center}
+\caption[Player's state transition table with actions.]%<-- this version will appear in List of Tables
+{Player's state transition table with actions.}%<-- this version will appear on page
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}cccc}
+\sphline
+\it State &\it Event &\it Next State &\it Transition Function\cr
+\sphline
+stopped&play\_event&playing&do\_play\cr
+playing&stop\_event&stopped&do\_stop\cr
+playing&pause\_event&paused&do\_pause\cr
+paused&play\_event&playing&do\_resume\cr
+paused&stop\_event&stopped&do\_stop\cr
+\sphline
+\end{tabular*}
+\end{center}
 \end{table}
 
 %%% can we kill the ``_event'' suffix here?
@@ -2203,8 +2273,8 @@ derived from some base \code{event}
 class (they need to be passed to action functions, and they may
 contain some event-specific information for an action), 
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 class player
 {
  public:
@@ -2231,6 +2301,7 @@ class player
     state_t m_state;
 };
 \end{verbatim}
+\end{codesamp}
 }
 
 %%% IMO this implementation bends over backward to be inefficient. My
@@ -2277,8 +2348,8 @@ then the most straightforward way to derive the FSM
 implementation from the above table would be something 
 like this:
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 void
 player::process_event(event const& e)
 {
@@ -2336,6 +2407,7 @@ player::process_event(event const& e)
         );
 }
 \end{verbatim}
+\end{codesamp}
 }
 
 %%% Not sure the part below is too relevant
@@ -2363,8 +2435,8 @@ event processing functions, one for each state:
 %%% bad, and we could afford to show just a single example of this,
 %%% taking it on faith that people will understand.
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 void
 player::process_event(event const& e)
 {
@@ -2380,13 +2452,14 @@ player::process_event(event const& e)
     }
 }
 \end{verbatim}
+\end{codesamp}
 }
 
 where, for example, \code{process\_\-playing\_\-state\_\-event} 
 function would look like this:
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 player::state_t
 player::process_stopped_state_event(event const& e)
 {
@@ -2409,6 +2482,7 @@ player::process_stopped_state_event(event const& e)
     return m_state;
 }
 \end{verbatim}
+\end{codesamp}
 }
 
 Still, if the number of events being handled from particular 
@@ -2445,8 +2519,8 @@ a \code{transition} class template that represents a single line
 of the table, and than the table itself can be represented as a 
 sequence of such lines:
 
-{\footnotesize
-\begin{verbatim}
+{\small
+\begin{codesamp}\begin{verbatim}
 typedef list<
       transition<stopped, play_event,  playing, &player::do_play>
     , transition<playing, stop_event,  stopped, &player::do_stop>
@@ -2455,6 +2529,7 @@ typedef list<
     , transition<paused,  stop_event,  stopped, &player::do_stop>
     >::type transition_table;
 \end{verbatim}
+\end{codesamp}
 }
 
 pros:
@@ -2464,7 +2539,7 @@ pros:
     definition and the state table of the FSM )
 \item performance %%%??
 \item compile-time checking 
-\item FSM "installation" is done at compile-time; cost 
+\item FSM ``installation'' is done at compile-time; cost 
     nothing in performance 
 \item only transition actions need to be implemented 
     (no need to inherit, extend classes, etc.) 
