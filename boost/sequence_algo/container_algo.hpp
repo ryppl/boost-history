@@ -32,7 +32,7 @@ namespace boost {
     class container_algo_pair_tag {};
     class container_algo_container_tag {};
 
-    template <Container>
+    template <typename Container>
     class container_algo_make_tag
     {
       typedef container_algo_container_tag       tag;
@@ -41,7 +41,7 @@ namespace boost {
       typedef typename Container::const_iterator const_result_type;
     };
 
-    template < class T >
+    template <typename T>
     class container_algo_make_tag< std::pair<T,T> >
     {
       typedef container_algo_pair_tag            tag;
