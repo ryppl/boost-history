@@ -21,8 +21,6 @@
 #include <string>
 #include <algorithm>
 
-static const int output_prec = 16;
-
 using namespace boost;
 using namespace interval_lib;
 
@@ -31,8 +29,8 @@ typedef interval<double, interval_traits<double,
 					 save_state<rounded_transc_opp<double> >,
 					 checking_lax<double> > > R;
 
-static unsigned nb_errors;
-static std::string test_name;
+unsigned nb_errors;
+std::string test_name;
 
 struct test {
   static void init(const std::string& n) {

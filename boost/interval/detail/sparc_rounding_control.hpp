@@ -28,6 +28,10 @@
 #  error This header is only intended for SPARC CPUs.
 #endif
 
+#ifdef __SUNPRO_CC
+#  include <ieeefp.h>
+#endif
+
 
 namespace boost {
   namespace interval_lib {
@@ -41,6 +45,8 @@ struct sparc_rounding_control
   {
 #   if defined(__GNUC__)
     __asm__ __volatile__("ld %0, %%fsr" : : "m"(mode));
+#   elif defined (__SUNPRO_CC)
+    fpsetround(fp_rnd(mode));
 #   elif defined(__KCC)
     asm("sethi %hi(mode), %o1");
     asm("ld [%o1+%lo(mode)], %fsr");
@@ -53,6 +59,8 @@ struct sparc_rounding_control
   {
 #   if defined(__GNUC__)
     __asm__ __volatile__("st %%fsr, %0" : "=m"(mode));
+#   elif defined (__SUNPRO_CC)
+    mode = fpgetround();
 #   elif defined(__KCC)
 #     error KCC on Sun SPARC get_round_mode: please fix me
     asm("st %fsr, [mode]");
@@ -61,10 +69,17 @@ struct sparc_rounding_control
 #   endif
   }
 
+#if defined(__SUNPRO_CC)
+  static void downward()   { set_rounding_mode(FP_RM); }
+  static void upward()     { set_rounding_mode(FP_RP); }
+  static void tonearest()  { set_rounding_mode(FP_RN); }
+  static void towardzero() { set_rounding_mode(FP_RZ); }
+#else
   static void downward()   { set_rounding_mode(0xc0000000); }
   static void upward()     { set_rounding_mode(0x80000000); }
   static void tonearest()  { set_rounding_mode(0x00000000); }
   static void towardzero() { set_rounding_mode(0x40000000); }
+#endif
 };
 
     } // namespace detail
