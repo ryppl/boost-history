@@ -610,7 +610,7 @@ namespace boost
 namespace io
 {
 
-repeat_char  multi_skipl( std::streamsize count, bool final_sync = false );
+repeat_char  skip_lines( std::streamsize count, bool final_sync = false );
 
 template &lt; typename Ch, class Tr &gt;
     std::basic_istream&lt;Ch, Tr&gt; &amp;  skipl( std::basic_istream&lt;Ch, Tr&gt; &amp;is );
@@ -623,7 +623,7 @@ template &lt; typename Ch, class Tr &gt;
 
 <blockquote><pre>
 <em>smanip</em>
-boost:io::multi_skipl( std::streamsize count, bool final_sync = false );
+boost:io::skip_lines( std::streamsize count, bool final_sync = false );
 </pre></blockquote>
 
 <p><strong>Returns:</strong> an object <code>s</code> such that <code>is &gt;&gt; s</code>, when <code>is</code> is a <code>std::basic_istream&lt;&gt;</code>, extracts (unformatted) and ignores all characters until <var>count</var> instances of the line-break character have been encountered (or when the end-of-file is reached), followed by a synchronization to <code>is</code> if <var>final_sync</var> is TRUE</p>
@@ -664,7 +664,7 @@ namespace boost
 namespace io
 {
 
-repeat_char  multi_newl( std::streamsize count, bool final_flush = false );
+repeat_char  new_lines( std::streamsize count, bool final_flush = false );
 
 template &lt; typename Ch, class Tr &gt;
     std::basic_ostream&lt;Ch, Tr&gt; &amp;  newl( std::basic_ostream&lt;Ch, Tr&gt; &amp;os );
@@ -677,7 +677,7 @@ template &lt; typename Ch, class Tr &gt;
 
 <blockquote><pre>
 <em>smanip</em>
-boost::io::multi_newl( std::streamsize count, bool final_flush = false );
+boost::io::new_lines( std::streamsize count, bool final_flush = false );
 </pre></blockquote>
 
 <p><strong>Returns:</strong> an object <code>s</code> such that <code>os &lt;&lt; s</code>, when <code>os</code> is a <code>std::basic_ostream&lt;&gt;</code>, inserts (unformatted) <var>count</var> instances of the line-break character, followed by a flush to <code>os</code> if <var>final_flush</var> is TRUE</p>
@@ -743,7 +743,7 @@ using <code>'\n'</code> (or <code>&quot;\n&quot;</code>) directly with
 		and Klaus Kreft
 	<dd>Section 3.2.2.1 of their <cite>Standard C++ IOStreams and Locales:
 		Advanced Programmer's Guide and Reference</cite> book is the
-		basis of <a href="#mnewl"><code>multi_newl</code></a> (called
+		basis of <a href="#mnewl"><code>new_lines</code></a> (called
 		<code>mendl</code> in the book).
 
 	<dt><a href="http://www.research.att.com/~bs/homepage.html">Bjarne Stroustrup</a>
@@ -761,8 +761,8 @@ using <code>'\n'</code> (or <code>&quot;\n&quot;</code>) directly with
 		href="#resetios"><code>resetios</code></a>, <a
 		href="#repeatch"><code>repeat_ch</code></a>, <a
 		href="#repeatchar"><code>repeat_char</code></a>, <a
-		href="#mnewl"><code>multi_newl</code></a>, <a
-		href="#mskipl"><code>multi_skipl</code></a>, and <a
+		href="#mnewl"><code>new_lines</code></a>, <a
+		href="#mskipl"><code>skip_lines</code></a>, and <a
 		href="#ios_form"><code>basic_ios_form</code></a>.  Contributed
 		<cite><a href="../test/iomanip_test.cpp">iomanip_test.cpp</a></cite>.
 </dl>

@@ -25,7 +25,7 @@ namespace io
 
 //  Forward declarations  ----------------------------------------------------//
 
-repeat_char  multi_newl( std::streamsize count, bool final_flush = false );
+repeat_char  new_lines( std::streamsize count, bool final_flush = false );
 
 template < typename Ch, class Tr >
     std::basic_ostream<Ch, Tr> &  newl( std::basic_ostream<Ch, Tr> &os );
@@ -35,7 +35,7 @@ template < typename Ch, class Tr >
 
 inline
 repeat_char
-multi_newl
+new_lines
 (
     std::streamsize  count,
     bool             final_flush  // = false
@@ -52,7 +52,7 @@ newl
     std::basic_ostream<Ch, Tr> &  os
 )
 {
-    return os << multi_newl( 1 );
+    return os << new_lines( 1 );
 }
 
 

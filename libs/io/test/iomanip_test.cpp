@@ -7,7 +7,7 @@
 //  See <http://www.boost.org/libs/io/> for the library's home page.
 
 //  Revision History
-//   22 Jan 2004  Initial version (Daryle Walker)
+//   29 Aug 2004  Initial version (Daryle Walker)
 
 #include <boost/io/iomanip.hpp>      // for boost::io::newl, etc.
 #include <boost/test/unit_test.hpp>  // for main, BOOST_CHECK_EQUAL, etc.
@@ -156,57 +156,57 @@ resetios_unit_test
     BOOST_CHECK_EQUAL( ' ', ss.fill() );
 }
 
-// Unit test for multi_newl
+// Unit test for new_lines
 void
-multi_newl_unit_test
+new_lines_unit_test
 (
 )
 {
-    using boost::io::multi_newl;
+    using boost::io::new_lines;
 
     sync_count_stringbuf  scsb;
     std::ostream          os( &scsb );
 
     // Just like newl
-    os << "Hello" << multi_newl( 1, false ) << "There";
+    os << "Hello" << new_lines( 1, false ) << "There";
     BOOST_CHECK_EQUAL( scsb.str(), "Hello\nThere" );
     BOOST_CHECK_EQUAL( 0ul, scsb.sync_count() );
 
     // Doing several
-    os << ',' << multi_newl( 2 ) << "Boosters!";
+    os << ',' << new_lines( 2 ) << "Boosters!";
     BOOST_CHECK_EQUAL( scsb.str(), "Hello\nThere,\n\nBoosters!" );
     BOOST_CHECK_EQUAL( 0ul, scsb.sync_count() );
 
     // Do a flush
-    os << multi_newl( 3, true );
+    os << new_lines( 3, true );
     BOOST_CHECK_EQUAL( scsb.str(), "Hello\nThere,\n\nBoosters!\n\n\n" );
     BOOST_CHECK_EQUAL( 1ul, scsb.sync_count() );
 }
 
-// Unit test for multi_skipl
+// Unit test for skip_lines
 void
-multi_skipl_unit_test
+skip_lines_unit_test
 (
 )
 {
-    using boost::io::multi_skipl;
+    using boost::io::skip_lines;
 
     sync_count_stringbuf  scsb( "Hello\nThere\n\nBoosters!\nGood\n\nBye Now." );
     std::istream          is( &scsb );
     std::string           scratch;
 
     // Just like skipl
-    is >> multi_skipl( 1, false ) >> scratch;
+    is >> skip_lines( 1, false ) >> scratch;
     BOOST_CHECK_EQUAL( scratch, "There" );
     BOOST_CHECK_EQUAL( 0ul, scsb.sync_count() );
 
     // Skip over two lines
-    is >> multi_skipl( 2 ) >> scratch;
+    is >> skip_lines( 2 ) >> scratch;
     BOOST_CHECK_EQUAL( scratch, "Boosters!" );
     BOOST_CHECK_EQUAL( 0ul, scsb.sync_count() );
 
     // Do a sync
-    is >> multi_skipl( 3, true ) >> scratch;
+    is >> skip_lines( 3, true ) >> scratch;
     BOOST_CHECK_EQUAL( scratch, "Bye" );
     BOOST_CHECK_EQUAL( 1ul, scsb.sync_count() );
 }
@@ -292,8 +292,8 @@ init_unit_test_suite
     test->add( BOOST_TEST_CASE(newl_unit_test) );
     test->add( BOOST_TEST_CASE(skipl_unit_test) );
     test->add( BOOST_TEST_CASE(resetios_unit_test) );
-    test->add( BOOST_TEST_CASE(multi_newl_unit_test) );
-    test->add( BOOST_TEST_CASE(multi_skipl_unit_test) );
+    test->add( BOOST_TEST_CASE(new_lines_unit_test) );
+    test->add( BOOST_TEST_CASE(skip_lines_unit_test) );
     test->add( BOOST_TEST_CASE(ios_form_unit_test) );
 
     return test;

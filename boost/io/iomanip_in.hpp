@@ -25,7 +25,7 @@ namespace io
 
 //  Forward declarations  ----------------------------------------------------//
 
-repeat_char  multi_skipl( std::streamsize count, bool final_sync = false );
+repeat_char  skip_lines( std::streamsize count, bool final_sync = false );
 
 template < typename Ch, class Tr >
     std::basic_istream<Ch, Tr> &  skipl( std::basic_istream<Ch, Tr> &is );
@@ -35,7 +35,7 @@ template < typename Ch, class Tr >
 
 inline
 repeat_char
-multi_skipl
+skip_lines
 (
     std::streamsize  count,
     bool             final_sync  // = false
@@ -52,7 +52,7 @@ skipl
     std::basic_istream<Ch, Tr> &  is
 )
 {
-    return is >> multi_skipl( 1 );
+    return is >> skip_lines( 1 );
 }
 
 
