@@ -54,7 +54,13 @@ class bigint : boost::operators<bigint> {
       // read in ASCII digits till it stops.
       while(is.get(c) && isdigit(c))
 	str.push_back(c);
-      is.putback(c);
+      if(is.fail())
+        // clear error state
+        is.clear();
+      else
+        // put back the last character retrieved
+        is.putback(c);
+
       *this = bigint(str);
       return is;
     }
@@ -97,9 +103,22 @@ public:
   ~bigint() {
     mpz_clear(gmp_value_);
   }
-    
-  bool operator!() const {
+
+
+  bool is_zero() const {
     return mpz_sgn(gmp_value_) == 0;
+  }
+    
+  bool positive() const {
+    return mpz_sgn(gmp_value_) > 0;
+  }
+
+  bool negative() const {
+    return mpz_sgn(gmp_value_) < 0;
+  }
+
+  bool operator!() const {
+    return this->is_zero();
   }
   
   bool operator<(bigint const& other) const {
