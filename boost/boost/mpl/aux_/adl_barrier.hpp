@@ -47,7 +47,7 @@ namespace aux { using namespace mpl_::aux; }
 
 #endif
 
-#if BOOST_WORKAROUND(BOOST_MPL_CFG_GCC, <= 0x0295)
+#if BOOST_WORKAROUND(BOOST_MPL_CFG_GCC, <= 0x0295) || BOOST_WORKAROUND(__MWERKS__, BOOST_TESTED_AT(0x3202))
 #   define BOOST_MPL_AUX_ADL_BARRIER_DECL(type) \
     namespace boost { namespace mpl { using ::mpl_::type; } } \
 /**/
