@@ -12,7 +12,7 @@
  * no guarantees about its quality, correctness or reliability.
  *
  * Author acknowledges the support of the Faculty of Civil Engineering, 
- * Zagreb, Croatia.
+ * University of Zagreb, Croatia.
  *
  */
 
@@ -52,12 +52,75 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
 
   // matrix_traits<> generic version: 
   template <typename M>
-  struct matrix_traits {}; 
+  struct matrix_traits 
+  {
+    // typedefs:
+    //   value_type
+    //   pointer
+    //   ordering_type
+    // static functions:
+    //   pointer storage()
+    //   int size1()
+    //   int size2()
+    //   int leading_dimension()
+  }; 
 
   // storage ordering tags: 
   struct row_major_t {};
   struct column_major_t {};
 
+  // upper/lower tags:
+  struct upper_t {};
+  struct lower_t {};
+
+  //
+  // Free functions that automatically rely on the correct traits class
+  //
+  
+  template < typename vector_type >
+  typename vector_type::value_type* vector_storage(vector_type& v)
+  { return vector_traits< vector_type >::storage( v ) ; }
+
+  template < typename vector_type >
+  const typename vector_type::value_type* vector_storage(const vector_type& v)
+  { return vector_traits< const vector_type >::storage( v ) ; }
+
+  template < typename vector_type >
+  int size(vector_type& v)
+  { return vector_traits< vector_type >::size( v ) ; }
+
+  template < typename vector_type >
+  int stride(vector_type& v)
+  { return vector_traits< vector_type >::stride( v ) ; }
+
+  template < typename matrix_type >
+  typename matrix_type::value_type* matrix_storage(matrix_type& m)
+  { return matrix_traits< matrix_type >::storage( m ) ; }
+  
+  template < typename matrix_type >
+  const typename matrix_type::value_type* matrix_storage(const matrix_type& m)
+  { return matrix_traits< const matrix_type >::storage( m ) ; }
+  
+  template < typename matrix_type >
+  int size1(matrix_type& m)
+  { return matrix_traits< matrix_type >::size1( m ) ; }
+  
+  template < typename matrix_type >
+  int size2(matrix_type& m)
+  { return matrix_traits< matrix_type >::size2( m ) ; }
+  
+  template < typename matrix_type >
+  int stride1(matrix_type& m)
+  { return matrix_traits< matrix_type >::stride1( m ) ; }
+  
+  template < typename matrix_type >
+  int stride2(matrix_type& m)
+  { return matrix_traits< matrix_type >::stride2( m ) ; }
+  
+  template < typename matrix_type >
+  int leading_dimension(matrix_type& m)
+  { return matrix_traits< matrix_type >::leading_dimension( m ) ; }
+  
 }}}}  
 
 #endif 

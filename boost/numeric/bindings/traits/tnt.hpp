@@ -12,12 +12,15 @@
  * no guarantees about its quality, correctness or reliability.
  *
  * Author acknowledges the support of the Faculty of Civil Engineering, 
- * Zagreb, Croatia.
+ * University of Zagreb, Croatia.
  *
  */
 
 #ifndef BOOST_NUMERIC_BINDINGS_TRAITS_TNT_H
 #define BOOST_NUMERIC_BINDINGS_TRAITS_TNT_H
+
+// Roldan Pozo's TNT (Template Numerical Toolkit)
+// see: http://math.nist.gov/tnt/index.html
 
 #include <boost/numeric/bindings/traits/traits.hpp>
 #include <tnt/tnt_array1d.h>

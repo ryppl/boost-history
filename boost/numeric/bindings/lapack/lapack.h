@@ -59,19 +59,22 @@ extern "C"
 {
   typedef int (*fortran_function_type)(...) ;
 
-  void LAPACK_DGETRF(int* m, int* n, double*   a, int* lda, int* ipiv, int* info) ;
-  void LAPACK_ZGETRF(int* m, int* n, dcomplex* a, int* lda, int* ipiv, int* info) ;
+  void LAPACK_DGETRF(const int* m, const int* n, double*   a, const int* lda, int* ipiv, int* info) ;
+  void LAPACK_ZGETRF(const int* m, const int* n, dcomplex* a, const int* lda, int* ipiv, int* info) ;
 
-  void LAPACK_DGETRS(char* trans, int *n, int* nrhs, double*   a, int* lda, int* ipiv, double*   b, int* ldb, int* info);
-  void LAPACK_ZGETRS(char* trans, int *n, int* nrhs, dcomplex* a, int* lda, int* ipiv, dcomplex* b, int* ldb, int* info);
+  void LAPACK_DGETRS(const char* trans, const int *n, const int* nrhs, const double*   a, const int* lda, const int* ipiv, double*   b, const int* ldb, int* info);
+  void LAPACK_ZGETRS(const char* trans, const int *n, const int* nrhs, const dcomplex* a, const int* lda, const int* ipiv, dcomplex* b, const int* ldb, int* info);
 
-  // void LAPACK_DSYTRS(char* trans, int *n, int* nrhs, double*               a, int* lda, int* ipiv, double*               b, int* ldb, int* info);
-  // void LAPACK_ZSYTRS(char* trans, int *n, int* nrhs, std::complex<double>* a, int* lda, int* ipiv, std::complex<double>* b, int* ldb, int* info);
+  void LAPACK_DSYTRF(const char* uplo, const int* n, double*   a, const int* lda, int* ipiv, double* work, const int* lwork, int* info) ;
+  void LAPACK_ZSYTRF(const char* uplo, const int* n, dcomplex* a, const int* lda, int* ipiv, dcomplex* work, const int* lwork, int* info) ;
 
-  void LAPACK_DGEEV(char* jobvl, char* jobvr, int * n, double*   a, int* lda, double* wr, double* wi, double* vl, int* ldvl, double* vr, int* ldvr, double* work, int* lwork, int* info);
-  void LAPACK_ZGEEV(char* jobvl, char* jobvr, int * n, dcomplex* a, int* lda, dcomplex* w, dcomplex* vl, int* ldvl, dcomplex* vr, int* ldvr, dcomplex* work, int* lwork, double* rwork, int* info);
+  void LAPACK_DSYTRS(const char* uplo, const int *n, const int* nrhs, const double*   a, const int* lda, const int* ipiv, double*               b, const int* ldb, int* info);
+  void LAPACK_ZSYTRS(const char* uplo, const int *n, const int* nrhs, const dcomplex* a, const int* lda, const int* ipiv, dcomplex* b, const int* ldb, int* info);
 
-  // void LAPACK_DGEES(char* jobvl, char* sort, fortran_function_type select, int* n, double*   a, int* lda, int* sdim, double*   wr, double*   wi, double*   vs, int* ldvs, double*   work, int* lwork, int* bwork, int* info);
-  // void LAPACK_ZGEES(char* jobvl, char* sort, fortran_function_type select, int* n, dcomplex* a, int* lda, int* sdim, dcomplex* w, dcomplex* vs, int* ldvs, dcomplex* work, int* lwork, double* rwork, int* bwork, int* info);
+  void LAPACK_DGEEV(const char* jobvl, const char* jobvr, const int * n, double*   a, const int* lda, double* wr, double* wi, double* vl, const int* ldvl, double* vr, const int* ldvr, double* work, const int* lwork, int* info);
+  void LAPACK_ZGEEV(const char* jobvl, const char* jobvr, const int * n, dcomplex* a, const int* lda, dcomplex* w, dcomplex* vl, const int* ldvl, dcomplex* vr, const int* ldvr, dcomplex* work, const int* lwork, double* rwork, int* info);
+
+  // void LAPACK_DGEES(const char* jobvl, const char* sort, fortran_function_type select, const int* n, double*   a, const int* lda, int* sdim, double*   wr, double*   wi, double*   vs, const int* ldvs, double*   work, const int* lwork, int* bwork, int* info);
+  // void LAPACK_ZGEES(const char* jobvl, const char* sort, fortran_function_type select, const int* n, dcomplex* a, const int* lda, int* sdim, dcomplex* w, dcomplex* vs, int* ldvs, dcomplex* work, const int* lwork, double* rwork, int* bwork, int* info);
 }
 #endif // boost_numeric_bindings_lapack_lapack_h

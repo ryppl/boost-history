@@ -12,7 +12,7 @@
  * no guarantees about its quality, correctness or reliability.
  *
  * Author acknowledges the support of the Faculty of Civil Engineering, 
- * Zagreb, Croatia.
+ * University of Zagreb, Croatia.
  *
  */
 

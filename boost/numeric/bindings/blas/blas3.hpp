@@ -42,12 +42,9 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
     const int k = TRANSA == traits::NO_TRANSPOSE 
       ? matraits::size2( a )
       : matraits::size1( a ) ;
-    const int k1 = TRANSB == traits::NO_TRANSPOSE 
-      ? mbtraits::size1( b )
-      : mbtraits::size2( b );
+    assert( k ==  ( TRANSB == traits::NO_TRANSPOSE ? mbtraits::size1( b ) : mbtraits::size2( b ) ) ) ;
     assert( m == mctraits::size1( c ) ); 
     assert( n == mctraits::size2( c ) ); 
-    assert( k == k1 ); 
     const int lda = matraits::leading_dimension( a );
     const int ldb = mbtraits::leading_dimension( b );
     const int ldc = mctraits::leading_dimension( c );

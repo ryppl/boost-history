@@ -11,11 +11,17 @@ namespace boost { namespace numeric { namespace bindings { namespace lapack {
   {
     typedef typename ::boost::numeric::bindings::traits::value_traits< T >::value_type bind_type ;
 
-    typedef void (*getrf_type)(int* m, int* n, bind_type* a, int* lda, int* ipiv, int* info) ;
-    typedef void (*getrs_type)(char* trans, int *n, int* nrhs, bind_type* a, int* lda, int* ipiv, bind_type* b, int* ldb, int* info);
+    typedef void (*getrf_type)(const int* m, const int* n, bind_type* a, const int* lda, int* ipiv, int* info) ;
+    typedef void (*getrs_type)(const char* trans, const int *n, const int* nrhs, const bind_type* a, const int* lda, const int* ipiv, bind_type* b, const int* ldb, int* info);
+
+    typedef void (*sytrf_type)(const char* m, const int* n, bind_type* a, const int* lda, int* ipiv, bind_type* work, const int* lwork, int* info) ;
+    typedef void (*sytrs_type)(const char* trans, const int *n, const int* nrhs, const bind_type* a, const int* lda, const int* ipiv, bind_type* b, const int* ldb, int* info);
 
     static getrf_type getrf ;
     static getrs_type getrs ;
+
+    static sytrf_type sytrf ;
+    static sytrs_type sytrs ;
   };
 
   extern double* work_buffer ;

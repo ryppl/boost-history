@@ -4,8 +4,8 @@
 //  warranty, and with no claim as to its suitability for any purpose.
 //  Copyright (C) 2002 Si-Lab b.v.b.a.
 
-#ifndef femtown_valuetraits_hpp
-#define femtown_valuetraits_hpp
+#ifndef boost_numeric_bindings_traits_value_traits_hpp
+#define boost_numeric_bindings_traits_value_traits_hpp
 
 ///
 /// ties machine-dependent data-types to FEMTown specific data-types
@@ -53,23 +53,6 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     typedef int value_type ;
   };
 
-  template < typename T >
-  bool eq(const T& a, const T& b, typename value_traits< T >::value_type tolerance) 
-  { return std::abs( a - b ) < tolerance ; }
-
-  template < typename T >
-  struct is_equal
-  {
-    typedef typename value_traits< T >::value_type value_type ;
-
-    is_equal(const value_type & tolerance) : tolerance_( tolerance ) {}
-
-    bool operator()(const T& a, const T& b) const
-    { return eq< T >(a,b,tolerance_) ; }
-
-    value_type tolerance_ ;
-  };
-
 }}}}
 
-#endif // femtown_valuetraits_hpp
+#endif // boost_numeric_bindings_traits_value_traits_hpp

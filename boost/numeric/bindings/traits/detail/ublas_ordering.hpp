@@ -16,29 +16,28 @@
  *
  */
 
-#ifndef BOOST_NUMERIC_BINDINGS_TRAITS_C_ARRAY_H
-#define BOOST_NUMERIC_BINDINGS_TRAITS_C_ARRAY_H
+#ifndef BOOST_NUMERIC_BINDINGS_TRAITS_UBLAS_ORDERING_H
+#define BOOST_NUMERIC_BINDINGS_TRAITS_UBLAS_ORDERING_H
 
-#include <boost/numeric/bindings/traits/traits.hpp>
+#include <boost/numeric/ublas/config.hpp> 
 
 namespace boost { namespace numeric { namespace bindings { namespace traits {
 
-  // built-in array
-  template <typename T, std::size_t N> 
-  struct vector_traits<T[N]> 
-  : default_vector_traits <T[N], T> 
-  {
-    static T* storage (T (&a)[N]) { return a; }
-    static int size (T (&)[N]) { return N; } 
-  }; 
+  namespace detail {
 
-  template <typename T, std::size_t N> 
-  struct vector_traits<T const [N]> 
-  : default_vector_traits <T const [N], T> 
-  {
-    static T const* storage (T const (&a)[N]) { return a; } 
-    static int size (T const (&)[N]) { return N; } 
-  }; 
+    template <typename StOrdTag>
+    struct ublas_ordering {};
+    
+    template<> 
+    struct ublas_ordering<boost::numeric::ublas::row_major_tag> {
+      typedef row_major_t type; 
+    };
+    template<> 
+    struct ublas_ordering<boost::numeric::ublas::column_major_tag> {
+      typedef column_major_t type; 
+    };
+
+  }
 
 }}}}
 
