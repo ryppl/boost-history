@@ -73,7 +73,7 @@
         <dia:real val="7.2"/>
       </dia:attribute>
       <dia:attribute name="name">
-        <dia:string>#boost:smart_enum#</dia:string>
+        <dia:string>#smart_enum#</dia:string>
       </dia:attribute>
       <dia:attribute name="stereotype">
         <dia:string/>
