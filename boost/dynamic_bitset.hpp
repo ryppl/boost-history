@@ -292,8 +292,9 @@ public:
     dynamic_bitset(const dynamic_bitset& b);
 
     void swap(dynamic_bitset& b);
-
     dynamic_bitset& operator=(const dynamic_bitset& b);
+
+    allocator_type get_allocator() const;
 
     // size changing operations
     void resize(size_type num_bits, bool value = false);
@@ -343,6 +344,9 @@ public:
 
     size_type size() const;
     size_type num_blocks() const;
+    size_type max_size() const;
+    void reserve(size_type n);
+    size_type capacity() const;
 
     bool is_subset_of(const dynamic_bitset& a) const;
     bool is_proper_subset_of(const dynamic_bitset& a) const;
@@ -577,6 +581,13 @@ operator=(const dynamic_bitset<Block, Allocator>& b)
     dynamic_bitset<Block, Allocator> tmp(b);
     this->swap(tmp);
     return *this;
+}
+
+template <typename Block, typename Allocator>
+inline typename dynamic_bitset<Block, Allocator>::allocator_type
+dynamic_bitset<Block, Allocator>::get_allocator() const
+{
+    return m_bits.get_allocator();
 }
 
 //-----------------------------------------------------------------------------
@@ -1113,6 +1124,50 @@ dynamic_bitset<Block, Allocator>::num_blocks() const
 }
 
 template <typename Block, typename Allocator>
+inline typename dynamic_bitset<Block, Allocator>::size_type
+dynamic_bitset<Block, Allocator>::max_size() const
+{
+    // Semantics of vector<>::max_size() aren't very clear
+    // (see lib issue 197) and many library implementations
+    // simply return dummy values, _unrelated_ to the underlying
+    // allocator.
+    //
+    // Given these problems, I was tempted to not provide this
+    // function at all but the user could need it if he provides
+    // his own allocator.
+    //
+
+    const size_type m = detail::vector_max_size_workaround(m_bits);
+
+    return m <= (size_type(-1)/bits_per_block) ?
+        m * bits_per_block :
+        size_type(-1);
+}
+
+template <typename Block, typename Allocator>
+inline void dynamic_bitset<Block, Allocator>::reserve(size_type n)
+{
+    assert(n <= max_size()); // PRE - G.P.S.
+    m_bits.reserve(calc_num_blocks(n));
+}
+
+template <typename Block, typename Allocator>
+typename dynamic_bitset<Block, Allocator>::size_type
+dynamic_bitset<Block, Allocator>::capacity() const
+{
+    // capacity is m_bits.capacity() * bits_per_block
+    // unless that one overflows
+    const size_type m = static_cast<size_type>(-1);
+    const size_type q = m / bits_per_block;
+
+    const size_type c = m_bits.capacity();
+
+    return c <= q ?
+        c * bits_per_block :
+        m;
+}
+
+template <typename Block, typename Allocator>
 bool dynamic_bitset<Block, Allocator>::
 is_subset_of(const dynamic_bitset<Block, Allocator>& a) const
 {
@@ -1427,12 +1482,12 @@ dynamic_bitset<Block, Allocator>::m_rearrange_extracted_bits(size_type
 {
     // Reverse the order of the blocks and, if needed, shift to the right
     std::reverse(m_bits.begin(), m_bits.end());
-    
+
     const int offset = bit_index(bits_read);
     if (offset)
         (*this) >>= (bits_per_block - offset);
     resize(bits_read); // this is never a grow
-    
+
 }
 
 
@@ -1440,12 +1495,14 @@ template <typename Ch, typename Tr, typename Block, typename Alloc>
 std::basic_istream<Ch, Tr>&
 operator>>(std::basic_istream<Ch, Tr>& is, dynamic_bitset<Block, Alloc>& b)
 {
-    // G.P.S. size_t vs size_type to be inspected
 
     using namespace std;
 
+    typedef dynamic_bitset<Block, Alloc>::size_type size_type;
+
     const streamsize w = is.width();
-    const size_t limit = w > 0 ? w : static_cast<size_t>(-1); // G.P.S. stream_size?
+    const size_type limit = 0 < w && w < b.max_size()?
+                            w : b.max_size();
 
     const ios_base::iostate ok = ios_base::goodbit;
     ios_base::iostate err = ok; // G.P.S.
@@ -1456,13 +1513,13 @@ operator>>(std::basic_istream<Ch, Tr>& is, dynamic_bitset<Block, Alloc>& b)
     const Ch one  = is.widen('1');
 
     typename basic_istream<Ch, Tr>::sentry iprefix(is); // skips whitespaces
-    size_t bits_stored = 0;
+    size_type bits_stored = 0;
     try {
 
         if (iprefix) {
-            
+
             b.clear();
-            
+
             basic_streambuf <Ch, Tr> * buf = is.rdbuf();
             Block * current = 0;
             const Block max_mask
@@ -1471,17 +1528,17 @@ operator>>(std::basic_istream<Ch, Tr>& is, dynamic_bitset<Block, Alloc>& b)
 
             typename Tr::int_type c = buf->sgetc(); // G.P.S.
             for( ; err == ok && bits_stored < limit; c = buf->snextc() ) {
-                
+
                 if (Tr::eq_int_type(Tr::eof(), c))
                     err |= ios_base::eofbit; // G.P.S.
                 else {
                     const Ch to_c = Tr::to_char_type(c);
                     const bool is_one = Tr::eq(to_c, one);
-                    
+
                     if (!is_one && !Tr::eq(to_c, zero))
                         break; // non digit character
-                    
-                    // need a new block; put it at the most
+
+                    // need a new block? put it at the most
                     // significant end, for now
                     //
                     if (mask == 0) {
@@ -1489,14 +1546,14 @@ operator>>(std::basic_istream<Ch, Tr>& is, dynamic_bitset<Block, Alloc>& b)
                         current = &b.m_highest_block();
                         mask = max_mask;
                     }
-                    
+
                     if(is_one)
                         *current |= mask;
-                    
+
                     mask >>= 1;
                     ++bits_stored;
                 }
-                
+
             } // for
 
 
@@ -1530,9 +1587,8 @@ operator>>(std::basic_istream<Ch, Tr>& is, dynamic_bitset<Block, Alloc>& b)
 
     }
 
-    // Set error bits: note that this may throw
-    if (err != ios_base::goodbit)
-        is.setstate (err);
+    if (err != ok)
+        is.setstate (err); // may throw
 
     return is;
 
