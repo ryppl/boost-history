@@ -1,4 +1,25 @@
 
+//   The following code was taken from tuple_basic.hpp/tuple_basic_no_partial_spec.hpp
+//   with the kind permission of Jaakko Järvi.
+//   The only modification done was to change namespaces.
+//   Comments below are that of the orginal version. - RR
+
+// Copyright (C) 1999, 2000 Jaakko Järvi (jaakko.jarvi@cs.utu.fi)
+// Copyright (C) 2001 Doug Gregor (gregod@rpi.edu)
+// Copyright (C) 2001 Gary Powell (gary.powell@sierra.com)
+//
+// Permission to copy, use, sell and distribute this software is granted
+// provided this copyright notice appears in all copies. 
+// Permission to modify the code and to distribute modified code is granted
+// provided this copyright notice appears in all copies, and a notice 
+// that the code was modified is included with the copyright notice.
+//
+// This software is provided "as is" without express or implied warranty, 
+// and with no claim as to its suitability for any purpose.
+
+// For more information, see http://www.boost.org or http://lambda.cs.utu.fi 
+
+
 #ifndef TUPPLE_DETAIL_HPP
 #define TUPPLE_DETAIL_HPP
 
@@ -14,71 +35,52 @@ namespace tupple {
 
 struct null_type {};
 
-//   The following code was taken from tuple_basic_no_partial_spec.hpp (boost 1.28.0)
-
 namespace detail {
 
-  // Takes a pointer and routes all assignments to whatever it points to
-  template<class T> struct assign_to_pointee
-  {
-  public:
-    assign_to_pointee(T* p) : ptr(p) {}
+      // Takes a pointer and routes all assignments to whatever it points to
+      template<typename T>
+      struct assign_to_pointee
+      {
+      public:
+        explicit assign_to_pointee(T* p) : ptr(p) {}
 
-    operator T&()
-    { return *ptr; }
+        template<typename Other>
+        assign_to_pointee& operator=(const Other& other)
+        {
+          *ptr = other;
+          return *this;
+        }
 
-    /* operator const T&() const
-    { return *ptr; } */
+      private:
+        T* ptr;
+      };
+
+      // Swallows any assignment
+      struct swallow_assign
+      {
+        template<typename T>
+        swallow_assign& operator=(const T&)
+        {
+          return *this;
+        }
+      };
+
+    template <typename T> struct add_const_reference : add_reference<typename add_const<T>::type> {};
+} // end of namespace detail
 
 
-    template<typename Other>
-    assign_to_pointee& operator=(const Other& other)
-    {
-      *ptr = other;
-      return *this;
+    // "ignore" allows tuple positions to be ignored when using "tie". 
+    namespace {
+#if (defined(BOOST_MSVC) && BOOST_MSVC <= 1300) || (defined(__DECCXX_VER) && __DECCXX_VER <= 60590031)
+      static
+#endif 
+      detail::swallow_assign ignore;
     }
-
-  private:
-    T* ptr;
-  };
-
-} // namespace detail
-
-
-//   The following code was taken from tuple_basic.hpp (boost 1.25.0)
-//   with the kind permission of Jaakko Järvi.
-//   The only modification done was to remove namespaces.
-//   Comments below are that of the orginal version. (RR)
-
-
-// Copyright (C) 1999, 2000 Jaakko Järvi (jaakko.jarvi@cs.utu.fi)
-//
-// Permission to copy, use, sell and distribute this software is granted
-// provided this copyright notice appears in all copies.
-// Permission to modify the code and to distribute modified code is granted
-// provided this copyright notice appears in all copies, and a notice
-// that the code was modified is included with the copyright notice.
-//
-// This software is provided "as is" without express or implied warranty,
-// and with no claim as to its suitability for any purpose.
-
-// For more information, see http://www.boost.org
 
 
 // access traits lifted from detail namespace to be part of the interface,
 // (Joel de Guzman's suggestion). Rationale: get functions are part of the
 // interface, so should the way to express their return types be.
-
-struct swallow_assign {
-
-  template<typename T>
-  swallow_assign& operator=(const T&) {
-    return *this;
-  }
-};
-
-// "ignore" allows tuple positions to be ignored when using "tie".
- swallow_assign ignore;
 
 
 template <class T> struct access_traits {
@@ -92,6 +94,7 @@ template <class T> struct access_traits {
 // and when binding temporaries to references, the reference must
 // be non-volatile and const. 8.5.3. (5)
 };
+
 #ifndef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
 template <class T> struct access_traits<T&> {
 
