@@ -156,19 +156,19 @@ void test_matrix_vector () {
 #ifdef USE_BOUNDED_ARRAY
     std::cout << "float, bounded_array" << std::endl;
     test_my_matrix_vector<numerics::vector<float, numerics::forward, numerics::bounded_array<float, 3> >,
-                          numerics::vector_of_vector<float, numerics::row_major<>, numerics::bounded_array<numerics::bounded_array<float, 3>, 3> >, 3> () ();
+                          numerics::vector_of_vector<float, numerics::row_major<>, numerics::bounded_array<numerics::bounded_array<float, 3>, 3 + 1> >, 3> () ();
 
     std::cout << "double, bounded_array" << std::endl;
     test_my_matrix_vector<numerics::vector<double, numerics::forward, numerics::bounded_array<double, 3> >,
-                          numerics::vector_of_vector<double, numerics::row_major<>, numerics::bounded_array<numerics::bounded_array<double, 3>, 3> >, 3> () ();
+                          numerics::vector_of_vector<double, numerics::row_major<>, numerics::bounded_array<numerics::bounded_array<double, 3>, 3 + 1> >, 3> () ();
 
     std::cout << "std::complex<float>, bounded_array" << std::endl;
     test_my_matrix_vector<numerics::vector<std::complex<float>, numerics::forward, numerics::bounded_array<std::complex<float>, 3> >,
-                          numerics::vector_of_vector<std::complex<float>, numerics::row_major<>, numerics::bounded_array<numerics::bounded_array<std::complex<float>, 3>, 3> >, 3> () ();
+                          numerics::vector_of_vector<std::complex<float>, numerics::row_major<>, numerics::bounded_array<numerics::bounded_array<std::complex<float>, 3>, 3 + 1> >, 3> () ();
 
     std::cout << "std::complex<double>, bounded_array" << std::endl;
     test_my_matrix_vector<numerics::vector<std::complex<double>, numerics::forward, numerics::bounded_array<std::complex<double>, 3> >,
-                          numerics::vector_of_vector<std::complex<double>, numerics::row_major<>, numerics::bounded_array<numerics::bounded_array<std::complex<double>, 3>, 3> >, 3> () ();
+                          numerics::vector_of_vector<std::complex<double>, numerics::row_major<>, numerics::bounded_array<numerics::bounded_array<std::complex<double>, 3>, 3 + 1> >, 3> () ();
 #endif
 
 #ifdef USE_UNBOUNDED_ARRAY
@@ -208,4 +208,5 @@ void test_matrix_vector () {
 #endif
 #endif
 }
+
 
