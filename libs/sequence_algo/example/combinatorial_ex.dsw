@@ -3,7 +3,7 @@ Microsoft Developer Studio Workspace File, Format Version 6.00
 
 ###############################################################################
 
-Project: "rcombo"=".\rcombo.dsp" - Package Owner=<4>
+Project: "combinatorial_ex1"=".\combinatorial_ex1.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -15,7 +15,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "rcomboex"=".\rcomboex.dsp" - Package Owner=<4>
+Project: "combinatorial_ex2"=".\combinatorial_ex2.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{

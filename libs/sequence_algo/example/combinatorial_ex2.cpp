@@ -1,4 +1,4 @@
-// rcomboex.cpp - Ask Marilyn Puzzle, Parade magazine 5/5/02 --------------//
+// combinatorial_ex2.cpp - Ask Marilyn Puzzle, Parade magazine 5/5/02 --------------//
 
 // Copyright © Philip F. Garofalo 2002. All rights reserved.
 // Permission to copy, use, modify, sell and distribute this software
@@ -183,7 +183,7 @@ int main()
     // each word is found to reduce the number of permutations to search,.
 
     cout << "\n\n--- More efficient way to solve the same problem ---\n\n";
-     WordSearch();   // find first word
+    WordSearch();   // find first word
     WordSearch();   // find second word
     WordSearch();   // find third and last word
         

@@ -1,5 +1,5 @@
-// rcombo.cpp -- Test program for r-permutation and r-combination generic functions
-//                   in rcombo.h.
+// combinatorial_ex1.cpp -- Test program for r-permutation and r-combination generic functions
+//                   in combinatorial.h.
 
 // Copyright © Philip F. Garofalo 2002. All rights reserved.
 // Permission to copy, use, modify, sell and distribute this software
