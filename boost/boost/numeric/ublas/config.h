@@ -208,6 +208,8 @@
 // Thanks to Kresimir Fresl for porting to Comeau.
 #ifdef __COMO__
 
+// Comeau lacks some specializations in <cmath>
+#define NUMERICS_C_MATH
 // Comeau 4.2.45 seems to have problems with NUMERICS_FRIEND_FUNCTION (this seems to be arguable).
 // Comeau allows to use iterator_base_traits.
 #define NUMERICS_USE_ITERATOR_BASE_TRAITS

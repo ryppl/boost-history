@@ -131,14 +131,18 @@ namespace boost { namespace numerics {
 
         // Assignment
         NUMERICS_INLINE
-        sparse_matrix &operator = (const sparse_matrix &m) { 
-            check (size1_ == m.size1_, bad_size ());
-            check (size2_ == m.size2_, bad_size ());
-            check (non_zeros_ == m.non_zeros_, bad_size ());
-            size1_ = m.size1_;
-            size2_ = m.size2_;
-            non_zeros_ = m.non_zeros_;
-            data () = m.data ();
+        sparse_matrix &operator = (const sparse_matrix &m) {
+            // Too unusual semantic.
+            // check (this != &m, external_logic ());
+            if (this != &m) {
+                check (size1_ == m.size1_, bad_size ());
+                check (size2_ == m.size2_, bad_size ());
+                check (non_zeros_ == m.non_zeros_, bad_size ());
+                size1_ = m.size1_;
+                size2_ = m.size2_;
+                non_zeros_ = m.non_zeros_;
+                data () = m.data ();
+            }
             return *this;
         }
         NUMERICS_INLINE
@@ -220,14 +224,17 @@ namespace boost { namespace numerics {
         // Swapping
         NUMERICS_INLINE
         void swap (sparse_matrix &m) {
-            check (this != &m, external_logic ());
-            check (size1_ == m.size1_, bad_size ());
-            check (size2_ == m.size2_, bad_size ());
-            check (non_zeros_ == m.non_zeros_, bad_size ());
-            std::swap (size1_, m.size1_);
-            std::swap (size2_, m.size2_);
-            std::swap (non_zeros_, m.non_zeros_);
-            data ().swap (m.data ());
+            // Too unusual semantic.
+            // check (this != &m, external_logic ());
+            if (this != &m) {
+                check (size1_ == m.size1_, bad_size ());
+                check (size2_ == m.size2_, bad_size ());
+                check (non_zeros_ == m.non_zeros_, bad_size ());
+                std::swap (size1_, m.size1_);
+                std::swap (size2_, m.size2_);
+                std::swap (non_zeros_, m.non_zeros_);
+                data ().swap (m.data ());
+            }
         }
 #ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
@@ -304,8 +311,10 @@ namespace boost { namespace numerics {
                 ++ i;
                 it = data ().lower_bound (functor_type::element (i, size1_, j, size2_));
             }
-            if (rank == 1 && index2 != j)
+            if (rank == 1 && index2 != j) {
+                i = size1_;
                 rank = 0;
+            }
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
             return const_iterator1 (*this, i);
 #else
@@ -334,8 +343,10 @@ namespace boost { namespace numerics {
                 ++ i;
                 it = data ().lower_bound (functor_type::element (i, size1_, j, size2_));
             }
-            if (rank == 1 && index2 != j)
+            if (rank == 1 && index2 != j) {
+                i = size1_;
                 rank = 0;
+            }
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
             return iterator1 (*this, i);
 #else
@@ -365,8 +376,10 @@ namespace boost { namespace numerics {
                 ++ j;
                 it = data ().lower_bound (functor_type::element (i, size1_, j, size2_));
             }
-            if (rank == 1 && index1 != i)
+            if (rank == 1 && index1 != i) {
+                j = size2_;
                 rank = 0;
+            }
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
             return const_iterator2 (*this, j);
 #else
@@ -396,8 +409,10 @@ namespace boost { namespace numerics {
                 ++ j;
                 it = data ().lower_bound (functor_type::element (i, size1_, j, size2_));
             }
-            if (rank == 1 && index1 != i)
+            if (rank == 1 && index1 != i) {
+                j = size2_;
                 rank = 0;
+            }
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
             return iterator2 (*this, j);
 #else
@@ -1154,14 +1169,18 @@ namespace boost { namespace numerics {
 
         // Assignment
         NUMERICS_INLINE
-        sparse_vector_of_sparse_vector &operator = (const sparse_vector_of_sparse_vector &m) { 
-            check (size1_ == m.size1_, bad_size ());
-            check (size2_ == m.size2_, bad_size ());
-            check (non_zeros_ == m.non_zeros_, bad_size ());
-            size1_ = m.size1_;
-            size2_ = m.size2_;
-            non_zeros_ = m.non_zeros_;
-            data () = m.data ();
+        sparse_vector_of_sparse_vector &operator = (const sparse_vector_of_sparse_vector &m) {
+            // Too unusual semantic.
+            // check (this != &m, external_logic ());
+            if (this != &m) {
+                check (size1_ == m.size1_, bad_size ());
+                check (size2_ == m.size2_, bad_size ());
+                check (non_zeros_ == m.non_zeros_, bad_size ());
+                size1_ = m.size1_;
+                size2_ = m.size2_;
+                non_zeros_ = m.non_zeros_;
+                data () = m.data ();
+            }
             return *this;
         }
         NUMERICS_INLINE
@@ -1243,14 +1262,17 @@ namespace boost { namespace numerics {
         // Swapping
         NUMERICS_INLINE
         void swap (sparse_vector_of_sparse_vector &m) {
-            check (this != &m, external_logic ());
-            check (size1_ == m.size1_, bad_size ());
-            check (size2_ == m.size2_, bad_size ());
-            check (non_zeros_ == m.non_zeros_, bad_size ());
-            std::swap (size1_, m.size1_);
-            std::swap (size2_, m.size2_);
-            std::swap (non_zeros_, m.non_zeros_);
-            data ().swap (m.data ());
+            // Too unusual semantic.
+            // check (this != &m, external_logic ());
+            if (this != &m) {
+                check (size1_ == m.size1_, bad_size ());
+                check (size2_ == m.size2_, bad_size ());
+                check (non_zeros_ == m.non_zeros_, bad_size ());
+                std::swap (size1_, m.size1_);
+                std::swap (size2_, m.size2_);
+                std::swap (non_zeros_, m.non_zeros_);
+                data ().swap (m.data ());
+            }
         }
 #ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
@@ -2351,17 +2373,21 @@ namespace boost { namespace numerics {
         // Assignment
         NUMERICS_INLINE
         compressed_matrix &operator = (const compressed_matrix &m) { 
-            check (size1_ == m.size1_, bad_size ());
-            check (size2_ == m.size2_, bad_size ());
-            check (non_zeros_ == m.non_zeros_, bad_size ());
-            size1_ = m.size1_;
-            size2_ = m.size2_;
-            non_zeros_ = m.non_zeros_;
-            filled1_ = m.filled1_;
-            filled2_ = m.filled2_;
-            index1_data () = m.index1_data ();
-            index2_data () = m.index2_data ();
-            value_data () = m.value_data ();
+            // Too unusual semantic.
+            // check (this != &m, external_logic ());
+            if (this != &m) {
+                check (size1_ == m.size1_, bad_size ());
+                check (size2_ == m.size2_, bad_size ());
+                check (non_zeros_ == m.non_zeros_, bad_size ());
+                size1_ = m.size1_;
+                size2_ = m.size2_;
+                non_zeros_ = m.non_zeros_;
+                filled1_ = m.filled1_;
+                filled2_ = m.filled2_;
+                index1_data () = m.index1_data ();
+                index2_data () = m.index2_data ();
+                value_data () = m.value_data ();
+            }
             return *this;
         }
         NUMERICS_INLINE
@@ -2443,18 +2469,21 @@ namespace boost { namespace numerics {
         // Swapping
         NUMERICS_INLINE
         void swap (compressed_matrix &m) {
-            check (this != &m, external_logic ());
-            check (size1_ == m.size1_, bad_size ());
-            check (size2_ == m.size2_, bad_size ());
-            check (non_zeros_ == m.non_zeros_, bad_size ());
-            std::swap (size1_, m.size1_);
-            std::swap (size2_, m.size2_);
-            std::swap (non_zeros_, m.non_zeros_);
-            std::swap (filled1_, m.filled1_);
-            std::swap (filled2_, m.filled2_);
-            index1_data ().swap (m.index1_data ());
-            index2_data ().swap (m.index2_data ());
-            value_data ().swap (m.value_data ());
+            // Too unusual semantic.
+            // check (this != &m, external_logic ());
+            if (this != &m) {
+                check (size1_ == m.size1_, bad_size ());
+                check (size2_ == m.size2_, bad_size ());
+                check (non_zeros_ == m.non_zeros_, bad_size ());
+                std::swap (size1_, m.size1_);
+                std::swap (size2_, m.size2_);
+                std::swap (non_zeros_, m.non_zeros_);
+                std::swap (filled1_, m.filled1_);
+                std::swap (filled2_, m.filled2_);
+                index1_data ().swap (m.index1_data ());
+                index2_data ().swap (m.index2_data ());
+                value_data ().swap (m.value_data ());
+            }
         }
 #ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE

@@ -746,6 +746,11 @@ namespace boost { namespace numerics {
                 check (&(*this) () == &it (), external_logic ());
                 return it1_ == it.it1_ && it2_ == it.it2_;
             }
+            NUMERICS_INLINE
+            bool operator < (const const_iterator1 &it) const {
+                check (&(*this) () == &it (), external_logic ());
+                return it1_ < it.it1_ && it2_ == it.it2_;
+            }
 
         private:
 #ifdef NUMERICS_USE_INVARIANT_HOISTING
@@ -890,6 +895,11 @@ namespace boost { namespace numerics {
             bool operator == (const const_iterator2 &it) const {
                 check (&(*this) () == &it (), external_logic ());
                 return it1_ == it.it1_ && it2_ == it.it2_;
+            }
+            NUMERICS_INLINE
+            bool operator < (const const_iterator2 &it) const {
+                check (&(*this) () == &it (), external_logic ());
+                return it1_ == it.it1_ && it2_ < it.it2_;
             }
 
         private:
@@ -1213,6 +1223,11 @@ namespace boost { namespace numerics {
                 check (&(*this) () == &it (), external_logic ());
                 return it_ == it.it_;
             }
+            NUMERICS_INLINE
+            bool operator < (const const_iterator1 &it) const {
+                check (&(*this) () == &it (), external_logic ());
+                return it_ < it.it_;
+            }
 
         private:
             const_iterator1_type it_;
@@ -1329,6 +1344,11 @@ namespace boost { namespace numerics {
             bool operator == (const const_iterator2 &it) const {
                 check (&(*this) () == &it (), external_logic ());
                 return it_ == it.it_;
+            }
+            NUMERICS_INLINE
+            bool operator < (const const_iterator2 &it) const {
+                check (&(*this) () == &it (), external_logic ());
+                return it_ < it.it_;
             }
 
         private:
@@ -1667,6 +1687,11 @@ namespace boost { namespace numerics {
                 check (&(*this) () == &it (), external_logic ());
                 return it_ == it.it_;
             }
+            NUMERICS_INLINE
+            bool operator < (const const_iterator1 &it) const {
+                check (&(*this) () == &it (), external_logic ());
+                return it_ < it.it_;
+            }
 
         private:
             const_iterator1_type it_;
@@ -1783,6 +1808,11 @@ namespace boost { namespace numerics {
             bool operator == (const const_iterator2 &it) const {
                 check (&(*this) () == &it (), external_logic ());
                 return it_ == it.it_;
+            }
+            NUMERICS_INLINE
+            bool operator < (const const_iterator2 &it) const {
+                check (&(*this) () == &it (), external_logic ());
+                return it_ < it.it_;
             }
 
         private:
@@ -2224,6 +2254,11 @@ namespace boost { namespace numerics {
                 check (&(*this) () == &it (), external_logic ());
                 return it1_ == it.it1_ && it2_ == it.it2_;
             }
+            NUMERICS_INLINE
+            bool operator < (const const_iterator1 &it) const {
+                check (&(*this) () == &it (), external_logic ());
+                return it1_ < it.it1_ && it2_ < it.it2_;
+            }
 
         private:
             size_type i_;
@@ -2446,6 +2481,11 @@ namespace boost { namespace numerics {
                 check (&(*this) () == &it (), external_logic ());
                 return it1_ == it.it1_ && it2_ == it.it2_;
             }
+            NUMERICS_INLINE
+            bool operator < (const const_iterator2 &it) const {
+                check (&(*this) () == &it (), external_logic ());
+                return it1_ < it.it1_ && it2_ < it.it2_;
+            }
 
         private:
             size_type i_;
@@ -2579,7 +2619,7 @@ expression_type;
         // Element access
         NUMERICS_INLINE
         value_type operator () (size_type i, size_type j) const { 
-            return functor_type () (e1_, e2_ (i, j)); 
+            return functor_type () (e1_, e2_ (i, j));
         }
 
 #ifdef NUMERICS_DEPRECATED
@@ -2784,6 +2824,13 @@ expression_type;
                 // check (it1_ == it.it1_, external_logic ());
                 return it2_ == it.it2_;
             }
+            NUMERICS_INLINE
+            bool operator < (const const_iterator1 &it) const {
+                check (&(*this) () == &it (), external_logic ());
+                // FIXME: we shouldn't compare floats
+                // check (it1_ == it.it1_, external_logic ());
+                return it2_ < it.it2_;
+            }
 
         private:
             const_iterator1_type it1_;
@@ -2904,6 +2951,13 @@ expression_type;
                 // FIXME: we shouldn't compare floats
                 // check (it1_ == it.it1_, external_logic ());
                 return it2_ == it.it2_;
+            }
+            NUMERICS_INLINE
+            bool operator < (const const_iterator2 &it) const {
+                check (&(*this) () == &it (), external_logic ());
+                // FIXME: we shouldn't compare floats
+                // check (it1_ == it.it1_, external_logic ());
+                return it2_ < it.it2_;
             }
 
         private:
@@ -3225,6 +3279,13 @@ expression_type;
                 // check (it2_ == it.it2_, external_logic ());
                 return it1_ == it.it1_;
             }
+            NUMERICS_INLINE
+            bool operator < (const const_iterator1 &it) const {
+                check (&(*this) () == &it (), external_logic ());
+                // FIXME: we shouldn't compare floats
+                // check (it2_ == it.it2_, external_logic ());
+                return it1_ < it.it1_;
+            }
 
         private:
             const_iterator11_type it1_;
@@ -3345,6 +3406,13 @@ expression_type;
                 // FIXME: we shouldn't compare floats
                 // check (it2_ == it.it2_, external_logic ());
                 return it1_ == it.it1_;
+            }
+            NUMERICS_INLINE
+            bool operator < (const const_iterator2 &it) const {
+                check (&(*this) () == &it (), external_logic ());
+                // FIXME: we shouldn't compare floats
+                // check (it2_ == it.it2_, external_logic ());
+                return it1_ < it.it1_;
             }
 
         private:
@@ -3678,7 +3746,12 @@ sparse_bidirectional_iterator_tag ());
             NUMERICS_INLINE
             bool operator == (const const_iterator &it) const {
                 check (&(*this) () == &it (), external_logic ());
-                return it1_ == it.it1_; 
+                return it1_ == it.it1_;
+            }
+            NUMERICS_INLINE
+            bool operator < (const const_iterator &it) const {
+                check (&(*this) () == &it (), external_logic ());
+                return it1_ < it.it1_;
             }
 
         private:
@@ -4045,7 +4118,12 @@ sparse_bidirectional_iterator_tag ());
             NUMERICS_INLINE
             bool operator == (const const_iterator &it) const {
                 check (&(*this) () == &it (), external_logic ());
-                return it2_ == it.it2_; 
+                return it2_ == it.it2_;
+            }
+            NUMERICS_INLINE
+            bool operator < (const const_iterator &it) const {
+                check (&(*this) () == &it (), external_logic ());
+                return it2_ < it.it2_;
             }
 
         private:
@@ -4492,6 +4570,11 @@ sparse_bidirectional_iterator_tag ());
                 check (&(*this) () == &it (), external_logic ());
                 return it1_ == it.it1_ && it2_ == it.it2_;
             }
+            NUMERICS_INLINE
+            bool operator < (const const_iterator1 &it) const {
+                check (&(*this) () == &it (), external_logic ());
+                return it1_ < it.it1_ && it2_ == it.it2_;
+            }
 
         private:
             const_iterator11_type it1_;
@@ -4667,6 +4750,11 @@ sparse_bidirectional_iterator_tag ());
             bool operator == (const const_iterator2 &it) const {
                 check (&(*this) () == &it (), external_logic ());
                 return it1_ == it.it1_ && it2_ == it.it2_;
+            }
+            NUMERICS_INLINE
+            bool operator < (const const_iterator2 &it) const {
+                check (&(*this) () == &it (), external_logic ());
+                return it1_ == it.it1_ && it2_ < it.it2_;
             }
 
         private:

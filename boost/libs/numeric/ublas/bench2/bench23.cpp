@@ -25,7 +25,7 @@ struct bench_c_matrix_prod {
 
     void operator () (int runs) const {
         try {
-            static c_matrix_traits<T, N, N>::type m1, m2, m3;
+            static typename c_matrix_traits<T, N, N>::type m1, m2, m3;
             initialize_c_matrix<T, N, N> () (m1);
             initialize_c_matrix<T, N, N> () (m2);
             boost::timer t;

@@ -305,6 +305,21 @@ namespace boost { namespace numerics {
             const derived_iterator_type *d = static_cast<const derived_iterator_type *> (this);
             return ! (*d == it);
         }
+        NUMERICS_INLINE
+        bool operator <= (const derived_iterator_type &it) const {
+            const derived_iterator_type *d = static_cast<const derived_iterator_type *> (this);
+            return ! (it < *d);
+        }
+        NUMERICS_INLINE
+        bool operator >= (const derived_iterator_type &it) const {
+            const derived_iterator_type *d = static_cast<const derived_iterator_type *> (this);
+            return ! (*d < it);
+        }
+        NUMERICS_INLINE
+        bool operator > (const derived_iterator_type &it) const {
+            const derived_iterator_type *d = static_cast<const derived_iterator_type *> (this);
+            return it < *d;
+        }
     };
 
 #ifndef NUMERICS_FRIEND_FUNCTION

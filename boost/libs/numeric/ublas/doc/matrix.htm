@@ -290,11 +290,11 @@ href="container.htm#matrix">Matrix</a>.</p>
 
 <h4>Interface</h4>
 
-<pre><code>    // Array based matrix class 
+<pre><code>    // Array based matrix class
     template&lt;class T, class F, class A&gt;
-    class matrix: 
+    class matrix:
         public matrix_expression&lt;matrix&lt;T, F, A&gt; &gt; {
-    public:      
+    public:
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
         typedef T value_type;
@@ -312,7 +312,7 @@ href="container.htm#matrix">Matrix</a>.</p>
         typedef typename A::const_iterator const_iterator_type;
         typedef typename A::iterator iterator_type;
         typedef dense_tag storage_category;
-        typedef unknown_orientation_tag orientation_category;
+        typedef typename F::orientation_category orientation_category;
 
         // Construction and destruction
         matrix ();

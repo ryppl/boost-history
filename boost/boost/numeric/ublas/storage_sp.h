@@ -112,10 +112,14 @@ namespace boost { namespace numerics {
 
         // Assignment
         NUMERICS_INLINE
-        map_array &operator = (const map_array &a) { 
-            check (this != &a, external_logic ());
-            resize (a.size_);
-            std::copy (a.data_, a.data_ + a.size_, data_);
+        map_array &operator = (const map_array &a) {
+            // Too unusual semantic.
+            // Thanks to Michael Stevens for spotting this.
+            // check (this != &a, external_logic ());
+            if (this != &a) {
+                resize (a.size_);
+                std::copy (a.data_, a.data_ + a.size_, data_);
+            }
             return *this;
         }
         NUMERICS_INLINE
@@ -127,10 +131,13 @@ namespace boost { namespace numerics {
         // Swapping
         NUMERICS_INLINE
         void swap (map_array &a) {
-            check (this != &a, external_logic ());
-            std::swap (capacity_, a.capacity_);
-            std::swap (data_, a.data_);
-            std::swap (size_, a.size_);
+            // Too unusual semantic.
+            // check (this != &a, external_logic ());
+            if (this != &a) {
+                std::swap (capacity_, a.capacity_);
+                std::swap (data_, a.data_);
+                std::swap (size_, a.size_);
+            }
         }
 #ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
@@ -333,17 +340,22 @@ namespace boost { namespace numerics {
 
     template<class I, class T, class F>
     NUMERICS_INLINE
-    std::map<I, T, F> &assign_temporary (std::map<I, T, F> &a1, std::map<I, T, F> &a2) { 
-        check (&a1 != &a2, external_logic ());
-        a1.swap (a2);
+    std::map<I, T, F> &assign_temporary (std::map<I, T, F> &a1, std::map<I, T, F> &a2) {
+        // Too unusual semantic.
+        // check (&a1 != &a2, external_logic ());
+        if (&a1 != &a2) 
+            a1.swap (a2);
         return  a1;
     }
     // This specialization is missing in Dinkumware's STL?!
     template<class I, class T, class F>
     NUMERICS_INLINE
-    void swap (std::map<I, T, F> &a1, std::map<I, T, F> &a2) { 
-        check (&a1 != &a2, external_logic ());
-        a1.swap (a2);
+    void swap (std::map<I, T, F> &a1, std::map<I, T, F> &a2) {
+        // Too unusual semantic.
+        // check (&a1 != &a2, external_logic ());
+        if (&a1 != &a2)
+                a1.swap (a2);
+        return a1;
     }
 
     // Set array 
@@ -419,10 +431,14 @@ namespace boost { namespace numerics {
 
         // Assignment
         NUMERICS_INLINE
-        set_array &operator = (const set_array &a) { 
-            check (this != &a, external_logic ());
-            resize (a.size_);
-            std::copy (a.data_, a.data_ + a.size_, data_);
+        set_array &operator = (const set_array &a) {
+            // Too unusual semantic.
+            // Thanks to Michael Stevens for spotting this.
+            // check (this != &a, external_logic ());
+            if (this != &a) {
+                resize (a.size_);
+                std::copy (a.data_, a.data_ + a.size_, data_);
+            }
             return *this;
         }
         NUMERICS_INLINE
@@ -434,10 +450,13 @@ namespace boost { namespace numerics {
         // Swapping
         NUMERICS_INLINE
         void swap (set_array &a) {
-            check (this != &a, external_logic ());
-            std::swap (capacity_, a.capacity_);
-            std::swap (data_, a.data_);
-            std::swap (size_, a.size_);
+            // Too unusual semantic.
+            // check (this != &a, external_logic ());
+            if (this != &a) {
+                std::swap (capacity_, a.capacity_);
+                std::swap (data_, a.data_);
+                std::swap (size_, a.size_);
+            }
         }
 #ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
@@ -638,16 +657,20 @@ namespace boost { namespace numerics {
     template<class I, class F>
     NUMERICS_INLINE
     std::set<I, F> &assign_temporary (std::set<I, F> &a1, std::set<I, F> &a2) { 
-        check (&a1 != &a2, external_logic ());
-        a1.swap (a2);
+        // Too unusual semantic.
+        // check (&a1 != &a2, external_logic ());
+        if (&a1 != &a2)
+            a1.swap (a2);
         return  a1;
     }
     // This specialization is missing in Dinkumware's STL?!
     template<class I, class F>
     NUMERICS_INLINE
-    void swap (std::set<I, F> &a1, std::set<I, F> &a2) { 
-        check (&a1 != &a2, external_logic ());
-        a1.swap (a2);
+    void swap (std::set<I, F> &a1, std::set<I, F> &a2) {
+        // Too unusual semantic.
+        // check (&a1 != &a2, external_logic ());
+        if (&a1 != &a2)
+            a1.swap (a2);
     }
 
 }}

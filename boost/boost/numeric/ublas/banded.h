@@ -269,16 +269,19 @@ namespace boost { namespace numerics {
         // Swapping
         NUMERICS_INLINE
         void swap (banded_matrix &m) {
-            check (this != &m, external_logic ());
-            check (size1_ == m.size1_, bad_size ());
-            check (size2_ == m.size2_, bad_size ());
-            check (lower_ == m.lower_, bad_size ());
-            check (upper_ == m.upper_, bad_size ());
-            std::swap (size1_, m.size1_);
-            std::swap (size2_, m.size2_);
-            std::swap (lower_, m.lower_);
-            std::swap (upper_, m.upper_);
-            data ().swap (m.data ());
+            // Too unusual semantic.
+            // check (this != &m, external_logic ());
+            if (this != &m) {
+                check (size1_ == m.size1_, bad_size ());
+                check (size2_ == m.size2_, bad_size ());
+                check (lower_ == m.lower_, bad_size ());
+                check (upper_ == m.upper_, bad_size ());
+                std::swap (size1_, m.size1_);
+                std::swap (size2_, m.size2_);
+                std::swap (lower_, m.lower_);
+                std::swap (upper_, m.upper_);
+                data ().swap (m.data ());
+            }
         }
 #ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
@@ -1178,10 +1181,13 @@ namespace boost { namespace numerics {
         // Swapping
         NUMERICS_INLINE
         void swap (banded_adaptor &m) {
-            check (this != &m, external_logic ());
-            check (lower_ == m.lower_, bad_size ());
-            check (upper_ == m.upper_, bad_size ());
-            matrix_swap<scalar_swap<value_type, value_type> > () (*this, m); 
+            // Too unusual semantic.
+            // check (this != &m, external_logic ());
+            if (this != &m) {
+                check (lower_ == m.lower_, bad_size ());
+                check (upper_ == m.upper_, bad_size ());
+                matrix_swap<scalar_swap<value_type, value_type> > () (*this, m);
+            }
         }
 #ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE

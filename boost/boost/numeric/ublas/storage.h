@@ -133,9 +133,13 @@ namespace boost { namespace numerics {
         // Assignment
         NUMERICS_INLINE
         unbounded_array &operator = (const unbounded_array &a) {
-            check (this != &a, external_logic ());
-            check (size_ == a.size_, bad_size ());
-            std::copy (a.data_, a.data_ + a.size_, data_);
+            // Too unusual semantic.
+            // Thanks to Michael Stevens for spotting this.
+            // check (this != &a, external_logic ());
+            if (this != &a) {
+                check (size_ == a.size_, bad_size ());
+                std::copy (a.data_, a.data_ + a.size_, data_);
+            }
             return *this;
         }
         NUMERICS_INLINE
@@ -147,10 +151,13 @@ namespace boost { namespace numerics {
         // Swapping
         NUMERICS_INLINE
         void swap (unbounded_array &a) {
-            check (this != &a, external_logic ());
-            check (size_ == a.size_, bad_size ());
-            std::swap (size_, a.size_);
-            std::swap (data_, a.data_);
+            // Too unusual semantic.
+            // check (this != &a, external_logic ());
+            if (this != &a) {
+                check (size_ == a.size_, bad_size ());
+                std::swap (size_, a.size_);
+                std::swap (data_, a.data_);
+            }
         }
 #ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
@@ -319,10 +326,14 @@ namespace boost { namespace numerics {
 
         // Assignment
         NUMERICS_INLINE
-        bounded_array &operator = (const bounded_array &a) { 
-            check (this != &a, external_logic ());
-            check (size_ == a.size_, bad_size ());
-            std::copy (a.data_, a.data_ + a.size_, data_);
+        bounded_array &operator = (const bounded_array &a) {
+            // Too unusual semantic.
+            // Thanks to Michael Stevens for spotting this.
+            // check (this != &a, external_logic ());
+            if (this != &a) {
+                check (size_ == a.size_, bad_size ());
+                std::copy (a.data_, a.data_ + a.size_, data_);
+            }
             return *this;
         }
         NUMERICS_INLINE
@@ -334,9 +345,12 @@ namespace boost { namespace numerics {
         // Swapping
         NUMERICS_INLINE
         void swap (bounded_array &a) {
-            check (this != &a, external_logic ());
-            check (size_ == a.size_, bad_size ());
-            std::swap_ranges (data_, data_ + size_, a.data_);
+            // Too unusual semantic.
+            // check (this != &a, external_logic ());
+            if (this != &a) {
+                check (size_ == a.size_, bad_size ());
+                std::swap_ranges (data_, data_ + size_, a.data_);
+            }
         }
 #ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
@@ -545,9 +559,13 @@ namespace boost { namespace numerics {
         // Assignment
         NUMERICS_INLINE
         array_adaptor &operator = (const array_adaptor &a) {
-            check (this != &a, external_logic ());
-            check (size_ == a.size_, bad_size ());
-            std::copy (a.data_, a.data_ + a.size_, data_);
+            // Too unusual semantic.
+            // Thanks to Michael Stevens for spotting this.
+            // check (this != &a, external_logic ());
+            if (this != &a) {
+                check (size_ == a.size_, bad_size ());
+                std::copy (a.data_, a.data_ + a.size_, data_);
+            }
             return *this;
         }
         NUMERICS_INLINE
@@ -562,11 +580,14 @@ namespace boost { namespace numerics {
         // Swapping
         NUMERICS_INLINE
         void swap (array_adaptor &a) {
-            check (this != &a, external_logic ());
-            check (size_ == a.size_, bad_size ());
-            std::swap (size_, a.size_);
-            std::swap (own_, a.own_);
-            std::swap (data_, a.data_);
+            // Too unusual semantic.
+            // check (this != &a, external_logic ());
+            if (this != &a) {
+                check (size_ == a.size_, bad_size ());
+                std::swap (size_, a.size_);
+                std::swap (own_, a.own_);
+                std::swap (data_, a.data_);
+            }
         }
 #ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
@@ -765,9 +786,13 @@ namespace boost { namespace numerics {
         // Assignment
         NUMERICS_INLINE
         array_adaptor &operator = (const array_adaptor &a) {
-            check (this != &a, external_logic ());
-            check (size_ == a.size_, bad_size ());
-            std::copy (a.data_.get (), a.data_.get () + a.size_, data_.get ());
+            // Too unusual semantic.
+            // Thanks to Michael Stevens for spotting this.
+            // check (this != &a, external_logic ());
+            if (this != &a) {
+                check (size_ == a.size_, bad_size ());
+                std::copy (a.data_.get (), a.data_.get () + a.size_, data_.get ());
+            }
             return *this;
         }
         NUMERICS_INLINE
@@ -782,11 +807,14 @@ namespace boost { namespace numerics {
         // Swapping
         NUMERICS_INLINE
         void swap (array_adaptor &a) {
-            check (this != &a, external_logic ());
-            check (size_ == a.size_, bad_size ());
-            std::swap (size_, a.size_);
-            std::swap (own_, a.own_);
-            std::swap (data_, a.data_);
+            // Too unusual semantic.
+            // check (this != &a, external_logic ());
+            if (this != &a) {
+                check (size_ == a.size_, bad_size ());
+                std::swap (size_, a.size_);
+                std::swap (own_, a.own_);
+                std::swap (data_, a.data_);
+            }
         }
 #ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
@@ -897,17 +925,24 @@ namespace boost { namespace numerics {
     template<class T>
     NUMERICS_INLINE
     std::valarray<T> &assign_temporary (std::valarray<T> &a1, std::valarray<T> &a2) {
-        check (&a1 != &a2, external_logic ());
-        check (a1.size () == a2.size (), bad_size ());
-        return a1 = a2;
+        // Too unusual semantic.
+        // check (&a1 != &a2, external_logic ());
+        if (&a1 != &a2) {
+            check (a1.size () == a2.size (), bad_size ());
+            a1 = a2;
+        }
+        return a1;
     }
 
     template<class T>
     NUMERICS_INLINE
     std::vector<T> &assign_temporary (std::vector<T> &a1, std::vector<T> &a2) {
-        check (&a1 != &a2, external_logic ());
-        check (a1.size () == a2.size (), bad_size ());
-        a1.swap (a2);
+        // Too unusual semantic.
+        // check (&a1 != &a2, external_logic ());
+        if (&a1 != &a2) {
+            check (a1.size () == a2.size (), bad_size ());
+            a1.swap (a2);
+        }
         return a1;
     }
 
@@ -1038,7 +1073,12 @@ namespace boost { namespace numerics {
             NUMERICS_INLINE
             bool operator == (const const_iterator &it) const {
                 check (&(*this) () == &it (), external_logic ());
-                return it_ == it.it_; 
+                return it_ == it.it_;
+            }
+            NUMERICS_INLINE
+            bool operator < (const const_iterator &it) const {
+                check (&(*this) () == &it (), external_logic ());
+                return it_ < it.it_;
             }
 
         private:
@@ -1213,6 +1253,11 @@ namespace boost { namespace numerics {
             bool operator == (const const_iterator &it) const {
                 check (&(*this) () == &it (), external_logic ());
                 return it_ == it.it_;
+            }
+            NUMERICS_INLINE
+            bool operator < (const const_iterator &it) const {
+                check (&(*this) () == &it (), external_logic ());
+                return it_ < it.it_;
             }
 
         private:
@@ -1419,6 +1464,11 @@ namespace boost { namespace numerics {
             bool operator == (const const_iterator &it) const {
                 check (&(*this) () == &it (), external_logic ());
                 return it_ == it.it_;
+            }
+            NUMERICS_INLINE
+            bool operator < (const const_iterator &it) const {
+                check (&(*this) () == &it (), external_logic ());
+                return it_ < it.it_;
             }
 
         private:

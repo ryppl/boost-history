@@ -489,6 +489,11 @@ namespace boost { namespace numerics {
                 check (&(*this) () == &it (), external_logic ());
                 return it_ == it.it_;
             }
+            NUMERICS_INLINE
+            bool operator < (const const_iterator &it) const {
+                check (&(*this) () == &it (), external_logic ());
+                return it_ < it.it_;
+            }
 
         private:
             const_iterator_type it_;
@@ -853,7 +858,12 @@ namespace boost { namespace numerics {
             NUMERICS_INLINE
             bool operator == (const const_iterator &it) const {
                 check (&(*this) () == &it (), external_logic ());
-                return it1_ == it.it1_ && it2_ == it.it2_; 
+                return it1_ == it.it1_ && it2_ == it.it2_;
+            }
+            NUMERICS_INLINE
+            bool operator < (const const_iterator &it) const {
+                check (&(*this) () == &it (), external_logic ());
+                return it1_ < it.it1_ && it2_ < it.it2_;
             }
 
         private:
@@ -1093,7 +1103,14 @@ namespace boost { namespace numerics {
                 check (&(*this) () == &it (), external_logic ());
                 // FIXME: we shouldn't compare floats
                 // check (it1_ == it.it1_, external_logic ());
-                return it2_ == it.it2_; 
+                return it2_ == it.it2_;
+            }
+            NUMERICS_INLINE
+            bool operator < (const const_iterator &it) const {
+                check (&(*this) () == &it (), external_logic ());
+                // FIXME: we shouldn't compare floats
+                // check (it1_ == it.it1_, external_logic ());
+                return it2_ < it.it2_;
             }
 
         private:
@@ -1318,7 +1335,14 @@ namespace boost { namespace numerics {
                 check (&(*this) () == &it (), external_logic ());
                 // FIXME: we shouldn't compare floats
                 // check (it2_ == it.it2_, external_logic ());
-                return it1_ == it.it1_; 
+                return it1_ == it.it1_;
+            }
+            NUMERICS_INLINE
+            bool operator < (const const_iterator &it) const {
+                check (&(*this) () == &it (), external_logic ());
+                // FIXME: we shouldn't compare floats
+                // check (it2_ == it.it2_, external_logic ());
+                return it1_ < it.it1_;
             }
 
         private:

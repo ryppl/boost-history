@@ -349,6 +349,7 @@ namespace boost { namespace numerics {
             difference_type size1 (m.size1 ());
             typename M::iterator1 it1 (m.begin1 ());
 #ifdef NUMERICS_BOUNDS_CHECK_EX
+            // This fails for size2 == 0
             check (m.end1 () - it1 == size1, bad_size ());
 #endif
             while (-- size1 >= 0) {
@@ -368,6 +369,7 @@ namespace boost { namespace numerics {
             difference_type size1 (m.size1 ());
             typename M::iterator1 it1 (m.begin1 ());
 #ifdef NUMERICS_BOUNDS_CHECK_EX
+            // This fails for size2 == 0
             check (m.end1 () - it1 == size1, bad_size ());
 #endif
             while (-- size1 >= 0) {
@@ -683,10 +685,12 @@ namespace boost { namespace numerics {
             difference_type size1 (common (m.size1 (), e ().size1 ()));
             typename M::iterator1 it1 (m.begin1 ());
 #ifdef NUMERICS_BOUNDS_CHECK_EX
+            // This fails for size2 == 0
             check (m.end1 () - it1 == size1, bad_size ());
 #endif
             typename E::const_iterator1 it1e (e ().begin1 ());
 #ifdef NUMERICS_BOUNDS_CHECK_EX
+            // This fails for size2 == 0
             check (e ().end1 () - it1e == size1, bad_size ());
 #endif
             while (-- size1 >= 0) {
@@ -708,10 +712,12 @@ namespace boost { namespace numerics {
             difference_type size1 (common (m.size1 (), e ().size1 ()));
             typename M::iterator1 it1 (m.begin1 ());
 #ifdef NUMERICS_BOUNDS_CHECK_EX
+            // This fails for size2 == 0
             check (m.end1 () - it1 == size1, bad_size ());
 #endif
             typename E::const_iterator1 it1e (e ().begin1 ());
 #ifdef NUMERICS_BOUNDS_CHECK_EX
+            // This fails for size2 == 0
             check (e ().end1 () - it1e == size1, bad_size ());
 #endif
             while (-- size1 >= 0) {
@@ -1868,7 +1874,7 @@ namespace boost { namespace numerics {
 
     template<class E> 
     class matrix_const_reference;
-    template<class E> 
+    template<class E>
     class matrix_reference;
 
     // Array based matrix class 
@@ -1901,11 +1907,14 @@ namespace boost { namespace numerics {
         typedef typename A::const_iterator const_iterator_type;
         typedef typename A::iterator iterator_type;
         typedef dense_tag storage_category;
-        typedef unknown_orientation_tag orientation_category;
+        // This could be better for performance,
+        // typedef typename unknown_orientation_tag orientation_category;
+        // but others depend on the orientation information...
+        typedef typename functor_type::orientation_category orientation_category;
 
         // Construction and destruction
         NUMERICS_INLINE
-        matrix (): 
+        matrix ():
             size1_ (0), size2_ (0), data_ (0) {}
         NUMERICS_INLINE
         matrix (size_type size1, size_type size2):
@@ -2059,12 +2068,15 @@ namespace boost { namespace numerics {
         // Swapping
         NUMERICS_INLINE
         void swap (matrix &m) {
-            check (this != &m, external_logic ());
-            check (size1_ == m.size1_, bad_size ());
-            check (size2_ == m.size2_, bad_size ());
-            std::swap (size1_, m.size1_);
-            std::swap (size2_, m.size2_);
-            data ().swap (m.data ());
+            // Too unusual semantic.
+            // check (this != &m, external_logic ());
+            if (this != &m) {
+                check (size1_ == m.size1_, bad_size ());
+                check (size2_ == m.size2_, bad_size ());
+                std::swap (size1_, m.size1_);
+                std::swap (size2_, m.size2_);
+                data ().swap (m.data ());
+            }
         }
 #ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
@@ -2324,6 +2336,11 @@ namespace boost { namespace numerics {
                 check (&(*this) () == &it (), external_logic ());
                 return it_ == it.it_;
             }
+            NUMERICS_INLINE
+            bool operator < (const const_iterator1 &it) const {
+                check (&(*this) () == &it (), external_logic ());
+                return it_ < it.it_;
+            }
 
         private:
             const_iterator_type it_;
@@ -2443,6 +2460,11 @@ namespace boost { namespace numerics {
             bool operator == (const iterator1 &it) const {
                 check (&(*this) () == &it (), external_logic ());
                 return it_ == it.it_;
+            }
+            NUMERICS_INLINE
+            bool operator < (const iterator1 &it) const {
+                check (&(*this) () == &it (), external_logic ());
+                return it_ < it.it_;
             }
 
         private:
@@ -2567,6 +2589,11 @@ namespace boost { namespace numerics {
                 check (&(*this) () == &it (), external_logic ());
                 return it_ == it.it_;
             }
+            NUMERICS_INLINE
+            bool operator < (const const_iterator2 &it) const {
+                check (&(*this) () == &it (), external_logic ());
+                return it_ < it.it_;
+            }
 
         private:
             const_iterator_type it_;
@@ -2687,6 +2714,11 @@ namespace boost { namespace numerics {
                 check (&(*this) () == &it (), external_logic ());
                 return it_ == it.it_;
             }
+            NUMERICS_INLINE
+            bool operator < (const iterator2 &it) const {
+                check (&(*this) () == &it (), external_logic ());
+                return it_ < it.it_;
+            }
 
         private:
             iterator_type it_;
@@ -2780,7 +2812,10 @@ namespace boost { namespace numerics {
         typedef typename A::value_type::const_iterator const_iterator_type;
         typedef typename A::value_type::iterator iterator_type;
         typedef dense_tag storage_category;
-        typedef unknown_orientation_tag orientation_category;
+        // This could be better for performance,
+        // typedef typename unknown_orientation_tag orientation_category;
+        // but others depend on the orientation information...
+        typedef typename functor_type::orientation_category orientation_category;
 
         // Construction and destruction
         NUMERICS_INLINE
@@ -2944,12 +2979,15 @@ namespace boost { namespace numerics {
         // Swapping
         NUMERICS_INLINE
         void swap (vector_of_vector &m) {
-            check (this != &m, external_logic ());
-            check (size1_ == m.size1_, bad_size ());
-            check (size2_ == m.size2_, bad_size ());
-            std::swap (size1_, m.size1_);
-            std::swap (size2_, m.size2_);
-            data ().swap (m.data ());
+            // Too unusual semantic.
+            // check (this != &m, external_logic ());
+            if (this != &m) {
+                check (size1_ == m.size1_, bad_size ());
+                check (size2_ == m.size2_, bad_size ());
+                std::swap (size1_, m.size1_);
+                std::swap (size2_, m.size2_);
+                data ().swap (m.data ());
+            }
         }
 #ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
@@ -3221,6 +3259,11 @@ namespace boost { namespace numerics {
                 check (&(*this) () == &it (), external_logic ());
                 return it_ == it.it_;
             }
+            NUMERICS_INLINE
+            bool operator < (const const_iterator1 &it) const {
+                check (&(*this) () == &it (), external_logic ());
+                return it_ < it.it_;
+            }
 
         private:
             size_type i_;
@@ -3355,6 +3398,11 @@ namespace boost { namespace numerics {
             bool operator == (const iterator1 &it) const {
                 check (&(*this) () == &it (), external_logic ());
                 return it_ == it.it_;
+            }
+            NUMERICS_INLINE
+            bool operator < (const iterator1 &it) const {
+                check (&(*this) () == &it (), external_logic ());
+                return it_ < it.it_;
             }
 
         private:
@@ -3494,6 +3542,11 @@ namespace boost { namespace numerics {
                 check (&(*this) () == &it (), external_logic ());
                 return it_ == it.it_;
             }
+            NUMERICS_INLINE
+            bool operator < (const const_iterator2 &it) const {
+                check (&(*this) () == &it (), external_logic ());
+                return it_ < it.it_;
+            }
 
         private:
             size_type i_;
@@ -3628,6 +3681,11 @@ namespace boost { namespace numerics {
             bool operator == (const iterator2 &it) const {
                 check (&(*this) () == &it (), external_logic ());
                 return it_ == it.it_;
+            }
+            NUMERICS_INLINE
+            bool operator < (const iterator2 &it) const {
+                check (&(*this) () == &it (), external_logic ());
+                return it_ < it.it_;
             }
 
         private:
@@ -3783,11 +3841,14 @@ namespace boost { namespace numerics {
         // Swapping
         NUMERICS_INLINE
         void swap (identity_matrix &m) {
-            check (this != &m, external_logic ());
-            check (size1_ == m.size1_, bad_size ());
-            check (size2_ == m.size2_, bad_size ());
-            std::swap (size1_, m.size1_);
-            std::swap (size2_, m.size2_);
+            // Too unusual semantic.
+            // check (this != &m, external_logic ());
+            if (this != &m) {
+                check (size1_ == m.size1_, bad_size ());
+                check (size2_ == m.size2_, bad_size ());
+                std::swap (size1_, m.size1_);
+                std::swap (size2_, m.size2_);
+            }
         }
 #ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
@@ -3973,6 +4034,11 @@ namespace boost { namespace numerics {
                 check (&(*this) () == &it (), external_logic ());
                 return it1_ == it.it1_ && it2_ == it.it2_ ;
             }
+            NUMERICS_INLINE
+            bool operator < (const const_iterator1 &it) const {
+                check (&(*this) () == &it (), external_logic ());
+                return it1_ < it.it1_ && it2_ == it.it2_ ;
+            }
 
         private:
             const_iterator_type it1_;
@@ -4092,6 +4158,11 @@ namespace boost { namespace numerics {
             bool operator == (const const_iterator2 &it) const {
                 check (&(*this) () == &it (), external_logic ());
                 return it1_ == it.it1_ && it2_ == it.it2_;
+            }
+            NUMERICS_INLINE
+            bool operator < (const const_iterator2 &it) const {
+                check (&(*this) () == &it (), external_logic ());
+                return it1_ == it.it1_ && it2_ < it.it2_;
             }
 
         private:
@@ -4227,11 +4298,14 @@ namespace boost { namespace numerics {
         // Swapping
         NUMERICS_INLINE
         void swap (zero_matrix &m) {
-            check (this != &m, external_logic ());
-            check (size1_ == m.size1_, bad_size ());
-            check (size2_ == m.size2_, bad_size ());
-            std::swap (size1_, m.size1_);
-            std::swap (size2_, m.size2_);
+            // Too unusual semantic.
+            // check (this != &m, external_logic ());
+            if (this != &m) {
+                check (size1_ == m.size1_, bad_size ());
+                check (size2_ == m.size2_, bad_size ());
+                std::swap (size1_, m.size1_);
+                std::swap (size2_, m.size2_);
+            }
         }
 #ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
@@ -4582,7 +4656,7 @@ namespace boost { namespace numerics {
 
     // Scalar matrix class
     template<class T>
-    class scalar_matrix: 
+    class scalar_matrix:
         public matrix_expression<scalar_matrix<T> > {
     public:      
         typedef std::size_t size_type;
@@ -4606,22 +4680,22 @@ namespace boost { namespace numerics {
 
         // Construction and destruction
         NUMERICS_INLINE
-        scalar_matrix (): 
+        scalar_matrix ():
             size1_ (0), size2_ (0), value_ () {}
         NUMERICS_INLINE
-        scalar_matrix (size_type size1, size_type size2, const value_type &value): 
-            size1_ (size1), size2_ (size2), value_ (value_) {}
+        scalar_matrix (size_type size1, size_type size2, const value_type &value):
+            size1_ (size1), size2_ (size2), value_ (value) {}
         NUMERICS_INLINE
-        scalar_matrix (const scalar_matrix &m): 
+        scalar_matrix (const scalar_matrix &m):
             size1_ (m.size1_), size2_ (m.size2_), value_ (m.value_) {}
 
         // Accessors
         NUMERICS_INLINE
-        size_type size1 () const { 
+        size_type size1 () const {
             return size1_;
         }
         NUMERICS_INLINE
-        size_type size2 () const { 
+        size_type size2 () const {
             return size2_;
         }
 
@@ -4664,12 +4738,15 @@ namespace boost { namespace numerics {
         // Swapping
         NUMERICS_INLINE
         void swap (scalar_matrix &m) {
-            check (this != &m, external_logic ());
-            check (size1_ == m.size1_, bad_size ());
-            check (size2_ == m.size2_, bad_size ());
-            std::swap (size1_, m.size1_);
-            std::swap (size2_, m.size2_);
-            std::swap (value_, m.value_);
+            // Too unusual semantic.
+            // check (this != &m, external_logic ());
+            if (this != &m) {
+                check (size1_ == m.size1_, bad_size ());
+                check (size2_ == m.size2_, bad_size ());
+                std::swap (size1_, m.size1_);
+                std::swap (size2_, m.size2_);
+                std::swap (value_, m.value_);
+            }
         }
 #ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
@@ -4847,6 +4924,11 @@ namespace boost { namespace numerics {
                 check (&(*this) () == &it (), external_logic ());
                 return it1_ == it.it1_ && it2_ == it.it2_ ;
             }
+            NUMERICS_INLINE
+            bool operator < (const const_iterator1 &it) const {
+                check (&(*this) () == &it (), external_logic ());
+                return it1_ < it.it1_ && it2_ == it.it2_ ;
+            }
 
         private:
             const_iterator_type it1_;
@@ -4967,6 +5049,11 @@ namespace boost { namespace numerics {
                 check (&(*this) () == &it (), external_logic ());
                 return it1_ == it.it1_ && it2_ == it.it2_;
             }
+            NUMERICS_INLINE
+            bool operator < (const const_iterator2 &it) const {
+                check (&(*this) () == &it (), external_logic ());
+                return it1_ == it.it1_ && it2_ < it.it2_;
+            }
 
         private:
             const_iterator_type it1_;
@@ -5038,7 +5125,10 @@ namespace boost { namespace numerics {
         typedef const T *const_iterator_type;
         typedef T *iterator_type;
         typedef dense_tag storage_category;
-        typedef unknown_orientation_tag orientation_category;
+        // This could be better for performance,
+        // typedef typename unknown_orientation_tag orientation_category;
+        // but others depend on the orientation information...
+        typedef row_major_tag orientation_category;
 
         // Construction and destruction
         NUMERICS_INLINE
@@ -5202,13 +5292,16 @@ namespace boost { namespace numerics {
         // Swapping
         NUMERICS_INLINE
         void swap (c_matrix &m) {
-            check (this != &m, external_logic ());
-            check (size1_ == m.size1_, bad_size ());
-            check (size2_ == m.size2_, bad_size ());
-            std::swap (size1_, m.size1_);
-            std::swap (size2_, m.size2_);
-            for (size_type i = 0; i < size1_; ++ i)
-                std::swap_ranges (data_ [i], data_ [i] + size2_, m.data_ [i]);
+            // Too unusual semantic.
+            // check (this != &m, external_logic ());
+            if (this != &m) {
+                check (size1_ == m.size1_, bad_size ());
+                check (size2_ == m.size2_, bad_size ());
+                std::swap (size1_, m.size1_);
+                std::swap (size2_, m.size2_);
+                for (size_type i = 0; i < size1_; ++ i)
+                    std::swap_ranges (data_ [i], data_ [i] + size2_, m.data_ [i]);
+            }
         }
 #ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
@@ -5468,6 +5561,11 @@ namespace boost { namespace numerics {
                 check (&(*this) () == &it (), external_logic ());
                 return it_ == it.it_;
             }
+            NUMERICS_INLINE
+            bool operator < (const const_iterator1 &it) const {
+                check (&(*this) () == &it (), external_logic ());
+                return it_ < it.it_;
+            }
 
         private:
             const_iterator_type it_;
@@ -5587,6 +5685,11 @@ namespace boost { namespace numerics {
             bool operator == (const iterator1 &it) const {
                 check (&(*this) () == &it (), external_logic ());
                 return it_ == it.it_;
+            }
+            NUMERICS_INLINE
+            bool operator < (const iterator1 &it) const {
+                check (&(*this) () == &it (), external_logic ());
+                return it_ < it.it_;
             }
 
         private:
@@ -5711,6 +5814,11 @@ namespace boost { namespace numerics {
                 check (&(*this) () == &it (), external_logic ());
                 return it_ == it.it_;
             }
+            NUMERICS_INLINE
+            bool operator < (const const_iterator2 &it) const {
+                check (&(*this) () == &it (), external_logic ());
+                return it_ < it.it_;
+            }
 
         private:
             const_iterator_type it_;
@@ -5830,6 +5938,11 @@ namespace boost { namespace numerics {
             bool operator == (const iterator2 &it) const {
                 check (&(*this) () == &it (), external_logic ());
                 return it_ == it.it_;
+            }
+            NUMERICS_INLINE
+            bool operator < (const iterator2 &it) const {
+                check (&(*this) () == &it (), external_logic ());
+                return it_ < it.it_;
             }
 
         private:

@@ -184,9 +184,12 @@ namespace boost { namespace numerics {
         // Swapping
         NUMERICS_INLINE
         void swap (vector_range &vr) {
-            check (this != &vr, external_logic ());
-            check (size () == vr.size (), bad_size ());
-            std::swap_ranges (begin (), end (), vr.begin ());
+            // Too unusual semantic.
+            // check (this != &vr, external_logic ());
+            if (this != &vr) {
+                check (size () == vr.size (), bad_size ());
+                std::swap_ranges (begin (), end (), vr.begin ());
+            }
         }
 #ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
@@ -334,6 +337,11 @@ namespace boost { namespace numerics {
                 check (&(*this) () == &it (), external_logic ());
                 return it_ == it.it_;
             }
+            NUMERICS_INLINE
+            bool operator < (const const_iterator &it) const {
+                check (&(*this) () == &it (), external_logic ());
+                return it_ < it.it_;
+            }
 
         private:
             const_iterator_type it_;
@@ -428,6 +436,11 @@ namespace boost { namespace numerics {
             bool operator == (const iterator &it) const {
                 check (&(*this) () == &it (), external_logic ());
                 return it_ == it.it_;
+            }
+            NUMERICS_INLINE
+            bool operator < (const iterator &it) const {
+                check (&(*this) () == &it (), external_logic ());
+                return it_ < it.it_;
             }
 
         private:
@@ -690,9 +703,12 @@ namespace boost { namespace numerics {
         // Swapping
         NUMERICS_INLINE
         void swap (vector_slice &vs) {
-            check (this != &vs, external_logic ());
-            check (size () == vs.size (), bad_size ());
-            std::swap_ranges (begin (), end (), vs.begin ());
+            // Too unusual semantic.
+            // check (this != &vs, external_logic ());
+            if (this != &vs) {
+                check (size () == vs.size (), bad_size ());
+                std::swap_ranges (begin (), end (), vs.begin ());
+            }
         }
 #ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
@@ -836,6 +852,11 @@ namespace boost { namespace numerics {
                 check (&(*this) () == &it (), external_logic ());
                 return it_ == it.it_;
             }
+            NUMERICS_INLINE
+            bool operator < (const const_iterator &it) const {
+                check (&(*this) () == &it (), external_logic ());
+                return it_ < it.it_;
+            }
 
         private:
             const_iterator_type it_;
@@ -930,6 +951,11 @@ namespace boost { namespace numerics {
             bool operator == (const iterator &it) const {
                 check (&(*this) () == &it (), external_logic ());
                 return it_ == it.it_;
+            }
+            NUMERICS_INLINE
+            bool operator < (const iterator &it) const {
+                check (&(*this) () == &it (), external_logic ());
+                return it_ < it.it_;
             }
 
         private:
@@ -1193,9 +1219,12 @@ namespace boost { namespace numerics {
         // Swapping
         NUMERICS_INLINE
         void swap (vector_indirect &vi) {
-            check (this != &vi, external_logic ());
-            check (size () == vi.size (), bad_size ());
-            std::swap_ranges (begin (), end (), vi.begin ());
+            // Too unusual semantic.
+            // check (this != &vi, external_logic ());
+            if (this != &vi) {
+                check (size () == vi.size (), bad_size ());
+                std::swap_ranges (begin (), end (), vi.begin ());
+            }
         }
 #ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
@@ -1339,6 +1368,11 @@ namespace boost { namespace numerics {
                 check (&(*this) () == &it (), external_logic ());
                 return it_ == it.it_;
             }
+            NUMERICS_INLINE
+            bool operator < (const const_iterator &it) const {
+                check (&(*this) () == &it (), external_logic ());
+                return it_ < it.it_;
+            }
 
         private:
             const_iterator_type it_;
@@ -1433,6 +1467,11 @@ namespace boost { namespace numerics {
             bool operator == (const iterator &it) const {
                 check (&(*this) () == &it (), external_logic ());
                 return it_ == it.it_;
+            }
+            NUMERICS_INLINE
+            bool operator < (const iterator &it) const {
+                check (&(*this) () == &it (), external_logic ());
+                return it_ < it.it_;
             }
 
         private:

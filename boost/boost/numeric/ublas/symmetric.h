@@ -252,10 +252,13 @@ namespace boost { namespace numerics {
         // Swapping
         NUMERICS_INLINE
         void swap (symmetric_matrix &m) {
-            check (this != &m, external_logic ());
-            check (size_ == m.size_, bad_size ());
-            std::swap (size_, m.size_);
-            data ().swap (m.data ());
+            // Too unusual semantic
+            // check (this != &m, external_logic ());
+            if (this != &m) {
+                check (size_ == m.size_, bad_size ());
+                std::swap (size_, m.size_);
+                data ().swap (m.data ());
+            }
         }
 #ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
@@ -1099,8 +1102,10 @@ namespace boost { namespace numerics {
         // Swapping
         NUMERICS_INLINE
         void swap (symmetric_adaptor &m) {
-            check (this != &m, external_logic ());
-            matrix_swap<scalar_swap<value_type, value_type> > () (*this, m); 
+            // Too unusual semantic
+            // check (this != &m, external_logic ());
+            if (this != &m) 
+                matrix_swap<scalar_swap<value_type, value_type> > () (*this, m); 
         }
 #ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
