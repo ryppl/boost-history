@@ -151,7 +151,7 @@ type system as are integral constants, types, and templates).
 Function templates may also be declared to accept variable-length
 template parameter lists in the same manner as class templates. In
 this case (and barring reuse of the vararg type as the final function
-parameter, as described in the next section) arguments may only by
+parameter, as described in the next section) arguments may only be
 specified explicitly when calling the function template; they are not
 deduced, e.g.,:
 
@@ -177,7 +177,7 @@ template<... Args>
 the arguments, then {\tt args} is a value parameter pack containing
 the function call arguments passed after the {\tt format}
 argument.\footnote{Note that, unlike C varargs, we do not require but
-  do allow an arguments prior to the argument bundle.} Like template
+  do allow arguments prior to the argument bundle.} Like template
 parameter packs, value parameter packs are not first-class entities:
 their type is that of the associated template parameter pack, which is
 itself not a type in the type system. Both template and value
@@ -285,7 +285,7 @@ conversion sequences are otherwise equal.
 
 \subsection{The types of variadic templates}
 Since parameter packs have no associated types, we specify the
-type of an instantiation typesafe variadic function to be equivalent
+type of an instantiation of a typesafe variadic function to be equivalent
 to the type of a nontemplate function with all template parameters
 substituted and both the template and value parameter packs unpacked
 at the end of the template and function parameter lists,
