@@ -45,6 +45,18 @@ public:
     // Constructors
     basic_array_streambuf();
     basic_array_streambuf( self_type const &c );
+    basic_array_streambuf( char_type const *b, char_type const *e );
+
+    template < typename InIter >
+    basic_array_streambuf( InIter b, InIter e )
+    {
+        for ( std::size_t i = 0 ; (i < self_type::array_size) && (b != e)
+         ; ++i, ++b )
+        {
+            traits_type::assign( this->array_[i], *b );
+        }
+        this->setup_buffers();
+    }
 
     // Accessors
     char_type *  array_begin();
@@ -54,6 +66,9 @@ public:
     char_type const *  array_end() const;
 
 private:
+    // Helpers
+    void  setup_buffers();
+
     // Member data
     char_type  array_[ array_size ];
 
@@ -68,10 +83,19 @@ private:
     class basic_array_##SuffixF \
         : public basic_wrapping_##SuffixB< basic_array_streambuf<N, Ch, Tr> > \
     { \
+        typedef basic_array_streambuf<N, Ch, Tr>     streambuf_type; \
+        typedef basic_wrapping_##SuffixB<streambuf_type>  base_type; \
     public: \
         BOOST_STATIC_CONSTANT( std::size_t, array_size = N ); \
         typedef Ch  char_type; \
         typedef Tr  traits_type; \
+        basic_array_##SuffixF() \
+            {} \
+        basic_array_##SuffixF( char_type const *b, char_type const *e ) \
+            : base_type( b, e ) {} \
+        template < typename InIter > \
+        basic_array_##SuffixF( InIter b, InIter e ) \
+            : base_type( b, e ) {} \
         char_type *  array_begin() \
             { return this->rdbuf()->array_begin(); } \
         char_type *  array_end() \
@@ -97,9 +121,8 @@ basic_array_streambuf<N, Ch, Tr>::basic_array_streambuf
 (
 )
 {
-    this->setg( this->array_, this->array_, this->array_
-     + self_type::array_size );
-    this->setp( this->array_, this->array_ + self_type::array_size );
+    traits_type::assign( this->array_, self_type::array_size, char_type() );
+    this->setup_buffers();
 }
 
 template < std::size_t N, typename Ch, class Tr >
@@ -111,50 +134,71 @@ basic_array_streambuf<N, Ch, Tr>::basic_array_streambuf
     : base_type( c )
 {
     traits_type::copy( this->array_, c.array_, self_type::array_size );
+    this->setup_buffers();
+}
 
+template < std::size_t N, typename Ch, class Tr >
+inline
+basic_array_streambuf<N, Ch, Tr>::basic_array_streambuf
+(
+    typename basic_array_streambuf<N, Ch, Tr>::char_type const *  b,
+    typename basic_array_streambuf<N, Ch, Tr>::char_type const *  e
+)
+{
+    traits_type::copy( this->array_, b, (e - b) );
+    this->setup_buffers();
+}
+
+template < std::size_t N, typename Ch, class Tr >
+inline
+typename basic_array_streambuf<N, Ch, Tr>::char_type *
+basic_array_streambuf<N, Ch, Tr>::array_begin
+(
+)
+{
+    return this->array_;
+}
+
+template < std::size_t N, typename Ch, class Tr >
+inline
+typename basic_array_streambuf<N, Ch, Tr>::char_type *
+basic_array_streambuf<N, Ch, Tr>::array_end
+(
+)
+{
+    return this->array_ + self_type::array_size;
+}
+
+template < std::size_t N, typename Ch, class Tr >
+inline
+typename basic_array_streambuf<N, Ch, Tr>::char_type const *
+basic_array_streambuf<N, Ch, Tr>::array_begin
+(
+) const
+{
+    return this->array_;
+}
+
+template < std::size_t N, typename Ch, class Tr >
+inline
+typename basic_array_streambuf<N, Ch, Tr>::char_type const *
+basic_array_streambuf<N, Ch, Tr>::array_end
+(
+) const
+{
+    return this->array_ + self_type::array_size;
+}
+
+template < std::size_t N, typename Ch, class Tr >
+inline
+void
+basic_array_streambuf<N, Ch, Tr>::setup_buffers
+(
+)
+{
     this->setg( this->array_, this->array_, this->array_
      + self_type::array_size );
     this->setp( this->array_, this->array_ + self_type::array_size );
-}
-
-template < std::size_t N, typename Ch, class Tr >
-inline
-typename basic_array_streambuf<N, Ch, Tr>::char_type *
-basic_array_streambuf<N, Ch, Tr>::array_begin
-(
-)
-{
-    return this->array_;
-}
-
-template < std::size_t N, typename Ch, class Tr >
-inline
-typename basic_array_streambuf<N, Ch, Tr>::char_type *
-basic_array_streambuf<N, Ch, Tr>::array_end
-(
-)
-{
-    return this->array_ + self_type::array_size;
-}
-
-template < std::size_t N, typename Ch, class Tr >
-inline
-typename basic_array_streambuf<N, Ch, Tr>::char_type const *
-basic_array_streambuf<N, Ch, Tr>::array_begin
-(
-) const
-{
-    return this->array_;
-}
-
-template < std::size_t N, typename Ch, class Tr >
-inline
-typename basic_array_streambuf<N, Ch, Tr>::char_type const *
-basic_array_streambuf<N, Ch, Tr>::array_end
-(
-) const
-{
-    return this->array_ + self_type::array_size;
 }
 
 

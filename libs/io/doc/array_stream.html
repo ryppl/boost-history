@@ -97,6 +97,10 @@ public:
     // Constructors
     basic_array_streambuf();
     basic_array_streambuf( basic_array_streambuf const &amp;c );
+    basic_array_streambuf( char_type const *b, char_type const *e );
+
+    template &lt; typename InIter &gt;
+        basic_array_streambuf( InIter b, InIter e );
 
     // Accessors
     char_type *  array_begin();
@@ -133,14 +137,28 @@ character type is the array's element type.</p>
 	<dd>
 		<strong>Effects:</strong> initializes the base class's
 			internal buffer pointers to the bounds of the internal
-			array
+			array; all elements of the internal array are set to
+                        the default value of the elements' type
 
 	<dt><code>basic_array_streambuf( basic_array_streambuf const &amp;c );</code>
 	<dd>
 		<strong>Effects:</strong> initializes the base class's
-			internal buffer pointers to the bounds of the internal array
-			and copies the element values in <var>c</var>'s internal
+			internal buffer pointers to the bounds of the internal array;
+			copies the element values in <var>c</var>'s internal
 			array to the new object's internal array
+	<dt><code>basic_array_streambuf( char_type const *b, char_type const *e );</code>
+	<dd>
+		<strong>Effects:</strong> initializes the base class's
+			internal buffer pointers to the bounds of the internal array;
+			copies the values of the array-segment between <var>b</var>
+			and <var>e</var> to the internal array
+	<dt><code>template &lt; typename InIter &gt;
+        	basic_array_streambuf( InIter b, InIter e );</code>
+	<dd>
+		<strong>Effects:</strong> initializes the base class's
+			internal buffer pointers to the bounds of the internal array;
+			copies the values of the sequence between <var>b</var> and
+			<var>e</var> to the internal array
 </dl>
 
 <h3><a name="m_observe">Observer Member Functions</a></h3>
@@ -207,7 +225,12 @@ public:
     typedef Ch  char_type;
     typedef Tr  traits_type;
 
-    // Use automatically-defined default constructor
+    // Constructors (forwarded to the internal streambuf)
+    basic_array_<var>stream</var>();
+    basic_array_<var>stream</var>( char_type const *b, char_type const *e );
+
+    template &lt; typename InIter &gt;
+        basic_array_<var>stream</var>( InIter b, InIter e );
 
     // Accessors (forwarded to the internal streambuf)
     char_type *  array_begin();
