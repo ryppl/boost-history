@@ -7,14 +7,18 @@
 #  include <boost/fixed_string/detail/basic_string_impl.hpp>
 
 #  include <string.h>
-#  include <wchar.h>
 #  include <stdio.h>
+#  include <wchar.h>
 #  include <stdarg.h>
 
    namespace boost
    {
       namespace detail
       {
+         /** encapsulate printf-style functionality into a char_traits-like
+           * class.
+           */
+
          template< typename CharT > class format_policy{};
 
          template<> class format_policy< char >
@@ -22,7 +26,7 @@
             public:
                static inline int              format( char * s, size_t n, const char * fmt, va_list args )
                {
-#                 if defined(BOOST_MSVC)
+#                 if defined(BOOST_MSVC) || defined(BOOST_INTEL_WIN)
                      return( ::_vsnprintf( s, n, fmt, args ));
 #                 else
                      return( ::vsnprintf( s, n, fmt, args ));
@@ -30,22 +34,27 @@
                }
          };
 
+#        if !defined(BOOST_NO_CWCHAR)
          template<> class format_policy< wchar_t >
          {
             public:
                static inline int              format( wchar_t * s, size_t n, const wchar_t * fmt, va_list args )
                {
-#                 if defined(BOOST_MSVC)
-                     return( ::_vsnwprintf( s, n, fmt, args ));
-#                 elif defined(__MWERKS__)
-                     return( ::vswprintf( s, n, fmt, args ));
-#                 else
-                     return( ::vsnwprintf( s, n, fmt, args ));
-#                 endif
+#              if defined(BOOST_MSVC) || defined(BOOST_INTEL_WIN)
+                  return( ::_vsnwprintf( s, n, fmt, args ));
+#              else
+                  return( ::vswprintf( s, n, fmt, args ));
+#              endif
                }
          };
+#        endif
 
-         template< typename CharT, class CharStringPolicy = std::char_traits< CharT >, class FmtPolicy = format_policy< CharT > >
+         template
+         <
+            typename CharT,
+            class CharStringPolicy = std::char_traits< CharT >,
+            class FmtPolicy = format_policy< CharT >
+         >
          class fixed_string_impl
          {
             public:
@@ -134,14 +143,14 @@
             public: // string operations
                inline void                       assign_( const CharT * s, size_type l )
                {
-                  if( l == -1 )        l = traits_type::length( s );
+                  if( l == size_type( -1 )) l = traits_type::length( s );
                   len = ( l >= cap ) ? cap : l;
                   traits_type::copy( str, s, len );
                   str[ len ] = CharT();
                }
                inline void                       append_( const CharT * s, size_type l = size_type( -1 ))
                {
-                  if( l == -1 )        l = traits_type::length( s );
+                  if( l == size_type( -1 )) l = traits_type::length( s );
                   l = (( l + len ) >= cap ) ? ( cap - len ) : l;
                   traits_type::copy( str + len, s, l );
                   len += l;
@@ -317,9 +326,9 @@
          private:
             CharT                      buf[ storage_c ];
          public:
-            inline this_type                     substr( size_type pos, size_type n ) const
+            inline this_type                     substr( size_type pos, size_type _n ) const
             {
-               return( this_type( *this, pos, n ));
+               return( this_type( *this, pos, _n ));
             }
          public: // assignment
             inline this_type &    operator=( const this_type & s )
