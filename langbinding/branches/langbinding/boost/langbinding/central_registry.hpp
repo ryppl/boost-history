@@ -51,6 +51,19 @@ namespace boost { namespace langbinding {
          , typename registry<T>::rvalue_from_stage1
          , typename registry<T>::rvalue_from_stage2
       );
+
+      BOOST_LANGBINDING_DECL
+      static void central_registry<T>::import(
+           registry_ptr r
+         , const char* module
+      );
+
+      BOOST_LANGBINDING_DECL
+      static void central_registry<T>::import(
+           registry_ptr r
+         , const char* module
+         , const typename registry<T>::type_info_& type
+      );
    };
 
 }}
