@@ -348,7 +348,7 @@ public:
   }
 
   bool operator!() const {
-    this->is_zero();
+    return this->is_zero();
   }
 
   bool operator<(bigint const& other) const {

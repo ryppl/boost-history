@@ -93,6 +93,8 @@ int main() {
     assert(x == bigint("1234567"));
   }
 
+  assert(bigint(0) == bigint("0"));
+  assert(bigint(5) == bigint("5"));
 
   assert(!bigint(0));
   assert(!!bigint(5));
@@ -150,4 +152,15 @@ int main() {
     o << std::setfill('x') << bigint(55555) << std::setw(5) << "x";
     assert (o.str() == "55555xxxxx");
   }
+
+  // Use lexical cast to convert from a string of numbers to a bigint.
+  // An error in lexical_cast may throw a bad_lexical_cast object.
+  try {
+    bigint ll = boost::lexical_cast<boost::bigint>("123");
+    assert(ll == 123);
+  } catch (boost::bad_lexical_cast&) {
+    throw;
+  }
+
+
 }
