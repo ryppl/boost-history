@@ -39,7 +39,9 @@ namespace detail
         typedef boost::indirect_iterator<typename C::iterator>                iterator;
         typedef boost::indirect_iterator<typename C::const_iterator>          const_iterator;                
         typedef boost::indirect_iterator<typename C::reverse_iterator>        reverse_iterator;
-        typedef boost::indirect_iterator<typename C::const_reverse_iterator>  const_reverse_iterator;                
+        typedef boost::indirect_iterator<typename C::const_reverse_iterator>  const_reverse_iterator;              
+        typedef T                                                             object_type;
+        typedef T                                                             search_key_type;
     };
     
     template< typename M, typename T >
@@ -51,6 +53,8 @@ namespace detail
         typedef typename ptr_container::detail::map_iterator<typename M::const_iterator, const T>         const_iterator;
         typedef typename ptr_container::detail::map_iterator<typename M::reverse_iterator, T>             reverse_iterator;
         typedef typename ptr_container::detail::map_iterator<typename M::const_reverse_iterator, const T> const_reverse_iterator;
+        typedef std::pair<const typename M::key_type, T*>                                                 object_type;
+        typedef typename M::key_type                                                                      search_key_type;
     };
 
     template< typename Config >
@@ -70,7 +74,7 @@ namespace detail
         typedef BOOST_DEDUCED_TYPENAME Config::value_type     T;
 
     public: // typedefs
-        typedef  T                                            object_type;
+        typedef  BOOST_DEDUCED_TYPENAME Config::object_type   object_type;
         typedef  T*                                           value_type;
         typedef  T*                                           pointer;
         typedef  T&                                           reference;

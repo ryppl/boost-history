@@ -24,40 +24,7 @@
 
 namespace boost
 {
-    //////////////////////////////////////////////////////////////////////////////
-    // clonability of map values
     
-    namespace foo
-    {
-
-        template< typename K, typename T, typename C, typename A >
-            typename std::map<K,T,C,A>::value_type make_clone( const typename std::map<K,T,C,A>::value_type& pair )
-        {
-            typename std::map<K,T,C,A>::value_type( pair.first, make_clone( *pair.second ) );
-        }
-        
-        template< typename K, typename T, typename C, typename A >
-            typename std::multimap<K,T,C,A>::value_type make_clone( const typename std::multimap<K,T,C,A>::value_type& pair )
-        {
-            typename std::multimap<K,T,C,A>::value_type( pair.first, make_clone( *pair.second ) );
-        }
-    }
-    
-    
-    //////////////////////////////////////////////////////////////////////////////
-    // ptr_less specializarion
-    /*
-    template< typename 
-    struct map_ptr_less
-    {
-        bool operator()( const P& l, const P& r ) const
-        {
-            return *l.second < *r.second;
-        }
-    };
-    */
-    
-
     template< typename Key, typename T, typename Compare = std::less<Key>, 
               typename Allocator = std::allocator< std::pair<const Key, T*> > >
     class ptr_map : public detail::associative_ptr_container< detail::map_config< std::map<Key,T*,Compare,Allocator>, T > >
@@ -65,11 +32,30 @@ namespace boost
         typedef detail::associative_ptr_container< detail::map_config< std::map<Key,T*,Compare,Allocator>, T > > Base;
     
     public:
-        // mapped_type
-               
+            // mapped_type ?
+        
         typedef BOOST_DEDUCED_TYPENAME Base::iterator     iterator;                 
         typedef BOOST_DEDUCED_TYPENAME Base::ptr_iterator ptr_iterator;         
+        typedef BOOST_DEDUCED_TYPENAME Base::object_type  object_type;         
 
+    private:
+           
+        template< typename II >                                               
+        void map_basic_clone_and_insert( II first, II last )                  
+        {                                                                     
+            while( first != last )                                            
+            {                                            
+                if( this->find( first.key() ) != this->end() )
+                {
+                    const object_type& pair = *first.base();            // nothrow                     
+                    std::auto_ptr<T> ptr( make_clone( *pair.second ) ); // strong
+                    insert( pair.first, ptr.get() );                    // strong, commit
+                    ptr.release();                                      // nothrow
+                }
+                ++first;                                                      
+            }                                                                 
+        }
+        
     public:
         explicit ptr_map( const Compare& comp = Compare(), const Allocator& alloc = Allocator() ) 
         : Base( comp, alloc ) { }
@@ -77,27 +63,35 @@ namespace boost
         template< typename InputIterator >
         ptr_map( InputIterator first, InputIterator last, 
                  const Compare& comp = Compare(), const Allocator& alloc = Allocator() ) 
-        : Base( first, last, comp, alloc ) { }
+        : Base( comp, alloc ) 
+        {
+            map_basic_clone_and_insert( first, last );
+        }
         
         BOOST_PTR_CONTAINER_RELEASE_AND_CLONE( ptr_map );
         
         using Base::insert;
         
-        /*
-        std::pair<iterator,bool> insert( const T& t ) // strong
+        template< typename InputIterator >
+        void insert( InputIterator first, InputIterator last ) // basic
         {
-            return insert( make_clone( t ) );
+            map_basic_clone_and_insert( first, last );
         }
-        */
         
-        std::pair<iterator,bool> insert( std::pair<const Key, T*>& p ) // strong
+        std::pair<iterator,bool> insert( const Key& key, T* x ) // strong
         {
-            std::auto_ptr<T> ptr( p.second );
-            std::pair<ptr_iterator,bool> res = this->c__().insert( p );       
-            if( res.second )                                                 
-                ptr.release();                                                  
-            return std::make_pair( iterator( res.first ), res.second );
+            std::auto_ptr<T> ptr( x );                                                         // nothrow
+            std::pair<ptr_iterator,bool> res = this->c__().insert( std::make_pair( key, x ) ); // strong, commit      
+            if( res.second )                                                                   // nothrow     
+                ptr.release();                                                                 // nothrow
+            return std::make_pair( iterator( res.first ), res.second );                        // nothrow   
         }
+        
+        std::pair<iterator,bool> insert( const Key& key, const T& x ) // strong
+        {
+            return insert( key, make_clone( x ) );
+        }
+
     };
     
 
@@ -109,9 +103,26 @@ namespace boost
         typedef detail::associative_ptr_container< detail::map_config< std::multimap<Key,T*,Compare,Allocator>, T > > Base;
     
     public: // typedefs
+        // mapped_type
         typedef BOOST_DEDUCED_TYPENAME Base::iterator     iterator;                 
-        typedef BOOST_DEDUCED_TYPENAME Base::ptr_iterator ptr_iterator;         
+        typedef BOOST_DEDUCED_TYPENAME Base::ptr_iterator ptr_iterator;        
+        typedef BOOST_DEDUCED_TYPENAME Base::object_type  object_type;          
 
+    private:
+        
+        template< typename II >                                               
+        void map_basic_clone_and_insert( II first, II last )                  
+        {                                                                     
+            while( first != last )                                            
+            {                                            
+                const object_type& pair = *first.base();            // nothrow                     
+                std::auto_ptr<T> ptr( make_clone( *pair.second ) ); // strong
+                insert( pair.first, ptr.get() );                    // strong, commit
+                ptr.release();                                      // nothrow
+                ++first;                                                      
+            }                                                                 
+        }
+        
     public:
         explicit ptr_multimap( const Compare& comp = Compare(), 
                       const Allocator& alloc = Allocator() ) 
@@ -120,23 +131,32 @@ namespace boost
         template< typename InputIterator >
         ptr_multimap( InputIterator first, InputIterator last,
                       const Compare& comp = Compare(), const Allocator& alloc = Allocator() )
-        : Base( first, last, comp, alloc ) { }
+        : Base( comp, alloc ) 
+        {
+            map_basic_clone_and_insert( first, last );
+        }
         
         BOOST_PTR_CONTAINER_RELEASE_AND_CLONE( ptr_multimap );
         
         using Base::insert;
-        /*
-        iterator insert( const std::pair<const Key,T*>& t ) // strong
+        
+        template< typename InputIterator >
+        void insert( InputIterator first, InputIterator last ) // basic
         {
-            return insert( make_clone( t ) );
+            map_basic_clone_and_insert( first, last );
         }
-        */
-        iterator insert( const std::pair<const Key, T*>& p ) // strong
+        
+        iterator insert( const Key& key, T* x ) // strong
         {
-            std::auto_ptr<T> ptr( p.second );
-            ptr_iterator res = this->c__().insert( p );       
-            ptr.release();                                                  
-            return iterator( res );
+            std::auto_ptr<T> ptr( x );                                         // nothrow
+            ptr_iterator res = this->c__().insert( std::make_pair( key, x ) ); // strong, commit        
+            ptr.release();                                                     // notrow
+            return iterator( res );           
+        }
+        
+        iterator insert( const Key& key, const T& x ) // strong
+        {
+            return insert( key, make_clone( x ) );
         }
     };
 

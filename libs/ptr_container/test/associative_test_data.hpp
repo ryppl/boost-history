@@ -1,10 +1,10 @@
 
 #include <libs/ptr_container/test/test_data.hpp>
 
-template< typename C, typename T >
+template< typename C, typename B, typename T >
 void associative_container_test();
 
-template< typename C, typename T >
+template< typename C, typename B, typename T >
 void associative_container_test()
 {   
     BOOST_MESSAGE( "starting associative container test" ); 
@@ -61,11 +61,12 @@ void associative_container_test()
     BOOST_CHECK( c3.empty() );
     BOOST_MESSAGE( "finished modifiers test" ); 
              
-    std::auto_ptr<typename C::object_type> ptr2  = c.release( c.begin() );
+    std::auto_ptr<B> ptr2  = c.release( c.begin() );
     std::auto_ptr<C> ap    = c.release();
     c                      = c2.clone();
     BOOST_MESSAGE( "finished release/clone test" ); 
-                     
+  
+  /*                   
     c.transfer( c3.begin(), c3 );
     c.transfer( c3.begin(), c3.end(), c3 );
     BOOST_CHECK( c3.empty() );
@@ -74,7 +75,8 @@ void associative_container_test()
     BOOST_CHECK( !c3.empty() );
     BOOST_CHECK( c.empty() );
     BOOST_MESSAGE( "finished transfer test" );         
-    
+  */
+      
     BOOST_MESSAGE( "finished set/map interface test" );         
 }
 

@@ -7,14 +7,14 @@ int test_main( int, char*[] )
     typedef_test< ptr_map<int, Base>, Derived >();
     typedef_test< ptr_map<int, Value>, Value >();
 
-    associative_container_test< ptr_map<int, Base>, Derived >();
-    associative_container_test< ptr_map<int, Value>, Value >();
+    associative_container_test< ptr_map<int, Base>, Base, Derived >();
+    associative_container_test< ptr_map<int, Value>, Value, Value >();
     
     typedef_test< ptr_multimap<int, Base>, Derived >();
     typedef_test< ptr_multimap<int, Value>, Value >();
 
-    associative_container_test< ptr_multimap<int, Base>, Derived >();
-    associative_container_test< ptr_multimap<int, Value>, Value >();
+    associative_container_test< ptr_multimap<int, Base>, Base, Derived >();
+    associative_container_test< ptr_multimap<int, Value>, Value, Value >();
     
     //c.insert( T() );
     //c.insert( t );

@@ -36,6 +36,19 @@ namespace boost
         typedef BOOST_DEDUCED_TYPENAME Base::iterator     iterator;                 
         typedef BOOST_DEDUCED_TYPENAME Base::ptr_iterator ptr_iterator;         
 
+    private:
+        
+        template< typename II >                                               
+        void set_basic_clone_and_insert( II first, II last ) // basic                 
+        {                                                                     
+            while( first != last )                                            
+            {           
+                if( this->find( *first ) != this->end() )
+                    insert( make_clone( *first ) ); // strong, commit                              
+                ++first;                                                      
+            }                                                                 
+        }                         
+
     public:
         explicit ptr_set( const Compare& comp = Compare(), 
                           const Allocator& alloc = Allocator() ) : Base( comp, alloc ) 
@@ -44,19 +57,21 @@ namespace boost
         template< typename InputIterator >
         ptr_set( InputIterator first, InputIterator last, const Compare& comp = Compare(), 
                  const Allocator& alloc = Allocator() ) 
-        : Base( first, last, comp, alloc )
-        { }
+        : Base( comp, alloc )
+        {
+            set_basic_clone_and_insert( first, last );
+        }
 
         BOOST_PTR_CONTAINER_RELEASE_AND_CLONE( ptr_set );
         
         using Base::insert;                                                    
         
-        std::pair<iterator,bool> insert( const Key& x )   
+        std::pair<iterator,bool> insert( const Key& x ) // strong  
         {  
             return this->insert( make_clone ( x ) );
         }                                                   
 
-        std::pair<iterator,bool> insert( Key* x )                       
+        std::pair<iterator,bool> insert( Key* x ) // strong                      
         {       
             std::auto_ptr<Key> ptr( x );                                
             std::pair<ptr_iterator,bool> res = this->c__().insert( x );       
@@ -65,6 +80,11 @@ namespace boost
             return std::make_pair( iterator( res.first ), res.second );     
         }
 
+        template< typename InputIterator >
+        void insert( InputIterator first, InputIterator last ) // basic
+        {
+            set_basic_clone_and_insert( first, last );
+        }
     };
         
         
@@ -80,6 +100,17 @@ namespace boost
         typedef BOOST_DEDUCED_TYPENAME Base::iterator     iterator;              
         typedef BOOST_DEDUCED_TYPENAME Base::ptr_iterator ptr_iterator;  
         
+    private:
+        template< typename II >                                               
+        void set_basic_clone_and_insert( II first, II last ) // basic                 
+        {                                                                     
+            while( first != last )                                            
+            {           
+                insert( make_clone( *first ) ); // strong, commit                              
+                ++first;                                                      
+            }                                                                 
+        }                         
+
     public:
         explicit ptr_multiset( const Compare& comp = Compare(), 
                                const Allocator& alloc = Allocator() )
@@ -90,18 +121,21 @@ namespace boost
         ptr_multiset( InputIterator first, InputIterator last,
                       const Compare& comp = Compare(), 
                       const Allocator& alloc = Allocator() ) 
-        : Base( first, last, comp, alloc ) { }
+        : Base( comp, alloc ) 
+        {
+            set_basic_clone_and_insert( first, last );
+        }
         
         BOOST_PTR_CONTAINER_RELEASE_AND_CLONE( ptr_multiset );
                                                                             
         using Base::insert;                                                     
         
-        iterator insert( const Key& x )                                 
+        iterator insert( const Key& x ) // strong                                
         {                                                                       
             return this->insert( make_clone ( x ) );                            
         }                                                                       
         
-        iterator insert( Key* x )                                       
+        iterator insert( Key* x ) // strong                                      
         {                                                                       
             std::auto_ptr<Key> ptr( x );                                
             ptr_iterator res = this->c__().insert( x );                         
@@ -109,6 +143,11 @@ namespace boost
             return iterator( res );                                             
         }
         
+        template< typename InputIterator >
+        void insert( InputIterator first, InputIterator last ) // basic
+        {
+            set_basic_clone_and_insert( first, last );
+        }
     };
 
     //////////////////////////////////////////////////////////////////////////////

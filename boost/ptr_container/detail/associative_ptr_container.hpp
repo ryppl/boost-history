@@ -32,39 +32,24 @@ namespace detail
         typedef reversible_ptr_container<Config> Base;
 
     public: // typedefs
-        typedef typename Config::container_type              C;
-        typedef BOOST_DEDUCED_TYPENAME C::key_type           key_type;
-        typedef BOOST_DEDUCED_TYPENAME C::key_compare        key_compare;
-        typedef BOOST_DEDUCED_TYPENAME C::value_compare      value_compare;
-        typedef BOOST_DEDUCED_TYPENAME Base::scoped_deleter  scoped_deleter;
-        typedef BOOST_DEDUCED_TYPENAME Base::allocator_type  allocator_type;
-        typedef BOOST_DEDUCED_TYPENAME Base::object_type     object_type; 
-        typedef BOOST_DEDUCED_TYPENAME Base::iterator        iterator; 
-        typedef BOOST_DEDUCED_TYPENAME Base::const_iterator  const_iterator;
-        typedef BOOST_DEDUCED_TYPENAME Base::size_type       size_type;
-        typedef BOOST_DEDUCED_TYPENAME Base::difference_type difference_type;
-        //BOOST_FORWARD_TYPEDEF( Base );
-    
+        typedef BOOST_DEDUCED_TYPENAME Config::container_type   C;
+        typedef BOOST_DEDUCED_TYPENAME C::key_type              key_type;
+        typedef BOOST_DEDUCED_TYPENAME Config::search_key_type  search_key_type;
+        typedef BOOST_DEDUCED_TYPENAME C::key_compare           key_compare;
+        typedef BOOST_DEDUCED_TYPENAME C::value_compare         value_compare;
+        typedef BOOST_DEDUCED_TYPENAME Base::allocator_type     allocator_type; 
+        typedef BOOST_DEDUCED_TYPENAME Base::object_type        object_type; 
+        typedef BOOST_DEDUCED_TYPENAME Base::iterator           iterator; 
+        typedef BOOST_DEDUCED_TYPENAME Base::const_iterator     const_iterator;
+        typedef BOOST_DEDUCED_TYPENAME Base::ptr_iterator       ptr_iterator; 
+        typedef BOOST_DEDUCED_TYPENAME Base::ptr_const_iterator ptr_const_iterator;
+        typedef BOOST_DEDUCED_TYPENAME Base::size_type          size_type;
+     
     protected:
-        void insert_clones_and_release( scoped_deleter& sd ) // strong
-        {
-            //
-            // 'c_.insert' always provides the strong guarantee for T* elements
-            // since a copy constructor of a pointer cannot throw
-            //
-            this->c__().insert( sd.begin(), sd.end() ); 
-            sd.release();
-        }
         
-        /*
-        template< typename InputIterator >
-        void insert_clones_and_release_map( scoped_deleter& sd,
-                                            InputIterator first, InputIterator last )
-        {
-            $this->c__().insert
-        }
-        */
-
+        void assign();                // hide inherited members
+        void operator[]( size_type ); // hide inherited members 
+        
     public: // foundation
         
        template< typename Compare >
@@ -76,17 +61,6 @@ namespace detail
        template< typename PtrContainer >
        associative_ptr_container( std::auto_ptr<PtrContainer> r ) : Base( r )
        { }
-       
-       template< typename InputIterator, typename Compare >
-       associative_ptr_container( InputIterator first, InputIterator last, const Compare& comp, 
-                                  const allocator_type& alloc = allocator_type() )
-       : Base( comp, alloc )
-       { 
-           difference_type n = std::distance( first, last ); 
-           scoped_deleter sd( n );                  // strong
-           this->make_clones( sd, first, last );    // strong
-           insert_clones_and_release( sd );         // strong
-       }
        
        template< typename PtrContainer >
        void operator=( std::auto_ptr<PtrContainer> r )
@@ -105,28 +79,15 @@ namespace detail
             return this->c__().value_comp();
         }
         
-        using Base::insert;
-        
-        template< typename InputIterator >
-        void insert( InputIterator first, InputIterator last )
-        {
-            scoped_deleter sd( std::distance( first, last ) ); // strong
-            this->make_clones( sd, first, last );              // strong
-            // hm
-            this->c__().insert( sd.begin(), sd.end() );
-            sd.release();
-        }
-        
         void erase( iterator before ) // nothrow 
         { 
             this->remove( before ); 
             this->c__().erase( before.base() );
         }
         
-        size_type erase( const key_type& x )
+        size_type erase( const search_key_type& x )
         {
-            // ?
-            return 0;
+            return this->c__().erase( x );
         }
         
         void erase( iterator first, iterator last ) // notrow 
@@ -135,41 +96,54 @@ namespace detail
             this->c__().erase( first.base(), last.base() );
         }
 
-        iterator find( const key_type& x )
+        iterator find( const search_key_type& x )
         {
             return iterator( this->c__().find( x ) );
         }
         
-        const_iterator find( const key_type& x ) const 
+        const_iterator find( const search_key_type& x ) const 
         {
             return const_iterator( this->c__().find( x ) );
         }
         
-        size_type count( const key_type& x ) const 
+        size_type count( const search_key_type& x ) const 
         {
             return this->c__().count( x ); 
         }
         
-        iterator lower_bound( const key_type& x )
+        iterator lower_bound( const search_key_type& x )
         {
             return iterator( this->c__().lower_bound( x ) );
         }
          
-        const_iterator lower_bound( const key_type& x ) const 
+        const_iterator lower_bound( const search_key_type& x ) const 
         {
             return const_iterator( this->c__().lower_bound( x ) );        
         } 
         
-        iterator upper_bound( const key_type& x )
+        iterator upper_bound( const search_key_type& x )
         {
             return iterator( this->c__().upper_bound( x ) ); 
         }
         
-        const_iterator upper_bound( const key_type& x ) const
+        const_iterator upper_bound( const search_key_type& x ) const
         {
             return const_iterator( this->c__().upper_bound( x ) );
         }
         
+        std::pair<iterator, iterator> equal_range( const search_key_type& x ) 
+        {
+            std::pair<ptr_iterator,ptr_iterator> p = this->c__().equal_range( x );
+            return std::make_pair( iterator( p.first ), iterator( p.second ) );
+        }
+        
+        std::pair<const_iterator, const_iterator> equal_range( const search_key_type& x ) const 
+        {
+            std::pair<ptr_const_iterator,ptr_const_iterator> p = this->c__().equal_range( x );
+            return std::make_pair( const_iterator( p.first ), const_iterator( p.second ) );
+        }
+        
+        /*
         template< typename PtrContainer >
         void transfer( typename PtrContainer::iterator object, PtrContainer& from ) // strong
         {
@@ -182,6 +156,7 @@ namespace detail
         void transfer( typename PtrContainer::iterator first, 
                        typename PtrContainer::iterator last, PtrContainer& from )
         {
+            // need try-catch
             this->c__().insert( first.base(), last.base() ); // strong 
             from.c__().erase( first.base(), last.base() );   // nothrow
         }
@@ -189,24 +164,14 @@ namespace detail
         template< typename PtrContainer >
         void transfer( PtrContainer& from )
         {
+            // need try-catch
             this->c__().insert( from.c__().begin(), from.c__().end() ); // strong
-            from.c__().clear();                                   // nothrow
+            from.c__().clear();                                         // nothrow
         }
-
-        //std::pair<iterator, iterator>
-        //                equal_range( const key_type& x) { return make_pair( this->c_().equal_range( x ) ); }
-        //std::pair<const_iterator, const_iterator>
-        //                equal_range( const key_type& x) const { return make_pair( this->c_().equal_range( x ) ); }
+        */
     };
     
 } // namespace 'detail'
-
-#define BOOST_FORWARD_ASSOC_TYPEDEF( Base )                      \
-BOOST_FORWARD_TYPEDEF( Base );                                   \
-typedef BOOST_DEDUCED_TYPENAME Base::key_type key_type;          \
-typedef BOOST_DEDUCED_TYPENAME Base::key_compare key_compare;    \
-typedef BOOST_DEDUCED_TYPENAME Base::value_compare value_compare
-
 
     /////////////////////////////////////////////////////////////////////////
     // default predicates:
