@@ -12,7 +12,7 @@
 // $Revision$
 
 #include <boost/mpl/advance.hpp>
-#include <boost/mpl/iterator_tag.hpp>
+#include <boost/mpl/iterator_tags.hpp>
 #include <boost/mpl/aux_/test.hpp>
 
 template< int pos > struct iter

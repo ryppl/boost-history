@@ -14,7 +14,7 @@
 // $Date$
 // $Revision$
 
-#include <boost/mpl/iterator_tag.hpp>
+#include <boost/mpl/iterator_tags.hpp>
 #include <boost/mpl/plus.hpp>
 #include <boost/mpl/minus.hpp>
 #include <boost/mpl/aux_/iterator_names.hpp>

@@ -14,7 +14,7 @@
 // $Date$
 // $Revision$
 
-#include <boost/mpl/iterator_tag.hpp>
+#include <boost/mpl/iterator_tags.hpp>
 #include <boost/mpl/list/aux_/node.hpp>
 #include <boost/mpl/aux_/lambda_spec.hpp>
 

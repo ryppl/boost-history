@@ -17,7 +17,7 @@
 #ifndef BOOST_MPL_AUX_SINGLE_ELEMENT_ITER_HPP_INCLUDED
 #define BOOST_MPL_AUX_SINGLE_ELEMENT_ITER_HPP_INCLUDED
 
-#include <boost/mpl/iterator_tag.hpp>
+#include <boost/mpl/iterator_tags.hpp>
 #include <boost/mpl/plus.hpp>
 #include <boost/mpl/minus.hpp>
 #include <boost/mpl/int.hpp>

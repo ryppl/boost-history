@@ -2,11 +2,11 @@
 #ifndef BOOST_MPL_JOINT_VIEW_HPP_INCLUDED
 #define BOOST_MPL_JOINT_VIEW_HPP_INCLUDED
 
-// Copyright Aleksey Gurtovoy 2000-2003
+// Copyright Aleksey Gurtovoy 2000-2004
 //
-// Use, modification and distribution are subject to the Boost Software 
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
-// at http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
@@ -20,8 +20,7 @@
 #include <boost/mpl/begin_end.hpp>
 #include <boost/mpl/aux_/na_spec.hpp>
 
-namespace boost {
-namespace mpl {
+namespace boost { namespace mpl {
 
 namespace aux {
 struct joint_view_tag;
@@ -49,11 +48,11 @@ struct joint_view
     typedef typename begin<Sequence2_>::type first2_;
     typedef typename end<Sequence2_>::type last2_;
 
- public:
     // agurt, 25/may/03: for the 'size_traits' implementation above
     typedef Sequence1_ sequence1_;
     typedef Sequence2_ sequence2_;
 
+    typedef joint_view type;
     typedef aux::joint_view_tag tag;
     typedef typename aux::joint_iter<first1_,last1_,first2_> begin;
     typedef typename aux::joint_iter<last1_,last1_,last2_> end;
@@ -61,7 +60,6 @@ struct joint_view
 
 BOOST_MPL_AUX_NA_SPEC(2, joint_view)
 
-} // namespace mpl
-} // namespace boost
+}}
 
 #endif // BOOST_MPL_JOINT_VIEW_HPP_INCLUDED

@@ -17,7 +17,7 @@
 
 #include <boost/mpl/transform.hpp>
 #include <boost/mpl/begin_end.hpp>
-#include <boost/mpl/iterator_tag.hpp>
+#include <boost/mpl/iterator_tags.hpp>
 #include <boost/mpl/next.hpp>
 #include <boost/mpl/lambda.hpp>
 #include <boost/mpl/deref.hpp>

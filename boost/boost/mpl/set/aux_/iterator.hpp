@@ -17,7 +17,7 @@
 
 #include <boost/mpl/set/aux_/set0.hpp>
 #include <boost/mpl/has_key.hpp>
-#include <boost/mpl/iterator_tag.hpp>
+#include <boost/mpl/iterator_tags.hpp>
 #include <boost/mpl/next.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/if.hpp>
@@ -77,8 +77,8 @@ template< typename Set > struct s_iter<Set, set0<> >
 template< typename Set >
 struct s_end_iter
 {
-    typedef fwd_iter_tag_       category;
-    typedef s_iter<Set,set0<> > next;
+    typedef forward_iterator_tag    category;
+    typedef s_iter<Set,set0<> >     next;
 };
 
 template< typename Set, typename Tail > struct s_iter

@@ -18,7 +18,7 @@
 #include <boost/mpl/map/aux_/map0.hpp>
 #include <boost/mpl/map/aux_/at_impl.hpp>
 #include <boost/mpl/map/aux_/tag.hpp>
-#include <boost/mpl/iterator_tag.hpp>
+#include <boost/mpl/iterator_tags.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/next.hpp>
 #include <boost/mpl/deref.hpp>

@@ -47,7 +47,6 @@
 #   if defined(BOOST_MPL_CFG_EXTENDED_TEMPLATE_PARAMETERS_MATCHING)
 
 #   include <boost/mpl/limits/arity.hpp>
-#   include <boost/mpl/limits/int.hpp>
 #   include <boost/mpl/aux_/preprocessor/range.hpp>
 #   include <boost/mpl/aux_/preprocessor/repeat.hpp>
 #   include <boost/mpl/aux_/preprocessor/params.hpp>
@@ -59,6 +58,8 @@
 #   include <boost/preprocessor/inc.hpp>
 #   include <boost/preprocessor/cat.hpp>
 
+#   define AUX778076_ARITY BOOST_PP_INC(BOOST_MPL_LIMIT_METAFUNCTION_ARITY)
+
 namespace boost { namespace mpl { namespace aux {
 
 template< BOOST_MPL_AUX_NTTP_DECL(int, N) > struct arity_tag
@@ -66,34 +67,31 @@ template< BOOST_MPL_AUX_NTTP_DECL(int, N) > struct arity_tag
     typedef char (&type)[N + 1];
 };
 
-#define AUX_MAX_ARITY_OP(unused, state, i_) \
+#   define AUX778076_MAX_ARITY_OP(unused, state, i_) \
     ( BOOST_PP_CAT(C,i_) > 0 ? BOOST_PP_CAT(C,i_) : state ) \
 /**/
 
 template<
-      BOOST_MPL_PP_PARAMS(
-          BOOST_MPL_LIMIT_METAFUNCTION_ARITY
-        , BOOST_MPL_AUX_NTTP_DECL(int, C)
-        )
+      BOOST_MPL_PP_PARAMS(AUX778076_ARITY, BOOST_MPL_AUX_NTTP_DECL(int, C))
     >
 struct max_arity
 {
     BOOST_STATIC_CONSTANT(int, value = 
           BOOST_PP_SEQ_FOLD_LEFT(
-              AUX_MAX_ARITY_OP
+              AUX778076_MAX_ARITY_OP
             , -1
-            , BOOST_MPL_PP_RANGE(1, BOOST_MPL_LIMIT_METAFUNCTION_ARITY)
+            , BOOST_MPL_PP_RANGE(1, AUX778076_ARITY)
             )
         );
 };
 
-#undef AUX_MAX_ARITY_OP
+#   undef AUX778076_MAX_ARITY_OP
 
 arity_tag<0>::type arity_helper(...);
 
-#define BOOST_PP_ITERATION_LIMITS (1, BOOST_MPL_LIMIT_METAFUNCTION_ARITY)
-#define BOOST_PP_FILENAME_1 <boost/mpl/aux_/template_arity.hpp>
-#include BOOST_PP_ITERATE()
+#   define BOOST_PP_ITERATION_LIMITS (1, AUX778076_ARITY)
+#   define BOOST_PP_FILENAME_1 <boost/mpl/aux_/template_arity.hpp>
+#   include BOOST_PP_ITERATE()
 
 template< typename F, BOOST_MPL_AUX_NTTP_DECL(int, N) >
 struct template_arity_impl
@@ -103,7 +101,7 @@ struct template_arity_impl
         );
 };
 
-#define AUX778076_TEMPLATE_ARITY_IMPL_INVOCATION(unused, i_, F) \
+#   define AUX778076_TEMPLATE_ARITY_IMPL_INVOCATION(unused, i_, F) \
     BOOST_PP_COMMA_IF(i_) template_arity_impl<F,BOOST_PP_INC(i_)>::value \
 /**/
 
@@ -112,7 +110,7 @@ struct template_arity
 {
     BOOST_STATIC_CONSTANT(int, value = (
           max_arity< BOOST_MPL_PP_REPEAT(
-              BOOST_MPL_LIMIT_METAFUNCTION_ARITY
+              AUX778076_ARITY
             , AUX778076_TEMPLATE_ARITY_IMPL_INVOCATION
             , F
             ) >::value
@@ -121,7 +119,9 @@ struct template_arity
     typedef int_<value> type;
 };
 
-#undef AUX778076_TEMPLATE_ARITY_IMPL_INVOCATION
+#   undef AUX778076_TEMPLATE_ARITY_IMPL_INVOCATION
+
+#   undef AUX778076_ARITY
 
 }}}
 

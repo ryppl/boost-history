@@ -4,9 +4,9 @@
 
 // Copyright Aleksey Gurtovoy 2000-2004
 //
-// Use, modification and distribution are subject to the Boost Software 
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
-// at http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
@@ -16,6 +16,7 @@
 
 #include <boost/mpl/find_if.hpp>
 #include <boost/mpl/iterator_range.hpp>
+#include <boost/mpl/iterator_tags.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/aux_/lambda_spec.hpp>
 #include <boost/mpl/aux_/config/ctps.hpp>
@@ -57,7 +58,7 @@ template<
 struct filter_iter
 {
     typedef Iterator base;
-    typedef typename base::category category;
+    typedef forward_iterator_tag category;
     typedef typename aux::next_filter_iter<
           typename next<base>::type
         , LastIterator
@@ -74,7 +75,7 @@ template<
 struct filter_iter< LastIterator,LastIterator,Predicate >
 {
     typedef LastIterator base;
-    typedef typename base::category category;
+    typedef forward_iterator_tag category;
 };
 
 #else
@@ -90,9 +91,7 @@ struct filter_iter_impl
     struct result_
     {
         typedef Iterator base;
-        // agurt, 14/oct/02: have to use 'Iterator' instead of 'base' below
-        // to prevent 'base' and 'mpl::base' conflict on MSVC 6.0
-        typedef typename Iterator::category category;
+        typedef forward_iterator_tag category;
         typedef typename next_filter_iter<
               typename next<Iterator>::type
             , LastIterator
@@ -114,7 +113,7 @@ struct filter_iter_impl< true >
     struct result_
     {
         typedef Iterator base;
-        typedef typename Iterator::category category;
+        typedef forward_iterator_tag category;
     };
 };
 
