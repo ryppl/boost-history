@@ -584,15 +584,15 @@ The first tuple algorithm creates a tuple that is the reverse of the
 input tuple.
 \begin{verbatim}
 template<... Args>
-  tuple<Args> reverse(tuple<>, Args args)
-  { return tuple<Args>(args); }
+  tuple<Args> reverse(tuple<>, Args&... args)
+  { return tuple<Args...>(args...); }
 
 template<typename Tuple, ... Args>
-  auto reverse(const Tuple& t, Args args)
+  auto reverse(const Tuple& t, Args&... args)
   { 
     typedef typename Tuple::head_type head_type;
     typedef typename Tuple::tail_type tail_type;
-    return reverse<tail_type, head_type>(t.tail, t.head, args);
+    return reverse<tail_type, head_type>(t.tail, t.head, args...);
   }
 \end{verbatim}
 
@@ -602,28 +602,28 @@ stored in a tuple and later unpacked and passed to a function object
 as function call parameters.
 \begin{verbatim}
 template<typename F, ... Args>
-  auto apply(F f, tuple<>, Args args)
-  { return f(args); }
+  auto apply(F f, tuple<>, Args&... args)
+  { return f(args...); }
 
 template<typename F, typename Tuple, ... Args>
-  auto apply(F f, const Tuple& t, Args args)
-  { return apply(f, t.tail, args, t.head); }
+  auto apply(F f, const Tuple& t, Args&... args)
+  { return apply(f, t.tail, args..., t.head); }
 
 template<typename F, typename Tuple, ... Args>
-  auto apply(F f, Tuple& t, Args args)
-  { return apply(f, t.tail, args, t.head); }
+  auto apply(F f, Tuple& t, Args&... args)
+  { return apply(f, t.tail, args..., t.head); }
 \end{verbatim}
 
 The final tuple algorithm represents a transformation on tuples,
 similar to the {\tt transform} algorithm in the standard library.
 \begin{verbatim}
 template<typename F, ... Args>
-  auto transform(tuple<>, F, Args args)
-  { return make_tuple(args); }
+  auto transform(tuple<>, F, Args&... args)
+  { return make_tuple(args...); }
 
 template<typename Tuple, typename F, ... Args>
-  auto transform(const Tuple& t, F f, Args args)
-  { return transform(t.tail, f, args, f(t.head)); }
+  auto transform(const Tuple& t, F f, Args&... args)
+  { return transform(t.tail, f, args..., f(t.head)); }
 \end{verbatim}
 
 \subsection{Function implementation}
