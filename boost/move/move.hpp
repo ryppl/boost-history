@@ -17,6 +17,7 @@
 #ifndef BOOST_MOVE_MOVE_HPP
 #define BOOST_MOVE_MOVE_HPP
 
+#include <algorithm> // for std::swap
 #include <iterator> // for iterator_traits
 
 #include "boost/mpl/if.hpp"
@@ -69,6 +70,23 @@ move(T& source)
 // types and on non-conforming compilers.
 //
 
+#if   defined(BOOST_NO_ARGUMENT_DEPENDENT_LOOKUP)   \
+ || ( defined(__GNUC__) && __GNUC__ < 3 )
+
+// [Indicate that move_swap by overload is disabled...]
+#define BOOST_NO_MOVE_SWAP_BY_OVERLOAD
+
+// [...and provide straight swap-by-move implementation:]
+template <typename T>
+inline void move_swap(T& lhs, T& rhs)
+{
+    T tmp( boost::move(lhs) );
+    lhs = boost::move(rhs);
+    rhs = boost::move(tmp);
+}
+
+#else// !defined(__GNUC__) || __GNUC__ >= 3
+
 namespace detail { namespace move_swap {
 
 template <typename T>
@@ -88,6 +106,8 @@ inline void move_swap(T& lhs, T& rhs)
 
     swap(lhs, rhs);
 }
+
+#endif // __GNUC__ workaround (for 2.x and below)
 
 //////////////////////////////////////////////////////////////////////////
 // function template move

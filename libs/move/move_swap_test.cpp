@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-// boost libs/move/auto_mover_test.cpp source file
+// boost libs/move/move_swap_test.cpp source file
 // See http://www.boost.org for updates, documentation, and revision history.
 //-----------------------------------------------------------------------------
 //
@@ -71,8 +71,6 @@ public: // operators
 // argument-dependent (Koenig) function lookup.
 //
 
-#if !defined(BOOST_NO_ARGUMENT_DEPENDENT_LOOKUP)
-
 class my_swappable
     : boost::noncopyable
 {
@@ -102,8 +100,6 @@ void swap(my_swappable& lhs, my_swappable& rhs)
 {
     lhs.swap(rhs);
 }
-
-#endif // !defined(BOOST_NO_ARGUMENT_DEPENDENT_LOOKUP
 
 } // namespace ns
 
@@ -139,15 +135,15 @@ int test_main( int, char *[] )
     // test boost::swap on primitive, copyable type
     swap_test< char >();
 
-    // test boost::swap on swappable, noncopyable type
-    swap_test< ns::my_swappable >();
-
-#if !defined(BOOST_NO_ARGUMENT_DEPENDENT_LOOKUP)
-
     // test boost::swap on moveable, noncopyable type
     swap_test< ns::my_moveable >();
 
-#endif // !defined(BOOST_NO_ARGUMENT_DEPENDENT_LOOKUP)
+#if !defined(BOOST_NO_MOVE_SWAP_BY_OVERLOAD)
+
+    // test boost::swap on swappable, noncopyable type
+    swap_test< ns::my_swappable >();
+
+#endif // !defined(BOOST_NO_MOVE_SWAP_BY_OVERLOAD)
 
     return boost::exit_success;
 }
