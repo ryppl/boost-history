@@ -253,18 +253,72 @@
                </row>
             </tbody>
          </tgroup></table>
-      </section><section id = "fixedstr.fixed_string_iface"><title>boost::detail::fixed_string_iface</title>
+      </section><section id = "fixedstr.FormatPolicy"><title>Format Policy</title>
+         <para>
+            The character traits design provides an interface to a range of string functions that
+            allow <code>std::basic_string</code> and the I/O streams to operate generically over
+            the string type. It also allows for alternative implementations to the C string functions
+            to be used (e.g. native platform functions or for/while loop implementations).
+         </para><para>
+            Using the <code>std::basic_string</code> interface, it is possible to implement most of
+            the C-style string functions. However, the <code>printf</code> group of functions do not
+            have an implementation equivalent (without implementing a low-level version of the <code>printf</code>
+            function using I/O streams).
+         </para><para>
+            This is where the Format Policy comes in: it allows <code>printf</code>-style formatting
+            that the <code>boost::fixed_string_base</code> class uses to provide a formatting function.
+            The Format Policy has the folloring interface:
+         </para>
+         <table><title>FormatPolicy</title><tgroup cols = "3" align = "left" valign = "top">
+            <thead><row>
+               <entry>expression</entry>
+               <entry>return type</entry>
+               <entry>description</entry>
+            </row></thead>
+            <tbody>
+               <row>
+                  <entry><simpara><code>FP::format( CharT * s, size_t n, const CharT * fmt, va_list args )</code></simpara></entry>
+                  <entry><simpara><code>int</code></simpara></entry>
+                  <entry><simpara>
+                     Formats the string <code>s</code> using the formatting string <code>fmt</code> and the
+                     arguments supplied by <code>args</code>. It will write a maximum of <code>n</code>
+                     characters.
+                  </simpara></entry>
+               </row>
+            </tbody>
+         </tgroup></table>
+         <section id = "fixedstr.format_policy"><title>boost::detail::format_policy</title>
 <synopsis>
    namespace boost { namespace detail
    {
-      template&lt; typename CharT, class Policy = std::char_traits&lt; CharT &gt; &gt;
-      struct fixed_string_iface;
+      template&lt; typename CharT &gt;
+      struct format_policy;
    }}
 </synopsis>
          <para>
-            This is an implementation of <code>StringPolicy</code> that exposes the methods as pure
-            virtual functions. The virtual functions are used to help meed requirement [3] and is
-            not intended for external use.
+            This is an implementation of the <code>FormatPolicy</code> interface using the C library
+            function <code>vsnprintf</code> for <code>char</code> strings and <code>vsnwprintf</code>
+            for <code>wchar_t</code> strings.
+         </para>
+         </section>
+      </section><section id = "fixedstr.fixed_string_impl"><title>boost::detail::fixed_string_impl</title>
+<synopsis>
+   namespace boost { namespace detail
+   {
+      template
+      &lt;
+         typename CharT, class Policy = std::char_traits&lt; CharT &gt;
+         class FmtPolicy = format_policy&lt; CharT &gt;
+      &gt;
+      struct fixed_string_impl;
+   }}
+</synopsis>
+         <para>
+            This is an implementation of <code>StringPolicy</code> that holds the strings capacity
+            as well as its length, thus allowing requirement [3] to be met without the use of
+            virtual functions. It is not intended for external use.
+         </para><para>
+            <code>FmtPolicy</code> is a policy type conformant with the Format Policy interface.
          </para>
       </section><section id = "fixedstr.fixed_string_base"><title>boost::fixed_string_base</title>
          <para>
@@ -273,7 +327,11 @@
 <synopsis>
    namespace boost
    {
-      template&lt; typename CharT, class CharStringPolicy = std::char_traits&lt; CharT &gt; &gt;
+      template
+      &lt;
+         typename CharT, class Policy = std::char_traits&lt; CharT &gt;
+         class FmtPolicy = detail::format_policy&lt; CharT &gt;
+      &gt;
       struct fixed_string_base;
 
       typedef fixed_string_base&lt; char &gt;    char_string;
@@ -301,13 +359,18 @@
             limitations/differences:
             <itemizedlist>
                <listitem><para>
-                  you cannot directly create a boost::fixed_string_base, it can only be used as a reference
-                  or pointer to a boost::fixed_string object, and as such it does not have any constructors;
+                  It is possible to construct a <code>boost::fixed_string_base</code> but there are limitations
+                  on how to do this. You cannot create a default <code>boost::fixed_string_base</code> object
+                  and it is inadvisable to construct a <code>boost::fixed_string_base</code> using the <code>+</code>
+                  operator and <code>substr</code> function from <code>boost::fixed_string</code>.
                </para></listitem>
                <listitem><para>
-                  the substring operations return a <code>std::basic_string</code> type.
+                  The <code>substr</code> function and <code>+</code> operator are not implemented in this
+                  class, although they are available in <code>boost::fixed_string</code>.
                </para></listitem>
             </itemizedlist>
+         </para><para>
+            <code>FmtPolicy</code> is a policy type conformant with the Format Policy interface.
          </para>
          <table><title>Additional Interface</title><tgroup cols = "3" align = "left" valign = "top">
             <thead><row>
@@ -324,9 +387,20 @@
                   <entry><simpara><code>buffer() const</code></simpara></entry>
                   <entry><simpara><code>char_type *</code></simpara></entry>
                   <entry><simpara>
-                     returns access to the internal string buffer.
+                     Returns access to the internal string buffer.
                      <emphasis role = "bold">[Note:</emphasis>
                         This is not buffer safe -- use with caution!
+                     <emphasis role = "bold">]</emphasis>
+                  </simpara></entry>
+               </row><row>
+                  <entry><simpara><code>recalc()</code></simpara></entry>
+                  <entry><simpara><code>void</code></simpara></entry>
+                  <entry><simpara>
+                     Recalculate the size of the string after external modification.
+                     <emphasis role = "bold">[Note:</emphasis>
+                        The modified string must be null-terminated and shorter than
+                        <code>capacity()</code>, otherwise unpredictable behaviour
+                        will occur.
                      <emphasis role = "bold">]</emphasis>
                   </simpara></entry>
                </row><row>
@@ -346,7 +420,12 @@
 <synopsis>
    namespace boost
    {
-      template&lt; size_t n, typename CharT = char, class CharStringPolicy = std::char_traits&lt; CharT &gt; &gt;
+      template
+      &lt;
+         size_t n, typename CharT = char,
+         class CharStringPolicy = std::char_traits&lt; CharT &gt;
+         class FmtPolicy = detail::format_policy&lt; CharT &gt;
+      &gt;
       class fixed_string;
    }
 </synopsis>
@@ -354,6 +433,8 @@
             This is the main class that provides the fixed-capacity string implementation, deriving
             itself from <code>boost::fixed_string_base</code>. It also provides the constructors
             specified in the <code>std::basic_string</code> interface.
+         </para><para>
+            <code>FmtPolicy</code> is a policy type conformant with the Format Policy interface.
          </para>
       </section><section id = "fixedstr.cstyle"><title>C-style Functions</title>
          <para>
@@ -385,12 +466,19 @@
 <synopsis>
    namespace boost
    {
-      template&lt; size_t n, typename CharT = char, class CharStringPolicy = std::char_traits&lt; CharT &gt; &gt;
+      template
+      &lt;
+         size_t n, typename CharT = char,
+         class CharStringPolicy = std::char_traits&lt; CharT &gt;
+         class FmtPolicy = detail::format_policy&lt; CharT &gt;
+      &gt;
       class formatterex;
       typedef formatterex&lt; 512 &gt; formatter;
    }
 </synopsis>
          <para>
+            <code>FmtPolicy</code> is a policy type conformant with the Format Policy interface.
+         </para><para>
             It is quite often useful to have a string buffer to format variable messages (e.g. error
             messages from parsing a file with line number, file and error description) or queries
             such as XPath expressions or SQL queries. This can be done using <code>std::stringstream</code>
