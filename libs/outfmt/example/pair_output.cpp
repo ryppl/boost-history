@@ -44,13 +44,13 @@ int main()
    // std::pair output examples
 
    std::cout << "pair< string, int > = "
-             << boost::io::formatobout( p, pairfmt3 )
+             << boost::io::formatob( p, pairfmt3 )
              << '\n';
 
    // [results]: pair< string, int > = Hello ==> 10
 
    std::cout << "pair< string, int > = "
-             << boost::io::formatobout
+             << boost::io::formatob
                 (
                    p,
                    boost::io::pairfmt().format( "; " )
@@ -62,13 +62,13 @@ int main()
    // std::map output examples
 
    std::cout << "map< string, string > = "
-             << boost::io::formatlistout( m, pairfmt1 )
+             << boost::io::formatlist( m, pairfmt1 )
              << '\n' << '\n';
 
    // [results]: map< string, string > = [ ( Abscheid Nehmen, Farewell ), ( Engel, Angel ), ( Mas Alla, Beyond ), ( Wenn Das Liebe Ist, If This Is Love ) ]
 
    std::cout << "map< string, string > = "
-             << boost::io::formatlistout( m, pairfmt1 ) // [note]: pairfmt1 is reused
+             << boost::io::formatlist( m, pairfmt1 ) // [note]: pairfmt1 is reused
                 .format( "\n", "", "\n" )
              << '\n' << '\n';
 
@@ -82,7 +82,7 @@ int main()
    */
 
    std::cout << "map< string, string > = "
-             << boost::io::formatlistout
+             << boost::io::formatlist
                 (
                    m,
                    boost::io::pairfmt() // inlined equivalent to pairfmt1
@@ -101,7 +101,7 @@ int main()
    // changing the way std::pair is outputted
 
    std::cout << "map< string, string > = "
-             << boost::io::formatlistout( m, pairfmt2 )
+             << boost::io::formatlist( m, pairfmt2 )
                 .format( "\n==> ", "", "\n==> " )
              << '\n' << '\n';
 
@@ -115,7 +115,7 @@ int main()
    */
 
    std::cout << "map< string, string > = "
-             << boost::io::formatlistout( m, pairfmt3 )
+             << boost::io::formatlist( m, pairfmt3 )
                 .format( "\n   ", "", "\n   " )
              << '\n' << '\n';
 
@@ -137,13 +137,13 @@ int main()
    // [results]: list< complex< double > > = [ (3.5,9.7), (7.9,0), (1,2.5) ]
 
    std::cout << "list< complex< double > > = "
-             << boost::io::formatlistout( dl, pairfmt1 ) // custom format - more control on spacing
+             << boost::io::formatlist( dl, pairfmt1 ) // custom format - more control on spacing
              << '\n';
 
    // [results]: list< complex< double > > = [ ( 3.5, 9.7 ), ( 7.9, 0 ), ( 1, 2.5 ) ]
 
    std::cout << "list< complex< double > > = "
-             << boost::io::formatlistout( dl, pairfmt2 ) // custom fomat - a more radical change!
+             << boost::io::formatlist( dl, pairfmt2 ) // custom fomat - a more radical change!
              << '\n' << '\n';
 
    // [results]: list< complex< double > > = [ ( 3.5 | 9.7 ), ( 7.9 | 0 ), ( 1 | 2.5 ) ]

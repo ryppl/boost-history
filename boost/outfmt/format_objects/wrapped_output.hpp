@@ -55,7 +55,7 @@
 
       template< class Outputter >
       inline wrapped_output< typename Outputter::format_type, Outputter >
-                                                 wrappedfmtout
+                                                 wrappedfmt
                                                  (
                                                     const Outputter & out
                                                  )

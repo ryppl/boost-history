@@ -26,7 +26,7 @@ int main()
       std::ofstream                    out( "doc.txt" );
 
       // serialize to the stream
-      out << boost::io::formatobout( p1, textio ) << '\n';
+      out << boost::io::formatob( p1, textio ) << '\n';
    }
 
    // reading data back from a plain text-based serialization stream
@@ -37,9 +37,9 @@ int main()
       std::ifstream                    is( "doc.txt" );
       std::pair< char, int >           p2;
 
-      std::cout << "pair before reading: " << boost::io::formatobout( p2, textio ) << '\n';
+      std::cout << "pair before reading: " << boost::io::formatob( p2, textio ) << '\n';
       is >> boost::io::readobout( p2, textio );
-      std::cout << "pair after reading:  "  << boost::io::formatobout( p2, textio ) << '\n';
+      std::cout << "pair after reading:  "  << boost::io::formatob( p2, textio ) << '\n';
 
       // [output]:
       //    pair before reading: (  , 0 )
@@ -58,7 +58,7 @@ int main()
 //    out << "<?xml version = \"1.0\" encoding = \"UTF-8\"?>\n\n"; // XML signature
 
       // serialize to the stream
-      out << boost::io::formatobout( p1, xmlio ) << '\n';
+      out << boost::io::formatob( p1, xmlio ) << '\n';
    }
 
    // reading data back from a plain text-based serialization stream
@@ -69,9 +69,9 @@ int main()
       std::ifstream                    is( "doc1.xml" );
       std::pair< char, int >           p2;
 
-      std::cout << "pair before reading: " << boost::io::formatobout( p2, textio ) << '\n';
+      std::cout << "pair before reading: " << boost::io::formatob( p2, textio ) << '\n';
       is >> boost::io::readobout( p2, xmlio );
-      std::cout << "pair after reading:  "  << boost::io::formatobout( p2, textio ) << '\n';
+      std::cout << "pair after reading:  "  << boost::io::formatob( p2, textio ) << '\n';
 
       // [output]:
       //    pair before reading: (  , 0 )
@@ -86,7 +86,7 @@ int main()
       boost::io::wrapped_output< char * >,
       boost::io::wrapped_output< char * >
    >                                   xmlio2 =
-      boost::io::pairfmtout
+      boost::io::pairfmt
       (
          boost::io::wrappedfmt().format( "<i1>", "</i1>" ),
          boost::io::wrappedfmt().format( "<i2>", "</i2>" )
@@ -99,7 +99,7 @@ int main()
       out << "<?xml version = \"1.0\" encoding = \"UTF-8\"?>\n\n"; // XML signature
 
       // serialize to the stream
-      out << boost::io::formatobout( p1, xmlio2 ) << '\n';
+      out << boost::io::formatob( p1, xmlio2 ) << '\n';
    }
 
    // reading data back from a plain text-based serialization stream
@@ -132,7 +132,7 @@ int main()
       std::ofstream                    out( "doc2.txt" );
 
       // serialize to the stream
-      out << boost::io::formatobout( pc1, textio2 ) << '\n';
+      out << boost::io::formatob( pc1, textio2 ) << '\n';
    }
 
    // reading data back from a plain text-based serialization stream
@@ -144,9 +144,9 @@ int main()
       std::pair< std::complex< float >, int >
                                        pc2;
 
-      std::cout << "pair before reading: " << boost::io::formatobout( pc2, textio2 ) << '\n';
+      std::cout << "pair before reading: " << boost::io::formatob( pc2, textio2 ) << '\n';
       is >> boost::io::readobout( pc2, textio2 );
-      std::cout << "pair after reading:  "  << boost::io::formatobout( pc2, textio2 ) << '\n';
+      std::cout << "pair after reading:  "  << boost::io::formatob( pc2, textio2 ) << '\n';
 
       // [output]:
       // pair before reading: ( ( 0, 0 ), 0 )
@@ -162,9 +162,9 @@ int main()
       std::pair< std::pair< float, double >, int >
                                        pc2;
 
-      std::cout << "pair before reading: " << boost::io::formatobout( pc2, textio2 ) << '\n';
+      std::cout << "pair before reading: " << boost::io::formatob( pc2, textio2 ) << '\n';
       is >> boost::io::readobout( pc2, textio2 );
-      std::cout << "pair after reading:  "  << boost::io::formatobout( pc2, textio2 ) << '\n';
+      std::cout << "pair after reading:  "  << boost::io::formatob( pc2, textio2 ) << '\n';
 
       // [output]:
       // pair before reading: ( ( 0, 0 ), 0 )

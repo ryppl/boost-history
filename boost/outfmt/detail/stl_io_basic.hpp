@@ -11,7 +11,7 @@
       const std::vector< T, Allocator >    & v
    )
    {
-      return( os << boost::io::formatobout( v, boost::io::containerfmt()));
+      return( os << boost::io::formatob( v, boost::io::containerfmt()));
    }
 
    // std::list outputter
@@ -23,7 +23,7 @@
       const std::list< T, Allocator >      & l
    )
    {
-      return( os << boost::io::formatobout( l, boost::io::containerfmt()));
+      return( os << boost::io::formatob( l, boost::io::containerfmt()));
    }
 
    // std::deque outputter
@@ -35,7 +35,7 @@
       const std::deque< T, Allocator >     & dq
    )
    {
-      return( os << boost::io::formatobout( dq, boost::io::containerfmt()));
+      return( os << boost::io::formatob( dq, boost::io::containerfmt()));
    }
 
    // std::map outputter
@@ -53,10 +53,10 @@
    {
       return
       (
-         os << boost::io::formatobout
+         os << boost::io::formatob
          (
             m,
-            boost::io::containerfmtout( boost::io::pairfmt())
+            boost::io::containerfmt( boost::io::pairfmt())
          )
       );
    }
@@ -76,10 +76,10 @@
    {
       return
       (
-         os << boost::io::formatobout
+         os << boost::io::formatob
          (
             mm,
-            boost::io::containerfmtout( boost::io::pairfmt())
+            boost::io::containerfmt( boost::io::pairfmt())
          )
       );
    }
@@ -97,7 +97,7 @@
       const std::set< KeyT, Cmp, Allocator > & s
    )
    {
-      return( os << boost::io::formatobout( s, boost::io::containerfmt()));
+      return( os << boost::io::formatob( s, boost::io::containerfmt()));
    }
 
    // std::multiset outputter
@@ -113,7 +113,7 @@
       const std::multiset< KeyT, Cmp, Allocator > & ms
    )
    {
-      return( os << boost::io::formatobout( ms, boost::io::containerfmt()));
+      return( os << boost::io::formatob( ms, boost::io::containerfmt()));
    }
 
    // std::pair outputter
@@ -129,7 +129,7 @@
       const std::pair< T1, T2 >            & p
    )
    {
-      return( os << boost::io::formatobout( p, boost::io::pairfmt()));
+      return( os << boost::io::formatob( p, boost::io::pairfmt()));
    }
 
 #  if defined(BOOST_IOFM__HASH_CONTAINERS)
@@ -144,10 +144,10 @@
       {
          return
          (
-            os << boost::io::formatobout
+            os << boost::io::formatob
             (
                m,
-               boost::io::containerfmtout( boost::io::pairfmt())
+               boost::io::containerfmt( boost::io::pairfmt())
             )
          );
       }
@@ -163,10 +163,10 @@
       {
          return
          (
-            os << boost::io::formatobout
+            os << boost::io::formatob
             (
                mm,
-               boost::io::containerfmtout( boost::io::pairfmt())
+               boost::io::containerfmt( boost::io::pairfmt())
             )
          );
       }
@@ -180,7 +180,7 @@
          const std::hash_set< BOOST_IOFM__HASH_SET_ARG > & s
       )
       {
-         return( os << boost::io::formatobout( s, boost::io::containerfmt()));
+         return( os << boost::io::formatob( s, boost::io::containerfmt()));
       }
 
       // std::hash_multiset outputter
@@ -192,7 +192,7 @@
          const std::hash_multiset< BOOST_IOFM__HASH_SET_ARG > & ms
       )
       {
-         return( os << boost::io::formatobout( ms, boost::io::containerfmt()));
+         return( os << boost::io::formatob( ms, boost::io::containerfmt()));
       }
 #  endif
 
@@ -206,7 +206,7 @@
          const std::slist< T, Allocator >     & sl
       )
       {
-         return( os << boost::io::formatobout( sl, boost::io::containerfmt()));
+         return( os << boost::io::formatob( sl, boost::io::containerfmt()));
       }
 #  endif
 #endif

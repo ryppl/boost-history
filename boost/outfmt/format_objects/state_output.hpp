@@ -52,15 +52,6 @@
             }
       };
 
-      template< class StateObject, bool pre >
-      inline state_output< char *, StateObject, pre >
-                                                 statefmt()
-      {
-         state_output< char *, StateObject, pre >
-                                       out;
-         return( out );
-      }
-
       template< typename FormatType, class StateObject, bool pre >
       inline state_output< FormatType, StateObject, pre >
                                                  statefmtex()
@@ -70,9 +61,18 @@
          return( out );
       }
 
+      template< class StateObject, bool pre >
+      inline state_output< char *, StateObject, pre >
+                                                 statefmt()
+      {
+         state_output< char *, StateObject, pre >
+                                       out;
+         return( out );
+      }
+
       template< class StateObject, bool pre, class Outputter >
       inline state_output< typename Outputter::format_type, StateObject, pre, Outputter >
-                                                 statefmtout
+                                                 statefmt
                                                  (
                                                     const Outputter & out
                                                  )

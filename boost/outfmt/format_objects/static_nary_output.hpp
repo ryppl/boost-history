@@ -91,7 +91,7 @@
 
       template< class Outputter >
       inline static_nary_output< typename Outputter::format_type, Outputter >
-                                                 naryfmtout
+                                                 naryfmt
                                                  (
                                                     const Outputter & out
                                                  )

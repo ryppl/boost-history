@@ -2,9 +2,7 @@
 
 #ifndef BOOST__IOFM__FORMATLIST__HPP
 #define BOOST__IOFM__FORMATLIST__HPP
-#  include <boost/outfmt/format_objects.hpp>
-#  include <iostream>
-#  include <iterator>
+#  include <boost/outfmt/formatob.hpp>
 
    namespace boost { namespace io
    {
@@ -80,8 +78,10 @@
 
       // list format manipulators
 
+      // [todo]: return( formatob( range( first, last ), rangefmt()));
       template< typename ForwardIterator >
-      inline formatlist_t< ForwardIterator >     formatlist
+      inline formatlist_t< ForwardIterator >
+                                                 formatlist
                                                  (
                                                     ForwardIterator first,
                                                     ForwardIterator last
@@ -90,6 +90,7 @@
          return( formatlist_t< ForwardIterator >( first, last ));
       }
 
+      // [todo]: return( formatob( range( c ), rangefmt()));
       template< class Container >
       inline formatlist_t< typename Container::iterator >
                                                  formatlist
@@ -100,6 +101,7 @@
          return( formatlist_t< BOOST_DEDUCED_TYPENAME Container::iterator >( c.begin(), c.end()));
       }
 
+      // [todo]: return( formatobout( ip, rangefmt()));
       template< typename ForwardIterator >
       inline formatlist_t< ForwardIterator >
                                                  formatlist
@@ -112,6 +114,7 @@
 
       // extended format manipulator:
 
+      // [todo]: return( formatob( range( first, last ), rangefmtex< FormatType >()));
       template< typename FormatType, typename ForwardIterator >
       inline formatlist_t< ForwardIterator, FormatType >
                                                  formatlistex
@@ -123,6 +126,7 @@
          return( formatlist_t< ForwardIterator, FormatType >( first, last ));
       }
 
+      // [todo]: return( formatob( range( c ), rangefmtex< FormatType >()));
       template< typename FormatType, class Container >
       inline formatlist_t< typename Container::iterator, FormatType >
                                                  formatlistex
@@ -133,6 +137,7 @@
          return( formatlist_t< BOOST_DEDUCED_TYPENAME Container::iterator, FormatType >( c.begin(), c.end()));
       }
 
+      // [todo]: return( formatobout( ip, rangefmtex< FormatType >()));
       template< typename FormatType, typename ForwardIterator >
       inline formatlist_t< ForwardIterator, FormatType >
                                                  formatlistex
@@ -147,7 +152,7 @@
 
       template< typename ForwardIterator, class Outputter >
       inline formatlist_t< ForwardIterator, typename Outputter::format_type, Outputter >
-                                                 formatlistout
+                                                 formatlist
                                                  (
                                                     ForwardIterator first,
                                                     ForwardIterator last,
@@ -164,7 +169,7 @@
 
       template< class Container, class Outputter >
       inline formatlist_t< typename Container::iterator, typename Outputter::format_type, Outputter >
-                                                 formatlistout
+                                                 formatlist
                                                  (
                                                     Container & c,
                                                     Outputter out
@@ -180,7 +185,7 @@
 
       template< typename ForwardIterator, class Outputter >
       inline formatlist_t< ForwardIterator, typename Outputter::format_type, Outputter >
-                                                 formatlistout
+                                                 formatlist
                                                  (
                                                     std::pair< ForwardIterator, ForwardIterator > & ip,
                                                     Outputter out

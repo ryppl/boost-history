@@ -19,7 +19,7 @@
                                   (
                                      OutputStream &    os,
                                      const Container & c
-                                  ) const 
+                                  ) const
             {
                typedef detail::list_output< FormatType, container_output< FormatType, Outputter >, Outputter >
                                                                      base_type;
@@ -55,7 +55,7 @@
 
       template< class Outputter >
       inline container_output< BOOST_DEDUCED_TYPENAME Outputter::format_type, Outputter >
-                                                 containerfmtout
+                                                 containerfmt
                                                  (
                                                     const Outputter & out
                                                  )

@@ -82,7 +82,7 @@ int main()
    // [results]: std::string = <: W a r u m   b i s t   d u   n i c h t   d a ? :>
 
    std::cout << "std::string = "
-             << boost::io::formatlistout
+             << boost::io::formatlist
                 (
                    s,
                    boost::io::wrappedfmt().format( "'", "'" ) // :-)

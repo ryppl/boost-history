@@ -96,7 +96,7 @@
 
       template< typename T, class Outputter >
       inline formatob_t< T, typename Outputter::format_type, Outputter >
-                                                 formatobout( const T & t, const Outputter & o )
+                                                 formatob( const T & t, const Outputter & o )
       {
          return( formatob_t< T, BOOST_DEDUCED_TYPENAME Outputter::format_type, Outputter >( t, o ));
       }

@@ -45,13 +45,13 @@ int main()
    // examples
 
    std::cout << "int[ 3 ][ 3 ] = "
-             << boost::io::formatlistout( a2D, a2D + 3, arrayfmt( 3 ))
+             << boost::io::formatlist( a2D, a2D + 3, arrayfmt( 3 ))
              << '\n';
 
    // [results:] int[ 3 ][ 3 ] = [ ( 1, 0, 0 ), ( 0, 1, 0 ), ( 0, 0, 1 ) ]
 
    std::cout << "int[ 3 ][ 3 ] = "
-             << boost::io::formatlistout
+             << boost::io::formatlist
                 (
                    a2D, a2D + 3,
                    boost::io::arrayfmt( 3 ).format( "( ", " )" ) // inlined form
@@ -61,7 +61,7 @@ int main()
    // [results]: int[ 3 ][ 3 ] = [ ( 1, 0, 0 ), ( 0, 1, 0 ), ( 0, 0, 1 ) ]
 
    std::cout << "int[ 3 ][ 3 ] = "
-             << boost::io::formatlistout( a2D, a2D + 3, arrayfmt( 3 ))
+             << boost::io::formatlist( a2D, a2D + 3, arrayfmt( 3 ))
                 .format( "\n", "", "\n" )
              << '\n' << '\n';
 
@@ -74,7 +74,7 @@ int main()
    */
 
    std::cout << "int[ 3 ][ 3 ] = "
-             << boost::io::formatlistout( a2D, a2D + 3, arrayfmt( 1, 2 ))
+             << boost::io::formatlist( a2D, a2D + 3, arrayfmt( 1, 2 ))
                .format( "\n", "\0", "\n" )
              << '\n' << '\n';
 
@@ -87,7 +87,7 @@ int main()
    */
 
    std::cout << "std::list< std::list< char > > tictactoe = "
-             << boost::io::formatlistout( tictactoe, containerfmt )
+             << boost::io::formatlist( tictactoe, containerfmt )
                 .format( "\n", "", "\n" )
              << '\n' << '\n';
 
@@ -100,7 +100,7 @@ int main()
    */
 
    std::cout << "std::list< std::list< char > > tictactoe = "
-             << boost::io::formatlistout
+             << boost::io::formatlist
                 (
                    tictactoe,
                    boost::io::containerfmt() // inlined form

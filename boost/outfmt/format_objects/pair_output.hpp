@@ -235,7 +235,7 @@
 
       template< class Outputter1 >
       inline pair_output< typename Outputter1::format_type, Outputter1, boost::io::basic_output >
-                                                 pairfmtout
+                                                 pairfmt
                                                  (
                                                     const Outputter1 & out1
                                                  )
@@ -245,7 +245,7 @@
 
       template< class Outputter1, class Outputter2 >
       inline pair_output< typename Outputter1::format_type, Outputter1, Outputter2 >
-                                                 pairfmtout
+                                                 pairfmt
                                                  (
                                                     const Outputter1 & out1,
                                                     const Outputter2 & out2

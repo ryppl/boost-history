@@ -43,6 +43,49 @@
             }
       };
 
+      // range construction helpers
+
+      template< typename ForwardIterator >
+      std::pair< ForwardIterator, ForwardIterator >
+                                                 range( ForwardIterator f, ForwardIterator l )
+      {
+         return( std::pair< ForwardIterator, ForwardIterator >( f, l ));
+      }
+
+      template< class Container >
+      std::pair< typename Container::iterator, typename Container::iterator >
+                                                 range( Container & c )
+      {
+         return( range( c.begin(), c.end()));
+      }
+
+      template< typename T, std::size_t n >
+      std::pair< const T *, const T * >
+                                                 range( const T a[ n ] )
+      {
+         return( range( a, a + n ));
+      }
+
+      template< typename T, std::size_t n >
+      std::pair< const T *, const T * >
+                                                 range( const T a[ n ], std::size_t off )
+      {
+         // pre: 0 <= off < n
+         return( range( a + off, a + n ));
+      }
+
+      template< typename T, std::size_t n >
+      std::pair< const T *, const T * >
+                                                 range( const T a[ n ], std::size_t off, std::size_t len )
+      {
+         // pre: 0 <= off < n
+         // pre: 0 <= ( off + len ) < n
+         return( range( a + off, a + off + len ));
+      }
+      */
+
+      // range format generators
+
       template< class FormatType >
       inline range_output< FormatType >          rangefmtex()
       {
@@ -57,7 +100,7 @@
 
       template< class Outputter >
       inline range_output< BOOST_DEDUCED_TYPENAME Outputter::format_type, Outputter >
-                                                 rangefmtout
+                                                 rangefmt
                                                  (
                                                     const Outputter & out
                                                  )

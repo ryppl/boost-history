@@ -64,7 +64,7 @@ int main()
    // [2]: {John}, {James}, {Corina}
 
    std::cout << "[2]: "
-             << boost::io::formatlistout
+             << boost::io::formatlist
                 (
                    names,
                    // use wrapped output to simplify construction:
@@ -79,10 +79,10 @@ int main()
    // [3]: {[0] John}, {[1] James}, {[2] Corina}
 
    std::cout << "[3]: "
-             << boost::io::formatlistout
+             << boost::io::formatlist
                 (
                    names,
-                   boost::io::wrappedfmtout
+                   boost::io::wrappedfmt
                    (
                       // create an instance of a position Format Object:
                       position_output< char * >()
@@ -92,10 +92,10 @@ int main()
              << '\n';
 
    std::cout << "[3]: "
-             << boost::io::formatlistout
+             << boost::io::formatlist
                 (
                    names,
-                   boost::io::wrappedfmtout
+                   boost::io::wrappedfmt
                    (
                       // state based version of the above
                       boost::io::statefmt< position_state, true >()
@@ -107,7 +107,7 @@ int main()
    // [4]: [0] John, [1] James, [2] Corina
 
    std::cout << "[4]: "
-             << boost::io::formatlistout( names, position_output< char * >())
+             << boost::io::formatlist( names, position_output< char * >())
                 .format( "", "" )
              << '\n' << '\n';
 
@@ -119,7 +119,7 @@ int main()
    */
 
    std::cout << "[5]:"
-             << boost::io::formatlistout( names, boost::io::wrappedfmt().format( "[", "]" ))
+             << boost::io::formatlist( names, boost::io::wrappedfmt().format( "[", "]" ))
                 .format( "\n", "", "\n" )
              << '\n';
 
@@ -131,7 +131,7 @@ int main()
    */
 
    std::cout << "[6]:"
-             << boost::io::formatlistout( names, position_output< char * >())
+             << boost::io::formatlist( names, position_output< char * >())
                 .format( "\n", "", "\n" )
              << '\n' << '\n';
 
@@ -143,7 +143,7 @@ int main()
    */
 
    std::cout << "[7]:"
-             << boost::io::formatlistout( names, position_output< char * >())
+             << boost::io::formatlist( names, position_output< char * >())
                 .format( "\n'", "'", "'\n'" )
              << '\n' << '\n';
 

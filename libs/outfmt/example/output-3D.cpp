@@ -38,7 +38,7 @@ int main()
    // example using formatter objects
 
    std::cout << "char[ 3 ][ 3 ][ 3 ] = "
-             << boost::io::formatlistout( a3D, a3D + 3, array3Dfmt( 3 ))
+             << boost::io::formatlist( a3D, a3D + 3, array3Dfmt( 3 ))
                 .format( "\n", "", "\n" )
              << '\n' << '\n';
 
@@ -53,7 +53,7 @@ int main()
    // partially inlined form
 
    std::cout << "char[ 3 ][ 3 ][ 3 ] = "
-             << boost::io::formatlistout
+             << boost::io::formatlist
                 (
                    a3D, a3D + 3,
                    boost::io::arrayfmtout( arrayfmt( 3 ), 3 ) // inlined form
@@ -75,7 +75,7 @@ int main()
    // as they will deduce the object types for you!
 
    std::cout << "char[ 3 ][ 3 ][ 3 ] = "
-             << boost::io::formatlistout
+             << boost::io::formatlist
                 (
                    a3D, a3D + 3, // outermost index
                    boost::io::arrayfmtout
@@ -101,7 +101,7 @@ int main()
    // as they will deduce the object types for you!
 
    std::cout << "char[ 3 ][ 3 ][ 3 ] = "
-             << boost::io::formatlistout
+             << boost::io::formatlist
                 (
                    a3D, a3D + 3, // outermost index
                    boost::io::arrayfmtout

@@ -95,6 +95,8 @@
          return( arrayfmtex< char * >( 0, len ));
       }
 
+      // temporary hack until sequences are in place
+
       template< class Outputter >
       inline array_output< typename Outputter::format_type, Outputter >
                                                  arrayfmtout
