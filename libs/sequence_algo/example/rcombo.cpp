@@ -19,6 +19,7 @@
 #include <vector>
 #include <string>
 #include <fstream>
+#include <stdexcept>
 using namespace std;
 
 #ifdef __MWERKS__
@@ -27,7 +28,7 @@ using namespace std;
 
 #include <boost/lexical_cast.hpp>
  
-#include "rcombo.hpp"
+#include "combinatorial.hpp"
 using namespace boost;
 
 #define DIM(a)    (sizeof(a)/sizeof(a)[0])

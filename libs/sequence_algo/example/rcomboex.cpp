@@ -35,11 +35,12 @@
 #include <fstream>
 #include <string>
 #include <exception>
+#include <stdexcept>
 #include <cstdlib>
 #include <cassert>
 using namespace std;
 
-#include "rcombo.hpp"        // next_r_permutation()
+#include "combinatorial.hpp"        // next_r_permutation()
 
 #define DIM(a)    (sizeof(a)/sizeof(a)[0])
 

@@ -35,6 +35,7 @@
 #include <cassert>
 #include <sstream>      // ostringstream
 #include <functional>   // greater<>
+#include <stdexcept>
 using namespace std;
 
 #ifdef __MWERKS__
@@ -45,7 +46,7 @@ using namespace std;
 #include <boost/test/test_tools.hpp>
 #include <boost/lexical_cast.hpp>
 
-#include "rcombo.hpp"
+#include "combinatorial.hpp"
 using namespace boost;
 
 // macros ---------------------------------------->>
@@ -371,16 +372,16 @@ void test_is_sorted(T& seq)
 
 void test_smallest_greater(const vector<char>& nums)
 {
-    BOOST_CRITICAL_TEST(smallest_greater(nums.begin(), nums.end(), '3')
+    BOOST_CRITICAL_TEST(min_element_greater_than(nums.begin(), nums.end(), '3')
     	== find(nums.begin(), nums.end(), '4'));
-    BOOST_CRITICAL_TEST(smallest_greater(nums.begin(), nums.end(), '9') == nums.end());
-    BOOST_CRITICAL_TEST(smallest_greater(nums.begin(), nums.end(), '6') == nums.end());
+    BOOST_CRITICAL_TEST(min_element_greater_than(nums.begin(), nums.end(), '9') == nums.end());
+    BOOST_CRITICAL_TEST(min_element_greater_than(nums.begin(), nums.end(), '6') == nums.end());
 
-    BOOST_CRITICAL_TEST(smallest_greater(nums.begin(), nums.end(), '3', greater<char>())
+    BOOST_CRITICAL_TEST(min_element_greater_than(nums.begin(), nums.end(), '3', greater<char>())
     	== find(nums.begin(), nums.end(), '2'));
-    BOOST_CRITICAL_TEST(smallest_greater(nums.begin(), nums.end(), '9', greater<char>())
+    BOOST_CRITICAL_TEST(min_element_greater_than(nums.begin(), nums.end(), '9', greater<char>())
     	== find(nums.begin(), nums.end(), '6'));
-    BOOST_CRITICAL_TEST(smallest_greater(nums.begin(), nums.end(), '6', greater<char>())
+    BOOST_CRITICAL_TEST(min_element_greater_than(nums.begin(), nums.end(), '6', greater<char>())
     	==  find(nums.begin(), nums.end(), '5'));
 }   // test_smallest_greater
 
@@ -388,18 +389,18 @@ void test_smallest_greater(const vector<char>& nums)
 
 void test_largest_less(const vector<char>& nums)
 {
-    BOOST_CRITICAL_TEST(largest_less(nums.begin(), nums.end(), '4')
+    BOOST_CRITICAL_TEST(max_element_less_than(nums.begin(), nums.end(), '4')
     	== find(nums.begin(), nums.end(), '3'));
-    BOOST_CRITICAL_TEST(largest_less(nums.begin(), nums.end(), '1') == nums.end());
-    BOOST_CRITICAL_TEST(largest_less(nums.begin(), nums.end(), '0') == nums.end());
+    BOOST_CRITICAL_TEST(max_element_less_than(nums.begin(), nums.end(), '1') == nums.end());
+    BOOST_CRITICAL_TEST(max_element_less_than(nums.begin(), nums.end(), '0') == nums.end());
 
-    BOOST_CRITICAL_TEST(largest_less(nums.begin(), nums.end(), '4', greater<char>())
+    BOOST_CRITICAL_TEST(max_element_less_than(nums.begin(), nums.end(), '4', greater<char>())
     	== find(nums.begin(), nums.end(), '5'));
-    BOOST_CRITICAL_TEST(largest_less(nums.begin(), nums.end(), '1', greater<char>())
+    BOOST_CRITICAL_TEST(max_element_less_than(nums.begin(), nums.end(), '1', greater<char>())
     	== find(nums.begin(), nums.end(), '2'));
-    BOOST_CRITICAL_TEST(largest_less(nums.begin(), nums.end(), '0', greater<char>())
+    BOOST_CRITICAL_TEST(max_element_less_than(nums.begin(), nums.end(), '0', greater<char>())
     	== find(nums.begin(), nums.end(), '1'));
-    BOOST_CRITICAL_TEST(largest_less(nums.begin(), nums.end(), '7', greater<char>())
+    BOOST_CRITICAL_TEST(max_element_less_than(nums.begin(), nums.end(), '7', greater<char>())
     	== nums.end());
 }   // test_largest_less
 
@@ -712,7 +713,7 @@ int test_main(int argc, char* argv[])
     // test is_sorted function ---------------------------------------->>
     test_is_sorted(nums);
     
-    // test smallest_greater and largest_less functions --------------->>
+    // test min_element_greater_than and max_element_less_than functions --------------->>
     test_smallest_greater(nums);
     test_largest_less(nums);
 

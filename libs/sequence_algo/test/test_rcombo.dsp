@@ -103,7 +103,7 @@ SOURCE=.\test_rcombo.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=..\..\..\boost\sequence_algo\rcombo.hpp
+SOURCE=..\..\..\boost\sequence_algo\combinatorial.hpp
 # End Source File
 # End Group
 # Begin Group "Resource Files"
