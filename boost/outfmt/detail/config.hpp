@@ -100,6 +100,10 @@
 #     include <ostream>
 #     include <locale>
 #     define _DEPRECATED _DEPRECATED_TEMP
+#  else
+#     include <istream>
+#     include <ostream>
+#     include <locale>
 #  endif
 
 #endif
