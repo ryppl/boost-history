@@ -84,7 +84,6 @@ void default_test(void)
     BOOST_CHECK(!get_impl(p));
 }
 
-#if 0
 void init_const_test(smart_ptr<object> const& p)
 {
     BOOST_CHECK_EQUAL(p->foo(), 42);
@@ -405,15 +404,15 @@ void multi_inherit_test(void)
     }
     BOOST_CHECK(dead);
 }
-#endif
+
 }
 
 using namespace boost;
 test::test_suite* init_unit_test_suite(int argc, char* argv[])
 {
     test::test_suite* test = BOOST_TEST_SUITE("Basic smart_ptr framework tests");
-    test->add(BOOST_TEST_CASE(&default_test));
 #if 0
+    test->add(BOOST_TEST_CASE(&default_test));
     test->add(BOOST_TEST_CASE(&init_test));
     test->add(BOOST_TEST_CASE(&copy_test));
     test->add(BOOST_TEST_CASE(&assign_test));
@@ -424,8 +423,8 @@ test::test_suite* init_unit_test_suite(int argc, char* argv[])
     test->add(BOOST_TEST_CASE(&no_copy_test));
     test->add(BOOST_TEST_CASE(&conversion_test));
     test->add(BOOST_TEST_CASE(&concept_interface_test));
+#endif    
     test->add(BOOST_TEST_CASE(&multi_inherit_test));
-#endif
 
     return test;
 }
