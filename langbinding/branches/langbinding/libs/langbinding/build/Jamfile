@@ -1,0 +1,2 @@
+# declare the location of this subproject relative to the root
+subproject libs/langbinding/build ;
