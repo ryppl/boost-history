@@ -9,6 +9,7 @@
 #include <fstream>
 #include <string>
 #include <algorithm> // for std::min
+#include <cassert>
 
 #include "boost/config.hpp" // for BOOST_STATIC_CONSTANT
 #include "boost/limits.hpp"
@@ -18,6 +19,7 @@
 template <typename Block>
 inline bool nth_bit(Block num, std::size_t n)
 {
+  assert(n < std::numeric_limits<Block>::digits);
   // Move the nth bit to position 0 and then mask out all other bits.
   return (num >> n) & 1;
 }
@@ -493,7 +495,7 @@ struct bitset_test {
     if (will_overflow) {
       try {
         (void)lhs.to_ulong();
-        BOOST_CHECK(false); // It should have thrown and exception
+        BOOST_CHECK(false); // It should have thrown an exception
       } catch (std::overflow_error) {
         // Good!
       } catch (...) {
@@ -502,8 +504,12 @@ struct bitset_test {
     } else {
       unsigned long num = lhs.to_ulong();
       // Make sure the number is right
-      for (std::size_t I = 0; I < N; ++I)
-        BOOST_CHECK(lhs[I] == nth_bit(num, I));
+      if (N == 0)
+        BOOST_CHECK(num == 0);
+      else {
+        for (std::size_t I = 0; I < N; ++I)
+          BOOST_CHECK(lhs[I] == (I < n ? nth_bit(num, I) : 0)); //G.P.S. bugfix
+      }
     }
   }
 
