@@ -1,18 +1,6 @@
 
 #include <boost/config.hpp>
-
-/* With my current MS VC++ 7.0 config, Boost.Test fails to compile,
-   and I do not have the time to nail it down. Thus, VC++ tests are done
-   with Boost 1.28.0.  - RR
-*/
-
-#ifdef BOOST_MSVC
-#  define BOOST_INCLUDE_MAIN
-#  include <boost/test/test_tools.hpp>
-#else
-#  include <boost/test/included/test_exec_monitor.hpp>
-#endif
-
+#include <boost/test/minimal.hpp>
 
 #include <vector>
 #include <string>
@@ -30,6 +18,7 @@ void test1()
 
   typedef boost::view::range_view< 
     std::vector<int>::iterator, std::vector<int>::const_iterator
+    // boost::view::traits::iterators_from< std::vector<int> >
 #ifdef BOOST_MSVC
     , int, int&, int* //, std::random_access_iterator_tag, long 
 #endif  
@@ -37,10 +26,10 @@ void test1()
 
   r_view rv( v.begin(), v.end() );
 
-  BOOST_TEST( v.size() == rv.size() );
+  BOOST_CHECK( v.size() == rv.size() );
   for( int i = 0; i < N; ++i )
   {
-    BOOST_TEST( v[i] == rv[i] );
+    BOOST_CHECK( v[i] == rv[i] );
   }
 
   std::vector<int>::const_iterator it = v.begin();
@@ -48,8 +37,8 @@ void test1()
 
   for( ; rit != rv.end(); ++it, ++rit )
   {
-    BOOST_TEST( *it == *rit );
-    BOOST_TEST( it == rit ); // Is this always guaranteed?
+    BOOST_CHECK( *it == *rit );
+    BOOST_CHECK( it == rit ); // Is this always guaranteed?
   }
 }
 
@@ -67,10 +56,10 @@ void test2()
 
   r_view rv( ch, ch + N );
 
-  BOOST_TEST( str.size() == rv.size() );
+  BOOST_CHECK( str.size() == rv.size() );
   for( int i = 0; i < N; ++i )
   {
-    BOOST_TEST( str[i] == rv[i] );
+    BOOST_CHECK( str[i] == rv[i] );
   }
 }
 
@@ -81,7 +70,7 @@ int test_main(int, char *[])
   test2();
 
   bool error_on_purpose = false;
-  //BOOST_TEST( error_on_purpose );
+  //BOOST_CHECK( error_on_purpose );
 
   return 0;
 }

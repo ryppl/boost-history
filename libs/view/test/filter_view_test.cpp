@@ -1,19 +1,6 @@
 
 #include <boost/config.hpp>
-
-/* With my current MS VC++ 7.0 config, Boost.Test fails to compile,
-   and I do not have the time to nail it down. Thus, VC++ tests are done
-   with Boost 1.28.0.  - RR
-*/
-
-#ifdef BOOST_MSVC
-#  define BOOST_INCLUDE_MAIN
-#  include <boost/test/test_tools.hpp>
-#else
-#  include <boost/test/included/test_exec_monitor.hpp>
-#endif
-
-#include <iostream>
+#include <boost/test/minimal.hpp>
 
 #include <vector>
 #include <algorithm>
@@ -59,25 +46,25 @@ void test1()
 
   boost::view::filter_view< std::vector<int>, is_big_number > bigview( v );
 
-  BOOST_TEST( bigview.empty() );
-  BOOST_TEST( bigview.size() == 0 );
+  BOOST_CHECK( bigview.empty() );
+  BOOST_CHECK( bigview.size() == 0 );
 
   typedef boost::view::filter_view< std::vector<int>, is_positive_number > pos_view_type;
   pos_view_type posview( v );
 
-  BOOST_TEST( posview.size() == 3 );
+  BOOST_CHECK( posview.size() == 3 );
 
-  BOOST_TEST( posview.front() == 4 );
+  BOOST_CHECK( posview.front() == 4 );
 
   pos_view_type::iterator it = posview.begin();
-  BOOST_TEST( *it == 4 ); ++it;
-  BOOST_TEST( *it == 5 ); ++it;
-  BOOST_TEST( *it == 8 );
+  BOOST_CHECK( *it == 4 ); ++it;
+  BOOST_CHECK( *it == 5 ); ++it;
+  BOOST_CHECK( *it == 8 );
 
   std::vector<int> positives( posview.size() );
 
   std::copy( posview.begin(), posview.end(), positives.begin() );
-  BOOST_TEST( is_equal( positives, posview ) );
+  BOOST_CHECK( is_equal( positives, posview ) );
 }
 
 
@@ -96,7 +83,7 @@ void test2()
                              is_negative_number > v( b );
   std::fill( v.begin(), v.end(), 0 );
 
-  BOOST_TEST( is_equal( a, b ) );
+  BOOST_CHECK( is_equal( a, b ) );
 #endif
 }
 
@@ -107,7 +94,7 @@ int test_main(int, char *[])
   test2();
 
   bool error_on_purpose = false;
-  //BOOST_TEST( error_on_purpose );
+  //BOOST_CHECK( error_on_purpose );
 
   return 0;
 }

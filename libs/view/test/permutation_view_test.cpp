@@ -1,17 +1,6 @@
 
 #include <boost/config.hpp>
-
-/* With my current MS VC++ 7.0 config, Boost.Test fails to compile,
-   and I do not have the time to nail it down. Thus, VC++ tests are done
-   with Boost 1.28.0.  - RR
-*/
-
-#ifdef BOOST_MSVC
-#  define BOOST_INCLUDE_MAIN
-#  include <boost/test/test_tools.hpp>
-#else
-#  include <boost/test/included/test_exec_monitor.hpp>
-#endif
+#include <boost/test/minimal.hpp>
 
 #include <functional>
 #include <cmath>
@@ -50,19 +39,19 @@ void reverse_test()
 
   reverse_view rv( v, r );
   
-  BOOST_TEST( rv.size() == N );
+  BOOST_CHECK( rv.size() == N );
 
   std::vector<int>::reverse_iterator rit = v.rbegin();
   reverse_view::iterator it = rv.begin();
 
   for( ; it != rv.end(); ++it, ++rit )
   {
-    BOOST_TEST( *it == *rit );
+    BOOST_CHECK( *it == *rit );
   }
 
 #ifndef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
   rv[0] = 22;
-  BOOST_TEST( v[N-1] == 22 );
+  BOOST_CHECK( v[N-1] == 22 );
 #endif
 }
 
@@ -87,7 +76,7 @@ void reverse_function_test()
 
   reverse_view rv( v, reindex_type( 0, N, do_reverse(N) ) );
 
-  BOOST_TEST( rv.size() == N );
+  BOOST_CHECK( rv.size() == N );
   
   std::vector<int>::const_iterator vit = v.begin();
   reverse_view::iterator it = rv.begin();
@@ -98,7 +87,7 @@ void reverse_function_test()
 
   for( ; it != rv.end(); ++it, ++vit )
   {
-    BOOST_TEST( *it == *vit );
+    BOOST_CHECK( *it == *vit );
   }
 }
 
@@ -115,15 +104,15 @@ void resample_test()
   typedef boost::view::permutation_view< std::vector<int>, std::deque<int> > resample_view;
   resample_view rv( v, r );
 
-  BOOST_TEST( v.size() == rv.size() );
+  BOOST_CHECK( v.size() == rv.size() );
 
-  BOOST_TEST( rv[0] == v[0] );
-  BOOST_TEST( rv[1] == v[2] );
-  BOOST_TEST( rv[2] == v[4] );
-  BOOST_TEST( rv[3] == v[6] );
-  BOOST_TEST( rv[4] == v[1] );
-  BOOST_TEST( rv[5] == v[3] );
-  BOOST_TEST( rv[6] == v[5] );
+  BOOST_CHECK( rv[0] == v[0] );
+  BOOST_CHECK( rv[1] == v[2] );
+  BOOST_CHECK( rv[2] == v[4] );
+  BOOST_CHECK( rv[3] == v[6] );
+  BOOST_CHECK( rv[4] == v[1] );
+  BOOST_CHECK( rv[5] == v[3] );
+  BOOST_CHECK( rv[6] == v[5] );
 }
 
 
@@ -149,15 +138,15 @@ void alpha_order_test()
 
   alpha_order_view aov( v, alpha_order_type( 'A', 'F', alpha_order('A') ) );
 
-  BOOST_TEST( aov.size() == 5 );
+  BOOST_CHECK( aov.size() == 5 );
 
-  BOOST_TEST( aov.front() == v[0] );
-  BOOST_TEST( aov.back()  == v[4] );
+  BOOST_CHECK( aov.front() == v[0] );
+  BOOST_CHECK( aov.back()  == v[4] );
   
   int c = 'A'; int i = 0;
   for( ; c < 'F'; ++c, ++i )
   {
-    BOOST_TEST( aov[c] == v[i] );
+    BOOST_CHECK( aov[c] == v[i] );
   }
 }
 
@@ -178,11 +167,11 @@ void two_dim_test()
   typedef boost::counting_iterator_generator< intpair >::type count_iter;
   count_iter cit( zero );
 
-  BOOST_TEST( tdv.size() == intpair( std::make_pair(2,1), 3 ) );
+  BOOST_CHECK( tdv.size() == intpair( std::make_pair(2,1), 3 ) );
 
   for( std::vector<int>::iterator it = v.begin(); *cit != e; ++it, ++cit )
   {
-    BOOST_TEST( tdv[ *cit ] == *it );
+    BOOST_CHECK( tdv[ *cit ] == *it );
   }
 }
 
@@ -197,7 +186,7 @@ int test_main(int, char *[])
   two_dim_test();
 
   bool error_on_purpose = false;
-  //BOOST_TEST( error_on_purpose );
+  //BOOST_CHECK( error_on_purpose );
 
   return 0;
 }

@@ -1,17 +1,6 @@
 
 #include <boost/config.hpp>
-
-/* With my current MS VC++ 7.0 config, Boost.Test fails to compile,
-   and I do not have the time to nail it down. Thus, VC++ tests are done
-   with Boost 1.28.0.  - RR
-*/
-
-#ifdef BOOST_MSVC
-#  define BOOST_INCLUDE_MAIN
-#  include <boost/test/test_tools.hpp>
-#else
-#  include <boost/test/included/test_exec_monitor.hpp>
-#endif
+#include <boost/test/minimal.hpp>
 
 #include <cmath>
 #include <functional>
@@ -60,8 +49,8 @@ void function_as_struct_test()
   typedef boost::view::transform_view< std::vector<std::string>, english2german > SatzT;
   SatzT satz( sentence );
 
-  BOOST_TEST( satz[0] == std::string("Hallo") );
-  BOOST_TEST( satz[1] == std::string("Welt") );
+  BOOST_CHECK( satz[0] == std::string("Hallo") );
+  BOOST_CHECK( satz[1] == std::string("Welt") );
 }
 
 
@@ -89,11 +78,11 @@ void function_as_pointer_test()
   trans_view absv( v, absf ); 
 #endif
 
-  BOOST_TEST( v.size() == absv.size() );
+  BOOST_CHECK( v.size() == absv.size() );
 
   std::vector<int>::const_iterator it = v.begin(); trans_view::const_iterator absit = absv.begin();
   for( ; absit != absv.end(); ++it, ++absit )
-    { BOOST_TEST( equals( *absit, fabs( *it ) ) ); }
+    { BOOST_CHECK( equals( *absit, fabs( *it ) ) ); }
   
 
 #ifndef BOOST_MSVC
@@ -104,9 +93,9 @@ void function_as_pointer_test()
   trans_trans_view sqrtv( absv, sqrtf );
 #endif
 
-  BOOST_TEST( v.size() == sqrtv.size() );
+  BOOST_CHECK( v.size() == sqrtv.size() );
   for( int i = 0; i < N; ++i )
-    { BOOST_TEST( equals( sqrtv[i], sqrt( fabs( v[i] ) ) ) ); }
+    { BOOST_CHECK( equals( sqrtv[i], sqrt( fabs( v[i] ) ) ) ); }
 
 }
 
@@ -124,13 +113,13 @@ void boost_function_test()
 
   typedef boost::view::transform_view< std::vector<int>, boost::function1<int,int> > fct_view;
 
-  boost::function<double,double> f;
+  boost::function1<int,int> f;
   f = shiffle;
 
   fct_view fview( v, f );
 
   for( int i = 0; i < N; ++i )
-    { BOOST_TEST( fview[i] == (v[i] << 1) ) ; }
+    { BOOST_CHECK( fview[i] == (v[i] << 1) ) ; }
 }
 
 
@@ -158,13 +147,13 @@ void map_test()
 #ifndef BOOST_MSVC
   typedef boost::view::transform_view< std::map< std::string, double >, boost::function1<double,double> > value_view;
 
-  BOOST_TEST( typeid( value_view::index_type ) == typeid( std::map< std::string, double >::key_type ) );
+  BOOST_CHECK( typeid( value_view::index_type ) == typeid( std::map< std::string, double >::key_type ) );
 
   value_view value( stock, &plus10percent );
 
-  BOOST_TEST( equals( value[ std::string("microsoft") ], 1.1 * 24.95 ) );
-  BOOST_TEST( equals( value[ std::string("cisco") ], 1.1 * 13.4 ) );
-  BOOST_TEST( equals( value[ std::string("hp") ], 1.1 * 19.55 ) );
+  BOOST_CHECK( equals( value[ std::string("microsoft") ], 1.1 * 24.95 ) );
+  BOOST_CHECK( equals( value[ std::string("cisco") ], 1.1 * 13.4 ) );
+  BOOST_CHECK( equals( value[ std::string("hp") ], 1.1 * 19.55 ) );
 
 #endif
 
@@ -175,7 +164,7 @@ void map_test()
   anothervalue_view::const_iterator vit = another.begin();
 
   for( ; vit != another.end(); ++it, ++vit )
-    { BOOST_TEST( equals( *vit, 1.1 * (*it).second ) ); }
+    { BOOST_CHECK( equals( *vit, 1.1 * (*it).second ) ); }
 }
 
 
@@ -205,14 +194,14 @@ void parse_example()
   parsed.push_back( std::string( s.begin() + (b-pview.begin()),
                                  s.begin() + (e-pview.begin()) ) );
 
-  BOOST_TEST( parsed.size() == 5 );
+  BOOST_CHECK( parsed.size() == 5 );
 
   std::vector< std::string >::const_iterator it = parsed.begin();
-  BOOST_TEST( *it == "A" ); ++it;
-  BOOST_TEST( *it == "sentence" ); ++it;
-  BOOST_TEST( *it == "with" ); ++it;
-  BOOST_TEST( *it == "five" ); ++it;
-  BOOST_TEST( *it == "words." ); 
+  BOOST_CHECK( *it == "A" ); ++it;
+  BOOST_CHECK( *it == "sentence" ); ++it;
+  BOOST_CHECK( *it == "with" ); ++it;
+  BOOST_CHECK( *it == "five" ); ++it;
+  BOOST_CHECK( *it == "words." ); 
 }
 
 
@@ -226,7 +215,8 @@ int test_main(int, char *[])
   parse_example();
 
   bool error_on_purpose = false;
-  //BOOST_TEST( error_on_purpose );
+  //BOOST_CHECK( error_on_purpose );
 
   return 0;
 }
+

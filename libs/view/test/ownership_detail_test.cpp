@@ -1,18 +1,6 @@
 
 #include <boost/config.hpp>
-
-/* With my current MS VC++ 7.0 config, Boost.Test fails to compile,
-   and I do not have the time to nail it down. Thus, VC++ tests are done
-   with Boost 1.28.0.  - RR
-*/
-
-#ifdef BOOST_MSVC
-#  define BOOST_INCLUDE_MAIN
-#  include <boost/test/test_tools.hpp>
-#else
-#  include <boost/test/included/test_exec_monitor.hpp>
-#endif
-
+#include <boost/test/minimal.hpp>
 
 #include <vector>
 
@@ -21,7 +9,7 @@
 
 template<class U,class V> void compare_elementwise( const U& u, const V& v )
 {
-  BOOST_TEST( u.size() == v->size() );
+  BOOST_CHECK( u.size() == v->size() );
   if( u.size() != v->size() ) return;
 
   typename U::const_iterator i = u.begin();
@@ -29,7 +17,7 @@ template<class U,class V> void compare_elementwise( const U& u, const V& v )
 
   for( ; i != u.end(); ++i, ++j )
   {
-    BOOST_TEST( *i == *j );
+    BOOST_CHECK( *i == *j );
   }
 }
 
@@ -38,26 +26,26 @@ void typeid_test()
 {
   typedef std::vector<char> container_type;
 
-  BOOST_TEST( typeid( boost::view::ownership::wrap< container_type >::type )
+  BOOST_CHECK( typeid( boost::view::ownership::wrap< container_type >::type )
               == typeid( boost::view::ownership::shared< container_type > ) );
 
-  BOOST_TEST( typeid( boost::view::ownership::wrap< container_type >::domain )
+  BOOST_CHECK( typeid( boost::view::ownership::wrap< container_type >::domain )
               == typeid( container_type  ) );
 
 #ifndef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
 
-  BOOST_TEST( typeid( boost::view::ownership::wrap< boost::view::ownership::unique< container_type > >::type )
+  BOOST_CHECK( typeid( boost::view::ownership::wrap< boost::view::ownership::unique< container_type > >::type )
               == typeid( boost::view::ownership::unique< container_type > ) );
-  BOOST_TEST( typeid( boost::view::ownership::wrap< boost::view::ownership::shared< container_type > >::type )
+  BOOST_CHECK( typeid( boost::view::ownership::wrap< boost::view::ownership::shared< container_type > >::type )
               == typeid( boost::view::ownership::shared< container_type > ) );
-  BOOST_TEST( typeid( boost::view::ownership::wrap< boost::view::ownership::external< container_type > >::type )
+  BOOST_CHECK( typeid( boost::view::ownership::wrap< boost::view::ownership::external< container_type > >::type )
               == typeid( boost::view::ownership::external< container_type > ) );
 
-  BOOST_TEST( typeid( boost::view::ownership::wrap< boost::view::ownership::unique< container_type > >::domain )
+  BOOST_CHECK( typeid( boost::view::ownership::wrap< boost::view::ownership::unique< container_type > >::domain )
               == typeid(  container_type  ));
-  BOOST_TEST( typeid( boost::view::ownership::wrap< boost::view::ownership::shared< container_type > >::domain )
+  BOOST_CHECK( typeid( boost::view::ownership::wrap< boost::view::ownership::shared< container_type > >::domain )
               == typeid(  container_type  ) );
-  BOOST_TEST( typeid( boost::view::ownership::wrap< boost::view::ownership::external< container_type > >::domain )
+  BOOST_CHECK( typeid( boost::view::ownership::wrap< boost::view::ownership::external< container_type > >::domain )
               == typeid( container_type ) );
 
 #else
@@ -107,16 +95,16 @@ void ownership_usecount_test()
   container_type v(10,'*');
 
   boost::view::ownership::shared< container_type >   a(v);
-  BOOST_TEST( a.use_count() == 1 );
+  BOOST_CHECK( a.use_count() == 1 );
 
   boost::view::ownership::shared< container_type >   b(a);
-  BOOST_TEST( a.use_count() == 2 );
-  BOOST_TEST( b.use_count() == 2 );
+  BOOST_CHECK( a.use_count() == 2 );
+  BOOST_CHECK( b.use_count() == 2 );
 
   boost::view::ownership::shared< boost::view::ownership::shared< container_type > >   aa(a);
-  BOOST_TEST( aa.use_count() == 1 );
-  BOOST_TEST( aa.get()->use_count() == 3 );
-  BOOST_TEST( a.use_count() == 3 );
+  BOOST_CHECK( aa.use_count() == 1 );
+  BOOST_CHECK( aa.get()->use_count() == 3 );
+  BOOST_CHECK( a.use_count() == 3 );
 }
 
 
@@ -129,7 +117,7 @@ int test_main(int, char *[])
   ownership_usecount_test();
 
   bool error_on_purpose = false;
-  //BOOST_TEST( error_on_purpose );
+  //BOOST_CHECK( error_on_purpose );
 
   return 0;
 }

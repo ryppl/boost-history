@@ -1,17 +1,6 @@
 
 #include <boost/config.hpp>
-
-/* With my current MS VC++ 7.0 config, Boost.Test fails to compile,
-   and I do not have the time to nail it down. Thus, VC++ tests are done
-   with Boost 1.28.0.  - RR
-*/
-
-#ifdef BOOST_MSVC
-#  define BOOST_INCLUDE_MAIN
-#  include <boost/test/test_tools.hpp>
-#else
-#  include <boost/test/included/test_exec_monitor.hpp>
-#endif
+#include <boost/test/minimal.hpp>
 
 #include <vector>
 
@@ -37,13 +26,13 @@ void cyclic_iterator_test()
 
   for( ; i < 2*N; ++i, --j )
   {
-    BOOST_TEST( std::distance( begin, forward ) == i );
-    BOOST_TEST( forward.policies().past_the_end == (i/N) );
-    BOOST_TEST( *forward == v[i%N] );
+    BOOST_CHECK( std::distance( begin, forward ) == i );
+    BOOST_CHECK( forward.policies().past_the_end == (i/N) );
+    BOOST_CHECK( *forward == v[i%N] );
 
-    BOOST_TEST( std::distance( begin, backward ) == j );
-    BOOST_TEST( backward.policies().past_the_end == ( (j-N+1)/N ) );
-    BOOST_TEST( *backward == v[ (j+2*N)%N ] );
+    BOOST_CHECK( std::distance( begin, backward ) == j );
+    BOOST_CHECK( backward.policies().past_the_end == ( (j-N+1)/N ) );
+    BOOST_CHECK( *backward == v[ (j+2*N)%N ] );
 
     ++forward;
     --backward;
@@ -54,13 +43,13 @@ void cyclic_iterator_test()
 
   for( i = 0, j = 0; i < 4*N; i += 2, j -= 2 )
   {
-    BOOST_TEST( std::distance( begin, forward ) == i );
-    BOOST_TEST( forward.policies().past_the_end == (i/N) );
-    BOOST_TEST( *forward == v[i%N] );
+    BOOST_CHECK( std::distance( begin, forward ) == i );
+    BOOST_CHECK( forward.policies().past_the_end == (i/N) );
+    BOOST_CHECK( *forward == v[i%N] );
 
-    BOOST_TEST( std::distance( begin, backward ) == j );
-    BOOST_TEST( backward.policies().past_the_end == ( (j-N+1)/N ) );
-    BOOST_TEST( *backward == v[ (j+4*N)%N ] );
+    BOOST_CHECK( std::distance( begin, backward ) == j );
+    BOOST_CHECK( backward.policies().past_the_end == ( (j-N+1)/N ) );
+    BOOST_CHECK( *backward == v[ (j+4*N)%N ] );
 
     std::advance( forward, 2 );
     std::advance( backward, -2 );
@@ -87,13 +76,13 @@ void reverse_cyclic_iterator_test()
 
   for( ; i < 2*N; ++i, --j )
   {
-    BOOST_TEST( std::distance( rbegin, rforward ) == i );
-    BOOST_TEST( rforward.policies().past_the_end == ( (-i-N+1)/N ) );
-    BOOST_TEST( *rforward == v[(-i+2*N)%N] );
+    BOOST_CHECK( std::distance( rbegin, rforward ) == i );
+    BOOST_CHECK( rforward.policies().past_the_end == ( (-i-N+1)/N ) );
+    BOOST_CHECK( *rforward == v[(-i+2*N)%N] );
 
-    BOOST_TEST( std::distance( rbegin, rbackward ) == j );
-    BOOST_TEST( rbackward.policies().past_the_end == ( -j/N ) );
-    BOOST_TEST( *rbackward == v[ -j%N ] );
+    BOOST_CHECK( std::distance( rbegin, rbackward ) == j );
+    BOOST_CHECK( rbackward.policies().past_the_end == ( -j/N ) );
+    BOOST_CHECK( *rbackward == v[ -j%N ] );
 
     ++rforward;
     --rbackward;
@@ -104,13 +93,13 @@ void reverse_cyclic_iterator_test()
 
   for( i = 0, j = 0; i < 4*N; i += 2, j -= 2 )
   {
-    BOOST_TEST( std::distance( rbegin, rforward ) == i );
-    BOOST_TEST( rforward.policies().past_the_end == ((-i-N+1)/N) );
-    BOOST_TEST( *rforward == v[(-i+4*N)%N] );
+    BOOST_CHECK( std::distance( rbegin, rforward ) == i );
+    BOOST_CHECK( rforward.policies().past_the_end == ((-i-N+1)/N) );
+    BOOST_CHECK( *rforward == v[(-i+4*N)%N] );
 
-    BOOST_TEST( std::distance( rbegin, rbackward ) == j );
-    BOOST_TEST( rbackward.policies().past_the_end == ( -j/N ) );
-    BOOST_TEST( *rbackward == v[ -j%N ] );
+    BOOST_CHECK( std::distance( rbegin, rbackward ) == j );
+    BOOST_CHECK( rbackward.policies().past_the_end == ( -j/N ) );
+    BOOST_CHECK( *rbackward == v[ -j%N ] );
 
     std::advance( rforward, 2 );
     std::advance( rbackward, -2 );
@@ -124,7 +113,7 @@ int test_main(int, char *[])
   reverse_cyclic_iterator_test();
 
   bool error_on_purpose = false;
-  //BOOST_TEST( error_on_purpose );
+  //BOOST_CHECK( error_on_purpose );
 
   return 0;
 }
