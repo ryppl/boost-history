@@ -25,7 +25,8 @@
 # define BOOST_NO_IMPLICIT_MOVE_CTOR_FOR_COPYABLE_TYPES
 #endif
 
-#if BOOST_WORKAROUND(__GNUC__, BOOST_TESTED_AT(3))                  \
+#if !defined(__EDG__)                                               \
+    && BOOST_WORKAROUND(__GNUC__, BOOST_TESTED_AT(3))               \
     && BOOST_WORKAROUND(__GNUC_MINOR__, BOOST_TESTED_AT(3))         \
     && BOOST_WORKAROUND(__GNUC_PATCHLEVEL__, BOOST_TESTED_AT(1))
 # define BOOST_MOVE_GCC_WORKAROUND
@@ -53,7 +54,7 @@ struct move_from
 {
     explicit move_from(X* p)
       : p(p) {}
-
+    
     // Convenience for move constructing/assigning base classes.
     template <class Y>
     operator move_from<Y>()
@@ -69,6 +70,24 @@ struct move_from
  private:
     X* p; // this pointer will refer to the object from which to move
 };
+
+// Detect whether T is movable
+//
+// Checking wehther there's a conversion from move_from<T> to T is
+// ideal, because that'll detect the case where the user wants T to be
+// explicitly movable but not implicitly movable from an rvalue
+// (i.e. no conversion to move_from<T> supplied.  I'm not sure why
+// that would arise, but at least we have the option.  Of course GCC 3
+// doesn't seem to support the option, so we'll check for the implicit
+// rvalue conversion in that case.
+template <class T>
+struct is_movable
+#if !defined(__EDG__) && BOOST_WORKAROUND(__GNUC__, >= 3)
+  : boost::is_convertible<T,move_from<T> >
+#else 
+  : boost::is_convertible<move_from<T>,T>
+#endif
+{};
 
 #ifdef BOOST_MOVE_GCC_WORKAROUND
 
@@ -92,14 +111,14 @@ namespace detail {
 
 template <class T>
 typename boost::mpl::if_<
-    boost::is_convertible<T,move_from<T> >
+    is_movable<T>
   , T
   , T&
 >::type
 inline
 move(T& x, int = 0)  // optional argument is for people using msvc6 compatibility mode
 {
-    return detail::move(x, boost::is_convertible<T,move_from<T> >());
+    return detail::move(x, is_movable<T>());
 }
 
 #elif BOOST_WORKAROUND(BOOST_MSVC, == 1200)
@@ -121,7 +140,7 @@ move_from<T> move(move_from<T> x, int = 0)
 template <class T>
 inline
 typename boost::mpl::if_<
-    is_convertible<T, move_from<T> >
+    is_movable<T>
   , move_from<T>
   , T&
 >::type
@@ -145,7 +164,6 @@ struct movable
         return move_from<Derived>(static_cast<Derived*>(this));
     }
 
-    typedef void* move_disabler;
  protected:
     movable() {}
     

@@ -42,7 +42,7 @@ public: // constants
         );
 
 private: // representation
-    size_t len_;
+    std::size_t len_;
     char* str_;
 
 public: // structors

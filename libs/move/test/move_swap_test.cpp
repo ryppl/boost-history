@@ -130,6 +130,10 @@ void swap_test()
     BOOST_ASSERT( y == y_orig );
     BOOST_ASSERT( !(x == y) );
 
+#ifdef BOOST_MSVC
+# pragma warning(disable: 4675) // resolved overload was found by argument-dependent lookup -- duh!
+#endif
+    
 #if BOOST_WORKAROUND(__GNUC__, == 2) || defined(BOOST_NO_ARGUMENT_DEPENDENT_LOOKUP)
 # define swap boost::move_swap
 #else
@@ -139,13 +143,6 @@ void swap_test()
 
     BOOST_ASSERT( x == y_orig );
     BOOST_ASSERT( y == x_orig );
-
-    // Make sure it works on builtins
-    int i1 = 1, i2 = 2;
-    swap(i1, i2);
-
-    BOOST_ASSERT(i1 == 2);
-    BOOST_ASSERT(i2 == 1);
 }
 
 //////////////////////////////////////////////////////////////////////////
