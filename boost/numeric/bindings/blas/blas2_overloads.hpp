@@ -9,7 +9,7 @@
 #define BOOST_NUMERIC_BINDINGS_BLAS_BLAS2_OVERLOADS_HPP
 
 #include <boost/numeric/bindings/blas/blas.h>
-#include <boost/numeric/bindings/traits/type.hpp>
+#include <boost/numeric/bindings/traits/type_traits.hpp>
 
 namespace boost { namespace numeric { namespace bindings { namespace blas { namespace detail {
 
