@@ -23,23 +23,32 @@
 #ifndef BOOST_LANGBINDING_REGISTRY
 #define BOOST_LANGBINDING_REGISTRY
 
-#define BOOST_LANGBINDING_DECL
-
 #include <memory>
+#include <boost/langbinding/config.hpp>
 
 namespace boost { namespace langbinding {
 
-   struct rvalue_data_base
-   {};
+   namespace detail {
+
+      template<class T>
+      struct registry_impl;
+
+      template<class T>
+      struct lvalue_chain;
+
+      template<class T>
+      struct rvalue_chain;
+
+      template<class T>
+      struct registration;
+   }
+   
+   struct rvalue_data_base;
 
    template<class T>
-   class registry
+   class BOOST_LANGBINDING_DECL registry
    {
    public:
-      struct lvalue_chain;
-      struct rvalue_chain;
-      struct registration;
-
       typedef typename T::type_info type_info_;
       typedef typename T::argument_type argument_type;
 
@@ -47,36 +56,30 @@ namespace boost { namespace langbinding {
       typedef void*(*rvalue_from_stage1)(const argument_type&, int&);
       typedef void(*rvalue_from_stage2)(const argument_type&, rvalue_data_base*);
 
-      BOOST_LANGBINDING_DECL
-      const registration& lookup(const type_info_&);
+      const detail::registration<T>* lookup(const type_info_&);
 
-      BOOST_LANGBINDING_DECL
-      const registration* query(const type_info_&);
+      const detail::registration<T>* query(const type_info_&);
 
-      BOOST_LANGBINDING_DECL
       void insert(const type_info_&, lvalue_from_function);
 
-      BOOST_LANGBINDING_DECL
       void insert(const type_info_& x, 
          rvalue_from_stage1 convertible, rvalue_from_stage2 convert);
 
-      BOOST_LANGBINDING_DECL
       void export_converters(const type_info_&, registry&);
 
-      BOOST_LANGBINDING_DECL
       void export_converters(registry&);
-
-      BOOST_LANGBINDING_DECL
+ 
       static registry* instance();
 
       registry(const registry&);
       registry& operator=(const registry&);
 
+      ~registry();
+      
    private:
       registry();
 
-      struct implementation;
-      std::auto_ptr<implementation> m_pimpl;
+      std::auto_ptr<detail::registry_impl<T> > m_pimpl;
    };
 
 }}

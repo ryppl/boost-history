@@ -24,8 +24,10 @@
 #define BOOST_LANGBINDING_REGISTRY_IMPLEMENTATION
 
 #include <boost/langbinding/registry.hpp>
-#include <boost/langbinding/central_registry.hpp>
 #include <boost/langbinding/registration.ipp>
+#include <boost/langbinding/central_registry.hpp>
+
+#include <boost/langbinding/rvalue_data.hpp>
 
 #include <memory>
 #include <map>
@@ -33,55 +35,61 @@
 
 namespace boost { namespace langbinding {
 
-   template<class T>
-   struct registry<T>::implementation
-   {
-      typedef std::map<
-           typename registry<T>::type_info_
-         , typename registry<T>::registration
-      > registry_t;
+   namespace detail {
+   
+      template<class T>
+      struct BOOST_LANGBINDING_DECL registry_impl
+      {
+         typedef std::map<
+              typename registry<T>::type_info_
+            , registration<T>
+         > registry_t;
 
-      registry_t entries;
-   };
+         registry_t entries;
+      };
 
+   }
+   
    template<class T>
    registry<T>::registry()
-      : m_pimpl(new implementation)
+      : m_pimpl(new detail::registry_impl<T>)
    {}
 
    template<class T>
-   BOOST_LANGBINDING_DECL
-   const typename registry<T>::registration& 
-      registry<T>::lookup(const type_info_& x)
+   registry<T>::~registry() {}
+
+   template<class T>
+   const detail::registration<T>*
+   registry<T>::lookup(const type_info_& x)
    {
       std::cout << "lookup for \"" << x << "\"\n";
 
-      return m_pimpl->entries[x];
+      const detail::registration<T>& c = m_pimpl->entries[x];
+      return &c;
    }
 
    template<class T>
-   BOOST_LANGBINDING_DECL
-   const typename registry<T>::registration* 
+   const detail::registration<T>* 
       registry<T>::query(const type_info_& x)
    {
       std::cout << "query for \"" << x << "\"\n";
 
-      typename implementation::registry_t::const_iterator iter
+      typename detail::registry_impl<T>::registry_t::const_iterator iter
          = m_pimpl->entries.find(x);
 
       return iter == m_pimpl->entries.end() ? 0 : &iter->second;
    }
 
    template<class T>
-   BOOST_LANGBINDING_DECL
    void registry<T>::insert(const type_info_& x, 
       typename registry<T>::lvalue_from_function convert)
    {
       std::cout << "lvalue insert for \"" << x << "\"\n";
 
-      registration& r = const_cast<registration&>(lookup(x));
+      detail::registration<T>& r 
+         = const_cast<detail::registration<T>&>(*lookup(x));
 
-      typedef typename registry<T>::lvalue_chain chain_t;
+      typedef detail::lvalue_chain<T> chain_t;
 
       chain_t* chain = new chain_t;
       chain->convert = convert;
@@ -92,16 +100,16 @@ namespace boost { namespace langbinding {
    }
 
    template<class T>
-   BOOST_LANGBINDING_DECL
    void registry<T>::insert(const type_info_& x,
       typename registry<T>::rvalue_from_stage1 convertible,
       typename registry<T>::rvalue_from_stage2 convert)
    {
       std::cout << "rvalue insert for \"" << x << "\"\n";
 
-      registration& r = const_cast<registration&>(lookup(x));
+      detail::registration<T>& r 
+         = const_cast<detail::registration<T>&>(*lookup(x));
 
-      typedef typename registry<T>::rvalue_chain chain_t;
+      typedef detail::rvalue_chain<T> chain_t;
 
       chain_t* chain = new chain_t;
       chain->convertible = convertible;
@@ -113,52 +121,49 @@ namespace boost { namespace langbinding {
    }
 
    template<class T>
-   BOOST_LANGBINDING_DECL
    void registry<T>::export_converters(registry& to)
    {
-      for (typename implementation::registry_t::const_iterator iter
+      for (typename detail::registry_impl<T>::registry_t::const_iterator iter
             = m_pimpl->entries.begin()
             ; iter != m_pimpl->entries.end()
             ; ++iter)
       {
          const type_info_& type = iter->first;
 
-         for (lvalue_chain* c = iter->second.lvalue_converters; 
+         for (detail::lvalue_chain<T>* c = iter->second.lvalue_converters; 
                c != 0; c = c->next)
          {
             to.insert(type, c->convert);
          }
 
-         for (rvalue_chain* c = iter->second.rvalue_converters; 
-               c != 0; c = c->next)
+         for (detail::rvalue_chain<T>* c2 = iter->second.rvalue_converters; 
+               c2 != 0; c2 = c2->next)
          {
-            to.insert(type, c->convertible, c->convert);
+            to.insert(type, c2->convertible, c2->convert);
          }
       }
    }
 
    template<class T>
-   BOOST_LANGBINDING_DECL
-   void registry<T>::export_converters(const type_info_& type, registry& to)
+   void registry<T>::export_converters(const type_info_& x, registry& to)
    {
-      const registration* r = query(type);
+      const detail::registration<T>* r = query(x);
       if (!r) return;
 
-      for (lvalue_chain* c = r->lvalue_converters; 
+      for (detail::lvalue_chain<T>* c = r->lvalue_converters; 
             c != 0; c = c->next)
       {
-         to.insert(type, c->convert);
+         to.insert(x, c->convert);
       }
 
-      for (rvalue_chain* c = r->rvalue_converters;
-            c != 0; c = c->next)
+      for (detail::rvalue_chain<T>* c2 = r->rvalue_converters;
+            c2 != 0; c2 = c2->next)
       {
-         to.insert(type, c->convertible, c->convert);
+         to.insert(x, c2->convertible, c2->convert);
       }
    }
 
    template<class T>
-   BOOST_LANGBINDING_DECL
    registry<T>* registry<T>::instance()
    {
       static std::auto_ptr<registry<T> > p(new registry);

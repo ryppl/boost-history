@@ -25,10 +25,10 @@
 #ifndef BOOST_LANGBINDING_REGISTRATION_IMPLEMENTATION
 #define BOOST_LANGBINDING_REGISTRATION_IMPLEMENTATION
 
-namespace boost { namespace langbinding {
+namespace boost { namespace langbinding { namespace detail {
 
    template<class T>
-   struct registry<T>::registration
+   struct registration
    {
       registration()
          : lvalue_converters(0)
@@ -36,26 +36,26 @@ namespace boost { namespace langbinding {
       {}
 
       typename registry<T>::type_info_ type;
-      typename registry<T>::lvalue_chain* lvalue_converters;
-      typename registry<T>::rvalue_chain* rvalue_converters;
+      lvalue_chain<T>* lvalue_converters;
+      rvalue_chain<T>* rvalue_converters;
    };
 
    template<class T>
-   struct registry<T>::lvalue_chain
+   struct lvalue_chain
    {
       typename registry<T>::lvalue_from_function convert;
       lvalue_chain* next;
    };
 
    template<class T>
-   struct registry<T>::rvalue_chain
+   struct rvalue_chain
    {
       typename registry<T>::rvalue_from_stage1 convertible;
       typename registry<T>::rvalue_from_stage2 convert;
       rvalue_chain* next;
    };
 
-}}
+}}}
 
 #endif
 
