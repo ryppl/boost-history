@@ -9,7 +9,7 @@
 //  in all copies. This software is provided "as is" without express or implied
 //  warranty, and with no claim as to its suitability for any purpose.
 
-// ideas taken from Rüdiger Loos's format class
+// ideas taken from Rudiger Loos's format class
 // and Karl Nelson's ofstream (also took its parsing code as basis for printf parsing)
 
 // ------------------------------------------------------------------------------
@@ -32,6 +32,7 @@
 
 
 #include "boost/format/format_class.hpp"
+#include "boost/throw_exception.hpp"
 
 namespace boost {
 namespace io {
@@ -52,7 +53,7 @@ namespace detail {
       char cur_ch = os.narrow( s[start], 0);
       assert(cur_ch != 0 ); // since we called isdigit, this should not happen.
       n *= 10;
-      n += cur_ch - '0'; // §22.2.1.1.2 of the C++ standard
+      n += cur_ch - '0'; // 22.2.1.1.2 of the C++ standard
       ++start;
     }
     return n;
@@ -68,7 +69,7 @@ namespace detail {
     // Effects : advance *pos_p by skipping printf's asterisk fields.
     // Returns : nothing
   {
-    assert( pos_p);
+    assert( pos_p != 0);
     if(*pos_p >= buf.size() ) return;
     if(buf[ *pos_p]==os.widen('*')) {
       ++ (*pos_p);
@@ -84,7 +85,7 @@ namespace detail {
     // it either throws if user sets the corresponding flag, or does nothing.
   {
     if(exceptions & io::bad_format_string_bit)
-          throw io::bad_format_string();
+          boost::throw_exception(io::bad_format_string());
   }
     
 
@@ -104,7 +105,7 @@ namespace detail {
     //           - *fpar is set with the parameters read in the directive
   {
     typedef format_item<Ch, Tr>  format_item_t;
-    assert( pos_p);
+    assert( pos_p != 0);
     typename std::basic_string<Ch, Tr>::size_type       &i1 = *pos_p,      
                                                         i0; 
     fpar->argN_ = format_item_t::argN_no_posit;  // if no positional-directive
@@ -359,7 +360,7 @@ void basic_format<Ch, Traits> ::parse(const string_t & buf)
     {
       if( i1+1 >= buf.size() ) {
         if(exceptions() & io::bad_format_string_bit)
-          throw io::bad_format_string(); // must not end in "bla bla %"
+          boost::throw_exception(io::bad_format_string()); // must not end in "bla bla %"
         else break; // stop there, ignore last '%'
       }
       if(buf[i1+1] == buf[i1] ) { i1+=2; continue; } // escaped "%%" / "##"
@@ -421,7 +422,7 @@ void basic_format<Ch, Traits> ::parse(const string_t & buf)
       if(max_argN >= 0 )  // dont mix positional with non-positionnal directives
         {
           if(exceptions() & io::bad_format_string_bit)
-            throw io::bad_format_string();
+            boost::throw_exception(io::bad_format_string());
           // else do nothing. => positionnal arguments are processed as non-positionnal
         }
       // set things like it would have been with positional directives :
