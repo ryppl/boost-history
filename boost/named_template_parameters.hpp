@@ -53,7 +53,11 @@ namespace boost {
       class feature_selector : 
 	public discriminator<typename Feature_list::head_type, N>,
 	public feature_selector<typename Feature_list::tail_type, N+1>
-      {};
+      {
+	BOOST_STATIC_ASSERT(detail::is_named_parameter<
+			      typename Feature_list::head_type
+			    >::value);
+      };
       
       template <int N> class feature_selector<boost::tuples::null_type, N> {};
 
