@@ -5,10 +5,13 @@
 // with no claim as to its suitability for any purpose.
 
 // Contains
-//      (1) the metafunction select, which mimics the effect of a chain
-//          of nested mpl if_'s or apply_if's, and plus the convenience template
-//          select_c, and
-//      (2) the template lazy, for lazy evaluation with select and select_c.
+//      (1) The metafunction select, which mimics the effect of a chain
+//          of nested mpl if_'s or apply_if's. Supports up to 16 cases.
+//      (2) The convenience template select_c.
+//      (2) The template lazy, for lazy evaluation with select and select_c.
+//      (3) The templates lazy_select_c and lazy_select.  Identical to select_c 
+//          and select except that lazy evaluation is automatically applied to 
+//          each case.
 //
 // -----------------------------------------------------------------------------
 //
@@ -26,7 +29,7 @@
 //     Here case1, case2, ... are models of MPL::IntegralConstant with value type
 //     bool, and n <= 16.
 //
-// (2) select_c. same as select, except that the cases should be boolean constant
+// (2) select_c. Same as select, except that the cases should be boolean constant
 //     expressions.
 //
 // (3) Lazy evauation. To specify that certain types should be subject to lazy 
@@ -59,8 +62,11 @@
 //        numbers of cases would be available, e.g., using select20, select30, 
 //        etc. It's not clear that this would be useful.
 //    (5) select depends on Type Traits, MPL, Boost.Preprocessor and 
-//        select_by_size select_by_size is needed only for Borland < 5.6.4. This 
+//        select_by_size. select_by_size is needed only for Borland < 5.6.4. This 
 //        dependency could presumably be eliminated, but the author is too tired.
+//    (6) select has been tested on VC6, VC7.1, GCC 2.95 (cygwin), GCC 3.2 (MinGW)
+//        GCC 3.3.1 (cygwin), Comeau C/C++ 4.3.3, Intel for Windows 7.1 and 8.0,
+//        BCC 5.5.1 and 5.6.4 and Metrowerks Codewarrior 8.0.
 //
 
 #ifndef BOOST_MPL_SELECT_HPP_INCLUDED
@@ -70,26 +76,15 @@
 #include <boost/mpl/apply_if.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/identity.hpp>
+#include <boost/mpl/or.hpp>
+#include <boost/mpl/void.hpp>
 #include <boost/preprocessor/arithmetic/dec.hpp>
 #include <boost/preprocessor/arithmetic/inc.hpp>
 #include <boost/preprocessor/cat.hpp>
-#include <boost/preprocessor/comparison/equal.hpp>
-#include <boost/preprocessor/control/if.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
+#include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/preprocessor/repetition/repeat_from_to.hpp>
 #include <boost/type_traits/is_base_and_derived.hpp>
-#include <boost/type_traits/is_convertible.hpp>
-#include <boost/type_traits/detail/yes_no_type.hpp>
-
-#include <boost/mpl/vector/vector20.hpp>
-#include <boost/mpl/pair.hpp>
-#include <boost/mpl/switch.hpp>
-#include <boost/mpl/aux_/lambda_support.hpp>
-#include <boost/mpl/aux_/void_spec.hpp>
-#include <boost/mpl/aux_/preprocessor/def_params_tail.hpp>
-#include <boost/mpl/void.hpp>
-#include <boost/mpl/aux_/arity_spec.hpp>
-#include <boost/mpl/aux_/lambda_spec.hpp>
 
 // Needed for Borland 5.5.1 and to reduce template nesting on GCC 2.9x
 #if defined(__BORLANDC__) && (__BORLANDC__ < 0x564) || \
@@ -99,55 +94,72 @@
                 
 //--------------Macros--------------------------------------------------------//
 
-// BOOST_SELECT_C_PARAMS(n) expands to 
-//   bool B1 = true, typename T1 = select_default, ... , 
-//   bool Bn = true, typename Tn = select_default.
-#define BOOST_SELECT_C_PARAMS_N(z, n, text)                                    \
+// These macros are for readability, not configurability.
+
+// BOOST_MPL_SELECT_C_PARAMS(n) expands to 
+//   bool B1 = true, typename T1 = void_, ... , 
+//   bool Bn = true, typename Tn = void_.
+#define BOOST_MPL_SELECT_C_PARAMS_N(z, n, text)                                \
     BOOST_PP_COMMA_IF(BOOST_PP_DEC(n))                                         \
     bool BOOST_PP_CAT(B, n) = true                                             \
-    , typename BOOST_PP_CAT(T, n) = aux_::select_default                       \
+    , typename BOOST_PP_CAT(T, n) = void_                                      \
     /**/
-#define BOOST_SELECT_C_PARAMS(n)                                               \
-    BOOST_PP_REPEAT_FROM_TO(1, BOOST_PP_INC(n), BOOST_SELECT_C_PARAMS_N, _)    \
+#define BOOST_MPL_SELECT_C_PARAMS(n)                                           \
+    BOOST_PP_REPEAT_FROM_TO(1, BOOST_PP_INC(n), BOOST_MPL_SELECT_C_PARAMS_N, _)\
     /**/
 
-// BOOST_SELECT_PARAMS(n) expands to 
-//   typename B1 = true_, typename T1 = select_default, ... , 
-//   typename Bn = true_, typename Tn = select_default.
-#define BOOST_SELECT_PARAMS_N(z, n, text)                                      \
+// BOOST_MPL_SELECT_PARAMS(n) expands to 
+//   typename B1 = true_, typename T1 = void_, ... , 
+//   typename Bn = true_, typename Tn = void_.
+#define BOOST_MPL_SELECT_PARAMS_N(z, n, text)                                  \
     BOOST_PP_COMMA_IF(BOOST_PP_DEC(n))                                         \
     typename BOOST_PP_CAT(B, n) = true_                                        \
-    , typename BOOST_PP_CAT(T, n) = aux_::select_default                       \
+    , typename BOOST_PP_CAT(T, n) = void_                                      \
     /**/
-#define BOOST_SELECT_PARAMS(n)                                                 \
-    BOOST_PP_REPEAT_FROM_TO(1, BOOST_PP_INC(n), BOOST_SELECT_PARAMS_N, _)      \
-    /**/
-
-// BOOST_SELECT_C_ARGS(n) expands to B1, T1, ..., Bn, Tn
-#define BOOST_SELECT_C_ARGS_N(z, n, text)                                      \
-    BOOST_PP_COMMA_IF(BOOST_PP_DEC(n)) BOOST_PP_CAT(B, n), BOOST_PP_CAT(T, n)  \
-    /**/
-#define BOOST_SELECT_C_ARGS(n)                                                 \
-    BOOST_PP_REPEAT_FROM_TO(1, BOOST_PP_INC(n), BOOST_SELECT_C_ARGS_N, _)      \
+#define BOOST_MPL_SELECT_PARAMS(n)                                             \
+    BOOST_PP_REPEAT_FROM_TO(1, BOOST_PP_INC(n), BOOST_MPL_SELECT_PARAMS_N, _)  \
     /**/
 
-// BOOST_SELECT_C_ARGS_WKND(n) expands to 
-//   BOOST_MPL_AUX_VALUE_WKND(B1)::value, T1, ... , 
+// BOOST_MPL_SELECT_ARGS(m, n) expands to Bm, Tm, ..., Bn, Tn
+#define BOOST_MPL_SELECT_ARGS_N(z, n, text)                                    \
+    BOOST_PP_COMMA_IF(text) BOOST_PP_CAT(B, n), BOOST_PP_CAT(T, n)             \
+    /**/
+#define BOOST_MPL_SELECT_ARGS(from, to)                                        \
+    BOOST_MPL_SELECT_ARGS_N(0, from, 0)                                        \
+    BOOST_PP_REPEAT_FROM_TO( BOOST_PP_INC(from), BOOST_PP_INC(to),             \
+                             BOOST_MPL_SELECT_ARGS_N, 1 )                      \
+    /**/
+
+// BOOST_MPL_SELECT_ARGS_WKND(m, n) expands to 
+//   BOOST_MPL_AUX_VALUE_WKND(Bn)::value, Tm, ... , 
 //   BOOST_MPL_AUX_VALUE_WKND(Bn)::value, Tn.
-#define BOOST_SELECT_C_ARGS_WKND_N(z, n, text)                                 \
+#define BOOST_MPL_SELECT_ARGS_WKND_N(z, n, text)                               \
     BOOST_PP_COMMA_IF(BOOST_PP_DEC(n))                                         \
     BOOST_MPL_AUX_VALUE_WKND(BOOST_PP_CAT(B, n))::value, BOOST_PP_CAT(T, n)    \
     /**/
-#define BOOST_SELECT_C_ARGS_WKND(n)                                            \
-    BOOST_PP_REPEAT_FROM_TO(1, BOOST_PP_INC(n), BOOST_SELECT_C_ARGS_WKND_N, _) \
+#define BOOST_MPL_SELECT_ARGS_WKND(from, to)                                   \
+    BOOST_PP_REPEAT_FROM_TO( from, BOOST_PP_INC(to),                           \
+                             BOOST_MPL_SELECT_ARGS_WKND_N, _ )                 \
     /**/
+
+// BOOST_MPL_SELECT_ARGS_WKND(n) expands to 
+//   bool_<B1>, T1, ... , bool_<Bn>, Tn.
+#define BOOST_MPL_SELECT_ARGS_WRAPPED_N(z, n, text)                            \
+    BOOST_PP_COMMA_IF(BOOST_PP_DEC(n))                                         \
+    bool_<BOOST_PP_CAT(B, n)>, BOOST_PP_CAT(T, n)                              \
+    /**/
+#define BOOST_MPL_SELECT_ARGS_WRAPPED(n)                                       \
+    BOOST_PP_REPEAT_FROM_TO( 1, BOOST_PP_INC(n),                               \
+                             BOOST_MPL_SELECT_ARGS_WRAPPED_N, _ )              \
+    /**/
+
 
 namespace boost { namespace mpl {
 
 //--------------Lazy evaluation machinery-------------------------------------//
 
-namespace aux_ {
-    struct lazy_base { };
+namespace aux {
+    struct lazy_base { }; // Base class for mpl::lazy.
 
 // Needed for Borland 5.5.1 and to reduce template nesting on GCC 2.9x
 #if defined(__BORLANDC__) && (__BORLANDC__ < 0x564) || \
@@ -156,20 +168,18 @@ namespace aux_ {
     utility::case_<false> is_lazy_helper(...);
 #endif
 
-    // Returns the given type, unless is is of the form eval<U>, in which case
+    // Returns the given type, unless it is of the form lazy<U>, in which case
     // returns the result of applying U.
     template<typename T>
     struct lazy_eval {
         template<typename U>
-        struct apply_base_type {
-            typedef typename U::base::type type;
-        };
+        struct apply_base_type { typedef typename U::base::type type; };
 
         // Needed for Borland 5.5.1 and to reduce template nesting on GCC 2.9x.
         // This passes UDTs through ellipsis and so yields UB (or so I'm told)
         #if (!defined(__BORLANDC__) || (__BORLANDC__ >= 0x564)) && \
             (!defined(__GNUC__) || (__GNUC__ > 2)) 
-            typedef boost::is_convertible<T, lazy_base> is_lazy;
+            typedef boost::is_base_and_derived<lazy_base, T> is_lazy;
         #else
             static T* t;
             struct is_lazy {
@@ -186,178 +196,158 @@ namespace aux_ {
         type;
     };
 
-}               // End namespaces aux_.
+}               // End namespaces aux.
 
 template<typename T>
-struct lazy : public mpl::aux_::lazy_base { typedef T base; };
-
-namespace aux_ {
-
-// Unspecified types default to void.
-#if !defined(BOOST_MSVC) || (BOOST_MSVC >= 1300)
-    typedef void select_default;
-#else
-    typedef lazy< mpl::identity<void> > select_default;
-#endif
-
-}               // End namespace aux_.
+struct lazy : public mpl::aux::lazy_base { typedef T base; };
 
 //--------------Definition of select_c----------------------------------------//
 
-#ifndef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
+#ifndef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION //---------------------------//
+
+    // This implementation is noticeably faster than the more succint version 
+    // for compilers without partial specicialization
 
     // Machinery for lazy evaluation is necessary only at lowest level,
     // so the intermediate version of select4 omits it to save a few levels
     // of template nesting.
-    template<BOOST_SELECT_C_PARAMS(4)>
-    struct select4;
-
-    template< typename T1,
-              bool B2, typename T2,
-              bool B3, typename T3,
-              bool B4, typename T4 >
-    struct select4<true, T1, B2, T2, B3, T3, B4, T4> {
-        typedef T1 type;
-    };
-
-    template< typename T1,
-              typename T2,
-              bool B3, typename T3,
-              bool B4, typename T4 >
-    struct select4<false, T1, true, T2, B3, T3, B4, T4> {
-        typedef T2 type;
-    };
-
-    template< typename T1,
-              typename T2,
-              typename T3,
-              bool B4, typename T4 >
-    struct select4<false, T1, false, T2, true, T3, B4, T4> {
-        typedef T3 type;
-    };
-
-    template<typename T1, typename T2, typename T3, typename T4>
-    struct select4<false, T1, false, T2, false, T3, true, T4> {
-        typedef T4 type;
+    template<BOOST_MPL_SELECT_PARAMS(4)>
+    struct select4 {
+        typedef typename
+                apply_if<
+                    B1, identity<T1>,
+                    apply_if<
+                        B2, identity<T2>,
+                        apply_if<
+                            B3, identity<T3>, identity<T4>
+                        >
+                    >
+                >::type type;
     };
 
     // Version of select4 with support for lazy evaluation.
-    template<BOOST_SELECT_C_PARAMS(4)>
-    struct select4_lazy;
+    template<BOOST_MPL_SELECT_C_PARAMS(4)>
+    struct select4_lazy_impl;
 
     template< typename T1,
               bool B2, typename T2,
               bool B3, typename T3,
               bool B4, typename T4 >
-    struct select4_lazy<true, T1, B2, T2, B3, T3, B4, T4> {
-        typedef typename aux_::lazy_eval<T1>::type type;
+    struct select4_lazy_impl<true, T1, B2, T2, B3, T3, B4, T4> {
+        typedef typename aux::lazy_eval<T1>::type type;
     };
 
     template< typename T1,
               typename T2,
               bool B3, typename T3,
               bool B4, typename T4 >
-    struct select4_lazy<false, T1, true, T2, B3, T3, B4, T4> {
-        typedef typename aux_::lazy_eval<T2>::type type;
+    struct select4_lazy_impl<false, T1, true, T2, B3, T3, B4, T4> {
+        typedef typename aux::lazy_eval<T2>::type type;
     };
 
     template< typename T1,
               typename T2,
               typename T3,
               bool B4, typename T4 >
-    struct select4_lazy<false, T1, false, T2, true, T3, B4, T4> {
-        typedef typename aux_::lazy_eval<T3>::type type;
+    struct select4_lazy_impl<false, T1, false, T2, true, T3, B4, T4> {
+        typedef typename aux::lazy_eval<T3>::type type;
     };
 
     template<typename T1, typename T2, typename T3, typename T4>
-    struct select4_lazy<false, T1, false, T2, false, T3, true, T4> {
-        typedef typename aux_::lazy_eval<T4>::type type;
+    struct select4_lazy_impl<false, T1, false, T2, false, T3, true, T4> {
+        typedef typename aux::lazy_eval<T4>::type type;
     };
 
-    template<BOOST_SELECT_C_PARAMS(16)>
-    struct select_c
+    template<BOOST_MPL_SELECT_PARAMS(4)>
+    struct select4_lazy 
+        : select4_lazy_impl<BOOST_MPL_SELECT_ARGS_WKND(1, 4)> 
+        { };
+
+    template<BOOST_MPL_SELECT_PARAMS(16)>
+    struct select
         : select4<
-            B1 || B2 || B3 || B4,
-            select4_lazy<B1, T1, B2, T2, B3, T3, true, T4>,
-            B5 || B6 || B7 || B8,
-            select4_lazy<B5, T5, B6, T6, B7, T7, true, T8>,  
-            B9 || B10 || B11 || B12,
-            select4_lazy<B9, T9, B10, T10, B11, T11, true, T12>,  
-            B13 || B14 || B15 || B16,
-            select4_lazy<B13, T13, B14, T14, B15, T15, true, T16>
+              or_<B1, B2, B3, B4>,
+              select4_lazy<BOOST_MPL_SELECT_ARGS(1, 4)>,
+              or_<B5, B6, B7, B8>,
+              select4_lazy<BOOST_MPL_SELECT_ARGS(5, 8)>,
+              or_<B9, B10, B11, B12>,
+              select4_lazy<BOOST_MPL_SELECT_ARGS(9, 12)>,
+              or_<B13, B14, B15, B16>,
+              select4_lazy<BOOST_MPL_SELECT_ARGS(13, 16)>
           >::type
         { };
-#else // #ifndef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
-    template<BOOST_SELECT_C_PARAMS(2)>
-    struct select2 {
-        typedef typename
-                apply_if_c<
-                    B1,
-                    aux_::lazy_eval<T1>,
-                    aux_::lazy_eval<T2>
-                >::type
-        type;
-    };
+#else // #ifndef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION //------------------//
 
-    template<BOOST_SELECT_C_PARAMS(4)>
-    struct select4 {
+    template<BOOST_MPL_SELECT_PARAMS(16)>
+    struct select_impl {
         typedef typename
-                apply_if_c<
-                    B1 || B2,
-                    select2<B1, T1, true, T2>,
-                    select2<B3, T3, true, T4>
-                >::type
-        type;
-    };
-
-    template<BOOST_SELECT_C_PARAMS(8)>
-    struct select8 {
-        typedef typename
-                apply_if_c<
-                    B1 || B2 || B3 || B4,
-                    select4<B1, T1, B2, T2, B3, T3, true, T4>,
-                    select4<B5, T5, B6, T6, B7, T7, true, T8>
-                >::type
-        type;
-    };
-
-    template<BOOST_SELECT_C_PARAMS(16)>
-    struct select_c {
-        typedef typename
-                apply_if_c<
-                    B1 || B2 || B3 || B4 || B5 || B6 || B7 || B8,
-                    select8<
-                        B1, T1, B2, T2, B3, T3, B4, T4, 
-                        B5, T5, B6, T6, B7, T7, true, T8
+                apply_if<
+                    or_<B1, B2, B3, B4>,
+                    apply_if<
+                        B1, identity<T1>,
+                        apply_if<
+                            B2, identity<T2>,
+                            apply_if<
+                                B3, identity<T3>, identity<T4>
+                            >
+                        >
                     >,
-                    select8<
-                        B9, T9, B10, T10, B11, T11, B12, T12, 
-                        B13, T13, B14, T14, B15, T15, true, T16
-                    >
-                >::type
-        type;
+                    select_impl<BOOST_MPL_SELECT_ARGS(5, 16)>
+                >::type                                result;
+        typedef typename aux::lazy_eval<result>::type  type;
     };
-#endif // #ifndef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
 
-//--------------Definition of select, lazy_select_c and select_z--------------//
+    template<> struct select_impl<> { typedef void_ type; };
 
-template<BOOST_SELECT_PARAMS(16)>
-struct select {
-    typedef typename select_c<BOOST_SELECT_C_ARGS_WKND(16)>::type type;
+    template<BOOST_MPL_SELECT_PARAMS(16)>
+    struct select : select_impl<BOOST_MPL_SELECT_ARGS(1, 16)> { };
+
+#endif // #ifndef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION //-----------------//
+
+//--------------Definition of select_c, lazy_select and lazy_select_c---------//
+
+namespace aux { // VC6 Workarounds.
+
+template< BOOST_MPL_SELECT_PARAMS(16), 
+          typename Base = 
+              typename select<BOOST_MPL_SELECT_ARGS(1, 16)>::type >
+struct lazy_select_impl : Base { };
+
+template< BOOST_MPL_SELECT_C_PARAMS(16),
+          typename Base = 
+              typename select<BOOST_MPL_SELECT_ARGS_WRAPPED(16)>::type >
+struct lazy_select_c_impl : Base { };
+
+}               // End namespace aux.
+
+template<BOOST_MPL_SELECT_C_PARAMS(16)>
+struct select_c {
+    typedef typename select<BOOST_MPL_SELECT_ARGS_WRAPPED(16)>::type type;
 };
 
-template<BOOST_SELECT_C_PARAMS(16)>
-struct lazy_select_c {
-    typedef typename select_c<BOOST_SELECT_C_ARGS(16)>::type  result;
-    typedef typename result::type                             type;
-};
-
-template<BOOST_SELECT_PARAMS(16)>
+template< BOOST_MPL_SELECT_PARAMS(16)>
 struct lazy_select {
-    typedef typename select_c<BOOST_SELECT_C_ARGS_WKND(16)>::type  result;
-    typedef typename result::type                                  type;
+    typedef typename aux::lazy_select_impl<BOOST_MPL_SELECT_ARGS(1, 16)>::type type;
+};
+
+template<BOOST_MPL_SELECT_C_PARAMS(16)>
+struct lazy_select_c {
+    typedef typename aux::lazy_select_c_impl<BOOST_MPL_SELECT_ARGS(1, 16)>::type type;
 };
 
 } }             // End namespaces mpl, boost.
+
+//--------------Undefine macros-----------------------------------------------//
+
+#undef BOOST_MPL_SELECT_C_PARAMS_N
+#undef BOOST_MPL_SELECT_C_PARAMS
+#undef BOOST_MPL_SELECT_PARAMS_N
+#undef BOOST_MPL_SELECT_PARAMS
+#undef BOOST_MPL_SELECT_ARGS_N
+#undef BOOST_MPL_SELECT_ARGS
+#undef BOOST_MPL_SELECT_ARGS_WKND_N
+#undef BOOST_MPL_SELECT_ARGS_WKND
+#undef BOOST_MPL_SELECT_ARGS_WRAPPED_N
+#undef BOOST_MPL_SELECT_ARGS_WRAPPED_N
 
 #endif          // #ifndef BOOST_MPL_SELECT_HPP_INCLUDED
