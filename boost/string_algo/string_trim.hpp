@@ -16,39 +16,54 @@
 
 #include "string_funct.hpp"
 
+// some macros for simplify definition of trim functions
+#define BOOST_STRING_TRIM_SEQ_FWD( Alg, Seq, Pred ) Alg( Seq, Pred )
+
 namespace boost {
 
-
 //  trim iterator  -----------------------------------------------//
+
+    // Search for first non space character from the beginning of the sequence
+    /*
+        Spaces are recognized accoding to 
+    */
+    template< typename Iterator, typename Predicate >
+    inline Iterator trim_begin_if( Iterator InBegin, Iterator InEnd, Predicate IsSpace )
+    {
+        return std::find_if( 
+            InBegin, 
+            InEnd, 
+            std::not1(IsSpace));
+    }
 
     // Search for first non space character from the beginning of the sequence
     template< typename Iterator >
     inline Iterator trim_begin( Iterator InBegin, Iterator InEnd, const std::locale& Loc=std::locale() )
     {
-        return std::find_if( 
+        return trim_begin_if(
             InBegin, 
             InEnd, 
-            std::not1(std::bind2nd(string_util_impl::isspaceF<typename Iterator::value_type>(), Loc )));
+            if_isspace<typename Iterator::value_type>( Loc ) );
     }
 
 //  left trim  -----------------------------------------------//
 
     // const version of left trim
-    template< typename Seq >
-    inline Seq trim_left_copy( const Seq& Input, const std::locale& Loc=std::locale() )
+    template< typename SeqT, typename Predicate >
+    inline SeqT trim_left_copy_if( const SeqT& Input, Predicate IsSpace )
     {
-        return Seq( 
-                trim_begin( Input.begin(), Input.end(), Loc ),
+        return SeqT( 
+                trim_begin_if( Input.begin(), Input.end(), IsSpace ),
                 Input.end() );
     }
 
     // in-place version of left trim
-    template< typename Seq >
-    inline Seq& trim_left( Seq& Input, const std::locale& Loc=std::locale() )
+    template< typename SeqT, typename Predicate >
+    inline SeqT& trim_left_if( SeqT& Input, Predicate IsSpace )
     {
         Input.erase( 
             Input.begin(),
-            trim_begin( Input.begin(), Input.end(), Loc ));
+            trim_begin_if( Input.begin(), Input.end(), IsSpace ));
 
         return Input;
     }
@@ -56,21 +71,21 @@ namespace boost {
 //  right trim  -----------------------------------------------//
 
     // const version of right trim
-    template< typename Seq >
-    inline Seq trim_right_copy( const Seq& Input, const std::locale& Loc=std::locale() )
+    template< typename SeqT, typename Predicate >
+    inline SeqT trim_right_copy_if( const SeqT& Input, Predicate IsSpace )
     {
-        return Seq( 
+        return SeqT( 
             Input.begin(),
-            trim_begin( Input.rbegin(), Input.rend(), Loc ).base()
+            trim_begin_if( Input.rbegin(), Input.rend(), IsSpace ).base()
             );
     }
     
     // in-place version of right trim
-    template< typename Seq >
-    inline Seq& trim_right( Seq& Input, const std::locale& Loc=std::locale() )
+    template< typename SeqT, typename Predicate >
+    inline SeqT& trim_right_if( SeqT& Input, Predicate IsSpace )
     {
         Input.erase(
-            trim_begin( Input.rbegin(), Input.rend(), Loc ).base(),
+            trim_begin_if( Input.rbegin(), Input.rend(), IsSpace ).base(),
             Input.end()
             );
 
@@ -80,26 +95,79 @@ namespace boost {
 //  both side trim  -----------------------------------------------//
 
     // const version of trim
-    template< typename Seq >
-    inline Seq trim_copy( const Seq& Input, const std::locale& Loc=std::locale() )
+    template< typename SeqT, typename Predicate >
+    inline SeqT trim_copy_if( const SeqT& Input, Predicate IsSpace )
     {
-        typename Seq::const_iterator TrimEnd=trim_begin( Input.rbegin(), Input.rend(), Loc).base();
+        typename SeqT::const_iterator TrimEnd=trim_begin_if( Input.rbegin(), Input.rend(), IsSpace).base();
 
-        return Seq( 
-            trim_begin( Input.begin(), TrimEnd, Loc ),
+        return SeqT( 
+            trim_begin_if( Input.begin(), TrimEnd, IsSpace ),
             TrimEnd
             );
     }
     
     // in-place version of trim
-    template< typename Seq >
-    inline Seq& trim( Seq& Input, const std::locale& Loc=std::locale() )
+    template< typename SeqT, typename Predicate >
+    inline SeqT& trim_if( SeqT& Input, Predicate IsSpace )
     {
-        return trim_left( trim_right( Input, Loc ), Loc );
+        return trim_left_if( trim_right_if( Input, IsSpace ), IsSpace );
     }
     
+//  standard shortcuts  -----------------------------------------------//
+
+    template< typename SeqT >
+    inline SeqT trim_left_copy( const SeqT& Input, const std::locale& Loc=std::locale() )
+    {
+        return 
+            BOOST_STRING_TRIM_SEQ_FWD( 
+                trim_left_copy_if, Input, 
+                if_isspace<typename SeqT::value_type>( Loc ) );
+    }
+    template< typename SeqT >
+    inline SeqT& trim_left( SeqT& Input, const std::locale& Loc=std::locale() )
+    {
+        return 
+            BOOST_STRING_TRIM_SEQ_FWD( 
+                trim_left_if, Input, 
+                if_isspace<typename SeqT::value_type>( Loc ) );
+    }
+    template< typename SeqT >
+    inline SeqT trim_right_copy( const SeqT& Input, const std::locale& Loc=std::locale() )
+    {
+        return 
+            BOOST_STRING_TRIM_SEQ_FWD( 
+                trim_right_copy_if, Input, 
+                if_isspace<typename SeqT::value_type>( Loc ) );
+    }
+    template< typename SeqT >
+    inline SeqT& trim_right( SeqT& Input, const std::locale& Loc=std::locale() )
+    {
+        return 
+            BOOST_STRING_TRIM_SEQ_FWD( 
+                trim_right_if, Input, 
+                if_isspace<typename SeqT::value_type>( Loc ) );
+    }
+    template< typename SeqT >
+    inline SeqT trim_copy( const SeqT& Input, const std::locale& Loc=std::locale() )
+    {
+        return
+            BOOST_STRING_TRIM_SEQ_FWD( 
+                trim_copy_if, Input, 
+                if_isspace<typename SeqT::value_type>( Loc ) );
+    }
+    template< typename SeqT >
+    inline SeqT& trim( SeqT& Input, const std::locale& Loc=std::locale() )
+    {
+        return
+            BOOST_STRING_TRIM_SEQ_FWD( 
+                trim_if, Input, 
+                if_isspace<typename SeqT::value_type>( Loc ) );
+    }
+
 
 } // namespace boost
 
+// remove macro definitions
+#undef BOOST_STRING_TRIM_SEQ_FWD
 
 #endif  // BOOST_STRING_TRIM_HPP

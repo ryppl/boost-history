@@ -27,7 +27,7 @@ namespace boost {
     */
     template< typename InputIterator, typename SubIterator, typename BinaryPredicate >
     inline std::pair<InputIterator,InputIterator> 
-    find( 
+    find_if( 
         InputIterator Begin, 
         InputIterator End, 
         SubIterator SubBegin,
@@ -70,10 +70,10 @@ namespace boost {
         SubIterator SubBegin,
         SubIterator SubEnd )
     {
-        return find( 
+        return find_if( 
             Begin, End, 
             SubBegin, SubEnd, 
-            string_util_impl::equal_toF<
+            detail::string_algo::equal_toF<
                 typename InputIterator::value_type, 
                 typename SubIterator::value_type>());
     }
@@ -81,14 +81,14 @@ namespace boost {
 //  find_first  -----------------------------------------------//
 
     // find_first sequence const version
-    template< typename Seq1, typename Seq2, typename BinaryPredicate >
-    inline std::pair<typename Seq1::const_iterator, typename Seq1::const_iterator> 
-    find_first( 
-        const Seq1& Input, 
-        const Seq2& Substr,
+    template< typename SeqT1, typename SeqT2, typename BinaryPredicate >
+    inline std::pair<typename SeqT1::const_iterator, typename SeqT1::const_iterator> 
+    find_first_if( 
+        const SeqT1& Input, 
+        const SeqT2& Substr,
         BinaryPredicate Comp )
     {
-        return find( Input.begin(), Input.end(), Substr.begin(), Substr.end(), Comp );
+        return find_if( Input.begin(), Input.end(), Substr.begin(), Substr.end(), Comp );
     }
 
     // find_first sequence const version
@@ -96,29 +96,29 @@ namespace boost {
         Implicit parameters are not correctly handled by VC7 so we have to provide
         two variants of the same method
     */
-    template< typename Seq1, typename Seq2 >
-    inline std::pair<typename Seq1::const_iterator, typename Seq1::const_iterator> 
+    template< typename SeqT1, typename SeqT2 >
+    inline std::pair<typename SeqT1::const_iterator, typename SeqT1::const_iterator> 
     find_first( 
-        const Seq1& Input, 
-        const Seq2& Substr )
+        const SeqT1& Input, 
+        const SeqT2& Substr )
     {
-        return find_first( 
+        return find_first_if( 
             Input, 
             Substr,
-            string_util_impl::equal_toF<
-                typename Seq1::value_type, 
-                typename Seq2::value_type>());
+            detail::string_algo::equal_toF<
+                typename SeqT1::value_type, 
+                typename SeqT2::value_type>());
     }
 
     // find_first sequence non-const version
-    template< typename Seq1, typename Seq2, typename BinaryPredicate >
-    inline std::pair<typename Seq1::iterator, typename Seq1::iterator> 
-    BOOST_STRING_NON_CONST_FUNCTION(find_first)( 
-        Seq1& Input, 
-        const Seq2& Substr,
+    template< typename SeqT1, typename SeqT2, typename BinaryPredicate >
+    inline std::pair<typename SeqT1::iterator, typename SeqT1::iterator> 
+    BOOST_STRING_NON_CONST_FUNCTION(find_first_if)( 
+        SeqT1& Input, 
+        const SeqT2& Substr,
         BinaryPredicate Comp )
     {
-        return find( Input.begin(), Input.end(), Substr.begin(), Substr.end(), Comp );
+        return find_if( Input.begin(), Input.end(), Substr.begin(), Substr.end(), Comp );
     }
 
     // find_first sequence non-const version
@@ -126,34 +126,34 @@ namespace boost {
         Implicit parameters are not correctly handled by VC7 so we have to provide
         two variants of the same method
     */
-    template< typename Seq1, typename Seq2 >
-    inline std::pair<typename Seq1::iterator, typename Seq1::iterator> 
+    template< typename SeqT1, typename SeqT2 >
+    inline std::pair<typename SeqT1::iterator, typename SeqT1::iterator> 
     BOOST_STRING_NON_CONST_FUNCTION(find_first)( 
-        Seq1& Input, 
-        const Seq2& Substr )
+        SeqT1& Input, 
+        const SeqT2& Substr )
     {
-        return BOOST_STRING_NON_CONST_FUNCTION(find_first)( 
+        return BOOST_STRING_NON_CONST_FUNCTION(find_first_if)( 
             Input, 
             Substr,
-            string_util_impl::equal_toF<
-                typename Seq1::value_type, 
-                typename Seq2::value_type>()); 
+            detail::string_algo::equal_toF<
+                typename SeqT1::value_type, 
+                typename SeqT2::value_type>()); 
     }
 
 //  find_last  -----------------------------------------------//
 
     // find_last sequence const version
-    template< typename Seq1, typename Seq2, typename BinaryPredicate >
-    inline std::pair<typename Seq1::const_iterator, typename Seq1::const_iterator> 
-    find_last( 
-        const Seq1& Input, 
-        const Seq2& Substr,
+    template< typename SeqT1, typename SeqT2, typename BinaryPredicate >
+    inline std::pair<typename SeqT1::const_iterator, typename SeqT1::const_iterator> 
+    find_last_if( 
+        const SeqT1& Input, 
+        const SeqT2& Substr,
         BinaryPredicate Comp )
     {
         std::pair<
-            typename Seq1::const_reverse_iterator, 
-            typename Seq1::const_reverse_iterator> result=
-        find( Input.rbegin(), Input.rend(), Substr.rbegin(), Substr.rend(), Comp );
+            typename SeqT1::const_reverse_iterator, 
+            typename SeqT1::const_reverse_iterator> result=
+        find_if( Input.rbegin(), Input.rend(), Substr.rbegin(), Substr.rend(), Comp );
 
         return std::make_pair( result.second.base(), result.first.base() );
     }
@@ -163,32 +163,32 @@ namespace boost {
         Implicit parameters are not correctly handled by VC7 so we have to provide
         two variants of the same method
     */
-    template< typename Seq1, typename Seq2 >
-    inline std::pair<typename Seq1::const_iterator, typename Seq1::const_iterator> 
+    template< typename SeqT1, typename SeqT2 >
+    inline std::pair<typename SeqT1::const_iterator, typename SeqT1::const_iterator> 
     find_last( 
-        const Seq1& Input, 
-        const Seq2& Substr )
+        const SeqT1& Input, 
+        const SeqT2& Substr )
     {
         return find_last( 
             Input, 
             Substr,
-            string_util_impl::equal_toF<
-                typename Seq1::value_type, 
-                typename Seq2::value_type>());
+            detail::string_algo::equal_toF<
+                typename SeqT1::value_type, 
+                typename SeqT2::value_type>());
     }
 
     // find_last sequence non-const version
-    template< typename Seq1, typename Seq2, typename BinaryPredicate >
-    inline std::pair<typename Seq1::iterator, typename Seq1::iterator> 
-    BOOST_STRING_NON_CONST_FUNCTION(find_last)( 
-        Seq1& Input, 
-        const Seq2& Substr,
+    template< typename SeqT1, typename SeqT2, typename BinaryPredicate >
+    inline std::pair<typename SeqT1::iterator, typename SeqT1::iterator> 
+    BOOST_STRING_NON_CONST_FUNCTION(find_last_if)( 
+        SeqT1& Input, 
+        const SeqT2& Substr,
         BinaryPredicate Comp )
     {
         std::pair<
-            typename Seq1::reverse_iterator, 
-            typename Seq1::reverse_iterator> result=
-        find( Input.rbegin(), Input.rend(), Substr.rbegin(), Substr.rend(), Comp );
+            typename SeqT1::reverse_iterator, 
+            typename SeqT1::reverse_iterator> result=
+        find_if( Input.rbegin(), Input.rend(), Substr.rbegin(), Substr.rend(), Comp );
 
         return std::make_pair( result.second.base(), result.first.base() );
     }
@@ -198,18 +198,18 @@ namespace boost {
         Implicit parameters are not correctly handled by VC7 so we have to provide
         two variants of the same method
     */
-    template< typename Seq1, typename Seq2 >
-    inline std::pair<typename Seq1::iterator, typename Seq1::iterator> 
+    template< typename SeqT1, typename SeqT2 >
+    inline std::pair<typename SeqT1::iterator, typename SeqT1::iterator> 
     BOOST_STRING_NON_CONST_FUNCTION(find_last)( 
-        Seq1& Input, 
-        const Seq2& Substr )
+        SeqT1& Input, 
+        const SeqT2& Substr )
     {
-        return BOOST_STRING_NON_CONST_FUNCTION(find_last)( 
+        return BOOST_STRING_NON_CONST_FUNCTION(find_last_if)( 
             Input, 
             Substr,
-            string_util_impl::equal_toF<
-                typename Seq1::value_type, 
-                typename Seq2::value_type>());
+            detail::string_algo::equal_toF<
+                typename SeqT1::value_type, 
+                typename SeqT2::value_type>());
     }
 
 //  replace_substr ----------------------------------------------------------------------//
@@ -226,18 +226,18 @@ class Iterator : public Container::iterator {};
             The rest of the Repl is then inserted thereafter.
             If the Repl sequence is shorter, overlaping elements are erased from the Input
     */
-    template< typename InputSeq, typename ReplSeq >
-    inline typename InputSeq::iterator
+    template< typename InputSeqT, typename ReplSeqT >
+    inline typename InputSeqT::iterator
     replace_substr(
-        InputSeq& Input,
-        typename InputSeq::iterator From,
-        typename InputSeq::iterator To,
-        ReplSeq& Repl )
+        InputSeqT& Input,
+        typename InputSeqT::iterator From,
+        typename InputSeqT::iterator To,
+        ReplSeqT& Repl )
     {       
-        typename InputSeq::iterator InsertIt=From;
+        typename InputSeqT::iterator InsertIt=From;
         bool bReplace=(InsertIt!=To);
         
-        for( typename ReplSeq::const_iterator ReplIt=Repl.begin();
+        for( typename ReplSeqT::const_iterator ReplIt=Repl.begin();
             ReplIt!=Repl.end();
             ReplIt++)
         {
@@ -281,7 +281,7 @@ class Iterator : public Container::iterator {};
         typename ReplIterator,
         typename OutputIterator, 
         typename BinaryPredicate>
-    inline void replace_first_copy(
+    inline void replace_first_copy_if(
         InputIterator Begin,
         InputIterator End,
         MatchIterator MatchBegin,
@@ -293,7 +293,7 @@ class Iterator : public Container::iterator {};
     {
         // Find first match
         std::pair<InputIterator,InputIterator> M=
-            find( Begin, End, MatchBegin, MatchEnd, Comp );
+            find_if( Begin, End, MatchBegin, MatchEnd, Comp );
 
         if ( M.first==M.second )
         {
@@ -325,30 +325,30 @@ class Iterator : public Container::iterator {};
         ReplIterator ReplEnd,
         OutputIterator Output )
     {
-        replace_first_copy(
+        replace_first_copy_if(
             Begin, End,
             MatchBegin, MatchEnd,
             ReplBegin, ReplEnd,
             Output,
-            string_util_impl::equal_toF<
+            detail::string_algo::equal_toF<
                 typename InputIterator::value_type, 
                 typename MatchIterator::value_type>() );
     }
 
     // replace_first sequence version
     template<
-        typename InputSeq,
-        typename MatchSeq,
-        typename ReplSeq,
+        typename InputSeqT,
+        typename MatchSeqT,
+        typename ReplSeqT,
         typename BinaryPredicate >
-    InputSeq replace_first_copy( 
-        const InputSeq& Input,
-        const MatchSeq& Match,
-        const ReplSeq& Repl,
+    InputSeqT replace_first_copy_if( 
+        const InputSeqT& Input,
+        const MatchSeqT& Match,
+        const ReplSeqT& Repl,
         BinaryPredicate Comp )
     {
-        InputSeq Output;
-        replace_first_copy( 
+        InputSeqT Output;
+        replace_first_copy_if( 
             Input.begin(), Input.end(), 
             Match.begin(), Match.end(), 
             Repl.begin(), Repl.end(), 
@@ -360,21 +360,21 @@ class Iterator : public Container::iterator {};
 
     // replace_first sequence version ( with default Comp predicate )
     template<
-        typename InputSeq,
-        typename MatchSeq,
-        typename ReplSeq >
-    InputSeq replace_first_copy( 
-        const InputSeq& Input,
-        const MatchSeq& Match,
-        const ReplSeq& Repl )
+        typename InputSeqT,
+        typename MatchSeqT,
+        typename ReplSeqT >
+    InputSeqT replace_first_copy( 
+        const InputSeqT& Input,
+        const MatchSeqT& Match,
+        const ReplSeqT& Repl )
     {
-        return replace_first_copy( 
+        return replace_first_copy_if( 
             Input,
             Match,
             Repl,
-            string_util_impl::equal_toF<
-                typename InputSeq::value_type, 
-                typename MatchSeq::value_type>() );
+            detail::string_algo::equal_toF<
+                typename InputSeqT::value_type, 
+                typename MatchSeqT::value_type>() );
     }
 
 
@@ -385,19 +385,19 @@ class Iterator : public Container::iterator {};
         Makes in-place replacement of the first match
     */
     template<
-        typename InputSeq,
-        typename MatchSeq,
-        typename ReplSeq,
+        typename InputSeqT,
+        typename MatchSeqT,
+        typename ReplSeqT,
         typename BinaryPredicate >
-    InputSeq& replace_first( 
-        InputSeq& Input,
-        const MatchSeq& Match,
-        const ReplSeq& Repl,
+    InputSeqT& replace_first_if( 
+        InputSeqT& Input,
+        const MatchSeqT& Match,
+        const ReplSeqT& Repl,
         BinaryPredicate Comp )
     {
         // Find range for the match
-        std::pair<typename InputSeq::iterator, typename InputSeq::iterator> M=
-            find( Input.begin(), Input.end(), Match.begin(), Match.end(), Comp );
+        std::pair<typename InputSeqT::iterator, typename InputSeqT::iterator> M=
+            find_if( Input.begin(), Input.end(), Match.begin(), Match.end(), Comp );
 
         if ( M.first==M.second )
         {
@@ -414,21 +414,21 @@ class Iterator : public Container::iterator {};
 
     // replace_first in-place sequence version ( with default comp parameter )
     template<
-        typename InputSeq,
-        typename MatchSeq,
-        typename ReplSeq >
-    InputSeq& replace_first( 
-        InputSeq& Input,
-        const MatchSeq& Match,
-        const ReplSeq& Repl )
+        typename InputSeqT,
+        typename MatchSeqT,
+        typename ReplSeqT >
+    InputSeqT& replace_first( 
+        InputSeqT& Input,
+        const MatchSeqT& Match,
+        const ReplSeqT& Repl )
     {
-        return replace_first(
+        return replace_first_if(
             Input,
             Match,
             Repl,
-            string_util_impl::equal_toF<
-                typename InputSeq::value_type, 
-                typename MatchSeq::value_type>() );
+            detail::string_algo::equal_toF<
+                typename InputSeqT::value_type, 
+                typename MatchSeqT::value_type>() );
     }
 
 //  replace_all    ----------------------------------------------------------------//
@@ -444,7 +444,7 @@ class Iterator : public Container::iterator {};
         typename ReplIterator,
         typename OutputIterator, 
         typename BinaryPredicate>
-    inline void replace_all_copy(
+    inline void replace_all_copy_if(
         InputIterator Begin,
         InputIterator End,
         MatchIterator MatchBegin,
@@ -457,7 +457,7 @@ class Iterator : public Container::iterator {};
         // Find the first match
         InputIterator LastMatch=Begin;
         std::pair<InputIterator,InputIterator> M=
-            find( Begin, End, MatchBegin, MatchEnd, Comp );
+            find_if( Begin, End, MatchBegin, MatchEnd, Comp );
 
         // Iterate throug all matches
         while( M.first != M.second )
@@ -469,7 +469,7 @@ class Iterator : public Container::iterator {};
 
             // Proceed to the next match
             LastMatch=M.second;
-            M=find( LastMatch, End, MatchBegin, MatchEnd, Comp );
+            M=find_if( LastMatch, End, MatchBegin, MatchEnd, Comp );
         }
 
         // Copy the rest of the sequence
@@ -491,12 +491,12 @@ class Iterator : public Container::iterator {};
         ReplIterator ReplEnd,
         OutputIterator Output )
     {
-        replace_all_copy(
+        replace_all_copy_if(
             Begin, End,
             MatchBegin, MatchEnd,
             ReplBegin, ReplEnd,
             Output,
-            string_util_impl::equal_toF<
+            detail::string_algo::equal_toF<
                 typename InputIterator::value_type, 
                 typename MatchIterator::value_type>() );
     }
@@ -504,18 +504,18 @@ class Iterator : public Container::iterator {};
 
     // replace_all sequence version
     template<
-        typename InputSeq,
-        typename MatchSeq,
-        typename ReplSeq,
+        typename InputSeqT,
+        typename MatchSeqT,
+        typename ReplSeqT,
         typename BinaryPredicate >
-    InputSeq replace_all_copy( 
-        const InputSeq& Input,
-        const MatchSeq& Match,
-        const ReplSeq& Repl,
+    InputSeqT replace_all_copy_if( 
+        const InputSeqT& Input,
+        const MatchSeqT& Match,
+        const ReplSeqT& Repl,
         BinaryPredicate Comp )
     {
-        InputSeq output;
-        replace_all_copy( 
+        InputSeqT output;
+        replace_all_copy_if( 
             Input.begin(), Input.end(), 
             Match.begin(), Match.end(), 
             Repl.begin(), Repl.end(), 
@@ -527,21 +527,21 @@ class Iterator : public Container::iterator {};
 
     // replace_all sequence version ( with default Comp predicate )
     template<
-        typename InputSeq,
-        typename MatchSeq,
-        typename ReplSeq >
-    InputSeq replace_all_copy( 
-        const InputSeq& Input,
-        const MatchSeq& Match,
-        const ReplSeq& Repl )
+        typename InputSeqT,
+        typename MatchSeqT,
+        typename ReplSeqT >
+    InputSeqT replace_all_copy( 
+        const InputSeqT& Input,
+        const MatchSeqT& Match,
+        const ReplSeqT& Repl )
     {
-        return replace_all_copy( 
+        return replace_all_copy_if( 
             Input,
             Match,
             Repl,
-            string_util_impl::equal_toF<
-                typename InputSeq::value_type, 
-                typename MatchSeq::value_type>() );
+            detail::string_algo::equal_toF<
+                typename InputSeqT::value_type, 
+                typename MatchSeqT::value_type>() );
     }
 
 //  replace_all ( in-place version ) ---------------------------------//
@@ -551,31 +551,31 @@ class Iterator : public Container::iterator {};
         Makes in-place replacement of all matches in the seqence
     */
     template<
-        typename InputSeq,
-        typename MatchSeq,
-        typename ReplSeq,
+        typename InputSeqT,
+        typename MatchSeqT,
+        typename ReplSeqT,
         typename BinaryPredicate >
-    InputSeq& replace_all( 
-        InputSeq& Input,
-        const MatchSeq& Match,
-        const ReplSeq& Repl,
+    InputSeqT& replace_all_if( 
+        InputSeqT& Input,
+        const MatchSeqT& Match,
+        const ReplSeqT& Repl,
         BinaryPredicate Comp )
     {
         // Find the first match
-        std::pair<typename InputSeq::iterator, typename InputSeq::iterator> M=
-            find( Input.begin(), Input.end(), Match.begin(), Match.end(), Comp );
+        std::pair<typename InputSeqT::iterator, typename InputSeqT::iterator> M=
+            find_if( Input.begin(), Input.end(), Match.begin(), Match.end(), Comp );
 
         // Iterate throug all matches
         while( M.first != M.second )
         {
             // Replace the match
-            typename InputSeq::iterator It=replace_substr(
+            typename InputSeqT::iterator It=replace_substr(
                 Input,
                 M.first, M.second,
                 Repl );
 
             // Proceed to the next match
-            M=find( It, Input.end(), Match.begin(), Match.end(), Comp );
+            M=find_if( It, Input.end(), Match.begin(), Match.end(), Comp );
         }
             
         return Input;
@@ -584,21 +584,21 @@ class Iterator : public Container::iterator {};
 
     // replace_first in-place sequence version ( with default comp parameter )
     template<
-        typename InputSeq,
-        typename MatchSeq,
-        typename ReplSeq >
-    InputSeq& replace_all( 
-        InputSeq& Input,
-        const MatchSeq& Match,
-        const ReplSeq& Repl )
+        typename InputSeqT,
+        typename MatchSeqT,
+        typename ReplSeqT >
+    InputSeqT& replace_all( 
+        InputSeqT& Input,
+        const MatchSeqT& Match,
+        const ReplSeqT& Repl )
     {
-        return replace_all(
+        return replace_all_if(
             Input,
             Match,
             Repl,
-            string_util_impl::equal_toF<
-                typename InputSeq::value_type, 
-                typename MatchSeq::value_type>() );
+            detail::string_algo::equal_toF<
+                typename InputSeqT::value_type, 
+                typename MatchSeqT::value_type>() );
     }
 
 //  erase and variants  --------------------------------------------------------//
@@ -612,7 +612,7 @@ class Iterator : public Container::iterator {};
         typename MatchIterator, 
         typename OutputIterator, 
         typename BinaryPredicate>
-    inline void erase_first_copy(
+    inline void erase_first_copy_if(
         InputIterator Begin,
         InputIterator End,
         MatchIterator MatchBegin,
@@ -620,7 +620,7 @@ class Iterator : public Container::iterator {};
         OutputIterator Output,
         BinaryPredicate Comp )
     {
-        replace_first_copy( Begin, End, MatchBegin, MatchBegin, End, End, Output, Comp );
+        replace_first_copy_if( Begin, End, MatchBegin, MatchBegin, End, End, Output, Comp );
     }
 
     // erase_first iterator version ( with defalt comp parameter )
@@ -635,55 +635,71 @@ class Iterator : public Container::iterator {};
         MatchIterator MatchEnd,
         OutputIterator Output )
     {
-        replace_first_copy( Begin, End, MatchBegin, MatchBegin, End, End, Output );
+        erase_first_copy_if( 
+            Begin, End, 
+            MatchBegin, MatchBegin, 
+            Output,             
+            detail::string_algo::equal_toF<
+                typename InputIterator::value_type, 
+                typename MatchIterator::value_type>()  );
     }
 
     // erase_first sequence version
     template<
-        typename InputSeq,
-        typename MatchSeq,
+        typename InputSeqT,
+        typename MatchSeqT,
         typename BinaryPredicate >
-    InputSeq erase_first_copy( 
-        const InputSeq& Input,
-        const MatchSeq& Match,
+    InputSeqT erase_first_copy_if( 
+        const InputSeqT& Input,
+        const MatchSeqT& Match,
         BinaryPredicate Comp )
     {
-        return replace_first_copy( Input, Match, InputSeq(), Comp );
+        return replace_first_copy_if( Input, Match, InputSeqT(), Comp );
     }
 
     // erase_first sequence version ( with default Comp predicate )
     template<
-        typename InputSeq,
-        typename MatchSeq >
-    InputSeq erase_first_copy( 
-        const InputSeq& Input,
-        const MatchSeq& Match )
+        typename InputSeqT,
+        typename MatchSeqT >
+    InputSeqT erase_first_copy( 
+        const InputSeqT& Input,
+        const MatchSeqT& Match )
     {
-        return replace_first_copy( Input, Match, InputSeq() );
+        return erase_first_copy_if( 
+            Input, 
+            Match, 
+            detail::string_algo::equal_toF<
+                typename InputSeqT::value_type, 
+                typename MatchSeqT::value_type>()  );
     }
 
     // erase_first in-place sequence version
     template<
-        typename InputSeq,
-        typename MatchSeq,
+        typename InputSeqT,
+        typename MatchSeqT,
         typename BinaryPredicate >
-    InputSeq& erase_first( 
-        InputSeq& Input,
-        const MatchSeq& Match,
+    InputSeqT& erase_first_if( 
+        InputSeqT& Input,
+        const MatchSeqT& Match,
         BinaryPredicate Comp )
     {
-        return replace_first( Input, Match, InputSeq(), Comp );
+        return replace_first_if( Input, Match, InputSeqT(), Comp );
     }
 
     // erase_first in-place sequence version ( with default comp parameter )
     template<
-        typename InputSeq,
-        typename MatchSeq >
-    InputSeq& erase_first( 
-        InputSeq& Input,
-        const MatchSeq& Match )
+        typename InputSeqT,
+        typename MatchSeqT >
+    InputSeqT& erase_first( 
+        InputSeqT& Input,
+        const MatchSeqT& Match )
     {
-        return replace_first( Input, Match, InputSeq() );
+        return erase_first_if( 
+            Input, 
+            Match,          
+            detail::string_algo::equal_toF<
+                typename InputSeqT::value_type, 
+                typename MatchSeqT::value_type>()   );
     }
 
     // erase_all iterator version
@@ -692,7 +708,7 @@ class Iterator : public Container::iterator {};
         typename MatchIterator, 
         typename OutputIterator, 
         typename BinaryPredicate>
-    inline void erase_all_copy(
+    inline void erase_all_copy_if(
         InputIterator Begin,
         InputIterator End,
         MatchIterator MatchBegin,
@@ -700,7 +716,7 @@ class Iterator : public Container::iterator {};
         OutputIterator Output,
         BinaryPredicate Comp )
     {
-        replace_all_copy( Begin, End, MatchBegin, MatchEnd, End, End, Output, Comp );
+        replace_all_copy_if( Begin, End, MatchBegin, MatchEnd, End, End, Output, Comp );
     }
 
     // erase_all iterator version ( with default Comp predicate )
@@ -715,55 +731,71 @@ class Iterator : public Container::iterator {};
         MatchIterator MatchEnd,
         OutputIterator Output )
     {
-        replace_all_copy( Begin, End, MatchBegin, MatchEnd, End, End, Output );
+        erase_all_copy_if( 
+            Begin, End, 
+            MatchBegin, MatchEnd, 
+            Output,
+            detail::string_algo::equal_toF<
+                typename InputIterator::value_type, 
+                typename MatchIterator::value_type>()  );
     }
 
     // erase_all sequence version
     template<
-        typename InputSeq,
-        typename MatchSeq,
+        typename InputSeqT,
+        typename MatchSeqT,
         typename BinaryPredicate >
-    InputSeq erase_all_copy( 
-        const InputSeq& Input,
-        const MatchSeq& Match,
+    InputSeqT erase_all_copy_if( 
+        const InputSeqT& Input,
+        const MatchSeqT& Match,
         BinaryPredicate Comp )
     {
-        return replace_all_copy( Input, Match, InputSeq(), Comp );
+        return replace_all_copy_if( Input, Match, InputSeqT(), Comp );
     }
 
     // erase_all sequence version ( with default Comp predicate )
     template<
-        typename InputSeq,
-        typename MatchSeq >
-    InputSeq erase_all_copy( 
-        const InputSeq& Input,
-        const MatchSeq& Match )
+        typename InputSeqT,
+        typename MatchSeqT >
+    InputSeqT erase_all_copy( 
+        const InputSeqT& Input,
+        const MatchSeqT& Match )
     {
-        return replace_all_copy( Input, Match, InputSeq() );
+        return erase_all_copy_if( 
+            Input, 
+            Match,
+            detail::string_algo::equal_toF<
+                typename InputSeqT::value_type, 
+                typename MatchSeqT::value_type>()  );
     }
 
     // erase_all in-place sequence version
     template<
-        typename InputSeq,
-        typename MatchSeq,
+        typename InputSeqT,
+        typename MatchSeqT,
         typename BinaryPredicate >
-    InputSeq& erase_all( 
-        InputSeq& Input,
-        const MatchSeq& Match,
+    InputSeqT& erase_all_if( 
+        InputSeqT& Input,
+        const MatchSeqT& Match,
         BinaryPredicate Comp )
     {
-        return replace_all( Input, Match, InputSeq(), Comp );
+        return replace_all_if( Input, Match, InputSeqT(), Comp );
     }
 
     // erase_all in-place sequence version ( with default comp parameter )
     template<
-        typename InputSeq,
-        typename MatchSeq >
-    InputSeq& erase_all( 
-        InputSeq& Input,
-        const MatchSeq& Match )
+        typename InputSeqT,
+        typename MatchSeqT >
+    InputSeqT& erase_all( 
+        InputSeqT& Input,
+        const MatchSeqT& Match )
     {
-        return replace_all( Input, Match, InputSeq() );
+        return erase_all_if( 
+            Input, 
+            Match, 
+            detail::string_algo::equal_toF<
+                typename InputSeqT::value_type, 
+                typename MatchSeqT::value_type>()  );
     }
 
 

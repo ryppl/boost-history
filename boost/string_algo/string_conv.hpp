@@ -21,28 +21,28 @@ namespace boost {
 //  tolower  -----------------------------------------------//
 
     // const version of tolower
-    template< typename Seq >
-    inline Seq tolower_copy( const Seq& Input, const std::locale& Loc=std::locale() )
+    template< typename SeqT >
+    inline SeqT tolower_copy( const SeqT& Input, const std::locale& Loc=std::locale() )
     {
-        Seq Output;
+        SeqT Output;
         std::transform( 
             Input.begin(), 
             Input.end(), 
-            std::back_inserter<Seq>( Output ),
-            std::bind2nd( string_util_impl::tolowerF<typename Seq::value_type>(), Loc ) );
+            std::back_inserter<SeqT>( Output ),
+            detail::string_algo::tolowerF<typename SeqT::value_type>(Loc) );
 
         return Output;
     }
 
     // in-place version of tolower
-    template< typename Seq >
-    inline Seq& tolower( Seq& Input, const std::locale& Loc=std::locale() )
+    template< typename SeqT >
+    inline SeqT& tolower( SeqT& Input, const std::locale& Loc=std::locale() )
     {
         std::transform( 
             Input.begin(), 
             Input.end(), 
             Input.begin(),
-            std::bind2nd( string_util_impl::tolowerF<typename Seq::value_type>(), Loc ) );
+            detail::string_algo::tolowerF<typename SeqT::value_type>(Loc) );
         
         return Input;
     }
@@ -50,28 +50,28 @@ namespace boost {
 //  toupper  -----------------------------------------------//
 
     // const version of toupper
-    template< typename Seq >
-    inline Seq toupper_copy( const Seq& Input, const std::locale& Loc=std::locale() )
+    template< typename SeqT >
+    inline SeqT toupper_copy( const SeqT& Input, const std::locale& Loc=std::locale() )
     {
-        Seq Output;
+        SeqT Output;
         std::transform( 
             Input.begin(), 
             Input.end(), 
-            std::back_inserter<Seq>( Output ),
-            std::bind2nd( string_util_impl::toupperF<typename Seq::value_type>(), Loc ) );
+            std::back_inserter<SeqT>( Output ),
+            detail::string_algo::toupperF<typename SeqT::value_type>(Loc) );
 
         return Output;
     }
 
     // in-place version of toupper
-    template< typename Seq >
-    inline Seq& toupper( Seq& Input, const std::locale& Loc=std::locale() )
+    template< typename SeqT >
+    inline SeqT& toupper( SeqT& Input, const std::locale& Loc=std::locale() )
     {
         std::transform( 
             Input.begin(), 
             Input.end(), 
             Input.begin(),
-            std::bind2nd( string_util_impl::toupperF<typename Seq::value_type>(), Loc ) );
+            detail::string_algo::toupperF<typename SeqT::value_type>(Loc) );
         
         return Input;
     }

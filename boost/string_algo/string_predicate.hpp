@@ -22,7 +22,7 @@ namespace boost {
 
     // start_with iterator version
     template< typename InputIterator, typename SubIterator, typename BinaryPredicate >
-    inline bool starts_with( 
+    inline bool starts_with_if( 
         InputIterator Begin, 
         InputIterator End, 
         SubIterator SubBegin,
@@ -55,53 +55,53 @@ namespace boost {
             End,
             SubBegin,
             SubEnd,
-            string_util_impl::equal_toF< typename InputIterator::value_type, typename SubIterator::value_type >() );
+            detail::string_algo::equal_toF< typename InputIterator::value_type, typename SubIterator::value_type >() );
     }
 
 
     // start_with sequence version
-    template< typename Seq1, typename Seq2, typename BinaryPredicate >
-    inline bool starts_with( 
-        const Seq1& Input, 
-        const Seq2& Substr, 
+    template< typename SeqT1, typename SeqT2, typename BinaryPredicate >
+    inline bool starts_with_if( 
+        const SeqT1& Input, 
+        const SeqT2& Substr, 
         BinaryPredicate Comp )
     {
-        return starts_with( Input.begin(), Input.end(), Substr.begin(), Substr.end(), Comp );
+        return starts_with_if( Input.begin(), Input.end(), Substr.begin(), Substr.end(), Comp );
     }
 
     // start_with sequence version with implicit comparison predicate
-    template< typename Seq1, typename Seq2 >
-    inline bool starts_with( const Seq1& Input, const Seq2& Substr )
+    template< typename SeqT1, typename SeqT2 >
+    inline bool starts_with( const SeqT1& Input, const SeqT2& Substr )
     {
-        return starts_with( 
+        return starts_with_if( 
             Input, 
             Substr, 
-            string_util_impl::equal_toF<typename Seq1::value_type, typename Seq2::value_type>());
+            detail::string_algo::equal_toF<typename SeqT1::value_type, typename SeqT2::value_type>());
     }
 
     // end_with sequence version
-    template< typename Seq1, typename Seq2, typename BinaryPredicate >
-    inline bool ends_with( 
-        const Seq1& Input, 
-        const Seq2& Substr, 
+    template< typename SeqT1, typename SeqT2, typename BinaryPredicate >
+    inline bool ends_with_if( 
+        const SeqT1& Input, 
+        const SeqT2& Substr, 
         BinaryPredicate Comp )
     {
-        return starts_with( Input.rbegin(), Input.rend(), Substr.rbegin(), Substr.rend(), Comp );
+        return starts_with_if( Input.rbegin(), Input.rend(), Substr.rbegin(), Substr.rend(), Comp );
     }
 
     // end_with sequence version with implicit comparison predicate
-    template< typename Seq1, typename Seq2 >
-    inline bool ends_with( const Seq1& Input, const Seq2& Substr )
+    template< typename SeqT1, typename SeqT2 >
+    inline bool ends_with( const SeqT1& Input, const SeqT2& Substr )
     {
-        return ends_with( 
+        return ends_with_if( 
             Input, 
             Substr, 
-            string_util_impl::equal_toF<typename Seq1::value_type, typename Seq2::value_type>());
+            detail::string_algo::equal_toF<typename SeqT1::value_type, typename SeqT2::value_type>());
     }
 
     // contains iterator version
     template< typename InputIterator, typename SubIterator, typename BinaryPredicate >
-    inline bool contains( 
+    inline bool contains_if( 
         InputIterator Begin, 
         InputIterator End, 
         SubIterator SubBegin,
@@ -128,32 +128,32 @@ namespace boost {
         SubIterator SubBegin,
         SubIterator SubEnd )
     {
-        return contains( 
+        return contains_if( 
             Begin,
             End,
             SubBegin,
             SubEnd,
-            string_util_impl::equal_toF< typename InputIterator::value_type, typename SubIterator::value_type >() );
+            detail::string_algo::equal_toF< typename InputIterator::value_type, typename SubIterator::value_type >() );
     }
 
     // contains sequence version
-    template< typename Seq1, typename Seq2, typename BinaryPredicate >
-    inline bool contains( 
-        const Seq1& Input, 
-        const Seq2& Substr, 
+    template< typename SeqT1, typename SeqT2, typename BinaryPredicate >
+    inline bool contains_if( 
+        const SeqT1& Input, 
+        const SeqT2& Substr, 
         BinaryPredicate Comp )
     {
-        return contains( Input.begin(), Input.end(), Substr.begin(), Substr.end(), Comp );
+        return contains_if( Input.begin(), Input.end(), Substr.begin(), Substr.end(), Comp );
     }
 
     // contains sequence version with implicit comparison predicate
-    template< typename Seq1, typename Seq2 >
-    inline bool contains( const Seq1& Input, const Seq2& Substr )
+    template< typename SeqT1, typename SeqT2 >
+    inline bool contains( const SeqT1& Input, const SeqT2& Substr )
     {
-        return contains( 
+        return contains_if( 
             Input, 
             Substr, 
-            string_util_impl::equal_toF<typename Seq1::value_type, typename Seq2::value_type>());
+            detail::string_algo::equal_toF<typename SeqT1::value_type, typename SeqT2::value_type>());
     }
 
 } // namespace boost

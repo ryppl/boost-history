@@ -63,4 +63,8 @@ void trim_test()
     BOOST_CHECK( str3=="" );
     str3 = ""; trim( str3 );
     BOOST_CHECK( str3=="" );
+
+    // *** non-standard predicate tests *** //
+    BOOST_CHECK( trim_copy_if( string("123abc456"), if_isclassified<char>(std::ctype_base::digit) )=="abc" );
+    BOOST_CHECK( trim_copy_if( string("<>abc<>"), if_isfrom( string("<>") ) )=="abc" );
 }
