@@ -30,11 +30,29 @@
 #   undef or
 #endif
 
+// agurt, 19/may/04: workaround a conflict with <iso646.h> header's 
+// 'or' and 'and' macros, see http://tinyurl.com/3et69; 'defined(or)'
+// has to be checked in a separate condition, otherwise GCC complains 
+// about 'or' being an alternative token
+#if defined(_MSC_VER)
+#if defined(or)
+#   pragma push_macro("or")
+#   undef or
+#   define or(x)
+#endif
+#endif
+
 #   define BOOST_MPL_PREPROCESSED_HEADER or.hpp
 #   include <boost/mpl/aux_/include_preprocessed.hpp>
 
 #if defined(BOOST_MSVC)
 #   pragma pop_macro("or")
+#endif
+
+#if defined(_MSC_VER) 
+#if defined(or)
+#   pragma pop_macro("or")
+#endif
 #endif
 
 #else
