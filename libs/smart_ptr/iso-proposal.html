@@ -274,7 +274,45 @@ void test()
 		<p>Implementations are allowed to throw exceptions other than <code>std::bad_alloc</code>
 			since on some platforms they might need to create a mutex to synchronize the 
 			access to the ownership infrastructure.</p>
-		<P>[unprotected... [Colvin94]... debug hooks...]</P>
+		<P>A common concern, dating back to [<A href="#Colvin94">Colvin94</A>], is that it 
+			is very easy to violate the preconditions of smart pointer operations. This 
+			proposal attempts to systematically eliminate undefined behavior possibilities 
+			as long as the user is manipulating already valid <EM>shared_ptr</EM> (and <EM>weak_ptr</EM>) 
+			instances, but using the pointer constructor correctly is still up to the user.</P>
+		<P>One possible alternative is to eliminate this unsafe constructor, and instead 
+			provide a family of factory functions of the form:</P>
+		<pre>
+template&lt;class T&gt; shared_ptr&lt;T&gt; shared_new()
+{
+    return shared_ptr&lt;T&gt;(new T());
+}
+
+template&lt;class T, class A1&gt; shared_ptr&lt;T&gt; shared_new(A1 const &amp; a1)
+{
+    return shared_ptr&lt;T&gt;(new T(a1));
+}
+
+template&lt;class T, class A1, class A2&gt; shared_ptr&lt;T&gt; shared_new(A1 const &amp; a1, A2 const &amp; a2)
+{
+    return shared_ptr&lt;T&gt;(new T(a1, a2));
+}
+</pre>
+		<P>This approach has not been adopted for the following reasons:</P>
+		<UL>
+			<LI>
+				An important application of <EM>shared_ptr</EM>
+			is to wrap existing raw pointer based interfaces;
+			<LI>
+			When a class has an inaccessible constructor, the factory function will fail to 
+			compile;
+			<LI>
+				Forwarding an arbitrary list of arguments may be problematic [<A href="#Dimov02">Dimov02</A>];
+			<LI>
+				The existing practice strongly favors the unprotected but powerful pointer 
+				constructor approach.</LI></UL>
+		<P>As an alternative, the Boost implementation offers an experimental debug mode [<A href="#Boost03a">Boost03a</A>] 
+			that catches many common errors at runtime, including misuse of the pointer 
+			constructor and invoking <code>delete</code> on a pointer managed by <EM>shared_ptr</EM>.</P>
 		<h4>2. Deleter Constructor</h4>
 		<p>...</p>
 		<h4>3. weak_ptr Constructor</h4>
@@ -309,7 +347,16 @@ void test()
 		<p><code>operator-&gt;</code> requires that <code>get() != 0</code> in order to 
 			allow conforming implementations to assert in debug mode.</p>
 		<h4>7. <code>use_count</code> and <code>unique</code></h4>
-		<p>...</p>
+		<p><code>use_count</code> is provided as a testing and debugging aid - only. It 
+			allows postconditions to be specified in a form that can be tested by client 
+			code, and it has been proven useful in practice when tracking down bugs in 
+			projects with complex ownership structures. At the same time, production code 
+			should not rely on <code>use_count</code>. While all reasonable shared 
+			ownership implementations support <code>use_count</code> queries, not all can 
+			do so in an efficient manner.</p>
+		<P>The common <code>use_count() == 1</code> query has been given its own name for 
+			efficiency reasons, since some implementations can provide a constant time <code>unique()</code>
+			but not a constant time <code>use_count()</code>.</P>
 		<h4>8. Conversion Operator</h4>
 		<p>...</p>
 		<h4>9. <code>operator&lt;</code></h4>
@@ -849,14 +896,27 @@ void test()
 		</p>
 		<h2>V. References</h2>
 		<p>[<a name="Boehm02">Boehm02</a>] Hans-J. Boehm, <i>Destructors, Finalizers, and 
-				Synchronization</i>, HP Labs Technical Report HPL-2002-335, December, 2002. 
+				Synchronization</i>, HP Labs Technical Report HPL-2002-335, December 2002. 
 			Available online at <a href="http://www.hpl.hp.com/techreports/2002/HPL-2002-335.html">
 				http://www.hpl.hp.com/techreports/2002/HPL-2002-335.html</a></p>
+		<p>[<a name="Boost03a">Boost03a</a>] Boost Smart Pointer Library, source file <em>sp_debug_hooks.cpp</em>. 
+			Available online at <a href="http://www.boost.org/libs/smart_ptr/src/sp_debug_hooks.cpp">
+				http://www.boost.org/libs/smart_ptr/src/sp_debug_hooks.cpp</a></p>
+		<p>[<a name="Boost03b">Boost03b</a>] Boost Smart Pointer Library, source file <em>sp_collector.cpp</em>. 
+			Available online at <a href="http://www.boost.org/libs/smart_ptr/src/sp_collector.cpp">
+				http://www.boost.org/libs/smart_ptr/src/sp_collector.cpp</a></p>
+		<p>[<a name="Christopher84">Christopher84</a>] Thomas W. Christopher, <i>Reference 
+				Count Garbage Collection</i>, Software - Practice and Experience, Vol. 14(6), 
+			pp. 503-507, June 1984.</p>
 		<p>[<a name="Colvin94">Colvin94</a>] Gregory Colvin, <i>Exception Safe Smart Pointers</i>, 
-			C++ committee document 94-168/N0555, July, 1994. Available online at <a href="http://std.dkuug.dk/jtc1/sc22/wg21/docs/papers/1994/N0555.pdf">
+			C++ committee document N0555=94-168, July 1994. Available online at <a href="http://std.dkuug.dk/jtc1/sc22/wg21/docs/papers/1994/N0555.pdf">
 				http://std.dkuug.dk/jtc1/sc22/wg21/docs/papers/1994/N0555.pdf</a></p>
+		<p>[<a name="Dimov02">Dimov02</a>] Peter Dimov, Howard E. Hinnant, Dave Abrahams, <i>The 
+				Forwarding Problem: Arguments</i>, C++ committee document N1385=02-0043, 
+			September 2002. Available online at <a href="http://std.dkuug.dk/jtc1/sc22/wg21/docs/papers/2002/n1385.htm">
+				http://std.dkuug.dk/jtc1/sc22/wg21/docs/papers/2002/n1385.htm</a></p>
 		<p>[<a name="Ellis94">Ellis94</a>] John R. Ellis and David L. Detlefs, <i>Safe, 
-				Efficient Garbage Collection for C++</i>, Usenix Proceedings, February, 
+				Efficient Garbage Collection for C++</i>, Usenix Proceedings, February 
 			1994. This paper includes an extensive discussion of weak pointers and an 
 			extensive bibliography. Available online at <a href="http://www.usenix.org/publications/library/proceedings/c++94/full_papers/ellis.a">
 				http://www.usenix.org/publications/library/proceedings/c++94/full_papers/ellis.a</a></p>
@@ -866,7 +926,7 @@ void test()
 			times should read a random selection of these entries.</p>
 		<p>[<a name="Hinnant02">Hinnant02</a>] Howard E. Hinnant, Peter Dimov, and Dave 
 			Abrahams, <em>A Proposal to Add Move Semantics Support to the C++ Language</em>, 
-			C++ committee document N1377=02-0035, September, 2002. Available online at <a href="http://std.dkuug.dk/jtc1/sc22/wg21/docs/papers/2002/n1377.htm">
+			C++ committee document N1377=02-0035, September 2002. Available online at <a href="http://std.dkuug.dk/jtc1/sc22/wg21/docs/papers/2002/n1377.htm">
 				http://std.dkuug.dk/jtc1/sc22/wg21/docs/papers/2002/n1377.htm</a></p>
 		<p>[<a name="Meyers01">Meyers01</a>] Scott Meyers, <i><a href="http://www.awl.com/cseng/titles/0-201-74962-9/">
 					Effective STL</a></i>, page 39, Addison-Wesley, 2001, ISBN 
