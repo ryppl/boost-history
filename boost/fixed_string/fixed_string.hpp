@@ -268,7 +268,7 @@
                int                     len_;
                fixed_string_base &     str_;
                public:
-                  length_proxy( fixes_string_base & source ):
+                  length_proxy( fixed_string_base & source ):
                      str_( source ), len_( source.capacity())
                   {
                   }
