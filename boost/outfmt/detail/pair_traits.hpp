@@ -1,12 +1,11 @@
-// (C) Copyright 2003: Reece H. Dunn 
-// (C) Copyright Jonathan Turkanis 2003.
-
-#if defined(_MSC_VER) && (_MSC_VER >= 1200)
-#  pragma once
-#endif
+// (C) Copyright 2003-2004: Reece H. Dunn; Jonathan Turkanis 
 
 #ifndef BOOST_IOFM_DETAIL_PairTraits_HPP
 #define BOOST_IOFM_DETAIL_PairTraits_HPP
+#  if defined(BOOST_HAS_PRAGMA_ONCE)
+#     pragma once
+#  endif
+
 #  include <boost/outfmt/detail/format_traits.hpp>
 
    namespace boost { namespace io { namespace detail

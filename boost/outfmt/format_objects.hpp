@@ -1,11 +1,12 @@
-// (C) Copyright 2003: Reece H. Dunn
-
-#if defined(_MSC_VER) && (_MSC_VER >= 1200)
-#  pragma once
-#endif
+// (C) Copyright 2003-2004: Reece H. Dunn
 
 #ifndef BOOST_IOFM_FormatObjects_HPP
 #define BOOST_IOFM_FormatObjects_HPP
+#  include <boost/outfmt/detail/config.hpp>
+#  if defined(BOOST_HAS_PRAGMA_ONCE)
+#     pragma once
+#  endif
+
 #  include <boost/outfmt/format_objects/forward.hpp>
 #  include <boost/outfmt/detail/input_helper.hpp>
 

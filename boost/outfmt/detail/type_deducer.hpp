@@ -1,14 +1,13 @@
-// (C) Copyright Jonathan Turkanis 2003.
-
-#if defined(_MSC_VER) && (_MSC_VER >= 1200)
-#  pragma once
-#endif
+// (C) Copyright Jonathan Turkanis 2003-2004.
 
 #ifndef BOOST_IOFM_DETAIL_TYPE_DEDUCER_HPP
 #define BOOST_IOFM_DETAIL_TYPE_DEDUCER_HPP
+#  if defined(BOOST_HAS_PRAGMA_ONCE)
+#     pragma once
+#  endif
 
-#include <boost/outfmt/detail/type_traits.hpp>
-#include <boost/outfmt/detail/select.hpp>    
+#  include <boost/outfmt/detail/type_traits.hpp>
+#  include <boost/outfmt/detail/select.hpp>    
 
    namespace boost { namespace io
    {

@@ -1,11 +1,11 @@
-// (C) Copyright 2003: Reece H. Dunn
-
-#if defined(_MSC_VER) && (_MSC_VER >= 1200)
-#  pragma once
-#endif
+// (C) Copyright 2003-2004: Reece H. Dunn
 
 #ifndef BOOST_IOFM_DETAIL_InputHelper_HPP
 #define BOOST_IOFM_DETAIL_InputHelper_HPP
+#  if defined(BOOST_HAS_PRAGMA_ONCE)
+#     pragma once
+#  endif
+
 #  include <boost/noncopyable.hpp>
 
    namespace boost { namespace io { namespace detail

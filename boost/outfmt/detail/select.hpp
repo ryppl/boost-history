@@ -1,10 +1,6 @@
-// (C) Copyright Jonathan Turkanis 2003.
+// (C) Copyright Jonathan Turkanis 2003-2004.
 
-#if defined(_MSC_VER) && (_MSC_VER >= 1200)
-#  pragma once
-#endif
-
-// Permission to copy, use, modify, sell and distribute this software 
+// Permission to copy, use, modify, sell and distribute this software
 // is granted provided this copyright notice appears in all copies. This 
 // software is provided "as is" without express or implied warranty, and 
 // with no claim as to its suitability for any purpose.
@@ -46,7 +42,10 @@
 //
 
 #ifndef BOOST_IO_SELECT_HPP_INCLUDED
-#define BOOST_IO_SELECT_HPP_INCLUDED       
+#define BOOST_IO_SELECT_HPP_INCLUDED
+#  if defined(BOOST_HAS_PRAGMA_ONCE)
+#     pragma once
+#  endif
  
 #include <boost/type_traits.hpp>            // is_base_and_derived
 #include <boost/mpl/apply_if.hpp>
