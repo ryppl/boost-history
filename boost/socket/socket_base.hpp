@@ -17,25 +17,12 @@
 #define BOOST_SOCKET_SOCKET_BASE_HPP 1
 
 #include "boost/socket/config.hpp"
-
-#if defined(USES_WINSOCK2)
-#include <winsock2.h>
-#include <Ws2tcpip.h>
-#else
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <sys/ioctl.h>
-#endif
-
-
-#include "boost/socket/address.hpp"
-#include "boost/socket/protocol.hpp"
-#include "boost/socket/time_value.hpp"
-#include "boost/socket/socket_option.hpp"
+#include "boost/socket/impl/default_socket_impl.hpp"
+#include "boost/socket/impl/default_error_policy.hpp"
 #include "boost/socket/socket_errors.hpp"
+#include "boost/socket/concept/protocol.hpp"
+#include "boost/socket/concept/address.hpp"
 
-#include "boost/config.hpp"
-#include "boost/static_assert.hpp"
 #include "boost/concept_check.hpp"
 
 namespace boost
@@ -43,106 +30,67 @@ namespace boost
   namespace socket
   {
 
-#if defined(USES_WINSOCK2)
-    enum Direction
-    {
-      Receiving=SD_RECEIVE,
-      Sending=SD_SEND,
-      Both=SD_BOTH
-    };
-
-#else
-    enum Direction
-    {
-#ifdef SHUT_RD
-      Receiving=SHUT_RD,
-#else
-      Receiving=0,
-#endif
-
-#ifdef SHUT_WR
-      Sending=SHUT_WR,
-#else
-      Sending=1,
-#endif
-
-#ifdef SHUT_RDWR
-      Both=SHUT_RDWR
-#else
-      Both=2
-#endif
-    };
-#endif
-
     //! platform independent, low level interface
     /** Implementation will depend on platform */
-    template <typename ErrorPolicy=default_error_policy>
+    template <typename ErrorPolicy=default_error_policy,
+              typename SocketImpl=impl::default_socket_impl>
     class socket_base
     {
     public:
       typedef ErrorPolicy error_policy;
+      typedef SocketImpl socket_impl;
+      typedef typename socket_impl::socket_t socket_t;
+      typedef socket_base<error_policy,socket_impl> self_t;
 
       socket_base()
-          : socket_(invalid_socket)
+          : m_socket_impl()
       {}
 
       socket_base(const socket_base& s)
-          : socket_(s.socket_)
+          : m_socket_impl(s.m_socket_impl),
+            m_error_policy(s.m_error_policy)
       {}
 
-      explicit socket_base(socket_type socket)
-          : socket_(socket)
+      explicit socket_base(socket_t socket)
+          : m_socket_impl(socket)
       {}
 
-      // destructor
-      ~socket_base() {}
-
+      ~socket_base()
+      {}
 
       template <typename SocketOption>
       int ioctl(SocketOption& option)
       {
-        BOOST_STATIC_ASSERT(option.level==SOL_IOCTL);
-#ifdef USES_WINSOCK2
-        int ret = ::ioctlsocket(socket_,
-                                option.option,
-                                &option.value);
-#else
-        int ret = ::ioctl(socket_,
-                          option.option,
-                          &option.value);
-#endif
-        if (ret==socket_error)
-          ret=error_policy::handle_error();
-        return ret;
+        int ret = m_socket_impl.ioctl(option.optname(), option.data());
+        if (ret!=Success)
+          return m_error_policy.handle_error(function::ioctl,ret);
+        return Success;
       }
 
       template <typename SocketOption>
       int getsockopt(SocketOption& option)
       {
-        BOOST_STATIC_ASSERT(option.level!=SOL_IOCTL);
         BOOST_STATIC_ASSERT(option.can_get);
         int len=option.size();
         int ret = ::getsockopt(socket_,
                                option.level, option.option, &option.value,
                                &len);
-        if (ret==socket_error)
-          error_policy::handle_error();
-        return ret;
+        if (ret!=Success)
+          return m_error_policy.handle_error(function::getsockopt,ret);
+        return Success;
       }
 
       template <typename SocketOption>
       int setsockopt(const SocketOption& option)
       {
-        BOOST_STATIC_ASSERT(option.level!=SOL_IOCTL);
         BOOST_STATIC_ASSERT(option.can_set);
-        int ret = ::setsockopt(socket_,
-                               option.level,
-                               option.option,
-                               (char*)&option.value,
-                               option.size());
-        if (ret==socket_error)
-          error_policy::handle_error();
-        return ret;
+        int ret = m_socket_impl.setsockopt(option.level(),
+                                           option.optname(),
+                                           option.data(),
+                                           option.size());
+        if (ret!=Success)
+          return m_error_policy.handle_error(function::setsockopt,ret);
+        return Success;
       }
 
       // create a socket, Address family, type {SOCK_STREAM, SOCK_DGRAM },
@@ -153,14 +101,11 @@ namespace boost
         boost::function_requires< ProtocolConcept<Protocol> >();
 
         // SOCKET socket(int af,int type,int protocol);
-        socket_ = ::socket(protocol.family(),
-                           protocol.type(),
-                           protocol.protocol());
-        if (socket_==invalid_socket)
-        {
-          int err=error_policy::handle_error();
-          return err;
-        }
+        int ret = m_socket_impl.open(protocol.family(),
+                                     protocol.type(),
+                                     protocol.protocol());
+        if (ret!=Success)
+          return m_error_policy.handle_error(function::open,ret);
         return Success;
       }
 
@@ -168,177 +113,127 @@ namespace boost
       int connect(const Addr& address)
       {
         boost::function_requires< AddressConcept<Addr> >();
-        int ret= ::connect(socket_,
-                           address.socket_address(),
-                           address.size());
+        int ret= m_socket_impl.connect(address.representation());
         if (ret!=Success)
-          return error_policy::handle_error();
+          return m_error_policy.handle_error(function::connect,ret);
         return Success;
       }
 
       template <class Addr>
       int bind(const Addr& address)
       {
-        int ret=::bind(socket_,
-                       address.socket_address(),
-                       address.size());
+        int ret=m_socket_impl.bind(address.representation());
         if (ret!=Success)
-          return error_policy::handle_error();
+          return m_error_policy.handle_error(function::bind,ret);
         return Success;
       }
 
       int listen(int backlog)
       {
-        int ret=::listen(socket_, backlog);
-        if (ret!=0)
-          return error_policy::handle_error();
+        int ret=m_socket_impl.listen(backlog);
+        if (ret!=Success)
+          return m_error_policy.handle_error(function::listen,ret);
         return Success;
      }
 
       //! accept a connection
       template <class Addr>
-      socket_base accept(Addr& address)
+      std::pair<self_t,int> accept(Addr& address)
       {
         boost::function_requires< AddressConcept<Addr> >();
-
-        size_type len=address.size();
-        socket_type new_socket
-          = ::accept(socket_, address.socket_address(), &len);
-        if (new_socket==invalid_socket)
+        std::pair<void*,size_t> rep=address.representation();
+        std::pair<socket_impl,int> ret;
+        ret = m_socket_impl.accept(rep);
+        if (ret.second!=Success)
         {
-          /*int ret=*/error_policy::handle_error();
+          int ret2=m_error_policy.handle_error(function::accept,ret.second);
+          return std::make_pair(self_t(),ret2);
         }
-        return socket_base<error_policy>(new_socket);
+        return std::make_pair(self_t(ret.first),Success);
       }
 
       //! receive data
-      int recv(void* data, size_type len)
+      int recv(void* data, size_t len)
       {
-        int flags = 0;
-        int ret=::recv(socket_, (char*)data, len,flags);
-        if (ret==socket_error)
-          return error_policy::handle_error();
+        int ret=m_socket_impl.recv(data, len);
+        if (ret<0)
+          return m_error_policy.handle_error(function::recv,ret);
         return ret;
       }
 
       //! send data
       /** Returns the number of bytes sent */
-      int send(const void* data, size_type len)
+      int send(const void* data, size_t len)
       {
-        int flags = 0;
-        int ret=::send(socket_, (const char*)data, len, flags);
-        if (ret==socket_error)
-          return error_policy::handle_error();
+        int ret=m_socket_impl.send(data, len);
+        if (ret<0)
+          return m_error_policy.handle_error(function::send,ret);
         return ret;
       }
 
       //! shut the socket down
       int shutdown(Direction how=Both)
       {
-        int ret = ::shutdown(socket_, static_cast<int>(how));
+        int ret = m_socket_impl.shutdown(how);
         if (ret!=Success)
-          return error_policy::handle_error();
+          return m_error_policy.handle_error(function::shutdown,ret);
         return Success;
       }
 
       //! close the socket
       int close()
       {
-#if defined(USES_WINSOCK2)
-        int ret = ::closesocket(socket_);
-#else
-        int ret = ::close(socket_);
-#endif
+        int ret=m_socket_impl.close();
         if (ret!=Success)
-          return error_policy::handle_error();
-
-        socket_=invalid_socket;
-
+          return m_error_policy.handle_error(function::close, ret );
         return Success;
      }
 
       //! check for a valid socket
       bool is_valid() const
       {
-        return socket_!=invalid_socket;
+        return m_socket_impl.is_valid();
       }
 
       //! obtain OS socket
-      socket_type socket()
+      socket_t socket()
       {
-        return socket_;
+        return m_socket_impl.socket();
       }
 
       //! obtain OS socket
-      const socket_type socket() const
+      const socket_t socket() const
       {
-        return socket_;
+        return m_socket_impl.socket();
       }
 
       //! compare a socket
       bool operator<(const socket_base& socket) const
       {
-        return socket_<socket.socket_;
+        return m_socket_impl<socket.m_socket_impl;
       }
 
       //! compare a socket
       bool operator==(const socket_base& socket) const
       {
-        return socket_==socket.socket_;
+        return m_socket_impl==socket.m_socket_impl;
       }
 
       //! compare a socket
       bool operator!=(const socket_base& socket) const
       {
-        return socket_!=socket.socket_;
+        return m_socket_impl!=socket.m_socket_impl;
       }
 
-      //! initialise socket system
-      static inline bool initialise();
-      //! finalise socket system
-      static inline void finalise();
     private:
-      socket_type socket_;
+      socket_base(const socket_impl& s)
+          : m_socket_impl(s)
+      {}
+
+      socket_impl m_socket_impl;
+      error_policy m_error_policy;
     };
 
-#ifdef _WIN32
-    template <typename ErrorPolicy>
-    bool socket_base<ErrorPolicy>::initialise()
-    {
-      WORD wVersionRequested;
-      WSADATA wsaData;
-      int err;
-
-      wVersionRequested = ((MAKEWORD(2, 2)));
-
-      err = WSAStartup(wVersionRequested, &wsaData);
-      if (err != 0)
-        return true;
-      if (LOBYTE(wsaData.wVersion) != 2 || HIBYTE(wsaData.wVersion) != 2)
-      {
-        WSACleanup();
-        return true;
-      }
-      return false;
-    }
-
-    template <typename ErrorPolicy>
-    void socket_base<ErrorPolicy>::finalise()
-    {
-      WSACleanup();
-    }
-#else
-    template <typename ErrorPolicy>
-    bool socket_base<ErrorPolicy>::initialise()
-    {
-      return true;
-    }
-
-    template <typename ErrorPolicy>
-    void socket_base<ErrorPolicy>::finalise()
-    {
-    }
-#endif
 
   }
 }

@@ -19,18 +19,6 @@
 #include "boost/socket/config.hpp"
 #include "boost/socket/socket_option.hpp"
 
-#if defined(USES_WINSOCK2)
-#include <Ws2tcpip.h>
-#else
-
-#ifdef __CYGWIN__
-#include "cygwin/in_systm.h"
-#endif
-
-#include <netinet/in.h>
-#include <netinet/ip.h>
-#endif
-
 namespace boost
 {
   namespace socket
@@ -38,13 +26,11 @@ namespace boost
     namespace ip4
     {
 
-
-//  typedef socket_option<SOL_SOCKET, SIO_GET_INTERFACE_LIST, true, false, ???>
-//    socket_option_get_interface_list;
-
       //! IP options
-      typedef socket_option<IPPROTO_IP, IP_OPTIONS, true, true, char *>
-      socket_option_ip_options;
+      class socket_option_ip_options
+      {};
+
+#if 0
       typedef socket_option<IPPROTO_IP, IP_TOS, true, false, int>
       socket_option_ip_tos;
       typedef socket_option<IPPROTO_IP, IP_TTL, true, true, int>
@@ -83,42 +69,22 @@ namespace boost
       socket_option_tcp_expedited_1122;
 #endif
 
+#endif
+
       class tcp_protocol
       {
       public:
-        static int type()
-        {
-          return SOCK_STREAM;
-        }
-
-        static int protocol()
-        {
-          return IPPROTO_TCP;
-        }
-
-        static short family()
-        {
-          return AF_INET;
-        }
+        static int type();
+        static int protocol();
+        static short family();
       };
 
       class udp_protocol
       {
       public:
-        static int type()
-        {
-          return SOCK_DGRAM;
-        }
-
-        static int protocol()
-        {
-          return IPPROTO_UDP;
-        }
-
-        static short family()
-        {
-          return PF_INET;
-        }
+        static int type();
+        static int protocol();
+        static short family();
       };
 
 

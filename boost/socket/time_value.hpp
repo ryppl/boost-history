@@ -23,6 +23,14 @@ namespace boost
   namespace socket
   {
 
+    struct timeval
+    {
+      long tv_sec;
+      long tv_usec;
+    };
+
+
+    //! placeholder until we use date_time
     struct time_value
     {
     public:
@@ -32,9 +40,14 @@ namespace boost
         time_.tv_usec=tv_usec;
       }
 
-      struct timeval const* timevalue() const
+      void const* timevalue() const
       {
         return &time_;
+      }
+
+      unsigned short msec() const
+      {
+        return time_.tv_sec+time_.tv_usec/1000;
       }
 
       bool operator<(const struct time_value& t) const

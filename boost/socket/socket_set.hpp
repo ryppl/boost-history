@@ -19,6 +19,10 @@
 #include "boost/socket/config.hpp"
 #include "boost/iterator_adaptors.hpp"
 
+#ifdef USES_WINSOCK2
+#include "Winsock2.h"
+#endif
+
 namespace boost
 {
   namespace socket
@@ -54,14 +58,10 @@ namespace boost
     public:
       struct iter_policy{};
 
-      typedef boost::iterator_adaptor<socket_type*,
+      typedef boost::iterator_adaptor<socket_t*,
                                       socket_set_iterator_policies,
-                                      socket_type>
+                                      socket_t>
         iterator;
-      typedef boost::iterator_adaptor<const socket_type*,
-                                      socket_set_iterator_policies,
-                                      socket_type>
-        const_iterator;
 
       socket_set()
       {
@@ -88,12 +88,12 @@ namespace boost
         FD_ZERO(&set_);
       }
 
-      void erase(socket_type socket)
+      void erase(socket_t socket)
       {
         FD_CLR(socket, &set_) ;
       }
 
-      void insert(socket_type socket)
+      void insert(socket_t socket)
       {
         FD_SET(socket, &set_);
       }
@@ -103,7 +103,7 @@ namespace boost
         return FD_SETSIZE;
       }
 
-      bool is_set(socket_type socket) const
+      bool is_set(socket_t socket) const
       {
         return FD_ISSET(socket, &set_);
       }
@@ -156,7 +156,7 @@ namespace boost
       typename IteratorAdaptor::reference
       dereference(const IteratorAdaptor& x) const
       {
-        return const_cast<socket_type&>(x.base());
+        return const_cast<socket_t&>(x.base());
       }
 
     private:
@@ -169,22 +169,14 @@ namespace boost
     public:
       struct iter_policy{};
 
-      typedef boost::iterator_adaptor<socket_type,
+      typedef boost::iterator_adaptor<socket_t,
                                       socket_set_iterator_policies,
-                                      socket_type,
-                                      socket_type&,
-                                      socket_type,
+                                      socket_t,
+                                      socket_t&,
+                                      socket_t,
                                       std::forward_iterator_tag,
                                       int>
         iterator;
-      typedef boost::iterator_adaptor<socket_type,
-                                      socket_set_iterator_policies,
-                                      socket_type,
-                                      socket_type&,
-                                      socket_type,
-                                      std::forward_iterator_tag,
-                                      int>
-        const_iterator;
 
       socket_set()
       {
@@ -211,12 +203,12 @@ namespace boost
         FD_ZERO(&set_);
       }
 
-      void erase(socket_type socket)
+      void erase(socket_t socket)
       {
         FD_CLR(socket, &set_) ;
       }
 
-      void insert(socket_type socket)
+      void insert(socket_t socket)
       {
         FD_SET(socket, &set_);
       }
@@ -226,7 +218,7 @@ namespace boost
         return FD_SETSIZE;
       }
 
-      bool is_set(socket_type socket) const
+      bool is_set(socket_t socket) const
       {
         return FD_ISSET(socket, &set_);
       }

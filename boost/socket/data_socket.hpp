@@ -28,26 +28,28 @@ namespace boost
 
     //! acceptor
     /** interface for a socket that can accept connections. */
-    template <typename ErrorPolicy=default_error_policy>
+    template <typename SocketBase=socket_base<> >
     class data_socket
     {
     public:
-      typedef ErrorPolicy error_policy;
+      typedef SocketBase socket_base_t;
+      typedef typename socket_base_t::socket_t socket_t;
+      typedef typename socket_base_t::error_policy error_policy;
 
       data_socket()
-          : socket_()
+          : m_socket()
       {}
 
       data_socket(const data_socket& s)
-          : socket_(s.socket_)
+          : m_socket(s.m_socket)
       {}
 
-      explicit data_socket(const socket_base<error_policy>& s)
-          : socket_(s)
+      explicit data_socket(const socket_base_t& s)
+          : m_socket(s)
       {}
 
-      explicit data_socket(socket_type socket)
-          : socket_(socket)
+      explicit data_socket(socket_t socket)
+          : m_socket(socket)
       {}
 
       // destructor
@@ -57,84 +59,84 @@ namespace boost
       template <typename SocketOption>
       int ioctl(SocketOption& option)
       {
-        return socket_.ioctl(option);
+        return m_socket.ioctl(option);
       }
 
       template <typename SocketOption>
       int getsockopt(SocketOption& option)
       {
-        return socket_.getsockopt(option);
+        return m_socket.getsockopt(option);
       }
 
       template <typename SocketOption>
       int setsockopt(const SocketOption& option)
       {
-        return socket_.setsockopt(option);
+        return m_socket.setsockopt(option);
       }
 
       //! receive data
       int recv(void* data, int len)
       {
-        return socket_.recv(data,len);
+        return m_socket.recv(data,len);
       }
 
       //! send data
       /** Returns the number of bytes sent */
       int send(const void* data, int len)
       {
-        return socket_.send(data,len);
+        return m_socket.send(data,len);
       }
 
       //! shut the socket down
       int shutdown(Direction how=Both)
       {
-        return socket_.shutdown(how);
+        return m_socket.shutdown(how);
       }
 
       //! close the socket
       int close()
       {
-        return socket_.close();
+        return m_socket.close();
       }
 
       //! check for a valid socket
       bool is_valid() const
       {
-        return socket_.is_valid();
+        return m_socket.is_valid();
       }
 
       //! obtain OS socket
-      socket_type socket()
+      socket_t socket()
       {
-        return socket_.socket();
+        return m_socket.socket();
       }
 
       //! obtain a base socket
-      socket_base<error_policy>& base()
+      socket_base_t& base()
       {
-        return socket_;
+        return m_socket;
       }
 
       //! compare a socket
       bool operator<(const data_socket& socket) const
       {
-        return socket_<socket.socket_;
+        return m_socket<socket.m_socket;
       }
 
       //! compare a socket
       bool operator==(const data_socket& socket) const
       {
-        return socket_==socket.socket_;
+        return m_socket==socket.m_socket;
       }
 
       //! compare a socket
       bool operator!=(const data_socket& socket) const
       {
-        return socket_!=socket.socket_;
+        return m_socket!=socket.m_socket;
       }
 
     private:
-      socket_base<error_policy> socket_;
+      socket_base_t m_socket;
     };
 
   }

@@ -31,13 +31,16 @@ namespace boost
 
     template <typename Element,
               typename Traits = std::char_traits<Element>,
-              typename ErrorPolicy=default_error_policy
+              typename SocketBase=socket_base<>
               >
     class basic_socket_streambuf
       : public std::basic_streambuf<Element, Traits>
     {
     public:
-      typedef ErrorPolicy error_policy;
+      typedef SocketBase socket_base_t;
+      typedef typename socket_base_t::socket_t socket_t;
+      typedef typename socket_base_t::error_policy error_policy;
+
       typedef Element char_type;
       typedef Traits traits_type;
       typedef typename Traits::int_type int_type;
@@ -102,14 +105,13 @@ namespace boost
           return Traits::to_int_type(*gptr());
         if (egbuf() - gptr() < gptr() - eback())
           setg(eback(), eback(), eback());
-        size_type r=socket_.recv((void*)gptr(), egbuf() - gptr());
+        int r=socket_.recv((void*)gptr(), egbuf() - gptr());
         if (r == 0)
           return Traits::eof();
-        else if (r == socket_error)
+        else if (r <0)
         {
-          int err=error_policy::handle_error();
-          if (err!=WouldBlock)
-            throw socket_exception("error in stream",err);
+          if (r!=WouldBlock)
+            throw socket_exception("error in stream",r);
         }
         setg(eback(), gptr(), gptr() + r);
         return *gptr();

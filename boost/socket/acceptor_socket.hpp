@@ -29,28 +29,30 @@ namespace boost
 
     //! acceptor
     /** interface for a socket that can accept connections. */
-    template <typename ErrorPolicy=default_error_policy>
+    template <typename SocketBase=socket_base<> >
     class acceptor_socket
     {
     public:
-      typedef ErrorPolicy error_policy;
+      typedef SocketBase socket_base_t;
+      typedef typename socket_base_t::socket_t socket_t;
+      typedef typename socket_base_t::error_policy error_policy;
 
       template <typename SocketOption>
       int ioctl(SocketOption& option)
       {
-        return base_.ioctl(option);
+        return m_base.ioctl(option);
       }
 
       template <typename SocketOption>
       int getsockopt(SocketOption& option)
       {
-        return base_.getsockopt(option);
+        return m_base.getsockopt(option);
       }
 
       template <typename SocketOption>
       int setsockopt(const SocketOption& option)
       {
-        return base_.setsockopt(option);
+        return m_base.setsockopt(option);
       }
 
       //! Open a socket for passive connection acceptance
@@ -59,11 +61,11 @@ namespace boost
       int open(const Protocol& protocol,
                const Addr& address)
       {
-        const int open_error=base_.open(protocol);
+        const int open_error=m_base.open(protocol);
         if (open_error!=error_policy::Success)
           return open_error;
 
-        const int bind_error=base_.bind(address);
+        const int bind_error=m_base.bind(address);
         if (bind_error!=Success)
           return bind_error;
 
@@ -77,19 +79,19 @@ namespace boost
                        const Addr& address,
                        std::size_t backlog)
       {
-        const int open_error=base_.open(protocol);
+        const int open_error=m_base.open(protocol);
         if (open_error!=Success)
           return open_error;
 
-        const int bind_error=base_.bind(address);
+        const int bind_error=m_base.bind(address);
         if (bind_error!=Success)
           return bind_error;
 
         // set the socket to non-blocking so that listen will succeed
-        socket_option_non_blocking non_block(true);
-        base_.ioctl(non_block);
+        option::non_blocking non_block(true);
+        m_base.ioctl(non_block);
 
-        const int listen_error=base_.listen(backlog);
+        const int listen_error=m_base.listen(backlog);
         if (listen_error==Success || listen_error==WouldBlock)
           return Success;
         return listen_error;
@@ -97,43 +99,52 @@ namespace boost
 
       //! accept a connection
       template <class Addr>
-      data_socket<error_policy> accept(Addr& address)
+      std::pair<data_socket<socket_base_t>,int>
+      accept(Addr& address)
       {
-        return data_socket<error_policy>(base_.accept(address));
+        std::pair<socket_base_t,int> ret=m_base.accept(address);
+        return std::make_pair(
+          data_socket<socket_base_t>(ret.first),
+          ret.second);
       }
 
 
       //! accept a connection
       /** Blocking version */
       template <class Addr>
-      data_socket<error_policy> accept(Addr& address, std::size_t backlog)
+      std::pair<data_socket<socket_base_t>,int>
+      accept(Addr& address, std::size_t backlog)
       {
-        const int listen_error=base_.listen(backlog);
+        const int listen_error=m_base.listen(backlog);
         if (listen_error!=Success && listen_error!=WouldBlock)
-          return data_socket<error_policy>(INVALID_SOCKET);
-        return data_socket<error_policy>(base_.accept(address));
+          return std::make_pair(data_socket<socket_base_t>(),listen_error);
+
+        std::pair<socket_base_t,int> ret=m_base.accept(address);
+        return std::make_pair(
+          data_socket<socket_base_t>(ret.first),
+          ret.second);
       }
 
 
       //! close a connection
       int close()
       {
-        return base_.close();
+        return m_base.close();
       }
 
       //! obtain OS socket
-      socket_type socket()
+      socket_t socket()
       {
-        return base_.socket();
+        return m_base.socket();
       }
 
       //! obtain socket_base
-      socket_base<error_policy>& base()
+      socket_base_t& base()
       {
-        return base_;
+        return m_base;
       }
     private:
-      socket_base<error_policy> base_;
+      socket_base_t m_base;
     };
 
   }// namespace
