@@ -10,6 +10,11 @@
 #endif
 
 #include <windows.h>
+#include <boost/config.hpp>
+
+#if defined(BOOST_MSVC)
+#  pragma comment(lib, "user32.lib")
+#endif
 
 namespace boost { namespace gui { namespace win
 {
