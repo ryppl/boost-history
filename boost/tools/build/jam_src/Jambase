@@ -22,20 +22,20 @@ SLASH ?= / ;
 # A fix for the broken behavior of built-in glob
 rule glob ( dirs * : patterns * )
 {
-    return [ GLOB $(dirs:T) : $(dirs:T)\\$(SLASH)$(>) ] ;
+    return [ GLOB $(dirs:T) : $(dirs:T)\\$(SLASH)$(patterns) ] ;
 }
 
 # Glob for patterns in the directories starting from the given
 # start directory, up to and including the root of the file-system.
 # We stop globing as soon as we find at least one match.
 #
-rule find-to-root ( dir : patterns )
+rule find-to-root ( dir : patterns + )
 {
-    local globs = [ glob $(<) : $(>) ] ;
+    local globs = [ glob $(dir) : $(patterns) ] ;
     while ! $(globs) && $(dir:P) != $(dir)
     {
         dir = $(dir:P) ;
-        globs = [ glob $(dir) : $(>) ] ;
+        globs = [ glob $(dir) : $(patterns) ] ;
     }
     return $(globs) ;
 }
@@ -45,21 +45,20 @@ rule find-to-root ( dir : patterns )
 # them. The path indicated is relative to the location of the
 # boost-build.jam file.
 #
-rule boost-build ( dir )
+rule boost-build ( dir ? )
 {
     # Add the given directory to the path so we can hopefully find the
     # build system.
     #
-    if $(<)
+    if $(dir)
     {
         BOOST_BUILD_PATH = $(dir:R=$(file-location.boost-build.jam)) $(BOOST_BUILD_PATH) ;
     }
     
     # Try to find the build system bootstrap file 'boost-build.jam'.
     #
-    bootstrap-filename = boost-build.jam ;
     local bootstrap-file =
-        [ glob $(BOOST_BUILD_PATH) : $(bootstrap-filename) ] ;
+        [ glob $(BOOST_BUILD_PATH) : boost-build.jam ] ;
     
     # There is no boost-build.jam we can find, exit with an error, and information.
     #
@@ -90,17 +89,16 @@ rule record-file-location ( file : location )
     file-location.$(file:G=) = $(location) ;
 }
 
-if [ SUBST $(ARGV[1]:B:L) (.*)(bjam)(.*) $2 ]
+if [ MATCH .*(bjam).* : $(ARGV[1]:B:L) ]
 {
     # We attempt to load "boost-build.jam" by searching from the current invocation directory
     # up to the root of the file-system and in the paths specified by BOOST_BUILD_PATH.
     # Within this, one invokes the "boost-build" rule to indicate where the Boost.Build
     # files are to load them.
     #
-    local boost-build-filename = boost-build.jam ;
     local boost-build-file =
-        [ find-to-root [ PWD ] : $(boost-build-filename) ]
-        [ glob $(BOOST_BUILD_PATH) : $(boost-build-filename) ] ;
+        [ find-to-root [ PWD ] : boost-build.jam ]
+        [ glob $(BOOST_BUILD_PATH) : boost-build.jam ] ;
     
     # There is no boost-build.jam we can find, exit with an error, and information.
     #
@@ -125,7 +123,7 @@ if [ SUBST $(ARGV[1]:B:L) (.*)(bjam)(.*) $2 ]
     # system or the the old V1 syste.
     #
     BINDRULE on <jam-module>boost-base.jam = record-file-location ;
-    file-location.$(boost-build-filename) = $(boost-build-file[1]:D) ;
+    file-location.boost-build.jam = $(boost-build-file[1]:D) ;
     include $(boost-build-file[1]) ;
     
     # Check that, at minimum, the build system loaded.
@@ -136,7 +134,7 @@ if [ SUBST $(ARGV[1]:B:L) (.*)(bjam)(.*) $2 ]
             "Unable to load Boost.Build, it seems that the build system files"
             "where located, but the build system is not defined."
             "Attempted to use, as the bootstrap, this file:"
-            $(boost-build-filename:R=$(file-location.$(boost-build-filename))).
+            $(file-location.boost-build.jam)$(SLASH)boost-build.jam.
             "Please consult the documentation at 'http://www.boost.org'." ;
     }
 }
