@@ -1,5 +1,3 @@
-// (-*- C++ -*- header)  
-
 /*
  * 
  * Copyright (c) Kresimir Fresl 2002 
@@ -19,14 +17,17 @@
 #ifndef BOOST_NUMERIC_BINDINGS_TRAITS_SYMM_HERM_TRAITS_HPP
 #define BOOST_NUMERIC_BINDINGS_TRAITS_SYMM_HERM_TRAITS_HPP
 
-#include <complex> 
+#include <boost/numeric/bindings/traits/type.hpp> 
 #include <boost/numeric/bindings/traits/traits.hpp>
+
+#ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
 
 namespace boost { namespace numeric { namespace bindings { namespace traits {
 
   namespace detail {
 
     // select symmetric or hermitian matrix structure 
+
     template <typename T> 
     struct symm_herm_t {}; 
     template<>
@@ -38,16 +39,37 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
       typedef symmetric_t type;
     }; 
     template<>
-    struct symm_herm_t<std::complex<float> > {
+    struct symm_herm_t<complex_f> {
       typedef hermitian_t type;
     }; 
     template<>
-    struct symm_herm_t<std::complex<double> > {
+    struct symm_herm_t<complex_d> {
       typedef hermitian_t type;
+    }; 
+
+    template <typename T> 
+    struct symm_herm_pack_t {}; 
+    template<>
+    struct symm_herm_pack_t<float> {
+      typedef symmetric_packed_t type;
+    }; 
+    template<>
+    struct symm_herm_pack_t<double> {
+      typedef symmetric_packed_t type;
+    }; 
+    template<>
+    struct symm_herm_pack_t<complex_f> {
+      typedef hermitian_packed_t type;
+    }; 
+    template<>
+    struct symm_herm_pack_t<complex_d> {
+      typedef hermitian_packed_t type;
     }; 
 
   }
 
 }}}}
 
-#endif 
+#endif // BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
+
+#endif // BOOST_NUMERIC_BINDINGS_TRAITS_SYMM_HERM_TRAITS_HPP 
