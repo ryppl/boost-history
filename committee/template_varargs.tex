@@ -229,6 +229,11 @@ template<typename T, ... Args>
   }
 \end{verbatim}
 
+Note that when the parameter pack is empty, it expands to zero
+arguments (in the function call or template argument list). Thus, the
+recursion terminates for \texttt{printf} when {\tt args} is empty,
+calling the second overload of \texttt{printf}.
+
 \subsection{Deducing parameter packs from a function call}
 Template and value parameter packs can be deduced from a function call
 by first deducing the argument type (to be included in the template
@@ -637,7 +642,13 @@ struct make_tuple_element_type
     };
 
   template<typename T>
-    struct apply<reference_wrapper<T> >
+    struct apply<reference_wrapper<T>&>
+    {
+      typedef T& type;
+    };
+
+  template<typename T>
+    struct apply<const reference_wrapper<T>&>
     {
       typedef T& type;
     };
