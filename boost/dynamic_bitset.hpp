@@ -1055,8 +1055,9 @@ inline void
 to_block_range(const dynamic_bitset<Block, Allocator>& b,
                BlockOutputIterator result)
 {
-    assert (b.m_bits != 0 || b.m_num_blocks == 0);
-    std::copy (b.m_bits, b.m_bits + b.m_num_blocks, result); // [gps]
+    // note how this copies *all* bits, including the
+    // unused ones in the last block (which are zero)
+    std::copy(b.m_bits.begin(), b.m_bits.end(), result); // [gps]
 }
 
 template <typename Block, typename Allocator>
