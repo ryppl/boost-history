@@ -29,6 +29,10 @@
 #include <cstddef>  
 #include <iterator>
 
+#include <list>
+#include <map>
+#include <set>
+
 namespace boost
 {
 
@@ -48,6 +52,7 @@ namespace boost
     // result_iterator (will follow the constness of the argument)
     // difference_type
     // container_category (tag)
+    // container_id       (tag)
     //
     // Valid free standing functions:
     //------------------------------------------
@@ -71,7 +76,7 @@ namespace boost
     //    - is_associative
     //    - is_pair
     //    - is_iterator_range  ( perhaps only this one and away with pair )
-    //
+    //    - is_list
     // 
     //
     // implemented by SFINAE helper functions
@@ -85,6 +90,14 @@ namespace boost
     struct associative_container_tag : public container_tag {};
     struct iterator_range_container_tag : public container_tag {};
     struct container_adapter_tag : public container_tag {};
+    
+    struct deque_tag {};
+    struct list_tag {};
+    struct vector_tag {};
+    struct map_tag {};
+    struct multimap_tag {};
+    struct set_tag {};
+    struct multiset_tag {};
     
     namespace detail
     {
@@ -131,12 +144,25 @@ namespace boost
 	    template< typename T, typename U >
 	    true_t  is_container( const std::pair<T,U>* );
 	    false_t is_container( ... );
-
+/*
 	    template< typename C >
 	    true_t  is_associative_container( const C*, 
 					      const typename C::key_type =
 					      typename C::key_type() );
-	    false_t is_associative_container( ... );
+*/
+        template< typename K, typename T, typename C, typename A >
+        true_t  is_associative_container( const std::map<K,T,C,A>* );    
+            
+        template< typename K, typename T, typename C, typename A >
+        true_t  is_associative_container( const std::multimap<K,T,C,A>* );    
+
+        template< typename K, typename C, typename A >
+        true_t  is_associative_container( const std::set<K,C,A>* );    
+            
+        template< typename K, typename C, typename A >
+        true_t  is_associative_container( const std::multiset<K,C,A>* );    
+
+        false_t is_associative_container( ... );
 
 // 	    template< typename C >
 // 	    true_t  has_random_access_iterator( const C&, 
@@ -156,6 +182,11 @@ namespace boost
 				       typename C::iterator_range_tag() );
 	    false_t is_iterator_range( ... );
 				       
+        template< typename T, typename A >
+        true_t  is_list( const std::list<T,A>* );
+        
+        false_t is_list( ... );
+        
 	    template< typename C >
 	    struct tag_generator
 	    {
@@ -190,9 +221,13 @@ namespace boost
 					    not_a_container_tag
  	                                  >::type 
 		                          >::type
-	 	                          >::type                         tag;
-				
-	    }; // struct 'tag_generator'
+	 	                          >::type                 container_category;
+        		
+        BOOST_STATIC_CONSTANT( bool, is_list_ = sizeof( true_t ) == 
+                                                sizeof( is_list( c ) ) ); 
+        typedef typename mpl::if_c< is_list_, list_tag, not_a_container_tag
+                                  >::type                 container_id;
+        }; // struct 'tag_generator'
 
 	} // namespace 'container'
 
@@ -468,7 +503,8 @@ namespace boost
 	typedef typename detail::container::tag_generator<C>   tag_generator;
 
     public:
-	typedef typename tag_generator::tag                 container_category;
+	typedef typename tag_generator::container_category    container_category;
+    typedef typename tag_generator::container_id          container_id;
 
 	static inline bool is_container() 
 	{ return tag_generator::is_container_; }
@@ -482,6 +518,9 @@ namespace boost
 	static inline bool is_associative()
 	{ return tag_generator::is_associative_container_; }
 	    
+    static inline bool is_list()
+    { return tag_generator::is_list_; }
+    
     }; // 'container_traits'
 
     ///////////////////////////////////////////////////////////////////////////

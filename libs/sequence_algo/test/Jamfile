@@ -1,0 +1,17 @@
+subproject libs/sequence_algo/test ;
+
+template base : 
+    ## Requirements ##
+    : <include>$(BOOST_ROOT)
+      <include>../../.. 
+      
+    
+    ## default-BUILD ##
+    : debug 
+      <debug>static
+    ;
+
+exe  container_algo : <template>base container_algo.cpp ;
+exe  algo_traits : <template>base algo_traits.cpp ;
+exe  algo_concept   : <template>base algo_concept_covering.cpp ;
+exe  container_traits : <template>base container_traits.cpp ;

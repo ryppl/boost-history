@@ -743,7 +743,7 @@ namespace
         const int size = 10, n = 5;
         const int with = 1;
         vector<int> a( size ), a2( size );
-        fill_n_( a, n, with );
+        ext::fill_n( a, n, with );
         fill_n( begin( a2 ), n, with );
         assert( ext::equal( a, begin( a2 ) ) );        
     }
@@ -844,7 +844,7 @@ namespace
         iter = ext::unique( a2, bin_predicate() );
         iter = unique( begin( a3 ), end( a3 ), bin_predicate() );
         assert( ext::equal( a2, begin( a3 ) ) );
-	print2( a3, a2 );
+        print2( a3, a2 );
     }
 
 
@@ -1030,10 +1030,10 @@ namespace
         iter2  = lower_bound( v2.begin(), v2.end(), bound );
         assert( *iter == *iter2 ); 
         citer = lower_bound( cv, bound ); 
-        iter  = lower_bound_( v, bound, bin_predicate() );
+        iter  = ext::lower_bound( v, bound, bin_predicate() );
         iter2 = lower_bound( v2.begin(), v2.end(), bound, bin_predicate() );
         assert( *iter == *iter2 );
-        citer = lower_bound_( cv, bound, bin_predicate() );
+        citer = ext::lower_bound( cv, bound, bin_predicate() );
     }
 
 
@@ -1050,10 +1050,10 @@ namespace
         iter2  = upper_bound( v2.begin(), v2.end(), bound );
         assert( *iter == *iter2 ); 
         citer = upper_bound( cv, bound ); 
-        iter  = upper_bound_( v, bound, bin_predicate() );
+        iter  = ext::upper_bound( v, bound, bin_predicate() );
         iter2 = upper_bound( v2.begin(), v2.end(), bound, bin_predicate() );
         assert( *iter == *iter2 );
-        citer = upper_bound_( cv, bound, bin_predicate() );
+        citer = ext::upper_bound( cv, bound, bin_predicate() );
 
     }
 
@@ -1072,10 +1072,10 @@ namespace
         pi2   = equal_range( v2.begin(), v2.end(), bound );
         assert( *pi1.first == *pi2.first ); 
         pci   = equal_range( cv, bound ); 
-        pi1  = equal_range_( v, bound, bin_predicate() );
+        pi1  = ext::equal_range( v, bound, bin_predicate() );
         pi2 = equal_range( v2.begin(), v2.end(), bound, bin_predicate() );
         assert( *pi1.first == *pi2.first ); 
-        pci = equal_range_( cv, bound, bin_predicate() );
+        pci = ext::equal_range( cv, bound, bin_predicate() );
     }
 
 
@@ -1470,7 +1470,7 @@ namespace
         iter = adjacent_difference( v.begin(), v.end(), v2.begin() );
         assert( v1 == v2 );
 
-        iter = adjacent_difference_( v, begin( v1 ), binary_fun() );
+        iter = ext::adjacent_difference( v, begin( v1 ), binary_fun() );
         iter = adjacent_difference( v.begin(), v.end(), 
 				    v2.begin(), binary_fun() );
     }
