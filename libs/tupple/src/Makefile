@@ -22,7 +22,7 @@ FLAGS =
 INCLUDE = -I$(DRIVE_E)/lib/boost_1_31_0 -I.
 LINK  =
 
-ASTYLE_OPTS = -s2 -b -P
+ASTYLE_OPTS = -s2 -b -N -P
 INDENT_OPTS = --no-tabs -bl -bli0 -nce -npcs -nsaf -nsai -nsaw -prs -hnl
 
 all: tupple.hpp iterator_tupple.hpp container_tupple.hpp
