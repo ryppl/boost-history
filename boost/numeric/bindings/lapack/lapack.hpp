@@ -11,9 +11,9 @@ namespace boost { namespace numeric { namespace bindings { namespace lapack {
   template < typename matrix_type, typename IpivIterator >
   int getrf(matrix_type& a, IpivIterator begin_ipiv, IpivIterator end_ipiv)
   {
-    typedef typename matrix_type::value_type                value_type ;
-    typedef matrix_traits< matrix_type >                    mtraits ; 
-    typedef typename value_traits< value_type >::value_type bind_type ;
+    typedef typename matrix_type::value_type                                                  value_type ;
+    typedef boost::numeric::bindings::traits::matrix_traits< matrix_type >                    mtraits ; 
+    typedef typename boost::numeric::bindings::traits::value_traits< value_type >::value_type bind_type ;
 
     int m = mtraits::size1( a ) ;
     int n = mtraits::size2( a ) ;
@@ -29,9 +29,9 @@ namespace boost { namespace numeric { namespace bindings { namespace lapack {
   template <typename matrix_type, typename IntIterator >
   int getrs(char trans, matrix_type& a, IntIterator begin_ipiv, IntIterator end_ipiv, matrix_type& b)
   {
-    typedef typename matrix_type::value_type                value_type ;
-    typedef matrix_traits< matrix_type >                    mtraits ; 
-    typedef typename value_traits< value_type >::value_type bind_type ;
+    typedef typename matrix_type::value_type                                                  value_type ;
+    typedef boost::numeric::bindings::traits::matrix_traits< matrix_type >                    mtraits ; 
+    typedef typename boost::numeric::bindings::traits::value_traits< value_type >::value_type bind_type ;
 
     assert( trans == 'N' || trans == 'T' );
     int n = a.size1();
