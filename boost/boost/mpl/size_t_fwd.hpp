@@ -14,6 +14,7 @@
 // $Date$
 // $Revision$
 
+#include <boost/mpl/aux_/adl_barrier.hpp>
 #include <boost/config.hpp> // make sure 'size_t' is placed into 'std'
 #include <cstddef>
 

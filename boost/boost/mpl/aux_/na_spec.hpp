@@ -17,6 +17,7 @@
 #if !defined(BOOST_MPL_PREPROCESSING_MODE)
 #   include <boost/mpl/lambda_fwd.hpp>
 #   include <boost/mpl/int.hpp>
+#   include <boost/mpl/bool.hpp>
 #   include <boost/mpl/aux_/na.hpp>
 #   include <boost/mpl/aux_/arity.hpp>
 #   include <boost/mpl/aux_/template_arity_fwd.hpp>
@@ -80,6 +81,7 @@ struct lambda< \
     , true_ \
     > \
 { \
+    typedef false_ is_le; \
     typedef name< BOOST_MPL_AUX_NA_PARAMS(i) > type; \
 }; \
 template<> \
@@ -89,6 +91,7 @@ struct lambda< \
     , false_ \
     > \
 { \
+    typedef false_ is_le; \
     typedef name< BOOST_MPL_AUX_NA_PARAMS(i) > type; \
 }; \
 /**/
@@ -101,6 +104,7 @@ struct lambda< \
     BOOST_MPL_AUX_LAMBDA_ARITY_PARAM(int_<-1>) \
     > \
 { \
+    typedef false_ is_le; \
     typedef name< BOOST_MPL_AUX_NA_PARAMS(i) > type; \
 }; \
 /**/

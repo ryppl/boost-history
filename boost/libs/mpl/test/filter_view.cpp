@@ -16,8 +16,8 @@
 #include <boost/mpl/max_element.hpp>
 #include <boost/mpl/list.hpp>
 #include <boost/mpl/sizeof.hpp>
-#include <boost/mpl/aux_/test.hpp>
 #include <boost/mpl/deref.hpp>
+#include <boost/mpl/aux_/test.hpp>
 
 #include <boost/type_traits/is_float.hpp>
 #include <boost/type_traits/is_same.hpp>

@@ -5,9 +5,9 @@
 // Copyright Aleksey Gurtovoy 2000-2002
 // Copyright David Abrahams 2000-2002
 //
-// Use, modification and distribution are subject to the Boost Software 
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
-// at http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
@@ -20,7 +20,7 @@
 #include <boost/mpl/iterator_tag.hpp>
 #include <boost/mpl/next.hpp>
 #include <boost/mpl/lambda.hpp>
-#include <boost/mpl/apply.hpp>
+#include <boost/mpl/deref.hpp>
 #include <boost/mpl/aux_/na_spec.hpp>
 
 namespace boost { namespace mpl {
@@ -31,7 +31,7 @@ struct zip_iterator
     typedef forward_iterator_tag category;
     typedef typename transform<
           IteratorSeq
-        , apply0<_1>
+        , deref<_1>
         >::type type;
 
     typedef zip_iterator<
@@ -59,6 +59,6 @@ struct zip_view
 
 BOOST_MPL_AUX_NA_SPEC(1, zip_view)
 
-}} // namespace boost::mpl
+}}
 
 #endif // BOOST_MPL_ZIP_VIEW_HPP_INCLUDED
