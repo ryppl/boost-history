@@ -6,9 +6,10 @@
 // purpose.
 
 #include <vector>
-#include <algorithm> // for std::min
 #include <fstream>
-#include "boost/test/test_tools.hpp"
+#include <algorithm> // for std::min
+
+#include "boost/test/minimal.hpp"
 
 // Extract the bit at position n from num.
 template <typename Block>

@@ -5,16 +5,12 @@
 // implied warranty, and with no claim as to its suitability for any
 // purpose.
 
-#include <iostream>
-#include <fstream>
+
 #include <cmath> // for pow
 
 #include "boost/dynamic_bitset.hpp"
 
-#include "boost/test/test_tools.hpp"
-
 #include "bitset_test.hpp"
-
 #include "boost/config.hpp"
 
 
