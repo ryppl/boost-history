@@ -33,6 +33,7 @@
 # include <boost/type_traits/object_traits.hpp>
 # include <boost/type_traits/is_polymorphic.hpp>
 # include <boost/detail/workaround.hpp>
+# include <boost/enable_shared_from_this.hpp>
 
 namespace boost { namespace langbinding {
 
@@ -66,13 +67,15 @@ namespace boost { namespace langbinding {
 
       static boost::shared_ptr<inheritance_graph_base> 
          graph_for_extension(extension_id_t id);
-      
+
    private:
       struct implementation;
       boost::shared_ptr<implementation> m_pimpl;
    };
 
-   class inheritance_graph : public inheritance_graph_base
+   class inheritance_graph 
+      : public inheritance_graph_base
+      , public enable_shared_from_this<inheritance_graph>
    {
    public:
       static inheritance_graph& instance();

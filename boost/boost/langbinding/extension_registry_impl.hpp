@@ -21,29 +21,40 @@
 // ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 // DEALINGS IN THE SOFTWARE.
 
-#ifndef BOOST_LANGBINDING_REGISTRY_INSTANCE_IMPLEMENTATION
-#define BOOST_LANGBINDING_REGISTRY_INSTANCE_IMPLEMENTATION
+#ifndef BOOST_LANGBINDING_EXTENSION_REGISTRY_IMPL_HPP
+#define BOOST_LANGBINDING_EXTENSION_REGISTRY_IMPL_HPP
 
-#include <boost/langbinding/registry.hpp>
-#include <boost/shared_ptr.hpp>
+#include <boost/langbinding/config.hpp>
+#include <boost/langbinding/extension_id.hpp>
+#include <utility>
 
 namespace boost { namespace langbinding {
 
    template<class T>
-   registry<T>& registry<T>::instance()
+   class registry;
+
+   class inheritance_graph;
+
+   template<class T>
+   class BOOST_LANGBINDING_DECL extension_registry_impl
    {
-      static boost::shared_ptr<registry<T> > p(new registry);
-      return *p.get();
-   }
+   public:
 
-   template<class T>
-   registry<T>::registry()
-   {}
+      typedef std::pair<
+            registry<T>*
+          , inheritance_graph*
+      > extension_t;
+      
+      static void register_(
+            extension_id_t
+          , const char*
+          , registry<T>*
+          , inheritance_graph*);
+      
+      static extension_t extension(const char*);
+      static extension_t extension(extension_id_t);
+    };
 
-   template<class T>
-   registry<T>::~registry() 
-   {}
-   
 }}
 
 #endif
