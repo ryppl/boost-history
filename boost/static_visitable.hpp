@@ -94,26 +94,31 @@ struct static_visitable_traits
 {
 public: // static functions
 
-#define BOOST_AUX_STATIC_VISITABLE_TRAITS_APPLY_VISITOR(CV__)   \
-    template <typename Visitor>                                 \
-    static                                                      \
-        typename Visitor::result_type                           \
-    apply_visitor(Visitor& visitor, CV__ Visitable& visitable)  \
-    {                                                           \
-        CV__ static_visitable<Visitable>& v = visitable;        \
-        return v.apply_visitor(                                 \
-              visitor                                           \
-            , detail::static_visitable::private_forward_tag()   \
-            );                                                  \
-    }                                                           \
-    /**/
-#
-#define BOOST_NOTHING /**/
-#
-    BOOST_AUX_STATIC_VISITABLE_TRAITS_APPLY_VISITOR(BOOST_NOTHING)
-    BOOST_AUX_STATIC_VISITABLE_TRAITS_APPLY_VISITOR(const)
-#
-#undef BOOST_AUX_STATIC_VISITABLE_TRAITS_APPLY_VISITOR
+    template <typename Visitor>
+    static
+        typename Visitor::result_type
+    apply_visitor(Visitor& visitor, Visitable& operand)
+    {
+        // Visit directly:
+        static_visitable<Visitable>& v = operand;
+        return v.apply_visitor(
+              visitor
+            , detail::static_visitable::private_forward_tag()
+            );
+    }
+
+    template <typename Visitor>
+    static
+        typename Visitor::result_type
+    apply_visitor(Visitor& visitor, const Visitable& operand)
+    {
+        // Const-visit directly:
+        const static_visitable<Visitable>& v = operand;
+        return v.apply_visitor(
+              visitor
+            , detail::static_visitable::private_forward_tag()
+            );
+    }
 
 };
 

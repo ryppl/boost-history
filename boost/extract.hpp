@@ -21,15 +21,15 @@
 
 #include "boost/config.hpp"
 #include "boost/extractable.hpp"
-#include "boost/mpl/bool_c.hpp"
 
 #include "boost/type_traits/is_base_and_derived.hpp"
+#include "boost/type_traits/is_const.hpp"
 #include "boost/mpl/logical/not.hpp"
 #include "boost/mpl/logical/or.hpp"
+#include "boost/mpl/bool_c.hpp"
 
-#include "boost/static_visitable.hpp"
+#include "boost/visitor/unary_apply_visitor.hpp"
 #include "boost/static_visitor.hpp"
-#include "boost/visitor/bad_visit.hpp"
 #include "boost/visitor/dynamic_visitor_base.hpp"
 #include "boost/visitor/dynamic_visitor_interface.hpp"
 
@@ -62,13 +62,13 @@ public: // std::exception implementation
 
 namespace detail {
 
-// (detail) metafunction is_explicitly_extractable
+// (detail) metafunction is_directly_extractable
 //
 // Value metafunction indicates whether the specified type explicitly
 // supports extraction of a specified type T.
 //
 template <typename T>
-struct is_explicitly_extractable
+struct is_directly_extractable
 {
 public: // metafunction result
 
@@ -97,7 +97,7 @@ private: // representation
 
     T* p_;
 
-private: // private helpers
+private: // helpers (extract by visitation)
 
     // (helper) class template extracting_visitor
     //
@@ -149,71 +149,73 @@ private: // private helpers
     template <typename Extractable, typename B>
     static T* extract_impl(
           Extractable& operand
-        , mpl::true_c //is_extractable
-        , B
+        , B// is_const
+        , mpl::false_c// directly_extractable
         )
     {
-        static extractable_traits<Extractable> traits; // for MSVC
-        return traits.template extract<T>(operand);
+        visitor visiting;
+        boost::apply_visitor(visiting, operand);
+        return visiting.p;
     }
 
-    template <typename Extractable, typename B>
-    static T* extract_impl(
-          const Extractable& operand
-        , mpl::true_c //is_extractable
-        , B
-        )
-    {
-        static extractable_traits<Extractable> traits; // for MSVC
-        return traits.template extract<T>(operand);
-    }
+private: // helpers (extract by extractable_traits)
 
     template <typename Extractable>
     static T* extract_impl(
           Extractable& operand
-        , mpl::false_c //is_extractable
-        , mpl::true_c //is_static_visitable
+        , mpl::false_c// is_const
+        , mpl::true_c// directly_extractable
         )
     {
-        visitor visiting;
-        static_visitable_traits<Extractable>::apply_visitor(visiting, operand);
-        return visiting.p;
+        // Instantiate traits as MSVC workaround:
+        extractable_traits<Extractable> traits;
+        return traits.template extract<T>(operand);
     }
 
     template <typename Extractable>
     static T* extract_impl(
           const Extractable& operand
-        , mpl::false_c //is_extractable
-        , mpl::true_c //is_static_visitable
+        , mpl::true_c// is_const
+        , mpl::true_c// directly_extractable
         )
     {
-        visitor visiting;
-        static_visitable_traits<Extractable>::apply_visitor(visiting, operand);
-        return visiting.p;
+        // Instantiate traits as MSVC workaround:
+        extractable_traits<Extractable> traits;
+        return traits.template extract<T>(operand);
     }
+
+private: // workaround for structors (below)
 
     template <typename Extractable>
     static T* extract_impl(
           Extractable& operand
-        , mpl::false_c //is_extractable
-        , mpl::false_c //is_static_visitable
+        , mpl::false_c is_const
         )
     {
-        // NOTE TO USER :
-        // Compile error here indicates that operand is not extractable.
-        dynamic_visitable_base& visited = operand;
+        typedef detail::is_directly_extractable<Extractable>
+            directly_extractable;
 
-        visitor visiting;
-        try
-        {
-            visited.apply_visitor(visiting);
-        }
-        catch (bad_visit&)
-        {
-            return 0;
-        }
+        return extract_impl(
+              operand
+            , is_const
+            , mpl::bool_c<directly_extractable::value>()
+            );
+    }
 
-        return visiting.p;
+    template <typename Extractable>
+    static T* extract_impl(
+          const Extractable& operand
+        , mpl::true_c is_const
+        )
+    {
+        typedef detail::is_directly_extractable<Extractable>
+            directly_extractable;
+
+        return extract_impl(
+              operand
+            , is_const
+            , mpl::bool_c<directly_extractable::value>()
+            );
     }
 
 public: // structors
@@ -223,18 +225,9 @@ public: // structors
     {
         p_ = extract_impl(
               operand
-            , mpl::bool_c< detail::is_explicitly_extractable<Extractable>::value >()
-            , mpl::bool_c< is_static_visitable<Extractable>::value >()
-            );
-    }
-
-    template <typename Extractable>
-    explicit extract(const Extractable& operand)
-    {
-        p_ = extract_impl(
-              operand
-            , mpl::bool_c< detail::is_explicitly_extractable<Extractable>::value >()
-            , mpl::bool_c< is_static_visitable<Extractable>::value >()
+            , mpl::bool_c<
+                  is_const<Extractable>::value
+                >()
             );
     }
 
@@ -249,7 +242,7 @@ public: // operators
 
     typedef T& result_type;
 
-    result_type operator()() const
+    T& operator()() const
     {
         if (!check())
             throw bad_extract();
@@ -257,7 +250,7 @@ public: // operators
         return *p_;
     }
 
-    operator result_type() const
+    operator T&() const
     {
         return (*this)();
     }
