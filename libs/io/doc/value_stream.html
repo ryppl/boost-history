@@ -1,0 +1,244 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<title>Constant-Value I/O Stream Library</title>
+</head>
+<body>
+<h1><img src="../../../c++boost.gif" alt="c++boost.gif (8819 bytes)" align="middle" width="277" height="86">Constant-Value Streams</h1>
+
+<p>The header <cite><a href="../../../boost/io/value_stream.hpp">boost/io/value_stream.hpp</a></cite> covers streams and stream buffers that return a single character.</p>
+
+<h2><a name="contents">Contents</a></h2>
+
+<ol>
+	<li><a href="#contents">Contents</a></li>
+	<li><a href="#rationale">Rationale</a></li>
+	<li><a href="#header">Header Synopsis</a></li>
+	<li><a href="#value_sb">Constant-Value Stream Buffer Class Template</a>
+		<ul>
+			<li><a href="#mvs_types">Member Types</a></li>
+			<li><a href="#mvs_ctr">Constructors</a></li>
+			<li><a href="#mvs_observe">Observer Member Functions</a></li>
+			<li><a href="#mvs_override">Overridden Virtual Functions</a></li>
+		</ul></li>
+	<li><a href="#value_s">Constant-Value Stream Class Templates</a></li>
+	<li><a href="#refer">References</a></li>
+	<li><a href="#credits">Credits</a>
+		<ul>
+			<li><a href="#contributors">Contributors</a></li>
+			<li><a href="#history">History</a></li>
+		</ul></li>
+</ol>
+
+<h2><a name="rationale">Rationale</a></h2>
+
+<p>Many <dfn>command-line interfaces</dfn> (CLI) support redirection of their terminal input and output(s).  Sometimes, an user wants to provide a basic input source and/or an output destination to stress-out a command.  Some CLIs provide a special file name that provides a constant byte source (<i>e.g.</i> &quot;/dev/zero&quot; on UNIX-style systems).  The constant byte source acts as it is empty to write, so writing attempts immediately fail (<i>i.e.</i> return an end-of-file indication).  However, the constant byte source acts as it is infinitely large to read, so all (valid) reading attempts succeed and never return an end-of-file indication, but return the same byte/character over and over again (the null/zero byte/character in the case of &quot;/dev/zero&quot;).  The stream (buffer) class templates provide a platform-independent analog of a constant byte source.</p>
+
+<h2><a name="header">Header Synopsis</a></h2>
+
+<blockquote><pre>
+#include &lt;iosfwd&gt;  <i>// for std::char_traits (declaration)</i>
+
+namespace boost
+{
+namespace io
+{
+
+template &lt; typename Ch, class Tr = ::std::char_traits&lt;Ch&gt; &gt;
+    class basic_valuebuf;
+typedef basic_valuebuf&lt;char&gt;      valuebuf;
+typedef basic_valuebuf&lt;wchar_t&gt;  wvaluebuf;
+
+template &lt; typename Ch, class Tr = ::std::char_traits&lt;Ch&gt; &gt;
+    class basic_ovaluestream;
+typedef basic_ovaluestream&lt;char&gt;      ovaluestream;
+typedef basic_ovaluestream&lt;wchar_t&gt;  wovaluestream;
+
+template &lt; typename Ch, class Tr = ::std::char_traits&lt;Ch&gt; &gt;
+    class basic_ivaluestream;
+typedef basic_ivaluestream&lt;char&gt;      ivaluestream;
+typedef basic_ivaluestream&lt;wchar_t&gt;  wivaluestream;
+
+}
+}
+</pre></blockquote>
+
+<h2><a name="value_sb">Constant-Value Stream Buffer Class Template</a></h2>
+
+<p>The <code>boost::io::basic_valuebuf</code> acts like a <code>std::basic_streambuf</code>, which has the semantics of a void sink, but changes the semantics of the reading operations to add the semantics of a constant character source.  Only input-oriented support is provided.</p>
+
+<blockquote><pre>
+#include &lt;ios&gt;        <i>// for std::streamsize</i>
+#include &lt;streambuf&gt;  <i>// for std::basic_streambuf</i>
+
+template &lt; typename Ch, class Tr &gt;
+class boost::io::basic_valuebuf
+    : public std::basic_streambuf&lt;Ch, Tr&gt;
+{
+public:
+    // Template arguments
+    typedef Ch  char_type;
+    typedef Tr  traits_type;
+
+    // Other types
+    typedef typename Tr::int_type  int_type;
+    typedef typename Tr::pos_type  pos_type;
+    typedef typename Tr::off_type  off_type;
+
+    // Constructor (use automatically-defined destructor)
+    explicit  basic_valuebuf( char_type const &amp;value = char_type() );
+
+    // Accessors
+    std::streamsize  gcount() const;
+
+    char_type  gvalue() const;
+
+protected:
+    // Overriden virtual functions
+    virtual  std::streamsize  showmanyc();
+    virtual  std::streamsize  xsgetn( char_type *s, std::streamsize n );
+    virtual  int_type         underflow();
+    virtual  int_type         uflow();
+    virtual  int_type         pbackfail( int_type c = traits_type::eof() );
+
+};
+</pre></blockquote>
+
+<p>The type-based template arguments <var>Ch</var> and <var>Tr</var> represent the character type and character-traits type used for the stream buffer, respectively.</p>
+
+<h3><a name="mvs_types">Member Types</a></h3>
+
+<dl>
+	<dt><code>char_type</code>
+	<dd>a synonym for the stream buffer's character type
+
+	<dt><code>traits_type</code>
+	<dd>a synonym for the stream buffer's character-traits type
+
+	<dt><code>int_type</code>
+	<dd>a synonym for the stream buffer's character with end-of-file type
+
+	<dt><code>pos_type</code>
+	<dd>a synonym for the stream buffer's position type
+
+	<dt><code>off_type</code>
+	<dd>a synonym for the stream buffer's offset type
+</dl>
+
+<h3><a name="mvs_ctr">Constructors</a></h3>
+
+<p><strong>Note:</strong> the automatically-defined destructor is used.</p>
+
+<dl>
+	<dt><code>explicit  basic_valuebuf( char_type const &amp;value = char_type() );</code>
+	<dd>
+		<strong>Effects:</strong> zero-initializes the running count of characters (virtually) read; sets the character value to be repeatedly read to <var>value</var> (set to the defaulted/zero character value if omitted)
+</dl>
+
+<h3><a name="mvs_observe">Observer Member Functions</a></h3>
+
+<dl>
+    <dt><code>std::streamsize  gcount() const;</code>
+	<dd>
+		<strong>Returns:</strong> the current number of characters so far processed by (input) reading operations<br>
+		<strong>Rationale:</strong> the only way to record the number of (virtually) successfull reads
+
+    <dt><code>char_type  gvalue() const;</code>
+	<dd>
+		<strong>Returns:</strong> character returned by (input) reading operations<br>
+		<strong>Rationale:</strong> the only way to obtain the character value without changing the running count
+</dl>
+
+<h3><a name="mvs_override">Overridden Virtual Functions</a></h3>
+
+<dl>
+    <dt><code>std::streamsize  showmanyc();</code>
+	<dd>
+		<strong>Returns:</strong> the maximum <code>std::streamsize</code> value (to indicate unlimited characters)<br>
+		<strong>Rationale:</strong> indicating how many characters are immediately available for reading
+
+    <dt><code>std::streamsize  xsgetn( char_type *s, std::streamsize n );</code>
+	<dd>
+		<strong>Preconditions:</strong> <code><var>s</var> != NULL &amp;&amp; <var>n</var> &gt;= 0</code> and the array segment defined by starting at <var>s</var> and ending just before <code>(s + n)</code> should be valid<br>
+		<strong>Effects:</strong> writes <var>n</var> copies of the constant-value character to the array segment starting at <var>s</var>; increments the running count of characters (virtually) read by <var>n</var><br>
+		<strong>Returns:</strong> <var>n</var>, or 0 if there is a (detectable) problem with the arguments<br>
+		<strong>Rationale:</strong> reading in a bunch of characters at once
+
+    <dt><code>int_type  underflow();</code>
+	<dd>
+		<strong>Effects:</strong> pretends to read in the constant-value character at the &quot;current&quot; spot in the input sequence (doesn't actually do anything)<br>
+		<strong>Returns:</strong> an expanded copy of the constant-value character (this member function should never fail, so an end-of-file indicator should never be returned)<br>
+		<strong>Rationale:</strong> reading in a single character
+
+    <dt><code>int_type  uflow();</code>
+	<dd>
+		<strong>Effects:</strong> pretends to read in the constant-value character and increment the marker in the input sequence, actually just increments the running count of characters (virtually) read by 1<br>
+		<strong>Returns:</strong> an expanded copy of the constant-value character (this member function should never fail, so an end-of-file indicator should never be returned)<br>
+		<strong>Rationale:</strong> reading in a single character and moving the input sequence one place forward
+
+    <dt><code>int_type  pbackfail( int_type c = traits_type::eof() );</code>
+	<dd>
+		<strong>Effects:</strong> if <var>c</var> is an end-of-file indicator or an expanded copy of the constant-value character, then decrements the running count of characters (virtually) read by 1, else fails doing nothing<br>
+		<strong>Returns:</strong> an expanded copy of the constant-value character on success, an end-of-file indicator otherwise<br>
+		<strong>Rationale:</strong> moving the input sequence one place backward, unreading in a single character
+</dl>
+
+<h2><a name="value_s">Constant-Value Stream Class Templates</a></h2>
+
+<p>The <code>boost::io::basic_ivaluestream</code> and <code>boost::io::basic_ovaluestream</code> class templates are stream classes that use an internal <a href="#value_sb"><code>basic_valuebuf</code></a> object.  They are implemented with the <a href="streambuf_wrapping.html">stream-buffer-wrapping stream base library</a>.  (Replace the <var>M</var> in the declaration with <var>i</var> for the input stream and <var>o</var> for the output stream.)
+
+<blockquote><pre>
+#include &lt;boost/io/streambuf_wrapping.hpp&gt;
+
+template &lt; typename Ch, class Tr &gt;
+class boost::io::basic_<var>M</var>valuestream
+    : public boost::io::basic_wrapping_<var>M</var>stream&lt; basic_valuebuf&lt;Ch, Tr&gt; &gt;
+{
+public:
+    // Template arguments
+    typedef Ch  char_type;
+    typedef Tr  traits_type;
+
+    // Other types
+    typedef typename Tr::int_type  int_type;
+    typedef typename Tr::pos_type  pos_type;
+    typedef typename Tr::off_type  off_type;
+
+    // Forward to appropiate stream-buffer constructor/member-function
+    explicit  basic_<var>M</var>valuestream( char_type const &amp;value = char_type() );
+
+    char_type  gvalue() const;
+
+};
+</pre></blockquote>
+
+<h2><a name="refer">References</a></h2>
+
+<ul>
+	<li>The constant-value-stream library header itself: <cite><a href="../../../boost/io/value_stream.hpp">boost/io/value_stream.hpp</a></cite></li>
+	<li>Some test/example code: <cite><a href="../test/value_stream_test.cpp">value_stream_test.cpp</a></cite></li>
+</ul>
+
+<h2><a name="credits">Credits</a></h2>
+
+<h3><a name="contributors">Contributors</a></h3>
+
+<dl>
+	<dt><a href="../../../people/daryle_walker.html">Daryle Walker</a>
+	<dd>Started the library.  Contributed the initial versions of the constant-value stream and stream-buffer class templates.
+</dl>
+
+<h3><a name="history">History</a></h3>
+
+<dl>
+	<dt>29 Dec 2003, Daryle Walker
+	<dd>Initial version
+</dl>
+
+<hr>
+
+<p>Revised: 29 December 2003</p>
+
+<p>Copyright 2003 Daryle Walker.  Use, modification, and distribution are subject to the Boost Software License, Version 1.0.  (See accompanying file <a href="../../../LICENSE_1_0.txt">LICENSE_1_0.txt</a> or a copy at &lt;<a href="http://www.boost.org/LICENSE_1_0.txt">http://www.boost.org/LICENSE_1_0.txt</a>&gt;.)</p>
+</body>
+</html>

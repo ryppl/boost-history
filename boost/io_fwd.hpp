@@ -148,6 +148,24 @@ typedef basic_iconstpointerstream<char>      iconstpointerstream;
 typedef basic_iconstpointerstream<wchar_t>  wiconstpointerstream;
 
 
+//  From <boost/io/value_stream.hpp>  ----------------------------------------//
+
+template < typename Ch, class Tr = ::std::char_traits<Ch> >
+    class basic_valuebuf;
+typedef basic_valuebuf<char>      valuebuf;
+typedef basic_valuebuf<wchar_t>  wvaluebuf;
+
+template < typename Ch, class Tr = ::std::char_traits<Ch> >
+    class basic_ivaluestream;
+typedef basic_ivaluestream<char>      ivaluestream;
+typedef basic_ivaluestream<wchar_t>  wivaluestream;
+
+template < typename Ch, class Tr = ::std::char_traits<Ch> >
+    class basic_ovaluestream;
+typedef basic_ovaluestream<char>      ovaluestream;
+typedef basic_ovaluestream<wchar_t>  wovaluestream;
+
+
 }  // namespace io
 }  // namespace boost
 
