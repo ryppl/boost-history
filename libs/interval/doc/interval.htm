@@ -3,7 +3,7 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-  <link rel="stylesheet" type="text/css" href="boost.css">
+  <link rel="stylesheet" type="text/css" href="../../../boost.css">
   <title>Boost Interval Arithmetic Library</title>
 </head>
 
@@ -52,17 +52,19 @@ mathematical intervals. It consists of a single header &lt;<a
 href="../../../boost/interval.hpp">boost/interval.hpp</a>&gt; and principally
 a type which can be used as <tt>interval&lt;T&gt;</tt>. In fact, this
 interval template is declared as <tt>interval&lt;T,Traits&gt;</tt> where
-<tt>Traits</tt> is a policy class that controls  the various behaviours of
+<tt>Traits</tt> is a policy class that controls the various behaviours of
 the interval class; <tt>interval&lt;T&gt;</tt> just happens to pick the
 default policies for the type <tt>T</tt>.
 
 <h3>Interval Arithmetic</h3>
 An interval is a pair of numbers which represents all the numbers between
-these two. The purpose of this library is to extend the usual arithmetic
+these two. (Intervals are considered close so the bounds are included.)
+The purpose of this library is to extend the usual arithmetic
 functions to intervals. These intervals will be written [<i>a</i>,<i>b</i>]
-to represent all the numbers between <i>a</i> and <i>b</i>. <i>a</i> and
+to represent all the numbers between <i>a</i> and <i>b</i> (included).
+<i>a</i> and
 <i>b</i> can be infinite (but they can not be the same infinite) and <i>a</i>
-&#8804; <i>b</i>.
+&le; <i>b</i>.
 
 <p>The fundamental property of interval arithmetic is the <b><em>inclusion
 property</em></b>:</p>
@@ -70,15 +72,14 @@ property</em></b>:</p>
     <dd>``if <i>f</i> is a function on a set of numbers, <i>f</i> can be
       extended to a new function defined on intervals. This new function
       <i>f</i> takes one interval argument and returns an interval result
-      such as: &#8704; <i>x</i> &#8712; [<i>a</i>,<i>b</i>],
-      <i>f</i>(<i>x</i>) &#8712; <i>f</i>([<i>a</i>,<i>b</i>]).''</dd>
-    <dd> </dd>
+      such as: &forall; <i>x</i> &isin; [<i>a</i>,<i>b</i>],
+      <i>f</i>(<i>x</i>) &isin; <i>f</i>([<i>a</i>,<i>b</i>]).''</dd>
 </dl>
 
 <p>Such a property is not limited to functions with only one argument.
 Whenever possible, the interval result should be the smallest one able to
 satisfy the property (it is not really useful if the new functions always
-answer [-&#8734;,+&#8734;]).</p>
+answer [-&infin;,+&infin;]).</p>
 
 <p>There are at least two reasons a user would like to use this library. The
 obvious one is when the user has to compute with intervals. One example is
@@ -158,12 +159,12 @@ behavior will be triggered when the result is indeterminate.</p>
 <p>Another solution is to  map <em>indeterminate</em> always to <i>false,</i>
 or always to <i>true</i>. If <i>false</i> is chosen, the comparison will be
 called "<i>certain</i>;" indeed, the result of [<i>a</i>,<i>b</i>] &lt;
-[<i>c</i>,<i>d</i>] will be <i>true</i> if and only if: &#8704; <i>x</i>
-&#8712; [<i>a</i>,<i>b</i>] &#8704; <i>y</i> &#8712; [<i>c</i>,<i>d</i>],
+[<i>c</i>,<i>d</i>] will be <i>true</i> if and only if: &forall; <i>x</i>
+&isin; [<i>a</i>,<i>b</i>] &forall; <i>y</i> &isin; [<i>c</i>,<i>d</i>],
 <i>x</i> &lt; <i>y</i>. If <i>true</i> is chosen, the comparison will be
 called "<i>possible</i>;" indeed, the result of [<i>a</i>,<i>b</i>] &lt;
-[<i>c</i>,<i>d</i>] will be <i>true</i> if and only if: &#8707; <i>x</i>
-&#8712; [<i>a</i>,<i>b</i>] &#8707; <i>y</i> &#8712; [<i>c</i>,<i>d</i>],
+[<i>c</i>,<i>d</i>] will be <i>true</i> if and only if: &exist; <i>x</i>
+&isin; [<i>a</i>,<i>b</i>] &exist; <i>y</i> &isin; [<i>c</i>,<i>d</i>],
 <i>x</i> &lt; <i>y</i>.</p>
 
 <p>Since any of these solution has a clearly defined semantics, it is not
@@ -530,8 +531,8 @@ function. It is the reason why fmod will answer [5,10].</p>
 Some constants are hidden in the boost::interval_lib namespace. They need to
 be explicitely templated by the interval type. The functions are
 pi&lt;I&gt;(), pi_half&lt;I&gt;() and pi_twice&lt;I&gt;(), and they return an
-object of interval type I. Their respective values are &#960;, &#960;/2 and
-2&#960;.
+object of interval type I. Their respective values are &pi;, &pi;/2 and
+2&pi;.
 
 <h3>Exception throwing</h3>
 The interval class and all the functions defined around this class never
@@ -756,9 +757,9 @@ interval&lt;float&gt; and interval&lt;double&gt;.</p>
 <p><b>fmod.cpp</b> defines a minimalistic version of interval&lt;int&gt; and
 uses it in order to test fmod on some specific interval values.</p>
 
-<p><b>pi.cpp</b> tests if the interval value of &#960; (for int, float and
-double base types) contains the number &#960; (defined with 21 decimal
-digits) and if it is a subset of [&#960;±1ulp] (in order to ensure some
+<p><b>pi.cpp</b> tests if the interval value of &pi; (for int, float and
+double base types) contains the number &pi; (defined with 21 decimal
+digits) and if it is a subset of [&pi;±1ulp] (in order to ensure some
 precision).</p>
 
 <p><b>interval_test.cpp</b> tests if the interval library respects the basic
