@@ -71,6 +71,7 @@ rule spirit-run ( sources + : args * : input-files * : requirements * : name ? :
     # MT is not available on both Unix and Windows on Comeau
     {   # no MT support available
         template multi-threading : : :
+            <define>BOOST_DISABLE_THREADS=1
             $(spirit-header-include)
         ;
     }

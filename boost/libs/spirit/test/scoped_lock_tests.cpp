@@ -22,8 +22,7 @@ void banner()
     std::cout << "\n";
 }
 
-#if !defined(SPIRIT_HAVE_BOOST_THREAD) || \
-defined(DONT_HAVE_BOOST) || \
+#if defined(DONT_HAVE_BOOST) || \
 !defined(BOOST_HAS_THREADS) || \
 defined(BOOST_DISABLE_THREADS)
 // if boost libraries are not available we have to skip the tests
