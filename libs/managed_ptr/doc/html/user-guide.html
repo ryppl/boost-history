@@ -1,0 +1,214 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>User's Guide</title><link rel="stylesheet" href="boostbook.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.65.1"><link rel="home" href="index.html" title="Chapter 1. boost/managed_ptr/refcycle_counted"><link rel="up" href="index.html" title="Chapter 1. boost/managed_ptr/refcycle_counted"><link rel="previous" href="ch01s02.html" title="Notation"><link rel="next" href="ch01s04.html" title="Bibliography"><link rel="chapter" href="index.html" title="Chapter 1. boost/managed_ptr/refcycle_counted"><link rel="subsection" href="user-guide.html#id2507036" title="Scalar smart pointer declaration"><link rel="subsection" href="user-guide.html#id2460214" title="Container of smart pointer declaration"><link rel="subsection" href="user-guide.html#id2460291" title="smart pointer descriptor for a type"><link rel="subsection" href="user-guide.html#id2458319" title="Compatible compilers"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><table cellpadding="2" width="100%"><td valign="top"><img src="../../c++boost.gif" alt="c++boost.gif (8819 bytes)" width="277" height="86"></td><td align="center"><a href="../../index.htm">Home</a></td><td align="center"><a href="libraries.html">Libraries</a></td><td align="center"><a href="../../people/people.htm">People</a></td><td align="center"><a href="../../more/faq.htm">FAQ</a></td><td align="center"><a href="../../more/index.htm">More</a></td></table><hr><div class="spirit-nav"><a accesskey="p" href="ch01s02.html"><img src="images/prev.png" alt="Prev"></a><a accesskey="u" href="index.html"><img src="images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="images/home.png" alt="Home"></a><a accesskey="n" href="ch01s04.html"><img src="images/next.png" alt="Next"></a></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="user-guide"></a>User's Guide</h2></div></div><div></div></div><div class="toc"><dl><dt><span class="section"><a href="user-guide.html#id2507036">Scalar smart pointer declaration</a></span></dt><dt><span class="section"><a href="user-guide.html#id2460214">Container of smart pointer declaration</a></span></dt><dt><span class="section"><a href="user-guide.html#id2460291">smart pointer descriptor for a type</a></span></dt><dt><span class="section"><a href="user-guide.html#id2458319">Compatible compilers</a></span></dt></dl></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2507036"></a>Scalar smart pointer declaration</h3></div></div><div></div></div><p> The
+following declares 
+<tt class="computeroutput">a_csp_t</tt>
+as a cyclic smart pointer for type 
+<tt class="computeroutput">T</tt>:
+</p><pre class="programlisting">
+#include "boost/managed_ptr/smart_ptr.hpp"
+using namespace boost::managed_ptr;
+    typedef
+  refcycle_counted_curry_prox_visitor
+    &lt;refcycle_prox_visitor_abs
+    &gt;::owner
+      &lt;T
+      &gt; 
+csp_T_type
+;
+  csp_T_type
+a_csp_T
+;
+</pre><p>
+The
+<tt class="computeroutput">boost::managed_ptr::refcycle_prox_visitor_abs
+</tt>
+
+outer template parameter specifies a visitor class (i.e. an instance
+of the "Visitor Pattern" [<a href="ch01s04.html#biblioentry-GOF95" title="[GOF95]"><span class="abbrev">GOF95</span></a>] ) for
+visiting a select group of smart pointers.  The
+<tt class="computeroutput">refcycle_prox_visitor_abs</tt> visitor
+only visits the super class,
+<tt class="computeroutput">refcycle_counted_curry_prox_visitor
+&lt;refcycle_prox_visitor_abs &gt;::owner_void</tt> which
+implements the garbage collection method described in [<a href="ch01s04.html#biblioentry-Mart90" title="[Mart90]"><span class="abbrev">Mart90</span></a>]. The value of the pointee in this case
+is null.  For any other value, a factory class,
+<tt class="computeroutput">auto_overhead</tt>, must be used, as in:
+
+</p><pre class="programlisting">
+  csp_T_type
+a_csp_T
+  ( default_ctor_tag()
+  )
+;
+</pre><p>
+which creates a referent
+</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2460214"></a>Container of smart pointer declaration</h3></div></div><div></div></div><p>A cycle of smart pointers may pass through a container of some
+sort which can accesses the smart pointer only through a raw pointer
+pointing to the heap, i.e. through a <a href="ch01s02.html#gloss.SPPC">SPPC</a>.  For
+example:
+
+</p><pre class="programlisting">
+#include "boost/managed_ptr/smart_ptr.hpp"
+  using namespace boost::managed_ptr
+  ;
+    struct
+  node_vec
+  {
+        typedef
+      smart_ptr
+      &lt; node_vec
+      , refcycle_counted_curry_prox_visitor
+        &lt;refcycle_prox_visitor_abs
+        &gt;::owner
+        &lt;_&gt; 
+      &gt; 
+    sp_type
+    ;
+        typedef
+      std::vector
+        &lt; sp_type
+        &gt;
+    container_type
+    ;
+      container_type
+    my_sp_children
+    ;
+  };//end node_vec struct
+
+</pre><p>
+
+Since an instance of node_vec may reference itself indirectly through
+its my_sp_children member variable, this means a cycle passing through
+my_sp_children can exist.  To enable collection of such a cycle,
+node_vec ::container_type must be changed to:
+ 
+</p><pre class="programlisting">
+
+#include "boost/managed_ptr/smart_ptr.hpp"
+#include "boost/managed_ptr/stlcont_prox_extern/scoped_cyclic_container.hpp"
+
+    struct
+  node_vec
+  {
+...
+        typedef
+      stlcont_prox_extern::scoped_cyclic_container
+        &lt; std::vector
+        , sp_type
+        &gt;
+    container_type
+    ;
+...
+  };//end node_vec struct
+
+</pre><p>
+
+The templated class, <tt class="computeroutput"> scoped_cyclic_container
+</tt>, is simply a "thin wrapper" around the templated
+container that is its first template argument. The definition of
+<tt class="computeroutput">scoped_cyclic_container</tt> can be used
+as a model for any other templated containers which are instances of
+<a href="ch01s02.html#gloss.SPPC">SPPC</a>.
+
+</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2460291"></a>smart pointer descriptor for a type</h3></div></div><div></div></div><p>For any type, <tt class="computeroutput">REFERENT</tt>, containing
+either <a href="ch01s02.html#gloss.SSP">SSP</a> or <a href="ch01s02.html#gloss.SPPC">SPPC</a>, the
+garbage collector must know the locations of these contained objects.
+These locations are provided by:
+
+</p><pre class="programlisting">
+  prox_children&lt;VISITOR&gt;
+  ::prox_description_of&lt;REFERENT&gt;
+</pre><p>
+
+where the argument for VISITOR should be an abstract visitor class for
+visiting a selected group if different smart pointer types. In the
+previous examples, this was <tt class="computeroutput"> refcycle_prox_visitor_abs
+</tt>.
+
+To calculate this, the following macro invokation must appear following
+the declaration of <tt class="computeroutput">REFERENT</tt>:
+
+</p><pre class="programlisting">
+
+DECLARE_PROX_CHILDREN_FOR_REFERENT_VISITOR \
+ ( REFERENT \
+ , VISITOR \
+ )
+
+</pre><p>
+
+This macro is defined in boost/managed_ptr/prox_children.hpp.  This
+must be done for REFERENT as well as any types derived from REFERENT
+if those derived types may be in cycles.  This requirement is similar
+to but less restrictive than the following "constraint" in 
+<a href="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/vcmxspec/html/vcManagedExtensionsSpec_4.asp" target="_top">managed c++</a>:
+
+</p><div class="blockquote"><blockquote class="blockquote">
+  A __gc class shall not have an unmanaged class derived from it.
+</blockquote></div><p>
+
+To be more specific, if the user is sure that not cycles will pass
+through some instance of REFERENT_derived, then there's not need for:
+
+</p><pre class="programlisting">
+
+DECLARE_PROX_CHILDREN_FOR_REFERENT_VISITOR \
+ ( REFERENT \
+ , VISITOR \
+ )
+
+</pre></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2458319"></a>Compatible compilers</h3></div></div><div></div></div><div class="toc"><dl><dt><span class="section"><a href="user-guide.html#id2458334">intel details</a></span></dt><dt><span class="section"><a href="user-guide.html#id2458367">como details</a></span></dt><dt><span class="section"><a href="user-guide.html#id2458384">g++ details</a></span></dt></dl></div><p>Unfortunately, amoung g++, comeau, and intel, only intel
+successfully compiles
+<tt class="computeroutput">libs/managed_ptr/test/smart_ptr_test.cpp</tt> 
+. 
+</p><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="id2458334"></a>intel details</h4></div></div><div></div></div><p>
+More precisely, the intel compiler used to successfully compile and
+run <tt class="computeroutput">smart_ptr_test.cpp</tt>
+is given by the
+following output:
+
+</p><pre class="screen">
+bash-2.05a$ icc -V
+Intel(R) C++ Compiler for 32-bit applications, Version 8.0   Build 20031231Z Pac kage ID: &lt;installpackageid&gt;
+Copyright (C) 1985-2003 Intel Corporation.  All rights reserved.
+</pre><p>
+The output of the test was in smart_ptr_test.run, whose contents were:
+</p><pre class="screen">
+Running 26 test cases...
+
+*** No errors detected
+
+EXIT STATUS: 0
+</pre></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="id2458367"></a>como details</h4></div></div><div></div></div><p>
+Como is able to compile everything; however, the link step fails
+with:
+</p><pre class="screen">
+como.link ../../../../bin.v2/development_lje/libs/managed_ptr/test/smart_ptr_test.test/como/debug/smart_ptr_test
+nm: t_exp.o: no symbols
+nm: e_rem_pio2.o: no symbols
+nm: k_cos.o: no symbols
+nm: k_rem_pio2.o: no symbols
+...
+</pre></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="id2458384"></a>g++ details</h4></div></div><div></div></div><p>
+With the following version of g++:
+</p><pre class="screen">
+cd /usr/local/gcc-3.4-20040225/bin/
+./g++ -v
+Reading specs from /usr/local/gcc-3.4-20040225/lib/gcc/i686-pc-linux-gnu/3.4.0/specs
+Configured with: ../../gcc-3.4-20040225/configure --prefix=/usr/local/gcc-3.4-20040225 --enable-languages=c++ : (reconfigured) ../../gcc-3.4-20040225/configure --prefix=/usr/local/gcc-3.4-20040225 --enable-languages=c++
+Thread model: posix
+gcc version 3.4.0 20040225 (prerelease)
+</pre><p>
+there were many compile-time errors:
+</p><pre class="screen">
+cd ~/prog_dev/boost-snapshot/boost-04-08-03-0800/development_lje/libs/managed_ptr/test/
+bjam --v2
+...patience...
+...found 656 targets...
+...updating 4 targets...
+gcc.compile.c++ ../../../../bin.v2/development_lje/libs/managed_ptr/test/smart_ptr_test.test/gcc/debug/smart_ptr_test.o
+In file included from ../../../boost/managed_ptr/refcycle_prox_visitor_abs.hpp:6,
+                 from smart_ptr_test.cpp:52:
+../../../boost/managed_ptr/prox_children.hpp:876: error: type/value mismatch at argument 1 in template parameter list for `template&lt;class Iterator&gt; struct boost::iterator_default::range'
+../../../boost/managed_ptr/prox_children.hpp:876: error:   expected a type, got `typename boost::managed_ptr::prox_children&lt;ProxVisitor&gt;::maker_proxiter_abs::prox_offsets_type::const_iterator'
+../../../boost/managed_ptr/prox_children.hpp:879: error: type `typename boost::managed_ptr::prox_children&lt;ProxVisitor&gt;::maker_proxiter_abs::prox_offsets_type' is not derived from type `boost::m
+</pre></div></div></div><table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr><td align="left"></td><td align="right"><small></small></td></tr></table><hr><div class="spirit-nav"><a accesskey="p" href="ch01s02.html"><img src="images/prev.png" alt="Prev"></a><a accesskey="u" href="index.html"><img src="images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="images/home.png" alt="Home"></a><a accesskey="n" href="ch01s04.html"><img src="images/next.png" alt="Next"></a></div></body></html>
