@@ -71,6 +71,8 @@ align="middle" width="277" height="86">
 
 <dt><a href="#member-typedefs">Member typedefs</a></dt>
 
+<dt><a href="#public-data-members">Public data members</a></dt>
+
 <dt><a href="#constructors">Constructors</a></dt>
 
 <dt><a href="#destructor">Destructor</a></dt>
@@ -121,25 +123,25 @@ class dynamic_bitset
 {
 public:
     typedef Block <a href="#block_type">block_type</a>;
-    typedef <i>implementation-defined</i> <a href=
-"#size_type">size_type</a>;
-    enum { <a href=
-"#bits_per_block">bits_per_block</a> = <i>implementation-defined</i> };
+    typedef <i>implementation-defined</i> <a href="#size_type">size_type</a>;
+    static const int <a href=
+       "#bits_per_block">bits_per_block</a> = <i>implementation-defined</i>;
+    static const size_type <a href=
+		   "#npos">npos</a> = <i>implementation-defined</i>;
 
     class <a href="#reference">reference</a>
     {
     public:
         // An automatically generated copy constructor.
+				
         reference&amp; operator=(bool value);
+        reference&amp; operator=(const reference&amp; rhs);
+
         reference&amp; operator|=(bool value);
         reference&amp; operator&amp;=(bool value);
         reference&amp; operator^=(bool value);
         reference&amp; operator-=(bool value);
-        reference&amp; operator=(const reference&amp; j);
-        reference&amp; operator|=(const reference&amp; j);
-        reference&amp; operator&amp;=(const reference&amp; j);
-        reference&amp; operator^=(const reference&amp; j);
-        reference&amp; operator-=(const reference&amp; j);
+
         bool operator~() const;
         operator bool() const;
         reference&amp; flip();
@@ -213,9 +215,9 @@ public:
     size_type <a href="#count">count</a>() const;
 
     reference <a href=
-"#bracket">operator[]</a>(size_type pos) { return reference(*this, pos); }
+"#bracket">operator[]</a>(size_type pos);
     bool <a href=
-"#const-bracket">operator[]</a>(size_type pos) const { return test(pos); }
+"#const-bracket">operator[]</a>(size_type pos) const;
 
     unsigned long <a href="#to_ulong">to_ulong</a>() const;
   
@@ -661,6 +663,9 @@ The unsigned integer for representing the size of the bit set.
 The same type as the <tt>Block</tt> template parameter. 
 
 <hr>
+<h3><a name="public-data-members">Public data members</a></h3>
+
+<hr>
 <pre>
 <a name="bits_per_block">dynamic_bitset::bits_per_block</a>
 </pre>
@@ -669,6 +674,12 @@ The number of bits the type <tt>Block</tt> uses to represent values,
 excluding any padding bits. Numerically equal
 to <tt>std::numeric_limits&lt;Block&gt;::digits</tt>.
 
+<hr>
+<pre>
+<a name="npos">dynamic_bitset::npos</a>
+</pre>
+
+The maximum value of <tt>size_type</tt>. [gps]
 
 <hr>
 <h3><a name="constructors">Constructors</a></h3>
@@ -1183,7 +1194,7 @@ bool <a name="const-bracket">operator[]</a>(size_type n) const
 </pre>
 
 <b>Precondition:</b> <tt>n &lt; this-&gt;size()</tt>.<br>
-<b>Returns:</b> <tt>true</tt> if bit <tt>n</tt> is set. 
+<b>Returns:</b> The same as <tt>test(n)</tt>. 
 
 <hr>
 <pre>
