@@ -5,8 +5,13 @@
 
 namespace boost { namespace numeric { namespace blasbindings {
 
-  template < typename T >
-  struct traits
+  template < typename V >
+  struct vector_traits
+  {
+  };
+
+  template < typename M >
+  struct matrix_traits
   {
   };
 

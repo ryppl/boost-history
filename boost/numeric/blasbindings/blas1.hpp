@@ -9,11 +9,11 @@
 namespace boost { namespace numeric { namespace blasbindings {
   
   template < typename vector_type >
-  void scal(const typename traits<vector_type>::value_type &alpha, 
+  void scal(const typename vector_traits<vector_type>::value_type &alpha, 
 	    vector_type &x
 	    )
   {
-    typedef traits< vector_type >                           vtraits ; 
+    typedef vector_traits< vector_type >                           vtraits ; 
     typedef typename vtraits::value_type                    value_type ;
     typedef typename value_traits< value_type >::value_type bind_type ;
 
@@ -29,13 +29,13 @@ namespace boost { namespace numeric { namespace blasbindings {
 
 
   template < typename vector_type_x, typename vector_type_y >
-  void axpy(const typename traits<vector_type_x>::value_type alpha,
+  void axpy(const typename vector_traits<vector_type_x>::value_type alpha,
 	    const vector_type_x &x, 
 	    vector_type_y &y
 	    )
   { 
-    typedef traits< const vector_type_x >                   xvtraits ; 
-    typedef traits< vector_type_y >                         yvtraits ; 
+    typedef vector_traits< const vector_type_x >                   xvtraits ; 
+    typedef vector_traits< vector_type_y >                         yvtraits ; 
     typedef typename xvtraits::value_type                   value_type ;
     typedef typename value_traits< value_type >::value_type bind_type ;
 
@@ -55,11 +55,11 @@ namespace boost { namespace numeric { namespace blasbindings {
 
 
   template < typename vector_type_x, typename vector_type_y >
-  typename traits< vector_type_x >::value_type 
+  typename vector_traits< vector_type_x >::value_type 
   dot(const vector_type_x &x, const vector_type_y &y)
   {
-    typedef traits< const vector_type_x >                   xvtraits ; 
-    typedef traits< const vector_type_y >                   yvtraits ; 
+    typedef vector_traits< const vector_type_x >                   xvtraits ; 
+    typedef vector_traits< const vector_type_y >                   yvtraits ; 
     typedef typename xvtraits::value_type                   value_type ;
     typedef typename value_traits< value_type >::value_type bind_type ;
 
@@ -77,11 +77,11 @@ namespace boost { namespace numeric { namespace blasbindings {
   }
 
   template < typename vector_type_x, typename vector_type_y >
-  typename traits< vector_type_x >::value_type 
+  typename vector_traits< vector_type_x >::value_type 
   dotu(const vector_type_x &x, const vector_type_y &y)
   {
-    typedef traits< const vector_type_x >                   xvtraits ; 
-    typedef traits< const vector_type_y >                   yvtraits ; 
+    typedef vector_traits< const vector_type_x >                   xvtraits ; 
+    typedef vector_traits< const vector_type_y >                   yvtraits ; 
     typedef typename xvtraits::value_type                   value_type ;
     typedef typename value_traits< value_type >::value_type bind_type ;
 
@@ -102,11 +102,11 @@ namespace boost { namespace numeric { namespace blasbindings {
   }
 
   template < typename vector_type_x, typename vector_type_y >
-  typename traits< vector_type_x >::value_type 
+  typename vector_traits< vector_type_x >::value_type 
   dotc(const vector_type_x &x, const vector_type_y &y)
   {
-    typedef traits< const vector_type_x >                   xvtraits ; 
-    typedef traits< const vector_type_y >                   yvtraits ; 
+    typedef vector_traits< const vector_type_x >                   xvtraits ; 
+    typedef vector_traits< const vector_type_y >                   yvtraits ; 
     typedef typename xvtraits::value_type                   value_type ;
     typedef typename value_traits< value_type >::value_type bind_type ;
 

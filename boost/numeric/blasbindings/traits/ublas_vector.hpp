@@ -7,7 +7,7 @@
 namespace boost { namespace numeric { namespace blasbindings {
 
   template < typename T, typename A >
-  struct traits< boost::numeric::ublas::vector< T, A > >
+  struct vector_traits< boost::numeric::ublas::vector< T, A > >
   {
     typedef A                                     allocator ;
     typedef typename allocator::pointer           pointer ;
@@ -29,7 +29,7 @@ namespace boost { namespace numeric { namespace blasbindings {
   };
 
   template < typename T, typename A >
-  struct traits< boost::numeric::ublas::vector< T, A > const >
+  struct vector_traits< boost::numeric::ublas::vector< T, A > const >
   {
     typedef A const                                     allocator ;
     typedef typename allocator::const_pointer           pointer ;
@@ -51,7 +51,7 @@ namespace boost { namespace numeric { namespace blasbindings {
   };
 
   template < typename V >
-  struct traits< boost::numeric::ublas::vector_range< V > >
+  struct vector_traits< boost::numeric::ublas::vector_range< V > >
   {
     typedef typename V::pointer                      pointer ;
     typedef typename V::const_pointer                const_pointer ;
@@ -62,17 +62,17 @@ namespace boost { namespace numeric { namespace blasbindings {
 
 
     static pointer storage(vector_type& v) 
-    { return traits< V >::storage( v.data() ) + v.start() ; }
+    { return vector_traits< V >::storage( v.data() ) + v.start() ; }
 
     static size_type size(vector_type& v)
     { return v.size() ; }
 
     static size_type stride(vector_type& v) 
-    { return traits< V >::stride( v.data() ) ; }
+    { return vector_traits< V >::stride( v.data() ) ; }
   };
 
   template < typename V >
-  struct traits< boost::numeric::ublas::vector_range< V > const >
+  struct vector_traits< boost::numeric::ublas::vector_range< V > const >
   {
     typedef typename V::const_pointer                      pointer ;
     typedef typename V::const_pointer                      const_pointer ;
@@ -83,17 +83,17 @@ namespace boost { namespace numeric { namespace blasbindings {
 
 
     static pointer storage(vector_type& v) 
-    { return traits< V const >::storage( v.data() ) + v.start() ; }
+    { return vector_traits< V const >::storage( v.data() ) + v.start() ; }
 
     static size_type size(vector_type& v)
     { return v.size() ; }
 
     static size_type stride(vector_type& v) 
-    { return traits< V const >::stride( v.data() ) ; }
+    { return vector_traits< V const >::stride( v.data() ) ; }
   };
 
   template < typename V >
-  struct traits< boost::numeric::ublas::vector_slice< V > >
+  struct vector_traits< boost::numeric::ublas::vector_slice< V > >
   {
     typedef typename V::pointer                      pointer ;
     typedef typename V::const_pointer                const_pointer ;
@@ -103,17 +103,17 @@ namespace boost { namespace numeric { namespace blasbindings {
     typedef typename vector_type::value_type         value_type ;
 
     static pointer storage(vector_type& v) 
-    { return traits< V >::storage( v.data() ) + v.start() ; }
+    { return vector_traits< V >::storage( v.data() ) + v.start() ; }
 
     static size_type size(vector_type& v)
     { return v.size() ; }
 
     static size_type stride(vector_type& v) 
-    { return traits< V >::stride( v.data() ) * v.stride() ; }
+    { return vector_traits< V >::stride( v.data() ) * v.stride() ; }
   };
 
   template < typename V >
-  struct traits< boost::numeric::ublas::vector_slice< V > const >
+  struct vector_traits< boost::numeric::ublas::vector_slice< V > const >
   {
     typedef typename V::const_pointer                      pointer ;
     typedef typename V::const_pointer                      const_pointer ;
@@ -124,17 +124,17 @@ namespace boost { namespace numeric { namespace blasbindings {
 
 
     static pointer storage(vector_type& v) 
-    { return traits< V const >::storage( v.data() ) + v.start() ; }
+    { return vector_traits< V const >::storage( v.data() ) + v.start() ; }
 
     static size_type size(vector_type& v)
     { return v.size() ; }
 
     static size_type stride(vector_type& v) 
-    { return traits< V const >::stride( v.data() ) * v.stride() ; }
+    { return vector_traits< V const >::stride( v.data() ) * v.stride() ; }
   };
 
   template < typename T, typename F, typename A >
-  struct traits< boost::numeric::ublas::matrix< T, F, A > >
+  struct matrix_traits< boost::numeric::ublas::matrix< T, F, A > >
   {
     typedef typename A::pointer                      pointer ;
     typedef boost::numeric::ublas::matrix< T, F, A > matrix_type ;
@@ -158,7 +158,7 @@ namespace boost { namespace numeric { namespace blasbindings {
   };
 
   template < typename T, typename F, typename A >
-  struct traits< boost::numeric::ublas::matrix< T, F, A > const >
+  struct matrix_traits< boost::numeric::ublas::matrix< T, F, A > const >
   {
     typedef A const                                        allocator ;
     typedef typename allocator::const_pointer              pointer ;
@@ -186,7 +186,7 @@ namespace boost { namespace numeric { namespace blasbindings {
   };
 
   template < typename M >
-  struct traits< boost::numeric::ublas::matrix_row< M > >
+  struct vector_traits< boost::numeric::ublas::matrix_row< M > >
   {
     typedef typename M::pointer                      pointer ;
     typedef typename M::const_pointer                      const_pointer ;
@@ -197,17 +197,17 @@ namespace boost { namespace numeric { namespace blasbindings {
 
 
     static pointer storage(matrix_type& m) 
-    { return traits< M >::storage( m.data() ) + m.index() ; }       // supposes column_major !!!
+    { return matrix_traits< M >::storage( m.data() ) + m.index() ; }       // supposes column_major !!!
 
     static size_type size(matrix_type& m)
     { return m.size() ; }
 
     static size_type stride(matrix_type& m) 
-    { return traits< M >::stride1( m.data() ) ; }     // supposes column_major
+    { return matrix_traits< M >::stride1( m.data() ) ; }     // supposes column_major
   };
 
   template < typename M >
-  struct traits< boost::numeric::ublas::matrix_row< M > const >
+  struct vector_traits< boost::numeric::ublas::matrix_row< M > const >
   {
     typedef typename M::const_pointer                     pointer ;
     typedef typename M::const_pointer                     const_pointer ;
@@ -218,17 +218,17 @@ namespace boost { namespace numeric { namespace blasbindings {
 
 
     static pointer storage(matrix_type& m) 
-    { return traits< M const >::storage( m.data() ) + m.index() ; }       // supposes column_major !!!
+    { return matrix_traits< M const >::storage( m.data() ) + m.index() ; }       // supposes column_major !!!
 
     static size_type size(matrix_type& m)
     { return m.size() ; }
 
     static size_type stride(matrix_type& m) 
-    { return traits< M const >::stride1( m.data() ) ; }     // supposes column_major
+    { return matrix_traits< M const >::stride1( m.data() ) ; }     // supposes column_major
   };
 
   template < typename M >
-  struct traits< boost::numeric::ublas::matrix_column< M > >
+  struct vector_traits< boost::numeric::ublas::matrix_column< M > >
   {
     typedef typename M::pointer                       pointer ;
     typedef typename M::const_pointer                 const_pointer ;
@@ -239,17 +239,17 @@ namespace boost { namespace numeric { namespace blasbindings {
 
 
     static pointer storage(matrix_type& m) 
-    { return traits< M >::storage( m.data() ) + ( m.index() * traits< M >::stride1( m.data() ) ) ; }       // supposes column_major !!!
+    { return matrix_traits< M >::storage( m.data() ) + ( m.index() * matrix_traits< M >::stride1( m.data() ) ) ; }       // supposes column_major !!!
 
     static size_type size(matrix_type& m)
     { return m.size() ; }
 
     static size_type stride(matrix_type& m) 
-    { return traits< M >::stride2( m.data() ) ; }     // supposes column_major
+    { return matrix_traits< M >::stride2( m.data() ) ; }     // supposes column_major
   };
 
   template < typename M >
-  struct traits< boost::numeric::ublas::matrix_column< M > const >
+  struct vector_traits< boost::numeric::ublas::matrix_column< M > const >
   {
     typedef typename M::const_pointer                       pointer ;
     typedef typename M::const_pointer                       const_pointer ;
@@ -260,13 +260,13 @@ namespace boost { namespace numeric { namespace blasbindings {
 
 
     static pointer storage(matrix_type& m) 
-    { return traits< M const >::storage( m.data() ) + ( m.index() * traits< M >::stride1( m.data() ) ) ; }       // supposes column_major !!!
+    { return matrix_traits< M const >::storage( m.data() ) + ( m.index() * matrix_traits< M >::stride1( m.data() ) ) ; }       // supposes column_major !!!
 
     static size_type size(matrix_type& m)
     { return m.size() ; }
 
     static size_type stride(matrix_type& m) 
-    { return traits< M const >::stride2( m.data() ) ; }     // supposes column_major
+    { return matrix_traits< M const >::stride2( m.data() ) ; }     // supposes column_major
   };
 
 }}}

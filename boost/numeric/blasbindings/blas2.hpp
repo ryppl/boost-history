@@ -15,16 +15,16 @@ namespace boost { namespace numeric { namespace blasbindings {
     typename matrix_type, typename vector_type_x, typename vector_type_y 
     >
   void gemv(const char TRANS, 
-	    const typename traits<matrix_type>::value_type &alpha, 
+	    const typename matrix_traits<matrix_type>::value_type &alpha, 
 	    const matrix_type &a, 
 	    const vector_type_x &x, 
-	    const typename traits<vector_type_y>::value_type &beta,
+	    const typename vector_traits<vector_type_y>::value_type &beta,
 	    vector_type_y &y
 	    )
   {
-    typedef traits< const matrix_type >                     mtraits ; 
-    typedef traits< const vector_type_x >                   xvtraits ; 
-    typedef traits< vector_type_y >                         yvtraits ; 
+    typedef matrix_traits< const matrix_type >                     mtraits ; 
+    typedef vector_traits< const vector_type_x >                   xvtraits ; 
+    typedef vector_traits< vector_type_y >                         yvtraits ; 
     typedef typename mtraits::value_type                    value_type ;
     typedef typename value_traits< value_type >::value_type bind_type ;
 
@@ -55,10 +55,10 @@ namespace boost { namespace numeric { namespace blasbindings {
     typename matrix_type, typename vector_type_x, typename vector_type_y 
     >
   inline 
-  void gemv(const typename traits<matrix_type>::value_type &alpha, 
+  void gemv(const typename matrix_traits<matrix_type>::value_type &alpha, 
 	    const matrix_type &a, 
 	    const vector_type_x &x, 
-	    const typename traits<vector_type_y>::value_type &beta,
+	    const typename vector_traits<vector_type_y>::value_type &beta,
 	    vector_type_y &y
 	    )
   {
@@ -73,7 +73,7 @@ namespace boost { namespace numeric { namespace blasbindings {
   inline 
   void gemv(const matrix_type &a, const vector_type_x &x, vector_type_y &y)
   {
-    typedef typename traits<matrix_type>::value_type val_t; 
+    typedef typename matrix_traits<matrix_type>::value_type val_t; 
     gemv( NO_TRANSPOSE, (val_t) 1, a, x, (val_t) 0, y );
   }
 
