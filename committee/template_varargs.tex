@@ -1,6 +1,7 @@
 \documentclass{article}
 \usepackage{hyperref}
 \usepackage{vmargin}
+\usepackage{amsmath}
 \setpapersize{USletter}
 \setmarginsrb{1in}{1in}{1in}{1in}{0.25in}{0.25in}{0in}{0in}
 
@@ -104,7 +105,7 @@ Here, {\tt T} is the name of the template type parameter and {\tt
 (possibly empty) set of template arguments given to {\tt Foo}.
 Template parameter packs may contain template type, non-type, and
 template template arguments and are represented as an unspecified
-class type.
+class type when a type is required.
 
 Function templates may also be variadic templates in the same manner
 as class templates.  Arguments can be specified explicitly when
@@ -168,7 +169,7 @@ so that, for instance, a {\tt printf}-like function may pass the
 remaining arguments on like this:
 \begin{verbatim}
 template<typename T, ... Args>
-  void printf(const char* s, const T& next, Args... args)
+  void printf(const char* s, const T& next, const Args&... args)
   {
     // print characters in s until we hit a formatting command
     // format ``next'' by converting it as appropriate
@@ -395,10 +396,12 @@ implementation of the polymorphic function adaptors~\cite{Gregor02}
 proposal, which has placed the most stress on the formulation of
 variadic templates thus far.
 
-The class type of a template parameter pack \texttt{<T1, T2, ..., TN}
-contains unnamed values here denoted \texttt{t1, t2, ..., tN} of types
-\texttt{T1, T2, ..., TN}, respectively, and must provide the following
-when all \texttt{Ti} are types:
+\subsection{The types of parameter packs}
+Each template parameter pack \texttt{<T1, T2, ..., TN} has an
+associated class type that contains unnamed values here denoted
+\texttt{t1, t2, ..., tN} of types \texttt{T1, T2, ..., TN},
+respectively, and must provide the following when all \texttt{Ti} are
+types:
 \begin{itemize}
 \item A default constructor that default-initializes \texttt{t1, t2,
     ..., tN}, if the types \texttt{<T1, T2, ..., TN} have default
@@ -447,6 +450,27 @@ as, e.g., a structure containing the same types as in the example
 above, implementations may elide these copy constructions by
 performing parameter pack layout in a manner that coincides with the
 activation record for a particular platform.
+
+The types associated with template parameter packs \textit{may not} be
+be used in conjunction with the ellipsis operator. For instance:
+
+\begin{verbatim}
+template<typename T> void bar(const T& x);
+
+template<typename T1, ... Args>
+  void foo(const T1&, const Args& args)
+  { 
+    foo(args...); // okay
+    bar(args); // okay
+  }
+
+template<typename T> 
+  void bar(const T& x)
+  {
+    T y = x; // okay for instantiation
+    foo(x...); // not okay: x is not a parameter pack
+  }
+\end{verbatim}
 
 \section{Examples}
 To demonstrate the use of variadic templates, this section gives
@@ -868,11 +892,11 @@ template<typename X, typename Args> X& mu(X& x, Args&)
   { return x; }
 
 // Return type of bind(...)
-template<typename F, typename BoundArgs>
+template<typename F, ... BoundArgs>
 struct binder
 {
-  binder(const F& f, const BoundArgs& bound_args)
-    : f(f), bound_args(bound_args) {}
+  binder(const F& f, const BoundArgs&... bound_args)
+    : f(f), bound_args(bound_args...) {}
 
   template<... Args> auto operator()(Args&... args)
     { return lambda(f)(mu(bound_args, args...)...); }
@@ -886,20 +910,20 @@ private:
 };
 
 // Helper to construct binder objects
-template<typename F, typename BoundArgs>
-  binder<F, BoundArgs> make_binder(F f, const BoundArgs& bound_args)
-  { return binder<F, BoundArgs>(f, bound_args); }
+template<typename F, ... BoundArgs>
+  binder<F, BoundArgs...> make_binder(F f, const BoundArgs&... bound_args)
+  { return binder<F, BoundArgs...>(f, bound_args...); }
 
 // Determine if a type T is a binder type
 template<typename T> struct is_bind_expression : integral_constant<bool, false> {};
 
-template<typename F, typename BoundArgs>
-struct is_bind_expression<binder<F, BoundArgs> > : integral_constant<bool, true> {};
+template<typename F, ... BoundArgs>
+struct is_bind_expression<binder<F, BoundArgs...> > : integral_constant<bool, true> {};
 
 // Bind overload for function objects and function pointers
 template<typename F, ... BoundArgs>
   auto bind(F f, const BoundArgs&... bound_args)
-  { return binder<F, BoundArgs>(f, bound_args); }
+  { return binder<F, BoundArgs...>(f, bound_args...); }
 
 // Bind overload for member pointers (both function and data)
 template<typename Class, typename T, ... BoundArgs>
@@ -909,6 +933,141 @@ template<typename Class, typename T, ... BoundArgs>
 \normalsize
 
 \section{Alternatives \& Extensions}
+\subsection{Ellipsis operator for ordinary class types}
+One extension of the ellipsis operator would permit it to be applied
+for any class type, which would have the effect of unpacking all of
+the fields in that class type into separate arguments. This
+information could be used for compile-time reflective metaprogramming,
+e.g., to perform automatic marshalling or to construct property
+inspectors. There are several open questions to be considered for this
+extension:
+
+\begin{enumerate}
+\item How should base classes be handled? Base classes need to be
+  forbidden (severely limiting), enumerated as arguments in some
+  defined order, or have their fields enumerated. The middle option
+  provides the most information, assuming that some method exists to
+  distinguish a base class from a member.
+
+\item How should protected/private members or base classes be
+  handled? Enumerating protected and private members is essential for
+  many applications of compile-time reflection, but through this
+  operator one can easily (and even accidentally) break
+  encapsulation. 
+  
+\item Would it lead to confusing situations? The proposed ellipsis
+  operator is very different from other C++ operators, because it
+  essentially permits macro-like expansion via template parameters. If
+  extended to support arbitrary class types, problems involving the
+  use of the ellipsis operator might be harder to debug, because,
+  e.g., one may accidentally use \texttt{...} on a type that was never
+  meant to be unbundled. Without this extension, diagnosing errors in
+  the use of \texttt{...} would be very easy and very effective.
+
+\item What syntax should we use? If the ellipsis operator applies to
+  any class type, it is not clear what types the \texttt{...} binds
+  to. We will require a new syntax that explicitly states which types
+  to unpack.
+\end{enumerate}
+
+The combination of these factors (especially \#2) leads us to believe
+that reflection should be supported differently, although it is very
+likely that the underlying mechanism will take advantage of variadic
+templates. 
+
+\subsection{Parameter pack Nth element and size operators}
+Access to the N$^\text{th}$ element of a parameter pack requires a
+linear number of instantiation, as in the \texttt{tuple\_element}
+definition in Sec.~\ref{tupleimpl}. A further extension may provide a
+new operator that accesses the N$^\text{th}$ element of a parameter
+pack without the linear number of instantiations. The suggested syntax
+for such an operator involves two new operators: \texttt{.[]} to
+access values and \texttt{.<>} to access types. For instance:
+
+\begin{verbatim}
+template<int N, typename Tuple> struct tuple_element;
+
+template<int N, ... Elements>
+  struct tuple_element<tuple<Elements...> >
+  {
+    typedef Elements.<N> type;
+  };
+
+template<int N, ... Elements>
+  Elements.<N>& get(tuple<Elements...>& t)
+  { return t.[N]; }
+
+template<int N, ... Elements>
+  const Elements.<N>& get(const tuple<Elements...>& t)
+  { return t.[N]; }
+\end{verbatim}
+
+In addition, support for an operation returning the length (i.e.,
+number of elements) in a parameter pack would permit the entirety of
+the tuple proposal~\cite{Jarvi02} (plus other metaprogramming tasks)
+to be implemented without incurring a large number of
+instantiations. The \texttt{sizeof} operator, when provided with an
+argument followed by an ellipsis, could provide the number of elements
+in a parameter pack. For instance:
+
+\begin{verbatim}
+template<typename Tuple> struct tuple_size;
+
+template<... Elements>
+  struct tuple_size<tuple<Elements...> > 
+    : integral_constant<size_t, sizeof(Elements...)> { };
+\end{verbatim}
+
+While these extensions may be useful, we believe that they introduce a
+large amount of syntactic sugar that will not be very important in
+practice. For the cases such as \texttt{tuple\_element} and
+\texttt{tuple\_size} that incur a linear number of instantiations
+without these extensions, the definitions can be manually ``unrolled''
+to alleviate these problems, as is done for the \texttt{mu} function
+in Sec.~\ref{bindimpl}.
+
+\subsection{Overloadable operator \texttt{...}}
+This proposal introduces \texttt{...} as a full-fledged operator only
+usable for special, compiler-defined parameter packs. Some
+user-defined types (notable the library-defined \texttt{tuple} type)
+may wish to present a parameter-pack---like interface and support the
+ellipsis operator. \texttt{operator...} could be a nonstatic member
+function taking zero arguments and returning a parameter pack. For
+instance, within the \texttt{tuple} type:
+
+\begin{verbatim}
+template<... Elements>
+  class tuple 
+  {
+    // ...
+  public:
+    Elements operator...() const { return elements; }
+
+  private:
+    Elements elements;
+  };
+\end{verbatim}
+
+The down side to allowing overloading of \texttt{operator...} is that
+it will require a new syntax for the \texttt{...} operator. For
+instance, consider the following code:
+
+\begin{verbatim}
+template<...> struct bar;
+
+template<typename T1, typename T2>
+  struct foo
+  {
+    typedef foo<bar<T1, T2>...> > foobar;
+  };
+\end{verbatim}
+
+When neither or both of \texttt{T1} and \texttt{T2} have an
+\texttt{operator...},, the instantiation is ill-formed. This ambiguity
+delays checking of the use of the ellipsis operator in templates until
+instantiation time, so we have decided not to include it in this
+version of the proposal.
+
 \subsection{Extended template argument deduction}
 One potential extension to this proposal we have considered is to
 allow parameter packs to occur before the end of the template header
