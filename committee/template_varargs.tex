@@ -525,17 +525,17 @@ struct mem_fn_adaptor
     { return (object.*pmf)(args...); }
 
   template<... Args>
-  result_type operator()(const Class& object, Args... args) const
+  result_type operator()(const Class& object, Args&... args) const
     { return (object.*pmf)(args...); }
 
   template<typename T, ... Args>
   typename enable_if<(!is_base_of<Class, T>::value), result_type>::type
-  operator()(T& ptr, Args... args) const
+  operator()(T& ptr, Args&... args) const
     { return ((*ptr).*pmf)(args...); }
 
   template<typename T, ... Args>
   typename enable_if<(!is_base_of<Class, T>::value), result_type>::type
-  operator()(const T& ptr, Args... args) const
+  operator()(const T& ptr, Args&... args) const
     { return ((*ptr).*pmf)(args...); }
 
 private:
@@ -768,14 +768,13 @@ struct bad_function_call : public std::exception {};
 
 template<typename> struct function;
 
-
 template<typename R, ... ArgumentTypes>
   struct function<R(ArgumentTypes...)>
   {
     typedef R result_type;
 
     template<typename Functor>
-      auto functor_invoker(ArgumentTypes... args) const
+      auto functor_invoker(ArgumentTypes&... args) const
       { return (*static_cast<Functor*>(functor))(args...); }
     
     template<typename Functor> 
@@ -861,7 +860,7 @@ template<typename R, ... ArgumentTypes>
 
     operator bool() const { return invoker; }
 
-    template<... Args> result_type operator()(Args... args) const
+    result_type operator()(ArgumentTypes... args) const
     {
       if (!invoker) throw bad_function_call;
       return (this->*invoker)(args...);
