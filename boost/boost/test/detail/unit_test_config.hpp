@@ -77,6 +77,9 @@ namespace unit_test_framework = unit_test;
 //  Revision History :
 //  
 //  $Log$
+//  Revision 1.23.6.1  2004/12/06 03:37:22  djowel
+//  bring back boost.test for 1.6
+//
 //  Revision 1.23  2004/10/01 10:52:11  rogeeff
 //  shared some workaround detection
 //

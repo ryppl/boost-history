@@ -32,6 +32,9 @@
 //  Revision History :
 //  
 //  $Log$
+//  Revision 1.9.8.1  2004/12/06 03:37:24  djowel
+//  bring back boost.test for 1.6
+//
 //  Revision 1.9  2004/07/19 12:30:49  rogeeff
 //  guard rename
 //

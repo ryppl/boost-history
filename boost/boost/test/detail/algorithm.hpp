@@ -217,6 +217,9 @@ find_last_not_of( BidirectionalIterator1 first1, BidirectionalIterator1 last1,
 //  Revision History :
 //  
 //  $Log$
+//  Revision 1.6.8.1  2004/12/06 03:37:22  djowel
+//  bring back boost.test for 1.6
+//
 //  Revision 1.6  2004/07/19 12:17:48  rogeeff
 //  guard rename
 //

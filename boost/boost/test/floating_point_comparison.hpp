@@ -120,6 +120,9 @@ compute_tolerance( FPT percentage_tolerance )
 //  Revision History :
 //  
 //  $Log$
+//  Revision 1.18.8.1  2004/12/06 03:37:21  djowel
+//  bring back boost.test for 1.6
+//
 //  Revision 1.18  2004/07/19 12:14:09  rogeeff
 //  guard rename
 //  tolerance parameter renamed for clarity

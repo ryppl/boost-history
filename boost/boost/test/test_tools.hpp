@@ -577,6 +577,9 @@ namespace test_toolbox = test_tools;
 //  Revision History :
 //
 //  $Log$
+//  Revision 1.45.6.1  2004/12/06 03:37:22  djowel
+//  bring back boost.test for 1.6
+//
 //  Revision 1.45  2004/07/25 08:31:10  rogeeff
 //  don't use wchar if BOOST_NO_CWCHAR is defined
 //

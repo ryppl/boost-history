@@ -324,6 +324,9 @@ create_test_case( void (UserTestCase::*fct_)( ParamType ), std::string name_, bo
 //  Revision History :
 //  
 //  $Log$
+//  Revision 1.24.8.1  2004/12/06 03:37:22  djowel
+//  bring back boost.test for 1.6
+//
 //  Revision 1.24  2004/07/19 12:16:41  rogeeff
 //  guard rename
 //

@@ -74,6 +74,9 @@ init_unit_test_suite( int /* argc */, char* /* argv */ [] ) {
 //  Revision History :
 //  
 //  $Log$
+//  Revision 1.11.8.1  2004/12/06 03:37:21  djowel
+//  bring back boost.test for 1.6
+//
 //  Revision 1.11  2004/07/19 12:12:40  rogeeff
 //  guard rename
 //

@@ -109,6 +109,9 @@ create_test_case( function1<void,ParameterType> const& fct_, std::string name_,
 //  Revision History :
 //  
 //  $Log$
+//  Revision 1.19.8.1  2004/12/06 03:37:22  djowel
+//  bring back boost.test for 1.6
+//
 //  Revision 1.19  2004/07/19 12:16:41  rogeeff
 //  guard rename
 //

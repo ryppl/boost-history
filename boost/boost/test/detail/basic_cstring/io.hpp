@@ -68,6 +68,9 @@ operator<<( std::basic_ostream<CharT1,Tr>& os, basic_cstring<CharT2> const& str 
 //  Revision History :
 //  
 //  $Log$
+//  Revision 1.9.6.1  2004/12/06 03:37:23  djowel
+//  bring back boost.test for 1.6
+//
 //  Revision 1.9  2004/09/19 09:22:13  rogeeff
 //  ios fix for classic iostreams
 //

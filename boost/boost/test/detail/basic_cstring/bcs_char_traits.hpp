@@ -142,6 +142,9 @@ public:
 //  Revision History :
 //  
 //  $Log$
+//  Revision 1.6.6.1  2004/12/06 03:37:23  djowel
+//  bring back boost.test for 1.6
+//
 //  Revision 1.6  2004/10/01 10:51:28  rogeeff
 //  gcc 2.95 workarounds
 //

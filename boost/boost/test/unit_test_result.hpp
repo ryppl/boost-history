@@ -127,6 +127,9 @@ struct unit_test_result_tracker {
 //  Revision History :
 //  
 //  $Log$
+//  Revision 1.22.6.1  2004/12/06 03:37:22  djowel
+//  bring back boost.test for 1.6
+//
 //  Revision 1.22  2004/08/04 02:50:27  rogeeff
 //  darwin workarounds
 //

@@ -107,6 +107,9 @@ operator <( basic_cstring<CharT> x, basic_cstring<CharT> y )
 //  Revision History :
 //  
 //  $Log$
+//  Revision 1.7.6.1  2004/12/06 03:37:23  djowel
+//  bring back boost.test for 1.6
+//
 //  Revision 1.7  2004/08/11 03:18:49  rogeeff
 //  second tru64cxx65 fix
 //

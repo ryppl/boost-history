@@ -51,6 +51,9 @@ const_string retrieve_framework_parameter( const_string parameter_name_, int* ar
 //  Revision History :
 //  
 //  $Log$
+//  Revision 1.16.6.1  2004/12/06 03:37:22  djowel
+//  bring back boost.test for 1.6
+//
 //  Revision 1.16  2004/08/18 05:28:57  rogeeff
 //  another tru64cxx65 workaround
 //

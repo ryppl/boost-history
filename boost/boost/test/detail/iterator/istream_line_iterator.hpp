@@ -89,6 +89,9 @@ typedef basic_istream_line_iterator<wchar_t>    wistream_line_iterator;
 //  Revision History :
 //  
 //  $Log$
+//  Revision 1.7.6.1  2004/12/06 03:37:23  djowel
+//  bring back boost.test for 1.6
+//
 //  Revision 1.7  2004/09/19 09:22:13  rogeeff
 //  ios fix for classic iostreams
 //

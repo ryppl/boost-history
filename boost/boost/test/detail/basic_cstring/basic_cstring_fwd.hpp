@@ -40,6 +40,9 @@ typedef char const* const           c_literal_string;
 //  Revision History :
 //  
 //  $Log$
+//  Revision 1.5.6.1  2004/12/06 03:37:23  djowel
+//  bring back boost.test for 1.6
+//
 //  Revision 1.5  2004/08/18 05:28:57  rogeeff
 //  another tru64cxx65 workaround
 //
