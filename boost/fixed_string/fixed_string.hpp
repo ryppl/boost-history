@@ -84,8 +84,8 @@
          };
       }
 
-      template< typename CharT, class Policy = std::char_traits< CharT > >
-      struct fixed_string_base: public detail::basic_string_impl< detail::fixed_string_iface< CharT, Policy > >
+      template< typename CharT, class CharStringPolicy = std::char_traits< CharT > >
+      struct fixed_string_base: public detail::basic_string_impl< detail::fixed_string_iface< CharT, CharStringPolicy > >
       {
          public: // extended interface
             inline                operator const CharT *() const
@@ -105,8 +105,8 @@
       typedef fixed_string_base< char >                    char_string;
       typedef fixed_string_base< wchar_t >                 wchar_string;
 
-      template< size_t n, typename CharT = char, class StringPolicy = std::char_traits< CharT > >
-      class fixed_string: public fixed_string_base< CharT, StringPolicy >
+      template< size_t n, typename CharT = char, class CharStringPolicy = std::char_traits< CharT > >
+      class fixed_string: public fixed_string_base< CharT, CharStringPolicy >
       {
          private:
             CharT                      str[ n ];
@@ -119,12 +119,12 @@
                                        zero_buffer_error, ok
                                      >::type::value                  zero_buffer_check;
             // string policy check: StringPolicy::char_type == CharT
-            struct string_policy_error{};
-            typedef typename mpl::if_< is_same< typename StringPolicy::char_type, CharT >,
-                                       ok, string_policy_error
-                                     >::type::value                  string_policy_check;
+            struct char_string_policy_error{};
+            typedef typename mpl::if_< is_same< typename CharStringPolicy::char_type, CharT >,
+                                       ok, char_string_policy_error
+                                     >::type::value                  char_string_policy_check;
          public:
-            typedef fixed_string_base< CharT, StringPolicy >         base_type;
+            typedef fixed_string_base< CharT, CharStringPolicy >     base_type;
             typedef typename base_type::size_type                    size_type;
             typedef typename base_type::iterator                     iterator;
             typedef typename base_type::const_iterator               const_iterator;
@@ -162,12 +162,10 @@
             }
             inline reference                     at_( size_type i )
             {
-               if( i >= n )            throw( std::out_of_range( "" ));
                return( str[ i ]);
             }
             inline const_reference               at_( size_type i ) const
             {
-               if( i >= n )            throw( std::out_of_range( "" ));
                return( str[ i ]);
             }
          private: // size and capacity
@@ -185,7 +183,7 @@
             }
             inline void                          resize_( size_t sz, CharT c )
             {
-               if( sz > len )          StringPolicy::assign( str + len, sz - len, c );
+               if( sz > len )          CharStringPolicy::assign( str + len, sz - len, c );
                len = sz;
                str[ len ] = CharT();
             }
@@ -200,16 +198,16 @@
          private: // string operations
             inline void                          assign_( const CharT * s, size_type l )
             {
-               if( l == npos )         l = StringPolicy::length( s );
+               if( l == npos )         l = CharStringPolicy::length( s );
                len = ( l > n ) ? ( n - 1 ) : l;
-               StringPolicy::copy( str, s, len );
+               CharStringPolicy::copy( str, s, len );
                str[ len ] = CharT();
             }
             inline void                          append_( const CharT * s, size_type l = npos )
             {
-               if( l == npos )         l = StringPolicy::length( s );
+               if( l == npos )         l = CharStringPolicy::length( s );
                l = (( l + len ) > n ) ? ( n - len ) : l;
-               StringPolicy::copy( str + len, s, l );
+               CharStringPolicy::copy( str + len, s, l );
                len += l - 1;
                str[ len ] = CharT();
             }
