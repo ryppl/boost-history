@@ -54,8 +54,8 @@
          virtual const char *                    c_str()  const = 0;
          virtual const char *                    data()   const = 0;
          virtual char &                          at( size_t i ) = 0;
-         virtual char *                          iter_offset(       ptrdiff_t ) = 0;
-         virtual const char *                    const_iter_offset( ptrdiff_t ) const = 0;
+         virtual char *                          iter_offset( ptrdiff_t ) = 0;
+         virtual const char *                    iter_offset( ptrdiff_t ) const = 0;
 
          virtual size_t                          length()   const = 0;
          virtual size_t                          capacity() const = 0;
@@ -75,8 +75,8 @@
          virtual const wchar_t *                 c_str()  const = 0;
          virtual const wchar_t *                 data()   const = 0;
          virtual wchar_t &                       at( size_t i ) = 0;
-         virtual wchar_t *                       iter_offset(       ptrdiff_t ) = 0;
-         virtual const wchar_t *                 const_iter_offset( ptrdiff_t ) const = 0;
+         virtual wchar_t *                       iter_offset( ptrdiff_t ) = 0;
+         virtual const wchar_t *                 iter_offset( ptrdiff_t ) const = 0;
 
          virtual size_t                          length()   const = 0;
          virtual size_t                          capacity() const = 0;
@@ -145,7 +145,7 @@
             {
                return( str + off );
             }
-            inline const CharT *                 const_iter_offset( difference_type off ) const
+            inline const CharT *                 iter_offset( difference_type off ) const
             {
                return( str + off );
             }

@@ -25,8 +25,8 @@
       const value_type * c_str()  const;
       const value_type * data()   const;
       value_type &       at( size_type i );
-      iterator           iter_offset(       difference_type );
-      const_iterator     const_iter_offset( difference_type ) const;
+      iterator           iter_offset( difference_type );
+      const_iterator     iter_offset( difference_type ) const;
       size_type          length()   const;
       size_type          capacity() const;
       size_type          max_size() const;
@@ -123,7 +123,7 @@
          public: // 21.3.2: iterators
             inline const_iterator                begin() const
             {
-               return( get_impl().const_iter_offset( 0 ));
+               return( get_impl().iter_offset( 0 ));
             }
             inline iterator                      begin()
             {
@@ -131,7 +131,7 @@
             }
             inline const_iterator                end() const
             {
-               return( get_impl().const_iter_offset( size()));
+               return( get_impl().iter_offset( size()));
             }
             inline iterator                      end()
             {
@@ -139,19 +139,19 @@
             }
             inline const_reverse_iterator        rbegin() const
             {
-               return( const_reverse_iterator( get_impl().const_iter_offset( size())));
+               return( const_reverse_iterator( end()));
             }
             inline reverse_iterator              rbegin()
             {
-               return( reverse_iterator( get_impl().iter_offset( size() )));
+               return( reverse_iterator( end()));
             }
             inline const_reverse_iterator        rend() const
             {
-               return( const_reverse_iterator( get_impl().const_iter_offset( -1 )));
+               return( const_reverse_iterator( begin()));
             }
             inline reverse_iterator              rend()
             {
-               return( reverse_iterator( get_impl().iter_offset( -1 )));
+               return( reverse_iterator( begin()));
             }
          public: // 21.3.3: capacity
             inline size_type                     size() const
