@@ -337,12 +337,11 @@ public:
     template <typename B, typename A>
     friend bool operator==(const dynamic_bitset<B, A>& a,
                            const dynamic_bitset<B, A>& b);
+
     template <typename B, typename A>
     friend bool operator<(const dynamic_bitset<B, A>& a,
                           const dynamic_bitset<B, A>& b);
-    template <typename B, typename A>
-    friend bool operator>(const dynamic_bitset<B, A>& a,
-                          const dynamic_bitset<B, A>& b);
+
 
     template <typename B, typename A, typename BlockOutputIterator>
     friend void to_block_range(const dynamic_bitset<B, A>& b,
@@ -366,10 +365,6 @@ public:
                                     typename dynamic_bitset<B, A>::size_type nbits, dynamic_bitset<B, A>& b);
 
 #endif
-
-private:
-    void m_zero_unused_bits();
-    size_type m_do_find_from(size_type first_block) const;
 
 
 public:
@@ -411,10 +406,13 @@ private:
     BOOST_STATIC_CONSTANT(int, ulong_width = std::numeric_limits<unsigned long>::digits);
     typedef std::vector<block_type, allocator_type> buffer_type;
 
-    // [gps] moved here
+    void m_zero_unused_bits();
+    size_type m_do_find_from(size_type first_block) const;
+
     static size_type block_index(size_type pos) { return pos / bits_per_block; }
     static int bit_index(size_type pos) { return pos % bits_per_block; }
     static Block bit_mask(size_type pos) { return Block(1) << bit_index(pos); }
+
 
 
 BOOST_DYN_BITSET_PRIVATE:
