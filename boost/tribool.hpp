@@ -275,5 +275,13 @@ inline tribool operator||(tribool x, tribool y)
 
 } // end namespace boost
 
+#define BOOST_TRIBOOL_THIRD_STATE(Name)					\
+namespace boost {							\
+inline bool Name(tribool x, indeterminate_t dummy = indeterminate_t())	\
+{									\
+  return x.value == tribool::indeterminate_value;			\
+}									\
+} // end namespace boost
+
 #endif // BOOST_TRIBOOL_HPP
 
