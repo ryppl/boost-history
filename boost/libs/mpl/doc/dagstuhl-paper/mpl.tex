@@ -10,6 +10,7 @@
 \newcommand{\mpgmers}{meta\-program\-mer}
 \newcommand{\mfn}{meta\-function}
 \newcommand{\mfns}{meta\-functions}
+\newcommand{\mdat}{meta\-data}
 
 \input{defs}
 
@@ -62,13 +63,13 @@ is a context-free grammar in EBNF, and its output is a program which
 parses that grammar. Note that in this case the \mpgm{} (YACC) is
 written in a language (`C') which does not directly support the
 description of generated programs. These specifications, which we'll
-call \emph{meta-data}, are not written in `C', but in a
+call \emph{\mdat}, are not written in `C', but in a
 \emph{meta-language}. Because the the rest of the user's program
 typically requires a general-purpose programming system and must
-interact with the generated parser, the meta-data is translated into
+interact with the generated parser, the \mdat\ is translated into
 `C', which is then compiled and linked together with the rest of the
-system. The meta-data thus undergoes two translation steps, and the
-user is always very conscious of the boundary between his meta-data
+system. The \mdat\ thus undergoes two translation steps, and the
+user is always very conscious of the boundary between his \mdat\
 and the rest of his program.
 % need bibliography reference for YACC
 
@@ -94,7 +95,7 @@ idioms used for metaprogramming in C++.
 
 The availability of \emph{non-type template parameters} makes it
 possible to perform integer computations at compile-time. For example,
-the following tiny meta-function computes the factorial of its
+the following template computes the factorial of its
 argument:
 
 {\footnotesize
@@ -113,12 +114,16 @@ struct factorial<0>
 \end{verbatim}
 }
 
-Because of the hard line between the expression of compile-time and
-runtime computation in \Cpp, metaprograms look different from their
-runtime counterparts. Thus, although as in Scheme the \Cpp\ \mpgmer\
-writes her code in the same language as the ordinary program, only a
-subset of the language is available: those expressions which
-can be evaluated at compile-time. Compare the above with a
+The program fragment above is called a \emph{\mfn}, and it is easy to
+see its relationship to a function designed to be evaluated at
+runtime: the ``\mfn\ argument'' is passed as a template parameter, and
+its ``return value'' is defined as a nested static constant.  Because
+of the hard line between the expression of compile-time and runtime
+computation in \Cpp, metaprograms look different from their runtime
+counterparts. Thus, although as in Scheme the \Cpp\ \mpgmer\ writes
+her code in the same language as the ordinary program, only a subset
+of the full \Cpp\ language is available to her: those expressions
+which can be evaluated at compile-time. Compare the above with a
 straightforward runtime definition of the factorial function:
 
 {\footnotesize
@@ -134,12 +139,12 @@ While it is easy to see the analogy between the two recursive
 defintions, recursion is in general more important to \Cpp{}
 metaprograms than it is to runtime \Cpp. In contrast to languages such
 as Lisp where recursion is idiomatic, \Cpp\ programmers will typically
-avoid it when possible. This is done not only for efficiency
+avoid recursion when possible. This is done not only for efficiency
 reasons, but also because of ``cultural momentum'': recursive programs
-are just harder (for \Cpp\ programmers) to think about. Like pure Lisp,
-though, the \Cpp\ template mechanism is a \emph{functional} programming
-language: as such it rules out the use of data mutation required to
-maintain loop variables.
+are simply harder (for \Cpp\ programmers) to think about. Like pure
+Lisp, though, the \Cpp\ template mechanism is a \emph{functional}
+programming language: as such it rules out the use of data mutation
+required to maintain loop variables.
 
 A key difference between the runtime and compile-time factorial
 functions is the expression of the termination condition: our
@@ -378,7 +383,7 @@ consequences be?
 
 \begin{enumerate}
 
-\item We could write programs to interpret the meta-data directly. In
+\item We could write programs to interpret the \mdat\ directly. In
   our factorial example, the array size could have been a runtime
   quantity; then we'd have been able to use the straightforward
   factorial function. However, that would imply the use of dynamic
@@ -412,7 +417,7 @@ all_permutations(T const& input);
   tell you that the impracticality of this approach is the very reason
   YACC's existence.
 
-  In a language such as \Cpp, where the meta-data can be expressed in
+  In a language such as \Cpp, where the \mdat\ can be expressed in
   the same language as the rest of the user's program, expressivity is
   further enhanced: the user can invoke \mpgms\ directly, without
   learning a foreign syntax or interrupting the flow of his code.
@@ -819,62 +824,128 @@ Which gives us exactly what we wanted.
 %%% This intro material needs to come earlier, since you talk about
 %%% nullary functions in the previous section.  
 
-A \emph{metafunction} is an entity of a certain structure that
-represents a function invocable at compile-time.  In \Cpp\, the basic
-underlying language construct of any model of metafunction concept is
-a \emph{class template}: it can take types and/or non-type arguments
-as actual template parameters and "return" types or non-type values
-through its nested type/static const data members
-declarations. Obviously, a bare class template is the simplest
-possible model of the concept:
+\subsubsection{The Form of Metafunctions}
+
+In \Cpp\, the basic underlying language construct which allows
+parameterized compile-time computation is the \emph{class template}. A
+bare class template is the simplest possible model we could choose for
+\mfns: it can take types and/or non-type arguments as actual template
+parameters and instantiation ``returns'' a new type. For example, the
+following produces a type derived from its arguments:
 
 {\footnotesize
 \begin{verbatim}
-// 'plus' metafunction
-template<long N1, long N2>
-struct plus
+template<class N1, class N2>
+struct derive : N1, N2
 {
-    static long const value = N1 + N2;
-};
-
-// metafunction "invocation"
-long const sum = plus<5, 10>::value;
-\end{verbatim}
-}
-
-Veldhuizen [Vel95] was first to talk about class templates 
-as "compile-time functions", and [CE00] have introduced 
-"template metafunction" as an equivalent term (they also 
-use "metafunction" as the short form). As the definition 
-above shows, we use the word "metafunction" as a slightly 
-broader term. There are at least two common forms of 
-compile-time invocable entities that are used in template 
-metaprograms (see Figure 1), and we say "metafunction" when 
-we broadly refer to any of those.
-
-
-{\footnotesize
-\begin{verbatim}
-// form 1: class template metafunction (ct-metafunction)
-template< typename T1, .., typename Tn >
-struct f
-{
-    typedef ... type;
-};
-
-// form 2: function class
-struct f
-{
-    template< typename T1, .., typename Tn >
-    struct apply
-    {
-        typedef ... type;
-    };
 };
 \end{verbatim}
 }
 
-Figure 1. Two common forms of metafunction concept.
+However, this model is far too limiting: it restricts the \mfn\ result
+not only to class types, but to instantiations of a given class
+template, to say nothing of the fact that every \mfn\ invocation
+introduces an additional level of template nesting. While that might
+be acceptable for this particular \mfn\, any model which prevented us
+from ``returning'', say, \code{int} is obviously not general
+enough. To meet this basic requirement, we must rely on a nested type
+to provide our return value:
+
+{\footnotesize
+\begin{verbatim}
+template<class N1, class N2>
+struct derive
+{
+  struct type : N1, N2 {};
+};
+// silly specialization, but demonstrates ``returning'' int.
+template<>
+struct derive<void,void>
+{
+  typedef int type;
+};
+\end{verbatim}
+}
+
+Veldhuizen [Vel95] was first to talk about class templates of this
+form as ``compile-time functions'', and [CE00] have introduced
+``template \mfn'' as an equivalent term (they also use the simpler
+term ``\mfn'' as do we). While syntactically simple, however, this
+form of \mfn\ does not always interact optimally with the rest of
+\Cpp. In order to pass such a \mfn\ to another template, we need to
+use \emph{template template parameters}:
+
+{\footnotesize
+\begin{verbatim}
+// Returns F(T1,F(T2,T3))
+template<template<typename>class F, class T1, class T2, class T3>
+struct apply_twice
+{
+  typedef typename F<
+        T1
+        , typename F<T2,T3>::type
+  >::type type;
+};
+
+// A new metafunction returning a type derived from T1, T2, and T3
+template <class T1, class T2, class T3>
+struct derive3
+  : apply_twice<derive,T1,T2,T3>
+{};
+\end{verbatim}
+}
+
+Because \Cpp\ makes a strict distinction between type and class
+template template parameters, this approach creates an artificial
+``wall'' between \mfns\ and other \mdat, relegating \mfns\ to the
+status of second-class citizens. For example, recalling our
+introduction to type sequences, there's no way to make a \code{cons}
+list of \mfns:
+
+{\footnotesize
+\begin{verbatim}
+typedef cons<derive, cons<derive3, nil> > derive_functions; // error!
+\end{verbatim}
+}
+
+We might consider redefining our \code{cons} cell so we can pass
+\code{derive} as the head element:
+
+{\footnotesize
+\begin{verbatim}
+template <
+    template<template<class T,class U> class F
+  , class Tail
+> struct cons;
+\end{verbatim}
+}
+
+However, now we have another problem: \Cpp\ strictly enforces the
+\emph{arity} (number of parameters) of any template template
+parameter, so we \emph{still} can't embed \code{derive3} in a
+\code{cons} list. Fortunately, the truism that ``there is no problem
+in software which can't be solved by adding yet another level of
+indirection'' applies here. To elevate \mfns\ to the status of
+first-class objects, the MPL introduces the concept of a ``\mfn\
+class'':\footnote{This form should look familiar to anyone acquainted
+with function objects in STL, with the nexted \code{apply} template
+taking the same role as the runtime function-call operator}
+
+{\footnotesize
+\begin{verbatim}
+// metafunction class form of derive
+struct derive
+{
+  template<class N1, class N2>
+  struct apply
+  {
+    struct type : N1, N2 {};
+  };
+};
+\end{verbatim}
+}
+
+
 
 %%% Should make the link between MPL metafunction classes and STL function
 %%% objects 
