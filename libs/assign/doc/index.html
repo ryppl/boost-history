@@ -23,34 +23,103 @@
       <p align="left">
         <a href="#reference">Reference</a>
       <ul>
-        <li><a href="trim.html">Standard containers</a></li>
-        <li><a href="conv.html"><code>boost::array</code></a></li>
-        <li><a href="predicate.html"><code>boost::graph</code></a></li>
-        <li><a href="find.html"><code>boost::ublas</code></a></li>
-        <li><a href="replace.html"><code>boost::multi_array</code></a></li>
-        <li><a href="classification.html">Classification predicates</a></li>
-      </ul>
-    </li>
+        <li><a href="#stl">Standard containers</a></li>
+        <li><a href="#array"><code>boost::array</code></a></li>
+        <!--<li><a href="#graph"><code>boost::graph</code></a></li>-->
+        <li><a href="#multi_array"><code>boost::multi_array</code></a></li>
+        <li><a href="#ublas"><code>boost::ublas</code></a></li>   
+        <li><a href="#operator_plus"><code>operator+=()</code></a>  
+        <li><a href="#operator_pipe"><code>operator<<()</code></a>  
+        <li><a href="#assign"><code>function insert()</code></a></li>    
+        <li><a href="#assign"><code>function assign()</code></a></li>
+        <li><a href="#assign_all"><code>function assign_all()</code></a></li>     
+      </ul>     
     <li><a href="#extensions">Extensions</a></li>   
     <ul>
-        <li><a href="trim.html">class <code>insert_assigner</code></a></li>
-        <li><a href="conv.html">class <code>fixed_sized_assigner</code></a></li>
-    </ul>       
+        <li><a href="#insert_assigner">class <code>insert_assigner</code></a></li>
+        <li><a href="#fixed_assigner">class <code>fixed_sized_assigner</code></a></li> 
+        <li><a href="#iterator_insert">function <code>make_iterator_insertion()</code></a></li>
+        <li><a href="#iterator_assignment">function <code>make_iterator_assignment()</a> </li> </ul>       
+    <li><a href="#exceptions">Exceptions</a>
+        <ul>
+        <li><a href="assignmenr_exception">class <code>assignment_exception</code></a></li> </ul>    
+    </li>    
     <li><a href="#portability">Portability</a></li>
-    <li><a href="#rationale">Rationale</a>
-      <ul>
-        <li><a href="#regex">Regular expressions</a></li>
-      </ul>
-    </li>
+    <li><a href="#performance">Performance</a></li>
     <li><a href="#ack">Acknowledgements</a></li>
   </ul>
+  
   <hr>
+  
   <h2><a name="intro">Introduction</a></h2>
   <p>
-    Intro here.
+    The purpose of this library is to make easy to fill containers with 
+    constant data. This is particularly useful in learning, testing, and 
+    prototyping situations, but can also be handy otherwise. 
+  The library comes with predefined operators for the standard library
+  and some of the libraries from boost. It also gives access to a 
+  few classes that makes it simple to extend the functionality to
+  new handle new container types. Below are given some examples.
   </p>
   <p>
+    To fill a vector with values you write   
+    <pre>
+    #include &ltboost/assign/stl.hpp&gt
+    #include &ltvector&gt
+    using namespace std;
+    using namespace boost::assignment;
+    ...
+    {
+        vector&ltint&gt values;  
+        values += 1,2,3,4,5,6,7,8,9;
+    }
+    </pre>
+   </p> 
+   <p>
+   To fill a map with pairs of values you write
+   <pre>
+    #include &ltboost/assign/stl.hpp&gt
+    #include &ltvector&gt
+    using namespace std;
+    using namespace boost::assignment;
+    ...
+    {
+        map&ltconst char*,int&gt months;  
+        assign( months )
+    	    ( "january",   31 )( "february", 28 )
+    	    ( "march",     31 )( "april",    30 )
+    	    ( "may",       31 )( "june",     30 )
+    	    ( "july",      31 )( "august",   31 )
+    	    ( "september", 30 )( "october",  31 )
+    	    ( "november",  30 )( "december", 31 );
+    }
+   </pre> 
   </p>
+  <p>
+  Assume you have a class with a constructor that takes several arguments
+  and want to fill a vector with objects of that type. This can be done
+  like this:
+  <pre>
+    #include &ltboost/assign/stl.hpp&gt
+    #include &ltvector&gt
+    using namespace std;
+    using namespace boost::assignment;
+    ...
+    struct five
+    {
+        five( int, int, int, int, int ) { }
+        five( const string&, const string&, const string&,  
+	          const string&, const string& ) { }
+    };
+    ...
+    {
+        vector&ltfive&gt my_vector;   
+        assign( my_vector )(1,2,3,4,5) ("1","2","3","4","5")(6,7,8,9,10);
+    }
+  </pre>
+   Now <code>my_vector</code> holds three objects constructed with one of the 
+   three lists of arguments, respectively.
+ </p>
   <p>
   </p>
   <h2><a name="reference">Reference</a></h2>
