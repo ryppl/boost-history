@@ -6,8 +6,13 @@
 namespace boost {
 
   namespace detail {
+
 template<class T> inline
 bool is_neg(const T& x) { return x < T(0); }
+
+template<class T> inline
+bool is_zero(const T& x) { return x == T(0); }
+
   } // namespace detail
 
   namespace interval_lib {

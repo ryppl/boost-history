@@ -472,8 +472,10 @@ during the computations, the l-value is not modified (but it may be corrupt
 if an exception is thrown by the base type during an assignment).</p>
 
 <p>The operators <code>/</code> and <code>/=</code> will try to produce an
-empty interval if the denominator is exactly zero and a whole interval if it
-only contains zero.</p>
+empty interval if the denominator is exactly zero. If the denominator
+contains zero (but not only zero), the result will be the smallest interval
+containing the set of division results; so one of its bound will be infinite,
+but it may not be the whole interval.</p>
 
 <h4><code>lower</code> <code>upper</code> <code>median</code></h4>
 
@@ -484,7 +486,7 @@ interval (<code>(lower+upper)/2</code> rounded to nearest).
 (<code>upper-lower</code> rounded toward plus infinity).</p>
 
 <h4><code>min</code> <code>max</code> <code>abs</code> <code>square</code>
-<code>pow</code></h4>
+<code>pow</code> <code>division_part?</code></h4>
 
 <p>The functions <code>min</code>, <code>max</code> and <code>abs</code> are
 also defined. Please do not mistake them for the functions defined in the
@@ -493,8 +495,8 @@ standard library (aka <code>a&lt;b?a:b</code>, <code>a&gt;b?a:b</code>,
 property of interval arithmetic. For example, max([<i>a</i>,<i>b</i>],
 [<i>c</i>,<i>d</i>]) = {max(<i>x</i>,<i>y</i>) such that <i>x</i> in
 [<i>a</i>,<i>b</i>] and <i>y</i> in [<i>c</i>,<i>d</i>]}. They are not
-defined in the std namespace but in the boost namespace in order to avoid
-conflict with the other definitions.</p>
+defined in the <code>std</code> namespace but in the boost namespace in order
+to avoid conflict with the other definitions.</p>
 
 <p>The <code>square</code> function is quite particular. As you can expect
 from its name, it computes the square of its argument. The reason this
@@ -508,6 +510,17 @@ its better accuracy and a small performance improvement.</p>
 more accurate way to compute the integer power of an interval. Please note:
 when the power is 0 and the interval is not empty, the result is 1, even if
 the input interval contains 0.</p>
+
+<p>The functions <code>division_part1</code> and <code>division_part2</code>
+are useful when the user expects the division to return disjoint intervals if
+necessary. For example, the narrowest closed set containg [2,3] / [-2,1] is
+not ]-&#x221e;,&#x221e;[ but the union of ]-&#x221e;,-1] and [2,&#x221e;[.
+When the result of the division is representable by only one interval,
+<code>division_part1</code> returns this interval and sets the boolean
+reference to <code>false</code>. However, if the result needs two intervals,
+<code>division_part1</code> returns the negative part and sets the boolean
+reference to <code>true</code>; a call to <code>division_part2</code> is now
+needed to get the positive part.</p>
 
 <h4><code>intersect</code> <code>hull</code> <code>overlap</code>
 <code>in</code> <code>in_zero</code> <code>subset</code>
@@ -605,14 +618,14 @@ document.</p>
 <pre>namespace boost {
 namespace interval_lib {
 
-<font color="#ff0000">    /* built-in comparison policies */
-</font>    template &lt;class T&gt;  struct compare_certainly;
+<font color="#ff0000">/* built-in comparison policies */
+</font>template &lt;class T&gt;  struct compare_certainly;
 template &lt;class T&gt;  struct compare_possibly;
 template &lt;class T&gt;  struct compare_data;
 template &lt;class T, class Function&gt;  struct compare_full;
 
-<font color="#ff0000">    /* built-in rounding policy and its specializations */
-</font>    template &lt;class T&gt;  struct rounded_math;
+<font color="#ff0000">/* built-in rounding policy and its specializations */
+</font>template &lt;class T&gt;  struct rounded_math;
 template &lt;&gt;         struct rounded_math&lt;float&gt;;
 template &lt;&gt;         struct rounded_math&lt;double&gt;;
 template &lt;&gt;         struct rounded_math&lt;long double&gt;;
@@ -632,8 +645,8 @@ template &lt;class T, class Rounding = rounded_arith_opp&lt;T&gt; &gt;  struct r
 template &lt;class Rounding&gt; struct save_state;
 template &lt;class Rounding&gt; struct save_state_nothing;
 
-<font color="#ff0000">    /* built-in checking policies */
-</font>    template &lt;class T&gt; struct checking_nothing;
+<font color="#ff0000">/* built-in checking policies */
+</font>template &lt;class T&gt; struct checking_nothing;
 template &lt;class T&gt; struct checking_lax;
 template &lt;class T&gt; struct checking_strict;
 
@@ -643,15 +656,14 @@ template &lt;class Traits&gt; struct unprotect_traits;
 template &lt;class I&gt; struct unprotect;
 
 <span style="color: #FF0000">/* constants, need to be explicitly templated */
-</span>    template&lt;class I&gt; I pi();
+</span>template&lt;class I&gt; I pi();
 template&lt;class I&gt; I pi_half();
 template&lt;class I&gt; I pi_twice();
 
 <span style="color: #FF0000">/* interval explicit comparison functions</span><span style="color: #FF0000">:
-* the mode can be cer=certainly or pos=possibly,
-* the function lt=less_than, gt=greater_than, le=less_than_or_equal_to, ge=greater_than_or_equal_to
-*   eq=equal_to, ne= not_equal_to
-*/</span>
+ * the mode can be cer=certainly or pos=possibly,
+ * the function lt=less_than, gt=greater_than, le=less_than_or_equal_to, ge=greater_than_or_equal_to
+ *   eq=equal_to, ne= not_equal_to */</span>
 template &lt;class T, class Traits&gt;  bool cerlt(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
 template &lt;class T, class Traits&gt;  bool cerlt(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
 template &lt;class T, class Traits&gt;  bool cerlt(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
@@ -719,16 +731,17 @@ page.</p>
 <h4>Compilation options</h4>
 We have made many efforts to reduce the number of compilation options to a
 minimum, but depending on your platform, you may find that you need one or
-two. Some versions of gcc miss proper specialization of numeric_limits and
-using the flag <code>-DBOOST_NO_LIMITS</code> may help. Also removing the
-warnings for older gcc compilers about the lack of long double support can be
-done with the option <code>-Wno-long-double</code>. The tests and examples
-have successfully been compiled with gcc 2.95 on x86 (Debian, FreeBSD), on
-sparc (Debian); with gcc 2.95 and stlport on x86 (Solaris), sparc (Solaris),
-and powerpc (Debian); with gcc 2.96, 3.04, 3.1.1, and 3.2 on x86 (Debian);
-and with SunPRO 5.3 (Solaris). There are some issues with Borland on x86
-(Windows), and Visual C++ which we're working on. We know some workarounds
-but they wouldn't be portable enough to put into the library.
+two. Some versions of gcc miss proper specialization of
+<code>numeric_limits</code> and using the flag <code>-DBOOST_NO_LIMITS</code>
+may help. Also removing the warnings for older gcc compilers about the lack
+of long double support can be done with the option
+<code>-Wno-long-double</code>. The tests and examples have successfully been
+compiled with gcc 2.95 on x86 (Debian, FreeBSD), on sparc (Debian); with gcc
+2.95 and stlport on x86 (Solaris), sparc (Solaris), and powerpc (Debian);
+with gcc 2.96, 3.04, 3.1.1, and 3.2 on x86 (Debian); and with SunPRO 5.3
+(Solaris). There are some issues with Borland on x86 (Windows), and Visual
+C++ which we're working on. We know some workarounds but they wouldn't be
+portable enough to put into the library.
 
 <h2 id="dangers">Common Pitfalls and Dangers</h2>
 
@@ -862,14 +875,15 @@ impact the interface in any major way (with the design we have chosen,
 everything can be added by specialization or by passing different template
 parameters).</p>
 
-<p><strong>Pred/succ.</strong> In a previous version, two functions pred and
-succ, with various corollaries like widen, were supplied. The intent was to
-enlarge the interval by one ulp (as little as possible), e.g. to ensure the
-inclusion property. Since making interval a template of T, we could not
-define <i>ulp</i> for a random parameter. In turn, rounding policies let us
-eliminate entirely the use of ulp while making the intervals tighter (if a
-result is a representable singleton, there is no use to widen the interval).
-We decided to drop those functions.</p>
+<p><strong>Pred/succ.</strong> In a previous version, two functions
+<code>pred</code> and <code>succ</code>, with various corollaries like
+<code>widen</code>, were supplied. The intent was to enlarge the interval by
+one ulp (as little as possible), e.g. to ensure the inclusion property. Since
+making interval a template of T, we could not define <i>ulp</i> for a random
+parameter. In turn, rounding policies let us eliminate entirely the use of
+ulp while making the intervals tighter (if a result is a representable
+singleton, there is no use to widen the interval). We decided to drop those
+functions.</p>
 
 <p><strong>Specialization of <code>std::less</code>.</strong> There is no
 need to specialize <code>std::less</code> for intervals. Depending on the

@@ -52,7 +52,7 @@ std::ostream& operator<<(std::ostream& os, const interval<T, Policies>& r)
 {
   std::streamsize p = os.precision(); // decimal notation
   // FIXME poor man's power of 10, only up to 1E-15
-  p = (p>15) ? 15 : p-1;
+  p = (p > 15) ? 15 : p - 1;
   double eps = 1.0; while (p>0) { eps /= 10.0; --p; }
   // widen the interval so output is correct
   interval<T, Policies> r_wide = widen(r, static_cast<T>(eps / 2.0));
@@ -75,18 +75,18 @@ operator>>(std::basic_istream<Ch, ChTr>& is, const interval<T, Policies>& r)
   c_type.widen(punct, punct+3, wpunct);
   Ch c;
   is >> c;
-  if(ChTr::eq(c, wpunct[0])) {
+  if (ChTr::eq(c, wpunct[0])) {
     is >> l >> c;
-    if(ChTr::eq(c, wpunct[1]))
+    if (ChTr::eq(c, wpunct[1]))
       is >> u >> c;
-    if(!ChTr::eq(c, wpunct[2]))
+    if (!ChTr::eq(c, wpunct[2]))
       is.setstate(is.failbit);
   } else {
     is.putback(c);
     is >> l;
     u = l;
   }
-  if(is)
+  if (is)
     r = succ(interval<T, Policies>(l, r));   // round outward by 1 ulp
   return is;
 }
@@ -106,9 +106,9 @@ std::istream& operator>>(std::istream& is, interval<T, Policies>& r)
       is >> c;
     }
   }
-  if(c != ']')
+  if (c != ']')
     is.setstate(is.failbit);
-  else if(is.good())
+  else if (is.good())
     r.assign(l, u);
   return is;
 }

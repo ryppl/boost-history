@@ -24,6 +24,7 @@
 #include <boost/interval/detail/interval_prototype.hpp>
 #include <boost/interval/detail/test_input.hpp>
 #include <boost/interval/detail/bugs.hpp>
+#include <utility>
 
 /*
  * Implementation of simple functions

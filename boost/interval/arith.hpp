@@ -24,6 +24,7 @@
 #include <boost/interval/detail/interval_prototype.hpp>
 #include <boost/interval/detail/bugs.hpp>
 #include <boost/interval/detail/test_input.hpp>
+#include <boost/interval/detail/division.hpp>
 #include <algorithm>
 
 namespace boost {
@@ -107,21 +108,6 @@ interval<T, Policies>& interval<T, Policies>::operator*=(const T& r)
 }
 
 template<class T, class Policies> inline
-interval<T, Policies> multiplicative_inverse(const interval<T, Policies>& x)
-{
-  if (interval_lib::detail::test_input(x))
-    return interval<T, Policies>::empty();
-  if (in_zero(x)) {
-    typedef typename Policies::checking checking;
-    checking::divide_by_zero(x.lower(), x.upper());
-    return interval<T, Policies>::whole();
-  }
-  typename Policies::rounding rnd;
-  return interval<T, Policies>(rnd.div_down(1, x.upper()),
-			     rnd.div_up  (1, x.lower()), true);
-}
-
-template<class T, class Policies> inline
 interval<T, Policies>& interval<T, Policies>::operator/=(const interval<T, Policies>& r)
 {
   return *this = *this / r;
@@ -141,7 +127,7 @@ interval<T, Policies> operator+(const interval<T, Policies>& x,
     return interval<T, Policies>::empty();
   typename Policies::rounding rnd;
   return interval<T,Policies>(rnd.add_down(x.lower(), y.lower()),
-			    rnd.add_up  (x.upper(), y.upper()), true);
+			      rnd.add_up  (x.upper(), y.upper()), true);
 }
 
 template<class T, class Policies> inline
@@ -151,7 +137,7 @@ interval<T, Policies> operator+(const T& x, const interval<T, Policies>& y)
     return interval<T, Policies>::empty();
   typename Policies::rounding rnd;
   return interval<T,Policies>(rnd.add_down(x, y.lower()),
-			    rnd.add_up  (x, y.upper()), true);
+			      rnd.add_up  (x, y.upper()), true);
 }
 
 template<class T, class Policies> inline
@@ -166,7 +152,7 @@ interval<T, Policies> operator-(const interval<T, Policies>& x,
     return interval<T, Policies>::empty();
   typename Policies::rounding rnd;
   return interval<T,Policies>(rnd.sub_down(x.lower(), y.upper()),
-			    rnd.sub_up  (x.upper(), y.lower()), true);
+			      rnd.sub_up  (x.upper(), y.lower()), true);
 }
 
 template<class T, class Policies> inline
@@ -176,7 +162,7 @@ interval<T, Policies> operator-(const T& x, const interval<T, Policies>& y)
     return interval<T, Policies>::empty();
   typename Policies::rounding rnd;
   return interval<T,Policies>(rnd.sub_down(x, y.upper()),
-			    rnd.sub_up  (x, y.lower()), true);
+			      rnd.sub_up  (x, y.lower()), true);
 }
 
 template<class T, class Policies> inline
@@ -186,15 +172,13 @@ interval<T, Policies> operator-(const interval<T, Policies>& x, const T& y)
     return interval<T, Policies>::empty();
   typename Policies::rounding rnd;
   return interval<T,Policies>(rnd.sub_down(x.lower(), y),
-			    rnd.sub_up  (x.upper(), y), true);
+			      rnd.sub_up  (x.upper(), y), true);
 }
 
 template<class T, class Policies> inline
 interval<T, Policies> operator*(const interval<T, Policies>& x,
 				const interval<T, Policies>& y)
 {
-  // using std::min;
-  // using std::max;
   BOOST_INTERVAL_using_max(min);
   BOOST_INTERVAL_using_max(max);
   if (interval_lib::detail::test_input(x, y))
@@ -253,31 +237,19 @@ interval<T, Policies> operator/(const interval<T, Policies>& x,
 {
   if (interval_lib::detail::test_input(x, y))
     return interval<T, Policies>::empty();
-  if (in_zero(y)) {
-    if (singleton(y)) return interval<T, Policies>::empty();
-    else              return interval<T, Policies>::whole();
-  }
-  typename Policies::rounding rnd;
-  typedef interval<T, Policies> I;
-  const T& xl = x.lower();
-  const T& xu = x.upper();
-  const T& yl = y.lower();
-  const T& yu = y.upper();
-  if (detail::is_neg(xu))
-    if (detail::is_neg(yu))
-      return I(rnd.div_down(xu, yl), rnd.div_up(xl, yu), true);
+  if (in_zero(y))
+    if (!detail::is_zero(y.lower()))
+      if (!detail::is_zero(y.upper()))
+	return interval_lib::detail::div_zero(x);
+      else
+	return interval_lib::detail::div_negative(x, y.lower());
     else
-      return I(rnd.div_down(xl, yl), rnd.div_up(xu, yu), true);
-  else if (detail::is_neg(xl))
-    if (detail::is_neg(yu))
-      return I(rnd.div_down(xu, yu), rnd.div_up(xl, yu), true);
-    else
-      return I(rnd.div_down(xl, yl), rnd.div_up(xu, yl), true);
+      if (!detail::is_zero(y.upper()))
+	return interval_lib::detail::div_positive(x, y.upper());
+      else
+	return interval<T, Policies>::empty();
   else
-    if (detail::is_neg(yu))
-      return I(rnd.div_down(xu, yu), rnd.div_up(xl, yl), true);
-    else
-      return I(rnd.div_down(xl, yu), rnd.div_up(xu, yl), true);
+    return interval_lib::detail::div_non_zero(x, y);
 }
 
 template<class T, class Policies> inline
@@ -285,23 +257,25 @@ interval<T, Policies> operator/(const T& x, const interval<T, Policies>& y)
 {
   if (interval_lib::detail::test_input(x, y))
     return interval<T, Policies>::empty();
-  if (in_zero(y)) {
-    if (singleton(y)) return interval<T, Policies>::empty();
-    else              return interval<T, Policies>::whole();
-  }
-  typename Policies::rounding rnd;
-  const T& yl = y.lower();
-  const T& yu = y.upper();
-  if (detail::is_neg(x))
-    return interval<T, Policies>(rnd.div_down(x, yl), rnd.div_up(x, yu), true);
+  if (in_zero(y))
+    if (!detail::is_zero(y.lower()))
+      if (!detail::is_zero(y.upper()))
+	return interval_lib::detail::div_zero<T, Policies>(x);
+      else
+	return interval_lib::detail::div_negative<T, Policies>(x, y.lower());
+    else
+      if (!detail::is_zero(y.upper()))
+	return interval_lib::detail::div_positive<T, Policies>(x, y.upper());
+      else
+	return interval<T, Policies>::empty();
   else
-    return interval<T, Policies>(rnd.div_down(x, yu), rnd.div_up(x, yl), true);
+    return interval_lib::detail::div_non_zero(x, y);
 }
 
 template<class T, class Policies> inline
 interval<T, Policies> operator/(const interval<T, Policies>& x, const T& y)
 {
-  if (interval_lib::detail::test_input(x, y) || y == T(0))
+  if (interval_lib::detail::test_input(x, y) || detail::is_zero(y))
     return interval<T, Policies>::empty();
   typename Policies::rounding rnd;
   const T& xl = x.lower();

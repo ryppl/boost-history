@@ -4,10 +4,12 @@
 #include <boost/interval/detail/interval_prototype.hpp>
 #include <boost/interval/detail/test_input.hpp>
 #include <boost/interval/detail/bugs.hpp>
+#include <boost/interval/detail/division.hpp>
 #include <boost/interval/arith.hpp>
 #include <boost/interval/rounding.hpp>
 #include <algorithm>
 #include <cmath>
+#include <utility>
 
 namespace boost {
 
@@ -133,6 +135,40 @@ interval<T, Policies> square(const interval<T, Policies>& x)
 				     rnd.mul_up(x.upper(), x.upper())), true);
   }
 }
+
+  namespace interval_lib {
+
+template<class T, class Policies> inline
+interval<T, Policies> division_part1(const interval<T, Policies>& x,
+				     const interval<T, Policies>& y, bool& b)
+{
+  typedef interval<T, Policies> I;
+  b = false;
+  if (detail::test_input(x, y))
+    return I::empty();
+  if (in_zero(y))
+    if (y.lower() != T(0))
+      if (y.upper() != T(0))
+	return detail::div_zero_part1(x, y, b);
+      else
+	return detail::div_negative(x, y.lower());
+    else
+      if (y.upper() != T(0))
+	return detail::div_positive(x, y.upper());
+      else
+	return I::empty();
+  else
+    return detail::div_non_zero(x, y);
+}
+
+template<class T, class Policies> inline
+interval<T, Policies> division_part2(const interval<T, Policies>& x,
+				     const interval<T, Policies>& y)
+{
+  return detail::div_zero_part2(x, y);
+}
+
+  } // namespace interval_lib
 
 } // namespace boost
 
