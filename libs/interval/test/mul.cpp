@@ -35,7 +35,7 @@ bool test_square(double al, double au) {
 
 bool test_sqrt(double al, double au) {
   I a(al, au);
-  I b = square(sqrt(a));
+  I b = square(boost::sqrt(a)); // boost:: qualification required by SunPRO...
   return subset(abs(a), b);
 }
 
