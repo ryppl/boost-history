@@ -410,8 +410,4 @@ private:
 //   ? ??? 01  Initial version (Ullrich Koethe)
 //   5 Oct 01  Reworked version (Gennadiy Rozental)
 
-# ifdef BOOST_INCLUDE_MAIN
-#   include <libs/test/src/test_main.cpp>
-# endif
-
 #endif // BOOST_TEST_TOOLS_HPP
