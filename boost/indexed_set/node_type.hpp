@@ -14,7 +14,7 @@
 #include <boost/mpl/iter_fold_backward.hpp>
 #include <boost/indexed_set_fwd.hpp>
 #include <boost/indexed_set/header_holder.hpp>
-#include <boost/indexed_set/index_node.hpp>
+#include <boost/indexed_set/index_node_base.hpp>
 #include <boost/indexed_set/msvc_index_specifier.hpp>
 #include <boost/indexed_set/prevent_eti.hpp>
 #include <boost/static_assert.hpp>

@@ -19,16 +19,6 @@ namespace detail{
 
 /* definition of red-black nodes for indexed_set::index */
 
-template<typename Value>
-struct index_node_base
-{
-  typedef Value value_type;
-  value_type    value;
-
-private:
-  index_node_base(); /* this class is not intended to be cted, merely allocated */
-};
-
 enum index_color{red=false,black=true};
 
 struct index_node_impl
