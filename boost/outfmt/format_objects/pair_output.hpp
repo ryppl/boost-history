@@ -3,6 +3,7 @@
 #ifndef BOOST__IOFM__FORMAT_OBJECTS__PAIR_OUTPUT__HPP
 #define BOOST__IOFM__FORMAT_OBJECTS__PAIR_OUTPUT__HPP
 #  include <boost/outfmt/formatter.hpp>
+#  include <boost/outfmt/detail/input_helper.hpp>
 
 #  include <utility>                             // std::pair
 #  include <complex>                             // std::complex
@@ -32,6 +33,9 @@
          private:
             Outputter1                 out1;
             Outputter2                 out2;
+
+         // output:
+
          public: // standard library dual-valued types
             template< typename T1, typename T2, class OutputStream >
             inline OutputStream & operator()
@@ -98,6 +102,38 @@
                out1( os, first ) << separator();
                return( out2( os, second ) << close());
             }
+
+         // input
+
+         public:
+            template< typename T1, typename T2, class InputStream >
+            inline bool                          read
+                                                 (
+                                                    InputStream & is,
+                                                    std::pair< T1, T2 > & p
+                                                 )
+            {
+               boost::io::detail::input_helper< InputStream >
+                                       in( is );
+                                       
+               T1                      t1;
+               if( in.match( open()) && out1.read( is, t1 ))
+               {
+                  T2                   t2;
+                  if( in.match( separator()) && out2.read( is, t2 ) && in.match( close()))
+                  {
+                     p.first  = t1;
+                     p.second = t2;
+                     return( true );
+                  }
+               }
+               return( false );
+            }
+         
+         public:
+
+         // constructors
+
          public:
             inline           pair_output()
             {
