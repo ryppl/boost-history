@@ -1,4 +1,4 @@
-// Copyright (C) 2002 Hugo Duncan
+// Copyright (C) 2002, 2003 Hugo Duncan
 
 // Permission to use, copy, modify, distribute and sell this software
 // and its documentation for any purpose is hereby granted without fee,
@@ -12,7 +12,7 @@
 #pragma once
 #endif
 
-#include "boost\config.hpp"
+#include "boost/config.hpp"
 
 /// include guard
 #ifndef BOOST_SOCKET_CONFIG_HPP
