@@ -23,6 +23,12 @@ find( const Container& c, T value )
     return std::find( boost::begin( c ), boost::end( c ), value );
 }
 
+std::vector<char> 
+check_rvalue_return()
+{
+    return std::vector<char>( 10, 'm' ); 
+}
+
 using namespace boost;
 
 template< typename charT >
@@ -83,7 +89,8 @@ void check_string()
     BOOST_CHECK( find( char_ws, to_search ) != end( char_ws ) );    
     BOOST_CHECK( find( my_wstring, to_search ) != end( my_wstring ) );
 #endif  
-
+    
+    find( check_rvalue_return(), 'n' );
 }
 
 
