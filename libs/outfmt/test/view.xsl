@@ -8,10 +8,14 @@
          <title>Regression Test Results</title>
          <style>
             td{ vertical-align: top; }
-            th{ background-color: #BBB; }
             a{  color: blue; }
 
-            .table2{ background-color: lightskyblue; }
+            table{   background-color: #EEE; }
+            th{      background-color: lightskyblue; }
+            td{      background-color: #DDD; }
+            .table2{ background-color: #CCC; }
+
+            table.nobg, td.nobg{ background-color: white; }
 
             .passed{      color: black;  font-weight: bold; }
             .failed{      color: red;    font-weight: bold; }
@@ -104,12 +108,12 @@
 
    <xsl:template match = "test-set" mode = "detail">
       <hr/>
-      <a name = "#{generate-id(.)}"/><table width = "100%">
-         <tr><td align = "right" width = "50%">Compiler:         </td><td><xsl:value-of select = "@compiler"/> </td></tr>
-         <tr><td align = "right" width = "50%">Standard Library: </td><td><xsl:value-of select = "@stdlib"  /> </td></tr>
-         <tr><td align = "right" width = "50%">Platform:         </td><td><xsl:value-of select = "@platform"/> </td></tr>
-         <tr><td align = "right" width = "50%">Boost Version:    </td>
-            <td><xsl:value-of select = "
+      <a name = "#{generate-id(.)}"/><table width = "100%" class = "nobg">
+         <tr><td align = "right" width = "50%" class = "nobg">Compiler:         </td><td class = "nobg"><xsl:value-of select = "@compiler"/> </td></tr>
+         <tr><td align = "right" width = "50%" class = "nobg">Standard Library: </td><td class = "nobg"><xsl:value-of select = "@stdlib"  /> </td></tr>
+         <tr><td align = "right" width = "50%" class = "nobg">Platform:         </td><td class = "nobg"><xsl:value-of select = "@platform"/> </td></tr>
+         <tr><td align = "right" width = "50%" class = "nobg">Boost Version:    </td>
+            <td class = "nobg"><xsl:value-of select = "
                round(@boostver div 100000)
             "/>.<xsl:value-of select = "
                round((@boostver div 100) mod 1000)
@@ -139,7 +143,7 @@
             <span class = "{@read}"><xsl:value-of select = "@read"/></span>
          </td><td align = "center"><xsl:if test = "( position() mod 2 ) = 1"><xsl:attribute name = "class">table2</xsl:attribute></xsl:if>
             <span class = "{@write}"><xsl:value-of select = "@write"/></span>
-         </td><td>
+         </td><td><xsl:if test = "( position() mod 2 ) = 1"><xsl:attribute name = "class">table2</xsl:attribute></xsl:if>
             <xsl:choose>
                <xsl:when test = "not(@read = 'unsupported') and not(@write = 'unsupported')">
                   <pre style = "margin-bottom: 0pc;">
@@ -155,3 +159,4 @@
       </tr>
    </xsl:template>
 </xsl:stylesheet>
+
