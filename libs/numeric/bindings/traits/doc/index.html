@@ -1,22 +1,102 @@
 <html>
-<title>boost::numeric::bindings::traits</title>
-<body>
-<h1>boost::numeric::bindings::traits library</title>
-<h3>Rationale</h3>
-The traits library is intended to make abstraction of
-<ul>
-<li>Underlying vector and matrix types
-<p>All bindings should be independent from the actual matrix and vector
-types that are used for calling the bindings. Currently the bindings
-are targeted to support ublas, std::vector, std::valarray and TNT.
-<li>Calling conventions
-<p>There are also bindings provided for libraries that are typically
-implemented using Fortran like BLAS and LAPACK. A mapping thus
-needs to be performed between C and Fortran calling conventions.
-</ul>
+<head>
+<link rel="stylesheet" type="text/css" href="boost.css">
+<title>Boost.Numeric.Traits</title>
+</head>
 
-<h3>vector_traits</h3>
-<h3>matrix_traits</h3>
+<body link="#0000ff" vlink="#800080">
+<table border="0" cellpadding="7" cellspacing="0" width="100%" summary="header">
+<tr>
+<td valign="top" width="300">
+<h3><a href="../../../index.htm"><img height="86" width="277" alt="C++ Boost" src="../../../c++boost.gif" border="0"></a></h3>
+</td>
+<td valign="top">
+<h1 align="center">Boost.Numeric.Traits</h1>
+</td>
+</tr>
+</table>
+<hr>
+<h2>Content</h2>
+<ol>
+<li><a href="#generic_storage_layout">Generic storage layout</a></li>
+<ol>
+<li>Rational</li>
+<li>Using the traits</li>
+<li>Free functions</li>
+<li>vector_traits</li>
+<ol>
+<li>Associated types</li>
+<li>Expression semantics</li>
+</ol>
+<li>matrix_traits</li>
+</ol>
+<li><a href="#calling_conventions">Calling conventions</a></li>
+</ol>
+<hr>
+
+<h2><a name="generic_storage_layout">1. Generic storage layout</a></h2>
+<h3>1.1 Rationale</h3>
+<p>The traits library provides generic functions to obtain information
+about the storage layout (in memory) for a multitude of different
+vector and matrix libraries. These functions are used in the 
+generic API's for the different external libraries to convert
+storage information about any matrix or vector into a format
+supported by the original API of the external library.
+<p>The mapping between the generic function to obtain storage layout information
+about a vector or matrix and the actual function call is provided by means of a traits
+class. One advantage of this approach is that the traits-idiom is a compile-time mechanism
+and thus adds no run-time overhead. Another advantage is the extensibility
+since this traits class can be specialised for many different vector or matrix libraries. 
+<h3>1.2 Using the traits</h3>
+Since the traits rely on specialisations for every different vector or matrix class, 
+you need to include the proper specialisation before using the traits.
+<h3>1.3 Free functions</h3>
+<p>There are also free functions available to obtain storage layout information
+about a vector- or matrix-object. The syntax of these is slightly simpler than that
+of the traits class. Although these free functions generally rely
+on the traits class, they can also implement an alternative strategy
+on compilers that are unable to handle the traits idiom.
+
+<h3>1.4 vector_traits</h3>
+<h4>1.4.1 Associated types</h4>
+<table border=1>
+<tr><td>Value type<td>V::value_type<td>The type of the objects contained in the vector
+<tr><td>Pointer type<td>V::pointer_type<td>Data type used to point to any entry of the vector in memory
+</table>
+<h4>1.4.2 Expression semantics</h4>
+<table border=1>
+<tr><th>Name<th>Expression<th>Precondition<th>Semantics<th>Postcondition
+<tr><td>begin of storage<td>storage(v)<td><td>returns a pointer to the begin of the storage of the vector<td>
+<tr><td>size of vector<td>size(v)<td><td>returns the size of the vector<td>
+<tr><td>stride<td>stride(v)<td><td>returns the distance between pointers pointing to consecutive entries<td>
+</table>
+
+<h3>1.5 matrix_traits</h3>
+<h4>1.5.1 Associated types</h4>
+<table border=1>
+<tr><td>Value type<td>M::value_type<td>The type of the objects contained in the vector
+<tr><td>Pointer type<td>M::pointer_type<td>Data type used to point to any entry of the vector in memory
+<tr><td>Matrix structure<td>M::matrix_structure<td>Indicates the structure of the storage layout
+<tr><td>Ordering type<td>M::ordering_type<td>row or column major<td>
+</table>
+<h4>1.5.2 Expression semantics</h4>
+<table border=1>
+<tr><th>Name<th>Expression<th>Precondition<th>Semantics<th>Postcondition
+<tr><td>begin of storage<td>storage(m)<td><td>returns a pointer to the begin of the storage of the vector<td>
+<tr><td>size of storage<td>storage_size(m)<td><td>returns the size of the storage<td>
+<tr><td>Number of rows<td>size1(m)<td><td>number of rows<td>
+<tr><td>Number of columns<td>size2(m)<td><td>number of columns<td>
+<tr><td>Leading dimension<td>leading_dimension(m)<td><td>returns the distance between pointers to the first element in consecutive rows(columns) in case of column-major(row-major) matrices.
+
+</table>
+
+<h2>Calling conventions</h2>
+<p>To facilitate generic bindings for libraries of which the API
+is defined in Fortran, the numeric.traits library provides
+a multi-platform mapping between C and Fortran calling conventions.
+
+<hr>
+
 <h3>Linking with fortran libraries</h3>
 <a href="http://www.aei.mpg.de/~jthorn/c2f.html">Here's more information</a> on how to call Fortran routines from C and C++,
 
