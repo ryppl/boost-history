@@ -69,112 +69,111 @@ namespace boost {
     T tanh_down (const T& x) { using std::tanh; return tanh(x); }
     T tanh_up   (const T& x) { using std::tanh; return tanh(x); }
 #ifdef BOOST_HAVE_INV_HYPERBOLIC
-    T asinh_down(const T& x) { using std::asinh; return asinh(x); }
-    T asinh_up  (const T& x) { using std::asinh; return asinh(x); }
-    T acosh_down(const T& x) { using std::acosh; return acosh(x); }
-    T acosh_up  (const T& x) { using std::acosh; return acosh(x); }
-    T atanh_down(const T& x) { using std::atanh; return atanh(x); }
-    T atanh_up  (const T& x) { using std::atanh; return atanh(x); }
+    T asinh_down(const T& x) { return ::asinh(x); }
+    T asinh_up  (const T& x) { return ::asinh(x); }
+    T acosh_down(const T& x) { return ::acosh(x); }
+    T acosh_up  (const T& x) { return ::acosh(x); }
+    T atanh_down(const T& x) { return ::atanh(x); }
+    T atanh_up  (const T& x) { return ::atanh(x); }
 #endif
   };
   
   template<class T, class Rounding>
   struct rounded_transc_std: Rounding
   {
-    #define ROUND_DOWN(EXPR) (downward(),   force_rounding( EXPR ))
-    #define ROUND_UP(EXPR)   (upward(),     force_rounding( EXPR ))
-    T exp_down  (const T& x) { using std::exp; return ROUND_DOWN( exp(x)   ); }
-    T exp_up    (const T& x) { using std::exp; return ROUND_UP  ( exp(x)   ); }
-    T log_down  (const T& x) { using std::log; return ROUND_DOWN( log(x)   ); }
-    T log_up    (const T& x) { using std::log; return ROUND_UP  ( log(x)   ); }
-    T sin_down  (const T& x) { using std::sin; return ROUND_DOWN( sin(x)   ); }
-    T sin_up    (const T& x) { using std::sin; return ROUND_UP  ( sin(x)   ); }
-    T cos_down  (const T& x) { using std::cos; return ROUND_DOWN( cos(x)   ); }
-    T cos_up    (const T& x) { using std::cos; return ROUND_UP  ( cos(x)   ); }
-    T tan_down  (const T& x) { using std::tan; return ROUND_DOWN( tan(x)   ); }
-    T tan_up    (const T& x) { using std::tan; return ROUND_UP  ( tan(x)   ); }
-    T asin_down (const T& x) { using std::asin; return ROUND_DOWN( asin(x)  ); }
-    T asin_up   (const T& x) { using std::asin; return ROUND_UP  ( asin(x)  ); }
-    T acos_down (const T& x) { using std::acos; return ROUND_DOWN( acos(x)  ); }
-    T acos_up   (const T& x) { using std::acos; return ROUND_UP  ( acos(x)  ); }
-    T atan_down (const T& x) { using std::atan; return ROUND_DOWN( atan(x)  ); }
-    T atan_up   (const T& x) { using std::atan; return ROUND_UP  ( atan(x)  ); }
-    T sinh_down (const T& x) { using std::sinh; return ROUND_DOWN( sinh(x)  ); }
-    T sinh_up   (const T& x) { using std::sinh; return ROUND_UP  ( sinh(x)  ); }
-    T cosh_down (const T& x) { using std::cosh; return ROUND_DOWN( cosh(x)  ); }
-    T cosh_up   (const T& x) { using std::cosh; return ROUND_UP  ( cosh(x)  ); }
-    T tanh_down (const T& x) { using std::tanh; return ROUND_DOWN( tanh(x)  ); }
-    T tanh_up   (const T& x) { using std::tanh; return ROUND_UP  ( tanh(x)  ); }
+    #define BOOST_DN(EXPR) (downward(),   force_rounding( EXPR ))
+    #define BOOST_UP(EXPR) (upward(),     force_rounding( EXPR ))
+    T exp_down  (const T& x) { using std::exp;  return BOOST_DN( exp(x)  ); }
+    T exp_up    (const T& x) { using std::exp;  return BOOST_UP( exp(x)  ); }
+    T log_down  (const T& x) { using std::log;  return BOOST_DN( log(x)  ); }
+    T log_up    (const T& x) { using std::log;  return BOOST_UP( log(x)  ); }
+    T sin_down  (const T& x) { using std::sin;  return BOOST_DN( sin(x)  ); }
+    T sin_up    (const T& x) { using std::sin;  return BOOST_UP( sin(x)  ); }
+    T cos_down  (const T& x) { using std::cos;  return BOOST_DN( cos(x)  ); }
+    T cos_up    (const T& x) { using std::cos;  return BOOST_UP( cos(x)  ); }
+    T tan_down  (const T& x) { using std::tan;  return BOOST_DN( tan(x)  ); }
+    T tan_up    (const T& x) { using std::tan;  return BOOST_UP( tan(x)  ); }
+    T asin_down (const T& x) { using std::asin; return BOOST_DN( asin(x) ); }
+    T asin_up   (const T& x) { using std::asin; return BOOST_UP( asin(x) ); }
+    T acos_down (const T& x) { using std::acos; return BOOST_DN( acos(x) ); }
+    T acos_up   (const T& x) { using std::acos; return BOOST_UP( acos(x) ); }
+    T atan_down (const T& x) { using std::atan; return BOOST_DN( atan(x) ); }
+    T atan_up   (const T& x) { using std::atan; return BOOST_UP( atan(x) ); }
+    T sinh_down (const T& x) { using std::sinh; return BOOST_DN( sinh(x) ); }
+    T sinh_up   (const T& x) { using std::sinh; return BOOST_UP( sinh(x) ); }
+    T cosh_down (const T& x) { using std::cosh; return BOOST_DN( cosh(x) ); }
+    T cosh_up   (const T& x) { using std::cosh; return BOOST_UP( cosh(x) ); }
+    T tanh_down (const T& x) { using std::tanh; return BOOST_DN( tanh(x) ); }
+    T tanh_up   (const T& x) { using std::tanh; return BOOST_UP( tanh(x) ); }
 #ifdef BOOST_HAVE_INV_HYPERBOLIC
-    T asinh_down(const T& x) { using std::asinh; return ROUND_DOWN( asinh(x) );}
-    T asinh_up  (const T& x) { using std::asinh; return ROUND_UP  ( asinh(x) );}
-    T acosh_down(const T& x) { using std::acosh; return ROUND_DOWN( acosh(x) );}
-    T acosh_up  (const T& x) { using std::acosh; return ROUND_UP  ( acosh(x) );}
-    T atanh_down(const T& x) { using std::atanh; return ROUND_DOWN( atanh(x) );}
-    T atanh_up  (const T& x) { using std::atanh; return ROUND_UP  ( atanh(x) );}
+    T asinh_down(const T& x) { return BOOST_DN( ::asinh(x) );}
+    T asinh_up  (const T& x) { return BOOST_UP( ::asinh(x) );}
+    T acosh_down(const T& x) { return BOOST_DN( ::acosh(x) );}
+    T acosh_up  (const T& x) { return BOOST_UP( ::acosh(x) );}
+    T atanh_down(const T& x) { return BOOST_DN( ::atanh(x) );}
+    T atanh_up  (const T& x) { return BOOST_UP( ::atanh(x) );}
 #endif
-    #undef ROUND_DOWN
-    #undef ROUND_UP
+    #undef BOOST_DOWN
+    #undef BOOST_UP
   };
 
   template<class T, class Rounding>
   struct rounded_transc_opp: Rounding
   {
-    #define ROUND_DOWN(EXPR) (downward(),  force_rounding( EXPR ))
-    #define ROUND_NEAR(EXPR) (tonearest(), force_rounding( EXPR ))
-    #define ROUND_UP(EXPR)   force_rounding( EXPR )
-    T exp_down  (const T& x) { using std::exp;
-	                       T y = ROUND_DOWN ( exp(x)    );
+    #define BOOST_DN(EXPR) (downward(),  force_rounding( EXPR ))
+    #define BOOST_NR(EXPR) (tonearest(), force_rounding( EXPR ))
+    #define BOOST_UP(EXPR) force_rounding( EXPR )
+    T exp_down  (const T& x) { using std::exp;  T y =   BOOST_DN( exp(x)   );
                                upward();
                                return y;
                              }
-    T exp_up    (const T& x) { using std::exp; return ROUND_UP  ( exp(x)    ); }
-    T log_down  (const T& x) { using std::log; T y = ROUND_DOWN ( log(x)    );
+    T exp_up    (const T& x) { using std::exp;  return  BOOST_UP( exp(x)   ); }
+    T log_down  (const T& x) { using std::log;  T y =   BOOST_DN( log(x)   );
                                upward();
                                return y;
                              }
-    T log_up    (const T& x) { using std::log; return ROUND_UP  ( log(x)    ); }
-    T sin_down  (const T& x) { using std::sin; return -ROUND_UP ( sin(-x)   ); }
-    T sin_up    (const T& x) { using std::sin; return ROUND_UP  ( sin(x)    ); }
-    T cos_down  (const T& x) { using std::cos; T y = ROUND_DOWN ( cos(x)    );
+    T log_up    (const T& x) { using std::log;  return  BOOST_UP( log(x)   ); }
+    T sin_down  (const T& x) { using std::sin;  return -BOOST_UP( sin(-x)  ); }
+    T sin_up    (const T& x) { using std::sin;  return  BOOST_UP( sin(x)   ); }
+    T cos_down  (const T& x) { using std::cos;  T y =   BOOST_DN( cos(x)   );
 			       upward();
                                return y;
 			     }
-    T cos_up    (const T& x) { using std::cos; return ROUND_UP  ( cos(x)    ); }
-    T tan_down  (const T& x) { using std::tan; return -ROUND_UP ( tan(-x)   ); }
-    T tan_up    (const T& x) { using std::tan; return ROUND_UP  ( tan(x)    ); }
-    T asin_down (const T& x) { using std::asin; return -ROUND_UP ( asin(-x) ); }
-    T asin_up   (const T& x) { using std::asin; return ROUND_UP  ( asin(x)  ); }
-    T acos_down (const T& x) { using std::acos; T y = ROUND_DOWN ( acos(x)  );
+    T cos_up    (const T& x) { using std::cos;  return  BOOST_UP( cos(x)   ); }
+    T tan_down  (const T& x) { using std::tan;  return -BOOST_UP( tan(-x)  ); }
+    T tan_up    (const T& x) { using std::tan;  return  BOOST_UP( tan(x)   ); }
+    T asin_down (const T& x) { using std::asin; return -BOOST_UP( asin(-x) ); }
+    T asin_up   (const T& x) { using std::asin; return  BOOST_UP( asin(x)  ); }
+    T acos_down (const T& x) { using std::acos; T y =   BOOST_DN( acos(x)  );
                                upward();
                                return y;
 			     }
-    T acos_up   (const T& x) { using std::acos; return ROUND_UP  ( acos(x)  ); }
-    T atan_down (const T& x) { using std::atan; return -ROUND_UP ( atan(-x) ); }
-    T atan_up   (const T& x) { using std::atan; return ROUND_UP  ( atan(x)  ); }
-    T sinh_down (const T& x) { using std::sinh; return -ROUND_UP ( sinh(-x) ); }
-    T sinh_up   (const T& x) { using std::sinh; return ROUND_UP  ( sinh(x)  ); }
-    T cosh_down (const T& x) { using std::cosh; T y = ROUND_DOWN ( cosh(x)  );
+    T acos_up   (const T& x) { using std::acos; return  BOOST_UP( acos(x)  ); }
+    T atan_down (const T& x) { using std::atan; return -BOOST_UP( atan(-x) ); }
+    T atan_up   (const T& x) { using std::atan; return  BOOST_UP( atan(x)  ); }
+    T sinh_down (const T& x) { using std::sinh; return -BOOST_UP( sinh(-x) ); }
+    T sinh_up   (const T& x) { using std::sinh; return  BOOST_UP( sinh(x)  ); }
+    T cosh_down (const T& x) { using std::cosh; T y =   BOOST_DN( cosh(x)  );
                                upward();
                                return y;
                              }
-    T cosh_up   (const T& x) { using std::cosh; return ROUND_UP  ( cosh(x)  ); }
-    T tanh_down (const T& x) { using std::tanh; return -ROUND_UP ( tanh(-x) ); }
-    T tanh_up   (const T& x) { using std::tanh; return ROUND_UP  ( tanh(x)  ); }
+    T cosh_up   (const T& x) { using std::cosh; return  BOOST_UP( cosh(x)  ); }
+    T tanh_down (const T& x) { using std::tanh; return -BOOST_UP( tanh(-x) ); }
+    T tanh_up   (const T& x) { using std::tanh; return  BOOST_UP( tanh(x)  ); }
 #ifdef BOOST_HAVE_INV_HYPERBOLIC
-    T asinh_down(const T& x) { using std::asinh; return -ROUND_UP ( asinh(-x));}
-    T asinh_up  (const T& x) { using std::asinh; return ROUND_UP  ( asinh(x) );}
-    T acosh_down(const T& x) { using std::acosh; T y = ROUND_DOWN ( acosh(x) );
+    T asinh_down(const T& x) { return -BOOST_UP( ::asinh(-x));}
+    T asinh_up  (const T& x) { return  BOOST_UP( ::asinh(x) );}
+    T acosh_down(const T& x) { T y =   BOOST_DN( ::acosh(x) );
                                upward();
                                return y;
 			     }
-    T acosh_up  (const T& x) { using std::acosh; return ROUND_UP  ( acosh(x) );}
-    T atanh_down(const T& x) { using std::atanh; return -ROUND_UP ( atanh(-x));}
-    T atanh_up  (const T& x) { using std::atanh; return ROUND_UP  ( atanh(x) );}
+    T acosh_up  (const T& x) { return  BOOST_UP( ::acosh(x) );}
+    T atanh_down(const T& x) { return -BOOST_UP( ::atanh(-x));}
+    T atanh_up  (const T& x) { return  BOOST_UP( ::atanh(x) );}
 #endif
-    #undef ROUND_DOWN
-    #undef ROUND_NEAR
-    #undef ROUND_UP
+    #undef BOOST_DN
+    #undef BOOST_NR
+    #undef BOOST_UP
   };
   
   } // interval_lib

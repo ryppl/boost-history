@@ -3,7 +3,7 @@
  * Copyright Jens Maurer 2000
  * Copyright Hervé Brönnimann, Guillaume Melquiond, Sylvain Pion, 2002
  * Permission to use, copy, modify, sell, and distribute this software
- * is hereby granted without free provided that the above copyright notice
+ * is hereby granted without fee provided that the above copyright notice
  * appears in all copies and that both that copyright notice and this
  * permission notice appear in supporting documentation,
  *
@@ -65,10 +65,7 @@ namespace boost {
     interval(const T& l, const T& u);
 
     template<class Traits2>
-    interval(const interval<T, Traits2>& r): low(r.lower()), up(r.upper())
-    {
-      if (boost::empty(r)) set_empty();
-    }
+      interval(const interval<T, Traits2>& r);
 
     // compiler-generated copy constructor and assignment operator are fine
 
@@ -99,6 +96,9 @@ namespace boost {
     void set(const T& l, const T& u);
 
   private:
+    typedef typename Traits::compare  compare;
+    typedef typename Traits::checking checking;
+    typedef typename Traits::rounding rounding;
     T low;
     T up;
   };

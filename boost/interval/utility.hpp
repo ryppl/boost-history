@@ -2,7 +2,8 @@
 #define BOOST_INTERVAL_UTILITY_HPP
 
 #ifndef BOOST_INTERVAL_HPP
-#error Internal header file: This header must be included by <boost/interval.hpp> only.
+#error Internal header file: \
+This header must be included by <boost/interval.hpp> only.
 #endif
 
 /*
@@ -11,10 +12,17 @@
 
 namespace boost {
 
+template<class T, class Traits>
+  template <class Traits2> inline
+  interval<T,Traits>::interval(const interval<T, Traits2>& r)
+    : low(r.lower()), up(r.upper())
+  {
+    if (boost::empty(r)) set_empty();
+  }
+
 template<class T, class Traits> inline
 void interval<T, Traits>::set_empty()
 {
-  typedef typename Traits::checking checking;
   low = checking::empty_lower();
   up  = checking::empty_upper();
 }
@@ -22,7 +30,6 @@ void interval<T, Traits>::set_empty()
 template<class T, class Traits> inline
 void interval<T, Traits>::set_whole()
 {
-  typedef typename Traits::checking checking;
   const T& inf = checking::inf();
   low = -inf;
   up  =  inf;
@@ -37,8 +44,9 @@ interval<T, Traits>::interval(const T& v): low(v), up(v)
 template<class T, class Traits> inline
 interval<T, Traits>::interval(const T& l, const T& u): low(l), up(u)
 {
-  typedef typename Traits::checking checking;
   if (interval_lib::detail::test_input<T, Traits>(l, u) || !(l <= u))
+    // equivalent to:   (u < l)  ??????   --Her
+    // or even could be part of test_input ?????   --Syl
     set_empty();
 }
 
@@ -54,6 +62,7 @@ template<class T, class Traits> inline
 void interval<T, Traits>::assign(const T& l, const T& u)
 {
   if (interval_lib::detail::test_input<T, Traits>(l, u) || !(l <= u))
+    // same question
     set_empty();
   else set(l, u);
 }
@@ -68,7 +77,6 @@ void interval<T, Traits>::set(const T& l, const T& u)
 template<class T, class Traits> inline
 interval<T, Traits> interval<T, Traits>::hull(const T& x, const T& y)
 {
-  typedef typename Traits::checking checking;
   bool bad_x = interval_lib::detail::test_input<T, Traits>(x);
   bool bad_y = interval_lib::detail::test_input<T, Traits>(y);
   if (bad_x)
@@ -83,7 +91,6 @@ interval<T, Traits> interval<T, Traits>::hull(const T& x, const T& y)
 template<class T, class Traits> inline
 interval<T, Traits> interval<T, Traits>::empty()
 {
-  typedef typename Traits::checking checking;
   return interval<T, Traits>(checking::empty_lower(),
 			     checking::empty_upper(), true);
 }
@@ -91,7 +98,6 @@ interval<T, Traits> interval<T, Traits>::empty()
 template<class T, class Traits> inline
 interval<T, Traits> interval<T, Traits>::whole()
 {
-  typedef typename Traits::checking checking;
   const T& inf = checking::inf();
   return interval<T, Traits>(-inf, inf, true);
 }
@@ -99,8 +105,7 @@ interval<T, Traits> interval<T, Traits>::whole()
 template<class T, class Traits> inline
 const T& interval<T, Traits>::lower() const
 {
-  /*typedef typename Traits::checking checking;
-  if (checking::is_empty(low, up))
+  /*if (checking::is_empty(low, up))
   return checking::nan();*/
   return low;
 }
@@ -108,8 +113,7 @@ const T& interval<T, Traits>::lower() const
 template<class T, class Traits> inline
 const T& interval<T, Traits>::upper() const
 {
-  /*typedef typename Traits::checking checking;
-  if (checking::is_empty(low, up))
+  /*if (checking::is_empty(low, up))
   return checking::nan();*/
   return up;
 }
@@ -141,8 +145,8 @@ T width(const interval<T, Traits>& x)
 template<class T, class Traits> inline
 T median(const interval<T, Traits>& x)
 {
+  typedef typename Traits::checking checking;
   if (interval_lib::detail::test_input(x)) {
-    typedef typename Traits::checking checking;
     return checking::nan();
   }
   typename Traits::rounding rnd;
@@ -167,8 +171,7 @@ template<class T, class Traits> inline
 bool empty(const interval<T, Traits>& x)
 {
   return interval_lib::detail::test_input(x);
-  //typedef typename Traits::checking checking;
-  //return checking::is_empty(x.lower(), x.upper());
+  //return typename Traits::checking::is_empty(x.lower(), x.upper());
 }
 
 template<class T, class Traits> inline
@@ -248,7 +251,6 @@ interval<T, Traits> hull(const interval<T, Traits>& x,
 {
   using std::min;
   using std::max;
-  typedef typename Traits::checking checking;
   bool bad_x = interval_lib::detail::test_input(x);
   bool bad_y = interval_lib::detail::test_input(y);
   if (bad_x)
@@ -265,7 +267,6 @@ interval<T, Traits> hull(const interval<T, Traits>& x, const T& y)
 {
   using std::min;
   using std::max;
-  typedef typename Traits::checking checking;
   bool bad_x = interval_lib::detail::test_input(x);
   bool bad_y = interval_lib::detail::test_input<T, Traits>(y);
   if (bad_y)
@@ -282,7 +283,6 @@ interval<T, Traits> hull(const T& x, const interval<T, Traits>& y)
 {
   using std::min;
   using std::max;
-  typedef typename Traits::checking checking;
   bool bad_x = interval_lib::detail::test_input<T, Traits>(x);
   bool bad_y = interval_lib::detail::test_input(y);
   if (bad_x)

@@ -234,21 +234,21 @@ bool operator<(const interval<T, Traits>& x,
 		      const interval<T, Traits>& y)
 {
   typedef typename Traits::compare compare;
-  return compare::lessthan(x.lower(), x.upper(), y.lower(), y.upper());
+  return compare::less_than(x.lower(), x.upper(), y.lower(), y.upper());
 }
 
 template<class T, class Traits> inline
 bool operator<(const T& x, const interval<T, Traits>& y)
 {
   typedef typename Traits::compare compare;
-  return compare::lessthan(x, x, y.lower(), y.upper());
+  return compare::less_than(x, x, y.lower(), y.upper());
 }
 
 template<class T, class Traits> inline
 bool operator<(const interval<T, Traits>& x, const T& y)
 {
   typedef typename Traits::compare compare;
-  return compare::lessthan(x.lower(), x.upper(), y, y);
+  return compare::less_than(x.lower(), x.upper(), y, y);
 }
 
 template<class T, class Traits> inline
@@ -256,21 +256,21 @@ bool operator>(const interval<T, Traits>& x,
 		      const interval<T, Traits>& y)
 {
   typedef typename Traits::compare compare;
-  return compare::lessthan(y.lower(), y.upper(), x.lower(), x.upper());
+  return compare::less_than(y.lower(), y.upper(), x.lower(), x.upper());
 }
 
 template<class T, class Traits> inline
 bool operator>(const T& x, const interval<T, Traits>& y)
 {
   typedef typename Traits::compare compare;
-  return compare::lessthan(y.lower(), y.upper(), x, x);
+  return compare::less_than(y.lower(), y.upper(), x, x);
 }
 
 template<class T, class Traits> inline
 bool operator>(const interval<T, Traits>& x, const T& y)
 {
   typedef typename Traits::compare compare;
-  return compare::lessthan(y, y, x.lower(), x.upper());
+  return compare::less_than(y, y, x.lower(), x.upper());
 }
 
 template<class T, class Traits> inline
@@ -278,21 +278,21 @@ bool operator<=(const interval<T, Traits>& x,
 		       const interval<T, Traits>& y)
 {
   typedef typename Traits::compare compare;
-  return !compare::lessthan(y.lower(), y.upper(), x.lower(), x.upper());
+  return !compare::less_than(y.lower(), y.upper(), x.lower(), x.upper());
 }
 
 template<class T, class Traits> inline
 bool operator<=(const T& x, const interval<T, Traits>& y)
 {
   typedef typename Traits::compare compare;
-  return !compare::lessthan(y.lower(), y.upper(), x, x);
+  return !compare::less_than(y.lower(), y.upper(), x, x);
 }
 
 template<class T, class Traits> inline
 bool operator<=(const interval<T, Traits>& x, const T& y)
 {
   typedef typename Traits::compare compare;
-  return !compare::lessthan(y, y, x.lower(), x.upper());
+  return !compare::less_than(y, y, x.lower(), x.upper());
 }
 
 template<class T, class Traits> inline
@@ -300,21 +300,21 @@ bool operator>=(const interval<T, Traits>& x,
 		       const interval<T, Traits>& y)
 {
   typedef typename Traits::compare compare;
-  return !compare::lessthan(x.lower(), x.upper(), y.lower(), y.upper());
+  return !compare::less_than(x.lower(), x.upper(), y.lower(), y.upper());
 }
 
 template<class T, class Traits> inline
 bool operator>=(const T& x, const interval<T, Traits>& y)
 {
   typedef typename Traits::compare compare;
-  return !compare::lessthan(x, x, y.lower(), y.upper());
+  return !compare::less_than(x, x, y.lower(), y.upper());
 }
 
 template<class T, class Traits> inline
 bool operator>=(const interval<T, Traits>& x, const T& y)
 {
   typedef typename Traits::compare compare;
-  return !compare::lessthan(x.lower(), x.upper(), y, y);
+  return !compare::less_than(x.lower(), x.upper(), y, y);
 }
 
 template<class T, class Traits> inline
@@ -322,21 +322,21 @@ bool operator==(const interval<T, Traits>& x,
 		       const interval<T, Traits>& y)
 {
   typedef typename Traits::compare compare;
-  return compare::equalto(x.lower(), x.upper(), y.lower(), y.upper());
+  return compare::equal_to(x.lower(), x.upper(), y.lower(), y.upper());
 }
 
 template<class T, class Traits> inline
 bool operator==(const T& x, const interval<T, Traits>& y)
 {
   typedef typename Traits::compare compare;
-  return compare::equalto(x, x, y.lower(), y.upper());
+  return compare::equal_to(x, x, y.lower(), y.upper());
 }
 
 template<class T, class Traits> inline
 bool operator==(const interval<T, Traits>& x, const T& y)
 {
   typedef typename Traits::compare compare;
-  return compare::equalto(x.lower(), x.upper(), y, y);
+  return compare::equal_to(x.lower(), x.upper(), y, y);
 }
 
 template<class T, class Traits> inline
@@ -344,21 +344,21 @@ bool operator!=(const interval<T, Traits>& x,
 		       const interval<T, Traits>& y)
 {
   typedef typename Traits::compare compare;
-  return !compare::equalto(x.lower(), x.upper(), y.lower(), y.upper());
+  return !compare::equal_to(x.lower(), x.upper(), y.lower(), y.upper());
 }
 
 template<class T, class Traits> inline
 bool operator!=(const T& x, const interval<T, Traits>& y)
 {
   typedef typename Traits::compare compare;
-  return !compare::equalto(x, x, y.lower(), y.upper());
+  return !compare::equal_to(x, x, y.lower(), y.upper());
 }
 
 template<class T, class Traits> inline
 bool operator!=(const interval<T, Traits>& x, const T& y)
 {
   typedef typename Traits::compare compare;
-  return !compare::equalto(x.lower(), x.upper(), y, y);
+  return !compare::equal_to(x.lower(), x.upper(), y, y);
 }
 
 
@@ -367,36 +367,36 @@ bool operator!=(const interval<T, Traits>& x, const T& y)
 template<class T>
 struct compare_certainly
 {
-  static bool lessthan(const T&, const T& xu, const T& yl, const T&)
+  static bool less_than(const T&, const T& xu, const T& yl, const T&)
   { return xu < yl; }
-  static bool equalto(const T& xl, const T& xu, const T& yl, const T& yu)
+  static bool equal_to(const T& xl, const T& xu, const T& yl, const T& yu)
   { return xu == yl && yu == xl; }
 };
 
 template<class T>
 struct compare_possibly
 {
-  static bool lessthan(const T& xl, const T&, const T&, const T& yu)
+  static bool less_than(const T& xl, const T&, const T&, const T& yu)
   { return xl < yu; }
-  static bool equalto(const T& xl, const T& xu, const T& yl, const T& yu)
+  static bool equal_to(const T& xl, const T& xu, const T& yl, const T& yu)
   { return !(xu < yl || yu < xl); }
 };
 
 template<class T, class F>
 struct compare_full
 {
-  static bool lessthan(const T& xl, const T& xu, const T& yl, const T& yu)
+  static bool less_than(const T& xl, const T& xu, const T& yl, const T& yu)
   { return xu < yl || (xl < yu && F()()); }
-  static bool equalto(const T& xl, const T& xu, const T& yl, const T& yu)
+  static bool equal_to(const T& xl, const T& xu, const T& yl, const T& yu)
   { return (xu == yl && yu == xl) || (!(xu < yl || yu < xl) && F()()); }
 };
 
 template<class T>
 struct compare_data
 {
-  static bool lessthan(const T& xl, const T&, const T&, const T& yu)
+  static bool less_than(const T& xl, const T&, const T&, const T& yu)
   { return xl < yl || (xl == yl && xu < yu); }
-  static bool equalto(const T& xl, const T& xu, const T& yl, const T& yu)
+  static bool equal_to(const T& xl, const T& xu, const T& yl, const T& yu)
   { return xl == yl && xu == yu; }
 };
 

@@ -55,6 +55,7 @@ struct checking_base
   static bool is_empty(const T& l, const T& u)
   {
     return !(l <= u);
+    // note: equivalent to (u < l), except if u==nan() or l==nan()
   }
 };
 

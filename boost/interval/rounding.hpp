@@ -2,7 +2,8 @@
 #define BOOST_INTERVAL_ROUNDING_HPP
 
 #ifndef BOOST_INTERVAL_HPP
-#error Internal header file: This header must be included by <boost/interval.hpp> only.
+#error Internal header file: \
+This header must be included by <boost/interval.hpp> only.
 #endif
 
 namespace boost {
@@ -111,16 +112,16 @@ namespace boost {
   struct unprotect_traits
   {
     typedef interval_traits<typename Traits::base_type,
-			    typename Traits::compare,
-                            typename unprotect_rounding<typename Traits::rounding>::type,
-			    typename Traits::checking> type;
+	      typename Traits::compare,
+              typename unprotect_rounding<typename Traits::rounding>::type,
+              typename Traits::checking> type;
   };
   
   template<class I>
   struct unprotect
   {
     typedef interval<typename I::base_type,
-		     typename unprotect_traits<typename I::traits_type>::type> type;
+              typename unprotect_traits<typename I::traits_type>::type> type;
   };
 
   } // namespace interval_lib
@@ -139,7 +140,7 @@ namespace boost {
 #elif defined(__USE_ISOC99)
 #  include <boost/interval/detail/isoc99_rounding_control.hpp>
 #else
-#  error Please specify rounding control mechanism.
+#  error Boost::interval: Please specify rounding control mechanism.
 #endif
 
 
