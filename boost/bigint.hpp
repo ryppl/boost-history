@@ -1,6 +1,15 @@
 #ifndef BIGINT_RG08272002_HPP
 #define BIGINT_RG08272002_HPP
 
+// Use, modification and distribution is subject to the Boost Software 
+// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
+
+//  Bigint Library
+//  Authors: Ronald Garcia
+//           Jeremy Siek
+//           Andrew Lumsdaine
+
 //
 // bigint.hpp - an arbitrary magnitude integer type
 //
