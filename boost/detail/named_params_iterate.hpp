@@ -38,14 +38,14 @@
 #define BOOST_NAMED_PARAMS_LIST(z, n, text) \
     aux::arg_list< \
         BOOST_DEDUCED_TYPENAME aux::as_tagged_argument< \
-            BOOST_PP_CAT(K, n), BOOST_PP_CAT(A, n) \
+            BOOST_PP_CAT(PS, n), BOOST_PP_CAT(A, n) \
         >::type
 
 #define BOOST_NAMED_PARAMS_CLOSE_LIST(z, n, text) > 
 
 #define BOOST_NAMED_PARAMS_NAMED_TYPE(z, n, text) \
     typename aux::as_tagged_argument< \
-        BOOST_PP_CAT(K, n), BOOST_PP_CAT(A, n) \
+        BOOST_PP_CAT(PS, n), BOOST_PP_CAT(A, n) \
     >::type BOOST_PP_CAT(named, n)(BOOST_PP_CAT(a, n));
 
 template<BOOST_PP_ENUM_PARAMS(N, class A)>

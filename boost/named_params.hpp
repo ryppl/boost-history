@@ -411,10 +411,12 @@ namespace aux
       }
   };
 
-  template <> struct arg_list<int,int> {}; // ETI workaround
+#if BOOST_WORKAROUND(BOOST_MSVC, <= 1300)  // ETI workaround
+  template <> struct arg_list<int,int> {};
+#endif 
 
   // Holds a reference to an argument of type Arg associated with
-  // keyword tag Keyword
+  // keyword Keyword
   template <class Keyword, class Arg>
   struct tagged_argument
   {
@@ -444,13 +446,24 @@ namespace aux
       Arg& value;
   };
 
+  // Defines a metafunction, is_tagged_argument, that identifies
+  // tagged_argument specializations.
   BOOST_PYTHON_IS_XXX_DEF(tagged_argument,tagged_argument,2)
 
+
+  //
+  // reference_wrapper support -- because of the forwarding problem,
+  // when passing arguments positionally by non-const reference, we
+  // ask users of named parameter interfaces to use ref(x) to wrap
+  // them.
+  //
+  
+  // is_cv_reference_wrapper returns mpl::true_ if T is of type
+  // reference_wrapper<U> cv
   template <class U>
   yes_t is_cv_reference_wrapper_check(reference_wrapper<U> const volatile*);
   no_t is_cv_reference_wrapper_check(...);
 
-  // Returns mpl::true_ if T is of type reference_wrapper<U> cv
   template <class T>
   struct is_cv_reference_wrapper
   {
@@ -462,7 +475,7 @@ namespace aux
 
      typedef mpl::bool_<value> type;
   };
-
+  
   // Produces the unwrapped type to hold a reference to in named<>
   // Can't use boost::unwrap_reference<> here because it
   // doesn't handle the case where T = reference_wrapper<U> cv
@@ -478,24 +491,25 @@ namespace aux
 
 } // namespace aux
 
+
+// Instances of unique specializations of keyword<...> serve to
+// associate arguments with parameter names.  For example:
+//
+//    struct rate_;           // parameter names
+//    struct skew_;
+//    namespace
+//    {
+//      keyword<rate_> rate;  // keywords
+//      keyword<skew_> skew;
+//    }
+//
+//    ...
+//
+//    f(rate = 1, skew = 2.4);
+//
 template <class Tag>
 struct keyword
 {
-#if !BOOST_WORKAROUND(BOOST_MSVC, == 1200)  // partial ordering bug
-    template <class T>
-    aux::tagged_argument<
-        Tag
-      , typename aux::unwrap_cv_reference<T const>::type
-    > 
-    operator=(T const& x) const
-    {
-        return aux::tagged_argument<
-            Tag
-          , BOOST_DEDUCED_TYPENAME aux::unwrap_cv_reference<T const>::type
-        >(x);
-    }
-#endif
-
     template <class T>
     aux::tagged_argument<
         Tag
@@ -516,14 +530,33 @@ struct keyword
         return aux::default_<Tag, Default>(default_);
     }
 
-#if !BOOST_WORKAROUND(BOOST_MSVC, == 1200)  // partial ordering bug
+    template <class Default>
+    aux::lazy_default<Tag, Default>
+    operator||(Default& default_) const
+    {
+        return aux::lazy_default<Tag, Default>(default_);
+    }
+
+#if !BOOST_WORKAROUND(BOOST_MSVC, == 1200)  // avoid partial ordering bugs
+    template <class T>
+    aux::tagged_argument<
+        Tag
+      , typename aux::unwrap_cv_reference<T const>::type
+    > 
+    operator=(T const& x) const
+    {
+        return aux::tagged_argument<
+            Tag
+          , BOOST_DEDUCED_TYPENAME aux::unwrap_cv_reference<T const>::type
+        >(x);
+    }
+
     template <class Default>
     aux::default_<Tag, const Default>
     operator|(const Default& default_) const
     {
         return aux::default_<Tag, const Default>(default_);
     }
-#endif 
 
     template <class Default>
     aux::lazy_default<Tag, Default>
@@ -531,6 +564,7 @@ struct keyword
     {
         return aux::lazy_default<Tag, Default>(default_);
     }
+#endif 
 };
 
 // These templates can be used to describe the treatment of particular
@@ -564,10 +598,27 @@ struct optional
 
 namespace aux
 {
+  // Defines metafunctions, is_required and is_optional, that
+  // identify required<...> and optional<...> specializations.
   BOOST_PYTHON_IS_XXX_DEF(required, required, 2)
   BOOST_PYTHON_IS_XXX_DEF(optional, optional, 2)
 
-  template <class T> struct get_key_type { typedef typename T::key_type type; };
+  //
+  // key_type, has_default, and predicate --
+  //
+  // These metafunctions accept a ParameterSpec and extract the
+  // keyword tag, whether or not a default is supplied for the
+  // parameter, and the predicate that the corresponding actual
+  // argument type is required match.
+  //
+  // a ParameterSpec is a specialization of either keyword<...>,
+  // required<...> or optional<...>.
+  //
+  
+  // helper for key_type<...>, below.
+  template <class T>
+  struct get_key_type
+  { typedef typename T::key_type type; };
 
   template <class T>
   struct key_type
@@ -588,7 +639,12 @@ namespace aux
   {
   };
 
-  template <class T> struct get_predicate { typedef typename T::predicate type; };
+  // helper for predicate<...>, below
+  template <class T>
+  struct get_predicate
+  {
+      typedef typename T::predicate type;
+  };
 
   template <class T>
   struct predicate
@@ -603,38 +659,46 @@ namespace aux
   {
   };
 
-  template <class T>
+
+  // Converts a ParameterSpec into a specialization of
+  // parameter_requirements.  We need to do this in order to get the
+  // key_type into the type in a way that can be conveniently matched
+  // by a satisfies(...) member function in arg_list.
+  template <class ParameterSpec>
   struct as_parameter_requirements
   {
       typedef parameter_requirements<
-          typename key_type<T>::type
-        , typename predicate<T>::type
-        , typename has_default<T>::type
+          typename key_type<ParameterSpec>::type
+        , typename predicate<ParameterSpec>::type
+        , typename has_default<ParameterSpec>::type
       > type;
   };
 
-  // labels T with keyword KW if it is not already named
-  template <class KW, class T>
+  // Labels Arg with default keyword tag DefaultTag if it is not
+  // already a tagged_argument
+  template <class DefaultTag, class Arg>
   struct as_tagged_argument
   {
       typedef typename mpl::if_<
-          is_tagged_argument<T>
-        , T
+          is_tagged_argument<Arg>
+        , Arg
         , tagged_argument<
-              typename key_type<KW>::type
-            , typename unwrap_cv_reference<T const>::type
+              typename key_type<DefaultTag>::type
+            , typename unwrap_cv_reference<Arg const>::type
           >
       >::type type;
   };
 
-#if BOOST_WORKAROUND(BOOST_MSVC, == 1200)
+#if BOOST_WORKAROUND(BOOST_MSVC, == 1200)  // ETI workaround
   template <>
   struct as_tagged_argument<int,int>
   {
       typedef int type;
   };
 #endif
-  
+
+  // Returns mpl::true_ iff the given ParameterRequirements are
+  // satisfied by ArgList.
   template <class ArgList, class ParameterRequirements>
   struct satisfies
   {
@@ -651,11 +715,13 @@ namespace aux
       typedef mpl::bool_<value> type;
   };
 
-  template <class ArgList, class Parameter>
+  // Returns mpl::true_ if the requirements of the given ParameterSpec
+  // are satisfied by ArgList.
+  template <class ArgList, class ParameterSpec>
   struct satisfies_requirements_of
     : satisfies<
           ArgList
-        , typename as_parameter_requirements<Parameter>::type
+        , typename as_parameter_requirements<ParameterSpec>::type
       >
   {};
 
@@ -666,41 +732,6 @@ namespace aux
   {};
 #endif
   
-  template <class B /* = mpl::true_ */>
-  struct restrict_keywords
-  {
-      template<class Keywords>
-      struct apply
-      {
-          struct type_ : Keywords
-          {
-              type_(const Keywords&) {}
-          };
-          typedef type_ type;
-      };
-  };
-
-#if BOOST_WORKAROUND(BOOST_MSVC, == 1200)
-  // ETI workaround
-  template <>
-  struct restrict_keywords<int>
-  {
-      template <class Keywords>
-      struct apply
-      {
-          typedef int type;
-      };
-  };
-#endif
-  
-  template <>
-  struct restrict_keywords<mpl::false_>
-  {
-      template<class>
-      struct apply
-      {};
-  };
-
   // Given actual argument types T0...Tn, return a list of
   // tagged_argument<U0...Um> types where:
   //
@@ -754,44 +785,54 @@ namespace aux
 
 } // namespace aux
 
-#define BOOST_PARAMETERS_TEMPLATE_ARGS(z, n, text) class BOOST_PP_CAT(K, n) = aux::void_
+#define BOOST_PARAMETERS_TEMPLATE_ARGS(z, n, text) class BOOST_PP_CAT(PS, n) = aux::void_
 
 template<
-     class K0
+     class PS0
    , BOOST_PP_ENUM_SHIFTED(BOOST_NAMED_PARAMS_MAX_ARITY, BOOST_PARAMETERS_TEMPLATE_ARGS, _)
 >
 struct parameters
 {
-
+    typedef parameters self;
 #undef BOOST_PARAMETERS_TEMPLATE_ARGS
 
-#ifndef BOOST_NO_SFINAE
     // if the elements of NamedList match the criteria of overload
     // resolution, returns a type which can be constructed from
     // parameters.  Otherwise, this is not a valid metafunction (no nested
     // ::type).
 
-# define BOOST_NAMED_PARAMS_passes_predicate(z, n, text) \
-    aux::satisfies_requirements_of<NamedList, BOOST_PP_CAT(K, n)>
+# define BOOST_NAMED_PARAMS_passes_predicate(z, n, text)                \
+    typename mpl::and_<                                                 \
+        aux::satisfies_requirements_of<NamedList, BOOST_PP_CAT(PS, n)> ,
+      
+#define BOOST_NAMED_PARAMS_right_angle(z, n, text)    >
 
+#ifndef BOOST_NO_SFINAE
+    // If NamedList satisfies the PS0, PS1, ..., this is a
+    // metafunction returning parameters.  Otherwise it 
+    // has no nested ::type.
     template <class NamedList>
     struct restrict_base
-    {
-        // metafunction forwarding here would confuse vc6
-        typedef mpl::apply_wrap1<
-            aux::restrict_keywords<
-                typename mpl::and_<
-                    BOOST_PP_ENUM(BOOST_NAMED_PARAMS_MAX_ARITY, BOOST_NAMED_PARAMS_passes_predicate, _)
-                >::type
-            >
-          , parameters
-        > type;
-    };
-
-# undef BOOST_NAMED_PARAMS_passes_predicate
-    
+      : mpl::if_<
+            // mpl::and_<
+            //    aux::satisfies_requirements_of<NamedList,PS0>
+            //  , mpl::and_<
+            //       aux::satisfies_requirements_of<NamedList,PS1>...
+            //           ..., mpl::true_
+            // ...> >
+            BOOST_PP_REPEAT(BOOST_NAMED_PARAMS_MAX_ARITY, BOOST_NAMED_PARAMS_passes_predicate, _)
+            mpl::true_
+            BOOST_PP_REPEAT(BOOST_NAMED_PARAMS_MAX_ARITY, BOOST_NAMED_PARAMS_right_angle, _)
+            
+          , mpl::identity<parameters>
+          , aux::void_
+        >
+    {};
 #endif
-
+    
+# undef BOOST_NAMED_PARAMS_passes_predicate
+# undef BOOST_NAMED_PARAMS_right_angle
+    
     // Instantiations are to be used as an optional argument to control SFINAE
     template<
         BOOST_PP_ENUM_BINARY_PARAMS(
@@ -801,20 +842,18 @@ struct parameters
     struct restrict
 #ifndef BOOST_NO_SFINAE
       : restrict_base<
-            // Build a list of tagged_argument<K,T> items for each keyword and actual 
+            // Build a list of tagged_argument<PS,T> items for each keyword and actual 
             BOOST_DEDUCED_TYPENAME BOOST_PP_CAT(mpl::apply, BOOST_NAMED_PARAMS_MAX_ARITY)<
                 aux::make_arg_list<
                     BOOST_PP_ENUM_PARAMS(BOOST_NAMED_PARAMS_MAX_ARITY, T)
                 >
-              , BOOST_PP_ENUM_PARAMS(BOOST_NAMED_PARAMS_MAX_ARITY, K)
+              , BOOST_PP_ENUM_PARAMS(BOOST_NAMED_PARAMS_MAX_ARITY, PS)
             >::type
-        >::type
+        >::type    
+    {};
+#else
+    { typedef parameters type; };
 #endif 
-    {
-#ifdef BOOST_NO_SFINAE
-        typedef parameters type;
-#endif 
-    };
 
     aux::empty_arg_list operator()() const
     {
