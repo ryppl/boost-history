@@ -11,10 +11,7 @@
 
    // type deduction:
 
-   namespace boost { namespace io { namespace detail
-   {
-      BOOST_IO_CLASSIFY_TYPE_2( std::vector, boost::io::seq_container_type );
-   }}}
+   BOOST_IO_CLASSIFY_TYPE( 2, std::vector, boost::io::seq_container_type )
 
    // I/O support:
 

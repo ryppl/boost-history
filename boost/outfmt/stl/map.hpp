@@ -11,11 +11,8 @@
 
    // type deduction:
 
-   namespace boost { namespace io { namespace detail
-   {
-      BOOST_IO_CLASSIFY_TYPE_4( std::map,      boost::io::assoc_container_type );
-      BOOST_IO_CLASSIFY_TYPE_4( std::multimap, boost::io::assoc_container_type );
-   }}}
+   BOOST_IO_CLASSIFY_TYPE( 4, std::map,      boost::io::assoc_container_type )
+   BOOST_IO_CLASSIFY_TYPE( 4, std::multimap, boost::io::assoc_container_type )
 
    // I/O support:
 

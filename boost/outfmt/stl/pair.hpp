@@ -10,15 +10,11 @@
 #  include <utility>
 #  include <boost/outfmt/detail/naryval.hpp>
 
+   // type deduction:
+   BOOST_IO_CLASSIFY_TYPE( 2, std::pair, boost::io::pair_type )
+
    namespace boost { namespace io
    {
-      // type deduction:
-
-      namespace detail
-      {
-         BOOST_IO_CLASSIFY_TYPE_2( std::pair, boost::io::pair_type );
-      }
-
       // naryval:
 
       /*

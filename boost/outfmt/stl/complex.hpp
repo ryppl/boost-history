@@ -9,15 +9,12 @@
 
 #  include <complex>
 
+   // type deduction:
+
+   BOOST_IO_CLASSIFY_TYPE( 1, std::complex, boost::io::nary2value_type )
+
    namespace boost { namespace io
    {
-      // type deduction:
-
-      namespace detail
-      {
-         BOOST_IO_CLASSIFY_TYPE_1( std::complex, boost::io::nary2value_type );
-      }
-
       // naryval:
 
       BOOST_IO_NARY_PARAM1( std::complex, inseperable_pair< T > )

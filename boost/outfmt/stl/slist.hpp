@@ -15,10 +15,7 @@
 
    // type deduction:
 
-   namespace boost { namespace io { namespace detail
-   {
-      BOOST_IO_CLASSIFY_TYPE_2( BOOST_IOFM_STDEXT::slist, boost::io::seq_container_type );
-   }}}
+   BOOST_IO_CLASSIFY_TYPE( 2, BOOST_IOFM_STDEXT::slist, boost::io::seq_container_type )
 
    // I/O support:
 

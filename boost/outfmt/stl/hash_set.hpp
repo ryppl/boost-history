@@ -22,16 +22,13 @@
 
    // type deduction:
 
-   namespace boost { namespace io { namespace detail
-   {
-#     if defined(BOOST_DINKUMWARE_STDLIB)
-         BOOST_IO_CLASSIFY_TYPE_3( BOOST_IOFM_STDEXT::hash_set,      boost::io::set_container_type );
-         BOOST_IO_CLASSIFY_TYPE_3( BOOST_IOFM_STDEXT::hash_multiset, boost::io::set_container_type );
-#     else // SGI containers
-         BOOST_IO_CLASSIFY_TYPE_4( BOOST_IOFM_STDEXT::hash_set,      boost::io::set_container_type );
-         BOOST_IO_CLASSIFY_TYPE_4( BOOST_IOFM_STDEXT::hash_multiset, boost::io::set_container_type );
+#  if defined(BOOST_DINKUMWARE_STDLIB)
+      BOOST_IO_CLASSIFY_TYPE( 3, BOOST_IOFM_STDEXT::hash_set,      boost::io::set_container_type )
+      BOOST_IO_CLASSIFY_TYPE( 3,BOOST_IOFM_STDEXT::hash_multiset, boost::io::set_container_type )
+#  else // SGI containers
+      BOOST_IO_CLASSIFY_TYPE( 4, BOOST_IOFM_STDEXT::hash_set,   boost::io::set_container_type )
+      BOOST_IO_CLASSIFY_TYPE( 4, BOOST_IOFM_STDEXT::hash_multiset, boost::io::set_container_type )
 #     endif
-   }}}
 
    // I/O support:
 

@@ -8,13 +8,13 @@
 #  endif
 
 #  include <list>
+#  if defined(__MWERKS__)
+#     include <boost/mpl/int.hpp>
+#  endif
 
    // type deduction:
 
-   namespace boost { namespace io { namespace detail
-   {
-      BOOST_IO_CLASSIFY_TYPE_2( std::list, boost::io::seq_container_type );
-   }}}
+   BOOST_IO_CLASSIFY_TYPE( 2, std::list, boost::io::seq_container_type )
 
    // I/O support:
 

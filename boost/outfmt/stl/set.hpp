@@ -11,11 +11,8 @@
 
    // type deduction:
 
-   namespace boost { namespace io { namespace detail
-   {
-      BOOST_IO_CLASSIFY_TYPE_3( std::set,      boost::io::set_container_type );
-      BOOST_IO_CLASSIFY_TYPE_3( std::multiset, boost::io::set_container_type );
-   }}}
+   BOOST_IO_CLASSIFY_TYPE( 3, std::set,      boost::io::set_container_type )
+   BOOST_IO_CLASSIFY_TYPE( 3, std::multiset, boost::io::set_container_type )
 
    // I/O support:
 
