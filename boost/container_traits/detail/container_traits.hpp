@@ -71,8 +71,6 @@ namespace boost {
                 return c.empty();
             }
 
-#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
-
             template< typename C >
             static iterator begin( C& c )
             {
@@ -96,22 +94,6 @@ namespace boost {
             {
                 return c.end();
             }
-
-#else // BOOST_NO_FUNCTION_TEMPLATE_ORDERING
-
-            template< typename C >
-            static result_iterator begin( C& c )
-            {
-                return c.begin();
-            }
-
-            template< typename C >
-            static result_iterator end( C& c )
-            {
-                return c.end();
-            }
-
-#endif // BOOST_NO_FUNCTION_TEMPLATE_ORDERING    
 
         }; 
 
@@ -160,11 +142,7 @@ namespace boost {
             template< typename P >
             static size_type size( const P& p )
             {
-                difference_type diff = std::distance( p.first, p.second );
-                if ( diff < 0 ) // ??? isn't this illegal ???
-                    return 0;
-                else
-                    return diff;
+                return std::distance( p.first, p.second );
             }
 
             template< typename P >
@@ -250,7 +228,7 @@ namespace boost {
         template< typename T, typename BaseT >
         struct array_traits_cv_selector
         {
-            typedef BOOST_DEDUCED_TYPENAME 
+            typedef BOOST_CT_DEDUCED_TYPENAME 
                 ::boost::mpl::apply_if< 
                     ::boost::is_convertible<T,BaseT*>,
                     array_traits_impl_selector<T,BaseT>,
@@ -272,7 +250,7 @@ namespace boost {
             template< typename T1, typename T2 >
             struct apply
             {
-                typedef BOOST_DEDUCED_TYPENAME
+                typedef BOOST_CT_DEDUCED_TYPENAME
                     ::boost::mpl::apply_if< 
                         ::boost::is_convertible<T,const volatile T2*>,
                         array_traits_cv_selector<T,T2>,
@@ -385,13 +363,15 @@ namespace boost {
                 template< typename A >
                 static size_type length( const A& a )
                 {
+                    if( empty( a ) )
+                        return 0;
                     return std::char_traits<char>::length(a);
                 }
                 
                 template< typename A >
                 static bool empty( const A& a )
                 {
-                    return a==0 || a[0]==0; // a[0] should be sufficient.
+                    return a==0 || a[0]==0; 
                 }
             };
         };
@@ -409,13 +389,15 @@ namespace boost {
                 template< typename A >
                 static size_type length( const A& a )
                 {
+                    if( empty( a ) ) 
+                        return 0;
                     return std::char_traits<wchar_t>::length(a);
                 }
 
                 template< typename A >
                 static bool empty( const A& a )
                 {
-                    return a==0 || a[0]==0; // se comment abovex
+                    return a==0 || a[0]==0; 
                 }
             };
         };
@@ -425,8 +407,7 @@ namespace boost {
         {
         private:
             // resolve array traits
-            typedef BOOST_CT_DEDUCED_TYPENAME ::boost::remove_cv<T>::type T_t;
-            typedef array_traits<T_t>                             traits_type;
+            typedef array_traits<T>   traits_type;
 
         public:
             typedef BOOST_DEDUCED_TYPENAME
@@ -470,9 +451,6 @@ namespace boost {
                 return array_length_type::empty(a);
             }
             
-
-#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
-
             template< typename A >
             static iterator begin( A& a )
             {
@@ -488,30 +466,14 @@ namespace boost {
             template< typename A >
             static iterator end( A& a )
             {
-                return a + array_length_type::length( &a[0] );
+                return a + array_length_type::length( a ); // note: problemematic if &a[0] since a can be 0
             }
 
             template< typename A >
             static const_iterator end( const A& a )
             {
-                return a + array_length_type::length( &a[0] );
+                return a + array_length_type::length( a );
             }
-
-#else // BOOST_NO_FUNCTION_TEMPLATE_ORDERING
-
-            template< typename A >
-            static result_iterator begin( A& a )
-            {
-                return a;
-            }
-
-            template< typename A >
-            static result_iterator end( A& a )
-            {
-                return a+array_length_type::length(a);
-            }
-
-#endif // BOOST_NO_FUNCTION_TEMPLATE_ORDERING    
 
         }; 
 
@@ -532,35 +494,28 @@ namespace boost {
             BOOST_STATIC_ASSERT(( ::boost::is_convertible<char*,T>::value ||
                                   ::boost::is_convertible<wchar_t*,T>::value ));             
 #endif
-#ifdef __BORLANDC__
-            typedef ::boost::remove_pointer<T>::type value_type__;
-            typedef ::boost::remove_cv<value_type__>::type value_type;
-#else
-            typedef BOOST_DEDUCED_TYPENAME
-                ::boost::remove_pointer<
-                    BOOST_DEDUCED_TYPENAME
-                        ::boost::remove_cv<T>::type>::type value_type;
-#endif
+            typedef BOOST_CT_DEDUCED_TYPENAME ::boost::remove_pointer<T>::type value_type;
+
             typedef BOOST_CT_DEDUCED_TYPENAME
                 ::boost::remove_cv<value_type>::type char_type;
             typedef ::std::char_traits<char_type> char_traits;
 
-            typedef value_type* iterator;
+            typedef value_type*       iterator;
             typedef const value_type* const_iterator;
-            typedef BOOST_DEDUCED_TYPENAME std::ptrdiff_t difference_type;
-            typedef BOOST_DEDUCED_TYPENAME std::size_t size_type;
+            typedef std::ptrdiff_t    difference_type;
+            typedef std::size_t       size_type;
 
             typedef BOOST_CT_DEDUCED_TYPENAME
                 ::boost::mpl::if_< ::boost::is_const<T>,
                     const_iterator,
                     iterator 
-                >::type result_iterator;
+                >::type              result_iterator;
 
             // static operations
             template< typename P >
             static size_type size( const P& p )
             {
-                if ( p==0 ) 
+                if ( empty( p ) )
                     return 0;
                 else
                     return char_traits::length(p);
@@ -569,10 +524,8 @@ namespace boost {
             template< typename P >
             static bool empty( const P& p )
             {
-                return p==0 || p[0]==0; // here p can be null
+                return p==0 || p[0]==0; 
             }
-
-#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
 
             template< typename P >
             static iterator begin( P& p )
@@ -589,39 +542,18 @@ namespace boost {
             template< typename P >
             static iterator end( P& p )
             {
-                if ( p==0 )
+                if( empty( p ) )
                     return p;
-                else
-                    return p+char_traits::length(p);
+                return p+char_traits::length(p);
             }
 
             template< typename P >
             static const_iterator end( const P& p )
             {
-                if ( p==0 )
+                if( empty( p ) )
                     return p;
-                else
-                    return p+char_traits::length(p);
+                return p+char_traits::length(p);
             }
-
-#else // BOOST_NO_FUNCTION_TEMPLATE_ORDERING
-
-            template< typename P >
-            static result_iterator begin( P& p )
-            {
-                return p;
-            }
-
-            template< typename P >
-            static result_iterator end( P& p )
-            {
-                if ( p==0 )
-                    return p;
-                else
-                    return p+char_traits::length(p);
-            }
-
-#endif // BOOST_NO_FUNCTION_TEMPLATE_ORDERING    
         }; 
 
         template<typename T>
@@ -632,8 +564,18 @@ namespace boost {
 
 // Iterator container traits ---------------------------------------------------------------
         
+#ifdef BOOST_MSVC_STD_ITERATOR
+        template< typename T1, T2 >
+        yes_type is_iterator_impl( const std::iterator<T2,T2>* );
+#else        
+#if BOOST_DINKUMWARE_STDLIB == 1
+        template< typename C, typename T, typename D >
+        yes_type is_iterator_impl( const std::iterator<C,T,D>* );
+#else
         template< typename C, typename T, typename D, typename P, typename R >
         yes_type is_iterator_impl( const std::iterator<C,T,D,P,R>* );
+#endif
+#endif
         no_type  is_iterator_impl( ... ); 
         
         template< typename T >

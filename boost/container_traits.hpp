@@ -93,8 +93,6 @@ namespace boost {
             return container_traits<C>::__function_type::empty( c );
         }
 
-#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
-
         template< typename C >
         inline BOOST_DEDUCED_TYPENAME container_traits<C>::iterator
         begin( C& c )
@@ -123,24 +121,6 @@ namespace boost {
             return container_traits<C>::__function_type::end( c );
         }
 
-#else // BOOST_NO_FUNCTION_TEMPLATE_ORDERING
-
-        template< typename C >
-        inline BOOST_DEDUCED_TYPENAME container_traits<C>::result_iterator
-        begin( C& c )
-        {
-            return container_traits<C>::__function_type::begin( c );
-        }
-
-        template< typename C >
-        inline BOOST_DEDUCED_TYPENAME container_traits<C>::result_iterator
-        end( C& c )
-        {
-            return container_traits<C>::__function_type::end( c );
-        }
-
-#endif // BOOST_NO_FUNCTION_TEMPLATE_ORDERING
- 
         template< typename T, std::size_t sz >
         container_traits_detail::container_traits_size<sz>
         sizer( const T (&array)[sz] );
@@ -148,6 +128,40 @@ namespace boost {
         template< typename T, std::size_t sz >
         container_traits_detail::container_traits_size<sz>
         sizer( T (&array)[sz] );
+
+        //////////////////////////////////////////////////////////////////////
+        // MPL compatible traits
+        //////////////////////////////////////////////////////////////////////
+        
+        template< typename T >
+        struct container_value_type
+        {
+            BOOST_DEDUCED_TYPENAME container_traits<T>::value_type type;
+        };
+        
+        template< typename T >
+        struct container_iterator
+        {
+            BOOST_DEDUCED_TYPENAME container_traits<T>::iterator type;
+        };
+
+        template< typename T >
+        struct container_const_iterator
+        {
+            BOOST_DEDUCED_TYPENAME container_traits<T>::const_iterator type;
+        };
+
+        template< typename T >
+        struct container_difference_type
+        {
+            BOOST_DEDUCED_TYPENAME container_traits<T>::difference_type type;
+        };
+
+        template< typename T >
+        struct container_result_iterator
+        {
+            BOOST_DEDUCED_TYPENAME container_traits<T>::result_iterator type;
+        };
 
 } // namespace boost
 
