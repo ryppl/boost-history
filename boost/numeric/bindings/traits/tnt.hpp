@@ -2,17 +2,17 @@
 
 /*
  * 
- * Copyright (c) Kresimir Fresl 2002 
+ * Copyright (c) Kresimir Fresl and Toon Knapen 2002 
  *
  * Permission to copy, modify, use and distribute this software 
  * for any non-commercial or commercial purpose is granted provided 
  * that this license appear on all copies of the software source code.
  *
- * Author assumes no responsibility whatsoever for its use and makes 
+ * Authors assume no responsibility whatsoever for its use and makes 
  * no guarantees about its quality, correctness or reliability.
  *
- * Author acknowledges the support of the Faculty of Civil Engineering, 
- * University of Zagreb, Croatia.
+ * First author acknowledges the support of the Faculty of Civil 
+ * Engineering, University of Zagreb, Croatia.
  *
  */
 
@@ -32,8 +32,7 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
 
   // TNT::Array1D<>
   template <typename T>
-  struct vector_traits<TNT::Array1D<T> > 
-  {
+  struct vector_traits<TNT::Array1D<T> > {
     typedef T value_type; 
     typedef T* pointer; 
     static pointer storage (TNT::Array1D<T>& v) { return &v[0]; }
@@ -42,8 +41,7 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
   }; 
 
   template <typename T>
-  struct vector_traits<TNT::Array1D<T> const> 
-  {
+  struct vector_traits<TNT::Array1D<T> const> {
     typedef T value_type; 
     typedef T const* pointer; 
     static pointer storage (TNT::Array1D<T> const& v) { return &v[0]; }
@@ -53,8 +51,7 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
 
   // TNT::Fortran_Array1D<>
   template <typename T>
-  struct vector_traits<TNT::Fortran_Array1D<T> > 
-  {
+  struct vector_traits<TNT::Fortran_Array1D<T> > {
     typedef T value_type; 
     typedef T* pointer; 
     static pointer storage (TNT::Fortran_Array1D<T>& v) { return &v(1); }
@@ -63,8 +60,7 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
   }; 
 
   template <typename T>
-  struct vector_traits<TNT::Fortran_Array1D<T> const> 
-  {
+  struct vector_traits<TNT::Fortran_Array1D<T> const> {
     typedef T value_type; 
     typedef T const* pointer; 
     static pointer storage (TNT::Fortran_Array1D<T> const& v) { return &v(1); }
@@ -75,25 +71,31 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
 
   // TNT::Array2D<>
   template <typename T>
-  struct matrix_traits<TNT::Array2D<T> > 
-  {
+  struct matrix_traits<TNT::Array2D<T> > {
+    typedef general_t matrix_structure; 
     typedef T value_type; 
     typedef T* pointer; 
     static pointer storage (TNT::Array2D<T>& m) { return m[0]; }
     static int size1 (TNT::Array2D<T>& m) { return m.dim1(); } 
     static int size2 (TNT::Array2D<T>& m) { return m.dim2(); } 
+    static int storage_size (TNT::Array2D<T>& m) { 
+      return size1 (m) * size2 (m); 
+    }
     static int leading_dimension (TNT::Array2D<T>& m) { return m.dim2(); } 
     typedef row_major_t ordering_type; 
   }; 
 
   template <typename T>
-  struct matrix_traits<TNT::Array2D<T> const> 
-  {
+  struct matrix_traits<TNT::Array2D<T> const> {
+    typedef general_t matrix_structure; 
     typedef T value_type; 
     typedef T const* pointer; 
     static pointer storage (TNT::Array2D<T> const& m) { return m[0]; }
     static int size1 (TNT::Array2D<T> const& m) { return m.dim1(); } 
     static int size2 (TNT::Array2D<T> const& m) { return m.dim2(); } 
+    static int storage_size (TNT::Array2D<T> const& m) { 
+      return size1 (m) * size2 (m); 
+    }
     static int leading_dimension (TNT::Array2D<T> const& m) { 
       return m.dim2(); 
     } 
@@ -102,13 +104,16 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
 
   // TNT::Fortran_Array2D<>
   template <typename T>
-  struct matrix_traits<TNT::Fortran_Array2D<T> > 
-  {
+  struct matrix_traits<TNT::Fortran_Array2D<T> > {
+    typedef general_t matrix_structure; 
     typedef T value_type; 
     typedef T* pointer; 
     static pointer storage (TNT::Fortran_Array2D<T>& m) { return &m(1, 1); }
     static int size1 (TNT::Fortran_Array2D<T>& m) { return m.dim1(); } 
     static int size2 (TNT::Fortran_Array2D<T>& m) { return m.dim2(); } 
+    static int storage_size (TNT::Fortran_Array2D<T>& m) { 
+      return size1 (m) * size2 (m); 
+    }
     static int leading_dimension (TNT::Fortran_Array2D<T>& m) { 
       return m.dim1(); 
     } 
@@ -116,8 +121,8 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
   }; 
 
   template <typename T>
-  struct matrix_traits<TNT::Fortran_Array2D<T> const> 
-  {
+  struct matrix_traits<TNT::Fortran_Array2D<T> const> {
+    typedef general_t matrix_structure; 
     typedef T value_type; 
     typedef T const* pointer; 
     static pointer storage (TNT::Fortran_Array2D<T> const& m) { 
@@ -125,6 +130,9 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     }
     static int size1 (TNT::Fortran_Array2D<T> const& m) { return m.dim1(); } 
     static int size2 (TNT::Fortran_Array2D<T> const& m) { return m.dim2(); } 
+    static int storage_size (TNT::Fortran_Array2D<T> const& m) { 
+      return size1 (m) * size2 (m); 
+    }
     static int leading_dimension (TNT::Fortran_Array2D<T> const& m) { 
       return m.dim1(); 
     } 

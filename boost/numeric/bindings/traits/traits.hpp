@@ -2,17 +2,17 @@
 
 /*
  * 
- * Copyright (c) Kresimir Fresl 2002 
+ * Copyright (c) Kresimir Fresl and Toon Knapen 2002 
  *
  * Permission to copy, modify, use and distribute this software 
  * for any non-commercial or commercial purpose is granted provided 
  * that this license appear on all copies of the software source code.
  *
- * Author assumes no responsibility whatsoever for its use and makes 
+ * Authors assume no responsibility whatsoever for its use and makes 
  * no guarantees about its quality, correctness or reliability.
  *
- * Author acknowledges the support of the Faculty of Civil Engineering, 
- * University of Zagreb, Croatia.
+ * First author acknowledges the support of the Faculty of Civil 
+ * Engineering, University of Zagreb, Croatia.
  *
  */
 
@@ -50,20 +50,33 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
   struct vector_traits : default_vector_traits<V> {}; 
 
 
+  // matrix structure tags:
+  struct general_t {}; 
+  struct symmetric_t {}; 
+  struct symmetric_packed_t {}; 
+  struct hermitian_t {}; 
+  struct hermitian_packed_t {}; 
+  // triangular, banded etc. 
+  struct unknown_structure_t {}; 
+
   // matrix_traits<> generic version: 
   template <typename M>
-  struct matrix_traits 
-  {
+  struct matrix_traits {
     // typedefs:
+    //   matrix_structure 
     //   value_type
     //   pointer
     //   ordering_type
     // static functions:
     //   pointer storage()
+    //   int storage_size()
     //   int size1()
     //   int size2()
-    //   int leading_dimension()
+    //   int leading_dimension()  // not all matrix types 
+    // symmetric/hermitian typedefs:
+    //   uplo_type 
   }; 
+
 
   // storage ordering tags: 
   struct row_major_t {};
@@ -73,53 +86,68 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
   struct upper_t {};
   struct lower_t {};
 
-  //
-  // Free functions that automatically rely on the correct traits class
-  //
-  
-  template < typename vector_type >
-  typename vector_type::value_type* vector_storage(vector_type& v)
-  { return vector_traits< vector_type >::storage( v ) ; }
 
-  template < typename vector_type >
-  const typename vector_type::value_type* vector_storage(const vector_type& v)
-  { return vector_traits< const vector_type >::storage( v ) ; }
+  // free accessor functions: 
+  
+  template <typename VectorT>
+  inline 
+  typename vector_traits<VectorT>::pointer vector_storage (VectorT& v) { 
+    return vector_traits<VectorT>::storage (v); 
+  }
 
-  template < typename vector_type >
-  int size(vector_type& v)
-  { return vector_traits< vector_type >::size( v ) ; }
+  template <typename VectorT>
+  inline
+  int vector_size (VectorT& v) { 
+    return vector_traits<VectorT>::size (v); 
+  }
 
-  template < typename vector_type >
-  int stride(vector_type& v)
-  { return vector_traits< vector_type >::stride( v ) ; }
+  template <typename VectorT>
+  inline
+  int vector_stride (VectorT& v) { 
+    return vector_traits<VectorT>::stride (v); 
+  }
 
-  template < typename matrix_type >
-  typename matrix_type::value_type* matrix_storage(matrix_type& m)
-  { return matrix_traits< matrix_type >::storage( m ) ; }
+  template <typename MatrixT>
+  inline
+  typename matrix_traits<MatrixT>::pointer matrix_storage (MatrixT& m) { 
+    return matrix_traits<MatrixT>::storage (m); 
+  }
   
-  template < typename matrix_type >
-  const typename matrix_type::value_type* matrix_storage(const matrix_type& m)
-  { return matrix_traits< const matrix_type >::storage( m ) ; }
+  template <typename MatrixT>
+  inline
+  int matrix_size1 (MatrixT& m) { 
+    return matrix_traits<MatrixT>::size1 (m); 
+  }
   
-  template < typename matrix_type >
-  int size1(matrix_type& m)
-  { return matrix_traits< matrix_type >::size1( m ) ; }
+  template <typename MatrixT>
+  inline
+  int matrix_size2 (MatrixT& m) { 
+    return matrix_traits<MatrixT>::size2 (m); 
+  }
   
-  template < typename matrix_type >
-  int size2(matrix_type& m)
-  { return matrix_traits< matrix_type >::size2( m ) ; }
+  template <typename MatrixT>
+  inline
+  int matrix_storage_size (MatrixT& m) { 
+    return matrix_traits<MatrixT>::storage_size (m); 
+  }
   
-  template < typename matrix_type >
-  int stride1(matrix_type& m)
-  { return matrix_traits< matrix_type >::stride1( m ) ; }
+  template <typename MatrixT>
+  inline
+  int matrix_stride1 (MatrixT& m) { 
+    return matrix_traits<MatrixT>::stride1 (m); 
+  }
   
-  template < typename matrix_type >
-  int stride2(matrix_type& m)
-  { return matrix_traits< matrix_type >::stride2( m ) ; }
+  template <typename MatrixT>
+  inline
+  int matrix_stride2 (MatrixT& m) { 
+    return matrix_traits<MatrixT>::stride2 (m); 
+  }
   
-  template < typename matrix_type >
-  int leading_dimension(matrix_type& m)
-  { return matrix_traits< matrix_type >::leading_dimension( m ) ; }
+  template <typename MatrixT>
+  inline
+  int leading_dimension (MatrixT& m) { 
+    return matrix_traits<MatrixT>::leading_dimension (m); 
+  }
   
 }}}}  
 
