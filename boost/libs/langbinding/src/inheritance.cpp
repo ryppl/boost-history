@@ -1,12 +1,12 @@
 #define BOOST_LANGBINDING_BUILD
 
-// Copyright David Abrahams 2002. Permission to copy, use,
+// Copyright David Abrahams 2002. 
+// Copyright Daniel Wallin 2003.
+// Permission to copy, use,
 // modify, sell and distribute this software is granted provided this
 // copyright notice appears in all copies. This software is provided
 // "as is" without express or implied warranty, and with no claim as
 // to its suitability for any purpose.
-
-// Copyright (c) 2003 Daniel Wallin
 
 #include <boost/langbinding/inheritance.hpp>
 #include <boost/graph/breadth_first_search.hpp>
