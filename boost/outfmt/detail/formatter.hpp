@@ -12,14 +12,14 @@
    {
       template
       <
-         typename FormatType,
+         typename DelimeterType,
          class    ReferenceType,
-         class    FormatTraits = boost::io::detail::format_traits< FormatType >
+         class    FormatTraits = boost::io::detail::default_sequence_traits< DelimeterType >
       >
-      class formatter_t: public openclose_formatter_t< FormatType, ReferenceType, FormatTraits >
+      class formatter_t: public openclose_formatter_t< DelimeterType, ReferenceType, FormatTraits >
       {
          public:
-            typedef openclose_formatter_t< FormatType, ReferenceType, FormatTraits >
+            typedef openclose_formatter_t< DelimeterType, ReferenceType, FormatTraits >
                                                            base_type;
             typedef typename base_type::format_type        format_type;
             typedef typename base_type::traits_type        traits_type;
@@ -61,7 +61,7 @@
             template< typename RT2, class FormatTraits2 >
             inline ReferenceType &               format
                                                  (
-                                                    const openclose_formatter_t< FormatType, RT2, FormatTraits2 > & fmt
+                                                    const openclose_formatter_t< DelimeterType, RT2, FormatTraits2 > & fmt
                                                  )
             {
                return( base_type::format( fmt.open(), fmt.close()));
@@ -70,14 +70,14 @@
             template< typename RT2, class FormatTraits2 >
             inline ReferenceType &               format
                                                  (
-                                                    const formatter_t< FormatType, RT2, FormatTraits2 > & fmt
+                                                    const formatter_t< DelimeterType, RT2, FormatTraits2 > & fmt
                                                  )
             {
                return( format( fmt.open(), fmt.close(), fmt.separator()));
             }
          public: // constructors
             inline           formatter_t():
-               openclose_formatter_t< FormatType, ReferenceType, FormatTraits >(),
+               openclose_formatter_t< DelimeterType, ReferenceType, FormatTraits >(),
                fmt_separator( traits_type::separator_default() )
             {
             }
@@ -87,7 +87,7 @@
                                 format_type c,
                                 format_type s // = traits_type::separator_default
                              ):
-               openclose_formatter_t< FormatType, ReferenceType, FormatTraits >( o, c ),
+               openclose_formatter_t< DelimeterType, ReferenceType, FormatTraits >( o, c ),
                fmt_separator( s )
             {
             }
@@ -96,40 +96,40 @@
                                 format_type o,
                                 format_type c
                              ):
-               openclose_formatter_t< FormatType, ReferenceType, FormatTraits >( o, c ),
+               openclose_formatter_t< DelimeterType, ReferenceType, FormatTraits >( o, c ),
                fmt_separator( traits_type::separator_default())
             {
             }
             inline           formatter_t( format_type s ):
-               openclose_formatter_t< FormatType, ReferenceType, FormatTraits >(),
+               openclose_formatter_t< DelimeterType, ReferenceType, FormatTraits >(),
                fmt_separator( s )
             {
             }
             template< typename RT2, class FormatTraits2 >
             inline           formatter_t
                              (
-                                const openclose_formatter_t< FormatType, RT2, FormatTraits2 > & fmt,
+                                const openclose_formatter_t< DelimeterType, RT2, FormatTraits2 > & fmt,
                                 format_type s // = traits_type::separator_default
                              ):
-               openclose_formatter_t< FormatType, ReferenceType, FormatTraits >( fmt ),
+               openclose_formatter_t< DelimeterType, ReferenceType, FormatTraits >( fmt ),
                fmt_separator( s )
             {
             }
             template< typename RT2, class FormatTraits2 >
             inline           formatter_t // VC workaround
                              (
-                                const openclose_formatter_t< FormatType, RT2, FormatTraits2 > & fmt
+                                const openclose_formatter_t< DelimeterType, RT2, FormatTraits2 > & fmt
                              ):
-               openclose_formatter_t< FormatType, ReferenceType, FormatTraits >( fmt ),
+               openclose_formatter_t< DelimeterType, ReferenceType, FormatTraits >( fmt ),
                fmt_separator( traits_type::separator_default())
             {
             }
             template< typename RT2, class FormatTraits2 >
             inline           formatter_t
                              (
-                                const formatter_t< FormatType, RT2, FormatTraits2 > & fmt
+                                const formatter_t< DelimeterType, RT2, FormatTraits2 > & fmt
                              ):
-               openclose_formatter_t< FormatType, ReferenceType, FormatTraits >( fmt ),
+               openclose_formatter_t< DelimeterType, ReferenceType, FormatTraits >( fmt ),
                fmt_separator( fmt.separator())
             {
             }
@@ -137,24 +137,24 @@
 
       template
       <
-         typename FormatType,
-         class FormatTraits = boost::io::detail::format_traits< FormatType >
+         typename DelimeterType,
+         class FormatTraits = boost::io::detail::default_sequence_traits< DelimeterType >
       >
       class formatter: public formatter_t
                               <
-                                 FormatType,
-                                 formatter< FormatType, FormatTraits >,
+                                 DelimeterType,
+                                 formatter< DelimeterType, FormatTraits >,
                                  FormatTraits
                               >
       {
          public:
-            typedef formatter_t< FormatType, openclose_formatter< FormatType, FormatTraits >, FormatTraits >
+            typedef formatter_t< DelimeterType, openclose_formatter< DelimeterType, FormatTraits >, FormatTraits >
                                                            base_type;
             typedef typename base_type::format_type        format_type;
             typedef typename base_type::traits_type        traits_type;
          public:
             inline           formatter():
-               formatter_t< FormatType, formatter, FormatTraits >()
+               formatter_t< DelimeterType, formatter, FormatTraits >()
             {
             }
             inline           formatter
@@ -163,7 +163,7 @@
                                 format_type c,
                                 format_type s // = traits_type::separator_default
                              ):
-               formatter_t< FormatType, formatter, FormatTraits >( o, c, s )
+               formatter_t< DelimeterType, formatter, FormatTraits >( o, c, s )
             {
             }
             inline           formatter // VC workaround
@@ -171,37 +171,37 @@
                                 format_type o,
                                 format_type c
                              ):
-               formatter_t< FormatType, formatter, FormatTraits >( o, c, traits_type::separator_default() )
+               formatter_t< DelimeterType, formatter, FormatTraits >( o, c, traits_type::separator_default() )
             {
             }
             inline           formatter( format_type s ):
-               formatter_t< FormatType, formatter, FormatTraits >( s )
+               formatter_t< DelimeterType, formatter, FormatTraits >( s )
             {
             }
             template< typename RT2, class FormatTraits2 >
             inline           formatter
                              (
-                                const openclose_formatter_t< FormatType, RT2, FormatTraits2 > & fmt,
+                                const openclose_formatter_t< DelimeterType, RT2, FormatTraits2 > & fmt,
                                 format_type s // = traits_type::separator_default
                              ):
-               formatter_t< FormatType, formatter, FormatTraits >( fmt, s )
+               formatter_t< DelimeterType, formatter, FormatTraits >( fmt, s )
             {
             }
             template< typename RT2, class FormatTraits2 >
             inline           formatter // VC workaround
                              (
-                                const openclose_formatter_t< FormatType, RT2, FormatTraits2 > & fmt
+                                const openclose_formatter_t< DelimeterType, RT2, FormatTraits2 > & fmt
                              ):
-               formatter_t< FormatType, formatter, FormatTraits >( fmt, traits_type::separator_default() )
+               formatter_t< DelimeterType, formatter, FormatTraits >( fmt, traits_type::separator_default() )
             {
             }
 #           if !defined(BOOST_MSVC) || _MSC_VER > 1200
                template< typename RT2, class FormatTraits2 >
                inline        formatter
                              (
-                                const formatter_t< FormatType, RT2, FormatTraits2 > & fmt
+                                const formatter_t< DelimeterType, RT2, FormatTraits2 > & fmt
                              ):
-                  formatter_t< FormatType, formatter, FormatTraits >( fmt )
+                  formatter_t< DelimeterType, formatter, FormatTraits >( fmt )
                {
                }
 #           endif

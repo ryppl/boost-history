@@ -87,7 +87,7 @@
                mpl::identity< string_traits_base< T > >
             >::type
       >
-      struct string_traits: public Base
+      struct default_string_traits: public Base
       {
       };          
    }}}

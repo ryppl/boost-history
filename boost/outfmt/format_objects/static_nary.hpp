@@ -13,21 +13,21 @@
 
    namespace boost { namespace io
    {
-      template< typename FormatType, class FmtObject >
-      class static_nary_object: public formatter_t
-                                <
-                                   FormatType,
-                                   static_nary_object< FormatType, FmtObject >,
-                                   boost::io::detail::pair_traits< FormatType >
-                                >
+      template< typename DelimeterType, class FormatObject >
+      class naryfmt_t: public formatter_t
+                              <
+                                 DelimeterType,
+                                 naryfmt_t< DelimeterType, FormatObject >,
+                                 boost::io::detail::default_nary_traits< DelimeterType >
+                              >
       {
          public:
-            typedef static_nary_object< FormatType, FmtObject >      this_type;
-            typedef typename formatter_t< FormatType, this_type, boost::io::detail::pair_traits< FormatType > >::traits_type
+            typedef naryfmt_t< DelimeterType, FormatObject >         this_type;
+            typedef typename formatter_t< DelimeterType, this_type, boost::io::detail::default_nary_traits< DelimeterType > >::traits_type
                                                                      traits_type;
             typedef seq_type< nary_type >                            formatter_type;
          public:
-            FmtObject                  fo;
+            FormatObject               fo;
 
          // output
 
@@ -146,40 +146,40 @@
          // constructors
 
          public:
-            inline           static_nary_object()
+            inline           naryfmt_t()
             {
             }
-            inline           static_nary_object( const static_nary_object & o ):
-               formatter_t< FormatType, this_type, boost::io::detail::pair_traits< FormatType > >( o ),
+            inline           naryfmt_t( const naryfmt_t & o ):
+               formatter_t< DelimeterType, this_type, boost::io::detail::default_nary_traits< DelimeterType > >( o ),
                fo( o.fo )
             {
             }
-            inline           static_nary_object( const FmtObject & o ):
+            inline           naryfmt_t( const FormatObject & o ):
                fo( o )
             {
             }
       };
 
-      template< class FormatType >
-      inline static_nary_object< FormatType >    naryfmtex()
+      template< class DelimeterType >
+      inline naryfmt_t< DelimeterType >          naryfmtex()
       {
-         static_nary_object< FormatType > ob;
+         naryfmt_t< DelimeterType > ob;
          return( ob );
       }
 
-      inline static_nary_object< const char * >        naryfmt()
+      inline naryfmt_t< const char * >           naryfmt()
       {
          return( naryfmtex< const char * >());
       }
 
-      template< class FmtObject >
-      inline static_nary_object< typename FmtObject::format_type, FmtObject >
+      template< class FormatObject >
+      inline naryfmt_t< typename FormatObject::format_type, FormatObject >
                                                  naryfmt
                                                  (
-                                                    const FmtObject & fo
+                                                    const FormatObject & fo
                                                  )
       {
-         return( static_nary_object< typename FmtObject::format_type, FmtObject >( fo ));
+         return( naryfmt_t< typename FormatObject::format_type, FormatObject >( fo ));
       }
    }}
 #endif

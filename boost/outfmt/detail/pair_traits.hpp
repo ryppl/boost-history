@@ -8,7 +8,7 @@
 #     pragma once
 #  endif
 
-#  include <boost/outfmt/detail/format_traits.hpp>
+#  include <boost/outfmt/detail/type_traits.hpp>
 
    namespace boost { namespace io { namespace detail
    {
@@ -96,7 +96,7 @@
                mpl::identity< pair_traits_base< T > >
             >::type
       >
-      struct pair_traits: public Base
+      struct default_nary_traits: public Base
       {
       };          
    }}}

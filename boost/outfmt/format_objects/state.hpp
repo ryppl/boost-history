@@ -12,17 +12,17 @@
 
    namespace boost { namespace io
    {
-      template< typename FormatType, class StateObject, bool pre, class FmtObject >
-      class state_object
+      template< typename DelimeterType, class StateObject, bool pre, class FormatObject >
+      class statefmt_t
       {
          public:
-            typedef state_object< StateObject, FmtObject, pre >      this_type;
-            typedef typename FmtObject::traits_type                  traits_type;
-            typedef FormatType                                       format_type;
+            typedef statefmt_t< StateObject, FormatObject, pre >     this_type;
+            typedef typename FormatObject::traits_type               traits_type;
+            typedef DelimeterType                                    format_type;
             typedef seq_type< state_type >                           formatter_type;
          private:
             StateObject                state;
-            FmtObject                  fo;
+            FormatObject               fo;
          public:
             template< typename T, class InputStream >
             inline bool                          read( InputStream & is, T & v ) const
@@ -55,48 +55,48 @@
                return( os );
             }
          public:
-            inline           state_object()
+            inline           statefmt_t()
             {
             }
-            inline           state_object( const state_object & o ):
+            inline           statefmt_t( const statefmt_t & o ):
                state( o.state ),
                fo(    o.fo )
             {
             }
-            inline           state_object( const FmtObject & o ):
+            inline           statefmt_t( const FormatObject & o ):
                fo( o )
             {
             }
-            inline           state_object( const StateObject & s ):
+            inline           statefmt_t( const StateObject & s ):
                state( s )
             {
             }
       };
 
-      template< typename FormatType, class StateObject, bool pre >
-      inline state_object< FormatType, StateObject, pre >
+      template< typename DelimeterType, class StateObject, bool pre >
+      inline statefmt_t< DelimeterType, StateObject, pre >
                                                  statefmtex()
       {
-         state_object< FormatType, StateObject, pre >
+         statefmt_t< DelimeterType, StateObject, pre >
                                        ob;
          return( ob );
       }
 
       template< class StateObject, bool pre >
-      inline state_object< const char *, StateObject, pre >
+      inline statefmt_t< const char *, StateObject, pre >
                                                  statefmt()
       {
          return( statefmtex< const char *, StateObject, pre >());
       }
 
-      template< class StateObject, bool pre, class FmtObject >
-      inline state_object< typename FmtObject::format_type, StateObject, pre, FmtObject >
+      template< class StateObject, bool pre, class FormatObject >
+      inline statefmt_t< typename FormatObject::format_type, StateObject, pre, FormatObject >
                                                  statefmt
                                                  (
-                                                    const FmtObject & fo
+                                                    const FormatObject & fo
                                                  )
       {
-         return( state_object< typename FmtObject::format_type, StateObject, pre, FmtObject >( fo ));
+         return( statefmt_t< typename FormatObject::format_type, StateObject, pre, FormatObject >( fo ));
       }
    }}
 #endif

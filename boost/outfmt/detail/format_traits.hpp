@@ -96,7 +96,7 @@
                mpl::identity< format_traits_base< T > >
             >::type
       >
-      struct format_traits: public Base
+      struct default_sequence_traits: public Base
       {
       };          
    }}}

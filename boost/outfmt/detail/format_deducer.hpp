@@ -18,7 +18,7 @@
       {
          template< typename Category,
                    typename T, 
-                   typename FormatType = char >
+                   typename DelimeterType = char >
          struct output_deducer {
 
             template<class TT, typename FF>
@@ -39,7 +39,7 @@
             struct get_comp {
                 typedef composite_deducer<
                             typename type_deducer<U>::base_type,
-                            FormatType
+                            DelimeterType
                         > type; // RHD: broken in GCC 2.95.3-5
             };
 
@@ -47,7 +47,7 @@
             struct get_comp1 {
                 typedef composite_deducer<
                             typename type_deducer<U>::base1_type,
-                            FormatType
+                            DelimeterType
                         > type; // RHD: broken in GCC 2.95.3-5
             };
 
@@ -55,30 +55,30 @@
             struct get_comp2 {
                 typedef composite_deducer<
                             typename type_deducer<U>::base2_type,
-                            FormatType
+                            DelimeterType
                         > type; // RHD: broken in GCC 2.95.3-5
             };
 
             template<typename Base>
             struct get_array_out { 
-                typedef array_object<  
-                            FormatType, 
+                typedef arrayfmt_t<  
+                            DelimeterType, 
                             typename Base::type::outputter
                         > type;
             };
 
             template<typename Base>
             struct get_container_out { 
-                typedef container_object<  
-                            FormatType, 
+                typedef containerfmt_t<  
+                            DelimeterType, 
                             typename Base::type::outputter
                         > type;
             };
 
             template<typename Base1, typename Base2>
             struct get_pair_out { 
-                typedef pair_object<  
-                            FormatType, 
+                typedef pairfmt_t<  
+                            DelimeterType, 
                             typename Base1::type::outputter, 
                             typename Base2::type::outputter 
                         > type;
@@ -86,16 +86,16 @@
 
             template<typename Base>
             struct get_nary_out { 
-                typedef static_nary_object<  
-                            FormatType, 
+                typedef naryfmt_t<  
+                            DelimeterType, 
                             typename Base::type::outputter
                         > type;
             };
 
             template<typename Base>
             struct get_range_out { 
-                typedef range_object<  
-                            FormatType, 
+                typedef rangefmt_t<  
+                            DelimeterType, 
                             typename Base::type::outputter
                         > type;
             };
@@ -124,7 +124,7 @@
             typedef typename
                     select<
                         is_same<category, basic_tag>, 
-                            basic_object,
+                            basicfmt_t,
                         is_same<category, array_tag>, 
                             eval< get_array_out<base1> >,
                         is_same<category, container_tag>, 
@@ -175,13 +175,13 @@
 
       }     // End namespace detail.
 
-      template< class T, typename FormatType = char >
+      template< class T, typename DelimeterType = char >
       struct deducer {
          typedef type_deducer<T>                  info;
          typedef detail::output_deducer< 
                      typename info::category,
                      typename info::object_type, 
-                     FormatType
+                     DelimeterType
                  >                                type;
       };
    }}

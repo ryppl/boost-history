@@ -75,15 +75,15 @@
          }
       }
 
-      template< typename FormatType, class FmtObject >
-      class container_object: public detail::list_object< FormatType, container_object
-                                                                      <
-                                                                         FormatType,
-                                                                         FmtObject
-                                                                      >, FmtObject >
+      template< typename DelimeterType, class FormatObject >
+      class containerfmt_t: public detail::list_object< DelimeterType, containerfmt_t
+                                                                       <
+                                                                          DelimeterType,
+                                                                          FormatObject
+                                                                       >, FormatObject >
       {
          private:
-            typedef detail::list_object< FormatType, container_object< FormatType, FmtObject >, FmtObject >
+            typedef detail::list_object< DelimeterType, containerfmt_t< DelimeterType, FormatObject >, FormatObject >
                                                                      base_type;
          public:
             typedef seq_type< seq_container_type >                   formatter_type; // container_type?
@@ -121,39 +121,39 @@
                return(( *self ).readc( is, detail::inserter_assoc( c )));
             }
          public:
-            inline           container_object()
+            inline           containerfmt_t()
             {
             }
-            inline           container_object( const container_object & o ):
-               detail::list_object< FormatType, container_object< FormatType, FmtObject >, FmtObject >( o )
+            inline           containerfmt_t( const containerfmt_t & o ):
+               detail::list_object< DelimeterType, containerfmt_t< DelimeterType, FormatObject >, FormatObject >( o )
             {
             }
-            inline           container_object( const FmtObject & o ):
-               detail::list_object< FormatType, container_object< FormatType, FmtObject >, FmtObject >( o )
+            inline           containerfmt_t( const FormatObject & o ):
+               detail::list_object< DelimeterType, containerfmt_t< DelimeterType, FormatObject >, FormatObject >( o )
             {
             }
       };
 
-      template< class FormatType >
-      inline container_object< FormatType >      containerfmtex()
+      template< class DelimeterType >
+      inline containerfmt_t< DelimeterType >     containerfmtex()
       {
-         container_object< FormatType > ob;
+         containerfmt_t< DelimeterType > ob;
          return( ob );
       }
 
-      inline container_object< const char * >          containerfmt()
+      inline containerfmt_t< const char * >      containerfmt()
       {
          return( containerfmtex< const char * >());
       }
 
-      template< class FmtObject >
-      inline container_object< BOOST_DEDUCED_TYPENAME FmtObject::format_type, FmtObject >
+      template< class FormatObject >
+      inline containerfmt_t< BOOST_DEDUCED_TYPENAME FormatObject::format_type, FormatObject >
                                                  containerfmt
                                                  (
-                                                    const FmtObject & o
+                                                    const FormatObject & o
                                                  )
       {
-         return( container_object< BOOST_DEDUCED_TYPENAME FmtObject::format_type, FmtObject >( o ));
+         return( containerfmt_t< BOOST_DEDUCED_TYPENAME FormatObject::format_type, FormatObject >( o ));
       }
    }}
 #endif

@@ -16,15 +16,15 @@
 
    namespace boost { namespace io
    {
-      template< typename FormatType, class FmtObject >
-      class range_object: public detail::list_object< FormatType, range_object
-                                                                  <
-                                                                     FormatType,
-                                                                     FmtObject
-                                                                  >, FmtObject >
+      template< typename DelimeterType, class FormatObject >
+      class rangefmt_t: public detail::list_object< DelimeterType, rangefmt_t
+                                                                   <
+                                                                      DelimeterType,
+                                                                      FormatObject
+                                                                   >, FormatObject >
       {
          private:
-            typedef detail::list_object< FormatType, range_object< FormatType, FmtObject >, FmtObject >
+            typedef detail::list_object< DelimeterType, rangefmt_t< DelimeterType, FormatObject >, FormatObject >
                                                                      base_type;
          public:
             typedef seq_type< range_type >                           formatter_type;
@@ -51,41 +51,41 @@
                return(( *self ).write( os, ip.first, ip.second ));
             }
          public:
-            inline           range_object()
+            inline           rangefmt_t()
             {
             }
-            inline           range_object( const range_object & o ):
-               detail::list_object< FormatType, range_object< FormatType, FmtObject >, FmtObject >( o )
+            inline           rangefmt_t( const rangefmt_t & o ):
+               detail::list_object< DelimeterType, rangefmt_t< DelimeterType, FormatObject >, FormatObject >( o )
             {
             }
-            inline           range_object( const FmtObject & o ):
-               detail::list_object< FormatType, range_object< FormatType, FmtObject >, FmtObject >( o )
+            inline           rangefmt_t( const FormatObject & o ):
+               detail::list_object< DelimeterType, rangefmt_t< DelimeterType, FormatObject >, FormatObject >( o )
             {
             }
       };
 
       // range format generators
 
-      template< class FormatType >
-      inline range_object< FormatType >          rangefmtex()
+      template< class DelimeterType >
+      inline rangefmt_t< DelimeterType >         rangefmtex()
       {
-         range_object< FormatType >    ob;
+         rangefmt_t< DelimeterType >    ob;
          return( ob );
       }
 
-      inline range_object< const char * >              rangefmt()
+      inline rangefmt_t< const char * >          rangefmt()
       {
          return( rangefmtex< const char * >());
       }
 
-      template< class FmtObject >
-      inline range_object< BOOST_DEDUCED_TYPENAME FmtObject::format_type, FmtObject >
+      template< class FormatObject >
+      inline rangefmt_t< BOOST_DEDUCED_TYPENAME FormatObject::format_type, FormatObject >
                                                  rangefmt
                                                  (
-                                                    const FmtObject & o
+                                                    const FormatObject & o
                                                  )
       {
-         return( range_object< BOOST_DEDUCED_TYPENAME FmtObject::format_type, FmtObject >( o ));
+         return( rangefmt_t< BOOST_DEDUCED_TYPENAME FormatObject::format_type, FormatObject >( o ));
       }
    }}
 #endif

@@ -13,15 +13,15 @@
 
    namespace boost { namespace io { namespace detail
    {
-      template< typename FormatType, class RetType, typename FmtObject = boost::io::basic_object >
-      class list_object: public formatter_t< FormatType, RetType >
+      template< typename DelimeterType, class RetType, typename FormatObject = boost::io::basicfmt_t >
+      class list_object: public formatter_t< DelimeterType, RetType >
       {
          public:
-            typedef list_object< FormatType, RetType, FmtObject >    this_type;
-            typedef typename formatter_t< FormatType, this_type >::traits_type
+            typedef list_object< DelimeterType, RetType, FormatObject > this_type;
+            typedef typename formatter_t< DelimeterType, this_type >::traits_type
                                                                      traits_type;
          private:
-            FmtObject                  fo;
+            FormatObject               fo;
          public:
             template< class InputStream, class Iterator >
             inline bool                          readc
@@ -115,11 +115,11 @@
             {
             }
             inline           list_object( const list_object & lo ):
-               formatter_t< FormatType, RetType >( lo ),
+               formatter_t< DelimeterType, RetType >( lo ),
                fo( lo.fo )
             {
             }
-            inline           list_object( const FmtObject & o ):
+            inline           list_object( const FormatObject & o ):
                fo( o )
             {
             }

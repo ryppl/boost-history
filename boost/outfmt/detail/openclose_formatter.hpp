@@ -12,14 +12,14 @@
    {
       template
       <
-         typename FormatType,
+         typename DelimeterType,
          class    ReferenceType,
-         class    FormatTraits = boost::io::detail::format_traits< FormatType >
+         class    FormatTraits = boost::io::detail::default_sequence_traits< DelimeterType >
       >
       class openclose_formatter_t
       {
          public:
-            typedef FormatType                             format_type;
+            typedef DelimeterType                          format_type;
             typedef FormatTraits                           traits_type;
          private: // format control
             format_type                fmt_open;
@@ -47,7 +47,7 @@
             template< typename RefT2, class FormatTraits2 >
             inline ReferenceType &               format
                                                  (
-                                                    const openclose_formatter_t< FormatType, RefT2, FormatTraits2 > & fmt
+                                                    const openclose_formatter_t< DelimeterType, RefT2, FormatTraits2 > & fmt
                                                  )
             {
                return( format( fmt.open(), fmt.close()));
@@ -64,7 +64,7 @@
             {
             }
             template< typename RefT2, class FormatTraits2 >
-            inline           openclose_formatter_t( const openclose_formatter_t< FormatType, RefT2, FormatTraits2 > & fmt ):
+            inline           openclose_formatter_t( const openclose_formatter_t< DelimeterType, RefT2, FormatTraits2 > & fmt ):
                fmt_open(  fmt.open()),
                fmt_close( fmt.close())
             {
@@ -73,33 +73,33 @@
 
       template
       <
-         typename FormatType,
-         class    FormatTraits = boost::io::detail::format_traits< FormatType >
+         typename DelimeterType,
+         class    FormatTraits = boost::io::detail::default_sequence_traits< DelimeterType >
       >
       class openclose_formatter: public openclose_formatter_t
                                         <
-                                           FormatType,
-                                           openclose_formatter< FormatType, FormatTraits >,
+                                           DelimeterType,
+                                           openclose_formatter< DelimeterType, FormatTraits >,
                                            FormatTraits
                                         >
       {
          public:
-            typedef openclose_formatter_t< FormatType, openclose_formatter< FormatType, FormatTraits >, FormatTraits >
+            typedef openclose_formatter_t< DelimeterType, openclose_formatter< DelimeterType, FormatTraits >, FormatTraits >
                                                            base_type;
             typedef typename base_type::format_type        format_type;
             typedef typename base_type::traits_type        traits_type;
          public:
             inline           openclose_formatter():
-               openclose_formatter_t< FormatType, openclose_formatter, FormatTraits >()
+               openclose_formatter_t< DelimeterType, openclose_formatter, FormatTraits >()
             {
             }
             inline           openclose_formatter( format_type o, format_type c ):
-               openclose_formatter_t< FormatType, openclose_formatter, FormatTraits >( o, c )
+               openclose_formatter_t< DelimeterType, openclose_formatter, FormatTraits >( o, c )
             {
             }
             template< typename RefT2, class FormatTraits2 >
-            inline           openclose_formatter( const openclose_formatter_t< FormatType, RefT2, FormatTraits2 > & fmt ):
-               openclose_formatter_t< FormatType, openclose_formatter, FormatTraits >( fmt )
+            inline           openclose_formatter( const openclose_formatter_t< DelimeterType, RefT2, FormatTraits2 > & fmt ):
+               openclose_formatter_t< DelimeterType, openclose_formatter, FormatTraits >( fmt )
             {
             }
       };

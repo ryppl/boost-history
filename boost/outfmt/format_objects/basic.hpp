@@ -81,7 +81,7 @@
          };
       }
 
-      class basic_object
+      class basicfmt_t
       {
          public:
             typedef void                                             traits_type;
@@ -111,17 +111,17 @@
                 );
             }
          public:
-            inline           basic_object()
+            inline           basicfmt_t()
             {
             }
-            inline           basic_object( const basic_object & )
+            inline           basicfmt_t( const basicfmt_t & )
             {
             }
       };
 
-      inline basic_object basicfmt()
+      inline basicfmt_t                          basicfmt()
       {
-         basic_object                  ob;
+         basicfmt_t                  ob;
          return( ob );
       }
    }}

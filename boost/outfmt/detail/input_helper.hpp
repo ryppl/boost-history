@@ -8,7 +8,7 @@
 #     pragma once
 #  endif
 
-#  include <ios>
+#  include <boost/outfmt/detail/config.hpp>
 #  include <boost/noncopyable.hpp>
 
    namespace boost { namespace io { namespace detail

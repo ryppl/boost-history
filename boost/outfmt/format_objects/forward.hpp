@@ -12,27 +12,27 @@
 
    namespace boost { namespace io
    {
-      class                            basic_object;
+      class                            basicfmt_t;
 
-      template< typename FormatType, class FmtObject = boost::io::basic_object >
-      class                            wrapped_object;
+      template< typename DelimeterType, class FormatObject = boost::io::basicfmt_t >
+      class                            wrappedfmt_t;
 
-      template< typename FormatType, class StateObject, bool pre = true, class FmtObject = boost::io::basic_object >
-      class                            state_object;
+      template< typename DelimeterType, class StateObject, bool pre = true, class FormatObject = boost::io::basicfmt_t >
+      class                            statefmt_t;
 
-      template< typename FormatType, class FmtObject1 = boost::io::basic_object, class FmtObject2 = boost::io::basic_object >
-      class                            pair_object;
+      template< typename DelimeterType, class FormatObject1 = boost::io::basicfmt_t, class FormatObject2 = boost::io::basicfmt_t >
+      class                            pairfmt_t;
 
-      template< typename FormatType, class FmtObject = boost::io::basic_object >
-      class                            static_nary_object;
+      template< typename DelimeterType, class FormatObject = boost::io::basicfmt_t >
+      class                            naryfmt_t;
 
-      template< typename FormatType, class FmtObject = boost::io::basic_object >
-      class                            range_object;
+      template< typename DelimeterType, class FormatObject = boost::io::basicfmt_t >
+      class                            rangefmt_t;
 
-      template< typename FormatType, class FmtObject = boost::io::basic_object >
-      class                            array_object;
+      template< typename DelimeterType, class FormatObject = boost::io::basicfmt_t >
+      class                            arrayfmt_t;
 
-      template< typename FormatType, class FmtObject = boost::io::basic_object >
-      class                            container_object;
+      template< typename DelimeterType, class FormatObject = boost::io::basicfmt_t >
+      class                            containerfmt_t;
    }}
 #endif

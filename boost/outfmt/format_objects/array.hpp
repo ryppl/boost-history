@@ -12,18 +12,18 @@
 
    namespace boost { namespace io
    {
-      template< typename FormatType, class FmtObject >
-      class array_object: public detail::list_object< FormatType, array_object
-                                                                  <
-                                                                     FormatType,
-                                                                     FmtObject
-                                                                  >, FmtObject >
+      template< typename DelimeterType, class FormatObject >
+      class arrayfmt_t: public detail::list_object< DelimeterType, arrayfmt_t
+                                                                   <
+                                                                      DelimeterType,
+                                                                      FormatObject
+                                                                   >, FormatObject >
       {
          private:
             long                       length;
             long                       offset;
          private:
-            typedef detail::list_object< FormatType, array_object< FormatType, FmtObject >, FmtObject >
+            typedef detail::list_object< DelimeterType, arrayfmt_t< DelimeterType, FormatObject >, FormatObject >
                                                                      base_type;
          public:
             typedef seq_type< array_type >                           formatter_type;
@@ -47,90 +47,90 @@
                return(( *self ).write( os, array + offset, array + offset + length ));
             }
          public:
-            inline array_object & operator()( long len )
+            inline arrayfmt_t & operator()( long len )
             {
                offset = 0;
                length = len;
                return( *this );
             }
-            inline array_object & operator()( long off, long len )
+            inline arrayfmt_t & operator()( long off, long len )
             {
                offset = off;
                length = len;
                return( *this );
             }
          public:
-            inline           array_object( const array_object & ao ):
-               detail::list_object< FormatType, array_object< FormatType, FmtObject >, FmtObject >( ao ),
+            inline           arrayfmt_t( const arrayfmt_t & ao ):
+               detail::list_object< DelimeterType, arrayfmt_t< DelimeterType, FormatObject >, FormatObject >( ao ),
                length( ao.length ),
                offset( ao.offset )
             {
             }
-            inline           array_object( long len = 0 ):
+            inline           arrayfmt_t( long len = 0 ):
                length( len ),
                offset( 0 )
             {
             }
-            inline           array_object( long off, long len ):
+            inline           arrayfmt_t( long off, long len ):
                length( len ),
                offset( off )
             {
             }
-            inline           array_object( const FmtObject & o, long len = 0 ):
-               detail::list_object< FormatType, array_object< FormatType, FmtObject >, FmtObject >( o ),
+            inline           arrayfmt_t( const FormatObject & o, long len = 0 ):
+               detail::list_object< DelimeterType, arrayfmt_t< DelimeterType, FormatObject >, FormatObject >( o ),
                length( len ),
                offset( 0 )
             {
             }
-            inline           array_object( const FmtObject & o, long off, long len ):
-               detail::list_object< FormatType, array_object< FormatType, FmtObject >, FmtObject >( o ),
+            inline           arrayfmt_t( const FormatObject & o, long off, long len ):
+               detail::list_object< DelimeterType, arrayfmt_t< DelimeterType, FormatObject >, FormatObject >( o ),
                length( len ),
                offset( off )
             {
             }
       };
 
-      template< class FormatType >
-      inline array_object< FormatType >          arrayfmtex( long off, long len )
+      template< class DelimeterType >
+      inline arrayfmt_t< DelimeterType >         arrayfmtex( long off, long len )
       {
-         array_object< FormatType > ob( off, len );
+         arrayfmt_t< DelimeterType > ob( off, len );
          return( ob );
       }
-      template< class FormatType >
-      inline array_object< FormatType >          arrayfmtex( long len = 0 )
+      template< class DelimeterType >
+      inline arrayfmt_t< DelimeterType >         arrayfmtex( long len )
       {
-         return( arrayfmtex< FormatType >( 0, len ));
+         return( arrayfmtex< DelimeterType >( 0, len ));
       }
 
-      inline array_object< const char * >              arrayfmt( long off, long len )
+      inline arrayfmt_t< const char * >          arrayfmt( long off, long len )
       {
          return( arrayfmtex< const char * >( off, len ));
       }
-      inline array_object< const char * >              arrayfmt( long len = 0 )
+      inline arrayfmt_t< const char * >          arrayfmt( long len )
       {
          return( arrayfmtex< const char * >( 0, len ));
       }
 
-      template< class FmtObject >
-      inline array_object< typename FmtObject::format_type, FmtObject >
+      template< class FormatObject >
+      inline arrayfmt_t< typename FormatObject::format_type, FormatObject >
                                                  arrayfmtout
                                                  (
-                                                    const FmtObject & o,
+                                                    const FormatObject & o,
                                                     long              off,
                                                     long              len
                                                  )
       {
-         return( array_object< BOOST_DEDUCED_TYPENAME FmtObject::format_type, FmtObject >( o, off, len ));
+         return( arrayfmt_t< BOOST_DEDUCED_TYPENAME FormatObject::format_type, FormatObject >( o, off, len ));
       }
-      template< class FmtObject >
-      inline array_object< typename FmtObject::format_type, FmtObject >
+      template< class FormatObject >
+      inline arrayfmt_t< typename FormatObject::format_type, FormatObject >
                                                  arrayfmtout
                                                  (
-                                                    const FmtObject & o,
-                                                    long              len = 0
+                                                    const FormatObject & o,
+                                                    long              len
                                                  )
       {
-         return( array_object< BOOST_DEDUCED_TYPENAME FmtObject::format_type, FmtObject >( o, len ));
+         return( arrayfmt_t< BOOST_DEDUCED_TYPENAME FormatObject::format_type, FormatObject >( o, len ));
       }
    }}
 #endif

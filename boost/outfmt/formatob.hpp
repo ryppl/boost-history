@@ -21,23 +21,23 @@
 
    namespace boost { namespace io
    {
-      template< typename T, typename FormatType = const char *, class FmtObject = boost::io::basic_object >
-      class formatob_t: public FmtObject, public boost::noncopyable
+      template< typename T, typename DelimeterType = const char *, class FormatObject = boost::io::basicfmt_t >
+      class formatob_t: public FormatObject, public boost::noncopyable
       {
          public:
             typename mpl::if_
             <
                mpl::or_
                <
-                  is_range< T >, is_formatter< FmtObject, range_type >,
-                  is_basic< T >, is_formatter< FmtObject, basic_type >
+                  is_range< T >, is_formatter< FormatObject, range_type >,
+                  is_basic< T >, is_formatter< FormatObject, basic_type >
                >,
                typename boost::call_traits< T >::value_type,
                typename boost::call_traits< T >::const_reference
             >::type                    ob;
          public:
-            typedef typename FmtObject::format_type        format_type;
-            typedef typename FmtObject::traits_type        traits_type;
+            typedef typename FormatObject::format_type     format_type;
+            typedef typename FormatObject::traits_type     traits_type;
          public:
             inline formatob_t &                  format
                                                  (
@@ -46,7 +46,7 @@
                                                     format_type s
                                                  )
             {
-               FmtObject::format( o, c, s );
+               FormatObject::format( o, c, s );
                return( *this );
             }
             inline formatob_t &                  format
@@ -55,7 +55,7 @@
                                                     format_type c
                                                  )
             {
-               FmtObject::format( o, c );
+               FormatObject::format( o, c );
                return( *this );
             }
             inline formatob_t &                  format
@@ -63,63 +63,63 @@
                                                     format_type s
                                                  )
             {
-               FmtObject::format( s );
+               FormatObject::format( s );
                return( *this );
             }
 
             template< typename RT2, class FormatTraits2 >
             inline formatob_t &                  format
                                                  (
-                                                    const openclose_formatter_t< FormatType, RT2, FormatTraits2 > & fmt
+                                                    const openclose_formatter_t< DelimeterType, RT2, FormatTraits2 > & fmt
                                                  )
             {
-               FmtObject::format( fmt );
+               FormatObject::format( fmt );
                return( *this );
             }
 
             template< typename RT2, class FormatTraits2 >
             inline formatob_t &                  format
                                                  (
-                                                    const formatter_t< FormatType, RT2, FormatTraits2 > & fmt
+                                                    const formatter_t< DelimeterType, RT2, FormatTraits2 > & fmt
                                                  )
             {
-               FmtObject::format( fmt );
+               FormatObject::format( fmt );
                return( *this );
             }
          private:
             inline           formatob_t();
          public: // constructors
             inline           formatob_t( const formatob_t & fo ):
-               FmtObject( fo ),
+               FormatObject( fo ),
                ob( fo.ob )
             {
             }
             inline           formatob_t( const T & val ): ob( val )
             {
             }
-            inline           formatob_t( const T & val, const FmtObject & o ):
-               FmtObject( o ),
+            inline           formatob_t( const T & val, const FormatObject & o ):
+               FormatObject( o ),
                ob( val )
             {
             }
       };
 
 #     if !defined(BOOST_IOFM_NO_BASIC_STREAM)
-         template< typename CharT, class TraitsT, typename T, typename FormatType, typename FmtObject >
+         template< typename CharT, class TraitsT, typename T, typename DelimeterType, typename FormatObject >
          inline std::basic_ostream< CharT, TraitsT > & operator<<
          (
             std::basic_ostream< CharT, TraitsT > & os,
-            const formatob_t< T, FormatType, FmtObject > & fo
+            const formatob_t< T, DelimeterType, FormatObject > & fo
          )
          {
             return( fo.write( os, fo.ob ));
          }
 
-         template< typename CharT, class TraitsT, typename T, typename FormatType, typename FmtObject >
+         template< typename CharT, class TraitsT, typename T, typename DelimeterType, typename FormatObject >
          inline std::basic_istream< CharT, TraitsT > & operator>>
          (
             std::basic_istream< CharT, TraitsT >         & is,
-            const formatob_t< T, FormatType, FmtObject > & fo
+            const formatob_t< T, DelimeterType, FormatObject > & fo
          )
          {
             boost::io::detail::input_helper< std::basic_istream< CharT, TraitsT > >
@@ -128,21 +128,21 @@
             return( is );
          }
 #     else
-         template< typename T, typename FormatType, typename FmtObject >
+         template< typename T, typename DelimeterType, typename FormatObject >
          inline std::ostream & operator<<
          (
             std::ostream & os,
-            const formatob_t< T, FormatType, FmtObject > & fo
+            const formatob_t< T, DelimeterType, FormatObject > & fo
          )
          {
             return( fo.write( os, fo.ob ));
          }
 
-         template< typename T, typename FormatType, typename FmtObject >
+         template< typename T, typename DelimeterType, typename FormatObject >
          inline std::istream & operator>>
          (
             std::istream & is,
-            const formatob_t< T, FormatType, FmtObject > & fo
+            const formatob_t< T, DelimeterType, FormatObject > & fo
          )
          {
             boost::io::detail::input_helper< std::istream >
@@ -166,14 +166,14 @@
             ));
          }
 
-         template< typename FormatType, typename T >
-         inline formatob_t< T, FormatType, typename deducer< T, FormatType >::type::outputter >
+         template< typename DelimeterType, typename T >
+         inline formatob_t< T, DelimeterType, typename deducer< T, DelimeterType >::type::outputter >
                                                  formatobex( const T & t )
          {
-            return( formatob_t< T, FormatType, BOOST_DEDUCED_TYPENAME deducer< T, FormatType >::type::outputter >
+            return( formatob_t< T, DelimeterType, BOOST_DEDUCED_TYPENAME deducer< T, DelimeterType >::type::outputter >
             (
                t,
-               deducer< T, FormatType >::type::generate()
+               deducer< T, DelimeterType >::type::generate()
             ));
          }
 #     else // no automatic deduction: use basic_output instead
@@ -183,18 +183,18 @@
             return( formatob_t< T >( t ));
          }
 
-         template< typename FormatType, typename T >
-         inline formatob_t< T, FormatType >      formatobex( const T & t )
+         template< typename DelimeterType, typename T >
+         inline formatob_t< T, DelimeterType >      formatobex( const T & t )
          {
-            return( formatob_t< T, FormatType >( t ));
+            return( formatob_t< T, DelimeterType >( t ));
          }
 #     endif
 
-      template< typename T, class FmtObject >
-      inline formatob_t< T, typename FmtObject::format_type, FmtObject >
-                                                 formatob( const T & t, const FmtObject & o )
+      template< typename T, class FormatObject >
+      inline formatob_t< T, typename FormatObject::format_type, FormatObject >
+                                                 formatob( const T & t, const FormatObject & o )
       {
-         return( formatob_t< T, BOOST_DEDUCED_TYPENAME FmtObject::format_type, FmtObject >( t, o ));
+         return( formatob_t< T, BOOST_DEDUCED_TYPENAME FormatObject::format_type, FormatObject >( t, o ));
       }
    }}
 #endif

@@ -12,20 +12,20 @@
 
    namespace boost { namespace io
    {
-      template< typename FormatType, class FmtObject >
-      class wrapped_object: public openclose_formatter_t< FormatType, wrapped_object
-                                                                      <
-                                                                         FormatType,
-                                                                         FmtObject
-                                                                      > >
+      template< typename DelimeterType, class FormatObject >
+      class wrappedfmt_t: public openclose_formatter_t< DelimeterType, wrappedfmt_t
+                                                                       <
+                                                                          DelimeterType,
+                                                                          FormatObject
+                                                                       > >
       {
          public:
-            typedef wrapped_object< FormatType, FmtObject >          this_type;
-            typedef typename openclose_formatter_t< FormatType, this_type >::traits_type
+            typedef wrappedfmt_t< DelimeterType, FormatObject >      this_type;
+            typedef typename openclose_formatter_t< DelimeterType, this_type >::traits_type
                                                                      traits_type;
             typedef seq_type< wrapped_type >                         formatter_type;
          private:
-            FmtObject                  fo;
+            FormatObject               fo;
          public:
             template< typename T, class InputStream >
             inline bool                          read( InputStream & is, T & v ) const
@@ -83,40 +83,40 @@
                return( fo.write( os, value ) << close());
             }
          public:
-            inline           wrapped_object()
+            inline           wrappedfmt_t()
             {
             }
-            inline           wrapped_object( const wrapped_object & o ):
-               openclose_formatter_t< FormatType, this_type >( o ),
+            inline           wrappedfmt_t( const wrappedfmt_t & o ):
+               openclose_formatter_t< DelimeterType, this_type >( o ),
                fo( o.fo )
             {
             }
-            inline           wrapped_object( const FmtObject & o ):
+            inline           wrappedfmt_t( const FormatObject & o ):
                fo( o )
             {
             }
       };
 
-      template< class FormatType >
-      inline wrapped_object< FormatType >        wrappedfmtex()
+      template< class DelimeterType >
+      inline wrappedfmt_t< DelimeterType >       wrappedfmtex()
       {
-         wrapped_object< FormatType >  ob;
+         wrappedfmt_t< DelimeterType >  ob;
          return( ob );
       }
 
-      inline wrapped_object< const char * >            wrappedfmt()
+      inline wrappedfmt_t< const char * >        wrappedfmt()
       {
          return( wrappedfmtex< const char * >());
       }
 
-      template< class FmtObject >
-      inline wrapped_object< typename FmtObject::format_type, FmtObject >
+      template< class FormatObject >
+      inline wrappedfmt_t< typename FormatObject::format_type, FormatObject >
                                                  wrappedfmt
                                                  (
-                                                    const FmtObject & fo
+                                                    const FormatObject & fo
                                                  )
       {
-         return( wrapped_object< BOOST_DEDUCED_TYPENAME FmtObject::format_type, FmtObject >( fo ));
+         return( wrappedfmt_t< BOOST_DEDUCED_TYPENAME FormatObject::format_type, FormatObject >( fo ));
       }
    }}
 #endif

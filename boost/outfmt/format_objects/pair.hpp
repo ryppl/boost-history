@@ -13,23 +13,23 @@
 
    namespace boost { namespace io
    {
-      template< typename FormatType, class FmtObject1, class FmtObject2 >
-      class pair_object: public formatter_t
-                                <
-                                   FormatType,
-                                   pair_object< FormatType, FmtObject1, FmtObject2 >,
-                                   boost::io::detail::pair_traits< FormatType >
-                                >
+      template< typename DelimeterType, class FormatObject1, class FormatObject2 >
+      class pairfmt_t: public formatter_t
+                              <
+                                 DelimeterType,
+                                 pairfmt_t< DelimeterType, FormatObject1, FormatObject2 >,
+                                 boost::io::detail::default_nary_traits< DelimeterType >
+                              >
       {
          public:
-            typedef pair_object< FormatType, FmtObject1, FmtObject2 >
+            typedef pairfmt_t< DelimeterType, FormatObject1, FormatObject2 >
                                                                      this_type;
-            typedef typename formatter_t< FormatType, this_type, boost::io::detail::pair_traits< FormatType > >::traits_type
+            typedef typename formatter_t< DelimeterType, this_type, boost::io::detail::default_nary_traits< DelimeterType > >::traits_type
                                                                      traits_type;
             typedef seq_type< pair_type >                            formatter_type;
          private:
-            FmtObject1                 fo1;
-            FmtObject2                 fo2;
+            FormatObject1              fo1;
+            FormatObject2              fo2;
          public:
             template< typename T, class InputStream >
             inline bool                          read( InputStream & is, T & v ) const
@@ -81,22 +81,22 @@
          // constructors
 
          public:
-            inline           pair_object()
+            inline           pairfmt_t()
             {
             }
-            inline           pair_object( const pair_object & po ):
-               formatter_t< FormatType, this_type, boost::io::detail::pair_traits< FormatType > >( po ),
+            inline           pairfmt_t( const pairfmt_t & po ):
+               formatter_t< DelimeterType, this_type, boost::io::detail::default_nary_traits< DelimeterType > >( po ),
                fo1( po.fo1 ),
                fo2( po.fo2 )
             {
             }
-            inline           pair_object( const FmtObject1 & o1 ): fo1( o1 )
+            inline           pairfmt_t( const FormatObject1 & o1 ): fo1( o1 )
             {
             }
-            inline           pair_object
+            inline           pairfmt_t
                              (
-                                const FmtObject1 & o1,
-                                const FmtObject2 & o2
+                                const FormatObject1 & o1,
+                                const FormatObject2 & o2
                              ):
                fo1( o1 ),
                fo2( o2 )
@@ -104,37 +104,37 @@
             }
       };
 
-      template< class FormatType >
-      inline pair_object< FormatType >           pairfmtex()
+      template< class DelimeterType >
+      inline pairfmt_t< DelimeterType >          pairfmtex()
       {
-         pair_object< FormatType >     ob;
+         pairfmt_t< DelimeterType >     ob;
          return( ob );
       }
 
-      inline pair_object< const char * >               pairfmt()
+      inline pairfmt_t< const char * >           pairfmt()
       {
          return( pairfmtex< const char * >());
       }
 
-      template< class FmtObject1 >
-      inline pair_object< typename FmtObject1::format_type, FmtObject1 > //, boost::io::basic_object >
+      template< class FormatObject1 >
+      inline pairfmt_t< typename FormatObject1::format_type, FormatObject1 > //, boost::io::basicfmt_t >
                                                  pairfmt
                                                  (
-                                                    const FmtObject1 & fo
+                                                    const FormatObject1 & fo
                                                  )
       {
-         return( pair_object< typename FmtObject1::format_type, FmtObject1 >( fo ));
+         return( pairfmt_t< typename FormatObject1::format_type, FormatObject1 >( fo ));
       }
 
-      template< class FmtObject1, class FmtObject2 >
-      inline pair_object< typename FmtObject1::format_type, FmtObject1, FmtObject2 >
+      template< class FormatObject1, class FormatObject2 >
+      inline pairfmt_t< typename FormatObject1::format_type, FormatObject1, FormatObject2 >
                                                  pairfmt
                                                  (
-                                                    const FmtObject1 & fo1,
-                                                    const FmtObject2 & fo2
+                                                    const FormatObject1 & fo1,
+                                                    const FormatObject2 & fo2
                                                  )
       {
-         return( pair_object< BOOST_DEDUCED_TYPENAME FmtObject1::format_type, FmtObject1, FmtObject2 >( fo1, fo2 ));
+         return( pairfmt_t< BOOST_DEDUCED_TYPENAME FormatObject1::format_type, FormatObject1, FormatObject2 >( fo1, fo2 ));
       }
    }}
 #endif
