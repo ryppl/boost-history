@@ -32,7 +32,7 @@ interval<T, Traits> fmod(const interval<T, Traits>& x,
 			 const interval<T, Traits>& y)
 {
   typename Traits::rounding rnd;
-  typedef interval<T, typename interval_lib::unprotect<Traits>::type> I;
+  typedef typename interval_lib::unprotect<interval<T, Traits> >::type I;
   const T& yb = detail::sign(x.lower()) ? y.lower() : y.upper();
   T n = rnd.int_down(rnd.div_down(x.lower(), yb));
   return (const I&)x - n * (const I&)y;
@@ -42,7 +42,7 @@ template<class T, class Traits> inline
 interval<T, Traits> fmod(const interval<T, Traits>& x, const T& y)
 {
   typename Traits::rounding rnd;
-  typedef interval<T, typename interval_lib::unprotect<Traits>::type> I;
+  typedef typename interval_lib::unprotect<interval<T, Traits> >::type I;
   T n = rnd.int_down(rnd.div_down(x.lower(), y));
   return (const I&)x - n * I(y);
 }
@@ -51,7 +51,7 @@ template<class T, class Traits> inline
 interval<T, Traits> fmod(const T& x, const interval<T, Traits>& y)
 {
   typename Traits::rounding rnd;
-  typedef interval<T, typename interval_lib::unprotect<Traits>::type> I;
+  typedef typename interval_lib::unprotect<interval<T, Traits> >::type I;
   const T& yb = detail::sign(x) ? y.lower() : y.upper();
   T n = rnd.int_down(rnd.div_down(x, yb));
   return x - n * (const I&)y;
@@ -88,7 +88,7 @@ template<class T, class Traits> inline
 interval<T, Traits> cos(const interval<T, Traits>& x)
 {
   typename Traits::rounding rnd;
-  typedef interval<T, typename interval_lib::unprotect<Traits>::type> I;
+  typedef typename interval_lib::unprotect<interval<T, Traits> >::type I;
 
   // get lower bound within [0, pi]
   const I pi2 = interval_lib::pi_2_1<I>();
@@ -114,7 +114,7 @@ template<class T, class Traits> inline
 interval<T, Traits> sin(const interval<T, Traits>& x)
 {
   typename Traits::rounding rnd;
-  typedef interval<T, typename interval_lib::unprotect<Traits>::type> I;
+  typedef typename interval_lib::unprotect<interval<T, Traits> >::type I;
   return cos((const I&)x - interval_lib::pi_1_2<I>());
 }
 
@@ -122,7 +122,7 @@ template<class T, class Traits> inline
 interval<T, Traits> tan(const interval<T, Traits>& x)
 {
   typename Traits::rounding rnd;
-  typedef interval<T, typename interval_lib::unprotect<Traits>::type> I;
+  typedef typename interval_lib::unprotect<interval<T, Traits> >::type I;
 
   // get lower bound within [-pi/2, pi/2]
   const I pi = interval_lib::pi<I>();

@@ -18,7 +18,7 @@ void interval<T, Traits>::set_empty()
 }
 
 template<class T, class Traits> inline
-void interval<T, Traits>::set_entire()
+void interval<T, Traits>::set_whole()
 {
   low = -base_limits::infinity();
   up = base_limits::infinity();
@@ -287,9 +287,7 @@ template<class T, class Traits> inline
 interval<T, Traits> scale(const interval<T, Traits>& x,
 			  const T& mirror, const T& factor)
 {
-  typename Traits::rounding rnd;
-  typedef interval<T, typename interval_lib::unprotect<Traits>::type> I;
-  return factor * ((I)x - mirror);
+  return factor * (x - mirror);
 }
 
 template<class T, class Traits> inline

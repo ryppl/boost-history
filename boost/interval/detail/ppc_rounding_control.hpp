@@ -9,7 +9,7 @@
 #error This header only works with GNU CC.
 #endif
 
-#ifndef POWERPC
+#if !defined(powerpc) && !defined(__powerpc__) && !defined(__ppc__)
 #error This header only works on PPC CPUs.
 #endif
 

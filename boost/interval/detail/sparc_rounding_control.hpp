@@ -59,7 +59,6 @@ struct sparc_rounding_control
 #   else
 #     error Unsupported compiler for Sparc rounding control.
 #   endif
-    return mode;
   }
 
   static void downward()   { set_rounding_mode(0xc0000000); }

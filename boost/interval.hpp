@@ -104,17 +104,11 @@ namespace boost {
    * Non-Member Function Declarations
    */
 
-  // Declares a unary operator:
-  //   interval<T,Tr> operator(interval<T,Tr> const&);
-  #define BOOST_INTERVAL_DEFINE_OPERATOR_1( name ) \
-    template<class T, class Traits> \
-      interval<T,Traits> \
-      name (const interval<T,Traits>& x);
+  template<class T, class Traits>
+  const interval<T, Traits>& operator+(const interval<T, Traits>& x);
 
-  BOOST_INTERVAL_DEFINE_OPERATOR_1( operator+ )
-  BOOST_INTERVAL_DEFINE_OPERATOR_1( operator- )
-
-  #undef BOOST_INTERVAL_DEFINE_OPERATOR_1
+  template<class T, class Traits>
+  interval<T, Traits> operator-(const interval<T, Traits>& x);
 
   // Declares all three binary operators:
   //   interval<T,Tr> op (interval<T,Tr> const&, interval<T,Tr> const&);

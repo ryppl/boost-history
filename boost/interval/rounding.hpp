@@ -106,22 +106,25 @@ namespace boost {
   };
   
   template<class Rounding>
-  struct unprotect
+  struct unprotect_rounding
   {
     typedef typename Rounding::unprotected_rounding type;
   };
   
-  template<class T, class Compare, class Rounding, class Checking>
-  struct unprotect<interval_traits<T, Compare, Rounding, Checking> >
+  template<class Traits>
+  struct unprotect_traits
   {
-    typedef interval_traits<T, Compare,
-                            typename unprotect<Rounding>::type, Checking> type;
+    typedef interval_traits<typename Traits::base_type,
+			    typename Traits::compare,
+                            typename unprotect_rounding<typename Traits::rounding>::type,
+			    typename Traits::checking> type;
   };
   
-  template<class T, class Traits>
-  struct unprotect<interval<T, Traits> > 
+  template<class I>
+  struct unprotect
   {
-    typedef interval<T, typename unprotect<Traits>::type> type;
+    typedef interval<typename I::base_type,
+		     typename unprotect_traits<typename I::traits_type>::type> type;
   };
 
   } // namespace interval_lib
@@ -133,12 +136,12 @@ namespace boost {
 // define appropriate specialization of rounding_control for built-in types
 #if defined(__i386__) || defined(__BORLANDC__) || defined(BOOST_MSVC)
 #  include <boost/interval/detail/x86_rounding_control.hpp>
-#elif defined(powerpc) || defined(__powerpc__)
+#elif defined(powerpc) || defined(__powerpc__) || defined(__ppc__)
 #  include <boost/interval/detail/ppc_rounding_control.hpp>
 #elif defined(sparc) || defined(__sparc__)
 #  include <boost/interval/detail/sparc_rounding_control.hpp>
-//#elif defined(__USE_ISOC99)
-//#  include <boost/interval/detail/isoc99_rounding_control.hpp>
+#elif defined(__USE_ISOC99)
+#  include <boost/interval/detail/isoc99_rounding_control.hpp>
 #else
 #  error Please specify rounding control mechanism.
 #endif

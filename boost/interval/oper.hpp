@@ -28,7 +28,7 @@ namespace boost {
  */
 
 template<class T, class Traits> inline
-interval<T, Traits> operator+(const interval<T, Traits>& x)
+const interval<T, Traits>& operator+(const interval<T, Traits>& x)
 {
   return x;
 }
