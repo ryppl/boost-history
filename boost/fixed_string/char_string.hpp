@@ -59,7 +59,7 @@
          virtual size_t                          length() const = 0;
          virtual char *                          assign(  const char * s, size_t l = size_t( -1 )) = 0;
          virtual char *                          append(  const char * s, size_t l = size_t( -1 )) = 0;
-         virtual int                             compare( const char * s, size_t l = size_t( -1 )) = 0;
+         virtual int                             compare( const char * s, size_t l = size_t( -1 )) const = 0;
          virtual int                             format(  const char * fmt, va_list args ) = 0;
       };
       
@@ -69,7 +69,7 @@
          virtual size_t                          length() const = 0;
          virtual wchar_t *                       assign(  const wchar_t * s, size_t l = size_t( -1 )) = 0;
          virtual wchar_t *                       append(  const wchar_t * s, size_t l = size_t( -1 )) = 0;
-         virtual int                             compare( const wchar_t * s, size_t l = size_t( -1 )) = 0;
+         virtual int                             compare( const wchar_t * s, size_t l = size_t( -1 )) const = 0;
          virtual int                             format(  const wchar_t * fmt, va_list args ) = 0;
       };
       
