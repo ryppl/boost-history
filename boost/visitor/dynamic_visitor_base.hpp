@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-// boost apply_visitor_fwd.hpp header file
+// boost visitor/dynamic_visitor_base.hpp header file
 // See http://www.boost.org for updates, documentation, and revision history.
 //-----------------------------------------------------------------------------
 //
@@ -14,20 +14,29 @@
 // suitability of this software for any purpose. It is provided "as is" 
 // without express or implied warranty.
 
-#ifndef BOOST_APPLY_VISITOR_FWD_HPP
-#define BOOST_APPLY_VISITOR_FWD_HPP
+#ifndef BOOST_VISITOR_DYNAMIC_VISITOR_BASE_HPP
+#define BOOST_VISITOR_DYNAMIC_VISITOR_BASE_HPP
 
 namespace boost {
 
-// class template apply_visitor_traits
+//////////////////////////////////////////////////////////////////////////
+// class dynamic_visitor_base
 //
-// Class template meant to be specialized for types wishing to offer
-//   apply_visitor(visitor, visitable) functionality.
-// NOTE: apply_visitor_traits::execute(visitor, visitable) must be defined
-//   for any specialization of apply_visitor_traits.
+// Serves as an abstract base to all dynamic visitors.
 //
-template <typename Visitable> struct apply_visitor_traits;
+struct dynamic_visitor_base
+{
+public: // typedefs
+    typedef void result_type;
+
+public: // make class abstract via pure virtual destructor "trick"
+    virtual ~dynamic_visitor_base() = 0;
+};
+
+dynamic_visitor_base::~dynamic_visitor_base()
+{
+}
 
 } // namespace boost
 
-#endif // BOOST_APPLY_VISITOR_FWD_HPP
+#endif // BOOST_VISITOR_DYNAMIC_VISITOR_BASE_HPP

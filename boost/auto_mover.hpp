@@ -22,62 +22,6 @@
 
 namespace boost {
 
-namespace detail {
-
-    // class storage_holder
-    //
-    // Works around problem of noncopyable aligned_storage under GCC 3.2.
-    // Is simple, does not introduce problems for other compilers.
-    //
-    template <typename Storage>
-    class storage_holder
-    {
-    private: // representation
-        Storage storage_;
-
-    public: // structors
-        storage_holder()
-        {
-        }
-
-    public: // override noncopyable restriction on Storage
-        storage_holder(const storage_holder&)
-        {
-        }
-
-        storage_holder& operator=(const storage_holder&)
-        {
-        }
-
-    public: // accessors
-        void* address()
-        {
-            return storage_.address();
-        }
-
-        const void* address() const
-        {
-            return storage_.address();
-        }
-    };
-
-    // struct auto_mover_ref
-    //
-    // Similar in function to std::auto_ptr_ref.
-    //
-    template <typename T>
-    struct auto_mover_ref
-    {
-        T& ref_;
-
-    public:
-        auto_mover_ref(T& ref)
-            : ref_(ref)
-        {
-        }
-    };
-} // namespace detail
-
 //////////////////////////////////////////////////////////////////////////
 // class template auto_mover
 //
@@ -93,7 +37,7 @@ class auto_mover
         , alignment_of<T>::value
         > aligned_storage_t;
 
-    detail::storage_holder<aligned_storage_t> storage_;
+    aligned_storage_t storage_;
 
 public:
     typedef T element_type;
@@ -169,15 +113,31 @@ public: // queries
         return *reinterpret_cast<const T*>(storage_.address());
     }
 
+private: // conversions (see below)
+    // struct auto_mover_ref
+    //
+    // Similar in function to std::auto_ptr_ref.
+    //
+    struct auto_mover_ref
+    {
+        T& ref_;
+
+    public:
+        auto_mover_ref(T& ref)
+            : ref_(ref)
+        {
+        }
+    };
+
 public: // conversions
-    auto_mover(detail::auto_mover_ref<T> operand)
+    auto_mover(auto_mover_ref operand)
     {
         move(storage_.address(), operand.ref_);
     }
 
-    operator detail::auto_mover_ref<T>()
+    operator auto_mover_ref()
     {
-        return detail::auto_mover_ref<T>(get());
+        return auto_mover_ref(get());
     }
 };
 

@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-// boost apply_visitor.hpp header file
+// boost visitor/static_visitor.hpp header file
 // See http://www.boost.org for updates, documentation, and revision history.
 //-----------------------------------------------------------------------------
 //
@@ -14,11 +14,27 @@
 // suitability of this software for any purpose. It is provided "as is" 
 // without express or implied warranty.
 
-#ifndef BOOST_APPLY_VISITOR_HPP
-#define BOOST_APPLY_VISITOR_HPP
+#ifndef BOOST_STATIC_VISITOR_HPP
+#define BOOST_STATIC_VISITOR_HPP
 
-#include "boost/visitor/unary_apply_visitor.hpp"
-#include "boost/visitor/binary_apply_visitor.hpp"
-#include "boost/visitor/delayed_apply_visitor.hpp"
+namespace boost {
 
-#endif // BOOST_APPLY_VISITOR_HPP
+//////////////////////////////////////////////////////////////////////////
+// class template static_visitor
+//
+// An empty base class that typedefs the return type of a deriving static
+// visitor. The class is analogous to std::unary_function in this role.
+//
+
+template <typename R = void>
+struct static_visitor
+{
+    typedef R result_type;
+
+protected:
+    ~static_visitor() { }
+};
+
+} // namespace boost
+
+#endif // BOOST_STATIC_VISITOR_HPP

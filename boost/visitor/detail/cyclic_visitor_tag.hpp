@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-// boost apply_visitor.hpp header file
+// boost visitor/detail/cyclic_visitor_tag.hpp header file
 // See http://www.boost.org for updates, documentation, and revision history.
 //-----------------------------------------------------------------------------
 //
@@ -14,11 +14,25 @@
 // suitability of this software for any purpose. It is provided "as is" 
 // without express or implied warranty.
 
-#ifndef BOOST_APPLY_VISITOR_HPP
-#define BOOST_APPLY_VISITOR_HPP
+#ifndef BOOST_VISITOR_DETAIL_CYCLIC_VISITOR_TAG_HPP
+#define BOOST_VISITOR_DETAIL_CYCLIC_VISITOR_TAG_HPP
 
-#include "boost/visitor/unary_apply_visitor.hpp"
-#include "boost/visitor/binary_apply_visitor.hpp"
-#include "boost/visitor/delayed_apply_visitor.hpp"
+namespace boost {
 
-#endif // BOOST_APPLY_VISITOR_HPP
+namespace detail { namespace visitor {
+
+//////////////////////////////////////////////////////////////////////////
+// class template cyclic_visitor_tag
+//
+
+struct cyclic_visitor_tag
+{
+protected:
+    ~cyclic_visitor_tag() { }
+};
+
+}} // namespace detail::visitor
+
+} // namespace boost
+
+#endif // BOOST_VISITOR_DETAIL_CYCLIC_VISITOR_TAG_HPP

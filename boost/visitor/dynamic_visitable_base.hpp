@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-// boost apply_visitor.hpp header file
+// boost visitor/dynamic_visitable_base.hpp header file
 // See http://www.boost.org for updates, documentation, and revision history.
 //-----------------------------------------------------------------------------
 //
@@ -14,11 +14,29 @@
 // suitability of this software for any purpose. It is provided "as is" 
 // without express or implied warranty.
 
-#ifndef BOOST_APPLY_VISITOR_HPP
-#define BOOST_APPLY_VISITOR_HPP
+#ifndef BOOST_VISITOR_DYNAMIC_VISITABLE_BASE_HPP
+#define BOOST_VISITOR_DYNAMIC_VISITABLE_BASE_HPP
 
-#include "boost/visitor/unary_apply_visitor.hpp"
-#include "boost/visitor/binary_apply_visitor.hpp"
-#include "boost/visitor/delayed_apply_visitor.hpp"
+#include "boost/visitor/dynamic_visitor_base.hpp"
 
-#endif // BOOST_APPLY_VISITOR_HPP
+namespace boost {
+
+//////////////////////////////////////////////////////////////////////////
+// class dynamic_visitable_base
+//
+// Serves as an abstract base to all types supporting dynamic visitation.
+//
+
+struct dynamic_visitable_base
+{
+    virtual void apply_visitor(dynamic_visitor_base&) = 0;
+
+protected:
+    ~dynamic_visitable_base()
+    {
+    }
+};
+
+} // namespace boost
+
+#endif // BOOST_VISITOR_DYNAMIC_VISITABLE_BASE_HPP

@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-// boost generic_visitor.hpp header file
+// boost visitor/dynamic_visitor_interface.hpp header file
 // See http://www.boost.org for updates, documentation, and revision history.
 //-----------------------------------------------------------------------------
 //
@@ -14,27 +14,29 @@
 // suitability of this software for any purpose. It is provided "as is" 
 // without express or implied warranty.
 
-#ifndef BOOST_GENERIC_VISITOR_HPP
-#define BOOST_GENERIC_VISITOR_HPP
+#ifndef BOOST_VISITOR_DYNAMIC_VISITOR_INTERFACE_HPP
+#define BOOST_VISITOR_DYNAMIC_VISITOR_INTERFACE_HPP
 
 namespace boost {
 
 //////////////////////////////////////////////////////////////////////////
-// class template generic_visitor
+// class template dynamic_visitor_interface<T>
 //
-// An empty base class that typedefs the return type of a deriving generic
-// visitor. The class is analogous to std::unary_function in this role.
+// Serves as an abstract base to all dynamic visitors supporting
+// visitation of objects of type T.
 //
 
-template <typename R = void>
-struct generic_visitor
+template <typename T>
+struct dynamic_visitor_interface
 {
-    typedef R result_type;
+    virtual void visit(T&) = 0;
 
 protected:
-    ~generic_visitor() { }
+    ~dynamic_visitor_interface()
+    {
+    }
 };
 
 } // namespace boost
 
-#endif // BOOST_GENERIC_VISITOR_HPP
+#endif // BOOST_VISITOR_DYNAMIC_VISITOR_INTERFACE_HPP

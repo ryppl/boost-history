@@ -26,6 +26,10 @@
 #include "boost/mpl/apply_if.hpp"
 #include "boost/mpl/identity.hpp"
 
+#if defined(__GNUC__)
+#   include <cassert>
+#endif // __GNUC__ workaround (see below)
+
 namespace boost {
 namespace detail {
 
@@ -64,15 +68,32 @@ public:
         );
 
 private: // representation
-    union
+    union data_t
     {
         char buf[size];
         align_t dummy_;
     } data_;
 
+#if defined(__GNUC__)
+
+public: // _should_ be noncopyable, but GCC compiler emits error
+    aligned_storage(const aligned_storage&)
+    {
+        assert(false);
+    }
+
+    aligned_storage& operator=(const aligned_storage&)
+    {
+        assert(false);
+    }
+
+#else// !defined(__GNUC__)
+
 private: // noncopyable
     aligned_storage(const aligned_storage&);
     aligned_storage& operator=(const aligned_storage&);
+
+#endif// __GNUC__ workaround
 
 public: // structors
     aligned_storage()

@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-// boost apply_visitor.hpp header file
+// boost visitor/bad_visit.hpp header file
 // See http://www.boost.org for updates, documentation, and revision history.
 //-----------------------------------------------------------------------------
 //
@@ -14,11 +14,30 @@
 // suitability of this software for any purpose. It is provided "as is" 
 // without express or implied warranty.
 
-#ifndef BOOST_APPLY_VISITOR_HPP
-#define BOOST_APPLY_VISITOR_HPP
+#ifndef BOOST_VISITOR_BAD_VISIT_HPP
+#define BOOST_VISITOR_BAD_VISIT_HPP
 
-#include "boost/visitor/unary_apply_visitor.hpp"
-#include "boost/visitor/binary_apply_visitor.hpp"
-#include "boost/visitor/delayed_apply_visitor.hpp"
+#include <exception>
 
-#endif // BOOST_APPLY_VISITOR_HPP
+namespace boost {
+
+//////////////////////////////////////////////////////////////////////////
+// class bad_visit
+//
+// Exception thrown when a visitation attempt fails due to invalid
+// visited subtype or contents.
+//
+struct bad_visit
+    : std::exception
+{
+public:
+    virtual const char * what() const throw()
+    {
+        return "boost::bad_visit: "
+               "failed visitation using boost::apply_visitor";
+    }
+};
+
+} // namespace boost
+
+#endif // BOOST_VISITOR_BAD_VISIT_HPP
