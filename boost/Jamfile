@@ -41,14 +41,19 @@ lib-locate ?= $(exec-locate)/lib ;
 local include-locate = [ MATCH "^--includedir=(.*)" : $(ARGV) ] ;
 include-locate ?= $(boost-locate)/include ;
 
+# bring in the rules for python
+SEARCH on <module@>python.jam = $(BOOST_BUILD_PATH) ;
+include <module@>python.jam ;
+
 stage $(lib-locate:D=)
     :
         # please order by name to ease maintenance
         #~ <dll>libs/date_time/build/boost_date_time
         <lib>libs/date_time/build/boost_date_time
         <lib>libs/filesystem/build/boost_filesystem
-        <dll>libs/python/build/boost_python
-        <lib>libs/python/build/boost_python
+        [ cond [ check-python-config ] :
+            <dll>libs/python/build/boost_python
+            <lib>libs/python/build/boost_python ]
         <dll>libs/regex/build/boost_regex
         <lib>libs/regex/build/boost_regex
         #~ <dll>libs/signals/build/boost_signals

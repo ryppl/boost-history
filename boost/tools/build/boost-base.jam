@@ -2181,6 +2181,7 @@ rule stage ( name : sources + : requirements * : local-build * )
                     local arch = [ get-values <instruction-set> : $(s-properties) ] ;
                     arch ?= [ get-values <architecture> : $(s-properties) ] ;
                     arch ?= $(OSPLAT:L) ;
+                    if $(arch) = "default" { arch = $(OSPLAT:L) ; }
                     arch += [ get-values <address-model> : $(s-properties) ] ;
                     arch += $(OS:L) ;
                     s-subdir = $(arch:J=-) ;
@@ -2337,7 +2338,6 @@ rule common-stage-tag ( toolset variant : properties * )
         case *vc7* : toolset-tag += vc ;
     }
     toolset-tag += [ MATCH "[-c]([0123456789]+).([0123456789]*)" : $(toolset) ] ;
-    toolset-tag += [ MATCH "[-]([0123456789]+).([0123456789]*)" : $(toolset) ] ;
     tags += $(toolset-tag:J=) ;
     
     local thread-tag = ;
@@ -2381,8 +2381,8 @@ rule glob-tree ( root : patterns * )
     return $(files) ;
 }
 
-rule unless ( test : no-value * : yes-value * )
+rule unless ( test ? : no-value * : yes-value * )
 { if ! $(test) { return $(no-value) ; } else { return $(yes-value) ; } }
 
-rule cond ( test : yes-value * : no-value * )
+rule cond ( test ? : yes-value * : no-value * )
 { if $(test) { return $(yes-value) ; } else { return $(no-value) ; } }
