@@ -1,0 +1,572 @@
+<HTML>
+<!--
+  -- Copyright (c) Jeremy Siek, Andrew Lumsdaine 2001
+  --
+  -- Permission to use, copy, modify, distribute and sell this software
+  -- and its documentation for any purpose is hereby granted without fee,
+  -- provided that the above copyright notice appears in all copies and
+  -- that both that copyright notice and this permission notice appear
+  -- in supporting documentation.  Silicon Graphics makes no
+  -- representations about the suitability of this software for any
+  -- purpose.  It is provided "as is" without express or implied warranty.
+  -->
+<Head>
+<Title>Linear Algebra Concepts</Title>
+<BODY BGCOLOR="#ffffff" LINK="#0000ee" TEXT="#000000" VLINK="#551a8b" 
+        ALINK="#ff0000"> 
+<IMG SRC="../../../c++boost.gif" 
+     ALT="C++ Boost" width="277" height="86"> 
+
+<BR Clear>
+
+<H1>Linear Algebra Concepts</H1>
+
+This set of concepts is meant to form requirements that can be used in
+algorithms that perform algebraic operations on matrices, vectors, and
+scalars. In the list of invariants for each concept, we only list the
+minimal properties that define the concept, and do not list invariants
+that can be deduced from the minimal set.
+
+<hr>
+<h4><a name="AdditiveAbelianGroup">Additive Abelian Group</a></h4>
+
+Refines <a
+href="http://www.boost.org/libs/utility/Assignable.html">Assignable</a>
+and <a
+href="http://www.boost.org/libs/utility/CopyConstructible.html">Copy Constructible</a>.
+<p>
+Notation: <tt>X</tt> is a type that models Additive Abelian Group, and
+<tt>a, b</tt> are objects of type <tt>X</tt>.
+<p>
+
+Associated Types:
+<blockquote>
+<tt>boost::binary_op_return&lt;boost::op_add, X, X&gt;::type</tt><br>
+<tt>boost::binary_op_return&lt;boost::op_subtract, X, X&gt;::type</tt><br>
+<tt>boost::unary_op_return&lt;boost::op_negate, X&gt;::type</tt><br>
+<tt>boost::unary_op_return&lt;boost::op_zero, X&gt;::type</tt><br>
+<br>
+All of these types must be convertible to <tt>X</tt> and must model
+Additive Abelian Group interchangeably with type <tt>X</tt>.
+</blockquote>
+
+<p>
+Valid Expressions:
+<p>
+<table>
+<!-- <tr><th>Valid Expression</th><th>Return type</th></tr> -->
+<tr><td width=80><tt>a + b</tt></td>
+<td><tt>boost::binary_op_return&lt;boost::op_add, X&gt;::type</tt></td></tr>
+
+<tr><td><tt>b += a</tt></td>
+<td><tt>X&amp;</tt></td></tr>
+
+<tr><td><tt>-a</tt></td>
+<td><tt>boost::unary_op_return&lt;boost::op_negate, X&gt;::type</tt></td></tr>
+
+<tr><td><tt>a - b</tt></td>
+<td><tt>boost::binary_op_return&lt;boost::op_subtract, X&gt;::type</tt></tr>
+
+<tr><td><tt>b -= a</tt></td>
+<td><tt>X&amp;</tt></td></tr>
+
+<tr><td><tt>zero(a)</tt></td>
+<td><tt>boost::unary_op_return&lt;boost::op_zero, X&gt;::type</tt></td></tr>
+</table>
+
+<p>
+Invariants:<br>
+<ul>
+  <li>Associativity<br>
+    <tt>(a + b) + c</tt> is equivalent to <tt>a + (b + c)</tt>
+  <li>Definition of Identity Element<br>
+    <tt>a + zero(a)</tt> is equivalent to <tt>a</tt>
+  <li>Definition of Additive Inverse<br>
+    <tt>a + -a</tt> is equivalent to <tt>zero(a)</tt>
+  <li>Commutativity<br>
+    <tt>a + b</tt> is equivalent to <tt>b + a</tt>  
+  <li>Meaning of subtraction</br>
+     <tt>a - b</tt> is equivalent to <tt>a + -b</tt>
+  <li>Meaning of assignment-addition<br>
+    <tt>b += a</tt> is equivalent to <tt>b = b + a</tt>
+  <li>Meaning of assignment-subtraction<br>
+    <tt>b -= a</tt> is equivalent to <tt>b = b - a</tt>
+</ul>
+
+
+<hr>
+<h4><a name="MultRingWithIdentity">Multiplicative Ring with Identity</a></h4>
+
+Refines <a href="#AdditiveAbelianGroup">Additive Abelian Group</a>
+<p>
+Notation: <tt>X</tt> is a type that models Multiplicative Ring with Identity, and
+<tt>a, b</tt> are objects of type <tt>X</tt>.
+<p>
+
+Associated Types:
+<blockquote>
+<tt>boost::binary_op_return&lt;boost::op_multiply, X, X&gt;::type</tt><br>
+<tt>boost::unary_op_return&lt;boost::op_one, X&gt;::type</tt><br>
+<br>
+These return types must be convertible to <tt>X</tt> and must model
+Multiplicative Ring with Identity interchangeably with type <tt>X</tt>.
+</blockquote>
+
+<p>
+Valid Expressions:
+<p>
+<table>
+<tr><td width=80><tt>a * b</tt></td>
+<td><tt>boost::binary_op_return&lt;boost::op_multiply, X, X&gt;::type</tt></td></tr>
+
+<tr><td width=80><tt>b *= a</tt></td>
+<td><tt>X&amp;</tt></td></tr>
+
+<tr><td><tt>one(a)</tt></td>
+<td><tt>boost::unary_op_return&lt;boost::op_one, X, X&gt;::type</tt></td></tr>
+</table>
+
+<p>
+Invariants:
+<ul>
+  <li> Associativity of Multiplication <br>
+    <tt>a * (b * c)</tt>  is equivalent to  <tt>(a * b) * c</tt>
+  <li> Distributivity <br>
+    <tt>a*(b + c)</tt> is equivalent to  <tt>a*b + a*c</tt> <br>
+    <tt>(b + c)*a</tt> is equivalent to  <tt>b*a + c*a</tt>
+  <li> Definition of Multiplicative Identity <br>
+    <tt>a * one(a)</tt> is equivalent to  <tt>a</tt>
+  <li> Meaning of multiplication-assignment<br>
+    <tt>b *= a</tt> is equivalent to <tt>b = b * a</tt>
+</ul>
+
+Note: the meaning of multiplication by zero is induced by the
+distributivity property:<br>
+<tt>a*zero(a) ->= a*(a - a) -> a*a - a*a -> zero(a)</tt>.
+
+<hr>
+<h4><a name="CommMultRingWithIdentity">Commutative Multiplicative Ring with Identity</a></h4>
+
+Refines <a href="#MultRingWithIdentity">Multiplicative Ring with Identity</a>
+<p>
+Notation: <tt>X</tt> is a type that models Commutative Multiplicative Ring with Identity, and
+<tt>a, b</tt> are objects of type <tt>X</tt>.
+<p>
+Invariants:
+<ul>
+  <li> Commutativity <br>
+    <tt>a * b</tt> is equivalent to <tt>b * a</tt>
+</ul>
+
+
+<hr>
+<h4><a name="Field">Field</a></h4>
+
+Refines <a href="#CommMultRingWithIdentity">Commutative Multiplicative Ring with Identity</a>
+<p>
+Notation: <tt>X</tt> is a type that models Field, and
+<tt>a, b</tt> are objects of type <tt>X</tt>.
+
+<p>
+Associated Types:
+<blockquote>
+<tt>boost::binary_op_return&lt;boost::op_divide, X, X&gt;::type</tt><br>
+<br>
+This return type must be convertible to <tt>X</tt> and must model
+Field interchangeably with type <tt>X</tt>.
+</blockquote>
+
+<p>
+Valid Expressions:
+<p>
+<table>
+<tr><td width=80><tt>a / b</tt></td>
+<td><tt>boost::binary_op_return&lt;boost::op_divide, X, X&gt;::type</tt></td></tr>
+
+<tr><td><tt>b /= a</tt></td>
+<td><tt>X&amp;</tt></td></tr>
+</table>
+
+<p>
+Invariants:
+<ul>
+  <li> Definition of Multplicative Inverse <br>
+  If <tt>a * x</tt> is equivalent to <tt>b</tt> then <tt>x</tt> is
+  equivalent to <tt>b/a</tt>.
+
+  <li><tt>a / b</tt> is undefined if and only if <tt>b</tt>
+  is equivalent to <tt>zero(a)</tt>.
+
+  <li> Meaning of assignment-division<br>
+   <tt>b /= a</tt> is equivalent to <tt>b = b / a</tt>.
+</ul>
+
+
+<hr>
+<h4><a name="R_Module">R-Module</a></h4>
+
+<tt>{G,R}</tt> are types that together model R-Module.  Also,
+<tt>G</tt> is a type that models <a
+href="#AdditiveAbelianGroup">Additive Abelian Group</a> with
+<tt>x,y</tt> objects of type <tt>G</tt>.  <tt>R</tt> is a type that
+models <a href="#MultRingWithIdentity">Multiplicative Ring with Identity</a> and <tt>a,
+b</tt> are objects of type <tt>R</tt>.
+
+<p>
+Associated Types:
+<blockquote>
+<tt>boost::binary_op_return&lt;boost::op_multiply, G, R&gt;::type</tt><br>
+<tt>boost::binary_op_return&lt;boost::op_multiply, R, G&gt;::type</tt><br>
+<br>
+These return types must be convertible to <tt>G</tt> and must model
+concept R-Module interchangeably with types <tt>{G,R}</tt>.
+</blockquote>
+
+
+<p>
+Valid Expressions:
+<p>
+<table>
+<tr><td width=80><tt>y *= a</tt></td>
+<td><tt>X&amp;</tt></td></tr>
+
+<tr><td><tt>x * a</tt></td>
+<td><tt>boost::binary_op_return&lt;boost::op_multiply, G, R&gt;::type</tt></td></tr>
+
+<tr><td><tt>a * x</tt></td>
+<td><tt>boost::binary_op_return&lt;boost::op_multiply, R, G&gt;::type</tt></td></tr>
+
+</table>
+
+<p>
+Invariants:
+<ul>
+  <li> Distributive <br>
+    <tt>(a + b)*x</tt> is equivalent to <tt>a*x + b*x</tt> <br>
+    <tt>a*(x + y)</tt> is equivalent to <tt>a*x + a*y</tt><br>
+  <li> Associative <br>
+    <tt>a * (b * x)</tt> is equivalent to <tt>(a * b) * x</tt>
+  <li> Identity <br>
+    <tt>one(a) * x</tt> is equivalent to <tt>x</tt>
+  <li> Commutativity (if multiplication on <tt>R</tt> is commutative)<br>
+    <tt>a * x</tt> is equivalent to <tt>x * a</tt>
+</ul>
+
+
+
+<hr>
+<h4><a name="VectorSpace">Vector Space</a></h4>
+
+<tt>{G,F}</tt> are types that together model Vector Space.
+<tt>{G,F}</tt> model <a href="#R_Module">R-Module</a> with
+<tt>x,y</tt> objects of type <tt>G</tt>.  <tt>F</tt> is a type that
+models <a href="#Field">Field</a> and <tt>a, b</tt> are objects of
+type <tt>F</tt>.
+
+<p>
+Associated Types:
+<blockquote>
+<tt>boost::binary_op_return&lt;boost::op_divide, G, F&gt;::type</tt><br>
+<br>
+The return type must be convertible to <tt>G</tt> and must model
+concept Vector Space interchangeably with types <tt>{G,F}</tt>.
+</blockquote>
+
+<p>
+Valid Expressions:
+<p>
+<table>
+<tr><td width=80><tt>y /= a</tt></td>
+<td><tt>X&amp;</tt></td></tr>
+
+<tr><td><tt>x / a</tt></td>
+<td><tt>boost::binary_op_return&lt;boost::op_divide, G, F&gt;::type</tt></td></tr>
+
+</table>
+
+
+<hr>
+<h4><a name="BanachSpace">Banach Space</a></h4>
+
+<tt>{G,F,Norm}</tt> are types that together model Banach Space.
+<tt>G</tt> is a type that models <a href="#VectorSpace">Vector
+Space</a> with <tt>x,y</tt> objects of type <tt>G</tt>.  <tt>F</tt> is
+a type that models <a href="#Field">Field</a> and <tt>a, b</tt> are
+objects of type <tt>F</tt>. <tt>Norm</tt> is a unary function object,
+and <tt>norm</tt> is an object of that type. 
+
+<p>
+Associated Types:
+<blockquote>
+<tt>magnitude&lt;F&gt;::type</tt> <br> This type must model <a
+href="#Field">Field</a>, <a
+href="http://www.sgi.com/tech/stl/LessThanComparable.html">Less Than
+Comparable</a>, which means it is a strict weak ordering (as stated in
+the C++ standard but not the SGI STL docs), and <a
+href="http://www.sgi.com/tech/stl/EqualityComparable.html">Equality
+Comparable</a>
+</blockquote>
+
+<p>
+Valid Expressions:
+<p>
+<table>
+<tr><td width=80><tt>norm(x)</tt></td>
+<td><tt>magnitude&lt;F&gt;::type</tt></td></tr>
+
+<tr><td><tt>std::abs(a)</tt></td>
+<td><tt>magnitude&lt;F&gt;::type</tt></td></tr>
+
+</table>
+
+<p>
+Invariants:
+The <tt>norm</tt> function object must obey the following invariants.
+<ul>
+  <li> <tt>norm(x) >= zero(r)</tt>
+  <li> <tt>norm(x)</tt> is equivalent to <tt>zero(r)</tt> iff
+  <tt>x</tt> is equivalent to <tt>zero(x)</tt>
+  <li> Homogeneity <br>
+    <tt>norm(a*x)</tt> is equivalent to <tt>std::abs(a) * norm(x)</tt>
+  <li> Triangle Inequality <br>
+    <tt>norm(x + y) <=  norm(x) + norm(y)</tt>
+</ul>
+
+The <tt>std::abs()</tt> function must obey a similar set of invariants.
+<ul>
+  <li> <tt>std::abs(a) >= zero(r)</tt>
+  <li> <tt>std::abs(a)</tt> is equivalent to <tt>zero(r)</tt>
+   if and only if  <tt>a</tt> is equivalent to <tt>zero(a)</tt>
+  <li> Homogeneity <br>
+    <tt>std::abs(a*b)</tt> is equivalent to <tt>std::abs(a) * std::abs(b)</tt>
+  <li> Triangle Inequality <br>
+    <tt>std::abs(a + b) <= std::abs(a) + std::abs(b)</tt>
+</ul>
+
+
+<hr>
+<h4><a name="BasicVector">Basic Vector</a></h4>
+
+<tt>X</tt> is a type that models Basic Vector and <tt>x</tt> is an
+object of type <tt>X</tt>. The object <tt>i</tt> is of type
+<tt>vector_traits&lt;X&gt;::size_type</tt>, and object <tt>a</tt>
+is of type <tt>vector_traits&lt;X&gt;::value_type</tt>. A vector
+can be mutable, or constant. The element-assignment expression
+is not required of a constant vector.
+
+<p>
+<table>
+<tr><td width=80><tt>x[i]</tt></td>
+<td><tt>vector_traits&lt;X&gt;::reference</tt>, which must be
+a type convertible to the value type (the <tt>reference</tt>
+type is not required to be an lvalue).</td></tr>
+
+<tr><td width=80><tt>x[i] = a</tt></td>
+<td>undefined return type</td></tr>
+
+<tr><td><tt>size(x)</tt></td>
+<td><tt>vector_traits&lt;X&gt;::size_type</tt></td></tr>
+</table>
+
+
+<hr>
+<h4><a name="FiniteBanachSpace">Finite Banach Space</a></h4>
+
+<tt>{G,F}</tt> are types that together model Finite Banach Space.
+<tt>G</tt> is a type that models <a href="#BanachSpace">Banach
+Space</a> and <a href="#BasicVector">Basic Vector</a> with
+<tt>x,y</tt> objects of type <tt>G</tt>.  <tt>F</tt> is a type that
+models <a href="#Field">Field</a> and <tt>a, b</tt> are objects of
+type <tt>F</tt>.
+
+
+<hr>
+<h4><a name="HilbertSpace">Hilbert Space</a></h4>
+
+<tt>{G,F,Norm,InnerProd}</tt> are types that together model Hilbert
+Space.  The types <tt>{G,F,Norm}</tt> must also model <a
+href="#BanachSpace">Banach Space</a>. The objects <tt>x,y</tt> are of
+type <tt>G</tt>.  <tt>F</tt> is a type that models <a
+href="#Field">Field</a> and <tt>a, b</tt> are objects of type
+<tt>F</tt>. <tt>InnerProd</tt> is a binary function, and <tt>dot</tt>
+is an object of that type.
+
+<p>
+Associated Types:
+<blockquote>
+<tt>boost::binary_op_return&lt;boost::op_norm, G&gt;::type</tt><br>
+<br>
+The return type must be convertible to <tt>G</tt> and must model
+Hilbert Space interchangeably with types
+<tt>{G,F,Norm,InnerProd}</tt>.
+</blockquote>
+
+<p>
+Valid Expreesions
+<p>
+<table>
+<tr><td width=100><tt>dot(x, y)</tt></td>
+<td><tt>F</tt></td></tr>
+
+<tr><td><tt>std::conj(a)</tt></td>
+<td><tt>F</tt></td></tr>
+
+<tr><td><tt>std::conj(x)</tt></td>
+<td><tt>boost::binary_op_return&lt;boost::op_norm, G&gt;::type</tt></td></tr>
+
+</table>
+
+<p>
+Invariants:
+The <tt>dot</tt> functor obeys the following invariants.
+<ul>
+  <li> <tt>dot(x,x) > zero(a)</tt> for all <tt>x</tt> not equivalent to <tt>zero(x)</tt>
+  <li> <tt>dot(x,x)</tt> is equivalent to <tt>zero(a)</tt> if <tt>x</tt> is equivalent to <tt>zero(x)</tt>
+  <li> <tt>dot(x,y)</tt> is equivalent to <tt>dot(y,std::conj(x))</tt>
+  <li> <tt>dot(a*x + b*y, z)</tt> is equivalent to <tt>a*dot(x,z) + b*dot(y,z)</tt>
+  <li> <tt>dot(x, a*y + b*z)</tt> is equivalent to <tt>std::conj(a)*dot(x,y) + std::conj(b)*dot(x,z)</tt>
+  <li> <tt>norm(x)</tt> is equivalent to <tt>std::sqrt(dot(x,x))</tt>
+</ul>
+
+The scalar <tt>std::conj()</tt> function must obey the following laws.
+<ul>
+  <li> <tt>std::conj(a * b)</tt> is equivalent to <tt>std::conj(a) * std::conj(b)</tt>
+  <li> <tt>std::conj(a + b)</tt> is equivalent to <tt>std::conj(a) + std::conj(b)</tt>
+</ul>
+
+The vector <tt>std::conj()</tt> function must obey similar laws.
+<ul>
+  <li> <tt>std::conj(x * y)</tt> is equivalent to <tt>std::conj(x) * std::conj(y)</tt>
+  <li> <tt>std::conj(x + y)</tt> is equivalent to <tt>std::conj(x) + std::conj(y)</tt>
+</ul>
+
+
+
+<hr>
+<h4><a name="FiniteHilbertSpace">Finite Hilbert Space</a></h4>
+
+<tt>{G,F}</tt> are types that together model Finite Hilbert Space.
+<tt>G</tt> is a type that models <a href="#HilbertSpace">Hilbert
+Space</a> and <a href="#BasicVector">Basic Vector</a> with
+<tt>x,y</tt> objects of type <tt>G</tt>.  <tt>F</tt> is a type that
+models <a href="#Field">Field</a> and <tt>a, b</tt> are objects of
+type <tt>F</tt>.
+
+
+
+<hr>
+<h4><a name="LinearOperator">Linear Operator</a></h4>
+
+<tt>{Op,Range,Domain,F}</tt> are types that together model Linear
+Operator.  The type <tt>Op</tt> is the ``linear operator'', and
+<tt>A</tt> an object of that type. The types <tt>{Range,F}</tt> form a
+<a href="#VectorSpace">Vector Space</a>. The types <tt>{Domain,F}</tt>
+also form a Vector Space. The object <tt>x</tt> used below is of type
+<tt>Domain</tt>.
+
+<p>
+Associated Types:
+<blockquote>
+<tt>boost::binary_op_return&lt;boost::op_multiply,Op,Domain&gt;::type</tt><br>
+This type must be convertible to <tt>Range</tt> and model Linear
+Operator with the types <tt>{Op,Domain,F}</tt>.</td>
+</blockquote>
+
+<p>
+Valid Expressions:
+<table>
+<tr><td width=80><tt>A * x</tt></td>
+<td><tt>boost::binary_op_return&lt;boost::op_multiply,Op,Domain&gt;::type</tt></tr>
+</table>
+
+<p>
+Invariants:
+<ul>
+  <li> Linearity <br>
+   <tt>A * (x + w)</tt> is equivalent to <tt>A * x + A * y</tt> <br>
+   <tt>A * (x * a)</tt> is equivalent to <tt>(A * x) * a</tt>
+</ul>
+
+
+<hr>
+<h4><a name="FiniteLinearOperator">Finite Linear Operator</a></h4>
+
+Refines <a href="#LinearOperator">Linear Operator</a>.
+<p>
+<tt>{FOp,Domain,Range,F}</tt> are types that together model Finite
+Linear Operator.  <tt>A</tt> an object of type <tt>FOp</tt>.
+<tt>{Domain,F}</tt> is a <a href="#VectorSpace">Vector Space</a>, and
+<tt>{Range,F}</tt> is also a <a href="#VectorSpace">Vector Space</a>.
+
+<p>
+<table>
+<tr><td width=80><tt>nrows(A)</tt></td>
+<td><tt>matrix_traits&lt;FOp&gt;::size_type</tt></td></tr>
+<tr><td><tt>ncols(A)</tt></td>
+<td><tt>matrix_traits&lt;FOp&gt;::size_type</tt></td></tr>
+</table>
+
+
+<hr>
+<h4><a name="TransposableLinearOperator">Transposable Linear Operator</a></h4>
+
+The types <tt>{Op,Domain,Range,F}</tt> together model Transposable
+Linear Operator. <tt>A</tt> an object of type <tt>Op</tt>. The types
+<tt>{Domain,F}</tt> and <tt>{Range,F}</tt> are models of <a
+href="#VectorSpace">Vector Space</a>. <tt>x</tt> is an object of type
+<tt>Range</tt>. The object <tt>y</tt> is of type <tt>Range</tt>.
+
+<p>
+Associated Types:
+<blockquote>
+<tt>boost::unary_op_return&lt;boost::op_trans, Op&gt;::type</tt><br>
+This type with <tt>{Range,Domain,F}</tt> must model Transposable Linear Operator.<br>
+<br>
+<tt>boost::binary_op_return&lt;boost::op_multiply, Range, Op&gt;::type</tt><br>
+This type must be convertible to <tt>Domain</tt>
+and model Transposable Linear Operator interchangeably with types
+<tt>{Op,Domain,Range,F}</tt>.</td>
+</blockquote>
+
+<p>
+Valid Expressions:
+<table>
+<tr><td width=80><tt>trans(A)</tt></td>
+<td><tt>boost::unary_op_return&lt;boost::op_trans, Op&gt;::type</tt></td></tr>
+<tr><td><tt>y * A</tt></td>
+<td><tt>boost::binary_op_return&lt;boost::op_multiply,
+Range, Op&gt;::type</tt>.</td></tr>
+</table>
+
+<p>
+Invariants:
+<ul>
+  <li>Meaning of left operator application<br>
+  <tt>y * A</tt> is equivalent to <tt>trans(A) * y</tt>
+</ul>
+
+<hr>
+<h4><a name="LinearAlgebra">Linear Algebra</a></h4>
+
+The types <tt>{Matrix,Vector,Scalar}</tt> together model the Linear
+Algebra concept. The types <tt>{Matrix,Vector,Scalar}</tt> together
+model <a href="#Linear Operator">Linear Operator</a>, and
+<tt>{Matrix,F}<tt> models <a href="#VEctorSpace">Vector
+Space</a>. Also the <tt>Matrix</tt> type must model <a
+href="#MultRingWithIdentity">Multiplicative Ring with Identity</a>.
+
+<br>
+<HR>
+<TABLE>
+<TR valign=top>
+<TD nowrap>Copyright &copy 2001</TD><TD>
+<A HREF="../../../people/jeremy_siek.htm">Jeremy Siek</A>,
+Univ.of Notre Dame (<A
+HREF="mailto:jsiek@lsc.nd.edu">jsiek@lsc.nd.edu</A>)<br>
+<A HREF=http://www.lsc.nd.edu/~lums>Andrew Lumsdaine</A>,
+Univ.of Notre Dame (<A
+HREF="mailto:lums@lsc.nd.edu">lums@lsc.nd.edu</A>)
+</TD></TR></TABLE>
+
+</BODY>
+</HTML> 

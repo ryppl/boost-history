@@ -1,0 +1,86 @@
+
+"R" for row
+"C" for column
+for matrix A, B, C respectively
+
+or for A, x, y respectively
+
+===============================================================================
+Matrix Vector Multiplication (Right)
+
+R C C
+=====
+  for (i=0;i<M;++i)
+    y(i) = A(i,:) + x(:)
+
+C C C
+=====
+  for (j=0;j<N;++j)
+    y(:) += A(:,j) + x[j]
+
+===============================================================================
+Matrix Vector Multiplication (Left)
+
+
+R R R
+=====
+  for (k=0;k<K;++k)
+    y(:) += x(k) * A(k,:)
+
+C R R
+=====
+  for (j=0;j<N;++j)
+    y(j) = x(:) * A(:,j)
+
+===============================================================================
+Matrix Matrix Multiplication
+
+row/column matrix orientation evaluation options.
+
+A is MxK
+B is KxN
+C is MxN
+
+R R R
+=====
+  for (i=0;i<M;++i)
+    for (k=0;k<K;++k)
+      C(i,:) += A(i,k) * B(k,:)
+
+R R C
+=====
+  can not do this efficiently
+
+R C R
+=====
+  for (i=0;i<M;++i)
+    for (j=0;j<N;++j)
+      C(i,j) = A(i,:) * B(:,j)
+
+R C C
+=====
+  for (j=0;j<N;++j)
+    for (i=0;i<M;++i)
+      C(i,j) = A(i,:) * B(:,j)
+
+C R R
+=====
+  for (k=0;k<K;++k)
+    for (i=0;i<M;++i)
+      C(i,:) += A(i,k) * B(k,:)
+
+C R C
+=====
+  for (j=0;j<N;++j)
+    for (k=0;k<K;++k)
+      C(:,j) += A(:,k) * B(j,k)
+
+C C R
+=====
+  can not do this efficiently
+
+C C C
+=====
+  for (k=0;k<K;++k)
+    for (j=0;j<N;++j)
+      C(:,j) += A(:,k) * B(j,k)
