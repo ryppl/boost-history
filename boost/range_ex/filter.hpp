@@ -21,35 +21,44 @@ namespace boost
 /// filters a range using the specified predicate
 ///
 template<typename FwdRng,typename Pred>
-boost::iterator_range<
-    boost::filter_iterator<
-        Pred
-      , BOOST_DEDUCED_TYPENAME boost::range_iterator<FwdRng>::type
+struct filter_range
+  : boost::iterator_range<
+        boost::filter_iterator<
+            Pred
+          , BOOST_DEDUCED_TYPENAME boost::range_result_iterator<FwdRng>::type
+        >
     >
->
-make_filter_range(FwdRng& rng,Pred pred)
 {
-    return boost::make_iterator_range(
-        boost::make_filter_iterator(pred,range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng))
-      , boost::make_filter_iterator(pred,range_ex_detail::adl_end(rng),range_ex_detail::adl_end(rng))
-    );
+    typedef BOOST_DEDUCED_TYPENAME boost::range_result_iterator<FwdRng>::type   base_iterator;
+    typedef boost::filter_iterator<Pred,base_iterator>                          iterator;
+    typedef boost::iterator_range<iterator>                                     base_range;
+
+    explicit filter_range(FwdRng &rng, Pred pred)
+      : base_range(
+            boost::make_filter_iterator(pred,range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng))
+          , boost::make_filter_iterator(pred,range_ex_detail::adl_end(rng),range_ex_detail::adl_end(rng))
+        )
+    {
+    }
+};
+
+/// \brief filters a range using the specified predicate
+///
+/// filters a range using the specified predicate
+///
+template<typename FwdRng,typename Pred>
+filter_range<FwdRng,Pred> make_filter_range(FwdRng& rng,Pred pred)
+{
+    return filter_range<FwdRng,Pred>(rng,pred);
 }
 
 /// \overload
 template<typename FwdRng,typename Pred>
-boost::iterator_range<
-    boost::filter_iterator<
-        Pred
-      , BOOST_DEDUCED_TYPENAME boost::range_const_iterator<FwdRng>::type
-    >
->
-make_filter_range(FwdRng const& rng,Pred pred)
+filter_range<FwdRng const,Pred> make_filter_range(FwdRng const& rng,Pred pred)
 {
-    return boost::make_iterator_range(
-        boost::make_filter_iterator(pred,range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng))
-      , boost::make_filter_iterator(pred,range_ex_detail::adl_end(rng),range_ex_detail::adl_end(rng))
-    );
+    return filter_range<FwdRng const,Pred>(rng,pred);
 }
+
 
 /// filter_range_adaptor
 ///   INTERNAL ONLY
@@ -59,34 +68,17 @@ struct filter_range_adaptor
     struct apply
     {
         BOOST_STATIC_ASSERT((boost::tuples::length<Args>::value==1));
-        typedef BOOST_DEDUCED_TYPENAME boost::range_result_iterator<Rng>::type iterator;
-        typedef boost::filter_iterator<
-            BOOST_DEDUCED_TYPENAME boost::tuples::element<0,Args>::type
-          , iterator
-        >
-        type;
+        typedef filter_range<
+            Rng
+          , BOOST_DEDUCED_TYPENAME boost::tuples::element<0,Args>::type
+        > type;
     };
 
     template<typename Rng,typename Args>
     static BOOST_DEDUCED_TYPENAME apply<Rng,Args>::type
-    begin(Rng & rng,Args const & args)
+    make_range(Rng & rng,Args const & args)
     {
-        return boost::make_filter_iterator(
-            boost::tuples::get<0>(args)
-          , range_ex_detail::adl_begin(rng)
-          , range_ex_detail::adl_end(rng)
-        );
-    }
-
-    template<typename Rng,typename Args>
-    static BOOST_DEDUCED_TYPENAME apply<Rng,Args>::type
-    end(Rng & rng,Args const & args)
-    {
-        return boost::make_filter_iterator(
-            boost::tuples::get<0>(args)
-          , range_ex_detail::adl_end(rng)
-          , range_ex_detail::adl_end(rng)
-        );
+        return make_filter_range(rng, boost::tuples::get<0>(args));
     }
 };
 

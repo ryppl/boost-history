@@ -23,32 +23,43 @@ namespace boost
 /// element in the original range.
 ///
 template<typename FwdRng>
-boost::iterator_range<
-    boost::indirect_iterator<
-        BOOST_DEDUCED_TYPENAME boost::range_iterator<FwdRng>::type
+struct indirect_range
+  : boost::iterator_range<
+        boost::indirect_iterator<
+            BOOST_DEDUCED_TYPENAME boost::range_result_iterator<FwdRng>::type
+        >
     >
->
-make_indirect_range(FwdRng& rng)
 {
-    return boost::make_iterator_range(
-        boost::make_indirect_iterator(range_ex_detail::adl_begin(rng))
-      , boost::make_indirect_iterator(range_ex_detail::adl_end(rng))
-    );
+    typedef BOOST_DEDUCED_TYPENAME boost::range_result_iterator<FwdRng>::type   base_iterator;
+    typedef boost::indirect_iterator<base_iterator>                             iterator;
+    typedef boost::iterator_range<iterator>                                     base_range;
+
+    explicit indirect_range(FwdRng &rng)
+      : base_range(
+            boost::make_indirect_iterator(range_ex_detail::adl_begin(rng))
+          , boost::make_indirect_iterator(range_ex_detail::adl_end(rng))
+        )
+    {
+    }
+};
+
+/// \brief produced an indirect range
+///
+/// produced an indirect range, where each element in the new
+/// range is the result of a dereference of the corresponding
+/// element in the original range.
+///
+template<typename FwdRng>
+indirect_range<FwdRng> make_indirect_range(FwdRng& rng)
+{
+    return indirect_range<FwdRng>(rng);
 }
 
 /// \overload
 template<typename FwdRng>
-boost::iterator_range<
-    boost::indirect_iterator<
-        BOOST_DEDUCED_TYPENAME boost::range_const_iterator<FwdRng>::type
-    >
->
-make_indirect_range(FwdRng const& rng)
+indirect_range<FwdRng const> make_indirect_range(FwdRng const& rng)
 {
-    return boost::make_iterator_range(
-        boost::make_indirect_iterator(range_ex_detail::adl_begin(rng))
-      , boost::make_indirect_iterator(range_ex_detail::adl_end(rng))
-    );
+    return indirect_range<FwdRng const>(rng);
 }
 
 /// indirect_range_adaptor
@@ -59,22 +70,14 @@ struct indirect_range_adaptor
     struct apply
     {
         BOOST_STATIC_ASSERT((boost::tuples::length<Args>::value==0));
-        typedef BOOST_DEDUCED_TYPENAME boost::range_result_iterator<Rng>::type iterator;
-        typedef boost::indirect_iterator<iterator> type;
+        typedef indirect_range<Rng> type;
     };
 
     template<typename Rng,typename Args>
     static BOOST_DEDUCED_TYPENAME apply<Rng,Args>::type
-    begin(Rng & rng, Args)
+    make_range(Rng & rng, Args)
     {
-        return boost::make_indirect_iterator(range_ex_detail::adl_begin(rng));
-    }
-
-    template<typename Rng,typename Args>
-    static BOOST_DEDUCED_TYPENAME apply<Rng,Args>::type
-    end(Rng & rng, Args)
-    {
-        return boost::make_indirect_iterator(range_ex_detail::adl_end(rng));
+        return make_indirect_range(rng);
     }
 };
 

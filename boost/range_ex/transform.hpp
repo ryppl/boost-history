@@ -16,39 +16,47 @@
 namespace boost
 {
 
+/// \brief a range that is the reverse of the original
+///
+/// a range that is the reverse of the original
+///
+template<typename FwdRng,typename UnaryFunc>
+struct transform_range
+  : boost::iterator_range<
+        boost::transform_iterator<
+            UnaryFunc
+          , BOOST_DEDUCED_TYPENAME boost::range_result_iterator<FwdRng>::type
+        >
+    >
+{
+    typedef BOOST_DEDUCED_TYPENAME boost::range_result_iterator<FwdRng>::type   base_iterator;
+    typedef boost::transform_iterator<UnaryFunc,base_iterator>                  iterator;
+    typedef boost::iterator_range<iterator>                                     base_range;
+
+    explicit transform_range(FwdRng &rng, UnaryFunc fun)
+      : base_range(
+            boost::make_transform_iterator(range_ex_detail::adl_begin(rng), fun)
+          , boost::make_transform_iterator(range_ex_detail::adl_end(rng), fun)
+        )
+    {
+    }
+};
+
 /// \brief transforms a range using the specified unary function
 ///
 /// transforms a range using the specified unary function
 ///
 template<typename FwdRng,typename UnaryFunc>
-boost::iterator_range<
-    boost::transform_iterator<
-        UnaryFunc
-      , BOOST_DEDUCED_TYPENAME boost::range_iterator<FwdRng>::type
-    >
->
-make_transform_range(FwdRng& rng, UnaryFunc fun)
+transform_range<FwdRng,UnaryFunc> make_transform_range(FwdRng& rng, UnaryFunc fun)
 {
-    return boost::make_iterator_range(
-        boost::make_transform_iterator(range_ex_detail::adl_begin(rng), fun)
-      , boost::make_transform_iterator(range_ex_detail::adl_end(rng), fun)
-    );
+    return transform_range<FwdRng,UnaryFunc>(rng, fun);
 }
 
 /// \overload
 template<typename FwdRng,typename UnaryFunc>
-boost::iterator_range<
-    boost::transform_iterator<
-        UnaryFunc
-      , BOOST_DEDUCED_TYPENAME boost::range_const_iterator<FwdRng>::type
-    >
->
-make_transform_range(FwdRng const& rng, UnaryFunc fun)
+transform_range<FwdRng const,UnaryFunc> make_transform_range(FwdRng const& rng, UnaryFunc fun)
 {
-    return boost::make_iterator_range(
-        boost::make_transform_iterator(range_ex_detail::adl_begin(rng), fun)
-      , boost::make_transform_iterator(range_ex_detail::adl_end(rng), fun)
-    );
+    return transform_range<FwdRng const,UnaryFunc>(rng, fun);
 }
 
 /// transform_range_adaptor
@@ -59,32 +67,17 @@ struct transform_range_adaptor
     struct apply
     {
         BOOST_STATIC_ASSERT((boost::tuples::length<Args>::value==1));
-        typedef BOOST_DEDUCED_TYPENAME boost::range_result_iterator<Rng>::type iterator;
-        typedef boost::transform_iterator<
-            BOOST_DEDUCED_TYPENAME boost::tuples::element<0,Args>::type
-          , iterator
-        >
-        type;
+        typedef transform_range<
+            Rng
+          , BOOST_DEDUCED_TYPENAME boost::tuples::element<0,Args>::type
+        > type;
     };
 
     template<typename Rng,typename Args>
     static BOOST_DEDUCED_TYPENAME apply<Rng,Args>::type
-    begin(Rng & rng, Args const & args)
+    make_range(Rng & rng, Args const & args)
     {
-        return boost::make_transform_iterator(
-            range_ex_detail::adl_begin(rng)
-          , boost::tuples::get<0>(args)
-        );
-    }
-
-    template<typename Rng,typename Args>
-    static BOOST_DEDUCED_TYPENAME apply<Rng,Args>::type
-    end(Rng & rng, Args const & args)
-    {
-        return boost::make_transform_iterator(
-            range_ex_detail::adl_end(rng)
-          , boost::tuples::get<0>(args)
-        );
+        return make_transform_range(rng, boost::tuples::get<0>(args));
     }
 };
 

@@ -16,37 +16,46 @@
 namespace boost
 {
 
+/// \brief a range that is the reverse of the original
+///
+/// a range that is the reverse of the original
+///
+template<typename BidiRng>
+struct reverse_range
+  : boost::iterator_range<
+        boost::reverse_iterator<
+            BOOST_DEDUCED_TYPENAME boost::range_result_iterator<BidiRng>::type
+        >
+    >
+{
+    typedef BOOST_DEDUCED_TYPENAME boost::range_result_iterator<BidiRng>::type  base_iterator;
+    typedef boost::reverse_iterator<base_iterator>                              iterator;
+    typedef boost::iterator_range<iterator>                                     base_range;
+
+    explicit reverse_range(BidiRng &rng)
+      : base_range(
+            boost::make_reverse_iterator(range_ex_detail::adl_end(rng))
+          , boost::make_reverse_iterator(range_ex_detail::adl_begin(rng))
+        )
+    {
+    }
+};
+
 /// \brief produces a range that is the reverse of the original
 ///
 /// produces a range that is the reverse of the original
 ///
-template<typename FwdRng>
-boost::iterator_range<
-    boost::reverse_iterator<
-        BOOST_DEDUCED_TYPENAME boost::range_iterator<FwdRng>::type
-    >
->
-make_reverse_range(FwdRng& rng)
+template<typename BidiRng>
+boost::reverse_range<BidiRng> make_reverse_range(BidiRng &rng)
 {
-    return boost::make_iterator_range(
-        boost::make_reverse_iterator(range_ex_detail::adl_end(rng))
-      , boost::make_reverse_iterator(range_ex_detail::adl_begin(rng))
-    );
+    return boost::reverse_range<BidiRng>(rng);
 }
 
 /// \overload
-template<typename FwdRng>
-boost::iterator_range<
-    boost::reverse_iterator<
-        BOOST_DEDUCED_TYPENAME boost::range_const_iterator<FwdRng>::type
-    >
->
-make_reverse_range(FwdRng const& rng)
+template<typename BidiRng>
+boost::reverse_range<BidiRng const> make_reverse_range(BidiRng const &rng)
 {
-    return boost::make_iterator_range(
-        boost::make_reverse_iterator(range_ex_detail::adl_end(rng))
-      , boost::make_reverse_iterator(range_ex_detail::adl_begin(rng))
-    );
+    return boost::reverse_range<BidiRng>(rng);
 }
 
 /// reverse_range_adaptor
@@ -57,23 +66,14 @@ struct reverse_range_adaptor
     struct apply
     {
         BOOST_STATIC_ASSERT((boost::tuples::length<Args>::value==0));
-        typedef BOOST_DEDUCED_TYPENAME boost::range_result_iterator<Rng>::type iterator;
-        typedef boost::reverse_iterator<iterator> type;
+        typedef reverse_range<Rng> type;
     };
 
-
     template<typename Rng,typename Args>
     static BOOST_DEDUCED_TYPENAME apply<Rng,Args>::type
-    begin(Rng & rng, Args)
+    make_range(Rng & rng, Args)
     {
-        return boost::make_reverse_iterator(range_ex_detail::adl_end(rng));
-    }
-
-    template<typename Rng,typename Args>
-    static BOOST_DEDUCED_TYPENAME apply<Rng,Args>::type
-    end(Rng & rng, Args)
-    {
-        return boost::make_reverse_iterator(range_ex_detail::adl_begin(rng));
+        return make_reverse_range(rng);
     }
 };
 

@@ -62,30 +62,20 @@ struct range_adaptor
 // operator |
 //
 template<typename Rng,typename Base,typename Args>
-inline boost::iterator_range<
-    BOOST_DEDUCED_TYPENAME Base::BOOST_NESTED_TEMPLATE apply<Rng, Args>::type
->
+inline BOOST_DEDUCED_TYPENAME Base::BOOST_NESTED_TEMPLATE apply<Rng, Args>::type
 operator |(Rng & rng, range_adaptor<Base,Args> const & that)
 {
-    return boost::make_iterator_range(
-        that.begin(rng,that.args)
-      , that.end(rng,that.args)
-    );
+    return that.make_range(rng,that.args);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // operator |
 //
 template<typename Rng,typename Base,typename Args>
-inline boost::iterator_range<
-    BOOST_DEDUCED_TYPENAME Base::BOOST_NESTED_TEMPLATE apply<Rng const, Args>::type
->
+inline BOOST_DEDUCED_TYPENAME Base::BOOST_NESTED_TEMPLATE apply<Rng const, Args>::type
 operator |(Rng const & rng, range_adaptor<Base,Args> const & that)
 {
-    return boost::make_iterator_range(
-        that.begin(rng,that.args)
-      , that.end(rng,that.args)
-    );
+    return that.make_range(rng,that.args);
 }
 
 } // namespace boost
