@@ -1,16 +1,16 @@
 <?
 
 include_once( "common.php" );
-include_once( "boost.php" );
+include_once( "util/boost.php" );
 
-echo bareHtmlHeader( "Container Algortihms" );
+echo bareHtmlHeader( "Standard Container Algortihms" );
 
-echo pictureAndName( "Container Algorithms" );
+echo pictureAndName( "Standard Container Algorithms" );
 echo overviewLinks(); echo hr();
 echo introduction();  echo hr();
-echo synopsis();      echo hr();
+echo reference();     echo hr();
 echo portability();   echo hr();
-echo references();    
+echo copyRightMEssage();    
 
 echo htmlFooter();
 
@@ -20,7 +20,7 @@ echo htmlFooter();
 //
 // overviewLinks(); 
 // introduction();  
-// synopsis();      
+// reference();      
 // portability();   
 // references();    
 // 
@@ -30,13 +30,19 @@ echo htmlFooter();
 // refLink();
 // iteratorRangeLink();
 // functionList(); 
+// stlLink1();
+// stlLink2();
+// nonModifyingLink();
+// modifyingLink();
+// numericLink();
+// 
 //
 
 function overviewLinks()
 {
     $list = "";
     $list .= item( introLink() ) . 
-             item( synopsLink() ) .
+             item( referenceLink() ) .
              item( portLink() ) .
              item( refLink() ); 
     return ulist( $list );
@@ -48,19 +54,12 @@ function introduction()
 {
     $res  = beginSection( introLink() );
     $motivation = p( "This library makes it possible to use all the standard 
-                      algorithms with an " . iteratorRangeLink() ." instead of a pair of iterators.
-                      An " . iteratorRangeLink() . " is any type from which is is possible
-                      to extract a pair of iterators that defines a valid sequence. This
-                      means that one can can use the library with standard containers, " . 
-                      code( "std::pair<iterator,iterator>" ) . " and builtin arrays in a 
-                      uniform way." );
-    
-    $traits     = p( "The magic that makes this possible are overloaded versions of the 
+                      algorithms with many different coontainers instead of a pair of iterators.
+                      The magic that makes this possible are overloaded versions of the 
                      free-standing functions " . code( "begin()" ) . " and " . code( "end()" ) .
-                     " and the accompanying traits class " . code( "iterator_range_traits<>" ) . 
-                     " (see " . iteratorRangeLink() . ")." ); 
+                     " and the accompanying traits class " . iteratorRangeLink() . "." ); 
     
-    $advantages = P( "The iterator range algorithms has several advantages over
+    $advantages = P( "The container algorithms has several advantages over
                      the normal algorithms:" .
                      ulist( li( "Shorter and more comprehensible code" ) .
                             li( "Functional style programming is now possible" ) .
@@ -99,7 +98,7 @@ function introduction()
        // std::vector<record> v( mismatching_part.first, mismatching_part.second );
        std::vector<record> v( mismatch( selection(), begin( old_selection ) ):
 
-       //
+       //                                                                                       
        // Example 3: specialized algorithm called for std::map
        //
        
@@ -114,22 +113,30 @@ function introduction()
                           
                        " ) );
                   
-    $res .= $motivation . $traits . $advantages . $example;
+    $res .= $motivation . $advantages . $example;
                        
     return $res;
 }
 
 
 
-function synopsis()
+function reference()
 {
-    $res             = beginSection( synopsLink() );
-    
-    $generalComments       = "begin end, ambiguity, enble_if, const_non_const version";
+    $res                   = beginSection( referenceLink() );
+  
+    $generalComments       = p( "The library is split up into several headers because
+                              calling specialized algorithm for eg. " .  
+                              code( "std::map::find()" ) . " and because it minimizes the
+                              inclusion of other necessary headers. In total there are 
+                              5 headers: " ) . 
+        ulist( li( a( containerAlgoLink(), containerAlgoLink() ) . ": everything. " ) .
+               li( a( nonModifyingLink(), nonModifyingLink() ) . ": non-modifying algorithms; includes " . 
+                   code( "<set>" ) . " and " . code( "<map>" ) . "." ) );   
+
     $spezializedAlgorithms = ""; 
     $noModifying = "";
     $modifying = "";
-    return $res . functionList();  
+    return $res . $generalComments . functionList();  
 }
 
 
@@ -137,6 +144,11 @@ function synopsis()
 function portability()
 {
     $res  = beginSection( portLink() );
+    $res .= p( "The portability of the library depends totally on " . iteratorRangeLink() 
+            . "." . "This means that you should at least expect everything to work with standard
+            containers and pairs of iterators whereas array handling will be a problem on more challenged
+            compilers." );
+        
     return $res; 
 }
 
@@ -150,15 +162,11 @@ function references()
 
 
 
-
-
-
-
-
 function iteratorRangeLink()
 {
-    return a( "iterator_range.html", "IteratorRange" );
+    return a( "../../container_traits/doc/container_traits.html", code( "container_traits<>" ) );
 }
+
 
 
 function functionList()
@@ -796,6 +804,34 @@ adjacent_difference( const Container& c, OutputIterator result,
 
 } // namespace 'boost' " );
 
+}
+
+    
+
+function stlLink1()
+{
+   return "http://www.cs.rpi.edu/projects/STL/htdocs/node13.html#stldatasheets";
+}
+    
+    
+
+function stlLink2()
+{
+   return "http://www.sgi.com/tech/stl/table_of_contents.html";
+}
+
+
+
+function containerAlgoLink()
+{
+   return "container_algo.hpp";
+}
+
+
+
+function nonModifyingLink()
+{
+    return "container_algo/non_modifying.hpp";
 }
 
 ?>

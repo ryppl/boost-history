@@ -1,10 +1,7 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"><html><head><title> Container Algortihms </title><meta http-equiv="Content-Type"content="text/html; charset=iso-8859-1"></head> <body><table  ><tr  ><td  ><img src="cboost.gif" width="100%" border="0"></td><td  ><h1  >Container Algorithms</h1></td></tr></table><ul  ><li  ><a href="#Introduction" >Introduction</a></li><li  ><a href="#Synopsis" >Synopsis</a></li><li  ><a href="#Portability" >Portability</a></li><li  ><a href="#References" >References</a></li></ul><hr size="1" ><h2  >Introduction</h2><a name="Introduction" ></a><p  >This library makes it possible to use all the standard 
-                      algorithms with an  <a href="iterator_range.html" target="_self" >IteratorRange</a>  instead of a pair of iterators.
-                      An  <a href="iterator_range.html" target="_self" >IteratorRange</a>  is any type from which is is possible
-                      to extract a pair of iterators that defines a valid sequence. This
-                      means that one can can use the library with standard containers, <code  >std::pair&lt;iterator,iterator&gt;</code> and builtin arrays in a 
-                      uniform way.</p><p  >The magic that makes this possible are overloaded versions of the 
-                     free-standing functions <code  >begin()</code> and <code  >end()</code> and the accompanying traits class <code  >iterator_range_traits&lt;&gt;</code> (see  <a href="iterator_range.html" target="_self" >IteratorRange</a> ).</p><p  >The iterator range algorithms has several advantages over
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"><html><head><title> Standard Container Algortihms </title><meta http-equiv="Content-Type"content="text/html; charset=iso-8859-1"></head> <body><table  ><tr  ><td  ><img src="cboost.gif" width="100%" border="0"></td><td  ><h1  >Standard Container Algorithms</h1></td></tr></table><ul  ><li  ><a href="#Introduction" >Introduction</a></li><li  ><a href="#Reference" >Reference</a></li><li  ><a href="#Portability" >Portability</a></li><li  ><a href="#References" >References</a></li></ul><hr size="1" ><h2  >Introduction</h2><a name="Introduction" ></a><p  >This library makes it possible to use all the standard 
+                      algorithms with many different coontainers instead of a pair of iterators.
+                      The magic that makes this possible are overloaded versions of the 
+                     free-standing functions <code  >begin()</code> and <code  >end()</code> and the accompanying traits class  <a href="../../container_traits/doc/container_traits.html" target="_self" ><code  >container_traits&lt;&gt;</code></a> .</p><p  >The container algorithms has several advantages over
                      the normal algorithms:<ul  ><li  >Shorter and more comprehensible code</li><li  >Functional style programming is now possible</li><li  >Less error prone when using built-in arrays</li><li  >Container specialized algorithms are 
                                  called whenever possible</li></ul></p><p  >Below are given some small examples:<pre  >
        //
@@ -36,7 +33,7 @@
        // std::vector&lt;record&gt; v( mismatching_part.first, mismatching_part.second );
        std::vector&lt;record&gt; v( mismatch( selection(), begin( old_selection ) ):
 
-       //
+       //                                                                                       
        // Example 3: specialized algorithm called for std::map
        //
        
@@ -49,7 +46,10 @@
        // find( begin( my_vector ), end( my_vector ), 4 );
        find( my_vector, 4 );
                           
-                       </pre></p><hr size="1" ><h2  >Synopsis</h2><a name="Synopsis" ></a><pre  >
+                       </pre></p><hr size="1" ><h2  >Reference</h2><a name="Reference" ></a><p  >The library is split up into several headers because
+                              calling specialized algorithm for eg. <code  >std::map::find()</code> and because it minimizes the
+                              inclusion of other necessary headers. In total there are 
+                              5 headers: </p><ul  ><li  > <a href="container_algo.hpp" target="_self" >container_algo.hpp</a> : everything. </li><li  > <a href="container_algo/non_modifying.hpp" target="_self" >container_algo/non_modifying.hpp</a> : non-modifying algorithms; includes <code  >&lt;set&gt;</code> and <code  >&lt;map&gt;</code>.</li></ul><pre  >
 namespace boost 
 {
 
@@ -680,4 +680,9 @@ inline OutputIterator
 adjacent_difference( const Container& c, OutputIterator result, 
                      Predicate pred );
 
-} // namespace 'boost' </pre><hr size="1" ><h2  >Portability</h2><a name="Portability" ></a><hr size="1" ><h2  >References</h2><a name="References" ></a></body></html>
+} // namespace 'boost' </pre><hr size="1" ><h2  >Portability</h2><a name="Portability" ></a><p  >The portability of the library depends totally on  <a href="../../container_traits/doc/container_traits.html" target="_self" ><code  >container_traits&lt;&gt;</code></a> .This means that you should at least expect everything to work with standard
+            containers and pairs of iterators whereas array handling will be a problem on more challenged
+            compilers.</p><hr size="1" ><p  >&copy; Thorsten Ottosen 2003 (nesotto@cs.auc.dk).
+    Permission to copy, use, modify, sell and distribute this software is granted provided this copyright notice appears
+     in all copies. This software is provided "as is" without express or implied warranty, and with no
+         claim as to its suitability for any purpose.</p><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br></body></html>
