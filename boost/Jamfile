@@ -1,10 +1,83 @@
 project-root ;
 
-# please order by name to ease maintenance
-subinclude libs/date_time/build ;
-subinclude libs/filesystem/build ;
-subinclude libs/python/build ;
-subinclude libs/regex/build ;
-subinclude libs/signals/build ;
-subinclude libs/test/build ;
-subinclude libs/thread/build ;
+local version-tag = [ MATCH "^([^.]+).([^.]+)" : $(BOOST_VERSION) ] ;
+if $(NT) { version-tag = $(version-tag:J=) ; }
+else { version-tag = $(version-tag:J=".") ; }
+version-tag = $(version-tag:J=) ;
+
+rule common-stage-tag ( toolset variant : properties * )
+{
+    local tags = ;
+
+    local toolset-tag = ;
+    switch $(toolset)
+    {
+        case *borland* : toolset-tag += bcb ;
+        case *como* : toolset-tag += como ;
+        case *cwpro8* : toolset-tag += cw8 ;
+        case *darwin* : toolset-tag += ;
+        case *edg* : toolset-tag += edg ;
+        case *gcc* : toolset-tag += gcc ;
+        case *intel-linux* : toolset-tag += il ;
+        case *intel-win32* : toolset-tag += iw ;
+        case *kcc* : toolset-tag += kcc ;
+        case *kylix* : toolset-tag += bck ;
+        case *metrowerks* : toolset-tag += cw ;
+        case *mingw* : toolset-tag += mgw ;
+        case *mipspro* : toolset-tag += mp ;
+        case *msvc* : toolset-tag += vc6 ;
+        case *sunpro* : toolset-tag += sw ;
+        case *tru64cxx* : toolset-tag += tru ;
+        case *vacpp* : toolset-tag += xlc ;
+        case *vc7* : toolset-tag += vc ;
+    }
+    toolset-tag += [ MATCH "[-c]([0123456789]+).([0123456789]*)" : $(toolset) ] ;
+    tags += $(toolset-tag:J=) ;
+    
+    local thread-tag = ;
+    if <threading>multi in $(properties) { thread-tag = mt ; }
+    tags += $(thread-tag:J=) ;
+    
+    local runtime-tag = ;
+    if <runtime-link>static in $(properties) { runtime-tag += s ; }
+    if <runtime-build>debug in $(properties) { runtime-tag += d ; }
+    if [ MATCH .*(debug).* : $(variant) ] { runtime-tag += d ; }
+    if [ MATCH .*(stlport).* : $(toolset) ] { runtime-tag += p ; }
+    tags += $(runtime-tag:J=) ;
+    
+    tags += $(version-tag) ;
+    
+    return $(properties) <tag><prefix>-$(tags:J=-) ;
+}
+
+rule unless ( test : no-value * : yes-value * ) { if ! $(test) { return $(no-value) ; } else { return $(yes-value) ; } }
+rule cond ( test : yes-value * : no-value * ) { if $(test) { return $(yes-value) ; } else { return $(no-value) ; } }
+
+stage lib
+    :
+        # please order by name to ease maintenance
+        <dll>libs/date_time/build/boost_date_time
+        <lib>libs/date_time/build/boost_date_time
+        <lib>libs/filesystem/build/boost_filesystem
+        #~ <lib>libs/graph/build/libbgl-viz
+        <dll>libs/python/build/boost_python
+        <lib>libs/python/build/boost_python
+        <dll>libs/regex/build/boost_regex
+        <lib>libs/regex/build/boost_regex
+        <dll>libs/signals/build/boost_signals
+        <lib>libs/signals/build/boost_signals
+        [ unless $(NT) :
+            <dll>libs/test/build/boost_prg_exec_monitor
+            <dll>libs/test/build/boost_test_exec_monitor
+            <dll>libs/test/build/boost_unit_test_framework ]
+        <lib>libs/test/build/boost_prg_exec_monitor
+        <lib>libs/test/build/boost_test_exec_monitor
+        <lib>libs/test/build/boost_unit_test_framework
+        <dll>libs/thread/build/boost_thread
+    :
+        <architecture-subdirs>yes
+        common-stage-tag
+    :
+        debug
+        release
+    ;

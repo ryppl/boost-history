@@ -2129,6 +2129,7 @@ rule stage ( name : sources + : requirements * : local-build * )
 
     local stage-id =
         [ grist-targets $(name) ] ;
+    local arch-subdirs = [ get-values <architecture-subdirs> : $(requirements) ] ;
 
     # Supress the regular build of this target
     local gSUPPRESS_FAKE_TARGETS =  [ get-values <suppress> : $(local-build) ] ;
@@ -2137,6 +2138,7 @@ rule stage ( name : sources + : requirements * : local-build * )
     local files = [ select-ungristed $(sources) ] ;
     local file-mode ;
     local file-tagged ;
+    local file-subdir ;
 
     # Prevent built object from getting deleted so that when targets are linked
     # multiple times they are available.
@@ -2169,6 +2171,16 @@ rule stage ( name : sources + : requirements * : local-build * )
                 local s-toolset = ;
                 local s-variant = ;
                 split-target-subvariant s-target s-properties s-toolset s-variant : $(subvariant) ;
+                local s-subdir ;
+                if $(arch-subdirs)
+                {
+                    local arch = [ get-values <instruction-set> : $(s-properties) ] ;
+                    arch ?= [ get-values <architecture> : $(s-properties) ] ;
+                    arch ?= $(OSPLAT:L) ;
+                    arch += [ get-values <address-model> : $(s-properties) ] ;
+                    arch += $(OS:L) ;
+                    s-subdir = $(arch:J=-) ;
+                }
                 
                 if  ( $(s-toolset) = $(source-build[1]) || $(source-build[1]) = * ) &&
                     ( $(s-variant) = $(source-build[2]) || $(source-build[2]) = * )
@@ -2197,6 +2209,7 @@ rule stage ( name : sources + : requirements * : local-build * )
                         files += $(sv) ;
                         file-mode($(sv)) = $($(gTARGET_TYPE($(s-target)))MODE) ;
                         file-tagged($(sv)) = $(renamed-target) ;
+                        file-subdir($(sv)) = $(s-subdir) ;
                     }
 
                 }
@@ -2219,7 +2232,7 @@ rule stage ( name : sources + : requirements * : local-build * )
             local FILEMODE = $(FILEMODE) ;
             if $(file-mode($(file))) { FILEMODE = $(file-mode($(file))) ; }
             MakeLocate $(destination-file) :
-                [ FDirName [ split-path $(LOCATE_TARGET)/$(stage-dir) ] ] ;
+                [ FDirName [ split-path $(LOCATE_TARGET)/$(stage-dir) ] $(file-subdir($(file))) ] ;
             FileClone $(destination-file) : $(file) ;
             declare-fake-targets $(stage-id)/$(destination-file:G=) : $(destination-file) ;
         }
