@@ -384,7 +384,7 @@ implementation::
             return Base.f(self) + 10
 
 If not for ``default_f``, this would call the virtual function ending up in
-and infinite loop.
+an infinite loop.
 
 To expose the class above and it's virtual function ``f``, we use ``class_`` 
 like this::
