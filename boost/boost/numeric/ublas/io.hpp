@@ -14,18 +14,21 @@
 //  GeNeSys mbH & Co. KG in producing this work.
 //
 
-#ifndef NUMERICS_IO_H
-#define NUMERICS_IO_H
+#ifndef BOOST_UBLAS_IO_H
+#define BOOST_UBLAS_IO_H
 
-#include <iostream>
+// Clients should only pay for what they use.
+// Thanks to Michael Stevens for spotting this.
+// #include <iostream>
+#include <iosfwd>
 
-namespace boost { namespace numerics {
+namespace boost { namespace numeric { namespace ublas {
 
-#ifdef NUMERICS_USE_BASIC_STREAM
+#ifdef BOOST_UBLAS_USE_BASIC_STREAM
 
     template<class E, class T, class VE>
     // This function seems to be big. So we do not let the compiler inline it.
-    // NUMERICS_INLINE
+    // BOOST_UBLAS_INLINE
     std::basic_ostream<E, T> &operator << (std::basic_ostream<E, T> &os,
                                            const vector_expression<VE> &v) {
         std::size_t size = v ().size ();
@@ -44,7 +47,7 @@ namespace boost { namespace numerics {
 
     template<class E, class T, class VT, class VA> 
     // This function seems to be big. So we do not let the compiler inline it.
-    // NUMERICS_INLINE
+    // BOOST_UBLAS_INLINE
     std::basic_ostream<E, T> &operator << (std::basic_ostream<E, T> &os, 
                                            const vector<VT, VA> &v) {
         std::size_t size = v.size ();
@@ -63,7 +66,7 @@ namespace boost { namespace numerics {
 
     template<class E, class T, class VT, class VA> 
     // This function seems to be big. So we do not let the compiler inline it.
-    // NUMERICS_INLINE
+    // BOOST_UBLAS_INLINE
     std::basic_istream<E, T> &operator >> (std::basic_istream<E, T> &is, 
                                            vector<VT, VA> &v) {
         E ch;
@@ -103,7 +106,7 @@ namespace boost { namespace numerics {
 
     template<class E, class T, class ME> 
     // This function seems to be big. So we do not let the compiler inline it.
-    // NUMERICS_INLINE
+    // BOOST_UBLAS_INLINE
     std::basic_ostream<E, T> &operator << (std::basic_ostream<E, T> &os, 
                                            const matrix_expression<ME> &m) {
         std::size_t size1 = m ().size1 ();
@@ -135,7 +138,7 @@ namespace boost { namespace numerics {
 
     template<class E, class T, class MT, class MF, class MA> 
     // This function seems to be big. So we do not let the compiler inline it.
-    // NUMERICS_INLINE
+    // BOOST_UBLAS_INLINE
     std::basic_ostream<E, T> &operator << (std::basic_ostream<E, T> &os, 
                                            const matrix<MT, MF, MA> &m) {
         std::size_t size1 = m.size1 ();
@@ -167,7 +170,7 @@ namespace boost { namespace numerics {
 
     template<class E, class T, class MT, class MF, class MA> 
     // This function seems to be big. So we do not let the compiler inline it.
-    // NUMERICS_INLINE
+    // BOOST_UBLAS_INLINE
     std::basic_istream<E, T> &operator >> (std::basic_istream<E, T> &is, 
                                            matrix<MT, MF, MA> &m) {
         E ch;
@@ -230,11 +233,11 @@ namespace boost { namespace numerics {
 
 #endif
 
-#ifdef NUMERICS_USE_STREAM
+#ifdef BOOST_UBLAS_USE_STREAM
 
     template<class VE>
     // This function seems to be big. So we do not let the compiler inline it.
-    // NUMERICS_INLINE
+    // BOOST_UBLAS_INLINE
     std::ostream &operator << (std::ostream &os, 
                                const vector_expression<VE> &v) {
         std::size_t size = v ().size ();
@@ -249,7 +252,7 @@ namespace boost { namespace numerics {
 
     template<class VT, class VA> 
     // This function seems to be big. So we do not let the compiler inline it.
-    // NUMERICS_INLINE
+    // BOOST_UBLAS_INLINE
     std::ostream &operator << (std::ostream &os, 
                                const vector<VT, VA> &v) {
         std::size_t size = v.size ();
@@ -264,7 +267,7 @@ namespace boost { namespace numerics {
 
     template<class VT, class VA> 
     // This function seems to be big. So we do not let the compiler inline it.
-    // NUMERICS_INLINE
+    // BOOST_UBLAS_INLINE
     std::istream &operator >> (std::istream &is, 
                                vector<VT, VA> &v) {
         char ch;
@@ -304,7 +307,7 @@ namespace boost { namespace numerics {
 
     template<class ME> 
     // This function seems to be big. So we do not let the compiler inline it.
-    // NUMERICS_INLINE
+    // BOOST_UBLAS_INLINE
     std::ostream &operator << (std::ostream &os, 
                                const matrix_expression<ME> &m) {
         std::size_t size1 = m ().size1 ();
@@ -332,7 +335,7 @@ namespace boost { namespace numerics {
 
     template<class MT, class MF, class MA> 
     // This function seems to be big. So we do not let the compiler inline it.
-    // NUMERICS_INLINE
+    // BOOST_UBLAS_INLINE
     std::ostream &operator << (std::ostream &os,
                                const matrix<MT, MF, MA> &m) {
         std::size_t size1 = m.size1 ();
@@ -360,7 +363,7 @@ namespace boost { namespace numerics {
 
     template<class MT, class MF, class MA> 
     // This function seems to be big. So we do not let the compiler inline it.
-    // NUMERICS_INLINE
+    // BOOST_UBLAS_INLINE
     std::istream &operator >> (std::istream &is, 
                                matrix<MT, MF, MA> &m) {
         char ch;
@@ -423,7 +426,7 @@ namespace boost { namespace numerics {
 
 #endif 
 
-}}
+}}}
 
 #endif
 

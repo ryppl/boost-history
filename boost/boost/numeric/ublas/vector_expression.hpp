@@ -14,17 +14,17 @@
 //  GeNeSys mbH & Co. KG in producing this work.
 //
 
-#ifndef VECTOR_ET_H
-#define VECTOR_ET_H
+#ifndef VECTOR_EXPRESSION_H
+#define VECTOR_EXPRESSION_H
 
-#include <boost/numeric/ublas/config.h>
-#include <boost/numeric/ublas/exception.h>
-#include <boost/numeric/ublas/functional.h>
+#include <boost/numeric/ublas/config.hpp>
+#include <boost/numeric/ublas/exception.hpp>
+#include <boost/numeric/ublas/functional.hpp>
 
 // Expression templates based on ideas of Todd Veldhuizen and Geoffrey Furnish
 // Iterators based on ideas of Jeremy Siek
 
-namespace boost { namespace numerics {
+namespace boost { namespace numeric { namespace ublas {
 
     template<class T>
     struct scalar_expression {
@@ -36,16 +36,16 @@ namespace boost { namespace numerics {
         public scalar_expression<T> {
     public:
         typedef T value_type;
-        
+
         // Construction and destruction
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         scalar_value ():
             t_ () {}
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         scalar_value (const value_type &t):
             t_ (t) {}
 
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         operator value_type () const {
             return t_;
         }
@@ -61,14 +61,14 @@ namespace boost { namespace numerics {
         typedef T value_type;
         
         // Construction and destruction
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         scalar_const_reference ():
             t_ (nil_) {}
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         scalar_const_reference (const value_type &t):
             t_ (t) {}
 
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         operator value_type () const {
             return t_;
         }
@@ -86,20 +86,57 @@ namespace boost { namespace numerics {
     struct vector_expression {
         typedef E expression_type;
         typedef vector_tag type_category;
+#ifdef BOOST_UBLAS_ENABLE_PROXY_SHORTCUTS
+        typedef const vector_range<const E> const_vector_range_type;
+        typedef vector_range<E> vector_range_type;
+        typedef const vector_slice<const E> const_vector_slice_type;
+        typedef vector_slice<E> vector_slice_type;
+        typedef const vector_indirect<const E> const_vector_indirect_type;
+        typedef vector_indirect<E> vector_indirect_type;
+#endif
 
         // This class could define an common interface for all
         // statically derived expression type classes.
-        // Due to a compiler deficiency - one can not reference class typedefs of E 
+        // Due to a compiler deficiency - one can not reference class typedefs of E
         // on MSVC 6.0 (error C2027) - we only implement the casts.
 
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const expression_type &operator () () const {
             return *static_cast<const expression_type *> (this);
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         expression_type &operator () () {
             return *static_cast<expression_type *> (this);
         }
+
+#ifdef BOOST_UBLAS_ENABLE_PROXY_SHORTCUTS
+        BOOST_UBLAS_INLINE
+        const_vector_range_type operator () (const range &r) const {
+            return const_vector_range_type (operator () (), r);
+        }
+        BOOST_UBLAS_INLINE
+        vector_range_type operator () (const range &r) {
+            return vector_range_type (operator () (), r);
+        }
+        BOOST_UBLAS_INLINE
+        const_vector_slice_type operator () (const slice &s) const {
+            return const_vector_slice_type (operator () (), s);
+        }
+        BOOST_UBLAS_INLINE
+        vector_slice_type operator () (const slice &s) {
+            return vector_slice_type (operator () (), s);
+        }
+        template<class A>
+        BOOST_UBLAS_INLINE
+        const_vector_indirect_type operator () (const indirect_array<A> &ia) const {
+            return const_vector_indirect_type (operator () (), ia);
+        }
+        template<class A>
+        BOOST_UBLAS_INLINE
+        vector_indirect_type operator () (const indirect_array<A> &ia) {
+            return vector_indirect_type (operator () (), ia);
+        }
+#endif
     };
 
     template<class E>
@@ -115,37 +152,37 @@ namespace boost { namespace numerics {
         typedef typename E::const_pointer const_pointer;
         typedef const_pointer pointer;
         typedef typename E::const_iterator const_iterator_type;
-#ifdef NUMERICS_DEPRECATED
+#ifdef BOOST_UBLAS_DEPRECATED
         typedef const vector_range<const E> const_vector_range_type;
 #endif
         typedef unknown_storage_tag storage_category;
 
         // Construction and destruction
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         vector_const_reference ():
             e_ (nil_) {}
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         vector_const_reference (const expression_type &e):
             e_ (e) {}
 
         // Accessors
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         size_type size () const {
             return e_.size ();
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const expression_type &expression () const {
             return e_;
         }
 
         // Element access
-        NUMERICS_INLINE
-        value_type operator () (size_type i) const {
+        BOOST_UBLAS_INLINE
+        const_reference operator () (size_type i) const {
             return e_ (i);
         }
 
-        NUMERICS_INLINE
-        value_type operator [] (size_type i) const {
+        BOOST_UBLAS_INLINE
+        const_reference operator [] (size_type i) const {
             return e_ [i];
         }
 
@@ -153,22 +190,22 @@ namespace boost { namespace numerics {
         typedef const_iterator iterator;
 
         // Element lookup
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_iterator find_first (size_type i) const {
             return e_.find_first (i);
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_iterator find_last (size_type i) const {
             return e_.find_last (i);
         }
 
         // Iterator is the iterator of the referenced expression.
 
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_iterator begin () const {
             return e_.begin ();
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_iterator end () const {
             return e_.end ();
         }
@@ -176,16 +213,16 @@ namespace boost { namespace numerics {
         // Reverse iterator
 
 #ifdef BOOST_MSVC_STD_ITERATOR
-        typedef reverse_iterator<const_iterator, value_type, value_type> const_reverse_iterator;
+        typedef reverse_iterator<const_iterator, value_type, const_reference> const_reverse_iterator;
 #else
         typedef reverse_iterator<const_iterator> const_reverse_iterator;
 #endif
 
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_reverse_iterator rbegin () const {
             return const_reverse_iterator (end ());
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_reverse_iterator rend () const {
             return const_reverse_iterator (begin ());
         }
@@ -212,96 +249,96 @@ namespace boost { namespace numerics {
         typedef typename E::pointer pointer;
         typedef typename E::const_iterator const_iterator_type;
         typedef typename E::iterator iterator_type;
-#ifdef NUMERICS_DEPRECATED
+#ifdef BOOST_UBLAS_DEPRECATED
         typedef const vector_range<const E> const_vector_range_type;
         typedef vector_range<E> vector_range_type;
 #endif
         typedef unknown_storage_tag storage_category;
 
         // Construction and destruction
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         vector_reference ():
             e_ (nil_) {}
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         vector_reference (expression_type &e):
             e_ (e) {}
 
         // Accessors
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         size_type size () const {
             return e_.size ();
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const expression_type &expression () const {
             return e_;
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         expression_type &expression () {
             return e_;
         }
 
         // Resizing
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         void resize (size_type size) {
             e_.resize (size);
         }
 
         // Element access
-        NUMERICS_INLINE
-        value_type operator () (size_type i) const { 
+        BOOST_UBLAS_INLINE
+        const_reference operator () (size_type i) const { 
             return e_ (i); 
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         reference operator () (size_type i) { 
             return e_ (i); 
         }
 
-        NUMERICS_INLINE
-        value_type operator [] (size_type i) const { 
-            return e_ [i]; 
+        BOOST_UBLAS_INLINE
+        const_reference operator [] (size_type i) const {
+            return e_ [i];
         }
-        NUMERICS_INLINE
-        reference operator [] (size_type i) { 
-            return e_ [i]; 
+        BOOST_UBLAS_INLINE
+        reference operator [] (size_type i) {
+            return e_ [i];
         }
 
         typedef const_iterator_type const_iterator;
         typedef iterator_type iterator;
 
         // Element lookup
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_iterator find_first (size_type i) const {
             return e_.find_first (i);
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         iterator find_first (size_type i) {
             return e_.find_first (i);
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_iterator find_last (size_type i) const {
             return e_.find_last (i);
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         iterator find_last (size_type i) {
             return e_.find_last (i);
         }
 
         // Iterator is the iterator of the referenced expression.
 
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_iterator begin () const {
             return e_.begin ();
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_iterator end () const {
             return e_.end (); 
         }
 
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         iterator begin () {
             return e_.begin ();
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         iterator end () {
             return e_.end (); 
         }
@@ -309,16 +346,16 @@ namespace boost { namespace numerics {
         // Reverse iterator
 
 #ifdef BOOST_MSVC_STD_ITERATOR
-        typedef reverse_iterator<const_iterator, value_type, value_type> const_reverse_iterator;
+        typedef reverse_iterator<const_iterator, value_type, const_reference> const_reverse_iterator;
 #else
         typedef reverse_iterator<const_iterator> const_reverse_iterator;
 #endif
 
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_reverse_iterator rbegin () const {
             return const_reverse_iterator (end ());
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_reverse_iterator rend () const {
             return const_reverse_iterator (begin ());
         }
@@ -329,11 +366,11 @@ namespace boost { namespace numerics {
         typedef reverse_iterator<iterator> reverse_iterator;
 #endif
 
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         reverse_iterator rbegin () {
             return reverse_iterator (end ());
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         reverse_iterator rend () {
             return reverse_iterator (begin ());
         }
@@ -355,47 +392,47 @@ namespace boost { namespace numerics {
         typedef typename E::size_type size_type;
         typedef typename E::difference_type difference_type;
         typedef typename F::result_type value_type;
-        typedef const value_type &const_reference;
+        typedef value_type const_reference;
         typedef const_reference reference;
         typedef const value_type *const_pointer;
         typedef const_pointer pointer;
         typedef const vector_unary<E, F> const_closure_type;
         typedef typename E::const_iterator const_iterator_type;
-#ifdef NUMERICS_DEPRECATED
+#ifdef BOOST_UBLAS_DEPRECATED
         typedef const vector_range<const_closure_type> const_vector_range_type;
 #endif
         typedef unknown_storage_tag storage_category;
 
         // Construction and destruction
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         vector_unary ():
             e_ () {}
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         vector_unary (const expression_type &e):
             e_ (e) {}
 
         // Accessors
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         size_type size () const {
             return e_.size ();
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const expression_type &expression () const {
             return e_;
         }
 
         // Element access
-        NUMERICS_INLINE
-        value_type operator () (size_type i) const {
+        BOOST_UBLAS_INLINE
+        const_reference operator () (size_type i) const {
             return functor_type () (e_ (i));
         }
 
-        NUMERICS_INLINE
-        value_type operator [] (size_type i) const {
+        BOOST_UBLAS_INLINE
+        const_reference operator [] (size_type i) const {
             return functor_type () (e_ [i]);
         }
 
-#ifdef NUMERICS_USE_INDEXED_ITERATOR
+#ifdef BOOST_UBLAS_USE_INDEXED_ITERATOR
         typedef indexed_const_iterator<const_closure_type, typename const_iterator_type::iterator_category> const_iterator;
         typedef const_iterator iterator;
 #else
@@ -404,18 +441,18 @@ namespace boost { namespace numerics {
 #endif
 
         // Element lookup
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_iterator find_first (size_type i) const {
-#ifdef NUMERICS_USE_INDEXED_ITERATOR
+#ifdef BOOST_UBLAS_USE_INDEXED_ITERATOR
             const_iterator_type it (e_.find_first (i));
             return const_iterator (*this, it.index ());
 #else
             return const_iterator (*this, e_.find_first (i));
 #endif
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_iterator find_last (size_type i) const {
-#ifdef NUMERICS_USE_INDEXED_ITERATOR
+#ifdef BOOST_UBLAS_USE_INDEXED_ITERATOR
             const_iterator_type it (e_.find_last (i));
             return const_iterator (*this, it.index ());
 #else
@@ -426,10 +463,10 @@ namespace boost { namespace numerics {
         // Iterator enhances the iterator of the referenced expression
         // with the unary functor.
 
-#ifndef NUMERICS_USE_INDEXED_ITERATOR
+#ifndef BOOST_UBLAS_USE_INDEXED_ITERATOR
         class const_iterator:
             public container_const_reference<vector_unary>,
-#ifdef NUMERICS_USE_ITERATOR_BASE_TRAITS
+#ifdef BOOST_UBLAS_USE_ITERATOR_BASE_TRAITS
             public iterator_base_traits<typename E::const_iterator::iterator_category>::template
                         iterator_base<const_iterator, value_type>::type {
 #else
@@ -438,61 +475,63 @@ namespace boost { namespace numerics {
 #endif
         public:
             typedef typename E::const_iterator::iterator_category iterator_category;
-#ifndef BOOST_MSVC_STD_ITERATOR
+#ifdef BOOST_MSVC_STD_ITERATOR
+            typedef const_reference reference;
+#else
             typedef typename vector_unary::difference_type difference_type;
             typedef typename vector_unary::value_type value_type;
-            typedef typename vector_unary::value_type reference;
-            typedef typename vector_unary::pointer pointer;
+            typedef typename vector_unary::const_reference reference;
+            typedef typename vector_unary::const_pointer pointer;
 #endif
 
             // Construction and destruction
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator ():
                 container_const_reference<vector_unary> (), it_ () {}
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator (const vector_unary &vu, const const_iterator_type &it):
                 container_const_reference<vector_unary> (vu), it_ (it) {}
 
             // Arithmetic
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator &operator ++ () {
                 ++ it_;
                 return *this;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator &operator -- () {
                 -- it_;
                 return *this;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator &operator += (difference_type n) {
                 it_ += n;
                 return *this;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator &operator -= (difference_type n) {
                 it_ -= n;
                 return *this;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             difference_type operator - (const const_iterator &it) const {
                 return it_ - it.it_;
             }
 
             // Dereference
-            NUMERICS_INLINE
-            value_type operator * () const {
+            BOOST_UBLAS_INLINE
+            reference operator * () const {
                 return functor_type () (*it_);
             }
 
             // Index
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             size_type index () const {
                 return it_.index ();
             }
 
             // Assignment 
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator &operator = (const const_iterator &it) {
                 container_const_reference<vector_unary>::assign (&it ());
                 it_ = it.it_;
@@ -500,14 +539,14 @@ namespace boost { namespace numerics {
             }
 
             // Comparison
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             bool operator == (const const_iterator &it) const {
-                check (&(*this) () == &it (), external_logic ());
+                BOOST_UBLAS_CHECK (&(*this) () == &it (), external_logic ());
                 return it_ == it.it_;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             bool operator < (const const_iterator &it) const {
-                check (&(*this) () == &it (), external_logic ());
+                BOOST_UBLAS_CHECK (&(*this) () == &it (), external_logic ());
                 return it_ < it.it_;
             }
 
@@ -516,11 +555,11 @@ namespace boost { namespace numerics {
         };
 #endif
 
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_iterator begin () const {
             return find_first (0); 
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_iterator end () const {
             return find_last (size ()); 
         }
@@ -528,25 +567,25 @@ namespace boost { namespace numerics {
         // Reverse iterator
 
 #ifdef BOOST_MSVC_STD_ITERATOR
-        typedef reverse_iterator<const_iterator, value_type, value_type> const_reverse_iterator;
+        typedef reverse_iterator<const_iterator, value_type, const_reference> const_reverse_iterator;
 #else
         typedef reverse_iterator<const_iterator> const_reverse_iterator;
 #endif
 
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_reverse_iterator rbegin () const {
             return const_reverse_iterator (end ());
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_reverse_iterator rend () const {
             return const_reverse_iterator (begin ());
         }
 
     private:
-#ifdef NUMERICS_ET_VALUE
+#ifdef BOOST_UBLAS_ET_VALUE
         expression_type e_; 
 #endif
-#ifdef NUMERICS_ET_REFERENCE
+#ifdef BOOST_UBLAS_ET_REFERENCE
         const expression_type &e_;
 #endif
     };
@@ -554,7 +593,7 @@ namespace boost { namespace numerics {
     template<class E, class F>
     struct vector_unary_traits {
         typedef vector_unary<typename E::const_closure_type, F> expression_type;
-#ifdef NUMERICS_USE_ET
+#ifdef BOOST_UBLAS_USE_ET
         typedef expression_type result_type; 
 #else
         typedef vector<typename F::result_type> result_type;
@@ -563,55 +602,55 @@ namespace boost { namespace numerics {
 
     // (- v) [i] = - v [i]
     template<class E> 
-    NUMERICS_INLINE
+    BOOST_UBLAS_INLINE
     typename vector_unary_traits<E, scalar_negate<typename E::value_type> >::result_type
     operator - (const vector_expression<E> &e) {
-        typedef NUMERICS_TYPENAME vector_unary_traits<E, scalar_negate<NUMERICS_TYPENAME E::value_type> >::expression_type expression_type;
+        typedef BOOST_UBLAS_TYPENAME vector_unary_traits<E, scalar_negate<BOOST_UBLAS_TYPENAME E::value_type> >::expression_type expression_type;
         return expression_type (e ());
     }
 
     // (conj v) [i] = conj (v [i])
     template<class E> 
-    NUMERICS_INLINE
+    BOOST_UBLAS_INLINE
     typename vector_unary_traits<E, scalar_conj<typename E::value_type> >::result_type
     conj (const vector_expression<E> &e) {
-        typedef NUMERICS_TYPENAME vector_unary_traits<E, scalar_conj<NUMERICS_TYPENAME E::value_type> >::expression_type expression_type;
+        typedef BOOST_UBLAS_TYPENAME vector_unary_traits<E, scalar_conj<BOOST_UBLAS_TYPENAME E::value_type> >::expression_type expression_type;
         return expression_type (e ());
     }
 
     // (real v) [i] = real (v [i])
     template<class E> 
-    NUMERICS_INLINE
+    BOOST_UBLAS_INLINE
     typename vector_unary_traits<E, scalar_real<typename E::value_type> >::result_type
     real (const vector_expression<E> &e) {
-        typedef NUMERICS_TYPENAME vector_unary_traits<E, scalar_real<NUMERICS_TYPENAME E::value_type> >::expression_type expression_type;
+        typedef BOOST_UBLAS_TYPENAME vector_unary_traits<E, scalar_real<BOOST_UBLAS_TYPENAME E::value_type> >::expression_type expression_type;
         return expression_type (e ());
     }
 
     // (imag v) [i] = imag (v [i])
     template<class E> 
-    NUMERICS_INLINE
+    BOOST_UBLAS_INLINE
     typename vector_unary_traits<E, scalar_imag<typename E::value_type> >::result_type
     imag (const vector_expression<E> &e) {
-        typedef NUMERICS_TYPENAME vector_unary_traits<E, scalar_imag<NUMERICS_TYPENAME E::value_type> >::expression_type expression_type;
+        typedef BOOST_UBLAS_TYPENAME vector_unary_traits<E, scalar_imag<BOOST_UBLAS_TYPENAME E::value_type> >::expression_type expression_type;
         return expression_type (e ());
     }
 
     // (trans v) [i] = v [i]
     template<class E> 
-    NUMERICS_INLINE
+    BOOST_UBLAS_INLINE
     typename vector_unary_traits<E, scalar_identity<typename E::value_type> >::result_type
     trans (const vector_expression<E> &e) {
-        typedef NUMERICS_TYPENAME vector_unary_traits<E, scalar_identity<NUMERICS_TYPENAME E::value_type> >::expression_type expression_type;
+        typedef BOOST_UBLAS_TYPENAME vector_unary_traits<E, scalar_identity<BOOST_UBLAS_TYPENAME E::value_type> >::expression_type expression_type;
         return expression_type (e ());
     }
 
     // (herm v) [i] = conj (v [i])
     template<class E> 
-    NUMERICS_INLINE
+    BOOST_UBLAS_INLINE
     typename vector_unary_traits<E, scalar_conj<typename E::value_type> >::result_type
     herm (const vector_expression<E> &e) {
-        typedef NUMERICS_TYPENAME vector_unary_traits<E, scalar_conj<NUMERICS_TYPENAME E::value_type> >::expression_type expression_type;
+        typedef BOOST_UBLAS_TYPENAME vector_unary_traits<E, scalar_conj<BOOST_UBLAS_TYPENAME E::value_type> >::expression_type expression_type;
         return expression_type (e ());
     }
 
@@ -625,52 +664,52 @@ namespace boost { namespace numerics {
         typedef typename promote_traits<typename E1::size_type, typename E2::size_type>::promote_type size_type;
         typedef typename promote_traits<typename E1::difference_type, typename E2::difference_type>::promote_type difference_type;
         typedef typename F::result_type value_type;
-        typedef const value_type &const_reference;
+        typedef value_type const_reference;
         typedef const_reference reference;
         typedef const value_type *const_pointer;
         typedef const_pointer pointer;
         typedef const vector_binary<E1, E2, F> const_closure_type;
         typedef typename E1::const_iterator const_iterator1_type;
         typedef typename E2::const_iterator const_iterator2_type;
-#ifdef NUMERICS_DEPRECATED
+#ifdef BOOST_UBLAS_DEPRECATED
         typedef const vector_range<const_closure_type> const_vector_range_type;
 #endif
         typedef unknown_storage_tag storage_category;
 
         // Construction and destruction
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         vector_binary ():
             e1_ (), e2_ () {}
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         vector_binary (const expression1_type &e1, const expression2_type &e2):
             e1_ (e1), e2_ (e2) {}
 
         // Accessors
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         size_type size () const { 
-            return common (e1_.size (), e2_.size ()); 
+            return BOOST_UBLAS_SAME (e1_.size (), e2_.size ()); 
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const expression1_type &expression1 () const {
             return e1_;
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const expression2_type &expression2 () const {
             return e2_;
         }
 
         // Element access
-        NUMERICS_INLINE
-        value_type operator () (size_type i) const {
+        BOOST_UBLAS_INLINE
+        const_reference operator () (size_type i) const {
             return functor_type () (e1_ (i), e2_ (i));
         }
 
-        NUMERICS_INLINE
-        value_type operator [] (size_type i) const {
+        BOOST_UBLAS_INLINE
+        const_reference operator [] (size_type i) const {
             return functor_type () (e1_ [i], e2_ [i]);
         }
 
-#ifdef NUMERICS_USE_INDEXED_ITERATOR
+#ifdef BOOST_UBLAS_USE_INDEXED_ITERATOR
         typedef typename iterator_restrict_traits<typename const_iterator1_type::iterator_category,
                                                   typename const_iterator2_type::iterator_category>::iterator_category iterator_category;
         typedef indexed_const_iterator<const_closure_type, iterator_category> const_iterator;
@@ -681,23 +720,23 @@ namespace boost { namespace numerics {
 #endif
 
         // Element lookup
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_iterator find_first (size_type i) const {
             const_iterator1_type it1 (e1_.find_first (i));
             const_iterator2_type it2 (e2_.find_first (i));
             i = std::min (it1.index (), it2.index ());
-#ifdef NUMERICS_USE_INDEXED_ITERATOR
+#ifdef BOOST_UBLAS_USE_INDEXED_ITERATOR
             return const_iterator (*this, i);
 #else
             return const_iterator (*this, i, it1, it2);
 #endif
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_iterator find_last (size_type i) const {
             const_iterator1_type it1 (e1_.find_last (i));
             const_iterator2_type it2 (e2_.find_last (i));
             i = std::max (it1.index (), it2.index ());
-#ifdef NUMERICS_USE_INDEXED_ITERATOR
+#ifdef BOOST_UBLAS_USE_INDEXED_ITERATOR
             return const_iterator (*this, i);
 #else
             return const_iterator (*this, i, it1, it2);
@@ -707,10 +746,10 @@ namespace boost { namespace numerics {
         // Iterator merges the iterators of the referenced expressions and
         // enhances them with the binary functor.
 
-#ifndef NUMERICS_USE_INDEXED_ITERATOR
+#ifndef BOOST_UBLAS_USE_INDEXED_ITERATOR
         class const_iterator:
             public container_const_reference<vector_binary>,
-#ifdef NUMERICS_USE_ITERATOR_BASE_TRAITS
+#ifdef BOOST_UBLAS_USE_ITERATOR_BASE_TRAITS
             public iterator_base_traits<typename iterator_restrict_traits<typename E1::const_iterator::iterator_category,
                                                                           typename E2::const_iterator::iterator_category>::iterator_category>::template
                         iterator_base<const_iterator, value_type>::type {
@@ -722,37 +761,39 @@ namespace boost { namespace numerics {
         public:
             typedef typename iterator_restrict_traits<typename E1::const_iterator::iterator_category,
                                                       typename E2::const_iterator::iterator_category>::iterator_category iterator_category;
-#ifndef BOOST_MSVC_STD_ITERATOR
+#ifdef BOOST_MSVC_STD_ITERATOR
+            typedef const_reference reference;
+#else
             typedef typename vector_binary::difference_type difference_type;
             typedef typename vector_binary::value_type value_type;
-            typedef typename vector_binary::value_type reference;
+            typedef typename vector_binary::const_reference reference;
             typedef typename vector_binary::const_pointer pointer;
 #endif
 
             // Construction and destruction
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator ():
                 container_const_reference<vector_binary> (), i_ (), it1_ (), it2_ () {}
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator (const vector_binary &vb, size_type i, const const_iterator1_type &it1, const const_iterator2_type &it2):
                 container_const_reference<vector_binary> (vb), i_ (i), it1_ (it1), it2_ (it2) {}
             
             // Dense specializations
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             void increment (dense_random_access_iterator_tag) {
                 ++ i_, ++ it1_, ++ it2_;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             void decrement (dense_random_access_iterator_tag) {
                 -- i_, -- it1_, -- it2_;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             value_type dereference (dense_random_access_iterator_tag) const {
                 return functor_type () (*it1_, *it2_);
             }
 
             // Packed specializations
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             void increment (packed_random_access_iterator_tag) {
                 if (it1_.index () <= i_)
                     ++ it1_;
@@ -760,7 +801,7 @@ namespace boost { namespace numerics {
                     ++ it2_;
                 ++ i_;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             void decrement (packed_random_access_iterator_tag) {
                 if (i_ <= it1_.index ())
                     -- it1_;
@@ -768,9 +809,9 @@ namespace boost { namespace numerics {
                     -- it2_;
                 -- i_;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             value_type dereference (packed_random_access_iterator_tag) const {
-#ifndef NUMERICS_CONDITIONAL_DEFECT
+#ifndef BOOST_UBLAS_CONDITIONAL_DEFECT
                 value_type t1 = i_ - it1_.index () ? value_type () : *it1_;
                 value_type t2 = i_ - it2_.index () ? value_type () : *it2_;
 #else
@@ -782,7 +823,7 @@ namespace boost { namespace numerics {
             }
 
             // Sparse specializations
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             void increment (sparse_bidirectional_iterator_tag) {
                 size_type index1 = (*this) ().size ();
                 if (it1_ != it1_ ().end ()) {
@@ -800,7 +841,7 @@ namespace boost { namespace numerics {
                 }
                 i_ = std::min (index1, index2);
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             void decrement (sparse_bidirectional_iterator_tag) {
                 size_type index1 = (*this) ().size ();
                 if (it1_ != it1_ ().end ()) {
@@ -818,7 +859,7 @@ namespace boost { namespace numerics {
                 }
                 i_ = std::max (index1, index2);
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             value_type dereference (sparse_bidirectional_iterator_tag) const {
                 value_type t1 = value_type ();
                 if (it1_ != it1_ ().end ())
@@ -832,45 +873,45 @@ namespace boost { namespace numerics {
             }
 
             // Arithmetic
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator &operator ++ () {
                 increment (iterator_category ());
                 return *this;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator &operator -- () {
                 decrement (iterator_category ());
                 return *this;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator &operator += (difference_type n) {
                 i_ += n, it1_ += n, it2_ += n;
                 return *this;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator &operator -= (difference_type n) {
                 i_ -= n, it1_ -= n, it2_ -= n;
                 return *this;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             difference_type operator - (const const_iterator &it) const {
-                return common (it1_ - it.it1_, it2_ - it.it2_);
+                return BOOST_UBLAS_SAME (it1_ - it.it1_, it2_ - it.it2_);
             }
 
             // Dereference
-            NUMERICS_INLINE
-            value_type operator * () const {
+            BOOST_UBLAS_INLINE
+            reference operator * () const {
                 return dereference (iterator_category ()); 
             }
 
             // Index
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             size_type index () const {
                 return i_;
             }
 
             // Assignment 
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator &operator = (const const_iterator &it) {
                 container_const_reference<vector_binary>::assign (&it ());
                 it1_ = it.it1_;
@@ -879,14 +920,14 @@ namespace boost { namespace numerics {
             }
 
             // Comparison
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             bool operator == (const const_iterator &it) const {
-                check (&(*this) () == &it (), external_logic ());
+                BOOST_UBLAS_CHECK (&(*this) () == &it (), external_logic ());
                 return it1_ == it.it1_ && it2_ == it.it2_;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             bool operator < (const const_iterator &it) const {
-                check (&(*this) () == &it (), external_logic ());
+                BOOST_UBLAS_CHECK (&(*this) () == &it (), external_logic ());
                 return it1_ < it.it1_ && it2_ < it.it2_;
             }
 
@@ -897,11 +938,11 @@ namespace boost { namespace numerics {
         };
 #endif
 
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_iterator begin () const {
             return find_first (0);
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_iterator end () const {
             return find_last (size ());
         }
@@ -909,26 +950,26 @@ namespace boost { namespace numerics {
         // Reverse iterator
 
 #ifdef BOOST_MSVC_STD_ITERATOR
-        typedef reverse_iterator<const_iterator, value_type, value_type> const_reverse_iterator;
+        typedef reverse_iterator<const_iterator, value_type, const_reference> const_reverse_iterator;
 #else
         typedef reverse_iterator<const_iterator> const_reverse_iterator;
 #endif
 
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_reverse_iterator rbegin () const {
             return const_reverse_iterator (end ());
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_reverse_iterator rend () const {
             return const_reverse_iterator (begin ());
         }
 
     private:
-#ifdef NUMERICS_ET_VALUE
+#ifdef BOOST_UBLAS_ET_VALUE
         expression1_type e1_; 
         expression2_type e2_; 
 #endif
-#ifdef NUMERICS_ET_REFERENCE
+#ifdef BOOST_UBLAS_ET_REFERENCE
         const expression1_type &e1_; 
         const expression2_type &e2_; 
 #endif
@@ -938,7 +979,7 @@ namespace boost { namespace numerics {
     struct vector_binary_traits {
         typedef vector_binary<typename E1::const_closure_type, 
                               typename E2::const_closure_type, F> expression_type;
-#ifdef NUMERICS_USE_ET
+#ifdef BOOST_UBLAS_USE_ET
         typedef expression_type result_type; 
 #else
         typedef vector<typename F::result_type> result_type;
@@ -947,25 +988,25 @@ namespace boost { namespace numerics {
 
     // (v1 + v2) [i] = v1 [i] + v2 [i]
     template<class E1, class E2>
-    NUMERICS_INLINE
+    BOOST_UBLAS_INLINE
     typename vector_binary_traits<E1, E2, scalar_plus<typename E1::value_type, 
                                                       typename E2::value_type> >::result_type
     operator + (const vector_expression<E1> &e1, 
                 const vector_expression<E2> &e2) {
-        typedef NUMERICS_TYPENAME vector_binary_traits<E1, E2, scalar_plus<NUMERICS_TYPENAME E1::value_type, 
-                                                                           NUMERICS_TYPENAME E2::value_type> >::expression_type expression_type;
+        typedef BOOST_UBLAS_TYPENAME vector_binary_traits<E1, E2, scalar_plus<BOOST_UBLAS_TYPENAME E1::value_type, 
+                                                                              BOOST_UBLAS_TYPENAME E2::value_type> >::expression_type expression_type;
         return expression_type (e1 (), e2 ());
     }
 
     // (v1 - v2) [i] = v1 [i] - v2 [i]
     template<class E1, class E2>
-    NUMERICS_INLINE
+    BOOST_UBLAS_INLINE
     typename vector_binary_traits<E1, E2, scalar_minus<typename E1::value_type,
                                                        typename E2::value_type> >::result_type
     operator - (const vector_expression<E1> &e1,
                 const vector_expression<E2> &e2) {
-        typedef NUMERICS_TYPENAME vector_binary_traits<E1, E2, scalar_minus<NUMERICS_TYPENAME E1::value_type,
-                                                                            NUMERICS_TYPENAME E2::value_type> >::expression_type expression_type;
+        typedef BOOST_UBLAS_TYPENAME vector_binary_traits<E1, E2, scalar_minus<BOOST_UBLAS_TYPENAME E1::value_type,
+                                                                               BOOST_UBLAS_TYPENAME E2::value_type> >::expression_type expression_type;
         return expression_type (e1 (), e2 ());
     }
 
@@ -979,52 +1020,52 @@ namespace boost { namespace numerics {
         typedef typename E2::size_type size_type;
         typedef typename E2::difference_type difference_type;
         typedef typename F::result_type value_type;
-        typedef const value_type &const_reference;
+        typedef value_type const_reference;
         typedef const_reference reference;
         typedef const value_type *const_pointer;
         typedef const_pointer pointer;
         typedef const vector_binary_scalar1<E1, E2, F> const_closure_type;
         typedef typename E1::value_type const_iterator1_type;
         typedef typename E2::const_iterator const_iterator2_type;
-#ifdef NUMERICS_DEPRECATED
+#ifdef BOOST_UBLAS_DEPRECATED
         typedef const vector_range<const_closure_type> const_vector_range_type;
 #endif
         typedef unknown_storage_tag storage_category;
 
         // Construction and destruction
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         vector_binary_scalar1 ():
             e1_ (), e2_ () {}
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         vector_binary_scalar1 (const expression1_type &e1, const expression2_type &e2):
             e1_ (e1), e2_ (e2) {}
 
         // Accessors
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         size_type size () const {
             return e2_.size ();
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const expression1_type &expression1 () const {
             return e1_;
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const expression2_type &expression2 () const {
             return e2_;
         }
 
         // Element access
-        NUMERICS_INLINE
-        value_type operator () (size_type i) const {
+        BOOST_UBLAS_INLINE
+        const_reference operator () (size_type i) const {
             return functor_type () (e1_, e2_ (i));
         }
 
-        NUMERICS_INLINE
-        value_type operator [] (size_type i) const {
+        BOOST_UBLAS_INLINE
+        const_reference operator [] (size_type i) const {
             return functor_type () (e1_, e2_ [i]);
         }
 
-#ifdef NUMERICS_USE_INDEXED_ITERATOR
+#ifdef BOOST_UBLAS_USE_INDEXED_ITERATOR
         typedef indexed_const_iterator<const_closure_type, typename const_iterator2_type::iterator_category> const_iterator;
         typedef const_iterator iterator;
 #else
@@ -1033,18 +1074,18 @@ namespace boost { namespace numerics {
 #endif
 
         // Element lookup
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_iterator find_first (size_type i) const {
-#ifdef NUMERICS_USE_INDEXED_ITERATOR
+#ifdef BOOST_UBLAS_USE_INDEXED_ITERATOR
             const_iterator2_type it (e2_.find_first (i));
             return const_iterator (*this, it.index ());
 #else
             return const_iterator (*this, e1_, e2_.find_first (i));
 #endif
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_iterator find_last (size_type i) const {
-#ifdef NUMERICS_USE_INDEXED_ITERATOR
+#ifdef BOOST_UBLAS_USE_INDEXED_ITERATOR
             const_iterator2_type it (e2_.find_last (i));
             return const_iterator (*this, it.index ());
 #else
@@ -1055,10 +1096,10 @@ namespace boost { namespace numerics {
         // Iterator enhances the iterator of the referenced vector expression
         // with the binary functor.
 
-#ifndef NUMERICS_USE_INDEXED_ITERATOR
+#ifndef BOOST_UBLAS_USE_INDEXED_ITERATOR
         class const_iterator:
             public container_const_reference<vector_binary_scalar1>,
-#ifdef NUMERICS_USE_ITERATOR_BASE_TRAITS
+#ifdef BOOST_UBLAS_USE_ITERATOR_BASE_TRAITS
             public iterator_base_traits<typename E2::const_iterator::iterator_category>::template
                         iterator_base<const_iterator, value_type>::type {
 #else
@@ -1067,61 +1108,63 @@ namespace boost { namespace numerics {
 #endif                                               
         public:
             typedef typename E2::const_iterator::iterator_category iterator_category;
-#ifndef BOOST_MSVC_STD_ITERATOR
+#ifdef BOOST_MSVC_STD_ITERATOR
+            typedef const_reference reference;
+#else
             typedef typename vector_binary_scalar1::difference_type difference_type;
             typedef typename vector_binary_scalar1::value_type value_type;
-            typedef typename vector_binary_scalar1::value_type reference;
-            typedef typename vector_binary_scalar1::pointer pointer;
+            typedef typename vector_binary_scalar1::const_reference reference;
+            typedef typename vector_binary_scalar1::const_pointer pointer;
 #endif
 
             // Construction and destruction
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator ():
                 container_const_reference<vector_binary_scalar1> (), it1_ (), it2_ () {}
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator (const vector_binary_scalar1 &vbs, const const_iterator1_type &it1, const const_iterator2_type &it2):
                 container_const_reference<vector_binary_scalar1> (vbs), it1_ (it1), it2_ (it2) {}
 
             // Arithmetic
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator &operator ++ () {
                 ++ it2_;
                 return *this;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator &operator -- () {
                 -- it2_;
                 return *this;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator &operator += (difference_type n) {
                 it2_ += n;
                 return *this;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator &operator -= (difference_type n) {
                 it2_ -= n;
                 return *this;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             difference_type operator - (const const_iterator &it) const {
                 return it2_ - it.it2_;
             }
 
             // Dereference
-            NUMERICS_INLINE
-            value_type operator * () const {
+            BOOST_UBLAS_INLINE
+            reference operator * () const {
                 return functor_type () (it1_, *it2_); 
             }
 
             // Index
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             size_type index () const {
                 return it2_.index ();
             }
 
             // Assignment 
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator &operator = (const const_iterator &it) {
                 container_const_reference<vector_binary_scalar1>::assign (&it ());
                 it1_ = it.it1_;
@@ -1130,18 +1173,18 @@ namespace boost { namespace numerics {
             }
 
             // Comparison
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             bool operator == (const const_iterator &it) const {
-                check (&(*this) () == &it (), external_logic ());
+                BOOST_UBLAS_CHECK (&(*this) () == &it (), external_logic ());
                 // FIXME: we shouldn't compare floats
-                // check (it1_ == it.it1_, external_logic ());
+                // BOOST_UBLAS_CHECK (it1_ == it.it1_, external_logic ());
                 return it2_ == it.it2_;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             bool operator < (const const_iterator &it) const {
-                check (&(*this) () == &it (), external_logic ());
+                BOOST_UBLAS_CHECK (&(*this) () == &it (), external_logic ());
                 // FIXME: we shouldn't compare floats
-                // check (it1_ == it.it1_, external_logic ());
+                // BOOST_UBLAS_CHECK (it1_ == it.it1_, external_logic ());
                 return it2_ < it.it2_;
             }
 
@@ -1151,11 +1194,11 @@ namespace boost { namespace numerics {
         };
 #endif
 
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_iterator begin () const {
             return find_first (0); 
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_iterator end () const {
             return find_last (size ()); 
         }
@@ -1163,26 +1206,26 @@ namespace boost { namespace numerics {
         // Reverse iterator
 
 #ifdef BOOST_MSVC_STD_ITERATOR
-        typedef reverse_iterator<const_iterator, value_type, value_type> const_reverse_iterator;
+        typedef reverse_iterator<const_iterator, value_type, const_reference> const_reverse_iterator;
 #else
         typedef reverse_iterator<const_iterator> const_reverse_iterator;
 #endif
 
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_reverse_iterator rbegin () const {
             return const_reverse_iterator (end ());
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_reverse_iterator rend () const {
             return const_reverse_iterator (begin ());
         }
 
     private:
-#ifdef NUMERICS_ET_VALUE
+#ifdef BOOST_UBLAS_ET_VALUE
         expression1_type e1_; 
         expression2_type e2_; 
 #endif
-#ifdef NUMERICS_ET_REFERENCE
+#ifdef BOOST_UBLAS_ET_REFERENCE
         const expression1_type &e1_; 
         const expression2_type &e2_; 
 #endif
@@ -1192,7 +1235,7 @@ namespace boost { namespace numerics {
     struct vector_binary_scalar1_traits {
         typedef vector_binary_scalar1<scalar_const_reference<T1>, 
                                       typename E2::const_closure_type, F> expression_type;
-#ifdef NUMERICS_USE_ET
+#ifdef BOOST_UBLAS_USE_ET
         typedef expression_type result_type; 
 #else
         typedef vector<typename F::result_type> result_type;
@@ -1201,11 +1244,11 @@ namespace boost { namespace numerics {
 
     // (t * v) [i] = t * v [i]
     template<class T1, class E2>
-    NUMERICS_INLINE
+    BOOST_UBLAS_INLINE
     typename vector_binary_scalar1_traits<T1, E2, scalar_multiplies<T1, typename E2::value_type> >::result_type
     operator * (const T1 &e1, 
                 const vector_expression<E2> &e2) {
-        typedef NUMERICS_TYPENAME vector_binary_scalar1_traits<T1, E2, scalar_multiplies<T1, NUMERICS_TYPENAME E2::value_type> >::expression_type expression_type;
+        typedef BOOST_UBLAS_TYPENAME vector_binary_scalar1_traits<T1, E2, scalar_multiplies<T1, BOOST_UBLAS_TYPENAME E2::value_type> >::expression_type expression_type;
         return expression_type (e1, e2 ());
     }
 
@@ -1219,52 +1262,52 @@ namespace boost { namespace numerics {
         typedef typename E1::size_type size_type;
         typedef typename E1::difference_type difference_type;
         typedef typename F::result_type value_type;
-        typedef const value_type &const_reference;
+        typedef value_type const_reference;
         typedef const_reference reference;
         typedef const value_type *const_pointer;
         typedef const_pointer pointer;
         typedef const vector_binary_scalar2<E1, E2, F> const_closure_type;
         typedef typename E1::const_iterator const_iterator1_type;
         typedef typename E2::value_type const_iterator2_type;
-#ifdef NUMERICS_DEPRECATED
+#ifdef BOOST_UBLAS_DEPRECATED
         typedef const vector_range<const_closure_type> const_vector_range_type;
 #endif
         typedef unknown_storage_tag storage_category;
 
         // Construction and destruction
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         vector_binary_scalar2 ():
             e1_ (), e2_ () {}
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         vector_binary_scalar2 (const expression1_type &e1, const expression2_type &e2):
             e1_ (e1), e2_ (e2) {}
 
         // Accessors
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         size_type size () const {
             return e1_.size (); 
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const expression1_type &expression1 () const {
             return e1_;
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const expression2_type &expression2 () const {
             return e2_;
         }
 
         // Element access
-        NUMERICS_INLINE
-        value_type operator () (size_type i) const {
+        BOOST_UBLAS_INLINE
+        const_reference operator () (size_type i) const {
             return functor_type () (e1_ (i), e2_);
         }
 
-        NUMERICS_INLINE
-        value_type operator [] (size_type i) const {
+        BOOST_UBLAS_INLINE
+        const_reference operator [] (size_type i) const {
             return functor_type () (e1_ [i], e2_);
         }
 
-#ifdef NUMERICS_USE_INDEXED_ITERATOR
+#ifdef BOOST_UBLAS_USE_INDEXED_ITERATOR
         typedef indexed_const_iterator<const_closure_type, typename const_iterator2_type::iterator_category> const_iterator;
         typedef const_iterator iterator;
 #else
@@ -1273,18 +1316,18 @@ namespace boost { namespace numerics {
 #endif
 
         // Element lookup
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_iterator find_first (size_type i) const {
-#ifdef NUMERICS_USE_INDEXED_ITERATOR
+#ifdef BOOST_UBLAS_USE_INDEXED_ITERATOR
             const_iterator1_type it (e1_.find_first (i));
             return const_iterator (*this, it.index ());
 #else
             return const_iterator (*this, e1_.find_first (i), e2_);
 #endif
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_iterator find_last (size_type i) const {
-#ifdef NUMERICS_USE_INDEXED_ITERATOR
+#ifdef BOOST_UBLAS_USE_INDEXED_ITERATOR
             const_iterator1_type it (e1_.find_last (i));
             return const_iterator (*this, it.index ());
 #else
@@ -1295,10 +1338,10 @@ namespace boost { namespace numerics {
         // Iterator enhances the iterator of the referenced vector expression
         // with the binary functor.
 
-#ifndef NUMERICS_USE_INDEXED_ITERATOR
+#ifndef BOOST_UBLAS_USE_INDEXED_ITERATOR
         class const_iterator:
             public container_const_reference<vector_binary_scalar2>,
-#ifdef NUMERICS_USE_ITERATOR_BASE_TRAITS
+#ifdef BOOST_UBLAS_USE_ITERATOR_BASE_TRAITS
             public iterator_base_traits<typename E1::const_iterator::iterator_category>::template
                         iterator_base<const_iterator, value_type>::type {
 #else
@@ -1307,61 +1350,63 @@ namespace boost { namespace numerics {
 #endif                                               
         public:
             typedef typename E1::const_iterator::iterator_category iterator_category;
-#ifndef BOOST_MSVC_STD_ITERATOR
+#ifdef BOOST_MSVC_STD_ITERATOR
+            typedef const_reference reference;
+#else
             typedef typename vector_binary_scalar2::difference_type difference_type;
             typedef typename vector_binary_scalar2::value_type value_type;
-            typedef typename vector_binary_scalar2::value_type reference;
-            typedef typename vector_binary_scalar2::pointer pointer;
+            typedef typename vector_binary_scalar2::const_reference reference;
+            typedef typename vector_binary_scalar2::const_pointer pointer;
 #endif
 
             // Construction and destruction
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator ():
                 container_const_reference<vector_binary_scalar2> (), it1_ (), it2_ () {}
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator (const vector_binary_scalar2 &vbs, const const_iterator1_type &it1, const const_iterator2_type &it2):
                 container_const_reference<vector_binary_scalar2> (vbs), it1_ (it1), it2_ (it2) {}
 
             // Arithmetic
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator &operator ++ () {
                 ++ it1_;
                 return *this;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator &operator -- () {
                 -- it1_;
                 return *this;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator &operator += (difference_type n) {
                 it1_ += n;
                 return *this;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator &operator -= (difference_type n) {
                 it1_ -= n;
                 return *this;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             difference_type operator - (const const_iterator &it) const {
                 return it1_ - it.it1_;
             }
 
             // Dereference
-            NUMERICS_INLINE
-            value_type operator * () const {
+            BOOST_UBLAS_INLINE
+            reference operator * () const {
                 return functor_type () (*it1_, it2_);
             }
 
             // Index
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             size_type index () const {
                 return it1_.index ();
             }
 
             // Assignment 
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator &operator = (const const_iterator &it) {
                 container_const_reference<vector_binary_scalar2>::assign (&it ());
                 it1_ = it.it1_;
@@ -1370,18 +1415,18 @@ namespace boost { namespace numerics {
             }
 
             // Comparison
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             bool operator == (const const_iterator &it) const {
-                check (&(*this) () == &it (), external_logic ());
+                BOOST_UBLAS_CHECK (&(*this) () == &it (), external_logic ());
                 // FIXME: we shouldn't compare floats
-                // check (it2_ == it.it2_, external_logic ());
+                // BOOST_UBLAS_CHECK (it2_ == it.it2_, external_logic ());
                 return it1_ == it.it1_;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             bool operator < (const const_iterator &it) const {
-                check (&(*this) () == &it (), external_logic ());
+                BOOST_UBLAS_CHECK (&(*this) () == &it (), external_logic ());
                 // FIXME: we shouldn't compare floats
-                // check (it2_ == it.it2_, external_logic ());
+                // BOOST_UBLAS_CHECK (it2_ == it.it2_, external_logic ());
                 return it1_ < it.it1_;
             }
 
@@ -1391,11 +1436,11 @@ namespace boost { namespace numerics {
         };
 #endif
 
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_iterator begin () const {
             return find_first (0); 
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_iterator end () const {
             return find_last (size ());
         }
@@ -1403,26 +1448,26 @@ namespace boost { namespace numerics {
         // Reverse iterator
 
 #ifdef BOOST_MSVC_STD_ITERATOR
-        typedef reverse_iterator<const_iterator, value_type, value_type> const_reverse_iterator;
+        typedef reverse_iterator<const_iterator, value_type, const_reference> const_reverse_iterator;
 #else
         typedef reverse_iterator<const_iterator> const_reverse_iterator;
 #endif
 
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_reverse_iterator rbegin () const {
             return const_reverse_iterator (end ());
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_reverse_iterator rend () const {
             return const_reverse_iterator (begin ());
         }
 
     private:
-#ifdef NUMERICS_ET_VALUE
+#ifdef BOOST_UBLAS_ET_VALUE
         expression1_type e1_; 
         expression2_type e2_; 
 #endif
-#ifdef NUMERICS_ET_REFERENCE
+#ifdef BOOST_UBLAS_ET_REFERENCE
         const expression1_type &e1_; 
         const expression2_type &e2_; 
 #endif
@@ -1432,7 +1477,7 @@ namespace boost { namespace numerics {
     struct vector_binary_scalar2_traits {
         typedef vector_binary_scalar2<typename E1::const_closure_type,        
                                       scalar_const_reference<T2>, F> expression_type;
-#ifdef NUMERICS_USE_ET
+#ifdef BOOST_UBLAS_USE_ET
         typedef expression_type result_type;
 #else
         typedef vector<typename F::result_type> result_type;
@@ -1441,21 +1486,21 @@ namespace boost { namespace numerics {
 
     // (v * t) [i] = v [i] * t
     template<class E1, class T2>
-    NUMERICS_INLINE
+    BOOST_UBLAS_INLINE
     typename vector_binary_scalar2_traits<E1, T2, scalar_multiplies<typename E1::value_type, T2> >::result_type
     operator * (const vector_expression<E1> &e1,
                 const T2 &e2) {
-        typedef NUMERICS_TYPENAME vector_binary_scalar2_traits<E1, T2, scalar_multiplies<NUMERICS_TYPENAME E1::value_type, T2> >::expression_type expression_type;
+        typedef BOOST_UBLAS_TYPENAME vector_binary_scalar2_traits<E1, T2, scalar_multiplies<BOOST_UBLAS_TYPENAME E1::value_type, T2> >::expression_type expression_type;
         return expression_type (e1 (), e2);
     }
 
     // (v / t) [i] = v [i] / t
     template<class E1, class T2>
-    NUMERICS_INLINE
+    BOOST_UBLAS_INLINE
     typename vector_binary_scalar2_traits<E1, T2, scalar_divides<typename E1::value_type, T2> >::result_type
     operator / (const vector_expression<E1> &e1,
                 const T2 &e2) {
-        typedef NUMERICS_TYPENAME vector_binary_scalar2_traits<E1, T2, scalar_divides<NUMERICS_TYPENAME E1::value_type, T2> >::expression_type expression_type;
+        typedef BOOST_UBLAS_TYPENAME vector_binary_scalar2_traits<E1, T2, scalar_divides<BOOST_UBLAS_TYPENAME E1::value_type, T2> >::expression_type expression_type;
         return expression_type (e1 (), e2);
     }
 
@@ -1472,51 +1517,51 @@ namespace boost { namespace numerics {
         typedef unknown_storage_tag storage_category;
 
         // Construction and destruction
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         vector_scalar_unary ():
             e_ () {}
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         vector_scalar_unary (const expression_type &e):
             e_ (e) {}
 
         // Accessors
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const expression_type &expression () const {
             return e_;
         }
 
         // Dense random access specialization
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         value_type evaluate (dense_random_access_iterator_tag) const {
             difference_type size = e_.size ();
-            if (size >= NUMERICS_ITERATOR_THRESHOLD)
+            if (size >= BOOST_UBLAS_ITERATOR_THRESHOLD)
                 return functor_type () (size, e_.begin ());
             else
                 return functor_type () (e_);
         }
 
         // Packed bidirectional specialization
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         value_type evaluate (packed_random_access_iterator_tag) const {
             return functor_type () (e_.begin (), e_.end ());
         }
 
         // Sparse bidirectional specialization
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         value_type evaluate (sparse_bidirectional_iterator_tag) const {
             return functor_type () (e_.begin (), e_.end ());
         }
 
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         operator value_type () const {
             return evaluate (iterator_category ());
         }
 
     private:
-#ifdef NUMERICS_ET_VALUE
+#ifdef BOOST_UBLAS_ET_VALUE
         expression_type e_;
 #endif
-#ifdef NUMERICS_ET_REFERENCE
+#ifdef BOOST_UBLAS_ET_REFERENCE
         const expression_type &e_;
 #endif
     };
@@ -1524,7 +1569,7 @@ namespace boost { namespace numerics {
     template<class E, class F>
     struct vector_scalar_unary_traits {
         typedef vector_scalar_unary<typename E::const_closure_type, F> expression_type;
-#if defined (NUMERICS_USE_ET) && defined (NUMERICS_USE_SCALAR_ET)
+#if defined (BOOST_UBLAS_USE_ET) && defined (BOOST_UBLAS_USE_SCALAR_ET)
          typedef expression_type result_type; 
 #else
          typedef typename F::result_type result_type;
@@ -1533,49 +1578,49 @@ namespace boost { namespace numerics {
 
     // sum v = sum (v [i])
     template<class E>
-    NUMERICS_INLINE
+    BOOST_UBLAS_INLINE
     typename vector_scalar_unary_traits<E, vector_sum<typename E::value_type> >::result_type
     sum (const vector_expression<E> &e) {
-        typedef NUMERICS_TYPENAME vector_scalar_unary_traits<E, vector_sum<NUMERICS_TYPENAME E::value_type> >::expression_type expression_type;
+        typedef BOOST_UBLAS_TYPENAME vector_scalar_unary_traits<E, vector_sum<BOOST_UBLAS_TYPENAME E::value_type> >::expression_type expression_type;
         return expression_type (e ());
     }
 
     // real: norm_1 v = sum (abs (v [i]))
     // complex: norm_1 v = sum (abs (real (v [i])) + abs (imag (v [i])))
     template<class E>
-    NUMERICS_INLINE
+    BOOST_UBLAS_INLINE
     typename vector_scalar_unary_traits<E, vector_norm_1<typename E::value_type> >::result_type
     norm_1 (const vector_expression<E> &e) {
-        typedef NUMERICS_TYPENAME vector_scalar_unary_traits<E, vector_norm_1<NUMERICS_TYPENAME E::value_type> >::expression_type expression_type;
+        typedef BOOST_UBLAS_TYPENAME vector_scalar_unary_traits<E, vector_norm_1<BOOST_UBLAS_TYPENAME E::value_type> >::expression_type expression_type;
         return expression_type (e ());
     }
 
     // real: norm_2 v = sqrt (sum (v [i] * v [i]))
     // complex: norm_2 v = sqrt (sum (v [i] * conj (v [i])))
     template<class E>
-    NUMERICS_INLINE
+    BOOST_UBLAS_INLINE
     typename vector_scalar_unary_traits<E, vector_norm_2<typename E::value_type> >::result_type
     norm_2 (const vector_expression<E> &e) {
-        typedef NUMERICS_TYPENAME vector_scalar_unary_traits<E, vector_norm_2<NUMERICS_TYPENAME E::value_type> >::expression_type expression_type;
+        typedef BOOST_UBLAS_TYPENAME vector_scalar_unary_traits<E, vector_norm_2<BOOST_UBLAS_TYPENAME E::value_type> >::expression_type expression_type;
         return expression_type (e ());
     }
 
     // real: norm_inf v = max (abs (v [i]))
     // complex: norm_inf v = max (max (abs (real (v [i])), abs (imag (v [i]))))
     template<class E>
-    NUMERICS_INLINE
+    BOOST_UBLAS_INLINE
     typename vector_scalar_unary_traits<E, vector_norm_inf<typename E::value_type> >::result_type
     norm_inf (const vector_expression<E> &e) {
-        typedef NUMERICS_TYPENAME vector_scalar_unary_traits<E, vector_norm_inf<NUMERICS_TYPENAME E::value_type> >::expression_type expression_type;
+        typedef BOOST_UBLAS_TYPENAME vector_scalar_unary_traits<E, vector_norm_inf<BOOST_UBLAS_TYPENAME E::value_type> >::expression_type expression_type;
         return expression_type (e ());
     }
 
     // real: index_norm_inf v = min (i: abs (v [i]) == max (abs (v [i])))
     template<class E>
-    NUMERICS_INLINE
+    BOOST_UBLAS_INLINE
     typename vector_scalar_unary_traits<E, vector_index_norm_inf<typename E::value_type> >::result_type
     index_norm_inf (const vector_expression<E> &e) {
-        typedef NUMERICS_TYPENAME vector_scalar_unary_traits<E, vector_index_norm_inf<NUMERICS_TYPENAME E::value_type> >::expression_type expression_type;
+        typedef BOOST_UBLAS_TYPENAME vector_scalar_unary_traits<E, vector_index_norm_inf<BOOST_UBLAS_TYPENAME E::value_type> >::expression_type expression_type;
         return expression_type (e ());
     }
 
@@ -1594,56 +1639,56 @@ namespace boost { namespace numerics {
         typedef unknown_storage_tag storage_category;
 
         // Construction and destruction
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         vector_scalar_binary ():
             e1_ (), e2_ () {}
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         vector_scalar_binary (const expression1_type &e1, const expression2_type  &e2):
             e1_ (e1), e2_ (e2) {}
 
         // Accessors
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const expression1_type &expression1 () const {
             return e1_;
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const expression2_type &expression2 () const {
             return e2_;
         }
 
         // Dense random access specialization
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         value_type evaluate (dense_random_access_iterator_tag) const {
-            difference_type size = common (e1_.size (), e2_.size ());
-            if (size >= NUMERICS_ITERATOR_THRESHOLD)
+            difference_type size = BOOST_UBLAS_SAME (e1_.size (), e2_.size ());
+            if (size >= BOOST_UBLAS_ITERATOR_THRESHOLD)
                 return functor_type () (size, e1_.begin (), e2_.begin ());
             else
                 return functor_type () (e1_, e2_);
         }
 
         // Packed bidirectional specialization
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         value_type evaluate (packed_random_access_iterator_tag) const {
             return functor_type () (e1_.begin (), e1_.end (), e2_.begin (), e2_.end ());
         }
 
         // Sparse bidirectional specialization
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         value_type evaluate (sparse_bidirectional_iterator_tag) const {
             return functor_type () (e1_.begin (), e1_.end (), e2_.begin (), e2_.end (), sparse_bidirectional_iterator_tag ()); 
         }
 
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         operator value_type () const { 
             return evaluate (iterator_category ());
         }
 
     private:
-#ifdef NUMERICS_ET_VALUE
+#ifdef BOOST_UBLAS_ET_VALUE
         expression1_type e1_;
         expression2_type e2_;
 #endif
-#ifdef NUMERICS_ET_REFERENCE
+#ifdef BOOST_UBLAS_ET_REFERENCE
         const expression1_type &e1_;
         const expression2_type &e2_;
 #endif
@@ -1653,7 +1698,7 @@ namespace boost { namespace numerics {
     struct vector_scalar_binary_traits {
         typedef vector_scalar_binary<typename E1::const_closure_type, 
                                      typename E2::const_closure_type, F> expression_type;
-#if defined (NUMERICS_USE_ET) && defined (NUMERICS_USE_SCALAR_ET)
+#if defined (BOOST_UBLAS_USE_ET) && defined (BOOST_UBLAS_USE_SCALAR_ET)
         typedef expression_type result_type; 
 #else
         typedef typename F::result_type result_type;
@@ -1662,36 +1707,36 @@ namespace boost { namespace numerics {
 
     // inner_prod (v1, v2) = sum (v1 [i] * v2 [i]
     template<class E1, class E2>
-    NUMERICS_INLINE
+    BOOST_UBLAS_INLINE
     typename vector_scalar_binary_traits<E1, E2, vector_inner_prod<typename E1::value_type, 
                                                                    typename E2::value_type,
                                                                    typename promote_traits<typename E1::value_type,
                                                                                            typename E2::value_type>::promote_type> >::result_type 
     inner_prod (const vector_expression<E1> &e1, 
                 const vector_expression<E2> &e2) {
-        typedef NUMERICS_TYPENAME vector_scalar_binary_traits<E1, E2, vector_inner_prod<NUMERICS_TYPENAME E1::value_type, 
-                                                                                        NUMERICS_TYPENAME E2::value_type,
-                                                                                        NUMERICS_TYPENAME promote_traits<NUMERICS_TYPENAME E1::value_type, 
-                                                                                                                         NUMERICS_TYPENAME E2::value_type>::promote_type> >::expression_type expression_type;
+        typedef BOOST_UBLAS_TYPENAME vector_scalar_binary_traits<E1, E2, vector_inner_prod<BOOST_UBLAS_TYPENAME E1::value_type, 
+                                                                                           BOOST_UBLAS_TYPENAME E2::value_type,
+                                                                                           BOOST_UBLAS_TYPENAME promote_traits<BOOST_UBLAS_TYPENAME E1::value_type, 
+                                                                                                                               BOOST_UBLAS_TYPENAME E2::value_type>::promote_type> >::expression_type expression_type;
         return expression_type (e1 (), e2 ());
     }
 
     template<class E1, class E2>
-    NUMERICS_INLINE
+    BOOST_UBLAS_INLINE
     typename vector_scalar_binary_traits<E1, E2, vector_inner_prod<typename E1::value_type, 
                                                                    typename E2::value_type,
                                                                    typename type_traits<typename promote_traits<typename E1::value_type, 
                                                                                                                 typename E2::value_type>::promote_type>::precision_type> >::result_type 
     prec_inner_prod (const vector_expression<E1> &e1, 
                      const vector_expression<E2> &e2) {
-        typedef NUMERICS_TYPENAME vector_scalar_binary_traits<E1, E2, vector_inner_prod<NUMERICS_TYPENAME E1::value_type, 
-                                                                                        NUMERICS_TYPENAME E2::value_type,
-                                                                                        NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME promote_traits<NUMERICS_TYPENAME E1::value_type, 
-                                                                                                                                                       NUMERICS_TYPENAME E2::value_type>::promote_type>::precision_type> >::expression_type expression_type;
+        typedef BOOST_UBLAS_TYPENAME vector_scalar_binary_traits<E1, E2, vector_inner_prod<BOOST_UBLAS_TYPENAME E1::value_type, 
+                                                                                           BOOST_UBLAS_TYPENAME E2::value_type,
+                                                                                           BOOST_UBLAS_TYPENAME type_traits<BOOST_UBLAS_TYPENAME promote_traits<BOOST_UBLAS_TYPENAME E1::value_type, 
+                                                                                                                                                                BOOST_UBLAS_TYPENAME E2::value_type>::promote_type>::precision_type> >::expression_type expression_type;
         return expression_type (e1 (), e2 ());
     }
 
-}}
+}}}
 
 #endif
 

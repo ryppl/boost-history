@@ -14,64 +14,64 @@
 //  GeNeSys mbH & Co. KG in producing this work.
 //
 
-#ifndef NUMERICS_MATH_H
-#define NUMERICS_MATH_H
+#ifndef BOOST_UBLAS_MATH_H
+#define BOOST_UBLAS_MATH_H
 
 #include <algorithm>
 
-#include <boost/numeric/ublas/config.h>
-#include <boost/numeric/ublas/traits.h>
+#include <boost/numeric/ublas/config.hpp>
+#include <boost/numeric/ublas/traits.hpp>
 
-namespace boost { namespace numerics {
+namespace boost { namespace numeric { namespace ublas {
 
     // GNU does not honour std, so we have to use namespace detail?
     namespace detail {
 
         template<class T>
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         typename type_traits<T>::real_type real (const T &t) {
             return type_traits<T>::real (t);
         }
 
         template<class T>
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         typename type_traits<T>::real_type imag (const T &t) {
             return type_traits<T>::imag (t);
         }
 
         template<class T>
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         T conj (const T &t) {
             return type_traits<T>::conj (t);
         }
 
         template<class T>
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         typename type_traits<T>::real_type abs (const T &t) {
             return type_traits<T>::abs (t);
         }
 
         template<class T>
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         T sqrt (const T &t) {
             return type_traits<T>::sqrt (t);
         }
 
         template<class T>
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         typename type_traits<T>::real_type norm_1 (const T &t) {
             // Oops, should have known that!
             return abs (real (t)) + abs (imag (t));
         }
 
         template<class T>
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         typename type_traits<T>::real_type norm_2 (const T &t) {
             return abs (t);
         }
 
         template<class T>
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         typename type_traits<T>::real_type norm_inf (const T &t) {
             // Oops, should have known that!
             return std::max (abs (real (t)), abs (imag (t)));
@@ -79,7 +79,7 @@ namespace boost { namespace numerics {
 
     }
 
-}}
+}}}
 
 #endif
 

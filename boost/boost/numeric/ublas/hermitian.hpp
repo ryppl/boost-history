@@ -14,56 +14,58 @@
 //  GeNeSys mbH & Co. KG in producing this work.
 //
 
-#ifndef NUMERICS_SYMMETRIC_H
-#define NUMERICS_SYMMETRIC_H
+#ifndef BOOST_UBLAS_HERMITIAN_H
+#define BOOST_UBLAS_HERMITIAN_H
 
-#include <boost/numeric/ublas/config.h>
-#include <boost/numeric/ublas/storage.h>
-#include <boost/numeric/ublas/vector_et.h>
-#include <boost/numeric/ublas/matrix_et.h>
+#include <boost/numeric/ublas/config.hpp>
+#include <boost/numeric/ublas/storage.hpp>
+#include <boost/numeric/ublas/vector_expression.hpp>
+#include <boost/numeric/ublas/matrix_expression.hpp>
 
 // Iterators based on ideas of Jeremy Siek
-// Symmetric matrices are square. Thanks to Peter Schmitteckert for spotting this.
+// Hermitian matrices are square. Thanks to Peter Schmitteckert for spotting this.
 
-namespace boost { namespace numerics {
+namespace boost { namespace numeric { namespace ublas {
 
     template<class M>
-    bool is_symmetric (const M &m) {
+    bool is_hermitian (const M &m) {
         typedef typename M::size_type size_type;
 
         if (m.size1 () != m.size2 ())
             return false;
-        size_type size = common (m.size1 (), m.size2 ());
+        size_type size = BOOST_UBLAS_SAME (m.size1 (), m.size2 ());
         for (size_type i = 0; i < size; ++ i) {
             for (size_type j = i; j < size; ++ j) {
-                if (m (i, j) != m (j, i))
+                if (m (i, j) != conj (m (j, i)))
                     return false;
             }
         }
         return true;
     }
 
-    // Array based symmetric matrix class 
+    // Array based hermitian matrix class 
     template<class T, class F1, class F2, class A>
-    class symmetric_matrix: 
-        public matrix_expression<symmetric_matrix<T, F1, F2, A> > {
+    class hermitian_matrix: 
+        public matrix_expression<hermitian_matrix<T, F1, F2, A> > {
     public:      
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
         typedef T value_type;
-        typedef const T &const_reference;
+        // FIXME: no better way to not return the address of a temporary?
+        // typedef const T &const_reference;
+        typedef const T const_reference;
         typedef T &reference;
         typedef const T *const_pointer;
         typedef T *pointer;
         typedef F1 functor1_type;
         typedef F2 functor2_type;
-        typedef A array_type;
         typedef const A const_array_type;
-        typedef const symmetric_matrix<T, F1, F2, A> const_self_type;
-        typedef symmetric_matrix<T, F1, F2, A> self_type;
+        typedef A array_type;
+        typedef const hermitian_matrix<T, F1, F2, A> const_self_type;
+        typedef hermitian_matrix<T, F1, F2, A> self_type;
         typedef const matrix_const_reference<const_self_type> const_closure_type;
         typedef matrix_reference<self_type> closure_type;
-#ifdef NUMERICS_DEPRECATED
+#ifdef BOOST_UBLAS_DEPRECATED
         typedef const matrix_row<const_self_type> const_matrix_row_type;
         typedef matrix_row<self_type> matrix_row_type;
         typedef const matrix_column<const_self_type> const_matrix_column_type;
@@ -76,112 +78,119 @@ namespace boost { namespace numerics {
         typedef typename F2::orientation_category orientation_category;
 
         // Construction and destruction
-        NUMERICS_INLINE
-        symmetric_matrix (): 
+        BOOST_UBLAS_INLINE
+        hermitian_matrix (): 
             size_ (0), 
             data_ (0) {}
-        NUMERICS_INLINE
-        symmetric_matrix (size_type size):
-            size_ (common (size, size)),
+        BOOST_UBLAS_INLINE
+        hermitian_matrix (size_type size):
+            size_ (BOOST_UBLAS_SAME (size, size)),
             data_ (functor1_type::packed_size (size, size)) {}
-        NUMERICS_INLINE
-        symmetric_matrix (size_type size1, size_type size2):
-            size_ (common (size1, size2)),
+        BOOST_UBLAS_INLINE
+        hermitian_matrix (size_type size1, size_type size2):
+            size_ (BOOST_UBLAS_SAME (size1, size2)),
             data_ (functor1_type::packed_size (size1, size2)) {}
-        NUMERICS_INLINE
-        symmetric_matrix (size_type size, const array_type &data): 
-            size_ (size),
+        BOOST_UBLAS_INLINE
+        hermitian_matrix (size_type size, const array_type &data): 
+            size_ (size), 
             data_ (data) {}
-        NUMERICS_INLINE
-        symmetric_matrix (const symmetric_matrix &m): 
+        BOOST_UBLAS_INLINE
+        hermitian_matrix (const hermitian_matrix &m): 
             size_ (m.size_),
             data_ (m.data_) {}
         template<class AE>
-        NUMERICS_INLINE
-        symmetric_matrix (const matrix_expression<AE> &ae): 
-            size_ (common (ae ().size1 (), ae ().size2 ())), 
+        BOOST_UBLAS_INLINE
+        hermitian_matrix (const matrix_expression<AE> &ae): 
+            size_ (BOOST_UBLAS_SAME (ae ().size1 (), ae ().size2 ())),
             data_ (functor1_type::packed_size (ae ().size1 (), ae ().size2 ())) {
-            matrix_assign<scalar_assign<value_type, NUMERICS_TYPENAME AE::value_type> > () (*this, ae); 
+            matrix_assign<scalar_assign<value_type, BOOST_UBLAS_TYPENAME AE::value_type> > () (*this, ae); 
         }
 
         // Accessors
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         size_type size1 () const { 
             return size_;
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         size_type size2 () const { 
             return size_;
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_array_type &data () const {
             return data_;
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         array_type &data () {
             return data_;
         }
 
         // Resizing
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         void resize (size_type size) {
-            size_ = common (size, size);
+            size_ = BOOST_UBLAS_SAME (size, size);
             data ().resize (functor1_type::packed_size (size, size));
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         void resize (size_type size1, size_type size2) {
-            size_ = common (size1, size2);
+            size_ = BOOST_UBLAS_SAME (size1, size2);
             data ().resize (functor1_type::packed_size (size1, size2));
         }
 
         // Element access
-        NUMERICS_INLINE
-        value_type operator () (size_type i, size_type j) const {
-            check (i < size_, bad_index ());
-            check (j < size_, bad_index ());
+        BOOST_UBLAS_INLINE
+        const_reference operator () (size_type i, size_type j) const {
+            BOOST_UBLAS_CHECK (i < size_, bad_index ());
+            BOOST_UBLAS_CHECK (j < size_, bad_index ());
+            // if (i == j)
+                //    return detail::real (data () [functor1_type::element (functor2_type (), i, size_, i, size_)]);
+            // else 
             if (functor1_type::other (i, j))
                 return data () [functor1_type::element (functor2_type (), i, size_, j, size_)];
             else
-                return data () [functor1_type::element (functor2_type (), j, size_, i, size_)];
+                return detail::conj (data () [functor1_type::element (functor2_type (), j, size_, i, size_)]);
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         reference operator () (size_type i, size_type j) {
-            check (i < size_, bad_index ());
-            check (j < size_, bad_index ());
+            BOOST_UBLAS_CHECK (i < size_, bad_index ());
+            BOOST_UBLAS_CHECK (j < size_, bad_index ());
             if (functor1_type::other (i, j))
                 return data () [functor1_type::element (functor2_type (), i, size_, j, size_)];
-            else
-                return data () [functor1_type::element (functor2_type (), j, size_, i, size_)];
+            else {
+                // Raising exceptions abstracted as requested during review.
+                // throw external_logic ();
+                external_logic ().raise ();
+                return conj_ = detail::conj (data () [functor1_type::element (functor2_type (), j, size_, i, size_)]);
+            }
         }
 
-#ifdef NUMERICS_DEPRECATED
-        NUMERICS_INLINE
+#ifdef BOOST_UBLAS_DEPRECATED
+        BOOST_UBLAS_INLINE
         const_matrix_row_type operator [] (size_type i) const {
             return const_matrix_row_type (*this, i);
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         matrix_row_type operator [] (size_type i) {
             return matrix_row_type (*this, i);
         }
 #endif
 
         // Assignment
-        NUMERICS_INLINE
-        symmetric_matrix &operator = (const symmetric_matrix &m) { 
-            check (size_ == m.size_, bad_size ());
+        BOOST_UBLAS_INLINE
+        hermitian_matrix &operator = (const hermitian_matrix &m) {
+            BOOST_UBLAS_CHECK (size_ == m.size_, bad_size ());
             size_ = m.size_;
             data () = m.data ();
             return *this;
         }
-        NUMERICS_INLINE
-        symmetric_matrix &assign_temporary (symmetric_matrix &m) {
+        BOOST_UBLAS_INLINE
+        hermitian_matrix &assign_temporary (hermitian_matrix &m) {
             swap (m);
             return *this;
         }
         template<class AE>
-        NUMERICS_INLINE
-        symmetric_matrix &operator = (const matrix_expression<AE> &ae) {
-#ifdef NUMERICS_MUTABLE_TEMPORARY
+        BOOST_UBLAS_INLINE
+        hermitian_matrix &operator = (const matrix_expression<AE> &ae) {
+#ifdef BOOST_UBLAS_MUTABLE_TEMPORARY
             return assign_temporary (self_type (ae));
 #else
             // return assign (self_type (ae));
@@ -190,22 +199,22 @@ namespace boost { namespace numerics {
 #endif
         }
         template<class AE>
-        NUMERICS_INLINE
-        symmetric_matrix &reset (const matrix_expression<AE> &ae) {
+        BOOST_UBLAS_INLINE
+        hermitian_matrix &reset (const matrix_expression<AE> &ae) { 
             self_type temporary (ae);
             resize (temporary.size1 (), temporary.size2 ());
             return assign_temporary (temporary);
         }
         template<class AE>
-        NUMERICS_INLINE
-        symmetric_matrix &assign (const matrix_expression<AE> &ae) { 
-            matrix_assign<scalar_assign<value_type, NUMERICS_TYPENAME AE::value_type> > () (*this, ae); 
+        BOOST_UBLAS_INLINE
+        hermitian_matrix &assign (const matrix_expression<AE> &ae) {
+            matrix_assign<scalar_assign<value_type, BOOST_UBLAS_TYPENAME AE::value_type> > () (*this, ae);
             return *this;
         }
         template<class AE>
-        NUMERICS_INLINE
-        symmetric_matrix& operator += (const matrix_expression<AE> &ae) {
-#ifdef NUMERICS_MUTABLE_TEMPORARY
+        BOOST_UBLAS_INLINE
+        hermitian_matrix& operator += (const matrix_expression<AE> &ae) {
+#ifdef BOOST_UBLAS_MUTABLE_TEMPORARY
             return assign_temporary (self_type (*this + ae));
 #else
             // return assign (self_type (*this + ae));
@@ -214,15 +223,15 @@ namespace boost { namespace numerics {
 #endif
         }
         template<class AE>
-        NUMERICS_INLINE
-        symmetric_matrix &plus_assign (const matrix_expression<AE> &ae) { 
-            matrix_assign<scalar_plus_assign<value_type, NUMERICS_TYPENAME AE::value_type> > () (*this, ae); 
+        BOOST_UBLAS_INLINE
+        hermitian_matrix &plus_assign (const matrix_expression<AE> &ae) {
+            matrix_assign<scalar_plus_assign<value_type, BOOST_UBLAS_TYPENAME AE::value_type> > () (*this, ae);
             return *this;
         }
         template<class AE>
-        NUMERICS_INLINE
-        symmetric_matrix& operator -= (const matrix_expression<AE> &ae) {
-#ifdef NUMERICS_MUTABLE_TEMPORARY
+        BOOST_UBLAS_INLINE
+        hermitian_matrix& operator -= (const matrix_expression<AE> &ae) {
+#ifdef BOOST_UBLAS_MUTABLE_TEMPORARY
             return assign_temporary (self_type (*this - ae));
 #else
             // return assign (self_type (*this - ae));
@@ -231,38 +240,47 @@ namespace boost { namespace numerics {
 #endif
         }
         template<class AE>
-        NUMERICS_INLINE
-        symmetric_matrix &minus_assign (const matrix_expression<AE> &ae) { 
-            matrix_assign<scalar_minus_assign<value_type, NUMERICS_TYPENAME AE::value_type> > () (*this, ae); 
+        BOOST_UBLAS_INLINE
+        hermitian_matrix &minus_assign (const matrix_expression<AE> &ae) { 
+            matrix_assign<scalar_minus_assign<value_type, BOOST_UBLAS_TYPENAME AE::value_type> > () (*this, ae); 
             return *this;
         }
         template<class AT>
-        NUMERICS_INLINE
-        symmetric_matrix& operator *= (const AT &at) {
+        BOOST_UBLAS_INLINE
+        hermitian_matrix& operator *= (const AT &at) {
+            // Multiplication is only allowed for real scalars,
+            // otherwise the resulting matrix isn't hermitian.
+            // Thanks to Peter Schmitteckert for spotting this.
+            BOOST_UBLAS_CHECK (detail::imag (at) == 0, non_real ());
             matrix_assign_scalar<scalar_multiplies_assign<value_type, AT> > () (*this, at);
             return *this;
         }
         template<class AT>
-        NUMERICS_INLINE
-        symmetric_matrix& operator /= (const AT &at) {
+        BOOST_UBLAS_INLINE
+        hermitian_matrix& operator /= (const AT &at) {
+            // Multiplication is only allowed for real scalars,
+            // otherwise the resulting matrix isn't hermitian.
+            // Thanks to Peter Schmitteckert for spotting this.
+            BOOST_UBLAS_CHECK (detail::imag (at) == 0, non_real ());
             matrix_assign_scalar<scalar_divides_assign<value_type, AT> > () (*this, at);
             return *this;
         }
 
         // Swapping
-        NUMERICS_INLINE
-        void swap (symmetric_matrix &m) {
-            // Too unusual semantic
-            // check (this != &m, external_logic ());
+        BOOST_UBLAS_INLINE
+        void swap (hermitian_matrix &m) {
+            // Too unusual semantic.
+            // BOOST_UBLAS_CHECK (this != &m, external_logic ());
             if (this != &m) {
-                check (size_ == m.size_, bad_size ());
+                // Precondition for container relaxed as requested during review.
+                // BOOST_UBLAS_CHECK (size_ == m.size_, bad_size ());
                 std::swap (size_, m.size_);
                 data ().swap (m.data ());
             }
         }
-#ifdef NUMERICS_FRIEND_FUNCTION
-        NUMERICS_INLINE
-        friend void swap (symmetric_matrix &m1, symmetric_matrix &m2) {
+#ifdef BOOST_UBLAS_FRIEND_FUNCTION
+        BOOST_UBLAS_INLINE
+        friend void swap (hermitian_matrix &m1, hermitian_matrix &m2) {
             m1.swap (m2);
         }
 #endif
@@ -270,45 +288,45 @@ namespace boost { namespace numerics {
         // Element insertion and erasure
         // These functions should work with std::vector.
         // Thanks to Kresimir Fresl for spotting this.
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         void insert (size_type i, size_type j, const_reference t) {
-            check (i < size_, bad_index ());
-            check (j < size_, bad_index ());
-#ifndef NUMERICS_USE_ET
+            BOOST_UBLAS_CHECK (i < size_, bad_index ());
+            BOOST_UBLAS_CHECK (j < size_, bad_index ());
+#ifndef BOOST_UBLAS_USE_ET
             if (t == value_type ()) 
                 return;
 #endif
             if (functor1_type::other (i, j)) {
-                check (data () [functor1_type::element (functor2_type (), i, size_, j, size_)] == value_type (), bad_index ());
+                BOOST_UBLAS_CHECK (data () [functor1_type::element (functor2_type (), i, size_, j, size_)] == value_type (), bad_index ());
                 // data ().insert (data ().begin () + functor1_type::element (functor2_type (), i, size_, j, size_), t);
                 data () [functor1_type::element (functor2_type (), i, size_, j, size_)] = t;
             } else {
-                check (data () [functor1_type::element (functor2_type (), j, size_, i, size_)] == value_type (), bad_index ());
-                // data ().insert (data ().begin () + functor1_type::element (functor2_type (), j, size_, i, size_), t);
-                data () [functor1_type::element (functor2_type (), j, size_, i, size_)] = t;
+                BOOST_UBLAS_CHECK (data () [functor1_type::element (functor2_type (), j, size_, i, size_)] == value_type (), bad_index ());
+                // data ().insert (data ().begin () + functor1_type::element (functor2_type (), j, size_, i, size_), detail::conj (t));
+                data () [functor1_type::element (functor2_type (), j, size_, i, size_)] = detail::conj (t);
             }
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         void erase (size_type i, size_type j) {
-            check (i < size_, bad_index ());
-            check (j < size_, bad_index ());
+            BOOST_UBLAS_CHECK (i < size_, bad_index ());
+            BOOST_UBLAS_CHECK (j < size_, bad_index ());
             if (functor1_type::other (i, j)) {
-                check (data () [functor1_type::element (functor2_type (), i, size_, j, size_)] == value_type (), bad_index ());
+                BOOST_UBLAS_CHECK (data () [functor1_type::element (functor2_type (), i, size_, j, size_)] == value_type (), bad_index ());
                 // data ().erase (data ().begin () + functor1_type::element (functor2_type (), i, size_, j, size_));
                 data () [functor1_type::element (functor2_type (), i, size_, j, size_)] = value_type ();
             } else {
-                check (data () [functor1_type::element (functor2_type (), j, size_, i, size_)] == value_type (), bad_index ());
+                BOOST_UBLAS_CHECK (data () [functor1_type::element (functor2_type (), j, size_, i, size_)] == value_type (), bad_index ());
                 // data ().erase (data ().begin () + functor1_type::element (functor2_type (), j, size_, i, size_));
                 data () [functor1_type::element (functor2_type (), j, size_, i, size_)] = value_type ();
             }
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         void clear () {
             // data ().clear ();
             std::fill (data ().begin (), data ().end (), value_type ());
         }
 
-#ifdef NUMERICS_USE_CANONICAL_ITERATOR
+#ifdef BOOST_UBLAS_USE_CANONICAL_ITERATOR
         typedef matrix_row_iterator<self_type, packed_random_access_iterator_tag> iterator1;
         typedef matrix_column_iterator<self_type, packed_random_access_iterator_tag> iterator2;
         typedef matrix_row_const_iterator<self_type, packed_random_access_iterator_tag> const_iterator1;
@@ -325,7 +343,7 @@ namespace boost { namespace numerics {
         typedef reverse_iterator<iterator2> reverse_iterator2;
 #endif
 #else
-#ifdef NUMERICS_USE_INDEXED_ITERATOR
+#ifdef BOOST_UBLAS_USE_INDEXED_ITERATOR
         typedef indexed_iterator1<self_type, packed_random_access_iterator_tag> iterator1;
         typedef indexed_iterator2<self_type, packed_random_access_iterator_tag> iterator2;
         typedef indexed_const_iterator1<self_type, packed_random_access_iterator_tag> const_iterator1;
@@ -337,9 +355,9 @@ namespace boost { namespace numerics {
         class iterator2;
 #endif
 #ifdef BOOST_MSVC_STD_ITERATOR
-        typedef reverse_iterator1<const_iterator1, value_type, value_type> const_reverse_iterator1;
+        typedef reverse_iterator1<const_iterator1, value_type, const_reference> const_reverse_iterator1;
         typedef reverse_iterator1<iterator1, value_type, reference> reverse_iterator1;
-        typedef reverse_iterator2<const_iterator2, value_type, value_type> const_reverse_iterator2;
+        typedef reverse_iterator2<const_iterator2, value_type, const_reference> const_reverse_iterator2;
         typedef reverse_iterator2<iterator2, value_type, reference> reverse_iterator2;
 #else
         typedef reverse_iterator1<const_iterator1> const_reverse_iterator1;
@@ -350,73 +368,73 @@ namespace boost { namespace numerics {
 #endif
 
         // Element lookup
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_iterator1 find_first1 (int rank, size_type i, size_type j) const {
-#ifdef NUMERICS_USE_CANONICAL_ITERATOR
+#ifdef BOOST_UBLAS_USE_CANONICAL_ITERATOR
             return const_iterator1 (*this, i);
 #else
             return const_iterator1 (*this, i, j);
 #endif
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         iterator1 find_first1 (int rank, size_type i, size_type j) {
             if (rank == 1) 
                 i = functor1_type::restrict1 (i, j);
-#ifdef NUMERICS_USE_CANONICAL_ITERATOR
+#ifdef BOOST_UBLAS_USE_CANONICAL_ITERATOR
             return iterator1 (*this, i);
 #else
             return iterator1 (*this, i, j);
 #endif
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_iterator1 find_last1 (int rank, size_type i, size_type j) const {
-#ifdef NUMERICS_USE_CANONICAL_ITERATOR
+#ifdef BOOST_UBLAS_USE_CANONICAL_ITERATOR
             return const_iterator1 (*this, i);
 #else
             return const_iterator1 (*this, i, j);
 #endif
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         iterator1 find_last1 (int rank, size_type i, size_type j) {
             if (rank == 1) 
                 i = functor1_type::restrict1 (i, j);
-#ifdef NUMERICS_USE_CANONICAL_ITERATOR
+#ifdef BOOST_UBLAS_USE_CANONICAL_ITERATOR
             return iterator1 (*this, i);
 #else
             return iterator1 (*this, i, j);
 #endif
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_iterator2 find_first2 (int rank, size_type i, size_type j) const {
-#ifdef NUMERICS_USE_CANONICAL_ITERATOR
+#ifdef BOOST_UBLAS_USE_CANONICAL_ITERATOR
             return const_iterator2 (*this, j);
 #else
             return const_iterator2 (*this, i, j);
 #endif
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         iterator2 find_first2 (int rank, size_type i, size_type j) {
             if (rank == 1) 
                 j = functor1_type::restrict2 (i, j);
-#ifdef NUMERICS_USE_CANONICAL_ITERATOR
+#ifdef BOOST_UBLAS_USE_CANONICAL_ITERATOR
             return iterator2 (*this, j);
 #else
             return iterator2 (*this, i, j);
 #endif
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_iterator2 find_last2 (int rank, size_type i, size_type j) const {
-#ifdef NUMERICS_USE_CANONICAL_ITERATOR
+#ifdef BOOST_UBLAS_USE_CANONICAL_ITERATOR
             return const_iterator2 (*this, j);
 #else
             return const_iterator2 (*this, i, j);
 #endif
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         iterator2 find_last2 (int rank, size_type i, size_type j) {
             if (rank == 1) 
                 j = functor1_type::restrict2 (i, j);
-#ifdef NUMERICS_USE_CANONICAL_ITERATOR
+#ifdef BOOST_UBLAS_USE_CANONICAL_ITERATOR
             return iterator2 (*this, j);
 #else
             return iterator2 (*this, i, j);
@@ -425,106 +443,113 @@ namespace boost { namespace numerics {
 
         // Iterators simply are indices.
 
-#if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
+#if ! defined (BOOST_UBLAS_USE_CANONICAL_ITERATOR) && ! defined (BOOST_UBLAS_USE_INDEXED_ITERATOR)
         class const_iterator1:
-            public container_const_reference<symmetric_matrix>,
+            public container_const_reference<hermitian_matrix>,
             public random_access_iterator_base<packed_random_access_iterator_tag,
                                                const_iterator1, value_type> {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
-#ifndef BOOST_MSVC_STD_ITERATOR
-            typedef typename symmetric_matrix::difference_type difference_type;
-            typedef typename symmetric_matrix::value_type value_type;
-            typedef typename symmetric_matrix::value_type reference;
-            typedef typename symmetric_matrix::const_pointer pointer;
+#ifdef BOOST_MSVC_STD_ITERATOR
+            typedef const_reference reference;
+#else
+            typedef typename hermitian_matrix::difference_type difference_type;
+            typedef typename hermitian_matrix::value_type value_type;
+            typedef typename hermitian_matrix::const_reference reference;
+            typedef typename hermitian_matrix::const_pointer pointer;
 #endif
             typedef const_iterator2 dual_iterator_type;
             typedef const_reverse_iterator2 dual_reverse_iterator_type;
 
             // Construction and destruction
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator1 ():
-                container_const_reference<symmetric_matrix> (), it1_ (), it2_ () {}
-            NUMERICS_INLINE
-            const_iterator1 (const symmetric_matrix &m, size_type it1, size_type it2):
-                container_const_reference<symmetric_matrix> (m), it1_ (it1), it2_ (it2) {}
-            NUMERICS_INLINE
+                container_const_reference<hermitian_matrix> (), it1_ (), it2_ () {}
+            BOOST_UBLAS_INLINE
+            const_iterator1 (const hermitian_matrix &m, size_type it1, size_type it2):
+                container_const_reference<hermitian_matrix> (m), it1_ (it1), it2_ (it2) {}
+            BOOST_UBLAS_INLINE
             const_iterator1 (const iterator1 &it):
-                container_const_reference<symmetric_matrix> (it ()), it1_ (it.it1_), it2_ (it.it2_) {}
+                container_const_reference<hermitian_matrix> (it ()), it1_ (it.it1_), it2_ (it.it2_) {}
 
             // Arithmetic
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator1 &operator ++ () {
                 ++ it1_;
                 return *this;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator1 &operator -- () {
                 -- it1_;
                 return *this;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator1 &operator += (difference_type n) {
                 it1_ += n;
                 return *this;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator1 &operator -= (difference_type n) {
                 it1_ -= n;
                 return *this;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             difference_type operator - (const const_iterator1 &it) const {
                 return it1_ - it.it1_;
             }
 
             // Dereference
-            NUMERICS_INLINE
-            value_type operator * () const {
+            BOOST_UBLAS_INLINE
+            reference operator * () const {
                 return (*this) () (it1_, it2_); 
             }
 
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator2 begin () const {
                 return (*this) ().find_first2 (1, it1_, 0);
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator2 end () const {
                 return (*this) ().find_last2 (1, it1_, (*this) ().size2 ());
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_reverse_iterator2 rbegin () const {
                 return const_reverse_iterator2 (end ());
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_reverse_iterator2 rend () const {
                 return const_reverse_iterator2 (begin ());
             }
 
             // Indices
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             size_type index1 () const {
                 return it1_;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             size_type index2 () const {
                 return it2_;
             }
 
             // Assignment 
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator1 &operator = (const const_iterator1 &it) {
-                container_const_reference<symmetric_matrix>::assign (&it ());
+                container_const_reference<hermitian_matrix>::assign (&it ());
                 it1_ = it.it1_;
                 it2_ = it.it2_;
                 return *this;
             }
 
             // Comparison
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             bool operator == (const const_iterator1 &it) const {
-                check (&(*this) () == &it (), external_logic ());
+                BOOST_UBLAS_CHECK (&(*this) () == &it (), external_logic ());
                 return it1_ == it.it1_ && it2_ == it.it2_;
+            }
+            BOOST_UBLAS_INLINE
+            bool operator < (const const_iterator1 &it) const {
+                BOOST_UBLAS_CHECK (&(*this) () == &it (), external_logic ());
+                return it1_ < it.it1_ && it2_ == it.it2_;
             }
 
         private:
@@ -533,112 +558,117 @@ namespace boost { namespace numerics {
         };
 #endif
 
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_iterator1 begin1 () const {
             return find_first1 (0, 0, 0);
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_iterator1 end1 () const {
             return find_last1 (0, size_, 0);
         }
 
-#if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
+#if ! defined (BOOST_UBLAS_USE_CANONICAL_ITERATOR) && ! defined (BOOST_UBLAS_USE_INDEXED_ITERATOR)
         class iterator1:
-            public container_reference<symmetric_matrix>,
+            public container_reference<hermitian_matrix>,
             public random_access_iterator_base<packed_random_access_iterator_tag,
                                                iterator1, value_type> {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
-            typedef typename symmetric_matrix::difference_type difference_type;
-            typedef typename symmetric_matrix::value_type value_type;
-            typedef typename symmetric_matrix::reference reference;
-            typedef typename symmetric_matrix::pointer pointer;
+            typedef typename hermitian_matrix::difference_type difference_type;
+            typedef typename hermitian_matrix::value_type value_type;
+            typedef typename hermitian_matrix::reference reference;
+            typedef typename hermitian_matrix::pointer pointer;
 #endif
             typedef iterator2 dual_iterator_type;
             typedef reverse_iterator2 dual_reverse_iterator_type;
 
             // Construction and destruction
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             iterator1 ():
-                container_reference<symmetric_matrix> (), it1_ (), it2_ () {}
-            NUMERICS_INLINE
-            iterator1 (symmetric_matrix &m, size_type it1, size_type it2):
-                container_reference<symmetric_matrix> (m), it1_ (it1), it2_ (it2) {}
+                container_reference<hermitian_matrix> (), it1_ (), it2_ () {}
+            BOOST_UBLAS_INLINE
+            iterator1 (hermitian_matrix &m, size_type it1, size_type it2):
+                container_reference<hermitian_matrix> (m), it1_ (it1), it2_ (it2) {}
 
             // Arithmetic
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             iterator1 &operator ++ () {
                 ++ it1_;
                 return *this;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             iterator1 &operator -- () {
                 -- it1_;
                 return *this;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             iterator1 &operator += (difference_type n) {
                 it1_ += n;
                 return *this;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             iterator1 &operator -= (difference_type n) {
                 it1_ -= n;
                 return *this;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             difference_type operator - (const iterator1 &it) const {
                 return it1_ - it.it1_;
             }
 
             // Dereference
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             reference operator * () const {
                 return (*this) () (it1_, it2_); 
             }
 
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             iterator2 begin () const {
                 return (*this) ().find_first2 (1, it1_, 0);
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             iterator2 end () const {
                 return (*this) ().find_last2 (1, it1_, (*this) ().size2 ());
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             reverse_iterator2 rbegin () const {
                 return reverse_iterator2 (end ());
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             reverse_iterator2 rend () const {
                 return reverse_iterator2 (begin ());
             }
 
             // Indices
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             size_type index1 () const {
                 return it1_;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             size_type index2 () const {
                 return it2_;
             }
 
             // Assignment 
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             iterator1 &operator = (const iterator1 &it) {
-                container_reference<symmetric_matrix>::assign (&it ());
+                container_reference<hermitian_matrix>::assign (&it ());
                 it1_ = it.it1_;
                 it2_ = it.it2_;
                 return *this;
             }
 
             // Comparison
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             bool operator == (const iterator1 &it) const {
-                check (&(*this) () == &it (), external_logic ());
+                BOOST_UBLAS_CHECK (&(*this) () == &it (), external_logic ());
                 return it1_ == it.it1_ && it2_ == it.it2_;
+            }
+            BOOST_UBLAS_INLINE
+            bool operator < (const iterator1 &it) const {
+                BOOST_UBLAS_CHECK (&(*this) () == &it (), external_logic ());
+                return it1_ < it.it1_ && it2_ == it.it2_;
             }
 
         private:
@@ -649,115 +679,122 @@ namespace boost { namespace numerics {
         };
 #endif
 
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         iterator1 begin1 () {
             return find_first1 (0, 0, 0);
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         iterator1 end1 () {
             return find_last1 (0, size_, 0);
         }
 
-#if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
+#if ! defined (BOOST_UBLAS_USE_CANONICAL_ITERATOR) && ! defined (BOOST_UBLAS_USE_INDEXED_ITERATOR)
         class const_iterator2:
-            public container_const_reference<symmetric_matrix>,
+            public container_const_reference<hermitian_matrix>,
             public random_access_iterator_base<packed_random_access_iterator_tag,
                                                const_iterator2, value_type> {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
-#ifndef BOOST_MSVC_STD_ITERATOR
-            typedef typename symmetric_matrix::difference_type difference_type;
-            typedef typename symmetric_matrix::value_type value_type;
-            typedef typename symmetric_matrix::value_type reference;
-            typedef typename symmetric_matrix::const_pointer pointer;
+#ifdef BOOST_MSVC_STD_ITERATOR
+            typedef const_reference reference;
+#else
+            typedef typename hermitian_matrix::difference_type difference_type;
+            typedef typename hermitian_matrix::value_type value_type;
+            typedef typename hermitian_matrix::const_reference reference;
+            typedef typename hermitian_matrix::const_pointer pointer;
 #endif
             typedef const_iterator1 dual_iterator_type;
             typedef const_reverse_iterator1 dual_reverse_iterator_type;
 
             // Construction and destruction
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator2 ():
-                container_const_reference<symmetric_matrix> (), it1_ (), it2_ () {}
-            NUMERICS_INLINE
-            const_iterator2 (const symmetric_matrix &m, size_type it1, size_type it2):
-                container_const_reference<symmetric_matrix> (m), it1_ (it1), it2_ (it2) {}
-            NUMERICS_INLINE
+                container_const_reference<hermitian_matrix> (), it1_ (), it2_ () {}
+            BOOST_UBLAS_INLINE
+            const_iterator2 (const hermitian_matrix &m, size_type it1, size_type it2):
+                container_const_reference<hermitian_matrix> (m), it1_ (it1), it2_ (it2) {}
+            BOOST_UBLAS_INLINE
             const_iterator2 (const iterator2 &it):
-                container_const_reference<symmetric_matrix> (it ()), it1_ (it.it1_), it2_ (it.it2_) {}
+                container_const_reference<hermitian_matrix> (it ()), it1_ (it.it1_), it2_ (it.it2_) {}
 
             // Arithmetic
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator2 &operator ++ () {
                 ++ it2_;
                 return *this;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator2 &operator -- () {
                 -- it2_;
                 return *this;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator2 &operator += (difference_type n) {
                 it2_ += n;
                 return *this;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator2 &operator -= (difference_type n) {
                 it2_ -= n;
                 return *this;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             difference_type operator - (const const_iterator2 &it) const {
                 return it2_ - it.it2_;
             }
 
             // Dereference
-            NUMERICS_INLINE
-            value_type operator * () const {
+            BOOST_UBLAS_INLINE
+            reference operator * () const {
                 return (*this) () (it1_, it2_); 
             }
 
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator1 begin () const {
                 return (*this) ().find_first1 (1, 0, it2_);
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator1 end () const {
                 return (*this) ().find_last1 (1, (*this) ().size1 (), it2_);
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_reverse_iterator1 rbegin () const {
                 return const_reverse_iterator1 (end ());
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_reverse_iterator1 rend () const {
                 return const_reverse_iterator1 (begin ());
             }
 
             // Indices
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             size_type index1 () const {
                 return it1_;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             size_type index2 () const {
                 return it2_;
             }
 
             // Assignment 
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator2 &operator = (const const_iterator2 &it) {
-                container_const_reference<symmetric_matrix>::assign (&it ());
+                container_const_reference<hermitian_matrix>::assign (&it ());
                 it1_ = it.it1_;
                 it2_ = it.it2_;
                 return *this;
             }
 
             // Comparison
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             bool operator == (const const_iterator2 &it) const {
-                check (&(*this) () == &it (), external_logic ());
+                BOOST_UBLAS_CHECK (&(*this) () == &it (), external_logic ());
                 return it1_ == it.it1_ && it2_ == it.it2_;
+            }
+            BOOST_UBLAS_INLINE
+            bool operator < (const const_iterator2 &it) const {
+                BOOST_UBLAS_CHECK (&(*this) () == &it (), external_logic ());
+                return it1_ == it.it1_ && it2_ < it.it2_;
             }
 
         private:
@@ -766,112 +803,117 @@ namespace boost { namespace numerics {
         };
 #endif
 
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_iterator2 begin2 () const {
             return find_first2 (0, 0, 0);
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_iterator2 end2 () const {
             return find_last2 (0, 0, size_);
         }
 
-#if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
+#if ! defined (BOOST_UBLAS_USE_CANONICAL_ITERATOR) && ! defined (BOOST_UBLAS_USE_INDEXED_ITERATOR)
         class iterator2:
-            public container_reference<symmetric_matrix>,
+            public container_reference<hermitian_matrix>,
             public random_access_iterator_base<packed_random_access_iterator_tag,
                                                iterator2, value_type> {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
-            typedef typename symmetric_matrix::difference_type difference_type;
-            typedef typename symmetric_matrix::value_type value_type;
-            typedef typename symmetric_matrix::reference reference;
-            typedef typename symmetric_matrix::pointer pointer;
+            typedef typename hermitian_matrix::difference_type difference_type;
+            typedef typename hermitian_matrix::value_type value_type;
+            typedef typename hermitian_matrix::reference reference;
+            typedef typename hermitian_matrix::pointer pointer;
 #endif
             typedef iterator1 dual_iterator_type;
             typedef reverse_iterator1 dual_reverse_iterator_type;
 
             // Construction and destruction
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             iterator2 ():
-                container_reference<symmetric_matrix> (), it1_ (), it2_ () {}
-            NUMERICS_INLINE
-            iterator2 (symmetric_matrix &m, size_type it1, size_type it2):
-                container_reference<symmetric_matrix> (m), it1_ (it1), it2_ (it2) {}
+                container_reference<hermitian_matrix> (), it1_ (), it2_ () {}
+            BOOST_UBLAS_INLINE
+            iterator2 (hermitian_matrix &m, size_type it1, size_type it2):
+                container_reference<hermitian_matrix> (m), it1_ (it1), it2_ (it2) {}
 
             // Arithmetic
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             iterator2 &operator ++ () {
                 ++ it2_;
                 return *this;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             iterator2 &operator -- () {
                 -- it2_;
                 return *this;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             iterator2 &operator += (difference_type n) {
                 it2_ += n;
                 return *this;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             iterator2 &operator -= (difference_type n) {
                 it2_ -= n;
                 return *this;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             difference_type operator - (const iterator2 &it) const {
                 return it2_ - it.it2_;
             }
 
             // Dereference
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             reference operator * () const {
                 return (*this) () (it1_, it2_); 
             }
 
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             iterator1 begin () const {
                 return (*this) ().find_first1 (1, 0, it2_);
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             iterator1 end () const {
                 return (*this) ().find_last1 (1, (*this) ().size1 (), it2_);
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             reverse_iterator1 rbegin () const {
                 return reverse_iterator1 (end ());
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             reverse_iterator1 rend () const {
                 return reverse_iterator1 (begin ());
             }
 
             // Indices
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             size_type index1 () const {
                 return it1_;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             size_type index2 () const {
                 return it2_;
             }
 
             // Assignment 
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             iterator2 &operator = (const iterator2 &it) {
-                container_reference<symmetric_matrix>::assign (&it ());
+                container_reference<hermitian_matrix>::assign (&it ());
                 it1_ = it.it1_;
                 it2_ = it.it2_;
                 return *this;
             }
 
             // Comparison
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             bool operator == (const iterator2 &it) const {
-                check (&(*this) () == &it (), external_logic ());
+                BOOST_UBLAS_CHECK (&(*this) () == &it (), external_logic ());
                 return it1_ == it.it1_ && it2_ == it.it2_;
+            }
+            BOOST_UBLAS_INLINE
+            bool operator < (const iterator2 &it) const {
+                BOOST_UBLAS_CHECK (&(*this) () == &it (), external_logic ());
+                return it1_ == it.it1_ && it2_ < it.it2_;
             }
 
         private:
@@ -882,49 +924,49 @@ namespace boost { namespace numerics {
         };
 #endif
 
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         iterator2 begin2 () {
             return find_first2 (0, 0, 0);
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         iterator2 end2 () {
             return find_last2 (0, 0, size_);
         }
 
         // Reverse iterators
 
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_reverse_iterator1 rbegin1 () const {
             return const_reverse_iterator1 (end1 ());
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_reverse_iterator1 rend1 () const {
             return const_reverse_iterator1 (begin1 ());
         }
 
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         reverse_iterator1 rbegin1 () {
             return reverse_iterator1 (end1 ());
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         reverse_iterator1 rend1 () {
             return reverse_iterator1 (begin1 ());
         }
 
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_reverse_iterator2 rbegin2 () const {
             return const_reverse_iterator2 (end2 ());
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_reverse_iterator2 rend2 () const {
             return const_reverse_iterator2 (begin2 ());
         }
 
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         reverse_iterator2 rbegin2 () {
             return reverse_iterator2 (end2 ());
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         reverse_iterator2 rend2 () {
             return reverse_iterator2 (begin2 ());
         }
@@ -932,12 +974,16 @@ namespace boost { namespace numerics {
     private:
         size_type size_;
         array_type data_;
+        static value_type conj_;
     };
 
-    // Symmetric matrix adaptor class
+    template<class T, class F1, class F2, class A>
+    typename hermitian_matrix<T, F1, F2, A>::value_type hermitian_matrix<T, F1, F2, A>::conj_;
+
+    // Hermitian matrix adaptor class
     template<class M, class F>
-    class symmetric_adaptor:
-        public matrix_expression<symmetric_adaptor<M, F> > {
+    class hermitian_adaptor:
+        public matrix_expression<hermitian_adaptor<M, F> > {
     public:
         typedef const M const_matrix_type;
         typedef M matrix_type;
@@ -945,15 +991,17 @@ namespace boost { namespace numerics {
         typedef typename M::size_type size_type;
         typedef typename M::difference_type difference_type;
         typedef typename M::value_type value_type;
-        typedef typename M::const_reference const_reference;
+        // FIXME: no better way to not return the address of a temporary?
+        // typedef typename M::const_reference const_reference;
+        typedef typename M::value_type const_reference;
         typedef typename M::reference reference;
         typedef typename M::const_pointer const_pointer;
         typedef typename M::pointer pointer;
-        typedef const symmetric_adaptor<M, F> const_self_type;
-        typedef symmetric_adaptor<M, F> self_type;
+        typedef const hermitian_adaptor<M, F> const_self_type;
+        typedef hermitian_adaptor<M, F> self_type;
         typedef const matrix_const_reference<const_self_type> const_closure_type;
         typedef matrix_reference<self_type> closure_type;
-#ifdef NUMERICS_DEPRECATED
+#ifdef BOOST_UBLAS_DEPRECATED
         typedef const matrix_row<const_self_type> const_matrix_row_type;
         typedef matrix_row<self_type> matrix_row_type;
         typedef const matrix_column<const_self_type> const_matrix_column_type;
@@ -967,44 +1015,44 @@ namespace boost { namespace numerics {
         typedef typename M::orientation_category orientation_category;
 
         // Construction and destruction
-        NUMERICS_INLINE
-        symmetric_adaptor ():
+        BOOST_UBLAS_INLINE
+        hermitian_adaptor (): 
             data_ (nil_) {
-            check (data_.size1 () == data_.size2 (), bad_size ());
+            BOOST_UBLAS_CHECK (data_.size1 () == data_.size2 (), bad_size ());
         }
-        NUMERICS_INLINE
-        symmetric_adaptor (matrix_type &data):
+        BOOST_UBLAS_INLINE
+        hermitian_adaptor (matrix_type &data): 
             data_ (data) {
-            check (data_.size1 () == data_.size2 (), bad_size ());
+            BOOST_UBLAS_CHECK (data_.size1 () == data_.size2 (), bad_size ());
         }
-        NUMERICS_INLINE
-        symmetric_adaptor (const symmetric_adaptor &m):
+        BOOST_UBLAS_INLINE
+        hermitian_adaptor (const hermitian_adaptor &m): 
             data_ (m.data_) {
-            check (data_.size1 () == data_.size2 (), bad_size ());
+            BOOST_UBLAS_CHECK (data_.size1 () == data_.size2 (), bad_size ());
         }
 
         // Accessors
-        NUMERICS_INLINE
-        size_type size1 () const {
+        BOOST_UBLAS_INLINE
+        size_type size1 () const { 
             return data_.size1 ();
         }
-        NUMERICS_INLINE
-        size_type size2 () const {
+        BOOST_UBLAS_INLINE
+        size_type size2 () const { 
             return data_.size2 ();
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_matrix_type &data () const {
             return data_;
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         matrix_type &data () {
             return data_;
         }
 
         // Resetting
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         void reset (matrix_type &data) {
-            check (data.size1 () == data.size2 (), bad_size ());
+            BOOST_UBLAS_CHECK (data.size1 () == data.size2 (), bad_size ());
             // References are not retargetable.
             // Thanks to Michael Stevens for spotting this.
             // data_ = data;
@@ -1012,112 +1060,127 @@ namespace boost { namespace numerics {
         }
 
         // Element access
-        NUMERICS_INLINE
-        value_type operator () (size_type i, size_type j) const {
-            check (i < size1 (), bad_index ());
-            check (j < size2 (), bad_index ());
+        BOOST_UBLAS_INLINE
+        const_reference operator () (size_type i, size_type j) const {
+            BOOST_UBLAS_CHECK (i < size1 (), bad_index ());
+            BOOST_UBLAS_CHECK (j < size2 (), bad_index ());
+            // if (i == j)
+            //     return detail::real (data () (i, i));
+            // else
             if (functor_type::other (i, j))
                 return data () (i, j);
             else
-                return data () (j, i);
+                return detail::conj (data () (j, i));
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         reference operator () (size_type i, size_type j) {
-            check (i < size1 (), bad_index ());
-            check (j < size2 (), bad_index ());
+            BOOST_UBLAS_CHECK (i < size1 (), bad_index ());
+            BOOST_UBLAS_CHECK (j < size2 (), bad_index ());
             if (functor_type::other (i, j))
                 return data () (i, j);
-            else
-                return data () (j, i);
+            else {
+                // Raising exceptions abstracted as requested during review.
+                // throw external_logic ();
+                external_logic ().raise ();
+                return conj_ = detail::conj (data () (j, i));
+            }
         }
 
-#ifdef NUMERICS_DEPRECATED
-        NUMERICS_INLINE
+#ifdef BOOST_UBLAS_DEPRECATED
+        BOOST_UBLAS_INLINE
         const_matrix_row_type operator [] (size_type i) const {
             return const_matrix_row_type (*this, i);
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         matrix_row_type operator [] (size_type i) {
             return matrix_row_type (*this, i);
         }
 #endif
 
         // Assignment
-        NUMERICS_INLINE
-        symmetric_adaptor &operator = (const symmetric_adaptor &m) {
-            matrix_assign<scalar_assign<value_type, value_type> > () (*this, m);
+        BOOST_UBLAS_INLINE
+        hermitian_adaptor &operator = (const hermitian_adaptor &m) { 
+            matrix_assign<scalar_assign<value_type, value_type> > () (*this, m); 
             return *this;
         }
-        NUMERICS_INLINE
-        symmetric_adaptor &assign_temporary (symmetric_adaptor &m) {
+        BOOST_UBLAS_INLINE
+        hermitian_adaptor &assign_temporary (hermitian_adaptor &m) { 
             *this = m;
             return *this;
         }
         template<class AE>
-        NUMERICS_INLINE
-        symmetric_adaptor &operator = (const matrix_expression<AE> &ae) {
-            matrix_assign<scalar_assign<value_type, value_type> > () (*this, matrix<value_type> (ae));
+        BOOST_UBLAS_INLINE
+        hermitian_adaptor &operator = (const matrix_expression<AE> &ae) { 
+            matrix_assign<scalar_assign<value_type, value_type> > () (*this, matrix<value_type> (ae)); 
             return *this;
         }
         template<class AE>
-        NUMERICS_INLINE
-        symmetric_adaptor &assign (const matrix_expression<AE> &ae) {
-            matrix_assign<scalar_assign<value_type, NUMERICS_TYPENAME AE::value_type> > () (*this, ae); 
+        BOOST_UBLAS_INLINE
+        hermitian_adaptor &assign (const matrix_expression<AE> &ae) { 
+            matrix_assign<scalar_assign<value_type, BOOST_UBLAS_TYPENAME AE::value_type> > () (*this, ae); 
             return *this;
         }
         template<class AE>
-        NUMERICS_INLINE
-        symmetric_adaptor& operator += (const matrix_expression<AE> &ae) {
+        BOOST_UBLAS_INLINE
+        hermitian_adaptor& operator += (const matrix_expression<AE> &ae) {
             matrix_assign<scalar_assign<value_type, value_type> > () (*this, matrix<value_type> (*this + ae)); 
             return *this;
         }
         template<class AE>
-        NUMERICS_INLINE
-        symmetric_adaptor &plus_assign (const matrix_expression<AE> &ae) { 
-            matrix_assign<scalar_plus_assign<value_type, NUMERICS_TYPENAME AE::value_type> > () (*this, ae);
+        BOOST_UBLAS_INLINE
+        hermitian_adaptor &plus_assign (const matrix_expression<AE> &ae) { 
+            matrix_assign<scalar_plus_assign<value_type, BOOST_UBLAS_TYPENAME AE::value_type> > () (*this, ae); 
             return *this;
         }
         template<class AE>
-        NUMERICS_INLINE
-        symmetric_adaptor& operator -= (const matrix_expression<AE> &ae) {
+        BOOST_UBLAS_INLINE
+        hermitian_adaptor& operator -= (const matrix_expression<AE> &ae) {
             matrix_assign<scalar_assign<value_type, value_type> > () (*this, matrix<value_type> (*this - ae)); 
             return *this;
         }
         template<class AE>
-        NUMERICS_INLINE
-        symmetric_adaptor &minus_assign (const matrix_expression<AE> &ae) { 
-            matrix_assign<scalar_minus_assign<value_type, NUMERICS_TYPENAME AE::value_type> > () (*this, ae); 
+        BOOST_UBLAS_INLINE
+        hermitian_adaptor &minus_assign (const matrix_expression<AE> &ae) { 
+            matrix_assign<scalar_minus_assign<value_type, BOOST_UBLAS_TYPENAME AE::value_type> > () (*this, ae); 
             return *this;
         }
         template<class AT>
-        NUMERICS_INLINE
-        symmetric_adaptor& operator *= (const AT &at) {
+        BOOST_UBLAS_INLINE
+        hermitian_adaptor& operator *= (const AT &at) {
+            // Multiplication is only allowed for real scalars,
+            // otherwise the resulting matrix isn't hermitian.
+            // Thanks to Peter Schmitteckert for spotting this.
+            BOOST_UBLAS_CHECK (detail::imag (at) == 0, non_real ());
             matrix_assign_scalar<scalar_multiplies_assign<value_type, AT> > () (*this, at);
             return *this;
         }
         template<class AT>
-        NUMERICS_INLINE
-        symmetric_adaptor& operator /= (const AT &at) {
+        BOOST_UBLAS_INLINE
+        hermitian_adaptor& operator /= (const AT &at) {
+            // Multiplication is only allowed for real scalars,
+            // otherwise the resulting matrix isn't hermitian.
+            // Thanks to Peter Schmitteckert for spotting this.
+            BOOST_UBLAS_CHECK (detail::imag (at) == 0, non_real ());
             matrix_assign_scalar<scalar_divides_assign<value_type, AT> > () (*this, at);
             return *this;
         }
 
         // Swapping
-        NUMERICS_INLINE
-        void swap (symmetric_adaptor &m) {
-            // Too unusual semantic
-            // check (this != &m, external_logic ());
-            if (this != &m) 
+        BOOST_UBLAS_INLINE
+        void swap (hermitian_adaptor &m) {
+            // Too unusual semantic.
+            // BOOST_UBLAS_CHECK (this != &m, external_logic ());
+            if (this != &m)
                 matrix_swap<scalar_swap<value_type, value_type> > () (*this, m); 
         }
-#ifdef NUMERICS_FRIEND_FUNCTION
-        NUMERICS_INLINE
-        friend void swap (symmetric_adaptor &m1, symmetric_adaptor &m2) {
+#ifdef BOOST_UBLAS_FRIEND_FUNCTION
+        BOOST_UBLAS_INLINE
+        friend void swap (hermitian_adaptor &m1, hermitian_adaptor &m2) {
             m1.swap (m2);
         }
 #endif
 
-#ifdef NUMERICS_USE_CANONICAL_ITERATOR
+#ifdef BOOST_UBLAS_USE_CANONICAL_ITERATOR
         typedef matrix_row_iterator<self_type, packed_random_access_iterator_tag> iterator1;
         typedef matrix_column_iterator<self_type, packed_random_access_iterator_tag> iterator2;
         typedef matrix_row_const_iterator<self_type, packed_random_access_iterator_tag> const_iterator1;
@@ -1134,7 +1197,7 @@ namespace boost { namespace numerics {
         typedef reverse_iterator<iterator2> reverse_iterator2;
 #endif
 #else
-#ifdef NUMERICS_USE_INDEXED_ITERATOR
+#ifdef BOOST_UBLAS_USE_INDEXED_ITERATOR
         typedef indexed_iterator1<self_type, packed_random_access_iterator_tag> iterator1;
         typedef indexed_iterator2<self_type, packed_random_access_iterator_tag> iterator2;
         typedef indexed_const_iterator1<self_type, packed_random_access_iterator_tag> const_iterator1;
@@ -1146,9 +1209,9 @@ namespace boost { namespace numerics {
         class iterator2;
 #endif
 #ifdef BOOST_MSVC_STD_ITERATOR
-        typedef reverse_iterator1<const_iterator1, value_type, value_type> const_reverse_iterator1;
+        typedef reverse_iterator1<const_iterator1, value_type, const_reference> const_reverse_iterator1;
         typedef reverse_iterator1<iterator1, value_type, reference> reverse_iterator1;
-        typedef reverse_iterator2<const_iterator2, value_type, value_type> const_reverse_iterator2;
+        typedef reverse_iterator2<const_iterator2, value_type, const_reference> const_reverse_iterator2;
         typedef reverse_iterator2<iterator2, value_type, reference> reverse_iterator2;
 #else
         typedef reverse_iterator1<const_iterator1> const_reverse_iterator1;
@@ -1159,73 +1222,73 @@ namespace boost { namespace numerics {
 #endif
 
         // Element lookup
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_iterator1 find_first1 (int rank, size_type i, size_type j) const {
-#ifdef NUMERICS_USE_CANONICAL_ITERATOR
+#ifdef BOOST_UBLAS_USE_CANONICAL_ITERATOR
             return const_iterator1 (*this, i);
 #else
             return const_iterator1 (*this, i, j);
 #endif
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         iterator1 find_first1 (int rank, size_type i, size_type j) {
             if (rank == 1) 
                 i = functor_type::restrict1 (i, j);
-#ifdef NUMERICS_USE_CANONICAL_ITERATOR
+#ifdef BOOST_UBLAS_USE_CANONICAL_ITERATOR
             return iterator1 (*this, i);
 #else
             return iterator1 (*this, i, j);
 #endif
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_iterator1 find_last1 (int rank, size_type i, size_type j) const {
-#ifdef NUMERICS_USE_CANONICAL_ITERATOR
+#ifdef BOOST_UBLAS_USE_CANONICAL_ITERATOR
             return const_iterator1 (*this, i);
 #else
             return const_iterator1 (*this, i, j);
 #endif
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         iterator1 find_last1 (int rank, size_type i, size_type j) {
-            if (rank == 1)
+            if (rank == 1) 
                 i = functor_type::restrict1 (i, j);
-#ifdef NUMERICS_USE_CANONICAL_ITERATOR
+#ifdef BOOST_UBLAS_USE_CANONICAL_ITERATOR
             return iterator1 (*this, i);
 #else
             return iterator1 (*this, i, j);
 #endif
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_iterator2 find_first2 (int rank, size_type i, size_type j) const {
-#ifdef NUMERICS_USE_CANONICAL_ITERATOR
+#ifdef BOOST_UBLAS_USE_CANONICAL_ITERATOR
             return const_iterator2 (*this, j);
 #else
             return const_iterator2 (*this, i, j);
 #endif
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         iterator2 find_first2 (int rank, size_type i, size_type j) {
             if (rank == 1) 
                 j = functor_type::restrict2 (i, j);
-#ifdef NUMERICS_USE_CANONICAL_ITERATOR
+#ifdef BOOST_UBLAS_USE_CANONICAL_ITERATOR
             return iterator2 (*this, j);
 #else
             return iterator2 (*this, i, j);
 #endif
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_iterator2 find_last2 (int rank, size_type i, size_type j) const {
-#ifdef NUMERICS_USE_CANONICAL_ITERATOR
+#ifdef BOOST_UBLAS_USE_CANONICAL_ITERATOR
             return const_iterator2 (*this, j);
 #else
             return const_iterator2 (*this, i, j);
 #endif
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         iterator2 find_last2 (int rank, size_type i, size_type j) {
             if (rank == 1) 
                 j = functor_type::restrict2 (i, j);
-#ifdef NUMERICS_USE_CANONICAL_ITERATOR
+#ifdef BOOST_UBLAS_USE_CANONICAL_ITERATOR
             return iterator2 (*this, j);
 #else
             return iterator2 (*this, i, j);
@@ -1234,106 +1297,113 @@ namespace boost { namespace numerics {
 
         // Iterators simply are indices.
 
-#if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
+#if ! defined (BOOST_UBLAS_USE_CANONICAL_ITERATOR) && ! defined (BOOST_UBLAS_USE_INDEXED_ITERATOR)
         class const_iterator1:
-            public container_const_reference<symmetric_adaptor>,
+            public container_const_reference<hermitian_adaptor>,
             public random_access_iterator_base<packed_random_access_iterator_tag,
                                                const_iterator1, value_type> {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
-#ifndef BOOST_MSVC_STD_ITERATOR
-            typedef typename symmetric_adaptor::difference_type difference_type;
-            typedef typename symmetric_adaptor::value_type value_type;
-            typedef typename symmetric_adaptor::value_type reference;
-            typedef typename symmetric_adaptor::const_pointer pointer;
+#ifdef BOOST_MSVC_STD_ITERATOR
+            typedef const_reference reference;
+#else
+            typedef typename hermitian_adaptor::difference_type difference_type;
+            typedef typename hermitian_adaptor::value_type value_type;
+            typedef typename hermitian_adaptor::const_reference reference;
+            typedef typename hermitian_adaptor::const_pointer pointer;
 #endif
             typedef const_iterator2 dual_iterator_type;
             typedef const_reverse_iterator2 dual_reverse_iterator_type;
 
             // Construction and destruction
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator1 ():
-                container_const_reference<symmetric_adaptor> (), it1_ (), it2_ () {}
-            NUMERICS_INLINE
-            const_iterator1 (const symmetric_adaptor &m, size_type it1, size_type it2):
-                container_const_reference<symmetric_adaptor> (m), it1_ (it1), it2_ (it2) {}
-            NUMERICS_INLINE
+                container_const_reference<hermitian_adaptor> (), it1_ (), it2_ () {}
+            BOOST_UBLAS_INLINE
+            const_iterator1 (const hermitian_adaptor &m, size_type it1, size_type it2):
+                container_const_reference<hermitian_adaptor> (m), it1_ (it1), it2_ (it2) {}
+            BOOST_UBLAS_INLINE
             const_iterator1 (const iterator1 &it):
-                container_const_reference<symmetric_adaptor> (it ()), it1_ (it.it1_), it2_ (it.it2_) {}
+                container_const_reference<hermitian_adaptor> (it ()), it1_ (it.it1_), it2_ (it.it2_) {}
 
             // Arithmetic
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator1 &operator ++ () {
                 ++ it1_;
                 return *this;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator1 &operator -- () {
                 -- it1_;
                 return *this;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator1 &operator += (difference_type n) {
                 it1_ += n;
                 return *this;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator1 &operator -= (difference_type n) {
                 it1_ -= n;
                 return *this;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             difference_type operator - (const const_iterator1 &it) const {
                 return it1_ - it.it1_;
             }
 
             // Dereference
-            NUMERICS_INLINE
-            value_type operator * () const {
-                return (*this) () (it1_, it2_);
+            BOOST_UBLAS_INLINE
+            reference operator * () const {
+                return (*this) () (it1_, it2_); 
             }
 
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator2 begin () const {
                 return (*this) ().find_first2 (1, it1_, 0);
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator2 end () const {
                 return (*this) ().find_last2 (1, it1_, (*this) ().size2 ());
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_reverse_iterator2 rbegin () const {
                 return const_reverse_iterator2 (end ());
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_reverse_iterator2 rend () const {
                 return const_reverse_iterator2 (begin ());
             }
 
             // Indices
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             size_type index1 () const {
                 return it1_;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             size_type index2 () const {
                 return it2_;
             }
 
-            // Assignment
-            NUMERICS_INLINE
+            // Assignment 
+            BOOST_UBLAS_INLINE
             const_iterator1 &operator = (const const_iterator1 &it) {
-                container_const_reference<symmetric_adaptor>::assign (&it ());
+                container_const_reference<hermitian_adaptor>::assign (&it ());
                 it1_ = it.it1_;
                 it2_ = it.it2_;
                 return *this;
             }
 
             // Comparison
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             bool operator == (const const_iterator1 &it) const {
-                check (&(*this) () == &it (), external_logic ());
+                BOOST_UBLAS_CHECK (&(*this) () == &it (), external_logic ());
                 return it1_ == it.it1_ && it2_ == it.it2_;
+            }
+            BOOST_UBLAS_INLINE
+            bool operator < (const const_iterator1 &it) const {
+                BOOST_UBLAS_CHECK (&(*this) () == &it (), external_logic ());
+                return it1_ < it.it1_ && it2_ == it.it2_;
             }
 
         private:
@@ -1342,112 +1412,117 @@ namespace boost { namespace numerics {
         };
 #endif
 
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_iterator1 begin1 () const {
             return find_first1 (0, 0, 0);
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_iterator1 end1 () const {
             return find_last1 (0, size1 (), 0);
         }
 
-#if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
+#if ! defined (BOOST_UBLAS_USE_CANONICAL_ITERATOR) && ! defined (BOOST_UBLAS_USE_INDEXED_ITERATOR)
         class iterator1:
-            public container_reference<symmetric_adaptor>,
+            public container_reference<hermitian_adaptor>,
             public random_access_iterator_base<packed_random_access_iterator_tag,
                                                iterator1, value_type> {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
-            typedef typename symmetric_adaptor::difference_type difference_type;
-            typedef typename symmetric_adaptor::value_type value_type;
-            typedef typename symmetric_adaptor::reference reference;
-            typedef typename symmetric_adaptor::pointer pointer;
+            typedef typename hermitian_adaptor::difference_type difference_type;
+            typedef typename hermitian_adaptor::value_type value_type;
+            typedef typename hermitian_adaptor::reference reference;
+            typedef typename hermitian_adaptor::pointer pointer;
 #endif
             typedef iterator2 dual_iterator_type;
             typedef reverse_iterator2 dual_reverse_iterator_type;
 
             // Construction and destruction
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             iterator1 ():
-                container_reference<symmetric_adaptor> (), it1_ (), it2_ () {}
-            NUMERICS_INLINE
-            iterator1 (symmetric_adaptor &m, size_type it1, size_type it2):
-                container_reference<symmetric_adaptor> (m), it1_ (it1), it2_ (it2) {}
+                container_reference<hermitian_adaptor> (), it1_ (), it2_ () {}
+            BOOST_UBLAS_INLINE
+            iterator1 (hermitian_adaptor &m, size_type it1, size_type it2):
+                container_reference<hermitian_adaptor> (m), it1_ (it1), it2_ (it2) {}
 
             // Arithmetic
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             iterator1 &operator ++ () {
                 ++ it1_;
                 return *this;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             iterator1 &operator -- () {
                 -- it1_;
                 return *this;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             iterator1 &operator += (difference_type n) {
                 it1_ += n;
                 return *this;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             iterator1 &operator -= (difference_type n) {
                 it1_ -= n;
                 return *this;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             difference_type operator - (const iterator1 &it) const {
                 return it1_ - it.it1_;
             }
 
             // Dereference
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             reference operator * () const {
                 return (*this) () (it1_, it2_); 
             }
 
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             iterator2 begin () const {
                 return (*this) ().find_first2 (1, it1_, 0);
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             iterator2 end () const {
                 return (*this) ().find_last2 (1, it1_, (*this) ().size2 ());
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             reverse_iterator2 rbegin () const {
                 return reverse_iterator2 (end ());
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             reverse_iterator2 rend () const {
                 return reverse_iterator2 (begin ());
             }
 
             // Indices
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             size_type index1 () const {
                 return it1_;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             size_type index2 () const {
                 return it2_;
             }
 
             // Assignment 
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             iterator1 &operator = (const iterator1 &it) {
-                container_reference<symmetric_adaptor>::assign (&it ());
+                container_reference<hermitian_adaptor>::assign (&it ());
                 it1_ = it.it1_;
                 it2_ = it.it2_;
                 return *this;
             }
 
             // Comparison
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             bool operator == (const iterator1 &it) const {
-                check (&(*this) () == &it (), external_logic ());
+                BOOST_UBLAS_CHECK (&(*this) () == &it (), external_logic ());
                 return it1_ == it.it1_ && it2_ == it.it2_;
+            }
+            BOOST_UBLAS_INLINE
+            bool operator < (const iterator1 &it) const {
+                BOOST_UBLAS_CHECK (&(*this) () == &it (), external_logic ());
+                return it1_ < it.it1_ && it2_ == it.it2_;
             }
 
         private:
@@ -1458,115 +1533,122 @@ namespace boost { namespace numerics {
         };
 #endif
 
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         iterator1 begin1 () {
             return find_first1 (0, 0, 0);
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         iterator1 end1 () {
             return find_last1 (0, size1 (), 0);
         }
 
-#if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
+#if ! defined (BOOST_UBLAS_USE_CANONICAL_ITERATOR) && ! defined (BOOST_UBLAS_USE_INDEXED_ITERATOR)
         class const_iterator2:
-            public container_const_reference<symmetric_adaptor>,
+            public container_const_reference<hermitian_adaptor>,
             public random_access_iterator_base<packed_random_access_iterator_tag,
                                                const_iterator2, value_type> {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
-#ifndef BOOST_MSVC_STD_ITERATOR
-            typedef typename symmetric_adaptor::difference_type difference_type;
-            typedef typename symmetric_adaptor::value_type value_type;
-            typedef typename symmetric_adaptor::value_type reference;
-            typedef typename symmetric_adaptor::const_pointer pointer;
+#ifdef BOOST_MSVC_STD_ITERATOR
+            typedef const_reference reference;
+#else
+            typedef typename hermitian_adaptor::difference_type difference_type;
+            typedef typename hermitian_adaptor::value_type value_type;
+            typedef typename hermitian_adaptor::const_reference reference;
+            typedef typename hermitian_adaptor::const_pointer pointer;
 #endif
             typedef const_iterator1 dual_iterator_type;
             typedef const_reverse_iterator1 dual_reverse_iterator_type;
 
             // Construction and destruction
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator2 ():
-                container_const_reference<symmetric_adaptor> (), it1_ (), it2_ () {}
-            NUMERICS_INLINE
-            const_iterator2 (const symmetric_adaptor &m, size_type it1, size_type it2):
-                container_const_reference<symmetric_adaptor> (m), it1_ (it1), it2_ (it2) {}
-            NUMERICS_INLINE
+                container_const_reference<hermitian_adaptor> (), it1_ (), it2_ () {}
+            BOOST_UBLAS_INLINE
+            const_iterator2 (const hermitian_adaptor &m, size_type it1, size_type it2):
+                container_const_reference<hermitian_adaptor> (m), it1_ (it1), it2_ (it2) {}
+            BOOST_UBLAS_INLINE
             const_iterator2 (const iterator2 &it):
-                container_const_reference<symmetric_adaptor> (it ()), it1_ (it.it1_), it2_ (it.it2_) {}
+                container_const_reference<hermitian_adaptor> (it ()), it1_ (it.it1_), it2_ (it.it2_) {}
 
             // Arithmetic
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator2 &operator ++ () {
                 ++ it2_;
                 return *this;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator2 &operator -- () {
                 -- it2_;
                 return *this;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator2 &operator += (difference_type n) {
                 it2_ += n;
                 return *this;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator2 &operator -= (difference_type n) {
                 it2_ -= n;
                 return *this;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             difference_type operator - (const const_iterator2 &it) const {
                 return it2_ - it.it2_;
             }
 
             // Dereference
-            NUMERICS_INLINE
-            value_type operator * () const {
-                return (*this) () (it1_, it2_);
+            BOOST_UBLAS_INLINE
+            reference operator * () const {
+                return (*this) () (it1_, it2_); 
             }
 
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator1 begin () const {
                 return (*this) ().find_first1 (1, 0, it2_);
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator1 end () const {
                 return (*this) ().find_last1 (1, (*this) ().size1 (), it2_);
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_reverse_iterator1 rbegin () const {
                 return const_reverse_iterator1 (end ());
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_reverse_iterator1 rend () const {
                 return const_reverse_iterator1 (begin ());
             }
 
             // Indices
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             size_type index1 () const {
                 return it1_;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             size_type index2 () const {
                 return it2_;
             }
 
             // Assignment 
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             const_iterator2 &operator = (const const_iterator2 &it) {
-                container_const_reference<symmetric_adaptor>::assign (&it ());
+                container_const_reference<hermitian_adaptor>::assign (&it ());
                 it1_ = it.it1_;
                 it2_ = it.it2_;
                 return *this;
             }
 
             // Comparison
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             bool operator == (const const_iterator2 &it) const {
-                check (&(*this) () == &it (), external_logic ());
+                BOOST_UBLAS_CHECK (&(*this) () == &it (), external_logic ());
                 return it1_ == it.it1_ && it2_ == it.it2_;
+            }
+            BOOST_UBLAS_INLINE
+            bool operator < (const const_iterator2 &it) const {
+                BOOST_UBLAS_CHECK (&(*this) () == &it (), external_logic ());
+                return it1_ == it.it1_ && it2_ < it.it2_;
             }
 
         private:
@@ -1575,112 +1657,117 @@ namespace boost { namespace numerics {
         };
 #endif
 
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_iterator2 begin2 () const {
             return find_first2 (0, 0, 0);
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_iterator2 end2 () const {
             return find_last2 (0, 0, size2 ());
         }
 
-#if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
+#if ! defined (BOOST_UBLAS_USE_CANONICAL_ITERATOR) && ! defined (BOOST_UBLAS_USE_INDEXED_ITERATOR)
         class iterator2:
-            public container_reference<symmetric_adaptor>,
+            public container_reference<hermitian_adaptor>,
             public random_access_iterator_base<packed_random_access_iterator_tag,
                                                iterator2, value_type> {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
-            typedef typename symmetric_adaptor::difference_type difference_type;
-            typedef typename symmetric_adaptor::value_type value_type;
-            typedef typename symmetric_adaptor::reference reference;
-            typedef typename symmetric_adaptor::pointer pointer;
+            typedef typename hermitian_adaptor::difference_type difference_type;
+            typedef typename hermitian_adaptor::value_type value_type;
+            typedef typename hermitian_adaptor::reference reference;
+            typedef typename hermitian_adaptor::pointer pointer;
 #endif
             typedef iterator1 dual_iterator_type;
             typedef reverse_iterator1 dual_reverse_iterator_type;
 
             // Construction and destruction
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             iterator2 ():
-                container_reference<symmetric_adaptor> (), it1_ (), it2_ () {}
-            NUMERICS_INLINE
-            iterator2 (symmetric_adaptor &m, size_type it1, size_type it2):
-                container_reference<symmetric_adaptor> (m), it1_ (it1), it2_ (it2) {}
+                container_reference<hermitian_adaptor> (), it1_ (), it2_ () {}
+            BOOST_UBLAS_INLINE
+            iterator2 (hermitian_adaptor &m, size_type it1, size_type it2):
+                container_reference<hermitian_adaptor> (m), it1_ (it1), it2_ (it2) {}
 
             // Arithmetic
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             iterator2 &operator ++ () {
                 ++ it2_;
                 return *this;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             iterator2 &operator -- () {
                 -- it2_;
                 return *this;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             iterator2 &operator += (difference_type n) {
                 it2_ += n;
                 return *this;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             iterator2 &operator -= (difference_type n) {
                 it2_ -= n;
                 return *this;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             difference_type operator - (const iterator2 &it) const {
                 return it2_ - it.it2_;
             }
 
             // Dereference
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             reference operator * () const {
                 return (*this) () (it1_, it2_); 
             }
 
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             iterator1 begin () const {
                 return (*this) ().find_first1 (1, 0, it2_);
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             iterator1 end () const {
                 return (*this) ().find_last1 (1, (*this) ().size1 (), it2_);
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             reverse_iterator1 rbegin () const {
                 return reverse_iterator1 (end ());
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             reverse_iterator1 rend () const {
                 return reverse_iterator1 (begin ());
             }
 
             // Indices
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             size_type index1 () const {
                 return it1_;
             }
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             size_type index2 () const {
                 return it2_;
             }
 
             // Assignment 
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             iterator2 &operator = (const iterator2 &it) {
-                container_reference<symmetric_adaptor>::assign (&it ());
+                container_reference<hermitian_adaptor>::assign (&it ());
                 it1_ = it.it1_;
                 it2_ = it.it2_;
                 return *this;
             }
 
             // Comparison
-            NUMERICS_INLINE
+            BOOST_UBLAS_INLINE
             bool operator == (const iterator2 &it) const {
-                check (&(*this) () == &it (), external_logic ());
+                BOOST_UBLAS_CHECK (&(*this) () == &it (), external_logic ());
                 return it1_ == it.it1_ && it2_ == it.it2_;
+            }
+            BOOST_UBLAS_INLINE
+            bool operator < (const iterator2 &it) const {
+                BOOST_UBLAS_CHECK (&(*this) () == &it (), external_logic ());
+                return it1_ == it.it1_ && it2_ < it.it2_;
             }
 
         private:
@@ -1691,49 +1778,49 @@ namespace boost { namespace numerics {
         };
 #endif
 
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         iterator2 begin2 () {
             return find_first2 (0, 0, 0);
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         iterator2 end2 () {
             return find_last2 (0, 0, size2 ());
         }
 
         // Reverse iterators
 
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_reverse_iterator1 rbegin1 () const {
             return const_reverse_iterator1 (end1 ());
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_reverse_iterator1 rend1 () const {
             return const_reverse_iterator1 (begin1 ());
         }
 
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         reverse_iterator1 rbegin1 () {
             return reverse_iterator1 (end1 ());
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         reverse_iterator1 rend1 () {
             return reverse_iterator1 (begin1 ());
         }
 
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_reverse_iterator2 rbegin2 () const {
             return const_reverse_iterator2 (end2 ());
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         const_reverse_iterator2 rend2 () const {
             return const_reverse_iterator2 (begin2 ());
         }
 
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         reverse_iterator2 rbegin2 () {
             return reverse_iterator2 (end2 ());
         }
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         reverse_iterator2 rend2 () {
             return reverse_iterator2 (begin2 ());
         }
@@ -1741,14 +1828,19 @@ namespace boost { namespace numerics {
     private:
         matrix_type &data_;
         static matrix_type nil_;
+        static value_type conj_;
     };
 
     template<class M, class F>
-    typename symmetric_adaptor<M, F>::matrix_type symmetric_adaptor<M, F>::nil_;
+    typename hermitian_adaptor<M, F>::matrix_type hermitian_adaptor<M, F>::nil_;
+    template<class M, class F>
+    typename hermitian_adaptor<M, F>::value_type hermitian_adaptor<M, F>::conj_;
 
-}}
+}}}
 
 #endif
+
+
 
 
 

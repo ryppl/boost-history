@@ -14,13 +14,14 @@
 //  GeNeSys mbH & Co. KG in producing this work.
 //
 
-#ifndef NUMERICS_CONFIG_H
-#define NUMERICS_CONFIG_H
+#ifndef BOOST_UBLAS_CONFIG_H
+#define BOOST_UBLAS_CONFIG_H
 
 #include <cassert>
 #include <cstddef>
 
 #include <boost/config.hpp>
+#include <boost/limits.hpp>
 
 #ifdef BOOST_MSVC
 // Disable some MSVC specific warnings.
@@ -33,21 +34,21 @@
 
 #ifdef BOOST_MSVC
 // MSVC doesn't always accept the 'typename' keyword.
-#define NUMERICS_TYPENAME
+#define BOOST_UBLAS_TYPENAME
 #else
-#define NUMERICS_TYPENAME typename
+#define BOOST_UBLAS_TYPENAME typename
 #endif
 // This could be eliminated.
-#define NUMERICS_EXPLICIT explicit
+#define BOOST_UBLAS_EXPLICIT explicit
 
 
 
 // #ifdef BOOST_MSVC
 // With MSVC we can could perform IO via basic_stream
-// #define NUMERICS_USE_BASIC_STREAM
+// #define BOOST_UBLAS_USE_BASIC_STREAM
 // #else
 // IO via streams
-#define NUMERICS_USE_STREAM
+#define BOOST_UBLAS_USE_STREAM
 // #endif
 
 
@@ -60,17 +61,17 @@
 #pragma inline_recursion (on)
 #pragma inline_depth (255)
 #pragma auto_inline (on)
-// #define NUMERICS_INLINE __forceinline
-#define NUMERICS_INLINE __inline
+// #define BOOST_UBLAS_INLINE __forceinline
+#define BOOST_UBLAS_INLINE __inline
 #else
-#define NUMERICS_INLINE inline
+#define BOOST_UBLAS_INLINE inline
 #endif
 
 // Do not check sizes!
-#define NUMERICS_USE_FAST_COMMON
+#define BOOST_UBLAS_USE_FAST_SAME
 
 // Use expression templates.
-#define NUMERICS_USE_ET
+#define BOOST_UBLAS_USE_ET
 
 // Disable performance options in debug mode
 #else
@@ -81,45 +82,44 @@
 // #pragma inline_depth ()
 // #pragma auto_inline (off)
 #endif
-#define NUMERICS_INLINE
+#define BOOST_UBLAS_INLINE
 
 #ifdef BOOST_MSVC
 // Use expression templates (otherwise we get many ICE's)
-#define NUMERICS_USE_ET
+#define BOOST_UBLAS_USE_ET
 #endif
 
 // Bounds check
-#define NUMERICS_BOUNDS_CHECK
+#define BOOST_UBLAS_BOUNDS_CHECK
 
 #endif
 
 
 
 // Use invariant hoisting.
-#define NUMERICS_USE_INVARIANT_HOISTING
+#define BOOST_UBLAS_USE_INVARIANT_HOISTING
 
 // Use Duff's device
-// #define NUMERICS_USE_DUFF_DEVICE
+// #define BOOST_UBLAS_USE_DUFF_DEVICE
 
 // When to switch from indexing to iterating
 // Empirically determined with MSVC.
-// #define NUMERICS_ITERATOR_THRESHOLD 0
-#ifndef NUMERICS_ITERATOR_THRESHOLD
-#define NUMERICS_ITERATOR_THRESHOLD 32
+#ifndef BOOST_UBLAS_ITERATOR_THRESHOLD
+// #define BOOST_UBLAS_ITERATOR_THRESHOLD 0
+#define BOOST_UBLAS_ITERATOR_THRESHOLD (std::numeric_limits<std::ptrdiff_t>::max ())
 #endif
-// #define NUMERICS_ITERATOR_THRESHOLD 128
 
 // ET options
-#define NUMERICS_ET_VALUE
-// #define NUMERICS_ET_REFERENCE
-// #define NUMERICS_ET_CLOSURE_VALUE
-#define NUMERICS_ET_CLOSURE_REFERENCE
+#define BOOST_UBLAS_ET_VALUE
+// #define BOOST_UBLAS_ET_REFERENCE
+// #define BOOST_UBLAS_ET_CLOSURE_VALUE
+#define BOOST_UBLAS_ET_CLOSURE_REFERENCE
 
 // Use canonical iterators.
-// #define NUMERICS_USE_CANONICAL_ITERATOR
+// #define BOOST_UBLAS_USE_CANONICAL_ITERATOR
 
 // Use indexed iterators.
-// #define NUMERICS_USE_INDEXED_ITERATOR
+// #define BOOST_UBLAS_USE_INDEXED_ITERATOR
 
 
 
@@ -128,11 +128,11 @@
 
 // Open problems:
 // MSVC lacks some specializations in <cmath>
-#define NUMERICS_C_MATH
+#define BOOST_UBLAS_C_MATH
 // MSVC's conditional operator is said to be defect?
-#define NUMERICS_CONDITIONAL_DEFECT
+#define BOOST_UBLAS_CONDITIONAL_DEFECT
 // MSVC allows to implement free function as friends.
-#define NUMERICS_FRIEND_FUNCTION
+#define BOOST_UBLAS_FRIEND_FUNCTION
 
 // Using MSVC the following is missing:
 // namespace std {
@@ -141,12 +141,12 @@
 //     typedef signed ptrdiff_t;
 //
 //     template<class T>
-//     NUMERICS_INLINE
+//     BOOST_UBLAS_INLINE
 //     const T &max (const T &t1, const T &t2) {
 //         return t1 > t2 ? t1 : t2;
 //     }
 //     template<class T>
-//     NUMERICS_INLINE
+//     BOOST_UBLAS_INLINE
 //     const T &min (const T &t1, const T &t2) {
 //         return t1 < t2 ? t1 : t2;
 //     }
@@ -159,6 +159,8 @@
 #define BOOST_MSVC_STD_ITERATOR
 #endif
 
+#define BOOST_UBLAS_ENABLE_PROXY_SHORTCUTS
+
 #endif
 
 
@@ -166,20 +168,22 @@
 #ifdef __GNUC__
 
 // Open problems:
-// GCC 2.95.3 is known not to accept NUMERICS_FRIEND_FUNCTION (this seems to be arguable).
+// GCC 2.95.3 is known not to accept BOOST_UBLAS_FRIEND_FUNCTION (this seems to be arguable).
 // GCC 3.x.x allows to implement free function as friends.
 #if !(__GNUC__ <= 2 && __GNUC_MINOR__ <= 95)
-#define NUMERICS_FRIEND_FUNCTION
+#define BOOST_UBLAS_FRIEND_FUNCTION
 #endif
-// GCC 2.95.3 is known not to accept NUMERICS_MUTABLE_TEMPORARY (this seems to be correct).
+// GCC 2.95.3 is known not to accept BOOST_UBLAS_MUTABLE_TEMPORARY (this seems to be correct).
 // GCC 2.95.3 allows to use iterator_base_traits.
-#define NUMERICS_USE_ITERATOR_BASE_TRAITS
-// GCC 2.95.3 needs NUMERICS_REVERSE_ITERATOR_OVERLOADS (this seems to be arguable).
-#define NUMERICS_REVERSE_ITERATOR_OVERLOADS
+#define BOOST_UBLAS_USE_ITERATOR_BASE_TRAITS
+// GCC 2.95.3 needs BOOST_UBLAS_REVERSE_ITERATOR_OVERLOADS (this seems to be arguable).
+#define BOOST_UBLAS_REVERSE_ITERATOR_OVERLOADS
 
-#define NUMERICS_USE_LONG_DOUBLE
+#define BOOST_UBLAS_USE_LONG_DOUBLE
 
-#define NUMERICS_SPECIALIZE_ASSIGN
+#define BOOST_UBLAS_ENABLE_SPECIALIZED_ASSIGN
+
+#define BOOST_UBLAS_ENABLE_PROXY_SHORTCUTS
 
 #endif
 
@@ -189,24 +193,39 @@
 
 // Open problems:
 // BCC allows to implement free function as friends.
-#define NUMERICS_FRIEND_FUNCTION
+#define BOOST_UBLAS_FRIEND_FUNCTION
 
 #endif
 
 
 
-// FIXME: What about __ICL?
+// Thanks to Roberto Andres Ruiz Vial for porting to Intel.
+#ifdef __ICL
+
+// Maybe BOOST_MSVC is set when using ICL with MSVC?
+#define BOOST_UBLAS_TYPENAME typename
+
+// Open problems:
+// ICL lacks some specializations in <cmath>
+#define BOOST_UBLAS_C_MATH
+
+#define BOOST_UBLAS_USE_LONG_DOUBLE
+
+#endif
+
+
+
 #ifdef __ICC
 
 // Open problems:
 // ICC lacks some specializations in <cmath>
-#define NUMERICS_C_MATH
+#define BOOST_UBLAS_C_MATH
 // ICC allows to implement free function as friends.
-#define NUMERICS_FRIEND_FUNCTION
+#define BOOST_UBLAS_FRIEND_FUNCTION
 // ICC sometimes needs qualified type names.
-#define NUMERICS_QUALIFIED_TYPENAME
+#define BOOST_UBLAS_QUALIFIED_TYPENAME
 
-#define NUMERICS_SPECIALIZE_ASSIGN
+#define BOOST_UBLAS_ENABLE_SPECIALIZED_ASSIGN
 
 #endif
 
@@ -216,19 +235,19 @@
 #ifdef __COMO__
 
 // Comeau lacks some specializations in <cmath>
-#define NUMERICS_C_MATH
-// Comeau 4.2.45 seems to have problems with NUMERICS_FRIEND_FUNCTION (this seems to be arguable).
+#define BOOST_UBLAS_C_MATH
+// Comeau 4.2.45 seems to have problems with BOOST_UBLAS_FRIEND_FUNCTION (this seems to be arguable).
 // Comeau allows to use iterator_base_traits.
-#define NUMERICS_USE_ITERATOR_BASE_TRAITS
+#define BOOST_UBLAS_USE_ITERATOR_BASE_TRAITS
 
-#define NUMERICS_USE_LONG_DOUBLE
+#define BOOST_UBLAS_USE_LONG_DOUBLE
 
 #endif
 
 
 
 // Forward declarations
-namespace boost { namespace numerics {
+namespace boost { namespace numeric { namespace ublas {
 
     template<class T>
     class unbounded_array;
@@ -248,6 +267,10 @@ namespace boost { namespace numerics {
 
     template<class E>
     class vector_range;
+    template<class E>
+    class vector_slice;
+    template<class E>
+    class vector_indirect;
 
     template<class E>
     class matrix_row;
@@ -263,6 +286,10 @@ namespace boost { namespace numerics {
     class matrix_column_const_iterator;
     template<class E>
     class matrix_range;
+    template<class E>
+    class matrix_slice;
+    template<class E>
+    class matrix_indirect;
 
     template<class F>
     struct vector_assign_scalar;
@@ -339,10 +366,10 @@ namespace boost { namespace numerics {
     class symmetric_adaptor;
 
     template<class T, class F1 = lower, class F2 = row_major, class A = unbounded_array<T> >
-    class hermitean_matrix;
+    class hermitian_matrix;
 
     template<class M, class F = lower>
-    class hermitean_adaptor;
+    class hermitian_adaptor;
 
     template<class T, class F = row_major, class A = map_array<std::size_t, T> >
     class sparse_matrix;
@@ -370,10 +397,8 @@ namespace boost { namespace numerics {
     typename MV::size_type num_non_zeros (const MV &mv) {
         return mv.non_zeros ();
     }
-}}
 
-// This temporarily is intended to keep existent code compatible.
-namespace numerics = boost::numerics;
+}}}
 
 #endif
 

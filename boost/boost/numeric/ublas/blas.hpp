@@ -14,10 +14,10 @@
 //  GeNeSys mbH & Co. KG in producing this work.
 //
 
-#ifndef NUMERICS_BLAS_H
-#define NUMERICS_BLAS_H
+#ifndef BOOST_UBLAS_BLAS_H
+#define BOOST_UBLAS_BLAS_H
 
-namespace boost { namespace numerics {
+namespace boost { namespace numeric { namespace ublas {
 
     namespace blas_1 {
 
@@ -69,7 +69,7 @@ namespace boost { namespace numerics {
         template<class T1, class V1, class T2, class V2>
         void 
         rot (const T1 &t1, V1 &v1, const T2 &t2, V2 &v2) {
-            typedef typename promote_traits<NUMERICS_TYPENAME V1::value_type, NUMERICS_TYPENAME V2::value_type>::promote_type promote_type;
+            typedef typename promote_traits<BOOST_UBLAS_TYPENAME V1::value_type, BOOST_UBLAS_TYPENAME V2::value_type>::promote_type promote_type;
             vector<promote_type> vt (t1 * v1 + t2 * v2);
             v2.assign (- t2 * v1 + t1 * v2);
             v1.assign (vt);
@@ -100,7 +100,7 @@ namespace boost { namespace numerics {
         template<class M, class T, class V1, class V2>
         M &
         gr (M &m, const T &t, const V1 &v1, const V2 &v2) {
-#ifdef NUMERICS_USE_ET
+#ifdef BOOST_UBLAS_USE_ET
             return m += t * outer_prod (v1, v2);
 #else 
             return m = m + t * outer_prod (v1, v2);
@@ -110,7 +110,7 @@ namespace boost { namespace numerics {
         template<class M, class T, class V>
         M &
         sr (M &m, const T &t, const V &v) {
-#ifdef NUMERICS_USE_ET
+#ifdef BOOST_UBLAS_USE_ET
             return m += t * outer_prod (v, v);
 #else 
             return m = m + t * outer_prod (v, v);
@@ -119,7 +119,7 @@ namespace boost { namespace numerics {
         template<class M, class T, class V>
         M &
         hr (M &m, const T &t, const V &v) {
-#ifdef NUMERICS_USE_ET
+#ifdef BOOST_UBLAS_USE_ET
             return m += t * outer_prod (v, conj (v));
 #else 
             return m = m + t * outer_prod (v, conj (v));
@@ -129,7 +129,7 @@ namespace boost { namespace numerics {
         template<class M, class T, class V1, class V2>
         M &
         sr2 (M &m, const T &t, const V1 &v1, const V2 &v2) {
-#ifdef NUMERICS_USE_ET
+#ifdef BOOST_UBLAS_USE_ET
             return m += t * (outer_prod (v1, v2) + outer_prod (v2, v1));
 #else 
             return m = m + t * (outer_prod (v1, v2) + outer_prod (v2, v1));
@@ -138,7 +138,7 @@ namespace boost { namespace numerics {
         template<class M, class T, class V1, class V2>
         M &
         hr2 (M &m, const T &t, const V1 &v1, const V2 &v2) {
-#ifdef NUMERICS_USE_ET
+#ifdef BOOST_UBLAS_USE_ET
             return m += t * outer_prod (v1, conj (v2)) + detail::conj (t) * outer_prod (v2, conj (v1));
 #else 
             return m = m + t * outer_prod (v1, conj (v2)) + detail::conj (t) * outer_prod (v2, conj (v1));
@@ -191,7 +191,7 @@ namespace boost { namespace numerics {
 
     }
 
-}}
+}}}
 
 #endif
 

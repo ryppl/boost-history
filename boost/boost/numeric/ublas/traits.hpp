@@ -14,21 +14,22 @@
 //  GeNeSys mbH & Co. KG in producing this work.
 //
 
-#ifndef NUMERICS_TRAITS_H
-#define NUMERICS_TRAITS_H
+#ifndef BOOST_UBLAS_TRAITS_H
+#define BOOST_UBLAS_TRAITS_H
 
 #include <cmath>
 #include <complex>
 
-#include <boost/numeric/ublas/config.h>
+#include <boost/numeric/ublas/config.hpp>
 
 // Promote traits borrowed from Todd Veldhuizen
 
-namespace boost { namespace numerics {
+namespace boost { namespace numeric { namespace ublas {
 
     template<class T>
     struct type_traits {
         typedef T value_type;
+        typedef const T &const_reference;
         typedef T real_type;
         typedef T precision_type;
 
@@ -36,26 +37,27 @@ namespace boost { namespace numerics {
         BOOST_STATIC_CONSTANT (std::size_t, multiplies_complexity = 0);
 
         static
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         real_type real (const value_type &t);
         static
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         real_type imag (const value_type &t);
         static
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         value_type conj (const value_type &t);
 
         static
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         real_type abs (const value_type &t);
         static
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         value_type sqrt (const value_type &t);
     };
 
     template<>
     struct type_traits<float> {
         typedef float value_type;
+        typedef float const_reference;
         typedef float real_type;
         typedef double precision_type;
 
@@ -63,34 +65,34 @@ namespace boost { namespace numerics {
         BOOST_STATIC_CONSTANT (std::size_t, multiplies_complexity = 1);
 
         static
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         real_type real (const value_type &t) {
                 return t;
         }
         static
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         real_type imag (const value_type &t) {
                 return 0;
         }
         static
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         value_type conj (const value_type &t) {
                 return t;
         }
 
         static
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         real_type abs (const value_type &t) {
-#ifdef NUMERICS_C_MATH
+#ifdef BOOST_UBLAS_C_MATH
             return ::fabsf (t);
 #else
             return std::abs (t);
 #endif
         }
         static
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         value_type sqrt (const value_type &t) {
-#ifdef NUMERICS_C_MATH
+#ifdef BOOST_UBLAS_C_MATH
             return ::sqrtf (t);
 #else
             return std::sqrt (t);
@@ -100,8 +102,9 @@ namespace boost { namespace numerics {
     template<>
     struct type_traits<double> {
         typedef double value_type;
+        typedef double const_reference;
         typedef double real_type;
-#ifndef NUMERICS_USE_LONG_DOUBLE
+#ifndef BOOST_UBLAS_USE_LONG_DOUBLE
         typedef double precision_type;
 #else
         typedef long double precision_type;
@@ -111,44 +114,45 @@ namespace boost { namespace numerics {
         BOOST_STATIC_CONSTANT (std::size_t, multiplies_complexity = 1);
 
         static
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         real_type real (const value_type &t) {
                 return t;
         }
         static
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         real_type imag (const value_type &t) {
                 return 0;
         }
         static
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         value_type conj (const value_type &t) {
                 return t;
         }
 
         static
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         real_type abs (const value_type &t) {
-#ifdef NUMERICS_C_MATH
+#ifdef BOOST_UBLAS_C_MATH
             return ::fabs (t);
 #else
             return std::abs (t);
 #endif
         }
         static
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         value_type sqrt (const value_type &t) {
-#ifdef NUMERICS_C_MATH
+#ifdef BOOST_UBLAS_C_MATH
             return ::sqrt (t);
 #else
             return std::sqrt (t);
 #endif
         }
     };
-#ifdef NUMERICS_USE_LONG_DOUBLE
+#ifdef BOOST_UBLAS_USE_LONG_DOUBLE
     template<>
     struct type_traits<long double> {
         typedef long double value_type;
+        typedef long double const_reference;
         typedef long double real_type;
         typedef long double precision_type;
 
@@ -156,34 +160,34 @@ namespace boost { namespace numerics {
         BOOST_STATIC_CONSTANT (std::size_t, multiplies_complexity = 1);
 
         static
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         real_type real (const value_type &t) {
                 return t;
         }
         static
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         real_type imag (const value_type &t) {
                 return 0;
         }
         static
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         value_type conj (const value_type &t) {
                 return t;
         }
 
         static
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         real_type abs (const value_type &t) {
-#ifdef NUMERICS_C_MATH
+#ifdef BOOST_UBLAS_C_MATH
             return ::fabsl (t);
 #else
             return std::abs (t);
 #endif
         }
         static
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         value_type sqrt (const value_type &t) {
-#ifdef NUMERICS_C_MATH
+#ifdef BOOST_UBLAS_C_MATH
             return ::sqrtl (t);
 #else
             return std::sqrt (t);
@@ -195,6 +199,7 @@ namespace boost { namespace numerics {
     template<>
     struct type_traits<std::complex<float> > {
         typedef std::complex<float> value_type;
+        typedef const std::complex<float> &const_reference;
         typedef float real_type;
         typedef std::complex<double> precision_type;
 
@@ -202,31 +207,31 @@ namespace boost { namespace numerics {
         BOOST_STATIC_CONSTANT (std::size_t, multiplies_complexity = 6);
 
         static
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         real_type real (const value_type &t) {
                 // return t.real ();
                 return std::real (t);
         }
         static
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         real_type imag (const value_type &t) {
                 // return t.imag ();
                 return std::imag (t);
         }
         static
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         value_type conj (const value_type &t) {
                 // return t.conj ();
                 return std::conj (t);
         }
 
         static
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         real_type abs (const value_type &t) {
                 return std::abs (t);
         }
         static
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         value_type sqrt (const value_type &t) {
                 return std::sqrt (t);
         }
@@ -234,8 +239,9 @@ namespace boost { namespace numerics {
     template<>
     struct type_traits<std::complex<double> > {
         typedef std::complex<double> value_type;
+        typedef const std::complex<double> &const_reference;
         typedef double real_type;
-#ifndef NUMERICS_USE_LONG_DOUBLE
+#ifndef BOOST_UBLAS_USE_LONG_DOUBLE
         typedef std::complex<double> precision_type;
 #else
         typedef std::complex<long double> precision_type;
@@ -245,39 +251,40 @@ namespace boost { namespace numerics {
         BOOST_STATIC_CONSTANT (std::size_t, multiplies_complexity = 6);
 
         static
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         real_type real (const value_type &t) {
                 // return t.real ();
                 return std::real (t);
         }
         static
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         real_type imag (const value_type &t) {
                 // return t.imag ();
                 return std::imag (t);
         }
         static
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         value_type conj (const value_type &t) {
                 // return t.conj ();
                 return std::conj (t);
         }
 
         static
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         real_type abs (const value_type &t) {
                 return std::abs (t);
         }
         static
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         value_type sqrt (const value_type &t) {
                 return std::sqrt (t);
         }
     };
-#ifdef NUMERICS_USE_LONG_DOUBLE
+#ifdef BOOST_UBLAS_USE_LONG_DOUBLE
     template<>
     struct type_traits<std::complex<long double> > {
         typedef std::complex<long double> value_type;
+        typedef const std::complex<long double> &const_reference;
         typedef long double real_type;
         typedef std::complex<long double> precision_type;
 
@@ -285,31 +292,31 @@ namespace boost { namespace numerics {
         BOOST_STATIC_CONSTANT (std::size_t, multiplies_complexity = 6);
 
         static
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         real_type real (const value_type &t) {
                 // return t.real ();
                 return std::real (t);
         }
         static
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         real_type imag (const value_type &t) {
                 // return t.imag ();
                 return std::imag (t);
         }
         static
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         value_type conj (const value_type &t) {
                 // return t.conj ();
                 return std::conj (t);
         }
 
         static
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         real_type abs (const value_type &t) {
                 return std::abs (t);
         }
         static
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         value_type sqrt (const value_type &t) {
                 return std::sqrt (t);
         }
@@ -329,7 +336,7 @@ namespace boost { namespace numerics {
     struct promote_traits<double, float> {
         typedef double promote_type;
     };
-#ifdef NUMERICS_USE_LONG_DOUBLE
+#ifdef BOOST_UBLAS_USE_LONG_DOUBLE
     template<>
     struct promote_traits<float, long double> {
         typedef long double promote_type;
@@ -364,7 +371,7 @@ namespace boost { namespace numerics {
     struct promote_traits<std::complex<double>, float> {
         typedef std::complex<double> promote_type;
     };
-#ifdef NUMERICS_USE_LONG_DOUBLE
+#ifdef BOOST_UBLAS_USE_LONG_DOUBLE
     template<>
     struct promote_traits<float, std::complex<long double> > {
         typedef std::complex<long double> promote_type;
@@ -395,7 +402,7 @@ namespace boost { namespace numerics {
     struct promote_traits<std::complex<double>, double> {
         typedef std::complex<double> promote_type;
     };
-#ifdef NUMERICS_USE_LONG_DOUBLE
+#ifdef BOOST_UBLAS_USE_LONG_DOUBLE
     template<>
     struct promote_traits<double, std::complex<long double> > {
         typedef std::complex<long double> promote_type;
@@ -406,7 +413,7 @@ namespace boost { namespace numerics {
     };
 #endif
 
-#ifdef NUMERICS_USE_LONG_DOUBLE
+#ifdef BOOST_UBLAS_USE_LONG_DOUBLE
     template<>
     struct promote_traits<long double, std::complex<float> > {
         // Here we'd better go the conservative way.
@@ -449,7 +456,7 @@ namespace boost { namespace numerics {
     struct promote_traits<std::complex<double>, std::complex<float> > {
         typedef std::complex<double> promote_type;
     };
-#ifdef NUMERICS_USE_LONG_DOUBLE
+#ifdef BOOST_UBLAS_USE_LONG_DOUBLE
     template<>
     struct promote_traits<std::complex<float>, std::complex<long double> > {
         typedef std::complex<long double> promote_type;
@@ -619,7 +626,7 @@ namespace boost { namespace numerics {
         typedef packed_random_access_iterator_tag iterator_category;
     };
 
-}}
+}}}
 
 #endif
 

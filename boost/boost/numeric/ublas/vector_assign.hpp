@@ -14,28 +14,28 @@
 //  GeNeSys mbH & Co. KG in producing this work.
 //
 
-#ifndef NUMERICS_VECTOR_AS_H
-#define NUMERICS_VECTOR_AS_H
+#ifndef BOOST_UBLAS_VECTOR_ASSIGN_H
+#define BOOST_UBLAS_VECTOR_ASSIGN_H
 
-#include <boost/numeric/ublas/config.h>
-#include <boost/numeric/ublas/vector_et.h>
+#include <boost/numeric/ublas/config.hpp>
+#include <boost/numeric/ublas/vector_expression.hpp>
 
 // Iterators based on ideas of Jeremy Siek
 
-namespace boost { namespace numerics {
+namespace boost { namespace numeric { namespace ublas {
 
-#ifdef NUMERICS_SPECIALIZE_ASSIGN
+#ifdef BOOST_UBLAS_ENABLE_SPECIALIZED_ASSIGN
     // Iterating case
     template<class F, class V, class T>
     // This function seems to be big. So we do not let the compiler inline it.
-    // NUMERICS_INLINE
+    // BOOST_UBLAS_INLINE
     void iterating_vector_assign_scalar (const F &f, V &v, const T &t) {
         typedef F functor_type;
         typedef typename V::difference_type difference_type;
         difference_type size (v.size ());
         typename V::iterator it (v.begin ());
-        check (v.end () - it == size, bad_size ());
-#ifndef NUMERICS_USE_DUFF_DEVICE
+        BOOST_UBLAS_CHECK (v.end () - it == size, bad_size ());
+#ifndef BOOST_UBLAS_USE_DUFF_DEVICE
         while (-- size >= 0)
             functor_type () (*it, t), ++ it;
 #else
@@ -45,12 +45,12 @@ namespace boost { namespace numerics {
     // Indexing case
     template<class F, class V, class T>
     // This function seems to be big. So we do not let the compiler inline it.
-    // NUMERICS_INLINE
+    // BOOST_UBLAS_INLINE
     void indexing_vector_assign_scalar (const F &f, V &v, const T &t) {
         typedef F functor_type;
         typedef typename V::difference_type difference_type;
         difference_type size (v.size ());
-#ifndef NUMERICS_USE_DUFF_DEVICE
+#ifndef BOOST_UBLAS_USE_DUFF_DEVICE
         for (difference_type i = 0; i < size; ++ i)
             functor_type () (v (i), t);
 #else
@@ -62,12 +62,12 @@ namespace boost { namespace numerics {
     // Dense (proxy) case
     template<class F, class V, class T>
     // This function seems to be big. So we do not let the compiler inline it.
-    // NUMERICS_INLINE
+    // BOOST_UBLAS_INLINE
     void evaluate_vector_assign_scalar (const F &f, V &v, const T &t, dense_proxy_tag) {
         typedef F functor_type;
         typedef typename V::difference_type difference_type;
         difference_type size (v.size ());
-        if (size >= NUMERICS_ITERATOR_THRESHOLD)
+        if (size >= BOOST_UBLAS_ITERATOR_THRESHOLD)
             iterating_vector_assign_scalar (functor_type (), v, t);
         else
             indexing_vector_assign_scalar (functor_type (), v, t);
@@ -75,7 +75,7 @@ namespace boost { namespace numerics {
     // Packed (proxy) case
     template<class F, class V, class T>
     // This function seems to be big. So we do not let the compiler inline it.
-    // NUMERICS_INLINE
+    // BOOST_UBLAS_INLINE
     void evaluate_vector_assign_scalar (const F &f, V &v, const T &t, packed_proxy_tag) {
         typedef F functor_type;
         typedef typename V::difference_type difference_type;
@@ -87,7 +87,7 @@ namespace boost { namespace numerics {
     // Sparse (proxy) case
     template<class F, class V, class T>
     // This function seems to be big. So we do not let the compiler inline it.
-    // NUMERICS_INLINE
+    // BOOST_UBLAS_INLINE
     void evaluate_vector_assign_scalar (const F &f, V &v, const T &t, sparse_proxy_tag) {
         typedef F functor_type;
         typename V::iterator it (v.begin ());
@@ -103,17 +103,17 @@ namespace boost { namespace numerics {
         typedef F functor_type;
         typedef typename F::assign_category assign_category;
 
-#ifndef NUMERICS_SPECIALIZE_ASSIGN
+#ifndef BOOST_UBLAS_ENABLE_SPECIALIZED_ASSIGN
         // Iterating case
         template<class V, class T>
         // This function seems to be big. So we do not let the compiler inline it.
-        // NUMERICS_INLINE
+        // BOOST_UBLAS_INLINE
         void iterating_assign (V &v, const T &t) {
             typedef typename V::difference_type difference_type;
             difference_type size (v.size ());
             typename V::iterator it (v.begin ());
-            check (v.end () - it == size, bad_size ());
-#ifndef NUMERICS_USE_DUFF_DEVICE
+            BOOST_UBLAS_CHECK (v.end () - it == size, bad_size ());
+#ifndef BOOST_UBLAS_USE_DUFF_DEVICE
             while (-- size >= 0)
                 functor_type () (*it, t), ++ it;
 #else
@@ -123,11 +123,11 @@ namespace boost { namespace numerics {
         // Indexing case
         template<class V, class T>
         // This function seems to be big. So we do not let the compiler inline it.
-        // NUMERICS_INLINE
+        // BOOST_UBLAS_INLINE
         void indexing_assign (V &v, const T &t) {
             typedef typename V::difference_type difference_type;
             difference_type size (v.size ());
-#ifndef NUMERICS_USE_DUFF_DEVICE
+#ifndef BOOST_UBLAS_USE_DUFF_DEVICE
             for (difference_type i = 0; i < size; ++ i)
                 functor_type () (v (i), t);
 #else
@@ -139,11 +139,11 @@ namespace boost { namespace numerics {
         // Dense (proxy) case
         template<class V, class T>
         // This function seems to be big. So we do not let the compiler inline it.
-        // NUMERICS_INLINE
+        // BOOST_UBLAS_INLINE
         void operator () (V &v, const T &t, dense_proxy_tag) {
             typedef typename V::difference_type difference_type;
             difference_type size (v.size ());
-            if (size >= NUMERICS_ITERATOR_THRESHOLD)
+            if (size >= BOOST_UBLAS_ITERATOR_THRESHOLD)
                 iterating_assign (v, t);
             else
                 indexing_assign (v, t);
@@ -151,7 +151,7 @@ namespace boost { namespace numerics {
         // Packed (proxy) case
         template<class V, class T>
         // This function seems to be big. So we do not let the compiler inline it.
-        // NUMERICS_INLINE
+        // BOOST_UBLAS_INLINE
         void operator () (V &v, const T &t, packed_proxy_tag) {
             typedef typename V::difference_type difference_type;
             typename V::iterator it (v.begin ());
@@ -162,7 +162,7 @@ namespace boost { namespace numerics {
         // Sparse (proxy) case
         template<class V, class T>
         // This function seems to be big. So we do not let the compiler inline it.
-        // NUMERICS_INLINE
+        // BOOST_UBLAS_INLINE
         void operator () (V &v, const T &t, sparse_proxy_tag) {
             typename V::iterator it (v.begin ());
             typename V::iterator it_end (v.end ());
@@ -173,10 +173,10 @@ namespace boost { namespace numerics {
 
         // Dispatcher
         template<class V, class T>
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         void operator () (V &v, const T &t) {
             typedef typename V::storage_category storage_category;
-#ifndef NUMERICS_SPECIALIZE_ASSIGN
+#ifndef BOOST_UBLAS_ENABLE_SPECIALIZED_ASSIGN
             operator () (v, t, storage_category ());
 #else
             evaluate_vector_assign_scalar (functor_type (), v, t, storage_category ());
@@ -254,20 +254,20 @@ namespace boost { namespace numerics {
         typedef sparse_proxy_tag storage_category;
     };
 
-#ifdef NUMERICS_SPECIALIZE_ASSIGN
+#ifdef BOOST_UBLAS_ENABLE_SPECIALIZED_ASSIGN
     // Iterating case
     template<class F, class V, class E>
     // This function seems to be big. So we do not let the compiler inline it.
-    // NUMERICS_INLINE
+    // BOOST_UBLAS_INLINE
     void iterating_vector_assign (const F &f, V &v, const vector_expression<E> &e) {
         typedef F functor_type;
         typedef typename V::difference_type difference_type;
-        difference_type size (common (v.size (), e ().size ()));
+        difference_type size (BOOST_UBLAS_SAME (v.size (), e ().size ()));
         typename V::iterator it (v.begin ());
-        check (v.end () - it == size, bad_size ());
+        BOOST_UBLAS_CHECK (v.end () - it == size, bad_size ());
         typename E::const_iterator ite (e ().begin ());
-        check (e ().end () - ite == size, bad_size ());
-#ifndef NUMERICS_USE_DUFF_DEVICE
+        BOOST_UBLAS_CHECK (e ().end () - ite == size, bad_size ());
+#ifndef BOOST_UBLAS_USE_DUFF_DEVICE
         while (-- size >= 0)
             functor_type () (*it, *ite), ++ it, ++ ite;
 #else
@@ -277,12 +277,12 @@ namespace boost { namespace numerics {
     // Indexing scase
     template<class F, class V, class E>
     // This function seems to be big. So we do not let the compiler inline it.
-    // NUMERICS_INLINE
+    // BOOST_UBLAS_INLINE
     void indexing_vector_assign (const F &f, V &v, const vector_expression<E> &e) {
         typedef F functor_type;
         typedef typename V::difference_type difference_type;
-        difference_type size (common (v.size (), e ().size ()));
-#ifndef NUMERICS_USE_DUFF_DEVICE
+        difference_type size (BOOST_UBLAS_SAME (v.size (), e ().size ()));
+#ifndef BOOST_UBLAS_USE_DUFF_DEVICE
         for (difference_type i = 0; i < size; ++ i)
             functor_type () (v (i), e () (i));
 #else
@@ -294,13 +294,13 @@ namespace boost { namespace numerics {
     // Dense (proxy) case
     template<class F, class V, class E>
     // This function seems to be big. So we do not let the compiler inline it.
-    // NUMERICS_INLINE
+    // BOOST_UBLAS_INLINE
     void evaluate_vector_assign (const F &f, V &v, const vector_expression<E> &e, dense_proxy_tag) {
         typedef F functor_type;
         typedef typename V::size_type size_type;
         typedef typename V::difference_type difference_type;
-        difference_type size (common (v.size (), e ().size ()));
-        if (size >= NUMERICS_ITERATOR_THRESHOLD)
+        difference_type size (BOOST_UBLAS_SAME (v.size (), e ().size ()));
+        if (size >= BOOST_UBLAS_ITERATOR_THRESHOLD)
             iterating_vector_assign (functor_type (), v, e);
         else
             indexing_vector_assign (functor_type (), v, e);
@@ -308,9 +308,9 @@ namespace boost { namespace numerics {
     // Packed (proxy) case
     template<class F, class V, class E>
     // This function seems to be big. So we do not let the compiler inline it.
-    // NUMERICS_INLINE
+    // BOOST_UBLAS_INLINE
     void evaluate_vector_assign (const F &f, V &v, const vector_expression<E> &e, packed_proxy_tag) {
-        check (v.size () == e ().size (), bad_size ());
+        BOOST_UBLAS_CHECK (v.size () == e ().size (), bad_size ());
         typedef F functor_type;
         typedef typename V::size_type size_type;
         typedef typename V::value_type value_type;
@@ -332,7 +332,7 @@ namespace boost { namespace numerics {
             functor_type () (*it, value_type ());
             ++ it;
         }
-#ifdef NUMERICS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
         {
             // Need the const member dispatched.
             const V &cv = v;
@@ -340,7 +340,7 @@ namespace boost { namespace numerics {
             typename E::const_iterator ite_end (e ().end ());
             while (ite != ite_end) {
                 // FIXME: we need a better floating point comparison...
-                check (*ite == cv (ite.index ()), bad_index ());
+                BOOST_UBLAS_CHECK (*ite == cv (ite.index ()), bad_index ());
                 ++ ite;
             }
         }
@@ -349,9 +349,9 @@ namespace boost { namespace numerics {
     // Sparse case
     template<class F, class V, class E>
     // This function seems to be big. So we do not let the compiler inline it.
-    // NUMERICS_INLINE
+    // BOOST_UBLAS_INLINE
     void evaluate_vector_assign (const F &f, V &v, const vector_expression<E> &e, sparse_tag) {
-        check (v.size () == e ().size (), bad_size ());
+        BOOST_UBLAS_CHECK (v.size () == e ().size (), bad_size ());
         v.clear ();
         typename E::const_iterator ite (e ().begin ());
         typename E::const_iterator ite_end (e ().end ());
@@ -361,9 +361,9 @@ namespace boost { namespace numerics {
     // Sparse proxy case
     template<class F, class V, class E>
     // This function seems to be big. So we do not let the compiler inline it.
-    // NUMERICS_INLINE
+    // BOOST_UBLAS_INLINE
     void evaluate_vector_assign (const F &f, V &v, const vector_expression<E> &e, sparse_proxy_tag) {
-        check (v.size () == e ().size (), bad_size ());
+        BOOST_UBLAS_CHECK (v.size () == e ().size (), bad_size ());
         typedef F functor_type;
         typedef typename V::value_type value_type;
         typename V::iterator it (v.begin ());
@@ -379,11 +379,11 @@ namespace boost { namespace numerics {
                 functor_type () (*it, value_type ());
                 ++ it;
             } else if (compare > 0) {
-#ifdef NUMERICS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
                 // Need the const member dispatched.
                 const V &cv = v;
                 // FIXME: we need a better floating point comparison...
-                check (*ite == cv (ite.index ()), bad_index ());
+                BOOST_UBLAS_CHECK (*ite == cv (ite.index ()), bad_index ());
 #endif
                 ++ ite;
             }
@@ -392,12 +392,12 @@ namespace boost { namespace numerics {
             functor_type () (*it, value_type ());
             ++ it;
         }
-#ifdef NUMERICS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
         while (ite != ite_end) {
             // Need the const member dispatched.
             const V &cv = v;
             // FIXME: we need a better floating point comparison...
-            check (*ite == cv (ite.index ()), bad_index ());
+            BOOST_UBLAS_CHECK (*ite == cv (ite.index ()), bad_index ());
             ++ ite;
         }
 #endif
@@ -410,19 +410,19 @@ namespace boost { namespace numerics {
         typedef F functor_type;
         typedef typename F::assign_category assign_category;
 
-#ifndef NUMERICS_SPECIALIZE_ASSIGN
+#ifndef BOOST_UBLAS_ENABLE_SPECIALIZED_ASSIGN
         // Iterating case
         template<class V, class E>
         // This function seems to be big. So we do not let the compiler inline it.
-        // NUMERICS_INLINE
+        // BOOST_UBLAS_INLINE
         void iterating_assign (V &v, const vector_expression<E> &e) {
             typedef typename V::difference_type difference_type;
-            difference_type size (common (v.size (), e ().size ()));
+            difference_type size (BOOST_UBLAS_SAME (v.size (), e ().size ()));
             typename V::iterator it (v.begin ());
-            check (v.end () - it == size, bad_size ());
+            BOOST_UBLAS_CHECK (v.end () - it == size, bad_size ());
             typename E::const_iterator ite (e ().begin ());
-            check (e ().end () - ite == size, bad_size ());
-#ifndef NUMERICS_USE_DUFF_DEVICE
+            BOOST_UBLAS_CHECK (e ().end () - ite == size, bad_size ());
+#ifndef BOOST_UBLAS_USE_DUFF_DEVICE
             while (-- size >= 0)
                 functor_type () (*it, *ite), ++ it, ++ ite;
 #else
@@ -432,11 +432,11 @@ namespace boost { namespace numerics {
         // Indexing scase
         template<class V, class E>
         // This function seems to be big. So we do not let the compiler inline it.
-        // NUMERICS_INLINE
+        // BOOST_UBLAS_INLINE
         void indexing_assign (V &v, const vector_expression<E> &e) {
             typedef typename V::difference_type difference_type;
-            difference_type size (common (v.size (), e ().size ()));
-#ifndef NUMERICS_USE_DUFF_DEVICE
+            difference_type size (BOOST_UBLAS_SAME (v.size (), e ().size ()));
+#ifndef BOOST_UBLAS_USE_DUFF_DEVICE
             for (difference_type i = 0; i < size; ++ i)
                 functor_type () (v (i), e () (i));
 #else
@@ -448,12 +448,12 @@ namespace boost { namespace numerics {
         // Dense (proxy) case
         template<class V, class E>
         // This function seems to be big. So we do not let the compiler inline it.
-        // NUMERICS_INLINE
+        // BOOST_UBLAS_INLINE
         void operator () (V &v, const vector_expression<E> &e, dense_proxy_tag) {
             typedef typename V::size_type size_type;
             typedef typename V::difference_type difference_type;
-            difference_type size (common (v.size (), e ().size ()));
-            if (size >= NUMERICS_ITERATOR_THRESHOLD)
+            difference_type size (BOOST_UBLAS_SAME (v.size (), e ().size ()));
+            if (size >= BOOST_UBLAS_ITERATOR_THRESHOLD)
                 iterating_assign (v, e);
             else
                 indexing_assign (v, e);
@@ -461,9 +461,9 @@ namespace boost { namespace numerics {
         // Packed (proxy) case
         template<class V, class E>
         // This function seems to be big. So we do not let the compiler inline it.
-        // NUMERICS_INLINE
+        // BOOST_UBLAS_INLINE
         void operator () (V &v, const vector_expression<E> &e, packed_proxy_tag) {
-            check (v.size () == e ().size (), bad_size ());
+            BOOST_UBLAS_CHECK (v.size () == e ().size (), bad_size ());
             typedef typename V::size_type size_type;
             typedef typename V::value_type value_type;
             typename V::iterator it (v.begin ());
@@ -484,7 +484,7 @@ namespace boost { namespace numerics {
                 functor_type () (*it, value_type ());
                 ++ it;
             }
-#ifdef NUMERICS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
             {
                 // Need the const member dispatched.
                 const V &cv = v;
@@ -492,7 +492,7 @@ namespace boost { namespace numerics {
                 typename E::const_iterator ite_end (e ().end ());
                 while (ite != ite_end) {
                     // FIXME: we need a better floating point comparison...
-                    check (*ite == cv (ite.index ()), bad_index ());
+                    BOOST_UBLAS_CHECK (*ite == cv (ite.index ()), bad_index ());
                     ++ ite;
                 }
             }
@@ -501,9 +501,9 @@ namespace boost { namespace numerics {
         // Sparse case
         template<class V, class E>
         // This function seems to be big. So we do not let the compiler inline it.
-        // NUMERICS_INLINE
+        // BOOST_UBLAS_INLINE
         void operator () (V &v, const vector_expression<E> &e, sparse_tag) {
-            check (v.size () == e ().size (), bad_size ());
+            BOOST_UBLAS_CHECK (v.size () == e ().size (), bad_size ());
             v.clear ();
             typename E::const_iterator ite (e ().begin ());
             typename E::const_iterator ite_end (e ().end ());
@@ -513,9 +513,9 @@ namespace boost { namespace numerics {
         // Sparse proxy case
         template<class V, class E>
         // This function seems to be big. So we do not let the compiler inline it.
-        // NUMERICS_INLINE
+        // BOOST_UBLAS_INLINE
         void operator () (V &v, const vector_expression<E> &e, sparse_proxy_tag) {
-            check (v.size () == e ().size (), bad_size ());
+            BOOST_UBLAS_CHECK (v.size () == e ().size (), bad_size ());
             typedef typename V::value_type value_type;
             typename V::iterator it (v.begin ());
             typename V::iterator it_end (v.end ());
@@ -530,11 +530,11 @@ namespace boost { namespace numerics {
                     functor_type () (*it, value_type ());
                     ++ it;
                 } else if (compare > 0) {
-#ifdef NUMERICS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
                     // Need the const member dispatched.
                     const V &cv = v;
                     // FIXME: we need a better floating point comparison...
-                    check (*ite == cv (ite.index ()), bad_index ());
+                    BOOST_UBLAS_CHECK (*ite == cv (ite.index ()), bad_index ());
 #endif
                     ++ ite;
                 }
@@ -543,12 +543,12 @@ namespace boost { namespace numerics {
                 functor_type () (*it, value_type ());
                 ++ it;
             }
-#ifdef NUMERICS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
             while (ite != ite_end) {
                 // Need the const member dispatched.
                 const V &cv = v;
                 // FIXME: we need a better floating point comparison...
-                check (*ite == cv (ite.index ()), bad_index ());
+                BOOST_UBLAS_CHECK (*ite == cv (ite.index ()), bad_index ());
                 ++ ite;
             }
 #endif
@@ -557,12 +557,12 @@ namespace boost { namespace numerics {
 
         // Dispatcher
         template<class V, class E>
-        NUMERICS_INLINE
+        BOOST_UBLAS_INLINE
         void operator () (V &v, const vector_expression<E> &e) {
-            typedef typename vector_assign_traits<NUMERICS_TYPENAME V::storage_category,
+            typedef typename vector_assign_traits<BOOST_UBLAS_TYPENAME V::storage_category,
                                                   assign_category,
-                                                  NUMERICS_TYPENAME E::const_iterator::iterator_category>::storage_category storage_category;
-#ifndef NUMERICS_SPECIALIZE_ASSIGN
+                                                  BOOST_UBLAS_TYPENAME E::const_iterator::iterator_category>::storage_category storage_category;
+#ifndef BOOST_UBLAS_ENABLE_SPECIALIZED_ASSIGN
             operator () (v, e, storage_category ());
 #else
             evaluate_vector_assign (functor_type (), v, e, storage_category ());
@@ -570,7 +570,7 @@ namespace boost { namespace numerics {
         }
     };
 
-}}
+}}}
 
 #endif
 
