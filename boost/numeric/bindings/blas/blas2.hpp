@@ -31,20 +31,16 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
 	    vector_type_y &y
 	    )
   {
-    // precondition: matrix_type must be dense or dense_proxy
-    BOOST_STATIC_ASSERT( ( boost::is_same< typename matrix_type::storage_category, 
-                                           boost::numeric::ublas::dense_tag 
-                                         >::value ) ||
-                         ( boost::is_same< typename matrix_type::storage_category, 
-                                           boost::numeric::ublas::dense_proxy_tag 
-                                         >::value ) 
-                        ) ;
-
     typedef traits::matrix_traits< const matrix_type > mtraits ; 
     typedef traits::vector_traits< const vector_type_x > xvtraits ; 
     typedef traits::vector_traits< vector_type_y > yvtraits ; 
     typedef typename mtraits::value_type value_type ;
     typedef typename traits::value_traits< value_type >::value_type bind_type ;
+
+    // precondition: matrix_type must be dense or dense_proxy
+    BOOST_STATIC_ASSERT( ( boost::is_same< typename mtraits::matrix_structure,
+                                           boost::numeric::bindings::traits::general_t
+                           >::value ) ) ;
 
     const int m = mtraits::size1( a ) ;
     const int n = mtraits::size2( a ) ;

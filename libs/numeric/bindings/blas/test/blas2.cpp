@@ -193,7 +193,7 @@ int main (int argc, char *argv [])
     {
       std::cerr <<         "gemv_matrix_range_vector_vector_double_complex" << std::endl ;
       std::ofstream stream("gemv_matrix_range_vector_vector_double_complex");
-     loop< std::complex<double>, gemv_matrix_range_vector_vector >( stream, start, step, stop, runs, gemv_matrix_range_vector_vector() ) ;
+      loop< std::complex<double>, gemv_matrix_range_vector_vector >( stream, start, step, stop, runs, gemv_matrix_range_vector_vector() ) ;
     }
   }
 
