@@ -38,6 +38,8 @@
 
 #define BLAS_SASUM FORTRAN_ID( sasum )
 #define BLAS_DASUM FORTRAN_ID( dasum )
+#define BLAS_SCASUM FORTRAN_ID( scasum )
+#define BLAS_DZASUM FORTRAN_ID( dzasum )
 
 //
 // level 2
@@ -63,5 +65,12 @@
 #define BLAS_DGEMM FORTRAN_ID( dgemm )
 #define BLAS_CGEMM FORTRAN_ID( cgemm )
 #define BLAS_ZGEMM FORTRAN_ID( zgemm )
+
+#define BLAS_SSYRK FORTRAN_ID( ssyrk )
+#define BLAS_DSYRK FORTRAN_ID( dsyrk )
+#define BLAS_CSYRK FORTRAN_ID( csyrk )
+#define BLAS_ZSYRK FORTRAN_ID( zsyrk )
+#define BLAS_CHERK FORTRAN_ID( cherk )
+#define BLAS_ZHERK FORTRAN_ID( zherk )
 
 #endif // BOOST_NUMERIC_BINDINGS_BLAS_BLAS_NAMES_H
