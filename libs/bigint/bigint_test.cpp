@@ -186,5 +186,14 @@ int main() {
   assert(bigint(-11) % bigint(3) == bigint(-2));
   assert(bigint(-11) % bigint(-3) == bigint(-2));
 
+  // hexadecimal and octal tests
+  {
+    std::ostringstream hexstr;
+    hexstr << std::hex << bigint(2147483647);
+    assert(hexstr.str() == "7fffffff");
 
+    std::ostringstream octstr;
+    octstr << std::oct << bigint(2147483647);
+    assert(octstr.str() == "17777777777");
+  }
 }

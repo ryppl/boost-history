@@ -76,6 +76,28 @@ class bigint : boost::operators<bigint> {
   // RG - new implementation of streaming in a base-agnostic form
   std::ostream& to_ostream(std::ostream& os) const {
 
+    static char const decimals[] = {'0','1','2','3','4','5','6','7','8','9'};
+    static char const hexadecimals[] = {'0','1','2','3','4','5','6','7','8',
+                                        '9','a','b','c','d','e','f'};
+
+    // obviously decimals would work fine...
+    static char const octals[] = {'0','1','2','3','4','5','6','7'};
+
+    std::ios_base::fmtflags flags = os.flags();
+
+    int outbase;
+    char const* outchars;
+    if (flags & std::ios_base::dec) {
+      outbase = 10;
+      outchars = decimals;
+    } else if (flags & std::ios_base::hex) {
+      outbase = 16;
+      outchars = hexadecimals;
+    } else { // if (flags & std::ios_base::oct)
+      outbase = 8;
+      outchars = hexadecimals;
+    }
+
     if(!os.good()) return os;
 
     if(this->negative()) {
@@ -83,16 +105,15 @@ class bigint : boost::operators<bigint> {
       return (-(*this)).to_ostream(os);
     }
     
-    // RG - for now written specifically for decimal notation
     std::vector<char> text;
     bigint quotient = *this;
     bigint remainder;
-    quotient.quotient_remainder(bigint(10),quotient,remainder);
-    // remainder will be < 10, so no truncation worries
-    text.push_back(remainder.buffer.back() + '0');
+    quotient.quotient_remainder(bigint(outbase),quotient,remainder);
+    // invariant: remainder < length of outchars.
+    text.push_back(outchars[remainder.buffer.back()]);
     while (!quotient.is_zero()) {
-      quotient.quotient_remainder(bigint(10),quotient,remainder);
-      text.push_back(remainder.buffer.back() + '0');
+      quotient.quotient_remainder(bigint(outbase),quotient,remainder);
+      text.push_back(outchars[remainder.buffer.back()]);
     }
 
     // spit it out!
@@ -274,7 +295,8 @@ class bigint : boost::operators<bigint> {
 			  bigint& quotient,
 			  bigint& remainder) {
 
-    // WARNING: either "other" or "this" may alias with "quotient" or "remainder"
+    // WARNING: either "other" or "this" may alias
+    // with "quotient" or "remainder"
     bigint xs(*this);
     bigint ys(other);
 

@@ -29,7 +29,13 @@ class bigint : boost::operators<bigint> {
     if(!os.good()) return os;
     
     // RG - Add code to set up a buffer rather than allowing gmp to allocate
-    return os << mpz_get_str(NULL, 10, gmp_value_);
+    std::ios_base::fmtflags flags = os.flags();
+    if (flags & std::ios_base::dec) 
+      return os << mpz_get_str(NULL, 10, gmp_value_);
+    else if (flags & std::ios_base::hex)
+      return os << mpz_get_str(NULL, 16, gmp_value_);
+    else // if (flags & std::ios_base::oct)
+      return os << mpz_get_str(NULL, 8, gmp_value_);
   }
   
   std::istream& from_istream(std::istream& is) {
