@@ -445,9 +445,9 @@ OSFULL = $(OS)$(OSVER)$(OSPLAT) $(OS)$(OSPLAT) $(OS)$(OSVER) $(OS) ;
 #
 
 # dwa 6/17/01 - added test
-DEPENDS all : shell files lib exe obj test ;
-DEPENDS all shell files lib exe obj test : first ;
-NOTFILE all first shell files lib exe obj dirs clean uninstall test ;
+DEPENDS all : shell files lib dll exe obj test ;
+DEPENDS all shell files lib dll exe obj test : first ;
+NOTFILE all first shell files lib dll exe obj dirs clean uninstall test ;
 ALWAYS clean uninstall ;
 
 #
@@ -1236,7 +1236,8 @@ rule split-path
         switch $(<:G=)
         {
         # It turns out that to match a backslash, you need a /quadruple/ slash
-        # in the case clause! 
+        # in the case clause!
+        case *\\\\*:* : # continue splitting
         case *:\\\\*\\\\* :  # continue splitting
         case *:/*\\\\* :  # continue splitting
         case *:\\\\*/* :  # continue splitting
