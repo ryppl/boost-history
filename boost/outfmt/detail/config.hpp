@@ -37,8 +37,10 @@
 #     define BOOST_IOFM_NO_BASIC_STREAM  // use old I/O streams
 #  endif
 
-#  if defined(BOOST_STD_EXTENSION_NAMESPACE)
-      namespace _stdext = BOOST_STD_EXTENSION_NAMESPACE;
+#  if defined(BOOST_MSVC) && (BOOST_MSVC >= 1310) // MS VC7.1
+#     define BOOST_IOFM_STDEXT                   stdext
+#  else
+#     define BOOST_IOFM_STDEXT                   BOOST_STD_EXTENSION_NAMESPACE
 #  endif
 
    // Compiler/Library specific information

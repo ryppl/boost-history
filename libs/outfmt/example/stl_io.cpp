@@ -24,7 +24,7 @@ int main()
 #  if defined(BOOST_HAS_SLIST)
       // std::slist
 
-      _stdext::slist< char >           sl;
+      BOOST_IOFM_STDEXT::slist< char > sl;
       sl.push_front( 'a' );
       sl.push_front( 'b' );
       sl.push_front( 'c' );
