@@ -7,22 +7,23 @@ SOURCES = classes.cpp conversions.cpp extension_class.cpp functions.cpp
 if $(NT)
 {
     PYTHON_ROOT ?= c:/tools/python ;
-    PYTHON_INCLUDES ?= $(PYTHON_ROOT)/include ;
+    PYTHON_INCLUDES ?= <include>$(PYTHON_ROOT)/include <gcc><*><include>/usr/include/python2.1 ;
+    PYTHON_LIBS ?= c:/cygnus/lib/python2.1/config/libpython2.1.dll.a ;
     PYTHON_LIB_PATH = $(PYTHON_ROOT)/libs ;
-    PYTHON_LIBS ?= $(PYTHON_ROOT)/libs/python20.lib ;
-    PYTHON_PROPERTIES ?= <gcc><*><define>SIZEOF_LONG=4 ;
+    PYTHON_PROPERTIES ?= <gcc><*><define>SIZEOF_LONG=4 <gcc><*><define>USE_DL_IMPORT ;
     SHELL_EXPORT ?= set ;
 }
 else if $(UNIX)
 {
-    PYTHON_INCLUDES ?= /usr/include/python1.5 ;
+    PYTHON_INCLUDES ?= <include>/usr/include/python1.5 ;
     PYTHON_LIBS ?= /usr/lib/python1.5/config/libpython1.5.a ;
     SHELL_EXPORT ?= export ;
 }
+PYTHON ?= python ;
 
-BOOST_PYTHON_INCLUDES = $(BOOST_ROOT) $(PYTHON_INCLUDES) ;
+BOOST_PYTHON_INCLUDES = <include>$(BOOST_ROOT) $(PYTHON_INCLUDES) ;
 
-lib libboost_python : ../src/$(SOURCES) : <include>$(BOOST_PYTHON_INCLUDES) <shared-linkable>true $(PYTHON_PROPERTIES) ;
+lib libboost_python : ../src/$(SOURCES) : $(BOOST_PYTHON_INCLUDES) <shared-linkable>true $(PYTHON_PROPERTIES) ;
 
 # boost-python name : sources : requirements : default-BUILD
 #
@@ -33,7 +34,7 @@ rule boost-python
         [ dll $(<)
             : <lib>libboost_python $(>) # Add the boost python library to sources
             : $(3)                      # Add some standard requirements
-                <include>$(BOOST_PYTHON_INCLUDES)
+                $(BOOST_PYTHON_INCLUDES)
                 <msvc><*><library-path>$(PYTHON_LIB_PATH)
                 <gcc><*><library-file>$(PYTHON_LIBS)
                 $(PYTHON_PROPERTIES)
@@ -142,13 +143,13 @@ rule boost-python-simple-test
 actions boost-python-runtest
 {
     $(SHELL_EXPORT) PYTHONPATH=$(PYTHONPATH)
-    python "$(>)" $(ARGS) > "$(<)"
+    $(PYTHON) "$(>)" $(ARGS) > "$(<)"
 }
 
 actions boost-python-force-test
 {
     $(SHELL_EXPORT) PYTHONPATH=$(PYTHONPATH)
-    python "$(>)" $(ARGS)
+    $(PYTHON) "$(>)" $(ARGS)
 }
 
 boost-python-simple-test ..$(SLASH)test$(SLASH)comprehensive.py : boost_python_test
