@@ -97,7 +97,7 @@ int test_main(int argc, char * argv[] ) {
 
   tmp.close();
   
-  // When teading tuples from a stream, manipulators must be set correctly:
+  // When reading tuples from a stream, manipulators must be set correctly:
   ifstream tmp3("temp.tmp");
   tuple<string, string, int> j;
 

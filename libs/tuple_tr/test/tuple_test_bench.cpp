@@ -394,7 +394,7 @@ make_tuple_test()
 // func_t fref = static_cast<func_t>(ref(make_tuple_test)); // works fine 
 // func_t fref = ref(make_tuple_test);                        // error
 
-// This is probably not a very common situation, so currently
+// This is probably not a very common situation. 
 // I don't know how which compiler is right (JJ)
 }
 
@@ -489,7 +489,6 @@ void tuple_length_test()
 
   BOOST_STATIC_ASSERT(tuple_size<t1>::value == 3);
   BOOST_STATIC_ASSERT(tuple_size<t2>::value == 0);
-
 }
 
 
