@@ -4,9 +4,9 @@
 
 // Copyright Aleksey Gurtovoy 2000-2004
 //
-// Use, modification and distribution are subject to the Boost Software 
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
-// at http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
@@ -17,12 +17,12 @@
 #include <boost/mpl/push_back_fwd.hpp>
 #include <boost/mpl/aux_/has_type.hpp>
 #include <boost/mpl/aux_/traits_lambda_spec.hpp>
+#include <boost/mpl/aux_/config/bcc_integral_constants.hpp>
 
 namespace boost { namespace mpl {
 
 // agurt 05/feb/04: no default implementation; the stub definition is needed 
 // to enable the default 'has_push_back' implementation below
-
 template< typename Tag >
 struct push_back_impl
 {
@@ -33,7 +33,7 @@ template< typename Tag >
 struct has_push_back_impl
 {
     template< typename Seq > struct apply
-#if !BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x561))
+#if !defined(BOOST_MPL_CFG_BCC_INTEGRAL_CONSTANTS)
         : aux::has_type< push_back<Seq,int> >
     {
 #else

@@ -79,7 +79,7 @@ struct msvc_is_incomplete<int>
 
 }}}
 
-#   define BOOST_MPL_HAS_XXX_TRAIT_NAMED_DEF_(trait, name, unused) \
+#   define BOOST_MPL_HAS_XXX_TRAIT_NAMED_DEF_(trait, name, default_) \
 template< typename T, typename name = ::boost::mpl::aux::has_xxx_tag > \
 struct BOOST_PP_CAT(trait,_impl) : T \
 { \
@@ -95,7 +95,7 @@ struct BOOST_PP_CAT(trait,_impl) : T \
     typedef bool_<value> type; \
 }; \
 \
-template< typename T > struct trait \
+template< typename T, bool fallback_ = default_ > struct trait \
     : boost::mpl::if_c< \
           boost::mpl::aux::msvc_is_incomplete<T>::value \
         , boost::mpl::bool_<false> \
@@ -147,7 +147,7 @@ template<> struct trait<T> \
 
 // MSVC 7.1+
 
-#   define BOOST_MPL_HAS_XXX_TRAIT_NAMED_DEF(trait, name, unused) \
+#   define BOOST_MPL_HAS_XXX_TRAIT_NAMED_DEF(trait, name, default_) \
 template< typename T > struct BOOST_PP_CAT(trait,_wrapper_); \
 template< typename T > \
 boost::mpl::aux::yes_tag BOOST_PP_CAT(trait,_helper_)( \
@@ -157,7 +157,7 @@ boost::mpl::aux::yes_tag BOOST_PP_CAT(trait,_helper_)( \
 \
 boost::mpl::aux::no_tag BOOST_PP_CAT(trait,_helper_)(...); \
 \
-template< typename T > struct trait \
+template< typename T, bool fallback_ = default_ > struct trait \
 { \
     typedef BOOST_PP_CAT(trait,_wrapper_)<T> t_; \
     BOOST_STATIC_CONSTANT(bool, value = \
@@ -170,8 +170,8 @@ template< typename T > struct trait \
 
 #   else // other SFINAE-capable compilers
 
-#   define BOOST_MPL_HAS_XXX_TRAIT_NAMED_DEF(trait, name, unused) \
-template< typename T > struct trait \
+#   define BOOST_MPL_HAS_XXX_TRAIT_NAMED_DEF(trait, name, default_) \
+template< typename T, bool fallback_ = default_ > struct trait \
 { \
     struct gcc_3_2_wknd \
     { \
@@ -201,11 +201,11 @@ template< typename T > struct trait \
 // placeholder implementation
 
 #   define BOOST_MPL_HAS_XXX_TRAIT_NAMED_DEF(trait, name, default_) \
-template< typename T > \
+template< typename T, bool fallback_ = default_ > \
 struct trait \
 { \
-    BOOST_STATIC_CONSTANT(bool, value = default_); \
-    typedef bool_<default_> type; \
+    BOOST_STATIC_CONSTANT(bool, value = fallback_); \
+    typedef bool_<fallback_> type; \
 }; \
 /**/
 

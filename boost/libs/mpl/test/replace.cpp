@@ -13,9 +13,9 @@
 // $Revision$
 
 #include <boost/mpl/replace.hpp>
+
 #include <boost/mpl/list.hpp>
 #include <boost/mpl/equal.hpp>
-
 #include <boost/mpl/aux_/test.hpp>
 
 MPL_TEST_CASE()

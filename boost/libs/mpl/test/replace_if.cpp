@@ -14,6 +14,7 @@
 // $Revision$
 
 #include <boost/mpl/replace_if.hpp>
+
 #include <boost/mpl/list/list10_c.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/equal.hpp>

@@ -2,9 +2,9 @@
 // Copyright Aleksey Gurtovoy 2000-2004
 // Copyright David Abrahams 2003-2004
 //
-// Use, modification and distribution are subject to the Boost Software 
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
-// at http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
@@ -13,6 +13,7 @@
 // $Revision$
 
 #include <boost/mpl/remove_if.hpp>
+
 #include <boost/mpl/list/list10_c.hpp>
 #include <boost/mpl/list/list10.hpp>
 #include <boost/mpl/front_inserter.hpp>
@@ -31,7 +32,7 @@ MPL_TEST_CASE()
     typedef remove_if<
           numbers
         , greater<_,int_<4> >
-        , front_inserter< list0_c<int> >
+        , mpl::front_inserter< list0_c<int> >
         >::type result;
 
     MPL_ASSERT_RELATION( size<result>::value, ==, 5 );
@@ -45,7 +46,7 @@ MPL_TEST_CASE()
     typedef reverse_remove_if<
           types
         , is_float<_>
-        , front_inserter< list0<> >
+        , mpl::front_inserter< list0<> >
         >::type result;
 
     MPL_ASSERT_RELATION( size<result>::value, ==, 4 );

@@ -58,6 +58,14 @@ MPL_TEST_CASE()
     MPL_ASSERT_NOT(( has_xxx< abstract > ));
     MPL_ASSERT_NOT(( has_xxx< noncopyable > ));
 
+    MPL_ASSERT(( has_xxx<b1,true> ));
+    MPL_ASSERT(( has_xxx<b2,true> ));
+    MPL_ASSERT(( has_xxx<b3,true> ));
+    MPL_ASSERT(( has_xxx<b4,true> ));
+    MPL_ASSERT(( has_xxx<b5,true> ));
+    MPL_ASSERT(( has_xxx<b6,true> ));
+    MPL_ASSERT(( has_xxx<b7,true> ));
+
 #if !defined(HAS_XXX_ASSERT)
 #   define HAS_XXX_ASSERT(x) MPL_ASSERT(x)
 #endif

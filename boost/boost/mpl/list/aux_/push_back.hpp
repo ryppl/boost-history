@@ -1,6 +1,6 @@
 
-#ifndef BOOST_MPL_LIST_AUX_O1_SIZE_HPP_INCLUDED
-#define BOOST_MPL_LIST_AUX_O1_SIZE_HPP_INCLUDED
+#ifndef BOOST_MPL_LIST_AUX_PUSH_BACK_HPP_INCLUDED
+#define BOOST_MPL_LIST_AUX_PUSH_BACK_HPP_INCLUDED
 
 // Copyright Aleksey Gurtovoy 2000-2004
 //
@@ -14,20 +14,21 @@
 // $Date$
 // $Revision$
 
-#include <boost/mpl/O1_size_fwd.hpp>
+#include <boost/mpl/push_back_fwd.hpp>
+#include <boost/mpl/bool.hpp>
 #include <boost/mpl/list/aux_/tag.hpp>
 
 namespace boost { namespace mpl {
 
 template<>
-struct O1_size_impl< aux::list_tag >
+struct has_push_back_impl< aux::list_tag >
 {
-    template< typename List > struct apply
-        : List::size
+    template< typename Seq > struct apply
+        : false_
     {
     };
 };
 
 }}
 
-#endif // BOOST_MPL_LIST_AUX_O1_SIZE_HPP_INCLUDED
+#endif // BOOST_MPL_LIST_AUX_PUSH_BACK_HPP_INCLUDED

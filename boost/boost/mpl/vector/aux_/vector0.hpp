@@ -2,7 +2,7 @@
 #ifndef BOOST_MPL_VECTOR_AUX_VECTOR0_HPP_INCLUDED
 #define BOOST_MPL_VECTOR_AUX_VECTOR0_HPP_INCLUDED
 
-// Copyright 2000-04 Aleksey Gurtovoy
+// Copyright Aleksey Gurtovoy 2000-2004
 //
 // Distributed under the Boost Software License, Version 1.0. 
 // (See accompanying file LICENSE_1_0.txt or copy at 
@@ -16,16 +16,18 @@
 
 #include <boost/mpl/long.hpp>
 #include <boost/mpl/void.hpp>
+#include <boost/mpl/na.hpp>
 #include <boost/mpl/aux_/type_wrapper.hpp>
 
 #include <boost/mpl/vector/aux_/iterator.hpp>
 #include <boost/mpl/vector/aux_/tag.hpp>
 #include <boost/mpl/aux_/config/typeof.hpp>
 
-namespace boost { 
-namespace mpl {
+namespace boost { namespace mpl {
 
-template< int dummy_ = 0 > struct vector0
+template< typename Dummy = na > struct vector0;
+
+template<> struct vector0<na>
 {
 #if defined(BOOST_MPL_CFG_TYPEOF_BASED_SEQUENCES)
     typedef aux::vector_tag tag;
@@ -45,7 +47,6 @@ template< int dummy_ = 0 > struct vector0
 #endif
 };
 
-} // namespace mpl
-} // namespace boost
+}}
 
 #endif // BOOST_MPL_VECTOR_AUX_VECTOR0_HPP_INCLUDED

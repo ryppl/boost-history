@@ -112,35 +112,33 @@ struct reverse_transform2_impl
 BOOST_MPL_AUX_INSERTER_ALGORITHM_DEF(3, transform1)                    
 BOOST_MPL_AUX_INSERTER_ALGORITHM_DEF(4, transform2)
     
-#define BOOST_MPL_transform_def(transform_)                                     \
-                                                                                \
-  template<                                                                     \
-        typename BOOST_MPL_AUX_NA_PARAM(Seq1)                                   \
-      , typename BOOST_MPL_AUX_NA_PARAM(Seq2OrOperation)                        \
-      , typename BOOST_MPL_AUX_NA_PARAM(OperationOrInserter)                    \
-      , typename BOOST_MPL_AUX_NA_PARAM(Inserter)                               \
-      >                                                                         \
-  struct transform_                                                             \
-    : if_<                                                                      \
-            or_<                                                                \
-                is_na<OperationOrInserter>                                      \
-              , is_lambda_expression< Seq2OrOperation >                         \
-              , not_< is_sequence<Seq2OrOperation> >                            \
-              >                                                                 \
-          , transform_##1<Seq1,Seq2OrOperation,OperationOrInserter>             \
-          , transform_##2<Seq1,Seq2OrOperation,OperationOrInserter,Inserter>    \
-          >::type                                                               \
-  {                                                                             \
-  };                                                                            \
-                                                                                \
-  BOOST_MPL_AUX_NA_SPEC(4, transform_)                                          \
-  /**/
-    
-BOOST_MPL_transform_def(transform)
-BOOST_MPL_transform_def(reverse_transform)
-    
-#undef BOOST_MPL_transform_def
-    
+#define AUX778076_TRANSFORM_DEF(name)                                   \
+template<                                                               \
+    typename BOOST_MPL_AUX_NA_PARAM(Seq1)                               \
+    , typename BOOST_MPL_AUX_NA_PARAM(Seq2OrOperation)                  \
+    , typename BOOST_MPL_AUX_NA_PARAM(OperationOrInserter)              \
+    , typename BOOST_MPL_AUX_NA_PARAM(Inserter)                         \
+    >                                                                   \
+struct name                                                             \
+    : if_<                                                              \
+          or_<                                                          \
+              is_na<OperationOrInserter>                                \
+            , is_lambda_expression< Seq2OrOperation >                   \
+            , not_< is_sequence<Seq2OrOperation> >                      \
+            >                                                           \
+        , name##1<Seq1,Seq2OrOperation,OperationOrInserter>             \
+        , name##2<Seq1,Seq2OrOperation,OperationOrInserter,Inserter>    \
+        >::type                                                         \
+{                                                                       \
+};                                                                      \
+BOOST_MPL_AUX_NA_SPEC(4, name)                                          \
+/**/
+
+AUX778076_TRANSFORM_DEF(transform)
+AUX778076_TRANSFORM_DEF(reverse_transform)
+
+#undef AUX778076_TRANSFORM_DEF
+
 }}
 
 #endif // BOOST_MPL_TRANSFORM_HPP_INCLUDED
