@@ -36,20 +36,10 @@ public:
             boost::permutation_iterator<
               typename ownership::wrap<ContainerT>::domain::iterator
             , typename ReindexT::iterator
-#ifdef BOOST_MSVC
-            , boost::use_default
-            , boost::use_default
-            , typename ownership::wrap<ContainerT>::domain::reference
-#endif
             >,
             boost::permutation_iterator<
               typename ownership::wrap<ContainerT>::domain::const_iterator
             , typename ReindexT::const_iterator
-#ifdef BOOST_MSVC
-            , boost::use_default
-            , boost::use_default
-            , typename ownership::wrap<ContainerT>::domain::const_reference
-#endif
             >
           > iter_traits;
 

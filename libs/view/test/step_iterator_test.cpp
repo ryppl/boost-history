@@ -9,6 +9,9 @@
 
 #include <boost/tupple/iterator_tupple.hpp>
 
+#include <boost/iterator/reverse_iterator.hpp>
+
+
 void forward_test()
 {
   int numbers[] = { 0, -1, 4, -3, 5, 8, -2 };
@@ -22,6 +25,7 @@ void forward_test()
                                   b2( v.begin()+1, 2 ),
                                   e( v.end(), 2 );
 
+  BOOST_CHECK( (b1 - e) == boost::step_iterator<iter_type>::negative_infinite_distance() );
   BOOST_CHECK( (e - b1) == boost::step_iterator<iter_type>::infinite_distance() );
   BOOST_CHECK( !boost::is_reachable( b1, e ) );
 
@@ -33,17 +37,12 @@ void forward_test()
     { std::cout << *it << " "; }
   std::cout << std::endl;*/
 
-  for( it = b2; it != e; ++it )
-    { std::cout << *it << " "; }
-  std::cout << std::endl;
+  iter_type vit;
+  for( it = b2, vit = v.begin()+1; it != e; ++it, vit += 2 )
+    { BOOST_CHECK( *it == *vit ); }
 
-  for( it = b1; it < e; ++it )
-    { std::cout << *it << " "; }
-  std::cout << std::endl;
-
-  for( it = b2; it < e; ++it )
-    { std::cout << *it << " "; }
-  std::cout << std::endl;
+  for( it = b1, vit = v.begin(); it < e; ++it, vit += 2 )
+    { BOOST_CHECK( *it == *vit ); }
 }
 
 
@@ -60,6 +59,7 @@ void backward_test()
                                   b2( v.end()-1, -2 ),
                                   e( v.begin(), -2 );
 
+  BOOST_CHECK( (b1 - e) == boost::step_iterator<iter_type>::negative_infinite_distance() );
   BOOST_CHECK( (e - b1) == boost::step_iterator<iter_type>::infinite_distance() );
   BOOST_CHECK( !boost::is_reachable( b1, e ) );
 
@@ -71,19 +71,21 @@ void backward_test()
       { std::cout << *it << " "; }
   std::cout << std::endl;*/
 
-  for( it = b2; it != e; ++it )
-    { std::cout << *it << " "; }
-  std::cout << std::endl;
+  iter_type vit;
+  boost::reverse_iterator<iter_type> rit;
+  for( it = b2, rit = boost::make_reverse_iterator( v.end()-1 ), vit = (v.end()-1)-1; 
+       it != e; ++it, ++++rit, vit -= 2 )
+  { 
+    BOOST_CHECK( *it == *rit ); 
+    BOOST_CHECK( *it == *vit ); 
+  }
 
-
-  for( it = b1; it < e; ++it )
-    { std::cout << *it << " "; }
-  std::cout << std::endl;
-
-  for( it = b2; it < e; ++it )
-    { std::cout << *it << " "; }
-  std::cout << std::endl;
-
+  for( it = b1, rit = boost::make_reverse_iterator( v.end() ), vit = v.end()-1; 
+       it < e; ++it, ++++rit, vit -= 2 )
+  { 
+    BOOST_CHECK( *it == *rit );
+    BOOST_CHECK( *it == *vit ); 
+  }
 }
 
 
@@ -110,8 +112,6 @@ void tuple_step_test()
 
   imageBegin = imageBegin + 2;
 
-  //RowType row( imageBegin, imageBegin + 1 );
-  //RowType endRow( imageEnd, imageEnd + 1 );
   RowType row( boost::make_step_iterator( image.begin(), stride ),
                boost::make_step_iterator( image.begin() + stride, stride ) );
 
@@ -123,7 +123,8 @@ void tuple_step_test()
   
   for( ; row != endRow; ++row )
   {
-    for( PixelIterator pixel = row.front(); pixel != row.back(); ++pixel )
+    for( PixelIterator pixel = row.front(); 
+         pixel != static_cast<PixelIterator>( row.back() ); ++pixel )
     {
       *pixel = value++;
     }
@@ -136,48 +137,6 @@ void tuple_step_test()
   }
 
 }
-
-
-//void tuple_step_test_again()
-//{
-//  typedef unsigned char PixelType; 
-//
-//  typedef std::vector<PixelType> ImageType;
-//  typedef std::vector<PixelType>::iterator PixelIterator;
-//
-//  int width = 11; int height = 9;
-//  int stride = width;
-//  ImageType image( width * height );
-//
-//  // 5th approach:
-//
-//  typedef boost::tupple::iterator_tuple< PixelIterator, PixelIterator > PixPixIterator;
-//  typedef boost::step_iterator< PixPixIterator > RowType;
-//
-//  PixelType value = 0;
-//
-//  PixPixIterator imageBegin( image.begin(), image.begin() + stride );
-//  RowIterator imageEnd( image.end(), stride );
-//
-//  RowType row( imageBegin, stride );
-//
-//  for( ; row.front() != imageEnd; ++row )
-//  {
-//    for( PixelIterator pixel = row.front(); pixel != row.back(); ++pixel )
-//    {
-//      *pixel = value++;
-//    }
-//  }
-//
-//  value = 0;
-//  for( PixelIterator it = image.begin(); it != image.end(); ++it )
-//  {
-//    BOOST_CHECK( *it == value++ );
-//  }
-//
-//}
-
-
 
 
 int test_main(int, char *[])

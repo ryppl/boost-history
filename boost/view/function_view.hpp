@@ -105,8 +105,11 @@ public:
 
   /// Returns the size of the view.
   size_type size()  const
-  //{ return std::distance( b, e ); }
-  { return end() - begin(); }
+  { 
+    // Workaround: counting_iterator does not provide operator-,
+    //             but the underlying iterators do.
+    return e.base() - b.base(); 
+  }
 
   /// Returns a const_iterator pointing to the begin of the view.
   const_iterator begin() const { return const_iterator( b, g ); }

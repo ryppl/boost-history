@@ -18,8 +18,27 @@
 namespace boost {
 
 /**
+ * The step iterator advances through the given range with a fixed step width.
+ * If the step width is negative, it behaves like a reverse iterator.
+ * 
+ * Example:
+ * \code
+ *  int numbers[] = { 0, -1, 4, -3, 5, 8, -2 };
+ *  const int N = sizeof(numbers)/sizeof(int);
+ * 
+ *  step_iterator<int*> it( numbers, 2 ), e( numbers+N, 2 );
+ *  for( ; it < e; ++it )
+ *  { ... }
  *
- * As a special case, a step_iterator with step=-1 is like a reverse_iterator.
+ *  // gives 0, 4, 5, -2
+ *
+ *  step_iterator<int*> rit( numbers+N, -2 ), re( numbers, -2 );
+ *  for( ; rit < re; ++rit )
+ *  { ... }
+ *
+ *  // gives -2, 5, 4, 0
+ *
+ * \endcode
  */
 
 template< class Iterator
@@ -44,13 +63,15 @@ public:
   static difference_type infinite_distance()
     { return std::numeric_limits<difference_type>::max(); }
 
+  // It is necessary to have negative_infinite_distance() == -infinite_distance().
   static difference_type negative_infinite_distance()
-    { return std::numeric_limits<difference_type>::min(); }
+    { return -infinite_distance(); }
 
   step_iterator()
     : step( 1 )
   {}
 
+  /// Constructs a step_iterator with the given step width.
   explicit step_iterator( Iterator x, difference_type theStep = 1 )
     : super_type(x), step( theStep )
   {
@@ -66,6 +87,9 @@ public:
 
 private:
 
+  /// Dereferences the step_iterator. If the step if negative, step_iterator
+  /// should behave like a reverse_iterator; thus, it returns the element
+  /// prior to the current one.
   typename super_type::reference dereference() const
   {
     if( step < 0 ) 
