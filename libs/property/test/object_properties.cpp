@@ -23,10 +23,10 @@ class property_holder
       > > value;
    public: // property int index[];
       int  get_index( int i ) const{ return a[ i ]; }
-      void set_index( int i, int v ){ a[ i ] = v; }
+      void set_index( int i, const int & v ){ a[ i ] = v; }
       boost::rank1_property< boost::rank1_object_property
       <
-         char, int, property_holder,
+         int, int, property_holder,
          &property_holder::get_index,
          &property_holder::set_index
       > > index;
