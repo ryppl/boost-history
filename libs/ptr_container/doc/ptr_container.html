@@ -1,47 +1,62 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"><html><head><title> Pointer Container Library </title><meta http-equiv="Content-Type"content="text/html; charset=iso-8859-1"></head> <body><table  ><tr  ><td  ><img src="cboost.gif" width="100%" border="0"></td><td  ><h1  >Pointer Container Library</h1></td></tr></table><ul  ><li  ><a href="#Introduction" >Introduction</a></li><li  ><a href="#Reference" >Reference</a></li><li  ><a href="#Examples" >Examples</a></li><li  ><a href="#Portability" >Portability</a></li><li  ><a href="#FAQ" >FAQ</a></li><li  ><a href="#References" >References</a></li></ul><hr size="1" ><h2  >Introduction</h2><a name="Introduction" ></a><p  >This library provides standard-like containers that are suitable
-                     for storing pointers to both polymorphic and non-polymorphic objects.
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"><html><head><title> Pointer Container Library </title><meta http-equiv="Content-Type"content="text/html; charset=iso-8859-1"></head> <body><table  ><tr  ><td  ><img src="cboost.gif" width="100%" border="0"></td><td  ><h1  >Pointer Container Library</h1></td></tr></table><ul  ><li  ><a href="#Introduction" >Introduction</a></li><li  ><a href="#Reference" >Reference</a></li><li  ><a href="#Examples" >Examples</a></li><li  ><a href="#Portability" >Portability</a></li><li  ><a href="#FAQ" >FAQ</a></li><li  ><a href="#References" >References</a></li></ul><hr size="1" ><h2  >Introduction</h2><a name="Introduction" ></a><p  >This library provides standard-like containers that are for storing heap-allocated
+                    objects only (or in case of a map, the mapped type must be a heap-allocated
+                    object. The stored pointers can point to both polymorphic and non-polymorphic objects.
                      For each of the standard containers there is a pointer container 
-                     equivalent that takes ownership of the stored pointers in an exception 
+                     equivalent that takes ownership of the objects in an exception 
                      safe manner. In this respect it is intended to solve 
-                     the so-called <i  >polymorphic class problem.</i></p><p  >The advantages are <ul  ><li  >Exception-safe and fool proof pointer storage and manipulation.</li><li  >Exception-guarantees are generally much better than with standard containers (very often the strong guarantee)</li><li  >Notational convenience compared to the use of containers of smart pointers.</li><li  >Iterators are automatically indirected so the comparison operations can be kept
-                                on object basis instead of making/adding pointer based variants.</li><li  >No memory-overhead as containers of smart_pointers can have.</li><li  >Usually faster than using containers of smart pointers.</li><li  >Provides an elegant solution to potential <code  >vector&lt; vector&lt;T&gt; &gt;</code> performance
-                                problems; simply use <code  >ptr_vector&lt; vector&lt;T&gt; &gt;.</code><li  >Offers more explicit control of lifetime issues.</li><li  >Can be used for types that are neither Assignable nor CopyConstructible. </li></li></ul></p><p  >The disadvantages are: <ul  ><li  >Some standard algorithms like <code  >unique()</code> need special care when using them with raw pointers</li></ul></p><p  >Below is given a small example that show how the usage compares to a container of smart pointers:<pre  >
-                       
-    using namespace boost;
-    using namespace std;
-                       
+                     the so-called <a href="#polymorphic class problem" >polymorphic class problem</a>.</p><p  >The advantages are <ul  ><li  >Exception-safe and fool proof pointer storage and manipulation.</li><li  >Exception-guarantees are generally much better than with standard containers (very often the strong guarantee)</li><li  >Notational convenience compared to the use of containers of smart pointers.</li><li  >Iterators are automatically indirected so the comparison operations can be kept
+                                on object basis instead of making/adding pointer based variants.</li><li  >No memory-overhead as containers of smart pointers can have (see <a href="#smart pointer comparison" >smart pointer comparison</a>). </li><li  >Usually faster than using containers of smart pointers (see <a href="#smart pointer comparison" >smart pointer comparison</a>).</li><li  >Provides an elegant solution to potential <code  >vector&lt; vector&lt;T&gt; &gt;</code> performance
+                                problems; simply use <code  >ptr_vector&lt; vector&lt;T&gt; &gt;.</code><li  >Offers more explicit control of lifetime issues.</li><li  >Can be used for types that are neither Assignable nor CopyConstructible. </li></li></ul></p><p  >Below is given a small example that show how the usage compares to a container of smart pointers:<pre  >                                           
+    //
+    // A simple polymorphic class
+    //
     class Poly
     {
+        int        i_;
+        static int cnt_;
+        
     public:
-        virtual ~Poly() {}
-        void foo() { doFoo(); }
+        Poly() : i_( cnt_++ )  { }
+        virtual ~Poly()        { }
+        void foo()             { doFoo(); }
+        
     private:    
-        virtual void doFoo() 
+        virtual void doFoo()   { ++i_; }
+        
+    public:
+        friend inline bool operator&gt;( const Poly& l, const Poly r )
         {
-            int i;
-            ++i;
+            return l.i_ &gt; r.i_;
+        }
+    };
+    
+    int Poly::cnt_ = 0;
+  
+    //
+    // Normally we need something like this to compare pointers to objects
+    //
+    template&lt; typename T &gt;
+    struct sptr_greater
+    {
+        bool operator()( const boost::shared_ptr&lt;T&gt;& l, const boost::shared_ptr&lt;T&gt;& r ) const
+        {
+            return *l &gt; *r;
         }
     };
                                                              
     //
     // one doesn't need to introduce new names or live with long ones
     //                                                         
-    typedef shared_ptr&lt;Poly&gt; PolyPtr;
+    typedef boost::shared_ptr&lt;Poly&gt; PolyPtr;
     
-    //
-    // one doesn't need to write this anymore
-    //                   
-    struct PolyPtrOps 
-    {
-      void operator()( const PolyPtr & a )
-        { a-&gt;foo(); }
-    };
-    
+
     int main()
     {
         enum { size = 2000000 };
-        vector&lt;PolyPtr&gt;    svec   
-        ptr_vector&lt;Poly&gt;   pvec;
+        typedef vector&lt;PolyPtr&gt;          vector_t;
+        typedef boost::ptr_vector&lt;Poly&gt;  ptr_vector_t;
+        vector_t                         svec;   
+        ptr_vector_t                     pvec;
         
         for( int i = 0; i &lt; size; ++i ) 
         {
@@ -49,14 +64,32 @@
             pvec.push_back( new Poly );  // no extra syntax      
         }
                        
-        for_each( svec.begin(), svec.end(), PolyPtrOps() );
-
-        for_each( pvec.begin(), pvec.end(), mem_fun_ref( &Poly::foo ) );
-     } </pre></p><hr size="1" ><h2  >Reference</h2><a name="Reference" ></a><p  >There are a few design decisions that will affect how the
+        for( int i = 0; i &lt; size; ++i )
+        {
+            svec[i]-&gt;foo();
+            pvec[i].foo(); // automatic indirection
+            svec[i] = PolyPtr( new Poly );
+            pvec.replace( i, new Poly ); // direct pointer assignment not possible, original element is deleted
+        }
+        
+        for( vector_t::iterator i = svec.begin(); i != svec.end(); ++i )
+            (*i)-&gt;foo();
+     
+        for( ptr_vector_t::iterator i = pvec.begin(); i != pvec.end(); ++i )
+            i-&gt;foo(); // automatic indirection
+        
+        sort( svec.begin(), svec.end(), sptr_greater&lt;Poly&gt;() );
+        pvec.sort( std::greater&lt;Poly&gt;() ); // automatic indirection on predicate
+        
+        sort( svec.begin(), svec.end(), *_1 &lt; *_2 ); // using lambda expressions
+        pvec.sort();                                 // ascending is default sort order
+        pvec.sort( std::less&lt;Poly&gt;() );              // same as default, no indirection on predicate
+         
+   } </pre></p><hr size="1" ><h2  >Reference</h2><a name="Reference" ></a><p  >There are a few design decisions that will affect how the
                      classes are used. Besides these the classes are much like
                      normal standard containers and provides almost the same interface.
-                     The new conventions are: </p><ul  ><li  ><i  >Null pointers are not allowed.</i> If the user tries to insert the null pointer, the
-                                 operation will throw a <code  >bad_pointer</code> exception. </li><li  ><i  >All default iterators apply an extra layer of indirection. </i> This is done to make the containers easier and safer to use. It promotes
+                     The new conventions are: </p><ol  ><li  ><i  >Null pointers are not allowed.</i> If the user tries to insert the null pointer, the
+                                 operation will throw a <code  >bad_pointer</code> exception (see <a href="#Example 1" >Example 1</a>).</li><li  ><i  >All default iterators apply an extra layer of indirection. </i> This is done to make the containers easier and safer to use. It promotes
                                a kind of pointer-less programming and the user of a class needs not worry about
                                pointers except when allocating them. Iterators that provide access to the naked pointers
                                are also provided since they might be useful in rare cases. Whenever eg. <code  >begin()</code> returns an <code  >iterator, ptr_begin()</code> will return an iterator that allows 
@@ -75,7 +108,7 @@
                                   pointers. </i> This is done to avoid some nasty pitfalls. Some of the functions
                                   take predicates and the user need not apply the indirection himself. This means that
                                   functors that work on objects can be passed to these algorithms which removes the programmer
-                                  from creating a functor that works on pointers. </li></ul><p  >The documentation is divided into a common section and an explanation for each container. 
+                                  from creating a functor that works on pointers. </li></ol><p  >The documentation is divided into a common section and an explanation for each container. 
                         The so-called "pseudo class" sections
                         show the interface that some or all of the classes have in common and the individual parts shows the interface
                         that is only part of some of the individual classes. Before you proceed, 
@@ -541,30 +574,45 @@ void transfer( typename PtrContainer::iterator object, PtrContainer& from );</pr
              *i += 42; // add 42 to each value
              cout &lt;&lt; "value=" &lt;&lt; *i &lt;&lt; ", key=" &lt;&lt; i.key() &lt;&lt; "n";
     } </pre><p  >So the difference from the normal map iterator is that <code  >operator*()</code> returns a reference to the mapped object (normally it returns a reference to a pair) and that
-              the key can be accessed through the <code  >key()</code> function. </p><hr size="1" ><h2  >Exception classes</h2><a name="Exception classes" ></a><hr size="1" ><h2  >Examples</h2><a name="Examples" ></a><p  >Some examples are given in the accompanying test
-                      files:</p><ul  ><li  > <a href="../test/incomplete_type_test.cpp" target="_self" ><code  >incomplete_type_test.cpp</code></a>  shows how to implement the Composite pattern.</li><li  > <a href="../test/associative_test_data.hpp" target="_self" ><code  >associative_test_data.hpp</code></a>  shows the common interface for all associative containers.</li><li  > <a href="../test/sequence_test_data.hpp" target="_self" ><code  >sequence_test_data.hpp</code></a>  shows the common interface for all sequences.</li></ul><hr size="1" ><h2  >Portability</h2><a name="Portability" ></a><p  >This library does not rely on any difficult template code, and so it should work
-                        with most compilers---even the older onces.</p><p  >Most of the tests have been run successfully on these compilers:<ul  ><li  >vc7.1</li><li  >gcc3.3.1</li><li  >como4.3.3</li></ul></p><hr size="1" ><h2  >FAQ</h2><a name="FAQ" ></a><ol  ><p  ><i  >Since a pointer container is not Copy-Constructible and Assignable, I cannot 
-                 put them into standard containers; what do I do?</i> Since they are Clonable, you simply put them in a pointer container.</p><p  ><i  >Calling <code  >assign()</code> is very costly and I do not really need to store
-                  cloned objects; I merely need to overwrite the existing ones; what do I do?;</i> Call <code  >std::copy( first, last, c.begin() );.</code></p><p  ><i  >Why is there no equivalent of <code  >boost::array&lt;T,size&gt;</code> for storing pointers?</i> For heap-allocated pointers there would be little performance benefit of having such a class.</p><p  ><i  >Why does the classes have some mutating algorithms as member functions?</i> Some mutating algorithms are inherently unsafe and error-prone to use with pointers. These few
-                 often-used algorithms are implemented so the user does not need to care about those pitfalls.</p><p  ><i  >Which mutating algorithms are safe to use with pointers?</i> Any mutating algorithm that moves elements around by swapping them. An important example is <code  >std::sort()</code>; examples of unsafe algorithms are <code  >std::unique()</code> and <code  >std::remove(). That is why these algorithms are provided as member functions. </code></p><p  ><i  >Why does <code  >ptr_map&lt;T&gt;::insert()/replace() </code> take two arguments (the key and the pointer) 
+              the key can be accessed through the <code  >key()</code> function. </p><hr size="1" ><h2  >Exception classes</h2><a name="Exception classes" ></a><hr size="1" ><h2  >Examples</h2><a name="Examples" ></a><p  >Some examples are given here and in the accompanying test
+                      files:</p><ul  ><li  ><a name="Example 1" ></a>Example: null pointers cannot be stored in the containers <blockquote  ><p  ><pre  >my_container.push_back( 0 ); // trows bad_ptr 
+my_container.replace( an_iterator, 0 ); // trows bad_ptr
+my_container.insert( an_iterator, 0 ); // trows bad_ptr                                                                 </pre></p></blockquote></li><li  ><a name="Example 2" ></a></li><li  ><a name="Example 3" ></a></li><li  ><a name="Example 4" ></a></li><li  ><a name="Example 5" ></a></li><li  ><a name="Example 6" ></a></li><li  ><a name="Example 7" ></a></li><li  ><a name="Example 8" ></a></li><li  ><a name="Example 9" ></a></li><li  > <a href="../test/incomplete_type_test.cpp" target="_self" ><code  >incomplete_type_test.cpp</code></a>  shows how to implement the Composite pattern.</li><li  > <a href="../test/associative_test_data.hpp" target="_self" ><code  >associative_test_data.hpp</code></a>  shows the common interface for all associative containers.</li><li  > <a href="../test/sequence_test_data.hpp" target="_self" ><code  >sequence_test_data.hpp</code></a>  shows the common interface for all sequences.</li></ul><hr size="1" ><h2  >Portability</h2><a name="Portability" ></a><p  >This library does not rely on any difficult template code, and so it should work
+                        with most compilers---even the older onces.</p><p  >Most of the tests have been run successfully on these compilers:<ul  ><li  >vc7.1</li><li  >gcc3.3.1</li><li  >como4.3.3</li></ul></p><hr size="1" ><h2  >FAQ</h2><a name="FAQ" ></a><ol  ><li  ><i  >Since a pointer container is not Copy-Constructible and Assignable, I cannot 
+                 put them into standard containers; what do I do?</i> Since they are Clonable, you simply put them in a pointer container.</li><li  ><i  >Calling <code  >assign()</code> is very costly and I do not really need to store
+                  cloned objects; I merely need to overwrite the existing ones; what do I do?;</i> Call <code  >std::copy( first, last, c.begin() );.</code></li><li  ><i  >Why is there no equivalent of <code  >boost::array&lt;T,size&gt;</code> for storing pointers?</i> For heap-allocated pointers there would be little performance benefit of having such a class.</li><li  ><i  >Why does the classes have some mutating algorithms as member functions?</i> Some mutating algorithms are inherently unsafe and error-prone to use with pointers. These few
+                 often-used algorithms are implemented so the user does not need to care about those pitfalls.</li><li  ><i  >Which mutating algorithms are safe to use with pointers?</i> Any mutating algorithm that moves elements around by swapping them. An important example is <code  >std::sort()</code>; examples of unsafe algorithms are <code  >std::unique()</code> and <code  >std::remove(). That is why these algorithms are provided as member functions. </code></li><li  ><i  >Why does <code  >ptr_map&lt;T&gt;::insert()/replace() </code> take two arguments (the key and the pointer) 
                    instead of one <code  >std::pair&lt;&gt;</code>? And why is the key passed by non-const reference? </i> This is the only way the function can be implemented in an exception-safe manner; since 
                   the copy-constructor of the key might throw, and since function arguments are not guaranteed to
                   be evaluated from left to right, we need to ensure that evaluating the first argument does not throw.
-                  Passing the key as a reference achieves just that.</p><p  ><i  >When instantiating a ptr_container with a type <code  >T,</code> is <code  > T </code> then
-                  allowed to be incomplete at that point? </i> Yes.</p><p  ><i  >Why are inserting member functions overloaded for both pointers and references?</i> Assuming only pointer arguments were allowed, the inexperienced programmer might forget
+                  Passing the key as a reference achieves just that.</li><li  ><i  >When instantiating a ptr_container with a type <code  >T,</code> is <code  > T </code> then
+                  allowed to be incomplete at that point? </i> Yes.</li><li  ><i  >Why are inserting member functions overloaded for both pointers and references?</i> Assuming only pointer arguments were allowed, the inexperienced programmer might forget
                  to call <code  >make_clone()</code> on an object. So the code would not compile. To fix it he
                  just takes the address of the object and now he is happy because the code compiles. So to avoid
                   that from happening, we add the overloaded version. Notice that containers of smart pointers does
-                  not have this problem. </p></ol><hr size="1" ><h2  >References</h2><a name="References" ></a><ol  ><li  >Matt Austern: "The Standard Librarian: Containers of Pointers," 
-            C/C++ Users Journal Experts Forum, <www.cuj.com/experts/1910/austern.htm>.</li><li  >Bjarne Stroustrup, "The C++ Programming Language", Appendix E: "Standard-Library Exception Safety", 
-            (http://www.research.att.com/~bs/3rd_safe.pdf).</li><li  >Herb Sutter, "Exceptional C++".</li><li  >Herb Sutter, "More Exceptional C++".</li><li  >Kevlin Henney, "From Mechanism to Method: The Safe Stacking of Cats", C++ Experts Forum, February 2002.</li><li  >Some of the few earlier attempts of smart containers I have seen are the rather interesting 
+                  not have this problem. </li><li  ><i  >Why do iterator-range inserts give the strong exception-safety guarantee? Is this not very inefficient?</i> It is because it is actually affordable to do so; the overhead is one heap-allocation which 
+                 is relatively small compared to cloning N objects. </li><li  ><a name="polymorphic class problem" ></a><i  >What is the polymorphic class problem?</i> The problem refers to the relatively trouplesome way C++
+               supports Object Oriented programming in connection with containers of
+               pointers to polymorphic objects. In a language without garbage collection,
+               you end up using either a container of smart pointers or a container that takes
+               ownership of the pointers. The hard part is to find an safe, fast and
+               elegant solution. </li><li  ><a name="smart pointer comparison" ></a><i  >Are the pointer containers faster and do they have a better memory footprint than
+                    a container of smart pointers? </i> The short answer is yes: they are faster and they do use less memory; in fact, they are the only way to obtain
+                  the zero-overhead hallmark of C++. Smart pointers usually
+                  have one word or more of memory overhead per pointer because a reference count must be maintained. And since the
+                  reference count must be maintained, there is also a runtime-overhead. If your objects are big, then
+                  the memory overhead is often neglible, but if you have many small objects, it is not.
+                  Further reading can be found 
+                  in these references: <a href="#[12]" >[12]</a> and <a href="#[13]" >[13]</a></li></ol><hr size="1" ><h2  >References</h2><a name="References" ></a><ol  ><li  ><a name="[1]" ></a>Matt Austern: "The Standard Librarian: Containers of Pointers," 
+            C/C++ Users Journal Experts Forum, <www.cuj.com/experts/1910/austern.htm>.</li><li  ><a name="[2]" ></a>Bjarne Stroustrup, "The C++ Programming Language", Appendix E: "Standard-Library Exception Safety", 
+            (http://www.research.att.com/~bs/3rd_safe.pdf).</li><li  ><a name="[3]" ></a>Herb Sutter, "Exceptional C++".</li><li  ><a name="[4]" ></a>Herb Sutter, "More Exceptional C++".</li><li  ><a name="[5]" ></a>Kevlin Henney, "From Mechanism to Method: The Safe Stacking of Cats", C++ Experts Forum, February 2002.</li><li  ><a name="[6]" ></a>Some of the few earlier attempts of smart containers I have seen are the rather interesting 
              NTL (http://www.ntllib.org/) and
              the "pointainer" from http://ootips.org/yonat/4dev/pointainer.h. As of this writing both libraries
-             are not exceptions-safe and can leak.</li><li  >INTERNATIONAL STANDARD, Programming languages --- C++, ISO/IEC 14882, 1998. See section 23.2.[1.3|2.3|4.3].</li><li  >C++ Standard Library Closed Issues List (Revision 27), Item 218, 
+             are not exceptions-safe and can leak.</li><li  ><a name="[7]" ></a>INTERNATIONAL STANDARD, Programming languages --- C++, ISO/IEC 14882, 1998. See section 23.2.[1.3|2.3|4.3].</li><li  ><a name="[8]" ></a>C++ Standard Library Closed Issues List (Revision 27), Item 218, 
             "Algorithms do not use binary predicate objects for default comparisons", 
-            http://anubis.dkuug.dk/jtc1/sc22/wg21/docs/lwg-closed.html#218.</li><li  >C++ Standard Library Active Issues List (Revision 27), Item 226, 
+            http://anubis.dkuug.dk/jtc1/sc22/wg21/docs/lwg-closed.html#218.</li><li  ><a name="[9]" ></a>C++ Standard Library Active Issues List (Revision 27), Item 226, 
             "User supplied specializations or overloads of namespace std function templates", 
-           http://gcc.gnu.org/onlinedocs/libstdc++/ext/lwg-active.html#226.</li><li  >Harald Nowak, "A remove_if for vector<T*>", C/C++ Users Journal, July 2001.</li></ol><hr size="1" ><p  >&copy; Thorsten Ottosen 2003-2004 (nesotto_AT_cs.auc.dk).
+           http://gcc.gnu.org/onlinedocs/libstdc++/ext/lwg-active.html#226.</li><li  ><a name="[10]" ></a>Harald Nowak, "A remove_if for vector<T*>", C/C++ Users Journal, July 2001.</li><li  ><a name="[11]" ></a> <a href="http://www.boost.org/libs/smart_ptr/smarttests.htm" target="_self" >Boost smart pointer timings</a> </li><li  ><a name="[12]" ></a> <a href="http://www.ntllib.org/asp.html" target="_self" >NTL: Array vs std::vector and boost::shared_ptr</a> </li></ol><hr size="1" ><p  >&copy; Thorsten Ottosen 2003-2004 (nesotto_AT_cs.auc.dk).
     Permission to copy, use, modify, sell and distribute this software is granted provided this copyright notice appears
      in all copies. This software is provided "as is" without express or implied warranty, and with no
          claim as to its suitability for any purpose.</p><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br></body></html>

@@ -58,68 +58,84 @@ function introduction()
 {
    $res = beginSection( introLink() );
    
-   $motivation = p( "This library provides standard-like containers that are suitable
-                     for storing pointers to both polymorphic and non-polymorphic objects.
+   $motivation = p( "This library provides standard-like containers that are for storing heap-allocated
+                    objects only (or in case of a map, the mapped type must be a heap-allocated
+                    object. The stored pointers can point to both polymorphic and non-polymorphic objects.
                      For each of the standard containers there is a pointer container 
-                     equivalent that takes ownership of the stored pointers in an exception 
+                     equivalent that takes ownership of the objects in an exception 
                      safe manner. In this respect it is intended to solve 
-                     the so-called " .  i( "polymorphic class problem." ) ) .
+                     the so-called " .  aLocal( polymorphicClassProblemLink() ) . "." ) .
                  P( "The advantages are " . 
                     ulist( li( "Exception-safe and fool proof pointer storage and manipulation." ) .
                            li( "Exception-guarantees are generally much better than with standard containers (very often the strong guarantee)" ) .
                            li( "Notational convenience compared to the use of containers of smart pointers." ) .
                            li( "Iterators are automatically indirected so the comparison operations can be kept
                                 on object basis instead of making/adding pointer based variants." ) .
-                           li( "No memory-overhead as containers of smart_pointers can have." ) .
-                           li( "Usually faster than using containers of smart pointers." ) . 
+                           li( "No memory-overhead as containers of smart pointers can have (see " . aLocal( smartPointerOverheadLink() ) . "). " ) .
+                           li( "Usually faster than using containers of smart pointers (see " . aLocal( smartPointerOverheadLink() ) . ")." ) . 
                            li( "Provides an elegant solution to potential " . code( "vector< vector<T> >" ) . " performance
                                 problems; simply use " . code( "ptr_vector< vector<T> >." ) .
                            li( "Offers more explicit control of lifetime issues." ) .
                            li( "Can be used for types that are neither Assignable nor CopyConstructible. " ) ) )         
-                           ) . 
+                           ) ; 
+   /* . 
                   p( "The disadvantages are: " .
                      ulist( li( "Some standard algorithms like " . code( "unique()" ) .
                                  " need special care when using them with raw pointers" ) ) );
-  
+  */
                      
    $examples = p( "Below is given a small example that show how the usage compares to a container of smart pointers:" . 
-                  pre( "
-                       
-    using namespace boost;
-    using namespace std;
-                       
+                  pre( "                                           
+    //
+    // A simple polymorphic class
+    //
     class Poly
     {
+        int        i_;
+        static int cnt_;
+        
     public:
-        virtual ~Poly() {}
-        void foo() { doFoo(); }
+        Poly() : i_( cnt_++ )  { }
+        virtual ~Poly()        { }
+        void foo()             { doFoo(); }
+        
     private:    
-        virtual void doFoo() 
+        virtual void doFoo()   { ++i_; }
+        
+    public:
+        friend inline bool operator>( const Poly& l, const Poly r )
         {
-            int i;
-            ++i;
+            return l.i_ > r.i_;
+        }
+    };
+    
+    int Poly::cnt_ = 0;
+  
+    //
+    // Normally we need something like this to compare pointers to objects
+    //
+    template< typename T >
+    struct sptr_greater
+    {
+        bool operator()( const boost::shared_ptr<T>& l, const boost::shared_ptr<T>& r ) const
+        {
+            return *l > *r;
         }
     };
                                                              
     //
     // one doesn't need to introduce new names or live with long ones
     //                                                         
-    typedef shared_ptr<Poly> PolyPtr;
+    typedef boost::shared_ptr<Poly> PolyPtr;
     
-    //
-    // one doesn't need to write this anymore
-    //                   
-    struct PolyPtrOps 
-    {
-      void operator()( const PolyPtr & a )
-        { a->foo(); }
-    };
-    
+
     int main()
     {
         enum { size = 2000000 };
-        vector<PolyPtr>    svec   
-        ptr_vector<Poly>   pvec;
+        typedef vector<PolyPtr>          vector_t;
+        typedef boost::ptr_vector<Poly>  ptr_vector_t;
+        vector_t                         svec;   
+        ptr_vector_t                     pvec;
         
         for( int i = 0; i < size; ++i ) 
         {
@@ -127,10 +143,28 @@ function introduction()
             pvec.push_back( new Poly );  // no extra syntax      
         }
                        
-        for_each( svec.begin(), svec.end(), PolyPtrOps() );
-
-        for_each( pvec.begin(), pvec.end(), mem_fun_ref( &Poly::foo ) );
-     } " ) ); 
+        for( int i = 0; i < size; ++i )
+        {
+            svec[i]->foo();
+            pvec[i].foo(); // automatic indirection
+            svec[i] = PolyPtr( new Poly );
+            pvec.replace( i, new Poly ); // direct pointer assignment not possible, original element is deleted
+        }
+        
+        for( vector_t::iterator i = svec.begin(); i != svec.end(); ++i )
+            (*i)->foo();
+     
+        for( ptr_vector_t::iterator i = pvec.begin(); i != pvec.end(); ++i )
+            i->foo(); // automatic indirection
+        
+        sort( svec.begin(), svec.end(), sptr_greater<Poly>() );
+        pvec.sort( std::greater<Poly>() ); // automatic indirection on predicate
+        
+        sort( svec.begin(), svec.end(), *_1 < *_2 ); // using lambda expressions
+        pvec.sort();                                 // ascending is default sort order
+        pvec.sort( std::less<Poly>() );              // same as default, no indirection on predicate
+         
+   } " ) ); 
    
    return $res . $motivation . $examples ;
 }
@@ -144,9 +178,10 @@ function reference()
                      classes are used. Besides these the classes are much like
                      normal standard containers and provides almost the same interface.
                      The new conventions are: " ) .
-                  ulist( 
+                  olist( 
                          li( i( "Null pointers are not allowed." ) . " If the user tries to insert the null pointer, the
-                                 operation will throw a " . code( "bad_pointer" ) . " exception. " ) . 
+                                 operation will throw a " . code( "bad_pointer" ) . " exception (see " . aLocal( exampleLink(1) ) . ")." 
+                             ) . 
                          li( i( "All default iterators apply an extra layer of indirection. " ) .
                              " This is done to make the containers easier and safer to use. It promotes
                                a kind of pointer-less programming and the user of a class needs not worry about
@@ -243,14 +278,29 @@ function reference()
 function examples()
 {
     $header = beginSection( examplesLink() );
-    $exampleList = p( "Some examples are given in the accompanying test
+    $exampleList = p( "Some examples are given here and in the accompanying test
                       files:" ) .
-                   ulist( li( a( "../test/incomplete_type_test.cpp", code( "incomplete_type_test.cpp" ) ) .
-                          " shows how to implement the Composite pattern." ) .
-                          li( a( "../test/associative_test_data.hpp", code( "associative_test_data.hpp" ) ) .
-                          " shows the common interface for all associative containers." ) .
-                          li( a( "../test/sequence_test_data.hpp", code( "sequence_test_data.hpp" ) ) .
-                          " shows the common interface for all sequences." ) );
+                   ulist( 
+                       
+                       li( aTarget( exampleLink(1) ) . example( "null pointers cannot be stored in the containers", 
+                                                                "my_container.push_back( 0 ); // trows bad_ptr 
+my_container.replace( an_iterator, 0 ); // trows bad_ptr
+my_container.insert( an_iterator, 0 ); // trows bad_ptr                                                                 " ) ) . 
+                       li( aTarget( exampleLink(2) )  ) . 
+                       li( aTarget( exampleLink(3) )  ) . 
+                       li( aTarget( exampleLink(4) )  ) . 
+                       li( aTarget( exampleLink(5) )  ) . 
+                       li( aTarget( exampleLink(6) )  ) . 
+                       li( aTarget( exampleLink(7) )  ) . 
+                       li( aTarget( exampleLink(8) )  ) . 
+                       li( aTarget( exampleLink(9) )  ) . 
+                       li( a( "../test/incomplete_type_test.cpp", code( "incomplete_type_test.cpp" ) ) .
+                           " shows how to implement the Composite pattern." ) .
+                       li( a( "../test/associative_test_data.hpp", code( "associative_test_data.hpp" ) ) .
+                           " shows the common interface for all associative containers." ) .
+                       li( a( "../test/sequence_test_data.hpp", code( "sequence_test_data.hpp" ) ) .
+                           " shows the common interface for all sequences." )
+                          );
 
      
     return $header . $exampleList;
@@ -276,42 +326,60 @@ function portability()
 function Faq()
 {
     $res  = beginSection( faqLink() );
-    $faq1 = p( i("Since a pointer container is not Copy-Constructible and Assignable, I cannot 
+    $faq1 = li( i("Since a pointer container is not Copy-Constructible and Assignable, I cannot 
                  put them into standard containers; what do I do?" ) .
                " Since they are Clonable, you simply put them in a pointer container." );
-    $faq2 = p( i( "Calling " . code( "assign()" ) . " is very costly and I do not really need to store
+    $faq2 = li( i( "Calling " . code( "assign()" ) . " is very costly and I do not really need to store
                   cloned objects; I merely need to overwrite the existing ones; what do I do?;" ) .
                " Call " . code( "std::copy( first, last, c.begin() );." ) ); 
-    $faq3 = p( i( "Why is there no equivalent of " . code( "boost::array<T,size>" ) . " for storing pointers?" ) .
+    $faq3 = li( i( "Why is there no equivalent of " . code( "boost::array<T,size>" ) . " for storing pointers?" ) .
                " For heap-allocated pointers there would be little performance benefit of having such a class." );
-    $faq4 = p( i( "Why does the classes have some mutating algorithms as member functions?" ) . 
+    $faq4 = li( i( "Why does the classes have some mutating algorithms as member functions?" ) . 
                " Some mutating algorithms are inherently unsafe and error-prone to use with pointers. These few
                  often-used algorithms are implemented so the user does not need to care about those pitfalls." ); 
-    $faq5 = p( i( "Which mutating algorithms are safe to use with pointers?" ) . 
+    $faq5 = li( i( "Which mutating algorithms are safe to use with pointers?" ) . 
                " Any mutating algorithm that moves elements around by swapping them. An important example is " . 
                code( "std::sort()" ) . "; examples of unsafe algorithms are " . code( "std::unique()" ) . " and " .
                code( "std::remove(). That is why these algorithms are provided as member functions. " ) );
-    $faq6 = p( i( "Why does " . code( "ptr_map<T>::insert()/replace() " ) . " take two arguments (the key and the pointer) 
+    $faq6 = li( i( "Why does " . code( "ptr_map<T>::insert()/replace() " ) . " take two arguments (the key and the pointer) 
                    instead of one " . code( "std::pair<>" ) . "? And why is the key passed by non-const reference? " ) .
                 " This is the only way the function can be implemented in an exception-safe manner; since 
                   the copy-constructor of the key might throw, and since function arguments are not guaranteed to
                   be evaluated from left to right, we need to ensure that evaluating the first argument does not throw.
                   Passing the key as a reference achieves just that." );
-    $faq7 = p( i( "When instantiating a ptr_container with a type " . code( "T," ) . " is " . code( " T " ) . " then
+    $faq7 = li( i( "When instantiating a ptr_container with a type " . code( "T," ) . " is " . code( " T " ) . " then
                   allowed to be incomplete at that point? " ) . 
                " Yes." );
-    $faq8 = p( i( "Why are inserting member functions overloaded for both pointers and references?" ) .
+    $faq8 = li( i( "Why are inserting member functions overloaded for both pointers and references?" ) .
                " Assuming only pointer arguments were allowed, the inexperienced programmer might forget
                  to call " . code( "make_clone()" ) . " on an object. So the code would not compile. To fix it he
                  just takes the address of the object and now he is happy because the code compiles. So to avoid
                   that from happening, we add the overloaded version. Notice that containers of smart pointers does
                   not have this problem. " );
-    $faq9 = p( i( "Why do iterator-range inserts give the strong exception-safety guarantee? Is this not very inefficient?" ) .
+    $faq9 = li( i( "Why do iterator-range inserts give the strong exception-safety guarantee? Is this not very inefficient?" ) .
                " It is because it is actually affordable to do so; the overhead is one heap-allocation which 
                  is relatively small compared to cloning N objects. " ); 
-               
+    $faq10 = li( aTarget( polymorphicClassProblemLink() ) . i( "What is the " . polymorphicClassProblemLink() . "?" ) . 
+             " The problem refers to the relatively trouplesome way C++
+               supports Object Oriented programming in connection with containers of
+               pointers to polymorphic objects. In a language without garbage collection,
+               you end up using either a container of smart pointers or a container that takes
+               ownership of the pointers. The hard part is to find an safe, fast and
+               elegant solution. " );         
+    $faq11 = li( aTarget( smartPointerOverheadLink() ) .
+                 i( "Are the pointer containers faster and do they have a better memory footprint than
+                    a container of smart pointers? " ) .
+                " The short answer is yes: they are faster and they do use less memory; in fact, they are the only way to obtain
+                  the zero-overhead hallmark of C++. Smart pointers usually
+                  have one word or more of memory overhead per pointer because a reference count must be maintained. And since the
+                  reference count must be maintained, there is also a runtime-overhead. If your objects are big, then
+                  the memory overhead is often neglible, but if you have many small objects, it is not.
+                  Further reading can be found 
+                  in these references: " . aLocal( refLink(12) ) . " and " . aLocal( refLink(13) ) );  
+
+                
                   
-    return $res . olist( $faq1 . $faq2 . $faq3 . $faq4 . $faq5 . $faq6 . $faq7 . $faq8 );
+    return $res . olist( $faq1 . $faq2 . $faq3 . $faq4 . $faq5 . $faq6 . $faq7 . $faq8 . $faq9 . $faq10 . $faq11 );
 }
 
 
@@ -320,26 +388,29 @@ function literature()
 {   
     $header       = beginSection( literatureLink() );
     $list = olist( 
-        li( 'Matt Austern: "The Standard Librarian: Containers of Pointers," 
+        li( aTarget( refLink(1) ) . 'Matt Austern: "The Standard Librarian: Containers of Pointers," 
             C/C++ Users Journal Experts Forum, <www.cuj.com/experts/1910/austern.htm>.' ) .
-        li( 'Bjarne Stroustrup, "The C++ Programming Language", Appendix E: "Standard-Library Exception Safety", 
+        li( aTarget( refLink(2) ) . 'Bjarne Stroustrup, "The C++ Programming Language", Appendix E: "Standard-Library Exception Safety", 
             (http://www.research.att.com/~bs/3rd_safe.pdf).' ) .
-        li( 'Herb Sutter, "Exceptional C++".' ) .
-        li( 'Herb Sutter, "More Exceptional C++".' ) .
-        li( 'Kevlin Henney, "From Mechanism to Method: The Safe Stacking of Cats", C++ Experts Forum, February 2002.' ) .
-        li( 'Some of the few earlier attempts of smart containers I have seen are the rather interesting 
+        li( aTarget( refLink(3) ) . 'Herb Sutter, "Exceptional C++".' ) .
+        li( aTarget( refLink(4) ) . 'Herb Sutter, "More Exceptional C++".' ) .
+        li( aTarget( refLink(5) ) . 'Kevlin Henney, "From Mechanism to Method: The Safe Stacking of Cats", C++ Experts Forum, February 2002.' ) .
+        li( aTarget( refLink(6) ) . 'Some of the few earlier attempts of smart containers I have seen are the rather interesting 
              NTL (http://www.ntllib.org/) and
              the "pointainer" from http://ootips.org/yonat/4dev/pointainer.h. As of this writing both libraries
              are not exceptions-safe and can leak.' ) .
-        li( 'INTERNATIONAL STANDARD, Programming languages --- C++, ISO/IEC 14882, 1998. See section 23.2.[1.3|2.3|4.3].' ) .
-        li( 'C++ Standard Library Closed Issues List (Revision 27), Item 218, 
+        li( aTarget( refLink(7) ) . 'INTERNATIONAL STANDARD, Programming languages --- C++, ISO/IEC 14882, 1998. See section 23.2.[1.3|2.3|4.3].' ) .
+        li( aTarget( refLink(8) ) . 'C++ Standard Library Closed Issues List (Revision 27), Item 218, 
             "Algorithms do not use binary predicate objects for default comparisons", 
             http://anubis.dkuug.dk/jtc1/sc22/wg21/docs/lwg-closed.html#218.' ) .
-        li( 'C++ Standard Library Active Issues List (Revision 27), Item 226, 
+        li( aTarget( refLink(9) ) . 'C++ Standard Library Active Issues List (Revision 27), Item 226, 
             "User supplied specializations or overloads of namespace std function templates", 
            http://gcc.gnu.org/onlinedocs/libstdc++/ext/lwg-active.html#226.' ) .
-        li( 'Harald Nowak, "A remove_if for vector<T*>", C/C++ Users Journal, July 2001.' ) );
-
+        li( aTarget( refLink(10) ) . 'Harald Nowak, "A remove_if for vector<T*>", C/C++ Users Journal, July 2001.' ) .
+        li( aTarget( refLink(11) ) . a( "http://www.boost.org/libs/smart_ptr/smarttests.htm", "Boost smart pointer timings" ) ) .
+        li( aTarget( refLink(12) ) . a( "http://www.ntllib.org/asp.html", "NTL: Array vs std::vector and boost::shared_ptr" ) )  
+                     );
+                
 
     return $header . $list;
 }
@@ -1855,6 +1926,36 @@ function see( $link )
 function include_header( $file )
 {
     return code( "#include <boost/ptr_container/$file>" );
+}
+
+//////////////////////////////////////////////////////////////////////////////
+// anchors
+
+function polymorphicClassProblemLink()
+{
+    return "polymorphic class problem";
+}
+
+
+
+function smartPointerOverheadLink()
+{
+    return "smart pointer comparison";
+}
+
+//////////////////////////////////////////////////////////////////////////////
+// reference anchors
+
+function refLink( $number )
+{
+    return "[$number]";
+}
+
+
+
+function exampleLink( $number ) 
+{
+    return "Example $number";
 }
 
 ?>
