@@ -37,9 +37,40 @@ struct fill_argument_types
     template<class T>
     void operator()(wrap<T>)
     {
-        arg->type = &typeid(T);
-        arg->lvalue = false;
+        arg->type = &strip((T(*)())0);
+        arg->lvalue = is_pointer<T>() 
+            || boost::detail::is_reference_to_non_const<T>();
         ++arg;
+    }
+
+    template<class T>
+    static std::type_info const& strip(T(*)())
+    {
+        return typeid(T);
+    }
+
+    template<class T>
+    static std::type_info const& strip(T&(*)())
+    {
+        return typeid(T);
+    }
+
+    template<class T>
+    static std::type_info const& strip(T const&(*)())
+    {
+        return typeid(T);
+    }
+
+    template<class T>
+    static std::type_info const& strip(T*(*)())
+    {
+        return typeid(T);
+    }
+
+    template<class T>
+    static std::type_info const& strip(T const*(*)())
+    {
+        return typeid(T);
     }
 
     argument_type* arg;
@@ -59,12 +90,12 @@ arg_vector<Signature> arg_vector<Signature>::instance;
 template<class Signature>
 inline arg_vector<Signature>::arg_vector()
 {
-    mpl::for_each<Signature, wrap<mpl::_> >(fill_argument_types(args));
+    mpl::for_each<Signature>(fill_argument_types(args));
 }
 
 struct transform_extractor_op
 {
-    transform_extractor_op(void**& args) : args(args) {}
+    transform_extractor_op(arg_conversion*& args) : args(args) {}
 
     template<class T>
     struct apply
@@ -73,12 +104,12 @@ struct transform_extractor_op
     };
 
     template<class T>
-    typename apply<wrap<T> >::type operator()(wrap<T>) const
+    typename apply<T>::type operator()(T) const
     {
-        return typename apply<wrap<T> >::type(*args++);
+        return typename apply<T>::type(*args++);
     }
 
-    mutable void**& args;
+    mutable arg_conversion*& args;
 };
 
 template<class R, class Arguments>
@@ -109,25 +140,20 @@ struct invoker : boost::langbinding::function::invoker
     invoker(F fn);
 
     typedef mpl::iterator_range<
-        typename mpl::next<
-            typename mpl::begin<Signature>::type
-        >::type
+        typename mpl::next<typename mpl::begin<Signature>::type>::type
       , typename mpl::end<Signature>::type
     > argument_types;
 
-    typedef mpl::transform_view<
-        argument_types
-      , wrap<mpl::_>
-    > argument_tuple;
+    typedef mpl::transform_view<argument_types, wrap<mpl::_> > argument_tuple;
 
     typedef typename mpl::front<Signature>::type return_type_;
-    
-    void* invoke(void** args, result_converter_base& rc_) const
+
+    void* invoke(arg_conversion* args, result_converter_base& rc_) const
     {
         result_converter<return_type_>& rc = static_cast<
             result_converter<return_type_>&>(rc_);
-        
-        aux::invoke(
+
+        return aux::invoke(
             aux::invoke_tag<
                 return_type_
               , F

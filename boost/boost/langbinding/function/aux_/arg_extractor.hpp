@@ -7,6 +7,8 @@
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/eval_if.hpp>
 
+#include <boost/langbinding/function/aux_/referent_storage.hpp>
+
 namespace boost { namespace langbinding { namespace function { namespace aux {
 
 struct extractor_base
@@ -19,7 +21,7 @@ struct extractor_base
 template<class T>
 struct ptr_extractor : extractor_base
 {
-    ptr_extractor(void* p) : extractor_base(p) {}
+    ptr_extractor(arg_conversion const& x) : extractor_base(x.convertible) {}
 
     T operator()() const
     {
@@ -30,7 +32,7 @@ struct ptr_extractor : extractor_base
 template<class T>
 struct ref_extractor : extractor_base
 {
-    ref_extractor(void* p) : extractor_base(p) {}
+    ref_extractor(arg_conversion const& x) : extractor_base(x.convertible) {}
 
     T operator()() const
     {
@@ -45,17 +47,33 @@ struct ref_extractor : extractor_base
 };
 
 template<class T>
-struct rvalue_extractor : extractor_base
+struct rvalue_extractor
 {
     typedef typename add_reference<T>::type result_type;
 
-    rvalue_extractor(void* p) : extractor_base(p) 
+    rvalue_extractor(arg_conversion const& x)
     {
+        if (x.construct)
+        {
+            result = x.construct(x.source, storage.bytes);
+        }
+        else
+        {
+            result = x.convertible;
+        }
+    }
+
+    ~rvalue_extractor()
+    {
+        if (result == storage.bytes)
+        {
+            destroy(result, (result_type(*)())0);
+        }
     }
 
     result_type operator()() const
     {
-        return extract(data, (result_type(*)())0);
+        return extract(result, (result_type(*)())0);
     }
 
     template<class U>
@@ -63,6 +81,15 @@ struct rvalue_extractor : extractor_base
     {
         return *static_cast<U*>(ptr);
     }
+
+    template<class U>
+    static void destroy(void* p, U&(*)())
+    {
+        static_cast<U*>(p)->~U();
+    }
+
+    void* result;
+    typename referent_storage<result_type>::type storage;
 };
 
 template<class T>
@@ -77,7 +104,7 @@ struct arg_extractor
           , mpl::identity<rvalue_extractor<T> >
         >
     >::type type;
-    };
+};
 
 }}}} // namespace boost::langbinding::function::aux
 

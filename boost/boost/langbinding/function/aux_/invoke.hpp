@@ -12,6 +12,7 @@
 
 #include <boost/spirit/fusion/sequence/get.hpp>
 
+#include <boost/langbinding/function/config.hpp>
 #include <boost/langbinding/function/aux_/invoke_tag.hpp>
 
 namespace boost { namespace langbinding { namespace function { namespace aux {

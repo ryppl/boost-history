@@ -4,6 +4,8 @@
 #ifndef ARGUMENT_TYPE_DWA2004917_HPP
 # define ARGUMENT_TYPE_DWA2004917_HPP
 
+#include <typeinfo>
+
 namespace boost { namespace langbinding { namespace function { 
 
 struct argument_type
