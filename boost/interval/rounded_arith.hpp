@@ -63,7 +63,7 @@ namespace boost {
   template<class T, class Rounding>
   struct rounded_arith_std: Rounding {
     #define BOOST_DN(EXPR) (downward(),   force_rounding( EXPR ))
-    #define ROUND_NR(EXPR) (to_nearest(), force_rounding( EXPR ))
+    #define BOOST_NR(EXPR) (to_nearest(), force_rounding( EXPR ))
     #define BOOST_UP(EXPR) (upward(),     force_rounding( EXPR ))
     void init() { }
     T add_down (const T& x, const T& y) { return BOOST_DN( x + y        ); }
