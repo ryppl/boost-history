@@ -141,8 +141,9 @@ Valid Expressions:
 <tr><td width=80><tt>b *= a</tt></td>
 <td><tt>X&amp;</tt></td></tr>
 
-<tr><td><tt>one(a)</tt></td>
+<tr><td><tt>one(a)</tt><a href="#1">[1]</a></td>
 <td><tt>boost::unary_op_return&lt;boost::op_one, X, X&gt;::type</tt></td></tr>
+
 </table>
 
 <p>
@@ -572,12 +573,19 @@ Invariants:
 The types <tt>{Matrix,Vector,Scalar}</tt> together model the Linear
 Algebra concept. The types <tt>{Matrix,Vector,Scalar}</tt> together
 model <a href="#Linear Operator">Linear Operator</a>, and
-<tt>{Matrix,F}<tt> models <a href="#VEctorSpace">Vector
+<tt>{Matrix,F}</tt> models <a href="#VEctorSpace">Vector
 Space</a>. Also the <tt>Matrix</tt> type must model <a
 href="#MultRingWithIdentity">Multiplicative Ring with Identity</a>.
 
 
 <hr>
+
+<h3>Notes</h3>
+
+<a name="1">[1]</a> An alternative for <tt>one(a)</tt> is
+<tt>X::one()</tt>. The issues involved are what if <tt>a</tt> is a
+matrix (with run-time specified size), and how does the identity
+matrix know what size it is.
 
 
 <h3>References</h3>
@@ -585,17 +593,20 @@ href="#MultRingWithIdentity">Multiplicative Ring with Identity</a>.
 <DL COMMapCT>
 
 <DD><P></P><DT><A NAME="waerden70:_algebra">1</A>
+<DD>
 B.L. van der Waerden
 <BR><EM>Algebra</EM>.
 <BR>Translated by Fred Blum and John R. Schulenberger
 <BR>Frederick Ungar Publishing, 1970.
 
 <DD><P></P><DT><A NAME="halmos87:_finite_vector">2</A>
+<DD>
 Paul R. Halmos
 <BR><EM>Finite-Dimensional Vector Spaces</EM>.
 <BR>Springer
 
 <DD><P></P><DT><A NAME="">3</A>
+<DD>
 <BR><EM>Teubner-Taschenbuch der Mathematik</EM
 
 </DL>
