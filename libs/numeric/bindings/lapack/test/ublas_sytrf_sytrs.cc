@@ -109,12 +109,14 @@ int main() {
 
   cout << endl << "part 2" << endl << endl; 
   
-  int lw = lapack::sytrf_query ('O', 'L', al1); 
+  int lw = lapack::sytrf_block ('O', 'L', al1);
   cout << "nb = " << lw << endl;
   lw *= n; 
-  cout << "lw = " << lw << endl;
+  cout << "lw = " << lw << " == " 
+       << lapack::sytrf_work ('O', 'L', al1) << endl;
+  cout << "mw = " << lapack::sytrf_work ('M', 'L', al1) << endl;
   std::vector<real_t> work (lw); 
-  int mb = lapack::sytrf_query ('M', 'L', al1); 
+  int mb = lapack::sytrf_block ('M', 'L', al1); 
   cout << "mb = " << mb << endl << endl;
 
   err = lapack::sytrf ('L', al1, ipiv, work);  
@@ -130,13 +132,15 @@ int main() {
     cout << "?" << endl; 
   cout << endl; 
 
-  lw = lapack::sytrf_query ('O', 'U', au1); 
+  lw = lapack::sytrf_block ('O', 'U', au1); 
   cout << "nb = " << lw << endl;
   lw *= n; 
-  cout << "lw = " << lw << endl; 
+  cout << "lw = " << lw << " == " 
+       << lapack::sytrf_work ('O', 'U', au1) << endl;
+  cout << "mw = " << lapack::sytrf_work ('M', 'U', au1) << endl;
   if (lw != work.size())
     work.resize (lw); 
-  mb = lapack::sytrf_query ('M', 'U', au1);
+  mb = lapack::sytrf_block ('M', 'U', au1);
   cout << "mb = " << mb << endl << endl;
 
   err = lapack::sytrf ('U', au1, ipiv, work);  
@@ -193,12 +197,14 @@ int main() {
     cout << "?" << endl;
   cout << endl; 
 
-  lw = lapack::sytrf_query ('O', scau); 
+  lw = lapack::sytrf_block ('O', scau); 
   cout << "nb = " << lw << endl;
   lw *= n; 
-  cout << "lw = " << lw << endl; 
+  cout << "lw = " << lw << " == " 
+       << lapack::sytrf_work ('O', scau) << endl;
+  cout << "mw = " << lapack::sytrf_work ('M', scau) << endl;
   std::vector<cmplx_t> cwork (lw); 
-  mb = lapack::sytrf_query ('M', scau); 
+  mb = lapack::sytrf_block ('M', scau); 
   cout << "mb = " << mb << endl << endl;
 
   ierr = lapack::sytrf (scau, ipiv, cwork); 

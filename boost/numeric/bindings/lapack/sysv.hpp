@@ -42,24 +42,24 @@ namespace boost { namespace numeric { namespace bindings {
     namespace detail {
 
       inline 
-      int sytrf_query (float, int const ispec, char const ul, int const n) {
+      int sytrf_block (float, int const ispec, char const ul, int const n) {
         char ul2[2] = "x"; ul2[0] = ul; 
         return ilaenv (ispec, "SSYTRF", ul2, n); 
       }
       inline 
-      int sytrf_query (double, int const ispec, char const ul, int const n) {
+      int sytrf_block (double, int const ispec, char const ul, int const n) {
         char ul2[2] = "x"; ul2[0] = ul; 
         return ilaenv (ispec, "DSYTRF", ul2, n); 
       }
       inline 
-      int sytrf_query (traits::complex_f, 
+      int sytrf_block (traits::complex_f, 
                        int const ispec, char const ul, int const n) 
       {
         char ul2[2] = "x"; ul2[0] = ul; 
         return ilaenv (ispec, "CSYTRF", ul2, n); 
       }
       inline 
-      int sytrf_query (traits::complex_d, 
+      int sytrf_block (traits::complex_d, 
                        int const ispec, char const ul, int const n) 
       {
         char ul2[2] = "x"; ul2[0] = ul; 
@@ -68,9 +68,10 @@ namespace boost { namespace numeric { namespace bindings {
 
     }
 
+
     template <typename SymmA>
     inline
-    int sytrf_query (char const q, char const ul, SymmA const& a) {
+    int sytrf_block (char const q, char const ul, SymmA const& a) {
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
       BOOST_STATIC_ASSERT((boost::is_same<
@@ -90,12 +91,12 @@ namespace boost { namespace numeric { namespace bindings {
       typedef typename SymmA::value_type val_t; 
 #endif 
       int ispec = (q == 'O' ? 1 : 2); 
-      return detail::sytrf_query (val_t(), ispec, ul, n); 
+      return detail::sytrf_block (val_t(), ispec, ul, n); 
     }
 
     template <typename SymmA>
     inline
-    int sytrf_query (char const q, SymmA const& a) {
+    int sytrf_block (char const q, SymmA const& a) {
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
       BOOST_STATIC_ASSERT((boost::is_same<
@@ -115,8 +116,77 @@ namespace boost { namespace numeric { namespace bindings {
       typedef typename SymmA::value_type val_t; 
 #endif 
       int ispec = (q == 'O' ? 1 : 2); 
-      return detail::sytrf_query (val_t(), ispec, ul, n); 
+      return detail::sytrf_block (val_t(), ispec, ul, n); 
     }
+
+    template <typename SymmA>
+    inline
+    int sytrf_work (char const q, char const ul, SymmA const& a) {
+
+#ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
+      BOOST_STATIC_ASSERT((boost::is_same<
+        typename traits::matrix_traits<SymmA>::matrix_structure, 
+        traits::general_t
+      >::value));
+#endif
+      assert (q == 'O' || q == 'M'); 
+      assert (ul == 'U' || ul == 'L'); 
+
+      int n = traits::matrix_size1 (a); 
+      assert (n == traits::matrix_size2 (a)); 
+
+#ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
+      typedef typename traits::matrix_traits<SymmA>::value_type val_t; 
+#else 
+      typedef typename SymmA::value_type val_t; 
+#endif 
+      int lw = -13; 
+      if (q == 'M') 
+        lw = 1;
+      if (q == 'O') 
+        lw = n * detail::sytrf_block (val_t(), 1, ul, n); 
+      return lw; 
+    }
+
+    template <typename SymmA>
+    inline
+    int sytrf_work (char const q, SymmA const& a) {
+
+#ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
+      BOOST_STATIC_ASSERT((boost::is_same<
+        typename traits::matrix_traits<SymmA>::matrix_structure, 
+        traits::symmetric_t
+      >::value));
+#endif
+      assert (q == 'O' || q == 'M'); 
+
+      char ul = traits::matrix_uplo_tag (a);
+      int n = traits::matrix_size1 (a); 
+      assert (n == traits::matrix_size2 (a)); 
+
+#ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
+      typedef typename traits::matrix_traits<SymmA>::value_type val_t; 
+#else 
+      typedef typename SymmA::value_type val_t; 
+#endif 
+      int lw = -13; 
+      if (q == 'M') 
+        lw = 1;
+      if (q == 'O') 
+        lw = n * detail::sytrf_block (val_t(), 1, ul, n); 
+      return lw; 
+    }
+
+
+    template <typename SymmA>
+    inline
+    int sysv_work (char const q, char const ul, SymmA const& a) {
+      return sytrf_work (q, ul, a); 
+    }
+
+    template <typename SymmA>
+    inline
+    int sysv_work (char const q, SymmA const& a) { return sytrf_work (q, a); }
 
 
     /*
@@ -267,8 +337,7 @@ namespace boost { namespace numeric { namespace bindings {
 
       if (i.valid()) {
         info = -102; 
-        int lw = sytrf_query ('O', ul, a); 
-        lw *= n; 
+        int lw = sytrf_work ('O', ul, a); 
         assert (lw >= 1); // paranoia ? 
 #ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
         typedef typename traits::matrix_traits<SymmA>::value_type val_t; 
@@ -305,8 +374,7 @@ namespace boost { namespace numeric { namespace bindings {
 
       if (i.valid()) {
         info = -102; 
-        int lw = sytrf_query ('O', a); 
-        lw *= n; 
+        int lw = sytrf_work ('O', a); 
         assert (lw >= 1); // paranoia ? 
 #ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
         typedef typename traits::matrix_traits<SymmA>::value_type val_t; 
@@ -437,8 +505,7 @@ namespace boost { namespace numeric { namespace bindings {
 #endif
 
       int info = -101; 
-      int lw = sytrf_query ('O', ul, a); 
-      lw *= traits::matrix_size1 (a); 
+      int lw = sytrf_work ('O', ul, a); 
       assert (lw >= 1); // paranoia ? 
 #ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
       typedef typename traits::matrix_traits<SymmA>::value_type val_t; 
@@ -465,8 +532,7 @@ namespace boost { namespace numeric { namespace bindings {
 
       char uplo = traits::matrix_uplo_tag (a);
       int info = -101; 
-      int lw = sytrf_query ('O', a); 
-      lw *= traits::matrix_size1 (a);  
+      int lw = sytrf_work ('O', a); 
       assert (lw >= 1); // paranoia ? 
 #ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
       typedef typename traits::matrix_traits<SymmA>::value_type val_t; 

@@ -163,6 +163,20 @@
 
 
 /********************************************/
+/* SVD */
+
+#define LAPACK_SGESVD FORTRAN_ID( sgesvd )
+#define LAPACK_DGESVD FORTRAN_ID( dgesvd )
+#define LAPACK_CGESVD FORTRAN_ID( cgesvd )
+#define LAPACK_ZGESVD FORTRAN_ID( zgesvd )
+
+#define LAPACK_SGESDD FORTRAN_ID( sgesdd )
+#define LAPACK_DGESDD FORTRAN_ID( dgesdd )
+#define LAPACK_CGESDD FORTRAN_ID( cgesdd )
+#define LAPACK_ZGESDD FORTRAN_ID( zgesdd )
+
+
+/********************************************/
 /* auxiliary */ 
 
 #define LAPACK_ILAENV FORTRAN_ID( ilaenv )

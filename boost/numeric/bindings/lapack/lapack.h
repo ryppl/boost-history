@@ -265,7 +265,7 @@ extern "C" {
 
 
   /**********************************************************************/
-  /* eigenproblems */
+  /*                         eigenproblems                              */
   /**********************************************************************/
 
   void LAPACK_SGEES (const char* jobvs, const char* sort, logical_t* select, const int* n,
@@ -325,6 +325,59 @@ extern "C" {
   void LAPACK_ZTREXC( const char* compq, const int *n,
                      dcomplex_t* t, const int * ldt, dcomplex_t* q, const int* ldq,
 		     int* ifst, const int * ilst, int* info );
+
+
+  /*********************************************************************/
+  /*                             SVD                                   */
+  /*********************************************************************/
+
+  void LAPACK_SGESVD (char const* jobu, char const* jobvt, 
+                      int const* m, int const* n, float* a, int const* lda, 
+                      float* s, float* u, int const* ldu, 
+                      float* vt, int const* ldvt,
+                      float* work, int const* lwork, int* info); 
+  void LAPACK_DGESVD (char const* jobu, char const* jobvt, 
+                      int const* m, int const* n, double* a, int const* lda, 
+                      double* s, double* u, int const* ldu, 
+                      double* vt, int const* ldvt,
+                      double* work, int const* lwork, int* info); 
+  void LAPACK_CGESVD (char const* jobu, char const* jobvt, 
+                      int const* m, int const* n, 
+                      fcomplex_t* a, int const* lda, 
+                      float* s, fcomplex_t* u, int const* ldu, 
+                      fcomplex_t* vt, int const* ldvt,
+                      fcomplex_t* work, int const* lwork, 
+                      float* rwork, int* info); 
+  void LAPACK_ZGESVD (char const* jobu, char const* jobvt, 
+                      int const* m, int const* n, 
+                      dcomplex_t* a, int const* lda, 
+                      double* s, dcomplex_t* u, int const* ldu, 
+                      dcomplex_t* vt, int const* ldvt,
+                      dcomplex_t* work, int const* lwork, 
+                      double* rwork, int* info); 
+
+  void LAPACK_SGESDD (char const* jobz, int const* m, int const* n, 
+                      float* a, int const* lda, 
+                      float* s, float* u, int const* ldu, 
+                      float* vt, int const* ldvt,
+                      float* work, int const* lwork, int* iwork, int* info); 
+  void LAPACK_DGESDD (char const* jobz, int const* m, int const* n, 
+                      double* a, int const* lda, 
+                      double* s, double* u, int const* ldu, 
+                      double* vt, int const* ldvt,
+                      double* work, int const* lwork, int* iwork, int* info); 
+  void LAPACK_CGESDD (char const* jobz, int const* m, int const* n, 
+                      fcomplex_t* a, int const* lda, 
+                      float* s, fcomplex_t* u, int const* ldu, 
+                      fcomplex_t* vt, int const* ldvt,
+                      fcomplex_t* work, int const* lwork, 
+                      float* rwork, int* iwork, int* info); 
+  void LAPACK_ZGESDD (char const* jobz, int const* m, int const* n, 
+                      dcomplex_t* a, int const* lda, 
+                      double* s, dcomplex_t* u, int const* ldu, 
+                      dcomplex_t* vt, int const* ldvt,
+                      dcomplex_t* work, int const* lwork, 
+                      double* rwork, int* iwork, int* info); 
 
 
   /********************************************************************/

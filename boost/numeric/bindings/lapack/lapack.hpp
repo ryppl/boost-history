@@ -33,5 +33,10 @@
 #include <boost/numeric/bindings/lapack/trevc.hpp>
 #include <boost/numeric/bindings/lapack/trexc.hpp>
 
+// SVD
+
+#include <boost/numeric/bindings/lapack/gesvd.hpp>
+#include <boost/numeric/bindings/lapack/gesdd.hpp>
+
 #endif // BOOST_NUMERIC_BINDINGS_LAPACK_LAPACK_HPP
 
