@@ -1440,15 +1440,66 @@ equal_to<int,int>::value; // error!
 \end{verbatim}
 }
 
+And of course this doesn't work the other way around either:
+
+{\footnotesize
+\begin{verbatim}
+typedef mpl::list<1,2,3,4,5> numbers; // error!
+\end{verbatim}
+}
+
 While this may be an obvious limitation, it imposes yet 
 another dilemma on the library design - on one hand, we don't 
 want to restrict users to type namipulations only, and on another 
 hand, full support for intergal manipulations would require at 
 least duplication of most of the library facilities (ideally, 
 if going this route, all the templates should be reimplemented 
-for every integral type - \emph{char}, \emph{int}, \emph{short},
-\emph{long}, etc.) - the same situation as we would have if we 
+for every integral type - \code{char}, \code{int}, \code{short},
+\code{long}, etc.) - the same situation as we would have if we 
 choosed to represent metafunctions as ordinary class templates.
+The solution for this issue is the same as well - we represent 
+integral values by wrapping them in types, so, for example, to 
+create a list of numbers you write:
+
+{\footnotesize
+\begin{verbatim}
+typedef mpl::list<
+      mpl::int_c<1>
+    , mpl::int_c<2>
+    , mpl::int_c<3>
+    , mpl::int_c<4>
+    , mpl::int_c<5>
+    > numbers;
+\end{verbatim}
+}
+
+Wrapping integral constants into types to make them 
+first-class citizens is important well inside metaprograms, 
+where you often don't know (and don't care) if the 
+metafunctions you are using operate on types, intergal 
+values, other metafunctions, or something else, like 
+fixed-point or rational numbers (\code{mpl::fixed\_c} 
+and \code{mpl::rational\_c}).
+
+But from user's perspective, the above example is much more
+verbose than the shorter one, the one that was incorrect. So, 
+for the convenience purposes, the library does provide users 
+with a template that takes non-type template parameters, but 
+allows a more compact notaion:
+
+{\footnotesize
+\begin{verbatim}
+typedef mpl::list_c<long,1,2,3,4,5> numbers;
+\end{verbatim}
+}
+
+There is a similar \code{vector} counterpart as well:
+
+{\footnotesize
+\begin{verbatim}
+typedef mpl::vector_c<long,1,2,3,4,5> numbers;
+\end{verbatim}
+}
 
 
 \emph{why external functions for all algorithms}
