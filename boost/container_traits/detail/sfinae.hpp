@@ -58,7 +58,7 @@ namespace boost
         //////////////////////////////////////////////////////////////////////
         
 #ifdef BOOST_MSVC_STD_ITERATOR
-        template< typename T1, T2 >
+        template< typename T1, typename T2 >
         yes_type is_iterator_impl( const std::iterator<T2,T2>* );
 #else        
 #if BOOST_DINKUMWARE_STDLIB == 1
