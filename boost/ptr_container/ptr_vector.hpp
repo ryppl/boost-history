@@ -71,8 +71,8 @@ namespace boost
         return p.release();
     }
 
-#undef BOOST_FORWARD_TYPEDEF
-#undef BOOST_PTR_CONTAINER_RELEASE_AND_CLONE
+//#undef BOOST_FORWARD_TYPEDEF
+//#undef BOOST_PTR_CONTAINER_RELEASE_AND_CLONE
 
 }
 

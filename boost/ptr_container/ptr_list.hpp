@@ -51,42 +51,7 @@ namespace boost
         : Base( first, last ) { }
         
         BOOST_PTR_CONTAINER_RELEASE_AND_CLONE( ptr_list );
-        
-    private:
-        class equal
-        {
-            const T& value_;
-            
-        public:
-            
-            equal( const T& v = T() ) : value_( v )
-            { }
-            
-            bool operator()( const T& x ) const
-            {
-                return x == value_;
-            }
-            
-            bool operator()( const T& l, const T& r ) const
-            {
-                return l == r;
-            }
-        };
-        
-        class less_than
-        {
-        public:
-            bool operator()( const T& l, const T& r ) const
-            {
-                return l < r;
-            }
-            
-            bool operator()( const T* l, const T* r ) const 
-            {
-                return *l < *r;
-            }
-        };
-    
+          
     public: 
         void splice( iterator before, ptr_list& x )                    
         {
@@ -105,7 +70,7 @@ namespace boost
         
         void remove( const_reference value )                           
         {
-            remove_if( equal( value ) ); 
+            remove_if( ptr_container::detail::equal<T>( value ) ); 
         } 
         
         template< typename Predicate > 
@@ -118,24 +83,9 @@ namespace boost
                     this->erase( i ); 
         }
         
-        void unique()                                                  
-        {
-            unique( equal() );
-        }
-        
-        template< typename BinaryPredicate >
-        void unique( BinaryPredicate binary_pred )                     
-        {
-            iterator i = this->begin();
-            iterator e = prior( this->end() );
-            for(; i != e; ++i )
-                if( binary_pred( *i, *next( i ) ) )
-                    this->erase( i );    
-        }
-        
         void merge( ptr_list& x )                                 
         {
-            merge( x, less_than() );
+            merge( x, ptr_container::detail::less_than() );
         }
     
         template< typename Compare > 
@@ -146,7 +96,7 @@ namespace boost
         
         void sort()                                                    
         { 
-            sort( less_than() ); 
+            sort( ptr_less_than<T>() ); 
         };
         
         template< typename Compare > 
@@ -174,7 +124,7 @@ namespace boost
 
 }
 
-#undef BOOST_FORWARD_TYPEDEF
-#undef BOOST_PTR_CONTAINER_RELEASE_AND_CLONE
+//#undef BOOST_FORWARD_TYPEDEF
+//#undef BOOST_PTR_CONTAINER_RELEASE_AND_CLONE
 
 #endif

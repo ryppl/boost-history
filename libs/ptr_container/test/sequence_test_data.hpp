@@ -1,11 +1,13 @@
 
 #include <libs/ptr_container/test/test_data.hpp>
+#include <boost/ptr_container/ptr_predicate.hpp>
+#include <boost/bind.hpp>
 
-template< typename C, typename T >
+template< typename C, typename B, typename T >
 void reversible_container_test();
 
 
-template< typename C, typename T >
+template< typename C, typename B, typename T >
 void reversible_container_test()
 {
 
@@ -94,5 +96,12 @@ void reversible_container_test()
     BOOST_CHECK( c.empty() );
     BOOST_MESSAGE( "finished transfer test" ); 
     
+    c.sort();
+    c.sort( std::greater<B>() ); // notice 'B'
+    c.unique();
+    c.unique( std::not_equal_to<B>() ); // notice 'B'
+    c.remove( T() );
+    T t;
+    c.remove_if( bind( std::not_equal_to<B>(), _1, cref( t ) ) ); // notice 'B'
 }
 

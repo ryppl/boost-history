@@ -12,6 +12,15 @@
 using namespace std;
 using namespace boost;
 
+//
+// Forward declare 'make_clone()' to be able
+// use clonability of 'Composite' inline in the class.
+// This is normally not needed when using .hpp + .cpp files.
+//
+class Composite;
+Composite* make_clone( const Composite& );
+
+
 class Composite 
 {
     typedef ptr_vector<Composite>         composite_t;

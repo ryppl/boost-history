@@ -8,8 +8,8 @@ int test_main( int, char*[] )
     typedef_test< ptr_deque<Base>, Derived >();
     typedef_test< ptr_deque<Value>, Value >();
 
-    reversible_container_test< ptr_deque<Base>, Derived >();
-    reversible_container_test< ptr_deque<Value>, Value >();
+    reversible_container_test< ptr_deque<Base>, Base, Derived >();
+    reversible_container_test< ptr_deque<Value>, Value, Value >();
 
 //    algo_test< ptr_deque<Value>, Value >();
 //    algo_test_polymorphic< ptr_deque<Base>, Derived >();

@@ -5,21 +5,20 @@
 # pragma once
 #endif
 
-#include <boost/type_traits/remove_pointer.hpp>
-#include <boost/mpl/if.hpp>
 #include <boost/ptr_container/detail/map_iterator.hpp>
-#include <boost/ptr_container/bad_pointer.hpp>
-#include <boost/ptr_container/bad_ptr_container_operation.hpp>
 #include <boost/ptr_container/detail/scoped_deleter.hpp>
 #include <boost/ptr_container/detail/size_undoer.hpp>
+#include <boost/ptr_container/bad_pointer.hpp>
+#include <boost/ptr_container/bad_ptr_container_operation.hpp>
 #include <boost/ptr_container/make_clone.hpp>
+#include <boost/ptr_container/ptr_predicate.hpp>
+#include <boost/bind.hpp>
 #include <boost/config.hpp>
 #include <boost/iterator/indirect_iterator.hpp>
 #include <boost/operators.hpp>
-#include <boost/cast.hpp>
+#include <boost/utility.hpp>
 #include <cassert>
 #include <algorithm>
-#include <iterator>
 #include <exception>
 #include <memory>
 
@@ -41,7 +40,6 @@ namespace detail
         typedef boost::indirect_iterator<typename C::reverse_iterator>        reverse_iterator;
         typedef boost::indirect_iterator<typename C::const_reverse_iterator>  const_reverse_iterator;              
         typedef T                                                             object_type;
-        typedef T                                                             search_key_type;
     };
     
     template< typename M, typename T >
@@ -54,12 +52,11 @@ namespace detail
         typedef typename ptr_container::detail::map_iterator<typename M::reverse_iterator, T>             reverse_iterator;
         typedef typename ptr_container::detail::map_iterator<typename M::const_reverse_iterator, const T> const_reverse_iterator;
         typedef std::pair<const typename M::key_type, T*>                                                 object_type;
-        typedef typename M::key_type                                                                      search_key_type;
     };
 
     template< typename Config >
     class reversible_ptr_container : less_than_comparable< reversible_ptr_container< Config >, 
-                                     equality_comparable< reversible_ptr_container< Config > > >
+                                     equality_comparable< reversible_ptr_container< Config > > >, noncopyable
     {
         // static assert: no array
         typedef BOOST_DEDUCED_TYPENAME Config::container_type C;
@@ -98,12 +95,6 @@ namespace detail
         typedef ptr_container::detail::scoped_deleter<T>                   scoped_deleter;
         typedef ptr_container::detail::size_undoer<C>                      size_undoer;
 
-
-        struct deleter_ptr
-        {
-            template< typename U >
-            void operator()( const U* u ) { delete u; }
-        };
 
     protected:
 
@@ -203,14 +194,13 @@ namespace detail
         
         void remove( iterator i )
         { 
-            remove( i, i );
+            checked_delete( &*i );
         }
         
         void remove( iterator first, iterator last ) 
         {
-            int ii = 0;
-            for( iterator i = first; i != last; ++i, ++ii )
-                delete &*i;
+            for( ; first != last; ++first )
+                checked_delete( &*first );
         }
 
         template< typename ForwardIterator >
@@ -284,6 +274,7 @@ namespace detail
         template< typename InputIterator >
         void assign( InputIterator first, InputIterator last ) // strong 
         { 
+            // todo: if( first == last ) return;
             difference_type n = std::distance( first, last ); 
             scoped_deleter sd( n );         // strong
             make_clones( sd, first, last ); // strong
@@ -294,6 +285,7 @@ namespace detail
         // overhead: 1 heap allocation (very cheap compared to cloning)
         void assign( size_type n, const_reference x ) // strong         
         {
+            // todo: if( first == last ) return;
             scoped_deleter sd( n );        // strong
             make_clones( sd, n, x );       // strong
             strong_resize_and_remove( n ); // strong
@@ -396,7 +388,7 @@ namespace detail
             ptr.release();             // nothrow
         }
           
-        void push_back( const_reference x ) // strong
+        void push_back( const T& x ) // strong
         { 
             push_back( make_clone( x ) );
         }
@@ -425,6 +417,7 @@ namespace detail
 
         void insert( iterator before, size_type n, const_reference x ) // strong 
         {
+            // todo: if( first == last ) return;
             scoped_deleter sd( n );                  // strong
             make_clones( sd, n, x );                 // strong 
             insert_clones_and_release( sd, before ); // strong, commit
@@ -433,15 +426,16 @@ namespace detail
         template< typename InputIterator >
         void insert( iterator before, InputIterator first, InputIterator last ) // strong 
         {
+            // todo: if( first == last ) return;
             scoped_deleter sd( std::distance( first, last ) ); // strong
             make_clones( sd, first, last );                    // strong
             insert_clones_and_release( sd, before );           // strong, commit 
         } 
                        
-        iterator erase( iterator before ) // nothrow 
+        iterator erase( iterator x ) // nothrow 
         { 
-            remove( before ); 
-            return iterator( c_.erase( before.base() ) );
+            remove( x ); 
+            return iterator( c_.erase( x.base() ) );
         }
         
         iterator erase( iterator first, iterator last ) // notrow 
@@ -586,6 +580,62 @@ namespace detail
             from.c_.clear();                                            // nothrow
         }
              
+    public: // special algorithms
+        
+        void sort()
+        {
+            sort( std::less<T>() );
+        }
+        
+        template< typename BinaryPredicate >
+        void sort( BinaryPredicate pred )
+        {
+            std::sort( ptr_begin(), ptr_end(), indirected2<BinaryPredicate>( pred ) );
+        }
+            
+        void unique()
+        {
+            unique( std::equal_to<T>() );
+        }
+        
+        template< typename BinaryPredicate >
+        void unique( BinaryPredicate pred )
+        {
+            iterator i = begin();
+            iterator e = end();
+            while( i != e )
+            {
+                iterator next_ = next( i );
+                
+                if( next_ == e )
+                    break;
+                
+                // see std 25.22.8 
+                if( pred( *next_, *i ) )
+                {
+                    erase( next_ );
+                    continue;
+                }
+                else
+                {
+                    ++i;
+                }
+            }
+        }
+         
+        void remove( const T& x )
+        {
+            remove_if( bind( std::equal_to<T>(), _1, cref( x ) ) ); 
+        }
+        
+        template< typename Predicate >
+        void remove_if( Predicate pred )
+        {
+            ptr_iterator last = std::partition( ptr_begin(), ptr_end(), 
+                                                not1< indirected1<Predicate,T> >( pred ) );
+            erase( iterator( last ), end() );
+        }
+            
     }; // 'reversible_ptr_container'
 
 
@@ -640,10 +690,8 @@ typedef BOOST_DEDUCED_TYPENAME Base::reverse_const_ptr_iterator reverse_const_pt
     std::auto_ptr<PC> clone() const                 \
     {                                               \
        return std::auto_ptr<PC>( new PC( this->begin(), this->end() ) ); \
-    }                                               \
-                                                    \
-    PC( const PC& );                                \
-    PC& operator=( const PC& )                                      
+    }
+                                                    
     
     
     } // namespace 'detail'

@@ -35,8 +35,10 @@ namespace boost
                 bool              released_;
             public:
                 scoped_deleter( int size ) : 
-                    ptrs_( size == 0 ? 0 : new T*[size] ), stored_( 0 ), released_( false )
-                { }
+                    ptrs_( new T*[size] ), stored_( 0 ), released_( false )
+                {
+                    assert( size > 0 );
+                }
                 
                 
                 
@@ -69,10 +71,7 @@ namespace boost
                 
                 T** begin()
                 {
-                    // note: replace with assertion
-                    //
-                    if( ptrs_.get() == 0 )
-                        return 0;
+                    assert( ptrs_.get() != 0 );
                     return &ptrs_[0];
                 }
                 
@@ -80,8 +79,7 @@ namespace boost
                 
                 T** end()
                 {
-                    if( ptrs_.get() == 0 )
-                        return 0;
+                    assert( ptrs_.get() != 0 );
                     return &ptrs_[stored_];
                 }
                 

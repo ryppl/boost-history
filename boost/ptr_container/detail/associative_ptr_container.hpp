@@ -34,21 +34,17 @@ namespace detail
     public: // typedefs
         typedef BOOST_DEDUCED_TYPENAME Config::container_type   C;
         typedef BOOST_DEDUCED_TYPENAME C::key_type              key_type;
-        typedef BOOST_DEDUCED_TYPENAME Config::search_key_type  search_key_type;
         typedef BOOST_DEDUCED_TYPENAME C::key_compare           key_compare;
         typedef BOOST_DEDUCED_TYPENAME C::value_compare         value_compare;
         typedef BOOST_DEDUCED_TYPENAME Base::allocator_type     allocator_type; 
-        typedef BOOST_DEDUCED_TYPENAME Base::object_type        object_type; 
         typedef BOOST_DEDUCED_TYPENAME Base::iterator           iterator; 
-        typedef BOOST_DEDUCED_TYPENAME Base::const_iterator     const_iterator;
-        typedef BOOST_DEDUCED_TYPENAME Base::ptr_iterator       ptr_iterator; 
-        typedef BOOST_DEDUCED_TYPENAME Base::ptr_const_iterator ptr_const_iterator;
         typedef BOOST_DEDUCED_TYPENAME Base::size_type          size_type;
      
     protected:
         
         void assign();                // hide inherited members
         void operator[]( size_type ); // hide inherited members 
+        void sort();                  // hide inherited members 
         
     public: // foundation
         
@@ -85,7 +81,7 @@ namespace detail
             this->c__().erase( before.base() );
         }
         
-        size_type erase( const search_key_type& x )
+        size_type erase( const key_type& x )
         {
             return this->c__().erase( x );
         }
@@ -96,7 +92,7 @@ namespace detail
             this->c__().erase( first.base(), last.base() );
         }
   
-        /*
+        
         template< typename PtrContainer >
         void transfer( typename PtrContainer::iterator object, PtrContainer& from ) // strong
         {
@@ -104,7 +100,8 @@ namespace detail
             this->c__().insert( *object.base() ); // strong
             from.c__().erase( object.base() );    // nothrow
         }
-        
+        /*
+        note: cannot be made safe easily
         template< typename PtrContainer > 
         void transfer( typename PtrContainer::iterator first, 
                        typename PtrContainer::iterator last, PtrContainer& from )
@@ -125,26 +122,14 @@ namespace detail
     };
     
 } // namespace 'detail'
-
-    /////////////////////////////////////////////////////////////////////////
-    // default predicates:
-    
-    template< typename T >
-    struct ptr_less
-    {
-        bool operator()( const T* l, const T* r ) const
-        {
-            return *l < *r;
-        }
-    };
     
     /////////////////////////////////////////////////////////////////////////
     // set algorithms
 #define BOOST_PTR_SET_ALGORITHMS( T )                                            \
                                                                                  \
-    iterator find( T& x )                                                        \
-    {   /* note bug in most std.lib, set::find is not overloaded */              \
-        return iterator( Base::c__().find( &x ) );                               \
+    iterator find( const T& x ) const                                            \
+    {   /* rvalue-lvalue conversion problem */                                   \
+        return iterator( this->c__().find( const_cast<T*>( &x ) ) );             \
     }                                                                            \
                                                                                  \
     size_type count( const T& x ) const                                          \

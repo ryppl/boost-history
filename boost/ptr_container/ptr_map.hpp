@@ -81,7 +81,7 @@ namespace boost
             map_basic_clone_and_insert( first, last );
         }
         
-        std::pair<iterator,bool> insert( const Key& key, T* x ) // strong
+        std::pair<iterator,bool> insert( Key& key, T* x ) // strong
         {
             std::auto_ptr<T> ptr( x );                                                         // nothrow
             std::pair<ptr_iterator,bool> res = this->c__().insert( std::make_pair( key, x ) ); // strong, commit      
@@ -90,7 +90,7 @@ namespace boost
             return std::make_pair( iterator( res.first ), res.second );                        // nothrow   
         }
         
-        std::pair<iterator,bool> insert( const Key& key, const T& x ) // strong
+        std::pair<iterator,bool> insert( Key& key, const T& x ) // strong
         {
             return insert( key, make_clone( x ) );
         }
@@ -153,7 +153,7 @@ namespace boost
             map_basic_clone_and_insert( first, last );
         }
         
-        iterator insert( const Key& key, T* x ) // strong
+        iterator insert( Key& key, T* x ) // strong
         {
             std::auto_ptr<T> ptr( x );                                         // nothrow
             ptr_iterator res = this->c__().insert( std::make_pair( key, x ) ); // strong, commit        
@@ -161,7 +161,7 @@ namespace boost
             return iterator( res );           
         }
         
-        iterator insert( const Key& key, const T& x ) // strong
+        iterator insert( Key& key, const T& x ) // strong
         {
             return insert( key, make_clone( x ) );
         }

@@ -79,9 +79,23 @@ bool operator<( const Base& l, const Base& r )
 
 
 
+bool operator>( const Base& l, const Base& r )
+{
+    return !l.less_than( r ) && r.less_than( l );
+}
+
+
+
 bool operator==( const Base& l, const Base& r )
 {
     return l.equal( r );
+}
+
+
+
+bool operator!=( const Base& l, const Base& r )
+{
+    return !l.equal( r );
 }
 
 
@@ -147,9 +161,23 @@ bool operator<( const Value& l, const Value& r )
 
 
 
+bool operator>( const Value& l, const Value& r )
+{
+    return l.name() > r.name();
+}
+
+
+
 bool operator==( const Value& l, const Value& r )
 {
     return l.name() == r.name();
+}
+
+
+
+bool operator!=( const Value& l, const Value& r )
+{
+    return l.name() != r.name();
 }
 
 

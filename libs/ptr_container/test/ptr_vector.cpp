@@ -9,8 +9,8 @@ int test_main( int, char*[] )
     typedef_test< ptr_vector<Base>, Derived >();
     typedef_test< ptr_vector<Value>, Value >();
 
-    reversible_container_test< ptr_vector<Base>, Derived >();
-    reversible_container_test< ptr_vector<Value>, Value >();
+    reversible_container_test< ptr_vector<Base>, Base, Derived >();
+    reversible_container_test< ptr_vector<Value>, Value, Value >();
 
     value_algo_test< ptr_vector<Value>, Value >();
  //   algo_test_polymorphic< ptr_vector<Base>, Derived >();

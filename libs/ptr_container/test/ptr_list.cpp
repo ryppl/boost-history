@@ -8,8 +8,8 @@ int test_main( int, char*[] )
     typedef_test< ptr_list<Base>, Derived >();
     typedef_test< ptr_list<Value>, Value >();
 
-    reversible_container_test< ptr_list<Base>, Derived >();
-    reversible_container_test< ptr_list<Value>, Value >();
+    reversible_container_test< ptr_list<Base>, Base, Derived >();
+    reversible_container_test< ptr_list<Value>, Value, Value >();
 
 //    algo_test< ptr_list<Value>, Value >();
 //    algo_test_polymorphic< ptr_list<Base>, Derived >();
