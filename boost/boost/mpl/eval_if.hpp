@@ -40,7 +40,7 @@ template<
     , typename F2
     >
 struct eval_if_c
-    : eval0< typename if_c<C,F1,F2>::type >
+    : apply0< typename if_c<C,F1,F2>::type >
 {
 };
 
