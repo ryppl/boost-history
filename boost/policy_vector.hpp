@@ -701,7 +701,7 @@ protected:
 // allows to check according to vector's checking policy
 
 // in namespace detail?
-#include "pointer_iterator_wrapper.hpp"
+#include <boost/policy_vector/pointer_iterator_wrapper.hpp>
 
 // Since we use the superb library Boost.iterator_adaptor for reverse
 // iterator below, might as well use an adapter instead of these 
@@ -755,7 +755,7 @@ protected:
 // allows to check according to vector's checking policy
 
 // in namespace detail?
-#include "index_iterator_wrapper.hpp"
+#include <boost/policy_vector/index_iterator_wrapper.hpp>
 
 // Same here, something like:
 // template class T, class V>

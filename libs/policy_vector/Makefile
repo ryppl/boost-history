@@ -1,5 +1,5 @@
 # CXX = g++-3.0
-CXXFLAGS += -W -Wall -pedantic -g -I.
+CXXFLAGS += -W -Wall -pedantic -g -I../..
 
 all: testing_fixed_external testing_fixed_range \
      testing_fixed_aggregate testing_fixed_allocated \
@@ -15,7 +15,7 @@ all: testing_fixed_external testing_fixed_range \
 	./testing_variable_grow_shrink
 	./testing_std_vector
 
-BOOST = ./boost
+BOOST = ../../boost
 SIZE  = 100000
 
 testing_fixed_aggregate: testing_vector.cpp $(BOOST)/policy_vector.hpp
