@@ -4,6 +4,8 @@
 //  warranty, and with no claim as to its suitability for any purpose.
 //  Copyright Toon Knapen, Karl Meerbergen
 
+#include "random.hpp"
+
 #include <boost/numeric/bindings/traits/ublas_vector.hpp>
 #include <boost/numeric/bindings/traits/ublas_matrix.hpp>
 #include <boost/numeric/bindings/traits/std_vector.hpp>
@@ -12,30 +14,11 @@
 #include <vector>
 #include <complex>
 #include <iostream>
-#include <cstdlib>
 #include <limits>
 
 
-template <typename T>
-T random_value() {
-   assert( false );
-   return 0;
-}
 
-template <>
-float random_value<float>() {return float(std::rand()) / float(RAND_MAX) - 0.5;}
-
-template <>
-double random_value<double>() {return double(std::rand()) / double(RAND_MAX) - 0.5;}
-
-template <>
-std::complex<float> random_value< std::complex<float> >() {return std::complex<float>(random_value<float>(), random_value<float>() );}
-
-template <>
-std::complex<double> random_value< std::complex<double> >() {return std::complex<double>(random_value<double>(), random_value<double>() );}
-
-
-// Randomize a vector
+// Randomize a vector (using functions from random.hpp)
 template <typename V>
 void randomize(V& v) {
    for (typename V::size_type i=0; i<v.size(); ++i)

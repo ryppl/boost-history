@@ -10,3 +10,19 @@ exe scal
 	   <library-path>$(BLAS_PATH)
 	   <find-library>$(BLAS_LIB)
         ;
+
+exe blas1
+        : blas1.cpp 
+        :  <include>$(BOOST_ROOT)
+	   <include>$(BOOST)
+	   <library-path>$(BLAS_PATH)
+	   <find-library>$(BLAS_LIB)
+        ;
+
+exe blas3
+        : blas3.cpp 
+        :  <include>$(BOOST_ROOT)
+	   <include>$(BOOST)
+	   <library-path>$(BLAS_PATH)
+	   <find-library>$(BLAS_LIB)
+        ;
