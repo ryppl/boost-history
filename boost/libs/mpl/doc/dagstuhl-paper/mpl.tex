@@ -1363,9 +1363,42 @@ struct tiny_list_iterator
 }
 
 ).
+
+\emph{why library-provided iteration is important}
+
+So, the library provides you with almost complete compile-time 
+equivalent of STL framework. Does it help you to solve you 
+metaprogramming tasks? Let's return to our \code{largest} 
+example to see if we can rewrite it in a better way with what 
+\code{boost::mpl} has to offer. Well, actually there is not 
+much to look at, because implementation of it with MPL is a 
+one-liner:
+
+{\footnotesize
+\begin{verbatim}
+template< typename Sequence >
+struct largest
+{
+    typedef typename boost::mpl::max_element<
+          Sequence
+        , boost::mpl::less<
+              boost::mpl::size_of<_1>
+            , boost::mpl::size_of<_2>
+            >
+        >::type type;
+};
+\end{verbatim}
+}
+
+%%% agurt: I sound like a sales person below :)
+No more termination conditions with a tricky patterns matching, 
+no more partial specializations, and that's even more important, 
+it's \emph{obvious} that's the above code does - even although 
+it's all templates - something that you cannot say about the 
+original version.
+
   
 \begin{itemize}
-  \item why library-provided iteration is important
   \item \code{iter\_fold}/\code{iter\_find} as two main 
     iteration algortihms, there are iterators
   \item why iterators
