@@ -12,7 +12,7 @@ doxygen autodoc
         ../../../boost/range_ex/transform.hpp
     :
         <doxygen:param>EXTRACT_ALL=YES
-        <doxygen:param>PREDEFINED=RANGE_EX_DOXYGEN_INVOKED
+        <doxygen:param>PREDEFINED=BOOST_RANGE_EX_DOXYGEN_INVOKED
         <doxygen:param>PREDEFINED=BOOST_DEDUCED_TYPENAME=typename
         <doxygen:param>HIDE_UNDOC_MEMBERS=NO
         <doxygen:param>EXTRACT_PRIVATE=NO

@@ -35,12 +35,155 @@
 
 [section Introduction]
 
-Blah!
+[:The /range/ of what we think and do is limited by what we fail to notice. And because we fail
+to notice that we fail to notice, there is little we can do to change; until we notice how
+failing to notice shapes our thoughts and deeds.]
+[:[*/-- R. D. Laing/]]
+
+[h2 Description]
+
+The Standard Template Library provides a framework for writing generic code: algorithms which
+operate on sequences, as defined by a pair of iterators. The _range_ library raises the 
+abstraction level by defining a /Range/ concept, which simplifies writing generic code over 
+sequences and generalizes the concept to seamlessly handle arrays, iterator pairs, null-terminated
+strings and other sequence-like types. The range\_ex library presented here extends _range_ by
+exploiting the /composability/ of ranges, and by providing range-based versions of all the STL
+algorithms.
+
+[h2 Motivation]
+
+The key advantantage of range-based algorithms over iterator-based algorithms is that the former
+are /composable/ -- a function can return a range, which is immediately used as a parameter to a
+range-based algorithm. This is not possible with iterator-based algorithms. Consider the
+`std::equal_range` algorithm, which returns a `std::pair` of iterators. If you wanted to
+pass the sequence represented by this pair to another `std::` algorithm, you would first have to
+save the pair into a local variable, [^/p/]. Only then could you call the algorithm, passing
+[^/p.first/] and [^/p.second/], because the standard algorithms need iterators, not ranges.
+The following code illustrates the difficulty:
+
+    std::vector<int> integers;
+
+    // call std::equal_range, and save the result.
+    // Ugh, this return type is ugly!
+    std::pair<std::vector<int>::iterator, std::vector<int>::iterator> p =
+        std::equal_range(integers.begin(), integers.end(), 0);
+
+    // do something to all the elements in the range    
+    std::for_each(p.begin, p.end, some_predicate());
+
+
+Range-based algorithms make this easier by eliminating the need to declare local variables.
+Just call the algorithm, using the call to `std::equal_range` as the range argument.
+A `std::pair` of iterators satisfies the Range concept, so it just works. Even better, you can
+use `boost::equal_range` to avoid having to get the begin and end iterators for the sequence.
+
+    std::vector<int> integers;
+
+    // call boost::equal_range, pass the result directly to boost::for_each
+    boost::for_each(boost::equal_range(integers, 0), some_predicate());
+
+
+A powerful application of this principle uses range /adaptors/ (built using the _iterator_ library)
+to filter and\/or transform a range before passing it to a range-based algorithm. In this way, you
+can specify that an algorithm only apply to elements satisfying a certain predicate. Or, you can
+make a range of [^/X/] look like a range of [^/Y/] by applying an [^/X to Y/] transformation to each
+element on the fly. The range_ex library provides a handful of range adaptor primatives which you
+can use to easily filter and transform ranges without needing to declare local variables or fuss
+about complicated intermediate types. The following code uses a range filter to achieve a similar
+effect as the call to `equal_range` above.
+
+    std::vector<int> integers;
+
+    // perform some action on all the integers that are 0
+    boost::for_each(
+        integers
+            | boost::adaptor::filter(std::bind1st(std::equal_to<int>(),0))
+      , some_predicate()
+    );
+
+In this code, notice how the pipe operator `|` is used to send the `integers` sequence through
+a filter, and that the resulting filtered range is immediately used in the call to 
+`boost::for_each`. The filtered range has a complicated type, but because we are using range-based
+algorithms, we don't have to know it. Better yet, we don't have to /type/ it. Hurray!
+
+[blurb _note_ This code is less efficient than the above code using `equal_range` because
+`equal_range` is O(log(N)), whereas iterating through a filtered range is O(N). This code is just
+for illustration purposes.]
 
 [endsect]
 
+[section User's Guide]
+TODO
+
+[section Range Algorithms]
+
+The Standard Template Library provides a number of useful general-purpose algorithms that operate
+on sequences. They are defined in the standard header `<algorithm>`. These algorithms are
+iterator-based, meaning that sequences are specified using two iterators. Often, it is more
+convenient to use ranges instead of iterators. For instance, if you want to apply an algorithm to
+every element in a container, it's easier to simply pass the container instead of passing
+/(container.begin(), container.end())/. Also, if you are using the [link range_ex.range_adaptors
+Range Adaptors], you don't want to have to declare a local variable to hold the adapted range
+because you don't know its type. Instead, you can adapt the range right in the call to a range-based
+algorithm, freeing you from having to know the type of the adapted range.
+
+To best support range-based code, and to better leverage the composability of ranges, the 
+Boost.range_ex library provides a complete set of range-based algorithms. You can find them in
+[headerref boost/range_ex/algorithm.hpp]. 
+
+
+[endsect]
+
+[section Range Adaptors]
+TODO
+
+[section filter]
+TODO
+
+[endsect]
+
+[section transform]
+TODO
+
+[endsect]
+
+[section indirect]
+TODO
+
+[endsect]
+
+[section reverse]
+TODO
+
+[endsect]
+
+[endsect]
+
+[section Examples]
+TODO
+
+[endsect]
+
+[endsect]
 
 [xinclude autodoc.boostbook]
 
+[section Acknowledgements]
 
+I am indebted to Thorsten Ottosen for his _range_ library. Also, I would like to thank
+Jeremy Siek and Vladimir Prus for their work on the Container Algorithms in the Boost
+Sandbox, on which my Range algorithms are based.
 
+[endsect]
+
+[section Appendix 1: Open Design Issues]
+
+The following are open issues with the design of the range algorithms and adaptors. Opinions
+on these issues are welcome.
+
+* Output ranges?
+* Two input ranges, or a range and an iterator?
+* Should find(map) call map.find()?
+* Null-termination of C-style strings?
+
+[endsect]

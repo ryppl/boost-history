@@ -44,10 +44,166 @@
 
 <section id="range_ex.introduction">
 <title>Introduction</title>
+<blockquote><para>The <emphasis>range</emphasis> of what we think and do is limited by what we fail to notice. And because we fail
+to notice that we fail to notice, there is little we can do to change; until we notice how
+failing to notice shapes our thoughts and deeds.</para></blockquote><blockquote><para><emphasis role="bold"><emphasis>-- R. D. Laing</emphasis></emphasis></para></blockquote><anchor id="introduction.description" /><bridgehead renderas="sect2">Description</bridgehead><para>
+The Standard Template Library provides a framework for writing generic code: algorithms which
+operate on sequences, as defined by a pair of iterators. The <ulink url="http://boost.org/libs/range/index.html">Boost.Range</ulink> library raises the 
+abstraction level by defining a <emphasis>Range</emphasis> concept, which simplifies writing generic code over 
+sequences and generalizes the concept to seamlessly handle arrays, iterator pairs, null-terminated
+strings and other sequence-like types. The range_ex library presented here extends <ulink url="http://boost.org/libs/range/index.html">Boost.Range</ulink> by
+exploiting the <emphasis>composability</emphasis> of ranges, and by providing range-based versions of all the STL
+algorithms.</para>
+<anchor id="introduction.motivation" /><bridgehead renderas="sect2">Motivation</bridgehead><para>
+The key advantantage of range-based algorithms over iterator-based algorithms is that the former
+are <emphasis>composable</emphasis> -- a function can return a range, which is immediately used as a parameter to a
+range-based algorithm. This is not possible with iterator-based algorithms. Consider the
+<code><phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">equal_range</phrase></code> algorithm, which returns a <code><phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">pair</phrase></code> of iterators. If you wanted to
+pass the sequence represented by this pair to another <code><phrase role="identifier">std</phrase><phrase role="special">::</phrase></code> algorithm, you would first have to
+save the pair into a local variable, <literal><emphasis>p</emphasis></literal>. Only then could you call the algorithm, passing
+<literal><emphasis>p.first</emphasis></literal> and <literal><emphasis>p.second</emphasis></literal>, because the standard algorithms need iterators, not ranges.
+The following code illustrates the difficulty:</para>
+<programlisting>
+<literal>
+<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase><phrase role="keyword">int</phrase><phrase role="special">&gt;</phrase><phrase role="identifier"> integers</phrase><phrase role="special">;</phrase><phrase role="comment">
+
+// call std::equal_range, and save the result.
+// Ugh, this return type is ugly!
+</phrase><phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">pair</phrase><phrase role="special">&lt;</phrase><phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase><phrase role="keyword">int</phrase><phrase role="special">&gt;::</phrase><phrase role="identifier">iterator</phrase><phrase role="special">,</phrase><phrase role="identifier"> std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase><phrase role="keyword">int</phrase><phrase role="special">&gt;::</phrase><phrase role="identifier">iterator</phrase><phrase role="special">&gt;</phrase><phrase role="identifier"> p</phrase><phrase role="special"> =</phrase><phrase role="identifier">
+    std</phrase><phrase role="special">::</phrase><phrase role="identifier">equal_range</phrase><phrase role="special">(</phrase><phrase role="identifier">integers</phrase><phrase role="special">.</phrase><phrase role="identifier">begin</phrase><phrase role="special">(),</phrase><phrase role="identifier"> integers</phrase><phrase role="special">.</phrase><phrase role="identifier">end</phrase><phrase role="special">(),</phrase><phrase role="number"> 0</phrase><phrase role="special">);</phrase><phrase role="comment">
+
+// do something to all the elements in the range    
+</phrase><phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">for_each</phrase><phrase role="special">(</phrase><phrase role="identifier">p</phrase><phrase role="special">.</phrase><phrase role="identifier">begin</phrase><phrase role="special">,</phrase><phrase role="identifier"> p</phrase><phrase role="special">.</phrase><phrase role="identifier">end</phrase><phrase role="special">,</phrase><phrase role="identifier"> some_predicate</phrase><phrase role="special">());</phrase>
+</literal>
+</programlisting>
 <para>
-Blah!</para>
+Range-based algorithms make this easier by eliminating the need to declare local variables.
+Just call the algorithm, using the call to <code><phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">equal_range</phrase></code> as the range argument.
+A <code><phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">pair</phrase></code> of iterators satisfies the Range concept, so it just works. Even better, you can
+use <code><phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">equal_range</phrase></code> to avoid having to get the begin and end iterators for the sequence.</para>
+<programlisting>
+<literal>
+<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase><phrase role="keyword">int</phrase><phrase role="special">&gt;</phrase><phrase role="identifier"> integers</phrase><phrase role="special">;</phrase><phrase role="comment">
+
+// call boost::equal_range, pass the result directly to boost::for_each
+</phrase><phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">for_each</phrase><phrase role="special">(</phrase><phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">equal_range</phrase><phrase role="special">(</phrase><phrase role="identifier">integers</phrase><phrase role="special">,</phrase><phrase role="number"> 0</phrase><phrase role="special">),</phrase><phrase role="identifier"> some_predicate</phrase><phrase role="special">());</phrase>
+</literal>
+</programlisting>
+<para>
+A powerful application of this principle uses range <emphasis>adaptors</emphasis> (built using the <ulink url="http://boost.org/libs/iterator/doc/index.html">Boost.Iterator</ulink> library)
+to filter and/or transform a range before passing it to a range-based algorithm. In this way, you
+can specify that an algorithm only apply to elements satisfying a certain predicate. Or, you can
+make a range of <literal><emphasis>X</emphasis></literal> look like a range of <literal><emphasis>Y</emphasis></literal> by applying an <literal><emphasis>X to Y</emphasis></literal> transformation to each
+element on the fly. The range_ex library provides a handful of range adaptor primatives which you
+can use to easily filter and transform ranges without needing to declare local variables or fuss
+about complicated intermediate types. The following code uses a range filter to achieve a similar
+effect as the call to <code><phrase role="identifier">equal_range</phrase></code> above.</para>
+<programlisting>
+<literal>
+<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase><phrase role="keyword">int</phrase><phrase role="special">&gt;</phrase><phrase role="identifier"> integers</phrase><phrase role="special">;</phrase><phrase role="comment">
+
+// perform some action on all the integers that are 0
+</phrase><phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">for_each</phrase><phrase role="special">(</phrase><phrase role="identifier">
+    integers</phrase><phrase role="special">
+        |</phrase><phrase role="identifier"> boost</phrase><phrase role="special">::</phrase><phrase role="identifier">adaptor</phrase><phrase role="special">::</phrase><phrase role="identifier">filter</phrase><phrase role="special">(</phrase><phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">bind1st</phrase><phrase role="special">(</phrase><phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">equal_to</phrase><phrase role="special">&lt;</phrase><phrase role="keyword">int</phrase><phrase role="special">&gt;(),</phrase><phrase role="number">0</phrase><phrase role="special">))</phrase><phrase role="special">
+  ,</phrase><phrase role="identifier"> some_predicate</phrase><phrase role="special">()</phrase><phrase role="special">
+);</phrase>
+</literal>
+</programlisting>
+<para>
+In this code, notice how the pipe operator <code><phrase role="special">|</phrase></code> is used to send the <code><phrase role="identifier">integers</phrase></code> sequence through
+a filter, and that the resulting filtered range is immediately used in the call to 
+<code><phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">for_each</phrase></code>. The filtered range has a complicated type, but because we are using range-based
+algorithms, we don't have to know it. Better yet, we don't have to <emphasis>type</emphasis> it. Hurray!</para>
+<informaltable frame="all">
+<?dbhtml table-width="74%" ?>
+<tgroup cols="1">
+<tbody>
+<row>
+<entry role="blurb">
+<inlinemediaobject><imageobject><imagedata fileref="images/note.png"></imagedata></imageobject></inlinemediaobject> This code is less efficient than the above code using <code><phrase role="identifier">equal_range</phrase></code> because
+<code><phrase role="identifier">equal_range</phrase></code> is O(log(N)), whereas iterating through a filtered range is O(N). This code is just
+for illustration purposes.</entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
 </section>
+<section id="range_ex.user_s_guide">
+<title>User's Guide</title>
+<para>
+TODO</para>
+
+<section id="range_ex.range_algorithms">
+<title>Range Algorithms</title>
+<para>
+The Standard Template Library provides a number of useful general-purpose algorithms that operate
+on sequences. They are defined in the standard header <code><phrase role="special">&lt;</phrase><phrase role="identifier">algorithm</phrase><phrase role="special">&gt;</phrase></code>. These algorithms are
+iterator-based, meaning that sequences are specified using two iterators. Often, it is more
+convenient to use ranges instead of iterators. For instance, if you want to apply an algorithm to
+every element in a container, it's easier to simply pass the container instead of passing
+<emphasis>(container.begin(), container.end())</emphasis>. Also, if you are using the <link linkend="range_ex.range_adaptors">Range Adaptors</link>, you don't want to have to declare a local variable to hold the adapted range
+because you don't know its type. Instead, you can adapt the range right in the call to a range-based
+algorithm, freeing you from having to know the type of the adapted range.</para>
+<para>
+To best support range-based code, and to better leverage the composability of ranges, the 
+Boost.range_ex library provides a complete set of range-based algorithms. You can find them in
+<headername alt="boost/range_ex/algorithm.hpp">boost/range_ex/algorithm.hpp</headername>.</para>
+</section>
+<section id="range_ex.range_adaptors">
+<title>Range Adaptors</title>
+<para>
+TODO</para>
+
+<section id="range_ex.filter">
+<title>filter</title>
+<para>
+TODO</para>
+</section>
+<section id="range_ex.transform">
+<title>transform</title>
+<para>
+TODO</para>
+</section>
+<section id="range_ex.indirect">
+<title>indirect</title>
+<para>
+TODO</para>
+</section>
+<section id="range_ex.reverse">
+<title>reverse</title>
+<para>
+TODO</para>
+</section></section>
+<section id="range_ex.examples">
+<title>Examples</title>
+<para>
+TODO</para>
+</section></section>
 <xi:include href="autodoc.boostbook" />
 
+<section id="range_ex.acknowledgements">
+<title>Acknowledgements</title>
+<para>
+I am indebted to Thorsten Ottosen for his <ulink url="http://boost.org/libs/range/index.html">Boost.Range</ulink> library. Also, I would like to thank
+Jeremy Siek and Vladimir Prus for their work on the Container Algorithms in the Boost
+Sandbox, on which my Range algorithms are based.</para>
+</section>
+<section id="range_ex.appendix_1__open_design_issues">
+<title>Appendix 1: Open Design Issues</title>
+<para>
+The following are open issues with the design of the range algorithms and adaptors. Opinions
+on these issues are welcome.</para>
+<itemizedlist>
+<listitem>
+Output ranges?
+</listitem><listitem>
+Two input ranges, or a range and an iterator?
+</listitem><listitem>
+Should find(map) call map.find()?
+</listitem><listitem>
+Null-termination of C-style strings?
+</listitem>
+</itemizedlist></section>
 </library>
 
