@@ -19,23 +19,24 @@
 
 #include <exception>
 
-#include "boost/utility/addressof.hpp"
 #include "boost/type_traits/is_pointer.hpp"
 #include "boost/type_traits/is_const.hpp"
 #include "boost/type_traits/add_pointer.hpp"
 #include "boost/type_traits/add_reference.hpp"
 
 #include "boost/mpl/apply_if.hpp"
-#include "boost/mpl/assert_is_same.hpp"
 #include "boost/mpl/bool_c.hpp"
 #include "boost/mpl/if.hpp"
 
-// The following are new/in-progress headers or fixes to existing headers:
-#include "boost/extract_fwd.hpp"
-#include "boost/detail/variant_workaround.hpp"
-
 namespace boost {
 
+//////////////////////////////////////////////////////////////////////////
+// Forward declares
+//
+
+template <typename Deriving> class extractable;
+
+//////////////////////////////////////////////////////////////////////////
 // class bad_extract
 //
 // The exception thrown in the event of a failed extract
@@ -52,146 +53,22 @@ public:
     }
 };
 
-// class template extract_traits
-//
-// Class template meant to be specialized for types wishing to offer
-//   extract<T>(...) functionality.
-// NOTE: T* extract_traits::execute( [const ]Holder& ) must be defined
-//   in any specialization of extract_traits.
-//
-template <typename Holder>
-struct extract_traits
-{
-private:
-    template <typename T>
-    static T* execute_impl(
-          T& operand
-        , mpl::true_c// extract_self
-        )
-    {
-        return boost::addressof(operand);
-    }
-
-    template <typename T>
-    static const T* execute_impl(
-          const T& operand
-        , mpl::true_c// extract_self
-        )
-    {
-        return boost::addressof(operand);
-    }
-
-    template <typename T>
-    static T* execute_impl(
-          T& operand
-        , mpl::false_c// extract_self
-        )
-    {
-        return static_cast<T*>(0);
-    }
-
-    template <typename T>
-    static const T* execute_impl(
-          const T& operand
-        , mpl::false_c// extract_self
-        )
-    {
-        return static_cast<const T*>(0);
-    }
-
-#if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
-
-public:
-    template <typename T>
-    static T* execute(Holder& operand)
-    {
-        return execute_impl<T>(
-              operand
-            , mpl::bool_c< is_same<Holder, T>::value >() // extract_self
-            );
-    }
-
-    template <typename T>
-    static const T* execute(const Holder& operand)
-    {
-        return execute_impl<T>(
-              operand
-            , mpl::bool_c< is_same<Holder, const T>::value >() // extract_self
-            );
-    }
-
-#else// defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
-
-private:
-    template <typename T>
-    static T* execute_no_partial_spec_impl(
-          Holder& operand
-        , mpl::true_c// is_variant
-        )
-    {
-        return detail::variant_extract_pointer<T>(operand);
-    }
-
-    template <typename T>
-    static const T* execute_no_partial_spec_impl(
-          const Holder& operand
-        , mpl::true_c// is_variant
-        )
-    {
-        return detail::variant_extract_pointer<const T>(operand);
-    }
-
-    template <typename T>
-    static T* execute_no_partial_spec_impl(
-          Holder& operand
-        , mpl::false_c// is_variant
-        )
-    {
-        return execute_impl(
-              operand
-            , mpl::bool_c< is_same<Holder, T>::value >() // extract_self
-            );
-    }
-
-    template <typename T>
-    static const T* execute_no_partial_spec_impl(
-          const Holder& operand
-        , mpl::false_c// is_variant
-        )
-    {
-        return execute_impl(
-              operand
-            , mpl::bool_c< is_same<Holder, const T>::value >() // extract_self
-            );
-    }
-
-public:
-    template <typename T>
-    static T* execute(Holder& operand)
-    {
-        return execute_no_partial_spec_impl<T>(
-              operand
-            , mpl::bool_c< is_variant<Holder>::value >()
-            );
-    }
-
-    template <typename T>
-    static const T* execute(const Holder& operand)
-    {
-        return execute_no_partial_spec_impl<T>(
-              operand
-            , mpl::bool_c< is_variant<Holder>::value >()
-            );
-    }
-
-#endif // BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION workaround
-
-};
-
 //////////////////////////////////////////////////////////////////////////
 // function template extract<T>
 //
-// Attempts a conversion of the given value to type T.
+// Attempts a conversion of the given value to specified type.
+//
+// Workaround below simulates following:
+//
+//   template <typename T, typename Holder> T * extract(Holder *);
+//   template <typename T, typename Holder> T * extract(const Holder *);
+//
+//   template <typename T, typename Holder> T & extract(Holder &);
+//   template <typename T, typename Holder> T & extract(const Holder &);
+//
+// Workaround rationale: see ISO standard defect 214 ("Partial ordering of
+// function templates is underspecified").
+//
 
 namespace detail {
 
@@ -199,27 +76,36 @@ template <typename T>
 struct extract_pointer_impl
 {
 private:
-    template <typename Holder> 
-    static T* execute_impl(Holder* operand, mpl::false_c)
+    template <typename Extractable> 
+    static T* execute_impl(
+          Extractable* operand
+        , mpl::false_c// is_const
+        )
     {
         if (!operand)
             return static_cast<T*>(0);
-        return extract_traits<Holder>::template execute<T>(*operand);
+        return extractable_traits<Extractable>::template extract<T>(*operand);
     }
 
-    template <typename Holder> 
-    static T* execute_impl(const Holder* operand, mpl::true_c)
+    template <typename Extractable> 
+    static T* execute_impl(
+          const Extractable* operand
+        , mpl::true_c// is_const
+        )
     {
         if (!operand)
             return static_cast<T*>(0);
-        return extract_traits<Holder>::template execute<T>(*operand);
+        return extractable_traits<Extractable>::template extract<T>(*operand);
     }
 
 public:
-    template <typename Holder>
-    static T* execute(Holder* operand)
+    template <typename Extractable>
+    static T* execute(Extractable* operand)
     {
-        return execute_impl(operand, mpl::bool_c< is_const<Holder>::value >());
+        return execute_impl(
+              operand
+            , mpl::bool_c< is_const<Extractable>::value >()
+            );
     }
 };
 
@@ -227,44 +113,53 @@ template <typename T>
 struct extract_reference_impl
 {
 private:
-    template <typename Holder>
-    static T& execute_impl(Holder& operand, mpl::false_c)
+    template <typename Extractable>
+    static T& execute_impl(
+          Extractable& operand
+        , mpl::false_c// is_const
+        )
     {
-        T* result = extract_traits<Holder>::template execute<T>(operand);
+        T* result = extractable_traits<Extractable>::template extract<T>(operand);
         if (!result)
             throw bad_extract();
         return *result;
     }
 
-    template <typename Holder>
-    static T& execute_impl(const Holder& operand, mpl::true_c)
+    template <typename Extractable>
+    static T& execute_impl(
+          const Extractable& operand
+        , mpl::true_c// is_const
+        )
     {
-        T* result = extract_traits<Holder>::template execute<T>(operand);
+        T* result = extractable_traits<Extractable>::template extract<T>(operand);
         if (!result)
             throw bad_extract();
         return *result;
     }
 
 public:
-    template <typename Holder>
-    static T& execute(Holder& operand)
+    template <typename Extractable>
+    static T& execute(Extractable& operand)
     {
-        return execute_impl(operand, mpl::bool_c<is_const<Holder>::value>());
+        return execute_impl(
+              operand
+            , mpl::bool_c< is_const<Extractable>::value >()
+            );
     }
 };
 
 } // namespace detail
 
-template <typename T, typename Holder>
+template <typename T, typename Extractable>
     typename mpl::apply_if<
-          is_pointer<Holder>
+          is_pointer<Extractable>
         , add_pointer<T>
         , add_reference<T>
         >::type
-extract(Holder& operand)
+extract(Extractable& operand)
 {
     typedef typename mpl::if_<
-          is_pointer<Holder>
+          is_pointer<Extractable>
         , detail::extract_pointer_impl<T>
         , detail::extract_reference_impl<T>
         >::type impl;
