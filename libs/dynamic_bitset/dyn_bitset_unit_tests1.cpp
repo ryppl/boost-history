@@ -50,7 +50,7 @@ void run_test_cases( BOOST_EXPLICIT_TEMPLATE_TYPE(Block) )
 
   std::string long_string = get_long_string();
 
-  std::size_t   N,
+  std::size_t   n,
                 ul_width    = std::numeric_limits<unsigned long>::digits,
                 block_width = std::numeric_limits<Block>::digits;
   unsigned long numbers[]   = { 0, 40247,
@@ -58,31 +58,34 @@ void run_test_cases( BOOST_EXPLICIT_TEMPLATE_TYPE(Block) )
 
   //=====================================================================
   // Test construction from unsigned long
-  for (std::size_t i = 0; i < 3; ++i) {
+  const std::size_t array_count =
+        sizeof(numbers) / sizeof(numbers[0]);
+
+  for (std::size_t i = 0; i < array_count; ++i) {
     unsigned long number = numbers[i];
-    N = 0;
-    Tests::from_unsigned_long(N, number);
+    n = 0;
+    Tests::from_unsigned_long(n, number);
 
-    N = std::size_t(0.7 * double(ul_width));
-    Tests::from_unsigned_long(N, number);
+    n = std::size_t(0.7 * double(ul_width));
+    Tests::from_unsigned_long(n, number);
 
-    N = 1 * ul_width;
-    Tests::from_unsigned_long(N, number);
+    n = 1 * ul_width;
+    Tests::from_unsigned_long(n, number);
 
-    N = std::size_t(1.3 * double(ul_width));
-    Tests::from_unsigned_long(N, number);
+    n = std::size_t(1.3 * double(ul_width));
+    Tests::from_unsigned_long(n, number);
 
-    N = std::size_t(0.7 * double(block_width));
-    Tests::from_unsigned_long(N, number);
+    n = std::size_t(0.7 * double(block_width));
+    Tests::from_unsigned_long(n, number);
 
-    N = block_width;
-    Tests::from_unsigned_long(N, number);
+    n = block_width;
+    Tests::from_unsigned_long(n, number);
 
-    N = std::size_t(1.3 * double(block_width));
-    Tests::from_unsigned_long(N, number);
+    n = std::size_t(1.3 * double(block_width));
+    Tests::from_unsigned_long(n, number);
 
-    N = 3 * block_width;
-    Tests::from_unsigned_long(N, number);
+    n = 3 * block_width;
+    Tests::from_unsigned_long(n, number);
   }
   //=====================================================================
   // Test construction from a string
