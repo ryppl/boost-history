@@ -12,20 +12,6 @@
 #include "vector.h"
 #include "matrix.h"
 
-namespace numerics {
-
-    std::size_t type_traits<float>::plus_complexity = 1;
-    std::size_t type_traits<float>::multiplies_complexity = 1;
-    std::size_t type_traits<double>::plus_complexity = 1;
-    std::size_t type_traits<double>::multiplies_complexity = 1;
-
-    std::size_t type_traits<std::complex<float> >::plus_complexity = 2;
-    std::size_t type_traits<std::complex<float> >::multiplies_complexity = 6;
-    std::size_t type_traits<std::complex<double> >::plus_complexity = 2;
-    std::size_t type_traits<std::complex<double> >::multiplies_complexity = 6;
-
-}
-
 #ifdef NUMERICS_USE_INSTANT 
 
 namespace numerics {
@@ -77,7 +63,7 @@ namespace numerics {
         }
 
         NUMERICS_INLINE
-        type_traits<float>::norm_type abs (const float &t) {
+        type_traits<float>::real_type abs (const float &t) {
 #ifdef USE_MSVC
             return ::fabsf (t);
 #else // USE_MSVC
@@ -85,7 +71,7 @@ namespace numerics {
 #endif // USE_MSVC
         }
         NUMERICS_INLINE
-        type_traits<double>::norm_type abs (const double &t) {
+        type_traits<double>::real_type abs (const double &t) {
 #ifdef USE_MSVC
             return ::fabs (t);
 #else // USE_MSVC
@@ -94,29 +80,29 @@ namespace numerics {
         }
 
         NUMERICS_INLINE
-        type_traits<float>::norm_type norm_1 (const float &t) {
+        type_traits<float>::real_type norm_1 (const float &t) {
             return abs (t);
         }
         NUMERICS_INLINE
-        type_traits<double>::norm_type norm_1 (const double &t) {
-            return abs (t);
-        }
-
-        NUMERICS_INLINE
-        type_traits<float>::norm_type norm_2 (const float &t) {
-            return abs (t);
-        }
-        NUMERICS_INLINE
-        type_traits<double>::norm_type norm_2 (const double &t) {
+        type_traits<double>::real_type norm_1 (const double &t) {
             return abs (t);
         }
 
         NUMERICS_INLINE
-        type_traits<float>::norm_type norm_inf (const float &t) {
+        type_traits<float>::real_type norm_2 (const float &t) {
             return abs (t);
         }
         NUMERICS_INLINE
-        type_traits<double>::norm_type norm_inf (const double &t) {
+        type_traits<double>::real_type norm_2 (const double &t) {
+            return abs (t);
+        }
+
+        NUMERICS_INLINE
+        type_traits<float>::real_type norm_inf (const float &t) {
+            return abs (t);
+        }
+        NUMERICS_INLINE
+        type_traits<double>::real_type norm_inf (const double &t) {
             return abs (t);
         }
 

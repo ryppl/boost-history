@@ -32,7 +32,7 @@ template<class V, int N>
 void test_blas_1<V, N>::operator () () {
 	try {
 		value_type t;
-		norm_type n;
+		real_type n;
 		V v1 (N), v2 (N);
 
 		// _asum

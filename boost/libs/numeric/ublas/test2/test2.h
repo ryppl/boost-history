@@ -44,7 +44,7 @@ void initialize_matrix (M &m) {
 template<class V, int N>
 struct test_blas_1 {
     typedef typename V::value_type value_type;
-    typedef typename numerics::type_traits<value_type>::norm_type norm_type;
+    typedef typename numerics::type_traits<value_type>::real_type real_type;
 
 	void operator () ();
 };

@@ -69,6 +69,36 @@ namespace numerics {
         }
     };
 
+    // Unary returning real
+    template<class T>
+    struct scalar_real_unary_functor {
+        typedef T argument_type;
+		typedef typename type_traits<T>::real_type result_type;
+    };
+
+    template<class T>
+    struct scalar_real: 
+        public scalar_real_unary_functor<T> {
+        typedef typename scalar_real_unary_functor<T>::argument_type argument_type;
+        typedef typename scalar_real_unary_functor<T>::result_type result_type;
+
+        NUMERICS_INLINE
+        result_type operator () (const argument_type &t) const { 
+            return detail::real (t); 
+        }
+    };
+    template<class T>
+    struct scalar_imag: 
+        public scalar_real_unary_functor<T> {
+        typedef typename scalar_real_unary_functor<T>::argument_type argument_type;
+        typedef typename scalar_real_unary_functor<T>::result_type result_type;
+
+        NUMERICS_INLINE
+        result_type operator () (const argument_type &t) const { 
+            return detail::imag (t); 
+        }
+    };
+
     // Binary
     template<class T1, class T2>
     struct scalar_binary_functor {
@@ -230,7 +260,7 @@ namespace numerics {
                 t += e () (i);
             return t; 
         }
-        // Dense random access iterator
+        // Dense case
         template<class I>
         NUMERICS_INLINE
         result_type operator () (difference_type size, I it) const { 
@@ -239,7 +269,7 @@ namespace numerics {
                 t += *it, ++ it;
             return t; 
         }
-        // Packed/sparse bidirectional iterator
+        // Sparse case
         template<class I>
         NUMERICS_INLINE
         result_type operator () (I it, const I &it_end) const { 
@@ -250,24 +280,24 @@ namespace numerics {
         }
     };
 
-    // Unary returning scalar norm
+    // Unary returning real scalar 
     template<class T>
-    struct vector_scalar_norm_unary_functor {
+    struct vector_scalar_real_unary_functor {
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
         typedef T value_type;
-        typedef typename type_traits<T>::norm_type norm_type;
-        typedef norm_type result_type;
+        typedef typename type_traits<T>::real_type real_type;
+        typedef real_type result_type;
     };
 
     template<class T>
     struct vector_norm_1: 
-        public vector_scalar_norm_unary_functor<T> {
-        typedef typename vector_scalar_norm_unary_functor<T>::size_type size_type;
-        typedef typename vector_scalar_norm_unary_functor<T>::difference_type difference_type;
-        typedef typename vector_scalar_norm_unary_functor<T>::value_type value_type;
-        typedef typename vector_scalar_norm_unary_functor<T>::norm_type norm_type;
-        typedef typename vector_scalar_norm_unary_functor<T>::result_type result_type;
+        public vector_scalar_real_unary_functor<T> {
+        typedef typename vector_scalar_real_unary_functor<T>::size_type size_type;
+        typedef typename vector_scalar_real_unary_functor<T>::difference_type difference_type;
+        typedef typename vector_scalar_real_unary_functor<T>::value_type value_type;
+        typedef typename vector_scalar_real_unary_functor<T>::real_type real_type;
+        typedef typename vector_scalar_real_unary_functor<T>::result_type result_type;
 
         template<class E>
         NUMERICS_INLINE
@@ -280,7 +310,7 @@ namespace numerics {
             }
             return t; 
         }
-        // Dense random access iterator
+        // Dense case
         template<class I>
         NUMERICS_INLINE
         result_type operator () (difference_type size, I it) const { 
@@ -292,7 +322,7 @@ namespace numerics {
             }
             return t; 
         }
-        // Packed/sparse bidirectional iterator
+        // Sparse case
         template<class I>
         NUMERICS_INLINE
         result_type operator () (I it, const I &it_end) const { 
@@ -307,43 +337,43 @@ namespace numerics {
     };
     template<class T>
     struct vector_norm_2: 
-        public vector_scalar_norm_unary_functor<T> {
-        typedef typename vector_scalar_norm_unary_functor<T>::size_type size_type;
-        typedef typename vector_scalar_norm_unary_functor<T>::difference_type difference_type;
-        typedef typename vector_scalar_norm_unary_functor<T>::value_type value_type;
-        typedef typename vector_scalar_norm_unary_functor<T>::norm_type norm_type;
-        typedef typename vector_scalar_norm_unary_functor<T>::result_type result_type;
+        public vector_scalar_real_unary_functor<T> {
+        typedef typename vector_scalar_real_unary_functor<T>::size_type size_type;
+        typedef typename vector_scalar_real_unary_functor<T>::difference_type difference_type;
+        typedef typename vector_scalar_real_unary_functor<T>::value_type value_type;
+        typedef typename vector_scalar_real_unary_functor<T>::real_type real_type;
+        typedef typename vector_scalar_real_unary_functor<T>::result_type result_type;
 
         template<class E>
         NUMERICS_INLINE
         result_type operator () (const vector_expression<E> &e) const { 
-            norm_type t (0);
+            real_type t (0);
             size_type size (e ().size ());
             for (size_type i = 0; i < size; ++ i) {
-                norm_type u (detail::abs (e () (i)));
+                real_type u (detail::abs (e () (i)));
                 t +=  u * u;
             }
             return detail::sqrt (t); 
         }
-        // Dense random access iterator
+        // Dense case
         template<class I>
         NUMERICS_INLINE
         result_type operator () (difference_type size, I it) const { 
-            norm_type t (0);
+            real_type t (0);
             while (-- size >= 0) {
-                norm_type u (detail::abs (*it));
+                real_type u (detail::abs (*it));
                 t +=  u * u;
                 ++ it;
             }
             return detail::sqrt (t); 
         }
-        // Packed/sparse bidirectional iterator
+        // Sparse case
         template<class I>
         NUMERICS_INLINE
         result_type operator () (I it, const I &it_end) const { 
-            norm_type t (0);
+            real_type t (0);
             while (it != it_end) {
-                norm_type u (detail::abs (*it));
+                real_type u (detail::abs (*it));
                 t +=  u * u;
                 ++ it;
             }
@@ -352,45 +382,45 @@ namespace numerics {
     };
     template<class T>
     struct vector_norm_inf: 
-        public vector_scalar_norm_unary_functor<T> {
-        typedef typename vector_scalar_norm_unary_functor<T>::size_type size_type;
-        typedef typename vector_scalar_norm_unary_functor<T>::difference_type difference_type;
-        typedef typename vector_scalar_norm_unary_functor<T>::value_type value_type;
-        typedef typename vector_scalar_norm_unary_functor<T>::norm_type norm_type;
-        typedef typename vector_scalar_norm_unary_functor<T>::result_type result_type;
+        public vector_scalar_real_unary_functor<T> {
+        typedef typename vector_scalar_real_unary_functor<T>::size_type size_type;
+        typedef typename vector_scalar_real_unary_functor<T>::difference_type difference_type;
+        typedef typename vector_scalar_real_unary_functor<T>::value_type value_type;
+        typedef typename vector_scalar_real_unary_functor<T>::real_type real_type;
+        typedef typename vector_scalar_real_unary_functor<T>::result_type result_type;
 
         template<class E>
         NUMERICS_INLINE
         result_type operator () (const vector_expression<E> &e) const { 
-            norm_type t (0);
+            real_type t (0);
             size_type size (e ().size ());
             for (size_type i = 0; i < size; ++ i) {
-                norm_type u (detail::abs (e () (i)));
+                real_type u (detail::abs (e () (i)));
                 if (u > t) 
                     t = u;
             }
             return t; 
         }
-        // Dense random access iterator
+        // Dense case
         template<class I>
         NUMERICS_INLINE
         result_type operator () (difference_type size, I it) const { 
-            norm_type t (0);
+            real_type t (0);
             while (-- size >= 0) {
-                norm_type u (detail::abs (*it));
+                real_type u (detail::abs (*it));
                 if (u > t) 
                     t = u;
                 ++ it;
             }
             return t; 
         }
-        // Packed/sparse bidirectional iterator
+        // Sparse case
         template<class I>
         NUMERICS_INLINE
         result_type operator () (I it, const I &it_end) const { 
-            norm_type t (0);
+            real_type t (0);
             while (it != it_end) {
-                norm_type u (detail::abs (*it));
+                real_type u (detail::abs (*it));
                 if (u > t) 
                     t = u;
                 ++ it;
@@ -405,7 +435,7 @@ namespace numerics {
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
         typedef T value_type;
-        typedef typename type_traits<T>::norm_type norm_type;
+        typedef typename type_traits<T>::real_type real_type;
         typedef size_type result_type;
     };
 
@@ -415,17 +445,17 @@ namespace numerics {
         typedef typename vector_scalar_index_unary_functor<T>::size_type size_type;
         typedef typename vector_scalar_index_unary_functor<T>::difference_type difference_type;
         typedef typename vector_scalar_index_unary_functor<T>::value_type value_type;
-        typedef typename vector_scalar_index_unary_functor<T>::norm_type norm_type;
+        typedef typename vector_scalar_index_unary_functor<T>::real_type real_type;
         typedef typename vector_scalar_index_unary_functor<T>::result_type result_type;
 
         template<class E>
         NUMERICS_INLINE
         result_type operator () (const vector_expression<E> &e) const { 
             result_type i_norm_inf (0);
-            norm_type t (0);
+            real_type t (0);
             size_type size (e ().size ());
             for (size_type i = 0; i < size; ++ i) {
-                norm_type u (detail::abs (e () (i)));
+                real_type u (detail::abs (e () (i)));
                 if (u > t) {
                     i_norm_inf = i;
                     t = u;
@@ -433,14 +463,14 @@ namespace numerics {
             }
             return i_norm_inf; 
         }
-        // Dense random access iterator
+        // Dense case
         template<class I>
         NUMERICS_INLINE
         result_type operator () (difference_type size, I it) const { 
             result_type i_norm_inf (0);
-            norm_type t (0);
+            real_type t (0);
             while (-- size >= 0) {
-                norm_type u (detail::abs (*it));
+                real_type u (detail::abs (*it));
                 if (u > t) {
                     i_norm_inf = it.index ();
                     t = u;
@@ -449,14 +479,14 @@ namespace numerics {
             }
             return i_norm_inf; 
         }
-        // Packed/sparse bidirectional iterator
+        // Sparse case
         template<class I>
         NUMERICS_INLINE
         result_type operator () (I it, const I &it_end) const { 
             result_type i_norm_inf (it.index ());
-            norm_type t (0);
+            real_type t (0);
             while (it != it_end) {
-                norm_type u (detail::abs (*it));
+                real_type u (detail::abs (*it));
                 if (u > t) {
                     i_norm_inf = it.index ();
                     t = u;
@@ -494,7 +524,7 @@ namespace numerics {
                 t = t + e1 () (i) * e2 () (i);
             return t; 
         }
-        // Dense random access iterator
+        // Dense case
         template<class I1, class I2>
         NUMERICS_INLINE
         result_type operator () (difference_type size, I1 it1, I2 it2) const { 
@@ -503,20 +533,20 @@ namespace numerics {
                 t = t + *it1 * *it2, ++ it1, ++ it2;
             return t; 
         }
-        // Packed bidirectional iterator
+        // Packed case
         template<class I1, class I2>
         NUMERICS_INLINE
         result_type operator () (I1 it1, const I1 &it1_end, I2 it2, const I2 &it2_end) const { 
             result_type t (0);
-            while (it1 != it1_end && it1.index () < it2.index ())
-                ++ it1;
-            while (it2 != it2_end && it2.index () < it1.index ())
-                ++ it2;
+            if (it1 != it1_end && it1.index () < it2.index ()) 
+                it1 += std::min (it2.index () - it1.index (), size_type (it1_end - it1));
+            if (it2 != it2_end && it2.index () < it1.index ()) 				
+                it2 += std::min (it1.index () - it2.index (), size_type (it2_end - it2));
             while (it1 != it1_end && it2 != it2_end) 
                 t += *it1 * *it2, ++ it1, ++ it2;
             return t; 
         }
-        // Sparse bidirectional iterator
+        // Sparse case
         template<class I1, class I2>
         NUMERICS_INLINE
         result_type operator () (I1 it1, const I1 &it1_end, I2 it2, const I2 &it2_end, sparse_bidirectional_iterator_tag) const { 
@@ -564,7 +594,7 @@ namespace numerics {
                 t += e1 () (i, j) * e2 () (j);
             return t; 
         }
-        // Dense random access iterator
+        // Dense case
         template<class I1, class I2>
         NUMERICS_INLINE
         result_type operator () (difference_type size, I1 it1, I2 it2) const { 
@@ -573,23 +603,47 @@ namespace numerics {
                 t += *it1 * *it2, ++ it1, ++ it2;
             return t; 
         }
-        // Packed bidirectional iterator
+        // Packed case
         template<class I1, class I2>
         NUMERICS_INLINE
         result_type operator () (I1 it1, const I1 &it1_end, I2 it2, const I2 &it2_end) const { 
+#ifdef NUMERICS_USE_CANONICAL_ITERATOR
             result_type t (0);
-            while (it1 != it1_end && it1.index2 () < it2.index ())
-                ++ it1;
-            while (it2 != it2_end && it2.index () < it1.index2 ())
-                ++ it2;
+            if (it1 != it1_end && it1.index () < it2.index ()) 
+                it1 += std::min (it2.index () - it1.index (), size_type (it1_end - it1));
+            if (it2 != it2_end && it2.index () < it1.index ()) 				
+                it2 += std::min (it1.index () - it2.index (), size_type (it2_end - it2));
             while (it1 != it1_end && it2 != it2_end) 
                 t += *it1 * *it2, ++ it1, ++ it2;
             return t; 
+#else
+            result_type t (0);
+            if (it1 != it1_end && it1.index2 () < it2.index ()) 
+                it1 += std::min (it2.index () - it1.index2 (), size_type (it1_end - it1));
+            if (it2 != it2_end && it2.index () < it1.index2 ()) 				
+                it2 += std::min (it1.index2 () - it2.index (), size_type (it2_end - it2));
+            while (it1 != it1_end && it2 != it2_end) 
+                t += *it1 * *it2, ++ it1, ++ it2;
+            return t; 
+#endif
         }
-        // Sparse bidirectional iterator
+        // Sparse case
         template<class I1, class I2>
         NUMERICS_INLINE
         result_type operator () (I1 it1, const I1 &it1_end, I2 it2, const I2 &it2_end, sparse_bidirectional_iterator_tag) const { 
+#ifdef NUMERICS_USE_CANONICAL_ITERATOR
+            result_type t (0);
+            while (it1 != it1_end && it2 != it2_end) {
+                difference_type compare = it1.index () - it2.index ();
+                if (compare < 0) 
+                    ++ it1;
+                else if (compare == 0) 
+                    t += *it1 * *it2, ++ it1, ++ it2;
+                else if (compare > 0)
+                    ++ it2;
+            }
+            return t; 
+#else
             result_type t (0);
             while (it1 != it1_end && it2 != it2_end) {
                 difference_type compare = it1.index2 () - it2.index ();
@@ -601,6 +655,7 @@ namespace numerics {
                     ++ it2;
             }
             return t; 
+#endif
         }
     };
 
@@ -623,7 +678,7 @@ namespace numerics {
                 t += e1 () (j) * e2 () (j, i);
             return t; 
         }
-        // Dense random access iterator
+        // Dense case
         template<class I1, class I2>
         NUMERICS_INLINE
         result_type operator () (difference_type size, I1 it1, I2 it2) const { 
@@ -632,26 +687,38 @@ namespace numerics {
                 t += *it1 * *it2, ++ it1, ++ it2;
             return t; 
         }
-        // Packed bidirectional iterator
+        // Packed case
         template<class I1, class I2>
         NUMERICS_INLINE
         result_type operator () (I1 it1, const I1 &it1_end, I2 it2, const I2 &it2_end) const { 
+#ifdef NUMERICS_USE_CANONICAL_ITERATOR
             result_type t (0);
-            while (it1 != it1_end && it1.index1 () < it2.index ())
-                ++ it1;
-            while (it2 != it2_end && it2.index () < it1.index1 ())
-                ++ it2;
+            if (it1 != it1_end && it1.index () < it2.index ()) 
+                it1 += std::min (it2.index () - it1.index (), size_type (it1_end - it1));
+            if (it2 != it2_end && it2.index () < it1.index ()) 				
+                it2 += std::min (it1.index () - it2.index (), size_type (it2_end - it2));
             while (it1 != it1_end && it2 != it2_end) 
                 t += *it1 * *it2, ++ it1, ++ it2;
             return t; 
+#else
+            result_type t (0);
+            if (it1 != it1_end && it1.index () < it2.index1 ()) 
+                it1 += std::min (it2.index1 () - it1.index (), size_type (it1_end - it1));
+            if (it2 != it2_end && it2.index1 () < it1.index ()) 				
+                it2 += std::min (it1.index () - it2.index1 (), size_type (it2_end - it2));
+            while (it1 != it1_end && it2 != it2_end) 
+                t += *it1 * *it2, ++ it1, ++ it2;
+            return t; 
+#endif
         }
-        // Sparse bidirectional iterator
+        // Sparse case
         template<class I1, class I2>
         NUMERICS_INLINE
         result_type operator () (I1 it1, const I1 &it1_end, I2 it2, const I2 &it2_end, sparse_bidirectional_iterator_tag) const { 
+#ifdef NUMERICS_USE_CANONICAL_ITERATOR
             result_type t (0);
             while (it1 != it1_end && it2 != it2_end) {
-                difference_type compare = it1.index1 () - it2.index ();
+                difference_type compare = it1.index () - it2.index ();
                 if (compare < 0) 
                     ++ it1;
                 else if (compare == 0) 
@@ -660,6 +727,19 @@ namespace numerics {
                     ++ it2;
             }
             return t; 
+#else
+            result_type t (0);
+            while (it1 != it1_end && it2 != it2_end) {
+                difference_type compare = it1.index () - it2.index1 ();
+                if (compare < 0) 
+                    ++ it1;
+                else if (compare == 0) 
+                    t += *it1 * *it2, ++ it1, ++ it2;
+                else if (compare > 0)
+                    ++ it2;
+            }
+            return t; 
+#endif
         }
     };
 
@@ -691,7 +771,7 @@ namespace numerics {
                 t += e1 () (i, k) * e2 () (k, j);
             return t; 
         }
-        // Dense random access iterator
+        // Dense case
         template<class I1, class I2>
         NUMERICS_INLINE
         result_type operator () (difference_type size, I1 it1, I2 it2) const { 
@@ -700,20 +780,20 @@ namespace numerics {
                 t += *it1 * *it2, ++ it1, ++ it2;
             return t; 
         }
-        // Packed bidirectional iterator
+        // Packed case
         template<class I1, class I2>
         NUMERICS_INLINE
-        result_type operator () (I1 it1, const I1 &it1_end, I2 it2, const I2 &it2_end, packed_bidirectional_iterator_tag) const { 
+        result_type operator () (I1 it1, const I1 &it1_end, I2 it2, const I2 &it2_end, packed_random_access_iterator_tag) const { 
             result_type t (0);
-            while (it1 != it1_end && it1.index2 () < it2.index1 ())
-                ++ it1;
-            while (it2 != it2_end && it2.index1 () < it1.index2 ())
-                ++ it2;
+            if (it1 != it1_end && it1.index2 () < it2.index1 ()) 
+                it1 += std::min (it2.index1 () - it1.index2 (), size_type (it1_end - it1));
+            if (it2 != it2_end && it2.index1 () < it1.index2 ()) 				
+                it2 += std::min (it1.index2 () - it2.index1 (), size_type (it2_end - it2));
             while (it1 != it1_end && it2 != it2_end) 
                 t += *it1 * *it2, ++ it1, ++ it2;
             return t; 
         }
-        // Sparse bidirectional iterator
+        // Sparse case
         template<class I1, class I2>
         NUMERICS_INLINE
         result_type operator () (I1 it1, const I1 &it1_end, I2 it2, const I2 &it2_end, sparse_bidirectional_iterator_tag) const { 
@@ -733,33 +813,33 @@ namespace numerics {
 
     // Unary returning scalar norm
     template<class T>
-    struct matrix_scalar_norm_unary_functor {
+    struct matrix_scalar_real_unary_functor {
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
 		typedef T value_type;
-        typedef typename type_traits<T>::norm_type norm_type;
-		typedef norm_type result_type;
+        typedef typename type_traits<T>::real_type real_type;
+		typedef real_type result_type;
     };
 
     template<class T>
     struct matrix_norm_1: 
-        public matrix_scalar_norm_unary_functor<T> {
-        typedef typename matrix_scalar_norm_unary_functor<T>::size_type size_type;
-        typedef typename matrix_scalar_norm_unary_functor<T>::difference_type difference_type;
-        typedef typename matrix_scalar_norm_unary_functor<T>::value_type value_type;
-        typedef typename matrix_scalar_norm_unary_functor<T>::norm_type norm_type;
-        typedef typename matrix_scalar_norm_unary_functor<T>::result_type result_type;
+        public matrix_scalar_real_unary_functor<T> {
+        typedef typename matrix_scalar_real_unary_functor<T>::size_type size_type;
+        typedef typename matrix_scalar_real_unary_functor<T>::difference_type difference_type;
+        typedef typename matrix_scalar_real_unary_functor<T>::value_type value_type;
+        typedef typename matrix_scalar_real_unary_functor<T>::real_type real_type;
+        typedef typename matrix_scalar_real_unary_functor<T>::result_type result_type;
 
         template<class E>
         NUMERICS_INLINE
         result_type operator () (const matrix_expression<E> &e) const { 
-            norm_type t (0);
+            real_type t (0);
             size_type size2 (e ().size2 ());
             for (size_type j = 0; j < size2; ++ j) {
-                norm_type u (0);
+                real_type u (0);
                 size_type size1 (e ().size1 ());
                 for (size_type i = 0; i < size1; ++ i) {
-                    norm_type v (detail::abs (e () (i, j)));
+                    real_type v (detail::abs (e () (i, j)));
                     u += v;
                 }
                 if (u > t) 
@@ -770,22 +850,22 @@ namespace numerics {
     };
     template<class T>
     struct matrix_norm_2: 
-        public matrix_scalar_norm_unary_functor<T> {
-        typedef typename matrix_scalar_norm_unary_functor<T>::size_type size_type;
-        typedef typename matrix_scalar_norm_unary_functor<T>::difference_type difference_type;
-        typedef typename matrix_scalar_norm_unary_functor<T>::value_type value_type;
-        typedef typename matrix_scalar_norm_unary_functor<T>::norm_type norm_type;
-        typedef typename matrix_scalar_norm_unary_functor<T>::result_type result_type;
+        public matrix_scalar_real_unary_functor<T> {
+        typedef typename matrix_scalar_real_unary_functor<T>::size_type size_type;
+        typedef typename matrix_scalar_real_unary_functor<T>::difference_type difference_type;
+        typedef typename matrix_scalar_real_unary_functor<T>::value_type value_type;
+        typedef typename matrix_scalar_real_unary_functor<T>::real_type real_type;
+        typedef typename matrix_scalar_real_unary_functor<T>::result_type result_type;
 
         template<class E>
         NUMERICS_INLINE
         result_type operator () (const matrix_expression<E> &e) const { 
-            norm_type t (0);
+            real_type t (0);
             size_type size1 (e ().size1 ());
             for (size_type i = 0; i < size1; ++ i) {
                 size_type size2 (e ().size2 ());
                 for (size_type j = 0; j < size2; ++ j) {
-                    norm_type u (detail::abs (e () (i, j)));
+                    real_type u (detail::abs (e () (i, j)));
                     t +=  u * u;
                 }
             }
@@ -794,23 +874,23 @@ namespace numerics {
     };
     template<class T>
     struct matrix_norm_inf: 
-        public matrix_scalar_norm_unary_functor<T> {
-        typedef typename matrix_scalar_norm_unary_functor<T>::size_type size_type;
-        typedef typename matrix_scalar_norm_unary_functor<T>::difference_type difference_type;
-        typedef typename matrix_scalar_norm_unary_functor<T>::value_type value_type;
-        typedef typename matrix_scalar_norm_unary_functor<T>::norm_type norm_type;
-        typedef typename matrix_scalar_norm_unary_functor<T>::result_type result_type;
+        public matrix_scalar_real_unary_functor<T> {
+        typedef typename matrix_scalar_real_unary_functor<T>::size_type size_type;
+        typedef typename matrix_scalar_real_unary_functor<T>::difference_type difference_type;
+        typedef typename matrix_scalar_real_unary_functor<T>::value_type value_type;
+        typedef typename matrix_scalar_real_unary_functor<T>::real_type real_type;
+        typedef typename matrix_scalar_real_unary_functor<T>::result_type result_type;
 
         template<class E>
         NUMERICS_INLINE
         result_type operator () (const matrix_expression<E> &e) const { 
-            norm_type t (0);
+            real_type t (0);
             size_type size1 (e ().size1 ());
             for (size_type i = 0; i < size1; ++ i) {
-                norm_type u (0);
+                real_type u (0);
                 size_type size2 (e ().size2 ());
                 for (size_type j = 0; j < size2; ++ j) {
-                    norm_type v (detail::abs (e () (i, j)));
+                    real_type v (detail::abs (e () (i, j)));
                     u += v;
                 }
                 if (u > t) 

@@ -126,7 +126,7 @@ namespace numerics {
 
 #ifndef NUMERICS_USE_INSTANT 
         NUMERICS_INLINE
-        type_traits<float>::norm_type abs (const float &t) {
+        type_traits<float>::real_type abs (const float &t) {
 #ifdef USE_MSVC
             return ::fabsf (t);
 #else 
@@ -134,7 +134,7 @@ namespace numerics {
 #endif 
         }
         NUMERICS_INLINE
-        type_traits<double>::norm_type abs (const double &t) {
+        type_traits<double>::real_type abs (const double &t) {
 #ifdef USE_MSVC
             return ::fabs (t);
 #else 
@@ -143,52 +143,52 @@ namespace numerics {
         }
 #else 
         NUMERICS_INLINE
-        type_traits<float>::norm_type abs (const float &t);
+        type_traits<float>::real_type abs (const float &t);
         NUMERICS_INLINE
-        type_traits<double>::norm_type abs (const double &t);
+        type_traits<double>::real_type abs (const double &t);
 #endif 
 
 #ifndef USE_GCC
         template<class T>
         NUMERICS_INLINE
-        typename type_traits<std::complex<T> >::norm_type abs (const std::complex<T> &t) {
+        typename type_traits<std::complex<T> >::real_type abs (const std::complex<T> &t) {
             return std::abs (t);
         }
 #else
         template<class T>
         NUMERICS_INLINE
-        typename type_traits<T>::norm_type abs (const T &t) {
+        typename type_traits<T>::real_type abs (const T &t) {
             return std::abs (t);
         }
 #endif
 
 #ifndef NUMERICS_USE_INSTANT 
         NUMERICS_INLINE
-        type_traits<float>::norm_type norm_1 (const float &t) {
+        type_traits<float>::real_type norm_1 (const float &t) {
             return abs (t);
         }
         NUMERICS_INLINE
-        type_traits<double>::norm_type norm_1 (const double &t) {
+        type_traits<double>::real_type norm_1 (const double &t) {
             return abs (t);
         }
 #else 
         NUMERICS_INLINE
-        type_traits<float>::norm_type norm_1 (const float &t);
+        type_traits<float>::real_type norm_1 (const float &t);
         NUMERICS_INLINE
-        type_traits<double>::norm_type norm_1 (const double &t);
+        type_traits<double>::real_type norm_1 (const double &t);
 #endif 
 
 #ifndef USE_GCC
         template<class T>
         NUMERICS_INLINE
-        typename type_traits<std::complex<T> >::norm_type norm_1 (const std::complex<T> &t) {
+        typename type_traits<std::complex<T> >::real_type norm_1 (const std::complex<T> &t) {
             // Oops, should have known that!
             return abs (t.real ()) + abs (t.imag ());
         }
 #else
         template<class T>
         NUMERICS_INLINE
-        typename type_traits<T>::norm_type norm_1 (const T &t) {
+        typename type_traits<T>::real_type norm_1 (const T &t) {
             // Oops, should have known that!
             return abs (t.real ()) + abs (t.imag ());
         }
@@ -196,61 +196,61 @@ namespace numerics {
 
 #ifndef NUMERICS_USE_INSTANT 
         NUMERICS_INLINE
-        type_traits<float>::norm_type norm_2 (const float &t) {
+        type_traits<float>::real_type norm_2 (const float &t) {
             return abs (t);
         }
         NUMERICS_INLINE
-        type_traits<double>::norm_type norm_2 (const double &t) {
+        type_traits<double>::real_type norm_2 (const double &t) {
             return abs (t);
         }
 #else 
         NUMERICS_INLINE
-        type_traits<float>::norm_type norm_2 (const float &t);
+        type_traits<float>::real_type norm_2 (const float &t);
         NUMERICS_INLINE
-        type_traits<double>::norm_type norm_2 (const double &t);
+        type_traits<double>::real_type norm_2 (const double &t);
 #endif 
 
 #ifndef USE_GCC
         template<class T>
         NUMERICS_INLINE
-        typename type_traits<std::complex<T> >::norm_type norm_2 (const std::complex<T> &t) {
+        typename type_traits<std::complex<T> >::real_type norm_2 (const std::complex<T> &t) {
             return abs (t);
         }
 #else
         template<class T>
         NUMERICS_INLINE
-        typename type_traits<T>::norm_type norm_2 (const T &t) {
+        typename type_traits<T>::real_type norm_2 (const T &t) {
             return abs (t);
         }
 #endif
 
 #ifndef NUMERICS_USE_INSTANT 
         NUMERICS_INLINE
-        type_traits<float>::norm_type norm_inf (const float &t) {
+        type_traits<float>::real_type norm_inf (const float &t) {
             return abs (t);
         }
         NUMERICS_INLINE
-        type_traits<double>::norm_type norm_inf (const double &t) {
+        type_traits<double>::real_type norm_inf (const double &t) {
             return abs (t);
         }
 #else 
         NUMERICS_INLINE
-        type_traits<float>::norm_type norm_inf (const float &t);
+        type_traits<float>::real_type norm_inf (const float &t);
         NUMERICS_INLINE
-        type_traits<double>::norm_type norm_inf (const double &t);
+        type_traits<double>::real_type norm_inf (const double &t);
 #endif 
 
 #ifndef USE_GCC
         template<class T>
         NUMERICS_INLINE
-        typename type_traits<std::complex<T> >::norm_type norm_inf (const std::complex<T> &t) {
+        typename type_traits<std::complex<T> >::real_type norm_inf (const std::complex<T> &t) {
             // Oops, should have known that!
             return std::max (abs (t.real ()), abs (t.imag ()));
         }
 #else
         template<class T>
         NUMERICS_INLINE
-        typename type_traits<T>::norm_type norm_inf (const T &t) {
+        typename type_traits<T>::real_type norm_inf (const T &t) {
             // Oops, should have known that!
             return std::max (abs (t.real ()), abs (t.imag ()));
         }

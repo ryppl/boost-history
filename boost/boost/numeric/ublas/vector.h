@@ -26,82 +26,6 @@
 
 namespace numerics {
 
-    // This functor computes the address translation 
-    // vector [i] -> storage [i]
-    struct forward {
-        typedef std::size_t size_type;
-        typedef std::ptrdiff_t difference_type;
-
-        // Indexing
-        static NUMERICS_INLINE
-        size_type element (size_type i, size_type size) {
-            check (i <= size, bad_index ());
-            return i;
-        }
-        static NUMERICS_INLINE
-        difference_type distance (difference_type i, size_type size) {
-            return i;
-        }
-        static NUMERICS_INLINE
-        size_type index (difference_type i, size_type size) {
-            return i;
-        }
-        static NUMERICS_INLINE
-        difference_type one () {
-            return 1;
-        }
-
-        // Iterating
-        template<class I>
-        static NUMERICS_INLINE
-        void increment (I &it) {
-            ++ it;
-        }
-        template<class I>
-        static NUMERICS_INLINE
-        void decrement (I &it) {
-            -- it;
-        }
-    };
-
-    // This functor computes the address translation 
-    // vector [i] -> storage [size - 1 - i]
-    struct backward {
-        typedef std::size_t size_type;
-        typedef std::ptrdiff_t difference_type;
-
-        // Indexing
-        static NUMERICS_INLINE
-        size_type element (size_type i, size_type size) {
-            check (i <= size, bad_index ());
-            return size - 1 - i;
-        }
-        static NUMERICS_INLINE
-        difference_type distance (difference_type i, size_type size) {
-            return size - 1 - i;
-        }
-        static NUMERICS_INLINE
-        size_type index (difference_type i, size_type size) {
-            return size - 1 - i;
-        }
-        static NUMERICS_INLINE
-        difference_type one () {
-            return -1;
-        }
-
-        // Iterating
-        template<class I>
-        static NUMERICS_INLINE
-        void increment (I &it) {
-            -- it;
-        }
-        template<class I>
-        static NUMERICS_INLINE
-        void decrement (I &it) {
-            ++ it;
-        }
-    };
-
     template<class S, class A> 
     struct vector_assign_scalar_traits {
         typedef S dispatch_category;
@@ -185,11 +109,11 @@ namespace numerics {
     };
 
     template<> 
-    struct vector_assign_traits<dense_tag, assign_tag, packed_bidirectional_iterator_tag> {
+    struct vector_assign_traits<dense_tag, assign_tag, packed_random_access_iterator_tag> {
         typedef packed_tag dispatch_category;
     };
     template<> 
-    struct vector_assign_traits<dense_tag, computed_assign_tag, packed_bidirectional_iterator_tag> {
+    struct vector_assign_traits<dense_tag, computed_assign_tag, packed_random_access_iterator_tag> {
         typedef packed_tag dispatch_category;
     };
     template<> 
@@ -215,7 +139,7 @@ namespace numerics {
         typedef sparse_proxy_tag dispatch_category;
     };
     template<> 
-    struct vector_assign_traits<sparse_tag, computed_assign_tag, packed_bidirectional_iterator_tag> {
+    struct vector_assign_traits<sparse_tag, computed_assign_tag, packed_random_access_iterator_tag> {
         typedef sparse_proxy_tag dispatch_category;
     };
     template<> 
@@ -271,13 +195,18 @@ namespace numerics {
         // NUMERICS_INLINE
         void operator () (V &v, const vector_expression<E> &e, packed_tag) {
             check (v.size () == e ().size (), bad_size ());
+            typedef typename V::size_type size_type;
             typedef typename V::value_type value_type;
             typename V::iterator it (v.begin ());
             typename V::iterator it_end (v.end ());
             typename E::const_iterator ite (e ().begin ());
             typename E::const_iterator ite_end (e ().end ());
-            while (ite != ite_end && ite.index () < it.index ()) 
-                ++ ite;
+            if (ite != ite_end && ite.index () < it.index ()) 
+                ite += std::min (it.index () - ite.index (), size_type (ite_end - ite));
+            while (it != it_end && ite != ite_end && it.index () < ite.index ()) {
+                functor_type () (*it, value_type ());
+                ++ it;
+            }
             while (it != it_end && ite != ite_end) {
                 functor_type () (*it, *ite);
                 ++ it, ++ ite;
@@ -297,8 +226,8 @@ namespace numerics {
                     ++ ite;
                 }
             }
-#endif
-        }
+#endif        
+		}
         // Sparse case
         template<class V, class E>
         // This function seems to be big. So we do not let the compiler inline it.
@@ -352,6 +281,13 @@ namespace numerics {
             }
 #endif
         }
+        // Unknown case
+        template<class V, class E>
+        // This function seems to be big. So we do not let the compiler inline it.
+        // NUMERICS_INLINE
+        void operator () (V &v, const vector_expression<E> &e, unknown_storage_tag) {
+            throw internal_logic ();
+        }
 
         // Dispatcher
         template<class V, class E>
@@ -370,9 +306,9 @@ namespace numerics {
     class vector_reference;
 
     // Array based vector class 
-    template<class T, class F, class A>
+    template<class T, class A>
     class vector: 
-        public vector_expression<vector<T, F, A> > {
+        public vector_expression<vector<T, A> > {
     public:      
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
@@ -381,10 +317,9 @@ namespace numerics {
         typedef T &reference;
         typedef const T *const_pointer;
         typedef T *pointer;
-        typedef F functor_type;
         typedef A array_type;
-        typedef const vector<T, F, A> const_self_type;
-        typedef vector<T, F, A> self_type;
+        typedef const vector<T, A> const_self_type;
+        typedef vector<T, A> self_type;
         typedef const vector_const_reference<const_self_type> const_closure_type;
         typedef vector_reference<self_type> closure_type;
 #ifdef NUMERICS_DEPRECATED
@@ -427,11 +362,11 @@ namespace numerics {
         // Element access
         NUMERICS_INLINE
         const_reference operator () (size_type i) const {
-            return data_ [functor_type::element (i, size_)]; 
+            return data_ [i]; 
         }
         NUMERICS_INLINE
         reference operator () (size_type i) {
-            return data_ [functor_type::element (i, size_)]; 
+            return data_ [i]; 
         }
 
         NUMERICS_INLINE
@@ -442,25 +377,6 @@ namespace numerics {
         reference operator [] (size_type i) { 
             return (*this) (i); 
         }
-
-#ifdef NUMERICS_DEPRECATED
-        NUMERICS_INLINE
-        const_vector_range_type project (size_type start, size_type stop) const {
-            return const_vector_range_type (*this, start, stop);
-        }
-        NUMERICS_INLINE
-        const_vector_range_type project (const range &r) const {
-            return const_vector_range_type (*this, r);
-        }
-        NUMERICS_INLINE
-        vector_range_type project (size_type start, size_type stop) {
-            return vector_range_type (*this, start, stop);
-        }
-        NUMERICS_INLINE
-        vector_range_type project (const range &r) {
-            return vector_range_type (*this, r);
-        }
-#endif
 
         // Assignment
         NUMERICS_INLINE
@@ -544,12 +460,12 @@ namespace numerics {
         // Element insertion and erasure
         NUMERICS_INLINE
         void insert (size_type i, const_reference t) {
-            check (data_ [functor_type::element (i, size_)] == value_type (), bad_index ());
-            data_.insert (data_.begin () + functor_type::element (i, size_), t);
+            check (data_ [i] == value_type (), bad_index ());
+            data_.insert (data_.begin () + i, t);
         }
         NUMERICS_INLINE
         void erase (size_type i) {
-            data_.erase (data_.begin () + functor_type::element (i, size_));
+            data_.erase (data_.begin () + i);
         }
         NUMERICS_INLINE
         void clear () {
@@ -557,8 +473,8 @@ namespace numerics {
         }
 
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
-        typedef indexed_iterator<self_type> iterator;
-        typedef indexed_const_iterator<self_type> const_iterator;
+        typedef indexed_iterator<self_type, dense_random_access_iterator_tag> iterator;
+        typedef indexed_const_iterator<self_type, dense_random_access_iterator_tag> const_iterator;
 #else
         class const_iterator;
         class iterator;
@@ -568,18 +484,34 @@ namespace numerics {
         NUMERICS_INLINE
         const_iterator find (size_type i) const {
 #ifndef NUMERICS_USE_INDEXED_ITERATOR
-            return const_iterator (*this, data_.begin () + functor_type::element (i, size_));
+            return const_iterator (*this, data_.begin () + i);
 #else
-            return const_iterator (*this, functor_type::element (i, size_));
+            return const_iterator (*this, i);
 #endif
         }
         NUMERICS_INLINE
         iterator find (size_type i) {
 #ifndef NUMERICS_USE_INDEXED_ITERATOR
-            return iterator (*this, data_.begin () + functor_type::element (i, size_));
+            return iterator (*this, data_.begin () + i);
 #else
-            return iterator (*this, functor_type::element (i, size_));
+            return iterator (*this, i);
 #endif
+        }
+        NUMERICS_INLINE
+        const_iterator lower_bound (size_type i) const {
+			return find (i);
+        }
+        NUMERICS_INLINE
+        iterator lower_bound (size_type i) {
+			return find (i);
+        }
+        NUMERICS_INLINE
+        const_iterator upper_bound (size_type i) const {
+			return find (i);
+        }
+        NUMERICS_INLINE
+        iterator upper_bound (size_type i) {
+			return find (i);
         }
 
         // Iterators simply are pointers.
@@ -605,33 +537,37 @@ namespace numerics {
             const_iterator (const vector &v, const const_iterator_type &it):
                 container_const_reference<vector> (v), it_ (it) {}
             NUMERICS_INLINE
+#ifndef USE_ICC
             const_iterator (const iterator &it):
+#else
+            const_iterator (const typename vector::iterator &it):
+#endif
                 container_const_reference<vector> (it ()), it_ (it.it_) {}
 
             // Arithmetic
             NUMERICS_INLINE
             const_iterator &operator ++ () {
-                functor_type::increment (it_);
+                ++ it_;
                 return *this;
             }
             NUMERICS_INLINE
             const_iterator &operator -- () {
-                functor_type::decrement (it_);
+                -- it_;
                 return *this;
             }
             NUMERICS_INLINE
             const_iterator &operator += (difference_type n) {
-                it_ += n * functor_type::one ();
+                it_ += n;
                 return *this;
             }
             NUMERICS_INLINE
             const_iterator &operator -= (difference_type n) {
-                it_ -= n * functor_type::one ();
+                it_ -= n;
                 return *this;
             }
             NUMERICS_INLINE
             difference_type operator - (const const_iterator &it) const {
-                return functor_type::distance (it_ - it.it_, (*this) ().size ());
+                return it_ - it.it_;
             }
 
             // Dereference
@@ -644,8 +580,7 @@ namespace numerics {
             // Index
             NUMERICS_INLINE
             size_type index () const {
-                const vector &v = (*this) ();
-                return functor_type::index (it_ - v.begin ().it_, v.size ());
+                return it_ - (*this) ().begin ().it_;
             }
 
             // Assignment 
@@ -672,11 +607,11 @@ namespace numerics {
 
         NUMERICS_INLINE
         const_iterator begin () const {
-            return find (0);
+            return lower_bound (0);
         }
         NUMERICS_INLINE
         const_iterator end () const {
-            return find (size_);
+            return upper_bound (size_);
         }
 
 #ifndef NUMERICS_USE_INDEXED_ITERATOR
@@ -703,27 +638,27 @@ namespace numerics {
             // Arithmetic
             NUMERICS_INLINE
             iterator &operator ++ () {
-                functor_type::increment (it_);
+                ++ it_;
                 return *this;
             }
             NUMERICS_INLINE
             iterator &operator -- () {
-                functor_type::decrement (it_);
+                -- it_;
                 return *this;
             }
             NUMERICS_INLINE
             iterator &operator += (difference_type n) {
-                it_ += n * functor_type::one ();
+                it_ += n;
                 return *this;
             }
             NUMERICS_INLINE
             iterator &operator -= (difference_type n) {
-                it_ -= n * functor_type::one ();
+                it_ -= n;
                 return *this;
             }
             NUMERICS_INLINE
             difference_type operator - (const iterator &it) const {
-                return functor_type::distance (it_ - it.it_, (*this) ().size ());
+                return it_ - it.it_;
             }
 
             // Dereference
@@ -736,8 +671,7 @@ namespace numerics {
             // Index
             NUMERICS_INLINE
             size_type index () const {
-                vector &v = (*this) ();
-                return functor_type::index (it_ - v.begin ().it_, v.size ());
+                return it_ - (*this) ().begin ().it_;
             }
 
             // Assignment
@@ -764,11 +698,11 @@ namespace numerics {
 
         NUMERICS_INLINE
         iterator begin () {
-            return find (0);
+            return lower_bound (0);
         }
         NUMERICS_INLINE
         iterator end () {
-            return find (size_);
+            return upper_bound (size_);
         }
 
         // Reverse iterator
@@ -827,13 +761,13 @@ namespace numerics {
         typedef const vector_range<const_self_type> const_vector_range_type;
 #endif
         typedef size_type const_iterator_type;
-        typedef dense_tag storage_category;
+        typedef packed_tag storage_category;
 
         // Construction and destruction
         NUMERICS_INLINE
         unit_vector (): 
             size_ (0), index_ (0) {}
-        NUMERICS_EXPLICIT NUMERICS_INLINE
+        NUMERICS_INLINE
         unit_vector (size_type size, size_type index): 
             size_ (size), index_ (index) {}
         NUMERICS_INLINE
@@ -866,17 +800,6 @@ namespace numerics {
             return (*this) (i); 
         }
 
-#ifdef NUMERICS_DEPRECATED
-        NUMERICS_INLINE
-        const_vector_range_type project (size_type start, size_type stop) const {
-            return const_vector_range_type (*this, start, stop);
-        }
-        NUMERICS_INLINE
-        const_vector_range_type project (const range &r) const {
-            return const_vector_range_type (*this, r);
-        }
-#endif
-
         // Assignment
         NUMERICS_INLINE
         unit_vector &operator = (const unit_vector &v) { 
@@ -906,16 +829,20 @@ namespace numerics {
 #endif
 
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
-        typedef indexed_const_iterator<self_type> iterator;
-        typedef indexed_const_iterator<self_type> const_iterator;
+        typedef indexed_const_iterator<self_type, packed_random_access_iterator_tag> iterator;
+        typedef indexed_const_iterator<self_type, packed_random_access_iterator_tag> const_iterator;
 #else
         class const_iterator;
 #endif
 
         // Element lookup
         NUMERICS_INLINE
-        const_iterator find (size_type i) const {
-            return const_iterator (*this, i);
+        const_iterator lower_bound (size_type i) const {
+			return const_iterator (*this, std::max (i, index_));
+        }
+        NUMERICS_INLINE
+        const_iterator upper_bound (size_type i) const {
+			return const_iterator (*this, std::min (i + 1, index_));
         }
 
         // Iterators simply are pointers.
@@ -925,7 +852,7 @@ namespace numerics {
             public container_const_reference<unit_vector>,
             public random_access_iterator_base<const_iterator, value_type> {
         public:
-            typedef dense_random_access_iterator_tag iterator_category;
+            typedef packed_random_access_iterator_tag iterator_category;
 #ifndef USE_MSVC
             typedef typename unit_vector::difference_type difference_type;
             typedef typename unit_vector::value_type value_type;
@@ -971,7 +898,7 @@ namespace numerics {
             NUMERICS_INLINE
             value_type operator * () const {
                 check (index () < (*this) ().size (), bad_index ());
-                return it_ == (*this) ().index ();
+                return (*this) () (index ());
             }
 
             // Index
@@ -1004,11 +931,11 @@ namespace numerics {
 
         NUMERICS_INLINE
         const_iterator begin () const {
-            return find (0);
+            return lower_bound (0);
         }
         NUMERICS_INLINE
         const_iterator end () const {
-            return find (size_);
+            return upper_bound (size_);
         }
 
         // Reverse iterator
@@ -1031,6 +958,224 @@ namespace numerics {
     private:
         size_type size_;
         size_type index_;
+    };
+
+    // Scalar vector class 
+    template<class T>
+    class scalar_vector: 
+        public vector_expression<scalar_vector<T> > {
+    public:      
+        typedef std::size_t size_type;
+        typedef std::ptrdiff_t difference_type;
+        typedef T value_type;
+        typedef const T &const_reference;
+        typedef T &reference;
+        typedef const T *const_pointer;
+        typedef T *pointer;
+        typedef const scalar_vector<T> const_self_type;
+        typedef scalar_vector<T> self_type;
+        typedef const vector_const_reference<const_self_type> const_closure_type;
+#ifdef NUMERICS_DEPRECATED
+        typedef const vector_range<const_self_type> const_vector_range_type;
+#endif
+        typedef size_type const_iterator_type;
+        typedef dense_tag storage_category;
+
+        // Construction and destruction
+        NUMERICS_INLINE
+        scalar_vector (): 
+            size_ (0), value_ () {}
+        NUMERICS_INLINE
+        scalar_vector (size_type size, const value_type &value): 
+            size_ (size), value_ (value) {}
+        NUMERICS_INLINE
+        scalar_vector (const scalar_vector &v): 
+            size_ (v.size_), value_ (v.value_) {}
+
+        // Resizing
+        NUMERICS_INLINE
+        void resize (size_type size) {
+            size_ = size;
+        }
+
+        NUMERICS_INLINE
+        size_type size () const { 
+            return size_; 
+        }
+
+        // Element access
+        NUMERICS_INLINE
+        value_type operator () (size_type i) const {
+            return value_; 
+        }
+
+        NUMERICS_INLINE
+        value_type operator [] (size_type i) const { 
+            return value_; 
+        }
+
+        // Assignment
+        NUMERICS_INLINE
+        scalar_vector &operator = (const scalar_vector &v) { 
+            check (size_ == v.size_, bad_size ());
+            value_ = v.value_;
+            return *this;
+        }
+        NUMERICS_INLINE
+        scalar_vector &assign_temporary (scalar_vector &v) { 
+            swap (v);
+            return *this;
+        }
+
+        // Swapping
+        NUMERICS_INLINE
+	    void swap (scalar_vector &v) {
+            check (this != &v, external_logic ());
+            check (size_ == v.size_, bad_size ());
+            std::swap (size_, v.size_);
+            std::swap (value_, v.value_);
+        }
+#ifndef USE_GCC
+        NUMERICS_INLINE
+	    friend void swap (scalar_vector &v1, scalar_vector &v2) {
+            v1.swap (v2);
+        }
+#endif
+
+#ifdef NUMERICS_USE_INDEXED_ITERATOR
+        typedef indexed_const_iterator<self_type, dense_random_access_iterator_tag> iterator;
+        typedef indexed_const_iterator<self_type, dense_random_access_iterator_tag> const_iterator;
+#else
+        class const_iterator;
+#endif
+
+        // Element lookup
+        NUMERICS_INLINE
+        const_iterator find (size_type i) const {
+            return const_iterator (*this, i);
+        }
+        NUMERICS_INLINE
+        const_iterator lower_bound (size_type i) const {
+			return find (i);
+        }
+        NUMERICS_INLINE
+        const_iterator upper_bound (size_type i) const {
+			return find (i);
+        }
+
+        // Iterators simply are pointers.
+
+#ifndef NUMERICS_USE_INDEXED_ITERATOR
+        class const_iterator:
+            public container_const_reference<scalar_vector>,
+            public random_access_iterator_base<const_iterator, value_type> {
+        public:
+            typedef dense_random_access_iterator_tag iterator_category;
+#ifndef USE_MSVC
+            typedef typename scalar_vector::difference_type difference_type;
+            typedef typename scalar_vector::value_type value_type;
+            typedef typename scalar_vector::value_type reference;
+            typedef typename scalar_vector::const_pointer pointer;
+#endif
+
+            // Construction and destruction
+            NUMERICS_INLINE
+            const_iterator ():
+                container_const_reference<scalar_vector> (), it_ () {}
+            NUMERICS_INLINE
+            const_iterator (const scalar_vector &v, const const_iterator_type &it):
+                container_const_reference<scalar_vector> (v), it_ (it) {}
+
+            // Arithmetic
+            NUMERICS_INLINE
+            const_iterator &operator ++ () {
+                ++ it_;
+                return *this;
+            }
+            NUMERICS_INLINE
+            const_iterator &operator -- () {
+                -- it_;
+                return *this;
+            }
+            NUMERICS_INLINE
+            const_iterator &operator += (difference_type n) {
+                it_ += n;
+                return *this;
+            }
+            NUMERICS_INLINE
+            const_iterator &operator -= (difference_type n) {
+                it_ -= n;
+                return *this;
+            }
+            NUMERICS_INLINE
+            difference_type operator - (const const_iterator &it) const {
+                return it_ - it.it_;
+            }
+
+            // Dereference
+            NUMERICS_INLINE
+            value_type operator * () const {
+                check (index () < (*this) ().size (), bad_index ());
+                return (*this) () (index ());
+            }
+
+            // Index
+            NUMERICS_INLINE
+            size_type index () const {
+                return it_;
+            }
+
+            // Assignment 
+            NUMERICS_INLINE
+            const_iterator &operator = (const const_iterator &it) {
+                container_const_reference<scalar_vector>::assign (&it ());
+                it_ = it.it_;
+                return *this;
+            }
+
+            // Comparison
+            NUMERICS_INLINE
+            bool operator == (const const_iterator &it) const {
+                check (&(*this) () == &it (), external_logic ());
+                return it_ == it.it_;
+            }
+
+        private:
+            const_iterator_type it_;
+        };
+
+        typedef const_iterator iterator;
+#endif
+
+        NUMERICS_INLINE
+        const_iterator begin () const {
+            return lower_bound (0);
+        }
+        NUMERICS_INLINE
+        const_iterator end () const {
+            return upper_bound (size_);
+        }
+
+        // Reverse iterator
+
+#ifdef USE_MSVC
+        typedef reverse_iterator<const_iterator, value_type, value_type> const_reverse_iterator;
+#else
+        typedef reverse_iterator<const_iterator> const_reverse_iterator;
+#endif
+
+        NUMERICS_INLINE
+        const_reverse_iterator rbegin () const {
+            return const_reverse_iterator (end ());
+        }
+        NUMERICS_INLINE
+        const_reverse_iterator rend () const {
+            return const_reverse_iterator (begin ());
+        }
+
+    private:
+        size_type size_;
+        value_type value_;
     };
 
     // Array based vector class 
@@ -1117,25 +1262,6 @@ namespace numerics {
         reference operator [] (size_type i) { 
             return (*this) (i); 
         }
-
-#ifdef NUMERICS_DEPRECATED
-        NUMERICS_INLINE
-        const_vector_range_type project (size_type start, size_type stop) const {
-            return const_vector_range_type (*this, start, stop);
-        }
-        NUMERICS_INLINE
-        const_vector_range_type project (const range &r) const {
-            return const_vector_range_type (*this, r);
-        }
-        NUMERICS_INLINE
-        vector_range_type project (size_type start, size_type stop) {
-            return vector_range_type (*this, start, stop);
-        }
-        NUMERICS_INLINE
-        vector_range_type project (const range &r) {
-            return vector_range_type (*this, r);
-        }
-#endif
 
         // Assignment
         NUMERICS_INLINE
@@ -1234,8 +1360,8 @@ namespace numerics {
         }
 
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
-        typedef indexed_iterator<self_type> iterator;
-        typedef indexed_const_iterator<self_type> const_iterator;
+        typedef indexed_iterator<self_type, dense_random_access_iterator_tag> iterator;
+        typedef indexed_const_iterator<self_type, dense_random_access_iterator_tag> const_iterator;
 #else
         class const_iterator;
         class iterator;
@@ -1257,6 +1383,22 @@ namespace numerics {
 #else
             return iterator (*this, i);
 #endif
+        }
+        NUMERICS_INLINE
+        const_iterator lower_bound (size_type i) const {
+			return find (i);
+        }
+        NUMERICS_INLINE
+        iterator lower_bound (size_type i) {
+			return find (i);
+        }
+        NUMERICS_INLINE
+        const_iterator upper_bound (size_type i) const {
+			return find (i);
+        }
+        NUMERICS_INLINE
+        iterator upper_bound (size_type i) {
+			return find (i);
         }
 
         // Iterators simply are pointers.
@@ -1282,7 +1424,11 @@ namespace numerics {
             const_iterator (const c_vector &v, const const_iterator_type &it):
                 container_const_reference<c_vector> (v), it_ (it) {}
             NUMERICS_INLINE
+#ifndef USE_ICC
             const_iterator (const iterator &it):
+#else
+            const_iterator (const typename c_vector::iterator &it):
+#endif
                 container_const_reference<c_vector> (it ()), it_ (it.it_) {}
 
             // Arithmetic
@@ -1349,11 +1495,11 @@ namespace numerics {
 
         NUMERICS_INLINE
         const_iterator begin () const {
-            return find (0);
+            return lower_bound (0);
         }
         NUMERICS_INLINE
         const_iterator end () const {
-            return find (size_);
+            return upper_bound (size_);
         }
 
 #ifndef NUMERICS_USE_INDEXED_ITERATOR
@@ -1413,7 +1559,7 @@ namespace numerics {
             // Index
             NUMERICS_INLINE
             size_type index () const {
-                const c_vector &v = (*this) ();
+                c_vector &v = (*this) ();
                 return it_ - v.begin ().it_;
             }
 
@@ -1441,11 +1587,11 @@ namespace numerics {
 
         NUMERICS_INLINE
         iterator begin () {
-            return find (0);
+            return lower_bound (0);
         }
         NUMERICS_INLINE
         iterator end () {
-            return find (size_);
+            return upper_bound (size_);
         }
 
         // Reverse iterator
@@ -1488,6 +1634,8 @@ namespace numerics {
 }
 
 #endif 
+
+
 
 
 

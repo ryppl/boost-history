@@ -23,7 +23,7 @@ CFG=test2 - Win32 Debug
 
 # Begin Project
 # PROP AllowPerConfigDependencies 0
-# PROP Scc_ProjName ""$/genesys/test/blas/test2", WXBAAAAA"
+# PROP Scc_ProjName ""$/boost/libs/numeric/ublas/test2", VDCAAAAA"
 # PROP Scc_LocalPath "."
 CPP=cl.exe
 RSC=rc.exe
@@ -176,6 +176,10 @@ SOURCE=..\..\..\..\boost\numeric\ublas\storage_sp.h
 # Begin Source File
 
 SOURCE=..\..\..\..\boost\numeric\ublas\symmetric.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\test2.h
 # End Source File
 # Begin Source File
 

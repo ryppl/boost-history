@@ -42,11 +42,11 @@ namespace numerics {
 	    return os << s.str ().c_str (); 
     }
 
-    template<class E, class T, class VT, class VA, class VF> 
+    template<class E, class T, class VT, class VA> 
     // This function seems to be big. So we do not let the compiler inline it.
     // NUMERICS_INLINE
     std::basic_ostream<E, T> &operator << (std::basic_ostream<E, T> &os, 
-                                           const vector<VT, VA, VF> &v) {
+                                           const vector<VT, VA> &v) {
         std::size_t size = v.size ();
         std::basic_ostringstream<E, T, std::allocator<E> > s;
 	    s.flags (os.flags ());
@@ -61,11 +61,11 @@ namespace numerics {
 	    return os << s.str ().c_str (); 
     }
 
-    template<class E, class T, class VT, class VA, class VF> 
+    template<class E, class T, class VT, class VA> 
     // This function seems to be big. So we do not let the compiler inline it.
     // NUMERICS_INLINE
     std::basic_istream<E, T> &operator >> (std::basic_istream<E, T> &is, 
-										   vector<VT, VA, VF> &v) {
+										   vector<VT, VA> &v) {
 	    E ch;
         std::size_t size;
         if (is >> ch && ch != '[') {
@@ -75,7 +75,7 @@ namespace numerics {
             is.putback (ch);
             is.setstate (std::ios_base::failbit);
         } else {
-            vector<VT, VA, VF> s (size);
+            vector<VT, VA> s (size);
             if (is >> ch && ch != '(') {
                 is.putback (ch);
                 is.setstate (std::ios_base::failbit);
@@ -133,11 +133,11 @@ namespace numerics {
 	    return os << s.str ().c_str (); 
     }
 
-    template<class E, class T, class MT, class MA, class MF> 
+    template<class E, class T, class MT, class MF, class MA> 
     // This function seems to be big. So we do not let the compiler inline it.
     // NUMERICS_INLINE
     std::basic_ostream<E, T> &operator << (std::basic_ostream<E, T> &os, 
-                                           const matrix<MT, MA, MF> &m) {
+                                           const matrix<MT, MF, MA> &m) {
         std::size_t size1 = m.size1 ();
         std::size_t size2 = m.size2 ();
         std::basic_ostringstream<E, T, std::allocator<E> > s;
@@ -165,11 +165,11 @@ namespace numerics {
 	    return os << s.str ().c_str (); 
     }
 
-    template<class E, class T, class VT, class VA, class VF> 
+    template<class E, class T, class MT, class MF, class MA> 
     // This function seems to be big. So we do not let the compiler inline it.
     // NUMERICS_INLINE
     std::basic_istream<E, T> &operator >> (std::basic_istream<E, T> &is, 
-                                           matrix<VT, VA, VF> &m) {
+                                           matrix<MT, MF, MA> &m) {
 	    E ch;
         std::size_t size1, size2;
         if (is >> ch && ch != '[') {
@@ -182,7 +182,7 @@ namespace numerics {
             is.putback (ch);
             is.setstate (std::ios_base::failbit);
         } else {
-            matrix<VT, VA, VF> s (size1, size2);
+            matrix<MT, MF, MA> s (size1, size2);
             if (is >> ch && ch != '(') {
                 is.putback (ch);
                 is.setstate (std::ios_base::failbit);
@@ -247,11 +247,11 @@ namespace numerics {
 	    return os; 
     }
 
-    template<class VT, class VA, class VF> 
+    template<class VT, class VA> 
     // This function seems to be big. So we do not let the compiler inline it.
     // NUMERICS_INLINE
     std::ostream &operator << (std::ostream &os, 
-                               const vector<VT, VA, VF> &v) {
+                               const vector<VT, VA> &v) {
         std::size_t size = v.size ();
         os << '[' << size << "](";
         if (size > 0)
@@ -262,11 +262,11 @@ namespace numerics {
 	    return os; 
     }
 
-    template<class VT, class VA, class VF> 
+    template<class VT, class VA> 
     // This function seems to be big. So we do not let the compiler inline it.
     // NUMERICS_INLINE
     std::istream &operator >> (std::istream &is, 
-							   vector<VT, VA, VF> &v) {
+							   vector<VT, VA> &v) {
 	    char ch;
         std::size_t size;
         if (is >> ch && ch != '[') {
@@ -276,7 +276,7 @@ namespace numerics {
             is.putback (ch);
             is.setstate (std::ios::failbit);
         } else {
-            vector<VT, VA, VF> s (size);
+            vector<VT, VA> s (size);
             if (is >> ch && ch != '(') {
                 is.putback (ch);
                 is.setstate (std::ios::failbit);
@@ -330,11 +330,11 @@ namespace numerics {
 	    return os; 
     }
 
-    template<class MT, class MA, class MF> 
+    template<class MT, class MF, class MA> 
     // This function seems to be big. So we do not let the compiler inline it.
     // NUMERICS_INLINE
     std::ostream &operator << (std::ostream &os, 
-                               const matrix<MT, MA, MF> &m) {
+                               const matrix<MT, MF, MA> &m) {
         std::size_t size1 = m.size1 ();
         std::size_t size2 = m.size2 ();
         os << '[' << size1 << ',' << size2 << "](";
@@ -358,11 +358,11 @@ namespace numerics {
 	    return os; 
     }
 
-    template<class VT, class VA, class VF> 
+    template<class MT, class MF, class MA> 
     // This function seems to be big. So we do not let the compiler inline it.
     // NUMERICS_INLINE
     std::istream &operator >> (std::istream &is, 
-                               matrix<VT, VA, VF> &m) {
+                               matrix<MT, MF, MA> &m) {
 	    char ch;
         std::size_t size1, size2;
         if (is >> ch && ch != '[') {
@@ -375,7 +375,7 @@ namespace numerics {
             is.putback (ch);
             is.setstate (std::ios::failbit);
         } else {
-            matrix<VT, VA, VF> s (size1, size2);
+            matrix<MT, MF, MA> s (size1, size2);
             if (is >> ch && ch != '(') {
                 is.putback (ch);
                 is.setstate (std::ios::failbit);

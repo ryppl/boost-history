@@ -508,7 +508,7 @@ namespace numerics {
         // Iterator simply is a index.
 
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
-        typedef indexed_const_iterator<range> const_iterator;
+        typedef indexed_const_iterator<range, std::random_access_iterator_tag> const_iterator;
 #else
         class const_iterator:
             public container_const_reference<range>,
@@ -679,7 +679,7 @@ namespace numerics {
         // Iterator simply is a index.
 
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
-        typedef indexed_const_iterator<slice> const_iterator;
+        typedef indexed_const_iterator<slice, std::random_access_iterator_tag> const_iterator;
 #else
         class const_iterator:
             public container_const_reference<slice>,

@@ -1,4 +1,4 @@
-//  
+//
 //  Copyright (c) 2000-2001
 //  Joerg Walter, Mathias Koch
 //  
@@ -43,10 +43,18 @@ namespace std {
 
 namespace numerics {
 
+#ifdef NUMERICS_NEED_CONVERSION
+    template<class C>
+    class container_reference;
+#endif
+
     template<class C>
     class container_const_reference {
     public:
         typedef C container_type;
+#ifdef NUMERICS_NEED_CONVERSION
+        typedef container_reference<container_type> container_reference;
+#endif
 
         NUMERICS_INLINE
         container_const_reference ():
@@ -54,10 +62,15 @@ namespace numerics {
         NUMERICS_INLINE
         container_const_reference (const container_type &c):
             c_ (&c) {}
+#ifdef NUMERICS_NEED_CONVERSION
+        NUMERICS_INLINE
+        container_const_reference (const container_reference &c):
+            c_ (c.c ()) {}
+#endif
 
         NUMERICS_INLINE
         const container_type &operator () () const {
-            return *c_; 
+            return *c_;
         }
 
         NUMERICS_INLINE
@@ -281,7 +294,7 @@ namespace numerics {
         NUMERICS_INLINE
         reverse_iterator ():
             std::reverse_iterator<iterator_type, value_type, reference> () {}
-        NUMERICS_INLINE NUMERICS_EXPLICIT
+        NUMERICS_INLINE
         reverse_iterator (const iterator_type &it):
             std::reverse_iterator<iterator_type, value_type, reference> (it) {}
 
@@ -330,14 +343,16 @@ namespace numerics {
         typedef T value_type;
         typedef R reference;
         typedef typename I::container_type container_type;
+#ifndef NUMERICS_USE_CANONICAL_ITERATOR
         typedef typename I::dual_iterator_type dual_iterator_type;
         typedef typename I::dual_reverse_iterator_type dual_reverse_iterator_type;
+#endif
 
         // Construction and destruction
         NUMERICS_INLINE
         reverse_iterator1 ():
             std::reverse_iterator<iterator_type, value_type, reference> () {}
-        NUMERICS_INLINE NUMERICS_EXPLICIT
+        NUMERICS_INLINE
         reverse_iterator1 (const iterator_type &it):
             std::reverse_iterator<iterator_type, value_type, reference> (it) {}
 
@@ -367,6 +382,7 @@ namespace numerics {
             return base ().index2 ();
         }
 
+#ifndef NUMERICS_USE_CANONICAL_ITERATOR
         NUMERICS_INLINE
         dual_iterator_type begin () const {
             return base ().begin ();
@@ -383,6 +399,7 @@ namespace numerics {
         dual_reverse_iterator_type rend () const {
             return dual_reverse_iterator_type (begin ());
         }
+#endif
     };
 
     template<class I, class T, class R>
@@ -407,14 +424,16 @@ namespace numerics {
         typedef T value_type;
         typedef R reference;
         typedef typename I::container_type container_type;
+#ifndef NUMERICS_USE_CANONICAL_ITERATOR
         typedef typename I::dual_iterator_type dual_iterator_type;
         typedef typename I::dual_reverse_iterator_type dual_reverse_iterator_type;
+#endif
 
         // Construction and destruction
         NUMERICS_INLINE
         reverse_iterator2 ():
             std::reverse_iterator<iterator_type, value_type, reference> () {}
-        NUMERICS_INLINE NUMERICS_EXPLICIT
+        NUMERICS_INLINE
         reverse_iterator2 (const iterator_type &it):
             std::reverse_iterator<iterator_type, value_type, reference> (it) {}
 
@@ -444,6 +463,7 @@ namespace numerics {
             return base ().index2 ();
         }
 
+#ifndef NUMERICS_USE_CANONICAL_ITERATOR
         NUMERICS_INLINE
         dual_iterator_type begin () const {
             return base ().begin ();
@@ -460,6 +480,7 @@ namespace numerics {
         dual_reverse_iterator_type rend () const {
             return dual_reverse_iterator_type (begin ());
         }
+#endif
     };
 
     template<class I, class T, class R>
@@ -488,7 +509,7 @@ namespace numerics {
         NUMERICS_INLINE
         reverse_iterator ():
             std::reverse_iterator<iterator_type> () {}
-        NUMERICS_INLINE NUMERICS_EXPLICIT
+        NUMERICS_INLINE
         reverse_iterator (const iterator_type &it):
             std::reverse_iterator<iterator_type> (it) {}
 
@@ -535,14 +556,16 @@ namespace numerics {
         typedef std::ptrdiff_t difference_type;
         typedef I iterator_type;
         typedef typename I::container_type container_type;
+#ifndef NUMERICS_USE_CANONICAL_ITERATOR
         typedef typename I::dual_iterator_type dual_iterator_type;
         typedef typename I::dual_reverse_iterator_type dual_reverse_iterator_type;
+#endif
 
         // Construction and destruction
         NUMERICS_INLINE
         reverse_iterator1 ():
             std::reverse_iterator<iterator_type> () {}
-        NUMERICS_INLINE NUMERICS_EXPLICIT
+        NUMERICS_INLINE
         reverse_iterator1 (const iterator_type &it):
             std::reverse_iterator<iterator_type> (it) {}
 
@@ -585,6 +608,7 @@ namespace numerics {
             return base ().index2 ();
         }
 
+#ifndef NUMERICS_USE_CANONICAL_ITERATOR
         NUMERICS_INLINE
         dual_iterator_type begin () const {
             return base ().begin ();
@@ -601,6 +625,7 @@ namespace numerics {
         dual_reverse_iterator_type rend () const {
             return dual_reverse_iterator_type (begin ());
         }
+#endif
     };
 
     template <class I>
@@ -610,14 +635,16 @@ namespace numerics {
         typedef std::ptrdiff_t difference_type;
         typedef I iterator_type;
         typedef typename I::container_type container_type;
+#ifndef NUMERICS_USE_CANONICAL_ITERATOR
         typedef typename I::dual_iterator_type dual_iterator_type;
         typedef typename I::dual_reverse_iterator_type dual_reverse_iterator_type;
+#endif
 
         // Construction and destruction
         NUMERICS_INLINE
         reverse_iterator2 ():
             std::reverse_iterator<iterator_type> () {}
-        NUMERICS_INLINE NUMERICS_EXPLICIT
+        NUMERICS_INLINE
         reverse_iterator2 (const iterator_type &it):
             std::reverse_iterator<iterator_type> (it) {}
 
@@ -660,6 +687,7 @@ namespace numerics {
             return base ().index2 ();
         }
 
+#ifndef NUMERICS_USE_CANONICAL_ITERATOR
         NUMERICS_INLINE
         dual_iterator_type begin () const {
             return base ().begin ();
@@ -676,6 +704,7 @@ namespace numerics {
         dual_reverse_iterator_type rend () const {
             return dual_reverse_iterator_type (begin ());
         }
+#endif
     };
 #endif
 
@@ -708,15 +737,15 @@ namespace numerics {
     }
 #endif
 
-    template<class C>
+    template<class C, class I>
     class indexed_iterator:
         public container_reference<C>, 
-        public random_access_iterator_base<indexed_iterator<C>, 
+        public random_access_iterator_base<indexed_iterator<C, I>, 
                                            typename C::value_type,
                                            typename C::difference_type> {
     public:
         typedef C container_type;
-        typedef std::random_access_iterator_tag iterator_category;
+        typedef I iterator_category;
         typedef typename container_type::size_type size_type;
         typedef typename container_type::difference_type difference_type;
         typedef typename container_type::value_type value_type;
@@ -771,7 +800,7 @@ namespace numerics {
         // Index
         NUMERICS_INLINE
         size_type index () const {
-            return it_ - (*this) ().begin ().it_;
+            return it_;
         }
 
         // Assignment 
@@ -785,7 +814,9 @@ namespace numerics {
         // Comparison
         NUMERICS_INLINE
         bool operator == (const indexed_iterator &it) const {
+#ifndef NUMERICS_USE_CANONICAL_ITERATOR
             check (&(*this) () == &it (), external_logic ());
+#endif
             return it_ == it.it_;
         }
 
@@ -794,49 +825,49 @@ namespace numerics {
     };
 
 #ifdef USE_MSVC
-    template<class C>
+    template<class C, class I>
     NUMERICS_INLINE
-    indexed_iterator<C> operator ++ (const indexed_iterator<C> &it, int) {
-        indexed_iterator<C> tmp (it);
+    indexed_iterator<C, I> operator ++ (const indexed_iterator<C, I> &it, int) {
+        indexed_iterator<C, I> tmp (it);
         ++ tmp;
         return tmp;
     }
-    template<class C>
+    template<class C, class I>
     NUMERICS_INLINE
-    indexed_iterator<C> operator -- (const indexed_iterator<C> &it, int) {
-        indexed_iterator<C> tmp (it);
+    indexed_iterator<C, I> operator -- (const indexed_iterator<C, I> &it, int) {
+        indexed_iterator<C, I> tmp (it);
         -- tmp;
         return tmp;
     }
-    template<class C>
+    template<class C, class I>
     NUMERICS_INLINE
-    indexed_iterator<C> operator + (const indexed_iterator<C> &it, std::ptrdiff_t n) {
-        indexed_iterator<C> tmp (it);
+    indexed_iterator<C, I> operator + (const indexed_iterator<C, I> &it, std::ptrdiff_t n) {
+        indexed_iterator<C, I> tmp (it);
         return tmp += n;
     }
-    template<class C>
+    template<class C, class I>
     NUMERICS_INLINE
-    indexed_iterator<C> operator - (const indexed_iterator<C> &it, std::ptrdiff_t n) {
-        indexed_iterator<C> tmp (it);
+    indexed_iterator<C, I> operator - (const indexed_iterator<C, I> &it, std::ptrdiff_t n) {
+        indexed_iterator<C, I> tmp (it);
         return tmp -= n;
     }
 #endif
 
-    template<class C>
+    template<class C, class I>
     class indexed_const_iterator:
         public container_const_reference<C>, 
-        public random_access_iterator_base<indexed_const_iterator<C>, 
+        public random_access_iterator_base<indexed_const_iterator<C, I>, 
                                            typename C::value_type,
                                            typename C::difference_type> {
     public:
         typedef C container_type;
-        typedef std::random_access_iterator_tag iterator_category;
+        typedef I iterator_category;
         typedef typename container_type::size_type size_type;
         typedef typename container_type::difference_type difference_type;
         typedef typename container_type::value_type value_type;
         typedef typename container_type::value_type reference;
         typedef typename container_type::const_pointer pointer;
-        typedef indexed_iterator<container_type> iterator_type;
+        typedef indexed_iterator<container_type, iterator_category> iterator_type;
 
         // Construction and destruction
         NUMERICS_INLINE
@@ -845,7 +876,7 @@ namespace numerics {
         NUMERICS_INLINE
         indexed_const_iterator (const container_type &c, size_type it):
             container_const_reference<container_type> (c), it_ (it) {}
-        NUMERICS_INLINE NUMERICS_EXPLICIT
+        NUMERICS_INLINE 
         indexed_const_iterator (const iterator_type &it):
             container_const_reference<container_type> (it ()), it_ (it.index ()) {}
 
@@ -890,7 +921,7 @@ namespace numerics {
         // Index
         NUMERICS_INLINE
         size_type index () const {
-            return it_ - (*this) ().begin ().it_;
+            return it_;
         }
 
         // Assignment 
@@ -904,63 +935,65 @@ namespace numerics {
         // Comparison
         NUMERICS_INLINE
         bool operator == (const indexed_const_iterator &it) const {
+#ifndef NUMERICS_USE_CANONICAL_ITERATOR
             check (&(*this) () == &it (), external_logic ());
+#endif
             return it_ == it.it_;
         }
 
     private:
         size_type it_;
 
-        friend class indexed_iterator<container_type>;
+        friend class indexed_iterator<container_type, iterator_category>;
     };
 
 #ifdef USE_MSVC
-    template<class C>
+    template<class C, class I>
     NUMERICS_INLINE
-    indexed_const_iterator<C> operator ++ (const indexed_const_iterator<C> &it, int) {
-        indexed_const_iterator<C> tmp (it);
+    indexed_const_iterator<C, I> operator ++ (const indexed_const_iterator<C, I> &it, int) {
+        indexed_const_iterator<C, I> tmp (it);
         ++ tmp;
         return tmp;
     }
-    template<class C>
+    template<class C, class I>
     NUMERICS_INLINE
-    indexed_const_iterator<C> operator -- (const indexed_const_iterator<C> &it, int) {
-        indexed_const_iterator<C> tmp (it);
+    indexed_const_iterator<C, I> operator -- (const indexed_const_iterator<C, I> &it, int) {
+        indexed_const_iterator<C, I> tmp (it);
         -- tmp;
         return tmp;
     }
-    template<class C>
+    template<class C, class I>
     NUMERICS_INLINE
-    indexed_const_iterator<C> operator + (const indexed_const_iterator<C> &it, std::ptrdiff_t n) {
-        indexed_const_iterator<C> tmp (it);
+    indexed_const_iterator<C, I> operator + (const indexed_const_iterator<C, I> &it, std::ptrdiff_t n) {
+        indexed_const_iterator<C, I> tmp (it);
         return tmp += n;
     }
-    template<class C>
+    template<class C, class I>
     NUMERICS_INLINE
-    indexed_const_iterator<C> operator - (const indexed_const_iterator<C> &it, std::ptrdiff_t n) {
-        indexed_const_iterator<C> tmp (it);
+    indexed_const_iterator<C, I> operator - (const indexed_const_iterator<C, I> &it, std::ptrdiff_t n) {
+        indexed_const_iterator<C, I> tmp (it);
         return tmp -= n;
     }
 #endif
 
-    template<class C>
+    template<class C, class I>
     class indexed_iterator2;
 
-    template<class C>
+    template<class C, class I>
     class indexed_iterator1:
         public container_reference<C>, 
-        public random_access_iterator_base<indexed_iterator1<C>, 
+        public random_access_iterator_base<indexed_iterator1<C, I>, 
                                            typename C::value_type,
                                            typename C::reference> {
     public:
         typedef C container_type;
-        typedef std::random_access_iterator_tag iterator_category;
+        typedef I iterator_category;
         typedef typename container_type::size_type size_type;
         typedef typename container_type::difference_type difference_type;
         typedef typename container_type::value_type value_type;
         typedef typename container_type::reference reference;
         typedef typename container_type::pointer pointer;
-        typedef indexed_iterator2<container_type> dual_iterator_type;
+        typedef indexed_iterator2<container_type, iterator_category> dual_iterator_type;
 #ifdef USE_MSVC
         typedef reverse_iterator2<dual_iterator_type, value_type, reference> dual_reverse_iterator_type;
 #else
@@ -1016,20 +1049,20 @@ namespace numerics {
         // Index
         NUMERICS_INLINE
         size_type index1 () const {
-            return it1_ - (*this) ().begin1 ().it1_;
+            return it1_;
         }
         NUMERICS_INLINE
         size_type index2 () const {
-            return it2_ - (*this) ().begin1 ().it2_;
+            return it2_;
         }
 
         NUMERICS_INLINE
         dual_iterator_type begin () const {
-            return (*this) ().find2 (1, index1 (), 0); 
+            return (*this) ().lower_bound2 (1, index1 (), 0); 
         }
         NUMERICS_INLINE
         dual_iterator_type end () const {
-            return (*this) ().find2 (1, index1 (), (*this) ().size2 ()); 
+            return (*this) ().lower_bound2 (1, index1 (), (*this) ().size2 ()); 
         }
         NUMERICS_INLINE
         dual_reverse_iterator_type rbegin () const {
@@ -1062,53 +1095,53 @@ namespace numerics {
     };
 
 #ifdef USE_MSVC
-    template<class C>
+    template<class C, class I>
     NUMERICS_INLINE
-    indexed_iterator1<C> operator ++ (const indexed_iterator1<C> &it, int) {
-        indexed_iterator1<C> tmp (it);
+    indexed_iterator1<C, I> operator ++ (const indexed_iterator1<C, I> &it, int) {
+        indexed_iterator1<C, I> tmp (it);
         ++ tmp;
         return tmp;
     }
-    template<class C>
+    template<class C, class I>
     NUMERICS_INLINE
-    indexed_iterator1<C> operator -- (const indexed_iterator1<C> &it, int) {
-        indexed_iterator1<C> tmp (it);
+    indexed_iterator1<C, I> operator -- (const indexed_iterator1<C, I> &it, int) {
+        indexed_iterator1<C, I> tmp (it);
         -- tmp;
         return tmp;
     }
-    template<class C>
+    template<class C, class I>
     NUMERICS_INLINE
-    indexed_iterator1<C> operator + (const indexed_iterator1<C> &it, std::ptrdiff_t n) {
-        indexed_iterator1<C> tmp (it);
+    indexed_iterator1<C, I> operator + (const indexed_iterator1<C, I> &it, std::ptrdiff_t n) {
+        indexed_iterator1<C, I> tmp (it);
         return tmp += n;
     }
-    template<class C>
+    template<class C, class I>
     NUMERICS_INLINE
-    indexed_iterator1<C> operator - (const indexed_iterator1<C> &it, std::ptrdiff_t n) {
-        indexed_iterator1<C> tmp (it);
+    indexed_iterator1<C, I> operator - (const indexed_iterator1<C, I> &it, std::ptrdiff_t n) {
+        indexed_iterator1<C, I> tmp (it);
         return tmp -= n;
     }
 #endif
 
-    template<class C>
+    template<class C, class I>
     class indexed_const_iterator2;
 
-    template<class C>
+    template<class C, class I>
     class indexed_const_iterator1:
         public container_const_reference<C>, 
-        public random_access_iterator_base<indexed_const_iterator1<C>, 
+        public random_access_iterator_base<indexed_const_iterator1<C, I>, 
                                            typename C::value_type,
                                            typename C::const_reference> {
     public:
         typedef C container_type;
-        typedef std::random_access_iterator_tag iterator_category;
+        typedef I iterator_category;
         typedef typename container_type::size_type size_type;
         typedef typename container_type::difference_type difference_type;
         typedef typename container_type::value_type value_type;
         typedef typename container_type::value_type reference;
         typedef typename container_type::const_pointer pointer;
-        typedef indexed_iterator1<container_type> iterator_type;
-        typedef indexed_const_iterator2<container_type> dual_iterator_type;
+        typedef indexed_iterator1<container_type, iterator_category> iterator_type;
+        typedef indexed_const_iterator2<container_type, iterator_category> dual_iterator_type;
 #ifdef USE_MSVC
         typedef reverse_iterator2<dual_iterator_type, value_type, value_type> dual_reverse_iterator_type;
 #else
@@ -1122,7 +1155,7 @@ namespace numerics {
         NUMERICS_INLINE
         indexed_const_iterator1 (const container_type &c, size_type it1, size_type it2):
             container_const_reference<container_type> (c), it1_ (it1), it2_ (it2) {}
-        NUMERICS_INLINE NUMERICS_EXPLICIT
+        NUMERICS_INLINE 
         indexed_const_iterator1 (const iterator_type &it):
             container_const_reference<container_type> (it ()), it1_ (it.index1 ()), it2_ (it.index2 ()) {}
 
@@ -1168,20 +1201,20 @@ namespace numerics {
         // Index
         NUMERICS_INLINE
         size_type index1 () const {
-            return it1_ - (*this) ().begin1 ().it1_;
+            return it1_;
         }
         NUMERICS_INLINE
         size_type index2 () const {
-            return it2_ - (*this) ().begin1 ().it2_;
+            return it2_;
         }
 
         NUMERICS_INLINE
         dual_iterator_type begin () const {
-            return (*this) ().find2 (1, index1 (), 0); 
+            return (*this) ().lower_bound2 (1, index1 (), 0); 
         }
         NUMERICS_INLINE
         dual_iterator_type end () const {
-            return (*this) ().find2 (1, index1 (), (*this) ().size2 ()); 
+            return (*this) ().lower_bound2 (1, index1 (), (*this) ().size2 ()); 
         }
         NUMERICS_INLINE
         dual_reverse_iterator_type rbegin () const {
@@ -1212,53 +1245,53 @@ namespace numerics {
         size_type it1_;
         size_type it2_;
 
-        friend class indexed_iterator1<container_type>;
+        friend class indexed_iterator1<container_type, iterator_category>;
     };
 
 #ifdef USE_MSVC
-    template<class C>
+    template<class C, class I>
     NUMERICS_INLINE
-    indexed_const_iterator1<C> operator ++ (const indexed_const_iterator1<C> &it, int) {
-        indexed_const_iterator1<C> tmp (it);
+    indexed_const_iterator1<C, I> operator ++ (const indexed_const_iterator1<C, I> &it, int) {
+        indexed_const_iterator1<C, I> tmp (it);
         ++ tmp;
         return tmp;
     }
-    template<class C>
+    template<class C, class I>
     NUMERICS_INLINE
-    indexed_const_iterator1<C> operator -- (const indexed_const_iterator1<C> &it, int) {
-        indexed_const_iterator1<C> tmp (it);
+    indexed_const_iterator1<C, I> operator -- (const indexed_const_iterator1<C, I> &it, int) {
+        indexed_const_iterator1<C, I> tmp (it);
         -- tmp;
         return tmp;
     }
-    template<class C>
+    template<class C, class I>
     NUMERICS_INLINE
-    indexed_const_iterator1<C> operator + (const indexed_const_iterator1<C> &it, std::ptrdiff_t n) {
-        indexed_const_iterator1<C> tmp (it);
+    indexed_const_iterator1<C, I> operator + (const indexed_const_iterator1<C, I> &it, std::ptrdiff_t n) {
+        indexed_const_iterator1<C, I> tmp (it);
         return tmp += n;
     }
-    template<class C>
+    template<class C, class I>
     NUMERICS_INLINE
-    indexed_const_iterator1<C> operator - (const indexed_const_iterator1<C> &it, std::ptrdiff_t n) {
-        indexed_const_iterator1<C> tmp (it);
+    indexed_const_iterator1<C, I> operator - (const indexed_const_iterator1<C, I> &it, std::ptrdiff_t n) {
+        indexed_const_iterator1<C, I> tmp (it);
         return tmp -= n;
     }
 #endif
 
-    template<class C>
+    template<class C, class I>
     class indexed_iterator2:
         public container_reference<C>, 
-        public random_access_iterator_base<indexed_iterator2<C>, 
+        public random_access_iterator_base<indexed_iterator2<C, I>, 
                                            typename C::value_type,
                                            typename C::reference> {
     public:
         typedef C container_type;
-        typedef std::random_access_iterator_tag iterator_category;
+        typedef I iterator_category;
         typedef typename container_type::size_type size_type;
         typedef typename container_type::difference_type difference_type;
         typedef typename container_type::value_type value_type;
         typedef typename container_type::reference reference;
         typedef typename container_type::pointer pointer;
-        typedef indexed_iterator1<container_type> dual_iterator_type;
+        typedef indexed_iterator1<container_type, iterator_category> dual_iterator_type;
 #ifdef USE_MSVC
         typedef reverse_iterator1<dual_iterator_type, value_type, reference> dual_reverse_iterator_type;
 #else
@@ -1314,20 +1347,20 @@ namespace numerics {
         // Index
         NUMERICS_INLINE
         size_type index1 () const {
-            return it1_ - (*this) ().begin2 ().it1_;
+            return it1_;
         }
         NUMERICS_INLINE
         size_type index2 () const {
-            return it2_ - (*this) ().begin2 ().it2_;
+            return it2_;
         }
 
         NUMERICS_INLINE
         dual_iterator_type begin () const {
-            return (*this) ().find1 (1, 0, index2 ()); 
+            return (*this) ().lower_bound1 (1, 0, index2 ()); 
         }
         NUMERICS_INLINE
         dual_iterator_type end () const {
-            return (*this) ().find1 (1, (*this) ().size1 (), index2 ()); 
+            return (*this) ().lower_bound1 (1, (*this) ().size1 (), index2 ()); 
         }
         NUMERICS_INLINE
         dual_reverse_iterator_type rbegin () const {
@@ -1360,50 +1393,50 @@ namespace numerics {
     };
 
 #ifdef USE_MSVC
-    template<class C>
+    template<class C, class I>
     NUMERICS_INLINE
-    indexed_iterator2<C> operator ++ (const indexed_iterator2<C> &it, int) {
-        indexed_iterator2<C> tmp (it);
+    indexed_iterator2<C, I> operator ++ (const indexed_iterator2<C, I> &it, int) {
+        indexed_iterator2<C, I> tmp (it);
         ++ tmp;
         return tmp;
     }
-    template<class C>
+    template<class C, class I>
     NUMERICS_INLINE
-    indexed_iterator2<C> operator -- (const indexed_iterator2<C> &it, int) {
-        indexed_iterator2<C> tmp (it);
+    indexed_iterator2<C, I> operator -- (const indexed_iterator2<C, I> &it, int) {
+        indexed_iterator2<C, I> tmp (it);
         -- tmp;
         return tmp;
     }
-    template<class C>
+    template<class C, class I>
     NUMERICS_INLINE
-    indexed_iterator2<C> operator + (const indexed_iterator2<C> &it, std::ptrdiff_t n) {
-        indexed_iterator2<C> tmp (it);
+    indexed_iterator2<C, I> operator + (const indexed_iterator2<C, I> &it, std::ptrdiff_t n) {
+        indexed_iterator2<C, I> tmp (it);
         return tmp += n;
     }
-    template<class C>
+    template<class C, class I>
     NUMERICS_INLINE
-    indexed_iterator2<C> operator - (const indexed_iterator2<C> &it, std::ptrdiff_t n) {
-        indexed_iterator2<C> tmp (it);
+    indexed_iterator2<C, I> operator - (const indexed_iterator2<C, I> &it, std::ptrdiff_t n) {
+        indexed_iterator2<C, I> tmp (it);
         return tmp -= n;
     }
 #endif
 
-    template<class C>
+    template<class C, class I>
     class indexed_const_iterator2:
         public container_const_reference<C>, 
-        public random_access_iterator_base<indexed_const_iterator2<C>, 
+        public random_access_iterator_base<indexed_const_iterator2<C, I>, 
                                            typename C::value_type,
                                            typename C::const_reference> {
     public:
         typedef C container_type;
-        typedef std::random_access_iterator_tag iterator_category;
+        typedef I iterator_category;
         typedef typename container_type::size_type size_type;
         typedef typename container_type::difference_type difference_type;
         typedef typename container_type::value_type value_type;
         typedef typename container_type::value_type reference;
         typedef typename container_type::const_pointer pointer;
-        typedef indexed_iterator2<container_type> iterator_type;
-        typedef indexed_const_iterator1<container_type> dual_iterator_type;
+        typedef indexed_iterator2<container_type, iterator_category> iterator_type;
+        typedef indexed_const_iterator1<container_type, iterator_category> dual_iterator_type;
 #ifdef USE_MSVC
         typedef reverse_iterator1<dual_iterator_type, value_type, value_type> dual_reverse_iterator_type;
 #else
@@ -1417,7 +1450,7 @@ namespace numerics {
         NUMERICS_INLINE
         indexed_const_iterator2 (const container_type &c, size_type it1, size_type it2):
             container_const_reference<container_type> (c), it1_ (it1), it2_ (it2) {}
-        NUMERICS_INLINE NUMERICS_EXPLICIT
+        NUMERICS_INLINE 
         indexed_const_iterator2 (const iterator_type &it):
             container_const_reference<container_type> (it ()), it1_ (it.index1 ()), it2_ (it.index2 ()) {}
 
@@ -1463,20 +1496,20 @@ namespace numerics {
         // Index
         NUMERICS_INLINE
         size_type index1 () const {
-            return it1_ - (*this) ().begin2 ().it1_;
+            return it1_;
         }
         NUMERICS_INLINE
         size_type index2 () const {
-            return it2_ - (*this) ().begin2 ().it2_;
+            return it2_;
         }
 
         NUMERICS_INLINE
         dual_iterator_type begin () const {
-            return (*this) ().find1 (1, 0, index2 ()); 
+            return (*this) ().lower_bound1 (1, 0, index2 ()); 
         }
         NUMERICS_INLINE
         dual_iterator_type end () const {
-            return (*this) ().find1 (1, (*this) ().size1 (), index2 ()); 
+            return (*this) ().lower_bound1 (1, (*this) ().size1 (), index2 ()); 
         }
         NUMERICS_INLINE
         dual_reverse_iterator_type rbegin () const {
@@ -1507,34 +1540,34 @@ namespace numerics {
         size_type it1_;
         size_type it2_;
 
-        friend class indexed_iterator2<container_type>;
+        friend class indexed_iterator2<container_type, iterator_category>;
     };
 
 #ifdef USE_MSVC
-    template<class C>
+    template<class C, class I>
     NUMERICS_INLINE
-    indexed_const_iterator2<C> operator ++ (const indexed_const_iterator2<C> &it, int) {
-        indexed_const_iterator2<C> tmp (it);
+    indexed_const_iterator2<C, I> operator ++ (const indexed_const_iterator2<C, I> &it, int) {
+        indexed_const_iterator2<C, I> tmp (it);
         ++ tmp;
         return tmp;
     }
-    template<class C>
+    template<class C, class I>
     NUMERICS_INLINE
-    indexed_const_iterator2<C> operator -- (const indexed_const_iterator2<C> &it, int) {
-        indexed_const_iterator2<C> tmp (it);
+    indexed_const_iterator2<C, I> operator -- (const indexed_const_iterator2<C, I> &it, int) {
+        indexed_const_iterator2<C, I> tmp (it);
         -- tmp;
         return tmp;
     }
-    template<class C>
+    template<class C, class I>
     NUMERICS_INLINE
-    indexed_const_iterator2<C> operator + (const indexed_const_iterator2<C> &it, std::ptrdiff_t n) {
-        indexed_const_iterator2<C> tmp (it);
+    indexed_const_iterator2<C, I> operator + (const indexed_const_iterator2<C, I> &it, std::ptrdiff_t n) {
+        indexed_const_iterator2<C, I> tmp (it);
         return tmp += n;
     }
-    template<class C>
+    template<class C, class I>
     NUMERICS_INLINE
-    indexed_const_iterator2<C> operator - (const indexed_const_iterator2<C> &it, std::ptrdiff_t n) {
-        indexed_const_iterator2<C> tmp (it);
+    indexed_const_iterator2<C, I> operator - (const indexed_const_iterator2<C, I> &it, std::ptrdiff_t n) {
+        indexed_const_iterator2<C, I> tmp (it);
         return tmp -= n;
     }
 #endif
@@ -1542,6 +1575,8 @@ namespace numerics {
 }
 
 #endif
+
+
 
 
 

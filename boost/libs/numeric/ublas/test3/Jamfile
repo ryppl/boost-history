@@ -3,10 +3,12 @@ subproject libs/numeric/ublas/test3 ;
 SOURCES = test3 test31 test32 test33 ;
 
 exe test3
-	: $(SOURCES).cpp
+	: $(SOURCES).cpp $(BOOST_ROOT)/boost/numeric/ublas/instant.cpp
 	: <include>$(BOOST_ROOT)
+	  <msvc><*><define>USE_MSVC
+	  <borland><*><cxxflags>"-w-8026 -w-8027 -w-8057 -w-8084 -w-8092"
+	  <borland><*><define>USE_BCC 	  
 	  <gcc><*><define>USE_GCC
 	  <intel-linux><*><define>USE_ICC
 	;
-
 

@@ -1,4 +1,4 @@
-//  
+//
 //  Copyright (c) 2000-2001
 //  Joerg Walter, Mathias Koch
 //  
@@ -27,7 +27,7 @@ namespace numerics {
     // Vector based range class
     template<class V>
     class vector_range:
-		public vector_expression<vector_range<V> > {
+        public vector_expression<vector_range<V> > {
     public:      
         typedef V vector_type;
         typedef typename V::size_type size_type;
@@ -56,9 +56,11 @@ namespace numerics {
         NUMERICS_INLINE
         vector_range (vector_type &data, const range &r): 
             data_ (data), r_ (r) {}
+#ifdef NUMERICS_DEPRECATED
         NUMERICS_INLINE
         vector_range (vector_type &data, size_type start, size_type stop): 
             data_ (data), r_ (start, stop) {}
+#endif
 
         NUMERICS_INLINE
         size_type start () const { 
@@ -90,22 +92,14 @@ namespace numerics {
             return (*this) (i); 
         }
 
-#ifdef NUMERICS_DEPRECATED
+#ifdef NUMERICS_HAS_PARTIAL_TEMPLATE_SPECIALIZATION
         NUMERICS_INLINE
-        vector_range project (size_type start, size_type stop) const {
-            return vector_range (data_, r_.composite (start, stop));
+        vector_range<vector_type> project (const range &r) const {
+            return vector_range<vector_type> (data_, r_.composite (r));
         }
         NUMERICS_INLINE
-        vector_range project (const range &r) const {
-            return vector_range (data_, r_.composite (r));
-        }
-        NUMERICS_INLINE
-        vector_range project (size_type start, size_type stop) {
-            return vector_range (data_, r_.composite (start, stop));
-        }
-        NUMERICS_INLINE
-        vector_range project (const range &r) {
-            return vector_range (data_, r_.composite (r));
+        vector_range<vector_type> project (const range &r) {
+            return vector_range<vector_type> (data_, r_.composite (r));
         }
 #endif
 
@@ -176,9 +170,11 @@ namespace numerics {
         }
 #endif
 
-#ifdef NUMERICS_INDEXED_ITERATOR_PROXIES
-        typedef indexed_iterator<vector_range<vector_type> > iterator;
-        typedef indexed_const_iterator<vector_range<vector_type> > const_iterator;
+#ifdef NUMERICS_USE_INDEXED_ITERATOR
+        typedef indexed_iterator<vector_range<vector_type>, 
+								 vector_type::iterator::iterator_category> iterator;
+        typedef indexed_const_iterator<vector_range<vector_type>, 
+									   vector_type::const_iterator::iterator_category> const_iterator;
 #else
         class const_iterator;
         class iterator;
@@ -186,27 +182,49 @@ namespace numerics {
 
         // Element lookup
         NUMERICS_INLINE
-        const_iterator find (size_type i) const {
-#ifndef NUMERICS_INDEXED_ITERATOR_PROXIES
+        const_iterator lower_bound (size_type i) const {
             // One has do to this, to get the const member dispatched?!
             const vector_type &data = data_;
-            return const_iterator (*this, data.find (start () + i));
+            const_iterator_type it (data.lower_bound (start () + i));
+#ifdef NUMERICS_USE_INDEXED_ITERATOR
+            return const_iterator (*this, it.index ());
 #else
-            return const_iterator (*this, i);
+            return const_iterator (*this, it);
 #endif
         }
         NUMERICS_INLINE
-        iterator find (size_type i) {
-#ifndef NUMERICS_INDEXED_ITERATOR_PROXIES
-            return iterator (*this, data_.find (start () + i));
+        iterator lower_bound (size_type i) {
+            iterator_type it (data_.lower_bound (start () + i));
+#ifdef NUMERICS_USE_INDEXED_ITERATOR
+            return iterator (*this, it.index ());
 #else
-            return iterator (*this, i);
+            return iterator (*this, it);
+#endif
+        }
+        NUMERICS_INLINE
+        const_iterator upper_bound (size_type i) const {
+            // One has do to this, to get the const member dispatched?!
+            const vector_type &data = data_;
+            const_iterator_type it (data.upper_bound (start () + i));
+#ifdef NUMERICS_USE_INDEXED_ITERATOR
+            return const_iterator (*this, it.index ());
+#else
+            return const_iterator (*this, it);
+#endif
+        }
+        NUMERICS_INLINE
+        iterator upper_bound (size_type i) {
+            iterator_type it (data_.upper_bound (start () + i));
+#ifdef NUMERICS_USE_INDEXED_ITERATOR
+            return iterator (*this, it.index ());
+#else
+            return iterator (*this, it);
 #endif
         }
 
         // Iterators simply are pointers.
 
-#ifndef NUMERICS_INDEXED_ITERATOR_PROXIES
+#ifndef NUMERICS_USE_INDEXED_ITERATOR
         class const_iterator:
             public container_const_reference<vector_range>,
             public random_access_iterator_base<const_iterator, value_type> {
@@ -226,9 +244,15 @@ namespace numerics {
             NUMERICS_INLINE
             const_iterator (const vector_range &vr, const const_iterator_type &it):
                 container_const_reference<vector_range> (vr), it_ (it) {}
+#ifndef USE_ICC
             NUMERICS_INLINE
             const_iterator (const iterator &it):
                 container_const_reference<vector_range> (it ()), it_ (it.it_) {}
+#else
+            NUMERICS_INLINE
+            const_iterator (const typename vector_range::iterator &it):
+                container_const_reference<vector_range> (it ()), it_ (it.it_) {}
+#endif
 
             // Arithmetic
             NUMERICS_INLINE
@@ -291,14 +315,14 @@ namespace numerics {
 
         NUMERICS_INLINE
         const_iterator begin () const {
-            return find (0);
+            return lower_bound (0);
         }
         NUMERICS_INLINE
         const_iterator end () const {
-            return find (size ());
+            return upper_bound (size ());
         }
 
-#ifndef NUMERICS_INDEXED_ITERATOR_PROXIES
+#ifndef NUMERICS_USE_INDEXED_ITERATOR
         class iterator:
             public container_reference<vector_range>,
             public random_access_iterator_base<iterator, value_type> {
@@ -382,11 +406,11 @@ namespace numerics {
 
         NUMERICS_INLINE
         iterator begin () {
-            return find (0);
+            return lower_bound (0);
         }
         NUMERICS_INLINE
         iterator end () {
-            return find (size ());
+            return upper_bound (size ());
         }
 
         // Reverse iterator
@@ -431,23 +455,32 @@ namespace numerics {
     vector_range<V>::vector_type vector_range<V>::nil_;
 
     // Projections
-    // FIXME: partial specialization for vector_range for example
+#ifdef NUMERICS_DEPRECATED
     template<class V>
     NUMERICS_INLINE
     vector_range<V> project (V &data, std::size_t start, std::size_t stop) {
         return vector_range<V> (data, start, stop);
     }
+#endif
     template<class V>
     NUMERICS_INLINE
     vector_range<V> project (V &data, const range &r) {
         return vector_range<V> (data, r);
     }
+#ifdef NUMERICS_HAS_PARTIAL_TEMPLATE_SPECIALIZATION
+    template<class V>
+    NUMERICS_INLINE
+    vector_range<V> project (const vector_range<V> &data, const range &r) {
+		NUMERICS_TRACE ("project (vector_range<V>, range)");
+        return data.project (r);
+    }
+#endif
 
     // Vector based slice class
     template<class V>
     class vector_slice:
 		public vector_expression<vector_slice<V> > {
-    public:      
+    public:
         typedef V vector_type;
         typedef typename V::size_type size_type;
         typedef typename V::difference_type difference_type;
@@ -475,9 +508,11 @@ namespace numerics {
         NUMERICS_INLINE
         vector_slice (vector_type &data, const slice &s): 
             data_ (data), s_ (s) {}
+#ifdef NUMERICS_DEPRECATED
         NUMERICS_INLINE
         vector_slice (vector_type &data, size_type start, size_type stride, size_type size): 
             data_ (data), s_ (start, stride, size) {}
+#endif
 
         NUMERICS_INLINE
         size_type start () const { 
@@ -513,22 +548,22 @@ namespace numerics {
             return (*this) (i); 
         }
 
-#ifdef NUMERICS_DEPRECATED
+#ifdef NUMERICS_HAS_PARTIAL_TEMPLATE_SPECIALIZATION
         NUMERICS_INLINE
-        vector_slice project (const range &r) const {
-            return vector_slice (data_, s_.composite (r));
+        vector_slice<vector_type> project (const range &r) const {
+            return vector_slice<vector_type>  (data_, s_.composite (r));
         }
         NUMERICS_INLINE
-        vector_slice project (const slice &s) const {
-            return vector_slice (data_, s_.composite (s));
+        vector_slice<vector_type> project (const range &r) {
+            return vector_slice<vector_type>  (data_, s_.composite (r));
         }
         NUMERICS_INLINE
-        vector_slice project (const range &r) {
-            return vector_slice (data_, s_.composite (r));
+        vector_slice<vector_type> project (const slice &s) const {
+            return vector_slice<vector_type>  (data_, s_.composite (s));
         }
-        NUMERICS_INLINE
-        vector_slice project (const slice &s) {
-            return vector_slice (data_, s_.composite (s));
+		NUMERICS_INLINE
+        vector_slice<vector_type> project (const slice &s) {
+            return vector_slice<vector_type> (data_, s_.composite (s));
         }
 #endif
 
@@ -599,9 +634,11 @@ namespace numerics {
         }
 #endif
 
-#ifdef NUMERICS_INDEXED_ITERATOR_PROXIES
-        typedef indexed_iterator<vector_slice<vector_type> > iterator;
-        typedef indexed_const_iterator<vector_slice<vector_type> > const_iterator;
+#ifdef NUMERICS_USE_INDEXED_ITERATOR
+        typedef indexed_iterator<vector_slice<vector_type>, 
+							     vector_type::iterator::iterator_category> iterator;
+        typedef indexed_const_iterator<vector_slice<vector_type>,
+									   vector_type::const_iterator::iterator_category> const_iterator;
 #else
         class const_iterator;
         class iterator;
@@ -609,25 +646,41 @@ namespace numerics {
 
         // Element lookup
         NUMERICS_INLINE
-        const_iterator find (size_type i) const {
-#ifndef NUMERICS_INDEXED_ITERATOR_PROXIES
-            return const_iterator (data_, s_.begin () + i);
-#else
+        const_iterator lower_bound (size_type i) const {
+#ifdef NUMERICS_USE_INDEXED_ITERATOR
             return const_iterator (*this, i);
+#else
+            return const_iterator (data_, s_.begin () + i);
 #endif
         }
         NUMERICS_INLINE
-        iterator find (size_type i) {
-#ifndef NUMERICS_INDEXED_ITERATOR_PROXIES
-            return iterator (data_, s_.begin () + i);
-#else
+        iterator lower_bound (size_type i) {
+#ifdef NUMERICS_USE_INDEXED_ITERATOR
             return iterator (*this, i);
+#else
+            return iterator (data_, s_.begin () + i);
+#endif
+        }
+        NUMERICS_INLINE
+        const_iterator upper_bound (size_type i) const {
+#ifdef NUMERICS_USE_INDEXED_ITERATOR
+            return const_iterator (*this, i);
+#else
+            return const_iterator (data_, s_.begin () + i);
+#endif
+        }
+        NUMERICS_INLINE
+        iterator upper_bound (size_type i) {
+#ifdef NUMERICS_USE_INDEXED_ITERATOR
+            return iterator (*this, i);
+#else
+            return iterator (data_, s_.begin () + i);
 #endif
         }
 
         // Iterators simply are indices.
 
-#ifndef NUMERICS_INDEXED_ITERATOR_PROXIES
+#ifndef NUMERICS_USE_INDEXED_ITERATOR
         class const_iterator:
             public container_const_reference<vector_type>,
             public random_access_iterator_base<const_iterator, value_type> {
@@ -647,9 +700,15 @@ namespace numerics {
             NUMERICS_INLINE
             const_iterator (const vector_type &v, const const_iterator_type &it):
                 container_const_reference<vector_type> (v), it_ (it) {}
+#ifndef USE_ICC
             NUMERICS_INLINE
             const_iterator (const iterator &it):
                 container_const_reference<vector_type> (it ()), it_ (it.it_) {}
+#else
+            NUMERICS_INLINE
+            const_iterator (const typename vector_slice::iterator &it):
+                container_const_reference<vector_type> (it ()), it_ (it.it_) {}
+#endif
 
             // Arithmetic
             NUMERICS_INLINE
@@ -712,22 +771,14 @@ namespace numerics {
 
         NUMERICS_INLINE
         const_iterator begin () const {
-#ifndef NUMERICS_INDEXED_ITERATOR_PROXIES
-            return const_iterator (data_, s_.begin ());
-#else
-            return const_iterator (*this, 0);
-#endif
+            return lower_bound (0);
         }
         NUMERICS_INLINE
         const_iterator end () const {
-#ifndef NUMERICS_INDEXED_ITERATOR_PROXIES
-            return const_iterator (data_, s_.end ());
-#else
-            return const_iterator (*this, s_.size ());
-#endif
+            return upper_bound (size ());
         }
 
-#ifndef NUMERICS_INDEXED_ITERATOR_PROXIES
+#ifndef NUMERICS_USE_INDEXED_ITERATOR
         class iterator:
             public container_reference<vector_type>,
             public random_access_iterator_base<iterator, value_type> {
@@ -811,19 +862,11 @@ namespace numerics {
 
         NUMERICS_INLINE
         iterator begin () {
-#ifndef NUMERICS_INDEXED_ITERATOR_PROXIES
-            return iterator (data_, s_.begin ());
-#else
-            return iterator (*this, 0);
-#endif
+            return lower_bound (0);
         }
         NUMERICS_INLINE
         iterator end () {
-#ifndef NUMERICS_INDEXED_ITERATOR_PROXIES
-            return iterator (data_, s_.end ());
-#else
-            return iterator (*this, s_.size ());
-#endif
+            return upper_bound (size ());
         }
 
         // Reverse iterator
@@ -867,8 +910,32 @@ namespace numerics {
     template<class V>
     vector_slice<V>::vector_type vector_slice<V>::nil_;
 
+    // Projections
+#ifdef NUMERICS_HAS_PARTIAL_TEMPLATE_SPECIALIZATION
+    template<class V>
+    NUMERICS_INLINE
+    vector_slice<V> project (const vector_slice<V> &data, const range &r) {
+		NUMERICS_TRACE ("project (vector_slice<V>, range)");
+        return data.project (r);
+    }
+#endif
+    template<class V>
+    NUMERICS_INLINE
+    vector_slice<V> project (V &data, const slice &s) {
+        return vector_slice<V> (data, s);
+    }
+#ifdef NUMERICS_HAS_PARTIAL_TEMPLATE_SPECIALIZATION
+    template<class V>
+    NUMERICS_INLINE
+    vector_slice<V> project (const vector_slice<V> &data, const slice &s) {
+		NUMERICS_TRACE ("project (vector_slice<V>, slice)");
+        return data.project (s);
+    }
+#endif
+
 }
 
 #endif 
+
 
 

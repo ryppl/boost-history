@@ -150,34 +150,34 @@ void bench_3<T, N>::operator () (int runs) {
 
 #ifdef USE_BOUNDED_ARRAY
     header ("matrix<bounded_array> safe");
-	bench_my_matrix_prod<numerics::matrix<T, numerics::row_major<>, numerics::bounded_array<T, N * N> >, N> () (runs, safe_tag ());
+	bench_my_matrix_prod<numerics::matrix<T, numerics::row_major, numerics::bounded_array<T, N * N> >, N> () (runs, safe_tag ());
 
     header ("matrix<bounded_array> fast");
-	bench_my_matrix_prod<numerics::matrix<T, numerics::row_major<>, numerics::bounded_array<T, N * N> >, N> () (runs, fast_tag ());
+	bench_my_matrix_prod<numerics::matrix<T, numerics::row_major, numerics::bounded_array<T, N * N> >, N> () (runs, fast_tag ());
 #endif
 
 #ifdef USE_UNBOUNDED_ARRAY
     header ("matrix<unbounded_array> safe");
-	bench_my_matrix_prod<numerics::matrix<T, numerics::row_major<>, numerics::unbounded_array<T> >, N> () (runs, safe_tag ());
+	bench_my_matrix_prod<numerics::matrix<T, numerics::row_major, numerics::unbounded_array<T> >, N> () (runs, safe_tag ());
 
     header ("matrix<unbounded_array> fast");
-	bench_my_matrix_prod<numerics::matrix<T, numerics::row_major<>, numerics::unbounded_array<T> >, N> () (runs, fast_tag ());
+	bench_my_matrix_prod<numerics::matrix<T, numerics::row_major, numerics::unbounded_array<T> >, N> () (runs, fast_tag ());
 #endif
 
 #ifdef USE_STD_VALARRAY
     header ("matrix<std::valarray> safe");
-	bench_my_matrix_prod<numerics::matrix<T, numerics::row_major<>, std::valarray<T> >, N> () (runs, safe_tag ());
+	bench_my_matrix_prod<numerics::matrix<T, numerics::row_major, std::valarray<T> >, N> () (runs, safe_tag ());
 
     header ("matrix<std::valarray> fast");
-	bench_my_matrix_prod<numerics::matrix<T, numerics::row_major<>, std::valarray<T> >, N> () (runs, fast_tag ());
+	bench_my_matrix_prod<numerics::matrix<T, numerics::row_major, std::valarray<T> >, N> () (runs, fast_tag ());
 #endif
 
 #ifdef USE_STD_VECTOR
     header ("matrix<std::vector> safe");
-	bench_my_matrix_prod<numerics::matrix<T, numerics::row_major<>, std::vector<T> >, N> () (runs, safe_tag ());
+	bench_my_matrix_prod<numerics::matrix<T, numerics::row_major, std::vector<T> >, N> () (runs, safe_tag ());
 
     header ("matrix<std::vector> fast");
-	bench_my_matrix_prod<numerics::matrix<T, numerics::row_major<>, std::vector<T> >, N> () (runs, fast_tag ());
+	bench_my_matrix_prod<numerics::matrix<T, numerics::row_major, std::vector<T> >, N> () (runs, fast_tag ());
 #endif
 
 #ifdef USE_STD_VALARRAY

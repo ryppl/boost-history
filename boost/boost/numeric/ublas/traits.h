@@ -25,42 +25,50 @@
 
 namespace numerics {
 
-    template<class T>
+// We should use BOOST_STATIC_CONSTANT one day.
+#ifndef USE_MSVC
+#define NUMERICS_STATIC_CONSTANT(type, assignment) static const type assignment
+#else
+// Static constant workaround from John Maddock
+#define NUMERICS_STATIC_CONSTANT(type, assignment) enum { assignment }
+#endif    
+	
+	template<class T>
     struct type_traits {
-        typedef T norm_type;
+        typedef T real_type;
         typedef T precision_type;
-        static std::size_t plus_complexity;
-        static std::size_t multiplies_complexity;
+        NUMERICS_STATIC_CONSTANT (std::size_t, plus_complexity = 0);
+        NUMERICS_STATIC_CONSTANT (std::size_t, multiplies_complexity = 0);
     };
 
     template<>
     struct type_traits<float> {
-        typedef float norm_type;
+        typedef float real_type;
 	    typedef double precision_type;
-        static std::size_t plus_complexity;
-        static std::size_t multiplies_complexity;
+        NUMERICS_STATIC_CONSTANT (std::size_t, plus_complexity = 1);
+        NUMERICS_STATIC_CONSTANT (std::size_t, multiplies_complexity = 1);
     };
     template<>
     struct type_traits<double> {
-        typedef double norm_type;
+        typedef double real_type;
 	    typedef double precision_type;
-        static std::size_t plus_complexity;
-        static std::size_t multiplies_complexity;
+        NUMERICS_STATIC_CONSTANT (std::size_t, plus_complexity = 1);
+        NUMERICS_STATIC_CONSTANT (std::size_t, multiplies_complexity = 1);
     };
 
     template<>
     struct type_traits<std::complex<float> > {
-        typedef float norm_type;
+        typedef float real_type;
 	    typedef std::complex<double> precision_type;
-        static std::size_t plus_complexity;
-        static std::size_t multiplies_complexity;
+        NUMERICS_STATIC_CONSTANT (std::size_t, plus_complexity = 2);
+        NUMERICS_STATIC_CONSTANT (std::size_t, multiplies_complexity = 6);
     };
     template<>
     struct type_traits<std::complex<double> > {
-        typedef double norm_type;
+        typedef double real_type;
 	    typedef std::complex<double> precision_type;
-        static std::size_t plus_complexity;
-        static std::size_t multiplies_complexity;
+        NUMERICS_STATIC_CONSTANT (std::size_t, plus_complexity = 2);
+        NUMERICS_STATIC_CONSTANT (std::size_t, multiplies_complexity = 6);
     };
 
     template<class T1, class T2>
@@ -103,8 +111,8 @@ namespace numerics {
     };
 
     struct sparse_bidirectional_iterator_tag : public std::bidirectional_iterator_tag {};
-    struct packed_bidirectional_iterator_tag : public sparse_bidirectional_iterator_tag {};
-    struct dense_random_access_iterator_tag : public std::random_access_iterator_tag {};
+    struct packed_random_access_iterator_tag : public std::random_access_iterator_tag {};
+    struct dense_random_access_iterator_tag : public packed_random_access_iterator_tag {};
 
     template<class I1, class I2>
     struct restrict_traits {
@@ -118,7 +126,7 @@ namespace numerics {
     };
 
     template<>
-    struct restrict_traits<packed_bidirectional_iterator_tag, sparse_bidirectional_iterator_tag> {
+    struct restrict_traits<packed_random_access_iterator_tag, sparse_bidirectional_iterator_tag> {
         typedef sparse_bidirectional_iterator_tag iterator_category;
     };
     template<>
@@ -126,8 +134,8 @@ namespace numerics {
         typedef sparse_bidirectional_iterator_tag iterator_category;
     };
     template<>
-    struct restrict_traits<dense_random_access_iterator_tag, packed_bidirectional_iterator_tag> {
-        typedef packed_bidirectional_iterator_tag iterator_category;
+    struct restrict_traits<dense_random_access_iterator_tag, packed_random_access_iterator_tag> {
+        typedef packed_random_access_iterator_tag iterator_category;
     };
 
 }

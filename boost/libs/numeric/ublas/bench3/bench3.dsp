@@ -23,7 +23,7 @@ CFG=bench3 - Win32 Debug
 
 # Begin Project
 # PROP AllowPerConfigDependencies 0
-# PROP Scc_ProjName ""$/genesys/test/blas/bench3", ZACAAAAA"
+# PROP Scc_ProjName ""$/boost/libs/numeric/ublas/bench3", SDCAAAAA"
 # PROP Scc_LocalPath "."
 CPP=cl.exe
 RSC=rc.exe
@@ -112,6 +112,10 @@ SOURCE=..\..\..\..\boost\numeric\ublas\instant.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\boost\numeric\ublas\banded.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\bench3.h
 # End Source File
 # Begin Source File
 

@@ -26,9 +26,9 @@
 namespace numerics {
 
     // Array based sparse vector class 
-    template<class T, class F, class A>
+    template<class T, class A>
     class sparse_vector: 
-        public vector_expression<sparse_vector<T, F, A> > {
+        public vector_expression<sparse_vector<T, A> > {
     public:      
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
@@ -37,10 +37,9 @@ namespace numerics {
         typedef T &reference;
         typedef const T *const_pointer;
         typedef T *pointer;
-        typedef F functor_type;
         typedef A array_type;
-        typedef const sparse_vector<T, F, A> const_self_type;
-        typedef sparse_vector<T, F, A> self_type;
+        typedef const sparse_vector<T, A> const_self_type;
+        typedef sparse_vector<T, A> self_type;
         typedef const vector_const_reference<const_self_type> const_closure_type;
         typedef vector_reference<self_type> closure_type;
 #ifdef NUMERICS_DEPRECATED
@@ -54,25 +53,25 @@ namespace numerics {
         // Construction and destruction
         NUMERICS_INLINE
         sparse_vector (): 
-            size_ (0), non_zeroes_ (0), data_ () {}
+            size_ (0), non_zeros_ (0), data_ () {}
         NUMERICS_INLINE
-        sparse_vector (size_type size, size_type non_zeroes = 0): 
-            size_ (size), non_zeroes_ (non_zeroes), data_ () {}
+        sparse_vector (size_type size, size_type non_zeros = 0): 
+            size_ (size), non_zeros_ (non_zeros), data_ () {}
         NUMERICS_INLINE
         sparse_vector (const sparse_vector &v): 
-            size_ (v.size_), non_zeroes_ (v.non_zeroes_), data_ (v.data_) {}
+            size_ (v.size_), non_zeros_ (v.non_zeros_), data_ (v.data_) {}
         template<class AE>
         NUMERICS_INLINE
-        sparse_vector (const vector_expression<AE> &ae, size_type non_zeroes = 0): 
-            size_ (ae ().size ()), non_zeroes_ (non_zeroes), data_ () { 
+        sparse_vector (const vector_expression<AE> &ae, size_type non_zeros = 0): 
+            size_ (ae ().size ()), non_zeros_ (non_zeros), data_ () { 
             vector_assign<scalar_assign<value_type, NUMERICS_TYPENAME AE::value_type> > () (*this, ae);
         }
 
         // Resizing
         NUMERICS_INLINE
-        void resize (size_type size, size_type non_zeroes = 0) {
+        void resize (size_type size, size_type non_zeros = 0) {
             size_ = size;
-            non_zeroes_ = non_zeroes_;
+            non_zeros_ = non_zeros_;
         }
 
         NUMERICS_INLINE
@@ -83,14 +82,14 @@ namespace numerics {
         // Element access
         NUMERICS_INLINE
         value_type operator () (size_type i) const {
-            const_iterator_type it (data_.find (functor_type::element (i, size_)));
-            if (it == data_.end () || (*it).first != functor_type::element (i, size_))
+            const_iterator_type it (data_.find (i));
+            if (it == data_.end () || (*it).first != i)
                 return value_type ();
             return (*it).second;
         }
         NUMERICS_INLINE
         reference operator () (size_type i) {
-            return data_ [functor_type::element (i, size_)]; 
+            return data_ [i]; 
         }
 
         NUMERICS_INLINE
@@ -102,30 +101,11 @@ namespace numerics {
             return (*this) (i); 
         }
 
-#ifdef NUMERICS_DEPRECATED
-        NUMERICS_INLINE
-        const_vector_range_type project (size_type start, size_type stop) const {
-            return const_vector_range_type (*this, start, stop);
-        }
-        NUMERICS_INLINE
-        const_vector_range_type project (const range &r) const {
-            return const_vector_range_type (*this, r);
-        }
-        NUMERICS_INLINE
-        vector_range_type project (size_type start, size_type stop) {
-            return vector_range_type (*this, start, stop);
-        }
-        NUMERICS_INLINE
-        vector_range_type project (const range &r) {
-            return vector_range_type (*this, r);
-        }
-#endif
-
         // Assignment
         NUMERICS_INLINE
         sparse_vector &operator = (const sparse_vector &v) { 
             check (size_ == v.size_, bad_size ());
-            check (non_zeroes_ == v.non_zeroes_, bad_size ());
+            check (non_zeros_ == v.non_zeros_, bad_size ());
             data_ = v.data_;
             return *this;
         }
@@ -138,9 +118,9 @@ namespace numerics {
         NUMERICS_INLINE
         sparse_vector &operator = (const vector_expression<AE> &ae) {
 #ifndef USE_GCC
-            return assign_temporary (self_type (ae, non_zeroes_));
+            return assign_temporary (self_type (ae, non_zeros_));
 #else
-            return assign (self_type (ae, non_zeroes_));
+            return assign (self_type (ae, non_zeros_));
 #endif
         }
         template<class AE>
@@ -153,9 +133,9 @@ namespace numerics {
         NUMERICS_INLINE
         sparse_vector &operator += (const vector_expression<AE> &ae) {
 #ifndef USE_GCC
-            return assign_temporary (self_type (*this + ae, non_zeroes_));
+            return assign_temporary (self_type (*this + ae, non_zeros_));
 #else
-            return assign (self_type (*this + ae, non_zeroes_));
+            return assign (self_type (*this + ae, non_zeros_));
 #endif
         }
         template<class AE>
@@ -168,9 +148,9 @@ namespace numerics {
         NUMERICS_INLINE
         sparse_vector &operator -= (const vector_expression<AE> &ae) {
 #ifndef USE_GCC
-            return assign_temporary (self_type (*this - ae, non_zeroes_));
+            return assign_temporary (self_type (*this - ae, non_zeros_));
 #else
-            return assign (self_type (*this - ae, non_zeroes_));
+            return assign (self_type (*this - ae, non_zeros_));
 #endif
         }
         template<class AE>
@@ -191,9 +171,9 @@ namespace numerics {
 	    void swap (sparse_vector &v) {
             check (this != &v, external_logic ());
             check (size_ == v.size_, bad_size ());
-            check (non_zeroes_ == v.non_zeroes_, bad_size ());
+            check (non_zeros_ == v.non_zeros_, bad_size ());
             std::swap (size_, v.size_);
-            std::swap (non_zeroes_, v.non_zeroes_);
+            std::swap (non_zeros_, v.non_zeros_);
             data_.swap (v.data_);
         }
 #ifndef USE_GCC
@@ -210,12 +190,12 @@ namespace numerics {
             if (t == value_type ()) 
                 return;
 #endif
-            check (data_.find (functor_type::element (i, size_)) == data_.end (), bad_index ());
-            data_.insert (data_.end (), std::pair<size_type, value_type> (functor_type::element (i, size_), t));
+            check (data_.find (i) == data_.end (), bad_index ());
+            data_.insert (data_.end (), std::pair<size_type, value_type> (i, t));
         }
         NUMERICS_INLINE
         void erase (size_type i) {
-            iterator_type it = data_.find (functor_type::element (i, size_));
+            iterator_type it = data_.find (i);
             if (it == data_.end ())
                 return;
             data_.erase (it);
@@ -232,26 +212,28 @@ namespace numerics {
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
         const_iterator find (size_type i) const {
-            switch (functor_type::one ()) {
-            case 1:
-                return const_iterator (*this, data_.lower_bound (functor_type::element (i, size_)));
-            case -1:
-                return const_iterator (*this, data_.upper_bound (functor_type::element (i, size_)));
-            default:
-                throw internal_logic ();
-            }
+            return const_iterator (*this, data_.lower_bound (i));
         }
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
         iterator find (size_type i) {
-            switch (functor_type::one ()) {
-            case 1:
-                return iterator (*this, data_.lower_bound (functor_type::element (i, size_)));
-            case -1:
-                return iterator (*this, data_.upper_bound (functor_type::element (i, size_)));
-            default:
-                throw internal_logic ();
-            }
+            return iterator (*this, data_.lower_bound (i));
+        }
+        NUMERICS_INLINE
+        const_iterator lower_bound (size_type i) const {
+			return find (i);
+        }
+        NUMERICS_INLINE
+        iterator lower_bound (size_type i) {
+			return find (i);
+        }
+        NUMERICS_INLINE
+        const_iterator upper_bound (size_type i) const {
+			return find (i);
+        }
+        NUMERICS_INLINE
+        iterator upper_bound (size_type i) {
+			return find (i);
         }
 
         // Iterators simply are pointers.
@@ -275,19 +257,24 @@ namespace numerics {
             NUMERICS_INLINE
             const_iterator (const sparse_vector &v, const const_iterator_type &it):
                 container_const_reference<sparse_vector> (v), it_ (it) {}
+#ifndef USE_ICC
             NUMERICS_INLINE
             const_iterator (const iterator &it):
                 container_const_reference<sparse_vector> (it ()), it_ (it.it_) {}
-
+#else
+            NUMERICS_INLINE
+            const_iterator (const typename sparse_vector::iterator &it):
+                container_const_reference<sparse_vector> (it ()), it_ (it.it_) {}
+#endif
             // Arithmetic
             NUMERICS_INLINE
             const_iterator &operator ++ () {
-                functor_type::increment (it_);
+                ++ it_;
                 return *this;
             }
             NUMERICS_INLINE
             const_iterator &operator -- () {
-                functor_type::decrement (it_);
+                -- it_;
                 return *this;
             }
 
@@ -355,12 +342,12 @@ namespace numerics {
             // Arithmetic
             NUMERICS_INLINE
             iterator &operator ++ () {
-                functor_type::increment (it_);
+                ++ it_;
                 return *this;
             }
             NUMERICS_INLINE
             iterator &operator -- () {
-                functor_type::decrement (it_);
+                -- it_;
                 return *this;
             }
 
@@ -441,7 +428,7 @@ namespace numerics {
 
     private:
         size_type size_;
-        size_type non_zeroes_;
+        size_type non_zeros_;
         array_type data_;
     };
 

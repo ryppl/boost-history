@@ -29,6 +29,7 @@ namespace numerics {
 
     template<class P>
     struct less {
+		NUMERICS_INLINE
         bool operator () (const P &p1, const P &p2) {
             return p1.first < p2.first;
         }
@@ -203,8 +204,8 @@ namespace numerics {
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
         const_pointer find (index_type i) const {
+#ifdef NUMERICS_DEPRECATED
             std::pair<const_pointer, const_pointer> pit;
-//            pit = std::equal_range (begin (), end (), value_type (i, 0), less<value_type> ());
             pit = std::equal_range (begin (), end (), value_type (i, data_value_type ()), less<value_type> ());
             if (pit.first->first == i)
                 return pit.first;
@@ -212,12 +213,18 @@ namespace numerics {
                 return pit.second;
             else
                 return end ();
+#else
+            const_pointer it (std::lower_bound (begin (), end (), value_type (i, data_value_type ()), less<value_type> ()));
+			if (it == end () || it->first != i)
+				it = end ();
+			return it;
+#endif
         }
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
         pointer find (index_type i) {
+#ifdef NUMERICS_DEPRECATED
             std::pair<pointer, pointer> pit;
-//            pit = std::equal_range (begin (), end (), value_type (i, 0), less<value_type> ());
             pit = std::equal_range (begin (), end (), value_type (i, data_value_type ()), less<value_type> ());
             if (pit.first->first == i)
                 return pit.first;
@@ -225,31 +232,35 @@ namespace numerics {
                 return pit.second;
             else
                 return end ();
+#else
+            pointer it (std::lower_bound (begin (), end (), value_type (i, data_value_type ()), less<value_type> ()));
+			if (it == end () || it->first != i)
+				it = end ();
+			return it;
+#endif
         }
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
         const_pointer lower_bound (index_type i) const {
-//            return std::lower_bound (begin (), end (), value_type (i, 0), less<value_type> ());
             return std::lower_bound (begin (), end (), value_type (i, data_value_type ()), less<value_type> ());
         }
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
         pointer lower_bound (index_type i) {
-//            return std::lower_bound (begin (), end (), value_type (i, 0), less<value_type> ());
             return std::lower_bound (begin (), end (), value_type (i, data_value_type ()), less<value_type> ());
         }
+#ifdef NUMERICS_DEPRECATED
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
         const_pointer upper_bound (index_type i) const {
-//            return std::upper_bound (begin (), end (), value_type (i, 0), less<value_type> ());
             return std::upper_bound (begin (), end (), value_type (i, data_value_type ()), less<value_type> ());
         }
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
         pointer upper_bound (index_type i) {
-//            return std::upper_bound (begin (), end (), value_type (i, 0), less<value_type> ());
             return std::upper_bound (begin (), end (), value_type (i, data_value_type ()), less<value_type> ());
         }
+#endif
 
         // Iterators simply are pointers.
 

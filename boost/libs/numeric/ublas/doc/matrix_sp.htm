@@ -48,7 +48,7 @@ the base container adaptor for sparse matrices.</p>
     <tr>
         <td><code>F</code></td>
         <td>Functor describing the storage organization.</td>
-        <td><code>row_major&lt;&gt;</code></td>
+        <td><code>row_major</code></td>
     </tr>
     <tr>
         <td><code>A</code></td>
@@ -85,7 +85,7 @@ href="container.htm#matrix">Matrix</a>.</p>
     </tr>
     <tr>
         <td><code>sparse_matrix (size_type size1, size_type2,
-        size_type non_zeroes)</code></td>
+        size_type non_zeros)</code></td>
         <td>Allocates a <code>sparse_matrix </code>that holds at
         most <code>size1 </code>rows of <code>size2 </code>elements.</td>
     </tr>
@@ -95,13 +95,13 @@ href="container.htm#matrix">Matrix</a>.</p>
     </tr>
     <tr>
         <td><code>template&lt;class AE&gt;<br>
-        sparse_matrix (size_type non_zeroes, const
+        sparse_matrix (size_type non_zeros, const
         matrix_expression&lt;AE&gt; &amp;ae)</code></td>
         <td>The extended copy constructor.</td>
     </tr>
     <tr>
         <td><code>void resize (size_type size1, size_type size2,
-        size_type non_zeroes)</code></td>
+        size_type non_zeros)</code></td>
         <td>Reallocates a <code>sparse_matrix </code>to hold at
         most <code>size1 </code>rows of <code>size2 </code>elements.
         The content of the <code>sparse_matrix </code>is
@@ -122,67 +122,10 @@ href="container.htm#matrix">Matrix</a>.</p>
         the<code> i</code>-th row. </td>
     </tr>
     <tr>
-        <td><code>reference_type operator () (size_type i,
-        size_type j)</code></td>
+        <td><code>reference operator () (size_type i, size_type
+        j)</code></td>
         <td>Returns a reference of the <code>j</code>-th element
         in the<code> i</code>-th row. </td>
-    </tr>
-    <tr>
-        <td><code>const_matrix_row_type operator [] (size_type i)
-        const</code></td>
-        <td>Returns a sub vector containing the <code>i</code>-th
-        row.</td>
-    </tr>
-    <tr>
-        <td><code>matrix_row_type operator [] (size_type i)</code></td>
-        <td>Returns a sub vector containing the <code>i</code>-th
-        row.</td>
-    </tr>
-    <tr>
-        <td><code>const_matrix_row_type row (size_type i) const</code></td>
-        <td>Returns a sub vector containing the <code>i</code>-th
-        row.</td>
-    </tr>
-    <tr>
-        <td><code>matrix_row_type row (size_type i)</code></td>
-        <td>Returns a sub vector containing the <code>i</code>-th
-        row.</td>
-    </tr>
-    <tr>
-        <td><code>const_matrix_column_type column (size_type j)
-        const</code></td>
-        <td>Returns a sub vector containing the <code>j</code>-th
-        column.</td>
-    </tr>
-    <tr>
-        <td><code>matrix_column_type column (size_type j)</code></td>
-        <td>Returns a sub vector containing the <code>j</code>-th
-        column.</td>
-    </tr>
-    <tr>
-        <td><code>const_matrix_range_type project (size_type
-        start1, size_type stop1, size_type start2, size_type
-        stop2) const</code></td>
-        <td>Returns a sub matrix ranging from the <code>start1</code>-th
-        to the <code>stop1</code>-th row and from the <code>start2</code>-th
-        to the <code>stop2</code>-th column. </td>
-    </tr>
-    <tr>
-        <td><code>const_matrix_range_type project (const range
-        &amp;r1, const range &amp;r2) const</code></td>
-        <td>Returns a sub matrix.</td>
-    </tr>
-    <tr>
-        <td><code>matrix_range_type project (size_type start1,
-        size_type stop1, size_type start2, size_type stop2)</code></td>
-        <td>Returns a sub matrix ranging from the <code>start1</code>-th
-        to the <code>stop1</code>-th row and from the <code>start2</code>-th
-        to the <code>stop2</code>-th column. </td>
-    </tr>
-    <tr>
-        <td><code>matrix_range_type project (const range &amp;r1,
-        const range &amp;r2)</code></td>
-        <td>Returns a sub matrix.</td>
     </tr>
     <tr>
         <td><code>sparse_matrix &amp;operator = (const
@@ -250,7 +193,7 @@ href="container.htm#matrix">Matrix</a>.</p>
     </tr>
     <tr>
         <td><code>void insert (size_type i, size_type j,
-        const_reference_type t)</code></td>
+        const_reference t)</code></td>
         <td>Inserts the value <code>t</code> at the <code>j</code>-th
         element of the <code>i</code>-th row.</td>
     </tr>
@@ -361,55 +304,37 @@ href="container.htm#matrix">Matrix</a>.</p>
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
         typedef T value_type;
-        typedef const T &amp;const_reference_type;
-        typedef T &amp;reference_type;
-        typedef const T *const_pointer_type;
-        typedef T *pointer_type;
+        typedef const T &amp;const_reference;
+        typedef T &amp;reference;
+        typedef const T *const_pointer;
+        typedef T *pointer;
         typedef F functor_type;
         typedef A array_type;
         typedef const sparse_matrix&lt;T, F, A&gt; const_self_type;
         typedef sparse_matrix&lt;T, F, A&gt; self_type;
         typedef const matrix_const_reference&lt;const_self_type&gt; const_closure_type;
         typedef matrix_reference&lt;self_type&gt; closure_type;
-        typedef const matrix_row&lt;const_self_type&gt; const_matrix_row_type;
-        typedef matrix_row&lt;self_type&gt; matrix_row_type;
-        typedef const matrix_column&lt;const_self_type&gt; const_matrix_column_type;
-        typedef matrix_column&lt;self_type&gt; matrix_column_type;
-        typedef const matrix_range&lt;const_self_type&gt; const_matrix_range_type;
-        typedef matrix_range&lt;self_type&gt; matrix_range_type;
         typedef typename A::const_iterator const_iterator_type;
         typedef typename A::iterator iterator_type;
         typedef sparse_tag storage_category;
         typedef typename F::orientation_category orientation_category;
 
         // Construction and destruction
-        sparse_matrix ():
-        sparse_matrix (size_type size1, size_type size2, size_type non_zeroes = 0);
+        sparse_matrix ();
+        sparse_matrix (size_type size1, size_type size2, size_type non_zeros = 0); 
         sparse_matrix (const sparse_matrix &amp;m);
         template&lt;class AE&gt;
-        sparse_matrix (const matrix_expression&lt;AE&gt; &amp;ae, size_type non_zeroes = 0);
+        sparse_matrix (const matrix_expression&lt;AE&gt; &amp;ae, size_type non_zeros = 0);
 
         // Resizing
-        void resize (size_type size1, size_type size2, size_type non_zeroes = 0);
+        void resize (size_type size1, size_type size2, size_type non_zeros = 0);
 
         size_type size1 () const;
         size_type size2 () const;
 
         // Element access
         value_type operator () (size_type i, size_type j) const;
-        reference_type operator () (size_type i, size_type j);
-
-        const_matrix_row_type operator [] (size_type i) const;
-        matrix_row_type operator [] (size_type i);
-        const_matrix_row_type row (size_type i) const;
-        matrix_row_type row (size_type i);
-        const_matrix_column_type column (size_type j) const;
-        matrix_column_type column (size_type j);
-
-        const_matrix_range_type project (size_type start1, size_type stop1, size_type start2, size_type stop2) const;
-        const_matrix_range_type project (const range &amp;r1, const range &amp;r2) const;
-        matrix_range_type project (size_type start1, size_type stop1, size_type start2, size_type stop2);
-        matrix_range_type project (const range &amp;r1, const range &amp;r2);
+        reference operator () (size_type i, size_type j);
 
         // Assignment
         sparse_matrix &amp;operator = (const sparse_matrix &amp;m);
@@ -434,7 +359,7 @@ href="container.htm#matrix">Matrix</a>.</p>
 	friend void swap (sparse_matrix &amp;m1, sparse_matrix &amp;m2);
 
         // Element insertion and erasure
-        void insert (size_type i, size_type j, const_reference_type t);
+        void insert (size_type i, size_type j, const_reference t);
         void erase (size_type i, size_type j);
         void clear ();
 
@@ -452,6 +377,14 @@ href="container.htm#matrix">Matrix</a>.</p>
         iterator1 find1 (int rank, size_type i, size_type j);
         const_iterator2 find2 (int rank, size_type i, size_type j) const;
         iterator2 find2 (int rank, size_type i, size_type j);
+        const_iterator1 lower_bound1 (int rank, size_type i, size_type j) const;
+        iterator1 lower_bound1 (int rank, size_type i, size_type j);
+        const_iterator1 upper_bound1 (int rank, size_type i, size_type j) const;
+        iterator1 upper_bound1 (int rank, size_type i, size_type j);
+        const_iterator2 lower_bound2 (int rank, size_type i, size_type j) const;
+        iterator2 lower_bound2 (int rank, size_type i, size_type j);
+        const_iterator2 upper_bound2 (int rank, size_type i, size_type j) const;
+        iterator2 upper_bound2 (int rank, size_type i, size_type j);
 
         // Iterators simply are pointers.
 
@@ -459,11 +392,11 @@ href="container.htm#matrix">Matrix</a>.</p>
             public container_const_reference&lt;sparse_matrix&gt;,
             public bidirectional_iterator_base&lt;const_iterator1, value_type&gt; {
         public:
-            typedef std::bidirectional_iterator_tag iterator_category;
+            typedef sparse_bidirectional_iterator_tag iterator_category;
             typedef typename sparse_matrix::difference_type difference_type;
             typedef typename sparse_matrix::value_type value_type;
             typedef typename sparse_matrix::value_type reference;
-            typedef typename sparse_matrix::const_pointer_type pointer;
+            typedef typename sparse_matrix::const_pointer pointer;
             typedef const_iterator2 dual_iterator_type;
             typedef const_reverse_iterator2 dual_reverse_iterator_type;
             typedef typename functor_type::functor1_type functor1_type;
@@ -487,7 +420,7 @@ href="container.htm#matrix">Matrix</a>.</p>
 
             // Indices
             size_type index1 () const;
-            size_type  index2 () const;
+            size_type index2 () const;
 
             // Assignment 
             const_iterator1 &amp;operator = (const const_iterator1 &amp;it);
@@ -503,11 +436,11 @@ href="container.htm#matrix">Matrix</a>.</p>
             public container_reference&lt;sparse_matrix&gt;,
             public bidirectional_iterator_base&lt;iterator1, value_type&gt; {
         public:
-            typedef std::bidirectional_iterator_tag iterator_category;
+            typedef sparse_bidirectional_iterator_tag iterator_category;
             typedef typename sparse_matrix::difference_type difference_type;
             typedef typename sparse_matrix::value_type value_type;
-            typedef typename sparse_matrix::reference_type reference;
-            typedef typename sparse_matrix::pointer_type pointer;
+            typedef typename sparse_matrix::reference reference;
+            typedef typename sparse_matrix::pointer pointer;
             typedef iterator2 dual_iterator_type;
             typedef reverse_iterator2 dual_reverse_iterator_type;
             typedef typename functor_type::functor1_type functor1_type;
@@ -521,7 +454,7 @@ href="container.htm#matrix">Matrix</a>.</p>
             iterator1 &amp;operator -- ();
 
             // Dereference
-            reference_type operator * () const;
+            reference operator * () const;
 
             iterator2 begin () const;
             iterator2 end () const;
@@ -530,7 +463,7 @@ href="container.htm#matrix">Matrix</a>.</p>
 
             // Indices
             size_type index1 () const;
-            size_type  index2 () const;
+            size_type index2 () const;
 
             // Assignment 
             iterator1 &amp;operator = (const iterator1 &amp;it);
@@ -546,11 +479,11 @@ href="container.htm#matrix">Matrix</a>.</p>
             public container_const_reference&lt;sparse_matrix&gt;,
             public bidirectional_iterator_base&lt;const_iterator2, value_type&gt; {
         public:
-            typedef std::bidirectional_iterator_tag iterator_category;
+            typedef sparse_bidirectional_iterator_tag iterator_category;
             typedef typename sparse_matrix::difference_type difference_type;
             typedef typename sparse_matrix::value_type value_type;
             typedef typename sparse_matrix::value_type reference;
-            typedef typename sparse_matrix::const_pointer_type pointer;
+            typedef typename sparse_matrix::const_pointer pointer;
             typedef const_iterator1 dual_iterator_type;
             typedef const_reverse_iterator1 dual_reverse_iterator_type;
             typedef typename functor_type::functor2_type functor2_type;
@@ -574,7 +507,7 @@ href="container.htm#matrix">Matrix</a>.</p>
 
             // Indices
             size_type index1 () const;
-            size_type  index2 () const;
+            size_type index2 () const;
 
             // Assignment 
             const_iterator2 &amp;operator = (const const_iterator2 &amp;it);
@@ -590,11 +523,11 @@ href="container.htm#matrix">Matrix</a>.</p>
             public container_reference&lt;sparse_matrix&gt;,
             public bidirectional_iterator_base&lt;iterator2, value_type&gt; {
         public:
-            typedef std::bidirectional_iterator_tag iterator_category;
+            typedef sparse_bidirectional_iterator_tag iterator_category;
             typedef typename sparse_matrix::difference_type difference_type;
             typedef typename sparse_matrix::value_type value_type;
-            typedef typename sparse_matrix::reference_type reference;
-            typedef typename sparse_matrix::pointer_type pointer;
+            typedef typename sparse_matrix::reference reference;
+            typedef typename sparse_matrix::pointer pointer;
             typedef iterator1 dual_iterator_type;
             typedef reverse_iterator1 dual_reverse_iterator_type;
             typedef typename functor_type::functor2_type functor2_type;
@@ -608,7 +541,7 @@ href="container.htm#matrix">Matrix</a>.</p>
             iterator2 &amp;operator -- ();
 
             // Dereference
-            reference_type operator * () const;
+            reference operator * () const;
 
             iterator1 begin () const;
             iterator1 end () const;
@@ -617,7 +550,7 @@ href="container.htm#matrix">Matrix</a>.</p>
 
             // Indices
             size_type index1 () const;
-            size_type  index2 () const;
+            size_type index2 () const;
 
             // Assignment 
             iterator2 &amp;operator = (const iterator2 &amp;it);

@@ -49,12 +49,13 @@ to address a range of a vector.</p>
 
 <h4>Model of</h4>
 
-<p><a href="proxy.htm#vector_proxy">Vector Proxy</a>. </p>
+<p><a href="expression.htm#vector_expressio">Vector Expression</a>.
+</p>
 
 <h4>Type requirements</h4>
 
 <p>None, except for those imposed by the requirements of <a
-href="proxy.htm#vector_proxy">Vector Proxy</a>.</p>
+href="expression.htm#vector_expression">Vector Expression</a>.</p>
 
 <h4>Public base classes</h4>
 
@@ -73,11 +74,6 @@ href="proxy.htm#vector_proxy">Vector Proxy</a>.</p>
         <td>Constructs a sub vector.</td>
     </tr>
     <tr>
-        <td><code>vector_range (vector_type &amp;data, size_type
-        start, size_type stop)</code></td>
-        <td>Constructs a sub vector.</td>
-    </tr>
-    <tr>
         <td><code>size_type start () const</code></td>
         <td>Returns the start of the sub vector.</td>
     </tr>
@@ -90,7 +86,7 @@ href="proxy.htm#vector_proxy">Vector Proxy</a>.</p>
         <td>Returns the value of the <code>i</code>-th element. </td>
     </tr>
     <tr>
-        <td><code>reference_type operator () (size_type i)</code></td>
+        <td><code>reference operator () (size_type i)</code></td>
         <td>Returns a reference of the <code>i</code>-th element.
         </td>
     </tr>
@@ -99,29 +95,9 @@ href="proxy.htm#vector_proxy">Vector Proxy</a>.</p>
         <td>Returns the value of the <code>i</code>-th element. </td>
     </tr>
     <tr>
-        <td><code>reference_type operator [] (size_type i)</code></td>
+        <td><code>reference operator [] (size_type i)</code></td>
         <td>Returns a reference of the <code>i</code>-th element.
         </td>
-    </tr>
-    <tr>
-        <td><code>vector_range project (size_type start,
-        size_type stop) const</code></td>
-        <td>Returns a sub vector ranging from the <code>start</code>-th
-        to the <code>stop</code>-th element.</td>
-    </tr>
-    <tr>
-        <td><code>vector_range project (const range &amp;r) const</code></td>
-        <td>Returns a sub vector.</td>
-    </tr>
-    <tr>
-        <td><code>vector_range project (size_type start,
-        size_type stop)</code></td>
-        <td>Returns a sub vector ranging from the <code>start</code>-th
-        to the <code>stop</code>-th element.</td>
-    </tr>
-    <tr>
-        <td><code>vector_range project (const range &amp;r)</code></td>
-        <td>Returns a sub vector.</td>
     </tr>
     <tr>
         <td><code>vector_range &amp;operator = (const
@@ -241,10 +217,10 @@ href="proxy.htm#vector_proxy">Vector Proxy</a>.</p>
         typedef typename V::size_type size_type;
         typedef typename V::difference_type difference_type;
         typedef typename V::value_type value_type;
-        typedef typename V::const_reference_type const_reference_type;
-        typedef typename V::reference_type reference_type;
-        typedef typename V::const_pointer_type const_pointer_type;
-        typedef typename V::pointer_type pointer_type;
+        typedef typename V::const_reference const_reference;
+        typedef typename V::reference reference;
+        typedef typename V::const_pointer const_pointer;
+        typedef typename V::pointer pointer;
         typedef const vector_const_reference&lt;const vector_range&lt;vector_type&gt; &gt; const_closure_type;
         typedef vector_reference&lt;vector_range&lt;vector_type&gt; &gt; closure_type;
         typedef typename V::const_iterator const_iterator_type;
@@ -252,24 +228,21 @@ href="proxy.htm#vector_proxy">Vector Proxy</a>.</p>
         typedef typename proxy_traits&lt;typename V::storage_category&gt;::storage_category storage_category;
 
         // Construction and destruction
-        vector_range ();
-        vector_range (vector_type &amp;data, const range &amp;r);
-        vector_range (vector_type &amp;data, size_type start, size_type stop);
+        vector_range (); 
+        vector_range (vector_type &amp;data, const range &amp;r); 
 
-        size_type start () const;
-        size_type size () const;
+        size_type start () const; 
+        size_type size () const; 
 
         // Element access
         value_type operator () (size_type i) const;
-        reference_type operator () (size_type i);
+        reference operator () (size_type i);
 
         value_type operator [] (size_type i) const;
-        reference_type operator [] (size_type i);
+        reference operator [] (size_type i);
 
-        vector_range project (size_type start, size_type stop) const;
-        vector_range project (const range &amp;r) const;
-        vector_range project (size_type start, size_type stop);
-        vector_range project (const range &amp;r);
+        vector_range&lt;vector_type&gt; project (const range &amp;r) const;
+        vector_range&lt;vector_type&gt; project (const range &amp;r);
 
         // Assignment
         vector_range &amp;operator = (const vector_range &amp;vr);
@@ -290,15 +263,17 @@ href="proxy.htm#vector_proxy">Vector Proxy</a>.</p>
         vector_range &amp;operator *= (const AT &amp;at);
 
         // Swapping
-	void swap (vector_range &amp;vr);
-	friend void swap (vector_range &amp;vr1, vector_range &amp;vr2);
+        void swap (vector_range &amp;vr);
+        friend void swap (vector_range &amp;vr1, vector_range &amp;vr2);
 
         class const_iterator;
         class iterator;
 
         // Element lookup
-        const_iterator find (size_type i) const;
-        iterator find (size_type i);
+        const_iterator lower_bound (size_type i) const;
+        iterator lower_bound (size_type i);
+        const_iterator upper_bound (size_type i) const;
+        iterator upper_bound (size_type i);
 
         // Iterators simply are pointers.
 
@@ -362,7 +337,7 @@ href="proxy.htm#vector_proxy">Vector Proxy</a>.</p>
             difference_type operator - (const iterator &amp;it) const;
 
             // Dereference
-            reference_type operator * () const;
+            reference operator * () const;
 
             // Index
             size_type index () const;
@@ -428,12 +403,13 @@ to address a slice of a vector.</p>
 
 <h4>Model of</h4>
 
-<p><a href="proxy.htm#vector_proxy">Vector Proxy</a>. </p>
+<p><a href="expression.htm#vector_expression">Vector Expression</a>.
+</p>
 
 <h4>Type requirements</h4>
 
 <p>None, except for those imposed by the requirements of <a
-href="proxy.htm#vector_proxy">Vector Proxy</a>.</p>
+href="expression.htm#vector_expression">Vector Expression</a>.</p>
 
 <h4>Public base classes</h4>
 
@@ -452,11 +428,6 @@ href="proxy.htm#vector_proxy">Vector Proxy</a>.</p>
         <td>Constructs a sub vector.</td>
     </tr>
     <tr>
-        <td><code>vector_slice (vector_type &amp;data, size_type
-        start, size_type stride, size_type size)</code></td>
-        <td>Constructs a sub vector.</td>
-    </tr>
-    <tr>
         <td><code>size_type size () const</code></td>
         <td>Returns the size of the sub vector.</td>
     </tr>
@@ -465,7 +436,7 @@ href="proxy.htm#vector_proxy">Vector Proxy</a>.</p>
         <td>Returns the value of the <code>i</code>-th element. </td>
     </tr>
     <tr>
-        <td><code>reference_type operator () (size_type i)</code></td>
+        <td><code>reference operator () (size_type i)</code></td>
         <td>Returns a reference of the <code>i</code>-th element.
         </td>
     </tr>
@@ -474,25 +445,9 @@ href="proxy.htm#vector_proxy">Vector Proxy</a>.</p>
         <td>Returns the value of the <code>i</code>-th element. </td>
     </tr>
     <tr>
-        <td><code>reference_type operator [] (size_type i)</code></td>
+        <td><code>reference operator [] (size_type i)</code></td>
         <td>Returns a reference of the <code>i</code>-th element.
         </td>
-    </tr>
-    <tr>
-        <td><code>vector_slice project (const range &amp;r) const</code></td>
-        <td>Returns a sub vector.</td>
-    </tr>
-    <tr>
-        <td><code>vector_slice project (const slice &amp;s) const</code></td>
-        <td>Returns a sub vector.</td>
-    </tr>
-    <tr>
-        <td><code>vector_slice project (const range &amp;r)</code></td>
-        <td>Returns a sub vector.</td>
-    </tr>
-    <tr>
-        <td><code>vector_slice project (const slice &amp;s)</code></td>
-        <td>Returns a sub vector.</td>
     </tr>
     <tr>
         <td><code>vector_slice &amp;operator = (const
@@ -606,16 +561,16 @@ href="proxy.htm#vector_proxy">Vector Proxy</a>.</p>
 <pre><code>    // Vector based slice class
     template&lt;class V&gt;
     class vector_slice:
-	public vector_expression&lt;vector_slice&lt;V&gt; &gt; {
+		public vector_expression&lt;vector_slice&lt;V&gt; &gt; {
     public:      
         typedef V vector_type;
         typedef typename V::size_type size_type;
         typedef typename V::difference_type difference_type;
         typedef typename V::value_type value_type;
-        typedef typename V::const_reference_type const_reference_type;
-        typedef typename V::reference_type reference_type;
-        typedef typename V::const_pointer_type const_pointer_type;
-        typedef typename V::pointer_type pointer_type;
+        typedef typename V::const_reference const_reference;
+        typedef typename V::reference reference;
+        typedef typename V::const_pointer const_pointer;
+        typedef typename V::pointer pointer;
         typedef const vector_const_reference&lt;const vector_slice&lt;vector_type&gt; &gt; const_closure_type;
         typedef vector_reference&lt;vector_slice&lt;vector_type&gt; &gt; closure_type;
         typedef slice::const_iterator const_iterator_type;
@@ -625,7 +580,6 @@ href="proxy.htm#vector_proxy">Vector Proxy</a>.</p>
         // Construction and destruction
         vector_slice ();
         vector_slice (vector_type &amp;data, const slice &amp;s);
-        vector_slice (vector_type &amp;data, size_type start, size_type stride, size_type size);
 
         size_type start () const;
         size_type stride () const;
@@ -633,15 +587,15 @@ href="proxy.htm#vector_proxy">Vector Proxy</a>.</p>
 
         // Element access
         value_type operator () (size_type i) const;
-        reference_type operator () (size_type i);
+        reference operator () (size_type i);
 
         value_type operator [] (size_type i) const;
-        reference_type operator [] (size_type i);
+        reference operator [] (size_type i);
 
-        vector_slice project (const range &amp;r) const;
-        vector_slice project (const slice &amp;s) const;
-        vector_slice project (const range &amp;r);
-        vector_slice project (const slice &amp;s);
+        vector_slice&lt;vector_type&gt; project (const range &amp;r) const;
+        vector_slice&lt;vector_type&gt; project (const range &amp;r);
+        vector_slice&lt;vector_type&gt; project (const slice &amp;s) const;
+        vector_slice&lt;vector_type&gt; project (const slice &amp;s);
 
         // Assignment
         vector_slice &amp;operator = (const vector_slice &amp;vs);
@@ -669,8 +623,10 @@ href="proxy.htm#vector_proxy">Vector Proxy</a>.</p>
         class iterator;
 
         // Element lookup
-        const_iterator find (size_type i) const;
-        iterator find (size_type i);
+        const_iterator lower_bound (size_type i) const;
+        iterator lower_bound (size_type i);
+        const_iterator upper_bound (size_type i) const;
+        iterator upper_bound (size_type i);
 
         // Iterators simply are indices.
 
@@ -734,7 +690,7 @@ href="proxy.htm#vector_proxy">Vector Proxy</a>.</p>
             difference_type operator - (const iterator &amp;it) const;
 
             // Dereference
-            reference_type operator * () const;
+            reference operator * () const;
 
             // Index
             size_type index () const;
@@ -744,6 +700,10 @@ href="proxy.htm#vector_proxy">Vector Proxy</a>.</p>
 
             // Comparison
             bool operator == (const iterator &amp;it) const;
+
+                check (&amp;(*this) () == &amp;it (), external_logic ());
+                return it_ == it.it_;
+            }
         };
 
         iterator begin ();

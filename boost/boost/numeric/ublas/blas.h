@@ -22,17 +22,17 @@ namespace numerics {
     namespace blas_1 {
 
         template<class V>
-        typename type_traits<typename V::value_type>::norm_type 
+        typename type_traits<typename V::value_type>::real_type 
 		asum (const V &v) {
             return norm_1 (v);
         }
         template<class V>
-		typename type_traits<typename V::value_type>::norm_type 
+		typename type_traits<typename V::value_type>::real_type 
 		nrm2 (const V &v) {
             return norm_2 (v);
         }
         template<class V>
-		typename type_traits<typename V::value_type>::norm_type 
+		typename type_traits<typename V::value_type>::real_type 
 		amax (const V &v) {
             return norm_inf (v);
         }

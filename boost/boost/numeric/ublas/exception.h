@@ -18,6 +18,7 @@
 #define NUMERICS_EXCEPTION_H
 
 #include <exception>
+#include <iostream>
 
 #include "config.h"
 
@@ -59,6 +60,12 @@ namespace numerics {
             return "exception: singular";
         }
     };
+    struct non_real:
+        public std::exception {
+        virtual const char *what () const throw () {
+            return "exception: non real";
+        }
+    };
     struct non_triangular:
         public std::exception {
         virtual const char *what () const throw () {
@@ -79,6 +86,14 @@ namespace numerics {
         if (! expression)
             throw e;
     }
+/*
+#define check(expression, e) \
+    if (! (expression)) { \
+        std::cout << "Assertion failed in file " << __FILE__ << " at line " << __LINE__ << ":" << std::endl; \
+        std::cout << #expression << std::endl; \
+        throw e; \
+    }
+*/
 #else
 //    template<class E>
 //    NUMERICS_INLINE

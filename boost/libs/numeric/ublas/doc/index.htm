@@ -150,12 +150,15 @@ primitives:</p>
         &amp;, const matrix_expression &amp;)</code></td>
     </tr>
     <tr>
-        <td>Left multiplication of vectors and matrices with a
-        scalar</td>
+        <td>Multiplication of vectors and matrices with a scalar</td>
         <td><code>vector_expression operator * (const
         scalar_expression &amp;, const vector_expression &amp;)<br>
+        vector_expression operator * (const vector_expression
+        &amp;, const scalar_expression &amp;)<br>
         matrix_expression operator * (const scalar_expression
-        &amp;, const matrix_expression &amp;)</code></td>
+        &amp;, const matrix_expression &amp;)<br>
+        matrix_expression operator * (const matrix_expression
+        &amp;, const scalar_expression &amp;)</code></td>
     </tr>
 </table>
 
@@ -555,7 +558,6 @@ common constructions of vectors and matrices comes next.</p>
     </tr>
     <tr>
         <td><code>vector&lt;T,<br>
-        &nbsp;forward,<br>
         &nbsp;std::vector&lt;T&gt; &gt; <br>
         &nbsp;&nbsp;v (size)</code></td>
         <td>Constructs a dense vector, storage is provided by a
@@ -563,7 +565,6 @@ common constructions of vectors and matrices comes next.</p>
     </tr>
     <tr>
         <td><code>vector&lt;T,<br>
-        &nbsp;forward,<br>
         &nbsp;unbounded_array&lt;T&gt; &gt; <br>
         &nbsp;&nbsp;v (size)</code></td>
         <td>Constructs a dense vector, storage is provided by a
@@ -571,15 +572,19 @@ common constructions of vectors and matrices comes next.</p>
     </tr>
     <tr>
         <td><code>vector&lt;T,<br>
-        forward,<br>
         &nbsp;bounded_array&lt;T, N&gt; &gt; <br>
         &nbsp;&nbsp;v (size)</code></td>
         <td>Constructs a dense vector, storage is provided by a
         stack-based array.</td>
     </tr>
     <tr>
+        <td><code>unit_vector&lt;T&gt; <br>
+        &nbsp;&nbsp;v (size, index)</code></td>
+        <td>Constructs the <code>index</code>-th canonical unit
+        vector.</td>
+    </tr>
+    <tr>
         <td><code>sparse_vector&lt;T,<br>
-        forward,<br>
         &nbsp;std::map&lt;std::size_t, T&gt; &gt; <br>
         &nbsp;&nbsp;v (size, non_zeroes)</code></td>
         <td>Constructs a sparse vector, storage is provided by a
@@ -587,7 +592,6 @@ common constructions of vectors and matrices comes next.</p>
     </tr>
     <tr>
         <td><code>sparse_vector&lt;T,<br>
-        forward,<br>
         &nbsp;compressed_array&lt;std::size_t, T&gt; &gt; <br>
         &nbsp;&nbsp;v (size, non_zeroes)</code></td>
         <td>Constructs a sparse vector, storage is provided by a
@@ -600,7 +604,7 @@ common constructions of vectors and matrices comes next.</p>
     </tr>
     <tr>
         <td><code>matrix&lt;T,<br>
-        &nbsp;row_major&lt;&gt;,<br>
+        &nbsp;row_major,<br>
         &nbsp;std::vector&lt;T&gt; &gt; <br>
         &nbsp;&nbsp;m (size1, size2)</code></td>
         <td>Constructs a dense matrix, storage is provided by a
@@ -608,7 +612,7 @@ common constructions of vectors and matrices comes next.</p>
     </tr>
     <tr>
         <td><code>matrix&lt;T,<br>
-        &nbsp;column_major&lt;&gt;,<br>
+        &nbsp;column_major,<br>
         &nbsp;std::vector&lt;T&gt; &gt;<br>
         &nbsp;&nbsp;m (size1, size2)</code></td>
         <td>Constructs a dense matrix, storage is provided by a
@@ -616,7 +620,7 @@ common constructions of vectors and matrices comes next.</p>
     </tr>
     <tr>
         <td><code>matrix&lt;T,<br>
-        &nbsp;row_major&lt;&gt;, <br>
+        &nbsp;row_major, <br>
         &nbsp;unbounded_array&lt;T&gt; &gt;<br>
         &nbsp;&nbsp;m (size1, size2)</code></td>
         <td>Constructs a dense matrix, storage is provided by a
@@ -624,7 +628,7 @@ common constructions of vectors and matrices comes next.</p>
     </tr>
     <tr>
         <td><code>matrix&lt;T,<br>
-        &nbsp;column_major&lt;&gt;,<br>
+        &nbsp;column_major,<br>
         &nbsp;unbounded_array&lt;T&gt; &gt;<br>
         &nbsp;&nbsp;m (size1, size2)</code></td>
         <td>Constructs a dense matrix, storage is provided by a
@@ -632,7 +636,7 @@ common constructions of vectors and matrices comes next.</p>
     </tr>
     <tr>
         <td><code>matrix&lt;T,<br>
-        &nbsp;row_major&lt;&gt;,<br>
+        &nbsp;row_major,<br>
         &nbsp;bounded_array&lt;T, N1 * N2&gt; &gt;<br>
         &nbsp;&nbsp;m (size1, size2)</code></td>
         <td>Constructs a dense matrix, storage is provided by a
@@ -640,15 +644,20 @@ common constructions of vectors and matrices comes next.</p>
     </tr>
     <tr>
         <td><code>matrix&lt;T,<br>
-        &nbsp;column_major&lt;&gt;,<br>
+        &nbsp;column_major,<br>
         &nbsp;bounded_array&lt;T, N1 * N2&gt; &gt;<br>
         &nbsp;&nbsp;m (size1, size2)</code></td>
         <td>Constructs a dense matrix, storage is provided by a
         stack-based array, orientation is column major.</td>
     </tr>
     <tr>
+        <td><code>identity_matrix&lt;T&gt;<br>
+        &nbsp;&nbsp;m (size)</code></td>
+        <td>Constructs an identity matrix.</td>
+    </tr>
+    <tr>
         <td><code>sparse_matrix&lt;T, <br>
-        &nbsp;row_major&lt;&gt;,<br>
+        &nbsp;row_major,<br>
         &nbsp;std::map&lt;std::size_t, T&gt; &gt;<br>
         &nbsp;&nbsp;m (size1, size2, non_zeroes)</code></td>
         <td>Constructs a sparse matrix, storage is provided by a
@@ -656,7 +665,7 @@ common constructions of vectors and matrices comes next.</p>
     </tr>
     <tr>
         <td><code>sparse_matrix&lt;T, <br>
-        &nbsp;column_major&lt;&gt;,<br>
+        &nbsp;column_major,<br>
         &nbsp;std::map&lt;std::size_t, T&gt; &gt;<br>
         &nbsp;&nbsp;m (size1, size2, non_zeroes)</code></td>
         <td>Constructs a sparse matrix, storage is provided by a
@@ -664,7 +673,7 @@ common constructions of vectors and matrices comes next.</p>
     </tr>
     <tr>
         <td><code>sparse_matrix&lt;T, <br>
-        &nbsp;row_major&lt;&gt;,<br>
+        &nbsp;row_major,<br>
         &nbsp;compressed_array&lt;std::size_t, T&gt; &gt; <br>
         &nbsp;&nbsp;m (size1, size2, non_zeroes)</code></td>
         <td>Constructs a sparse matrix, storage is provided by a
@@ -672,7 +681,7 @@ common constructions of vectors and matrices comes next.</p>
     </tr>
     <tr>
         <td><code>sparse_matrix&lt;T, <br>
-        &nbsp;column_major&lt;&gt;,<br>
+        &nbsp;column_major,<br>
         &nbsp;compressed_array&lt;std::size_t, T&gt; &gt; <br>
         &nbsp;&nbsp;m (size1, size2, non_zeroes)</code></td>
         <td>Constructs a sparse matrix, storage is provided by a
@@ -704,9 +713,9 @@ vectors and matrices, although this should be more expensive for
 matrices due to the needed temporary proxy objects.</p>
 
 <p>To support the most widely used C++ compilers our design and
-implementation does not depend on partial template
+implementation do not essentially depend on partial template
 specialization. So the test and benchmark programs successfully
-compile with MSVC 6.0, BCC 5.5 and GCC 2.95.2.</p>
+compile with MSVC 6.0, BCC 5.5, GCC 2.95.x / 3.0.x and ICC 5.0.1.</p>
 
 <p>To get the most performance out of the box with MSVC 6.0, you
 should change the preprocessor definition of <code>NUMERICS_INLINE
@@ -727,24 +736,26 @@ optimization to be fragile.</p>
                 Expression</a></li>
         </ol>
     </li>
-    <li><a href="proxy.htm">Proxy Concepts</a><ol type="1"
-        start="1">
-            <li><a href="proxy.htm#vector_proxy">Vector Proxy</a></li>
-            <li><a href="proxy.htm#matrix_proxy">Matrix Proxy</a></li>
-        </ol>
-    </li>
-    <li><a href="container.htm">Container Concepts</a><ol type="1"
-        start="1">
+    <li><a href="container.htm">Container Concepts</a><ol
+        type="1" start="1">
             <li><a href="container.htm#vector">Vector</a></li>
             <li><a href="container.htm#matrix">Matrix</a></li>
         </ol>
     </li>
     <li><a href="iterator.htm">Iterator Concepts</a><ol type="1"
         start="1">
-            <li><a href="iterator.htm#indexed_bidirectional_iterator">Indexed Bidirectional Iterator</a></li>
-            <li><a href="iterator.htm#indexed_random_access_iterator">Indexed Random Access Iterator</a></li>
-            <li><a href="iterator.htm#indexed_bidirectional_cr_iterator">Indexed Bidirectional Column/Row Iterator</a></li>
-            <li><a href="iterator.htm#indexed_random_access_cr_iterator">Indexed Random Access Column/Row Iterator</a></li>
+            <li><a
+                href="iterator.htm#indexed_bidirectional_iterator">Indexed
+                Bidirectional Iterator</a></li>
+            <li><a
+                href="iterator.htm#indexed_random_access_iterator">Indexed
+                Random Access Iterator</a></li>
+            <li><a
+                href="iterator.htm#indexed_bidirectional_cr_iterator">Indexed
+                Bidirectional Column/Row Iterator</a></li>
+            <li><a
+                href="iterator.htm#indexed_random_access_cr_iterator">Indexed
+                Random Access Column/Row Iterator</a></li>
         </ol>
     </li>
     <li><a href="storage.htm">Storage</a><ol type="1" start="1">
@@ -763,6 +774,7 @@ optimization to be fragile.</p>
     </li>
     <li><a href="vector.htm">Vector</a><ol type="1" start="1">
             <li><a href="vector.htm#vector">Vector</a></li>
+            <li><a href="vector.htm#unit_vector">Unit Vector</a></li>
         </ol>
     </li>
     <li><a href="vector_sp.htm">Sparse Vector</a><ol type="1"
@@ -791,6 +803,8 @@ optimization to be fragile.</p>
     </li>
     <li><a href="matrix.htm">Matrix</a><ol type="1" start="1">
             <li><a href="matrix.htm#matrix">Matrix</a></li>
+            <li><a href="matrix.htm#identity_matrix">Identity
+                Matrix</a></li>
         </ol>
     </li>
     <li><a href="matrix_sp.htm">Sparse Matrix</a><ol type="1"
@@ -846,14 +860,14 @@ of dimension 3 and 3 x 3, respectively.</p>
     <tr>
         <td rowspan="4">inner_prod</td>
         <td>C Array</td>
-        <td align="right">0.11 </td>
-        <td align="right">43.3488 </td>
+        <td align="right">0.1 </td>
+        <td align="right">47.6837 </td>
         <td rowspan="4">No significant abstraction penalty</td>
     </tr>
     <tr>
-        <td>vector&lt;bounded_array&gt;</td>
-        <td align="right">0.05 </td>
-        <td align="right">95.3674 </td>
+        <td>c_vector</td>
+        <td align="right">0.06 </td>
+        <td align="right">79.4729 </td>
     </tr>
     <tr>
         <td>vector&lt;unbounded_array&gt;</td>
@@ -862,25 +876,25 @@ of dimension 3 and 3 x 3, respectively.</p>
     </tr>
     <tr>
         <td>vector&lt;std::vector&gt;</td>
-        <td align="right">0.06 </td>
-        <td align="right">79.4729 </td>
+        <td align="right">0.11 </td>
+        <td align="right">43.3488 </td>
     </tr>
     <tr>
         <td rowspan="7">vector + vector</td>
         <td>C array</td>
-        <td align="right">0.11 </td>
-        <td align="right">52.0186 </td>
+        <td align="right">0.05 </td>
+        <td align="right">114.441 </td>
         <td rowspan="7">Abstraction penalty: factor 2</td>
     </tr>
     <tr>
-        <td>vector&lt;bounded_array&gt; safe</td>
-        <td align="right">0.38 </td>
-        <td align="right">15.058 </td>
-    </tr>
-    <tr>
-        <td>vector&lt;bounded_array&gt; fast</td>
+        <td>c_vector safe</td>
         <td align="right">0.22 </td>
         <td align="right">26.0093 </td>
+    </tr>
+    <tr>
+        <td>c_vector fast</td>
+        <td align="right">0.11 </td>
+        <td align="right">52.0186 </td>
     </tr>
     <tr>
         <td>vector&lt;unbounded_array&gt; safe</td>
@@ -889,178 +903,174 @@ of dimension 3 and 3 x 3, respectively.</p>
     </tr>
     <tr>
         <td>vector&lt;unbounded_array&gt; fast</td>
-        <td align="right">0.21 </td>
-        <td align="right">27.2478 </td>
+        <td align="right">0.16 </td>
+        <td align="right">35.7628 </td>
     </tr>
     <tr>
         <td>vector&lt;std::vector&gt; safe</td>
-        <td align="right">1.21 </td>
-        <td align="right">4.72896 </td>
+        <td align="right">1.16 </td>
+        <td align="right">4.9328 </td>
     </tr>
     <tr>
         <td>vector&lt;std::vector&gt; fast</td>
-        <td align="right">0.22 </td>
-        <td align="right">26.0093 </td>
+        <td align="right">0.16 </td>
+        <td align="right">35.7628 </td>
     </tr>
     <tr>
         <td rowspan="7">outer_prod</td>
         <td>C array</td>
+        <td align="right">0.06 </td>
+        <td align="right">85.8307 </td>
+        <td rowspan="7">Abstraction penalty: factor 2</td>
+    </tr>
+    <tr>
+        <td>c_matrix, c_vector safe</td>
+        <td align="right">0.22 </td>
+        <td align="right">23.4084 </td>
+    </tr>
+    <tr>
+        <td>c_matrix, c_vector fast</td>
         <td align="right">0.11 </td>
         <td align="right">46.8167 </td>
-        <td rowspan="7">Abstraction penalty: factor 6</td>
-    </tr>
-    <tr>
-        <td>matrix&lt;bounded_array&gt;,
-        vector&lt;bounded_array&gt; safe</td>
-        <td align="right">0.77 </td>
-        <td align="right">6.68811 </td>
-    </tr>
-    <tr>
-        <td>matrix&lt;bounded_array&gt;,
-        vector&lt;bounded_array&gt; fast</td>
-        <td align="right">0.61 </td>
-        <td align="right">8.44236 </td>
     </tr>
     <tr>
         <td>matrix&lt;unbounded_array&gt;,
         vector&lt;unbounded_array&gt; safe</td>
-        <td align="right">0.87 </td>
-        <td align="right">5.91936 </td>
+        <td align="right">0.38 </td>
+        <td align="right">13.5522 </td>
     </tr>
     <tr>
         <td>matrix&lt;unbounded_array&gt;,
         vector&lt;unbounded_array&gt; fast</td>
-        <td align="right">0.77 </td>
-        <td align="right">6.68811 </td>
+        <td align="right">0.16 </td>
+        <td align="right">32.1865 </td>
     </tr>
     <tr>
         <td>matrix&lt;std::vector&gt;, vector&lt;std::vector&gt;
         safe</td>
-        <td align="right">0.99 </td>
-        <td align="right">5.20186 </td>
+        <td align="right">0.5 </td>
+        <td align="right">10.2997 </td>
     </tr>
     <tr>
         <td>matrix&lt;std::vector&gt;, vector&lt;std::vector&gt;
         fast</td>
-        <td align="right">0.66 </td>
-        <td align="right">7.80279 </td>
+        <td align="right">0.11 </td>
+        <td align="right">46.8167 </td>
     </tr>
     <tr>
         <td rowspan="7">prod (matrix, vector)</td>
         <td>C array</td>
+        <td align="right">0.06 </td>
+        <td align="right">71.5256 </td>
+        <td rowspan="7">No significant abstraction penalty</td>
+    </tr>
+    <tr>
+        <td>c_matrix, c_vector safe</td>
         <td align="right">0.11 </td>
         <td align="right">39.0139 </td>
-        <td rowspan="7">Abstraction penalty: factor 3</td>
     </tr>
     <tr>
-        <td>matrix&lt;bounded_array&gt;,
-        vector&lt;bounded_array&gt; safe</td>
-        <td align="right">0.39 </td>
-        <td align="right">11.0039 </td>
-    </tr>
-    <tr>
-        <td>matrix&lt;bounded_array&gt;,
-        vector&lt;bounded_array&gt; fast</td>
-        <td align="right">0.33 </td>
-        <td align="right">13.0046 </td>
+        <td>c_matrix, c_vector fast</td>
+        <td align="right">0.11 </td>
+        <td align="right">39.0139 </td>
     </tr>
     <tr>
         <td>matrix&lt;unbounded_array&gt;,
         vector&lt;unbounded_array&gt; safe</td>
-        <td align="right">0.54 </td>
-        <td align="right">7.94729 </td>
+        <td align="right">0.33 </td>
+        <td align="right">13.0046 </td>
     </tr>
     <tr>
         <td>matrix&lt;unbounded_array&gt;,
         vector&lt;unbounded_array&gt; fast</td>
-        <td align="right">0.33 </td>
-        <td align="right">13.0046 </td>
+        <td align="right">0.11 </td>
+        <td align="right">39.0139 </td>
     </tr>
     <tr>
         <td>matrix&lt;std::vector&gt;, vector&lt;std::vector&gt;
         safe</td>
-        <td align="right">0.66 </td>
-        <td align="right">6.50232 </td>
+        <td align="right">0.38 </td>
+        <td align="right">11.2935 </td>
     </tr>
     <tr>
         <td>matrix&lt;std::vector&gt;, vector&lt;std::vector&gt;
         fast</td>
-        <td align="right">0.33 </td>
-        <td align="right">13.0046 </td>
+        <td align="right">0.05 </td>
+        <td align="right">85.8307 </td>
     </tr>
     <tr>
         <td rowspan="7">matrix + matrix</td>
         <td>C array</td>
         <td align="right">0.11 </td>
         <td align="right">46.8167 </td>
-        <td rowspan="7">Abstraction penalty: factor 8</td>
+        <td rowspan="7">No significant abstraction penalty</td>
     </tr>
     <tr>
-        <td>matrix&lt;bounded_array&gt; safe</td>
-        <td align="right">0.93 </td>
-        <td align="right">5.53746 </td>
+        <td>c_matrix safe</td>
+        <td align="right">0.17 </td>
+        <td align="right">30.2932 </td>
     </tr>
     <tr>
-        <td>matrix&lt;bounded_array&gt; fast</td>
-        <td align="right">0.83 </td>
-        <td align="right">6.20463 </td>
+        <td>c_matrix fast</td>
+        <td align="right">0.11 </td>
+        <td align="right">46.8167 </td>
     </tr>
     <tr>
         <td>matrix&lt;unbounded_array&gt; safe</td>
-        <td align="right">1.04 </td>
-        <td align="right">4.95177 </td>
+        <td align="right">0.44 </td>
+        <td align="right">11.7042 </td>
     </tr>
     <tr>
         <td>matrix&lt;unbounded_array&gt; fast</td>
-        <td align="right">0.82 </td>
-        <td align="right">6.28029 </td>
+        <td align="right">0.16 </td>
+        <td align="right">32.1865 </td>
     </tr>
     <tr>
         <td>matrix&lt;std::vector&gt; safe</td>
-        <td align="right">1.15 </td>
-        <td align="right">4.47812 </td>
+        <td align="right">0.6 </td>
+        <td align="right">8.58307 </td>
     </tr>
     <tr>
         <td>matrix&lt;std::vector&gt; fast</td>
-        <td align="right">0.82 </td>
-        <td align="right">6.28029 </td>
+        <td align="right">0.17 </td>
+        <td align="right">30.2932 </td>
     </tr>
     <tr>
         <td rowspan="7">prod (matrix, matrix)</td>
         <td>C array</td>
-        <td align="right">0.17 </td>
-        <td align="right">25.2443 </td>
-        <td rowspan="7">Abstraction penalty: factor 3</td>
+        <td align="right">0.11 </td>
+        <td align="right">39.0139 </td>
+        <td rowspan="7">No significant abstraction penalty</td>
     </tr>
     <tr>
-        <td>matrix&lt;bounded_array&gt; safe</td>
-        <td align="right">0.55 </td>
-        <td align="right">7.80279 </td>
+        <td>c_matrix safe</td>
+        <td align="right">0.11 </td>
+        <td align="right">39.0139 </td>
     </tr>
     <tr>
-        <td>matrix&lt;bounded_array&gt; fast</td>
-        <td align="right">0.49 </td>
-        <td align="right">8.75823 </td>
+        <td>c_matrix fast</td>
+        <td align="right">0.11 </td>
+        <td align="right">39.0139 </td>
     </tr>
     <tr>
         <td>matrix&lt;unbounded_array&gt; safe</td>
-        <td align="right">0.66 </td>
-        <td align="right">6.50232 </td>
+        <td align="right">0.22 </td>
+        <td align="right">19.507 </td>
     </tr>
     <tr>
         <td>matrix&lt;unbounded_array&gt; fast</td>
-        <td align="right">0.55 </td>
-        <td align="right">7.80279 </td>
+        <td align="right">0.11 </td>
+        <td align="right">39.0139 </td>
     </tr>
     <tr>
         <td>matrix&lt;std::vector&gt; safe</td>
-        <td align="right">0.66 </td>
-        <td align="right">6.50232 </td>
+        <td align="right">0.27 </td>
+        <td align="right">15.8946 </td>
     </tr>
     <tr>
         <td>matrix&lt;std::vector&gt; fast</td>
-        <td align="right">0.55 </td>
-        <td align="right">7.80279 </td>
+        <td align="right">0.11 </td>
+        <td align="right">39.0139 </td>
     </tr>
 </table>
 
@@ -1083,7 +1093,7 @@ dimension 100 and 100 x 100, respectively.</p>
         <td rowspan="4">No significant abstraction penalty</td>
     </tr>
     <tr>
-        <td>vector&lt;bounded_array&gt;</td>
+        <td>c_vector</td>
         <td align="right">0.06 </td>
         <td align="right">94.8906 </td>
     </tr>
@@ -1094,8 +1104,8 @@ dimension 100 and 100 x 100, respectively.</p>
     </tr>
     <tr>
         <td>vector&lt;std::vector&gt;</td>
-        <td align="right">0 </td>
-        <td align="right">1.#INF </td>
+        <td align="right">0.06 </td>
+        <td align="right">94.8906 </td>
     </tr>
     <tr>
         <td rowspan="7">vector + vector</td>
@@ -1105,24 +1115,24 @@ dimension 100 and 100 x 100, respectively.</p>
         <td rowspan="7">No significant abstraction penalty</td>
     </tr>
     <tr>
-        <td>vector&lt;bounded_array&gt; safe</td>
-        <td align="right">0.22 </td>
-        <td align="right">26.0093 </td>
+        <td>c_vector safe</td>
+        <td align="right">0.11 </td>
+        <td align="right">52.0186 </td>
     </tr>
     <tr>
-        <td>vector&lt;bounded_array&gt; fast</td>
-        <td align="right">0.06 </td>
-        <td align="right">95.3674 </td>
+        <td>c_vector fast</td>
+        <td align="right">0.11 </td>
+        <td align="right">52.0186 </td>
     </tr>
     <tr>
         <td>vector&lt;unbounded_array&gt; safe</td>
-        <td align="right">0.1 </td>
-        <td align="right">57.2205 </td>
+        <td align="right">0.11 </td>
+        <td align="right">52.0186 </td>
     </tr>
     <tr>
         <td>vector&lt;unbounded_array&gt; fast</td>
-        <td align="right">0.11 </td>
-        <td align="right">52.0186 </td>
+        <td align="right">0.06 </td>
+        <td align="right">95.3674 </td>
     </tr>
     <tr>
         <td>vector&lt;std::vector&gt; safe</td>
@@ -1131,51 +1141,49 @@ dimension 100 and 100 x 100, respectively.</p>
     </tr>
     <tr>
         <td>vector&lt;std::vector&gt; fast</td>
-        <td align="right">0.05 </td>
-        <td align="right">114.441 </td>
+        <td align="right">0.11 </td>
+        <td align="right">52.0186 </td>
     </tr>
     <tr>
         <td rowspan="7">outer_prod</td>
         <td>C array</td>
-        <td align="right">0.11 </td>
-        <td align="right">52.0186 </td>
+        <td align="right">0.05 </td>
+        <td align="right">114.441 </td>
         <td rowspan="7">No significant abstraction penalty</td>
     </tr>
     <tr>
-        <td>matrix&lt;bounded_array&gt;,
-        vector&lt;bounded_array&gt; safe</td>
+        <td>c_matrix, c_vector safe</td>
         <td align="right">0.28 </td>
         <td align="right">20.4359 </td>
     </tr>
     <tr>
-        <td>matrix&lt;bounded_array&gt;,
-        vector&lt;bounded_array&gt; fast</td>
+        <td>c_matrix, c_vector fast</td>
         <td align="right">0.11 </td>
         <td align="right">52.0186 </td>
     </tr>
     <tr>
         <td>matrix&lt;unbounded_array&gt;,
         vector&lt;unbounded_array&gt; safe</td>
-        <td align="right">0.22 </td>
-        <td align="right">26.0093 </td>
+        <td align="right">0.27 </td>
+        <td align="right">21.1928 </td>
     </tr>
     <tr>
         <td>matrix&lt;unbounded_array&gt;,
         vector&lt;unbounded_array&gt; fast</td>
-        <td align="right">0.11 </td>
-        <td align="right">52.0186 </td>
+        <td align="right">0.06 </td>
+        <td align="right">95.3674 </td>
     </tr>
     <tr>
         <td>matrix&lt;std::vector&gt;, vector&lt;std::vector&gt;
         safe</td>
-        <td align="right">0.33 </td>
-        <td align="right">17.3395 </td>
+        <td align="right">0.28 </td>
+        <td align="right">20.4359 </td>
     </tr>
     <tr>
         <td>matrix&lt;std::vector&gt;, vector&lt;std::vector&gt;
         fast</td>
-        <td align="right">0.16 </td>
-        <td align="right">35.7628 </td>
+        <td align="right">0.11 </td>
+        <td align="right">52.0186 </td>
     </tr>
     <tr>
         <td rowspan="7">prod (matrix, vector)</td>
@@ -1185,16 +1193,14 @@ dimension 100 and 100 x 100, respectively.</p>
         <td rowspan="7">No significant abstraction penalty</td>
     </tr>
     <tr>
-        <td>matrix&lt;bounded_array&gt;,
-        vector&lt;bounded_array&gt; safe</td>
+        <td>c_matrix, c_vector safe</td>
         <td align="right">0.11 </td>
         <td align="right">51.7585 </td>
     </tr>
     <tr>
-        <td>matrix&lt;bounded_array&gt;,
-        vector&lt;bounded_array&gt; fast</td>
-        <td align="right">0.06 </td>
-        <td align="right">94.8906 </td>
+        <td>c_matrix, c_vector fast</td>
+        <td align="right">0.05 </td>
+        <td align="right">113.869 </td>
     </tr>
     <tr>
         <td>matrix&lt;unbounded_array&gt;,
@@ -1205,84 +1211,84 @@ dimension 100 and 100 x 100, respectively.</p>
     <tr>
         <td>matrix&lt;unbounded_array&gt;,
         vector&lt;unbounded_array&gt; fast</td>
-        <td align="right">0.05 </td>
-        <td align="right">113.869 </td>
-    </tr>
-    <tr>
-        <td>matrix&lt;std::vector&gt;, vector&lt;std::vector&gt;
-        safe</td>
-        <td align="right">0.11 </td>
-        <td align="right">51.7585 </td>
-    </tr>
-    <tr>
-        <td>matrix&lt;std::vector&gt;, vector&lt;std::vector&gt;
-        fast</td>
-        <td align="right">0.11 </td>
-        <td align="right">51.7585 </td>
-    </tr>
-    <tr>
-        <td rowspan="7">matrix + matrix</td>
-        <td>C array</td>
-        <td align="right">0.17 </td>
-        <td align="right">33.6591 </td>
-        <td rowspan="7">No significant abstraction penalty</td>
-    </tr>
-    <tr>
-        <td>matrix&lt;bounded_array&gt; safe</td>
-        <td align="right">0.44 </td>
-        <td align="right">13.0046 </td>
-    </tr>
-    <tr>
-        <td>matrix&lt;bounded_array&gt; fast</td>
-        <td align="right">0.17 </td>
-        <td align="right">33.6591 </td>
-    </tr>
-    <tr>
-        <td>matrix&lt;unbounded_array&gt; safe</td>
-        <td align="right">0.33 </td>
-        <td align="right">17.3395 </td>
-    </tr>
-    <tr>
-        <td>matrix&lt;unbounded_array&gt; fast</td>
-        <td align="right">0.21 </td>
-        <td align="right">27.2478 </td>
-    </tr>
-    <tr>
-        <td>matrix&lt;std::vector&gt; safe</td>
-        <td align="right">0.5 </td>
-        <td align="right">11.4441 </td>
-    </tr>
-    <tr>
-        <td>matrix&lt;std::vector&gt; fast</td>
-        <td align="right">0.16 </td>
-        <td align="right">35.7628 </td>
-    </tr>
-    <tr>
-        <td rowspan="7">prod (matrix, matrix)</td>
-        <td>C array</td>
-        <td align="right">0.05 </td>
-        <td align="right">113.869 </td>
-        <td rowspan="7">No significant abstraction penalty?</td>
-    </tr>
-    <tr>
-        <td>matrix&lt;bounded_array&gt; safe</td>
-        <td align="right">0.11 </td>
-        <td align="right">51.7585 </td>
-    </tr>
-    <tr>
-        <td>matrix&lt;bounded_array&gt; fast</td>
         <td align="right">0.06 </td>
         <td align="right">94.8906 </td>
     </tr>
     <tr>
+        <td>matrix&lt;std::vector&gt;, vector&lt;std::vector&gt;
+        safe</td>
+        <td align="right">0.1 </td>
+        <td align="right">56.9344 </td>
+    </tr>
+    <tr>
+        <td>matrix&lt;std::vector&gt;, vector&lt;std::vector&gt;
+        fast</td>
+        <td align="right">0.06 </td>
+        <td align="right">94.8906 </td>
+    </tr>
+    <tr>
+        <td rowspan="7">matrix + matrix</td>
+        <td>C array</td>
+        <td align="right">0.22 </td>
+        <td align="right">26.0093 </td>
+        <td rowspan="7">No significant abstraction penalty</td>
+    </tr>
+    <tr>
+        <td>c_matrix safe</td>
+        <td align="right">0.49 </td>
+        <td align="right">11.6776 </td>
+    </tr>
+    <tr>
+        <td>c_matrix fast</td>
+        <td align="right">0.22 </td>
+        <td align="right">26.0093 </td>
+    </tr>
+    <tr>
+        <td>matrix&lt;unbounded_array&gt; safe</td>
+        <td align="right">0.39 </td>
+        <td align="right">14.6719 </td>
+    </tr>
+    <tr>
+        <td>matrix&lt;unbounded_array&gt; fast</td>
+        <td align="right">0.22 </td>
+        <td align="right">26.0093 </td>
+    </tr>
+    <tr>
+        <td>matrix&lt;std::vector&gt; safe</td>
+        <td align="right">0.44 </td>
+        <td align="right">13.0046 </td>
+    </tr>
+    <tr>
+        <td>matrix&lt;std::vector&gt; fast</td>
+        <td align="right">0.27 </td>
+        <td align="right">21.1928 </td>
+    </tr>
+    <tr>
+        <td rowspan="7">prod (matrix, matrix)</td>
+        <td>C array</td>
+        <td align="right">0.06 </td>
+        <td align="right">94.8906 </td>
+        <td rowspan="7">No significant abstraction penalty</td>
+    </tr>
+    <tr>
+        <td>c_matrix safe</td>
+        <td align="right">0.06 </td>
+        <td align="right">94.8906 </td>
+    </tr>
+    <tr>
+        <td>c_matrix fast</td>
+        <td align="right">0.05 </td>
+        <td align="right">113.869 </td>
+    </tr>
+    <tr>
         <td>matrix&lt;unbounded_array&gt; safe</td>
         <td align="right">0.11 </td>
         <td align="right">51.7585 </td>
     </tr>
     <tr>
         <td>matrix&lt;unbounded_array&gt; fast</td>
-        <td align="right">0.16 </td>
-        <td align="right">35.584 </td>
+        <td align="right">0.17 </td>
+        <td align="right">33.4908 </td>
     </tr>
     <tr>
         <td>matrix&lt;std::vector&gt; safe</td>
@@ -1291,8 +1297,8 @@ dimension 100 and 100 x 100, respectively.</p>
     </tr>
     <tr>
         <td>matrix&lt;std::vector&gt; fast</td>
-        <td align="right">0.17 </td>
-        <td align="right">33.4908 </td>
+        <td align="right">0.16 </td>
+        <td align="right">35.584 </td>
     </tr>
 </table>
 
@@ -1300,8 +1306,9 @@ dimension 100 and 100 x 100, respectively.</p>
 
 <p>We would like to thank all, which supported the development of
 this library: <br>
-David Abrahams, Beman Dawes, Kresimir Fresl, Joachim Kessel, Jens
-Maurer, Joachim Pyras, Jeremy Siek, Markus Steffl, Marc
-Zimmermann and the members of <a href="http://www.boost.org">http://www.boost.org</a></p>
+David Abrahams, Beman Dawes, Kresimir Fresl, Joachim Kessel, Toon
+Knapen, Jens Maurer, Joachim Pyras, Peter Schmitteckert, Jeremy
+Siek, Markus Steffl, Marc Zimmermann and the members of <a
+href="http://www.boost.org">http://www.boost.org</a></p>
 </body>
 </html>

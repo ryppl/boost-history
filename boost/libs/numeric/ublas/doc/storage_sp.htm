@@ -104,7 +104,7 @@ Reversible Container.</p>
         </td>
     </tr>
     <tr>
-        <td><code>data_reference_type operator [] (index_type i)</code></td>
+        <td><code>data_reference operator [] (index_type i)</code></td>
         <td>Returns a reference of the element that is associated
         with a particular index. If the <code>compressed_array</code>
         does not already contain such an element, <code>operator[]</code>
@@ -125,13 +125,13 @@ Reversible Container.</p>
         <td>Swaps the contents of the arrays. </td>
     </tr>
     <tr>
-        <td><code>pointer_type insert (pointer_type it, const
+        <td><code>pointer insert (pointer it, const
         value_type &amp;p)</code></td>
         <td>Inserts <code>p</code> into the array, using <code>it</code>
         as a hint to where it will be inserted. </td>
     </tr>
     <tr>
-        <td><code>void erase (pointer_type it)</code></td>
+        <td><code>void erase (pointer it)</code></td>
         <td>Erases the value at <code>it</code>.</td>
     </tr>
     <tr>
@@ -139,31 +139,31 @@ Reversible Container.</p>
         <td>Clears the array. </td>
     </tr>
     <tr>
-        <td><code>const_pointer_type find (index_type i) const</code></td>
+        <td><code>const_pointer find (index_type i) const</code></td>
         <td>Finds an element whose index is <code>i</code>. </td>
     </tr>
     <tr>
-        <td><code>pointer_type find (index_type i)</code></td>
+        <td><code>pointer find (index_type i)</code></td>
         <td>Finds an element whose index is <code>i</code>. </td>
     </tr>
     <tr>
-        <td><code>const_pointer_type lower_bound (index_type i)
+        <td><code>const_pointer lower_bound (index_type i)
         const</code></td>
         <td>Finds the first element whose index is not less than <code>i</code>.</td>
     </tr>
     <tr>
-        <td><code>pointer_type lower_bound (index_type i)</code></td>
+        <td><code>pointer lower_bound (index_type i)</code></td>
         <td>Finds the first element whose index is not less than <code>i</code>.
         </td>
     </tr>
     <tr>
-        <td><code>const_pointer_type upper_bound (index_type i)
+        <td><code>const_pointer upper_bound (index_type i)
         const</code></td>
         <td>Finds the first element whose index is greater than <code>i</code>.
         </td>
     </tr>
     <tr>
-        <td><code>pointer_type upper_bound (index_type i)</code></td>
+        <td><code>pointer upper_bound (index_type i)</code></td>
         <td>Finds the first element whose index is greater than <code>i</code>.
         </td>
     </tr>
@@ -222,13 +222,13 @@ Reversible Container.</p>
         typedef std::ptrdiff_t difference_type;
         typedef I index_type;
         typedef T data_value_type;
-        typedef const T &amp;data_const_reference_type;
-        typedef T &amp;data_reference_type;
+        typedef const T &amp;data_const_reference;
+        typedef T &amp;data_reference;
         typedef std::pair&lt;I, T&gt; value_type;
-        typedef const std::pair&lt;I, T&gt; &amp;const_reference_type;
-        typedef std::pair&lt;I, T&gt; &amp;reference_type;
-        typedef const std::pair&lt;I, T&gt; *const_pointer_type;
-        typedef std::pair&lt;I, T&gt; *pointer_type;
+        typedef const std::pair&lt;I, T&gt; &amp;const_reference;
+        typedef std::pair&lt;I, T&gt; &amp;reference;
+        typedef const std::pair&lt;I, T&gt; *const_pointer;
+        typedef std::pair&lt;I, T&gt; *pointer;
 
         // Construction and destruction
         compressed_array ();
@@ -242,7 +242,7 @@ Reversible Container.</p>
         size_type size () const;
 
         // Element access
-        data_reference_type operator [] (index_type i);
+        data_reference operator [] (index_type i);
 
         // Assignment
         compressed_array &amp;operator = (const compressed_array &amp;a);
@@ -253,28 +253,28 @@ Reversible Container.</p>
 	friend void swap (compressed_array &amp;a1, compressed_array &amp;a2);
 
         // Element insertion and deletion
-        pointer_type insert (pointer_type it, const value_type &amp;p);
-        void insert (pointer_type it, pointer_type it1, pointer_type it2);
-        void erase (pointer_type it);
-        void erase (pointer_type it1, pointer_type it2);
+        pointer insert (pointer it, const value_type &amp;p);
+        void insert (pointer it, pointer it1, pointer it2);
+        void erase (pointer it);
+        void erase (pointer it1, pointer it2);
         void clear ();
 
         // Element lookup
-        const_pointer_type find (index_type i) const;
-        pointer_type find (index_type i);
-        const_pointer_type lower_bound (index_type i) const;
-        pointer_type lower_bound (index_type i);
-        const_pointer_type upper_bound (index_type i) const;
-        pointer_type upper_bound (index_type i);
+        const_pointer find (index_type i) const;
+        pointer find (index_type i);
+        const_pointer lower_bound (index_type i) const;
+        pointer lower_bound (index_type i);
+        const_pointer upper_bound (index_type i) const;
+        pointer upper_bound (index_type i);
 
         // Iterators simply are pointers.
 
-        typedef const_pointer_type const_iterator;
+        typedef const_pointer const_iterator;
 
         const_iterator begin () const;
         const_iterator end () const;
 
-        typedef pointer_type iterator;
+        typedef pointer iterator;
 
         iterator begin ();
         iterator end ();
@@ -290,6 +290,9 @@ Reversible Container.</p>
 
         reverse_iterator rbegin ();
         reverse_iterator rend ();
-    };</code></pre>
+    };
+
+    template&lt;class I, class T&gt;
+    compressed_array&lt;I, T&gt; &amp;assign_temporary (compressed_array&lt;I, T&gt; &amp;a1, compressed_array&lt;I, T&gt; &amp;a2);</code></pre>
 </body>
 </html>

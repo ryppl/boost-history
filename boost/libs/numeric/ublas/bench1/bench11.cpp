@@ -214,22 +214,22 @@ void bench_1<T, N>::operator () (int runs) {
 
 #ifdef USE_BOUNDED_ARRAY
 	header ("vector<bounded_array>");
-    bench_my_inner_prod<numerics::vector<T, numerics::forward, numerics::bounded_array<T, N> >, N> () (runs);
+    bench_my_inner_prod<numerics::vector<T, numerics::bounded_array<T, N> >, N> () (runs);
 #endif
 
 #ifdef USE_UNBOUNDED_ARRAY
 	header ("vector<unbounded_array>");
-	bench_my_inner_prod<numerics::vector<T, numerics::forward, numerics::unbounded_array<T> >, N> () (runs);
+	bench_my_inner_prod<numerics::vector<T, numerics::unbounded_array<T> >, N> () (runs);
 #endif
 
 #ifdef USE_STD_VALARRAY
 	header ("vector<std::valarray>");
-	bench_my_inner_prod<numerics::vector<T, numerics::forward, std::valarray<T> >, N> () ();
+	bench_my_inner_prod<numerics::vector<T, std::valarray<T> >, N> () ();
 #endif
 
 #ifdef USE_STD_VECTOR
 	header ("vector<std::vector>");
-    bench_my_inner_prod<numerics::vector<T, numerics::forward, std::vector<T> >, N> () (runs);
+    bench_my_inner_prod<numerics::vector<T, std::vector<T> >, N> () (runs);
 #endif
 
 #ifdef USE_STD_VALARRAY
@@ -252,34 +252,34 @@ void bench_1<T, N>::operator () (int runs) {
 
 #ifdef USE_BOUNDED_ARRAY
     header ("vector<bounded_array> safe");
-	bench_my_vector_add<numerics::vector<T, numerics::forward, numerics::bounded_array<T, N> >, N> () (runs, safe_tag ());
+	bench_my_vector_add<numerics::vector<T, numerics::bounded_array<T, N> >, N> () (runs, safe_tag ());
 
 	header ("vector<bounded_array> fast");
-	bench_my_vector_add<numerics::vector<T, numerics::forward, numerics::bounded_array<T, N> >, N> () (runs, fast_tag ());
+	bench_my_vector_add<numerics::vector<T, numerics::bounded_array<T, N> >, N> () (runs, fast_tag ());
 #endif
 
 #ifdef USE_UNBOUNDED_ARRAY
 	header ("vector<unbounded_array> safe");
-	bench_my_vector_add<numerics::vector<T, numerics::forward, numerics::unbounded_array<T> >, N> () (runs, safe_tag ());
+	bench_my_vector_add<numerics::vector<T, numerics::unbounded_array<T> >, N> () (runs, safe_tag ());
 
 	header ("vector<unbounded_array> fast");
-	bench_my_vector_add<numerics::vector<T, numerics::forward, numerics::unbounded_array<T> >, N> () (runs, fast_tag ());
+	bench_my_vector_add<numerics::vector<T, numerics::unbounded_array<T> >, N> () (runs, fast_tag ());
 #endif
 
 #ifdef USE_STD_VALARRAY
 	header ("vector<std::valarray> safe");
-	bench_my_vector_add<numerics::vector<T, numerics::forward, std::valarray<T> >, N> () (runs, safe_tag ());
+	bench_my_vector_add<numerics::vector<T, std::valarray<T> >, N> () (runs, safe_tag ());
 
 	header ("vector<std::valarray> fast");
-	bench_my_vector_add<numerics::vector<T, numerics::forward, std::valarray<T> >, N> () (runs, fast_tag ());
+	bench_my_vector_add<numerics::vector<T, std::valarray<T> >, N> () (runs, fast_tag ());
 #endif
 
 #ifdef USE_STD_VECTOR
 	header ("vector<std::vector> safe");
-	bench_my_vector_add<numerics::vector<T, numerics::forward, std::vector<T> >, N> () (runs, safe_tag ());
+	bench_my_vector_add<numerics::vector<T, std::vector<T> >, N> () (runs, safe_tag ());
 
 	header ("vector<std::vector> fast");
-	bench_my_vector_add<numerics::vector<T, numerics::forward, std::vector<T> >, N> () (runs, fast_tag ());
+	bench_my_vector_add<numerics::vector<T, std::vector<T> >, N> () (runs, fast_tag ());
 #endif
 
 #ifdef USE_STD_VALARRAY

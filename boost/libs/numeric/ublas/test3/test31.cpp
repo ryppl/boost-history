@@ -31,14 +31,14 @@ template<class V, int N>
 struct test_my_vector {
     typedef typename V::value_type value_type;
     typedef typename V::size_type size_type;
-    typedef typename numerics::type_traits<value_type>::norm_type norm_type;
+    typedef typename numerics::type_traits<value_type>::real_type real_type;
 
     template<class VP>
     void operator () (VP &v1, VP &v2, VP &v3) const {
 		try {            
             value_type t;
             size_type i;
-            norm_type n;
+            real_type n;
 
             // Copy and swap
 			initialize_vector (v1);
@@ -73,6 +73,11 @@ struct test_my_vector {
 			std::cout << "1. * v1 = " << v2 << std::endl;
 			v2 = t * v1;
 			std::cout << "N * v1 = " << v2 << std::endl;
+			initialize_vector (v1);
+			v2 = v1 * value_type (1.);
+			std::cout << "v1 * 1. = " << v2 << std::endl;
+			v2 = v1 * t;
+			std::cout << "v1 * N = " << v2 << std::endl;
 
 			// Some assignments
 			initialize_vector (v1);
@@ -126,12 +131,16 @@ struct test_my_vector {
             (*this) (v1, v2, v3);
 
 #ifdef USE_RANGE
-            numerics::vector_range<V> vr1 (v1, 0, N), vr2 (v2, 0, N), vr3 (v3, 0, N);
+            numerics::vector_range<V> vr1 (v1, numerics::range (0, N)), 
+								      vr2 (v2, numerics::range (0, N)), 
+									  vr3 (v3, numerics::range (0, N));
             (*this) (vr1, vr2, vr3);
 #endif
 
 #ifdef USE_SLICE
-            numerics::vector_slice<V> vs1 (v1, 0, 1, N), vs2 (v2, 0, 1, N), vs3 (v3, 0, 1, N);
+            numerics::vector_slice<V> vs1 (v1, numerics::slice (0, 1, N)), 
+									  vs2 (v2, numerics::slice (0, 1, N)), 
+									  vs3 (v3, numerics::slice (0, 1, N));
             (*this) (vs1, vs2, vs3);
 #endif
 		}
@@ -150,30 +159,30 @@ void test_vector () {
 
 #ifdef USE_COMPRESSED_ARRAY
     std::cout << "float, compressed_array" << std::endl;
-    test_my_vector<numerics::sparse_vector<float, numerics::forward, numerics::compressed_array<std::size_t, float> >, 3 > () ();
+    test_my_vector<numerics::sparse_vector<float, numerics::compressed_array<std::size_t, float> >, 3 > () ();
 
     std::cout << "double, compressed_array" << std::endl;
-    test_my_vector<numerics::sparse_vector<double, numerics::forward, numerics::compressed_array<std::size_t, double> >, 3 > () ();
+    test_my_vector<numerics::sparse_vector<double, numerics::compressed_array<std::size_t, double> >, 3 > () ();
 
     std::cout << "std::complex<float>, compressed_array" << std::endl;
-    test_my_vector<numerics::sparse_vector<std::complex<float>, numerics::forward, numerics::compressed_array<std::size_t, std::complex<float> > >, 3 > () ();
+    test_my_vector<numerics::sparse_vector<std::complex<float>, numerics::compressed_array<std::size_t, std::complex<float> > >, 3 > () ();
 
     std::cout << "std::complex<double>, compressed_array" << std::endl;
-    test_my_vector<numerics::sparse_vector<std::complex<double>, numerics::forward, numerics::compressed_array<std::size_t, std::complex<double> > >, 3 > () ();
+    test_my_vector<numerics::sparse_vector<std::complex<double>, numerics::compressed_array<std::size_t, std::complex<double> > >, 3 > () ();
 #endif
 
 #ifdef USE_STD_MAP
     std::cout << "float, std::map" << std::endl;
-    test_my_vector<numerics::sparse_vector<float, numerics::forward, std::map<size_t, float> >, 3 > () ();
+    test_my_vector<numerics::sparse_vector<float, std::map<size_t, float> >, 3 > () ();
 
     std::cout << "double, std::map" << std::endl;
-    test_my_vector<numerics::sparse_vector<double, numerics::forward, std::map<size_t, double> >, 3 > () ();
+    test_my_vector<numerics::sparse_vector<double, std::map<size_t, double> >, 3 > () ();
 
     std::cout << "std::complex<float>, std::map" << std::endl;
-    test_my_vector<numerics::sparse_vector<std::complex<float>, numerics::forward, std::map<size_t, std::complex<float> > >, 3 > () ();
+    test_my_vector<numerics::sparse_vector<std::complex<float>, std::map<size_t, std::complex<float> > >, 3 > () ();
 
     std::cout << "std::complex<double>, std::map" << std::endl;
-    test_my_vector<numerics::sparse_vector<std::complex<double>, numerics::forward, std::map<size_t, std::complex<double> > > , 3 > () ();
+    test_my_vector<numerics::sparse_vector<std::complex<double>, std::map<size_t, std::complex<double> > > , 3 > () ();
 #endif
 }
 

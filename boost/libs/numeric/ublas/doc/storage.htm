@@ -97,13 +97,13 @@ Access Container. </p>
         </td>
     </tr>
     <tr>
-        <td><code>const_reference_type operator [] (size_type i)
+        <td><code>const_reference operator [] (size_type i)
         const</code></td>
         <td>Returns a <code>const </code>reference of the <code>i</code>-th
         element. </td>
     </tr>
     <tr>
-        <td><code>reference_type operator [] (size_type i)</code></td>
+        <td><code>reference operator [] (size_type i)</code></td>
         <td>Returns a reference of the <code>i</code>-th element.
         </td>
     </tr>
@@ -122,12 +122,12 @@ Access Container. </p>
         <td>Swaps the contents of the arrays. </td>
     </tr>
     <tr>
-        <td><code>pointer_type insert (pointer_type it, const
+        <td><code>pointer insert (pointer it, const
         value_type &amp;t)</code></td>
         <td>Inserts the value <code>t</code> at <code>it</code>.</td>
     </tr>
     <tr>
-        <td><code>void erase (pointer_type it)</code></td>
+        <td><code>void erase (pointer it)</code></td>
         <td>Erases the value at <code>it</code>.</td>
     </tr>
     <tr>
@@ -188,10 +188,10 @@ Access Container. </p>
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
         typedef T value_type;
-        typedef const T &amp;const_reference_type;
-        typedef T &amp;reference_type;
-        typedef const T *const_pointer_type;
-        typedef T *pointer_type;
+        typedef const T &amp;const_reference;
+        typedef T &amp;reference;
+        typedef const T *const_pointer;
+        typedef T *pointer;
 
         // Construction and destruction
         unbounded_array ();
@@ -205,32 +205,32 @@ Access Container. </p>
         size_type size () const;
 
         // Element access
-        const_reference_type operator [] (size_type i) const;
-        reference_type operator [] (size_type i);
+        const_reference operator [] (size_type i) const;
+        reference operator [] (size_type i);
 
         // Assignment
         unbounded_array &amp;operator = (const unbounded_array &amp;a);
         unbounded_array &amp;assign_temporary (unbounded_array &amp;a);
 
         // Swapping
-	void swap (unbounded_array &amp;a);
-	friend void swap (unbounded_array &amp;a1, unbounded_array &amp;a2);
+        void swap (unbounded_array &amp;a);
+        friend void swap (unbounded_array &amp;a1, unbounded_array &amp;a2);
 
         // Element insertion and deletion
-        pointer_type insert (pointer_type it, const value_type &amp;t);
-        void insert (pointer_type it, pointer_type it1, pointer_type it2);
-        void erase (pointer_type it);
-        void erase (pointer_type it1, pointer_type it2);
+        pointer insert (pointer it, const value_type &amp;t);
+        void insert (pointer it, pointer it1, pointer it2);
+        void erase (pointer it);
+        void erase (pointer it1, pointer it2);
         void clear ();
 
         // Iterators simply are pointers.
 
-        typedef const_pointer_type const_iterator;
+        typedef const_pointer const_iterator;
 
         const_iterator begin () const;
         const_iterator end () const;
 
-        typedef pointer_type iterator;
+        typedef pointer iterator;
 
         iterator begin ();
         iterator end ();
@@ -247,7 +247,9 @@ Access Container. </p>
         reverse_iterator rbegin ();
         reverse_iterator rend ();
     };
-</code></pre>
+
+    template&lt;class T&gt;
+    unbounded_array&lt;T&gt; &amp;assign_temporary (unbounded_array&lt;T&gt; &amp;a1, unbounded_array&lt;T&gt; &amp;a2);</code></pre>
 
 <h2><a name="bounded_array"></a>Bounded Array</h2>
 
@@ -339,13 +341,13 @@ Access Container. </p>
         <td>Returns the size of the <code>bounded_array</code>. </td>
     </tr>
     <tr>
-        <td><code>const_reference_type operator [] (size_type i)
+        <td><code>const_reference operator [] (size_type i)
         const</code></td>
         <td>Returns a <code>const </code>reference of the <code>i</code>-th
         element. </td>
     </tr>
     <tr>
-        <td><code>reference_type operator [] (size_type i)</code></td>
+        <td><code>reference operator [] (size_type i)</code></td>
         <td>Returns a reference of the <code>i</code>-th element.
         </td>
     </tr>
@@ -364,12 +366,12 @@ Access Container. </p>
         <td>Swaps the contents of the arrays. </td>
     </tr>
     <tr>
-        <td><code>pointer_type insert (pointer_type it, const
+        <td><code>pointer insert (pointer it, const
         value_type &amp;t)</code></td>
         <td>Inserts the value <code>t</code> at <code>it</code>.</td>
     </tr>
     <tr>
-        <td><code>void erase (pointer_type it)</code></td>
+        <td><code>void erase (pointer it)</code></td>
         <td>Erases the value at <code>it</code>.</td>
     </tr>
     <tr>
@@ -430,10 +432,10 @@ Access Container. </p>
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
         typedef T value_type;
-        typedef const T &amp;const_reference_type;
-        typedef T &amp;reference_type;
-        typedef const T *const_pointer_type;
-        typedef T *pointer_type;
+        typedef const T &amp;const_reference;
+        typedef T &amp;reference;
+        typedef const T *const_pointer;
+        typedef T *pointer;
 
         // Construction and destruction
         bounded_array ();
@@ -446,8 +448,8 @@ Access Container. </p>
         size_type size () const;
 
         // Element access
-        const_reference_type operator [] (size_type i) const;
-        reference_type operator [] (size_type i);
+        const_reference operator [] (size_type i) const;
+        reference operator [] (size_type i);
 
         // Assignment
         bounded_array &amp;operator = (const bounded_array &amp;a);
@@ -458,20 +460,20 @@ Access Container. </p>
 	friend void swap (bounded_array &amp;a1, bounded_array &amp;a2);
 
         // Element insertion and deletion
-        pointer_type insert (pointer_type it, const value_type &amp;t);
-        void insert (pointer_type it, pointer_type it1, pointer_type it2);
-        void erase (pointer_type it);
-        void erase (pointer_type it1, pointer_type it2);
+        pointer insert (pointer it, const value_type &amp;t);
+        void insert (pointer it, pointer it1, pointer it2);
+        void erase (pointer it);
+        void erase (pointer it1, pointer it2);
         void clear ();
 
         // Iterators simply are pointers.
 
-        typedef const_pointer_type const_iterator;
+        typedef const_pointer const_iterator;
 
         const_iterator begin () const;
         const_iterator end () const;
 
-        typedef pointer_type iterator;
+        typedef pointer iterator;
 
         iterator begin ();
         iterator end ();
@@ -483,11 +485,14 @@ Access Container. </p>
         const_reverse_iterator rbegin () const;
         const_reverse_iterator rend () const;
 
-        typedef std::reverse_iterator&lt;iterator, value_type, reference_type&gt; reverse_iterator;
+        typedef std::reverse_iterator&lt;iterator, value_type, reference&gt; reverse_iterator;
 
         reverse_iterator rbegin ();
         reverse_iterator rend ();
-    };</code></pre>
+    };
+
+    template&lt;class T, std::size_t N&gt;
+    bounded_array&lt;T, N&gt; &amp;assign_temporary (bounded_array&lt;T, N&gt; &amp;a1, bounded_array&lt;T, N&gt; &amp;a2);</code></pre>
 
 <h2><a name="range"></a>Range</h2>
 
@@ -590,10 +595,10 @@ Reversible Container. </p>
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
         typedef difference_type value_type;
-        typedef const difference_type &amp;const_reference_type;
-        typedef difference_type reference_type;
-        typedef const difference_type *const_pointer_type;
-        typedef difference_type *pointer_type;
+        typedef const difference_type &amp;const_reference;
+        typedef difference_type reference;
+        typedef const difference_type *const_pointer;
+        typedef difference_type *pointer;
         typedef size_type const_iterator_type;
 
         // Construction and destruction
@@ -770,10 +775,10 @@ Reversible Container. </p>
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
         typedef difference_type value_type;
-        typedef const difference_type &amp;const_reference_type;
-        typedef difference_type reference_type;
-        typedef const difference_type *const_pointer_type;
-        typedef difference_type *pointer_type;
+        typedef const difference_type &amp;const_reference;
+        typedef difference_type reference;
+        typedef const difference_type *const_pointer;
+        typedef difference_type *pointer;
         typedef size_type const_iterator_type;
 
         // Construction and destruction

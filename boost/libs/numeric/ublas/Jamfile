@@ -8,3 +8,17 @@ subinclude libs/numeric/ublas/test6 ;
 subinclude libs/numeric/ublas/bench1 ;
 subinclude libs/numeric/ublas/bench2 ;
 subinclude libs/numeric/ublas/bench3 ;
+
+SOURCES = concepts ;
+       
+exe concepts
+	: $(SOURCES).cpp $(BOOST_ROOT)/boost/numeric/ublas/instant.cpp
+	: <include>$(BOOST_ROOT)
+	  <msvc><*><define>USE_MSVC
+	  <borland><*><cxxflags>"-w-8026 -w-8027 -w-8057 -w-8084 -w-8092"
+	  <borland><*><define>USE_BCC 
+	  <gcc><*><define>USE_GCC
+	  <intel-linux><*><define>USE_ICC
+	;
+
+

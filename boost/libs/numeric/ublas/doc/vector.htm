@@ -15,7 +15,7 @@ content="text/html; charset=iso-8859-1">
 
 <h4>Description</h4>
 
-<p>The templated class <code>vector&lt;T, F, A&gt; </code>is the
+<p>The templated class <code>vector&lt;T, A&gt; </code>is the
 base container adaptor for dense vectors.</p>
 
 <h4>Example</h4>
@@ -45,11 +45,6 @@ base container adaptor for dense vectors.</p>
         <td>&nbsp;</td>
     </tr>
     <tr>
-        <td><code>F</code></td>
-        <td>Functor describing the storage organization.</td>
-        <td><code>forward</code></td>
-    </tr>
-    <tr>
         <td><code>A</code></td>
         <td>The type of the adapted array.</td>
         <td><code>unbounded_array&lt;T&gt;</code></td>
@@ -67,7 +62,7 @@ href="container.htm#vector">Vector</a>.</p>
 
 <h4>Public base classes</h4>
 
-<p><code>vector_expression&lt;vector&lt;T, F, A&gt; &gt;</code> </p>
+<p><code>vector_expression&lt;vector&lt;T, A&gt; &gt;</code> </p>
 
 <h4>Members</h4>
 
@@ -78,13 +73,13 @@ href="container.htm#vector">Vector</a>.</p>
     </tr>
     <tr>
         <td><code>vector ()</code> </td>
-        <td>Allocates an uninitialized <code>vector </code>that
-        holds at most zero elements.</td>
+        <td>Allocates an uninitialized <code>vector</code> that
+        holds zero elements.</td>
     </tr>
     <tr>
         <td><code>vector (size_type size)</code></td>
-        <td>Allocates an uninitialized <code>vector </code>that
-        holds at most <code>size</code> elements.</td>
+        <td>Allocates an uninitialized <code>vector</code> that
+        holds <code>size</code> elements.</td>
     </tr>
     <tr>
         <td><code>vector (const vector &amp;v)</code></td>
@@ -97,8 +92,8 @@ href="container.htm#vector">Vector</a>.</p>
     </tr>
     <tr>
         <td><code>void resize (size_type size)</code></td>
-        <td>Reallocates a <code>vector </code>to hold at most <code>size</code>
-        elements. The content of the <code>vector </code>is not
+        <td>Reallocates a <code>vector</code> to hold <code>size</code>
+        elements. The content of the <code>vector</code> is not
         preserved.</td>
     </tr>
     <tr>
@@ -106,47 +101,14 @@ href="container.htm#vector">Vector</a>.</p>
         <td>Returns the size of the <code>vector</code>. </td>
     </tr>
     <tr>
-        <td><code>const_reference_type operator () (size_type i)
-        const</code></td>
+        <td><code>const_reference operator () (size_type i) const</code></td>
         <td>Returns a <code>const </code>reference of the <code>i</code>-th
         element. </td>
     </tr>
     <tr>
-        <td><code>reference_type operator () (size_type i)</code></td>
+        <td><code>reference operator () (size_type i)</code></td>
         <td>Returns a reference of the <code>i</code>-th element.
         </td>
-    </tr>
-    <tr>
-        <td><code>const_reference_type operator [] (size_type i)
-        const</code></td>
-        <td>Returns a <code>const </code>reference of the <code>i</code>-th
-        element. </td>
-    </tr>
-    <tr>
-        <td><code>reference_type operator [] (size_type i)</code></td>
-        <td>Returns a reference of the <code>i</code>-th element.
-        </td>
-    </tr>
-    <tr>
-        <td><code>const_vector_range_type project (size_type
-        start, size_type stop) const</code></td>
-        <td>Returns a sub vector ranging from the <code>start</code>-th
-        to the <code>stop</code>-th element.</td>
-    </tr>
-    <tr>
-        <td><code>const_vector_range_type project (const range
-        &amp;r) const</code></td>
-        <td>Returns a sub vector.</td>
-    </tr>
-    <tr>
-        <td><code>vector_range_type project (size_type start,
-        size_type stop)</code></td>
-        <td>Returns a sub vector ranging from the <code>start</code>-th
-        to the <code>stop</code>-th element.</td>
-    </tr>
-    <tr>
-        <td><code>vector_range_type project (const range &amp;r)</code></td>
-        <td>Returns a sub vector.</td>
     </tr>
     <tr>
         <td><code>vector &amp;operator = (const vector &amp;v)</code></td>
@@ -209,8 +171,7 @@ href="container.htm#vector">Vector</a>.</p>
         <td>Swaps the contents of the vectors. </td>
     </tr>
     <tr>
-        <td><code>void insert (size_type i, const_reference_type
-        t)</code></td>
+        <td><code>void insert (size_type i, const_reference t)</code></td>
         <td>Inserts the value <code>t</code> at the <code>i</code>-th
         element.</td>
     </tr>
@@ -268,28 +229,26 @@ href="container.htm#vector">Vector</a>.</p>
 <h4>Interface</h4>
 
 <pre><code>    // Array based vector class 
-    template&lt;class T, class F, class A&gt;
+    template&lt;class T, class A&gt;
     class vector: 
-        public vector_expression&lt;vector&lt;T, F, A&gt; &gt; {
+        public vector_expression&lt;vector&lt;T, A&gt; &gt; {
     public:      
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
         typedef T value_type;
-        typedef const T &amp;const_reference_type;
-        typedef T &amp;reference_type;
-        typedef const T *const_pointer_type;
-        typedef T *pointer_type;
+        typedef const T &amp;const_reference;
+        typedef T &amp;reference;
+        typedef const T *const_pointer;
+        typedef T *pointer;
         typedef F functor_type;
         typedef A array_type;
-        typedef const vector&lt;T, F, A&gt; const_self_type;
-        typedef vector&lt;T, F, A&gt; self_type;
+        typedef const vector&lt;T, A&gt; const_self_type;
+        typedef vector&lt;T, A&gt; self_type;
         typedef const vector_const_reference&lt;const_self_type&gt; const_closure_type;
         typedef vector_reference&lt;self_type&gt; closure_type;
-        typedef const vector_range&lt;const_self_type&gt; const_vector_range_type;
-        typedef vector_range&lt;self_type&gt; vector_range_type;
         typedef typename A::const_iterator const_iterator_type;
         typedef typename A::iterator iterator_type;
-        typedef struct dense_tag storage_category;
+        typedef dense_tag storage_category;
 
         // Construction and destruction
         vector ();
@@ -304,16 +263,11 @@ href="container.htm#vector">Vector</a>.</p>
         size_type size () const;
 
         // Element access
-        const_reference_type operator () (size_type i) const;
-        reference_type operator () (size_type i);
+        const_reference operator () (size_type i) const;
+        reference operator () (size_type i);
 
-        const_reference_type operator [] (size_type i) const;
-        reference_type operator [] (size_type i);
-
-        const_vector_range_type project (size_type start, size_type stop) const;
-        const_vector_range_type project (const range &amp;r) const;
-        vector_range_type project (size_type start, size_type stop);
-        vector_range_type project (const range &amp;r);
+        const_reference operator [] (size_type i) const;
+        reference operator [] (size_type i);
 
         // Assignment
         vector &amp;operator = (const vector &amp;v);
@@ -335,10 +289,10 @@ href="container.htm#vector">Vector</a>.</p>
 
         // Swapping
 	void swap (vector &amp;v);
-	friend void swap (vector &amp;v1, vector &amp;v2);
+        friend void swap (vector &amp;v1, vector &amp;v2);
 
         // Element insertion and erasure
-        void insert (size_type i, const_reference_type t);
+        void insert (size_type i, const_reference t);
         void erase (size_type i);
         void clear ();
 
@@ -348,6 +302,10 @@ href="container.htm#vector">Vector</a>.</p>
         // Element lookup
         const_iterator find (size_type i) const;
         iterator find (size_type i);
+        const_iterator lower_bound (size_type i) const;
+        iterator lower_bound (size_type i);
+        const_iterator upper_bound (size_type i) const;
+        iterator upper_bound (size_type i);
 
         // Iterators simply are pointers.
 
@@ -355,16 +313,16 @@ href="container.htm#vector">Vector</a>.</p>
             public container_const_reference&lt;vector&gt;,
             public random_access_iterator_base&lt;const_iterator, value_type&gt; {
         public:
-            typedef std::random_access_iterator_tag iterator_category;
+            typedef dense_random_access_iterator_tag iterator_category;
             typedef typename vector::difference_type difference_type;
             typedef typename vector::value_type value_type;
-            typedef typename vector::const_reference_type reference;
-            typedef typename vector::const_pointer_type pointer;
+            typedef typename vector::const_reference reference;
+            typedef typename vector::const_pointer pointer;
 
             // Construction and destruction
             const_iterator ();
             const_iterator (const vector &amp;v, const const_iterator_type &amp;it);
-            const_iterator (const iterator &amp;it);
+            const_iterator (const iterator &amp;it):
 
             // Arithmetic
             const_iterator &amp;operator ++ ();
@@ -374,7 +332,7 @@ href="container.htm#vector">Vector</a>.</p>
             difference_type operator - (const const_iterator &amp;it) const;
 
             // Dereference
-            const_reference_type operator * () const;
+            const_reference operator * () const;
 
             // Index
             size_type index () const;
@@ -393,11 +351,11 @@ href="container.htm#vector">Vector</a>.</p>
             public container_reference&lt;vector&gt;,
             public random_access_iterator_base&lt;iterator, value_type&gt; {
         public:
-            typedef std::random_access_iterator_tag iterator_category;
+            typedef dense_random_access_iterator_tag iterator_category;
             typedef typename vector::difference_type difference_type;
             typedef typename vector::value_type value_type;
-            typedef typename vector::reference_type reference;
-            typedef typename vector::pointer_type pointer;
+            typedef typename vector::reference reference;
+            typedef typename vector::pointer pointer;
 
             // Construction and destruction
             iterator ();
@@ -411,12 +369,12 @@ href="container.htm#vector">Vector</a>.</p>
             difference_type operator - (const iterator &amp;it) const;
 
             // Dereference
-            reference_type operator * () const;
+            reference operator * () const;
 
             // Index
             size_type index () const;
 
-            // Assignment 
+            // Assignment
             iterator &amp;operator = (const iterator &amp;it);
 
             // Comparison
@@ -437,6 +395,230 @@ href="container.htm#vector">Vector</a>.</p>
 
         reverse_iterator rbegin ();
         reverse_iterator rend ();
+    }; </code></pre>
+
+<h2><a name="unit_vector"></a>Unit Vector</h2>
+
+<h4>Description</h4>
+
+<p>The templated class <code>unit_vector&lt;T&gt; </code>represents
+canonical unit vectors.</p>
+
+<h4>Example</h4>
+
+<pre>int main () {
+    for (int i = 0; i &lt; 3; ++ i) {
+	numerics::unit_vector&lt;double&gt; v (3, i);
+        std::cout &lt;&lt; v &lt;&lt; std::endl;
+    }
+}</pre>
+
+<h4>Definition</h4>
+
+<p>Defined in the header vector.h.</p>
+
+<h4>Template parameters</h4>
+
+<table border="1">
+    <tr>
+        <th>Parameter </th>
+        <th>Description </th>
+        <th>Default </th>
+    </tr>
+    <tr>
+        <td><code>T</code> </td>
+        <td>The type of object stored in the vector. </td>
+        <td>&nbsp;</td>
+    </tr>
+</table>
+
+<h4>Model of</h4>
+
+<p><a href="expression.htm#vector_expression">Vector Expression</a>.
+</p>
+
+<h4>Type requirements</h4>
+
+<p>None, except for those imposed by the requirements of <a
+href="expression.htm#vector_expression">Vector Expression</a>.</p>
+
+<h4>Public base classes</h4>
+
+<p><code>vector_expression&lt;unit_vector&lt;T&gt; &gt;</code> </p>
+
+<h4>Members</h4>
+
+<table border="1">
+    <tr>
+        <th>Member </th>
+        <th>Description </th>
+    </tr>
+    <tr>
+        <td><code>unit_vector ()</code> </td>
+        <td>Constructs an <code>unit_vector</code> that holds
+        zero elements.</td>
+    </tr>
+    <tr>
+        <td><code>unit_vector (size_type size, size_type index)</code></td>
+        <td>Constructs the <code>index</code>-th <code>unit_vector</code>
+        that holds <code>size</code> elements.</td>
+    </tr>
+    <tr>
+        <td><code>unit_vector (const unit_vector &amp;v)</code></td>
+        <td>The copy constructor.</td>
+    </tr>
+    <tr>
+        <td><code>void resize (size_type size)</code></td>
+        <td>Resizes a <code>unit_vector</code> to hold <code>size</code>
+        elements. </td>
+    </tr>
+    <tr>
+        <td><code>size_type size () const</code></td>
+        <td>Returns the size of the <code>unit_vector</code>. </td>
+    </tr>
+    <tr>
+        <td><code>size_type index () const</code></td>
+        <td>Returns the index of the <code>unit_vector</code>. </td>
+    </tr>
+    <tr>
+        <td><code>value_type operator () (size_type i) const</code></td>
+        <td>Returns the value of the <code>i</code>-th element. </td>
+    </tr>
+    <tr>
+        <td><code>unit_vector &amp;operator = (const unit_vector
+        &amp;v)</code></td>
+        <td>The assignment operator.</td>
+    </tr>
+    <tr>
+        <td><code>unit_vector &amp;assign_temporary (unit_vector
+        &amp;v)</code></td>
+        <td>Assigns a temporary. May change the unit vector <code>v</code>.</td>
+    </tr>
+    <tr>
+        <td><code>void swap (unit_vector &amp;v)</code></td>
+        <td>Swaps the contents of the unit vectors. </td>
+    </tr>
+    <tr>
+        <td><code>const_iterator begin () const</code></td>
+        <td>Returns a <code>const_iterator</code> pointing to the
+        beginning of the <code>unit_vector</code>. </td>
+    </tr>
+    <tr>
+        <td><code>const_iterator end () const</code></td>
+        <td>Returns a <code>const_iterator</code> pointing to the
+        end of the <code>unit_vector</code>. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator rbegin () const</code></td>
+        <td>Returns a <code>const_reverse_iterator</code>
+        pointing to the beginning of the reversed <code>unit_vector</code>.
+        </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator rend () const</code></td>
+        <td>Returns a <code>const_reverse_iterator</code>
+        pointing to the end of the reversed <code>unit_vector</code>.
+        </td>
+    </tr>
+</table>
+
+<h4>Interface</h4>
+
+<pre><code>    // Unit vector class 
+    template&lt;class T&gt;
+    class unit_vector: 
+        public vector_expression&lt;unit_vector&lt;T&gt; &gt; {
+    public:      
+        typedef std::size_t size_type;
+        typedef std::ptrdiff_t difference_type;
+        typedef T value_type;
+        typedef const T &amp;const_reference;
+        typedef T &amp;reference;
+        typedef const T *const_pointer;
+        typedef T *pointer;
+        typedef const unit_vector&lt;T&gt; const_self_type;
+        typedef unit_vector&lt;T&gt; self_type;
+        typedef const vector_const_reference&lt;const_self_type&gt; const_closure_type;
+        typedef size_type const_iterator_type;
+        typedef packed_tag storage_category;
+
+        // Construction and destruction
+        unit_vector ();
+        unit_vector (size_type size, size_type index);
+        unit_vector (const unit_vector &amp;v);
+
+        // Resizing
+        void resize (size_type size);
+
+        size_type size () const;
+        size_type index () const;
+
+        // Element access
+        value_type operator () (size_type i) const;
+
+        value_type operator [] (size_type i) const;
+
+        // Assignment
+        unit_vector &amp;operator = (const unit_vector &amp;v);
+        unit_vector &amp;assign_temporary (unit_vector &amp;v);
+
+        // Swapping
+	void swap (unit_vector &amp;v);
+        friend void swap (unit_vector &amp;v1, unit_vector &amp;v2);
+
+        class const_iterator;
+
+        // Element lookup
+        const_iterator lower_bound (size_type i) const;
+        const_iterator upper_bound (size_type i) const;
+
+        // Iterator simply is an index.
+
+        class const_iterator:
+            public container_const_reference&lt;unit_vector&gt;,
+            public random_access_iterator_base&lt;const_iterator, value_type&gt; {
+        public:
+            typedef packed_random_access_iterator_tag iterator_category;
+            typedef typename unit_vector::difference_type difference_type;
+            typedef typename unit_vector::value_type value_type;
+            typedef typename unit_vector::value_type reference;
+            typedef typename unit_vector::const_pointer pointer;
+
+            // Construction and destruction
+            const_iterator ();
+            const_iterator (const unit_vector &amp;v, const const_iterator_type &amp;it);
+
+            // Arithmetic
+            const_iterator &amp;operator ++ ();
+            const_iterator &amp;operator -- ();
+            const_iterator &amp;operator += (difference_type n);
+            const_iterator &amp;operator -= (difference_type n);
+            difference_type operator - (const const_iterator &amp;it) const;
+
+            // Dereference
+            value_type operator * () const;
+
+            // Index
+            size_type index () const;
+
+            // Assignment 
+            const_iterator &amp;operator = (const const_iterator &amp;it);
+
+            // Comparison
+            bool operator == (const const_iterator &amp;it) const;
+        };
+
+        typedef const_iterator iterator;
+
+        const_iterator begin () const;
+        const_iterator end () const;
+
+        // Reverse iterator
+
+        typedef reverse_iterator&lt;const_iterator&gt; const_reverse_iterator;
+
+        const_reverse_iterator rbegin () const;
+        const_reverse_iterator rend () const;
     };</code></pre>
 </body>
 </html>
