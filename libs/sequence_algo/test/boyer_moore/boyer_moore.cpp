@@ -30,7 +30,6 @@ int main(int, char *[])
                                                            pattern.end(),
                                                            std::back_inserter<>(vec), 0);
     assert(vec.size() > 0);
-    assert(*boost::boyer_moore("this is an example foo bar", "example") != 0);
     it = boost::boyer_moore(text, pattern);                            assert(it != text.end());
     it = boost::boyer_moore(text, "this");                             assert(it != text.end());
     it = boost::boyer_moore(text, "is an ex");                         assert(it != text.end());
@@ -55,12 +54,6 @@ int main(int, char *[])
     it = boost::boyer_moore(text, "plays many");        assert(it != text.end());
     it = boost::boyer_moore(text, "Plays many");        assert(it == text.end());
     assert(text.find("plays") != std::string::npos);
-
-    it = boost::boyer_moore("And in his time, one man plays many parts", "plays many");
-
-    char *t = "And in his time, one man plays many parts";
-    char *p = "plays many";
-    it = boost::boyer_moore(t, p);
 
 
 #if defined(BOOST_MSVC)

@@ -331,26 +331,6 @@ namespace boost {
         return text + len;
     }
 
-    // prevent the algorithm being called with temporary char strings
-    // ie.
-    //   it = boost::boyer_moore("this is an example foo bar", "example");
-    // and
-    //   it = boost::boyer_moore(L"this is an example foo bar", L"example");
-    // will cause a compiler error.
-    // However,
-    //   boost::boyer_moore("this is an example foo bar", "example");
-    // will compile but will cause a linker error
-    inline
-    void
-    boyer_moore(const std::string::value_type *text,
-                const std::string::value_type *pattern);
-
-
-    inline
-    void
-    boyer_moore(const std::wstring::value_type *text,
-                const std::wstring::value_type *pattern);
-
 }       // namespace boost
 
 #endif  // BOOST_BOYER_MOORE_H
