@@ -108,8 +108,8 @@ T width(const interval<T, Traits>& x)
 template<class T, class Traits> inline
 T median(const interval<T, Traits>& x)
 {
-  typename interval_lib::detail::tonearest<typename Traits::rounding>::type rnd;
-  return (x.lower() + x.upper())/2;
+  typename Traits::rounding rnd;
+  return rnd.median(x.lower(), x.upper());
 }
 
 template<class T, class Traits> inline
@@ -253,8 +253,8 @@ std::pair<interval<T, Traits>, interval<T, Traits> >
 bisect(const interval<T, Traits>& x)
 {
   typedef interval<T, Traits> I;
-  T m = median(x);
-  return std::pair<I,I>(I(x.lower(), m), I(m, x.upper()));
+  const T m = median(x);
+  return std::pair<I,I>(I(x.lower(), m, true), I(m, x.upper(), true));
 }
 
 #if 0

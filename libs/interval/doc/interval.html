@@ -812,6 +812,7 @@ struct rounding {
   T acosh_up  (T);  // [1;+&infin;]
   T atanh_down(T);  // [-1;1]
   T atanh_up  (T);  // [-1;1]
+  T median(T, T);
   T int_down(T);
   T int_up  (T);
   static T pi_down();
@@ -820,33 +821,37 @@ struct rounding {
   static T pi_1_2_up  ();
   static T pi_2_1_down();
   static T pi_2_1_up  ();
-  typedef ... tonearest_rounding;
   typedef ... unprotected_rounding;
 };
 </pre>
 
-<p>The functions <code>int_down</code> and <code>int_up</code>
-compute the nearest integer smaller or bigger than their
-argument. The <code>pi_</code> functions are supposed to return bounds
-of some constants. <code>pi</code> clearly stands for the mathematical
-constant &pi;. <code>pi_1_2</code> stands for &pi;/2 and
+<p>The functions <code>int_down</code> and <code>int_up</code> compute
+the nearest integer smaller or bigger than their argument. The
+function <code>median</code> computes the average of its two
+arguments. The <code>pi_</code> functions are supposed to return
+bounds of some constants. <code>pi</code> clearly stands for the
+mathematical constant &pi;. <code>pi_1_2</code> stands for &pi;/2 and
 <code>pi_2_1</code> stands for 2&pi;.</p>
 
 <p>The type <code>unprotected_rounding</code> is another rounding
-class able to work if nested inside <code>rounding</code>. Naturally
-<code>rounding::unprotected_rounding</code> may simply be
-<code>rounding</code> itself. But it can improve performance if it is
-a simplified version without constructor and destructor. See the <a
-href="#perf">performance notes</a> for an explanation.</p>
+class able to work if nested inside <code>rounding</code>. For
+example, the three first lines should all produce the same result; and
+the last line is allowed to have an undefined bahavior.</p>
 
-<p>The type <code>tonearest_rounding</code> also provides another
-rounding class. However, it does not have to be as complex as
-<code>rounding</code>. No members are required. The only purpose of
-this type is: the basic operators <code>+ - * /</code> will be rounded
-toward the nearest integer while an object of type
-<code>rounding::tonearest_rounding</code> is alive. This type must be
-defined in order for the functions <code>median</code> and
-<code>bisect</code> to compile.</p>
+<pre>
+T c; { rounding rnd; c = rnd.add_down(a, b); }
+T c; { rounding rnd1; { rounding rnd2; c = rnd2.add_down(a, b); } }
+T c; { rounding rnd1; { rounding::unprotected_rounding rnd2; c = rnd2.add_down(a, b); } }
+T d; { rounding::unprotected_rounding rnd; d = rnd.add_down(a, b); }
+</pre>
+
+<p>Naturally <code>rounding::unprotected_rounding</code> may simply be
+<code>rounding</code> itself. But it can improve performance if it is
+a simplified version without constructor nor destructor (since an
+object of type <code>rounding::unprotected_rounding</code> is
+guaranteed to be created only when an object of type
+<code>rounding</code> is already alive). See the <a
+href="#perf">performance notes</a> for some additional details.</p>
 
 <h3>Provided classes</h3>
 
@@ -902,12 +907,12 @@ struct rounding_control
   void tonearest();
   T to_int(T);
   T force_rounding(T);
-  T pi_down();
-  T pi_up  ();
-  T pi_1_2_down();
-  T pi_1_2_up  ();
-  T pi_2_1_down();
-  T pi_2_1_up  ();
+  static T pi_down();
+  static T pi_up  ();
+  static T pi_1_2_down();
+  static T pi_1_2_up  ();
+  static T pi_2_1_down();
+  static T pi_2_1_up  ();
 };
 
 template&lt;class T, class Rounding = rounding_control&lt;T&gt; &gt; struct rounded_arith_exact;
@@ -928,6 +933,7 @@ struct rounded_arith_...: Rounding
   T div_up  (T, T);
   T sqrt_down(T);
   T sqrt_up  (T);
+  T median(T, T);
   T int_down(T);
   T int_up  (T);
 };
@@ -975,7 +981,6 @@ template&lt;class Rounding&gt;
 struct save_state_...: Rounding
 {
   typedef ... unprotected_rounding;
-  typedef ... tonearest_rounding;
 };
 
   } // namespace interval_lib
@@ -1001,7 +1006,7 @@ save_state&lt;rounded_transc_dummy&lt;T, rounded_arith_opp&lt;T&gt; &gt; &gt;
 saving the current rounding mode and calling <code>init</code> in its
 constructor, and for restoring the saved rounding mode in its
 destructor. This class also correctly defines the
-<code>tonearest</code> and <code>unprotected</code> variations.</p>
+<code>unprotected</code> variation.</p>
 
 <p>If the rounding mode does not require any save nor initialization,
 <code>save_state_nothing</code> can be used instead of

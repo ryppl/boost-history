@@ -37,6 +37,7 @@ struct rounded_arith_exact: Rounding {
   T mul_up  (const T& x, const T& y) { return x * y; }
   T div_down(const T& x, const T& y) { return x / y; }
   T div_up  (const T& x, const T& y) { return x / y; }
+  T median  (const T& x, const T& y) { return (x + y) / 2; }
   T sqrt_down(const T& x) { return std::sqrt(x); }
   T sqrt_up  (const T& x) { return std::sqrt(x); }
   T int_down(const T& x) { return std::floor(x); }
@@ -62,6 +63,8 @@ struct rounded_arith_std: Rounding {
   { return (downward(), force_rounding(x / y)); }
   T div_up(const T& x, const T& y)
   { return (upward(), force_rounding(x / y)); }
+  T median(const T& x, const T& y)
+  { return (tonearest(), force_rounding((x + y) / 2)); }
   T sqrt_down(const T& x)
   { return (downward(), force_rounding(std::sqrt(x))); }
   T sqrt_up(const T& x)
@@ -83,6 +86,13 @@ struct rounded_arith_opp: Rounding {
   T mul_up  (const T& x, const T& y) { return force_rounding(x * y); }
   T div_down(const T& x, const T& y) { return -force_rounding(x / (-y)); }
   T div_up  (const T& x, const T& y) { return force_rounding(x / y); }
+  T median(const T& x, const T& y)
+  { 
+    tonearest();
+    T r = force_rounding((x + y) / 2);
+    upward();
+    return r;
+  }
   T sqrt_down(const T& x)
   { return sub_down(std::sqrt(x), detail::smallest<T>()); }
   T sqrt_up(const T& x) { return force_rounding(std::sqrt(x)); }

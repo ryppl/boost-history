@@ -12,8 +12,8 @@ template<class T>
 struct rounding_control
 {
   typedef void rounding_mode;
-  void upward() { }
-  void downward() { }
+  void upward   () { }
+  void downward () { }
   void tonearest() { }
   rounding_mode get_rounding_mode() { }
   void set_rounding_mode(rounding_mode) { }
@@ -54,27 +54,9 @@ struct rounded_math:
     namespace detail {
 
 template<class Rounding>
-struct save_state_tonearest: Rounding
-{
-  typename Rounding::rounding_mode mode;
-  save_state_tonearest() {
-    mode = get_rounding_mode();
-    tonearest();
-  }
-  ~save_state_tonearest() { set_rounding_mode(mode); }
-};
-
-template<class Rounding>
 struct save_state_unprotected: Rounding
 {
   typedef save_state_unprotected<Rounding> unprotected_rounding;
-  typedef save_state_tonearest<Rounding> tonearest_rounding;
-};
-
-template<class Rounding>
-struct tonearest
-{
-  typedef typename Rounding::tonearest_rounding type;
 };
 
     } // namespace detail
@@ -89,14 +71,12 @@ struct save_state: Rounding
   }
   ~save_state() { set_rounding_mode(mode); }
   typedef detail::save_state_unprotected<Rounding> unprotected_rounding;
-  typedef detail::save_state_tonearest<Rounding> tonearest_rounding;
 };
 
 template<class Rounding>
 struct save_state_nothing: Rounding
 {
   typedef save_state_nothing<Rounding> unprotected_rounding;
-  typedef save_state_nothing<Rounding> tonearest_rounding;
 };
 
 template<class Rounding>
