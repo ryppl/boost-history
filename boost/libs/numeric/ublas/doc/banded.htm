@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type"
 content="text/html; charset=iso-8859-1">
 <meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
-<title>Matrix</title>
+<title>Banded Matrix</title>
 </head>
 
 <body bgcolor="#FFFFFF">
@@ -24,7 +24,7 @@ the base container adaptor for banded matrices.</p>
     numerics::banded_matrix&lt;double&gt; m (3, 3, 1, 1);
     for (int i = 0; i &lt; m.size1 (); ++ i) 
         for (int j = std::max (i - 1, 0); j &lt; std::min (i + 2, m.size2 ()); ++ j)
-	    m (i, j) = 3 * i + j;
+            m (i, j) = 3 * i + j;
     std::cout &lt;&lt; m &lt;&lt; std::endl;
 }</pre>
 
@@ -200,6 +200,12 @@ href="container.htm#matrix">Matrix</a>.</p>
         matrix with a scalar.</td>
     </tr>
     <tr>
+        <td><code>template&lt;class AT&gt;<br>
+        banded_matrix &amp;operator /= (const AT &amp;at)</code></td>
+        <td>A computed assignment operator. Divides the banded
+        matrix through a scalar.</td>
+    </tr>
+    <tr>
         <td><code>void swap (banded_matrix &amp;m)</code></td>
         <td>Swaps the contents of the banded matrices. </td>
     </tr>
@@ -368,10 +374,12 @@ href="container.htm#matrix">Matrix</a>.</p>
         banded_matrix &amp;minus_assign (const matrix_expression&lt;AE&gt; &amp;ae);
         template&lt;class AT&gt;
         banded_matrix&amp; operator *= (const AT &amp;at);
+        template&lt;class AT&gt;
+        banded_matrix&amp; operator /= (const AT &amp;at);
 
         // Swapping
-	void swap (banded_matrix &amp;m);
-	friend void swap (banded_matrix &amp;m1, banded_matrix &amp;m2);
+        void swap (banded_matrix &amp;m);
+        friend void swap (banded_matrix &amp;m1, banded_matrix &amp;m2);
 
         // Element insertion and erasure
         void insert (size_type i, size_type j, const_reference t);
@@ -388,14 +396,14 @@ href="container.htm#matrix">Matrix</a>.</p>
         typedef reverse_iterator2&lt;iterator2&gt; reverse_iterator2;
 
         // Element lookup
-        const_iterator1 lower_bound1 (int rank, size_type i, size_type j) const;
-        iterator1 lower_bound1 (int rank, size_type i, size_type j);
-        const_iterator1 upper_bound1 (int rank, size_type i, size_type j) const;
-        iterator1 upper_bound1 (int rank, size_type i, size_type j);
-        const_iterator2 lower_bound2 (int rank, size_type i, size_type j) const;
-        iterator2 lower_bound2 (int rank, size_type i, size_type j);
-        const_iterator2 upper_bound2 (int rank, size_type i, size_type j) const;
-        iterator2 upper_bound2 (int rank, size_type i, size_type j);
+        const_iterator1 find_first1 (int rank, size_type i, size_type j) const;
+        iterator1 find_first1 (int rank, size_type i, size_type j);
+        const_iterator1 find_last1 (int rank, size_type i, size_type j) const;
+        iterator1 find_last1 (int rank, size_type i, size_type j);
+        const_iterator2 find_first2 (int rank, size_type i, size_type j) const;
+        iterator2 find_first2 (int rank, size_type i, size_type j);
+        const_iterator2 find_last2 (int rank, size_type i, size_type j) const;
+        iterator2 find_last2 (int rank, size_type i, size_type j);
 
         // Iterators simply are indices.
 
@@ -610,7 +618,7 @@ banded matrix adaptor for other matrices.</p>
     numerics::banded_adaptor&lt;numerics::matrix&lt;double&gt; &gt; ba (m, 1, 1);
     for (int i = 0; i &lt; ba.size1 (); ++ i) 
         for (int j = std::max (i - 1, 0); j &lt; std::min (i + 2, ba.size2 ()); ++ j)
-	    ba (i, j) = 3 * i + j;
+            ba (i, j) = 3 * i + j;
     std::cout &lt;&lt; ba &lt;&lt; std::endl;
 }</pre>
 
@@ -768,6 +776,12 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         adaptor with a scalar.</td>
     </tr>
     <tr>
+        <td><code>template&lt;class AT&gt;<br>
+        banded_adaptor &amp;operator /= (const AT &amp;at)</code></td>
+        <td>A computed assignment operator. Divides the banded
+        adaptor through a scalar.</td>
+    </tr>
+    <tr>
         <td><code>void swap (banded_adaptor &amp;m)</code></td>
         <td>Swaps the contents of the banded adaptors. </td>
     </tr>
@@ -915,10 +929,12 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         banded_adaptor &amp;minus_assign (const matrix_expression&lt;AE&gt; &amp;ae);
         template&lt;class AT&gt;
         banded_adaptor&amp; operator *= (const AT &amp;at);
+        template&lt;class AT&gt;
+        banded_adaptor&amp; operator /= (const AT &amp;at);
 
         // Swapping
-	void swap (banded_adaptor &amp;m);
-	friend void swap (banded_adaptor &amp;m1, banded_adaptor &amp;m2);
+        void swap (banded_adaptor &amp;m);
+        friend void swap (banded_adaptor &amp;m1, banded_adaptor &amp;m2);
 
         class const_iterator1;
         class iterator1;
@@ -930,14 +946,14 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         typedef reverse_iterator2&lt;iterator2&gt; reverse_iterator2;
 
         // Element lookup
-        const_iterator1 lower_bound1 (int rank, size_type i, size_type j) const;
-        iterator1 lower_bound1 (int rank, size_type i, size_type j);
-        const_iterator1 upper_bound1 (int rank, size_type i, size_type j) const;
-        iterator1 upper_bound1 (int rank, size_type i, size_type j);
-        const_iterator2 lower_bound2 (int rank, size_type i, size_type j) const;
-        iterator2 lower_bound2 (int rank, size_type i, size_type j);
-        const_iterator2 upper_bound2 (int rank, size_type i, size_type j) const;
-        iterator2 upper_bound2 (int rank, size_type i, size_type j);
+        const_iterator1 find_first1 (int rank, size_type i, size_type j) const;
+        iterator1 find_first1 (int rank, size_type i, size_type j);
+        const_iterator1 find_last1 (int rank, size_type i, size_type j) const;
+        iterator1 find_last1 (int rank, size_type i, size_type j);
+        const_iterator2 find_first2 (int rank, size_type i, size_type j) const;
+        iterator2 find_first2 (int rank, size_type i, size_type j);
+        const_iterator2 find_last2 (int rank, size_type i, size_type j) const;
+        iterator2 find_last2 (int rank, size_type i, size_type j);
 
         // Iterators simply are indices.
 

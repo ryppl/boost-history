@@ -4,38 +4,38 @@
 <meta http-equiv="Content-Type"
 content="text/html; charset=iso-8859-1">
 <meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
-<title>Symmetric Matrix</title>
+<title>Hermitean Matrix</title>
 </head>
 
 <body bgcolor="#FFFFFF">
 
-<h1>Symmetric Matrix</h1>
+<h1>Hermitean Matrix</h1>
 
-<h2><a name="symmetric_matrix"></a>Symmetric Matrix</h2>
+<h2><a name="hermitean_matrix"></a>Hermitean Matrix</h2>
 
 <h4>Description</h4>
 
-<p>The templated class <code>symmetric_matrix&lt;T, F1, F2, A&gt;
-</code>is the base container adaptor for symmetric matrices.</p>
+<p>The templated class <code>hermitean_matrix&lt;T, F1, F2, A&gt;
+</code>is the base container adaptor for hermitean matrices.</p>
 
 <h4>Example</h4>
 
 <pre>int main () {
-    numerics::symmetric_matrix&lt;double, numerics::lower&gt; ml (3, 3);
+    numerics::hermitean_matrix&lt;std::complex&lt;double&gt;, numerics::lower&gt; ml (3, 3);
     for (int i = 0; i &lt; ml.size1 (); ++ i) 
         for (int j = 0; j &lt;= i; ++ j)
-            ml (i, j) = 3 * i + j;
+            ml (i, j) = std::complex&lt;double&gt; (3 * i + j, 3 * i + j);
     std::cout &lt;&lt; ml &lt;&lt; std::endl;
-    numerics::symmetric_matrix&lt;double, numerics::upper&gt; mu (3, 3);
+    numerics::hermitean_matrix&lt;std::complex&lt;double&gt;, numerics::upper&gt; mu (3, 3);
     for (int i = 0; i &lt; m.size1 (); ++ i) 
         for (int j = i; j &lt;= m.size2 (); ++ j)
-            mu (i, j) = 3 * i + j;
+            mu (i, j) = std::complex&lt;double&gt; (3 * i + j, 3 * i + j);
     std::cout &lt;&lt; mu &lt;&lt; std::endl;
 }</pre>
 
 <h4>Definition</h4>
 
-<p>Defined in the header symmetric.h.</p>
+<p>Defined in the header hermitean.h.</p>
 
 <h4>Template parameters</h4>
 
@@ -52,7 +52,7 @@ content="text/html; charset=iso-8859-1">
     </tr>
     <tr>
         <td><code>F1</code></td>
-        <td>Functor describing the type of the symmetric matrix.</td>
+        <td>Functor describing the type of the hermitean matrix.</td>
         <td><code>lower</code></td>
     </tr>
     <tr>
@@ -78,7 +78,7 @@ href="container.htm#matrix">Matrix</a>.</p>
 
 <h4>Public base classes</h4>
 
-<p><code>matrix_expression&lt;symmetric_matrix&lt;T, F1, F2,
+<p><code>matrix_expression&lt;hermitean_matrix&lt;T, F1, F2,
 A&gt; &gt;</code> </p>
 
 <h4>Members</h4>
@@ -89,33 +89,33 @@ A&gt; &gt;</code> </p>
         <th>Description </th>
     </tr>
     <tr>
-        <td><code>symmetric_matrix ()</code> </td>
-        <td>Allocates an uninitialized <code>symmetric_matrix</code>
+        <td><code>hermitean_matrix ()</code> </td>
+        <td>Allocates an uninitialized <code>hermitean_matrix</code>
         that holds zero rows of zero elements.</td>
     </tr>
     <tr>
-        <td><code>symmetric_matrix (size_type size1, size_type
+        <td><code>hermitean_matrix (size_type size1, size_type
         size2 = size1)</code></td>
-        <td>Allocates an uninitialized <code>symmetric_matrix</code>
+        <td>Allocates an uninitialized <code>hermitean_matrix</code>
         that holds <code>size1</code> rows of <code>size2</code>
         elements.</td>
     </tr>
     <tr>
-        <td><code>symmetric_matrix (const symmetric_matrix
+        <td><code>hermitean_matrix (const hermitean_matrix
         &amp;m)</code></td>
         <td>The copy constructor.</td>
     </tr>
     <tr>
         <td><code>template&lt;class AE&gt;<br>
-        symmetric_matrix (const matrix_expression&lt;AE&gt;
+        hermitean_matrix (const matrix_expression&lt;AE&gt;
         &amp;ae)</code></td>
         <td>The extended copy constructor.</td>
     </tr>
     <tr>
         <td><code>void resize (size_type size1, size_type size2 =
         size1)</code></td>
-        <td>Reallocates a <code>symmetric_matrix </code>to hold <code>size1</code>
-        rows of <code>size2</code> elements. The content of the <code>symmetric_matrix</code>
+        <td>Reallocates a <code>hermitean_matrix </code>to hold <code>size1</code>
+        rows of <code>size2</code> elements. The content of the <code>hermitean_matrix</code>
         is not preserved.</td>
     </tr>
     <tr>
@@ -139,74 +139,74 @@ A&gt; &gt;</code> </p>
         in the <code>i</code>-th row. </td>
     </tr>
     <tr>
-        <td><code>symmetric_matrix &amp;operator = (const
-        symmetric_matrix &amp;m)</code></td>
+        <td><code>hermitean_matrix &amp;operator = (const
+        hermitean_matrix &amp;m)</code></td>
         <td>The assignment operator.</td>
     </tr>
     <tr>
-        <td><code>symmetric_matrix &amp;assign_temporary
-        (symmetric_matrix &amp;m)</code></td>
-        <td>Assigns a temporary. May change the symmetric matrix <code>m</code>.</td>
+        <td><code>hermitean_matrix &amp;assign_temporary
+        (hermitean_matrix &amp;m)</code></td>
+        <td>Assigns a temporary. May change the hermitean matrix <code>m</code>.</td>
     </tr>
     <tr>
         <td><code>template&lt;class AE&gt;<br>
-        symmetric_matrix &amp;operator = (const
+        hermitean_matrix &amp;operator = (const
         matrix_expression&lt;AE&gt; &amp;ae)</code></td>
         <td>The extended assignment operator.</td>
     </tr>
     <tr>
         <td><code>template&lt;class AE&gt;<br>
-        symmetric_matrix &amp;assign (const
+        hermitean_matrix &amp;assign (const
         matrix_expression&lt;AE&gt; &amp;ae)</code></td>
-        <td>Assigns a matrix expression to the symmetric matrix.
+        <td>Assigns a matrix expression to the hermitean matrix.
         Left and right hand side of the assignment should be
         independent.</td>
     </tr>
     <tr>
         <td><code>template&lt;class AE&gt;<br>
-        symmetric_matrix &amp;operator += (const
+        hermitean_matrix &amp;operator += (const
         matrix_expression&lt;AE&gt; &amp;ae)</code></td>
         <td>A computed assignment operator. Adds the matrix
-        expression to the symmetric matrix.</td>
+        expression to the hermitean matrix.</td>
     </tr>
     <tr>
         <td><code>template&lt;class AE&gt;<br>
-        symmetric_matrix &amp;plus_assign (const
+        hermitean_matrix &amp;plus_assign (const
         matrix_expression&lt;AE&gt; &amp;ae)</code></td>
-        <td>Adds a matrix expression to the symmetric matrix.
+        <td>Adds a matrix expression to the hermitean matrix.
         Left and right hand side of the assignment should be
         independent.</td>
     </tr>
     <tr>
         <td><code>template&lt;class AE&gt;<br>
-        symmetric_matrix &amp;operator -= (const
+        hermitean_matrix &amp;operator -= (const
         matrix_expression&lt;AE&gt; &amp;ae)</code></td>
         <td>A computed assignment operator. Subtracts the matrix
-        expression from the symmetric matrix.</td>
+        expression from the hermitean matrix.</td>
     </tr>
     <tr>
         <td><code>template&lt;class AE&gt;<br>
-        symmetric_matrix &amp;minus_assign (const
+        hermitean_matrix &amp;minus_assign (const
         matrix_expression&lt;AE&gt; &amp;ae)</code></td>
-        <td>Subtracts a matrix expression from the symmetric
+        <td>Subtracts a matrix expression from the hermitean
         matrix. Left and right hand side of the assignment should
         be independent.</td>
     </tr>
     <tr>
         <td><code>template&lt;class AT&gt;<br>
-        symmetric_matrix &amp;operator *= (const AT &amp;at)</code></td>
+        hermitean_matrix &amp;operator *= (const AT &amp;at)</code></td>
         <td>A computed assignment operator. Multiplies the
-        symmetric matrix with a scalar.</td>
+        hermitean matrix with a scalar.</td>
     </tr>
     <tr>
         <td><code>template&lt;class AT&gt;<br>
-        symmetric_matrix &amp;operator /= (const AT &amp;at)</code></td>
-        <td>A computed assignment operator. Divides the
-        symmetric matrix through a scalar.</td>
+        hermitean_matrix &amp;operator /= (const AT &amp;at)</code></td>
+        <td>A computed assignment operator. Divides the hermitean
+        matrix through a scalar.</td>
     </tr>
     <tr>
-        <td><code>void swap (symmetric_matrix &amp;m)</code></td>
-        <td>Swaps the contents of the symmetric matrices. </td>
+        <td><code>void swap (hermitean_matrix &amp;m)</code></td>
+        <td>Swaps the contents of the hermitean matrices. </td>
     </tr>
     <tr>
         <td><code>void insert (size_type i, size_type j,
@@ -226,97 +226,97 @@ A&gt; &gt;</code> </p>
     <tr>
         <td><code>const_iterator1 begin1 () const</code></td>
         <td>Returns a <code>const_iterator1</code> pointing to
-        the beginning of the <code>symmetric_matrix</code>. </td>
+        the beginning of the <code>hermitean_matrix</code>. </td>
     </tr>
     <tr>
         <td><code>const_iterator1 end1 () const</code></td>
         <td>Returns a <code>const_iterator1</code> pointing to
-        the end of the <code>symmetric_matrix</code>. </td>
+        the end of the <code>hermitean_matrix</code>. </td>
     </tr>
     <tr>
         <td><code>iterator1 begin1 () </code></td>
         <td>Returns a <code>iterator1</code> pointing to the
-        beginning of the <code>symmetric_matrix</code>. </td>
+        beginning of the <code>hermitean_matrix</code>. </td>
     </tr>
     <tr>
         <td><code>iterator1 end1 () </code></td>
         <td>Returns a <code>iterator1</code> pointing to the end
-        of the <code>symmetric_matrix</code>. </td>
+        of the <code>hermitean_matrix</code>. </td>
     </tr>
     <tr>
         <td><code>const_iterator2 begin2 () const</code></td>
         <td>Returns a <code>const_iterator2</code> pointing to
-        the beginning of the <code>symmetric_matrix</code>. </td>
+        the beginning of the <code>hermitean_matrix</code>. </td>
     </tr>
     <tr>
         <td><code>const_iterator2 end2 () const</code></td>
         <td>Returns a <code>const_iterator2</code> pointing to
-        the end of the <code>symmetric_matrix</code>. </td>
+        the end of the <code>hermitean_matrix</code>. </td>
     </tr>
     <tr>
         <td><code>iterator2 begin2 () </code></td>
         <td>Returns a <code>iterator2</code> pointing to the
-        beginning of the <code>symmetric_matrix</code>. </td>
+        beginning of the <code>hermitean_matrix</code>. </td>
     </tr>
     <tr>
         <td><code>iterator2 end2 () </code></td>
         <td>Returns a <code>iterator2</code> pointing to the end
-        of the <code>symmetric_matrix</code>. </td>
+        of the <code>hermitean_matrix</code>. </td>
     </tr>
     <tr>
         <td><code>const_reverse_iterator1 rbegin1 () const</code></td>
         <td>Returns a <code>const_reverse_iterator1</code>
-        pointing to the beginning of the reversed <code>symmetric_matrix</code>.
+        pointing to the beginning of the reversed <code>hermitean_matrix</code>.
         </td>
     </tr>
     <tr>
         <td><code>const_reverse_iterator1 rend1 () const</code></td>
         <td>Returns a <code>const_reverse_iterator1</code>
-        pointing to the end of the reversed <code>symmetric_matrix</code>.
+        pointing to the end of the reversed <code>hermitean_matrix</code>.
         </td>
     </tr>
     <tr>
         <td><code>reverse_iterator1 rbegin1 () </code></td>
         <td>Returns a <code>reverse_iterator1</code> pointing to
-        the beginning of the reversed <code>symmetric_matrix</code>.
+        the beginning of the reversed <code>hermitean_matrix</code>.
         </td>
     </tr>
     <tr>
         <td><code>reverse_iterator1 rend1 () </code></td>
         <td>Returns a <code>reverse_iterator1</code> pointing to
-        the end of the reversed <code>symmetric_matrix</code>. </td>
+        the end of the reversed <code>hermitean_matrix</code>. </td>
     </tr>
     <tr>
         <td><code>const_reverse_iterator2 rbegin2 () const</code></td>
         <td>Returns a <code>const_reverse_iterator2</code>
-        pointing to the beginning of the reversed <code>symmetric_matrix</code>.
+        pointing to the beginning of the reversed <code>hermitean_matrix</code>.
         </td>
     </tr>
     <tr>
         <td><code>const_reverse_iterator2 rend2 () const</code></td>
         <td>Returns a <code>const_reverse_iterator2</code>
-        pointing to the end of the reversed <code>symmetric_matrix</code>.
+        pointing to the end of the reversed <code>hermitean_matrix</code>.
         </td>
     </tr>
     <tr>
         <td><code>reverse_iterator2 rbegin2 () </code></td>
         <td>Returns a <code>reverse_iterator2</code> pointing to
-        the beginning of the reversed <code>symmetric_matrix</code>.
+        the beginning of the reversed <code>hermitean_matrix</code>.
         </td>
     </tr>
     <tr>
         <td><code>reverse_iterator2 rend2 () </code></td>
         <td>Returns a <code>reverse_iterator2</code> pointing to
-        the end of the reversed <code>symmetric_matrix</code>. </td>
+        the end of the reversed <code>hermitean_matrix</code>. </td>
     </tr>
 </table>
 
 <h4>Interface</h4>
 
-<pre><code>    // Array based symmetric matrix class 
+<pre><code>    // Array based hermitean matrix class 
     template&lt;class T, class F1, class F2, class A&gt;
-    class symmetric_matrix: 
-        public matrix_expression&lt;symmetric_matrix&lt;T, F1, F2, A&gt; &gt; {
+    class hermitean_matrix: 
+        public matrix_expression&lt;hermitean_matrix&lt;T, F1, F2, A&gt; &gt; {
     public:      
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
@@ -329,8 +329,8 @@ A&gt; &gt;</code> </p>
         typedef F2 functor2_type;
         typedef A array_type;
         typedef const A const_array_type;
-        typedef const symmetric_matrix&lt;T, F1, F2, A&gt; const_self_type;
-        typedef symmetric_matrix&lt;T, F1, F2, A&gt; self_type;
+        typedef const hermitean_matrix&lt;T, F1, F2, A&gt; const_self_type;
+        typedef hermitean_matrix&lt;T, F1, F2, A&gt; self_type;
         typedef const matrix_const_reference&lt;const_self_type&gt; const_closure_type;
         typedef matrix_reference&lt;self_type&gt; closure_type;
         typedef packed_tag storage_category;
@@ -338,11 +338,11 @@ A&gt; &gt;</code> </p>
         typedef typename F2::orientation_category orientation_category;
 
         // Construction and destruction
-        symmetric_matrix ();
-        symmetric_matrix (size_type size1, size_type size2 = size1);
-        symmetric_matrix (const symmetric_matrix &amp;m);
+        hermitean_matrix ();
+        hermitean_matrix (size_type size1, size_type size2 = size1);
+        hermitean_matrix (const hermitean_matrix &amp;m);
         template&lt;class AE&gt;
-        symmetric_matrix (const matrix_expression&lt;AE&gt; &amp;ae);
+        hermitean_matrix (const matrix_expression&lt;AE&gt; &amp;ae);
 
         // Resizing
         void resize (size_type size1, size_type size2 = size1);
@@ -357,28 +357,28 @@ A&gt; &gt;</code> </p>
         reference operator () (size_type i, size_type j);
 
         // Assignment
-        symmetric_matrix &amp;operator = (const symmetric_matrix &amp;m);
-        symmetric_matrix &amp;assign_temporary (symmetric_matrix &amp;m);
+        hermitean_matrix &amp;operator = (const hermitean_matrix &amp;m);
+        hermitean_matrix &amp;assign_temporary (hermitean_matrix &amp;m);
         template&lt;class AE&gt;
-        symmetric_matrix &amp;operator = (const matrix_expression&lt;AE&gt; &amp;ae);
+        hermitean_matrix &amp;operator = (const matrix_expression&lt;AE&gt; &amp;ae);
         template&lt;class AE&gt;
-        symmetric_matrix &amp;assign (const matrix_expression&lt;AE&gt; &amp;ae);
+        hermitean_matrix &amp;assign (const matrix_expression&lt;AE&gt; &amp;ae);
         template&lt;class AE&gt;
-        symmetric_matrix&amp; operator += (const matrix_expression&lt;AE&gt; &amp;ae);
+        hermitean_matrix&amp; operator += (const matrix_expression&lt;AE&gt; &amp;ae);
         template&lt;class AE&gt;
-        symmetric_matrix &amp;plus_assign (const matrix_expression&lt;AE&gt; &amp;ae);
+        hermitean_matrix &amp;plus_assign (const matrix_expression&lt;AE&gt; &amp;ae);
         template&lt;class AE&gt;
-        symmetric_matrix&amp; operator -= (const matrix_expression&lt;AE&gt; &amp;ae);
+        hermitean_matrix&amp; operator -= (const matrix_expression&lt;AE&gt; &amp;ae);
         template&lt;class AE&gt;
-        symmetric_matrix &amp;minus_assign (const matrix_expression&lt;AE&gt; &amp;ae);
+        hermitean_matrix &amp;minus_assign (const matrix_expression&lt;AE&gt; &amp;ae);
         template&lt;class AT&gt;
-        symmetric_matrix&amp; operator *= (const AT &amp;at);
+        hermitean_matrix&amp; operator *= (const AT &amp;at);
         template&lt;class AT&gt;
-        symmetric_matrix&amp; operator /= (const AT &amp;at);
+        hermitean_matrix&amp; operator /= (const AT &amp;at);
 
         // Swapping
-        void swap (symmetric_matrix &amp;m);
-        friend void swap (symmetric_matrix &amp;m1, symmetric_matrix &amp;m2);
+        void swap (hermitean_matrix &amp;m);
+        friend void swap (hermitean_matrix &amp;m1, hermitean_matrix &amp;m2);
 
         // Element insertion and erasure
         void insert (size_type i, size_type j, const_reference t);
@@ -407,20 +407,20 @@ A&gt; &gt;</code> </p>
         // Iterators simply are indices.
 
         class const_iterator1:
-            public container_const_reference&lt;symmetric_matrix&gt;,
+            public container_const_reference&lt;hermitean_matrix&gt;,
             public random_access_iterator_base&lt;const_iterator1, value_type&gt; {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
-            typedef typename symmetric_matrix::difference_type difference_type;
-            typedef typename symmetric_matrix::value_type value_type;
-            typedef typename symmetric_matrix::value_type reference;
-            typedef typename symmetric_matrix::const_pointer pointer;
+            typedef typename hermitean_matrix::difference_type difference_type;
+            typedef typename hermitean_matrix::value_type value_type;
+            typedef typename hermitean_matrix::value_type reference;
+            typedef typename hermitean_matrix::const_pointer pointer;
             typedef const_iterator2 dual_iterator_type;
             typedef const_reverse_iterator2 dual_reverse_iterator_type;
 
             // Construction and destruction
             const_iterator1 ();
-            const_iterator1 (const symmetric_matrix &amp;m, size_type it1, size_type it2);
+            const_iterator1 (const hermitean_matrix &amp;m, size_type it1, size_type it2);
             const_iterator1 (const iterator1 &amp;it);
 
             // Arithmetic
@@ -453,20 +453,20 @@ A&gt; &gt;</code> </p>
         const_iterator1 end1 () const;
 
         class iterator1:
-            public container_reference&lt;symmetric_matrix&gt;,
+            public container_reference&lt;hermitean_matrix&gt;,
             public random_access_iterator_base&lt;iterator1, value_type&gt; {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
-            typedef typename symmetric_matrix::difference_type difference_type;
-            typedef typename symmetric_matrix::value_type value_type;
-            typedef typename symmetric_matrix::reference reference;
-            typedef typename symmetric_matrix::pointer pointer;
+            typedef typename hermitean_matrix::difference_type difference_type;
+            typedef typename hermitean_matrix::value_type value_type;
+            typedef typename hermitean_matrix::reference reference;
+            typedef typename hermitean_matrix::pointer pointer;
             typedef iterator2 dual_iterator_type;
             typedef reverse_iterator2 dual_reverse_iterator_type;
 
             // Construction and destruction
             iterator1 ();
-            iterator1 (symmetric_matrix &amp;m, size_type it1, size_type it2);
+            iterator1 (hermitean_matrix &amp;m, size_type it1, size_type it2);
 
             // Arithmetic
             iterator1 &amp;operator ++ ();
@@ -498,20 +498,20 @@ A&gt; &gt;</code> </p>
         iterator1 end1 ();
 
         class const_iterator2:
-            public container_const_reference&lt;symmetric_matrix&gt;,
+            public container_const_reference&lt;hermitean_matrix&gt;,
             public random_access_iterator_base&lt;const_iterator2, value_type&gt; {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
-            typedef typename symmetric_matrix::difference_type difference_type;
-            typedef typename symmetric_matrix::value_type value_type;
-            typedef typename symmetric_matrix::value_type reference;
-            typedef typename symmetric_matrix::const_pointer pointer;
+            typedef typename hermitean_matrix::difference_type difference_type;
+            typedef typename hermitean_matrix::value_type value_type;
+            typedef typename hermitean_matrix::value_type reference;
+            typedef typename hermitean_matrix::const_pointer pointer;
             typedef const_iterator1 dual_iterator_type;
             typedef const_reverse_iterator1 dual_reverse_iterator_type;
 
             // Construction and destruction
             const_iterator2 ();
-            const_iterator2 (const symmetric_matrix &amp;m, size_type it1, size_type it2);
+            const_iterator2 (const hermitean_matrix &amp;m, size_type it1, size_type it2);
             const_iterator2 (const iterator2 &amp;it);
 
             // Arithmetic
@@ -544,20 +544,20 @@ A&gt; &gt;</code> </p>
         const_iterator2 end2 () const;
 
         class iterator2:
-            public container_reference&lt;symmetric_matrix&gt;,
+            public container_reference&lt;hermitean_matrix&gt;,
             public random_access_iterator_base&lt;iterator2, value_type&gt; {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
-            typedef typename symmetric_matrix::difference_type difference_type;
-            typedef typename symmetric_matrix::value_type value_type;
-            typedef typename symmetric_matrix::reference reference;
-            typedef typename symmetric_matrix::pointer pointer;
+            typedef typename hermitean_matrix::difference_type difference_type;
+            typedef typename hermitean_matrix::value_type value_type;
+            typedef typename hermitean_matrix::reference reference;
+            typedef typename hermitean_matrix::pointer pointer;
             typedef iterator1 dual_iterator_type;
             typedef reverse_iterator1 dual_reverse_iterator_type;
 
             // Construction and destruction
             iterator2 ();
-            iterator2 (symmetric_matrix &amp;m, size_type it1, size_type it2);
+            iterator2 (hermitean_matrix &amp;m, size_type it1, size_type it2);
 
             // Arithmetic
             iterator2 &amp;operator ++ ();
@@ -603,32 +603,32 @@ A&gt; &gt;</code> </p>
         reverse_iterator2 rend2 ();
     };</code></pre>
 
-<h2><a name="symmetric_adaptor"></a>Symmetric Adaptor</h2>
+<h2><a name="hermitean_adaptor"></a>Hermitean Adaptor</h2>
 
 <h4>Description</h4>
 
-<p>The templated class <code>symmetric_adaptor&lt;M, F&gt; </code>is
-a symmetric matrix adaptor for other matrices.</p>
+<p>The templated class <code>hermitean_adaptor&lt;M, F&gt; </code>is
+a hermitean matrix adaptor for other matrices.</p>
 
 <h4>Example</h4>
 
 <pre>int main () {
-    numerics::matrix&lt;double&gt; m (3, 3);
-    numerics::symmetric_adaptor&lt;numerics::matrix&lt;double&gt;, numerics::lower&gt; sal (m);
-    for (int i = 0; i &lt; sal.size1 (); ++ i) 
+    numerics::matrix&lt;std::complex&lt;double&gt; &gt; m (3, 3);
+    numerics::hermitean_adaptor&lt;numerics::matrix&lt;std::complex&lt;double&gt; &gt;, numerics::lower&gt; hal (m);
+    for (int i = 0; i &lt; hal.size1 (); ++ i) 
         for (int j = 0; j &lt;= i; ++ j)
-            sal (i, j) = 3 * i + j;
-    std::cout &lt;&lt; sal &lt;&lt; std::endl;
-    numerics::symmetric_adaptor&lt;numerics::matrix&lt;double&gt;, numerics::upper&gt; sau (m);
-    for (int i = 0; i &lt; sau.size1 (); ++ i) 
-        for (int j = i; j &lt;= sau.size2 (); ++ j)
-            sau (i, j) = 3 * i + j;
+            hal (i, j) = std::complex&lt;double&gt; (3 * i + j, 3 * i + j);
+    std::cout &lt;&lt; hal &lt;&lt; std::endl;
+    numerics::hermitean_adaptor&lt;numerics::matrix&lt;std::complex&lt;double&gt; &gt;, numerics::upper&gt; hau (m);
+    for (int i = 0; i &lt; hau.size1 (); ++ i) 
+        for (int j = i; j &lt;= hau.size2 (); ++ j)
+            hau (i, j) = std::complex&lt;double&gt; (3 * i + j, 3 * i + j);
     std::cout &lt;&lt; sau &lt;&lt; std::endl;
 }</pre>
 
 <h4>Definition</h4>
 
-<p>Defined in the header symmetric.h.</p>
+<p>Defined in the header hermitean.h.</p>
 
 <h4>Template parameters</h4>
 
@@ -645,7 +645,7 @@ a symmetric matrix adaptor for other matrices.</p>
     </tr>
     <tr>
         <td><code>F</code></td>
-        <td>Functor describing the type of the symmetric adaptor.</td>
+        <td>Functor describing the type of the hermitean adaptor.</td>
         <td><code>lower</code></td>
     </tr>
 </table>
@@ -662,7 +662,7 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
 
 <h4>Public base classes</h4>
 
-<p><code>matrix_expression&lt;symmetric_adaptor&lt;M, F&gt; &gt;</code>
+<p><code>matrix_expression&lt;hermitean_adaptor&lt;M, F&gt; &gt;</code>
 </p>
 
 <h4>Members</h4>
@@ -673,23 +673,23 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         <th>Description </th>
     </tr>
     <tr>
-        <td><code>symmetric_adaptor ()</code> </td>
-        <td>Constructs a <code>symmetric_adaptor</code> that
+        <td><code>hermitean_adaptor ()</code> </td>
+        <td>Constructs a <code>hermitean_adaptor</code> that
         holds zero rows of zero elements.</td>
     </tr>
     <tr>
-        <td><code>symmetric_adaptor (matrix_type &amp;data)</code></td>
-        <td>Constructs a <code>symmetric_adaptor</code> of a
+        <td><code>hermitean_adaptor (matrix_type &amp;data)</code></td>
+        <td>Constructs a <code>hermitean_adaptor</code> of a
         matrix.</td>
     </tr>
     <tr>
-        <td><code>symmetric_adaptor (const symmetric_adaptor
+        <td><code>hermitean_adaptor (const hermitean_adaptor
         &amp;m)</code></td>
         <td>The copy constructor.</td>
     </tr>
     <tr>
         <td><code>template&lt;class AE&gt;<br>
-        symmetric_adaptor (const matrix_expression&lt;AE&gt;
+        hermitean_adaptor (const matrix_expression&lt;AE&gt;
         &amp;ae)</code></td>
         <td>The extended copy constructor.</td>
     </tr>
@@ -714,170 +714,170 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         in the <code>i</code>-th row. </td>
     </tr>
     <tr>
-        <td><code>symmetric_adaptor &amp;operator = (const
-        symmetric_adaptor &amp;m)</code></td>
+        <td><code>hermitean_adaptor &amp;operator = (const
+        hermitean_adaptor &amp;m)</code></td>
         <td>The assignment operator.</td>
     </tr>
     <tr>
-        <td><code>symmetric_adaptor &amp;assign_temporary
-        (symmetric_adaptor &amp;m)</code></td>
-        <td>Assigns a temporary. May change the symmetric adaptor
+        <td><code>hermitean_adaptor &amp;assign_temporary
+        (hermitean_adaptor &amp;m)</code></td>
+        <td>Assigns a temporary. May change the hermitean adaptor
         <code>m</code>.</td>
     </tr>
     <tr>
         <td><code>template&lt;class AE&gt;<br>
-        symmetric_adaptor &amp;operator = (const
+        hermitean_adaptor &amp;operator = (const
         matrix_expression&lt;AE&gt; &amp;ae)</code></td>
         <td>The extended assignment operator.</td>
     </tr>
     <tr>
         <td><code>template&lt;class AE&gt;<br>
-        symmetric_adaptor &amp;assign (const
+        hermitean_adaptor &amp;assign (const
         matrix_expression&lt;AE&gt; &amp;ae)</code></td>
-        <td>Assigns a matrix expression to the symmetric adaptor.
+        <td>Assigns a matrix expression to the hermitean adaptor.
         Left and right hand side of the assignment should be
         independent.</td>
     </tr>
     <tr>
         <td><code>template&lt;class AE&gt;<br>
-        symmetric_adaptor &amp;operator += (const
+        hermitean_adaptor &amp;operator += (const
         matrix_expression&lt;AE&gt; &amp;ae)</code></td>
         <td>A computed assignment operator. Adds the matrix
-        expression to the symmetric adaptor.</td>
+        expression to the hermitean adaptor.</td>
     </tr>
     <tr>
         <td><code>template&lt;class AE&gt;<br>
-        symmetric_adaptor &amp;plus_assign (const
+        hermitean_adaptor &amp;plus_assign (const
         matrix_expression&lt;AE&gt; &amp;ae)</code></td>
-        <td>Adds a matrix expression to the symmetric adaptor.
+        <td>Adds a matrix expression to the hermitean adaptor.
         Left and right hand side of the assignment should be
         independent.</td>
     </tr>
     <tr>
         <td><code>template&lt;class AE&gt;<br>
-        symmetric_adaptor &amp;operator -= (const
+        hermitean_adaptor &amp;operator -= (const
         matrix_expression&lt;AE&gt; &amp;ae)</code></td>
         <td>A computed assignment operator. Subtracts the matrix
-        expression from the symmetric adaptor.</td>
+        expression from the hermitean adaptor.</td>
     </tr>
     <tr>
         <td><code>template&lt;class AE&gt;<br>
-        symmetric_adaptor &amp;minus_assign (const
+        hermitean_adaptor &amp;minus_assign (const
         matrix_expression&lt;AE&gt; &amp;ae)</code></td>
-        <td>Subtracts a matrix expression from the symmetric
+        <td>Subtracts a matrix expression from the hermitean
         adaptor. Left and right hand side of the assignment
         should be independent.</td>
     </tr>
     <tr>
         <td><code>template&lt;class AT&gt;<br>
-        symmetric_adaptor &amp;operator *= (const AT &amp;at)</code></td>
+        hermitean_adaptor &amp;operator *= (const AT &amp;at)</code></td>
         <td>A computed assignment operator. Multiplies the
-        symmetric adaptor with a scalar.</td>
+        hermitean adaptor with a scalar.</td>
     </tr>
     <tr>
         <td><code>template&lt;class AT&gt;<br>
-        symmetric_adaptor &amp;operator /= (const AT &amp;at)</code></td>
-        <td>A computed assignment operator. Divides the
-        symmetric adaptor through a scalar.</td>
+        hermitean_adaptor &amp;operator /= (const AT &amp;at)</code></td>
+        <td>A computed assignment operator. Divides the hermitean
+        adaptor through a scalar.</td>
     </tr>
     <tr>
-        <td><code>void swap (symmetric_adaptor &amp;m)</code></td>
-        <td>Swaps the contents of the symmetric adaptors. </td>
+        <td><code>void swap (hermitean_adaptor &amp;m)</code></td>
+        <td>Swaps the contents of the hermitean adaptors. </td>
     </tr>
     <tr>
         <td><code>const_iterator1 begin1 () const</code></td>
         <td>Returns a <code>const_iterator1</code> pointing to
-        the beginning of the <code>symmetric_adaptor</code>. </td>
+        the beginning of the <code>hermitean_adaptor</code>. </td>
     </tr>
     <tr>
         <td><code>const_iterator1 end1 () const</code></td>
         <td>Returns a <code>const_iterator1</code> pointing to
-        the end of the <code>symmetric_adaptor</code>. </td>
+        the end of the <code>hermitean_adaptor</code>. </td>
     </tr>
     <tr>
         <td><code>iterator1 begin1 () </code></td>
         <td>Returns a <code>iterator1</code> pointing to the
-        beginning of the <code>symmetric_adaptor</code>. </td>
+        beginning of the <code>hermitean_adaptor</code>. </td>
     </tr>
     <tr>
         <td><code>iterator1 end1 () </code></td>
         <td>Returns a <code>iterator1</code> pointing to the end
-        of the <code>symmetric_adaptor</code>. </td>
+        of the <code>hermitean_adaptor</code>. </td>
     </tr>
     <tr>
         <td><code>const_iterator2 begin2 () const</code></td>
         <td>Returns a <code>const_iterator2</code> pointing to
-        the beginning of the <code>symmetric_adaptor</code>. </td>
+        the beginning of the <code>hermitean_adaptor</code>. </td>
     </tr>
     <tr>
         <td><code>const_iterator2 end2 () const</code></td>
         <td>Returns a <code>const_iterator2</code> pointing to
-        the end of the <code>symmetric_adaptor</code>. </td>
+        the end of the <code>hermitean_adaptor</code>. </td>
     </tr>
     <tr>
         <td><code>iterator2 begin2 () </code></td>
         <td>Returns a <code>iterator2</code> pointing to the
-        beginning of the <code>symmetric_adaptor</code>. </td>
+        beginning of the <code>hermitean_adaptor</code>. </td>
     </tr>
     <tr>
         <td><code>iterator2 end2 () </code></td>
         <td>Returns a <code>iterator2</code> pointing to the end
-        of the <code>symmetric_adaptor</code>. </td>
+        of the <code>hermitean_adaptor</code>. </td>
     </tr>
     <tr>
         <td><code>const_reverse_iterator1 rbegin1 () const</code></td>
         <td>Returns a <code>const_reverse_iterator1</code>
-        pointing to the beginning of the reversed <code>symmetric_adaptor</code>.
+        pointing to the beginning of the reversed <code>hermitean_adaptor</code>.
         </td>
     </tr>
     <tr>
         <td><code>const_reverse_iterator1 rend1 () const</code></td>
         <td>Returns a <code>const_reverse_iterator1</code>
-        pointing to the end of the reversed <code>symmetric_adaptor</code>.
+        pointing to the end of the reversed <code>hermitean_adaptor</code>.
         </td>
     </tr>
     <tr>
         <td><code>reverse_iterator1 rbegin1 () </code></td>
         <td>Returns a <code>reverse_iterator1</code> pointing to
-        the beginning of the reversed <code>symmetric_adaptor</code>.
+        the beginning of the reversed <code>hermitean_adaptor</code>.
         </td>
     </tr>
     <tr>
         <td><code>reverse_iterator1 rend1 () </code></td>
         <td>Returns a <code>reverse_iterator1</code> pointing to
-        the end of the reversed <code>symmetric_adaptor</code>. </td>
+        the end of the reversed <code>hermitean_adaptor</code>. </td>
     </tr>
     <tr>
         <td><code>const_reverse_iterator2 rbegin2 () const</code></td>
         <td>Returns a <code>const_reverse_iterator2</code>
-        pointing to the beginning of the reversed <code>symmetric_adaptor</code>.
+        pointing to the beginning of the reversed <code>hermitean_adaptor</code>.
         </td>
     </tr>
     <tr>
         <td><code>const_reverse_iterator2 rend2 () const</code></td>
         <td>Returns a <code>const_reverse_iterator2</code>
-        pointing to the end of the reversed <code>symmetric_adaptor</code>.
+        pointing to the end of the reversed <code>hermitean_adaptor</code>.
         </td>
     </tr>
     <tr>
         <td><code>reverse_iterator2 rbegin2 () </code></td>
         <td>Returns a <code>reverse_iterator2</code> pointing to
-        the beginning of the reversed <code>symmetric_adaptor</code>.
+        the beginning of the reversed <code>hermitean_adaptor</code>.
         </td>
     </tr>
     <tr>
         <td><code>reverse_iterator2 rend2 () </code></td>
         <td>Returns a <code>reverse_iterator2</code> pointing to
-        the end of the reversed <code>symmetric_adaptor</code>. </td>
+        the end of the reversed <code>hermitean_adaptor</code>. </td>
     </tr>
 </table>
 
 <h4>Interface</h4>
 
-<pre><code>    // Symmetric matrix adaptor class 
+<pre><code>    // Hermitean matrix adaptor class 
     template&lt;class M, class F&gt;
-    class symmetric_adaptor: 
-        public matrix_expression&lt;symmetric_adaptor&lt;M, F&gt; &gt; {
+    class hermitean_adaptor: 
+        public matrix_expression&lt;hermitean_adaptor&lt;M, F&gt; &gt; {
     public:      
         typedef const M const_matrix_type;
         typedef M matrix_type;
@@ -889,8 +889,8 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         typedef typename M::reference reference;
         typedef typename M::const_pointer const_pointer;
         typedef typename M::pointer pointer;
-        typedef const symmetric_adaptor&lt;M, F&gt; const_self_type;
-        typedef symmetric_adaptor&lt;M, F&gt; self_type;
+        typedef const hermitean_adaptor&lt;M, F&gt; const_self_type;
+        typedef hermitean_adaptor&lt;M, F&gt; self_type;
         typedef const matrix_const_reference&lt;const_self_type&gt; const_closure_type;
         typedef matrix_reference&lt;self_type&gt; closure_type;
         typedef packed_tag storage_category;
@@ -898,9 +898,9 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         typedef typename M::orientation_category orientation_category;
 
         // Construction and destruction
-        symmetric_adaptor ();
-        symmetric_adaptor (matrix_type &amp;data);
-        symmetric_adaptor (const symmetric_adaptor &amp;m);
+        hermitean_adaptor ();
+        hermitean_adaptor (matrix_type &amp;data);
+        hermitean_adaptor (const hermitean_adaptor &amp;m);
 
         size_type size1 () const;
         size_type size2 () const;
@@ -912,28 +912,28 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         reference operator () (size_type i, size_type j);
 
         // Assignment
-        symmetric_adaptor &amp;operator = (const symmetric_adaptor &amp;m);
-        symmetric_adaptor &amp;assign_temporary (symmetric_adaptor &amp;m);
+        hermitean_adaptor &amp;operator = (const hermitean_adaptor &amp;m);
+        hermitean_adaptor &amp;assign_temporary (hermitean_adaptor &amp;m);
         template&lt;class AE&gt;
-        symmetric_adaptor &amp;operator = (const matrix_expression&lt;AE&gt; &amp;ae);
+        hermitean_adaptor &amp;operator = (const matrix_expression&lt;AE&gt; &amp;ae);
         template&lt;class AE&gt;
-        symmetric_adaptor &amp;assign (const matrix_expression&lt;AE&gt; &amp;ae);
+        hermitean_adaptor &amp;assign (const matrix_expression&lt;AE&gt; &amp;ae);
         template&lt;class AE&gt;
-        symmetric_adaptor&amp; operator += (const matrix_expression&lt;AE&gt; &amp;ae);
+        hermitean_adaptor&amp; operator += (const matrix_expression&lt;AE&gt; &amp;ae);
         template&lt;class AE&gt;
-        symmetric_adaptor &amp;plus_assign (const matrix_expression&lt;AE&gt; &amp;ae);
+        hermitean_adaptor &amp;plus_assign (const matrix_expression&lt;AE&gt; &amp;ae);
         template&lt;class AE&gt;
-        symmetric_adaptor&amp; operator -= (const matrix_expression&lt;AE&gt; &amp;ae);
+        hermitean_adaptor&amp; operator -= (const matrix_expression&lt;AE&gt; &amp;ae);
         template&lt;class AE&gt;
-        symmetric_adaptor &amp;minus_assign (const matrix_expression&lt;AE&gt; &amp;ae);
+        hermitean_adaptor &amp;minus_assign (const matrix_expression&lt;AE&gt; &amp;ae);
         template&lt;class AT&gt;
-        symmetric_adaptor&amp; operator *= (const AT &amp;at);
+        hermitean_adaptor&amp; operator *= (const AT &amp;at);
         template&lt;class AT&gt;
-        symmetric_adaptor&amp; operator /= (const AT &amp;at);
+        hermitean_adaptor&amp; operator /= (const AT &amp;at);
 
         // Swapping
-        void swap (symmetric_adaptor &amp;m);
-        friend void swap (symmetric_adaptor &amp;m1, symmetric_adaptor &amp;m2);
+        void swap (hermitean_adaptor &amp;m);
+        friend void swap (hermitean_adaptor &amp;m1, hermitean_adaptor &amp;m2);
 
         class const_iterator1;
         class iterator1;
@@ -957,20 +957,20 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         // Iterators simply are indices.
 
         class const_iterator1:
-            public container_const_reference&lt;symmetric_adaptor&gt;,
+            public container_const_reference&lt;hermitean_adaptor&gt;,
             public random_access_iterator_base&lt;const_iterator1, value_type&gt; {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
-            typedef typename symmetric_adaptor::difference_type difference_type;
-            typedef typename symmetric_adaptor::value_type value_type;
-            typedef typename symmetric_adaptor::value_type reference;
-            typedef typename symmetric_adaptor::const_pointer pointer;
+            typedef typename hermitean_adaptor::difference_type difference_type;
+            typedef typename hermitean_adaptor::value_type value_type;
+            typedef typename hermitean_adaptor::value_type reference;
+            typedef typename hermitean_adaptor::const_pointer pointer;
             typedef const_iterator2 dual_iterator_type;
             typedef const_reverse_iterator2 dual_reverse_iterator_type;
 
             // Construction and destruction
             const_iterator1 ();
-            const_iterator1 (const symmetric_adaptor &amp;m, size_type it1, size_type it2);
+            const_iterator1 (const hermitean_adaptor &amp;m, size_type it1, size_type it2);
             const_iterator1 (const iterator1 &amp;it);
 
             // Arithmetic
@@ -1003,20 +1003,20 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         const_iterator1 end1 () const;
 
         class iterator1:
-            public container_reference&lt;symmetric_adaptor&gt;,
+            public container_reference&lt;hermitean_adaptor&gt;,
             public random_access_iterator_base&lt;iterator1, value_type&gt; {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
-            typedef typename symmetric_adaptor::difference_type difference_type;
-            typedef typename symmetric_adaptor::value_type value_type;
-            typedef typename symmetric_adaptor::reference reference;
-            typedef typename symmetric_adaptor::pointer pointer;
+            typedef typename hermitean_adaptor::difference_type difference_type;
+            typedef typename hermitean_adaptor::value_type value_type;
+            typedef typename hermitean_adaptor::reference reference;
+            typedef typename hermitean_adaptor::pointer pointer;
             typedef iterator2 dual_iterator_type;
             typedef reverse_iterator2 dual_reverse_iterator_type;
 
             // Construction and destruction
             iterator1 ();
-            iterator1 (symmetric_adaptor &amp;m, size_type it1, size_type it2);
+            iterator1 (hermitean_adaptor &amp;m, size_type it1, size_type it2);
 
             // Arithmetic
             iterator1 &amp;operator ++ ();
@@ -1048,20 +1048,20 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         iterator1 end1 ();
 
         class const_iterator2:
-            public container_const_reference&lt;symmetric_adaptor&gt;,
+            public container_const_reference&lt;hermitean_adaptor&gt;,
             public random_access_iterator_base&lt;const_iterator2, value_type&gt; {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
-            typedef typename symmetric_adaptor::difference_type difference_type;
-            typedef typename symmetric_adaptor::value_type value_type;
-            typedef typename symmetric_adaptor::value_type reference;
-            typedef typename symmetric_adaptor::const_pointer pointer;
+            typedef typename hermitean_adaptor::difference_type difference_type;
+            typedef typename hermitean_adaptor::value_type value_type;
+            typedef typename hermitean_adaptor::value_type reference;
+            typedef typename hermitean_adaptor::const_pointer pointer;
             typedef const_iterator1 dual_iterator_type;
             typedef const_reverse_iterator1 dual_reverse_iterator_type;
 
             // Construction and destruction
             const_iterator2 ();
-            const_iterator2 (const symmetric_adaptor &amp;m, size_type it1, size_type it2);
+            const_iterator2 (const hermitean_adaptor &amp;m, size_type it1, size_type it2);
             const_iterator2 (const iterator2 &amp;it);
 
             // Arithmetic
@@ -1094,20 +1094,20 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         const_iterator2 end2 () const;
 
         class iterator2:
-            public container_reference&lt;symmetric_adaptor&gt;,
+            public container_reference&lt;hermitean_adaptor&gt;,
             public random_access_iterator_base&lt;iterator2, value_type&gt; {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
-            typedef typename symmetric_adaptor::difference_type difference_type;
-            typedef typename symmetric_adaptor::value_type value_type;
-            typedef typename symmetric_adaptor::reference reference;
-            typedef typename symmetric_adaptor::pointer pointer;
+            typedef typename hermitean_adaptor::difference_type difference_type;
+            typedef typename hermitean_adaptor::value_type value_type;
+            typedef typename hermitean_adaptor::reference reference;
+            typedef typename hermitean_adaptor::pointer pointer;
             typedef iterator1 dual_iterator_type;
             typedef reverse_iterator1 dual_reverse_iterator_type;
 
             // Construction and destruction
             iterator2 ();
-            iterator2 (symmetric_adaptor &amp;m, size_type it1, size_type it2);
+            iterator2 (hermitean_adaptor &amp;m, size_type it1, size_type it2);
 
             // Arithmetic
             iterator2 &amp;operator ++ ();

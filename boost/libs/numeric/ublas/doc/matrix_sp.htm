@@ -188,6 +188,12 @@ href="container.htm#matrix">Matrix</a>.</p>
         matrix with a scalar.</td>
     </tr>
     <tr>
+        <td><code>template&lt;class AT&gt;<br>
+        sparse_matrix &amp;operator /= (const AT &amp;at)</code></td>
+        <td>A computed assignment operator. Divides the sparse
+        matrix through a scalar.</td>
+    </tr>
+    <tr>
         <td><code>void swap (sparse_matrix &amp;m)</code></td>
         <td>Swaps the contents of the sparse matrices. </td>
     </tr>
@@ -356,10 +362,12 @@ href="container.htm#matrix">Matrix</a>.</p>
         sparse_matrix &amp;minus_assign (const matrix_expression&lt;AE&gt; &amp;ae);
         template&lt;class AT&gt;
         sparse_matrix&amp; operator *= (const AT &amp;at);
+        template&lt;class AT&gt;
+        sparse_matrix&amp; operator /= (const AT &amp;at);
 
         // Swapping
-	void swap (sparse_matrix &amp;m);
-	friend void swap (sparse_matrix &amp;m1, sparse_matrix &amp;m2);
+        void swap (sparse_matrix &amp;m);
+        friend void swap (sparse_matrix &amp;m1, sparse_matrix &amp;m2);
 
         // Element insertion and erasure
         void insert (size_type i, size_type j, const_reference t);
@@ -380,14 +388,14 @@ href="container.htm#matrix">Matrix</a>.</p>
         iterator1 find1 (int rank, size_type i, size_type j);
         const_iterator2 find2 (int rank, size_type i, size_type j) const;
         iterator2 find2 (int rank, size_type i, size_type j);
-        const_iterator1 lower_bound1 (int rank, size_type i, size_type j) const;
-        iterator1 lower_bound1 (int rank, size_type i, size_type j);
-        const_iterator1 upper_bound1 (int rank, size_type i, size_type j) const;
-        iterator1 upper_bound1 (int rank, size_type i, size_type j);
-        const_iterator2 lower_bound2 (int rank, size_type i, size_type j) const;
-        iterator2 lower_bound2 (int rank, size_type i, size_type j);
-        const_iterator2 upper_bound2 (int rank, size_type i, size_type j) const;
-        iterator2 upper_bound2 (int rank, size_type i, size_type j);
+        const_iterator1 find_first1 (int rank, size_type i, size_type j) const;
+        iterator1 find_first1 (int rank, size_type i, size_type j);
+        const_iterator1 find_last1 (int rank, size_type i, size_type j) const;
+        iterator1 find_last1 (int rank, size_type i, size_type j);
+        const_iterator2 find_first2 (int rank, size_type i, size_type j) const;
+        iterator2 find_first2 (int rank, size_type i, size_type j);
+        const_iterator2 find_last2 (int rank, size_type i, size_type j) const;
+        iterator2 find_last2 (int rank, size_type i, size_type j);
 
         // Iterators simply are pointers.
 

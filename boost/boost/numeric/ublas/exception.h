@@ -1,5 +1,5 @@
 //  
-//  Copyright (c) 2000-2001
+//  Copyright (c) 2000-2002
 //  Joerg Walter, Mathias Koch
 //  
 //  Permission to use, copy, modify, distribute and sell this software
@@ -11,7 +11,7 @@
 //  It is provided "as is" without express or implied warranty.
 //  
 //  The authors gratefully acknowledge the support of 
-//	GeNeSys mbH & Co. KG in producing this work.
+//  GeNeSys mbH & Co. KG in producing this work.
 //
 
 #ifndef NUMERICS_EXCEPTION_H
@@ -80,6 +80,7 @@ namespace numerics {
     };
 
 #ifdef NUMERICS_BOUNDS_CHECK
+#ifdef NUMERICS_THROW
 //    template<class E>
 //    NUMERICS_INLINE
 //    void check (bool expression, const E &e) {
@@ -104,6 +105,12 @@ namespace numerics {
         std::cerr << #expression << std::endl; \
         throw e; \
     }
+#else
+#define check(expression, e) \
+    assert (expression);
+#define check_ex(expression, file, line, e) \
+    assert (expression);
+#endif
 #else
 //    template<class E>
 //    NUMERICS_INLINE

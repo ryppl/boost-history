@@ -1,5 +1,5 @@
 //  
-//  Copyright (c) 2000-2001
+//  Copyright (c) 2000-2002
 //  Joerg Walter, Mathias Koch
 //  
 //  Permission to use, copy, modify, distribute and sell this software
@@ -11,7 +11,7 @@
 //  It is provided "as is" without express or implied warranty.
 //  
 //  The authors gratefully acknowledge the support of 
-//	GeNeSys mbH & Co. KG in producing this work.
+//  GeNeSys mbH & Co. KG in producing this work.
 //
 
 #ifndef NUMERICS_TRAITS_H
@@ -32,8 +32,8 @@ namespace numerics {
 // Static constant workaround from John Maddock
 #define NUMERICS_STATIC_CONSTANT(type, assignment) enum { assignment }
 #endif    
-	
-	template<class T>
+    
+    template<class T>
     struct type_traits {
         typedef T real_type;
         typedef T precision_type;
@@ -44,14 +44,14 @@ namespace numerics {
     template<>
     struct type_traits<float> {
         typedef float real_type;
-	    typedef double precision_type;
+        typedef double precision_type;
         NUMERICS_STATIC_CONSTANT (std::size_t, plus_complexity = 1);
         NUMERICS_STATIC_CONSTANT (std::size_t, multiplies_complexity = 1);
     };
     template<>
     struct type_traits<double> {
         typedef double real_type;
-	    typedef double precision_type;
+        typedef double precision_type;
         NUMERICS_STATIC_CONSTANT (std::size_t, plus_complexity = 1);
         NUMERICS_STATIC_CONSTANT (std::size_t, multiplies_complexity = 1);
     };
@@ -59,14 +59,14 @@ namespace numerics {
     template<>
     struct type_traits<std::complex<float> > {
         typedef float real_type;
-	    typedef std::complex<double> precision_type;
+        typedef std::complex<double> precision_type;
         NUMERICS_STATIC_CONSTANT (std::size_t, plus_complexity = 2);
         NUMERICS_STATIC_CONSTANT (std::size_t, multiplies_complexity = 6);
     };
     template<>
     struct type_traits<std::complex<double> > {
         typedef double real_type;
-	    typedef std::complex<double> precision_type;
+        typedef std::complex<double> precision_type;
         NUMERICS_STATIC_CONSTANT (std::size_t, plus_complexity = 2);
         NUMERICS_STATIC_CONSTANT (std::size_t, multiplies_complexity = 6);
     };
@@ -78,20 +78,20 @@ namespace numerics {
 
     template<>
     struct promote_traits<float, double> {
-	    typedef double promote_type;
+        typedef double promote_type;
     };
     template<>
     struct promote_traits<double, float> {
-	    typedef double promote_type;
+        typedef double promote_type;
     };
 
     template<>
     struct promote_traits<std::complex<float>, std::complex<double> > {
-	    typedef std::complex<double> promote_type;
+        typedef std::complex<double> promote_type;
     };
     template<>
     struct promote_traits<std::complex<double>, std::complex<float> > {
-	    typedef std::complex<double> promote_type;
+        typedef std::complex<double> promote_type;
     };
 
     struct unknown_storage_tag {};

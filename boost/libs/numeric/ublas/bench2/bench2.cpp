@@ -39,21 +39,21 @@ struct peak_c_plus {
     typedef T value_type;
 
     void operator () (int runs) const {
-		try {
-			static T s (0);
-			numerics::timer t;
-			for (int i = 0; i < runs; ++ i) {
+        try {
+            static T s (0);
+            numerics::timer t;
+            for (int i = 0; i < runs; ++ i) {
                 s += T (0);
-//				sink_scalar (s);
-			}
+//                sink_scalar (s);
+            }
             footer<value_type> () (0, 1, runs, t.elapsed ());
-		}
+        }
         catch (std::exception &e) {
-			std::cout << e.what () << std::endl;
-		}
-		catch (...) {
-			std::cout << "unknown exception" << std::endl;
-		}
+            std::cout << e.what () << std::endl;
+        }
+        catch (...) {
+            std::cout << "unknown exception" << std::endl;
+        }
     }
 };
 template<class T>
@@ -61,27 +61,27 @@ struct peak_c_multiplies {
     typedef T value_type;
 
     void operator () (int runs) const {
-		try {
-			static T s (1);
-			numerics::timer t;
-			for (int i = 0; i < runs; ++ i) {
+        try {
+            static T s (1);
+            numerics::timer t;
+            for (int i = 0; i < runs; ++ i) {
                 s *= T (1);
-//				sink_scalar (s);
-			}
+//                sink_scalar (s);
+            }
             footer<value_type> () (0, 1, runs, t.elapsed ());
-		}
+        }
         catch (std::exception &e) {
-			std::cout << e.what () << std::endl;
-		}
-		catch (...) {
-			std::cout << "unknown exception" << std::endl;
-		}
+            std::cout << e.what () << std::endl;
+        }
+        catch (...) {
+            std::cout << "unknown exception" << std::endl;
+        }
     }
 };
 
 template<class T>
 void peak<T>::operator () (int runs) {
-	header ("peak");
+    header ("peak");
 
     header ("plus");
     peak_c_plus<T> () (runs);
@@ -96,14 +96,14 @@ template struct peak<std::complex<float> >;
 template struct peak<std::complex<double> >;
 
 int main (int argc, char *argv []) {
-	header ("float");
+    header ("float");
     peak<float> () (100000000);
 
-	header ("double");
+    header ("double");
     peak<double> () (100000000);
 
 #ifdef USE_STD_COMPLEX
-	header ("std:complex<float>");
+    header ("std:complex<float>");
     peak<std::complex<float> > () (100000000);
 
     header ("std:complex<double>");
@@ -114,98 +114,98 @@ int main (int argc, char *argv []) {
     if (argc > 1)
         scale = atoi (argv [1]);
 
-	header ("float, 3");
+    header ("float, 3");
 
     bench_1<float, 3> () (1000000 * scale);
     bench_2<float, 3> () (300000 * scale);
     bench_3<float, 3> () (100000 * scale);
 
-	header ("float, 10");
+    header ("float, 10");
 
     bench_1<float, 10> () (300000 * scale);
     bench_2<float, 10> () (30000 * scale);
     bench_3<float, 10> () (3000 * scale);
 
-	header ("float, 30");
+    header ("float, 30");
 
     bench_1<float, 30> () (100000 * scale);
     bench_2<float, 30> () (3000 * scale);
     bench_3<float, 30> () (100 * scale);
 
-	header ("float, 100");
+    header ("float, 100");
 
     bench_1<float, 100> () (30000 * scale);
     bench_2<float, 100> () (300 * scale);
     bench_3<float, 100> () (3 * scale);
 
-	header ("double, 3");
+    header ("double, 3");
 
     bench_1<double, 3> () (1000000 * scale);
     bench_2<double, 3> () (300000 * scale);
     bench_3<double, 3> () (100000 * scale);
 
-	header ("double, 10");
+    header ("double, 10");
 
     bench_1<double, 10> () (300000 * scale);
     bench_2<double, 10> () (30000 * scale);
     bench_3<double, 10> () (3000 * scale);
 
-	header ("double, 30");
+    header ("double, 30");
 
     bench_1<double, 30> () (100000 * scale);
     bench_2<double, 30> () (3000 * scale);
     bench_3<double, 30> () (100 * scale);
 
-	header ("double, 100");
+    header ("double, 100");
 
     bench_1<double, 100> () (30000 * scale);
     bench_2<double, 100> () (300 * scale);
     bench_3<double, 100> () (3 * scale);
 
 #ifdef USE_STD_COMPLEX
-	header ("std::complex<float>, 3");
+    header ("std::complex<float>, 3");
 
     bench_1<std::complex<float>, 3> () (1000000 * scale);
     bench_2<std::complex<float>, 3> () (300000 * scale);
     bench_3<std::complex<float>, 3> () (100000 * scale);
 
-	header ("std::complex<float>, 10");
+    header ("std::complex<float>, 10");
 
     bench_1<std::complex<float>, 10> () (300000 * scale);
     bench_2<std::complex<float>, 10> () (30000 * scale);
     bench_3<std::complex<float>, 10> () (3000 * scale);
 
-	header ("std::complex<float>, 30");
+    header ("std::complex<float>, 30");
 
     bench_1<std::complex<float>, 30> () (100000 * scale);
     bench_2<std::complex<float>, 30> () (3000 * scale);
     bench_3<std::complex<float>, 30> () (100 * scale);
 
-	header ("std::complex<float>, 100");
+    header ("std::complex<float>, 100");
 
     bench_1<std::complex<float>, 100> () (30000 * scale);
     bench_2<std::complex<float>, 100> () (300 * scale);
     bench_3<std::complex<float>, 100> () (3 * scale);
 
-	header ("std::complex<double>, 3");
+    header ("std::complex<double>, 3");
 
     bench_1<std::complex<double>, 3> () (1000000 * scale);
     bench_2<std::complex<double>, 3> () (300000 * scale);
     bench_3<std::complex<double>, 3> () (100000 * scale);
 
-	header ("std::complex<double>, 10");
+    header ("std::complex<double>, 10");
 
     bench_1<std::complex<double>, 10> () (300000 * scale);
     bench_2<std::complex<double>, 10> () (30000 * scale);
     bench_3<std::complex<double>, 10> () (3000 * scale);
 
-	header ("std::complex<double>, 30");
+    header ("std::complex<double>, 30");
 
     bench_1<std::complex<double>, 30> () (100000 * scale);
     bench_2<std::complex<double>, 30> () (3000 * scale);
     bench_3<std::complex<double>, 30> () (100 * scale);
 
-	header ("std::complex<double>, 100");
+    header ("std::complex<double>, 100");
 
     bench_1<std::complex<double>, 100> () (30000 * scale);
     bench_2<std::complex<double>, 100> () (300 * scale);

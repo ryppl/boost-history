@@ -1,5 +1,5 @@
 //  
-//  Copyright (c) 2000-2001
+//  Copyright (c) 2000-2002
 //  Joerg Walter, Mathias Koch
 //  
 //  Permission to use, copy, modify, distribute and sell this software
@@ -11,7 +11,7 @@
 //  It is provided "as is" without express or implied warranty.
 //  
 //  The authors gratefully acknowledge the support of 
-//	GeNeSys mbH & Co. KG in producing this work.
+//  GeNeSys mbH & Co. KG in producing this work.
 //
 
 #ifndef NUMERICS_VECTOR_SP_H
@@ -73,7 +73,7 @@ namespace numerics {
         void resize (size_type size, size_type non_zeros = 0) {
             size_ = size;
             non_zeros_ = non_zeros;
-			data_.clear ();
+            data_.clear ();
         }
 
         NUMERICS_INLINE
@@ -175,10 +175,16 @@ namespace numerics {
             vector_assign_scalar<scalar_multiplies_assign<value_type, AT> > () (*this, at);
             return *this;
         }
+        template<class AT>
+        NUMERICS_INLINE
+        sparse_vector &operator /= (const AT &at) {
+            vector_assign_scalar<scalar_divides_assign<value_type, AT> > () (*this, at);
+            return *this;
+        }
 
         // Swapping
         NUMERICS_INLINE
-	    void swap (sparse_vector &v) {
+        void swap (sparse_vector &v) {
             check (this != &v, external_logic ());
             check (size_ == v.size_, bad_size ());
             check (non_zeros_ == v.non_zeros_, bad_size ());
@@ -188,7 +194,7 @@ namespace numerics {
         }
 #ifndef USE_GCC
         NUMERICS_INLINE
-	    friend void swap (sparse_vector &v1, sparse_vector &v2) {
+        friend void swap (sparse_vector &v1, sparse_vector &v2) {
             v1.swap (v2);
         }
 #endif
@@ -230,20 +236,20 @@ namespace numerics {
             return iterator (*this, data_.lower_bound (i));
         }
         NUMERICS_INLINE
-        const_iterator lower_bound (size_type i) const {
-			return find (i);
+        const_iterator find_first (size_type i) const {
+            return find (i);
         }
         NUMERICS_INLINE
-        iterator lower_bound (size_type i) {
-			return find (i);
+        iterator find_first (size_type i) {
+            return find (i);
         }
         NUMERICS_INLINE
-        const_iterator upper_bound (size_type i) const {
-			return find (i);
+        const_iterator find_last (size_type i) const {
+            return find (i);
         }
         NUMERICS_INLINE
-        iterator upper_bound (size_type i) {
-			return find (i);
+        iterator find_last (size_type i) {
+            return find (i);
         }
 
         // Iterators simply are pointers.
@@ -322,11 +328,11 @@ namespace numerics {
 
         NUMERICS_INLINE
         const_iterator begin () const {
-            return lower_bound (0);
+            return find_first (0);
         }
         NUMERICS_INLINE
         const_iterator end () const {
-            return upper_bound (size_);
+            return find_last (size_);
         }
 
         class iterator:
@@ -397,11 +403,11 @@ namespace numerics {
 
         NUMERICS_INLINE
         iterator begin () {
-            return lower_bound (0);
+            return find_first (0);
         }
         NUMERICS_INLINE
         iterator end () {
-            return upper_bound (size_);
+            return find_last (size_);
         }
 
         // Reverse iterator
@@ -472,20 +478,20 @@ namespace numerics {
         NUMERICS_INLINE
         compressed_vector (): 
             size_ (0), non_zeros_ (0), filled_ (0),
-			index_data_ (), value_data_ () {}
+            index_data_ (), value_data_ () {}
         NUMERICS_INLINE
         compressed_vector (size_type size, size_type non_zeros = 0): 
             size_ (size), non_zeros_ (non_zeros), filled_ (0),
-			index_data_ (non_zeros), value_data_ (non_zeros) {}
+            index_data_ (non_zeros), value_data_ (non_zeros) {}
         NUMERICS_INLINE
         compressed_vector (const compressed_vector &v): 
             size_ (v.size_), non_zeros_ (v.non_zeros_), filled_ (v.filled_),
-			index_data_ (v.index_data_), value_data_ (v.value_data_) {}
+            index_data_ (v.index_data_), value_data_ (v.value_data_) {}
         template<class AE>
         NUMERICS_INLINE
         compressed_vector (const vector_expression<AE> &ae, size_type non_zeros = 0): 
             size_ (ae ().size ()), non_zeros_ (non_zeros), filled_ (0),
-			index_data_ (non_zeros), value_data_ (non_zeros) { 
+            index_data_ (non_zeros), value_data_ (non_zeros) { 
             vector_assign<scalar_assign<value_type, NUMERICS_TYPENAME AE::value_type> > () (*this, ae);
         }
 
@@ -494,9 +500,9 @@ namespace numerics {
         void resize (size_type size, size_type non_zeros = 0) {
             size_ = size;
             non_zeros_ = non_zeros;
-			filled_ = 0;
-			index_data_.resize (non_zeros);
-			value_data_.resize (non_zeros);
+            filled_ = 0;
+            index_data_.resize (non_zeros);
+            value_data_.resize (non_zeros);
         }
 
         NUMERICS_INLINE
@@ -504,21 +510,21 @@ namespace numerics {
             return size_; 
         }
         NUMERICS_INLINE
-		const index_array_type &index_data () const {
-			return index_data_;
-		}
+        const index_array_type &index_data () const {
+            return index_data_;
+        }
         NUMERICS_INLINE
-		index_array_type &index_data () {
-			return index_data_;
-		}
+        index_array_type &index_data () {
+            return index_data_;
+        }
         NUMERICS_INLINE
-		const value_array_type &value_data () const {
-			return value_data_;
-		}
+        const value_array_type &value_data () const {
+            return value_data_;
+        }
         NUMERICS_INLINE
-		value_array_type &value_data () {
-			return value_data_;
-		}
+        value_array_type &value_data () {
+            return value_data_;
+        }
 
         // Element access
         NUMERICS_INLINE
@@ -550,7 +556,7 @@ namespace numerics {
         compressed_vector &operator = (const compressed_vector &v) { 
             check (size_ == v.size_, bad_size ());
             check (non_zeros_ == v.non_zeros_, bad_size ());
-			filled_ = v.filled_;
+            filled_ = v.filled_;
             index_data_ = v.index_data_;
             value_data_ = v.value_data_;
             return *this;
@@ -611,10 +617,16 @@ namespace numerics {
             vector_assign_scalar<scalar_multiplies_assign<value_type, AT> > () (*this, at);
             return *this;
         }
+        template<class AT>
+        NUMERICS_INLINE
+        compressed_vector &operator /= (const AT &at) {
+            vector_assign_scalar<scalar_divides_assign<value_type, AT> > () (*this, at);
+            return *this;
+        }
 
         // Swapping
         NUMERICS_INLINE
-	    void swap (compressed_vector &v) {
+        void swap (compressed_vector &v) {
             check (this != &v, external_logic ());
             check (size_ == v.size_, bad_size ());
             check (non_zeros_ == v.non_zeros_, bad_size ());
@@ -626,7 +638,7 @@ namespace numerics {
         }
 #ifndef USE_GCC
         NUMERICS_INLINE
-	    friend void swap (compressed_vector &v1, compressed_vector &v2) {
+        friend void swap (compressed_vector &v1, compressed_vector &v2) {
             v1.swap (v2);
         }
 #endif
@@ -638,19 +650,19 @@ namespace numerics {
             if (t == value_type ()) 
                 return;
 #endif
-			check (filled_ == 0 || index_data_ [filled_ - 1] < i + 1, external_logic ()); 
-			index_data_ [filled_] = i + 1;
-			value_data_ [filled_] = t;
-			++ filled_;
+            check (filled_ == 0 || index_data_ [filled_ - 1] < i + 1, external_logic ()); 
+            index_data_ [filled_] = i + 1;
+            value_data_ [filled_] = t;
+            ++ filled_;
         }
         NUMERICS_INLINE
         void erase (size_type i) {
-			check (filled_ > 0 && index_data_ [filled_ - 1] == i + 1, external_logic ());
-			-- filled_;
+            check (filled_ > 0 && index_data_ [filled_ - 1] == i + 1, external_logic ());
+            -- filled_;
         }
         NUMERICS_INLINE
         void clear () {
-			filled_ = 0;
+            filled_ = 0;
         }
 
         class const_iterator;
@@ -659,7 +671,7 @@ namespace numerics {
         // Element lookup
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
-        const_iterator find (size_type i) const {			
+        const_iterator find (size_type i) const {            
             return const_iterator (*this, std::lower_bound (index_data_.begin (), index_data_.begin () + filled_, i + 1, std::less<size_type> ()));
         }
         // This function seems to be big. So we do not let the compiler inline it.
@@ -668,20 +680,20 @@ namespace numerics {
             return iterator (*this, std::lower_bound (index_data_.begin (), index_data_.begin () + filled_, i + 1, std::less<size_type> ()));
         }
         NUMERICS_INLINE
-        const_iterator lower_bound (size_type i) const {
-			return find (i);
+        const_iterator find_first (size_type i) const {
+            return find (i);
         }
         NUMERICS_INLINE
-        iterator lower_bound (size_type i) {
-			return find (i);
+        iterator find_first (size_type i) {
+            return find (i);
         }
         NUMERICS_INLINE
-        const_iterator upper_bound (size_type i) const {
-			return find (i);
+        const_iterator find_last (size_type i) const {
+            return find (i);
         }
         NUMERICS_INLINE
-        iterator upper_bound (size_type i) {
-			return find (i);
+        iterator find_last (size_type i) {
+            return find (i);
         }
 
         // Iterators simply are pointers.
@@ -760,11 +772,11 @@ namespace numerics {
 
         NUMERICS_INLINE
         const_iterator begin () const {
-            return lower_bound (0);
+            return find_first (0);
         }
         NUMERICS_INLINE
         const_iterator end () const {
-            return upper_bound (size_);
+            return find_last (size_);
         }
 
         class iterator:
@@ -835,11 +847,11 @@ namespace numerics {
 
         NUMERICS_INLINE
         iterator begin () {
-            return lower_bound (0);
+            return find_first (0);
         }
         NUMERICS_INLINE
         iterator end () {
-            return upper_bound (size_);
+            return find_last (size_);
         }
 
         // Reverse iterator

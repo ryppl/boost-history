@@ -670,12 +670,12 @@ void test_project () {
 #ifndef USE_GCC
      numerics::vector<double> v (1), v1 (1), v2 (1);
      v (0) = v1 (0) = v2 (0) = 0;
-	 std::cout << numerics::project (numerics::project (v, numerics::range (0, 1)), numerics::range (0, 1)) << std::endl;
+     std::cout << numerics::project (numerics::project (v, numerics::range (0, 1)), numerics::range (0, 1)) << std::endl;
      std::cout << (v1 + v2) (0) << std::endl;
 
      numerics::matrix<double> m (1, 1), m1 (1, 1), m2 (1, 1);
      m1 (0, 0) = m2 (0, 0) = 0;
-	 std::cout << numerics::project (numerics::project (m, numerics::range (0, 1), numerics::range (0, 1)), numerics::range (0, 1), numerics::range (0, 1)) << std::endl;
+     std::cout << numerics::project (numerics::project (m, numerics::range (0, 1), numerics::range (0, 1)), numerics::range (0, 1), numerics::range (0, 1)) << std::endl;
      std::cout << (m1 + m2) (0, 0) << std::endl;
 #endif
 }

@@ -1,5 +1,5 @@
 //  
-//  Copyright (c) 2000-2001
+//  Copyright (c) 2000-2002
 //  Joerg Walter, Mathias Koch
 //  
 //  Permission to use, copy, modify, distribute and sell this software
@@ -11,7 +11,7 @@
 //  It is provided "as is" without express or implied warranty.
 //  
 //  The authors gratefully acknowledge the support of 
-//	GeNeSys mbH & Co. KG in producing this work.
+//  GeNeSys mbH & Co. KG in producing this work.
 //
 
 #ifndef NUMERICS_VECTOR_H
@@ -49,7 +49,7 @@ namespace numerics {
             while (-- size >= 0)
                 functor_type () (*it, t), ++ it;
 #else
-	    DD (size, 4, r, (functor_type () (*it, t), ++ it));
+            DD (size, 4, r, (functor_type () (*it, t), ++ it));
 #endif
         }
         // Indexing case
@@ -63,8 +63,8 @@ namespace numerics {
             for (difference_type i = 0; i < size; ++ i)
                 functor_type () (v (i), t); 
 #else
-	    difference_type i (0);
-	    DD (size, 4, r, (functor_type () (v (i), t), ++ i));
+            difference_type i (0);
+            DD (size, 4, r, (functor_type () (v (i), t), ++ i));
 #endif
         }
 
@@ -175,7 +175,7 @@ namespace numerics {
             while (-- size >= 0) 
                 functor_type () (*it, *ite), ++ it, ++ ite;
 #else
-	    DD (size, 2, r, (functor_type () (*it, *ite), ++ it, ++ ite));
+            DD (size, 2, r, (functor_type () (*it, *ite), ++ it, ++ ite));
 #endif
         }
         // Indexing scase
@@ -189,8 +189,8 @@ namespace numerics {
             for (difference_type i = 0; i < size; ++ i)
                 functor_type () (v (i), e () (i)); 
 #else
-	    difference_type i (0);
-	    DD (size, 2, r, (functor_type () (v (i), e () (i)), ++ i)); 
+            difference_type i (0);
+            DD (size, 2, r, (functor_type () (v (i), e () (i)), ++ i)); 
 #endif
         }
 
@@ -240,13 +240,13 @@ namespace numerics {
                 typename E::const_iterator ite (e ().begin ());
                 typename E::const_iterator ite_end (e ().end ());
                 while (ite != ite_end) {
-	 	    // FIXME: we need a better floating point comparison...
+                    // FIXME: we need a better floating point comparison...
                     check (*ite == cv (ite.index ()), bad_index ());
                     ++ ite;
                 }
             }
 #endif        
-		}
+        }
         // Sparse case
         template<class V, class E>
         // This function seems to be big. So we do not let the compiler inline it.
@@ -282,7 +282,7 @@ namespace numerics {
 #ifdef NUMERICS_BOUNDS_CHECK_EX
                     // Need the const member dispatched.
                     const V &cv = v;
-	 	    // FIXME: we need a better floating point comparison...
+                    // FIXME: we need a better floating point comparison...
                     check (*ite == cv (ite.index ()), bad_index ());
 #endif
                     ++ ite;
@@ -296,7 +296,7 @@ namespace numerics {
             while (ite != ite_end) {
                 // Need the const member dispatched.
                 const V &cv = v;
-	 	// FIXME: we need a better floating point comparison...
+                // FIXME: we need a better floating point comparison...
                 check (*ite == cv (ite.index ()), bad_index ());
                 ++ ite;
             }
@@ -474,10 +474,16 @@ namespace numerics {
             vector_assign_scalar<scalar_multiplies_assign<value_type, AT> > () (*this, at);
             return *this;
         }
+        template<class AT>
+        NUMERICS_INLINE
+        vector &operator /= (const AT &at) {
+            vector_assign_scalar<scalar_divides_assign<value_type, AT> > () (*this, at);
+            return *this;
+        }
 
         // Swapping
         NUMERICS_INLINE
-	    void swap (vector &v) {
+        void swap (vector &v) {
             check (this != &v, external_logic ());
             check (size_ == v.size_, bad_size ());
             std::swap (size_, v.size_);
@@ -485,7 +491,7 @@ namespace numerics {
         }
 #ifndef USE_GCC
         NUMERICS_INLINE
-	    friend void swap (vector &v1, vector &v2) {
+        friend void swap (vector &v1, vector &v2) {
             v1.swap (v2);
         }
 #endif
@@ -531,20 +537,20 @@ namespace numerics {
 #endif
         }
         NUMERICS_INLINE
-        const_iterator lower_bound (size_type i) const {
-			return find (i);
+        const_iterator find_first (size_type i) const {
+            return find (i);
         }
         NUMERICS_INLINE
-        iterator lower_bound (size_type i) {
-			return find (i);
+        iterator find_first (size_type i) {
+            return find (i);
         }
         NUMERICS_INLINE
-        const_iterator upper_bound (size_type i) const {
-			return find (i);
+        const_iterator find_last (size_type i) const {
+            return find (i);
         }
         NUMERICS_INLINE
-        iterator upper_bound (size_type i) {
-			return find (i);
+        iterator find_last (size_type i) {
+            return find (i);
         }
 
         // Iterators simply are pointers.
@@ -640,11 +646,11 @@ namespace numerics {
 
         NUMERICS_INLINE
         const_iterator begin () const {
-            return lower_bound (0);
+            return find_first (0);
         }
         NUMERICS_INLINE
         const_iterator end () const {
-            return upper_bound (size_);
+            return find_last (size_);
         }
 
 #ifndef NUMERICS_USE_INDEXED_ITERATOR
@@ -731,11 +737,11 @@ namespace numerics {
 
         NUMERICS_INLINE
         iterator begin () {
-            return lower_bound (0);
+            return find_first (0);
         }
         NUMERICS_INLINE
         iterator end () {
-            return upper_bound (size_);
+            return find_last (size_);
         }
 
         // Reverse iterator
@@ -848,7 +854,7 @@ namespace numerics {
 
         // Swapping
         NUMERICS_INLINE
-	    void swap (unit_vector &v) {
+        void swap (unit_vector &v) {
             check (this != &v, external_logic ());
             check (size_ == v.size_, bad_size ());
             std::swap (size_, v.size_);
@@ -856,7 +862,7 @@ namespace numerics {
         }
 #ifndef USE_GCC
         NUMERICS_INLINE
-	    friend void swap (unit_vector &v1, unit_vector &v2) {
+        friend void swap (unit_vector &v1, unit_vector &v2) {
             v1.swap (v2);
         }
 #endif
@@ -870,12 +876,12 @@ namespace numerics {
 
         // Element lookup
         NUMERICS_INLINE
-        const_iterator lower_bound (size_type i) const {
-			return const_iterator (*this, std::max (i, index_));
+        const_iterator find_first (size_type i) const {
+            return const_iterator (*this, std::max (i, index_));
         }
         NUMERICS_INLINE
-        const_iterator upper_bound (size_type i) const {
-			return const_iterator (*this, std::min (i, index_ + 1));
+        const_iterator find_last (size_type i) const {
+            return const_iterator (*this, std::min (i, index_ + 1));
         }
 
         // Iterators simply are pointers.
@@ -964,11 +970,11 @@ namespace numerics {
 
         NUMERICS_INLINE
         const_iterator begin () const {
-            return lower_bound (0);
+            return find_first (0);
         }
         NUMERICS_INLINE
         const_iterator end () const {
-            return upper_bound (size_);
+            return find_last (size_);
         }
 
         // Reverse iterator
@@ -1062,7 +1068,7 @@ namespace numerics {
 
         // Swapping
         NUMERICS_INLINE
-	    void swap (scalar_vector &v) {
+        void swap (scalar_vector &v) {
             check (this != &v, external_logic ());
             check (size_ == v.size_, bad_size ());
             std::swap (size_, v.size_);
@@ -1070,7 +1076,7 @@ namespace numerics {
         }
 #ifndef USE_GCC
         NUMERICS_INLINE
-	    friend void swap (scalar_vector &v1, scalar_vector &v2) {
+        friend void swap (scalar_vector &v1, scalar_vector &v2) {
             v1.swap (v2);
         }
 #endif
@@ -1088,12 +1094,12 @@ namespace numerics {
             return const_iterator (*this, i);
         }
         NUMERICS_INLINE
-        const_iterator lower_bound (size_type i) const {
-			return find (i);
+        const_iterator find_first (size_type i) const {
+            return find (i);
         }
         NUMERICS_INLINE
-        const_iterator upper_bound (size_type i) const {
-			return find (i);
+        const_iterator find_last (size_type i) const {
+            return find (i);
         }
 
         // Iterators simply are pointers.
@@ -1182,11 +1188,11 @@ namespace numerics {
 
         NUMERICS_INLINE
         const_iterator begin () const {
-            return lower_bound (0);
+            return find_first (0);
         }
         NUMERICS_INLINE
         const_iterator end () const {
-            return upper_bound (size_);
+            return find_last (size_);
         }
 
         // Reverse iterator
@@ -1359,10 +1365,16 @@ namespace numerics {
             vector_assign_scalar<scalar_multiplies_assign<value_type, AT> > () (*this, at);
             return *this;
         }
+        template<class AT>
+        NUMERICS_INLINE
+        c_vector &operator /= (const AT &at) {
+            vector_assign_scalar<scalar_divides_assign<value_type, AT> > () (*this, at);
+            return *this;
+        }
 
         // Swapping
         NUMERICS_INLINE
-	    void swap (c_vector &v) {
+        void swap (c_vector &v) {
             check (this != &v, external_logic ());
             check (size_ == v.size_, bad_size ());
             std::swap (size_, v.size_);
@@ -1370,7 +1382,7 @@ namespace numerics {
         }
 #ifndef USE_GCC
         NUMERICS_INLINE
-	    friend void swap (c_vector &v1, c_vector &v2) {
+        friend void swap (c_vector &v1, c_vector &v2) {
             v1.swap (v2);
         }
 #endif
@@ -1418,20 +1430,20 @@ namespace numerics {
 #endif
         }
         NUMERICS_INLINE
-        const_iterator lower_bound (size_type i) const {
-			return find (i);
+        const_iterator find_first (size_type i) const {
+            return find (i);
         }
         NUMERICS_INLINE
-        iterator lower_bound (size_type i) {
-			return find (i);
+        iterator find_first (size_type i) {
+            return find (i);
         }
         NUMERICS_INLINE
-        const_iterator upper_bound (size_type i) const {
-			return find (i);
+        const_iterator find_last (size_type i) const {
+            return find (i);
         }
         NUMERICS_INLINE
-        iterator upper_bound (size_type i) {
-			return find (i);
+        iterator find_last (size_type i) {
+            return find (i);
         }
 
         // Iterators simply are pointers.
@@ -1528,11 +1540,11 @@ namespace numerics {
 
         NUMERICS_INLINE
         const_iterator begin () const {
-            return lower_bound (0);
+            return find_first (0);
         }
         NUMERICS_INLINE
         const_iterator end () const {
-            return upper_bound (size_);
+            return find_last (size_);
         }
 
 #ifndef NUMERICS_USE_INDEXED_ITERATOR
@@ -1620,11 +1632,11 @@ namespace numerics {
 
         NUMERICS_INLINE
         iterator begin () {
-            return lower_bound (0);
+            return find_first (0);
         }
         NUMERICS_INLINE
         iterator end () {
-            return upper_bound (size_);
+            return find_last (size_);
         }
 
         // Reverse iterator

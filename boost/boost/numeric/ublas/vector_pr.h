@@ -1,5 +1,5 @@
 //
-//  Copyright (c) 2000-2001
+//  Copyright (c) 2000-2002
 //  Joerg Walter, Mathias Koch
 //  
 //  Permission to use, copy, modify, distribute and sell this software
@@ -11,7 +11,7 @@
 //  It is provided "as is" without express or implied warranty.
 //  
 //  The authors gratefully acknowledge the support of 
-//	GeNeSys mbH & Co. KG in producing this work.
+//  GeNeSys mbH & Co. KG in producing this work.
 //
 
 #ifndef NUMERICS_VECTOR_PR_H
@@ -164,26 +164,32 @@ namespace numerics {
             vector_assign_scalar<scalar_multiplies_assign<value_type, AT> > () (*this, at);
             return *this;
         }
+        template<class AT>
+        NUMERICS_INLINE
+        vector_range &operator /= (const AT &at) {
+            vector_assign_scalar<scalar_divides_assign<value_type, AT> > () (*this, at);
+            return *this;
+        }
 
         // Swapping
         NUMERICS_INLINE
-	    void swap (vector_range &vr) {
+        void swap (vector_range &vr) {
             check (this != &vr, external_logic ());
             check (size () == vr.size (), bad_size ());
             std::swap_ranges (begin (), end (), vr.begin ());
         }
 #ifndef USE_GCC
         NUMERICS_INLINE
-	    friend void swap (vector_range &vr1, vector_range &vr2) {
+        friend void swap (vector_range &vr1, vector_range &vr2) {
             vr1.swap (vr2);
         }
 #endif
 
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
         typedef indexed_iterator<vector_range<vector_type>, 
-								 vector_type::iterator::iterator_category> iterator;
+                                 NUMERICS_TYPENAME vector_type::iterator::iterator_category> iterator;
         typedef indexed_const_iterator<vector_range<vector_type>, 
-									   vector_type::const_iterator::iterator_category> const_iterator;
+                                       NUMERICS_TYPENAME vector_type::const_iterator::iterator_category> const_iterator;
 #else
         class const_iterator;
         class iterator;
@@ -191,10 +197,10 @@ namespace numerics {
 
         // Element lookup
         NUMERICS_INLINE
-        const_iterator lower_bound (size_type i) const {
+        const_iterator find_first (size_type i) const {
             // One has do to this, to get the const member dispatched?!
             const vector_type &data = data_;
-            const_iterator_type it (data.lower_bound (start () + i));
+            const_iterator_type it (data.find_first (start () + i));
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
             return const_iterator (*this, it.index ());
 #else
@@ -202,8 +208,8 @@ namespace numerics {
 #endif
         }
         NUMERICS_INLINE
-        iterator lower_bound (size_type i) {
-            iterator_type it (data_.lower_bound (start () + i));
+        iterator find_first (size_type i) {
+            iterator_type it (data_.find_first (start () + i));
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
             return iterator (*this, it.index ());
 #else
@@ -211,10 +217,10 @@ namespace numerics {
 #endif
         }
         NUMERICS_INLINE
-        const_iterator upper_bound (size_type i) const {
+        const_iterator find_last (size_type i) const {
             // One has do to this, to get the const member dispatched?!
             const vector_type &data = data_;
-            const_iterator_type it (data.upper_bound (start () + i));
+            const_iterator_type it (data.find_last (start () + i));
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
             return const_iterator (*this, it.index ());
 #else
@@ -222,8 +228,8 @@ namespace numerics {
 #endif
         }
         NUMERICS_INLINE
-        iterator upper_bound (size_type i) {
-            iterator_type it (data_.upper_bound (start () + i));
+        iterator find_last (size_type i) {
+            iterator_type it (data_.find_last (start () + i));
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
             return iterator (*this, it.index ());
 #else
@@ -324,11 +330,11 @@ namespace numerics {
 
         NUMERICS_INLINE
         const_iterator begin () const {
-            return lower_bound (0);
+            return find_first (0);
         }
         NUMERICS_INLINE
         const_iterator end () const {
-            return upper_bound (size ());
+            return find_last (size ());
         }
 
 #ifndef NUMERICS_USE_INDEXED_ITERATOR
@@ -415,11 +421,11 @@ namespace numerics {
 
         NUMERICS_INLINE
         iterator begin () {
-            return lower_bound (0);
+            return find_first (0);
         }
         NUMERICS_INLINE
         iterator end () {
-            return upper_bound (size ());
+            return find_last (size ());
         }
 
         // Reverse iterator
@@ -487,7 +493,7 @@ namespace numerics {
     template<class V>
     NUMERICS_INLINE
     vector_range<V> project (const vector_range<V> &data, const range &r) {
-		NUMERICS_TRACE ("project (vector_range<V>, range)");
+        NUMERICS_TRACE ("project (vector_range<V>, range)");
         return data.project (r);
     }
 #endif
@@ -495,7 +501,7 @@ namespace numerics {
     // Vector based slice class
     template<class V>
     class vector_slice:
-		public vector_expression<vector_slice<V> > {
+        public vector_expression<vector_slice<V> > {
     public:
         typedef const V const_vector_type;
         typedef V vector_type;
@@ -586,7 +592,7 @@ namespace numerics {
         vector_slice<vector_type> project (const slice &s) const {
             return vector_slice<vector_type>  (data_, s_.composite (s));
         }
-		NUMERICS_INLINE
+        NUMERICS_INLINE
         vector_slice<vector_type> project (const slice &s) {
             return vector_slice<vector_type> (data_, s_.composite (s));
         }
@@ -644,26 +650,32 @@ namespace numerics {
             vector_assign_scalar<scalar_multiplies_assign<value_type, AT> > () (*this, at);
             return *this;
         }
+        template<class AT>
+        NUMERICS_INLINE
+        vector_slice &operator /= (const AT &at) {
+            vector_assign_scalar<scalar_divides_assign<value_type, AT> > () (*this, at);
+            return *this;
+        }
 
         // Swapping
         NUMERICS_INLINE
-	    void swap (vector_slice &vs) {
+        void swap (vector_slice &vs) {
             check (this != &vs, external_logic ());
             check (size () == vs.size (), bad_size ());
             std::swap_ranges (begin (), end (), vs.begin ());
         }
 #ifndef USE_GCC
         NUMERICS_INLINE
-	    friend void swap (vector_slice &vs1, vector_slice &vs2) {
+        friend void swap (vector_slice &vs1, vector_slice &vs2) {
             vs1.swap (vs2);
         }
 #endif
 
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
         typedef indexed_iterator<vector_slice<vector_type>, 
-							     vector_type::iterator::iterator_category> iterator;
+                                 NUMERICS_TYPENAME vector_type::iterator::iterator_category> iterator;
         typedef indexed_const_iterator<vector_slice<vector_type>,
-									   vector_type::const_iterator::iterator_category> const_iterator;
+                                       NUMERICS_TYPENAME vector_type::const_iterator::iterator_category> const_iterator;
 #else
         class const_iterator;
         class iterator;
@@ -671,7 +683,7 @@ namespace numerics {
 
         // Element lookup
         NUMERICS_INLINE
-        const_iterator lower_bound (size_type i) const {
+        const_iterator find_first (size_type i) const {
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
             return const_iterator (*this, i);
 #else
@@ -679,7 +691,7 @@ namespace numerics {
 #endif
         }
         NUMERICS_INLINE
-        iterator lower_bound (size_type i) {
+        iterator find_first (size_type i) {
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
             return iterator (*this, i);
 #else
@@ -687,7 +699,7 @@ namespace numerics {
 #endif
         }
         NUMERICS_INLINE
-        const_iterator upper_bound (size_type i) const {
+        const_iterator find_last (size_type i) const {
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
             return const_iterator (*this, i);
 #else
@@ -695,7 +707,7 @@ namespace numerics {
 #endif
         }
         NUMERICS_INLINE
-        iterator upper_bound (size_type i) {
+        iterator find_last (size_type i) {
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
             return iterator (*this, i);
 #else
@@ -796,11 +808,11 @@ namespace numerics {
 
         NUMERICS_INLINE
         const_iterator begin () const {
-            return lower_bound (0);
+            return find_first (0);
         }
         NUMERICS_INLINE
         const_iterator end () const {
-            return upper_bound (size ());
+            return find_last (size ());
         }
 
 #ifndef NUMERICS_USE_INDEXED_ITERATOR
@@ -887,11 +899,11 @@ namespace numerics {
 
         NUMERICS_INLINE
         iterator begin () {
-            return lower_bound (0);
+            return find_first (0);
         }
         NUMERICS_INLINE
         iterator end () {
-            return upper_bound (size ());
+            return find_last (size ());
         }
 
         // Reverse iterator
@@ -940,7 +952,7 @@ namespace numerics {
     template<class V>
     NUMERICS_INLINE
     vector_slice<V> project (const vector_slice<V> &data, const range &r) {
-		NUMERICS_TRACE ("project (vector_slice<V>, range)");
+        NUMERICS_TRACE ("project (vector_slice<V>, range)");
         return data.project (r);
     }
 #endif
@@ -953,7 +965,7 @@ namespace numerics {
     template<class V>
     NUMERICS_INLINE
     vector_slice<V> project (const vector_slice<V> &data, const slice &s) {
-		NUMERICS_TRACE ("project (vector_slice<V>, slice)");
+        NUMERICS_TRACE ("project (vector_slice<V>, slice)");
         return data.project (s);
     }
 #endif

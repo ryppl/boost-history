@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type"
 content="text/html; charset=iso-8859-1">
 <meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
-<title>Matrix</title>
+<title>Triangular Matrix</title>
 </head>
 
 <body bgcolor="#FFFFFF">
@@ -25,12 +25,12 @@ matrices.</p>
     numerics::triangular_matrix&lt;double, numerics::lower&gt; ml (3, 3);
     for (int i = 0; i &lt; ml.size1 (); ++ i) 
         for (int j = 0; j &lt;= i; ++ j)
-	    ml (i, j) = 3 * i + j;
+            ml (i, j) = 3 * i + j;
     std::cout &lt;&lt; ml &lt;&lt; std::endl;
     numerics::triangular_matrix&lt;double, numerics::upper&gt; mu (3, 3);
     for (int i = 0; i &lt; m.size1 (); ++ i) 
         for (int j = i; j &lt;= m.size2 (); ++ j)
-	    mu (i, j) = 3 * i + j;
+            mu (i, j) = 3 * i + j;
     std::cout &lt;&lt; mu &lt;&lt; std::endl;
 }</pre>
 
@@ -198,6 +198,12 @@ A&gt; &gt;</code> </p>
         triangular_matrix &amp;operator *= (const AT &amp;at)</code></td>
         <td>A computed assignment operator. Multiplies the
         triangular matrix with a scalar.</td>
+    </tr>
+    <tr>
+        <td><code>template&lt;class AT&gt;<br>
+        triangular_matrix &amp;operator /= (const AT &amp;at)</code></td>
+        <td>A computed assignment operator. Divides the
+        triangular matrix through a scalar.</td>
     </tr>
     <tr>
         <td><code>void swap (triangular_matrix &amp;m)</code></td>
@@ -368,10 +374,12 @@ A&gt; &gt;</code> </p>
         triangular_matrix &amp;minus_assign (const matrix_expression&lt;AE&gt; &amp;ae);
         template&lt;class AT&gt;
         triangular_matrix&amp; operator *= (const AT &amp;at);
+        template&lt;class AT&gt;
+        triangular_matrix&amp; operator /= (const AT &amp;at);
 
         // Swapping
-	void swap (triangular_matrix &amp;m);
-	friend void swap (triangular_matrix &amp;m1, triangular_matrix &amp;m2);
+        void swap (triangular_matrix &amp;m);
+        friend void swap (triangular_matrix &amp;m1, triangular_matrix &amp;m2);
 
         // Element insertion and erasure
         void insert (size_type i, size_type j, const_reference t);
@@ -388,14 +396,14 @@ A&gt; &gt;</code> </p>
         typedef reverse_iterator2&lt;iterator2&gt; reverse_iterator2;
 
         // Element lookup
-        const_iterator1 lower_bound1 (int rank, size_type i, size_type j) const;
-        iterator1 lower_bound1 (int rank, size_type i, size_type j);
-        const_iterator1 upper_bound1 (int rank, size_type i, size_type j) const;
-        iterator1 upper_bound1 (int rank, size_type i, size_type j);
-        const_iterator2 lower_bound2 (int rank, size_type i, size_type j) const;
-        iterator2 lower_bound2 (int rank, size_type i, size_type j);
-        const_iterator2 upper_bound2 (int rank, size_type i, size_type j) const;
-        iterator2 upper_bound2 (int rank, size_type i, size_type j);
+        const_iterator1 find_first1 (int rank, size_type i, size_type j) const;
+        iterator1 find_first1 (int rank, size_type i, size_type j);
+        const_iterator1 find_last1 (int rank, size_type i, size_type j) const;
+        iterator1 find_last1 (int rank, size_type i, size_type j);
+        const_iterator2 find_first2 (int rank, size_type i, size_type j) const;
+        iterator2 find_first2 (int rank, size_type i, size_type j);
+        const_iterator2 find_last2 (int rank, size_type i, size_type j) const;
+        iterator2 find_last2 (int rank, size_type i, size_type j);
 
         // Iterators simply are indices.
 
@@ -610,12 +618,12 @@ a triangular matrix adaptor for other matrices.</p>
     numerics::triangular_adaptor&lt;numerics::matrix&lt;double&gt;, numerics::lower&gt; tal (m);
     for (int i = 0; i &lt; tal.size1 (); ++ i) 
         for (int j = 0; j &lt;= i; ++ j)
-	    tal (i, j) = 3 * i + j;
+            tal (i, j) = 3 * i + j;
     std::cout &lt;&lt; tal &lt;&lt; std::endl;
     numerics::triangular_adaptor&lt;numerics::matrix&lt;double&gt;, numerics::upper&gt; tau (m);
     for (int i = 0; i &lt; tau.size1 (); ++ i) 
         for (int j = i; j &lt;= tau.size2 (); ++ j)
-	    tau (i, j) = 3 * i + j;
+            tau (i, j) = 3 * i + j;
     std::cout &lt;&lt; tau &lt;&lt; std::endl;
 }</pre>
 
@@ -769,6 +777,12 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         triangular adaptor with a scalar.</td>
     </tr>
     <tr>
+        <td><code>template&lt;class AT&gt;<br>
+        triangular_adaptor &amp;operator /= (const AT &amp;at)</code></td>
+        <td>A computed assignment operator. Divides the
+        triangular adaptor through a scalar.</td>
+    </tr>
+    <tr>
         <td><code>void swap (triangular_adaptor &amp;m)</code></td>
         <td>Swaps the contents of the triangular adaptors. </td>
     </tr>
@@ -916,10 +930,12 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         triangular_adaptor &amp;minus_assign (const matrix_expression&lt;AE&gt; &amp;ae);
         template&lt;class AT&gt;
         triangular_adaptor&amp; operator *= (const AT &amp;at);
+        template&lt;class AT&gt;
+        triangular_adaptor&amp; operator /= (const AT &amp;at);
 
         // Swapping
-	void swap (triangular_adaptor &amp;m);
-   	friend void swap (triangular_adaptor &amp;m1, triangular_adaptor &amp;m2);
+        void swap (triangular_adaptor &amp;m);
+        friend void swap (triangular_adaptor &amp;m1, triangular_adaptor &amp;m2);
 
         class const_iterator1;
         class iterator1;
@@ -931,14 +947,14 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         typedef reverse_iterator2&lt;iterator2&gt; reverse_iterator2;
 
         // Element lookup
-        const_iterator1 lower_bound1 (int rank, size_type i, size_type j) const;
-        iterator1 lower_bound1 (int rank, size_type i, size_type j);
-        const_iterator1 upper_bound1 (int rank, size_type i, size_type j) const;
-        iterator1 upper_bound1 (int rank, size_type i, size_type j);
-        const_iterator2 lower_bound2 (int rank, size_type i, size_type j) const;
-        iterator2 lower_bound2 (int rank, size_type i, size_type j);
-        const_iterator2 upper_bound2 (int rank, size_type i, size_type j) const;
-        iterator2 upper_bound2 (int rank, size_type i, size_type j);
+        const_iterator1 find_first1 (int rank, size_type i, size_type j) const;
+        iterator1 find_first1 (int rank, size_type i, size_type j);
+        const_iterator1 find_last1 (int rank, size_type i, size_type j) const;
+        iterator1 find_last1 (int rank, size_type i, size_type j);
+        const_iterator2 find_first2 (int rank, size_type i, size_type j) const;
+        iterator2 find_first2 (int rank, size_type i, size_type j);
+        const_iterator2 find_last2 (int rank, size_type i, size_type j) const;
+        iterator2 find_last2 (int rank, size_type i, size_type j);
 
         // Iterators simply are indices.
 

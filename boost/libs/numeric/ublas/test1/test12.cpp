@@ -29,41 +29,41 @@ struct test_my_matrix_vector {
 
     template<class VP, class MP>
     void operator () (VP &v1, VP &v2, MP &m1) const {
-		try {
-			// Rows and columns
-			initialize_matrix (m1);
-			for (int i = 0; i < N; ++ i) {
-				v1 = numerics::row (m1, i);
-				std::cout << "row (m, " << i << ") = " << v1 << std::endl;
-				v1 = numerics::column (m1, i);
-				std::cout << "column (m, " << i << ") = " << v1 << std::endl;
-			}
+        try {
+            // Rows and columns
+            initialize_matrix (m1);
+            for (int i = 0; i < N; ++ i) {
+                v1 = numerics::row (m1, i);
+                std::cout << "row (m, " << i << ") = " << v1 << std::endl;
+                v1 = numerics::column (m1, i);
+                std::cout << "column (m, " << i << ") = " << v1 << std::endl;
+            }
 
-			// Outer product
-			initialize_vector (v1);
-			initialize_vector (v2);
-			m1 = numerics::outer_prod (v1, v2);
-			std::cout << "outer_prod (v1, v2) = " << m1 << std::endl;
+            // Outer product
+            initialize_vector (v1);
+            initialize_vector (v2);
+            m1 = numerics::outer_prod (v1, v2);
+            std::cout << "outer_prod (v1, v2) = " << m1 << std::endl;
 
-			// Matrix vector product 
-			initialize_matrix (m1);
-			initialize_vector (v1);
+            // Matrix vector product 
+            initialize_matrix (m1);
+            initialize_vector (v1);
             v2 = numerics::prod (m1, v1);
-			std::cout << "prod (m1, v1) = " << v2 << std::endl;
+            std::cout << "prod (m1, v1) = " << v2 << std::endl;
             v2 = numerics::prod (v1, m1);
-			std::cout << "prod (v1, m1) = " << v2 << std::endl;
-		}
+            std::cout << "prod (v1, m1) = " << v2 << std::endl;
+        }
         catch (std::exception &e) {
-			std::cout << e.what () << std::endl;
-		}
-		catch (...) {
-			std::cout << "unknown exception" << std::endl;
-		}
-	}
+            std::cout << e.what () << std::endl;
+        }
+        catch (...) {
+            std::cout << "unknown exception" << std::endl;
+        }
+    }
     void operator () () const {
-		try {
-			V v1 (N), v2 (N);
-			M m1 (N, N);
+        try {
+            V v1 (N), v2 (N);
+            M m1 (N, N);
             (*this) (v1, v2, m1);
 
             numerics::matrix_row<M> mr1 (m1, 0), mr2 (m1, 1);
@@ -74,21 +74,21 @@ struct test_my_matrix_vector {
 
 #ifdef USE_RANGE_AND_SLICE
             numerics::matrix_vector_range<M> mvr1 (m1, numerics::range (0, N), numerics::range (0, N)), 
-											 mvr2 (m1, numerics::range (0, N), numerics::range (0, N));
+                                             mvr2 (m1, numerics::range (0, N), numerics::range (0, N));
             (*this) (mvr1, mvr2, m1);
 
             numerics::matrix_vector_slice<M> mvs1 (m1, numerics::slice (0, 1, N), numerics::slice (0, 1, N)), 
-											 mvs2 (m1, numerics::slice (0, 1, N), numerics::slice (0, 1, N));
+                                             mvs2 (m1, numerics::slice (0, 1, N), numerics::slice (0, 1, N));
             (*this) (mvs1, mvs2, m1);
 #endif
-		}
+        }
         catch (std::exception &e) {
-			std::cout << e.what () << std::endl;
-		}
-		catch (...) {
-			std::cout << "unknown exception" << std::endl;
-		}
-	}
+            std::cout << e.what () << std::endl;
+        }
+        catch (...) {
+            std::cout << "unknown exception" << std::endl;
+        }
+    }
 };
 
 // Test matrix & vector

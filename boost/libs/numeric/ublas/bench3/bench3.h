@@ -30,14 +30,14 @@ template<class T, int N>
 struct initialize_c_vector  {
 #ifdef USE_MSVC
     NUMERICS_INLINE
-	void operator () (c_vector_traits<T, N>::type v) {
+    void operator () (c_vector_traits<T, N>::type v) {
 #else 
-	void operator () (c_vector_traits<T, N>::type &v) {
+    void operator () (c_vector_traits<T, N>::type &v) {
 #endif 
-		for (int i = 0; i < N; ++ i) 
+        for (int i = 0; i < N; ++ i) 
             v [i] = rand ();
-//			v [i] = 0;
-		}
+//            v [i] = 0;
+        }
 };
 template<class V>
 NUMERICS_INLINE
@@ -52,15 +52,15 @@ template<class T, int N, int M>
 struct initialize_c_matrix  {
 #ifdef USE_MSVC
     NUMERICS_INLINE
-	void operator () (c_matrix_traits<T, N, M>::type m) {
+    void operator () (c_matrix_traits<T, N, M>::type m) {
 #else 
-	void operator () (c_matrix_traits<T, N, M>::type &m) {
+    void operator () (c_matrix_traits<T, N, M>::type &m) {
 #endif 
-		for (int i = 0; i < N; ++ i) 
-			for (int j = 0; j < M; ++ j) 
-		        m [i] [j] = rand ();
-//				m [i] [j] = 0;
-	}
+        for (int i = 0; i < N; ++ i) 
+            for (int j = 0; j < M; ++ j) 
+                m [i] [j] = rand ();
+//                m [i] [j] = 0;
+    }
 };
 template<class M>
 NUMERICS_INLINE
@@ -83,14 +83,14 @@ template<class T, int N>
 struct sink_c_vector {
 #ifdef USE_MSVC
     NUMERICS_INLINE
-	void operator () (const c_vector_traits<T, N>::type v) {
+    void operator () (const c_vector_traits<T, N>::type v) {
 #else 
-	void operator () (const c_vector_traits<T, N>::type &v) {
+    void operator () (const c_vector_traits<T, N>::type &v) {
 #endif 
-		static c_vector_traits<T, N>::type g_v;
-		for (int i = 0; i < N; ++ i)
-			g_v [i] = v [i];
-	}
+        static c_vector_traits<T, N>::type g_v;
+        for (int i = 0; i < N; ++ i)
+            g_v [i] = v [i];
+    }
 };
 template<class V>
 NUMERICS_INLINE
@@ -102,15 +102,15 @@ template<class T, int N, int M>
 struct sink_c_matrix {
 #ifdef USE_MSVC
     NUMERICS_INLINE
-	void operator () (const c_matrix_traits<T, N, M>::type m) {
+    void operator () (const c_matrix_traits<T, N, M>::type m) {
 #else 
-	void operator () (const c_matrix_traits<T, N, M>::type &m) {
+    void operator () (const c_matrix_traits<T, N, M>::type &m) {
 #endif 
     static c_matrix_traits<T, N, M>::type g_m;
     for (int i = 0; i < N; ++ i)
         for (int j = 0; j < M; ++ j)
             g_m [i] [j] = m [i] [j];
-	}
+    }
 };
 template<class M>
 NUMERICS_INLINE
@@ -120,22 +120,22 @@ void sink_matrix (const M &m) {
 
 template<class T>
 struct peak {
-	void operator () (int runs);
+    void operator () (int runs);
 };
 
 template<class T, int N>
 struct bench_1 {
-	void operator () (int runs);
+    void operator () (int runs);
 };
 
 template<class T, int N>
 struct bench_2 {
-	void operator () (int runs);
+    void operator () (int runs);
 };
 
 template<class T, int N>
 struct bench_3 {
-	void operator () (int runs);
+    void operator () (int runs);
 };
 
 struct safe_tag {};

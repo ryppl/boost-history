@@ -201,8 +201,8 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         typedef const_iterator iterator;
 
         // Element lookup
-        const_iterator lower_bound (size_type i) const;
-        const_iterator upper_bound (size_type i) const;
+        const_iterator find_first (size_type i) const;
+        const_iterator find_last (size_type i) const;
 
         // Iterator is the iterator of the referenced expression.
 
@@ -365,10 +365,10 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         typedef iterator_type iterator;
 
         // Element lookup
-        const_iterator lower_bound (size_type i) const;
-        iterator lower_bound (size_type i);
-        const_iterator upper_bound (size_type i) const;
-        iterator upper_bound (size_type i);
+        const_iterator find_first (size_type i) const;
+        iterator find_first (size_type i);
+        const_iterator find_last (size_type i) const;
+        iterator find_last (size_type i);
 
         // Iterator is the iterator of the referenced expression.
 
@@ -512,8 +512,8 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         typedef const_iterator iterator;
 
         // Element lookup
-        const_iterator lower_bound (size_type i) const;
-        const_iterator upper_bound (size_type i) const;
+        const_iterator find_first (size_type i) const;
+        const_iterator find_last (size_type i) const;
 
         // Iterator enhances the iterator of the referenced expression 
         // with the unary functor.
@@ -774,8 +774,8 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         typedef const_iterator iterator;
 
         // Element lookup
-        const_iterator lower_bound (size_type i) const;
-        const_iterator upper_bound (size_type i) const;
+        const_iterator find_first (size_type i) const;
+        const_iterator find_last (size_type i) const;
 
         // Iterator merges the iterators of the referenced expressions and  
         // enhances them with the binary functor.
@@ -1042,8 +1042,8 @@ vector_expression&lt;vector_binary_scalar2&lt;E1, E2, F&gt; &gt; </code>resp.</p
         typedef const_iterator iterator;
 
         // Element lookup
-        const_iterator lower_bound (size_type i) const;
-        const_iterator upper_bound (size_type i) const;
+        const_iterator find_first (size_type i) const;
+        const_iterator find_last (size_type i) const;
 
         // Iterator enhances the iterator of the referenced vector expression
         // with the binary functor.
@@ -1127,8 +1127,8 @@ vector_expression&lt;vector_binary_scalar2&lt;E1, E2, F&gt; &gt; </code>resp.</p
         typedef const_iterator iterator;
 
         // Element lookup
-        const_iterator lower_bound (size_type i) const;
-        const_iterator upper_bound (size_type i) const;
+        const_iterator find_first (size_type i) const;
+        const_iterator find_last (size_type i) const;
 
         // Iterator enhances the iterator of the referenced vector expression
         // with the binary functor.
@@ -1197,8 +1197,8 @@ vector_expression&lt;vector_binary_scalar2&lt;E1, E2, F&gt; &gt; </code>resp.</p
 
     template&lt;class E1, class T2, class F&gt;
     struct vector_binary_scalar2_traits {
-        typedef vector_binary_scalar2&lt;typename E1::const_closure_type,		
-				      scalar_const_reference&lt;T2&gt;, F&gt; expression_type;
+        typedef vector_binary_scalar2&lt;typename E1::const_closure_type,
+                                      scalar_const_reference&lt;T2&gt;, F&gt; expression_type;
         typedef expression_type result_type; 
     };
 

@@ -1,5 +1,5 @@
 //
-//  Copyright (c) 2000-2001
+//  Copyright (c) 2000-2002
 //  Joerg Walter, Mathias Koch
 //  
 //  Permission to use, copy, modify, distribute and sell this software
@@ -11,7 +11,7 @@
 //  It is provided "as is" without express or implied warranty.
 //  
 //  The authors gratefully acknowledge the support of 
-//	GeNeSys mbH & Co. KG in producing this work.
+//  GeNeSys mbH & Co. KG in producing this work.
 //
 
 #ifndef NUMERICS_CONCEPTS_H
@@ -115,9 +115,9 @@ namespace numerics {
             // Dereference assignment
             *it = t;
 #else
-		    ignore_unused_variable_warning (it);
+            ignore_unused_variable_warning (it);
 #endif
-		    ignore_unused_variable_warning (t);
+            ignore_unused_variable_warning (t);
         }
     };
 
@@ -156,7 +156,7 @@ namespace numerics {
 #else
             t = *(it + n);
 #endif
-			ignore_unused_variable_warning (t);
+            ignore_unused_variable_warning (t);
         }
     };
 
@@ -331,9 +331,9 @@ namespace numerics {
             const_iterator_type cit_end (c.end ());
             // Size
             n = c.size ();
-			ignore_unused_variable_warning (cit_end);
-			ignore_unused_variable_warning (cit_begin);
-			ignore_unused_variable_warning (n);
+            ignore_unused_variable_warning (cit_end);
+            ignore_unused_variable_warning (cit_begin);
+            ignore_unused_variable_warning (n);
         }
     };
 
@@ -352,8 +352,8 @@ namespace numerics {
             iterator_type it_end (c.end ());
             // Swap
             c1.swap (c2); 
-			ignore_unused_variable_warning (it_end);
-			ignore_unused_variable_warning (it_begin);
+            ignore_unused_variable_warning (it_end);
+            ignore_unused_variable_warning (it_begin);
         }
     };
 
@@ -381,8 +381,8 @@ namespace numerics {
 #else
             const_reverse_iterator_type crit_end (c.rend ());
 #endif
-			ignore_unused_variable_warning (crit_end);
-			ignore_unused_variable_warning (crit_begin);
+            ignore_unused_variable_warning (crit_end);
+            ignore_unused_variable_warning (crit_begin);
         }
     };
 
@@ -399,8 +399,8 @@ namespace numerics {
             reverse_iterator_type rit_begin (c.rbegin ());
             // End of reverse range
             reverse_iterator_type rit_end (c.rend ());
-	    ignore_unused_variable_warning (rit_end);
-	    ignore_unused_variable_warning (rit_begin);
+            ignore_unused_variable_warning (rit_end);
+            ignore_unused_variable_warning (rit_begin);
         }
     };
 
@@ -417,7 +417,7 @@ namespace numerics {
             value_type t = value_type ();
             // Element access
             t = c [n];
-		    ignore_unused_variable_warning (t);
+            ignore_unused_variable_warning (t);
         }
     };
 
@@ -448,7 +448,7 @@ namespace numerics {
             size_type n (0);
             // Sizing constructor
             container_type c = container_type (n);
-		    ignore_unused_variable_warning (c);
+            ignore_unused_variable_warning (c);
         }
     };
 
@@ -532,7 +532,7 @@ namespace numerics {
             value_type t = value_type ();
             // Element access 
             t = g (n);
-			ignore_unused_variable_warning (t);
+            ignore_unused_variable_warning (t);
         }
     };
 
@@ -547,7 +547,7 @@ namespace numerics {
             value_type t = value_type ();
             // Conversion
             t = s;
-			ignore_unused_variable_warning (t);
+            ignore_unused_variable_warning (t);
         }
     };
 
@@ -566,8 +566,8 @@ namespace numerics {
             size_type n (0), i (0);
             value_type t = value_type ();
             // Find (internal?)
-            const_iterator_type cit_lower (v.lower_bound (i));
-            const_iterator_type cit_upper (v.upper_bound (i));
+            const_iterator_type cit_lower (v.find_first (i));
+            const_iterator_type cit_upper (v.find_last (i));
             // Beginning of range
             const_iterator_type cit_begin (v.begin ());
             // End of range
@@ -589,14 +589,14 @@ namespace numerics {
 #endif
             // Element access
             t = v (i);
-			ignore_unused_variable_warning (n);
-			ignore_unused_variable_warning (cit_lower);
-			ignore_unused_variable_warning (cit_upper);
-			ignore_unused_variable_warning (cit_begin);
-			ignore_unused_variable_warning (cit_end);
-			ignore_unused_variable_warning (crit_begin);
-			ignore_unused_variable_warning (crit_end);
-			ignore_unused_variable_warning (t);
+            ignore_unused_variable_warning (n);
+            ignore_unused_variable_warning (cit_lower);
+            ignore_unused_variable_warning (cit_upper);
+            ignore_unused_variable_warning (cit_begin);
+            ignore_unused_variable_warning (cit_end);
+            ignore_unused_variable_warning (crit_begin);
+            ignore_unused_variable_warning (crit_end);
+            ignore_unused_variable_warning (t);
         }
     };
 
@@ -615,8 +615,8 @@ namespace numerics {
             size_type i (0);
             value_type t = value_type ();
             // Find (internal?)
-            iterator_type it_lower (v.lower_bound (i));
-            iterator_type it_upper (v.upper_bound (i));
+            iterator_type it_lower (v.find_first (i));
+            iterator_type it_upper (v.find_last (i));
             // Beginning of range
             iterator_type it_begin (v.begin ());
             // End of range
@@ -635,12 +635,12 @@ namespace numerics {
             v2 -= v1;
             v2.minus_assign (v1);
             v *= t;
-			ignore_unused_variable_warning (it_lower);
-			ignore_unused_variable_warning (it_upper);
-			ignore_unused_variable_warning (it_begin);
-			ignore_unused_variable_warning (it_end);
-			ignore_unused_variable_warning (rit_begin);
-			ignore_unused_variable_warning (rit_end);
+            ignore_unused_variable_warning (it_lower);
+            ignore_unused_variable_warning (it_upper);
+            ignore_unused_variable_warning (it_begin);
+            ignore_unused_variable_warning (it_end);
+            ignore_unused_variable_warning (rit_begin);
+            ignore_unused_variable_warning (rit_end);
         }
     };
 
@@ -661,10 +661,10 @@ namespace numerics {
             size_type n (0), i (0), j (0);
             value_type t = value_type ();
             // Find (internal?)
-            const_iterator1_type cit1_lower (m.lower_bound1 (0, i, j));
-            const_iterator1_type cit1_upper (m.upper_bound1 (0, i, j));
-            const_iterator2_type cit2_lower (m.lower_bound2 (0, i, j));
-            const_iterator2_type cit2_upper (m.upper_bound2 (0, i, j));
+            const_iterator1_type cit1_lower (m.find_first1 (0, i, j));
+            const_iterator1_type cit1_upper (m.find_last1 (0, i, j));
+            const_iterator2_type cit2_lower (m.find_first2 (0, i, j));
+            const_iterator2_type cit2_upper (m.find_last2 (0, i, j));
             // Beginning of range
             const_iterator1_type cit1_begin (m.begin1 ());
             const_iterator2_type cit2_begin (m.begin2 ());
@@ -693,20 +693,20 @@ namespace numerics {
 #endif
             // Element access
             t = m (i, j);
-			ignore_unused_variable_warning (n);
-			ignore_unused_variable_warning (cit1_lower);
-			ignore_unused_variable_warning (cit1_upper);
-			ignore_unused_variable_warning (cit2_lower);
-			ignore_unused_variable_warning (cit2_upper);
-			ignore_unused_variable_warning (cit1_begin);
-			ignore_unused_variable_warning (cit2_begin);
-			ignore_unused_variable_warning (cit1_end);
-			ignore_unused_variable_warning (cit2_end);
-			ignore_unused_variable_warning (crit1_begin);
-			ignore_unused_variable_warning (crit2_begin);
-			ignore_unused_variable_warning (crit1_end);
-			ignore_unused_variable_warning (crit2_end);
-			ignore_unused_variable_warning (t);
+            ignore_unused_variable_warning (n);
+            ignore_unused_variable_warning (cit1_lower);
+            ignore_unused_variable_warning (cit1_upper);
+            ignore_unused_variable_warning (cit2_lower);
+            ignore_unused_variable_warning (cit2_upper);
+            ignore_unused_variable_warning (cit1_begin);
+            ignore_unused_variable_warning (cit2_begin);
+            ignore_unused_variable_warning (cit1_end);
+            ignore_unused_variable_warning (cit2_end);
+            ignore_unused_variable_warning (crit1_begin);
+            ignore_unused_variable_warning (crit2_begin);
+            ignore_unused_variable_warning (crit1_end);
+            ignore_unused_variable_warning (crit2_end);
+            ignore_unused_variable_warning (t);
         }
     };
 
@@ -727,10 +727,10 @@ namespace numerics {
             size_type i (0), j (0);
             value_type t = value_type ();
             // Find (internal?)
-            iterator1_type it1_lower (m.lower_bound1 (0, i, j));
-            iterator1_type it1_upper (m.upper_bound1 (0, i, j));
-            iterator2_type it2_lower (m.lower_bound2 (0, i, j));
-            iterator2_type it2_upper (m.upper_bound2 (0, i, j));
+            iterator1_type it1_lower (m.find_first1 (0, i, j));
+            iterator1_type it1_upper (m.find_last1 (0, i, j));
+            iterator2_type it2_lower (m.find_first2 (0, i, j));
+            iterator2_type it2_upper (m.find_last2 (0, i, j));
             // Beginning of range
             iterator1_type it1_begin (m.begin1 ());
             iterator2_type it2_begin (m.begin2 ());
@@ -753,18 +753,18 @@ namespace numerics {
             m2 -= m1;
             m2.minus_assign (m1);
             m *= t;
-			ignore_unused_variable_warning (it1_lower);
-			ignore_unused_variable_warning (it1_upper);
-			ignore_unused_variable_warning (it2_lower);
-			ignore_unused_variable_warning (it2_upper);
-			ignore_unused_variable_warning (it1_begin);
-			ignore_unused_variable_warning (it2_begin);
-			ignore_unused_variable_warning (it1_end);
-			ignore_unused_variable_warning (it2_end);
-			ignore_unused_variable_warning (rit1_begin);
-			ignore_unused_variable_warning (rit2_begin);
-			ignore_unused_variable_warning (rit1_end);
-			ignore_unused_variable_warning (rit2_end);
+            ignore_unused_variable_warning (it1_lower);
+            ignore_unused_variable_warning (it1_upper);
+            ignore_unused_variable_warning (it2_lower);
+            ignore_unused_variable_warning (it2_upper);
+            ignore_unused_variable_warning (it1_begin);
+            ignore_unused_variable_warning (it2_begin);
+            ignore_unused_variable_warning (it1_end);
+            ignore_unused_variable_warning (it2_end);
+            ignore_unused_variable_warning (rit1_begin);
+            ignore_unused_variable_warning (rit2_begin);
+            ignore_unused_variable_warning (rit1_end);
+            ignore_unused_variable_warning (rit2_end);
         }
     };
 
@@ -903,7 +903,7 @@ namespace numerics {
             r = a + (- a) == zero (value_type ());
             r = (- a) + a == zero (value_type ());
             r = a + b == b + a;
-			ignore_unused_variable_warning (r);
+            ignore_unused_variable_warning (r);
         }
     };
 
@@ -920,6 +920,7 @@ namespace numerics {
             r = a * (one (value_type ()) / a) == a;
             r = (one (value_type ()) / a) * a == a;
             r = a * b == b * a;
+            ignore_unused_variable_warning (r);
         }
     };
 
@@ -935,7 +936,7 @@ namespace numerics {
             r = (a + b) * c == a * c + b * c;
             r = one (value_type ()) * a == a;
             r = a * one (value_type ()) == a;
-			ignore_unused_variable_warning (r);
+            ignore_unused_variable_warning (r);
         }
         static void constraints (int) {
             AdditiveAbelianGroup<value_type>::constraints ();
@@ -945,7 +946,7 @@ namespace numerics {
             r = prod (a + b, c) == prod (a, c) + prod (b, c);
             r = prod (one (value_type ()), a) == a;
             r = prod (a, one (value_type ())) == a;
-			ignore_unused_variable_warning (r);
+            ignore_unused_variable_warning (r);
         }
     };
 
@@ -958,7 +959,7 @@ namespace numerics {
             bool r;
             value_type a = value_type (), b = value_type ();
             r = a * b == b * a;
-			ignore_unused_variable_warning (r);
+            ignore_unused_variable_warning (r);
         }
     };
 
@@ -972,7 +973,7 @@ namespace numerics {
             value_type a = value_type ();
             r = a == zero (value_type ()) || a * (one (value_type ()) / a) == a;
             r = a == zero (value_type ()) || (one (value_type ()) / a) * a == a;
-			ignore_unused_variable_warning (r);
+            ignore_unused_variable_warning (r);
         }
     };
 
@@ -991,7 +992,7 @@ namespace numerics {
             r = (alpha + beta) * a == alpha * a + beta * a;
             r = (alpha * beta) * a == alpha * (beta * a);
             r = one (value_type ()) * a == a;
-			ignore_unused_variable_warning (r);
+            ignore_unused_variable_warning (r);
         }
     };
 
@@ -1008,7 +1009,7 @@ namespace numerics {
             vector_type a = vector_type (), b = vector_type ();
             matrix_type A = matrix_type ();
             r = prod (A, alpha * a + beta * b) == alpha * prod (A, a) + beta * prod (A, b);
-			ignore_unused_variable_warning (r);
+            ignore_unused_variable_warning (r);
         }
     };
  
@@ -1156,35 +1157,35 @@ namespace numerics {
         MutableMatrix<matrix<double> >::constraints ();
 #ifdef INTERNAL_ITERATOR
         IndexedRandomAccess2DIterator<matrix<double>::const_iterator1, 
-									  matrix<double>::const_iterator2>::constraints ();
+                                      matrix<double>::const_iterator2>::constraints ();
         MutableIndexedRandomAccess2DIterator<matrix<double>::iterator1, 
-											 matrix<double>::iterator2>::constraints ();
+                                             matrix<double>::iterator2>::constraints ();
         IndexedRandomAccess2DIterator<matrix<double>::const_reverse_iterator1, 
-									  matrix<double>::const_reverse_iterator2>::constraints ();
+                                      matrix<double>::const_reverse_iterator2>::constraints ();
         MutableIndexedRandomAccess2DIterator<matrix<double>::reverse_iterator1, 
-											 matrix<double>::reverse_iterator2>::constraints ();
+                                             matrix<double>::reverse_iterator2>::constraints ();
 #endif
 
         Matrix<const vector_of_vector<double> >::constraints ();
         MutableMatrix<vector_of_vector<double> >::constraints ();
 #ifdef INTERNAL_ITERATOR
         IndexedRandomAccess2DIterator<vector_of_vector<double>::const_iterator1, 
-									  vector_of_vector<double>::const_iterator2>::constraints ();
+                                      vector_of_vector<double>::const_iterator2>::constraints ();
         MutableIndexedRandomAccess2DIterator<vector_of_vector<double>::iterator1, 
-											 vector_of_vector<double>::iterator2>::constraints ();
+                                             vector_of_vector<double>::iterator2>::constraints ();
         IndexedRandomAccess2DIterator<vector_of_vector<double>::const_reverse_iterator1, 
-									  vector_of_vector<double>::const_reverse_iterator2>::constraints ();
+                                      vector_of_vector<double>::const_reverse_iterator2>::constraints ();
         MutableIndexedRandomAccess2DIterator<vector_of_vector<double>::reverse_iterator1, 
-											 vector_of_vector<double>::reverse_iterator2>::constraints ();
+                                             vector_of_vector<double>::reverse_iterator2>::constraints ();
 #endif
 
         Matrix<identity_matrix<double> >::constraints ();
 #ifdef INTERNAL_ITERATOR
 #ifndef USE_MSVC
         IndexedRandomAccess2DIterator<identity_matrix<double>::const_iterator1, 
-									  identity_matrix<double>::const_iterator2>::constraints ();
+                                      identity_matrix<double>::const_iterator2>::constraints ();
         IndexedRandomAccess2DIterator<identity_matrix<double>::const_reverse_iterator1, 
-									  identity_matrix<double>::const_reverse_iterator2>::constraints ();
+                                      identity_matrix<double>::const_reverse_iterator2>::constraints ();
 #endif
 #endif
 
@@ -1192,9 +1193,9 @@ namespace numerics {
 #ifdef INTERNAL_ITERATOR
 #ifndef USE_MSVC
         IndexedRandomAccess2DIterator<scalar_matrix<double>::const_iterator1, 
-									  scalar_matrix<double>::const_iterator2>::constraints ();
+                                      scalar_matrix<double>::const_iterator2>::constraints ();
         IndexedRandomAccess2DIterator<scalar_matrix<double>::const_reverse_iterator1, 
-									  scalar_matrix<double>::const_reverse_iterator2>::constraints ();
+                                      scalar_matrix<double>::const_reverse_iterator2>::constraints ();
 #endif
 #endif
 
@@ -1202,13 +1203,13 @@ namespace numerics {
         MutableMatrix<c_matrix<double, 1, 1> >::constraints ();
 #ifdef INTERNAL_ITERATOR
         IndexedRandomAccess2DIterator<c_matrix<double, 1, 1>::const_iterator1, 
-									  c_matrix<double, 1, 1>::const_iterator2>::constraints ();
+                                      c_matrix<double, 1, 1>::const_iterator2>::constraints ();
         MutableIndexedRandomAccess2DIterator<c_matrix<double, 1, 1>::iterator1, 
-											 c_matrix<double, 1, 1>::iterator2>::constraints ();
+                                             c_matrix<double, 1, 1>::iterator2>::constraints ();
         IndexedRandomAccess2DIterator<c_matrix<double, 1, 1>::const_reverse_iterator1, 
-									  c_matrix<double, 1, 1>::const_reverse_iterator2>::constraints ();
+                                      c_matrix<double, 1, 1>::const_reverse_iterator2>::constraints ();
         MutableIndexedRandomAccess2DIterator<c_matrix<double, 1, 1>::reverse_iterator1, 
-											 c_matrix<double, 1, 1>::reverse_iterator2>::constraints ();
+                                             c_matrix<double, 1, 1>::reverse_iterator2>::constraints ();
 #endif
 
         // Matrix Proxies
@@ -1254,14 +1255,14 @@ namespace numerics {
         MutableMatrixExpression<matrix_range<matrix<double> > >::constraints ();
 #ifdef INTERNAL_ITERATOR
         IndexedRandomAccess2DIterator<matrix_range<matrix<double> >::const_iterator1, 
-									  matrix_range<matrix<double> >::const_iterator2>::constraints ();
+                                      matrix_range<matrix<double> >::const_iterator2>::constraints ();
         MutableIndexedRandomAccess2DIterator<matrix_range<matrix<double> >::iterator1, 
-											 matrix_range<matrix<double> >::iterator2>::constraints ();
+                                             matrix_range<matrix<double> >::iterator2>::constraints ();
 #ifndef USE_MSVC
         IndexedRandomAccess2DIterator<matrix_range<matrix<double> >::const_reverse_iterator1, 
-									  matrix_range<matrix<double> >::const_reverse_iterator2>::constraints ();
+                                      matrix_range<matrix<double> >::const_reverse_iterator2>::constraints ();
         MutableIndexedRandomAccess2DIterator<matrix_range<matrix<double> >::reverse_iterator1, 
-											 matrix_range<matrix<double> >::reverse_iterator2>::constraints ();
+                                             matrix_range<matrix<double> >::reverse_iterator2>::constraints ();
 #endif
 #endif
 
@@ -1269,14 +1270,14 @@ namespace numerics {
         MutableMatrixExpression<matrix_slice<matrix<double> > >::constraints ();
 #ifdef INTERNAL_ITERATOR
         IndexedRandomAccess2DIterator<matrix_slice<matrix<double> >::const_iterator1, 
-									  matrix_slice<matrix<double> >::const_iterator2>::constraints ();
+                                      matrix_slice<matrix<double> >::const_iterator2>::constraints ();
         MutableIndexedRandomAccess2DIterator<matrix_slice<matrix<double> >::iterator1, 
-											 matrix_slice<matrix<double> >::iterator2>::constraints ();
+                                             matrix_slice<matrix<double> >::iterator2>::constraints ();
 #ifndef USE_MSVC
         IndexedRandomAccess2DIterator<matrix_slice<matrix<double> >::const_reverse_iterator1, 
-									  matrix_slice<matrix<double> >::const_reverse_iterator2>::constraints ();
+                                      matrix_slice<matrix<double> >::const_reverse_iterator2>::constraints ();
         MutableIndexedRandomAccess2DIterator<matrix_slice<matrix<double> >::reverse_iterator1, 
-											 matrix_slice<matrix<double> >::reverse_iterator2>::constraints ();
+                                             matrix_slice<matrix<double> >::reverse_iterator2>::constraints ();
 #endif
 #endif
 
@@ -1285,26 +1286,26 @@ namespace numerics {
         MutableMatrix<banded_matrix<double> >::constraints ();
 #ifdef INTERNAL_ITERATOR
         IndexedBidirectional2DIterator<banded_matrix<double>::const_iterator1, 
-									   banded_matrix<double>::const_iterator2>::constraints ();
+                                       banded_matrix<double>::const_iterator2>::constraints ();
         MutableIndexedBidirectional2DIterator<banded_matrix<double>::iterator1, 
-											  banded_matrix<double>::iterator2>::constraints ();
+                                              banded_matrix<double>::iterator2>::constraints ();
         IndexedBidirectional2DIterator<banded_matrix<double>::const_reverse_iterator1, 
-									   banded_matrix<double>::const_reverse_iterator2>::constraints ();
+                                       banded_matrix<double>::const_reverse_iterator2>::constraints ();
         MutableIndexedBidirectional2DIterator<banded_matrix<double>::reverse_iterator1, 
-											  banded_matrix<double>::reverse_iterator2>::constraints ();
+                                              banded_matrix<double>::reverse_iterator2>::constraints ();
 #endif
 
         MatrixExpression<const banded_adaptor<const matrix<double> > >::constraints ();
         MutableMatrixExpression<banded_adaptor<matrix<double> > >::constraints ();
 #ifdef INTERNAL_ITERATOR
         IndexedBidirectional2DIterator<banded_adaptor<matrix<double> >::const_iterator1, 
-									   banded_adaptor<matrix<double> >::const_iterator2>::constraints ();
+                                       banded_adaptor<matrix<double> >::const_iterator2>::constraints ();
         MutableIndexedBidirectional2DIterator<banded_adaptor<matrix<double> >::iterator1, 
-											  banded_adaptor<matrix<double> >::iterator2>::constraints ();
+                                              banded_adaptor<matrix<double> >::iterator2>::constraints ();
         IndexedBidirectional2DIterator<banded_adaptor<matrix<double> >::const_reverse_iterator1, 
-									   banded_adaptor<matrix<double> >::const_reverse_iterator2>::constraints ();
+                                       banded_adaptor<matrix<double> >::const_reverse_iterator2>::constraints ();
         MutableIndexedBidirectional2DIterator<banded_adaptor<matrix<double> >::reverse_iterator1,
-											  banded_adaptor<matrix<double> >::reverse_iterator2>::constraints ();
+                                              banded_adaptor<matrix<double> >::reverse_iterator2>::constraints ();
 #endif
 
         // Triangular Matrix
@@ -1312,26 +1313,26 @@ namespace numerics {
         MutableMatrix<triangular_matrix<double> >::constraints ();
 #ifdef INTERNAL_ITERATOR
         IndexedBidirectional2DIterator<triangular_matrix<double>::const_iterator1, 
-									   triangular_matrix<double>::const_iterator2>::constraints ();
+                                       triangular_matrix<double>::const_iterator2>::constraints ();
         MutableIndexedBidirectional2DIterator<triangular_matrix<double>::iterator1, 
-											  triangular_matrix<double>::iterator2>::constraints ();
+                                              triangular_matrix<double>::iterator2>::constraints ();
         IndexedBidirectional2DIterator<triangular_matrix<double>::const_reverse_iterator1, 
-									   triangular_matrix<double>::const_reverse_iterator2>::constraints ();
+                                       triangular_matrix<double>::const_reverse_iterator2>::constraints ();
         MutableIndexedBidirectional2DIterator<triangular_matrix<double>::reverse_iterator1, 
-											  triangular_matrix<double>::reverse_iterator2>::constraints ();
+                                              triangular_matrix<double>::reverse_iterator2>::constraints ();
 #endif
 
         MatrixExpression<const triangular_adaptor<const matrix<double> > >::constraints ();
         MutableMatrixExpression<triangular_adaptor<matrix<double> > >::constraints ();
 #ifdef INTERNAL_ITERATOR
         IndexedBidirectional2DIterator<triangular_adaptor<matrix<double> >::const_iterator1, 
-									   triangular_adaptor<matrix<double> >::const_iterator2>::constraints ();
+                                       triangular_adaptor<matrix<double> >::const_iterator2>::constraints ();
         MutableIndexedBidirectional2DIterator<triangular_adaptor<matrix<double> >::iterator1, 
-											  triangular_adaptor<matrix<double> >::iterator2>::constraints ();
+                                              triangular_adaptor<matrix<double> >::iterator2>::constraints ();
         IndexedBidirectional2DIterator<triangular_adaptor<matrix<double> >::const_reverse_iterator1, 
-									   triangular_adaptor<matrix<double> >::const_reverse_iterator2>::constraints ();
+                                       triangular_adaptor<matrix<double> >::const_reverse_iterator2>::constraints ();
         MutableIndexedBidirectional2DIterator<triangular_adaptor<matrix<double> >::reverse_iterator1, 
-											  triangular_adaptor<matrix<double> >::reverse_iterator2>::constraints ();
+                                              triangular_adaptor<matrix<double> >::reverse_iterator2>::constraints ();
 #endif
 
         // Symmetric Matrix
@@ -1339,26 +1340,26 @@ namespace numerics {
         MutableMatrix<symmetric_matrix<double> >::constraints ();
 #ifdef INTERNAL_ITERATOR
         IndexedBidirectional2DIterator<symmetric_matrix<double>::const_iterator1, 
-									   symmetric_matrix<double>::const_iterator2>::constraints ();
+                                       symmetric_matrix<double>::const_iterator2>::constraints ();
         MutableIndexedBidirectional2DIterator<symmetric_matrix<double>::iterator1, 
-											  symmetric_matrix<double>::iterator2>::constraints ();
+                                              symmetric_matrix<double>::iterator2>::constraints ();
         IndexedBidirectional2DIterator<symmetric_matrix<double>::const_reverse_iterator1, 
-									   symmetric_matrix<double>::const_reverse_iterator2>::constraints ();
+                                       symmetric_matrix<double>::const_reverse_iterator2>::constraints ();
         MutableIndexedBidirectional2DIterator<symmetric_matrix<double>::reverse_iterator1, 
-											  symmetric_matrix<double>::reverse_iterator2>::constraints ();
+                                              symmetric_matrix<double>::reverse_iterator2>::constraints ();
 #endif
 
         MatrixExpression<const symmetric_adaptor<const matrix<double> > >::constraints ();
         MutableMatrixExpression<symmetric_adaptor<matrix<double> > >::constraints ();
 #ifdef INTERNAL_ITERATOR
         IndexedBidirectional2DIterator<symmetric_adaptor<matrix<double> >::const_iterator1, 
-									   symmetric_adaptor<matrix<double> >::const_iterator2>::constraints ();
+                                       symmetric_adaptor<matrix<double> >::const_iterator2>::constraints ();
         MutableIndexedBidirectional2DIterator<symmetric_adaptor<matrix<double> >::iterator1, 
-											  symmetric_adaptor<matrix<double> >::iterator2>::constraints ();
+                                              symmetric_adaptor<matrix<double> >::iterator2>::constraints ();
         IndexedBidirectional2DIterator<symmetric_adaptor<matrix<double> >::const_reverse_iterator1, 
-									   symmetric_adaptor<matrix<double> >::const_reverse_iterator2>::constraints ();
+                                       symmetric_adaptor<matrix<double> >::const_reverse_iterator2>::constraints ();
         MutableIndexedBidirectional2DIterator<symmetric_adaptor<matrix<double> >::reverse_iterator1, 
-											  symmetric_adaptor<matrix<double> >::reverse_iterator2>::constraints ();
+                                              symmetric_adaptor<matrix<double> >::reverse_iterator2>::constraints ();
 #endif
 
         // Hermitean Matrix
@@ -1366,26 +1367,26 @@ namespace numerics {
         MutableMatrix<hermitean_matrix<double> >::constraints ();
 #ifdef INTERNAL_ITERATOR
         IndexedBidirectional2DIterator<hermitean_matrix<double>::const_iterator1, 
-									   hermitean_matrix<double>::const_iterator2>::constraints ();
+                                       hermitean_matrix<double>::const_iterator2>::constraints ();
         MutableIndexedBidirectional2DIterator<hermitean_matrix<double>::iterator1, 
-										      hermitean_matrix<double>::iterator2>::constraints ();
+                                              hermitean_matrix<double>::iterator2>::constraints ();
         IndexedBidirectional2DIterator<hermitean_matrix<double>::const_reverse_iterator1, 
-									   hermitean_matrix<double>::const_reverse_iterator2>::constraints ();
+                                       hermitean_matrix<double>::const_reverse_iterator2>::constraints ();
         MutableIndexedBidirectional2DIterator<hermitean_matrix<double>::reverse_iterator1, 
-											  hermitean_matrix<double>::reverse_iterator2>::constraints ();
+                                              hermitean_matrix<double>::reverse_iterator2>::constraints ();
 #endif
 
         MatrixExpression<const hermitean_adaptor<const matrix<double> > >::constraints ();
         MutableMatrixExpression<hermitean_adaptor<matrix<double> > >::constraints ();
 #ifdef INTERNAL_ITERATOR
         IndexedBidirectional2DIterator<hermitean_adaptor<matrix<double> >::const_iterator1, 
-									   hermitean_adaptor<matrix<double> >::const_iterator2>::constraints ();
+                                       hermitean_adaptor<matrix<double> >::const_iterator2>::constraints ();
         MutableIndexedBidirectional2DIterator<hermitean_adaptor<matrix<double> >::iterator1, 
-											  hermitean_adaptor<matrix<double> >::iterator2>::constraints ();
+                                              hermitean_adaptor<matrix<double> >::iterator2>::constraints ();
         IndexedBidirectional2DIterator<hermitean_adaptor<matrix<double> >::const_reverse_iterator1, 
-									   hermitean_adaptor<matrix<double> >::const_reverse_iterator2>::constraints ();
+                                       hermitean_adaptor<matrix<double> >::const_reverse_iterator2>::constraints ();
         MutableIndexedBidirectional2DIterator<hermitean_adaptor<matrix<double> >::reverse_iterator1, 
-											  hermitean_adaptor<matrix<double> >::reverse_iterator2>::constraints ();
+                                              hermitean_adaptor<matrix<double> >::reverse_iterator2>::constraints ();
 #endif
 
         // Sparse Matrix
@@ -1393,14 +1394,14 @@ namespace numerics {
         MutableMatrix<sparse_matrix<double> >::constraints ();
 #ifdef INTERNAL_ITERATOR
         IndexedBidirectional2DIterator<sparse_matrix<double>::const_iterator1, 
-									   sparse_matrix<double>::const_iterator2>::constraints ();
+                                       sparse_matrix<double>::const_iterator2>::constraints ();
         MutableIndexedBidirectional2DIterator<sparse_matrix<double>::iterator1, 
-											  sparse_matrix<double>::iterator2>::constraints ();
+                                              sparse_matrix<double>::iterator2>::constraints ();
 #ifndef USE_MSVC
         IndexedBidirectional2DIterator<sparse_matrix<double>::const_reverse_iterator1, 
-									   sparse_matrix<double>::const_reverse_iterator2>::constraints ();
+                                       sparse_matrix<double>::const_reverse_iterator2>::constraints ();
         MutableIndexedBidirectional2DIterator<sparse_matrix<double>::reverse_iterator1, 
-											  sparse_matrix<double>::reverse_iterator2>::constraints ();
+                                              sparse_matrix<double>::reverse_iterator2>::constraints ();
 #endif
 #endif
 
@@ -1408,14 +1409,14 @@ namespace numerics {
         MutableMatrix<sparse_vector_of_sparse_vector<double> >::constraints ();
 #ifdef INTERNAL_ITERATOR
         IndexedBidirectional2DIterator<sparse_vector_of_sparse_vector<double>::const_iterator1, 
-									   sparse_vector_of_sparse_vector<double>::const_iterator2>::constraints ();
+                                       sparse_vector_of_sparse_vector<double>::const_iterator2>::constraints ();
         MutableIndexedBidirectional2DIterator<sparse_vector_of_sparse_vector<double>::iterator1, 
-											  sparse_vector_of_sparse_vector<double>::iterator2>::constraints ();
+                                              sparse_vector_of_sparse_vector<double>::iterator2>::constraints ();
 #ifndef USE_MSVC
         IndexedBidirectional2DIterator<sparse_vector_of_sparse_vector<double>::const_reverse_iterator1, 
-									   sparse_vector_of_sparse_vector<double>::const_reverse_iterator2>::constraints ();
+                                       sparse_vector_of_sparse_vector<double>::const_reverse_iterator2>::constraints ();
         MutableIndexedBidirectional2DIterator<sparse_vector_of_sparse_vector<double>::reverse_iterator1, 
-											  sparse_vector_of_sparse_vector<double>::reverse_iterator2>::constraints ();
+                                              sparse_vector_of_sparse_vector<double>::reverse_iterator2>::constraints ();
 #endif
 #endif
 
@@ -1423,14 +1424,14 @@ namespace numerics {
         MutableMatrix<compressed_matrix<double> >::constraints ();
 #ifdef INTERNAL_ITERATOR
         IndexedBidirectional2DIterator<compressed_matrix<double>::const_iterator1, 
-									   compressed_matrix<double>::const_iterator2>::constraints ();
+                                       compressed_matrix<double>::const_iterator2>::constraints ();
         MutableIndexedBidirectional2DIterator<compressed_matrix<double>::iterator1, 
-											  compressed_matrix<double>::iterator2>::constraints ();
+                                              compressed_matrix<double>::iterator2>::constraints ();
 #ifndef USE_MSVC
         IndexedBidirectional2DIterator<compressed_matrix<double>::const_reverse_iterator1, 
-									   compressed_matrix<double>::const_reverse_iterator2>::constraints ();
+                                       compressed_matrix<double>::const_reverse_iterator2>::constraints ();
         MutableIndexedBidirectional2DIterator<compressed_matrix<double>::reverse_iterator1, 
-											  compressed_matrix<double>::reverse_iterator2>::constraints ();
+                                              compressed_matrix<double>::reverse_iterator2>::constraints ();
 #endif
 #endif
 #endif
@@ -1491,10 +1492,10 @@ namespace numerics {
         MatrixExpression<matrix_const_reference<matrix<double> > >::constraints ();
 #ifdef INTERNAL_ITERATOR
         IndexedBidirectional2DIterator<matrix_const_reference<matrix<double> >::const_iterator1, 
-									   matrix_const_reference<matrix<double> >::const_iterator2>::constraints ();
+                                       matrix_const_reference<matrix<double> >::const_iterator2>::constraints ();
 #ifndef USE_MSVC
         IndexedBidirectional2DIterator<matrix_const_reference<matrix<double> >::const_reverse_iterator1, 
-									   matrix_const_reference<matrix<double> >::const_reverse_iterator2>::constraints ();
+                                       matrix_const_reference<matrix<double> >::const_reverse_iterator2>::constraints ();
 #endif
 #endif
 
@@ -1502,74 +1503,74 @@ namespace numerics {
         // MutableMatrixExpression<matrix_reference<matrix<double> > >::constraints ();
 #ifdef INTERNAL_ITERATOR
         IndexedBidirectional2DIterator<matrix_reference<matrix<double> >::const_iterator1, 
-									   matrix_reference<matrix<double> >::const_iterator2>::constraints ();
+                                       matrix_reference<matrix<double> >::const_iterator2>::constraints ();
         MutableIndexedBidirectional2DIterator<matrix_reference<matrix<double> >::iterator1, 
-											  matrix_reference<matrix<double> >::iterator2>::constraints ();
+                                              matrix_reference<matrix<double> >::iterator2>::constraints ();
 #ifndef USE_MSVC
         IndexedBidirectional2DIterator<matrix_reference<matrix<double> >::const_reverse_iterator1, 
-									   matrix_reference<matrix<double> >::const_reverse_iterator2>::constraints ();
+                                       matrix_reference<matrix<double> >::const_reverse_iterator2>::constraints ();
         MutableIndexedBidirectional2DIterator<matrix_reference<matrix<double> >::reverse_iterator1, 
-											  matrix_reference<matrix<double> >::reverse_iterator2>::constraints ();
+                                              matrix_reference<matrix<double> >::reverse_iterator2>::constraints ();
 #endif
 #endif
 
         MatrixExpression<vector_matrix_binary<vector<double>, vector<double>, scalar_multiplies<double, double> > >::constraints ();
 #ifdef INTERNAL_ITERATOR
         IndexedBidirectional2DIterator<vector_matrix_binary<vector<double>, vector<double>, scalar_multiplies<double, double> >::const_iterator1, 
-									   vector_matrix_binary<vector<double>, vector<double>, scalar_multiplies<double, double> >::const_iterator2>::constraints ();
+                                       vector_matrix_binary<vector<double>, vector<double>, scalar_multiplies<double, double> >::const_iterator2>::constraints ();
 #ifndef USE_MSVC
         IndexedBidirectional2DIterator<vector_matrix_binary<vector<double>, vector<double>, scalar_multiplies<double, double> >::const_reverse_iterator1, 
-									   vector_matrix_binary<vector<double>, vector<double>, scalar_multiplies<double, double> >::const_reverse_iterator2>::constraints ();
+                                       vector_matrix_binary<vector<double>, vector<double>, scalar_multiplies<double, double> >::const_reverse_iterator2>::constraints ();
 #endif
 #endif
 
         MatrixExpression<matrix_unary1<matrix<double>, scalar_identity<double> > >::constraints ();
 #ifdef INTERNAL_ITERATOR
         IndexedBidirectional2DIterator<matrix_unary1<matrix<double>, scalar_identity<double> >::const_iterator1, 
-									   matrix_unary1<matrix<double>, scalar_identity<double> >::const_iterator2>::constraints ();
+                                       matrix_unary1<matrix<double>, scalar_identity<double> >::const_iterator2>::constraints ();
 #ifndef USE_MSVC
         IndexedBidirectional2DIterator<matrix_unary1<matrix<double>, scalar_identity<double> >::const_reverse_iterator1, 
-									   matrix_unary1<matrix<double>, scalar_identity<double> >::const_reverse_iterator2>::constraints ();
+                                       matrix_unary1<matrix<double>, scalar_identity<double> >::const_reverse_iterator2>::constraints ();
 #endif
 #endif
 
         MatrixExpression<matrix_unary2<matrix<double>, scalar_identity<double> > >::constraints ();
 #ifdef INTERNAL_ITERATOR
         IndexedBidirectional2DIterator<matrix_unary2<matrix<double>, scalar_identity<double> >::const_iterator1, 
-									   matrix_unary2<matrix<double>, scalar_identity<double> >::const_iterator2>::constraints ();
+                                       matrix_unary2<matrix<double>, scalar_identity<double> >::const_iterator2>::constraints ();
 #ifndef USE_MSVC
         IndexedBidirectional2DIterator<matrix_unary2<matrix<double>, scalar_identity<double> >::const_reverse_iterator1, 
-									   matrix_unary2<matrix<double>, scalar_identity<double> >::const_reverse_iterator2>::constraints ();
+                                       matrix_unary2<matrix<double>, scalar_identity<double> >::const_reverse_iterator2>::constraints ();
 #endif
 #endif
 
         MatrixExpression<matrix_binary<matrix<double>, matrix<double>, scalar_plus<double, double> > >::constraints ();
 #ifdef INTERNAL_ITERATOR
         IndexedBidirectional2DIterator<matrix_binary<matrix<double>, matrix<double>, scalar_plus<double, double> >::const_iterator1, 
-									   matrix_binary<matrix<double>, matrix<double>, scalar_plus<double, double> >::const_iterator2>::constraints ();
+                                       matrix_binary<matrix<double>, matrix<double>, scalar_plus<double, double> >::const_iterator2>::constraints ();
 #ifndef USE_MSVC
         IndexedBidirectional2DIterator<matrix_binary<matrix<double>, matrix<double>, scalar_plus<double, double> >::const_reverse_iterator1, 
-									   matrix_binary<matrix<double>, matrix<double>, scalar_plus<double, double> >::const_reverse_iterator2>::constraints ();
+                                       matrix_binary<matrix<double>, matrix<double>, scalar_plus<double, double> >::const_reverse_iterator2>::constraints ();
 #endif
 #endif
 
         MatrixExpression<matrix_binary_scalar1<scalar_value<double>, matrix<double>, scalar_multiplies<double, double> > >::constraints ();
 #ifdef INTERNAL_ITERATOR
         IndexedBidirectional2DIterator<matrix_binary_scalar1<scalar_value<double>, matrix<double>, scalar_multiplies<double, double> >::const_iterator1, 
-									   matrix_binary_scalar1<scalar_value<double>, matrix<double>, scalar_multiplies<double, double> >::const_iterator2>::constraints ();
+                                       matrix_binary_scalar1<scalar_value<double>, matrix<double>, scalar_multiplies<double, double> >::const_iterator2>::constraints ();
 #ifndef USE_MSVC
         IndexedBidirectional2DIterator<matrix_binary_scalar1<scalar_value<double>, matrix<double>, scalar_multiplies<double, double> >::const_reverse_iterator1, 
-									   matrix_binary_scalar1<scalar_value<double>, matrix<double>, scalar_multiplies<double, double> >::const_reverse_iterator2>::constraints ();
+                                       matrix_binary_scalar1<scalar_value<double>, matrix<double>, scalar_multiplies<double, double> >::const_reverse_iterator2>::constraints ();
 #endif
 #endif
 
         MatrixExpression<matrix_binary_scalar2<matrix<double>, scalar_value<double>, scalar_multiplies<double, double> > >::constraints ();
 #ifdef INTERNAL_ITERATOR
         IndexedBidirectional2DIterator<matrix_binary_scalar2<matrix<double>, scalar_value<double>, scalar_multiplies<double, double> >::const_iterator1, 
-									   matrix_binary_scalar2<matrix<double>, scalar_value<double>, scalar_multiplies<double, double> >::const_iterator2>::constraints ();
+                                       matrix_binary_scalar2<matrix<double>, scalar_value<double>, scalar_multiplies<double, double> >::const_iterator2>::constraints ();
 #ifndef USE_MSVC
         IndexedBidirectional2DIterator<matrix_binary_scalar2<matrix<double>, scalar_value<double>, scalar_multiplies<double, double> >::const_reverse_iterator1, 
-									   matrix_binary_scalar2<matrix<double>, scalar_value<double>, scalar_multiplies<double, double> >::const_reverse_iterator2>::constraints ();
+                                       matrix_binary_scalar2<matrix<double>, scalar_value<double>, scalar_multiplies<double, double> >::const_reverse_iterator2>::constraints ();
 #endif
 #endif
 
@@ -1592,10 +1593,10 @@ namespace numerics {
         MatrixExpression<matrix_matrix_binary<matrix<double>, matrix<double>, matrix_matrix_prod<double, double, double> > >::constraints ();
 #ifdef INTERNAL_ITERATOR
         IndexedBidirectional2DIterator<matrix_matrix_binary<matrix<double>, matrix<double>, matrix_matrix_prod<double, double, double> >::const_iterator1, 
-									   matrix_matrix_binary<matrix<double>, matrix<double>, matrix_matrix_prod<double, double, double> >::const_iterator2>::constraints ();
+                                       matrix_matrix_binary<matrix<double>, matrix<double>, matrix_matrix_prod<double, double, double> >::const_iterator2>::constraints ();
 #ifndef USE_MSVC
         IndexedBidirectional2DIterator<matrix_matrix_binary<matrix<double>, matrix<double>, matrix_matrix_prod<double, double, double> >::const_reverse_iterator1, 
-									   matrix_matrix_binary<matrix<double>, matrix<double>, matrix_matrix_prod<double, double, double> >::const_reverse_iterator2>::constraints ();
+                                       matrix_matrix_binary<matrix<double>, matrix<double>, matrix_matrix_prod<double, double, double> >::const_reverse_iterator2>::constraints ();
 #endif
 #endif
 

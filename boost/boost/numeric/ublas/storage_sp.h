@@ -1,5 +1,5 @@
 //  
-//  Copyright (c) 2000-2001
+//  Copyright (c) 2000-2002
 //  Joerg Walter, Mathias Koch
 //  
 //  Permission to use, copy, modify, distribute and sell this software
@@ -11,7 +11,7 @@
 //  It is provided "as is" without express or implied warranty.
 //  
 //  The authors gratefully acknowledge the support of 
-//	GeNeSys mbH & Co. KG in producing this work.
+//  GeNeSys mbH & Co. KG in producing this work.
 //
 
 #ifndef NUMERICS_STORAGE_SP_H
@@ -30,7 +30,7 @@ namespace numerics {
 
     template<class P>
     struct less {
-		NUMERICS_INLINE
+        NUMERICS_INLINE
         bool operator () (const P &p1, const P &p2) {
             return p1.first < p2.first;
         }
@@ -126,7 +126,7 @@ namespace numerics {
 
         // Swapping
         NUMERICS_INLINE
-	    void swap (map_array &a) {
+        void swap (map_array &a) {
             check (this != &a, external_logic ());
             std::swap (capacity_, a.capacity_);
             std::swap (data_, a.data_);
@@ -134,7 +134,7 @@ namespace numerics {
         }
 #ifndef USE_GCC
         NUMERICS_INLINE
-	    friend void swap (map_array &a1, map_array &a2) {
+        friend void swap (map_array &a1, map_array &a2) {
             a1.swap (a2);
         }
 #endif
@@ -216,9 +216,9 @@ namespace numerics {
                 return end ();
 #else
             const_pointer it (std::lower_bound (begin (), end (), value_type (i, data_value_type ()), less<value_type> ()));
-			if (it == end () || it->first != i)
-				it = end ();
-			return it;
+            if (it == end () || it->first != i)
+                it = end ();
+            return it;
 #endif
         }
         // This function seems to be big. So we do not let the compiler inline it.
@@ -235,9 +235,9 @@ namespace numerics {
                 return end ();
 #else
             pointer it (std::lower_bound (begin (), end (), value_type (i, data_value_type ()), less<value_type> ()));
-			if (it == end () || it->first != i)
-				it = end ();
-			return it;
+            if (it == end () || it->first != i)
+                it = end ();
+            return it;
 #endif
         }
         // This function seems to be big. So we do not let the compiler inline it.
@@ -433,7 +433,7 @@ namespace numerics {
 
         // Swapping
         NUMERICS_INLINE
-	    void swap (set_array &a) {
+        void swap (set_array &a) {
             check (this != &a, external_logic ());
             std::swap (capacity_, a.capacity_);
             std::swap (data_, a.data_);
@@ -441,7 +441,7 @@ namespace numerics {
         }
 #ifndef USE_GCC
         NUMERICS_INLINE
-	    friend void swap (set_array &a1, set_array &a2) {
+        friend void swap (set_array &a1, set_array &a2) {
             a1.swap (a2);
         }
 #endif
@@ -520,9 +520,9 @@ namespace numerics {
                 return end ();
 #else
             const_pointer it (std::lower_bound (begin (), end (), i, std::less<value_type> ()));
-			if (it == end () || *it != i)
-				it = end ();
-			return it;
+            if (it == end () || *it != i)
+                it = end ();
+            return it;
 #endif
         }
         // This function seems to be big. So we do not let the compiler inline it.
@@ -539,9 +539,9 @@ namespace numerics {
                 return end ();
 #else
             pointer it (std::lower_bound (begin (), end (), i, std::less<value_type> ()));
-			if (it == end () || *it != i)
-				it = end ();
-			return it;
+            if (it == end () || *it != i)
+                it = end ();
+            return it;
 #endif
         }
         // This function seems to be big. So we do not let the compiler inline it.

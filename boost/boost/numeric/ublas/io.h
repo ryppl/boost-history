@@ -1,5 +1,5 @@
 //  
-//  Copyright (c) 2000-2001
+//  Copyright (c) 2000-2002
 //  Joerg Walter, Mathias Koch
 //  
 //  Permission to use, copy, modify, distribute and sell this software
@@ -11,7 +11,7 @@
 //  It is provided "as is" without express or implied warranty.
 //  
 //  The authors gratefully acknowledge the support of 
-//	GeNeSys mbH & Co. KG in producing this work.
+//  GeNeSys mbH & Co. KG in producing this work.
 //
 
 #ifndef NUMERICS_IO_H
@@ -30,16 +30,16 @@ namespace numerics {
                                            const vector_expression<VE> &v) {
         std::size_t size = v ().size ();
         std::basic_ostringstream<E, T, std::allocator<E> > s;
-	    s.flags (os.flags ());
-	    s.imbue (os.getloc ());
-	    s.precision (os.precision ());
+        s.flags (os.flags ());
+        s.imbue (os.getloc ());
+        s.precision (os.precision ());
         s << '[' << size << "](";
         if (size > 0)
             s << v () (0);
         for (std::size_t i = 1; i < size; ++ i) 
             s << ',' << v () (i);
         s << ')';
-	    return os << s.str ().c_str (); 
+        return os << s.str ().c_str (); 
     }
 
     template<class E, class T, class VT, class VA> 
@@ -49,24 +49,24 @@ namespace numerics {
                                            const vector<VT, VA> &v) {
         std::size_t size = v.size ();
         std::basic_ostringstream<E, T, std::allocator<E> > s;
-	    s.flags (os.flags ());
-	    s.imbue (os.getloc ());
-	    s.precision (os.precision ());
+        s.flags (os.flags ());
+        s.imbue (os.getloc ());
+        s.precision (os.precision ());
         s << '[' << size << "](";
         if (size > 0)
             s << v (0);
         for (std::size_t i = 1; i < size; ++ i) 
             s << ',' << v (i);
         s << ')';
-	    return os << s.str ().c_str (); 
+        return os << s.str ().c_str (); 
     }
 
     template<class E, class T, class VT, class VA> 
     // This function seems to be big. So we do not let the compiler inline it.
     // NUMERICS_INLINE
     std::basic_istream<E, T> &operator >> (std::basic_istream<E, T> &is, 
-										   vector<VT, VA> &v) {
-	    E ch;
+                                           vector<VT, VA> &v) {
+        E ch;
         std::size_t size;
         if (is >> ch && ch != '[') {
             is.putback (ch);
@@ -98,7 +98,7 @@ namespace numerics {
                 v = s;
             }
         }
-	    return is; 
+        return is; 
     }
 
     template<class E, class T, class ME> 
@@ -109,9 +109,9 @@ namespace numerics {
         std::size_t size1 = m ().size1 ();
         std::size_t size2 = m ().size2 ();
         std::basic_ostringstream<E, T, std::allocator<E> > s;
-	    s.flags (os.flags ());
-	    s.imbue (os.getloc ());
-	    s.precision (os.precision ());
+        s.flags (os.flags ());
+        s.imbue (os.getloc ());
+        s.precision (os.precision ());
         s << '[' << size1 << ',' << size2 << "](";
         if (size1 > 0) {
             s << '(' ;
@@ -130,7 +130,7 @@ namespace numerics {
             s << ')';
         }
         s << ')';
-	    return os << s.str ().c_str (); 
+        return os << s.str ().c_str (); 
     }
 
     template<class E, class T, class MT, class MF, class MA> 
@@ -141,9 +141,9 @@ namespace numerics {
         std::size_t size1 = m.size1 ();
         std::size_t size2 = m.size2 ();
         std::basic_ostringstream<E, T, std::allocator<E> > s;
-	    s.flags (os.flags ());
-	    s.imbue (os.getloc ());
-	    s.precision (os.precision ());
+        s.flags (os.flags ());
+        s.imbue (os.getloc ());
+        s.precision (os.precision ());
         s << '[' << size1 << ',' << size2 << "](";
         if (size1 > 0) {
             s << '(' ;
@@ -162,7 +162,7 @@ namespace numerics {
             s << ')';
         }
         s << ')';
-	    return os << s.str ().c_str (); 
+        return os << s.str ().c_str (); 
     }
 
     template<class E, class T, class MT, class MF, class MA> 
@@ -170,7 +170,7 @@ namespace numerics {
     // NUMERICS_INLINE
     std::basic_istream<E, T> &operator >> (std::basic_istream<E, T> &is, 
                                            matrix<MT, MF, MA> &m) {
-	    E ch;
+        E ch;
         std::size_t size1, size2;
         if (is >> ch && ch != '[') {
             is.putback (ch);
@@ -225,7 +225,7 @@ namespace numerics {
                 m = s;
             }
         }
-	    return is; 
+        return is; 
     }
 
 #endif 
@@ -244,7 +244,7 @@ namespace numerics {
         for (std::size_t i = 1; i < size; ++ i) 
             os << ',' << v () (i);
         os << ')';
-	    return os; 
+        return os; 
     }
 
     template<class VT, class VA> 
@@ -259,15 +259,15 @@ namespace numerics {
         for (std::size_t i = 1; i < size; ++ i) 
             os << ',' << v (i);
         os << ')';
-	    return os; 
+        return os; 
     }
 
     template<class VT, class VA> 
     // This function seems to be big. So we do not let the compiler inline it.
     // NUMERICS_INLINE
     std::istream &operator >> (std::istream &is, 
-							   vector<VT, VA> &v) {
-	    char ch;
+                               vector<VT, VA> &v) {
+        char ch;
         std::size_t size;
         if (is >> ch && ch != '[') {
             is.putback (ch);
@@ -299,7 +299,7 @@ namespace numerics {
                 v = s;
             }
         }
-	    return is; 
+        return is; 
     }
 
     template<class ME> 
@@ -327,7 +327,7 @@ namespace numerics {
             os << ')';
         }
         os << ')';
-	    return os; 
+        return os; 
     }
 
     template<class MT, class MF, class MA> 
@@ -355,7 +355,7 @@ namespace numerics {
             os << ')';
         }
         os << ')';
-	    return os; 
+        return os; 
     }
 
     template<class MT, class MF, class MA> 
@@ -363,7 +363,7 @@ namespace numerics {
     // NUMERICS_INLINE
     std::istream &operator >> (std::istream &is, 
                                matrix<MT, MF, MA> &m) {
-	    char ch;
+        char ch;
         std::size_t size1, size2;
         if (is >> ch && ch != '[') {
             is.putback (ch);
@@ -418,7 +418,7 @@ namespace numerics {
                 m = s;
             }
         }
-	    return is; 
+        return is; 
     }
 
 #endif 

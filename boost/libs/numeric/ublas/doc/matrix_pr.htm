@@ -147,6 +147,12 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         vector with a scalar.</td>
     </tr>
     <tr>
+        <td><code>template&lt;class AT&gt;<br>
+        matrix_row &amp;operator /= (const AT &amp;at)</code></td>
+        <td>A computed assignment operator. Divides the sub
+        vector through a scalar.</td>
+    </tr>
+    <tr>
         <td><code>void swap (matrix_row &amp;mr)</code></td>
         <td>Swaps the contents of the sub vectors. </td>
     </tr>
@@ -199,7 +205,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
 <pre><code>    // Matrix based row vector class
     template&lt;class M&gt;
     class matrix_row:
-	public vector_expression&lt;matrix_row&lt;M&gt; &gt; {
+        public vector_expression&lt;matrix_row&lt;M&gt; &gt; {
     public:      
         typedef const M const_matrix_type;
         typedef M matrix_type;
@@ -248,19 +254,21 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         matrix_row &amp;minus_assign (const vector_expression&lt;AE&gt; &amp;ae);
         template&lt;class AT&gt;
         matrix_row &amp;operator *= (const AT &amp;at);
+        template&lt;class AT&gt;
+        matrix_row &amp;operator /= (const AT &amp;at);
 
         // Swapping
-	void swap (matrix_row &amp;mr);
-	friend void swap (matrix_row &amp;mr1, matrix_row &amp;mr2);
+        void swap (matrix_row &amp;mr);
+        friend void swap (matrix_row &amp;mr1, matrix_row &amp;mr2);
 
         class const_iterator;
         class iterator;
 
         // Element lookup
-        const_iterator lower_bound (size_type j) const;
-        iterator lower_bound (size_type j);
-        const_iterator upper_bound (size_type j) const;
-        iterator upper_bound (size_type j);
+        const_iterator find_first (size_type j) const;
+        iterator find_first (size_type j);
+        const_iterator find_last (size_type j) const;
+        iterator find_last (size_type j);
 
         // Iterators simply are pointers.
 
@@ -489,6 +497,12 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         vector with a scalar.</td>
     </tr>
     <tr>
+        <td><code>template&lt;class AT&gt;<br>
+        matrix_column &amp;operator /= (const AT &amp;at)</code></td>
+        <td>A computed assignment operator. Divides the sub
+        vector through a scalar.</td>
+    </tr>
+    <tr>
         <td><code>void swap (matrix_column &amp;mc)</code></td>
         <td>Swaps the contents of the sub vectors. </td>
     </tr>
@@ -542,7 +556,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
 <pre><code>    // Matrix based column vector class
     template&lt;class M&gt;
     class matrix_column:
-	public vector_expression&lt;matrix_column&lt;M&gt; &gt; {
+        public vector_expression&lt;matrix_column&lt;M&gt; &gt; {
     public:      
         typedef const M const_matrix_type;
         typedef M matrix_type;
@@ -591,19 +605,21 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         matrix_column &amp;minus_assign (const vector_expression&lt;AE&gt; &amp;ae);
         template&lt;class AT&gt;
         matrix_column &amp;operator *= (const AT &amp;at);
+        template&lt;class AT&gt;
+        matrix_column &amp;operator /= (const AT &amp;at);
 
         // Swapping
-	void swap (matrix_column &amp;mc);
-	friend void swap (matrix_column &amp;mc1, matrix_column &amp;mc2);
+        void swap (matrix_column &amp;mc);
+        friend void swap (matrix_column &amp;mc1, matrix_column &amp;mc2);
 
         class const_iterator;
         class iterator;
 
         // Element lookup
-        const_iterator lower_bound (size_type i) const;
-        iterator lower_bound (size_type i);
-        const_iterator upper_bound (size_type i) const;
-        iterator upper_bound (size_type i);
+        const_iterator find_first (size_type i) const;
+        iterator find_first (size_type i);
+        const_iterator find_last (size_type i) const;
+        iterator find_last (size_type i);
 
         // Iterators simply are pointers.
 
@@ -707,7 +723,7 @@ to address a sub vector of a matrix.</p>
 <pre>int main () {
     numerics::matrix&lt;double&gt; m (3, 3);
     for (int i = 0; i &lt; m.size1 (); ++ i) 
-	for (int j = 0; j &lt; m.size2 (); ++ j) 
+        for (int j = 0; j &lt; m.size2 (); ++ j) 
             m (i, j) = 3 * i + j;
 
     numerics::matrix_vector_range&lt;numerics::matrix&lt;double&gt; &gt; mvr (m, range (0, 3), range (0, 3));
@@ -833,6 +849,12 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         vector with a scalar.</td>
     </tr>
     <tr>
+        <td><code>template&lt;class AT&gt;<br>
+        matrix_vector_range &amp;operator /= (const AT &amp;at)</code></td>
+        <td>A computed assignment operator. Divides the sub
+        vector through a scalar.</td>
+    </tr>
+    <tr>
         <td><code>void swap (matrix_vector_range &amp;mvr)</code></td>
         <td>Swaps the contents of the sub vectors. </td>
     </tr>
@@ -887,7 +909,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
 <pre><code>    // Matrix based vector range class
     template&lt;class M&gt;
     class matrix_vector_range:
-	public vector_expression&lt;matrix_vector_range&lt;M&gt; &gt; {
+        public vector_expression&lt;matrix_vector_range&lt;M&gt; &gt; {
     public:      
         typedef const M const_matrix_type;
         typedef M matrix_type;
@@ -938,19 +960,21 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         matrix_vector_range &amp;minus_assign (const vector_expression&lt;AE&gt; &amp;ae);
         template&lt;class AT&gt;
         matrix_vector_range &amp;operator *= (const AT &amp;at);
+        template&lt;class AT&gt;
+        matrix_vector_range &amp;operator /= (const AT &amp;at);
 
         // Swapping
-	void swap (matrix_vector_range &amp;mvr);
-	friend void swap (matrix_vector_range &amp;mvr1, matrix_vector_range &amp;mvr2);
+        void swap (matrix_vector_range &amp;mvr);
+        friend void swap (matrix_vector_range &amp;mvr1, matrix_vector_range &amp;mvr2);
 
         class const_iterator;
         class iterator;
 
         // Element lookup
-        const_iterator lower_bound (size_type i) const;
-        iterator lower_bound (size_type i);
-        const_iterator upper_bound (size_type i) const;
-        iterator upper_bound (size_type i);
+        const_iterator find_first (size_type i) const;
+        iterator find_first (size_type i);
+        const_iterator find_last (size_type i) const;
+        iterator find_last (size_type i);
 
         // Iterators simply are indices.
 
@@ -1056,7 +1080,7 @@ to address a sliced sub vector of a matrix.</p>
 <pre>int main () {
     numerics::matrix&lt;double&gt; m (3, 3);
     for (int i = 0; i &lt; m.size1 (); ++ i) 
-	for (int j = 0; j &lt; m.size2 (); ++ j) 
+        for (int j = 0; j &lt; m.size2 (); ++ j) 
             m (i, j) = 3 * i + j;
 
     numerics::matrix_vector_range&lt;numerics::matrix&lt;double&gt; &gt; mvs (m, slice (0, 1, 3), slice (0, 1, 3));
@@ -1182,6 +1206,12 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         vector with a scalar.</td>
     </tr>
     <tr>
+        <td><code>template&lt;class AT&gt;<br>
+        matrix_vector_slice &amp;operator /= (const AT &amp;at)</code></td>
+        <td>A computed assignment operator. Divides the sub
+        vector through a scalar.</td>
+    </tr>
+    <tr>
         <td><code>void swap (matrix_vector_slice &amp;mvs)</code></td>
         <td>Swaps the contents of the sub vectors. </td>
     </tr>
@@ -1236,7 +1266,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
 <pre><code>    // Matrix based vector slice class
     template&lt;class M&gt;
     class matrix_vector_slice:
-	public vector_expression&lt;matrix_vector_slice&lt;M&gt; &gt; {
+        public vector_expression&lt;matrix_vector_slice&lt;M&gt; &gt; {
     public:      
         typedef const M const_matrix_type;
         typedef M matrix_type;
@@ -1287,19 +1317,21 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         matrix_vector_slice &amp;minus_assign (const vector_expression&lt;AE&gt; &amp;ae);
         template&lt;class AT&gt;
         matrix_vector_slice &amp;operator *= (const AT &amp;at);
+        template&lt;class AT&gt;
+        matrix_vector_slice &amp;operator /= (const AT &amp;at);
 
         // Swapping
-	void swap (matrix_vector_slice &amp;mvs);
-	friend void swap (matrix_vector_slice &amp;mvs1, matrix_vector_slice &amp;mvs2);
+        void swap (matrix_vector_slice &amp;mvs);
+        friend void swap (matrix_vector_slice &amp;mvs1, matrix_vector_slice &amp;mvs2);
 
         class const_iterator;
         class iterator;
 
         // Element lookup
-        const_iterator lower_bound (size_type i) const;
-        iterator lower_bound (size_type i);
-        const_iterator upper_bound (size_type i) const;
-        iterator upper_bound (size_type i);
+        const_iterator find_first (size_type i) const;
+        iterator find_first (size_type i);
+        const_iterator find_last (size_type i) const;
+        iterator find_last (size_type i);
 
         // Iterators simply are indices.
 
@@ -1407,7 +1439,7 @@ to address a sub matrix of a matrix.</p>
     numerics::matrix_range&lt;numerics::matrix&lt;double&gt; &gt; mr (m, range (0, 3), range (0, 3));
     for (int i = 0; i &lt; mr.size1 (); ++ i) 
         for (int j = 0; j &lt; mr.size2 (); ++ j) 
-	    mr (i, j) = 3 * i + j;
+            mr (i, j) = 3 * i + j;
     std::cout &lt;&lt; mr &lt;&lt; std::endl;
 }</pre>
 
@@ -1544,6 +1576,12 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         matrix with a scalar.</td>
     </tr>
     <tr>
+        <td><code>template&lt;class AT&gt;<br>
+        matrix_range &amp;operator /= (const AT &amp;at)</code></td>
+        <td>A computed assignment operator. Divides the sub
+        matrix through a scalar.</td>
+    </tr>
+    <tr>
         <td><code>void swap (matrix_range &amp;mr)</code></td>
         <td>Swaps the contents of the sub matrices. </td>
     </tr>
@@ -1638,7 +1676,7 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
 <pre><code>    // Matrix based range class
     template&lt;class M&gt;
     class matrix_range:
-	public matrix_expression&lt;matrix_range&lt;M&gt; &gt; {
+        public matrix_expression&lt;matrix_range&lt;M&gt; &gt; {
     public:      
         typedef const M const_matrix_type;
         typedef M matrix_type;
@@ -1693,10 +1731,12 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         matrix_range &amp;minus_assign (const matrix_expression&lt;AE&gt; &amp;ae);
         template&lt;class AT&gt;
         matrix_range&amp; operator *= (const AT &amp;at);
+        template&lt;class AT&gt;
+        matrix_range&amp; operator /= (const AT &amp;at);
 
         // Swapping
- 	void swap (matrix_range &amp;mr);
-	friend void swap (matrix_range &amp;mr1, matrix_range &amp;mr2);
+        void swap (matrix_range &amp;mr);
+        friend void swap (matrix_range &amp;mr1, matrix_range &amp;mr2);
 
         class const_iterator1;
         class iterator1;
@@ -1708,14 +1748,14 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         typedef reverse_iterator2&lt;iterator2&gt; reverse_iterator2;
 
         // Element lookup
-        const_iterator1 lower_bound1 (int rank, size_type i, size_type j) const;
-        iterator1 lower_bound1 (int rank, size_type i, size_type j);
-        const_iterator1 upper_bound1 (int rank, size_type i, size_type j) const;
-        iterator1 upper_bound1 (int rank, size_type i, size_type j);
-        const_iterator2 lower_bound2 (int rank, size_type i, size_type j) const;
-        iterator2 lower_bound2 (int rank, size_type i, size_type j);
-        const_iterator2 upper_bound2 (int rank, size_type i, size_type j) const;
-        iterator2 upper_bound2 (int rank, size_type i, size_type j);
+        const_iterator1 find_first1 (int rank, size_type i, size_type j) const;
+        iterator1 find_first1 (int rank, size_type i, size_type j);
+        const_iterator1 find_last1 (int rank, size_type i, size_type j) const;
+        iterator1 find_last1 (int rank, size_type i, size_type j);
+        const_iterator2 find_first2 (int rank, size_type i, size_type j) const;
+        iterator2 find_first2 (int rank, size_type i, size_type j);
+        const_iterator2 find_last2 (int rank, size_type i, size_type j) const;
+        iterator2 find_last2 (int rank, size_type i, size_type j);
 
         // Iterators simply are pointers.
 
@@ -1930,7 +1970,7 @@ to address a sliced sub matrix of a matrix.</p>
     numerics::matrix_slice&lt;numerics::matrix&lt;double&gt; &gt; ms (m, slice (0, 1, 3), slice (0, 1, 3));
     for (int i = 0; i &lt; ms.size1 (); ++ i) 
         for (int j = 0; j &lt; ms.size2 (); ++ j) 
-	    ms (i, j) = 3 * i + j;
+            ms (i, j) = 3 * i + j;
     std::cout &lt;&lt; ms &lt;&lt; std::endl;
 }</pre>
 
@@ -2058,6 +2098,12 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         matrix with a scalar.</td>
     </tr>
     <tr>
+        <td><code>template&lt;class AT&gt;<br>
+        matrix_slice &amp;operator /= (const AT &amp;at)</code></td>
+        <td>A computed assignment operator. Multiplies the sub
+        matrix through a scalar.</td>
+    </tr>
+    <tr>
         <td><code>void swap (matrix_slice &amp;ms)</code></td>
         <td>Swaps the contents of the sub matrices. </td>
     </tr>
@@ -2152,7 +2198,7 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
 <pre><code>    // Matrix based slice class
     template&lt;class M&gt;
     class matrix_slice:
-	public matrix_expression&lt;matrix_slice&lt;M&gt; &gt; {
+        public matrix_expression&lt;matrix_slice&lt;M&gt; &gt; {
     public:      
         typedef const M const_matrix_type;
         typedef M matrix_type;
@@ -2207,10 +2253,12 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         matrix_slice &amp;minus_assign (const matrix_expression&lt;AE&gt; &amp;ae);
         template&lt;class AT&gt;
         matrix_slice&amp; operator *= (const AT &amp;at);
+        template&lt;class AT&gt;
+        matrix_slice&amp; operator /= (const AT &amp;at);
 
         // Swapping
-	    void swap (matrix_slice &amp;ms);
-	    friend void swap (matrix_slice &amp;ms1, matrix_slice &amp;ms2);
+        void swap (matrix_slice &amp;ms);
+        friend void swap (matrix_slice &amp;ms1, matrix_slice &amp;ms2);
 
         class const_iterator1;
         class iterator1;
@@ -2222,14 +2270,14 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         typedef reverse_iterator2&lt;iterator2&gt; reverse_iterator2;
 
         // Element lookup
-        const_iterator1 lower_bound1 (int rank, size_type i, size_type j) const;
-        iterator1 lower_bound1 (int rank, size_type i, size_type j);
-        const_iterator1 upper_bound1 (int rank, size_type i, size_type j) const;
-        iterator1 upper_bound1 (int rank, size_type i, size_type j);
-        const_iterator2 lower_bound2 (int rank, size_type i, size_type j) const;
-        iterator2 lower_bound2 (int rank, size_type i, size_type j);
-        const_iterator2 upper_bound2 (int rank, size_type i, size_type j) const;
-        iterator2 upper_bound2 (int rank, size_type i, size_type j);
+        const_iterator1 find_first1 (int rank, size_type i, size_type j) const;
+        iterator1 find_first1 (int rank, size_type i, size_type j);
+        const_iterator1 find_last1 (int rank, size_type i, size_type j) const;
+        iterator1 find_last1 (int rank, size_type i, size_type j);
+        const_iterator2 find_first2 (int rank, size_type i, size_type j) const;
+        iterator2 find_first2 (int rank, size_type i, size_type j);
+        const_iterator2 find_last2 (int rank, size_type i, size_type j) const;
+        iterator2 find_last2 (int rank, size_type i, size_type j);
 
         // Iterators simply are indices.
 

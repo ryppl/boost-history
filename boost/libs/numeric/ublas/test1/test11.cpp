@@ -31,122 +31,122 @@ struct test_my_vector {
 
     template<class VP>
     void operator () (VP &v1, VP &v2, VP &v3) const {
-		try {            
+        try {            
             value_type t;
             size_type i;
             real_type n;
 
             // Copy and swap
-			initialize_vector (v1);
-			initialize_vector (v2);
+            initialize_vector (v1);
+            initialize_vector (v2);
             v1 = v2;
-			std::cout << "v1 = v2 = " << v1 << std::endl;
+            std::cout << "v1 = v2 = " << v1 << std::endl;
             v1.assign_temporary (v2);
-			std::cout << "v1.assign_temporary (v2) = " << v1 << std::endl;
+            std::cout << "v1.assign_temporary (v2) = " << v1 << std::endl;
             v1.swap (v2);
-			std::cout << "v1.swap (v2) = " << v1 << " " << v2 << std::endl;
+            std::cout << "v1.swap (v2) = " << v1 << " " << v2 << std::endl;
 
-			// Unary vector operations resulting in a vector
-			initialize_vector (v1);
-			v2 = - v1;
-			std::cout << "- v1 = " << v2 << std::endl;
+            // Unary vector operations resulting in a vector
+            initialize_vector (v1);
+            v2 = - v1;
+            std::cout << "- v1 = " << v2 << std::endl;
             v2 = numerics::conj (v1);
-			std::cout << "conj (v1) = " << v2 << std::endl;
+            std::cout << "conj (v1) = " << v2 << std::endl;
 
-			// Binary vector operations resulting in a vector
-			initialize_vector (v1);
-			initialize_vector (v2);
-			v3 = v1 + v2;
-			std::cout << "v1 + v2 = " << v3 << std::endl;
+            // Binary vector operations resulting in a vector
+            initialize_vector (v1);
+            initialize_vector (v2);
+            v3 = v1 + v2;
+            std::cout << "v1 + v2 = " << v3 << std::endl;
 
-			v3 = v1 - v2;
-			std::cout << "v1 - v2 = " << v3 << std::endl;
+            v3 = v1 - v2;
+            std::cout << "v1 - v2 = " << v3 << std::endl;
 
-			// Scaling a vector
-			t = N;
-			initialize_vector (v1);
-			v2 = value_type (1.) * v1;
-			std::cout << "1. * v1 = " << v2 << std::endl;
-			v2 = t * v1;
-			std::cout << "N * v1 = " << v2 << std::endl;
-			initialize_vector (v1);
-			v2 = v1 * value_type (1.);
-			std::cout << "v1 * 1. = " << v2 << std::endl;
-			v2 = v1 * t;
-			std::cout << "v1 * N = " << v2 << std::endl;
+            // Scaling a vector
+            t = N;
+            initialize_vector (v1);
+            v2 = value_type (1.) * v1;
+            std::cout << "1. * v1 = " << v2 << std::endl;
+            v2 = t * v1;
+            std::cout << "N * v1 = " << v2 << std::endl;
+            initialize_vector (v1);
+            v2 = v1 * value_type (1.);
+            std::cout << "v1 * 1. = " << v2 << std::endl;
+            v2 = v1 * t;
+            std::cout << "v1 * N = " << v2 << std::endl;
 
-			// Some assignments
-			initialize_vector (v1);
-			initialize_vector (v2);
+            // Some assignments
+            initialize_vector (v1);
+            initialize_vector (v2);
 #ifdef NUMERICS_USE_ET
-			v2 += v1;
-			std::cout << "v2 += v1 = " << v2 << std::endl;
-			v2 -= v1;
-			std::cout << "v2 -= v1 = " << v2 << std::endl;
+            v2 += v1;
+            std::cout << "v2 += v1 = " << v2 << std::endl;
+            v2 -= v1;
+            std::cout << "v2 -= v1 = " << v2 << std::endl;
 #else
-			v2 = v2 + v1;
-			std::cout << "v2 += v1 = " << v2 << std::endl;
-			v2 = v2 - v1;
-			std::cout << "v2 -= v1 = " << v2 << std::endl;
+            v2 = v2 + v1;
+            std::cout << "v2 += v1 = " << v2 << std::endl;
+            v2 = v2 - v1;
+            std::cout << "v2 -= v1 = " << v2 << std::endl;
 #endif
-			v1 *= value_type (1.);
-			std::cout << "v1 *= 1. = " << v1 << std::endl;
-			v1 *= t;
-			std::cout << "v1 *= N = " << v1 << std::endl;
+            v1 *= value_type (1.);
+            std::cout << "v1 *= 1. = " << v1 << std::endl;
+            v1 *= t;
+            std::cout << "v1 *= N = " << v1 << std::endl;
 
-			// Unary vector operations resulting in a scalar
-			initialize_vector (v1);
-			t = numerics::sum (v1);
-			std::cout << "sum (v1) = " << t << std::endl;
-			n = numerics::norm_1 (v1);
-			std::cout << "norm_1 (v1) = " << n << std::endl;
-			n = numerics::norm_2 (v1);
-			std::cout << "norm_2 (v1) = " << n << std::endl;
-			n = numerics::norm_inf (v1);
-			std::cout << "norm_inf (v1) = " << n << std::endl;
+            // Unary vector operations resulting in a scalar
+            initialize_vector (v1);
+            t = numerics::sum (v1);
+            std::cout << "sum (v1) = " << t << std::endl;
+            n = numerics::norm_1 (v1);
+            std::cout << "norm_1 (v1) = " << n << std::endl;
+            n = numerics::norm_2 (v1);
+            std::cout << "norm_2 (v1) = " << n << std::endl;
+            n = numerics::norm_inf (v1);
+            std::cout << "norm_inf (v1) = " << n << std::endl;
 
             i = numerics::index_norm_inf (v1);
-			std::cout << "index_norm_inf (v1) = " << i << std::endl;
+            std::cout << "index_norm_inf (v1) = " << i << std::endl;
 
-			// Binary vector operations resulting in a scalar
-			initialize_vector (v1);
-			initialize_vector (v2);
-			t = numerics::inner_prod (v1, v2);
-			std::cout << "inner_prod (v1, v2) = " << t << std::endl;
-		}
+            // Binary vector operations resulting in a scalar
+            initialize_vector (v1);
+            initialize_vector (v2);
+            t = numerics::inner_prod (v1, v2);
+            std::cout << "inner_prod (v1, v2) = " << t << std::endl;
+        }
         catch (std::exception &e) {
-			std::cout << e.what () << std::endl;
-		}
-		catch (...) {
-			std::cout << "unknown exception" << std::endl;
-		}
-	}
+            std::cout << e.what () << std::endl;
+        }
+        catch (...) {
+            std::cout << "unknown exception" << std::endl;
+        }
+    }
     void operator () () const {
-		try {            
-			V v1 (N), v2 (N), v3 (N);
+        try {            
+            V v1 (N), v2 (N), v3 (N);
             (*this) (v1, v2, v3);
 
 #ifdef USE_RANGE
             numerics::vector_range<V> vr1 (v1, numerics::range (0, N)), 
-								      vr2 (v2, numerics::range (0, N)), 
-									  vr3 (v3, numerics::range (0, N));
+                                      vr2 (v2, numerics::range (0, N)), 
+                                      vr3 (v3, numerics::range (0, N));
             (*this) (vr1, vr2, vr3);
 #endif
 
 #ifdef USE_SLICE
             numerics::vector_slice<V> vs1 (v1, numerics::slice (0, 1, N)), 
-									  vs2 (v2, numerics::slice (0, 1, N)), 
-									  vs3 (v3, numerics::slice (0, 1, N));
+                                      vs2 (v2, numerics::slice (0, 1, N)), 
+                                      vs3 (v3, numerics::slice (0, 1, N));
             (*this) (vs1, vs2, vs3);
 #endif
-		}
+        }
         catch (std::exception &e) {
-			std::cout << e.what () << std::endl;
-		}
-		catch (...) {
-			std::cout << "unknown exception" << std::endl;
-		}
-	}
+            std::cout << e.what () << std::endl;
+        }
+        catch (...) {
+            std::cout << "unknown exception" << std::endl;
+        }
+    }
 };
 
 // Test vector

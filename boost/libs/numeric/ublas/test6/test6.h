@@ -13,24 +13,24 @@ void initialize_matrix (M &m, numerics::lower_tag) {
     int size1 = m.size1 ();
 //    int size2 = m.size2 ();
     for (int i = 0; i < size1; ++ i) {
-		int j = 0;
+        int j = 0;
         for (; j <= i; ++ j) 
             m (i, j) = i * size1 + j + 1;
 //        for (; j < size2; ++ j) 
 //            m (i, j) = 0;
-	}
+    }
 }
 template<class M>
 void initialize_matrix (M &m, numerics::upper_tag) {
     int size1 = m.size1 ();
     int size2 = m.size2 ();
     for (int i = 0; i < size1; ++ i) {
-		int j = 0;
+        int j = 0;
 //        for (; j < i; ++ j) 
 //            m (i, j) = 0;
         for (; j < size2; ++ j) 
             m (i, j) = i * size1 + j + 1;
-	}
+    }
 }
 template<class M>
 void initialize_matrix (M &m) {

@@ -1,5 +1,5 @@
 //
-//  Copyright (c) 2000-2001
+//  Copyright (c) 2000-2002
 //  Joerg Walter, Mathias Koch
 //  
 //  Permission to use, copy, modify, distribute and sell this software
@@ -11,7 +11,7 @@
 //  It is provided "as is" without express or implied warranty.
 //  
 //  The authors gratefully acknowledge the support of 
-//	GeNeSys mbH & Co. KG in producing this work.
+//  GeNeSys mbH & Co. KG in producing this work.
 //
 
 #ifndef NUMERICS_ITERATOR_H
@@ -1058,11 +1058,11 @@ namespace numerics {
 
         NUMERICS_INLINE
         dual_iterator_type begin () const {
-            return (*this) ().lower_bound2 (1, index1 (), 0); 
+            return (*this) ().find_first2 (1, index1 (), 0); 
         }
         NUMERICS_INLINE
         dual_iterator_type end () const {
-            return (*this) ().lower_bound2 (1, index1 (), (*this) ().size2 ()); 
+            return (*this) ().find_first2 (1, index1 (), (*this) ().size2 ()); 
         }
         NUMERICS_INLINE
         dual_reverse_iterator_type rbegin () const {
@@ -1210,11 +1210,11 @@ namespace numerics {
 
         NUMERICS_INLINE
         dual_iterator_type begin () const {
-            return (*this) ().lower_bound2 (1, index1 (), 0); 
+            return (*this) ().find_first2 (1, index1 (), 0); 
         }
         NUMERICS_INLINE
         dual_iterator_type end () const {
-            return (*this) ().lower_bound2 (1, index1 (), (*this) ().size2 ()); 
+            return (*this) ().find_first2 (1, index1 (), (*this) ().size2 ()); 
         }
         NUMERICS_INLINE
         dual_reverse_iterator_type rbegin () const {
@@ -1356,11 +1356,11 @@ namespace numerics {
 
         NUMERICS_INLINE
         dual_iterator_type begin () const {
-            return (*this) ().lower_bound1 (1, 0, index2 ()); 
+            return (*this) ().find_first1 (1, 0, index2 ()); 
         }
         NUMERICS_INLINE
         dual_iterator_type end () const {
-            return (*this) ().lower_bound1 (1, (*this) ().size1 (), index2 ()); 
+            return (*this) ().find_first1 (1, (*this) ().size1 (), index2 ()); 
         }
         NUMERICS_INLINE
         dual_reverse_iterator_type rbegin () const {
@@ -1505,11 +1505,11 @@ namespace numerics {
 
         NUMERICS_INLINE
         dual_iterator_type begin () const {
-            return (*this) ().lower_bound1 (1, 0, index2 ()); 
+            return (*this) ().find_first1 (1, 0, index2 ()); 
         }
         NUMERICS_INLINE
         dual_iterator_type end () const {
-            return (*this) ().lower_bound1 (1, (*this) ().size1 (), index2 ()); 
+            return (*this) ().find_first1 (1, (*this) ().size1 (), index2 ()); 
         }
         NUMERICS_INLINE
         dual_reverse_iterator_type rbegin () const {

@@ -127,6 +127,10 @@ SOURCE=..\..\..\..\boost\numeric\ublas\config.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\boost\numeric\ublas\duff.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\boost\numeric\ublas\exception.h
 # End Source File
 # Begin Source File

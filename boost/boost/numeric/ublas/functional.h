@@ -1,5 +1,5 @@
 //  
-//  Copyright (c) 2000-2001
+//  Copyright (c) 2000-2002
 //  Joerg Walter, Mathias Koch
 //  
 //  Permission to use, copy, modify, distribute and sell this software
@@ -11,7 +11,7 @@
 //  It is provided "as is" without express or implied warranty.
 //  
 //  The authors gratefully acknowledge the support of 
-//	GeNeSys mbH & Co. KG in producing this work.
+//  GeNeSys mbH & Co. KG in producing this work.
 //
 
 #ifndef NUMERICS_FUNCTIONAL_H
@@ -33,7 +33,7 @@ namespace numerics {
     template<class T>
     struct scalar_unary_functor {
         typedef T argument_type;
-		typedef T result_type;
+        typedef T result_type;
     };
 
     template<class T>
@@ -74,7 +74,7 @@ namespace numerics {
     template<class T>
     struct scalar_real_unary_functor {
         typedef T argument_type;
-		typedef typename type_traits<T>::real_type result_type;
+        typedef typename type_traits<T>::real_type result_type;
     };
 
     template<class T>
@@ -241,7 +241,7 @@ namespace numerics {
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
         typedef T value_type;
-		typedef T result_type;
+        typedef T result_type;
     };
 
     template<class T>
@@ -504,7 +504,7 @@ namespace numerics {
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
         typedef TR value_type;
-		typedef TR result_type;
+        typedef TR result_type;
     };
 
     template<class T1, class T2, class TR>
@@ -525,8 +525,8 @@ namespace numerics {
             for (size_type i = 0; i < size; ++ i)
                 t += e1 () (i) * e2 () (i);
 #else
-	    size_type i (0);
-	    DD (size, 4, r, (t += e1 () (i) * e2 () (i), ++ i));
+            size_type i (0);
+            DD (size, 4, r, (t += e1 () (i) * e2 () (i), ++ i));
 #endif
             return t; 
         }
@@ -539,7 +539,7 @@ namespace numerics {
             while (-- size >= 0)
                 t += *it1 * *it2, ++ it1, ++ it2;
 #else
-	    DD (size, 4, r, (t += *it1 * *it2, ++ it1, ++ it2));
+            DD (size, 4, r, (t += *it1 * *it2, ++ it1, ++ it2));
 #endif
             return t; 
         }
@@ -550,7 +550,7 @@ namespace numerics {
             result_type t (0);
             if (it1 != it1_end && it1.index () < it2.index ()) 
                 it1 += std::min (it2.index () - it1.index (), size_type (it1_end - it1));
-            if (it2 != it2_end && it2.index () < it1.index ()) 				
+            if (it2 != it2_end && it2.index () < it1.index ())                 
                 it2 += std::min (it1.index () - it2.index (), size_type (it2_end - it2));
             while (it1 != it1_end && it2 != it2_end) 
                 t += *it1 * *it2, ++ it1, ++ it2;
@@ -604,8 +604,8 @@ namespace numerics {
             for (size_type j = 0; j < size; ++ j)
                 t += e1 () (i, j) * e2 () (j);
 #else
-	    size_type j (0);
-	    DD (size, 4, r, (t += e1 () (i, j) * e2 () (j), ++ j));
+            size_type j (0);
+            DD (size, 4, r, (t += e1 () (i, j) * e2 () (j), ++ j));
 #endif
             return t; 
         }
@@ -618,7 +618,7 @@ namespace numerics {
             while (-- size >= 0)
                 t += *it1 * *it2, ++ it1, ++ it2;
 #else
-	    DD (size, 4, r, (t += *it1 * *it2, ++ it1, ++ it2));
+            DD (size, 4, r, (t += *it1 * *it2, ++ it1, ++ it2));
 #endif
             return t; 
         }
@@ -630,7 +630,7 @@ namespace numerics {
             result_type t (0);
             if (it1 != it1_end && it1.index () < it2.index ()) 
                 it1 += std::min (it2.index () - it1.index (), size_type (it1_end - it1));
-            if (it2 != it2_end && it2.index () < it1.index ()) 				
+            if (it2 != it2_end && it2.index () < it1.index ())                 
                 it2 += std::min (it1.index () - it2.index (), size_type (it2_end - it2));
             while (it1 != it1_end && it2 != it2_end) 
                 t += *it1 * *it2, ++ it1, ++ it2;
@@ -639,7 +639,7 @@ namespace numerics {
             result_type t (0);
             if (it1 != it1_end && it1.index2 () < it2.index ()) 
                 it1 += std::min (it2.index () - it1.index2 (), size_type (it1_end - it1));
-            if (it2 != it2_end && it2.index () < it1.index2 ()) 				
+            if (it2 != it2_end && it2.index () < it1.index2 ())                 
                 it2 += std::min (it1.index2 () - it2.index (), size_type (it2_end - it2));
             while (it1 != it1_end && it2 != it2_end) 
                 t += *it1 * *it2, ++ it1, ++ it2;
@@ -697,8 +697,8 @@ namespace numerics {
             for (size_type j = 0; j < size; ++ j)
                 t += e1 () (j) * e2 () (j, i);
 #else
-	    size_type j (0);
-	    DD (size, 4, r, (t += e1 () (j) * e2 () (j, i), ++ j));
+            size_type j (0);
+            DD (size, 4, r, (t += e1 () (j) * e2 () (j, i), ++ j));
 #endif
             return t; 
         }
@@ -711,7 +711,7 @@ namespace numerics {
             while (-- size >= 0)
                 t += *it1 * *it2, ++ it1, ++ it2;
 #else
-	    DD (size, 4, r, (t += *it1 * *it2, ++ it1, ++ it2));
+            DD (size, 4, r, (t += *it1 * *it2, ++ it1, ++ it2));
 #endif
             return t; 
         }
@@ -723,7 +723,7 @@ namespace numerics {
             result_type t (0);
             if (it1 != it1_end && it1.index () < it2.index ()) 
                 it1 += std::min (it2.index () - it1.index (), size_type (it1_end - it1));
-            if (it2 != it2_end && it2.index () < it1.index ()) 				
+            if (it2 != it2_end && it2.index () < it1.index ())                 
                 it2 += std::min (it1.index () - it2.index (), size_type (it2_end - it2));
             while (it1 != it1_end && it2 != it2_end) 
                 t += *it1 * *it2, ++ it1, ++ it2;
@@ -732,7 +732,7 @@ namespace numerics {
             result_type t (0);
             if (it1 != it1_end && it1.index () < it2.index1 ()) 
                 it1 += std::min (it2.index1 () - it1.index (), size_type (it1_end - it1));
-            if (it2 != it2_end && it2.index1 () < it1.index ()) 				
+            if (it2 != it2_end && it2.index1 () < it1.index ())                 
                 it2 += std::min (it1.index () - it2.index1 (), size_type (it2_end - it2));
             while (it1 != it1_end && it2 != it2_end) 
                 t += *it1 * *it2, ++ it1, ++ it2;
@@ -799,8 +799,8 @@ namespace numerics {
             for (size_type k = 0; k < size; ++ k) 
                 t += e1 () (i, k) * e2 () (k, j);
 #else
-	    size_type k (0);
-	    DD (size, 4, r, (t += e1 () (i, k) * e2 () (k, j), ++ k));
+            size_type k (0);
+            DD (size, 4, r, (t += e1 () (i, k) * e2 () (k, j), ++ k));
 #endif
             return t; 
         }
@@ -813,7 +813,7 @@ namespace numerics {
             while (-- size >= 0)
                 t += *it1 * *it2, ++ it1, ++ it2;
 #else
-	    DD (size, 4, r, (t += *it1 * *it2, ++ it1, ++ it2));
+            DD (size, 4, r, (t += *it1 * *it2, ++ it1, ++ it2));
 #endif
             return t; 
         }
@@ -824,7 +824,7 @@ namespace numerics {
             result_type t (0);
             if (it1 != it1_end && it1.index2 () < it2.index1 ()) 
                 it1 += std::min (it2.index1 () - it1.index2 (), size_type (it1_end - it1));
-            if (it2 != it2_end && it2.index1 () < it1.index2 ()) 				
+            if (it2 != it2_end && it2.index1 () < it1.index2 ())                 
                 it2 += std::min (it1.index2 () - it2.index1 (), size_type (it2_end - it2));
             while (it1 != it1_end && it2 != it2_end) 
                 t += *it1 * *it2, ++ it1, ++ it2;
@@ -853,9 +853,9 @@ namespace numerics {
     struct matrix_scalar_real_unary_functor {
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
-		typedef T value_type;
+        typedef T value_type;
         typedef typename type_traits<T>::real_type real_type;
-		typedef real_type result_type;
+        typedef real_type result_type;
     };
 
     template<class T>

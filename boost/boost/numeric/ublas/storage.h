@@ -1,5 +1,5 @@
 //  
-//  Copyright (c) 2000-2001
+//  Copyright (c) 2000-2002
 //  Joerg Walter, Mathias Koch
 //  
 //  Permission to use, copy, modify, distribute and sell this software
@@ -11,7 +11,7 @@
 //  It is provided "as is" without express or implied warranty.
 //  
 //  The authors gratefully acknowledge the support of 
-//	GeNeSys mbH & Co. KG in producing this work.
+//  GeNeSys mbH & Co. KG in producing this work.
 //
 
 #ifndef NUMERICS_STORAGE_H
@@ -28,12 +28,13 @@
 namespace numerics {
 
 #ifndef NUMERICS_USE_FAST_COMMON
-    template<class T>
-    NUMERICS_INLINE
-    const T &common_impl (const T &size1, const T &size2) {
-        check (size1 == size2, bad_size ());
-        return std::min (size1, size2);
-    }
+//    template<class T>
+//    NUMERICS_INLINE
+//    const T &common_impl (const T &size1, const T &size2) {
+//        check (size1 == size2, bad_size ());
+//        return std::min (size1, size2);
+//    }
+// #define common(size1, size2) common_impl((size1), (size2))
     template<class T>
     NUMERICS_INLINE
     const T &common_impl_ex (const T &size1, const T &size2, const char *file, int line) {
@@ -140,7 +141,7 @@ namespace numerics {
 
         // Swapping
         NUMERICS_INLINE
-	    void swap (unbounded_array &a) {
+        void swap (unbounded_array &a) {
             check (this != &a, external_logic ());
             check (size_ == a.size_, bad_size ());
             std::swap (size_, a.size_);
@@ -148,7 +149,7 @@ namespace numerics {
         }
 #ifndef USE_GCC
         NUMERICS_INLINE
-	    friend void swap (unbounded_array &a1, unbounded_array &a2) {
+        friend void swap (unbounded_array &a1, unbounded_array &a2) {
             a1.swap (a2);
         }
 #endif
@@ -327,14 +328,14 @@ namespace numerics {
 
         // Swapping
         NUMERICS_INLINE
-	    void swap (bounded_array &a) {
+        void swap (bounded_array &a) {
             check (this != &a, external_logic ());
             check (size_ == a.size_, bad_size ());
             std::swap_ranges (data_, data_ + size_, a.data_);
         }
 #ifndef USE_GCC
         NUMERICS_INLINE
-	    friend void swap (bounded_array &a1, bounded_array &a2) {
+        friend void swap (bounded_array &a1, bounded_array &a2) {
             a1.swap (a2);
         }
 #endif
@@ -462,50 +463,56 @@ namespace numerics {
             size_ (size), own_ (true), data_ (new value_type [size]) {
             if (! data_)
                 throw std::bad_alloc ();
-	}
+        }
         NUMERICS_INLINE
         array_adaptor (size_type size, pointer data): 
             size_ (size), own_ (false), data_ (data) {}
+        NUMERICS_INLINE
+        array_adaptor (const array_adaptor &a): 
+            size_ (a.size_), own_ (a.own_), data_ (a.data_) {
+            if (own_)
+                throw std::bad_alloc ();
+        }
 //      NUMERICS_INLINE
 //      array_adaptor (const array_adaptor &a): 
 //          size_ (a.size_), own_ (true), data_ (new value_type [a.size_]) {
 //          if (! data_)
 //              throw std::bad_alloc ();
-//	    *this = a;
-//	}
+//          *this = a;
+//      }
         NUMERICS_INLINE
         ~array_adaptor () { 
             if (own_) {
-            	if (! data_)
+                if (! data_)
                     throw std::bad_alloc ();
-            	delete [] data_; 
-	    }
-	}
+                delete [] data_; 
+            }
+        }
 
         // Resizing
         NUMERICS_INLINE
         void resize (size_type size) {
             if (own_) {
-            	if (! data_)
+                if (! data_)
                     throw std::bad_alloc ();
-            	delete [] data_; 
-	    }
-	    size_ = size;
-	    own_ = true;
-	    data_ = new value_type [size];
+                delete [] data_; 
+            }
+            size_ = size;
+            own_ = true;
+            data_ = new value_type [size];
             if (! data_)
                 throw std::bad_alloc ();
         }
         NUMERICS_INLINE
         void resize (size_type size, pointer data) {
             if (own_) {
-            	if (! data_)
-                	throw std::bad_alloc ();
-            	delete [] data_; 
-	    }
-	    size_ = size;
-	    own_ = false;
-	    data_ = data;
+                if (! data_)
+                    throw std::bad_alloc ();
+                delete [] data_; 
+            }
+            size_ = size;
+            own_ = false;
+            data_ = data;
         }
 
         NUMERICS_INLINE
@@ -541,7 +548,7 @@ namespace numerics {
 
         // Swapping
         NUMERICS_INLINE
-	    void swap (array_adaptor &a) {
+        void swap (array_adaptor &a) {
             check (this != &a, external_logic ());
             check (size_ == a.size_, bad_size ());
             std::swap (size_, a.size_);
@@ -550,7 +557,7 @@ namespace numerics {
         }
 #ifndef USE_GCC
         NUMERICS_INLINE
-	    friend void swap (array_adaptor &a1, array_adaptor &a2) {
+        friend void swap (array_adaptor &a1, array_adaptor &a2) {
             a1.swap (a2);
         }
 #endif
@@ -648,7 +655,7 @@ namespace numerics {
 
     private:
         size_type size_;
-	bool own_;
+        bool own_;
         pointer data_;
     };
 
@@ -951,7 +958,7 @@ namespace numerics {
             NUMERICS_INLINE
             size_type index () const {
                 check ((*this) ().stride () != 0, divide_by_zero ());
-                return (it_ - (*this) ().start ()) / (*this) ().stride ();
+                return (it_ - difference_type ((*this) ().start ())) / (*this) ().stride ();
             }
 
             // Assignment 
@@ -1009,6 +1016,13 @@ namespace numerics {
 }
 
 #endif 
+
+
+
+
+
+
+
 
 
 

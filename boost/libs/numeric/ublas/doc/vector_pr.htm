@@ -159,6 +159,12 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         vector with a scalar.</td>
     </tr>
     <tr>
+        <td><code>template&lt;class AT&gt;<br>
+        vector_range &amp;operator /= (const AT &amp;at)</code></td>
+        <td>A computed assignment operator. Divides the sub
+        vector through a scalar.</td>
+    </tr>
+    <tr>
         <td><code>void swap (vector_range &amp;vr)</code></td>
         <td>Swaps the contents of the sub vectors. </td>
     </tr>
@@ -211,7 +217,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
 <pre><code>    // Vector based range class
     template&lt;class V&gt;
     class vector_range:
-	public vector_expression&lt;vector_range&lt;V&gt; &gt; {
+        public vector_expression&lt;vector_range&lt;V&gt; &gt; {
     public:      
         typedef const V const_vector_type;
         typedef V vector_type;
@@ -264,6 +270,8 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         vector_range &amp;minus_assign (const vector_expression&lt;AE&gt; &amp;ae);
         template&lt;class AT&gt;
         vector_range &amp;operator *= (const AT &amp;at);
+        template&lt;class AT&gt;
+        vector_range &amp;operator /= (const AT &amp;at);
 
         // Swapping
         void swap (vector_range &amp;vr);
@@ -273,10 +281,10 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         class iterator;
 
         // Element lookup
-        const_iterator lower_bound (size_type i) const;
-        iterator lower_bound (size_type i);
-        const_iterator upper_bound (size_type i) const;
-        iterator upper_bound (size_type i);
+        const_iterator find_first (size_type i) const;
+        iterator find_first (size_type i);
+        const_iterator find_last (size_type i) const;
+        iterator find_last (size_type i);
 
         // Iterators simply are pointers.
 
@@ -512,6 +520,12 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         vector with a scalar.</td>
     </tr>
     <tr>
+        <td><code>template&lt;class AT&gt;<br>
+        vector_slice &amp;operator /= (const AT &amp;at)</code></td>
+        <td>A computed assignment operator. Divides the sub
+        vector through a scalar.</td>
+    </tr>
+    <tr>
         <td><code>void swap (vector_slice &amp;vs)</code></td>
         <td>Swaps the contents of the sub vectors. </td>
     </tr>
@@ -564,7 +578,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
 <pre><code>    // Vector based slice class
     template&lt;class V&gt;
     class vector_slice:
-	public vector_expression&lt;vector_slice&lt;V&gt; &gt; {
+        public vector_expression&lt;vector_slice&lt;V&gt; &gt; {
     public:      
         typedef const V const_vector_type;
         typedef V vector_type;
@@ -620,19 +634,21 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         vector_slice &amp;minus_assign (const vector_expression&lt;AE&gt; &amp;ae);
         template&lt;class AT&gt;
         vector_slice &amp;operator *= (const AT &amp;at);
+        template&lt;class AT&gt;
+        vector_slice &amp;operator /= (const AT &amp;at);
 
         // Swapping
-	void swap (vector_slice &amp;vs);
-	friend void swap (vector_slice &amp;vs1, vector_slice &amp;vs2);
+        void swap (vector_slice &amp;vs);
+        friend void swap (vector_slice &amp;vs1, vector_slice &amp;vs2);
 
         class const_iterator;
         class iterator;
 
         // Element lookup
-        const_iterator lower_bound (size_type i) const;
-        iterator lower_bound (size_type i);
-        const_iterator upper_bound (size_type i) const;
-        iterator upper_bound (size_type i);
+        const_iterator find_first (size_type i) const;
+        iterator find_first (size_type i);
+        const_iterator find_last (size_type i) const;
+        iterator find_last (size_type i);
 
         // Iterators simply are indices.
 

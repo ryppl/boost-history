@@ -1,5 +1,5 @@
 //
-//  Copyright (c) 2000-2001
+//  Copyright (c) 2000-2002
 //  Joerg Walter, Mathias Koch
 //  
 //  Permission to use, copy, modify, distribute and sell this software
@@ -11,12 +11,13 @@
 //  It is provided "as is" without express or implied warranty.
 //  
 //  The authors gratefully acknowledge the support of 
-//	GeNeSys mbH & Co. KG in producing this work.
+//  GeNeSys mbH & Co. KG in producing this work.
 //
 
 #ifndef NUMERICS_CONFIG_H
 #define NUMERICS_CONFIG_H
 
+#include <cassert>
 #include <cstddef>
 
 #ifdef USE_MSVC
@@ -103,7 +104,7 @@ namespace std {
 
 }
 
-#endif 
+#endif
 
 
 
@@ -114,7 +115,7 @@ namespace std {
 #define NUMERICS_EXPLICIT explicit
 
 #define NUMERICS_RESTRICT __restrict__
-// #define NUMERICS_RESTRICT 
+// #define NUMERICS_RESTRICT
 
 #ifdef NDEBUG
 

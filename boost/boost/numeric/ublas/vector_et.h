@@ -1,5 +1,5 @@
 //  
-//  Copyright (c) 2000-2001
+//  Copyright (c) 2000-2002
 //  Joerg Walter, Mathias Koch
 //  
 //  Permission to use, copy, modify, distribute and sell this software
@@ -11,7 +11,7 @@
 //  It is provided "as is" without express or implied warranty.
 //  
 //  The authors gratefully acknowledge the support of 
-//	GeNeSys mbH & Co. KG in producing this work.
+//  GeNeSys mbH & Co. KG in producing this work.
 //
 
 #ifndef VECTOR_ET_H
@@ -149,12 +149,12 @@ namespace numerics {
 
         // Element lookup
         NUMERICS_INLINE
-        const_iterator lower_bound (size_type i) const {
-            return e_.lower_bound (i);
+        const_iterator find_first (size_type i) const {
+            return e_.find_first (i);
         }
         NUMERICS_INLINE
-        const_iterator upper_bound (size_type i) const {
-            return e_.upper_bound (i);
+        const_iterator find_last (size_type i) const {
+            return e_.find_last (i);
         }
 
         // Iterator is the iterator of the referenced expression.
@@ -256,20 +256,20 @@ namespace numerics {
 
         // Element lookup
         NUMERICS_INLINE
-        const_iterator lower_bound (size_type i) const {
-            return e_.lower_bound (i);
+        const_iterator find_first (size_type i) const {
+            return e_.find_first (i);
         }
         NUMERICS_INLINE
-        iterator lower_bound (size_type i) {
-            return e_.lower_bound (i);
+        iterator find_first (size_type i) {
+            return e_.find_first (i);
         }
         NUMERICS_INLINE
-        const_iterator upper_bound (size_type i) const {
-            return e_.upper_bound (i);
+        const_iterator find_last (size_type i) const {
+            return e_.find_last (i);
         }
         NUMERICS_INLINE
-        iterator upper_bound (size_type i) {
-            return e_.upper_bound (i);
+        iterator find_last (size_type i) {
+            return e_.find_last (i);
         }
 
         // Iterator is the iterator of the referenced expression.
@@ -386,21 +386,21 @@ namespace numerics {
 
         // Element lookup
         NUMERICS_INLINE
-        const_iterator lower_bound (size_type i) const {
+        const_iterator find_first (size_type i) const {
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
-            const_iterator_type it (e_.lower_bound (i));
+            const_iterator_type it (e_.find_first (i));
             return const_iterator (*this, it.index ());
 #else
-            return const_iterator (*this, e_.lower_bound (i));
+            return const_iterator (*this, e_.find_first (i));
 #endif
         }
         NUMERICS_INLINE
-        const_iterator upper_bound (size_type i) const {
+        const_iterator find_last (size_type i) const {
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
-            const_iterator_type it (e_.upper_bound (i));
+            const_iterator_type it (e_.find_last (i));
             return const_iterator (*this, it.index ());
 #else
-            return const_iterator (*this, e_.upper_bound (i));
+            return const_iterator (*this, e_.find_last (i));
 #endif
         }
 
@@ -488,11 +488,11 @@ namespace numerics {
 
         NUMERICS_INLINE
         const_iterator begin () const {
-            return lower_bound (0); 
+            return find_first (0); 
         }
         NUMERICS_INLINE
         const_iterator end () const {
-            return upper_bound (size ()); 
+            return find_last (size ()); 
         }
 
         // Reverse iterator
@@ -643,10 +643,10 @@ namespace numerics {
 
         // Element lookup
         NUMERICS_INLINE
-        const_iterator lower_bound (size_type i) const {
-			const_iterator1_type it1 (e1_.lower_bound (i));
-			const_iterator2_type it2 (e2_.lower_bound (i));
-			i = std::min (it1.index (), it2.index ());
+        const_iterator find_first (size_type i) const {
+            const_iterator1_type it1 (e1_.find_first (i));
+            const_iterator2_type it2 (e2_.find_first (i));
+            i = std::min (it1.index (), it2.index ());
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
             return const_iterator (*this, i);
 #else
@@ -654,10 +654,10 @@ namespace numerics {
 #endif
         }
         NUMERICS_INLINE
-        const_iterator upper_bound (size_type i) const {
-			const_iterator1_type it1 (e1_.upper_bound (i));
-			const_iterator2_type it2 (e2_.upper_bound (i));
-			i = std::max (it1.index (), it2.index ());
+        const_iterator find_last (size_type i) const {
+            const_iterator1_type it1 (e1_.find_last (i));
+            const_iterator2_type it2 (e2_.find_last (i));
+            i = std::max (it1.index (), it2.index ());
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
             return const_iterator (*this, i);
 #else
@@ -827,11 +827,11 @@ namespace numerics {
 
         NUMERICS_INLINE
         const_iterator begin () const {
-			return lower_bound (0);
+            return find_first (0);
         }
         NUMERICS_INLINE
         const_iterator end () const {
-			return upper_bound (size ());
+            return find_last (size ());
         }
 
         // Reverse iterator
@@ -953,21 +953,21 @@ namespace numerics {
 
         // Element lookup
         NUMERICS_INLINE
-        const_iterator lower_bound (size_type i) const {
+        const_iterator find_first (size_type i) const {
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
-            const_iterator2_type it (e2_.lower_bound (i));
+            const_iterator2_type it (e2_.find_first (i));
             return const_iterator (*this, it.index ());
 #else
-            return const_iterator (*this, e1_, e2_.lower_bound (i));
+            return const_iterator (*this, e1_, e2_.find_first (i));
 #endif
         }
         NUMERICS_INLINE
-        const_iterator upper_bound (size_type i) const {
+        const_iterator find_last (size_type i) const {
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
-            const_iterator2_type it (e2_.upper_bound (i));
+            const_iterator2_type it (e2_.find_last (i));
             return const_iterator (*this, it.index ());
 #else
-            return const_iterator (*this, e1_, e2_.upper_bound (i));
+            return const_iterator (*this, e1_, e2_.find_last (i));
 #endif
         }
 
@@ -1059,11 +1059,11 @@ namespace numerics {
 
         NUMERICS_INLINE
         const_iterator begin () const {
-            return lower_bound (0); 
+            return find_first (0); 
         }
         NUMERICS_INLINE
         const_iterator end () const {
-            return upper_bound (size ()); 
+            return find_last (size ()); 
         }
 
         // Reverse iterator
@@ -1171,21 +1171,21 @@ namespace numerics {
 
         // Element lookup
         NUMERICS_INLINE
-        const_iterator lower_bound (size_type i) const {
+        const_iterator find_first (size_type i) const {
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
-            const_iterator1_type it (e1_.lower_bound (i));
+            const_iterator1_type it (e1_.find_first (i));
             return const_iterator (*this, it.index ());
 #else
-            return const_iterator (*this, e1_.lower_bound (i), e2_);
+            return const_iterator (*this, e1_.find_first (i), e2_);
 #endif
         }
         NUMERICS_INLINE
-        const_iterator upper_bound (size_type i) const {
+        const_iterator find_last (size_type i) const {
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
-            const_iterator1_type it (e1_.upper_bound (i));
+            const_iterator1_type it (e1_.find_last (i));
             return const_iterator (*this, it.index ());
 #else
-            return const_iterator (*this, e1_.upper_bound (i), e2_);
+            return const_iterator (*this, e1_.find_last (i), e2_);
 #endif
         }
 
@@ -1277,11 +1277,11 @@ namespace numerics {
 
         NUMERICS_INLINE
         const_iterator begin () const {
-            return lower_bound (0); 
+            return find_first (0); 
         }
         NUMERICS_INLINE
         const_iterator end () const {
-            return upper_bound (size ()); 
+            return find_last (size ()); 
         }
 
         // Reverse iterator
@@ -1314,8 +1314,8 @@ namespace numerics {
 
     template<class E1, class T2, class F>
     struct vector_binary_scalar2_traits {
-        typedef vector_binary_scalar2<typename E1::const_closure_type,		
-									  scalar_const_reference<T2>, F> expression_type;
+        typedef vector_binary_scalar2<typename E1::const_closure_type,        
+                                      scalar_const_reference<T2>, F> expression_type;
 #ifdef NUMERICS_USE_ET
         typedef expression_type result_type; 
 #else

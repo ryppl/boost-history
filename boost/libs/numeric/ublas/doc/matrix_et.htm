@@ -231,10 +231,10 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         typedef const_iterator2 iterator2;
 
         // Element lookup
-        const_iterator1 lower_bound1 (int rank, size_type i, size_type j) const;
-        const_iterator1 upper_bound1 (int rank, size_type i, size_type j) const;
-        const_iterator2 lower_bound2 (int rank, size_type i, size_type j) const;
-        const_iterator2 upper_bound2 (int rank, size_type i, size_type j) const;
+        const_iterator1 find_first1 (int rank, size_type i, size_type j) const;
+        const_iterator1 find_last1 (int rank, size_type i, size_type j) const;
+        const_iterator2 find_first2 (int rank, size_type i, size_type j) const;
+        const_iterator2 find_last2 (int rank, size_type i, size_type j) const;
 
         // Iterators are the iterators of the referenced expression.
 
@@ -457,14 +457,14 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         typedef iterator2_type iterator2;
 
         // Element lookup
-        const_iterator1 lower_bound1 (int rank, size_type i, size_type j) const;
-        iterator1 lower_bound1 (int rank, size_type i, size_type j);
-        const_iterator1 upper_bound1 (int rank, size_type i, size_type j) const;
-        iterator1 upper_bound1 (int rank, size_type i, size_type j);
-        const_iterator2 lower_bound2 (int rank, size_type i, size_type j) const;
-        iterator2 lower_bound2 (int rank, size_type i, size_type j);
-        const_iterator2 upper_bound2 (int rank, size_type i, size_type j) const;
-        iterator2 upper_bound2 (int rank, size_type i, size_type j);
+        const_iterator1 find_first1 (int rank, size_type i, size_type j) const;
+        iterator1 find_first1 (int rank, size_type i, size_type j);
+        const_iterator1 find_last1 (int rank, size_type i, size_type j) const;
+        iterator1 find_last1 (int rank, size_type i, size_type j);
+        const_iterator2 find_first2 (int rank, size_type i, size_type j) const;
+        iterator2 find_first2 (int rank, size_type i, size_type j);
+        const_iterator2 find_last2 (int rank, size_type i, size_type j) const;
+        iterator2 find_last2 (int rank, size_type i, size_type j);
 
         // Iterators are the iterators of the referenced expression.
 
@@ -664,10 +664,10 @@ matrix_expression&lt;matrix_unary2&lt;E, F&gt; &gt; </code>resp.</p>
         typedef reverse_iterator2&lt;const_iterator2&gt; const_reverse_iterator2;
 
         // Element lookup
-        const_iterator1 lower_bound1 (int rank, size_type i, size_type j) const;
-        const_iterator1 upper_bound1 (int rank, size_type i, size_type j) const;
-        const_iterator2 lower_bound2 (int rank, size_type i, size_type j) const;
-        const_iterator2 upper_bound2 (int rank, size_type i, size_type j) const;
+        const_iterator1 find_first1 (int rank, size_type i, size_type j) const;
+        const_iterator1 find_last1 (int rank, size_type i, size_type j) const;
+        const_iterator2 find_first2 (int rank, size_type i, size_type j) const;
+        const_iterator2 find_last2 (int rank, size_type i, size_type j) const;
 
         // Iterators enhance the iterators of the referenced expression
         // with the unary functor.
@@ -808,10 +808,10 @@ matrix_expression&lt;matrix_unary2&lt;E, F&gt; &gt; </code>resp.</p>
         typedef reverse_iterator2&lt;const_iterator2&gt; const_reverse_iterator2;
 
         // Element lookup
-        const_iterator1 lower_bound1 (int rank, size_type i, size_type j) const;
-        const_iterator1 upper_bound1 (int rank, size_type i, size_type j) const;
-        const_iterator2 lower_bound2 (int rank, size_type i, size_type j) const;
-        const_iterator2 upper_bound2 (int rank, size_type i, size_type j) const;
+        const_iterator1 find_first1 (int rank, size_type i, size_type j) const;
+        const_iterator1 find_last1 (int rank, size_type i, size_type j) const;
+        const_iterator2 find_first2 (int rank, size_type i, size_type j) const;
+        const_iterator2 find_last2 (int rank, size_type i, size_type j) const;
 
         // Iterators enhance the iterators of the referenced expression
         // with the unary functor.
@@ -1167,10 +1167,10 @@ href="expression.htm#matrix_expression">Matrix Expression</a>. </p>
         typedef reverse_iterator2&lt;const_iterator2&gt; const_reverse_iterator2;
 
         // Element lookup
-        const_iterator1 lower_bound1 (int rank, size_type i, size_type j) const;
-        const_iterator1 upper_bound1 (int rank, size_type i, size_type j) const;
-        const_iterator2 lower_bound2 (int rank, size_type i, size_type j) const;
-        const_iterator2 upper_bound2 (int rank, size_type i, size_type j) const;
+        const_iterator1 find_first1 (int rank, size_type i, size_type j) const;
+        const_iterator1 find_last1 (int rank, size_type i, size_type j) const;
+        const_iterator2 find_first2 (int rank, size_type i, size_type j) const;
+        const_iterator2 find_last2 (int rank, size_type i, size_type j) const;
 
         // Iterators enhance the iterators of the referenced expression
         // with the binary functor.
@@ -1542,10 +1542,10 @@ matrix_expression&lt;matrix_binary_scalar2&lt;E1, E2, F&gt; &gt; </code>resp.</p
         typedef reverse_iterator2&lt;const_iterator2&gt; const_reverse_iterator2;
 
         // Element lookup
-        const_iterator1 lower_bound1 (int rank, size_type i, size_type j) const;
-        const_iterator1 upper_bound1 (int rank, size_type i, size_type j) const;
-        const_iterator2 lower_bound2 (int rank, size_type i, size_type j) const;
-        const_iterator2 upper_bound2 (int rank, size_type i, size_type j) const;
+        const_iterator1 find_first1 (int rank, size_type i, size_type j) const;
+        const_iterator1 find_last1 (int rank, size_type i, size_type j) const;
+        const_iterator2 find_first2 (int rank, size_type i, size_type j) const;
+        const_iterator2 find_last2 (int rank, size_type i, size_type j) const;
 
         // Iterators enhance the iterators of the referenced expression
         // with the binary functor.
@@ -1688,10 +1688,10 @@ matrix_expression&lt;matrix_binary_scalar2&lt;E1, E2, F&gt; &gt; </code>resp.</p
         typedef reverse_iterator2&lt;const_iterator2&gt; const_reverse_iterator2;
 
         // Element lookup
-        const_iterator1 lower_bound1 (int rank, size_type i, size_type j) const;
-        const_iterator1 upper_bound1 (int rank, size_type i, size_type j) const;
-        const_iterator2 lower_bound2 (int rank, size_type i, size_type j) const;
-        const_iterator2 upper_bound2 (int rank, size_type i, size_type j) const;
+        const_iterator1 find_first1 (int rank, size_type i, size_type j) const;
+        const_iterator1 find_last1 (int rank, size_type i, size_type j) const;
+        const_iterator2 find_first2 (int rank, size_type i, size_type j) const;
+        const_iterator2 find_last2 (int rank, size_type i, size_type j) const;
 
         // Iterators enhance the iterators of the referenced expression
         // with the binary functor.
@@ -1823,13 +1823,13 @@ matrix_expression&lt;matrix_binary_scalar2&lt;E1, E2, F&gt; &gt; </code>resp.</p
     template&lt;class E1, class T2&gt;
     typename matrix_binary_scalar2_traits&lt;E1, T2, scalar_multiplies&lt;typename E1::value_type, T2&gt; &gt;::result_type
     operator * (const matrix_expression&lt;E1&gt; &amp;e1, 
-	        const T2 &amp;e2);
+                const T2 &amp;e2);
 
     // (m / t) [i] [j] = m [i] [j] / t
     template&lt;class E1, class T2&gt;
     typename matrix_binary_scalar2_traits&lt;E1, T2, scalar_divides&lt;typename E1::value_type, T2&gt; &gt;::result_type
     operator / (const matrix_expression&lt;E1&gt; &amp;e1, 
-	        const T2 &amp;e2);</code></pre>
+                const T2 &amp;e2);</code></pre>
 
 <h4>Description</h4>
 
@@ -2065,8 +2065,8 @@ E2, F&gt; &gt;</code> resp.</p>
         typedef const_iterator iterator;
 
         // Element lookup
-        const_iterator lower_bound (size_type i) const;
-        const_iterator upper_bound (size_type i) const;
+        const_iterator find_first (size_type i) const;
+        const_iterator find_last (size_type i) const;
 
         // Iterator simply is a pointer.
 
@@ -2160,8 +2160,8 @@ E2, F&gt; &gt;</code> resp.</p>
         typedef const_iterator iterator;
 
         // Element lookup
-        const_iterator lower_bound (size_type j) const;
-        const_iterator upper_bound (size_type j) const;
+        const_iterator find_first (size_type j) const;
+        const_iterator find_last (size_type j) const;
 
         // Iterator simply is a pointer.
 
@@ -2628,10 +2628,10 @@ F&gt; &gt;</code>.</p>
         typedef reverse_iterator2&lt;const_iterator2&gt; const_reverse_iterator2;
 
         // Element lookup
-        const_iterator1 lower_bound1 (int rank, size_type i, size_type j) const;
-        const_iterator1 upper_bound1 (int rank, size_type i, size_type j) const;
-        const_iterator2 lower_bound2 (int rank, size_type i, size_type j) const;
-        const_iterator2 upper_bound2 (int rank, size_type i, size_type j) const;
+        const_iterator1 find_first1 (int rank, size_type i, size_type j) const;
+        const_iterator1 find_last1 (int rank, size_type i, size_type j) const;
+        const_iterator2 find_first2 (int rank, size_type i, size_type j) const;
+        const_iterator2 find_last2 (int rank, size_type i, size_type j) const;
 
         // Iterators simply are pointers.
 
