@@ -80,25 +80,25 @@ namespace boost {
     while (second != last) {
       if (*first < *second) {
         if (*first < *min_result)
-	  min_result = first, potential_min_result = last;
-	if (*max_result < *second)
-	  max_result = second;
+          min_result = first, potential_min_result = last;
+        if (*max_result < *second)
+          max_result = second;
       } else {
-	// could be that *first == *second
+        // could be that *first == *second
         if (*second < *min_result)
-	  // Glisse: min_result = (*first > *second) ? second : first;
-	  min_result = second, potential_min_result = first;
-	if (*max_result < *first)
-	  max_result = first;
+          // Glisse: min_result = (*first > *second) ? second : first;
+          min_result = second, potential_min_result = first;
+        if (*max_result < *first)
+          max_result = first;
       }
       first = ++second; if (first != last) ++second;
     }
     // if odd number of elements, treat last element, with at most 2 comparisons
     if (first != last) {
       if (*first < *min_result)
-	min_result = first, potential_min_result = last;
+        min_result = first, potential_min_result = last;
       else if (*max_result < *first)
-	max_result = first;
+        max_result = first;
     }
     // resolve min_result being incorrect, with one extra comparison
     // (in which case potential_min_result is necessarily the correct result)
@@ -129,23 +129,23 @@ namespace boost {
     while (second != last) {
       if (comp(*first, *second)) {
         if (comp(*first, *min_result))
-	  min_result = first, potential_min_result = last;
+          min_result = first, potential_min_result = last;
         if (comp(*max_result, *second))
-	  max_result = second;
+          max_result = second;
       } else {
         if (comp(*second, *min_result))
-	  min_result = second, potential_min_result = first;
+          min_result = second, potential_min_result = first;
         if (comp(*max_result, *first))
-	  max_result = first;
+          max_result = first;
       }
       first = ++second; if (first != last) ++second;
     }
     // if odd number of elements, treat last element
     if (first != last) { // odd number of elements
       if (comp(*first, *min_result))
-	min_result = first, potential_min_result = last;
+        min_result = first, potential_min_result = last;
       else if (comp(*max_result, *first))
-	max_result = first;
+        max_result = first;
     }
     // resolve min_result being incorrect with one extra comparison
     // (in which case potential_min_result is necessarily the correct result)
@@ -580,24 +580,24 @@ namespace boost {
     while (second != last) {
       if ((*first < *second)) {
         if (!(*min_result < *first))
-	  min_result = first;
-	if (!(*second < *max_result))
-	  max_result = second, potential_max_result = last;
+          min_result = first;
+        if (!(*second < *max_result))
+          max_result = second, potential_max_result = last;
       } else {
-	// could be that *first == *second
+        // could be that *first == *second
         if (!(*min_result < *second))
-	  min_result = second;
-	if (!(*first < *max_result))
-	  max_result = first, potential_max_result = second;
+          min_result = second;
+        if (!(*first < *max_result))
+          max_result = first, potential_max_result = second;
       }
       first = ++second; if (first != last) ++second;
     }
     // if odd number of elements, treat last element with 2 comparisons
     if (first != last) {
       if (!(*min_result < *first))
-	min_result = first;
+        min_result = first;
       if (!(*first < *max_result))
-	max_result = first, potential_max_result = last;
+        max_result = first, potential_max_result = last;
     }
     // resolve max_result being incorrect, with one extra comparison
     // (in which case potential_max_result is necessarily the correct result)
@@ -629,24 +629,24 @@ namespace boost {
     while (second != last) {
       if (comp(*first, *second)) {
         if (!comp(*min_result, *first))
-	  min_result = first;
-	if (!comp(*second, *max_result))
-	  max_result = second, potential_max_result = last;
+          min_result = first;
+        if (!comp(*second, *max_result))
+          max_result = second, potential_max_result = last;
       } else {
-	// could be that *first == *second
+        // could be that *first == *second
         if (!comp(*min_result, *second))
-	  min_result = second;
-	if (!comp(*first, *max_result))
-	  max_result = first, potential_max_result = second;
+          min_result = second;
+        if (!comp(*first, *max_result))
+          max_result = first, potential_max_result = second;
       }
       first = ++second; if (first != last) ++second;
     }
     // if odd number of elements, treat last element with 2 comparisons
     if (first != last) {
       if (!comp(*min_result, *first))
-	min_result = first;
+        min_result = first;
       if (!comp(*first, *max_result))
-	max_result = first, potential_max_result = last;
+        max_result = first, potential_max_result = last;
     }
     // resolve max_result being incorrect, with one extra comparison
     // (in which case potential_max_result is necessarily the correct result)
