@@ -2,8 +2,20 @@
 // Use, modification, and distribution are subject to the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-// NOTE: This is presently under construction: not all of the functions are properly implemented.
-// part of this code is based on http://moderncppdesign.com/code/flex_string.zip by Andrei Alexandrescu
+// This code is based on boost-sandbox/boost/wave/util/flex_string.hpp by Andrei Alexandrescu,
+// modified my Hartmut Kasier
+
+// The main changes are:
+// *  uses an iterator_adaptor-style approach instead of StoragePolicy
+// *  uses an ErrorPolicy class to handle out_of_range and length_error exceptions
+// *  uses the traits_type functions instead of the POD functions
+//       pod_move( const Pod * b, const Pod * e, Pod * d ) --> traits_type::move( d, b, ( e - b ))
+//       pod_copy( const Pod * b, const Pod * e, Pod * d ) --> traits_type::copy( d, b, ( e - b ))
+//       pod_fill( Pod * b, Pod * e, T c )                 --> traits_type::assign( b, ( e - b ), c )
+// *  added exception handling for resize and reserve
+// *  uses an MPL-based approach to check InputIterator on replace( iterator i1, iterator i2, InputIterator j1, InputIterator j2 )
+// *  uses basic_string as the substring type (currently via a typedef: will make this a template policy at some point)
+// *  uses optimized versions of find and rfind for searching for single characters
 
 #ifndef BOOST_BASIC_STRING_IMPL_HPP
 #define BOOST_BASIC_STRING_IMPL_HPP
@@ -20,39 +32,46 @@
          return(( a < b ) ? a : b );
       }
 
-      struct noerror_on_out_of_range
+      struct noerror_string_policy
       {
          static inline void                      out_of_range()
          {
          }
+         static inline void                      length_error()
+         {
+         }
       };
 
-      struct exception_on_out_of_range
+      struct exception_string_policy
       {
          static inline void                      out_of_range()
          {
             throw( std::out_of_range( "" ));
+         }
+         static inline void                      length_error()
+         {
+            throw( std::length_error( "" ));
          }
       };
       
       /*
          begin() | end() :: rbegin() | rend()
          length() | capacity() | max_size()
-         at( size_t i )
+         data() | c_str() | at( size_t i )
+
          resize(  size_type n, value_type c )
          reserve( size_type n )
 
          assign( const char_type * s, size_type n )
          append( const char_type * s, size_type n )
          push_back( char_type c )
-         copy( char_type * s, size_type n, size_type pos = 0 ) const
       */
 
       template
       <
          class StringPolicy, typename CharT = char,
          class CharPolicy = std::char_traits< CharT >,
-         class ErrorPolicy = noerror_on_out_of_range 
+         class ErrorPolicy = noerror_string_policy
       >
       class basic_string_impl
       {
@@ -91,6 +110,10 @@
             inline const string_type &           get_impl() const
             {
                return( *static_cast< const string_type * >( this ));
+            }
+            inline const char_type *             offset( size_type pos )
+            {
+               return( &*( begin() + pos ));
             }
          public: // 21.3.2: iterators
             inline const_iterator                begin() const
@@ -140,6 +163,7 @@
             }
             inline void                          resize( size_type n, char_type c )
             {
+               if( n > max_size())     ErrorPolicy::length_error();
                get_impl().resize( n, c );
             }
             inline void                          resize( size_type n )
@@ -152,6 +176,7 @@
             }
             inline void                          reserve( size_type n = 0 )
             {
+               if( n > max_size())     ErrorPolicy::length_error();
                get_impl().reserve( n );
             }
             inline void                          clear()
@@ -178,6 +203,7 @@
             }
             inline reference                     at( size_type i )
             {
+               if( i > length())       ErrorPolicy::out_of_range();
                return( get_impl().at( i ));
             }
          public: // 21.3.5: modifiers
@@ -245,7 +271,8 @@
             }
             inline string_type &                 append( size_type n, char_type c )
             {
-               return( get_impl()); // todo == resize( size() + n, c );
+               get_impl().resize( size() + n, c );
+               return( get_impl());
             }
             template< typename InputIterator >
             inline size_type &                   append( InputIterator first, InputIterator last )
@@ -331,19 +358,100 @@
             inline string_type &                 replace( size_type pos1, size_type n1, const string_type & s, size_type pos2, size_type n2 )
             {
                if( pos1 > length())    ErrorPolicy::out_of_range();
-               return( replace( pos1, n1, static_cast< const char_type * >( s.begin() + pos2 ), min_( n2, s.length() - pos2 )));
+               return( replace( pos1, n1, s.offset( pos2 ), min_( n2, s.length() - pos2 )));
             }
-            inline string_type &                 replace( size_type pos, size_type n1, const char_type * s, size_type n2 )
+            inline string_type &                 replace( size_type d, size_type n1, const char_type * s, size_type n2 )
             {
-               return( replace( pos, n1, s, traits_type::length( s )));
+               if( d > size())         ErrorPolicy::out_of_range();
+               if( d + n1 > size())    n1 = size() - d;
+               static const std::less_equal< const value_type * > le = std::less_equal< const value_type * >();
+
+               const int               delta   = int( n2 - n1 );
+               const bool              aliased = le( &*begin(), s1 ) && le( s1, &*end());
+               if( delta > 0 )
+               {
+                  if( capacity() < size() + delta ) // realloc the string
+                  {
+                     if( aliased )
+                     {
+                        const size_type off = s1 - &*begin();
+                        reserve( size() + delta );
+                        s1 = offset( off );
+                     }
+                     else reserve( size() + delta );
+                  }
+
+                  const value_type *   s2   = s1 + n2;
+                  value_type *         d1   = offset( d );
+                  value_type *         d2   = d1 + n1;
+                  const int            len_ = int( &*end() - d2 );
+                  if( delta <= len_ )
+                  {
+                     value_type *      end_ = &*end();
+                     get_impl().append( end_ - delta, delta );
+                     traits_type::move( d2 + delta, d2, ( len_ - delta ));
+                     if( le( d2, s1 ))
+                     {
+                        if( aliased )  traits_type::copy( d1, s1 + delta, ( s2 - s1 ));
+                        else           traits_type::copy( d1, s1, ( s2 - s1 ));
+                     }
+                     else
+                     {
+                        if( le( d2, s2 ))
+                        {
+                           // assert( aliased );
+                           traits_type::move( d1, s1, ( d2 - s1 ));
+                           traits_type::move( d1 + ( d2 - s1 ), d2 + delta, ( s2 - d2 ));
+                        }
+                        else traits_type::move( d1, s1, ( s2 - s1 ));
+                     }
+                  }
+                  else
+                  {
+                     const size_type   sz = delta - len_;
+                     get_impl().append( s2 - sz, sz );
+                     get_impl().append( d2, len_ );
+                     traits_type::move( d1, s1, (( s2 - delta + len_ ) - s1 ));
+                  }
+               }
+               else
+               {
+                  traits_type::move( offset( d ), s1, n2 );
+                  traits_type::move( offset( d + n1 + delta ), offset( d + n1 ), ( &*end() - offset( d + n1 )));
+                  resize( size() + delta );
+               }
+               return( get_impl());
             }
-            inline string_type &                 replace( size_type pos, size_type n1, const char_type * s )
+            inline string_type &                 replace( size_type d, size_type n1, const char_type * s )
             {
-               return( get_impl()); // todo
+               return( replace( d, n1, s, traits_type::length( s )));
             }
             inline string_type &                 replace( size_type pos, size_type n1, size_type n2, char_type c )
             {
-               return( get_impl()); // todo
+               if( pos + n1 > size())  n1    = size() - pos;
+               const size_type         size_ = size();
+               if( pos + n2 > size_ )
+               {
+                  resize( pos + n2, c );
+                  get_impl().append( offset( pos + n1 ), size_ - pos - n1 );
+                  traits_type::assign( offset( pos ), size_ - pos, c );
+               }
+               else
+               {
+                  if( n2 > n1 )
+                  {
+                     const size_type   delta = n2 - n1;
+                     get_impl().append( offset( size_ - delta ), delta );
+                     traits_type::move( offset( pos + n2 ), offset( pos + n1 ), ( size_ - delta - pos - n1 ));
+                  }
+                  else
+                  {
+                     traits_type::move( offset( pos + n2 ), offset( pos + n1 ), size() - pos - n1 );
+                     resize( size_ - ( n1 - n2 ));
+                  }
+                  traits_type::assign( offset( pos ), n2, c );
+               }
+               return( get_impl());
             }
             inline string_type &                 replace( iterator i1, iterator i2, const string_type & s )
             {
@@ -375,7 +483,11 @@
          public:
             inline size_type                     copy( char_type * s, size_type n, size_type pos = 0 ) const
             {
-               return( get_impl().copy( s, n, pos ));
+               if( pos > size())       ErrorPolicy::out_of_range();
+               n = min_( n, size() - pos );
+               traits_type::copy( s, offset( pos ), n );
+               s[ n ] = char_type( '\0' );
+               return( n );
             }
             inline void                          swap( string_type & s )
             {
@@ -401,7 +513,13 @@
             }
             inline size_type                     find( const char_type * s, size_type pos, size_type n ) const
             {
-               return( npos ); // todo
+               const size_type         sz = size();
+               for( ; pos <= sz; ++pos )
+               {
+                  if( traits_type::compare( offset( pos ), s, n ) == 0 )
+                     return( pos );
+               }
+               return( npos );
             }
             inline size_type                     find( const char_type * s, size_type pos = 0 ) const
             {
@@ -409,7 +527,13 @@
             }
             inline size_type                     find( char_type c, size_type pos = 0 ) const
             {
-               return( npos ); // todo
+               const_iterator          last( end());
+               for( const_iterator first( begin() + pos ); first != last; ++first )
+               {
+                  if( traits_type::eq( *first, c ))
+                     return( pos );
+               }
+               return( npos );
             }
          public:
             inline size_type                     rfind( const string_type & s, size_type pos = npos ) const
@@ -418,7 +542,17 @@
             }
             inline size_type                     rfind( const char_type * s, size_type pos, size_type n ) const
             {
-               return( npos ); // todo
+               if( n > length())       return( npos );
+               pos = min_( pos, length() - n );
+               if( n == 0 )            return( pos );
+               
+               for( const_iterator i( begin() + pos );; --i )
+               {
+                  if( traits_type::eq( *i, *s ) && traits_type::compare( &*i, s, n ) == 0 )
+                     return( i - begin());
+                  if( i == begin())    break;
+               }
+               return( npos );
             }
             inline size_type                     rfind( const char_type * s, size_type pos = npos ) const
             {
@@ -426,7 +560,17 @@
             }
             inline size_type                     rfind( char_type c, size_type pos = npos ) const
             {
-               return( npos ); // todo
+               if( n > length())       return( npos );
+               pos = min_( pos, length() - n );
+               if( n == 0 )            return( pos );
+               
+               for( const_iterator i( begin() + pos );; --i )
+               {
+                  if( traits_type::eq( *i, c ))
+                     return( i - begin());
+                  if( i == begin())    break;
+               }
+               return( npos );
             }
          public:
             inline size_type                     find_first_of( const string_type & s, size_type pos = 0 ) const
@@ -435,7 +579,16 @@
             }
             inline size_type                     find_first_of( const char_type * s, size_type pos, size_type n ) const
             {
-               return( npos ); // todo
+               if( pos > length() || n == 0 )
+                  return( npos );
+                  
+               const_iterator          last( end());
+               for( const_iterator first( begin() + pos ); i != last; ++i )
+               {
+                  if( traits_type::find( s, n, *i ) != 0 )
+                     return( i - begin());
+               }
+               return( npos );
             }
             inline size_type                     find_first_of( const char_type * s, size_type pos = 0 ) const
             {
@@ -443,7 +596,7 @@
             }
             inline size_type                     find_first_of( char_type c, size_type pos = 0 ) const
             {
-               return( npos ); // todo
+               return( find_first_of( &c, pos, 1 )); // optimize?
             }
          public:
             inline size_type                     find_last_of( const string_type & s, size_type pos = 0 ) const
@@ -452,7 +605,17 @@
             }
             inline size_type                     find_last_of( const char_type * s, size_type pos, size_type n ) const
             {
-               return( npos ); // todo
+               if( !empty() && n > 0 )
+               {
+                  pos = min_( pos, length() - 1 );
+                  for( const_iterator i( begin() + pos );; --i )
+                  {
+                     if( traits_type::find( s, n, *i ) != 0 )
+                        return( i - begin());
+                     if( i == begin()) break;
+                  }
+               }
+               return( npos );
             }
             inline size_type                     find_last_of( const char_type * s, size_type pos = 0 ) const
             {
@@ -460,7 +623,7 @@
             }
             inline size_type                     find_last_of( char_type c, size_type pos = 0 ) const
             {
-               return( npos ); // todo
+               return( find_last_of( &c, pos, 1 )); // optimize?
             }
          public:
             inline size_type                     find_first_not_of( const string_type & s, size_type pos = 0 ) const
@@ -469,7 +632,16 @@
             }
             inline size_type                     find_first_not_of( const char_type * s, size_type pos, size_type n ) const
             {
-               return( npos ); // todo
+               if( pos < length())
+               {
+                  const_iterator       last( end());
+                  for( const_iterator first( begin() + pos ); i != last; ++i )
+                  {
+                     if( traits_type::find( s, n, *i ) == 0 )
+                        return( i - begin());
+                  }
+               }
+               return( npos );
             }
             inline size_type                     find_first_not_of( const char_type * s, size_type pos = 0 ) const
             {
@@ -477,7 +649,7 @@
             }
             inline size_type                     find_first_not_of( char_type c, size_type pos = 0 ) const
             {
-               return( npos ); // todo
+               return( find_first_not_of( &c, pos, 1 )); // optimize?
             }
          public:
             inline size_type                     find_last_not_of( const string_type & s, size_type pos = 0 ) const
@@ -486,7 +658,17 @@
             }
             inline size_type                     find_last_not_of( const char_type * s, size_type pos, size_type n ) const
             {
-               return( npos ); // todo
+               if( !empty())
+               {
+                  pos = min_( pos, size() - 1 );
+                  for( const_iterator i( begin() + pos );; --i )
+                  {
+                     if( traits_type::find( s, n, *i ) == 0 )
+                        return( i - begin());
+                     if( i == begin()) break;
+                  }
+               }
+               return( npos );
             }
             inline size_type                     find_last_not_of( const char_type * s, size_type pos = 0 ) const
             {
@@ -494,7 +676,7 @@
             }
             inline size_type                     find_last_not_of( char_type c, size_type pos = 0 ) const
             {
-               return( npos ); // todo
+               return( find_last_not_of( &c, pos, 1 )); // optimize?
             }
          public:
             inline substring_type                substr( size_type pos = 0, size_type n = npos ) const
