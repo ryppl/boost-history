@@ -29,8 +29,19 @@ int main()
 
    // reading data back from a plain text-based serialization stream
    {
-      // [todo]
-      // in >> boost::io::readobject( p1, textio ); ?
+      // [note]: the mechanism for reading data in is currently incomplete and experimental:
+      //    it is only currently supported for basic_output and pair_output/std::pair.
+
+      std::ifstream                    is( "doc.txt" );
+      std::pair< char, int >           p2;
+
+      std::cout << "pair before reading: " << boost::io::formatobout( p2, textio ) << '\n';
+      textio.read( is, p2 ); // is >> boost::io::readobject( p2, textio );
+      std::cout << "pair after reading:  "  << boost::io::formatobout( p2, textio ) << '\n';
+
+      // [output]:
+      //    pair before reading: (  , 0 )
+      //    pair after reading:  ( a, 5 )
    }
 
    // [2]: XML -- [note]: XML is a text-based system, and can thus be serialized to
@@ -42,7 +53,7 @@ int main()
    {
       // open the file to serialize the pair to
       std::ofstream                    out( "doc1.xml" );
-      out << "<?xml version = \"1.0\" encoding = \"UTF-8\"?>\n\n"; // XML signature
+//    out << "<?xml version = \"1.0\" encoding = \"UTF-8\"?>\n\n"; // XML signature
 
       // serialize to the stream
       out << boost::io::formatobout( p1, xmlio ) << '\n';
@@ -50,8 +61,19 @@ int main()
 
    // reading data back from a plain text-based serialization stream
    {
-      // [todo]
-      // in >> boost::io::readobject( p1, xmlio ); ?
+      // [note]: the mechanism for reading data in is currently incomplete and experimental:
+      //    it is only currently supported for basic_output and pair_output/std::pair.
+
+      std::ifstream                    is( "doc1.xml" );
+      std::pair< char, int >           p2;
+
+      std::cout << "pair before reading: " << boost::io::formatobout( p2, textio ) << '\n';
+      xmlio.read( is, p2 ); // is >> boost::io::readobject( p2, xmlio );
+      std::cout << "pair after reading:  "  << boost::io::formatobout( p2, textio ) << '\n';
+
+      // [output]:
+      //    pair before reading: (  , 0 )
+      //    pair after reading:  ( a, 5 )
    }
 
    // [3]: XML -- [note]: use wrapped output to simplify output specification
