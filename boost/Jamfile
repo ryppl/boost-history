@@ -2,7 +2,10 @@ if --help in $(ARGV)
 {
     ECHO "
 Usage:
-    bjam [options] [install]
+    bjam [options] [install|stage]
+
+    * install               Installs to the configured location(s).
+    * stage                 Stages the build products only to common stage location.
 
 Options:
     --help                  This message.
@@ -19,6 +22,8 @@ Locations:
                             Default; PREFIX/include
     --builddir=DIR          Build in this location instead of building
                             within the distribution tree. Recomended!
+    --stagedir=DIR          When staging only, stage to the location.
+                            Default; ./stage
 
 Features:
     --with-python[=PYTHON_ROOT]
@@ -35,8 +40,29 @@ Features:
     EXIT "" ;
 }
 
+local with-install = ;
+local with-stage = ;
+
+# build only, or build+install
+if install in $(ARGV)
+{
+    with-install = install ;
+    with-stage = ;
+}
+
+# stage only? (no install, only build and stage to a common dir)
+if stage in $(ARGV)
+{
+    with-stage = stage ;
+    with-install = ;
+}
+
+# possible stage only location
+local stage-locate = [ MATCH "^--stagedir=(.*)" : $(ARGV) ] ;
+stage-locate ?= stage ;
+
 # architecture independent files
-local boost-locate = [ MATCH "^--prefix=(.*)" : $(ARGV) ] ;
+local boost-locate = [ unless $(with-stage) : [ MATCH "^--prefix=(.*)" : $(ARGV) ] : $(stage-locate) ] ;
 if $(NT) { boost-locate ?= C:\\Boost ; }
 else if $(UNIX) { boost-locate ?= /usr/local ; }
 
@@ -67,13 +93,6 @@ if --with-pydebug in $(ARGV)
     with-debug-python = debug-python ;
 }
 
-# build only, or build+install
-local with-install = ;
-if install in $(ARGV)
-{
-    with-install = install ;
-}
-
 #
 project-root ;
 
@@ -89,7 +108,6 @@ version-tag = $(version-tag:J=) ;
 
 stage $(lib-locate:D=)
     :
-        $(install-set)
         # please order by name to ease maintenance
         <dll>libs/date_time/build/boost_date_time
         <lib>libs/date_time/build/boost_date_time
@@ -115,11 +133,12 @@ stage $(lib-locate:D=)
         common-stage-tag
         <tag><postfix>-$(version-tag)
         [ cond $(with-install) : <target>install : <target>all ]
+        [ cond $(with-stage) : <target>stage : <target>all ]
     :
         debug
         release
         [ cond $(with-debug-python) : debug-python ]
-        [ unless $(with-install) : <suppress>true ]
+        [ unless $(with-install) $(with-stage) : <suppress>true ]
     ;
 
 stage $(include-locate:D=)/boost-$(version-tag)
