@@ -14,6 +14,7 @@ SOURCES = \
   test_key_extractors.cpp\
   test_list_ops.cpp\
   test_modifiers.cpp\
+  test_mpl_ops.cpp\
   test_projection.cpp\
   test_range.cpp\
   test_safe_mode.cpp\

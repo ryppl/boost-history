@@ -37,6 +37,12 @@
       <li><a href="#simulate_std_list">Simulation of <code>std::list</code></a></li>
     </ul>
   </li>
+  <li><a href="#metaprogrammming">Metaprogramming and <code>indexed_set</code></a>
+    <ul>
+      <li><a href="#mpl_analysis">MPL analysis</li>
+      <li><a href="#mpl_synthesis">MPL synthesis</li>
+    </ul>
+  </li>
 </ul>
 
 <h2><a name="advanced_key_extractors">Advanced features of Boost.IndexedSet key
@@ -948,6 +954,143 @@ or, if the default value <code>Allocator=std::allocator&lt;T></code> is used:
 
 <blockquote><pre>
 <span class=identifier>std</span><span class=special>::</span><span class=identifier>list</span><span class=special>&lt;</span><span class=identifier>T</span><span class=special>&gt;</span> <span class=special>-&gt;</span> <span class=identifier>indexed_set</span><span class=special>&lt;</span><span class=identifier>mutable_value</span><span class=special>&lt;</span><span class=identifier>T</span><span class=special>&gt;,</span><span class=identifier>index_list</span><span class=special>&lt;</span><span class=identifier>sequenced</span><span class=special>&lt;&gt;</span> <span class=special>&gt;</span> <span class=special>&gt;</span>
+</pre></blockquote>
+
+<h2><a name="metaprogrammming">Metaprogramming and <code>indexed_set</code></a></h2>
+
+<p>
+Boost.IndexedSet provides a number of facilities intended to allow the analysis and
+synthesis of <code>indexed_set</code> instantiations by
+<a href="../../../libs/mpl/doc/index.html">MPL</a> metaprograms.
+</p>
+
+<h3><a name="mpl_analysis">MPL analysis</h3>
+
+<p>
+Given an <code>indexed_set</code> instantiation, the following nested types are
+provided for compile-time inspection of the various types concurring in the
+definition of the <code>indexed_set</code>:
+<ul>
+  <li><code>index_specifier_type_list</code>,</li>
+  <li><code>index_type_list</code>,</li>
+  <li><code>iterator_type_list</code>,</li>
+  <li><code>const_iterator_type_list</code>.</li>
+</ul>
+Each of these types is a <a href="../../../libs/mpl/doc/ref/Forward_Sequence.html">
+<code>MPL Forward Sequence</code></a> with as many elements as indices
+comprise the <code>indexed_set</code>: for instance, the <code>n</code>-nth
+element of <code>iterator_type_list</code> is the same as
+<code>nth_iterator_type&lt;n>::type</code>.
+</p>
+
+<p>
+An subtle but important distinction exists between
+<code>index_specifier_type_list</code> and <code>index_type_list</code>:
+the former typelist holds the index <i>specifiers</i>
+with which the <code>indexed_set</code> instantiation was defined,
+while the latter gives access to the actual implementation classes
+corresponding to each specifier. An example will help to clarify
+this distinction. Given the instantiation:
+</p>
+
+<blockquote><pre>
+<span class=keyword>typedef</span> <span class=identifier>indexed_set</span><span class=special>&lt;</span>
+  <span class=keyword>int</span><span class=special>,</span>
+  <span class=identifier>index_list</span><span class=special>&lt;</span>
+    <span class=identifier>unique</span><span class=special>&lt;</span><span class=identifier>identity</span><span class=special>&lt;</span><span class=keyword>int</span><span class=special>&gt;</span> <span class=special>&gt;,</span>
+    <span class=identifier>sequenced</span><span class=special>&lt;&gt;</span>
+  <span class=special>&gt;</span>
+<span class=special>&gt;</span> <span class=identifier>indexed_t</span><span class=special>;</span>
+</pre></blockquote>
+
+<p>
+<code>indexed_t::index_specifier_type_list</code> is a type list with
+elements
+</p>
+
+<blockquote><pre>
+<span class=identifier>unique</span><span class=special>&lt;</span><span class=identifier>identity</span><span class=special>&lt;</span><span class=keyword>int</span><span class=special>&gt;</span> <span class=special>&gt;</span>
+<span class=identifier>sequenced</span><span class=special>&lt;&gt;</span>
+</pre></blockquote>
+
+<p>
+while <code>indexed_t::index_type_list</code> holds the types
+</p>
+
+<blockquote><pre>
+<span class=identifier>indexed_set</span><span class=special>::</span><span class=identifier>nth_type</span><span class=special>&lt;</span><span class=number>0</span><span class=special>&gt;::</span><span class=identifier>type</span>
+<span class=identifier>indexed_set</span><span class=special>::</span><span class=identifier>nth_type</span><span class=special>&lt;</span><span class=number>1</span><span class=special>&gt;::</span><span class=identifier>type</span>
+</pre></blockquote>
+
+<p>
+so the typelists are radically different.
+</p>
+
+<h3><a name="mpl_synthesis">MPL synthesis</h3>
+
+<p>
+Suppose we want to write a metaprogram which constructs an
+<code>indexed_set</code> instantiation out of a typelist of
+index specifiers. Unfortunately, the intantiation syntax of
+<code>indexed_set</code> is not oriented to this sort of tasks:
+<code>index_list</code>, the construct in which index specifiers
+are given, accepts each specifier as a separate template
+argument. Thus, the mapping of a typelist of specifiers
+to its appropriate <code>index_list</code> instantiation requires
+a fair amount of work.
+</p>
+
+<p>
+In order to solve this problem, Boost.IndexedSet features an alternative
+method of index specification through the construct
+<code>mpl_index_list</code>:
+</p>
+
+<blockquote><pre>
+<span class=keyword>typedef</span> <span class=identifier>mpl</span><span class=special>::</span><span class=identifier>vector</span><span class=special>&lt;</span><span class=identifier>unique</span><span class=special>&lt;</span><span class=identifier>identity</span><span class=special>&lt;</span><span class=keyword>int</span><span class=special>&gt;</span> <span class=special>&gt;,</span><span class=identifier>sequenced</span><span class=special>&lt;&gt;</span> <span class=special>&gt;</span> <span class=identifier>index_list_t</span><span class=special>;</span>
+
+<span class=keyword>typedef</span> <span class=identifier>indexed_set</span><span class=special>&lt;</span>
+  <span class=keyword>int</span><span class=special>,</span>
+  <span class=identifier>mpl_index_list</span><span class=special>&lt;</span><span class=identifier>index_list_t</span><span class=special>&gt;</span>
+<span class=special>&gt;</span> <span class=identifier>indexed_t</span><span class=special>;</span>
+</pre></blockquote>
+
+<p>
+<code>mpl_index_list</code> accepts a
+<a href="../../../libs/mpl/doc/ref/Forward_Sequence.html">
+<code>MPL Forward Sequence</code></a> typelist holding the index specifiers.
+In the example, <code>mpl_index_list&lt;index_list_t></code> works as a
+synonim of
+<code>index_list&lt;unique&lt;identity&ltint> >,sequenced&lt;> ></code>.
+Although common users of Boost.IndexedSet have no reason to prefer
+<code>mpl_index_list</code> to <code>index_list</code>, the
+simplification that this alternative method of index specification
+provides to MPL metaprograms is considerable. The following example
+shows a typical mode of use of <code>mpl_index_list</code>:
+</p>
+
+<blockquote><pre>
+<span class=comment>// original indexed_set instantiation</span>
+<span class=keyword>typedef</span> <span class=identifier>indexed_set</span><span class=special>&lt;</span>
+  <span class=keyword>int</span><span class=special>,</span>
+  <span class=identifier>index_list</span><span class=special>&lt;</span>
+    <span class=identifier>unique</span><span class=special>&lt;</span><span class=identifier>identity</span><span class=special>&lt;</span><span class=keyword>int</span><span class=special>&gt;</span> <span class=special>&gt;</span>
+  <span class=special>&gt;</span>
+<span class=special>&gt;</span>                                <span class=identifier>indexed_t1</span><span class=special>;</span>
+
+<span class=comment>// we take its index list and add an index</span>
+<span class=keyword>typedef</span> <span class=identifier>boost</span><span class=special>::</span><span class=identifier>mpl</span><span class=special>::</span><span class=identifier>push_front</span><span class=special>&lt;</span>
+  <span class=identifier>indexed_t1</span><span class=special>::</span><span class=identifier>index_specifier_type_list</span><span class=special>,</span>
+  <span class=identifier>sequenced</span><span class=special>&lt;&gt;</span>
+<span class=special>&gt;::</span><span class=identifier>type</span>                          <span class=identifier>index_list_t</span><span class=special>;</span>
+
+<span class=comment>// augmented indexed_set</span>
+<span class=keyword>typedef</span> <span class=identifier>indexed_set</span><span class=special>&lt;</span>
+  <span class=keyword>int</span><span class=special>,</span>
+  <span class=identifier>mpl_index_list</span><span class=special>&lt;</span> <span class=comment>// note mpl_index_list</span>
+    <span class=identifier>index_list_t</span>
+  <span class=special>&gt;</span>
+<span class=special>&gt;</span>                                <span class=identifier>indexed_t2</span><span class=special>;</span>
 </pre></blockquote>
 
 <hr>

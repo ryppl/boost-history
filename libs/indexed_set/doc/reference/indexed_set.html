@@ -216,6 +216,7 @@ operators and functions associated with the index (vg. comparison and
   <span class=comment>// types:</span>
 
   <span class=keyword>typedef</span> <b>implementation defined</b>   <span class=identifier>ctor_args_list</span><span class=special>;</span>
+  <span class=keyword>typedef</span> <b>implementation defined</b>   <span class=identifier>index_specifier_type_list</span><span class=special>;</span>
   <span class=keyword>typedef</span> <b>implementation defined</b>   <span class=identifier>index_type_list</span><span class=special>;</span>
   <span class=keyword>typedef</span> <b>implementation defined</b>   <span class=identifier>iterator_type_list</span><span class=special>;</span>
   <span class=keyword>typedef</span> <b>implementation defined</b>   <span class=identifier>const_iterator_type_list</span><span class=special>;</span>
@@ -451,7 +452,12 @@ scheme outlined in the
     type of the elements contained.</li>
   <li><code>IndexSpecifierList</code> specifies the indices that the
     <code>indexed_set</code> is composed of. It must be an instantiation
-    of <a href="indices.html#index_list"><code>index_list</code></a>.</li>
+    of <a href="indices.html#index_list"><code>index_list</code></a> with
+    at least one non-default argument. Alternatively,
+    <code>IndexSpecifierList</code> can be an instantiation of
+    <a href="indices.html#mpl_index_list"><code>mpl_index_list</code></a>
+    with a non-empty <a href="../../../../libs/mpl/doc/ref/Forward_Sequence.html">
+    <code>MPL Forward Sequence</code></a> of index specifiers.</li>
   <li><code>Allocator</code> must comply with the C++ requirements for
     allocators <b>[lib.allocator.requirements]</b>.
 </ol>
@@ -479,10 +485,19 @@ Constructible</code></a>, provided that all <code>ctor_args</code> types
 involved are default constructible.
 </blockquote>
 
+<code>index_specifier_type_list</code>
+
+<blockquote>
+<a href="../../../../libs/mpl/doc/ref/Forward_Sequence.html">
+<code>MPL Forward Sequence</code></a> containing the types of the index specifiers
+used in the instantiation of the <code>indexed_set</code>, in the same order as
+they were provided.
+</blockquote>
+
 <code>index_type_list</code>
 
 <blockquote>
-<a href="../../../libs/mpl/doc/ref/Forward_Sequence.html">
+<a href="../../../../libs/mpl/doc/ref/Forward_Sequence.html">
 <code>MPL Forward Sequence</code></a> containing the types of the indices held by
 the <code>indexed_set</code>, in the same order as they were specified.
 </blockquote>
@@ -490,7 +505,7 @@ the <code>indexed_set</code>, in the same order as they were specified.
 <code>iterator_type_list</code>
 
 <blockquote>
-<a href="../../../libs/mpl/doc/ref/Forward_Sequence.html">
+<a href="../../../../libs/mpl/doc/ref/Forward_Sequence.html">
 <code>MPL Forward Sequence</code></a> containing the types of the iterators of
 the indices held by the <code>indexed_set</code>, in the same order as they were
 specified.
@@ -499,7 +514,7 @@ specified.
 <code>const_iterator_type_list</code>
 
 <blockquote>
-<a href="../../../libs/mpl/doc/ref/Forward_Sequence.html">
+<a href="../../../../libs/mpl/doc/ref/Forward_Sequence.html">
 <code>MPL Forward Sequence</code></a> containing the types of the constant
 iterators of the indices held by the <code>indexed_set</code>, in the same order
 as they were specified.
@@ -753,7 +768,7 @@ iterator equivalent to <code>it</code>.<br>
 
 <p>Copyright &copy; 2003-2004 Joaqu&iacute;n M L&oacute;pez Mu&ntilde;oz.
 Use, modification, and distribution are subject to the Boost Software 
-License, Version 1.0. (See accompanying file <a href="../../../LICENSE_1_0.txt">
+License, Version 1.0. (See accompanying file <a href="../../../../LICENSE_1_0.txt">
 LICENSE_1_0.txt</a> or copy at <a href="http://www.boost.org/LICENSE_1_0.txt">
 www.boost.org/LICENSE_1_0.txt</a>)
 </p>

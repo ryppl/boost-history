@@ -21,6 +21,7 @@
     <code>"boost/indexed_set/index_list.hpp"</code> synopsis</a>
     <ul>
       <li><a href="#index_list">Template class <code>index_list</code></a></li>
+      <li><a href="#mpl_index_list">Template class <code>mpl_index_list</code></a></li>
     </ul>
   </li>
   <li><a href="#tags">Tags</a></li>
@@ -113,11 +114,10 @@ the interface of indices, save that they must model
 <h2><a name="complexity_signature">Complexity signature</a></h2>
 
 <p>
-As some member functions provided by an index result in the execution
-of a global primitive from the list described above, it is not possible
-to give the complexity of an operation of an index on its own: instead, the
-complexity is a function of all the indices comprising a given
-instantiation of <code>indexed_set</code>. 
+Some member functions of an index interface are implemented by
+global primitives from the list above. Complexity of these operations
+thus depends on all indices of a given <code>indexed_set</code>, not just
+the currently used index.
 </p>
 
 <p>
@@ -164,8 +164,9 @@ is then of complexity
 <h2><a name="index_specification">Index specification</a></h2>
 
 <p>
-An index specifier provides the information needed by <code>indexed_set</code>
-in order to incorporate a given index instantiation as part of its index list.
+Index specifiers are passed as arguments of <a href="#index_list">
+<code>index_list</code></a> and provide <code>indexed_set</code> with
+the information needed to incorporate the corresponding index.
 Future releases of Boost.IndexedSet may allow for specification of user-defined
 indices. Meanwhile, the requirements for an index specifier remain
 implementation defined. Currently, Boost.IndexedSet provides the index specifiers
@@ -193,6 +194,8 @@ implementation defined. Currently, Boost.IndexedSet provides the index specifier
   <span class=keyword>typename</span> <span class=identifier>Tn</span><span class=special>=</span><b>implementation defined default</b><span class=special>&gt;</span>
 <span class=keyword>struct</span> <span class=identifier>index_list</span><span class=special>;</span>
 
+<span class=keyword>template</span><span class=special>&lt;</span><span class=keyword>typename</span> <span class=identifier>MplFwdSequence</span><span class=special>&gt;</span> <span class=keyword>struct</span> <span class=identifier>mpl_index_list</span><span class=special>;</span>
+
 <span class=special>}</span> <span class=comment>// namespace boost::indexed_sets</span> 
 
 <span class=special>}</span> <span class=comment>// namespace boost</span>
@@ -219,6 +222,24 @@ sequence of indices as the <code>IndexSpecifierList</code> of
 Each element of <code>indexed_list</code> must be an index specifier.
 The maximum number of elements of an <code>index_list</code> is
 implementation defined.
+</p>
+
+<h3><a name="mpl_index_list">Template class <code>mpl_index_list</code></a></h3>
+
+<p>
+The template class <code>mpl_index_list</code> takes as argument an
+<a href="../../../../libs/mpl/doc/ref/Forward_Sequence.html">
+<code>MPL Forward Sequence</code></a>, each of its elements being
+an index specifier.
+</p>
+
+<blockquote><pre>
+<span class=keyword>template</span><span class=special>&lt;</span><span class=keyword>typename</span> <span class=identifier>MplFwdSequence</span><span class=special>&gt;</span> <span class=keyword>struct</span> <span class=identifier>mpl_index_list</span><span class=special>;</span>
+</pre></blockquote>
+
+<p>
+<code>mpl_index_list</code> is a convenient replacement of the more
+usual <code>index_list</code> for metaprogramming purposes.
 </p>
 
 <h2><a name="tags">Tags</a></h2>
@@ -309,7 +330,7 @@ reference</a>.
 
 <p>Copyright &copy; 2003-2004 Joaqu&iacute;n M L&oacute;pez Mu&ntilde;oz.
 Use, modification, and distribution are subject to the Boost Software 
-License, Version 1.0. (See accompanying file <a href="../../../LICENSE_1_0.txt">
+License, Version 1.0. (See accompanying file <a href="../../../../LICENSE_1_0.txt">
 LICENSE_1_0.txt</a> or copy at <a href="http://www.boost.org/LICENSE_1_0.txt">
 www.boost.org/LICENSE_1_0.txt</a>)
 </p>

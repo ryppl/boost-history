@@ -66,6 +66,14 @@ struct index_list:private detail::index_list_marker
   typedef mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_INDEXED_SET_INDEX_LIST_SIZE,T)> type;
 };
 
+/* MPL-friendly variant of index_list for metaprogramming purposes */
+
+template<typename MplFwdSequence>
+struct mpl_index_list:private detail::index_list_marker
+{
+  typedef MplFwdSequence type;
+};
+
 } /* namespace indexed_sets */
 
 } /* namespace boost */

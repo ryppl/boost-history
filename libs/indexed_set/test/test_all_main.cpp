@@ -17,6 +17,7 @@
 #include "test_key_extractors.hpp"
 #include "test_list_ops.hpp"
 #include "test_modifiers.hpp"
+#include "test_mpl_ops.hpp"
 #include "test_projection.hpp"
 #include "test_range.hpp"
 #include "test_safe_mode.hpp"
@@ -35,6 +36,7 @@ int test_main(int,char *[])
   test_key_extractors();
   test_list_ops();
   test_modifiers();
+  test_mpl_ops();
   test_projection();
   test_range();
   test_safe_mode();

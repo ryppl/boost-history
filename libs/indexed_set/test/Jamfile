@@ -28,6 +28,7 @@ DEPENDS all : test ;
         : [ run test_key_extractors_main.cpp  test_key_extractors.cpp  ]
         : [ run test_list_ops_main.cpp        test_list_ops.cpp        ]
         : [ run test_modifiers_main.cpp       test_modifiers.cpp       ]
+        : [ run test_mpl_ops_main.cpp         test_mpl_ops.cpp         ]
         : [ run test_projection_main.cpp      test_projection.cpp      ]
         : [ run test_range_main.cpp           test_range.cpp           ]
         : [ run test_safe_mode_main.cpp       test_safe_mode.cpp       ]

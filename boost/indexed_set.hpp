@@ -93,6 +93,7 @@ public:
   typedef typename super::ctor_args_list           ctor_args_list;
 #endif
 
+  typedef typename IndexSpecifierList::type        index_specifier_type_list;
   typedef typename super::index_type_list          index_type_list;
   typedef typename super::iterator_type_list       iterator_type_list;
   typedef typename super::const_iterator_type_list const_iterator_type_list;
@@ -455,7 +456,7 @@ BOOST_INDEXED_SET_PROTECTED_IF_MEMBER_TEMPLATE_FRIENDS:
 private:
   void clean_up()
   {
-    erase(begin(),end());
+    for(iterator it=begin();it!=end();)erase_(it++.get_node());
   }
 
   std::size_t node_count;
