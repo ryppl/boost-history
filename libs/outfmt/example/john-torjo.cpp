@@ -1,4 +1,4 @@
-// (C) Copyright 2003: Reece H. Dunn
+// (C) Copyright 2003-2004: Reece H. Dunn
 
 // Produce the same formatting as the examples created by John Torjo for his
 // list outputter library/tutorial

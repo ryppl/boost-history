@@ -1,4 +1,4 @@
-// (C) Copyright 2003: Reece H. Dunn
+// (C) Copyright 2003-2004: Reece H. Dunn
 
 #include <iostream>  // std::cout
 #include <list>      // std::list
