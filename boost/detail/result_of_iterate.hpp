@@ -5,7 +5,7 @@
 // CWPro8 requires an argument in a function type specialization
 #if BOOST_WORKAROUND(__MWERKS__, BOOST_TESTED_AT(0x3002)) && BOOST_PP_ITERATION() == 0
 # define BOOST_RESULT_OF_ARGS void
-#else 
+#else
 # define BOOST_RESULT_OF_ARGS BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(),T)
 #endif
 
@@ -25,6 +25,13 @@ struct result_of<R (*)(BOOST_RESULT_OF_ARGS), FArgs>
   typedef R type;
 };
 
+template<typename R,  typename FArgs BOOST_PP_COMMA_IF(BOOST_PP_ITERATION())
+         BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(),typename T)>
+struct result_of<R (&)(BOOST_RESULT_OF_ARGS), FArgs>
+{
+  typedef R type;
+};
+
 #undef BOOST_RESULT_OF_ARGS
 
 #if BOOST_PP_ITERATION() > 1 && !BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x551))
@@ -32,6 +39,36 @@ template<typename R, typename FArgs BOOST_PP_COMMA_IF(BOOST_PP_ITERATION())
          BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(),typename T)>
 struct result_of<R (T0::*)
                      (BOOST_PP_ENUM_SHIFTED_PARAMS(BOOST_PP_ITERATION(),T)),
+                 FArgs>
+{
+  typedef R type;
+};
+
+template<typename R, typename FArgs BOOST_PP_COMMA_IF(BOOST_PP_ITERATION())
+         BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(),typename T)>
+struct result_of<R (T0::*)
+                     (BOOST_PP_ENUM_SHIFTED_PARAMS(BOOST_PP_ITERATION(),T))
+                     const,
+                 FArgs>
+{
+  typedef R type;
+};
+
+template<typename R, typename FArgs BOOST_PP_COMMA_IF(BOOST_PP_ITERATION())
+         BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(),typename T)>
+struct result_of<R (T0::*)
+                     (BOOST_PP_ENUM_SHIFTED_PARAMS(BOOST_PP_ITERATION(),T))
+                     volatile,
+                 FArgs>
+{
+  typedef R type;
+};
+
+template<typename R, typename FArgs BOOST_PP_COMMA_IF(BOOST_PP_ITERATION())
+         BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(),typename T)>
+struct result_of<R (T0::*)
+                     (BOOST_PP_ENUM_SHIFTED_PARAMS(BOOST_PP_ITERATION(),T))
+                     const volatile,
                  FArgs>
 {
   typedef R type;

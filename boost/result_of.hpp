@@ -7,7 +7,7 @@
 #include <boost/detail/workaround.hpp>
 #include <boost/mpl/aux_/has_xxx.hpp>
 
-#ifndef BOOST_RESULT_OF_NUM_ARHS
+#ifndef BOOST_RESULT_OF_NUM_ARGS
 #  define BOOST_RESULT_OF_NUM_ARGS 10
 #endif
 
