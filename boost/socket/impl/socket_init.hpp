@@ -1,10 +1,10 @@
-// Copyright (C) 2002 Hugo Duncan
+// Copyright (C) 2002 Michel André (michel@andre.net)
 
 // Permission to use, copy, modify, distribute and sell this software
 // and its documentation for any purpose is hereby granted without fee,
 // provided that the above copyright notice appear in all copies and
 // that both that copyright notice and this permission notice appear
-// in supporting documentation.  Hugo Duncan makes no representations
+// in supporting documentation.  Michel André makes no representations
 // about the suitability of this software for any purpose.
 // It is provided "as is" without express or implied warranty.
 
@@ -13,28 +13,28 @@
 #endif
 
 /// include guard
-#ifndef BOOST_SOCKET_IMPL_INITIALISER_HPP
-#define BOOST_SOCKET_IMPL_INITIALISER_HPP 1
+#ifndef BOOST_SOCKET_IMPL_SOCKET_INIT_HPP
+#define BOOST_SOCKET_IMPL_SOCKET_INIT_HPP 1
 
 namespace boost
 {
   namespace socket
   {
-    namespace impl
+    namespace detail
     {
-      class initialiser
+      struct socket_initializer
       {
-      public:
-        static const initialiser& uses_platform();
-        ~initialiser();
-      private:
-        static void initialise();
-        static void finalise();
-        static bool m_initialised;
+        static int m_niftycounter;
+        socket_initializer();
+        ~socket_initializer();
       };
 
-    }// namespace
-  }// namespace
-}// namespace
+      namespace
+      {
+        socket_initializer socket_initializer_instance;
+      }
+    }
+  }
+}
 
 #endif
