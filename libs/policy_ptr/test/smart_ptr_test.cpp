@@ -54,7 +54,7 @@ public:
 private:
     int age_;
 };
-//#if 0
+
 void default_test(void)
 {
     boost::smart_ptr<object> p;
@@ -85,7 +85,7 @@ void init_test(void)
     }
     BOOST_CHECK(dead);
 }
-//#endif
+
 void copy_test(void)
 {
     bool dead(false);
@@ -113,6 +113,40 @@ void copy_test(void)
     }
     BOOST_CHECK(dead);
 }
+class X { };
+void assign_test(void)
+{
+    using boost::swap;
+    bool dead(false);
+    bool dead2(false);
+    {
+        boost::smart_ptr<child> p(new child(dead, 14));
+        boost::smart_ptr<object> q;
+        q = p;
+        BOOST_CHECK(p == q);
+        BOOST_CHECK_EQUAL(boost::use_count(p), 2u );
+        boost::smart_ptr<child> c;
+        c = p;
+        BOOST_CHECK_EQUAL(boost::use_count(p), 3u );
+        boost::smart_ptr<child> d(new child(dead2, 27));
+        swap(c, d);
+        BOOST_CHECK_EQUAL(d->age(), 14);
+        BOOST_CHECK_EQUAL(c->age(), 27);
+        BOOST_CHECK_EQUAL(boost::use_count(c), 1u );
+        child* x = 0;
+        boost::release(p, x);
+        BOOST_CHECK(x == 0);
+        BOOST_CHECK_EQUAL(boost::use_count(q), 2u );
+        BOOST_CHECK(!p);
+        boost::release(c, x);
+        BOOST_CHECK(x != 0);
+        BOOST_CHECK_EQUAL(boost::use_count(c), 1u );
+        BOOST_CHECK(!c);
+        delete x;
+    }
+    BOOST_CHECK(dead);
+    BOOST_CHECK(dead2);
+}
 
 test::test_suite* init_unit_test_suite(int argc, char* argv[])
 {
@@ -121,6 +155,7 @@ test::test_suite* init_unit_test_suite(int argc, char* argv[])
     test->add(BOOST_TEST_CASE(&default_test));
     test->add(BOOST_TEST_CASE(&init_test));
     test->add(BOOST_TEST_CASE(&copy_test));
+    test->add(BOOST_TEST_CASE(&assign_test));
 
     return test;
 }
