@@ -18,16 +18,16 @@
     Traits defined in this header are used by various algorithms to achieve
     better performance for specific containers.
     Traits provide fail-safe defaults. If a container supports some this
-	features, it is possible to specialize the specific trait for this container.
-	For lacking compilers, it is possible of define override for a specific tester
-	function.
+    features, it is possible to specialize the specific trait for this container.
+    For lacking compilers, it is possible of define override for a specific tester
+    function.
 
-	Due to language restriction, it is not currently possible to specialize
-	stl containers without including the stl header. To decrease overhead,
-	needed by this inclusion, user can selectively include specialization 
-	header for a specific container. They are located in boost/string_algo/stl
-	directory. Alternatively she can include boost/string_algo/std_container_traits.hpp
-	header which container specialization for all stl containers.
+    Due to language restriction, it is not currently possible to specialize
+    stl containers without including the stl header. To decrease overhead,
+    needed by this inclusion, user can selectively include specialization 
+    header for a specific container. They are located in boost/string_algo/stl
+    directory. Alternatively she can include boost/string_algo/std_container_traits.hpp
+    header which container specialization for all stl containers.
 */
 
 namespace boost {
@@ -38,8 +38,8 @@ namespace boost {
 
         //! Native replace tester
         /*!
-			Declare an override of this tester function with return 
-			type boost::string_algo::yes_type for a sequence with this property.
+            Declare an override of this tester function with return 
+            type boost::string_algo::yes_type for a sequence with this property.
 
             \return yes_type if the container has basic_string like native replace
             method.
@@ -48,95 +48,95 @@ namespace boost {
 
         //! Native replace trait
         /*!
-			This trait specifies that the sequence has std::string like replace method
+            This trait specifies that the sequence has std::string like replace method
         */
-		template< typename T >
-		class sequence_has_native_replace
-		{
+        template< typename T >
+        class sequence_has_native_replace
+        {
         private:
             static T* t;
-		public:
+        public:
             BOOST_STATIC_CONSTANT(bool, value=( 
                 sizeof(sequence_has_native_replace_tester(t))==sizeof(yes_type) ) );
-			typedef mpl::bool_<value> type;		
-		};
+            typedef mpl::bool_<value> type;     
+        };
 
         //! Stable iterators tester
         /*!
-			Declare an override of this tester function with return 
-			type boost::string_algo::yes_type for a sequence with this property.
+            Declare an override of this tester function with return 
+            type boost::string_algo::yes_type for a sequence with this property.
 
-			\return yes_type if the seqeunce's insert/replace/erase methods do not invalidate
+            \return yes_type if the seqeunce's insert/replace/erase methods do not invalidate
             existing iterators.
         */
         no_type sequence_has_stable_iterators_tester(...);                     
 
         //! Stable iterators trait
         /*!
-			This trait specifies that the sequence has stable iterators. It means,
-			that operations like insert/erase/replace do not invalidate iterators.
+            This trait specifies that the sequence has stable iterators. It means,
+            that operations like insert/erase/replace do not invalidate iterators.
         */
-		template< typename T >
-		class sequence_has_stable_iterators
-		{
+        template< typename T >
+        class sequence_has_stable_iterators
+        {
         private:
             static T* t;
-		public:
+        public:
 
             BOOST_STATIC_CONSTANT(bool, value=( 
                 sizeof(sequence_has_stable_iterators_tester(t))==sizeof(yes_type) ) );
-			typedef mpl::bool_<value> type;
-		};
+            typedef mpl::bool_<value> type;
+        };
 
         //! const time insert tester
         /*!
-			Declare an override of this tester function with return 
-			type boost::string_algo::yes_type for a sequence with this property.
+            Declare an override of this tester function with return 
+            type boost::string_algo::yes_type for a sequence with this property.
 
-			\return yes_type if the sequence's insert method is working in constant time
+            \return yes_type if the sequence's insert method is working in constant time
         */
         no_type sequence_has_const_time_insert_tester(...);                        
 
-		//! Const time insert trait
-		/*
-			This trait specifies that the sequence's insert method is has 
-			constant time complexity.
-		*/
-		template< typename T >
-		class sequence_has_const_time_insert
-		{
+        //! Const time insert trait
+        /*
+            This trait specifies that the sequence's insert method is has 
+            constant time complexity.
+        */
+        template< typename T >
+        class sequence_has_const_time_insert
+        {
         private:
             static T* t;
-		public:
+        public:
             BOOST_STATIC_CONSTANT(bool, value=( 
                 sizeof(sequence_has_const_time_insert_tester(t))==sizeof(yes_type) ) );
-			typedef mpl::bool_<value> type;
-		};
+            typedef mpl::bool_<value> type;
+        };
 
         //! const time erase tester
         /*!
-			Declare an override of this tester function with return 
-			type boost::string_algo::yes_type for a sequence with this property.
+            Declare an override of this tester function with return 
+            type boost::string_algo::yes_type for a sequence with this property.
 
-			\return yes_type if the sequence's erase method is working in constant time
+            \return yes_type if the sequence's erase method is working in constant time
         */
         no_type sequence_has_const_time_erase_tester(...);                        
 
-		//! Const time erase trait
-		/*
-			This trait specifies that the sequence's erase method is has 
-			constant time complexity.
-		*/
-		template< typename T >
-		class sequence_has_const_time_erase
-		{
+        //! Const time erase trait
+        /*
+            This trait specifies that the sequence's erase method is has 
+            constant time complexity.
+        */
+        template< typename T >
+        class sequence_has_const_time_erase
+        {
         private:
             static T* t;
-		public:
+        public:
             BOOST_STATIC_CONSTANT(bool, value=( 
                 sizeof(sequence_has_const_time_erase_tester(t))==sizeof(yes_type) ) );
-			typedef mpl::bool_<value> type;
-		};
+            typedef mpl::bool_<value> type;
+        };
 
     } // namespace string_algo
 

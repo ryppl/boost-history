@@ -45,17 +45,17 @@ namespace boost {
                 const std::locale m_Locale;
             };
 
-            // an is_of functor 
+            // an is_any_of functor 
             /* 
                 returns true if the value is from the specitied range
             */
             template< typename CharT >
-            struct is_ofF :
+            struct is_any_ofF :
                 std::unary_function< CharT, bool >
             {
                 // Constructor 
                 template< typename SeqT >
-                is_ofF( const SeqT& Seq ) : m_Set( begin(Seq), end(Seq) ) {}
+                is_any_ofF( const SeqT& Seq ) : m_Set( begin(Seq), end(Seq) ) {}
                 
                 // Operation
                 bool operator()( CharT Ch ) const

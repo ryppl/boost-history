@@ -8,7 +8,7 @@
     <using-namespace name="boost::string_algo"/>
 
     <section>   
-        <title>Defintions</title>
+        <title>Definitions</title>
         <table>
             <title>Associated Types</title>
             <tgroup cols="3" align="left">
@@ -34,7 +34,7 @@
             </tgroup>
         </table>
 
-		<table>
+        <table>
             <title>Notation</title>
             <tgroup cols="2" align="left">
                 <tbody>
@@ -73,7 +73,7 @@
         <title>Finder Concept</title>
 
         <para>
-            Finder is a functor which searches for an arbitraty part of a container. 
+            Finder is a functor which searches for an arbitrary part of a container. 
             Result of the search is given as an <classname>iterator_range</classname> 
             pointing to the selected part.
         </para>
@@ -146,7 +146,7 @@
         </table>
 
         <para>
-            Similary to finders, formatters generalize format operations. When a finder is used to 
+            Similarly to finders, formatters generalize format operations. When a finder is used to 
             select a part of the input, formatter takes this selection and performs some formating
             on it. Algorithms can abstract from formating using a formatter.
         </para>

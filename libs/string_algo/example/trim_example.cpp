@@ -25,25 +25,25 @@ int main()
     string str2("<>trim<>");
     string str3("123abs343");
 
-	// Simple left trim
+    // Simple left trim
     cout << "trim_left copy of str1: " << "\"" << trim_left_copy( str1 ) << "\"" << endl;
 
-	// Inplace right trim
+    // Inplace right trim
     trim_right( str1 );
     cout << "trim_right on str1: " << "\"" << str1 << "\"" << endl;
 
-	// Paramteric trim. 'Space' is defined using is_of predicate
+    // Paramteric trim. 'Space' is defined using is_any_of predicate
     cout 
         << "trimmed copy of str4 ( space='<>' ): " 
-		<< "\""<< sa::trim_copy( str2, is_of<char>("<>") ) << "\"" << endl;
+        << "\""<< sa::trim_copy( str2, is_any_of<char>("<>") ) << "\"" << endl;
     
 
-	// Paramteric trim. 'Space' is defined using is_digit predicate
+    // Paramteric trim. 'Space' is defined using is_digit predicate
     cout 
         << "trimmed copy of str5 ( space=digit ): " 
-		<< "\"" << sa::trim_copy( str3, is_digit<char>() ) << "\"" << endl;
+        << "\"" << sa::trim_copy( str3, is_digit<char>() ) << "\"" << endl;
 
     cout << endl;
 
-	return 0;
+    return 0;
 }

@@ -14,40 +14,40 @@ exe conv_example
     conv_example.cpp
     :
     <include>$(BOOST_ROOT)     
-	:
-	;
+    :
+    ;
 
 exe predicate_example
     :
     predicate_example.cpp
     :
     <include>$(BOOST_ROOT)     
-	:
-	;
+    :
+    ;
 
 exe find_example
     :
     find_example.cpp 
     :
     <include>$(BOOST_ROOT)     
-	:
-	;
+    :
+    ;
 
 exe replace_example
     :
     replace_example.cpp
     :
     <include>$(BOOST_ROOT)     
-	:
-	;
+    :
+    ;
 
 exe rle_example
     :
     rle_example.cpp
     :
     <include>$(BOOST_ROOT)     
-	:
-	;
+    :
+    ;
 
 exe regex_example
     :
@@ -56,12 +56,12 @@ exe regex_example
     :
     <include>$(BOOST_ROOT)     
     :
-	;
+    ;
 
 exe split_example
-	:
-	split_example.cpp
-	:
-	<include>$(BOOST_ROOT)
-	:
-	;
+    :
+    split_example.cpp
+    :
+    <include>$(BOOST_ROOT)
+    :
+    ;

@@ -16,9 +16,9 @@
 #include <boost/string_algo/detail/format_regex.hpp>
 
 /*! \file
-	Defines refex_finder and regex_formatter generators. These two functors
-	are designed to work together. regex_formatter uses addtional information
-	about a match contained in the reger_finder search result.
+    Defines refex_finder and regex_formatter generators. These two functors
+    are designed to work together. regex_formatter uses addtional information
+    about a match contained in the reger_finder search result.
 */
 
 namespace boost {
@@ -29,14 +29,14 @@ namespace boost {
         //! "Regex" finder 
         /*!
             Construct first_finder. Finder uses regex engine to search
-			for a match.
+            for a match.
             Result is given in regex_search_result. This is an extension
-			of the iterator_range. In addtion it containes match results 
-			from regex_search algoritm.
+            of the iterator_range. In addtion it containes match results 
+            from regex_search algoritm.
 
-			\param Rx A regular expression
-			\param MatchFlags Regex search options
-			\return regex_finder functor
+            \param Rx A regular expression
+            \param MatchFlags Regex search options
+            \return regex_finder functor
         */
         template< 
             typename CharT, 
@@ -54,15 +54,15 @@ namespace boost {
 //  regex_formater  ---------------------------------------------//
 
         //! Regex formatter
-		/*!
-			Construct a regex formatter. Regex formater uses regex_format
-			function to format a match found by regex_finder. 
-			This formatted it designed to closely cooperate with regex_finder.
+        /*!
+            Construct a regex formatter. Regex formater uses regex_format
+            function to format a match found by regex_finder. 
+            This formatted it designed to closely cooperate with regex_finder.
 
-			\param Format Regex format definition
-			\param Flags Format flags
-			\return A regex formatter functor
-		*/
+            \param Format Regex format definition
+            \param Flags Format flags
+            \return A regex formatter functor
+        */
        template< 
             typename CharT, 
             typename TraitsT, typename AllocT >

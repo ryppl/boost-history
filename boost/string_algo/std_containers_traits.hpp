@@ -11,7 +11,7 @@
 #define BOOST_STRING_STD_CONTAINERS_TRAITS_HPP
 
 /*!\file 
-	This file includes sequence traits for stl containers.
+    This file includes sequence traits for stl containers.
 */
 
 #include <boost/config.hpp>

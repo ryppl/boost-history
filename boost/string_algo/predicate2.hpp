@@ -16,12 +16,12 @@
 #include <boost/string_algo/detail/predicate.hpp>
 
 /*! \file boost/string_algo/predicate2.hpp
-	The algorithms are resolving if a substring is contained in 
-	the input string under various conditions. These conditions are 
-	suffix and prefix check, equality check and containment check. 
+    The algorithms are resolving if a substring is contained in 
+    the input string under various conditions. These conditions are 
+    suffix and prefix check, equality check and containment check. 
 
-	In addtion to header predicate.hpp, algorithms defined here have
-	an additional parameter specifying element comparison predicate.
+    In addtion to header predicate.hpp, algorithms defined here have
+    an additional parameter specifying element comparison predicate.
 */
 
 namespace boost {
@@ -29,16 +29,16 @@ namespace boost {
 
 //  starts_with predicate  -----------------------------------------------//
 
-		//! 'Starts with' predicate
-		/*!
-			This predicate holds when the test container is a prefix of the Input.
-			In other word, if the input starts with the test.
+        //! 'Starts with' predicate
+        /*!
+            This predicate holds when the test container is a prefix of the Input.
+            In other word, if the input starts with the test.
 
-			\param Input An input container
-			\param Test A test container
-			\param Comp An element comparison predicate
-			\return A result of the test
-		*/
+            \param Input An input container
+            \param Test A test container
+            \param Comp An element comparison predicate
+            \return A result of the test
+        */
         template< typename InputContainerT, typename TestContainerT, typename PredicateT >
         inline bool starts_with( 
             const InputContainerT& Input, 
@@ -68,16 +68,16 @@ namespace boost {
 
 //  ends_with predicate  -----------------------------------------------//
 
-		//! 'Ends with' predicate
-		/*!
-			This predicate holds when the test container is a suffix of the Input.
-			In other word, if the input ends with the test.
+        //! 'Ends with' predicate
+        /*!
+            This predicate holds when the test container is a suffix of the Input.
+            In other word, if the input ends with the test.
 
-			\param Input An input container
-			\param Test A test container
-			\param Comp An element comparison predicate
-			\return A result of the test
-		*/
+            \param Input An input container
+            \param Test A test container
+            \param Comp An element comparison predicate
+            \return A result of the test
+        */
         template< typename InputContainerT, typename TestContainerT, typename PredicateT >
         inline bool ends_with( 
             const InputContainerT& Input, 
@@ -101,16 +101,16 @@ namespace boost {
 
 //  contains predicate  -----------------------------------------------//
 
-		//! 'Contains' predicate
-		/*!
-			This predicate holds when the test container is contained in the Input.
-			
-			\param Input An input container
-			\param Test A test container
-			\param Comp An element comparison predicate
-			\return A result of the test
-		*/
-		template< typename InputContainerT, typename TestContainerT, typename PredicateT >
+        //! 'Contains' predicate
+        /*!
+            This predicate holds when the test container is contained in the Input.
+            
+            \param Input An input container
+            \param Test A test container
+            \param Comp An element comparison predicate
+            \return A result of the test
+        */
+        template< typename InputContainerT, typename TestContainerT, typename PredicateT >
         inline bool contains( 
             const InputContainerT& Input, 
             const TestContainerT& Test,
@@ -129,16 +129,16 @@ namespace boost {
 //  equal predicate  -----------------------------------------------//
 
         //! 'Equals' predicate
-		/*!
-			This predicate holds when the test container is equal to the
-			input container i.e. all elements in both containers are same.
-			
-			\param Input An input container
-			\param Test A test container
-			\param Comp An element comparison predicate
-			\return A result of the test
-		*/
-		template< typename InputContainerT, typename TestContainerT, typename PredicateT >
+        /*!
+            This predicate holds when the test container is equal to the
+            input container i.e. all elements in both containers are same.
+            
+            \param Input An input container
+            \param Test A test container
+            \param Comp An element comparison predicate
+            \return A result of the test
+        */
+        template< typename InputContainerT, typename TestContainerT, typename PredicateT >
         inline bool equals( 
             const InputContainerT& Input, 
             const TestContainerT& Test,

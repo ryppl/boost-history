@@ -22,20 +22,20 @@ int main()
 
     string str1("AbCdEfG");
     vector<char> vec1( str1.begin(), str1.end() );
-	
-	// Convert vector of chars to lower case
+    
+    // Convert vector of chars to lower case
     cout << "lower-cased copy of vec1: ";
     to_lower_copy( ostream_iterator<char>(cout), vec1 );
     cout << endl;
 
-	// Conver string str1 to upper case ( copy the input )
+    // Conver string str1 to upper case ( copy the input )
     cout << "upper-cased copy of str1: " << to_upper_copy( str1 ) << endl;
 
-	// Inplace conversion
+    // Inplace conversion
     to_lower( str1 );
     cout << "lower-cased str1: " << str1 << endl;
 
     cout << endl;
 
-	return 0;
+    return 0;
 }

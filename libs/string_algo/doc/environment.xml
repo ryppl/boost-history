@@ -7,7 +7,7 @@
         <title>Build</title>
         <para>
             Whole library is provided in headers. Regex variants of some algorithms, 
-            however, are dependant on the Regex++ library. All such algorithms are
+            however, are dependent on the Regex++ library. All such algorithms are
             separated in <headername>boost/string_algo/regex.hpp</headername>. 
             If this header is used, an application must be linked with the <libraryname>Boost.Regex</libraryname> 
             library. 
@@ -19,7 +19,7 @@
         <para>
             Examples showing the basic usage of the library can be found in the libs/string_algo/example
             directory. There is a separate file for the each part of the library. Follow the boost
-            build guidelines to build examples using the bjam. To succesfully build regex examples 
+            build guidelines to build examples using the bjam. To successfully build regex examples 
             the <libraryname>Boost.Regex</libraryname> library is required. 
         </para>
     </section>
@@ -36,14 +36,14 @@
     <section>
         <title>Portability</title>
         <para>
-			Library has been successfully compiled and tested with the following compilers:
-			
-			<itemizedlist>
-				<listitem>Microsoft Visual C++ 7.0</listitem>
-				<listitem>Microsoft Visual C++ 7.1</listitem>
-				<listitem>GCC 3.2</listitem>
-				<listitem>GCC 3.3.1</listitem>
-			</itemizedlist>
+            Library has been successfully compiled and tested with the following compilers:
+            
+            <itemizedlist>
+                <listitem>Microsoft Visual C++ 7.0</listitem>
+                <listitem>Microsoft Visual C++ 7.1</listitem>
+                <listitem>GCC 3.2</listitem>
+                <listitem>GCC 3.3.1</listitem>
+            </itemizedlist>
         </para>
         <para>
             There are known limitation on platforms not supporting partial template specialization. 

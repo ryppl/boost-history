@@ -2,42 +2,67 @@
 <!DOCTYPE library PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
 "http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
 <section id="string_algo.rationale" last-revision="$Date$">
-	<title>Rationale</title>
+    <title>Rationale</title>
 
     <using-namespace name="boost"/>
     <using-namespace name="boost::string_algo"/>
-	
-	<section id="string_algo.structure">
-		<title>Library structure</title>
+    
+    <section id="string_algo.structure">
+        <title>Library structure</title>
 
-		<para>
-			When designing a library there is always a problem to find a balance between generalization
-			and usability. Generic utility can have wider range of usage with more options to extensibility,
-			but it can also bring unwanted overhead for everyday usage. 
-		</para>
-		<para>
-			Imagine a library for drawing geometric objects. It can contain one generic function draw(),
-			with many parameters specifying what to draw, like size, number of edges, shape etc.
-			This would allow you to draw almost anything, but when a user usualy needs to draw 
-			only a triangle, or a square, she will have to specify this simple request in a 
-			very complicated way. Therefore, for this purpose, two functions, draw_triangle() and
-			draw_square() would suit much better then a generic draw() function.
-		</para>
-		<para>
-			String Algorith Library solves this problem by dividing the interface into layers.
-			First layer (defined in the namespace boost) contains ready to use algorithms specialized
-			for common tasks. They are provided in multiple variant, to better suit the current needs.
-			Second layer (defined in the namespace boost::string_algo), provides generic interface with
-			a more options for extending and tunning. 
-		<para>
-		</para>
-			For instance, a <functionname>boost::trim</functionname> algorithm trims spaces from 
-			an input string. When there is a need to trim something else, there is 
-			<functionname>boost::string_algo::trim</functionname>. Its interface allow to specify a 
-			predicate which selects the characters to be removed.
-		</para>
-	</section>
-	<section id="string_algo.regex">
+        <para>
+            When designing a library there is always a problem to find a balance between generalization
+            and usability. Generic utility can have wider range of usage with more options to extensibility,
+            but it can also bring unwanted overhead for everyday usage. 
+        </para>
+        <para>
+            Imagine a library for drawing geometric objects. It can contain one generic function draw(),
+            with many parameters specifying what to draw, like size, number of edges, shape etc.
+            This would allow you to draw almost anything, but when a user usually needs to draw 
+            only a triangle, or a square, she will have to specify this simple request in a 
+            very complicated way. Therefore, for this purpose, two functions, draw_triangle() and
+            draw_square() would suit much better then a generic draw() function.
+        </para>
+        <para>
+            String Algorithm Library solves this problem by dividing the interface into layers.
+            First layer (defined in the namespace boost) contains ready to use algorithms specialized
+            for common tasks. They are provided in multiple variant, to better suit the specific needs.
+            Second layer (defined in the namespace boost::string_algo), provides generic interface with
+            more options for extending and tunning. 
+        <para>
+        </para>
+            For instance, a <functionname>boost::trim</functionname> algorithm trims spaces from 
+            an input string. When there is a need to trim something else, there is 
+            <functionname>boost::string_algo::trim</functionname>. Its interface allow to specify a 
+            predicate which selects the characters to be removed.
+        </para>
+    </section>
+    <section it="string_algo.locale">
+        <title>Locales</title>
+
+        <para>
+            Locales have a very close relation to string processing. They contain information about
+            the character sets. Locales are used, for example, to change the case of characters,
+            to classify the characters and etc. 
+        </para>
+        <para>
+            C++ allows to work with multiple different instances of locales at once. If an algorithm
+            manipulates some data in a way that requires the usage of locales, there must be a way
+            to specify them. However, one instance of locales is sufficient for most of the applications,
+            and for a user it could be very tedious to specify which locales should be used on every place 
+            where it is needed. 
+        </para> 
+        <para>
+            Fortunately, C++ standard allows to specify the "global" locales (using static member
+            function <code>std:locale::global()</code>). When instantiating 
+            <code>std::locale</code> class without explicit information, the instance will 
+            be initialized with "global" locales. It means, that if an algorithm needs some locales,
+            it should have a <code>std::locale</code> parameter with default value <code>std::locale()</code>.
+            If a user needs to specify locales explicitly, she can do so. Otherwise the "global"
+            locales are used.
+        </para>
+    </section>
+    <section id="string_algo.regex">
         <title>Regular Expressions</title>
 
         <para>

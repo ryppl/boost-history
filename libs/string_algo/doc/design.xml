@@ -7,14 +7,49 @@
     <using-namespace name="boost"/>
     <using-namespace name="boost::string_algo"/>
     
+    <section id="string_algo.iterator_range">
+        <title><code>iterator_range</code>class</title>
+
+        <para>
+            <classname>iterator_range</classname> is an encapsulation of a pair of iterators,
+            delimiting a sequence or, in other words, a range. This concept is widely used by 
+            sequence manipulating algorithms. Although being so useful, there no direct support 
+            for it in the standard library. All STL algorithms have two distinct parameters
+            for 'begin' and 'end' of a range. This design has benefits of lightweight implementation,
+            but it forbids to work with a range as a single value. 
+        </para> 
+        <para>
+            It is possible to encapsulate a range in <code>std::pair&lt;iterator,iterator&lt;</code>.
+            However <code>std::pair</code> being a generic encapsulation, it is not the best match for a range.
+            For instance, it does not enforce, that begin and end iterators are of the same type.
+        </para>
+        <para>
+            Naturally the range concept is heavily used also in this library. During the development of
+            the library, there was discovered, that there is a need for a reasonable encapsulation for it.
+            A core part of the library deals with substring searching algorithms. Any such an algorithm,
+            returns a range delimiting the result of the search. <code>std::pair</code> was discern as 
+            unsuitable. Therefore the <code>iterator_range</code> was defined.
+        </para>
+        <para>
+            <code>iterator_range</code> is a specialized lightweight encapsulation of a range.
+            Its intention is to manage a range as a single value and provide basic a interface for
+            common operations. Its interface is similar to a container. In addition of <code>begin()</code>
+            and <code>end()</code> accessors, it has member functions for checking if the range is empty,
+            or to determine the size of the range. It has also a set of member typedefs that extract
+            type information from the encapsulated iterators. Interface is compatible with 
+            <link linkend="string_algo.container_traits">container traits</link> requirements so
+            it is possible to use this class as a parameter to many algorithms in this library.
+        </para>
+    </section>
+        
     <section id="string_algo.container_traits">
         <title>Container Traits</title>
 
         <para>
             Container traits provide uniform access to different types of containers. 
-            This functionality allows to write generic algorithms wich work with several 
-            different kinds of containers. For this library is means, that many algorithms
-            work with <code>std::string</code> as well as with <code>char[]</code>.
+            This functionality allows to write generic algorithms which work with several 
+            different kinds of containers. For this library it means, that, for instance,
+            many algorithms work with <code>std::string</code> as well as with <code>char[]</code>.
         </para>
         <para>
             Following container types are supported:
@@ -35,12 +70,12 @@
         </para>
         <para>
             Container traits support a subset of container concept (Std &sect;23.1). This subset 
-			can be qualified as an input container concept. Definition can be found in the header
-			<headername>boost/string_algo/container_traits.hpp</headername>.Maeterlinck
+            can be qualified as an input container concept, e.g. a container with an immutable content. 
+            Definition can be found in the header <headername>boost/string_algo/container_traits.hpp</headername>.
         </para>
         <para>
             In the table C denotes a container, c an object of C. 
-		</para>
+        </para>
         <table>
             <title>Container Traits</title>
             <tgroup cols="3" align="left">
@@ -111,18 +146,24 @@
                 </tbody>
             </tgroup>
         </table>
+
+        <para>
+            Container traits are a part of this library only temporary. There is a plan for separate submission
+            of container_traits library to Boost. Once it gets accepted, String Algorithm Library will be adapted to 
+            use it and the internal implementation will be deprecated.
+        </para>
     
     </section>
-	<section id="string_algo.sequence_traits">
+    <section id="string_algo.sequence_traits">
         <title>Sequence Traits</title>
 
         <para>
             Major difference between <code>std::list</code> and <code>std::vector</code> is not in the interface
-            and functions they provide, rather in the inner details of the class and the way how it performs 
-            various operation. Problem is that it is not possible to infere this difference from the 
+            they provide, rather in the inner details of the class and the way how it performs 
+            various operation. Problem is that it is not possible to infer this difference from the 
             definitions of classes.
-			However some algorithms can make a significant improvement in the performance with the knowledge 
-			of particular container properties.
+            However some algorithms can make a significant improvement in the performance with the knowledge 
+            of particular container properties.
         </para>
         <para>
             Sequence traits allow to specify additional properties of a sequence container.
@@ -169,72 +210,70 @@
                     </row>
                     </tbody>
             </tgroup>
-		</table>
-		
-		<para>
-			Current implementation contains specializations for standard library's std::list&lt;T&gt;, 
-			std::basic_string&lt;T&gt; and SGI's std::rope&lt;T&gt; and std::slist&lt;T&gt;.
-		</para>
+        </table>
+        
+        <para>
+            Current implementation contains specializations for standard library's std::list&lt;T&gt;, 
+            std::basic_string&lt;T&gt; and SGI's std::rope&lt;T&gt; and std::slist&lt;T&gt;.
+        </para>
     </section>
-	<section id="string_algo.find">
+    <section id="string_algo.find">
         <title>Find Algorithms</title>
 
         <para>
-			Find algorithms have similar functionality to of <code>std::search</code> algorithm. They provide different 
-			interface which is more suitable for common string operations. 
-			Instead of returning just the start of matching subsequence they return a range, which is necessary 
-			when searching for a regular expression, and often more convenient. This feature also allows a 
-			partitioning of  the input sequence into three parts: prefix, substring and suffix. 
-		</para>
-		<para>
-			Another difference is an addition of various searching methods besides find_first, including find_regex. 
-		</para>
-		<para>
-			It the library, find algorithms are represented by a set of 
-			<link linkend="string_algo.finder_concept">finders</link>. Finders are used also by other facilities.
-			For convinience, there are also function wrappers for these finders to simplify find operations.
-		</para>
-		<para>
-			Currently the library contains only naive implementation of find algoritms with complexity 
-			O(n * m) where n is the size of the input sequence and m is the size of the seach sequence. 
-			There are algorithms with complexity O(n), but for smaller sequence a contant overhead is 
-			rather big. For small m &lt;&lt; n current implementation provides acceptable efficiency. 
-			Even C++ standard defines a required complexity for search algorithm only O(n * m). 
-			It is possible that a future version of library will contain also algoritms with linear 
-			complexity as an option
-		</para>
-	</section>
-	<section id="string_algo.replace">
-		<title>Replace Algorithms</title>
+            Find algorithms have similar functionality as <code>std::search</code> algorithm. They provide different 
+            interface which is more suitable for common string operations. 
+            Instead of returning just the start of matching subsequence they return a range, which is necessary 
+            when the length of the matching subsequence is not know beforehand, and often more convenient. 
+            This feature also allows a partitioning of  the input sequence into three 
+            parts: prefix, substring and suffix. 
+        </para>
+        <para>
+            Another difference is an addition of various searching methods besides find_first, including find_regex. 
+        </para>
+        <para>
+            It the library, find algorithms are represented by a set of 
+            <link linkend="string_algo.finder_concept">finders</link>. Finders are used also by other facilities.
+            For convenience, there are also function wrappers for these finders to simplify find operations.
+        </para>
+        <para>
+            Currently the library contains only naive implementation of find algorithms with complexity 
+            O(n * m) where n is the size of the input sequence and m is the size of the search sequence. 
+            There are algorithms with complexity O(n), but for smaller sequence a constant overhead is 
+            rather big. For small m &lt;&lt; n current implementation provides acceptable efficiency. 
+            Even C++ standard defines the required complexity for search algorithm only O(n * m). 
+            It is possible that a future version of library will contain also algorithms with linear 
+            complexity as an option
+        </para>
+    </section>
+    <section id="string_algo.replace">
+        <title>Replace Algorithms</title>
 
-		<para>
-			The implementation of replace algorithms follows a layered structure of the library. The 
-			lower layer implements generic substitution of a range in an input sequence with an 
-			another sequence. This layer takes a <link linkend="string_algo.finder_concept">finder</link> and a 
-			<link linkend="string_algo.formatter_concept">formatter</link> as an input. These two functors define 
-			what is to be replaced and what will be the replacement. The upper layer functions are just wrapping 
-			calls to lower layer provided with specific functors. Finders are shared with the 
-			find and split facility. 
-		</para>
-		<para>
-			Implementation of lower layer is designed to work with a generic sequence, but taking an 
-			advantage of specific features if possible. std::vector&lt;T&gt; is considered as a model for a 
-			generic sequence. <link linkend="string_algo.sequence_traits">Sequence traits</link> are
-			used to determine when a more efficient processing is possible.
-		</para>			
-	</section>
-	<section id="string_algo.split">
-		<title>Split Algorithms</title>
+        <para>
+            The implementation of replace algorithms follows a layered structure of the library. The 
+            lower layer implements generic substitution of a range in the input sequence, with  
+            another sequence. This layer takes a <link linkend="string_algo.finder_concept">finder</link> and a 
+            <link linkend="string_algo.formatter_concept">formatter</link> as an input. These two functors define 
+            what is to be replaced and what will be the replacement. The upper layer functions are just wrapping 
+            calls to lower layer provided with specific functors. Finders are shared with the 
+            find and split facility. 
+        </para>
+        <para>
+            Implementation of lower layer is designed to work with a generic sequence, but taking an 
+            advantage of specific features if possible. std::vector&lt;T&gt; is considered as a model for a 
+            generic sequence. <link linkend="string_algo.sequence_traits">Sequence traits</link> are
+            used to determine when a more efficient processing is possible.
+        </para>         
+    </section>
+    <section id="string_algo.split">
+        <title>Split Algorithms</title>
 
-		<para>
-			Split algorithms are a logical extension of <link linkend="string_algo.find">find facility</link>.
-			Instead of searching for a one match, whole input is searched. Result of the search is then used 
-			to partition the input. It depends on the algorithms which parts are returned as the result of
-			split operations. It can be the matching parts (<functionname>find_all</functionname>) of the parts in
-			between (<functionname>split</functionname>). 
-		</para>
-		<!--		<para>	
-			Implementation is using finders to perform the operation.
-		</para>-->
-	</section>
+        <para>
+            Split algorithms are a logical extension of <link linkend="string_algo.find">find facility</link>.
+            Instead of searching for a one match, whole input is searched. Result of the search is then used 
+            to partition the input. It depends on the algorithms which parts are returned as the result of
+            split operations. It can be the matching parts (<functionname>find_all</functionname>) of the parts in
+            between (<functionname>split</functionname>). 
+        </para>
+    </section>
 </section>

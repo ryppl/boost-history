@@ -33,22 +33,22 @@ namespace sa=boost::string_algo;
 void sequence_traits_test()
 {
     // basic_string traits
-	BOOST_CHECK( sa::sequence_has_native_replace<string>::value );
-	BOOST_CHECK( !sa::sequence_has_stable_iterators<string>::value );
-	BOOST_CHECK( !sa::sequence_has_const_time_insert<string>::value );    
-	BOOST_CHECK( !sa::sequence_has_const_time_erase<string>::value ); 
+    BOOST_CHECK( sa::sequence_has_native_replace<string>::value );
+    BOOST_CHECK( !sa::sequence_has_stable_iterators<string>::value );
+    BOOST_CHECK( !sa::sequence_has_const_time_insert<string>::value );    
+    BOOST_CHECK( !sa::sequence_has_const_time_erase<string>::value ); 
 
     // vector traits
-	BOOST_CHECK( !sa::sequence_has_native_replace< vector<char> >::value );
-	BOOST_CHECK( !sa::sequence_has_stable_iterators< vector<char> >::value );
-	BOOST_CHECK( !sa::sequence_has_const_time_insert< vector<char> >::value );    
-	BOOST_CHECK( !sa::sequence_has_const_time_erase< vector<char> >::value ); 
+    BOOST_CHECK( !sa::sequence_has_native_replace< vector<char> >::value );
+    BOOST_CHECK( !sa::sequence_has_stable_iterators< vector<char> >::value );
+    BOOST_CHECK( !sa::sequence_has_const_time_insert< vector<char> >::value );    
+    BOOST_CHECK( !sa::sequence_has_const_time_erase< vector<char> >::value ); 
 
     // list traits
-	BOOST_CHECK( !sa::sequence_has_native_replace< list<char> >::value );
-	BOOST_CHECK( sa::sequence_has_stable_iterators< list<char> >::value );
-	BOOST_CHECK( sa::sequence_has_const_time_insert< list<char> >::value );   
-	BOOST_CHECK( sa::sequence_has_const_time_erase< list<char> >::value );    
+    BOOST_CHECK( !sa::sequence_has_native_replace< list<char> >::value );
+    BOOST_CHECK( sa::sequence_has_stable_iterators< list<char> >::value );
+    BOOST_CHECK( sa::sequence_has_const_time_insert< list<char> >::value );   
+    BOOST_CHECK( sa::sequence_has_const_time_erase< list<char> >::value );    
 }
 
 // Combine tests for all variants of the algorithm

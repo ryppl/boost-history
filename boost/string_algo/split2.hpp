@@ -21,14 +21,14 @@
 #include <boost/string_algo/detail/util.hpp>
 
 /*! \file
-	Defines generic split algorithms. Split algorithms can be 
-	used to divide a sequence into several part accorfing 
-	to a given criteria. Result is given as a 'container 
-	of containers' where elements are copies or references 
-	to extracted parts.
+    Defines generic split algorithms. Split algorithms can be 
+    used to divide a sequence into several part accorfing 
+    to a given criteria. Result is given as a 'container 
+    of containers' where elements are copies or references 
+    to extracted parts.
 
-	There are two algorithms provided. One iterated through matching
-	substring, the other one through gasps between theese matches.
+    There are two algorithms provided. One iterated through matching
+    substring, the other one through gasps between theese matches.
 */
 
 namespace boost {
@@ -38,25 +38,25 @@ namespace boost {
 
         //! Iter find algorithm
         /*!
-			This algorithm executes a given finder in iteration on the input,
-			until the end of input is reached, or no match is found.
-			Iteration is done using built-in find_iterator, so the real 
-			searching is performed only when needed.
-			In each iteration new match is found and added to the result.
+            This algorithm executes a given finder in iteration on the input,
+            until the end of input is reached, or no match is found.
+            Iteration is done using built-in find_iterator, so the real 
+            searching is performed only when needed.
+            In each iteration new match is found and added to the result.
 
-			\param Result A 'container container' to container the result of search.
-				Both outher and inner container must have constructor taking a pair
-				of iterators as an argument.
-				Typical type of the result is 
-					std::vector< boost::iterator_range<iterator> >.
-				( each element of such a vector will container a range delimiting 
-				a match )
-			\param Input A container which will be searched.
-			\param FindF A finder functor used for searching
-			\return A reference the result
+            \param Result A 'container container' to container the result of search.
+                Both outher and inner container must have constructor taking a pair
+                of iterators as an argument.
+                Typical type of the result is 
+                    std::vector< boost::iterator_range<iterator> >.
+                ( each element of such a vector will container a range delimiting 
+                a match )
+            \param Input A container which will be searched.
+            \param FindF A finder functor used for searching
+            \return A reference the result
 
-			\note Prior content of the result will be overriden.
-	    */
+            \note Prior content of the result will be overriden.
+        */
         template< 
             typename ResultT,
             typename InputT,
@@ -67,16 +67,16 @@ namespace boost {
             InputT& Input,
             FindFT FindF )
         {
-			function_requires< 
-				FinderConcept<FindFT,
-				BOOST_STRING_TYPENAME container_result_iterator<InputT>::type> >();
+            function_requires< 
+                FinderConcept<FindFT,
+                BOOST_STRING_TYPENAME container_result_iterator<InputT>::type> >();
 
-			typedef BOOST_STRING_TYPENAME 
+            typedef BOOST_STRING_TYPENAME 
                 container_result_iterator<InputT>::type input_iterator_type;
             typedef detail::find_iterator<
                 input_iterator_type,
                 FindFT > find_iterator_type;
-			typedef detail::copy_rangeF<
+            typedef detail::copy_rangeF<
                 BOOST_STRING_TYPENAME 
                     container_value_type<ResultT>::type,
                 input_iterator_type> copy_range_type;
@@ -99,26 +99,26 @@ namespace boost {
 
         //! Split find algorithm
         /*!
-			This algorithm executes a given finder in iteration on the input,
-			until the end of input is reached, or no match is found.
-			Iteration is done using built-in find_iterator, so the real 
-			searching is performed only when needed.
-			Each match is used as a separator of segments. These segments are then
-			returned in the result.
+            This algorithm executes a given finder in iteration on the input,
+            until the end of input is reached, or no match is found.
+            Iteration is done using built-in find_iterator, so the real 
+            searching is performed only when needed.
+            Each match is used as a separator of segments. These segments are then
+            returned in the result.
 
-			\param Result A 'container container' to container the result of search.
-				Both outher and inner container must have constructor taking a pair
-				of iterators as an argument.
-				Typical type of the result is 
-					std::vector< boost::iterator_range<iterator> >.
-				( each element of such a vector will container a range delimiting 
-				a match )
-			\param Input A container which will be searched.
-			\param FindF A finder functor used for searching
-			\return A reference the result
+            \param Result A 'container container' to container the result of search.
+                Both outher and inner container must have constructor taking a pair
+                of iterators as an argument.
+                Typical type of the result is 
+                    std::vector< boost::iterator_range<iterator> >.
+                ( each element of such a vector will container a range delimiting 
+                a match )
+            \param Input A container which will be searched.
+            \param FindF A finder functor used for searching
+            \return A reference the result
 
-			\note Prior content of the result will be overriden.
-	    */
+            \note Prior content of the result will be overriden.
+        */
         template< 
             typename ResultT,
             typename InputT,
@@ -129,17 +129,17 @@ namespace boost {
             InputT& Input,
             FindFT FindF )
         {
-			function_requires< 
-				FinderConcept<FindFT,
-				BOOST_STRING_TYPENAME container_result_iterator<InputT>::type> >();
+            function_requires< 
+                FinderConcept<FindFT,
+                BOOST_STRING_TYPENAME container_result_iterator<InputT>::type> >();
 
-			typedef BOOST_STRING_TYPENAME 
+            typedef BOOST_STRING_TYPENAME 
                 container_result_iterator<InputT>::type input_iterator_type;
             typedef detail::find_iterator<
                 input_iterator_type,
                 FindFT,
                 detail::split_find_policy > find_iterator_type;
-			typedef detail::copy_rangeF<
+            typedef detail::copy_rangeF<
                 BOOST_STRING_TYPENAME 
                     container_value_type<ResultT>::type,
                 input_iterator_type> copy_range_type;

@@ -41,16 +41,16 @@ struct find_compressF
     find_compressF() {}
 
     // Operation
-	template<typename ForwardIteratorT>
+    template<typename ForwardIteratorT>
     iterator_range<ForwardIteratorT> operator()( 
         ForwardIteratorT Begin, 
         ForwardIteratorT End ) const
     {
-	    typedef ForwardIteratorT input_iterator_type;
-	    typedef typename boost::detail::iterator_traits<input_iterator_type>::value_type value_type;
-	    typedef iterator_range<input_iterator_type> result_type;
+        typedef ForwardIteratorT input_iterator_type;
+        typedef typename boost::detail::iterator_traits<input_iterator_type>::value_type value_type;
+        typedef iterator_range<input_iterator_type> result_type;
 
-		// begin of matchin segment
+        // begin of matchin segment
         input_iterator_type MStart=End;
         // Repetition counter
         value_type Cnt=0;
@@ -134,16 +134,16 @@ struct find_decompressF
     find_decompressF() {}
 
     // Operation
-	template<typename ForwardIteratorT>
+    template<typename ForwardIteratorT>
     iterator_range<ForwardIteratorT> operator()( 
         ForwardIteratorT Begin, 
         ForwardIteratorT End ) const
     {
-	    typedef ForwardIteratorT input_iterator_type;
-	    typedef typename boost::detail::iterator_traits<input_iterator_type>::value_type value_type;
-	    typedef iterator_range<input_iterator_type> result_type;
+        typedef ForwardIteratorT input_iterator_type;
+        typedef typename boost::detail::iterator_traits<input_iterator_type>::value_type value_type;
+        typedef iterator_range<input_iterator_type> result_type;
 
-		for(input_iterator_type It=Begin; It!=End; It++)
+        for(input_iterator_type It=Begin; It!=End; It++)
         {
             if( *It==repeat_mark<value_type>() )
             {
@@ -203,15 +203,15 @@ int main()
     // copy compression
     string compress=sa::replace_all_copy( 
         original, 
-		find_compressF(), 
+        find_compressF(), 
         format_compressF<string>() );
 
     cout << "Compressed string: " << compress << endl;
 
-	// Copy decompression
+    // Copy decompression
     string decompress=sa::replace_all_copy( 
         compress, 
-		find_decompressF(), 
+        find_decompressF(), 
         format_decompressF<string>() );
 
     cout << "Decompressed string: " << decompress << endl;
@@ -224,7 +224,7 @@ int main()
     
     cout << "Compressed string: " << original << endl;
 
-	// in-place decompression
+    // in-place decompression
     sa::replace_all( 
         original, 
         find_decompressF(), 
@@ -234,5 +234,5 @@ int main()
 
     cout << endl;
 
-	return 0;
+    return 0;
 }

@@ -11,7 +11,7 @@
 #define BOOST_STRING_ALGO_HPP
 
 /*! \file
-	Cummulative include for string_algo library
+    Cummulative include for string_algo library
 */
 
 #include <boost/string_algo/std_containers_traits.hpp>

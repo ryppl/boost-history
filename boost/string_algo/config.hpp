@@ -13,7 +13,7 @@
 #include <boost/config.hpp>
 
 #ifdef BOOST_STRING_DEDUCED_TYPENAME
-#	error "macro already defined!"
+#   error "macro already defined!"
 #endif
 
 #define BOOST_STRING_TYPENAME BOOST_DEDUCED_TYPENAME

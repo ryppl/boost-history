@@ -29,21 +29,21 @@ namespace sa=boost::string_algo;
 template<typename ContainerT>
 struct upcase_formatter
 {
-	// Formatter result type
-	typedef ContainerT result_type;
+    // Formatter result type
+    typedef ContainerT result_type;
 
-	// Formatter operator
-	/*
-		Finder does not have restriction
-		on its result type. To be able to use this formatter with
-		any finder, parameter must be templated.
-	*/
-	template<typename ReplaceT>
-	result_type operator()( const ReplaceT& Replace ) const
-	{
-		ContainerT Temp(Replace.begin(), Replace.end());
-		return to_upper(Temp);
-	}
+    // Formatter operator
+    /*
+        Finder does not have restriction
+        on its result type. To be able to use this formatter with
+        any finder, parameter must be templated.
+    */
+    template<typename ReplaceT>
+    result_type operator()( const ReplaceT& Replace ) const
+    {
+        ContainerT Temp(Replace.begin(), Replace.end());
+        return to_upper(Temp);
+    }
 };
 
 int main()
@@ -52,26 +52,26 @@ int main()
 
     string str1("abc___cde___efg");
 
-	// Erase 6-9th characters from the string
+    // Erase 6-9th characters from the string
     cout << "str1 without 6th to 9th character:" <<
         erase_range_copy( str1, make_range(str1.begin()+6, str1.begin()+9) ) << endl;
 
-	// Replace 6-9th character with '+++'
+    // Replace 6-9th character with '+++'
     cout << "str1 with 6th to 9th character replaced with '+++': " << 
         replace_range_copy( 
             str1, make_range(str1.begin()+6, str1.begin()+9), "+++" ) << endl;
 
     cout << "str1 with 'cde' replaced with 'XYZ': ";
     
-	// Replace first 'cde' with 'XYZ'. Modify the input
+    // Replace first 'cde' with 'XYZ'. Modify the input
     replace_first_copy( ostream_iterator<char>(cout), str1, "cde", "XYZ" );
     cout << endl;
-	
-	// Replace all '___'
+    
+    // Replace all '___'
     cout << "str1 with all '___' replaced with '---': " << 
         replace_all_copy( str1, "___", "---" ) << endl;
 
-	// Erase all '___'
+    // Erase all '___'
     cout << "str1 without all '___': " << 
         erase_all_copy( str1, "___" ) << endl;
 
@@ -82,17 +82,17 @@ int main()
 
     cout << "str1 with third and 5th occurence of _ replace: " << str1 << endl;
 
-	// Custom formatter examples
-	string str2("abC-xxxx-AbC-xxxx-abc");
+    // Custom formatter examples
+    string str2("abC-xxxx-AbC-xxxx-abc");
 
-	// Find string 'abc' ignoring the case and convert it to upper case
-	cout << "Upcase all 'abc'(s) in the str2: " <<
-		sa::replace_all_copy( 
-			str2,
-			sa::first_finder("abc", sa::is_iequal()), 
-			upcase_formatter<string>() );
-	
+    // Find string 'abc' ignoring the case and convert it to upper case
+    cout << "Upcase all 'abc'(s) in the str2: " <<
+        sa::replace_all_copy( 
+            str2,
+            sa::first_finder("abc", sa::is_iequal()), 
+            upcase_formatter<string>() );
+    
     cout << endl;
 
-	return 0;
+    return 0;
 }

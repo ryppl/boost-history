@@ -15,68 +15,68 @@
 #include <boost/string_algo/container_traits.hpp>
 
 /*! \file 
-	Defines concepts used in string_algo library
+    Defines concepts used in string_algo library
 */
 
 namespace boost {
-	namespace string_algo {
+    namespace string_algo {
 
-		//! Finder concept
-		/*!
-			Defines finder concept. Finder is a functor which selects
-			an arbitraty part of a container. Search is performed on
-			the range specified by starting and ending iterators.
+        //! Finder concept
+        /*!
+            Defines finder concept. Finder is a functor which selects
+            an arbitraty part of a container. Search is performed on
+            the range specified by starting and ending iterators.
 
-			Result of the find operation must be convertible to iterator_range.
-		*/
-		template<typename FinderT, typename IteratorT>
-		struct FinderConcept
-		{
-		private:
-			typedef iterator_range<IteratorT> range;
-		public:
-			void constraints()
-			{
-				// Operation
-				r=(*pF).operator()(i,i);
-			}
-		private:
-			range r;
-			IteratorT i;
-			FinderT* pF;	
-		}; // Finder_concept
+            Result of the find operation must be convertible to iterator_range.
+        */
+        template<typename FinderT, typename IteratorT>
+        struct FinderConcept
+        {
+        private:
+            typedef iterator_range<IteratorT> range;
+        public:
+            void constraints()
+            {
+                // Operation
+                r=(*pF).operator()(i,i);
+            }
+        private:
+            range r;
+            IteratorT i;
+            FinderT* pF;    
+        }; // Finder_concept
 
-		
-		//! Formatter concept
-		/*!
-			Defines formatter concept. Formatter is a functor, which
-			takes a result from a finder operation and transforms it
-			in a specific way.
+        
+        //! Formatter concept
+        /*!
+            Defines formatter concept. Formatter is a functor, which
+            takes a result from a finder operation and transforms it
+            in a specific way.
 
-			Formatter must define result_type typedef. This must match
-			with the result type of the operation.
-			Result must be a container, or a reference to it.
-		*/
-		template<typename FormatterT, typename FinderT, typename IteratorT>
-		struct FormatterConcept
-		{
-		private:
-			// Result type
-			typedef typename FormatterT::result_type result_type;
-		public:
-			void constraints()
-			{
-				// Operation
-				res=(*pFo).operator()( (*pF).operator()(i,i) );
-			}
-		private:
-			IteratorT i;
-			result_type res;
-			FinderT* pF;
-			FormatterT *pFo;
-		}; // FormatterConcept;
+            Formatter must define result_type typedef. This must match
+            with the result type of the operation.
+            Result must be a container, or a reference to it.
+        */
+        template<typename FormatterT, typename FinderT, typename IteratorT>
+        struct FormatterConcept
+        {
+        private:
+            // Result type
+            typedef typename FormatterT::result_type result_type;
+        public:
+            void constraints()
+            {
+                // Operation
+                res=(*pFo).operator()( (*pF).operator()(i,i) );
+            }
+        private:
+            IteratorT i;
+            result_type res;
+            FinderT* pF;
+            FormatterT *pFo;
+        }; // FormatterConcept;
 
-	} // namespace string_algo
+    } // namespace string_algo
 } // namespace boost
 
 

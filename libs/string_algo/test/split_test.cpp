@@ -76,7 +76,7 @@ void iterator_test()
     split(
         tokens,
         str1,
-        is_of<char>("x") );
+        is_any_of<char>("x") );
 
     BOOST_REQUIRE( tokens.size()==3 );
     BOOST_CHECK( tokens[0]==string("") );
@@ -86,7 +86,7 @@ void iterator_test()
     split(
         tokens,
         pch1,
-        is_of<char>("x") );
+        is_any_of<char>("x") );
 
     BOOST_REQUIRE( tokens.size()==3 );
     BOOST_CHECK( tokens[0]==string("") );
@@ -96,7 +96,7 @@ void iterator_test()
     split(
         vtokens,
         str1,
-        is_of<char>("x") );
+        is_any_of<char>("x") );
     deep_compare( tokens, vtokens );
 
     split(

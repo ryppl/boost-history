@@ -105,8 +105,8 @@ void classification_test()
     TEST_CLASS( is_punct<char>(), ".,;\"", "abc" );
     TEST_CLASS( is_upper<char>(), "ABC", "aBc" );
     TEST_CLASS( is_xdigit<char>(), "ABC123", "XFD" );
-    TEST_CLASS( is_of<char>( string("abc") ), "aaabbcc", "aaxb" );
-    TEST_CLASS( is_of<char>( "abc" ), "aaabbcc", "aaxb" );
+    TEST_CLASS( is_any_of<char>( string("abc") ), "aaabbcc", "aaxb" );
+    TEST_CLASS( is_any_of<char>( "abc" ), "aaabbcc", "aaxb" );
 
     TEST_CLASS( std::not1(is_classified<char>(std::ctype_base::space)), "...", "..\n\r\t " );
 }

@@ -18,8 +18,8 @@
 #include <boost/string_algo/format2.hpp>
 
 /*! \file
-	This header defines various erase algorithms. Each algorithm removes
-	a part(s) of the input according to searching criteria.
+    This header defines various erase algorithms. Each algorithm removes
+    a part(s) of the input according to searching criteria.
 */
 
 namespace boost {
@@ -27,16 +27,16 @@ namespace boost {
 //  erase_range -------------------------------------------------------//
 
     //! Erase range algorithm
-	/*!
-		Remove the given range from the input sequence.
-		Result is copied to the given output iterator.
+    /*!
+        Remove the given range from the input sequence.
+        Result is copied to the given output iterator.
 
-		\param Output A output iterarot to which the result will be copied
-		\param Input An input sequence
-		\param SearchRange A range in the input to be substituted
-		\return An output iterator pointing just after last inserted character
-	*/
-	template< typename OutputIteratorT, typename InputT >
+        \param Output A output iterarot to which the result will be copied
+        \param Input An input sequence
+        \param SearchRange A range in the input to be substituted
+        \return An output iterator pointing just after last inserted character
+    */
+    template< typename OutputIteratorT, typename InputT >
     inline OutputIteratorT erase_range_copy(
         OutputIteratorT Output,
         const InputT& Input,
@@ -52,14 +52,14 @@ namespace boost {
     }
 
     //! Erase range algorithm
-	/*!
-		Remove the given range from the input sequence.
-		Result is a modified copy of the input.
+    /*!
+        Remove the given range from the input sequence.
+        Result is a modified copy of the input.
 
-		\param Input An input sequence
-		\param SearchRange A range in the input to be substituted
-		\return A modified copy of the input
-	*/
+        \param Input An input sequence
+        \param SearchRange A range in the input to be substituted
+        \return A modified copy of the input
+    */
     template< typename InputT >
     inline InputT erase_range_copy( 
         const InputT& Input,
@@ -74,14 +74,14 @@ namespace boost {
     }
 
     //! Erase range algorithm
-	/*!
-		Remove the given range from the input sequence.
-		Input sequence is modified in-place.
+    /*!
+        Remove the given range from the input sequence.
+        Input sequence is modified in-place.
 
-		\param Input An input sequence
-		\param SearchRange A range in the input to be substituted
-		\return A reference to the modified input
-	*/
+        \param Input An input sequence
+        \param SearchRange A range in the input to be substituted
+        \return A reference to the modified input
+    */
     template< typename InputT >
     inline InputT& erase_range( 
         InputT& Input,
@@ -98,15 +98,15 @@ namespace boost {
 //  erase_first  --------------------------------------------------------//
 
     //! Erase first algorithm
-	/*!
-		Remove the first match of the search sequence from the input.
-		Result is copied to the given output iterator.
+    /*!
+        Remove the first match of the search sequence from the input.
+        Result is copied to the given output iterator.
 
-		\param Output A output iterarot to which the result will be copied
-		\param Input An input sequence
-		\param Search A string to be searched for. 
-		\return An output iterator pointing just after last inserted character
-	*/
+        \param Output A output iterarot to which the result will be copied
+        \param Input An input sequence
+        \param Search A string to be searched for. 
+        \return An output iterator pointing just after last inserted character
+    */
     template< 
         typename OutputIteratorT,
         typename InputT, 
@@ -124,14 +124,14 @@ namespace boost {
     }
 
     //! Erase first algorithm
-	/*!
-		Remove the first match of the search sequence from the input. 
-		Result is a modified copy of the input.
+    /*!
+        Remove the first match of the search sequence from the input. 
+        Result is a modified copy of the input.
 
-		\param Input An input sequence
-		\param Search A string to be searched for. 
-		\return A modified copy of the input
-	*/
+        \param Input An input sequence
+        \param Search A string to be searched for. 
+        \return A modified copy of the input
+    */
     template< typename InputT, typename SearchT >
     inline InputT erase_first_copy( 
         const InputT& Input,
@@ -144,14 +144,14 @@ namespace boost {
     }
 
     //! Erase first algorithm
-	/*!
-		Remove the first match of the search sequence from the input. 
-		Input sequence is modified in-place.
+    /*!
+        Remove the first match of the search sequence from the input. 
+        Input sequence is modified in-place.
 
-		\param Input An input sequence
-		\param Search A string to be searched for. 
-		\return A reference to the modified input
-	*/
+        \param Input An input sequence
+        \param Search A string to be searched for. 
+        \return A reference to the modified input
+    */
     template< typename InputT, typename SearchT >
     inline InputT& erase_first( 
         InputT& Input,
@@ -166,17 +166,17 @@ namespace boost {
 //  erase_first ( case insensitive ) ------------------------------------//
 
     //! Erase first algorithm ( case insensitive )
-	/*!
-		Remove the first match of the search sequence from the input. 
-		Result is copied to the given output iterator. Searching is case insensitive.
+    /*!
+        Remove the first match of the search sequence from the input. 
+        Result is copied to the given output iterator. Searching is case insensitive.
 
-		\param Output A output iterarot to which the result will be copied
-		\param Input An input sequence
-		\param Search A string to be searched for. 
-		\param Loc a locale used for case insensitive comparison
-		\return An output iterator pointing just after last inserted character
-	*/
-	template< 
+        \param Output A output iterarot to which the result will be copied
+        \param Input An input sequence
+        \param Search A string to be searched for. 
+        \param Loc a locale used for case insensitive comparison
+        \return An output iterator pointing just after last inserted character
+    */
+    template< 
         typename OutputIteratorT,
         typename InputT, 
         typename SearchT >
@@ -184,7 +184,7 @@ namespace boost {
         OutputIteratorT Output,
         const InputT& Input,
         const SearchT& Search,
-		const std::locale& Loc=std::locale() )
+        const std::locale& Loc=std::locale() )
     {
         return string_algo::replace_copy(
             Output,
@@ -194,20 +194,20 @@ namespace boost {
     }
 
     //! Erase first algorithm ( case insensitive )
-	/*!
-		Remove the first match of the search sequence from the input. 
-		Result is a modified copy of the input.	Searching is case insensitive.
+    /*!
+        Remove the first match of the search sequence from the input. 
+        Result is a modified copy of the input. Searching is case insensitive.
 
-		\param Input An input sequence
-		\param Search A string to be searched for.
-		\param Loc a locale used for case insensitive comparison
-		\return A modified copy of the input
-	*/
+        \param Input An input sequence
+        \param Search A string to be searched for.
+        \param Loc a locale used for case insensitive comparison
+        \return A modified copy of the input
+    */
     template< typename InputT, typename SearchT >
     inline InputT ierase_first_copy( 
         const InputT& Input,
         const SearchT& Search,
-		const std::locale& Loc=std::locale() )
+        const std::locale& Loc=std::locale() )
     {
         return string_algo::replace_copy( 
             Input, 
@@ -216,20 +216,20 @@ namespace boost {
     }
 
     //! Erase first algorithm ( case insensitive )
-	/*!
-		Remove the first match of the search sequence from the input. 
-		Input sequence is modified in-place. Searching is case insensitive.
+    /*!
+        Remove the first match of the search sequence from the input. 
+        Input sequence is modified in-place. Searching is case insensitive.
 
-		\param Input An input sequence
-		\param Search A string to be searched for.
-		\param Loc a locale used for case insensitive comparison
-		\return A reference to the modified input
-	*/
+        \param Input An input sequence
+        \param Search A string to be searched for.
+        \param Loc a locale used for case insensitive comparison
+        \return A reference to the modified input
+    */
     template< typename InputT, typename SearchT >
     inline InputT& ierase_first( 
         InputT& Input,
         const SearchT& Search,
-		const std::locale& Loc=std::locale() )
+        const std::locale& Loc=std::locale() )
     {
         return string_algo::replace( 
             Input, 
@@ -240,15 +240,15 @@ namespace boost {
 //  erase_last  --------------------------------------------------------//
 
     //! Erase last algorithm
-	/*!
-		Remove the last match of the search sequence from the input. 
-		Result is copied to the given output iterator.
+    /*!
+        Remove the last match of the search sequence from the input. 
+        Result is copied to the given output iterator.
 
-		\param Output A output iterarot to which the result will be copied
-		\param Input An input sequence
-		\param Search A string to be searched for. 
-		\return An output iterator pointing just after last inserted character
-	*/
+        \param Output A output iterarot to which the result will be copied
+        \param Input An input sequence
+        \param Search A string to be searched for. 
+        \return An output iterator pointing just after last inserted character
+    */
     template< 
         typename OutputIteratorT,
         typename InputT, 
@@ -266,14 +266,14 @@ namespace boost {
     }
 
     //! Erase last algorithm
-	/*!
-		Remove the last match of the search sequence from the input. 
-		Result is a modified copy of the input.
+    /*!
+        Remove the last match of the search sequence from the input. 
+        Result is a modified copy of the input.
 
-		\param Input An input sequence
-		\param Search A string to be searched for. 
-		\return A modified copy of the input
-	*/
+        \param Input An input sequence
+        \param Search A string to be searched for. 
+        \return A modified copy of the input
+    */
     template< typename InputT, typename SearchT >
     inline InputT erase_last_copy( 
         const InputT& Input,
@@ -286,14 +286,14 @@ namespace boost {
     }
 
     //! Erase last algorithm
-	/*!
-		Remove the last match of the search sequence from the input. 
-		Input sequence is modified in-place.
+    /*!
+        Remove the last match of the search sequence from the input. 
+        Input sequence is modified in-place.
 
-		\param Input An input sequence
-		\param Search A string to be searched for. 
-		\return A reference to the modified input
-	*/
+        \param Input An input sequence
+        \param Search A string to be searched for. 
+        \return A reference to the modified input
+    */
     template< typename InputT, typename SearchT >
     inline InputT& erase_last( 
         InputT& Input,
@@ -308,16 +308,16 @@ namespace boost {
 //  erase_last ( case insensitive ) ------------------------------------//
 
     //! Erase last algorithm ( case insensitive )
-	/*!
-		Remove the last match of the search sequence from the input. 
-		Result is copied to the given output iterator. Searching is case insensitive.
+    /*!
+        Remove the last match of the search sequence from the input. 
+        Result is copied to the given output iterator. Searching is case insensitive.
 
-		\param Output A output iterarot to which the result will be copied
-		\param Input An input sequence
-		\param Search A string to be searched for. 
-		\param Loc a locale used for case insensitive comparison
-		\return An output iterator pointing just after last inserted character
-	*/
+        \param Output A output iterarot to which the result will be copied
+        \param Input An input sequence
+        \param Search A string to be searched for. 
+        \param Loc a locale used for case insensitive comparison
+        \return An output iterator pointing just after last inserted character
+    */
     template< 
         typename OutputIteratorT,
         typename InputT, 
@@ -326,7 +326,7 @@ namespace boost {
         OutputIteratorT Output,
         const InputT& Input,
         const SearchT& Search,
-		const std::locale& Loc=std::locale() )
+        const std::locale& Loc=std::locale() )
     {
         return string_algo::replace_copy(
             Output,
@@ -336,20 +336,20 @@ namespace boost {
     }
 
     //! Erase last algorithm ( case insensitive )
-	/*!
-		Remove the last match of the search sequence from the input. 
-		Result is a modified copy of the input. Searching is case insensitive.
+    /*!
+        Remove the last match of the search sequence from the input. 
+        Result is a modified copy of the input. Searching is case insensitive.
 
-		\param Input An input sequence
-		\param Search A string to be searched for.
-		\param Loc a locale used for case insensitive comparison
-		\return A modified copy of the input
-	*/
+        \param Input An input sequence
+        \param Search A string to be searched for.
+        \param Loc a locale used for case insensitive comparison
+        \return A modified copy of the input
+    */
     template< typename InputT, typename SearchT >
     inline InputT ierase_last_copy( 
         const InputT& Input,
         const SearchT& Search,
-		const std::locale& Loc=std::locale() )
+        const std::locale& Loc=std::locale() )
     {
         return string_algo::replace_copy( 
             Input, 
@@ -358,20 +358,20 @@ namespace boost {
     }
 
     //! Erase last algorithm ( case insensitive )
-	/*!
-		Remove the last match of the search sequence from the input. 
-		Input sequence is modified in-place. Searching is case insensitive.
+    /*!
+        Remove the last match of the search sequence from the input. 
+        Input sequence is modified in-place. Searching is case insensitive.
 
-		\param Input An input sequence
-		\param Search A string to be searched for.
-		\param Loc a locale used for case insensitive comparison
-		\return A reference to the modified input
-	*/
+        \param Input An input sequence
+        \param Search A string to be searched for.
+        \param Loc a locale used for case insensitive comparison
+        \return A reference to the modified input
+    */
     template< typename InputT, typename SearchT >
     inline InputT& ierase_last( 
         InputT& Input,
         const SearchT& Search,
-		const std::locale& Loc=std::locale() )
+        const std::locale& Loc=std::locale() )
     {
         return string_algo::replace( 
             Input, 
@@ -382,16 +382,16 @@ namespace boost {
 //  erase_nth --------------------------------------------------------------------//
 
     //! Erase nth algorithm
-	/*!
-		Remove the Nth match of the search sequence in the input.
-		Result is copied to the given output iterator.
+    /*!
+        Remove the Nth match of the search sequence in the input.
+        Result is copied to the given output iterator.
 
-		\param Output A output iterarot to which the result will be copied
-		\param Input An input sequence
-		\param Search A string to be searched for. 
-		\param Nth An index of the match to be replaced
-		\return An output iterator pointing just after last inserted character
-	*/
+        \param Output A output iterarot to which the result will be copied
+        \param Input An input sequence
+        \param Search A string to be searched for. 
+        \param Nth An index of the match to be replaced
+        \return An output iterator pointing just after last inserted character
+    */
     template< 
         typename OutputIteratorT,
         typename InputT, 
@@ -410,15 +410,15 @@ namespace boost {
     }
 
     //! Erase nth algorithm
-	/*!
-		Remove the Nth match of the search sequence in the input.
-		Result is a modified copy of the input.
+    /*!
+        Remove the Nth match of the search sequence in the input.
+        Result is a modified copy of the input.
 
-		\param Input An input sequence
-		\param Search A string to be searched for. 
-		\param Nth An index of the match to be replaced
-		\return A modified copy of the input
-	*/
+        \param Input An input sequence
+        \param Search A string to be searched for. 
+        \param Nth An index of the match to be replaced
+        \return A modified copy of the input
+    */
     template< typename InputT, typename SearchT >
     inline InputT erase_nth_copy( 
         const InputT& Input,
@@ -432,15 +432,15 @@ namespace boost {
     }
 
     //! Erase nth algorithm
-	/*!
-		Remove the Nth match of the search sequence in the input.
-		Input sequence is modified in-place.
+    /*!
+        Remove the Nth match of the search sequence in the input.
+        Input sequence is modified in-place.
 
-		\param Input An input sequence
-		\param Search A string to be searched for. 
-		\param Nth An index of the match to be replaced
-		\return A reference to the modified input
-	*/
+        \param Input An input sequence
+        \param Search A string to be searched for. 
+        \param Nth An index of the match to be replaced
+        \return A reference to the modified input
+    */
     template< typename InputT, typename SearchT >
     inline InputT& erase_nth( 
         InputT& Input,
@@ -456,17 +456,17 @@ namespace boost {
 //  erase_nth ( case insensitive ) ---------------------------------------------//
 
     //! Erase nth algorithm ( case insensitive )
-	/*!
-		Remove the Nth match of the search sequence in the input.
-		Result is copied to the given output iterator. Searching is case insensitive.
+    /*!
+        Remove the Nth match of the search sequence in the input.
+        Result is copied to the given output iterator. Searching is case insensitive.
 
-		\param Output A output iterarot to which the result will be copied
-		\param Input An input sequence
-		\param Search A string to be searched for. 
-		\param Nth An index of the match to be replaced
-		\param Loc a locale used for case insensitive comparison
-		\return An output iterator pointing just after last inserted character
-	*/
+        \param Output A output iterarot to which the result will be copied
+        \param Input An input sequence
+        \param Search A string to be searched for. 
+        \param Nth An index of the match to be replaced
+        \param Loc a locale used for case insensitive comparison
+        \return An output iterator pointing just after last inserted character
+    */
     template< 
         typename OutputIteratorT,
         typename InputT, 
@@ -476,7 +476,7 @@ namespace boost {
         const InputT& Input,
         const SearchT& Search,
         unsigned int Nth,
-		const std::locale& Loc=std::locale() )
+        const std::locale& Loc=std::locale() )
     {
         return string_algo::replace_copy(
             Output,
@@ -486,22 +486,22 @@ namespace boost {
     }
 
     //! Erase nth algorithm
-	/*!
-		Remove the Nth match of the search sequence in the input.
-		Result is a modified copy of the input. Searching is case insensitive.
+    /*!
+        Remove the Nth match of the search sequence in the input.
+        Result is a modified copy of the input. Searching is case insensitive.
 
-		\param Input An input sequence
-		\param Search A string to be searched for. 
-		\param Nth An index of the match to be replaced
-		\param Loc a locale used for case insensitive comparison
-		\return A modified copy of the input
-	*/
+        \param Input An input sequence
+        \param Search A string to be searched for. 
+        \param Nth An index of the match to be replaced
+        \param Loc a locale used for case insensitive comparison
+        \return A modified copy of the input
+    */
     template< typename InputT, typename SearchT >
     inline InputT ierase_nth_copy( 
         const InputT& Input,
         const SearchT& Search,
         unsigned int Nth,
-		const std::locale& Loc=std::locale() )
+        const std::locale& Loc=std::locale() )
     {
         return string_algo::replace_copy( 
             Input, 
@@ -510,22 +510,22 @@ namespace boost {
     }
 
     //! Erase nth algorithm
-	/*!
-		Remove the Nth match of the search sequence in the input.
-		Input sequence is modified in-place. Searching is case insensitive.
+    /*!
+        Remove the Nth match of the search sequence in the input.
+        Input sequence is modified in-place. Searching is case insensitive.
 
-		\param Input An input sequence
-		\param Search A string to be searched for. 
-		\param Nth An index of the match to be replaced
-		\param Loc a locale used for case insensitive comparison
-		\return A reference to the modified input
-	*/
+        \param Input An input sequence
+        \param Search A string to be searched for. 
+        \param Nth An index of the match to be replaced
+        \param Loc a locale used for case insensitive comparison
+        \return A reference to the modified input
+    */
     template< typename InputT, typename SearchT >
     inline InputT& ierase_nth( 
         InputT& Input,
         const SearchT& Search,
         unsigned int Nth,
-		const std::locale& Loc=std::locale() )
+        const std::locale& Loc=std::locale() )
     {
         return string_algo::replace( 
             Input, 
@@ -537,15 +537,15 @@ namespace boost {
 //  erase_all  --------------------------------------------------------//
 
     //! Erase all algorithm
-	/*!
-		Remove all the occurences of the search sequence from the input. 
-		Result is copied to the given output iterator.
+    /*!
+        Remove all the occurences of the search sequence from the input. 
+        Result is copied to the given output iterator.
 
-		\param Output A output iterarot to which the result will be copied
-		\param Input An input sequence
-		\param Search A string to be searched for. 
-		\return An output iterator pointing just after last inserted character
-	*/
+        \param Output A output iterarot to which the result will be copied
+        \param Input An input sequence
+        \param Search A string to be searched for. 
+        \return An output iterator pointing just after last inserted character
+    */
     template< 
         typename OutputIteratorT,
         typename InputT, 
@@ -563,15 +563,15 @@ namespace boost {
     }
 
     //! Erase all algorithm
-	/*!
-		Remove all the occurences of the search sequence from the input. 
-		Result is a modified copy of the input.
+    /*!
+        Remove all the occurences of the search sequence from the input. 
+        Result is a modified copy of the input.
 
-		\param Input An input sequence
-		\param Search A string to be searched for. 
-		\return A modified copy of the input
-	*/  
-	template< typename InputT, typename SearchT >
+        \param Input An input sequence
+        \param Search A string to be searched for. 
+        \return A modified copy of the input
+    */  
+    template< typename InputT, typename SearchT >
     inline InputT erase_all_copy( 
         const InputT& Input,
         const SearchT& Search )
@@ -583,14 +583,14 @@ namespace boost {
     }
 
     //! Erase all algorithm
-	/*!
-		Remove all the occurences of the search sequence from the input. 
-		Input sequence is modified in-place.
+    /*!
+        Remove all the occurences of the search sequence from the input. 
+        Input sequence is modified in-place.
 
-		\param Input An input sequence
-		\param Search A string to be searched for. 
-		\return A reference to the modified input
-	*/
+        \param Input An input sequence
+        \param Search A string to be searched for. 
+        \return A reference to the modified input
+    */
     template< typename InputT, typename SearchT >
     inline InputT& erase_all( 
         InputT& Input,
@@ -605,16 +605,16 @@ namespace boost {
 //  erase_all ( case insensitive ) ------------------------------------//
 
     //! Erase all algorithm ( case insensitive )
-	/*!
-		Remove all the occurences of the search sequence from the input. 
-		Result is copied to the given output iterator. Searching is case insensitive.
+    /*!
+        Remove all the occurences of the search sequence from the input. 
+        Result is copied to the given output iterator. Searching is case insensitive.
 
-		\param Output A output iterarot to which the result will be copied
-		\param Input An input sequence
-		\param Search A string to be searched for. 
-		\param Loc a locale used for case insensitive comparison
-		\return An output iterator pointing just after last inserted character
-	*/
+        \param Output A output iterarot to which the result will be copied
+        \param Input An input sequence
+        \param Search A string to be searched for. 
+        \param Loc a locale used for case insensitive comparison
+        \return An output iterator pointing just after last inserted character
+    */
     template< 
         typename OutputIteratorT,
         typename InputT, 
@@ -623,7 +623,7 @@ namespace boost {
         OutputIteratorT Output,
         const InputT& Input,
         const SearchT& Search,
-		const std::locale& Loc=std::locale() )
+        const std::locale& Loc=std::locale() )
     {
         return string_algo::replace_all_copy(
             Output,
@@ -633,20 +633,20 @@ namespace boost {
     }
 
     //! Erase all algorithm ( case insensitive )
-	/*!
-		Remove all the occurences of the search sequence from the input. 
-		Result is a modified copy of the input. Searching is case insensitive.
+    /*!
+        Remove all the occurences of the search sequence from the input. 
+        Result is a modified copy of the input. Searching is case insensitive.
 
-		\param Input An input sequence
-		\param Search A string to be searched for. 
-		\param Loc a locale used for case insensitive comparison
-		\return A modified copy of the input
-	*/
+        \param Input An input sequence
+        \param Search A string to be searched for. 
+        \param Loc a locale used for case insensitive comparison
+        \return A modified copy of the input
+    */
     template< typename InputT, typename SearchT >
     inline InputT ierase_all_copy( 
         const InputT& Input,
         const SearchT& Search,
-		const std::locale& Loc=std::locale() )
+        const std::locale& Loc=std::locale() )
     {
         return string_algo::replace_all_copy( 
             Input, 
@@ -655,20 +655,20 @@ namespace boost {
     }
 
     //! Erase all algorithm ( case insensitive )
-	/*!
-		Remove all the occurences of the search sequence from the input. 
-		Input sequence is modified in-place. Searching is case insensitive.
+    /*!
+        Remove all the occurences of the search sequence from the input. 
+        Input sequence is modified in-place. Searching is case insensitive.
 
-		\param Input An input sequence
-		\param Search A string to be searched for. 
-		\param Loc a locale used for case insensitive comparison
-		\return A reference to the modified input
-	*/
+        \param Input An input sequence
+        \param Search A string to be searched for. 
+        \param Loc a locale used for case insensitive comparison
+        \return A reference to the modified input
+    */
     template< typename InputT, typename SearchT >
     inline InputT& ierase_all( 
         InputT& Input,
         const SearchT& Search,
-		const std::locale& Loc=std::locale() )
+        const std::locale& Loc=std::locale() )
     {
         return string_algo::replace_all( 
             Input, 
@@ -679,16 +679,16 @@ namespace boost {
 //  erase_head --------------------------------------------------------------------//
 
     //! Erase head algorithm
-	/*!
-		Remove the head from the input.	Head is a prefix of a seqence of given size. 
-		If the sequence is shorter then required, whole sequence if 
-		considered to be the head. Result is copied to the given output iterator.
+    /*!
+        Remove the head from the input. Head is a prefix of a seqence of given size. 
+        If the sequence is shorter then required, whole sequence if 
+        considered to be the head. Result is copied to the given output iterator.
 
-		\param Output A output iterarot to which the result will be copied
-		\param Input An input sequence
-		\param N A length of the head
-		\return An output iterator pointing just after last inserted character
-	*/
+        \param Output A output iterarot to which the result will be copied
+        \param Input An input sequence
+        \param N A length of the head
+        \return An output iterator pointing just after last inserted character
+    */
     template< 
         typename OutputIteratorT,
         typename InputT >
@@ -705,16 +705,16 @@ namespace boost {
     }
 
     //! Erase head algorithm
-	/*!
-		Remove the head from the input.	Head is a prefix of a seqence of given size. 
-		If the sequence is shorter then required, whole sequence if 
-		considered to be the head. Result is a modified copy of the input.
+    /*!
+        Remove the head from the input. Head is a prefix of a seqence of given size. 
+        If the sequence is shorter then required, whole sequence if 
+        considered to be the head. Result is a modified copy of the input.
 
-		\param Input An input sequence
-		\param N A length of the head
-		\return A modified copy of the input
-	*/
-	template< typename InputT >
+        \param Input An input sequence
+        \param N A length of the head
+        \return A modified copy of the input
+    */
+    template< typename InputT >
     inline InputT erase_head_copy( 
         const InputT& Input,
         unsigned int N )
@@ -726,16 +726,16 @@ namespace boost {
     }
 
     //! Erase head algorithm
-	/*!
-		Remove the head from the input.	Head is a prefix of a seqence of given size. 
-		If the sequence is shorter then required, whole sequence if 
-		considered to be the head. Input sequence is modified in-place.
+    /*!
+        Remove the head from the input. Head is a prefix of a seqence of given size. 
+        If the sequence is shorter then required, whole sequence if 
+        considered to be the head. Input sequence is modified in-place.
 
-		\param Input An input sequence
-		\param N A length of the head
-		\return A reference to the modified input
-	*/
-	template< typename InputT >
+        \param Input An input sequence
+        \param N A length of the head
+        \return A reference to the modified input
+    */
+    template< typename InputT >
     inline InputT& erase_head( 
         InputT& Input,
         unsigned int N )
@@ -749,16 +749,16 @@ namespace boost {
 //  erase_tail --------------------------------------------------------------------//
 
     //! Erase tail algorithm
-	/*!
-		Remove the tail from the input.	Tail is a suffix of a seqence of given size. 
-		If the sequence is shorter then required, whole sequence if 
-		considered to be the tail. Result is copied to the given output iterator.
+    /*!
+        Remove the tail from the input. Tail is a suffix of a seqence of given size. 
+        If the sequence is shorter then required, whole sequence if 
+        considered to be the tail. Result is copied to the given output iterator.
 
-		\param Output A output iterarot to which the result will be copied
-		\param Input An input sequence
-		\param N A length of the head
-		\return An output iterator pointing just after last inserted character
-	*/
+        \param Output A output iterarot to which the result will be copied
+        \param Input An input sequence
+        \param N A length of the head
+        \return An output iterator pointing just after last inserted character
+    */
     template< 
         typename OutputIteratorT,
         typename InputT >
@@ -775,16 +775,16 @@ namespace boost {
     }
 
     //! Erase tail algorithm
-	/*!
-		Remove the tail from the input.	Tail is a suffix of a seqence of given size. 
-		If the sequence is shorter then required, whole sequence if 
-		considered to be the tail. Result is a modified copy of the input.
+    /*!
+        Remove the tail from the input. Tail is a suffix of a seqence of given size. 
+        If the sequence is shorter then required, whole sequence if 
+        considered to be the tail. Result is a modified copy of the input.
 
-		\param Input An input sequence
-		\param N A length of the head
-		\return A modified copy of the input
-	*/
-	template< typename InputT >
+        \param Input An input sequence
+        \param N A length of the head
+        \return A modified copy of the input
+    */
+    template< typename InputT >
     inline InputT erase_tail_copy( 
         const InputT& Input,
         unsigned int N )
@@ -796,16 +796,16 @@ namespace boost {
     }
 
     //! Erase tail algorithm
-	/*!
-		Remove the tail from the input.	Tail is a suffix of a seqence of given size. 
-		If the sequence is shorter then required, whole sequence if 
-		considered to be the tail. Input sequence is modified in-place.
+    /*!
+        Remove the tail from the input. Tail is a suffix of a seqence of given size. 
+        If the sequence is shorter then required, whole sequence if 
+        considered to be the tail. Input sequence is modified in-place.
 
-		\param Input An input sequence
-		\param N A length of the head
-		\return A reference to the modified input
-	*/
-	template< typename InputT >
+        \param Input An input sequence
+        \param N A length of the head
+        \return A reference to the modified input
+    */
+    template< typename InputT >
     inline InputT& erase_tail( 
         InputT& Input,
         unsigned int N )

@@ -37,22 +37,22 @@ int main()
     iterator_range<string::iterator> head=find_head( str1, 3 );
     cout << "head(3) of the str1: " << string( head.begin(), head.end() ) << endl;
 
-	// get the tail
+    // get the tail
     head=find_tail( str2, 5 );
     cout << "tail(5) of the str2: " << string( head.begin(), head.end() ) << endl;
 
-	// char processing
-	char text[]="hello dolly!";
-	iterator_range<char*> crange=find_last(text,"ll");
+    // char processing
+    char text[]="hello dolly!";
+    iterator_range<char*> crange=find_last(text,"ll");
 
-	// transform the range ( add 1 )
-	transform( crange.begin(), crange.end(), crange.begin(), bind2nd( plus<char>(), 1 ) );
-	// uppercase the range
-	to_upper( crange );
+    // transform the range ( add 1 )
+    transform( crange.begin(), crange.end(), crange.begin(), bind2nd( plus<char>(), 1 ) );
+    // uppercase the range
+    to_upper( crange );
 
-	cout << text << endl;
+    cout << text << endl;
 
     cout << endl;
 
-	return 0;
+    return 0;
 }

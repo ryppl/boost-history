@@ -129,7 +129,7 @@ namespace boost {
                 {
                     replace_const_time_helper< 
                         boost::mpl::and_<
-							sequence_has_const_time_insert<InputT>,
+                            sequence_has_const_time_insert<InputT>,
                             sequence_has_const_time_erase<InputT> >::value >()(
                         Input, From, To, Begin, End );
                 }
@@ -172,7 +172,7 @@ namespace boost {
                 ForwardIteratorT End )
             {
                 replace_native_helper< sequence_has_native_replace<InputT>::value >()(
-					Input, From, To, Begin, End );
+                    Input, From, To, Begin, End );
             };
 
         } // namespace detail

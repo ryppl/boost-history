@@ -16,12 +16,12 @@
 #include <boost/string_algo/compare.hpp>
 
 /*! \file
-	Defines finder generators. Finder is a functor which is able to 
-	find a subsequence matching a specific criteria in an input
-	sequence. 
-	Finders are used by as a plugable components for replace, find 
-	and split facilities. This header contains generator functions 
-	for finders provided in this library.
+    Defines finder generators. Finder is a functor which is able to 
+    find a subsequence matching a specific criteria in an input
+    sequence. 
+    Finders are used by as a plugable components for replace, find 
+    and split facilities. This header contains generator functions 
+    for finders provided in this library.
 */
 
 namespace boost {
@@ -29,26 +29,26 @@ namespace boost {
 
 //  Generic find -----------------------------------------------//
 
-	//! Generic find algorithm
-	/*!
-		Search the input using the given finder.
+    //! Generic find algorithm
+    /*!
+        Search the input using the given finder.
 
-		\param Input A container which will be searched.
-		\param FindF Finder used for searching.
-		\return 
-			An iterator_range containing iterators delimiting the match. 
-			Returned iterator is either InputContainerT::iterator or 
-			InputContainerT::const_iterator, depending on the constness of 
-			the input parameter.
-	*/
-	template< typename InputContainerT, typename FindFT >
+        \param Input A container which will be searched.
+        \param FindF Finder used for searching.
+        \return 
+            An iterator_range containing iterators delimiting the match. 
+            Returned iterator is either InputContainerT::iterator or 
+            InputContainerT::const_iterator, depending on the constness of 
+            the input parameter.
+    */
+    template< typename InputContainerT, typename FindFT >
     inline iterator_range< 
         BOOST_STRING_TYPENAME string_algo::container_result_iterator<InputContainerT>::type >
     find( 
         InputContainerT& Input, 
-		FindFT FindF )
+        FindFT FindF )
     {
-		return FindF(begin(Input),end(Input));
+        return FindF(begin(Input),end(Input));
     }
 
 //  Finder generators ------------------------------------------//
@@ -59,8 +59,8 @@ namespace boost {
             occurence of the search sequence in a given input.
             Result is given as a range of iterator delimiting the match.
 
-			\param Search A seqeunce to be searched for.
-			\return first_finder functor
+            \param Search A seqeunce to be searched for.
+            \return first_finder functor
         */
         template<typename ContainerT>
         inline detail::first_finderF<
@@ -69,10 +69,10 @@ namespace boost {
         first_finder( const ContainerT& Search )
         {
             return 
-				detail::first_finderF<
-					BOOST_STRING_TYPENAME 
-		                container_const_iterator<ContainerT>::type,
-					is_equal>( Search, is_equal() ) ;
+                detail::first_finderF<
+                    BOOST_STRING_TYPENAME 
+                        container_const_iterator<ContainerT>::type,
+                    is_equal>( Search, is_equal() ) ;
         }
 
         //! "First" finder
@@ -83,9 +83,9 @@ namespace boost {
 
             Elements are compared using given predicate.
 
-			\param Search A seqeunce to be searched for.
-			\param Comp An element comparison predicate
-			\return first_finder functor
+            \param Search A seqeunce to be searched for.
+            \param Comp An element comparison predicate
+            \return first_finder functor
         */
         template<typename ContainerT,typename PredicateT>
         inline detail::first_finderF<
@@ -95,10 +95,10 @@ namespace boost {
             const ContainerT& Search, PredicateT Comp )
         {
             return 
-				detail::first_finderF<
-					BOOST_STRING_TYPENAME 
-						container_const_iterator<ContainerT>::type,
-					PredicateT>( Search, Comp );
+                detail::first_finderF<
+                    BOOST_STRING_TYPENAME 
+                        container_const_iterator<ContainerT>::type,
+                    PredicateT>( Search, Comp );
         }
 
         //! "Last" finder
@@ -107,8 +107,8 @@ namespace boost {
             occurence of the search sequence in a given input.
             Result is given as a range of iterator delimiting the match.
 
-			\param Search A seqeunce to be searched for.
-			\return last_finder functor
+            \param Search A seqeunce to be searched for.
+            \return last_finder functor
         */
         template<typename ContainerT>
         inline detail::last_finderF<
@@ -116,11 +116,11 @@ namespace boost {
             is_equal>
         last_finder( const ContainerT& Search )
         {
-			return 
-				detail::last_finderF<
-					BOOST_STRING_TYPENAME 
-						container_const_iterator<ContainerT>::type,
-					is_equal>( Search, is_equal() );
+            return 
+                detail::last_finderF<
+                    BOOST_STRING_TYPENAME 
+                        container_const_iterator<ContainerT>::type,
+                    is_equal>( Search, is_equal() );
         }
         //! "Last" finder
         /*!
@@ -130,9 +130,9 @@ namespace boost {
 
             Elements are compared using given predicate.
 
-			\param Search A seqeunce to be searched for.
-			\param Comp An element comparison predicate
-			\return last_finder functor
+            \param Search A seqeunce to be searched for.
+            \param Comp An element comparison predicate
+            \return last_finder functor
         */
         template<typename ContainerT, typename PredicateT>
         inline detail::last_finderF<
@@ -141,10 +141,10 @@ namespace boost {
         last_finder( const ContainerT& Search, PredicateT Comp )
         {
             return 
-				detail::last_finderF<
-					BOOST_STRING_TYPENAME 
-						container_const_iterator<ContainerT>::type,
-					PredicateT>( Search, Comp ) ;
+                detail::last_finderF<
+                    BOOST_STRING_TYPENAME 
+                        container_const_iterator<ContainerT>::type,
+                    PredicateT>( Search, Comp ) ;
         }
 
         //! "Nth" finder
@@ -153,9 +153,9 @@ namespace boost {
             occurence of the search sequence in a given input.
             Result is given as a range of iterator delimiting the match.
 
-			\param Search A seqeunce to be searched for.
-			\param Nth An index of the match to be find
-			\return nth_finder functor
+            \param Search A seqeunce to be searched for.
+            \param Nth An index of the match to be find
+            \return nth_finder functor
         */
         template<typename ContainerT>
         inline detail::nth_finderF<
@@ -166,10 +166,10 @@ namespace boost {
             unsigned int Nth)
         {
             return 
-				detail::nth_finderF<
-					BOOST_STRING_TYPENAME 
-						container_const_iterator<ContainerT>::type,
-					is_equal>( Search, Nth, is_equal() ) ;
+                detail::nth_finderF<
+                    BOOST_STRING_TYPENAME 
+                        container_const_iterator<ContainerT>::type,
+                    is_equal>( Search, Nth, is_equal() ) ;
         }
         //! "Nth" finder
         /*!
@@ -179,10 +179,10 @@ namespace boost {
 
             Elements are compared using given predicate.
 
-			\param Search A seqeunce to be searched for.
-			\param Nth An index of the match to be find
-			\param Comp An element comparison predicate
-			\return nth_finder functor
+            \param Search A seqeunce to be searched for.
+            \param Nth An index of the match to be find
+            \param Comp An element comparison predicate
+            \return nth_finder functor
         */
         template<typename ContainerT, typename PredicateT>
         inline detail::nth_finderF<
@@ -194,10 +194,10 @@ namespace boost {
             PredicateT Comp )
         {
             return 
-				detail::nth_finderF<
-					BOOST_STRING_TYPENAME 
-	                    container_const_iterator<ContainerT>::type,
-					PredicateT>( Search, Nth, Comp );
+                detail::nth_finderF<
+                    BOOST_STRING_TYPENAME 
+                        container_const_iterator<ContainerT>::type,
+                    PredicateT>( Search, Nth, Comp );
         }
 
         //! "Head" finder
@@ -207,8 +207,8 @@ namespace boost {
             size. It an input has less then n elements, whole input is 
             considered a head.
 
-			\param N The size of the head
-			\return head_finder functor
+            \param N The size of the head
+            \return head_finder functor
         */
         inline detail::head_finderF
         head_finder( unsigned int N )
@@ -223,8 +223,8 @@ namespace boost {
             size. It an input has less then n elements, whole input is 
             considered a head.
 
-			\param N The size of the head
-			\return tail_finder functor
+            \param N The size of the head
+            \return tail_finder functor
         */
         inline detail::tail_finderF
         tail_finder( unsigned int N )
@@ -244,9 +244,9 @@ namespace boost {
             search for continous segments of elements satisfying the 
             given predicate.
 
-			\param Pred An element selection predicate
-			\param bCompress Compress flag
-			\return token_finder functor
+            \param Pred An element selection predicate
+            \param bCompress Compress flag
+            \return token_finder functor
         */
         template< typename PredicateT >
         inline detail::token_finderF<PredicateT>
@@ -261,9 +261,9 @@ namespace boost {
             any operation. It simply returns the given range for 
             any input. 
 
-			\param Begin Beginning of the range
-			\param End End of the range
-			\return range_finger functor
+            \param Begin Beginning of the range
+            \param End End of the range
+            \return range_finger functor
         */
         template< typename ForwardIteratorT >
         inline detail::range_finderF<ForwardIteratorT>
@@ -280,8 +280,8 @@ namespace boost {
             any operation. It simply returns the given range for 
             any input. 
 
-			\param Range The range.
-			\return range_finger functor
+            \param Range The range.
+            \return range_finger functor
         */
         template< typename ForwardIteratorT >
         inline detail::range_finderF<ForwardIteratorT>
@@ -313,12 +313,12 @@ namespace boost {
 #include <boost/string_algo/compare.hpp>
 
 /*! \file
-	Defines finder generators. Finder is a functor which is able to 
-	find a subsequence matching a specific criteria in an input
-	sequence. 
-	Finders are used by as a plugable components for replace, find 
-	and split facilities. This header contains generator functions 
-	for finders provided in this library.
+    Defines finder generators. Finder is a functor which is able to 
+    find a subsequence matching a specific criteria in an input
+    sequence. 
+    Finders are used by as a plugable components for replace, find 
+    and split facilities. This header contains generator functions 
+    for finders provided in this library.
 */
 
 namespace boost {
@@ -332,8 +332,8 @@ namespace boost {
             occurence of the search sequence in a given input.
             Result is given as a range of iterator delimiting the match.
 
-			\param Search A seqeunce to be searched for.
-			\return first_finder functor
+            \param Search A seqeunce to be searched for.
+            \return first_finder functor
         */
         template<typename ContainerT>
         inline detail::first_finderF<
@@ -342,10 +342,10 @@ namespace boost {
         first_finder( const ContainerT& Search )
         {
             return 
-				detail::first_finderF<
-					BOOST_STRING_TYPENAME 
-		                container_const_iterator<ContainerT>::type,
-					is_equal>( Search, is_equal() ) ;
+                detail::first_finderF<
+                    BOOST_STRING_TYPENAME 
+                        container_const_iterator<ContainerT>::type,
+                    is_equal>( Search, is_equal() ) ;
         }
 
         //! "First" finder
@@ -356,9 +356,9 @@ namespace boost {
 
             Elements are compared using given predicate.
 
-			\param Search A seqeunce to be searched for.
-			\param Comp An element comparison predicate
-			\return first_finder functor
+            \param Search A seqeunce to be searched for.
+            \param Comp An element comparison predicate
+            \return first_finder functor
         */
         template<typename ContainerT,typename PredicateT>
         inline detail::first_finderF<
@@ -368,10 +368,10 @@ namespace boost {
             const ContainerT& Search, PredicateT Comp )
         {
             return 
-				detail::first_finderF<
-					BOOST_STRING_TYPENAME 
-						container_const_iterator<ContainerT>::type,
-					PredicateT>( Search, Comp );
+                detail::first_finderF<
+                    BOOST_STRING_TYPENAME 
+                        container_const_iterator<ContainerT>::type,
+                    PredicateT>( Search, Comp );
         }
 
         //! "Last" finder
@@ -380,8 +380,8 @@ namespace boost {
             occurence of the search sequence in a given input.
             Result is given as a range of iterator delimiting the match.
 
-			\param Search A seqeunce to be searched for.
-			\return last_finder functor
+            \param Search A seqeunce to be searched for.
+            \return last_finder functor
         */
         template<typename ContainerT>
         inline detail::last_finderF<
@@ -389,11 +389,11 @@ namespace boost {
             is_equal>
         last_finder( const ContainerT& Search )
         {
-			return 
-				detail::last_finderF<
-					BOOST_STRING_TYPENAME 
-						container_const_iterator<ContainerT>::type,
-					is_equal>( Search, is_equal() );
+            return 
+                detail::last_finderF<
+                    BOOST_STRING_TYPENAME 
+                        container_const_iterator<ContainerT>::type,
+                    is_equal>( Search, is_equal() );
         }
         //! "Last" finder
         /*!
@@ -403,9 +403,9 @@ namespace boost {
 
             Elements are compared using given predicate.
 
-			\param Search A seqeunce to be searched for.
-			\param Comp An element comparison predicate
-			\return last_finder functor
+            \param Search A seqeunce to be searched for.
+            \param Comp An element comparison predicate
+            \return last_finder functor
         */
         template<typename ContainerT, typename PredicateT>
         inline detail::last_finderF<
@@ -414,10 +414,10 @@ namespace boost {
         last_finder( const ContainerT& Search, PredicateT Comp )
         {
             return 
-				detail::last_finderF<
-					BOOST_STRING_TYPENAME 
-						container_const_iterator<ContainerT>::type,
-					PredicateT>( Search, Comp ) ;
+                detail::last_finderF<
+                    BOOST_STRING_TYPENAME 
+                        container_const_iterator<ContainerT>::type,
+                    PredicateT>( Search, Comp ) ;
         }
 
         //! "Nth" finder
@@ -426,9 +426,9 @@ namespace boost {
             occurence of the search sequence in a given input.
             Result is given as a range of iterator delimiting the match.
 
-			\param Search A seqeunce to be searched for.
-			\param Nth An index of the match to be find
-			\return nth_finder functor
+            \param Search A seqeunce to be searched for.
+            \param Nth An index of the match to be find
+            \return nth_finder functor
         */
         template<typename ContainerT>
         inline detail::nth_finderF<
@@ -439,10 +439,10 @@ namespace boost {
             unsigned int Nth)
         {
             return 
-				detail::nth_finderF<
-					BOOST_STRING_TYPENAME 
-						container_const_iterator<ContainerT>::type,
-					is_equal>( Search, Nth, is_equal() ) ;
+                detail::nth_finderF<
+                    BOOST_STRING_TYPENAME 
+                        container_const_iterator<ContainerT>::type,
+                    is_equal>( Search, Nth, is_equal() ) ;
         }
         //! "Nth" finder
         /*!
@@ -452,10 +452,10 @@ namespace boost {
 
             Elements are compared using given predicate.
 
-			\param Search A seqeunce to be searched for.
-			\param Nth An index of the match to be find
-			\param Comp An element comparison predicate
-			\return nth_finder functor
+            \param Search A seqeunce to be searched for.
+            \param Nth An index of the match to be find
+            \param Comp An element comparison predicate
+            \return nth_finder functor
         */
         template<typename ContainerT, typename PredicateT>
         inline detail::nth_finderF<
@@ -467,10 +467,10 @@ namespace boost {
             PredicateT Comp )
         {
             return 
-				detail::nth_finderF<
-					BOOST_STRING_TYPENAME 
-	                    container_const_iterator<ContainerT>::type,
-					PredicateT>( Search, Nth, Comp );
+                detail::nth_finderF<
+                    BOOST_STRING_TYPENAME 
+                        container_const_iterator<ContainerT>::type,
+                    PredicateT>( Search, Nth, Comp );
         }
 
         //! "Head" finder
@@ -480,8 +480,8 @@ namespace boost {
             size. It an input has less then n elements, whole input is 
             considered a head.
 
-			\param N The size of the head
-			\return head_finder functor
+            \param N The size of the head
+            \return head_finder functor
         */
         inline detail::head_finderF
         head_finder( unsigned int N )
@@ -496,8 +496,8 @@ namespace boost {
             size. It an input has less then n elements, whole input is 
             considered a head.
 
-			\param N The size of the head
-			\return tail_finder functor
+            \param N The size of the head
+            \return tail_finder functor
         */
         inline detail::tail_finderF
         tail_finder( unsigned int N )
@@ -517,9 +517,9 @@ namespace boost {
             search for continous segments of elements satisfying the 
             given predicate.
 
-			\param Pred An element selection predicate
-			\param bCompress Compress flag
-			\return token_finder functor
+            \param Pred An element selection predicate
+            \param bCompress Compress flag
+            \return token_finder functor
         */
         template< typename PredicateT >
         inline detail::token_finderF<PredicateT>
@@ -534,9 +534,9 @@ namespace boost {
             any operation. It simply returns the given range for 
             any input. 
 
-			\param Begin Beginning of the range
-			\param End End of the range
-			\return range_finger functor
+            \param Begin Beginning of the range
+            \param End End of the range
+            \return range_finger functor
         */
         template< typename ForwardIteratorT >
         inline detail::range_finderF<ForwardIteratorT>
@@ -553,8 +553,8 @@ namespace boost {
             any operation. It simply returns the given range for 
             any input. 
 
-			\param Range The range.
-			\return range_finger functor
+            \param Range The range.
+            \return range_finger functor
         */
         template< typename ForwardIteratorT >
         inline detail::range_finderF<ForwardIteratorT>

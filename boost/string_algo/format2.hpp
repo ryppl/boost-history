@@ -16,14 +16,14 @@
 #include <boost/string_algo/detail/format.hpp>
 
 /*! \file
-	Defines formatter generators. Formatter is a functor which formats
-	a string according to give paramters. Formatter should can work
-	in conjuntion with finders. A finder can provide addtional information
-	for a specific formatter. An example of such a cooperation is reger_finder
-	and regex_formatter.
+    Defines formatter generators. Formatter is a functor which formats
+    a string according to give paramters. Formatter should can work
+    in conjuntion with finders. A finder can provide addtional information
+    for a specific formatter. An example of such a cooperation is reger_finder
+    and regex_formatter.
 
-	Formatter are used by as a plugable components for replace facilities. 
-	This header contains generator functions for formatters provided in this library.
+    Formatter are used by as a plugable components for replace facilities. 
+    This header contains generator functions for formatters provided in this library.
 */
 
 namespace boost {
@@ -32,13 +32,13 @@ namespace boost {
 // generic formaters  ---------------------------------------------------------------//
 
         //! Constant formatter
-		/*!
-			Construct a const formatter. Const formatter always returns
-			the same value, regardless of the paramter.
+        /*!
+            Construct a const formatter. Const formatter always returns
+            the same value, regardless of the paramter.
 
-			\param Format A predefined value used as a result for formating
-			\return A const formatter functor
-		*/
+            \param Format A predefined value used as a result for formating
+            \return A const formatter functor
+        */
         template< typename ContainerT >
         inline detail::const_formatF<ContainerT>
         const_formatter( const ContainerT& Format )
@@ -47,12 +47,12 @@ namespace boost {
         }
 
         //! Identity formatter
-		/*!
-			Construct an identity formatter. Identity formatter always returns
-			the parameter.
+        /*!
+            Construct an identity formatter. Identity formatter always returns
+            the parameter.
 
-			\return An identity formatter functor
-		*/
+            \return An identity formatter functor
+        */
         template< typename ContainerT >
         inline detail::identity_formatF<ContainerT>
         identity_formatter()
@@ -61,14 +61,14 @@ namespace boost {
         }
 
         //! Empty formatter
-		/*!
-			Construct an empty formatter. Empty formater always returns an empty
-			sequence. 
+        /*!
+            Construct an empty formatter. Empty formater always returns an empty
+            sequence. 
 
-			\param Input container used to select a correct value_type for the
-					     resulting empty_container<>
-			\return An empty formatter functor
-		*/
+            \param Input container used to select a correct value_type for the
+                         resulting empty_container<>
+            \return An empty formatter functor
+        */
         template< typename ContainerT >
         inline detail::empty_formatF< 
             BOOST_STRING_TYPENAME container_value_type<ContainerT>::type >

@@ -140,27 +140,27 @@ void find_test()
     // find_token
     BOOST_CHECKPOINT( "find_token" );
 
-    nc_result=find_token( str1, is_of<char>("abc") );
+    nc_result=find_token( str1, is_any_of<char>("abc") );
     BOOST_CHECK( 
         (distance<string::const_iterator>( str1.begin(),nc_result.begin()) == 3) &&
         (distance<string::const_iterator>( str1.begin(),nc_result.end()) == 6) );
 
-    cv_result=find_token( const_cast<const string&>(str1), is_of<char>("abc") );
+    cv_result=find_token( const_cast<const string&>(str1), is_any_of<char>("abc") );
     BOOST_CHECK( 
         (distance<string::const_iterator>( str1.begin(),cv_result.begin()) == 3) &&
         (distance<string::const_iterator>( str1.begin(),cv_result.end()) == 6) );
 
-    nc_result=find_token( str1, is_of<char>("abc"), false );
+    nc_result=find_token( str1, is_any_of<char>("abc"), false );
     BOOST_CHECK( 
         (distance<string::const_iterator>( str1.begin(),nc_result.begin()) == 3) &&
         (distance<string::const_iterator>( str1.begin(),nc_result.end()) == 4) );
 
-    cv_result=find_token( const_cast<const string&>(str1), is_of<char>("abc"), false );
+    cv_result=find_token( const_cast<const string&>(str1), is_any_of<char>("abc"), false );
     BOOST_CHECK( 
         (distance<string::const_iterator>( str1.begin(),cv_result.begin()) == 3) &&
         (distance<string::const_iterator>( str1.begin(),cv_result.end()) == 4) );
 
-    ch_result=find_token( pch1, is_of<char>("abc"),false );
+    ch_result=find_token( pch1, is_any_of<char>("abc"),false );
     BOOST_CHECK( ( (ch_result.begin() - pch1 ) == 3 ) && ( (ch_result.end() - pch1 ) == 4 ) );
 
     // generic find

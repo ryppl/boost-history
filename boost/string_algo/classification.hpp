@@ -15,12 +15,12 @@
 #include <boost/string_algo/detail/classification.hpp>
 
 /*! \file
-	Classification predicates are included in the library to give 
-	some more convinience when using algorithms like trim and all. 
-	In general they wrap funcionality of std::isXXXX methods into generic functors. 
-	
-	All predicates support unary_function interface, so they can be used together 
-	with stl logic predicates.
+    Classification predicates are included in the library to give 
+    some more convinience when using algorithms like trim and all. 
+    In general they wrap funcionality of std::isXXXX methods into generic functors. 
+    
+    All predicates support unary_function interface, so they can be used together 
+    with stl logic predicates.
 */
 
 namespace boost {
@@ -28,16 +28,16 @@ namespace boost {
 //  classification functor generator -------------------------------------//
 
     //! is_classified predicate
-	/*!
-		Construct is_classified predicate. This predicate holds, if an input is
-		of specified ctype category.
-		The predicate is compatible with AdaptableUnaryFunction. CharT has to
-		be explititly specified.
+    /*!
+        Construct is_classified predicate. This predicate holds, if an input is
+        of specified ctype category.
+        The predicate is compatible with AdaptableUnaryFunction. CharT has to
+        be explititly specified.
 
-		\param Type ctype category
-		\param Loc A locale used for classification
-		\return An instance of is_classified predicated 
-	*/
+        \param Type ctype category
+        \param Loc A locale used for classification
+        \return An instance of is_classified predicated 
+    */
     template< typename CharT >
     inline string_algo::detail::is_classifiedF<CharT>
     is_classified( std::ctype_base::mask Type, const std::locale& Loc=std::locale() )
@@ -46,12 +46,12 @@ namespace boost {
     }
 
     //! is_space predicate
-	/*!
-		Construct is_classified predicate for ctype_base::space category.	
+    /*!
+        Construct is_classified predicate for ctype_base::space category.   
 
-		\param Loc A locale used for classification
-		\return An instance of is_classified predicated 
-	*/
+        \param Loc A locale used for classification
+        \return An instance of is_classified predicated 
+    */
     template< typename CharT >
     inline string_algo::detail::is_classifiedF<CharT> 
     is_space( const std::locale& Loc=std::locale() )
@@ -60,12 +60,12 @@ namespace boost {
     }
 
     //! is_alnum predicate
-	/*!
-		Construct is_classified predicate for ctype_base::alnum category.	
+    /*!
+        Construct is_classified predicate for ctype_base::alnum category.   
 
-		\param Loc A locale used for classification
-		\return An instance of is_classified predicated 
-	*/
+        \param Loc A locale used for classification
+        \return An instance of is_classified predicated 
+    */
     template< typename CharT >
     inline string_algo::detail::is_classifiedF<CharT> 
     is_alnum( const std::locale& Loc=std::locale() )
@@ -74,12 +74,12 @@ namespace boost {
     }
 
     //! is_alpha predicate
-	/*!
-		Construct is_classified predicate for ctype_base::alpha category.	
+    /*!
+        Construct is_classified predicate for ctype_base::alpha category.   
 
-		\param Loc A locale used for classification
-		\return An instance of is_classified predicated 
-	*/
+        \param Loc A locale used for classification
+        \return An instance of is_classified predicated 
+    */
     template< typename CharT >
     inline string_algo::detail::is_classifiedF<CharT> 
     is_alpha( const std::locale& Loc=std::locale() )
@@ -88,13 +88,13 @@ namespace boost {
     }
 
     //! is_cntrl predicate
-	/*!
-		Construct is_classified predicate for ctype_base::cntrl category.	
+    /*!
+        Construct is_classified predicate for ctype_base::cntrl category.   
 
-		\param Loc A locale used for classification
-		\return An instance of is_classified predicated 
-	*/
-	template< typename CharT >
+        \param Loc A locale used for classification
+        \return An instance of is_classified predicated 
+    */
+    template< typename CharT >
     inline string_algo::detail::is_classifiedF<CharT> 
     is_cntrl( const std::locale& Loc=std::locale() )
     {
@@ -102,12 +102,12 @@ namespace boost {
     }
 
     //! is_digit predicate
-	/*!
-		Construct is_classified predicate for ctype_base::digit category.	
+    /*!
+        Construct is_classified predicate for ctype_base::digit category.   
 
-		\param Loc A locale used for classification
-		\return An instance of is_classified predicated 
-	*/
+        \param Loc A locale used for classification
+        \return An instance of is_classified predicated 
+    */
     template< typename CharT >
     inline string_algo::detail::is_classifiedF<CharT> 
     is_digit( const std::locale& Loc=std::locale() )
@@ -116,12 +116,12 @@ namespace boost {
     }
 
     //! is_graph predicate
-	/*!
-		Construct is_classified predicate for ctype_base::graph category.	
+    /*!
+        Construct is_classified predicate for ctype_base::graph category.   
 
-		\param Loc A locale used for classification
-		\return An instance of is_classified predicated 
-	*/
+        \param Loc A locale used for classification
+        \return An instance of is_classified predicated 
+    */
     template< typename CharT >
     inline string_algo::detail::is_classifiedF<CharT> 
     is_graph( const std::locale& Loc=std::locale() )
@@ -130,13 +130,13 @@ namespace boost {
     }
 
     //! is_lower predicate
-	/*!
-		Construct is_classified predicate for ctype_base::lower category.	
+    /*!
+        Construct is_classified predicate for ctype_base::lower category.   
 
-		\param Loc A locale used for classification
-		\return An instance of is_classified predicated 
-	*/
-	template< typename CharT >
+        \param Loc A locale used for classification
+        \return An instance of is_classified predicated 
+    */
+    template< typename CharT >
     inline string_algo::detail::is_classifiedF<CharT> 
     is_lower( const std::locale& Loc=std::locale() )
     {
@@ -144,12 +144,12 @@ namespace boost {
     }
 
     //! is_print predicate
-	/*!
-		Construct is_classified predicate for ctype_base::print category.	
+    /*!
+        Construct is_classified predicate for ctype_base::print category.   
 
-		\param Loc A locale used for classification
-		\return An instance of is_classified predicated 
-	*/
+        \param Loc A locale used for classification
+        \return An instance of is_classified predicated 
+    */
     template< typename CharT >
     inline string_algo::detail::is_classifiedF<CharT> 
     is_print( const std::locale& Loc=std::locale() )
@@ -158,12 +158,12 @@ namespace boost {
     }
 
     //! is_punct predicate
-	/*!
-		Construct is_classified predicate for ctype_base::punct category.	
+    /*!
+        Construct is_classified predicate for ctype_base::punct category.   
 
-		\param Loc A locale used for classification
-		\return An instance of is_classified predicated 
-	*/
+        \param Loc A locale used for classification
+        \return An instance of is_classified predicated 
+    */
     template< typename CharT >
     inline string_algo::detail::is_classifiedF<CharT> 
     is_punct( const std::locale& Loc=std::locale() )
@@ -172,12 +172,12 @@ namespace boost {
     }
 
     //! is_upper predicate
-	/*!
-		Construct is_classified predicate for ctype_base::upper category.	
+    /*!
+        Construct is_classified predicate for ctype_base::upper category.   
 
-		\param Loc A locale used for classification
-		\return An instance of is_classified predicated 
-	*/
+        \param Loc A locale used for classification
+        \return An instance of is_classified predicated 
+    */
     template< typename CharT >
     inline string_algo::detail::is_classifiedF<CharT> 
     is_upper( const std::locale& Loc=std::locale() )
@@ -186,12 +186,12 @@ namespace boost {
     }
 
     //! is_xdigit predicate
-	/*!
-		Construct is_classified predicate for ctype_base::xdigit category.	
+    /*!
+        Construct is_classified predicate for ctype_base::xdigit category.  
 
-		\param Loc A locale used for classification
-		\return An instance of is_classified predicated 
-	*/
+        \param Loc A locale used for classification
+        \return An instance of is_classified predicated 
+    */
     template< typename CharT >
     inline string_algo::detail::is_classifiedF<CharT> 
     is_xdigit( const std::locale& Loc=std::locale() )
@@ -199,20 +199,20 @@ namespace boost {
         return string_algo::detail::is_classifiedF<CharT>( std::ctype_base::xdigit, Loc );
     }
 
-    //! is_of predicate
-	/*!
-		Construct is_of predicate. The predicate holds, if an input
-		is included in the specified set of characters.
-		The predicate is compatible with AdaptableUnaryFunction. CharT has to
-		be explititly specified.
+    //! is_any_of predicate
+    /*!
+        Construct is_any_of predicate. The predicate holds, if an input
+        is included in the specified set of characters.
+        The predicate is compatible with AdaptableUnaryFunction. CharT has to
+        be explititly specified.
 
-		\param Set A set of characters to be recognized
-		\return An instance of is_of predicated 
-	*/
+        \param Set A set of characters to be recognized
+        \return An instance of is_any_of predicated 
+    */
     template< typename CharT, typename ContainerT >
-    inline string_algo::detail::is_ofF<CharT> is_of( const ContainerT& Set )
+    inline string_algo::detail::is_any_ofF<CharT> is_any_of( const ContainerT& Set )
     {
-        return string_algo::detail::is_ofF<CharT>(Set); 
+        return string_algo::detail::is_any_ofF<CharT>(Set); 
     }
 
 } // namespace boost

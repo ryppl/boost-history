@@ -29,9 +29,17 @@
         one that suites her needs.
 
         The second layer, defined in the namespace <code>boost::string_algo</code>, on the 
-        other hand, is generic. Basicaly it contains the same set of algorithms as the first layer,
+        other hand, is generic. Basically it contains the same set of algorithms as the first layer,
         but the interface is more flexible, allows more customization, but it is harder to use.
 
-        The first layer is basicaly a set of wrappers around the second layer for the most common use cases.
+        The first layer is basically a set of wrappers around the second layer for the most common use cases.
+    </para>
+    <para>
+        Documentation is divided into several sections. For a quick start read the 
+        <link linkend="string_algo.usage">Usage</link> section. <link linkend="string_algo.design">Design Topics</link>,
+        <link linkend="string_algo.concept">Concepts</link> and <link linkend="string_algo.rationale">Rationale</link>
+        provides some explanation and reasoning about the library design, structure a the way how it should be used.
+        See the <link linkend="string_algo.reference">Reference</link> for the complete list of provided utilities
+        and algorithms.
     </para>
 </section>

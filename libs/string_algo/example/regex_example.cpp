@@ -22,13 +22,13 @@ int main()
 
     string str1("abc__(456)__123__(123)__cde");
 
-	// Replace all substrings matching (digit+) 
+    // Replace all substrings matching (digit+) 
     cout << 
         "replace all (digit+) in str1 with #digit+# :" <<
         replace_all_regex_copy( str1, regex("\\(([0-9]+)\\)"), string("#$1#") ) << endl;
     
     // Erase all substrings matching (digit+) 
-	cout << 
+    cout << 
         "remove all sequences of letters from str1 :" <<
         erase_all_regex_copy( str1, regex("[[:alpha:]]+") ) << endl;
 
@@ -38,5 +38,5 @@ int main()
 
     cout << endl;
 
-	return 0;
+    return 0;
 }

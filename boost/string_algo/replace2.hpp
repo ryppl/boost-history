@@ -19,9 +19,9 @@
 #include <boost/string_algo/detail/sequence.hpp>
 
 /*! \file
-	This header defines generic replace algorithms. Each algorithm replaces
-	a part(s) of the input. The part to be replaced is found using a finder.
-	Result of finding is then used by formatter to generate replacement.
+    This header defines generic replace algorithms. Each algorithm replaces
+    a part(s) of the input. The part to be replaced is found using a finder.
+    Result of finding is then used by formatter to generate replacement.
 */
 
 namespace boost {
@@ -36,11 +36,11 @@ namespace boost {
             The match is searched using find functor and substitute is formated using
             format functor.
 
-			\param Output A output iterarot to which the result will be copied
-			\param Input An input sequence
-			\param FindF A find functor used to search for a match to be replaced
-			\param FormatF A format functor used to format a match
-			\return An output iterator pointing just after last inserted character
+            \param Output A output iterarot to which the result will be copied
+            \param Input An input sequence
+            \param FindF A find functor used to search for a match to be replaced
+            \param FormatF A format functor used to format a match
+            \return An output iterator pointing just after last inserted character
         */
         template< 
             typename OutputIteratorT,
@@ -53,14 +53,14 @@ namespace boost {
             FindFT FindF,
             FormatFT FormatF )
         {
-			// Concept check
-			function_requires< 
-				FinderConcept<FindFT,
-				BOOST_STRING_TYPENAME container_const_iterator<InputT>::type> >();
-			function_requires< 
-				FormatterConcept<
-					FormatFT,
-					FindFT,BOOST_STRING_TYPENAME container_const_iterator<InputT>::type> >();
+            // Concept check
+            function_requires< 
+                FinderConcept<FindFT,
+                BOOST_STRING_TYPENAME container_const_iterator<InputT>::type> >();
+            function_requires< 
+                FormatterConcept<
+                    FormatFT,
+                    FindFT,BOOST_STRING_TYPENAME container_const_iterator<InputT>::type> >();
 
             typedef detail::find_format_store<
                 BOOST_STRING_TYPENAME 
@@ -97,10 +97,10 @@ namespace boost {
             The match is searched using find functor and substitute is formated using
             format functor.
 
-			\param Input An input sequence
-			\param FindF A find functor used to search for a match to be replaced
-			\param FormatF A format functor used to format a match
-			\return An output iterator pointing just after last inserted character
+            \param Input An input sequence
+            \param FindF A find functor used to search for a match to be replaced
+            \param FormatF A format functor used to format a match
+            \return An output iterator pointing just after last inserted character
         */
         template< 
             typename InputT, 
@@ -111,16 +111,16 @@ namespace boost {
             FindFT FindF,
             FormatFT FormatF )
         {
-			// Concept check
-			function_requires< 
-				FinderConcept<FindFT,
-				BOOST_STRING_TYPENAME container_const_iterator<InputT>::type> >();
-			function_requires< 
-				FormatterConcept<
-					FormatFT,
-					FindFT,BOOST_STRING_TYPENAME container_const_iterator<InputT>::type> >();
+            // Concept check
+            function_requires< 
+                FinderConcept<FindFT,
+                BOOST_STRING_TYPENAME container_const_iterator<InputT>::type> >();
+            function_requires< 
+                FormatterConcept<
+                    FormatFT,
+                    FindFT,BOOST_STRING_TYPENAME container_const_iterator<InputT>::type> >();
 
-			typedef detail::find_format_store<
+            typedef detail::find_format_store<
                 BOOST_STRING_TYPENAME 
                     container_const_iterator<InputT>::type, FormatFT> store_type;
 
@@ -153,10 +153,10 @@ namespace boost {
             The match is searched using find functor and substitute is formated using
             format functor.
 
-			\param Input An input sequence
-			\param FindF A find functor used to search for a match to be replaced
-			\param FormatF A format functor used to format a match
-			\return An output iterator pointing just after last inserted character
+            \param Input An input sequence
+            \param FindF A find functor used to search for a match to be replaced
+            \param FormatF A format functor used to format a match
+            \return An output iterator pointing just after last inserted character
         */
         template<
             typename InputT,
@@ -167,16 +167,16 @@ namespace boost {
             FindFT FindF,
             FormatFT FormatF )
         {
-			// Concept check
-			function_requires< 
-				FinderConcept<FindFT,
-				BOOST_STRING_TYPENAME container_iterator<InputT>::type> >();
-			function_requires< 
-				FormatterConcept<
-					FormatFT,
-					FindFT,BOOST_STRING_TYPENAME container_iterator<InputT>::type> >();
+            // Concept check
+            function_requires< 
+                FinderConcept<FindFT,
+                BOOST_STRING_TYPENAME container_iterator<InputT>::type> >();
+            function_requires< 
+                FormatterConcept<
+                    FormatFT,
+                    FindFT,BOOST_STRING_TYPENAME container_iterator<InputT>::type> >();
 
-			typedef detail::find_format_store<
+            typedef detail::find_format_store<
                 BOOST_STRING_TYPENAME 
                     container_iterator<InputT>::type, FormatFT> store_type;
 
@@ -208,11 +208,11 @@ namespace boost {
             The match is searched using find functor and substitute is formated using
             format functor.
 
-			\param Output A output iterarot to which the result will be copied
-			\param Input An input sequence
-			\param FindF A find functor used to search for a match to be replaced
-			\param FormatF A format functor used to format a match
-			\return An output iterator pointing just after last inserted character
+            \param Output A output iterarot to which the result will be copied
+            \param Input An input sequence
+            \param FindF A find functor used to search for a match to be replaced
+            \param FormatF A format functor used to format a match
+            \return An output iterator pointing just after last inserted character
         */
         template< 
             typename OutputIteratorT,
@@ -225,16 +225,16 @@ namespace boost {
             FindFT FindF,
             FormatFT FormatF )
         {
-			// Concept check
-			function_requires< 
-				FinderConcept<FindFT,
-				BOOST_STRING_TYPENAME container_const_iterator<InputT>::type> >();
-			function_requires< 
-				FormatterConcept<
-					FormatFT,
-					FindFT,BOOST_STRING_TYPENAME container_const_iterator<InputT>::type> >();
+            // Concept check
+            function_requires< 
+                FinderConcept<FindFT,
+                BOOST_STRING_TYPENAME container_const_iterator<InputT>::type> >();
+            function_requires< 
+                FormatterConcept<
+                    FormatFT,
+                    FindFT,BOOST_STRING_TYPENAME container_const_iterator<InputT>::type> >();
 
-			typedef BOOST_STRING_TYPENAME 
+            typedef BOOST_STRING_TYPENAME 
                 container_const_iterator<InputT>::type input_iterator_type; 
             typedef detail::find_format_store<
                 input_iterator_type, FormatFT> store_type;
@@ -273,10 +273,10 @@ namespace boost {
             The match is searched using find functor and substitute is formated using
             format functor.
 
-			\param Input An input sequence
-			\param FindF A find functor used to search for a match to be replaced
-			\param FormatF A format functor used to format a match
-			\return An output iterator pointing just after last inserted character
+            \param Input An input sequence
+            \param FindF A find functor used to search for a match to be replaced
+            \param FormatF A format functor used to format a match
+            \return An output iterator pointing just after last inserted character
         */
         template< 
             typename InputT, 
@@ -287,16 +287,16 @@ namespace boost {
             FindFT FindF,
             FormatFT FormatF )
         {
-			// Concept check
-			function_requires< 
-				FinderConcept<FindFT,
-				BOOST_STRING_TYPENAME container_const_iterator<InputT>::type> >();
-			function_requires< 
-				FormatterConcept<
-					FormatFT,
-					FindFT,BOOST_STRING_TYPENAME container_const_iterator<InputT>::type> >();
+            // Concept check
+            function_requires< 
+                FinderConcept<FindFT,
+                BOOST_STRING_TYPENAME container_const_iterator<InputT>::type> >();
+            function_requires< 
+                FormatterConcept<
+                    FormatFT,
+                    FindFT,BOOST_STRING_TYPENAME container_const_iterator<InputT>::type> >();
 
-			typedef BOOST_STRING_TYPENAME 
+            typedef BOOST_STRING_TYPENAME 
                 container_const_iterator<InputT>::type input_iterator_type; 
             typedef detail::find_format_store<
                 input_iterator_type, FormatFT> store_type;
@@ -337,10 +337,10 @@ namespace boost {
             The match is searched using find functor and substitute is formated using
             format functor.
 
-			\param Input An input sequence
-			\param FindF A find functor used to search for a match to be replaced
-			\param FormatF A format functor used to format a match
-			\return An output iterator pointing just after last inserted character
+            \param Input An input sequence
+            \param FindF A find functor used to search for a match to be replaced
+            \param FormatF A format functor used to format a match
+            \return An output iterator pointing just after last inserted character
         */
         template<
             typename InputT,
@@ -351,16 +351,16 @@ namespace boost {
             FindFT FindF,
             FormatFT FormatF )
         {
-			// Concept check
-			function_requires< 
-				FinderConcept<FindFT,
-				BOOST_STRING_TYPENAME container_iterator<InputT>::type> >();
-			function_requires< 
-				FormatterConcept<
-					FormatFT,
-					FindFT,BOOST_STRING_TYPENAME container_iterator<InputT>::type> >();
+            // Concept check
+            function_requires< 
+                FinderConcept<FindFT,
+                BOOST_STRING_TYPENAME container_iterator<InputT>::type> >();
+            function_requires< 
+                FormatterConcept<
+                    FormatFT,
+                    FindFT,BOOST_STRING_TYPENAME container_iterator<InputT>::type> >();
 
-			typedef BOOST_STRING_TYPENAME 
+            typedef BOOST_STRING_TYPENAME 
                 container_iterator<InputT>::type input_iterator_type; 
             typedef detail::find_format_store<
                 input_iterator_type, FormatFT> store_type;
