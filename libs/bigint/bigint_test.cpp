@@ -275,4 +275,19 @@ int main() {
     assert(o1.str() == "017777777777");
   }
 
+  {
+    // check width and fill
+    std::ostringstream o1;
+    o1 << std::setfill('x') << std::setw(10) << bigint(55555);
+    assert (o1.str() == "xxxxx55555");
+
+    std::ostringstream o2;
+    o2 << std::setfill('x') << std::setw(10) << std::left << bigint(55555);
+    assert (o2.str() == "55555xxxxx");
+
+    std::ostringstream o3;
+    o3 << std::setw(3) << bigint(12345);
+    assert (o3.str() == "12345");
+  }
+
 }
