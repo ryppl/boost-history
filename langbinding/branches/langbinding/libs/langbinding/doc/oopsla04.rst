@@ -319,8 +319,12 @@ that expects a ``boost::shared_ptr``.
 Inheritance
 ===========
 
-To indicate inheritance relationships the function type syntax is used. It
-was choosen to emulate the Python class declaration syntax.
+To indicate inheritance relationships the function type syntax is used. It was
+choosen to emulate the Python class declaration syntax. Indicating a
+inheritance relationship will register the relationship in a cast-graph, with
+``derived->base``, and possibly ``base->derived`` conversions (if the
+registered class is polymorphic). The derived class will also automatically
+inherit any registered member functions from it's base.
 
 For example::
 
@@ -330,11 +334,6 @@ Multiple inheritance is exposed by simply adding more argument types to
 the function type::
 
     class_<Derived(Base1, Base2)>("Derived")
-
-This will register the relationships in a cast-graph, with ``derived->base``, 
-and possibly ``base->derived`` conversions (if the registered class is 
-polymorphic). The derived class will also automatically inherit any registered
-member functions from it's base.
 
 ..  Inheritance2
     ============
