@@ -165,7 +165,7 @@ public:
         typedef typename std::basic_string<CharT, Traits, Alloc> StrT;
         typedef typename StrT::traits_type Tr;
 
-        const typename StrT::size_type rlen = std::min(n, s.size() - pos);
+        const typename StrT::size_type rlen = (std::min)(n, s.size() - pos); // gps
         const size_type sz = ( num_bits != npos? num_bits : rlen);
         m_bits.resize(calc_num_blocks(sz));
         m_num_bits = sz;
@@ -226,7 +226,7 @@ public:
     void m_append(BlockInputIterator first, BlockInputIterator last, std::forward_iterator_tag)
     {
         assert(first != last);
-        int r = size() % bits_per_block;
+        int r = count_extra_bits();
         std::size_t d = std::distance(first, last);
         m_bits.reserve(num_blocks() + d);
         if (r == 0) {
@@ -287,8 +287,10 @@ public:
     size_type size() const;
     size_type num_blocks() const;
     size_type max_size() const;
+#if 0 // gps
     void reserve(size_type n);
     size_type capacity() const;
+#endif
 
     bool is_subset_of(const dynamic_bitset& a) const;
     bool is_proper_subset_of(const dynamic_bitset& a) const;
@@ -338,8 +340,9 @@ private:
 
     size_type m_do_find_from(size_type first_block) const;
 
+    int count_extra_bits() const { return bit_index(size()); }
     static size_type block_index(size_type pos) { return pos / bits_per_block; }
-    static int bit_index(size_type pos) { return pos % bits_per_block; }
+    static int bit_index(size_type pos) { return static_cast<int>(pos % bits_per_block); }
     static Block bit_mask(size_type pos) { return Block(1) << bit_index(pos); }
 
 
@@ -481,7 +484,7 @@ inline void
 from_block_range(BlockIterator first, BlockIterator last,
                  dynamic_bitset<B, A>& result)
 {
-    // PRE: distance(first, last) == numblocks()
+    // PRE: distance(first, last) <= numblocks()
     std::copy (first, last, result.m_bits.begin()); //[gps]
 }
 
@@ -558,9 +561,15 @@ template <typename Block, typename Allocator>
 dynamic_bitset<Block, Allocator>& dynamic_bitset<Block, Allocator>::
 operator=(const dynamic_bitset<Block, Allocator>& b)
 {
+#if 0 // gps
     dynamic_bitset<Block, Allocator> tmp(b);
     this->swap(tmp);
     return *this;
+#else
+    m_bits = b.m_bits;
+    m_num_bits = b.m_num_bits;
+    return *this;
+#endif
 }
 
 template <typename Block, typename Allocator>
@@ -600,7 +609,7 @@ resize(size_type num_bits, bool value) // strong guarantee
 
   if (value && (num_bits > m_num_bits)) {
 
-    const size_type extra_bits = m_num_bits % bits_per_block; // gps
+    const size_type extra_bits = count_extra_bits(); // gps
     if (extra_bits) {
         assert(old_num_blocks >= 1 && old_num_blocks <= m_bits.size());
 
@@ -638,11 +647,9 @@ template <typename Block, typename Allocator>
 void dynamic_bitset<Block, Allocator>::
 append(Block value) // strong guarantee
 {
-
     // G.P.S. to be reviewed...
 
-     // if != 0 this is the number of bits used in the last block
-    const size_type r = m_num_bits % bits_per_block;
+    const int r = count_extra_bits();
 
     if (r == 0) {
         // the buffer is empty, or all blocks are filled
@@ -1068,7 +1075,7 @@ to_ulong() const
       return m_bits[0];
 
 
-  size_type last_block = block_index(std::min(m_num_bits-1,
+  size_type last_block = block_index((std::min)(m_num_bits-1, // gps
                                     (size_type)(ulong_width-1)));
   unsigned long result = 0;
   for (size_type i = 0; i <= last_block; ++i) {
@@ -1119,6 +1126,7 @@ dynamic_bitset<Block, Allocator>::max_size() const
         size_type(-1);
 }
 
+#if 0 // gps
 template <typename Block, typename Allocator>
 inline void dynamic_bitset<Block, Allocator>::reserve(size_type n)
 {
@@ -1141,6 +1149,7 @@ dynamic_bitset<Block, Allocator>::capacity() const
         c * bits_per_block :
         m;
 }
+#endif
 
 template <typename Block, typename Allocator>
 bool dynamic_bitset<Block, Allocator>::
@@ -1459,9 +1468,9 @@ operator>>(std::basic_istream<Ch, Tr>& is, dynamic_bitset<Block, Alloc>& b)
         const Ch zero = fac.widen('0'); // in accordance with prop. resol. of
         const Ch one  = fac.widen('1'); // lib DR 303 [last checked 4 Feb 2004]
 
-        typename bitset_type::bit_appender appender(b);
         b.clear();
         try {
+            typename bitset_type::bit_appender appender(b);
             basic_streambuf <Ch, Tr> * buf = is.rdbuf();
             typename Tr::int_type c = buf->sgetc(); // G.P.S.
             for( ; appender.get_count() < limit; c = buf->snextc() ) {
@@ -1596,7 +1605,7 @@ inline void dynamic_bitset<Block, Allocator>::m_zero_unused_bits()
     assert (num_blocks() == calc_num_blocks(m_num_bits));
 
     // if != 0 this is the number of bits used in the last block
-    size_type const extra_bits = size() % bits_per_block;
+    const int extra_bits = count_extra_bits();
 
     if (extra_bits != 0)
         m_highest_block() &= ~(~static_cast<Block>(0) << extra_bits);
@@ -1607,15 +1616,13 @@ inline void dynamic_bitset<Block, Allocator>::m_zero_unused_bits()
 template <typename Block, typename Allocator>
 bool dynamic_bitset<Block, Allocator>::m_check_invariants() const
 {
-    size_type const extra_bits = size() % bits_per_block;
+    const int extra_bits = count_extra_bits();
     if (extra_bits > 0) {
         block_type const mask = (~static_cast<Block>(0) << extra_bits);
         if ((m_highest_block() & mask) != 0)
             return false;
     }
-    if (size() > capacity())
-        return false;
-    if (num_blocks() != calc_num_blocks(size()))
+    if (m_bits.size() > m_bits.capacity() || num_blocks() != calc_num_blocks(size()))
         return false;
 
     return true;
