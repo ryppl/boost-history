@@ -30,7 +30,7 @@ enum error_code
   not_same_owner,
   invalid_range,
   inside_range,
-  same_container,
+  same_container
 };
 
 } /* namespace indexed_sets::safe_mode */
