@@ -20,7 +20,18 @@ test-suite "assign"
             list_inserter.cpp
 	    : list_inserter
        ]         
-
-    ;
+    : [ run
+            list_of_workaround.cpp
+	    : list_of_workaround
+       ] 
+    : [ run
+            email_example.cpp
+	    : email
+       ] 
+     : [ run
+            my_vector_example.cpp
+	    : my_vector
+       ] 
+       ;
 
 

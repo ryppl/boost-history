@@ -1,16 +1,13 @@
-/**
- * Non-intrusive Assignment Library
- * (C) Thorsten Ottosen 2002-2003
- * 
- * Permission to copy, use, modify,
- * sell and distribute this software is granted provided this
- * copyright notice appears in all copies. This software is provided
- * "as is" without express or implied warranty, and with no claim as
- * to its suitability for any purpose.
- *
- * See http://www.boost.org/libs/assign for documentation.
- *
- */
+// Boost.Assign library
+//
+//  Copyright Thorsten Ottosen 2003-2004. Use, modification and
+//  distribution is subject to the Boost Software License, Version
+//  1.0. (See accompanying file LICENSE_1_0.txt or copy at
+//  http://www.boost.org/LICENSE_1_0.txt)
+//
+// For more information, see http://www.boost.org/libs/assign/
+//
+
 
 #ifndef BOOST_ASSIGN_STD_SET_HPP
 #define BOOST_ASSIGN_STD_SET_HPP
@@ -19,64 +16,28 @@
 # pragma once
 #endif
 
-#include <boost/assign/make_insertion.hpp>
+#include <boost/assign/list_inserter.hpp>
 #include <boost/config.hpp>
 #include <set>
 
 namespace boost
 {
-namespace assignment
+namespace assign
 {
-
-    template< typename K, typename C, typename A, typename K2 >
-    inline void make_insertion( std::set<K,C,A>& c, K2 k )
-    {
-        c.insert( k );
-    }
-
-    template< typename K, typename C, typename A, typename K2 >
-    inline void make_insertion( std::multiset<K,C,A>& c, K2 k )
-    {
-        c.insert( k );
-    }
-
-} // namespace 'assignment'
-} // namespace 'boost'
-
-#include <boost/assign/insert_assigner.hpp>
-
-namespace boost
-{
-namespace assignment
-{
-    template< typename K, typename C, typename A, typename K2 >
-    inline insert_assigner< std::set<K,C,A> > 
+    template< class K, class C, class A, class K2 >
+    inline list_inserter< assign_detail::call_insert< std::set<K,C,A> >, K > 
     operator+=( std::set<K,C,A>& c, K2 k )
     {
-        return insert_assigner< std::set<K,C,A> >( c ),k;
-    }
-
-    template< typename K, typename C, typename A, typename K2 >
-    inline insert_assigner< std::multiset<K,C,A> > 
-    operator+=( std::multiset<K,C,A>& c, K2 k )
-    {
-        return insert_assigner< std::multiset<K,C,A> >( c ),k;
-    }
-
-    template< typename K, typename C, typename A >
-    inline insert_assigner< std::set<K,C,A> > 
-    insert( std::set<K,C,A>& c )
-    {
-        return insert_assigner< std::set<K,C,A> >( c );
+        return insert( c )( k );
     }
     
-    template< typename K, typename C, typename A >
-    inline insert_assigner< std::multiset<K,C,A> > 
-    insert( std::multiset<K,C,A>& c )
+    template< class K, class C, class A, class K2 >
+    inline list_inserter< assign_detail::call_insert< std::multiset<K,C,A> >, K > 
+    operator+=( std::multiset<K,C,A>& c, K2 k )
     {
-        return insert_assigner< std::multiset<K,C,A> >( c );
+        return insert( c )( k );
     }
-
+    
 }
 }
 

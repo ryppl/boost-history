@@ -1,16 +1,13 @@
-/**
- * Non-intrusive Assignment Library
- * (C) Thorsten Ottosen 2002-2003
- * 
- * Permission to copy, use, modify,
- * sell and distribute this software is granted provided this
- * copyright notice appears in all copies. This software is provided
- * "as is" without express or implied warranty, and with no claim as
- * to its suitability for any purpose.
- *
- * See http://www.boost.org/libs/assign for documentation.
- *
- */
+// Boost.Assign library
+//
+//  Copyright Thorsten Ottosen 2003-2004. Use, modification and
+//  distribution is subject to the Boost Software License, Version
+//  1.0. (See accompanying file LICENSE_1_0.txt or copy at
+//  http://www.boost.org/LICENSE_1_0.txt)
+//
+// For more information, see http://www.boost.org/libs/assign/
+//
+
 
 #ifndef BOOST_ASSIGN_STD_MAP_HPP
 #define BOOST_ASSIGN_STD_MAP_HPP
@@ -19,60 +16,27 @@
 # pragma once
 #endif
 
-#include <boost/assign/make_insertion.hpp>
+#include <boost/assign/list_inserter.hpp>
 #include <boost/config.hpp>
 #include <map>
 
 namespace boost
 {
-namespace assignment
+namespace assign
 {
 
-    template< typename K, typename V, typename C, typename A, typename P >
-    inline void make_insertion( std::map<K,V,C,A>& c, const P& p )
+    template< class K, class V, class C, class A, class P >
+    inline list_inserter< assign_detail::call_insert< std::map<K,V,C,A> >, P >
+    operator+=( std::map<K,V,C,A>& m, const P& p )
     {
-        c.insert( p );
-    }
-
-    template< typename K, typename V, typename C, typename A, typename P >
-    inline void make_insertion( std::multimap<K,V,C,A>& c, const P& p )
-    {
-        c.insert( p );
-    }
-
-} // namespace 'assignment'
-} // namespace 'boost'
-
-#include <boost/assign/insert_assigner.hpp>
-
-
-namespace boost
-{
-namespace assignment
-{
-
-    template< typename K, typename V, typename C, typename A, typename P >
-    inline insert_assigner< std::map<K,V,C,A> > operator+=( std::map<K,V,C,A>& m, const P& p )
-    {
-        return insert_assigner< std::map<K,V,C,A> >( m ),p;
+        return insert( m )( p );
     }
     
-    template< typename K, typename V, typename C, typename A, typename P >
-    inline insert_assigner< std::multimap<K,V,C,A> > operator+=( std::multimap<K,V,C,A>& m, const P& p )
+    template< class K, class V, class C, class A, class P >
+    inline list_inserter< assign_detail::call_insert< std::multimap<K,V,C,A> >, P >
+    operator+=( std::multimap<K,V,C,A>& m, const P& p )
     {
-        return insert_assigner< std::multimap<K,V,C,A> >( m ),p;
-    }
-    
-    template< typename K, typename V, typename C, typename A >
-    inline insert_assigner< std::map<K,V,C,A> > insert( std::map<K,V,C,A>& m )
-    {
-        return insert_assigner< std::map<K,V,C,A> >( m );
-    }
-    
-    template< typename K, typename V, typename C, typename A >
-    inline insert_assigner< std::multimap<K,V,C,A> > insert( std::multimap<K,V,C,A>& m )
-    {
-        return insert_assigner< std::multimap<K,V,C,A> >( m );
+        return insert( m )( p );
     }
 
 }
