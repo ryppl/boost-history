@@ -73,6 +73,12 @@ else if $(UNIX)
     {
         PYTHON_PROPERTIES += <*><*><linkflags>"-expect_unresolved 'Py*' -expect_unresolved '_Py*'" ;
     }
+    else if $(OS) = AIX
+    {
+        PYTHON_PROPERTIES 
+          += <*><*><linkflags>"-bI:$(PYTHON_LIB_PATH)/python.exp"
+            <*><*><find-library>pthreads ;
+    }
 }
 
 # Locate the python executable
