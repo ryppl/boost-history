@@ -539,7 +539,7 @@ BOOST_INDEXED_SET_PROTECTED_IF_MEMBER_TEMPLATE_FRIENDS:
 
   node_type* insert_(value_param_type v,node_type* position,node_type* x)
   {
-    node_type* res=link2(key(v),x,Category());
+    node_type* res=link3(key(v),position,x,Category());
     if(res!=x)return res;
     else{
       BOOST_INDEXED_SET_TRY{
