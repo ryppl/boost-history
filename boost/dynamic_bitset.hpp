@@ -144,6 +144,16 @@
 # define LOCAL_BOOST_USE_FACET(Type, loc) BOOST_USE_FACET(Type, loc)
 #endif
 
+// Helps getting a '0' or '1' character.
+//
+#if defined (BOOST_USE_FACET)
+# define BOOST_BITSET_CHAR(type, c) \
+           LOCAL_BOOST_USE_FACET(std::ctype<type>, std::locale()).widen(c)
+#else
+# define BOOST_BITSET_CHAR(type, c)  c
+#endif
+
+
 
 
 namespace boost {
@@ -223,37 +233,62 @@ public:
     dynamic_bitset(size_type num_bits, unsigned long value = 0,
                const Allocator& alloc = Allocator());
 
-    // from string
-#if defined(BOOST_OLD_IOSTREAMS)
-    explicit
-    dynamic_bitset(const std::string& s,
-               std::string::size_type pos = 0,
-               std::string::size_type n = std::string::npos,
-               const Allocator& alloc = Allocator())
-#else
+
+    // The presence of this constructor is a concession to ease of
+    // use, especially for the novice user. Strictly speaking, it
+    // remains a design error: a conversion from string is, for
+    // most types, formatting, and should be done by the standard
+    // formatting convention: operator>>.
+    //
+    // That way you have a neat separation of concerns between the class
+    // that stores the data (dynamic_bitset in this case) and the one that
+    // stores their textual representation (basic_string), a generic name,
+    // operator>>, for the free function that connects them (which is
+    // important for template programming) and none of the two classes
+    // encumbered with knowledge of the other. Also, you can easily deal
+    // with locale-related issues.
+    //
+    // NOTE:
     // The parentheses around std::basic_string<CharT, Traits, Alloc>::npos
     // in the code below are to avoid a g++ 3.2 bug and a Borland bug. -JGS
     template <typename CharT, typename Traits, typename Alloc>
     explicit
     dynamic_bitset(const std::basic_string<CharT, Traits, Alloc>& s,
         typename std::basic_string<CharT, Traits, Alloc>::size_type pos = 0,
-        typename std::basic_string<CharT, Traits, Alloc>::size_type n
-            = (std::basic_string<CharT, Traits, Alloc>::npos),
+        typename std::basic_string<CharT, Traits, Alloc>::size_type n   =
+                   (std::basic_string<CharT, Traits, Alloc>::npos),
+        size_type num_bits = npos,
         const Allocator& alloc = Allocator())
-#endif
 
     :m_bits(alloc),
      m_num_bits(0)
     {
-        // [gps] to be optimized
+        assert(pos <= s.size());
 
-        assert(pos <= s.size()); // [gps] <=??
-        const size_type len = std::min(s.size() - pos, n);
+        typedef typename std::basic_string<CharT, Traits, Alloc> StrT;
+        typedef typename StrT::traits_type Tr;
 
-        m_bits.resize(calc_num_blocks(len));
-        m_num_bits = len;
+        const typename StrT::size_type rlen = std::min(n, s.size() - pos);
+        const size_type sz = ( num_bits != npos? num_bits : rlen);
+        m_bits.resize(calc_num_blocks(sz));
+        m_num_bits = sz;
 
-        from_string(s, pos, len);
+
+        const size_type m = num_bits < rlen ? num_bits : rlen; // [gps]
+        const CharT one = BOOST_BITSET_CHAR(CharT, '1');
+
+        typename StrT::size_type i = 0;
+        for( ; i < m; ++i) {
+
+            const CharT c = s[(pos + m - 1) - i];
+
+            assert( Tr::eq(c, one)
+                    || Tr::eq(c, BOOST_BITSET_CHAR(CharT, '0')) );
+
+            if (Tr::eq(c, one))
+                set(i);
+
+        }
 
     }
 
@@ -367,41 +402,6 @@ public:
 #endif
 
 
-public:
-
-    // This is templated on the whole String instead of just CharT,
-    // Traits, Alloc to avoid compiler bugs.
-    template <typename String>
-    void from_string(const String& s, typename String::size_type pos,
-                     typename String::size_type rlen)
-    {
-        // TO Jeremy: this function is now used in one of the ctors only.
-        //            Do we really want it separately?
-        //
-        typedef typename String::value_type  Ch;
-        typedef typename String::traits_type Tr;
-
-#if defined (BOOST_USE_FACET) || defined (LOCAL_FACET_CONFIG_BUG)
-    Ch const one  = LOCAL_BOOST_USE_FACET(std::ctype<Ch>, std::locale()).widen('1');
-#else
-    Ch const one  = '1'; // temporary- G.P.S.
-#endif
-
-        reset(); // bugfix [gps]
-        size_type const tot = std::min (rlen, s.length()); // bugfix [gps]
-
-        typename String::const_iterator iter = s.begin() + pos + tot - 1;
-        for (size_type i = 0; i < tot; ++i) {
-            if (Tr::eq(*iter, one))
-                set(i);
-            //else
-              //  assert(Tr::eq(*iter, std::locale().widen('0')) );
-            --iter;
-        }
-
-    }
-
-    //
 private:
     BOOST_STATIC_CONSTANT(int, ulong_width = std::numeric_limits<unsigned long>::digits);
     typedef std::vector<block_type, allocator_type> buffer_type;
@@ -1033,7 +1033,11 @@ void to_string_helper (const dynamic_bitset<B, A> & b, stringT & s, std::size_t 
 
 
 
-// take as ref param instead?
+// A comment similar to the one about the constructor from
+// basic_string can be done here. Thanks to James Kanze for
+// making me (Gennaro) realize this and many other things
+// about internationalization.
+//
 template <typename Block, typename Allocator, typename stringT> // G.P.S.
 inline void
 to_string(const dynamic_bitset<Block, Allocator>& b, stringT& s)
