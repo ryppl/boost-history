@@ -1,12 +1,13 @@
 #include <boost/interval/interval.hpp>
 #include <boost/interval/checking.hpp>
 #include <boost/interval/compare.hpp>
+#include <boost/interval/policies.hpp>
 #include <boost/test/test_tools.hpp>
 
 struct empty_class {};
 
-typedef boost::interval_policies<empty_class,
-				 boost::interval_lib::checking_base<int> >
+typedef boost::interval_lib::policies
+          <empty_class, boost::interval_lib::checking_base<int> >
   policies;
 
 typedef boost::interval<int, policies> I;

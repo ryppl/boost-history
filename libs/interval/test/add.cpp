@@ -3,6 +3,7 @@
 #include <boost/interval/rounding.hpp>
 #include <boost/interval/rounded_arith.hpp>
 #include <boost/interval/utility.hpp>
+#include <boost/interval/policies.hpp>
 #include <boost/test/test_tools.hpp>
 
 typedef enum { EXPR_VAR, EXPR_NEG, EXPR_UP, EXPR_DOWN, EXPR_ADD, EXPR_SUB } e_type;
@@ -180,8 +181,8 @@ bool test_subeq1() {
   return equal(a -= var(2), I(down(var(0) - var(2)), up(var(1) - var(2))));
 }
 
-using namespace boost;
-using namespace interval_lib;
+//using namespace boost;
+//using namespace interval_lib;
 
 struct my_checking
 {
@@ -195,15 +196,16 @@ struct my_checking
 
 template<class Rounding>
 struct my_interval {
-  typedef interval<
-            pexpr,
-	    interval_policies<save_state<Rounding>, my_checking >
-          > type;
+private:
+  typedef boost::interval_lib::save_state<Rounding> my_rounding;
+  typedef boost::interval_lib::policies<my_rounding, my_checking> my_policies;
+public:
+  typedef boost::interval<pexpr, my_policies> type;
 };
 
 int test_main(int, char *[]) {
-  typedef my_interval<rounded_arith_std<pexpr> >::type I1;
-  typedef my_interval<rounded_arith_opp<pexpr> >::type I2;
+  typedef my_interval<boost::interval_lib::rounded_arith_std<pexpr> >::type I1;
+  typedef my_interval<boost::interval_lib::rounded_arith_opp<pexpr> >::type I2;
   BOOST_TEST((test_neg<I1>()));
   BOOST_TEST((test_neg<I2>()));
   BOOST_TEST((test_add<I1>()));

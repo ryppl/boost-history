@@ -155,8 +155,8 @@ int main()
   using namespace interval_lib;
 
   typedef interval<double,
-                   interval_policies<save_state<rounded_transc_opp<double> >,
-                                     checking_base<double> > > I;
+                   policies<save_state<rounded_transc_opp<double> >,
+                            checking_base<double> > > I;
 
   std::cout << "Zero points of sin(x)/(x*x+1)\n";
   find_zeros(std::cout, test_func1d<I>(), I(-11, 10));

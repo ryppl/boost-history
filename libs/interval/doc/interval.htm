@@ -223,8 +223,7 @@ href="#interval_lib"> Interval Support Library</a>.</p>
 
 namespace interval_lib {
 
-/* these declarations necessary for the declaration of interval_traits */
-template &lt;class T&gt; struct compare_certainly;
+/* these declarations necessary for the declaration of interval */
 template &lt;class T&gt; struct rounded_math;
 template &lt;class T&gt; struct checking_strict;
 
@@ -232,15 +231,15 @@ template &lt;class T&gt; struct checking_strict;
 
 } // namespace interval_lib
 
-/* template interval_traits; class definition can be found <a href="#interval_traits">here</a> */
-template &lt;class T,
-    class Compare  = interval_lib::compare_certainly&lt;T&gt;,
-    class Rounding = interval_lib::rounded_arithmetic&lt;T&gt;,
-    class Checking = interval_lib::checking_strict&lt;T&gt; &gt;
-class interval_traits;
+
+/* template interval_policies; class definition can be found <a href="#interval_policies">here</a> */
+template&lt;class Rounding, class Checking&gt;
+struct interval_policies;
 
 /* template class interval; class definition can be found <a href="#interval">here</a> */
-template &lt;class T, class Traits = interval_traits&lt;T&gt; &gt;
+template&lt;class T,
+         class Policies = interval_policies&lt;interval_lib::rounded_math&lt;T&gt;,
+                                            interval_lib::checking_strict&lt;T&gt; &gt; &gt;
 class interval;
 
 /* arithmetic operators involving intervals */
@@ -342,7 +341,7 @@ template&lt;class T, class Traits&gt;  bool operator&gt;(const T&amp; x, const i
 template&lt;class T, class Traits&gt;  bool operator&gt;=(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
 template&lt;class T, class Traits&gt;  bool operator&gt;=(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
 template&lt;class T, class Traits&gt;  bool operator&gt;=(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);</pre>
-<pre>  template&lt;class T, class Traits&gt;  bool operator==(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+<pre>template&lt;class T, class Traits&gt;  bool operator==(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
 template&lt;class T, class Traits&gt;  bool operator==(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
 template&lt;class T, class Traits&gt;  bool operator==(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
 
@@ -352,34 +351,28 @@ template&lt;class T, class Traits&gt;  bool operator!=(const T&amp; x, const int
 
 } // namespace boost</pre>
 
-<h2 id="interval_traits">Template class <code>interval_traits</code></h2>
+<h2 id="interval_traits">Template class <code>interval_policies</code></h2>
 
 <p>The <code>interval</code> class requires two template parameters, the
 first one is the type of the bounds. And the second one is a class defining
 three policies. This second parameter should look like:</p>
-<pre>  struct traits {
-typedef ... compare;
-typedef ... rounding;
-typedef ... checking;
+<pre>struct policies {
+  typedef ... rounding;
+  typedef ... checking;
 };</pre>
 
 <p>The requirements of these three types are detailed in their respective
-pages: <a href="#compare">comparison policies</a>, <a
-href="#rounding">rounding policies</a>, and <a href="#checking">checking
-policies</a>. In order to allow an easier definition of this parameter, the
-class <code>interval_traits</code> is defined as follows:</p>
+pages: <a href="#rounding">rounding policies</a>, and <a
+href="#checking">checking policies</a>. In order to allow an easier
+definition of this parameter, the class <code>interval_policies</code> is
+defined as follows:</p>
 <pre>namespace boost {
 
-template &lt;class T,
-    class Compare = interval_lib::compare_certainly&lt;T&gt;,
-    class Rounding = interval_lib::rounded_arithmetic&lt;T&gt;,
-    class Checking = interval_lib::checking_strict&lt;T&gt; &gt;
-struct interval_traits
+template &lt;class Rounding, class Checking&gt;
+struct interval_policies
 {
-typedef T base_type;
-typedef Compare compare;
-typedef Rounding rounding;
-typedef Checking checking;
+  typedef Rounding rounding;
+  typedef Checking checking;
 };
 
 } // namespace boost</pre>
@@ -387,39 +380,39 @@ typedef Checking checking;
 <h2><a name="interval"></a>Template class <code>interval</code></h2>
 The public interface of the template class interval itself is kept at a
 simplest minimum:
-<pre>template &lt;class T, class Traits = interval_traits&lt;T&gt; &gt;
+<pre>template &lt;class T, class Policies = interval_policies&lt;T&gt; &gt;
 class interval
 {
-public:
-typedef T      base_type;
-typedef Traits traits_type;
+  public:
+  typedef T      base_type;
+  typedef Traits traits_type;
 
-interval(const T&amp; v = T()): low(v), up(v) {}
-interval(const T&amp; l, const T&amp; u);
+  interval(const T&amp; v = T()): low(v), up(v) {}
+  interval(const T&amp; l, const T&amp; u);
 
-template&lt;class Traits2&gt;
-interval(const interval&lt;T,Traits2&gt;&amp; r): low(r.lower()), up(r.upper()) {}
+  template&lt;class Traits2&gt;
+  interval(const interval&lt;T,Traits2&gt;&amp; r): low(r.lower()), up(r.upper()) {}
 
-// compiler-generated copy constructor and assignment operator are fine
+  // compiler-generated copy constructor and assignment operator are fine
 
-interval&amp; operator=(const T&amp; x);
-void assign(const T&amp; l, const T&amp; u);
+  interval&amp; operator=(const T&amp; x);
+  void assign(const T&amp; l, const T&amp; u);
 
-const T&amp; lower() const { return low; }
-const T&amp; upper() const { return up;  }
+  const T&amp; lower() const { return low; }
+  const T&amp; upper() const { return up;  }
 
-static interval empty();
-static interval whole();
-static interval hull(const T&amp; x, const T&amp; y);
+  static interval empty();
+  static interval whole();
+  static interval hull(const T&amp; x, const T&amp; y);
 
-interval&amp; operator+= (const T&amp; r);
-interval&amp; operator+= (const interval&amp; r);
-interval&amp; operator-= (const T&amp; r);
-interval&amp; operator-= (const interval&amp; r);
-interval&amp; operator*= (const T&amp; r);
-interval&amp; operator*= (const interval&amp; r);
-interval&amp; operator/= (const T&amp; r);
-interval&amp; operator/= (const interval&amp; r);
+  interval&amp; operator+= (const T&amp; r);
+  interval&amp; operator+= (const interval&amp; r);
+  interval&amp; operator-= (const T&amp; r);
+  interval&amp; operator-= (const interval&amp; r);
+  interval&amp; operator*= (const T&amp; r);
+  interval&amp; operator*= (const interval&amp; r);
+  interval&amp; operator/= (const T&amp; r);
+  interval&amp; operator/= (const interval&amp; r);
 };</pre>
 
 <p>The two main constructors accept one and two arguments of type T. The

@@ -43,7 +43,7 @@ struct my_math:
 {};
 
 typedef
-  interval<T, interval_policies<my_math, my_checking> > R;
+  interval<T, policies<my_math, my_checking> > R;
 
 unsigned nb_errors;
 std::string test_name;

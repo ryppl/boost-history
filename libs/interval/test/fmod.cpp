@@ -22,7 +22,7 @@ using namespace boost;
 using namespace interval_lib;
 
 typedef interval<int,
-		 interval_policies<
+		 policies<
                    save_state_nothing<my_rounded_arith>,
                    checking_strict<int>
                  > > I;

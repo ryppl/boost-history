@@ -22,7 +22,6 @@
 #define BOOST_INTERVAL_ROUNDING_HPP
 
 namespace boost {
-
   namespace interval_lib {
 
   /*
@@ -106,37 +105,7 @@ namespace boost {
     : save_state_nothing<rounded_arith_exact<T> >
   {};
 
-  /*
-   * Protect / unprotect: control whether the rounding mode is set/reset
-   * at each operation, rather than once and for all.
-   */
-
-  template<class Rounding>
-  struct unprotect_rounding
-  {
-    typedef typename Rounding::unprotected_rounding type;
-  };
-  
-  template<class Policies>
-  struct unprotect_policies
-  {
-    typedef interval_policies<
-              typename unprotect_rounding<typename Policies::rounding>::type,
-              typename Policies::checking
-            > type;
-  };
-  
-  template<class I>
-  struct unprotect
-  {
-    typedef interval<
-              typename I::base_type,
-              typename unprotect_policies<typename I::traits_type>::type
-            > type;
-  };
-
   } // namespace interval_lib
-
 } // namespace boost
 
 

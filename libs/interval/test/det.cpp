@@ -51,7 +51,7 @@ struct variants {
 
   typedef
     interval
-      <T, interval_policies<
+      <T, policies<
             save_state<rounded_arith_std<double> >,
             checking_no_nan<double, checking_no_empty<double> >
           > >

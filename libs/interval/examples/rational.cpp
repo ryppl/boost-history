@@ -11,6 +11,7 @@
 #include <boost/interval/rounded_arith.hpp> // default arithmetic rounding policy
 #include <boost/interval/checking.hpp>      // default checking policy
 #include <boost/interval/arith.hpp>         // += *= -= etc
+#include <boost/interval/policies.hpp>      // default policy
 
 #include <boost/rational.hpp>
 #include <iostream>

@@ -62,11 +62,8 @@ std::vector<I1> newton_raphson(const I1& xs) {
 // Second method: with empty intervals
 
 typedef
-  interval<double,
-	   interval_policies<save_state<rounded_arith_opp<double> >,
-			     checking_no_nan<double,
-					     checking_base<double> > > >
-  I2_aux;
+  change_checking<interval<double>,
+		  checking_no_nan<double, checking_base<double> > >::type I2_aux;
 typedef unprotect<I2_aux>::type I2;
 
 std::vector<I2> newton_raphson(const I2& xs) {

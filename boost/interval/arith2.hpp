@@ -6,7 +6,7 @@
 #include <boost/interval/detail/bugs.hpp>
 #include <boost/interval/detail/division.hpp>
 #include <boost/interval/arith.hpp>
-#include <boost/interval/rounding.hpp>
+#include <boost/interval/policies.hpp>
 #include <algorithm>
 #include <cmath>
 #include <utility>
@@ -15,7 +15,7 @@ namespace boost {
 
 template<class T, class Policies> inline
 interval<T, Policies> fmod(const interval<T, Policies>& x,
-			 const interval<T, Policies>& y)
+			   const interval<T, Policies>& y)
 {
   if (interval_lib::detail::test_input(x, y))
     return interval<T, Policies>::empty();
