@@ -75,9 +75,10 @@ struct transform2_impl
     : fold< 
           pair_view<Seq1,Seq2>
         , typename In::state
-        , bind2< typename In::operation
+        , bind2< typename lambda< typename In::operation >::type
             , _1
-            , bind2<Op
+            , bind2<
+                  typename lambda<Op>::type
                 , bind1<first<>,_2>
                 , bind1<second<>,_2>
                 >
