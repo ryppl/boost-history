@@ -30,20 +30,7 @@ namespace detail{
  * index_proxy is used instead. index_proxy<Node> acts as an index
  * over nodes of type Node in all aspects relevant to safe_iterator, and
  * its shorter symbol name makes life easier for MSVC++ 6.0.
- * index_proxy provides its own index_proxy_iterator that interoperates
- * with real index iterators with respect to safe mode checks.
  */
-
-template<typename Node>
-class index_proxy_iterator
-{
-public:
-  index_proxy_iterator(Node* node_):node(node_){}
-
-  Node* get_node()const{return node;}
-private:
-  Node* node;
-};
 
 template<typename Node>
 class index_proxy:public safe_container<index_proxy<Node> >
@@ -58,43 +45,20 @@ protected:
   }
 
 public:
-  index_proxy_iterator<Node> begin()const
+  index_iterator<Node> begin()const
   {
-    return index_proxy_iterator<Node>(Node::from_impl(header->left()));
+    return index_iterator<Node>(
+      Node::from_impl(header->left()),const_cast<index_proxy*>(this));
   }
 
-  index_proxy_iterator<Node> end()const
+  index_iterator<Node> end()const
   {
-    return index_proxy_iterator<Node>(header);
+    return index_iterator<Node>(header,const_cast<index_proxy*>(this));
   }
 
 private:
   Node* header;
 };
-
-template<typename Node>
-bool operator==(const index_iterator<Node>& x,const index_proxy_iterator<Node>& y)
-{
-  return x.get_node()==y.get_node();
-}
-
-template<typename Node>
-bool operator==(const index_proxy_iterator<Node>& x,const index_iterator<Node>& y)
-{
-  return y==x;
-}
-
-template<typename Node>
-bool operator!=(const index_iterator<Node>& x,const index_proxy_iterator<Node>& y)
-{
-  return !(x==y);
-}
-
-template<typename Node>
-bool operator!=(const index_proxy_iterator<Node>& x,const index_iterator<Node>& y)
-{
-  return !(y==x);
-}
 
 } /* namespace indexed_sets::detail */
 
