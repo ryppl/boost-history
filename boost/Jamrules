@@ -1,15 +1,24 @@
-# Boost.Build top level Jamrules
+#==============================================================================
+#   Copyright (c) 2004 Martin Wille
+#   http://spirit.sourceforge.net/
+#
+#   Use, modification and distribution is subject to the Boost Software
+#   License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+#   http://www.boost.org/LICENSE_1_0.txt)
+#==============================================================================
 
-# See tools/build/index.html for documentation.
-project boost ;
+#
+# DO NOT COPY this file to the Boost CVS
+#
 
-# Set some important global variables if they haven't already been set by the
-# user on the command-line or in the environment
+SPIRIT_NO_MINIBOOST ?= "FALSE" ;
 
-# Establish this as the root of the boost installation. Most targets will want
-# $(BOOST_ROOT) in their #include path.
-path-global BOOST_ROOT : . ;
+if $(SPIRIT_NO_MINIBOOST) = "FALSE"
+{
+    BOOST_ROOT = $(top)/miniboost ;
+    SPIRIT_BOOST_HEADER_INCLUDE = $(top)/miniboost ;
+    SPIRIT_HAVE_BOOST_THREAD ?= "FALSE" ;
+    SPIRIT_HAVE_BOOST_REGEX ?= "FALSE" ;
+}
 
-# The current version of Boost.
-BOOST_VERSION ?= 1.32.0 ;
-
+project boost : $(BOOST_ROOT) ; # declare Boost as an EXTERNAL project
