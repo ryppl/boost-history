@@ -25,6 +25,7 @@
 #include "boost/visitor/detail/dynamic_return_error.hpp"
 
 #include "boost/preprocessor/define_forwarding_func.hpp"
+#include "boost/type_traits/is_const.hpp"
 #include "boost/mpl/bool_c.hpp"
 
 namespace boost {
@@ -64,18 +65,18 @@ R apply_visitor_impl(
     )
 {
     // Before visiting, clear the result value...
-    visitor.result_value.clear();
+    visitor.result_value.reset();
 
     // ...visit...
     visitable.apply_visitor(visitor);
 
     // ...but if the result value is still empty...
-    if (visitor.result_value.empty())
+    if (!visitor.result_value)
         // ...then the visitor is not properly implemented, so throw:
         throw detail::dynamic_return_error();
 
     // Otherwise (the normal case), return the visitor's result:
-    return visitor.result_value.get();
+    return *visitor.result_value;
 }
 
 //////////////////////////////////////////////////////////////////////////
