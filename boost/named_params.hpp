@@ -54,12 +54,31 @@ namespace detail
 
   struct nil
   {
+#if BOOST_WORKAROUND(BOOST_MSVC, <= 1300)
+      template<class KW>
+      struct apply
+      {
+         typedef nil type;
+      };
+
+      template<class KW, class Default>
+      struct apply_value
+      {
+         typedef Default type;
+      };
+
+      template<class K, class Default>
+      Default& get(const named_default<K, Default>& x) const
+      {
+          return x.default_;
+      }
+#else
       template<class K, class Default>
       Default& operator[](const named_default<K, Default>& x) const
       {
           return x.default_;
       }
-
+#endif
       // No keyword was found if we get here, so we should only return
       // mpl::true_ if it's OK to have a default for the argument.
       template <class Arg>
@@ -75,10 +94,59 @@ namespace detail
   template <class H, class T = nil>
   struct list : T
   {
+#if BOOST_WORKAROUND(BOOST_MSVC, <= 1300)
+     typedef list<H, T> self_t;
+
+     template<class KW>
+     struct apply
+       : mpl::apply_if<
+             boost::is_same<KW, typename H::key_type>
+           , mpl::identity<self_t>
+           , typename T::template apply<KW>
+         >
+     {};
+
+     template<class KW, class Default>
+     struct apply_value
+        : mpl::apply_if<
+              boost::is_same<KW, typename H::key_type>
+            , mpl::identity<typename H::value_type>
+            , typename T::template apply_value<KW, Default>
+          >
+      {};
+#endif
       H head;
-      
+
       list(H h, T t) : T(t), head(h) {}
 
+#if BOOST_WORKAROUND(BOOST_MSVC, <= 1300)
+      template<class KW>
+      typename apply_value<KW, nil>::type&
+      operator[](const keyword<KW>& x) const
+      {
+         typedef typename apply<KW>::type list_t;
+         return static_cast<const list_t&>(*this).get(x);
+      }
+
+      template<class KW, class Default>
+      typename apply_value<KW, Default>::type&
+      operator[](const named_default<KW, Default>& x) const
+      {
+         typedef typename apply<KW>::type list_t;
+         return static_cast<const list_t&>(*this).get(x);
+      }
+
+      typename H::value_type& get(const keyword<typename H::key_type>& x) const
+      {
+          return head[x];
+      }
+
+      template<class Default>
+      typename H::value_type& get(const named_default<typename H::key_type, Default>& x) const
+      {
+          return head[x];
+      }
+#else
       typename H::value_type& operator[](const keyword<typename H::key_type>& x) const
       {
           return head[x];
@@ -89,9 +157,8 @@ namespace detail
       {
           return head[x];
       }
-
-      using T::operator[];
-       
+		
+		using T::operator[];
 
       template <class HasDefault, class Predicate>
       static typename mpl::apply1<
@@ -101,6 +168,7 @@ namespace detail
       keyword_passes_predicate(arg<typename H::key_type,HasDefault,Predicate>*);
 
       using T::keyword_passes_predicate;
+#endif
   };
 
 //  struct named_base {};
@@ -135,16 +203,16 @@ struct keyword
 {
 #if !BOOST_WORKAROUND(BOOST_MSVC, == 1200)  // partial ordering bug
    template <class T>
-   detail::named<Tag,T> operator=(T& x) const
-   {
-      return detail::named<Tag,T>(x);
-   }
-#endif
-    
-   template <class T>
    detail::named<Tag,T const> operator=(T const& x) const
    {
       return detail::named<Tag,T const>(x);
+   }
+#endif
+	
+	template <class T>
+   detail::named<Tag,T> operator=(T& x) const
+   {
+      return detail::named<Tag,T>(x);
    }
 
    template <class T>
