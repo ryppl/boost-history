@@ -170,89 +170,89 @@ make1a(
 static void
 make1b( TARGET *t )
 {
-	TARGETS	*c;
-	int 	i;
-	char 	*failed = "dependents";
+    TARGETS     *c;
+    int         i;
+    char        *failed = "dependents";
 
-	/* If any dependents are still outstanding, wait until they */
-	/* call make1b() to signal their completion. */
+    /* If any dependents are still outstanding, wait until they */
+    /* call make1b() to signal their completion. */
 
-	if( --t->asynccnt )
-	    return;
+    if( --t->asynccnt )
+        return;
 
-	/* Now ready to build target 't'... if dependents built ok. */
+    /* Now ready to build target 't'... if dependents built ok. */
 
-	/* Collect status from dependents */
+    /* Collect status from dependents */
 
-	for( i = T_DEPS_DEPENDS; i <= T_DEPS_INCLUDES; i++ )
-	    for( c = t->deps[i]; c; c = c->next )
-		if( c->target->status > t->status )
-	{
-	    failed = c->target->name;
-	    t->status = c->target->status;
-	}
+    for( i = T_DEPS_DEPENDS; i <= T_DEPS_INCLUDES; i++ )
+        for( c = t->deps[i]; c; c = c->next )
+            if( c->target->status > t->status && !( c->target->flags & T_FLAG_NOCARE ) )
+            {
+                failed = c->target->name;
+                t->status = c->target->status;
+            }
 
-	/* If actions on deps have failed, bail. */
-	/* Otherwise, execute all actions to make target */
+    /* If actions on deps have failed, bail. */
+    /* Otherwise, execute all actions to make target */
 
-	if( t->status == EXEC_CMD_FAIL && t->actions )
-	{
-	    ++counts->skipped;
-	    printf( "...skipped %s for lack of %s...\n", t->name, failed );
-	}
+    if( t->status == EXEC_CMD_FAIL && t->actions )
+    {
+        ++counts->skipped;
+        printf( "...skipped %s for lack of %s...\n", t->name, failed );
+    }
 
-	if( t->status == EXEC_CMD_OK )
-	    switch( t->fate )
-	{
-	case T_FATE_INIT:
-	case T_FATE_MAKING:
-	    /* shouldn't happen */
+    if( t->status == EXEC_CMD_OK )
+        switch( t->fate )
+        {
+        case T_FATE_INIT:
+        case T_FATE_MAKING:
+            /* shouldn't happen */
 
-	case T_FATE_STABLE:
-	case T_FATE_NEWER:
-	    break;
+        case T_FATE_STABLE:
+        case T_FATE_NEWER:
+            break;
 
-	case T_FATE_CANTFIND:
-	case T_FATE_CANTMAKE:
-	    t->status = EXEC_CMD_FAIL;
-	    break;
+        case T_FATE_CANTFIND:
+        case T_FATE_CANTMAKE:
+            t->status = EXEC_CMD_FAIL;
+            break;
 
-	case T_FATE_ISTMP:
-	    if( DEBUG_MAKE )
-		printf( "...using %s...\n", t->name );
-	    break;
+        case T_FATE_ISTMP:
+            if( DEBUG_MAKE )
+                printf( "...using %s...\n", t->name );
+            break;
 
-	case T_FATE_TOUCHED:
-	case T_FATE_MISSING:
-	case T_FATE_OUTDATED:
-	case T_FATE_UPDATE:
-	    /* Set "on target" vars, build actions, unset vars */
-	    /* Set "progress" so that make1c() counts this target among */
-	    /* the successes/failures. */
+        case T_FATE_TOUCHED:
+        case T_FATE_MISSING:
+        case T_FATE_OUTDATED:
+        case T_FATE_UPDATE:
+            /* Set "on target" vars, build actions, unset vars */
+            /* Set "progress" so that make1c() counts this target among */
+            /* the successes/failures. */
 
-	    if( t->actions )
-	    {
+            if( t->actions )
+            {
                 ++counts->total;
-		if( DEBUG_MAKE && !( counts->total % 100 ) )
-		    printf( "...on %dth target...\n", counts->total );
+                if( DEBUG_MAKE && !( counts->total % 100 ) )
+                    printf( "...on %dth target...\n", counts->total );
 
-		pushsettings( t->settings );
-		t->cmds = (char *)make1cmds( t->actions );
-		popsettings( t->settings );
+                pushsettings( t->settings );
+                t->cmds = (char *)make1cmds( t->actions );
+                popsettings( t->settings );
 
-		t->progress = T_MAKE_RUNNING;
-	    }
+                t->progress = T_MAKE_RUNNING;
+            }
 
-	    break;
-	}
+            break;
+        }
 
-	/* Call make1c() to begin the execution of the chain of commands */
-	/* needed to build target.  If we're not going to build target */
-	/* (because of dependency failures or because no commands need to */
-	/* be run) the chain will be empty and make1c() will directly */
-	/* signal the completion of target. */
+    /* Call make1c() to begin the execution of the chain of commands */
+    /* needed to build target.  If we're not going to build target */
+    /* (because of dependency failures or because no commands need to */
+    /* be run) the chain will be empty and make1c() will directly */
+    /* signal the completion of target. */
 
-	make1c( t );
+    make1c( t );
 }
 
 /*
