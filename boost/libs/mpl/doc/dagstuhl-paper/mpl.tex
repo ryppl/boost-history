@@ -195,10 +195,9 @@ tend to be composed mostly of type computations.
 The ability to programmatically manipulate collections of types is a
 central tool of most interesting \Cpp\ metaprograms. Because this
 capability is so well-supported by the MPL, we'll provide just a brief
-introduction here. 
+introduction to the basics here.
 
-Suppose a user wished to find the largest of an arbitrary collection
-of types. First, we'd need a way to represent the collection. One
+First, we'd need a way to represent the collection. One
 idea might be to store the types in a structure:
 
 {\footnotesize
@@ -217,7 +216,7 @@ out what the names of the members are, and even if we assume that
 they're named according to some convention as above, there's no way to
 now how many members there are. The key to solving this problem is to
 increase the uniformity of the representation. If we have a consistent
-wayt to get the first type of any sequence, and the rest of the
+wayt to get the first type of any sequence and the rest of the
 sequence, we can easily access all members:
 
 {\footnotesize
@@ -237,7 +236,88 @@ types;
 \end{verbatim}
 }
 
-The structure described by \code{types} above is similar to 
+The structure described by \code{types} above is the compile-time
+analogue of a singly-linked list. Now that we've adjusted the
+structure so that the \Cpp\ template machinery can ``peel it apart'',
+let's examine a simple function which does so. Suppose a user wished
+to find the largest of an arbitrary collection of types. We can apply
+the recursive metafunction formula which should by now be familiar:
+
+{\footnotesize
+\begin{verbatim}
+// Choose the larger of two types
+template <class T1, class T2
+        , bool choose1 = (sizeof(T1) > sizeof(T2)) // hands off!
+        >
+struct choose_larger
+{
+   typedef T1 type;
+};
+
+// specialization for the case where sizeof(T2) >= sizeof(T1)
+template <class T1, class T2>
+struct choose_larger<T1,T2,false>
+{
+   typedef T2 type;
+};
+
+// Get the largest of a cons-list
+template <class T> struct largest;
+
+// Specialization to peel apart the cons list
+template <class First, class Rest>
+struct largest<cons<First,Rest> >
+   : choose_larger<First, typename largest<Rest>::type>
+{
+   // type inherited from base
+};
+
+// specialization for loop termination
+template <class First>
+struct largest<cons<First,nil> >
+{
+   typedef First type;
+};
+
+int main()
+{
+   std::cout
+         << typeid(largest<
+                      cons<int, cons<char, cons<double, nil> > >
+                   >::type).name()
+         << std::endl;
+}
+
+\end{verbatim}
+}
+
+There are several things worth noticing about this code:
+\begin{itemize}
+
+\item It uses a few ad-hoc, esoteric techniques (``hacks''). The
+  default template argument \code{choose1} in \code{choose_larger}
+  (labelled ``hands off!'') is one example. Without it, we would have
+  needed yet another template to provide the implementation of
+  \code{choose_larger}, or we would have had to provide the
+  computation explicitly as a parameter to the template - perhaps not
+  bad for this example, but it would make choose_larger much less
+  useful and more error-prone. The other hack is the derivation of a
+  specialization of \code{largest} from \code{choose_larger}. This is
+  a code-saving device which allows the programmer to avoid writing
+  \code{typedef typename}...\code{::type type} in the template body.
+
+\item Even this simple metaprogram uses three separate partial
+  specializations. The \code{largest} \mfn\ uses \emph{two}
+  specializations. One might expect that this indicates there are two
+  termination conditions, but there are not: one specialization is
+  needed simply to deal with access to the sequence elements. These
+  specializations make the code difficult to read by spreading the
+  definition of a single \mfn\ over several \Cpp\ template
+  definitions. Also, because they are \emph{partial} specializations,
+  they make the code unusable for a large community of \Cpp\
+  programmers whose compilers don't support that feature.
+\end{itemize}
+
 \subsection{Why Metaprogramming?}
 
 It's worth asking why anyone would want to do this. After all, even a
