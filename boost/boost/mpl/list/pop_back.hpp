@@ -61,9 +61,16 @@ struct list_pop_back_algorithm
     typedef typename mpl::list_traits<tag_>                  traits_;
     typedef typename traits_::template next_node<List>::type next_node_;
     typedef typename traits_::template is_null<next_node_>   is_null_;
+#if BOOST_MSVC != 1301 || _MSC_FULL_VER > 13012108 
     typedef typename mpl::detail::list_pop_back_algorithm_part1< 
                 (is_null_::value)
                 >::template part2<List>::type sequence;
+#else // vc7.01 alpha workaround
+    BOOST_STATIC_CONSTANT(bool, is_null_value = is_null_::value);
+    typedef typename mpl::detail::list_pop_back_algorithm_part1< 
+                is_null_value
+                >::template part2<List>::type sequence;
+#endif
 };
 
 } // namespace detail
