@@ -126,36 +126,40 @@ class bigint : boost::operators<bigint> {
   std::istream& from_istream(std::istream& is) {
 
     if(!is.good()) return is;
+
+    // Manage prefix and postfix operations (RAII object)
+    std::istream::sentry ipfx(is);
     
-    // Read into an std::string, then set.
-    std::string str;
-    char c;
+    if(ipfx) {
+      // Read the number into a string, then initialize from that.
+      std::string str;
+      char c;
 
-    // skip whitespace
-    is >> c;
-
-    // check for minus sign.
-    if(!(c == '-' || std::isdigit(c))) {
-      is.putback(c);
-      // signal error
-      is.clear(is.rdstate() | std::ios::failbit);
-      return is;
-    } else {
-      str.push_back(c);
-
-      // read in ASCII digits till it stops.
-      while(is.get(c) && isdigit(c))
-	str.push_back(c);
-      if(is.fail())
-        // clear error state
-        is.clear();
-      else
-        // put back the last character retrieved
+      // check for minus sign.
+      is.get(c);
+      if(!(c == '-' || std::isdigit(c))) {
         is.putback(c);
-      *this = bigint(str);
-      return is;
+        // signal error
+        is.clear(is.rdstate() | std::ios::failbit);
+      } else {
+        str.push_back(c);
+
+        // read in ASCII digits till it stops.
+        while(is.get(c) && isdigit(c))
+          str.push_back(c);
+        if(is.fail())
+          // clear error state
+          is.clear();
+        else
+          // put back the last character retrieved
+          is.putback(c);
+        *this = bigint(str);
+      }
     }
+    return is;
   }
+
+
 
   friend bigint operator-(bigint const& rhs);
 
