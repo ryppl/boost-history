@@ -28,7 +28,8 @@ behaviors and it would be sad to arbitrarily select one of these.</p>
 
 <p>The checking class should satisfy the following requirement (in the form
 of an interface):</p>
-<pre>struct checking
+<pre>/* requirements for checking policy */
+struct checking
 {
   static T inf();
   static T nan();
@@ -69,49 +70,7 @@ each function which involves an argument of type <code>T</code>. If one of
 the inputs is declared invalid, the the function will try to produce an
 invalid value or an input interval.</p>
 
-<h3>Checking customization</h3>
-
-<p>In order to define a suitable policy, you need to correctly say what you
-expect from your interval class. First of all, are you interested in getting
-empty intervals at the end of a calculus? If you do not want to obtain empty
-intervals, <code>empty_lower</code> and <code>empty_upper</code> have to fail
-when invoked (they can throw an exception, set a flag, etc). However, if no
-function is able to produce an empty interval, it is no more necessary to do
-the test, so <code>is_empty</code> may always return <code>false</code>. In
-this case, a good compiler will do a lot of optimizations. The value returned
-by <code>nan</code> does not have any interest since the functions will never
-call it. So you can put an assert inside if you do not trust the library.
-:-)</p>
-
-<p>You could also be interested in getting empty intervals at the end of the
-calculus. For example, if you need to transform an array of unsure values (or
-intervals) in a new array of intervals, you may not want to stop the
-conversion at the first encountered problem. So <code>empty_lower</code> and
-<code>empty_upper</code> need to return suitable values in order to define an
-empty interval (you can use an upper bound which is not greater or equal than
-the lower bound for example); and <code>is_empty</code> must be able to
-distinguish empty intervals from the valid intervals.</p>
-
-<p>Another important question is: is it possible that some numbers (objects
-of type <code>T</code>) are invalid? And if it is possible, are they allowed
-or not ? If it is not possible, no test is necessary; <code>is_nan</code> may
-always return <code>false</code>. In this case too, a good compiler will do a
-lot of optimizations.</p>
-
-<p>If function arguments can hold invalid numbers, two cases must be
-considered according to whether they are allowed or not. If they are allowed,
-<code>is_nan</code> just has to test if they are invalid or not. If they are
-forbidden, <code>is_nan</code> should fail when invoked on an invalid
-argument and return <code>false</code> otherwise.</p>
-
-<p>And finally, you need to decide what to do with <code>nan</code> if it has
-not already been decided at the beginning, and with <code>inf</code>. These
-cases are the most common cases.</p>
-
-<h3>Predefined classes</h3>
-
-<p>In order to simplify the customization of the policy, some templates are
-already defined in the library.</p>
+<h2>Synopsis</h2>
 <pre>namespace boost {
   namespace interval_lib {
 
@@ -125,6 +84,11 @@ template&lt;class T&gt; struct exception_invalid_number { void operator()(); };
 
   } // namespace interval_lib
 } // namespace boost</pre>
+
+<h2>Predefined classes</h2>
+
+<p>In order to simplify the customization of the policy, some templates are
+already defined in the library.</p>
 
 <p>First of all, there is <code>checking_base</code>. Thanks to the
 information provided by <code>std::numeric_limits&lt;T&gt;</code>, this class
@@ -171,15 +135,53 @@ with the message <code>"boost::interval: empty interval created"</code> and
 <code>std::invalid_argument</code> with the message <code>"boost::interval:
 invalid number"</code>.</p>
 
-<h3>Some examples</h3>
+<h2>Customizing your own checking policy</h2>
+
+<p>In order to define a suitable policy, you need to correctly say what you
+expect from your interval class. First of all, are you interested in getting
+empty intervals at the end of a calculus? If you do not want to obtain empty
+intervals, <code>empty_lower</code> and <code>empty_upper</code> have to fail
+when invoked (they can throw an exception, set a flag, etc). However, if no
+function is able to produce an empty interval, it is no more necessary to do
+the test, so <code>is_empty</code> may always return <code>false</code>. In
+this case, a good compiler will do a lot of optimizations.</p>
+
+<p>You could also be interested in getting empty intervals at the end of the
+calculus. For example, if you need to transform an array of unsure values (or
+intervals) in a new array of intervals, you may not want to stop the
+conversion at the first encountered problem. So <code>empty_lower</code> and
+<code>empty_upper</code> need to return suitable values in order to define an
+empty interval (you can use an upper bound which is not greater or equal than
+the lower bound for example); and <code>is_empty</code> must be able to
+distinguish empty intervals from the valid intervals.</p>
+
+<p>Another important question is: is it possible that some base numbers
+(objects of type <code>T</code>) are invalid? And if it is possible, are they
+allowed or not ? If it is not possible, no test is necessary;
+<code>is_nan</code> may always return <code>false</code>. In this case too, a
+good compiler will do a lot of optimizations. If function arguments can hold
+invalid numbers, two cases must be considered according to whether they are
+allowed or not. If they are allowed, <code>is_nan</code> just has to test if
+they are invalid or not. If they are forbidden, <code>is_nan</code> should
+fail (exception, assert, etc.) when invoked on an invalid argument and return
+<code>false</code> otherwise. The value returned by <code>nan</code> does not
+have any interest since the interval functions are guaranteed not to produce
+invalid interval bounds unless the user passes invalid numbers to the
+constructors. So you can put an assert inside if you do not trust the
+library. :-)</p>
+
+<p>And finally, you need to decide what to do with <code>nan</code> if it has
+not already been decided at the beginning, and with <code>inf</code>. These
+cases are the most common cases. <strong>????? -H</strong></p>
+
+<h2>Some examples</h2>
 <ul>
   <li>If you need a checking policy that allows the library to correctly
     manipulate data, even if they contain invalid numbers and empty
     intervals, then <code>checking_base&lt;T&gt;</code> is a possibility.</li>
   <li>If you do not want empty intervals to be created and are not sure all
-    the numbers are valid, then <code>checking_catch_nan&lt;T,
-    checking_no_empty&lt;T&gt; &gt;</code> can help you. This is the default
-    policy and it is also called
+    the numbers are valid, then <code>checking_catch_nan&lt;T,checking_no_empty&lt;T&gt; &gt;</code>
+   can help you. This is the default policy and it is also called
   <code>interval_lib::checking_strict</code>.</li>
   <li>If all the numbers will be valid and if no empty interval is supposed
     to be created (or if you do not want them to be created), then you can

@@ -22,7 +22,8 @@ href="../../../boost/interval.hpp">boost/interval.hpp</a>&gt;</h1>
       <td align=TOP><b>Contents of this page:</b><br>
         <a href="#intro">Introduction</a><br>
         <a href="#synopsis">Synopsis</a><br>
-        <a href="#interval_traits">Template class <tt>interval_traits</tt></a><br>
+        <a href="#interval_traits">Template class
+        <tt>interval_traits</tt></a><br>
         <a href="#interval">Template class <tt>interval</tt></a><br>
         <a href="#opers">Operations and functions</a><br>
         <a href="#interval_lib">Interval support library</a><br>
@@ -105,7 +106,7 @@ ordered so, for instance, <tt>complex&lt;T&gt;</tt> is not usable as base
 number type for intervals. The mathematical functions for the base number
 type should also be compatible with the total order (for instance if x&gt;y
 and z&gt;t, then it should also hold that x+y &gt; y+t), so modulo types are
-not usable either. 
+not usable either.
 
 <p>Secondly, the computations must be exact or provide some rounding methods
 (for instance, toward minus or plus infinity) if we want to  guarantee the
@@ -114,7 +115,7 @@ for instance if the base number type is exact, i.e. the result of a
 mathematic operation is always computed and represented without loss of
 precision. If the number type is not exact, we may still explicitely specify
 no rounding, with the obvious consequence that the  inclusion property is no
-longuer guaranteed. </p>
+longuer guaranteed.</p>
 
 <p>Finally, because heavy loss of precision is always possible, some numbers
 have to represent infinities or an exceptional behavior must be defined. The
@@ -152,16 +153,16 @@ functions. So, what to do in order to obtain boolean answers?
 as a failed assertion or raising an exception. In this case, the exceptional
 behavior will be triggered when the result is indeterminate.</p>
 
-<p>Another solution is to  map <em>indeterminate</em> always to 
-<i>false,</i> or always to <i>true</i>. If <i>false</i> is chosen, the
-comparison will be called "<i>certain</i>;" indeed, the result of
-[<i>a</i>,<i>b</i>] &lt; [<i>c</i>,<i>d</i>] will be <i>true</i> if and only
-if: &#8704; <i>x</i> &#8712; [<i>a</i>,<i>b</i>] &#8704; <i>y</i> &#8712;
-[<i>c</i>,<i>d</i>],  <i>x</i> &lt; <i>y</i>. If <i>true</i> is chosen, the
-comparison will be called "<i>possible</i>;" indeed, the result of
-[<i>a</i>,<i>b</i>] &lt; [<i>c</i>,<i>d</i>] will be <i>true</i> if and only
-if: &#8707; <i>x</i> &#8712; [<i>a</i>,<i>b</i>] &#8707; <i>y</i> &#8712;
-[<i>c</i>,<i>d</i>], <i>x</i> &lt; <i>y</i>.</p>
+<p>Another solution is to  map <em>indeterminate</em> always to <i>false,</i>
+or always to <i>true</i>. If <i>false</i> is chosen, the comparison will be
+called "<i>certain</i>;" indeed, the result of [<i>a</i>,<i>b</i>] &lt;
+[<i>c</i>,<i>d</i>] will be <i>true</i> if and only if: &#8704; <i>x</i>
+&#8712; [<i>a</i>,<i>b</i>] &#8704; <i>y</i> &#8712; [<i>c</i>,<i>d</i>], 
+<i>x</i> &lt; <i>y</i>. If <i>true</i> is chosen, the comparison will be
+called "<i>possible</i>;" indeed, the result of [<i>a</i>,<i>b</i>] &lt;
+[<i>c</i>,<i>d</i>] will be <i>true</i> if and only if: &#8707; <i>x</i>
+&#8712; [<i>a</i>,<i>b</i>] &#8707; <i>y</i> &#8712; [<i>c</i>,<i>d</i>],
+<i>x</i> &lt; <i>y</i>.</p>
 
 <p>Since any of these solution has a clearly defined semantics, it is not
 clear that we should enforce either of them. For this reason, the traits
@@ -182,7 +183,7 @@ standard comparison operators (&lt;, &lt;=, &gt;, &gt;=, ==, !=), as well as
 several interval-specific functions (min, max, which have a different meaning
 than <code>std::min</code> and <code>std::max</code>; lower, upper, width,
 median, empty, singleton, equal, in, in_zero, subset, proper_subset, overlap,
- intersection, hull, bisect).
+intersection, hull, bisect).
 
 <p>For some functions which take several parameters of type<code>
 interval&lt;T&gt;</code>, all combinations of argument types <code>T</code>
@@ -201,7 +202,6 @@ namespace <tt>boost::interval_lib</tt> as detailed in section<a
 href="#interval_lib"> Interval Support Library</a>.</p>
 
 <h2><a name="synopsis"></a>Synopsis</h2>
-
 <pre>namespace boost {
 
   namespace interval_lib {
@@ -324,7 +324,7 @@ href="#interval_lib"> Interval Support Library</a>.</p>
   template&lt;class T, class Traits&gt;  bool operator&gt;=(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
   template&lt;class T, class Traits&gt;  bool operator&gt;=(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
   template&lt;class T, class Traits&gt;  bool operator&gt;=(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);</pre>
-  <pre>  template&lt;class T, class Traits&gt;  bool operator==(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+<pre>  template&lt;class T, class Traits&gt;  bool operator==(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
   template&lt;class T, class Traits&gt;  bool operator==(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
   template&lt;class T, class Traits&gt;  bool operator==(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
 
@@ -387,18 +387,17 @@ href="#interval_lib"> Interval Support Library</a>.</p>
 The <tt>interval</tt> class requires two template parameters, the first one
 is the type of the bounds. And the second one is a class defining three
 policies. This second parameter should look like:
-
 <pre>  struct traits {
     typedef ... compare;
     typedef ... rounding;
     typedef ... checking;
   };</pre>
-The requirements of these three types are detailed in their respective
-  pages: <a href="#compare">comparison policies</a>, <a
-  href="#rounding">rounding policies</a>, and <a href="#checking">checking
-  policies</a>. In order to allow an easier definition of this parameter, the
-  class <tt>interval_traits</tt> is defined as follows:
-  <pre>namespace boost {
+The requirements of these three types are detailed in their respective pages:
+<a href="#compare">comparison policies</a>, <a href="#rounding">rounding
+policies</a>, and <a href="#checking">checking policies</a>. In order to
+allow an easier definition of this parameter, the class
+<tt>interval_traits</tt> is defined as follows:
+<pre>namespace boost {
 
   template &lt;class T,
             class Compare = interval_lib::compare_certainly&lt;T&gt;,
@@ -417,7 +416,6 @@ The requirements of these three types are detailed in their respective
 <h2><a name="interval"></a>Template class <tt>interval</tt></h2>
 The public interface of the template class interval itself is kept at a
 simplest minimum:
-
 <pre>template &lt;class T, class Traits = interval_traits&lt;T&gt; &gt;
 class interval
 {
@@ -451,8 +449,8 @@ class interval
 The two main constructors accept one and two arguments of type T. The first
 one produces a singleton interval [v,v]; and the second one an interval
 [l,u]. The second one will use the checking policy if u&lt;l. If you are not
-sure whether the bounds are inverted or not, it is better to use the 
-function call <code>hull(l,u)</code>.
+sure whether the bounds are inverted or not, it is better to use the function
+call <code>hull(l,u)</code>.
 
 <p>There is also a template constructor in order to change the traits
 parameter of an interval. But there is no constructor that changes the base
@@ -611,7 +609,6 @@ on each topic with examples, without unduly stretching the limits of this
 document.</div>
 
 <h4>Synopsis</h4>
-
 <pre>namespace boost {
   namespace interval_lib {
 
@@ -621,11 +618,13 @@ document.</div>
     template &lt;class T&gt;  struct compare_data;
     template &lt;class T, class Function&gt;  struct compare_full;
 
-<font color="#ff0000">    /* built-in rounding construction blocks */
+<font color="#ff0000">    /* built-in rounding policy and its specializations */
 </font>    template &lt;class T&gt;  struct rounded_math;
     template &lt;&gt;         struct rounded_math&lt;float&gt;;
     template &lt;&gt;         struct rounded_math&lt;double&gt;;
+    template &lt;&gt;         struct rounded_math&lt;long double&gt;;
 
+    <span style="color: #FF0000">/* built-in rounding construction blocks */</span>
     template &lt;class T&gt;  struct rounding_control;
 
     template &lt;class T, class Rounding = rounding_control&lt;T&gt; &gt;  struct rounded_arith_exact;
@@ -647,6 +646,9 @@ document.</div>
 
   } // namespace interval_lib
 } // namespace boost</pre>
+
+<p>Each component of the interval support library is detailed in its own
+page.</p>
 
 <h4 id="compare"><a href="comparisons.htm">Comparisons</a></h4>
 
@@ -700,7 +702,6 @@ there are only two switches (up and restore). It is better, but still a
 bottleneck when many operations are nested. Indeed, the generated code for
 [<i>a</i>,<i>b</i>] + [<i>c</i>,<i>d</i>] + [<i>e</i>,<i>f</i>] will probably
 look like:</p>
-
 <pre>up();
 t1 = -(-a - c);
 t2 = b + d;
@@ -711,7 +712,6 @@ y = t2 + f;
 restore();</pre>
 If you think it is possible to do much better, you are right. For example,
 this is better (and probably optimal):
-
 <pre>up();
 x = -(-a - c - e);
 y = b + d + f;
@@ -729,7 +729,6 @@ USING THE LIBRARY. -H</b>
 
 <p>Here is an example of the Horner scheme to compute the value of a polynom.
 The rounding mode switches are disabled for the whole computation.</p>
-
 <pre>// I is an interval class, the polynom is a simple array
 template&lt;class I&gt;
 I horner(const I&amp; x, const I p[], int n) {
