@@ -21,7 +21,7 @@ def process( file, boost_root, dst_dir, mode ):
 
     os.system( "preprocess %s %s %s %s" % ( boost_root, mode, file, file_path ) )
     os.rename( file_path, "%s.tmp" % file_path )
-    os.system( "pp.py %s.tmp %s" % ( file_path, file_path ) )
+    os.system( "python pp.py %s.tmp %s" % ( file_path, file_path ) )
     os.remove( "%s.tmp" % file_path )
 
     filename = os.path.basename(file_path)

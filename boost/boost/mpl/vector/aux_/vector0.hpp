@@ -29,6 +29,7 @@ template< int dummy_ = 0 > struct vector0
 {
 #if defined(BOOST_MPL_CFG_TYPEOF_BASED_SEQUENCES)
     typedef aux::vector_tag tag;
+    typedef vector0         type;
     typedef long_<32768>    lower_bound_;
     typedef lower_bound_    upper_bound_;
     typedef long_<0>        size;
