@@ -278,7 +278,7 @@ void run_test_cases( BOOST_EXPLICIT_TEMPLATE_TYPE(Block) )
 }
 
 int
-test_main(int argc, char*[])
+test_main(int, char*[])
 {
   run_test_cases<unsigned char>();
   run_test_cases<unsigned short>();
