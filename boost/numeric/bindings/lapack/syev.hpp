@@ -28,6 +28,8 @@
 #  include <boost/type_traits.hpp>
 #endif 
 
+#include <cassert>
+
 
 namespace boost { namespace numeric { namespace bindings { 
 
