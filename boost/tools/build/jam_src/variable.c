@@ -1,5 +1,5 @@
 /*
- * Copyright 1993, 2000 Christopher Seiwald.
+ * Copyright 1993-2002 Christopher Seiwald and Perforce Software, Inc.
  *
  * This file is part of Jam - see jam.c for Copyright information.
  */
@@ -10,9 +10,7 @@
 # include "variable.h"
 # include "expand.h"
 # include "hash.h"
-# include "filesys.h"
 # include "newstr.h"
-# include "strings.h"
 
 /*
  * variable.c - handle jam multi-element variables
@@ -66,10 +64,6 @@ static void var_dump( char *symbol, LIST *value, char *what );
 void
 var_defines( char **e )
 {
-    string buf[1];
-
-    string_new( buf );
-
 	for( ; *e; e++ )
 	{
 	    char *val;
@@ -96,6 +90,8 @@ var_defines( char **e )
 # else
 		char split = ' ';	
 # endif
+		char buf[ MAXSYM ];
+
 		/* Split *PATH at :'s, not spaces */
 
 		if( val - 4 >= *e )
@@ -110,20 +106,21 @@ var_defines( char **e )
 
 		for( pp = val + 1; p = strchr( pp, split ); pp = p + 1 )
 		{
-                    string_append_range( buf, pp, p );
-		    l = list_new( l, newstr( buf->value ) );
-                    string_truncate( buf, 0 );
+		    strncpy( buf, pp, p - pp );
+		    buf[ p - pp ] = '\0';
+		    l = list_new( l, newstr( buf ) );
 		}
 
 		l = list_new( l, newstr( pp ) );
 
 		/* Get name */
-                string_append_range( buf, *e, val );
-		var_set( buf->value, l, VAR_SET );
-                string_truncate( buf, 0 );
+
+		strncpy( buf, *e, val - *e );
+		buf[ val - *e ] = '\0';
+
+		var_set( buf, l, VAR_SET );
 	    }
 	}
-        string_free( buf );
 }
 
 /*

@@ -1,5 +1,5 @@
 /*
- * Copyright 1993, 1995 Christopher Seiwald.
+ * Copyright 1993-2002 Christopher Seiwald and Perforce Software, Inc.
  *
  * This file is part of Jam - see jam.c for Copyright information.
  */
@@ -95,16 +95,13 @@ make1( TARGET *t )
 	/* Talk about it */
 
 	if( DEBUG_MAKE && counts->failed )
-	    printf( "...failed updating %d target%s...\n", counts->failed,
-		        counts->failed > 1 ? "s" : "" );
+	    printf( "...failed updating %d target(s)...\n", counts->failed );
 
 	if( DEBUG_MAKE && counts->skipped )
-	    printf( "...skipped %d target%s...\n", counts->skipped,
-		        counts->skipped > 1 ? "s" : "" );
+	    printf( "...skipped %d target(s)...\n", counts->skipped );
 
 	if( DEBUG_MAKE && counts->made )
-	    printf( "...updated %d target%s...\n", counts->made,
-		        counts->made > 1 ? "s" : "" );
+	    printf( "...updated %d target(s)...\n", counts->made );
 
 	return counts->total != counts->made;
 }
@@ -170,89 +167,90 @@ make1a(
 static void
 make1b( TARGET *t )
 {
-    TARGETS     *c;
-    int         i;
-    char        *failed = "dependents";
+	TARGETS	*c;
+	int 	i;
+	char 	*failed = "dependents";
 
-    /* If any dependents are still outstanding, wait until they */
-    /* call make1b() to signal their completion. */
+	/* If any dependents are still outstanding, wait until they */
+	/* call make1b() to signal their completion. */
 
-    if( --t->asynccnt )
-        return;
+	if( --t->asynccnt )
+	    return;
 
-    /* Now ready to build target 't'... if dependents built ok. */
+	/* Now ready to build target 't'... if dependents built ok. */
 
-    /* Collect status from dependents */
+	/* Collect status from dependents */
 
-    for( i = T_DEPS_DEPENDS; i <= T_DEPS_INCLUDES; i++ )
-        for( c = t->deps[i]; c; c = c->next )
-            if( c->target->status > t->status && !( c->target->flags & T_FLAG_NOCARE ) )
-            {
-                failed = c->target->name;
-                t->status = c->target->status;
-            }
+	for( i = T_DEPS_DEPENDS; i <= T_DEPS_INCLUDES; i++ )
+	    for( c = t->deps[i]; c; c = c->next )
+		if( c->target->status > t->status )
+	{
+	    failed = c->target->name;
+	    t->status = c->target->status;
+	}
 
-    /* If actions on deps have failed, bail. */
-    /* Otherwise, execute all actions to make target */
+	/* If actions on deps have failed, bail. */
+	/* Otherwise, execute all actions to make target */
 
-    if( t->status == EXEC_CMD_FAIL && t->actions )
-    {
-        ++counts->skipped;
-        printf( "...skipped %s for lack of %s...\n", t->name, failed );
-    }
+	if( t->status == EXEC_CMD_FAIL && t->actions )
+	{
+	    ++counts->skipped;
+	    printf( "...skipped %s for lack of %s...\n", t->name, failed );
+	}
 
-    if( t->status == EXEC_CMD_OK )
-        switch( t->fate )
-        {
-        case T_FATE_INIT:
-        case T_FATE_MAKING:
-            /* shouldn't happen */
+	if( t->status == EXEC_CMD_OK )
+	    switch( t->fate )
+	{
+	case T_FATE_INIT:
+	case T_FATE_MAKING:
+	    /* shouldn't happen */
 
-        case T_FATE_STABLE:
-        case T_FATE_NEWER:
-            break;
+	case T_FATE_STABLE:
+	case T_FATE_NEWER:
+	    break;
 
-        case T_FATE_CANTFIND:
-        case T_FATE_CANTMAKE:
-            t->status = EXEC_CMD_FAIL;
-            break;
+	case T_FATE_CANTFIND:
+	case T_FATE_CANTMAKE:
+	    t->status = EXEC_CMD_FAIL;
+	    break;
 
-        case T_FATE_ISTMP:
-            if( DEBUG_MAKE )
-                printf( "...using %s...\n", t->name );
-            break;
+	case T_FATE_ISTMP:
+	    if( DEBUG_MAKE )
+		printf( "...using %s...\n", t->name );
+	    break;
 
-        case T_FATE_TOUCHED:
-        case T_FATE_MISSING:
-        case T_FATE_OUTDATED:
-        case T_FATE_UPDATE:
-            /* Set "on target" vars, build actions, unset vars */
-            /* Set "progress" so that make1c() counts this target among */
-            /* the successes/failures. */
+	case T_FATE_TOUCHED:
+	case T_FATE_MISSING:
+	case T_FATE_OUTDATED:
+	case T_FATE_UPDATE:
+	    /* Set "on target" vars, build actions, unset vars */
+	    /* Set "progress" so that make1c() counts this target among */
+	    /* the successes/failures. */
 
-            if( t->actions )
-            {
-                ++counts->total;
-                if( DEBUG_MAKE && !( counts->total % 100 ) )
-                    printf( "...on %dth target...\n", counts->total );
+	    if( t->actions )
+	    {
+		++counts->total;
 
-                pushsettings( t->settings );
-                t->cmds = (char *)make1cmds( t->actions );
-                popsettings( t->settings );
+		if( DEBUG_MAKE && !( counts->total % 100 ) )
+		    printf( "...on %dth target...\n", counts->total );
 
-                t->progress = T_MAKE_RUNNING;
-            }
+		pushsettings( t->settings );
+		t->cmds = (char *)make1cmds( t->actions );
+		popsettings( t->settings );
 
-            break;
-        }
+		t->progress = T_MAKE_RUNNING;
+	    }
 
-    /* Call make1c() to begin the execution of the chain of commands */
-    /* needed to build target.  If we're not going to build target */
-    /* (because of dependency failures or because no commands need to */
-    /* be run) the chain will be empty and make1c() will directly */
-    /* signal the completion of target. */
+	    break;
+	}
 
-    make1c( t );
+	/* Call make1c() to begin the execution of the chain of commands */
+	/* needed to build target.  If we're not going to build target */
+	/* (because of dependency failures or because no commands need to */
+	/* be run) the chain will be empty and make1c() will directly */
+	/* signal the completion of target. */
+
+	make1c( t );
 }
 
 /*
@@ -275,7 +273,7 @@ make1c( TARGET *t )
 	if( cmd && t->status == EXEC_CMD_OK )
 	{
 	    if( DEBUG_MAKE )
-		if( DEBUG_MAKEQ || ! ( cmd->rule->actions->flags & RULE_QUIETLY ) )
+		if( DEBUG_MAKEQ || ! ( cmd->rule->flags & RULE_QUIETLY ) )
 	    {
 		printf( "%s ", cmd->rule->name );
 		list_print( lol_get( &cmd->args, 0 ) );
@@ -351,19 +349,7 @@ make1d(
 	/* status and signal our completion so make1c() can run the next */
 	/* command.  On interrupts, we bail heavily. */
 
-        if ( t->flags & T_FLAG_FAIL_EXPECTED )
-        {
-          /* invert execution result when FAIL_EXPECTED was applied */
-          switch (status)
-          {
-            case EXEC_CMD_FAIL: status = EXEC_CMD_OK; break;
-            case EXEC_CMD_OK:   status = EXEC_CMD_FAIL; break;
-            default:
-              ;
-          }
-        }
-        
-	if( status == EXEC_CMD_FAIL && ( cmd->rule->actions->flags & RULE_IGNORE ) )
+	if( status == EXEC_CMD_FAIL && ( cmd->rule->flags & RULE_IGNORE ) )
 	    status = EXEC_CMD_OK;
 
 	/* On interrupt, set intr so _everything_ fails */
@@ -386,7 +372,7 @@ make1d(
 	/* If the command was interrupted or failed and the target */
 	/* is not "precious", remove the targets */
 
-	if( status != EXEC_CMD_OK && !( cmd->rule->actions->flags & RULE_TOGETHER ) )
+	if( status != EXEC_CMD_OK && !( cmd->rule->flags & RULE_TOGETHER ) )
 	{
 	    LIST *targets = lol_get( &cmd->args, 0 );
 
@@ -428,7 +414,6 @@ make1cmds( ACTIONS *a0 )
 	for( ; a0; a0 = a0->next )
 	{
 	    RULE    *rule = a0->action->rule;
-            rule_actions *actions = rule->actions;
 	    SETTINGS *boundvars;
 	    LIST    *nt, *ns;
 	    ACTIONS *a1;
@@ -438,7 +423,7 @@ make1cmds( ACTIONS *a0 )
 	    /* Only do rules with commands to execute. */
 	    /* If this action has already been executed, use saved status */
 
-	    if( !actions || a0->action->running )
+	    if( !rule->actions || a0->action->running )
 		continue;
 
 	    a0->action->running = 1;
@@ -448,20 +433,20 @@ make1cmds( ACTIONS *a0 )
 	    /* on sources from each instance of this rule for this target. */
 
 	    nt = make1list( L0, a0->action->targets, 0 );
-	    ns = make1list( L0, a0->action->sources, actions->flags );
+	    ns = make1list( L0, a0->action->sources, rule->flags );
 
-	    if( actions->flags & RULE_TOGETHER )
+	    if( rule->flags & RULE_TOGETHER )
 		for( a1 = a0->next; a1; a1 = a1->next )
 		    if( a1->action->rule == rule && !a1->action->running )
 	    {
-		ns = make1list( ns, a1->action->sources, actions->flags );
+		ns = make1list( ns, a1->action->sources, rule->flags );
 		a1->action->running = 1;
 	    }
 
 	    /* If doing only updated (or existing) sources, but none have */
 	    /* been updated (or exist), skip this action. */
 
-	    if( !ns && ( actions->flags & ( RULE_NEWSRCS | RULE_EXISTING ) ) )
+	    if( !ns && ( rule->flags & ( RULE_NEWSRCS | RULE_EXISTING ) ) )
 	    {
 		list_free( nt );
 		continue;
@@ -469,7 +454,7 @@ make1cmds( ACTIONS *a0 )
 
 	    /* If we had 'actions xxx bind vars' we bind the vars now */
 
-	    boundvars = make1settings( actions->bindlist );
+	    boundvars = make1settings( rule->bindlist );
 	    pushsettings( boundvars );
 
 	    /*
@@ -510,7 +495,7 @@ make1cmds( ACTIONS *a0 )
 		    cmds->tail = cmd;
 		    start += chunk;
 		}
-		else if( ( actions->flags & RULE_PIECEMEAL ) && chunk > 1 )
+		else if( ( rule->flags & RULE_PIECEMEAL ) && chunk > 1 )
 		{
 		    /* Reduce chunk size slowly. */
 

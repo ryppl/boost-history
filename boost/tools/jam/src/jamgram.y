@@ -1,5 +1,6 @@
 %token _BANG
 %token _BANG_EQUALS
+%token _AMPER
 %token _AMPERAMPER
 %token _LPAREN
 %token _RPAREN
@@ -26,7 +27,6 @@
 %token IN
 %token INCLUDE
 %token LOCAL
-%token MODULE
 %token ON
 %token PIECEMEAL
 %token QUIETLY
@@ -37,10 +37,11 @@
 %token UPDATED
 %token WHILE
 %token _LBRACE
+%token _BAR
 %token _BARBAR
 %token _RBRACE
 /*
- * Copyright 1993, 2000 Christopher Seiwald.
+ * Copyright 1993-2002 Christopher Seiwald and Perforce Software, Inc.
  *
  * This file is part of Jam - see jam.c for Copyright information.
  */
@@ -78,8 +79,10 @@
 
 %token ARG STRING
 
-%left _BARBAR
-%left _AMPERAMPER
+%left _BARBAR _BAR
+%left _AMPERAMPER _AMPER
+%left _EQUALS _BANG_EQUALS IN
+%left _LANGLE _LANGLE_EQUALS _RANGLE _RANGLE_EQUALS
 %left _BANG
 
 %{
@@ -91,31 +94,29 @@
 #include "compile.h"
 #include "newstr.h"
 
-# define F0 (LIST *(*)(PARSE *, FRAME *))0
+# define F0 (LIST *(*)(PARSE *, LOL *))0
 # define P0 (PARSE *)0
 # define S0 (char *)0
 
 # define pappend( l,r )    	parse_make( compile_append,l,r,P0,S0,S0,0 )
-# define pfor( s,l,r,x )    	parse_make( compile_foreach,l,r,P0,s,S0,x )
+# define peval( c,l,r )		parse_make( compile_eval,l,r,P0,S0,S0,c )
+# define pfor( s,l,r )    	parse_make( compile_foreach,l,r,P0,s,S0,0 )
 # define pif( l,r,t )	  	parse_make( compile_if,l,r,t,S0,S0,0 )
-# define pwhile( l,r )	  	parse_make( compile_while,l,r,P0,S0,S0,0 )
 # define pincl( l )       	parse_make( compile_include,l,P0,P0,S0,S0,0 )
 # define plist( s )	  	parse_make( compile_list,P0,P0,P0,s,S0,0 )
 # define plocal( l,r,t )  	parse_make( compile_local,l,r,t,S0,S0,0 )
-# define pmodule( l,r )	  	parse_make( compile_module,l,r,P0,S0,S0,0 )
 # define pnull()	  	parse_make( compile_null,P0,P0,P0,S0,S0,0 )
+# define pon( l,r )	  	parse_make( compile_on,l,r,P0,S0,S0,0 )
 # define prule( s,p )     	parse_make( compile_rule,p,P0,P0,s,S0,0 )
 # define prules( l,r )	  	parse_make( compile_rules,l,r,P0,S0,S0,0 )
-# define pset( l,r,a )          parse_make( compile_set,l,r,P0,S0,S0,a )
-# define psetmodule( l,r ) 	parse_make( compile_set_module,l,r,P0,S0,S0,0 )
+# define pset( l,r,a ) 	  	parse_make( compile_set,l,r,P0,S0,S0,a )
 # define pset1( l,r,t,a )	parse_make( compile_settings,l,r,t,S0,S0,a )
 # define psetc( s,p )     	parse_make( compile_setcomp,p,P0,P0,s,S0,0 )
-# define psetc_args( s,p,a )    parse_make( compile_setcomp,p,a,P0,s,S0,0 )
 # define psete( s,l,s1,f ) 	parse_make( compile_setexec,l,P0,P0,s,s1,f )
 # define pswitch( l,r )   	parse_make( compile_switch,l,r,P0,S0,S0,0 )
+# define pwhile( l,r )   	parse_make( compile_while,l,r,P0,S0,S0,0 )
 
 # define pnode( l,r )    	parse_make( F0,l,r,P0,S0,S0,0 )
-# define pcnode( c,l,r )	parse_make( F0,l,r,P0,S0,S0,c )
 # define psnode( s,l )     	parse_make( F0,l,P0,P0,s,S0,0 )
 
 %}
@@ -145,15 +146,11 @@ rules	: rule
 		{ $$.parse = $1.parse; }
 	| rule rules
 		{ $$.parse = prules( $1.parse, $2.parse ); }
-	| LOCAL list assign_list_opt _SEMIC block
-		{ $$.parse = plocal( $2.parse, $3.parse, $5.parse ); }
+	| LOCAL list _SEMIC block
+		{ $$.parse = plocal( $2.parse, pnull(), $4.parse ); }
+	| LOCAL list _EQUALS list _SEMIC block
+		{ $$.parse = plocal( $2.parse, $4.parse, $6.parse ); }
 	;
-
-assign_list_opt : /* empty */
-                { $$.parse = pnull(); }
-        | _EQUALS list
-                { $$.parse = $2.parse; }
-        ;
 
 rule	: _LBRACE block _RBRACE
 		{ $$.parse = $2.parse; }
@@ -163,30 +160,24 @@ rule	: _LBRACE block _RBRACE
 		{ $$.parse = prule( $1.string, $2.parse ); }
 	| arg assign list _SEMIC
 		{ $$.parse = pset( $1.parse, $3.parse, $2.number ); }
-	| MODULE LOCAL list assign_list_opt _SEMIC
-		{ $$.parse = psetmodule( $3.parse, $4.parse ); }
 	| arg ON list assign list _SEMIC
 		{ $$.parse = pset1( $1.parse, $3.parse, $5.parse, $4.number ); }
 	| RETURN list _SEMIC
 		{ $$.parse = $2.parse; }
 	| FOR ARG IN list _LBRACE block _RBRACE
-		{ $$.parse = pfor( $2.string, $4.parse, $6.parse, 0 ); }
-	| FOR LOCAL ARG IN list _LBRACE block _RBRACE
-		{ $$.parse = pfor( $3.string, $5.parse, $7.parse, 1 ); }
+		{ $$.parse = pfor( $2.string, $4.parse, $6.parse ); }
 	| SWITCH list _LBRACE cases _RBRACE
 		{ $$.parse = pswitch( $2.parse, $4.parse ); }
-	| IF cond _LBRACE block _RBRACE 
+	| IF expr _LBRACE block _RBRACE 
 		{ $$.parse = pif( $2.parse, $4.parse, pnull() ); }
-	| MODULE list _LBRACE block _RBRACE 
-		{ $$.parse = pmodule( $2.parse, $4.parse ); }
-	| WHILE cond _LBRACE block _RBRACE 
-		{ $$.parse = pwhile( $2.parse, $4.parse ); }
-	| IF cond _LBRACE block _RBRACE ELSE rule
+	| IF expr _LBRACE block _RBRACE ELSE rule
 		{ $$.parse = pif( $2.parse, $4.parse, $7.parse ); }
-        | RULE ARG _LPAREN lol _RPAREN rule
-		{ $$.parse = psetc_args( $2.string, $6.parse, $4.parse ); }
+	| WHILE expr _LBRACE block _RBRACE
+		{ $$.parse = pwhile( $2.parse, $4.parse ); }
 	| RULE ARG rule
 		{ $$.parse = psetc( $2.string, $3.parse ); }
+	| ON arg rule
+		{ $$.parse = pon( $2.parse, $3.parse ); }
 	| ACTIONS eflags ARG bindlist _LBRACE
 		{ yymode( SCAN_STRING ); }
 	  STRING 
@@ -210,32 +201,36 @@ assign	: _EQUALS
 	;
 
 /*
- * cond - a conditional for 'if'
+ * expr - an expression for if
  */
 
-cond	: arg 
-		{ $$.parse = pcnode( COND_EXISTS, $1.parse, pnull() ); }
-	| arg _EQUALS arg 
-		{ $$.parse = pcnode( COND_EQUALS, $1.parse, $3.parse ); }
-	| arg _BANG_EQUALS arg
-		{ $$.parse = pcnode( COND_NOTEQ, $1.parse, $3.parse ); }
-	| arg _LANGLE arg
-		{ $$.parse = pcnode( COND_LESS, $1.parse, $3.parse ); }
-	| arg _LANGLE_EQUALS arg 
-		{ $$.parse = pcnode( COND_LESSEQ, $1.parse, $3.parse ); }
-	| arg _RANGLE arg 
-		{ $$.parse = pcnode( COND_MORE, $1.parse, $3.parse ); }
-	| arg _RANGLE_EQUALS arg 
-		{ $$.parse = pcnode( COND_MOREEQ, $1.parse, $3.parse ); }
-	| arg IN list
-		{ $$.parse = pcnode( COND_IN, $1.parse, $3.parse ); }
-	| _BANG cond
-		{ $$.parse = pcnode( COND_NOT, $2.parse, P0 ); }
-	| cond _AMPERAMPER cond 
-		{ $$.parse = pcnode( COND_AND, $1.parse, $3.parse ); }
-	| cond _BARBAR cond
-		{ $$.parse = pcnode( COND_OR, $1.parse, $3.parse ); }
-	| _LPAREN cond _RPAREN
+expr	: arg 
+		{ $$.parse = peval( EXPR_EXISTS, $1.parse, pnull() ); }
+	| expr _EQUALS expr 
+		{ $$.parse = peval( EXPR_EQUALS, $1.parse, $3.parse ); }
+	| expr _BANG_EQUALS expr
+		{ $$.parse = peval( EXPR_NOTEQ, $1.parse, $3.parse ); }
+	| expr _LANGLE expr
+		{ $$.parse = peval( EXPR_LESS, $1.parse, $3.parse ); }
+	| expr _LANGLE_EQUALS expr 
+		{ $$.parse = peval( EXPR_LESSEQ, $1.parse, $3.parse ); }
+	| expr _RANGLE expr 
+		{ $$.parse = peval( EXPR_MORE, $1.parse, $3.parse ); }
+	| expr _RANGLE_EQUALS expr 
+		{ $$.parse = peval( EXPR_MOREEQ, $1.parse, $3.parse ); }
+	| expr _AMPER expr 
+		{ $$.parse = peval( EXPR_AND, $1.parse, $3.parse ); }
+	| expr _AMPERAMPER expr 
+		{ $$.parse = peval( EXPR_AND, $1.parse, $3.parse ); }
+	| expr _BAR expr
+		{ $$.parse = peval( EXPR_OR, $1.parse, $3.parse ); }
+	| expr _BARBAR expr
+		{ $$.parse = peval( EXPR_OR, $1.parse, $3.parse ); }
+	| expr IN expr
+		{ $$.parse = peval( EXPR_IN, $1.parse, $3.parse ); }
+	| _BANG expr
+		{ $$.parse = peval( EXPR_NOT, $2.parse, pnull() ); }
+	| _LPAREN expr _RPAREN
 		{ $$.parse = $2.parse; }
 	;
 
@@ -279,15 +274,27 @@ list	: listp
 listp	: /* empty */
 		{ $$.parse = pnull(); yymode( SCAN_PUNCT ); }
 	| listp arg
-	{ $$.parse = pappend( $1.parse, $2.parse ); }
+		{ $$.parse = pappend( $1.parse, $2.parse ); }
 	;
 
 arg	: ARG 
 		{ $$.parse = plist( $1.string ); }
-	| _LBRACKET ARG lol _RBRACKET
-		{ $$.parse = prule( $2.string, $3.parse ); }
+	| _LBRACKET { yymode( SCAN_NORMAL ); } func _RBRACKET
+		{ $$.parse = $3.parse; }
 	;
 
+/*
+ * func - a function call (inside [])
+ * This needs to be split cleanly out of 'rule'
+ */
+
+func	: ARG lol
+		{ $$.parse = prule( $1.string, $2.parse ); }
+	| ON arg ARG lol
+		{ $$.parse = pon( $2.parse, prule( $3.string, $4.parse ) ); }
+	| ON arg RETURN list 
+		{ $$.parse = pon( $2.parse, $4.parse ); }
+	;
 
 /*
  * eflags - zero or more modifiers to 'executes'

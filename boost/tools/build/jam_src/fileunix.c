@@ -1,12 +1,12 @@
 /*
- * Copyright 1993, 1995 Christopher Seiwald.
+ * Copyright 1993-2002 Christopher Seiwald and Perforce Software, Inc.
  *
  * This file is part of Jam - see jam.c for Copyright information.
  */
 
 # include "jam.h"
 # include "filesys.h"
-# include "strings.h"
+# include "pathsys.h"
 
 # ifdef USE_FILEUNIX
 
@@ -15,11 +15,6 @@
      defined( OS_SCO ) || \
      defined( OS_ISC ) 
 # define PORTAR 1
-# endif
-
-# ifdef __EMX__
-# include <sys/types.h>
-# include <sys/stat.h>
 # endif
 
 # if defined( OS_RHAPSODY ) || \
@@ -40,7 +35,7 @@
 # endif
 
 # if defined( OS_MVS ) || \
-     defined( OS_INTERIX )
+     defined( OS_INTERIX ) || defined(OS_AIX)
 
 #define	ARMAG	"!<arch>\n"
 #define	SARMAG	8
@@ -100,12 +95,13 @@ struct ar_hdr		/* archive file member header - printable ascii */
 void
 file_dirscan( 
 	char *dir,
-	void (*func)( char *file, int status, time_t t ) )
+	scanback func,
+	void *closure )
 {
-	FILENAME f;
+	PATHNAME f;
 	DIR *d;
 	STRUCT_DIRENT *dirent;
-        string filename[1];
+	char filename[ MAXJPATH ];
 
 	/* First enter directory itself */
 
@@ -119,7 +115,7 @@ file_dirscan(
 	/* Special case / : enter it */
 
 	if( f.f_dir.len == 1 && f.f_dir.ptr[0] == '/' )
-	    (*func)( dir, 0 /* not stat()'ed */, (time_t)0 );
+	    (*func)( closure, dir, 0 /* not stat()'ed */, (time_t)0 );
 
 	/* Now enter contents of directory */
 
@@ -129,7 +125,6 @@ file_dirscan(
 	if( DEBUG_BINDSCAN )
 	    printf( "scan directory %s\n", dir );
 
-        string_new( filename );
 	while( dirent = readdir( d ) )
 	{
 # ifdef old_sinix
@@ -140,12 +135,10 @@ file_dirscan(
 # endif
 	    f.f_base.len = strlen( f.f_base.ptr );
 
-            string_truncate( filename, 0 );
-	    file_build( &f, filename, 0 );
+	    path_build( &f, filename, 0 );
 
-	    (*func)( filename->value, 0 /* not stat()'ed */, (time_t)0 );
+	    (*func)( closure, filename, 0 /* not stat()'ed */, (time_t)0 );
 	}
-        string_free( filename );
 
 	closedir( d );
 }
@@ -180,7 +173,8 @@ file_time(
 void
 file_archscan(
 	char *archive,
-	void (*func)( char *file, int status, time_t t ) )
+	scanback func,
+	void *closure )
 {
 # ifndef NO_AR
 	struct ar_hdr ar_hdr;
@@ -258,7 +252,7 @@ file_archscan(
 
 	    sprintf( buf, "%s(%s)", archive, lar_name );
 
-	    (*func)( buf, 1 /* time valid */, (time_t)lar_date );
+	    (*func)( closure, buf, 1 /* time valid */, (time_t)lar_date );
 
 	    offset += SARHDR + ( ( lar_size + 1 ) & ~1 );
 	    lseek( fd, offset, 0 );
@@ -278,7 +272,8 @@ file_archscan(
 void
 file_archscan(
 	char *archive,
-	void (*func)( char *file, int status, time_t t ) )
+	scanback func,
+	void *closure )
 {
 	struct fl_hdr fl_hdr;
 
@@ -324,7 +319,7 @@ file_archscan(
 
 	    sprintf( buf, "%s(%s)", archive, ar_hdr.hdr._ar_name.ar_name );
 
-	    (*func)( buf, 1 /* time valid */, (time_t)lar_date );
+	    (*func)( closure, buf, 1 /* time valid */, (time_t)lar_date );
 	}
 
 	close( fd );

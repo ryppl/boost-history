@@ -1,11 +1,11 @@
 /*
- * Copyright 1993, 1995 Christopher Seiwald.
+ * Copyright 1993-2002 Christopher Seiwald and Perforce Software, Inc.
  *
  * This file is part of Jam - see jam.c for Copyright information.
  */
 
 # include "jam.h"
-# include "filesys.h"
+# include "pathsys.h"
 
 # ifdef OS_VMS
 
@@ -16,11 +16,11 @@
  *
  * External routines:
  *
- *	file_parse() - split a file name into dir/base/suffix/member
- *	file_build() - build a filename given dir/base/suffix/member
- *	file_parent() - make a FILENAME point to its parent dir
+ *	path_parse() - split a file name into dir/base/suffix/member
+ *	path_build() - build a filename given dir/base/suffix/member
+ *	path_parent() - make a PATHNAME point to its parent dir
  *
- * File_parse() and file_build() just manipuate a string and a structure;
+ * File_parse() and path_build() just manipuate a string and a structure;
  * they do not make system calls.
  *
  * WARNING!  This file contains voodoo logic, as black magic is 
@@ -32,13 +32,13 @@
  */
 
 /*
- * file_parse() - split a file name into dir/base/suffix/member
+ * path_parse() - split a file name into dir/base/suffix/member
  */
 
 void
-file_parse( 
+path_parse( 
 	char	*file,
-	FILENAME *f )
+	PATHNAME *f )
 {
 	char *p, *q;
 	char *end;
@@ -80,7 +80,7 @@ file_parse(
 	p = 0;
 	q = file;
 
-	while( q = memchr( q, '.', end - q ) )
+	while( q = (char *)memchr( q, '.', end - q ) )
 	    p = q++;
 
 	if( p )
@@ -225,171 +225,191 @@ dir_flags(
 }
 
 /*
- * file_build() - build a filename given dir/base/suffix/member
+ * path_build() - build a filename given dir/base/suffix/member
  */
 
 void
-file_build(
-	FILENAME *f,
-	string	*file,
+path_build(
+	PATHNAME *f,
+	char	*file,
 	int	binding )
 {
-    struct dirinf root, dir;
-    int g;
+	char *ofile = file;
+	struct dirinf root, dir;
+	int g;
 
-    file_build1( f, file );
-        
-    /* Get info on root and dir for combining. */
+	/* Start with the grist.  If the current grist isn't */
+	/* surrounded by <>'s, add them. */
 
-    dir_flags( f->f_root.ptr, f->f_root.len, &root );
-    dir_flags( f->f_dir.ptr, f->f_dir.len, &dir );
+	if( f->f_grist.len )
+	{
+	    if( f->f_grist.ptr[0] != '<' ) *file++ = '<';
+	    memcpy( file, f->f_grist.ptr, f->f_grist.len );
+	    file += f->f_grist.len;
+	    if( file[-1] != '>' ) *file++ = '>';
+	}
 
-    /* Combine */
+	/* Get info on root and dir for combining. */
 
-    switch( g = grid[ root.flags ][ dir.flags ] )
-    {
-    case G_DIR:	
-        /* take dir */
-        string_append_range( file, f->f_dir.ptr, f->f_dir.ptr + f->f_dir.len  );
-        break;
+	dir_flags( f->f_root.ptr, f->f_root.len, &root );
+	dir_flags( f->f_dir.ptr, f->f_dir.len, &dir );
 
-    case G_ROOT:	
-        /* take root */
-        string_append_range( file, f->f_root.ptr, f->f_root.ptr + f->f_root.len  );
-        break;
+	/* Combine */
 
-    case G_VAD:	
-        /* root's dev + abs directory */
-        string_append_range( file, root.dev.ptr, root.dev.ptr + root.dev.len  );
-        string_append_range( file, dir.dir.ptr, dir.dir.ptr + dir.dir.len  );
-        break;
+	switch( g = grid[ root.flags ][ dir.flags ] )
+	{
+	case G_DIR:	
+		/* take dir */
+		memcpy( file, f->f_dir.ptr, f->f_dir.len );
+		file += f->f_dir.len;
+		break;
+
+	case G_ROOT:	
+		/* take root */
+		memcpy( file, f->f_root.ptr, f->f_root.len );
+		file += f->f_root.len;
+		break;
+
+	case G_VAD:	
+		/* root's dev + abs directory */
+		memcpy( file, root.dev.ptr, root.dev.len );
+		file += root.dev.len;
+		memcpy( file, dir.dir.ptr, dir.dir.len );
+		file += dir.dir.len;
+		break;
 		
-    case G_DRD:	
-    case G_DDD:
-        /* root's dev:[dir] + rel directory */
-        string_append_range( file, f->f_root.ptr, f->f_root.ptr + f->f_root.len  );
+	case G_DRD:	
+	case G_DDD:
+		/* root's dev:[dir] + rel directory */
+		memcpy( file, f->f_root.ptr, f->f_root.len );
+		file += f->f_root.len;
 
-        /* sanity checks: root ends with ] */
+		/* sanity checks: root ends with ] */
 
-        if( file->value[file->size - 1] == ']' )
-            string_pop_back( file );
+		if( file[-1] == ']' )
+		     --file;	
 
-        /* Add . if separating two -'s */
+		/* Add . if separating two -'s */
 
-        if( g == G_DDD )
-            string_push_back( file, '.' );
+		if( g == G_DDD )
+		    *file++ = '.';
 
-        /* skip [ of dir */
-        string_append_range( file, dir.dir.ptr + 1, dir.dir.ptr + 1 + dir.dir.len - 1  );
-        break;
+		/* skip [ of dir */
+		memcpy( file, dir.dir.ptr + 1, dir.dir.len - 1 );
+		file += dir.dir.len - 1;
+		break;
 
-    case G_VRD:	
-        /* root's dev + rel directory made abs */
-        string_append_range( file, root.dev.ptr, root.dev.ptr + root.dev.len  );
-        string_push_back( file, '[' );
-        /* skip [. of rel dir */
-        string_append_range( file, dir.dir.ptr + 2, dir.dir.ptr + 2 + dir.dir.len - 2  );
-        break;
-    }
+	case G_VRD:	
+		/* root's dev + rel directory made abs */
+		memcpy( file, root.dev.ptr, root.dev.len );
+		file += root.dev.len;
+		*file++ = '[';
+		/* skip [. of rel dir */
+		memcpy( file, dir.dir.ptr + 2, dir.dir.len - 2 );
+		file += dir.dir.len - 2;
+		break;
+	}
 
 # ifdef DEBUG
-    if( DEBUG_SEARCH && ( root.flags || dir.flags ) )
-    {
-        printf( "%d x %d = %d (%s)\n", root.flags, dir.flags,
-                grid[ root.flags ][ dir.flags ], file->value );
-    }
+	if( DEBUG_SEARCH && ( root.flags || dir.flags ) )
+	{
+		*file = 0;
+		printf( "%d x %d = %d (%s)\n", root.flags, dir.flags,
+			grid[ root.flags ][ dir.flags ], ofile );
+	}
 # endif 
 
-    /* 
-     * Now do the special :P modifier when no file was present.
-     *	(none)		(none)
-     *	[dir1.dir2]	[dir1]
-     *	[dir]		[000000]
-     *	[.dir]		[]
-     *	[]		[]
-     */
+	/* 
+	 * Now do the special :P modifier when no file was present.
+	 *	(none)		(none)
+	 *	[dir1.dir2]	[dir1]
+	 *	[dir]		[000000]
+	 *	[.dir]		[]
+	 *	[]		[]
+	 */
 
-    if( file->value[file->size - 1] == ']' && f->parent )
-    {
-        char* p = file->value + file->size;
-        while( p-- > file->value )
-        {
-            if( *p == '.' )
-            {
-                string_truncate( file, p - file->value );
-                string_push_back( file, ']' );
-                break;
-            }
-            else if( *p == '-' )
-            {
-                /* handle .- or - */
-                if( p > file->value && p[-1] == '.' )
-                    --p;
-                
-                *p++ = ']';
-                break;
-            }
-            else if( *p == '[' )
-            {
-                if( p[1] == ']' )
-                {
-                    p += 2;
-                }
-                else
-                {
-                    string_truncate( file, p - file->value );
-                    string_append( file, "[000000]" );
-                }
-                break;
-            }
-        }
-    }
+	if( file[-1] == ']' && f->parent )
+	{
+	    while( file-- > ofile )
+	    {
+		if( *file == '.' )
+		{
+		    *file++ = ']';
+		    break;
+		}
+		else if( *file == '-' )
+		{
+		    /* handle .- or - */
+		    if( file > ofile && file[-1] == '.' )
+		    	--file;
+		    *file++ = ']';
+		    break;
+		}
+		else if( *file == '[' )
+		{
+		    if( file[1] == ']' )
+		    {
+		    	file += 2;
+		    }
+		    else
+		    {
+			strcpy( file, "[000000]" );
+			file += 8;
+		    }
+		    break;
+		}
+	    }
+	}
 
-    /* Now copy the file pieces. */
+	/* Now copy the file pieces. */
 
-    if( f->f_base.len )
-    {
-        string_append_range( file, f->f_base.ptr, f->f_base.ptr + f->f_base.len  );
-    }
+	if( f->f_base.len )
+	{
+	    memcpy( file, f->f_base.ptr, f->f_base.len );
+	    file += f->f_base.len;
+	}
 
-    /* If there is no suffix, we append a "." onto all generated */
-    /* names.  This keeps VMS from appending its own (wrong) idea */
-    /* of what the suffix should be. */
+	/* If there is no suffix, we append a "." onto all generated */
+	/* names.  This keeps VMS from appending its own (wrong) idea */
+	/* of what the suffix should be. */
 
-    if( f->f_suffix.len )
-    {
-        string_append_range( file, f->f_suffix.ptr, f->f_suffix.ptr + f->f_suffix.len  );
-    }
-    else if( binding && f->f_base.len )
-    {
-        string_push_back( file, '.' );
-    }
+	if( f->f_suffix.len )
+	{
+	    memcpy( file, f->f_suffix.ptr, f->f_suffix.len );
+	    file += f->f_suffix.len;
+	}
+	else if( binding && f->f_base.len )
+	{
+	    *file++ = '.';
+	}
 
-    if( f->f_member.len )
-    {
-        string_push_back( file, '(' );
-        string_append_range( file, f->f_member.ptr, f->f_member.ptr + f->f_member.len  );
-        string_push_back( file, ')' );
-    }
+	if( f->f_member.len )
+	{
+	    *file++ = '(';
+	    memcpy( file, f->f_member.ptr, f->f_member.len );
+	    file += f->f_member.len;
+	    *file++ = ')';
+	}
+	*file = 0;
 
 # ifdef DEBUG
-    if( DEBUG_SEARCH )
-        printf("built %.*s + %.*s / %.*s suf %.*s mem %.*s -> %s\n", 
-               f->f_root.len, f->f_root.ptr,
-               f->f_dir.len, f->f_dir.ptr,
-               f->f_base.len, f->f_base.ptr,
-               f->f_suffix.len, f->f_suffix.ptr,
-               f->f_member.len, f->f_member.ptr,
-               file->value );
+	if( DEBUG_SEARCH )
+	    printf("built %.*s + %.*s / %.*s suf %.*s mem %.*s -> %s\n", 
+		    f->f_root.len, f->f_root.ptr,
+		    f->f_dir.len, f->f_dir.ptr,
+		    f->f_base.len, f->f_base.ptr,
+		    f->f_suffix.len, f->f_suffix.ptr,
+		    f->f_member.len, f->f_member.ptr,
+		    ofile );
 # endif
 }
 
 /*
- *	file_parent() - make a FILENAME point to its parent dir
+ *	path_parent() - make a PATHNAME point to its parent dir
  */
 
 void
-file_parent( FILENAME *f )
+path_parent( PATHNAME *f )
 {
 	if( f->f_base.len )
 	{

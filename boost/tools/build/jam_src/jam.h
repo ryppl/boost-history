@@ -1,5 +1,5 @@
 /*
- * Copyright 1993, 1995 Christopher Seiwald.
+ * Copyright 1993-2002 Christopher Seiwald and Perforce Software, Inc.
  *
  * This file is part of Jam - see jam.c for Copyright information.
  */
@@ -35,7 +35,7 @@
 
 # ifdef VMS
 
-int unlink( char *f ); 	/* In filevms.c */
+# define unlink remove
 
 # include <types.h>
 # include <file.h>
@@ -57,8 +57,8 @@ int unlink( char *f ); 	/* In filevms.c */
 # define EXITBAD 0
 # define DOWNSHIFT_PATHS
 
-/* This may be inaccurate */
-# ifndef __DECC
+/* Do any of these work? */
+# if defined( VAX ) || defined( __VAX ) || defined( vax )
 # define OSPLAT "OSPLAT=VAX"
 # endif 
 
@@ -84,10 +84,8 @@ int unlink( char *f ); 	/* In filevms.c */
 # define OSMINOR "OS=NT"
 # define OS_NT
 # define SPLITPATH ';'
-/* Windows NT 3.51 only allows 996 chars per line, but we deal */
-/* with problem in "execnt.c".                                 */
-# define MAXLINE 2047	/* longest 'together' actions */
-# define USE_EXECNT
+# define MAXLINE 996	/* longest 'together' actions */
+# define USE_EXECUNIX
 # define USE_PATHUNIX
 # define PATH_DELIM '\\'
 # define DOWNSHIFT_PATHS
@@ -129,10 +127,6 @@ int unlink( char *f ); 	/* In filevms.c */
 # define PATH_DELIM '\\'
 # define DOWNSHIFT_PATHS
 
-# ifdef __EMX__
-#   define USE_FILEUNIX
-# endif
-
 # endif
 
 /*
@@ -150,6 +144,7 @@ int unlink( char *f ); 	/* In filevms.c */
 # define OSMINOR "OS=MAC"
 # define OS_MAC
 # define SPLITPATH ','
+# define DOWNSHIFT_PATHS
 
 # endif
 
@@ -406,7 +401,9 @@ int unlink( char *f ); 	/* In filevms.c */
 # define OSPLAT "OSPLAT=ARM"
 # endif
 
-# if defined( __ia64__ ) || defined( __IA64__ )
+# if defined( __ia64__ ) || \
+     defined( __IA64__ ) || \
+     defined( _M_IA64 )
 # define OSPLAT "OSPLAT=IA64"
 # endif
 
@@ -445,7 +442,7 @@ int unlink( char *f ); 	/* In filevms.c */
 
 /* Jam private definitions below. */
 
-# define DEBUG_MAX	12
+# define DEBUG_MAX	10
 
 struct globs {
 	int	noexec;
@@ -477,7 +474,4 @@ extern struct globs globs;
 # define DEBUG_LISTS	( globs.debug[ 9 ] )	/* show list manipulation */
 # define DEBUG_SCAN	( globs.debug[ 9 ] )	/* show scanner tokens */
 # define DEBUG_MEM	( globs.debug[ 9 ] )	/* show memory use */
-
-# define DEBUG_PROFILE	( globs.debug[ 10 ] )	/* dump rule execution times */
-# define DEBUG_PARSE	( globs.debug[ 11 ] )	/* debug parsing */
 

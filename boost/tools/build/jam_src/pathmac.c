@@ -1,11 +1,11 @@
 /*
- * Copyright 1993, 1995 Christopher Seiwald.
+ * Copyright 1993-2002 Christopher Seiwald and Perforce Software, Inc.
  *
  * This file is part of Jam - see jam.c for Copyright information.
  */
 
 # include "jam.h"
-# include "filesys.h"
+# include "pathsys.h"
 
 # ifdef OS_MAC
 
@@ -16,15 +16,15 @@
  *
  * External routines:
  *
- *	file_parse() - split a file name into dir/base/suffix/member
- *	file_build() - build a filename given dir/base/suffix/member
- *	file_parent() - make a FILENAME point to its parent dir
+ *	path_parse() - split a file name into dir/base/suffix/member
+ *	path_build() - build a filename given dir/base/suffix/member
+ *	path_parent() - make a PATHNAME point to its parent dir
  *
- * File_parse() and file_build() just manipuate a string and a structure;
+ * File_parse() and path_build() just manipuate a string and a structure;
  * they do not make system calls.
  *
  * 04/08/94 (seiwald) - Coherent/386 support added.
- * 12/26/93 (seiwald) - handle dir/.suffix properly in file_build()
+ * 12/26/93 (seiwald) - handle dir/.suffix properly in path_build()
  * 12/19/94 (mikem) - solaris string table insanity support
  * 12/21/94 (wingerd) Use backslashes for pathnames - the NT way.
  * 02/14/95 (seiwald) - parse and build /xxx properly
@@ -36,16 +36,19 @@
  * 05/03/96 (seiwald) - split from filent.c, fileunix.c
  * 12/20/96 (seiwald) - when looking for the rightmost . in a file name,
  *		      don't include the archive member name.
+ * 01/10/01 (seiwald) - path_parse now strips the trailing : from the
+ *			directory name, unless the directory name is all
+ *			:'s, so that $(d:P) works.
  */
 
 /*
- * file_parse() - split a file name into dir/base/suffix/member
+ * path_parse() - split a file name into dir/base/suffix/member
  */
 
 void
-file_parse( 
+path_parse( 
 	char	*file,
-	FILENAME *f )
+	PATHNAME *f )
 {
 	char *p, *q;
 	char *end;
@@ -63,16 +66,19 @@ file_parse(
 
 	/* Look for dir: */
 
-	p = strrchr( file, DELIM );
-
-	if( p )
+	if( p = strrchr( file, DELIM ) )
 	{
 	    f->f_dir.ptr = file;
 	    f->f_dir.len = p - file;
-	    
-	    /* Dir of : is : */
-	    f->f_dir.len++;
 	    file = p + 1;
+
+	    /* All :'s? Include last : as part of directory name */
+
+	    while( p > f->f_dir.ptr && *--p == DELIM )
+		;
+
+	    if( p == f->f_dir.ptr )
+		f->f_dir.len++;
 	}
 
 	end = file + strlen( file );
@@ -109,7 +115,7 @@ file_parse(
 }
 
 /*
- * file_build() - build a filename given dir/base/suffix/member
+ * path_build() - build a filename given dir/base/suffix/member
  */
  
 # define DIR_EMPTY	0	/* "" */
@@ -151,89 +157,116 @@ file_flags(
 }
 
 void
-file_build(
-	FILENAME *f,
-	string* file,
+path_build(
+	PATHNAME *f,
+	char	*file,
 	int	binding )
 {
-    int dflag, rflag, act;
+	char *ofile = file;
+	int dflag, rflag, act;
+	
+	if( DEBUG_SEARCH )
+	{
+	printf("build file: ");
+	if( f->f_root.len )
+		printf( "root = '%.*s' ", f->f_root.len, f->f_root.ptr );
+	if( f->f_dir.len )
+		printf( "dir = '%.*s' ", f->f_dir.len, f->f_dir.ptr );
+	if( f->f_base.len )
+		printf( "base = '%.*s' ", f->f_base.len, f->f_base.ptr );
+	}
+	
+	/* Start with the grist.  If the current grist isn't */
+	/* surrounded by <>'s, add them. */
 
-    file_build1( f, file );
+	if( f->f_grist.len )
+	{
+	    if( f->f_grist.ptr[0] != '<' ) *file++ = '<';
+	    memcpy( file, f->f_grist.ptr, f->f_grist.len );
+	    file += f->f_grist.len;
+	    if( file[-1] != '>' ) *file++ = '>';
+	}
 	
-    /* Combine root & directory, according to the grid. */
+	/* Combine root & directory, according to the grid. */
 	
-    dflag = file_flags( f->f_dir.ptr, f->f_dir.len );
-    rflag = file_flags( f->f_root.ptr, f->f_root.len );
+	dflag = file_flags( f->f_dir.ptr, f->f_dir.len );
+	rflag = file_flags( f->f_root.ptr, f->f_root.len );
 	
-    switch( act = grid[ rflag ][ dflag ] )
-    {
-    case G_DTDR:
-        {
-            /* :: of rel dir */
-            string_push_back( file, DELIM );
-        }
-        /* fall through */
+	switch( act = grid[ rflag ][ dflag ] )
+	{
+	case G_DTDR:
+		/* :: of rel dir */
+		*file++ = DELIM;
+		/* fall through */
 		
-    case G_DIR: 	
-        /* take dir */
-        string_append_range( file, f->f_dir.ptr, f->f_dir.ptr + f->f_dir.len  );
-        break;
+	case G_DIR: 	
+		/* take dir */
+		memcpy( file, f->f_dir.ptr, f->f_dir.len );
+	    	file += f->f_dir.len;
+		break;
 		
-    case G_ROOT:	
-        /* take root */
-        string_append_range( file, f->f_root.ptr, f->f_root.ptr + f->f_root.len  );
-        break;
+	case G_ROOT:	
+		/* take root */
+		memcpy( file, f->f_root.ptr, f->f_root.len );
+	    	file += f->f_root.len;
+		break;
 	    
-    case G_CAT:	
-        /* prepend root to dir */
-        string_append_range( file, f->f_root.ptr, f->f_root.ptr + f->f_root.len  );
-        if( file->value[file->size - 1] == DELIM )
-            string_pop_back( file );
-        string_append_range( file, f->f_dir.ptr, f->f_dir.ptr + f->f_dir.len  );
-        break;
+	case G_CAT:	
+		/* prepend root to dir */
+		memcpy( file, f->f_root.ptr, f->f_root.len );
+	    	file += f->f_root.len;
+		if( file[-1] == DELIM ) --file;
+		memcpy( file, f->f_dir.ptr, f->f_dir.len );
+	    	file += f->f_dir.len;
+		break;
 	
-    case G_DDDD:	
-        /* make it ::: (../..) */
-        string_append( file, ":::" );
-        break;
-    }
+	case G_DDDD:	
+		/* make it ::: (../..) */
+		strcpy( file, ":::" );
+		file += 3;
+		break;
+	}
 
-    /* Put : between dir and file (if none already) */
+	/* Put : between dir and file (if none already) */
 	
-    if( act != G_MT && 
-        file->value[file->size - 1] != DELIM && 
-        ( f->f_base.len || f->f_suffix.len ) )
-    {
-        string_push_back( file, DELIM );
-    }
+	if( act != G_MT && 
+	    file[-1] != DELIM && 
+	    ( f->f_base.len || f->f_suffix.len ) )
+	{
+	    *file++ = DELIM;
+	}
 
-    if( f->f_base.len )
-    {
-        string_append_range( file, f->f_base.ptr, f->f_base.ptr + f->f_base.len  );
-    }
+	if( f->f_base.len )
+	{
+	    memcpy( file, f->f_base.ptr, f->f_base.len );
+	    file += f->f_base.len;
+	}
 
-    if( f->f_suffix.len )
-    {
-        string_append_range( file, f->f_suffix.ptr, f->f_suffix.ptr + f->f_suffix.len  );
-    }
+	if( f->f_suffix.len )
+	{
+	    memcpy( file, f->f_suffix.ptr, f->f_suffix.len );
+	    file += f->f_suffix.len;
+	}
 
-    if( f->f_member.len )
-    {
-        string_push_back( file, '(' );
-        string_append_range( file, f->f_member.ptr, f->f_member.ptr + f->f_member.len  );
-        string_push_back( file, ')' );
-    }
+	if( f->f_member.len )
+	{
+	    *file++ = '(';
+	    memcpy( file, f->f_member.ptr, f->f_member.len );
+	    file += f->f_member.len;
+	    *file++ = ')';
+	}
+	*file = 0;	
 	
-    if( DEBUG_SEARCH )
-        printf(" -> '%s'\n", file->value);
+	if( DEBUG_SEARCH )
+		printf(" -> '%s'\n", ofile);
 }
 
 /*
- *	file_parent() - make a FILENAME point to its parent dir
+ *	path_parent() - make a PATHNAME point to its parent dir
  */
 
 void
-file_parent( FILENAME *f )
+path_parent( PATHNAME *f )
 {
 	/* just set everything else to nothing */
 
