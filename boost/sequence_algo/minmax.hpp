@@ -214,7 +214,7 @@ namespace boost {
     if (first == last) return last;
     ForwardIter max_result = first;
     while (++first != last)
-      if (cond(*first) && *min_result < *first)
+      if (cond(*first) && *max_result < *first)
         max_result = first;
     return max_result;
   }
@@ -229,7 +229,7 @@ namespace boost {
     if (first == last) return last;
     ForwardIter max_result = first;
     while (++first != last)
-      if (cond(*first) && comp(*min_result, *first))
+      if (cond(*first) && comp(*max_result, *first))
         max_result = first;
     return max_result;
   }

@@ -25,188 +25,122 @@
 //              that points into the middle of the sequence) is not within
 //              (first, last]. The combination functions throw std::invalid_argument
 //              if the selection [first, r) is not in sorted order. [Phil Garofalo]
- 
 
+// Jul 01 2002  Replaced about two-thirds of the calls to sort with partial_sort.
+//              This should result in a more efficient program. Also introduced
+//              two error objects combinatorial_range_error and
+//              combinatorial_sequence_disorder. [Phil Garofalo]
+ 
+// Jul 02 2002  Added reverser adapter, removed references to greater<T>() because
+//              requirements stipulate that only < need be supported by the
+//              containter elements. Replaced calls to min_element_greater_than
+//              and max_element_less_than with min_element_if and max_element_if
+//              respectively. [Phil Garofalo]
+ 
 
 #ifndef BOOST_COMBINATORIAL_HPP
 #define BOOST_COMBINATORIAL_HPP
 
 #include <algorithm>            // std::sort(), std::rotate(), etc.
-#include <functional>           // greater<>(), not2()
+#include <functional>           // less<>()
 #include <stdexcept>            // out_of_range, invalid_argument
 #include <boost/utility.hpp>    // next()
+#include <algorithm.hpp>        // is_sorted()
+#include <minmax.hpp>           // min/max_element_if()
 
 namespace boost {
-    
-    // is_sorted -------------------------------------------------------//
-    
-    // Returns true if [first, last) is in std::sorted order, based on the
-    // less than operator.
-    
-    template<class ForwardIterator>
-        inline bool
-        is_sorted(ForwardIterator first, ForwardIterator last)
+
+    // Binary predicate argument reverser
+
+    template <class Predicate>
+    class binary_reverse : 
+        public binary_function<Predicate::first_argument_type,
+            Predicate::second_argument_type, bool>
     {
-        if (first != last)
-            for (ForwardIterator old = first; ++first != last; old = first)
-                if (*first < *old)
-                    return false;
-                
-                return true;
+    protected:
+        Predicate pred;
+    public:
+        binary_reverse(const Predicate& x) : pred(x) {}
+        bool operator()(const first_argument_type& x,
+            const second_argument_type& y) const
+        {
+            return pred(y, x);
+        }
+    };  // binary_reverse class
+
+    template <class Predicate>
+        inline binary_reverse<Predicate>
+        reverser(const Predicate& pred)
+    {
+        return binary_reverse<Predicate>(pred);
     }
     
-    // is_sorted -------------------------------------------------------//
-    
-    // Returns true if [first, last) is in std::sorted order, based on
-    // a user-supplied binary comparison operator.
-    
-    template<class ForwardIterator, class Compare>
-        inline bool
-        is_sorted(ForwardIterator first, ForwardIterator last, Compare comp)
+    // Two exception objects
+
+    // combinatorial_range_error ------------------------------------------//
+
+    struct combinatorial_range_error : public std::out_of_range
     {
-        if (first != last)
-            for (ForwardIterator old = first; ++first != last; old = first)
-                if (comp(*first, *old))
-                    return false;
-                
-                return true;
-    }
-    
-    // min_element_greater_than -------------------------------------------------//
-    
-    // Returns an iterator pointing to the smallest value in [first, last)
-    // greater than x. last is returned if value is not found.
-    
-    // Time complexity is linear, O((last-first)/2) assignments in average
-    // case.
-    
-    template<class ForwardIterator, class T>
-        inline ForwardIterator
-        min_element_greater_than(ForwardIterator first, ForwardIterator last,
-            const T& x)
+        combinatorial_range_error(const string& func) :
+            std::out_of_range(func +  ": r is not in range (first, last]")
+            { }
+    };
+
+    // combinatorial_sequence_disorder ------------------------------------//
+
+    struct combinatorial_sequence_disorder : public std::invalid_argument
     {
-        ForwardIterator hold = last;
-        for (; first != last; first++)
-            if (x < *first)
-                if (hold == last)
-                    hold = first;
-                else
-                    if (*first < *hold)
-                        hold = first;
-                    return hold;
-    }    // min_element_greater_than
-    
-    // min_element_greater_than -------------------------------------------------//
-    
-    // Returns an iterator pointing to the smallest value in [first, last) 
-    // greater than x, based on a user-supplied binary comparison operator.
-    // last is returned if value is not found.
-    
-    // Time complexity is linear, O((last-first)/2) assignments in average
-    // case.
-    
-    template<class ForwardIterator, class T, class Compare>
-        inline ForwardIterator
-        min_element_greater_than(ForwardIterator first, ForwardIterator last,
-            const T& x, Compare comp)
-    {
-        ForwardIterator hold = last;
-        for (; first != last; first++)
-            if (comp(x, *first))
-                if (hold == last)
-                    hold = first;
-                else
-                    if (comp(*first, *hold))
-                        hold = first;
-                    return hold;
-    }    // min_element_greater_than
-    
-    
-    // max_element_less_than -----------------------------------------------------//
-    
-    // Returns an iterator pointing to the largest object in [first, last)
-    // less than x. last is returned if no such value is present.
-    
-    template<class ForwardIterator, class T>
-        inline ForwardIterator
-        max_element_less_than(ForwardIterator first, ForwardIterator last, const T& x)
-    {
-        ForwardIterator hold = last;
-        for(; first != last; first++)
-            if (*first < x)
-                if (hold == last)
-                    hold = first;
-                else
-                    if (*hold < *first)
-                        hold = first;
-                    return hold;
-    }    // max_element_less_than
-    
-    // max_element_less_than -------------------------------------------------------//
-    
-    // Returns an iterator pointing to the largest object in [first, last)
-    // less than x, based on a user-supplied binary comparison operator.
-    // last is returned if no such object is present.
-    
-    template<class ForwardIterator, class T, class Compare>
-        inline ForwardIterator
-        max_element_less_than(ForwardIterator first, ForwardIterator last,
-            const T& x, Compare comp)
-    {
-        ForwardIterator hold = last;
-        for(; first != last; first++)
-            if (comp(*first, x))
-                if (hold == last)
-                    hold = first;
-                else
-                    if (comp(*hold, *first))
-                        hold = first;
-                    return hold;
-    }    // max_element_less_than
-    
+        combinatorial_sequence_disorder(const string& func) :
+            std::invalid_argument(func + ": [first, r) is not in order")
+            { }
+    };
     
     // next_r_permutation -----------------------------------------------//
     
     // Arranges the elements in [first, r), from the larger range [first,
     // last) where first < r <= last, such that they represent the next
-    // r-permutation of elements in lexicographical order. When calling
-    // the function for the first time, the elements in [first, last) must
-    // be in ascending lexicographical order. Typically, when the function
+    // r-permutation of elements in lexicographical (or dictionary) order.
+    // When calling the function for the first time, the elements in
+    // [first, last) should be in ascending lexicographical order to start
+    // the permutation sequence at its beginning. Typically, when the function
     // is called it arranges the next r-permutation in [first, r) and returns
     // true. When the last permutation in lexicographical order is passed in,
-    // the function std::sorts the entire range, [first, last) into ascending order,
-    // restarting the sequence, and returns false.
+    // the function std::sorts the entire range, [first, last) into ascending
+    // order, restarting the sequence, and returns false.
     
     template<class RandomAccessIterator>
         bool
         next_r_permutation(RandomAccessIterator first, RandomAccessIterator r,
             RandomAccessIterator last)
     {
-        if (last - first <= 1)
+        typedef typename iterator_traits<RandomAccessIterator>::value_type T;
+
+        if (last - first < 2)
             return false;
         if (!(first < r && r <= last))
-            throw std::out_of_range("next_r_permutation: r is not in (first, last]");
+            throw combinatorial_range_error("next_r_permutation");
         
         RandomAccessIterator i = r - 1;
         while(true)
         {
             // find smallest element greater than *i after index i.
-            RandomAccessIterator k = min_element_greater_than(i + 1, last, *i);
-            
+            RandomAccessIterator k =
+                min_element_if(i + 1, last, bind1st(less<T>(), *i));
+
             if (k == last)            // Didn't find it.
                 if (i == first)
                 {
-                    std::sort(first, last);    // O(n lg n)
+                    std::partial_sort(first, r, last);
                     return false;    // we're done--end of permutations
                 }
                 else
                     --i;
-                else
-                {
-                    std::swap(*i,* k);
-                    std::partial_sort(i + 1, r, last);    // O(n lg n), heapsort
-                    return true;
-                }    // else
+            else
+            {
+                std::swap(*i,* k);
+                std::partial_sort(i + 1, r, last);    // O(n lg n), heapsort
+                return true;
+            }    // else
         }    // while
     }    // next_r_permutation
     
@@ -220,31 +154,35 @@ namespace boost {
         next_r_permutation(RandomAccessIterator first, RandomAccessIterator r,
             RandomAccessIterator last, Compare comp)
     {
-        if (last - first <= 1)
+        typedef typename iterator_traits<RandomAccessIterator>::value_type T;
+     
+        if (last - first < 2)
             return false;
         if (!(first < r && r <= last))
-            throw std::out_of_range("next_r_permutation: r is not in (first, last]");
+            throw combinatorial_range_error("next_r_permutation");
         
         RandomAccessIterator i = r - 1;
         while(true)
         {
             // find smallest element greater than *i after index i.
-            RandomAccessIterator k = min_element_greater_than(i + 1, last, *i, comp);
-            
+            //RandomAccessIterator k = min_element_greater_than(i + 1, last, *i, comp);
+            RandomAccessIterator k =
+                min_element_if(i + 1, last, comp, bind2nd(reverser(comp), *i));
+
             if (k == last)            // Didn't find it.
                 if (i == first)
                 {
-                    std::sort(first, last, comp);
+                    std::partial_sort(first, r, last, comp);
                     return false;    // we're done--end of permutations
                 }
                 else
                     --i;
-                else
-                {
-                    std::swap(*i,* k);
-                    std::partial_sort(i + 1, r, last, comp);    // O(n lg n), heapsort
-                    return true;
-                }    // else
+            else
+            {
+                std::swap(*i,* k);
+                std::partial_sort(i + 1, r, last, comp);    // O(n lg n), heapsort
+                return true;
+            }    // else
         }    // while
     }    // next_r_permutation
     
@@ -253,13 +191,13 @@ namespace boost {
     // Arranges the elements in [first, r), from the larger range [first,
     // last) where first < r <= last, such that they represent the previous
     // r-permutation of elements in lexicographical order. When calling
-    // the function for the first time, the elements in [first, last) must
-    // be in descending lexicographical order. Typically, when the function
-    // is called it arranges the previous r-permutation in [first, r)
-    // and returns true. When the first permutation in lexicographical,
-    // order is passed in the function std::sorts the entire range, [first, last)
-    // into descending order, restarting the sequence at the end, and
-    // returns false.
+    // the function for the first time, the elements in [first, last) should
+    // be in descending lexicographical order to start a new series at the
+    // end. Typically, when the function is called it arranges the previous
+    // r-permutation in [first, r) and returns true. When the first permutation
+    // in lexicographical order is passed in, the function std::sorts the entire
+    // range, [first, last) into descending order, restarting the sequence
+    // at the end, and returns false.
     
     template<class RandomAccessIterator>
         bool
@@ -268,31 +206,33 @@ namespace boost {
     {
         typedef typename iterator_traits<RandomAccessIterator>::value_type T;
 
-        if (last - first <= 1)
+        if (last - first < 2)
             return false;
         if (!(first < r && r <= last))
-            throw std::out_of_range("prev_r_permutation: r is not in (first, last]");
+            throw combinatorial_range_error("prev_r_permutation");
         
         RandomAccessIterator i = r - 1;
         while(true)
         {
             // find smallest element greater than *i after index i.
-            RandomAccessIterator k = max_element_less_than(i + 1, last, *i);
+            //RandomAccessIterator k = max_element_less_than(i + 1, last, *i);
+            RandomAccessIterator k =
+                max_element_if(i + 1, last, bind2nd(less<T>(), *i));
             
             if (k == last)            // Didn't find it.
                 if (i == first)
                 {
-                    std::sort(first, last, greater<T>());
+                    std::partial_sort(first, r, last, reverser(less<T>()));
                     return false;    // we're done--end of permutations
                 }
                 else
                     --i;
-                else
-                {
-                    std::swap(*i,* k);
-                    std::partial_sort(i+1, r, last, greater<T>());    // O(n lg n), heapsort
-                    return true;
-                }    // else
+            else
+            {
+                std::swap(*i,* k);
+                std::partial_sort(i+1, r, last, reverser(less<T>()));    // O(n lg n), heapsort
+                return true;
+            }    // else
         }    // while
     }    // prev_r_permutation
     
@@ -306,31 +246,35 @@ namespace boost {
         prev_r_permutation(RandomAccessIterator first, RandomAccessIterator r,
             RandomAccessIterator last, Compare comp)
     {
-        if (last - first <= 1)
+        typedef typename iterator_traits<RandomAccessIterator>::value_type T;
+
+        if (last - first < 2)
             return false;
         if (!(first < r && r <= last))
-            throw std::out_of_range("prev_r_permutation: r is not in (first, last]");
+            throw combinatorial_range_error("prev_r_permutation");
         
         RandomAccessIterator i = r - 1;
         while(true)
         {
             // find smallest element greater than *i after index i.
-            RandomAccessIterator k = max_element_less_than(i + 1, last, *i, comp);
+            //RandomAccessIterator k = max_element_less_than(i + 1, last, *i, comp);
+            RandomAccessIterator k =
+                max_element_if(i + 1, last, comp, bind2nd(comp, *i));
             
             if (k == last)            // Didn't find it.
                 if (i == first)
                 {
-                    std::sort(first, last, not2(comp));
+                    std::partial_sort(first, r, last, reverser(comp));
                     return false;    // we're done--end of permutations
                 }
                 else
                     --i;
-                else
-                {
-                    std::swap(*i,* k);
-                    std::partial_sort(i + 1, r, last, not2(comp));    // O(n lg n), heapsort 
-                    return true;
-                }    // else
+            else
+            {
+                std::swap(*i,* k);
+                std::partial_sort(i + 1, r, last, reverser(comp));    // O(n lg n), heapsort 
+                return true;
+            }    // else
         }    // while
     }    // prev_r_permutation
     
@@ -340,48 +284,53 @@ namespace boost {
     // Arranges the elements in [first, r), from the larger range [first,
     // last) where first < r <= last, such that they represent the next
     // r-combination of elements in lexicographical order. The elements
-    // in [first, last) must be in ascending lexicographical order.
+    // in [first, r) must be in ascending lexicographical order.
     // When the function is called and a next combination exists,
     // it arranges the next r-combination in [first, r) and returns true. 
-    // If the next combination does not exist, the function std::sorts the entire 
-    // range, [first, last) into ascending order, restarting the sequence,
-    // and returns false.
+    // If the next combination does not exist, the function std::sorts the
+    // entire range, [first, last) into ascending order, restarting the
+    // sequence, and returns false.
     
     template<class RandomAccessIterator>
         bool
         next_r_combination(RandomAccessIterator first, RandomAccessIterator r,
             RandomAccessIterator last)
     {
-        if (last - first <= 1)
+        typedef typename iterator_traits<RandomAccessIterator>::value_type T;
+
+        if (last - first < 2)
             return false;
         if (!(first < r && r <= last))
-            throw std::out_of_range("next_r_combination: r is not in (first, last]");
+            throw combinatorial_range_error("next_r_combination");
         if (!is_sorted(first, r))
-            throw std::invalid_argument("next_r_combination: [first, r) is not in order");
+            throw combinatorial_sequence_disorder("next_r_combination");
         
         RandomAccessIterator i = r - 1;
         while(true)
         {
-            RandomAccessIterator j = min_element_greater_than(r, last, *i);
+            //RandomAccessIterator j = min_element_greater_than(r, last, *i);
+            RandomAccessIterator j =
+                min_element_if(r, last, bind1st(less<T>(), *i));
             if (j == last)
                 if (i == first)
                 {
-                    std::sort(first, last);
+                    std::partial_sort(first, r, last);
                     return false;
                 }
                 else
                     --i;
-                else
+            else
+            {
+                std::swap(*i,* j);
+                for(++i; i < r; i++)
                 {
-                    std::swap(*i,* j);
-                    for(++i; i < r; i++)
-                    {
-                        j = min_element_greater_than(r, last, *(i - 1));
-                        if (j != last)
-                            std::swap(*i,* j);
-                    }    // for
-                    return true;
-                }    // else
+                    //j = min_element_greater_than(r, last, *(i - 1));
+                    j = min_element_if(r, last, bind1st(less<T>(), *(i - 1)));
+                    if (j != last)
+                        std::swap(*i,* j);
+                }    // for
+                return true;
+            }    // else
         }    // while
     }    // next_r_combination
     
@@ -395,36 +344,41 @@ namespace boost {
         next_r_combination(RandomAccessIterator first, RandomAccessIterator r,
             RandomAccessIterator last, Compare comp)
     {
-        if (last - first <= 1)
+        typedef typename iterator_traits<RandomAccessIterator>::value_type T;
+
+        if (last - first < 2)
             return false;
         if (!(first < r && r <= last))
-            throw std::out_of_range("next_r_combination: r is not in (first, last]");
+            throw combinatorial_range_error("next_r_combination");
         if (!is_sorted(first, r, comp))
-            throw std::invalid_argument("next_r_combination: [first, r) is not in order");
+            throw combinatorial_sequence_disorder("next_r_combination");
         
         RandomAccessIterator i = r - 1;
         while(true)
         {
-            RandomAccessIterator j = min_element_greater_than(r, last, *i, comp);
+            //RandomAccessIterator j = min_element_greater_than(r, last, *i, comp);
+            RandomAccessIterator j =
+                min_element_if(r, last, comp, bind2nd(reverser(comp), *i));
             if (j == last)
                 if (i == first)
                 {
-                    std::sort(first, last, comp);
+                    std::partial_sort(first, r, last, comp);
                     return false;
                 }
                 else
                     --i;
-                else
+            else
+            {
+                std::swap(*i, *j);
+                for(++i; i < r; ++i)
                 {
-                    std::swap(*i, *j);
-                    for(++i; i < r; ++i)
-                    {
-                        j = min_element_greater_than(r, last, *(i - 1), comp);
-                        if (j != last)
-                            std::swap(*i, *j);
-                    }    // for
-                    return true;
-                }    // else
+                    //j = min_element_greater_than(r, last, *(i - 1), comp);
+                    j = min_element_if(r, last, comp, bind2nd(reverser(comp), *(i - 1)));
+                    if (j != last)
+                        std::swap(*i, *j);
+                }    // for
+                return true;
+            }    // else
         }    // while
     }    // next_r_combination
     
@@ -434,7 +388,7 @@ namespace boost {
     // Arranges the elements in [first, r), from the larger range [first,
     // last) where first < r <= last, such that they represent the
     // previous r-combination of elements in lexicographical order.
-    // The elements in [first, last) must be in ascending lexicographical
+    // The elements in [first, r) must be in ascending lexicographical
     // order. When the function is called and a prior combination exists,
     // it arranges the previous r-combination in [first, r) and returns 
     // true. If the prior combination does not exist, the function 
@@ -446,12 +400,12 @@ namespace boost {
         prev_r_combination(RandomAccessIterator first, RandomAccessIterator r,
             RandomAccessIterator last)
     {
-        if (last - first <= 1)
+        if (last - first < 2)
             return false;
         if (!(first < r && r <= last))
-            throw std::out_of_range("prev_r_combination: r is not in (first, last]");
+            throw combinatorial_range_error("prev_r_combination");
         if (!is_sorted(first, r))
-            throw std::invalid_argument("prev_r_combination: [first, r) is not in order");
+            throw combinatorial_sequence_disorder("prev_r_combination");
 
         std::sort(r, last);
         for (RandomAccessIterator i = last - 1; i >= r; --i)
@@ -477,19 +431,19 @@ namespace boost {
         prev_r_combination(RandomAccessIterator first, RandomAccessIterator r,
             RandomAccessIterator last, Compare comp)
     {
-        if (last - first <= 1)
+        if (last - first < 2)
             return false;
         if (!(first < r && r <= last))
-            throw std::out_of_range("prev_r_combination: r is not in (first, last]");
+            throw combinatorial_range_error("prev_r_combination");
         if (!is_sorted(first, r, comp))
-            throw std::invalid_argument("prev_r_combination: [first, r) is not in order");
+            throw combinatorial_sequence_disorder("prev_r_combination");
 
         std::sort(r, last, comp);
         for (RandomAccessIterator i = last - 1; i >= r; i--)
             for (RandomAccessIterator j = first; j < r; j++)
                 if (comp(*i, *j))
                 {
-                    std::swap(*j,* i);
+                    std::swap(*j, *i);
                     std::sort(++j, last, comp);    // O(n lg n)
                     std::rotate(j, last - (r - j), last); // 2*[n/2]+[m/2]+[(n-m)/2] exchanges
                     return true;
