@@ -1,0 +1,147 @@
+\documentclass{article}
+\usepackage{hyperref}
+\usepackage{vmargin}
+\usepackage{amsmath}
+\setpapersize{USletter}
+\setmarginsrb{1in}{1in}{1in}{1in}{0.25in}{0.25in}{0in}{0in}
+
+
+\begin{document}
+
+\markboth{Doc. no: NXXXX=04-YYYY}{Doc. no: NXXXX=04-YYYY}
+\pagestyle{myheadings}
+
+\title{Accessing the target of a \texttt{tr1::function} object}
+\author{Douglas Gregor}
+\date{}
+\maketitle
+
+\par\noindent Document number: NXXXX=04-YYYY
+\par\noindent Date: \today
+\par\noindent Project: Programming Language C++, Library Working Group
+\par\noindent Reply-to: Douglas Gregor $<${\tt dgregor at cs.indiana.edu}$>$
+
+\section{Introduction}
+Class template \texttt{tr1::function} stores function objects of
+arbitrary types. While these function objects are copied, invoked, and
+destroyed by the implementation as needed, their identities are
+completely lost to the user: there is no way to access the stored
+function object or determine its type. 
+
+Both of these abilities are desirable, especially when
+using \texttt{tr1::function} to build higher-level callback constructs
+such as delegates or signals/slots. In particular, these capabilities
+are required to implement delegates that can ignore duplicate targets
+and remove targets based on their function object values. For
+instance, one can imagine creating a \texttt{delegate} class template
+that operates like this (and is implemented with a container of
+\texttt{tr1::function} objects):
+
+\begin{verbatim}
+enum mouse_button { mb_left, mb_middle, mb_right };
+
+delegate<void(int x, int y, mouse_button)> on_click;
+
+on_click += display_context_menu();
+
+// Say we want to record clicks for playback later...
+on_click += record_macro(macro_name);
+
+// We're done recording the macro: remove the function object
+on_click -= record_macro(macro_name);
+\end{verbatim}
+
+Here, the implementation of \texttt{-=} needs to compare function
+object wrappers for equality. Herb Sutter discusses these limitations in much
+more detail~\cite{Sutter03:Observer} and provides additional motivation for
+these features.
+
+\section{Target access}
+I propose to introduce two member functions to class template
+\texttt{tr1::function}, \texttt{type} and \texttt{target}. The
+\texttt{type} member function returns an \texttt{std::type\_info}
+object referring to the type of the target function object (or
+\texttt{typeid(void)} if there is no target):
+
+\begin{verbatim}
+tr1::function<int(int, int)> f = std::plus<int>();
+assert(f.type() == typeid(std::plus<int>));
+tr1::function<int(int, int)> g;
+assert(g.type() == typeid(void));
+\end{verbatim}
+
+The \texttt{target} member function is templated on the type of the
+target and returns a pointer to the actual target function object (if
+the type matches) or a null pointer (if the type does not match),
+e.g.:
+
+\begin{verbatim}
+std::plus<int>* fp = f.target<std::plus<int> >(); // OK, fp points to stored object
+std::minus<int>* nfp = f.target<std::minus<int> >(); // OK, NULL pointer
+\end{verbatim}
+
+There are several alternatives to the member functions proposed, the
+most popular of which is some form of \texttt{operator==} for
+\texttt{tr1::function}. I am not proposing any variant of
+\texttt{operator==} because:
+\begin{itemize}
+
+\item We would still require the \texttt{type} and \texttt{target}
+member functions (or something like them) to have full access to the
+function object targets.
+
+\item \texttt{operator==} is unimplementable for
+\texttt{tr1::function} within the C++ language, because we do not have
+a reliable way to detect if a given type \texttt{T} is
+\textsc{Equality Comparable} without user assistance.
+
+\item A more limited form of \texttt{operator==}, which can compare a
+\texttt{tr1::function} object to any potential target, is
+implementable but less intuitive.\footnote{Peter Dimov noted that
+this form of \texttt{operator==} is sufficient to implement
+delegates.} We need more experience before we can commit to such a
+strange form of operator.
+
+\item Adding \texttt{operator==} is not useful unless all of the
+standard binders also add \texttt{operator==}. 
+\end{itemize}
+
+\section{Proposed Text}
+Add to the end of the class definition in 3.4.3 [tr.func.wrap.func]:
+\begin{verbatim}
+// function target access
+type_info type() const;
+template<typename T> T* target();
+template<typename T> const T* target() const;
+\end{verbatim}
+
+Add a new section 3.4.3.5 ``function target access''  
+[tr.func.wrap.func.target]:
+
+\begin{verbatim}
+type_info type() const;
+\end{verbatim}
+
+\noindent\textbf{Returns}: If \texttt{*this} has a target of type
+\texttt{T}, \texttt{typeid(T)}; otherwise, \texttt{typeid(void)}.
+
+\noindent\textbf{Throws}: will not throw.
+
+\begin{verbatim}
+template<typename T> T* target();
+template<typename T> const T* target() const;
+\end{verbatim}
+
+\noindent\textbf{Requires}: \texttt{T} must be a function object type
+callable with parameter types \texttt{T1}, \texttt{T2}, $\ldots$,
+\texttt{TN} and return type \texttt{R}.
+
+\noindent\textbf{Returns}: If \texttt{type() == typeid(T)}, a pointer
+to the stored function target; otherwise, the NULL pointer.
+
+\noindent\textbf{Throws}: will not throw.
+
+\bibliographystyle{abbrv}
+\bibliography{function_target_access}
+
+\end{document}
