@@ -6,8 +6,8 @@
 #  define BOOST_HAS_UNISTD_H
 #  define BOOST_NO_CWCHAR
 #  define BOOST_NO_STDC_NAMESPACE
-#  ifndef BOOST_SYSTEM_HAS_STDINT_H
-#     define BOOST_SYSTEM_HAS_STDINT_H
+#  ifndef BOOST_HAS_STDINT_H
+#     define BOOST_HAS_STDINT_H
 #  endif
 #endif
 

@@ -21,8 +21,10 @@
 #include <cstddef>
 
 #if defined(__MSL__) && (__MSL__ >= 0x5000)
-#  define BOOST_SYSTEM_HAS_STDINT_H
-#  define BOOST_HAS_UNISTD_H
+#  define BOOST_HAS_STDINT_H
+#  if defined(macintosh)
+#     define BOOST_HAS_UNISTD_H
+#  endif
 #endif
 
 

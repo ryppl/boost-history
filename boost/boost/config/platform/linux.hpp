@@ -1,7 +1,7 @@
 // linux specific config options:
 #define BOOST_PLATFORM "linux"
 
-#define BOOST_SYSTEM_HAS_STDINT_H
+#define BOOST_HAS_STDINT_H
 #define BOOST_NO_SWPRINTF
 
 #ifndef __GNUC__

@@ -132,7 +132,7 @@
 #     endif
       // POSIX version 6 requires <stdint.h>
 #     if defined(_POSIX_VERSION) && (_POSIX_VERSION >= 200100)
-#        define BOOST_SYSTEM_HAS_STDINT_H
+#        define BOOST_HAS_STDINT_H
 #     endif
       // POSIX defines _POSIX_THREADS > 0 for pthread support,
       // however some platforms define _POSIX_THREADS without
@@ -170,7 +170,7 @@
 // have a <stdint.h>:
 //
 #  if defined(__STDC_VERSION__) && (__STDC_VERSION__ >= 199901)
-#     define BOOST_SYSTEM_HAS_STDINT_H
+#     define BOOST_HAS_STDINT_H
 #  endif
 
 //
