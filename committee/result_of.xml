@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+  "http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<section>
+  <title>A uniform method for computing function object return types (revision 1)</title>
+
+  <variablelist>
+    <varlistentry><term>Document number</term><listitem><simpara>N1454=03-0037</simpara></listitem></varlistentry>
+    <varlistentry><term>Revises document number</term><listitem><simpara>N1437=03-0019</simpara></listitem></varlistentry>
+    <varlistentry><term>Date</term><listitem><simpara>27 February 2003</simpara></listitem></varlistentry>
+    <varlistentry><term>Project</term><listitem><simpara>Programming Language C++, Library Working Group</simpara></listitem></varlistentry>
+    <varlistentry><term>Reply-to</term><listitem><simpara>Doug Gregor <email>gregod@cs.rpi.edu</email></simpara></listitem></varlistentry>
+  </variablelist>
+
+  <section>
+    <title>Introduction</title>
+
+    <using-namespace name="std"/>
+
+    <para>This proposal introduces a class template
+    <code><classname>result_of</classname></code> that computes the
+    return type of a function object call. <code>result_of</code> is
+    intended to act as a bridge from the function objects of C++98 to
+    more powerful function objects as used in current binding and
+    composition libraries. This bridge provides both forward
+    compatibility, allowing C++02 code to derive benefits from future
+    C++ revisions without modification, and backward compatibility to
+    enable next-generation libraries to retain compatiblity with C++98
+    and C++02 compilers.</para>
+
+    <para>Function objects provide customization for standard library
+    algorithms and are therefore important for the effective use of
+    these algorithms. Experience has shown that programs using
+    function objects generally use a large number of very simple
+    function objects. Many of these function objects merely reorder,
+    drop, or introduce values for parameters, and then forward to
+    other functions; they are function object adaptors.</para>
+
+    <para>The design of function object adaptors reduces to writing
+    forwarding functions that can accept a set of arguments, transform
+    those arguments in some manner, and pass the resulting arguments
+    to another function. There are two important considerations when
+    writing any forwarding function, regardless of the argument
+    transformation: how to forward the arguments to the underlying
+    function object and how to return the result returned by the
+    underlying function object. The former is discussed extensively in
+    [Dimov02]; the latter is the subject of this proposal.</para>
+  </section>
+
+  <section>
+    <title>Existing Practice</title>
+
+    <para>The C++98 standard requires that unary and binary function
+    objects define a member type <code>result_type</code> specifying
+    the type returned from <code>operator()</code>. While this method
+    works well for simple function objects (and has been adopted by
+    even very flexible composition and binding libraries, such as
+    Boost.Bind [cite]), it is incompatible with function objects with
+    an overloaded or templated <code>operator()</code>. These function
+    objects may not have values of the same type returned from every
+    instance of <code>operator()</code>, and the result type may not
+    even be known until a complete set of argument types is
+    given. Thus it is impossible to define a single
+    <code>result_type</code> member type. Such function objects do not
+    fit the function object model of the standard library, and
+    therefore modern binding and composition libraries have defined
+    new (somewhat incompatible) methods for deducing return
+    types.</para>
+
+    <para>The basic method employed by most libraries that require
+    return type deduction beyond what <code>result_type</code> can
+    provide is to require each function object to define a member
+    template that accepts a list of argument types and defines a
+    member type that indicates the return type of the function object
+    when called with arguments of the given types. The specific
+    details vary among libraries: the argument type list may be
+    specifed via separate template arguments or it may be bundled
+    together in a typelist of some form; the return type deduction is
+    sometimes performed by a namespace-level class template that
+    forwards to a member template (e.g., <code>actor_result</code> in
+    Phoenix [cite]); and the names of these entities differ among
+    implementations (e.g., <code>result</code> in Phoenix [cite] and
+    <code>sig</code> in Lambda). The following example defines a
+    simple function object whose return type depends on its argument
+    type:</para>
+
+<programlisting>struct square_ {
+  template&lt;typename T&gt; struct result {
+    typedef T type;
+  }
+
+  template&lt;typename T&gt; T operator()(T&amp; x) const
+  {
+    return x*x;
+  }
+};</programlisting>
+
+  </section>
+
+  <section>
+    <title>Syntax and examples</title>
+
+    <para>The <code>result_of</code> class template follows the
+    existing practice. It defines a namespace-level class template
+    (<code>result_of</code>) that determines the return type of a
+    function object given the argument types to be passed to that
+    function object, and defines two methods for retrieving the
+    function call operator return type from the function object type:
+    the first uses <code>result_type</code>, for backward
+    compatibility with simple function objects, and the second uses a
+    nested <code>result</code> member class template, for use with
+    more powerful function objects.</para>
+
+    <para>The definition of the behavior of <code>result_of</code> is
+    straightforward: given types <code>F</code>, <code>T1</code>,
+    <code>T2</code>, ..., <code>TN</code> and lvalues <code>f</code>,
+    <code>t1</code>, <code>t2</code>, ..., <code>tN</code> of those
+    types, respectively, the type expression
+    
+
+<programlisting>result_of&lt;F(T1, T2, ..., TN)&gt;::type</programlisting> 
+
+    evaluates to the type of the expression <code>f(t1, t2, ...,
+    tN)</code>.</para>
+
+    <para>A generic forwarding function object may then be defined as:</para>
+    <programlisting>template&lt;typename F&gt; struct forwardN {
+  template&lt;typename Args&gt; struct result;
+
+  template&lt;typename T, typename T1, typename T2, ..., typename TN&gt;
+  struct result&lt;T(T1, T2, ..., TN)&gt; {
+    typedef typename result_of&lt;F(T1, T2, ..., TN)&gt;::type type;
+  };
+
+  template&lt;typename T, typename T1, typename T2, ..., typename TN&gt;
+  struct result&lt;const T(T1, T2, ..., TN)&gt; {
+    typedef typename result_of&lt;const F(T1, T2, ..., TN)&gt;::type type;
+  };
+
+  template&lt;typename T1, typename T2, ..., typename TN&gt;
+  typename result&lt;forwardN(T1, T2, ..., TN)&gt;::type
+  operator()(T1&amp; t1, T2&amp; t2, ..., TN&amp; tN) 
+  {
+    return f(t1, t2, ..., tN);
+  }
+
+  template&lt;typename T1, typename T2, ..., typename TN&gt;
+  typename result&lt;const forwardN(T1, T2, ..., TN)&gt;::type
+  operator()(T1&amp; t1, T2&amp; t2, ..., TN&amp; tN) const
+  {
+    return f(t1, t2, ..., tN);
+  }
+
+  F f;
+};</programlisting>
+  </section>
+
+  <section>
+    <title>Looking Ahead</title>
+  
+    <para>The problem of determining the return type of a function
+    object call is a subset of the more general problem of determining
+    the result type of an expression. If this larger problem is solved
+    (e.g., by a form of <code>typeof</code>[cite]) in future revisions
+    of C++, that solution may be used directly with the proposed
+    <code>result_of</code>, as may vendor-specific extensions with
+    similar functionality. It is the intention of this proposal that
+    with a suitable <code>typeof</code> implementation (i.e., one that
+    preserves references and cv-qualifiers) the definition of
+    <code>result_of</code> would be as trivial as:</para>
+
+    <programlisting>template&lt;typename F, typename T1, typename T2, ..., typename TN&gt;
+class result_of&lt;F(T1, T2, ..., TN)&gt; {
+  static F f;
+  static T1 t1;
+  static T2 t2;
+       .
+       .
+       .
+  static TN tN;
+  
+public:
+  typedef typeof(f(t1, t2, ..., tN)) type;
+};</programlisting>
+
+    <para>The advent of <code>typeof</code> should not be viewed as
+    nullifying this proposal. Much to the contrary, this proposal
+    defines a method by which C++98 libraries can both benefit today
+    from a simple, powerful method for deducing function object return
+    types and be prepared for tomorrow's language support for return
+    type deduction. Using the proposed <code>result_of</code>, a C++98
+    forwarding function object such as the aforementioned
+    <code>forwardN</code> will automatically use any advances in
+    return type deduction as they become available in newer compiler
+    and standard library implementations.</para>
+  </section>
+
+  <section>
+    <title>Impact on the Standard</title>
+
+    <para>This proposal defines a pure extension to the header
+    <code>&lt;functional&gt;</code>. It introduces only one additional
+    name, <code>result_of</code>, into namespace
+    <code>std</code>.</para>
+  </section>
+
+  <library-reference>
+    <title>Proposed Text</title>
+    
+    <para></para>
+    <header name="functional">
+      <namespace name="std">
+        <class name="result_of">
+          <template>
+            <template-type-parameter name="FunctionCallTypes"
+              comment="Function type F(T1, T2, ..., TN)"/>
+          </template>
+
+          <typedef name="type">
+            <type><emphasis>unspecified</emphasis></type>
+          </typedef>
+
+          <purpose>Determines the result type of function object call expressions.</purpose>
+
+          <description>
+            <para>Given an lvalue <code>f</code> of type
+            <code>F</code> and lvalues <code>t1</code>,
+            <code>t2</code>, ..., <code>tN</code> of types
+            <code>T1</code>, <code>T2</code>, ..., <code>TN</code>,
+            respectively, the <code>type</code> member type defines
+            the result type of the expression <code>f(t1, t2, ...,
+            tN)</code>.</para>
+ 
+            <para>The implementation may determine the member type
+            <code>type</code> via any means that produces the exact
+            type of the expression <code>f(t1, t2, ..., tN)</code> for
+            the given types.</para>
+
+            <para>If the implementation cannot determine the type of
+            the expression <code>f(t1, t2, ..., tN)</code>, or if the
+            expression is ill-formed, the implementation shall use the
+            following process to determine the member type
+            <code>type</code>:
+            <orderedlist spacing="compact">
+              <listitem><para>If <code>F</code> is a function type, <code>type</code> is the return type of the function type <code>F</code>.</para></listitem>
+              <listitem><para>If <code>F</code> is a member function type, <code>type</code> is the return type of the member function type <code>F</code>.</para></listitem>
+              <listitem><para>If <code>F</code> is a function object defined by the standard library, the method of determining <code>type</code> is unspecified.</para></listitem>
+              <listitem><para>If <code>F</code> is a class type with a member type <code>result_type</code>, <code>type</code> is <code>F::result_type</code>.</para></listitem>
+              <listitem><para>If <code>F</code> is a class type with no member named <code>result_type</code> or if <code>F::result_type</code> is not a type:
+                <orderedlist spacing="compact">
+                  <listitem><simpara>If <code>N=0</code> (no arguments), <code>type</code> is <code>void</code>.</simpara></listitem>
+                  <listitem><simpara>If <code>N&gt;0</code>, <code>type</code> is <code>F::result&lt;F(T1, T2, ..., TN)&gt;::type</code>.</simpara></listitem>
+                </orderedlist></para></listitem>
+              <listitem><para>Otherwise, the program is ill-formed.</para></listitem>
+            </orderedlist>
+            </para>           
+          </description>
+        </class>
+      </namespace>
+    </header>
+  </library-reference>
+
+  <section>
+    <title>Rationale</title>
+
+    <orderedlist>
+      <listitem><para><code>result_of</code> syntax: the
+      <code>result_of</code> syntax differs from existing
+      practice. Existing libraries generally pass the argument types
+      as individual template arguments or via a tuple-like typelist
+      facility. However, it should be noted that these libraries
+      predate the use of function types to encode operations and
+      argument lists. There are several other advantages to the
+      function type encoding:</para>
+      <itemizedlist spacing="compact">
+        <listitem><para>The syntax of the type computation closely mirrors the syntax of the run-time computation.</para></listitem>
+        <listitem><para>The function type includes in a natural way the type of the function object (even when forwarding to the <code>result</code> member class template), allowing for differentiation between invocations of a function object with differing cv-qualifiers.</para></listitem>
+        <listitem><para>Limitations on the number of argument types are not introduced by the <code>result_of</code> class template.</para></listitem>
+        <listitem><para>Auxiliary typelist types are not introduced.</para></listitem>
+        <listitem><para>With the acceptance of the function object wrappers proposal [cite], there is precedent for the user of function types to encode function argument lists.</para></listitem>
+      </itemizedlist>
+      </listitem>
+
+      <listitem><para><code>result_of&lt;F()&gt;::type</code>: the
+      zero-argument case must differ from cases with one or more
+      arguments when the return type is not easily deducible (e.g.,
+      via a function pointer, member function pointer,
+      implementation-specific deduction, or <code>result_type</code>
+      member) due to the C++ template class instantiation rules. When
+      a template class is instantiated, the declarations of every
+      non-template member function are instantiated. This poses a
+      problem for function objects attempting to accept zero
+      arguments, because the declaration of the zero-argument
+      <code>operator()</code> (and, correspondingly,
+      <code>result_of&lt;F()&gt;</code>) will be instanted even if the
+      function is not called. However, the underlying function object
+      may not accept zero arguments (and, thus,
+      <code>F::result&lt;F()&gt;::type</code> may be
+      ill-formed).</para> <para>The cost of this special case is that
+      function objects accepting zero arguments must specialize
+      <code>result_of</code> for zero arguments or provide a single
+      result type via <code>result_type</code>.</para></listitem>
+    </orderedlist>
+  </section>
+
+  <section>
+    <title>Acknowledgements</title> <para>Jaakko J&auml;rvi, Peter
+    Dimov, Joel de Guzman, and Gary Powell were all instrumental in
+    bounding the definition of <code>result_of</code>.</para>
+  </section>
+</section>

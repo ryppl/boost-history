@@ -1,0 +1,633 @@
+\documentclass{article}
+\usepackage{hyperref}
+\usepackage{fullpage}
+
+\begin{document}
+\title{Typesafe Variable-length Function and Template Argument Lists}
+\author{Douglas Gregor \and Gary Powell \and Jaakko J\"arvi}
+\maketitle
+
+\section{Introduction}
+This proposal addresses three problems under a unified framework:
+\begin{itemize}
+\item The inability to instantiate class and function templates with an arbitrarily-long list of template parameters.
+\item The inability to pass an arbitrary number of arguments to a function in a type-safe manner.
+\item The argument forwarding problem.
+\end{itemize}
+
+The proposed resolution is to introduce a syntax and semantics for
+variable-length template argument lists (usable with function templates
+via explicit template argument specification and with class templates)
+along with a method of argument building using the same mechanism to
+pass an arbitrary number of function call arguments to a function in a
+typesafe manner.
+
+\section{Motivation}
+\subsection{Variable-length template parameter lists}
+Variable-length template parameter lists allow a class or function
+template to accept some number (possibly zero) of template arguments
+beyond the number of template parameters specified. This behavior can
+be simulated in C++ via a long list of defaulted template parameters,
+e.g., a typelist wrapper may appear as:
+
+\begin{verbatim}
+struct unused;
+template<typename T1 = unused, typename T2 = unused, 
+         typename T3 = unused, typename T4 = unused, 
+         /* up to */ typename TN = unused> class list;
+\end{verbatim}
+
+This technique is used by the Boost Tuples library~\cite{Tuples01},
+for the specification of class template {\tt std::tuple<>} in the
+library TR~\cite{Jarvi02}, and in the Boost metaprogramming
+library~\cite{Gurtovoy02}. Unfortunately, this method leads to very
+long type names in error messages (compilers tend to print the
+defaulted arguments) and very long mangled names. It is also not
+scalable to additional arguments without resorting to preprocessor
+magic~\cite{Preprocessor01}. In all of these libraries (and presumably
+many more), an implementation based on template varargs would be
+shorter and would not suffer the limitations of the aforementioned
+implementation. The declaration of the {\tt list<>} template above may
+be:
+\begin{verbatim}
+template<...> class list;
+\end{verbatim}
+
+This language feature is primarily designed for library developers,
+and is drawn from experience in library development where these
+techniques have been simulated in one way or
+another~\cite{Gurtovoy02,Lambda02,Tuples01,Function01,Bind01}. Novice
+users aren't likely to use this feature, as any use of a heterogenous
+type container ({\tt tuple}, in this case) requires some degree of
+metaprogramming, although advanced users may require this
+functionality. 
+
+\subsection{Typesafe Variable-length Function Parameter Lists}
+Variable-length function parameter lists (denoted by an ellipsis at
+the end of a function parameter list) allow an arbitrary number of
+function call arguments to be passed to a function that declares fewer
+parameters than it is passed. This feature is rarely used in C++ code
+(except for compatibility with C libraries), because passing non-POD
+types through {\tt ...} invokes undefined behavior. However, such a
+feature is useful in some contexts, e.g., for implementing a type-safe
+C++ {\tt printf} that works for non-POD types. The lack of such a
+facility has resulted in odd syntax for formatting~\cite{Krempp02},
+e.g.:
+\begin{verbatim}
+format("writing %1%, x=%2%: %3%-th try") % "toto" % 40.23 % 50
+\end{verbatim}
+
+\subsection{Argument forwarding}
+The forwarding problem, as described in~\cite{Dimov02}, is:
+
+\begin{quote}
+  For a given expression $E(a_1, a_2, ..., a_n)$ that depends on the
+  (generic) parameters $a_1, a_2, ..., a_n$, it is not possible to
+  write a function (object) $f$ such that $f(a_1, a_2, ..., a_n)$ is
+  equivalent to $E(a_1, a_2, ..., a_n)$.
+\end{quote}
+
+The primary issue with the argument forwarding problem is to deduce
+the types of $a_1, a_2, ..., a_n$ such that they can be forwarded to
+the underlying function $E$ without changing the semantics of the
+expression. The common implementation idiom is to accept a (non-const)
+reference for each parameter, and to provide overloads for some number
+of arguments to forward, e.g.:
+\begin{verbatim}
+template<typename E, typename T1>
+void f(E e, T1& a1) { e(a1); }
+
+template<typename E, typename T1, typename T2>
+void f(E e, T1& a1, T2& a2) { e(a1, a2); }
+
+template<typename E, typename T1, typename T2, typename T3>
+void f(E e, T1& a1, T2& a2, T3& a3) { e(a1, a2, a3); }
+
+// repeat up to N arguments
+\end{verbatim}
+
+This proposal solves both issues: arguments are passed via the ``Const
++ Non-const reference'' option \#3 enumerated in~\cite{Dimov02}, which
+results in ``perfect'' forwarding of arguments, but does not require
+$2^N$ overloads to support $N$ arguments: instead, a single overload
+suffices for any number of arguments. The solution matches all three
+criteria (C1-C3) of the argument forwarding paper~\cite{Dimov02}, but
+bundling the arguments into a single argument and provides an
+unbundling method to pass the arguments on to another function.
+
+\section{Syntax and Semantics}
+\subsection{Variable-length template parameter lists}
+\par The template parameter list to a function or class template can
+be declared to accept an arbitrary number of extra template arguments
+by terminating it with ``...'' optionally followed by an identifier
+that will hold a tuple of the extra arguments. Any number of template
+parameters may precede the ``...''. Thus we can define, for instance,
+a class {\tt Foo} accepting a template type parameter followed by an
+arbitrary number of template arguments as:
+\begin{verbatim}
+template<typename T, ... Args> class Foo;
+\end{verbatim}
+
+Here, {\tt T} is the name of the template type parameter and {\tt
+  Args} is the name of a {\tt std::tuple<>}~\cite{Jarvi02} containing
+the (possibly empty) set of template arguments given to {\tt Foo}.
+Given the instantiation {\tt Foo<int, float, double, std::string>},
+{\tt Elements} would be {\tt std::tuple<float, double, std::string>}
+(note that {\tt T} is {\tt int}). 
+
+Nontype and template template arguments are not placed directly in
+the tuple (see~\cite{Jarvi02}), so they are wrapped in {\tt
+  nontype\_template\_arg} or {\tt template\_template\_arg}, respectively. 
+
+{\tt nontype\_template\_arg} is defined as:
+\begin{verbatim}
+template<typename T, T V> struct nontype_template_arg {
+  typedef T type;
+  static const T value = V; 
+};
+\end{verbatim}
+
+{\tt template\_template\_arg} is a class template with the following
+signature: 
+\begin{verbatim}
+template<typename Designator>
+struct template_template_arg {
+  template<... Args> struct apply {
+    typedef /* see below */ type;
+  }
+};
+\end{verbatim}
+
+The {\tt Designator>} type is an unspecified type that uniquely
+identifies the class template (e.g., {\tt std::vector}) but that is
+itself not a template. The {\tt apply} member class template accepts
+some number of template arguments and instantiates the template
+designated by the {\tt Designator} with those parameters. Thus
+instantiating {\tt Foo<int, std::vector>} results in {\tt Args} being
+{\tt std::tuple<template\_template\_arg<X> >} (where {\tt X} is
+unspecied and unique to {\tt std::vector}) and where {\tt
+  template\_template\_arg<X>::apply<int>::type} is equivalent to {\tt
+  std::vector<int>}. 
+
+Default template arguments will be applied when fewer template
+arguments are specified in {\tt Args} than are defined for {\tt U}.
+Thus, the instantiation {\tt Foo<int, std::vector, 17>} would result
+in Args being the tuple \\ {\tt std::tuple<template\_template\_arg<???>,
+  nontype\_template\_arg<int, 17>}.
+
+Function templates may also be declared to accept variable-length
+template parameter lists in the same manner as class templates. In
+this case (and barring an ellipsis in the function parameter list, as
+described in the next section) arguments may only by specified
+explicitly when calling the function template; they are not deduced,
+e.g.,:
+
+\begin{verbatim}
+template<... Args> void f();
+// ... 
+f<int, double>(); // Args will be std::tuple<int, double>
+\end{verbatim}
+
+\subsection{Typesafe variable-length function parameter lists}
+When a function template contains an ellipsis (followed by an
+identifier), that identifier may be reused as the type of the final
+parameter in the function's parameter list to accept the tuple of
+arguments passed to the function. For instance, a C++ {\tt printf} may
+be declared as:
+\begin{verbatim}
+template<... Args>
+  void printf(const char* format, Args args);
+\end{verbatim}
+
+{\tt Args} is deduced as an {\tt std::tuple} containing the types of
+the arguments, then {\tt args} is a value of that type containing the
+function call arguments passed after the {\tt format}
+argument.\footnote{Note that, unlike C varargs, we do not require but
+  do allow an argument prior to the argument bundle.} Arguments are
+then accessed via any operations on a tuple. 
+
+\subsection{Forwarding function arguments}
+A tuple of values can be forwarded to a function object via a new
+function template {\tt std::apply} that unbundles a tuple into
+separate elements to be passed to a function object. The
+pseudo-declarations for {\tt std::apply} are:
+\begin{verbatim}
+template<typename F, typename T1, typename T2, ..., typename TN>
+the-return-type apply(F& f, tuple<T1, T2, ..., TN>& t);
+
+template<typename F, typename Class, typename T1, typename T2, ..., typename TN>
+the-return-type apply(F Class::*pm, Class& obj, tuple<T1, T2, ..., TN>& t);
+
+template<typename F, typename Class, typename T1, typename T2, ..., typename TN>
+the-return-type apply(F Class::*pm, const Class& obj, tuple<T1, T2, ..., TN>& t);
+
+\end{verbatim}
+A call expression {\tt std::apply(f, t)} where {\tt f} is a function
+object and {\tt t} is of type {\tt std::tuple<T1, T2, ..., TN>}
+returns {\tt f(get<1>(t), get<2>(t), ..., get<N>(t))}. Similarly, a
+call expression {\tt std::apply(pmf, obj, t)}, where {\tt pmf} is a
+pointer-to-member function, {\tt obj} is an object whose type is equal
+to or derived from the type of the member function pointer's class
+type, and {\tt t} is of type {\tt std::tuple<T1, T2, ..., TN>} returns
+{\tt (obj.*pmf)(get<1>(t), get<2>(t), ..., get<N>(t))}.
+
+With this definition, we can define a function {\tt g} that forwards
+perfectly to its function object parameter {\tt f}:
+\begin{verbatim}
+template<typename F, ... Args>
+  the-return-type g(F f, Args args) {return std::apply(f, args);}
+\end{verbatim}
+
+\subsection{Argument type deduction}
+The type of each element in the argument tuple is deduced to achieve
+perfect argument forwarding. For an argument {\tt xi}, the type {\tt
+  Ti} of the corresponding tuple element is the parameter type of the
+{\tt forward} function determined by overload resolution using the
+following two candidates:
+\begin{verbatim}
+template<typename T> void forward(T&);
+template<typename T> void forward(const T &);
+\end{verbatim}
+
+\subsection{Partial ordering of vararg class template partial specializations}
+The class template partial specialization partial ordering rules will
+need to be augmented to include partial ordering with vararg
+templates. Intuitively, a binding to a parameter that falls into a
+template's variable-length argument list is weaker than a binding to a
+specified template parameter. For instance, given:
+
+\begin{verbatim}
+template<...> struct foo;
+template<typename T, ...> struct foo<T>; // #1
+template<typename T, typename U> struct foo<T, U>; // #2
+\end{verbatim}
+
+Partial specialization \#2 is more specialized than partial
+specialization \#1 because \#2 requires that the second template
+argument by a type (and not a template or acceptable
+literal). 
+
+Formalizing this notion, we introduce a new type of template
+parameter we call a template {\em variant} parameter. Template variant
+parameters cannot be declared explicitly, but occur implicitly as
+parameters for vararg templates. However, any template argument
+(type, nontype, or template) can be passed to a template {\em variant}
+parameter. 
+
+Paragraph 3 of 14.5.5.2 [temp.func.order] describes the rules for
+transforming a template for the purpose of partial ordering. To
+support partial ordering with template varargs, introduce an
+additional bullet:
+\begin{itemize}
+\item If after removing the variable-length template parameter list
+  designator from both templates the template parameter lists of the
+  templates are of different length, append unique template variant
+  parameters to the shorted template parameter list until the template
+  parameter lists are of equal length.
+\end{itemize}
+
+\subsection{Overloading}
+\label{overloading}
+The overloading rules need two minor changes to accomodate template
+varargs:
+\begin{itemize}
+\item Template vararg functions follow the same overloading rules as
+  non-template vararg functions.
+\item If two overloads differ only in that one is a template vararg
+  function and the other is a non-template vararg function, the
+  template vararg function is more specialized.
+\end{itemize}
+
+Thus we prefer the typesafe template varargs to unsafe template
+varargs, even though these rules conflict with 13.3.3p1,
+which prefers non-template functions to template functions when the
+conversion sequences are otherwise equal. 
+
+\subsection{Function traits}
+The Type Traits library proposal~\cite{Maddock03} defines a set of
+class templates that report information about types. We propose to add
+one additional class template {\tt function\_traits} that reports
+information about function types. The pseudo-definition follows:
+\begin{verbatim}
+template<typename FunctionType> struct function_traits;
+
+// For each 0 <= N <= implementation-defined maximum
+template<typename R, typename T1, typename T2, ..., typename TN>
+struct function_traits<R(T1, T2, ..., TN)>
+{
+  typedef R result_type;
+  typedef tuple<T1, T2, ..., TN> argument_types;
+};
+\end{verbatim}
+
+This class template can be implemented for a fixed number of
+arguments in a library, but requires compiler support to handle an
+arbitrary number of arguments. It is useful for many libraries that
+deal with function and member function pointers as function objects,
+where one may need to forward a set of function arguments whose types
+are fixed (see Section~\ref{functionimpl}).
+
+\section{Examples}
+This section gives skeletal implementations of four library
+components, including Tuples, all of which were accepted by the
+library working group into the first library TR. The implementations
+are not complete, but omit only features that are irrelevant to the
+discussion of template varargs. 
+
+\subsection{Member pointer adaptor implementation}
+The following code implements the enhanced member pointer adaptor
+proposal~\cite{Dimov03a}. The {\tt enable\_if} and {\tt
+  is\_function\_type} class templates are used but not defined, as
+they are implementable directly in C++2003 and their definitions would
+offer little additional insight.
+
+\small
+\begin{verbatim}
+template<typename Class, typename FunctionType>
+struct mem_fn_adaptor
+{
+  mem_fn_adaptor(FunctionType Class::*pmf) : pmf(pmf) {}
+  
+  template<... Args>
+  the-return-type operator()(Class& object, Args args) const
+    { return std::apply(pmf, object, args); }
+
+  template<... Args>
+  the-return-type operator()(const Class& object, Args args) const
+    { return std::apply(pmf, object, args); }
+
+  template<typename T, ..., Args>
+  the-return-type operator()(T& ptr, Args args) const
+    { return std::apply(pmf, *ptr, args); }
+
+  template<typename T, ..., Args>
+  the-return-type operator()(const T& ptr, Args args) const
+    { return std::apply(pmf, *ptr, args); }
+
+private:
+  FunctionType Class::*pmf;
+};
+
+template<typename Class, typename T>
+struct mem_ptr_adaptor
+{
+  mem_ptr_adaptor(T Class::*pm) : pm(pm) {}
+
+  T& operator()(Class& object) const { return object.*pm; }
+  const T& operator()(const Class& object) const { return object.*pm; }
+
+  template<typename Ptr> const T& operator()(Ptr& ptr) const 
+    { return (*ptr).*pm; }
+  template<typename Ptr> const T& operator()(const Ptr& ptr) const
+    { return (*ptr).*pm; }
+
+private:
+  T Class::*pm;
+};
+
+template<typename Class, typename FunctionType>
+typename enable_if<(is_function_type<FunctionType>::value), 
+                   mem_fn_adaptor<Class, FunctionType> >::type
+mem_fn(FunctionType Class::*pmf)
+  { return mem_fn_adaptor<Class, FunctionType>(pmf); }
+
+template<typename Class, typename T>
+typename enable_if<(!is_function_type<T>::value), 
+                   mem_fn_adaptor<Class, T> >::type
+mem_fn(T Class::*pm)
+  { return mem_fn_adaptor<Class, T>(pm); }
+\end{verbatim}
+\normalsize 
+
+\subsection{Tuple implementation}
+\label{tupleimpl}
+The following code implements the interesting portions of the Tuple
+proposal~\cite{Jarvi02} using template varargs as proposed here. Note
+that there is a mutual dependency: template varargs depend on tuples
+and tuples are specified as a class template accepting a
+variable-length template argument list. However,
+this mutual dependency is not problematic, because no tuple types need
+to be named until after the {\tt tuple} template has been
+defined. The definition of tuples is recursive, such that a tuple of
+length $N$ is implemented as a ``head'' element and a tuple of length
+$N-1$, with a tuple of length $0$ specified as an explicit
+specialization.
+
+\small
+\begin{verbatim}
+// Tuple is tuple tuple<T1, T2, ..., TN>
+template<typename Tuple> struct tuple_tail;
+
+template<... Elements>
+class tuple
+{
+  typedef typename tuple_element<Elements, 1>::type head_type;
+  typedef typename tuple_tail<Elements>::type tail_type;
+  typedef tuple self_type;
+
+public:
+  tuple() {}
+
+  template<typename T1, ... Args> explicit tuple(const T1& t1, Args args)
+    : head(t1), tail(args) {}
+
+  template<typename Tuple>
+  tuple(const Tuple& other,
+        typename enable_if<(is_base_and_derived<tuple<>, self_type>::value),
+                           void>::type * = 0)
+    : head(other.head), tail(other.tail) {}
+
+  template<typename Tuple>
+  typename enable_if<(is_base_and_derived<tuple<>, self_type>::value),
+                     tuple&>::type
+  operator=(const Tuple& tuple)
+  {
+    head = other.head;
+    tail = other.tail;
+    return *this;
+  }
+
+private:
+  head_type head;
+  tail_type tail;
+};
+
+// Base case: a nullary tuple
+template<> class tuple<> {};
+
+// 2-element case, for pair specializations
+template<typename T1, typename T2>
+class tuple
+{
+  typedef T1 head_type;
+  typedef tuple<T2> tail_type;
+
+public:
+  tuple() {}
+
+  tuple(const T1& t1, const T2& t2) : head(t1), tail(t2) {}
+
+  template<typename U1, typename U2>
+  tuple(const pair<U1, U2>& other) : head(other.first), tail(other.second) {}
+
+  template<typename U1, typename U2>
+  tuple(const tuple<U1, U2>& other) : head(other.head), tail(other.tail) {}
+
+  template<typename U1, typename U2>
+  tuple& operator=(const pair<U1, U2>& other)
+  {
+    head = other.first;
+    tail = tail_type(other.second);
+    return *this;
+  }
+
+  template<typename U1, typename U2>
+  tuple& operator=(const tuple<U1, U2>& other)
+  {
+    head = other.head;
+    tail = other.tail;
+    return *this;
+  }
+};
+
+// Tuple is tuple tuple<T1, T2, ..., TN>
+template<typename Tuple>
+struct tuple_tail
+{
+  // tuple<T2, T3, ..., TN>
+  typedef /* ... */ type;
+
+  // Returns tuple<T2, T3, ..., TN>(get<2>(t), get<3>(t), ..., get<N>(t))
+  type get(const Tuple& t);
+};
+
+// Tuple is tuple<T1, T2, ..., TN>
+template<typename Tuple>
+struct make_tuple_result
+{
+  // tuple<U1, U2, ..., UN>, where:
+  //  V1 = T1 with top-level lvalue(/rvalue) removed
+  //  U1 = T& if V1 is reference_wrapper<T>, V1 otherwise
+  typedef /* meta mumbo jumbo */ type;
+};
+
+template<... Args>
+typename make_tuple_result<Args>::type
+make_tuple(Args args)
+{
+  typedef typename make_tuple_result<Args>::type result_type;
+  return result_type(args);
+}
+
+template<... Args> Args tie(Args args) { return args; }
+\end{verbatim}
+\normalsize
+
+\subsection{Function implementation}
+\label{functionimpl}
+This section implements the core interesting portions of class
+template {\tt function} from the function object wrapper
+proposal~\cite{Gregor02}.  
+\small
+\begin{verbatim}
+struct bad_function_call : public std::exception {};
+
+template<typename R, typename Args>
+struct function_invoker_base
+{
+  virtual ~function_invoker_base() {}
+  virtual R invoke(Args& args) = 0;
+  virtual function_invoker_base* clone() = 0;
+};
+
+template<typename R, typename Args, typename F>
+struct function_invoker : public function_invoker_base<R, Args>
+{
+  function_invoker(F f) : f(f) {}
+  R invoke(Args& args) { return std::apply(f, args); }
+  function_invoker_base<R, Args>* clone() { return new function_invoker(f); }
+
+private:
+   F f;
+};
+
+template<typename Args, typename F>
+struct function_invoker<void, Args, F> 
+  : public function_invoker_base<void, Args>
+{
+  function_invoker(F f) : f(f) {}
+  void invoke(Args & args) { std::apply(f, args); }
+  function_invoker_base<void, Args>* clone() { return new function_invoker(f); }
+
+private:
+  F f;
+};
+
+template<typename Function> // Function type R(T1, T2, ..., TN)
+struct function
+{
+  typedef typename function_traits<Function>::result_type result_type;
+  typedef typename function_traits<Function>::argument_types argument_types;
+  
+private:
+  typedef function_invoker_base<result_type, argument_types> invoker_type;
+  
+public:
+  function() : invoker(0) {}
+  
+  function(const function& other) : invoker(0)
+    { if (other.invoker) invoker = other.invoker->clone(); }
+
+  template<typename F> function(F f) : invoker(0)
+    { invoker = new function_invoker<result_type, argument_types, F>(f); }
+
+  template<typename F> function(reference_wrapper<F> f) : invoker(0)
+  { 
+    invoker = new function_invoker<result_type, argument_types, F&>(f.get()); 
+  }
+  
+  template<typename T, typename C> function(T C::*pm) : invoker(0)
+    { *this = std::mem_fn(pm); }
+
+  function(int) : invoker(0) {}
+  
+  ~function() { if (invoker) { delete invoker; invoker = 0; } }
+
+  function& operator=(const function& other)
+  {
+    function tmp(other);
+    tmp.swap(*this);
+    return *this;
+  }
+  
+  template<typename F> function& operator=(F f)
+  {
+    function tmp(f);
+    tmp.swap(*this);
+    return *this;
+  }
+  
+  operator bool() const { return invoker; }
+
+  template<... Args>
+  result_type operator()(Args args) const
+  {
+    if (!invoker) throw bad_function_call;
+    return invoker->invoke(args);
+  }
+  
+  void swap(function& other)
+  {
+    using std::swap;
+    swap(invoker, other.invoker);
+  }
+  
+private:
+  invoker_type* invoker;
+};
+\end{verbatim}
+\normalsize
+
+\bibliographystyle{abbrv}
+\bibliography{template_varargs}
+\end{document}
