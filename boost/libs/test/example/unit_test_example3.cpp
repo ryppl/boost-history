@@ -69,7 +69,7 @@ struct account_test {
 
     void test_deposit()
     {
-        float curr_ballance = m_account.balance();
+        float curr_ballance = (float)m_account.balance();
         float deposit_value;
 
         std::cout << "Enter deposit value:\n";
@@ -101,7 +101,7 @@ struct account_test {
 
     void test_withdraw()
     {
-        float curr_ballance = m_account.balance();
+        float curr_ballance = (float)m_account.balance();
 
         m_account.withdraw(2.5);
 
