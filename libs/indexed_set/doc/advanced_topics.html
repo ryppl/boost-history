@@ -826,8 +826,32 @@ pair is always <code>true</code>.
 
 <p>
 The case of <code>std::map</code>s and <code>std::multimap</code>s does not lend
-itself to such a direct simulation by means of <code>indexed_set</code>, but
-we can still obtain a functionally close replacement:
+itself to such a direct simulation by means of <code>indexed_set</code>. The main
+problem lies in the fact that elements of an <code>indexed_set</code> are treated
+as constant, while the <code>std::map</code> and <code>std::multimap</code> handle
+objects of type <code>std::pair&lt;const Key,T></code>, thus allowing for free
+modification of the value part. To overcome this difficulty we need to create an ad
+hoc pair class: 
+</p>
+
+<blockquote><pre>
+<span class=keyword>template</span> <span class=special>&lt;</span><span class=keyword>typename</span> <span class=identifier>T1</span><span class=special>,</span><span class=keyword>typename</span> <span class=identifier>T2</span><span class=special>&gt;</span>
+<span class=keyword>struct</span> <span class=identifier>mutable_pair</span>
+<span class=special>{</span>
+  <span class=keyword>typedef</span> <span class=identifier>T1</span> <span class=identifier>first_type</span><span class=special>;</span>
+  <span class=keyword>typedef</span> <span class=identifier>T2</span> <span class=identifier>second_type</span><span class=special>;</span>
+
+  <span class=identifier>mutable_pair</span><span class=special>():</span><span class=identifier>first</span><span class=special>(</span><span class=identifier>T1</span><span class=special>()),</span><span class=identifier>second</span><span class=special>(</span><span class=identifier>T2</span><span class=special>()){}</span>
+  <span class=identifier>mutable_pair</span><span class=special>(</span><span class=keyword>const</span> <span class=identifier>T1</span><span class=special>&amp;</span> <span class=identifier>f</span><span class=special>,</span><span class=keyword>const</span> <span class=identifier>T2</span><span class=special>&amp;</span> <span class=identifier>s</span><span class=special>):</span><span class=identifier>first</span><span class=special>(</span><span class=identifier>f</span><span class=special>),</span><span class=identifier>second</span><span class=special>(</span><span class=identifier>s</span><span class=special>){}</span>
+  <span class=identifier>mutable_pair</span><span class=special>(</span><span class=keyword>const</span> <span class=identifier>std</span><span class=special>::</span><span class=identifier>pair</span><span class=special>&lt;</span><span class=identifier>T1</span><span class=special>,</span><span class=identifier>T2</span><span class=special>&gt;&amp;</span> <span class=identifier>p</span><span class=special>):</span><span class=identifier>first</span><span class=special>(</span><span class=identifier>p</span><span class=special>.</span><span class=identifier>first</span><span class=special>),</span><span class=identifier>second</span><span class=special>(</span><span class=identifier>p</span><span class=special>.</span><span class=identifier>second</span><span class=special>){}</span>
+
+  <span class=identifier>T1</span>         <span class=identifier>first</span><span class=special>;</span>
+  <span class=keyword>mutable</span> <span class=identifier>T2</span> <span class=identifier>second</span><span class=special>;</span>
+<span class=special>};</span>
+</pre></blockquote>
+
+<p>
+an so the substitution rules are:
 </p>
 
 <blockquote><pre>
@@ -845,7 +869,7 @@ we can still obtain a functionally close replacement:
     <span class=keyword>typename</span> <span class=identifier>Allocator</span><span class=special>::</span><span class=keyword>template</span> <span class=identifier>rebind</span><span class=special>&lt;</span><span class=identifier>Element</span><span class=special>&gt;::</span><span class=identifier>other</span>
   <span class=special>&gt;</span>
 
-(<span class=identifier>with</span> <span class=identifier>Element</span><span class=special>=</span><span class=identifier>std</span><span class=special>::</span><span class=identifier>pair</span><span class=special>&lt;</span><span class=identifier>Key</span><span class=special>,</span><span class=keyword>mutable</span> <span class=identifier>T</span><span class=special>&gt;</span>)
+(<span class=identifier>with</span> <span class=identifier>Element</span><span class=special>=</span><span class=identifier>mutable_pair</span><span class=special>&lt;</span><span class=identifier>Key</span><span class=special>,</span><span class=identifier>T</span><span class=special>&gt;</span>)
 </pre></blockquote>
 
 <p>
@@ -859,7 +883,7 @@ If default values are considered, the rules take the form:
 <span class=identifier>std</span><span class=special>::</span><span class=identifier>multimap</span><span class=special>&lt;</span><span class=identifier>Key</span><span class=special>,</span><span class=identifier>T</span><span class=special>&gt;</span> <span class=special>-&gt;</span>
   <span class=identifier>indexed_set</span><span class=special>&lt;</span><span class=identifier>Element</span><span class=special>,</span><span class=identifier>index_list</span><span class=special>&lt;</span><span class=identifier>non_unique</span><span class=special>&lt;</span><span class=identifier>member</span><span class=special>&lt;</span><span class=identifier>Element</span><span class=special>,</span><span class=identifier>Key</span><span class=special>,&amp;</span><span class=identifier>Element</span><span class=special>::</span><span class=identifier>first</span><span class=special>&gt;</span> <span class=special>&gt;</span> <span class=special>&gt;</span> <span class=special>&gt;</span>
 
-(<span class=identifier>with</span> <span class=identifier>Element</span><span class=special>=</span><span class=identifier>std</span><span class=special>::</span><span class=identifier>pair</span><span class=special>&lt;</span><span class=identifier>Key</span><span class=special>,</span><span class=keyword>mutable</span> <span class=identifier>T</span><span class=special>&gt;</span>)
+(<span class=identifier>with</span> <span class=identifier>Element</span><span class=special>=</span><span class=identifier>mutable_pair</span><span class=special>&lt;</span><span class=identifier>Key</span><span class=special>,</span><span class=identifier>T</span><span class=special>&gt;</span>)
 </pre></blockquote>
 
 <p>
@@ -881,19 +905,49 @@ See the <a href="performance.html">performance section</a> for further details.
 <p>
 Unlike the case of associative containers, simulating <code>std::list</code>
 in Boost.IndexedSet does not add any significant functionality, so the following
-is presented merely for completeness sake. The corresponding substitution rule is:
+is presented merely for completeness sake.
+</p>
+
+<p>
+Much as with standard maps, the main difficulty to overcome when simulating
+<code>std::list</code> derives from the constant nature of elements of an
+<code>indexed_set</code>. Again, some sort of adaption class is needed, like
+for instance the following:
 </p>
 
 <blockquote><pre>
-<span class=identifier>std</span><span class=special>::</span><span class=identifier>list</span><span class=special>&lt;</span><span class=identifier>T</span><span class=special>,</span><span class=identifier>Allocator</span><span class=special>&gt;</span> <span class=special>-&gt;</span> <span class=identifier>indexed_set</span><span class=special>&lt;</span><span class=keyword>mutable</span> <span class=identifier>T</span><span class=special>,</span><span class=identifier>index_list</span><span class=special>&lt;</span><span class=identifier>sequenced</span><span class=special>&lt;&gt;</span> <span class=special>&gt;,</span><span class=identifier>Allocator</span><span class=special>&gt;</span>
+<span class=keyword>template</span> <span class=special>&lt;</span><span class=keyword>typename</span> <span class=identifier>T</span><span class=special>&gt;</span>
+<span class=keyword>struct</span> <span class=identifier>mutable_value</span>
+<span class=special>{</span>
+  <span class=identifier>mutable_value</span><span class=special>(</span><span class=keyword>const</span> <span class=identifier>T</span><span class=special>&amp;</span> <span class=identifier>t</span><span class=special>):</span><span class=identifier>t</span><span class=special>(</span><span class=identifier>t</span><span class=special>){}</span>
+  <span class=keyword>operator</span> <span class=identifier>T</span><span class=special>&amp;()</span><span class=keyword>const</span><span class=special>{</span><span class=keyword>return</span> <span class=identifier>t</span><span class=special>;}</span>
+
+<span class=keyword>private</span><span class=special>:</span>
+  <span class=keyword>mutable</span> <span class=identifier>T</span> <span class=identifier>t</span><span class=special>;</span>
+<span class=special>};</span>
 </pre></blockquote>
 
 <p>
-or, if default values are considered:
+which allows us to use the substitution rule:
 </p>
 
 <blockquote><pre>
-<span class=identifier>std</span><span class=special>::</span><span class=identifier>list</span><span class=special>&lt;</span><span class=identifier>T</span><span class=special>&gt;</span> <span class=special>-&gt;</span> <span class=identifier>indexed_set</span><span class=special>&lt;</span><span class=keyword>mutable</span> <span class=identifier>T</span><span class=special>,</span><span class=identifier>index_list</span><span class=special>&lt;</span><span class=identifier>sequenced</span><span class=special>&lt;&gt;</span> <span class=special>&gt;</span> <span class=special>&gt;</span>
+<span class=identifier>std</span><span class=special>::</span><span class=identifier>list</span><span class=special>&lt;</span><span class=identifier>T</span><span class=special>,</span><span class=identifier>Allocator</span><span class=special>&gt;</span> <span class=special>-&gt;</span>
+  <span class=identifier>indexed_set</span><span class=special>&lt;</span>
+    <span class=identifier>Element</span><span class=special>,</span>
+    <span class=identifier>index_list</span><span class=special>&lt;</span><span class=identifier>sequenced</span><span class=special>&lt;&gt;</span> <span class=special>&gt;,</span>
+    <span class=keyword>typename</span> <span class=identifier>Allocator</span><span class=special>::</span><span class=keyword>template</span> <span class=identifier>rebind</span><span class=special>&lt;</span><span class=identifier>Element</span><span class=special>&gt;::</span><span class=identifier>other</span>
+  <span class=special>&gt;</span>
+
+(<span class=identifier>with</span> <span class=identifier>Element</span><span class=special>=</span><span class=identifier>mutable_value</span><span class=special>&lt;</span><span class=identifier>T</span><span class=special>&gt;</span>)
+</pre></blockquote>
+
+<p>
+or, if the default value <code>Allocator=std::allocator&lt;T></code> is used:
+</p>
+
+<blockquote><pre>
+<span class=identifier>std</span><span class=special>::</span><span class=identifier>list</span><span class=special>&lt;</span><span class=identifier>T</span><span class=special>&gt;</span> <span class=special>-&gt;</span> <span class=identifier>indexed_set</span><span class=special>&lt;</span><span class=identifier>mutable_value</span><span class=special>&lt;</span><span class=identifier>T</span><span class=special>&gt;,</span><span class=identifier>index_list</span><span class=special>&lt;</span><span class=identifier>sequenced</span><span class=special>&lt;&gt;</span> <span class=special>&gt;</span> <span class=special>&gt;</span>
 </pre></blockquote>
 
 <hr>
