@@ -1,4 +1,4 @@
-// (C) Copyright Craig Henderson 2002
+// (C) Copyright Craig Henderson 2002, 2003
 //               cdm.henderson@virgin.net
 //
 // Permission to use, copy, modify, distribute and sell this software
@@ -50,7 +50,7 @@ static void test_character_seq(const char *str1, const char *str2)
               << "         & \"" << str2 << "\"" << std::endl;
 
 // VC6 chokes on using a std::string for the subsequence:
-// the Dunkumware STl does not implement a push_back method
+// the Dunkumware STL does not implement a push_back method
 // on std::basic_string
 #if defined(BOOST_MSVC)  &&  (_MSC_VER <= 1200)
     typedef
@@ -81,12 +81,12 @@ static void test_character_seq(const char *str1, const char *str2)
 #endif
     std::cout << "\"" << std::endl;
     std::cout << "Length is " << llcs << std::endl;
+
+    std::allocator<signed short> alloc;
               
     BOOST_ASSERT(llcs == static_cast<signed short>(subsequence.size()));
     BOOST_ASSERT(llcs == boost::longest_common_subsequence_length<signed short>(str1, str1+strlen(str1),
                                                                                 str2, str2+strlen(str2)));
-                                                                                
-    std::allocator<signed short> alloc;
     BOOST_ASSERT(llcs == boost::longest_common_subsequence_length<signed short>(str1, str1+strlen(str1),
                                                                                 str2, str2+strlen(str2),
                                                                                 alloc));
@@ -232,6 +232,10 @@ int main(int, char **)
 
     try
     {
+        // bug reported by graydon hoare <graydon@redhat.com>
+        test_character_seq("ab ccc", "a  b ccc");
+        test_character_seq("aaaa aaaa", "a  a a  a");
+
         // this is the test documented by David Eppstein at
         // http://www1.ics.uci.edu/~eppstein/161/960229.html
         test_character_seq("nematode knowledge", "empty bottle");
@@ -241,7 +245,7 @@ int main(int, char **)
         test_character_seq("little jack horner.", "sat in a corner");
         test_character_seq("jack and jill went up the hill", "to fetch a pale of water");
         test_character_seq("to fetch a pale of water", "jack and jill went up the hill");
-
+/*
         // test for string array difference
         test_string_array_seq();
 
@@ -252,6 +256,7 @@ int main(int, char **)
         test_container_type< std::deque<int> >(5000);
         for (int loop=1; loop<25; ++loop)
             test_container_type< std::vector<int> >(1000);
+*/
     }
     catch(const std::exception &e)
     {
