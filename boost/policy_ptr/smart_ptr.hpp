@@ -1695,33 +1695,27 @@ namespace boost
         return get_impl(p);
     }
 
-// MSVC, of course, does not like partial specialization
-#ifndef BOOST_MSVC
-
     template <typename T, BOOST_SMART_POINTER_PARAMETERS>
-    struct less<boost::smart_ptr<T, BOOST_SMART_POINTER_POLICIES> >
-        : public binary_function<
-            boost::smart_ptr<T, BOOST_SMART_POINTER_POLICIES>,
-            boost::smart_ptr<T, BOOST_SMART_POINTER_POLICIES>,
+    struct less
+        : public std::binary_function<
+            smart_ptr<T, BOOST_SMART_POINTER_POLICIES>,
+            smart_ptr<T, BOOST_SMART_POINTER_POLICIES>,
             bool
         >
     {
-        bool operator()(boost::smart_ptr<T, BOOST_SMART_POINTER_POLICIES> const& lhs,
-                        boost::smart_ptr<T, BOOST_SMART_POINTER_POLICIES> const& rhs) const
+        bool operator()(smart_ptr<T, BOOST_SMART_POINTER_POLICIES> const& lhs,
+                        smart_ptr<T, BOOST_SMART_POINTER_POLICIES> const& rhs) const
         {
             return less<T*>()(get_impl(lhs), get_impl(rhs));
         }
     };
 
     template <typename T, BOOST_SMART_POINTER_PARAMETERS>
-    void swap(boost::smart_ptr<T, BOOST_SMART_POINTER_POLICIES>& lhs,
-              boost::smart_ptr<T, BOOST_SMART_POINTER_POLICIES>& rhs)
+    void swap(smart_ptr<T, BOOST_SMART_POINTER_POLICIES>& lhs,
+              smart_ptr<T, BOOST_SMART_POINTER_POLICIES>& rhs)
     {
         return lhs.swap(rhs);
     }
-}
-
-#endif // BOOST_MSVC
 
 }   // namespace boost
 
