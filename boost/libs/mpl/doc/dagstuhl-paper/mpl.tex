@@ -44,7 +44,130 @@ and offers some lessons learned about C++ template metaprogramming.
 
 
 \section{Introduction}
-\subsection{What is template metaprogramming? }
+
+\subsection{What is Metaprogramming?}
+
+Metaprogramming is usually defined as the creation of programs which
+generate other programs. Parser generators such as YACC are examples
+of one kind of program-generating program. The input language to YACC
+is a context-free grammar in EBNF, and its output is a program which
+parses that grammar. Note that in this case the metaprogram (YACC) is
+written in a language (`C') which does not directly support the
+description of generated programs. These specifications, which we'll
+call \emph{meta-data}, are not written in `C', but in a
+\emph{meta-language}. Because the the rest of the user's program
+typically requires a general-purpose programming system and must
+interact with the generated parser, the meta-data is translated into
+`C', which is then compiled and linked together with the rest of the
+system. The meta-data thus undergoes two translation steps, and the
+user is always very conscious of the boundary between his meta-data
+and the rest of his program.
+% need bibliography reference for YACC
+
+A more interesting form of metaprogramming is available in languages
+such as Scheme, where the generated program specification is given in
+the same language as the metaprogram itself. The metaprogrammer
+defines his meta-language as a subset of the expressible forms of the
+underlying language, and program generation can take place in the same
+translation step used to process the rest of the user's program. This
+allows users to switch transparently between ordinary programming,
+generated program specification, and metaprogramming, often without
+being aware of the transition.
+% bib reference for Scheme metaprogramming
+
+\subsection{Metaprogramming in \Cpp}
+
+In \Cpp, it was discovered almost by accident that the template
+mechanism provides a rich facility for computation at
+compile-time. For example, the following meta-function computes the
+factorial of its argument:
+
+{\footnotesize
+\begin{verbatim}
+template <unsigned n>
+struct factorial
+{
+   static const unsigned value = n * factorial<n-1>::value;
+};
+
+template <>
+struct factorial<0>
+{
+   static const unsigned value = 1;
+};
+\end{verbatim}
+}
+
+We might use this function, for example, to enumerate the values of a
+given function when used to reduce all permutations of an array:
+
+{\footnotesize
+\begin{verbatim}
+// Holder for an array of N doubles
+template <unsigned N>
+struct double_array
+{
+   double values[N];
+};
+
+template <unsigned N, class F>
+double_array<factorial<N>::value>
+accumulate_all_permutations(double (&input)[N], F f)
+{
+   double_array<factorial<N>::value> result;
+   double* p = result.values;
+   for (unsigned i = 0; i < N; ++i)
+   {
+       double copied[N];
+       std::copy(input, input + N, copied);
+       *p++ = std::accumulate(copied, copied+N, 0, f);
+       std::next_permutation(input, input + N);
+   }
+   return result;
+}
+\end{verbatim}
+}
+
+Because of the hard line between the expression of compile-time and
+runtime computation in \Cpp, metaprograms look different from their
+runtime counterparts. Take for example a straightforward runtime
+definition of the factorial function:
+
+{\footnotesize
+\begin{verbatim}
+unsigned factorial(unsigned N)
+{
+   return N == 0 ? 1 : N * factorial(N - 1);
+}
+\end{verbatim}
+}
+
+This definition would be useless in \code{accumulate\_\-all\_\-permutations}
+above, since in \Cpp array sizes are required to be computed at
+compile-time. While it is easy to see the analogy between the two
+recursive defintions, this feature is in fact more important to \Cpp
+metaprograms than it is to runtime \Cpp. In contrast to languages such
+as Lisp where recursion is idiomatic, \Cpp programmers will typically
+avoid recursion when possible. This is often for efficiency reasons,
+but also because of ``cultural momentum'': recursive programs are just
+harder (for \Cpp programmers) to think about. Like pure Lisp, the \Cpp
+template mechanism is a \emph{functional} programming language which
+rules out the use of data mutation required to maintain loop
+variables.
+
+Another key difference between the runtime and compile-time factorial
+functions is the expression of the termination condition: our
+meta-factorial uses template specialization as a kind of
+\emph{pattern-matching} mechanism to describe the behavior when
+\code{N} is zero. The syntactic analogue in the runtime world would
+require two separate definitions of the same function. In this case
+the impact of the second definition is minimal, but in large
+metaprograms the cost of maintaining and understanding the terminating
+definitions can become significant.
+
+\subsection{Why Metaprogramming?}
+
+
 \subsection{Is it for real-world? }
 \subsection{Motivation (Why a library is needed?)}
 \subsection{What about portability? }
@@ -58,6 +181,8 @@ and offers some lessons learned about C++ template metaprogramming.
 \section{Design of boost::mpl}
 \subsection{Design goals}
 \subsection{Design decisions}
+\subsubsection{Use of iterators}
+\subsubsection{Abstraction of sequences}
 
 \section{Advanced examples (What can I do with boost::mpl?)}
 \subsection{Using \mpl\ to implement compile-time FSM generator}
