@@ -18,7 +18,6 @@
 #include <boost/type_traits/is_convertible.hpp>
 #include <boost/iterator/detail/config_def.hpp>
 #include <boost/python/detail/is_xxx.hpp>
-//#include <boost/mpl/aux_/has_xxx.hpp>
 
 namespace boost {
 
@@ -30,9 +29,9 @@ struct arg;
 
 namespace detail
 { 
-  // just to avoid confusion.  We have to build a conversion operator
-  // that returns this type to get around ETI; int seemed a little too
-  // dangerous.
+  // We have to build a conversion operator to get around ETI with
+  // default function arguments; int seemed a little too easily
+  // confused, so we'll use this special type instead.
   struct non_int_eti_type { private: non_int_eti_type(); };
   
   typedef char yes_t;
@@ -55,18 +54,30 @@ namespace detail
   struct nil
   {
 #if BOOST_WORKAROUND(BOOST_MSVC, <= 1300)
-      template<class KW>
-      struct apply
+      // A metafunction class which, given a keyword, returns the base
+      // sublist whose get() function can produce the value for that
+      // key.
+      struct key_owner
       {
-         typedef nil type;
+          template<class KW>
+          struct apply
+          {
+              typedef nil type;
+          };
       };
-
-      template<class KW, class Default>
-      struct apply_value
+          
+      // A metafunction class which, given a keyword and a default
+      // type, returns the appropriate result type for a keyword
+      // lookup given that default
+      struct key_value_type
       {
-         typedef Default type;
+          template<class KW, class Default>
+          struct apply
+          {
+              typedef Default type;
+          };
       };
-
+      
       template<class K, class Default>
       Default& get(const named_default<K, Default>& x) const
       {
@@ -88,6 +99,12 @@ namespace detail
       typedef mpl::always<mpl::true_> predicate;
   };
 
+  template <class T>
+  struct key_value_type_mfn
+  {
+      typedef typename T::key_value_type type;
+  };
+  
   // A tuple of labeled argument holders
   // Restructured this so that head isn't inherited
   // We'll need a version without using declarations for vc6/7.0
@@ -95,45 +112,62 @@ namespace detail
   struct list : T
   {
 #if BOOST_WORKAROUND(BOOST_MSVC, <= 1300)
-     typedef list<H, T> self_t;
+      typedef list<H, T> self_t;
 
-     template<class KW>
-     struct apply
-       : mpl::apply_if<
-             boost::is_same<KW, typename H::key_type>
-           , mpl::identity<self_t>
-           , typename T::template apply<KW>
-         >
-     {};
+      typedef H head_type;
+      typedef T tail_type;
+      
+      // A metafunction class which, given a keyword, returns the base
+      // sublist whose get() function can produce the value for that
+      // key.
+      struct key_owner
+      {
+          template<class KW>
+          struct apply
+            : mpl::apply_if<
+                  boost::is_same<KW, typename H::key_type>
+                , mpl::identity<self_t>
+                , mpl::apply1<typename T::key_owner,KW>
+              >
+          {};
+      };
 
-     template<class KW, class Default>
-     struct apply_value
-        : mpl::apply_if<
-              boost::is_same<KW, typename H::key_type>
-            , mpl::identity<typename H::value_type>
-            , typename T::template apply_value<KW, Default>
-          >
-      {};
+      // A metafunction class which, given a keyword and a default
+      // type, returns the appropriate result type for a keyword
+      // lookup given that default
+      struct key_value_type
+      {
+          template<class KW, class Default>
+          struct apply
+            : mpl::apply_if<
+                  boost::is_same<KW, typename H::key_type>
+                , mpl::identity<typename H::value_type>
+                , mpl::apply2<typename T::key_value_type,KW, Default>
+              >
+          {
+          };
+      };
 #endif
+      
       H head;
 
       list(H h, T t) : T(t), head(h) {}
 
 #if BOOST_WORKAROUND(BOOST_MSVC, <= 1300)
       template<class KW>
-      typename apply_value<KW, nil>::type&
+      typename mpl::apply2<key_value_type,KW, nil>::type&
       operator[](const keyword<KW>& x) const
       {
-         typedef typename apply<KW>::type list_t;
-         return static_cast<const list_t&>(*this).get(x);
+          typename mpl::apply1<key_owner,KW>::type const& sublist = *this;
+          return sublist.get(x);
       }
 
       template<class KW, class Default>
-      typename apply_value<KW, Default>::type&
+      typename mpl::apply2<key_value_type,KW, Default>::type&
       operator[](const named_default<KW, Default>& x) const
       {
-         typedef typename apply<KW>::type list_t;
-         return static_cast<const list_t&>(*this).get(x);
+          typename mpl::apply1<key_owner,KW>::type const& sublist = *this;
+          return sublist.get(x);
       }
 
       typename H::value_type& get(const keyword<typename H::key_type>& x) const
@@ -158,7 +192,7 @@ namespace detail
           return head[x];
       }
 		
-		using T::operator[];
+      using T::operator[];
 
       template <class HasDefault, class Predicate>
       static typename mpl::apply1<
@@ -171,10 +205,10 @@ namespace detail
 #endif
   };
 
-//  struct named_base {};
-
+  template <> struct list<int,int> {};
+  
   template <class KW, class T>
-  struct named // : named_base
+  struct named
   {
       typedef KW key_type;
       typedef T value_type;
@@ -476,20 +510,6 @@ struct keywords
           , self_t
         > type;
     };
-
-# if BOOST_WORKAROUND(BOOST_MSVC, == 1200)
-    // To satisfy ETI
-    operator detail::non_int_eti_type() const;
-# endif 
-
-# if  BOOST_WORKAROUND(BOOST_MSVC, <= 1300)
-    // ETI workaround
-    template <>
-    struct restrict_base<int>
-    {
-        typedef detail::non_int_eti_type type;
-    };
-# endif
 #endif
 
     // Instantiations are to be used as an optional argument to control SFINAE
