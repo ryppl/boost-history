@@ -11,96 +11,10 @@ content="C:\PROGRAM FILES\MICROSOFT OFFICE\OFFICE\html.dot">
 
 <body bgcolor="#FFFFFF" link="#0000FF" vlink="#800080">
 
+<p align="left"><img src="../../c++boost.gif" width="277"
+height="86"></p>
+
 <h1 align="center">Boost Configuration Reference</h1>
-
-<h2>Reviewers Notes</h2>
-
-<p>The following notes are for reviewers only and will be removed
-from the final version of this document.</p>
-
-<p>This version of the boost config offers the following features:</p>
-
-<ul>
-    <li>Config split into separate compiler/standard library/platform
-        sections, with each section then split into separate mini-configs.
-    </li>
-    <li>Cross dependencies are now removed, so that changes the
-        config of one compiler/standard library/platform, does
-        not force a recompile unless that particular mini-config
-        is in use (and needed). </li>
-    <li>Expert users can isolate themselves from dependencies by
-        setting a few macros. </li>
-    <li>Optional configure script for unix-like platforms. </li>
-    <li>Documentation updated and moved out of the headers and
-        into this html file. </li>
-    <li>Thorough regression tests, make it much easier nor to
-        figure out what the correct configuration for a given
-        platform actually is. </li>
-</ul>
-
-<p>The following issues are known about, or require comment:</p>
-
-<ul>
-    <li>BOOST_NO_HASH and BOOST_NO_SLIST deprecated in favour of
-        BOOST_HAS_HASH and BOOST_HAS_SLIST - these are optional
-        features and no macros should be required to be defined
-        for a fully conforming compiler. </li>
-    <li>BOOST_SYSTEM_HAS_STDINT_H changed to BOOST_HAS_STDINT_H
-        throughout for consistency.</li>
-    <li>Quite a number of regex options have been added, so that
-        boost/regex/detail/regex_config.hpp can be finally
-        deprecated. The options added are: BOOST_NO_CWCHAR,
-        BOOST_NO_CWCTYPE, BOOST_NO_STD_DISTANCE,
-        BOOST_NO_STD_LOCALE, BOOST_NO_STD_MESSAGES,
-        BOOST_NO_STD_USE_FACET, BOOST_NO_STD_WSTRING,
-        BOOST_NO_SWPRINTF, BOOST_HAS_NL_TYPES_H,
-        BOOST_HAS_STLP_USE_FACET, BOOST_HAS_TWO_ARG_USE_FACET,
-        BOOST_HAS_MACRO_USE_FACET, BOOST_USE_FACET. The regex
-        library will need to be updated to use these new versions
-        once the new config goes live. </li>
-    <li>BOOST_HAS_UNISTD_H added for POSIX feature tests (regex,
-        thread, and pool libraries for now, probably more later),
-        currently this is only used internally within the config
-        system, but may be used elsewhere as well in future (for
-        example the pool lib currently includes &lt;unistd.h&gt;).</li>
-    <li>BOOST_NO_MEMBER_TEMPLATE_KEYWORD added for compilers that
-        support member templates, but not the use of the template
-        keyword when accessing member template classes (Codewarrior
-        5.x, HP aCC). </li>
-    <li>Helper macros BOOST_STRINGIZE and BOOST_JOIN added, the
-        latter to replace BOOST_ASSERT_JOIN in static_assert.hpp,
-        the former is used internally by the configuration code,
-        but may also be more generally useful elseware. </li>
-    <li>BOOST_VERSION and other &quot;<a href="#info_macros">informational
-        macros</a>&quot; are now documented (outside of the
-        headers) for the first time. BOOST_VERSION has also been
-        moved to &lt;boost/version.hpp&gt; to avoid dependencies
-        getting broken just because a new release has been made. </li>
-    <li>Support for &lt;stdint.h&gt; has been enabled on linux -
-        this seems to be working OK, but probably needs more
-        testing. </li>
-    <li>For the threading library added BOOST_HAS_THREADS,
-        BOOST_DISABLE_THREADS, BOOST_HAS_BETHREADS,
-        BOOST_HAS_PTHREADS, BOOST_HAS_WINTHREADS. The regex and
-        pool libraries can also use these.</li>
-    <li>It's not clear how to handle compilers/libraries/platforms
-        that are not auto-detected. There are really two options:
-        do nothing, or stop with a #error. The latter seems to be
-        overkill - there is a good change that most of boost will
-        build OK even if the compiler/platform/library is not
-        detected, provided it is reasonably standard complient.</li>
-    <li>It's not clear how to handle as yet unreleased versions
-        of compilers/standard libraries. There are three options:
-        (a) assume all future versions will be fully standard
-        conformant, and contain all the extentions that the
-        current version has (current practice), (b) Assume that
-        all future versions will have all of the defects of the
-        current version (may involve less maintenance in practice),
-        or (c) stop with a #error.</li>
-    <li>The master version of this submission is on a cvs branch
-        called &quot;split-config&quot;, changes should be made
-        to that branch.</li>
-</ul>
 
 <h2>Contents</h2>
 
@@ -327,22 +241,7 @@ they are listed in the following table:&nbsp;</p>
         threading support, even if the compiler in its current
         translation mode supports multiple threads.</td>
     </tr>
-    <tr>
-        <td valign="top" width="48%">BOOST_REGEX_USE_C_LOCALE</td>
-        <td valign="top" width="52%">When defined tells the regex
-        library to use the global C locale in its support code,
-        even on Win32 (where it normally uses the win32 locale).</td>
-    </tr>
-    <tr>
-        <td valign="top" width="48%">BOOST_REGEX_USE_CPP_LOCALE</td>
-        <td valign="top" width="52%">When defined tells the regex
-        library to use the C++ locale in it's support code. This
-        means that the regex library supports per-instance
-        locales, at the expense of some speed.</td>
-    </tr>
 </table>
-
-<p>&nbsp;</p>
 
 <h4><a name="advanced_config"></a>Advanced configuration usage</h4>
 
@@ -436,8 +335,6 @@ configuration based on your current compiler setup - <a
 href="#config_script">see using the configure script</a> for more
 details.</p>
 
-<p>&nbsp;</p>
-
 <h4><a name="testing"></a>Testing the boost configuration</h4>
 
 <p>The boost configuration library provides a full set of
@@ -530,8 +427,6 @@ platform/library/compiler then please include a log of the full
 compiler output, the output from config_info.cpp, and the pass/fail
 test results.</p>
 
-<p>&nbsp;</p>
-
 <h2><a name="macro_ref"></a>Boost Macro Reference</h2>
 
 <h4><a name="defects"></a>Macros that describe defects:</h4>
@@ -618,13 +513,6 @@ class X { ... };</pre>
         <td valign="top" width="51%">BOOST_NO_INCLASS_MEMBER_INITIALIZATION</td>
         <td valign="top" width="16%">Compiler</td>
         <td valign="top" width="33%">Compiler violates std::9.4.2/4.</td>
-    </tr>
-    <tr>
-        <td valign="top" width="51%">BOOST_NO_INTEGRAL_INT64_T</td>
-        <td valign="top" width="16%">Compiler</td>
-        <td valign="top" width="33%">Defined if int64_t as
-        defined by &lt;boost/cstdint.hpp&gt; is not usable in
-        integral constant expressions.</td>
     </tr>
     <tr>
         <td valign="top" width="51%">BOOST_NO_INTRINSIC_WCHAR_T</td>
@@ -810,8 +698,6 @@ f(&amp;bar); // should choose #2.</pre>
     </tr>
 </table>
 
-<p>&nbsp;</p>
-
 <h4><a name="features"></a>Macros that describe optional features:</h4>
 
 <p>The following macros describe features that are not required
@@ -933,8 +819,6 @@ present.</p>
     </tr>
 </table>
 
-<p>&nbsp;</p>
-
 <h4><a name="helpers"></a>Boost Helper Macros</h4>
 
 <p>The following macros are either simple helpers, or macros that
@@ -1001,8 +885,6 @@ provide workarounds for compiler/standard library defects.</p>
         combination with a predefined macro such a __LINE__.</td>
     </tr>
 </table>
-
-<p>&nbsp;</p>
 
 <h4><a name="info_macros"></a>Boost Informational Macros</h4>
 
@@ -1237,6 +1119,19 @@ change only when new macros are added.</p>
 and &lt;<a href="../../boost/config/select_stdlib_config.hpp">boost/config/select_stdlib_config.hpp</a>&gt;
 are included by default and should change only if support for a
 new compiler/standard library/platform is added.</p>
+
+<p>The compiler/platform/standard library selection code is set
+up so that unknown platforms are ignored and assumed to be fully
+standards compliant - this gives unknown platforms a &quot;sporting
+chance&quot; of working &quot;as is&quot; even without running
+the configure script.</p>
+
+<p>When adding or modifying the individual mini-configs, assume
+that future, as yet unreleased versions of compilers, have all
+the defects of the current version. Although this is perhaps
+unnecessarily pessimistic, it cuts down on the maintenance of
+these files, and experience suggests that pessimism is better
+placed than optimism here!</p>
 
 <h2><a name="rationale"></a>Rationale</h2>
 

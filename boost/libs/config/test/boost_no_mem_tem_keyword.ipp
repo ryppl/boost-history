@@ -43,7 +43,7 @@ void test_proc(T i)
 
 #else
 template <class T>
-void test_proc(T i)
+void test_proc(T)
 {
 }
 #endif
@@ -56,6 +56,7 @@ int test()
 
 
 }
+
 
 
 
