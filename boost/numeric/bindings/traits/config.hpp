@@ -32,6 +32,8 @@
 
 #elif defined(__COMO__)
 
+#elif defined(__KCC)
+
 #else
 #error bindings do not recognise compiler
 #endif

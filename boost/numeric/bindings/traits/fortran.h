@@ -9,7 +9,7 @@
 
 // First we need to know what the conventions for linking
 // C with Fortran is on this platform/toolset
-#if defined(__GNUC__) || defined(__ICC) || defined(__sgi) || defined(__COMO__)
+#if defined(__GNUC__) || defined(__ICC) || defined(__sgi) || defined(__COMO__) || defined(__KCC)
 #define BIND_FORTRAN_LOWERCASE_UNDERSCORE
 #elif defined(__IBMCPP__) || defined(_MSC_VER)
 #define BIND_FORTRAN_LOWERCASE
