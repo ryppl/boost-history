@@ -7,6 +7,7 @@
 //
 
 #include "gmp.h"
+#include "boost/bigint/bigint_base.hpp"
 #include "boost/config.hpp"
 #include "boost/operators.hpp"
 #include <iostream>
@@ -19,12 +20,11 @@
 
 namespace boost {
 
-class bigint : boost::operators<bigint> {
+class bigint : public boost::detail::bigint::bigint_base<bigint>, // for op>>
+               boost::operators<bigint> {
   mpz_t gmp_value_;
 
   friend std::ostream& operator<<(std::ostream& os, bigint const& rhs);
-  friend std::istream& operator>>(std::istream& is, bigint& rhs);
-  
   std::ostream& to_ostream(std::ostream& os) const {
     
     if(!os.good()) return os;
@@ -66,53 +66,6 @@ class bigint : boost::operators<bigint> {
     }
     return os;
   }
-  
-  std::istream& from_istream(std::istream& is) {
-
-    if(!is.good()) return is;
-
-    // Manage prefix and postfix operations (RAII object)
-    std::istream::sentry ipfx(is);
-    
-    if(ipfx) {
-      std::ios_base::fmtflags flags = is.flags();
-      base_type base;
-      if (flags & std::ios_base::dec) {
-        base = decimal;
-      } else if (flags & std::ios_base::hex) {
-        base = hexadecimal;
-      } else { // if (flags & std::ios_base::oct)
-        base = octal;
-      }
-
-      // Read the number into a string, then initialize from that.
-      std::string str;
-      char c;
-
-      // check for minus sign.
-      is.get(c);
-      if(!(c == '-' || std::isxdigit(c))) {
-        is.putback(c);
-        // signal error
-        is.clear(is.rdstate() | std::ios::failbit);
-      } else {
-        str.push_back(c);
-
-        // read in ASCII (hexadecimal) digits till it stops.
-        while(is.get(c) && isxdigit(c))
-          str.push_back(c);
-        if(is.fail())
-          // clear error state
-          is.clear();
-        else
-          // put back the last character retrieved
-          is.putback(c);
-        *this = bigint(str,base);
-      }
-    }
-    return is;
-  }
-
 
   friend bigint operator-(bigint const& rhs);
   bigint& negate() {
@@ -122,8 +75,9 @@ class bigint : boost::operators<bigint> {
   
   
 public:
-  enum base_type {octal=8, decimal=10, hexadecimal=16};
-  
+
+  typedef boost::detail::bigint::bigint_base<bigint>::base_type base_type;
+
   bigint() {
     mpz_init(gmp_value_);
   }
@@ -227,11 +181,6 @@ void swap(bigint& lhs, bigint& rhs) {
 inline
 std::ostream& operator<<(std::ostream& os, bigint const& rhs) {
   return rhs.to_ostream(os);
-}
-
-inline
-std::istream& operator>>(std::istream& is, bigint& rhs) {
-  return rhs.from_istream(is);
 }
 
 inline
