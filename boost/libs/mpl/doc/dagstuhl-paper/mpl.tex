@@ -117,7 +117,7 @@ Because of the hard line between the expression of compile-time and
 runtime computation in \Cpp, metaprograms look different from their
 runtime counterparts. Thus, although as in Scheme the \Cpp\ \mpgmer\
 writes her code in the same language as the ordinary program, only a
-subset of the language is available to her: those expressions which
+subset of the language is available: those expressions which
 can be evaluated at compile-time. Compare the above with a
 straightforward runtime definition of the factorial function:
 
@@ -209,11 +209,11 @@ all_permutations(T const& in)
    wrapper<typename permutation_holder<T>::type> result;
 
    // Copy the unpermuted array to the first result element
-   unsigned const N = sizeof(*result.x)/sizeof(**result.x);
+   unsigned const N = sizeof(T)/sizeof(**result.x);
    std::copy(&*in, &*in + N, result.x[0]);
 
    // Enumerate the permutations
-   unsigned const result_size = sizeof(result.x)/sizeof(*result.x);
+   unsigned const result_size = sizeof(result.x)/sizeof(T);
    for (T* dst = result.x + 1; dst != result.x + result_size; ++dst)
    {
        T* src = dst - 1;
@@ -268,10 +268,43 @@ all_permutations(T const& input);
   YACC's existence.
 \end{enumerate}
 
-So, the motivation for \mping{} comes down to the combination
-of three factors: efficiency, expressivity, and correctness.
+So, the motivation for \mping{} comes down to the combination of three
+factors: efficiency, expressivity, and correctness. While in classical
+programming there is always a tension between expressivity and
+correctness on one hand and efficiency on the other, in the \mping\
+world we wield new power: can move the computation required for
+expressivity from runtime to compile-time.
 
-\subsection{Why a Metaprogramming Library?}
+\subsection{Why a Metaprogramming \emph{Library}?}
+
+Why do we need any library? 
+\begin{itemize}
+
+\item Boredom. Repeating the same idioms over and over is
+  \emph{tedious}. It makes programmers tired and reduces
+  productivity. Often the best libraries are ``plucked'' by an astute
+  programmer from a sea of drudgery.
+
+
+\item Correctness. When programmers get bored, they get sloppy. It's
+  better to code something once correctly than to code it ten times
+  incorrectly. It's better still if you can get a library to do the
+  work for you.
+
+\item Efficiency. With a centralized implementation for any given
+  function, optimizations and improvements are more likely to have
+  been applied.
+
+\item Quality. Code that is appropriate for a general-purpose library
+  is usually incidental to the purpose of its users. To a library
+  developer, it is the central mission. On average, the containers
+  provided by any given \Cpp\ standard library implementation are
+  better-designed and implemented than the project-specific
+  implementations which abound, because library development was
+  treated as an end in itself rather than a task incidental to the
+  development of some other application.
+
+\end{itemize}
 
 
 \subsection{What about portability? }
