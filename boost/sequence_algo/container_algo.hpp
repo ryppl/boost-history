@@ -122,10 +122,13 @@ namespace boost
 		{
 			typedef container_algo_pair_tag            tag;
 			typedef typename iterator_traits<T>::difference_type size_type;
-			//typedef T                                  size_type;?
 			typedef T                                  result_type;
 			typedef T                                  const_result_type;
 		};
+                template <typename T>
+                struct container_algo_make_tag< const std::pair<T,T> >
+                  : public container_algo_make_tag< std::pair<T,T> >
+                { };
 
 		template< typename T, size_t sz >
 		struct container_algo_make_tag< T[sz] >
@@ -413,7 +416,16 @@ namespace boost
 		diff_type; 
 	};
 
-
+        template< typename T >
+        struct mutable_return< std::pair<T,T> >
+        {
+                typedef T iterator;
+                typedef typename std::iterator_traits<iterator>::difference_type
+                diff_type; 
+        };
+        template< typename T >
+        struct mutable_return< const std::pair<T,T> >
+          : public mutable_return< std::pair<T,T> > { };
 
 	template< typename T, size_t sz >
 	struct mutable_return< T[sz] >
@@ -430,7 +442,14 @@ namespace boost
 		typedef typename T::const_iterator  iterator;
 	};
 
-
+        template< typename T >
+        struct const_return< std::pair<T,T> >
+        {
+                typedef T iterator;
+        };
+        template< typename T >
+        struct const_return< const std::pair<T,T> >
+          : public const_return< std::pair<T,T> > { };
 
 	template< typename T, size_t sz >
 	struct const_return< T[sz] >
@@ -1346,7 +1365,7 @@ sort_heap
 	*/
 
 
-#define BOOST_FWD_ALGO_BE
+#undef BOOST_FWD_ALGO_BE
 #undef BOOST_FWD_ALGO_BEX
 #undef BOOST_FWD_ALGO_BEXY
 #undef BOOST_FWD_ALGO_BEXYZ
