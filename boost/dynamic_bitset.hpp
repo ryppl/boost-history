@@ -148,10 +148,13 @@ class dynamic_bitset :
   // Portability note: member function templates are defined inside
   // this class definition to avoid problems with VC++. Similarly,
   // with the member functions of the nested class.
+
+  typedef detail::dynamic_bitset_base<Block, Allocator> base;
+
 public:
     typedef Block block_type;
     typedef std::size_t size_type;
-    enum { bits_per_block = CHAR_BIT * sizeof(Block) };
+    BOOST_STATIC_CONSTANT(int, bits_per_block = (base::bits_per_block) ); // [gps]
 
     // reference to a bit
     class reference

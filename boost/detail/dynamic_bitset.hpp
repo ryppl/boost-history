@@ -12,6 +12,7 @@
 #define BOOST_DETAIL_DYNAMIC_BITSET_HPP
 
 #include "boost/config.hpp"
+#include "boost/limits.hpp"
 #include "boost/detail/workaround.hpp"
 #include "boost/detail/iterator.hpp"
 
@@ -46,11 +47,10 @@ namespace boost {
         dynamic_bitset_alloc_base<Allocator>
     {
       typedef std::size_t size_type;
-#ifndef BOOST_DYN_BITSET_USE_FRIENDS
-    public:
-#endif
-      enum { bits_per_block = CHAR_BIT * sizeof(Block) };
-    public:
+public:
+    
+      BOOST_STATIC_CONSTANT(int, bits_per_block = (std::numeric_limits<Block>::digits));
+
       dynamic_bitset_base()
         : m_bits(0), m_num_bits(0), m_num_blocks(0) { }
 
