@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 // Copyright (C) 2004, Andrei Alexandrescu and David B. Held
-// Distributed under the Boost Software License, Version 1.0. (See
-// http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. (See accompany-
+// ing file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //----------------------------------------------------------------------------
 #ifndef BOOST_SMART_PTR_HPP
 #define BOOST_SMART_PTR_HPP
@@ -125,7 +125,7 @@ namespace boost
                     Policies, storage_policy_tag, Default
                 >::type,
                 T
-            >::type
+            >
 	    { };
 
         template <typename T, class Policies, class Default>
@@ -137,7 +137,7 @@ namespace boost
                 typename storage_policy_<
                     T, Policies, BOOST_SP_DEFAULT_STORAGE_POLICY
                 >::type
-            >::type
+            >
         { };
 
         template <typename T, class Policies, class Default>
@@ -149,7 +149,7 @@ namespace boost
                 typename ownership_policy_<
                     T, Policies, BOOST_SP_DEFAULT_OWNERSHIP_POLICY
                 >::type
-            >::type
+            >
         { };
 
         template <typename T, class Policies, class Default>
@@ -161,7 +161,7 @@ namespace boost
                 typename checking_policy_<
                     T, Policies, BOOST_SP_DEFAULT_CHECKING_POLICY
                 >::type
-            >::type type;
+            >
         { };
         //--------------------------------------------------------------------
     }   // namespace detail
@@ -202,9 +202,9 @@ namespace boost
                                                 pointer_type;
         typedef typename storage_policy::const_pointer_type
                                                 const_pointer_type;
-        typedef typename storage_policy::stored_type::type
+        typedef typename storage_policy::stored_type
                                                 stored_type;
-        typedef typename storage_policy::const_stored_type<>::type
+        typedef typename storage_policy::const_stored_type
                                                 const_stored_type;
         typedef typename storage_policy::reference_type
                                                 reference_type;

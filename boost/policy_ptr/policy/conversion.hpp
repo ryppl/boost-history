@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 // Copyright (C) 2004, Andrei Alexandrescu and David B. Held
-// Distributed under the Boost Software License, Version 1.0. (See
-// http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. (See accompany-
+// ing file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //----------------------------------------------------------------------------
 #ifndef BOOST_CONVERSION_HPP
 #define BOOST_CONVERSION_HPP

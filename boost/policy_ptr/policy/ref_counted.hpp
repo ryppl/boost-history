@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 // Copyright (C) 2004, Andrei Alexandrescu and David B. Held
-// Distributed under the Boost Software License, Version 1.0. (See
-// http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. (See accompany-
+// ing file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //----------------------------------------------------------------------------
 #ifndef BOOST_REF_COUNTED_HPP
 #define BOOST_REF_COUNTED_HPP
@@ -23,7 +23,7 @@ namespace boost
         typedef typename storage_policy::pointer_type   pointer_type;
 
     protected:          // Protected Interface
-                        ref_counted(void)
+                        ref_counted_(void)
                             : count_(0)                 { }
 
                         ref_counted_(ref_counted_ const& rhs)
@@ -117,7 +117,7 @@ namespace boost
 
     private:            // Implementation
         ref_counted_&   operator=(ref_counted_ const&);
-        BOOST_DECLARE_TEMPLATE_FRIEND(U, ref_counted_)
+        BOOST_SP_DECLARE_TEMPLATE_FRIEND(U, ref_counted_)
 
         unsigned*       count_;
     };

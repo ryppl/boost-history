@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 // Copyright (C) 2004, Andrei Alexandrescu and David B. Held
-// Distributed under the Boost Software License, Version 1.0. (See
-// http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. (See accompany-
+// ing file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //----------------------------------------------------------------------------
 #ifndef BOOST_NO_CHECK_HPP
 #define BOOST_NO_CHECK_HPP
@@ -28,7 +28,7 @@ namespace boost
                         template <typename U>
                         no_check_(no_check_<U> const& rhs)
                             : base_type(static_cast<
-                                typename no_check<U>::base_type const&
+                                typename no_check_<U>::base_type const&
                             >(rhs))                     { }
 
                         template <typename U>
