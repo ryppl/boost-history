@@ -399,7 +399,8 @@ BOOST_DYN_BITSET_PRIVATE:
 
     void m_rearrange_extracted_bits(size_type num_bits);
     static size_type calc_num_blocks(size_type num_bits)
-    { return (num_bits + (bits_per_block - 1)) / bits_per_block; }
+        { return (num_bits + (bits_per_block - 1)) / bits_per_block; }
+    Block& m_highest_block();
 
 
     buffer_type m_bits; // [gps] to be renamed
@@ -1463,7 +1464,8 @@ operator>>(std::basic_istream<Ch, Tr>& is, dynamic_bitset<Block, Alloc>& b)
             b.clear();
             
             basic_streambuf <Ch, Tr> * buf = is.rdbuf();
-            typename vector<Block, Alloc>::iterator it;
+            //typename vector<Block, Alloc>::iterator it;
+            Block * current = 0;
 
             const Block max_mask
                = Block(1) << (dynamic_bitset<Block, Alloc>::bits_per_block - 1);
@@ -1486,12 +1488,12 @@ operator>>(std::basic_istream<Ch, Tr>& is, dynamic_bitset<Block, Alloc>& b)
                     //
                     if (mask == 0) {
                         b.append(0);
-                        it = b.m_bits.end() - 1; // G.P.S. last_block()?
+                        current = &b.m_highest_block(); //it = b.m_bits.end() - 1; // G.P.S. last_block()?
                         mask = max_mask;
                     }
                     
                     if(is_one)
-                        *it |= mask;
+                        *current |= mask;
                     
                     mask >>= 1;
                     ++bits_stored;
@@ -1581,7 +1583,15 @@ operator-(const dynamic_bitset<Block, Allocator>& x,
 
 
 //-----------------------------------------------------------------------------
-// private member functions
+// private member functions (on conforming compilers)
+
+template <typename Block, typename Allocator>
+inline Block& dynamic_bitset<Block, Allocator>::m_highest_block()
+{
+    assert(size() > 0 && num_blocks() > 0);
+    return *(m_bits.end() - 1);
+}
+
 
 
 // If size() is not a multiple of bits_per_block
