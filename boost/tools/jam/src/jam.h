@@ -86,7 +86,7 @@ int unlink( char *f ); 	/* In filevms.c */
 # define SPLITPATH ';'
 /* Windows NT 3.51 only allows 996 chars per line, but we deal */
 /* with problem in "execnt.c".                                 */
-# define MAXLINE 10240	/* longest 'together' actions */
+# define MAXLINE 2047	/* longest 'together' actions */
 # define USE_EXECNT
 # define USE_PATHUNIX
 # define PATH_DELIM '\\'
