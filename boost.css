@@ -23,12 +23,16 @@ BODY
 PRE
 {
     MARGIN-LEFT: 2em;
-    FONT-FAMILY: Courier;
-    BACKGROUND-COLOR: #dfffff
+    FONT-FAMILY: Courier,
+                 monospace;
 }
 CODE
 {
-    FONT-FAMILY: Courier;
+    FONT-FAMILY: Courier,
+                 monospace;
+}
+CODE.as_pre
+{
     white-space: pre;
 }
 .index
