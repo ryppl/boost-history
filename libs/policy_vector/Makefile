@@ -1,5 +1,6 @@
-# CXX = g++-3.0
-CXXFLAGS += -W -Wall -pedantic -g -I../..
+CXX = g++-3.0
+CXXFLAGS += -W -Wall -pedantic -O -I../..
+# CXXFLAGS += -W -Wall -pedantic -g -I../..
 
 all: testing_fixed_external testing_fixed_range \
      testing_fixed_aggregate testing_fixed_allocated \

@@ -1,11 +1,13 @@
 /* a comprehensive test suite for using class policy_vector<>
  */
 
+// put first to detect missing includes, etc.
+#include <boost/policy_vector.hpp>
+
 #include <iostream>
 #include <vector>
 #include <memory>
 #include <boost/timer.hpp>
-#include <boost/policy_vector.hpp>
 
 using namespace boost;
 
