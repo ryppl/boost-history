@@ -1,4 +1,4 @@
-//  Boost general library string_algo.hpp header file  ---------------------------//
+//  Boost string_algo library string_algo.hpp header file  ---------------------------//
 
 //  (C) Copyright Pavol Droba 2002. Permission to copy, use, modify, sell and
 //  distribute this software is granted provided this copyright notice appears

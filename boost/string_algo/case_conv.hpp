@@ -1,4 +1,4 @@
-//  Boost general library case_conv.hpp header file  ---------------------------//
+//  Boost string_algo library case_conv.hpp header file  ---------------------------//
 
 //  (C) Copyright Pavol Droba 2002. Permission to copy, use, modify, sell and
 //  distribute this software is granted provided this copyright notice appears
@@ -43,7 +43,7 @@ namespace string_util_impl {
         typedef typename std::binary_function< CharT, std::locale, CharT >::first_argument_type first_argument_type;
         typedef typename std::binary_function< CharT, std::locale, CharT >::second_argument_type second_argument_type;
 
-		result_type operator ()( first_argument_type Ch, const second_argument_type& Loc ) const
+        result_type operator ()( first_argument_type Ch, const second_argument_type& Loc ) const
         {
             return std::toupper( Ch, Loc );
         }
@@ -56,7 +56,7 @@ namespace string_util_impl {
 
     // const version of tolower
     template< class Seq >
-    Seq tolower( const Seq& Input, const std::locale& Loc=std::locale() )
+    inline Seq tolower( const Seq& Input, const std::locale& Loc=std::locale() )
     {
         Seq Output;
         std::transform( 
@@ -70,7 +70,7 @@ namespace string_util_impl {
 
     // in-place version of tolower
     template< class Seq >
-    Seq& tolower_in( Seq& Input, const std::locale& Loc=std::locale() )
+    inline Seq& tolower_in( Seq& Input, const std::locale& Loc=std::locale() )
     {
         std::transform( 
             Input.begin(), 
@@ -85,7 +85,7 @@ namespace string_util_impl {
 
     // const version of toupper
     template< class Seq >
-    Seq toupper( const Seq& Input, const std::locale& Loc=std::locale() )
+    inline Seq toupper( const Seq& Input, const std::locale& Loc=std::locale() )
     {
         Seq Output;
         std::transform( 
@@ -99,7 +99,7 @@ namespace string_util_impl {
 
     // in-place version of toupper
     template< class Seq >
-    Seq& toupper_in( Seq& Input, const std::locale& Loc=std::locale() )
+    inline Seq& toupper_in( Seq& Input, const std::locale& Loc=std::locale() )
     {
         std::transform( 
             Input.begin(), 
