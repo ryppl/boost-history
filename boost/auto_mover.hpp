@@ -88,7 +88,7 @@ public: // queries
         return get();
     }
 
-    const T* operator*() const
+    const T& operator*() const
     {
         return get();
     }

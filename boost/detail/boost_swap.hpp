@@ -17,7 +17,7 @@
 #ifndef BOOST_DETAIL_BOOST_SWAP_HPP
 #define BOOST_DETAIL_BOOST_SWAP_HPP
 
-#include <utility> // for std::swap
+#include <algorithm> // for std::swap
 
 namespace boost {
 namespace detail {
@@ -41,7 +41,7 @@ inline void boost_swap(T& lhs, T& rhs)
     using std::swap;
 #endif // __GNUC__ workaround
 
-    swap(lhs, rhs);
+	swap(lhs, rhs);
 }
 
 } // namespace detail
