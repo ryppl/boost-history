@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+    <TITLE>Class Template remove_qualifiers</TITLE>
+    <LINK REL='stylesheet' HREF='../../../../boost.css'>
+    <LINK REL='stylesheet' HREF='../theme/interfaces.css'>
+</HEAD>
+<BODY>
+
+<!-- Begin Banner -->
+
+    <H1 CLASS='title'>Class Template <CODE>remove_qualifiers</CODE></H1>
+    <HR CLASS='banner'>
+
+<!-- End Banner -->
+
+<DL class='page-index'>
+  <DT><A href='#description'>Description</A></DT>
+  <DT><A href='#headers'>Headers</A></DT>
+  <DT><A href='#synopsis'>Synopsis</A></DT>
+</DL>
+
+<A NAME='description'></A>
+<H2>Description</H2>
+
+<P>
+    The class template <CODE>remove_qualifiers</CODE> is a unary <A HREF='http://www.boost.org/libs/mpl/doc/refmanual/metafunction.html' TARGET='_top'>Metafunction</A> which removes applications of the interface adapters <A HREF='const_view.html'><CODE>const_view</CODE></A> and <A HREF='fixed_view.html'><CODE>fixed_view</CODE></A>.
+</P>
+
+<A NAME='headers'></A>
+<H2>Headers</H2>
+
+<DT><CODE><A class='header' href='../../../../boost/interfaces/remove_qualifiers.hpp'>&lt;boost/interfaces/remove_qualifiers.hpp&gt;</A></CODE></DT>
+
+<A NAME='synopsis'></A>
+<H2>Synopsis</H2>
+
+<PRE CLASS='broken_ie'><SPAN CLASS='keyword'>namespace</SPAN> boost { <SPAN CLASS='keyword'>namespace</SPAN> interfaces { 
+
+    <SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>typename</SPAN> Interface&gt;
+    <SPAN CLASS='keyword'>struct</SPAN> remove_qualifiers
+        : mpl::identity&lt;Interface&gt;
+        { };
+
+    <SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>typename</SPAN> Interface&gt;
+    <SPAN CLASS='keyword'>struct</SPAN> remove_qualifiers&lt; <A CLASS='documented' HREF='const_view.html'>const_view</A>&lt;Interface&gt; &gt;
+        : remove_qualifiers&lt;Interface&gt;
+        { };
+
+    <SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>typename</SPAN> Interface&gt;
+    <SPAN CLASS='keyword'>struct</SPAN> remove_qualifiers&lt; <A CLASS='documented' HREF='fixed_view.html'>fixed_view</A>&lt;Interface&gt; &gt;
+        : remove_qualifiers&lt;Interface&gt;
+        { };
+
+} } <SPAN CLASS='comment'>// End namespace boost::interfaces</SPAN></PRE>
+
+<!-- Begin Footer -->
+
+<HR>
+<P STYLE='margin-top:2em' CLASS='copyright'>Revised
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B, %Y" startspan -->
+13 Jan, 2005
+<!--webbot bot="Timestamp" endspan i-checksum="38504" -->
+</P>
+
+<P CLASS='copyright'>&copy; Copyright Jonathan Turkanis, 2005. Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at <A HREF='http://www.boost.org/LICENSE_1_0.txt'>http://www.boost.org/LICENSE_1_0.txt</A>)
+</P>
+
+<!-- End Footer -->
+
+</BODY>

@@ -1,0 +1,411 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+    <TITLE>Class Template shared_obj</TITLE>
+    <LINK REL='stylesheet' HREF='../../../../boost.css'>
+        <LINK REL='stylesheet' HREF='../theme/interfaces.css'>
+</HEAD>
+<BODY>
+
+<!-- Begin Banner -->
+
+<H1 CLASS='title'>Class Template <CODE>shared_obj</CODE></H1>
+<HR CLASS='banner'>
+
+<!-- End Banner -->
+
+<DL class='page-index'>
+    <DT><A href='#description'>Description</A></DT> <DT><A href='#headers'>Headers</A></DT>
+    <DT><A href='#reference'>Reference</A>
+        <DL class='page-index'>
+            <DT>
+                <A href='#synopsis'>Synopsis</A></DT> <DT><A href='#shared_obj'>Class Template <CODE>shared_obj</CODE></A>
+            </DT>
+        </DL>
+    </DT>
+</DL>
+
+<HR>
+
+<A NAME='description'></A>
+<H2>Description</H2>
+
+<P>
+    The class template <CODE>shared_obj</CODE> is a reference-counted <A HREF='../guide/smart_references.html'>Smart Reference</A> patterned on the template <A HREF='http://www.boost.org/libs/smart_ptr/shared_ptr.htm' TARGET='_top'><CODE>boost::shared_ptr</CODE></A>.
+</P>
+
+<P>
+    Together with each object managed by a <CODE>shared_obj</CODE> is stored a reference count and a <I>deleter</I>. The reference count records the number of instances of <CODE>shared_obj</CODE> which manage a given object. When the reference count reaches zero &#8212; just before the last <CODE>shared_obj</CODE> managing a given object is destroyed &#8212; the object is freed using the stored deleter. By default, the deleter is an instance of <A HREF='http://www.boost.org/libs/utility/checked_delete.html' TARGET='_top'><CODE>boost::checked_deleter</CODE></A>, but a user supplied deleter may be specified when an object is bound to an instance of <CODE>shared_obj</CODE>.
+</P>
+
+<A NAME='description'></A>
+<H2>To Do</H2>
+
+<P>Add pre- and post- conditions, where appropriate.</P>
+
+<A NAME='headers'></A>
+<H2>Headers</H2>
+
+<DT><A CLASS='header' HREF='../../../../boost/interfaces/shared_obj.hpp'><CODE>&lt;boost/interfaces/shared_obj.hpp&gt;</CODE></A></DT>
+
+<A NAME='reference'></A>
+<H2>Reference</H2>
+
+<A NAME='synopsis'></A>
+<H3>Synopsis</H3>
+
+<PRE CLASS='broken_ie'><SPAN CLASS="keyword">namespace</SPAN> boost { <SPAN CLASS='keyword'>namespace</SPAN> interfaces {
+
+<SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> <A CLASS="documented" HREF="#shared_obj_template_params">Interface</A>&gt;
+<SPAN CLASS="keyword">class</SPAN> <A CLASS="documented" HREF="#shared_obj">shared_obj</A> {
+<SPAN CLASS="keyword">public</SPAN>:
+    <SPAN CLASS="keyword">typedef</SPAN> <SPAN CLASS="keyword">typename</SPAN> <A CLASS='documented' HREF='fixed_view.html'>fixed_view</A>&lt;Interface&gt; <A CLASS="documented" HREF="#shared_obj_element_type">element_type</A>;
+
+        <SPAN CLASS='comment'>// Constructors</SPAN>
+
+    <A CLASS="documented" HREF="#shared_obj_default_ctor">shared_obj</A>();
+
+    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> T&gt;
+    <SPAN CLASS="keyword">explicit</SPAN> <A CLASS="documented" HREF="#shared_obj_pointer_ctor1">shared_obj</A>(T* t);
+
+    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> T, <SPAN CLASS='keyword'>typename</SPAN> D&gt;
+    <A CLASS="documented" HREF="#shared_obj_pointer_ctor2">shared_obj</A>(T* t, D d);
+
+    <A CLASS="documented" HREF="#shared_obj_copy_ctors">shared_obj</A>(<SPAN CLASS="keyword">const</SPAN> shared_obj& ptr);
+
+    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> Subinterface&gt;
+    <A CLASS="documented" HREF="#shared_obj_copy_ctors">shared_obj</A>(<SPAN CLASS="keyword">const</SPAN> shared_obj&lt;Subinterface&gt;& ptr);
+
+        <SPAN CLASS='comment'>// Destructor</SPAN>
+
+    ~<A CLASS="documented" HREF="#shared_obj_dtor">shared_obj</A>();
+
+        <SPAN CLASS='comment'>// Assignment</SPAN>
+
+    shared_obj& <A CLASS="documented" HREF="#shared_obj_assign">operator=</A>(shared_obj ptr);
+
+    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> Subinterface&gt;    
+    shared_obj&amp; <A CLASS="documented" HREF="#shared_obj_assign">operator=</A>(shared_obj&lt;Subinterface&gt; ptr);
+
+    <SPAN CLASS="keyword">operator</SPAN> <A CLASS="documented" HREF="#shared_obj_safe_bool">unspecified-bool-type</A>() <SPAN CLASS="keyword">const</SPAN>;
+
+    <SPAN CLASS='omitted'>[Member functions from Interface]</SPAN>
+};
+
+<SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>typename</SPAN> Interface&gt;
+<A CLASS='documented' HREF='fixed_view.html'>fixed_view</A>&lt;Interface&gt;* <A CLASS="documented" HREF="#shared_obj_get">get</A>(<SPAN CLASS='keyword'>const</SPAN> shared_object&lt;Interface&gt;&amp; obj);
+
+<SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>typename</SPAN> Interface&gt;
+<SPAN CLASS="keyword">void</SPAN> <A CLASS="documented" HREF="#shared_obj_nullary_reset">reset</A>(shared_object&lt;Interface&gt;&amp; obj);
+
+<SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>typename</SPAN> Interface, <SPAN CLASS='keyword'>typename</SPAN> T&gt;
+<SPAN CLASS="keyword">void</SPAN> <A CLASS="documented" HREF="#shared_obj_unary_reset">reset</A>(shared_object&lt;Interface&gt;&amp; obj, T* t);
+
+<SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>typename</SPAN> Interface&, <SPAN CLASS='keyword'>typename</SPAN> T, <SPAN CLASS='keyword'>typename</SPAN> D&gt;
+<SPAN CLASS="keyword">void</SPAN> <A CLASS="documented" HREF="#shared_obj_binary_reset">reset</A>(shared_object&lt;Interface&gt;&amp; obj, T* t, D d);
+
+<SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>typename</SPAN> Interface&gt;
+<SPAN CLASS='keyword'>bool</SPAN> <A CLASS='documented' HREF='#shared_obj_unique'>unique</A>(<SPAN CLASS='keyword'>const</SPAN> shared_object&lt;Interface&gt;&amp; obj);
+
+<SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>typename</SPAN> Interface&gt;
+<SPAN CLASS='keyword'>long</SPAN> <A CLASS='documented' HREF='#shared_obj_use_count'>use_count</A>(<SPAN CLASS='keyword'>const</SPAN> shared_object&lt;Interface&gt;&amp; obj);
+
+} } <SPAN CLASS='comment'>// End namespace boost::interfaces</SPAN></PRE>
+
+<A NAME='shared_obj'></A>
+<H3>Class Template <CODE>shared_obj</CODE></H3>
+
+<A NAME='shared_obj_template_params'></A>
+<H5>Template Parameters</H5>
+
+<TABLE STYLE='margin-left:2em' BORDER=0 CELLPADDING=2>
+<TR>
+    <TR>
+        <TD VALIGN='top'><I>Interface</I></TD><TD WIDTH='2em' ALIGN='center' VALIGN='top'>-</TD><TD></TD>
+        <TD>
+            <P STYLE='margin:0'>An interface defined using the <A HREF='../guide/idl.html'>Interface Definition Language</A> (IDL).</P>
+        </TD>
+    </TR>
+</TABLE>
+
+<A NAME='shared_obj_element_type'></A>
+<H4><CODE>shared_obj::element_type</CODE></H4>
+
+<PRE CLASS='broken_ie'>    <SPAN CLASS="keyword">typedef</SPAN> <SPAN CLASS="keyword">typename</SPAN> fixed_view&lt;T&gt; element_type;</PRE>
+
+<P>
+    Used by the dereferencing operators, in place of the template parameter Interface, to help prevent resource leaks and double deletes. <I>See</I> <A HREF='fixed_view.html#example'>Example</A>.
+</P>
+
+<A NAME='shared_obj_default_ctor'></A>
+<H4><CODE>shared_obj::shared_obj</CODE></H4>
+<PRE CLASS='broken_ie'>    shared_obj();</PRE>
+
+<P>Constructs an empty <CODE>shared_obj</CODE>. Never throws.</P>
+
+<A NAME='shared_obj_pointer_ctor1'></A>
+<PRE CLASS='broken_ie'>    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> T&gt;
+    <SPAN CLASS="keyword">explicit</SPAN> shared_obj(T* t);</PRE>
+
+<H5>Template Parameters</H5>
+
+<TABLE STYLE='margin-left:2em' BORDER=0 CELLPADDING=2>
+<TR>
+    <TR>
+        <TD VALIGN='top'><I>T</I></TD><TD WIDTH='2em' ALIGN='center' VALIGN='top'>-</TD><TD></TD>
+        <TD>
+            <P STYLE='margin:0'>A class implementing <CODE>Interface</CODE>. The type <CODE>T</CODE> must be complete and have an accessible destructor which does not throw, but <I>need not be complete</I> at the point <CODE>t</CODE> is freed.</P>
+        </TD>
+    </TR>
+</TABLE>
+
+<P>
+    Constructs an instance of <CODE>shared_obj</CODE> which takes ownership of <CODE>t</CODE>. The reference count is initialized to one; when it reaches zero, <CODE>t</CODE> will be freed using <CODE>delete</CODE>.
+</P>
+<P>
+    If an exception is thrown, <CODE>t</CODE> will be freed using <CODE>delete</CODE>.
+</P>
+
+<A NAME='shared_obj_pointer_ctor2'></A>
+<PRE CLASS='broken_ie'>    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> T, <SPAN CLASS='keyword'>typename</SPAN> D&gt;
+    shared_obj(T* t, D d);</PRE>
+
+<H5>Template Parameters</H5>
+<TABLE STYLE='margin-left:2em' BORDER=0 CELLPADDING=2>
+<TR>
+    <TR>
+        <TD VALIGN='top'><I>T</I></TD><TD WIDTH='2em' ALIGN='center' VALIGN='top'>-</TD>
+        <TD>
+            <P STYLE='margin:0'>A class implementing <CODE>Interface</CODE>.
+        </TD>
+    </TR>
+    <TR>
+        <TD VALIGN='top'><I>D</I></TD><TD WIDTH='2em' ALIGN='center' VALIGN='top'>-</TD>
+        <TD>
+            <P STYLE='margin:0'>A type with an accessible copy constructor and destructor which do not throw. The expression <CODE>d(t)</CODE>, where <CODE>d</CODE> is an instance of <CODE>D</CODE> and <CODE>t</CODE> has type <CODE>T*</CODE>, must be well-formed, must not lead to undefined behavior and must not throw. 
+        </TD>
+    </TR>
+</TABLE>
+
+<P>
+    Constructs an instance of <CODE>shared_obj</CODE> which takes ownership of <CODE>t</CODE>. The reference count is initialized to one; when it reaches zero, <CODE>t</CODE> will be freed using a copy of <CODE>d</CODE>.
+</P>
+<P>
+    If an exception is thrown, <CODE>t</CODE> will be freed by invoking <CODE>d(t)</CODE>.
+</P>
+
+<A NAME='shared_obj_copy_ctors'></A>
+<PRE CLASS='broken_ie'>    shared_obj(<SPAN CLASS="keyword">const</SPAN> shared_obj& ptr);
+
+    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> Subinterface&gt;
+    shared_obj(<SPAN CLASS="keyword">const</SPAN> shared_obj&lt;Subinterface&gt;& ptr);</PRE>
+
+<P>
+    If the given instance of <CODE>shared_obj</CODE> is non-empty, constructs a <CODE>shared_obj</CODE> which manages the same object as the given instance and increments the reference count. Otherwise, constructs an empty <CODE>shared_obj</CODE>. Never throws.
+</P>
+
+<A NAME='shared_obj_dtor'></A>
+<H4><CODE>shared_obj::~shared_obj</CODE></H4>
+<PRE CLASS='broken_ie'>    ~shared_obj();</PRE>
+
+<P>
+    If the reference count is non-zero, decrements the reference count and relinquishes ownership of the managed object. 
+</P>
+
+<A NAME='shared_obj_assign'></A>
+<H4><CODE>shared_obj::operator=</CODE></H4>
+<PRE CLASS='broken_ie'>    shared_obj& operator=(shared_obj ptr);
+
+    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> Subinterface&gt;    
+    shared_obj&amp; operator=(shared_obj&lt;Subinterface&gt; ptr);</PRE>
+
+<P>
+    If the reference count is non-zero, decrements the reference count and relinquishes ownership of the managed object. 
+</P>
+
+<P>
+    Next, if the given instance of <CODE>shared_obj</CODE> is non-empty, takes shared ownership of the managed object and increments the reference count. Never throws.
+</P>
+
+<A NAME='shared_obj_safe_bool'></A>
+<H4><CODE>shared_obj::operator unspecified-bool-type()</CODE></H4>
+<PRE CLASS='broken_ie'>    <SPAN CLASS="keyword">operator</SPAN> unspecified-bool-type() <SPAN CLASS="keyword">const</SPAN>;</PRE>
+
+<P>
+     Returns an unspecified value which, when used in boolean contexts, is equivalent to <CODE><A HREF='#shared_obj_get'>get</A>(*this) != 0</CODE>. Never throws.
+</P>
+
+<A NAME='shared_obj_get'></A>
+<H3>Function Template <CODE>get</CODE></H3>
+
+<PRE CLASS='broken_ie'>    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS='keyword'>typename</SPAN> Interface&gt;
+    element_type* get(<SPAN CLASS='keyword'>const</SPAN> shared_obj&lt;Interface&gt;&amp; obj);</PRE>
+
+<A NAME='shared_obj_get_template_params'></A>
+<H5>Template Parameters</H5>
+
+<TABLE STYLE='margin-left:2em' BORDER=0 CELLPADDING=2>
+<TR>
+    <TR>
+        <TD VALIGN='top'><I>Interface</I></TD><TD WIDTH='2em' ALIGN='center' VALIGN='top'>-</TD><TD></TD>
+        <TD>
+            <P STYLE='margin:0'>An interface defined using the <A HREF='../guide/idl.html'>Interface Definition Language</A> (IDL).</P>
+        </TD>
+    </TR>
+</TABLE>
+
+<P>
+    Returns a pointer through which member functions of object managed by the given instance of <CODE>shared_obj</CODE> can be accessed. Never throws.
+</P>
+
+<A NAME='shared_obj_nullary_reset'></A>
+<H3>Function Template <CODE>reset</CODE></H3>
+
+<PRE CLASS='broken_ie'>    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS='keyword'>typename</SPAN> Interface&gt;
+    <SPAN CLASS="keyword">void</SPAN> reset(shared_obj&lt;Interface&gt;&amp; obj);</PRE>
+
+<A NAME='shared_obj_nullary_reset_template_params'></A>
+<H5>Template Parameters</H5>
+
+<TABLE STYLE='margin-left:2em' BORDER=0 CELLPADDING=2>
+<TR>
+    <TR>
+        <TD VALIGN='top'><I>Interface</I></TD><TD WIDTH='2em' ALIGN='center' VALIGN='top'>-</TD><TD></TD>
+        <TD>
+            <P STYLE='margin:0'>An interface defined using the <A HREF='../guide/idl.html'>Interface Definition Language</A> (IDL).</P>
+        </TD>
+    </TR>
+</TABLE>
+
+<P>
+    If the reference count associated with the given instance of <CODE>shared_obj</CODE> is non-zero, decrements the reference count and causes the given instance to relinquish ownership of the managed object. 
+</P>
+
+<A NAME='shared_obj_unary_reset'></A>
+<PRE CLASS='broken_ie'>    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS='keyword'>typename</SPAN> Interface, <SPAN CLASS="keyword">typename</SPAN> T&gt;
+    <SPAN CLASS="keyword">void</SPAN> reset(shared_obj&lt;Interface&gt;&amp; obj, T* t);</PRE>
+
+<A NAME='shared_obj_unary_reset_template_params'></A>
+<H5>Template Parameters</H5>
+
+<TABLE STYLE='margin-left:2em' BORDER=0 CELLPADDING=2>
+<TR>
+    <TR>
+        <TD VALIGN='top'><I>Interface</I></TD><TD WIDTH='2em' ALIGN='center' VALIGN='top'>-</TD><TD></TD>
+        <TD>
+            <P STYLE='margin:0'>An interface defined using the <A HREF='../guide/idl.html'>Interface Definition Language</A> (IDL).</P>
+        </TD>
+    </TR>
+    <TR>
+        <TD VALIGN='top'><I>T</I></TD><TD WIDTH='2em' ALIGN='center' VALIGN='top'>-</TD><TD></TD>
+        <TD>
+            <P STYLE='margin:0'>A class implementing <I>Interface</I>. The type <CODE>T</CODE> must be complete and have an accessible destructor which does not throw, but <I>need not be complete</I> at the point <CODE>t</CODE> is freed.</P>
+        </TD>
+    </TR>
+</TABLE>
+
+<P>
+    If the reference count associated with the given instance of <CODE>shared_obj</CODE> is non-zero, decrements the reference count and causes the given instance to relinquish ownership of the managed object. 
+</P>
+<P>
+    Next, causes the given instance of <CODE>shared_obj</CODE> to take ownership of <CODE>t</CODE>. The reference count is initialized to one; when it reaches zero, <CODE>t</CODE> will be freed using <CODE>delete</CODE>.
+</P>
+<P>
+    If an exception is thrown, <CODE>t</CODE> will be freed using <CODE>delete</CODE>.
+</P>
+
+<A NAME='shared_obj_binary_reset'></A>
+<PRE CLASS='broken_ie'>    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS='keyword'>typename</SPAN> Interface, <SPAN CLASS="keyword">typename</SPAN> T, <SPAN CLASS="keyword">typename</SPAN> D&gt;
+    <SPAN CLASS="keyword">void</SPAN> reset(shared_obj&lt;Interface&gt;&amp; obj, T* t, D d);</PRE>
+
+<A NAME='shared_obj_binary_reset_template_params'></A>
+<H5>Template Parameters</H5>
+<TABLE STYLE='margin-left:2em' BORDER=0 CELLPADDING=2>
+<TR>
+    <TR>
+        <TD VALIGN='top'><I>Interface</I></TD><TD WIDTH='2em' ALIGN='center' VALIGN='top'>-</TD>
+        <TD>
+            <P STYLE='margin:0'>An interface defined using the <A HREF='../guide/idl.html'>Interface Definition Language</A> (IDL).</P>
+        </TD>
+    </TR>
+    <TR>
+        <TD VALIGN='top'><I>T</I></TD><TD WIDTH='2em' ALIGN='center' VALIGN='top'>-</TD>
+        <TD>
+            <P STYLE='margin:0'>A class implementing <I>Interface</I>.
+        </TD>
+    </TR>
+    <TR>
+        <TD VALIGN='top'><I>D</I></TD><TD WIDTH='2em' ALIGN='center' VALIGN='top'>-</TD>
+        <TD>
+            <P STYLE='margin:0'>A type with an accessible copy constructor and destructor which do not throw. The expression <CODE>d(t)</CODE>, where <CODE>d</CODE> is an instance of <CODE>D</CODE> and <CODE>t</CODE> has type <CODE>T*</CODE>, must be well-formed, must not lead to undefined behavior and must not throw. 
+        </TD>
+    </TR>
+</TABLE>
+
+<P>
+    If the reference count associated with the given instance of <CODE>shared_obj</CODE> is non-zero, decrements the reference count and causes the given instance to relinquish ownership of the managed object. 
+</P>
+<P>
+   Next, causes the given instance of <CODE>shared_obj</CODE> to take ownership of <CODE>t</CODE>. The reference count is initialized to one; when it reaches zero, <CODE>t</CODE> will be freed using a copy of <CODE>d</CODE>.
+</P>
+<P>
+    If an exception is thrown, <CODE>t</CODE> will be freed by invoking <CODE>d(t)</CODE>.
+</P>
+
+<A NAME='shared_obj_unique'></A>
+<H3>Function Template <CODE>unique</CODE></H3>
+
+<PRE CLASS='broken_ie'>    <SPAN CLASS="keyword">bool</SPAN> unique(shared_obj&lt;Interface&gt;&amp; obj);</PRE>
+
+<A NAME='shared_obj_unique_template_params'></A>
+<H5>Template Parameters</H5>
+
+<TABLE STYLE='margin-left:2em' BORDER=0 CELLPADDING=2>
+<TR>
+    <TR>
+        <TD VALIGN='top'><I>Interface</I></TD><TD WIDTH='2em' ALIGN='center' VALIGN='top'>-</TD><TD></TD>
+        <TD>
+            <P STYLE='margin:0'>An interface defined using the <A HREF='../guide/idl.html'>Interface Definition Language</A> (IDL).</P>
+        </TD>
+    </TR>
+</TABLE>
+
+<P>Returns true if the reference count associated with the given instance of <CODE>shared_obj</CODE> is one. Never throws.</P>
+
+<A NAME='shared_obj_use_count'></A>
+<H3>Function Template <CODE>use_count</CODE></H3>
+
+<PRE CLASS='broken_ie'>    <SPAN CLASS="keyword">long</SPAN> use_count(shared_obj&lt;Interface&gt;&amp; obj);</PRE>
+
+<A NAME='shared_obj_use_count_template_params'></A>
+<H5>Template Parameters</H5>
+
+<TABLE STYLE='margin-left:2em' BORDER=0 CELLPADDING=2>
+<TR>
+    <TR>
+        <TD VALIGN='top'><I>Interface</I></TD><TD WIDTH='2em' ALIGN='center' VALIGN='top'>-</TD><TD></TD>
+        <TD>
+            <P STYLE='margin:0'>An interface defined using the <A HREF='../guide/idl.html'>Interface Definition Language</A> (IDL).</P>
+        </TD>
+    </TR>
+</TABLE>
+
+<P>Returns the reference count associated with the given instance of <CODE>shared_obj</CODE>. Should be used only for testing and debugging. Never throws.</P>
+
+<!-- Begin Footer -->
+
+<HR>
+<P CLASS='copyright'>Revised
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B, %Y" startspan -->
+16 Jan, 2005
+<!--webbot bot="Timestamp" endspan i-checksum="38504" -->
+</P>
+
+<P CLASS='copyright'>&copy; Copyright Jonathan D. Turkanis, 2005</P>
+<P CLASS='copyright'> 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at <A HREF='http://www.boost.org/LICENSE_1_0.txt'>http://www.boost.org/LICENSE_1_0.txt</A>)
+</P>
+
+<!-- End Footer -->
+
+</BODY>

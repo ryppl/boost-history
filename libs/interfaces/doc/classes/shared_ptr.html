@@ -1,0 +1,368 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+    <TITLE>Class Template shared_ptr</TITLE>
+    <LINK REL='stylesheet' HREF='../../../../boost.css'>
+        <LINK REL='stylesheet' HREF='../theme/interfaces.css'>
+</HEAD>
+<BODY>
+
+<!-- Begin Banner -->
+
+<H1 CLASS='title'>Class Template <CODE>shared_ptr</CODE></H1>
+<HR CLASS='banner'>
+
+<!-- End Banner -->
+
+<DL class='page-index'>
+    <DT><A href='#description'>Description</A></DT> <DT><A href='#headers'>Headers</A></DT>
+    <DT><A href='#reference'>Reference</A>
+        <DL class='page-index'>
+            <DT>
+                <A href='#synopsis'>Synopsis</A></DT> <DT><A href='#shared_ptr'>Class Template <CODE>shared_ptr</CODE></A>
+            </DT>
+        </DL>
+    </DT>
+</DL>
+
+<HR>
+
+<A NAME='description'></A>
+<H2>Description</H2>
+
+<P>
+    The class template <CODE>shared_ptr</CODE> is a reference-counted <A HREF='../guide/smart_pointers.html'>Smart Interface Pointer</A> patterned on the template <A HREF='http://www.boost.org/libs/smart_ptr/shared_ptr.htm' TARGET='_top'><CODE>boost::shared_ptr</CODE></A>.
+</P>
+
+<P>
+    Together with each object managed by a <CODE>shared_ptr</CODE> is stored a reference count and a <I>deleter</I>. The reference count records the number of instances of <CODE>shared_ptr</CODE> which manage a given object. When the reference count reaches zero &#8212; just before the last <CODE>shared_ptr</CODE> managing a given object is destroyed &#8212; the object is freed using the stored deleter. By default, the deleter is an instance of <A HREF='http://www.boost.org/libs/utility/checked_delete.html' TARGET='_top'><CODE>boost::checked_deleter</CODE></A>, but a user supplied deleter may be specified when an object is bound to an instance of <CODE>shared_ptr</CODE>.
+</P>
+
+<A NAME='description'></A>
+<H2>To Do</H2>
+
+<P>Add pre- and post- conditions, where appropriate.</P>
+
+<A NAME='headers'></A>
+<H2>Headers</H2>
+
+<DT><A CLASS='header' HREF='../../../../boost/interfaces/shared_ptr.hpp'><CODE>&lt;boost/interfaces/shared_ptr.hpp&gt;</CODE></A></DT>
+
+<A NAME='reference'></A>
+<H2>Reference</H2>
+
+<A NAME='synopsis'></A>
+<H3>Synopsis</H3>
+
+<PRE CLASS='broken_ie'><SPAN CLASS="keyword">namespace</SPAN> boost { <SPAN CLASS='keyword'>namespace</SPAN> interfaces {
+
+<SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> <A CLASS="documented" HREF="#shared_ptr_template_params">Interface</A>&gt;
+<SPAN CLASS="keyword">class</SPAN> <A CLASS="documented" HREF="#shared_ptr">shared_ptr</A> {
+<SPAN CLASS="keyword">public</SPAN>:
+    <SPAN CLASS="keyword">typedef</SPAN> <SPAN CLASS="keyword">typename</SPAN> <A CLASS='documented' HREF='fixed_view.html'>fixed_view</A>&lt;Interface&gt; <A CLASS="documented" HREF="#shared_ptr_element_type">element_type</A>;
+
+        <SPAN CLASS='comment'>// Constructors</SPAN>
+
+    <A CLASS="documented" HREF="#shared_ptr_default_ctor">shared_ptr</A>();
+
+    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> T&gt;
+    <SPAN CLASS="keyword">explicit</SPAN> <A CLASS="documented" HREF="#shared_ptr_pointer_ctor1">shared_ptr</A>(T* t);
+
+    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> T, <SPAN CLASS='keyword'>typename</SPAN> D&gt;
+    <A CLASS="documented" HREF="#shared_ptr_pointer_ctor2">shared_ptr</A>(T* t, D d);
+
+    <A CLASS="documented" HREF="#shared_ptr_copy_ctors">shared_ptr</A>(<SPAN CLASS="keyword">const</SPAN> shared_ptr& ptr);
+
+    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> Subinterface&gt;
+    <A CLASS="documented" HREF="#shared_ptr_copy_ctors">shared_ptr</A>(<SPAN CLASS="keyword">const</SPAN> shared_ptr&lt;Subinterface&gt;& ptr);
+
+        <SPAN CLASS='comment'>// Destructor</SPAN>
+
+    ~<A CLASS="documented" HREF="#shared_ptr_dtor">shared_ptr</A>();
+
+        <SPAN CLASS='comment'>// Assignment</SPAN>
+
+    shared_ptr& <A CLASS="documented" HREF="#shared_ptr_assign">operator=</A>(shared_ptr ptr);
+
+    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> Subinterface&gt;    
+    shared_ptr&amp; <A CLASS="documented" HREF="#shared_ptr_assign">operator=</A>(shared_ptr&lt;Subinterface&gt; ptr);
+
+    <SPAN CLASS='omitted'>[Member functions from Interface]</SPAN>
+
+        <SPAN CLASS='comment'>// Smart pointer interface</SPAN>
+
+    element_type* <A CLASS="documented" HREF="#shared_ptr_get">get</A>() <SPAN CLASS="keyword">const</SPAN>;
+
+    element_type& <A CLASS="documented" HREF="#shared_ptr_deref">operator*</A>() <SPAN CLASS="keyword">const</SPAN>;
+
+    element_type* <A CLASS="documented" HREF="#shared_ptr_arrow">operator-&gt;</A>() <SPAN CLASS="keyword">const</SPAN>;
+
+    <SPAN CLASS="keyword">void</SPAN> <A CLASS="documented" HREF="#shared_ptr_nullary_reset">reset</A>();
+
+    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> T&gt;
+    <SPAN CLASS="keyword">void</SPAN> <A CLASS="documented" HREF="#shared_ptr_unary_reset">reset</A>(T* t);
+
+    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> T, <SPAN CLASS='keyword'>typename</SPAN> D&gt;
+    <SPAN CLASS="keyword">void</SPAN> <A CLASS="documented" HREF="#shared_ptr_binary_reset">reset</A>(T* t, D d);
+
+    <SPAN CLASS="keyword">operator</SPAN> <A CLASS="documented" HREF="#shared_ptr_safe_bool">unspecified-bool-type</A>() <SPAN CLASS="keyword">const</SPAN>;
+
+    <SPAN CLASS="keyword">void</SPAN> <A CLASS="documented" HREF="#shared_ptr_swap">swap</A>(shared_ptr& p);
+
+    <SPAN CLASS='keyword'>bool</SPAN> <A CLASS='documented' HREF='#shared_ptr_unique'>unique</A>() <SPAN CLASS='keyword'>const</SPAN>;
+
+    <SPAN CLASS='keyword'>long</SPAN> <A CLASS='documented' HREF='#shared_ptr_use_count'>use_count</A>() <SPAN CLASS='keyword'><SPAN CLASS='keyword'>const</SPAN></SPAN>;
+};
+
+} } <SPAN CLASS='comment'>// End namespace boost::interfaces</SPAN></PRE>
+
+<A NAME='shared_ptr'></A>
+<H3>Class Template <CODE>shared_ptr</CODE></H3>
+
+<A NAME='shared_ptr_template_params'></A>
+<H5>Template Parameters</H5>
+
+<TABLE STYLE='margin-left:2em' BORDER=0 CELLPADDING=2>
+<TR>
+    <TR>
+        <TD VALIGN='top'><I>Interface</I></TD><TD WIDTH='2em' ALIGN='center' VALIGN='top'>-</TD><TD></TD>
+        <TD>
+            <P STYLE='margin:0'>An interface defined using the <A HREF='../guide/idl.html'>Interface Definition Language</A> (IDL).</P>
+        </TD>
+    </TR>
+</TABLE>
+
+<A NAME='shared_ptr_element_type'></A>
+<H4><CODE>shared_ptr::element_type</CODE></H4>
+
+<PRE CLASS='broken_ie'>    <SPAN CLASS="keyword">typedef</SPAN> <SPAN CLASS="keyword">typename</SPAN> fixed_view&lt;T&gt; element_type;</PRE>
+
+<P>
+    Used by the dereferencing operators, in place of the template parameter Interface, to help prevent resource leaks and double deletes. <I>See</I> <A HREF='fixed_view.html#example'>Example</A>.
+</P>
+
+<A NAME='shared_ptr_default_ctor'></A>
+<H4><CODE>shared_ptr::shared_ptr</CODE></H4>
+<PRE CLASS='broken_ie'>    shared_ptr();</PRE>
+
+<P>Constructs an empty <CODE>shared_ptr</CODE>. Never throws.</P>
+
+<A NAME='shared_ptr_pointer_ctor1'></A>
+<PRE CLASS='broken_ie'>    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> T&gt;
+    <SPAN CLASS="keyword">explicit</SPAN> shared_ptr(T* t);</PRE>
+
+<H5>Template Parameters</H5>
+
+<TABLE STYLE='margin-left:2em' BORDER=0 CELLPADDING=2>
+<TR>
+    <TR>
+        <TD VALIGN='top'><I>T</I></TD><TD WIDTH='2em' ALIGN='center' VALIGN='top'>-</TD><TD></TD>
+        <TD>
+            <P STYLE='margin:0'>A class implementing <CODE>Interface</CODE>. The type <CODE>T</CODE> must be complete and have an accessible destructor which does not throw, but <I>need not be complete</I> at the point <CODE>t</CODE> is freed.</P>
+        </TD>
+    </TR>
+</TABLE>
+
+<P>
+    Constructs an instance of <CODE>shared_ptr</CODE> which takes ownership of <CODE>t</CODE>. The reference count is initialized to one; when it reaches zero, <CODE>t</CODE> will be freed using <CODE>delete</CODE>.
+</P>
+<P>
+    If an exception is thrown, <CODE>t</CODE> will be freed using <CODE>delete</CODE>.
+</P>
+
+<A NAME='shared_ptr_pointer_ctor2'></A>
+<PRE CLASS='broken_ie'>    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> T, <SPAN CLASS='keyword'>typename</SPAN> D&gt;
+    shared_ptr(T* t, D d);</PRE>
+
+<H5>Template Parameters</H5>
+<TABLE STYLE='margin-left:2em' BORDER=0 CELLPADDING=2>
+<TR>
+    <TR>
+        <TD VALIGN='top'><I>T</I></TD><TD WIDTH='2em' ALIGN='center' VALIGN='top'>-</TD>
+        <TD>
+            <P STYLE='margin:0'>A class implementing <CODE>Interface</CODE>.
+        </TD>
+    </TR>
+    <TR>
+        <TD VALIGN='top'><I>D</I></TD><TD WIDTH='2em' ALIGN='center' VALIGN='top'>-</TD>
+        <TD>
+            <P STYLE='margin:0'>A type with an accessible copy constructor and destructor which do not throw. The expression <CODE>d(t)</CODE>, where <CODE>d</CODE> is an instance of <CODE>D</CODE> and <CODE>t</CODE> has type <CODE>T*</CODE>, must be well-formed, must not lead to undefined behavior and must not throw. 
+        </TD>
+    </TR>
+</TABLE>
+
+<P>
+    Constructs an instance of <CODE>shared_ptr</CODE> which takes ownership of <CODE>t</CODE>. The reference count is initialized to one; when it reaches zero, <CODE>t</CODE> will be freed using a copy of <CODE>d</CODE>.
+</P>
+<P>
+    If an exception is thrown, <CODE>t</CODE> will be freed by invoking <CODE>d(t)</CODE>.
+</P>
+
+<A NAME='shared_ptr_copy_ctors'></A>
+<PRE CLASS='broken_ie'>    shared_ptr(<SPAN CLASS="keyword">const</SPAN> shared_ptr& ptr);
+
+    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> Subinterface&gt;
+    shared_ptr(<SPAN CLASS="keyword">const</SPAN> shared_ptr&lt;Subinterface&gt;& ptr);</PRE>
+
+<P>
+    If the given instance of <CODE>shared_ptr</CODE> is non-empty, constructs a <CODE>shared_ptr</CODE> which manages the same object as the given instance and increments the reference count. Otherwise, constructs an empty <CODE>shared_ptr</CODE>. Never throws.
+</P>
+
+<A NAME='shared_ptr_dtor'></A>
+<H4><CODE>shared_ptr::~shared_ptr</CODE></H4>
+<PRE CLASS='broken_ie'>    ~shared_ptr();</PRE>
+
+<P>
+    If the reference count is non-zero, decrements the reference count and relinquishes ownership of the managed object. 
+</P>
+
+<A NAME='shared_ptr_assign'></A>
+<H4><CODE>shared_ptr::operator=</CODE></H4>
+<PRE CLASS='broken_ie'>    shared_ptr& operator=(shared_ptr ptr);
+
+    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> Subinterface&gt;    
+    shared_ptr&amp; operator=(shared_ptr&lt;Subinterface&gt; ptr);</PRE>
+
+<P>
+    If the reference count is non-zero, decrements the reference count and relinquishes ownership of the managed object. 
+</P>
+
+<P>
+    Next, if the given instance of <CODE>shared_ptr</CODE> is non-empty, takes shared ownership of the managed object and increments the reference count. Never throws.
+</P>
+
+<A NAME='shared_ptr_get'></A>
+<H4><CODE>shared_ptr::get</CODE></H4>
+<PRE CLASS='broken_ie'>    element_type* get() <SPAN CLASS="keyword">const</SPAN>;</PRE>
+
+<P>
+    Returns a pointer through which member functions of the bound object can be accessed. Never throws.
+</P>
+
+<A NAME='shared_ptr_deref'></A>
+<H4><CODE>shared_ptr::operator*</CODE></H4>
+<PRE CLASS='broken_ie'>    element_type& operator*() <SPAN CLASS="keyword">const</SPAN>;</PRE>
+
+<P>
+    Returns a reference through which member functions of the bound object can be accessed. Never throws.
+</P>
+
+<A NAME='shared_ptr_arrow'></A>
+<H4><CODE>shared_ptr::operator-></CODE></H4>
+<PRE CLASS='broken_ie'>    element_type* operator-&gt;() <SPAN CLASS="keyword">const</SPAN>;</PRE>
+
+<P>
+    Returns a pointer through which member functions of the bound object can be accessed. Never throws.
+</P>
+
+<A NAME='shared_ptr_nullary_reset'></A>
+<H4><CODE>shared_ptr::reset</CODE></H4>
+<PRE CLASS='broken_ie'>    <SPAN CLASS="keyword">void</SPAN> reset();</PRE>
+
+<P>
+    If the reference count is non-zero, decrements the reference count and relinquishes ownership of the managed object. 
+</P>
+
+<A NAME='shared_ptr_unary_reset'></A>
+<H4><CODE>shared_ptr::reset</CODE></H4>
+<PRE CLASS='broken_ie'>    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> T&gt;
+    <SPAN CLASS="keyword">void</SPAN> reset(T* t);</PRE>
+
+<H5>Template Parameters</H5>
+
+<TABLE STYLE='margin-left:2em' BORDER=0 CELLPADDING=2>
+<TR>
+    <TR>
+        <TD VALIGN='top'><I>T</I></TD><TD WIDTH='2em' ALIGN='center' VALIGN='top'>-</TD><TD></TD>
+        <TD>
+            <P STYLE='margin:0'>A class implementing <CODE>Interface</CODE>. The type <CODE>T</CODE> must be complete and have an accessible destructor which does not throw, but <I>need not be complete</I> at the point <CODE>t</CODE> is freed.</P>
+        </TD>
+    </TR>
+</TABLE>
+
+<P>
+    If the reference count is non-zero, decrements the reference count and relinquishes ownership of the managed object. 
+</P>
+<P>
+    Next, takes ownership of <CODE>t</CODE>. The reference count is initialized to one; when it reaches zero, <CODE>t</CODE> will be freed using <CODE>delete</CODE>.
+</P>
+<P>
+    If an exception is thrown, <CODE>t</CODE> will be freed using <CODE>delete</CODE>.
+</P>
+
+<A NAME='shared_ptr_binary_reset'></A>
+<PRE CLASS='broken_ie'>    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> T, <SPAN CLASS="keyword">typename</SPAN> D&gt;
+    <SPAN CLASS="keyword">void</SPAN> reset(T* t, D d);</PRE>
+
+<H5>Template Parameters</H5>
+<TABLE STYLE='margin-left:2em' BORDER=0 CELLPADDING=2>
+<TR>
+    <TR>
+        <TD VALIGN='top'><I>T</I></TD><TD WIDTH='2em' ALIGN='center' VALIGN='top'>-</TD>
+        <TD>
+            <P STYLE='margin:0'>A class implementing <CODE>Interface</CODE>.
+        </TD>
+    </TR>
+    <TR>
+        <TD VALIGN='top'><I>D</I></TD><TD WIDTH='2em' ALIGN='center' VALIGN='top'>-</TD>
+        <TD>
+            <P STYLE='margin:0'>A type with an accessible copy constructor and destructor which do not throw. The expression <CODE>d(t)</CODE>, where <CODE>d</CODE> is an instance of <CODE>D</CODE> and <CODE>t</CODE> has type <CODE>T*</CODE>, must be well-formed, must not lead to undefined behavior and must not throw. 
+        </TD>
+    </TR>
+</TABLE>
+
+<P>
+    If the reference count is non-zero, decrements the reference count and relingues ownership of the managed object. 
+</P>
+<P>
+    Next, takes ownership of <CODE>t</CODE>. The reference count is initialized to one; when it reaches zero, <CODE>t</CODE> will be freed using a copy of <CODE>d</CODE>.
+</P>
+<P>
+    If an exception is thrown, <CODE>t</CODE> will be freed by invoking <CODE>d(t)</CODE>.
+</P>
+
+<A NAME='shared_ptr_safe_bool'></A>
+<H4><CODE>shared_ptr::operator unspecified-bool-type()</CODE></H4>
+<PRE CLASS='broken_ie'>    <SPAN CLASS="keyword">operator</SPAN> unspecified-bool-type() <SPAN CLASS="keyword">const</SPAN>;</PRE>
+
+<P>
+     Returns an unspecified value which, when used in boolean contexts, is equivalent to <CODE><A HREF='#shared_ptr_get'>get</A>() != 0</CODE>. Never throws.
+</P>
+
+<A NAME='shared_ptr_swap'></A>
+<H4><CODE>shared_ptr::swap</CODE></H4>
+<PRE CLASS='broken_ie'>    <SPAN CLASS="keyword">void</SPAN> swap(shared_ptr& p);</PRE>
+
+<P>
+     Exchanges the content of <CODE>this</CODE> instance of <CODE>shared_ptr</CODE> with that of the given instance. Never throws.
+</P>
+
+<A NAME='shared_ptr_unique'></A>
+<H4><CODE>shared_ptr::unique</CODE></H4>
+<PRE CLASS='broken_ie'>    <SPAN CLASS="keyword">bool</SPAN> unique() <SPAN CLASS='keyword'>const</SPAN>;</PRE>
+
+<P>Returns true if the reference count is one. Never throws.</P>
+
+<A NAME='shared_ptr_use_count'></A>
+<H4><CODE>shared_ptr::use_count</CODE></H4>
+<PRE CLASS='broken_ie'>    <SPAN CLASS="keyword">long</SPAN> use_count() <SPAN CLASS='keyword'>const</SPAN>;</PRE>
+
+<P>Returns the reference count. Should be used only for testing and debugging. Never throws.</P>
+
+<!-- Begin Footer -->
+
+<HR>
+<P CLASS='copyright'>Revised
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B, %Y" startspan -->
+16 Jan, 2005
+<!--webbot bot="Timestamp" endspan i-checksum="38504" -->
+</P>
+
+<P CLASS='copyright'>&copy; Copyright Jonathan D. Turkanis, 2005</P>
+<P CLASS='copyright'> 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at <A HREF='http://www.boost.org/LICENSE_1_0.txt'>http://www.boost.org/LICENSE_1_0.txt</A>)
+</P>
+
+<!-- End Footer -->
+
+</BODY>

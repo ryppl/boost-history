@@ -1,0 +1,265 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+    <TITLE>Class Template manual_ptr</TITLE>
+    <LINK REL='stylesheet' HREF='../../../../boost.css'>
+        <LINK REL='stylesheet' HREF='../theme/interfaces.css'>
+</HEAD>
+<BODY>
+
+<!-- Begin Banner -->
+
+<H1 CLASS='title'>Class Template <CODE>manual_ptr</CODE></H1>
+<HR CLASS='banner'>
+
+<!-- End Banner -->
+
+<DL class='page-index'>
+    <DT><A href='#description'>Description</A></DT> <DT><A href='#headers'>Headers</A></DT>
+    <DT><A href='#reference'>Reference</A>
+        <DL class='page-index'>
+            <DT>
+                <A href='#synopsis'>Synopsis</A></DT> <DT><A href='#manual_ptr'>Class Template <CODE>manual_ptr</CODE></A>
+            </DT>
+        </DL>
+    </DT>
+</DL>
+
+<HR>
+
+<A NAME='description'></A>
+<H2>Description</H2>
+
+<P>
+    The class template <CODE>manual_ptr</CODE> is a <A HREF='../guide/smart_pointers.html'>Smart Interface Pointer</A>
+    which supports manual resource management. Objects managed by instances of <CODE>manual_ptr</CODE> are never freed automatically; instead, <CODE>manual_ptr</CODE> allows the programmer to <CODE>delete</CODE> the bound object using the member function <A HREF='#manual_ptr_free'><CODE>free</CODE></A>.
+</P>
+<P>
+    It is recommended that programmers use the other <A HREF='../guide/smart_pointers.html'>Smart Interface Pointers</A> and <A HREF='../guide/smart_references.html'>Smart References</A> most of the time. Manual resource management is appropriate somtimes, however; for example, without something like <CODE>manual_ptr</CODE> it would not be possible to implement <CODE>release()</CODE> functions for <A HREF='unique_ptr.html'><CODE>unique_ptr</CODE></A> and <A HREF='unique_obj.html'><CODE>unique_obj</CODE></A>.
+</P>
+
+<A NAME='headers'></A>
+<H2>Headers</H2>
+
+<DT><A CLASS='header' HREF='../../../../boost/interfaces/manual_ptr.hpp'><CODE>&lt;boost/interfaces/manual_ptr.hpp&gt;</CODE></A></DT>
+
+<A NAME='reference'></A>
+<H2>Reference</H2>
+
+<A NAME='synopsis'></A>
+<H3>Synopsis</H3>
+
+<PRE CLASS='broken_ie'><SPAN CLASS="keyword">namespace</SPAN> boost { <SPAN CLASS='keyword'>namespace</SPAN> interfaces {
+
+<SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> <A CLASS="documented" HREF="#manual_ptr_template_params">Interface</A>&gt;
+<SPAN CLASS="keyword">class</SPAN> <A CLASS="documented" HREF="#manual_ptr">manual_ptr</A> {
+<SPAN CLASS="keyword">public</SPAN>:
+    <SPAN CLASS="keyword">typedef</SPAN> <SPAN CLASS="keyword">typename</SPAN> <A CLASS='documented' HREF='fixed_view.html'>fixed_view</A>&lt;Interface&gt; <A CLASS="documented" HREF="#manual_ptr_element_type">element_type</A>;
+
+        <SPAN CLASS='comment'>// Constructors</SPAN>
+
+    <A CLASS="documented" HREF="#manual_ptr_default_ctor">manual_ptr</A>();
+
+    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> T&gt;
+    <SPAN CLASS="keyword">explicit</SPAN> <A CLASS="documented" HREF="#manual_ptr_pointer_ctors">manual_ptr</A>(T* t);
+
+    <A CLASS="documented" HREF="#manual_ptr_copy_ctors">manual_ptr</A>(<SPAN CLASS="keyword">const</SPAN> manual_ptr& ptr);
+
+    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> Subinterface&gt;
+    <A CLASS="documented" HREF="#manual_ptr_copy_ctors">manual_ptr</A>(<SPAN CLASS="keyword">const</SPAN> manual_ptr&lt;Subinterface&gt;& ptr);
+
+        <SPAN CLASS='comment'>// Assignment</SPAN>
+
+    manual_ptr& <A CLASS="documented" HREF="#manual_ptr_assign">operator=</A>(manual_ptr ptr);
+
+    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> Subinterface&gt;    
+    manual_ptr&amp; <A CLASS="documented" HREF="#manual_ptr_assign">operator=</A>(manual_ptr&lt;Subinterface&gt; ptr);
+
+        // Smart pointer interface
+
+    element_type* <A CLASS="documented" HREF="#manual_ptr_get">get</A>() <SPAN CLASS="keyword">const</SPAN>;
+
+    element_type& <A CLASS="documented" HREF="#manual_ptr_deref">operator*</A>() <SPAN CLASS="keyword">const</SPAN>;
+
+    element_type* <A CLASS="documented" HREF="#manual_ptr_arrow">operator-&gt;</A>() <SPAN CLASS="keyword">const</SPAN>;
+
+    <SPAN CLASS="keyword">void</SPAN> <A CLASS="documented" HREF="#manual_ptr_nullary_reset">reset</A>();
+
+    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> T&gt;
+    <SPAN CLASS="keyword">void</SPAN> <A CLASS="documented" HREF="#manual_ptr_unary_reset">reset</A>(T* t);
+
+    <SPAN CLASS="keyword">operator</SPAN> <A CLASS="documented" HREF="#manual_ptr_safe_bool">unspecified-bool-type</A>() <SPAN CLASS="keyword">const</SPAN>;
+
+    <SPAN CLASS="keyword">void</SPAN> <A CLASS="documented" HREF="#manual_ptr_swap">swap</A>(manual_ptr& p);
+
+    <SPAN CLASS="keyword">void</SPAN> <A CLASS="documented" HREF="#manual_ptr_free">free</A>();
+};
+
+} } <SPAN CLASS='comment'>// End namespace boost::interfaces</SPAN></PRE>
+
+<A NAME='manual_ptr'></A>
+<H3>Class Template <CODE>manual_ptr</CODE></H3>
+
+<A NAME='manual_ptr_template_params'></A>
+<H5>Template Parameters</H5>
+
+<TABLE STYLE='margin-left:2em' BORDER=0 CELLPADDING=2>
+<TR>
+    <TR>
+        <TD VALIGN='top'><I>Interface</I></TD><TD WIDTH='2em' ALIGN='center' VALIGN='top'>-</TD><TD></TD>
+        <TD>
+            <P STYLE='margin:0'>An interface defined using the <A HREF='../guide/idl.html'>Interface Definition Language</A> (IDL).</P>
+        </TD>
+    </TR>
+</TABLE>
+
+<A NAME='manual_ptr_element_type'></A>
+<H4><CODE>manual_ptr::element_type</CODE></H4>
+
+<PRE CLASS='broken_ie'>    <SPAN CLASS="keyword">typedef</SPAN> <SPAN CLASS="keyword">typename</SPAN> fixed_view&lt;T&gt; element_type;</PRE>
+
+<P>
+    Used by the dereferencing operators, in place of the template parameter Interface, to help prevent resource leaks and double deletes. <I>See</I> <A HREF='fixed_view.html#example'>Example</A>.
+</P>
+
+<A NAME='manual_ptr_default_ctor'></A>
+<H4><CODE>manual_ptr::manual_ptr</CODE></H4>
+<PRE CLASS='broken_ie'>    manual_ptr();</PRE>
+
+<P>Constructs an empty <CODE>manual_ptr</CODE>. Never throws.</P>
+
+<A NAME='manual_ptr_copy_ctors'></A>
+<H4><CODE>manual_ptr::manual_ptr</CODE></H4>
+<PRE CLASS='broken_ie'>    manual_ptr(<SPAN CLASS="keyword">const</SPAN> manual_ptr& ptr);
+
+    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> Subinterface&gt;
+    manual_ptr(<SPAN CLASS="keyword">const</SPAN> manual_ptr&lt;Subinterface&gt;& ptr);</PRE>
+
+<P>
+    Constructs a <CODE>manual_ptr</CODE> bound to the same object as the given <CODE>manual_ptr</CODE>. Never throws.
+</P>
+
+<A NAME='manual_ptr_pointer_ctors'></A>
+<H4><CODE>manual_ptr::manual_ptr</CODE></H4>
+<PRE CLASS='broken_ie'>    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> T&gt;
+    <SPAN CLASS="keyword">explicit</SPAN> manual_ptr(T* t);</PRE>
+
+<H5>Template Parameters</H5>
+
+<TABLE STYLE='margin-left:2em' BORDER=0 CELLPADDING=2>
+<TR>
+    <TR>
+        <TD VALIGN='top'><I>T</I></TD><TD WIDTH='2em' ALIGN='center' VALIGN='top'>-</TD><TD></TD>
+        <TD>
+            <P STYLE='margin:0'>A class implementing <CODE>Interface</CODE>. The type <CODE>T</CODE> must be complete and have an accessible destructor, but <I>need not be complete</I> at the point <CODE>t</CODE> is freed.</P>
+        </TD>
+    </TR>
+</TABLE>
+
+<P>Constructs an instance of <CODE>manual_ptr</CODE> bound to the given object.</P>
+
+<A NAME='manual_ptr_assign'></A>
+<H4><CODE>manual_ptr::operator=</CODE></H4>
+<PRE CLASS='broken_ie'>    manual_ptr& operator=(manual_ptr ptr);
+
+    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> Subinterface&gt;    
+    manual_ptr&amp; operator=(manual_ptr&lt;Subinterface&gt; ptr);</PRE>
+
+<P>
+    Binds <CODE>this</CODE> instance of <CODE>manual_ptr</CODE> to the same object as the given <CODE>manual_ptr</CODE>. Never throws.
+</P>
+
+<A NAME='manual_ptr_get'></A>
+<H4><CODE>manual_ptr::get</CODE></H4>
+<PRE CLASS='broken_ie'>    element_type* get() <SPAN CLASS="keyword">const</SPAN>;</PRE>
+
+<P>
+    Returns a pointer through which member functions of the bound object can be accessed. Never throws.
+</P>
+
+<A NAME='manual_ptr_deref'></A>
+<H4><CODE>manual_ptr::operator*</CODE></H4>
+<PRE CLASS='broken_ie'>    element_type& operator*() <SPAN CLASS="keyword">const</SPAN>;</PRE>
+
+<P>
+    Returns a reference through which member functions of the bound object can be accessed. Never throws.
+</P>
+
+<A NAME='manual_ptr_arrow'></A>
+<H4><CODE>manual_ptr::operator-></CODE></H4>
+<PRE CLASS='broken_ie'>    element_type* operator-&gt;() <SPAN CLASS="keyword">const</SPAN>;</PRE>
+
+<P>
+    Returns a pointer through which member functions of the bound object can be accessed. Never throws.
+</P>
+
+<A NAME='manual_ptr_nullary_reset'></A>
+<H4><CODE>manual_ptr::reset</CODE></H4>
+<PRE CLASS='broken_ie'>    <SPAN CLASS="keyword">void</SPAN> reset();</PRE>
+
+<P>
+    If there is currently a bound object, this member causes it to become unbound. 
+</P>
+
+<A NAME='manual_ptr_unary_reset'></A>
+<H4><CODE>manual_ptr::reset</CODE></H4>
+<PRE CLASS='broken_ie'>    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> T&gt;
+    <SPAN CLASS="keyword">void</SPAN> reset(T* t);</PRE>
+
+<H5>Template Parameters</H5>
+
+<TABLE STYLE='margin-left:2em' BORDER=0 CELLPADDING=2>
+<TR>
+    <TR>
+        <TD VALIGN='top'><I>T</I></TD><TD WIDTH='2em' ALIGN='center' VALIGN='top'>-</TD><TD></TD>        
+        <TD>
+            <P STYLE='margin:0'>A class implementing <CODE>Interface</CODE>. The type <CODE>T</CODE> must be complete and have an accessible destructor, but <I>need not be complete</I> at the point <CODE>t</CODE> is freed.</P>
+        </TD>
+    </TR>
+</TABLE>
+
+<P>
+    If there is currently a bound object, this member causes it to become unbound. Next, it binds <CODE>this</CODE> instance of <CODE>manual_ptr</CODE> to the given object. Never throws
+</P>
+
+<A NAME='manual_ptr_safe_bool'></A>
+<H4><CODE>manual_ptr::operator unspecified-bool-type()</CODE></H4>
+<PRE CLASS='broken_ie'>    <SPAN CLASS="keyword">operator</SPAN> unspecified-bool-type() <SPAN CLASS="keyword">const</SPAN>;</PRE>
+
+<P>
+     Returns an unspecified value which, when used in boolean contexts, is equivalent to <CODE><A HREF='#manual_ptr_get'>get</A>() != 0</CODE>. Never throws.
+</P>
+
+<A NAME='manual_ptr_swap'></A>
+<H4><CODE>manual_ptr::swap</CODE></H4>
+<PRE CLASS='broken_ie'>    <SPAN CLASS="keyword">void</SPAN> swap(manual_ptr& p);</PRE>
+
+<P>
+     Exchanges the content of <CODE>this</CODE> instance of <CODE>manual_ptr</CODE> with that of the given instance. Never throws.
+</P>
+
+<A NAME='manual_ptr_free'></A>
+<H4><CODE>manual_ptr::free</CODE></H4>
+<PRE CLASS='broken_ie'>    <SPAN CLASS="keyword">void</SPAN> free();</PRE>
+
+<P>
+    Frees the bound object using <CODE>delete</CODE>. Throws only if the destructor of the bound object throws.
+</P>
+
+<!-- Begin Footer -->
+
+<HR>
+<P CLASS='copyright'>Revised
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B, %Y" startspan -->
+16 Jan, 2005
+<!--webbot bot="Timestamp" endspan i-checksum="38504" -->
+</P>
+
+<P CLASS='copyright'>&copy; Copyright Jonathan D. Turkanis, 2005</P>
+<P CLASS='copyright'> 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at <A HREF='http://www.boost.org/LICENSE_1_0.txt'>http://www.boost.org/LICENSE_1_0.txt</A>)
+</P>
+
+<!-- End Footer -->
+
+</BODY>

@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+    <TITLE>Function Template extract</TITLE>
+    <LINK REL='stylesheet' HREF='../../../../boost.css'>
+        <LINK REL='stylesheet' HREF='../theme/interfaces.css'>
+</HEAD>
+<BODY>
+
+<!-- Begin Banner -->
+
+<H1 CLASS='title'>Function Template <CODE>extract</CODE></H1>
+<HR CLASS='banner'>
+
+<!-- End Banner -->
+
+<DL class='page-index'>
+    <DT><A href='#description'>Description</A></DT> <DT><A href='#headers'>Headers</A></DT>
+    <DT><A href='#reference'>Reference</A>
+        <DL class='page-index'>
+            <DT><A href='#synopsis'>Synopsis</A></DT> 
+            <DT><A href='#bad_extract'>Class <CODE>bad_extract</CODE></A></DT> 
+            <DT><A href='#extract'>Function Template <CODE>extract</CODE></A></DT>
+        </DL>
+    </DT>
+</DL>
+
+<HR>
+
+<A NAME='description'></A>
+<H2>Description</H2>
+
+<P>
+    The function template <CODE>extract</CODE> allows the object bound to an interface instance to be retrieved in a type-safe manner.
+</P>
+
+<A NAME='headers'></A>
+<H2>Headers</H2>
+
+<DT><A CLASS='header' HREF='../../../../boost/interfaces/extract.hpp'><CODE>&lt;boost/interfaces/extract.hpp&gt;</CODE></A></DT>
+
+<A NAME='reference'></A>
+<H2>Reference</H2>
+
+<A NAME='synopsis'></A>
+<H3>Synopsis</H3>
+
+<PRE CLASS='broken_ie'><SPAN CLASS="keyword">namespace</SPAN> boost { <SPAN CLASS="keyword">namespace</SPAN> interfaces {
+
+<SPAN CLASS='keyword'>class</SPAN> <A CLASS='documented' HREF='#bad_extract'>bad_extract</A> : <SPAN CLASS='keyword'>public</SPAN> std::bad_cast {
+<SPAN CLASS='keyword'>public:</SPAN>
+    <SPAN CLASS='keyword'>const</SPAN> <SPAN CLASS='keyword'>char</SPAN>* <A CLASS='documented' HREF='#bad_extract_what'>what</A>() <SPAN CLASS='keyword'>const</SPAN> <SPAN CLASS='keyword'>throw</SPAN>();
+};
+
+<SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> <A CLASS="documented" HREF="#extract_template_params">T</A>, <SPAN CLASS="keyword">typename</SPAN> <A CLASS="documented" HREF="#extract_template_params">Interface</A>&gt;
+T& <A CLASS="documented" HREF="#extract">extract</A>(<SPAN CLASS='keyword'>const</SPAN> Interface& i); <SPAN CLASS='comment'>// throw(bad_extract)</SPAN> 
+
+} } <SPAN CLASS='comment'>// End namespace boost::interfaces</SPAN></PRE>
+
+<A NAME='bad_extract'></A>
+<H3>Class Template <CODE>bad_extract</CODE></H3>
+
+<H4>Description</H4>
+
+<P>The class <CODE>bad_extract</CODE> is an exception type thrown by <A HREF='#extract'><CODE>extract</CODE></A> to indicate that an extraction has failed.
+
+<A NAME='bad_extract_what'></A>
+<H4><CODE>bad_extract::what</CODE></H4>
+
+<PRE CLASS='broken_ie'>    <SPAN CLASS='keyword'>const</SPAN> <SPAN CLASS='keyword'>char</SPAN>* what() <SPAN CLASS='keyword'>const</SPAN> <SPAN CLASS='keyword'>throw</SPAN>();</PRE>
+
+<P>Returns an implementation-defined string identifying <CODE>this</CODE> exception as an instance of <CODE>bad_extract</CODE>.</P>
+
+<A NAME='extract'></A>
+<H3>Function Template <CODE>extract</CODE></H3>
+
+<PRE CLASS='broken_ie'><SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> T, <SPAN CLASS='keyword'>typename</SPAN> Interface&gt;
+T& extract(<SPAN CLASS='keyword'>const</SPAN> Interface& i);</PRE>
+
+<A NAME='extract_template_params'></A>
+<H5>Template Parameters</H5>
+
+<TABLE STYLE='margin-left:2em' BORDER=0 CELLPADDING=2>
+<TR>
+    <TR>
+        <TD VALIGN='top'><I>Interface</I></TD><TD WIDTH='2em' ALIGN='center' VALIGN='top'>-</TD>
+        <TD>
+            <P STYLE='margin:0'>An interface defined using the <A HREF='../guide/idl.html'>Interface Definition Language</A> (IDL).</P>
+        </TD>
+    </TR>
+    <TR>
+        <TD VALIGN='top'><I>T</I></TD><TD WIDTH='2em' ALIGN='center' VALIGN='top'>-</TD>
+        <TD>
+            <P STYLE='margin:0'>A class implementing <I>Interface</I>.
+        </TD>
+    </TR>
+</TABLE>
+
+<P>Retrieves the object bound to <CODE>i</CODE> as a reference to <CODE>T</CODE>.</P>
+<P>    
+    The extraction will succeed only if <CODE>i</CODE> is bound to an object and if the static type of the object, at the point it was bound to <CODE>i</CODE>, is the same as or derived from <CODE>T</CODE>. If the extraction cannot succeed, <CODE>extract</CODE> throws an exception of type <A HREF='#bad_extract'><CODE>bad_extract</CODE></A>.
+</P>
+<P>
+    <CODE>extract</CODE> is implemented using exception handling, and is therefore a relatively expensive operation.
+</P>
+
+<!-- Begin Footer -->
+
+<HR>
+
+<P STYLE='margin-top:2em' CLASS='copyright'>Revised
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B, %Y" startspan -->
+20 Jan, 2005
+<!--webbot bot="Timestamp" endspan i-checksum="38504" -->
+</P>
+
+<P CLASS='copyright'>&copy; Copyright Jonathan Turkanis, 2005. Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at <A HREF='http://www.boost.org/LICENSE_1_0.txt'>http://www.boost.org/LICENSE_1_0.txt</A>)
+</P>
+
+
+<!-- End Footer -->
+
+</BODY>

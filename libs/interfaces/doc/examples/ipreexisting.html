@@ -1,0 +1,48 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+    <TITLE>Interface IPreExisting</TITLE>
+    <LINK REL='stylesheet' HREF='../theme/interfaces.css'>
+</HEAD>
+<BODY>
+
+<!-- Begin Banner -->
+
+<H1 CLASS='title'>Interface IPreExisting</CODE></H1>
+<HR STYLE='margin-bottom:1em'>
+
+<!-- End Banner -->
+
+<P>The following <A HREF='../guide/pseudocode.html'>pseudocode</A></P>
+
+<PRE CLASS='broken_ie'><SPAN CLASS='keyword'>interface</SPAN> IPreExisting {
+    <SPAN CLASS='keyword'>void</SPAN> foo();
+    <SPAN CLASS='keyword'>void</SPAN> bar();
+    <SPAN CLASS='keyword'>void</SPAN> baz();
+};</PRE>
+
+<P>can be rendered in the <A HREF='../guide/idl.html'>Interface Definition Language</A> (IDL) as follows:</P>
+
+<PRE CLASS='broken_ie'><A CLASS='documented' HREF='../macros/begin.html#begin'>BOOST_IDL_BEGIN</A>(IPreExisting)
+    <A CLASS='documented' HREF='../macros/fnz.html#fnz'>BOOST_IDL_FN0</A>(foo, <SPAN CLASS='keyword'>void</SPAN>)
+    <A CLASS='documented' HREF='../macros/fnz.html#fnz'>BOOST_IDL_FN0</A>(bar, <SPAN CLASS='keyword'>void</SPAN>)
+    <A CLASS='documented' HREF='../macros/fnz.html#fnz'>BOOST_IDL_FN0</A>(baz, <SPAN CLASS='keyword'>void</SPAN>)
+<A CLASS='documented' HREF='../macros/end.html#end'>BOOST_IDL_END</A>(IPreExisting)</PRE>
+
+<!-- Begin Footer -->
+
+<HR STYLE='margin-top:1em'>
+<P CLASS='copyright'>Revised
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B, %Y" startspan -->
+13 Jan, 2005
+<!--webbot bot="Timestamp" endspan i-checksum="38504" -->
+</P>
+
+<P CLASS='copyright'>&copy; Copyright Jonathan D. Turkanis, 2005</P>
+<P CLASS='copyright'> 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at <A HREF='http://www.boost.org/LICENSE_1_0.txt'>http://www.boost.org/LICENSE_1_0.txt</A>)
+</P>
+
+<!-- End Footer -->
+
+</BODY>

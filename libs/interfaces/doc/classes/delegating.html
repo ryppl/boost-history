@@ -1,0 +1,183 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+    <TITLE>Class Template delegating</TITLE>
+    <LINK REL='stylesheet' HREF='../theme/interfaces.css'>
+</HEAD>
+<BODY>
+
+<!-- Begin Banner -->
+
+<H1 CLASS='title'>Class Template <CODE>delegating</CODE></H1>
+<HR CLASS='banner'>
+
+<!-- End Banner -->
+
+<DL class='page-index'>
+    <DT><A href='#description'>Description</A></DT>
+	<DT><A href='#headers'>Headers</A></DT>
+    <DT><A href='#reference'>Reference</A>
+		<DL>
+			<DT><A href='#synopsis'>Synopsis</A></DT> 
+			<DT><A href='#delegating'>Class Template <CODE>delegating</CODE></A></DT>
+			<DT><A href='#set_delegate'>Function Template <CODE>set_delegate</CODE></A></DT>
+        </DL>
+    </DT>
+	<DT><A href='#example'>Example</A></DT>
+</DL>
+
+<HR>
+
+<A NAME='description'></A>
+<H2>Description</H2>
+
+<P>
+    The class template <CODE>delegating</CODE> provides support for dynamic inheritance through delegation. Deriving from <CODE>delegating&lt;Interface&gt;</CODE> yeilds a class which implements the interface <CODE>Interface</CODE> by delegating to an object specified at runtime. A class may derive from several specializations of <CODE>delegating</CODE>, thereby implementing multiple interfaces through delegation.
+</P>
+
+<A NAME='headers'></A>
+<H2>Headers</H2>
+
+<DT><A CLASS='header' HREF='../../../../boost/interfaces/delegation.hpp'><CODE>&lt;boost/interfaces/delegation.hpp&gt;</CODE></A></DT>
+
+<A NAME='reference'></A>
+<H2>Reference</H2>
+
+<A NAME='synopsis'></A>
+<H3>Synopsis</H3>
+
+<PRE CLASS='broken_ie'><SPAN CLASS="keyword">namespace</SPAN> boost { <SPAN CLASS='keyword'>namespace</SPAN> interfaces {
+
+<SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> <A CLASS="documented" HREF="#template_params">Interface</A>&gt;
+<SPAN CLASS="keyword">class</SPAN> <A CLASS="documented" HREF="#delegating">delegating</A> {
+<SPAN CLASS="keyword">protected</SPAN>:
+    <SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>typename</SPAN> T&gt;
+    <SPAN CLASS='keyword'>void</SPAN> <A CLASS='documented' HREF='#set'>set</A>(T* t);
+};
+
+<SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>typename</SPAN> Interface, <SPAN CLASS='keyword'>typename</SPAN> Delegating, <SPAN CLASS='keyword'>typename</SPAN> T&gt;
+<SPAN CLASS='keyword'>void</SPAN> <A CLASS='documented' HREF='#set_delegate'>set_delegate</A>(Delegating& d, T* t);
+
+} } <SPAN CLASS='comment'>// End namespace boost::interfaces</SPAN></PRE>
+
+<A NAME='delegating'></A>
+<H3>Class Template <CODE STYLE='font-size:110%'>delegating</CODE></H3>
+
+<A NAME='template_params'></A>
+<H5>Template parameters</H5>
+
+<TABLE STYLE='margin-left:2em' BORDER=0 CELLPADDING=2>
+<TR>
+    <TR>
+        <TD VALIGN='top'><I>Interface</I></TD><TD WIDTH='2em' ALIGN='center' VALIGN='top'>-</TD><TD></TD>
+        <TD>
+            <P STYLE='margin:0'>An interface defined using the <A HREF='../guide/idl.html'>Interface Definition Language</A> (IDL).</P>
+        </TD>
+    </TR>
+</TABLE>
+
+<A NAME='set'></A>
+<H4><CODE>delegating::set</CODE></H4>
+
+<H5>Template parameters</H5>
+
+<TABLE STYLE='margin-left:2em' BORDER=0 CELLPADDING=2>
+<TR>
+    <TR>
+        <TD VALIGN='top'><I>T</I></TD><TD WIDTH='2em' ALIGN='center' VALIGN='top'>-</TD>
+        <TD>
+            <P STYLE='margin:0'>A class which implements <CODE>Interface</CODE>.</P>
+        </TD>
+    </TR>
+</TABLE>
+
+<PRE CLASS='broken_ie'><SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>typename</SPAN> T&gt;
+<SPAN CLASS='keyword'>void</SPAN> set(T* t);</PRE>
+
+<P>Specifies an object to which invocations of <CODE>Interface</CODE> member functions through <CODE>this</CODE> instance of <CODE>delegating</CODE> are to be directed. Never throws.</P>
+
+<A NAME='set_delegate'></A>
+<H3>Function Template <CODE STYLE='font-size:110%'>set_delegate</CODE></H3>
+
+<H5>Template parameters</H5>
+
+<TABLE STYLE='margin-left:2em' BORDER=0 CELLPADDING=2>
+<TR>
+    <TR>
+        <TD VALIGN='top'><I>Interface</I></TD><TD WIDTH='2em' ALIGN='center' VALIGN='top'>-</TD>
+        <TD>
+            <P STYLE='margin:0'>
+				An interface defined using the <A HREF='../guide/idl.html'>Interface Definition Language</A> (IDL). This parameter must be specified explicitly.
+			</P>
+        </TD>
+    </TR>
+    <TR>
+        <TD VALIGN='top'><I>Delegating</I></TD><TD WIDTH='2em' ALIGN='center' VALIGN='top'>-</TD>
+        <TD>
+            <P STYLE='margin:0'>A class deriving from <CODE>delegating&lt;Interface&gt;</CODE>.</P>
+        </TD>
+    </TR>
+    <TR>
+        <TD VALIGN='top'><I>T</I></TD><TD WIDTH='2em' ALIGN='center' VALIGN='top'>-</TD>
+        <TD>
+            <P STYLE='margin:0'>A class which implements <CODE>Interface</CODE>.</P>
+        </TD>
+    </TR>
+</TABLE>
+
+<PRE CLASS='broken_ie'><SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>typename</SPAN> Interface, <SPAN CLASS='keyword'>typename</SPAN> Delegating, <SPAN CLASS='keyword'>typename</SPAN> T&gt;
+<SPAN CLASS='keyword'>void</SPAN> set_delegate(Delegating& d, T* t);</PRE>
+
+<P>Specifies an object to which invocations of <CODE>Interface</CODE> member functions through object <CODE>d</CODE> are to be directed. Never throws.</P>
+
+<P><CODE>set_delegate</CODE> is able to access the object <CODE>d</CODE> outside the scope of the class <CODE>Delegating</CODE> only if <CODE>Delegating</CODE> has declared the class <A HREF='access.html'><CODE>boost::interfaces::access</CODE></A> as a <CODE>friend</CODE>; otherwise, invoking <CODE>set_delegate</CODE> yields a compile-time error.</P>
+
+<A NAME='example'></A>
+<H2>Example</H2>
+
+<PRE CLASS='broken_ie'><SPAN CLASS='comment'>// Pseudocode:</SPAN>
+<SPAN CLASS='keyword'>interface</SPAN> <A CLASS='documented' HREF='../examples/ianimal.html'>IAnimal</A> {
+    <SPAN CLASS='keyword'>void</SPAN> speak();
+};
+
+<SPAN CLASS='keyword'>struct</SPAN> Sheep {
+    <SPAN CLASS='keyword'>void</SPAN> speak() { std::cout << <SPAN CLASS='numeric_literal'>"Baaaah\n"</SPAN>; }
+};
+
+<SPAN CLASS='keyword'>struct</SPAN> Cow {
+    <SPAN CLASS='keyword'>void</SPAN> speak() { std::cout << <SPAN CLASS='numeric_literal'>"Moooo\n"</SPAN>; }
+};
+
+<SPAN CLASS='keyword'>struct</SPAN> Delegator : delegating&lt;IAnimal&gt; { 
+    <SPAN CLASS='keyword'>friend</SPAN> <SPAN CLASS='keyword'>class</SPAN> <A CLASS='documented' HREF='access.html'>boost::interfaces::access</A>;
+};
+
+<SPAN CLASS='keyword'>int</SPAN> main()
+{
+    Delegator d;
+    Sheep     s;
+    Cow       c;
+    d.speak();                    <SPAN CLASS='comment'>// Undefined behavior: delegate null</SPAN>
+    set_delegate&lt;IAnimal&gt;(d, &s);
+    d.speak();                    <SPAN CLASS='comment'>// Prints "Baaaah"</SPAN>
+    set_delegate&lt;IAnimal&gt;(d, &c);
+    d.speak();                    <SPAN CLASS='comment'>// Prints "Moooo"</SPAN>
+}</PRE>
+
+<!-- Begin Footer -->
+
+<HR>
+<P CLASS='copyright'>Revised
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B, %Y" startspan -->
+13 Jan, 2005
+<!--webbot bot="Timestamp" endspan i-checksum="38504" -->
+</P>
+
+<P CLASS='copyright'>&copy; Copyright Jonathan D. Turkanis, 2005</P>
+<P CLASS='copyright'> 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at <A HREF='http://www.boost.org/LICENSE_1_0.txt'>http://www.boost.org/LICENSE_1_0.txt</A>)
+</P>
+
+<!-- End Footer -->
+
+</BODY>

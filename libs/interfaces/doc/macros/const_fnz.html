@@ -1,0 +1,126 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+    <TITLE>Macro BOOST_IDL_CONST_FNz</TITLE>
+    <LINK REL='stylesheet' HREF='../../../../boost.css'>
+    <LINK REL='stylesheet' HREF='../theme/interfaces.css'>
+</HEAD>
+<BODY>
+
+<!-- Begin Banner -->
+
+    <H1 CLASS='title'>Macro BOOST_IDL_CONST_FN<I>z</I></H1>
+    <HR CLASS='banner'>
+
+<!-- End Banner -->
+
+<DL class='page-index'>
+  <DT><A href='#description'>Description</A></DT>
+  <DT><A href='#headers'>Headers</A></DT>
+  <DT><A href='#synopsis'>Synopsis</A></DT>
+  <DT><A href='#reference'>Reference</A></DT>
+  <DT><A href='#examples'>Examples</A></DT>
+</DL>
+
+<A NAME='description'></A>
+<H2>Description</H2>
+
+<P>
+    The macro <A href='#fnz'><CODE>BOOST_IDL_CONST_FN<I>z</I></CODE></A> is used to declare a <CODE>const</CODE> interface member function with arity <I>z</I>.
+</P>
+
+<A NAME='headers'></A>
+<H2>Headers</H2>
+
+<DT><CODE><A class='header' href='../../../../boost/interfaces.hpp'>&lt;boost/interfaces.hpp&gt;</A></CODE></DT>
+<DT><CODE><A class='header' href='../../../../boost/interfaces/detail/idl/fn.hpp'>&lt;boost/interfaces/detail/idl/fn.hpp&gt;</A></CODE></DT>
+
+<A NAME='synopsis'></A>
+<H2>Synopsis</H2>
+
+<PRE CLASS='broken_ie'><SPAN CLASS='preprocessor'>#define</SPAN> <A CLASS='documented' HREF='#fnz'>BOOST_IDL_CONST_FN0</A></A>(<I>name</I>, <I>result</I>) <SPAN CLASS='omitted'>...</SPAN>
+<SPAN CLASS='preprocessor'>#define</SPAN> <A CLASS='documented' HREF='#fnz'>BOOST_IDL_CONST_FN1</A></A>(<I>name</I>, <I>result</I>, <I>arg_type1</I>) <SPAN CLASS='omitted'>...</SPAN>
+<SPAN CLASS='preprocessor'>#define</SPAN> <A CLASS='documented' HREF='#fnz'>BOOST_IDL_CONST_FN2</A></A>(<I>name</I>, <I>result</I>, <I>arg_type1</I>, <I>arg_type2</I>) <SPAN CLASS='omitted'>...</SPAN>
+...
+<SPAN CLASS='preprocessor'>#define</SPAN> <A CLASS='documented' HREF='#fnz'>BOOST_IDL_CONST_FN<I>N</I></A></A>(<I>name</I>, <I>result</I>, <I>arg_type1</I>, ..., <I>arg_type</I>N) <SPAN CLASS='omitted'>...</SPAN>
+</PRE>
+
+<A NAME='reference'></A>
+<H2>Reference</H2>
+
+<A NAME='const_fnz'></A>
+<H3><CODE>BOOST_IDL_CONST_FN<I>z</I></CODE></H3>
+
+<PRE CLASS='broken_ie'><SPAN CLASS='preprocessor'>#define</SPAN> BOOST_IDL_CONST_FN<I>z</I>(<I>name</I>, <I>result</I>, <I>arg_type1</I>, ..., <I>arg_type</I>z) <SPAN CLASS='omitted'>...</SPAN></PRE>
+
+<A NAME='function_params'></A>
+<H5>Parameters</H5>
+
+<TABLE STYLE='margin-left:2em' BORDER=0 CELLPADDING=2>
+<TR>
+    <TR>
+        <TD VALIGN='top'><I>name</I></TD><TD WIDTH='2em' VALIGN='top'>-</TD>
+        <TD>The name of the member function being declared</TD>
+    </TR>
+    <TR>
+        <TD VALIGN='top'><I>result</I></TD><TD WIDTH='2em' VALIGN='top'>-</TD>
+        <TD>The return type of the member function being declared</TD>
+    </TR>
+    <TR>
+        <TD VALIGN='top'><I>arg_type</I>z</TD><TD WIDTH='2em' VALIGN='top'>-</TD>
+        <TD>The <I>z</I>th argument type of the member function being declared</TD>
+    </TR>
+</TABLE>
+
+<P>
+    The macro <A href='#end'><CODE>BOOST_IDL_CONST_FN<I>z</I></CODE></A> is used to declare a <CODE>const</CODE> interface member function with arity <I>z</I>. It may occur between invocations of <A href='begin.html'><CODE>BOOST_IDL_BEGIN<I>xxx</I></CODE></A> and <A href='end.html'><CODE>BOOST_IDL_END<I>xxx</I></CODE></A> delimiting an interface definition, following any invocations of <A href='extends.html'><CODE>BOOST_IDL_EXTENDS</CODE></A>. Invocations of <CODE>BOOST_IDL_CONST_FN<I>z</I></CODE> may be interspersed with invocations of <A href='const_fn.html'><CODE>BOOST_IDL_FN<I>z</I></CODE></A>, without regard to order.
+</P>
+
+<P>
+    Overloading is permitted. The rules for overloading are the same as for an ordinary C++ class.
+</P>
+
+<A NAME='examples'></A>
+<H2>Examples</H2>
+
+The <A HREF='../guide/idl.html'>IDL</A> definition</P>
+
+<PRE CLASS='broken_ie'>BOOST_IDL_BEGIN(IBar)
+    BOOST_IDL_CONST_FN0(foo, void)
+BOOST_IDL_END(IBar)</PRE>
+
+<P>is equivalent to the <A HREF='../guide/pseudocode.html'>pseudocode</A></P>
+
+<PRE CLASS='broken_ie'><SPAN CLASS='keyword'>interface</SPAN> IBar {
+    <SPAN CLASS='keyword'>void</SPAN> foo() <SPAN CLASS='keyword'>const</SPAN>;
+};</PRE>
+
+Similarly, the <A HREF='../guide/idl.html'>IDL</A> definition</P>
+
+<PRE CLASS='broken_ie'>BOOST_IDL_BEGIN(IBar)
+    BOOST_IDL_CONST_FN0(foo, void)
+    BOOST_IDL_CONST_FN2(foo, int, const std::string&, const std::string&)
+BOOST_IDL_END(IBar)</PRE>
+
+<P>is equivalent to the <A HREF='../guide/pseudocode.html'>pseudocode</A></P>
+
+<PRE CLASS='broken_ie'><SPAN CLASS='keyword'>interface</SPAN> IBar {
+    <SPAN CLASS='keyword'>void</SPAN> foo() <SPAN CLASS='keyword'>const</SPAN>;
+    <SPAN CLASS='keyword'>int</SPAN> foo(const std::string&, const std::string&) <SPAN CLASS='keyword'>const</SPAN>;
+};</PRE>
+
+<!-- Begin Footer -->
+
+<HR>
+<P STYLE='margin-top:2em' CLASS='copyright'>Revised
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B, %Y" startspan -->
+13 Jan, 2005
+<!--webbot bot="Timestamp" endspan i-checksum="38504" -->
+</P>
+
+<P CLASS='copyright'>&copy; Copyright Jonathan Turkanis, 2005. Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at <A HREF='http://www.boost.org/LICENSE_1_0.txt'>http://www.boost.org/LICENSE_1_0.txt</A>)
+</P>
+
+<!-- End Footer -->
+
+</BODY>

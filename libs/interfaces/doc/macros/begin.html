@@ -1,0 +1,184 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+    <TITLE>Macro BOOST_IDL_BEGINxxx</TITLE>
+    <LINK REL='stylesheet' HREF='../../../../boost.css'>
+    <LINK REL='stylesheet' HREF='../theme/interfaces.css'>
+</HEAD>
+<BODY>
+
+<!-- Begin Banner -->
+
+    <H1 CLASS='title'>Macro BOOST_IDL_BEGIN<I>xxx</I></H1>
+    <HR CLASS='banner'>
+
+<!-- End Banner -->
+
+<DL class='page-index'>
+  <DT><A href='#description'>Description</A></DT>
+  <DT><A href='#headers'>Headers</A></DT>
+  <DT><A href='#synopsis'>Synopsis</A></DT>
+  <DT><A href='#reference'>Reference</A>
+	<DL class='page-index'>
+	  <DT><A href='#begin'><CODE>BOOST_IDL_BEGIN</CODE></A></DT>
+	  <DT><A href='#beginz'><CODE>BOOST_IDL_BEGIN<I>z</I></CODE></A></DT>
+	  <DT><A href='#begin_template'><CODE>BOOST_IDL_BEGIN_TEMPLATE</CODE></A></DT>
+	</DL>
+  </DT>
+</DL>
+
+<A NAME='description'></A>
+<H2>Description</H2>
+
+<P>
+    The macros <A href='#begin'><CODE>BOOST_IDL_BEGIN</CODE></A>, <A href='#beginz'><CODE>BOOST_IDL_BEGIN<I>z</I></CODE></A> and <A href='#begin_template'><CODE>BOOST_IDL_BEGIN_TEMPLATE</CODE></A> are used to begin an interface definition in the macro-based <A HREF='../idl.html'>interface definition language</A> (IDL).
+</P>
+
+<H2>To Do</H2>
+
+<UL>
+<LI>Fix template examples so that PROTECT is not needed.
+</UL>
+
+<A NAME='headers'></A>
+<H2>Headers</H2>
+
+<DT><CODE><A class='header' href='../../../../boost/interfaces.hpp'>&lt;boost/interfaces.hpp&gt;</A></CODE></DT>
+<DT><CODE><A class='header' href='../../../../boost/interfaces/detail/idl/begin.hpp'>&lt;boost/interfaces/detail/idl/begin.hpp&gt;</A></CODE></DT>
+
+<A NAME='synopsis'></A>
+<H2>Synopsis</H2>
+
+<PRE CLASS='broken_ie'><SPAN CLASS='preprocessor'>#define</SPAN> <A CLASS='documented' HREF='#begin_template'>BOOST_IDL_BEGIN_TEMPLATE</A>(<I>name</I>, <I>arity</I>) <SPAN CLASS='omitted'>...</SPAN>
+<SPAN CLASS='preprocessor'>#define</SPAN> <A CLASS='documented' HREF='#begin'>BOOST_IDL_BEGIN</A>(<I>name</I>)  BOOST_IDL_BEGIN_TEMPLATE(<I>name</I>, 0)
+<SPAN CLASS='preprocessor'>#define</SPAN> <A CLASS='documented' HREF='#beginz'>BOOST_IDL_BEGIN1</A>(<I>name</I>) BOOST_IDL_BEGIN_TEMPLATE(<I>name</I>, 1)
+<SPAN CLASS='preprocessor'>#define</SPAN> <A CLASS='documented' HREF='#beginz'>BOOST_IDL_BEGIN2</A>(<I>name</I>) BOOST_IDL_BEGIN_TEMPLATE(<I>name</I>, 2)
+<SPAN CLASS='omitted'>...</SPAN>
+<SPAN CLASS='preprocessor'>#define</SPAN> <A CLASS='documented' HREF='#beginz'>BOOST_IDL_BEGIN<I>N</I></A>(<I>name</I>) BOOST_IDL_BEGIN_TEMPLATE(<I>name</I>, N)</PRE>
+
+<A NAME='reference'></A>
+<H2>Reference</H2>
+
+<A NAME='begin'></A>
+<H3><CODE>BOOST_IDL_BEGIN</CODE></H3>
+
+<PRE CLASS='broken_ie'><SPAN CLASS='preprocessor'>#define</SPAN> BOOST_IDL_BEGIN(<I>name</I>) <SPAN CLASS='omitted'>...</SPAN></PRE>
+
+<A NAME='function_params'></A>
+<H5>Parameters</H5>
+
+<TABLE STYLE='margin-left:2em' BORDER=0 CELLPADDING=2>
+<TR>
+    <TR>
+        <TD VALIGN='top'><I>name</I></TD><TD WIDTH='2em' VALIGN='top'>-</TD>
+        <TD>The name of the interface being defined</TD>
+    </TR>
+</TABLE>
+
+<P>The macro <CODE>BOOST_IDL_BEGIN(<I>name</I>)</CODE> is used to begin the definition of a non-templated interface <CODE><I>name</I></CODE>. E.g., the following <A HREF='../guide/idl.html'>IDL</A> definition</P>
+
+<PRE CLASS='broken_ie'>BOOST_IDL_BEGIN(IBar)
+    BOOST_IDL_FN0(foo, <SPAN CLASS='keyword'>void</SPAN>)
+BOOST_IDL_END(IBar)</PRE>
+
+<P>is equivalent to the <A HREF='../guide/pseudocode.html'>pseudocode</A></P>
+
+<PRE CLASS='broken_ie'><SPAN CLASS='keyword'>interface</SPAN> IBar {
+    <SPAN CLASS='keyword'>void</SPAN> foo();
+};</PRE>
+
+<A NAME='beginz'></A>
+<H3><CODE>BOOST_IDL_BEGIN<I>z</I></CODE></H3>
+
+<PRE CLASS='broken_ie'><SPAN CLASS='preprocessor'>#define</SPAN> BOOST_IDL_BEGIN<I>z</I>(<I>name</I>) <SPAN CLASS='omitted'>...</SPAN></PRE>
+
+<A NAME='function_params'></A>
+<H5>Parameters</H5>
+
+<TABLE STYLE='margin-left:2em' BORDER=0 CELLPADDING=2>
+<TR>
+    <TR>
+        <TD VALIGN='top'><I>name</I></TD><TD WIDTH='2em' VALIGN='top'>-</TD>
+        <TD>The name of the interface being defined</TD>
+    </TR>
+</TABLE>
+
+<P>The macro <CODE>BOOST_IDL_BEGIN<I>z</I>(<I>name</I>)</CODE> is used to begin the definition of a <CODE>z</CODE>-ary templated interface <CODE><I>name</I></CODE>. The keword <CODE>template</CODE> and the template parameter list must precede <CODE>BOOST_IDL_BEGIN<I>z</I></CODE>. E.g., the following <A HREF='../guide/idl.html'>IDL</A> definition</P>
+
+<PRE CLASS='broken_ie'><SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>typename</SPAN> T&gt;
+BOOST_IDL_BEGIN1(IStack)
+    BOOST_IDL_CONST_FN0(empty, <SPAN CLASS='keyword'>bool</SPAN>)
+    BOOST_IDL_FN1(push, <SPAN CLASS='keyword'>void</SPAN>, <SPAN CLASS='keyword'>const</SPAN> T&)
+    BOOST_IDL_FN0(pop, <SPAN CLASS='keyword'>void</SPAN>)
+    BOOST_IDL_FN0(top, T&)
+    BOOST_IDL_CONST_FN0(top, <SPAN CLASS='keyword'>const</SPAN> T&)
+BOOST_IDL_END1(IStack)</PRE>
+
+<P>is equivalent to the <A HREF='../guide/pseudocode.html'>pseudocode</A></P>
+
+<PRE CLASS='broken_ie'><SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>typename</SPAN> T&gt;
+<SPAN CLASS='keyword'>interface</SPAN> IStack {
+    <SPAN CLASS='keyword'>bool</SPAN> empty() <SPAN CLASS='keyword'>const</SPAN>;
+    <SPAN CLASS='keyword'>void</SPAN> push(<SPAN CLASS='keyword'>const</SPAN> T&);
+    <SPAN CLASS='keyword'>void</SPAN> pop();
+    T& top();
+    <SPAN CLASS='keyword'>const</SPAN> T& top() <SPAN CLASS='keyword'>const</SPAN>;
+};</PRE>
+
+<A NAME='begin_template'></A>
+<H3><CODE>BOOST_IDL_BEGIN_TEMPLATE</CODE></H3>
+
+<PRE CLASS='broken_ie'><SPAN CLASS='preprocessor'>#define</SPAN> BOOST_IDL_BEGIN_TEMPLATE(<I>name</I>, <I>arity</I>) <SPAN CLASS='omitted'>...</SPAN></PRE>
+
+<A NAME='function_params'></A>
+<H5>Parameters</H5>
+
+<TABLE STYLE='margin-left:2em' BORDER=0 CELLPADDING=2>
+<TR>
+    <TR>
+        <TD VALIGN='top'><I>name</I></TD><TD WIDTH='2em' VALIGN='top'>-</TD>
+        <TD>The name of the interface being defined</TD>
+    </TR>
+    <TR>
+        <TD VALIGN='top'><I>arity</I></TD><TD WIDTH='2em' VALIGN='top'>-</TD>
+        <TD>The template arity of the interface being defined</TD>
+    </TR>
+</TABLE>
+
+<P>The macro <CODE>BOOST_IDL_BEGIN_TEMPLATE(<I>name</I>, <I>arity</I>)</CODE> is used to begin the definition of a templated interface <CODE><I>name</I></CODE>, if <CODE><I>arity</I></CODE> is non-zero, and a non-templated interface <CODE>name</CODE> otherwise. In the case of a templated interface, the keword <CODE>template</CODE> and the template parameter list must precede <CODE>BOOST_IDL_BEGIN_TEMPLATE</CODE>. E.g., the following <A HREF='../guide/idl.html'>IDL</A> definition</P>
+
+<PRE CLASS='broken_ie'>template&lt;<SPAN CLASS='keyword'>typename</SPAN> T&gt;
+BOOST_IDL_BEGIN_TEMPLATE(IStack, 1)
+    BOOST_IDL_CONST_FN0(empty, <SPAN CLASS='keyword'>bool</SPAN>)
+    BOOST_IDL_FN1(push, <SPAN CLASS='keyword'>void</SPAN>, <SPAN CLASS='keyword'>const</SPAN> T&)
+    BOOST_IDL_FN0(pop, <SPAN CLASS='keyword'>void</SPAN>)
+    BOOST_IDL_FN0(top, T&)
+    BOOST_IDL_CONST_FN0(top, <SPAN CLASS='keyword'>const</SPAN> T&)
+BOOST_IDL_END_TEMPLATE(IStack, 1)</PRE>
+
+<P>is equivalent to the <A HREF='../guide/pseudocode.html'>pseudocode</A></P>
+
+<PRE CLASS='broken_ie'><SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>typename</SPAN> T&gt;
+<SPAN CLASS='keyword'>interface</SPAN> IStack {
+    <SPAN CLASS='keyword'>bool</SPAN> empty() <SPAN CLASS='keyword'>const</SPAN>;
+    <SPAN CLASS='keyword'>void</SPAN> push(<SPAN CLASS='keyword'>const</SPAN> T&);
+    <SPAN CLASS='keyword'>void</SPAN> pop();
+    T& top();
+    <SPAN CLASS='keyword'>const</SPAN> T& top() <SPAN CLASS='keyword'>const</SPAN>;
+};</PRE>
+
+<!-- Begin Footer -->
+
+<HR>
+<P STYLE='margin-top:2em' CLASS='copyright'>Revised
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B, %Y" startspan -->
+13 Jan, 2005
+<!--webbot bot="Timestamp" endspan i-checksum="38504" -->
+</P>
+
+<P CLASS='copyright'>&copy; Copyright Jonathan Turkanis, 2005. Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at <A HREF='http://www.boost.org/LICENSE_1_0.txt'>http://www.boost.org/LICENSE_1_0.txt</A>)
+</P>
+
+<!-- End Footer -->
+
+</BODY>

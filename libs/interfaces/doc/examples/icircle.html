@@ -1,0 +1,45 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+    <TITLE>Interface ICircle</TITLE>
+    <LINK REL='stylesheet' HREF='../theme/interfaces.css'>
+</HEAD>
+<BODY>
+
+<!-- Begin Banner -->
+
+<H1 CLASS='title'>Interface ICircle</CODE></H1>
+<HR STYLE='margin-bottom:1em'>
+
+<!-- End Banner -->
+
+<P>The following <A HREF='../guide/pseudocode.html'>pseudocode</A></P>
+
+<PRE CLASS='broken_ie'><SPAN CLASS='keyword'>interface</SPAN> ICircle : IPoint {
+    <SPAN CLASS='keyword'>long</SPAN> diameter() <SPAN CLASS='keyword'>const</SPAN>;
+    <SPAN CLASS='keyword'>void</SPAN> diameter(<SPAN CLASS='keyword'>long</SPAN>);
+};</PRE>
+
+<P>can be rendered in the <A HREF='../guide/idl.html'>Interface Definition Language</A> (IDL) as follows:</P>
+
+<PRE CLASS='broken_ie'><A CLASS='documented' HREF='../macros/begin.html#begin'>BOOST_IDL_BEGIN</A>(ICircle)
+    <A CLASS='documented' HREF='../macros/extends.html#extends'>BOOST_IDL_EXTENDS</A>(IPoint)
+    <A CLASS='documented' HREF='../macros/const_fnz.html#const_fnz'>BOOST_IDL_CONST_FN0</A>(diameter, <SPAN CLASS='keyword'>long</SPAN>)
+    <A CLASS='documented' HREF='../macros/fnz.html#fnz'>BOOST_IDL_FN1</A>(diameter, <SPAN CLASS='keyword'>void</SPAN>, <SPAN CLASS='keyword'>long</SPAN>)
+<A CLASS='documented' HREF='../macros/end.html#end'>BOOST_IDL_END</A>(ICircle)</PRE>
+
+<!-- Begin Footer -->
+
+<HR STYLE='margin-top:1em'>
+<P STYLE='margin-top:2em' CLASS='copyright'>Revised
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B, %Y" startspan -->
+13 Jan, 2005
+<!--webbot bot="Timestamp" endspan i-checksum="38504" -->
+</P>
+
+<P CLASS='copyright'>&copy; Copyright Jonathan Turkanis, 2005. Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at <A HREF='http://www.boost.org/LICENSE_1_0.txt'>http://www.boost.org/LICENSE_1_0.txt</A>)
+</P>
+
+<!-- End Footer -->
+
+</BODY>

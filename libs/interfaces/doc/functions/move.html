@@ -1,0 +1,139 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+    <TITLE>Function Template move</TITLE>
+    <LINK REL='stylesheet' HREF='../../../../boost.css'>
+        <LINK REL='stylesheet' HREF='../theme/interfaces.css'>
+</HEAD>
+<BODY>
+
+<!-- Begin Banner -->
+
+<H1 CLASS='title'>Function Template <CODE>move</CODE></H1>
+<HR CLASS='banner'>
+
+<!-- End Banner -->
+
+<DL class='page-index'>
+    <DT><A href='#description'>Description</A></DT> <DT><A href='#headers'>Headers</A></DT>
+    <DT><A href='#reference'>Reference</A>
+        <DL class='page-index'>
+            <DT><A href='#synopsis'>Synopsis</A></DT> 
+            <DT><A href='#move_source'>Class Template <CODE>move_source</CODE></A></DT> 
+            <DT><A href='#move'>Function Template <CODE>move</CODE></A></DT>
+        </DL>
+    </DT>
+</DL>
+
+<HR>
+
+<A NAME='description'></A>
+<H2>Description</H2>
+
+<P>
+    The function template <CODE>move</CODE> allows the user to transfer owenership explicitly from one instance of <A HREF='../classes/unique_ptr.html'><CODE>unique_ptr</CODE></A> or <A HREF='../classes/unique_obj.html'><CODE>unique_obj</CODE></A> to another in cases where implicit transfer of ownership is disallowed.
+</P>
+
+<A NAME='headers'></A>
+<H2>Headers</H2>
+
+<DL class='page-index'>
+    <DT><A CLASS='header' HREF='../../../../boost/interfaces/move.hpp'><CODE>&lt;boost/interfaces/move.hpp&gt;</CODE></A></DT>
+</DL>
+
+<P>It should never be necessary to include this header directly, since it is included by <A HREF='../../../../boost/interfaces/unique_ptr.hpp' CLASS='header'><CODE>&lt;boost/interfaces/unique_ptr.hpp&gt;</CODE></A> and <A HREF='../../../../boost/interfaces/unique_obj.hpp' CLASS='header'><CODE>&lt;boost/interfaces/unique_obj.hpp&gt;</CODE></A>.
+
+<A NAME='reference'></A>
+<H2>Reference</H2>
+
+<A NAME='synopsis'></A>
+<H3>Synopsis</H3>
+
+<PRE CLASS='broken_ie'><SPAN CLASS="keyword">namespace</SPAN> boost { <SPAN CLASS="keyword">namespace</SPAN> interfaces {
+
+<SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> <A CLASS="documented" HREF="#move_source_template_params">Ptr</A>&gt;
+<SPAN CLASS="keyword">class</SPAN> <A CLASS="documented" HREF="#move_source">move_source</A> {
+<SPAN CLASS="keyword">public</SPAN>:
+    <A CLASS="documented" HREF="#move_source_ctor">move_source</A>(Ptr& ptr);
+    Ptr& <A CLASS="documented" HREF="#move_source_ptr">ptr</A>() <SPAN CLASS="keyword">const</SPAN>;
+};
+
+<SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> <A CLASS="documented" HREF="#move_template_params">Ptr</A>&gt;
+move_ptrs::move_source&lt;Ptr&gt; <A CLASS="documented" HREF="#move">move</A>(Ptr& x);
+
+} } <SPAN CLASS='comment'>// End namespace boost::interfaces</SPAN></PRE>
+
+<A NAME='move_source'></A>
+<H3>Class Template <CODE>move_source</CODE></H3>
+
+<H4>Description</H4>
+
+<P>The class template <CODE>move_source</CODE> serves as the return type of <A HREF='#move'><CODE>move</CODE></A> and as a constuctor argument to <A HREF='../classes/unique_ptr.html#unique_ptr_move_ctor'><CODE>unique_ptr</CODE></A> and <A HREF='../classes/unique_obj.html#unique_obj_move_ctor'><CODE>unique_obj</CODE></A>. It is simply a reference wrapper &#8212; <A HREF='http://www.boost.org/doc/html/reference_wrapper.html' TARGET='_top'><CODE>boost::reference_wrapper</CODE></A> could have been used instead.
+
+<A NAME='move_source_template_params'></A>
+<H5>Template Parameters</H5>
+
+<TABLE STYLE='margin-left:2em' BORDER=0 CELLPADDING=2>
+<TR>
+    <TR>
+        <TD VALIGN='top'><I>Ptr</I></TD><TD WIDTH='2em' ALIGN='center' VALIGN='top'>-</TD>
+        <TD>
+            A type having a 'move constuctor' &#8212; i.e., a constructor taking a <CODE>const</CODE> reference to <CODE>move_source&lt;Ptr&gt;</CODE>.
+        </TD>
+    </TR>
+</TABLE>
+
+<A NAME='move_source_ctor'></A>
+<H4><CODE>move_source::move_source</CODE></H4>
+
+<PRE CLASS='broken_ie'>    move_source(Ptr& ptr);</PRE>
+
+<P>Constructs an instance of <CODE>move_source</CODE> which wraps the given instance of the template parameter <CODE>Ptr</CODE>.</P>
+
+<A NAME='move_source_ptr'></A>
+<H4><CODE>move_source::ptr</CODE></H4>
+
+<PRE CLASS='broken_ie'>    Ptr& ptr() <SPAN CLASS="keyword">const</SPAN>;</PRE>
+
+<P>Returns a reference to the instance of the template parameter <CODE>Ptr</CODE> wrapped by <CODE>this</CODE> instance of <CODE>move_source</CODE>.</P>
+
+<A NAME='move'></A>
+<H3>Function Template <CODE>move</CODE></H3>
+
+<P>Used to transfer ownership explcitly from one instance of <A HREF='../classes/unique_ptr.html'><CODE>unique_ptr</CODE></A> or <A HREF='../classes/dynamic_move_ptr.html'><CODE>unique_obj</CODE></A> to another. 
+
+<A NAME='move_template_params'></A>
+<H5>Template Parameters</H5>
+
+<TABLE STYLE='margin-left:2em' BORDER=0 CELLPADDING=2>
+<TR>
+    <TR>
+        <TD VALIGN='top'><I>Ptr</I></TD><TD WIDTH='2em' ALIGN='center' VALIGN='top'>-</TD>
+        <TD>
+            A type having a 'move constuctor' &#8212; i.e., a constructor taking a <CODE>const</CODE> reference to <CODE>move_source&lt;Ptr&gt;</CODE>.
+        </TD>
+    </TR>
+</TABLE>
+
+<PRE CLASS='broken_ie'><SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> Ptr&gt;
+interfaces::move_source&lt;Ptr&gt; move(Ptr& x);</PRE>
+
+<P>Returns an instance of <A HREF='#move_source'><CODE>move_source</CODE></A> which wraps the given instance of the template parameter <CODE>Ptr</CODE>.</P>
+
+<!-- Begin Footer -->
+
+<HR>
+<P CLASS='copyright'>Revised
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B, %Y" startspan -->
+13 Jan, 2005
+<!--webbot bot="Timestamp" endspan i-checksum="38504" -->
+</P>
+
+<P CLASS='copyright'>&copy; Copyright Jonathan D. Turkanis, 2005</P>
+<P CLASS='copyright'> 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at <A HREF='http://www.boost.org/LICENSE_1_0.txt'>http://www.boost.org/LICENSE_1_0.txt</A>)
+</P>
+
+<!-- End Footer -->
+
+</BODY>

@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+    <TITLE>Class Template implements</TITLE>
+    <LINK REL='stylesheet' HREF='../../../../boost.css'>
+    <LINK REL='stylesheet' HREF='../theme/interfaces.css'>
+</HEAD>
+<BODY>
+
+<!-- Begin Banner -->
+
+    <H1 CLASS='title'>Class Template <CODE>implements</CODE></H1>
+    <HR CLASS='banner'>
+
+<!-- End Banner -->
+
+<DL class='page-index'>
+  <DT><A href='#description'>Description</A></DT>
+  <DT><A href='#notes'>Notes</A></DT>
+  <DT><A href='#headers'>Headers</A></DT>
+  <DT><A href='#synopsis'>Synopsis</A></DT>
+</DL>
+
+<A NAME='description'></A>
+<H2>Description</H2>
+
+<P>
+    The class template <CODE>implements</CODE> is a binary, boolean-valued <A HREF='http://www.boost.org/libs/mpl/doc/refmanual/metafunction.html' TARGET='_top'>Metafunction</A> which returns true for a class/interface pair if the class <I>implements</I> the interface, i.e., if the class defines non-static member functions with names and signatures exactly matching those of the member functions of the interface.
+</P>
+
+
+<A NAME='notes'></A>
+<H2>Notes</H2>
+
+<UL>
+<LI>
+    The current implementation does not enforce an exact match between the member function signatures of a class and those of an interface when an interface instance is initialized with a class instance or when a class instance is assigned to an interface instance. In the future, this enforcement may be provided optionally by the introduction of an additional qualifier <I>strict</I>. See <A HREF='../future.html#aditional_qualifiers'>Future Directions: Additional Qualifiers</A>.
+</LI>
+<LI>
+    Support for <CODE>implements</CODE> can be disabled by defining the preprocessor symbol <CODE>BOOST_IDL_NO_IMPLEMENTS</CODE>; this can help shorten compile times slightly. If support for <CODE>implements</CODE> is disabled, the class template <CODE>implements</CODE> will be defined but will always evaluate to <CODE>mpl::false_</CODE>.
+</LI>
+<LI>
+    The metafunction <CODE>implements</CODE> is currently broken on VC 7.1. See <A HREF='../testing.html#platforms'>Testing: Supported Platforms</A>.
+</LI>
+</UL>
+
+
+<A NAME='headers'></A>
+<H2>Headers</H2>
+
+<DT><CODE><A class='header' href='../../../../boost/interfaces/implements.hpp'>&lt;boost/interfaces/implements.hpp&gt;</A></CODE></DT>
+
+<A NAME='synopsis'></A>
+<H2>Synopsis</H2>
+
+<PRE CLASS='broken_ie'><SPAN CLASS='keyword'>namespace</SPAN> boost { <SPAN CLASS='keyword'>namespace</SPAN> interfaces { 
+
+    <SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>typename</SPAN> T, <SPAN CLASS='keyword'>typename</SPAN> Interface&gt;
+    <SPAN CLASS='keyword'>struct</SPAN> implements
+        : mpl::bool_< <SPAN CLASS='omitted'>...</SPAN> >
+        { };
+
+} } <SPAN CLASS='comment'>// End namespace boost::interfaces</SPAN></PRE>
+
+<!-- Begin Footer -->
+
+<HR>
+<P STYLE='margin-top:2em' CLASS='copyright'>Revised
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B, %Y" startspan -->
+13 Jan, 2005
+<!--webbot bot="Timestamp" endspan i-checksum="38504" -->
+</P>
+
+<P CLASS='copyright'>&copy; Copyright Jonathan Turkanis, 2005. Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at <A HREF='http://www.boost.org/LICENSE_1_0.txt'>http://www.boost.org/LICENSE_1_0.txt</A>)
+</P>
+
+<!-- End Footer -->
+
+</BODY>

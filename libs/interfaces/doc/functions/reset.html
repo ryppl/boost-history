@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+    <TITLE>Function Template reset</TITLE>
+    <LINK REL='stylesheet' HREF='../../../../boost.css'>
+        <LINK REL='stylesheet' HREF='../theme/interfaces.css'>
+</HEAD>
+<BODY>
+
+<!-- Begin Banner -->
+
+<H1 CLASS='title'>Function Template <CODE>reset</CODE></H1>
+<HR CLASS='banner'>
+
+<!-- End Banner -->
+
+<DL class='page-index'>
+    <DT><A href='#description'>Description</A></DT> <DT><A href='#headers'>Headers</A></DT>
+    <DT><A href='#synopsis'>Synopsis</A></DT>
+</DL>
+
+<HR>
+
+<A NAME='description'></A>
+<H2>Description</H2>
+
+<P>
+    The function template <CODE>reset</CODE> frees the object, if any, bound to an instance of <A HREF='../classes/shared_obj.html'><CODE>shared_obj</CODE></A> or <A HREF='../classes/unique_obj.html'><CODE>unique_obj</CODE></A>, and optionally specifies an new object to be bound. 
+</P>
+
+<A NAME='headers'></A>
+<H2>Headers</H2>
+
+<DT><A CLASS='header' HREF='../../../../boost/interfaces/shared_obj.hpp'><CODE>&lt;boost/interfaces/shared_obj.hpp&gt;</CODE></A></DT>
+<DT><A CLASS='header' HREF='../../../../boost/interfaces/unique_obj.hpp'><CODE>&lt;boost/interfaces/unique_obj.hpp&gt;</CODE></A></DT>
+
+<A NAME='reference'></A>
+<H2>Reference</H2>
+
+<A NAME='synopsis'></A>
+<H3>Synopsis</H3>
+
+<PRE CLASS='broken_ie'><SPAN CLASS="keyword">namespace</SPAN> boost { <SPAN CLASS="keyword">namespace</SPAN> interfaces {
+
+<SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> <A CLASS="documented" HREF="../classes/shared_obj.html#shared_obj_nullary_reset_template_params">Interface</A>&gt;
+<CODE>void</CODE> <A CLASS="documented" HREF="../classes/shared_obj.html#shared_obj_nullary_reset">reset</A>(<SPAN CLASS='keyword'>const</SPAN> <A CLASS='documented' HREF='../classes/shared_obj.html'>shared_obj</A>&lt;Interface&gt;& obj);
+
+<SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> <A CLASS="documented" HREF="../classes/shared_obj.html#shared_obj_unary_reset_template_params">Interface</A>, <SPAN CLASS="keyword">typename</SPAN> <A CLASS="documented" HREF="../classes/shared_obj.html#shared_obj_unary_reset_template_params">T</A>&gt;
+<CODE>void</CODE> <A CLASS="documented" HREF="../classes/shared_obj.html#shared_obj_unary_reset">reset</A>(<SPAN CLASS='keyword'>const</SPAN> <A CLASS='documented' HREF='../classes/shared_obj.html'>shared_obj</A>&lt;Interface&gt;& obj, T* t);
+
+<SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> <A CLASS="documented" HREF="../classes/shared_obj.html#shared_obj_binary_reset_template_params">Interface</A>, <SPAN CLASS="keyword">typename</SPAN> <A CLASS="documented" HREF="../classes/shared_obj.html#shared_obj_binary_reset_template_params">T</A>, <SPAN CLASS="keyword">typename</SPAN> <A CLASS="documented" HREF="../classes/shared_obj.html#shared_obj_binary_reset_template_params">D</A>&gt;
+<CODE>void</CODE> <A CLASS="documented" HREF="../classes/shared_obj.html#shared_obj_binary_reset">reset</A>(<SPAN CLASS='keyword'>const</SPAN> <A CLASS='documented' HREF='../classes/shared_obj.html'>shared_obj</A>&lt;Interface&gt;& obj, T* t, D d);
+
+<SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> <A CLASS="documented" HREF="../classes/unique_obj.html#unique_obj_nullary_reset_template_params">Interface</A>&gt;
+<CODE>void</CODE> <A CLASS="documented" HREF="../classes/unique_obj.html#unique_obj_nullary_reset">reset</A>(<SPAN CLASS='keyword'>const</SPAN> <A CLASS='documented' HREF='../classes/unique_obj.html'>unique_obj</A>&lt;Interface&gt;& obj);
+
+<SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> <A CLASS="documented" HREF="../classes/unique_obj.html#unique_obj_unary_reset_template_params">Interface</A>, <SPAN CLASS="keyword">typename</SPAN> <A CLASS="documented" HREF="../classes/unique_obj.html#unique_obj_unary_reset_template_params">T</A>&gt;
+<CODE>void</CODE> <A CLASS="documented" HREF="../classes/unique_obj.html#unique_obj_unary_reset">reset</A>(<SPAN CLASS='keyword'>const</SPAN> <A CLASS='documented' HREF='../classes/unique_obj.html'>unique_obj</A>&lt;Interface&gt;& obj, T* t);
+
+} } <SPAN CLASS='comment'>// End namespace boost::interfaces</SPAN></PRE>
+
+<!-- Begin Footer -->
+
+<HR>
+
+<P STYLE='margin-top:2em' CLASS='copyright'>Revised
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B, %Y" startspan -->
+20 Jan, 2005
+<!--webbot bot="Timestamp" endspan i-checksum="38504" -->
+</P>
+
+<P CLASS='copyright'>&copy; Copyright Jonathan Turkanis, 2005. Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at <A HREF='http://www.boost.org/LICENSE_1_0.txt'>http://www.boost.org/LICENSE_1_0.txt</A>)
+</P>
+
+
+<!-- End Footer -->
+
+</BODY>

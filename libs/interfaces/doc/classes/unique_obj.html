@@ -1,0 +1,355 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+    <TITLE>Class Template unique_obj</TITLE>
+    <LINK REL='stylesheet' HREF='../../../../boost.css'>
+        <LINK REL='stylesheet' HREF='../theme/interfaces.css'>
+</HEAD>
+<BODY>
+
+<!-- Begin Banner -->
+
+<H1 CLASS='title'>Class Template <CODE>unique_obj</CODE></H1>
+<HR CLASS='banner'>
+
+<!-- End Banner -->
+
+<DL class='page-index'>
+    <DT><A href='#description'>Description</A></DT> 
+    <DT><A href='#examples'>Examples</A></DT>
+    <DT><A href='#headers'>Headers</A></DT>
+    <DT><A href='#reference'>Reference</A>
+        <DL class='page-index'>
+            <DT><A href='#synopsis'>Synopsis</A></DT> 
+            <DT><A href='#unique_obj'>Class Template <CODE>unique_obj</CODE></A></DT>
+            <DT><A href='#unique_obj_get'>Function Template <CODE>get</CODE></A></DT>
+            <DT><A href='#unique_obj_release'>Function Template <CODE>release</CODE></A></DT>
+            <DT><A href='#unique_obj_nullary_reset'>Function Template <CODE>reset</CODE></A></DT>
+        </DL>
+    </DT>
+</DL>
+
+<HR>
+
+<A NAME='description'></A>
+<H2>Description</H2>
+
+<P>
+    The class template <CODE>unique_obj</CODE> is a <A HREF='../guide/smart_references.html'>Smart Reference</A> with the following characteristics:
+</P>
+<UL>
+    <LI><I>Exclusive ownership</I>. An object may be managed by at most one instance of <CODE>unique_obj</CODE> type at any given time.
+    <LI><I>Passable to / returnable from functions</I>. Instances of <CODE>unique_obj</CODE> may be passed to and returned from functions, transfering ownership from the caller to the function in the first case, and from the function to the caller in the second.
+    <LI><I>No implicit transfer of ownership from an lvalue.</I> An lvalue instance of a <CODE>unique_obj</CODE> may neither be assigned to nor be used to initialize a second instance of a specialization of the template.
+</UL>
+<P>
+    Ownership may be transfered from an lvalue of type <CODE>unique_obj</CODE> using the function template <A HREF='../functions/move.html'><CODE>move</CODE></A>.
+</P>
+<P>
+    <CODE>unique_obj</CODE> is patterned on the template <CODE>move_ptr</CODE> introduced in <A HREF='../bibliography.html#hinnant1'>[Hinnant1]</A> as a safe replacement for <CODE>std::auto_ptr</CODE>. A free implementation of <CODE>move_ptr</CODE> is available here: <A HREF='http://www.kangaroologic.com/move_ptr/'>Boost.MovePtr</A>.
+</P>
+
+<A NAME='examples'></A>
+<H2>Examples</H2>
+
+<A NAME='example1'></A>
+<H4>I. Receiving Ownership</H4>
+
+<P>
+    By declaring a function to return a specialization of <CODE>unique_obj</CODE>, the programmer indicates that the function transfers ownership of the managed object to the caller and ensures that the object is freed if the caller ignores the return value.
+</P>
+
+<PRE CLASS='broken_ie'>    unique_obj&lt;IScrollbar&gt; NewScrollbar(<SPAN CLASS="keyword">const</SPAN> Style& style);</PRE>
+
+<A NAME='example2'></A>
+<H4>II. Relinquishing Ownership</H4>
+
+<P>
+    By declaring a function with a parameter whose type is specialization of <CODE>unique_obj</CODE>, the programmer indicates that the function takes ownership of the managed object and ensures that the object will be freed unless it is explicitly released.
+</P>
+<PRE CLASS='broken_ie'>    <SPAN CLASS="keyword">void</SPAN> ListView::AddItem(unique_obj&lt;ListItem&gt; item);</PRE>
+
+<A NAME='example3'></A>
+<H4>III. RAII</H4>
+
+<P><CODE>unique_obj</CODE> can be used like <CODE>std::auto_ptr</CODE> to ensure that resources are cleaned up at the end of a block in an exception-safe manner.</P>
+
+<PRE CLASS='broken_ie'>    <SPAN CLASS='keyword'>void</SPAN> f()
+    {
+        unique_obj&lt;IAnimal&gt; animal(<SPAN CLASS='keyword'>new</SPAN> Hound);
+        std::cout << <SPAN CLASS='numeric_literal'>"name = "</SPAN> << animal.name() << <SPAN CLASS='numeric_literal'>"\n"</SPAN>;
+        animal.eat();
+        animal.speak();
+    }
+</PRE>
+
+<P>In the above example, the dynamically allocate <CODE>Hound</CODE> is deleted before the function <CODE>f</CODE> finishes execution, even if an exception is thrown.</P>
+
+<A NAME='headers'></A>
+<H2>Headers</H2>
+
+<DT><A CLASS='header' HREF='../../../../boost/interfaces/unique_obj.hpp'><CODE>&lt;boost/interfaces/unique_obj.hpp&gt;</CODE></A></DT>
+
+<A NAME='reference'></A>
+<H2>Reference</H2>
+
+<A NAME='synopsis'></A>
+<H3>Synopsis</H3>
+
+<PRE CLASS='broken_ie'><SPAN CLASS="keyword">namespace</SPAN> boost { <SPAN CLASS='keyword'>namespace</SPAN> interfaces {
+
+<SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> <A CLASS="documented" HREF="#unique_obj_template_params">Interface</A>&gt;
+<SPAN CLASS="keyword">class</SPAN> <A CLASS="documented" HREF="#unique_obj">unique_obj</A> {
+<SPAN CLASS="keyword">public</SPAN>:
+    <SPAN CLASS="keyword">typedef</SPAN> <SPAN CLASS="keyword">typename</SPAN> <A CLASS='documented' HREF='fixed_view.html'>fixed_view</A>&lt;Interface&gt; <A CLASS="documented" HREF="#unique_obj_element_type">element_type</A>;
+
+        <SPAN CLASS='comment'>// Constructors</SPAN>
+
+    <A CLASS="documented" HREF="#unique_obj_default_ctor">unique_obj</A>();
+
+    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> T&gt;
+    <SPAN CLASS="keyword">explicit</SPAN> <A CLASS="documented" HREF="#unique_obj_pointer_ctors">unique_obj</A>(T* t);
+
+    <A CLASS="documented" HREF="#unique_obj_copy_ctors">unique_obj</A>(<SPAN CLASS="keyword">const</SPAN> unique_obj& ptr);
+
+    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> Subinterface&gt;
+    <A CLASS="documented" HREF="#unique_obj_copy_ctors">unique_obj</A>(<SPAN CLASS="keyword">const</SPAN> unique_obj&lt;Subinterface&gt;& ptr);
+
+    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> Subinterface&gt;
+    <A CLASS="documented" HREF="#unique_obj_move_ctor">unique_obj</A>(<A CLASS="documented" HREF="../functions/move.html#move_source">move_source</A>&lt; unique_obj&lt;Subinterface&gt; &gt; src);
+
+        <SPAN CLASS='comment'>// Destructor</SPAN>
+
+    ~<A CLASS="documented" HREF="#unique_obj_dtor">unique_obj</A>();
+
+        <SPAN CLASS='comment'>// Assignment</SPAN>
+
+    unique_obj& <A CLASS="documented" HREF="#unique_obj_assign">operator=</A>(unique_obj ptr);
+
+    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> Subinterface&gt;    
+    unique_obj&amp; <A CLASS="documented" HREF="#unique_obj_assign">operator=</A>(unique_obj&lt;Subinterface&gt; ptr);
+
+    <SPAN CLASS="keyword">operator</SPAN> <A CLASS="documented" HREF="#unique_obj_safe_bool">unspecified-bool-type</A>() <SPAN CLASS="keyword">const</SPAN>;
+};
+
+<SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>typename</SPAN> Interface&gt;
+<A CLASS='documented' HREF='fixed_view.html'>fixed_view</A>&lt;Interface&gt;* <A CLASS="documented" HREF="#unique_obj_get">get</A>(<SPAN CLASS='keyword'>const</SPAN> unique_object&lt;Interface&gt;&amp; obj);
+
+<SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>typename</SPAN> Interface&gt;
+<A CLASS='documented' HREF='manual_ptr.html'>manual_ptr</A>&lt;Interface&gt; <A CLASS="documented" HREF="#unique_obj_release">release</A>(unique_object&lt;Interface&gt;&amp; obj);
+
+<SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>typename</SPAN> Interface&gt;
+<SPAN CLASS="keyword">void</SPAN> <A CLASS="documented" HREF="#unique_obj_nullary_reset">reset</A>(unique_object&lt;Interface&gt;&amp; obj);
+
+<SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>typename</SPAN> Interface, <SPAN CLASS='keyword'>typename</SPAN> T&gt;
+<SPAN CLASS="keyword">void</SPAN> <A CLASS="documented" HREF="#unique_obj_unary_reset">reset</A>(unique_object&lt;Interface&gt;&amp; obj, T* t);
+
+} } <SPAN CLASS='comment'>// End namespace boost::interfaces</SPAN></PRE>
+
+<A NAME='unique_obj'></A>
+<H3>Class Template <CODE>unique_obj</CODE></H3>
+
+<A NAME='unique_obj_template_params'></A>
+<H5>Template Parameters</H5>
+
+<TABLE STYLE='margin-left:2em' BORDER=0 CELLPADDING=2>
+<TR>
+    <TR>
+        <TD VALIGN='top'><I>Interface</I></TD><TD WIDTH='2em' ALIGN='center' VALIGN='top'>-</TD><TD></TD>
+        <TD>
+            <P STYLE='margin:0'>An interface defined using the <A HREF='../guide/idl.html'>Interface Definition Language</A> (IDL).</P>
+        </TD>
+    </TR>
+</TABLE>
+
+<A NAME='unique_obj_element_type'></A>
+<H4><CODE>unique_obj::element_type</CODE></H4>
+
+<PRE CLASS='broken_ie'>    <SPAN CLASS="keyword">typedef</SPAN> <SPAN CLASS="keyword">typename</SPAN> fixed_view&lt;T&gt; element_type;</PRE>
+
+<P>
+    Used by the dereferencing operators, in place of the template parameter Interface, to help prevent resource leaks and double deletes. <I>See</I> <A HREF='fixed_view.html#example'>Example</A>.
+</P>
+
+<A NAME='unique_obj_default_ctor'></A>
+<H4><CODE>unique_obj::unique_obj</CODE></H4>
+<PRE CLASS='broken_ie'>    unique_obj();</PRE>
+
+<P>Constructs an empty instance of <CODE>unique_obj</CODE>. Never throws.</P>
+
+<A NAME='unique_obj_pointer_ctors'></A>
+<PRE CLASS='broken_ie'>    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> T&gt;
+    <SPAN CLASS="keyword">explicit</SPAN> unique_obj(T* t);</PRE>
+
+<H5>Template Parameters</H5>
+
+<TABLE STYLE='margin-left:2em' BORDER=0 CELLPADDING=2>
+<TR>
+    <TR>
+        <TD VALIGN='top'><I>T</I></TD><TD WIDTH='2em' ALIGN='center' VALIGN='top'>-</TD><TD></TD>
+        <TD>
+            <P STYLE='margin:0'>A class implementing <CODE>Interface</CODE>. The type <CODE>T</CODE> must be complete and have an accessible destructor, but <I>need not be complete</I> at the point <CODE>t</CODE> is freed.</P>
+        </TD>
+    </TR>
+</TABLE>
+
+<P>
+    Constructs an instance of <CODE>unique_obj</CODE> which takes ownership of the given object. Unless, after zero or more transfers of ownership, the object is released using <CODE>unique_obj::release</CODE>, it will eventually be freed correctly using <CODE>delete</CODE>.
+</P>
+
+<A NAME='unique_obj_copy_ctors'></A>
+<PRE CLASS='broken_ie'>    unique_obj(<SPAN CLASS="keyword">const</SPAN> unique_obj& ptr);
+
+    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> Subinterface&gt;
+    unique_obj(<SPAN CLASS="keyword">const</SPAN> unique_obj&lt;Subinterface&gt;& ptr);</PRE>
+
+<P>
+    Constructs a copy of the given instance of <CODE>unique_obj</CODE>, taking ownership of the managed object. Never throws.
+</P>
+
+<A NAME='unique_obj_move_ctor'></A>
+<PRE CLASS='broken_ie'>    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> Subinterface&gt;
+    unique_obj(move_source&lt; unique_obj&lt;Subinterface&gt; &gt; src);</PRE>
+
+<P>
+    Constructs an instance of <CODE>unique_obj</CODE> from the return value of the function <A HREF='../functions/move.html'><CODE>move</CODE></A>, taking ownership of the object managed by the instance of <CODE>unique_obj</CODE> on which <A HREF='../functions/move.html'><CODE>move</CODE></A> was invoked. Allows explicit transfer of ownership from an lvalue of type <CODE>unique_obj</CODE> when implicit tranfer would be forbidden.
+</P>
+<P>
+    Never throws. 
+</P>
+
+<A NAME='unique_obj_dtor'></A>
+<H4><CODE>unique_obj::~unique_obj</CODE></H4>
+<PRE CLASS='broken_ie'>    ~unique_obj();</PRE>
+
+<P>If there is currently a managed object, frees it using <CODE>delete</CODE>.</P>
+
+<P>
+    Throws only if the destructor of the bound object throws.
+</P>
+
+<A NAME='unique_obj_assign'></A>
+<H4><CODE>unique_obj::operator=</CODE></H4>
+<PRE CLASS='broken_ie'>    unique_obj& operator=(unique_obj ptr);
+
+    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> Subinterface&gt;    
+    unique_obj&amp; operator=(unique_obj&lt;Subinterface&gt; ptr);</PRE>
+
+<P>
+    Takes ownership of the pointer managed by the given instance of <CODE>unique_obj</CODE>. Never throws.
+</P>
+
+<A NAME='unique_obj_safe_bool'></A>
+<H4><CODE>unique_obj::operator unspecified-bool-type()</CODE></H4>
+<PRE CLASS='broken_ie'>    <SPAN CLASS="keyword">operator</SPAN> unspecified-bool-type() <SPAN CLASS="keyword">const</SPAN>;</PRE>
+
+<P>
+     Returns an unspecified value which, when used in boolean contexts, is equivalent to <CODE><A HREF='#unique_obj_get'>get</A>(*this) != 0</CODE>. Never throws.
+</P>
+
+<A NAME='unique_obj_get'></A>
+<H3>Function Template <CODE>get</CODE></H3>
+<PRE CLASS='broken_ie'>    <SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>typename</SPAN> Interface&gt;
+    element_type* get(<SPAN CLASS='keyword'>const</SPAN> unique_obj&lt;Interface&gt;&amp; obj);</PRE>
+
+<A NAME='unique_obj_get_template_params'></A>
+<H5>Template Parameters</H5>
+<TABLE STYLE='margin-left:2em' BORDER=0 CELLPADDING=2>
+<TR>
+    <TR>
+        <TD VALIGN='top'><I>Interface</I></TD><TD WIDTH='2em' ALIGN='center' VALIGN='top'>-</TD>
+        <TD>
+            <P STYLE='margin:0'>An interface defined using the <A HREF='../guide/idl.html'>Interface Definition Language</A> (IDL).</P>
+        </TD>
+    </TR>
+</TABLE>
+
+<P>
+    Returns a pointer through which member functions of the object bound to the given instance of <CODE>unique_obj</CODE> can be accessed. Never throws.
+</P>
+
+<A NAME='unique_obj_release'></A>
+<H3>Function Template <CODE>release</CODE></H3>
+<PRE CLASS='broken_ie'>    <SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>typename</SPAN> Interface&gt;
+    manual_ptr&lt;Interface&gt;* release(unique_obj&lt;Interface&gt;&amp; obj);</PRE>
+
+<H5>Template Parameters</H5>
+<TABLE STYLE='margin-left:2em' BORDER=0 CELLPADDING=2>
+<TR>
+    <TR>
+        <TD VALIGN='top'><I>Interface</I></TD><TD WIDTH='2em' ALIGN='center' VALIGN='top'>-</TD>
+        <TD>
+            <P STYLE='margin:0'>An interface defined using the <A HREF='../guide/idl.html'>Interface Definition Language</A> (IDL).</P>
+        </TD>
+    </TR>
+</TABLE>
+
+<P>
+    Causes the given instance of <CODE>unique_obj</CODE> to relinguish ownership of the bound object, if any. Returns an instance of <CODE>manual_ptr</CODE> which can be used to access the member functions of the bound object and to free it. Never throws.
+</P>
+
+<A NAME='unique_obj_nullary_reset'></A>
+<H3>Function Template <CODE>reset</CODE></H3>
+<PRE CLASS='broken_ie'>    <SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>typename</SPAN> Interface&gt;
+    <SPAN CLASS="keyword">void</SPAN> reset(unique_obj&lt;Interface&gt;&amp; obj);</PRE>
+
+<A NAME='unique_obj_nullary_reset_template_params'></A>
+<H5>Template Parameters</H5>
+<TABLE STYLE='margin-left:2em' BORDER=0 CELLPADDING=2>
+<TR>
+    <TR>
+        <TD VALIGN='top'><I>Interface</I></TD><TD WIDTH='2em' ALIGN='center' VALIGN='top'>-</TD>
+        <TD>
+            <P STYLE='margin:0'>An interface defined using the <A HREF='../guide/idl.html'>Interface Definition Language</A> (IDL).</P>
+        </TD>
+    </TR>
+</TABLE>
+
+<P>
+    Causes the given instance of <CODE>unique_obj</CODE> to relinquish ownership of the bound object, if any, and free it using <CODE>delete</CODE>. 
+</P>
+
+<A NAME='unique_obj_unary_reset'></A>
+<PRE CLASS='broken_ie'>    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS='keyword'>typename</SPAN> Interface, <SPAN CLASS="keyword">typename</SPAN> T&gt;
+    <SPAN CLASS="keyword">void</SPAN> reset(unique_obj&lt;Interface&gt;&amp; obj, T* t);</PRE>
+
+<A NAME='unique_obj_unary_reset_template_params'></A>
+<H5>Template Parameters</H5>
+
+<TABLE STYLE='margin-left:2em' BORDER=0 CELLPADDING=2>
+<TR>
+    <TR>
+        <TD VALIGN='top'><I>Interface</I></TD><TD WIDTH='2em' ALIGN='center' VALIGN='top'>-</TD>
+        <TD>
+            <P STYLE='margin:0'>An interface defined using the <A HREF='../guide/idl.html'>Interface Definition Language</A> (IDL).</P>
+        </TD>
+    </TR>
+    <TR>
+        <TD VALIGN='top'><I>T</I></TD><TD WIDTH='2em' ALIGN='center' VALIGN='top'>-</TD>
+        <TD>
+            <P STYLE='margin:0'>A class implementing <CODE>Interface</CODE>. The type <CODE>T</CODE> must be complete and have an accessible destructor, but <I>need not be complete</I> at the point <CODE>t</CODE> is freed.</P>
+        </TD>
+    </TR>
+</TABLE>
+
+<P>
+    Causes the given instance of <CODE>unique_obj</CODE> to relinquish ownership of the bound object, if any, and free it using <CODE>delete</CODE>. Next, takes ownership of the given object. Never throws
+</P>
+
+<!-- Begin Footer -->
+
+<HR>
+<P CLASS='copyright'>Revised
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B, %Y" startspan -->
+16 Jan, 2005
+<!--webbot bot="Timestamp" endspan i-checksum="38504" -->
+</P>
+
+<P CLASS='copyright'>&copy; Copyright Jonathan D. Turkanis, 2005</P>
+<P CLASS='copyright'> 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at <A HREF='http://www.boost.org/LICENSE_1_0.txt'>http://www.boost.org/LICENSE_1_0.txt</A>)
+</P>
+
+<!-- End Footer -->
+
+</BODY>

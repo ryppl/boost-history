@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+    <TITLE>Macro BOOST_IDL_EXTENDS</TITLE>
+    <LINK REL='stylesheet' HREF='../../../../boost.css'>
+    <LINK REL='stylesheet' HREF='../theme/interfaces.css'>
+</HEAD>
+<BODY>
+
+<!-- Begin Banner -->
+
+    <H1 CLASS='title'>Macro BOOST_IDL_EXTENDS</H1>
+    <HR CLASS='banner'>
+
+<!-- End Banner -->
+
+<DL class='page-index'>
+  <DT><A href='#description'>Description</A></DT>
+  <DT><A href='#headers'>Headers</A></DT>
+  <DT><A href='#reference'>Reference</A></DT>
+  <DT><A href='#examples'>Examples</A></DT>
+</DL>
+
+<A NAME='description'></A>
+<H2>Description</H2>
+
+<P>
+    The macro <A href='#extends'><CODE>BOOST_IDL_EXTENDS</CODE></A> is used within an interface definition to declare a superinterface.
+</P>
+
+<A NAME='headers'></A>
+<H2>Headers</H2>
+
+<DT><CODE><A class='header' href='../../../../boost/interfaces.hpp'>&lt;boost/interfaces.hpp&gt;</A></CODE></DT>
+<DT><CODE><A class='header' href='../../../../boost/interfaces/detail/idl/extends.hpp'>&lt;boost/interfaces/detail/idl/extends.hpp&gt;</A></CODE></DT>
+
+<A NAME='reference'></A>
+<H2>Reference</H2>
+
+<A NAME='extends'></A>
+<H3><CODE>BOOST_IDL_EXTENDS</CODE></H3>
+
+<PRE CLASS='broken_ie'><SPAN CLASS='preprocessor'>#define</SPAN> BOOST_IDL_EXTENDS(<I>name</I>) <SPAN CLASS='omitted'>...</SPAN></PRE>
+
+<A NAME='function_params'></A>
+<H5>Parameters</H5>
+
+<TABLE STYLE='margin-left:2em' BORDER=0 CELLPADDING=2>
+<TR>
+    <TR>
+        <TD VALIGN='top'><I>name</I></TD><TD WIDTH='2em' VALIGN='top'>-</TD>
+        <TD>The name of the superinterface being declared</TD>
+    </TR>
+</TABLE>
+
+<P>
+    The macro <A href='#extends'><CODE>BOOST_IDL_EXTENDS</CODE></A> is used within an interface definition to declare a superinterface.
+</P>
+	
+<P>
+	Several invocations of <CODE>BOOST_IDL_EXTENDS</CODE> may occur in a single interface definition. 
+	Order is significant: functions in a superinterface will hide like-named functions in a superinterface declared by a preceeding invocation of <CODE>BOOST_IDL_EXTENDS</CODE>. This is an unfortunate consequence of the fact that interfaces are implemented using single inheritance to take full advantage of the Empty Base Optimization (EBO).
+</P>
+
+<A NAME='examples'></A>
+<H2>Examples</H2>
+
+The <A HREF='../guide/idl.html'>IDL</A> definition</P>
+
+<PRE CLASS='broken_ie'>BOOST_IDL_BEGIN(IDerived)
+    BOOST_IDL_EXTENDS(IBase)
+    BOOST_IDL_FN0(foo, void)
+BOOST_IDL_END(IDerived)</PRE>
+
+<P>is equivalent to the <A HREF='../guide/pseudocode.html'>pseudocode</A></P>
+
+<PRE CLASS='broken_ie'><SPAN CLASS='keyword'>interface</SPAN> IDerived : IBase {
+    <SPAN CLASS='keyword'>void</SPAN> foo();
+};</PRE>
+
+The <A HREF='../guide/idl.html'>IDL</A> definition</P>
+
+<PRE CLASS='broken_ie'>BOOST_IDL_BEGIN(IDerived)
+    BOOST_IDL_EXTENDS(IBase1)
+    BOOST_IDL_EXTENDS(IBase2)
+    BOOST_IDL_EXTENDS(IBase3)
+    BOOST_IDL_FN0(foo, void)
+BOOST_IDL_END(IDerived)</PRE>
+
+<P>is equivalent to the <A HREF='../guide/pseudocode.html'>pseudocode</A></P>
+
+<PRE CLASS='broken_ie'><SPAN CLASS='keyword'>interface</SPAN> IDerived : IBase1, IBase2, IBase3 {
+    <SPAN CLASS='keyword'>void</SPAN> foo();
+};</PRE>
+
+<!-- Begin Footer -->
+
+<HR>
+<P STYLE='margin-top:2em' CLASS='copyright'>Revised
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B, %Y" startspan -->
+13 Jan, 2005
+<!--webbot bot="Timestamp" endspan i-checksum="38504" -->
+</P>
+
+<P CLASS='copyright'>&copy; Copyright Jonathan Turkanis, 2005. Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at <A HREF='http://www.boost.org/LICENSE_1_0.txt'>http://www.boost.org/LICENSE_1_0.txt</A>)
+</P>
+
+<!-- End Footer -->
+
+</BODY>

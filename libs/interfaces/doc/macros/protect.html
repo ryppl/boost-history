@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+    <TITLE>Macro BOOST_IDL_EXTENDS</TITLE>
+    <LINK REL='stylesheet' HREF='../../../../boost.css'>
+    <LINK REL='stylesheet' HREF='../theme/interfaces.css'>
+</HEAD>
+<BODY>
+
+<!-- Begin Banner -->
+
+    <H1 CLASS='title'>Macro BOOST_IDL_PROTECT</H1>
+    <HR CLASS='banner'>
+
+<!-- End Banner -->
+
+<DL class='page-index'>
+  <DT><A href='#description'>Description</A></DT>
+  <DT><A href='#headers'>Headers</A></DT>
+  <DT><A href='#reference'>Reference</A></DT>
+  <DT><A href='#examples'>Examples</A></DT>
+</DL>
+
+<A NAME='description'></A>
+<H2>Description</H2>
+
+<P>
+    The macro <A href='#extends'><CODE>BOOST_IDL_PROTECT</CODE></A> is used to prevent commas within a type expression from being interpretted as macro argument separators by the preprocessor.
+</P>
+
+<A NAME='headers'></A>
+<H2>Headers</H2>
+
+<DT><CODE><A class='header' href='../../../../boost/interfaces.hpp'>&lt;boost/interfaces.hpp&gt;</A></CODE></DT>
+<DT><CODE><A class='header' href='../../../../boost/interfaces/detail/idl/protect.hpp'>&lt;boost/interfaces/detail/idl/protect.hpp&gt;</A></CODE></DT>
+
+<A NAME='reference'></A>
+<H2>Reference</H2>
+
+<A NAME='protect'></A>
+<H3><CODE>BOOST_IDL_PROTECT</CODE></H3>
+
+<PRE CLASS='broken_ie'><SPAN CLASS='preprocessor'>#define</SPAN> BOOST_IDL_PROTECT(<I>expr</I>) <SPAN CLASS='omitted'>...</SPAN></PRE>
+
+<A NAME='function_params'></A>
+<H5>Parameters</H5>
+
+<TABLE STYLE='margin-left:2em' BORDER=0 CELLPADDING=2>
+<TR>
+    <TR>
+        <TD VALIGN='top'><I>expr</I></TD><TD WIDTH='2em' VALIGN='top'>-</TD>
+        <TD>A parenthesized expression of the form <CODE>(<I>type_expr</I>)</CODE></TD>
+    </TR>
+</TABLE>
+
+<P>
+    The macro <CODE>BOOST_IDL_PROTECT</CODE> is used to prevent commas within a type expression from being interpretted as macro argument separators by the preprocessor.
+</P>
+
+<P>
+	If <CODE><I>type_expr</I></CODE> denotes a type <CODE>T</CODE>, <CODE>BOOST_IDL_PROTECT((<I>type_expr</I>))</CODE> expands to an expression denoting the <I>decayed</I> type of <CODE>T</CODE>. The decayed type of <CODE>T</CODE> is usually the same as <CODE>T</CODE>, but can differ from <CODE>T</CODE> if <CODE>T</CODE> involves array or function types or has top-level cv-qualification.
+</P>
+
+<A NAME='examples'></A>
+<H2>Example</H2>
+
+<P>Consider the following <A HREF='../guide/pseudocode.html'>pseudocode</A> definition:</P>
+
+<PRE CLASS='broken_ie'><SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>typename</SPAN> Ch, <SPAN CLASS='keyword'>typename</SPAN> Tr, <SPAN CLASS='keyword'>typename</SPAN> Alloc&gt;
+<SPAN CLASS='keyword'>interface</SPAN> INamed {
+    std::basic_string&lt;Ch, Tr, Alloc&gt; name() <SPAN CLASS='keyword'>const</SPAN>;
+};</PRE>
+
+<P>An initial attempt to render the above using the <A HREF='../guide/idl.html'>IDL</A> might be as follows:</P>
+
+<PRE CLASS='broken_ie'><SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>typename</SPAN> Ch, <SPAN CLASS='keyword'>typename</SPAN> Tr, <SPAN CLASS='keyword'>typename</SPAN> Alloc&gt;
+BOOST_IDL_BEGIN3(INamed)
+    BOOST_IDL_CONST_FN0(name, std::basic_string&lt;Ch, Tr, Alloc&gt;)
+BOOST_IDL_END3(INamed)</PRE>
+
+<P>Unfortunately, the preprocessor interprets the third line as an invocation of the macro <A HREF='const_fnz.html'><CODE>BOOST_IDL_CONST_FN0</CODE></A> with four arguments:</P>
+<OL>
+<LI><CODE>name</CODE>
+<LI><CODE>std::basic_string&lt;Ch</CODE>
+<LI><CODE>Tr</CODE>
+<LI><CODE>Alloc&gt;</CODE>
+</OL>
+
+<P>This is an error, since <A HREF='const_fnz.html'><CODE>BOOST_IDL_CONST_FN0</CODE></A> takes only two arguments.</P>
+
+<P>The solution, using <CODE>BOOST_IDL_PROTECT</CODE>, is as follows:
+
+<PRE CLASS='broken_ie'><SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>typename</SPAN> Ch, <SPAN CLASS='keyword'>typename</SPAN> Tr, <SPAN CLASS='keyword'>typename</SPAN> Alloc&gt;
+BOOST_IDL_BEGIN3(INamed)
+    BOOST_IDL_CONST_FN0(
+        name, 
+        BOOST_IDL_PROTECT((std::basic_string&lt;Ch, Tr, Alloc&gt;))
+    )
+BOOST_IDL_END3(INamed)</PRE>
+
+<P>(Note the double parentheses around the expression <CODE>std::basic_string&lt;Ch, Tr, Alloc&gt;</CODE>.)</P>
+
+<!-- Begin Footer -->
+
+<HR>
+<P STYLE='margin-top:2em' CLASS='copyright'>Revised
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B, %Y" startspan -->
+13 Jan, 2005
+<!--webbot bot="Timestamp" endspan i-checksum="38504" -->
+</P>
+
+<P CLASS='copyright'>&copy; Copyright Jonathan Turkanis, 2005. Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at <A HREF='http://www.boost.org/LICENSE_1_0.txt'>http://www.boost.org/LICENSE_1_0.txt</A>)
+</P>
+
+<!-- End Footer -->
+
+</BODY>

@@ -1,0 +1,224 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+    <TITLE>Class Template const_view</TITLE>
+    <LINK REL='stylesheet' HREF='../theme/interfaces.css'>
+</HEAD>
+<BODY>
+
+<!-- Begin Banner -->
+
+<H1 CLASS='title'>Class Template <CODE>const_view</CODE></H1>
+<HR CLASS='banner'>
+
+<!-- End Banner -->
+
+<DL class='page-index'>
+    <DT><A href='#description'>Description</A></DT> 
+    <DT><A href='#note'>Note</A></DT> 
+	<DT><A href='#headers'>Headers</A></DT>
+    <DT><A href='#reference'>Reference</A>
+        <DL class='page-index'>
+            <DT>
+                <A href='#synopsis'>Synopsis</A></DT> <DT><A href='#const_view'>Class Template <CODE>const_view</CODE></A>
+            </DT>
+        </DL>
+    </DT>
+	<DT><A href='#example'>Example</A></DT>
+</DL>
+
+<HR>
+
+<A NAME='description'></A>
+<H2>Description</H2>
+
+<P>The class template <CODE>const_view</CODE> is an <I>interface adapter</I> which takes an interface as a template parameter and yeilds a <CODE>const</CODE> view of the interface: an interface with the same properties as the original interface except that it can be bound to <CODE>const</CODE> objects and its non-<CODE>const</CODE> member functions have been disabled. Attempting to invoke a non-<CODE>const</CODE> member function of an instance of a specialization of <CODE>const_view</CODE> produces a compile-time error.</P>
+
+<A NAME='note'></A>
+<H2>Note</H2>
+
+<P>In the future it will be possible to use <CODE>const_view</CODE> in conjunction with <A HREF='fixed_view.html'><CODE>fixed_view</CODE></A> to produce an interface whose non-<CODE>const</CODE> member functions have been disabled and which cannot be rebound. <I>See</I> <A HREF='../future.html#qualifiers'>Future Directions: Qualifiers</A>.</P>
+
+<A NAME='headers'></A>
+<H2>Headers</H2>
+
+<DT><A CLASS='header' HREF='../../../../boost/interfaces/const_view.hpp'><CODE>&lt;boost/interfaces/const_view.hpp&gt;</CODE></A></DT>
+
+<A NAME='reference'></A>
+<H2>Reference</H2>
+
+<A NAME='synopsis'></A>
+<H3>Synopsis</H3>
+
+<PRE CLASS='broken_ie'><SPAN CLASS="keyword">namespace</SPAN> boost { <SPAN CLASS='keyword'>namespace</SPAN> interfaces {
+
+<SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> <A CLASS="documented" HREF="#template_params">Interface</A>&gt;
+<SPAN CLASS="keyword">class</SPAN> <A CLASS="documented" HREF="#const_view">const_view</A> {
+<SPAN CLASS="keyword">public</SPAN>:
+
+        <SPAN CLASS='comment'>// Constructors</SPAN>
+
+    <A CLASS="documented" HREF="#default_ctor">const_view</A>();
+
+    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> T&gt;
+    <A CLASS="documented" HREF="#object_ctor">const_view</A>(<SPAN CLASS='keyword'>const</SPAN> T& t);
+
+    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> Subinterface&gt;
+    <A CLASS="documented" HREF="#interface_ctor">const_view</A>(<SPAN CLASS="keyword">const</SPAN> Subinterface& other);
+
+    <A CLASS="documented" HREF="#copy_ctors">const_view</A>(<SPAN CLASS="keyword">const</SPAN> const_view& other);
+
+    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> Subinterface&gt;
+    <A CLASS="documented" HREF="#copy_ctors">const_view</A>(<SPAN CLASS="keyword">const</SPAN> const_view&lt;Subinterface&gt;& other);
+
+        <SPAN CLASS='comment'>// Assignment</SPAN>
+
+    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> T&gt;    
+    const_view&amp; <A CLASS="documented" HREF="#assign_object">operator=</A>(<SPAN CLASS='keyword'>const</SPAN> T& rhs);
+    <!-- <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> Subinterface&gt;    
+    const_view&amp; <A CLASS="documented" HREF="#assign_interface">operator=</A>(<SPAN CLASS='keyword'>const</SPAN> Subinterface rhs); -->
+    const_view&amp; <A CLASS="documented" HREF="#assign_const_view">operator=</A>(<SPAN CLASS='keyword'>const</SPAN> const_view& rhs);
+    <!-- <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> Subinterface&gt;    
+    const_view&amp; <A CLASS="documented" HREF="#assign_const_view">operator=</A>(<SPAN CLASS='keyword'>const</SPAN> const_view&lt;Subinterface&gt; rhs); -->
+    const_view& <A CLASS="documented" HREF="#assign_nullptr">operator=</A>(<SPAN CLASS='omitted'>unspecified-null-pointer-type</SPAN>);
+
+    <SPAN CLASS='keyword'>operator</SPAN> <A CLASS='documented' HREF='#safe_bool'>unspecified-bool-type</A>() <SPAN CLASS='keyword'>const</SPAN>;
+
+    <SPAN CLASS='comment'>[const member functions from Interface]</SPAN>
+};
+
+} } <SPAN CLASS='comment'>// End namespace boost::interfaces</SPAN></PRE>
+
+<A NAME='const_view'></A>
+<H3>Class Template <CODE STYLE='font-size:110%'>const_view</CODE></H3>
+
+<A NAME='template_params'></A>
+<H5>Template parameters</H5>
+
+<TABLE STYLE='margin-left:2em' BORDER=0 CELLPADDING=2>
+<TR>
+    <TR>
+        <TD VALIGN='top'><I>Interface</I></TD><TD WIDTH='2em' ALIGN='center' VALIGN='top'>-</TD><TD></TD>
+        <TD>
+            <P STYLE='margin:0'>An interface defined using the <A HREF='../guide/idl.html'>Interface Definition Language</A> (IDL).</P>
+        </TD>
+    </TR>
+</TABLE>
+
+<A NAME='default_ctor'></A>
+<H4><CODE>const_view::const_view</CODE></H4>
+<PRE CLASS='broken_ie'>    const_view();</PRE>
+
+<P>Constructs an unbound <CODE>const_view</CODE>. Never throws.</P>
+
+<A NAME='object_ctor'></A>
+<PRE CLASS='broken_ie'>    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> T&gt;
+    const_view(<SPAN CLASS='keyword'>const</SPAN> T& t)</PRE>
+
+<P>
+    Constructs a <CODE>const_view</CODE> bound to the given object. Never throws.
+</P>
+
+<A NAME='interface_ctor'></A>
+<PRE CLASS='broken_ie'>    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> Subinterface&gt;
+    const_view(<SPAN CLASS="keyword">const</SPAN> Subinterface& other);</PRE>
+
+<P>
+    Constructs a <CODE>const_view</CODE> bound to the same object as the given interface. <CODE>Subinterface</CODE> must be the same as or a subinterface of the template parameter <A HREF='#template_params'><CODE>Interface</CODE></A>. Never throws.
+</P>
+
+<A NAME='copy_ctors'></A>
+<PRE CLASS='broken_ie'>    const_view(<SPAN CLASS="keyword">const</SPAN> const_view& other);
+
+    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> Subinterface&gt;
+    const_view(<SPAN CLASS="keyword">const</SPAN> const_view&lt;Subinterface&gt;& other);</PRE>
+
+<P>
+    The first member constructs a copy of the given <CODE>const_view</CODE>. The second member constructs an instance of <CODE>const_view</CODE> bound to the same object as the given instance of <CODE>const_view&lt;Subinterface&gt;</CODE>. <CODE>Subinterface</CODE> must be a subinterface of the template parameter <A HREF='#template_params'><CODE>Interface</CODE></A>. Neither member throws.
+</P>
+
+<A NAME='assign_object'></A>
+<H4><CODE>const_view::operator=</CODE></H4>
+<PRE CLASS='broken_ie'>    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> TT&gt;
+    const_view& operator=(<SPAN CLASS='keyword'>const</SPAN> T&);</PRE>
+
+<P>
+    Binds <CODE>this</CODE> instance of <CODE>const_view</CODE> to the given object. Never throws. 
+</P>
+
+<!-- <A NAME='assign_interface'></A>
+<PRE CLASS='broken_ie'>    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> Subinterface&gt;
+    const_view& operator=(<SPAN CLASS="keyword">const</SPAN> Subinterface& other);</PRE>
+
+<P>
+    Binds <CODE>this</CODE> instance of <CODE>const_view</CODE> to the same object as the given interface. <CODE>Subinterface</CODE> must be the same as or a subinterface of the template parameter <A HREF='#template_params'><CODE>Interface</CODE></A>. Never throws.
+</P> -->
+
+<!-- <A NAME='assign_const_view'></A>
+<PRE CLASS='broken_ie'>    const_view& operator=(<SPAN CLASS="keyword">const</SPAN> const_view& other);
+
+    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> Subinterface&gt;
+    const_view& operator=(<SPAN CLASS="keyword">const</SPAN> const_view&lt;Subinterface&gt;& other);</PRE>
+
+<P>
+    Both members bind <CODE>this</CODE> instance of <CODE>const_view</CODE> to the same object as the given interface. <CODE>Subinterface</CODE> must be the a subinterface of the template parameter <A HREF='#template_params'><CODE>Interface</CODE></A>. Neither member throws.
+</P>
+ -->
+
+<A NAME='assign_const_view'></A>
+<PRE CLASS='broken_ie'>    const_view& operator=(<SPAN CLASS="keyword">const</SPAN> const_view& other);</PRE>
+
+<P>
+    Binds <CODE>this</CODE> instance of <CODE>const_view</CODE> to the same object as the given interface. Never throws.
+</P>
+
+<A NAME='assign_nullptr'></A>
+<PRE CLASS='broken_ie'>    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> TT&gt;
+    const_view& operator=(<SPAN CLASS='omitted'>unspecified-null-pointer-type</SPAN>);</PRE>
+
+<P>
+    Causes <CODE>this</CODE> instance of <CODE>const_view</CODE> to become unbound from the current object, if any. The argument must be a null pointer constant, <I>e.g.</I>, 0. Never throws. 
+</P>
+
+<A NAME='safe_bool'></A>
+<H4><CODE>const_view::operator unspecified-bool-type()</CODE></H4>
+<PRE CLASS='broken_ie'>    <SPAN CLASS="keyword">operator</SPAN> unspecified-bool-type() <SPAN CLASS="keyword">const</SPAN>;</PRE>
+
+<P>
+     Returns an unspecified value which, when used in boolean contexts, is equivalent to <CODE>true</CODE> if <CODE>this</CODE> instance of <CODE>const_view</CODE> is bound to an object and to <CODE>false</CODE> otherwise. Never throws.
+</P>
+
+<A NAME='example'></A>
+<H2>Example</H2>
+
+<P>By declaring a function to take a <CODE>const</CODE> view of an interface, one can guarantee that non-<CODE>const</CODE> functions will not be accessible within the body of the function:</P>
+
+<PRE CLASS='broken_ie'><SPAN CLASS='omitted'>// Pseudocode:</SPAN>
+<SPAN CLASS='keyword'>interface</SPAN> <A CLASS='documented' HREF='../examples/iexplosive.html'>IExplosive</A> {
+    <SPAN CLASS='keyword'>std::string</SPAN> type() <SPAN CLASS='keyword'>const</SPAN>;
+    <SPAN CLASS='keyword'>void</SPAN> detonate();
+}
+
+<SPAN CLASS='keyword'>void</SPAN> f(const_view&lt;IExplosive&gt;& e)
+{
+    std::cout &lt;&lt; e.type() &lt;&lt; "\n";
+    e.detonate(); <SPAN CLASS='comment'>// Compile-time error.</SPAN>
+}</PRE>
+
+<!-- Begin Footer -->
+
+<HR>
+<P CLASS='copyright'>Revised
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B, %Y" startspan -->
+13 Jan, 2005
+<!--webbot bot="Timestamp" endspan i-checksum="38504" -->
+</P>
+
+<P CLASS='copyright'>&copy; Copyright Jonathan D. Turkanis, 2005</P>
+<P CLASS='copyright'> 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at <A HREF='http://www.boost.org/LICENSE_1_0.txt'>http://www.boost.org/LICENSE_1_0.txt</A>)
+</P>
+
+<!-- End Footer -->
+
+</BODY>
