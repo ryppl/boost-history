@@ -25,8 +25,9 @@
 #endif
 
 #if defined(BOOST_MMAP_POSIX)
-#   include "sys\stat.h"
+#   include "sys/stat.h"
 #endif
+#include "boost/config.hpp"
 #include "boost/utility.hpp"
 
 namespace boost {

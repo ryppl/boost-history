@@ -58,10 +58,10 @@ namespace boost {
             }
 
             // initialise working array
-            const int array_size = (size_first + 1) * sizeof(size_type) * 3;
+            const std::ptrdiff_t array_size = (size_first + 1) * sizeof(size_type) * 3;
             memset(pA, 0, array_size);
-            size_type *pB = pA + size_first + 1;
-            size_type *pO = pB + size_first + 1;
+            size_type      *pB = pA + size_first + 1;
+            std::ptrdiff_t *pO = reinterpret_cast<std::ptrdiff_t *>(pB + size_first + 1);
 
             // we need to track the position in middle row that each entry
             // comes from, so create another working array and initial each

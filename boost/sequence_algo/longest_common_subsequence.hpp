@@ -69,7 +69,7 @@ namespace boost {
 
         // allocate a working array large enough for three entire
         // lengths of the first sequence
-        const int array_size = (size_first + 1) * sizeof(size_type) * 3;
+        const std::ptrdiff_t array_size = (size_first + 1) * ((sizeof(size_type) * 2) + sizeof(std::ptrdiff_t));
 
         // VC6's dinkumware STL does not provide an allocate without the hint
         size_type *pA = alloc.allocate(array_size, 0);
