@@ -2,10 +2,9 @@
 
 - !!!! Write documentation !!! -
 
-- add case-insensitive versions
-
+- add case-insensitive versions, allow parametric comparison
 - find iterator
-- change trim to use the replace library
+- add trim find functor(s).
 - find algoritms complexity reduction / provide optional algorithms
 
 ----- DONE: ------

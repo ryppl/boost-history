@@ -1,0 +1,363 @@
+<!doctype html public "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+
+<head>
+  <title>String Algorithm Library</title>
+  <meta content="Pavol Droba, mailto:droba@topmail.sk" name="author">
+  <meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+  <meta name="ProgId" content="FrontPage.Editor.Document">
+</head>
+
+<body text="#000000" bgcolor="#ffffff">
+
+  <div align="left">
+    <table border="0" width="799" height="134">
+      <tr>
+        <td width="288" height="134"><img id="IMG1" height="86"
+          src="../../../c++boost.gif" width="277" align="middle" border="0"></td>
+        <td width="1152" height="134">
+          <h1 align="center">&nbsp;String Algorithm Library&nbsp;</h1>
+          <h2 align="center">Trim</h2>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <ul>
+    <li><a href="##trim_algorithms">Trim Algorithms</a>
+      <ul>
+        <li><a href="##overview">Overview</a></li>
+        <li><a href="##ta_description">Description</a></li>
+        <li><a href="##ta_synopsis">Synopsis</a></li>
+      </ul>
+    </li>
+    <li><a href="##predicates">Predicates</a>
+      <ul>
+        <li><a href="##pred_description">Description</a></li>
+        <li><a href="##pred_synopsis">Synopsis</a>&nbsp;&nbsp;&nbsp;&nbsp;</li>
+      </ul>
+    </li>
+  </ul>
+  <hr>
+  <h2><a name="#trim_algorithms">Trim Algorithms</a></h2>
+  <h3><a name="#overview">Overview</a></h3>
+  <p>
+    Trim&nbsp;algorithms are included in <a
+    href="../../../boost/string_algo/trim.hpp">&lt;boost/string_algo/trim.hpp&gt;</a>
+    header ( in <code>boost</code> namespace&nbsp; ).<br>
+    Trim algorithms are used to remove trailing and leading spaces from a
+    sequence (string). Definition of a &quot;space&quot; is functor based.
+    Functions take a selection predicate as a parameter. Common predicates are
+    provided with library. Algorithms are provided for iterator ranges as well
+    as for sequences for convinience.
+  </p>
+  <h3><a name="#ta_description">Description</a></h3>
+  <p>
+    Each algorithm removes trailing or leading spaces from the input sequence. <code>trim_left</code>
+    removes leading spaces,&nbsp; <code>trim_right</code> removes trailing
+    spaces and <code>trim</code> removes both. Result is either copied into an
+    output iterator, a copy of the input sequence or applied to the input
+    depending on an algorithm variant.
+  </p>
+  <p>
+    For predicate-based variants, IsSpace predicate must satisfy <code>std::unary_function&lt;Input::value_type,
+    bool&gt;</code> requirements.
+  </p>
+  <table border="0" width="601" height="21">
+  </table>
+  <table border="1" height="28" width="827">
+    <tr>
+      <th height="30" valign="top" align="center">Function</th>
+      <th height="30" width="234">Description</th>
+      <th height="30" width="464">Example</th>
+    </tr>
+    <tr>
+      <td height="28" valign="top" align="center"><code>trim_left_copy_if</code></td>
+      <td height="28" valign="top" align="center" width="234">Remove leading
+        spaces. Copy version with IsSpace predicate.</td>
+      <td height="28" valign="top" align="center" width="464"><code>trim_left_copy_if(ostream_iterator&lt;char&gt;(cout),
+        Begin, End, isfrom( string(&quot;&lt;&gt;&quot;) );<br>
+        str=trim_left_copy_if(str, isspace&lt;char&gt;() );</code></td>
+    </tr>
+    <tr>
+      <td height="30" valign="top" align="center"><code>trim_left_if</code></td>
+      <td height="30" valign="top" align="center" width="234">Remove leading
+        spaces. In-place version with IsSpace predicate.</td>
+      <td height="30" valign="top" align="center" width="464"><code>str=trim_left_if(str,
+        isspace&lt;char&gt;() );</code></td>
+    </tr>
+    <tr>
+      <td height="30" valign="top" align="center"><code>trim_left_copy</code></td>
+      <td height="28" valign="top" align="center" width="234">Remove leading
+        spaces. Copy version.</td>
+      <td height="28" valign="top" align="center" width="464"><code>trim_left_copy(ostream_iterator&lt;char&gt;(cout),
+        Begin, End, std::locale(&quot;German_germany&quot;) );<br>
+        str=trim_left_copy(str);</code></td>
+    </tr>
+    <tr>
+      <td height="30" valign="top" align="center"><code>trim_left</code></td>
+      <td height="30" valign="top" align="center" width="234">Remove leading
+        spaces. In-place version .</td>
+      <td height="30" valign="top" align="center" width="464"><code>trim_left(str);</code><br>
+      </td>
+    </tr>
+    <tr>
+      <td height="28" valign="top" align="center"><code>trim_right_copy_if</code></td>
+      <td height="28" valign="top" align="center" width="234">Remove trailing
+        spaces. Copy version with IsSpace predicate.</td>
+      <td height="28" valign="top" align="center" width="464"><code>trim_right_copy_if(ostream_iterator&lt;char&gt;(cout),
+        Begin, End, isfrom( string(&quot;&lt;&gt;&quot;) );<br>
+        str=trim_right_copy_if(str, isspace&lt;char&gt;() );</code></td>
+    </tr>
+    <tr>
+      <td height="30" valign="top" align="center"><code>trim_right_if</code></td>
+      <td height="30" valign="top" align="center" width="234">Remove trailing
+        spaces. In-place version with IsSpace predicate.</td>
+      <td height="30" valign="top" align="center" width="464"><code>str=trim_right_if(str,
+        isspace&lt;char&gt;() );</code></td>
+    </tr>
+    <tr>
+      <td height="30" valign="top" align="center"><code>trim_right_copy</code></td>
+      <td height="28" valign="top" align="center" width="234">Remove trailing
+        spaces. Copy version.</td>
+      <td height="28" valign="top" align="center" width="464"><code>trim_right_copy(ostream_iterator&lt;char&gt;(cout),
+        Begin, End, std::locale(&quot;German_germany&quot;) );<br>
+        str=trim_right_copy(str);</code></td>
+    </tr>
+    <tr>
+      <td height="30" valign="top" align="center"><code>trim_right</code></td>
+      <td height="30" valign="top" align="center" width="234">Remove trailing
+        spaces. In-place version .</td>
+      <td height="30" valign="top" align="center" width="464"><code>trim_right(str);</code><br>
+      </td>
+    </tr>
+    <tr>
+      <td height="28" valign="top" align="center"><code>trim_copy_if</code></td>
+      <td height="28" valign="top" align="center" width="234">Remove trailing
+        and leading spaces. Copy version with IsSpace predicate.</td>
+      <td height="28" valign="top" align="center" width="464"><code>trim_copy_if(ostream_iterator&lt;char&gt;(cout),
+        Begin, End, isfrom( string(&quot;&lt;&gt;&quot;) );<br>
+        str=trim_copy_if(str, isspace&lt;char&gt;() );</code></td>
+    </tr>
+    <tr>
+      <td height="30" valign="top" align="center"><code>trim_if</code></td>
+      <td height="30" valign="top" align="center" width="234">Remove trailing
+        and leading spaces. In-place version with IsSpace predicate.</td>
+      <td height="30" valign="top" align="center" width="464"><code>str=trim_if(str,
+        isspace&lt;char&gt;() );</code></td>
+    </tr>
+    <tr>
+      <td height="30" valign="top" align="center"><code>trim_copy</code></td>
+      <td height="28" valign="top" align="center" width="234">Remove trailing
+        and leading spaces. Copy version.</td>
+      <td height="28" valign="top" align="center" width="464"><code>trim_copy(ostream_iterator&lt;char&gt;(cout),
+        Begin, End, std::locale(&quot;German_germany&quot;) );<br>
+        str=trim_copy(str);</code></td>
+    </tr>
+    <tr>
+      <td height="30" valign="top" align="center"><code>trim</code></td>
+      <td height="30" valign="top" align="center" width="234">Remove trailing
+        and leading spaces. In-place version .</td>
+      <td height="30" valign="top" align="center" width="464"><code>trim(str);</code><br>
+      </td>
+    </tr>
+  </table>
+  <h3><a name="#ta_synopsis">Synopsis</a></h3>
+  <p>
+    Iterator based variant. Funtion returns an output operator pointing just
+    after last inserted character.
+  </p>
+  <pre>    <b>template</b>&lt; <b>typename</b> IteratorT, <b>typename</b> OutputIteratorT, <b>typename</b> PredicateT &gt;
+    OutputIteratorT trim_left_copy_if( 
+        OutputIteratorT Output,
+        IteratorT InBegin,
+        IteratorT InEnd,
+        PredicateT IsSpace );
+
+    <b>template</b>&lt; <b>typename</b> IteratorT, <b>typename</b> OutputIteratorT, <b>typename</b> PredicateT &gt;
+    OutputIteratorT trim_right_copy_if( 
+        OutputIteratorT Output,
+        IteratorT InBegin,
+        IteratorT InEnd,
+        PredicateT IsSpace );
+
+    <b>template</b>&lt; <b>typename</b> IteratorT, <b>typename</b> OutputIteratorT, <b>typename</b> PredicateT &gt;
+    OutputIteratorT trim_copy_if( 
+        OutputIteratorT Output,
+        IteratorT InBegin,
+        IteratorT InEnd,
+        PredicateT IsSpace );</pre>
+  <p>
+    Sequence version with copy semantic. Returns a new sequence which is a
+    trimmed copy of the input sequence
+  </p>
+  <pre>    <b>template</b>&lt; <b>typename</b> SeqT, <b>typename</b> PredicateT &gt;
+    SeqT trim_left_copy_if( <b>const</b> SeqT&amp; Input, PredicateT IsSpace );
+
+    <b>template</b>&lt; <b>typename</b> SeqT, <b>typename</b> PredicateT &gt;
+    SeqT trim_right_copy_if( <b>const</b> SeqT&amp; Input, PredicateT IsSpace );
+
+    <b>template</b>&lt; <b>typename</b> SeqT, <b>typename</b> PredicateT &gt;
+    SeqT trim_copy_if( <b>const</b> SeqT&amp; Input, PredicateT IsSpace );</pre>
+  <p>
+    Sequence, in-place versions. Returns a reference to the input sequence.
+  </p>
+  <pre>    <b>template</b>&lt; <b>typename</b> SeqT, <b>typename</b> PredicateT &gt;
+    SeqT&amp; trim_left_if( SeqT&amp; Input, PredicateT IsSpace );
+
+    <b>template</b>&lt; <b>typename</b> SeqT, <b>typename</b> PredicateT &gt;
+    SeqT&amp; trim_right_if( SeqT&amp; Input, PredicateT IsSpace );
+
+    <b>template</b>&lt; <b>typename</b> SeqT, <b>typename</b> PredicateT &gt;
+    SeqT&amp; trim_if( SeqT&amp; Input, PredicateT IsSpace );</pre>
+  <p>
+    Shortcut versions for regular space ( <code>create_isspace()</code> is used
+    to instantiate isclassified functor ).
+  </p>
+  <pre>    <b>template</b>&lt; <b>typename</b> SeqT &gt;
+    SeqT trim_left_copy( <b>const</b> SeqT&amp; Input, <b>const</b> std::locale&amp; Loc=std::locale() );
+
+    <b>template</b>&lt; <b>typename</b> SeqT &gt;
+    SeqT&amp; trim_left( SeqT&amp; Input, <b>const</b> std::locale&amp; Loc=std::locale() );
+
+    <b>template</b>&lt; <b>typename</b> SeqT &gt;
+    SeqT trim_right_copy( <b>const</b> SeqT&amp; Input, <b>const</b> std::locale&amp; Loc=std::locale() );
+
+    <b>template</b>&lt; <b>typename</b> SeqT &gt;
+    SeqT&amp; trim_right( SeqT&amp; Input, <b>const</b> std::locale&amp; Loc=std::locale() );
+
+    <b>template</b>&lt; <b>typename</b> SeqT &gt;
+    SeqT trim_copy( <b>const</b> SeqT&amp; Input, <b>const</b> std::locale&amp; Loc=std::locale() );
+
+    <b>template</b>&lt; <b>typename</b> SeqT &gt;
+    SeqT&amp; trim( SeqT&amp; Input, <b>const</b> std::locale&amp; Loc=std::locale() );</pre>
+  <p>
+    Parameters:
+  </p>
+  <div align="left">
+    <table border="0" width="574" height="1">
+      <tr>
+        <td width="418" height="31" valign="top"><code>OutputIteratorT Output</code></td>
+        <td width="728" height="31" valign="top">Output iterator for the result.
+          The result of the operation will be sent to this iterator.</td>
+      </tr>
+      <tr>
+        <td width="418" height="31" valign="top"><code>InputIteratorT Begin</code></td>
+        <td width="728" height="31" valign="top">Begin of an input sequence</td>
+      </tr>
+      <tr>
+        <td width="418" height="31" valign="top"><code>InputIteratorT End</code></td>
+        <td width="728" height="31" valign="top">End of an input sequence</td>
+      </tr>
+      <tr>
+        <td width="418" height="31" valign="top"><code><b>const</b> SeqT&amp;
+          Input</code></td>
+        <td width="728" height="31" valign="top">An input sequence (const)</td>
+      </tr>
+      <tr>
+        <td width="418" height="31" valign="top"><code>SeqT&amp; Input</code></td>
+        <td width="728" height="31" valign="top">An input sequence (mutable)</td>
+      </tr>
+      <tr>
+        <td width="418" height="31" valign="top">PredicateT Predicate</td>
+        <td width="728" height="31" valign="top">Space selection predicate.</td>
+      </tr>
+      <tr>
+        <td width="418" height="31" valign="top"><code><b>const</b> std::locale&amp;
+          Loc</code></td>
+        <td width="728" height="31" valign="top">An instance of locales which
+          will be used for conversion</td>
+      </tr>
+    </table>
+  </div>
+  <hr>
+  <h2><a name="#predicates">Predicates</a></h2>
+  <h3><b><a name="#pred_description">Description</a></b></h3>
+  <p>
+    Library contains some useful predicates which can be used with trim
+    algorithms. Trim predicates are provided in the form of generators. This
+    approach is more convinient for user and hides implementation details.
+  </p>
+  <p>
+    Table shows the functionality of provided functors.
+  </p>
+  <div align="left">
+    <table border="1" height="28" width="814">
+      <tr>
+        <th height="30" valign="top" align="center" width="101">Predicate</th>
+        <th height="30" width="237">Description</th>
+        <th height="30" width="162">Underlaying functor</th>
+        <th height="30" width="290">Example</th>
+      </tr>
+      <tr>
+        <td height="28" valign="top" align="center" width="101"><code>isclassified</code>&nbsp;</td>
+        <td height="28" valign="top" align="center" width="237">Match any
+          character matching a characted class defined by Type parameter and
+          locale.</td>
+        <td height="28" valign="top" align="center" width="162"><code>isclassifiedF&lt;CharT&gt;</code></td>
+        <td height="28" valign="top" align="center" width="290"><code>isclassified(std::ctype_base::digit)<br>
+          </code>Creates a functor, that matches all digits.</td>
+      </tr>
+      <tr>
+        <td height="30" valign="top" align="center" width="101">isspace</td>
+        <td height="30" valign="top" align="center" width="237">Match a space.
+          Instance of <code>isclassified</code> for <code>std::ctype_base::space</code>
+          type</td>
+        <td height="30" valign="top" align="center" width="162"><code>isclassifiedF&lt;CharT&gt;</code></td>
+        <td height="30" valign="top" align="center" width="290"><code>isspace()</code><br>
+          Creates a functore that matches all spaces.</td>
+      </tr>
+      <tr>
+        <td height="30" valign="top" align="center" width="101">isfrom</td>
+        <td height="30" valign="top" align="center" width="237">Match any
+          charater from the input sequence</td>
+        <td height="30" valign="top" align="center" width="162">isfromF&lt;SeqT&gt;</td>
+        <td height="30" valign="top" align="center" width="290"><code>isfrom(string(&quot;abc&quot;))<br>
+          </code>Creates a functor which matches any of the charaters a,b,c.</td>
+      </tr>
+    </table>
+  </div>
+  <h3><a name="#pred_synopsis">Synopsis</a></h3>
+  <pre>    <b>template</b>&lt; <b>typename</b> CharT &gt;
+    string_algo::detail::isclassifiedF&lt;CharT&gt; 
+    isclassified( std::ctype_base::mask Type, <b>const</b> std::locale&amp; Loc=std::locale() );
+
+    <b>template</b>&lt; <b>typename</b> CharT &gt;
+    string_algo::detail::isclassifiedF&lt;CharT&gt; 
+    isspace( <b>const</b> std::locale&amp; Loc=std::locale() );
+
+    <b>template</b>&lt; <b>typename</b> SeqT &gt;
+    string_algo::detail::isfromF&lt;SeqT&gt; isfrom( <b>const</b> SeqT&amp; Seq );</pre>
+  <p>
+    Parameters:
+  </p>
+  <table border="0" width="574" height="1">
+    <tr>
+      <td width="418" height="31" valign="top"><code>std::ctype_base::mask Type</code></td>
+      <td width="728" height="31" valign="top">A bit mask identifying a matching
+        character class. Can be any combination of std::ctype_base::mask
+        constants.</td>
+    </tr>
+    <tr>
+      <td width="418" height="31" valign="top"><code><b>const</b> SeqT&amp; Seq</code></td>
+      <td width="728" height="31" valign="top">Members of this seqence define a
+        set of matching characters.</td>
+    </tr>
+    <tr>
+      <td width="418" height="31" valign="top"><code><b>const</b> std::locale&amp;
+        Loc</code></td>
+      <td width="728" height="31" valign="top">An instance of locales which will
+        be used by a predicate</td>
+    </tr>
+  </table>
+  <hr>
+  <p>
+    (C) Copyright Pavol Droba 2003. Permission to copy, use, modify, sell and
+    distribute this software is granted provided this copyright notice appears
+    in all copies. This software is provided &quot;as is&quot; without express
+    or implied warranty, and with no claim as to its suitability for any
+    purpose.
+  </p>
+
+</body>
+
+</html>

@@ -98,7 +98,7 @@ namespace boost {
                     m_Type(Type), m_CType(std::use_facet< std::ctype<CharT> >(Loc)) {}
 
                 // Operation
-                result_type operator ()( argument_type Ch ) const
+                result_type operator()( argument_type Ch ) const
                 {
                     return m_CType.is(m_Type, Ch); 
                 }
@@ -123,7 +123,7 @@ namespace boost {
                 isfromF( const SeqT& Seq ) : m_Set( Seq.begin(), Seq.end() ) {}
                 
                 // Operation
-                result_type operator ()( argument_type Ch ) const
+                result_type operator()( argument_type Ch ) const
                 {
                     return m_Set.find( Ch )!=m_Set.end();
                 }

@@ -11,7 +11,6 @@
 #define BOOST_STRING_REGEX_HPP
 
 #include <boost/regex.hpp>
-#include <boost/string_algo/config.hpp>
 #include <boost/string_algo/traits.hpp>
 #include <boost/string_algo/iterator_range.hpp>
 #include <boost/string_algo/find_impl.hpp>
@@ -50,34 +49,19 @@ namespace boost {
         typename CharT, 
         typename RegexTraitsT, typename RegexAllocatorT>
     inline string_algo::detail::
-        regex_search_result< typename InputT::const_iterator >
+        regex_search_result< 
+			typename string_algo::input_policy<InputT>::iterator_type >
     find_regex( 
-        const InputT& Input, 
-        const reg_expression<CharT, RegexTraitsT, RegexAllocatorT>& Rx,
-        unsigned int MatchFlags=match_default )
-    {
-        return string_algo::find( 
-            Input, 
-            string_algo::detail::
-                create_find_regexF<InputT>::create_const( Rx, MatchFlags ) );
-    }
-
-    // find_first sequence non-const version
-    template< 
-        typename InputT, 
-        typename CharT, 
-        typename RegexTraitsT, typename RegexAllocatorT>
-    inline string_algo::detail::
-        regex_search_result< typename InputT::iterator >
-    BOOST_STRING_MUTABLE_FUN(find_regex)( 
         InputT& Input, 
         const reg_expression<CharT, RegexTraitsT, RegexAllocatorT>& Rx,
         unsigned int MatchFlags=match_default )
     {
         return string_algo::find( 
             Input, 
-            string_algo::detail::
-                create_find_regexF<InputT>::create( Rx, MatchFlags ) );
+            string_algo::detail::find_regexF<
+				InputT,
+				reg_expression<CharT, RegexTraitsT, RegexAllocatorT>,
+				typename string_algo::input_policy<InputT>::policy >( Rx, MatchFlags ) );
     }
 
 //  replace_regex --------------------------------------------------------------------//

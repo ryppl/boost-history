@@ -187,8 +187,7 @@ void substr()
 
     cout << endl;
 
-    iterator_range<string::iterator> nc_result=
-        BOOST_STRING_MUTABLE_FUN(find_first)( str1, str2 );
+    iterator_range<string::iterator> nc_result=find_first( str1, str2 );
     cout << string( nc_result.begin(), str1.end() ) << endl;
     cout << string( str1.begin(), nc_result.end() ) << endl;
 
@@ -214,7 +213,7 @@ void substr()
 
     cout << endl;
 
-    nc_result=BOOST_STRING_MUTABLE_FUN(find_last)( str1, str2 );
+    nc_result=find_last( str1, str2 );
     cout << string( nc_result.begin(), str1.end() ) << endl;
     cout << string( str1.begin(), nc_result.end() ) << endl;
 
@@ -240,7 +239,7 @@ void substr()
 
     cout << endl;
 
-    nc_result=BOOST_STRING_MUTABLE_FUN(find_nth)( str1, str2, 1 );
+    nc_result=find_nth( str1, str2, 1 );
     cout << string( nc_result.begin(), str1.end() ) << endl;
     cout << string( str1.begin(), nc_result.end() ) << endl;
 

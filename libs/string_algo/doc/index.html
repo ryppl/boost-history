@@ -1,32 +1,35 @@
 <!doctype html public "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
-	<head>
-		<title>String Algorithm Library</title>
-		<meta content="Pavol Droba, mailto:droba@topmail.sk" name="author">
-	</head>
-	<body text="#000000" bgcolor="#ffffff">
-		<h1><img id="IMG1" height="86" src="../../../c++boost.gif" width="277" align="middle" border="0">
-			String Algorithm Library
-		</h1>
-		<ul>
-			<li>
-				<a href="#intro">Introduction</a>
-			<li>
-				Using The String Algorithm Library
-				<ul>
-					<li>
-						<a href="#trim">Trim</a></A>
-					<li>
-						<a href="#case_conv">Case conversion</a>
-					<li>
-						<a href="#predicate">Predicates</a>
-					<li>
-						<a href="#find">Find</a>
-					<li>
-						<a href="#replace">Replace/Erase</a>
-					</li>
-				</ul>
-			<li>
+
+<head>
+  <title>String Algorithm Library</title>
+  <meta content="Pavol Droba, mailto:droba@topmail.sk" name="author">
+  <meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+  <meta name="ProgId" content="FrontPage.Editor.Document">
+</head>
+
+<body text="#000000" bgcolor="#ffffff">
+
+  <table border="0" width="799" height="134">
+    <tr>
+      <td width="288" height="134"><img id="IMG1" src="../../../c++boost.gif"
+        align="middle" border="0" width="277" height="86"></td>
+      <td width="1152" height="134">
+        <h1 align="center">String Algorithm Library</h1>
+      </td>
+    </tr>
+  </table>
+  <ul>
+    <li><a href="#intro">Introduction</a>
+    <li>Reference
+      <ul>
+        <li><a href="trim.html">Trim</a></li>
+        <li><a href="conv.html">Case Conversion</a>
+        <li><a href="predicate.html">Predicates</a>
+        <li><a href="#find">Find</a></li>
+        <li><a href="#replace">Replace/Erase</a></li>
+      </ul>
+      <!--			<li>
 				Extending and Customization
 				<ul>
 					<li>
@@ -43,62 +46,47 @@
 					Replace format
 					</li>
 				</ul>
-			</li>
-		</ul>
-		<hr>
-		<h2><a name="#intro">Introduction</a></h2>
-		<p>The String Algorithm Library provide a generic implementation of various 
-			string-related algorithms which are missing in STL. It&nbsp;can be seen as an 
-			extension to algorithms library of STL. Algorithm in this library includes 
-			trimming, case conversion, predicates and find/replace routines. All of them 
-			come in different variants so it is easier to choose the best fit for a current 
-			need.
-		</p>
-		<p>Implementation is not restricted to a particular container ( like a 
-			std::basic_string ), rather it is as generic as possible. Generalising is not 
-			compromising the performance, algorithms are specialized&nbsp;for 
-			specific&nbsp;containers, when there is a possibility for optimization.</p>
-		<comment>
+			</li> -->
+  </ul>
+  <hr>
+  <h2><a name="#intro">Introduction</a></h2>
+  <p>
+    The String Algorithm Library provides a generic implementation of various
+    string-related algorithms which are missing in STL. It&nbsp;is an extension
+    to algorithms library of STL. Algorithm in this library includes trimming,
+    case conversion, predicates and find/replace routines. All of them come in
+    different variants so it is easier to choose the best fit for a current
+    need.
+  </p>
+  <p>
+    Implementation is not restricted to a particular container ( like a
+    std::basic_string ), rather it is as generic as possible. Generalization is
+    not compromising the performance, algorithms are using container specific
+    features when it means a performance gain.
+  </p>
+        
+  <!--        
 		<p>Many algorithms in this library are implemented using 2 layer structure. There 
 			is a generic algorithm in the bottom layer, which is highly paramertic and so 
 			not very well suited for general usage. The second layer consist of various 
 			specializations for a given algorithm. An example is <code>replace()</code> algorithm. 
 			The generic version of <code>replace()</code> accepts a <em>find</em> and <em>format</em>
 			functors as a parameters. The library contains an implementaion of several 
-			functors which can be used in this place. <code>raplace_firs()</code> as a 
+			functors which can be used in this place. <code>replace_first()</code> as a 
 			second layer algorithm is a simple wrapper around <code>replace</code> that 
 			instantiates <code>find_firstF</code> functor and calls a generic version of 
 			the <code>replace()</code> to do the job.
 		</p>
-		</comment>
-		<h2>U<a name="#using">sing the String Algorithm Library</a></h2>
-		<h3>General&nbsp;Conventions</h3>
-		<p>&nbsp;</p>
-		<p></p>
-		<h3><a name="#trim">Trim</a></h3>
-		<p>Trimming algorithms are included in <a href="../../../boost/string_algo/trim.hpp">&lt;boost/string_algo/trim.hpp&gt;</a></p>
-		<p></p>
-		<h3><a name="#case_conv">Case Conversion</a></h3>
-		<p>Case conversion&nbsp;algorithms are included in <a href="../../../boost/string_algo/conv.hpp">
-				&lt;boost/string_algo/case_conv.hpp&gt;</a></p>
-		<p></p>
-		<h3><a name="#predicate">Predicates</a></h3>
-		<p>Predicate algorithms are included in <a href="../../../boost/string_algo/predicate.hpp">
-				&lt;boost/string_algo/predicate.hpp&gt;</a></p>
-		<p></p>
-		<h3><a name="#find"></a>Find</h3>
-		<p>Find&nbsp;algorithms are included in <a href="../../../boost/string_algo/find.hpp">&lt;boost/string_algo/find.hpp&gt;</a></p>
-		<p></p>
-		<h3><a name="#replace"></a>Replace/Erase</h3>
-		<p>Replace/Erase&nbsp;algorithms are included in <a href="../../../boost/string_algo/replace.hpp">
-				&lt;boost/string_algo/replace.hpp&gt;</a>&nbsp;and <a href="../../../boost/string_algo/erase.hpp">
-				&lt;boost/string_algo/erase.hpp&gt;</a></p>
-		<p></p>
-		<h2><a name="#extend">Extending and Customization</a></h2>
-		<hr>
-		(C) Copyright Pavol Droba 2002. Permission to copy, use, modify, sell and 
-		distribute this software is granted provided this copyright notice appears in 
-		all copies. This software is provided "as is" without express or implied 
-		warranty, and with no claim as to its suitability for any purpose.
-	</body>
+-->
+  <hr>
+  <p>
+    (C) Copyright Pavol Droba 2003. Permission to copy, use, modify, sell and
+    distribute this software is granted provided this copyright notice appears
+    in all copies. This software is provided &quot;as is&quot; without express
+    or implied warranty, and with no claim as to its suitability for any
+    purpose.
+  </p>
+
+</body>
+
 </html>

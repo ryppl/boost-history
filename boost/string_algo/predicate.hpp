@@ -10,54 +10,28 @@
 #ifndef BOOST_STRING_PREDICATE_HPP
 #define BOOST_STRING_PREDICATE_HPP
 
-#include <algorithm>
-
-#include <boost/string_algo/traits.hpp>
 #include <boost/string_algo/find.hpp>
+#include <boost/string_algo/detail/predicate.hpp>
 
 namespace boost {
 
-//  prefix predicates  -----------------------------------------------//
+//  starts_with predicate  -----------------------------------------------//
 
     // start_with iterator version
-    template< typename InputIterator, typename SubIterator >
+    template< typename InputIteratorT, typename SubIteratorT >
     inline bool starts_with( 
-        InputIterator Begin, 
-        InputIterator End, 
-        SubIterator SubBegin,
-        SubIterator SubEnd )
+        InputIteratorT Begin, 
+        InputIteratorT End, 
+        SubIteratorT SubBegin,
+        SubIteratorT SubEnd )
     {
-        InputIterator it=Begin;
-        SubIterator pit=SubBegin;
+        InputIteratorT it=Begin;
+        SubIteratorT pit=SubBegin;
         for(;
             it!=End && pit!=SubEnd;
             it++,pit++)
         {
             if( !( (*it)==(*pit) ) )
-                return false;
-        }
-
-        return pit==SubEnd;
-    }
-
-    template< 
-        typename InputIterator, 
-        typename SubIterator, 
-        typename BinaryPredicate >
-    inline bool start_with( 
-        InputIterator Begin, 
-        InputIterator End, 
-        SubIterator SubBegin,
-        SubIterator SubEnd,
-        BinaryPredicate Comp )
-    {
-        InputIterator it=Begin;
-        SubIterator pit=SubBegin;
-        for(;
-            it!=End && pit!=SubEnd;
-            it++,pit++)
-        {
-            if( !Comp(*it,*pit ) )
                 return false;
         }
 
@@ -73,24 +47,41 @@ namespace boost {
         return starts_with( Input.begin(), Input.end(), Substr.begin(), Substr.end() );
     }
 
+//  ends_with predicate  -----------------------------------------------//
+
+	template< typename InputIteratorT, typename SubIteratorT >
+    inline bool ends_with( 
+        InputIteratorT Begin, 
+        InputIteratorT End, 
+        SubIteratorT SubBegin,
+        SubIteratorT SubEnd )
+    {
+        typedef typename boost::detail::
+			iterator_traits<InputIteratorT>::iterator_category category;
+
+		return string_algo::detail::
+			ends_with_iter_select( 
+				Begin, End, SubBegin, SubEnd, category() );
+    }
+
     // end_with sequence version
     template< typename SeqT1, typename SeqT2 >
     inline bool ends_with( 
         const SeqT1& Input, 
         const SeqT2& Substr )
     {
-        return starts_with( Input.rbegin(), Input.rend(), Substr.rbegin(), Substr.rend() );
+        return ends_with( Input.begin(), Input.end(), Substr.begin(), Substr.end() );
     }
 
-//  contains predicates  -----------------------------------------------//
+//  contains predicate  -----------------------------------------------//
 
     // contains iterator version
-    template< typename InputIterator, typename SubIterator >
+    template< typename InputIteratorT, typename SubIteratorT >
     inline bool contains( 
-        InputIterator Begin, 
-        InputIterator End, 
-        SubIterator SubBegin,
-        SubIterator SubEnd )
+        InputIteratorT Begin, 
+        InputIteratorT End, 
+        SubIteratorT SubBegin,
+        SubIteratorT SubEnd )
     {
         if ( SubBegin==SubEnd )
         {
@@ -114,44 +105,20 @@ namespace boost {
 //  equal predicate  -----------------------------------------------//
 
     // equal iterator version
-    template< typename InputIterator, typename SubIterator >
+    template< typename InputIteratorT, typename SubIteratorT >
     inline bool equals( 
-        InputIterator Begin, 
-        InputIterator End, 
-        SubIterator SubBegin,
-        SubIterator SubEnd )
+        InputIteratorT Begin, 
+        InputIteratorT End, 
+        SubIteratorT SubBegin,
+        SubIteratorT SubEnd )
     {
-        InputIterator it=Begin;
-        SubIterator pit=SubBegin;
+        InputIteratorT it=Begin;
+        SubIteratorT pit=SubBegin;
         for(;
             it!=End && pit!=SubEnd;
             it++,pit++)
         {
             if( !( (*it)==(*pit) ) )
-                return false;
-        }
-
-        return ( pit==SubEnd ) && ( it==End );
-    }
-
-    template< 
-        typename InputIterator, 
-        typename SubIterator, 
-        typename BinaryPredicate >
-    inline bool equals( 
-        InputIterator Begin, 
-        InputIterator End, 
-        SubIterator SubBegin,
-        SubIterator SubEnd,
-        BinaryPredicate Comp )
-    {
-        InputIterator it=Begin;
-        SubIterator pit=SubBegin;
-        for(;
-            it!=End && pit!=SubEnd;
-            it++,pit++)
-        {
-            if( !Comp(*it,*pit) )
                 return false;
         }
 

@@ -79,7 +79,7 @@ namespace boost {
             return m_Begin==m_End; 
         }
         
-        difference_type size() 
+        difference_type size() const
         { 
             return std::distance( m_Begin, m_End ); 
         }

@@ -1,0 +1,396 @@
+<!doctype html public "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+
+<head>
+  <meta http-equiv="Content-Language" content="en-gb">
+  <meta name="author" content="Pavol Droba, mailto:droba@topmail.sk">
+  <meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+  <meta name="ProgId" content="FrontPage.Editor.Document">
+  <title>String Algorithm Library</title>
+</head>
+
+<body text="#000000" bgcolor="#ffffff">
+
+  <div align="left">
+    <table border="0" width="799" height="134">
+      <tr>
+        <td width="288" height="134"><img id="IMG1" src="../../../c++boost.gif"
+          align="middle" border="0" width="277" height="86"></td>
+        <td width="1152" height="134">
+          <h1 align="center">&nbsp;String Algorithm Library&nbsp;</h1>
+          <h2 align="center">Find</h2>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <ul>
+    <li><a href="##find_algorithms">Find Algorithms</a>
+      <ul>
+        <li><a href="##fa_overview">Overview</a></li>
+      </ul>
+    </li>
+    <li><a href="##iterator_range">iterator_range class</a>
+      <ul>
+        <li><a href="##iter_description">Description</a></li>
+        <li><a href="##iter_synopsis">Synopsis</a></li>
+      </ul>
+    </li>
+    <li><a href="##user_api">User-level API</a>
+      <ul>
+        <li><a href="##ua_description">Description</a></li>
+        <li><a href="##ua_synopsis">Synopsis</a>&nbsp;&nbsp;&nbsp;&nbsp;</li>
+      </ul>
+    </li>
+    <li><a href="##low_api">Low-level API</a>
+      <ul>
+        <li><a href="##la_description">Description</a></li>
+        <li><a href="##la_synopsis">Synopsis</a>&nbsp;&nbsp;&nbsp;&nbsp;</li>
+      </ul>
+    </li>
+    <li><a href="##functors">Find functors</a>
+      <ul>
+        <li><a href="##fun_description">Description</a></li>
+        <li><a href="##fun_synopsis">Synopsis</a>&nbsp;&nbsp;&nbsp;&nbsp;</li>
+      </ul>
+    </li>
+  </ul>
+  <hr>
+  <h2><a name="#find_algorithms">Find Algorithms</a></h2>
+  <h3><a name="#fa_overview">Overview</a></h3>
+  <p>
+    Find algorithms are used to search for a substring matching a specific
+    criteria. Result is given as a pair of iterators (represented by an instance
+    of <code>iterator_range</code>) pointing into input sequence. Matching
+    criteria is specific per find algorithm. <a href="##low_api">Low-level API</a>
+    provides a generic functor based interface. <a href="##user_api">User-level
+    API</a> encapsulates calls to low-level API using <a href="##functors">functors</a>
+    provided with the library.
+  </p>
+  <hr>
+  <h2><a name="#iterator_range">iterator_range class</a></h2>
+  <h3><a name="#iter_description">Description</a></h3>
+  <p>
+    <code>iterator_range</code> class included in <a
+    href="../../../boost/string_algo/trim.hpp">&lt;boost/string_algo/iterator_range.hpp&gt;</a>
+    header ( in <code>boost</code> namespace&nbsp; ).<br>
+    Many algorithms working with sequences take a pair of iterators, delimiting
+    a working range, as an arguments. <code>iterator_range</code> class is an
+    encapsulation of a range identified by a pair of iterators. It provides a
+    minimal sequence interface, so it is possible to pass an instance to an
+    algorithm requiring a sequence as an input. This utility class also
+    simplifies a design of an algorithm library, beacuse it is enough to provide
+    just a sequence variant.
+  </p>
+  <h3><a name="#iter_synopsis">Synopsis</a></h3>
+  <pre>    <b>template</b>&lt; <b>typename</b> IteratorT &gt; 
+    <b>class</b> iterator_range
+    {
+    <b>public</b>:
+        <b>typedef</b> iterator_range&lt;IteratorT&gt; type;
+        <b>typedef</b> <b>typename</b> boost::detail::
+            iterator_traits&lt;IteratorT&gt;::value_type value_type;
+        <b>typedef</b> typename boost::detail::
+            iterator_traits&lt;IteratorT&gt;::difference_type difference_type;
+        <b>typedef</b> IteratorT const_iterator;
+        <b>typedef</b> IteratorT iterator;</pre>
+  <pre>        iterator_range();
+        iterator_range( iterator Begin, iterator End );
+        <b>template</b>&lt; <b>typename</b> OtherItT &gt;
+        iterator_range( <b>const</b> iterator_range&lt;OtherItT&gt;&amp; Other );
+
+        <b>template</b>&lt; <b>typename</b> OtherItT &gt;
+        iterator_range&amp; <b>operator</b>=( <b>const</b> iterator_range&lt;OtherItT&gt;&amp; Other );
+
+        <b>template</b>&lt; <b>typename</b> OtherItT &gt; 
+        <b>bool</b> <b>operator</b>==( <b>const</b> iterator_range&lt;OtherItT&gt;&amp; Other );
+        <b>template</b>&lt; <b>typename</b> OtherItT &gt; 
+        <b>bool</b> <b>operator</b>!=( <b>const</b> iterator_range&lt;OtherItT&gt;&amp; Other );
+        IteratorT begin() <b>const</b>;
+        IteratorT end() <b>const</b>;
+        <b>bool</b> empty() <b>const</b>;
+        difference_type size() <b>const</b>;
+    };</pre>
+  <p>
+    Class members:
+  </p>
+  <table border="0" width="602" height="1">
+    <tr>
+      <td width="602" height="31" valign="top"><code><b>typename</b> IteratorT</code></td>
+      <td width="572" height="31" valign="top">An iterator type, to be contained
+        by the iteratator_range</td>
+    </tr>
+    <tr>
+      <td width="602" height="31" valign="top"><code>type</code></td>
+      <td width="572" height="31" valign="top">Self type</td>
+    </tr>
+    <tr>
+      <td width="602" height="31" valign="top"><code>value_type</code></td>
+      <td width="572" height="31" valign="top">value_type of the contained
+        iterator</td>
+    </tr>
+    <tr>
+      <td width="602" height="31" valign="top"><code>difference_type</code></td>
+      <td width="572" height="31" valign="top">difference_type of the container
+        iterator</td>
+    </tr>
+    <tr>
+      <td width="602" height="31" valign="top"><code>const_iterator</code></td>
+      <td width="572" height="31" valign="top">const_iterator type</td>
+    </tr>
+    <tr>
+      <td width="602" height="31" valign="top"><code>iterator</code></td>
+      <td width="572" height="31" valign="top">iterator type</td>
+    </tr>
+    <tr>
+      <td width="602" height="31" valign="top"><code>iterator_range()</code></td>
+      <td width="572" height="31" valign="top">Default contructor</td>
+    </tr>
+    <tr>
+      <td width="602" height="31" valign="top"><code>iterator_range( <br>
+        &nbsp;&nbsp;&nbsp; iterator Begin, iterator End )</code></td>
+      <td width="572" height="31" valign="top">Contructor from a pair of
+        iterators</td>
+    </tr>
+    <tr>
+      <td width="602" height="31" valign="top"><code>iterator_range(<b><br>
+        &nbsp; const</b> iterator_range&lt;OtherItT&gt;&amp;Other)</code></td>
+      <td width="572" height="31" valign="top">Copy constructor. Templated to
+        make possible a conversion between const_iterator and iterator types</td>
+    </tr>
+    <tr>
+      <td width="602" height="31" valign="top">i<code>terator_range&amp; <b>operator</b>=(<br>
+        &nbsp; <b>const</b> iterator_range&lt;OtherItT&gt;&amp; Other)</code></td>
+      <td width="572" height="31" valign="top">Assignment. Templated to make
+        possible a conversion between const_iterator and iterator types</td>
+    </tr>
+    <tr>
+      <td width="602" height="31" valign="top"><code><b>bool</b> <b>operator</b>==(<br>
+        &nbsp; <b>const</b> iterator_range&lt;OtherItT&gt;&amp; Other)<b><br>
+        bool</b> <b>operator</b>!=(<br>
+        &nbsp; <b>const</b> iterator_range&lt;OtherItT&gt;&amp; Other)</code></td>
+      <td width="572" height="31" valign="top">Comparison operators.</td>
+    </tr>
+    <tr>
+      <td width="602" height="31" valign="top"><code>IteratorT begin() <b>const</b></code></td>
+      <td width="572" height="31" valign="top">Returns first iterator from the
+        range</td>
+    </tr>
+    <tr>
+      <td width="602" height="31" valign="top"><code>IteratorT end() <b>const</b></code></td>
+      <td width="572" height="31" valign="top">Returns second iterator from the
+        range</td>
+    </tr>
+    <tr>
+      <td width="602" height="31" valign="top"><code><b>bool</b> empty() <b>const</b></code></td>
+      <td width="572" height="31" valign="top">Check if the range is empty.<br>
+        <code>begin()==end()</code></td>
+    </tr>
+    <tr>
+      <td width="602" height="31" valign="top"><code>difference_type size() <b>const</b></code></td>
+      <td width="572" height="31" valign="top">Returns the distance between
+        iterators.<br>
+        <code>std::distance(begin(), end())</code></td>
+    </tr>
+  </table>
+  <hr>
+  <h2><a name="#user_api">User-level API</a></h2>
+  <h3><a name="#ua_description">Description</a></h3>
+  <p>
+    included in <a href="../../../boost/string_algo/trim.hpp">&lt;boost/string_algo/trim.hpp&gt;</a>
+    header ( in <code>boost</code> namespace&nbsp; ).<br>
+  </p>
+  <h3><a name="#ua_synopsis">Synopsis</a></h3>
+  <hr>
+  <h2><a name="#low_api">Low-level API</a></h2>
+  <h3><a name="#la_description">Description</a></h3>
+  <h3><a name="#la_synopsis">Synopsis</a></h3>
+  <hr>
+  <h2><a name="#functors">Find Functors</a></h2>
+  <h3><a name="#fun_description">Description</a></h3>
+  <h3><a name="#fun_synopsis">Synopsis</a></h3>
+  <table border="0" width="601" height="21">
+  </table>
+  <table border="1" height="28" width="827">
+    <tr>
+      <th height="30" valign="top" align="center">Function</th>
+      <th height="30" width="234">Description</th>
+      <th height="30" width="464">Example</th>
+    </tr>
+    <tr>
+      <td height="28" valign="top" align="center"><code>trim_left_copy_if</code></td>
+      <td height="28" valign="top" align="center" width="234">Remove leading
+        spaces. Copy version with IsSpace predicate.</td>
+      <td height="28" valign="top" align="center" width="464"><code>trim_left_copy_if(ostream_iterator&lt;char&gt;(cout),
+        Begin, End, isfrom( string(&quot;&lt;&gt;&quot;) );<br>
+        str=trim_left_copy_if(str, isspace&lt;char&gt;() );</code></td>
+    </tr>
+    <tr>
+      <td height="30" valign="top" align="center"><code>trim_left_if</code></td>
+      <td height="30" valign="top" align="center" width="234">Remove leading
+        spaces. In-place version with IsSpace predicate.</td>
+      <td height="30" valign="top" align="center" width="464"><code>str=trim_left_if(str,
+        isspace&lt;char&gt;() );</code></td>
+    </tr>
+    <tr>
+      <td height="30" valign="top" align="center"><code>trim_left_copy</code></td>
+      <td height="28" valign="top" align="center" width="234">Remove leading
+        spaces. Copy version.</td>
+      <td height="28" valign="top" align="center" width="464"><code>trim_left_copy(ostream_iterator&lt;char&gt;(cout),
+        Begin, End, std::locale(&quot;German_germany&quot;) );<br>
+        str=trim_left_copy(str);</code></td>
+    </tr>
+    <tr>
+      <td height="30" valign="top" align="center"><code>trim_left</code></td>
+      <td height="30" valign="top" align="center" width="234">Remove leading
+        spaces. In-place version .</td>
+      <td height="30" valign="top" align="center" width="464"><code>trim_left(str);</code><br>
+      </td>
+    </tr>
+    <tr>
+      <td height="28" valign="top" align="center"><code>trim_right_copy_if</code></td>
+      <td height="28" valign="top" align="center" width="234">Remove trailing
+        spaces. Copy version with IsSpace predicate.</td>
+      <td height="28" valign="top" align="center" width="464"><code>trim_right_copy_if(ostream_iterator&lt;char&gt;(cout),
+        Begin, End, isfrom( string(&quot;&lt;&gt;&quot;) );<br>
+        str=trim_right_copy_if(str, isspace&lt;char&gt;() );</code></td>
+    </tr>
+    <tr>
+      <td height="30" valign="top" align="center"><code>trim_right_if</code></td>
+      <td height="30" valign="top" align="center" width="234">Remove trailing
+        spaces. In-place version with IsSpace predicate.</td>
+      <td height="30" valign="top" align="center" width="464"><code>str=trim_right_if(str,
+        isspace&lt;char&gt;() );</code></td>
+    </tr>
+    <tr>
+      <td height="30" valign="top" align="center"><code>trim_right_copy</code></td>
+      <td height="28" valign="top" align="center" width="234">Remove trailing
+        spaces. Copy version.</td>
+      <td height="28" valign="top" align="center" width="464"><code>trim_right_copy(ostream_iterator&lt;char&gt;(cout),
+        Begin, End, std::locale(&quot;German_germany&quot;) );<br>
+        str=trim_right_copy(str);</code></td>
+    </tr>
+    <tr>
+      <td height="30" valign="top" align="center"><code>trim_right</code></td>
+      <td height="30" valign="top" align="center" width="234">Remove trailing
+        spaces. In-place version .</td>
+      <td height="30" valign="top" align="center" width="464"><code>trim_right(str);</code><br>
+      </td>
+    </tr>
+    <tr>
+      <td height="28" valign="top" align="center"><code>trim_copy_if</code></td>
+      <td height="28" valign="top" align="center" width="234">Remove trailing
+        and leading spaces. Copy version with IsSpace predicate.</td>
+      <td height="28" valign="top" align="center" width="464"><code>trim_copy_if(ostream_iterator&lt;char&gt;(cout),
+        Begin, End, isfrom( string(&quot;&lt;&gt;&quot;) );<br>
+        str=trim_copy_if(str, isspace&lt;char&gt;() );</code></td>
+    </tr>
+    <tr>
+      <td height="30" valign="top" align="center"><code>trim_if</code></td>
+      <td height="30" valign="top" align="center" width="234">Remove trailing
+        and leading spaces. In-place version with IsSpace predicate.</td>
+      <td height="30" valign="top" align="center" width="464"><code>str=trim_if(str,
+        isspace&lt;char&gt;() );</code></td>
+    </tr>
+    <tr>
+      <td height="30" valign="top" align="center"><code>trim_copy</code></td>
+      <td height="28" valign="top" align="center" width="234">Remove trailing
+        and leading spaces. Copy version.</td>
+      <td height="28" valign="top" align="center" width="464"><code>trim_copy(ostream_iterator&lt;char&gt;(cout),
+        Begin, End, std::locale(&quot;German_germany&quot;) );<br>
+        str=trim_copy(str);</code></td>
+    </tr>
+    <tr>
+      <td height="30" valign="top" align="center"><code>trim</code></td>
+      <td height="30" valign="top" align="center" width="234">Remove trailing
+        and leading spaces. In-place version .</td>
+      <td height="30" valign="top" align="center" width="464"><code>trim(str);</code><br>
+      </td>
+    </tr>
+  </table>
+  <div align="left">
+    <table border="0" width="574" height="1">
+      <tr>
+        <td width="418" height="31" valign="top"><code>OutputIteratorT Output</code></td>
+        <td width="728" height="31" valign="top">Output iterator for the result.
+          The result of the operation will be sent to this iterator.</td>
+      </tr>
+      <tr>
+        <td width="418" height="31" valign="top"><code>InputIteratorT Begin</code></td>
+        <td width="728" height="31" valign="top">Begin of an input sequence</td>
+      </tr>
+      <tr>
+        <td width="418" height="31" valign="top"><code>InputIteratorT End</code></td>
+        <td width="728" height="31" valign="top">End of an input sequence</td>
+      </tr>
+      <tr>
+        <td width="418" height="31" valign="top"><code><b>const</b> SeqT&amp;
+          Input</code></td>
+        <td width="728" height="31" valign="top">An input sequence (const)</td>
+      </tr>
+      <tr>
+        <td width="418" height="31" valign="top"><code>SeqT&amp; Input</code></td>
+        <td width="728" height="31" valign="top">An input sequence (mutable)</td>
+      </tr>
+      <tr>
+        <td width="418" height="31" valign="top">PredicateT Predicate</td>
+        <td width="728" height="31" valign="top">Space selection predicate.</td>
+      </tr>
+      <tr>
+        <td width="418" height="31" valign="top"><code><b>const</b>
+          std::locale&amp; Loc</code></td>
+        <td width="728" height="31" valign="top">An instance of locales which
+          will be used for conversion</td>
+      </tr>
+    </table>
+  </div>
+  <p>
+    Table shows the functionality of provided functors.
+  </p>
+  <div align="left">
+    <table border="1" height="28" width="814">
+      <tr>
+        <th height="30" valign="top" align="center" width="101">Predicate</th>
+        <th height="30" width="237">Description</th>
+        <th height="30" width="162">Underlaying functor</th>
+        <th height="30" width="290">Example</th>
+      </tr>
+      <tr>
+        <td height="28" valign="top" align="center" width="101"><code>isclassified</code>&nbsp;</td>
+        <td height="28" valign="top" align="center" width="237">Match any
+          character matching a characted class defined by Type parameter and
+          locale.</td>
+        <td height="28" valign="top" align="center" width="162"><code>isclassifiedF&lt;CharT&gt;</code></td>
+        <td height="28" valign="top" align="center" width="290"><code>isclassified(std::ctype_base::digit)<br>
+          </code>Creates a functor, that matches all digits.</td>
+      </tr>
+      <tr>
+        <td height="30" valign="top" align="center" width="101">isspace</td>
+        <td height="30" valign="top" align="center" width="237">Match a space.
+          Instance of <code>isclassified</code> for <code>std::ctype_base::space</code>
+          type</td>
+        <td height="30" valign="top" align="center" width="162"><code>isclassifiedF&lt;CharT&gt;</code></td>
+        <td height="30" valign="top" align="center" width="290"><code>isspace()</code><br>
+          Creates a functore that matches all spaces.</td>
+      </tr>
+      <tr>
+        <td height="30" valign="top" align="center" width="101">isfrom</td>
+        <td height="30" valign="top" align="center" width="237">Match any
+          charater from the input sequence</td>
+        <td height="30" valign="top" align="center" width="162">isfromF&lt;SeqT&gt;</td>
+        <td height="30" valign="top" align="center" width="290"><code>isfrom(string(&quot;abc&quot;))<br>
+          </code>Creates a functor which matches any of the charaters a,b,c.</td>
+      </tr>
+    </table>
+  </div>
+  <hr>
+  <p>
+    (C) Copyright Pavol Droba 2003. Permission to copy, use, modify, sell and
+    distribute this software is granted provided this copyright notice appears
+    in all copies. This software is provided &quot;as is&quot; without express
+    or implied warranty, and with no claim as to its suitability for any
+    purpose.
+  </p>
+
+</body>
+
+</html>

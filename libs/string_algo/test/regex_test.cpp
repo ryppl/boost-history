@@ -41,7 +41,7 @@ static void find_test()
         (distance<string::const_iterator>( str1.begin(),cv_result.begin()) == 3) &&
         (distance<string::const_iterator>( str1.begin(),cv_result.end()) == 6) );
 
-    nc_result=BOOST_STRING_MUTABLE_FUN(find_regex)( str1, rx );
+    nc_result=find_regex( str1, rx );
     BOOST_CHECK( 
         (distance<string::const_iterator>( str1.begin(),nc_result.begin()) == 3) &&
         (distance<string::const_iterator>( str1.begin(),nc_result.end()) == 6) );
@@ -52,7 +52,7 @@ static void find_test()
         (distance<string::const_iterator>( str1.begin(),cv_result.end()) == 6) );
 
     // multi-type comparison test
-    nc_vresult=BOOST_STRING_MUTABLE_FUN(find_regex)( vec1, rx );
+    nc_vresult=find_regex( vec1, rx );
     BOOST_CHECK( 
         (distance<vector<int>::const_iterator>( vec1.begin(),nc_vresult.begin()) == 3) &&
         (distance<vector<int>::const_iterator>( vec1.begin(),nc_vresult.end()) == 6) );

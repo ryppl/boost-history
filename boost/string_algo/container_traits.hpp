@@ -10,7 +10,7 @@
 #ifndef BOOST_STRING_CONTAINER_TRAITS_HPP
 #define BOOST_STRING_CONTAINER_TRAITS_HPP
 
-#include <boost/string_algo/config.hpp>
+#include <boost/config.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/mpl/bool_c.hpp>
 #include <boost/mpl/find_if.hpp>

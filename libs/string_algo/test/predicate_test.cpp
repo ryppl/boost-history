@@ -70,6 +70,12 @@ void predicate_test()
     BOOST_CHECK( !contains( str2, string("abcd") ) );
     BOOST_CHECK( !equals( str2, string("abcd") ) );
 
+	// equal test
+    BOOST_CHECK( starts_with( str2, string("abc") ) );
+    BOOST_CHECK( ends_with( str2, string("abc") ) );
+    BOOST_CHECK( contains( str2, string("abc") ) );
+    BOOST_CHECK( equals( str2, string("abc") ) );
+
     //! Empty string test
     BOOST_CHECK( starts_with( str2, string("") ) );
     BOOST_CHECK( ends_with( str2, string("") ) );
