@@ -279,7 +279,10 @@ namespace boost {
   
   enum { kdst_t = ksrc_static_t + 1, koffset, ksrc_dynamic_t };
   typedef std::vector<cache_element> cache_t;
-  
+
+  typedef std::vector<boost::langbinding::inheritance_graph_base*> 
+     back_references_t;
+
 }} // boost::unnamed namespace
 
 namespace boost { namespace langbinding {
@@ -385,18 +388,19 @@ namespace boost { namespace langbinding {
       implementation()
          : expected_cache_len(0)
       {}
-      
+
       smart_graph up_graph;
       smart_graph full_graph;
       type_index_t type_index;
       cache_t cache;
       std::size_t expected_cache_len;
+      back_references_t back_references;
    };
 
    void inheritance_graph_base::register_dynamic_id(
             class_id static_id, dynamic_id_function get_dynamic_id)
    {
-      tuples::get<kdynamic_id>(*m_pimpl->demand_type(static_id)) 
+      tuples::get<kdynamic_id>(*m_pimpl->demand_type(static_id))
          = get_dynamic_id;
    }
 
@@ -455,10 +459,10 @@ namespace boost { namespace langbinding {
          return;
 
       // copy the type index
-      for (type_index_t::iterator i = m_pimpl->type_index.begin()
-            ; i != m_pimpl->type_index.end(); ++i)
+      for (type_index_t::iterator i = that.m_pimpl->type_index.begin()
+            ; i != that.m_pimpl->type_index.end(); ++i)
       {
-         type_index_t::iterator x = that.m_pimpl->demand_type(
+         type_index_t::iterator x = m_pimpl->demand_type(
                tuples::get<ksrc_static_t>(*i));
          tuples::get<kdynamic_id>(*x) = tuples::get<kdynamic_id>(*i);
       }
@@ -467,7 +471,7 @@ namespace boost { namespace langbinding {
          , cast_graph::edge_iterator> edges_t;
 
       // only go throught the full graph, that holds ALL casts
-      cast_graph& g = m_pimpl->full_graph.topology();
+      cast_graph& g = that.m_pimpl->full_graph.topology();
 
       typedef property_map<cast_graph,edge_cast_t>::type cast_map;
       cast_map casts = get(edge_cast, g);
@@ -483,37 +487,54 @@ namespace boost { namespace langbinding {
          vertex_t dst = target(*e, g);
 
          type_index_t::iterator src_iter = std::find_if(
-                 m_pimpl->type_index.begin()
-               , m_pimpl->type_index.end()
+                 that.m_pimpl->type_index.begin()
+               , that.m_pimpl->type_index.end()
                , boost::bind<bool>(std::equal_to<vertex_t>()
                      , boost::bind<vertex_t>(select_nth<kvertex, index_entry>(), _1)
                      , src));
 
          type_index_t::iterator dst_iter = std::find_if(
-                 m_pimpl->type_index.begin()
-               , m_pimpl->type_index.end()
+                 that.m_pimpl->type_index.begin()
+               , that.m_pimpl->type_index.end()
                , boost::bind<bool>(std::equal_to<vertex_t>()
                      , boost::bind<vertex_t>(select_nth<kvertex, index_entry>(), _1)
                      , dst));
 
-         bool polymorphic = tuples::get<kdynamic_id>(*src_iter) != 0;
-            
+         bool downcast = !edge(src, dst,
+               that.m_pimpl->up_graph.topology()).second;
+
          class_id src_t = tuples::get<ksrc_static_t>(*src_iter);
          class_id dst_t = tuples::get<ksrc_static_t>(*dst_iter);
 
-         that.add_cast(src_t, dst_t, cast, polymorphic);
+         add_cast(src_t, dst_t, cast, downcast);
       }
 
-      m_pimpl = that.m_pimpl;
+      boost::shared_ptr<implementation> keep_alive(that.m_pimpl);
+
+      for (back_references_t::iterator i 
+            = keep_alive->back_references.begin()
+            ; i != keep_alive->back_references.end()
+            ; ++i)
+      {
+         inheritance_graph_base& back_ref = **i;
+         back_ref.m_pimpl = m_pimpl;
+         m_pimpl->back_references.push_back(&back_ref);
+      }
    }
 
    inheritance_graph_base::inheritance_graph_base()
       : m_pimpl(new implementation)
    {
+      m_pimpl->back_references.push_back(this);
    }
 
    inheritance_graph_base::~inheritance_graph_base()
    {
+      m_pimpl->back_references.erase(
+            std::find(
+               m_pimpl->back_references.begin()
+             , m_pimpl->back_references.end()
+             , this));
    }
 }}
 
