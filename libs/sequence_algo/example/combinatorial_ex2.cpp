@@ -36,6 +36,7 @@
 #include <string>
 #include <exception>
 #include <stdexcept>
+
 #include <cstdlib>
 #include <cassert>
 using namespace std;
@@ -70,16 +71,16 @@ vector<string> theSegs(tri, &tri[12]);
 vector<string> theSegs;
 #endif
 
-const int R = 4;    // select 4 three-letter at a time
+const int R = 4;    // select 4 three-letter words at a time
 
 #if _MSC_VER <= 1200
-//
+
 // Versions 6.0 and earlier of Microsoft's C++ compiler do not support
 // partial template specialization, so we'll need to explicitly specialize
-// iterator_traits for the container type, which is char* in this test app.
-// It is required only before the call to the default version of
-// prev_r_permutation,the one without the user-supplied compare function.
-//
+// iterator_traits for the container type, which is string* in this example
+// application. It is required only before the call to the default version
+// of prev_r_permutation,the one without the user-supplied compare function.
+
 namespace std {
    template<>
    struct iterator_traits<string*> {
@@ -90,8 +91,8 @@ namespace std {
        typedef string& reference;
    };
 }   // namespace std
-#endif  // MSC_VER
 
+#endif  // MSC_VER
 
 // WordSearch -----------------------------------------------------------//
 
