@@ -189,7 +189,7 @@ unit_test_result::confirmation_report( std::ostream& where_to )
     bool failed = m_pimpl->m_test_cases_failed != 0 || m_pimpl->is_failed();
 
     if( failed ) {
-        where_to << "\n*** Failures in \"" << m_pimpl->m_test_case_name << "\"" << std::endl;
+        where_to << "\n*** " << m_pimpl->m_assertions_failed << " Failures in \"" << m_pimpl->m_test_case_name << "\"" << std::endl;
     }
     else {
         char const* p = std::getenv( "BOOST_TEST_RESULT_CONFIRMATION" );
@@ -217,14 +217,14 @@ unit_test_result::short_report( std::ostream& where_to, int indent )
              << (failed ? "failed with:\n" : "passed with:\n");
 
     if( total_test_cases > 1 ) {
-        int width = static_cast<int>( std::log10( std::max( m_pimpl->m_test_cases_passed, m_pimpl->m_test_cases_failed ))) + 1;
+        int width = static_cast<int>( std::log10( (float)std::max( m_pimpl->m_test_cases_passed, m_pimpl->m_test_cases_failed ))) + 1;
         where_to << indent_string << std::setw( width ) << m_pimpl->m_test_cases_passed
                  << " test cases out of " << total_test_cases << " passed\n";
         where_to << indent_string << std::setw( width ) << m_pimpl->m_test_cases_failed
                  << " test cases out of " << total_test_cases << " failed\n";
     }
 
-    int width = total_assertions > 0 ? static_cast<int>( std::log10( std::max( m_pimpl->m_assertions_passed, m_pimpl->m_assertions_failed ))) + 1
+    int width = total_assertions > 0 ? static_cast<int>( std::log10( (float)std::max( m_pimpl->m_assertions_passed, m_pimpl->m_assertions_failed ))) + 1
                                      : 1;
     where_to << indent_string << std::setw( width ) << m_pimpl->m_assertions_passed << " assertions out of "
              << total_assertions << " passed\n";

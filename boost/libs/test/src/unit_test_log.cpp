@@ -14,6 +14,7 @@
 // BOOST
 #include <boost/scoped_ptr.hpp>
 #include <boost/progress.hpp>
+#include <boost/version.hpp>
 
 // STL
 #include <iostream>
@@ -314,9 +315,21 @@ unit_test_log::start( unit_test_counter test_cases_amount )
 {
     m_pimpl->m_expected_total_test_cases_amount = test_cases_amount;
 
-    if( m_pimpl->m_threshold_level != report_nothing )
+    if( m_pimpl->m_threshold_level != report_nothing ) {
         m_pimpl->stream() << "Running " << test_cases_amount << " test " 
                           << (test_cases_amount > 1 ? "cases" : "case") << "...\n";
+
+        if( m_pimpl->m_threshold_level <= report_test_suites ) {
+            m_pimpl->stream() << " Platform: " << BOOST_PLATFORM            << '\n'
+                              << " Compiler: " << BOOST_COMPILER            << '\n'
+                              << " STL     : " << BOOST_STDLIB              << '\n'
+                              << " Boost   : " << BOOST_VERSION/100000      << "." 
+                                               << BOOST_VERSION/100 % 1000  << "." 
+                                               << BOOST_VERSION % 100       << '\n';
+        }
+
+        
+    }
 
     m_pimpl->m_progress_display.reset( m_pimpl->m_threshold_level == report_progress_only         ?
         new boost::progress_display( m_pimpl->m_expected_total_test_cases_amount, m_pimpl->stream() ) :

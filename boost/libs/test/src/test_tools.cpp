@@ -207,7 +207,7 @@ struct output_test_stream::Impl
 output_test_stream::output_test_stream( char const* pattern_file, bool match_or_save )
 : m_pimpl( new Impl ) {
     if( pattern_file != NULL && pattern_file[0] != '\0' )
-        m_pimpl->m_pattern_to_match_or_save.open( pattern_file, match_or_save ? std::ios_base::in : std::ios_base::out );
+        m_pimpl->m_pattern_to_match_or_save.open( pattern_file, match_or_save ? std::ios::in : std::ios::out );
     m_pimpl->m_match_or_save = match_or_save;
 }
 
@@ -335,7 +335,7 @@ output_test_stream::match_pattern( bool flush_stream )
 
 void
 output_test_stream::flush() {
-    seekp( 0, std::ios_base::beg );
+    seekp( 0, std::ios::beg );
 }
 
 //____________________________________________________________________________//

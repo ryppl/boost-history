@@ -24,9 +24,9 @@ const struct parameter_names {
     char const* env_name;
     char const* cla_name;
 } parameter_cla_names [] = {
-    { LOGLEVEL          , "--loglevel" },
+    { LOGLEVEL          , "--log_level" },
     { NO_RESULT_CODE    , "--result_code" },
-    { RESULT_REPORT     , "--result_report" },
+    { RESULT_REPORT     , "--report_level" },
     { TESTS_TO_RUN      , "--run_test" },
     { SAVE_TEST_PATTERN , "--save_pattern" },
     { NULL              , NULL }
