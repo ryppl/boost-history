@@ -82,7 +82,7 @@ void test_vector_matrix()
     
 #if BOOST_WORKAROUND(BOOST_DINKUMWARE_STDLIB, == 1)    
 #else    
-/*    
+
     matrix3x3 m = list_of( list_of(1)(2)(3) )
                          ( list_of(4)(5)(6) )
                          ( list_of(7)(8)(9) );
@@ -94,14 +94,18 @@ void test_vector_matrix()
     typedef vector<int>  row;
     typedef vector<row>  matrix;
     
-    matrix m2 = list_of( list_of(1)(2)(3) )
-                       ( list_of(4)(5) )
-                       ( list_of(6) );
+    //
+    // note: some libraries need a little help
+    //       with the conversion, hence the 'row' template parameter. 
+    //
+    matrix m2 = list_of< row >( list_of(1)(2)(3) )
+                              ( list_of(4)(5) )
+                              ( list_of(6) );
     
     for( int i = 0; i != sz; ++i )
         for( int j = 0; j != sz - i; ++j )
             BOOST_CHECK_EQUAL( m[i][j], i*sz + j + 1 );
-*/
+
 #endif  
   
 }
