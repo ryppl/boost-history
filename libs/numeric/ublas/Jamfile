@@ -1,8 +1,0 @@
-subproject libs/numeric/ublas ;
-subinclude libs/numeric/ublas/blasbindings ;
-
-lib ublas 
-        : blaspp.cpp 
-        :  <include>$(BOOST_ROOT)
-	   <include>$B_ROOT
-        ;
