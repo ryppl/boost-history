@@ -13,8 +13,8 @@
   <div align="left">
     <table border="0" width="799" height="134">
       <tr>
-        <td width="288" height="134"><img id="IMG1" height="86"
-          src="../../../c++boost.gif" width="277" align="middle" border="0"></td>
+        <td width="288" height="134"><img id="IMG1" src="cboost.gif"
+          align="middle" border="0" width="277" height="86"></td>
         <td width="1152" height="134">
           <h1 align="center">&nbsp;String Algorithm Library&nbsp;</h1>
           <h2 align="center">Predicates</h2>
@@ -25,19 +25,20 @@
   <ul>
     <li>
       <p align="left">
-        <a href="##predicates">Predicates</a>
+        <a href="#predicates">Predicates</a>
       <ul>
         <li>
           <p align="left">
-            <a href="##overview">Overview</a></li>
-        <li><a href="##description">Description</a></li>
-        <li><a href="##synopsis">Synopsis</a></li>
+            <a href="#overview">Overview</a></li>
+        <li><a href="#description">Description</a></li>
+        <li><a href="#synopsis">Synopsis</a></li>
+        <li><a href="#examples">Examples</a></li>
       </ul>
     </li>
   </ul>
   <hr>
-  <h2><a name="#predicates">Predicates</a></h2>
-  <h3><a name="#overview">Overview</a></h3>
+  <h2><a name="predicates">Predicates</a></h2>
+  <h3><a name="overview">Overview</a></h3>
   <p>
     Predicates are included in <a
     href="../../../boost/string_algo/predicate.hpp">&lt;boost/string_algo/predicate.hpp&gt;</a>
@@ -46,7 +47,7 @@
     string under various contidions. This includes suffix and prefix chech,
     equality check and containment check.
   </p>
-  <h3><a name="#description">Description</a></h3>
+  <h3><a name="description">Description</a></h3>
   <p>
     &nbsp;Following table shows the summary of all predicates. Each algoritm
     returns a <code>bool</code> value representing a success of condition check.
@@ -96,7 +97,7 @@
         string(&quot;123abc&quot;) );</code></td>
     </tr>
   </table>
-  <h3><a name="#synopsis">Synopsis</a></h3>
+  <h3><a name="synopsis">Synopsis</a></h3>
   <p>
     Iterator based variants.&nbsp;
   </p>
@@ -141,33 +142,82 @@
   <div align="left">
     <table border="0" width="574" height="1">
       <tr>
-        <td width="418" height="31" valign="top"><code>InputIteratorT Begin</code></td>
-        <td width="728" height="31" valign="top">Begin of an input sequence</td>
+        <td width="437" height="31" valign="top"><code><b>typename</b>
+          InputIteratorT</code></td>
+        <td width="709" height="31" valign="top">A forward iterator type</td>
       </tr>
       <tr>
-        <td width="418" height="31" valign="top"><code>InputIteratorT End</code></td>
-        <td width="728" height="31" valign="top">End of an input sequence</td>
+        <td width="437" height="31" valign="top"><code><b>typename</b>
+          SubIteratorT</code></td>
+        <td width="709" height="31" valign="top">A forward iterator type</td>
       </tr>
       <tr>
-        <td width="418" height="31" valign="top"><code>SubIteratorT SubBegin</code></td>
-        <td width="728" height="31" valign="top">Begin of a substring sequence</td>
+        <td width="437" height="31" valign="top"><code><b>typename</b> SeqT1, <b>typename</b>
+          SeqT2</code></td>
+        <td width="709" height="31" valign="top">A sequence types</td>
       </tr>
       <tr>
-        <td width="418" height="31" valign="top"><code>SubIteratorT SubEnd</code></td>
-        <td width="728" height="31" valign="top">End of a substring sequence</td>
+        <td width="437" height="31" valign="top"><code>InputIteratorT Begin</code></td>
+        <td width="709" height="31" valign="top">Begin of an input sequence</td>
       </tr>
       <tr>
-        <td width="418" height="31" valign="top"><code><b>const</b> Seq1T&amp;
+        <td width="437" height="31" valign="top"><code>InputIteratorT End</code></td>
+        <td width="709" height="31" valign="top">End of an input sequence</td>
+      </tr>
+      <tr>
+        <td width="437" height="31" valign="top"><code>SubIteratorT SubBegin</code></td>
+        <td width="709" height="31" valign="top">Begin of a substring sequence</td>
+      </tr>
+      <tr>
+        <td width="437" height="31" valign="top"><code>SubIteratorT SubEnd</code></td>
+        <td width="709" height="31" valign="top">End of a substring sequence</td>
+      </tr>
+      <tr>
+        <td width="437" height="31" valign="top"><code><b>const</b> Seq1T&amp;
           Input</code></td>
-        <td width="728" height="31" valign="top">An input sequence</td>
+        <td width="709" height="31" valign="top">An input sequence</td>
       </tr>
       <tr>
-        <td width="418" height="31" valign="top"><code><b>const</b> Seq2T&amp;
+        <td width="437" height="31" valign="top"><code><b>const</b> Seq2T&amp;
           Substr</code></td>
-        <td width="728" height="31" valign="top">An substring sequence</td>
+        <td width="709" height="31" valign="top">An substring sequence</td>
       </tr>
     </table>
   </div>
+  <h3><a name="examples">Examples</a></h3>
+  <p>
+    Following example shows basic usage of predicate algorithms. More examples
+    can be found in the library tests in <a href="../test/predicate_test.cpp">&lt;libs/string_algo/test/predicate_test.cpp&gt;</a>.
+  </p>
+  <pre>#include &lt;string&gt;
+#include &lt;iostream&gt;
+#include &lt;boost/string_algo/predicate.hpp&gt;
+
+using namespace std;
+using namespace boost;
+
+void predicate_example()
+{
+    cout &lt;&lt; &quot;* Predicate Example *&quot; &lt;&lt; endl &lt;&lt; endl;
+
+    string str1(&quot;123xxx321&quot;);
+    string str2(&quot;abc&quot;);
+
+    cout &lt;&lt; &quot;str1 starts with \&quot;123\&quot;: &quot; &lt;&lt; 
+        (starts_with( str1, string(&quot;123&quot;) )?&quot;true&quot;:&quot;false&quot;) &lt;&lt; endl; 
+    cout &lt;&lt; &quot;str1 ends with \&quot;123\&quot;: &quot; &lt;&lt; 
+        (ends_with( str1, string(&quot;123&quot;) )?&quot;true&quot;:&quot;false&quot;) &lt;&lt; endl; 
+
+    cout &lt;&lt; &quot;str1 contains \&quot;xxx\&quot;: &quot; &lt;&lt; 
+        (contains( str1, string(&quot;xxx&quot;) )?&quot;true&quot;:&quot;false&quot;) &lt;&lt; endl; 
+
+    // Note: equals have to be explicitly qualified, 
+    // otherwise it conflicts with std::equals
+    cout &lt;&lt; &quot;str2 equals \&quot;abc\&quot;: &quot; &lt;&lt; 
+        (boost::equals( str2, string(&quot;abc&quot;) )?&quot;true&quot;:&quot;false&quot;) &lt;&lt; endl; 
+
+    cout &lt;&lt; endl;
+}   </pre>
   <hr>
   <p>
     (C) Copyright Pavol Droba 2003. Permission to copy, use, modify, sell and

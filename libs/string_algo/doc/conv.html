@@ -13,7 +13,7 @@
   <div align="left">
     <table border="0" width="799" height="134">
       <tr>
-        <td width="288" height="134"><img id="IMG1" src="../../../c++boost.gif"
+        <td width="288" height="134"><img id="IMG1" src="cboost.gif"
           align="middle" border="0" width="277" height="86"></td>
         <td width="1152" height="134">
           <h1 align="center">&nbsp;String Algorithm Library&nbsp;</h1>
@@ -25,19 +25,20 @@
   <ul>
     <li>
       <p align="left">
-        <a href="##case_conversion_algorithms">Case Conversion Algoritms</a>
+        <a href="#case_conversion_algorithms">Case Conversion Algoritms</a>
       <ul>
         <li>
           <p align="left">
-            <a href="##overview">Overview</a></li>
-        <li><a href="##description">Description</a></li>
-        <li><a href="##synopsis">Synopsis</a></li>
+            <a href="#overview">Overview</a></li>
+        <li><a href="#description">Description</a></li>
+        <li><a href="#synopsis">Synopsis</a></li>
+        <li><a href="#examples">Examples</a></li>
       </ul>
     </li>
   </ul>
   <hr>
-  <h2><a name="#case_conversion_algorithms">Case Conversion Algorithms</a></h2>
-  <h3><a name="#overview">Overview</a></h3>
+  <h2><a name="case_conversion_algorithms">Case Conversion Algorithms</a></h2>
+  <h3><a name="overview">Overview</a></h3>
   <p>
     Case conversion&nbsp;algorithms are included in <a
     href="../../../boost/string_algo/conv.hpp">&lt;boost/string_algo/conv.hpp&gt;</a>
@@ -45,7 +46,7 @@
     Algorithms <code>tolower</code> and <code>toupper</code> are extensions to <code>std::tolower()</code>
     and <code>std::toupper()</code> methods for sequences.
   </p>
-  <h3><a name="#description">Description</a></h3>
+  <h3><a name="description">Description</a></h3>
   <p>
     <code>tolower </code>and <code>toupper </code>algorithms convert the case of
     characters in the sequence, charater by character. Case conversion is driven
@@ -90,7 +91,7 @@
       </td>
     </tr>
   </table>
-  <h3><a name="#synopsis">Synopsis</a></h3>
+  <h3><a name="synopsis">Synopsis</a></h3>
   <p>
     Iterator based variants. Funtions return an output iterator pointing just
     after last inserted character.
@@ -123,6 +124,20 @@
   <div align="left">
     <table border="0" width="574" height="1">
       <tr>
+        <td width="418" height="31" valign="top"><code><b>typename</b>
+          InputIteratorT</code></td>
+        <td width="728" height="31" valign="top">A forward iterator type</td>
+      </tr>
+      <tr>
+        <td width="418" height="31" valign="top"><code><b>typename</b>
+          OutputIteratorT</code></td>
+        <td width="728" height="31" valign="top">An output iterator type</td>
+      </tr>
+      <tr>
+        <td width="418" height="31" valign="top"><code><b>typename</b> SeqT</code></td>
+        <td width="728" height="31" valign="top">A sequence type</td>
+      </tr>
+      <tr>
         <td width="418" height="31" valign="top"><code>OutputIteratorT Output</code></td>
         <td width="728" height="31" valign="top">Output iterator for the result.
           The result of the operation will be sent to this iterator.</td>
@@ -152,6 +167,39 @@
       </tr>
     </table>
   </div>
+  <h3><a name="examples">Examples</a></h3>
+  <p>
+    Following example shows basic usage of case conversion algorithms. More
+    examples can be found in the library tests in <a
+    href="../test/conv_test.cpp">&lt;libs/string_algo/test/conv_test.cpp&gt;</a>.
+  </p>
+  <pre>#include &lt;string&gt;
+#include &lt;vector&gt;
+#include &lt;iostream&gt;
+#include &lt;iterator&gt;
+#include &lt;boost/string_algo/conv.hpp&gt;
+
+using namespace std;
+using namespace boost;
+
+void conv_example()
+{  
+    cout &lt;&lt; &quot;* Case Conversion Example *&quot; &lt;&lt; endl &lt;&lt; endl;
+
+    string str1(&quot;AbCdEfG&quot;);
+    vector&lt;char&gt; vec1( str1.begin(), str1.end() );
+
+    cout &lt;&lt; &quot;lower-cased copy of vec1: &quot;;
+    tolower_copy( ostream_iterator&lt;char&gt;(cout), vec1.begin(), vec1.end() );
+    cout &lt;&lt; endl;
+
+    cout &lt;&lt; &quot;upper-cased copy of str1: &quot; &lt;&lt; toupper_copy( str1 ) &lt;&lt; endl;
+
+    tolower( str1 );
+    cout &lt;&lt; &quot;lower-cased str1: &quot; &lt;&lt; str1 &lt;&lt; endl;
+
+    cout &lt;&lt; endl;
+}</pre>
   <hr>
   <p>
     (C) Copyright Pavol Droba 2003. Permission to copy, use, modify, sell and

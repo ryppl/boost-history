@@ -2,6 +2,7 @@
 
 - !!!! Write documentation !!! -
 
+- functor concept checks
 - add case-insensitive versions, allow parametric comparison
 - find iterator
 - add trim find functor(s).

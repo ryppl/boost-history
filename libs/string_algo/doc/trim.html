@@ -13,8 +13,8 @@
   <div align="left">
     <table border="0" width="799" height="134">
       <tr>
-        <td width="288" height="134"><img id="IMG1" height="86"
-          src="../../../c++boost.gif" width="277" align="middle" border="0"></td>
+        <td width="288" height="134"><img id="IMG1" src="cboost.gif"
+          align="middle" border="0" width="277" height="86"></td>
         <td width="1152" height="134">
           <h1 align="center">&nbsp;String Algorithm Library&nbsp;</h1>
           <h2 align="center">Trim</h2>
@@ -23,23 +23,24 @@
     </table>
   </div>
   <ul>
-    <li><a href="##trim_algorithms">Trim Algorithms</a>
+    <li><a href="#trim_algorithms">Trim Algorithms</a>
       <ul>
-        <li><a href="##overview">Overview</a></li>
-        <li><a href="##ta_description">Description</a></li>
-        <li><a href="##ta_synopsis">Synopsis</a></li>
+        <li><a href="#ta_overview">Overview</a></li>
+        <li><a href="#ta_description">Description</a></li>
+        <li><a href="#ta_synopsis">Synopsis</a></li>
       </ul>
     </li>
-    <li><a href="##predicates">Predicates</a>
+    <li><a href="#predicates">Trim Predicates</a>
       <ul>
-        <li><a href="##pred_description">Description</a></li>
-        <li><a href="##pred_synopsis">Synopsis</a>&nbsp;&nbsp;&nbsp;&nbsp;</li>
+        <li><a href="#ta_description">Description</a></li>
+        <li><a href="#pred_synopsis">Synopsis</a>&nbsp;&nbsp;&nbsp;</li>
       </ul>
     </li>
+    <li><a href="#examples">Examples</a></li>
   </ul>
   <hr>
-  <h2><a name="#trim_algorithms">Trim Algorithms</a></h2>
-  <h3><a name="#overview">Overview</a></h3>
+  <h2><a name="trim_algorithms">Trim Algorithms</a></h2>
+  <h3><a name="ta_overview">Overview</a></h3>
   <p>
     Trim&nbsp;algorithms are included in <a
     href="../../../boost/string_algo/trim.hpp">&lt;boost/string_algo/trim.hpp&gt;</a>
@@ -50,7 +51,7 @@
     provided with library. Algorithms are provided for iterator ranges as well
     as for sequences for convinience.
   </p>
-  <h3><a name="#ta_description">Description</a></h3>
+  <h3><a name="ta_description">Description</a></h3>
   <p>
     Each algorithm removes trailing or leading spaces from the input sequence. <code>trim_left</code>
     removes leading spaces,&nbsp; <code>trim_right</code> removes trailing
@@ -161,7 +162,7 @@
       </td>
     </tr>
   </table>
-  <h3><a name="#ta_synopsis">Synopsis</a></h3>
+  <h3><a name="ta_synopsis">Synopsis</a></h3>
   <p>
     Iterator based variant. Funtion returns an output operator pointing just
     after last inserted character.
@@ -236,6 +237,25 @@
   <div align="left">
     <table border="0" width="574" height="1">
       <tr>
+        <td width="418" height="31" valign="top"><code><b>typename</b>
+          InputIteratorT</code></td>
+        <td width="728" height="31" valign="top">A forward iterator type</td>
+      </tr>
+      <tr>
+        <td width="418" height="31" valign="top"><code><b>typename</b>
+          OutputIteratorT</code></td>
+        <td width="728" height="31" valign="top">An output iterator type</td>
+      </tr>
+      <tr>
+        <td width="418" height="31" valign="top"><code><b>typename</b> SeqT</code></td>
+        <td width="728" height="31" valign="top">A sequence type</td>
+      </tr>
+      <tr>
+        <td width="418" height="31" valign="top"><code><b>typename</b>
+          PredicateT</code></td>
+        <td width="728" height="31" valign="top">An unary predicate type</td>
+      </tr>
+      <tr>
         <td width="418" height="31" valign="top"><code>OutputIteratorT Output</code></td>
         <td width="728" height="31" valign="top">Output iterator for the result.
           The result of the operation will be sent to this iterator.</td>
@@ -258,20 +278,20 @@
         <td width="728" height="31" valign="top">An input sequence (mutable)</td>
       </tr>
       <tr>
-        <td width="418" height="31" valign="top">PredicateT Predicate</td>
+        <td width="418" height="31" valign="top"><code>PredicateT Predicate</code></td>
         <td width="728" height="31" valign="top">Space selection predicate.</td>
       </tr>
       <tr>
-        <td width="418" height="31" valign="top"><code><b>const</b> std::locale&amp;
-          Loc</code></td>
+        <td width="418" height="31" valign="top"><code><b>const</b>
+          std::locale&amp; Loc</code></td>
         <td width="728" height="31" valign="top">An instance of locales which
           will be used for conversion</td>
       </tr>
     </table>
   </div>
   <hr>
-  <h2><a name="#predicates">Predicates</a></h2>
-  <h3><b><a name="#pred_description">Description</a></b></h3>
+  <h2><a name="predicates">Trim Predicates</a></h2>
+  <h3><b><a name="pred_description">Description</a></b></h3>
   <p>
     Library contains some useful predicates which can be used with trim
     algorithms. Trim predicates are provided in the form of generators. This
@@ -316,7 +336,7 @@
       </tr>
     </table>
   </div>
-  <h3><a name="#pred_synopsis">Synopsis</a></h3>
+  <h3><a name="pred_synopsis">Synopsis</a></h3>
   <pre>    <b>template</b>&lt; <b>typename</b> CharT &gt;
     string_algo::detail::isclassifiedF&lt;CharT&gt; 
     isclassified( std::ctype_base::mask Type, <b>const</b> std::locale&amp; Loc=std::locale() );
@@ -343,12 +363,47 @@
         set of matching characters.</td>
     </tr>
     <tr>
-      <td width="418" height="31" valign="top"><code><b>const</b> std::locale&amp;
-        Loc</code></td>
+      <td width="418" height="31" valign="top"><code><b>const</b>
+        std::locale&amp; Loc</code></td>
       <td width="728" height="31" valign="top">An instance of locales which will
         be used by a predicate</td>
     </tr>
   </table>
+  <h2><a name="examples">Examples</a></h2>
+  <p>
+    Following example shows basic usage of trim algorithms. More examples can be
+    found in the library tests in <a href="../test/trim_test.cpp">&lt;libs/string_algo/test/trim_test.cpp&gt;</a>.
+  </p>
+  <pre>#include &lt;string&gt;
+#include &lt;iostream&gt;
+#include &lt;boost/string_algo/trim.hpp&gt;
+
+using namespace std;
+using namespace boost;
+
+void trim_example()
+{
+    cout &lt;&lt; &quot;* Trim Example *&quot; &lt;&lt; endl &lt;&lt; endl;
+
+    string str1(&quot;     1x x x x1     &quot;);
+    string str2(&quot;&lt;&gt;trim&lt;&gt;&quot;);
+    string str3(&quot;123abs343&quot;);
+
+    cout &lt;&lt; &quot;trim_left copy of str1: &quot; &lt;&lt; &quot;\&quot;&quot; &lt;&lt; trim_left_copy( str1 ) &lt;&lt; &quot;\&quot;&quot; &lt;&lt; endl;
+
+    trim_right( str1 );
+    cout &lt;&lt; &quot;trim_right on str1: &quot; &lt;&lt; &quot;\&quot;&quot; &lt;&lt; str1 &lt;&lt; &quot;\&quot;&quot; &lt;&lt; endl;
+
+    cout 
+        &lt;&lt; &quot;trimmed copy of str4 ( space='&lt;&gt;' ): &quot; 
+        &lt;&lt; &quot;\&quot;&quot;&lt;&lt; trim_copy_if( str2, isfrom( string(&quot;&lt;&gt;&quot;) ) ) &lt;&lt; &quot;\&quot;&quot; &lt;&lt; endl;
+    
+    cout 
+        &lt;&lt; &quot;trimmed copy of str5 ( space=digit ): &quot; 
+        &lt;&lt; &quot;\&quot;&quot; &lt;&lt; trim_copy_if( str3, isclassified&lt;char&gt;(ctype_base::digit) ) &lt;&lt; &quot;\&quot;&quot; &lt;&lt; endl;
+
+    cout &lt;&lt; endl;
+}</pre>
   <hr>
   <p>
     (C) Copyright Pavol Droba 2003. Permission to copy, use, modify, sell and
