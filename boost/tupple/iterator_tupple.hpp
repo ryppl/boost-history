@@ -8,12 +8,12 @@
 #ifndef BOOST_ITERATOR_TUPPLE_HPP
 #define BOOST_ITERATOR_TUPPLE_HPP
 
-#include "boost/config.hpp"
+#include <boost/config.hpp>
 
 #ifdef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
-#  include "detail/iterator_tupple_no_part_spec.hpp"
+#  include <boost/tupple/detail/iterator_tupple_no_part_spec.hpp>
 #else
-#  include "boost/tupple/detail/iterator_tupple_part_spec.hpp"
+#  include <boost/tupple/detail/iterator_tupple_part_spec.hpp>
 #endif // BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
 
 
