@@ -1,15 +1,14 @@
 CFLAGS = -Wall
 IDIR = ../../../boost/
-SDIR = ../../../../../boost/boost/libs/test/src
+SDIR = ../../../../boost/libs/test/src
 OBJS = smart_ptr_test.o execution_monitor.o test_tools.o unit_test_log.o \
     unit_test_main.o unit_test_monitor.o unit_test_parameters.o \
-    unit_test_result.o unit_test_suite.o
+    unit_test_result.o unit_test_suite.o supplied_log_formatters.o
 
 smart_ptr_test: $(OBJS)
 	g++ $(OBJS) -o smart_ptr_test
 
-smart_ptr_test.o: $(IDIR)/policy_ptr/smart_ptr.hpp \
-        $(IDIR)/optimally_inherit.hpp smart_ptr_test.cpp
+smart_ptr_test.o: $(IDIR)/policy_ptr/smart_ptr.hpp smart_ptr_test.cpp
 	g++ -c $(CFLAGS) smart_ptr_test.cpp
 
 execution_monitor.o: $(SDIR)/execution_monitor.cpp
@@ -35,3 +34,13 @@ unit_test_result.o: $(SDIR)/unit_test_result.cpp
 
 unit_test_suite.o: $(SDIR)/unit_test_suite.cpp
 	g++ -c $(CFLAGS) $(SDIR)/unit_test_suite.cpp
+
+supplied_log_formatters.o: $(SDIR)/supplied_log_formatters.cpp
+	g++ -c $(CFLAGS) $(SDIR)/supplied_log_formatters.cpp
+
+tidy:
+	rm -f *~
+
+clean: tidy
+	rm -f *.o
+	rm -f smart_ptr_test

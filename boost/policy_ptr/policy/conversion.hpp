@@ -1,4 +1,6 @@
 //----------------------------------------------------------------------------
+// conversion.hpp
+//
 // Copyright (C) 2004, Andrei Alexandrescu and David B. Held
 // Distributed under the Boost Software License, Version 1.0. (See accompany-
 // ing file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -13,7 +15,6 @@ namespace boost
     class allow_conversion_ : public CheckingPolicy
     {
     public:             // Types
-        typedef conversion_policy_tag                   policy_category;
         typedef CheckingPolicy                          checking_policy;
         typedef checking_policy                         base_type;
         typedef typename checking_policy::pointer_type  pointer_type;
@@ -57,7 +58,10 @@ namespace boost
                             : base_type(p, d)           { }
 
         static
-        void            swap(allow_conversion_&)        { }
+        void            swap(allow_conversion_& lhs, allow_conversion_& rhs)
+        {
+            base_type::swap(lhs, rhs);
+        }
     };
     //------------------------------------------------------------------------
     template <class CheckingPolicy>
@@ -117,11 +121,19 @@ namespace boost
                             : base_type(p, d)           { }
 
         static
-        void            swap(disallow_conversion_&)     { }
+        void            swap(
+                            disallow_conversion_& lhs,
+                            disallow_conversion_& rhs
+                        )
+        {
+            base_type::swap(lhs, rhs);
+        }
     };
     //------------------------------------------------------------------------
     struct disallow_conversion
     {
+        typedef conversion_policy_tag policy_category;
+
         template <typename T>
         struct apply
         {
@@ -129,6 +141,18 @@ namespace boost
         };
     };
     //------------------------------------------------------------------------
+    struct allow_conversion
+    {
+        typedef conversion_policy_tag policy_category;
+
+        template <typename T>
+        struct apply
+        {
+            typedef allow_conversion_<T> type;
+        };
+    };
+    //------------------------------------------------------------------------
 }   // namespace boost
 //----------------------------------------------------------------------------
 #endif // BOOST_CONVERSION_HPP
+

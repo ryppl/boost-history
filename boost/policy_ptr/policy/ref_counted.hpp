@@ -1,4 +1,6 @@
 //----------------------------------------------------------------------------
+// ref_counted.hpp
+//
 // Copyright (C) 2004, Andrei Alexandrescu and David B. Held
 // Distributed under the Boost Software License, Version 1.0. (See accompany-
 // ing file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -7,6 +9,7 @@
 #define BOOST_REF_COUNTED_HPP
 //----------------------------------------------------------------------------
 // Headers
+#include <cstdlib>                                      // std::size_t
 #include <algorithm>                                    // std::swap()
 //----------------------------------------------------------------------------
 namespace boost
@@ -16,19 +19,27 @@ namespace boost
     class ref_counted_ : public StoragePolicy
     {
     public:             // Types
-        typedef ownership_policy_tag                    policy_category;
         typedef copy_semantics_tag                      ownership_category;
         typedef StoragePolicy                           storage_policy;
         typedef storage_policy                          base_type;
         typedef typename storage_policy::pointer_type   pointer_type;
+        typedef std::size_t                             counter_type;
+        typedef typename storage_policy::stored_param   stored_param;
+        typedef typename storage_policy::pointer_param  pointer_param;
 
     protected:          // Protected Interface
                         ref_counted_(void)
-                            : count_(0)                 { }
+                            : count_(0)
+        {
+            BOOST_SP_CONSTRUCTOR_HOOK(*this, "ref_counted(void)");
+        }
 
                         ref_counted_(ref_counted_ const& rhs)
                             : base_type(static_cast<base_type const&>(rhs)),
-                            count_(rhs.count_)          { }
+                            count_(rhs.count_)
+        {
+            BOOST_SP_CONSTRUCTOR_HOOK(*this, "ref_counted(ref_counted const&)");
+        }
 
                         template <typename U>
                         ref_counted_(ref_counted_<U> const& rhs)
@@ -37,40 +48,59 @@ namespace boost
                             >(rhs)),
                             count_(BOOST_SP_CONVERT_ARGUMENT(
                                 ref_counted_, rhs, count_
-                            ))                          { }
+                            ))
+        {
+            BOOST_SP_CONSTRUCTOR_HOOK(
+                *this, "ref_counted(ref_counted<U> const&)"
+            );
+        }
 
-                        template <typename U>
-                        ref_counted_(U& p)
-                            : base_type(p), count_(new unsigned(1))
-                                                        { }
+                        ref_counted_(stored_param p)
+                            : base_type(p), count_(new counter_type(1))
+        {
+            BOOST_SP_CONSTRUCTOR_HOOK(
+                *this, "ref_counted(stored_param)"
+            );
+        }
 
                         template <typename U>
                         ref_counted_(U const& p)
-                            : base_type(p), count_(new unsigned(1))
-                                                        { }
+                            : base_type(p), count_(new counter_type(1))
+        {
+            BOOST_SP_CONSTRUCTOR_HOOK(*this, "ref_counted(U const&)");
+        }
 
                         template <typename U, typename V>
                         ref_counted_(U& p, V& d)
-                            : base_type(p, d), count_(new unsigned(1))
-                                                        { }
+                            : base_type(p, d), count_(new counter_type(1))
+        {
+            BOOST_SP_CONSTRUCTOR_HOOK(*this, "ref_counted(U&, V&)");
+        }
 
                         template <typename U, typename V>
                         ref_counted_(U const& p, V& d)
-                            : base_type(p, d), count_(new unsigned(1))
-                                                        { }
+                            : base_type(p, d), count_(new counter_type(1))
+        {
+            BOOST_SP_CONSTRUCTOR_HOOK(*this, "ref_counted(U const&, V&)");
+        }
 
                         template <typename U, typename V>
                         ref_counted_(U& p, V const& d)
-                            : base_type(p, d), count_(new unsigned(1))
-                                                        { }
+                            : base_type(p, d), count_(new counter_type(1))
+        {
+            BOOST_SP_CONSTRUCTOR_HOOK(*this, "ref_counted(U&, V const&)");
+        }
 
                         template <typename U, typename V>
                         ref_counted_(U const& p, V const& d)
-                            : base_type(p, d), count_(new unsigned(1))
-                                                        { }
+                            : base_type(p, d), count_(new counter_type(1))
+        {
+            BOOST_SP_CONSTRUCTOR_HOOK(*this, "ref_counted(U const&, V const&)");
+        }
 
-                       ~ref_counted_()
+                       ~ref_counted_(void)
 		{
+            BOOST_SP_DESTRUCTOR_HOOK(*this, "~ref_counted(void)");
             if (!count_ || !--*count_)
             {
                 delete count_;
@@ -81,19 +111,21 @@ namespace boost
             }
         }
 
-        pointer_type    clone(pointer_type const& val)
+        stored_param    clone(stored_param p)
         {
             ++*count_;
-            return val;
-        }
-
-        void            swap(ref_counted_& rhs)
-        {
-            std::swap(count_, rhs.count_);
+            return p;
         }
 
         static
-        void            on_release(ref_counted_& sp)
+        void            swap(ref_counted_& lhs, ref_counted_& rhs)
+        {
+            base_type::swap(lhs, rhs);
+            std::swap(lhs.count_, rhs.count_);
+        }
+
+        static
+        void            on_release(ref_counted_ const& sp)
         {
             if (sp.count_ && *sp.count_ > 1) throw bad_release();
         }
@@ -110,7 +142,7 @@ namespace boost
 
     public:             // Public Interface
         friend inline
-        unsigned        use_count(ref_counted_ const& p)
+        counter_type    use_count(ref_counted_ const& p)
         {
             return p.count_ ? *(p.count_) : 0U ;
         }
@@ -119,11 +151,13 @@ namespace boost
         ref_counted_&   operator=(ref_counted_ const&);
         BOOST_SP_DECLARE_TEMPLATE_FRIEND(U, ref_counted_)
 
-        unsigned*       count_;
+        counter_type*   count_;
     };
     //------------------------------------------------------------------------
     struct ref_counted
     {
+        typedef ownership_policy_tag policy_category;
+
         template <typename T>
         struct apply
         {
