@@ -1,0 +1,60 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <link rel="stylesheet" type="text/css" href="../../../boost.css">
+    <title>Boost.Smart Pointer - Definitions</title>
+  </head>
+  <body link="#0000ff" vlink="#800080">
+    <table border="0" cellpadding="7" cellspacing="0" width="100%" summary="header">
+      <tr> 
+        <td valign="top" width="300"> 
+          <h3><a href="../../../index.htm"><img height="86" width="277" alt="C++ Boost" src="../../../c++boost.gif" border="0"></a></h3>
+        </td>
+        <td valign="top"> 
+          <h1 align="center">Boost.Smart Pointer</h1>
+          <h2 align="center">Definitions</h2>
+        </td>
+      </tr>
+    </table>
+    <hr>
+    <h2>Contents</h2>
+    <dl class="page-index">
+      <dt><a href="#introduction">Introduction</a></dt>
+      <dt><a href="#definitinos">Definitions</a></dt>
+      <dl class="page-index">
+        <dt><a href="#definition-smart-pointer">Smart Pointer</a></dt>
+        <dt><a href="#definition-Policy">Policy</a></dt>
+      </dl>
+    </dl>
+    <hr>
+    <h2><a name="introduction"></a>Introduction</h2>
+    <p>Smart pointer terminology is briefly explained, but <cite>MC++D</cite> is a more
+    complete reference.</p>
+    <h2><a name="definitions"></a>Definitions</h2>
+    <dl class="definitions">
+      <dt><p><a name="definition-term1"></a><b>Smart Pointer:</b> <cite>A C++ object that
+        simulates simple pointers by implementing <code>operator-></code> and the unary 
+        <code>operator*</code>.</cite>
+        [<a href="bibliography.html#Alexandrescu-01">Alexandrescu 01</a>]  More generally,
+        a smart pointer can be viewed as a generic RAII wrapper.</p>
+      </dt>
+      <dt><p><a name="definition-term2"></a><b>Policy:</b> <cite>A policy defines a class 
+        interface or a class template interface...Policies have much in common with traits
+        (Alexandrescu 2000a) but differ in that they put less emphasis on type and more
+        emphasis on behaviour...Policy classes are not intended for standalone use; instead,
+        they are inherited by, or contained within, other classes.</cite>
+        [<a href="bibliography.html#Alexandrescu-01">Alexandrescu 01</a>]  Simply put,
+        a policy is a component of a generic type that contributes customizable behaviour.</p>
+      </dt>
+    </dl>
+
+    <hr>
+    <p>Revised
+      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B, %Y" startspan -->
+      30 September, 2002
+      <!--webbot bot="Timestamp" endspan i-checksum="39359" -->
+    </p>
+    <p><i>&copy; Copyright <a href="mailto:dheld@codelogicconsulting.com">David B. Held</a> 2002.
+    All Rights Reserved.</i></p>
+  </body>
+</html>

@@ -1,0 +1,73 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <link rel="stylesheet" type="text/css" href="../../../boost.css">
+    <title>Boost.Smart Pointer - Overview</title>
+  </head>
+  <body link="#0000ff" vlink="#800080">
+    <table border="0" cellpadding="7" cellspacing="0" width="100%" summary="header">
+      <tr> 
+        <td valign="top" width="300"> 
+          <h3><a href="../../../index.htm"><img height="86" width="277" alt="C++ Boost" src="../../../c++boost.gif" border="0"></a></h3>
+        </td>
+        <td valign="top"> 
+          <h1 align="center">Boost.Smart Pointer</h1>
+          <h2 align="center">Overview</h2>
+        </td>
+      </tr>
+    </table>
+    <hr>
+
+    <dl class="index">
+      <dt><a href="#introduction">Introduction</a></dt>
+      <dt><a href="#changes">Changes</a></dt>
+      <dt><a href="#policies">Policies</a></dt>
+      <dt><a href="#footnotes">Footnotes</a></dt>
+    </dl>
+
+    <h2><a name="introduction"></a>Introduction</h2>
+    <p>This library offers an highly configurable policy-based smart pointer as originally 
+    described in <cite>Modern C++ Design</cite> 
+    [<a href="bibliography.html#Alexandrescu-01">Alexandrescu 01</a>] and implemented in Loki.
+    As such, <cite>MC++D</cite> should be consulted for all major design rationales.  While 
+    this implementation varies from the original Loki version, it is essentially the original
+    Loki implementation converted to Boost coding conventions and enhanced by suggestions from 
+    the Boost community and Andrei himself.</p>
+
+    <h2><a name="changes"></a>Changes</h2>
+    <p>Since <cite>MC++D</cite> provides the best overview for this library, this documentation 
+    will primarily discuss changes from the original Loki design.  In particular, the following 
+    are the most notable:</p>
+    
+    <ul>
+      <li>Multiple inheritance is optimized by the use of <code>optimally_inherit&lt;&gt;</code>.</li>
+      <li>Array support is added through the use of the <code>array_storage</code> policy.</li>
+      <li>The ordering comparisons (&lt;, &lt;=, &gt;, &gt;=) are enabled via a macro.</li>
+    </ul>
+
+    <h2><a name="policies"></a>Policies</h2>
+    <p>Obviously, one of the central features of policy-based design is the policies 
+    themselves.  <b>Boost.Smart Pointer</b> provides a full complement of policies to cover a
+    wide array of smart pointer use cases.  However, there will inevitably be scenarios not
+    covered by the provided policies, and at this point, the user will need to know how to
+    construct custom policies.  Understanding the design of <code>smart_ptr</code> is the 
+    first step, and can be accomplished by reading <cite>MC++D</cite>.  Then, the 
+    <a href="rationale.html">Rationale</a> and <a href="definitions.html">Definitions</a> 
+    pages discuss details regarding the implementation of policies.</p>
+
+    <h2><a name="footnotes"></a>Footnotes</h2>
+    <dl>
+      <dt><a name="footnote1" class="footnote">(1)</a> {{text}}</dt>
+      <dt><a name="footnote2" class="footnote">(2)</a> {{text}}</dt>
+    </dl>
+
+    <hr>
+    <p>Revised 
+      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B, %Y" startspan -->
+      30 September, 2002
+      <!--webbot bot="Timestamp" endspan i-checksum="39359" -->
+    </p>
+    <p><i>&copy; Copyright <a href="mailto:dheld@codelogicconsulting.com">David B. Held</a> 2002.
+    All Rights Reserved.</i></p>
+  </body>
+</html>

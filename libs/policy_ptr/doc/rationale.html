@@ -1,0 +1,128 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <link rel="stylesheet" type="text/css" href="../../../boost.css">
+    <title>Boost.Smart Pointer - Rationale</title>
+  </head>
+  <body link="#0000ff" vlink="#800080">
+    <table border="0" cellpadding="7" cellspacing="0" width="100%" summary="header">
+      <tr>
+        <td valign="top" width="300"> 
+          <h3><a href="../../../index.htm"><img height="86" width="277" alt="C++ Boost" src="../../../c++boost.gif" border="0"></a></h3>
+        </td>
+        <td valign="top"> 
+          <h1 align="center">Boost.Smart Pointer</h1>
+          <h2 align="center">Rationale</h2>
+        </td>
+      </tr>
+    </table>
+    <hr>
+    <dl class="index">
+      <dt><a href="#introduction">Introduction</a></dt>
+      <dt><a href="#optimally_inherit"><code>optimally_inherit&lt;&gt;</code></a></dt>
+      <dt><a href="#array_storage"><code>array_storage</code></a></dt>
+      <dt><a href="#ordering-comparisons">Ordering Comparisons</a></dt>
+      <dt><a href="#portability">Portability</a></dt>
+      <dt><a href="#policy-categories">Policy Categories</a></dt>
+      <dt><a href="#const-correctness"><code>const</code> Correctness</a></dt>
+      <dt><a href="#current-pointers">Current Boost Smart Pointers</a></dt>
+      <dt><a href="#footnotes">Footnotes</a></dt>
+    </dl>
+    <h2><a name="introduction"></a>Introduction</h2>
+    <p>Since the design and rationale for <b>Boost.Smart Pointer</b> is largely documented
+    in <cite>Modern C++ Design</cite>, this document shall cover the changes from the Loki
+    implementation.  Also covered are policy implementation details for those wishing to
+    write their own policies.</p>
+    <h2><a name="optimally_inherit"></a><code>optimally_inherit&lt;&gt;</code></h2>
+    <p>While there is not currently a consensus on how policy parameters should be passed
+    to a policy-based smart pointer, this library follows the original Loki design in choosing
+    Multiple Inheritance.  Of concern to smart pointer users is the size of the smart pointer
+    itself.  An unnecessarily large smart pointer can potentially waste a lot of memory, as
+    it is likely to be used in containers and other contexts which generate many instances of
+    the pointer.  Ordinarily, there is no memory cost to single-parent inheritance of empty
+    base classes, as most compilers implement Empty Base Optimization (EBO).  Thus, inheriting
+    from a single policy generally does not elicit code bloat.  However, in the face of 
+    multiple inheritance, EBO has been found inconsistent or entirely lacking on many 
+    platforms.  Thus, inheriting from multiple empty base classes may increase the size of the
+    pointer needlessly.</p>
+    <p>To circumvent this problem, Andrei Alexandrescu suggested an OptionallyInherit template 
+    which examines the size of its arguments to determine whether or not it should inherit 
+    from each parameter.  David Held implemented this technique with a few modifications and 
+    named it <code>optimally_inherit&lt;&gt;</code>.  The actual 
+    <code>optimally_inherit&lt;&gt;</code> template is a type generator intended to be used as 
+    a base class for policy-based types.  While this technique effectively eliminates the 
+    MI-EBO pessimization, it does not come without cost.  The most important limitation is that 
+    empty policies cannot contribute new interface to the smart pointer type.  This is because 
+    empty policies do not become part of the inheritance tree of the smart pointer.  
+    Constructor validation is preserved, and empty policies can still define which policy 
+    variants they will accept.  But any new interface methods introduced by a policy must be 
+    declared static.</p>
+    <h2><a name="array_storage"></a><code>array_storage</code></h2>
+    <p>Loki did not support array policies by default, because Andrei felt that smart pointers
+    were not an appropriate facility for dealing with arrays.  The Boost community at large
+    dissented, and so <b>Boost.Smart Pointer</b> defines an <code>array_storage</code> 
+    StoragePolicy.  This policy defines all the usual operations one would expect from a
+    smart pointer to an array.</p>
+    <h2><a name="ordering-comparisons"></a>Ordering Comparisons</h2>
+    <p>The original Loki::SmartPtr left ordering comparison operators (<code>&lt;, &lt;=, 
+    &gt;=, &gt;</code>) undefined, because they are potentially dangerous.  The current library
+    also leaves the operators incompletely defined, but allows the user to enable them by
+    defining BOOST_SMART_POINTER_ORDERING_OPERATORS.</p>
+    <h2><a name="portability"></a>Portability</h2>
+    <p><b>Boost.Smart Pointer</b> strives to achieve the high level of portability typical of
+    Boost libraries.  In many respects, that goal has been achieved.  However, the extensive
+    use of member template functions makes this a non-negotiable feature upon which the 
+    library depends.  Thus, this library is only usable on platforms that at least support
+    BOOST_MSVC6_MEMBER_TEMPLATES.  The latest perusal of the Boost.Config files shows that only
+    two compilers fail to support this feature, and they are both older versions of compilers
+    which currently support the feature.  Thus, this requirement should not be overly 
+    burdensome for users.</p>
+    <h2><a name="policy-categories"></a>Policy Categories</h2>
+    <p>One of the criticisms of policy-based design is that it leads to potentially complex
+    types which may be difficult for end-users to properly declare.  Thus, solutions such as
+    named template parameters and policy adaptors have been devised to support the use of
+    policy-based designs.  While a policy adaptor does not currently exist for <b>Boost.Smart
+    Pointer</b>, one may be introduced in the future.  To support this possibility, the
+    default policies define a policy_category.  New user-defined policies should also define
+    this type by selecting one of the tags below:</p>
+    <dl>
+      <dt>boost::storage_policy_tag</dt>
+      <dt>boost::ownership_policy_tag</dt>
+      <dt>boost::conversion_policy_tag</dt>
+      <dt>boost::checking_policy_tag</dt>
+    </dl>
+    <h2><a name="const-correctness"></a><code>const</code> Correctness</h2>
+    <p>StoragePolicies must now define:</p>
+    <dl>
+      <dt>stored_type</dt>
+      <dt>const_stored_type</dt>
+      <dt>pointer_type</dt>
+      <dt>const_pointer_type</dt>
+      <dt>reference_type</dt>
+      <dt>const_reference_type</dt>
+    </dl>
+    <p>in support of const-correctness for <code>smart_ptr</code>.
+    <h2><a name="current-pointers"></a>Current Boost Smart Pointers</h2>
+    <p>While the ultimate fate of smart pointer technology remains a foggy mystery, it seems
+    only reasonable to support as many useful smart pointer designs as possible.  As such,
+    <b>Boost.Smart Pointer</b> includes a set of policies which allow <code>smart_ptr</code>
+    to emulate the current Boost smart pointers (<code>shared_ptr&lt;&gt;, weak_ptr&lt;&gt;,
+    intrusive_ptr&lt;&gt;, and shared_array&lt;&gt;</code>).  Whether or not this is necessary 
+    or useful is a matter of considerable controversy.  However, since the policies already
+    exist, it costs nothing to provide them to users.</p>
+    <h2><a name="footnotes"></a>Footnotes</h2>
+    <dl>
+      <dt><a name="footnote1" class="footnote">(1)</a> {{text}}</dt>
+      <dt><a name="footnote2" class="footnote">(2)</a> {{text}}</dt>
+    </dl>
+
+    <hr>
+    <p>Revised
+      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B, %Y" startspan -->
+      30 September, 2002
+      <!--webbot bot="Timestamp" endspan i-checksum="39359" -->
+    </p>
+    <p><i>&copy; Copyright <a href="mailto:dheld@codelogicconsulting.com">David B. Held</a> 2002.
+    All Rights Reserved.</i></p>
+  </body>
+</html>
