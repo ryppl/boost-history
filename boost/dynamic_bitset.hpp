@@ -75,11 +75,12 @@ class dynamic_bitset
 
   BOOST_STATIC_ASSERT(detail::dynamic_bitset_allowed_block_type<Block>::value);
 
-  typedef int block_width_type;
 public:
     typedef Block block_type;
     typedef Allocator allocator_type;
     typedef std::size_t size_type;
+    typedef int block_width_type; // gps
+
     BOOST_STATIC_CONSTANT(block_width_type, bits_per_block = (std::numeric_limits<Block>::digits));
     BOOST_STATIC_CONSTANT(size_type, npos = static_cast<size_type>(-1));
 
@@ -919,8 +920,8 @@ bool dynamic_bitset<Block, Allocator>::any() const
 {
     for (size_type i = 0; i < num_blocks(); ++i)
         if (m_bits[i])
-            return 1;
-    return 0;
+            return true;
+    return false;
 }
 
 template <typename Block, typename Allocator>
@@ -1596,7 +1597,7 @@ operator>>(std::basic_istream<Ch, Tr>& is, dynamic_bitset<Block, Alloc>& b)
     }
 
     is.width(0); // gps
-    if (b.size() == 0)
+    if (b.size() == 0 /*|| !cerberos*/)
         err |= ios_base::failbit;
     if (err != ios_base::goodbit) // gps
         is.setstate (err); // may throw
