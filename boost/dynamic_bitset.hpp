@@ -993,7 +993,7 @@ dynamic_bitset<Block, Allocator>::operator~() const
 }
 
 
-/* snipped: [gps]
+/*
 
 The following is the straightforward implementation of count(), which
 we leave here in a comment for documentation purposes.
@@ -1009,8 +1009,7 @@ dynamic_bitset<Block, Allocator>::count() const
     return sum;
 }
 
-The actual algorithm used is based on using a lookup
-table.
+The actual algorithm uses a lookup table.
 
 
   The basic idea of the method is to pick up X bits at a time
@@ -1019,23 +1018,16 @@ table.
   of 1<<X elements where table[N] is the number of '1' digits
   in the binary representation of N (i.e. in our X bits).
 
-  Note that the table can be oversized (i.e. can even have more
-  than 1<<X elements; in that case only the first 1<<X will be
-  actually used) but it cannot be undersized.
-  In this implementation X is 8 (but can be easily changed: you
-  just have to change the definition of count<>::max_bits) and
-  the internal array of blocks is seen as an array of bytes: if
-  a byte has exactly 8 bits then it's enough to sum the value
-  of table[B] for each byte B. Otherwise 8 bits at a time are
-  'extracted' from each byte by using another loop. As a further
-  efficiency consideration note that even if you have, let's say,
-  32-bit chars the inner loop will not do 4 (i.e. 32/8) iterations,
-  unless you have at least one bit set in the highest 8 bits of the
-  byte.
 
-  Note also that the outmost if/else is not necessary but is there
-  to help the optimizer (and one of the two branches is always dead
-  code).
+  In this implementation X is 8 (but can be easily changed: you
+  just have to modify the definition of table_width and shrink/enlarge
+  the table accordingly - it could be useful, for instance, to expand
+  the table to 512 elements on an implementation with 9-bit bytes) and
+  the internal array of blocks is seen, if possible, as an array of bytes.
+  In practice the "reinterpretation" as array of bytes is possible if and
+  only if X >= CHAR_BIT and Block has no padding bits (that would be counted
+  together with the "real ones" if we saw the array as array of bytes).
+  Otherwise we simply 'extract' X bits at a time from each Block.
 
 */
 
@@ -1044,36 +1036,13 @@ template <typename Block, typename Allocator>
 typename dynamic_bitset<Block, Allocator>::size_type
 dynamic_bitset<Block, Allocator>::count() const
 {
-    using detail::byte_type;
+    using namespace detail::dynamic_bitset_count_impl;
 
-    const byte_type * p = detail::object_representation(this->m_bits);
-    const byte_type * past_end = p + this->m_num_blocks * sizeof(Block);
+    const bool no_padding = bits_per_block == CHAR_BIT * sizeof(Block);
+    const mode m = table_width >= CHAR_BIT && no_padding? access_by_bytes : access_by_blocks;
 
-    size_type num = 0;
-    unsigned int const max_bit = detail::count<>::max_bit;
+    return do_count(this->m_bits, this->m_num_blocks, (mode_to_type<m>*) 0 );
 
-    if (CHAR_BIT <= max_bit) { // table is large enough
-        while (p < past_end) {
-            num += detail::count<>::table[*p];
-            ++p;
-        }
-    }
-    else {
-        while (p < past_end) {
-            // this inner loop 'extracts' max_bit bits at a time
-            // from the byte at address p, and thus allows to use
-            // our (small) table for any (high) CHAR_BIT value
-            byte_type value = *p;
-            do {
-                num += detail::count<>::table[value & ((1<<max_bit)-1)];
-            } while (value >>= max_bit);
-
-            ++p;
-        }
-    }
-
-
-    return num;
 }
 
 
