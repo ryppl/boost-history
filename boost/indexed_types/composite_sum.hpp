@@ -2,6 +2,7 @@
 #ifndef BOOST_INDEXED_TYPES_COMPOSITE_SUM_HPP_LJE20041220
 #define BOOST_INDEXED_TYPES_COMPOSITE_SUM_HPP_LJE20041220
 #include "boost/indexed_types/composite_type.hpp"
+#include <boost/mpl/int.hpp>
 #include <exception>
 namespace boost{namespace indexed_types{
 
