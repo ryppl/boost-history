@@ -19,21 +19,20 @@
 #ifndef BOOST_NUMERIC_BINDINGS_TRAITS_UBLAS_CLOSURE_H
 #define BOOST_NUMERIC_BINDINGS_TRAITS_UBLAS_CLOSURE_H
 
+#include <boost/type_traits.hpp>
+
 namespace boost { namespace numeric { namespace bindings { namespace traits {
 
   namespace detail {
 
-    template <typename VM> 
-    struct closure_traits {
+    template <typename VMIdentifier, typename VM>
+    struct closure_detail_traits {
       typedef VM type; 
       static VM& get (VM& vm) { return vm; } 
-    }; 
+    };
 
     template <typename VM> 
-    struct closure_traits<VM const> {
-      typedef VM const type; 
-      static VM const& get (VM const& vm) { return vm; } 
-    }; 
+    struct closure_traits : closure_detail_traits< typename boost::remove_const<VM>::type, VM > { }; 
 
   }
 

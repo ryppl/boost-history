@@ -20,6 +20,7 @@
 #define BOOST_NUMERIC_BINDINGS_TRAITS_UBLAS_VECTOR_CLOSURE_H
 
 #include <boost/numeric/bindings/traits/detail/ublas_closure.hpp>
+#include <boost/numeric/bindings/traits/detail/generate_const.hpp>
 #include <boost/numeric/ublas/vector_expression.hpp>
 
 namespace boost { namespace numeric { namespace bindings { namespace traits {
@@ -28,22 +29,12 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
 
     // vector references 
 
-    template <typename V>
-    struct 
-    closure_traits<boost::numeric::ublas::vector_reference<V> > {
-      typedef boost::numeric::ublas::vector_reference<V> ref_type;
-      typedef typename ref_type::expression_type type; 
+    template <typename V, typename VR>
+    struct
+    closure_detail_traits< boost::numeric::ublas::vector_reference<V>, VR > {
+      typedef VR                                                                   ref_type;
+      typedef typename generate_const<VR,typename ref_type::expression_type>::type type; 
       static type& get (ref_type& r) { 
-	return r.expression();
-      }
-    };
-
-    template <typename V>
-    struct 
-    closure_traits<boost::numeric::ublas::vector_reference<V> const> {
-      typedef boost::numeric::ublas::vector_reference<V> const ref_type;
-      typedef typename ref_type::expression_type const type; 
-      static type& get (ref_type const& r) { 
 	return r.expression();
       }
     };

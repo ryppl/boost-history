@@ -20,6 +20,7 @@
 #define BOOST_NUMERIC_BINDINGS_TRAITS_UBLAS_MATRIX_CLOSURE_H
 
 #include <boost/numeric/bindings/traits/detail/ublas_closure.hpp>
+#include <boost/numeric/bindings/traits/detail/generate_const.hpp>
 #include <boost/numeric/ublas/matrix_expression.hpp>
 
 namespace boost { namespace numeric { namespace bindings { namespace traits {
@@ -28,22 +29,12 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
 
     // matrix references 
 
-    template <typename M>
-    struct 
-    closure_traits<boost::numeric::ublas::matrix_reference<M> > {
-      typedef boost::numeric::ublas::matrix_reference<M> ref_type;
-      typedef typename ref_type::expression_type type; 
+    template <typename M, typename MR>
+    struct
+    closure_detail_traits< boost::numeric::ublas::matrix_reference<M>, MR > {
+      typedef MR                                                                   ref_type;
+      typedef typename generate_const<MR,typename ref_type::expression_type>::type type; 
       static type& get (ref_type& r) { 
-	return r.expression();
-      }
-    };
-
-    template <typename M>
-    struct 
-    closure_traits<boost::numeric::ublas::matrix_reference<M> const> {
-      typedef boost::numeric::ublas::matrix_reference<M> const ref_type;
-      typedef typename ref_type::expression_type const type; 
-      static type& get (ref_type const& r) { 
 	return r.expression();
       }
     };
