@@ -57,8 +57,6 @@ template<class T, class Traits> inline
 interval<T, Traits>::interval(const T& l, const T& u): low(l), up(u)
 {
   if (interval_lib::detail::test_input<T, Traits>(l, u) || !(l <= u))
-    // equivalent to:   (u < l)  ??????   --Her
-    // or even could be part of test_input ?????   --Syl
     set_empty();
 }
 
@@ -74,7 +72,6 @@ template<class T, class Traits> inline
 void interval<T, Traits>::assign(const T& l, const T& u)
 {
   if (interval_lib::detail::test_input<T, Traits>(l, u) || !(l <= u))
-    // same question
     set_empty();
   else set(l, u);
 }
@@ -406,21 +403,24 @@ template<class I> inline
 I pi()
 {
   typedef typename I::base_type T;
-  return I(constants::pi_lower<T>(), constants::pi_upper<T>(), true);
+  return I(constants::pi_lower<T>(),
+	   constants::pi_upper<T>(), true);
 }
 
 template<class I> inline
 I pi_half()
 {
   typedef typename I::base_type T;
-  return I(constants::pi_half_lower<T>(), constants::pi_half_upper<T>(), true);
+  return I(constants::pi_half_lower<T>(),
+	   constants::pi_half_upper<T>(), true);
 }
 
 template<class I> inline
 I pi_twice()
 {
   typedef typename I::base_type T;
-  return I(constants::pi_twice_lower<T>(), constants::pi_twice_upper<T>(), true);
+  return I(constants::pi_twice_lower<T>(),
+	   constants::pi_twice_upper<T>(), true);
 }
 
   } // namespace interval_lib

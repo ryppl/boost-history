@@ -271,10 +271,11 @@ in section<a href="#interval_lib"> Interval Support Library</a>.</p>
   template &lt;class T, class Traits&gt;  interval&lt;T, Traits&gt; operator/(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
   template &lt;class T, class Traits&gt;  interval&lt;T, Traits&gt; operator/(const T&amp; r, const interval&lt;T, Traits&gt;&amp; x);
 
-  /* algebraic functions: sqrt, abs, square */
+  /* algebraic functions: sqrt, abs, square, pow */
   template &lt;class T, class Traits&gt;  interval&lt;T, Traits&gt; abs(const interval&lt;T, Traits&gt;&amp; x);
   template &lt;class T, class Traits&gt;  interval&lt;T, Traits&gt; sqrt(const interval&lt;T, Traits&gt;&amp; x);
   template &lt;class T, class Traits&gt;  interval&lt;T, Traits&gt; square(const interval&lt;T, Traits&gt;&amp; x);
+  template &lt;class T, class Traits&gt;  interval&lt;T, Traits&gt; pow(const interval&lt;T, Traits&gt;&amp; x, int y);
 
   /* transcendental functions: exp, log */
   template &lt;class T, class Traits&gt;  interval&lt;T, Traits&gt; exp(const interval&lt;T, Traits&gt;&amp; x);
@@ -487,9 +488,9 @@ an exception is thrown during the computations, the l-value is not
 modified (but it may be corrupt if an exception is thrown by the base
 type during an assignment).</p>
 
-<p>The operators <code>/</code> and <code>/=</code> use the <a
-href="#checking">checking</a> policy if the denominator contains
-zero.</p>
+<p>The operators <code>/</code> and <code>/=</code> will try to
+produce an empty interval if the denominator is exactly zero and a
+whole interval if it only contains zero.</p>
 
 <h4><code>lower</code> <code>upper</code> <code>median</code></h4>
 
@@ -500,7 +501,7 @@ nearest). <code>width</code> computes the width of an interval
 (<code>upper-lower</code> rounded toward plus infinity).</p>
 
 <h4><code>min</code> <code>max</code> <code>abs</code>
-<code>square</code></h4>
+<code>square</code> <code>pow</code></h4>
 
 <p>The functions <code>min</code>, <code>max</code> and
 <code>abs</code> are also defined. Please do not mistake them for the
@@ -523,6 +524,11 @@ the result is a smaller interval.  Consequently,
 <code>square(x)</code> should be used instead of <code>x*x</code>
 because of its better accuracy and a small performance
 improvement.</p>
+
+<p>As for <code>square</code>, <code>pow</code> provides an efficient
+and more accurate way to compute the integer power of an
+interval. Please note: when the power is 0 and the interval is not
+empty, the result is 1, even if the input interval contains 0.</p>
 
 <h4><code>intersect</code> <code>hull</code> <code>overlap</code>
 <code>in</code> <code>in_zero</code> <code>subset</code>
@@ -564,7 +570,7 @@ if two intervals are equal.</p>
 functions extend the traditional functions to the intervals and
 respect the basic property of interval arithmetic. They use the <a
 href="#checking">checking</a> policy to produce empty intervals when
-the input interval is strictly out side of the domain of the
+the input interval is strictly outside of the domain of the
 function.</p>
 
 <p>The function <code>fmod(interval x, interval y)</code> expects the
@@ -576,12 +582,13 @@ two arguments are positive singletons, this function
 <code>fmod(interval, interval)</code> will behave like the traditional
 function <code>fmod(double, double)</code>.</p>
 
-<p>Please note that <code>fmod</code> does not respect the basic
+<p>Please note that <code>fmod</code> does not respect the inclusion
 property of arithmetic interval. For example, the result of
 <code>fmod</code>([13,17],[7,8]) should be [0,8] (since it must
 contain [0,3] and [5,8]). But this answer is not really useful when
 the purpose is to restrict an interval in order to compute a periodic
-function. It is the reason why fmod will answer [5,10].</p>
+function. It is the reason why <code>fmod</code> will answer
+[5,10].</p>
 
 <h3>Constants</h3>
 
@@ -761,6 +768,17 @@ is a good candidate since it defines a physical equality and a strict
 ordering. This is suitable for indexing intervals in a
 <code>std::map</code>, for instance.</p>
 
+<h4>Interval values and references</h4>
+
+<p>This problem is a corollary of the previous problem with
+<code>x != x</code>. All the functions of the library only consider
+the value of an interval and not the reference of an interval. In
+particular, you should not expect (unless <code>x</code> is a
+singleton) the following values to be equal: <code>x/x</code> and 1,
+<code>x*x</code> and <code>square(x)</code>, <code>x-x</code> and 0,
+etc.</p>
+
+
 <h4>Unprotected rounding</h4>
 
 <p>As explained in <a href="rounding.htm#perf">this section</a>, a
@@ -784,7 +802,7 @@ read this <a href="guide.htm">mini-guide</a>.</p>
 intent is to ensure that the code is in accordance with this
 documentation, and to help you find the right compilation options for
 your platforms. See the above section <a href="#perfs">Compilation
-options</a> for some starting points.  They are a good place to try
+options</a> for some starting points. They are a good place to try
 and use the library first.</p>
 
 <p>The test programs are as follows. Please note that they require the

@@ -29,6 +29,7 @@ behaviors and it would be sad to arbitrarily select one of these.</p>
 
 <p>The checking class should satisfy the following requirement (in the form
 of an interface):</p>
+
 <pre>/* requirements for checking policy */
 struct checking
 {
@@ -72,6 +73,7 @@ the inputs is declared invalid, the the function will try to produce an
 invalid value or an input interval.</p>
 
 <h2>Synopsis</h2>
+
 <pre>namespace boost {
   namespace interval_lib {
 
@@ -171,9 +173,11 @@ invalid interval bounds unless the user passes invalid numbers to the
 constructors. So you can put an assert inside if you do not trust the
 library. :-)</p>
 
-<p>And finally, you need to decide what to do with <code>nan</code> if it has
-not already been decided at the beginning, and with <code>inf</code>. These
-cases are the most common cases. <strong>????? -H</strong></p>
+<p>And finally, you need to decide what to do with <code>nan</code> if
+it has not already been decided at the beginning, and with
+<code>inf</code>. These functions should return a value or start an
+exceptional behavior (especially if the base type does not have
+corresponding values).</p>
 
 <h2>Some examples</h2>
 <ul>
