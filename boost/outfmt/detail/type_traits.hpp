@@ -7,43 +7,7 @@
 #  endif
 
 #  include <boost/outfmt/detail/range.hpp>
-
-#  include <complex>     // std::complex
-#  include <string>      // std::basic_string
-#  include <deque>       // std::deque
-#  include <list>        // std::list
-#  include <vector>      // std::vector
-#  include <set>         // std::set, std::multiset
-#  include <map>         // std::map, std::multimap
-#  include <utility>     // std::pair
-
-#  if defined(BOOST_IO_NO_DEPRECATED_MODIFIER) && defined(BOOST_DINKUMWARE_STDLIB)
-#     define _DEPRECATED_TEMP _DEPRECATED
-#     define _DEPRECATED
-#  endif
-#  if defined(BOOST_IOFM_HASH_CONTAINERS)
-#     include <hash_set> // std::hash_set, std::hash_multiset
-#     include <hash_map> // std::hash_map, std::hash_multimap
-#  endif
-#  if defined(BOOST_IO_NO_DEPRECATED_MODIFIER) && defined(BOOST_DINKUMWARE_STDLIB)
-#     define _DEPRECATED _DEPRECATED_TEMP
-#  endif
-
-#  if defined(BOOST_HAS_SLIST)
-#     include <slist>    // std::slist
-#  endif
-
-#  include <boost/compressed_pair.hpp>
-#  include <boost/rational.hpp>
-#  if !defined(BOOST_IOFM_NO_LIB_INTERVAL)
-#     include <boost/numeric/interval/interval.hpp>
-#  endif
-#  if !defined(BOOST_IOFM_NO_LIB_QUATERNION)
-#     include <boost/math/quaternion.hpp>
-#  endif
-#  if !defined(BOOST_IOFM_NO_LIB_OCTONION)
-#     include <boost/math/octonion.hpp>
-#  endif
+#  include <string>
 
 #  include <boost/mpl/or.hpp>
 #  include <boost/mpl/if.hpp>
@@ -80,6 +44,11 @@
       namespace detail
       {
          boost::io::seq_type< boost::io::basic_type > classify( ... );
+
+         // array types:
+
+         template< typename T, int N >
+         boost::io::seq_type< boost::io::array_type > classify( const T( * )[ N ] );
       }
 
       // type checker implementation
@@ -185,61 +154,7 @@
 
    namespace boost { namespace io { namespace detail
    {
-      // array types
-
-      template< typename T, int N >
-      boost::io::seq_type< boost::io::array_type > classify( const T( * )[ N ] );
-
-      // standard containers and types
-
-      BOOST_IO_CLASSIFY_TYPE_2( std::basic_string, boost::io::std_string_type );
-      BOOST_IO_CLASSIFY_TYPE_1( std::complex,      boost::io::nary2value_type );
-      BOOST_IO_CLASSIFY_TYPE_2( std::pair,         boost::io::pair_type );
-      BOOST_IO_CLASSIFY_TYPE_2( std::deque,        boost::io::seq_container_type );
-      BOOST_IO_CLASSIFY_TYPE_2( std::list,         boost::io::seq_container_type );
-      BOOST_IO_CLASSIFY_TYPE_2( std::vector,       boost::io::seq_container_type );
-      BOOST_IO_CLASSIFY_TYPE_3( std::set,          boost::io::set_container_type );
-      BOOST_IO_CLASSIFY_TYPE_3( std::multiset,     boost::io::set_container_type );
-      BOOST_IO_CLASSIFY_TYPE_4( std::map,          boost::io::assoc_container_type );
-      BOOST_IO_CLASSIFY_TYPE_4( std::multimap,     boost::io::assoc_container_type );
-
-      // standard extension container types
-
-#     if defined(BOOST_IOFM_HASH_CONTAINERS)
-#        if defined(BOOST_DINKUMWARE_STDLIB)
-            BOOST_IO_CLASSIFY_TYPE_3( BOOST_IOFM_STDEXT::hash_set,      boost::io::set_container_type );
-            BOOST_IO_CLASSIFY_TYPE_3( BOOST_IOFM_STDEXT::hash_multiset, boost::io::set_container_type );
-            BOOST_IO_CLASSIFY_TYPE_4( BOOST_IOFM_STDEXT::hash_map,      boost::io::assoc_container_type );
-            BOOST_IO_CLASSIFY_TYPE_4( BOOST_IOFM_STDEXT::hash_multimap, boost::io::assoc_container_type );
-#        else // SGI containers
-            BOOST_IO_CLASSIFY_TYPE_4( BOOST_IOFM_STDEXT::hash_set,      boost::io::set_container_type );
-            BOOST_IO_CLASSIFY_TYPE_4( BOOST_IOFM_STDEXT::hash_multiset, boost::io::set_container_type );
-            BOOST_IO_CLASSIFY_TYPE_5( BOOST_IOFM_STDEXT::hash_map,      boost::io::assoc_container_type );
-            BOOST_IO_CLASSIFY_TYPE_5( BOOST_IOFM_STDEXT::hash_multimap, boost::io::assoc_container_type );
-#        endif
-#     endif
-
-#     if defined(BOOST_HAS_SLIST)
-         BOOST_IO_CLASSIFY_TYPE_2( BOOST_IOFM_STDEXT::slist, boost::io::seq_container_type );
-#     endif
-
-      // Boost types
-
-      BOOST_IO_CLASSIFY_TYPE_2( boost::compressed_pair, boost::io::pair_type );
-      BOOST_IO_CLASSIFY_TYPE_1( boost::rational,        boost::io::nary2int_type );
-
-#     if !defined(BOOST_IOFM_NO_LIB_INTERVAL)
-         BOOST_IO_CLASSIFY_TYPE_2( boost::numeric::interval, boost::io::nary2base_type );
-#     endif
-
-#     if !defined(BOOST_IOFM_NO_LIB_QUATERNION)
-         BOOST_IO_CLASSIFY_TYPE_1( boost::math::quaternion, boost::io::pair_type );
-#     endif
-
-#     if !defined(BOOST_IOFM_NO_LIB_OCTONION)
-         BOOST_IO_CLASSIFY_TYPE_1( boost::math::octonion, boost::io::pair_type );
-#     endif
-
+      BOOST_IO_CLASSIFY_TYPE_2( std::basic_string,  boost::io::std_string_type );
       BOOST_IO_CLASSIFY_TYPE_1( boost::io::range_t, boost::io::range_type );
    }}}
 #endif

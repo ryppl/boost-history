@@ -7,6 +7,7 @@
 #  endif
 
 #  include <cstddef>
+#  include <utility>
 
    namespace boost { namespace io
    {
