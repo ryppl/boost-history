@@ -2,8 +2,8 @@
 #define boost_ublas_blas_hpp
 
 #include <complex>
-#include <boost/numeric/ublas/vector.h>
-#include <boost/numeric/ublas/matrix.h>
+#include <boost/numeric/ublas/vector.hpp>
+#include <boost/numeric/ublas/matrix.hpp>
 
   //
   // make sure to match the library symbols
@@ -17,12 +17,15 @@
 #define BLAS_DDOT ddot_
 #define BLAS_ZDOT zdotc_
 
+#define BLAS_ZGERU zgeru_
+
 #define BLAS_DGEMM dgemm_
 #define BLAS_ZGEMM zgemm_
 #else
 #error do not how to link with fortran
 #endif
   
+typedef std::complex<double> dcomplex ;
   //
   // define C-wrapper for (fortran) BLAS calls
 extern "C"
@@ -35,11 +38,13 @@ extern "C"
   double                 BLAS_DDOT(const int *n, const double                 *x, const int *incx, const double                 *y, const int *incy);
   std::complex< double > BLAS_ZDOT(const int *n, const std::complex< double > *x, const int *incx, const std::complex< double > *y, const int *incy);
 
+  void BLAS_ZGERU(const int* m, const int* n, const std::complex<double>* alpha, const std::complex<double>* x, const int* incx, const std::complex<double>* y, const int* incy, std::complex<double>* a, const int* lda);
+
   void BLAS_DGEMM(const char *transa, const char *transb, const int *m, const int *n, const int *k, const double                 *alpha, const double                 *a, const int *lda, const double                 *b, const int *ldb, const double                 *beta, double                 *c, const int *ldc);
   void BLAS_ZGEMM(const char *transa, const char *transb, const int *m, const int *n, const int *k, const std::complex< double > *alpha, const std::complex< double > *a, const int *lda, const std::complex< double > *b, const int *ldb, const std::complex< double > *beta, std::complex< double > *c, const int *ldc);
 }
 
-namespace boost { namespace numerics { 
+namespace boost { namespace numeric { namespace ublas {
   
   template < typename T >
   struct blas_traits
@@ -49,6 +54,7 @@ namespace boost { namespace numerics {
     typedef T (*dot_type)(const int *n, const T* x, const int* incx,  const T* y, const int* incy);
 
     // level 2 types
+    typedef void (*geru_type)(const int*, const int*, const dcomplex* alpha, const dcomplex* x, const int* incx, const dcomplex* y, const int* incy, dcomplex* a, const int* lda);
     
     // level 3 types
     typedef void (*gemm_type)(const char *transa, const char *transb, const int *m, const int *n, const int *k, const T *alpha, const T *a, const int *lda, const T *b, const int *ldb, const T *beta, T *c, const int *ldc);
@@ -58,6 +64,7 @@ namespace boost { namespace numerics {
     static dot_type dot ;
 
     // level 2 functions
+    static geru_type geru ;
 
     // level 3 functions
     static gemm_type gemm ;
@@ -119,6 +126,6 @@ namespace boost { namespace numerics {
     const int ldc = m;
     blas_traits< T >::gemm( &TRANS_N, &TRANS_T, &m, &n, &k, &alpha, &(a.data()[0]), &lda, &(b.data()[0]), &ldb, &beta, &(c.data()[0]), &ldc );
   }
-}}
+}}}
 
 #endif // boost_ublas_blas_hpp

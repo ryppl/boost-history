@@ -9,32 +9,26 @@
 #include <iostream>
 #include <string>
 
-#include <boost/numeric/ublas/config.h>
-#include <boost/numeric/ublas/vector.h>
-#include <boost/numeric/ublas/matrix.h>
+#include <boost/numeric/ublas/config.hpp>
+#include <boost/numeric/ublas/vector.hpp>
+#include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/blas.hpp>
-#include <boost/numeric/ublas/io.h>
+#include <boost/numeric/ublas/io.hpp>
 
 #include <boost/timer.hpp>
 
-#include "main.hpp"
+// #include "main.hpp"
 
-void header (std::string text) {
-    std::cout << text << std::endl;
-    //std::cerr << text << std::endl;
-}
-template < typename matrix_type >
-bool zero( const matrix_type& m, double tolerance = 1e-8)
-{
-  bool is_zero = true;
-  size_t num_rows = m.size1();
-  size_t num_cols = m.size2();
-  for(size_t i = 0; i < num_rows ; ++i )
-    for(size_t j = 0; j < num_cols; ++j )
-      is_zero = is_zero && ( m(i,j) < tolerance ) ;
-  return is_zero;
-}
+using namespace boost ;
 
+template<class T>
+struct report_mflops {
+    void operator () (int multiplies, int plus, int runs, double elapsed) {
+        std::cout << (multiplies * numeric::ublas::type_traits<T>::multiplies_complexity + plus * numeric::ublas::type_traits<T>::plus_complexity) * runs / (1024 * 1024 * elapsed) ;
+        std::cout << "\t";
+        std::cout.flush();
+    }
+};
 
 template<class T>
 struct peak_c_plus {
@@ -46,9 +40,8 @@ struct peak_c_plus {
             boost::timer t;
             for (int i = 0; i < runs; ++ i) {
                 s += T (0);
-//                sink_scalar (s);
             }
-            footer<value_type> () (0, 1, runs, t.elapsed ());
+            report_mflops<value_type> () (0, 1, runs, t.elapsed ());
         }
         catch (std::exception &e) {
             std::cout << e.what () << std::endl;
@@ -68,9 +61,8 @@ struct peak_c_multiplies {
             boost::timer t;
             for (int i = 0; i < runs; ++ i) {
                 s *= T (1);
-//                sink_scalar (s);
             }
-            footer<value_type> () (0, 1, runs, t.elapsed ());
+            report_mflops<value_type> () (0, 1, runs, t.elapsed ());
         }
         catch (std::exception &e) {
             std::cout << e.what () << std::endl;
@@ -82,47 +74,31 @@ struct peak_c_multiplies {
 };
 
 template<class T>
-void peak<T>::operator () (int runs) {
-    header ("peak");
-
-    header ("plus");
+struct peak {
+  void operator () (int runs) {
+    std::cout << "peak performance plus : ";
     peak_c_plus<T> () (runs);
-
-    header ("multiplies");
+    std::cout << std::endl;
+    std::cout << "peak performance multiplies : ";
     peak_c_multiplies<T> () (runs);
+    std::cout << std::endl;
+  }
+};
+
+double norm(double v)
+{ return fabs( v ); }
+
+template < typename matrix_type_1, typename matrix_type_2 >
+bool equal(const matrix_type_1& m1, const matrix_type_2& m2, double tolerance = 1e-3)
+{
+  size_t num_rows = m1.size1();
+  size_t num_cols = m1.size2();
+  double max_diff = 0.0 ;
+  for(size_t i = 0; i < num_rows ; ++i )
+    for(size_t j = 0; j < num_cols; ++j )
+      max_diff = std::max( max_diff, norm(m1(i,j) - m2(i,j)) );
+  return max_diff < tolerance ;
 }
-
-
-template < class matrix_type >
-struct bench_ublas_gemm
-{
-  typedef typename matrix_type::value_type value_type;
-
-  matrix_type operator()(int runs, const matrix_type& m1, const matrix_type& m2) const
-  {
-    matrix_type result( m1.size1(), m2.size2() );
-    boost::timer t;
-    for(int i = 0; i < runs ; ++i ) result.assign( prod( m1, m2 ) );
-    footer<value_type> () (m1.size1() * m1.size2() * m2.size2(), 0, runs, t.elapsed ());
-    return result ;
-  }
-};
-
-template < class matrix_type >
-struct bench_blas_gemm
-{
-  typedef typename matrix_type::value_type value_type;
-
-  matrix_type operator()(int runs, const matrix_type& m1, const matrix_type& m2) const
-  {
-    matrix_type result( m1.size1(), m2.size2() );
-    value_type zero = 0.0, one = 1.0;
-    boost::timer t;
-    for(int i = 0; i < runs; ++i ) numerics::gemm( one, m1, m2, zero, result );
-    footer<value_type> () (m1.size1() * m1.size2() * m2.size2(), 0, runs, t.elapsed ());
-    return result;
-  }
-};
 
 template < typename matrix_type >
 void initialize(matrix_type& m)
@@ -132,200 +108,70 @@ void initialize(matrix_type& m)
       m(i,j) = i + j;
 }
 
-template <class T, int N, int K, int M>
-void bench_gemm(int runs) {
-  header("bench_gemm");
+template < typename T >
+void run_tests()
+{
+  std::cerr << "size vs MFLOPS : prod<row_major>\tprod<column_major>\tgemm" << std::endl;
+  boost::timer t;
+  for(size_t i = 2; i < 10000 ; ++i ) {
+    int runs = std::max<int>(1, 500000 - i*i*i );
+    std::cout << i << "\t";
+    // row_major
+    typedef numeric::ublas::matrix< T, numeric::ublas::row_major > matrix_row_type ;
+    matrix_row_type m1_rm(i,i), m2_rm(i,i), result_rm(i,i);
+    initialize( m1_rm );
+    initialize( m2_rm );
+    
+    t.restart();
+    for(int run_i = 0; run_i < runs ; ++run_i ) result_rm.assign( prod( m1_rm, m2_rm ) );
+    report_mflops<T> () (i * i * i, 0, runs, t.elapsed ());
 
-  header("row_major");
-  typedef numerics::matrix< T, numerics::row_major > matrix_row_type ;
-  matrix_row_type m1_rm(N,K), m2_rm(K,M), result_rm( N,M );
-  initialize( m1_rm );
-  initialize( m2_rm );
-  result_rm = bench_ublas_gemm< matrix_row_type >()(runs, m1_rm, m2_rm );
-  //std::cout << "result : " << result_rm << std::endl;
+    // column_major 
+    typedef numeric::ublas::matrix< T, numeric::ublas::column_major > matrix_column_type ;
+    matrix_column_type m1_cm = m1_rm, m2_cm = m2_rm, result_cm(i,i);
 
-  header("column_major");
-  typedef numerics::matrix< T, numerics::column_major > matrix_column_type ;
-  matrix_column_type m1_cm = m1_rm, m2_cm = m2_rm, result_cm( N,M );
-  result_cm = bench_ublas_gemm< matrix_column_type >()(runs, m1_cm, m2_cm);
-  //std::cout << "result : " << result_cm << std::endl;
+    t.restart();
+    for(int run_i = 0; run_i < runs ; ++run_i ) result_cm.assign( prod( m1_cm, m2_cm ) );
+    report_mflops<T> () (i * i * i, 0, runs, t.elapsed ());
 
-  header("blas");
-  matrix_column_type result_blas( N,M );
-  result_blas = bench_blas_gemm< matrix_column_type >()( runs, m1_cm, m2_cm );
-  //std::cout << "result : " << result_blas << std::endl;
+    // BLAS
+    T zero = 0.0, one = 1.0;
+    matrix_column_type m1_blas = m1_rm, m2_blas = m2_rm, result_blas(i,i);
 
-  if ( zero( result_rm - result_cm ) && zero( result_rm - result_blas ) )
-    { std::cerr << "regression test succeeded " << std::endl; }
-  else
-    { std::cerr << "regression test failed" << std::endl; abort() ; }
+    t.restart();
+    for(int run_i = 0; run_i < runs; ++run_i ) numeric::ublas::gemm( one, m1_blas, m2_blas, zero, result_blas );
+    report_mflops<T> () (i * i * i, 0, runs, t.elapsed ());
+
+    if ( ! ( equal( result_rm, result_cm ) && equal( result_rm, result_blas ) ) ) { 
+      std::cerr << "regression test failed" << std::endl; 
+      std::cerr << result_rm << "\n" << result_cm << "\n" << result_blas << std::endl;
+      abort();
+    }
+    std::cout << std::endl;
+  }
 }
-
-template <class T, int N, int K, int M>
-void bench_gemm_n_t(int runs) {
-  header("bench_gemm_n_t");
-
-  header("row_major");
-  typedef numerics::matrix< T, numerics::row_major > matrix_row_type ;
-  matrix_row_type m1_rm(N,K), m2_rm(M,K), result_rm( N,M );
-  initialize( m1_rm );
-  initialize( m2_rm );
-  result_rm = bench_ublas_gemm< matrix_row_type >()(runs, m1_rm, trans( m2_rm ) );
-  //std::cout << "result : " << result_rm << std::endl;
-
-  header("column_major");
-  typedef numerics::matrix< T, numerics::column_major > matrix_column_type ;
-  matrix_column_type m1_cm = m1_rm, m2_cm = m2_rm, result_cm( N,M );
-  result_cm = bench_ublas_gemm< matrix_column_type >()(runs, m1_cm, trans( m2_cm ) );
-  //std::cout << "result : " << result_cm << std::endl;
-
-  header("blas");
-  matrix_column_type result_blas( N,M );
-  result_blas = bench_blas_gemm< matrix_column_type >()( runs, m1_cm, trans( m2_cm ) );
-  //std::cout << "result : " << result_blas << std::endl;
-
-  if ( zero( result_rm - result_cm ) && zero( result_rm - result_blas ) )
-    { std::cerr << "regression test succeeded " << std::endl; }
-  else
-    { std::cerr << "regression test failed" << std::endl; abort() ; }
-}
-
-//template struct peak<float>;
-//template struct peak<double>;
-//template struct peak<std::complex<float> >;
-//template struct peak<std::complex<double> >;
 
 int main (int argc, char *argv []) {
-    header ("float");
-    peak<float> () (100000000);
+  //
+  // report peak performance of virious datatypes
+  std::cerr << "peak float:\n";
+  peak<float> () (100000000);
 
-    header ("double");
-    peak<double> () (100000000);
+  std::cerr << "peak double:\n";
+  peak<double> () (100000000);
 
-#ifdef USE_COMPLEX
-    header ("std:complex<float>");
-    peak<std::complex<float> > () (100000000);
+  std::cerr << "peak std:complex<float> :\n";
+  peak<std::complex<float> > () (100000000);
 
-    header ("std:complex<double>");
-    peak<std::complex<double> > () (100000000);
-#endif
+  std::cerr << "peak std:complex<double> :\n";
+  peak<std::complex<double> > () (100000000);
 
-    int scale = 1;
-    if (argc > 1)
-        scale = atoi (argv [1]);
+  std::cout << "value_type == double" << std::endl;
+  run_tests< double >();
 
-#ifdef USE_FLOAT
-    /*
-    header ("float, 3");
+  std::cout << "value_type == std::complex<double>" << std::endl;
+  run_tests< std::complex<double> >();
 
-    bench_1<float, 3> () (1000000 * scale);
-    bench_2<float, 3> () (300000 * scale);
-    bench_3<float, 3> () (100000 * scale);
-
-    header ("float, 10");
-
-    bench_1<float, 10> () (300000 * scale);
-    bench_2<float, 10> () (30000 * scale);
-    bench_3<float, 10> () (3000 * scale);
-
-    header ("float, 30");
-
-    bench_1<float, 30> () (100000 * scale);
-    bench_2<float, 30> () (3000 * scale);
-    bench_3<float, 30> () (100 * scale);
-
-    header ("float, 100");
-
-    bench_1<float, 100> () (30000 * scale);
-    bench_2<float, 100> () (300 * scale);
-    bench_3<float, 100> () (3 * scale);
-    */
-#endif
-
-    header ("\ndouble, 3");
-
-    bench_gemm<double, 3, 3, 3>(1000000 * scale);
-    bench_gemm_n_t<double, 3, 3, 3>(1000000 * scale);
-    //bench_2<double, 3> () (300000 * scale);
-    //bench_3<double, 3> () (100000 * scale);
-
-    header ("\ndouble, 10");
-
-    bench_gemm<double, 10, 10, 10>(300000 * scale);
-    bench_gemm_n_t<double, 10, 10, 10>(300000 * scale);
-    //bench_2<double, 10> () (30000 * scale);
-    //bench_3<double, 10> () (3000 * scale);
-
-    header ("\ndouble, 30");
-
-    bench_gemm<double, 30, 30, 30>(10000 * scale);
-    bench_gemm_n_t<double, 30, 30, 30>(10000 * scale);
-    //bench_2<double, 30> () (3000 * scale);
-    //bench_3<double, 30> () (100 * scale);
-
-    header ("\ndouble, 100");
-
-    bench_gemm<double, 100, 100, 100>(10 * scale);
-    bench_gemm_n_t<double, 100, 100, 100>(10 * scale);
-    //bench_2<double, 100> () (300 * scale);
-    //bench_3<double, 100> () (3 * scale);
-
-    header ("\ndouble, 1000");
-    bench_gemm<double, 1000, 100, 1000>(1 * scale);
-    bench_gemm_n_t<double, 1000, 100, 1000>(1 * scale);
-
-#ifdef USE_STD_COMPLEX
-    /*
-    header ("std::complex<float>, 3");
-
-    bench_1<std::complex<float>, 3> () (1000000 * scale);
-    bench_2<std::complex<float>, 3> () (300000 * scale);
-    bench_3<std::complex<float>, 3> () (100000 * scale);
-
-    header ("std::complex<float>, 10");
-
-    bench_1<std::complex<float>, 10> () (300000 * scale);
-    bench_2<std::complex<float>, 10> () (30000 * scale);
-    bench_3<std::complex<float>, 10> () (3000 * scale);
-
-    header ("std::complex<float>, 30");
-
-    bench_1<std::complex<float>, 30> () (100000 * scale);
-    bench_2<std::complex<float>, 30> () (3000 * scale);
-    bench_3<std::complex<float>, 30> () (100 * scale);
-
-    header ("std::complex<float>, 100");
-
-    bench_1<std::complex<float>, 100> () (30000 * scale);
-    bench_2<std::complex<float>, 100> () (300 * scale);
-    bench_3<std::complex<float>, 100> () (3 * scale);
-
-    header ("std::complex<double>, 3");
-
-    bench_1<std::complex<double>, 3> () (1000000 * scale);
-    bench_2<std::complex<double>, 3> () (300000 * scale);
-    bench_3<std::complex<double>, 3> () (100000 * scale);
-
-    header ("std::complex<double>, 10");
-
-    bench_1<std::complex<double>, 10> () (300000 * scale);
-    bench_2<std::complex<double>, 10> () (30000 * scale);
-    bench_3<std::complex<double>, 10> () (3000 * scale);
-
-    header ("std::complex<double>, 30");
-
-    bench_1<std::complex<double>, 30> () (100000 * scale);
-    bench_2<std::complex<double>, 30> () (3000 * scale);
-    bench_3<std::complex<double>, 30> () (100 * scale);
-
-    header ("std::complex<double>, 100");
-
-    bench_1<std::complex<double>, 100> () (30000 * scale);
-    bench_2<std::complex<double>, 100> () (300 * scale);
-    bench_3<std::complex<double>, 100> () (3 * scale);
-    */
-#endif
-
-    return 0;
+  return 0;
 }
 

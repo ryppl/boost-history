@@ -96,6 +96,8 @@ int gees_tst()
     std::cout << std::endl;
     std::sort( w.begin(), w.end(), cmp_real_part() );
     for(size_t i = 0 ; i < size_i ; ++i ) assert( is_equal( i * 1.0, w[i].real(), .5 ) );
+
+    // still calculate A - UTherm(U) ~= 0
   }
   return 0;
 }

@@ -1,25 +1,8 @@
-#ifndef BENCH3_H
+#ifndef boost_numeric_ublas_blas_hpp
 #define BENCH3_H
 
-namespace numerics = boost::numerics;
+namespace numerics = boost::numeric::ublas ;
 
-void header (std::string text);
-
-template<class T>
-struct footer {
-    void operator () (int multiplies, int plus, int runs, double elapsed) {
-        std::cout << "elapsed: " << elapsed << " s, "
-                  << (multiplies * numerics::type_traits<T>::multiplies_complexity +
-                      plus * numerics::type_traits<T>::plus_complexity) * runs /
-                     (1024 * 1024 * elapsed) << " Mflops" << std::endl;
-        /*
-        std::cerr << "elapsed: " << elapsed << " s, "
-                  << (multiplies * numerics::type_traits<T>::multiplies_complexity +
-                      plus * numerics::type_traits<T>::plus_complexity) * runs /
-                     (1024 * 1024 * elapsed) << " Mflops" << std::endl;
-        */
-    }
-};
 
 template<class T, int N> 
 struct c_vector_traits {
