@@ -77,8 +77,8 @@ namespace boost {
   template<class T, class Rounding>
   struct rounded_transc_std: Rounding
   {
-    #define ROUND_DOWN(EXPR) downward(),   force_rounding( EXPR )
-    #define ROUND_UP  (EXPR) upward(),     force_rounding( EXPR )
+    #define ROUND_DOWN(EXPR) (downward(),   force_rounding( EXPR ))
+    #define ROUND_UP(EXPR)   (upward(),     force_rounding( EXPR ))
     T exp_down  (const T& x) { return ROUND_DOWN( std::exp(x)   ); }
     T exp_up    (const T& x) { return ROUND_UP  ( std::exp(x)   ); }
     T log_down  (const T& x) { return ROUND_DOWN( std::log(x)   ); }
@@ -114,9 +114,9 @@ namespace boost {
   template<class T, class Rounding>
   struct rounded_transc_opp: Rounding
   {
-    #define ROUND_DOWN(EXPR) downward(), force_rounding( EXPR ) 
-    #define ROUND_NEAR(EXPR) tonearest(), force_rounding( EXPR )
-    #define ROUND_UP  (EXPR) force_rounding( EXPR )
+    #define ROUND_DOWN(EXPR) (downward(),  force_rounding( EXPR ))
+    #define ROUND_NEAR(EXPR) (tonearest(), force_rounding( EXPR ))
+    #define ROUND_UP(EXPR)   force_rounding( EXPR )
     T exp_down  (const T& x) { T y = ROUND_DOWN ( std::exp(x)    );
                                upward();
                                return y;

@@ -55,7 +55,6 @@ namespace boost {
   {
   public:
     typedef T base_type;
-    // typedef std::numeric_limits<base_type> base_limits;
     typedef Traits traits_type;
 
     interval(const T& v = 0): low(v), up(v) {}
@@ -93,6 +92,7 @@ namespace boost {
     void set(const T& l, const T& u);
 
   private:
+    typedef std::numeric_limits<base_type> base_limits;
     T low;
     T up;
   };

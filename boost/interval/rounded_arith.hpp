@@ -56,7 +56,7 @@ namespace boost {
   struct rounded_arith_std: Rounding {
     #define ROUND_DOWN(EXPR) (downward(),   force_rounding( EXPR ))
     #define ROUND_NEAR(EXPR) (to_nearest(), force_rounding( EXPR ))
-    #define ROUND_UP  (EXPR) (upward(),     force_rounding( EXPR ))
+    #define ROUND_UP(EXPR)   (upward(),     force_rounding( EXPR ))
     void init() { }
     T add_down (const T& x, const T& y) { return ROUND_DOWN ( x + y        ); }
     T add_up   (const T& x, const T& y) { return ROUND_UP   ( x + y        ); }
@@ -79,9 +79,9 @@ namespace boost {
   template<class T, class Rounding>
   struct rounded_arith_opp: Rounding {
     void init() { upward(); }
-    #define ROUND_DOWN(EXPR) downward(),  force_rounding( EXPR )
-    #define ROUND_NEAR(EXPR) tonearest(), force_rounding( EXPR )
-    #define ROUND_UP  (EXPR)              force_rounding( EXPR )
+    #define ROUND_DOWN(EXPR) (downward(),  force_rounding( EXPR ))
+    #define ROUND_NEAR(EXPR) (tonearest(), force_rounding( EXPR ))
+    #define ROUND_UP(EXPR)                 force_rounding( EXPR )
     T add_down (const T& x, const T& y) { return -ROUND_UP  ( (-x) - y ); }
     T add_up   (const T& x, const T& y) { return ROUND_UP   ( x + y    ); }
     T sub_down (const T& x, const T& y) { return -ROUND_UP  ( y - x    ); }
@@ -90,7 +90,7 @@ namespace boost {
     T mul_up   (const T& x, const T& y) { return ROUND_UP   ( x * y    ); }
     T div_down (const T& x, const T& y) { return -ROUND_UP  ( x / (-y) ); }
     T div_up   (const T& x, const T& y) { return ROUND_UP   ( x / y    ); }
-    T median   (const T& x, const T& y) { T r = ROUND_NEAR  ( (x + y) / 2  );
+    T median   (const T& x, const T& y) { T r = ROUND_NEAR  ( (x + y) / 2 );
                                           upward();
                                           return r;
 					}
@@ -98,7 +98,7 @@ namespace boost {
                                           upward();
                                           return r;
 					}
-    T sqrt_up  (const T& x)             { return ROUND_UP   ( std::sqrt(x) ); }
+    T sqrt_up  (const T& x)             { return ROUND_UP  ( std::sqrt(x) ); }
     T int_down (const T& x)             { return -to_int(-x); }
     T int_up   (const T& x)             { return to_int(x); }
     #undef ROUND_DOWN
