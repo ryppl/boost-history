@@ -56,6 +56,12 @@ int main(int, char *[])
     it = boost::boyer_moore(text, "Plays many");        assert(it == text.end());
     assert(text.find("plays") != std::string::npos);
 
+    it = boost::boyer_moore("And in his time, one man plays many parts", "plays many");
+
+    char *t = "And in his time, one man plays many parts";
+    char *p = "plays many";
+    it = boost::boyer_moore(t, p);
+
 
 #if defined(BOOST_MSVC)
 {
@@ -63,8 +69,6 @@ int main(int, char *[])
     std::wstring wpattern(L"example");
 
     std::wstring::const_iterator wit;
-    assert(*boost::boyer_moore(L"this is an example foo bar", L"example") != 0);
-
     std::vector<std::ptrdiff_t> vec;
     boost::boyer_moore_search<std::wstring::const_iterator,
                               std::wstring::const_iterator>(wtext.begin(),
@@ -81,7 +85,6 @@ int main(int, char *[])
     wit = boost::boyer_moore(wtext, L"fo");         assert(wit != wtext.end());
     wit = boost::boyer_moore(wtext, L"is");         assert(wit != wtext.end());
     std::advance(wit, 2);
-    wit = boost::boyer_moore(&(*wit), L"is");       assert(wit != wtext.end());
 }
 #endif
 

@@ -14,6 +14,7 @@
 
 #include <boost/config.hpp>
 #include <string>
+#include <vector>
 
 
 #if !(defined(BOOST_MSVC)  &&  (_MSC_VER <= 1300))
@@ -192,9 +193,9 @@ namespace boost {
 
     // class to search for a pattern in multiple sequences
     template<typename Res,
-            typename ItS,
-            typename ItP,
-            typename Alloc=std::allocator<std::ptrdiff_t>
+             typename ItS,
+             typename ItP,
+             typename Alloc=std::allocator<std::ptrdiff_t>
             >
     class boyer_moore_pattern_search
     {
@@ -314,9 +315,9 @@ namespace boost {
 
 
     inline
-    const std::string::value_type *
-    boyer_moore(const std::string::value_type *text,
-                const std::string::value_type *pattern)
+    std::string::value_type *
+    boyer_moore(std::string::value_type *text,
+                std::string::value_type *pattern)
     {
         std::string    t(text);
         std::string    p(pattern);
@@ -330,23 +331,25 @@ namespace boost {
         return text + len;
     }
 
+    // prevent the algorithm being called with temporary char strings
+    // ie.
+    //   it = boost::boyer_moore("this is an example foo bar", "example");
+    // and
+    //   it = boost::boyer_moore(L"this is an example foo bar", L"example");
+    // will cause a compiler error.
+    // However,
+    //   boost::boyer_moore("this is an example foo bar", "example");
+    // will compile but will cause a linker error
+    inline
+    void
+    boyer_moore(const std::string::value_type *text,
+                const std::string::value_type *pattern);
+
 
     inline
-    const std::wstring::value_type *
+    void
     boyer_moore(const std::wstring::value_type *text,
-                const std::wstring::value_type *pattern)
-    {
-        std::wstring   t(text);
-        std::wstring   p(pattern);
-        std::ptrdiff_t len = std::char_traits<std::wstring::value_type>::length(text);
-        boyer_moore_search<std::wstring::const_iterator,
-                           std::wstring::const_iterator>(t.begin(),
-                                                         t.end(),
-                                                         p.begin(),
-                                                         p.end(),
-                                                         &len, 1);
-        return text + len;
-    }
+                const std::wstring::value_type *pattern);
 
 }       // namespace boost
 
