@@ -1,3 +1,4 @@
+Executing ssh-askpass to query the password...
 /* A Bison parser, made from jamgram.y
    by GNU bison 1.31.  */
 
