@@ -99,6 +99,7 @@
 #  include <ostream>
 #endif
 
+#include "boost/lowest_bit.hpp" // used by find_first/next
 #include "boost/dynamic_bitset_fwd.hpp" //G.P.S.
 #include "boost/detail/dynamic_bitset.hpp"
 
@@ -155,6 +156,7 @@ public:
     typedef Block block_type;
     typedef std::size_t size_type;
     BOOST_STATIC_CONSTANT(int, bits_per_block = (base::bits_per_block) ); // [gps]
+    BOOST_STATIC_CONSTANT(size_type, npos = -1);
 
     // reference to a bit
     class reference
@@ -374,6 +376,10 @@ public:
     bool is_subset_of(const dynamic_bitset& a) const;
     bool is_proper_subset_of(const dynamic_bitset& a) const;
 
+    // lookup
+    size_type find_first() const;
+    size_type find_next(size_type pos) const;
+
 
 #ifdef BOOST_DYN_BITSET_USE_FRIENDS
     // lexicographical comparison
@@ -417,6 +423,7 @@ private:
     void reset_(size_type bit);
     bool test_(size_type bit) const;
     void set_block_(size_type blocknum, Block b);
+    size_type m_do_find_from(size_type first_block) const;
 
 public:
 
@@ -1196,6 +1203,65 @@ is_proper_subset_of(const dynamic_bitset<Block, Allocator>& a) const
     }
     return proper;
 }
+
+// --------------------------------
+// lookup
+
+
+// look for the first bit "on", starting
+// from the block with index first_block
+//
+template <typename Block, typename Allocator>
+typename dynamic_bitset<Block, Allocator>::size_type
+dynamic_bitset<Block, Allocator>::m_do_find_from(size_type first_block) const
+{
+    size_type i = first_block;
+
+    // skip null blocks
+    while (i < this->m_num_blocks && this->m_bits[i] == 0)
+        ++i;
+
+    if (i>=this->m_num_blocks)
+        return npos; // not found
+
+    return i * bits_per_block + boost::lowest_bit(this->m_bits[i]);
+
+}
+
+
+
+template <typename Block, typename Allocator>
+typename dynamic_bitset<Block, Allocator>::size_type
+dynamic_bitset<Block, Allocator>::find_first() const
+{
+    return m_do_find_from(0);
+
+}
+
+
+
+template <typename Block, typename Allocator>
+typename dynamic_bitset<Block, Allocator>::size_type
+dynamic_bitset<Block, Allocator>::find_next(size_type pos) const
+{
+    ++pos;
+    if (pos >= this->size())
+        return npos;
+
+    const size_type blk = this->word(pos);
+    const size_type ind = this->offset(pos);
+
+    // mask out bits before pos
+    const Block fore = this->m_bits[blk] & ( ~Block(0) << ind );
+
+    return fore?
+        blk * bits_per_block + lowest_bit(fore)
+        :
+        m_do_find_from(blk + 1);
+
+}
+
+
 
 //-----------------------------------------------------------------------------
 // comparison
