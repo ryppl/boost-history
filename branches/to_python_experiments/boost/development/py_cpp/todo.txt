@@ -1,0 +1,137 @@
+Better python and C++ exception handling/error reporting.
+long long support
+use Python generic numeric coercion in from_python() for C++ numeric types
+Document error-handling
+Consider renaming PyPtr to Reference.
+Report Cygwin linker memory issues
+handle more arguments
+MI from both ExtensionClasses and Python classes, or at least don't crash(!)
+Remove one level of indirection on type objects (no vtbl?).
+Much more testing, especially of things in objects.h
+Make multiple inheritance from real Python classes work - I don't think this is possible
+Handle polymorphism (passing a Wrapped<Derived> as a Base*).
+Specializations of Caller<> for commmon combinations of argument types (?)
+special member functions for numeric types
+pickling support
+testing with Python 2.0
+Make abstract classes non-instantiable
+
+Documentation:
+    building
+
+    overloading and the overload resolution mechanism
+
+    special member functions
+
+    exposing data members as attributes
+        def_readonly()
+        def_readwrite()
+        def_getter()
+        def_setter()
+
+    differences between Python classes and ExtensionClasses
+        additional capabilities of ExtensionClasses
+
+    exception handling
+
+    Advanced Topics:
+        Advanced Type Conversion
+            adding conversions for fundamental types
+                generic conversions for template types (with partial spec).
+
+            Interacting with built-in Python objects and types from C++
+
+            dealing with non-const reference/pointer parameters
+
+        Private virtual functions with default implementations
+
+        extending multiple-argument support using gen_all.py
+    
+    limitations
+        templates
+            Yes. If you look at the examples in extclass_demo.cpp you'll see that I have
+            exposed several template instantiations (e.g. std::pair<int,int>) in Python.
+            Keep in mind, however, that you can only expose a template instantiation,
+            not a template. In other words, MyTemplate<Foo> can be exposed. MyTemplate
+            itself cannot.
+
+            Well, that's not strictly true. Wow, this is more complicated to explain
+            than I thought.
+            You can't make an ExtensionClass<MyTemplate>, since after all MyTemplate is
+            not a type. You can only expose a concrete type to Python.
+
+            What you *can* do (if your compiler supports partial ordering of function
+            templates - MSVC is broken and does not) is to write appropriate
+            from_python() and to_python() functions for converting a whole class of
+            template instantiations to/from Python. That won't let you create an
+            instance of MyTemplate<SomePythonType> from Python, but it will let you
+            pass/return arbitrary MyTemplate<SomeCplusplusType> instances to/from your
+            wrapped C++ functions.
+
+            template <class T>
+            MyTemplate<T> from_python(PyObject* x, py::Type<MyTemplate<T> >)
+            {
+               // code to convert x into a MyTemplate<T>... that part is up to you
+            }
+
+            template <class T>
+            PyObject* from_python(const MyTemplate<T>&)
+            {
+               // code to convert MyTemplate<T> into a PyObject*... that part is up to
+            you
+            }
+
+            For example, you could use this to convert Python lists to/from
+            std::vector<T> automatically.
+
+        enums
+
+        the importance of declaration order of ClassWrappers/ExtensionInstances
+
+        out parameters and non-const pointers
+
+        returning references to wrapped objects
+
+        About the vc6 project and the debug build
+
+        About doctest.py
+
+Boost remarks:
+
+    > > One of us is completely nuts ;->. How can I move the test
+    > > (is_prefix(enablers[i].name + 2, name + 2)) outside the loop if it
+    depends
+    > > on the loop index, i?
+    > >
+    >   name += 2;
+    >    for()
+    > {
+    >    if (is_prefix(enablers[i].name + 2, name))
+    > }
+
+    I see now. I guess I should stop pussyfooting and either go for optimization
+    or clarity here, eh?
+
+    ------
+
+    > Re: Dict                                                                      
+    >    Why abbreviate this? Code is read 5 or 6 times for every time its          
+    > written. The few extra characters don't affect compile time or program        
+    > speed. It's part of my personal goal of write what you mean, name them        
+    what                                                                            
+    > they are.                                                                     
+                                                                                    
+    I completely agree. Abbrevs rub me the wrong way, 2 ;-> 
+ 
+    -------
+
+
+                                                                                    
+                                                                                    
+Later:
+       keyword and varargs?
+       Put explicit Type<> arguments at the beginnings of overloads, to make them look more like template instance specifications.
+
+Known bugs
+      can't handle 'const void' return values
+      Who returns 'const void'? I did it once, by mistake ;)

@@ -1,4 +1,18 @@
-//  (C) Copyright David Abrahams 2000. Permission to copy, use, modify, sell and
+from gen_function import *
+import string
+
+def gen_extclass(args):
+    held_instance = """%{
+    template <%(class A%n%:, %)>%}
+    HeldInstance(PyObject* p%(, const A%n%& a%n%)) : T(%(a%n%:, %)), m_self(p) {}"""
+
+    instance_value_holder = """%{
+    template <%(class A%n%:, %)>%}
+    InstanceValueHolder(ExtensionInstance* p%(, const A%n& a%n%)) :
+        m_held(p%(, a%n%)) {}"""
+    
+    return (
+"""//  (C) Copyright David Abrahams 2000. Permission to copy, use, modify, sell and
 //  distribute this software is granted provided this copyright notice appears
 //  in all copies. This software is provided "as is" without express or implied
 //  warranty, and with no claim as to its suitability for any purpose.
@@ -6,7 +20,7 @@
 //  The author gratefully acknowleges the support of Dragon Systems, Inc., in
 //  producing this work.
 //
-//  This file automatically generated for 5-argument constructors by
+//  This file automatically generated for %d-argument constructors by
 //  gen_extclass.py
 
 #ifndef EXTENSION_CLASS_DWA052000_H_
@@ -27,7 +41,6 @@ namespace py {
 
 // forward declarations
 class ExtensionInstance;
-class ExtensionClassBase;
 template <class T> class InstanceHolder;
 template <class T, class U> class InstanceValueHolder;
 template <class Ptr, class T> class InstancePtrHolder;
@@ -54,39 +67,10 @@ T* check_non_null(T* p)
 
 template <class T> class HeldInstance;
 
-namespace detail {
-  typedef void* (*ConversionFunction)(void*);
-
-  struct BaseClassInfo
-  {
-      BaseClassInfo(ExtensionClassBase* t, ConversionFunction f)
-          :class_object(t), convert(f)
-          {}
-    
-      ExtensionClassBase* class_object;
-      ConversionFunction convert;
-  };
-
-  typedef BaseClassInfo DerivedClassInfo;
-}
-
 class ExtensionClassBase : public Class<ExtensionInstance>
 {
  public:
     ExtensionClassBase(const char* name);
-    
- public:
-    // the purpose of try_class_conversions() and its related functions 
-    // is explained in extclass.cpp
-    void* try_class_conversions(InstanceHolderBase*) const;
-    void* try_base_class_conversions(InstanceHolderBase*) const;
-    void* try_derived_class_conversions(InstanceHolderBase*) const;
-
- private:
-    virtual void* extract_object_from_holder(InstanceHolderBase* v) const = 0;
-    virtual std::vector<py::detail::BaseClassInfo> const& base_classes() const = 0;
-    virtual std::vector<py::detail::DerivedClassInfo> const& derived_classes() const = 0;
-
  protected:
     void add_method(PyPtr<Function> method, const char* name);
     void add_default_method(PyPtr<Function> method, const char* name);
@@ -102,24 +86,12 @@ template <class T>
 class ClassRegistry
 {
  public:
-    static ExtensionClassBase* class_object()
+    static Class<ExtensionInstance>* class_object()
         { return static_class_object; }
-
-    // Register/unregister the Python class object corresponding to T
-    static void register_class(ExtensionClassBase*);
-    static void unregister_class(ExtensionClassBase*);
-
-    // Establish C++ inheritance relationships
-    static void register_base_class(py::detail::BaseClassInfo const&);
-    static void register_derived_class(py::detail::DerivedClassInfo const&);
-
-    // Query the C++ inheritance relationships
-    static std::vector<py::detail::BaseClassInfo> const& base_classes();
-    static std::vector<py::detail::DerivedClassInfo> const& derived_classes();
+    static void register_class(py::Class<py::ExtensionInstance>*);
+    static void unregister_class(py::Class<py::ExtensionInstance>*);
  private:
-    static ExtensionClassBase* static_class_object;
-    static std::vector<py::detail::BaseClassInfo> static_base_class_info;
-    static std::vector<py::detail::DerivedClassInfo> static_derived_class_info;
+    static py::Class<py::ExtensionInstance>* static_class_object;
 };
 
 #ifdef PY_NO_INLINE_FRIENDS_IN_NAMESPACE // back to global namespace for this GCC bug
@@ -165,11 +137,6 @@ class PyExtensionClassConverters
             py::InstanceHolder<T>* held = dynamic_cast<py::InstanceHolder<T>*>(*p);
             if (held != 0)
                 return held->target();
-
-            // see extclass.cpp for an explanation of try_class_conversions()
-            void * target = py::ClassRegistry<T>::class_object()->try_class_conversions(*p);
-            if(target) 
-                return static_cast<T *>(target);
         }
         py::report_missing_instance_data(self, py::ClassRegistry<T>::class_object(), typeid(T));
         throw py::ArgumentError();
@@ -217,6 +184,7 @@ class PyExtensionClassConverters
             
             return py::PyPtr<py::ExtensionInstance>(new py::ExtensionInstance(class_));
         }
+
 
     // Convert to const T*
     friend const T* from_python(PyObject* p, py::Type<const T*>)
@@ -296,28 +264,6 @@ class ReadOnlySetattrFunction : public Function
     String m_name;
 };
 
-namespace detail
-{
-
-template <class From, class To>
-struct DefineConversion
-{
-    static void * upcast_ptr(void * v)
-    {
-        return static_cast<To *>(static_cast<From *>(v));
-    }
-
-    static void * downcast_ptr(void * v)
-    {
-        return dynamic_cast<To *>(static_cast<From *>(v));
-    }
-};
-
-}
-
-enum WithoutDowncast { without_downcast };
-
-
 // An easy way to make an extension base class which wraps T. Note that Python
 // subclasses of this class will simply be Class<ExtensionInstance> objects.
 //
@@ -348,19 +294,19 @@ class ExtensionClass
     ~ExtensionClass();
 
     // define constructors
-    template <class A1, class A2, class A3, class A4, class A5>
-    void def(Constructor<A1, A2, A3, A4, A5>)
+""" % args
+        + gen_function(
+"""    template <%(class A%n%:, %)>
+    void def(Constructor<%(A%n%:, %)>)
     // The following incantation builds a Signature1, Signature2,... object. It
     // should _all_ get optimized away.
     { add_constructor(
-        prepend(Type<A1>::Id(),
-        prepend(Type<A2>::Id(),
-        prepend(Type<A3>::Id(),
-        prepend(Type<A4>::Id(),
-        prepend(Type<A5>::Id(),
-                Signature0()))))));
+        %(prepend(Type<A%n>::Id(),
+        %)        Signature0()%()%));
     }
-
+""", args)
+        +
+"""
     // define member functions. In fact this works for free functions, too -
     // they act like static member functions, or if they start with the
     // appropriate self argument (as a pointer), they can be used just like
@@ -412,49 +358,10 @@ class ExtensionClass
         this->def_getter(pm, name);
         this->def_setter(pm, name);
     }
-        
-    // declare the given class a base class of this one and register 
-    // up and down conversion functions
-    template <class S, class V>
-    void declare_base(ExtensionClass<S, V> * base)
-    {
-        // see extclass.cpp for an explanation of why we need to register
-        // conversion functions
-        detail::BaseClassInfo baseInfo(base, 
-                            &detail::DefineConversion<S, T>::downcast_ptr);
-        ClassRegistry<T>::register_base_class(baseInfo);
-        add_base(Ptr(as_object(base), Ptr::new_ref));
-        
-        detail::DerivedClassInfo derivedInfo(this, 
-                            &detail::DefineConversion<T, S>::upcast_ptr);
-        ClassRegistry<S>::register_derived_class(derivedInfo);
-    }
-        
-    // declare the given class a base class of this one and register 
-    // only up conversion function
-    template <class S, class V>
-    void declare_base(ExtensionClass<S, V> * base, WithoutDowncast)
-    {
-        // see extclass.cpp for an explanation of why we need to register
-        // conversion functions
-        detail::BaseClassInfo baseInfo(base, 0);
-        ClassRegistry<T>::register_base_class(baseInfo);
-        add_base(Ptr(as_object(base), Ptr::new_ref));
-        
-        detail::DerivedClassInfo derivedInfo(this, 
-                           &detail::DefineConversion<T, S>::upcast_ptr);
-        ClassRegistry<S>::register_derived_class(derivedInfo);
-    }
     
- private: // types
+ private:
     typedef InstanceValueHolder<T,U> Holder;
-
- private: // ExtensionClassBase virtual function implementations
-    std::vector<detail::BaseClassInfo> const& base_classes() const;
-    std::vector<detail::DerivedClassInfo> const& derived_classes() const;
-    void* extract_object_from_holder(InstanceHolderBase* v) const;
-
- private: // Utility functions
+    
     template <class Signature>
     void add_constructor(Signature sig)
     {
@@ -469,18 +376,9 @@ class HeldInstance : public T
 {
     // There are no member functions: we want to avoid inadvertently overriding
     // any virtual functions in T.
-public:
-    HeldInstance(PyObject* p) : T(), m_self(p) {}
-    template <class A1>
-    HeldInstance(PyObject* p, const A1& a1) : T(a1), m_self(p) {}
-    template <class A1, class A2>
-    HeldInstance(PyObject* p, const A1& a1, const A2& a2) : T(a1, a2), m_self(p) {}
-    template <class A1, class A2, class A3>
-    HeldInstance(PyObject* p, const A1& a1, const A2& a2, const A3& a3) : T(a1, a2, a3), m_self(p) {}
-    template <class A1, class A2, class A3, class A4>
-    HeldInstance(PyObject* p, const A1& a1, const A2& a2, const A3& a3, const A4& a4) : T(a1, a2, a3, a4), m_self(p) {}
-    template <class A1, class A2, class A3, class A4, class A5>
-    HeldInstance(PyObject* p, const A1& a1, const A2& a2, const A3& a3, const A4& a4, const A5& a5) : T(a1, a2, a3, a4, a5), m_self(p) {}
+public:"""
+        + gen_functions(held_instance, args)
+        + """
 protected:
     PyObject* m_self; // Not really needed; doesn't really hurt.
 };
@@ -504,35 +402,21 @@ class InstanceValueHolder : public InstanceHolder<Held>
 public:
     Held* target() { return &m_held; }
     Wrapper* value_target() { return &m_held; }
-
-    InstanceValueHolder(ExtensionInstance* p) :
-        m_held(p) {}
-    template <class A1>
-    InstanceValueHolder(ExtensionInstance* p, const A1& a1) :
-        m_held(p, a1) {}
-    template <class A1, class A2>
-    InstanceValueHolder(ExtensionInstance* p, const A1& a1, const A2& a2) :
-        m_held(p, a1, a2) {}
-    template <class A1, class A2, class A3>
-    InstanceValueHolder(ExtensionInstance* p, const A1& a1, const A2& a2, const A3& a3) :
-        m_held(p, a1, a2, a3) {}
-    template <class A1, class A2, class A3, class A4>
-    InstanceValueHolder(ExtensionInstance* p, const A1& a1, const A2& a2, const A3& a3, const A4& a4) :
-        m_held(p, a1, a2, a3, a4) {}
-    template <class A1, class A2, class A3, class A4, class A5>
-    InstanceValueHolder(ExtensionInstance* p, const A1& a1, const A2& a2, const A3& a3, const A4& a4, const A5& a5) :
-        m_held(p, a1, a2, a3, a4, a5) {}
+"""
+        + gen_functions(instance_value_holder, args)
+        + """
 private:
     Wrapper m_held;
 };
-
+""" +
+"""
 template <class PtrType, class HeldType>
 class InstancePtrHolder : public InstanceHolder<HeldType>
 {
  public:
     HeldType* target() { return &*m_ptr; }
     PtrType& ptr() { return m_ptr; }
-    
+
     InstancePtrHolder(PtrType ptr) : m_ptr(ptr) {}
  private:
     PtrType m_ptr;
@@ -572,37 +456,13 @@ ExtensionClass<T, U>::ExtensionClass(const char* name)
 }
 
 template <class T, class U>
-inline
-std::vector<detail::BaseClassInfo> const & 
-ExtensionClass<T, U>::base_classes() const
-{
-    return ClassRegistry<T>::base_classes();
-}
-
-template <class T, class U>
-inline
-std::vector<detail::DerivedClassInfo> const & 
-ExtensionClass<T, U>::derived_classes() const
-{
-    return ClassRegistry<T>::derived_classes();
-}
-       
-template <class T, class U>
-void* ExtensionClass<T, U>::extract_object_from_holder(InstanceHolderBase* v) const
-{
-    py::InstanceHolder<T>* held = dynamic_cast<py::InstanceHolder<T>*>(v);
-    if(held) return held->target();
-    return 0;
-}
-
-template <class T, class U>
 ExtensionClass<T, U>::~ExtensionClass()
 {
     ClassRegistry<T>::unregister_class(this);
 }
 
 template <class T>
-inline void ClassRegistry<T>::register_class(ExtensionClassBase* p)
+inline void ClassRegistry<T>::register_class(Class<ExtensionInstance>* p)
 {
     // You're not expected to create more than one of these!
     assert(static_class_object == 0);
@@ -610,7 +470,7 @@ inline void ClassRegistry<T>::register_class(ExtensionClassBase* p)
 }
 
 template <class T>
-inline void ClassRegistry<T>::unregister_class(ExtensionClassBase* p)
+inline void ClassRegistry<T>::unregister_class(Class<ExtensionInstance>* p)
 {
     // The user should be destroying the same object they created.
     assert(static_class_object == p);
@@ -618,41 +478,23 @@ inline void ClassRegistry<T>::unregister_class(ExtensionClassBase* p)
     static_class_object = 0;
 }
 
-template <class T>
-void ClassRegistry<T>::register_base_class(py::detail::BaseClassInfo const & i)
-{
-    static_base_class_info.push_back(i);
-}
-
-template <class T>
-void ClassRegistry<T>::register_derived_class(py::detail::DerivedClassInfo const & i)
-{
-    static_derived_class_info.push_back(i);
-}
-
-template <class T>
-std::vector<py::detail::BaseClassInfo> const& ClassRegistry<T>::base_classes()
-{
-    return static_base_class_info;
-}
-
-template <class T>
-std::vector<py::detail::DerivedClassInfo> const& ClassRegistry<T>::derived_classes()
-{
-    return static_derived_class_info;
-}
-
 //
 // Static data member declaration.
 //
 template <class T>
-ExtensionClassBase* ClassRegistry<T>::static_class_object;
-template <class T>
-std::vector<py::detail::BaseClassInfo> ClassRegistry<T>::static_base_class_info;
-template <class T>
-std::vector<py::detail::DerivedClassInfo> ClassRegistry<T>::static_derived_class_info;
+Class<py::ExtensionInstance>* ClassRegistry<T>::static_class_object;
 
 } // namespace py
 
 #endif // EXTENSION_CLASS_DWA052000_H_
+""")
 
+if __name__ == '__main__':
+    import sys
+
+    if len(sys.argv) == 1:
+        args = 5
+    else:
+        args = int(sys.argv[1])
+
+    print gen_extclass(args)

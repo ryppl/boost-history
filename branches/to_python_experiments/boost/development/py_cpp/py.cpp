@@ -7,11 +7,7 @@
 //  producing this work.
 
 #include "py.h"
-#include <boost/config.hpp>
-#include <typeinfo>
-#ifndef BOOST_NO_LIMITS
-# include <boost/cast.hpp>
-#endif
+#include <boost/cast.hpp>
 
 namespace py {
 
@@ -86,19 +82,11 @@ T integer_from_python(PyObject* p, py::Type<T>)
 {
     const long long_result = from_python(p, py::Type<long>());
 
-#ifndef BOOST_NO_LIMITS
     try
     {
         return boost::numeric_cast<T>(long_result);
     }
     catch(const boost::bad_numeric_cast&)
-#else
-    if (static_cast<T>(long_result) == long_result)
-    {
-        return static_cast<T>(long_result);
-    }
-    else
-#endif
     {
         char buffer[256];
         const char message[] = "%ld out of range for %s";
@@ -115,17 +103,12 @@ template <class T>
 PyObject* integer_to_python(T value)
 {
     long value_as_long;
-
-#ifndef BOOST_NO_LIMITS
+    
     try
     {
-        value_as_long = boost::numeric_cast<long>(value);
+        value_as_long = boost::numeric_cast<T>(value);
     }
     catch(const boost::bad_numeric_cast&)
-#else
-    value_as_long = static_cast<long>(value);
-    if (value_as_long != value)
-#endif
     {
         const char message[] = "value out of range for Python int";
         PyErr_SetString(PyExc_ValueError, message);
