@@ -620,7 +620,6 @@ namespace
         int copy1[a_size], copy2[a_size];
 
         copy( a, copy1 );
-	copy( a, v.begin() );
         copy( begin( a ), end( a ), begin( copy2 ) );
         assert( ext::equal( copy1, copy2 ) );
     }
