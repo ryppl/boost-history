@@ -522,12 +522,13 @@ struct is_tuple
 template<typename T1, ... Elements>
 class tuple : public tuple_base 
 {
-  typedef T1 head_type;
-  typedef typename add_reference<typename add_const<head_type>::type>::type head_param_type;
-  typedef tuple<Elements> tail_type;
-  typedef tuple self_type;
+  typedef typename add_reference<typename add_const<T1>::type>::type
+    head_param_type;
 
 public:
+  typedef T1 head_type;
+  typedef tuple<Elements> tail_type;
+
   static const size_t size = 1 + tail_type::size;
 
   tuple() {}
@@ -574,13 +575,13 @@ public:
 template<typename T1, typename T2>
 class tuple : public tuple_base 
 {
-  typedef T1 head_type;
-  typedef tuple<T2> tail_type;
-
   typename add_reference<typename add_const<T1>::type>::type param1_type;
   typename add_reference<typename add_const<T2>::type>::type param2_type;
 
 public:
+  typedef T1 head_type;
+  typedef tuple<T2> tail_type;
+
   static const size_t size = 2;
 
   tuple() {}
@@ -613,23 +614,62 @@ public:
   tail_type tail;
 };
 
+// Performs an arbitrary transform on each of the types in a
+// tuple. This is a utility function, used by tie and make_tuple.
+template<typename MetaFun, typename Tuple, ... Rest>
+  class transform_tuple_type
+  {
+    typedef typename Tuple::head_type old_head_type;
+    typedef typename MetaFun::template apply<old_head_type>::type
+      new_head_type;
+    typedef typename Tuple::tail_type old_tail_type;
+    typedef transform_tuple_type<MetaFun, old_tail_type, Rest, new_head_type>
+      gen;
+  public:
+    typedef typename gen::type type;
+  };
+
+template<typename MetaFun, ... Rest>
+  class transform_tuple_type<MetaFun, tuple<>, Rest>
+  {
+  public:
+    typedef tuple<Rest> type;
+  };
+
 // make_tuple implementation
-tuple<> make_tuple() { return tuple(); }
+struct make_tuple_element_type
+{
+  template<typename T> 
+    struct apply
+    {
+      typedef T type;
+    };
 
-template<typename T1, ... Rest> 
-  auto make_tuple(const T1& t1, Rest rest)
-  { return tuple<T1, decltype(make_tuple(rest))>(t1, make_tuple(rest)); }
+  template<typename T>
+    struct apply<T&>
+    {
+      typedef typename remove_cv<T>::type type;
+    };
 
-template<typename T1, ... Rest> 
-  auto make_tuple(const reference_wrapper<T1>& t1, Rest rest)
-  { return tuple<T1&, decltype(make_tuple(rest))>(t1, make_tuple(rest)); }
+  template<typename T>
+    struct apply<reference_wrapper<T> >
+    {
+      typedef T& type;
+    };
+};
+
+template<... Elements> 
+  auto make_tuple(Elements elements)
+  {
+    typedef typename transform_tuple_type<make_tuple_element_type,
+                                          tuple<Elements> >::type result_type; 
+    return result_type(elements);
+  }
 
 // tie implementation
-tuple<> tie() { return tuple(); }
-
-template<typename T1, ... Rest> 
-  auto tie(T1& t1, Rest rest)
-  { return tuple<T1&, decltype(tie(rest))>(t1, tie(rest)); }
+template<... Elements>
+  tuple<Elements> tie(Elements elements)
+  { return tuple<Elements>(elements); }
 \end{verbatim}
 \normalsize
 
@@ -643,12 +683,16 @@ The first tuple algorithm creates a tuple that is the reverse of the
 input tuple.
 \begin{verbatim}
 template<... Args>
-  auto reverse(tuple<>, Args args)
-  { return make_tuple(args); }
+  tuple<Args> reverse(tuple<>, Args args)
+  { return tuple<Args>(args); }
 
 template<typename Tuple, ... Args>
   auto reverse(const Tuple& t, Args args)
-  { return reverse(t.tail, t.head, args); }
+  { 
+    typedef typename Tuple::head_type head_type;
+    typedef typename Tuple::tail_type tail_type;
+    return reverse<tail_type, head_type>(t.tail, t.head, args);
+  }
 \end{verbatim}
 
 The second tuple algorithm illustrates the ability to unpack a tuple
@@ -673,7 +717,7 @@ The final tuple algorithm represents a transformation on tuples,
 similar to the {\tt transform} algorithm in the standard library.
 \begin{verbatim}
 template<typename F, ... Args>
-  auto transform(tuple<>, F f, Args args)
+  auto transform(tuple<>, F, Args args)
   { return make_tuple(args); }
 
 template<typename Tuple, typename F, ... Args>
