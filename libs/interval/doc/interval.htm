@@ -172,10 +172,12 @@ called "<i>possible</i>;" indeed, the result of [<i>a</i>,<i>b</i>] &lt;
 <i>x</i> &lt; <i>y</i>.</p>
 
 <p>Since any of these solution has a clearly defined semantics, it is not
-clear that we should enforce either of them. For this reason, the traits
-class defines which behavior will be followed, and different behavior can be
-followed by tailoring the traits class. See <a
-href="comparisons.htm">comparison policies</a> pages for further details.</p>
+clear that we should enforce either of them. For this reason, the default
+behavior consists to mimic the real comparisons by throwing an exception in
+the indeterminate case. Other behaviors can be selected bu using specific
+comparison namespace. There is also a bunch of explicitely named comparison
+functions. See <a href="comparisons.htm">comparisons</a> pages for further
+details.</p>
 
 <h3>Overview of the library, and usage</h3>
 
@@ -186,20 +188,21 @@ above and the content of the namespace boost. In addition to the class
 <code>interval&lt;T&gt;</code>, this level of usage provides arithmetic
 operators (<code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>),
 algebraic and piecewise-algebraic functions (<code>abs</code>,
-<code>square</code>, <code>sqrt</code>), transcendental and trigonometric
-functions (<code>exp</code>, <code>log</code>, <code>sin</code>,
-<code>cos</code>, <code>tan, asin</code>, <code>acos</code>,
-<code>atan</code>, <code>sinh</code>, <code>cosh</code>, <code>tanh</code>,
-<code>asinh</code>, <code>acosh</code>, <code>atanh</code>), and the standard
-comparison operators (<code>&lt;</code>, <code>&lt;=</code>,
-<code>&gt;</code>, <code>&gt;=</code>, <code>==</code>, <code>!=</code>), as
-well as several interval-specific functions (<code>min</code>,
-<code>max</code>, which have a different meaning than <code>std::min</code>
-and <code>std::max</code>; <code>lower</code>, <code>upper</code>,
-<code>width</code>, <code>median</code>, <code>empty</code>, <code>singleton,
-equal</code>, <code>in</code>, <code>in_zero</code>, <code>subset</code>,
-<code>proper_subset</code>, <code>overlap</code>, <code>intersection,
-hull</code>, <code>bisect</code>).</p>
+<code>square</code>, <code>sqrt</code>, <code>pow</code>), transcendental and
+trigonometric functions (<code>exp</code>, <code>log</code>,
+<code>sin</code>, <code>cos</code>, <code>tan</code>, <code>asin</code>,
+<code>acos</code>, <code>atan</code>, <code>sinh</code>, <code>cosh</code>,
+<code>tanh</code>, <code>asinh</code>, <code>acosh</code>,
+<code>atanh</code>), and the standard comparison operators
+(<code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>,
+<code>&gt;=</code>, <code>==</code>, <code>!=</code>), as well as several
+interval-specific functions (<code>min</code>, <code>max</code>, which have a
+different meaning than <code>std::min</code> and <code>std::max</code>;
+<code>lower</code>, <code>upper</code>, <code>width</code>,
+<code>median</code>, <code>empty</code>, <code>singleton, equal</code>,
+<code>in</code>, <code>in_zero</code>, <code>subset</code>,
+<code>proper_subset</code>, <code>overlap</code>, <code>intersection</code>,
+<code>hull</code>, <code>bisect</code>).</p>
 
 <p>For some functions which take several parameters of type
 <code>interval&lt;T&gt;</code>, all combinations of argument types
@@ -210,22 +213,21 @@ from the arguments of type <code>T</code> to a singleton of type
 that an argument is a singleton sometimes renders some tests unnecessary).</p>
 
 <p>A somewhat more advanced usage of this library is to hand-pick the
-policies <code>Rounding</code>, <code>Compare</code>, and
-<code>Checking</code> and pass them to <code>interval&lt;T,Traits&gt;</code>
-through the use of <code>Traits :=
-boost::interval_traits&lt;T,Compare,Rounding,Checking&gt;</code>. Appropriate
+policies <code>Rounding</code> and <code>Checking</code> and pass them to
+<code>interval&lt;T, Policies&gt;</code> through the use of <code>Policies :=
+boost::interval_lib::policies&lt;Rounding,Checking&gt;</code>. Appropriate
 policies can be fabricated by using the various classes provided in the
-namespace <code>boost::interval_lib</code> as detailed in section<a
-href="#interval_lib"> Interval Support Library</a>.</p>
+namespace <code>boost::interval_lib</code> as detailed in section <a
+href="#interval_lib">Interval Support Library</a>. It is also possible to
+choose the comparison scheme by overloading operators through namespaces.</p>
 
 <h2><a name="synopsis"></a>Synopsis</h2>
 <pre>namespace boost {
 
 namespace interval_lib {
 
-/* these declarations necessary for the declaration of interval */
-template &lt;class T&gt; struct rounded_math;
-template &lt;class T&gt; struct checking_strict;
+/* this declaration is necessary for the declaration of interval */
+template &lt;class T&gt; struct default_policies;
 
 /* ... ; the full synopsis of namespace interval_lib can be found <a href="#interval_lib">here</a> */
 
@@ -237,9 +239,7 @@ template&lt;class Rounding, class Checking&gt;
 struct interval_policies;
 
 /* template class interval; class definition can be found <a href="#interval">here</a> */
-template&lt;class T,
-         class Policies = interval_policies&lt;interval_lib::rounded_math&lt;T&gt;,
-                                            interval_lib::checking_strict&lt;T&gt; &gt; &gt;
+template&lt;class T, class Policies = typename interval_lib::default_policies&lt;T&gt; &gt;
 class interval;
 
 /* arithmetic operators involving intervals */
@@ -380,7 +380,7 @@ struct interval_policies
 <h2><a name="interval"></a>Template class <code>interval</code></h2>
 The public interface of the template class interval itself is kept at a
 simplest minimum:
-<pre>template &lt;class T, class Policies = interval_policies&lt;T&gt; &gt;
+<pre>template &lt;class T, class Policies = typename interval_lib::default_policies&lt;T&gt;::type &gt;
 class interval
 {
   public:
@@ -888,7 +888,7 @@ order for this library to be written. Hervé reorganized and wrote chapters of
 the documentation based on Guillaume's great starting point.</p>
 <hr>
 
-<p>Revised: 2002-12-15<br>
+<p>Revised: 2003-01-15<br>
 Copyright (c) Guillaume Melquiond, Sylvain Pion, Hervé Brönnimann, 2002.<br>
 Polytechnic University, 2002.</p>
 </body>
