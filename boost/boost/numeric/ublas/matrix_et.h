@@ -1511,9 +1511,7 @@ namespace boost { namespace numerics {
         // Element lookup
         NUMERICS_INLINE
         const_iterator1 find_first1 (int rank, size_type i, size_type j) const {
-            // FIXME: LAPACK tests fail for m x n banded matrices, if we only use rank.
-            // const_iterator1_type it1 (e_.find_first2 (rank, j, i));
-            const_iterator1_type it1 (e_.find_first2 (size1 () == size2 () ? rank : 0, j, i));
+            const_iterator1_type it1 (e_.find_first2 (rank, j, i));
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
             return const_iterator1 (*this, it1.index ());
 #else
@@ -1526,9 +1524,7 @@ namespace boost { namespace numerics {
         }
         NUMERICS_INLINE
         const_iterator1 find_last1 (int rank, size_type i, size_type j) const {
-            // FIXME: LAPACK tests fail for m x n banded matrices, if we only use rank.
-            // const_iterator1_type it1 (e_.find_last2 (rank, j, i));
-            const_iterator1_type it1 (e_.find_last2 (size1 () == size2 () ? rank : 0, j, i));
+            const_iterator1_type it1 (e_.find_last2 (rank, j, i));
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
             return const_iterator1 (*this, it1.index ());
 #else
@@ -1541,9 +1537,7 @@ namespace boost { namespace numerics {
         }
         NUMERICS_INLINE
         const_iterator2 find_first2 (int rank, size_type i, size_type j) const {
-            // FIXME: LAPACK tests fail for m x n banded matrices, if we only use rank.
-            // const_iterator2_type it2 (e_.find_first1 (rank, j, i));
-            const_iterator2_type it2 (e_.find_first1 (size1 () == size2 () ? rank : 0, j, i));
+            const_iterator2_type it2 (e_.find_first1 (rank, j, i));
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
             return const_iterator2 (*this, it2.index ());
 #else
@@ -1556,9 +1550,7 @@ namespace boost { namespace numerics {
         }
         NUMERICS_INLINE
         const_iterator2 find_last2 (int rank, size_type i, size_type j) const {
-            // FIXME: LAPACK tests fail for m x n banded matrices, if we only use rank.
-            // const_iterator2_type it2 (e_.find_last1 (rank, j, i));
-            const_iterator2_type it2 (e_.find_last1 (size1 () == size2 () ? rank : 0, j, i));
+            const_iterator2_type it2 (e_.find_last1 (rank, j, i));
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
             return const_iterator2 (*this, it2.index ());
 #else
@@ -1582,7 +1574,7 @@ namespace boost { namespace numerics {
 #else
             public random_access_iterator_base<typename E::const_iterator2::iterator_category,
                                                const_iterator1, value_type> {
-#endif                                               
+#endif
         public:
             typedef typename E::const_iterator2::iterator_category iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
@@ -1778,7 +1770,7 @@ namespace boost { namespace numerics {
                 return it_.index1 ();
             }
 
-            // Assignment 
+            // Assignment
             NUMERICS_INLINE
             const_iterator2 &operator = (const const_iterator2 &it) {
                 container_const_reference<matrix_unary2>::assign (&it ());

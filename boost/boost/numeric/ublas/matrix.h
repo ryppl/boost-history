@@ -121,7 +121,7 @@ namespace boost { namespace numerics {
         size_type index1 (size_type index1, size_type index2) {
             return index1;
         }
-        static 
+        static
         NUMERICS_INLINE
         size_type index2 (size_type index1, size_type index2) {
             return index2;
@@ -348,7 +348,9 @@ namespace boost { namespace numerics {
             typedef typename M::difference_type difference_type;
             difference_type size1 (m.size1 ());
             typename M::iterator1 it1 (m.begin1 ());
+#ifdef NUMERICS_BOUNDS_CHECK_EX
             check (m.end1 () - it1 == size1, bad_size ());
+#endif
             while (-- size1 >= 0) {
                 difference_type size2 (m.size2 ());
                 typename matrix_row<M>::iterator it2 ((*it1).begin ());
@@ -365,7 +367,9 @@ namespace boost { namespace numerics {
             typedef typename M::difference_type difference_type;
             difference_type size1 (m.size1 ());
             typename M::iterator1 it1 (m.begin1 ());
+#ifdef NUMERICS_BOUNDS_CHECK_EX
             check (m.end1 () - it1 == size1, bad_size ());
+#endif
             while (-- size1 >= 0) {
                 difference_type size2 (m.size2 ());
                 typename M::iterator2 it2 (it1.begin ());
@@ -678,9 +682,13 @@ namespace boost { namespace numerics {
             typedef typename M::difference_type difference_type;
             difference_type size1 (common (m.size1 (), e ().size1 ()));
             typename M::iterator1 it1 (m.begin1 ());
+#ifdef NUMERICS_BOUNDS_CHECK_EX
             check (m.end1 () - it1 == size1, bad_size ());
+#endif
             typename E::const_iterator1 it1e (e ().begin1 ());
+#ifdef NUMERICS_BOUNDS_CHECK_EX
             check (e ().end1 () - it1e == size1, bad_size ());
+#endif
             while (-- size1 >= 0) {
                 difference_type size2 (common (m.size2 (), e ().size2 ()));
                 typename matrix_row<M>::iterator it2 ((*it1).begin ());
@@ -699,9 +707,13 @@ namespace boost { namespace numerics {
             typedef typename M::difference_type difference_type;
             difference_type size1 (common (m.size1 (), e ().size1 ()));
             typename M::iterator1 it1 (m.begin1 ());
+#ifdef NUMERICS_BOUNDS_CHECK_EX
             check (m.end1 () - it1 == size1, bad_size ());
+#endif
             typename E::const_iterator1 it1e (e ().begin1 ());
+#ifdef NUMERICS_BOUNDS_CHECK_EX
             check (e ().end1 () - it1e == size1, bad_size ());
+#endif
             while (-- size1 >= 0) {
                 difference_type size2 (common (m.size2 (), e ().size2 ()));
                 typename M::iterator2 it2 (it1.begin ());

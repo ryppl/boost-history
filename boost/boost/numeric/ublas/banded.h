@@ -389,9 +389,9 @@ namespace boost { namespace numerics {
         NUMERICS_INLINE
         const_iterator1 find1 (int rank, size_type i, size_type j) const {
             if (rank == 1) {
-                size_type lower_i = std::max (difference_type (j - lower_), difference_type (0));
+                size_type lower_i = std::max (difference_type (j - upper_), difference_type (0));
                 i = std::max (i, lower_i);
-                size_type upper_i = std::min (j + 1 + upper_, size1_);
+                size_type upper_i = std::min (j + 1 + lower_, size1_);
                 i = std::min (i, upper_i);
             }
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
@@ -403,9 +403,9 @@ namespace boost { namespace numerics {
         NUMERICS_INLINE
         iterator1 find1 (int rank, size_type i, size_type j) {
             if (rank == 1) {
-                size_type lower_i = std::max (difference_type (j - lower_), difference_type (0));
+                size_type lower_i = std::max (difference_type (j - upper_), difference_type (0));
                 i = std::max (i, lower_i);
-                size_type upper_i = std::min (j + 1 + upper_, size1_);
+                size_type upper_i = std::min (j + 1 + lower_, size1_);
                 i = std::min (i, upper_i);
             }
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
@@ -533,7 +533,7 @@ namespace boost { namespace numerics {
             // Dereference
             NUMERICS_INLINE
             value_type operator * () const {
-                return (*this) () (it1_, it2_); 
+                return (*this) () (it1_, it2_);
             }
 
             NUMERICS_INLINE
@@ -647,7 +647,7 @@ namespace boost { namespace numerics {
             // Dereference
             NUMERICS_INLINE
             reference operator * () const {
-                return (*this) () (it1_, it2_); 
+                return (*this) () (it1_, it2_);
             }
 
             NUMERICS_INLINE
@@ -766,7 +766,7 @@ namespace boost { namespace numerics {
             // Dereference
             NUMERICS_INLINE
             value_type operator * () const {
-                return (*this) () (it1_, it2_); 
+                return (*this) () (it1_, it2_);
             }
 
             NUMERICS_INLINE
@@ -880,7 +880,7 @@ namespace boost { namespace numerics {
             // Dereference
             NUMERICS_INLINE
             reference operator * () const {
-                return (*this) () (it1_, it2_); 
+                return (*this) () (it1_, it2_);
             }
 
             NUMERICS_INLINE
@@ -1235,9 +1235,9 @@ namespace boost { namespace numerics {
         NUMERICS_INLINE
         const_iterator1 find1 (int rank, size_type i, size_type j) const {
             if (rank == 1) {
-                size_type lower_i = std::max (difference_type (j - lower_), difference_type (0));
+                size_type lower_i = std::max (difference_type (j - upper_), difference_type (0));
                 i = std::max (i, lower_i);
-                size_type upper_i = std::min (j + 1 + upper_, size1 ());
+                size_type upper_i = std::min (j + 1 + lower_, size1 ());
                 i = std::min (i, upper_i);
             }
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
@@ -1249,9 +1249,9 @@ namespace boost { namespace numerics {
         NUMERICS_INLINE
         iterator1 find1 (int rank, size_type i, size_type j) {
             if (rank == 1) {
-                size_type lower_i = std::max (difference_type (j - lower_), difference_type (0));
+                size_type lower_i = std::max (difference_type (j - upper_), difference_type (0));
                 i = std::max (i, lower_i);
-                size_type upper_i = std::min (j + 1 + upper_, size1 ());
+                size_type upper_i = std::min (j + 1 + lower_, size1 ());
                 i = std::min (i, upper_i);
             }
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
