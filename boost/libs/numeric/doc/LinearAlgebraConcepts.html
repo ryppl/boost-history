@@ -27,6 +27,21 @@ scalars. In the list of invariants for each concept, we only list the
 minimal properties that define the concept, and do not list invariants
 that can be deduced from the minimal set.
 
+<h3>Floating-Point Arithmetic Issues</h3>
+
+<p>
+Floating point numbers and operations do not satisfy the strict
+mathematical properties described in this document, however, they are
+of course of immense practical importance. The approach we take is to
+document algorithms using these strict mathematical definitions, and
+to warn users that the algorithm's results will not be guaranteed if
+they use types (such as <tt>float</tt>) that do not meet the strict
+requirements. In addition, for some algorithms it will be possible to
+state error bounds, but this will need to be handled on a case by case
+basis.
+</p>
+
+
 <hr>
 <h4><a name="AdditiveAbelianGroup">Additive Abelian Group</a></h4>
 
@@ -78,19 +93,23 @@ Valid Expressions:
 Invariants:<br>
 <ul>
   <li>Associativity<br>
-    <tt>(a + b) + c</tt> is equivalent to <tt>a + (b + c)</tt>
+    <tt>(a + b) + c == a + (b + c)</tt>
   <li>Definition of Identity Element<br>
-    <tt>a + zero(a)</tt> is equivalent to <tt>a</tt>
+    <tt>a + zero(a) == a</tt>
   <li>Definition of Additive Inverse<br>
-    <tt>a + -a</tt> is equivalent to <tt>zero(a)</tt>
+    <tt>a + -a == zero(a)</tt>
   <li>Commutativity<br>
-    <tt>a + b</tt> is equivalent to <tt>b + a</tt>  
+    <tt>a + b == b + a</tt>  
   <li>Meaning of subtraction</br>
-     <tt>a - b</tt> is equivalent to <tt>a + -b</tt>
+     <tt>a - b == a + -b</tt>
   <li>Meaning of assignment-addition<br>
-    <tt>b += a</tt> is equivalent to <tt>b = b + a</tt>
+    If <tt>c == b</tt> then after executing
+    <tt>b += a</tt> and <tt>c = c + a</tt> we still have 
+    <tt>c == b</tt>.
   <li>Meaning of assignment-subtraction<br>
-    <tt>b -= a</tt> is equivalent to <tt>b = b - a</tt>
+    If <tt>c == b</tt> then after executing
+    <tt>b -= a</tt> and <tt>c = c - a</tt> we still have 
+    <tt>c == b</tt>.
 </ul>
 
 
@@ -130,19 +149,21 @@ Valid Expressions:
 Invariants:
 <ul>
   <li> Associativity of Multiplication <br>
-    <tt>a * (b * c)</tt>  is equivalent to  <tt>(a * b) * c</tt>
+    <tt>a * (b * c) == (a * b) * c</tt>
   <li> Distributivity <br>
-    <tt>a*(b + c)</tt> is equivalent to  <tt>a*b + a*c</tt> <br>
-    <tt>(b + c)*a</tt> is equivalent to  <tt>b*a + c*a</tt>
+    <tt>a*(b + c) == a*b + a*c</tt> <br>
+    <tt>(b + c)*a == b*a + c*a</tt>
   <li> Definition of Multiplicative Identity <br>
-    <tt>a * one(a)</tt> is equivalent to  <tt>a</tt>
+    <tt>a * one(a) == one(a) * a == a</tt>
   <li> Meaning of multiplication-assignment<br>
-    <tt>b *= a</tt> is equivalent to <tt>b = b * a</tt>
+    If <tt>c == b</tt> then after executing
+    <tt>b *= a</tt> and <tt>c = c * a</tt> we still have 
+    <tt>c == b</tt>.
 </ul>
 
 Note: the meaning of multiplication by zero is induced by the
 distributivity property:<br>
-<tt>a*zero(a) ->= a*(a - a) -> a*a - a*a -> zero(a)</tt>.
+<tt>a*zero(a) -> a*(a - a) -> a*a - a*a -> zero(a)</tt>.
 
 <hr>
 <h4><a name="CommMultRingWithIdentity">Commutative Multiplicative Ring with Identity</a></h4>
@@ -155,7 +176,7 @@ Notation: <tt>X</tt> is a type that models Commutative Multiplicative Ring with 
 Invariants:
 <ul>
   <li> Commutativity <br>
-    <tt>a * b</tt> is equivalent to <tt>b * a</tt>
+    <tt>a * b == b * a</tt>
 </ul>
 
 
@@ -191,14 +212,14 @@ Valid Expressions:
 Invariants:
 <ul>
   <li> Definition of Multplicative Inverse <br>
-  If <tt>a * x</tt> is equivalent to <tt>b</tt> then <tt>x</tt> is
-  equivalent to <tt>b/a</tt>.
+  If <tt>a * x == b</tt> then <tt>x == b/a</tt>.
 
-  <li><tt>a / b</tt> is undefined if and only if <tt>b</tt>
-  is equivalent to <tt>zero(a)</tt>.
+  <li><tt>a / b</tt> is undefined if and only if <tt>b == zero(a)</tt>.
 
   <li> Meaning of assignment-division<br>
-   <tt>b /= a</tt> is equivalent to <tt>b = b / a</tt>.
+    If <tt>c == b</tt> then after executing
+    <tt>b /= a</tt> and <tt>c = c / a</tt> we still have 
+    <tt>c == b</tt>.
 </ul>
 
 
@@ -242,14 +263,14 @@ Valid Expressions:
 Invariants:
 <ul>
   <li> Distributive <br>
-    <tt>(a + b)*x</tt> is equivalent to <tt>a*x + b*x</tt> <br>
-    <tt>a*(x + y)</tt> is equivalent to <tt>a*x + a*y</tt><br>
+    <tt>(a + b)*x == a*x + b*x</tt> <br>
+    <tt>a*(x + y) == a*x + a*y</tt><br>
   <li> Associative <br>
-    <tt>a * (b * x)</tt> is equivalent to <tt>(a * b) * x</tt>
+    <tt>a * (b * x) == (a * b) * x</tt>
   <li> Identity <br>
-    <tt>one(a) * x</tt> is equivalent to <tt>x</tt>
+    <tt>one(a) * x == x</tt>
   <li> Commutativity (if multiplication on <tt>R</tt> is commutative)<br>
-    <tt>a * x</tt> is equivalent to <tt>x * a</tt>
+    <tt>a * x == x * a</tt>
 </ul>
 
 
@@ -324,10 +345,10 @@ Invariants:
 The <tt>norm</tt> function object must obey the following invariants.
 <ul>
   <li> <tt>norm(x) >= zero(r)</tt>
-  <li> <tt>norm(x)</tt> is equivalent to <tt>zero(r)</tt> iff
-  <tt>x</tt> is equivalent to <tt>zero(x)</tt>
+  <li> <tt>norm(x) == zero(r)</tt> iff
+  <tt>x == zero(x)</tt>
   <li> Homogeneity <br>
-    <tt>norm(a*x)</tt> is equivalent to <tt>std::abs(a) * norm(x)</tt>
+    <tt>norm(a*x) == std::abs(a) * norm(x)</tt>
   <li> Triangle Inequality <br>
     <tt>norm(x + y) <=  norm(x) + norm(y)</tt>
 </ul>
@@ -335,10 +356,10 @@ The <tt>norm</tt> function object must obey the following invariants.
 The <tt>std::abs()</tt> function must obey a similar set of invariants.
 <ul>
   <li> <tt>std::abs(a) >= zero(r)</tt>
-  <li> <tt>std::abs(a)</tt> is equivalent to <tt>zero(r)</tt>
-   if and only if  <tt>a</tt> is equivalent to <tt>zero(a)</tt>
+  <li> <tt>std::abs(a) == zero(r)</tt>
+   if and only if  <tt>a == zero(a)</tt>
   <li> Homogeneity <br>
-    <tt>std::abs(a*b)</tt> is equivalent to <tt>std::abs(a) * std::abs(b)</tt>
+    <tt>std::abs(a*b) == std::abs(a) * std::abs(b)</tt>
   <li> Triangle Inequality <br>
     <tt>std::abs(a + b) <= std::abs(a) + std::abs(b)</tt>
 </ul>
@@ -420,24 +441,24 @@ Valid Expreesions
 Invariants:
 The <tt>dot</tt> functor obeys the following invariants.
 <ul>
-  <li> <tt>dot(x,x) > zero(a)</tt> for all <tt>x</tt> not equivalent to <tt>zero(x)</tt>
-  <li> <tt>dot(x,x)</tt> is equivalent to <tt>zero(a)</tt> if <tt>x</tt> is equivalent to <tt>zero(x)</tt>
-  <li> <tt>dot(x,y)</tt> is equivalent to <tt>dot(y,std::conj(x))</tt>
-  <li> <tt>dot(a*x + b*y, z)</tt> is equivalent to <tt>a*dot(x,z) + b*dot(y,z)</tt>
-  <li> <tt>dot(x, a*y + b*z)</tt> is equivalent to <tt>std::conj(a)*dot(x,y) + std::conj(b)*dot(x,z)</tt>
-  <li> <tt>norm(x)</tt> is equivalent to <tt>std::sqrt(dot(x,x))</tt>
+  <li> <tt>dot(x,x) > zero(a)</tt> for all <tt>x != zero(x)</tt>
+  <li> <tt>dot(x,x) == zero(a)</tt> if <tt>x == zero(x)</tt>
+  <li> <tt>dot(x,y) == dot(y,std::conj(x))</tt>
+  <li> <tt>dot(a*x + b*y, z) == a*dot(x,z) + b*dot(y,z)</tt>
+  <li> <tt>dot(x, a*y + b*z) == std::conj(a)*dot(x,y) + std::conj(b)*dot(x,z)</tt>
+  <li> <tt>norm(x) == std::sqrt(dot(x,x))</tt>
 </ul>
 
 The scalar <tt>std::conj()</tt> function must obey the following laws.
 <ul>
-  <li> <tt>std::conj(a * b)</tt> is equivalent to <tt>std::conj(a) * std::conj(b)</tt>
-  <li> <tt>std::conj(a + b)</tt> is equivalent to <tt>std::conj(a) + std::conj(b)</tt>
+  <li> <tt>std::conj(a * b) == std::conj(a) * std::conj(b)</tt>
+  <li> <tt>std::conj(a + b) == std::conj(a) + std::conj(b)</tt>
 </ul>
 
 The vector <tt>std::conj()</tt> function must obey similar laws.
 <ul>
-  <li> <tt>std::conj(x * y)</tt> is equivalent to <tt>std::conj(x) * std::conj(y)</tt>
-  <li> <tt>std::conj(x + y)</tt> is equivalent to <tt>std::conj(x) + std::conj(y)</tt>
+  <li> <tt>std::conj(x * y) == std::conj(x) * std::conj(y)</tt>
+  <li> <tt>std::conj(x + y) == std::conj(x) + std::conj(y)</tt>
 </ul>
 
 
@@ -483,8 +504,8 @@ Valid Expressions:
 Invariants:
 <ul>
   <li> Linearity <br>
-   <tt>A * (x + w)</tt> is equivalent to <tt>A * x + A * y</tt> <br>
-   <tt>A * (x * a)</tt> is equivalent to <tt>(A * x) * a</tt>
+   <tt>A * (x + w) == A * x + A * y</tt> <br>
+   <tt>A * (x * a) == (A * x) * a</tt>
 </ul>
 
 
@@ -542,7 +563,7 @@ Range, Op&gt;::type</tt>.</td></tr>
 Invariants:
 <ul>
   <li>Meaning of left operator application<br>
-  <tt>y * A</tt> is equivalent to <tt>trans(A) * y</tt>
+  <tt>y * A == trans(A) * y</tt>
 </ul>
 
 <hr>
@@ -554,6 +575,31 @@ model <a href="#Linear Operator">Linear Operator</a>, and
 <tt>{Matrix,F}<tt> models <a href="#VEctorSpace">Vector
 Space</a>. Also the <tt>Matrix</tt> type must model <a
 href="#MultRingWithIdentity">Multiplicative Ring with Identity</a>.
+
+
+<hr>
+
+
+<h3>References</h3>
+
+<DL COMMapCT>
+
+<DD><P></P><DT><A NAME="waerden70:_algebra">1</A>
+B.L. van der Waerden
+<BR><EM>Algebra</EM>.
+<BR>Translated by Fred Blum and John R. Schulenberger
+<BR>Frederick Ungar Publishing, 1970.
+
+<DD><P></P><DT><A NAME="halmos87:_finite_vector">2</A>
+Paul R. Halmos
+<BR><EM>Finite-Dimensional Vector Spaces</EM>.
+<BR>Springer
+
+<DD><P></P><DT><A NAME="">3</A>
+<BR><EM>Teubner-Taschenbuch der Mathematik</EM
+
+</DL>
+
 
 <br>
 <HR>
