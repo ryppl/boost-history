@@ -21,7 +21,7 @@
 //    on non-conformant compilers/standard libraries
 // *  proper implementation of reverse< InputIterator >( ... ) for non-integral types
 // *  implementations of swap and getline are in the std namespace to allow std qualified calls to work
-// *  operator+ is not implemented to allow for non-constructable policy types (e.g. my flex_string implementation)
+// *  operator+ is not implemented to allow for non-constructable policy types (e.g. my fixed_string implementation)
 
 #ifndef BOOST_BASIC_STRING_IMPL_HPP
 #define BOOST_BASIC_STRING_IMPL_HPP
