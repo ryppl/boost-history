@@ -60,8 +60,8 @@ namespace boost
             BOOST_STATIC_CONSTANT( bool, is_pair_                = sizeof( is_pair_impl( c ) ) == sizeof( yes_type ) );
             BOOST_STATIC_CONSTANT( bool, is_char_ptr_            = sizeof( is_char_ptr_impl( c ) ) == sizeof( yes_type ) );
             BOOST_STATIC_CONSTANT( bool, is_const_char_ptr_      = sizeof( is_const_char_ptr_impl( c ) ) == sizeof( yes_type ) );
-            BOOST_STATIC_CONSTANT( bool, is_wchar_t_ptr_         = sizeof( is_wchar_ptr_impl( c ) ) == sizeof( yes_type ) );
-            BOOST_STATIC_CONSTANT( bool, is_const_wchar_t_ptr_   = sizeof( is_const_wchar_ptr_impl( c ) ) == sizeof( yes_type ) );
+            BOOST_STATIC_CONSTANT( bool, is_wchar_t_ptr_         = sizeof( is_wchar_t_ptr_impl( c ) ) == sizeof( yes_type ) );
+            BOOST_STATIC_CONSTANT( bool, is_const_wchar_t_ptr_   = sizeof( is_const_wchar_t_ptr_impl( c ) ) == sizeof( yes_type ) );
             BOOST_STATIC_CONSTANT( bool, is_string_              = (::boost::type_traits::ice_or<is_const_char_ptr_, is_const_wchar_t_ptr_>::value ));
             BOOST_STATIC_CONSTANT( bool, is_array_               = ::boost::is_array<C>::value );
             BOOST_STATIC_CONSTANT( bool, is_iterator_            = sizeof( is_iterator_impl( c ) ) == sizeof( yes_type ) );

@@ -12,7 +12,7 @@
 #endif
 
 #ifdef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
-#include <boost/container_traits/detail/differnce_type.hpp>
+#include <boost/container_traits/detail/difference_type.hpp>
 #else
 
 #include <boost/detail/iterator.hpp>

@@ -34,14 +34,14 @@ begin( const C& c )
 }
 
 #endif // BOOST_NO_FUNCTION_TEMPLATE_ORDERING
-
+/*
 template< typename C >
 inline BOOST_DEDUCED_TYPENAME container_result_iterator<C>::type
 begin( C& c )
 {
     return c.begin(); 
 }
-
+*/
 //////////////////////////////////////////////////////////////////////
 // pair
 //////////////////////////////////////////////////////////////////////
@@ -67,16 +67,17 @@ inline Iterator begin( std::pair<Iterator,Iterator>& p )
 //////////////////////////////////////////////////////////////////////
 
 template< typename T, std::size_t sz >
-inline const T* begin( const T (&array)[sz] )
+inline const T* begin( const T BOOST_ARRAY_REF[sz] )
 {
     return array;
 }
 
 template< typename T, std::size_t sz >
-inline T* begin( T (&array)[sz] )
+inline T* begin( T BOOST_ARRAY_REF[sz] )
 {
     return array;
 }
+
 
 //////////////////////////////////////////////////////////////////////
 // string
@@ -117,12 +118,26 @@ begin( const std::istream_iterator<C,T,D,P>& i )
 
 #endif
 
+#ifdef BOOST_MSVC_STD_ITERATOR
+
+template< typename C, typename T, typename D >
+inline std::istream_iterator<C,T,D>
+begin( std::istream_iterator<C,T,D>& i )
+{
+    return i;
+}
+
+#else // BOOST_MSVC_STD_ITERATOR
+
+
 template< typename C, typename T, typename D, typename P >
 inline std::istream_iterator<C,T,D,P>
 begin( std::istream_iterator<C,T,D,P>& i )
 {
     return i;
 }
+
+#endif // BOOST_MSVC_STD_ITERATOR
 
 } // namespace boost
 

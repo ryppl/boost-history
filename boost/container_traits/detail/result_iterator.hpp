@@ -32,8 +32,8 @@ namespace boost
             struct pts
             {
                 typedef BOOST_CT_DEDUCED_TYPENAME ::boost::mpl::if_c< ::boost::is_const<C>::value, 
-                                                                      BOOST_CT_DEDUCED_TYPENAME C::iterator,
-                                                                      BOOST_CT_DEDUCED_TYPENAME C::const_iterator >::type type; 
+                                                                      BOOST_CT_DEDUCED_TYPENAME C::const_iterator,
+                                                                      BOOST_CT_DEDUCED_TYPENAME C::iterator >::type type; 
             };
         };
 

@@ -43,13 +43,13 @@ namespace boost
         //////////////////////////////////////////////////////////////////////
 
         template< typename T, std::size_t sz >
-        inline bool empty( const T (&array)[sz] )
+        inline bool empty( const T BOOST_ARRAY_REF[sz] )
         {
             return sz == 0;
         }
 
         template< typename T, std::size_t sz >
-        inline bool empty( T (&array)[sz] )
+        inline bool empty( T BOOST_ARRAY_REF[sz] )
         {
             return sz == 0;
         }
@@ -71,13 +71,25 @@ namespace boost
         //////////////////////////////////////////////////////////////////////
         // iterator
         //////////////////////////////////////////////////////////////////////
-        
-        template< typename C, typename T, typename D, typename P >
+
+#ifdef BOOST_MSVC_STD_ITERATOR
+
+        template< typename C, typename T, typename D >
+        inline bool
+        empty( const std::istream_iterator<C,T,D>& i )
+        {
+            return i == std::istream_iterator<C,T,D>();
+        }
+
+#else
+	    template< typename C, typename T, typename D, typename P >
         inline bool
         empty( const std::istream_iterator<C,T,D,P>& i )
         {
             return i == std::istream_iterator<C,T,D,P>();
         }
+
+#endif
 
 } // namepace 'boost'
 

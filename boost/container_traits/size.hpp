@@ -44,6 +44,22 @@ namespace boost
         // array
         //////////////////////////////////////////////////////////////////////
 
+#ifdef BOOST_CT_NO_ARRAY_SUPPORT
+
+        template< typename T, std::size_t sz >
+        inline std::size_t size( const T (array)[sz] )
+        {
+            return sz;
+        }
+        
+        template< typename T, std::size_t sz >
+        inline std::size_t size( T (array)[sz] )
+        {
+            return sz;
+		}
+
+#else // BOOST_CT_NO_ARRAY_SUPPORT
+		
         template< typename T, std::size_t sz >
         inline std::size_t size( const T (&array)[sz] )
         {
@@ -55,6 +71,8 @@ namespace boost
         {
             return sz;
         }
+
+#endif // BOOST_CT_NO_ARRAY_SUPPORT
 
         //////////////////////////////////////////////////////////////////////
         // string
@@ -77,9 +95,18 @@ namespace boost
         //////////////////////////////////////////////////////////////////////
         // iterator
         //////////////////////////////////////////////////////////////////////
-        
-        template< typename C, typename T, typename D, typename P >
+
+#ifdef BOOST_MSVC_STD_ITERATOR	
+
+        template< typename C, typename T, typename D >
+        inline std::size_t size( const std::istream_iterator<C,T,D>& );
+
+#else // BOOST_MSVC_STD_ITERATOR
+
+		template< typename C, typename T, typename D, typename P >
         inline std::size_t size( const std::istream_iterator<C,T,D,P>& );
+
+#endif
 
 } // namespace 'boost'
 

@@ -23,5 +23,22 @@
 #define BOOST_CT_DEDUCED_TYPENAME BOOST_DEDUCED_TYPENAME
 #endif
 
+#ifdef BOOST_CT_NO_ARRAY_SUPPORT
+#error "macro already defined!"
+#endif
+
+#if _MSC_VER <= 1200
+#define BOOST_CT_NO_ARRAY_SUPPORT
+#endif
+
+#ifdef BOOST_CT_NO_ARRAY_SUPPORT
+#define BOOST_ARRAY_REF (array)
+#define BOOST_CT_NO_STATIC_ASSERT
+#else
+#define BOOST_ARRAY_REF (&array)
+#endif
+
+
+
 #endif
 

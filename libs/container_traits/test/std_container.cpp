@@ -14,7 +14,9 @@ void check_std_container()
     vec_t                    vec;
     vec.push_back( 3 ); vec.push_back( 4 );
     const vec_t              cvec( vec ); 
-    
+
+#ifndef BOOST_CT_NO_STATIC_ASSERT
+
     BOOST_STATIC_ASSERT(( is_same< container_value_type<vec_t>::type, vec_t::value_type >::value ));
     BOOST_STATIC_ASSERT(( is_same< container_iterator<vec_t>::type, vec_t::iterator >::value ));
     BOOST_STATIC_ASSERT(( is_same< container_const_iterator<vec_t>::type, vec_t::const_iterator >::value ));
@@ -28,6 +30,8 @@ void check_std_container()
     BOOST_STATIC_ASSERT(( is_same< container_const_iterator<const vec_t>::type, vec_t::const_iterator >::value ));
     BOOST_STATIC_ASSERT(( is_same< container_difference_type<const vec_t>::type, vec_t::difference_type >::value ));
     BOOST_STATIC_ASSERT(( is_same< container_size_type<const vec_t>::type, vec_t::size_type >::value ));
+
+#endif
 
     BOOST_CHECK( begin( vec ) == vec.begin() );
     BOOST_CHECK( end( vec )   == vec.end() );

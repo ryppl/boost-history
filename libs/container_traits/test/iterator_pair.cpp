@@ -21,7 +21,9 @@ void check_iterator_pair()
     pair_t                   pair       = std::make_pair( begin( vec ), end( vec ) );
     const_pair_t             const_pair = std::make_pair( begin( vec ), end( vec ) );
     const_pair_tt            constness_pair( pair );
-    
+
+#ifndef BOOST_CT_NO_STATIC_ASSERT	
+
     BOOST_STATIC_ASSERT(( is_same< container_value_type<pair_t>::type, 
                           detail::iterator_traits<pair_t::first_type>::value_type>::value ));
     BOOST_STATIC_ASSERT(( is_same< container_iterator<pair_t>::type, pair_t::first_type >::value ));
@@ -41,6 +43,8 @@ void check_iterator_pair()
     BOOST_STATIC_ASSERT(( is_same< container_size_type<const_pair_tt>::type, std::size_t >::value ));
     BOOST_STATIC_ASSERT(( is_same< container_result_iterator<const_pair_tt>::type, const_pair_tt::first_type >::value ));
     BOOST_STATIC_ASSERT(( is_same< container_result_iterator<const_pair_tt>::type, const_pair_tt::first_type >::value ));
+
+#endif
 
     BOOST_CHECK( begin( pair ) == pair.first );
     BOOST_CHECK( end( pair )   == pair.second );

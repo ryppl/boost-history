@@ -31,11 +31,11 @@ namespace boost
     
     template< typename T, std::size_t sz >
     container_traits_detail::container_traits_size<sz>
-    sizer( const T (&array)[sz] );
+    sizer( const T BOOST_ARRAY_REF[sz] );
     
     template< typename T, std::size_t sz >
     container_traits_detail::container_traits_size<sz>
-    sizer( T (&array)[sz] );
+    sizer( T BOOST_ARRAY_REF[sz] );
 
 } // namespace 'boost'
 

@@ -12,7 +12,7 @@
 #endif
 
 #ifdef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
-#include <boost/container_traits/detail/const_iterator.hpp>
+#include <boost/container_traits/detail/result_iterator.hpp>
 #else
 
 #include <boost/container_traits/config.hpp>

@@ -68,13 +68,13 @@ namespace boost
         //////////////////////////////////////////////////////////////////////
 
         template< typename T, std::size_t sz >
-        inline const T* end( const T (&array)[sz] )
+        inline const T* end( const T BOOST_ARRAY_REF[sz] )
         {
             return array + sz;
         }
         
         template< typename T, std::size_t sz >
-        inline T* end( T (&array)[sz] )
+        inline T* end( T BOOST_ARRAY_REF[sz] )
         {
             return array + sz;
         }
@@ -129,7 +129,20 @@ namespace boost
         {
             return std::istream_iterator<C,T,D,P>();
         }
+
 #endif // BOOST_NO_FUNCTION_TEMPLATE_ORDERING
+
+	
+#ifdef BOOST_MSVC_STD_ITERATOR
+
+        template< typename C, typename T, typename D >
+        inline std::istream_iterator<C,T,D>
+        end( std::istream_iterator<C,T,D>& i )
+        {
+            return std::istream_iterator<C,T,D>();
+        }
+
+#else // BOOST_MSVC_STD_ITERATOR
 
         template< typename C, typename T, typename D, typename P >
         inline std::istream_iterator<C,T,D,P>
@@ -137,6 +150,8 @@ namespace boost
         {
             return std::istream_iterator<C,T,D,P>();
         }
+
+#endif // BOOST_MSVC_STD_ITERATOR	
 
 } // namespace 'boost'
 
