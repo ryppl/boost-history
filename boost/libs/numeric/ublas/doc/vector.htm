@@ -21,7 +21,8 @@ base container adaptor for dense vectors.</p>
 <h4>Example</h4>
 
 <pre>int main () {
-    numerics::vector&lt;double&gt; v (3);
+    using namespace boost::numeric::ublas;
+    vector&lt;double&gt; v (3);
     for (int i = 0; i &lt; v.size (); ++ i)
         v (i) = i;
     std::cout &lt;&lt; v &lt;&lt; std::endl;
@@ -29,7 +30,7 @@ base container adaptor for dense vectors.</p>
 
 <h4>Definition</h4>
 
-<p>Defined in the header vector.h.</p>
+<p>Defined in the header vector.hpp.</p>
 
 <h4>Template parameters</h4>
 
@@ -107,6 +108,16 @@ href="container.htm#vector">Vector</a>.</p>
     </tr>
     <tr>
         <td><code>reference operator () (size_type i)</code></td>
+        <td>Returns a reference of the <code>i</code>-th element.
+        </td>
+    </tr>
+    <tr>
+        <td><code>const_reference operator [] (size_type i) const</code></td>
+        <td>Returns a <code>const </code>reference of the <code>i</code>-th
+        element. </td>
+    </tr>
+    <tr>
+        <td><code>reference operator [] (size_type i)</code></td>
         <td>Returns a reference of the <code>i</code>-th element.
         </td>
     </tr>
@@ -346,7 +357,7 @@ href="container.htm#vector">Vector</a>.</p>
             difference_type operator - (const const_iterator &amp;it) const;
 
             // Dereference
-            const_reference operator * () const;
+            reference operator * () const;
 
             // Index
             size_type index () const;
@@ -356,6 +367,7 @@ href="container.htm#vector">Vector</a>.</p>
 
             // Comparison
             bool operator == (const const_iterator &amp;it) const;
+            bool operator < (const const_iterator &amp;it) const;
         };
 
         const_iterator begin () const;
@@ -393,6 +405,7 @@ href="container.htm#vector">Vector</a>.</p>
 
             // Comparison
             bool operator == (const iterator &amp;it) const;
+            bool operator < (const iterator &amp;it) const;
         };
 
         iterator begin ();
@@ -421,15 +434,16 @@ canonical unit vectors.</p>
 <h4>Example</h4>
 
 <pre>int main () {
+    using namespace boost::numeric::ublas;
     for (int i = 0; i &lt; 3; ++ i) {
-        numerics::unit_vector&lt;double&gt; v (3, i);
+        unit_vector&lt;double&gt; v (3, i);
         std::cout &lt;&lt; v &lt;&lt; std::endl;
     }
 }</pre>
 
 <h4>Definition</h4>
 
-<p>Defined in the header vector.h.</p>
+<p>Defined in the header vector.hpp.</p>
 
 <h4>Template parameters</h4>
 
@@ -495,7 +509,11 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         <td>Returns the index of the <code>unit_vector</code>. </td>
     </tr>
     <tr>
-        <td><code>value_type operator () (size_type i) const</code></td>
+        <td><code>const_reference operator () (size_type i) const</code></td>
+        <td>Returns the value of the <code>i</code>-th element. </td>
+    </tr>
+    <tr>
+        <td><code>const_reference operator [] (size_type i) const</code></td>
         <td>Returns the value of the <code>i</code>-th element. </td>
     </tr>
     <tr>
@@ -569,9 +587,9 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         void resize (size_type size);
 
         // Element access
-        value_type operator () (size_type i) const;
+        const_reference operator () (size_type i) const;
 
-        value_type operator [] (size_type i) const;
+        const_reference operator [] (size_type i) const;
 
         // Assignment
         unit_vector &amp;operator = (const unit_vector &amp;v);
@@ -596,7 +614,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
             typedef packed_random_access_iterator_tag iterator_category;
             typedef typename unit_vector::difference_type difference_type;
             typedef typename unit_vector::value_type value_type;
-            typedef typename unit_vector::value_type reference;
+            typedef typename unit_vector::const_reference reference;
             typedef typename unit_vector::const_pointer pointer;
 
             // Construction and destruction
@@ -611,7 +629,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
             difference_type operator - (const const_iterator &amp;it) const;
 
             // Dereference
-            value_type operator * () const;
+            reference operator * () const;
 
             // Index
             size_type index () const;
@@ -621,6 +639,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
 
             // Comparison
             bool operator == (const const_iterator &amp;it) const;
+            bool operator < (const const_iterator &amp;it) const;
         };
 
         typedef const_iterator iterator;
@@ -646,13 +665,14 @@ zero vectors.</p>
 <h4>Example</h4>
 
 <pre>int main () {
-    numerics::zero_vector&lt;double&gt; v (3);
+    using namespace boost::numeric::ublas;
+    zero_vector&lt;double&gt; v (3);
     std::cout &lt;&lt; v &lt;&lt; std::endl;
 }</pre>
 
 <h4>Definition</h4>
 
-<p>Defined in the header vector.h.</p>
+<p>Defined in the header vector.hpp.</p>
 
 <h4>Template parameters</h4>
 
@@ -714,7 +734,11 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         <td>Returns the size of the <code>zero_vector</code>. </td>
     </tr>
     <tr>
-        <td><code>value_type operator () (size_type i) const</code></td>
+        <td><code>const_reference operator () (size_type i) const</code></td>
+        <td>Returns the value of the <code>i</code>-th element. </td>
+    </tr>
+    <tr>
+        <td><code>const_reference operator [] (size_type i) const</code></td>
         <td>Returns the value of the <code>i</code>-th element. </td>
     </tr>
     <tr>
@@ -788,9 +812,9 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         void resize (size_type size);
 
         // Element access
-        value_type operator () (size_type i) const;
+        const_reference operator () (size_type i) const;
 
-        value_type operator [] (size_type i) const;
+        const_reference operator [] (size_type i) const;
 
         // Assignment
         zero_vector &amp;operator = (const zero_vector &amp;v);
@@ -815,7 +839,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
             typedef sparse_bidirectional_iterator_tag iterator_category;
             typedef typename zero_vector::difference_type difference_type;
             typedef typename zero_vector::value_type value_type;
-            typedef typename zero_vector::value_type reference;
+            typedef typename zero_vector::const_reference reference;
             typedef typename zero_vector::const_pointer pointer;
 
             // Construction and destruction
@@ -827,7 +851,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
             const_iterator &amp;operator -- ();
 
             // Dereference
-            value_type operator * () const;
+            reference operator * () const;
 
             // Index
             size_type index () const;

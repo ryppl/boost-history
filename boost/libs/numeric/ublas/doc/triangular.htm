@@ -22,12 +22,13 @@ matrices.</p>
 <h4>Example</h4>
 
 <pre>int main () {
-    numerics::triangular_matrix&lt;double, numerics::lower&gt; ml (3, 3);
+    using namespace boost::numeric::ublas;
+    triangular_matrix&lt;double, lower&gt; ml (3, 3);
     for (int i = 0; i &lt; ml.size1 (); ++ i) 
         for (int j = 0; j &lt;= i; ++ j)
             ml (i, j) = 3 * i + j;
     std::cout &lt;&lt; ml &lt;&lt; std::endl;
-    numerics::triangular_matrix&lt;double, numerics::upper&gt; mu (3, 3);
+    triangular_matrix&lt;double, upper&gt; mu (3, 3);
     for (int i = 0; i &lt; m.size1 (); ++ i) 
         for (int j = i; j &lt;= m.size2 (); ++ j)
             mu (i, j) = 3 * i + j;
@@ -36,7 +37,7 @@ matrices.</p>
 
 <h4>Definition</h4>
 
-<p>Defined in the header triangular.h.</p>
+<p>Defined in the header triangular.hpp.</p>
 
 <h4>Template parameters</h4>
 
@@ -355,7 +356,7 @@ A&gt; &gt;</code> </p>
         void resize (size_type size1, size_type size2);
 
         // Element access
-        value_type operator () (size_type i, size_type j) const;
+        const_reference operator () (size_type i, size_type j) const;
         reference operator () (size_type i, size_type j);
 
         // Assignment
@@ -417,7 +418,7 @@ A&gt; &gt;</code> </p>
             typedef packed_random_access_iterator_tag iterator_category;
             typedef typename triangular_matrix::difference_type difference_type;
             typedef typename triangular_matrix::value_type value_type;
-            typedef typename triangular_matrix::value_type reference;
+            typedef typename triangular_matrix::const_reference reference;
             typedef typename triangular_matrix::const_pointer pointer;
             typedef const_iterator2 dual_iterator_type;
             typedef const_reverse_iterator2 dual_reverse_iterator_type;
@@ -435,7 +436,7 @@ A&gt; &gt;</code> </p>
             difference_type operator - (const const_iterator1 &amp;it) const;
 
             // Dereference
-            value_type operator * () const;
+            reference operator * () const;
 
             const_iterator2 begin () const;
             const_iterator2 end () const;
@@ -451,6 +452,7 @@ A&gt; &gt;</code> </p>
 
             // Comparison
             bool operator == (const const_iterator1 &amp;it) const;
+            bool operator < (const const_iterator1 &amp;it) const;
         };
 
         const_iterator1 begin1 () const;
@@ -496,6 +498,7 @@ A&gt; &gt;</code> </p>
 
             // Comparison
             bool operator == (const iterator1 &amp;it) const;
+            bool operator < (const iterator1 &amp;it) const;
         };
 
         iterator1 begin1 ();
@@ -508,7 +511,7 @@ A&gt; &gt;</code> </p>
             typedef packed_random_access_iterator_tag iterator_category;
             typedef typename triangular_matrix::difference_type difference_type;
             typedef typename triangular_matrix::value_type value_type;
-            typedef typename triangular_matrix::value_type reference;
+            typedef typename triangular_matrix::const_reference reference;
             typedef typename triangular_matrix::const_pointer pointer;
             typedef const_iterator1 dual_iterator_type;
             typedef const_reverse_iterator1 dual_reverse_iterator_type;
@@ -526,7 +529,7 @@ A&gt; &gt;</code> </p>
             difference_type operator - (const const_iterator2 &amp;it) const;
 
             // Dereference
-            value_type operator * () const;
+            reference operator * () const;
 
             const_iterator1 begin () const;
             const_iterator1 end () const;
@@ -542,6 +545,7 @@ A&gt; &gt;</code> </p>
 
             // Comparison
             bool operator == (const const_iterator2 &amp;it) const;
+            bool operator < (const const_iterator2 &amp;it) const;
         };
 
         const_iterator2 begin2 () const;
@@ -587,6 +591,7 @@ A&gt; &gt;</code> </p>
 
             // Comparison
             bool operator == (const iterator2 &amp;it) const;
+            bool operator < (const iterator2 &amp;it) const;
         };
 
         iterator2 begin2 ();
@@ -617,13 +622,14 @@ a triangular matrix adaptor for other matrices.</p>
 <h4>Example</h4>
 
 <pre>int main () {
-    numerics::matrix&lt;double&gt; m (3, 3);
-    numerics::triangular_adaptor&lt;numerics::matrix&lt;double&gt;, numerics::lower&gt; tal (m);
+    using namespace boost::numeric::ublas;
+    matrix&lt;double&gt; m (3, 3);
+    triangular_adaptor&lt;matrix&lt;double&gt;, lower&gt; tal (m);
     for (int i = 0; i &lt; tal.size1 (); ++ i) 
         for (int j = 0; j &lt;= i; ++ j)
             tal (i, j) = 3 * i + j;
     std::cout &lt;&lt; tal &lt;&lt; std::endl;
-    numerics::triangular_adaptor&lt;numerics::matrix&lt;double&gt;, numerics::upper&gt; tau (m);
+    triangular_adaptor&lt;matrix&lt;double&gt;, upper&gt; tau (m);
     for (int i = 0; i &lt; tau.size1 (); ++ i) 
         for (int j = i; j &lt;= tau.size2 (); ++ j)
             tau (i, j) = 3 * i + j;
@@ -632,7 +638,7 @@ a triangular matrix adaptor for other matrices.</p>
 
 <h4>Definition</h4>
 
-<p>Defined in the header triangular.h.</p>
+<p>Defined in the header triangular.hpp.</p>
 
 <h4>Template parameters</h4>
 
@@ -918,7 +924,7 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         void reset (matrix_type &amp;data);
 
         // Element access
-        value_type operator () (size_type i, size_type j) const;
+        const_reference operator () (size_type i, size_type j) const;
         reference operator () (size_type i, size_type j);
 
         // Assignment
@@ -973,7 +979,7 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
             typedef packed_random_access_iterator_tag iterator_category;
             typedef typename triangular_adaptor::difference_type difference_type;
             typedef typename triangular_adaptor::value_type value_type;
-            typedef typename triangular_adaptor::value_type reference;
+            typedef typename triangular_adaptor::const_reference reference;
             typedef typename triangular_adaptor::const_pointer pointer;
             typedef const_iterator2 dual_iterator_type;
             typedef const_reverse_iterator2 dual_reverse_iterator_type;
@@ -991,7 +997,7 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
             difference_type operator - (const const_iterator1 &amp;it) const;
 
             // Dereference
-            value_type operator * () const;
+            reference operator * () const;
 
             const_iterator2 begin () const;
             const_iterator2 end () const;
@@ -1007,6 +1013,7 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
 
             // Comparison
             bool operator == (const const_iterator1 &amp;it) const;
+            bool operator < (const const_iterator1 &amp;it) const;
         };
 
         const_iterator1 begin1 () const;
@@ -1052,6 +1059,7 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
 
             // Comparison
             bool operator == (const iterator1 &amp;it) const;
+            bool operator < (const iterator1 &amp;it) const;
         };
 
         iterator1 begin1 ();
@@ -1064,7 +1072,7 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
             typedef packed_random_access_iterator_tag iterator_category;
             typedef typename triangular_adaptor::difference_type difference_type;
             typedef typename triangular_adaptor::value_type value_type;
-            typedef typename triangular_adaptor::value_type reference;
+            typedef typename triangular_adaptor::const_reference reference;
             typedef typename triangular_adaptor::const_pointer pointer;
             typedef const_iterator1 dual_iterator_type;
             typedef const_reverse_iterator1 dual_reverse_iterator_type;
@@ -1082,7 +1090,7 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
             difference_type operator - (const const_iterator2 &amp;it) const;
 
             // Dereference
-            value_type operator * () const;
+            reference operator * () const;
 
             const_iterator1 begin () const;
             const_iterator1 end () const;
@@ -1098,6 +1106,7 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
 
             // Comparison
             bool operator == (const const_iterator2 &amp;it) const;
+            bool operator < (const const_iterator2 &amp;it) const;
         };
 
         const_iterator2 begin2 () const;
@@ -1143,6 +1152,7 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
 
             // Comparison
             bool operator == (const iterator2 &amp;it) const;
+            bool operator < (const iterator2 &amp;it) const;
         };
 
         iterator2 begin2 ();

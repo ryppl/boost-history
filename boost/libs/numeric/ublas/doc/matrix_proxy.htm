@@ -21,9 +21,10 @@ address a row of a matrix.</p>
 <h4>Example</h4>
 
 <pre>int main () {
-    numerics::matrix&lt;double&gt; m (3, 3);
+    using namespace boost::numeric::ublas;
+    matrix&lt;double&gt; m (3, 3);
     for (int i = 0; i &lt; m.size1 (); ++ i) {
-        numerics::matrix_row&lt;numerics::matrix&lt;double&gt; &gt; mr (m, i);
+        matrix_row&lt;matrix&lt;double&gt; &gt; mr (m, i);
         for (int j = 0; j &lt; mr.size (); ++ j) 
             mr (j) = 3 * i + j;
         std::cout &lt;&lt; mr &lt;&lt; std::endl;
@@ -32,7 +33,7 @@ address a row of a matrix.</p>
 
 <h4>Definition</h4>
 
-<p>Defined in the header matrix_pr.h.</p>
+<p>Defined in the header matrix_proxy.hpp.</p>
 
 <h4>Template parameters</h4>
 
@@ -79,7 +80,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         <td>Returns the size of the sub vector.</td>
     </tr>
     <tr>
-        <td><code>value_type operator () (size_type i) const</code></td>
+        <td><code>const_reference operator () (size_type i) const</code></td>
         <td>Returns the value of the <code>i</code>-th element. </td>
     </tr>
     <tr>
@@ -236,10 +237,10 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         void reset (matrix_type &amp;data, size_type i);
 
         // Element access
-        value_type operator () (size_type j) const;
+        const_reference operator () (size_type j) const;
         reference operator () (size_type j);
 
-        value_type operator [] (size_type j) const;
+        const_reference operator [] (size_type j) const;
         reference operator [] (size_type j);
 
         // Assignment
@@ -284,7 +285,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
             typedef typename M::const_iterator2::iterator_category iterator_category;
             typedef typename M::const_iterator2::difference_type difference_type;
             typedef typename M::const_iterator2::value_type value_type;
-            typedef typename M::const_iterator2::value_type reference;
+            typedef typename M::const_iterator2::reference reference;
             typedef typename M::const_iterator2::pointer pointer;
 
             // Construction and destruction
@@ -300,7 +301,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
             difference_type operator - (const const_iterator &amp;it) const;
 
             // Dereference
-            value_type operator * () const;
+            reference operator * () const;
 
             // Index
             size_type index () const;
@@ -310,6 +311,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
 
             // Comparison
             bool operator == (const const_iterator &amp;it) const;
+            bool operator < (const const_iterator &amp;it) const;
         };
 
         const_iterator begin () const;
@@ -347,6 +349,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
 
             // Comparison
             bool operator == (const iterator &amp;it) const;
+            bool operator < (const iterator &amp;it) const;
         };
 
         iterator begin ();
@@ -375,9 +378,10 @@ to address a column of a matrix.</p>
 <h4>Example</h4>
 
 <pre>int main () {
-    numerics::matrix&lt;double&gt; m (3, 3);
+    using namespace boost::numeric::ublas;
+    matrix&lt;double&gt; m (3, 3);
     for (int j = 0; j &lt; m.size2 (); ++ j) {
-        numerics::matrix_column&lt;numerics::matrix&lt;double&gt; &gt; mc (m, j);
+        matrix_column&lt;matrix&lt;double&gt; &gt; mc (m, j);
         for (int i = 0; i &lt; mc.size (); ++ i)
             mc (i) = 3 * i + j;
         std::cout &lt;&lt; mc &lt;&lt; std::endl;
@@ -386,7 +390,7 @@ to address a column of a matrix.</p>
 
 <h4>Definition</h4>
 
-<p>Defined in the header matrix_pr.h.</p>
+<p>Defined in the header matrix_proxy.hpp.</p>
 
 <h4>Template parameters</h4>
 
@@ -434,7 +438,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         <td>Returns the size of the sub vector.</td>
     </tr>
     <tr>
-        <td><code>value_type operator () (size_type i) const</code></td>
+        <td><code>const_reference operator () (size_type i) const</code></td>
         <td>Returns the value of the <code>i</code>-th element. </td>
     </tr>
     <tr>
@@ -592,10 +596,10 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         void reset (matrix_type &amp;data, size_type j);
 
         // Element access
-        value_type operator () (size_type i) const;
+        const_reference operator () (size_type i) const;
         reference operator () (size_type i);
 
-        value_type operator [] (size_type i) const;
+        const_reference operator [] (size_type i) const;
         reference operator [] (size_type i);
 
         // Assignment
@@ -640,7 +644,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
             typedef typename M::const_iterator1::iterator_category iterator_category;
             typedef typename M::const_iterator1::difference_type difference_type;
             typedef typename M::const_iterator1::value_type value_type;
-            typedef typename M::const_iterator1::value_type reference;
+            typedef typename M::const_iterator1::reference reference;
             typedef typename M::const_iterator1::pointer pointer;
 
             // Construction and destruction
@@ -656,7 +660,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
             difference_type operator - (const const_iterator &amp;it) const;
 
             // Dereference
-            value_type operator * () const;
+            reference operator * () const;
 
             // Index
             size_type index () const;
@@ -666,6 +670,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
 
             // Comparison
             bool operator == (const const_iterator &amp;it) const;
+            bool operator < (const const_iterator &amp;it) const;
         };
 
         const_iterator begin () const;
@@ -703,6 +708,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
 
             // Comparison
             bool operator == (const iterator &amp;it) const;
+            bool operator < (const iterator &amp;it) const;
         };
 
         iterator begin ();
@@ -731,18 +737,19 @@ to address a sub vector of a matrix.</p>
 <h4>Example</h4>
 
 <pre>int main () {
-    numerics::matrix&lt;double&gt; m (3, 3);
+    using namespace boost::numeric::ublas;
+    matrix&lt;double&gt; m (3, 3);
     for (int i = 0; i &lt; m.size1 (); ++ i) 
         for (int j = 0; j &lt; m.size2 (); ++ j) 
             m (i, j) = 3 * i + j;
 
-    numerics::matrix_vector_range&lt;numerics::matrix&lt;double&gt; &gt; mvr (m, range (0, 3), range (0, 3));
+    matrix_vector_range&lt;matrix&lt;double&gt; &gt; mvr (m, range (0, 3), range (0, 3));
     std::cout &lt;&lt; mvr &lt;&lt; std::endl;
 }</pre>
 
 <h4>Definition</h4>
 
-<p>Defined in the header matrix_pr.h.</p>
+<p>Defined in the header matrix_proxy.hpp.</p>
 
 <h4>Template parameters</h4>
 
@@ -790,7 +797,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         <td>Returns the size of the sub vector.</td>
     </tr>
     <tr>
-        <td><code>value_type operator () (size_type i) const</code></td>
+        <td><code>const_reference operator () (size_type i) const</code></td>
         <td>Returns the value of the <code>i</code>-th element. </td>
     </tr>
     <tr>
@@ -952,10 +959,10 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         void reset (matrix_type &amp;data, const range &amp;r1, const range &amp;r2);
 
         // Element access
-        value_type operator () (size_type i) const;
+        const_reference operator () (size_type i) const;
         reference operator () (size_type i);
 
-        value_type operator [] (size_type i) const;
+        const_reference operator [] (size_type i) const;
         reference operator [] (size_type i);
 
         // Assignment
@@ -994,19 +1001,19 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         // Iterators simply are indices.
 
         class const_iterator:
-            public container_const_reference&lt;matrix_type&gt;,
+            public container_const_reference&lt;matrix_vector_range&gt;,
             public random_access_iterator_base&lt;const_iterator, value_type&gt; {
         public:
             typedef typename restrict_traits&lt;typename M::const_iterator1::iterator_category,
                                              typename M::const_iterator2::iterator_category&gt;::iterator_category iterator_category; 
-            typedef typename matrix_type::difference_type difference_type;
-            typedef typename matrix_type::value_type value_type;
-            typedef typename matrix_type::value_type reference;
-            typedef typename matrix_type::const_pointer pointer;
+            typedef typename matrix_vector_range::difference_type difference_type;
+            typedef typename matrix_vector_range::value_type value_type;
+            typedef typename matrix_vector_range::const_reference reference;
+            typedef typename matrix_vector_range::const_pointer pointer;
 
             // Construction and destruction
             const_iterator ();
-            const_iterator (const matrix_type &amp;m, const const_iterator1_type &amp;it1, const const_iterator2_type &amp;it2);
+            const_iterator (const matrix_vector_range &amp;mvr, const const_iterator1_type &amp;it1, const const_iterator2_type &amp;it2);
             const_iterator (const iterator &amp;it);
 
             // Arithmetic
@@ -1017,7 +1024,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
             difference_type operator - (const const_iterator &amp;it) const;
 
             // Dereference
-            value_type operator * () const;
+            reference operator * () const;
 
             // Index
             size_type  index () const;
@@ -1027,25 +1034,26 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
 
             // Comparison
             bool operator == (const const_iterator &amp;it) const;
+            bool operator < (const const_iterator &amp;it) const;
         };
 
         const_iterator begin () const;
         const_iterator end () const;
 
         class iterator:
-            public container_reference&lt;matrix_type&gt;,
+            public container_reference&lt;matrix_vector_range&gt;,
             public random_access_iterator_base&lt;iterator, value_type&gt; {
         public:
             typedef typename restrict_traits&lt;typename M::iterator1::iterator_category,
                                              typename M::iterator2::iterator_category&gt;::iterator_category iterator_category; 
-            typedef typename matrix_type::difference_type difference_type;
-            typedef typename matrix_type::value_type value_type;
-            typedef typename matrix_type::reference reference;
-            typedef typename matrix_type::pointer pointer;
+            typedef typename matrix_vector_range::difference_type difference_type;
+            typedef typename matrix_vector_range::value_type value_type;
+            typedef typename matrix_vector_range::reference reference;
+            typedef typename matrix_vector_range::pointer pointer;
 
             // Construction and destruction
             iterator ();
-            iterator (matrix_type &amp;m, const iterator1_type &amp;it1, const iterator2_type &amp;it2);
+            iterator (matrix_vector_range &amp;mvr, const iterator1_type &amp;it1, const iterator2_type &amp;it2);
 
             // Arithmetic
             iterator &amp;operator ++ ();
@@ -1065,6 +1073,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
 
             // Comparison
             bool operator == (const iterator &amp;it) const;
+            bool operator < (const iterator &amp;it) const;
         };
 
         iterator begin ();
@@ -1093,18 +1102,19 @@ to address a sliced sub vector of a matrix.</p>
 <h4>Example</h4>
 
 <pre>int main () {
-    numerics::matrix&lt;double&gt; m (3, 3);
+    using namespace boost::numeric::ublas;
+    matrix&lt;double&gt; m (3, 3);
     for (int i = 0; i &lt; m.size1 (); ++ i) 
         for (int j = 0; j &lt; m.size2 (); ++ j) 
             m (i, j) = 3 * i + j;
 
-    numerics::matrix_vector_range&lt;numerics::matrix&lt;double&gt; &gt; mvs (m, slice (0, 1, 3), slice (0, 1, 3));
+    matrix_vector_range&lt;matrix&lt;double&gt; &gt; mvs (m, slice (0, 1, 3), slice (0, 1, 3));
     std::cout &lt;&lt; mvs &lt;&lt; std::endl;
 }</pre>
 
 <h4>Definition</h4>
 
-<p>Defined in the header matrix_pr.h.</p>
+<p>Defined in the header matrix_proxy.hpp.</p>
 
 <h4>Template parameters</h4>
 
@@ -1152,7 +1162,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         <td>Returns the size of the sub vector.</td>
     </tr>
     <tr>
-        <td><code>value_type operator () (size_type i) const</code></td>
+        <td><code>const_reference operator () (size_type i) const</code></td>
         <td>Returns the value of the <code>i</code>-th element. </td>
     </tr>
     <tr>
@@ -1314,10 +1324,10 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         void reset (matrix_type &amp;data, const slice &amp;s1, const slice &amp;s2);
 
         // Element access
-        value_type operator () (size_type i) const;
+        const_reference operator () (size_type i) const;
         reference operator () (size_type i);
 
-        value_type operator [] (size_type i) const;
+        const_reference operator [] (size_type i) const;
         reference operator [] (size_type i);
 
         // Assignment
@@ -1356,19 +1366,19 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         // Iterators simply are indices.
 
         class const_iterator:
-            public container_const_reference&lt;matrix_type&gt;,
+            public container_const_reference&lt;matrix_vector_slice&gt;,
             public random_access_iterator_base&lt;const_iterator, value_type&gt; {
         public:
             typedef typename restrict_traits&lt;typename M::const_iterator1::iterator_category,
                                              typename M::const_iterator2::iterator_category&gt;::iterator_category iterator_category; 
-            typedef typename matrix_type::difference_type difference_type;
-            typedef typename matrix_type::value_type value_type;
-            typedef typename matrix_type::value_type reference;
-            typedef typename matrix_type::const_pointer pointer;
+            typedef typename matrix_vector_slice::difference_type difference_type;
+            typedef typename matrix_vector_slice::value_type value_type;
+            typedef typename matrix_vector_slice::const_reference reference;
+            typedef typename matrix_vector_slice::const_pointer pointer;
 
             // Construction and destruction
             const_iterator ();
-            const_iterator (const matrix_type &amp;m, const const_iterator1_type &amp;it1, const const_iterator2_type &amp;it2);
+            const_iterator (const matrix_vector_slice &amp;mvs, const const_iterator1_type &amp;it1, const const_iterator2_type &amp;it2);
             const_iterator (const iterator &amp;it);
 
             // Arithmetic
@@ -1379,7 +1389,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
             difference_type operator - (const const_iterator &amp;it) const;
 
             // Dereference
-            value_type operator * () const;
+            reference operator * () const;
 
             // Index
             size_type  index () const;
@@ -1389,25 +1399,26 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
 
             // Comparison
             bool operator == (const const_iterator &amp;it) const;
+            bool operator < (const const_iterator &amp;it) const;
         };
 
         const_iterator begin () const;
         const_iterator end () const;
 
         class iterator:
-            public container_reference&lt;matrix_type&gt;,
+            public container_reference&lt;matrix_vector_slice&gt;,
             public random_access_iterator_base&lt;iterator, value_type&gt; {
         public:
             typedef typename restrict_traits&lt;typename M::iterator1::iterator_category,
                                              typename M::iterator2::iterator_category&gt;::iterator_category iterator_category; 
-            typedef typename matrix_type::difference_type difference_type;
-            typedef typename matrix_type::value_type value_type;
-            typedef typename matrix_type::reference reference;
-            typedef typename matrix_type::pointer pointer;
+            typedef typename matrix_vector_slice::difference_type difference_type;
+            typedef typename matrix_vector_slice::value_type value_type;
+            typedef typename matrix_vector_slice::reference reference;
+            typedef typename matrix_vector_slice::pointer pointer;
 
             // Construction and destruction
             iterator ();
-            iterator (matrix_type &amp;m, const iterator1_type &amp;it1, const iterator2_type &amp;it2);
+            iterator (matrix_vector_slice &amp;mvs, const iterator1_type &amp;it1, const iterator2_type &amp;it2);
 
             // Arithmetic
             iterator &amp;operator ++ ();
@@ -1427,6 +1438,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
 
             // Comparison
             bool operator == (const iterator &amp;it) const;
+            bool operator < (const iterator &amp;it) const;
         };
 
         iterator begin ();
@@ -1455,8 +1467,9 @@ to address a sub matrix of a matrix.</p>
 <h4>Example</h4>
 
 <pre>int main () {
-    numerics::matrix&lt;double&gt; m (3, 3);
-    numerics::matrix_range&lt;numerics::matrix&lt;double&gt; &gt; mr (m, range (0, 3), range (0, 3));
+    using namespace boost::numeric::ublas;
+    matrix&lt;double&gt; m (3, 3);
+    matrix_range&lt;matrix&lt;double&gt; &gt; mr (m, range (0, 3), range (0, 3));
     for (int i = 0; i &lt; mr.size1 (); ++ i) 
         for (int j = 0; j &lt; mr.size2 (); ++ j) 
             mr (i, j) = 3 * i + j;
@@ -1465,7 +1478,7 @@ to address a sub matrix of a matrix.</p>
 
 <h4>Definition</h4>
 
-<p>Defined in the header matrix_pr.h.</p>
+<p>Defined in the header matrix_proxy.hpp.</p>
 
 <h4>Template parameters</h4>
 
@@ -1525,7 +1538,7 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         <td>Returns the number of columns. </td>
     </tr>
     <tr>
-        <td><code>value_type operator () (size_type i, size_type
+        <td><code>const_reference operator () (size_type i, size_type
         j) const</code></td>
         <td>Returns the value of the <code>j</code>-th element in
         the<code> i</code>-th row. </td>
@@ -1733,7 +1746,7 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         void reset (matrix_type &amp;data, const range &amp;r1, const range &amp;r2);
 
         // Element access
-        value_type operator () (size_type i, size_type j) const;
+        const_reference operator () (size_type i, size_type j) const;
         reference operator () (size_type i, size_type j);
 
         matrix_range&lt;const_matrix_type&gt; project (const range &amp;r1, const range &amp;r2) const;
@@ -1791,7 +1804,7 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
             typedef typename M::const_iterator1::iterator_category iterator_category;
             typedef typename M::const_iterator1::difference_type difference_type;
             typedef typename M::const_iterator1::value_type value_type;
-            typedef typename M::const_iterator1::value_type reference;
+            typedef typename M::const_iterator1::reference reference;
             typedef typename M::const_iterator1::pointer pointer;
             typedef const_iterator2 dual_iterator_type;
             typedef const_reverse_iterator2 dual_reverse_iterator_type;
@@ -1809,7 +1822,7 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
             difference_type operator - (const const_iterator1 &amp;it) const;
 
             // Dereference
-            value_type operator * () const;
+            reference operator * () const;
 
             const_iterator2 begin () const;
             const_iterator2 end () const;
@@ -1825,6 +1838,7 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
 
             // Comparison
             bool operator == (const const_iterator1 &amp;it) const;
+            bool operator < (const const_iterator1 &amp;it) const;
         };
 
         const_iterator1 begin1 () const;
@@ -1870,6 +1884,7 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
 
             // Comparison
             bool operator == (const iterator1 &amp;it) const;
+            bool operator < (const iterator1 &amp;it) const;
         };
 
         iterator1 begin1 ();
@@ -1882,7 +1897,7 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
             typedef typename M::const_iterator2::iterator_category iterator_category;
             typedef typename M::const_iterator2::difference_type difference_type;
             typedef typename M::const_iterator2::value_type value_type;
-            typedef typename M::const_iterator2::value_type reference;
+            typedef typename M::const_iterator2::reference reference;
             typedef typename M::const_iterator2::pointer pointer;
             typedef const_iterator1 dual_iterator_type;
             typedef const_reverse_iterator1 dual_reverse_iterator_type;
@@ -1900,7 +1915,7 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
             difference_type operator - (const const_iterator2 &amp;it) const;
 
             // Dereference
-            value_type operator * () const;
+            reference operator * () const;
 
             const_iterator1 begin () const;
             const_iterator1 end () const;
@@ -1916,6 +1931,7 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
 
             // Comparison
             bool operator == (const const_iterator2 &amp;it) const;
+            bool operator < (const const_iterator2 &amp;it) const;
         };
 
         const_iterator2 begin2 () const;
@@ -1961,6 +1977,7 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
 
             // Comparison
             bool operator == (const iterator2 &amp;it) const;
+            bool operator < (const iterator2 &amp;it) const;
         };
 
         iterator2 begin2 ();
@@ -1991,8 +2008,9 @@ to address a sliced sub matrix of a matrix.</p>
 <h4>Example</h4>
 
 <pre>int main () {
-    numerics::matrix&lt;double&gt; m (3, 3);
-    numerics::matrix_slice&lt;numerics::matrix&lt;double&gt; &gt; ms (m, slice (0, 1, 3), slice (0, 1, 3));
+    using namespace boost::numeric::ublas;
+    matrix&lt;double&gt; m (3, 3);
+    matrix_slice&lt;matrix&lt;double&gt; &gt; ms (m, slice (0, 1, 3), slice (0, 1, 3));
     for (int i = 0; i &lt; ms.size1 (); ++ i) 
         for (int j = 0; j &lt; ms.size2 (); ++ j) 
             ms (i, j) = 3 * i + j;
@@ -2001,7 +2019,7 @@ to address a sliced sub matrix of a matrix.</p>
 
 <h4>Definition</h4>
 
-<p>Defined in the header matrix_pr.h.</p>
+<p>Defined in the header matrix_proxy.hpp.</p>
 
 <h4>Template parameters</h4>
 
@@ -2052,7 +2070,7 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         <td>Returns the number of columns. </td>
     </tr>
     <tr>
-        <td><code>value_type operator () (size_type i, size_type
+        <td><code>const_reference operator () (size_type i, size_type
         j) const</code></td>
         <td>Returns the value of the <code>j</code>-th element in
         the<code> i</code>-th row. </td>
@@ -2258,7 +2276,7 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         void reset (matrix_type &amp;data, const slice &amp;s1, const slice &amp;s2);
 
         // Element access
-        value_type operator () (size_type i, size_type j) const;
+        const_reference operator () (size_type i, size_type j) const;
         reference operator () (size_type i, size_type j);
 
         matrix_slice&lt;const_matrix_type&gt; project (const range &amp;r1, const range &amp;r2) const;
@@ -2312,20 +2330,20 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         // Iterators simply are indices.
 
         class const_iterator1:
-            public container_const_reference&lt;matrix_type&gt;,
+            public container_const_reference&lt;matrix_slice&gt;,
             public random_access_iterator_base&lt;const_iterator1, value_type&gt; {
         public:
             typedef typename M::const_iterator1::iterator_category iterator_category;
             typedef typename M::const_iterator1::difference_type difference_type;
             typedef typename M::const_iterator1::value_type value_type;
-            typedef typename M::const_iterator1::value_type reference;
+            typedef typename M::const_iterator1::reference reference;
             typedef typename M::const_iterator1::pointer pointer;
             typedef const_iterator2 dual_iterator_type;
             typedef const_reverse_iterator2 dual_reverse_iterator_type;
 
             // Construction and destruction
             const_iterator1 ();
-            const_iterator1 (const matrix_type &amp;m, const const_iterator1_type &amp;it1, const const_iterator2_type &amp;it2);
+            const_iterator1 (const matrix_slice &amp;ms, const const_iterator1_type &amp;it1, const const_iterator2_type &amp;it2);
             const_iterator1 (const iterator1 &amp;it);
 
             // Arithmetic
@@ -2336,7 +2354,7 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
             difference_type operator - (const const_iterator1 &amp;it) const;
 
             // Dereference
-            value_type operator * () const;
+            reference operator * () const;
 
             const_iterator2 begin () const;
             const_iterator2 end () const;
@@ -2352,13 +2370,14 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
 
             // Comparison
             bool operator == (const const_iterator1 &amp;it) const;
+            bool operator < (const const_iterator1 &amp;it) const;
         };
 
         const_iterator1 begin1 () const;
         const_iterator1 end1 () const;
 
         class iterator1:
-            public container_reference&lt;matrix_type&gt;,
+            public container_reference&lt;matrix_slice&gt;,
             public random_access_iterator_base&lt;iterator1, value_type&gt; {
         public:
             typedef typename M::iterator1::iterator_category iterator_category;
@@ -2371,7 +2390,7 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
 
             // Construction and destruction
             iterator1 ();
-            iterator1 (matrix_type &amp;m, const iterator1_type &amp;it1, const iterator2_type &amp;it2);
+            iterator1 (matrix_slice &amp;ms, const iterator1_type &amp;it1, const iterator2_type &amp;it2);
 
             // Arithmetic
             iterator1 &amp;operator ++ ();
@@ -2397,26 +2416,27 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
 
             // Comparison
             bool operator == (const iterator1 &amp;it) const;
+            bool operator < (const iterator1 &amp;it) const;
         };
 
         iterator1 begin1 ();
         iterator1 end1 ();
 
         class const_iterator2:
-            public container_const_reference&lt;matrix_type&gt;,
+            public container_const_reference&lt;matrix_slice&gt;,
             public random_access_iterator_base&lt;const_iterator2, value_type&gt; {
         public:
             typedef typename M::const_iterator2::iterator_category iterator_category;
             typedef typename M::const_iterator2::difference_type difference_type;
             typedef typename M::const_iterator2::value_type value_type;
-            typedef typename M::const_iterator2::value_type reference;
+            typedef typename M::const_iterator2::reference reference;
             typedef typename M::const_iterator2::pointer pointer;
             typedef const_iterator1 dual_iterator_type;
             typedef const_reverse_iterator1 dual_reverse_iterator_type;
 
             // Construction and destruction
             const_iterator2 ();
-            const_iterator2 (const matrix_type &amp;m, const const_iterator1_type &amp;it1, const const_iterator2_type &amp;it2);
+            const_iterator2 (const matrix_slice &amp;ms, const const_iterator1_type &amp;it1, const const_iterator2_type &amp;it2);
             const_iterator2 (const iterator2 &amp;it);
 
             // Arithmetic
@@ -2427,7 +2447,7 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
             difference_type operator - (const const_iterator2 &amp;it) const;
 
             // Dereference
-            value_type operator * () const;
+            reference operator * () const;
 
             const_iterator1 begin () const;
             const_iterator1 end () const;
@@ -2443,13 +2463,14 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
 
             // Comparison
             bool operator == (const const_iterator2 &amp;it) const;
+            bool operator < (const const_iterator2 &amp;it) const;
         };
 
         const_iterator2 begin2 () const;
         const_iterator2 end2 () const;
 
         class iterator2:
-            public container_reference&lt;matrix_type&gt;,
+            public container_reference&lt;matrix_slice&gt;,
             public random_access_iterator_base&lt;iterator2, value_type&gt; {
         public:
             typedef typename M::iterator2::iterator_category iterator_category;
@@ -2462,7 +2483,7 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
 
             // Construction and destruction
             iterator2 ();
-            iterator2 (matrix_type &amp;m, const iterator1_type &amp;it1, const iterator2_type &amp;it2);
+            iterator2 (matrix_slice &amp;ms, const iterator1_type &amp;it1, const iterator2_type &amp;it2);
 
             // Arithmetic
             iterator2 &amp;operator ++ ();
@@ -2488,6 +2509,7 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
 
             // Comparison
             bool operator == (const iterator2 &amp;it) const;
+            bool operator < (const iterator2 &amp;it) const;
         };
 
         iterator2 begin2 ();

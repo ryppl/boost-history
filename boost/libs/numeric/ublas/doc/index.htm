@@ -430,7 +430,7 @@ how BLAS calls may be mapped onto our classes. </p>
         <td><em>A &lt;- a x x</em><sup><em>T</em></sup><em> + A</em>
         or<em><br>
         A &lt;- a x x</em><sup><em>H</em></sup><em> + A</em></td>
-        <td>Performs a symmetric or hermitean rank <em>1</em>
+        <td>Performs a symmetric or hermitian rank <em>1</em>
         update.</td>
     </tr>
     <tr>
@@ -444,7 +444,7 @@ how BLAS calls may be mapped onto our classes. </p>
         x</em><sup><em>T</em></sup><em> + A</em> or<em><br>
         A &lt;- a x y</em><sup><em>H</em></sup><em> + a</em><sup><em>-</em></sup><em>
         y x</em><sup><em>H</em></sup><em> + A</em> </td>
-        <td>Performs a symmetric or hermitean rank <em>2</em>
+        <td>Performs a symmetric or hermitian rank <em>2</em>
         update.</td>
     </tr>
 </table>
@@ -518,7 +518,7 @@ how BLAS calls may be mapped onto our classes. </p>
         B &lt;- a A</em><sup><em>T</em></sup><em> A + b B </em>or<br>
         <em>B &lt;- a A A</em><sup><em>H</em></sup><em> + b B </em>or<em><br>
         B &lt;- a A</em><sup><em>H</em></sup><em> A + b B </em></td>
-        <td>Performs a symmetric or hermitean rank <em>k</em>
+        <td>Performs a symmetric or hermitian rank <em>k</em>
         update.</td>
     </tr>
     <tr>
@@ -540,7 +540,7 @@ how BLAS calls may be mapped onto our classes. </p>
         B A</em><sup><em>H</em></sup><em> + b C</em> or<em><br>
         C &lt;- a A</em><sup><em>H</em></sup><em> B + a</em><sup><em>-</em></sup><em>
         B</em><sup><em>H</em></sup><em> A + b C</em></td>
-        <td>Performs a symmetric or hermitean rank <em>2 k</em>
+        <td>Performs a symmetric or hermitian rank <em>2 k</em>
         update.</td>
     </tr>
 </table>
@@ -727,10 +727,17 @@ implementation do not essentially depend on partial template
 specialization. So the test and benchmark programs successfully
 compile with MSVC 6.0, BCC 5.5, GCC 2.95.x / 3.0.x and ICC 5.0.1.</p>
 
+<p>The library presumes standard compliant allocation through <code>operator
+new </code>and <code>operator delete</code>. So programs which
+are intended to run under MSVC 6.0 should set a correct new
+handler throwing a <code>std::bad_alloc</code> exception 
+via <code>_set_new_handler</code> to detect out of
+memory conditions.</p>
+
 <p>To get the most performance out of the box with MSVC 6.0, you
-should change the preprocessor definition of <code>NUMERICS_INLINE
+should change the preprocessor definition of <code>BOOST_UBLAS_INLINE
 </code>from <code>inline </code>to <code>__forceinline </code>in
-the header file config.h<code>.</code> But we suspect this
+the header file config.hpp<code>.</code> But we suspect this
 optimization to be fragile.</p>
 
 <h2>Reference</h2>
@@ -776,9 +783,9 @@ optimization to be fragile.</p>
             <li><a href="storage.htm#slice">Slice</a></li>
         </ul>
     </li>
-    <li><a href="storage_sp.htm">Sparse Storage</a><ul
+    <li><a href="storage_sparse.htm">Sparse Storage</a><ul
         type="circle">
-            <li><a href="storage_sp.htm#map_array">Map Array</a></li>
+            <li><a href="storage_sparse.htm#map_array">Map Array</a></li>
         </ul>
     </li>
     <li><a href="vector.htm">Vector</a><ul type="circle">
@@ -787,27 +794,29 @@ optimization to be fragile.</p>
             <li><a href="vector.htm#zero_vector">Zero Vector</a></li>
         </ul>
     </li>
-    <li><a href="vector_sp.htm">Sparse Vector</a><ul
+    <li><a href="vector_sparse.htm">Sparse Vector</a><ul
         type="circle">
-            <li><a href="vector_sp.htm#sparse_vector">Sparse
+            <li><a href="vector_sparse.htm#sparse_vector">Sparse
                 Vector</a></li>
         </ul>
     </li>
-    <li><a href="vector_pr.htm">Vector Proxies</a><ul
+    <li><a href="vector_proxy.htm">Vector Proxies</a><ul
         type="circle">
-            <li><a href="vector_pr.htm#vector_range">Vector Range</a></li>
-            <li><a href="vector_pr.htm#vector_slice">Vector Slice</a></li>
+            <li><a href="vector_proxy.htm#vector_range">Vector
+                Range</a></li>
+            <li><a href="vector_proxy.htm#vector_slice">Vector
+                Slice</a></li>
         </ul>
     </li>
-    <li><a href="vector_et.htm">Vector Expressions</a><ul
+    <li><a href="vector_expression.htm">Vector Expressions</a><ul
         type="circle">
-            <li><a href="vector_et.htm#vector_expression">Vector
+            <li><a href="vector_expression.htm#vector_expression">Vector
                 Expression</a></li>
-            <li><a href="vector_et.htm#vector_references">Vector
+            <li><a href="vector_expression.htm#vector_references">Vector
                 References</a></li>
-            <li><a href="vector_et.htm#vector_operations">Vector
+            <li><a href="vector_expression.htm#vector_operations">Vector
                 Operations</a></li>
-            <li><a href="vector_et.htm#vector_reductions">Vector
+            <li><a href="vector_expression.htm#vector_reductions">Vector
                 Reductions</a></li>
         </ul>
     </li>
@@ -815,60 +824,75 @@ optimization to be fragile.</p>
             <li><a href="matrix.htm#matrix">Matrix</a></li>
             <li><a href="matrix.htm#identity_matrix">Identity
                 Matrix</a></li>
-            <li><a href="matrix.htm#zero_matrix">Zero
+            <li><a href="matrix.htm#zero_matrix">Zero Matrix</a></li>
+        </ul>
+    </li>
+    <li><a href="triangular.htm">Triangular Matrix</a><ul
+        type="circle">
+            <li><a href="triangular.htm#triangular_matrix">Triangular
                 Matrix</a></li>
+            <li><a href="triangular.htm#triangular_adaptor">Triangular
+                Adaptor</a></li>
         </ul>
     </li>
-    <li><a href="triangular.htm">Triangular Matrix</a><ul type="circle">
-            <li><a href="triangular.htm#triangular_matrix">Triangular Matrix</a></li>
-            <li><a href="triangular.htm#triangular_adaptor">Triangular Adaptor</a></li>
+    <li><a href="symmetric.htm">Symmetric Matrix</a><ul
+        type="circle">
+            <li><a href="symmetric.htm#symmetric_matrix">Symmetric
+                Matrix</a></li>
+            <li><a href="symmetric.htm#symmetric_adaptor">Symmetric
+                Adaptor</a></li>
         </ul>
     </li>
-    <li><a href="symmetric.htm">Symmetric Matrix</a><ul type="circle">
-            <li><a href="symmetric.htm#symmetric_matrix">Symmetric Matrix</a></li>
-            <li><a href="symmetric.htm#symmetric_adaptor">Symmetric Adaptor</a></li>
-        </ul>
-    </li>
-    <li><a href="hermitean.htm">Hermitean Matrix</a><ul type="circle">
-            <li><a href="hermitean.htm#hermitean_matrix">Hermitean Matrix</a></li>
-            <li><a href="hermitean.htm#hermitean_adaptor">Hermitean Adaptor</a></li>
+    <li><a href="hermitian.htm">Hermitian Matrix</a><ul
+        type="circle">
+            <li><a href="hermitian.htm#hermitian_matrix">Hermitian
+                Matrix</a></li>
+            <li><a href="hermitian.htm#hermitian_adaptor">Hermitian
+                Adaptor</a></li>
         </ul>
     </li>
     <li><a href="banded.htm">Banded Matrix</a><ul type="circle">
             <li><a href="banded.htm#banded_matrix">Banded Matrix</a></li>
-            <li><a href="banded.htm#banded_adaptor">Banded Adaptor</a></li>
+            <li><a href="banded.htm#banded_adaptor">Banded
+                Adaptor</a></li>
         </ul>
     </li>
-    <li><a href="matrix_sp.htm">Sparse Matrix</a><ul
+    <li><a href="matrix_sparse.htm">Sparse Matrix</a><ul
         type="circle">
-            <li><a href="matrix_sp.htm#sparse_matrix">Sparse
+            <li><a href="matrix_sparse.htm#sparse_matrix">Sparse
                 Matrix</a></li>
         </ul>
     </li>
-    <li><a href="matrix_pr.htm">Matrix Proxies</a><ul
+    <li><a href="matrix_proxy.htm">Matrix Proxies</a><ul
         type="circle">
-            <li><a href="matrix_pr.htm#matrix_row">Matrix Row</a></li>
-            <li><a href="matrix_pr.htm#matrix_column">Matrix
+            <li><a href="matrix_proxy.htm#matrix_row">Matrix Row</a></li>
+            <li><a href="matrix_proxy.htm#matrix_column">Matrix
                 Column</a></li>
-            <li><a href="matrix_pr.htm#vector_range">Vector Range</a></li>
-            <li><a href="matrix_pr.htm#vector_slice">Vector Slice</a></li>
-            <li><a href="matrix_pr.htm#matrix_range">Matrix Range</a></li>
-            <li><a href="matrix_pr.htm#matrix_slice">Matrix Slice</a></li>
+            <li><a href="matrix_proxy.htm#vector_range">Vector
+                Range</a></li>
+            <li><a href="matrix_proxy.htm#vector_slice">Vector
+                Slice</a></li>
+            <li><a href="matrix_proxy.htm#matrix_range">Matrix
+                Range</a></li>
+            <li><a href="matrix_proxy.htm#matrix_slice">Matrix
+                Slice</a></li>
         </ul>
     </li>
-    <li><a href="matrix_et.htm">Matrix Expressions</a><ul
+    <li><a href="matrix_expression.htm">Matrix Expressions</a><ul
         type="circle">
-            <li><a href="matrix_et.htm#matrix_expression">Matrix
+            <li><a href="matrix_expression.htm#matrix_expression">Matrix
                 Expression</a></li>
-            <li><a href="matrix_et.htm#matrix_references">Matrix
+            <li><a href="matrix_expression.htm#matrix_references">Matrix
                 References</a></li>
-            <li><a href="matrix_et.htm#matrix_operations">Matrix
+            <li><a href="matrix_expression.htm#matrix_operations">Matrix
                 Operations</a></li>
-            <li><a href="matrix_et.htm#matrix_reductions">Matrix
+            <li><a href="matrix_expression.htm#matrix_reductions">Matrix
                 Reductions</a></li>
-            <li><a href="matrix_et.htm#matrix_vector_operations">Matrix
+            <li><a
+                href="matrix_expression.htm#matrix_vector_operations">Matrix
                 Vector Operations</a></li>
-            <li><a href="matrix_et.htm#matrix_matrix_operations">Matrix
+            <li><a
+                href="matrix_expression.htm#matrix_matrix_operations">Matrix
                 Matrix Operations</a></li>
         </ul>
     </li>
@@ -1338,9 +1362,9 @@ dimension 100 and 100 x 100, respectively.</p>
 
 <p>We would like to thank all, which supported the development of
 this library: <br>
-David Abrahams, Beman Dawes, Kresimir Fresl, Joachim Kessel, Toon
-Knapen, Jens Maurer, Joachim Pyras, Peter Schmitteckert, Jeremy
-Siek, Markus Steffl, Michael Stevens, Martin Weiser, Marc Zimmermann
-and the members of <a href="http://www.boost.org">http://www.boost.org</a></p>
+David Abrahams, Fernando Cacciola, Beman Dawes, Kresimir Fresl, Joachim Kessel, 
+Toon Knapen, Jens Maurer, Gary Powell, Joachim Pyras, Peter Schmitteckert, 
+Jeremy Siek, Markus Steffl, Michael Stevens, Martin Weiser, Marc Zimmermann and 
+the members of <a href="http://www.boost.org">http://www.boost.org</a></p>
 </body>
 </html>

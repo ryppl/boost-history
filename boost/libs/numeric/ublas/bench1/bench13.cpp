@@ -9,13 +9,13 @@
 #include <iostream>
 #include <string>
 
-#include <boost/numeric/ublas/config.h>
-#include <boost/numeric/ublas/vector.h>
-#include <boost/numeric/ublas/matrix.h>
+#include <boost/numeric/ublas/config.hpp>
+#include <boost/numeric/ublas/vector.hpp>
+#include <boost/numeric/ublas/matrix.hpp>
 
 #include <boost/timer.hpp>
 
-#include "bench1.h"
+#include "bench1.hpp"
 
 template<class T, int N>
 struct bench_c_matrix_prod {
@@ -59,7 +59,7 @@ struct bench_my_matrix_prod {
             initialize_matrix (m2);
             boost::timer t;
             for (int i = 0; i < runs; ++ i) {
-                m3 = numerics::prod (m1, m2);
+                m3 = ublas::prod (m1, m2);
 //                sink_matrix (m3);
             }
             footer<value_type> () (N * N * N, N * N * (N - 1), runs, t.elapsed ());
@@ -78,7 +78,7 @@ struct bench_my_matrix_prod {
             initialize_matrix (m2);
             boost::timer t;
             for (int i = 0; i < runs; ++ i) {
-                m3.assign (numerics::prod (m1, m2));
+                m3.assign (ublas::prod (m1, m2));
 //                sink_matrix (m3);
             }
             footer<value_type> () (N * N * N, N * N * (N - 1), runs, t.elapsed ());
@@ -134,42 +134,42 @@ void bench_3<T, N>::operator () (int runs) {
 
 #ifdef USE_C_ARRAY
     header ("c_matrix safe");
-    bench_my_matrix_prod<numerics::c_matrix<T, N, N>, N> () (runs, safe_tag ());
+    bench_my_matrix_prod<ublas::c_matrix<T, N, N>, N> () (runs, safe_tag ());
 
     header ("c_matrix fast");
-    bench_my_matrix_prod<numerics::c_matrix<T, N, N>, N> () (runs, fast_tag ());
+    bench_my_matrix_prod<ublas::c_matrix<T, N, N>, N> () (runs, fast_tag ());
 #endif
 
 #ifdef USE_BOUNDED_ARRAY
     header ("matrix<bounded_array> safe");
-    bench_my_matrix_prod<numerics::matrix<T, numerics::row_major, numerics::bounded_array<T, N * N> >, N> () (runs, safe_tag ());
+    bench_my_matrix_prod<ublas::matrix<T, ublas::row_major, ublas::bounded_array<T, N * N> >, N> () (runs, safe_tag ());
 
     header ("matrix<bounded_array> fast");
-    bench_my_matrix_prod<numerics::matrix<T, numerics::row_major, numerics::bounded_array<T, N * N> >, N> () (runs, fast_tag ());
+    bench_my_matrix_prod<ublas::matrix<T, ublas::row_major, ublas::bounded_array<T, N * N> >, N> () (runs, fast_tag ());
 #endif
 
 #ifdef USE_UNBOUNDED_ARRAY
     header ("matrix<unbounded_array> safe");
-    bench_my_matrix_prod<numerics::matrix<T, numerics::row_major, numerics::unbounded_array<T> >, N> () (runs, safe_tag ());
+    bench_my_matrix_prod<ublas::matrix<T, ublas::row_major, ublas::unbounded_array<T> >, N> () (runs, safe_tag ());
 
     header ("matrix<unbounded_array> fast");
-    bench_my_matrix_prod<numerics::matrix<T, numerics::row_major, numerics::unbounded_array<T> >, N> () (runs, fast_tag ());
+    bench_my_matrix_prod<ublas::matrix<T, ublas::row_major, ublas::unbounded_array<T> >, N> () (runs, fast_tag ());
 #endif
 
 #ifdef USE_STD_VALARRAY
     header ("matrix<std::valarray> safe");
-    bench_my_matrix_prod<numerics::matrix<T, numerics::row_major, std::valarray<T> >, N> () (runs, safe_tag ());
+    bench_my_matrix_prod<ublas::matrix<T, ublas::row_major, std::valarray<T> >, N> () (runs, safe_tag ());
 
     header ("matrix<std::valarray> fast");
-    bench_my_matrix_prod<numerics::matrix<T, numerics::row_major, std::valarray<T> >, N> () (runs, fast_tag ());
+    bench_my_matrix_prod<ublas::matrix<T, ublas::row_major, std::valarray<T> >, N> () (runs, fast_tag ());
 #endif
 
 #ifdef USE_STD_VECTOR
     header ("matrix<std::vector> safe");
-    bench_my_matrix_prod<numerics::matrix<T, numerics::row_major, std::vector<T> >, N> () (runs, safe_tag ());
+    bench_my_matrix_prod<ublas::matrix<T, ublas::row_major, std::vector<T> >, N> () (runs, safe_tag ());
 
     header ("matrix<std::vector> fast");
-    bench_my_matrix_prod<numerics::matrix<T, numerics::row_major, std::vector<T> >, N> () (runs, fast_tag ());
+    bench_my_matrix_prod<ublas::matrix<T, ublas::row_major, std::vector<T> >, N> () (runs, fast_tag ());
 #endif
 
 #ifdef USE_STD_VALARRAY

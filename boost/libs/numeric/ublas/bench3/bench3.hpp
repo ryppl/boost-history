@@ -1,7 +1,7 @@
 #ifndef BENCH3_H
 #define BENCH3_H
 
-namespace numerics = boost::numerics;
+namespace ublas = boost::numeric::ublas;
 
 void header (std::string text);
 
@@ -9,12 +9,12 @@ template<class T>
 struct footer {
     void operator () (int multiplies, int plus, int runs, double elapsed) {
         std::cout << "elapsed: " << elapsed << " s, "
-                  << (multiplies * numerics::type_traits<T>::multiplies_complexity +
-                      plus * numerics::type_traits<T>::plus_complexity) * runs /
+                  << (multiplies * ublas::type_traits<T>::multiplies_complexity +
+                      plus * ublas::type_traits<T>::plus_complexity) * runs /
                      (1024 * 1024 * elapsed) << " Mflops" << std::endl;
         std::cerr << "elapsed: " << elapsed << " s, "
-                  << (multiplies * numerics::type_traits<T>::multiplies_complexity +
-                      plus * numerics::type_traits<T>::plus_complexity) * runs /
+                  << (multiplies * ublas::type_traits<T>::multiplies_complexity +
+                      plus * ublas::type_traits<T>::plus_complexity) * runs /
                      (1024 * 1024 * elapsed) << " Mflops" << std::endl;
     }
 };
@@ -31,7 +31,7 @@ struct c_matrix_traits {
 template<class T, int N> 
 struct initialize_c_vector  {
 #ifdef BOOST_MSVC
-    NUMERICS_INLINE
+    BOOST_UBLAS_INLINE
     void operator () (typename c_vector_traits<T, N>::type v) {
 #else
     void operator () (typename c_vector_traits<T, N>::type &v) {
@@ -42,7 +42,7 @@ struct initialize_c_vector  {
         }
 };
 template<class V>
-NUMERICS_INLINE
+BOOST_UBLAS_INLINE
 void initialize_vector (V &v) {
     int size = v.size ();
     for (int i = 0; i < size; ++ i) 
@@ -53,7 +53,7 @@ void initialize_vector (V &v) {
 template<class T, int N, int M> 
 struct initialize_c_matrix  {
 #ifdef BOOST_MSVC
-    NUMERICS_INLINE
+    BOOST_UBLAS_INLINE
     void operator () (typename c_matrix_traits<T, N, M>::type m) {
 #else
     void operator () (typename c_matrix_traits<T, N, M>::type &m) {
@@ -65,7 +65,7 @@ struct initialize_c_matrix  {
     }
 };
 template<class M>
-NUMERICS_INLINE
+BOOST_UBLAS_INLINE
 void initialize_matrix (M &m) {
     int size1 = m.size1 ();
     int size2 = m.size2 ();
@@ -76,7 +76,7 @@ void initialize_matrix (M &m) {
 }
 
 template<class T>
-NUMERICS_INLINE
+BOOST_UBLAS_INLINE
 void sink_scalar (const T &s) {
     static T g_s = s;
 }
@@ -84,7 +84,7 @@ void sink_scalar (const T &s) {
 template<class T, int N>
 struct sink_c_vector {
 #ifdef BOOST_MSVC
-    NUMERICS_INLINE
+    BOOST_UBLAS_INLINE
     void operator () (const typename c_vector_traits<T, N>::type v) {
 #else
     void operator () (const typename c_vector_traits<T, N>::type &v) {
@@ -95,7 +95,7 @@ struct sink_c_vector {
     }
 };
 template<class V>
-NUMERICS_INLINE
+BOOST_UBLAS_INLINE
 void sink_vector (const V &v) {
     static V g_v (v);
 }
@@ -103,7 +103,7 @@ void sink_vector (const V &v) {
 template<class T, int N, int M>
 struct sink_c_matrix {
 #ifdef BOOST_MSVC
-    NUMERICS_INLINE
+    BOOST_UBLAS_INLINE
     void operator () (const typename c_matrix_traits<T, N, M>::type m) {
 #else 
     void operator () (const typename c_matrix_traits<T, N, M>::type &m) {
@@ -115,7 +115,7 @@ struct sink_c_matrix {
     }
 };
 template<class M>
-NUMERICS_INLINE
+BOOST_UBLAS_INLINE
 void sink_matrix (const M &m) {
     static M g_m (m);
 }

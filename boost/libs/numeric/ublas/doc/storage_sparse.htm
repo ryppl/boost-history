@@ -21,7 +21,8 @@ a simple std::map-like associative container as a sorted array.</p>
 <h4>Example</h4>
 
 <pre>int main () {
-    numerics::map_array&lt;int, double&gt; a (3);
+    using namespace boost::numeric::ublas;
+    map_array&lt;int, double&gt; a (3);
     for (int i = 0; i &lt; a.size (); ++ i) {
         a [i] = i;
         std::cout &lt;&lt; a [i] &lt;&lt; std::endl;
@@ -30,7 +31,7 @@ a simple std::map-like associative container as a sorted array.</p>
 
 <h4>Definition</h4>
 
-<p>Defined in the header storage_sp.h.</p>
+<p>Defined in the header storage_sparse.hpp.</p>
 
 <h4>Template parameters</h4>
 

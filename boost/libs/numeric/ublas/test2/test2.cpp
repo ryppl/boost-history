@@ -8,61 +8,73 @@
 
 #include <iostream>
 
-#include <boost/numeric/ublas/config.h>
-#include <boost/numeric/ublas/vector.h>
-#include <boost/numeric/ublas/matrix.h>
-#include <boost/numeric/ublas/triangular.h>
-#include <boost/numeric/ublas/io.h>
+#include <boost/numeric/ublas/config.hpp>
+#include <boost/numeric/ublas/vector.hpp>
+#include <boost/numeric/ublas/matrix.hpp>
+#include <boost/numeric/ublas/triangular.hpp>
+#include <boost/numeric/ublas/io.hpp>
 
-#include <boost/numeric/ublas/blas.h>
+#include <boost/numeric/ublas/blas.hpp>
 
-#include "test2.h"
+#include "test2.hpp"
+
+#ifdef BOOST_MSVC
+// Standard new handler is not standard compliant.
+#include <new.h>
+int __cdecl std_new_handler (unsigned) {
+    throw std::bad_alloc ();
+}
+#endif
 
 int main () {
+#ifdef BOOST_MSVC
+    _set_new_handler (std_new_handler);
+#endif
+
     std::cout << "test_blas_1" << std::endl;
 
     std::cout << "float" << std::endl;
-    test_blas_1<numerics::vector<float>, 3> () ();
+    test_blas_1<ublas::vector<float>, 3> () ();
 
     std::cout << "double" << std::endl;
-    test_blas_1<numerics::vector<double>, 3> () ();
+    test_blas_1<ublas::vector<double>, 3> () ();
 
 #ifdef USE_STD_COMPLEX
     std::cout << "std::complex<float>" << std::endl;
-    test_blas_1<numerics::vector<std::complex<float> >, 3> () ();
+    test_blas_1<ublas::vector<std::complex<float> >, 3> () ();
 
     std::cout << "std::complex<double>" << std::endl;
-    test_blas_1<numerics::vector<std::complex<double> >, 3> () ();
+    test_blas_1<ublas::vector<std::complex<double> >, 3> () ();
 #endif
 
     std::cout << "test_blas_2" << std::endl;
 
     std::cout << "float" << std::endl;
-    test_blas_2<numerics::vector<float>, numerics::matrix<float>, 3> () ();
+    test_blas_2<ublas::vector<float>, ublas::matrix<float>, 3> () ();
 
     std::cout << "double" << std::endl;
-    test_blas_2<numerics::vector<double>, numerics::matrix<double>, 3> () ();
+    test_blas_2<ublas::vector<double>, ublas::matrix<double>, 3> () ();
 
 #ifdef USE_STD_COMPLEX
     std::cout << "std::complex<float>" << std::endl;
-    test_blas_2<numerics::vector<std::complex<float> >, numerics::matrix<std::complex<float> >, 3> () ();
+    test_blas_2<ublas::vector<std::complex<float> >, ublas::matrix<std::complex<float> >, 3> () ();
 
     std::cout << "std::complex<double>" << std::endl;
-    test_blas_2<numerics::vector<std::complex<double> >, numerics::matrix<std::complex<double> >, 3> () ();
+    test_blas_2<ublas::vector<std::complex<double> >, ublas::matrix<std::complex<double> >, 3> () ();
 #endif
 
     std::cout << "float" << std::endl;
-    test_blas_3<numerics::matrix<float>, 3> () ();
+    test_blas_3<ublas::matrix<float>, 3> () ();
 
     std::cout << "double" << std::endl;
-    test_blas_3<numerics::matrix<double>, 3> () ();
+    test_blas_3<ublas::matrix<double>, 3> () ();
 
 #ifdef USE_STD_COMPLEX
     std::cout << "std::complex<float>" << std::endl;
-    test_blas_3<numerics::matrix<std::complex<float> >, 3> () ();
+    test_blas_3<ublas::matrix<std::complex<float> >, 3> () ();
 
     std::cout << "std::complex<double>" << std::endl;
-    test_blas_3<numerics::matrix<std::complex<double> >, 3> () ();
+    test_blas_3<ublas::matrix<std::complex<double> >, 3> () ();
 #endif
     return 0;
 }

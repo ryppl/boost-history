@@ -108,111 +108,111 @@ SOURCE=.\test53.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=..\..\..\..\boost\numeric\ublas\banded.h
+SOURCE=..\..\..\..\boost\numeric\ublas\banded.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\boost\numeric\ublas\blas.h
+SOURCE=..\..\..\..\boost\numeric\ublas\blas.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\boost\numeric\ublas\concepts.h
+SOURCE=..\..\..\..\boost\numeric\ublas\concepts.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\boost\numeric\ublas\config.h
+SOURCE=..\..\..\..\boost\numeric\ublas\config.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\boost\numeric\ublas\duff.h
+SOURCE=..\..\..\..\boost\numeric\ublas\duff.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\boost\numeric\ublas\exception.h
+SOURCE=..\..\..\..\boost\numeric\ublas\exception.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\boost\numeric\ublas\functional.h
+SOURCE=..\..\..\..\boost\numeric\ublas\functional.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\boost\numeric\ublas\hermitean.h
+SOURCE=..\..\..\..\boost\numeric\ublas\hermitian.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\boost\numeric\ublas\io.h
+SOURCE=..\..\..\..\boost\numeric\ublas\io.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\boost\numeric\ublas\iterator.h
+SOURCE=..\..\..\..\boost\numeric\ublas\iterator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\boost\numeric\ublas\math.h
+SOURCE=..\..\..\..\boost\numeric\ublas\math.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\boost\numeric\ublas\matrix.h
+SOURCE=..\..\..\..\boost\numeric\ublas\matrix.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\boost\numeric\ublas\matrix_as.h
+SOURCE=..\..\..\..\boost\numeric\ublas\matrix_assign.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\boost\numeric\ublas\matrix_et.h
+SOURCE=..\..\..\..\boost\numeric\ublas\matrix_expression.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\boost\numeric\ublas\matrix_pr.h
+SOURCE=..\..\..\..\boost\numeric\ublas\matrix_proxy.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\boost\numeric\ublas\matrix_sp.h
+SOURCE=..\..\..\..\boost\numeric\ublas\matrix_sparse.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\boost\numeric\ublas\storage.h
+SOURCE=..\..\..\..\boost\numeric\ublas\storage.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\boost\numeric\ublas\storage_sp.h
+SOURCE=..\..\..\..\boost\numeric\ublas\storage_sparse.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\boost\numeric\ublas\symmetric.h
+SOURCE=..\..\..\..\boost\numeric\ublas\symmetric.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\test5.h
+SOURCE=.\test5.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\boost\numeric\ublas\traits.h
+SOURCE=..\..\..\..\boost\numeric\ublas\traits.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\boost\numeric\ublas\triangular.h
+SOURCE=..\..\..\..\boost\numeric\ublas\triangular.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\boost\numeric\ublas\vector.h
+SOURCE=..\..\..\..\boost\numeric\ublas\vector.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\boost\numeric\ublas\vector_as.h
+SOURCE=..\..\..\..\boost\numeric\ublas\vector_assign.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\boost\numeric\ublas\vector_et.h
+SOURCE=..\..\..\..\boost\numeric\ublas\vector_expression.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\boost\numeric\ublas\vector_pr.h
+SOURCE=..\..\..\..\boost\numeric\ublas\vector_proxy.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\boost\numeric\ublas\vector_sp.h
+SOURCE=..\..\..\..\boost\numeric\ublas\vector_sparse.hpp
 # End Source File
 # End Group
 # End Target

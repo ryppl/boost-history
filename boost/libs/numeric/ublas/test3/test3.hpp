@@ -1,7 +1,7 @@
 #ifndef TEST3_H
 #define TEST3_H
 
-namespace numerics = boost::numerics;
+namespace ublas = boost::numeric::ublas;
 
 template<class V>
 void initialize_vector (V &v) {
@@ -25,8 +25,11 @@ void test_matrix_vector ();
 
 void test_matrix ();
 
+// Borland gets a VIRDEF error?!
+#ifndef __BORLANDC__
 #define USE_RANGE
 // #define USE_SLICE
+#endif
 
 #define USE_MAP_ARRAY
 // #define USE_STD_MAP

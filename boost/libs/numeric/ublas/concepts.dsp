@@ -99,107 +99,103 @@ SOURCE=.\concepts.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=..\..\..\boost\numeric\ublas\banded.h
+SOURCE=..\..\..\boost\numeric\ublas\blas.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\boost\numeric\ublas\blas.h
+SOURCE=..\..\..\boost\numeric\ublas\concepts.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\boost\numeric\ublas\concepts.h
+SOURCE=..\..\..\boost\numeric\ublas\config.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\boost\numeric\ublas\config.h
+SOURCE=..\..\..\boost\numeric\ublas\duff.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\boost\numeric\ublas\duff.h
+SOURCE=..\..\..\boost\numeric\ublas\exception.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\boost\numeric\ublas\exception.h
+SOURCE=..\..\..\boost\numeric\ublas\functional.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\boost\numeric\ublas\functional.h
+SOURCE=..\..\..\boost\numeric\ublas\hermitian.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\boost\numeric\ublas\hermitean.h
+SOURCE=..\..\..\boost\numeric\ublas\io.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\boost\numeric\ublas\io.h
+SOURCE=..\..\..\boost\numeric\ublas\iterator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\boost\numeric\ublas\iterator.h
+SOURCE=..\..\..\boost\numeric\ublas\math.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\boost\numeric\ublas\math.h
+SOURCE=..\..\..\boost\numeric\ublas\matrix.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\boost\numeric\ublas\matrix.h
+SOURCE=..\..\..\boost\numeric\ublas\matrix_assign.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\boost\numeric\ublas\matrix_as.h
+SOURCE=..\..\..\boost\numeric\ublas\matrix_expression.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\boost\numeric\ublas\matrix_et.h
+SOURCE=..\..\..\boost\numeric\ublas\matrix_proxy.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\boost\numeric\ublas\matrix_pr.h
+SOURCE=..\..\..\boost\numeric\ublas\matrix_sparse.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\boost\numeric\ublas\matrix_sp.h
+SOURCE=..\..\..\boost\numeric\ublas\storage.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\boost\numeric\ublas\storage.h
+SOURCE=..\..\..\boost\numeric\ublas\storage_sparse.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\boost\numeric\ublas\storage_sp.h
+SOURCE=..\..\..\boost\numeric\ublas\symmetric.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\boost\numeric\ublas\symmetric.h
+SOURCE=..\..\..\boost\numeric\ublas\traits.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\boost\numeric\ublas\traits.h
+SOURCE=..\..\..\boost\numeric\ublas\triangular.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\boost\numeric\ublas\triangular.h
+SOURCE=..\..\..\boost\numeric\ublas\vector.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\boost\numeric\ublas\vector.h
+SOURCE=..\..\..\boost\numeric\ublas\vector_assign.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\boost\numeric\ublas\vector_as.h
+SOURCE=..\..\..\boost\numeric\ublas\vector_expression.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\boost\numeric\ublas\vector_et.h
+SOURCE=..\..\..\boost\numeric\ublas\vector_proxy.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\boost\numeric\ublas\vector_pr.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\boost\numeric\ublas\vector_sp.h
+SOURCE=..\..\..\boost\numeric\ublas\vector_sparse.hpp
 # End Source File
 # End Group
 # Begin Group "Resource Files"
@@ -220,7 +216,7 @@ SOURCE=.\doc\expression.htm
 # End Source File
 # Begin Source File
 
-SOURCE=.\doc\hermitean.htm
+SOURCE=.\doc\hermitian.htm
 # End Source File
 # Begin Source File
 
@@ -236,15 +232,15 @@ SOURCE=.\doc\matrix.htm
 # End Source File
 # Begin Source File
 
-SOURCE=.\doc\matrix_et.htm
+SOURCE=.\doc\matrix_expression.htm
 # End Source File
 # Begin Source File
 
-SOURCE=.\doc\matrix_pr.htm
+SOURCE=.\doc\matrix_proxy.htm
 # End Source File
 # Begin Source File
 
-SOURCE=.\doc\matrix_sp.htm
+SOURCE=.\doc\matrix_sparse.htm
 # End Source File
 # Begin Source File
 
@@ -252,7 +248,7 @@ SOURCE=.\doc\storage.htm
 # End Source File
 # Begin Source File
 
-SOURCE=.\doc\storage_sp.htm
+SOURCE=.\doc\storage_sparse.htm
 # End Source File
 # Begin Source File
 
@@ -268,15 +264,15 @@ SOURCE=.\doc\vector.htm
 # End Source File
 # Begin Source File
 
-SOURCE=.\doc\vector_et.htm
+SOURCE=.\doc\vector_expression.htm
 # End Source File
 # Begin Source File
 
-SOURCE=.\doc\vector_pr.htm
+SOURCE=.\doc\vector_proxy.htm
 # End Source File
 # Begin Source File
 
-SOURCE=.\doc\vector_sp.htm
+SOURCE=.\doc\vector_sparse.htm
 # End Source File
 # End Target
 # End Project

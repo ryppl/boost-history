@@ -8,12 +8,12 @@
 
 #include <iostream>
 
-#include <boost/numeric/ublas/config.h>
-#include <boost/numeric/ublas/vector.h>
-#include <boost/numeric/ublas/matrix.h>
-#include <boost/numeric/ublas/io.h>
+#include <boost/numeric/ublas/config.hpp>
+#include <boost/numeric/ublas/vector.hpp>
+#include <boost/numeric/ublas/matrix.hpp>
+#include <boost/numeric/ublas/io.hpp>
 
-#include "test1.h"
+#include "test1.hpp"
 
 // Test matrix & vector expression templates 
 template<class V, class M, int N>
@@ -26,24 +26,24 @@ struct test_my_matrix_vector {
             // Rows and columns
             initialize_matrix (m1);
             for (int i = 0; i < N; ++ i) {
-                v1 = numerics::row (m1, i);
+                v1 = ublas::row (m1, i);
                 std::cout << "row (m, " << i << ") = " << v1 << std::endl;
-                v1 = numerics::column (m1, i);
+                v1 = ublas::column (m1, i);
                 std::cout << "column (m, " << i << ") = " << v1 << std::endl;
             }
 
             // Outer product
             initialize_vector (v1);
             initialize_vector (v2);
-            m1 = numerics::outer_prod (v1, v2);
+            m1 = ublas::outer_prod (v1, v2);
             std::cout << "outer_prod (v1, v2) = " << m1 << std::endl;
 
             // Matrix vector product 
             initialize_matrix (m1);
             initialize_vector (v1);
-            v2 = numerics::prod (m1, v1);
+            v2 = ublas::prod (m1, v1);
             std::cout << "prod (m1, v1) = " << v2 << std::endl;
-            v2 = numerics::prod (v1, m1);
+            v2 = ublas::prod (v1, m1);
             std::cout << "prod (v1, m1) = " << v2 << std::endl;
         }
         catch (std::exception &e) {
@@ -59,19 +59,19 @@ struct test_my_matrix_vector {
             M m1 (N, N);
             (*this) (v1, v2, m1);
 
-            numerics::matrix_row<M> mr1 (m1, 0), mr2 (m1, 1);
+            ublas::matrix_row<M> mr1 (m1, 0), mr2 (m1, 1);
             (*this) (mr1, mr2, m1);
 
-            numerics::matrix_column<M> mc1 (m1, 0), mc2 (m1, 1);
+            ublas::matrix_column<M> mc1 (m1, 0), mc2 (m1, 1);
             (*this) (mc1, mc2, m1);
 
 #ifdef USE_RANGE_AND_SLICE
-            numerics::matrix_vector_range<M> mvr1 (m1, numerics::range (0, N), numerics::range (0, N)), 
-                                             mvr2 (m1, numerics::range (0, N), numerics::range (0, N));
+            ublas::matrix_vector_range<M> mvr1 (m1, ublas::range (0, N), ublas::range (0, N)), 
+                                          mvr2 (m1, ublas::range (0, N), ublas::range (0, N));
             (*this) (mvr1, mvr2, m1);
 
-            numerics::matrix_vector_slice<M> mvs1 (m1, numerics::slice (0, 1, N), numerics::slice (0, 1, N)), 
-                                             mvs2 (m1, numerics::slice (0, 1, N), numerics::slice (0, 1, N));
+            ublas::matrix_vector_slice<M> mvs1 (m1, ublas::slice (0, 1, N), ublas::slice (0, 1, N)), 
+                                          mvs2 (m1, ublas::slice (0, 1, N), ublas::slice (0, 1, N));
             (*this) (mvs1, mvs2, m1);
 #endif
         }
@@ -91,112 +91,112 @@ void test_matrix_vector () {
 #ifdef USE_MATRIX
 #ifdef USE_BOUNDED_ARRAY
     std::cout << "float, bounded_array" << std::endl;
-    test_my_matrix_vector<numerics::vector<float, numerics::bounded_array<float, 3> >,
-                          numerics::matrix<float, numerics::row_major, numerics::bounded_array<float, 3 * 3> >, 3> () ();
+    test_my_matrix_vector<ublas::vector<float, ublas::bounded_array<float, 3> >,
+                          ublas::matrix<float, ublas::row_major, ublas::bounded_array<float, 3 * 3> >, 3> () ();
 
     std::cout << "double, bounded_array" << std::endl;
-    test_my_matrix_vector<numerics::vector<double, numerics::bounded_array<double, 3> >,
-                          numerics::matrix<double, numerics::row_major, numerics::bounded_array<double, 3 * 3> >, 3> () ();
+    test_my_matrix_vector<ublas::vector<double, ublas::bounded_array<double, 3> >,
+                          ublas::matrix<double, ublas::row_major, ublas::bounded_array<double, 3 * 3> >, 3> () ();
 
     std::cout << "std::complex<float>, bounded_array" << std::endl;
-    test_my_matrix_vector<numerics::vector<std::complex<float>, numerics::bounded_array<std::complex<float>, 3> >,
-                          numerics::matrix<std::complex<float>, numerics::row_major, numerics::bounded_array<std::complex<float>, 3 * 3> >, 3> () ();
+    test_my_matrix_vector<ublas::vector<std::complex<float>, ublas::bounded_array<std::complex<float>, 3> >,
+                          ublas::matrix<std::complex<float>, ublas::row_major, ublas::bounded_array<std::complex<float>, 3 * 3> >, 3> () ();
 
     std::cout << "std::complex<double>, bounded_array" << std::endl;
-    test_my_matrix_vector<numerics::vector<std::complex<double>, numerics::bounded_array<std::complex<double>, 3> >,
-                          numerics::matrix<std::complex<double>, numerics::row_major, numerics::bounded_array<std::complex<double>, 3 * 3> >, 3> () ();
+    test_my_matrix_vector<ublas::vector<std::complex<double>, ublas::bounded_array<std::complex<double>, 3> >,
+                          ublas::matrix<std::complex<double>, ublas::row_major, ublas::bounded_array<std::complex<double>, 3 * 3> >, 3> () ();
 #endif
 
 #ifdef USE_UNBOUNDED_ARRAY
     std::cout << "float, unbounded_array" << std::endl;
-    test_my_matrix_vector<numerics::vector<float, numerics::unbounded_array<float> >,
-                          numerics::matrix<float, numerics::row_major, numerics::unbounded_array<float> >, 3> () ();
+    test_my_matrix_vector<ublas::vector<float, ublas::unbounded_array<float> >,
+                          ublas::matrix<float, ublas::row_major, ublas::unbounded_array<float> >, 3> () ();
 
     std::cout << "double, unbounded_array" << std::endl;
-    test_my_matrix_vector<numerics::vector<double, numerics::unbounded_array<double> >,
-                          numerics::matrix<double, numerics::row_major, numerics::unbounded_array<double> >, 3> () ();
+    test_my_matrix_vector<ublas::vector<double, ublas::unbounded_array<double> >,
+                          ublas::matrix<double, ublas::row_major, ublas::unbounded_array<double> >, 3> () ();
 
     std::cout << "std::complex<float>, unbounded_array" << std::endl;
-    test_my_matrix_vector<numerics::vector<std::complex<float>, numerics::unbounded_array<std::complex<float> > >,
-                          numerics::matrix<std::complex<float>, numerics::row_major, numerics::unbounded_array<std::complex<float> > >, 3> () ();
+    test_my_matrix_vector<ublas::vector<std::complex<float>, ublas::unbounded_array<std::complex<float> > >,
+                          ublas::matrix<std::complex<float>, ublas::row_major, ublas::unbounded_array<std::complex<float> > >, 3> () ();
 
     std::cout << "std::complex<double>, unbounded_array" << std::endl;
-    test_my_matrix_vector<numerics::vector<std::complex<double>, numerics::unbounded_array<std::complex<double> > >,
-                          numerics::matrix<std::complex<double>, numerics::row_major, numerics::unbounded_array<std::complex<double> > >, 3> () ();
+    test_my_matrix_vector<ublas::vector<std::complex<double>, ublas::unbounded_array<std::complex<double> > >,
+                          ublas::matrix<std::complex<double>, ublas::row_major, ublas::unbounded_array<std::complex<double> > >, 3> () ();
 #endif
 
 #ifdef USE_STD_VECTOR
     std::cout << "float, std::vector" << std::endl;
-    test_my_matrix_vector<numerics::vector<float, std::vector<float> >,
-                          numerics::matrix<float, numerics::row_major, std::vector<float> >, 3> () ();
+    test_my_matrix_vector<ublas::vector<float, std::vector<float> >,
+                          ublas::matrix<float, ublas::row_major, std::vector<float> >, 3> () ();
 
     std::cout << "double, std::vector" << std::endl;
-    test_my_matrix_vector<numerics::vector<double, std::vector<double> >,
-                          numerics::matrix<double, numerics::row_major, std::vector<double> >, 3> () ();
+    test_my_matrix_vector<ublas::vector<double, std::vector<double> >,
+                          ublas::matrix<double, ublas::row_major, std::vector<double> >, 3> () ();
 
     std::cout << "std::complex<float>, std::vector" << std::endl;
-    test_my_matrix_vector<numerics::vector<std::complex<float>, std::vector<std::complex<float> > >,
-                          numerics::matrix<std::complex<float>, numerics::row_major, std::vector<std::complex<float> > >, 3> () ();
+    test_my_matrix_vector<ublas::vector<std::complex<float>, std::vector<std::complex<float> > >,
+                          ublas::matrix<std::complex<float>, ublas::row_major, std::vector<std::complex<float> > >, 3> () ();
 
     std::cout << "std::complex<double>, std::vector" << std::endl;
-    test_my_matrix_vector<numerics::vector<std::complex<double>, std::vector<std::complex<double> > >,
-                          numerics::matrix<std::complex<double>, numerics::row_major, std::vector<std::complex<double> > >, 3> () ();
+    test_my_matrix_vector<ublas::vector<std::complex<double>, std::vector<std::complex<double> > >,
+                          ublas::matrix<std::complex<double>, ublas::row_major, std::vector<std::complex<double> > >, 3> () ();
 #endif
 #endif
 
 #ifdef USE_VECTOR_OF_VECTOR
 #ifdef USE_BOUNDED_ARRAY
     std::cout << "float, bounded_array" << std::endl;
-    test_my_matrix_vector<numerics::vector<float, numerics::bounded_array<float, 3> >,
-                          numerics::vector_of_vector<float, numerics::row_major, numerics::bounded_array<numerics::bounded_array<float, 3>, 3 + 1> >, 3> () ();
+    test_my_matrix_vector<ublas::vector<float, ublas::bounded_array<float, 3> >,
+                          ublas::vector_of_vector<float, ublas::row_major, ublas::bounded_array<ublas::bounded_array<float, 3>, 3 + 1> >, 3> () ();
 
     std::cout << "double, bounded_array" << std::endl;
-    test_my_matrix_vector<numerics::vector<double, numerics::bounded_array<double, 3> >,
-                          numerics::vector_of_vector<double, numerics::row_major, numerics::bounded_array<numerics::bounded_array<double, 3>, 3 + 1> >, 3> () ();
+    test_my_matrix_vector<ublas::vector<double, ublas::bounded_array<double, 3> >,
+                          ublas::vector_of_vector<double, ublas::row_major, ublas::bounded_array<ublas::bounded_array<double, 3>, 3 + 1> >, 3> () ();
 
     std::cout << "std::complex<float>, bounded_array" << std::endl;
-    test_my_matrix_vector<numerics::vector<std::complex<float>, numerics::bounded_array<std::complex<float>, 3> >,
-                          numerics::vector_of_vector<std::complex<float>, numerics::row_major, numerics::bounded_array<numerics::bounded_array<std::complex<float>, 3>, 3 + 1> >, 3> () ();
+    test_my_matrix_vector<ublas::vector<std::complex<float>, ublas::bounded_array<std::complex<float>, 3> >,
+                          ublas::vector_of_vector<std::complex<float>, ublas::row_major, ublas::bounded_array<ublas::bounded_array<std::complex<float>, 3>, 3 + 1> >, 3> () ();
 
     std::cout << "std::complex<double>, bounded_array" << std::endl;
-    test_my_matrix_vector<numerics::vector<std::complex<double>, numerics::bounded_array<std::complex<double>, 3> >,
-                          numerics::vector_of_vector<std::complex<double>, numerics::row_major, numerics::bounded_array<numerics::bounded_array<std::complex<double>, 3>, 3 + 1> >, 3> () ();
+    test_my_matrix_vector<ublas::vector<std::complex<double>, ublas::bounded_array<std::complex<double>, 3> >,
+                          ublas::vector_of_vector<std::complex<double>, ublas::row_major, ublas::bounded_array<ublas::bounded_array<std::complex<double>, 3>, 3 + 1> >, 3> () ();
 #endif
 
 #ifdef USE_UNBOUNDED_ARRAY
     std::cout << "float, unbounded_array" << std::endl;
-    test_my_matrix_vector<numerics::vector<float, numerics::unbounded_array<float> >,
-                          numerics::vector_of_vector<float, numerics::row_major, numerics::unbounded_array<numerics::unbounded_array<float> > >, 3> () ();
+    test_my_matrix_vector<ublas::vector<float, ublas::unbounded_array<float> >,
+                          ublas::vector_of_vector<float, ublas::row_major, ublas::unbounded_array<ublas::unbounded_array<float> > >, 3> () ();
 
     std::cout << "double, unbounded_array" << std::endl;
-    test_my_matrix_vector<numerics::vector<double, numerics::unbounded_array<double> >,
-                          numerics::vector_of_vector<double, numerics::row_major, numerics::unbounded_array<numerics::unbounded_array<double> > >, 3> () ();
+    test_my_matrix_vector<ublas::vector<double, ublas::unbounded_array<double> >,
+                          ublas::vector_of_vector<double, ublas::row_major, ublas::unbounded_array<ublas::unbounded_array<double> > >, 3> () ();
 
     std::cout << "std::complex<float>, unbounded_array" << std::endl;
-    test_my_matrix_vector<numerics::vector<std::complex<float>, numerics::unbounded_array<std::complex<float> > >,
-                          numerics::vector_of_vector<std::complex<float>, numerics::row_major, numerics::unbounded_array<numerics::unbounded_array<std::complex<float> > > >, 3> () ();
+    test_my_matrix_vector<ublas::vector<std::complex<float>, ublas::unbounded_array<std::complex<float> > >,
+                          ublas::vector_of_vector<std::complex<float>, ublas::row_major, ublas::unbounded_array<ublas::unbounded_array<std::complex<float> > > >, 3> () ();
 
     std::cout << "std::complex<double>, unbounded_array" << std::endl;
-    test_my_matrix_vector<numerics::vector<std::complex<double>, numerics::unbounded_array<std::complex<double> > >,
-                          numerics::vector_of_vector<std::complex<double>, numerics::row_major, numerics::unbounded_array<numerics::unbounded_array<std::complex<double> > > >, 3> () ();
+    test_my_matrix_vector<ublas::vector<std::complex<double>, ublas::unbounded_array<std::complex<double> > >,
+                          ublas::vector_of_vector<std::complex<double>, ublas::row_major, ublas::unbounded_array<ublas::unbounded_array<std::complex<double> > > >, 3> () ();
 #endif
 
 #ifdef USE_STD_VECTOR
     std::cout << "float, std::vector" << std::endl;
-    test_my_matrix_vector<numerics::vector<float, std::vector<float> >,
-                          numerics::vector_of_vector<float, numerics::row_major, std::vector<std::vector<float> > >, 3> () ();
+    test_my_matrix_vector<ublas::vector<float, std::vector<float> >,
+                          ublas::vector_of_vector<float, ublas::row_major, std::vector<std::vector<float> > >, 3> () ();
 
     std::cout << "double, std::vector" << std::endl;
-    test_my_matrix_vector<numerics::vector<double, std::vector<double> >,
-                          numerics::vector_of_vector<double, numerics::row_major, std::vector<std::vector<double> > >, 3> () ();
+    test_my_matrix_vector<ublas::vector<double, std::vector<double> >,
+                          ublas::vector_of_vector<double, ublas::row_major, std::vector<std::vector<double> > >, 3> () ();
 
     std::cout << "std::complex<float>, std::vector" << std::endl;
-    test_my_matrix_vector<numerics::vector<std::complex<float>, std::vector<std::complex<float> > >,
-                          numerics::vector_of_vector<std::complex<float>, numerics::row_major, std::vector<std::vector<std::complex<float> > > >, 3> () ();
+    test_my_matrix_vector<ublas::vector<std::complex<float>, std::vector<std::complex<float> > >,
+                          ublas::vector_of_vector<std::complex<float>, ublas::row_major, std::vector<std::vector<std::complex<float> > > >, 3> () ();
 
     std::cout << "std::complex<double>, std::vector" << std::endl;
-    test_my_matrix_vector<numerics::vector<std::complex<double>, std::vector<std::complex<double> > >,
-                          numerics::vector_of_vector<std::complex<double>, numerics::row_major, std::vector<std::vector<std::complex<double> > > >, 3> () ();
+    test_my_matrix_vector<ublas::vector<std::complex<double>, std::vector<std::complex<double> > >,
+                          ublas::vector_of_vector<std::complex<double>, ublas::row_major, std::vector<std::vector<std::complex<double> > > >, 3> () ();
 #endif
 #endif
 }

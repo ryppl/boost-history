@@ -21,8 +21,9 @@ to address a range of a vector.</p>
 <h4>Example</h4>
 
 <pre>int main () {
-    numerics::vector&lt;double&gt; v (3);
-    numerics::vector_range&lt;numerics::vector&lt;double&gt; &gt; vr (v, range (0, 3));
+    using namespace boost::numeric::ublas;
+    vector&lt;double&gt; v (3);
+    vector_range&lt;vector&lt;double&gt; &gt; vr (v, range (0, 3));
     for (int i = 0; i &lt; vr.size (); ++ i)
         vr (i) = i;
     std::cout &lt;&lt; vr &lt;&lt; std::endl;
@@ -30,7 +31,7 @@ to address a range of a vector.</p>
 
 <h4>Definition</h4>
 
-<p>Defined in the header vector_pr.h.</p>
+<p>Defined in the header vector_proxy.hpp.</p>
 
 <h4>Template parameters</h4>
 
@@ -82,7 +83,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         <td>Returns the size of the sub vector.</td>
     </tr>
     <tr>
-        <td><code>value_type operator () (size_type i) const</code></td>
+        <td><code>const_reference operator () (size_type i) const</code></td>
         <td>Returns the value of the <code>i</code>-th element. </td>
     </tr>
     <tr>
@@ -91,7 +92,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         </td>
     </tr>
     <tr>
-        <td><code>value_type operator [] (size_type i) const</code></td>
+        <td><code>const_reference operator [] (size_type i) const</code></td>
         <td>Returns the value of the <code>i</code>-th element. </td>
     </tr>
     <tr>
@@ -249,10 +250,10 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         void reset (vector_type &amp;data, const range &amp;r);
 
         // Element access
-        value_type operator () (size_type i) const;
+        const_reference operator () (size_type i) const;
         reference operator () (size_type i);
 
-        value_type operator [] (size_type i) const;
+        const_reference operator [] (size_type i) const;
         reference operator [] (size_type i);
 
         vector_range&lt;const_vector_type&gt; project (const range &amp;r) const;
@@ -300,7 +301,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
             typedef typename V::const_iterator::iterator_category iterator_category;
             typedef typename V::const_iterator::difference_type difference_type;
             typedef typename V::const_iterator::value_type value_type;
-            typedef typename V::const_iterator::value_type reference;
+            typedef typename V::const_iterator::reference reference;
             typedef typename V::const_iterator::pointer pointer;
 
             // Construction and destruction
@@ -316,7 +317,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
             difference_type operator - (const const_iterator &amp;it) const;
 
             // Dereference
-            value_type operator * () const;
+            reference operator * () const;
 
             // Index
             size_type index () const;
@@ -326,6 +327,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
 
             // Comparison
             bool operator == (const const_iterator &amp;it) const;
+            bool operator < (const const_iterator &amp;it) const;
         };
 
         const_iterator begin () const;
@@ -363,6 +365,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
 
             // Comparison
             bool operator == (const iterator &amp;it) const;
+            bool operator < (const iterator &amp;it) const;
         };
 
         iterator begin ();
@@ -391,8 +394,9 @@ to address a slice of a vector.</p>
 <h4>Example</h4>
 
 <pre>int main () {
-    numerics::vector&lt;double&gt; v (3);
-    numerics::vector_slice&lt;numerics::vector&lt;double&gt; &gt; vs (v, slice (0, 1, 3));
+    using namespace boost::numeric::ublas;
+    vector&lt;double&gt; v (3);
+    vector_slice&lt;vector&lt;double&gt; &gt; vs (v, slice (0, 1, 3));
     for (int i = 0; i &lt; vs.size (); ++ i) 
         vs (i) = i;
     std::cout &lt;&lt; vs &lt;&lt; std::endl;
@@ -400,7 +404,7 @@ to address a slice of a vector.</p>
 
 <h4>Definition</h4>
 
-<p>Defined in the header vector_pr.h.</p>
+<p>Defined in the header vector_proxy.hpp.</p>
 
 <h4>Template parameters</h4>
 
@@ -448,7 +452,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         <td>Returns the size of the sub vector.</td>
     </tr>
     <tr>
-        <td><code>value_type operator () (size_type i) const</code></td>
+        <td><code>const_reference operator () (size_type i) const</code></td>
         <td>Returns the value of the <code>i</code>-th element. </td>
     </tr>
     <tr>
@@ -457,7 +461,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         </td>
     </tr>
     <tr>
-        <td><code>value_type operator [] (size_type i) const</code></td>
+        <td><code>const_reference operator [] (size_type i) const</code></td>
         <td>Returns the value of the <code>i</code>-th element. </td>
     </tr>
     <tr>
@@ -616,10 +620,10 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         void reset (vector_type &amp;data, const slice &amp;s);
 
         // Element access
-        value_type operator () (size_type i) const;
+        const_reference operator () (size_type i) const;
         reference operator () (size_type i);
 
-        value_type operator [] (size_type i) const;
+        const_reference operator [] (size_type i) const;
         reference operator [] (size_type i);
 
         vector_slice&lt;const_vector_type&gt; project (const range &amp;r) const;
@@ -663,18 +667,18 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         // Iterators simply are indices.
 
         class const_iterator:
-            public container_const_reference&lt;vector_type&gt;,
+            public container_const_reference&lt;vector_slice&gt;,
             public random_access_iterator_base&lt;const_iterator, value_type&gt; {
         public:
             typedef typename V::const_iterator::iterator_category iterator_category;
             typedef typename V::const_iterator::difference_type difference_type;
             typedef typename V::const_iterator::value_type value_type;
-            typedef typename V::const_iterator::value_type reference;
+            typedef typename V::const_iterator::reference reference;
             typedef typename V::const_iterator::pointer pointer;
 
             // Construction and destruction
             const_iterator ();
-            const_iterator (const vector_type &amp;v, const const_iterator_type &amp;it);
+            const_iterator (const vector_slice &amp;vs, const const_iterator_type &amp;it);
             const_iterator (const iterator &amp;it);
 
             // Arithmetic
@@ -685,7 +689,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
             difference_type operator - (const const_iterator &amp;it) const;
 
             // Dereference
-            value_type operator * () const;
+            reference operator * () const;
 
             // Index
             size_type index () const;
@@ -695,13 +699,14 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
 
             // Comparison
             bool operator == (const const_iterator &amp;it) const;
+            bool operator < (const const_iterator &amp;it) const;
         };
 
         const_iterator begin () const;
         const_iterator end () const;
 
         class iterator:
-            public container_reference&lt;vector_type&gt;,
+            public container_reference&lt;vector_slice&gt;,
             public random_access_iterator_base&lt;iterator, value_type&gt; {
         public:
             typedef typename V::iterator::iterator_category iterator_category;
@@ -712,7 +717,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
 
             // Construction and destruction
             iterator ();
-            iterator (vector_type &amp;v, const iterator_type &amp;it);
+            iterator (vector_slice &amp;vs, const iterator_type &amp;it);
 
             // Arithmetic
             iterator &amp;operator ++ ();
@@ -732,10 +737,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
 
             // Comparison
             bool operator == (const iterator &amp;it) const;
-
-                check (&amp;(*this) () == &amp;it (), external_logic ());
-                return it_ == it.it_;
-            }
+            bool operator < (const iterator &amp;it) const;
         };
 
         iterator begin ();

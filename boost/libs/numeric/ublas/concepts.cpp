@@ -9,24 +9,24 @@
 #include <cassert>
 #include <iostream>
 
-#include <boost/numeric/ublas/config.h>
-#include <boost/numeric/ublas/vector.h>
-#include <boost/numeric/ublas/vector_sp.h>
-#include <boost/numeric/ublas/matrix.h>
-#include <boost/numeric/ublas/banded.h>
-#include <boost/numeric/ublas/triangular.h>
-#include <boost/numeric/ublas/symmetric.h>
-#include <boost/numeric/ublas/hermitean.h>
-#include <boost/numeric/ublas/matrix_sp.h>
-#include <boost/numeric/ublas/io.h>
+#include <boost/numeric/ublas/config.hpp>
+#include <boost/numeric/ublas/vector.hpp>
+#include <boost/numeric/ublas/vector_sparse.hpp>
+#include <boost/numeric/ublas/matrix.hpp>
+#include <boost/numeric/ublas/banded.hpp>
+#include <boost/numeric/ublas/triangular.hpp>
+#include <boost/numeric/ublas/symmetric.hpp>
+#include <boost/numeric/ublas/hermitian.hpp>
+#include <boost/numeric/ublas/matrix_sparse.hpp>
+#include <boost/numeric/ublas/io.hpp>
 
-#include <boost/numeric/ublas/concepts.h>
+#include <boost/numeric/ublas/concepts.hpp>
 
-namespace numerics = boost::numerics;
+namespace ublas = boost::numeric::ublas;
 
 int main () {
-    void (* check) (void) = numerics::concept_checks;
-    numerics::ignore_unused_variable_warning (check);
+    void (* check) (void) = ublas::concept_checks;
+    ublas::ignore_unused_variable_warning (check);
     return 0;
 }
 

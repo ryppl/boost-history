@@ -9,15 +9,15 @@
 #include <iostream>
 #include <string>
 
-#include <boost/numeric/ublas/config.h>
-#include <boost/numeric/ublas/vector.h>
-#include <boost/numeric/ublas/vector_sp.h>
-#include <boost/numeric/ublas/matrix.h>
-#include <boost/numeric/ublas/matrix_sp.h>
+#include <boost/numeric/ublas/config.hpp>
+#include <boost/numeric/ublas/vector.hpp>
+#include <boost/numeric/ublas/vector_sparse.hpp>
+#include <boost/numeric/ublas/matrix.hpp>
+#include <boost/numeric/ublas/matrix_sparse.hpp>
 
 #include <boost/timer.hpp>
 
-#include "bench2.h"
+#include "bench2.hpp"
 
 template<class T, int N>
 struct bench_c_inner_prod {
@@ -58,7 +58,7 @@ struct bench_my_inner_prod {
             boost::timer t;
             for (int i = 0; i < runs; ++ i) {
                 static value_type s (0);
-                s = numerics::inner_prod (v1, v2);
+                s = ublas::inner_prod (v1, v2);
 //                sink_scalar (s);
             }
             footer<value_type> () (N, N - 1, runs, t.elapsed ());
@@ -203,12 +203,12 @@ void bench_1<T, N>::operator () (int runs) {
 
 #ifdef USE_MAP_ARRAY
     header ("sparse_vector<map_array>");
-    bench_my_inner_prod<numerics::sparse_vector<T, numerics::map_array<std::size_t, T> >, N> () (runs);
+    bench_my_inner_prod<ublas::sparse_vector<T, ublas::map_array<std::size_t, T> >, N> () (runs);
 #endif
 
 #ifdef USE_STD_MAP
     header ("sparse_vector<std::map>");
-    bench_my_inner_prod<numerics::sparse_vector<T, std::map<std::size_t, T> >, N> () (runs);
+    bench_my_inner_prod<ublas::sparse_vector<T, std::map<std::size_t, T> >, N> () (runs);
 #endif
 
 #ifdef USE_STD_VALARRAY
@@ -223,18 +223,18 @@ void bench_1<T, N>::operator () (int runs) {
 
 #ifdef USE_MAP_ARRAY
     header ("sparse_vector<map_array> safe");
-    bench_my_vector_add<numerics::sparse_vector<T, numerics::map_array<std::size_t, T> >, N> () (runs, safe_tag ());
+    bench_my_vector_add<ublas::sparse_vector<T, ublas::map_array<std::size_t, T> >, N> () (runs, safe_tag ());
 
     header ("sparse_vector<map_array> fast");
-    bench_my_vector_add<numerics::sparse_vector<T, numerics::map_array<std::size_t, T> >, N> () (runs, fast_tag ());
+    bench_my_vector_add<ublas::sparse_vector<T, ublas::map_array<std::size_t, T> >, N> () (runs, fast_tag ());
 #endif
 
 #ifdef USE_STD_MAP
     header ("sparse_vector<std::map> safe");
-    bench_my_vector_add<numerics::sparse_vector<T, std::map<std::size_t, T> >, N> () (runs, safe_tag ());
+    bench_my_vector_add<ublas::sparse_vector<T, std::map<std::size_t, T> >, N> () (runs, safe_tag ());
 
     header ("sparse_vector<std::map> fast");
-    bench_my_vector_add<numerics::sparse_vector<T, std::map<std::size_t, T> >, N> () (runs, fast_tag ());
+    bench_my_vector_add<ublas::sparse_vector<T, std::map<std::size_t, T> >, N> () (runs, fast_tag ());
 #endif
 
 #ifdef USE_STD_VALARRAY

@@ -9,15 +9,15 @@
 #include <iostream>
 #include <string>
 
-#include <boost/numeric/ublas/config.h>
-#include <boost/numeric/ublas/vector.h>
-#include <boost/numeric/ublas/vector_sp.h>
-#include <boost/numeric/ublas/matrix.h>
-#include <boost/numeric/ublas/matrix_sp.h>
+#include <boost/numeric/ublas/config.hpp>
+#include <boost/numeric/ublas/vector.hpp>
+#include <boost/numeric/ublas/vector_sparse.hpp>
+#include <boost/numeric/ublas/matrix.hpp>
+#include <boost/numeric/ublas/matrix_sparse.hpp>
 
 #include <boost/timer.hpp>
 
-#include "bench2.h"
+#include "bench2.hpp"
 
 template<class T, int N>
 struct bench_c_matrix_prod {
@@ -62,7 +62,7 @@ struct bench_my_matrix_prod {
             initialize_matrix (m2);
             boost::timer t;
             for (int i = 0; i < runs; ++ i) {
-                m3 = numerics::prod (m1, m2);
+                m3 = ublas::prod (m1, m2);
 //                sink_matrix (m3);
             }
             footer<value_type> () (N * N * N, N * N * (N - 1), runs, t.elapsed ());
@@ -82,7 +82,7 @@ struct bench_my_matrix_prod {
             initialize_matrix (m2);
             boost::timer t;
             for (int i = 0; i < runs; ++ i) {
-                m3.assign (numerics::prod (m1, m2));
+                m3.assign (ublas::prod (m1, m2));
 //                sink_matrix (m3);
             }
             footer<value_type> () (N * N * N, N * N * (N - 1), runs, t.elapsed ());
@@ -138,22 +138,22 @@ void bench_3<T, N>::operator () (int runs) {
 
 #ifdef USE_MAP_ARRAY
     header ("sparse_matrix<map_array, row_major>, sparse_matrix<map_array, column_major> safe");
-    bench_my_matrix_prod<numerics::sparse_matrix<T, numerics::row_major, numerics::map_array<std::size_t, T> >, 
-                         numerics::sparse_matrix<T, numerics::column_major, numerics::map_array<std::size_t, T> >, N> () (runs, safe_tag ());
+    bench_my_matrix_prod<ublas::sparse_matrix<T, ublas::row_major, ublas::map_array<std::size_t, T> >, 
+                         ublas::sparse_matrix<T, ublas::column_major, ublas::map_array<std::size_t, T> >, N> () (runs, safe_tag ());
 
     header ("sparse_matrix<map_array, row_major>, sparse_matrix<map_array, column_major> fast");
-    bench_my_matrix_prod<numerics::sparse_matrix<T, numerics::row_major, numerics::map_array<std::size_t, T> >, 
-                         numerics::sparse_matrix<T, numerics::column_major, numerics::map_array<std::size_t, T> >, N> () (runs, fast_tag ());
+    bench_my_matrix_prod<ublas::sparse_matrix<T, ublas::row_major, ublas::map_array<std::size_t, T> >, 
+                         ublas::sparse_matrix<T, ublas::column_major, ublas::map_array<std::size_t, T> >, N> () (runs, fast_tag ());
 #endif
 
 #ifdef USE_STD_MAP
     header ("sparse_matrix<std::map, row_major>, sparse_matrix<std::map, column_major> safe");
-    bench_my_matrix_prod<numerics::sparse_matrix<T, numerics::row_major, std::map<std::size_t, T> >, 
-                         numerics::sparse_matrix<T, numerics::column_major, std::map<std::size_t, T> >, N> () (runs, safe_tag ());
+    bench_my_matrix_prod<ublas::sparse_matrix<T, ublas::row_major, std::map<std::size_t, T> >, 
+                         ublas::sparse_matrix<T, ublas::column_major, std::map<std::size_t, T> >, N> () (runs, safe_tag ());
 
     header ("sparse_matrix<std::map, row_major>, sparse_matrix<std::map, column_major> fast");
-    bench_my_matrix_prod<numerics::sparse_matrix<T, numerics::row_major, std::map<std::size_t, T> >, 
-                         numerics::sparse_matrix<T, numerics::column_major, std::map<std::size_t, T> >, N> () (runs, fast_tag ());
+    bench_my_matrix_prod<ublas::sparse_matrix<T, ublas::row_major, std::map<std::size_t, T> >, 
+                         ublas::sparse_matrix<T, ublas::column_major, std::map<std::size_t, T> >, N> () (runs, fast_tag ());
 #endif
 
 #ifdef USE_STD_VALARRAY

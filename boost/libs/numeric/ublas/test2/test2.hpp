@@ -1,7 +1,7 @@
 #ifndef TEST2_H
 #define TEST2_H
 
-namespace numerics = boost::numerics;
+namespace ublas = boost::numeric::ublas;
 
 template<class V>
 void initialize_vector (V &v) {
@@ -11,7 +11,7 @@ void initialize_vector (V &v) {
 }
 
 template<class M>
-void initialize_matrix (M &m, numerics::lower_tag) {
+void initialize_matrix (M &m, ublas::lower_tag) {
     int size1 = m.size1 ();
     int size2 = m.size2 ();
     for (int i = 0; i < size1; ++ i) {
@@ -23,7 +23,7 @@ void initialize_matrix (M &m, numerics::lower_tag) {
     }
 }
 template<class M>
-void initialize_matrix (M &m, numerics::upper_tag) {
+void initialize_matrix (M &m, ublas::upper_tag) {
     int size1 = m.size1 ();
     int size2 = m.size2 ();
     for (int i = 0; i < size1; ++ i) {
@@ -46,7 +46,7 @@ void initialize_matrix (M &m) {
 template<class V, int N>
 struct test_blas_1 {
     typedef typename V::value_type value_type;
-    typedef typename numerics::type_traits<value_type>::real_type real_type;
+    typedef typename ublas::type_traits<value_type>::real_type real_type;
 
     void operator () ();
 };

@@ -21,7 +21,7 @@ including class <code>vector</code> itself.</p>
 
 <h4>Definition</h4>
 
-<p>Defined in the header vector_et.h.</p>
+<p>Defined in the header vector_expression.hpp.</p>
 
 <h4>Template parameters</h4>
 
@@ -96,7 +96,7 @@ a constant reference to a vector expression.</p>
 
 <h4>Definition</h4>
 
-<p>Defined in the header vector_et.h.</p>
+<p>Defined in the header vector_expression.hpp.</p>
 
 <h4>Template parameters</h4>
 
@@ -144,7 +144,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         <td>Returns the size of the expression. </td>
     </tr>
     <tr>
-        <td><code>value_type operator () (size_type i) const</code></td>
+        <td><code>const_reference operator () (size_type i) const</code></td>
         <td>Returns the value of the <code>i</code>-th element. </td>
     </tr>
     <tr>
@@ -192,11 +192,12 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
 
         // Accessors
         size_type size () const;
+        const expression_type &amp;expression () const;
 
         // Element access
-        value_type operator () (size_type i) const;
+        const_reference operator () (size_type i) const;
 
-        value_type operator [] (size_type i) const;
+        const_reference operator [] (size_type i) const;
 
         typedef const_iterator_type const_iterator;
         typedef const_iterator iterator;
@@ -227,7 +228,7 @@ a reference to a vector expression.</p>
 
 <h4>Definition</h4>
 
-<p>Defined in the header vector_et.h.</p>
+<p>Defined in the header vector_expression.hpp.</p>
 
 <h4>Template parameters</h4>
 
@@ -278,7 +279,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         <td>Returns the size of the expression. </td>
     </tr>
     <tr>
-        <td><code>value_type operator () (size_type i) const</code></td>
+        <td><code>const_reference operator () (size_type i) const</code></td>
         <td>Returns the value of the <code>i</code>-th element. </td>
     </tr>
     <tr>
@@ -352,15 +353,17 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
 
         // Accessors
         size_type size () const;
+        const expression_type &amp;expression () const;
+        expression_type &amp;expression ();
 
         // Resizing
         void resize (size_type size);
 
         // Element access
-        value_type operator () (size_type i) const;
+        const_reference operator () (size_type i) const;
         reference operator () (size_type i);
 
-        value_type operator [] (size_type i) const;
+        const_reference operator [] (size_type i) const;
         reference operator [] (size_type i);
 
         typedef const_iterator_type const_iterator;
@@ -404,7 +407,7 @@ a unary vector operation.</p>
 
 <h4>Definition</h4>
 
-<p>Defined in the header vector_et.h.</p>
+<p>Defined in the header vector_expression.hpp.</p>
 
 <h4>Template parameters</h4>
 
@@ -455,7 +458,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         <td>Returns the size of the expression. </td>
     </tr>
     <tr>
-        <td><code>value_type operator () (size_type i) const</code></td>
+        <td><code>const_reference operator () (size_type i) const</code></td>
         <td>Returns the value of the <code>i</code>-th element. </td>
     </tr>
     <tr>
@@ -491,7 +494,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         typedef typename E::size_type size_type;
         typedef typename E::difference_type difference_type;
         typedef typename F::result_type value_type;
-        typedef const value_type &amp;const_reference;
+        typedef value_type const_reference;
         typedef const_reference reference;
         typedef const value_type *const_pointer;
         typedef const_pointer pointer;
@@ -505,11 +508,12 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
 
         // Accessors
         size_type size () const;
+        const expression_type &amp;expression () const;
 
         // Element access
-        value_type operator () (size_type i) const;
+        const_reference operator () (size_type i) const;
 
-        value_type operator [] (size_type i) const;
+        const_reference operator [] (size_type i) const;
 
         class const_iterator;
         typedef const_iterator iterator;
@@ -527,9 +531,9 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         public:
             typedef typename E::const_iterator::iterator_category iterator_category;
             typedef typename vector_unary::difference_type difference_type;
-            typedef typename vector_unary::value_type value_type;
-            typedef typename vector_unary::value_type reference;
-            typedef typename vector_unary::pointer pointer;
+            typedef typename vector_unary::value_type  value_type;
+            typedef typename vector_unary::const_reference reference;
+            typedef typename vector_unary::const_pointer pointer;
 
             // Construction and destruction
             const_iterator ();
@@ -543,7 +547,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
             difference_type operator - (const const_iterator &amp;it) const;
 
             // Dereference
-            value_type operator * () const;
+            reference operator * () const;
 
             // Index
             size_type index () const;
@@ -553,6 +557,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
 
             // Comparison
             bool operator == (const const_iterator &amp;it) const;
+            bool operator < (const const_iterator &amp;it) const;
         };
 
         const_iterator begin () const;
@@ -613,12 +618,12 @@ vector expression. <code>conj</code> computes the complex
 conjugate of a vector expression. <code>real</code> and <code>imag</code>
 compute the real and imaginary parts of a vector expression. <code>trans</code>
 computes the transpose of a vector expression. <code>herm</code>
-computes the hermitean, i.e. the complex conjugate of the
+computes the hermitian, i.e. the complex conjugate of the
 transpose of a vector expression.</p>
 
 <h4>Definition</h4>
 
-<p>Defined in the header vector_et.h.</p>
+<p>Defined in the header vector_expression.hpp.</p>
 
 <h4>Type requirements</h4>
 
@@ -638,16 +643,17 @@ transpose of a vector expression.</p>
 <h4>Examples</h4>
 
 <pre>int main () {
-    numerics::vector&lt;std::complex&lt;double&gt; &gt; v (3);
+    using namespace boost::numeric::ublas;
+    vector&lt;std::complex&lt;double&gt; &gt; v (3);
     for (int i = 0; i &lt; v.size (); ++ i) 
         v (i) = std::complex (i, i);
 
     std::cout &lt;&lt; - v &lt;&lt; std::endl;
-    std::cout &lt;&lt; numerics::conj (v) &lt;&lt; std::endl;
-    std::cout &lt;&lt; numerics::real (v) &lt;&lt; std::endl;
-    std::cout &lt;&lt; numerics::imag (v) &lt;&lt; std::endl;
-    std::cout &lt;&lt; numerics::trans (v) &lt;&lt; std::endl;
-    std::cout &lt;&lt; numerics::herm (v) &lt;&lt; std::endl;
+    std::cout &lt;&lt; conj (v) &lt;&lt; std::endl;
+    std::cout &lt;&lt; real (v) &lt;&lt; std::endl;
+    std::cout &lt;&lt; imag (v) &lt;&lt; std::endl;
+    std::cout &lt;&lt; trans (v) &lt;&lt; std::endl;
+    std::cout &lt;&lt; herm (v) &lt;&lt; std::endl;
 }</pre>
 
 <h3>Binary Operation Description</h3>
@@ -659,7 +665,7 @@ a binary vector operation.</p>
 
 <h4>Definition</h4>
 
-<p>Defined in the header vector_et.h.</p>
+<p>Defined in the header vector_expression.hpp.</p>
 
 <h4>Template parameters</h4>
 
@@ -716,7 +722,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         <td>Returns the size of the expression. </td>
     </tr>
     <tr>
-        <td><code>value_type operator () (size_type i) const</code></td>
+        <td><code>const_reference operator () (size_type i) const</code></td>
         <td>Returns the value of the <code>i</code>-th element. </td>
     </tr>
     <tr>
@@ -753,7 +759,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         typedef typename promote_traits&lt;typename E1::size_type, typename E2::size_type&gt;::promote_type size_type;
         typedef typename promote_traits&lt;typename E1::difference_type, typename E2::difference_type&gt;::promote_type difference_type;
         typedef typename F::result_type value_type;
-        typedef const value_type &amp;const_reference;
+        typedef value_type const_reference;
         typedef const_reference reference;
         typedef const value_type *const_pointer;
         typedef const_pointer pointer;
@@ -768,11 +774,13 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
 
         // Accessors
         size_type size () const;
+        const expression1_type &amp;expression1 () const;
+        const expression2_type &amp;expression2 () const;
 
         // Element access
-        value_type operator () (size_type i) const;
+        const_reference operator () (size_type i) const;
 
-        value_type operator [] (size_type i) const;
+        const_reference operator [] (size_type i) const;
 
         class const_iterator;
         typedef const_iterator iterator;
@@ -792,7 +800,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
                                              typename E2::const_iterator::iterator_category&gt;::iterator_category iterator_category;
             typedef typename vector_binary::difference_type difference_type;
             typedef typename vector_binary::value_type value_type;
-            typedef typename vector_binary::value_type reference;
+            typedef typename vector_binary::const_reference reference;
             typedef typename vector_binary::const_pointer pointer;
 
             // Construction and destruction
@@ -822,7 +830,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
             difference_type operator - (const const_iterator &amp;it) const;
 
             // Dereference
-            value_type operator * () const;
+            reference operator * () const;
 
             // Index
             size_type index () const;
@@ -832,6 +840,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
 
             // Comparison
             bool operator == (const const_iterator &amp;it) const;
+            bool operator < (const const_iterator &amp;it) const;
         };
 
         const_iterator begin () const;
@@ -879,7 +888,7 @@ two vector expressions.</p>
 
 <h4>Definition</h4>
 
-<p>Defined in the header vector_et.h.</p>
+<p>Defined in the header vector_expression.hpp.</p>
 
 <h4>Type requirements</h4>
 
@@ -903,7 +912,8 @@ two vector expressions.</p>
 <h4>Examples</h4>
 
 <pre>int main () {
-    numerics::vector&lt;double&gt; v1 (3), v2 (3);
+    using namespace boost::numeric::ublas;
+    vector&lt;double&gt; v1 (3), v2 (3);
     for (int i = 0; i &lt; std::min (v1.size (), v2.size ()); ++ i) 
         v1 (i) = v2 (i) = i;
 
@@ -920,7 +930,7 @@ F&gt; </code>describes a binary outer vector operation.</p>
 
 <h4>Definition</h4>
 
-<p>Defined in the header matrix_et.h.</p>
+<p>Defined in the header matrix_expression.hpp.</p>
 
 <h4>Template parameters</h4>
 
@@ -982,7 +992,7 @@ F&gt; &gt;</code></p>
         <td>Returns the number of columns. </td>
     </tr>
     <tr>
-        <td><code>value_type operator () (size_type i, size_type
+        <td><code>const_reference operator () (size_type i, size_type
         j) const</code></td>
         <td>Returns the value of the <code>j</code>-th element in
         the<code> i</code>-th row. </td>
@@ -1041,7 +1051,7 @@ F&gt; &gt;</code></p>
         typedef typename promote_traits&lt;typename E1::size_type, typename E2::size_type&gt;::promote_type size_type;
         typedef typename promote_traits&lt;typename E1::difference_type, typename E2::difference_type&gt;::promote_type difference_type;
         typedef typename F::result_type value_type;
-        typedef const value_type &amp;const_reference;
+        typedef value_type const_reference;
         typedef const_reference reference;
         typedef const value_type *const_pointer;
         typedef const_pointer pointer;
@@ -1058,9 +1068,11 @@ F&gt; &gt;</code></p>
         // Accessors
         size_type size1 () const;
         size_type size2 () const;
+        const expression1_type &amp;expression1 () const;
+        const expression2_type &amp;expression2 () const;
 
         // Element access
-        value_type operator () (size_type i, size_type j) const;
+        const_reference operator () (size_type i, size_type j) const;
 
         class const_iterator1;
         typedef const_iterator1 iterator1;
@@ -1084,7 +1096,7 @@ F&gt; &gt;</code></p>
                                              typename E2::const_iterator::iterator_category&gt;::iterator_category iterator_category;
             typedef typename vector_matrix_binary::difference_type difference_type;
             typedef typename vector_matrix_binary::value_type value_type;
-            typedef typename vector_matrix_binary::value_type reference;
+            typedef typename vector_matrix_binary::const_reference reference;
             typedef typename vector_matrix_binary::const_pointer pointer;
             typedef const_iterator2 dual_iterator_type;
             typedef const_reverse_iterator2 dual_reverse_iterator_type;
@@ -1101,7 +1113,7 @@ F&gt; &gt;</code></p>
             difference_type operator - (const const_iterator1 &amp;it) const;
 
             // Dereference
-            value_type operator * () const;
+            reference operator * () const;
 
             const_iterator2 begin () const;
             const_iterator2 end () const;
@@ -1117,6 +1129,7 @@ F&gt; &gt;</code></p>
 
             // Comparison
             bool operator == (const const_iterator1 &amp;it) const;
+            bool operator < (const const_iterator1 &amp;it) const;
         };
 
         const_iterator1 begin1 () const;
@@ -1130,7 +1143,7 @@ F&gt; &gt;</code></p>
                                              typename E2::const_iterator::iterator_category&gt;::iterator_category iterator_category;
             typedef typename vector_matrix_binary::difference_type difference_type;
             typedef typename vector_matrix_binary::value_type value_type;
-            typedef typename vector_matrix_binary::value_type reference;
+            typedef typename vector_matrix_binary::const_reference reference;
             typedef typename vector_matrix_binary::const_pointer pointer;
             typedef const_iterator1 dual_iterator_type;
             typedef const_reverse_iterator1 dual_reverse_iterator_type;
@@ -1147,7 +1160,7 @@ F&gt; &gt;</code></p>
             difference_type operator - (const const_iterator2 &amp;it) const;
 
             // Dereference
-            value_type operator * () const;
+            reference operator * () const;
 
             const_iterator1 begin () const;
             const_iterator1 end () const;
@@ -1163,6 +1176,7 @@ F&gt; &gt;</code></p>
 
             // Comparison
             bool operator == (const const_iterator2 &amp;it) const;
+            bool operator < (const const_iterator2 &amp;it) const;
         };
 
         const_iterator2 begin2 () const;
@@ -1201,7 +1215,7 @@ vector expressions.</p>
 
 <h4>Definition</h4>
 
-<p>Defined in the header matrix_et.h.</p>
+<p>Defined in the header matrix_expression.hpp.</p>
 
 <h4>Type requirements</h4>
 
@@ -1223,7 +1237,8 @@ vector expressions.</p>
 <h4>Examples</h4>
 
 <pre>int main () {
-    numerics::vector&lt;double&gt; v1 (3), v2 (3);
+    using namespace boost::numeric::ublas;
+    vector&lt;double&gt; v1 (3), v2 (3);
     for (int i = 0; i &lt; std::min (v1.size (), v2.size ()); ++ i) 
         v1 (i) = v2 (i) = i;
 
@@ -1240,7 +1255,7 @@ describe binary operations between a scalar and a vector.</p>
 
 <h4>Definition</h4>
 
-<p>Defined in the header vector_et.h.</p>
+<p>Defined in the header vector_expression.hpp.</p>
 
 <h4>Template parameters</h4>
 
@@ -1304,7 +1319,7 @@ vector_expression&lt;vector_binary_scalar2&lt;E1, E2, F&gt; &gt; </code>resp.</p
         <td>Returns the size of the expression. </td>
     </tr>
     <tr>
-        <td><code>value_type operator () (size_type i) const</code></td>
+        <td><code>const_reference operator () (size_type i) const</code></td>
         <td>Returns the value of the <code>i</code>-th element. </td>
     </tr>
     <tr>
@@ -1341,7 +1356,7 @@ vector_expression&lt;vector_binary_scalar2&lt;E1, E2, F&gt; &gt; </code>resp.</p
         typedef typename E2::size_type size_type;
         typedef typename E2::difference_type difference_type;
         typedef typename F::result_type value_type;
-        typedef const value_type &amp;const_reference;
+        typedef value_type const_reference;
         typedef const_reference reference;
         typedef const value_type *const_pointer;
         typedef const_pointer pointer;
@@ -1356,11 +1371,13 @@ vector_expression&lt;vector_binary_scalar2&lt;E1, E2, F&gt; &gt; </code>resp.</p
 
         // Accessors
         size_type size () const;
+        const expression1_type &amp;expression1 () const;
+        const expression2_type &amp;expression2 () const;
 
         // Element access
-        value_type operator () (size_type i) const;
+        const_reference operator () (size_type i) const;
 
-        value_type operator [] (size_type i) const;
+        const_reference operator [] (size_type i) const;
 
         class const_iterator;
         typedef const_iterator iterator;
@@ -1379,8 +1396,8 @@ vector_expression&lt;vector_binary_scalar2&lt;E1, E2, F&gt; &gt; </code>resp.</p
             typedef typename E2::const_iterator::iterator_category iterator_category;
             typedef typename vector_binary_scalar1::difference_type difference_type;
             typedef typename vector_binary_scalar1::value_type value_type;
-            typedef typename vector_binary_scalar1::value_type reference;
-            typedef typename vector_binary_scalar1::pointer pointer;
+            typedef typename vector_binary_scalar1::const_reference reference;
+            typedef typename vector_binary_scalar1::const_pointer pointer;
 
             // Construction and destruction
             const_iterator ();
@@ -1394,7 +1411,7 @@ vector_expression&lt;vector_binary_scalar2&lt;E1, E2, F&gt; &gt; </code>resp.</p
             difference_type operator - (const const_iterator &amp;it) const;
 
             // Dereference
-            value_type operator * () const;
+            reference operator * () const;
 
             // Index
             size_type index () const;
@@ -1404,6 +1421,7 @@ vector_expression&lt;vector_binary_scalar2&lt;E1, E2, F&gt; &gt; </code>resp.</p
 
             // Comparison
             bool operator == (const const_iterator &amp;it) const;
+            bool operator < (const const_iterator &amp;it) const;
         };
 
         const_iterator begin () const;
@@ -1427,7 +1445,7 @@ vector_expression&lt;vector_binary_scalar2&lt;E1, E2, F&gt; &gt; </code>resp.</p
         typedef typename E1::size_type size_type;
         typedef typename E1::difference_type difference_type;
         typedef typename F::result_type value_type;
-        typedef const value_type &amp;const_reference;
+        typedef value_type const_reference;
         typedef const_reference reference;
         typedef const value_type *const_pointer;
         typedef const_pointer pointer;
@@ -1442,11 +1460,13 @@ vector_expression&lt;vector_binary_scalar2&lt;E1, E2, F&gt; &gt; </code>resp.</p
 
         // Accessors
         size_type size () const;
+        const expression1_type &amp;expression1 () const;
+        const expression2_type &amp;expression2 () const;
 
         // Element access
-        value_type operator () (size_type i) const;
+        const_reference operator () (size_type i) const;
 
-        value_type operator [] (size_type i) const ;
+        const_reference operator [] (size_type i) const ;
 
         class const_iterator;
         typedef const_iterator iterator;
@@ -1465,8 +1485,8 @@ vector_expression&lt;vector_binary_scalar2&lt;E1, E2, F&gt; &gt; </code>resp.</p
             typedef typename E1::const_iterator::iterator_category iterator_category;
             typedef typename vector_binary_scalar2::difference_type difference_type;
             typedef typename vector_binary_scalar2::value_type value_type;
-            typedef typename vector_binary_scalar2::value_type reference;
-            typedef typename vector_binary_scalar2::pointer pointer;
+            typedef typename vector_binary_scalar2::const_reference reference;
+            typedef typename vector_binary_scalar2::const_pointer pointer;
 
             // Construction and destruction
             const_iterator ();
@@ -1480,7 +1500,7 @@ vector_expression&lt;vector_binary_scalar2&lt;E1, E2, F&gt; &gt; </code>resp.</p
             difference_type operator - (const const_iterator &amp;it) const;
 
             // Dereference
-            value_type operator * () const;
+            reference operator * () const;
 
             // Index
             size_type index () const;
@@ -1490,6 +1510,7 @@ vector_expression&lt;vector_binary_scalar2&lt;E1, E2, F&gt; &gt; </code>resp.</p
 
             // Comparison
             bool operator == (const const_iterator &amp;it) const;
+            bool operator < (const const_iterator &amp;it) const;
         };
 
         const_iterator begin () const;
@@ -1547,7 +1568,7 @@ with the reciprocal of the scalar. </p>
 
 <h4>Definition</h4>
 
-<p>Defined in the header vector_et.h.</p>
+<p>Defined in the header vector_expression.hpp.</p>
 
 <h4>Type requirements</h4>
 
@@ -1569,7 +1590,8 @@ with the reciprocal of the scalar. </p>
 <h4>Examples</h4>
 
 <pre>int main () {
-    numerics::vector&lt;double&gt; v (3);
+    using namespace boost::numeric::ublas;
+    vector&lt;double&gt; v (3);
     for (int i = 0; i &lt; v.size (); ++ i) 
         v (i) = i;
 
@@ -1624,7 +1646,7 @@ first element having maximal absolute value.</p>
 
 <h4>Definition</h4>
 
-<p>Defined in the header vector_et.h.</p>
+<p>Defined in the header vector_expression.hpp.</p>
 
 <h4>Type requirements</h4>
 
@@ -1644,15 +1666,16 @@ first element having maximal absolute value.</p>
 <h4>Examples</h4>
 
 <pre>int main () {
-    numerics::vector&lt;double&gt; v (3);
+    using namespace boost::numeric::ublas;
+    vector&lt;double&gt; v (3);
     for (int i = 0; i &lt; v.size (); ++ i) 
         v (i) = i;
 
-    std::cout &lt;&lt; numerics::sum (v) &lt;&lt; std::endl;
-    std::cout &lt;&lt; numerics::norm_1 (v) &lt;&lt; std::endl;
-    std::cout &lt;&lt; numerics::norm_2 (v) &lt;&lt; std::endl;
-    std::cout &lt;&lt; numerics::norm_inf (v) &lt;&lt; std::endl;
-    std::cout &lt;&lt; numerics::index_norm_inf (v) &lt;&lt; std::endl;
+    std::cout &lt;&lt; sum (v) &lt;&lt; std::endl;
+    std::cout &lt;&lt; norm_1 (v) &lt;&lt; std::endl;
+    std::cout &lt;&lt; norm_2 (v) &lt;&lt; std::endl;
+    std::cout &lt;&lt; norm_inf (v) &lt;&lt; std::endl;
+    std::cout &lt;&lt; index_norm_inf (v) &lt;&lt; std::endl;
 }</pre>
 
 <h3>Binary Reductions</h3>
@@ -1689,7 +1712,7 @@ double precision inner product of the vector expressions<code>.</code></p>
 
 <h4>Definition</h4>
 
-<p>Defined in the header vector_et.h.</p>
+<p>Defined in the header vector_expression.hpp.</p>
 
 <h4>Type requirements</h4>
 
@@ -1713,11 +1736,12 @@ double precision inner product of the vector expressions<code>.</code></p>
 <h4>Examples</h4>
 
 <pre>int main () {
-    numerics::vector&lt;double&gt; v1 (3), v2 (3);
+    using namespace boost::numeric::ublas;
+    vector&lt;double&gt; v1 (3), v2 (3);
     for (int i = 0; i &lt; std::min (v1.size (), v2.size ()); ++ i) 
         v1 (i) = v2 (i) = i;
 
-    std::cout &lt;&lt; numerics::inner_prod (v1, v2) &lt;&lt; std::endl;
+    std::cout &lt;&lt; inner_prod (v1, v2) &lt;&lt; std::endl;
 }</pre>
 </body>
 </html>

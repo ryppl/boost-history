@@ -9,13 +9,13 @@
 #include <iostream>
 #include <string>
 
-#include <boost/numeric/ublas/config.h>
-#include <boost/numeric/ublas/vector.h>
-#include <boost/numeric/ublas/matrix.h>
+#include <boost/numeric/ublas/config.hpp>
+#include <boost/numeric/ublas/vector.hpp>
+#include <boost/numeric/ublas/matrix.hpp>
 
 #include <boost/timer.hpp>
 
-#include "bench3.h"
+#include "bench3.hpp"
 
 template<class T, int N>
 struct bench_c_inner_prod {
@@ -51,14 +51,14 @@ struct bench_my_inner_prod {
     void operator () (int runs) const {
         try {
             static V v1 (N), v2 (N);
-            numerics::vector_range<V> vr1 (v1, numerics::range (0, N)), 
-                                      vr2 (v2, numerics::range (0, N));
+            ublas::vector_range<V> vr1 (v1, ublas::range (0, N)), 
+                                      vr2 (v2, ublas::range (0, N));
             initialize_vector (vr1);
             initialize_vector (vr2);
             boost::timer t;
             for (int i = 0; i < runs; ++ i) {
                 static value_type s (0);
-                s = numerics::inner_prod (vr1, vr2);
+                s = ublas::inner_prod (vr1, vr2);
 //                sink_scalar (s);
             }
             footer<value_type> () (N, N - 1, runs, t.elapsed ());
@@ -130,9 +130,9 @@ struct bench_my_vector_add {
     void operator () (int runs, safe_tag) const {
         try {
             static V v1 (N), v2 (N), v3 (N);
-            numerics::vector_range<V> vr1 (v1, numerics::range (0, N)), 
-                                      vr2 (v2, numerics::range (0, N)), 
-                                      vr3 (v2, numerics::range (0, N));
+            ublas::vector_range<V> vr1 (v1, ublas::range (0, N)), 
+                                      vr2 (v2, ublas::range (0, N)), 
+                                      vr3 (v2, ublas::range (0, N));
             initialize_vector (vr1);
             initialize_vector (vr2);
             initialize_vector (vr3);
@@ -153,9 +153,9 @@ struct bench_my_vector_add {
     void operator () (int runs, fast_tag) const {
         try {
             static V v1 (N), v2 (N), v3 (N);
-            numerics::vector_range<V> vr1 (v1, numerics::range (0, N)), 
-                                      vr2 (v2, numerics::range (0, N)), 
-                                      vr3 (v2, numerics::range (0, N));
+            ublas::vector_range<V> vr1 (v1, ublas::range (0, N)), 
+                                      vr2 (v2, ublas::range (0, N)), 
+                                      vr3 (v2, ublas::range (0, N));
             initialize_vector (vr1);
             initialize_vector (vr2);
             boost::timer t;
@@ -210,27 +210,27 @@ void bench_1<T, N>::operator () (int runs) {
 
 #ifdef USE_C_ARRAY
     header ("c_vector");
-    bench_my_inner_prod<numerics::c_vector<T, N>, N> () (runs);
+    bench_my_inner_prod<ublas::c_vector<T, N>, N> () (runs);
 #endif
 
 #ifdef USE_BOUNDED_ARRAY
     header ("vector<bounded_array>");
-    bench_my_inner_prod<numerics::vector<T, numerics::bounded_array<T, N> >, N> () (runs);
+    bench_my_inner_prod<ublas::vector<T, ublas::bounded_array<T, N> >, N> () (runs);
 #endif
 
 #ifdef USE_UNBOUNDED_ARRAY
     header ("vector<unbounded_array>");
-    bench_my_inner_prod<numerics::vector<T, numerics::unbounded_array<T> >, N> () (runs);
+    bench_my_inner_prod<ublas::vector<T, ublas::unbounded_array<T> >, N> () (runs);
 #endif
 
 #ifdef USE_STD_VALARRAY
     header ("vector<std::valarray>");
-    bench_my_inner_prod<numerics::vector<T, std::valarray<T> >, N> () ();
+    bench_my_inner_prod<ublas::vector<T, std::valarray<T> >, N> () ();
 #endif
 
 #ifdef USE_STD_VECTOR
     header ("vector<std::vector>");
-    bench_my_inner_prod<numerics::vector<T, std::vector<T> >, N> () (runs);
+    bench_my_inner_prod<ublas::vector<T, std::vector<T> >, N> () (runs);
 #endif
 
 #ifdef USE_STD_VALARRAY
@@ -245,42 +245,42 @@ void bench_1<T, N>::operator () (int runs) {
 
 #ifdef USE_C_ARRAY
     header ("c_vector safe");
-    bench_my_vector_add<numerics::c_vector<T, N>, N> () (runs, safe_tag ());
+    bench_my_vector_add<ublas::c_vector<T, N>, N> () (runs, safe_tag ());
 
     header ("c_vector fast");
-    bench_my_vector_add<numerics::c_vector<T, N>, N> () (runs, fast_tag ());
+    bench_my_vector_add<ublas::c_vector<T, N>, N> () (runs, fast_tag ());
 #endif
 
 #ifdef USE_BOUNDED_ARRAY
     header ("vector<bounded_array> safe");
-    bench_my_vector_add<numerics::vector<T, numerics::bounded_array<T, N> >, N> () (runs, safe_tag ());
+    bench_my_vector_add<ublas::vector<T, ublas::bounded_array<T, N> >, N> () (runs, safe_tag ());
 
     header ("vector<bounded_array> fast");
-    bench_my_vector_add<numerics::vector<T, numerics::bounded_array<T, N> >, N> () (runs, fast_tag ());
+    bench_my_vector_add<ublas::vector<T, ublas::bounded_array<T, N> >, N> () (runs, fast_tag ());
 #endif
 
 #ifdef USE_UNBOUNDED_ARRAY
     header ("vector<unbounded_array> safe");
-    bench_my_vector_add<numerics::vector<T, numerics::unbounded_array<T> >, N> () (runs, safe_tag ());
+    bench_my_vector_add<ublas::vector<T, ublas::unbounded_array<T> >, N> () (runs, safe_tag ());
 
     header ("vector<unbounded_array> fast");
-    bench_my_vector_add<numerics::vector<T, numerics::unbounded_array<T> >, N> () (runs, fast_tag ());
+    bench_my_vector_add<ublas::vector<T, ublas::unbounded_array<T> >, N> () (runs, fast_tag ());
 #endif
 
 #ifdef USE_STD_VALARRAY
     header ("vector<std::valarray> safe");
-    bench_my_vector_add<numerics::vector<T, std::valarray<T> >, N> () (runs, safe_tag ());
+    bench_my_vector_add<ublas::vector<T, std::valarray<T> >, N> () (runs, safe_tag ());
 
     header ("vector<std::valarray> fast");
-    bench_my_vector_add<numerics::vector<T, std::valarray<T> >, N> () (runs, fast_tag ());
+    bench_my_vector_add<ublas::vector<T, std::valarray<T> >, N> () (runs, fast_tag ());
 #endif
 
 #ifdef USE_STD_VECTOR
     header ("vector<std::vector> safe");
-    bench_my_vector_add<numerics::vector<T, std::vector<T> >, N> () (runs, safe_tag ());
+    bench_my_vector_add<ublas::vector<T, std::vector<T> >, N> () (runs, safe_tag ());
 
     header ("vector<std::vector> fast");
-    bench_my_vector_add<numerics::vector<T, std::vector<T> >, N> () (runs, fast_tag ());
+    bench_my_vector_add<ublas::vector<T, std::vector<T> >, N> () (runs, fast_tag ());
 #endif
 
 #ifdef USE_STD_VALARRAY

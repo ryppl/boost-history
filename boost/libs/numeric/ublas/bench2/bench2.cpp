@@ -9,15 +9,15 @@
 #include <iostream>
 #include <string>
 
-#include <boost/numeric/ublas/config.h>
-#include <boost/numeric/ublas/vector.h>
-#include <boost/numeric/ublas/vector_sp.h>
-#include <boost/numeric/ublas/matrix.h>
-#include <boost/numeric/ublas/matrix_sp.h>
+#include <boost/numeric/ublas/config.hpp>
+#include <boost/numeric/ublas/vector.hpp>
+#include <boost/numeric/ublas/vector_sparse.hpp>
+#include <boost/numeric/ublas/matrix.hpp>
+#include <boost/numeric/ublas/matrix_sparse.hpp>
 
 #include <boost/timer.hpp>
 
-#include "bench2.h"
+#include "bench2.hpp"
 
 void header (std::string text) {
     std::cout << text << std::endl;
@@ -85,7 +85,19 @@ template struct peak<double>;
 template struct peak<std::complex<float> >;
 template struct peak<std::complex<double> >;
 
+#ifdef BOOST_MSVC
+// Standard new handler is not standard compliant.
+#include <new.h>
+int __cdecl std_new_handler (unsigned) {
+    throw std::bad_alloc ();
+}
+#endif
+
 int main (int argc, char *argv []) {
+#ifdef BOOST_MSVC
+    _set_new_handler (std_new_handler);
+#endif
+
     header ("float");
     peak<float> () (100000000);
 

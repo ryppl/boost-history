@@ -21,7 +21,8 @@ the base container adaptor for sparse vectors.</p>
 <h4>Example</h4>
 
 <pre>int main () {
-    numerics::sparse_vector&lt;double&gt; v (3, 3);
+    using namespace boost::numeric::ublas;
+    sparse_vector&lt;double&gt; v (3, 3);
     for (int i = 0; i &lt; v.size (); ++ i) 
         v (i) = i;
     std::cout &lt;&lt; v &lt;&lt; std::endl;
@@ -29,7 +30,7 @@ the base container adaptor for sparse vectors.</p>
 
 <h4>Definition</h4>
 
-<p>Defined in the header vector_sp.h.</p>
+<p>Defined in the header vector_sparse.hpp.</p>
 
 <h4>Template parameters</h4>
 
@@ -110,7 +111,7 @@ href="container.htm#vector">Vector</a>.</p>
         <td>Returns the size of the <code>sparse_vector</code>. </td>
     </tr>
     <tr>
-        <td><code>value_type operator () (size_type i) const</code></td>
+        <td><code>const_reference operator () (size_type i) const</code></td>
         <td>Returns the value of the <code>i</code>-th element. </td>
     </tr>
     <tr>
@@ -119,7 +120,7 @@ href="container.htm#vector">Vector</a>.</p>
         </td>
     </tr>
     <tr>
-        <td><code>value_type operator [] (size_type i) const</code></td>
+        <td><code>const_reference operator [] (size_type i) const</code></td>
         <td>Returns the value of the <code>i</code>-th element. </td>
     </tr>
     <tr>
@@ -297,10 +298,10 @@ href="container.htm#vector">Vector</a>.</p>
         void resize (size_type size, size_type non_zeros = 0);
 
         // Element access
-        value_type operator () (size_type i) const;
+        const_reference operator () (size_type i) const;
         reference operator () (size_type i);
 
-        value_type operator [] (size_type i) const;
+        const_reference operator [] (size_type i) const;
         reference operator [] (size_type i);
 
         // Assignment
@@ -354,7 +355,7 @@ href="container.htm#vector">Vector</a>.</p>
             typedef sparse_bidirectional_iterator_tag iterator_category;
             typedef typename sparse_vector::difference_type difference_type;
             typedef typename sparse_vector::value_type value_type;
-            typedef typename sparse_vector::value_type reference;
+            typedef typename sparse_vector::const_reference reference;
             typedef typename sparse_vector::const_pointer pointer;
 
             // Construction and destruction
@@ -367,7 +368,7 @@ href="container.htm#vector">Vector</a>.</p>
             const_iterator &amp;operator -- ();
 
             // Dereference
-            value_type operator * () const;
+            reference operator * () const;
 
             // Index
             size_type index () const;
