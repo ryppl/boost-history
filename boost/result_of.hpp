@@ -37,7 +37,7 @@ struct get_result_of<F, FArgs, true>
 template<typename F, typename FArgs>
 struct get_result_of<F, FArgs, false>
 {
-  typedef typename F::template result_of<FArgs>::type type;
+//  typedef typename F::template result_of<FArgs>::type type;
 };
 
 template<typename F, typename FArgs>
