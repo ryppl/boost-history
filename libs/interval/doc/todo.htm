@@ -22,12 +22,17 @@
   <li>The precision of <code>pi&lt;long double&gt;()</code> can be improved if
       we know how many bits of precision it is able to store (which is platform
       dependent).</li>
+  <li>Safe conversions from <code>interval&lt;double&gt;</code> to
+      <code>interval&lt;float&gt;</code>? Requires partial
+      specialization.</li>
+  <li>Correct the file test/io.cpp, which compiles but does not run
+      properly.</li>
 </ul>
 
 <hr>
 
 <p>Revised: 2002-08-30<br>
 Copyright (c) Guillaume Melquiond, Sylvain Pion, Hervé Brönnimann, 2002.<br>
-Work done at Polytechnic University.</p>
+Polytechnic University.</p>
 </body>
 </html>
