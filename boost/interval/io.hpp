@@ -33,7 +33,6 @@ namespace boost {
  */
 
 #if 0
-// Ensure generation of outer bounds in all cases
 template<class Ch, class ChTr, class T, class Traits>
 std::basic_ostream<Ch, ChTr>&
 operator<<(std::basic_ostream<Ch, ChTr>& os, const interval<T, Traits>& r)
@@ -46,12 +45,17 @@ operator<<(std::basic_ostream<Ch, ChTr>& os, const interval<T, Traits>& r)
   return os;
 }
 #else
-// FIXME: try to generate an enclosing interval (would depend on
-// precision of stream, etc.)
+// Ensure generation of outer bounds in all cases
 template<class T, class Traits> inline
 std::ostream& operator<<(std::ostream& os, const interval<T, Traits>& r)
 {
-  os << "[" << r.lower() << "," << r.upper() << "]";
+  std::streamsize p = os.precision(); // decimal notation
+  // FIXME poor man's power of 10, only up to 1E-15
+  p = (p>15) ? 15 : p-1;
+  double eps = 1.0; while (p>0) { eps /= 10.0; --p; }
+  // widen the interval so output is correct
+  interval<T, Traits> eps_i(-eps/2.0, eps/2.0), r_wide = r+eps_i;
+  os << "[" << r_wide.lower() << "," << r_wide.upper() << "]";
   return os;
 }
 #endif
@@ -91,7 +95,7 @@ std::istream& operator>>(std::istream& is, interval<T, Traits>& r)
 {
   T l, u;
   char c = 0;
-
+  // we assume that l and u are representable numbers
   if(is.peek() == '[') {
     is >> c;
     is >> l;
