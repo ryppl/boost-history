@@ -18,7 +18,7 @@ DETAILDIR = $(BOOSTDIR)/tupple/detail
 OPTS  = -w -O2 -g0
 PREFLAGS = -E -C -P
 FLAGS =
-INCLUDE = -I$(DRIVE_E)/lib/boost_1_29_0 -I.
+INCLUDE = -I$(DRIVE_E)/lib/boost_1_30_0 -I.
 LINK  =
 
 FORMAT_OPTS = --no-tabs -bl -bli0 -nce -npcs -nsaf -nsai -nsaw -prs
