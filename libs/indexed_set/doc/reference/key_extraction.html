@@ -14,7 +14,11 @@
 <h2>Contents</h2>
 
 <ul>
-  <li><a href="#key_extractors">Key Extractors</a></li>
+  <li><a href="#key_extractors">Key Extractors</a>
+    <ul>
+      <li><a href="#far_pointers">Far pointers</a></li>
+    </ul>
+  </li>
   <li><a href="#identity_synopsis">Header
     <code>"boost/indexed_set/identity.hpp"</code> synopsis</a>
     <ul>
@@ -45,7 +49,7 @@
 <h2><a name="key_extractors">Key Extractors</a></h2>
 
 <p>
-Key extractors are used by <a href="reg_indices.html">regular indices</a> to
+Key extraction classes are used by <a href="reg_indices.html">regular indices</a> to
 obtain the sorting keys from the elements of an <code>indexed_set</code>.
 An <a href="http://www.sgi.com/tech/stl/Assignable.html"><code>Assignable</code></a>
 class <code>KeyFromValue</code> is said to be a key extractor from a
@@ -93,11 +97,13 @@ that workaround some deficiencies in the support for non-type template parameter
 by certain compilers.
 </p>
 
+<h3><a name="far_pointers">Far pointers</a></h3>
+
 <p>
 The key extractors provided by Boost.IndexedSet are templatized according
 to the type <code>Type</code> and serve to extract keys not only from objects
 of type <code>Type</code>, but also from reference wrappers provided by
-<a href="../../../doc/html/ref.html">Boost.Ref</a> and from <i>far pointers</i>
+<a href="../../../../doc/html/ref.html">Boost.Ref</a> and from <i>far pointers</i>
 to <code>Type</code> (or to reference wrappers of <code>Type</code>): a far pointer
 is any type <code>P</code> such that, for an object <code>p</code> of type
 <code>const P</code>
@@ -141,7 +147,7 @@ that acts as a do-nothing identity functor.
 <span class=special>{</span>
   <span class=keyword>typedef</span> <span class=identifier>Type</span> <span class=identifier>result_type</span><span class=special>;</span>
 
-  <span class=keyword>template</span><span class=special>&lt;</span><span class=keyword>typename</span> <span class=identifier>PtrType</span><span class=special>&gt;</span> <span class=identifier>Type</span><span class=special>&amp;</span> <span class=keyword>operator</span><span class=special>()(</span><span class=keyword>const</span> <span class=identifier>PtrType</span><span class=special>&amp;</span> <span class=identifier>x</span><span class=special>)</span><span class=keyword>const</span><span class=special>;</span>
+  <span class=keyword>template</span><span class=special>&lt;</span><span class=keyword>typename</span> <span class=identifier>FarPtr</span><span class=special>&gt;</span> <span class=identifier>Type</span><span class=special>&amp;</span> <span class=keyword>operator</span><span class=special>()(</span><span class=keyword>const</span> <span class=identifier>FarPtr</span><span class=special>&amp;</span> <span class=identifier>x</span><span class=special>)</span><span class=keyword>const</span><span class=special>;</span>
   <span class=keyword>const</span> <span class=identifier>Type</span><span class=special>&amp;</span> <span class=keyword>operator</span><span class=special>()(</span><span class=keyword>const</span> <span class=identifier>Type</span><span class=special>&amp;</span> <span class=identifier>x</span><span class=special>)</span><span class=keyword>const</span><span class=special>;</span> 
   <span class=identifier>Type</span><span class=special>&amp;</span>       <span class=keyword>operator</span><span class=special>()(</span><span class=identifier>Type</span><span class=special>&amp;</span> <span class=identifier>x</span><span class=special>)</span><span class=keyword>const</span><span class=special>;</span> <span class=comment>// only provided if Type is non-const
 
@@ -165,18 +171,21 @@ that acts as a do-nothing identity functor.
   <li>read/write <a href="#key_extractors"><code>Key Extractor</code></a>
     from <code>reference_wrapper&lt;Type></code>,</li>
   <li><a href="#key_extractors"><code>Key Extractor</code></a>
-    from any far pointer to <code>const Type</code></code>.</li>
+    from any <a href="#far_pointers">far pointer</a> to
+    <code>const Type</code></code>.</li>
   <li>read/write <a href="#key_extractors"><code>Key Extractor</code></a>
-    from any far pointer to <code>Type</code></code>.</li>
+    from any <a href="#far_pointers">far pointer</a>
+    to <code>Type</code></code>.</li>
 </ul>
 </p>
 
 <h4><code>identity</code> members</h4>
 
-<code>template&lt;typename PtrType> Type& operator()(const PtrType& x)const;</code>
+<code>template&lt;typename FarPtr> Type& operator()(const FarPtr& x)const;</code>
 
 <blockquote>
-<b>Requires:</b> <code>PtrType</code> is a far pointer type to <code>Type</code>.<br>
+<b>Requires:</b> <code>FarPtr</code> is a <a href="#far_pointers">far pointer</a>
+type to <code>Type</code>.<br>
 <b>Returns:</b> a reference to the object far-pointed to by <code>x</code>.
 </blockquote>
 
@@ -242,7 +251,7 @@ aimed at accessing a given member of a class.
 <span class=special>{</span>
   <span class=keyword>typedef</span> <span class=identifier>Type</span> <span class=identifier>result_type</span><span class=special>;</span>
 
-  <span class=keyword>template</span><span class=special>&lt;</span><span class=keyword>typename</span> <span class=identifier>PtrType</span><span class=special>&gt;</span> <span class=identifier>Type</span><span class=special>&amp;</span> <span class=keyword>operator</span><span class=special>()(</span><span class=keyword>const</span> <span class=identifier>PtrType</span><span class=special>&amp;</span> <span class=identifier>x</span><span class=special>)</span><span class=keyword>const</span><span class=special>;</span>
+  <span class=keyword>template</span><span class=special>&lt;</span><span class=keyword>typename</span> <span class=identifier>FarPtr</span><span class=special>&gt;</span> <span class=identifier>Type</span><span class=special>&amp;</span> <span class=keyword>operator</span><span class=special>()(</span><span class=keyword>const</span> <span class=identifier>FarPtr</span><span class=special>&amp;</span> <span class=identifier>x</span><span class=special>)</span><span class=keyword>const</span><span class=special>;</span>
   <span class=keyword>const</span> <span class=identifier>Type</span><span class=special>&amp;</span> <span class=keyword>operator</span><span class=special>()(</span><span class=keyword>const</span> <span class=identifier>Class</span><span class=special>&amp;</span> <span class=identifier>x</span><span class=special>)</span><span class=keyword>const</span><span class=special>;</span>
   <span class=identifier>Type</span><span class=special>&amp;</span>       <span class=keyword>operator</span><span class=special>()(</span><span class=identifier>Class</span><span class=special>&amp;</span> <span class=identifier>x</span><span class=special>)</span><span class=keyword>const</span><span class=special>;</span> <span class=comment>// only provided if Type is non-const</span>
   <span class=keyword>const</span> <span class=identifier>Type</span><span class=special>&amp;</span> <span class=keyword>operator</span><span class=special>()(</span><span class=keyword>const</span> <span class=identifier>reference_wrapper</span><span class=special>&lt;</span><span class=keyword>const</span> <span class=identifier>Class</span><span class=special>&gt;&amp;</span> <span class=identifier>x</span><span class=special>)</span><span class=keyword>const</span><span class=special>;</span>
@@ -262,18 +271,21 @@ The <code>PtrToMember</code> template argument specifies the particular
   <li>read/write <a href="#key_extractors"><code>Key Extractor</code></a>
     from <code>reference_wrapper&lt;Class></code>,</li>
   <li><a href="#key_extractors"><code>Key Extractor</code></a>
-    from any far pointer to <code>const Class</code></code>,</li>
+    from any <a href="#far_pointers">far pointer</a>
+    to <code>const Class</code></code>,</li>
   <li>read/write <a href="#key_extractors"><code>Key Extractor</code></a>
-    from any far pointer to <code>Class</code></code>.</li>
+    from any <a href="#far_pointers">far pointer</a>
+    to <code>Class</code></code>.</li>
 </ul>
 </p>
 
 <h4><code>member</code> members</h4>
 
-<code>template&lt;typename PtrType> Type& operator()(const PtrType& x)const;</code>
+<code>template&lt;typename FarPtr> Type& operator()(const FarPtr& x)const;</code>
   
 <blockquote>
-<b>Requires:</b> <code>PtrType</code> is a far pointer type to <code>Type</code>.<br>
+<b>Requires:</b> <code>FarPtr</code> is a <a href="#far_pointers">far pointer</a>
+type to <code>Type</code>.<br>
 <b>Returns:</b> a reference to the object far-pointed to by <code>x</code>.
 </blockquote>
 
@@ -327,7 +339,7 @@ luckily enough, most compilers accept it nevertheless, so
 <span class=special>{</span>
   <span class=keyword>typedef</span> <span class=identifier>Type</span> <span class=identifier>result_type</span><span class=special>;</span>
 
-  <span class=keyword>template</span><span class=special>&lt;</span><span class=keyword>typename</span> <span class=identifier>PtrType</span><span class=special>&gt;</span> <span class=identifier>Type</span><span class=special>&amp;</span> <span class=keyword>operator</span><span class=special>()(</span><span class=keyword>const</span> <span class=identifier>PtrType</span><span class=special>&amp;</span> <span class=identifier>x</span><span class=special>)</span><span class=keyword>const</span><span class=special>;</span>
+  <span class=keyword>template</span><span class=special>&lt;</span><span class=keyword>typename</span> <span class=identifier>FarPtr</span><span class=special>&gt;</span> <span class=identifier>Type</span><span class=special>&amp;</span> <span class=keyword>operator</span><span class=special>()(</span><span class=keyword>const</span> <span class=identifier>FarPtr</span><span class=special>&amp;</span> <span class=identifier>x</span><span class=special>)</span><span class=keyword>const</span><span class=special>;</span>
   <span class=keyword>const</span> <span class=identifier>Type</span><span class=special>&amp;</span> <span class=keyword>operator</span><span class=special>()(</span><span class=keyword>const</span> <span class=identifier>Class</span><span class=special>&amp;</span> <span class=identifier>x</span><span class=special>)</span><span class=keyword>const</span><span class=special>;</span> 
   <span class=identifier>Type</span><span class=special>&amp;</span>       <span class=keyword>operator</span><span class=special>()(</span><span class=identifier>Class</span><span class=special>&amp;</span> <span class=identifier>x</span><span class=special>)</span><span class=keyword>const</span><span class=special>;</span> <span class=comment>// only provided if Type is non-const</span>
   <span class=keyword>const</span> <span class=identifier>Type</span><span class=special>&amp;</span> <span class=keyword>operator</span><span class=special>()(</span><span class=keyword>const</span> <span class=identifier>reference_wrapper</span><span class=special>&lt;</span><span class=keyword>const</span> <span class=identifier>Class</span><span class=special>&gt;&amp;</span> <span class=identifier>x</span><span class=special>)</span><span class=keyword>const</span><span class=special>;</span>
@@ -432,7 +444,7 @@ returning as key the result of invoking a given constant member function of a cl
 <span class=special>{</span>
   <span class=keyword>typedef</span> <span class=keyword>typename</span> <span class=identifier>remove_reference</span><span class=special>&lt;</span><span class=identifier>Type</span><span class=special>&gt;::</span><span class=identifier>type</span> <span class=identifier>result_type</span><span class=special>;</span>
 
-  <span class=keyword>template</span><span class=special>&lt;</span><span class=keyword>typename</span> <span class=identifier>PtrType</span><span class=special>&gt;</span> <span class=identifier>Type</span> <span class=keyword>operator</span><span class=special>()(</span><span class=keyword>const</span> <span class=identifier>PtrType</span><span class=special>&amp;</span> <span class=identifier>x</span><span class=special>)</span><span class=keyword>const</span><span class=special>;</span>
+  <span class=keyword>template</span><span class=special>&lt;</span><span class=keyword>typename</span> <span class=identifier>FarPtr</span><span class=special>&gt;</span> <span class=identifier>Type</span> <span class=keyword>operator</span><span class=special>()(</span><span class=keyword>const</span> <span class=identifier>FarPtr</span><span class=special>&amp;</span> <span class=identifier>x</span><span class=special>)</span><span class=keyword>const</span><span class=special>;</span>
   <span class=identifier>Type</span> <span class=keyword>operator</span><span class=special>()(</span><span class=keyword>const</span> <span class=identifier>Class</span><span class=special>&amp;</span> <span class=identifier>x</span><span class=special>)</span><span class=keyword>const</span><span class=special>;</span>
   <span class=identifier>Type</span> <span class=keyword>operator</span><span class=special>()(</span><span class=keyword>const</span> <span class=identifier>reference_wrapper</span><span class=special>&lt;</span><span class=keyword>const</span> <span class=identifier>Class</span><span class=special>&gt;&amp;</span> <span class=identifier>x</span><span class=special>)</span><span class=keyword>const</span><span class=special>;</span>
   <span class=identifier>Type</span> <span class=keyword>operator</span><span class=special>()(</span><span class=keyword>const</span> <span class=identifier>reference_wrapper</span><span class=special>&lt;</span><span class=identifier>Class</span><span class=special>&gt;&amp;</span> <span class=identifier>x</span><span class=special>)</span><span class=keyword>const</span><span class=special>;</span>
@@ -452,18 +464,21 @@ member function used in the extraction.
   <li><a href="#key_extractors"><code>Key Extractor</code></a>
     from <code>reference_wrapper&lt;Class></code>,</li>
   <li><a href="#key_extractors"><code>Key Extractor</code></a>
-    from any far pointer to <code>const Class</code></code>,</li>
+    from any <a href="#far_pointers">far pointer</a>
+    to <code>const Class</code></code>,</li>
   <li><a href="#key_extractors"><code>Key Extractor</code></a>
-    from any far pointer to <code>Class</code></code>.</li>
+    from any <a href="#far_pointers">far pointer</a>
+    to <code>Class</code></code>.</li>
 </ul>
 </p>
 
 <h4><code>const_mem_fun</code> members</h4>
 
-<code>template&lt;typename PtrType> Type operator()(const PtrType& x)const;</code>
+<code>template&lt;typename FarPtr> Type operator()(const FarPtr& x)const;</code>
 
 <blockquote>
-<b>Requires:</b> <code>PtrType</code> is a far pointer type to <code>Type</code>.<br>
+<b>Requires:</b> <code>FarPtr</code> is a <a href="#far_pointers">far pointer</a>
+type to <code>Type</code>.<br>
 <b>Returns:</b> <code>(x.*PtrToMemberFunction)()</code>, where <code>x</code> is the
 object far-pointed to by <code>x</code>.
 </blockquote>
@@ -499,7 +514,7 @@ returning as key the result of invoking a given member function of a class.
 <span class=special>{</span>
   <span class=keyword>typedef</span> <span class=keyword>typename</span> <span class=identifier>remove_reference</span><span class=special>&lt;</span><span class=identifier>Type</span><span class=special>&gt;::</span><span class=identifier>type</span> <span class=identifier>result_type</span><span class=special>;</span>
 
-  <span class=keyword>template</span><span class=special>&lt;</span><span class=keyword>typename</span> <span class=identifier>PtrType</span><span class=special>&gt;</span> <span class=identifier>Type</span> <span class=keyword>operator</span><span class=special>()(</span><span class=keyword>const</span> <span class=identifier>PtrType</span><span class=special>&amp;</span> <span class=identifier>x</span><span class=special>)</span><span class=keyword>const</span><span class=special>;</span>
+  <span class=keyword>template</span><span class=special>&lt;</span><span class=keyword>typename</span> <span class=identifier>FarPtr</span><span class=special>&gt;</span> <span class=identifier>Type</span> <span class=keyword>operator</span><span class=special>()(</span><span class=keyword>const</span> <span class=identifier>FarPtr</span><span class=special>&amp;</span> <span class=identifier>x</span><span class=special>)</span><span class=keyword>const</span><span class=special>;</span>
   <span class=identifier>Type</span> <span class=keyword>operator</span><span class=special>()(</span><span class=identifier>Class</span><span class=special>&amp;</span> <span class=identifier>x</span><span class=special>)</span><span class=keyword>const</span><span class=special>;</span>
   <span class=identifier>Type</span> <span class=keyword>operator</span><span class=special>()(</span><span class=keyword>const</span> <span class=identifier>reference_wrapper</span><span class=special>&lt;</span><span class=identifier>Class</span><span class=special>&gt;&amp;</span> <span class=identifier>x</span><span class=special>)</span><span class=keyword>const</span><span class=special>;</span>
 <span class=special>};</span>
@@ -514,16 +529,18 @@ function used in the extraction.
   <li><a href="#key_extractors"><code>Key Extractor</code></a>
     from <code>reference_wrapper&lt;Class></code>,</li>
   <li><a href="#key_extractors"><code>Key Extractor</code></a>
-    from any far pointer to <code>Class</code></code>.</li>
+    from any <a href="#far_pointers">far pointer</a>
+    to <code>Class</code></code>.</li>
 </ul>
 </p>
 
 <h4><code>mem_fun</code> members</h4>
 
-<code>template&lt;typename PtrType> Type operator()(const PtrType& x)const;</code>
+<code>template&lt;typename FarPtr> Type operator()(const FarPtr& x)const;</code>
 
 <blockquote>
-<b>Requires:</b> <code>PtrType</code> is a far pointer type to <code>Type</code>.<br>
+<b>Requires:</b> <code>FarPtr</code> is a <a href="#far_pointers">far pointer</a>
+type to <code>Type</code>.<br>
 <b>Returns:</b> <code>(x.*PtrToMemberFunction)()</code>, where <code>x</code> is the
 object far-pointed to by <code>x</code>.
 </blockquote>
@@ -557,7 +574,7 @@ these pointers as an additional template parameter.
 <span class=special>{</span>
   <span class=keyword>typedef</span> <span class=keyword>typename</span> <span class=identifier>remove_reference</span><span class=special>&lt;</span><span class=identifier>Type</span><span class=special>&gt;::</span><span class=identifier>type</span> <span class=identifier>result_type</span><span class=special>;</span>
 
-  <span class=keyword>template</span><span class=special>&lt;</span><span class=keyword>typename</span> <span class=identifier>PtrType</span><span class=special>&gt;</span> <span class=identifier>Type</span> <span class=keyword>operator</span><span class=special>()(</span><span class=keyword>const</span> <span class=identifier>PtrType</span><span class=special>&amp;</span> <span class=identifier>x</span><span class=special>)</span><span class=keyword>const</span><span class=special>;</span>
+  <span class=keyword>template</span><span class=special>&lt;</span><span class=keyword>typename</span> <span class=identifier>FarPtr</span><span class=special>&gt;</span> <span class=identifier>Type</span> <span class=keyword>operator</span><span class=special>()(</span><span class=keyword>const</span> <span class=identifier>FarPtr</span><span class=special>&amp;</span> <span class=identifier>x</span><span class=special>)</span><span class=keyword>const</span><span class=special>;</span>
   <span class=identifier>Type</span> <span class=keyword>operator</span><span class=special>()(</span><span class=keyword>const</span> <span class=identifier>Class</span><span class=special>&amp;</span> <span class=identifier>x</span><span class=special>)</span><span class=keyword>const</span><span class=special>;</span>
   <span class=identifier>Type</span> <span class=keyword>operator</span><span class=special>()(</span><span class=keyword>const</span> <span class=identifier>reference_wrapper</span><span class=special>&lt;</span><span class=keyword>const</span> <span class=identifier>Class</span><span class=special>&gt;&amp;</span> <span class=identifier>x</span><span class=special>)</span><span class=keyword>const</span><span class=special>;</span>
   <span class=identifier>Type</span> <span class=keyword>operator</span><span class=special>()(</span><span class=keyword>const</span> <span class=identifier>reference_wrapper</span><span class=special>&lt;</span><span class=identifier>Class</span><span class=special>&gt;&amp;</span> <span class=identifier>x</span><span class=special>)</span><span class=keyword>const</span><span class=special>;</span>
@@ -598,7 +615,7 @@ used for extraction.
 <span class=special>{</span>
   <span class=keyword>typedef</span> <span class=keyword>typename</span> <span class=identifier>remove_reference</span><span class=special>&lt;</span><span class=identifier>Type</span><span class=special>&gt;::</span><span class=identifier>type</span> <span class=identifier>result_type</span><span class=special>;</span>
 
-  <span class=keyword>template</span><span class=special>&lt;</span><span class=keyword>typename</span> <span class=identifier>PtrType</span><span class=special>&gt;</span> <span class=identifier>Type</span> <span class=keyword>operator</span><span class=special>()(</span><span class=keyword>const</span> <span class=identifier>PtrType</span><span class=special>&amp;</span> <span class=identifier>x</span><span class=special>)</span><span class=keyword>const</span><span class=special>;</span>
+  <span class=keyword>template</span><span class=special>&lt;</span><span class=keyword>typename</span> <span class=identifier>FarPtr</span><span class=special>&gt;</span> <span class=identifier>Type</span> <span class=keyword>operator</span><span class=special>()(</span><span class=keyword>const</span> <span class=identifier>FarPtr</span><span class=special>&amp;</span> <span class=identifier>x</span><span class=special>)</span><span class=keyword>const</span><span class=special>;</span>
   <span class=identifier>Type</span> <span class=keyword>operator</span><span class=special>()(</span><span class=identifier>Class</span><span class=special>&amp;</span> <span class=identifier>x</span><span class=special>)</span><span class=keyword>const</span><span class=special>;</span>
   <span class=identifier>Type</span> <span class=keyword>operator</span><span class=special>()(</span><span class=keyword>const</span> <span class=identifier>reference_wrapper</span><span class=special>&lt;</span><span class=identifier>Class</span><span class=special>&gt;&amp;</span> <span class=identifier>x</span><span class=special>)</span><span class=keyword>const</span><span class=special>;</span>
 <span class=special>};</span>
@@ -667,7 +684,7 @@ for MSVC++ 6.0 or lower.
 
 <p>Copyright &copy; 2003-2004 Joaqu&iacute;n M L&oacute;pez Mu&ntilde;oz.
 Use, modification, and distribution are subject to the Boost Software 
-License, Version 1.0. (See accompanying file <a href="../../../LICENSE_1_0.txt">
+License, Version 1.0. (See accompanying file <a href="../../../../LICENSE_1_0.txt">
 LICENSE_1_0.txt</a> or copy at <a href="http://www.boost.org/LICENSE_1_0.txt">
 www.boost.org/LICENSE_1_0.txt</a>)
 </p>
