@@ -1,13 +1,11 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 <head>
-<title>I/O Manipulator Library</title>
+<title>Boost I/O Manipulator Library</title>
 </head>
 <body text="black" bgcolor="white" link="blue" vlink="purple" alink="red">
 <h1><img src="../../../c++boost.gif" alt="c++boost.gif (8819 bytes)"
-align="middle" width="277" height="86">Header &lt;<cite><a
-href="../../../boost/io/iomanip.hpp">boost/io/iomanip.hpp</a></cite>
-&gt;</h1>
+align="middle" width="277" height="86">I/O Manipulator Library</h1>
 
 <p>The header <cite><a
 href="../../../boost/io/iomanip.hpp">boost/io/iomanip.hpp</a></cite>
@@ -22,7 +20,6 @@ and/or objects).</p>
 	<li><a href="#header">Header Synopsis</a></li>
 	<li><a href="#newl">Non-flushing Line-break Output Manipulator</a></li>
 	<li><a href="#skipl">Line-skipping Input Manipulator</a></li>
-	<li><a href="#example">Example</a></li>
 	<li><a href="#refer">References</a></li>
 	<li><a href="#credits">Credits</a>
 		<ul>
@@ -51,6 +48,7 @@ template &lt; typename Ch, class Tr &gt;
 template &lt; typename Ch, class Tr &gt;
     std::basic_istream&lt;Ch, Tr&gt; &amp;  skipl( std::basic_istream&lt;Ch, Tr&gt; &amp;is );
 
+
 }
 }
 </pre></blockquote>
@@ -63,11 +61,15 @@ std::basic_ostream&lt;Ch, Tr&gt; &amp;
 boost::io::newl( std::basic_ostream&lt;Ch, Tr&gt; &amp;os );
 </pre></blockquote>
 
-<p><strong>Effects:</strong> inserts a new-line character (sequence), appropiate for the stream's character type and locale, into stream <var>os</var></p>
+<p><strong>Effects:</strong> inserts a new-line character (sequence),
+appropiate for the stream's character type and locale, into stream
+<var>os</var></p>
 
 <p><strong>Returns:</strong> <var>os</var></p>
 
-<p><strong>Rationale:</strong> gives a method of inserting a newline that looks object-based, without the additional flushing behavior of <code>std::endl</code></p>
+<p><strong>Rationale:</strong> gives a method of inserting a newline
+that looks object-based, without the additional flushing behavior of
+<code>std::endl</code></p>
 
 <h2><a name="skipl">Line-skipping Input Manipulator</a></h2>
 
@@ -77,15 +79,14 @@ std::basic_istream&lt;Ch, Tr&gt; &amp;
 boost:io::skipl( std::basic_istream&lt;Ch, Tr&gt; &amp;is );
 </pre></blockquote>
 
-<p><strong>Effects:</strong> passes over all the characters in stream <var>is</var> until the first encountered new-line character (sequence) is passed, or the stream's end is reached</p>
+<p><strong>Effects:</strong> passes over all the characters in stream
+<var>is</var> until the first encountered new-line character (sequence)
+is passed, or the stream's end is reached</p>
 
 <p><strong>Returns:</strong> <var>is</var></p>
 
-<p><strong>Rationale:</strong> a dual to <a href="#newl"><code>boost::io::newl</code></a></p>
-
-<h2><a name="example">Example</a></h2>
-
-<p>Put something here or erase this section.</p>
+<p><strong>Rationale:</strong> a dual to <a
+href="#newl"><code>boost::io::newl</code></a></p>
 
 <h2><a name="refer">References</a></h2>
 
@@ -101,23 +102,36 @@ boost:io::skipl( std::basic_istream&lt;Ch, Tr&gt; &amp;is );
 <h3><a name="contributors">Contributors</a></h3>
 
 <dl>
-	<dt><a href="../../../people/daryle_walker.html">Daryle Walker</a>
-	<dd>Started the library.  Contributed the initial versions of the....
+	<dt><a href="http://www.josuttis.com">Nicolai Josuttis</a>
+	<dd>Section 13.6.2 of his <cite>The C++ Standard Library: A Tutorial
+		and Reference</cite> book is the basis of <a
+		href="#skipl"><code>boost::io::skipl</code></a> (called
+		<code>ignore_line</code> in the book).
 
-	<dt>Others (from books and Internet)
-	<dd>I'll copy them from my previous try of this library
+	<dt><a href="../../../people/dietmar_kuehl.htm">Dietmar Kuehl</a>
+	<dd><a href="news:94atsm$27u$6@news.BelWue.DE">Posted the idea</a>
+		that led to <a href="#newl"><code>boost::io::newl</code></a> on
+		<a
+		href="news:comp.lang.c++.moderated">comp.lang.c++.moderated</a>.
+
+	<dt><a href="../../../people/daryle_walker.html">Daryle Walker</a>
+	<dd>Started the library.  Contributed the initial versions of <a
+		href="#skipl"><code>boost::io::skipl</code></a> and <a
+		href="#newl"><code>boost::io::newl</code></a>.  Contributed
+		<cite><a
+		href="../test/iomanip_test.cpp">iomanip_test.cpp</a></cite>.
 </dl>
 
 <h3><a name="history">History</a></h3>
 
 <dl>
-	<dt>10 Nov 2002, Daryle Walker
+	<dt>20 Nov 2002, Daryle Walker
 	<dd>Initial version
 </dl>
 
 <hr>
 
-<p>Revised: 10 November 2002</p>
+<p>Revised: 20 November 2002</p>
 
 <p>Copyright &copy; Daryle Walker 2002.  Permission to copy, use,
 modify, sell and distribute this document is granted provided this
