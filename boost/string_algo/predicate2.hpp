@@ -46,9 +46,9 @@ namespace boost {
             PredicateT Comp )
         {
             typedef BOOST_STRING_TYPENAME 
-                string_algo::container_traits<InputContainerT>::const_iterator Iterator1T;
+                string_algo::container_const_iterator<InputContainerT>::type Iterator1T;
             typedef BOOST_STRING_TYPENAME 
-                string_algo::container_traits<TestContainerT>::const_iterator Iterator2T;
+                string_algo::container_const_iterator<TestContainerT>::type Iterator2T;
                 
             Iterator1T InputEnd=string_algo::end(Input);
             Iterator2T TestEnd=string_algo::end(Test);
@@ -85,7 +85,7 @@ namespace boost {
             PredicateT Comp )
         {
             typedef BOOST_STRING_TYPENAME 
-                string_algo::container_traits<InputContainerT>::const_iterator Iterator1T;
+                string_algo::container_const_iterator<InputContainerT>::type Iterator1T;
             typedef BOOST_STRING_TYPENAME boost::detail::
                 iterator_traits<Iterator1T>::iterator_category category;
 
@@ -145,9 +145,9 @@ namespace boost {
             PredicateT Comp )
         {
             typedef BOOST_STRING_TYPENAME 
-                string_algo::container_traits<InputContainerT>::const_iterator Iterator1T;
+                string_algo::container_const_iterator<InputContainerT>::type Iterator1T;
             typedef BOOST_STRING_TYPENAME 
-                string_algo::container_traits<TestContainerT>::const_iterator Iterator2T;
+                string_algo::container_const_iterator<TestContainerT>::type Iterator2T;
                 
             Iterator1T InputEnd=string_algo::end(Input);
             Iterator2T TestEnd=string_algo::end(Test);

@@ -50,7 +50,7 @@ namespace boost {
         typename CharT, 
         typename RegexTraitsT, typename RegexAllocatorT>
     inline iterator_range< 
-        BOOST_STRING_TYPENAME string_algo::container_traits<InputT>::result_iterator >
+        BOOST_STRING_TYPENAME string_algo::container_result_iterator<InputT>::type >
     find_regex( 
         InputT& Input, 
         const reg_expression<CharT, RegexTraitsT, RegexAllocatorT>& Rx,

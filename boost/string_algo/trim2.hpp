@@ -197,7 +197,7 @@ namespace boost {
 			PredicateT IsSpace )
 		{
 			BOOST_STRING_TYPENAME 
-				string_algo::container_traits<ContainerT>::const_iterator TrimEnd=
+				string_algo::container_const_iterator<ContainerT>::type TrimEnd=
 				string_algo::detail::trim_end( 
 					string_algo::begin(Input), 
 					string_algo::end(Input), 
@@ -226,8 +226,12 @@ namespace boost {
 		template< typename ContainerT, typename PredicateT >
 		inline ContainerT trim_copy( const ContainerT& Input, PredicateT IsSpace )
 		{
-			BOOST_STRING_TYPENAME ContainerT::const_iterator TrimEnd=
-				string_algo::detail::trim_end( string_algo::begin(Input), string_algo::end(Input), IsSpace);
+			BOOST_STRING_TYPENAME 
+				container_const_iterator<ContainerT>::type TrimEnd=
+					string_algo::detail::trim_end( 
+						string_algo::begin(Input), 
+						string_algo::end(Input), 
+						IsSpace);
 
 			return ContainerT( 
 				string_algo::detail::trim_begin( 

@@ -71,11 +71,11 @@ namespace boost {
 		*/
         template< typename ContainerT >
         inline detail::empty_formatF< 
-            BOOST_STRING_TYPENAME container_traits<ContainerT>::value_type >
+            BOOST_STRING_TYPENAME container_value_type<ContainerT>::type >
         empty_formatter( const ContainerT& Input )
         {
             return detail::empty_formatF<
-                BOOST_STRING_TYPENAME container_traits<ContainerT>::value_type >();
+                BOOST_STRING_TYPENAME container_value_type<ContainerT>::type >();
         }
 
 

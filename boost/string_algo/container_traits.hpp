@@ -113,6 +113,60 @@ namespace boost {
 
         }; // 'container_traits'
 
+//  container_traits metafunctions -----------------------------------------//
+
+		//! Container value_type trait
+		/*!
+			Extract the type of elemets conained in a container
+		*/
+		template< typename C >
+        struct container_value_type
+        {
+            typedef BOOST_STRING_TYPENAME container_traits<C>::value_type type;
+        };
+        
+		//! Container difference trait
+		/*!
+			Extract container's difference type
+		*/
+        template< typename C >
+        struct container_difference_type
+        {
+            typedef BOOST_STRING_TYPENAME container_traits<C>::difference_type type;
+        };
+
+		//! Container iterator trait
+		/*!
+			Extract container's iterator type
+		*/
+        template< typename C >
+        struct container_iterator
+        {
+            typedef BOOST_STRING_TYPENAME container_traits<C>::iterator type;
+        };
+
+		//! Container const_iterator trait
+		/*!
+			Extract container's const_iterator type
+		*/
+        template< typename C >
+        struct container_const_iterator
+        {
+            typedef BOOST_STRING_TYPENAME container_traits<C>::const_iterator type;
+        };
+
+
+		//! Container result_iterator
+		/*!
+			Extract container's result_iterator type. This type maps to C::iterator
+			for mutable container and C::const_iterator for const containers.
+		*/
+        template< typename C >
+        struct container_result_iterator
+        {
+            typedef BOOST_STRING_TYPENAME container_traits<C>::result_iterator type;
+        };
+
 //  container_traits related functions -----------------------------------------//
 
 		//! Free-standing size() function
@@ -211,7 +265,7 @@ namespace boost {
         }
 
 #endif // BOOST_NO_FUNCTION_TEMPLATE_ORDERING
- 
+
     } // namespace string_algo
 } // namespace boost
 

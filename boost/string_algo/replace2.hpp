@@ -56,15 +56,15 @@ namespace boost {
 			// Concept check
 			function_requires< 
 				FinderConcept<FindFT,
-				BOOST_STRING_TYPENAME container_traits<InputT>::const_iterator> >();
+				BOOST_STRING_TYPENAME container_const_iterator<InputT>::type> >();
 			function_requires< 
 				FormatterConcept<
 					FormatFT,
-					FindFT,BOOST_STRING_TYPENAME container_traits<InputT>::const_iterator> >();
+					FindFT,BOOST_STRING_TYPENAME container_const_iterator<InputT>::type> >();
 
             typedef detail::find_format_store<
                 BOOST_STRING_TYPENAME 
-                    container_traits<InputT>::const_iterator, FormatFT> store_type;
+                    container_const_iterator<InputT>::type, FormatFT> store_type;
 
             // Create store for the find result
             store_type M( FormatF );
@@ -114,15 +114,15 @@ namespace boost {
 			// Concept check
 			function_requires< 
 				FinderConcept<FindFT,
-				BOOST_STRING_TYPENAME container_traits<InputT>::const_iterator> >();
+				BOOST_STRING_TYPENAME container_const_iterator<InputT>::type> >();
 			function_requires< 
 				FormatterConcept<
 					FormatFT,
-					FindFT,BOOST_STRING_TYPENAME container_traits<InputT>::const_iterator> >();
+					FindFT,BOOST_STRING_TYPENAME container_const_iterator<InputT>::type> >();
 
 			typedef detail::find_format_store<
                 BOOST_STRING_TYPENAME 
-                    container_traits<InputT>::const_iterator, FormatFT> store_type;
+                    container_const_iterator<InputT>::type, FormatFT> store_type;
 
             // Create store for the find result
             store_type M( FormatF );
@@ -170,15 +170,15 @@ namespace boost {
 			// Concept check
 			function_requires< 
 				FinderConcept<FindFT,
-				BOOST_STRING_TYPENAME container_traits<InputT>::iterator> >();
+				BOOST_STRING_TYPENAME container_iterator<InputT>::type> >();
 			function_requires< 
 				FormatterConcept<
 					FormatFT,
-					FindFT,BOOST_STRING_TYPENAME container_traits<InputT>::iterator> >();
+					FindFT,BOOST_STRING_TYPENAME container_iterator<InputT>::type> >();
 
 			typedef detail::find_format_store<
                 BOOST_STRING_TYPENAME 
-                    container_traits<InputT>::iterator, FormatFT> store_type;
+                    container_iterator<InputT>::type, FormatFT> store_type;
 
             // Create store for the find result
             store_type M( FormatF );
@@ -228,14 +228,14 @@ namespace boost {
 			// Concept check
 			function_requires< 
 				FinderConcept<FindFT,
-				BOOST_STRING_TYPENAME container_traits<InputT>::const_iterator> >();
+				BOOST_STRING_TYPENAME container_const_iterator<InputT>::type> >();
 			function_requires< 
 				FormatterConcept<
 					FormatFT,
-					FindFT,BOOST_STRING_TYPENAME container_traits<InputT>::const_iterator> >();
+					FindFT,BOOST_STRING_TYPENAME container_const_iterator<InputT>::type> >();
 
 			typedef BOOST_STRING_TYPENAME 
-                container_traits<InputT>::const_iterator input_iterator_type; 
+                container_const_iterator<InputT>::type input_iterator_type; 
             typedef detail::find_format_store<
                 input_iterator_type, FormatFT> store_type;
         
@@ -290,14 +290,14 @@ namespace boost {
 			// Concept check
 			function_requires< 
 				FinderConcept<FindFT,
-				BOOST_STRING_TYPENAME container_traits<InputT>::const_iterator> >();
+				BOOST_STRING_TYPENAME container_const_iterator<InputT>::type> >();
 			function_requires< 
 				FormatterConcept<
 					FormatFT,
-					FindFT,BOOST_STRING_TYPENAME container_traits<InputT>::const_iterator> >();
+					FindFT,BOOST_STRING_TYPENAME container_const_iterator<InputT>::type> >();
 
 			typedef BOOST_STRING_TYPENAME 
-                container_traits<InputT>::const_iterator input_iterator_type; 
+                container_const_iterator<InputT>::type input_iterator_type; 
             typedef detail::find_format_store<
                 input_iterator_type, FormatFT> store_type;
         
@@ -354,14 +354,14 @@ namespace boost {
 			// Concept check
 			function_requires< 
 				FinderConcept<FindFT,
-				BOOST_STRING_TYPENAME container_traits<InputT>::iterator> >();
+				BOOST_STRING_TYPENAME container_iterator<InputT>::type> >();
 			function_requires< 
 				FormatterConcept<
 					FormatFT,
-					FindFT,BOOST_STRING_TYPENAME container_traits<InputT>::iterator> >();
+					FindFT,BOOST_STRING_TYPENAME container_iterator<InputT>::type> >();
 
 			typedef BOOST_STRING_TYPENAME 
-                container_traits<InputT>::iterator input_iterator_type; 
+                container_iterator<InputT>::type input_iterator_type; 
             typedef detail::find_format_store<
                 input_iterator_type, FormatFT> store_type;
         

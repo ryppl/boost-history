@@ -27,7 +27,7 @@ namespace boost {
             struct const_formatF
             {
                 typedef BOOST_STRING_TYPENAME
-                    container_traits<FormatT>::const_iterator format_iterator;
+                    container_const_iterator<FormatT>::type format_iterator;
                 typedef iterator_range<format_iterator> result_type;
 
                 // Construction

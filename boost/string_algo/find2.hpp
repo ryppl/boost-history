@@ -43,7 +43,7 @@ namespace boost {
 	*/
 	template< typename InputContainerT, typename FindFT >
     inline iterator_range< 
-        BOOST_STRING_TYPENAME string_algo::container_traits<InputContainerT>::result_iterator >
+        BOOST_STRING_TYPENAME string_algo::container_result_iterator<InputContainerT>::type >
     find( 
         InputContainerT& Input, 
 		FindFT FindF )
@@ -64,14 +64,14 @@ namespace boost {
         */
         template<typename ContainerT>
         inline detail::first_finderF<
-            BOOST_STRING_TYPENAME container_traits<ContainerT>::const_iterator,
+            BOOST_STRING_TYPENAME container_const_iterator<ContainerT>::type,
             is_equal>
         first_finder( const ContainerT& Search )
         {
             return 
 				detail::first_finderF<
 					BOOST_STRING_TYPENAME 
-		                container_traits<ContainerT>::const_iterator,
+		                container_const_iterator<ContainerT>::type,
 					is_equal>( Search, is_equal() ) ;
         }
 
@@ -89,7 +89,7 @@ namespace boost {
         */
         template<typename ContainerT,typename PredicateT>
         inline detail::first_finderF<
-            BOOST_STRING_TYPENAME container_traits<ContainerT>::const_iterator,
+            BOOST_STRING_TYPENAME container_const_iterator<ContainerT>::type,
             PredicateT>
         first_finder( 
             const ContainerT& Search, PredicateT Comp )
@@ -97,7 +97,7 @@ namespace boost {
             return 
 				detail::first_finderF<
 					BOOST_STRING_TYPENAME 
-						container_traits<ContainerT>::const_iterator,
+						container_const_iterator<ContainerT>::type,
 					PredicateT>( Search, Comp );
         }
 
@@ -112,14 +112,14 @@ namespace boost {
         */
         template<typename ContainerT>
         inline detail::last_finderF<
-            BOOST_STRING_TYPENAME container_traits<ContainerT>::const_iterator,
+            BOOST_STRING_TYPENAME container_const_iterator<ContainerT>::type,
             is_equal>
         last_finder( const ContainerT& Search )
         {
 			return 
 				detail::last_finderF<
 					BOOST_STRING_TYPENAME 
-						container_traits<ContainerT>::const_iterator,
+						container_const_iterator<ContainerT>::type,
 					is_equal>( Search, is_equal() );
         }
         //! "Last" finder
@@ -136,14 +136,14 @@ namespace boost {
         */
         template<typename ContainerT, typename PredicateT>
         inline detail::last_finderF<
-            BOOST_STRING_TYPENAME container_traits<ContainerT>::const_iterator,
+            BOOST_STRING_TYPENAME container_const_iterator<ContainerT>::type,
             PredicateT>
         last_finder( const ContainerT& Search, PredicateT Comp )
         {
             return 
 				detail::last_finderF<
 					BOOST_STRING_TYPENAME 
-						container_traits<ContainerT>::const_iterator,
+						container_const_iterator<ContainerT>::type,
 					PredicateT>( Search, Comp ) ;
         }
 
@@ -159,7 +159,7 @@ namespace boost {
         */
         template<typename ContainerT>
         inline detail::nth_finderF<
-            BOOST_STRING_TYPENAME container_traits<ContainerT>::const_iterator,
+            BOOST_STRING_TYPENAME container_const_iterator<ContainerT>::type,
             is_equal>
         nth_finder( 
             const ContainerT& Search, 
@@ -168,7 +168,7 @@ namespace boost {
             return 
 				detail::nth_finderF<
 					BOOST_STRING_TYPENAME 
-						container_traits<ContainerT>::const_iterator,
+						container_const_iterator<ContainerT>::type,
 					is_equal>( Search, Nth, is_equal() ) ;
         }
         //! "Nth" finder
@@ -186,7 +186,7 @@ namespace boost {
         */
         template<typename ContainerT, typename PredicateT>
         inline detail::nth_finderF<
-            BOOST_STRING_TYPENAME container_traits<ContainerT>::const_iterator,
+            BOOST_STRING_TYPENAME container_const_iterator<ContainerT>::type,
             PredicateT>
         nth_finder( 
             const ContainerT& Search, 
@@ -196,7 +196,7 @@ namespace boost {
             return 
 				detail::nth_finderF<
 					BOOST_STRING_TYPENAME 
-	                    container_traits<ContainerT>::const_iterator,
+	                    container_const_iterator<ContainerT>::type,
 					PredicateT>( Search, Nth, Comp );
         }
 
@@ -337,14 +337,14 @@ namespace boost {
         */
         template<typename ContainerT>
         inline detail::first_finderF<
-            BOOST_STRING_TYPENAME container_traits<ContainerT>::const_iterator,
+            BOOST_STRING_TYPENAME container_const_iterator<ContainerT>::type,
             is_equal>
         first_finder( const ContainerT& Search )
         {
             return 
 				detail::first_finderF<
 					BOOST_STRING_TYPENAME 
-		                container_traits<ContainerT>::const_iterator,
+		                container_const_iterator<ContainerT>::type,
 					is_equal>( Search, is_equal() ) ;
         }
 
@@ -362,7 +362,7 @@ namespace boost {
         */
         template<typename ContainerT,typename PredicateT>
         inline detail::first_finderF<
-            BOOST_STRING_TYPENAME container_traits<ContainerT>::const_iterator,
+            BOOST_STRING_TYPENAME container_const_iterator<ContainerT>::type,
             PredicateT>
         first_finder( 
             const ContainerT& Search, PredicateT Comp )
@@ -370,7 +370,7 @@ namespace boost {
             return 
 				detail::first_finderF<
 					BOOST_STRING_TYPENAME 
-						container_traits<ContainerT>::const_iterator,
+						container_const_iterator<ContainerT>::type,
 					PredicateT>( Search, Comp );
         }
 
@@ -385,14 +385,14 @@ namespace boost {
         */
         template<typename ContainerT>
         inline detail::last_finderF<
-            BOOST_STRING_TYPENAME container_traits<ContainerT>::const_iterator,
+            BOOST_STRING_TYPENAME container_const_iterator<ContainerT>::type,
             is_equal>
         last_finder( const ContainerT& Search )
         {
 			return 
 				detail::last_finderF<
 					BOOST_STRING_TYPENAME 
-						container_traits<ContainerT>::const_iterator,
+						container_const_iterator<ContainerT>::type,
 					is_equal>( Search, is_equal() );
         }
         //! "Last" finder
@@ -409,14 +409,14 @@ namespace boost {
         */
         template<typename ContainerT, typename PredicateT>
         inline detail::last_finderF<
-            BOOST_STRING_TYPENAME container_traits<ContainerT>::const_iterator,
+            BOOST_STRING_TYPENAME container_const_iterator<ContainerT>::type,
             PredicateT>
         last_finder( const ContainerT& Search, PredicateT Comp )
         {
             return 
 				detail::last_finderF<
 					BOOST_STRING_TYPENAME 
-						container_traits<ContainerT>::const_iterator,
+						container_const_iterator<ContainerT>::type,
 					PredicateT>( Search, Comp ) ;
         }
 
@@ -432,7 +432,7 @@ namespace boost {
         */
         template<typename ContainerT>
         inline detail::nth_finderF<
-            BOOST_STRING_TYPENAME container_traits<ContainerT>::const_iterator,
+            BOOST_STRING_TYPENAME container_const_iterator<ContainerT>::type,
             is_equal>
         nth_finder( 
             const ContainerT& Search, 
@@ -441,7 +441,7 @@ namespace boost {
             return 
 				detail::nth_finderF<
 					BOOST_STRING_TYPENAME 
-						container_traits<ContainerT>::const_iterator,
+						container_const_iterator<ContainerT>::type,
 					is_equal>( Search, Nth, is_equal() ) ;
         }
         //! "Nth" finder
@@ -459,7 +459,7 @@ namespace boost {
         */
         template<typename ContainerT, typename PredicateT>
         inline detail::nth_finderF<
-            BOOST_STRING_TYPENAME container_traits<ContainerT>::const_iterator,
+            BOOST_STRING_TYPENAME container_const_iterator<ContainerT>::type,
             PredicateT>
         nth_finder( 
             const ContainerT& Search, 
@@ -469,7 +469,7 @@ namespace boost {
             return 
 				detail::nth_finderF<
 					BOOST_STRING_TYPENAME 
-	                    container_traits<ContainerT>::const_iterator,
+	                    container_const_iterator<ContainerT>::type,
 					PredicateT>( Search, Nth, Comp );
         }
 

@@ -197,7 +197,7 @@ namespace boost {
         PredicateT Pred )
     {
         typedef BOOST_STRING_TYPENAME 
-            string_algo::container_traits<InputContainerT>::const_iterator Iterator1T;
+            string_algo::container_const_iterator<InputContainerT>::type Iterator1T;
 
         Iterator1T InputEnd=string_algo::end(Input);
         for( Iterator1T It=string_algo::begin(Input); It!=InputEnd; It++ )

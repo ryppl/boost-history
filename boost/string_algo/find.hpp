@@ -41,7 +41,7 @@ namespace boost {
 	*/
     template< typename InputContainerT, typename SearchContainerT >
     inline iterator_range< 
-        BOOST_STRING_TYPENAME string_algo::container_traits<InputContainerT>::result_iterator >
+        BOOST_STRING_TYPENAME string_algo::container_result_iterator<InputContainerT>::type >
     find_first( 
         InputContainerT& Input, 
         const SearchContainerT& Search )
@@ -65,7 +65,7 @@ namespace boost {
     */
     template< typename InputContainerT, typename SearchContainerT >
     inline iterator_range< 
-        BOOST_STRING_TYPENAME string_algo::container_traits<InputContainerT>::result_iterator >
+        BOOST_STRING_TYPENAME string_algo::container_result_iterator<InputContainerT>::type >
     ifind_first( 
         InputContainerT& Input, 
         const SearchContainerT& Search,
@@ -91,7 +91,7 @@ namespace boost {
     */
     template< typename InputContainerT, typename SearchContainerT >
     inline iterator_range< 
-        BOOST_STRING_TYPENAME string_algo::container_traits<InputContainerT>::result_iterator >
+        BOOST_STRING_TYPENAME string_algo::container_result_iterator<InputContainerT>::type >
     find_last( 
         InputContainerT& Input, 
         const SearchContainerT& Search )
@@ -116,7 +116,7 @@ namespace boost {
     */
     template< typename InputContainerT, typename SearchContainerT >
     inline iterator_range< 
-        BOOST_STRING_TYPENAME string_algo::container_traits<InputContainerT>::result_iterator >
+        BOOST_STRING_TYPENAME string_algo::container_result_iterator<InputContainerT>::type >
     ifind_last( 
         InputContainerT& Input, 
         const SearchContainerT& Search,
@@ -144,7 +144,7 @@ namespace boost {
     */
     template< typename InputContainerT, typename SearchContainerT >
     inline iterator_range< 
-        BOOST_STRING_TYPENAME string_algo::container_traits<InputContainerT>::result_iterator >
+        BOOST_STRING_TYPENAME string_algo::container_result_iterator<InputContainerT>::type >
     find_nth( 
         InputContainerT& Input, 
         const SearchContainerT& Search,
@@ -171,7 +171,7 @@ namespace boost {
     */
     template< typename InputContainerT, typename SearchContainerT >
     inline iterator_range< 
-        BOOST_STRING_TYPENAME string_algo::container_traits<InputContainerT>::result_iterator >
+        BOOST_STRING_TYPENAME string_algo::container_result_iterator<InputContainerT>::type >
     ifind_nth( 
         InputContainerT& Input, 
         const SearchContainerT& Search,
@@ -200,7 +200,7 @@ namespace boost {
     */
     template< typename InputContainerT >
     inline iterator_range< 
-        BOOST_STRING_TYPENAME string_algo::container_traits<InputContainerT>::result_iterator >
+        BOOST_STRING_TYPENAME string_algo::container_result_iterator<InputContainerT>::type >
     find_head( 
         InputContainerT& Input, 
         unsigned int N )
@@ -227,7 +227,7 @@ namespace boost {
     */
     template< typename InputContainerT >
     inline iterator_range< 
-        BOOST_STRING_TYPENAME string_algo::container_traits<InputContainerT>::result_iterator >
+        BOOST_STRING_TYPENAME string_algo::container_result_iterator<InputContainerT>::type >
     find_tail( 
         InputContainerT& Input, 
         unsigned int N )
@@ -254,7 +254,7 @@ namespace boost {
     */
     template< typename InputContainerT, typename PredicateT >
     inline iterator_range< 
-        BOOST_STRING_TYPENAME string_algo::container_traits<InputContainerT>::result_iterator >
+        BOOST_STRING_TYPENAME string_algo::container_result_iterator<InputContainerT>::type >
     find_token( 
         InputContainerT& Input,
         PredicateT Pred,

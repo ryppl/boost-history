@@ -47,7 +47,7 @@ namespace boost {
         const InputSeqT& Input,
         const iterator_range<
             BOOST_STRING_TYPENAME 
-                string_algo::container_traits<InputSeqT>::const_iterator>& SearchRange,
+                string_algo::container_const_iterator<InputSeqT>::type>& SearchRange,
         const FormatSeqT& Format )
     {
         return string_algo::replace_copy(
@@ -72,7 +72,7 @@ namespace boost {
         const InputSeqT& Input,
         const iterator_range<
             BOOST_STRING_TYPENAME 
-                string_algo::container_traits<InputSeqT>::const_iterator>& SearchRange,
+                string_algo::container_const_iterator<InputSeqT>::type>& SearchRange,
         const FormatSeqT& Format )
     {
         return string_algo::replace_copy(
@@ -96,7 +96,7 @@ namespace boost {
         InputSeqT& Input,
         const iterator_range<
             BOOST_STRING_TYPENAME 
-                string_algo::container_traits<InputSeqT>::iterator>& SearchRange,
+                string_algo::container_iterator<InputSeqT>::type>& SearchRange,
         const FormatSeqT& Format )
     {
         return string_algo::replace(

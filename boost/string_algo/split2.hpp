@@ -36,7 +36,7 @@ namespace boost {
 
 //  iterate find ---------------------------------------------------//
 
-        // Iter find algorith
+        //! Iter find algorithm
         /*!
 			This algorithm executes a given finder in iteration on the input,
 			until the end of input is reached, or no match is found.
@@ -69,16 +69,16 @@ namespace boost {
         {
 			function_requires< 
 				FinderConcept<FindFT,
-				BOOST_STRING_TYPENAME container_traits<InputT>::result_iterator> >();
+				BOOST_STRING_TYPENAME container_result_iterator<InputT>::type> >();
 
 			typedef BOOST_STRING_TYPENAME 
-                container_traits<InputT>::result_iterator input_iterator_type;
+                container_result_iterator<InputT>::type input_iterator_type;
             typedef detail::find_iterator<
                 input_iterator_type,
                 FindFT > find_iterator_type;
 			typedef detail::copy_rangeF<
                 BOOST_STRING_TYPENAME 
-                    container_traits<ResultT>::value_type,
+                    container_value_type<ResultT>::type,
                 input_iterator_type> copy_range_type;
             
             input_iterator_type InputEnd=end(Input);
@@ -97,7 +97,7 @@ namespace boost {
 
 //  iterate split ---------------------------------------------------//
 
-        // Split find algorithm
+        //! Split find algorithm
         /*!
 			This algorithm executes a given finder in iteration on the input,
 			until the end of input is reached, or no match is found.
@@ -131,17 +131,17 @@ namespace boost {
         {
 			function_requires< 
 				FinderConcept<FindFT,
-				BOOST_STRING_TYPENAME container_traits<InputT>::result_iterator> >();
+				BOOST_STRING_TYPENAME container_result_iterator<InputT>::type> >();
 
 			typedef BOOST_STRING_TYPENAME 
-                container_traits<InputT>::result_iterator input_iterator_type;
+                container_result_iterator<InputT>::type input_iterator_type;
             typedef detail::find_iterator<
                 input_iterator_type,
                 FindFT,
                 detail::split_find_policy > find_iterator_type;
 			typedef detail::copy_rangeF<
                 BOOST_STRING_TYPENAME 
-                    container_traits<ResultT>::value_type,
+                    container_value_type<ResultT>::type,
                 input_iterator_type> copy_range_type;
             
             input_iterator_type InputEnd=end(Input);
