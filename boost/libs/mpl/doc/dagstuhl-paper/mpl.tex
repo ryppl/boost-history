@@ -1857,9 +1857,6 @@ unrolling is used.
 \end{codesamp}
 }
 
-  \subsubsection{numbered forms of \code{list}}
-  \subsubsection{algorithm support lambda}
-
 \subsection{Code generation facilities}
 
 There are cases, especially in domain of numeric computations, then 
@@ -1984,13 +1981,205 @@ There are other ways to generate an analogous code,
 but they are much less expressive.
 
 
-\subsection{Lambda facility}
+\section{Lambda facility}
 
-\section{Design of mpl}
-\subsection{Design goals}
-\subsection{Design decisions}
-\subsubsection{Use of iterators}
-\subsubsection{Abstraction of sequences}
+I'll try to summarize it here. Lambda is supposed to allow inline
+composition of class templates into ``lambda expressions" that are
+classes and therefore can be passed around as ordinary function
+classes, and transformed into \mfn\ classes before application
+using
+
+{\small
+\begin{codesamp}\begin{verbatim}
+typedef lambda<expr>::type func;
+\end{verbatim}
+\end{codesamp}
+}
+
+expression. For example, `boost::remove\_\-const' traits is a class template
+(obviously), and a \mfn{} in MPL terminology. The simplest example
+of ``inline composition" of it would be something like
+
+{\small
+\begin{codesamp}\begin{verbatim}
+typedef boost::remove_const<_1> expr;
+\end{verbatim}
+\end{codesamp}
+}
+
+
+and that forms a so called ``lambda expression", that is neither a function
+class, not a \mfn{}, but can be passed around everywhere because
+it's an ordinary C++ class, and all MPL facilities are polymorphic regarding
+their arguments. Now, that lambda expression can be \emph{transformed} into a
+\mfn\ class using MPL `lambda' facility:
+
+{\small
+\begin{codesamp}\begin{verbatim}
+typedef boost::remove_const<_1> expr;
+typedef lambda<expr>::type func;
+\end{verbatim}
+\end{codesamp}
+}
+
+Now 'func' is an unary \mfn\ class and can be used as such - in
+particular, it can be pass around (obviously), and it can be invoked
+(applied):
+
+{\small
+\begin{codesamp}\begin{verbatim}
+typedef apply1<func,int const>::type res;
+BOOST_MPL_ASSERT_IS_SAME(res, int);
+\end{verbatim}
+\end{codesamp}
+}
+
+or even
+
+{\small
+\begin{codesamp}\begin{verbatim}
+typedef func::apply<int const>::type res;
+BOOST_MPL_ASSERT_IS_SAME(res, int);
+\end{verbatim}
+\end{codesamp}
+}
+
+Inline composition is very syntactically appealing when you deal with
+\mfn{}s, because it makes the expression obvious:
+
+{\small
+\begin{codesamp}\begin{verbatim}
+typedef logical_or< less< size_of<_1>, 16>, boost::is_same<_1,_2> > expr;
+typedef lambda<expr>::type func;
+\end{verbatim}
+\end{codesamp}
+}
+
+And you don't have to do the last part (\code{typedef lambda<expr>::type func})
+yourself, because all the algorithms do this to any of their \mfn\ class
+operands internally (\code{lambda<T>::type} expression applied to a \mfn\ class
+gives back the same \mfn\ class, so it's safe to apply the expression
+unconditionally).
+
+The alternative way to get an equivalent to the above \mfn\ class would
+be:
+
+{\small
+\begin{codesamp}\begin{verbatim}
+typedef bind< make_f2<logical_or>
+    , bind< make_f2<less>
+        , bind< make_f1<size_of>, _1 >
+        , 16
+        >
+    , bind< make_f2<boost::is_same>, _1,_2>
+    > func;
+\end{verbatim}
+\end{codesamp}
+}
+
+Or to use `compose\_\-{*}' an similar way. Here, we use `make\_\-f{*}' templates to
+convert \mfn{} into \mfn\ classes (and yes, they do require the
+template template parameters), and then we combine them using `bind'. The
+transformation from this form to the above inline lambda expression and
+visa-versa is mechanic, and that's what essentially `typedef
+lambda<expr>::type' expression does.
+
+Now, in absence of lambda, MPL enables one to write the above in a little
+bit less cumbersome way by fully \emph{specializing} its own /mfns/
+(algorithms, primitives, etc.) for the case when all the arguments are
+replaced by lambda placeholders in alphabetical order. For example, the original
+`mpl::less' template looks like this:
+
+{\small
+\begin{codesamp}\begin{verbatim}
+template< typename T0, typename T1 >
+struct less 
+{
+    typedef bool_c<(T1::value op T2::value)> type;
+};
+\end{verbatim}
+\end{codesamp}
+}
+
+and it's specialized like this:
+
+{\small
+\begin{codesamp}\begin{verbatim}
+template<>
+struct less<_1,_2>
+{
+    template< typename T0, typename T1 > struct apply
+    {
+        typedef bool_c<(T1::value op T2::value)> type;
+    };
+};
+\end{verbatim}
+\end{codesamp}
+}
+
+The same is done for everything else in the library that is represented by
+top level class template (\mfn{}), so, with this knowledge, the
+previous awkward bind example can be rewritten as:
+
+{\small
+\begin{codesamp}\begin{verbatim}
+typedef bind< logical_or<_1,_2>
+    , bind< less<_1,_2>, size_of<_1>, 16 >
+    , bind< make_f2<boost::is_same>, _1,_2 >
+    > func;
+\end{verbatim}
+\end{codesamp}
+}
+
+Note that you still have to wrap `is\_\-same' into `make\_\-f2', because it's a
+foreign template.
+
+Now, about combining ct-metufunctions and \mfn\ classes in the single
+lambda expression - it can be done like this:
+
+{\small
+\begin{codesamp}\begin{verbatim}
+struct my_predicate
+{
+    template< typename T1, typename T2 > struct apply
+    {
+        //...
+    };
+};
+
+typedef logical_or<
+      less< size_of<_1>, 16>
+    , my_predicate // here
+    > expr;
+\end{verbatim}
+\end{codesamp}
+}
+
+or, if, for example, you want to bind something to one of it's arguments (or
+change the order of parameters), then either
+
+{\small
+\begin{codesamp}\begin{verbatim}
+typedef logical_or<
+      less< size_of<_1>, 16>
+    , bind<my_predicate,int,_1>::type // here
+    > expr;
+\end{verbatim}
+\end{codesamp}
+}
+
+or
+
+{\small
+\begin{codesamp}\begin{verbatim}
+typedef logical_or<
+      less< size_of<_1>, 16>
+    , my_predicate::apply<int,_1> // here
+    > expr;
+\end{verbatim}
+\end{codesamp}
+}
+
 
 \section{An advanced example - compile-time FSM generator}
 
@@ -2065,7 +2254,7 @@ class player
     struct stop_event;
     struct pause_event;
 
-    // "input" function
+    // ``input" function
     void process_event(event const&); // throws
 
  private:
@@ -2088,7 +2277,7 @@ class player
 %%% IMO this implementation bends over backward to be inefficient. My
 %%% first thought would have been:
 %%
-%%     // "input" function
+%%     // ``input" function
 %%     template <class Event>
 %%     void process_event(Event const&); // throws
 %%
@@ -2394,7 +2583,7 @@ int main()
 \end{codesamp}
 }
 
-\subsection{Related work}
+\section{Related work}
 
 A notable prior work in the field of automation of general-purpose 
 state machine implementation in \Cpp\ is the Robert Martin's State 
