@@ -96,13 +96,9 @@
 # include <locale> // G.P.S
 #endif
 
-
-//  The purpose of this BOOST_OLD_IOSTREAMS macro is basically to support
-//  pre-standard implementations of the g++ library (the best place for such
-//  a test would be in the boost config files, but there isn't probably any
-//  intent for a general old iostreams support). The test here exploits the
-//  fact that old (in fact, pre 3.0) versions of libstdc++ are based on the
-//  old sgi [Thanks to Phil Edwards for useful info about libstdc++ history]
+// Support for pre-3.0 versions of libstdc++ (the test here
+// exploits the presence of an old SGI macro) [Thanks to Phil
+// Edwards for his useful info about the libstdc++ history]
 //
 #if defined (__STL_CONFIG_H) && !defined (__STL_USE_NEW_IOSTREAMS)
 #  define BOOST_OLD_IOSTREAMS
@@ -113,18 +109,11 @@
 #  include <ostream>
 #endif
 
-#include "boost/dynamic_bitset_fwd.hpp" //G.P.S.
+#include "boost/dynamic_bitset_fwd.hpp"
 #include "boost/detail/dynamic_bitset.hpp"
-#include "boost/limits.hpp" // [gps] now included here
+#include "boost/limits.hpp"
 #include "boost/lowest_bit.hpp" // used by find_first/next
 
-
-
-#if BOOST_WORKAROUND(BOOST_MSVC, <= 1300)                   // 1300 == VC++ 7.0
-  //  in certain situations VC++ requires a redefinition of
-  //  default template arguments, in contrast with 14.1/12
-# define BOOST_WORKAROUND_REPEAT_DEFAULT_TEMPLATE_ARGUMENTS // local macro
-#endif
 
 
 // Helps getting a '0' or '1' character.
@@ -143,7 +132,8 @@ namespace boost {
 
 template
 
-# ifdef BOOST_WORKAROUND_REPEAT_DEFAULT_TEMPLATE_ARGUMENTS
+# if BOOST_WORKAROUND(BOOST_MSVC, <= 1300)  // 1300 == VC++ 7.0
+   // VC++ wants default arguments again here
    <typename Block = unsigned long, typename Allocator = std::allocator<Block> >
 # else
    <typename Block, typename Allocator>
@@ -1505,7 +1495,7 @@ operator>>(std::basic_istream<Ch, Tr>& is, dynamic_bitset<Block, Alloc>& b)
 
     using namespace std;
 
-    typedef dynamic_bitset<Block, Alloc>::size_type size_type;
+    typedef typename dynamic_bitset<Block, Alloc>::size_type size_type;
 
     const streamsize w = is.width();
     const size_type limit = 0 < w && w < b.max_size()?
@@ -1695,8 +1685,8 @@ inline void dynamic_bitset<Block, Allocator>::m_zero_unused_bits()
 } // namespace boost
 
 
-#undef BOOST_WORKAROUND_REPEAT_DEFAULT_TEMPLATE_ARGUMENTS
+#undef BOOST_OLD_IOSTREAMS
+#undef BOOST_BITSET_CHAR
 
-#endif // BOOST_DYNAMIC_BITSET_HPP
-
+#endif // include guard
 
