@@ -235,8 +235,7 @@ public: // queries
 
 public: // operators
 
-   typedef T& result_type;
-//  Original code: typedef typename call_traits<T>::param_type result_type;
+    typedef T& result_type;
 
     result_type operator()() const
     {
