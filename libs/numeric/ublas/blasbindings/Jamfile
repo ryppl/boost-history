@@ -1,0 +1,17 @@
+subproject libs/numeric/ublas/blasbindings ;
+
+SOURCES = main ;
+
+exe main
+	: $(SOURCES).cpp 
+	  <lib>../ublas$(SUFLIB)
+	: <include>$(BOOST_ROOT)
+	  <borland><*><cxxflags>"-w-8026 -w-8027 -w-8057 -w-8084 -w-8092"
+          <library-path>/usr/lib
+          <find-library>f77blas
+          <find-library>atlas
+          <find-library>g2c
+        : debug release
+	;
+
+
