@@ -1,20 +1,20 @@
 BOOST_INCLUDE=D:/boost
 
 HEADERS= \
-	test_main.cpp \
-	trim_test.cpp \
-	case_conv_test.cpp \
-	string_predicate_test.cpp \
-	../../../boost/string_algo/trim.hpp \
-	../../../boost/string_algo/case_conv.hpp \
+	../../../boost/string_algo/string_trim.hpp \
+	../../../boost/string_algo/string_conv.hpp \
 	../../../boost/string_algo/string_predicate.hpp \
+	../../../boost/string_algo/string_funct.hpp \
+	../../../boost/string_algo/string_substr.hpp \
 	../../../boost/string_algo.hpp
+
 
 SOURCES= \
 	test_main.cpp \
 	trim_test.cpp \
-	case_conv_test.cpp \
-    string_predicate_test.cpp
+	conv_test.cpp \
+    predicate_test.cpp \
+	substr_test.cpp
 
 all: test.exe
 

@@ -1,4 +1,4 @@
-//  Boost string_algo library trim_test.cpp file  ---------------------------//
+//  Boost string_algo library conv_test.cpp file  ---------------------------//
 
 //  (C) Copyright Pavol Droba 2002. Permission to copy, use, modify, sell and
 //  distribute this software is granted provided this copyright notice appears
@@ -15,7 +15,7 @@
 using namespace std;
 using namespace boost;
 
-void case_conv_test()
+void conv_test()
 {
     string str1("AbCdEfG 123 xxxYYYzZzZ");
     string str2("AbCdEfG 123 xxxYYYzZzZ");

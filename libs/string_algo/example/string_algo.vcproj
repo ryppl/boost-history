@@ -112,16 +112,22 @@
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc">
 			<File
-				RelativePath="..\..\..\boost\string_algo\case_conv.hpp">
+				RelativePath="..\..\..\boost\string_algo.hpp">
 			</File>
 			<File
-				RelativePath="..\..\..\boost\string_algo.hpp">
+				RelativePath="..\..\..\boost\string_algo\string_conv.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\boost\string_algo\string_funct.hpp">
 			</File>
 			<File
 				RelativePath="..\..\..\boost\string_algo\string_predicate.hpp">
 			</File>
 			<File
-				RelativePath="..\..\..\boost\string_algo\trim.hpp">
+				RelativePath="..\..\..\boost\string_algo\string_substr.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\boost\string_algo\string_trim.hpp">
 			</File>
 		</Filter>
 		<Filter
