@@ -557,6 +557,9 @@ else
 			helper class template. In a typical implementation, the three <EM>shared_ptr</EM>
 			constructors that create unique pointers automatically detect the <code>enable_shared_from_this</code>
 			base and initialize its internal <EM>weak_ptr</EM> member.</P>
+		<P>The default constructor, copy constructor, copy assignment operator, and the 
+			destructor of <code>enable_shared_from_this</code> are protected. <code>enable_shared_from_this&lt;X&gt;</code>
+			is only useful as a public base class of <code>X</code>.</P>
 		<h3>E. Size and Performance</h3>
 		<h4>1. <a name="Memory-footprint">Memory Footprint</a></h4>
 		<p>In the Boost implementation, the size of <EM>shared_ptr</EM> (and <EM>weak_ptr</EM>) 
@@ -758,7 +761,7 @@ else
       public:
         typedef T element_type;
 
-        <em>// constructors</EM>
+        <em>// constructors</em>
         shared_ptr();
         template&lt;class Y&gt; explicit shared_ptr(Y * p);
         template&lt;class Y, class D&gt; shared_ptr(Y * p, D d);
@@ -767,30 +770,30 @@ else
         template&lt;class Y&gt; explicit shared_ptr(weak_ptr&lt;Y&gt; const &amp; r);
         template&lt;class Y&gt; explicit shared_ptr(auto_ptr&lt;Y&gt; &amp; r);
 
-        <em>// destructor</EM>
+        <em>// destructor</em>
         ~shared_ptr();
 
-        <em>// assignment</EM>
+        <em>// assignment</em>
         shared_ptr &amp; operator=(shared_ptr const &amp; r);
         template&lt;class Y&gt; shared_ptr &amp; operator=(shared_ptr&lt;Y&gt; const &amp; r);
         template&lt;class Y&gt; shared_ptr &amp; operator=(auto_ptr&lt;Y&gt; &amp; r);
 
-        <em>// modifiers</EM>
+        <em>// modifiers</em>
         void swap(shared_ptr &amp; r);
         void reset();
         template&lt;class Y&gt; void reset(Y * p);
         template&lt;class Y, class D&gt; void reset(Y * p, D d);
 
-        <em>// observers</EM>
+        <em>// observers</em>
         T * get() const;
         T &amp; operator*() const;
         T * operator-&gt;() const;
         long use_count() const;
         bool unique() const;
-        operator <em>unspecified-bool-type</EM>() const;
+        operator <em>unspecified-bool-type</em>() const;
       };
 
-      <em>// comparison</EM>
+      <em>// comparison</em>
       template&lt;class T, class U&gt;
         bool operator==(shared_ptr&lt;T&gt; const &amp; a, shared_ptr&lt;U&gt; const &amp; b);
 
@@ -800,21 +803,21 @@ else
       template&lt;class T, class U&gt;
         bool operator&lt;(shared_ptr&lt;T&gt; const &amp; a, shared_ptr&lt;U&gt; const &amp; b);
 
-      <em>// other operators</EM>
+      <em>// other operators</em>
       template&lt;class E, class T, class Y&gt;
         basic_ostream&lt;E, T&gt; &amp; operator&lt;&lt; (basic_ostream&lt;E, T&gt; &amp; os, shared_ptr&lt;Y&gt; const &amp; p);
 
-      <em>// specialized algorithms</EM>
+      <em>// specialized algorithms</em>
       template&lt;class T&gt; void swap(shared_ptr&lt;T&gt; &amp; a, shared_ptr&lt;T&gt; &amp; b);
 
-      <em>// casts</EM>
+      <em>// casts</em>
       template&lt;class T, class U&gt;
         shared_ptr&lt;T&gt; static_pointer_cast(shared_ptr&lt;U&gt; const &amp; r);
 
       template&lt;class T, class U&gt;
         shared_ptr&lt;T&gt; dynamic_pointer_cast</A>(shared_ptr&lt;U&gt; const &amp; r);
 
-      <em>// get_deleter</EM>
+      <em>// get_deleter</em>
       template&lt;class D, class T&gt;
         D * get_deleter(shared_ptr&lt;T&gt; const &amp; p);
     }
@@ -974,7 +977,7 @@ else
 		<P><B>Notes:</B> <code>unique()</code> may be faster than <code>use_count()</code>. 
 			If you are using <code>unique()</code> to implement copy on write, do not rely 
 			on a specific value when <code>get() == 0</code>.</P>
-		<pre>    operator <em>unspecified-bool-type</EM> () const;
+		<pre>    operator <em>unspecified-bool-type</em> () const;
 </pre>
 		<p><b>Returns:</b> an unspecified value that, when used in boolean contexts, is 
 			equivalent to <code>get() != 0</code>.</p>
@@ -1070,35 +1073,35 @@ else
       public:
         typedef T element_type;
 
-        <em>// constructors</EM>
+        <em>// constructors</em>
         weak_ptr();
         template&lt;class Y&gt; weak_ptr(shared_ptr&lt;Y&gt; const &amp; r);
         weak_ptr(weak_ptr const &amp; r);
         template&lt;class Y&gt; weak_ptr(weak_ptr&lt;Y&gt; const &amp; r);
 
-        <em>// destructor</EM>
+        <em>// destructor</em>
         ~weak_ptr();
 
-        <em>// assignment</EM>
+        <em>// assignment</em>
         weak_ptr &amp; operator=(weak_ptr const &amp; r);
         template&lt;class Y&gt; weak_ptr &amp; operator=(weak_ptr&lt;Y&gt; const &amp; r);
         template&lt;class Y&gt; weak_ptr &amp; operator=(shared_ptr&lt;Y&gt; const &amp; r);
 
-        <em>// modifiers</EM>
+        <em>// modifiers</em>
         void swap(weak_ptr &amp; r);
         void reset();
 
-        <em>// observers</EM>
+        <em>// observers</em>
         long use_count() const;
         bool expired() const;
         shared_ptr&lt;T&gt; lock() const;
       };
 
-      <em>// comparison</EM>
+      <em>// comparison</em>
       template&lt;class T, class U&gt;
         bool operator&lt;(weak_ptr&lt;T&gt; const &amp; a, weak_ptr&lt;U&gt; const &amp; b);
 
-      <em>// specialized algorithms</EM>
+      <em>// specialized algorithms</em>
       template&lt;class T&gt;
         void swap(weak_ptr&lt;T&gt; &amp; a, weak_ptr&lt;T&gt; &amp; b);
     }
@@ -1204,12 +1207,30 @@ else
 		<p><em>—end example.</em>]</p>
 		<pre>    namespace std {
       template&lt;class T&gt; class enable_shared_from_this {
+      protected:
+        enable_shared_from_this();
+        enable_shared_from_this(enable_shared_from_this const &amp;);
+        enable_shared_from_this &amp; operator=(enable_shared_from_this const &amp;);
+        ~enable_shared_from_this();
       public:
         shared_ptr&lt;T&gt; shared_from_this();
         shared_ptr&lt;T const&gt; shared_from_this() const;
       };
     }
 </pre>
+		<pre>    enable_shared_from_this&lt;T&gt;::enable_shared_from_this();
+    enable_shared_from_this&lt;T&gt;::enable_shared_from_this(enable_shared_from_this&lt;T&gt; const &amp;);
+</pre>
+		<p><b>Effects:</b> Constructs an <code>enable_shared_from_this&lt;T&gt;</code> instance.</p>
+		<p><b>Throws:</b> nothing.</p>
+		<pre>    enable_shared_from_this&lt;T&gt; &amp; enable_shared_from_this&lt;T&gt;::operator=(enable_shared_from_this&lt;T&gt; const &amp;);
+</pre>
+		<p><b>Returns:</b> <code>*this</code>.</p>
+		<p><b>Throws:</b> nothing.</p>
+		<pre>    enable_shared_from_this&lt;T&gt;::~enable_shared_from_this();
+</pre>
+		<p><b>Effects:</b> Destroys <code>*this</code>.</p>
+		<p><b>Throws:</b> nothing.</p>
 		<pre>    template&lt;class T&gt; shared_ptr&lt;T&gt; 
       enable_shared_from_this&lt;T&gt;::shared_from_this();
     template&lt;class T&gt; shared_ptr&lt;T const&gt; 
@@ -1232,6 +1253,13 @@ else
 
         weak_ptr&lt;T&gt; __weak_this;
 
+    protected:
+
+        enable_shared_from_this() {}
+        enable_shared_from_this(enable_shared_from_this const &amp;) {}
+        enable_shared_from_this &amp; operator=(enable_shared_from_this const &amp;) { return *this; }
+        ~enable_shared_from_this() {}
+
     public:
 
         shared_ptr&lt;T&gt; shared_from_this() { return shared_ptr&lt;T&gt;(__weak_this); }
@@ -1245,14 +1273,17 @@ else
 		<p>Revision 1:</p>
 		<UL>
 			<LI>
-				Introduced a requirement that all empty pointers should have <code>use_count()</code> of 
-				zero, eliminating most unspecified behavior. The decision is explained in 
-				III.A.5.</LI>
+				Introduced a requirement that all empty pointers should have <code>use_count()</code>
+			of zero, eliminating most unspecified behavior. The decision is explained in 
+			III.A.5.
 			<LI>
 				Added a note in III.B.7 that the underlying reference count type is not 
-				required to be <code>long</code>.</LI>
+				required to be <code>long</code>.
 			<LI>
-				Added an example and a note to IV.E.</LI></UL>
+			Added an example and a note to IV.E.
+			<LI>
+				Added protected default constructor, copy constructor, copy assignment and 
+				destructor to <code>enable_shared_from_this</code>.</LI></UL>
 		<h2>VI. References</h2>
 		<p>[<a name="Abrahams02">Abrahams02</a>] Dave Abrahams et al, <i>Boost.Python library 
 				documentation</i>, October 2002. Available online at <A href="http://www.boost.org/libs/python/">
