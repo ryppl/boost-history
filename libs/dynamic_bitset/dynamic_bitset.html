@@ -8,11 +8,11 @@
    express or implied warranty, and with no claim as to its suitability
    for any purpose.
  -->
- 
+
 <!--
    Copyright (c) 1996-1999
    Silicon Graphics Computer Systems, Inc.
-  
+
    Permission to use, copy, modify, distribute and sell this software
    and its documentation for any purpose is hereby granted without fee,
    provided that the above copyright notice appears in all copies and
@@ -20,10 +20,10 @@
    in supporting documentation.  Silicon Graphics makes no
    representations about the suitability of this software for any
    purpose.  It is provided "as is" without express or implied warranty.
-  
+
    Copyright (c) 1994
    Hewlett-Packard Company
-  
+
    Permission to use, copy, modify, distribute and sell this software
    and its documentation for any purpose is hereby granted without fee,
    provided that the above copyright notice appears in all copies and
@@ -31,7 +31,7 @@
    in supporting documentation.  Hewlett-Packard Company makes no
    representations about the suitability of this software for any
    purpose.  It is provided "as is" without express or implied warranty.
- 
+
   -->
 <head>
 <title>dynamic_bitset&lt;Block, Allocator&gt;</title>
@@ -39,7 +39,7 @@
 <body text="#000000" link="#006600" alink="#003300" vlink=
 "#7C7F87" bgcolor="#FFFFFF">
 <img src="../../c++boost.gif" alt="c++boost.gif (8819 bytes)"
-align="middle" width="277" height="86"> 
+align="middle" width="277" height="86">
 
 <p><!--end header-->
 <br clear="">
@@ -142,14 +142,14 @@ public:
     static const int <a href=
        "#bits_per_block">bits_per_block</a> = <i>implementation-defined</i>;
     static const size_type <a href=
-		   "#npos">npos</a> = <i>implementation-defined</i>;
+          "#npos">npos</a> = <i>implementation-defined</i>;
 
     class <a href="#reference">reference</a>
     {
         void operator&amp;(); // not defined
     public:
         // An automatically generated copy constructor.
-				
+
         reference&amp; operator=(bool value);
         reference&amp; operator=(const reference&amp; rhs);
 
@@ -173,8 +173,8 @@ public:
 
     template &lt;typename CharT, typename Traits, typename Alloc&gt;
     explicit <a href=
-"#cons3">dynamic_bitset</a>(const std::basic_string&lt;CharT, Traits, Alloc&gt;&amp; s, 
-        typename std::basic_string&lt;CharT, Traits, Alloc&gt;::size_type pos = 0, 
+"#cons3">dynamic_bitset</a>(const std::basic_string&lt;CharT, Traits, Alloc&gt;&amp; s,
+        typename std::basic_string&lt;CharT, Traits, Alloc&gt;::size_type pos = 0,
         typename std::basic_string&lt;CharT, Traits, Alloc&gt;::size_type n = std::basic_string&lt;CharT, Traits, Alloc&gt;::npos,
         const Allocator&amp; alloc = Allocator());
 
@@ -236,7 +236,7 @@ public:
 "#const-bracket">operator[]</a>(size_type pos) const;
 
     unsigned long <a href="#to_ulong">to_ulong</a>() const;
-  
+
     size_type <a href="#size">size</a>() const;
     size_type <a href="#num_blocks">num_blocks</a>() const;
 
@@ -292,12 +292,12 @@ dynamic_bitset&lt;Block, Allocator&gt;
 
 template &lt;typename Block, typename Allocator, typename CharT, typename Alloc&gt;
 void <a href=
-"#to_string">to_string</a>(const dynamic_bitset&lt;Block, Allocator&gt;&amp; b, 
+"#to_string">to_string</a>(const dynamic_bitset&lt;Block, Allocator&gt;&amp; b,
           std::basic_string&lt;CharT, Alloc&gt;&amp; s);
 
 template &lt;typename Block, typename Allocator, typename BlockOutputIterator&gt;
 void <a href=
-"#to_block_range">to_block_range</a>(const dynamic_bitset&lt;Block, Allocator&gt;&amp; b, 
+"#to_block_range">to_block_range</a>(const dynamic_bitset&lt;Block, Allocator&gt;&amp; b,
                     BlockOutputIterator result);
 
 template &lt;typename CharT, typename Traits, typename Block, typename Allocator&gt;
@@ -373,16 +373,16 @@ longs).</p>
 #include &lt;boost/dynamic_bitset.hpp&gt;
 int main(int, char*[])
 {
-  const boost::dynamic_bitset&lt;&gt; b0(2, 0ul); 
+  const boost::dynamic_bitset&lt;&gt; b0(2, 0ul);
   std::cout &lt;&lt; "bits(0) = " &lt;&lt; b0 &lt;&lt; std::endl;
 
-  const boost::dynamic_bitset&lt;&gt; b1(2, 1ul); 
+  const boost::dynamic_bitset&lt;&gt; b1(2, 1ul);
   std::cout &lt;&lt; "bits(1) = " &lt;&lt; b1 &lt;&lt; std::endl;
 
-  const boost::dynamic_bitset&lt;&gt; b2(2, 2ul); 
+  const boost::dynamic_bitset&lt;&gt; b2(2, 2ul);
   std::cout &lt;&lt; "bits(2) = " &lt;&lt; b2 &lt;&lt; std::endl;
 
-  const boost::dynamic_bitset&lt;&gt; b3(2, 3ul); 
+  const boost::dynamic_bitset&lt;&gt; b3(2, 3ul);
   std::cout &lt;&lt; "bits(3) = " &lt;&lt; b3 &lt;&lt; std::endl;
 
   return EXIT_SUCCESS;
@@ -408,7 +408,7 @@ bits(3) = 11
 #include &lt;iostream&gt;
 #include &lt;boost/dynamic_bitset.hpp&gt;
 int main(int, char*[]) {
-  const boost::dynamic_bitset&lt;&gt; mask(12, 2730ul); 
+  const boost::dynamic_bitset&lt;&gt; mask(12, 2730ul);
   std::cout &lt;&lt; "mask = " &lt;&lt; mask &lt;&lt; std::endl;
 
   boost::dynamic_bitset&lt;&gt; x(12);
@@ -447,7 +447,7 @@ Shifted right:    010011010110
 The <tt>dynamic_bitset</tt> does not provide iterators (and
 therefore is not a <a href=
 "http://www.sgi.com/tech/stl/Container.html">Container</a>) for
-the following reasons: 
+the following reasons:
 
 <ol>
 <li><tt>std::bitset</tt> does not have iterators, and
@@ -533,16 +533,16 @@ Constructible</a>, <a href=
 "http://www.sgi.com/tech/stl/EqualityComparable.html">Equality
 Comparable</a>, <a href=
 "http://www.sgi.com/tech/stl/LessThanComparable.html">LessThan
-Comparable</a>. 
+Comparable</a>.
 
 <h3><a name="type-requirements">Type requirements</a></h3>
 
 <tt>Block</tt> is an unsigned integer type. <tt>Allocator</tt>
-satisfies the Standard requirements for an Allocator. 
+satisfies the Standard requirements for an Allocator.
 
 <h3><a name="public-base-classes">Public base classes</a></h3>
 
-None. 
+None.
 
 <h3><a name="member-typedefs">Member typedefs</a></h3>
 
@@ -662,21 +662,21 @@ and return <tt>b[i]</tt>.</td>
 <a name="const_reference">dynamic_bitset::const_reference</a>
 </pre>
 
-The type <tt>bool</tt>. 
+The type <tt>bool</tt>.
 
 <hr>
 <pre>
 <a name="size_type">dynamic_bitset::size_type</a>
 </pre>
 
-The unsigned integer for representing the size of the bit set. 
+The unsigned integer for representing the size of the bit set.
 
 <hr>
 <pre>
 <a name="block_type">dynamic_bitset::block_type</a>
 </pre>
 
-The same type as the <tt>Block</tt> template parameter. 
+The same type as the <tt>Block</tt> template parameter.
 
 <hr>
 <h3><a name="public-data-members">Public data members</a></h3>
@@ -714,8 +714,8 @@ operations such as <tt>resize</tt> to allocate memory.<br>
 (<tt>std::bad_alloc</tt> if
 <tt>Allocator=std::allocator</tt>).<br>
  (Required by <a href=
-"http://www.sgi.com/tech/stl/Defaultconstructible.html">Default
-Constructible</a>.) 
+"http://www.sgi.com/tech/stl/DefaultConstructible.html">Default
+Constructible</a>.)
 
 <hr>
 <pre>
@@ -730,7 +730,7 @@ Constructible</a>.)
 min(num_bits, std::numeric_limits&lt;unsigned long&gt;::digits)</tt>). A copy of
 the <tt>alloc</tt> object will be used in subsequent bitset
 operations such as <tt>resize</tt> to allocate memory.<br>
- <b>Postconditions:</b> 
+ <b>Postconditions:</b>
 
 <ul>
 <li><tt>this-&gt;size() == num_bits</tt></li>
@@ -745,7 +745,7 @@ operations such as <tt>resize</tt> to allocate memory.<br>
 <b>Throws:</b> An allocation error if memory is exhausted
 (<tt>std::bad_alloc</tt> if
 <tt>Allocator=std::allocator</tt>).<br>
- 
+
 
 <hr>
 <pre>
@@ -761,7 +761,7 @@ allocator in <tt>x</tt>. <br>
 (<tt>std::bad_alloc</tt> if
 <tt>Allocator=std::allocator</tt>).<br>
  (Required by <a href=
-"http://www.sgi.com/tech/stl/Assignable.html">Assignable</a>.) 
+"http://www.sgi.com/tech/stl/Assignable.html">Assignable</a>.)
 
 <hr>
 <pre>
@@ -789,7 +789,7 @@ Iterator</a> and its <tt>value_type</tt> must be the same type as
  <b>Throws:</b> An allocation error if memory is exhausted
 (<tt>std::bad_alloc</tt> if
 <tt>Allocator=std::allocator</tt>).<br>
- 
+
 
 <hr>
 <pre>
@@ -801,7 +801,7 @@ explicit
                typename std::basic_string&lt;CharT, Traits, Alloc&gt;::size_type n = <a
  href=
 "http://www.sgi.com/tech/stl/basic_string.html">std::basic_string</a>&lt;Char,Traits,Alloc&gt;::npos,
-               const Allocator&amp; alloc = Allocator()) 
+               const Allocator&amp; alloc = Allocator())
 </pre>
 
 <b>Precondition:</b> <tt>pos &lt;= s.size()</tt> and the
@@ -817,7 +817,7 @@ M - 1 - i</tt> corresponds to bit <tt>i</tt>. So, for example,
 <tt>dynamic_bitset(string("1101"))</tt> is the same as
 <tt>dynamic_bitset(13ul)</tt>.<br>
  <b>Throws:</b> an allocation error if memory is exhausted
-(<tt>std::bad_alloc</tt> if <tt>Allocator=std::allocator</tt>). 
+(<tt>std::bad_alloc</tt> if <tt>Allocator=std::allocator</tt>).
 
 <hr>
 <h3><a name="destructor">Destructor</a></h3>
@@ -829,7 +829,7 @@ M - 1 - i</tt> corresponds to bit <tt>i</tt>. So, for example,
 
 <b>Effects:</b> Releases the memory associated with this bitset
 and destroys the bitset object itself.<br>
- <b>Throws:</b> nothing. 
+ <b>Throws:</b> nothing.
 
 <hr>
 <h3><a name="member-functions">Member Functions</a></h3>
@@ -844,7 +844,7 @@ are exchanged.<br>
 <b>Postconditions:</b> This bitset is equal to the original
 <tt>b</tt>, and <tt>b</tt> is equal to the previous version of
 this bitset.<br>
-<b>Throws:</b> nothing. 
+<b>Throws:</b> nothing.
 
 <hr>
 <pre>
@@ -859,7 +859,7 @@ dynamic_bitset&amp; <a name=
  <b>Returns:</b> <tt>*this</tt>.<br>
  <b>Throws:</b> nothing. <br>
 (Required by <a href=
-"http://www.sgi.com/tech/stl/Assignable.html">Assignable</a>.) 
+"http://www.sgi.com/tech/stl/Assignable.html">Assignable</a>.)
 
 <hr>
 <pre>
@@ -878,7 +878,7 @@ discarded).<br>
  <b>Throws:</b> An allocation error if memory is exhausted
 (<tt>std::bad_alloc</tt> if
 <tt>Allocator=std::allocator</tt>).<br>
- 
+
 
 <hr>
 <pre>
@@ -886,7 +886,7 @@ void <a name="clear">clear</a>()
 </pre>
 
 <b>Effects:</b> The size of the bitset becomes zero.<br>
- <b>Throws:</b> nothing. 
+ <b>Throws:</b> nothing.
 
 <hr>
 <pre>
@@ -898,7 +898,7 @@ the value of the new most-significant bit to <tt>value</tt>.<br>
  <b>Throws:</b> An allocation error if memory is exhausted
 (<tt>std::bad_alloc</tt> if
 <tt>Allocator=std::allocator</tt>).<br>
- 
+
 
 <hr>
 <pre>
@@ -914,7 +914,7 @@ is set to <tt>((value &gt;&gt; i) &amp; 1)</tt>.<br>
  <b>Throws:</b> An allocation error if memory is exhausted
 (<tt>std::bad_alloc</tt> if
 <tt>Allocator=std::allocator</tt>).<br>
- 
+
 
 <hr>
 <pre>
@@ -924,7 +924,7 @@ void <a name=
 </pre>
 
 <b>Effects:</b> This function provides the same end result as the
-following code, but is typically more efficient. 
+following code, but is typically more efficient.
 
 <pre>
 for (; first != last; ++first)
@@ -939,7 +939,7 @@ Iterator</a> and the <tt>value_type</tt> must be the same type as
  <b>Throws:</b> An allocation error if memory is exhausted
 (<tt>std::bad_alloc</tt> if
 <tt>Allocator=std::allocator</tt>).<br>
- 
+
 
 <hr>
 <pre>
@@ -949,7 +949,7 @@ dynamic_bitset&amp; <a name=
 
 <b>Requires:</b> <tt>this-&gt;size() == rhs.size()</tt>.<br>
  <b>Effects:</b> Bitwise-AND all the bits in <tt>rhs</tt> with
-the bits in this bitset. This is equivalent to: 
+the bits in this bitset. This is equivalent to:
 
 <pre>
 for (size_type i = 0; i != this-&gt;size(); ++i)
@@ -957,7 +957,7 @@ for (size_type i = 0; i != this-&gt;size(); ++i)
 </pre>
 
 <b>Returns:</b> <tt>*this</tt>.<br>
- <b>Throws:</b> nothing. 
+ <b>Throws:</b> nothing.
 
 <hr>
 <pre>
@@ -967,7 +967,7 @@ dynamic_bitset&amp; <a name=
 
 <b>Requires:</b> <tt>this-&gt;size() == rhs.size()</tt>.<br>
  <b>Effects:</b> Bitwise-OR's all the bits in <tt>rhs</tt> with
-the bits in this bitset. This is equivalent to: 
+the bits in this bitset. This is equivalent to:
 
 <pre>
 for (size_type i = 0; i != this-&gt;size(); ++i)
@@ -975,7 +975,7 @@ for (size_type i = 0; i != this-&gt;size(); ++i)
 </pre>
 
 <b>Returns:</b> <tt>*this</tt>.<br>
- <b>Throws:</b> nothing. 
+ <b>Throws:</b> nothing.
 
 <hr>
 <pre>
@@ -985,7 +985,7 @@ dynamic_bitset&amp; <a name=
 
 <b>Requires:</b> <tt>this-&gt;size() == rhs.size()</tt>.<br>
  <b>Effects:</b> Bitwise-XOR's all the bits in <tt>rhs</tt> with
-the bits in this bitset. This is equivalent to: 
+the bits in this bitset. This is equivalent to:
 
 <pre>
 for (size_type i = 0; i != this-&gt;size(); ++i)
@@ -993,7 +993,7 @@ for (size_type i = 0; i != this-&gt;size(); ++i)
 </pre>
 
 <b>Returns:</b> <tt>*this</tt>.<br>
- <b>Throws:</b> nothing. 
+ <b>Throws:</b> nothing.
 
 <hr>
 <pre>
@@ -1003,7 +1003,7 @@ dynamic_bitset&amp; <a name=
 
 <b>Requires:</b> <tt>this-&gt;size() == rhs.size()</tt>.<br>
  <b>Effects:</b> Computes the set difference of this bitset and
-the <tt>rhs</tt> bitset. This is equivalent to: 
+the <tt>rhs</tt> bitset. This is equivalent to:
 
 <pre>
 for (size_type i = 0; i != this-&gt;size(); ++i)
@@ -1011,7 +1011,7 @@ for (size_type i = 0; i != this-&gt;size(); ++i)
 </pre>
 
 <b>Returns:</b> <tt>*this</tt>.<br>
- <b>Throws:</b> nothing. 
+ <b>Throws:</b> nothing.
 
 <hr>
 <pre>
@@ -1024,7 +1024,7 @@ dynamic_bitset&amp; <a name=
 pos takes on the previous value of the bit at position <tt>pos -
 n</tt>, or zero if no such bit exists.<br>
  <b>Returns:</b> <tt>*this</tt>.<br>
- <b>Throws:</b> nothing. 
+ <b>Throws:</b> nothing.
 
 <hr>
 <pre>
@@ -1037,7 +1037,7 @@ dynamic_bitset&amp; <a name=
 <tt>pos</tt> takes on the previous value of bit <tt>pos + n</tt>,
 or zero if no such bit exists.<br>
  <b>Returns:</b> <tt>*this</tt>.<br>
- <b>Throws:</b> nothing. 
+ <b>Throws:</b> nothing.
 
 <hr>
 <pre>
@@ -1053,7 +1053,7 @@ the expression <tt>b &lt;&lt; n</tt> is equivalent to
 constructing a temporary copy of <tt>b</tt> and then using
 <tt>operator&lt;&lt;=</tt>.<br>
  <b>Throws:</b> An allocation error if memory is exhausted
-(<tt>std::bad_alloc</tt> if <tt>Allocator=std::allocator</tt>). 
+(<tt>std::bad_alloc</tt> if <tt>Allocator=std::allocator</tt>).
 
 <hr>
 <pre>
@@ -1069,7 +1069,7 @@ the expression <tt>b &gt;&gt; n</tt> is equivalent to
 constructing a temporary copy of <tt>b</tt> and then using
 <tt>operator&gt;&gt;=</tt>.<br>
  <b>Throws:</b> An allocation error if memory is exhausted
-(<tt>std::bad_alloc</tt> if <tt>Allocator=std::allocator</tt>). 
+(<tt>std::bad_alloc</tt> if <tt>Allocator=std::allocator</tt>).
 
 <hr>
 <pre>
@@ -1078,7 +1078,7 @@ dynamic_bitset&amp; <a name="set1">set</a>()
 
 <b>Effects:</b> Sets every bit in this bitset to 1.<br>
 <b>Returns:</b> <tt>*this</tt><br>
-<b>Throws:</b> nothing. 
+<b>Throws:</b> nothing.
 
 <hr>
 <pre>
@@ -1087,7 +1087,7 @@ dynamic_bitset&amp; <a name="flip1">flip</a>()
 
 <b>Effects:</b> Flips the value of every bit in this bitset.<br>
 <b>Returns:</b> <tt>*this</tt><br>
-<b>Throws:</b> nothing. 
+<b>Throws:</b> nothing.
 
 <hr>
 <pre>
@@ -1097,7 +1097,7 @@ dynamic_bitset <a name="op-not">operator~</a>() const
 <b>Returns:</b> a copy of <tt>*this</tt> with all of its bits
 flipped.<br>
 <b>Throws:</b> An allocation error if memory is exhausted
-(<tt>std::bad_alloc</tt> if <tt>Allocator=std::allocator</tt>). 
+(<tt>std::bad_alloc</tt> if <tt>Allocator=std::allocator</tt>).
 
 <hr>
 <pre>
@@ -1106,7 +1106,7 @@ dynamic_bitset&amp; <a name="reset1">reset</a>()
 
 <b>Effects:</b> Clears every bit in this bitset.<br>
 <b>Returns:</b> <tt>*this</tt><br>
-<b>Throws:</b> nothing. 
+<b>Throws:</b> nothing.
 
 <hr>
 <pre>
@@ -1118,7 +1118,7 @@ dynamic_bitset&amp; <a name=
  <b>Effects:</b> Sets bit <tt>n</tt> if <tt>val</tt> is
 <tt>true</tt>, and clears bit <tt>n</tt> if <tt>val</tt> is
 <tt>false</tt>. <br>
- <b>Returns:</b> <tt>*this</tt> 
+ <b>Returns:</b> <tt>*this</tt>
 
 <hr>
 <pre>
@@ -1127,7 +1127,7 @@ dynamic_bitset&amp; <a name="reset2">reset</a>(size_type n)
 
 <b>Precondition:</b> <tt>n &lt; this-&gt;size()</tt>.<br>
 <b>Effects:</b> Clears bit <tt>n</tt>.<br>
-<b>Returns:</b> <tt>*this</tt> 
+<b>Returns:</b> <tt>*this</tt>
 
 <hr>
 <pre>
@@ -1136,7 +1136,7 @@ dynamic_bitset&amp; <a name="flip2">flip</a>(size_type n)
 
 <b>Precondition:</b> <tt>n &lt; this-&gt;size()</tt>.<br>
 <b>Effects:</b> Flips bit <tt>n</tt>.<br>
-<b>Returns:</b> <tt>*this</tt> 
+<b>Returns:</b> <tt>*this</tt>
 
 <hr>
 <pre>
@@ -1144,7 +1144,7 @@ size_type <a name="size">size</a>() const
 </pre>
 
 <b>Returns:</b> the number of bits in this bitset.<br>
-<b>Throws:</b> nothing. 
+<b>Throws:</b> nothing.
 
 <hr>
 <pre>
@@ -1152,7 +1152,7 @@ size_type <a name="num_blocks">num_blocks</a>() const
 </pre>
 
 <b>Returns:</b> the number of blocks in this bitset.<br>
-<b>Throws:</b> nothing. 
+<b>Throws:</b> nothing.
 
 <hr>
 <pre>
@@ -1161,7 +1161,7 @@ size_type <a name="count">count</a>() const
 
 <b>Returns:</b> the number of bits in this bitset that are
 set.<br>
-<b>Throws:</b> nothing. 
+<b>Throws:</b> nothing.
 
 <hr>
 <pre>
@@ -1170,7 +1170,7 @@ bool <a name="any">any</a>() const
 
 <b>Returns:</b> <tt>true</tt> if any bits in this bitset are set,
 and otherwise returns <tt>false</tt>.<br>
-<b>Throws:</b> nothing. 
+<b>Throws:</b> nothing.
 
 <hr>
 <pre>
@@ -1179,7 +1179,7 @@ bool <a name="none">none</a>() const
 
 <b>Returns:</b> <tt>true</tt> if no bits are set, and otherwise
 returns <tt>false</tt>.<br>
-<b>Throws:</b> nothing. 
+<b>Throws:</b> nothing.
 
 <hr>
 <pre>
@@ -1188,7 +1188,7 @@ bool <a name="test">test</a>(size_type n) const
 
 <b>Precondition:</b> <tt>n &lt; this-&gt;size()</tt>.<br>
  <b>Returns:</b> <tt>true</tt> if bit <tt>n</tt> is set and
-<tt>false</tt> is bit <tt>n</tt> is 0. 
+<tt>false</tt> is bit <tt>n</tt> is 0.
 
 <hr>
 <pre>
@@ -1202,7 +1202,7 @@ operator and a conversion to <tt>bool</tt>, which allows you to
 use <tt>operator[]</tt> for assignment. That is, you can write
 both <tt>x = b[n]</tt> and <tt>b[n] = x</tt>. However, in many
 other respects the proxy is not the same as the true reference
-type <tt>bool&amp;</tt>. 
+type <tt>bool&amp;</tt>.
 
 <hr>
 <pre>
@@ -1210,7 +1210,7 @@ bool <a name="const-bracket">operator[]</a>(size_type n) const
 </pre>
 
 <b>Precondition:</b> <tt>n &lt; this-&gt;size()</tt>.<br>
-<b>Returns:</b> The same as <tt>test(n)</tt>. 
+<b>Returns:</b> The same as <tt>test(n)</tt>.
 
 <hr>
 <pre>
@@ -1222,7 +1222,7 @@ unsigned long <a name="to_ulong">to_ulong</a>() const
 <b>Throws:</b> <tt>std::overflow_error</tt> if that value is too large to
 be represented in an <tt>unsigned long</tt>, i.e. if <tt>*this</tt> has
 any non-zero bit at a position <tt>&gt;=
-std::numeric_limits&lt;unsigned long&gt;::digits</tt>. 
+std::numeric_limits&lt;unsigned long&gt;::digits</tt>.
 
 <hr>
 <pre>
@@ -1235,7 +1235,7 @@ bool <a name=
 <tt>a</tt>. That is, it returns true if, for every bit that is
 set in this bitset, the corresponding bit in bitset <tt>a</tt> is
 also set. Otherwise this function returns false.<br>
-<b>Throws:</b> nothing. 
+<b>Throws:</b> nothing.
 
 <hr>
 <pre>
@@ -1249,7 +1249,7 @@ bool <a name=
 set in this bitset, the corresponding bit in bitset <tt>a</tt> is
 also set and if <tt>this-&gt;count() &lt; a.count()</tt>.
 Otherwise this function returns false.<br>
-<b>Throws:</b> nothing. 
+<b>Throws:</b> nothing.
 
 <hr>
 <pre>
@@ -1264,7 +1264,7 @@ returns <tt>false</tt>.<br>
  <b>Throws:</b> nothing.<br>
  (Required by <a href=
 "http://www.sgi.com/tech/stl/EqualityComparable.html">Equality
-Comparable</a>.) 
+Comparable</a>.)
 
 <hr>
 <pre>
@@ -1276,7 +1276,7 @@ bool <a name=
 <b>Throws:</b> nothing.<br>
 (Required by <a href=
 "http://www.sgi.com/tech/stl/EqualityComparable.html">Equality
-Comparable</a>.) 
+Comparable</a>.)
 
 <hr>
 <pre>
@@ -1292,7 +1292,7 @@ for a definition of lexicographic ordering). <br>
 <b>Throws:</b> nothing.<br>
 (Required by <a href=
 "http://www.sgi.com/tech/stl/LessThanComparable.html">Less Than
-Comparable</a>.) 
+Comparable</a>.)
 
 <hr>
 <pre>
@@ -1305,7 +1305,7 @@ rhs)</tt><br>
 <b>Throws:</b> nothing.<br>
 (Required by <a href=
 "http://www.sgi.com/tech/stl/LessThanComparable.html">Less Than
-Comparable</a>.) 
+Comparable</a>.)
 
 <hr>
 <pre>
@@ -1317,7 +1317,7 @@ bool <a name=
 <b>Throws:</b> nothing.<br>
 (Required by <a href=
 "http://www.sgi.com/tech/stl/LessThanComparable.html">Less Than
-Comparable</a>.) 
+Comparable</a>.)
 
 <hr>
 <pre>
@@ -1329,7 +1329,7 @@ bool <a name=
 <b>Throws:</b> nothing.<br>
 (Required by <a href=
 "http://www.sgi.com/tech/stl/LessThanComparable.html">Less Than
-Comparable</a>.) 
+Comparable</a>.)
 
 <hr>
 <h3><a name="non-member-functions">Non-Member Functions</a></h3>
@@ -1347,7 +1347,7 @@ bitsets <tt>a</tt> and <tt>b</tt>. Note that the expression
 of <tt>b1</tt>, using <tt>operator&amp;=</tt>, and returning the
 temporary copy.<br>
 <b>Throws:</b> An allocation error if memory is exhausted
-(<tt>std::bad_alloc</tt> if <tt>Allocator=std::allocator</tt>). 
+(<tt>std::bad_alloc</tt> if <tt>Allocator=std::allocator</tt>).
 
 <hr>
 <pre>
@@ -1362,7 +1362,7 @@ bitsets <tt>a</tt> and <tt>b</tt>. Note that the expression
 of <tt>b1</tt>, using <tt>operator&amp;=</tt>, and returning the
 temporary copy.<br>
 <b>Throws:</b> An allocation error if memory is exhausted
-(<tt>std::bad_alloc</tt> if <tt>Allocator=std::allocator</tt>). 
+(<tt>std::bad_alloc</tt> if <tt>Allocator=std::allocator</tt>).
 
 <hr>
 <pre>
@@ -1377,7 +1377,7 @@ bitsets <tt>a</tt> and <tt>b</tt>. Note that the expression
 of <tt>b1</tt>, using <tt>operator&amp;=</tt>, and returning the
 temporary copy.<br>
 <b>Throws:</b> An allocation error if memory is exhausted
-(<tt>std::bad_alloc</tt> if <tt>Allocator=std::allocator</tt>). 
+(<tt>std::bad_alloc</tt> if <tt>Allocator=std::allocator</tt>).
 
 <hr>
 <pre>
@@ -1392,7 +1392,7 @@ bitsets <tt>a</tt> and <tt>b</tt>. Note that the expression
 <tt>b1</tt>, using <tt>operator-=</tt>, and returning the
 temporary copy.<br>
 <b>Throws:</b> An allocation error if memory is exhausted
-(<tt>std::bad_alloc</tt> if <tt>Allocator=std::allocator</tt>). 
+(<tt>std::bad_alloc</tt> if <tt>Allocator=std::allocator</tt>).
 
 <hr>
 <pre>
@@ -1418,7 +1418,7 @@ member function, to allow for flexibility with regards to the
 template parameters of <tt>basic_string</tt>, the member function
 would require explicit template parameters. Few C++ programmers
 are familiar with explicit template parameters, and some C++
-compilers do not handle them properly. 
+compilers do not handle them properly.
 
 <hr>
 <pre>
@@ -1441,7 +1441,7 @@ model of <a href=
 "http://www.sgi.com/tech/stl/OutputIterator.html">Output
 Iterator</a> and its <tt>value_type</tt> must be the same type as
 <tt>Block</tt>. Further, the size of the output range must be
-greater or equal <tt>b.num_blocks()</tt>. 
+greater or equal <tt>b.num_blocks()</tt>.
 
 <hr>
 <pre>
@@ -1457,7 +1457,7 @@ bitset. <br>
 of <a href="http://www.sgi.com/tech/stl/InputIterator.html">Input
 Iterator</a> and its <tt>value_type</tt> must be the same type as
 <tt>Block</tt>. The size of the iterator range must be less or
-equal to <tt>b.num_blocks()</tt>. 
+equal to <tt>b.num_blocks()</tt>.
 
 <hr>
 <pre>
@@ -1470,7 +1470,7 @@ basic_ostream&lt;Char, Traits&gt;&amp;
 Output a <tt>dynamic_bitset</tt> to an output stream. This
 function behaves as if it converts the <tt>dynamic_bitset</tt> to
 a string and then writes that string to the output stream. That
-is, it is equivalent to 
+is, it is equivalent to
 
 <pre>
 std::basic_string&lt;Char, Traits&gt; s;
@@ -1481,32 +1481,54 @@ os &lt;&lt; s;
 <b>Throws:</b> An allocation error if memory is exhausted
 (<tt>std::bad_alloc</tt> if <tt>Allocator=std::allocator</tt>).
 Also will throw <tt>std::ios_base::failure</tt> if there is a
-problem writing to the stream. 
+problem writing to the stream.
 
 <hr>
 <pre>
 template &lt;typename Char, typename Traits, typename Block, typename Alloc&gt;
-basic_istream&lt;Char,Traits&gt;&amp;
+std::basic_istream&lt;Char,Traits&gt;&amp;
 <a name=
-"op-in">operator&gt;&gt;</a>(basic_istream&lt;Char,Traits&gt;&amp; is, dynamic_bitset&lt;Block, Alloc&gt;&amp; x)
+"op-in">operator&gt;&gt;</a>(std::basic_istream&lt;Char,Traits&gt;&amp; is, dynamic_bitset&lt;Block, Alloc&gt;&amp; b)
 </pre>
 
-<b>Effects:</b> Extracts a <tt>dynamic_bitset</tt> from an input
-stream. This function first skips whitespace, then extracts up to
-<tt>x.size()</tt> characters from the input stream. It stops
-either when it has successfully extracted <tt>x.size()</tt>
-characters, or when extraction fails, or when it sees a character
-that is something other than <tt>1</tt> (in which case it does
-not extract that character). If extraction is successful, the
-function then assigns a value to the bitset in the same way as if
-it were initializing the bitset from a string. So, for example,
-if the input stream contains the characters <tt>"1100abc"</tt>,
-it will assign the value <tt>12ul</tt> to the bitset, and the
-next character read from the input stream will be <tt>a</tt>.<br>
+<b>Effects:</b> Extracts a <tt>dynamic_bitset</tt> from an input stream.
+It begins by constructing a <tt>sentry</tt> object <tt>k</tt> as if <tt>k</tt>
+were constructed by
+
+ <tt>typename std::basic_istream&lt;Char, Traits&gt;::sentry k(is)</tt>.
+
+If <tt>bool(k)</tt> is true, it calls <tt>b.clear()</tt>
+then extracts characters from <tt>is</tt> and appends them to the less
+significant end of <tt>b</tt>. If <tt>is.width()</tt> is zero
+then the maximum number of characters  appended, <tt>n</tt>, is <tt>b.max_size</tt>;
+otherwise <tt>n</tt> is the smallest between <tt>b.max_size()</tt> and
+<tt>is.width()</tt>.
+
+Unless the extractor is exited via an exception, characters are extracted and
+appended until any of the following occurs:<br>
+
+<ul>
+<li>- <tt>n</tt> characters are stored;</li>
+<li>- end-of-file, or an error, occurs on the input sequence;</li>
+<li>- the next available input character <tt>c</tt> is, according to
+      <tt>Traits::eq</tt>, different from both <tt>is.widen('0')</tt> and
+      <tt>is.widen('1')</tt> </li>
+</ul>
+<br> After the last character (if any) is extracted, <tt>is.width(0)</tt> is
+     called and the sentry object k is destroyed.
+<br>
+<br>If the function extracts no characters[???], it calls is.setstate(ios::failbit),
+     which may throw <tt>std::ios_base::failure</tt>.
+
+
+<br>------
+
+
+<br>
 <b>Throws:</b> An allocation error if memory is exhausted
 (<tt>std::bad_alloc</tt> if <tt>Allocator=std::allocator</tt>).
-Also will throw <tt>std::ios_base::failure</tt> if there is a
-problem reading from the stream. 
+A <tt>std::ios_base::failure</tt> if there is a problem reading
+from the stream.
 
 <hr>
 <h3><a name="see-also">See also</a></h3>
@@ -1514,7 +1536,7 @@ problem reading from the stream.
 <tt><a href=
 "http://www.sgi.com/tech/stl/bitset.html">std::bitset</a></tt>,
 <tt><a href=
-"http://www.sgi.com/tech/stl/Vector.html">std::vector</a></tt>, 
+"http://www.sgi.com/tech/stl/Vector.html">std::vector</a></tt>,
 
 <h3><a name="acknowledgements">Acknowledgements</a></h3>
 
