@@ -111,17 +111,17 @@ namespace boost
         return AF_INET;
       }
 
-      int udp_protocol::type()
+      protocol_type_t udp_protocol::type()
       {
         return SOCK_DGRAM;
       }
 
-      int udp_protocol::protocol()
+      protocol_t udp_protocol::protocol()
       {
         return IPPROTO_UDP;
       }
 
-      short udp_protocol::family()
+      family_t udp_protocol::family()
       {
         return PF_INET;
       }
