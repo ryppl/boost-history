@@ -529,10 +529,29 @@ dynamic_bitset(size_type num_bits, unsigned long value, const Allocator& alloc)
   : m_bits(calc_num_blocks(num_bits), Block(0), alloc),
     m_num_bits(num_bits)
 {
-  const size_type M = std::min(static_cast<size_type>(ulong_width), num_bits);
-  for(size_type i = 0; i < M; ++i, value >>= 1) // [G.P.S.] to be optimized
-    if ( value & 0x1 )
-      set(i);
+
+  if (num_bits == 0)
+      return;
+
+  typedef unsigned long num_type;
+
+  // cut off all bits in value that have pos >= num_bits, if any
+  if (num_bits < ulong_width) {
+      const num_type mask = (num_type(1) << num_bits) - 1;
+      value &= mask;
+  }
+
+  if (bits_per_block >= ulong_width) {
+      m_bits[0] = static_cast<block_type>(value);
+  }
+  else {
+      for(size_type i = 0; value != 0; ++i) {
+
+          m_bits[i] = static_cast<block_type>(value);
+          value >>= bits_per_block;
+      }
+  }
+
 }
 
 // copy constructor
@@ -1048,46 +1067,36 @@ template <typename Block, typename Allocator>
 unsigned long dynamic_bitset<Block, Allocator>::
 to_ulong() const
 {
-  const std::overflow_error
-    overflow("boost::bit_set::operator unsigned long()");
 
-  if (this->num_blocks() == 0)
-    return 0;
+  if (m_num_bits == 0)
+      return 0; // convention
 
-  if (sizeof(Block) >= sizeof(unsigned long)) {
-    for (size_type i = 1; i < this->num_blocks(); ++i)
-      if (this->m_bits[i])
-        throw overflow;
-    const Block mask = static_cast<Block>(static_cast<unsigned long>(-1));
-    if (this->m_bits[0] & ~mask)
-      throw overflow;
-    size_type N = std::min(sizeof(unsigned long) * CHAR_BIT, this->size());
-    unsigned long num = 0;
-    for (size_type j = 0; j < N; ++j)
-      if (this->test(j))
-        num |= (1 << j);
-    return num;
+  // Check for overflows. This may be a performance burden on very
+  // large bitsets but is required by the specification, sorry
+  if (find_next(ulong_width - 1) != npos)
+    throw std::overflow_error("boost::dynamic_bitset::to_ulong overflow");
+
+
+  // Ok, from now on we can be sure there's no "on" bit beyond
+  // the allowed positions
+
+  if (bits_per_block >= ulong_width)
+      return m_bits[0];
+
+
+  size_type last_block = block_index(std::min(m_num_bits-1,
+                                    (size_type)(ulong_width-1)));
+  unsigned long result = 0;
+  for (size_type i = 0; i <= last_block; ++i) {
+
+    assert(bits_per_block * i < ulong_width);
+
+    unsigned long piece = m_bits[i];
+    result |= (piece << (bits_per_block * i));
   }
-  else { // sizeof(Block) < sizeof(unsigned long).
-    const size_type nwords =
-      (sizeof(unsigned long) + sizeof(Block) - 1) / sizeof(Block);
 
-    size_type min_nwords = nwords;
-    if (this->num_blocks() > nwords) {
-      for (size_type i = nwords; i < this->num_blocks(); ++i)
-        if (this->m_bits[i])
-          throw overflow;
-    }
-    else
-      min_nwords = this->num_blocks();
+  return result;
 
-    unsigned long result = 0;
-    size_type N = std::min(sizeof(unsigned long) * CHAR_BIT, this->size());
-    for (size_type i = 0; i < N; ++i)
-      if (this->test(i))
-        result |= (1 << i);
-    return result;
-  }
 }
 
 
