@@ -22,11 +22,14 @@ free-feature user-interface : console gui ;
 
 feature wide-character-support : on off ;
 feature exception-handling : on off ;
+feature rtti : on off ;
 
 free-feature define ; # <define>PYTHON=foo
 free-feature undef ; # <undef>PYTHON=foo
 path-feature "include" ; # <include>../foo/bar/mumble
-
+path-feature library-path ;
+path-feature library-file ;
+free-feature find-library ;
 
 # Can the target participate in a shared library?
 feature shared-linkable : false true ;
@@ -44,6 +47,7 @@ COMMON_PROPERTIES ?=
     <user-interface>console
     <wide-character-support>on
     <exception-handling>on
+    <rtti>on
     <user-interface>console
     <shared-linkable>false
     
