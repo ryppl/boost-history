@@ -24,6 +24,8 @@
             typedef detail::list_object< FormatType, range_object< FormatType, FmtObject >, FmtObject >
                                                                      base_type;
          public:
+            typedef seq_type< range_type >                           formatter_type;
+         public:
             template< typename ForwardIterator, class InputStream >
             inline bool                          read
                                                  (
@@ -44,17 +46,6 @@
             {
                const base_type *       self = static_cast< const base_type * >( this );
                return(( *self ).write( os, ip.first, ip.second ));
-            }
-         public:
-            template< typename ForwardIterator, class OutputStream >
-            inline OutputStream &                write
-                                                 (
-                                                    OutputStream & os,
-                                                    const range_t< ForwardIterator > & ip
-                                                 ) const
-            {
-               const base_type *       self = static_cast< const base_type * >( this );
-               return(( *self ).write( os, ip.first, ip.last ));
             }
          public:
             inline           range_object()

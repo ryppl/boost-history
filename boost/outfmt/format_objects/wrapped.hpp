@@ -21,6 +21,7 @@
             typedef wrapped_object< FormatType, FmtObject >          this_type;
             typedef typename openclose_formatter_t< FormatType, this_type >::traits_type
                                                                      traits_type;
+            typedef seq_type< wrapped_type >                         formatter_type;
          private:
             FmtObject                  fo;
          public:

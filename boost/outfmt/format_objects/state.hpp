@@ -17,6 +17,7 @@
             typedef state_object< StateObject, FmtObject, pre >      this_type;
             typedef typename FmtObject::traits_type                  traits_type;
             typedef FormatType                                       format_type;
+            typedef seq_type< state_type >                           formatter_type;
          private:
             StateObject                state;
             FmtObject                  fo;

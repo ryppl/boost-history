@@ -21,6 +21,8 @@
             typedef detail::list_object< FormatType, container_object< FormatType, FmtObject >, FmtObject >
                                                                      base_type;
          public:
+            typedef seq_type< seq_container_type >                   formatter_type; // container_type?
+         public:
             template< typename Container, class InputStream >
             inline bool                          read( InputStream & is, Container & c ) const
             {

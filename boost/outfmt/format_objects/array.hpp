@@ -24,6 +24,8 @@
             typedef detail::list_object< FormatType, array_object< FormatType, FmtObject >, FmtObject >
                                                                      base_type;
          public:
+            typedef seq_type< array_type >                           formatter_type;
+         public:
             template< typename T, class InputStream >
             inline bool                          read( InputStream & is, const T * array ) const
             {

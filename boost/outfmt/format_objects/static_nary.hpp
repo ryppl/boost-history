@@ -23,6 +23,7 @@
             typedef static_nary_object< FormatType, FmtObject >      this_type;
             typedef typename formatter_t< FormatType, this_type, boost::io::detail::pair_traits< FormatType > >::traits_type
                                                                      traits_type;
+            typedef seq_type< nary_type >                            formatter_type;
          public:
             FmtObject                  fo;
 

@@ -24,6 +24,7 @@
                                                                      this_type;
             typedef typename formatter_t< FormatType, this_type, boost::io::detail::pair_traits< FormatType > >::traits_type
                                                                      traits_type;
+            typedef seq_type< pair_type >                            formatter_type;
          private:
             FmtObject1                 fo1;
             FmtObject2                 fo2;
