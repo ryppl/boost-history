@@ -929,7 +929,7 @@ bool operator<(
   const index<KeyFromValue,Compare,Allocator,Super,TagList,Category>& x,
   const index<KeyFromValue,Compare,Allocator,Super,TagList,Category>& y)
 {
-  return std::lexicographical_compare(x.begin(),x.end(),y.begin(),y.end(),x.value_comp());
+  return std::lexicographical_compare(x.begin(),x.end(),y.begin(),y.end());
 }
 
 template<

@@ -34,5 +34,5 @@ void test_comparison()
 
   BOOST_CHECK(es==es&&es<=es&&es>=es&&i12==i12&&i12<=i12&&i12>=i12);
   BOOST_CHECK(es!=es2&&es2<es&&es>es2&&!(es<=es2)&&!(es2>=es));
-  BOOST_CHECK(i12!=i1&&i1<i12&&i12>i1&&!(i12<=i1)&&!(i1>=i12));
+  BOOST_CHECK(i1!=i12&&i12<i1&&i1>i12&&!(i1<=i12)&&!(i12>=i1));
 }
