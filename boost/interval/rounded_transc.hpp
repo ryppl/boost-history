@@ -68,12 +68,14 @@ namespace boost {
     T cosh_up   (const T& x) { using std::cosh; return cosh(x); }
     T tanh_down (const T& x) { using std::tanh; return tanh(x); }
     T tanh_up   (const T& x) { using std::tanh; return tanh(x); }
-    T asinh_down(const T& x) { return std::asinh(x); }
-    T asinh_up  (const T& x) { return std::asinh(x); }
-    T acosh_down(const T& x) { return std::acosh(x); }
-    T acosh_up  (const T& x) { return std::acosh(x); }
-    T atanh_down(const T& x) { return std::atanh(x); }
-    T atanh_up  (const T& x) { return std::atanh(x); }
+#ifdef BOOST_HAVE_INV_HYPERBOLIC
+    T asinh_down(const T& x) { using std::asinh; return asinh(x); }
+    T asinh_up  (const T& x) { using std::asinh; return asinh(x); }
+    T acosh_down(const T& x) { using std::acosh; return acosh(x); }
+    T acosh_up  (const T& x) { using std::acosh; return acosh(x); }
+    T atanh_down(const T& x) { using std::atanh; return atanh(x); }
+    T atanh_up  (const T& x) { using std::atanh; return atanh(x); }
+#endif
   };
   
   template<class T, class Rounding>
@@ -103,12 +105,14 @@ namespace boost {
     T cosh_up   (const T& x) { using std::cosh; return ROUND_UP  ( cosh(x)  ); }
     T tanh_down (const T& x) { using std::tanh; return ROUND_DOWN( tanh(x)  ); }
     T tanh_up   (const T& x) { using std::tanh; return ROUND_UP  ( tanh(x)  ); }
-    T asinh_down(const T& x) { return ROUND_DOWN( std::asinh(x) );}
-    T asinh_up  (const T& x) { return ROUND_UP  ( std::asinh(x) );}
-    T acosh_down(const T& x) { return ROUND_DOWN( std::acosh(x) );}
-    T acosh_up  (const T& x) { return ROUND_UP  ( std::acosh(x) );}
-    T atanh_down(const T& x) { return ROUND_DOWN( std::atanh(x) );}
-    T atanh_up  (const T& x) { return ROUND_UP  ( std::atanh(x) );}
+#ifdef BOOST_HAVE_INV_HYPERBOLIC
+    T asinh_down(const T& x) { using std::asinh; return ROUND_DOWN( asinh(x) );}
+    T asinh_up  (const T& x) { using std::asinh; return ROUND_UP  ( asinh(x) );}
+    T acosh_down(const T& x) { using std::acosh; return ROUND_DOWN( acosh(x) );}
+    T acosh_up  (const T& x) { using std::acosh; return ROUND_UP  ( acosh(x) );}
+    T atanh_down(const T& x) { using std::atanh; return ROUND_DOWN( atanh(x) );}
+    T atanh_up  (const T& x) { using std::atanh; return ROUND_UP  ( atanh(x) );}
+#endif
     #undef ROUND_DOWN
     #undef ROUND_UP
   };
@@ -157,15 +161,17 @@ namespace boost {
     T cosh_up   (const T& x) { using std::cosh; return ROUND_UP  ( cosh(x)  ); }
     T tanh_down (const T& x) { using std::tanh; return -ROUND_UP ( tanh(-x) ); }
     T tanh_up   (const T& x) { using std::tanh; return ROUND_UP  ( tanh(x)  ); }
-    T asinh_down(const T& x) { return -ROUND_UP ( std::asinh(-x));}
-    T asinh_up  (const T& x) { return ROUND_UP  ( std::asinh(x) );}
-    T acosh_down(const T& x) { T y = ROUND_DOWN ( std::acosh(x) );
+#ifdef BOOST_HAVE_INV_HYPERBOLIC
+    T asinh_down(const T& x) { using std::asinh; return -ROUND_UP ( asinh(-x));}
+    T asinh_up  (const T& x) { using std::asinh; return ROUND_UP  ( asinh(x) );}
+    T acosh_down(const T& x) { using std::acosh; T y = ROUND_DOWN ( acosh(x) );
                                upward();
                                return y;
 			     }
-    T acosh_up  (const T& x) { return ROUND_UP  ( std::acosh(x) );}
-    T atanh_down(const T& x) { return -ROUND_UP ( std::atanh(-x));}
-    T atanh_up  (const T& x) { return ROUND_UP  ( std::atanh(x) );}
+    T acosh_up  (const T& x) { using std::acosh; return ROUND_UP  ( acosh(x) );}
+    T atanh_down(const T& x) { using std::atanh; return -ROUND_UP ( atanh(-x));}
+    T atanh_up  (const T& x) { using std::atanh; return ROUND_UP  ( atanh(x) );}
+#endif
     #undef ROUND_DOWN
     #undef ROUND_NEAR
     #undef ROUND_UP

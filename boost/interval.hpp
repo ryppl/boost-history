@@ -376,6 +376,7 @@ namespace boost {
   template<class T, class Traits>
     interval<T,Traits> tanh(const interval<T,Traits>& x);
 
+#ifdef BOOST_HAVE_INV_HYPERBOLIC
   template<class T, class Traits>
     interval<T,Traits> asinh(const interval<T,Traits>& x);
 
@@ -384,6 +385,7 @@ namespace boost {
 
   template<class T, class Traits>
     interval<T,Traits> atanh(const interval<T,Traits>& x);
+#endif
 
   /*
    * Interval trigonometric constants: pi, pi/2, 2*pi

@@ -266,6 +266,7 @@ interval<T, Traits> tanh(const interval<T, Traits>& x)
 			     rnd.tanh_up  (x.upper()), true);
 }
 
+#ifdef BOOST_HAVE_INV_HYPERBOLIC
 template<class T, class Traits> inline
 interval<T, Traits> asinh(const interval<T, Traits>& x)
 {
@@ -297,6 +298,7 @@ interval<T, Traits> atanh(const interval<T, Traits>& x)
   T u = (x.upper() >= T(1) ) ?  checking::inf() : rnd.atanh_up  (x.upper());
   return interval<T, Traits>(l, u, true);
 }
+#endif // BOOST_HAVE_INV_HYPERBOLIC
 
 } // namespace boost
 
