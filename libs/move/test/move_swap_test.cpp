@@ -14,11 +14,11 @@
 // suitability of this software for any purpose. It is provided "as is" 
 // without express or implied warranty.
 
-#include "boost/move.hpp"
-#include "boost/test/minimal.hpp"
+#include <boost/move.hpp>
+#include <boost/noncopyable.hpp> // for boost::noncopyable
+#include <boost/assert.hpp>
 
 #include <vector>
-#include "boost/utility.hpp" // for boost::noncopyable
 
 namespace ns {
 
@@ -28,8 +28,7 @@ namespace ns {
 // Noncopyable, nonswappable but moveable.
 //
 class my_moveable
-    : public boost::moveable< my_moveable >
-    , boost::noncopyable
+    : public boost::movable< my_moveable >
 {
 private: // represntation
     std::vector<char> v_;
@@ -40,19 +39,20 @@ public: // structors
     {
     }
 
-    my_moveable(boost::move_source<my_moveable> source)
+    my_moveable(boost::move_from<my_moveable> source)
         : v_()
     {
-        *this = source;
+        *this = source;  // invoke the move assignment operator
     }
 
 public: // modifiers
-    my_moveable& operator=(boost::move_source<my_moveable> source)
+    my_moveable& operator=(boost::move_from<my_moveable> source)
     {
-        my_moveable& rhs = source.get();
+        my_moveable& rhs = *source;
 
         v_.swap(rhs.v_);
-        rhs.v_.clear();
+        rhs.v_.clear(); // not sure why we're doing this
+        return *this;
     }
 
 public: // operators
@@ -117,20 +117,21 @@ void swap_test()
     T y('y');
     T y_orig('y');
 
-    BOOST_REQUIRE( x == x_orig );
-    BOOST_REQUIRE( y == y_orig );
-    BOOST_REQUIRE( !(x == y) );
+    BOOST_ASSERT( x == x_orig );
+    BOOST_ASSERT( y == y_orig );
+    BOOST_ASSERT( !(x == y) );
 
-    boost::move_swap(x, y);
+    using boost::swap;
+    swap(x, y);
 
-    BOOST_CHECK( x == y_orig );
-    BOOST_CHECK( y == x_orig );    
+    BOOST_ASSERT( x == y_orig );
+    BOOST_ASSERT( y == x_orig );    
 }
 
 //////////////////////////////////////////////////////////////////////////
 // function test_main
 //
-int test_main( int, char *[] )
+int main()
 {
     // test boost::move_swap on primitive, copyable type
     swap_test< char >();
@@ -144,6 +145,4 @@ int test_main( int, char *[] )
     swap_test< ns::my_swappable >();
 
 #endif // !defined(BOOST_NO_MOVE_SWAP_BY_OVERLOAD)
-
-    return boost::exit_success;
 }

@@ -1,0 +1,18 @@
+# Boost Utility Library test Jamfile
+
+subproject libs/move/test ;
+
+# bring in rules for testing
+import testing ;
+
+{
+    test-suite "move"
+       : [ run move.cpp ]
+         [ run move_test.cpp ]
+         [ run move_swap_test.cpp ]
+         [ compile-fail rvalue_by_ref_fail.cpp ]
+         [ compile-fail const_rvalue_by_ref_fail.cpp ]
+         [ compile-fail const_lvalue_by_ref_fail.cpp ]
+         [ compile-fail copy_move_only_fail.cpp ]
+       ;
+}

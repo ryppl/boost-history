@@ -14,13 +14,13 @@
 // suitability of this software for any purpose. It is provided "as is" 
 // without express or implied warranty.
 
-#include "boost/move.hpp"
-#include "boost/test/minimal.hpp"
+#include <boost/move.hpp>
+#include <boost/assert.hpp>
+#include <boost/utility.hpp> // for boost::noncopyable
 
 #include <cstdlib> // for size_t
 #include <cstring> // for strlen, str(n)cpy
 #include <algorithm> // for swap
-#include "boost/utility.hpp" // for boost::noncopyable
 
 //////////////////////////////////////////////////////////////////////////
 // class moveable_string
@@ -28,8 +28,10 @@
 // Moveable std::string-like type. But look, no implicit copying allowed!
 //
 class moveable_string
-    : public boost::moveable< moveable_string >
+  : public boost::movable<moveable_string>
+#ifndef __GNUC__
     , boost::noncopyable
+#endif 
 {
 public: // constants
     BOOST_STATIC_CONSTANT(
@@ -53,12 +55,15 @@ public: // structors
     {
     }
 
-    moveable_string(boost::move_source<moveable_string> source)
-        : len_(source.get().len_)
-        , str_(source.get().str_)
+    operator boost::move_from<moveable_string>() {
+        return boost::move_from<moveable_string>(*this);
+    }
+    moveable_string(boost::move_from<moveable_string> source)
+      : len_(source->len_)
+      , str_(source->str_)
     {
-        source.get().len_ = 0;
-        source.get().str_ = 0;
+        source->len_ = 0;
+        source->str_ = 0;
     }
 
     moveable_string(const char* str, std::size_t len = npos)
@@ -70,9 +75,9 @@ public: // structors
     }
 
 public: // modifiers
-    moveable_string& operator=(boost::move_source<moveable_string> source)
+    moveable_string& operator=(boost::move_from<moveable_string> source)
     {
-        moveable_string& rhs = source.get();
+        moveable_string& rhs = *source;
 
         clear();
 
@@ -80,7 +85,8 @@ public: // modifiers
         rhs.len_ = 0;
 
         str_ = rhs.str_;
-        rhs.str_ = 0;        
+        rhs.str_ = 0;
+        return *this;
     }
 
     void swap(moveable_string& rhs)
@@ -126,15 +132,16 @@ public: // operators
         }
         return *this;
     }
+// private:
+//    void operator=(moveable_string
 };
 
-  boost::return_t<moveable_string>::type
-operator+(const moveable_string& lhs, const moveable_string& rhs)
+moveable_string operator+(const moveable_string& lhs, const moveable_string& rhs)
 {
     // we *need* to do a copy here -- the only place though!
     moveable_string lhs_copy(lhs.c_str(), lhs.length());
 
-    return lhs_copy += rhs;
+    return boost::move(lhs_copy += rhs);
 }
 
 bool operator==(const moveable_string& lhs, const moveable_string& rhs)
@@ -147,8 +154,7 @@ bool operator==(const moveable_string& lhs, const moveable_string& rhs)
 // 
 // Returns a moveable_string via move (i.e. without deep copy).
 //
-  boost::return_t<moveable_string>::type
-source()
+moveable_string source()
 {
     moveable_string str("efg");
     return "abcd" + str;
@@ -157,10 +163,10 @@ source()
 //////////////////////////////////////////////////////////////////////////
 // function test_main
 //
-int test_main( int, char *[] )
+int main( int, char *[] )
 {
     moveable_string sink(source());
-    BOOST_CHECK( sink == "abcdefg" );
+    BOOST_ASSERT( sink == "abcdefg" );
 
-    return boost::exit_success;
+    return 0;
 }
