@@ -15,6 +15,7 @@
 #ifndef BOOST_ASSIGN_HPP
 #define BOOST_ASSIGN_HPP
 
+#include "fixed_size_assigner.hpp"
 #include <boost/config.hpp>
 
 #include <stack>
@@ -32,7 +33,7 @@
 
 namespace boost
 {
-namespace assign
+namespace assignment
 {
 
 #if defined( _MSC_VER ) && !defined( __COMO__ )
@@ -48,7 +49,7 @@ namespace assign
     template< typename C, typename V >
     inline void insert( C& c, const V& v )
     {
- 	c.insert( c.end(), v );
+        c.insert( c.end(), v );
     }
 
 
@@ -57,7 +58,7 @@ namespace assign
     template< typename V, typename C >
     inline void insert( std::stack<V,C>& c, const V& v )
     {
-	c.push( v );
+        c.push( v );
     }
 
 
@@ -65,7 +66,7 @@ namespace assign
     template< typename V, typename C >
     inline void insert( std::queue<V,C>& c, const V& v )
     {
-	c.push( v );
+        c.push( v );
     }
     
     
@@ -73,7 +74,7 @@ namespace assign
     template< typename V, typename C, typename Comp >
     inline void insert( std::priority_queue<V,C,Comp>& c, const V& v )
     {
-	c.push( v );
+        c.push( v );
     }
 
 #if defined( _MSC_VER ) && !defined( __COMO__ )
@@ -87,7 +88,7 @@ namespace assign
     template< typename V, typename A >
     inline void insert( std::deque<V,A>& c, const V& v )
     {
-	c.insert( c.end(), v );
+        c.insert( c.end(), v );
     }
     
 
@@ -95,8 +96,7 @@ namespace assign
     template< typename V, typename A >
     inline void insert( std::list<V,A>& c, const V& v )
     {
-	c.insert( c.end(), v );
-	
+        c.insert( c.end(), v ); 
     }
 
 
@@ -106,7 +106,7 @@ namespace assign
     insert( std::map<K,V,Comp,A>& c, 
 	    const typename std::map<K,V,Comp,A>::value_type& v )
     {
-	c.insert( c.end(), v );
+        c.insert( c.end(), v );
     }
 
 
@@ -116,7 +116,7 @@ namespace assign
     insert( std::multimap<K,V,Comp,A>& c,
 	    const typename std::map<K,V,Comp,A>::value_type& v )
     {
-	c.insert( c.end(), v );
+        c.insert( c.end(), v );
     }
 
 
@@ -124,7 +124,7 @@ namespace assign
     template< typename V, typename Comp, typename A >
     inline void insert( std::set<V,Comp,A>& c, const V& v )
     {
-	c.insert( c.end(), v );
+        c.insert( c.end(), v );
     }
 
 
@@ -132,7 +132,7 @@ namespace assign
     template< typename V, typename Comp, typename A >
     inline void insert( std::multiset<V,Comp,A>& c, const V& v )
     {
-	c.insert( c.end(), v );
+        c.insert( c.end(), v );
     }
 
 
@@ -140,7 +140,7 @@ namespace assign
     template< typename V, typename A >
     inline void insert( std::vector<V,A>& c, const V& v )
     {
-	c.insert( c.end(), v );
+        c.insert( c.end(), v );
     }
 
 #endif
@@ -161,10 +161,10 @@ namespace assign
 
 
 
-	    explicit assigner( C& c, const value_type& v )
+	    assigner( C& c, const value_type& v )
 		: c_( c )
 	    {
-		insert( c_, v );
+            insert( c_, v );
 	    }
 
 
@@ -180,8 +180,8 @@ namespace assign
 	    template< typename T, typename T2 >
 	    assigner& operator()( const T& t, const T2& t2 )
 	    {
-		insert( c_, value_type( t, t2 ) );
-		return *this;
+            insert( c_, value_type( t, t2 ) );
+            return *this;
 	    }
 
 
@@ -189,8 +189,8 @@ namespace assign
 	    template< typename T, typename T2, typename T3 >
 	    assigner& operator()( const T& t, const T2& t2, const T3& t3 )
 	    {
-		insert( c_, value_type( t, t2, t3 ) );
-		return *this;
+            insert( c_, value_type( t, t2, t3 ) );
+            return *this;
 	    }
 
 
@@ -199,8 +199,8 @@ namespace assign
 	    assigner& operator()( const T& t, const T2& t2, const T3& t3,
 				  const T4& t4 )
 	    {
-		insert( c_, value_type( t, t2, t3, t4 ) );
-		return *this;
+            insert( c_, value_type( t, t2, t3, t4 ) );
+            return *this;
 	    }
 
 
@@ -210,8 +210,8 @@ namespace assign
 	    assigner& operator()( const T& t, const T2& t2, const T3& t3,
 				  const T4& t4, const T5& t5 )
 	    {
-		insert( c_, value_type( t, t2, t3, t4, t5 ) );
-		return *this;
+            insert( c_, value_type( t, t2, t3, t4, t5 ) );
+            return *this;
 	    }
 
 
@@ -221,8 +221,8 @@ namespace assign
 	    assigner& operator()( const T& t, const T2& t2, const T3& t3,
 				  const T4& t4, const T5& t5, const T6& t6 )
 	    {
-		insert( c_, value_type( t, t2, t3, t4, t5, t6 ) );
-		return *this;
+            insert( c_, value_type( t, t2, t3, t4, t5, t6 ) );
+            return *this;
 	    }
 
 	private:
@@ -239,7 +239,7 @@ namespace assign
     inline detail::assigner<C> 
     operator+=( C& c, const typename C::value_type& v )
     {
- 	return detail::assigner<C>( c, v );
+        return detail::assigner<C>( c, v );
     }
     
 
@@ -247,9 +247,18 @@ namespace assign
     template< typename C >
     inline detail::assigner<C> assign( C& c )
     {
-	return detail::assigner<C>( c );
+        return detail::assigner<C>( c );
     }
 
-} // namespace 'assign'
+    
+    template< typename C >
+    inline detail::fixed_size_assigner<typename C::value_type, typename C::iterator>
+    assign_all( C& c )
+    {
+        return detail::fixed_size_assigner<typename C::value_type, 
+            typename C::iterator>( c.begin(), c.end() );
+    }
+        
+    } // namespace 'assignment'
 } // namespace 'boost'
 #endif

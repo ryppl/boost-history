@@ -20,19 +20,19 @@
 
 namespace boost
 {
-    namespace assign
+    namespace assignment
     {
-	namespace bnu = boost::numeric::ublas;
-	
-	template< typename V, typename F1, typename F2, 
-		  typename A, typename V2 >
-	inline detail::fixed_size_assigner<V, typename A::iterator>
-	operator<<( bnu::triangular_matrix<V,F1,F2,A>& c, const V2& v )
-	{
-	    A& a = c.data();
-	    return detail::fixed_size_assigner<V, typename A::iterator>
-		( a.begin(), a.end(), v );
-	}
+    	namespace bnu = boost::numeric::ublas;
+    	
+    	template< typename V, typename F1, typename F2, 
+    		  typename A, typename V2 >
+    	inline detail::fixed_size_assigner<V, typename A::iterator>
+    	operator<<( bnu::triangular_matrix<V,F1,F2,A>& c, const V2& v )
+    	{
+    	    A& a = c.data();
+    	    return detail::fixed_size_assigner<V, typename A::iterator>
+    		( a.begin(), a.end(), v );
+    	}
     }
 }
 

@@ -18,7 +18,7 @@
 #include <iostream>
 
 using namespace std;
-using namespace boost::assign;
+using namespace boost::assignment;
 
 template< typename K, typename V >
 inline std::pair<K,V> P( K k, V v )
@@ -76,118 +76,123 @@ struct six
 
 int main()
 {
+        
+        typedef int     primitive;
+        typedef string  compound;
     
-    typedef int     primitive;
-    typedef string  compound;
-
-    try
-    {
-	
-	deque<primitive>                d;
-	list<primitive>                 l;
-	vector<primitive>               v;
-	set<primitive>                  s;
-	multiset<primitive>             ms;
-	stack<primitive>                st;
-	queue<primitive>                q;
-	priority_queue<primitive>       pq;
-	map<primitive, primitive>       m;
-	multimap<primitive, primitive>  mm;
-	
-	
-	deque<compound>               d2;
-	list<compound>                l2;
-	vector<compound>              v2;
-	set<compound>                 s2;
-	multiset<compound>            ms2;
-	stack<compound>               st2;
-	queue<compound>               q2;
-	priority_queue<compound>      pq2;
-	map<compound, compound>       m2;
-	multimap<compound, compound>  mm2;
-	//------------------------------------
-	//------------------------------------
-	d += 1,2,3,4,5,6,7,8,9;
-	l += 1,2,3,4,5,6,7,8,9;
-	v += 1,2,3,4,5,6,7,8,9;
-	s += 1,2,3,4,5,6,7,8,9;
-	ms += 1,2,3,4,5,6,7,8,9;
-	st += 1,2,3,4,5,6,7,8,9;
-	q  += 1,2,3,4,5,6,7,8,9;
-	pq += 1,2,3,4,5,6,7,8,9;
-
-
-	assert_equal( d, l );
-	assert_equal( d, v );
-	assert_equal( d, s );
-	assert_equal( d, ms );
-	
-	m += P( 1, 2 ), P( 2, 3 ), P( 4, 5 );
-	assign( m )( 5,6 )( 6, 7 );    
-	
-	mm += P( 1, 2 ), P( 2, 3 ), P( 4, 5 );
-	assign( mm ) ( 5,6 )( 6, 7 );
-
-	assert_equal( m, mm );    
-	//------------------------------------
-	d2 += "strings", " to", "use as a", compound( "compound" ); 
-	l2 += "strings", " to", "use as a", compound( "compound" );
-	v2 += "strings", " to", "use as a", compound( "compound" );
-	s2 += "strings", " to", "use as a", compound( "compound" );
-	ms2 += "strings", " to", "use as a", compound( "compound" );  
-	st2 += "strings", " to", "use as a", compound( "compound" );  
-	q2 += "strings", " to", "use as a", compound( "compound" );  
-	pq2 += "strings", " to", "use as a", compound( "compound" );  
-
-	assert_equal( d2, l2 );
-	assert_equal( d2, v2 );
-	
-	//
-	// these won't hold since strings are sorted in the sets
-	//
-	//assert_equal( d2, s2 );
-	//assert_equal( d2, ms2 );
-
-	m2 += P( "one", "two" ), P( compound( "three"), "four" );
-	assign( m2 ) ( "five", "six" );
-	mm2 += P( "one", "two" ), P( compound( "three"), "four" );
-	assign( mm2 ) ( "five", "six" );
-
-	assert_equal( m2, mm2 );
-	//------------------------------------
-
-	map<const char*,int>  months;  
-	
-	months  += 
-	    P( "january",   31 ), P( "february", 28 ),
-	    P( "march",     31 ), P( "april",    30 ),
-	    P( "may",       31 ), P( "june",     30 ),
-	    P( "july",      31 ), P( "august",   31 ),
-	    P( "september", 30 ), P( "october",  31 ),
-	    P( "november",  30 ), P( "december", 31 );
-	months.clear();
-
-	assign( months )
-	    ( "january",   31 )( "february", 28 )
-	    ( "march",     31 )( "april",    30 )
-	    ( "may",       31 )( "june",     30 )
-	    ( "july",      31 )( "august",   31 )
-	    ( "september", 30 )( "october",  31 )
-	    ( "november",  30 )( "december", 31 );
-	
-	vector<three>    v_three;
-	vector<four>     v_four;
-	vector<five>     v_five;
-	vector<six>      v_six;
-
-	assign( v_three ) (1,2,3) ("1","2","3");
-	assign( v_four ) (1,2,3,4) ("1","2","3","4");
-	assign( v_five ) (1,2,3,4,5) ("1","2","3","4","5");
-	assign( v_six ) (1,2,3,4,5,6) ("1","2","3","4","5","6");
+        try
+        {
+    	
+    	deque<primitive>                d;
+    	list<primitive>                 l;
+    	vector<primitive>               v;
+    	set<primitive>                  s;
+    	multiset<primitive>             ms;
+    	stack<primitive>                st;
+    	queue<primitive>                q;
+    	priority_queue<primitive>       pq;
+    	map<primitive, primitive>       m;
+    	multimap<primitive, primitive>  mm;
+    	
+    	
+    	deque<compound>               d2;
+    	list<compound>                l2;
+    	vector<compound>              v2;
+    	set<compound>                 s2;
+    	multiset<compound>            ms2;
+    	stack<compound>               st2;
+    	queue<compound>               q2;
+    	priority_queue<compound>      pq2;
+    	map<compound, compound>       m2;
+    	multimap<compound, compound>  mm2;
+    	//------------------------------------
+    	//------------------------------------
+    	d += 1,2,3,4,5,6,7,8,9;
+    	l += 1,2,3,4,5,6,7,8,9;
+    	v += 1,2,3,4,5,6,7,8,9;
+    	s += 1,2,3,4,5,6,7,8,9;
+    	ms += 1,2,3,4,5,6,7,8,9;
+    	st += 1,2,3,4,5,6,7,8,9;
+    	q  += 1,2,3,4,5,6,7,8,9;
+    	pq += 1,2,3,4,5,6,7,8,9;
+    
+    
+    	assert_equal( d, l );
+    	assert_equal( d, v );
+    	assert_equal( d, s );
+    	assert_equal( d, ms );
+    	
+    	m += P( 1, 2 ), P( 2, 3 ), P( 4, 5 );
+    	assign( m )( 5,6 )( 6, 7 );    
+    	
+    	mm += P( 1, 2 ), P( 2, 3 ), P( 4, 5 );
+    	assign( mm ) ( 5,6 )( 6, 7 );
+    
+    	assert_equal( m, mm );    
+    	//------------------------------------
+    	d2 += "strings", " to", "use as a", compound( "compound" ); 
+    	l2 += "strings", " to", "use as a", compound( "compound" );
+    	v2 += "strings", " to", "use as a", compound( "compound" );
+    	s2 += "strings", " to", "use as a", compound( "compound" );
+    	ms2 += "strings", " to", "use as a", compound( "compound" );  
+    	st2 += "strings", " to", "use as a", compound( "compound" );  
+    	q2 += "strings", " to", "use as a", compound( "compound" );  
+    	pq2 += "strings", " to", "use as a", compound( "compound" );  
+    
+    	assert_equal( d2, l2 );
+    	assert_equal( d2, v2 );
+    	
+    	//
+    	// these won't hold since strings are sorted in the sets
+    	//
+    	//assert_equal( d2, s2 );
+    	//assert_equal( d2, ms2 );
+    
+    	m2 += P( "one", "two" ), P( compound( "three"), "four" );
+    	assign( m2 ) ( "five", "six" );
+    	mm2 += P( "one", "two" ), P( compound( "three"), "four" );
+    	assign( mm2 ) ( "five", "six" );
+    
+    	assert_equal( m2, mm2 );
+    	//------------------------------------
+    
+    	map<const char*,int>  months;  
+    	
+    	months  += 
+    	    P( "january",   31 ), P( "february", 28 ),
+    	    P( "march",     31 ), P( "april",    30 ),
+    	    P( "may",       31 ), P( "june",     30 ),
+    	    P( "july",      31 ), P( "august",   31 ),
+    	    P( "september", 30 ), P( "october",  31 ),
+    	    P( "november",  30 ), P( "december", 31 );
+    	months.clear();
+    
+    	assign( months )
+    	    ( "january",   31 )( "february", 28 )
+    	    ( "march",     31 )( "april",    30 )
+    	    ( "may",       31 )( "june",     30 )
+    	    ( "july",      31 )( "august",   31 )
+    	    ( "september", 30 )( "october",  31 )
+    	    ( "november",  30 )( "december", 31 );
+    	
+    	vector<three>    v_three;
+    	vector<four>     v_four;
+    	vector<five>     v_five;
+    	vector<six>      v_six;
+    
+    	assign( v_three ) (1,2,3) ("1","2","3");
+    	assign( v_four ) (1,2,3,4) ("1","2","3","4");
+    	assign( v_five ) (1,2,3,4,5) ("1","2","3","4","5");
+    	assign( v_six ) (1,2,3,4,5,6) ("1","2","3","4","5","6");
+        
+        vector<int> v_all( 4 );
+        assign_all( v_all )(1)(2)(3);
+        assign_all( v_all ) << 1, 2;
+        
     }
     catch( std::exception& e )
     {
-	cout << e.what() << endl;
+        cout << e.what() << endl;
     }
 
     return 0;

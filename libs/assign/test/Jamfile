@@ -1,0 +1,16 @@
+subproject libs/assign/test ;
+
+template base : 
+    ## Requirements ##
+    : <include>$(BOOST_ROOT)
+      <include>../../.. 
+      
+    
+    ## default-BUILD ##
+    : debug 
+      <debug>static
+    ;
+
+exe  array : <template>base array.cpp ;
+exe  ublas : <template>base ublas.cpp ;
+exe  stl   : <template>base stl.cpp ;

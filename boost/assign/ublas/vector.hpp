@@ -20,24 +20,24 @@
 
 namespace boost
 {
-    namespace assign
+    namespace assignment
     {
-	namespace bnu = boost::numeric::ublas;
-	
-	//
-	// @note: the extra template parameter is necessary
-	//        to help template matching when eg.
-	//        'V=double' and 'V2=int'.
-	//
-	
-	template< typename V, typename A, typename V2 > 
-	inline detail::fixed_size_assigner<V, typename A::iterator> 
-	operator<<( bnu::vector<V,A>& c, const V2& v )
-	{
-	    A& a = c.data();
-	    return detail::fixed_size_assigner<V, typename A::iterator>
-		( a.begin(), a.end(), v );
-	}
+    	namespace bnu = boost::numeric::ublas;
+    	
+    	//
+    	// @note: the extra template parameter is necessary
+    	//        to help template matching when eg.
+    	//        'V=double' and 'V2=int'.
+    	//
+    	
+    	template< typename V, typename A, typename V2 > 
+    	inline detail::fixed_size_assigner<V, typename A::iterator> 
+    	operator<<( bnu::vector<V,A>& c, const V2& v )
+    	{
+    	    A& a = c.data();
+    	    return detail::fixed_size_assigner<V, typename A::iterator>
+    		( a.begin(), a.end(), v );
+    	}
     }
 }
 

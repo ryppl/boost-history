@@ -1,4 +1,4 @@
-/**
+    /**
  * Non-intrusive Assignment Library
  * (C) Thorsten Ottosen 2002-2003
  * 
@@ -17,24 +17,26 @@
 
 #include <exception>
 
-namespace assign
-{
-    class assign_exception : public std::exception
+namespace boost
+{    
+    namespace assignment
     {
-    public:
-	assign_exception( const char* what ) : what_( what )
-	{ }
-
-
-
-	virtual const char* what() const throw()
-	{
-	    return what_;
-	}
-
-    private:
-	const char* what_;
-    };
+        class assign_exception : public std::exception
+        {
+            public:
+        	assign_exception( const char* what ) : what_( what )
+        	{ }
+        
+        
+        
+        	virtual const char* what() const throw()
+        	{
+        	    return what_;
+        	}
+        
+            private:
+                const char* what_;
+        };
+    }
 }
-
 #endif
