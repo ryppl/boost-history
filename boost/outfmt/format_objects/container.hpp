@@ -7,9 +7,56 @@
 #  endif
 
 #  include <boost/outfmt/format_objects/detail/list.hpp>
+#  include <boost/outfmt/format_objects/detail/list.hpp>
 
    namespace boost { namespace io
    {
+      namespace detail
+      {
+         template< class Container, typename T = typename Container::value_type >
+         class insert_iterator: public boost::noncopyable
+         {
+            public:
+               typedef Container                                     container_type;
+               typedef std::output_iterator_tag                      category_type;
+               typedef void                                          pointer;
+               typedef typename Container::reference                 reference;
+               typedef T                                             value_type;
+            private:
+               Container &             c;
+            public:
+               insert_iterator &  operator=( typename Container::const_reference val )
+               {
+                  get_typeid< Container >::value; // BCB workaround
+                  insert( c, val, seq_type< get_typeid< Container >::value >());
+                  return( *this );
+               }
+               insert_iterator &  operator*(){       return( *this ); }
+               insert_iterator &  operator++(){      return( *this ); }
+               insert_iterator    operator++( int ){ return( *this ); }
+            private:
+               void                              insert( Container & cont, typename Container::const_reference val, seq_type< seq_container_type > )
+               {
+                  cont.push_back( val );
+               }
+               void                              insert( Container & cont, typename Container::const_reference val, seq_type< set_container_type > )
+               {
+                  cont.insert( cont.end(), val );
+               }
+               void                              insert( Container & cont, typename Container::const_reference val, seq_type< assoc_container_type > )
+               {
+                  cont.insert( val );
+               }
+            public:
+               explicit      insert_iterator( Container & x ): c( x )
+               {
+               }
+               inline        insert_iterator( const insert_iterator & i ): c( i.c )
+               {
+               }
+         };
+      }
+
       template< typename FormatType, class FmtObject >
       class container_object: public detail::list_object< FormatType, container_object
                                                                       <
@@ -50,9 +97,39 @@
                typename Container::value_type
                                        value;
 
-               return(( *self ).readc( is, std::back_inserter( c ), value ));
+               return(( *self ).readc( is, detail::insert_iterator< Container >( c ), value ));
             }
-            // [todo]: read( seq_type< assoc_container_type > ) -- map-like containers
+            template< typename Container, class InputStream >
+            inline bool                          read
+                                                 (
+                                                    InputStream & is,
+                                                    Container   & c,
+                                                    seq_type< set_container_type >
+                                                 ) const
+            {
+               const base_type *       self = static_cast< const base_type * >( this );
+               typename Container::value_type
+                                       value;
+
+               return(( *self ).readc( is, detail::insert_iterator< Container >( c ), value ));
+            }
+            template< typename Container, class InputStream >
+            inline bool                          read
+                                                 (
+                                                    InputStream & is,
+                                                    Container   & c,
+                                                    seq_type< assoc_container_type >
+                                                 ) const
+            {
+               // [bug]: problems with associative containers
+
+               const base_type *       self = static_cast< const base_type * >( this );
+               typedef std::pair< typename Container::key_type, typename Container::mapped_type >
+                                                                     value_type;
+               value_type              value;
+
+               return(( *self ).readc( is, detail::insert_iterator< Container, value_type >( c ), value ));
+            }
          public:
             inline           container_object()
             {
