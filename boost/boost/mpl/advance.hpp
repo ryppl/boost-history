@@ -48,6 +48,8 @@ struct advance_impl
     };
 };
 
+BOOST_MPL_AUX_AGLORITHM_NAMESPACE_BEGIN
+
 template<
       typename BOOST_MPL_AUX_NA_PARAM(Iterator)
     , typename BOOST_MPL_AUX_NA_PARAM(N)
@@ -68,7 +70,9 @@ struct advance_c
 {
 };
 
-BOOST_MPL_AUX_NA_SPEC(2, advance)
+BOOST_MPL_AUX_AGLORITHM_NAMESPACE_END
+
+BOOST_MPL_AUX_NA_ALGORITHM_SPEC(2, advance)
 //BOOST_MPL_METAFUNCTION(2, advance)
 
 }}

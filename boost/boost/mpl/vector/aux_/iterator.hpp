@@ -57,6 +57,7 @@ struct v_iter
 
 };
 
+
 #if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
 
 template<
@@ -78,6 +79,8 @@ struct prior< v_iter<Vector,n_> >
     enum { prior_ = n_ - 1 };
     typedef v_iter<Vector,prior_> type;
 };
+
+BOOST_MPL_AUX_AGLORITHM_NAMESPACE_BEGIN
 
 template<
       typename Vector
@@ -101,6 +104,8 @@ struct distance< v_iter<Vector,n_>, v_iter<Vector,m_> >
     : long_<(m_ - n_)>
 {
 };
+
+BOOST_MPL_AUX_AGLORITHM_NAMESPACE_END
 
 #else // BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
 

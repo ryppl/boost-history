@@ -21,7 +21,12 @@ namespace boost { namespace mpl {
 BOOST_MPL_AUX_COMMON_NAME_WKND(advance)
 
 template< typename Tag > struct advance_impl;
+
+BOOST_MPL_AUX_AGLORITHM_NAMESPACE_BEGIN
+
 template< typename Iterator, typename N > struct advance;
+
+BOOST_MPL_AUX_AGLORITHM_NAMESPACE_END
 
 }}
 

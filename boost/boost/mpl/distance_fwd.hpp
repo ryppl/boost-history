@@ -20,8 +20,12 @@ namespace boost { namespace mpl {
 
 BOOST_MPL_AUX_COMMON_NAME_WKND(distance)
 
+BOOST_MPL_AUX_AGLORITHM_NAMESPACE_BEGIN
+
 template< typename Tag > struct advance_impl;
 template< typename First, typename Last > struct distance;
+
+BOOST_MPL_AUX_AGLORITHM_NAMESPACE_END
 
 }}
 
