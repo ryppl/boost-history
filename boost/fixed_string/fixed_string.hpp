@@ -5,7 +5,6 @@
 #ifndef BOOST_FIXED_STRING_HPP
 #define BOOST_FIXED_STRING_HPP
 #  include <boost/fixed_string/detail/basic_string_impl.hpp>
-//#  include <boost/mpl/or.hpp>
 #  include <boost/mpl/and.hpp>
 #  include <boost/mpl/equal_to.hpp>
 #  include <boost/mpl/int.hpp>
@@ -110,8 +109,8 @@
       class fixed_string: public fixed_string_base< CharT, CharStringPolicy >
       {
          private:
-            BOOST_STATIC_CONSTANT( size_t, storage_c  = n + 1 ); // needs_null ? n + 1 : n
-            BOOST_STATIC_CONSTANT( size_t, capacity_c = n );     // needs_null ? n     : n - 1
+            BOOST_STATIC_CONSTANT( size_t, storage_c  = n + 1 );
+            BOOST_STATIC_CONSTANT( size_t, capacity_c = n );
          public:
             typedef fixed_string_base< CharT, CharStringPolicy >     base_type;
             typedef fixed_string< n, CharT, CharStringPolicy >       this_type;
@@ -120,30 +119,26 @@
             size_t                     len;
          public: // validation checks
             struct ok{ typedef char value; };
-            // zero-buffer check: n != 0 iff n == storage
-            struct zero_buffer_error{};
-            typedef typename mpl::if_< mpl::and_
-                                       <
-                                          mpl::equal_to< mpl::int_< n >, mpl::int_< 0 > >,
-#                                         if defined(__BORLANDC__) // Borland workaround
-                                             mpl::bool_< ( this_type::storage_c == 0 ) >
-#                                         else
-                                             mpl::equal_to< mpl::int_< storage_c >, mpl::int_< 0 > >
-#                                         endif
-                                       >,
-                                       zero_buffer_error, ok
-                                     >::type::value                  zero_buffer_check;
             // string policy check: StringPolicy::char_type == CharT
             struct char_string_policy_error{};
             typedef typename mpl::if_< is_same< typename CharStringPolicy::char_type, CharT >,
                                        ok, char_string_policy_error
                                      >::type::value                  char_string_policy_check;
          public:
+            typedef typename base_type::traits_type                  triats_type;
+            typedef typename base_type::value_type                   value_type;
+            typedef typename base_type::char_type                    char_type;
+            typedef typename base_type::allocator_type               allocator_type;
             typedef typename base_type::size_type                    size_type;
-            typedef typename base_type::iterator                     iterator;
-            typedef typename base_type::const_iterator               const_iterator;
+            typedef typename base_type::difference_type              difference_type;
             typedef typename base_type::reference                    reference;
             typedef typename base_type::const_reference              const_reference;
+            typedef typename base_type::reference                    pointer;
+            typedef typename base_type::const_reference              const_pointer;
+            typedef typename base_type::iterator                     iterator;
+            typedef typename base_type::const_iterator               const_iterator;
+            typedef typename base_type::reverse_iterator             reverse_iterator;
+            typedef typename base_type::const_reverse_iterator       const_reverse_iterator;
          private: // iterators
             inline iterator                      begin_()
             {
@@ -201,7 +196,7 @@
                {
                   if( sz >= capacity_c )
                      sz = capacity_c;
-                  CharStringPolicy::assign( str + len, sz - len, c );
+                  triats_type::assign( str + len, sz - len, c );
                }
                len = sz;
                str[ len ] = CharT();
@@ -217,16 +212,16 @@
          private: // string operations
             inline void                          assign_( const CharT * s, size_type l )
             {
-               if( l == npos )         l = CharStringPolicy::length( s );
+               if( l == npos )         l = triats_type::length( s );
                len = ( l >= capacity_c ) ? capacity_c : l;
-               CharStringPolicy::copy( str, s, len );
+               triats_type::copy( str, s, len );
                str[ len ] = CharT();
             }
             inline void                          append_( const CharT * s, size_type l = npos )
             {
-               if( l == npos )         l = CharStringPolicy::length( s );
+               if( l == npos )         l = triats_type::length( s );
                l = (( l + len ) >= capacity_c ) ? ( capacity_c - len ) : l;
-               CharStringPolicy::copy( str + len, s, l );
+               triats_type::copy( str + len, s, l );
                len += l;
                str[ len ] = CharT();
             }
@@ -245,26 +240,48 @@
                   str[ ++len ] = CharT();
                }
             }
+         public:
+            inline this_type &    operator=( const this_type & s )
+            {
+               this_type::assign_( s.str, s.len );
+               return( *this );
+            }
+            inline this_type &    operator=( const base_type & s )
+            {
+               this_type::assign_( s.c_str(), s.length());
+               return( *this );
+            }
+            inline this_type &    operator=( const value_type * s )
+            {
+               this_type::assign_( s, triats_type::length( s ));
+               return( *this );
+            }
+            inline this_type &    operator=( value_type c )
+            {
+               len = 0;
+               this_type::push_back_( c );
+               return( *this );
+            }
          public: // construction
             inline           fixed_string(): len( 0 )
             {
                str[ 0 ] = CharT();
             }
-            inline           fixed_string( const fixed_string & s, size_type p = 0, size_type l = npos ): len( 0 )
+            inline           fixed_string( const this_type & s ): len( 0 )
             {
-               assign( s.c_str(), p, l );
+               this_type::assign_( s.str, s.len );
             }
             inline           fixed_string( const base_type & s, size_type p = 0, size_type l = npos ): len( 0 )
             {
-               assign( s.c_str(), p, l );
+               assign( s, p, l );
             }
             inline           fixed_string( const CharT * s, size_type l ): len( 0 )
             {
-               assign( s, l );
+               this_type::assign_( s, l );
             }
             inline           fixed_string( const CharT * s ): len( 0 )
             {
-               assign( s );
+               this_type::assign_( s, traits_type::length( s ));
             }
             inline           fixed_string( size_type l, CharT c ): len( 0 )
             {
@@ -276,5 +293,20 @@
                assign( first, last );
             }
       };
+      
+      // lhs + rhs
+
+      template< size_t n, class C, class CSP >
+      inline fixed_string< n, C, CSP > 
+                                  operator+
+                                  ( 
+                                     const fixed_string< n, C, CSP > & lhs,
+                                     const typename fixed_string< n, C, CSP >::value_type * rhs
+                                  )
+      {
+         fixed_string< n, C, CSP > res( lhs );
+         res.append( rhs );
+         return( fixed_string< n, C, CSP >( res ));
+      }
    }
 #endif
