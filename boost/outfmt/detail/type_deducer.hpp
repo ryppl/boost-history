@@ -57,26 +57,24 @@
             struct get_int_type { typedef typename U::int_type type; };
 
             template<typename U>
+            struct get_base_type { typedef typename U::base_type type; };
+
+            template<typename U>
             struct get_first_type { typedef typename U::first_type type; };
 
             template<typename U>
             struct get_second_type { typedef typename U::second_type type; };
 
-            template<typename U>
-            struct get_base_type { typedef typename U::base_type type; };
-
             typedef typename 
-                    select< is_std_pair<T>, eval< get_first_type<T> >,
-                            is_compressed_pair<T>, eval< get_first_type<T> >,
-                            is_std_complex<T>, eval< get_value_type<T> >,
-                            is_rational<T>, eval< get_int_type<T> >,
-                            is_interval<T>, eval< get_base_type<T> > 
+                    select< is_type<T, pair_type>,         eval< get_first_type<T> >,
+                            is_type<T, nary2value_type>,   eval< get_value_type<T> >,
+                            is_type<T, nary2int_type>,     eval< get_int_type<T> >,
+                            is_type<T, nary2base_type>,    eval< get_base_type<T> >
                     >::type                                            base1_type;
 
             typedef typename 
-                    select< is_std_pair<T>, eval< get_second_type<T> >,
-                            is_compressed_pair<T>, eval< get_second_type<T> >,
-                            mpl::true_, base1_type 
+                    select< is_type<T, pair_type>, eval< get_second_type<T> >,
+                            mpl::true_,            base1_type 
                     >::type                                            base2_type;    
         };
 

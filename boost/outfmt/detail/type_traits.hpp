@@ -4,70 +4,29 @@
 #  pragma once
 #endif
 
-// Permission to copy, use, modify, sell and distribute this software 
-// is granted provided this copyright notice appears in all copies. This 
-// software is provided "as is" without express or implied warranty, and 
-// with no claim as to its suitability for any purpose.
+#ifndef BOOST_IOFM_TypeTraits_HPP
+#define BOOST_IOFM_TypeTraits_HPP
+#  include <boost/outfmt/detail/config.hpp>
 
-// 
-// 1. Defines the following type traits templates. Each models 
-//    MPL::IntegralConstant and has the form: 
-//    template<typename T> struct is_xxx.
-//   
-//       is_std_complex
-//       is_std_pair
-//       is_std_deque
-//       is_std_list
-//       is_std_map
-//       is_std_multimap
-//       is_std_set
-//       is_std_multiset
-//       is_std_string
-//       is_std_vector
-//       is_slist                 // RHD: added support for the SGI slist container
-//       is_hash_set
-//       is_hash_multiset
-//       is_hash_map
-//       is_hash_multimap
-//       is_compressed_pair
-//       is_rational
-//       is_interval
-//       is_quaternion
-//       is_octonion
-//
-//       is_container (subsumes is_std_deque through is_hash_multimap)
-//       is_pair (subsumes is_std_complex, is_std_pair, is_ratioanl, etc.)
-//       is_nary (is_quaternion and is_octonion)
-//
-
-#ifndef BOOST_IO_STREAM_TRAITS_HPP_INCLUDED
-#define BOOST_IO_STREAM_TRAITS_HPP_INCLUDED       
-                
-//--------------STL headers containing types to be analyzed-------------------//
-
-#  include <complex>   
-#  include <deque>    
-#  include <list>      
-#  include <map>       
-#  include <set>       
-#  include <vector>    
-#  include <utility>   // pair
-
-//--------------Non-standard STL headers containing types to be analyzed------//
+#  include <complex>     // std::complex
+#  include <string>      // std::basic_string
+#  include <deque>       // std::deque
+#  include <list>        // std::list
+#  include <vector>      // std::vector
+#  include <set>         // std::set, std::multiset
+#  include <map>         // std::map, std::multimap
+#  include <utility>     // std::pair
 
 #  if defined(BOOST_IOFM_HASH_CONTAINERS)
-#     include <hash_map>
-#     include <hash_set>
+#     include <hash_set> // std::hash_set, std::hash_multiset
+#     include <hash_map> // std::hash_map, std::hash_multimap
 #  endif
-#  if defined(BOOST_HAS_SLIST) // RHD: added support for the SGI slist container
-#     include <slist>
+#  if defined(BOOST_HAS_SLIST)
+#     include <slist>    // std::slist
 #  endif
-
-//--------------Boost headers containing types to be analyzed-----------------//
 
 #  include <boost/compressed_pair.hpp>           
-#  include <boost/rational.hpp>                 
-
+#  include <boost/rational.hpp>
 #  if !defined(BOOST_IOFM_NO_LIB_INTERVAL)
 #     include <boost/numeric/interval/interval.hpp>
 #  endif
@@ -78,254 +37,193 @@
 #     include <boost/math/octonion.hpp>             
 #  endif
 
-//--------------Headers used to perform the type-analysis---------------------//
- 
-#include <boost/config.hpp>       // BOOST_STATIC_CONSTANT, 
-                                  // BOOST_DINKUMWARE_STDLIB,
-                                  // BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION,
-                                  // BOOST_NO_INTRINSIC_WCHAR_T.
-                      
-#include <boost/outfmt/detail/select.hpp>
-#include <boost/mpl/bool.hpp>
-#include <boost/mpl/or.hpp>
-#include <boost/type_traits.hpp>               // is_same, is_base_and_derived.
-#include <boost/type_traits/detail/yes_no_type.hpp>    
+#  include <boost/mpl/or.hpp>
+#  include <boost/mpl/if.hpp>
+#  include <boost/mpl/apply_if.hpp>
+#  include <boost/mpl/identity.hpp>
 
-namespace boost { namespace io { 
-                
-//--------------is_a----------------------------------------------------------//
+   namespace boost { namespace io
+   {
+      // classification values
 
-//
-// Description: Metafunction returning true if U is the same as or derived 
-//      from T.
-//
-template<typename T, typename U>
-struct is_a : public mpl::or_< is_base_and_derived<U, T>, is_same<U, T> > { };
+      static const int                 basic_type             =  1;
+      static const int                 std_string_type        =  2;
+      static const int                 array_type             =  3;
+      static const int                 nary_type              =  4;
+      static const int                 pair_type              =  5;
+      static const int                 nary2value_type        =  6;
+      static const int                 nary2base_type         =  7;
+      static const int                 nary2int_type          =  8;
+      static const int                 seq_container_type     =  9;
+      static const int                 assoc_container_type   = 10;
 
-//--------------or_-----------------------------------------------------------//
+      template< int id >
+      struct seq_type
+      {
+         char                          type[ id ];
+      };
 
-// mpl::or_ has two few paramters.
-// RHD: extended or_ to support more parameters for future/custom extensions
-template< typename T1,
-          typename T2,
-          typename T3 = mpl::false_,
-          typename T4 = mpl::false_,
-          typename T5 = mpl::false_,
-          typename T6 = mpl::false_,
-          typename T7 = mpl::false_,
-          typename T8 = mpl::false_,
-          typename T9 = mpl::false_,
-          typename T10 = mpl::false_,
-          typename T11 = mpl::false_,
-          typename T12 = mpl::false_,
-          typename T13 = mpl::false_,
-          typename T14 = mpl::false_,
-          typename T15 = mpl::false_,
-          typename T16 = mpl::false_
-        >
-struct or_ 
-    : public mpl::or_<
-                 mpl::or_< T1,  T2,  T3,  T4  >,
-                 mpl::or_< T5,  T6,  T7,  T8  >,
-                 mpl::or_< T9,  T10, T11, T12 >,
-                 mpl::or_< T13, T14, T15, T16 >
-             >
-    { };
+      // classification function
 
-//--------------type traits helpers-------------------------------------------//
+      namespace detail
+      {
+         boost::io::seq_type< boost::io::basic_type > classify( ... );
+      }
 
-#define BOOST_IO_MAKE_TRAITS(name, helper) \
-template<typename T> \
-struct name { \
-    static const T* io; \
-    struct type { \
-       BOOST_STATIC_CONSTANT( bool, value = (sizeof(helper(io)) == \
-                                             sizeof(type_traits::yes_type)) ); \
-    }; \
-    BOOST_STATIC_CONSTANT(bool, value = type::value); \
-}; 
+      // type checker implementation
 
-#define BOOST_IO_MAKE_TRAITS_HELPERS_1(helper, type) \
-template<typename T> \
-type_traits::yes_type helper(const type<T>*); \
-type_traits::no_type helper(...);    
+      template< typename T >
+      struct get_typeid
+      {
+         static const T *              io;
+         struct type
+         {
+            BOOST_STATIC_CONSTANT( int, value = sizeof( boost::io::detail::classify( io )));
+         };
+         BOOST_STATIC_CONSTANT( int, value = type::value );
+      };
 
-#define BOOST_IO_MAKE_TRAITS_HELPERS_2(helper, type) \
-template<typename T, typename U> \
-type_traits::yes_type helper(const type<T, U>*); \
-type_traits::no_type helper(...);    
+      template< typename T, int id >
+      struct is_type
+      {
+         static const T *              io;
+         struct type
+         {
+            BOOST_STATIC_CONSTANT( bool, value = ( sizeof( boost::io::detail::classify( io )) == id ));
+         };
+         BOOST_STATIC_CONSTANT( bool, value = type::value  );
+      };
 
-#define BOOST_IO_MAKE_TRAITS_HELPERS_3(helper, type) \
-template<typename T, typename U, typename V> \
-type_traits::yes_type helper(const type<T, U, V>*); \
-type_traits::no_type helper(...);    
+      // helpers -- simple type classification
 
-#define BOOST_IO_MAKE_TRAITS_HELPERS_4(helper, type) \
-template<typename T, typename U, typename V, typename W> \
-type_traits::yes_type helper(const type<T, U, V, W>*); \
-type_traits::no_type helper(...);    
+      template< typename T >
+      struct is_basic: public is_type< T, basic_type >
+      {
+      };
 
-// RHD: fixed the macro -- , X> ==> , typename X>
-#define BOOST_IO_MAKE_TRAITS_HELPERS_5(helper, type) \
-template<typename T, typename U, typename V, typename W, typename X> \
-type_traits::yes_type helper(const type<T, U, V, W, X>*); \
-type_traits::no_type helper(...);    
+      template< typename T >
+      struct is_std_string: public is_type< T, std_string_type >
+      {
+      };
 
-namespace detail {
+      template< typename T >
+      struct is_nary: public is_type< T, nary_type >
+      {
+      };
 
-    //--------------Standard types--------------------------------------------//
-                                          
-BOOST_IO_MAKE_TRAITS_HELPERS_1(is_complex_helper, std::complex)
-BOOST_IO_MAKE_TRAITS_HELPERS_2(is_pair_helper, std::pair)
-BOOST_IO_MAKE_TRAITS_HELPERS_2(is_deque_helper, std::deque)
-BOOST_IO_MAKE_TRAITS_HELPERS_2(is_list_helper, std::list)
-BOOST_IO_MAKE_TRAITS_HELPERS_4(is_map_helper, std::map)
-BOOST_IO_MAKE_TRAITS_HELPERS_4(is_multimap_helper, std::multimap)
-BOOST_IO_MAKE_TRAITS_HELPERS_3(is_set_helper, std::set)
-BOOST_IO_MAKE_TRAITS_HELPERS_3(is_multiset_helper, std::multiset)
-BOOST_IO_MAKE_TRAITS_HELPERS_3(is_string_helper, std::basic_string)
-BOOST_IO_MAKE_TRAITS_HELPERS_2(is_vector_helper, std::vector)
+      template< typename T >
+      struct is_array: public is_type< T, array_type >
+      {
+      };
 
-    //--------------Non-standard containers-----------------------------------//
+      template< typename T >
+      struct is_seq_container: public is_type< T, seq_container_type >
+      {
+      };
 
-// Note: The SGI versions each have an additional template parameter.
+      template< typename T >
+      struct is_assoc_container: public is_type< T, assoc_container_type >
+      {
+      };
 
-#ifdef BOOST_IOFM_HASH_CONTAINERS
-#ifdef BOOST_DINKUMWARE_STDLIB
-    BOOST_IO_MAKE_TRAITS_HELPERS_3 \
-        (is_hash_set_helper, std::hash_set)
-    BOOST_IO_MAKE_TRAITS_HELPERS_3 \
-        (is_hash_multiset_helper, std::hash_multiset)
-    BOOST_IO_MAKE_TRAITS_HELPERS_4 \
-        (is_hash_map_helper, std::hash_map)
-    BOOST_IO_MAKE_TRAITS_HELPERS_4 \
-        (is_hash_multimap_helper, std::hash_multimap)
-#else // #ifdef BOOST_DINKUMWARE_STDLIB
-    BOOST_IO_MAKE_TRAITS_HELPERS_4 \
-        (is_hash_set_helper, std::hash_set)
-    BOOST_IO_MAKE_TRAITS_HELPERS_4 \
-        (is_hash_multiset_helper, std::hash_multiset)
-    BOOST_IO_MAKE_TRAITS_HELPERS_5 \
-        (is_hash_map_helper, std::hash_map)
-    BOOST_IO_MAKE_TRAITS_HELPERS_5 \
-        (is_hash_multimap_helper, std::hash_multimap)
-#endif // #ifdef BOOST_DINKUMWARE_STDLIB
-#endif // #ifdef BOOST_IOFM_HASH_CONTAINERS
+      // helpers -- grouped type classification
 
-#if defined(BOOST_HAS_SLIST) // RHD: added support for the SGI slist container
-   BOOST_IO_MAKE_TRAITS_HELPERS_2(is_slist_helper, std::slist)
+      template< typename T >
+      struct is_container: public mpl::or_
+                           <
+                              is_seq_container< T >,
+                              is_assoc_container< T >
+                           >
+      {
+      };
+
+      template< typename T >
+      struct is_pair: public mpl::or_
+                      <
+                         is_type< T, pair_type >,
+                         is_type< T, nary2value_type >,
+                         is_type< T, nary2base_type >,
+                         is_type< T, nary2int_type >
+                      >
+      {
+      };
+   }}
+
+   // type classification
+
+   // helper macros
+
+#  define BOOST_IO_CLASSIFY_TYPE_1( type, id )\
+      template< typename T1 >                 \
+      boost::io::seq_type< id > classify( const type< T1 > * );
+#  define BOOST_IO_CLASSIFY_TYPE_2( type, id )\
+      template< typename T1, typename T2 >    \
+      boost::io::seq_type< id > classify( const type< T1, T2 > * );
+#  define BOOST_IO_CLASSIFY_TYPE_3( type, id )\
+      template< typename T1, typename T2, typename T3 >\
+      boost::io::seq_type< id > classify( const type< T1, T2, T3 > * );
+#  define BOOST_IO_CLASSIFY_TYPE_4( type, id )\
+      template< typename T1, typename T2, typename T3, typename T4 >\
+      boost::io::seq_type< id > classify( const type< T1, T2, T3, T4 > * );
+#  define BOOST_IO_CLASSIFY_TYPE_5( type, id )\
+      template< typename T1, typename T2, typename T3, typename T4, typename T5 >\
+      boost::io::seq_type< id > classify( const type< T1, T2, T3, T4, T5 > * );
+
+   namespace boost { namespace io { namespace detail
+   {
+      // array types
+
+      template< typename T, int N >
+      boost::io::seq_type< boost::io::array_type > classify( const T( * )[ N ] );
+
+      // standard containers and types
+
+      BOOST_IO_CLASSIFY_TYPE_2( std::basic_string, boost::io::std_string_type );
+      BOOST_IO_CLASSIFY_TYPE_1( std::complex,      boost::io::nary2value_type );
+      BOOST_IO_CLASSIFY_TYPE_2( std::pair,         boost::io::pair_type );
+      BOOST_IO_CLASSIFY_TYPE_2( std::deque,        boost::io::seq_container_type );
+      BOOST_IO_CLASSIFY_TYPE_2( std::list,         boost::io::seq_container_type );
+      BOOST_IO_CLASSIFY_TYPE_2( std::vector,       boost::io::seq_container_type );
+      BOOST_IO_CLASSIFY_TYPE_3( std::set,          boost::io::seq_container_type );
+      BOOST_IO_CLASSIFY_TYPE_3( std::multiset,     boost::io::seq_container_type );
+      BOOST_IO_CLASSIFY_TYPE_4( std::map,          boost::io::assoc_container_type );
+      BOOST_IO_CLASSIFY_TYPE_4( std::multimap,     boost::io::assoc_container_type );
+
+      // standard extension container types
+
+#     if defined(BOOST_IOFM_HASH_CONTAINERS)
+#        if defined(BOOST_DINKUMWARE_STDLIB)
+            BOOST_IO_CLASSIFY_TYPE_3( std::hash_set,      boost::io::seq_container_type );
+            BOOST_IO_CLASSIFY_TYPE_3( std::hash_multiset, boost::io::seq_container_type );
+            BOOST_IO_CLASSIFY_TYPE_4( std::hash_map,      boost::io::assoc_container_type );
+            BOOST_IO_CLASSIFY_TYPE_4( std::hash_multimap, boost::io::assoc_container_type );
+#        else // SGI containers
+            BOOST_IO_CLASSIFY_TYPE_4( std::hash_set,      boost::io::seq_container_type );
+            BOOST_IO_CLASSIFY_TYPE_4( std::hash_multiset, boost::io::seq_container_type );
+            BOOST_IO_CLASSIFY_TYPE_5( std::hash_map,      boost::io::assoc_container_type );
+            BOOST_IO_CLASSIFY_TYPE_5( std::hash_multimap, boost::io::assoc_container_type );
+#        endif
+#     endif
+
+#     if defined(BOOST_HAS_SLIST)
+         BOOST_IO_CLASSIFY_TYPE_2( std::slist, boost::io::seq_container_type );
+#     endif
+
+      // Boost types
+
+      BOOST_IO_CLASSIFY_TYPE_2( boost::compressed_pair, boost::io::pair_type );
+      BOOST_IO_CLASSIFY_TYPE_1( boost::rational,        boost::io::nary2int_type );
+
+#     if !defined(BOOST_IOFM_NO_LIB_INTERVAL)
+         BOOST_IO_CLASSIFY_TYPE_2( boost::numeric::interval, boost::io::nary2base_type );
+#     endif
+
+#     if !defined(BOOST_IOFM_NO_LIB_QUATERNION)
+         BOOST_IO_CLASSIFY_TYPE_1( boost::math::quaternion, boost::io::pair_type );
+#     endif
+
+#     if !defined(BOOST_IOFM_NO_LIB_OCTONION)
+         BOOST_IO_CLASSIFY_TYPE_1( boost::math::octonion, boost::io::pair_type );
+#     endif
+   }}}
 #endif
-
-    //--------------Boost types-----------------------------------------------//
-
-BOOST_IO_MAKE_TRAITS_HELPERS_2(is_compressed_pair_helper, boost::compressed_pair)
-BOOST_IO_MAKE_TRAITS_HELPERS_1(is_rational_helper, boost::rational)
-    
-#ifndef BOOST_IOFM_NO_LIB_INTERVAL
-    BOOST_IO_MAKE_TRAITS_HELPERS_2(is_interval_helper, boost::numeric::interval)
-#endif // #ifndef BOOST_IOFM_NO_LIB_INTERVAL
-
-#ifndef BOOST_IOFM_NO_LIB_QUATERNION
-   BOOST_IO_MAKE_TRAITS_HELPERS_1(is_quaternion_helper, boost::math::quaternion)
-#endif // #ifndef BOOST_IOFM_NO_LIB_QUATERNION
-
-#ifndef BOOST_IOFM_NO_LIB_OCTONION
-   BOOST_IO_MAKE_TRAITS_HELPERS_1(is_octonion_helper, boost::math::octonion)
-#endif // #ifndef BOOST_IOFM_NO_LIB_OCTONION
-
-}               // End namespace detail.
-
-//--------------is_xxx metafunctions------------------------------------------//
-
-    //--------------Standard types--------------------------------------------//
-
-BOOST_IO_MAKE_TRAITS(is_std_complex, detail::is_complex_helper)
-BOOST_IO_MAKE_TRAITS(is_std_pair, detail::is_pair_helper)
-BOOST_IO_MAKE_TRAITS(is_std_deque, detail::is_deque_helper)
-BOOST_IO_MAKE_TRAITS(is_std_list, detail::is_list_helper)
-BOOST_IO_MAKE_TRAITS(is_std_map, detail::is_map_helper)
-BOOST_IO_MAKE_TRAITS(is_std_multimap, detail::is_multimap_helper)
-BOOST_IO_MAKE_TRAITS(is_std_set, detail::is_set_helper)
-BOOST_IO_MAKE_TRAITS(is_std_multiset, detail::is_multiset_helper)
-BOOST_IO_MAKE_TRAITS(is_std_string, detail::is_string_helper)
-BOOST_IO_MAKE_TRAITS(is_std_vector, detail::is_vector_helper)
-
-    //--------------Non-standard containers-----------------------------------//
-
-#ifdef BOOST_IOFM_HASH_CONTAINERS
-    BOOST_IO_MAKE_TRAITS(is_hash_set, detail::is_hash_set_helper)
-    BOOST_IO_MAKE_TRAITS(is_hash_multiset, detail::is_hash_multiset_helper)
-    BOOST_IO_MAKE_TRAITS(is_hash_map, detail::is_hash_map_helper)
-    BOOST_IO_MAKE_TRAITS(is_hash_multimap, detail::is_hash_multimap_helper)
-#else // #ifdef BOOST_IOFM_HASH_CONTAINERS
-    template<typename T> struct is_hash_set : public mpl::false_ { };
-    template<typename T> struct is_hash_multiset : public mpl::false_ { };
-    template<typename T> struct is_hash_map : public mpl::false_ { };
-    template<typename T> struct is_hash_multimap : public mpl::false_ { };
-#endif
-
-#if defined(BOOST_HAS_SLIST) // RHD: added support for the SGI slist container
-   BOOST_IO_MAKE_TRAITS(is_slist, detail::is_slist_helper)
-#else
-   template<typename T> struct is_slist : public mpl::false_ { };
-#endif
-
-    //--------------Boost-types-----------------------------------------------//
-
-BOOST_IO_MAKE_TRAITS(is_compressed_pair, detail::is_compressed_pair_helper)
-BOOST_IO_MAKE_TRAITS(is_rational, detail::is_rational_helper)
-
-#ifndef BOOST_IOFM_NO_LIB_INTERVAL
-    BOOST_IO_MAKE_TRAITS(is_interval, detail::is_interval_helper)
-#else  // #ifndef BOOST_IOFM_NO_LIB_INTERVAL
-    template<typename T> struct is_interval : public mpl::false_ { };
-#endif // #ifndef BOOST_IOFM_NO_LIB_INTERVAL
-
-#ifndef BOOST_IOFM_NO_LIB_QUATERNION
-    BOOST_IO_MAKE_TRAITS(is_quaternion, detail::is_quaternion_helper)
-#else  // #ifndef BOOST_IOFM_NO_LIB_QUATERNION
-    template<typename T> struct is_quaternion : public mpl::false_ { };
-#endif // #ifndef BOOST_IOFM_NO_LIB_QUATERNION
-
-#ifndef BOOST_IOFM_NO_LIB_OCTONION
-   BOOST_IO_MAKE_TRAITS(is_octonion, detail::is_octonion_helper)
-#else  // #ifndef BOOST_IOFM_NO_LIB_OCTONION
-    template<typename T> struct is_octonion : public mpl::false_ { };
-#endif // #ifndef BOOST_IOFM_NO_LIB_OCTONION
-
-template<typename T>
-struct is_container
-    : public or_< 
-                 is_std_deque<T>,
-                 is_std_list<T>,
-                 is_std_map<T>,
-                 is_std_multimap<T>,
-                 is_std_set<T>,
-                 is_std_multiset<T>,
-                 is_std_string<T>,
-                 is_std_vector<T>,
-                 is_slist<T>,          // RHD: added support for the SGI slist container
-                 is_hash_set<T>,
-                 is_hash_multiset<T>,
-                 is_hash_map<T>,
-                 is_hash_multimap<T>
-             >
-    { };
-
-template<typename T>
-struct is_pair
-    : public or_< 
-                 is_std_complex<T>,
-                 is_std_pair<T>,
-                 is_compressed_pair<T>,
-                 is_rational<T>,
-                 is_interval<T>
-             >
-    { };
-
-template<typename T>
-struct is_nary : public or_< is_quaternion<T>, is_octonion<T> > { };
-
-} }             // End namespaces io, boost.
-
-#endif          // #ifndef BOOST_IO_STREAM_TRAITS_HPP_INCLUDED

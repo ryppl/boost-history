@@ -8,8 +8,6 @@
 #ifndef BOOST_IOFM_DETAIL_PairTraits_HPP
 #define BOOST_IOFM_DETAIL_PairTraits_HPP
 #  include <boost/outfmt/detail/format_traits.hpp>
-#  include <boost/outfmt/detail/type_traits.hpp>
-#  include <boost/mpl/if.hpp>
 
    namespace boost { namespace io { namespace detail
    {

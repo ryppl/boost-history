@@ -7,9 +7,7 @@
 
 #ifndef BOOST_IOFM_DETAIL_FormatTraits_HPP
 #define BOOST_IOFM_DETAIL_FormatTraits_HPP
-#  include <boost/outfmt/detail/config.hpp>
 #  include <boost/outfmt/detail/type_traits.hpp>
-#  include <boost/mpl/if.hpp>
 
    namespace boost { namespace io { namespace detail
    {
