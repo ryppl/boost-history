@@ -9,11 +9,19 @@
 #include <iostream>
 #include <string>
 
+#ifdef NUMERICS_PRIVATE
 #include "../config.h"
 #include "../vector.h"
 #include "../matrix.h"
 
 #include "../timer.h"
+#else
+#include <boost/numeric/ublas/config.h>
+#include <boost/numeric/ublas/vector.h>
+#include <boost/numeric/ublas/matrix.h>
+
+#include <boost/numeric/ublas/timer.h>
+#endif
 
 #include "bench1.h"
 

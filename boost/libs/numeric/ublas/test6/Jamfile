@@ -1,0 +1,11 @@
+subproject libs/numeric/ublas/test6 ;
+
+SOURCES = test6 test61 test62 test63 ;
+
+exe test6
+	: $(SOURCES).cpp
+	: <include>$(BOOST_ROOT)
+	  <gcc><*><define>USE_GCC
+	  <intel><*><define>USE_ICC
+	;
+

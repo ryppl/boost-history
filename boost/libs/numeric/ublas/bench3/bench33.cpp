@@ -9,11 +9,19 @@
 #include <iostream>
 #include <string>
 
+#ifdef NUMERICS_PRIVATE
 #include "../config.h"
 #include "../vector.h"
 #include "../matrix.h"
 
 #include "../timer.h"
+#else
+#include <boost/numeric/ublas/config.h>
+#include <boost/numeric/ublas/vector.h>
+#include <boost/numeric/ublas/matrix.h>
+
+#include <boost/numeric/ublas/timer.h>
+#endif
 
 #include "bench3.h"
 
@@ -80,7 +88,7 @@ struct bench_my_matrix_prod {
 			initialize_matrix (mr2);
 			numerics::timer t;
 			for (int i = 0; i < runs; ++ i) {
-                m3.assign (numerics::prod (mr1, mr2));
+                mr3.assign (numerics::prod (mr1, mr2));
 //				sink_matrix (mr3);
 			}
             footer<value_type> () (N * N * N, N * N * (N - 1), runs, t.elapsed ());

@@ -23,8 +23,11 @@ void test_matrix_vector ();
 
 void test_matrix ();
 
+// FIXME: Borland out of memory!
+#ifndef USE_BCC
 #define USE_RANGE
 // #define USE_SLICE
+#endif
 
 // #define USE_BOUNDED_ARRAY
 #define USE_UNBOUNDED_ARRAY

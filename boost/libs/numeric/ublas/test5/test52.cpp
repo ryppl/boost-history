@@ -8,15 +8,23 @@
 
 #include <iostream>
 
+#ifdef NUMERICS_PRIVATE
 #include "../config.h"
 #include "../vector.h"
 #include "../matrix.h"
 #include "../triangular.h"
 #include "../io.h"
+#else
+#include <boost/numeric/ublas/config.h>
+#include <boost/numeric/ublas/vector.h>
+#include <boost/numeric/ublas/matrix.h>
+#include <boost/numeric/ublas/triangular.h>
+#include <boost/numeric/ublas/io.h>
+#endif
 
 #include "test5.h"
 
-// Test matrix & vector expression templates 
+// Test matrix & vector expression templates
 template<class V, class M, int N>
 struct test_my_matrix_vector {
     typedef typename V::value_type value_type;

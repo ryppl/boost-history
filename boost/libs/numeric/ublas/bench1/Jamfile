@@ -1,0 +1,11 @@
+subproject libs/numeric/ublas/bench1 ;
+
+SOURCES = bench1 bench11 bench12 bench13 ;
+
+exe bench1
+	: $(SOURCES).cpp $(BOOST_ROOT)/boost/numeric/ublas/instant.cpp
+	: <include>$(BOOST_ROOT)
+	  <gcc><*><define>USE_GCC
+	  <intel><*><define>USE_ICC
+	;
+

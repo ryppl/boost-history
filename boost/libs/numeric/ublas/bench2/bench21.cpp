@@ -9,6 +9,7 @@
 #include <iostream>
 #include <string>
 
+#ifdef NUMERICS_PRIVATE
 #include "../config.h"
 #include "../vector.h"
 #include "../vector_sp.h"
@@ -16,6 +17,15 @@
 #include "../matrix_sp.h"
 
 #include "../timer.h"
+#else
+#include <boost/numeric/ublas/config.h>
+#include <boost/numeric/ublas/vector.h>
+#include <boost/numeric/ublas/vector_sp.h>
+#include <boost/numeric/ublas/matrix.h>
+#include <boost/numeric/ublas/matrix_sp.h>
+
+#include <boost/numeric/ublas/timer.h>
+#endif
 
 #include "bench2.h"
 
