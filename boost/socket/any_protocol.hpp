@@ -26,8 +26,8 @@ namespace boost
     class any_protocol
     {
     public:
-      any_protocol(protocol_type_t type, protocol_t protocol, family_t family)
-          : m_type(type),  m_protocol(protocol), m_family(family)
+      any_protocol(family_t family, protocol_type_t type, protocol_t protocol)
+          : m_family(family), m_type(type),  m_protocol(protocol)
       {}
 
       protocol_type_t type() const
@@ -46,9 +46,9 @@ namespace boost
       }
 
     private:
+      family_t m_family;
       protocol_type_t m_type;
       protocol_t m_protocol;
-      family_t m_family;
     };
   }
 }
