@@ -223,11 +223,19 @@ private:
         {
             if(0 == --this->counter())
 			{
+                size_t const character_bytes((this->size() + 1) * sizeof(char_type));
+                size_t const elements(
+                      1
+                    + character_bytes / sizeof(typename allocator::value_type) 
+                    + (0 != character_bytes % sizeof(typename allocator::value_type))
+                    );
+
 				boost::detail::atomic_count* const p(&this->counter());
 				// g++ 3.2.3 needs it for the next line when atomic_count is long int
 				using boost::detail::atomic_count; 
 				p->~atomic_count();
-                this->allocator::deallocate(reinterpret_cast<typename allocator::pointer>(p), 0);
+
+                this->allocator::deallocate(reinterpret_cast<typename allocator::pointer>(p), elements);
 			}
         }
         state_ = 0;
