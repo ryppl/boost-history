@@ -6,6 +6,8 @@
 // Copyright (c) 2002
 // Eric Friedman
 //
+// See below original copyright by Andrei Alexandrescu.
+//
 // Permission to use, copy, modify, distribute and sell this software
 // and its documentation for any purpose is hereby granted without fee, 
 // provided that the above copyright notice appears in all copies and 
@@ -231,7 +233,10 @@ uninitialized_move(
 #endif // BOOST_MOVE_HPP
 
 
-/* Original copyright -- on mojo.h -- follows:
+/* Boost.Move is derivative of MOJO. Much thanks to Andrei for his initial work.
+ * See <http://www.cuj.com/experts/2102/alexandr.htm> for information on MOJO.
+
+ * Original copyright -- on mojo.h -- follows:
 
 ////////////////////////////////////////////////////////////////////////////////
 // MOJO: MOving Joint Objects
