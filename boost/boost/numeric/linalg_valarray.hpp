@@ -85,6 +85,11 @@ namespace boost {
     typedef std::_Expr<std::_UnClos<std::negate, std::_ValArray, R>, R> type;
   };
   // -e
+  template <class R, class Clos>
+  struct unary_op_return<op_negate, std::_Expr<Clos,R> >
+  {
+    typedef std::_Expr<std::_UnClos<std::negate, std::_Expr, Clos>, R> type;
+  };
 
 
   // v / a
@@ -94,33 +99,42 @@ namespace boost {
     typedef std::_Expr<std::_BinClos<std::divides, std::_ValArray,
       std::_Constant, F, F>, F> type;
   };
+  // e / a
+  template <class F, class Clos>
+  struct binary_op_return<op_divide, std::_Expr<Clos, F>, F>
+  {
+    typedef std::_Expr<std::_BinClos<std::divides, std::_Expr,
+      std::_Constant, Clos, F>, F> type;
+  };
 
+
+  // v * a
   template <class F>
   struct binary_op_return<op_multiply, std::valarray<F>, F>
   {
     typedef std::_Expr<std::_BinClos<std::multiplies, std::_ValArray,
       std::_Constant, F, F>, F> type;
   };
-
+  // e * a
+  template <class F, class Clos>
+  struct binary_op_return<op_multiply, std::_Expr<Clos, F>, F >
+  {
+    typedef std::_Expr<std::_BinClos<std::multiplies, std::_Expr, 
+      std::_Constant, Clos, F>, F> type;
+  };
+  // a * v
   template <class F>
   struct binary_op_return<op_multiply, F, std::valarray<F> >
   {
     typedef std::_Expr<std::_BinClos<std::multiplies, std::_Constant,
       std::_ValArray, F, F>, F> type;
   };
-
+  // a * e
   template <class F, class Clos>
   struct binary_op_return<op_multiply, F, std::_Expr<Clos, F> >
   {
     typedef std::_Expr<std::_BinClos<std::multiplies, std::_Constant,
       std::_Expr, F, Clos>, F> type;
-  };
-
-  template <class F, class Clos>
-  struct binary_op_return<op_multiply, std::_Expr<Clos, F>, F >
-  {
-    typedef std::_Expr<std::_BinClos<std::multiplies, std::_Expr, 
-      std::_Constant, Clos, F>, F> type;
   };
 
   // zero(v)

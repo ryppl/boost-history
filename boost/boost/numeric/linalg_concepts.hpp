@@ -10,7 +10,7 @@ namespace boost {
   struct AdditiveAbelianGroupConcept
   {
     typedef typename boost::binary_op_return<op_add, X, X>::type add_ret;
-    typedef typename boost::unary_op_return<op_negate, X>::type neg_ret;
+    typedef typename boost::unary_op_return<op_negate, add_ret>::type neg_ret;
     typedef typename boost::binary_op_return<op_subtract, X, neg_ret>::type
       sub_ret;
     typedef typename boost::unary_op_return<op_zero, sub_ret>::type zero_ret;
@@ -22,7 +22,7 @@ namespace boost {
 
       const add_ret& c = a + b;
       X& d = (b += c);
-      const neg_ret& e = -a;
+      const neg_ret& e = -c;
       const sub_ret& f = d - e;
       const zero_ret& h = zero(f);
       X& g = (b -= h);
@@ -136,13 +136,16 @@ namespace boost {
   template <class G, class F>
   struct VectorSpaceConcept {
     typedef typename boost::binary_op_return<op_divide,G,F>::type div_ret;
+    typedef typename boost::binary_op_return<op_divide,div_ret,F>::type 
+      div_ret2;
     void constraints() {
       function_requires< RModuleConcept<G, F> >();
       function_requires< FieldConcept<F> >();
 
       const div_ret& y = x / a;
+      const div_ret2& w = y / a;
       G& z = (x /= a);
-      ignore_unused_variable_warning(y);
+      ignore_unused_variable_warning(w);
       ignore_unused_variable_warning(z);
     }
     G x;
