@@ -23,13 +23,13 @@
 #include <stack>
 #include <queue>
 
-#if defined( _MSC_VER ) && !defined( __COMO__ )
+#if BOOST_NO_FUNCTION_TEMPLATE_ORDERING
 
-    #include <deque>
-    #include <list>
-    #include <map>
-    #include <set>
-    #include <vector>
+#include <deque>
+#include <list>
+#include <map>
+#include <set>
+#include <vector>
 
 #endif
 
@@ -37,25 +37,6 @@ namespace boost
 {
 namespace assignment
 {
-
-#if defined( _MSC_VER ) && !defined( __COMO__ )
-
-//     template< typename C, typename V >
-//     inline void make_iterator_insertion( C& c, const V& v )
-//     {
-//  	c.insert( c.end(), v );
-//     }
-
-#else 
-
-    template< typename C, typename V >
-    inline void make_iterator_insertion( C& c, const V& v )
-    {
-        c.insert( c.end(), v );
-    }
-
-
-#endif
 
     template< typename V, typename C >
     inline void make_iterator_insertion( std::stack<V,C>& c, const V& v )
@@ -79,14 +60,14 @@ namespace assignment
         c.push( v );
     }
 
-#if defined( _MSC_VER ) && !defined( __COMO__ )
+#if BOOST_NO_FUNCTION_TEMPLATE_ORDERING
 
     //
     // We can circumvent vc's missing support of partial ordering
     // by making _no_ default template function. We have to write
     // all overloads explicitly :(.
     //
-#if 1
+    
     template< typename V, typename A >
     inline void make_iterator_insertion( std::deque<V,A>& c, const V& v )
     {
@@ -147,8 +128,7 @@ namespace assignment
 
 #endif
 
-#endif // defined( _MSC_VER )
-
 } // namespace 'assignment'
 } // namespace 'boost'
+
 #endif

@@ -20,14 +20,14 @@ namespace boost
 namespace assignment
 {
 
-#if defined( _MSC_VER ) && !defined( __COMO__ )
+#if BOOST_NO_FUNCTION_TEMPLATE_ORDERING
 
-// do nothing: a default version f*** up vc6 
+// do nothing: a default version ***** up vc6 
 
 #else 
 
     template< typename C, typename V >
-    inline void make_iterator_insertion( C& c, const V& v )
+    inline void make_insertion( C& c, const V& v )
     {
         c.insert( c.end(), v );
     }
