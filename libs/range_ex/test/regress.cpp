@@ -265,6 +265,8 @@ void test_algorithms(Rng & rng)
     test_random_algorithms(rng, iterator_category());
 }
 
+int* addr(int &i) { return &i; }
+bool true_(int) { return true; }
 
 ///////////////////////////////////////////////////////////////////////////////
 // test_main
@@ -278,16 +280,22 @@ int test_main( int, char*[] )
     char ntcs_buffer[] = "\1\2\3\4\5";
     char *ntcs  = ntcs_buffer;
     int array[] = { 1,2,3,4,5 };
-    std::list<int> list(int_iterator(1),int_iterator(6));
-    std::vector<int> vector(int_iterator(1),int_iterator(6));
-    std::pair<std::vector<int>::iterator,std::vector<int>::iterator> pair(vector.begin(),vector.end());
+    std::list<int> my_list(int_iterator(1),int_iterator(6));
+    std::vector<int> my_vector(int_iterator(1),int_iterator(6));
+    std::pair<std::vector<int>::iterator,std::vector<int>::iterator> my_pair(my_vector.begin(),my_vector.end());
 
     // test the algorithms with list and const list
     test_algorithms(ntcs);
     test_algorithms(array);
-    test_algorithms(list);
-    test_algorithms(vector);
-    test_algorithms(pair);
+    test_algorithms(my_list);
+    test_algorithms(my_vector);
+    test_algorithms(my_pair);
+
+    boost::reverse_range<std::vector<int> > r = my_vector | boost::adaptor::reverse;
+    typedef boost::transform_range<std::vector<int>,int*(*)(int&)> int_ptr_range;
+    int_ptr_range t = my_vector | boost::adaptor::transform(&addr);
+    boost::indirect_range<int_ptr_range> i = t | boost::adaptor::indirect;
+    boost::filter_range<std::vector<int>, bool(*)(int)> f = my_vector | boost::adaptor::filter(&true_);
 
     return 0;
 }
