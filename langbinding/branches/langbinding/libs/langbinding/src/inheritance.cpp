@@ -459,5 +459,3 @@ namespace boost { namespace langbinding {
    }
 }}
 
-#endif
-
