@@ -2,12 +2,23 @@
 <!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
   "http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
 <section>
+  <sectioninfo>
+    <author>
+      <firstname>Douglas</firstname>
+      <surname>Gregor <email>gregod@cs.rpi.edu</email></surname>
+    </author>
+    <author>
+      <firstname>Peter</firstname>
+      <surname>Dimov <email>pdimov@mmltd.net</email></surname>
+    </author>
+  </sectioninfo>
+
   <title>A proposal to add a reference wrapper to the standard library (revision 1)</title>
 
 <variablelist termlength="16">
   <varlistentry><term>Document number</term><listitem><simpara>N1453=03-0036</simpara></listitem></varlistentry>
   <varlistentry><term>Revises document number</term><listitem><simpara>N1436=03-0018</simpara></listitem></varlistentry>
-  <varlistentry><term>Date</term><listitem><simpara>24 February 2003</simpara></listitem></varlistentry>
+  <varlistentry><term>Date</term><listitem><simpara>9 April 2003</simpara></listitem></varlistentry>
   <varlistentry><term>Project</term><listitem><simpara>Programming Language C++, Library Working Group</simpara></listitem></varlistentry>
   <varlistentry><term>Reply-to</term><listitem><simpara>Doug Gregor <email>gregod@cs.rpi.edu</email></simpara></listitem></varlistentry>
 </variablelist>
