@@ -40,7 +40,9 @@ class component: public event_handler
          gui::area, component, &component::get_client_area
       > > client_area;
    public:
-      void move( const area & );
+      void resize(  const area & );
+      void resize(  const size & );
+      void move_to( const position & );
       void hook_events();
       void default_event( event * );
    public:

@@ -74,11 +74,27 @@ boost::gui::area boost::gui::component::get_client_area() const
    return client;
 }
 
-void boost::gui::component::move( const area & mv )
+void boost::gui::component::resize( const area & mv )
 {
    ::SetWindowPos
    (
-      *this, 0, mv.xpos, mv.ypos, mv.width, mv.height, SWP_NOZORDER
+      *this, 0, mv.xpos, mv.ypos, mv.width, mv.height, SWP_NOZORDER | SWP_NOOWNERZORDER
+   );
+}
+
+void boost::gui::component::resize( const size & mv )
+{
+   ::SetWindowPos
+   (
+      *this, 0, 0, 0, mv.dx, mv.dy, SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOMOVE
+   );
+}
+
+void boost::gui::component::move_to( const position & pos )
+{
+   ::SetWindowPos
+   (
+      *this, 0, pos.xpos, pos.ypos, 0, 0, SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOSIZE
    );
 }
 

@@ -14,7 +14,7 @@ void guix::frame::EvDestroy( gui::event * ev )
 
 void guix::frame::EvPosChanged( gui::event * ev )
 {
-   if( pane ) pane -> move( client_area );
+   if( pane ) pane -> resize( client_area );
    ev -> handled = true;
 }
 

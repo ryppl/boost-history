@@ -49,8 +49,8 @@ int gui_main( const gui::entry_data & ed )
    edit edit(  &wnd );
    button btn( TEXT( "Press Me!" ), &wnd );
 
-   edit.move( gui::area( 10, 10, 200, 25 ));
-   btn.move(  gui::area( 10, 50, 200, 25 ));
+   edit.resize( gui::area( 10, 10, 200, 25 ));
+   btn.resize(  gui::area( 10, 50, 200, 25 ));
 
    ::ShowWindow( wnd, ed.show );
 
