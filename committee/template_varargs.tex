@@ -41,11 +41,11 @@ typesafe manner.
 
 \section{Motivation}
 \subsection{Variable-length template parameter lists}
-Variable-length template parameter lists (variadic templates) allow a class or
-function template to accept some number (possibly zero) of template
-arguments beyond the number of template parameters specified. This
-behavior can be simulated in C++ via a long list of defaulted template
-parameters, e.g., a typelist wrapper may appear as:
+Variable-length template parameter lists (variadic templates) allow a
+class or function template to accept some number (possibly zero) of
+template arguments beyond the number of template parameters specified.
+This behavior can be simulated in C++ via a long list of defaulted
+template parameters, e.g., a typelist wrapper may appear as:
 
 \begin{verbatim}
 struct unused;
@@ -103,9 +103,8 @@ Here, {\tt T} is the name of the template type parameter and {\tt
   Args} is the name of a ``template parameter pack'' containing the
 (possibly empty) set of template arguments given to {\tt Foo}.
 Template parameter packs may contain template type, non-type, and
-template template arguments but themselves have no representation in
-the C++ type system (i.e., they are not first-class entities in the
-type system as are integral constants, types, and templates).
+template template arguments and are represented as an unspecified
+class type.
 
 Function templates may also be variadic templates in the same manner
 as class templates.  Arguments can be specified explicitly when
@@ -132,8 +131,9 @@ template<... Args>
   void printf(const char* format, const Args&... args);
 \end{verbatim}
 
-\noindent The ellipsis indicates that the function ``parameter'' args
-actually represents the ``unpacked'' arguments, so for a call to
+\noindent The ellipsis indicates that the function ``parameter''
+\texttt{args}
+actually represents the ``unpacked'' parameters, so for a call to
 \texttt{printf} with $N+1$ arguments, the signature is equivalent to
 the pseudocode:
 
@@ -146,14 +146,13 @@ template<typename T1, typename T2, ..., typename TN>
 Note that \texttt{Args} is used as a placeholder in the type of the
 \texttt{args} ``parameter'', and \texttt{Args} is replaced by each
 implicitly-named template parameter while \texttt{args} is replaced by
-each implicitly-named function parameter. Thus both forms of parameter
-packs are primarily syntactic entities.
-
-Deduction of template parameter packs from function call arguments
-proceeds as it would if the arguments were explicitly passed. For
-instance, calling \texttt{printf("\%e \%i", 3.14159, 17)} would deduce
-\texttt{Args = <double,int>}, with the parameter types \texttt{const
-  double\&} and \texttt{const int\&}.
+each implicitly-named function parameter. Deduction of template
+parameter packs from function call arguments proceeds as it would if
+the parameters were explicitly enumerated as in the pseudocode
+declaration of \texttt{print}. For instance, calling
+\texttt{printf("\%e \%i", 3.14159, 17)} would deduce \texttt{Args =
+  <double,int>}, with the parameter types \texttt{const double\&} and
+\texttt{const int\&}.
 
 \subsection{Unpacking template and value parameter packs}
 The ellipsis operator unpacks all of the values (or template
@@ -188,6 +187,63 @@ Note that when the parameter pack is empty, it expands to zero
 arguments (in the function call or template argument list). Thus, the
 recursion terminates for \texttt{printf} when {\tt args} is empty,
 calling the second overload of \texttt{printf}.
+
+The ellipsis operator is valid following any of these constructs:
+\begin{itemize}
+\item An argument in a function call argument list.
+\item An argument in a template argument list.
+\item Following the type of a parameter in a parameter declaration
+\end{itemize}
+
+In each case, the text of the argument (or parameter) preceding the
+ellipsis is treated as a pattern to be repeated for each element in
+the parameter pack as individual arguments (or parameters) within the
+current argument (or parameter) list. In the pattern, the parameter
+pack is a placeholder for the positions where the elements in the
+parameter pack will be substituted. Fig.~\ref{fig:expansions}
+illustrates the expansions of several template and value parameter
+packs. In the figure, \texttt{X} is a template parameter pack
+containing template parameters \texttt{X1}, \texttt{X2}, ....,
+\texttt{XN} and, when all \texttt{Xi} are types, \texttt{x} is a value
+parameter pack of type \texttt{X} such that \texttt{x1}, \texttt{x2},
+..., \texttt{xN} are the contained values. Similarly, \texttt{Y} is a
+template parameter pack of size \texttt{M}, with associated
+\texttt{Yi}, \texttt{y}, and \texttt{yi}. Additionally, assume the
+following declarations:
+\begin{verbatim}
+template<...> class list;
+template<...> class vector;
+
+template<... Args> void f(Args... args);
+template<... Args> void g(Args... args;)
+template<typename T> T id(T);
+
+\end{verbatim}
+
+\begin{figure}
+\centering
+\begin{tabular}{l|l}
+\textbf{Types \& Expressions} & \textbf{Expansion} \\\hline
+\texttt{list<X...>} & \texttt{list<X1, X2, ..., XN>} \\
+\texttt{list<int, X..., float>} & \texttt{list<int, X1, X2, ..., XN,
+  float>} \\
+\texttt{f(x...)} & \texttt{f(x1, x2, ..., xN)} \\
+\texttt{f(17, x..., 3.14159)} & \texttt{f(17, x1, x2, ..., xN,
+  3.14159)} \\
+\texttt{int (*)(X...)} & \texttt{int (*)(X1, X2, ..., XN)} \\
+\texttt{list<typename add\_pointer<X>::type...>} &
+\texttt{list<typename add\_pointer<X1>::type,} \\
+& \qquad\texttt{{ }typename add\_pointer<X2>::type,} \\
+& \qquad\texttt{{ }typename add\_pointer<XN>::type>} \\
+
+\texttt{f(x*x)} & \texttt{f(x1*x1, x2*x2, ..., xN*xN)} \\
+
+
+\end{tabular}
+\caption{Illustration of the expansions of types and
+  expressions using template and value parameter packs.}
+\label{fig:expansions}
+\end{figure}
 
 \subsection{Deducing template parameter packs from types}
 Template parameter packs can be deduced from template argument lists
@@ -644,14 +700,16 @@ outside the scope of this proposal.
 \begin{verbatim}
 struct bad_function_call : public std::exception {};
 
-template<typename Function> // Function type R(T1, T2, ..., TN)
-  struct function
-  {
-    typedef typename function_traits<Function>::result_type result_type;
-    typedef typename function_traits<Function>::argument_types argument_types;
+template<typename> struct function;
 
-    template<typename Functor, ... Args>
-      auto functor_invoker(Args... args) const
+
+template<typename R, ... ArgumentTypes>
+  struct function<R(ArgumentTypes...)>
+  {
+    typedef R result_type;
+
+    template<typename Functor>
+      auto functor_invoker(ArgumentTypes... args) const
       { return (*static_cast<Functor*>(functor))(args...); }
     
     template<typename Functor> 
@@ -863,11 +921,8 @@ template<typename Class, typename T, ... BoundArgs>
 \end{verbatim}
 \normalsize
 
-\section{Extensions}
-\subsection{First-class parameter packs}
-...
-
-\subsection{More parameter pack deduction}
+\section{Alternatives \& Extensions}
+\subsection{Extended template argument deduction}
 One potential extension to this proposal we have considered is to
 allow parameter packs to occur before the end of the template header
 (so that multiple template parameter packs may be declared in a single
