@@ -14,8 +14,8 @@
  *
  */
 
-#ifndef boost_numeric_bindings_traits_vector_traits_hpp
-#define boost_numeric_bindings_traits_vector_traits_hpp
+#ifndef BOOST_NUMERIC_BINDINGS_TRAITS_VECTOR_TRAITS_HPP
+#define BOOST_NUMERIC_BINDINGS_TRAITS_VECTOR_TRAITS_HPP
 
 namespace boost { namespace numeric { namespace bindings { namespace traits {
 
@@ -70,4 +70,4 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
 
 }}}}
 
-#endif // boost_numeric_bindings_traits_vector_traits_hpp
+#endif // BOOST_NUMERIC_BINDINGS_TRAITS_VECTOR_TRAITS_HPP
