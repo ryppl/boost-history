@@ -26,7 +26,7 @@
       const value_type * data()   const;
       value_type &       at( size_type i );
       iterator           iter_offset( difference_type );
-      const_iterator     iter_offset( difference_type ) const;
+      const_iterator     const_iter_offset( difference_type ) const;
       size_type          length()   const;
       size_type          capacity() const;
       size_type          max_size() const;
@@ -123,7 +123,7 @@
          public: // 21.3.2: iterators
             inline const_iterator                begin() const
             {
-               return( get_impl().iter_offset( 0 ));
+               return( get_impl().const_iter_offset( 0 ));
             }
             inline iterator                      begin()
             {
@@ -131,7 +131,7 @@
             }
             inline const_iterator                end() const
             {
-               return( get_impl().iter_offset( size()));
+               return( get_impl().const_iter_offset( size()));
             }
             inline iterator                      end()
             {
