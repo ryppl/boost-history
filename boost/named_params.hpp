@@ -62,6 +62,8 @@ namespace aux
   yes_t to_yesno(mpl::true_);
   no_t to_yesno(mpl::false_);
 
+  // A placemarker for "no argument passed."
+  struct void_ {};
 
   // A wrapper for the default value passed by the user when resolving
   // the value of the parameter with the given Keyword
@@ -138,7 +140,7 @@ namespace aux
       // arguments; this makes initialization
       empty_arg_list(
           BOOST_PP_ENUM_PARAMS(
-              BOOST_NAMED_PARAMS_MAX_ARITY, empty_arg_list BOOST_PP_INTERCEPT
+              BOOST_NAMED_PARAMS_MAX_ARITY, void_ BOOST_PP_INTERCEPT
       ))
       {}
 
@@ -146,9 +148,9 @@ namespace aux
       // The overload set technique doesn't work with these older
       // compilers, so they need some explicit handholding.
       
-      // A metafunction class that, given a keyword, returns the base
-      // sublist whose get() function can produce the value for that
-      // key.
+      // A metafunction class that, given a keyword, returns the type
+      // of the base sublist whose get() function can produce the
+      // value for that key
       struct key_owner
       {
           template<class KW>
@@ -227,8 +229,32 @@ namespace aux
   template <class TaggedArg, class Next = empty_arg_list>
   struct arg_list : Next
   {
+      TaggedArg arg;      // Stores the argument
+
+      // Store the arguments in successive nodes of this list
+      template< // class A0, class A1, ...
+          BOOST_PP_ENUM_PARAMS(BOOST_NAMED_PARAMS_MAX_ARITY, class A)
+      >
+      arg_list( // A0 const& a0, A1 const& a1, ...
+          BOOST_PP_ENUM_BINARY_PARAMS(BOOST_NAMED_PARAMS_MAX_ARITY, A, const & a)
+      )
+        : Next( // a1, a2, ...
+              BOOST_PP_ENUM_SHIFTED_PARAMS(BOOST_NAMED_PARAMS_MAX_ARITY, a)
+            , void_()
+          )
+        , arg(a0)
+      {}
+
+      // Create a new list by prepending arg to a copy of tail.  Used
+      // when incrementally building this structure with the comma
+      // operator.
+      arg_list(TaggedArg arg, Next const& tail)
+        : Next(tail)
+        , arg(arg)
+      {}
+
 #if BOOST_WORKAROUND(BOOST_MSVC, <= 1300) || BOOST_NAMED_PARAMS_GCC2
-      // A metafunction class which, given a keyword, returns the base
+      // A metafunction class that, given a keyword, returns the base
       // sublist whose get() function can produce the value for that
       // key.
       struct key_owner
@@ -243,7 +269,7 @@ namespace aux
           {};
       };
 
-      // A metafunction class which, given a keyword and a default
+      // A metafunction class that, given a keyword and a default
       // type, returns the appropriate result type for a keyword
       // lookup given that default
       struct key_value_type
@@ -258,31 +284,9 @@ namespace aux
           {
           };
       };
-#endif
 
-      TaggedArg arg;
-
-      template<
-          BOOST_PP_ENUM_PARAMS(BOOST_NAMED_PARAMS_MAX_ARITY, class A)
-      >
-      arg_list(
-          BOOST_PP_ENUM_BINARY_PARAMS(BOOST_NAMED_PARAMS_MAX_ARITY, A, const & a)
-      )
-        : Next(
-              BOOST_PP_ENUM_SHIFTED_PARAMS(BOOST_NAMED_PARAMS_MAX_ARITY, a)
-            , empty_arg_list()
-          )
-        , arg(a0)
-      {}
-
-      arg_list(TaggedArg arg, Next const& next)
-        : Next(next)
-        , arg(arg)
-      {}
-
-#if BOOST_WORKAROUND(BOOST_MSVC, <= 1300) || BOOST_NAMED_PARAMS_GCC2
       template <class KW>
-      typename mpl::apply_wrap2<key_value_type, KW, empty_arg_list>::type&
+      typename mpl::apply_wrap2<key_value_type, KW, void_>::type&
       operator[](keyword<KW> x) const
       {
           typename mpl::apply_wrap1<key_owner, KW>::type const& sublist = *this;
@@ -610,8 +614,6 @@ namespace aux
       typedef int type;
   };
 #endif
-
-  struct void_;
   
   // Seq ::= a list of named<K,T> objects
   // Arg ::= an arg<...> instantiation

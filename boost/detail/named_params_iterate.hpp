@@ -54,7 +54,7 @@ BOOST_PP_REPEAT(N, BOOST_NAMED_PARAMS_CLOSE_LIST, _)
 operator()(BOOST_PP_ENUM_BINARY_PARAMS(N, A, const& a)) const
 {
     using aux::arg_list;
-    using aux::empty_arg_list;
+    using aux::void_;
 
     typedef BOOST_PP_ENUM(N, BOOST_NAMED_PARAMS_LIST, _)
         BOOST_PP_REPEAT(N, BOOST_NAMED_PARAMS_CLOSE_LIST, _) list_t;
@@ -65,7 +65,7 @@ operator()(BOOST_PP_ENUM_BINARY_PARAMS(N, A, const& a)) const
         BOOST_PP_ENUM_PARAMS(N, named)
         BOOST_PP_ENUM_TRAILING_PARAMS(
             BOOST_PP_SUB(BOOST_NAMED_PARAMS_MAX_ARITY, N)
-          , empty_arg_list() BOOST_PP_INTERCEPT
+          , void_() BOOST_PP_INTERCEPT
         ));
 }
 
