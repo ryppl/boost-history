@@ -67,7 +67,7 @@ function introduction()
                  P( "The advantages are " . 
                     ulist( li( "Exception-safe and fool proof pointer storage and manipulation." ) .
                            li( "Exception-guarantees are generally much better than with standard containers (very often the strong guarantee)" ) .
-                           li( "Notational convinience compared to the use of containers of smart pointers." ) .
+                           li( "Notational convenience compared to the use of containers of smart pointers." ) .
                            li( "Iterators are automatically indirected so the comparison operations can be kept
                                 on object basis instead of making/adding pointer based variants." ) .
                            li( "No memory-overhead as containers of smart_pointers can have." ) .
@@ -160,7 +160,7 @@ function reference()
                               deep-copy is needed anyway, every container has " . code( "clone()" ) . " member function." ) . 
                          li( i( "Stored elements need not be CopyConstructible or Assignable, but 
                                 for a subset of the operations they are required to be Clonable." ) . 
-                             " This is because most polymophic objects cannot be copied directly, 
+                             " This is because most polymorphic objects cannot be copied directly, 
                               but they can often be so by a use of a member function. Often it does not even make
                               sense to clone an object in which case a large subset of the operations are still workable." 
                               ) .
@@ -168,7 +168,7 @@ function reference()
                                  Whenever pointers are inserted into a container, ownership is transferred to the container." ) .
                              " All containers take ownership of the stored pointers and therefore a container needs to have its 
                                own copies. " ) .
-                         li( i( "Ownership can be tranferred from a container on a per pointer basis." ) .
+                         li( i( "Ownership can be transferred from a container on a per pointer basis." ) .
                              " This can of course also be convenient. Whenever it happens, an " . code( "std::auto_ptr<>" ) .
                                " is used to provide an exception-safe transfer. " ) .              
                          li( i( "Ownership can be transferred from a container to another container on a per iterator range basis." ) . 
@@ -189,7 +189,7 @@ function reference()
 
      $overview   .= p( "The documentation is divided into a common section and an explanation for each container. 
                         The so-called \"pseudo class\" sections
-                        show the interface that some or all of the classes have in common and the indvisual parts shows the interface
+                        show the interface that some or all of the classes have in common and the individual parts shows the interface
                         that is only part of some of the individual classes. Before you proceed, 
                         please make sure you understand the Clonable concept." ) .
                     ulist( item( clonableLink() ) .
@@ -305,7 +305,7 @@ function Faq()
                " Assuming only pointer arguments were allowed, the inexperienced programmer might forget
                  to call " . code( "make_clone()" ) . " on an object. So the code would not compile. To fix it he
                  just takes the address of the object and now he is happy because the code compiles. So to avoid
-                  that from hapening, we add the overloaded version. Notice that containers of smart pointers does
+                  that from happening, we add the overloaded version. Notice that containers of smart pointers does
                   not have this problem. " );
     $faq9 = p( i( "Why do iterator-range inserts give the strong exception-safety guarantee? Is this not very inefficient?" ) .
                " It is because it is actually affordable to do so; the overhead is one heap-allocation which 
@@ -1377,7 +1377,7 @@ function setRef()
 } // namespace 'boost'  
 </pre> ";
 
-    $details = beginDetails( "modifers" ) .
+    $details = beginDetails( "modifiers" ) .
         code( "std::pair<iterator,bool> insert( Key* x );" ) .
         blockQuote( 
             requirements( code( "x != 0" ) ) .
@@ -1460,7 +1460,7 @@ function multisetRef()
 } // namespace 'boost'  
 </pre> ";
 
-    $details = beginDetails( "modifers" ) .
+    $details = beginDetails( "modifiers" ) .
         code( "iterator insert( Key* x );" ) .
         blockQuote( 
             requirements( code( "x != 0" ) ) .
@@ -1550,7 +1550,7 @@ function mapRef()
 } // namespace 'boost'  
 </pre> ";
 
-    $details = beginDetails( "modifers" ) .
+    $details = beginDetails( "modifiers" ) .
         code( "std::pair<iterator,bool> insert( Key& key, T* x );" ) .
         blockQuote( 
             requirements( code( "x != 0" ) ) .
@@ -1662,7 +1662,7 @@ function multimapRef()
 } // namespace 'boost'  
 </pre> ";
 
-    $details = beginDetails( "modifers" ) .
+    $details = beginDetails( "modifiers" ) .
         code( "iterator insert( Key& key, T* x );" ) .
         blockQuote( 
             requirements( code( "x != 0" ) ) .
@@ -1753,7 +1753,7 @@ function mapIteratorRef()
     } " ) .
         p( "So the difference from the normal map iterator is that " . code( "operator*()" ) . 
             " returns a reference to the mapped object (normally it returns a reference to a pair) and that
-              the key can be accessed throgh the " . code( "key()" ) . " function. " ); 
+              the key can be accessed through the " . code( "key()" ) . " function. " ); 
                          
     return $res . $explanation;
 }
