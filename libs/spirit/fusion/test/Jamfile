@@ -1,0 +1,176 @@
+#==============================================================================
+#    Copyright (c) 2003 Joel de Guzman
+#
+#    Permission to copy, use, modify, sell and distribute this software
+#    is granted provided this copyright notice appears in all copies.
+#    This software is provided "as is" without express or implied
+#    warranty, and with no claim as to its suitability for any purpose.
+#==============================================================================
+
+subproject libs/spirit/fusion/test ;
+
+unit-test append_tests
+    : append_tests.cpp
+	: <sysinclude>$(BOOST_ROOT)
+	:
+	;
+
+unit-test const_value_sequence_tests
+    : const_value_sequence_tests.cpp
+	: <sysinclude>$(BOOST_ROOT)
+	:
+	;
+
+unit-test contains_tests
+    : contains_tests.cpp
+	: <sysinclude>$(BOOST_ROOT)
+	:
+	;
+
+unit-test count_if_tests
+    : count_if_tests.cpp
+	: <sysinclude>$(BOOST_ROOT)
+	:
+	;
+
+unit-test count_tests
+    : count_tests.cpp
+	: <sysinclude>$(BOOST_ROOT)
+	:
+	;
+
+unit-test filter_tests
+    : filter_tests.cpp
+	: <sysinclude>$(BOOST_ROOT)
+	:
+	;
+
+unit-test filter_view_tests
+    : filter_view_tests.cpp
+	: <sysinclude>$(BOOST_ROOT)
+	:
+	;
+
+unit-test find_if_tests
+    : find_if_tests.cpp
+	: <sysinclude>$(BOOST_ROOT)
+	:
+	;
+
+unit-test find_tests
+    : find_tests.cpp
+	: <sysinclude>$(BOOST_ROOT)
+	:
+	;
+
+unit-test fold_tests
+    : fold_tests.cpp
+	: <sysinclude>$(BOOST_ROOT)
+	:
+	;
+
+unit-test for_each_tests
+    : for_each_tests.cpp
+	: <sysinclude>$(BOOST_ROOT)
+	:
+	;
+
+unit-test insert_tests
+    : insert_tests.cpp
+	: <sysinclude>$(BOOST_ROOT)
+	:
+	;
+
+unit-test iterator_tests
+    : iterator_tests.cpp
+	: <sysinclude>$(BOOST_ROOT)
+	:
+	;
+
+unit-test joint_view_tests
+    : joint_view_tests.cpp
+	: <sysinclude>$(BOOST_ROOT)
+	:
+	;
+
+unit-test push_back_tests
+    : push_back_tests.cpp
+	: <sysinclude>$(BOOST_ROOT)
+	:
+	;
+
+unit-test push_front_tests
+    : push_front_tests.cpp
+	: <sysinclude>$(BOOST_ROOT)
+	:
+	;
+
+unit-test remove_if_tests
+    : remove_if_tests.cpp
+	: <sysinclude>$(BOOST_ROOT)
+	:
+	;
+
+unit-test remove_tests
+    : remove_tests.cpp
+	: <sysinclude>$(BOOST_ROOT)
+	:
+	;
+
+unit-test replace_tests
+    : replace_tests.cpp
+	: <sysinclude>$(BOOST_ROOT)
+	:
+	;
+
+unit-test single_view_tests
+    : single_view_tests.cpp
+	: <sysinclude>$(BOOST_ROOT)
+	:
+	;
+
+unit-test slice_view_tests
+    : slice_view_tests.cpp
+	: <sysinclude>$(BOOST_ROOT)
+	:
+	;
+
+unit-test transform_tests
+    : transform_tests.cpp
+	: <sysinclude>$(BOOST_ROOT)
+	:
+	;
+
+unit-test transform_view_tests
+    : transform_view_tests.cpp
+	: <sysinclude>$(BOOST_ROOT)
+	:
+	;
+
+unit-test tuple_io_tests
+    : tuple_io_tests.cpp
+	: <sysinclude>$(BOOST_ROOT)
+	:
+	;
+
+unit-test tuple_tests
+    : tuple_tests.cpp
+	: <sysinclude>$(BOOST_ROOT)
+	:
+	;
+
+unit-test tuple_view_tests
+    : tuple_view_tests.cpp
+	: <sysinclude>$(BOOST_ROOT)
+	:
+	;
+
+unit-test tuple_view_tests
+    : tuple_view_tests.cpp
+	: <sysinclude>$(BOOST_ROOT)
+	:
+	;
+
+
+
+
