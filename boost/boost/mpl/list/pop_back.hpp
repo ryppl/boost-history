@@ -61,7 +61,7 @@ struct list_pop_back_algorithm
     typedef typename mpl::list_traits<tag_>                  traits_;
     typedef typename traits_::template next_node<List>::type next_node_;
     typedef typename traits_::template is_null<next_node_>   is_null_;
-#if BOOST_MSVC != 1301 || _MSC_FULL_VER > 13012108 
+#if !defined(BOOST_MSVC) || BOOST_MSVC < 1301 || _MSC_FULL_VER > 13102140
     typedef typename mpl::detail::list_pop_back_algorithm_part1< 
                 (is_null_::value)
                 >::template part2<List>::type sequence;
