@@ -1,4 +1,4 @@
-// Copyright (C) 2001,2002 Roland Richter <roland@flll.jku.at>
+// Copyright (C) 2001-2003 Roland Richter <roland@flll.jku.at>
 // Permission to copy, use, modify, sell and distribute this software
 // is granted provided this copyright notice appears in all copies.
 // This software is provided "as is" without express or implied
@@ -8,12 +8,18 @@
 #include "boost/tupple/detail/tupple_detail.hpp"
 
 
+#include <boost/type_traits.hpp>
+#include <boost/mpl/if.hpp>
+#include <boost/static_assert.hpp>
+
+
 namespace boost
 {
   namespace tupple
   {
     template < class T > struct tuple0
     {
+      typedef tuple0 < T > self_type;
       int size(  ) const
       {
         return 0;
@@ -114,6 +120,13 @@ namespace boost
           m0 = rhs.m0;
           m1 = rhs.m1;
         }
+        return *this;
+      }
+      template < class U1,
+        class U2 > self_type & operator=( const std::pair < U1, U2 > &p )
+      {
+        m0 = p.first;
+        m1 = p.second;
         return *this;
       }
       int size(  ) const
@@ -1158,6 +1171,62 @@ namespace boost
       T7 m7;
       T8 m8;
     };
+    namespace detail
+    {
+      template < class T > struct n_fold_helper
+      {
+        template < int N > struct select
+        {
+        };
+          template <> struct select <0 >
+        {
+          typedef tuple0 < null_type > type;
+        };
+          template <> struct select <1 >
+        {
+          typedef tuple1 < T > type;
+        };
+          template <> struct select <2 >
+        {
+          typedef tuple2 < T, T > type;
+        };
+          template <> struct select <3 >
+        {
+          typedef tuple3 < T, T, T > type;
+        };
+          template <> struct select <4 >
+        {
+          typedef tuple4 < T, T, T, T > type;
+        };
+          template <> struct select <5 >
+        {
+          typedef tuple5 < T, T, T, T, T > type;
+        };
+          template <> struct select <6 >
+        {
+          typedef tuple6 < T, T, T, T, T, T > type;
+        };
+          template <> struct select <7 >
+        {
+          typedef tuple7 < T, T, T, T, T, T, T > type;
+        };
+          template <> struct select <8 >
+        {
+          typedef tuple8 < T, T, T, T, T, T, T, T > type;
+        };
+          template <> struct select <9 >
+        {
+          typedef tuple9 < T, T, T, T, T, T, T, T, T > type;
+        };
+      };
+    }                           // namespace detail
+
+    template < class T, int N > struct n_fold_tuple
+    {
+      typedef detail::n_fold_helper < T >::select < N >::type type;
+    };
+
+
 
 
     template < class TupleT > typename TupleT::get_type0 get0( TupleT & t )
@@ -1187,10 +1256,6 @@ namespace boost
     {
       return make_tuple( detail::assign_to_pointee < T0 > ( &theM0 ) );
     }
-    template < class T > struct n_fold_tuple1
-    {
-      typedef tuple1 < T > type;
-    };
     template < class TupleT > typename TupleT::get_type1 get1( TupleT & t )
     {
       return t.m1;
@@ -1222,10 +1287,6 @@ namespace boost
       return make_tuple( detail::assign_to_pointee < T0 > ( &theM0 ),
                          detail::assign_to_pointee < T1 > ( &theM1 ) );
     }
-    template < class T > struct n_fold_tuple2
-    {
-      typedef tuple2 < T, T > type;
-    };
     template < class TupleT > typename TupleT::get_type2 get2( TupleT & t )
     {
       return t.m2;
@@ -1267,10 +1328,6 @@ namespace boost
                          detail::assign_to_pointee < T1 > ( &theM1 ),
                          detail::assign_to_pointee < T2 > ( &theM2 ) );
     }
-    template < class T > struct n_fold_tuple3
-    {
-      typedef tuple3 < T, T, T > type;
-    };
     template < class TupleT > typename TupleT::get_type3 get3( TupleT & t )
     {
       return t.m3;
@@ -1314,10 +1371,6 @@ namespace boost
                          detail::assign_to_pointee < T2 > ( &theM2 ),
                          detail::assign_to_pointee < T3 > ( &theM3 ) );
     }
-    template < class T > struct n_fold_tuple4
-    {
-      typedef tuple4 < T, T, T, T > type;
-    };
     template < class TupleT > typename TupleT::get_type4 get4( TupleT & t )
     {
       return t.m4;
@@ -1370,10 +1423,6 @@ namespace boost
                          detail::assign_to_pointee < T3 > ( &theM3 ),
                          detail::assign_to_pointee < T4 > ( &theM4 ) );
     }
-    template < class T > struct n_fold_tuple5
-    {
-      typedef tuple5 < T, T, T, T, T > type;
-    };
     template < class TupleT > typename TupleT::get_type5 get5( TupleT & t )
     {
       return t.m5;
@@ -1428,10 +1477,6 @@ namespace boost
                          detail::assign_to_pointee < T4 > ( &theM4 ),
                          detail::assign_to_pointee < T5 > ( &theM5 ) );
     }
-    template < class T > struct n_fold_tuple6
-    {
-      typedef tuple6 < T, T, T, T, T, T > type;
-    };
     template < class TupleT > typename TupleT::get_type6 get6( TupleT & t )
     {
       return t.m6;
@@ -1495,10 +1540,6 @@ namespace boost
                          detail::assign_to_pointee < T5 > ( &theM5 ),
                          detail::assign_to_pointee < T6 > ( &theM6 ) );
     }
-    template < class T > struct n_fold_tuple7
-    {
-      typedef tuple7 < T, T, T, T, T, T, T > type;
-    };
     template < class TupleT > typename TupleT::get_type7 get7( TupleT & t )
     {
       return t.m7;
@@ -1565,10 +1606,6 @@ namespace boost
                          detail::assign_to_pointee < T6 > ( &theM6 ),
                          detail::assign_to_pointee < T7 > ( &theM7 ) );
     }
-    template < class T > struct n_fold_tuple8
-    {
-      typedef tuple8 < T, T, T, T, T, T, T, T > type;
-    };
     template < class TupleT > typename TupleT::get_type8 get8( TupleT & t )
     {
       return t.m8;
@@ -1644,10 +1681,6 @@ namespace boost
                          detail::assign_to_pointee < T7 > ( &theM7 ),
                          detail::assign_to_pointee < T8 > ( &theM8 ) );
     }
-    template < class T > struct n_fold_tuple9
-    {
-      typedef tuple9 < T, T, T, T, T, T, T, T, T > type;
-    };
     template < class F, class R, class T0 > struct function_object1
     {
       typedef tuple1 < T0 > argument_type;
@@ -2389,7 +2422,7 @@ namespace boost
 
 // operator!= seems to be defined within STL, sometimes,
 // for instance in file stl_relops.h of SGI's STL
-#ifndef TUPPLE_SKIP_NOT_EQUAL
+#ifndef TUPPLE_SKIP_UNEQUAL
     template < class T0, class S0 > bool operator!=( const tuple1 < T0 > &lhs,
                                                      const tuple1 < S0 >
                                                      &rhs )
@@ -2459,6 +2492,127 @@ namespace boost
       return !( lhs == rhs );
     }
 #endif
+    namespace detail
+    {
+// The initial case.
+      template < class T0 > struct base_type_selector1
+      {
+        typedef boost::mpl::if_c <
+          boost::is_same < T0, null_type >::value,
+          tuple0 < null_type >, tuple1 < T0 > >::type type;
+      };
+
+        template < class T0, class T1 > struct base_type_selector2
+      {
+        typedef boost::mpl::if_c < boost::is_same < T1, null_type >::value,
+          base_type_selector1 < T0 >::type, tuple2 < T0, T1 > >::type type;
+      };
+        template < class T0, class T1, class T2 > struct base_type_selector3
+      {
+        typedef boost::mpl::if_c < boost::is_same < T2, null_type >::value,
+          base_type_selector2 < T0, T1 >::type, tuple3 < T0, T1,
+          T2 > >::type type;
+      };
+        template < class T0, class T1, class T2, class T3 > struct base_type_selector4
+      {
+        typedef boost::mpl::if_c < boost::is_same < T3, null_type >::value,
+          base_type_selector3 < T0, T1, T2 >::type, tuple4 < T0, T1, T2,
+          T3 > >::type type;
+      };
+        template < class T0, class T1, class T2, class T3, class T4 > struct base_type_selector5
+      {
+        typedef boost::mpl::if_c < boost::is_same < T4, null_type >::value,
+          base_type_selector4 < T0, T1, T2, T3 >::type, tuple5 < T0, T1, T2,
+          T3, T4 > >::type type;
+      };
+        template < class T0, class T1, class T2, class T3, class T4,
+        class T5 > struct base_type_selector6
+      {
+        typedef boost::mpl::if_c < boost::is_same < T5, null_type >::value,
+          base_type_selector5 < T0, T1, T2, T3, T4 >::type, tuple6 < T0, T1,
+          T2, T3, T4, T5 > >::type type;
+      };
+        template < class T0, class T1, class T2, class T3, class T4, class T5,
+        class T6 > struct base_type_selector7
+      {
+        typedef boost::mpl::if_c < boost::is_same < T6, null_type >::value,
+          base_type_selector6 < T0, T1, T2, T3, T4, T5 >::type, tuple7 < T0,
+          T1, T2, T3, T4, T5, T6 > >::type type;
+      };
+        template < class T0, class T1, class T2, class T3, class T4, class T5,
+        class T6, class T7 > struct base_type_selector8
+      {
+        typedef boost::mpl::if_c < boost::is_same < T7, null_type >::value,
+          base_type_selector7 < T0, T1, T2, T3, T4, T5, T6 >::type,
+          tuple8 < T0, T1, T2, T3, T4, T5, T6, T7 > >::type type;
+      };
+        template < class T0, class T1, class T2, class T3, class T4, class T5,
+        class T6, class T7, class T8 > struct base_type_selector9
+      {
+        typedef boost::mpl::if_c < boost::is_same < T8, null_type >::value,
+          base_type_selector8 < T0, T1, T2, T3, T4, T5, T6, T7 >::type,
+          tuple9 < T0, T1, T2, T3, T4, T5, T6, T7, T8 > >::type type;
+      };
+    }                           // namespace detail
+    template < class T0 = null_type, class T1 = null_type, class T2 =
+      null_type, class T3 = null_type, class T4 = null_type, class T5 =
+      null_type, class T6 = null_type, class T7 = null_type, class T8 =
+      null_type > struct tuple:public detail::base_type_selector9 < T0, T1,
+      T2, T3, T4, T5, T6, T7, T8 >::type
+    {
+      typedef detail::base_type_selector9 < T0, T1, T2, T3, T4, T5, T6, T7,
+        T8 >::type base_type;
+
+        tuple(  ):self_type(  )
+      {
+      }
+
+      template < class V0 > tuple( V0 v0 ):self_type( v0 )
+      {
+      }
+    template < class V0, class V1 > tuple( V0 v0, V1 v1 ):self_type( v0,
+                 v1 )
+      {
+      }
+    template < class V0, class V1, class V2 > tuple( V0 v0, V1 v1, V2 v2 ):self_type( v0, v1,
+                 v2 )
+      {
+      }
+    template < class V0, class V1, class V2, class V3 > tuple( V0 v0, V1 v1, V2 v2, V3 v3 ):self_type( v0, v1, v2,
+                 v3 )
+      {
+      }
+    template < class V0, class V1, class V2, class V3, class V4 > tuple( V0 v0, V1 v1, V2 v2, V3 v3, V4 v4 ):self_type( v0, v1, v2, v3,
+                 v4 )
+      {
+      }
+    template < class V0, class V1, class V2, class V3, class V4, class V5 > tuple( V0 v0, V1 v1, V2 v2, V3 v3, V4 v4, V5 v5 ):self_type( v0, v1, v2, v3, v4,
+                 v5 )
+      {
+      }
+    template < class V0, class V1, class V2, class V3, class V4, class V5, class V6 > tuple( V0 v0, V1 v1, V2 v2, V3 v3, V4 v4, V5 v5, V6 v6 ):self_type( v0, v1, v2, v3, v4, v5,
+                 v6 )
+      {
+      }
+    template < class V0, class V1, class V2, class V3, class V4, class V5, class V6, class V7 > tuple( V0 v0, V1 v1, V2 v2, V3 v3, V4 v4, V5 v5, V6 v6, V7 v7 ):self_type( v0, v1, v2, v3, v4, v5, v6,
+                 v7 )
+      {
+      }
+    template < class V0, class V1, class V2, class V3, class V4, class V5, class V6, class V7, class V8 > tuple( V0 v0, V1 v1, V2 v2, V3 v3, V4 v4, V5 v5, V6 v6, V7 v7, V8 v8 ):self_type( v0, v1, v2, v3, v4, v5, v6, v7,
+                 v8 )
+      {
+      }
+
+      template < class S0, class S1, class S2, class S3, class S4, class S5,
+        class S6, class S7,
+        class S8 > base_type & operator=( const tuple < S0, S1, S2, S3, S4,
+                                          S5, S6, S7, S8 > &rhs )
+      {
+        //BOOST_STATIC_ASSERT(  );
+        return ( base_type::operator=( rhs ) );
+      }
+
+    };
   }                             // namespace tupple
 }                               // namespace boost
 
