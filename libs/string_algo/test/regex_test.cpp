@@ -116,5 +116,5 @@ int test_main( int, char*[] )
     find_test();
     replace_test();
 
-	return 0;
+    return 0;
 }

@@ -67,7 +67,7 @@ namespace boost {
             return *this;
         }
 
-		// Comparison
+        // Comparison
         template< typename OtherItT > 
         bool operator==( const iterator_range<OtherItT>& Other )
         {
