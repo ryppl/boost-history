@@ -231,13 +231,9 @@
 # define OSMINOR "OS=CYGWIN"
 # define OS_CYGWIN
 # endif
-# if defined(__FreeBSD__) && !defined(__DragonFly__)
+# ifdef __FreeBSD__
 # define OSMINOR "OS=FREEBSD"
 # define OS_FREEBSD
-# endif
-# ifdef __DragonFly__
-# define OSMINOR "OS=DRAGONFLYBSD"
-# define OS_DRAGONFLYBSD
 # endif
 # ifdef __DGUX__
 # define OSMINOR "OS=DGUX"
@@ -398,7 +394,6 @@
 
 # if !defined(OS_BSDI) && \
      !defined(OS_FREEBSD) && \
-     !defined(OS_DRAGONFLYBSD) && \
      !defined(OS_NEXT) && \
      !defined(OS_MACHTEN) && \
      !defined(OS_MACOSX) && \
@@ -431,7 +426,6 @@
      defined( __i386__ ) || \
      defined( _M_IX86 )
 # if !defined( OS_FREEBSD ) && \
-     !defined( OS_DRAGONFLYBSD ) && \
      !defined( OS_OS2 ) && \
      !defined( OS_AS400 )
 # define OSPLAT "OSPLAT=X86"
