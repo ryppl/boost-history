@@ -13,6 +13,8 @@
 // Mutating algorithms taken from Vladimir Prus <ghost@cs.msu.su>
 // code from Boost Wiki
 
+// Problem: should member functions be called automatically? Or should the user 
+// know that it is better to call map::find() than find( map )?
 
 // Thu May 30     I strongly disagree to have two different type for
 //                begin() and end() in std::pair<Iter1,Iter2>
@@ -20,6 +22,7 @@
 
 // Thu May 30     Proposed to put container interfaces
 //                into separate file for <algorithm> extensions [Herve]
+
 
 #ifndef BOOST_CONTAINER_ALGORITHM_HPP
 #define BOOST_CONTAINER_ALGORITHM_HPP
@@ -29,6 +32,7 @@
 #include <boost/array_traits.hpp>
 #include <boost/concept_check.hpp>
 #include <boost/config.hpp>
+#include <boost/type_traits/function_traits.hpp>
 #include <boost/detail/iterator.hpp>
 
 //#include <boost/sequence_algo/algorithm.hpp>
@@ -98,6 +102,9 @@ namespace boost
 		class container_algo_array_tag
 		{
 		};
+		class container_algo_iter_tag
+		{
+		};
 
 		template <typename Container>
 		struct container_algo_make_tag
@@ -126,6 +133,9 @@ namespace boost
 			typedef typename array_traits<T[sz]>::iterator    result_type;
 			typedef const result_type                         const_result_type; 
 		};
+
+		template< typename Iterator >
+		struct container_algo_make_tag;
 
 		// for container_tag
 		template <typename Container>
@@ -345,23 +355,45 @@ namespace boost
 	// Macros
 	///////////////////////////////////////////////////////////////////////////
 
-#define BOOST_FWD_ALGO( A )       return std::A( begin( c ), end( c ) );
-#define BOOST_FWD_ALGO1( A, X )   return std::A( begin( c ), end( c ), X );
-#define BOOST_FWD_ALGO2( A )      return std::A( begin( c1 ), end( c1 ),    \
-                                                 begin( c2 ), end( c2 ) );  
-#define BOOST_FWD_ALGO21( A, X )  return std::A( begin( c1 ), end( c1 ),    \
-                                                 begin( c2 ), end( c2 ), X );
+#define BOOST_FWD_ALGO_BE( A )       return std::A( begin( c ), end( c ) );
+#define BOOST_FWD_ALGO_BEX( A, X )   return std::A( begin( c ), end( c ), X );
+#define BOOST_FWD_ALGO_BEXY( A, X, Y ) return std::A( begin( c ), end( c ), X, Y );
+#define BOOST_FWD_ALGO_BEXYZ( A, X, Y, Z ) \
+                                return std::A( begin( c ), end( c ), X, Y, Z );
+#define BOOST_FWD_ALGO_BEBE( A )     return std::A( begin( c1 ), end( c1 ), \
+                                                    begin( c2 ), end( c2 ) );  
+#define BOOST_FWD_ALGO_BEBEX( A, X ) return std::A( begin( c1 ), end( c1 ), \
+                                                    begin( c2 ), end( c2 ), X );
+#define BOOST_FWD_ALGO_BEB( A )      return std::A( begin( c1 ), end( c1 ), \
+	                                                begin( c2 ) );
+#define BOOST_FWD_ALGO_BEBX( A, X )  return  std::A( begin( c1 ), end( c1 ), \
+                                                     begin( c2 ), X );  
+//
+// naming convention: 
+//  fun   = Unary_function,
+//  pred  = Predicate
+//  value = T (equality compareable)
+//	
 
-	/**
-	 * naming convention: fun, pred, value
-	 * */
-#define BOOST_FWD_ALGO_FUN( A ) /*CHECK_FUN*/      BOOST_FWD_ALGO1( A, fun )
-#define BOOST_FWD_ALGO_EQ( A ) /*CHECL_EQ*/        BOOST_FWD_ALGO1( A, value )
-#define BOOST_FWD_ALGO_PRED( A ) /*CHECK_PRED*/       BOOST_FWD_ALGO1( A, pred ) 
-#define BOOST_FWD_ALGO_BPRED( A ) /*CHECK_BPRED*/     BOOST_FWD_ALGO1( A, pred )
-#define BOOST_FWD_ALGO2_BPRED( A ) /*CHECK_BPRED*/ BOOST_FWD_ALGO21( A, pred ) )
+#define BOOST_FWD_ALGO_FUN( A )                                              \
+    /* @note: don't work with functors :(                                    \
+	function_requires< UnaryFunctionConcept<Unary_function, void,            \
+                  typename function_traits<Unary_function>::arg1_type > >(); \
+    */				                                                         \
+    BOOST_FWD_ALGO_BEX( A, fun )
+	
+#define BOOST_FWD_ALGO_EQ( A ) /*CHECL_EQ*/      BOOST_FWD_ALGO_BEX( A, value )
+#define BOOST_FWD_ALGO_PRED( A ) /*CHECK_PRED*/    BOOST_FWD_ALGO_BEX( A, pred ) 
+#define BOOST_FWD_ALGO_BPRED( A ) /*CHECK_BPRED*/  BOOST_FWD_ALGO_BEX( A, pred )
+#define BOOST_FWD_ALGO_INT_EQ( A ) /*CHECK_INT, CHECK_EQ*/ \
+                 BOOST_FWD_ALGO_BEXY( A, count, value )
+#define BOOST_FWD_ALGO_INT_EQ_BPRED( A ) /**CHECK_INT, CHECK_EQ, CHECK_BPRED */ \
+                                BOOST_FWD_ALGO_BEXYZ( A, count, value, pred );
+#define BOOST_FWD_ALGO3_BPRED( A ) /*CHECK_BPRED*/ BOOST_FWD_ALGO_BEBX( A, pred )
+#define BOOST_FWD_ALGO4_BPRED( A ) /*CHECK_BPRED*/BOOST_FWD_ALGO_BEBEX( A, pred )
+
 #define BOOST_ALGO_START1( A, R, C, Arg1 )     R A( C c, Arg1 arg1 )                                                            
-	#define XXXXXXXX return std::A( begin( c ), end( c ), arg1 );         
+#define XXXXXXXX return std::A( begin( c ), end( c ), arg1 );         
 
 	#define CHECK_UNARY_FUNCTION( Fun, Container )               
 	#define CHECK_BINARY_PREDICATE( Pred, Container1, Container2 )
@@ -375,6 +407,8 @@ namespace boost
 	struct mutable_return
 	{
 		typedef typename T::iterator  iterator;
+		typedef typename std::iterator_traits<iterator>::difference_type
+		diff_type; 
 	};
 
 
@@ -383,7 +417,7 @@ namespace boost
 	struct mutable_return< T[sz] >
 	{
 		typedef typename array_traits<T[sz]>::iterator  iterator;
-
+		typedef size_t                                  diff_type;
 	};
 
 
@@ -399,7 +433,16 @@ namespace boost
 	template< typename T, size_t sz >
 	struct const_return< T[sz] >
 	{
-		typedef const typename array_traits<const T[sz]>::iterator  iterator;
+		typedef typename array_traits<const T[sz]>::iterator  iterator;
+	};
+
+
+
+	template< typename T1, typename T2 >
+	struct pair_return
+	{
+		typedef typename std::pair< typename mutable_return<T1>::iterator,
+		typename mutable_return<T2>::iterator > iter_pair;
 	};
 
 	///////////////////////////////////////////////////////////////////////////
@@ -416,123 +459,278 @@ namespace boost
 
 
 	template< typename Container, typename T >
-	typename mutable_return<Container>::iterator 
+	inline typename mutable_return<Container>::iterator 
 	find( Container& c, const T& value )
 	{
 		BOOST_FWD_ALGO_EQ( find );
 	}
 
 	template< typename Container, typename T >
-	typename const_return<Container>::iterator 
+	inline typename const_return<Container>::iterator 
 	find( const Container& c, const T& value )
 	{
 		BOOST_FWD_ALGO_EQ( find );
 	}
-	
-	
-	
+
+
+
 	template< typename Container, typename Predicate >
-	typename mutable_return<Container>::iterator 
+	inline typename mutable_return<Container>::iterator 
 	find_if( Container& c, Predicate pred )
 	{
 		BOOST_FWD_ALGO_PRED( find_if );
 	}
-	
+
 	template< typename Container, typename Predicate >
-	typename const_return<Container>::iterator 
+	inline typename const_return<Container>::iterator
 	find_if( const Container& c, Predicate pred )
 	{
 		BOOST_FWD_ALGO_PRED( find_if );
-	}	
-	
-	
+	}   
+
+
 
 	template< typename Container >
-	typename Container::iterator 
-	adjacent_find( Container& c );
+	inline typename mutable_return<Container>::iterator
+	adjacent_find( Container& c )
+	{
+		BOOST_FWD_ALGO_BE( adjacent_find );
+	}
+
+	template< typename Container >
+	inline typename const_return<Container>::iterator
+	adjacent_find( const Container& c )
+	{
+		BOOST_FWD_ALGO_BE( adjacent_find );
+	}
 
 	template< typename Container, typename Binary_predicate >
-	typename Container::iterator 
-	adjacent_find( Container& c, Binary_predicate binary_pred );
+	inline typename mutable_return<Container>::iterator 
+	adjacent_find( Container& c, Binary_predicate pred )
+	{
+		BOOST_FWD_ALGO_BPRED( adjacent_find );
+	}
 
-	// container or begin iterator?
-	// How can both be supported? begin( iterator = itself )?
-	template< typename Container, typename Forward_iterator >
-	typename Container::iterator 
-	find_first_of( Container& search_for, Forward_iterator first2, 
-				   Forward_iterator last2 ); 
+	template< typename Container, typename Binary_predicate >
+	inline typename const_return<Container>::iterator 
+	adjacent_find( const Container& c, Binary_predicate pred )
+	{
+		BOOST_FWD_ALGO_BPRED( adjacent_find );
+	}
+
+
 
 	template< typename Container1, typename Container2 >
-	typename Container1::iterator 
-	find_first_of( Container1& search_for, Container2& search_in );
+	inline typename mutable_return<Container1>::iterator 
+	find_first_of( Container1& c1, const Container2& c2 )
+	{
+		BOOST_FWD_ALGO_BEBE( find_first_of );
+	}
 
-	template< typename Container, typename Forward_iterator, 
+	template< typename Container1, typename Container2 >
+	inline typename const_return<Container1>::iterator 
+	find_first_of( const Container1& c1, const Container2& c2 )
+	{
+		BOOST_FWD_ALGO_BEBE( find_first_of );
+	}
+
+	template< typename Container1, typename Container2, 
 	typename Binary_predicate >
-	typename Container::iterator 
-	find_first_of( Container& search_for, Forward_iterator first2, 
-				   Forward_iterator last2, Binary_predicate binary_pred );
+	inline typename mutable_return<Container1>::iterator 
+	find_first_of( Container1& c1, const Container2& c2, 
+				   Binary_predicate pred )
+	{
+		BOOST_FWD_ALGO4_BPRED( find_first_of );
+	}
+
+	template< typename Container1, typename Container2, 
+	typename Binary_predicate >
+	inline typename const_return<Container1>::iterator 
+	find_first_of( const Container1& c1, const Container2& c2, 
+				   Binary_predicate pred )
+	{
+		BOOST_FWD_ALGO4_BPRED( find_first_of );
+	}
+
+
 
 	template< typename Container, typename T >
-	typename std::iterator_traits<typename Container::iterator>::difference_type
-	count( const Container& c, const T& value );
+	inline typename mutable_return<Container>::diff_type
+	count( const Container& c, const T& value )
+	{
+		BOOST_FWD_ALGO_EQ( count );
+	}
 
-	template <typename Container, typename Predicate>
-	typename std::iterator_traits<typename Container::iterator>::difference_type
-	count_if( const Container& c, Predicate p );
 
-	// container or begin iterator?
-	// How can both be supported? begin( iterator = itself )?
-	template< typename Container, typename Input_iterator >
-	inline typename std::pair<typename Container::iterator, Input_iterator> 
-	mismatch( Container& c, Input_iterator first2 );
 
-	template< typename Container, typename Input_iterator, 
-	typename Binary_predicate > 
-	inline typename std::pair<typename Container::iterator, Input_iterator> 
-	mismatch( Container& c, Input_iterator first2, Binary_predicate binary_pred );
+	template< typename Container, typename Predicate >
+	inline typename mutable_return<Container>::diff_type
+	count_if( const Container& c, Predicate pred )
+	{
+		BOOST_FWD_ALGO_PRED( count_if );
+	}
+
+
 
 	template< typename Container1, typename Container2 >
-	bool 
-	equal( const Container1& c1, const Container2& c2 );    
+	inline typename pair_return<Container1,Container2>::iter_pair
+	mismatch( Container1& c1, Container2& c2 )
+	{
+		BOOST_FWD_ALGO_BEB( mismatch );
+	}
 
-	template< typename Container, typename Input_iterator, 
-	typename Binary_predicate > 
-	bool 
-	equal( Container& c, Input_iterator first2, 
-		   Binary_predicate binary_pred );
-
-	// problem: what about other intervals?
-	// make_pair( begin, begin + 5 ) ?
-	// range( begin, begin + 5 ) ? 
 	template< typename Container1, typename Container2 >
-	inline typename Container1::iterator 
-	search( Container1& search_in, Container2& search_for );
+	inline typename pair_return< const Container1,Container2>::iter_pair
+	mismatch( const Container1& c1, Container2& c2 )
+	{
+		BOOST_FWD_ALGO_BEB( mismatch );
+	}
+
+	template< typename Container1, typename Container2 >
+	inline typename pair_return<Container1, const Container2>::iter_pair
+	mismatch( Container1& c1, const Container2& c2 )
+	{
+		BOOST_FWD_ALGO_BEB( mismatch );
+	}
+
+	template< typename Container1, typename Container2 >
+	inline typename pair_return<const Container1, const Container2>::iter_pair
+	mismatch( const Container1& c1, const Container2& c2 )
+	{
+		BOOST_FWD_ALGO_BEB( mismatch );
+	}
+
+	template< typename Container1, typename Container2, 
+	typename Binary_predicate >
+	inline typename pair_return<Container1,Container2>::iter_pair
+	mismatch( Container1& c1, const Container2& c2, Binary_predicate pred )
+	{
+		BOOST_FWD_ALGO3_BPRED( mismatch );
+	}
+
+	template< typename Container1, typename Container2, 
+	typename Binary_predicate >
+	inline typename pair_return<Container1,Container2>::iter_pair
+	mismatch( const Container1& c1, const Container2& c2, Binary_predicate pred )
+	{
+		BOOST_FWD_ALGO3_BPRED( mismatch );
+	}
+
+
+
+	template< typename Container1, typename Container2 >
+	inline bool 
+	equal( const Container1& c1, const Container2& c2 )
+	{
+		BOOST_FWD_ALGO_BEB( equal );
+	}
+
+	template< typename Container1, typename Container2, 
+	typename Binary_predicate > 
+	inline bool 
+	equal_( const Container1& c1, const Container2& c2, Binary_predicate pred )
+	{
+		BOOST_FWD_ALGO3_BPRED( equal );
+	}
+
+
+
+	template< typename Container1, typename Container2 >
+	inline typename mutable_return<Container1>::iterator 
+	search( Container1& c1, const Container2& c2 )
+	{
+		BOOST_FWD_ALGO_BEBE( search );
+	}
+
+	template< typename Container1, typename Container2 >
+	inline typename const_return<Container1>::iterator 
+	search( const Container1& c1, const Container2& c2 )
+	{
+		BOOST_FWD_ALGO_BEBE( search );
+	}
 
 	template< typename Container1, typename Container2,
 	typename Binary_predicate >
-	typename Container1::iterator
-	search( Container1& search_in, Container2& search_for,
-			Binary_predicate binary_pred );
-
-	template< typename Forward_container, typename Integer, typename T >
-	typename Forward_container::iterator 
-	search_n( Forward_container& c, Integer count, const T& value );   
-
-	template<class Container, class Size, class T, class Predicate>
-	inline typename Container::iterator
-	search_n(Container& container, Size count, const T& value,
-			 Predicate pred);
-
-	template< typename Container1, typename Container2 >
-	typename Container1::iterator 
-	find_end( Container1& search_in, Container2& search_for );
-
+	inline typename mutable_return<Container1>::iterator
+	search( Container1& c1, const Container2& c2, Binary_predicate pred )
+	{
+		BOOST_FWD_ALGO4_BPRED( search );
+	}
 
 	template< typename Container1, typename Container2,
 	typename Binary_predicate >
-	typename Container1::iterator 
-	find_end( Container1& search_in, Container2& search_for,
-			  Binary_predicate binary_pred );
+	inline typename const_return<Container1>::iterator
+	search( const Container1& c1, const Container2& c2, Binary_predicate pred )
+	{
+		BOOST_FWD_ALGO4_BPRED( search );
+	}
+
+
+
+	template< typename Container, typename Integer, typename T >
+	inline typename mutable_return<Container>::iterator 
+	search_n( Container& c, Integer count, const T& value )
+	{
+		BOOST_FWD_ALGO_INT_EQ( search_n );
+	}
+
+	template< typename Container, typename Integer, typename T >
+	inline typename const_return<Container>::iterator 
+	search_n( const Container& c, Integer count, const T& value )
+	{
+		BOOST_FWD_ALGO_INT_EQ( search_n );
+	}
+
+	template< typename Container, typename Integer, 
+	typename T, typename Binary_predicate >
+	inline typename mutable_return<Container>::iterator
+	search_n( Container& c, Integer count, const T& value,
+			  Binary_predicate pred )
+	{
+		BOOST_FWD_ALGO_INT_EQ_BPRED( search_n );
+	}
+
+	template< typename Container, typename Integer, 
+	typename T, typename Binary_predicate >
+	inline typename const_return<Container>::iterator
+	search_n( const Container& c, Integer count, const T& value,
+			  Binary_predicate pred )
+	{
+		BOOST_FWD_ALGO_INT_EQ_BPRED( search_n );
+	}
+
+
+
+	template< typename Container1, typename Container2 >
+	typename mutable_return<Container1>::iterator 
+	find_end( Container1& c1, const Container2& c2 )
+	{
+		BOOST_FWD_ALGO_BEBE( find_end ); 
+	}
+
+	template< typename Container1, typename Container2 >
+	typename const_return<Container1>::iterator 
+	find_end( const Container1& c1, const Container2& c2 )
+	{
+		BOOST_FWD_ALGO_BEBE( find_end ); 
+	}
+
+	template< typename Container1, typename Container2,
+	typename Binary_predicate >
+	typename mutable_return<Container1>::iterator 
+	find_end( Container1& c1, const Container2& c2, Binary_predicate pred )
+	{
+		BOOST_FWD_ALGO4_BPRED( find_end );
+	}
+
+	template< typename Container1, typename Container2,
+	typename Binary_predicate >
+	typename const_return<Container1>::iterator 
+	find_end( const Container1& c1, const Container2& c2, 
+			  Binary_predicate pred )
+	{
+		BOOST_FWD_ALGO4_BPRED( find_end );
+	}
 
 	///////////////////////////////////////////////////////////////////////////
 	// Modifying Sequance Operations
