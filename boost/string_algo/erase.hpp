@@ -22,7 +22,7 @@ namespace boost {
 //  erase_range -------------------------------------------------------//
 
     // erase_range iterator version
-    template< typename ForwardIterator1T, typename OutputIteratorT >
+    template< typename OutputIteratorT, typename ForwardIterator1T >
     inline OutputIteratorT erase_range_copy(
         OutputIteratorT Output,
         ForwardIterator1T Begin,
@@ -43,7 +43,7 @@ namespace boost {
                 typename boost::detail::iterator_traits<ForwardIterator1T>::value_type >() );
     }
 
-    template< typename InputT, typename OutputIteratorT >
+    template< typename OutputIteratorT, typename InputT >
     inline OutputIteratorT erase_range_copy(
         OutputIteratorT Output,
         const InputT& Input,
@@ -99,9 +99,9 @@ namespace boost {
 
     // erase_first iterator version
     template< 
+        typename OutputIteratorT,
         typename ForwardIterator1T, 
-        typename ForwardIterator2T, 
-        typename OutputIteratorT >
+        typename ForwardIterator2T >
     inline OutputIteratorT erase_first_copy(
         OutputIteratorT Output,
         ForwardIterator1T Begin,
@@ -123,9 +123,9 @@ namespace boost {
     }
 
     template< 
+        typename OutputIteratorT,
         typename InputT, 
-        typename SearchT,
-        typename OutputIteratorT >
+        typename SearchT >
     inline OutputIteratorT erase_first_copy(
         OutputIteratorT Output,
         const InputT& Input,
@@ -172,9 +172,9 @@ namespace boost {
 
     // erase_last iterator version
     template< 
+        typename OutputIteratorT,
         typename ForwardIterator1T, 
-        typename ForwardIterator2T, 
-        typename OutputIteratorT >
+        typename ForwardIterator2T >
     inline OutputIteratorT erase_last_copy(
         OutputIteratorT Output,
         ForwardIterator1T Begin,
@@ -196,9 +196,9 @@ namespace boost {
     }
 
     template< 
+        typename OutputIteratorT,
         typename InputT, 
-        typename SearchT,
-        typename OutputIteratorT >
+        typename SearchT >
     inline OutputIteratorT erase_last_copy(
         OutputIteratorT Output,
         const InputT& Input,
@@ -245,9 +245,9 @@ namespace boost {
 
     // erase_nth iterator version
     template< 
+        typename OutputIteratorT,
         typename ForwardIterator1T, 
-        typename ForwardIterator2T, 
-        typename OutputIteratorT >
+        typename ForwardIterator2T >
     inline OutputIteratorT erase_nth_copy(
         OutputIteratorT Output,
         ForwardIterator1T Begin,
@@ -270,9 +270,9 @@ namespace boost {
     }
 
     template< 
+        typename OutputIteratorT,
         typename InputT, 
-        typename SearchT,
-        typename OutputIteratorT >
+        typename SearchT >
     inline OutputIteratorT erase_nth_copy(
         OutputIteratorT Output,
         const InputT& Input,
@@ -323,9 +323,9 @@ namespace boost {
 
     // erase_all iterator version
     template< 
+        typename OutputIteratorT,
         typename ForwardIterator1T, 
-        typename ForwardIterator2T, 
-        typename OutputIteratorT >
+        typename ForwardIterator2T >
     inline OutputIteratorT erase_all_copy(
         OutputIteratorT Output,
         ForwardIterator1T Begin,
@@ -347,9 +347,9 @@ namespace boost {
     }
 
     template< 
+        typename OutputIteratorT,
         typename InputT, 
-        typename SearchT,
-        typename OutputIteratorT >
+        typename SearchT >
     inline OutputIteratorT erase_all_copy(
         OutputIteratorT Output,
         const InputT& Input,

@@ -108,7 +108,6 @@ static void replace_test()
     BOOST_CHECK( str1==string("123AxXxCa23ca456c321") );
 }
 
-
 void regex_test()
 {
     find_test();

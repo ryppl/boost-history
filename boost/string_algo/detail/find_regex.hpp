@@ -109,7 +109,7 @@ namespace boost {
 
             // Construction helper
             template<typename InputT, typename RegExT>
-            find_regexF<typename input_policy<InputT>::iterator_type, RegExT>
+            inline find_regexF<typename input_policy<InputT>::iterator_type, RegExT>
             create_find_regex(
                 InputT&,
                 const RegExT& Rx, 

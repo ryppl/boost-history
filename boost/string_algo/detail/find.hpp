@@ -55,7 +55,7 @@ namespace boost {
 
             // Construction helper
             template<typename InputT>
-            find_rangeF<typename input_policy<InputT>::iterator_type>
+            inline find_rangeF<typename input_policy<InputT>::iterator_type>
             create_find_range( 
                 InputT&, 
                 const iterator_range<typename input_policy<InputT>::iterator_type>& Range )
@@ -119,7 +119,7 @@ namespace boost {
 
             // Construction helper
             template<typename InputT, typename SearchT>
-            find_firstF<typename input_policy<InputT>::iterator_type, SearchT>
+            inline find_firstF<typename input_policy<InputT>::iterator_type, SearchT>
             create_find_first(
                 InputT&,
                 const SearchT& Search )
@@ -218,7 +218,7 @@ namespace boost {
 
             // Construction helper
             template<typename InputT, typename SearchT>
-            find_lastF<typename input_policy<InputT>::iterator_type, SearchT>
+            inline find_lastF<typename input_policy<InputT>::iterator_type, SearchT>
             create_find_last(
                 InputT&,
                 const SearchT& Search )
@@ -282,7 +282,7 @@ namespace boost {
 
             // Construction helper
             template<typename InputT, typename SearchT>
-            find_nthF<typename input_policy<InputT>::iterator_type, SearchT>
+            inline find_nthF<typename input_policy<InputT>::iterator_type, SearchT>
             create_find_nth(
                 InputT&,
                 const SearchT& Search,

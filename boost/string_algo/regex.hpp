@@ -66,11 +66,11 @@ namespace boost {
 
     // replace_regex iterator version
     template< 
+        typename OutputIteratorT,
         typename ForwardIteratorT,
         typename CharT, 
         typename RegexTraitsT, typename RegexAllocatorT,
-        typename FormatStringTraitsT, typename FormatStringAllocatorT,
-        typename OutputIteratorT >
+        typename FormatStringTraitsT, typename FormatStringAllocatorT >
     inline OutputIteratorT replace_regex_copy(
         OutputIteratorT Output,
         ForwardIteratorT Begin,
@@ -92,11 +92,11 @@ namespace boost {
     }
 
     template< 
+        typename OutputIteratorT,
         typename InputT, 
         typename CharT, 
         typename RegexTraitsT, typename RegexAllocatorT,
-        typename FormatStringTraitsT, typename FormatStringAllocatorT,
-        typename OutputIteratorT >
+        typename FormatStringTraitsT, typename FormatStringAllocatorT >
     inline OutputIteratorT replace_regex_copy(
         OutputIteratorT Output,
         const InputT& Input,
@@ -160,11 +160,11 @@ namespace boost {
 
     // replace_all_regex iterator version
     template< 
+        typename OutputIteratorT,
         typename ForwardIteratorT,
         typename CharT, 
         typename RegexTraitsT, typename RegexAllocatorT,
-        typename FormatStringTraitsT, typename FormatStringAllocatorT,
-        typename OutputIteratorT >
+        typename FormatStringTraitsT, typename FormatStringAllocatorT >
     inline OutputIteratorT replace_all_regex_copy(
         OutputIteratorT Output,
         ForwardIteratorT Begin,
@@ -187,11 +187,11 @@ namespace boost {
 
     // replace_all_regex sequence version
     template< 
+        typename OutputIteratorT,
         typename InputT, 
         typename CharT, 
         typename RegexTraitsT, typename RegexAllocatorT,
-        typename FormatStringTraitsT, typename FormatStringAllocatorT,
-        typename OutputIteratorT >
+        typename FormatStringTraitsT, typename FormatStringAllocatorT >
     inline OutputIteratorT replace_all_regex_copy(
         OutputIteratorT Output,
         const InputT& Input,
@@ -255,10 +255,10 @@ namespace boost {
 
     // erase_regex iterator version
     template< 
+        typename OutputIteratorT,
         typename ForwardIteratorT,
         typename CharT, 
-        typename RegexTraitsT, typename RegexAllocatorT,
-        typename OutputIteratorT >
+        typename RegexTraitsT, typename RegexAllocatorT >
     inline OutputIteratorT erase_regex_copy(
         OutputIteratorT Output,
         ForwardIteratorT Begin,
@@ -278,10 +278,10 @@ namespace boost {
     }
 
     template< 
+        typename OutputIteratorT,
         typename InputT, 
         typename CharT, 
-        typename RegexTraitsT, typename RegexAllocatorT,
-        typename OutputIteratorT >
+        typename RegexTraitsT, typename RegexAllocatorT >
     inline OutputIteratorT erase_regex_copy(
         OutputIteratorT Output,
         const InputT& Input,
@@ -318,7 +318,7 @@ namespace boost {
         typename InputT, 
         typename CharT, 
         typename RegexTraitsT, typename RegexAllocatorT >
-    InputT& erase_regex( 
+    inline InputT& erase_regex( 
         InputT& Input,
         const reg_expression<CharT, RegexTraitsT, RegexAllocatorT>& Rx,
         unsigned int MatchFlags=match_default )
@@ -334,10 +334,10 @@ namespace boost {
 
     // erase_all_regex iterator version
     template< 
+        typename OutputIteratorT,
         typename ForwardIteratorT,
         typename CharT, 
-        typename RegexTraitsT, typename RegexAllocatorT,
-        typename OutputIteratorT >
+        typename RegexTraitsT, typename RegexAllocatorT >
     inline OutputIteratorT erase_all_regex_copy(
         OutputIteratorT Output,
         ForwardIteratorT Begin,
@@ -358,10 +358,10 @@ namespace boost {
 
     // erase_all_regex sequence version
     template< 
+        typename OutputIteratorT,
         typename InputT, 
         typename CharT, 
-        typename RegexTraitsT, typename RegexAllocatorT,
-        typename OutputIteratorT >
+        typename RegexTraitsT, typename RegexAllocatorT >
     inline OutputIteratorT erase_all_regex_copy(
         OutputIteratorT Output,
         const InputT& Input,

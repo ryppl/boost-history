@@ -10,6 +10,12 @@
 
   <body text="#000000" bgcolor="#ffffff">
 
+    <p>
+      <!--webbot bot="Navigation" s-type="arrows" s-orientation="horizontal"
+      s-rendering="text" b-include-home="TRUE" b-include-up="TRUE" u-page
+      s-target startspan --><nobr>[&nbsp;<a href="trim.html">Back</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="index.html">Home</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="predicate.html">Next</a>&nbsp;]</nobr><!--webbot bot="Navigation" endspan i-checksum="22654" -->
+    </p>
+    <hr>
     <div align="left">
       <table border="0" width="799" height="134">
         <tr>
@@ -86,13 +92,13 @@
     </p>
     <pre><b>namespace</b> boost {
 
-    <b>template</b>&lt; <b>typename</b> InputIteratorT, <b>typename</b> OutputIteratorT &gt;
+    <b>template</b>&lt; <b>typename</b> OutputIteratorT, <b>typename</b> InputIteratorT &gt;
     <b>inline</b> OutputIteratorT <a href="#tolower_copy">tolower_copy</a>(
         OutputIteratorT Output,
         InputIteratorT Begin,
         InputIteratorT End,
         <b>const</b> std::locale&amp; Loc=std::locale() );</pre>
-    <pre>    <b>template</b>&lt; <b>typename</b> InputIteratorT, <b>typename</b> OutputIteratorT &gt;
+    <pre>    <b>template</b>&lt; <b>typename</b> OutputIteratorT, <b>typename</b> InputIteratorT &gt;
     <b>inline</b> OutputIteratorT <a href="#toupper_copy">toupper_copy</a>(
         OutputIteratorT Output,
         InputIteratorT Begin,

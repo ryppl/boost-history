@@ -10,6 +10,12 @@
 
   <body text="#000000" bgcolor="#ffffff">
 
+    <p>
+      <!--webbot bot="Navigation" s-type="arrows" s-orientation="horizontal"
+      s-rendering="text" b-include-home="TRUE" b-include-up="TRUE" u-page
+      s-target startspan --><nobr>[&nbsp;<a href="index.html">Home</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="conv.html">Next</a>&nbsp;]</nobr><!--webbot bot="Navigation" endspan i-checksum="29757" -->
+    </p>
+    <hr>
     <div align="left">
       <table border="0" width="799" height="134">
         <tr>
@@ -139,22 +145,22 @@
     </p>
     <pre><b>namespace</b> boost {
 
-    <b>template</b>&lt; <b>typename</b> ForwardIteratorT, <b>typename</b> OutputIteratorT, <b>typename</b> PredicateT &gt;
-    OutputIteratorT <a href="#trim_left_copy_if">trim_left_copy_if</a>( 
+    <b>template</b>&lt; <b>typename</b> OutputIteratorT, <b>typename</b> ForwardIteratorT, <b>typename</b> PredicateT &gt;
+    <b>inline </b>OutputIteratorT <a href="#trim_left_copy_if">trim_left_copy_if</a>( 
         OutputIteratorT Output,
         ForwardIteratorT InBegin,
         ForwardIteratorT InEnd,
         PredicateT IsSpace );
 
-    <b>template</b>&lt; <b>typename</b> ForwardIteratorT, <b>typename</b> OutputIteratorT, <b>typename</b> PredicateT &gt;
-    OutputIteratorT <a href="#trim_right_copy_if">trim_right_copy_if</a>( 
+    <b>template</b>&lt; <b>typename</b> OutputIteratorT, <b>typename</b> ForwardIteratorT, <b>typename</b> PredicateT &gt;
+    <b>inline </b>OutputIteratorT <a href="#trim_right_copy_if">trim_right_copy_if</a>( 
         OutputIteratorT Output,
         ForwardIteratorT InBegin,
         ForwardIteratorT InEnd,
         PredicateT IsSpace );
 
-    <b>template</b>&lt; <b>typename</b> ForwardIteratorT, <b>typename</b> OutputIteratorT, <b>typename</b> PredicateT &gt;
-    OutputIteratorT <a href="#trim_copy_if">trim_copy_if</a>( 
+    <b>template</b>&lt; <b>typename</b> OutputIteratorT, <b>typename</b> ForwardIteratorT, <b>typename</b> PredicateT &gt;
+    <b>inline </b>OutputIteratorT <a href="#trim_copy_if">trim_copy_if</a>( 
         OutputIteratorT Output,
         ForwardIteratorT InBegin,
         ForwardIteratorT InEnd,
@@ -167,13 +173,13 @@
     <pre> <b>namespace</b> boost {
 
     <b>template</b>&lt; <b>typename</b> SeqT, <b>typename</b> PredicateT &gt;
-    SeqT <a href="#trim_left_copy_if">trim_left_copy_if</a>( <b>const</b> SeqT&amp; Input, PredicateT IsSpace );
+    <b>inline </b>SeqT <a href="#trim_left_copy_if">trim_left_copy_if</a>( <b>const</b> SeqT&amp; Input, PredicateT IsSpace );
 
     <b>template</b>&lt; <b>typename</b> SeqT, <b>typename</b> PredicateT &gt;
-    SeqT <a href="#trim_right_copy_if">trim_right_copy_if</a>( <b>const</b> SeqT&amp; Input, PredicateT IsSpace );
+    <b>inline </b>SeqT <a href="#trim_right_copy_if">trim_right_copy_if</a>( <b>const</b> SeqT&amp; Input, PredicateT IsSpace );
 
     <b>template</b>&lt; <b>typename</b> SeqT, <b>typename</b> PredicateT &gt;
-    SeqT <a href="#trim_copy_if">trim_copy_if</a>( <b>const</b> SeqT&amp; Input, PredicateT IsSpace );
+    <b>inline </b>SeqT <a href="#trim_copy_if">trim_copy_if</a>( <b>const</b> SeqT&amp; Input, PredicateT IsSpace );
 }</pre>
     <p>
       Sequence, in-place versions. Returns a reference to the input sequence.
@@ -181,13 +187,13 @@
     <pre><b>namespace</b> boost {
  
     <b>template</b>&lt; <b>typename</b> SeqT, <b>typename</b> PredicateT &gt;
-    SeqT&amp; <a href="#trim_left_if">trim_left_if</a>( SeqT&amp; Input, PredicateT IsSpace );
+    <b>inline </b>SeqT&amp; <a href="#trim_left_if">trim_left_if</a>( SeqT&amp; Input, PredicateT IsSpace );
 
     <b>template</b>&lt; <b>typename</b> SeqT, <b>typename</b> PredicateT &gt;
-    SeqT&amp; <a href="#trim_right_if">trim_right_if</a>( SeqT&amp; Input, PredicateT IsSpace );
+    <b>inline </b>SeqT&amp; <a href="#trim_right_if">trim_right_if</a>( SeqT&amp; Input, PredicateT IsSpace );
 
     <b>template</b>&lt; <b>typename</b> SeqT, <b>typename</b> PredicateT &gt;
-    SeqT&amp; <a href="#trim_if">trim_if</a>( SeqT&amp; Input, PredicateT IsSpace );
+    <b>inline </b>SeqT&amp; <a href="#trim_if">trim_if</a>( SeqT&amp; Input, PredicateT IsSpace );
 }</pre>
     <p>
       Shortcut versions for regular space ( <code>create_isspace()</code> is
@@ -196,22 +202,22 @@
     <pre><b>namespace</b> boost {
 
     <b>template</b>&lt; <b>typename</b> SeqT &gt;
-    SeqT <a href="#trim_left_copy">trim_left_copy</a>( <b>const</b> SeqT&amp; Input, <b>const</b> std::locale&amp; Loc=std::locale() );
+    <b>inline </b>SeqT <a href="#trim_left_copy">trim_left_copy</a>( <b>const</b> SeqT&amp; Input, <b>const</b> std::locale&amp; Loc=std::locale() );
 
     <b>template</b>&lt; <b>typename</b> SeqT &gt;
-    SeqT&amp; <a href="#trim_left">trim_left</a>( SeqT&amp; Input, <b>const</b> std::locale&amp; Loc=std::locale() );
+    <b>inline </b>SeqT&amp; <a href="#trim_left">trim_left</a>( SeqT&amp; Input, <b>const</b> std::locale&amp; Loc=std::locale() );
 
     <b>template</b>&lt; <b>typename</b> SeqT &gt;
-    SeqT <a href="#trim_right_copy">trim_right_copy</a>( <b>const</b> SeqT&amp; Input, <b>const</b> std::locale&amp; Loc=std::locale() );
+    <b>inline </b>SeqT <a href="#trim_right_copy">trim_right_copy</a>( <b>const</b> SeqT&amp; Input, <b>const</b> std::locale&amp; Loc=std::locale() );
 
     <b>template</b>&lt; <b>typename</b> SeqT &gt;
-    SeqT&amp; <a href="#trim_right">trim_right</a>( SeqT&amp; Input, <b>const</b> std::locale&amp; Loc=std::locale() );
+    <b>inline </b>SeqT&amp; <a href="#trim_right">trim_right</a>( SeqT&amp; Input, <b>const</b> std::locale&amp; Loc=std::locale() );
 
     <b>template</b>&lt; <b>typename</b> SeqT &gt;
-    SeqT <a href="#trim_copy">trim_copy</a>( <b>const</b> SeqT&amp; Input, <b>const</b> std::locale&amp; Loc=std::locale() );
+    <b>inline </b>SeqT <a href="#trim_copy">trim_copy</a>( <b>const</b> SeqT&amp; Input, <b>const</b> std::locale&amp; Loc=std::locale() );
 
     <b>template</b>&lt; <b>typename</b> SeqT &gt;
-    SeqT&amp; <a href="#trim">trim</a>( SeqT&amp; Input, <b>const</b> std::locale&amp; Loc=std::locale() );
+    <b>inline </b>SeqT&amp; <a href="#trim">trim</a>( SeqT&amp; Input, <b>const</b> std::locale&amp; Loc=std::locale() );
 }</pre>
     <p>
       Parameters:

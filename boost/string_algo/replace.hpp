@@ -22,9 +22,9 @@ namespace boost {
 
     // replace_range iterator version
     template< 
+        typename OutputIteratorT,
         typename ForwardIterator1T, 
-        typename ForwardIterator2T,
-        typename OutputIteratorT >
+        typename ForwardIterator2T >
     inline OutputIteratorT replace_range_copy(
         OutputIteratorT Output,
         ForwardIterator1T Begin,
@@ -48,9 +48,9 @@ namespace boost {
 
     // replace_range output iterator version
     template< 
+        typename OutputIteratorT,
         typename InputT, 
-        typename FormatT,
-        typename OutputIteratorT >
+        typename FormatT >
     inline OutputIteratorT replace_range_copy(
         OutputIteratorT Output,
         const InputT& Input,
@@ -109,10 +109,10 @@ namespace boost {
 
     // replace_first iterator version
     template< 
+        typename OutputIteratorT,
         typename ForwardIterator1T, 
         typename ForwardIterator2T, 
-        typename ForwardIterator3T,
-        typename OutputIteratorT >
+        typename ForwardIterator3T >
     inline OutputIteratorT replace_first_copy(
         OutputIteratorT Output,
         ForwardIterator1T Begin,
@@ -138,10 +138,10 @@ namespace boost {
 
     // replace_first output iterator version
     template< 
+        typename OutputIteratorT,
         typename InputT, 
         typename SearchT,
-        typename FormatT,
-        typename OutputIteratorT >
+        typename FormatT >
     inline OutputIteratorT replace_first_copy(
         OutputIteratorT Output,
         const InputT& Input,
@@ -191,10 +191,10 @@ namespace boost {
 
     // replace_last iterator version
     template< 
+        typename OutputIteratorT,
         typename ForwardIterator1T, 
         typename ForwardIterator2T, 
-        typename ForwardIterator3T,
-        typename OutputIteratorT >
+        typename ForwardIterator3T >
     inline OutputIteratorT replace_last_copy(
         OutputIteratorT Output,
         ForwardIterator1T Begin,
@@ -220,10 +220,10 @@ namespace boost {
 
     // replace_last output iterator version
     template< 
+        typename OutputIteratorT,
         typename InputT, 
         typename SearchT,
-        typename FormatT,
-        typename OutputIteratorT >
+        typename FormatT >
     inline OutputIteratorT replace_last_copy(
         OutputIteratorT Output,
         const InputT& Input,
@@ -273,10 +273,10 @@ namespace boost {
 
     // replace_nth iterator version
     template< 
+        typename OutputIteratorT,
         typename ForwardIterator1T, 
         typename ForwardIterator2T, 
-        typename ForwardIterator3T,
-        typename OutputIteratorT >
+        typename ForwardIterator3T >
     inline OutputIteratorT replace_nth_copy(
         OutputIteratorT Output,
         ForwardIterator1T Begin,
@@ -302,10 +302,10 @@ namespace boost {
     }
 
     template< 
+        typename OutputIteratorT,
         typename InputT, 
         typename SearchT,
-        typename FormatT,
-        typename OutputIteratorT >
+        typename FormatT >
     inline OutputIteratorT replace_nth_copy(
         OutputIteratorT Output,
         const InputT& Input,
@@ -359,10 +359,10 @@ namespace boost {
 
     // replace_all iterator version
     template< 
+        typename OutputIteratorT,
         typename ForwardIterator1T, 
         typename ForwardIterator2T, 
-        typename ForwardIterator3T,
-        typename OutputIteratorT >
+        typename ForwardIterator3T >
     inline OutputIteratorT replace_all_copy(
         OutputIteratorT Output,
         ForwardIterator1T Begin,
@@ -388,10 +388,10 @@ namespace boost {
 
     // replace_all iterator version
     template< 
+        typename OutputIteratorT,
         typename InputT, 
         typename SearchT,
-        typename FormatT,
-        typename OutputIteratorT >
+        typename FormatT >
     inline OutputIteratorT replace_all_copy(
         OutputIteratorT Output,
         const InputT& Input,

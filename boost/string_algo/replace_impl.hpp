@@ -30,8 +30,8 @@ namespace boost {
             format functor
         */
         template< 
-            typename InputT, 
             typename OutputIteratorT,
+            typename InputT,
             typename FindFT,
             typename FormatFT >
         inline OutputIteratorT replace_copy(
@@ -132,8 +132,8 @@ namespace boost {
             but with the all matches replaced with substitute range.
         */
         template< 
-            typename InputT, 
             typename OutputIteratorT,
+            typename InputT,
             typename FindFT,
             typename FormatFT >
         inline OutputIteratorT replace_all_copy(

@@ -20,7 +20,7 @@ namespace boost {
 //  tolower  -----------------------------------------------//
 
     // iterator version of tolower
-    template< typename InputIteratorT, typename OutputIteratorT >
+    template< typename OutputIteratorT, typename InputIteratorT >
     inline OutputIteratorT 
     tolower_copy(
         OutputIteratorT Output,
@@ -66,7 +66,7 @@ namespace boost {
 //  toupper  -----------------------------------------------//
 
     // iterator version of toupper
-    template< typename InputIteratorT, typename OutputIteratorT >
+    template< typename OutputIteratorT, typename InputIteratorT >
     inline OutputIteratorT 
     toupper_copy(
         OutputIteratorT Output,

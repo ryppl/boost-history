@@ -84,7 +84,7 @@ namespace boost {
 
             // Bounded version of the std::copy algorithm
             template<typename InputIteratorT, typename OutputIteratorT>
-            OutputIteratorT bounded_copy(
+            inline OutputIteratorT bounded_copy(
                 InputIteratorT First, 
                 InputIteratorT Last, 
                 OutputIteratorT DestFirst,

@@ -11,6 +11,12 @@
 
   <body text="#000000" bgcolor="#ffffff">
 
+    <p>
+      <!--webbot bot="Navigation" s-type="arrows" s-orientation="horizontal"
+      s-rendering="text" b-include-home="TRUE" b-include-up="TRUE" u-page
+      s-target startspan --><nobr>[&nbsp;<a href="replace_all.html">Back</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="index.html">Home</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="replace.html">Up</a>&nbsp;]</nobr><!--webbot bot="Navigation" endspan i-checksum="39075" -->
+    </p>
+    <hr>
     <div align="left">
       <table border="0" width="799" height="134">
         <tr>
@@ -107,11 +113,11 @@
     <pre><b>namespace</b> boost {
 
     <b>template</b>&lt; 
+        <b>typename</b> OutputIteratorT,
         <b>typename</b> ForwardIteratorT,
         <b>typename</b> CharT, 
         <b>typename</b> RegexTraitsT, <b>typename</b> RegexAllocatorT,
-        <b>typename</b> FormatStringTraitsT, <b>typename</b> FormatStringAllocatorT,
-        <b>typename</b> OutputIteratorT &gt;
+        <b>typename</b> FormatStringTraitsT, <b>typename</b> FormatStringAllocatorT &gt;
     <b>inline</b> OutputIteratorT <a href="#replace_regex_copy">replace_regex_copy</a>(
         OutputIteratorT Output,
         ForwardIteratorT Begin,
@@ -121,11 +127,11 @@
         <b>unsigned</b> <b>int</b> MatchFlags=match_default,
         <b>unsigned</b> <b>int</b> FormatFlags=0 );</pre>
     <pre>    <b>template</b>&lt; 
+        <b>typename</b> OutputIteratorT,
         <b>typename</b> ForwardIteratorT,
         <b>typename</b> CharT, 
         <b>typename</b> RegexTraitsT, <b>typename</b> RegexAllocatorT,
-        <b>typename</b> FormatStringTraitsT, <b>typename</b> FormatStringAllocatorT,
-        <b>typename</b> OutputIteratorT &gt;
+        <b>typename</b> FormatStringTraitsT, <b>typename</b> FormatStringAllocatorT &gt;
     <b>inline</b> OutputIteratorT <a href="#replace_all_regex_copy">replace_all_regex_copy</a>(
         OutputIteratorT Output,
         ForwardIteratorT Begin,
@@ -136,10 +142,10 @@
         <b>unsigned</b> <b>int</b> FormatFlags=0 );</pre>
     <div align="left">
       <pre>    <b>template</b>&lt; 
+        <b>typename</b> OutputIteratorT,
         <b>typename</b> ForwardIteratorT,
         <b>typename</b> CharT, 
-        <b>typename</b> RegexTraitsT, <b>typename</b> RegexAllocatorT,
-        <b>typename</b> OutputIteratorT &gt;
+        <b>typename</b> RegexTraitsT, <b>typename</b> RegexAllocatorT &gt;
     <b>inline</b> OutputIteratorT <a href="#erase_regex_copy">erase_regex_copy</a>(
         OutputIteratorT Output,
         ForwardIteratorT Begin,
@@ -148,10 +154,10 @@
         <b>unsigned</b> <b>int</b> MatchFlags=match_default );</pre>
     </div>
     <pre>    <b>template</b>&lt; 
+        <b>typename</b> OutputIteratorT,
         <b>typename</b> ForwardIteratorT,
         <b>typename</b> CharT, 
-        <b>typename</b> RegexTraitsT, <b>typename</b> RegexAllocatorT,
-        <b>typename</b> OutputIteratorT &gt;
+        <b>typename</b> RegexTraitsT, <b>typename</b> RegexAllocatorT &gt;
     <b>inline</b> OutputIteratorT <a href="#erase_all_regex_copy">erase_all_regex_copy</a>(
         OutputIteratorT Output,
         ForwardIteratorT Begin,
@@ -166,11 +172,11 @@
     <pre><b>namespace</b> boost {
 
     <b>template</b>&lt; 
+        <b>typename</b> OutputIteratorT,
         <b>typename</b> InputT, 
         <b>typename</b> CharT, 
         <b>typename</b> RegexTraitsT, <b>typename</b> RegexAllocatorT,
-        <b>typename</b> FormatStringTraitsT, <b>typename</b> FormatStringAllocatorT,
-        <b>typename</b> OutputIteratorT &gt;
+        <b>typename</b> FormatStringTraitsT, <b>typename</b> FormatStringAllocatorT &gt;
     <b>inline</b> OutputIteratorT <a href="#replace_regex_copy">replace_regex_copy</a>(
         OutputIteratorT Output,
         <b>const</b> InputT&amp; Input,
@@ -179,11 +185,11 @@
         <b>unsigned</b> <b>int</b> MatchFlags=match_default,
         <b>unsigned</b> <b>int</b> FormatFlags=0 );</pre>
     <pre>    <b>template</b>&lt; 
+        <b>typename</b> OutputIteratorT,
         <b>typename</b> InputT, 
         <b>typename</b> CharT, 
         <b>typename</b> RegexTraitsT, <b>typename</b> RegexAllocatorT,
-        <b>typename</b> FormatStringTraitsT, <b>typename</b> FormatStringAllocatorT,
-        <b>typename</b> OutputIteratorT &gt;
+        <b>typename</b> FormatStringTraitsT, <b>typename</b> FormatStringAllocatorT &gt;
     <b>inline</b> OutputIteratorT <a href="#replace_all_regex_copy">replace_all_regex_copy</a>(
         OutputIteratorT Output,
         <b>const</b> InputT&amp; Input,
@@ -192,20 +198,20 @@
         <b>unsigned</b> <b>int</b> MatchFlags=match_default,
         <b>unsigned</b> <b>int</b> FormatFlags=0 );</pre>
     <pre>    <b>template</b>&lt; 
+        <b>typename</b> OutputIteratorT,
         <b>typename</b> InputT, 
         <b>typename</b> CharT, 
-        <b>typename</b> RegexTraitsT, <b>typename</b> RegexAllocatorT,
-        <b>typename</b> OutputIteratorT &gt;
+        <b>typename</b> RegexTraitsT, <b>typename</b> RegexAllocatorT &gt;
     <b>inline</b> OutputIteratorT <a href="#erase_regex_copy">erase_regex_copy</a>(
         OutputIteratorT Output,
         <b>const</b> InputT&amp; Input,
         <b>const</b> reg_expression&lt;CharT, RegexTraitsT, RegexAllocatorT&gt;&amp; Rx,
         <b>unsigned</b> <b>int</b> MatchFlags=match_default );</pre>
     <pre>    <b>template</b>&lt; 
+        <b>typename</b> OutputIteratorT,
         <b>typename</b> InputT, 
         <b>typename</b> CharT, 
-        <b>typename</b> RegexTraitsT, <b>typename</b> RegexAllocatorT,
-        <b>typename</b> OutputIteratorT &gt;
+        <b>typename</b> RegexTraitsT, <b>typename</b> RegexAllocatorT &gt;
     <b>inline</b> OutputIteratorT <a href="#erase_all_regex_copy">erase_all_regex_copy</a>(
         OutputIteratorT Output,
         <b>const</b> InputT&amp; Input,

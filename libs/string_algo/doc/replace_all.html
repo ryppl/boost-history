@@ -11,6 +11,12 @@
 
   <body text="#000000" bgcolor="#ffffff">
 
+    <p>
+      <!--webbot bot="Navigation" s-type="arrows" s-orientation="horizontal"
+      s-rendering="text" b-include-home="TRUE" b-include-up="TRUE" u-page
+      s-target startspan --><nobr>[&nbsp;<a href="replace_nth.html">Back</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="index.html">Home</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="replace.html">Up</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="replace_regex.html">Next</a>&nbsp;]</nobr><!--webbot bot="Navigation" endspan i-checksum="40217" -->
+    </p>
+    <hr>
     <div align="left">
       <table border="0" width="799" height="134">
         <tr>
@@ -83,10 +89,10 @@
     <pre><b>namespace</b> boost {
 
     <b>template</b>&lt; 
+        <b>typename</b> OutputIteratorT,
         <b>typename</b> ForwardIterator1T, 
         <b>typename</b> ForwardIterator2T, 
-        <b>typename</b> ForwardIterator3T,
-        <b>typename</b> OutputIteratorT &gt;
+        <b>typename</b> ForwardIterator3T &gt;
     <b>inline</b> OutputIteratorT <a href="#replace_all_copy">replace_all_copy</a>(
         OutputIteratorT Output,
         ForwardIterator1T Begin,
@@ -96,9 +102,9 @@
         ForwardIterator3T FormatBegin,
         ForwardIterator3T FormatEnd );</pre>
     <pre>    <b>template</b>&lt; 
+        <b>typename</b> OutputIteratorT,
         <b>typename</b> ForwardIterator1T, 
-        <b>typename</b> ForwardIterator2T, 
-        <b>typename</b> OutputIteratorT &gt;
+        <b>typename</b> ForwardIterator2T &gt;
     <b>inline</b> OutputIteratorT <a href="#erase_all_copy">erase_all_copy</a>(
         OutputIteratorT Output,
         ForwardIterator1T Begin,
@@ -113,10 +119,10 @@
     <pre><b>namespace</b> boost {
 
     <b>template</b>&lt; 
+        <b>typename</b> OutputIteratorT,
         <b>typename</b> InputT, 
         <b>typename</b> SearchT,
-        <b>typename</b> FormatT,
-        <b>typename</b> OutputIteratorT &gt;
+        <b>typename</b> FormatT &gt;
     <b>inline</b> OutputIteratorT <a href="#replace_all_copy">replace_all_copy</a>(
         OutputIteratorT Output,
         <b>const</b> InputT&amp; Input,
@@ -124,9 +130,9 @@
         <b>const</b> FormatT&amp; Format );
 
     <b>template</b>&lt; 
+        <b>typename</b> OutputIteratorT,
         <b>typename</b> InputT, 
-        <b>typename</b> SearchT,
-        <b>typename</b> OutputIteratorT &gt;
+        <b>typename</b> SearchT &gt;
     <b>inline</b> OutputIteratorT <a href="#erase_all_copy">erase_all_copy</a>(
         OutputIteratorT Output,
         <b>const</b> InputT&amp; Input,

@@ -46,7 +46,7 @@ namespace boost {
 //  left trim  -----------------------------------------------//
 
     // iterator version of left trim
-    template< typename ForwardIteratorT, typename OutputIteratorT, typename PredicateT >
+    template< typename OutputIteratorT, typename ForwardIteratorT, typename PredicateT >
     inline OutputIteratorT trim_left_copy_if( 
         OutputIteratorT Output,
         ForwardIteratorT InBegin,
@@ -84,7 +84,7 @@ namespace boost {
 //  right trim  -----------------------------------------------//
 
     // iterator version of left trim
-    template< typename ForwardIteratorT, typename OutputIteratorT, typename PredicateT >
+    template< typename OutputIteratorT, typename ForwardIteratorT, typename PredicateT >
     inline OutputIteratorT trim_right_copy_if( 
         OutputIteratorT Output,
         ForwardIteratorT InBegin,
@@ -124,7 +124,7 @@ namespace boost {
 //  both side trim  -----------------------------------------------//
 
     // iterator version of left trim
-    template< typename ForwardIteratorT, typename OutputIteratorT, typename PredicateT >
+    template< typename OutputIteratorT, typename ForwardIteratorT, typename PredicateT >
     inline OutputIteratorT trim_copy_if( 
         OutputIteratorT Output,
         ForwardIteratorT InBegin,
