@@ -1305,7 +1305,7 @@ namespace boost
 
     /// \overload
     template<typename Rng,typename Val,typename Cmp>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_iterator<Rng>::type
+    inline BOOST_DEDUCED_TYPENAME detail::iter_pair<Rng>::type
     equal_range(Rng & rng,Val const & val,Cmp cmp)
     {
         return std::equal_range(detail::adl_begin(rng),detail::adl_end(rng),val,cmp);
@@ -1313,7 +1313,7 @@ namespace boost
 
     /// \overload
     template<typename Rng,typename Val,typename Cmp>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_const_iterator<Rng>::type
+    inline BOOST_DEDUCED_TYPENAME detail::iter_pair<Rng const>::type
     equal_range(Rng const & rng,Val const & val,Cmp cmp)
     {
         return std::equal_range(detail::adl_begin(rng),detail::adl_end(rng),val,cmp);
