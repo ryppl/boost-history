@@ -20,19 +20,19 @@
 #include "boost/socket/socket_errors.hpp"
 #include "boost/iterator_adaptors.hpp"
 
-class addrinfo;
-
 namespace boost
 {
   namespace socket
   {
+    class addrinfo;
+
     class any_address;
     class any_protocol;
 
     class address_info
     {
     public:
-      address_info(::addrinfo const* info)
+      address_info(addrinfo const* info)
           : m_addrinfo(info)
       {}
       any_protocol protocol() const;
@@ -41,11 +41,11 @@ namespace boost
     private:
       // help for the iterators
       friend class address_info_iterator_policies;
-      ::addrinfo const* next() const;
+      addrinfo const* next() const;
       address_info() : m_addrinfo(0) {}
-      void set(::addrinfo const* addr){ m_addrinfo=addr; }
+      void set(addrinfo const* addr){ m_addrinfo=addr; }
 
-      ::addrinfo const* m_addrinfo;
+      addrinfo const* m_addrinfo;
     };
 
 
@@ -107,7 +107,7 @@ namespace boost
         const int   socktype,
         const int   protocol);
 
-      ::addrinfo* m_addrinfo;
+      addrinfo* m_addrinfo;
     };
 
 

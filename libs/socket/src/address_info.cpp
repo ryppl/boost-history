@@ -26,6 +26,7 @@
 #include <Winsock2.h>
 #include <Ws2tcpip.h>
 #else
+
 #endif
 
 #ifdef _MSC_VER
@@ -33,33 +34,101 @@
 #pragma warning (disable: 4786 4305)
 #endif
 
+#if defined(USES_WINSOCK2)
+#define HAVE_GETADDRINFO
+#endif
+
+
+
 namespace boost
 {
   namespace socket
   {
 
+#if !defined(HAVE_GETADDRINFO)
+    namespace detail
+    {
+
+      struct addrinfo {
+        int     ai_flags;
+        int     ai_family;
+        int     ai_socktype;
+        int     ai_protocol;
+        size_t  ai_addrlen;
+        char   *ai_canonname;
+        struct sockaddr  *ai_addr;
+        struct addrinfo  *ai_next;
+      };
+
+
+      void freeaddrinfo(addrinfo* info)
+      {
+        delete info;
+      }
+
+      int getaddrinfo(
+        const char* name,
+        const char* service,
+        addrinfo* hint,
+        addrinfo** result )
+      {
+        *result=0;
+        return 0;
+      }
+    }
+#define ADDRINFO_NS detail
+
+    inline detail::addrinfo*&
+    cast_addrinfo(boost::socket::addrinfo*& addr)
+    {
+      return (detail::addrinfo*&)(addr);
+    }
+
+    inline detail::addrinfo const*
+    cast_addrinfo(boost::socket::addrinfo const* addr)
+    {
+      return (detail::addrinfo const*)(addr);
+    }
+
+#else
+#define ADDRINFO_NS
+
+    inline ::addrinfo*&
+    cast_addrinfo(boost::socket::addrinfo*& addr)
+    {
+      return (::addrinfo*&)(addr);
+    }
+
+    inline ::addrinfo const*
+    cast_addrinfo(const boost::socket::addrinfo* addr)
+    {
+      return (::addrinfo const*)(addr);
+    }
+#endif
+
+
     any_protocol address_info::protocol() const
     {
-      return any_protocol(m_addrinfo->ai_socktype,
-                          m_addrinfo->ai_protocol,
-                          m_addrinfo->ai_family);
+      return any_protocol(cast_addrinfo(m_addrinfo)->ai_socktype,
+                          cast_addrinfo(m_addrinfo)->ai_protocol,
+                          cast_addrinfo(m_addrinfo)->ai_family);
     }
 
     any_address address_info::address() const
     {
-      return any_address(m_addrinfo->ai_family,
-                         m_addrinfo->ai_addr,
-                         m_addrinfo->ai_addrlen);
+      return any_address(cast_addrinfo(m_addrinfo)->ai_family,
+                         cast_addrinfo(m_addrinfo)->ai_addr,
+                         cast_addrinfo(m_addrinfo)->ai_addrlen);
     }
 
     const int address_info::flags() const
     {
-      return m_addrinfo->ai_flags;
+      return cast_addrinfo(m_addrinfo)->ai_flags;
     }
 
-    ::addrinfo const* address_info::next() const
+    addrinfo const* address_info::next() const
     {
-      return m_addrinfo->ai_next;
+      return (addrinfo const*)cast_addrinfo(m_addrinfo)->ai_next;
     }
 
     address_info_list::address_info_list(const char* name,
@@ -75,7 +144,7 @@ namespace boost
 
     address_info_list::~address_info_list()
     {
-      ::freeaddrinfo(m_addrinfo);
+      ADDRINFO_NS::freeaddrinfo(cast_addrinfo(m_addrinfo));
     }
 
     void address_info_list::get_addrinfo(
@@ -87,7 +156,7 @@ namespace boost
       const int   protocol )
     {
       int result;
-      ::addrinfo hint;
+      ADDRINFO_NS::addrinfo hint;
 
       memset(&hint, 0, sizeof(hint));
       hint.ai_flags = flags;
@@ -95,9 +164,8 @@ namespace boost
       hint.ai_socktype = socktype;
       hint.ai_protocol = protocol;
 
-      result = ::getaddrinfo(name, service, &hint, &m_addrinfo);
-//       if (result != 0)
-//          throw socket_exception("getaddrinfo",result);
+      result = ADDRINFO_NS::getaddrinfo(
+        name, service, &hint, &cast_addrinfo(m_addrinfo));
     }
 
   }// namespace
