@@ -1,14 +1,12 @@
 //  Boost execution_monitor header file  -------------------------------------//
 
-//  (C) Copyright Beman Dawes 2001. Permission to copy, use, modify, sell
-//  and distribute this software is granted provided this copyright notice
-//  appears in all copies. This software is provided "as is" without express or
-//  implied warranty, and with no claim as to its suitability for any purpose.
+//  (C) Copyright Gennadiy Rozental & Beman Dawes 2001. 
+//  Permission to copy, use, modify, sell and distribute this software
+//  is granted provided this copyright notice appears in all copies.
+//  This software is provided "as is" without express or implied warranty,
+//  and with no claim as to its suitability for any purpose.
 
 //  See http://www.boost.org for updates, documentation, and revision history.
-
-//  Revision History
-//   4 Jun 01  Initial version (Beman Dawes)
 
 //  The original Boost Test Library included an implementation detail function
 //  named catch_exceptions() which caught otherwise uncaught C++ exceptions.
@@ -33,65 +31,68 @@
 #ifndef BOOST_EXECUTION_MONITOR_HPP
 #define BOOST_EXECUTION_MONITOR_HPP
 
-namespace boost
-{
-
-//  execution_exception class  -----------------------------------------------//
-
+namespace boost {
+    
+// ************************************************************************** //
+// **************              execution_exception             ************** //
+// ************************************************************************** //
+    
 //  design rationale: fear of being out (or nearly out) of memory.
-
-  class execution_exception
-  {
-   public:
-
+    
+class execution_exception {
+public:
     enum error_code {
+        //  These values are sometimes used as program return codes.
+        //  The particular values have been choosen to avoid conflicts with
+        //  commonly used program return codes: values < 100 are often user
+        //  assigned, values > 255 are sometimes used to report system errors.
+        //  Gaps in values allow for orderly expansion.
+        
+        no_error               = 0,   // for completeness only; never returned
+        user_error             = 200, // user reported non-fatal error
+        cpp_exception_error    = 205, // see note (1) below
+        system_error           = 210, // see note (2) below
+        timeout_error          = 215, // only detectable on certain platforms
+        user_fatal_error       = 220, // user reported fatal error
+        system_fatal_error     = 225  // see note (2) below
+        
+        //  Note 1: Only uncaught C++ exceptions are treated as errors.
+        //  If the application catches a C++ exception, it will never reach
+        //  the execution_monitor.
+        
+        //  Note 2: These errors include Unix signals and Windows structured
+        //  exceptions.  They are often initiated by hardware traps.
+        //
+        //  The implementation decides what's a fatal_system_exception and what's
+        //  just a system_exception.  Fatal errors are so likely to have corrupted
+        //  machine state (like a stack overflow or addressing exception) that it
+        //  is unreasonable to continue execution.
+    };
+    
+    // Constructor
+    execution_exception( error_code ec, char const* what_msg ) // max length 256 inc '\0'
+    : m_error_code( ec ), m_what( what_msg ) {}
 
-      //  These values are sometimes used as program return codes.
-      //  The particular values have been choosen to avoid conflicts with
-      //  commonly used program return codes: values < 100 are often user
-      //  assigned, values > 255 are sometimes used to report system errors.
-      //  Gaps in values allow for orderly expansion.
+    // access methods
+    error_code      code() const { return m_error_code; }
+    char const*     what() const { return m_what; }
 
-      no_error               = 0,   // for completeness only; never returned
-      user_error             = 200, // user reported non-fatal error
-      cpp_exception_error    = 205, // see note (1) below
-      system_error           = 210, // see note (2) below
-      timeout_error          = 215, // only detectable on certain platforms
-      user_fatal_error       = 220, // user reported fatal error
-      system_fatal_error     = 225, // see note (2) below
+private:
+    // Data members
+    error_code      m_error_code;
+    char const*     m_what;
+};
 
-      //  Note 1: Only uncaught C++ exceptions are treated as errors.
-      //  If the application catches a C++ exception, it will never reach
-      //  the execution_monitor.
-      
-      //  Note 2: These errors include Unix signals and Windows structured
-      //  exceptions.  They are often initiated by hardware traps.
-      //
-      //  The implementation decides what's a fatal_system_exception and what's
-      //  just a system_exception.  Fatal errors are so likely to have corrupted
-      //  machine state (like a stack overflow or addressing exception) that it
-      //  is unreasonable to continue execution.
-      };
+// ************************************************************************** //
+// **************               execution_monitor              ************** //
+// ************************************************************************** //
 
-    execution_exception( error_code ec,
-                         const char * what_msg ) // max length 256 inc '\0'
-                       : _ec(ec), _what(what_msg) {}
-    error_code code() const { return _ec; }
-    const char * what() const { return _what; }
-   private:
-    error_code _ec;
-    const char * _what;
-  };
-
-//  execution_monitor abstract base class  -----------------------------------//
-
-  class execution_monitor
-  {
-   public:
-
-    virtual ~execution_monitor(){}
-
-    int execute( int timeout = 0);  // timeout is in seconds
+class execution_monitor {
+public:
+    // Destructor
+    virtual ~execution_monitor()    {}
+    
+    int execute( int timeout = 0 );  // timeout is in seconds
     //  The timeout argument specifies the seconds that elapse before
     //  a timer_error occurs.  May be ignored on some platforms.
     //
@@ -105,12 +106,16 @@ namespace boost
     //
     //  Note: execute() doesn't consider it an error for function() to
     //  return a non-zero value.
-
+    
     //  user supplied function called by execute()
     virtual int function() = 0;
-
-  };  // exception monitor
+    
+}; // exception monitor
 
 }  // namespace boost
 
 #endif
+
+//  Revision History
+//   5 Oct 01  Slightly reformatted to fit unit test library (Gennadiy Rozental)
+//   4 Jun 01  Initial version (Beman Dawes)
