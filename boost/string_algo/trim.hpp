@@ -1,6 +1,6 @@
 //  Boost string_algo library trim.hpp header file  ---------------------------//
 
-//  (C) Copyright Pavol Droba 2002. Permission to copy, use, modify, sell and
+//  (C) Copyright Pavol Droba 2002-2003. Permission to copy, use, modify, sell and
 //  distribute this software is granted provided this copyright notice appears
 //  in all copies. This software is provided "as is" without express or implied
 //  warranty, and with no claim as to its suitability for any purpose.
@@ -10,9 +10,11 @@
 #ifndef BOOST_STRING_TRIM_HPP
 #define BOOST_STRING_TRIM_HPP
 
-#include <locale>
+#include <boost/string_algo/config.hpp>
+#include <boost/string_algo/container_traits.hpp>
 #include <boost/string_algo/detail/trim.hpp>
 #include <boost/string_algo/classification.hpp>
+#include <locale>
 
 // some macros for simplify definition of trim functions
 #define BOOST_STRING_TRIM_SEQ_FWD( Alg, Seq, Pred ) Alg( Seq, Pred )
@@ -22,16 +24,18 @@ namespace boost {
 //  left trim  -----------------------------------------------//
 
     // iterator version of left trim
-    template< typename OutputIteratorT, typename ForwardIteratorT, typename PredicateT >
+    template< typename OutputIteratorT, typename SeqT, typename PredicateT >
     inline OutputIteratorT trim_left_copy_if( 
         OutputIteratorT Output,
-        ForwardIteratorT InBegin,
-        ForwardIteratorT InEnd,
-        PredicateT IsSpace )
+		const SeqT& Input,
+		PredicateT IsSpace )
     {
         std::copy( 
-            string_algo::detail::trim_begin_if( InBegin, InEnd, IsSpace ),
-            InEnd,
+			string_algo::detail::trim_begin_if( 
+				string_algo::begin(Input), 
+				string_algo::end(Input), 
+				IsSpace ),
+			string_algo::end(Input),
             Output );
 
         return Output;
@@ -42,8 +46,11 @@ namespace boost {
     inline SeqT trim_left_copy_if( const SeqT& Input, PredicateT IsSpace )
     {
         return SeqT( 
-                string_algo::detail::trim_begin_if( Input.begin(), Input.end(), IsSpace ),
-                Input.end() );
+			string_algo::detail::trim_begin_if( 
+				string_algo::begin(Input), 
+				string_algo::end(Input), 
+				IsSpace ),
+			string_algo::end(Input) );
     }
 
     // in-place version of left trim
@@ -51,8 +58,11 @@ namespace boost {
     inline SeqT& trim_left_if( SeqT& Input, PredicateT IsSpace )
     {
         Input.erase( 
-            Input.begin(),
-            string_algo::detail::trim_begin_if( Input.begin(), Input.end(), IsSpace ));
+            string_algo::begin(Input),
+            string_algo::detail::trim_begin_if( 
+				string_algo::begin(Input), 
+				string_algo::end(Input), 
+				IsSpace ));
 
         return Input;
     }
@@ -60,16 +70,18 @@ namespace boost {
 //  right trim  -----------------------------------------------//
 
     // iterator version of left trim
-    template< typename OutputIteratorT, typename ForwardIteratorT, typename PredicateT >
+    template< typename OutputIteratorT, typename SeqT, typename PredicateT >
     inline OutputIteratorT trim_right_copy_if( 
         OutputIteratorT Output,
-        ForwardIteratorT InBegin,
-        ForwardIteratorT InEnd,
-        PredicateT IsSpace )
+		const SeqT& Input,
+		PredicateT IsSpace )
     {
         std::copy( 
-            InBegin,
-            string_algo::detail::trim_end_if( InBegin, InEnd, IsSpace ),
+			string_algo::begin(Input),
+            string_algo::detail::trim_end_if( 
+				string_algo::begin(Input), 
+				string_algo::end(Input), 
+				IsSpace ),
             Output );
 
         return Output;
@@ -80,8 +92,11 @@ namespace boost {
     inline SeqT trim_right_copy_if( const SeqT& Input, PredicateT IsSpace )
     {
         return SeqT( 
-            Input.begin(),
-            string_algo::detail::trim_end_if( Input.begin(), Input.end(), IsSpace )
+            string_algo::begin(Input),
+            string_algo::detail::trim_end_if( 
+				string_algo::begin(Input), 
+				string_algo::end(Input), 
+				IsSpace )
             );
     }
     
@@ -90,8 +105,11 @@ namespace boost {
     inline SeqT& trim_right_if( SeqT& Input, PredicateT IsSpace )
     {
         Input.erase(
-            string_algo::detail::trim_end_if( Input.begin(), Input.end(), IsSpace ),
-            Input.end()
+            string_algo::detail::trim_end_if( 
+				string_algo::begin(Input), 
+				string_algo::end(Input), 
+				IsSpace ),
+            string_algo::end(Input)
             );
 
         return Input;
@@ -100,18 +118,22 @@ namespace boost {
 //  both side trim  -----------------------------------------------//
 
     // iterator version of left trim
-    template< typename OutputIteratorT, typename ForwardIteratorT, typename PredicateT >
+    template< typename OutputIteratorT, typename SeqT, typename PredicateT >
     inline OutputIteratorT trim_copy_if( 
         OutputIteratorT Output,
-        ForwardIteratorT InBegin,
-        ForwardIteratorT InEnd,
-        PredicateT IsSpace )
+		const SeqT& Input,
+		PredicateT IsSpace )
     {
-        ForwardIteratorT TrimEnd=
-            string_algo::detail::trim_end_if( InBegin, InEnd, IsSpace);
+		BOOST_STRING_TYPENAME 
+			string_algo::container_traits<SeqT>::const_iterator TrimEnd=
+			string_algo::detail::trim_end_if( 
+				string_algo::begin(Input), 
+				string_algo::end(Input), 
+				IsSpace);
 
         std::copy( 
-            string_algo::detail::trim_begin_if( InBegin, TrimEnd, IsSpace ),
+            string_algo::detail::trim_begin_if( 
+				string_algo::begin(Input), TrimEnd, IsSpace ),
             TrimEnd,
             Output
             );
@@ -123,11 +145,14 @@ namespace boost {
     template< typename SeqT, typename PredicateT >
     inline SeqT trim_copy_if( const SeqT& Input, PredicateT IsSpace )
     {
-        typename SeqT::const_iterator TrimEnd=
-            string_algo::detail::trim_end_if( Input.begin(), Input.end(), IsSpace);
+        BOOST_STRING_TYPENAME SeqT::const_iterator TrimEnd=
+            string_algo::detail::trim_end_if( string_algo::begin(Input), string_algo::end(Input), IsSpace);
 
         return SeqT( 
-            string_algo::detail::trim_begin_if( Input.begin(), TrimEnd, IsSpace ),
+            string_algo::detail::trim_begin_if( 
+				string_algo::begin(Input), 
+				TrimEnd, 
+				IsSpace ),
             TrimEnd
             );
     }
@@ -148,7 +173,7 @@ namespace boost {
             BOOST_STRING_TRIM_SEQ_FWD( 
                 trim_left_copy_if, 
 				Input, 
-				is_space<BOOST_STRING_DEDUCED_TYPENAME SeqT::value_type>( Loc ) );
+				is_space<BOOST_STRING_TYPENAME SeqT::value_type>( Loc ) );
     }
     template< typename SeqT >
     inline SeqT& trim_left( SeqT& Input, const std::locale& Loc=std::locale() )
@@ -157,7 +182,7 @@ namespace boost {
             BOOST_STRING_TRIM_SEQ_FWD( 
                 trim_left_if, 
 				Input, 
-				is_space<BOOST_STRING_DEDUCED_TYPENAME SeqT::value_type>( Loc ) );
+				is_space<BOOST_STRING_TYPENAME SeqT::value_type>( Loc ) );
     }
     template< typename SeqT >
     inline SeqT trim_right_copy( const SeqT& Input, const std::locale& Loc=std::locale() )
@@ -166,7 +191,7 @@ namespace boost {
             BOOST_STRING_TRIM_SEQ_FWD( 
                 trim_right_copy_if, 
 				Input, 
-				is_space<BOOST_STRING_DEDUCED_TYPENAME SeqT::value_type>( Loc ) );
+				is_space<BOOST_STRING_TYPENAME SeqT::value_type>( Loc ) );
     }
     template< typename SeqT >
     inline SeqT& trim_right( SeqT& Input, const std::locale& Loc=std::locale() )
@@ -175,7 +200,7 @@ namespace boost {
             BOOST_STRING_TRIM_SEQ_FWD( 
                 trim_right_if, 
 				Input, 
-				is_space<BOOST_STRING_DEDUCED_TYPENAME SeqT::value_type>( Loc ) );
+				is_space<BOOST_STRING_TYPENAME SeqT::value_type>( Loc ) );
     }
     template< typename SeqT >
     inline SeqT trim_copy( const SeqT& Input, const std::locale& Loc=std::locale() )
@@ -184,7 +209,7 @@ namespace boost {
             BOOST_STRING_TRIM_SEQ_FWD( 
                 trim_copy_if, 
 				Input, 
-				is_space<BOOST_STRING_DEDUCED_TYPENAME SeqT::value_type>( Loc ) );
+				is_space<BOOST_STRING_TYPENAME SeqT::value_type>( Loc ) );
     }
     template< typename SeqT >
     inline SeqT& trim( SeqT& Input, const std::locale& Loc=std::locale() )
@@ -193,7 +218,7 @@ namespace boost {
             BOOST_STRING_TRIM_SEQ_FWD( 
                 trim_if, 
 				Input, 
-				is_space<BOOST_STRING_DEDUCED_TYPENAME SeqT::value_type>( Loc ) );
+				is_space<BOOST_STRING_TYPENAME SeqT::value_type>( Loc ) );
     }
 
 

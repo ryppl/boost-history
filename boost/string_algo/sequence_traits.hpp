@@ -1,6 +1,6 @@
 //  Boost string_algo library sequence_traits.hpp header file  ---------------------------//
 
-//  (C) Copyright Pavol Droba 2002. Permission to copy, use, modify, sell and
+//  (C) Copyright Pavol Droba 2002-2003. Permission to copy, use, modify, sell and
 //  distribute this software is granted provided this copyright notice appears
 //  in all copies. This software is provided "as is" without express or implied
 //  warranty, and with no claim as to its suitability for any purpose.
@@ -52,7 +52,7 @@ namespace boost {
             Traits from this class template are used by various algorithms to achieve
             better performance for specific containers.
             This class template provides a default selection of sequence propoerties. 
-            New containers can specialized eihter by specializing the whole class,
+            New containers can supported eihter by specializing the whole class,
             or by providing a specific overrides for tester functinons.
         */
         template< typename SequenceT >

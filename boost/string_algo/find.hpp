@@ -1,6 +1,6 @@
 //  Boost string_algo library find.hpp header file  ---------------------------//
 
-//  (C) Copyright Pavol Droba 2002. Permission to copy, use, modify, sell and
+//  (C) Copyright Pavol Droba 2002-2003. Permission to copy, use, modify, sell and
 //  distribute this software is granted provided this copyright notice appears
 //  in all copies. This software is provided "as is" without express or implied
 //  warranty, and with no claim as to its suitability for any purpose.
@@ -11,193 +11,146 @@
 #define BOOST_STRING_FIND_HPP
 
 #include <boost/string_algo/config.hpp>
-#include <boost/string_algo/input_policy.hpp>
+#include <boost/string_algo/container_traits.hpp>
 #include <boost/string_algo/iterator_range.hpp>
-#include <boost/string_algo/detail/find.hpp>
 #include <boost/string_algo/find_impl.hpp>
 
 namespace boost {
 
 //  find_first  -----------------------------------------------//
 
-    // find the first match a subsequnce in the sequence
-    template< typename ForwardIterator1T, typename ForwardIterator2T >
-    inline iterator_range<ForwardIterator1T>
-    find_first( 
-        ForwardIterator1T Begin, 
-        ForwardIterator1T End, 
-        ForwardIterator2T SearchBegin,
-        ForwardIterator2T SearchEnd )
-    {
-        iterator_range<ForwardIterator1T> Range( Begin, End );
-
-        return string_algo::find( 
-            Range,
-            string_algo::detail::
-                create_find_first( 
-                    Range,
-                    make_range( SearchBegin, SearchEnd ) ) );
-    }
-
-    // find_first sequence version
+	// find first
+    /*
+		Search for a first match of search sequence in the 
+		input sequence. Result is given as a pair of iterators,
+		delimiting the match.
+	*/
     template< typename InputT, typename SearchT >
     inline iterator_range< 
-        BOOST_STRING_DEDUCED_TYPENAME string_algo::input_policy<InputT>::iterator_type >
+        BOOST_STRING_TYPENAME string_algo::container_traits<InputT>::result_iterator >
     find_first( 
         InputT& Input, 
         const SearchT& Search )
     {
-        return string_algo::find( 
-            Input, 
-            string_algo::detail::create_find_first( Input, Search ) );
+		return string_algo::first_finder(Search)(Input);
     }
 
 //  find_last  -----------------------------------------------//
 
-    // find the last match a subsequnce in the sequence
-    template< typename ForwardIterator1T, typename ForwardIterator2T >
-    inline iterator_range<ForwardIterator1T>
-    find_last( 
-        ForwardIterator1T Begin, 
-        ForwardIterator1T End, 
-        ForwardIterator2T SearchBegin,
-        ForwardIterator2T SearchEnd )
-    {
-        iterator_range<ForwardIterator1T> Range( Begin, End );
-
-        return string_algo::find( 
-            Range,
-            string_algo::detail::
-                create_find_last( 
-                        Range,
-                        make_range( SearchBegin, SearchEnd ) ) );
-    }
-
-    // find_last sequence version
+	// find last
+    /*
+		Search for a last match of search sequence in the 
+		input sequence. Result is given as a pair of iterators,
+		delimiting the match.
+	*/
     template< typename InputT, typename SearchT >
     inline iterator_range< 
-        BOOST_STRING_DEDUCED_TYPENAME string_algo::input_policy<InputT>::iterator_type >
+        BOOST_STRING_TYPENAME string_algo::container_traits<InputT>::result_iterator >
     find_last( 
         InputT& Input, 
         const SearchT& Search )
     {
-        return string_algo::find( 
-            Input, 
-            string_algo::detail::create_find_last( Input, Search ) );
+		return string_algo::last_finder(Search)(Input);
     }
 
 //  find_nth ----------------------------------------------------------------------//
 
-    // find the n-th match of a subsequnce in the sequence
-    template< typename ForwardIterator1T, typename ForwardIterator2T >
-    inline iterator_range<ForwardIterator1T>
-    find_nth( 
-        ForwardIterator1T Begin, 
-        ForwardIterator1T End, 
-        ForwardIterator2T SearchBegin,
-        ForwardIterator2T SearchEnd,
-        unsigned int Nth )
-    {
-        iterator_range<ForwardIterator1T> Range( Begin, End );
-
-        return string_algo::find( 
-            Range,
-            string_algo::detail::
-                create_find_nth( 
-                    Range,
-                    make_range( SearchBegin, SearchEnd ), Nth ) );
-    }
+    // find n-th
+    /*
+		Search for an n-th match of search sequence in the 
+		input sequence. Result is given as a pair of iterators,
+		delimiting the match.
+	*/
 
     template< typename InputT, typename SearchT >
     inline iterator_range< 
-        BOOST_STRING_DEDUCED_TYPENAME string_algo::input_policy<InputT>::iterator_type >
+        BOOST_STRING_TYPENAME string_algo::container_traits<InputT>::result_iterator >
     find_nth( 
         InputT& Input, 
         const SearchT& Search,
         unsigned int Nth )
     {
-        return string_algo::find( 
-            Input, 
-            string_algo::detail::create_find_nth( Input, Search, Nth ) );
+		return string_algo::nth_finder(Search,Nth)(Input);
     }
 
 //  find_head ----------------------------------------------------------------------//
 
-    // find a head of the sequence
-    template< typename ForwardIterator1T >
-    inline iterator_range<ForwardIterator1T>
-    find_head( 
-        ForwardIterator1T Begin, 
-        ForwardIterator1T End, 
-        unsigned int N )
-    {
-        iterator_range<ForwardIterator1T> Range( Begin, End );
-
-        return string_algo::find( 
-            Range,
-            string_algo::detail::create_find_head( Range, N ) );
-    }
-
+	// find a head
+    /*
+		Get the head sequence of the input.
+		Result is given as a pair of iterators, delimiting the match.
+	*/
     template< typename InputT >
     inline iterator_range< 
-        BOOST_STRING_DEDUCED_TYPENAME string_algo::input_policy<InputT>::iterator_type >
+        BOOST_STRING_TYPENAME string_algo::container_traits<InputT>::result_iterator >
     find_head( 
         InputT& Input, 
         unsigned int N )
     {
-        return string_algo::find( 
-            Input, 
-            string_algo::detail::create_find_head( Input, N ) );
+        return string_algo::head_finder( N )( Input ); 		
     }
 
+    // find a head
+    /*
+		Get the head sequence of the input.
+		Result is given as a copy the head sequence.
+	*/
     template< typename InputT >
     inline InputT find_head_copy( 
         const InputT& Input, 
         unsigned int N )
     {
-        return string_algo::find_copy( 
-            Input, 
-            string_algo::detail::create_find_head( Input, N ) );
+        return copy_range<InputT>( string_algo::head_finder(N)(Input) );
     }
 
 //  find_tail ----------------------------------------------------------------------//
 
-    // find a head of the sequence
-    template< typename ForwardIterator1T >
-    inline iterator_range<ForwardIterator1T>
-    find_tail( 
-        ForwardIterator1T Begin, 
-        ForwardIterator1T End, 
-        unsigned int N )
-    {
-        iterator_range<ForwardIterator1T> Range( Begin, End );
-
-        return string_algo::find( 
-            Range,
-            string_algo::detail::create_find_tail( Range, N ) );
-    }
-
-    template< typename InputT >
+	// find a tail
+    /*
+		Get the tail sequence of the input.
+		Result is given as a pair of iterators, delimiting the match.
+	*/
+	template< typename InputT >
     inline iterator_range< 
-        BOOST_STRING_DEDUCED_TYPENAME string_algo::input_policy<InputT>::iterator_type >
+        BOOST_STRING_TYPENAME string_algo::container_traits<InputT>::result_iterator >
     find_tail( 
         InputT& Input, 
         unsigned int N )
     {
-        return string_algo::find( 
-            Input, 
-            string_algo::detail::create_find_tail( Input, N ) );
+        return string_algo::tail_finder( N )( Input ); 		
     }
 
+    // find a tail
+    /*
+		Get the tail sequence of the input.
+		Result is given as a copy the head sequence.
+	*/
     template< typename InputT >
     inline InputT find_tail_copy( 
         const InputT& Input, 
         unsigned int N )
     {
-        return string_algo::find_copy( 
-            Input, 
-            string_algo::detail::create_find_tail( Input, N ) );
+		return copy_range<InputT>( string_algo::tail_finder(N)(Input) );
     }
+
+//  find_token --------------------------------------------------------------------//
+
+	// find a token
+    /*
+		Get the token in the given sequence
+		Result is given as a pair of iterators, delimiting the match.
+	*/
+	template< typename InputT, typename PredicateT >
+    inline iterator_range< 
+        BOOST_STRING_TYPENAME string_algo::container_traits<InputT>::result_iterator >
+    find_token( 
+        InputT& Input,
+		PredicateT Pred,
+        bool bCompress=true )
+    {
+        return string_algo::token_finder( Pred, bCompress )( Input ); 		
+    }
+
 
 } // namespace boost
 

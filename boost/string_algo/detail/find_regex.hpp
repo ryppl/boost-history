@@ -11,14 +11,12 @@
 #define BOOST_STRING_FIND_REGEX_DETAIL_HPP
 
 #include <boost/string_algo/config.hpp>
-#include <functional>
 #include <boost/regex.hpp>
 #include <boost/string_algo/iterator_range.hpp>
+#include <boost/string_algo/container_traits.hpp>
 
 namespace boost {
-
     namespace string_algo {
-
         namespace detail {
 
 //  regex find functor -----------------------------------------------//
@@ -30,16 +28,11 @@ namespace boost {
             {
                 typedef regex_search_result<IteratorT> type;
                 typedef iterator_range<IteratorT> base_type;
-                typedef BOOST_STRING_DEDUCED_TYPENAME 
-                    base_type::value_type value_type;
-                typedef BOOST_STRING_DEDUCED_TYPENAME 
-                    base_type::reference reference;
-                typedef BOOST_STRING_DEDUCED_TYPENAME 
-                    base_type::difference_type difference_type;
-                typedef BOOST_STRING_DEDUCED_TYPENAME 
-                    base_type::const_iterator const_iterator;
-                typedef BOOST_STRING_DEDUCED_TYPENAME 
-                    base_type::iterator iterator;
+				typedef BOOST_STRING_TYPENAME base_type::value_type value_type;
+				typedef BOOST_STRING_TYPENAME base_type::reference reference;
+                typedef BOOST_STRING_TYPENAME base_type::difference_type difference_type;
+                typedef BOOST_STRING_TYPENAME base_type::const_iterator const_iterator;
+                typedef BOOST_STRING_TYPENAME base_type::iterator iterator;
                 typedef match_results<iterator> match_results_type;
 
                 // Contruction
@@ -80,12 +73,9 @@ namespace boost {
             /*
                 Regex based search functor
             */
-            template<typename InputIteratorT, typename RegExT>
+            template<typename RegExT>
             struct find_regexF
             {
-                typedef InputIteratorT input_iterator_type;
-                typedef regex_search_result< input_iterator_type > result_type;
-
                 typedef RegExT regex_type;
                 typedef const RegExT& regex_reference_type;
                     
@@ -94,11 +84,16 @@ namespace boost {
                     m_Rx(Rx), m_MatchFlags(MatchFlags) {}   
 
                 // Operation
-                result_type operator()( 
-                    input_iterator_type Begin, 
-                    input_iterator_type End ) const
+				template< typename ForwardIteratorT >
+                regex_search_result<ForwardIteratorT>
+				operator()( 
+					ForwardIteratorT Begin, 
+                    ForwardIteratorT End ) const
                 {
-                    // instantiate match result
+                    typedef ForwardIteratorT input_iterator_type;
+					typedef regex_search_result<ForwardIteratorT> result_type;
+
+					// instantiate match result
                     match_results<input_iterator_type> result;
                     // search for a match
                     if ( regex_search( Begin, End, result, m_Rx, m_MatchFlags ) )
@@ -113,30 +108,21 @@ namespace boost {
                     }
                 }
 
+				template<typename InputT>
+				regex_search_result< 
+					BOOST_STRING_TYPENAME container_traits<InputT>::result_iterator >
+				operator()( InputT& Input ) const
+				{
+					return operator()( begin(Input), end(Input) );
+				}
+
             private:
                 regex_reference_type m_Rx; // Regexp
                 unsigned m_MatchFlags;     // match flags
             };
 
-            // Construction helper
-            template<typename InputT, typename RegExT>
-            inline find_regexF<
-                BOOST_STRING_DEDUCED_TYPENAME input_policy<InputT>::iterator_type, 
-                RegExT>
-            create_find_regex(
-                InputT&,
-                const RegExT& Rx, 
-                unsigned int MatchFlags=match_default )
-            {
-                return find_regexF<
-                    BOOST_STRING_DEDUCED_TYPENAME input_policy<InputT>::iterator_type, 
-                    RegExT>( Rx, MatchFlags );
-            }
-   
         } // namespace detail
-
     } // namespace string_algo
-
 } // namespace boost
 
 #endif  // BOOST_STRING_FIND_DETAIL_HPP

@@ -49,7 +49,7 @@ namespace boost {
                 ForwardIteratorT InEnd, 
                 PredicateT IsSpace )
             {
-                typedef BOOST_STRING_DEDUCED_TYPENAME boost::detail::
+                typedef BOOST_STRING_TYPENAME boost::detail::
                     iterator_traits<ForwardIteratorT>::iterator_category category;
 
                 return trim_end_if_iter_select( InBegin, InEnd, IsSpace, category() );

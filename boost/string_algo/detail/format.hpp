@@ -10,14 +10,14 @@
 #ifndef BOOST_STRING_FORMAT_DETAIL_HPP
 #define BOOST_STRING_FORMAT_DETAIL_HPP
 
+#include <boost/string_algo/container_traits.hpp>
+#include <boost/string_algo/iterator_range.hpp>
 #include <boost/string_algo/detail/util.hpp>
-
-namespace boost {
 
 //  generic replace functors -----------------------------------------------//
 
+namespace boost {
     namespace string_algo {
-        
         namespace detail {
 
 //  replace identity format functor -----------------------------------------//
@@ -26,22 +26,23 @@ namespace boost {
             template< typename FormatT >
             struct identity_formatF
             {
-                typedef FormatT result_type;
-                typedef const result_type& result_reference_type;
-                
+				typedef BOOST_STRING_TYPENAME
+					container_traits<FormatT>::const_iterator format_iterator;
+				typedef iterator_range<format_iterator> result_type;
+
                 // Construction
                 identity_formatF( const FormatT& Format ) :
-                    m_Format( Format ) {}
+                    m_Format( begin(Format), end(Format) ) {}
 
                 // Operation
                 template< typename ReplaceT >
-                result_reference_type operator()( const ReplaceT& ) const
+                const result_type& operator()( const ReplaceT& ) const
                 {
-                    return m_Format;
+					return m_Format;
                 }
 
             private:
-                const FormatT& m_Format;
+                result_type m_Format;
             };
 
 //  empty format functor ( used by erase ) ------------------------------------//

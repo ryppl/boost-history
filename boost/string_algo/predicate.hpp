@@ -1,6 +1,6 @@
 //  Boost string_algo library predicate.hpp header file  ---------------------------//
 
-//  (C) Copyright Pavol Droba 2002. Permission to copy, use, modify, sell and
+//  (C) Copyright Pavol Droba 2002-2003. Permission to copy, use, modify, sell and
 //  distribute this software is granted provided this copyright notice appears
 //  in all copies. This software is provided "as is" without express or implied
 //  warranty, and with no claim as to its suitability for any purpose.
@@ -11,6 +11,7 @@
 #define BOOST_STRING_PREDICATE_HPP
 
 #include <boost/string_algo/config.hpp>
+#include <boost/string_algo/container_traits.hpp>
 #include <boost/string_algo/find.hpp>
 #include <boost/string_algo/detail/predicate.hpp>
 
@@ -18,60 +19,53 @@ namespace boost {
 
 //  starts_with predicate  -----------------------------------------------//
 
-    // start_with iterator version
-    template< typename ForwardIterator1T, typename ForwardIterator2T >
+    // start_with predicate
+    template< typename SeqT1, typename SeqT2 >
     inline bool starts_with( 
-        ForwardIterator1T Begin, 
-        ForwardIterator1T End, 
-        ForwardIterator2T SubBegin,
-        ForwardIterator2T SubEnd )
+        const SeqT1& Input, 
+        const SeqT2& Substr )
     {
-        ForwardIterator1T it=Begin;
-        ForwardIterator2T pit=SubBegin;
+        typedef BOOST_STRING_TYPENAME 
+			string_algo::container_traits<SeqT1>::const_iterator Iterator1T;
+		typedef BOOST_STRING_TYPENAME 
+			string_algo::container_traits<SeqT2>::const_iterator Iterator2T;
+			
+		Iterator1T InputEnd=string_algo::end(Input);
+		Iterator2T SubstrEnd=string_algo::end(Substr);
+
+		Iterator1T it=string_algo::begin(Input);
+        Iterator2T pit=string_algo::begin(Substr);
         for(;
-            it!=End && pit!=SubEnd;
+            it!=InputEnd && pit!=SubstrEnd;
             it++,pit++)
         {
             if( !( (*it)==(*pit) ) )
                 return false;
         }
 
-        return pit==SubEnd;
-    }
-
-    // start_with sequence version
-    template< typename SeqT1, typename SeqT2 >
-    inline bool starts_with( 
-        const SeqT1& Input, 
-        const SeqT2& Substr )
-    {
-        return starts_with( Input.begin(), Input.end(), Substr.begin(), Substr.end() );
+        return pit==SubstrEnd;
     }
 
 //  ends_with predicate  -----------------------------------------------//
 
-    template< typename ForwardIterator1T, typename ForwardIterator2T >
-    inline bool ends_with( 
-        ForwardIterator1T Begin, 
-        ForwardIterator1T End, 
-        ForwardIterator2T SubBegin,
-        ForwardIterator2T SubEnd )
-    {
-        typedef BOOST_STRING_DEDUCED_TYPENAME boost::detail::
-            iterator_traits<ForwardIterator1T>::iterator_category category;
-
-        return string_algo::detail::
-            ends_with_iter_select( 
-                Begin, End, SubBegin, SubEnd, category() );
-    }
-
-    // end_with sequence version
+    // end_with predicate
     template< typename SeqT1, typename SeqT2 >
     inline bool ends_with( 
         const SeqT1& Input, 
         const SeqT2& Substr )
     {
-        return ends_with( Input.begin(), Input.end(), Substr.begin(), Substr.end() );
+        typedef BOOST_STRING_TYPENAME 
+			string_algo::container_traits<SeqT1>::const_iterator Iterator1T;
+		typedef BOOST_STRING_TYPENAME boost::detail::
+            iterator_traits<Iterator1T>::iterator_category category;
+
+        return string_algo::detail::
+            ends_with_iter_select( 
+                string_algo::begin(Input), 
+				string_algo::end(Input), 
+				string_algo::begin(Substr), 
+				string_algo::end(Substr), 
+				category() );
     }
 
 //  contains predicate  -----------------------------------------------//
@@ -90,7 +84,10 @@ namespace boost {
             return true;
         }
         
-        return ( !find_first( Begin, End, SubBegin, SubEnd ).empty() );
+        return (
+			!find_first( 
+				make_range(Begin, End), 
+				make_range(SubBegin, SubEnd) ).empty() );
     }
 
     // contains sequence version
@@ -99,59 +96,47 @@ namespace boost {
         const SeqT1& Input, 
         const SeqT2& Substr )
     {
-        return contains( Input.begin(), Input.end(), Substr.begin(), Substr.end() );
+		if ( string_algo::empty(Substr) )
+        {
+            // Empty range is contained always
+            return true;
+        }
+        
+        return (
+			!find_first( Input,	Substr ).empty() );
     }
 
 
 //  equal predicate  -----------------------------------------------//
 
-    // equal iterator version
-    template< typename ForwardIterator1T, typename ForwardIterator2T >
+    // equals predicate
+    template< typename SeqT1, typename SeqT2 >
     inline bool equals( 
-        ForwardIterator1T Begin, 
-        ForwardIterator1T End, 
-        ForwardIterator2T SubBegin,
-        ForwardIterator2T SubEnd )
+        const SeqT1& Input, 
+        const SeqT2& Substr )
     {
-        ForwardIterator1T it=Begin;
-        ForwardIterator2T pit=SubBegin;
+        typedef BOOST_STRING_TYPENAME 
+			string_algo::container_traits<SeqT1>::const_iterator Iterator1T;
+		typedef BOOST_STRING_TYPENAME 
+			string_algo::container_traits<SeqT2>::const_iterator Iterator2T;
+			
+		Iterator1T InputEnd=string_algo::end(Input);
+		Iterator2T SubstrEnd=string_algo::end(Substr);
+
+		Iterator1T it=string_algo::begin(Input);
+        Iterator2T pit=string_algo::begin(Substr);
         for(;
-            it!=End && pit!=SubEnd;
+            it!=InputEnd && pit!=SubstrEnd;
             it++,pit++)
         {
             if( !( (*it)==(*pit) ) )
                 return false;
         }
 
-        return ( pit==SubEnd ) && ( it==End );
-    }
-
-    // equals sequence version
-    template< typename SeqT1, typename SeqT2 >
-    inline bool equals( 
-        const SeqT1& Input, 
-        const SeqT2& Substr )
-    {
-        return equals( Input.begin(), Input.end(), Substr.begin(), Substr.end() );
+        return ( pit==SubstrEnd ) && ( it==InputEnd );
     }
 
 //  all predicate  -----------------------------------------------//
-
-    // all predicate iterator version
-    template< typename ForwardIterator1T, typename PredicateT >
-    inline bool all( 
-        ForwardIterator1T Begin, 
-        ForwardIterator1T End, 
-        PredicateT Predicate)
-    {
-        for( ForwardIterator1T It=Begin; It!=End; It++ )
-        {
-            if ( !Predicate(*It) )
-                return false;
-        }
-        
-        return true;
-    }
 
     // all predicate sequence version
     template< typename SeqT1, typename PredicateT >
@@ -159,7 +144,17 @@ namespace boost {
         const SeqT1& Input, 
         PredicateT Predicate )
     {
-        return all( Input.begin(), Input.end(), Predicate );
+        typedef BOOST_STRING_TYPENAME 
+			string_algo::container_traits<SeqT1>::const_iterator Iterator1T;
+
+		Iterator1T InputEnd=string_algo::end(Input);
+		for( Iterator1T It=string_algo::begin(Input); It!=InputEnd; It++ )
+        {
+            if ( !Predicate(*It) )
+                return false;
+        }
+        
+        return true;
     }
 
 

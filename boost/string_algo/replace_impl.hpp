@@ -1,6 +1,6 @@
 //  Boost string_algo library replace_impl.hpp header file  ---------------------------//
 
-//  (C) Copyright Pavol Droba 2002. Permission to copy, use, modify, sell and
+//  (C) Copyright Pavol Droba 2002-2003. Permission to copy, use, modify, sell and
 //  distribute this software is granted provided this copyright notice appears
 //  in all copies. This software is provided "as is" without express or implied
 //  warranty, and with no claim as to its suitability for any purpose.
@@ -11,14 +11,60 @@
 #define BOOST_STRING_REPLACE_IMPL_HPP
 
 #include <deque>
+#include <boost/detail/iterator.hpp>
+#include <boost/string_algo/container_traits.hpp>
 #include <boost/string_algo/iterator_range.hpp>
 #include <boost/string_algo/detail/replace.hpp>
 #include <boost/string_algo/detail/container.hpp>
+#include <boost/string_algo/detail/format.hpp>
 
 namespace boost {
-
     namespace string_algo {
- 
+
+// generic formaters  ---------------------------------------------------------------//
+
+		// identity formater
+		template< typename ForwardIteratorT >
+		inline detail::identity_formatF<
+			iterator_range<ForwardIteratorT> >
+		identity_formater( 
+			ForwardIteratorT FormatBegin,
+			ForwardIteratorT FormatEnd )
+		{
+			return detail::identity_formatF<
+				iterator_range<ForwardIteratorT> >( make_range( FormatBegin, FormatEnd ) );
+		}
+
+		// identity formater
+		template< typename ContainerT >
+		inline detail::identity_formatF<ContainerT>
+		identity_formater( const ContainerT& Format )
+		{
+			return detail::identity_formatF<ContainerT>( Format );
+		}
+
+		// empty formater
+		template< typename IteratorT >
+		inline detail::empty_formatF<
+			BOOST_STRING_TYPENAME boost::detail::iterator_traits<IteratorT>::value_type >
+		empty_formater( 
+			IteratorT Begin,
+			IteratorT End )
+		{
+			return detail::empty_formatF<
+				BOOST_STRING_TYPENAME 
+					boost::detail::iterator_traits<IteratorT>::value_type >();
+		}
+
+		template< typename ContainerT >
+		inline detail::empty_formatF< 
+			BOOST_STRING_TYPENAME container_traits<ContainerT>::value_type >
+		empty_formater( const ContainerT& Input )
+		{
+			return detail::empty_formatF<
+				BOOST_STRING_TYPENAME container_traits<ContainerT>::value_type >();
+		}
+
 // generic replace  -----------------------------------------------------------------//
 
         // replace 
@@ -39,28 +85,30 @@ namespace boost {
             FindFT FindF,
             FormatFT FormatF )
         {
-            typedef BOOST_STRING_DEDUCED_TYPENAME 
-                FindFT::result_type search_result_type;
-            
+			typedef detail::find_format_store<
+				BOOST_STRING_TYPENAME 
+					container_traits<InputT>::const_iterator, FormatFT> store_type;
+
+			// Create store for the find result
+			store_type M( FormatF );
+
             // Find first match
-            search_result_type M=FindF( Input.begin(), Input.end() );
+            M=FindF( begin(Input), end(Input) );
 
             if ( M.empty() )
             {
                 // Match not found - return original sequence
-                std::copy( Input.begin(), Input.end(), Output );
+                std::copy( begin(Input), end(Input), Output );
                 return Output;
             }
 
             // Copy the beginning of the sequence
-            std::copy( Input.begin(), M.begin(), Output );
+            std::copy( begin(Input), begin(M), Output );
             // Format find result
-            BOOST_STRING_DEDUCED_TYPENAME 
-                FormatFT::result_type FResult=FormatF( M );
             // Copy formated result
-            std::copy( FResult.begin(), FResult.end(), Output );
+            std::copy( begin(M.format_result()), end(M.format_result()), Output );
             // Copy the rest of the sequence
-            std::copy( M.end(), Input.end(), Output );
+            std::copy( M.end(), end(Input), Output );
 
             return Output;
         }
@@ -75,11 +123,15 @@ namespace boost {
             FindFT FindF,
             FormatFT FormatF )
         {
-            typedef BOOST_STRING_DEDUCED_TYPENAME 
-                FindFT::result_type search_result_type;
+			typedef detail::find_format_store<
+				BOOST_STRING_TYPENAME 
+					container_traits<InputT>::const_iterator, FormatFT> store_type;
 
-            // Find first match
-            search_result_type M=FindF( Input.begin(), Input.end() );
+			// Create store for the find result
+			store_type M( FormatF );
+
+			// Find first match
+            M=FindF( begin(Input), end(Input) );
 
             if ( M.empty() )
             {
@@ -89,11 +141,11 @@ namespace boost {
 
             InputT Output;
             // Copy the beginning of the sequence
-            detail::insert( Output, Output.end(), Input.begin(), M.begin() );
+            detail::insert( Output, end(Output), begin(Input), M.begin() );
             // Copy formated result
-            detail::insert( Output, Output.end(), FormatF( M ) );
+            detail::insert( Output, end(Output), M.format_result() );
             // Copy the rest of the sequence
-            detail::insert( Output, Output.end(), M.end(), Input.end() );
+            detail::insert( Output, end(Output), M.end(), end(Input) );
 
             return Output;
         }
@@ -108,11 +160,15 @@ namespace boost {
             FindFT FindF,
             FormatFT FormatF )
         {
-            typedef BOOST_STRING_DEDUCED_TYPENAME 
-                FindFT::result_type search_result_type;
+			typedef detail::find_format_store<
+				BOOST_STRING_TYPENAME 
+					container_traits<InputT>::iterator, FormatFT> store_type;
+
+			// Create store for the find result
+			store_type M( FormatF );
             
             // Find range for the match
-            search_result_type M=FindF( Input.begin(), Input.end() );
+            M=FindF( begin(Input), end(Input) );
 
             if ( M.empty() )
             {
@@ -121,7 +177,7 @@ namespace boost {
             }
 
             // Replace match
-            detail::replace( Input, M.begin(), M.end(), FormatF( M ) );
+            detail::replace( Input, M.begin(), M.end(), M.format_result() );
             
             return Input;
         }
@@ -145,34 +201,34 @@ namespace boost {
             FindFT FindF,
             FormatFT FormatF )
         {
-            typedef BOOST_STRING_DEDUCED_TYPENAME 
-                FindFT::result_type search_result_type;
-            typedef BOOST_STRING_DEDUCED_TYPENAME 
-                InputT::const_iterator input_iterator_type; 
+            typedef BOOST_STRING_TYPENAME 
+                container_traits<InputT>::const_iterator input_iterator_type; 
+			typedef detail::find_format_store<
+				input_iterator_type, FormatFT> store_type;
         
-            input_iterator_type LastMatch=Input.begin();
+			// Create store for the find result
+			store_type M( FormatF );
 
-            // Find first match
-            search_result_type M=FindF( Input.begin(), Input.end() );
+			input_iterator_type LastMatch=begin(Input);
+
+			// Find first match
+            M=FindF( begin(Input), end(Input) );
 
             // Iterate throug all matches
             while( !M.empty() )
             {
                 // Copy the beginning of the sequence
                 std::copy( LastMatch, M.begin(), Output );
-                // Format find result
-                BOOST_STRING_DEDUCED_TYPENAME 
-                    FormatFT::result_type FResult=FormatF( M );
                 // Copy formated result
-                std::copy( FResult.begin(), FResult.end(), Output );
+                std::copy( begin(M.format_result()), end(M.format_result()), Output );
 
                 // Proceed to the next match
                 LastMatch=M.end();
-                M=FindF( LastMatch, Input.end() );
+                M=FindF( LastMatch, end(Input) );
             }
 
             // Copy the rest of the sequence
-            std::copy( LastMatch, Input.end(), Output );
+            std::copy( LastMatch, end(Input), Output );
 
             return Output;
         }
@@ -187,15 +243,18 @@ namespace boost {
             FindFT FindF,
             FormatFT FormatF )
         {
-            typedef BOOST_STRING_DEDUCED_TYPENAME 
-                FindFT::result_type search_result_type;
-            typedef BOOST_STRING_DEDUCED_TYPENAME 
-                InputT::const_iterator input_iterator_type; 
+            typedef BOOST_STRING_TYPENAME 
+                container_traits<InputT>::const_iterator input_iterator_type; 
+			typedef detail::find_format_store<
+				input_iterator_type, FormatFT> store_type;
+        
+			// Create store for the find result
+			store_type M( FormatF );
 
             // Initialize last match
-            input_iterator_type LastMatch=Input.begin();
+            input_iterator_type LastMatch=begin(Input);
             // Find first match
-            search_result_type M=FindF( Input.begin(), Input.end() );
+            M=FindF( begin(Input), end(Input) );
 
             // Output temporary
             InputT Output;
@@ -204,17 +263,17 @@ namespace boost {
             while( !M.empty() )
             {
                 // Copy the beginning of the sequence
-                detail::insert( Output, Output.end(), LastMatch, M.begin() );
+                detail::insert( Output, end(Output), LastMatch, M.begin() );
                 // Copy formated result
-                detail::insert( Output, Output.end(), FormatF( M ) );
+                detail::insert( Output, end(Output), M.format_result() );
 
                 // Proceed to the next match
                 LastMatch=M.end();
-                M=FindF( LastMatch, Input.end() );
+                M=FindF( LastMatch, end(Input) );
             }
 
             // Copy the rest of the sequence
-            detail::insert( Output, Output.end(), LastMatch, Input.end() );
+            detail::insert( Output, end(Output), LastMatch, end(Input) );
 
             return Output;
         }
@@ -229,20 +288,23 @@ namespace boost {
             FindFT FindF,
             FormatFT FormatF )
         {
-            typedef BOOST_STRING_DEDUCED_TYPENAME 
-                FindFT::result_type search_result_type;
-            typedef BOOST_STRING_DEDUCED_TYPENAME 
-                InputT::iterator input_iterator_type; 
+            typedef BOOST_STRING_TYPENAME 
+                container_traits<InputT>::iterator input_iterator_type; 
+			typedef detail::find_format_store<
+				input_iterator_type, FormatFT> store_type;
+        
+			// Create store for the find result
+			store_type M( FormatF );
             
             // Instantiate replacement storage
-            std::deque<BOOST_STRING_DEDUCED_TYPENAME InputT::value_type> Storage;
+            std::deque<BOOST_STRING_TYPENAME InputT::value_type> Storage;
 
             // Initialize replacement iterators
-            input_iterator_type InsertIt=Input.begin();
-            input_iterator_type SearchIt=Input.begin();
+            input_iterator_type InsertIt=begin(Input);
+            input_iterator_type SearchIt=begin(Input);
             
             // Find range for a first match
-            search_result_type M=FindF( Input.begin(), Input.end() );
+            M=FindF( begin(Input), end(Input) );
 
             while ( !M.empty() )
             {
@@ -258,10 +320,10 @@ namespace boost {
                 SearchIt=M.end();
 
                 // Copy formated replace to the storage
-                detail::copy_to_storage( Storage, FormatF(M) );
+                detail::copy_to_storage( Storage, M.format_result() );
 
                 // Find range for a next match
-                M=FindF( SearchIt, Input.end() );
+                M=FindF( SearchIt, end(Input) );
             }
 
             // process the last segment
@@ -270,24 +332,23 @@ namespace boost {
                 Input,
                 InsertIt,
                 SearchIt,
-                Input.end() );
+                end(Input) );
             
             if ( Storage.empty() )
             {
                 // Truncate input
-                detail::erase( Input, InsertIt, Input.end() );
+                detail::erase( Input, InsertIt, end(Input) );
             }
             else
             {
                 // Copy remaining data to the end of input
-                detail::insert( Input, Input.end(), Storage.begin(), Storage.end() );
+                detail::insert( Input, end(Input), Storage.begin(), Storage.end() );
             }
 
             return Input;
         }
 
     } // namespace string_algo
-    
 } // namespace boost
 
 

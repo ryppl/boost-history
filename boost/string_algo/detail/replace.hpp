@@ -13,14 +13,50 @@
 #include <boost/string_algo/config.hpp>
 #include <algorithm>
 #include <boost/mpl/bool.hpp>
+#include <boost/string_algo/container_traits.hpp>
 #include <boost/string_algo/sequence_traits.hpp>
 #include <boost/string_algo/detail/container.hpp>
+#include <boost/string_algo/iterator_range.hpp>
 
 namespace boost {
-
     namespace string_algo {
-        
-        namespace detail {
+		namespace detail {
+
+//  temporary format and find reusul storage --------------------------------//
+
+			template< 
+				typename ForwardIteratorT,
+				typename FormatT >
+			class find_format_store : 
+				public iterator_range<ForwardIteratorT>
+			{
+				typedef BOOST_STRING_TYPENAME
+					FormatT::result_type format_result_type;
+			public:
+				// Construction
+				find_format_store( const FormatT& Format ) :
+					m_Format( Format ) {}
+
+				// Assignment
+				template< typename FindResultT >
+				find_format_store& operator=( FindResultT FindResult )
+				{
+					iterator_range<ForwardIteratorT>::operator=(FindResult);
+					m_FormatResult=m_Format(FindResult);
+					
+					return *this;
+				}
+
+				// Retrive format result
+				const format_result_type& format_result()
+				{	
+					return m_FormatResult;
+				}
+
+			private:
+				const FormatT& m_Format;
+				format_result_type m_FormatResult;
+			};
 
 //  storage handling routines -----------------------------------------------//
             
@@ -47,7 +83,7 @@ namespace boost {
                 StorageT& Storage,
                 const WhatT& What )
             {
-                Storage.insert( Storage.end(), What.begin(), What.end() );
+                Storage.insert( Storage.end(), begin(What), end(What) );
             }
 
 
@@ -147,16 +183,14 @@ namespace boost {
             {
                 return 
                     process_segment_helper< 
-                        BOOST_STRING_DEDUCED_TYPENAME 
+                        BOOST_STRING_TYPENAME 
                             sequence_traits<InputT>::stable_iterators >()(
                                 Storage, Input, InsertIt, SegmentBegin, SegmentEnd );
             }
             
 
         } // namespace detail
-
     } // namespace string_algo
-
 } // namespace boost
 
 #endif  // BOOST_STRING_REPLACE_DETAIL_HPP

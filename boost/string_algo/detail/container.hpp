@@ -13,6 +13,7 @@
 #include <boost/string_algo/config.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/logical.hpp>
+#include <boost/string_algo/container_traits.hpp>
 #include <boost/string_algo/sequence_traits.hpp>
 
 namespace boost {
@@ -26,16 +27,16 @@ namespace boost {
             template< typename InputT, typename InsertT >
             inline void insert(
                 InputT& Input,
-                BOOST_STRING_DEDUCED_TYPENAME InputT::iterator At,
+                BOOST_STRING_TYPENAME InputT::iterator At,
                 const InsertT& Insert )
             {
-                insert( Input, At, Insert.begin(), Insert.end() );
+                insert( Input, At, begin(Insert), end(Insert) );
             }
 
             template< typename InputT, typename ForwardIteratorT >
             inline void insert(
                 InputT& Input,
-                BOOST_STRING_DEDUCED_TYPENAME InputT::iterator At,
+                BOOST_STRING_TYPENAME InputT::iterator At,
                 ForwardIteratorT Begin,
                 ForwardIteratorT End )
             {
@@ -51,8 +52,8 @@ namespace boost {
             template< typename InputT >
             inline typename InputT::iterator erase(
                 InputT& Input,
-                BOOST_STRING_DEDUCED_TYPENAME InputT::iterator From,
-                BOOST_STRING_DEDUCED_TYPENAME InputT::iterator To )
+                BOOST_STRING_TYPENAME InputT::iterator From,
+                BOOST_STRING_TYPENAME InputT::iterator To )
             {
                 return Input.erase( From, To );
             }
@@ -67,14 +68,14 @@ namespace boost {
                 template< typename InputT, typename ForwardIteratorT >
                 void operator()(
                     InputT& Input,
-                    BOOST_STRING_DEDUCED_TYPENAME InputT::iterator From,
-                    BOOST_STRING_DEDUCED_TYPENAME InputT::iterator To,
+                    BOOST_STRING_TYPENAME InputT::iterator From,
+                    BOOST_STRING_TYPENAME InputT::iterator To,
                     ForwardIteratorT Begin,
                     ForwardIteratorT End )
                 {
                     // Copy data to the container ( as much as possible )
                     ForwardIteratorT InsertIt=Begin;
-                    BOOST_STRING_DEDUCED_TYPENAME InputT::iterator InputIt=From;
+                    BOOST_STRING_TYPENAME InputT::iterator InputIt=From;
                     for(; InsertIt!=End && InputIt!=To; InsertIt++, InputIt++ )
                     {
                         *InputIt=*InsertIt;
@@ -103,12 +104,12 @@ namespace boost {
                 template< typename InputT, typename ForwardIteratorT >
                 void operator()(
                     InputT& Input,
-                    BOOST_STRING_DEDUCED_TYPENAME InputT::iterator From,
-                    BOOST_STRING_DEDUCED_TYPENAME InputT::iterator To,
+                    BOOST_STRING_TYPENAME InputT::iterator From,
+                    BOOST_STRING_TYPENAME InputT::iterator To,
                     ForwardIteratorT Begin,
                     ForwardIteratorT End ) 
                 {
-                    BOOST_STRING_DEDUCED_TYPENAME InputT::iterator At=Input.erase( From, To );
+                    BOOST_STRING_TYPENAME InputT::iterator At=Input.erase( From, To );
                     if ( Begin!=End )
                     {
                         Input.insert( At, Begin, End );
@@ -123,16 +124,16 @@ namespace boost {
                 template< typename InputT, typename ForwardIteratorT >
                 void operator()(
                     InputT& Input,
-                    BOOST_STRING_DEDUCED_TYPENAME InputT::iterator From,
-                    BOOST_STRING_DEDUCED_TYPENAME InputT::iterator To,
+                    BOOST_STRING_TYPENAME InputT::iterator From,
+                    BOOST_STRING_TYPENAME InputT::iterator To,
                     ForwardIteratorT Begin,
                     ForwardIteratorT End ) 
                 {
                     replace_const_time_helper< 
-                        BOOST_STRING_DEDUCED_TYPENAME boost::mpl::and_<
-                            BOOST_STRING_DEDUCED_TYPENAME 
+                        BOOST_STRING_TYPENAME boost::mpl::and_<
+                            BOOST_STRING_TYPENAME 
                                 sequence_traits<InputT>::const_time_insert,
-                            BOOST_STRING_DEDUCED_TYPENAME 
+                            BOOST_STRING_TYPENAME 
                                 sequence_traits<InputT>::const_time_erase >::type >()(
                         Input, From, To, Begin, End );
                 }
@@ -145,8 +146,8 @@ namespace boost {
                 template< typename InputT, typename ForwardIteratorT >
                 void operator()(
                     InputT& Input,
-                    BOOST_STRING_DEDUCED_TYPENAME InputT::iterator From,
-                    BOOST_STRING_DEDUCED_TYPENAME InputT::iterator To,
+                    BOOST_STRING_TYPENAME InputT::iterator From,
+                    BOOST_STRING_TYPENAME InputT::iterator To,
                     ForwardIteratorT Begin,
                     ForwardIteratorT End )
                 {
@@ -159,23 +160,23 @@ namespace boost {
             template< typename InputT, typename InsertT >
             inline void replace(
                 InputT& Input,
-                BOOST_STRING_DEDUCED_TYPENAME InputT::iterator From,
-                BOOST_STRING_DEDUCED_TYPENAME InputT::iterator To,
+                BOOST_STRING_TYPENAME InputT::iterator From,
+                BOOST_STRING_TYPENAME InputT::iterator To,
                 const InsertT& Insert )
             {
-                replace( Input, From, To, Insert.begin(), Insert.end() );
+                replace( Input, From, To, begin(Insert), end(Insert) );
             }
 
             template< typename InputT, typename ForwardIteratorT >
             inline void replace(
                 InputT& Input,
-                BOOST_STRING_DEDUCED_TYPENAME InputT::iterator From,
-                BOOST_STRING_DEDUCED_TYPENAME InputT::iterator To,
+                BOOST_STRING_TYPENAME InputT::iterator From,
+                BOOST_STRING_TYPENAME InputT::iterator To,
                 ForwardIteratorT Begin,
                 ForwardIteratorT End )
             {
                 replace_native_helper< 
-                    BOOST_STRING_DEDUCED_TYPENAME sequence_traits<InputT>::native_replace >()(
+                    BOOST_STRING_TYPENAME sequence_traits<InputT>::native_replace >()(
                     Input, From, To, Begin, End );
             };
 

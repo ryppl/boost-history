@@ -11,7 +11,6 @@
 #define BOOST_STRING_CASE_CONV_DETAIL_HPP
 
 #include <boost/string_algo/config.hpp>
-#include <functional>
 #include <locale>
 
 namespace boost {
@@ -23,19 +22,14 @@ namespace boost {
 //  case conversion functors -----------------------------------------------//
 
             // a tolower functor 
-            template< typename CharT >
-            struct tolowerF : public std::unary_function< CharT, CharT > 
+            struct to_lowerF 
             {
-                typedef BOOST_STRING_DEDUCED_TYPENAME 
-                    std::unary_function< CharT, CharT >::result_type result_type;
-                typedef BOOST_STRING_DEDUCED_TYPENAME 
-                    std::unary_function< CharT, CharT >::argument_type argument_type;
-
                 // Constructor
-                tolowerF( const std::locale& Loc ) : m_Loc( Loc ) {}
+                to_lowerF( const std::locale& Loc ) : m_Loc( Loc ) {}
 
                 // Operation
-                result_type operator ()( argument_type Ch ) const
+                template<typename CharT>
+				CharT operator ()( CharT Ch ) const
                 {
                     return std::tolower( Ch, m_Loc );
                 }
@@ -44,19 +38,14 @@ namespace boost {
             };
 
             // a toupper functor 
-            template< typename CharT >
-            struct toupperF : public std::unary_function< CharT, CharT > 
+            struct to_upperF
             {
-                typedef BOOST_STRING_DEDUCED_TYPENAME 
-                    std::unary_function< CharT, CharT >::result_type result_type;
-                typedef BOOST_STRING_DEDUCED_TYPENAME
-                    std::unary_function< CharT, CharT >::argument_type argument_type;
-
                 // Constructor
-                toupperF( const std::locale& Loc ) : m_Loc( Loc ) {}
+                to_upperF( const std::locale& Loc ) : m_Loc( Loc ) {}
 
                 // Operation
-                result_type operator ()( argument_type Ch ) const
+				template<typename CharT>
+                CharT operator ()( CharT Ch ) const
                 {
                     return std::toupper( Ch, m_Loc );
                 }

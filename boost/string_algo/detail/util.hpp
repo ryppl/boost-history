@@ -29,11 +29,11 @@ namespace boost {
             template< typename Type1, typename Type2 >
             struct equal_toF : public std::binary_function< Type1, Type2, bool > 
             {
-                typedef BOOST_STRING_DEDUCED_TYPENAME 
+                typedef BOOST_STRING_TYPENAME 
                     std::binary_function< Type1, Type2, bool >::result_type result_type;
-                typedef BOOST_STRING_DEDUCED_TYPENAME 
+                typedef BOOST_STRING_TYPENAME 
                     std::binary_function< Type1, Type2, bool >::first_argument_type first_argument_type;
-                typedef BOOST_STRING_DEDUCED_TYPENAME 
+                typedef BOOST_STRING_TYPENAME 
                     std::binary_function< Type1, Type2, bool >::second_argument_type second_argument_type;
 
                 result_type operator ()( 
@@ -58,21 +58,23 @@ namespace boost {
             {
                 typedef empty_container<CharT> type;        
                 typedef CharT value_type;
-                typedef size_t size_type;
-                typedef size_t difference_type;
-                typedef const value_type* const_pointer;
+				typedef std::size_t size_type;
+				typedef std::ptrdiff_t difference_type;
+				typedef const value_type& reference;
                 typedef const value_type& const_reference;
-                typedef const value_type* const_iterator;
+				typedef const value_type* iterator;
+				typedef const value_type* const_iterator;
+
                 
                 // Operations
                 const_iterator begin() const
                 {
-                    return reinterpret_cast<const_pointer>(0);
+                    return reinterpret_cast<const_iterator>(0);
                 }
 
                 const_iterator end() const
                 {
-                    return reinterpret_cast<const_pointer>(0);
+                    return reinterpret_cast<const_iterator>(0);
                 }
 
                 bool empty() const

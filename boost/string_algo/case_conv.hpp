@@ -1,6 +1,6 @@
 //  Boost string_algo library case_conv.hpp header file  ---------------------------//
 
-//  (C) Copyright Pavol Droba 2002. Permission to copy, use, modify, sell and
+//  (C) Copyright Pavol Droba 2002-2003. Permission to copy, use, modify, sell and
 //  distribute this software is granted provided this copyright notice appears
 //  in all copies. This software is provided "as is" without express or implied
 //  warranty, and with no claim as to its suitability for any purpose.
@@ -13,101 +13,127 @@
 #include <boost/string_algo/config.hpp>
 #include <algorithm>
 #include <locale>
-#include <boost/detail/iterator.hpp>
+#include <boost/string_algo/container_traits.hpp>
 #include <boost/string_algo/detail/case_conv.hpp>
 
 namespace boost {
 
-//  tolower  -----------------------------------------------//
+//  to_lower  -----------------------------------------------//
 
-    // iterator version of tolower
-    template< typename OutputIteratorT, typename InputIteratorT >
+    // convert to lower case
+	/*
+		Each element of the input sequence is converted to lower
+		case.
+		Result is copied to the given output iterator.
+	*/
+    template< typename OutputIteratorT, typename SeqT >
     inline OutputIteratorT 
-    tolower_copy(
+    to_lower_copy(
         OutputIteratorT Output,
-        InputIteratorT Begin,
-        InputIteratorT End,
-        const std::locale& Loc=std::locale() )
+		const SeqT& Input,
+		const std::locale& Loc=std::locale() )
     {
         return std::transform( 
-            Begin, 
-            End, 
+			string_algo::begin(Input), 
+            string_algo::end(Input), 
             Output,
-            string_algo::detail::tolowerF<
-                BOOST_STRING_DEDUCED_TYPENAME 
-                    detail::iterator_traits<InputIteratorT>::value_type>(Loc) );
+            string_algo::detail::to_lowerF(Loc) );
     }
 
-    // const version of tolower
+    // convert to lower case
+	/*
+		Each element of the input sequence is converted to lower
+		case.
+		Result is given as a converted copy of the input sequence.
+	*/
     template< typename SeqT >
-    inline SeqT tolower_copy( const SeqT& Input, const std::locale& Loc=std::locale() )
+    inline SeqT to_lower_copy( const SeqT& Input, const std::locale& Loc=std::locale() )
     {
         SeqT Output;
         std::transform( 
-            Input.begin(), 
-            Input.end(), 
+			string_algo::begin(Input), 
+            string_algo::end(Input), 
             std::back_inserter<SeqT>( Output ),
-            string_algo::detail::tolowerF<BOOST_STRING_DEDUCED_TYPENAME SeqT::value_type>(Loc) );
+            string_algo::detail::to_lowerF(Loc) );
 
         return Output;
     }
 
-    // in-place version of tolower
-    template< typename SeqT >
-    inline SeqT& tolower( SeqT& Input, const std::locale& Loc=std::locale() )
+    // convert to lower case
+	/*
+		Each element of the input sequence is converted to lower
+		case.
+		Input sequence is modified in-place and the reference to it is as
+		a result.
+	*/
+	template< typename SeqT >
+    inline SeqT& to_lower( SeqT& Input, const std::locale& Loc=std::locale() )
     {
         std::transform( 
-            Input.begin(), 
-            Input.end(), 
-            Input.begin(),
-            string_algo::detail::tolowerF<BOOST_STRING_DEDUCED_TYPENAME SeqT::value_type>(Loc) );
+			string_algo::begin(Input), 
+            string_algo::end(Input), 
+			string_algo::begin(Input), 
+            string_algo::detail::to_lowerF(Loc) );
         
         return Input;
     }
     
-//  toupper  -----------------------------------------------//
+//  to_upper  -----------------------------------------------//
 
-    // iterator version of toupper
-    template< typename OutputIteratorT, typename InputIteratorT >
+    // convert to upper case
+	/*
+		Each element of the input sequence is converted to upper
+		case.
+		Result is copied to the given output iterator.
+	*/
+    template< typename OutputIteratorT, typename SeqT >
     inline OutputIteratorT 
-    toupper_copy(
+    to_upper_copy(
         OutputIteratorT Output,
-        InputIteratorT Begin,
-        InputIteratorT End,
-        const std::locale& Loc=std::locale() )
+		const SeqT& Input,
+		const std::locale& Loc=std::locale() )
     {
         return std::transform( 
-            Begin, 
-            End, 
+			string_algo::begin(Input), 
+            string_algo::end(Input), 
             Output,
-            string_algo::detail::toupperF<
-                BOOST_STRING_DEDUCED_TYPENAME 
-                    detail::iterator_traits<InputIteratorT>::value_type>(Loc) );
-    }
+            string_algo::detail::to_upperF(Loc) );
+	}
 
-    // const version of toupper
+    // convert to upper case
+	/*
+		Each element of the input sequence is converted to upper
+		case.
+		Result is given as a converted copy of the input sequence.
+	*/
     template< typename SeqT >
-    inline SeqT toupper_copy( const SeqT& Input, const std::locale& Loc=std::locale() )
+    inline SeqT to_upper_copy( const SeqT& Input, const std::locale& Loc=std::locale() )
     {
         SeqT Output;
         std::transform( 
-            Input.begin(), 
-            Input.end(), 
+			string_algo::begin(Input), 
+            string_algo::end(Input), 
             std::back_inserter<SeqT>( Output ),
-            string_algo::detail::toupperF<BOOST_STRING_DEDUCED_TYPENAME SeqT::value_type>(Loc) );
+            string_algo::detail::to_upperF(Loc) );
 
         return Output;
     }
 
-    // in-place version of toupper
+    // convert to upper case
+	/*
+		Each element of the input sequence is converted to upper
+		case.
+		Input sequence is modified in-place and the reference to it is as
+		a result.
+	*/
     template< typename SeqT >
-    inline SeqT& toupper( SeqT& Input, const std::locale& Loc=std::locale() )
+    inline SeqT& to_upper( SeqT& Input, const std::locale& Loc=std::locale() )
     {
         std::transform( 
-            Input.begin(), 
-            Input.end(), 
-            Input.begin(),
-            string_algo::detail::toupperF<BOOST_STRING_DEDUCED_TYPENAME SeqT::value_type>(Loc) );
+			string_algo::begin(Input), 
+            string_algo::end(Input), 
+			string_algo::begin(Input), 
+            string_algo::detail::to_upperF(Loc) );
         
         return Input;
     }

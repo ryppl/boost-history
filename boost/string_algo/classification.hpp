@@ -1,6 +1,6 @@
 //  Boost string_algo library classification.hpp header file  ---------------------------//
 
-//  (C) Copyright Pavol Droba 2002. Permission to copy, use, modify, sell and
+//  (C) Copyright Pavol Droba 2002-2003. Permission to copy, use, modify, sell and
 //  distribute this software is granted provided this copyright notice appears
 //  in all copies. This software is provided "as is" without express or implied
 //  warranty, and with no claim as to its suitability for any purpose.
@@ -12,7 +12,6 @@
 
 #include <algorithm>
 #include <locale>
-#include <boost/detail/iterator.hpp>
 #include <boost/string_algo/detail/classification.hpp>
 
 namespace boost {
@@ -115,11 +114,11 @@ namespace boost {
         return string_algo::detail::is_classifiedF<CharT>( std::ctype_base::xdigit, Loc );
     }
 
-    // Construct an is_from functor 
+    // Construct an is_of functor 
 	template< typename CharT, typename SeqT >
-    inline string_algo::detail::is_fromF<CharT> is_from( const SeqT& Seq )
+    inline string_algo::detail::is_ofF<CharT> is_of( const SeqT& Seq )
     {
-        return string_algo::detail::is_fromF<CharT>(Seq); 
+		return string_algo::detail::is_ofF<CharT>(Seq); 
     }
 
 } // namespace boost

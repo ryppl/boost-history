@@ -15,6 +15,7 @@
 #include <functional>
 #include <locale>
 #include <set>
+#include <boost/string_algo/container_traits.hpp>
 
 namespace boost {
 
@@ -24,26 +25,6 @@ namespace boost {
 
 //  classification functors -----------------------------------------------//
 			
-/*
-			// is_classified functor
-            struct is_classifiedF
-            {
-                // Constructor from a locale 
-                is_classifiedF(std::ctype_base::mask Type, std::locale const & Loc = std::locale()) :
-                    m_Type(Type), m_Locale(Loc) {}
-
-                // Operation
-                template< typename CharT>
-                bool operator()( CharT Ch ) const
-                {
-                    return std::use_facet< std::ctype<CharT> >(m_Locale).is( m_Type, Ch );
-                }
-
-            private:
-                const std::ctype_base::mask m_Type;
-                const std::locale m_Locale;
-            };
-*/
             // is_classified functor
 			template< typename CharT >
 			struct is_classifiedF :
@@ -64,17 +45,17 @@ namespace boost {
                 const std::locale m_Locale;
             };
 
-			// an is_from functor 
+			// an is_of functor 
             /* 
-                returns true if the value is from specitied range
+                returns true if the value is from the specitied range
             */
             template< typename CharT >
-			struct is_fromF :
+			struct is_ofF :
 				std::unary_function< CharT, bool >
             {
                 // Constructor 
 				template< typename SeqT >
-                is_fromF( const SeqT& Seq ) : m_Set( Seq.begin(), Seq.end() ) {}
+                is_ofF( const SeqT& Seq ) : m_Set( begin(Seq), end(Seq) ) {}
                 
                 // Operation
                 bool operator()( CharT Ch ) const

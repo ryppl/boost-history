@@ -1,6 +1,6 @@
 //  Boost string_algo library erase.hpp header file  ---------------------------//
 
-//  (C) Copyright Pavol Droba 2002. Permission to copy, use, modify, sell and
+//  (C) Copyright Pavol Droba 2002-2003. Permission to copy, use, modify, sell and
 //  distribute this software is granted provided this copyright notice appears
 //  in all copies. This software is provided "as is" without express or implied
 //  warranty, and with no claim as to its suitability for any purpose.
@@ -11,152 +11,63 @@
 #define BOOST_STRING_ERASE_HPP
 
 #include <boost/string_algo/config.hpp>
-#include <boost/detail/iterator.hpp>
+#include <boost/string_algo/container_traits.hpp>
 #include <boost/string_algo/iterator_range.hpp>
 #include <boost/string_algo/replace_impl.hpp>
-#include <boost/string_algo/detail/find.hpp>
+#include <boost/string_algo/find_impl.hpp>
 #include <boost/string_algo/detail/format.hpp>
 
 namespace boost {
 
 //  erase_range -------------------------------------------------------//
 
-    // erase_range iterator version
-    template< typename OutputIteratorT, typename ForwardIterator1T >
-    inline OutputIteratorT erase_range_copy(
-        OutputIteratorT Output,
-        ForwardIterator1T Begin,
-        ForwardIterator1T End,
-        ForwardIterator1T SearchBegin,
-        ForwardIterator1T SearchEnd )
-    {
-        iterator_range<ForwardIterator1T> Range( Begin, End );
-
-        return string_algo::replace_copy(
-            Output,
-            Range, 
-            string_algo::detail::
-                create_find_range( 
-                        Range,
-                        make_range( SearchBegin, SearchEnd ) ),
-            string_algo::detail::empty_formatF< 
-                BOOST_STRING_DEDUCED_TYPENAME 
-                    boost::detail::iterator_traits<ForwardIterator1T>::value_type >() );
-    }
-
+    // erase_range iterator-output version
     template< typename OutputIteratorT, typename InputT >
     inline OutputIteratorT erase_range_copy(
         OutputIteratorT Output,
         const InputT& Input,
-        const iterator_range<BOOST_STRING_DEDUCED_TYPENAME InputT::const_iterator>& SearchRange )
+        const iterator_range<
+			BOOST_STRING_TYPENAME 
+				string_algo::container_traits<InputT>::const_iterator>& SearchRange )
     {
         return string_algo::replace_copy(
             Output,
             Input,
-            string_algo::detail::
-                create_find_range(
-                    Input,
-                    SearchRange ),
-            string_algo::detail::
-                empty_formatF<BOOST_STRING_DEDUCED_TYPENAME InputT::value_type>() );
-    }
-
-    template< typename OutputIteratorT, typename InputT >
-    inline OutputIteratorT erase_range_copy(
-        OutputIteratorT Output,
-        const InputT& Input,
-        BOOST_STRING_DEDUCED_TYPENAME InputT::const_iterator SearchBegin,
-        BOOST_STRING_DEDUCED_TYPENAME InputT::const_iterator SearchEnd )
-    {
-        return erase_range_copy(
-            Output,
-            Input,
-            make_range( SearchBegin, SearchEnd ) );
+            string_algo::range_finder( SearchRange ),
+            string_algo::empty_formater( Input ) );
     }
 
     // erase_range sequence version
     template< typename InputT >
     inline InputT erase_range_copy( 
         const InputT& Input,
-        const iterator_range<BOOST_STRING_DEDUCED_TYPENAME InputT::const_iterator>& SearchRange )
+        const iterator_range<
+			BOOST_STRING_TYPENAME 
+				string_algo::container_traits<InputT>::const_iterator>& SearchRange )
     {
         return string_algo::replace_copy( 
             Input,
-            string_algo::detail::
-                create_find_range(
-                    Input,
-                    SearchRange ),
-            string_algo::detail::
-                empty_formatF<BOOST_STRING_DEDUCED_TYPENAME InputT::value_type>() );
-    }
-
-    // erase_range sequence version
-    template< typename InputT >
-    inline InputT erase_range_copy( 
-        const InputT& Input,
-        BOOST_STRING_DEDUCED_TYPENAME InputT::const_iterator SearchBegin,
-        BOOST_STRING_DEDUCED_TYPENAME InputT::const_iterator SearchEnd )
-    {
-        return erase_range_copy( 
-            Input,
-            make_range( SearchBegin, SearchEnd ) );
+            string_algo::range_finder( SearchRange ),
+            string_algo::empty_formater( Input ) );
     }
 
     // replace_first in-place sequence version
     template< typename InputT >
     inline InputT& erase_range( 
         InputT& Input,
-        const iterator_range<BOOST_STRING_DEDUCED_TYPENAME InputT::iterator>& SearchRange )
+        const iterator_range<
+			BOOST_STRING_TYPENAME 
+				string_algo::container_traits<InputT>::iterator>& SearchRange )
     {
         return string_algo::replace( 
             Input, 
-            string_algo::detail::
-                create_find_range(
-                    Input,
-                    SearchRange ),
-            string_algo::detail::
-                empty_formatF<BOOST_STRING_DEDUCED_TYPENAME InputT::value_type>() );
-    }
-
-    template< typename InputT >
-    inline InputT& erase_range( 
-        InputT& Input,
-        BOOST_STRING_DEDUCED_TYPENAME InputT::iterator SearchBegin,
-        BOOST_STRING_DEDUCED_TYPENAME InputT::iterator SearchEnd )
-    {
-        return erase_range( 
-            Input, 
-            make_range( SearchBegin, SearchEnd ) );
+            string_algo::range_finder( SearchRange ),
+            string_algo::empty_formater( Input ) );
     }
 
 //  erase_first  --------------------------------------------------------//
 
-    // erase_first iterator version
-    template< 
-        typename OutputIteratorT,
-        typename ForwardIterator1T, 
-        typename ForwardIterator2T >
-    inline OutputIteratorT erase_first_copy(
-        OutputIteratorT Output,
-        ForwardIterator1T Begin,
-        ForwardIterator1T End,
-        ForwardIterator2T SearchBegin,
-        ForwardIterator2T SearchEnd )
-    {
-        iterator_range<ForwardIterator1T> Range( Begin, End );
-
-        return string_algo::replace_copy(
-            Output,
-            Range, 
-            string_algo::detail::
-                create_find_first( 
-                    Range,
-                    make_range( SearchBegin, SearchEnd ) ),
-            string_algo::detail::empty_formatF< 
-                BOOST_STRING_DEDUCED_TYPENAME 
-                    boost::detail::iterator_traits<ForwardIterator1T>::value_type >() );
-    }
-
+    // erase_first iterator-output version
     template< 
         typename OutputIteratorT,
         typename InputT, 
@@ -169,10 +80,8 @@ namespace boost {
         return string_algo::replace_copy(
             Output,
             Input,
-            string_algo::detail::
-                create_find_first( Input, Search ),
-            string_algo::detail::
-                empty_formatF<BOOST_STRING_DEDUCED_TYPENAME InputT::value_type>() );
+            string_algo::first_finder( Search ),
+            string_algo::empty_formater( Input ) );
     }
 
     // erase_first sequence version
@@ -183,10 +92,8 @@ namespace boost {
     {
         return string_algo::replace_copy( 
             Input, 
-            string_algo::detail::
-                create_find_first( Input, Search ),
-            string_algo::detail::
-                empty_formatF<BOOST_STRING_DEDUCED_TYPENAME InputT::value_type>() );
+            string_algo::first_finder( Search ),
+            string_algo::empty_formater( Input ) );
     }
 
     // erase_first in-place sequence version
@@ -197,40 +104,13 @@ namespace boost {
     {
         return string_algo::replace( 
             Input, 
-            string_algo::detail::
-                create_find_first( Input, Search ),
-            string_algo::detail::
-                empty_formatF<BOOST_STRING_DEDUCED_TYPENAME InputT::value_type>() );
+            string_algo::first_finder( Search ),
+            string_algo::empty_formater( Input ) );
     }
 
 //  erase_last  --------------------------------------------------------//
 
-    // erase_last iterator version
-    template< 
-        typename OutputIteratorT,
-        typename ForwardIterator1T, 
-        typename ForwardIterator2T >
-    inline OutputIteratorT erase_last_copy(
-        OutputIteratorT Output,
-        ForwardIterator1T Begin,
-        ForwardIterator1T End,
-        ForwardIterator2T SearchBegin,
-        ForwardIterator2T SearchEnd )
-    {
-        iterator_range<ForwardIterator1T> Range( Begin, End );
-
-        return string_algo::replace_copy(
-            Output,
-            Range, 
-            string_algo::detail::
-                create_find_last( 
-                    Range,
-                    make_range( SearchBegin, SearchEnd ) ),
-            string_algo::detail::empty_formatF< 
-                BOOST_STRING_DEDUCED_TYPENAME 
-                    boost::detail::iterator_traits<ForwardIterator1T>::value_type >() );
-    }
-
+    // erase_last iterator-output version
     template< 
         typename OutputIteratorT,
         typename InputT, 
@@ -243,10 +123,8 @@ namespace boost {
         return string_algo::replace_copy(
             Output,
             Input,
-            string_algo::detail::
-                create_find_last( Input, Search ),
-            string_algo::detail::
-                empty_formatF<BOOST_STRING_DEDUCED_TYPENAME InputT::value_type>() );
+            string_algo::last_finder( Search ),
+            string_algo::empty_formater( Input ) );
     }
 
     // erase_last sequence version
@@ -257,10 +135,8 @@ namespace boost {
     {
         return string_algo::replace_copy( 
             Input, 
-            string_algo::detail::
-                create_find_last( Input, Search ),
-            string_algo::detail::
-                empty_formatF<BOOST_STRING_DEDUCED_TYPENAME InputT::value_type>() );
+            string_algo::last_finder( Search ),
+            string_algo::empty_formater( Input ) );
     }
 
     // erase_last in-place sequence version
@@ -271,41 +147,13 @@ namespace boost {
     {
         return string_algo::replace( 
             Input, 
-            string_algo::detail::
-                create_find_last( Input, Search ),
-            string_algo::detail::
-                empty_formatF<BOOST_STRING_DEDUCED_TYPENAME InputT::value_type>() );
+            string_algo::last_finder( Search ),
+            string_algo::empty_formater( Input ) );
     }
 
 //  erase_nth --------------------------------------------------------------------//
 
-    // erase_nth iterator version
-    template< 
-        typename OutputIteratorT,
-        typename ForwardIterator1T, 
-        typename ForwardIterator2T >
-    inline OutputIteratorT erase_nth_copy(
-        OutputIteratorT Output,
-        ForwardIterator1T Begin,
-        ForwardIterator1T End,
-        ForwardIterator2T SearchBegin,
-        ForwardIterator2T SearchEnd,
-        unsigned int Nth )
-    {
-        iterator_range<ForwardIterator1T> Range( Begin, End );
-
-        return string_algo::replace_copy(
-            Output,
-            Range, 
-            string_algo::detail::
-                create_find_nth( 
-                    Range,
-                    make_range( SearchBegin, SearchEnd ), Nth ),
-            string_algo::detail::empty_formatF< 
-                BOOST_STRING_DEDUCED_TYPENAME 
-                    boost::detail::iterator_traits<ForwardIterator1T>::value_type >() );
-    }
-
+    // erase_nth iterator-output version
     template< 
         typename OutputIteratorT,
         typename InputT, 
@@ -319,10 +167,8 @@ namespace boost {
         return string_algo::replace_copy(
             Output,
             Input,
-            string_algo::detail::
-                create_find_nth( Input, Search, Nth ),
-            string_algo::detail::
-                empty_formatF<BOOST_STRING_DEDUCED_TYPENAME InputT::value_type>() );
+            string_algo::nth_finder( Search, Nth ),
+            string_algo::empty_formater( Input ) );
     }
 
     // erase_nth sequence version
@@ -334,10 +180,8 @@ namespace boost {
     {
         return string_algo::replace_copy( 
             Input, 
-            string_algo::detail::
-                create_find_nth( Input, Search, Nth ),
-            string_algo::detail::
-                empty_formatF<BOOST_STRING_DEDUCED_TYPENAME InputT::value_type>() );
+            string_algo::nth_finder( Search, Nth ),
+            string_algo::empty_formater( Input ) );
     }
 
     // erase_nth in-place sequence version
@@ -349,41 +193,14 @@ namespace boost {
     {
         return string_algo::replace( 
             Input, 
-            string_algo::detail::
-                create_find_nth( Input, Search, Nth ),
-            string_algo::detail::
-                empty_formatF<BOOST_STRING_DEDUCED_TYPENAME InputT::value_type>() );
+            string_algo::nth_finder( Search, Nth ),
+            string_algo::empty_formater( Input ) );
     }
 
 
 //  erase_all  --------------------------------------------------------//
 
-    // erase_all iterator version
-    template< 
-        typename OutputIteratorT,
-        typename ForwardIterator1T, 
-        typename ForwardIterator2T >
-    inline OutputIteratorT erase_all_copy(
-        OutputIteratorT Output,
-        ForwardIterator1T Begin,
-        ForwardIterator1T End,
-        ForwardIterator2T SearchBegin,
-        ForwardIterator2T SearchEnd )
-    {
-        iterator_range<ForwardIterator1T> Range( Begin, End );
-
-        return string_algo::replace_all_copy(
-            Output,
-            Range,
-            string_algo::detail::
-                create_find_first( 
-                    Range,
-                    make_range( SearchBegin, SearchEnd ) ),
-            string_algo::detail::empty_formatF< 
-                BOOST_STRING_DEDUCED_TYPENAME 
-                    boost::detail::iterator_traits<ForwardIterator1T>::value_type >() );
-    }
-
+    // erase_all iterator-output version
     template< 
         typename OutputIteratorT,
         typename InputT, 
@@ -396,10 +213,8 @@ namespace boost {
         return string_algo::replace_all_copy(
             Output,
             Input,
-            string_algo::detail::
-                create_find_first( Input, Search ),
-            string_algo::detail::
-                empty_formatF<BOOST_STRING_DEDUCED_TYPENAME InputT::value_type>() );
+            string_algo::first_finder( Search ),
+            string_algo::empty_formater( Input ) );
     }
 
     // erase_all sequence version
@@ -410,10 +225,8 @@ namespace boost {
     {
         return string_algo::replace_all_copy( 
             Input, 
-            string_algo::detail::
-                create_find_first( Input, Search ),
-            string_algo::detail::
-                empty_formatF<BOOST_STRING_DEDUCED_TYPENAME InputT::value_type>() );
+            string_algo::first_finder( Search ),
+            string_algo::empty_formater( Input ) );
     }
 
     // erase_all in-place sequence version
@@ -424,35 +237,13 @@ namespace boost {
     {
         return string_algo::replace_all( 
             Input, 
-            string_algo::detail::
-                create_find_first( Input, Search ),
-            string_algo::detail::
-                empty_formatF<BOOST_STRING_DEDUCED_TYPENAME InputT::value_type>() );
+            string_algo::first_finder( Search ),
+            string_algo::empty_formater( Input ) );
     }
 
 //  erase_head --------------------------------------------------------------------//
 
-    // erase_head iterator version
-    template< 
-        typename OutputIteratorT,
-        typename ForwardIterator1T>
-    inline OutputIteratorT erase_head_copy(
-        OutputIteratorT Output,
-        ForwardIterator1T Begin,
-        ForwardIterator1T End,
-        unsigned int N )
-    {
-        iterator_range<ForwardIterator1T> Range( Begin, End );
-
-        return string_algo::replace_copy(
-            Output,
-            Range, 
-            string_algo::detail::create_find_head( Range, N ),
-            string_algo::detail::empty_formatF< 
-                BOOST_STRING_DEDUCED_TYPENAME 
-                    boost::detail::iterator_traits<ForwardIterator1T>::value_type >() );
-    }
-
+    // erase_head iterator-output version
     template< 
         typename OutputIteratorT,
         typename InputT >
@@ -464,9 +255,8 @@ namespace boost {
         return string_algo::replace_copy(
             Output,
             Input,
-            string_algo::detail::create_find_head( Input, N ),
-            string_algo::detail::
-                empty_formatF<BOOST_STRING_DEDUCED_TYPENAME InputT::value_type>() );
+            string_algo::head_finder(N),
+            string_algo::empty_formater( Input ) );
     }
 
     // erase_head sequence version
@@ -477,9 +267,8 @@ namespace boost {
     {
         return string_algo::replace_copy( 
             Input,
-            string_algo::detail::create_find_head( Input, N ),
-            string_algo::detail::
-                empty_formatF<BOOST_STRING_DEDUCED_TYPENAME InputT::value_type>() );
+            string_algo::head_finder(N),
+            string_algo::empty_formater( Input ) );
     }
 
     // erase_head in-place sequence version
@@ -490,35 +279,13 @@ namespace boost {
     {
         return string_algo::replace( 
             Input, 
-            string_algo::detail::
-                create_find_head( Input, N ),
-            string_algo::detail::
-                empty_formatF<BOOST_STRING_DEDUCED_TYPENAME InputT::value_type>() );
+            string_algo::head_finder(N),
+            string_algo::empty_formater( Input ) );
     }
 
 //  erase_tail --------------------------------------------------------------------//
 
-    // erase_tail iterator version
-    template< 
-        typename OutputIteratorT,
-        typename ForwardIterator1T>
-    inline OutputIteratorT erase_tail_copy(
-        OutputIteratorT Output,
-        ForwardIterator1T Begin,
-        ForwardIterator1T End,
-        unsigned int N )
-    {
-        iterator_range<ForwardIterator1T> Range( Begin, End );
-
-        return string_algo::replace_copy(
-            Output,
-            Range, 
-            string_algo::detail::create_find_tail( Range, N ),
-            string_algo::detail::empty_formatF< 
-                BOOST_STRING_DEDUCED_TYPENAME 
-                    boost::detail::iterator_traits<ForwardIterator1T>::value_type >() );
-    }
-
+    // erase_tail iterator-output version
     template< 
         typename OutputIteratorT,
         typename InputT >
@@ -530,9 +297,8 @@ namespace boost {
         return string_algo::replace_copy(
             Output,
             Input,
-            string_algo::detail::create_find_tail( Input, N ),
-            string_algo::detail::
-                empty_formatF<BOOST_STRING_DEDUCED_TYPENAME InputT::value_type>() );
+            string_algo::tail_finder(N),
+            string_algo::empty_formater( Input ) );
     }
 
     // erase_tail sequence version
@@ -543,9 +309,8 @@ namespace boost {
     {
         return string_algo::replace_copy( 
             Input,
-            string_algo::detail::create_find_tail( Input, N ),
-            string_algo::detail::
-                empty_formatF<BOOST_STRING_DEDUCED_TYPENAME InputT::value_type>() );
+            string_algo::tail_finder(N),
+            string_algo::empty_formater( Input ) );
     }
 
     // erase_tail in-place sequence version
@@ -556,10 +321,8 @@ namespace boost {
     {
         return string_algo::replace( 
             Input, 
-            string_algo::detail::
-                create_find_tail( Input, N ),
-            string_algo::detail::
-                empty_formatF<BOOST_STRING_DEDUCED_TYPENAME InputT::value_type>() );
+            string_algo::tail_finder(N),
+            string_algo::empty_formater( Input ) );
     }
     
 } // namespace boost

@@ -1,6 +1,6 @@
 //  Boost string_algo library regex.hpp header file  ---------------------------//
 
-//  (C) Copyright Pavol Droba 2002. Permission to copy, use, modify, sell and
+//  (C) Copyright Pavol Droba 2002-2003. Permission to copy, use, modify, sell and
 //  distribute this software is granted provided this copyright notice appears
 //  in all copies. This software is provided "as is" without express or implied
 //  warranty, and with no claim as to its suitability for any purpose.
@@ -12,57 +12,32 @@
 
 #include <boost/string_algo/config.hpp>
 #include <boost/regex.hpp>
-#include <boost/string_algo/input_policy.hpp>
+#include <boost/string_algo/container_traits.hpp>
 #include <boost/string_algo/iterator_range.hpp>
-#include <boost/string_algo/find_impl.hpp>
 #include <boost/string_algo/replace_impl.hpp>
-#include <boost/string_algo/detail/find_regex.hpp>
-#include <boost/string_algo/detail/format_regex.hpp>
-#include <boost/string_algo/detail/format.hpp>
+#include <boost/string_algo/regex_impl.hpp>
 
 namespace boost {
 
 //  find_regex  -----------------------------------------------//
 
     // find the first match a subsequnce in the sequence
-    template< 
-        typename ForwardIteratorT, 
-        typename CharT, 
-        typename RegexTraitsT, typename RegexAllocatorT>
-    inline iterator_range<ForwardIteratorT>
-    find_regex( 
-        ForwardIteratorT Begin, 
-        ForwardIteratorT End, 
-        const reg_expression<CharT, RegexTraitsT, RegexAllocatorT>& Rx,
-        unsigned int MatchFlags=match_default )
-    {
-        iterator_range<ForwardIteratorT> Range( Begin, End );
-
-        // Forward the call to the functor
-        return string_algo::find( 
-            Range,
-            string_algo::detail::
-                create_find_regex( Range, Rx, MatchFlags ) );
-    }
-
-    // find_first sequence const version
-    template< 
+	template< 
         typename InputT, 
         typename CharT, 
         typename RegexTraitsT, typename RegexAllocatorT>
     inline iterator_range< 
-        BOOST_STRING_DEDUCED_TYPENAME string_algo::input_policy<InputT>::iterator_type >
+        BOOST_STRING_TYPENAME string_algo::container_traits<InputT>::result_iterator >
     find_regex( 
         InputT& Input, 
         const reg_expression<CharT, RegexTraitsT, RegexAllocatorT>& Rx,
         unsigned int MatchFlags=match_default )
     {
-        return string_algo::find( 
-            Input, 
-            string_algo::detail::create_find_regex( Input, Rx, MatchFlags ) );
+		return string_algo::regex_finder(Rx,MatchFlags)( Input );
     }
 
-    template< 
+    // find the first match a subsequnce in the sequence ( copy version )
+	template< 
         typename InputT, 
         typename CharT, 
         typename RegexTraitsT, typename RegexAllocatorT>
@@ -71,40 +46,12 @@ namespace boost {
         const reg_expression<CharT, RegexTraitsT, RegexAllocatorT>& Rx,
         unsigned int MatchFlags=match_default )
     {
-        return string_algo::find_copy( 
-            Input, 
-            string_algo::detail::create_find_regex( Input, Rx, MatchFlags ) );
-    }
+		return copy_range<InputT>(string_algo::regex_finder(Rx,MatchFlags)(Input) );
+	}
 
 //  replace_regex --------------------------------------------------------------------//
 
-    // replace_regex iterator version
-    template< 
-        typename OutputIteratorT,
-        typename ForwardIteratorT,
-        typename CharT, 
-        typename RegexTraitsT, typename RegexAllocatorT,
-        typename FormatStringTraitsT, typename FormatStringAllocatorT >
-    inline OutputIteratorT replace_regex_copy(
-        OutputIteratorT Output,
-        ForwardIteratorT Begin,
-        ForwardIteratorT End,
-        const reg_expression<CharT, RegexTraitsT, RegexAllocatorT>& Rx,
-        const std::basic_string<CharT, FormatStringTraitsT, FormatStringAllocatorT>& Format,
-        unsigned int MatchFlags=match_default,
-        unsigned int FormatFlags=0 )
-    {
-        iterator_range<ForwardIteratorT> Range( Begin, End );
-
-        return string_algo::replace_copy( 
-            Output,
-            Range,
-            string_algo::detail::
-                create_find_regex( Range, Rx, MatchFlags ),
-            string_algo::detail::
-                create_regex_format( Format, FormatFlags ) );
-    }
-
+    // replace_regex output-iterator version
     template< 
         typename OutputIteratorT,
         typename InputT, 
@@ -122,10 +69,8 @@ namespace boost {
         return string_algo::replace_copy( 
             Output,
             Input,
-            string_algo::detail::
-                create_find_regex( Input, Rx, MatchFlags ),
-            string_algo::detail::
-                create_regex_format( Format, FormatFlags ) );
+            string_algo::regex_finder( Rx, MatchFlags ),
+            string_algo::regex_formater( Format, FormatFlags ) );
     }
 
     // replace_regex sequence version
@@ -143,10 +88,8 @@ namespace boost {
     {
         return string_algo::replace_copy( 
             Input,
-            string_algo::detail::
-                create_find_regex( Input, Rx, MatchFlags ),
-            string_algo::detail::
-                create_regex_format( Format, FormatFlags ) );
+            string_algo::regex_finder( Rx, MatchFlags ),
+            string_algo::regex_formater( Format, FormatFlags ) );
     }
 
     // replace_regex in-place sequence version
@@ -164,42 +107,13 @@ namespace boost {
     {
         return string_algo::replace( 
             Input,
-            string_algo::detail::
-                create_find_regex( Input, Rx, MatchFlags ),
-            string_algo::detail::
-                create_regex_format( Format, FormatFlags ) );
+            string_algo::regex_finder( Rx, MatchFlags ),
+            string_algo::regex_formater( Format, FormatFlags ) );
     }
 
 //  replace_all_regex --------------------------------------------------------------------//
 
     // replace_all_regex iterator version
-    template< 
-        typename OutputIteratorT,
-        typename ForwardIteratorT,
-        typename CharT, 
-        typename RegexTraitsT, typename RegexAllocatorT,
-        typename FormatStringTraitsT, typename FormatStringAllocatorT >
-    inline OutputIteratorT replace_all_regex_copy(
-        OutputIteratorT Output,
-        ForwardIteratorT Begin,
-        ForwardIteratorT End,
-        const reg_expression<CharT, RegexTraitsT, RegexAllocatorT>& Rx,
-        const std::basic_string<CharT, FormatStringTraitsT, FormatStringAllocatorT>& Format,
-        unsigned int MatchFlags=match_default,
-        unsigned int FormatFlags=0 )
-    {
-        iterator_range<ForwardIteratorT> Range( Begin, End );
-
-        return string_algo::replace_all_copy( 
-            Output,
-            Range,
-            string_algo::detail::
-                create_find_regex( Range, Rx, MatchFlags ),
-            string_algo::detail::
-                create_regex_format( Format, FormatFlags ) );
-    }
-
-    // replace_all_regex sequence version
     template< 
         typename OutputIteratorT,
         typename InputT, 
@@ -217,10 +131,8 @@ namespace boost {
         return string_algo::replace_all_copy( 
             Output,
             Input,
-            string_algo::detail::
-                create_find_regex( Input, Rx, MatchFlags ),
-            string_algo::detail::
-                create_regex_format( Format, FormatFlags ) );
+            string_algo::regex_finder( Rx, MatchFlags ),
+            string_algo::regex_formater( Format, FormatFlags ) );
     }
 
     // replace_all_regex sequence version
@@ -238,10 +150,8 @@ namespace boost {
     {
         return string_algo::replace_all_copy( 
             Input,
-            string_algo::detail::
-                create_find_regex( Input, Rx, MatchFlags ),
-            string_algo::detail::
-                create_regex_format( Format, FormatFlags ) );
+            string_algo::regex_finder( Rx, MatchFlags ),
+            string_algo::regex_formater( Format, FormatFlags ) );
     }
 
     // replace_all_regex in-place sequence version
@@ -259,39 +169,13 @@ namespace boost {
     {
         return string_algo::replace_all( 
             Input,
-            string_algo::detail::
-                create_find_regex( Input, Rx, MatchFlags ),
-            string_algo::detail::
-                create_regex_format( Format, FormatFlags ) );
+            string_algo::regex_finder( Rx, MatchFlags ),
+            string_algo::regex_formater( Format, FormatFlags ) );
     }
 
 //  erase_regex --------------------------------------------------------------------//
 
-    // erase_regex iterator version
-    template< 
-        typename OutputIteratorT,
-        typename ForwardIteratorT,
-        typename CharT, 
-        typename RegexTraitsT, typename RegexAllocatorT >
-    inline OutputIteratorT erase_regex_copy(
-        OutputIteratorT Output,
-        ForwardIteratorT Begin,
-        ForwardIteratorT End,
-        const reg_expression<CharT, RegexTraitsT, RegexAllocatorT>& Rx,
-        unsigned int MatchFlags=match_default )
-    {
-        iterator_range<ForwardIteratorT> Range( Begin, End );
-
-        return string_algo::replace_copy( 
-            Output,
-            Range,
-            string_algo::detail::
-                create_find_regex( Range, Rx, MatchFlags ),
-            string_algo::detail::empty_formatF<
-                BOOST_STRING_DEDUCED_TYPENAME 
-                    boost::detail::iterator_traits<ForwardIteratorT>::value_type >() );
-    }
-
+    // erase_regex output iterator version
     template< 
         typename OutputIteratorT,
         typename InputT, 
@@ -306,10 +190,8 @@ namespace boost {
         return string_algo::replace_copy(
             Output,
             Input,
-            string_algo::detail::
-                create_find_regex( Input, Rx, MatchFlags ),
-            string_algo::detail::
-                empty_formatF<BOOST_STRING_DEDUCED_TYPENAME InputT::value_type>() );
+            string_algo::regex_finder( Rx, MatchFlags ),
+            string_algo::empty_formater( Input ) );
     }
 
     // erase_regex sequence version
@@ -324,10 +206,8 @@ namespace boost {
     {
         return string_algo::replace_copy( 
             Input, 
-            string_algo::detail::
-                create_find_regex( Input, Rx, MatchFlags ),
-            string_algo::detail::
-                empty_formatF<BOOST_STRING_DEDUCED_TYPENAME InputT::value_type>() );
+            string_algo::regex_finder( Rx, MatchFlags ),
+            string_algo::empty_formater( Input ) );
     }
 
     // erase_regex in-place sequence version
@@ -342,38 +222,11 @@ namespace boost {
     {
         return string_algo::replace( 
             Input, 
-            string_algo::detail::
-                create_find_regex( Input, Rx, MatchFlags ),
-            string_algo::detail::
-                empty_formatF<BOOST_STRING_DEDUCED_TYPENAME InputT::value_type>() );
+            string_algo::regex_finder( Rx, MatchFlags ),
+            string_algo::empty_formater( Input ) );
     }
 
 //  erase_all_regex --------------------------------------------------------------------//
-
-    // erase_all_regex iterator version
-    template< 
-        typename OutputIteratorT,
-        typename ForwardIteratorT,
-        typename CharT, 
-        typename RegexTraitsT, typename RegexAllocatorT >
-    inline OutputIteratorT erase_all_regex_copy(
-        OutputIteratorT Output,
-        ForwardIteratorT Begin,
-        ForwardIteratorT End,
-        const reg_expression<CharT, RegexTraitsT, RegexAllocatorT>& Rx,
-        unsigned int MatchFlags=match_default )
-    {
-        iterator_range<ForwardIteratorT> Range( Begin, End );
-
-        return string_algo::replace_all_copy( 
-            Output,
-            Range,
-            string_algo::detail::
-                create_find_regex( Range, Rx, MatchFlags ),
-            string_algo::detail::empty_formatF<
-                BOOST_STRING_DEDUCED_TYPENAME 
-                    boost::detail::iterator_traits<ForwardIteratorT>::value_type >() );
-    }
 
     // erase_all_regex sequence version
     template< 
@@ -390,10 +243,8 @@ namespace boost {
         return string_algo::replace_all_copy(
             Output,
             Input,
-            string_algo::detail::
-                create_find_regex( Input, Rx, MatchFlags ),
-            string_algo::detail::
-                empty_formatF<BOOST_STRING_DEDUCED_TYPENAME InputT::value_type>() );
+            string_algo::regex_finder( Rx, MatchFlags ),
+            string_algo::empty_formater( Input ) );
     }
 
     // erase_all_regex sequence version
@@ -408,10 +259,8 @@ namespace boost {
     {
         return string_algo::replace_all_copy( 
             Input, 
-            string_algo::detail::
-                create_find_regex( Input, Rx, MatchFlags ),
-            string_algo::detail::
-                empty_formatF<BOOST_STRING_DEDUCED_TYPENAME InputT::value_type>() );
+            string_algo::regex_finder( Rx, MatchFlags ),
+            string_algo::empty_formater( Input ) );
     }
 
     // erase_all_regex in-place sequence version
@@ -426,10 +275,8 @@ namespace boost {
     {
         return string_algo::replace_all( 
             Input, 
-            string_algo::detail::
-                create_find_regex( Input, Rx, MatchFlags ),
-            string_algo::detail::
-                empty_formatF<BOOST_STRING_DEDUCED_TYPENAME InputT::value_type>() );
+            string_algo::regex_finder( Rx, MatchFlags ),
+            string_algo::empty_formater( Input ) );
     }
 
 } // namespace boost
