@@ -1,0 +1,18 @@
+# pre-build the test engine and XMLDOM-lite code 
+
+lib testlib : impl/test_engine.cpp
+       xmldom/impl/filestream.cpp
+       xmldom/impl/xmllexer.cpp
+       xmldom/impl/xmldom-lite.cpp
+    :
+       <link>static
+    ;
+
+# generate the test programs
+
+exe stl_io : stl_io.cpp //testlib
+    ;
+
+exe formatter : formatter.cpp //testlib
+    ;
+
