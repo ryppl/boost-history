@@ -12,8 +12,6 @@
 #  if !defined(BOOST_GUI_LOG_TO_STREAM)
       std::ofstream boost::gui::log( "boost-gui-log.txt" );
 #  endif
-#else
-   boost::gui::null_log boost::gui::log;
 #endif
 
 #if defined(__GNUC__) && (__GNUC__ >= 3)
