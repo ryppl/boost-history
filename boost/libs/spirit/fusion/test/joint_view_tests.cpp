@@ -46,6 +46,7 @@ test_main(int, char*[])
     {
         tuple<int, char> t1(3, 'x');
         tuple<X> t2;
+        tuple<int> t3(3);
         typedef joint_view<tuple<int, char>, tuple<X> > view_type;
         view_type view(t1, t2);
         std::cout << view << std::endl;

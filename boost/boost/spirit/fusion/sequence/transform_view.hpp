@@ -30,16 +30,19 @@ namespace boost { namespace fusion
         typedef typename meta::end<seq>::type last_type;
         typedef F transform_type;
 
-        transform_view(Sequence& seq, F f)
-            : first(fusion::begin(seq))
-            , last(fusion::end(seq))
-            , f(f)
-        {}
+        transform_view(Sequence& seq, F f);
 
         first_type first;
         last_type last;
         transform_type f;
     };
+
+    template <typename Sequence, typename F>
+    transform_view<Sequence,F>::transform_view(Sequence& seq, F f)
+        : first(fusion::begin(seq))
+        , last(fusion::end(seq))
+        , f(f)
+    {}
 }}
 
 #endif

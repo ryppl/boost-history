@@ -17,12 +17,28 @@
 
 namespace boost { namespace fusion { namespace detail
 {
+    namespace sequence_greater_equal_detail {
+        template <typename T,typename I1, typename I2>
+        bool call(T const& self,I1 const& a, I2 const& b) {
+            return *a >= *b
+                && (!(*b >= *a) || T::call(fusion::next(a), fusion::next(b)));;
+        }
+    }
+
     template <typename Seq1, typename Seq2>
     struct sequence_greater_equal
     {
         typedef typename meta::end<Seq1>::type end1_type;
         typedef typename meta::end<Seq2>::type end2_type;
 
+        template <typename I1, typename I2>
+        static bool
+        call(I1 const& a, I2 const& b)
+        {
+            typename meta::equal_to<I1, end1_type>::type eq;
+            return call(a, b, eq);
+        }
+        
         template <typename I1, typename I2>
         static bool
         call(I1 const&, I2 const&, mpl::true_)
@@ -35,16 +51,7 @@ namespace boost { namespace fusion { namespace detail
         static bool
         call(I1 const& a, I2 const& b, mpl::false_)
         {
-            return *a >= *b
-                && (!(*b >= *a) || call(fusion::next(a), fusion::next(b)));
-        }
-
-        template <typename I1, typename I2>
-        static bool
-        call(I1 const& a, I2 const& b)
-        {
-            typename meta::equal_to<I1, end1_type>::type eq;
-            return call(a, b, eq);
+            return sequence_greater_equal_detail::call(sequence_greater_equal<Seq1,Seq2>(),a,b);
         }
     };
 }}}

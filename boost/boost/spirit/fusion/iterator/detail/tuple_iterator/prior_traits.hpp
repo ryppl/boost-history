@@ -28,8 +28,9 @@ namespace boost { namespace fusion
         {
             typedef FUSION_GET_INDEX(Iterator) index;
             typedef FUSION_GET_TUPLE(Iterator) tuple_;
+            typedef FUSION_INT(0) other_index;
             BOOST_STATIC_ASSERT((
-                ::boost::mpl::greater_equal<index, mpl::int_<0> >::value));
+                ::boost::mpl::greater_equal<index, other_index >::value));
 
             typedef typename mpl::prior<index>::type prior;
             typedef tuple_iterator<FUSION_GET_VALUE(prior), tuple_> type;

@@ -371,6 +371,41 @@ namespace boost {namespace fusion {namespace detail {
     struct bool_base : T {};
 #endif
 }}}
+
+//VC 6 has serious problems with mpl::int_ in tuple_iterator_base. 
+//It ICEs because operator int() const on mpl::int_ is inlined. 
+//At the same time, another test using integral_c<T,N> ICEs because operator int() is not inlined. 
+//Only solution seems to be to define a special msvc_fusion_int for VC 6 to be used in tuple_iterator_base
+#if BOOST_WORKAROUND(BOOST_MSVC, <= 1200)
+namespace boost {namespace fusion {namespace detail{
+
+template<int N>
+struct msvc_fusion_int
+{
+    BOOST_STATIC_CONSTANT(int, value = N);
+    typedef msvc_fusion_int<N> type;
+    typedef int value_type;
+
+    typedef msvc_fusion_int<value + 1> next;
+    typedef msvc_fusion_int<value - 1> prior;
+
+    operator int() const;
+};
+
+template<int N>
+msvc_fusion_int<N>::operator int() const
+{
+    return static_cast<int>(this->value); 
+}
+
+}}}
+#define FUSION_INT(N) boost::fusion::detail::msvc_fusion_int<N>
+#else
+#define FUSION_INT(N) boost::mpl::int_<N>
+#endif
+
+
+
 ///////////////////////////////////////////////////////////////////////////////
 //
 //   Borland is so flaky with const correctness of iterators. It's getting

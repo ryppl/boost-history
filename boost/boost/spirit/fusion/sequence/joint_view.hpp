@@ -34,16 +34,20 @@ namespace boost { namespace fusion
         typedef typename meta::begin<view2>::type concat_type;
         typedef typename meta::end<view2>::type concat_last_type;
 
-        joint_view(View1& view1, View2& view2)
-            : first(fusion::begin(view1))
-            , concat(fusion::begin(view2))
-            , concat_last(fusion::end(view2))
-        {}
+        joint_view(View1& view1, View2& view2);
 
         first_type first;
         concat_type concat;
         concat_last_type concat_last;
     };
+
+    template <typename View1, typename View2>
+    joint_view<View1,View2>::joint_view(View1& view1, View2& view2)
+        : first(fusion::begin(view1))
+        , concat(fusion::begin(view2))
+        , concat_last(fusion::end(view2))
+    {}
+
 }}
 
 #endif

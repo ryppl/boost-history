@@ -43,7 +43,7 @@ namespace boost { namespace fusion
         typedef typename converter::type iter;
 
         return meta::prior_impl<FUSION_GET_TAG(iter)>::
-            template apply<Iterator>::call(converter::convert(i));
+            template apply<iter>::call(converter::convert(i));
     }
 }}
 

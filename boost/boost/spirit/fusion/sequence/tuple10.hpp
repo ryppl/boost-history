@@ -77,9 +77,6 @@ namespace boost { namespace fusion
         static T0
         construct(Iterator const& i, detail::disambiguate_as_iterator)
         {
-#if BOOST_WORKAROUND(BOOST_MSVC,==1200)
-            typedef typename as_fusion_iterator<Iterator>::type msvc_helper;
-#endif
             return *i;
         }
 
@@ -200,9 +197,6 @@ namespace boost { namespace fusion
         construct(Iterator const& i, void const*)
         {
             typedef typename meta::next<Iterator>::type i1_type;
-#if BOOST_WORKAROUND(BOOST_MSVC,==1200)
-            typedef typename as_fusion_iterator<i1_type>::type msvc_helper;
-#endif
             i1_type i1(fusion::next(i));
             return tuple_data2<T0, T1>(*i, *i1);
         }
@@ -276,9 +270,6 @@ namespace boost { namespace fusion
 #else
             typedef typename meta::next<Iterator>::type i1_type;
             typedef typename meta::next<i1_type>::type i2_type;
-#if BOOST_WORKAROUND(BOOST_MSVC,==1200)
-            typedef typename as_fusion_iterator<i2_type>::type msvc_helper;
-#endif
             i1_type i1(fusion::next(i));
             i2_type i2(fusion::next(i1));
 #endif

@@ -19,7 +19,9 @@ namespace boost { namespace fusion
         struct end_impl
         {
             template <typename Sequence>
-            struct apply {};
+            struct apply {
+                typedef int type;
+            };
         };
 
         template <typename Sequence>

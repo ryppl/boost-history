@@ -32,7 +32,7 @@ namespace boost { namespace fusion
     template <int N, typename Tuple>
     struct tuple_iterator_base : iterator_base<tuple_iterator<N, Tuple> >
     {
-        typedef mpl::int_<N> index;
+        typedef FUSION_INT(N) index;
         typedef Tuple tuple;
         typedef tuple_iterator_tag tag;
         typedef tuple_iterator<N, Tuple> self_type;

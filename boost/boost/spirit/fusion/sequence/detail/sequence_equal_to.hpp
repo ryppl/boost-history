@@ -17,12 +17,20 @@
 
 namespace boost { namespace fusion { namespace detail
 {
+    namespace sequence_equal_to_detail {
+        template<typename T,typename I1,typename I2>
+        bool call(T const& self,I1 const& a, I2 const& b) {
+            return fusion::deref(a) == fusion::deref(b)
+                && T::call(fusion::next(a), fusion::next(b));
+        }
+    }
+
     template <typename Seq1, typename Seq2>
     struct sequence_equal_to
     {
         typedef typename meta::end<Seq1>::type end1_type;
         typedef typename meta::end<Seq2>::type end2_type;
-
+        
         template <typename I1, typename I2>
         static bool
         call(I1 const& a, I2 const& b)
@@ -43,8 +51,7 @@ namespace boost { namespace fusion { namespace detail
         static bool
         call(I1 const& a, I2 const& b, mpl::false_)
         {
-            return fusion::deref(a) == fusion::deref(b)
-                && call(fusion::next(a), fusion::next(b));
+            return sequence_equal_to_detail::call(sequence_equal_to<Seq1,Seq2>(),a,b);
         }
     };
 }}}
