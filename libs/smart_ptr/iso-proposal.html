@@ -25,7 +25,7 @@
 		<p>The list of possible smart pointer features is extremely broad. The C++ Standard 
 			Library currently provides a single smart pointer, <i>std::auto_ptr</i>, which 
 			provides specific and focused transfer-of-ownership semantics. Arguably the 
-			most common need, however, is for shared-ownership semantics. Because<i> std::auto_ptr</i>
+			most common need, however, is for shared-ownership semantics. Because <i>std::auto_ptr</i>
 			does not provide shared-ownership semantics, it cannot even be used with 
 			Standard Library containers.</p>
 		<p>This document proposes a smart-pointer with shared-ownership semantics which 
@@ -93,10 +93,15 @@
 				or <i>shared_ptr</i>
 			covers all important shared-ownership use cases.
 			<li>
-			Supports observer idioms such as caches, simplifying their use.
+				Supports observer idioms such as caches. Allows functions or classes to keep 
+				references to objects without affecting their lifetime. (See [<A href="#Boehm02">Boehm02</A>] 
+				for an example where using a <EM>shared_ptr</EM> instead of a <EM>weak_ptr</EM>
+			as an observer leads to deadlock.)
 			<li>
-			Replaces unsafe uses of raw pointers, guaranteeing an exception rather than 
-			undefined behavior if used after object deletion.
+			Replaces unsafe uses of raw pointers, eliminating the possibility of following 
+			a dangling pointer.
+			<LI>
+			Is very hard to specify and implement correctly.
 			<li>
 				Reflects existing practice with a decade of refinement and use. [<a href="#Ellis94">Ellis94</a>]</li>
 		</ul>
@@ -112,17 +117,69 @@
 		<h2>III. Design Decisions</h2>
 		<h3>A. General Principles</h3>
 		<h4>1. "As Close to Raw Pointers as Possible, but no Closer"</h4>
-		<p>[...]</p>
+		<p>Ordinary C++ pointers have some interesting properties that make them suitable 
+			for a wide range of tasks. It is possible to copy, assign, pass and return by 
+			value, "destroy" a pointer to an incomplete type. It is possible to refer to 
+			any object's address using a pointer to <code>void</code>. Pointers to derived 
+			classes are implicitly convertible to pointers to base classes, and it is 
+			possible to use <code>static_cast</code> or <code>dynamic_cast</code> to 
+			perform the opposite conversion.</p>
+		<P>The two main problems with ordinary pointers are the need for manual resource 
+			management and the possibility of accessing an invalid (dangling) pointer.</P>
+		<P>The proposed smart pointers retain the strengths of raw pointers, eliminating 
+			their weaknesses. <EM>shared_ptr</EM> and <EM>weak_ptr</EM> fully support 
+			incomplete types, cv-qualified types, and <code>void</code> as a template 
+			parameter, and implicit conversions. <EM>shared_ptr</EM> supports static and 
+			dynamic casts, and will automatically delete (or otherwise release) the object 
+			it owns when the last <EM>shared_ptr</EM> instance is destroyed. <EM>weak_ptr</EM>
+			eliminates the possibility of accessing a dangling pointer.</P>
 		<h4>2. "Just Do the Right Thing"</h4>
-		<p>[...]</p>
+		<p>The versatility described in the previous paragraphs can lead to some tricky 
+			situations. A <EM>shared_ptr</EM> can be created in a shared library and then 
+			destroyed by the application. By using implicit conversions, the last remaining <EM>
+				shared_ptr</EM> instance to an object may turn out to have a template 
+			parameter of <code>void</code>, a base with an inaccessible or nonvirtual 
+			destructor, or an incomplete type.</p>
+		<P>The general principle followed by the proposed design is that in such 
+			situations, the implementation should "just do the right thing" and invoke the 
+			proper destructor or <code>operator delete</code>. This implies that the 
+			information necessary to properly destroy the managed object should be fully 
+			captured at the point where the smart pointer is constructed.</P>
 		<h4>3. No Extra Parameters</h4>
-		<p>[...]</p>
-		<h4>4. No Preferred Implementation</h4>
-		<p>[...]</p>
-		<h4>5. The "Shares Ownership with" Equivalence Relation</h4>
-		<p>[...]</p>
-		<h4>6. The "Empty Pointer" Concept</h4>
-		<p>[...]</p>
+		<p>Following the "as close as possible" principle, the proposed smart pointers have 
+			a single template parameter, the type of the pointee. Avoiding additional 
+			parameters helps interoperability between libraries from different authors, 
+			although an additional benefit is that it makes <EM>shared_ptr</EM> easier to 
+			use, teach and recommend.</p>
+		<h4>4. The "Shares Ownership with" Equivalence Relation</h4>
+		<p>The proposed text uses "<STRONG>p</STRONG> <EM>shares ownership with</EM> <STRONG>q</STRONG>" 
+			to indicate that <STRONG>p</STRONG> and <STRONG>q</STRONG> have both originated 
+			from the same smart pointer, and <EM>own</EM> the same object. "<EM>Shares 
+				ownerwhip with</EM>" is an equivalence relation. It is reflexive (<STRONG>p</STRONG>
+			<EM>shares ownership with</EM> <STRONG>p</STRONG>), comutative (if <STRONG>p</STRONG>
+			<EM>shares ownership with</EM> <STRONG>q</STRONG>, <STRONG>q</STRONG> also <EM>shares 
+				ownership with</EM> <STRONG>p</STRONG>), and transitive (if <STRONG>p</STRONG>
+			<EM>shares ownership with</EM> <STRONG>q</STRONG> and <STRONG>q</STRONG> <EM>shares 
+				ownership with</EM> <STRONG>r</STRONG>, <STRONG>p</STRONG> <EM>shares ownership 
+				with</EM> <STRONG>r</STRONG>). This relation divides all non-<EM>empty</EM> 
+			smart pointers into equivalence classes. The number of <EM>shared_ptr</EM> 
+			instances in <STRONG>p</STRONG>'s equivalence class can be obtained using <code>p.use_count()</code>. 
+			The last <EM>shared_ptr</EM> instance in a given equivalence class is 
+			responsible for destroying the <EM>owned</EM> object.</p>
+		<h4>5. The "Empty Pointer" Concept</h4>
+		<p>Default-constructed smart pointers, and smart pointer instances that have been <code>
+				reset()</code>, are called <EM>empty</EM> in the proposed text. It is 
+			necessary to introduce this special class in order to offer the nothrow 
+			guarantee for <code>shared_ptr::shared_ptr()</code>, <code>shared_ptr::reset()</code>,
+			<code>weak_ptr::weak_ptr()</code>, and <code>weak_ptr::reset()</code>. <code>p.reset()</code>
+			for smart pointers is often used as an equivalent for <code>delete p</code> for 
+			raw pointers, hence the need to guarantee that this operation doesn't throw.</p>
+		<P>
+			The infrastructure required to keep track of ownership may need to dynamically 
+			allocate memory. To ensure that default constructors and <code>reset()</code> do 
+			not throw, these operations are allowed to skip this allocation, and produce <EM>empty</EM>
+			smart pointers that do not track ownership, and do not fully support 
+			ownership-related queries such as <code>use_count()</code>.</P>
 		<h3>B. shared_ptr</h3>
 		<h4>1.</h4>
 		<p>[...]</p>
@@ -136,8 +193,7 @@
 		<p>[...]</p>
 		<h2>IV. Proposed Text</h2>
 		<h3>A. Additions to header &lt;memory&gt; synopsis (20.4)</h3>
-		<pre>
-  class bad_weak_ptr;
+		<pre>  class bad_weak_ptr;
 
   template&lt;class T&gt; class shared_ptr;
 
@@ -522,7 +578,7 @@
 		<P><B>Throws:</B> nothing.</P>
 		<h3>D. Class template <code>weak_ptr</code></h3>
 		<p>The class template <code>weak_ptr</code>...</p>
-<pre>
+		<pre>
     namespace std {
       template&lt;class T&gt; class weak_ptr {
 
@@ -565,94 +621,94 @@
 		<p><code>weak_ptr</code> is <code>CopyConstructible</code>, <code>Assignable</code>, 
 			and <code>LessThanComparable</code>, allowing its use in standard containers.</p>
 		<h4><code>weak_ptr</code> constructors</h4>
-<pre>
+		<pre>
     weak_ptr();
 </pre>
-			<p><b>Effects:</b> Constructs an <EM>empty</EM> <code>weak_ptr</code>.</p>
-			<p><b>Postconditions:</b> <code>use_count() == 0</code>.</p>
-			<p><b>Throws:</b> nothing.</p>
-<pre>
-    template&lt;class Y&gt; weak_ptr</A>(shared_ptr&lt;Y&gt; const &amp; r);
+		<p><b>Effects:</b> Constructs an <EM>empty</EM> <code>weak_ptr</code>.</p>
+		<p><b>Postconditions:</b> <code>use_count() == 0</code>.</p>
+		<p><b>Throws:</b> nothing.</p>
+		<pre>    template&lt;class Y&gt; weak_ptr</A>(shared_ptr&lt;Y&gt; const &amp; r);
     weak_ptr(weak_ptr const &amp; r);
     template&lt;class Y&gt; weak_ptr(weak_ptr&lt;Y&gt; const &amp; r);
 </pre>
-			<p><b>Effects:</b> If <code>r</code> is <EM>empty</EM>, constructs an <EM>empty</EM>
-				<code>weak_ptr</code>; otherwise, constructs a <code>weak_ptr</code> that <EM>shares 
-					ownership</EM> with <code>r</code> and stores a copy of the 
-				pointer stored in <code>r</code>.</p>
-			<p><b>Postconditions:</b> <code>use_count() == r.use_count()</code>.</p>
-			<p><b>Throws:</b> nothing.</p>
+		<p><b>Effects:</b> If <code>r</code> is <EM>empty</EM>, constructs an <EM>empty</EM>
+			<code>weak_ptr</code>; otherwise, constructs a <code>weak_ptr</code> that <EM>shares 
+				ownership</EM> with <code>r</code> and stores a copy of the pointer stored 
+			in <code>r</code>.</p>
+		<p><b>Postconditions:</b> <code>use_count() == r.use_count()</code>.</p>
+		<p><b>Throws:</b> nothing.</p>
 		<h4><code>weak_ptr</code> destructor</h4>
-<pre>
+		<pre>
     ~weak_ptr();
 </pre>
-			<P><B>Effects:</B> Destroys this <code>weak_ptr</code> but has no effect on the object 
-				its stored pointer points to.</P>
-			<P><B>Throws:</B> nothing.</P>
+		<P><B>Effects:</B> Destroys this <code>weak_ptr</code> but has no effect on the 
+			object its stored pointer points to.</P>
+		<P><B>Throws:</B> nothing.</P>
 		<h4><code>weak_ptr</code> assignment</h4>
-<pre>
+		<pre>
     weak_ptr &amp; operator=(weak_ptr const &amp; r);
     template&lt;class Y&gt; weak_ptr &amp; operator=(weak_ptr&lt;Y&gt; const &amp; r);
     template&lt;class Y&gt; weak_ptr &amp; operator=(shared_ptr&lt;Y&gt; const &amp; r);
 </pre>
-			<P><B>Effects:</B> Equivalent to <code>weak_ptr(r).swap(*this)</code>.</P>
-			<P><B>Throws:</B> nothing.</P>
-			<P><B>Notes:</B> The implementation is free to meet the effects (and the implied 
-				guarantees) via different means, without creating a temporary.</P>
+		<P><B>Effects:</B> Equivalent to <code>weak_ptr(r).swap(*this)</code>.</P>
+		<P><B>Throws:</B> nothing.</P>
+		<P><B>Notes:</B> The implementation is free to meet the effects (and the implied 
+			guarantees) via different means, without creating a temporary.</P>
 		<h4><code>weak_ptr</code> modifiers</h4>
-<pre>
+		<pre>
     void swap(weak_ptr &amp; r);
 </pre>
-			<p><b>Effects:</b> Exchanges the contents of <code>*this</code> and <code>r</code>.</p>
-			<p><b>Throws:</b> nothing.</p>
-<pre>
+		<p><b>Effects:</b> Exchanges the contents of <code>*this</code> and <code>r</code>.</p>
+		<p><b>Throws:</b> nothing.</p>
+		<pre>
     void reset();
 </pre>
-			<P><B>Effects:</B> Equivalent to <code>weak_ptr().swap(*this)</code>.</P>
+		<P><B>Effects:</B> Equivalent to <code>weak_ptr().swap(*this)</code>.</P>
 		<h4><code>weak_ptr</code> observers</h4>
-<pre>
+		<pre>
     long use_count() const;
 </pre>
-			<p><b>Returns:</b> if <code>*this</code> is <EM>empty</EM>, an unspecified 
-				nonnegative value; otherwise, the number of <code>shared_ptr</code> instances that <EM>share 
-					ownership</EM> with <code>*this</code>.</p>
-			<p><b>Throws:</b> nothing.</p>
-			<P><B>Notes:</B> <code>use_count()</code> is not necessarily efficient. Use only 
-				for debugging and testing purposes, not for production code.</P>
-<pre>
+		<p><b>Returns:</b> if <code>*this</code> is <EM>empty</EM>, an unspecified 
+			nonnegative value; otherwise, the number of <code>shared_ptr</code> instances 
+			that <EM>share ownership</EM> with <code>*this</code>.</p>
+		<p><b>Throws:</b> nothing.</p>
+		<P><B>Notes:</B> <code>use_count()</code> is not necessarily efficient. Use only 
+			for debugging and testing purposes, not for production code.</P>
+		<pre>
     bool expired() const;
 </pre>
-			<p><b>Returns:</b> <code>use_count() == 0</code>.</p>
-			<p><b>Throws:</b> nothing.</p>
-			<P><B>Notes:</B> <code>expired()</code> may be faster than <code>use_count()</code>.</P>
-<pre>
+		<p><b>Returns:</b> <code>use_count() == 0</code>.</p>
+		<p><b>Throws:</b> nothing.</p>
+		<P><B>Notes:</B> <code>expired()</code> may be faster than <code>use_count()</code>.</P>
+		<pre>
     shared_ptr&lt;T&gt; lock() const;
 </pre>
-			<P><B>Returns:</B> <code>expired()? shared_ptr&lt;T&gt;(): shared_ptr&lt;T&gt;(*this)</code>.</P>
-			<P><B>Throws:</B> nothing.</P>
+		<P><B>Returns:</B> <code>expired()? shared_ptr&lt;T&gt;(): shared_ptr&lt;T&gt;(*this)</code>.</P>
+		<P><B>Throws:</B> nothing.</P>
 		<h4><code>weak_ptr</code> comparison</h4>
-<pre>
+		<pre>
     template&lt;class T, class U&gt;
       bool operator&lt;(weak_ptr&lt;T&gt; const &amp; a, weak_ptr&lt;U&gt; const &amp; b);
 </pre>
-			<p><b>Returns:</b> an unspecified value such that</p>
-			<UL>
-				<LI>
-					<code>operator&lt;</code> is a strict weak ordering as described in section 25.3 <code>[lib.alg.sorting]</code>;
-				<LI>
-					under the equivalence relation defined by <code>operator&lt;</code>, <code>!(a 
-						&lt; b) &amp;&amp; !(b &lt; a)</code>, two <code>weak_ptr</code> instances 
-					are equivalent if and only if they <EM>share ownership</EM>.</LI></UL>
-			<p><b>Throws:</b> nothing.</p>
-			<P><B>Notes:</B> Allows <code>weak_ptr</code> objects to be used as keys in 
-				associative containers.</P>
+		<p><b>Returns:</b> an unspecified value such that</p>
+		<UL>
+			<LI>
+				<code>operator&lt;</code> is a strict weak ordering as described in section 
+				25.3 <code>[lib.alg.sorting]</code>;
+			<LI>
+				under the equivalence relation defined by <code>operator&lt;</code>, <code>!(a &lt; 
+					b) &amp;&amp; !(b &lt; a)</code>, two <code>weak_ptr</code> instances are 
+				equivalent if and only if they <EM>share ownership</EM>.</LI></UL>
+		<p><b>Throws:</b> nothing.</p>
+		<P><B>Notes:</B> Allows <code>weak_ptr</code> objects to be used as keys in 
+			associative containers.</P>
 		<h4><code>weak_ptr</code> specialized algorithms</h4>
-<pre>
+		<pre>
     template&lt;class T&gt;
       void swap(weak_ptr&lt;T&gt; &amp; a, weak_ptr&lt;T&gt; &amp; b)
 </pre>
-			<P><B>Effects:</B> Equivalent to <code>a.swap(b)</code>.</P>
-			<P><B>Throws:</B> nothing.</P>
+		<P><B>Effects:</B> Equivalent to <code>a.swap(b)</code>.</P>
+		<P><B>Throws:</B> nothing.</P>
 		<h3>E. Class template <code>enable_shared_from_this</code></h3>
 		<pre>
     namespace std {
@@ -663,26 +719,25 @@
       };
     }
 </pre>
-<pre>
+		<pre>
     template&lt;class T&gt; shared_ptr&lt;T&gt; 
       enable_shared_from_this&lt;T&gt;::shared_from_this();
     template&lt;class T&gt; shared_ptr&lt;T const&gt; 
       enable_shared_from_this&lt;T&gt;::shared_from_this() const;
 </pre>
-			<p>
-				<b>Requires:</b> <code>enable_shared_from_this&lt;T&gt;</code> must be an 
-				accessible base class of <code>T</code>. <code>*this</code> must be a subobject 
-				of an instance <code>t</code> of type <code>T</code> . There must exist 
-				at least one <code>shared_ptr</code> instance <code>p</code> that <EM>owns</EM>
-				<code>&amp;t</code>.
-			</p>
-			<p>
-				<b>Returns:</b> A <code>shared_ptr&lt;T&gt;</code> instance <code>r</code> that shares 
-				ownership with <code>p</code>.
-			</p>
-			<p>
-				<b>Postconditions:</b> <code>r.get() == this</code>.
-			</p>
+		<p>
+			<b>Requires:</b> <code>enable_shared_from_this&lt;T&gt;</code> must be an 
+			accessible base class of <code>T</code>. <code>*this</code> must be a subobject 
+			of an instance <code>t</code> of type <code>T</code> . There must exist at 
+			least one <code>shared_ptr</code> instance <code>p</code> that <EM>owns</EM> <code>&amp;t</code>.
+		</p>
+		<p>
+			<b>Returns:</b> A <code>shared_ptr&lt;T&gt;</code> instance <code>r</code> that 
+			shares ownership with <code>p</code>.
+		</p>
+		<p>
+			<b>Postconditions:</b> <code>r.get() == this</code>.
+		</p>
 		<h2>V. Code Examples</h2>
 		<h3><a name="Implementation-difficulty">Implementation difficulty</a></h3>
 		<p>The Boost developers found a shared-ownership smart pointer exceedingly 
@@ -729,6 +784,10 @@ void test()
 		<p>Again, it is surprising how many experts get this wrong.</p>
 		<h2>VI. Acknowledgements</h2>
 		<h2>VII. References</h2>
+		<p>[<a name="Boehm02">Boehm02</a>] Hans-J. Boehm, <i>Destructors, Finalizers, and 
+				Synchronization</i>, HP Labs Technical Report HPL-2002-335, December, 2002. 
+			Available online at <a href="http://www.hpl.hp.com/techreports/2002/HPL-2002-335.html">
+				http://www.hpl.hp.com/techreports/2002/HPL-2002-335.html</a></p>
 		<p>[<a name="Colvin94">Colvin94</a>] Gregory Colvin, <i>Exception Safe Smart Pointers</i>, 
 			C++ committee document 94-168/N0555, July, 1994. Available online at <a href="http://std.dkuug.dk/jtc1/sc22/wg21/docs/papers/1994/N0555.pdf">
 				http://std.dkuug.dk/jtc1/sc22/wg21/docs/papers/1994/N0555.pdf</a></p>
@@ -737,12 +796,12 @@ void test()
 			1994. This paper includes an extensive discussion of weak pointers and an 
 			extensive bibliography. Available online at <a href="http://www.usenix.org/publications/library/proceedings/c++94/full_papers/ellis.a">
 				http://www.usenix.org/publications/library/proceedings/c++94/full_papers/ellis.a</a></p>
+		<p>[<a name="Google03">Google03</a>] Searching <a href="http://www.google.com">www.google.com</a>
+			for "reference counted smart pointer" yields 2,400 entries. Anyone doubting 
+			that shared-ownership smart pointers have been reinvented a large number of 
+			times should read a random selection of these entries.</p>
 		<p>[<a name="Meyers01">Meyers01</a>] Scott Meyers, <i><a href="http://www.awl.com/cseng/titles/0-201-74962-9/">
 					Effective STL</a></i>, page 39, Addison-Wesley, 2001, ISBN 
 			0-201-74962-9.</p>
-		<p>[<a name="Google03">Google03</a>] Searching <a href="http://www.google.com">www.google.com</a>
-			for &quot;reference counted smart pointer&quot; yields 2,400 entries. Anyone 
-			doubting that shared-ownership smart pointers have been reinvented a large 
-			number of times should read a random selection of these entries.</p>
 	</body>
 </html>
