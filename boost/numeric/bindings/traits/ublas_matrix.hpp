@@ -137,14 +137,14 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
 
     // stride1 == distance (m (i, j), m (i+1, j)) 
     static int stride1 (matrix_type& m) { 
-      return matrix_type::functor_type::one1 (m.size1(), m.size2());
+      return (typename matrix_type::functor_type)::one1 (m.size1(), m.size2());
     } 
     // stride2 == distance (m (i, j), m (i, j+1)) 
     static int stride2 (matrix_type& m) { 
-      return matrix_type::functor_type::one2 (m.size1(), m.size2());
+      return (typename matrix_type::functor_type)::one2 (m.size1(), m.size2());
     }
     static int leading_dimension (matrix_type& m) {
-      return matrix_type::functor_type::size2 (m.size1(), m.size2());
+      return (typename matrix_type::functor_type)::size2 (m.size1(), m.size2());
     }
     typedef typename detail::ublas_ordering<
       typename F::orientation_category
@@ -176,13 +176,13 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     { return ( size1( m ) + 1 ) * size2( m ) / 2 ; }
 
     static int stride1 (matrix_type const& m) { 
-      return matrix_type::functor_type::one1 (m.size1(), m.size2());
+      return (typename matrix_type::functor_type)::one1 (m.size1(), m.size2());
     } 
     static int stride2 (matrix_type const& m) { 
-      return matrix_type::functor_type::one2 (m.size1(), m.size2());
+      return (typename matrix_type::functor_type)::one2 (m.size1(), m.size2());
     }
     static int leading_dimension (matrix_type const& m) {
-      return matrix_type::functor_type::size2 (m.size1(), m.size2());
+      return (typename matrix_type::functor_type)::size2 (m.size1(), m.size2());
     }
     typedef typename detail::ublas_ordering<
       typename F::orientation_category
