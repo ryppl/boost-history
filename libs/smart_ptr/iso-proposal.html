@@ -1,137 +1,173 @@
 <html>
-
-<head>
-<meta http-equiv="Content-Language" content="en-us">
-<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
-<meta name="ProgId" content="FrontPage.Editor.Document">
-<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
-<title>I</title>
-</head>
-
-<body>
-
-<h2>I. Motivation</h2>
-<p>Resource management, particularly of dynamically allocated memory, has been a 
-serious concern since the days of the earliest digital computers. Many modern 
-computer languages (Python, Perl, Java) provide built-in facilities for managing 
-dynamically allocated memory. In both the C and C++ languages, leaving dynamic memory management choices up to 
-the programmer is a&nbsp; long-standing design decision .</p>
-<p>Use of a pointer-like object called a <i>smart-pointer</i> to manage 
-dynamically allocated memory has been the preferred approach in C++ for many 
-years. Google finds 153,000 references to the term &quot;smart pointer&quot;, with the 
-high-ranking listings almost entirely in the context of C++ programming. Leading 
-authors of C++ related books often treat smart pointers in depth. Of the 50 plus 
-C++ libraries available on the Boost web site, the Boost Smart Pointer library 
-is the most commonly visited. Smart pointers are encountered with great 
-frequency in production code. There is clearly great interest and need for 
-quality smart pointers in the C++ community.</p>
-<p>The list of possible smart pointer features is extremely broad. The C++ 
-Standard Library currently provides a single smart pointer, <i>std::auto_ptr</i>, 
-which provides specific and focused transfer-of-ownership semantics. Arguably 
-the most common need, however, is for shared-ownership semantics. Because<i>
-std::auto_ptr</i> does not provide shared-ownership semantics, it cannot even be used with Standard Library 
-containers.</p>
-<p>This document proposes&nbsp;a smart-pointer with shared-ownership semantics 
-which meets a very broad spectrum of smart-pointer needs, is based on 
-existing practice, and has many other beneficial characteristics. An 
-implementation is available at <a href="http://www.boost.org/libs/smart_ptr">
-http://www.boost.org/libs/smart_ptr</a>.</p>
-<h3>A. Motivation for a shared-ownership smart pointer</h3>
-<ul>
-  <li>Is a reasonable default choice for many or even most smart pointer needs, 
-  consistent with the spirit of the Standard Library.</li>
-  <li>Can be used in Standard Library containers, filling a major embarrassing 
-  gap in the current Standard Library.</li>
-  <li>Has been reinvented thousands of times (often with gratuitous mistakes and 
-  misfeatures).</li>
-  <li>Is very hard to specify and implement correctly, particularly as regards exception 
-  safety, 
-  thread safety, and weak pointers. See <a href="#Implementation-difficulty">
-  Implementation difficulty</a> below.</li>
-</ul>
-<h3>B. Motivation for the <i>shared_ptr</i> shared-ownership smart pointer</h3>
-<p><i>&nbsp;[Rather than specifying memory management policy via class template 
-parameters, shared_ptr has an alternate constructor with a second argument 
-supplying a destruction policy functor.&nbsp;This is the key to understanding 
-both the design itself and several of the claimed advantages.]</i></p>
-<ul>
-  <li>Has the same object type regardless of features used, greatly facilitating 
-  interoperability between libraries, including third-party libraries.</li>
-  <li>Supports custom deallocators, allowing user-specified memory policies and 
-  extending management to a wide range of object types, such as COM objects.</li>
-  <li>Supports weak pointers, allowing cycle breaking and supporting observer 
-  applications such as caches.</li>
-  <li>Delivers exceptional expressive power without additional template 
-  parameterization, easing use by novices and experts alike.</li>
-  <li>Supports encapsulation and implementation hiding via the ability to use 
-  incomplete classes and protected nonvirtual base destructors, and the ability 
-  to hide allocation details.</li>
-  <li>&quot;Just works&quot; in numerous tricky situations, such as calling the right 
-  destructor and crossing load-unit/heap boundaries.</li>
-  <li>Requires no language support and does not prevent users or the Standard Library 
-  from later adding other smart pointers to meet additional needs.</li>
-  <li>Allows several implementation techniques, leaving implementors room for 
-  tradeoffs.</li>
-  <li>Reflects existing practice with a decade of refinement and use, including 
-  many non-obvious enhancements. [<a href="#Col-94">Col-94</a>]</li>
-  <li>Is widely recommended in books, magazine articles, and newsgroup postings 
-  by both C++ experts and everyday users.</li>
-</ul>
-<h3>C. Motivation for the <i>weak_ptr</i> shared-ownership-observer smart pointer</h3>
-<ul>
-  <li>Supports data structures with cyclic pointers, with the benefit that 
-  either <i>weak_ptr</i> or <i>shared-ptr</i> covers all important 
-  shared-ownership use cases.</li>
-  <li>Supports observer idioms such as caches, simplifying their use.</li>
-  <li>Replaces unsafe uses of raw pointers, guaranteeing an exception rather 
-  than undefined behavior if used after object deletion.</li>
-  <li>Reflects existing practice with a decade of refinement and use. [<a href="#E&D-94">E&amp;D-94</a>]</li>
-</ul>
-<h2>II. Impact On the Standard</h2>
-
-<h2>??? Supporting Material</h2>
-
-<h3><a name="Implementation-difficulty">Implementation difficulty</a></h3>
-
-<h4>Example 1</h4>
-<blockquote>
-  <pre>p.reset(new X);</pre>
-</blockquote>
-<p>It is very common for even expert implementations to fail when reset throws 
-an exception. The behavior should be to delete the X object, and have no other 
-effects, i.e. p must be left unchanged.</p>
-<h4>Example 2</h4>
-<p>Taken from Boost's shared_ptr_test.cpp:</p>
-<blockquote>
-  <pre>struct X
+	<head>
+		<title>A Proposal to Add General Purpose Smart Pointers to the Standard Library</title>
+		<meta http-equiv="Content-Language" content="en-us">
+		<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+	</head>
+	<body>
+		<h1>A Proposal to Add General Purpose Smart Pointers to the Standard Library</h1>
+		<h2>I. Motivation</h2>
+		<p>Resource management, particularly of dynamically allocated memory, has been a 
+			serious concern since the days of the earliest digital computers. Many modern 
+			computer languages (Python, Perl, Java) provide built-in facilities for 
+			managing dynamically allocated memory. In both the C and C++ languages, leaving 
+			dynamic memory management choices up to the programmer is a long-standing 
+			design decision .</p>
+		<p>Use of a pointer-like object called a <i>smart-pointer</i> to manage dynamically 
+			allocated memory has been the preferred approach in C++ for many years. Google 
+			finds 153,000 references to the term "smart pointer", with the high-ranking 
+			listings almost entirely in the context of C++ programming. Leading authors of 
+			C++ related books often treat smart pointers in depth. Of the 50 plus C++ 
+			libraries available on the Boost web site, the Boost Smart Pointer library is 
+			the most commonly visited. Smart pointers are encountered with great frequency 
+			in production code. There is clearly great interest and need for quality smart 
+			pointers in the C++ community.</p>
+		<p>The list of possible smart pointer features is extremely broad. The C++ Standard 
+			Library currently provides a single smart pointer, <i>std::auto_ptr</i>, which 
+			provides specific and focused transfer-of-ownership semantics. Arguably the 
+			most common need, however, is for shared-ownership semantics. Because<i> std::auto_ptr</i>
+			does not provide shared-ownership semantics, it cannot even be used with 
+			Standard Library containers.</p>
+		<p>This document proposes a smart-pointer with shared-ownership semantics which 
+			meets a very broad spectrum of smart-pointer needs, is based on existing 
+			practice, and has many other beneficial characteristics. An implementation is 
+			available at <a href="http://www.boost.org/libs/smart_ptr">http://www.boost.org/libs/smart_ptr</a>.</p>
+		<h3>A. Motivation for a shared-ownership smart pointer</h3>
+		<ul>
+			<li>
+			Is a reasonable default choice for many or even most smart pointer needs, 
+			consistent with the spirit of the Standard Library.
+			<li>
+			Can be used in Standard Library containers, filling a major embarrassing gap in 
+			the current Standard Library.
+			<li>
+			Has been reinvented thousands of times (often with gratuitous mistakes and 
+			misfeatures).
+			<li>
+				Is very hard to specify and implement correctly, particularly as regards 
+				exception safety, thread safety, and weak pointers. See <a href="#Implementation-difficulty">
+					Implementation difficulty</a> below.</li>
+		</ul>
+		<h3>B. Motivation for the <i>shared_ptr</i> shared-ownership smart pointer</h3>
+		<p><i>[Rather than specifying memory management policy via class template parameters, 
+				shared_ptr has an alternate constructor with a second argument supplying a 
+				destruction policy functor. This is the key to understanding both the design 
+				itself and several of the claimed advantages.]</i></p>
+		<ul>
+			<li>
+			Has the same object type regardless of features used, greatly facilitating 
+			interoperability between libraries, including third-party libraries.
+			<li>
+			Supports custom deallocators, allowing user-specified memory policies and 
+			extending management to a wide range of object types, such as COM objects.
+			<li>
+			Supports weak pointers, allowing cycle breaking and supporting observer 
+			applications such as caches.
+			<li>
+			Delivers exceptional expressive power without additional template 
+			parameterization, easing use by novices and experts alike.
+			<li>
+			Supports encapsulation and implementation hiding via the ability to use 
+			incomplete classes and protected nonvirtual base destructors, and the ability 
+			to hide allocation details.
+			<li>
+			"Just works" in numerous tricky situations, such as calling the right 
+			destructor and crossing load-unit/heap boundaries.
+			<li>
+			Requires no language support and does not prevent users or the Standard Library 
+			from later adding other smart pointers to meet additional needs.
+			<li>
+			Allows several implementation techniques, leaving implementors room for 
+			tradeoffs.
+			<li>
+				Reflects existing practice with a decade of refinement and use, including many 
+				non-obvious enhancements. [<a href="#Colvin94">Colvin94</a>]
+			<li>
+				Is widely recommended in books, magazine articles, and newsgroup postings by 
+				both C++ experts and everyday users.</li>
+		</ul>
+		<h3>C. Motivation for the <i>weak_ptr</i> shared-ownership-observer smart pointer</h3>
+		<ul>
+			<li>
+				Supports data structures with cyclic pointers, with the benefit that either <i>weak_ptr</i>
+				or <i>shared_ptr</i>
+			covers all important shared-ownership use cases.
+			<li>
+			Supports observer idioms such as caches, simplifying their use.
+			<li>
+			Replaces unsafe uses of raw pointers, guaranteeing an exception rather than 
+			undefined behavior if used after object deletion.
+			<li>
+				Reflects existing practice with a decade of refinement and use. [<a href="#Ellis94">Ellis94</a>]</li>
+		</ul>
+		<h2>II. Impact On the Standard</h2>
+		<p>
+			This proposal is a pure library extension. It proposes changes to an existing 
+			header, <code>&lt;memory&gt;</code>, but it does not require changes to any 
+			standard classes or functions and it does not require changes to any of the 
+			standard requirement tables. It does not require any changes in the core 
+			language, and it has been implemented in standard C++. The proposal does not 
+			depend on any other library extensions.
+		</p>
+		<h2>III. Design Decisions</h2>
+		<h3>A. General Principles</h3>
+		<h4>1. "As Close to Raw Pointers as Possible, but no Closer"</h4>
+		<p>[...]</p>
+		<h4>2. "Just Do the Right Thing"</h4>
+		<p>[...]</p>
+		<h4>3. No Preferred Implementation</h4>
+		<p>[...]</p>
+		<h4>4. The "Shares Ownership with" Equivalence Relation</h4>
+		<p>[...]</p>
+		<h4>5. The "Empty Pointer" Concept</h4>
+		<p>[...]</p>
+		<h3>B. shared_ptr</h3>
+		<h4>1.</h4>
+		<p>[...]</p>
+		<h3>C. weak_ptr</h3>
+		<h4>1.</h4>
+		<p>[...]</p>
+		<h3>D. Alternatives</h3>
+		<h4>1. Policy Based Smart Pointers</h4>
+		<p>[...]</p>
+		<h4>2. Garbage Collection</h4>
+		<p>[...]</p>
+		<h2>IV. Proposed Text</h2>
+		<h2>V. Code Examples</h2>
+		<h3><a name="Implementation-difficulty">Implementation difficulty</a></h3>
+		<h4>Example 1</h4>
+		<blockquote>
+			<pre>p.reset(new X);</pre>
+		</blockquote>
+		<p>It is very common for even expert implementations to fail when reset throws an 
+			exception. The behavior should be to delete the X object, and have no other 
+			effects, i.e. p must be left unchanged.</p>
+		<h4>Example 2</h4>
+		<p>Taken from Boost's shared_ptr_test.cpp:</p>
+		<blockquote>
+			<pre>struct X
 {
-X(): next() {}
-boost::shared_ptr&lt;X&gt; next;
+    boost::shared_ptr&lt;X&gt; next;
 };
 
 void test()
 {
-boost::shared_ptr&lt;X&gt; p(new X);
-p-&gt;next = boost::shared_ptr&lt;X&gt;(new X);
-BOOST_TEST(!p-&gt;next-&gt;next);
-p = p-&gt;next;
-BOOST_TEST(!p-&gt;next);
+    boost::shared_ptr&lt;X&gt; p(new X);
+    p-&gt;next = boost::shared_ptr&lt;X&gt;(new X);
+    p = p-&gt;next;
+    BOOST_TEST(!p-&gt;next);
 }</pre>
-</blockquote>
-<p>Again, it is surprising how many experts get this wrong.</p>
-
-		<h2><a name="References">References</a></h2>
-		<p>[<a name="Col-94">Col-94</a>] Gregory Colvin,
-        <a href="http://std.dkuug.dk/jtc1/sc22/wg21/docs/papers/1994/N0555.pdf">
-        Exception Safe Smart Pointers</a>, C++ committee document 94-168/N0555, 
-        July, 1994. URL 
-        http://std.dkuug.dk/jtc1/sc22/wg21/docs/papers/1994/N0555.pdf</p>
-		<p>[<a name="E&amp;D-94">E&amp;D-94</a>] John R. Ellis &amp; David L. Detlefs,
-        <a href="http://www.usenix.org/publications/library/proceedings/c++94/full_papers/ellis.a">
-        Safe, Efficient Garbage Collection for C++</a>, Usenix Proceedings, 
-        February, 1994. This paper includes an extensive discussion of weak 
-        pointers and an extensive bibliography. URL http://www.usenix.org/publications/library/proceedings/c++94/full_papers/ellis.a</p>
-		
-</body>
-
+		</blockquote>
+		<p>Again, it is surprising how many experts get this wrong.</p>
+		<h2>VI. Acknowledgements</h2>
+		<h2>VII. References</h2>
+		<p>[<a name="Colvin94">Colvin94</a>] Gregory Colvin, Exception Safe Smart Pointers, 
+			C++ committee document 94-168/N0555, July, 1994. Available online at <a href="http://std.dkuug.dk/jtc1/sc22/wg21/docs/papers/1994/N0555.pdf">
+				http://std.dkuug.dk/jtc1/sc22/wg21/docs/papers/1994/N0555.pdf</a></p>
+		<p>[<a name="Ellis94">Ellis94</a>] John R. Ellis and David L. Detlefs, Safe, 
+			Efficient Garbage Collection for C++, Usenix Proceedings, February, 1994. This 
+			paper includes an extensive discussion of weak pointers and an extensive 
+			bibliography. Available online at <a href="http://www.usenix.org/publications/library/proceedings/c++94/full_papers/ellis.a">
+				http://www.usenix.org/publications/library/proceedings/c++94/full_papers/ellis.a</a></p>
+	</body>
 </html>
