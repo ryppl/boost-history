@@ -71,7 +71,11 @@
         <a href="#usage">Usage</a> 
 
         <ul>
-          <li><a href="#user_globals">Global Variables and the Command-Line</a>
+          <li><a href="#command_line">The Command-Line</a>
+          <ul>
+            <li><a href="#user_targets">User Targets</a>
+            <li><a href="#user_globals">Global Variables</a>
+          </ul>
           <li><a href="#subproject_jamfiles">Subproject Jamfiles</a>
           <ul>
             <li><a href="#subproject_rule">The <tt>subproject</tt> Rule</a>
@@ -89,7 +93,7 @@
       <li><a href="#internals">Internals</a>
       <ul>
         <li><a href="#jam_fundamentals">Jam Fundamentals</a>
-        <li><a href="#grist">Who's Gristing What, and Where</a>
+        <li><a href="#target_names">Target Names</a>
         <li><a href="#internal_globals">Global Variables</a>
       </ul>
 
@@ -454,6 +458,41 @@ subinclude foo/bar/baz <font color="#7f7f7f">foo/bar/...</font> ;
     how to write project and subproject Jamfiles. It also describes the other
     files written in the Jam language: build-tool specification files, feature
     descriptions files.
+
+      <h3><a name="command_line">The Command Line</a></h3>
+      
+      <p>This section describes in detail how the build system can be invoked.
+
+         <h4><a name="user_targets">User Targets</a></h4>
+
+         <p>The Jam command line ends with an optional list of target names; if
+         no target names are supplied, the built-in pseudotarget <tt>all</tt> is
+         built. In a large project, naming targets can be dicey because of
+         collisions. Jam uses a mechanism called <a href="#grist">grist</a> to
+         distinguish targets that would otherwise have the same
+         name. Fortunately, you won't often have to supply grist at the
+         command-line. When you declare a main target, a Jam pseudotarget of the
+         same name is created which depends on
+         <i>all</i> of the subvariants requested for your invocation of the
+         build system. For example, if your subproject declares:
+<blockquote><pre>
+exe my_target : my_source1.cpp my_source2.c ;
+</pre></blockquote>
+         and you invoke Jam with <tt>-sBUILD=&quot;debug
+         release&quot;&nbsp;my_target</tt>, you will build both the debug and
+         release versions of <tt>my_target</tt>.
+         
+         <p> These simple, ungristed names are called <b>user targets</b>, and
+         are only available for the subproject where Jam is invoked. That way,
+         builds from the top level (which may include many Jamfiles through
+         the subinclude rule) and builds of library dependencies (which may
+         live in other subprojects), don't collide. If it
+         is neccessary to refer more explicitly to a particular target from the
+         command-line, you will have to add ``grist''. Please see <a
+         href="#target_names">this section</a> for a more complete description of how
+         to name particular targets in a build.
+
+         <h4><a name="user_globals">Global Variables</a></h4>
 
     <h3><a name="#subproject_jamfiles">SubProject Jamfiles</a></h3>
     This section describes how to write a Jamfile for a subproject. 
@@ -880,7 +919,34 @@ flags msvc HDRS &lt;include&gt; ;
   not affect control flow.
   
   
-    <h3><a name="grist">Who's Gristing What, and Where</a></h3>
+    <h3><a name="target_names">Target Names</a></h3>
+
+    <p>In addition to <a href="#user_targets">user targets</a>, which correspond
+    directly to the names the user writes in her subproject Jamfile, several
+    additional targets are generated, regardless of the directory from which Jam
+    was invoked:
+
+    <ul>
+
+      <li>A <b>main target</b> has all the same dependencies as a user target
+      (i.e. building it updates all requested subvariants). Its name is the same
+      except for the addition of <tt>$(SOURCE_GRIST)</tt>, which identifies the
+      subproject. The identification looks like the names of the path components
+      from the project root to the subproject, separated by exclamation
+      points. Thus, if the project is rooted at <tt>foo</tt>, in the subproject
+      at <tt>foo/bar/baz</tt> the target <tt>my_target</tt>  is
+      identified by <tt>&lt;bar!baz&gt;my_target</tt>.
+
+      <li>A <b>subvariant target</b> has additional grist identifying its main
+      target and subvariant. This grist is joined to <tt>$(SOURCE_GRIST)</tt>
+      with the platform's directory separator. Thus, on Unix, a subvariant
+      target of <tt>my_target</tt> above might be identified as
+      <tt>&lt;bar!baz/my_target/optimization-space/runtime-link-static&gt;my_source.o</tt>.
+      Note that the part of the grist following the first slash, known as the
+      <b>subvariant id</b>, also corresponds
+      to a fragment of the subvariant directory path where the corresponding
+      target is generated. Most built targets will be identified this way. 
+    </ul>
 
     <h3><a name="internal_globals">Global Variables</a></h3>
 

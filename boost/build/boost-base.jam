@@ -448,6 +448,12 @@ rule path-feature
     gPATH_FEATURES += <$(<)> ;
 }
 
+rule dependency-feature
+{
+    path-feature $(<) : $(>) ;
+    gDEPENDENCY_FEATURES += <$(<)> ;
+}
+
 # feature-default <feature>...
 #
 # return the default properties corresponding to the given feature(s)
@@ -518,6 +524,10 @@ rule flags
         else
         {
             $(variable) += [ get-values $(x) : $(gBUILD_PROPERTIES) ] ;
+            if $(x:G) in $(gDEPENDENCY_FEATURES)
+            {
+                gDEPENDENCY_VARIABLES($(toolset)) += $(variable) ;
+            }
         }
     }
     if ! $(condition)
@@ -538,7 +548,8 @@ rule include-tools
 
     gTARGET_VARIABLES = ;
     gRELEVANT_FEATURES($(<)) = ; # clear relevant feature set
-    
+    gDEPENDENCY_VARIABLES($(<)) = ;
+
     include $(BOOST_BUILD_INSTALLATION)$(SLASH)$(<)-tools.jam ;
 
     # Always maintain the list of relevant features as unique
@@ -559,6 +570,7 @@ rule extends-toolset
     }
     # Add the relevant features from the base toolset
     gRELEVANT_FEATURES($(gCURRENT_TOOLSET)) += $(gRELEVANT_FEATURES($(<))) ;
+    gDEPENDENCY_VARIABLES($(gCURRENT_TOOLSET)) += $(gDEPENDENCY_VARIABLES($(<))) ;
 }
 
 # relevant-features toolset
@@ -675,6 +687,11 @@ rule set-target-variables # file-target
     for s in $(gTARGET_VARIABLES)
     {
         $(s) on $(<) = $($(s)) ;
+        
+        if $(s) in $(gDEPENDENCY_VARIABLES($(gCURRENT_TOOLSET)))
+        {
+            DEPENDS $(<) : $($(s)) ;
+        }
     }
 }
 
@@ -1015,15 +1032,14 @@ rule find-compatible-subvariant
     local requirements = [ select-properties $(>)
                             : $(gTARGET_REQUIREMENTS($(<))) ] ;
                                 
-    local build-request = $(3) ;
-    local free-properties = [ segregate-free-properties requirements build-request ] ;
+    local free-properties = [ segregate-free-properties requirements ] ;
 
     # begin with the properties overridden by the target requirements
     local override-properties = $(requirements) ;
 
     # add properties from build-request, checking for compatibility
     local p ;
-    for p in [ difference $(build-request) : $(requirements) ]
+    for p in [ difference $(3) : $(requirements) ]
     {
         local f = $(p:G) ;
         if $(f) in $(requirements:G)
@@ -1058,18 +1074,13 @@ rule find-compatible-subvariant
 }
 
 
-# link-libraries libs... : toolset variant : dependent-properties
+# link-libraries libs... : toolset variant : dependent-simple-properties
 #
 # For each target specified in libs, generate build instructions
 # for a subvariant that can be linked with a dependent target with
 # dependent-properties, returning a list of the linkable targets.
 rule link-libraries
 {
-  # extract the simple properties from dependent-properties
-  local simple-properties
-            = [ difference $(3)
-                : [ get-properties $(gFREE_FEATURES) : $(3) ] ] ;
-
   local lib-path result ;
   for lib-path in $(<)
   {
@@ -1132,7 +1143,7 @@ rule declare-fake-targets
     # The following checks that we're in the subdirectory of Jam's invocation
     # so that we can arrange for ungristed target names to be built from the
     # command-line.
-    if ( $(SUBDIR) = $(gINVOCATION_SUBDIR) )
+    if ( $(SUBDIR_TOKENS) = $(gINVOCATION_SUBDIR_TOKENS) )
     {
         DEPENDS $(<:G=) : $(<) ; # allows $(<:G=) to be used to build all variants
         NOTFILE $(<:G=) ;
@@ -1232,8 +1243,12 @@ rule subvariant-target
 
     if $(gTARGET_LIBS($(<)))
     {
+        # extract the simple properties from dependent-properties
+        local simple-properties = $(gBUILD_PROPERTIES) ;
+        segregate-free-properties simple-properties ;
+        
         # generate library build instructions
-        local libs = [ link-libraries $(gTARGET_LIBS($(<))) : $(3) : $(>[2-]) ] ;
+        local libs = [ link-libraries $(gTARGET_LIBS($(<))) : $(3) : $(simple-properties) ] ;
         NEEDLIBS on $(target-files) += $(libs) ;
         DEPENDS $(target-files) : $(libs) ; 
     }

@@ -4,11 +4,25 @@ SOURCES = classes.cpp conversions.cpp extension_class.cpp functions.cpp
     init_function.cpp module_builder.cpp 
     objects.cpp types.cpp cross_module.cpp ;
 
-PYTHON_ROOT ?= c:/tools/python ;
+if $(NT)
+{
+    PYTHON_ROOT ?= c:/tools/python ;
+    PYTHON_INCLUDES ?= $(PYTHON_ROOT)/include ;
+    PYTHON_LIB_PATH = $(PYTHON_ROOT)/libs ;
+    PYTHON_LIBS ?= $(PYTHON_ROOT)/libs/python20.lib ;
+    PYTHON_PROPERTIES ?= <gcc><*><define>SIZEOF_LONG=4 ;
+    SHELL_EXPORT ?= set ;
+}
+else if $(UNIX)
+{
+    PYTHON_INCLUDES ?= /usr/include/python1.5 ;
+    PYTHON_LIBS ?= /usr/lib/python1.5/config/libpython1.5.a ;
+    SHELL_EXPORT ?= export ;
+}
 
-PYTHON_INCLUDES = $(BOOST_ROOT) $(PYTHON_ROOT)$(SLASH)include ;
+BOOST_PYTHON_INCLUDES = $(BOOST_ROOT) $(PYTHON_INCLUDES) ;
 
-lib libboost_python : ../src/$(SOURCES) : <include>$(PYTHON_INCLUDES) <shared-linkable>true ;
+lib libboost_python : ../src/$(SOURCES) : <include>$(BOOST_PYTHON_INCLUDES) <shared-linkable>true $(PYTHON_PROPERTIES) ;
 
 # boost-python name : sources : requirements : default-BUILD
 #
@@ -19,9 +33,10 @@ rule boost-python
         [ dll $(<)
             : <lib>libboost_python $(>) # Add the boost python library to sources
             : $(3)                      # Add some standard requirements
-                <include>$(PYTHON_INCLUDES)
-                <msvc><*><library-path>$(PYTHON_ROOT)/libs
-                <gcc><*><library-file>$(PYTHON_ROOT)/libs/python20.lib
+                <include>$(BOOST_PYTHON_INCLUDES)
+                <msvc><*><library-path>$(PYTHON_LIB_PATH)
+                <gcc><*><library-file>$(PYTHON_LIBS)
+                $(PYTHON_PROPERTIES)
         : $(4) ] ;                      # pass on the default-BUILD
 
     # pick out just the DLL files generated
@@ -126,13 +141,13 @@ rule boost-python-simple-test
 
 actions boost-python-runtest
 {
-    set PYTHONPATH=$(PYTHONPATH)
+    $(SHELL_EXPORT) PYTHONPATH=$(PYTHONPATH)
     python "$(>)" $(ARGS) > "$(<)"
 }
 
 actions boost-python-force-test
 {
-    set PYTHONPATH=$(PYTHONPATH)
+    $(SHELL_EXPORT) PYTHONPATH=$(PYTHONPATH)
     python "$(>)" $(ARGS)
 }
 

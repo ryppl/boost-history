@@ -243,3 +243,21 @@ assert_equal [ directory-of a$(SLASH)b c d$(SLASH)e$(SLASH)f ] : a . d$(SLASH)e 
     assert_equal [ get-BUILD c <d>e ] : <f>g a ;
 }
 
+# strip-initial
+assert_equal [ strip-initial a b c : a b c d e f g ] : d e f g ;
+assert_equal [ strip-initial a b c : a b d e f g ] : a b d e f g ;
+assert_equal [ strip-initial a b c : b d e f g ] : b d e f g ;
+assert_equal [ strip-initial a b c : ] :  ;
+
+# simplify-path-tokens
+{
+    local $(gTOP)_TOKENS = .. .. .. ;
+    local gINVOCATION_SUBDIR_TOKENS = d e ;
+    assert_equal [ simplify-path-tokens a b . c .. .. d e ] : a d e ;
+    assert_equal [ simplify-path-tokens a b .. .. .. d e ] : .. d e ;
+    assert_equal [ simplify-path-tokens .. .. d e : xxx ] : .. .. d e ;
+    assert_equal [ simplify-path-tokens a b .. .. : xxx ] : xxx ;
+    $(gTOP)_TOKENS = .. .. ;
+    assert_equal [ simplify-path-tokens .. .. d e : xxx ] : xxx ; 
+    assert_equal [ simplify-path-tokens .. .. d e f g : xxx ] : f g ; 
+}

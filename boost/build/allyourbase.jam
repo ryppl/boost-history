@@ -408,6 +408,7 @@ CRELIB          ?= ;
 DOT             ?= . ;
 DOTDOT          ?= .. ;
 EXEMODE         ?= 711 ;
+DLLMODE         ?= 755 ;
 FILEMODE        ?= 644 ;
 FORTRAN         ?= f77 ;
 FORTRANFLAGS    ?= ;
@@ -1140,6 +1141,9 @@ rule SubDir
         }
 
         $(<[1]) = [ FSubDir $(<[2-]) ] ;
+        $(<[1])_TOKENS = [ split-path $($(<[1])) ] ;
+        gTOP = $(<[1]) ; #  not sure why someone would want to use anything
+                         # other than TOP, but just in case...
     }
 
     #
@@ -1175,10 +1179,14 @@ rule SubDir
     # Get path to current directory from root using SubDir.
     # Save dir tokens for other potential uses.
     SUBDIR_TOKENS = $(<[2-]) ;
+    
+    # This allows us to determine whether we're in the directory where jam was
+    # invoked from so that we can make locally named targets
+    gINVOCATION_SUBDIR_TOKENS ?= $(SUBDIR_TOKENS) ;
 
     # SUBDIR is the path from the invocation directory to the subproject
-    # directory. 
-    SUBDIR = [ FDirName [ simplify-path-tokens $($(<[1]))  $(SUBDIR_TOKENS) ] ] ;
+    # directory.
+    SUBDIR = [ FDirName [ simplify-path-tokens $($(<[1])_TOKENS)  $(SUBDIR_TOKENS) ] ] ;
 
     SEARCH_SOURCE = $(SUBDIR) ;
 
@@ -1196,14 +1204,9 @@ rule SubDir
     SUBDIRCCFLAGS = ;
     SUBDIRC++FLAGS = ;
 
-    # This allows us to determine whether we're in the directory where jam was
-    # invoked from so that we can make locally named targets
-    
-    gINVOCATION_SUBDIR ?= $(SUBDIR) ;
-
     # This variable holds the path from the directory of Jam's invocation to the
     # directory of the current subproject.
-    RELATIVE_SUBDIR_TOKENS = [ simplify-path-tokens [ split-path $($(<[1])) ] $(SUBDIR_TOKENS) ] ;
+    RELATIVE_SUBDIR_TOKENS = [ simplify-path-tokens $($(<[1])_TOKENS) $(SUBDIR_TOKENS) : $(DOT) ] ;
     RELATIVE_SUBDIR = [ join-path $(RELATIVE_SUBDIR_TOKENS) ] ;
 }
 # These are the global variables that get set up by SubDir. If you need to
@@ -1287,6 +1290,31 @@ rule reverse
     return $(result) ;
 }
 
+# dwa 6/28/01 - added for boost
+# strip-initial tokens... : input
+#
+# if input begins with tokens, remove the initial sequence of tokens and return
+# the rest. Otherwise return input unchanged.
+rule strip-initial
+{
+    local result = $(>) ;
+    local t ;
+    local matched = true ;
+    for t in $(<)
+    {
+        if $(matched) && ( $(t) = $(result[1]) )
+        {
+            result = $(result[2-]) ;
+        }
+        else
+        {
+            matched = ;
+            result = $(>) ;
+        }
+    }
+    return $(result) ;
+}
+
 # dwa 6/4/01 - added for boost
 # simplify-path-tokens token1 token2 ... tokenN : DOT-opt
 #
@@ -1296,7 +1324,7 @@ rule reverse
 #
 # [ simplify-path-tokens a b . c .. .. d e ] => a d e
 # [ simplify-path-tokens a b .. .. .. d e ]  => .. d e
-# [ simplify-path-tokens .. .. d e : xxx ]   => .. .. d e
+# [ simplify-path-tokens .. .. d e : xxx ]   => .. .. d e (provided TOP != ../..)
 # [ simplify-path-tokens a b .. .. : xxx ]   => xxx
 rule simplify-path-tokens
 {
@@ -1323,6 +1351,7 @@ rule simplify-path-tokens
     }
 
     result = $(dotdots) $(result) ;
+    result = [ strip-initial $($(gTOP)_TOKENS) $(gINVOCATION_SUBDIR_TOKENS) : $(result) ] ;
     result ?= $(>) ;
     return $(result) ;
 }

@@ -28,7 +28,7 @@ free-feature define ; # <define>PYTHON=foo
 free-feature undef ; # <undef>PYTHON=foo
 path-feature "include" ; # <include>../foo/bar/mumble
 path-feature library-path ;
-path-feature library-file ;
+dependency-feature library-file ;
 free-feature find-library ;
 
 # Can the target participate in a shared library?
