@@ -6,7 +6,7 @@
 #     pragma once
 #  endif
 
-#  include <boost/numeric/interval/interval.hpp>
+#  include <boost/numeric/interval.hpp>
 
    namespace boost { namespace io
    {
