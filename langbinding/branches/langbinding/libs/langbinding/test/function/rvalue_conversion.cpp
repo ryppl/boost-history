@@ -11,20 +11,17 @@ void f(int x, float y)
     assert(x == ::x && y == ::y);
 }
 
-void g(int& x, float y)
-{
-    assert(x == ::x && y == ::y);
-}
+#include <iostream>
 
-void h(int* x, float y)
+void* construct(void* src, void* storage)
 {
-    assert(*x == ::x && y == ::y);
+    return new (storage) int(6);
 }
 
 int main()
 {
     arg_conversion args[2] = { 
-        0, &x, 0
+        0, 0, &construct
       , 0, &y, 0
     };
 
@@ -34,7 +31,5 @@ int main()
     } rc;
     
     make_function(&f)->invoke(args, rc);
-    make_function(&g)->invoke(args, rc);
-    make_function(&h)->invoke(args, rc);
 }
 
