@@ -717,6 +717,20 @@ struct bitset_test {
     }
   }
 
+  static void intersects(const Bitset& a, const Bitset& b)
+  {
+    bool have_intersection = false;
+
+    typename Bitset::size_type m = a.size() < b.size() ? a.size() : b.size();
+    for(typename Bitset::size_type i = 0; i < m && !have_intersection; ++i)
+      if(a[i] == true && b[i] == true)
+        have_intersection = true;
+
+    BOOST_CHECK(a.intersects(b) == have_intersection);
+    // also check it is commutative
+    BOOST_CHECK(b.intersects(a) == have_intersection);
+  }
+
   static void find_first(const Bitset& b)
   {
       // find first non-null bit, if any

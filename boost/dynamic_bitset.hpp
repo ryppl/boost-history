@@ -295,6 +295,7 @@ public:
 
     bool is_subset_of(const dynamic_bitset& a) const;
     bool is_proper_subset_of(const dynamic_bitset& a) const;
+    bool intersects(const dynamic_bitset & a) const;
 
     // lookup
     size_type find_first() const;
@@ -1189,6 +1190,19 @@ is_proper_subset_of(const dynamic_bitset<Block, Allocator>& a) const
             return false;
     }
     return proper;
+}
+
+template <typename Block, typename Allocator>
+bool dynamic_bitset<Block, Allocator>::intersects(const dynamic_bitset & b) const
+{
+    size_type common_blocks = num_blocks() < b.num_blocks()
+                              ? num_blocks() : b.num_blocks();
+
+    for(size_type i = 0; i < common_blocks; ++i) {
+        if(m_bits[i] & b.m_bits[i])
+            return true;
+    }
+    return false;
 }
 
 // --------------------------------

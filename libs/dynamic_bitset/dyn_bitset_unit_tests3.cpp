@@ -193,6 +193,30 @@ void run_test_cases( BOOST_EXPLICIT_TEMPLATE_TYPE(Block) )
     Tests::proper_subset(a, b);
   }
   //=====================================================================
+  // Test intersects
+  {
+    bitset_type a; // empty
+    bitset_type b;
+    Tests::intersects(a, b);
+  }
+  {
+    bitset_type a;
+    bitset_type b(5, 8ul);
+    Tests::intersects(a, b);
+  }
+  {
+    bitset_type a(8, 0ul);
+    bitset_type b(15, 0ul);
+    b[9] = 1;
+    Tests::intersects(a, b);
+  }
+  {
+    bitset_type a(15, 0ul);
+    bitset_type b(22, 0ul);
+    a[14] = b[14] = 1;
+    Tests::intersects(a, b);
+  }
+  //=====================================================================
   // Test find_first
   {
       // empty bitset
