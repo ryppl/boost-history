@@ -1,0 +1,421 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<title>Temporary Buffer Management Template Class</title>
+</head>
+<body>
+<h1><img src="../../../c++boost.gif" alt="c++boost.gif (8819 bytes)"
+align="middle" width="277" height="86">Template Class
+<code>auto_temp_buf</code></h1>
+
+<p>The header <cite><a href = "../../../boost/memory/auto_temp_buf.hpp"
+>boost/memory/auto_temp_buf.hpp</a></cite> covers the resource
+management of temporary memory controlled by the standard library.</p>
+
+<h2><a name="contents">Contents</a></h2>
+
+<ol>
+    <li><a href="#contents">Contents</a></li>
+    <li><a href="#rationale">Rationale</a></li>
+    <li><a href="#header">Header Synopsis</a></li>
+    <li><a href="#auto_temp_buf">Temporary Buffer Management Template
+        Class</a>
+        <ul>
+            <li><a href="#m_types">Member Types</a></li>
+            <li><a href="#m_ctr">Constructors</a></li>
+            <li><a href="#m_observe">Observer Member Functions</a></li>
+            <li><a href="#m_mutate">Mutator Member Functions</a></li>
+            <li><a href="#operators">Operators</a></li>
+        </ul></li>
+    <li><a href="#example">Example</a></li>
+    <li><a href="#refer">References</a></li>
+    <li><a href="#credits">Credits</a>
+        <ul>
+            <li><a href="#contributors">Contributors</a></li>
+            <li><a href="#history">History</a></li>
+        </ul></li>
+</ol>
+
+<h2><a name="rationale">Rationale</a></h2>
+
+<p>The pair of template functions <code>std::get_temporary_buffer</code>
+and <code>std::return_temporary_buffer</code> form an archaic allocation
+technique for scratch space during an algorithm's execution.  The template
+class presented here provides a <dfn>RAII</dfn> (Resource Acquistion Is
+Initialization) shell around these allocation functions to provide
+exception safety.</p>
+
+<h2><a name="header">Header Synopsis</a></h2>
+
+<blockquote><pre>
+namespace boost
+{
+namespace memory
+{
+
+template &lt; typename T &gt;
+    class auto_temp_buf;
+
+}
+}
+</pre></blockquote>
+
+<h2><a name="auto_temp_buf">Temporary Buffer Management Template
+Class</a></h2>
+
+<p>[The following prose is similar to the text given by the standard for
+<code>std::auto_ptr</code> (section 20.4.5,
+&quot;lib.auto.ptr&quot;).]</p>
+
+<p>Template <code>boost::memory::auto_temp_buf</code> stores the pointer
+and length of an <em>uninitialized</em> memory block obtained via
+<code>std::get_temporary_buffer&lt;&gt;</code> and deletes that block
+with <code>std::return_temporary_buffer&lt;&gt;</code> when the management
+object itself is destroyed (such as when leaving block scope).</p>
+
+<p>Class <code>boost::memory::auto_temp_buf&lt;&gt;::auto_temp_buf_ref</code>
+holds a reference to an <code>auto_temp_buf</code>.  It is used by the
+<code>auto_temp_buf</code> conversions to allow <code>auto_temp_buf</code>
+objects to be passed to and returned from functions.</p>
+
+<blockquote><pre>
+#include &lt;cstddef&gt;  <i>// for std::ptrdiff_t</i>
+#include &lt;utility&gt;  <i>// for std::pair</i>
+
+template &lt; typename T &gt;
+class auto_temp_buf
+{
+    struct auto_temp_buf_ref;
+
+public:
+    // Template arguments
+    typedef T  element_type;
+
+    // Other types
+    typedef std::ptrdiff_t  size_type;
+
+    typedef std::pair&lt;element_type *, size_type&gt;  block_type;
+
+    typedef block_type auto_temp_buf::*  safe_bool;
+
+    // Lifetime
+              auto_temp_buf();
+    explicit  auto_temp_buf( block_type b );
+              auto_temp_buf( element_type *p, size_type n );
+
+    explicit  auto_temp_buf( size_type n );
+
+    auto_temp_buf( auto_temp_buf &amp;c );
+    auto_temp_buf( auto_temp_buf_ref r );
+
+    ~auto_temp_buf();
+
+    // Observers
+    element_type *  get() const;
+    size_type       size() const;
+
+    bool  valid() const;
+
+    // Mutators
+    block_type  release();
+
+    void  reset( block_type b );
+    void  reset( element_type *p, size_type n );
+    void  reset();
+
+    // Operators
+    operator auto_temp_buf_ref();
+
+    auto_temp_buf &amp;  operator =( auto_temp_buf &amp;c );
+    auto_temp_buf &amp;  operator =( auto_temp_buf_ref r );
+
+          operator safe_bool() const;
+    bool  operator !() const;
+
+};
+</pre></blockquote>
+
+<p>The <code>auto_temp_buf</code> provides semantics of strict
+ownership.  An <code>auto_temp_buf</code> owns the memory block it
+refers to.  Copying an <code>auto_temp_buf</code> copies the block's
+pointer &amp; size and transfers ownership to the destination.  If more
+than one <code>auto_temp_buf</code> owns the same memory block at the
+same time, the results are undefined.</p>
+
+<p>The use of <code>auto_temp_buf</code> is to encapsulate calls to the
+standard allocation routines for temporary buffers.  Those buffers can
+be used for &quot;quick &amp; dirty&quot; space within algorithms.  The
+allocation calls may use all sorts of unportable optimizations.  These
+optimizations can limit the size of a buffer.  Note that the memory
+provided by these buffers is <strong>uninitialized</strong>; the
+initialzation policy, including any constructor and destructor calls, has
+to be managed separately by the user.</p>
+
+<p>The type-based template argument <var>T</var> represents the type of
+elements to be potentially used in the memory block.</p>
+
+<p>The interface is very similar to <code>std::auto_ptr</code>.</p>
+
+<h3><a name="m_types">Member Types</a></h3>
+
+<dl>
+    <dt><code>element_type</code>
+    <dd>a synonym for the element type that the memory block is based
+
+    <dt><code>size_type</code>
+    <dd>a synonym for the type used in memory block sizing<br>
+        <strong>Note:</strong> this type is <em>signed</em>.
+
+    <dt><code>block_type</code>
+    <dd>a synonym for the type returned from <code>std::get_temporary_buffer</code>
+
+    <dt><code>safe_bool</code>
+    <dd>an alternate for <code>bool</code> that avoids integral conversions
+</dl>
+
+<h3><a name="m_ctr">Constructors</a></h3>
+
+<dl>
+    <dt><code>auto_temp_buf();</code>
+    <dd>
+        <strong>Postconditions:</strong> <code>*this</code> holds an
+            empty buffer (nil pointer and zero size).
+
+    <dt><code>auto_temp_buf( block_type b );</code>
+    <dd>
+        <strong>Postconditions:</strong> <code>*this</code> holds the
+            temporary buffer described by <var>b</var>.
+
+    <dt><code>auto_temp_buf( element_type *p, size_type n );</code>
+    <dd>
+        <strong>Postconditions:</strong> <code>*this</code> holds the
+            temporary buffer described by pointer <var>p</var> and
+            size <var>n</var>.
+
+    <dt><code>auto_temp_buf( size_type n );</code>
+    <dd>
+        <strong>Effects:</strong> Calls <code>std::get_temporary_buffer&lt;
+            element_type &gt;( <var>n</var> )</code>.<br>
+        <strong>Postconditions:</strong> <code>*this</code> holds the
+            temporary buffer returned from the allocation call.<br>
+        <strong>Note:</strong> The returned buffer may be smaller than
+            requested.  The buffer will be empty if the allocation call
+            fails.
+
+    <dt><code>auto_temp_buf( auto_temp_buf &amp;c );</code>
+    <dd>
+        <strong>Effects:</strong> Calls
+            <code><var>c</var>.release()</code>.<br>
+        <strong>Postconditions:</strong> <code>*this</code> holds the
+            temporary buffer returned from <code>release()</code>.
+
+    <dt><code>auto_temp_buf( auto_temp_buf_ref r );</code>
+    <dd>
+        <strong>Effects:</strong> Calls
+            <code><var>b</var>.release()</code>, where <var>b</var> is
+            the <code>auto_temp_buf</code> to which <var>r</var>
+            refers.<br>
+        <strong>Postconditions:</strong> <code>*this</code> holds the
+            temporary buffer returned from <code>release()</code>.
+
+    <dt><code>~auto_temp_buf();</code>
+    <dd>
+        <strong>Requires:</strong> The expression
+            <code>std::return_temporary_buffer&lt; element_type &gt;(
+            get() )</code> is well formed.<br>
+        <strong>Effects:</strong> <code>std::return_temporary_buffer&lt;
+            element_type &gt;( get() )</code>.
+</dl>
+
+<h3><a name="m_observe">Observer Member Functions</a></h3>
+
+<dl>
+    <dt><code>element_type *  get() const;</code>
+    <dd>
+        <strong>Returns:</strong> The pointer to the buffer
+            <code>*this</code> holds.
+
+    <dt><code>size_type  size() const;</code>
+    <dd>
+        <strong>Returns:</strong> The size of the buffer
+            <code>*this</code> holds.
+
+    <dt><code>bool  valid() const;</code>
+    <dd>
+        <strong>Returns:</strong> The validity state of the buffer
+            <code>*this</code> holds.  The buffer is valid if its pointer
+            is not nil and its size is positive.
+</dl>
+
+<h3><a name="m_mutate">Mutator Member Functions</a></h3>
+
+<dl>
+    <dt><code>block_type  release();</code>
+    <dd>
+        <strong>Returns:</strong> <code>std::make_pair( get(), size()
+            )</code>.<br>
+        <strong>Postconditions:</strong> <code>*this</code> holds an
+            empty buffer.
+
+    <dt><code>void  reset( block_type b );</code>
+    <dd>
+        <strong>Requires:</strong> The expression
+            <code>std::return_temporary_buffer&lt; element_type &gt;(
+            get() )</code> is well formed.<br>
+        <strong>Effects:</strong> If <code>std::make_pair( get(), size() )
+            != <var>b</var></code>, then
+            <code>std::return_temporary_buffer&lt; element_type
+            &gt;( get() )</code>.<br>
+        <strong>Postconditions:</strong> <code>*this</code> holds the
+            temporary buffer described by <var>b</var>.
+
+    <dt><code>void  reset( element_type *p, size_type n );</code>
+    <dd>
+        <strong>Requires:</strong> The expression
+            <code>std::return_temporary_buffer&lt; element_type &gt;(
+            get() )</code> is well formed.<br>
+        <strong>Effects:</strong> Calls <code>reset( std::make_pair(p,
+            n) )</code>.<br>
+        <strong>Postconditions:</strong> <code>*this</code> holds the
+            temporary buffer described by <var>p</var> and <var>n</var>.
+
+    <dt><code>void  reset();</code>
+    <dd>
+        <strong>Requires:</strong> The expression
+            <code>std::return_temporary_buffer&lt; element_type &gt;(
+            get() )</code> is well formed.<br>
+        <strong>Effects:</strong> Calls <code>reset( NULL, 0 )</code>.<br>
+        <strong>Postconditions:</strong> <code>*this</code> holds an
+            empty buffer.
+</dl>
+
+<h3><a name="operators">Operators</a></h3>
+
+<dl>
+    <dt><code>operator auto_temp_buf_ref();</code>
+    <dd>
+        <strong>Returns:</strong> An <code>auto_temp_buf_ref</code> that
+            holds <code>*this</code>.
+
+    <dt><code>auto_temp_buf &amp;  operator =( auto_temp_buf &amp;c );</code>
+    <dd>
+        <strong>Requires:</strong> The expression
+            <code>std::return_temporary_buffer&lt; element_type &gt;(
+            get() )</code> is well formed.<br>
+        <strong>Effects:</strong> <code>reset( <var>c</var>.release()
+            )</code>.<br>
+        <strong>Returns:</strong> <code>*this</code>.
+
+    <dt><code>auto_temp_buf &amp;  operator =( auto_temp_buf_ref r )
+        throw();</code>
+    <dd>
+        <strong>Requires:</strong> The expression
+            <code>std::return_temporary_buffer&lt; element_type &gt;(
+            get() )</code> is well formed.<br>
+        <strong>Effects:</strong> Calls <code>reset(
+            <var>b</var>.release() )</code>, where <var>b</var> is the
+            <code>auto_temp_buf</code> to which <var>r</var> refers.<br>
+        <strong>Returns:</strong> <code>*this</code>.
+
+    <dt><code>operator safe_bool();</code>
+    <dd>
+        <strong>Returns:</strong> A non-nil pointer-to-member if
+            <code>valid()</code>, a nil pointer-to-member otherwise.
+
+    <dt><code>bool  operator !() const;</code>
+    <dd>
+        <strong>Returns:</strong> A value of FALSE if <code>valid()</code>,
+            a TRUE value otherwise.
+</dl>
+
+<h2><a name="example">Example</a></h2>
+
+<blockquote><pre>
+#include &lt;boost/memory/auto_temp_buf.hpp&gt;
+  <i>// for auto_temp_buf</i>
+
+#include &lt;cassert&gt;     <i>// for assert</i>
+#include &lt;memory&gt;      <i>// for uninitialized_fill_n</i>
+#include &lt;algorithm&gt;   <i>// for find_if</i>
+#include &lt;functional&gt;  <i>// for bind2nd, not_equal_to</i>
+
+int
+main
+(
+)
+{
+    using namespace std;
+
+    typedef boost::memory::auto_temp_buf&lt;int&gt;  buffer_type;
+
+    // Adapted from SGI's STL example for <i>get_temporary_buffer</i>
+    if ( buffer_type  b = buffer_type(10000) )
+    {
+        uninitialized_fill_n( b.get(), b.size(), 42 );
+
+        int *  result = find_if( b.get(), b.get() + b.size(),
+         bind2nd(not_equal_to&lt;int&gt;(), 42) );
+        assert( result == (b.get() + b.size()) );
+
+        // Since the element type, &quot;int,&quot; is a POD (plain
+        // old data) type, we don't have to worry about calling
+        // the corresponding destruction routines.
+    }
+
+    return 0;
+}
+</pre></blockquote>
+
+<h2><a name="refer">References</a></h2>
+
+<ul>
+    <li>The temporary buffer management library header itself:
+        <cite><a href = "../../../boost/memory/auto_temp_buf.hpp"
+        >boost/memory/auto_temp_buf.hpp</a></cite></li>
+    <li>Some example code: <cite><a href =
+        "../example/auto_temp_buf_example.cpp">auto_temp_buf_example.cpp</a
+        ></cite></li>
+</ul>
+
+<h2><a name="credits">Credits</a></h2>
+
+<h3><a name="contributors">Contributors</a></h3>
+
+<dl>
+    <dt><a href="http://www.josuttis.com">Nicolai Josuttis</a>
+    <dd>Section 15.2 of his <cite>The C++ Standard Library: A Tutorial
+        and Reference</cite> book has an explanation of
+        <code>get_temporary_buffer</code> and
+        <code>return_temporary_buffer</code>.
+
+    <dt><a href="http://www.sgi.com/tech/stl/">STL at SGI</a>
+    <dd>The original developers of the pre-Standard library provide
+        a historical explanation of <code>get_temporary_buffer</code>
+        and <code>return_temporary_buffer</code>.
+
+    <dt><a href="../../../people/daryle_walker.html">Daryle Walker</a>
+    <dd>Started the library.  Contributed the initial version of the
+        temporary buffer management template class.  Contributed the
+        example file <cite><a href = 
+        "../example/auto_temp_buf_example.cpp">auto_temp_buf_example.cpp</a
+        ></cite>.
+</dl>
+
+<h3><a name="history">History</a></h3>
+
+<dl>
+    <dt>21 Jul 2003, Daryle Walker
+    <dd>Initial version
+</dl>
+
+<hr>
+
+<p>Revised: 21 July 2003</p>
+
+<p>Copyright &copy; Daryle Walker 2003.  Permission to copy, use,
+modify, sell and distribute this document is granted provided this
+copyright notice appears in all copies.  This document is provided
+&quot;as is&quot; without express or implied warranty, and with no claim
+as to its suitability for any purpose.</p>
+</body>
+</html>

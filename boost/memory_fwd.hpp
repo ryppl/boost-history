@@ -23,6 +23,12 @@ template < typename T >
     class auto_array;
 
 
+//  From <boost/memory/auto_temp_buf.hpp>  -----------------------------------//
+
+template < typename T >
+    class auto_temp_buf;
+
+
 }  // namespace memory
 }  // namespace boost
 
