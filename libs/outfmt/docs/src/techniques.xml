@@ -1,0 +1,57 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!--
+(C) Copyright 2003-2004: Reece H. Dunn 
+Distributed under the Boost Software License, Version 1.0.
+(See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+-->
+
+<section id = "outfmt.techniques"><title>Techniques</title>
+   <para>
+      This section goes over some applications of this library that go beyond it's
+      goal of allowing you to format sequential types to a stream.
+   </para>
+   <section id = "outfmt.serialization"><title>Serialization</title>
+      <para>
+         This library can be used to perform simple serialization. See
+         <code>libs/outfmt/example/serialize.cpp</code> for examples on doing this.
+         Robert Ramey's Boost.Serialization library is now a part of Boost and
+         offers better serialization facilities.
+      </para>
+   </section><section id = "outfmt.dataread"><title>Reading In Data: A Simple Parser</title>
+      <para>
+         If you have data that is in a specific text format, it is possible to use
+         this library to read that data into the program. For example, given:
+      </para>
+      <programlisting>
+   2.75, 3.112
+   7.1, 9.98765
+   ...</programlisting>
+      <para>
+         Each line of data can be represented as:
+      </para>
+      <programlisting>   typedef std::pair&lt; float, float &gt; data_entry;</programlisting>
+      <para>
+         If the file is loaded into a <code>std::ifstream</code> called <code>in</code>, the
+         data can be read in using the following code:
+      </para>
+      <programlisting>
+  std::list&lt; data_entry &gt; data;
+  data_entry elem;
+  while( in )
+  {
+     in &gt;&gt; boost::io::format( elem ).format( "", "\n" );
+     if( in ) data.push_pack( elem );
+  }</programlisting>
+      <para>
+         This is hard to do trivially in Boost.Spirit. If there is an "end-of-data" marker,
+         for example <code>[eod]</code>, the code becomes even simpler:
+      </para>
+      <programlisting>
+   std::list&lt; data_entry &gt; data;
+   in >> boost::io::format
+         (
+            data,
+            boost::io::containerfmt( boost::io::pairfmt().format( "", "\n" ))
+         ).format( "", "[eod]" );</programlisting>
+   </section>
+</section>

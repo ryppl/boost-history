@@ -1,0 +1,73 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!--
+(C) Copyright 2003-2004: Reece H. Dunn 
+Distributed under the Boost Software License, Version 1.0.
+(See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+-->
+
+<section id = "outfmt.evolution"><title>Library Evolution</title>
+   <section id = "outfmt.future"><title>Future Directions</title>
+      <section id = "outfmt.future-str"><title>Improved String Formatting</title>
+         <para>
+            At present, the string formatting is restricted to std::string and is
+            not very flexible. I would like to integrate strings more properly
+            into the framework, possibly adding escape/unescape functionality.
+         </para>
+      </section><section id = "outfmt.future-data"><title>Position/Context Information</title>
+         <para>
+            Add support for context information, including the length of the
+            sub-list being outputted and the current position within that
+            sub-list. Other context information may be added at a future
+            date. How does this interact with <code>boost::io::state_object</code>?
+         </para>
+      </section>
+   </section><section id = "outfmt.portability"><title>Portability</title>
+      <para>
+         The code has been succesfully tested on:
+         <orderedlist>
+            <listitem>
+               MS VC 7.0 and 7.1
+               <emphasis role = "bold">[Note:</emphasis>
+                  C-style arrays are only supported within type deduction for MS VC 7.1,
+                  they do not work on VC 7.0.
+               <emphasis role = "bold">]</emphasis>
+            </listitem>
+            <listitem>Borland C++Compiler 5.5.1 and 5.6.4</listitem>
+            <listitem>GNU G++ 3.x (under the i686-pc-cygwin environment)</listitem>
+            <listitem>
+               GNU G++ 2.95.3-5 (under the i686-pc-cygwin environment)
+               <emphasis role = "bold">[Note:</emphasis>
+                  Type deduction does not work, but the rest of the library does.
+               <emphasis role = "bold">]</emphasis>
+            </listitem>
+            <listitem>Intel 7.1</listitem>
+            <listitem>Como 4.3.3</listitem>
+         </orderedlist>
+      </para><para>
+         <emphasis role = "bold">[Note:</emphasis>
+            The library is currently broken on the MS VC 6 compiler.
+         <emphasis role = "bold">]</emphasis>
+      </para>
+   </section><section id = "outfmt.ack"><title>Acknowledgements</title>
+      <para>This library was designed and implemented by Reece H. Dunn.</para>
+      <para>
+         The output functors were based on a comment in the "IO for STL containers"
+         thread on the boost developers mailing list.
+      </para><para>
+         Jonathan Turkanis has provided a reworked version of the format object/type
+         deduction mechanism that does not rely on partial specialization as well as
+         porting to various compilers.
+      </para><para>
+         Special thanks to:
+         <orderedlist>
+            <listitem>Martin Henson:
+               For giving me a reason to create the library in the first place!
+            </listitem><listitem>Boost Developers:
+               For their feedback and support during the development of the library,
+               specifically: Paul A. Bristow; Terje Sletteb&#xF8;; Gennadiy Rozental;
+               John Torjo;Jonathan Turkanis; and Pavel Vozenilek.
+            </listitem>
+         </orderedlist>
+      </para>
+   </section>
+</section>

@@ -1,0 +1,28 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!--
+(C) Copyright 2003-2004: Reece H. Dunn 
+Distributed under the Boost Software License, Version 1.0.
+(See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+-->
+
+<section id = "outfmt.intro"><title>Introduction</title>
+   <para>
+      The C++ standard library provides input/output facilities via streams with a
+      mechanism for extending it to support your own types; the standard library
+      does this for <code>std::complex</code>, for instance. The Standard Template
+      Library (STL) provides a mechanism for storing collections of objects, but
+      does not provide I/O support via streams.
+   </para><para>
+      This lack of stream support seems to be a defect of STL design (and indeed it
+      is), but there is a valid reason for not providing such a facility: how should
+      the list be rendered? Different applications want different ways for the list
+      to be represented. Is it possible to configure how the list is formatted?
+      What about nested constructs, <code>std::pair</code>, arrays and other complex
+      constructs?
+   </para><para>
+      The outfmt library is an attempt to answer these questions, providing an
+      extensible framework that sits between containers and the I/O stream library,
+      allowing output like:
+   </para>
+   <programlisting>{ 1 : 2 : 3 }</programlisting>
+</section>

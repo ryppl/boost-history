@@ -1,0 +1,70 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!--
+(C) Copyright 2003-2004: Reece H. Dunn 
+Distributed under the Boost Software License, Version 1.0.
+(See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+-->
+
+<section id = "outfmt.stlio"><title>STL IO</title>
+   <para>
+      The I/O formatting library provides a mechanism for rendering sequential types
+      using manipulators and is described in more depth in later sections. As well
+      as this, it provides inserters and extractors for the STL types listed in the
+      following table:
+   </para>
+   <table><title>STL Types</title><tgroup cols = "2">
+      <thead><row>
+         <entry>Include File</entry>
+         <entry>Supported Type</entry>
+      </row></thead><tbody>
+         <row><entry>boost/outfmt/stl/deque.hpp</entry>   <entry>std::deque</entry></row>
+         <row><entry>boost/outfmt/stl/hash_map.hpp</entry><entry>ext::hash_map; ext::hash_multimap</entry></row>
+         <row><entry>boost/outfmt/stl/hash_set.hpp</entry><entry>ext::hash_set; ext::hash_multiset</entry></row>
+         <row><entry>boost/outfmt/stl/list.hpp</entry>    <entry>std::list</entry></row>
+         <row><entry>boost/outfmt/stl/map.hpp</entry>     <entry>std::map; std::multimap</entry></row>
+         <row><entry>boost/outfmt/stl/pair.hpp</entry>    <entry>std::pair</entry></row>
+         <row><entry>boost/outfmt/stl/set.hpp</entry>     <entry>std::set; std::multiset</entry></row>
+         <row><entry>boost/outfmt/stl/slist.hpp</entry>   <entry>ext::slist</entry></row>
+         <row><entry>boost/outfmt/stl/vector.hpp</entry>  <entry>std::vector</entry></row>
+      </tbody>
+   </tgroup></table>
+   <para>
+      You can use the STL container types in an I/O expression like you would any other type,
+      for example:
+   </para>
+   <programlisting>
+   std::list&lt; int &gt; l;
+   std::cin &gt;&gt; l; // read in a list
+   std::cout &lt;&lt; l; // format the list</programlisting>
+   <para>
+      Given the input <code>"[1, 2  , 3, 4 ]"</code>, the output will be:
+   </para>
+   <programlisting>[ 1, 2, 3, 4 ]</programlisting>
+   <para>
+      N-ary types (e.g. <code>std::pair</code>, <code>boost::rational</code>,
+      <code>boost::math::quaternion</code>) are rendered using parenthesis instead
+      of square brackets.
+   </para><para>
+      Strings can cause a problem when reading them back in from an input stream, for
+      example if they contain spaces. The library will only correct std::string types
+      and not C-style strings or strings from another library. For <code>std::string</code>
+      types, it will enclose them in quotes, escaping any <code>\</code> character as
+      <code>\\</code> and <code>"</code> as <code>\"</code>.
+   </para><para>
+      The library also provides support for the following types, but does not define
+      inserters and extractors for them since they are already defined elsewhere:
+   </para>
+   <table><title>Supported Types</title><tgroup cols = "2">
+      <thead><row>
+         <entry>Include File</entry>
+         <entry>Supported Type</entry>
+      </row></thead><tbody>
+         <row><entry>boost/outfmt/stl/complex.hpp</entry>          <entry>std::complex</entry></row>
+         <row><entry>boost/outfmt/boost/compressed_pair.hpp</entry><entry>boost::compressed_pair</entry></row>
+         <row><entry>boost/outfmt/boost/interval.hpp</entry>       <entry>boost::numeric::interval</entry></row>
+         <row><entry>boost/outfmt/boost/octonion.hpp</entry>       <entry>boost::math::octonion</entry></row>
+         <row><entry>boost/outfmt/boost/quaternion.hpp</entry>     <entry>boost::math::quaternion</entry></row>
+         <row><entry>boost/outfmt/boost/rational.hpp</entry>       <entry>boost::rational</entry></row>
+      </tbody>
+   </tgroup></table>
+</section>

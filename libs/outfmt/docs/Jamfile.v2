@@ -1,0 +1,4 @@
+project boost/outfmt ;
+import boostbook : boostbook ;
+
+boostbook outfmt : outfmt.xml ;

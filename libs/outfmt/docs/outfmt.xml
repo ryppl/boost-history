@@ -1,0 +1,48 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!--
+(C) Copyright 2003-2004: Reece H. Dunn 
+Distributed under the Boost Software License, Version 1.0.
+(See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+-->
+
+<!DOCTYPE library PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+          "http://www.boost.org/tools/boostbook/dtd/boostbook.dtd"
+>
+
+<library name = "Output Formatters" dirname = "outfmt" id = "outfmt"
+   last-revision = "$Date$"
+   xmlns:xi = "http://www.w3.org/2003/XInclude"
+>
+   <title>Output Formatters</title>
+
+   <libraryinfo>
+      <author><firstname>Reece</firstname><surname>Dunn</surname></author>
+      <author><firstname>Jonathan</firstname><surname>Turkanis</surname></author>
+
+      <copyright>
+         <year>2004</year>
+         <holder>Reece H. Dunn</holder>
+         <holder>Jonathan D. Turkanis</holder>
+      </copyright>
+
+      <legalnotice><para>
+         Distributed under the Boost Software License, Version 1.0.
+         (See accompanying file LICENSE_1_0.txt or copy at
+         http://www.boost.org/LICENSE_1_0.txt)
+      </para></legalnotice>
+
+      <librarypurpose>
+         Provide a flexible mechanism to output container-like data types to a stream
+         and read data into the type.
+      </librarypurpose>
+      <librarycategory name = "category:io"/>
+   </libraryinfo>
+
+   <xi:include href = "src/introduction.xml"/>
+   <xi:include href = "src/stlio.xml"/>
+   <xi:include href = "src/manipulators.xml"/>
+   <xi:include href = "src/delimeters.xml"/>
+   <xi:include href = "src/format-objects.xml"/>
+   <xi:include href = "src/techniques.xml"/>
+   <xi:include href = "src/evolution.xml"/>
+</library>

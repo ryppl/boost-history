@@ -1,0 +1,240 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!--
+(C) Copyright 2003-2004: Reece H. Dunn 
+Distributed under the Boost Software License, Version 1.0.
+(See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+-->
+
+<section id = "outfmt.delimeters"><title>Delimeters</title>
+   <para>
+      A sequential data type is rendered to a stream element by element. A typical example looks
+      like this:
+   </para>
+   <programlisting>   [ 3, 6, 9, 12, 15 ]</programlisting>
+   <para>
+      The <code>"[ "</code> character sequence forms the open delimeter, the <code>", "</code>
+      character sequences form the separator delimeters and the <code>" ]"</code> character
+      sequence forms the closing delimeter.
+   </para>
+
+   <section id = "outfmt.delimeters.traits"><title>FormatTraits</title>
+      <para>
+         A <code>FormatTraits</code> class is a class that provides the default values for the
+         open, close and separator delimeters used when rendering the list to a stream. These
+         can be overriden by the user as described in the following section. The class has the
+         general form:
+      </para>
+      <programlisting>
+   template&lt; typename CharT &gt;
+   struct format_traits
+   {
+      static const CharT open_default = <emphasis role="bold">implemenation defined</emphasis>;
+      static const CharT close_default = <emphasis role="bold">implemenation defined</emphasis>;
+      static const CharT separator_default = <emphasis role="bold">implemenation defined</emphasis>;
+   };</programlisting>
+      <para>
+         <emphasis role="bold">[Note: </emphasis>
+         The reason the values for the format traits are implementation defined is that
+         there is no common type, thus they may be <code>'['</code>, <code>L"[ "</code>
+         or <code>std::string( L"[ " )</code>. The only requirement is that they are
+         consistent within the specific FormatTraits type.
+         <emphasis role="bold"> --end note]</emphasis>
+      </para><para>
+         The default value for a delimeter type is <code>const char *</code>. There are two
+         default traits classes provided: <code>boost::io::detail::pair_traits</code>
+         with the formatting:
+      </para>
+      <programlisting>   ( ..., ... )</programlisting>
+      <para>
+         and <code>boost::io::detail::format_traits</code> with the formatting:
+      </para>
+      <programlisting>   [ ..., ... ]</programlisting>
+      <para>
+         The <code>boost::io::detail::pair_traits</code> class is used by n-ary types like <code>std::pair</code>,
+         while the other types use <code>boost::io::detail::format_traits</code>.
+      </para><para>
+         Both are defined for <code>char</code>, <code>wchar_t</code>, <code>const char *</code>, <code>const wchar_t *</code>
+         and the standard library string types <code>std::basic_string</code>, <code>std::string</code> and
+         <code>std::wstring</code>.
+      </para>
+   </section><section id = "outfmt.delimeters.openclose"><title>boost::io::openclose_formatter</title>
+      <programlisting>
+   template
+   &lt;
+      typename FormatType,
+      class FormatTraits = boost::io::detail::format_traits&lt; FormatType &gt;
+   &gt;
+   class boost::io::openclose_formatter;</programlisting>
+
+      <section id = "outfmt.delimeters.oc-cons"><title>constructors</title>
+         <programlisting>   openclose_formatter();</programlisting>
+         <para>Creates a <code>boost::io::openclose_formatter</code> object with default formatting.</para>
+
+         <programlisting>   openclose_formatter( format_type o, format_type c );</programlisting>
+         <para>Creates a <code>boost::io::openclose_formatter</code> object with custom formatting.</para>
+
+         <programlisting>
+   template&lt; typename RT2, class FormatTraits2 &gt;
+   openclose_formatter
+   (
+      const openclose_formatter_t&lt; FormatType, RT2, FormatTraits2 &gt; &amp; fmt
+   );</programlisting>
+         <para>Creates a <code>boost::io::openclose_formatter</code> object with formatting inherited from <code>fmt</code>.</para>
+      </section><section id = "outfmt.delimeters.oc-open"><title>open</title>
+         <programlisting>   typename format_type open() const;</programlisting>
+         <para>
+            Returns the current value for the formatting at the start of the output type.  
+         </para>
+      </section><section id = "outfmt.delimeters.oc-close"><title>close</title>
+         <programlisting>   typename format_type close() const;</programlisting>
+         <para>
+            Returns the current value for the formatting at the end of the output type.
+         </para>
+      </section><section id = "outfmt.delimeters.oc-format"><title>format</title>
+         <programlisting>   ReferenceType &amp; format( format_type o, format_type c );</programlisting>
+         <para>Sets the values for the opening (o) and closing formatting.</para>
+         <programlisting>
+   std::vector&lt; int &gt; v;
+   // ...
+   std::cout &lt;&lt; boost::io::formatob( v ).format( "[ ", " )" ); // output: [ 3, 12 )</programlisting>
+
+         <programlisting>
+   template&lt; typename RT2, class FormatTraits2 &gt;
+   ReferenceType &amp; format
+   (
+      const boost::io::openclose_formatter_t&lt; FormatType, RT2, FormatTraits2 &gt; &amp; fmt
+   );</programlisting>
+         <para>
+            Copies the values of the opening and closing formatting from one formatter to another,
+            requiring only that they have the same FormatType. For example:
+         </para>
+         <programlisting>
+   boost::io::openclose_formatter&lt; char * &gt; fmt( "| ", " |" );
+   int i[ 4 ] = { 1, 2, 3, 4 };
+   std::cout &lt;&lt; boost::io::formatob
+                      (
+                         boost::io::range( i, i + 2 )
+                      ).format( fmt ); // output: | 1, 2 |</programlisting>
+      </section>
+   </section><section id = "outfmt.delimeters.fmt"><title>boost::io::formatter</title>
+      <programlisting>
+   template
+   &lt;
+      typename FormatType,
+      class FormatTraits = boost::io::detail::format_traits&lt; FormatType &gt;
+   &gt;
+   class boost::io::formatter;</programlisting>
+      <para>
+         <code>boost::io::formatter</code> inherits from <code>boost::io::openclose_formatter</code>,
+         extending it's functionality to include separators.         
+      </para>
+
+      <section id = "outfmt.delimeters.fmt-cons"><title>constructors</title>
+         <programlisting>   formatter();</programlisting>
+         <para>Creates a <code>boost::io::formatter</code> object with default formatting.</para>
+
+         <programlisting>
+   formatter
+   (
+      format_type o,
+      format_type c,
+      format_type s = traits_type::separator_default
+   );</programlisting>
+         <para>Creates a boost::io::formatter object with custom formatting.</para>
+
+         <programlisting>   formatter( format_type s );</programlisting>
+         <para>Creates a <code>boost::io::formatter</code> object with custom formatting for the separator only.</para>
+
+         <programlisting>
+   template&lt; typename RT2, class FormatTraits2 &gt;
+   formatter
+   (
+      const openclose_formatter_t&lt; FormatType, RT2, FormatTraits2 &gt; &amp; fmt,
+      format_type s = traits_type::separator_default
+   );</programlisting>
+         <para>
+            Creates a <code>boost::io::formatter</code> object with formatting inherited from <code>fmt</code> and
+            providing optional separator formatting.  
+         </para>
+
+         <programlisting>
+   template&lt; typename RT2, class FormatTraits2 &gt;
+   formatter
+   (
+      const formatter_t&lt; FormatType, RT2, FormatTraits2 &gt; &amp; fmt
+   );</programlisting>
+         <para>Creates a <code>boost::io::formatter</code> object with formatting inherited from <code>fmt</code>.</para>
+      </section><section id = "outfmt.delimeters.fmt-sep"><title>separator</title>
+         <programlisting>   typename format_type separator() const;</programlisting>
+         <para>
+            Returns the current value for the formatting inbetween items in the sequence.
+         </para>
+      </section><section id = "outfmt.delimeters.fmt-format"><title>format</title>
+         <programlisting>ReferenceType &amp; format( format_type o, format_type c, format_type s );</programlisting>
+         <para>Sets the values for the opening (o), closing (c) and separator (s) formatting.</para>
+
+         <programlisting>ReferenceType &amp; format( format_type o, format_type c );</programlisting>
+         <para>Sets the values for the opening (o) and closing (c) formatting.</para>
+
+         <programlisting>ReferenceType &amp; format( format_type s );</programlisting>
+         <para>Sets the value for the separator.</para>
+
+         <programlisting>
+   template&lt; typename RT2, class FormatTraits2 &gt;
+   ReferenceType &amp; format
+   (
+      const openclose_formatter_t&lt; FormatType, RT2, FormatTraits2 &gt; &amp; fmt
+   );</programlisting>
+         <para>
+            Copies the values of the opening and closing formatting from an <code>openclose_formatter</code> to
+            a <code>formatter</code> object, requiring only that they have the same <code>FormatType</code>.
+         </para>
+
+         <programlisting>
+   template&lt; typename RT2, class FormatTraits2 &gt;
+   ReferenceType &amp; format
+   (
+      const formatter_t&lt; FormatType, RT2, FormatTraits2 &gt; &amp; fmt
+   );</programlisting>
+         <para>
+            Copies the values of the opening, closing and separator formatting from one <code>formatter</code> to
+            another, requiring only that they have the same <code>FormatType</code>. For example:
+         </para>
+         <programlisting>
+   boost::io::formatter&lt; char * &gt; fmt( "| ", " |", " : " );
+   int i[ 4 ] = { 1, 2, 3, 4 };
+   std::cout &lt;&lt; boost::io::formatob
+                      (
+                         boost::io::range( i, i + 2 )
+                      ).format( fmt ); // output: | 1 : 2 |</programlisting>
+      </section>
+   </section><section id = "outfmt.delimeters.fmttypes"><title>Why openclose_formatter and formatter types?</title>
+      <para>
+         Sometimes you only want to specify the open and closing sections of a sequence formatting. Using
+         <code>boost::io::openclose_formatter</code> allows this, while saving space from storing the separator.
+         For example:
+      </para>
+      <programlisting>
+   boost::io::openclose_formatter&lt; char * &gt; fmt( "{ ", " }" );
+   int i[ 4 ] = { 1, 2, 3, 4 };
+   std::cout &lt;&lt; boost::io::formatob
+                      (
+                         boost::io::range( i, i + 2 )
+                      ).format( fmt ); // output: { 1, 2 }</programlisting>
+      <para>
+         There are also situations where you just have opening and closing delimeters used, for example in
+         the section on Formatting Objects, there is a wrapped object type that allows formatting around elements
+         in the sequence. This means you can create output like:
+      </para>
+      <programlisting>   [ 'a', 'b', 'c' ]</programlisting>
+      <para>
+         Without a wrapped object construct, the above would look like this:
+      </para>
+      <programlisting>   [ a, b, c ]</programlisting>
+      <para>
+         Or you would need to do the following:
+      </para>
+      <programlisting>
+   std::cout &lt;&lt; boost::io::formatob( l ).format( "[ '", "' ]", "', '" );</programlisting>
+   </section>
+</section>

@@ -1,0 +1,398 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!--
+(C) Copyright 2003-2004: Reece H. Dunn 
+Distributed under the Boost Software License, Version 1.0.
+(See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+-->
+
+<section id = "outfmt.fmtobj"><title>Format Objects</title>
+   <section id = "outfmr.fmtobj-out"><title>Output Facilities</title>
+      <para>
+         When formatting an object to a stream, the call to <code>boost::io::formatob</code>
+         creates an object of type <code>boost::io::formatob_t</code> containing
+         a reference to the object being formatted. The I/O stream library will
+         then call <code>&lt;&lt;</code> on <code>boost::io::formatob_t</code>
+         which diverts processing to a <code>FormatObject</code>, calling
+      </para>
+      <programlisting>   FormatObject::write( os, fo.ob );</programlisting>
+      <para>
+         where <code>FormatObject</code> is the format object responsible for
+         rendering the type to a stream, <code>os</code> is the output stream,
+         <code>fo</code> is the <code>boost::io::formatob_t</code> object and
+         <code>ob</code> is the object passed to the manipulator for formatting.
+         The <code>write</code> function has the form:
+      </para>
+      <programlisting>
+   template&lt; typename T, class OutputStream &gt;
+   inline OutputStream &amp; write( OutputStream &amp; os, const T &amp; value ) const
+   (
+      // ...
+      return( os );
+   );</programlisting>
+      <para>
+         It is possible for <code>T</code> to be a more specialized type (like
+         <code>std::pair</code>) in order to perform specialist formatting. Also,
+         the <code>FormatObject</code> may divert processing to a nested
+         <code>FormatObject</code> making it possible to format complex nested
+         constructs.
+      </para>
+   </section><section id = "outfmr.fmtobj-in"><title>Input Facilities</title>
+      <para>
+         When reading an object from a stream, the call to <code>boost::io::formatob</code>
+         creates an object of type <code>boost::io::formatob_t</code> containing
+         a reference to the object being formatted as it does when outputting the
+         object. The I/O stream library will then call <code>&gt;&gt;</code> on
+         <code>boost::io::formatob_t</code> which wraps the input stream around
+         an input helper to account for implementation differences and simplify
+         certain operations. It then diverts processing to a
+         <code>FormatObject</code>, calling
+      </para>
+      <programlisting>   FormatObject::read( is, fo.ob );</programlisting>
+      <para>
+         where <code>FormatObject</code> is the format object responsible for
+         reading the type from a stream, <code>is</code> is the input stream,
+         <code>fo</code> is the <code>boost::io::formatob_t</code> object and
+         <code>ob</code> is the object passed to the manipulator for formatting.
+         The <code>read</code> function has the form:
+      </para>
+      <programlisting>
+   template&lt; typename T, class InputStream &gt;
+   inline bool read( InputStream &amp; is, T &amp; value ) const
+   (
+      // ...
+      return( true );
+   );</programlisting>
+      <para>
+         This function is responsible for reading the data from the stream, placing
+         it in the <code>value</code> object. If there is an error during the read
+         operation (e.g. the delimeters are incorrect), the function returns
+         <code>false</code>.
+      </para>
+   </section><section id = "outfmr.fmtobj-creating"><title>Creating A Format Object</title>
+      <para>
+         A format object will usually derive from either
+         <code>boost::io::openclose_formatter_t</code> or <code>boost::io::formatter_t</code>
+         to allow control over the formatting at that level (for example the outermost
+         array of a 3D array). Format objects usually have the following form:
+      </para>
+      <programlisting>
+   template&lt; typename FormatType, class FmtObject &gt;
+   class fmt_object: public formatter_t&lt; FormatType, fmt_object, FormatTraits &gt;
+   {
+      private:
+         FmtObject fo;
+      public:
+         typedef FormatType       format_type;
+         typedef seq_type&lt; type &gt; formatter_type;
+         // read and write functions; constructors
+   };</programlisting>
+      <para>
+         where <code>FormatTraits</code> is a class denoting the default delimeter values,
+         <code>format_type</code> is the delimeter type (needed for nested format object
+         constructs) and <code>formatter_type</code> is the type ID of the format object
+         used in automatic type deduction. Not all format objects have all of these elements.
+      </para>
+   </section>
+
+   <section id = "outfmr.fmtobj-simple"><title>Simple Types</title>
+      <section id = "outfmr.fmtobj-basic"><title>boost::io::basic_object</title>
+         <programlisting>   class boost::io::basic_object</programlisting>
+         <para>
+            This is a generic format object that defaults to using the I/O stream
+            <code>&lt;&lt;</code> operator for writing and <code>&gt;&gt;</code>
+            for reading. (This behaviour is actually implemented by
+            <code>boost::io::detail::simple_object</code>).
+         </para><para>
+            If the type is a C++ standard library string, <code>boost::io::basic_object</code>
+            delegates to <code>boost::io::detail::string_object</code> to perform
+            escaping/unescaping (<code>"</code> to <code>\"</code> and <code>\</code> to
+            <code>\\</code>) and wrapping the string in quotes (<code>"</code>).
+         </para>
+         <section><title>boost::io::basicfmt</title>
+            <programlisting>   boost::io::basicfmt();</programlisting>
+            <para>
+               This creates an object of type <code>boost::io::basic_object</code>. You
+               will not generally use this function as all formatting objects default
+               to using <code>boost::io::basic_object</code> as the nested format object.
+               It is included for completeness.
+            </para>
+         </section>
+      </section><section id = "outfmr.fmtobj-wrapped"><title>boost::io::wrapped_object</title>
+         <programlisting>
+   template&lt; typename FormatType, class FmtObject &gt;
+   class boost::io::wrapped_object;</programlisting>
+         <para>
+            <code>boost::io::wrapped_object</code> inherits its formatting from
+            <code>boost::io::openclose_formatter_t</code>, allowing specific formatting
+            to be added around a type, for example, adding <code>'</code> around
+            characters. This would also be useful for things like formatting a
+            complex type as XML data.
+         </para>
+         <section><title>boost::io::wrappedfmt</title>
+            <programlisting>   boost::io::wrappedfmt();</programlisting>
+            <para>
+               This creates an object of type <code>boost::io::wrapped_object</code>
+               using the default format type and format object.
+            </para>
+            <programlisting>   boost::io::wrappedfmtex&lt; FormatType &gt;();</programlisting>
+            <para>
+               This creates an object of type <code>boost::io::wrapped_object</code>
+               using a custom format type.
+            </para>
+            <programlisting>   boost::io::wrappedfmt( const FormatObject &amp; fo );</programlisting>
+            <para>
+               This creates an object of type <code>boost::io::wrapped_object</code>
+               using a custom format object, inheriting the format type from that
+               format object.
+            </para>
+         </section>
+      </section>
+   </section><section id = "outfmr.fmtobj-narytype"><title>N-Ary Types</title>
+      <para>
+         An n-ary type is an object, such as a quaternion, that has a fixed number of
+         elements.
+      </para>
+      <section id = "outfmr.fmtobj-pair"><title>boost::io::pair_object</title>
+         <programlisting>
+   template&lt; typename FormatType, class FmtObject1, class FmtObject2 &gt;
+   class boost::io::pair_object;</programlisting>
+         <para>
+            <code>boost::io::pair_object</code> inherits its formatting from
+            <code>boost::io::formatter_t</code>, allowing specific formatting
+            to be added around the pair type (<code>std::pair</code>,
+            <code>std::complex</code>, <code>boost::rational</code>,
+            <code>boost::compressed_pair</code> and <code>boost::numeric::interval</code>).
+            This is a special case of static n-ary where each element can have a
+            different formatting, allowing constructs like:
+         </para>
+         <programlisting>
+   std::pair&lt; float, std::list&lt; char &gt; &gt;</programlisting>
+         <section><title>boost::io::pairfmt</title>
+            <programlisting>   boost::io::pairfmt();</programlisting>
+            <para>
+               This creates an object of type <code>boost::io::pair_object</code>
+               using the default format type and format object.
+            </para>
+            <programlisting>   boost::io::pairfmtex&lt; FormatType &gt;();</programlisting>
+            <para>
+               This creates an object of type <code>boost::io::pair_object</code>
+               using a custom format type.
+            </para>
+            <programlisting>   boost::io::pairfmt( const FormatObject &amp; fo );</programlisting>
+            <para>
+               This creates an object of type <code>boost::io::pair_object</code>
+               using a custom format object for <code>FmtObject1</code>, inheriting
+               the format type from that format object.
+            </para>
+            <programlisting>   boost::io::pairfmt( const FO1 &amp; fo1, const FO2 &amp; fo2 );</programlisting>
+            <para>
+               This creates an object of type <code>boost::io::pair_object</code>
+               using <code>fo1</code> for the <code>FmtObject1</code> format object and
+               <code>fo2</code> for <code>FmtObject2</code>, inheriting the format type
+               from <code>FO1</code>. If hte format objects have a different format type
+               a compilation error will result.
+            </para>
+         </section>
+      </section><section id = "outfmr.fmtobj-nary"><title>boost::io::static_nary_object</title>
+         <programlisting>
+   template&lt; typename FormatType, class FmtObject &gt;
+   class boost::io::static_nary_object;</programlisting>
+         <para>
+            <code>boost::io::static_nary_object</code> inherits its formatting from
+            <code>boost::io::formatter_t</code>, allowing specific formatting
+            to be added around a 4-ary (<code>boost::math::quaternion</code>) or 8-ary
+            (<code>boost::math::octonion</code>) type.
+         </para>
+      </section>
+         <section><title>boost::io::naryfmt</title>
+            <programlisting>   boost::io::naryfmt();</programlisting>
+            <para>
+               This creates an object of type <code>boost::io::static_nary_object</code>
+               using the default format type and format object.
+            </para>
+            <programlisting>   boost::io::naryfmtex&lt; FormatType &gt;();</programlisting>
+            <para>
+               This creates an object of type <code>boost::io::static_nary_object</code>
+               using a custom format type.
+            </para>
+            <programlisting>   boost::io::naryfmt( const FormatObject &amp; fo );</programlisting>
+            <para>
+               This creates an object of type <code>boost::io::static_nary_object</code>
+               using a custom format object, inheriting the format type from that
+               format object.
+            </para>
+         </section>
+   </section><section id = "outfmr.fmtobj-seq"><title>Sequences</title>
+      <section id = "outfmr.fmtobj-array"><title>boost::io::array_object</title>
+         <programlisting>
+   template&lt; typename FormatType, class FmtObject &gt;
+   class boost::io::array_object;</programlisting>
+         <para>
+            <code>boost::io::array_object</code> inherits its formatting from
+            <code>boost::io::formatter_t</code>, allowing specific formatting
+            to be added around an array construct. It allows you to specify an
+            offset and length in order to create sub-ranges.
+         </para>
+         <section><title>boost::io::arrayfmt</title>
+            <programlisting>
+   boost::io::arrayfmt( long len = 0 );
+   boost::io::arrayfmt( long off, long len );</programlisting>
+            <para>
+               This creates an object of type <code>boost::io::array_object</code>
+               using the default format type and format object, where <code>len</code>
+               is the number of elements within the array to be processed and
+               <code>off</code> is the offset from the first element within the array.
+            </para>
+            <programlisting>
+   boost::io::arrayfmtex&lt; FormatType &gt;( long len = 0 );
+   boost::io::arrayfmtex&lt; FormatType &gt;( long off, long len );</programlisting>
+            <para>
+               This creates an object of type <code>boost::io::array_object</code>
+               using a custom format type, where <code>len</code> is the number of
+               elements within the array to be processed and <code>off</code> is the
+               offset from the first element within the array.
+            </para>
+            <programlisting>
+   boost::io::arrayfmtout( const FormatObject &amp; fo, long len = 0 );
+   boost::io::arrayfmtout( const FormatObject &amp; fo, long off, long len );</programlisting>
+            <para>
+               This creates an object of type <code>boost::io::array_object</code>
+               using a custom format object, inheriting the format type from that
+               format object, where <code>len</code> is the number of elements
+               within the array to be processed and <code>off</code> is the offset
+               from the first element within the array.
+            </para>
+         </section>
+      </section><section id = "outfmr.fmtobj-container"><title>boost::io::container_object</title>
+         <programlisting>
+   template&lt; typename FormatType, class FmtObject &gt;
+   class boost::io::container_object;</programlisting>
+         <para>
+            <code>boost::io::container_object</code> inherits its formatting from
+            <code>boost::io::formatter_t</code>, allowing specific formatting
+            to be added around an STL container type.
+         </para>
+         <section><title>boost::io::containerfmt</title>
+            <programlisting>   boost::io::containerfmt();</programlisting>
+            <para>
+               This creates an object of type <code>boost::io::container_object</code>
+               using the default format type and format object.
+            </para>
+            <programlisting>   boost::io::containerfmtex&lt; FormatType &gt;();</programlisting>
+            <para>
+               This creates an object of type <code>boost::io::container_object</code>
+               using a custom format type.
+            </para>
+            <programlisting>   boost::io::containerfmt( const FormatObject &amp; fo );</programlisting>
+            <para>
+               This creates an object of type <code>boost::io::container_object</code>
+               using a custom format object, inheriting the format type from that
+               format object.
+            </para>
+         </section>
+      </section><section id = "outfmr.fmtobj-range"><title>boost::io::range_object</title>
+         <programlisting>
+   template&lt; typename FormatType, class FmtObject &gt;
+   class boost::io::range_object;</programlisting>
+         <para>
+            <code>boost::io::range_object</code> inherits its formatting from
+            <code>boost::io::formatter_t</code>, allowing specific formatting
+            to be added around an object created by <code>boost::io::range</code>.
+         </para>
+         <section><title>boost::io::rangefmt</title>
+            <programlisting>   boost::io::rangefmt();</programlisting>
+            <para>
+               This creates an object of type <code>boost::io::range_object</code>
+               using the default format type and format object.
+            </para>
+            <programlisting>   boost::io::rangefmtex&lt; FormatType &gt;();</programlisting>
+            <para>
+               This creates an object of type <code>boost::io::range_object</code>
+               using a custom format type.
+            </para>
+            <programlisting>   boost::io::rangefmt( const FormatObject &amp; fo );</programlisting>
+            <para>
+               This creates an object of type <code>boost::io::range_object</code>
+               using a custom format object, inheriting the format type from that
+               format object.
+            </para>
+         </section>
+      </section>
+   </section><section id = "outfmr.fmtobj-fmtob"><title>boost::io::formatob_t</title>
+      <programlisting>
+   template&lt; typename T, typename FormatType, class FmtObject >
+   class boost::io::formatob_t;</programlisting>
+      <para>
+         This is the class that is created using the <code>boost::io::formatob</code>
+         manipulator. It behaves like the <code>boost::io::formatter_t</code> class,
+         redirecting the calls to <code>FmtObject</code>. See
+         <link linkend = "outfmt.manip">boost::io::formatob</link> for a discussion on
+         creating a <code>boost::io::formatob_t</code> object.
+      </para>
+   </section><section id = "outfmr.fmtobj-state"><title>boost::io::state_object</title>
+      <programlisting>
+   template&lt; typename FormatType, class StateObject, bool pre, class FmtObject &gt;
+   class boost::io::state_object;</programlisting>
+      <para>
+         <code>boost::io::state_object</code> does not inherit any formatting because
+         it only renders a state object to the stream, paired with a format object
+         for the type it surrounds. If <code>pre</code> is <code>true</code>, it will
+         render:
+      </para>
+      <programlisting>   [StateObject][FmtObject]</programlisting>
+      <para>
+         to the stream, where <code>[StateObject]</code> is the output generated by the
+         state object and <code>[FmtObject]</code> is the output generated by the
+         format object. If <code>pre</code> is <code>false</code>, it will render:
+      </para>
+      <programlisting>   [FmtObject][StateObject]</programlisting>
+      <para>
+         to the stream.
+      </para>
+
+      <section id = "outfmr.fmtobj-stateob"><title>State Objects</title>
+         <para>A state object is a type of function object that has the form:</para>
+         <programlisting>
+   template&lt; class OutputStream &gt;
+   inline OutputStream &amp; operator()
+   (
+      OutputStream &amp; os
+   );</programlisting>
+         <para>A state object should only output state information to the stream.</para>
+      </section><section><title>boost::io::statefmt</title>
+         <programlisting>   boost::io::statefmt&lt; StateObject, pre &gt;();</programlisting>
+         <para>
+            This creates an object of type <code>boost::io::state_object</code>
+            using the default format type and format object, where
+            <code>StateObject</code> is the state object class to be used
+            and <code>pre</code> is an indicator whether the state object is
+            rendered before or after the element <code>boost::io::state_object</code>
+            surrounds.
+         </para>
+         <programlisting>   boost::io::statefmtex&lt; FormatType, StateObject, pre &gt;();</programlisting>
+         <para>
+            This creates an object of type <code>boost::io::state_object</code>
+            using a custom format type, where <code>StateObject</code> is the
+            state object class to be used and <code>pre</code> is an indicator
+            whether the state object is rendered before or after the element
+            <code>boost::io::state_object</code> surrounds.
+         </para>
+         <programlisting>   boost::io::statefmt&lt; StateObject, pre &gt;( const FormatObject &amp; fo );</programlisting>
+         <para>
+            This creates an object of type <code>boost::io::state_object</code>
+            using a custom format object, inheriting the format type from that
+            format object, where <code>StateObject</code> is the state object
+            class to be used and <code>pre</code> is an indicator whether the
+            state object is rendered before or after the element
+            <code>boost::io::state_object</code> surrounds.
+         </para>
+      </section>
+   </section><section id = "outfmr.fmtobj-errormsg"><title>I Get Long Error Messages When I Try To Compile</title>
+      <para>
+         This is due to the template-based nature of the library. Locate the
+         <code>boost::io::formatob</code> call where the errors originate and
+         check to see if the format object construct matches with the type
+         of the object you are formatting.
+      </para>
+   </section>
+</section>

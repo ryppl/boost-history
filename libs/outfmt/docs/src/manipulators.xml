@@ -1,0 +1,109 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!--
+(C) Copyright 2003-2004: Reece H. Dunn 
+Distributed under the Boost Software License, Version 1.0.
+(See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+-->
+
+<section id = "outfmt.manipulators"><title>Manipulators</title>
+   <para>
+      It is often necessary to override the way a type is formatted to a stream, or to format a
+      subrange of a container or array. The manipulators in this library serve this purpose.
+   </para>
+   <section id = "outfmt.manip"><title>boost::io::formatob</title>
+      <para>
+         The manipulators are available by including <code>boost/outfmt/formatob.hpp</code>. In
+         order to add support for various STL and Boost types you need to include the appropriate
+         files listed in the <link linkend = "outfmt.stlio">STL I/O</link> section.
+      </para>
+
+      <programlisting>   boost::io::formatobex&lt; FormatType &gt;( const T &amp; ob );</programlisting>
+      <para>
+         This will format <code>ob</code> automatically according to what type <code>T</code> is,
+         including complex, nested constructs. It allows you to specify the type used to store
+         the <link linkend = "outfmt.delimeters">delimeters</link> (see that section for more info).
+      </para>
+
+      <programlisting>   boost::io::formatob( const T &amp; ob );</programlisting>
+      <para>
+         This will format <code>ob</code> automatically according to what type <code>T</code> is,
+         including complex, nested constructs. This is equivalent to using
+         <code>boost::io::formatobex&lt; const char * &gt;</code>
+      </para>
+
+      <programlisting>   boost::io::formatob( const T &amp; ob, const FmtObject &amp; fo );</programlisting>
+      <para>
+         This will format <code>ob</code> automatically according to what type <code>T</code> is,
+         including complex, nested constructs. Here, the format type is taken from
+         <code>FmtObject::format_type</code>, where <code>FmtObject</code> is a
+         <link linkend = "outfmt.fmtobj">format object</link>. This allows the nested
+         constructs to be formatted.
+      </para>
+
+      <programlisting>
+   std::vector&lt; float &gt; v;
+   std::cout &lt;&lt; boost::io::formatob( v ); // output: [  ]
+   std::cout &lt;&lt; boost::io::formatob( std::make_pair( 7, 3.14159 )); // output: ( 7, 3.14159 )</programlisting>
+   </section>
+   <section id = "outfmt.range"><title>boost::io::range</title>
+      <para>
+         If you need to specify a range or sub-range, <code>boost::io::format</code> will not recongnise
+         it unless it is a container.
+      </para>
+
+      <programlisting>
+   boost::io::range( ForwardIterator first, ForwardIterator last );</programlisting>
+      <para>
+         This creates the range <code>[first, last)</code> that can be used by <code>boost::io::format</code>.
+      </para>
+
+      <programlisting>
+   boost::io::range( const std::pair&lt; ForwardIterator, ForwardIterator &gt; pi );</programlisting>
+      <para>
+         This creates the range <code>[pi.first, pi.second)</code> that can be used by <code>boost::io::format</code>.
+         Normally, <code>boost::io::format</code> interprets a <code>std::pair</code> type as a 2-ary sequence. If
+         the pair type specifies a range, you need to use this function to inform <code>boost::io::format</code>
+         that it is a range.
+      </para>
+
+      <programlisting>
+   boost::io::range( const Container &amp; c );</programlisting>
+      <para>
+         This creates the range <code>[c.begin(), c.end())</code>. <code>boost::io::format</code> provides
+         native support for containers, specifically dynamic construction of the container when reading it
+         in from a stream. This is here for completeness and for when you want to specifically keep the
+         number of elements in the container the same.
+      </para>
+
+      <programlisting>
+   boost::io::range( const T a[ n ] );</programlisting>
+      <para>
+         This creates the range <code>[a, a + n)</code>. <code>boost::io::format</code> provides
+         native support for arrays, this is here for completeness only.
+      </para>
+
+      <programlisting>
+   boost::io::range( const T a[ n ], std::size_t off );</programlisting>
+      <para>
+         This creates the range <code>[a + off, a + n)</code>, allowing you to display an array starting
+         at the given offset.
+      </para>
+
+      <programlisting>
+   boost::io::range( const T a[ n ], std::size_t off, std::size_t len );</programlisting>
+      <para>
+         This creates the range <code>[a + off, a + off + len)</code>, allowing you to display <code>len</code>
+         elements on an array, starting at a given offset.
+      </para>
+
+      <programlisting>
+   int array = { 1, 2, 3, 4, 5, 6, 7 };
+   std::cout &lt;&lt; boost::io::formatob( boost::io::range( array + 2, array + 4 )); // output: [ 3, 4 ]
+   std::cout &lt;&lt; boost::io::formatob
+                (
+                   boost::io::range( std::make_pair( array + 2, array + 4 ))
+                ); // output: [ 3, 4 ]
+   std::cout &lt;&lt; boost::io::formatob( boost::io::range( array, 2 )); // output: [ 3, 4, 5, 6, 7 ]
+   std::cout &lt;&lt; boost::io::formatob( boost::io::range( array, 2, 4 )); // output: [ 3, 4, 5, 6 ]</programlisting>
+   </section>
+</section>
