@@ -12,8 +12,8 @@
 
 #include <algorithm>
 
-#include "traits.hpp"
-#include "find.hpp"
+#include <boost/string_algo/traits.hpp>
+#include <boost/string_algo/find.hpp>
 
 namespace boost {
 
@@ -41,16 +41,16 @@ namespace boost {
     }
 
     template< 
-		typename InputIterator, 
-		typename SubIterator, 
-		typename BinaryPredicate >
+        typename InputIterator, 
+        typename SubIterator, 
+        typename BinaryPredicate >
     inline bool start_with( 
         InputIterator Begin, 
         InputIterator End, 
         SubIterator SubBegin,
         SubIterator SubEnd,
-		BinaryPredicate Comp )
-	{
+        BinaryPredicate Comp )
+    {
         InputIterator it=Begin;
         SubIterator pit=SubBegin;
         for(;
@@ -62,7 +62,7 @@ namespace boost {
         }
 
         return pit==SubEnd;
-	}
+    }
 
     // start_with sequence version
     template< typename SeqT1, typename SeqT2 >
@@ -84,7 +84,7 @@ namespace boost {
 
 //  contains predicates  -----------------------------------------------//
 
-	// contains iterator version
+    // contains iterator version
     template< typename InputIterator, typename SubIterator >
     inline bool contains( 
         InputIterator Begin, 
@@ -113,9 +113,9 @@ namespace boost {
 
 //  equal predicate  -----------------------------------------------//
 
-	// equal iterator version
+    // equal iterator version
     template< typename InputIterator, typename SubIterator >
-    inline bool equal( 
+    inline bool equals( 
         InputIterator Begin, 
         InputIterator End, 
         SubIterator SubBegin,
@@ -135,16 +135,16 @@ namespace boost {
     }
 
     template< 
-		typename InputIterator, 
-		typename SubIterator, 
-		typename BinaryPredicate >
-    inline bool equal( 
+        typename InputIterator, 
+        typename SubIterator, 
+        typename BinaryPredicate >
+    inline bool equals( 
         InputIterator Begin, 
         InputIterator End, 
         SubIterator SubBegin,
         SubIterator SubEnd,
-		BinaryPredicate Comp )
-	{
+        BinaryPredicate Comp )
+    {
         InputIterator it=Begin;
         SubIterator pit=SubBegin;
         for(;
@@ -156,15 +156,15 @@ namespace boost {
         }
 
         return ( pit==SubEnd ) && ( it==End );
-	}
+    }
 
     // start_with sequence version
     template< typename SeqT1, typename SeqT2 >
-    inline bool equal( 
+    inline bool equals( 
         const SeqT1& Input, 
         const SeqT2& Substr )
     {
-        return equal( Input.begin(), Input.end(), Substr.begin(), Substr.end() );
+        return equals( Input.begin(), Input.end(), Substr.begin(), Substr.end() );
     }
 
 

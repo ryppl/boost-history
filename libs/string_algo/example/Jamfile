@@ -1,0 +1,15 @@
+# Boost Filesystem Library Build Jamfile
+
+subproject libs/string_algo/example ;
+
+exe string_algo
+    :
+    main.cpp
+    :
+    <include>$(BOOST_ROOT)     # this automatically points to the boost-sandbox root
+    :
+    <library-path>$(BOOST)/libs/regex/build/bin-stage/
+    <find-library>boost_regex
+    debug
+    ;
+

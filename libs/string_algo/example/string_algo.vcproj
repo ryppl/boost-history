@@ -140,6 +140,9 @@
 				RelativePath="..\..\..\boost\string_algo\predicate.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\boost\string_algo\regex.hpp">
+			</File>
+			<File
 				RelativePath="..\..\..\boost\string_algo\replace.hpp">
 			</File>
 			<File
@@ -168,6 +171,18 @@
 				</File>
 				<File
 					RelativePath="..\..\..\boost\string_algo\detail\find.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\boost\string_algo\detail\find_base.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\boost\string_algo\detail\find_regex.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\boost\string_algo\detail\format.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\boost\string_algo\detail\format_regex.hpp">
 				</File>
 				<File
 					RelativePath="..\..\..\boost\string_algo\detail\replace.hpp">

@@ -11,8 +11,7 @@
 #define BOOST_STRING_TRIM_HPP
 
 #include <locale>
-
-#include "detail/trim.hpp"
+#include <boost/string_algo/detail/trim.hpp>
 
 // some macros for simplify definition of trim functions
 #define BOOST_STRING_TRIM_SEQ_FWD( Alg, Seq, Pred ) Alg( Seq, Pred )

@@ -13,7 +13,7 @@
 #include <algorithm>
 #include <locale>
 
-#include "detail/case_conv.hpp"
+#include <boost/string_algo/detail/case_conv.hpp>
 
 namespace boost {
 

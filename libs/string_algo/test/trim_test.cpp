@@ -9,7 +9,7 @@
 
 #include <string>
 #include <iostream>
-#include <boost/string_algo.hpp>
+#include <boost/string_algo/trim.hpp>
 #include <boost/test/test_tools.hpp>
 
 using namespace std;

@@ -14,7 +14,9 @@
 extern void trim_test();
 extern void conv_test();
 extern void predicate_test();
-extern void substr_test();
+extern void find_test();
+extern void replace_test();
+extern void regex_test();
 
 // test main 
 int test_main( int, char*[] )
@@ -22,7 +24,9 @@ int test_main( int, char*[] )
     trim_test();
     conv_test();
     predicate_test();
-    substr_test();
+    find_test();
+    replace_test();
+    regex_test();
 
     return 0;
 }

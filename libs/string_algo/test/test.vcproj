@@ -22,10 +22,12 @@
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/EHa"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\..\"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="TRUE"
+				ExceptionHandling="FALSE"
 				BasicRuntimeChecks="0"
 				RuntimeLibrary="1"
 				UsePrecompiledHeader="0"
@@ -67,12 +69,14 @@
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/EHa"
 				Optimization="2"
 				InlineFunctionExpansion="1"
 				OmitFramePointers="TRUE"
 				AdditionalIncludeDirectories="..\..\..\"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				StringPooling="TRUE"
+				ExceptionHandling="FALSE"
 				RuntimeLibrary="4"
 				EnableFunctionLevelLinking="TRUE"
 				UsePrecompiledHeader="0"
@@ -114,10 +118,16 @@
 				RelativePath="conv_test.cpp">
 			</File>
 			<File
+				RelativePath="find_test.cpp">
+			</File>
+			<File
 				RelativePath="predicate_test.cpp">
 			</File>
 			<File
-				RelativePath="substr_test.cpp">
+				RelativePath="regex_test.cpp">
+			</File>
+			<File
+				RelativePath="replace_test.cpp">
 			</File>
 			<File
 				RelativePath="test_main.cpp">

@@ -10,8 +10,6 @@
 #ifndef BOOST_STRING_ALGO_HPP
 #define BOOST_STRING_ALGO_HPP
 
-
-#include <boost/string_algo/traits.hpp>
 #include <boost/string_algo/trim.hpp>
 #include <boost/string_algo/conv.hpp>
 #include <boost/string_algo/predicate.hpp>

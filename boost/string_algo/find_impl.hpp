@@ -11,8 +11,7 @@
 #define BOOST_STRING_FIND_IMPL_HPP
 
 #include <functional>
-#include "traits.hpp"
-#include "iterator_range.hpp"
+#include <boost/string_algo/iterator_range.hpp>
 
 namespace boost {
 
@@ -23,43 +22,35 @@ namespace boost {
         // find iterator version
         template< 
             typename InputIteratorT, 
-            typename SearchIteratorT, 
             typename FindF >
-        inline typename string_algo::
-            iter_search_traits< InputIteratorT, SearchIteratorT>::range_type 
+        inline typename FindF::result_type 
         find( 
             InputIteratorT Begin, 
             InputIteratorT End, 
-            SearchIteratorT SearchBegin,
-            SearchIteratorT SearchEnd,
-            FindF Find )
+            const FindF& Find )
         {
             // Forward the call to the functor
-            return Find( 
-                string_algo::make_range( Begin, End ),
-                string_algo::make_range( SearchBegin, SearchEnd ) );
+            return Find( make_range( Begin, End ) );
         }
 
         // find sequence const version
-        template< typename InputT, typename SearchT, typename FindF >
-        inline typename string_algo::search_traits<InputT, SearchT>::const_range_type 
+        template< typename InputT, typename FindF >
+        inline typename FindF::result_type 
         find( 
             const InputT& Input, 
-            const SearchT& Search,
-            FindF Find)
+            const FindF& Find )
         {
-            return Find( Input, Search );
+            return Find( Input );
         }
 
         // find sequence non-const version
-        template< typename InputT, typename SearchT, typename FindF >
-        inline typename string_algo::search_traits<InputT,SearchT>::range_type 
+        template< typename InputT, typename FindF >
+        inline typename FindF::result_type 
         BOOST_STRING_NON_CONST_FUNCTION(find)( 
             InputT& Input, 
-            const SearchT& Search,
-            FindF Find )
+            const FindF& Find )
         {
-            return Find( Input, Search );
+            return Find( Input );
         }
 
     } // namespace string_algo

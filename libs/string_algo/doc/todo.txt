@@ -2,24 +2,21 @@
 
 - !!!! Write documentation !!! -
 
-- fix tests
-- in-place replace_all -> optimization
-
-- regex variants for search, replace 
-- trim_end_if and find_last fix for ForwardIterator
-- find iterator
-
-- change trim to use the replace library
-
-- find algoritms complexity reduction / provide optional algorithms
 - add case-insensitive versions
-- specializations for basic_string where necessary
+
+- find iterator
+- change trim to use the replace library
+- find algoritms complexity reduction / provide optional algorithms
+- trim_end_if and find_last fix for ForwardIterator
 
 ----- DONE: ------
 
+- in-place replace_all -> optimization
 - change erase to use replace and a special format
-	( requires that the result code compiles to optimal 
-	    version ) 
-
+  ( requires that the result code compiles to optimal version ) 
 - add parametric predicate versions for predicate algorithms
-- specializations for container_caps<basic_string> added
+- specializations basic_string and list added
+- fix tests ( partialy fixed )
+- fix tests -> add OutputIterator variant tests
+- regex variants for search, replace 
+- search traits removed

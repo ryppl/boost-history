@@ -2,13 +2,17 @@
 #include <iostream>
 #include <iterator>
 #include <set>
+#include <list>
 #include <vector>
-#include <boost/string_algo.hpp>
-#include <boost/string_algo/container_traits.hpp>
+#include <boost/string_algo/replace.hpp>
 #include <boost/string_algo/detail/util.hpp>
+//#include <boost/regex.hpp>
+//#include <boost/string_algo/regex.hpp>
 
 using namespace std;
 using namespace boost;
+
+/*
 
 void trimtest()
 {
@@ -90,28 +94,35 @@ void algo()
     cout << (contains( str1, string("abc") )?"true":"false") << endl; 
 }
 
+*/
+
 void replace()
 {
-    string str1("123abcxxxabc321");
+    string str1("1xxabcxxabcxx1");
     const string str2("abc");
     const string str3("YYY");
+    vector<char> vec1( str1.begin(), str1.end() );
+    list<char> list1( str1.begin(), str1.end() );
 
+    cout << str1 << endl;
+/*
     cout << endl;
 
     ostream_iterator<char> ost(cout);
 
-    replace_first_copy( string("abcabc"), string("abc"), string("YYY"), ost );
+    replace_first_copy( ost, string("abcabc"), string("abc"), string("YYY") );
     cout << endl;
     replace_first_copy( 
+        ost,
         str1.begin(), str1.end(), 
         str2.begin(), str2.end(),
-        str3.begin(), str3.end(),
-        ost );
+        str3.begin(), str3.end() );
 
     cout << endl;
 
     cout << replace_first_copy( string("abcabc"), string("abc"), string("YYY") ) << endl; 
     cout << replace_first_copy( string("abcabc"), string(""), string("YYY") ) << endl; 
+
 
     cout << replace_last_copy( string("abcabc"), string("abc"), string("YYY") ) << endl; 
     cout << replace_last_copy( string("abcabc"), string(""), string("YYY") ) << endl; 
@@ -125,17 +136,34 @@ void replace()
 
     cout << endl;
 
-    replace_first( str1, string("x"), string("456") );
+*/
+    replace_first( vec1, string("xx"), string("yy") );
+    cout << "vector: " << string( vec1.begin(), vec1.end() ) << endl;
+    replace_first( vec1, string("yy"), string("zzz") );
+    cout << "vector: " << string( vec1.begin(), vec1.end() ) << endl;
+    replace_first( vec1, string("zzz"), string("xx") );
+    cout << "vector: " << string( vec1.begin(), vec1.end() ) << endl;
+
+    replace_first( list1, string("xx"), string("yy") );
+    cout << "list: " << string( list1.begin(), list1.end() ) << endl;
+
+    replace_first( str1, string("xx"), string("yy") );
+    cout << str1 << endl;
+
+    replace_all( str1, string("xx"), string("yy") );
+    cout << str1 << endl;
+    replace_all( str1, string("yy"), string("abc") );
     cout << str1 << endl;
     replace_all( str1, string("abc"), string("X") );
     cout << str1 << endl;
-    replace_all( str1, string("X"), string("mno") );
-    cout << str1 << endl;
-    replace_all( str1, string("mno"), string("ZZZ") );
+    replace_all( str1, string("X"), string("") );
     cout << str1 << endl; 
+
 
     cout << endl;
 }
+
+/*
 
 void substr()
 {
@@ -143,7 +171,7 @@ void substr()
     const string str3("123abcxxxabcXXXabc321");
     const string str2("abc");
 
-    string_algo::iterator_range<string::const_iterator> cv_result=
+    iterator_range<string::const_iterator> cv_result=
         find_first( str3, str2 );
 
     cout << string( cv_result.begin(), str3.end() ) << endl;
@@ -158,7 +186,7 @@ void substr()
 
     cout << endl;
 
-    string_algo::iterator_range<string::iterator> nc_result=
+    iterator_range<string::iterator> nc_result=
         BOOST_STRING_NON_CONST_FUNCTION(find_first)( str1, str2 );
     cout << string( nc_result.begin(), str1.end() ) << endl;
     cout << string( str1.begin(), nc_result.end() ) << endl;
@@ -224,27 +252,29 @@ void substr()
     cout << endl;
 }
 
-void range_test()
+
+
+void equals_test()
 {
     string str1("123");
     const string str2( "12345" );
-	const string str3( "123" );
+    const string str3( "123" );
 
-	if ( !boost::equal( str1.begin(), str1.end(), str2.begin(), str2.end(), 
-		boost::string_algo::detail::equal_toF<char, char>() ) )
-		cout << "1:false" << endl;
-	if ( !boost::equal( str2.begin(), str2.end(), str1.begin(), str1.end() ) )
-		cout << "2:false" << endl;
-	if ( boost::equal( str1, str3 ) )
-		cout << "3:true" << endl;
+    if ( !boost::equals( str1.begin(), str1.end(), str2.begin(), str2.end(), 
+        boost::string_algo::detail::equal_toF<char, char>() ) )
+        cout << "1:false" << endl;
+    if ( !boost::equals( str2.begin(), str2.end(), str1.begin(), str1.end() ) )
+        cout << "2:false" << endl;
+    if ( boost::equals( str1, str3 ) )
+        cout << "3:true" << endl;
 }
 
 void contatiner()
 {
-	string str1("123xxx123yyy123");
-	string str2("456");
+    string str1("123xxx123yyy123");
+    string str2("456");
 
-	const char cstr[]="123";
+    const char cstr[]="123";
 
     ostream_iterator<char> ost(cout);
 
@@ -257,16 +287,52 @@ void contatiner()
 
 }
 
-      
+
+
+void regextest()
+{
+    string str1("123xxx123yyy123");
+    string str2("xxxyyy");
+    vector<int> vec1( str1.begin(), str1.end() );
+    regex rx("([0-9]+)");
+    
+    iterator_range<string::iterator> r=
+        boost::find_regex_nc( 
+            str2, 
+            rx );
+
+    cout << string( r.begin(), r.end() ) << endl;
+
+    replace_regex(
+        vec1,
+        rx,
+        string("a$1a") );
+
+    cout << string( vec1.begin(), vec1.end() ) << endl;
+
+    cout << 
+        replace_all_regex_copy(
+            str1,
+            rx,
+            string("A$1A") ) << endl;
+
+    cout << erase_regex_copy( str1, rx ) << endl;
+    cout << erase_all_regex_copy( str1, rx ) << endl; 
+}
+
+*/
+
+
 int main()
 {
 //  trimtest();
 //  convtest();
 //  algo();
+//  equals_test();
 //  substr();
-//  replace();
-  range_test();
-//contatiner();
+    replace();
+//  contatiner();
+//  regextest();
 
     cout << "Done." << endl;
     cin.get();

@@ -10,14 +10,16 @@
 #ifndef BOOST_STRING_REPLACE_IMPL_HPP
 #define BOOST_STRING_REPLACE_IMPL_HPP
 
-#include "traits.hpp"
-#include "iterator_range.hpp"
-#include "container_traits.hpp"
+#include <deque>
+#include <boost/string_algo/traits.hpp>
+#include <boost/string_algo/iterator_range.hpp>
+#include <boost/string_algo/detail/replace.hpp>
+#include <boost/string_algo/detail/container.hpp>
 
 namespace boost {
 
     namespace string_algo {
-
+ 
 // generic replace  -----------------------------------------------------------------//
 
         // replace 
@@ -29,23 +31,19 @@ namespace boost {
         */
         template< 
             typename InputT, 
-            typename SearchT,
-            typename FormatT,
             typename OutputIteratorT,
             typename FindFT,
             typename FormatFT >
         inline OutputIteratorT replace_copy(
-            const InputT& Input,
-            const SearchT& Search,
-            const FormatT& Format,
             OutputIteratorT Output,
-            FindFT FindF,
-            FormatFT FormatF )
+            const InputT& Input,
+            const FindFT& FindF,
+            const FormatFT& FormatF )
         {
-            typedef typename string_algo::
-                search_traits<InputT, SearchT>::const_range_type input_range_type; 
+            typedef typename FindFT::result_type search_result_type;
+            
             // Find first match
-            input_range_type M=FindF( Input, Search );
+            search_result_type M=FindF( Input );
 
             if ( M.empty() )
             {
@@ -57,7 +55,7 @@ namespace boost {
             // Copy the beginning of the sequence
             std::copy( Input.begin(), M.begin(), Output );
             // Format find result
-            typename FormatFT::result_type FResult=FormatF( Format, M );
+            typename FormatFT::result_type FResult=FormatF( M );
             // Copy formated result
             std::copy( FResult.begin(), FResult.end(), Output );
             // Copy the rest of the sequence
@@ -69,26 +67,18 @@ namespace boost {
         // replace iterator version
         template< 
             typename InputIteratorT, 
-            typename SearchIteratorT, 
-            typename FormatIteratorT,
             typename OutputIteratorT,
             typename FindFT,
             typename FormatFT >
         inline OutputIteratorT replace_copy(
+            OutputIteratorT Output,
             InputIteratorT Begin,
             InputIteratorT End,
-            SearchIteratorT SearchBegin,
-            SearchIteratorT SearchEnd,
-            FormatIteratorT FormatBegin,
-            FormatIteratorT FormatEnd,
-            OutputIteratorT Output,
-            FindFT FindF,
-            FormatFT FormatF )
+            const FindFT& FindF,
+            const FormatFT& FormatF )
         {
             return replace_copy(
-                string_algo::make_range( Begin, End ),
-                string_algo::make_range( SearchBegin, SearchEnd ),
-                string_algo::make_range( FormatBegin, FormatEnd ),
+                make_range( Begin, End ),
                 Output,
                 FindF,
                 FormatF );
@@ -97,25 +87,17 @@ namespace boost {
         // replace sequence version
         template< 
             typename InputT, 
-            typename SearchT,
-            typename FormatT,
             typename FindFT,
             typename FormatFT >
         inline InputT replace_copy(
             const InputT& Input,
-            const SearchT& Search,
-            const FormatT& Format,
-            FindFT FindF,
-            FormatFT FormatF )
+            const FindFT& FindF,
+            const FormatFT& FormatF )
         {
-            typedef typename string_algo::
-                search_traits<InputT, SearchT>::const_range_type input_range_type; 
-
-			// Instantiate insert functor
-			typename string_algo::container_caps_traits<InputT>::insert_type InsertF;
+            typedef typename FindFT::result_type search_result_type;
 
             // Find first match
-            input_range_type M=FindF( Input, Search );
+            search_result_type M=FindF( Input );
 
             if ( M.empty() )
             {
@@ -125,11 +107,11 @@ namespace boost {
 
             InputT Output;
             // Copy the beginning of the sequence
-            InsertF( Output, Output.end(), Input.begin(), M.begin() );
+            detail::insert( Output, Output.end(), Input.begin(), M.begin() );
             // Copy formated result
-            InsertF( Output, Output.end(), FormatF( Format, M.begin(), M.end() ) );
+            detail::insert( Output, Output.end(), FormatF( M ) );
             // Copy the rest of the sequence
-            InsertF( Output, Output.end(), M.end(), Input.end() );
+            detail::insert( Output, Output.end(), M.end(), Input.end() );
 
             return Output;
         }
@@ -137,25 +119,17 @@ namespace boost {
         // replace in-place sequence version
         template<
             typename InputT,
-            typename SearchT,
-            typename FormatT,
             typename FindFT,
             typename FormatFT >
         inline InputT& replace( 
             InputT& Input,
-            const SearchT& Search,
-            const FormatT& Format,
-            FindFT FindF,
-            FormatFT FormatF )
+            const FindFT& FindF,
+            const FormatFT& FormatF )
         {
-            typedef typename string_algo::
-                search_traits<InputT, SearchT>::range_type input_range_type; 
+            typedef typename FindFT::result_type search_result_type;
             
-            // Instantiate replace functor
-			typename string_algo::container_caps_traits<InputT>::replace_type ReplaceF;
-
             // Find range for the match
-            input_range_type M=FindF( Input, Search );
+            search_result_type M=FindF( Input );
 
             if ( M.empty() )
             {
@@ -164,7 +138,7 @@ namespace boost {
             }
 
             // Replace match
-            ReplaceF( Input, M.begin(), M.end(), FormatF( Format, M.begin(), M.end() ) );
+            detail::replace( Input, M.begin(), M.end(), FormatF( M ) );
             
             return Input;
         }
@@ -179,28 +153,22 @@ namespace boost {
         */
         template< 
             typename InputT, 
-            typename SearchT,
-            typename FormatT,
             typename OutputIteratorT,
             typename FindFT,
             typename FormatFT >
         inline OutputIteratorT replace_all_copy(
-            const InputT& Input,
-            const SearchT& Search,
-            const FormatT& Format,
             OutputIteratorT Output,
-            FindFT FindF,
-            FormatFT FormatF )
+            const InputT& Input,
+            const FindFT& FindF,
+            const FormatFT& FormatF )
         {
-            typedef typename string_algo::
-                search_traits<InputT, SearchT>::const_range_type input_range_type; 
-            typedef typename string_algo::
-                search_traits<InputT, SearchT>::input_const_iterator_type input_iterator_type; 
+            typedef typename FindFT::result_type search_result_type;
+            typedef typename InputT::const_iterator input_iterator_type; 
         
             input_iterator_type LastMatch=Input.begin();
 
             // Find first match
-            input_range_type M=FindF( Input, Search );
+            search_result_type M=FindF( Input );
 
             // Iterate throug all matches
             while( !M.empty() )
@@ -208,13 +176,13 @@ namespace boost {
                 // Copy the beginning of the sequence
                 std::copy( LastMatch, M.begin(), Output );
                 // Format find result
-                typename FormatFT::result_type FResult=FormatF( Format, M );
+                typename FormatFT::result_type FResult=FormatF( M );
                 // Copy formated result
                 std::copy( FResult.begin(), FResult.end(), Output );
 
                 // Proceed to the next match
                 LastMatch=M.end();
-                M=FindF( Input, Search, LastMatch );
+                M=FindF( Input, LastMatch );
             }
 
             // Copy the rest of the sequence
@@ -226,26 +194,18 @@ namespace boost {
         // replace_all generic version
         template< 
             typename InputIteratorT, 
-            typename SearchIteratorT, 
-            typename FormatIteratorT,
             typename OutputIteratorT,
             typename FindFT,
             typename FormatFT >
         inline OutputIteratorT replace_all_copy(
+            OutputIteratorT Output,
             InputIteratorT Begin,
             InputIteratorT End,
-            SearchIteratorT SearchBegin,
-            SearchIteratorT SearchEnd,
-            FormatIteratorT FormatBegin,
-            FormatIteratorT FormatEnd,
-            OutputIteratorT Output,
-            FindFT FindF,
-            FormatFT FormatF )
+            const FindFT& FindF,
+            const FormatFT& FormatF )
         {
             return replace_all_copy(
-                string_algo::make_range( Begin, End ),
-                string_algo::make_range( SearchBegin, SearchEnd ),
-                string_algo::make_range( FormatBegin, FormatEnd ),
+                make_range( Begin, End ),
                 Output,
                 FindF,
                 FormatF );
@@ -254,48 +214,39 @@ namespace boost {
         // replace_all sequence version
         template< 
             typename InputT, 
-            typename SearchT,
-            typename FormatT,
             typename FindFT,
             typename FormatFT >
         inline InputT replace_all_copy(
             const InputT& Input,
-            const SearchT& Search,
-            const FormatT& Format,
-            FindFT FindF,
-            FormatFT FormatF )
+            const FindFT& FindF,
+            const FormatFT& FormatF )
         {
-            typedef typename string_algo::
-                search_traits<InputT, SearchT>::input_const_iterator_type input_iterator_type; 
-            typedef typename string_algo::
-                search_traits<InputT, SearchT>::const_range_type input_range_type; 
+            typedef typename FindFT::result_type search_result_type;
+            typedef typename InputT::const_iterator input_iterator_type; 
 
-            // Instantiate insert functor
-			typename string_algo::container_caps_traits<InputT>::insert_type InsertF;
-
-			// Initialize last match
+            // Initialize last match
             input_iterator_type LastMatch=Input.begin();
             // Find first match
-            input_range_type M=FindF( Input, Search );
+            search_result_type M=FindF( Input );
 
-			// Output temporary
+            // Output temporary
             InputT Output;
 
             // Iterate throug all matches
             while( !M.empty() )
             {
                 // Copy the beginning of the sequence
-                InsertF( Output, Output.end(), LastMatch, M.begin() );
+                detail::insert( Output, Output.end(), LastMatch, M.begin() );
                 // Copy formated result
-                InsertF( Output, Output.end(), FormatF( Format, M.begin(), M.end() ) );
+                detail::insert( Output, Output.end(), FormatF( M ) );
 
                 // Proceed to the next match
                 LastMatch=M.end();
-                M=FindF( Input, Search, LastMatch );
+                M=FindF( Input, LastMatch );
             }
 
             // Copy the rest of the sequence
-            InsertF( Output, Output.end(), LastMatch, Input.end() );
+            detail::insert( Output, Output.end(), LastMatch, Input.end() );
 
             return Output;
         }
@@ -303,35 +254,63 @@ namespace boost {
         // replace_all in-place sequence version
         template<
             typename InputT,
-            typename SearchT,
-            typename FormatT,
             typename FindFT,
             typename FormatFT >
         inline InputT& replace_all( 
             InputT& Input,
-            const SearchT& Search,
-            const FormatT& Format,
-            FindFT FindF,
-            FormatFT FormatF )
+            const FindFT& FindF,
+            const FormatFT& FormatF )
         {
-            typedef typename string_algo::
-                search_traits<InputT, SearchT>::input_iterator_type input_iterator_type; 
-            typedef typename string_algo::
-                search_traits<InputT, SearchT>::range_type input_range_type; 
+            typedef typename FindFT::result_type search_result_type;
+            typedef typename InputT::iterator input_iterator_type; 
             
-            // Instantiate replace functor
-			typename string_algo::container_caps_traits<InputT>::replace_iter_type ReplaceF;
+            // Instantiate replacement storage
+            std::deque<typename InputT::value_type> Storage;
 
-			// Find range for the match
-            input_range_type M=FindF( Input, Search );
+            // Initialize replacement iterators
+            input_iterator_type InsertIt=Input.begin();
+            input_iterator_type SearchIt=Input.begin();
+            
+            // Find range for a first match
+            search_result_type M=FindF( Input );
 
             while ( !M.empty() )
             {
-                // Replace match
-                input_iterator_type It=
-                    ReplaceF( Input, M.begin(), M.end(), FormatF( Format, M.begin(), M.end() ) );
+                // process the segment
+                InsertIt=detail::process_segment( 
+                    Storage,
+                    Input,
+                    InsertIt,
+                    SearchIt,
+                    M.begin() );
+                
+                // Adjust search iterator
+                SearchIt=M.end();
 
-                M=FindF( Input, Search, It );
+                // Copy formated replace to the storage
+                detail::copy_to_storage( Storage, FormatF(M) );
+
+                // Find range for a next match
+                M=FindF( Input, SearchIt );
+            }
+
+            // process the last segment
+            InsertIt=detail::process_segment( 
+                Storage,
+                Input,
+                InsertIt,
+                SearchIt,
+                Input.end() );
+            
+            if ( Storage.empty() )
+            {
+                // Truncate input
+                detail::erase( Input, InsertIt, Input.end() );
+            }
+            else
+            {
+                // Copy remaining data to the end of input
+                detail::insert( Input, Input.end(), Storage.begin(), Storage.end() );
             }
 
             return Input;
