@@ -36,7 +36,7 @@ class range_view
 {
 public:
   /// The view's own type.
-  typedef range_view<IteratorT,ConstIteratorT> self_type;
+  typedef range_view<IteratorT,ConstIteratorT,ValueT,ReferenceT,PointerT,CategoryT,DifferenceT> self_type;
 
   typedef traits::default_iterator_traits< 
     IteratorT, ConstIteratorT,
