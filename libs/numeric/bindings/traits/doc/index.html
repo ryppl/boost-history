@@ -1,0 +1,24 @@
+<html>
+<title>boost::numeric::bindings::traits</title>
+<body>
+<h1>boost::numeric::bindings::traits library</title>
+<h3>Rationale</h3>
+The traits library is intended to make abstraction of
+<ul>
+<li>Underlying vector and matrix types
+<p>All bindings should be independent from the actual matrix and vector
+types that are used for calling the bindings. Currently the bindings
+are targeted to support ublas, std::vector, std::valarray and TNT.
+<li>Calling conventions
+<p>There are also bindings provided for libraries that are typically
+implemented using Fortran like BLAS and LAPACK. A mapping thus
+needs to be performed between C and Fortran calling conventions.
+</ul>
+
+<h3>vector_traits</h3>
+<h3>matrix_traits</h3>
+<h3>Linking with fortran libraries</h3>
+<a href="http://www.aei.mpg.de/~jthorn/c2f.html">Here's more information</a> on how to call Fortran routines from C and C++,
+
+</body>
+</html>
