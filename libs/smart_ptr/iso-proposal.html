@@ -580,8 +580,23 @@ else
 			conclusion (also supported by [<A href="#Berger02">Berger02</A>]) that it would 
 			be better to optimize the global <code>::operator new</code> allocator instead 
 			of focusing on the internal allocations performed by <EM>shared_ptr</EM>.</P>
-		<h4>2. Copy Performance</h4>
-		<p>...</p>
+		<P>The source code used for the&nbsp;test is available as part of the Boost 
+			implementation.</P>
+		<h4>3. Copy Performance</h4>
+		<p>In multithreaded builds, the Boost implementation always synchronizes reference 
+			count operations to make <EM>shared_ptr</EM> "as thread safe as an int", 
+			consistent with the behavior of most standard libraries. This sometimes raises 
+			performance concerns since in some cases users can guarantee that two <EM>shared_ptr</EM>
+			instances that share ownership will never be accessed simultaneously from 
+			different threads.</p>
+		<P>The configuration described above is able to execute 8388608 (2<SUP>23</SUP> ) <code>
+				push_back</code> operations into a <code>std::vector&lt; shared_ptr&lt;int&gt; 
+				&gt;</code> (without calling <code>reserve</code> first) in about 2.63 
+			seconds in a singlethreaded build, 5.44 seconds in a multithreaded build. A 
+			factor of two increase seems like a lot, but the difference rarely impacts real 
+			code, since it never needs to repeatedly make so many <EM>shared_ptr</EM> copies.</P>
+		<P>The source code used for the test is available as part of the Boost 
+			implementation.</P>
 		<h3>F. Alternatives</h3>
 		<h4>1. Policy Based Smart Pointers</h4>
 		<p>...</p>
@@ -653,7 +668,7 @@ else
       public:
         typedef T element_type;
 
-        <em>// constructors</EM>
+        <em>// constructors</em>
         shared_ptr();
         template&lt;class Y&gt; explicit shared_ptr(Y * p);
         template&lt;class Y, class D&gt; shared_ptr(Y * p, D d);
@@ -662,30 +677,30 @@ else
         template&lt;class Y&gt; explicit shared_ptr(weak_ptr&lt;Y&gt; const &amp; r);
         template&lt;class Y&gt; explicit shared_ptr(auto_ptr&lt;Y&gt; &amp; r);
 
-        <em>// destructor</EM>
+        <em>// destructor</em>
         ~shared_ptr();
 
-        <em>// assignment</EM>
+        <em>// assignment</em>
         shared_ptr &amp; operator=(shared_ptr const &amp; r);
         template&lt;class Y&gt; shared_ptr &amp; operator=(shared_ptr&lt;Y&gt; const &amp; r);
         template&lt;class Y&gt; shared_ptr &amp; operator=(auto_ptr&lt;Y&gt; &amp; r);
 
-        <em>// modifiers</EM>
+        <em>// modifiers</em>
         void swap(shared_ptr &amp; r);
         void reset();
         template&lt;class Y&gt; void reset(Y * p);
         template&lt;class Y, class D&gt; void reset(Y * p, D d);
 
-        <em>// observers</EM>
+        <em>// observers</em>
         T * get() const;
         T &amp; operator*() const;
         T * operator-&gt;() const;
         long use_count() const;
         bool unique() const;
-        operator <em>unspecified-bool-type</EM>() const;
+        operator <em>unspecified-bool-type</em>() const;
       };
 
-      <em>// comparison</EM>
+      <em>// comparison</em>
       template&lt;class T, class U&gt;
         bool operator==(shared_ptr&lt;T&gt; const &amp; a, shared_ptr&lt;U&gt; const &amp; b);
 
@@ -695,21 +710,21 @@ else
       template&lt;class T, class U&gt;
         bool operator&lt;(shared_ptr&lt;T&gt; const &amp; a, shared_ptr&lt;U&gt; const &amp; b);
 
-      <em>// other operators</EM>
+      <em>// other operators</em>
       template&lt;class E, class T, class Y&gt;
         basic_ostream&lt;E, T&gt; &amp; operator&lt;&lt; (basic_ostream&lt;E, T&gt; &amp; os, shared_ptr&lt;Y&gt; const &amp; p);
 
-      <em>// specialized algorithms</EM>
+      <em>// specialized algorithms</em>
       template&lt;class T&gt; void swap(shared_ptr&lt;T&gt; &amp; a, shared_ptr&lt;T&gt; &amp; b);
 
-      <em>// casts</EM>
+      <em>// casts</em>
       template&lt;class T, class U&gt;
         shared_ptr&lt;T&gt; static_pointer_cast(shared_ptr&lt;U&gt; const &amp; r);
 
       template&lt;class T, class U&gt;
         shared_ptr&lt;T&gt; dynamic_pointer_cast</A>(shared_ptr&lt;U&gt; const &amp; r);
 
-      <em>// get_deleter</EM>
+      <em>// get_deleter</em>
       template&lt;class D, class T&gt;
         D * get_deleter(shared_ptr&lt;T&gt; const &amp; p);
     }
@@ -871,7 +886,7 @@ else
 		<P><B>Notes:</B> <code>unique()</code> may be faster than <code>use_count()</code>. 
 			If you are using <code>unique()</code> to implement copy on write, do not rely 
 			on a specific value when <code>get() == 0</code>.</P>
-		<pre>    operator <em>unspecified-bool-type</EM> () const;
+		<pre>    operator <em>unspecified-bool-type</em> () const;
 </pre>
 		<p><b>Returns:</b> an unspecified value that, when used in boolean contexts, is 
 			equivalent to <code>get() != 0</code>.</p>
@@ -967,35 +982,35 @@ else
       public:
         typedef T element_type;
 
-        <em>// constructors</EM>
+        <em>// constructors</em>
         weak_ptr();
         template&lt;class Y&gt; weak_ptr(shared_ptr&lt;Y&gt; const &amp; r);
         weak_ptr(weak_ptr const &amp; r);
         template&lt;class Y&gt; weak_ptr(weak_ptr&lt;Y&gt; const &amp; r);
 
-        <em>// destructor</EM>
+        <em>// destructor</em>
         ~weak_ptr();
 
-        <em>// assignment</EM>
+        <em>// assignment</em>
         weak_ptr &amp; operator=(weak_ptr const &amp; r);
         template&lt;class Y&gt; weak_ptr &amp; operator=(weak_ptr&lt;Y&gt; const &amp; r);
         template&lt;class Y&gt; weak_ptr &amp; operator=(shared_ptr&lt;Y&gt; const &amp; r);
 
-        <em>// modifiers</EM>
+        <em>// modifiers</em>
         void swap(weak_ptr &amp; r);
         void reset();
 
-        <em>// observers</EM>
+        <em>// observers</em>
         long use_count() const;
         bool expired() const;
         shared_ptr&lt;T&gt; lock() const;
       };
 
-      <em>// comparison</EM>
+      <em>// comparison</em>
       template&lt;class T, class U&gt;
         bool operator&lt;(weak_ptr&lt;T&gt; const &amp; a, weak_ptr&lt;U&gt; const &amp; b);
 
-      <em>// specialized algorithms</EM>
+      <em>// specialized algorithms</em>
       template&lt;class T&gt;
         void swap(weak_ptr&lt;T&gt; &amp; a, weak_ptr&lt;T&gt; &amp; b);
     }
