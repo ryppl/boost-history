@@ -377,4 +377,23 @@ int main() {
     is >> std::dec >> x;
     assert(x == 8);
   }
+
+  // Test out bad reads of numbers (watch out for eofs!)
+  {
+    bigint x;
+    std::istringstream i1("-");
+    std::istringstream i2("0x");
+    std::istringstream i3("-0x");
+    std::istringstream i4("");
+
+    i1 >> x;
+    assert(i1.fail());
+    i2 >> std::hex >> x;
+    assert(i2.fail());
+    i3 >> std::hex >> x;
+    assert(i3.fail());
+    i4 >> x;
+    assert(i4.fail());
+  }
+
 }
