@@ -13,22 +13,330 @@ content="text/html; charset=iso-8859-1">
 
 <h2><a name="matrix"></a>Matrix</h2>
 
-<p>The templated class <code>matrix </code>is the base container
-adaptor for dense matrices.</p>
+<h4>Description</h4>
+
+<p>The templated class <code>matrix&lt;T, F, A&gt; </code>is the
+base container adaptor for dense matrices.</p>
+
+<h4>Example</h4>
+
+<pre>int main () {
+    numerics::matrix&lt;double&gt; m (3, 3);
+    for (int i = 0; i &lt; m.size1 (); ++ i) 
+        for (int j = 0; j &lt; m.size2 (); ++ j) 
+	    m (i, j) = 3 * i + j;
+    std::cout &lt;&lt; m &lt;&lt; std::endl;
+}</pre>
+
+<h4>Definition</h4>
+
+<p>Defined in the header matrix.h.</p>
+
+<h4>Template parameters</h4>
+
+<table border="1">
+    <tr>
+        <th>Parameter </th>
+        <th>Description </th>
+        <th>Default </th>
+    </tr>
+    <tr>
+        <td><tt>T</tt> </td>
+        <td>The type of object stored in the matrix. </td>
+        <td>&nbsp;</td>
+    </tr>
+    <tr>
+        <td><tt>F</tt></td>
+        <td>Functor describing the storage organization.</td>
+        <td><tt>row_major&lt;&gt;</tt></td>
+    </tr>
+    <tr>
+        <td><tt>A</tt></td>
+        <td>The type of the adapted array.</td>
+        <td><tt>unbounded_array&lt;T&gt;</tt></td>
+    </tr>
+</table>
+
+<h4>Model of</h4>
+
+<p>Matrix. </p>
+
+<h4>Type requirements</h4>
+
+<p>None, except for those imposed by the requirements of Matrix.</p>
+
+<h4>Public base classes</h4>
+
+<p><code>matrix_expression&lt;matrix&lt;T, F, A&gt; &gt;</code> </p>
+
+<h4>Members</h4>
+
+<table border="1">
+    <tr>
+        <th>Member </th>
+        <th>Description </th>
+    </tr>
+    <tr>
+        <td><code>matrix ()</code> </td>
+        <td>Allocates an uninitialized <code>matrix </code>that
+        holds at most zero rows of zero elements.</td>
+    </tr>
+    <tr>
+        <td><code>matrix (size_type size1, size_type size2)</code></td>
+        <td>Allocates an uninitialized <code>matrix </code>that
+        holds at most <code>size1 </code>rows of <code>size2 </code>elements.</td>
+    </tr>
+    <tr>
+        <td><code>matrix (const matrix &amp;m)</code></td>
+        <td>The copy constructor.</td>
+    </tr>
+    <tr>
+        <td><code>template&lt;class AE&gt;<br>
+        matrix (const matrix_expression&lt;AE&gt; &amp;ae)</code></td>
+        <td>The extended copy constructor.</td>
+    </tr>
+    <tr>
+        <td><code>void resize (size_type size1, size2)</code></td>
+        <td>Reallocates a <code>matrix </code>to hold at most <code>size1
+        </code>rows of <code>size2 </code>elements. The content
+        of the <code>matrix </code>is not preserved.</td>
+    </tr>
+    <tr>
+        <td><code>size_type size1 () const</code></td>
+        <td>Returns the number of rows. </td>
+    </tr>
+    <tr>
+        <td><code>size_type size2 () const</code></td>
+        <td>Returns the number of columns. </td>
+    </tr>
+    <tr>
+        <td><code>const_reference_type operator () (size_type i,
+        size_type j) const</code></td>
+        <td>Returns a <code>const </code>reference of the <tt>j</tt>-th
+        element in the<tt> i</tt>-th row. </td>
+    </tr>
+    <tr>
+        <td><code>reference_type operator () (size_type i,
+        size_type j)</code></td>
+        <td>Returns a reference of the <tt>j</tt>-th element in
+        the<tt> i</tt>-th row. </td>
+    </tr>
+    <tr>
+        <td><code>matrix_row_type operator [] (size_type i)</code></td>
+        <td>Returns a sub vector containing the <tt>i</tt>-th
+        row.</td>
+    </tr>
+    <tr>
+        <td><code>matrix_row_type row (size_type i)</code></td>
+        <td>Returns a sub vector containing the <tt>i</tt>-th
+        row.</td>
+    </tr>
+    <tr>
+        <td><code>matrix_column_type column (size_type j)</code></td>
+        <td>Returns a sub vector containing the <tt>j</tt>-th
+        column.</td>
+    </tr>
+    <tr>
+        <td><code>matrix_range_type project (size_type start1,
+        size_type stop1, size_type start2, size_type stop2)</code></td>
+        <td>Returns a sub matrix ranging from the <tt>start1</tt>-th
+        to the <tt>stop1</tt>-th row and from the <tt>start2</tt>-th
+        to the <tt>stop2</tt>-th column. </td>
+    </tr>
+    <tr>
+        <td><code>matrix_range_type project (const range &amp;r1,
+        const range &amp;r2)</code></td>
+        <td>Returns a sub matrix.</td>
+    </tr>
+    <tr>
+        <td><code>matrix &amp;operator = (const matrix &amp;m)</code></td>
+        <td>The assignment operator.</td>
+    </tr>
+    <tr>
+        <td><code>matrix &amp;assign_temporary (matrix &amp;m)</code></td>
+        <td>Assigns a temporary. May change the matrix <code>m</code>.</td>
+    </tr>
+    <tr>
+        <td><code>template&lt;class AE&gt;<br>
+        matrix &amp;operator = (const matrix_expression&lt;AE&gt;
+        &amp;ae)</code></td>
+        <td>The extended assignment operator.</td>
+    </tr>
+    <tr>
+        <td><code>template&lt;class AE&gt;<br>
+        matrix &amp;assign (const matrix_expression&lt;AE&gt;
+        &amp;ae)</code></td>
+        <td>Assigns a matrix expression to the matrix. Left and
+        right hand side of the assignment should be independent.</td>
+    </tr>
+    <tr>
+        <td><code>template&lt;class AE&gt;<br>
+        matrix &amp;operator += (const
+        matrix_expression&lt;AE&gt; &amp;ae)</code></td>
+        <td>A computed assignment operator. Adds the matrix
+        expression to the matrix.</td>
+    </tr>
+    <tr>
+        <td><code>template&lt;class AE&gt;<br>
+        matrix &amp;plus_assign (const
+        matrix_expression&lt;AE&gt; &amp;ae)</code></td>
+        <td>Adds a matrix expression to the matrix. Left and
+        right hand side of the assignment should be independent.</td>
+    </tr>
+    <tr>
+        <td><code>template&lt;class AE&gt;<br>
+        matrix &amp;operator -= (const
+        matrix_expression&lt;AE&gt; &amp;ae)</code></td>
+        <td>A computed assignment operator. Subtracts the matrix
+        expression from the matrix.</td>
+    </tr>
+    <tr>
+        <td><code>template&lt;class AE&gt;<br>
+        matrix &amp;minus_assign (const
+        matrix_expression&lt;AE&gt; &amp;ae)</code></td>
+        <td>Subtracts a matrix expression from the matrix. Left
+        and right hand side of the assignment should be
+        independent.</td>
+    </tr>
+    <tr>
+        <td><code>template&lt;class AT&gt;<br>
+        matrix &amp;operator *= (const AT &amp;at)</code></td>
+        <td>A computed assignment operator. Multiplies the matrix
+        with a scalar.</td>
+    </tr>
+    <tr>
+        <td><code>void swap (matrix &amp;m)</code></td>
+        <td>Swaps the contents of the matrices. </td>
+    </tr>
+    <tr>
+        <td><code>void clear ()</code></td>
+        <td>Fills the matrix with the value <tt>0</tt>.</td>
+    </tr>
+    <tr>
+        <td><code>void insert (size_type i, size_type j,
+        const_reference_type t)</code></td>
+        <td>Inserts the value <tt>t</tt> at the <tt>j</tt>-th
+        element of the <tt>i</tt>-th row.</td>
+    </tr>
+    <tr>
+        <td><code>const_iterator1 find1 (size_type i, size_type
+        j) const</code></td>
+        <td>Finds the <tt>j</tt>-th element of the <tt>i</tt>-th
+        row.</td>
+    </tr>
+    <tr>
+        <td><code>iterator1 find1 (size_type i, size_type j)</code></td>
+        <td>Finds the <tt>j</tt>-th element of the <tt>i</tt>-th
+        row.</td>
+    </tr>
+    <tr>
+        <td><code>const_iterator2 find2 (size_type i, size_type
+        j) const</code></td>
+        <td>Finds the <tt>j</tt>-th element of the <tt>i</tt>-th
+        row.</td>
+    </tr>
+    <tr>
+        <td><code>iterator2 find2 (size_type i, size_type j)</code></td>
+        <td>Finds the <tt>j</tt>-th element of the <tt>i</tt>-th
+        row.</td>
+    </tr>
+    <tr>
+        <td><code>const_iterator1 begin1 () const</code></td>
+        <td>Returns a <tt>const_iterator1</tt> pointing to the
+        beginning of the <tt>matrix</tt>. </td>
+    </tr>
+    <tr>
+        <td><code>const_iterator1 end1 () const</code></td>
+        <td>Returns a <tt>const_iterator1</tt> pointing to the
+        end of the <tt>matrix</tt>. </td>
+    </tr>
+    <tr>
+        <td><code>iterator1 begin1 () </code></td>
+        <td>Returns a <tt>iterator1</tt> pointing to the
+        beginning of the <tt>matrix</tt>. </td>
+    </tr>
+    <tr>
+        <td><code>iterator1 end1 () </code></td>
+        <td>Returns a <tt>iterator1</tt> pointing to the end of
+        the <tt>matrix</tt>. </td>
+    </tr>
+    <tr>
+        <td><code>const_iterator2 begin2 () const</code></td>
+        <td>Returns a <tt>const_iterator2</tt> pointing to the
+        beginning of the <tt>matrix</tt>. </td>
+    </tr>
+    <tr>
+        <td><code>const_iterator2 end2 () const</code></td>
+        <td>Returns a <tt>const_iterator2</tt> pointing to the
+        end of the <tt>matrix</tt>. </td>
+    </tr>
+    <tr>
+        <td><code>iterator2 begin2 () </code></td>
+        <td>Returns a <tt>iterator2</tt> pointing to the
+        beginning of the <tt>matrix</tt>. </td>
+    </tr>
+    <tr>
+        <td><code>iterator2 end2 () </code></td>
+        <td>Returns a <tt>iterator2</tt> pointing to the end of
+        the <tt>matrix</tt>. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator1 rbegin1 () const</code></td>
+        <td>Returns a <tt>const_reverse_iterator1</tt> pointing
+        to the beginning of the reversed <tt>matrix</tt>. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator1 rend1 () const</code></td>
+        <td>Returns a <tt>const_reverse_iterator1</tt> pointing
+        to the end of the reversed <tt>matrix</tt>. </td>
+    </tr>
+    <tr>
+        <td><code>reverse_iterator1 rbegin1 () </code></td>
+        <td>Returns a <tt>reverse_iterator1</tt> pointing to the
+        beginning of the reversed <tt>matrix</tt>. </td>
+    </tr>
+    <tr>
+        <td><code>reverse_iterator1 rend1 () </code></td>
+        <td>Returns a <tt>reverse_iterator1</tt> pointing to the
+        end of the reversed <tt>matrix</tt>. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator2 rbegin2 () const</code></td>
+        <td>Returns a <tt>const_reverse_iterator2</tt> pointing
+        to the beginning of the reversed <tt>matrix</tt>. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator2 rend2 () const</code></td>
+        <td>Returns a <tt>const_reverse_iterator2</tt> pointing
+        to the end of the reversed <tt>matrix</tt>. </td>
+    </tr>
+    <tr>
+        <td><code>reverse_iterator2 rbegin2 () </code></td>
+        <td>Returns a <tt>reverse_iterator2</tt> pointing to the
+        beginning of the reversed <tt>matrix</tt>. </td>
+    </tr>
+    <tr>
+        <td><code>reverse_iterator2 rend2 () </code></td>
+        <td>Returns a <tt>reverse_iterator2</tt> pointing to the
+        end of the reversed <tt>matrix</tt>. </td>
+    </tr>
+</table>
+
+<h4>Interface</h4>
 
 <pre><code>    // Array based matrix class 
-    template&lt;class T, class A, class F&gt;
+    template&lt;class T, class F, class A&gt;
     class matrix: 
-        public matrix_expression&lt;matrix&lt;T, A, F&gt; &gt; {
+        public matrix_expression&lt;matrix&lt;T, F, A&gt; &gt; {
     public:      
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
         typedef T value_type;
         typedef const T &amp;const_reference_type;
         typedef T &amp;reference_type;
-        typedef A array_type;
         typedef F functor_type;
-        typedef matrix&lt;T, A, F&gt; self_type;
+        typedef A array_type;
+        typedef matrix&lt;T, F, A&gt; self_type;
         typedef matrix_const_reference&lt;self_type&gt; const_closure_type;
         typedef matrix_reference&lt;self_type&gt; closure_type;
         typedef matrix_row&lt;self_type&gt; matrix_row_type;
@@ -53,7 +361,7 @@ adaptor for dense matrices.</p>
         size_type size2 () const;
 
         // Element access
-        value_type operator () (size_type i, size_type j) const;
+        const_reference_type operator () (size_type i, size_type j) const;
         reference_type operator () (size_type i, size_type j);
 
         matrix_row_type operator [] (size_type i);
@@ -87,7 +395,7 @@ adaptor for dense matrices.</p>
 
         // Element insertion
         void clear ();
-        void insert (size_type i, size_type j, const T &amp;t);
+        void insert (size_type i, size_type j, const_reference_type t);
 
         class const_iterator1;
         class iterator1;
@@ -120,7 +428,7 @@ adaptor for dense matrices.</p>
             difference_type operator - (const const_iterator1 &amp;it) const;
 
             // Dereference
-            value_type operator * () const;
+            const_reference_type operator * () const;
 
             const_iterator2 begin () const;
             const_iterator2 end () const;
@@ -187,7 +495,7 @@ adaptor for dense matrices.</p>
             difference_type operator - (const const_iterator2 &amp;it) const;
 
             // Dereference
-            value_type operator * () const;
+            const_reference_type operator * () const;
 
             const_iterator1 begin () const;
             const_iterator1 end () const;
@@ -257,947 +565,6 @@ adaptor for dense matrices.</p>
 
         reverse_iterator2 rbegin2 ();
         reverse_iterator2 rend2 ();
-    };</code></pre>
-
-<h2><a name="matrix_row"></a>Matrix Row</h2>
-
-<p>The templated class <code>matrix_row </code>allows to address
-a row of a matrix.</p>
-
-<pre><code>    // Matrix based row vector class
-    template&lt;class M&gt;
-    class matrix_row:
-	public vector_expression&lt;matrix_row&lt;M&gt; &gt; {
-    public:      
-        typedef M matrix_type;
-        typedef typename M::size_type size_type;
-        typedef typename M::difference_type difference_type;
-        typedef typename M::value_type value_type;
-        typedef typename M::const_reference_type const_reference_type;
-        typedef typename M::reference_type reference_type;
-        typedef vector_const_reference&lt;matrix_row&lt;M&gt; &gt; const_closure_type;
-        typedef vector_reference&lt;matrix_row&lt;M&gt; &gt; closure_type;
-        typedef vector_range&lt;matrix_row&lt;M&gt; &gt; vector_range_type;
-        typedef typename M::const_iterator2 const_iterator_type;
-        typedef typename M::iterator2 iterator_type;
-        typedef typename proxy_traits&lt;typename M::storage_category&gt;::storage_category storage_category;
-
-        // Construction and destruction
-        matrix_row (matrix_type &amp;data, size_type i);
-
-        size_type size () const;
-
-        // Element access
-        value_type operator () (size_type j) const;
-        reference_type operator () (size_type j);
-
-        value_type operator [] (size_type j) const;
-        reference_type operator [] (size_type j);
-
-        vector_range_type project (size_type start, size_type stop);
-        vector_range_type project (const range &amp;r);
-
-        // Assignment
-        matrix_row &amp;operator = (const matrix_row &amp;mr);
-        matrix_row &amp;assign_temporary (matrix_row &amp;mr);
-        template&lt;class AE&gt;
-        matrix_row &amp;operator = (const vector_expression&lt;AE&gt; &amp;ae);
-        template&lt;class AE&gt;
-        matrix_row &amp;assign (const vector_expression&lt;AE&gt; &amp;ae);
-        template&lt;class AE&gt;
-        matrix_row &amp;operator += (const vector_expression&lt;AE&gt; &amp;ae);
-        template&lt;class AE&gt;
-        matrix_row &amp;plus_assign (const vector_expression&lt;AE&gt; &amp;ae);
-        template&lt;class AE&gt;
-        matrix_row &amp;operator -= (const vector_expression&lt;AE&gt; &amp;ae);
-        template&lt;class AE&gt;
-        matrix_row &amp;minus_assign (const vector_expression&lt;AE&gt; &amp;ae);
-        template&lt;class AT&gt;
-        matrix_row &amp;operator *= (const AT &amp;at);
-
-        // Swapping
-	void swap (matrix_row &amp;mr);
-	friend void swap (matrix_row &amp;mr1, matrix_row &amp;mr2);
-
-        class const_iterator;
-        class iterator;
-
-        // Element lookup
-        const_iterator find (size_type j) const;
-        iterator find (size_type j);
-
-        // Iterators simply are pointers.
-
-        class const_iterator:
-            public container_const_reference&lt;matrix_row&gt;,
-            public random_access_iterator_base&lt;const_iterator, value_type&gt; {
-        public:
-            typedef typename M::const_iterator2::iterator_category iterator_category;
-
-            // Construction and destruction
-            const_iterator (const matrix_row &amp;mr, const const_iterator_type &amp;it);
-            const_iterator (const iterator &amp;it);
-
-            // Arithmetic
-            const_iterator &amp;operator ++ ();
-            const_iterator &amp;operator -- ();
-            const_iterator &amp;operator += (difference_type n);
-            const_iterator &amp;operator -= (difference_type n);
-            difference_type operator - (const const_iterator &amp;it) const;
-
-            // Dereference
-            value_type operator * () const;
-
-            // Index
-            size_type index () const;
-
-            // Comparison
-            bool operator == (const const_iterator &amp;it) const;
-        };
-
-        const_iterator begin () const;
-        const_iterator end () const;
-
-        class iterator:
-            public container_reference&lt;matrix_row&gt;,
-            public random_access_iterator_base&lt;iterator, value_type&gt; {
-        public:
-            typedef typename M::iterator2::iterator_category iterator_category;
-
-            // Construction and destruction
-            iterator (matrix_row &amp;mr, const iterator_type &amp;it);
-
-            // Arithmetic
-            iterator &amp;operator ++ ();
-            iterator &amp;operator -- ();
-            iterator &amp;operator += (difference_type n);
-            iterator &amp;operator -= (difference_type n);
-            difference_type operator - (const iterator &amp;it) const;
-
-            // Dereference
-            reference_type operator * ();
-
-            // Index
-            size_type index () const;
-
-            // Comparison
-            bool operator == (const iterator &amp;it) const;
-        };
-
-        iterator begin ();
-        iterator end ();
-    };</code></pre>
-
-<h2><a name="matrix_column"></a>Matrix Column</h2>
-
-<p>The templated class <code>matrix_column </code>allows to
-address a column of a matrix.</p>
-
-<pre><code>    // Matrix based column vector class
-    template&lt;class M&gt;
-    class matrix_column:
-	public vector_expression&lt;matrix_column&lt;M&gt; &gt; {
-    public:      
-        typedef M matrix_type;
-        typedef typename M::size_type size_type;
-        typedef typename M::difference_type difference_type;
-        typedef typename M::value_type value_type;
-        typedef typename M::const_reference_type const_reference_type;
-        typedef typename M::reference_type reference_type;
-        typedef vector_const_reference&lt;matrix_column&lt;M&gt; &gt; const_closure_type;
-        typedef vector_reference&lt;matrix_column&lt;M&gt; &gt; closure_type;
-        typedef vector_range&lt;matrix_column&lt;M&gt; &gt; vector_range_type;
-        typedef typename M::const_iterator1 const_iterator_type;
-        typedef typename M::iterator1 iterator_type;
-        typedef typename proxy_traits&lt;typename M::storage_category&gt;::storage_category storage_category;
-
-        // Construction and destruction
-        matrix_column (matrix_type &amp;data, size_type j);
-
-        size_type size () const;
-
-        // Element access
-        value_type operator () (size_type i) const;
-        reference_type operator () (size_type i);
-
-        value_type operator [] (size_type i) const;
-        reference_type operator [] (size_type i);
-
-        vector_range_type project (size_type start, size_type stop);
-        vector_range_type project (const range &amp;r);
-
-        // Assignment
-        matrix_column &amp;operator = (const matrix_column &amp;mc);
-        matrix_column &amp;assign_temporary (matrix_column &amp;mc);
-        template&lt;class AE&gt;
-        matrix_column &amp;operator = (const vector_expression&lt;AE&gt; &amp;ae);
-        template&lt;class AE&gt;
-        matrix_column &amp;assign (const vector_expression&lt;AE&gt; &amp;ae);
-        template&lt;class AE&gt;
-        matrix_column &amp;operator += (const vector_expression&lt;AE&gt; &amp;ae);
-        template&lt;class AE&gt;
-        matrix_column &amp;plus_assign (const vector_expression&lt;AE&gt; &amp;ae);
-        template&lt;class AE&gt;
-        matrix_column &amp;operator -= (const vector_expression&lt;AE&gt; &amp;ae);
-        template&lt;class AE&gt;
-        matrix_column &amp;minus_assign (const vector_expression&lt;AE&gt; &amp;ae);
-        template&lt;class AT&gt;
-        matrix_column &amp;operator *= (const AT &amp;at);
-
-        // Swapping
-	void swap (matrix_column &amp;mc);
-	friend void swap (matrix_column &amp;mc1, matrix_column &amp;mc2);
-
-        class const_iterator;
-        class iterator;
-
-        // Element lookup
-        const_iterator find (size_type i) const;
-        iterator find (size_type i);
-
-        // Iterators simply are pointers.
-
-        class const_iterator:
-            public container_const_reference&lt;matrix_column&gt;,
-            public random_access_iterator_base&lt;const_iterator, value_type&gt; {
-        public:
-            typedef typename M::const_iterator1::iterator_category iterator_category;
-
-            // Construction and destruction
-            const_iterator (const matrix_column &amp;mc, const const_iterator_type &amp;it);
-            const_iterator (const iterator &amp;it);
-
-            // Arithmetic
-            const_iterator &amp;operator ++ ();
-            const_iterator &amp;operator -- ();
-            const_iterator &amp;operator += (difference_type n);
-            const_iterator &amp;operator -= (difference_type n);
-            difference_type operator - (const const_iterator &amp;it) const;
-
-            // Dereference
-            value_type operator * () const;
-
-            // Index
-            size_type index () const;
-
-            // Comparison
-            bool operator == (const const_iterator &amp;it) const;
-        };
-
-        const_iterator begin () const;
-        const_iterator end () const;
-
-        class iterator:
-            public container_reference&lt;matrix_column&gt;,
-            public random_access_iterator_base&lt;iterator, value_type&gt; {
-        public:
-            typedef typename M::iterator1::iterator_category iterator_category;
-
-            // Construction and destruction
-            iterator (matrix_column &amp;mc, const iterator_type &amp;it);
-
-            // Arithmetic
-            iterator &amp;operator ++ ();
-            iterator &amp;operator -- ();
-            iterator &amp;operator += (difference_type n);
-            iterator &amp;operator -= (difference_type n);
-            difference_type operator - (const iterator &amp;it) const;
-
-            // Dereference
-            reference_type operator * ();
-
-            // Index
-            size_type index () const;
-
-            // Comparison
-            bool operator == (const iterator &amp;it) const;
-        };
-
-        iterator begin ();
-        iterator end ();
-    };</code></pre>
-
-<h2><a name="vector_range"></a>Vector Range</h2>
-
-<p>The templated class <code>matrix_vector_range </code>allows to
-address a sub vector of a matrix.</p>
-
-<pre><code>    // Matrix based vector range class
-    template&lt;class M&gt;
-    class matrix_vector_range:
-		public vector_expression&lt;matrix_vector_range&lt;M&gt; &gt; {
-    public:      
-        typedef M matrix_type;
-        typedef typename M::size_type size_type;
-        typedef typename M::difference_type difference_type;
-        typedef typename M::value_type value_type;
-        typedef typename M::const_reference_type const_reference_type;
-        typedef typename M::reference_type reference_type;
-        typedef vector_const_reference&lt;matrix_vector_range&lt;M&gt; &gt; const_closure_type;
-        typedef vector_reference&lt;matrix_vector_range&lt;M&gt; &gt; closure_type;
-        typedef range::const_iterator const_iterator1_type;
-        typedef range::const_iterator iterator1_type;
-        typedef range::const_iterator const_iterator2_type;
-        typedef range::const_iterator iterator2_type;
-        typedef typename proxy_traits&lt;typename M::storage_category&gt;::storage_category storage_category;
-
-        // Construction and destruction
-        matrix_vector_range (matrix_type &amp;data, const range &amp;r1, const range &amp;r2);
-        matrix_vector_range (matrix_type &amp;data, size_type start1, size_type stop1, size_type start2, size_type stop2);
-
-        size_type size () const;
-
-        // Element access
-        value_type operator () (size_type i) const;
-        reference_type operator () (size_type i);
-
-        value_type operator [] (size_type i) const;
-        reference_type operator [] (size_type i);
-
-        matrix_vector_range project (size_type start, size_type stop);
-        matrix_vector_range project (const range &amp;r);
-
-        // Assignment
-        matrix_vector_range &amp;operator = (const matrix_vector_range &amp;mvr);
-        matrix_vector_range &amp;assign_temporary (matrix_vector_range &amp;mvr);
-        template&lt;class AE&gt;
-        matrix_vector_range &amp;operator = (const vector_expression&lt;AE&gt; &amp;ae);
-        template&lt;class AE&gt;
-        matrix_vector_range &amp;assign (const vector_expression&lt;AE&gt; &amp;ae);
-        template&lt;class AE&gt;
-        matrix_vector_range &amp;operator += (const vector_expression&lt;AE&gt; &amp;ae);
-        template&lt;class AE&gt;
-        matrix_vector_range &amp;plus_assign (const vector_expression&lt;AE&gt; &amp;ae);
-        template&lt;class AE&gt;
-        matrix_vector_range &amp;operator -= (const vector_expression&lt;AE&gt; &amp;ae);
-        template&lt;class AE&gt;
-        matrix_vector_range &amp;minus_assign (const vector_expression&lt;AE&gt; &amp;ae);
-        template&lt;class AT&gt;
-        matrix_vector_range &amp;operator *= (const AT &amp;at);
-
-        // Swapping
-	void swap (matrix_vector_range &amp;mvr);
-	friend void swap (matrix_vector_range &amp;mvr1, matrix_vector_range &amp;mvr2);
-
-        // Iterators simply are indexes.
-
-        class iterator;
-
-        class const_iterator:
-            public container_const_reference&lt;matrix_type&gt;,
-            public random_access_iterator_base&lt;const_iterator, value_type&gt; {
-        public:
-            typedef typename restrict_traits&lt;typename M::const_iterator1::iterator_category,
-	                                     typename M::const_iterator2::iterator_category&gt;::iterator_category iterator_category; 
-
-            // Construction and destruction
-            const_iterator (const matrix_type &amp;m, const const_iterator1_type &amp;it1, const const_iterator2_type &amp;it2);
-            const_iterator (const iterator &amp;it);
-
-            // Arithmetic
-            const_iterator &amp;operator ++ ();
-            const_iterator &amp;operator -- ();
-            const_iterator &amp;operator += (difference_type n);
-            const_iterator &amp;operator -= (difference_type n);
-            difference_type operator - (const const_iterator &amp;it) const;
-
-            // Dereference
-            value_type operator * () const;
-
-            // Index
-            size_type  index () const;
-
-            // Comparison
-            bool operator == (const const_iterator &amp;it) const;
-        };
-
-        const_iterator begin () const;
-        const_iterator end () const;
-
-        class iterator:
-            public container_reference&lt;matrix_type&gt;,
-            public random_access_iterator_base&lt;iterator, value_type&gt; {
-        public:
-            typedef typename restrict_traits&lt;typename M::iterator1::iterator_category,
-	                                     typename M::iterator2::iterator_category&gt;::iterator_category iterator_category; 
-
-            // Construction and destruction
-            iterator (matrix_type &amp;m, const iterator1_type &amp;it1, const iterator2_type &amp;it2);
-
-            // Arithmetic
-            iterator &amp;operator ++ ();
-            iterator &amp;operator -- ();
-            iterator &amp;operator += (difference_type n);
-            iterator &amp;operator -= (difference_type n);
-            difference_type operator - (const iterator &amp;it) const;
-
-            // Dereference
-            reference_type operator * ();
-
-            // Index
-            size_type index () const;
-
-            // Comparison
-            bool operator == (const iterator &amp;it) const;
-        };
-
-        iterator begin ();
-        iterator end ();
-    };</code></pre>
-
-<h2><a name="vector_slice"></a>Vector Slice</h2>
-
-<p>The templated class <code>matrix_vector_slice </code>allows to
-address a sliced sub vector of a matrix.</p>
-
-<pre><code>    // Matrix based vector slice class
-    template&lt;class M&gt;
-    class matrix_vector_slice:
-		public vector_expression&lt;matrix_vector_slice&lt;M&gt; &gt; {
-    public:      
-        typedef M matrix_type;
-        typedef typename M::size_type size_type;
-        typedef typename M::difference_type difference_type;
-        typedef typename M::value_type value_type;
-        typedef typename M::const_reference_type const_reference_type;
-        typedef typename M::reference_type reference_type;
-        typedef vector_const_reference&lt;matrix_vector_slice&lt;M&gt; &gt; const_closure_type;
-        typedef vector_reference&lt;matrix_vector_slice&lt;M&gt; &gt; closure_type;
-        typedef slice::const_iterator const_iterator1_type;
-        typedef slice::const_iterator iterator1_type;
-        typedef slice::const_iterator const_iterator2_type;
-        typedef slice::const_iterator iterator2_type;
-        typedef typename proxy_traits&lt;typename M::storage_category&gt;::storage_category storage_category;
-
-        // Construction and destruction
-        matrix_vector_slice (matrix_type &amp;data, const slice &amp;s1, const slice &amp;s2);
-        matrix_vector_slice (matrix_type &amp;data, size_type start1, size_type stride1, size_type size1, size_type start2, size_type stride2, size_type size2);
-
-        size_type size () const;
-
-        // Element access
-        value_type operator () (size_type i) const;
-        reference_type operator () (size_type i);
-
-        value_type operator [] (size_type i) const;
-        reference_type operator [] (size_type i);
-
-        matrix_vector_slice project (const range &amp;r);
-        matrix_vector_slice project (const slice &amp;s);
-
-        // Assignment
-        matrix_vector_slice &amp;operator = (const matrix_vector_slice &amp;mvs);
-        matrix_vector_slice &amp;assign_temporary (matrix_vector_slice &amp;mvs);
-        template&lt;class AE&gt;
-        matrix_vector_slice &amp;operator = (const vector_expression&lt;AE&gt; &amp;ae);
-        template&lt;class AE&gt;
-        matrix_vector_slice &amp;assign (const vector_expression&lt;AE&gt; &amp;ae);
-        template&lt;class AE&gt;
-        matrix_vector_slice &amp;operator += (const vector_expression&lt;AE&gt; &amp;ae);
-        template&lt;class AE&gt;
-        matrix_vector_slice &amp;plus_assign (const vector_expression&lt;AE&gt; &amp;ae);
-        template&lt;class AE&gt;
-        matrix_vector_slice &amp;operator -= (const vector_expression&lt;AE&gt; &amp;ae);
-        template&lt;class AE&gt;
-        matrix_vector_slice &amp;minus_assign (const vector_expression&lt;AE&gt; &amp;ae);
-        template&lt;class AT&gt;
-        matrix_vector_slice &amp;operator *= (const AT &amp;at);
-
-        // Swapping
-	void swap (matrix_vector_slice &amp;mvs);
-	friend void swap (matrix_vector_slice &amp;mvs1, matrix_vector_slice &amp;mvs2);
-
-        // Iterators simply are indexes.
-
-        class iterator;
-
-        class const_iterator:
-            public container_const_reference&lt;matrix_type&gt;,
-            public random_access_iterator_base&lt;const_iterator, value_type&gt; {
-        public:
-            typedef typename restrict_traits&lt;typename M::const_iterator1::iterator_category,
-                                    	     typename M::const_iterator2::iterator_category&gt;::iterator_category iterator_category; 
-
-            // Construction and destruction
-            const_iterator (const matrix_type &amp;m, const const_iterator1_type &amp;it1, const const_iterator2_type &amp;it2);
-            const_iterator (const iterator &amp;it);
-
-            // Arithmetic
-            const_iterator &amp;operator ++ ();
-            const_iterator &amp;operator -- ();
-            const_iterator &amp;operator += (difference_type n);
-            const_iterator &amp;operator -= (difference_type n);
-            difference_type operator - (const const_iterator &amp;it) const;
-
-            // Dereference
-            value_type operator * () const;
-
-            // Index
-            size_type  index () const;
-
-            // Comparison
-            bool operator == (const const_iterator &amp;it) const;
-        };
-
-        const_iterator begin () const;
-        const_iterator end () const;
-
-        class iterator:
-            public container_reference&lt;matrix_type&gt;,
-            public random_access_iterator_base&lt;iterator, value_type&gt; {
-        public:
-            typedef typename restrict_traits&lt;typename M::iterator1::iterator_category,
-	                                     typename M::iterator2::iterator_category&gt;::iterator_category iterator_category; 
-
-            // Construction and destruction
-            iterator (matrix_type &amp;m, const iterator1_type &amp;it1, const iterator2_type &amp;it2);
-
-            // Arithmetic
-            iterator &amp;operator ++ ();
-            iterator &amp;operator -- ();
-            iterator &amp;operator += (difference_type n);
-            iterator &amp;operator -= (difference_type n);
-            difference_type operator - (const iterator &amp;it) const;
-
-            // Dereference
-            reference_type operator * ();
-
-            // Index
-            size_type index () const;
-
-            // Comparison
-            bool operator == (const iterator &amp;it) const;
-        };
-
-        iterator begin ();
-        iterator end ();
-    };</code></pre>
-
-<h2><a name="matrix_range"></a>Matrix Range</h2>
-
-<p>The templated class <code>matrix_range </code>allows to
-address a sub matrix of a matrix.</p>
-
-<pre><code>    // Matrix based range class
-    template&lt;class M&gt;
-    class matrix_range:
-	public matrix_expression&lt;matrix_range&lt;M&gt; &gt; {
-    public:      
-        typedef M matrix_type;
-        typedef typename M::size_type size_type;
-        typedef typename M::difference_type difference_type;
-        typedef typename M::value_type value_type;
-        typedef typename M::const_reference_type const_reference_type;
-        typedef typename M::reference_type reference_type;
-        typedef matrix_const_reference&lt;matrix_range&lt;M&gt; &gt; const_closure_type;
-        typedef matrix_reference&lt;matrix_range&lt;M&gt; &gt; closure_type;
-        typedef matrix_row&lt;matrix_range&lt;M&gt; &gt; matrix_row_type;
-        typedef matrix_column&lt;matrix_range&lt;M&gt; &gt; matrix_column_type;
-        typedef typename M::const_iterator1 const_iterator1_type;
-        typedef typename M::iterator1 iterator1_type;
-        typedef typename M::const_iterator2 const_iterator2_type;
-        typedef typename M::iterator2 iterator2_type;
-        typedef typename proxy_traits&lt;typename M::storage_category&gt;::storage_category storage_category;
-        typedef typename M::orientation_category orientation_category;
-
-        // Construction and destruction
-        matrix_range (matrix_type &amp;data, const range &amp;r1, const range &amp;r2);
-        matrix_range (matrix_type &amp;data, size_type start1, size_type stop1, size_type start2, size_type stop2);
-
-        size_type start1 () const;
-        size_type size1 () const;
-        size_type start2() const;
-        size_type size2 () const;
-
-        // Element access
-        value_type operator () (size_type i, size_type j) const;
-        reference_type operator () (size_type i, size_type j);
-
-        matrix_row_type operator [] (size_type i);
-        matrix_row_type row (size_type i);
-        matrix_column_type column (size_type j);
-
-        matrix_range project (size_type start1, size_type stop1, size_type start2, size_type stop2);
-        matrix_range project (const range &amp;r1, const range &amp;r2);
-
-        // Assignment
-        matrix_range &amp;operator = (const matrix_range &amp;mr);
-        matrix_range &amp;assign_temporary (matrix_range &amp;mr);
-        template&lt;class AE&gt;
-        matrix_range &amp;operator = (const matrix_expression&lt;AE&gt; &amp;ae);
-        template&lt;class AE&gt;
-        matrix_range &amp;assign (const matrix_expression&lt;AE&gt; &amp;ae);
-        template&lt;class AE&gt;
-        matrix_range&amp; operator += (const matrix_expression&lt;AE&gt; &amp;ae);
-        template&lt;class AE&gt;
-        matrix_range &amp;plus_assign (const matrix_expression&lt;AE&gt; &amp;ae);
-        template&lt;class AE&gt;
-        matrix_range&amp; operator -= (const matrix_expression&lt;AE&gt; &amp;ae);
-        template&lt;class AE&gt;
-        matrix_range &amp;minus_assign (const matrix_expression&lt;AE&gt; &amp;ae);
-        template&lt;class AT&gt;
-        matrix_range&amp; operator *= (const AT &amp;at);
-
-        // Swapping
-	void swap (matrix_range &amp;mr);
-	friend void swap (matrix_range &amp;mr1, matrix_range &amp;mr2);
-
-        class const_iterator1;
-        class iterator1;
-        class const_iterator2;
-        class iterator2;
-
-        // Element lookup
-        const_iterator1 find1 (size_type i, size_type j) const;
-        iterator1 find1 (size_type i, size_type j);
-        const_iterator2 find2 (size_type i, size_type j) const;
-        iterator2 find2 (size_type i, size_type j);
-
-        // Iterators simply are pointers.
-
-        class const_iterator1:
-            public container_const_reference&lt;matrix_range&gt;,
-            public random_access_iterator_base&lt;const_iterator1, value_type&gt; {
-        public:
-            typedef typename M::const_iterator1::iterator_category iterator_category;
-
-            // Construction and destruction
-            const_iterator1 (const matrix_range &amp;mr, const const_iterator1_type &amp;it);
-            const_iterator1 (const iterator1 &amp;it);
-
-            // Arithmetic
-            const_iterator1 &amp;operator ++ ();
-            const_iterator1 &amp;operator -- ();
-            const_iterator1 &amp;operator += (difference_type n);
-            const_iterator1 &amp;operator -= (difference_type n);
-            difference_type operator - (const const_iterator1 &amp;it) const;
-
-            // Dereference
-            value_type operator * () const;
-
-            const_iterator2 begin () const;
-            const_iterator2 end () const;
-
-            // Indices
-            size_type index1 () const;
-            size_type index2 () const;
-
-            // Comparison
-            bool operator == (const const_iterator1 &amp;it) const;
-        };
-
-        const_iterator1 begin1 () const;
-        const_iterator1 end1 () const;
-
-        class iterator1:
-            public container_reference&lt;matrix_range&gt;,
-            public random_access_iterator_base&lt;iterator1, value_type&gt; {
-        public:
-            typedef typename M::iterator1::iterator_category iterator_category;
-
-            // Construction and destruction
-            iterator1 (matrix_range &amp;mr, const iterator1_type &amp;it);
-
-            // Arithmetic
-            iterator1 &amp;operator ++ ();
-            iterator1 &amp;operator -- ();
-            iterator1 &amp;operator += (difference_type n);
-            iterator1 &amp;operator -= (difference_type n);
-            difference_type operator - (const iterator1 &amp;it) const;
-
-            // Dereference
-            reference_type operator * ();
-
-            iterator2 begin ();
-            iterator2 end ();
-
-            // Indices
-            size_type index1 () const;
-            size_type index2 () const;
-
-            // Comparison
-            bool operator == (const iterator1 &amp;it) const;
-        };
-
-        iterator1 begin1 ();
-        iterator1 end1 ();
-
-        class const_iterator2:
-            public container_const_reference&lt;matrix_range&gt;,
-            public random_access_iterator_base&lt;const_iterator2, value_type&gt; {
-        public:
-            typedef typename M::const_iterator2::iterator_category iterator_category;
-
-            // Construction and destruction
-            const_iterator2 (const matrix_range &amp;mr, const const_iterator2_type &amp;it);
-            const_iterator2 (const iterator2 &amp;it);
-
-            // Arithmetic
-            const_iterator2 &amp;operator ++ ();
-            const_iterator2 &amp;operator -- ();
-            const_iterator2 &amp;operator += (difference_type n);
-            const_iterator2 &amp;operator -= (difference_type n);
-            difference_type operator - (const const_iterator2 &amp;it) const;
-
-            // Dereference
-            value_type operator * () const;
-
-            const_iterator1 begin () const;
-            const_iterator1 end () const;
-
-            // Indices
-            size_type index1 () const;
-            size_type index2 () const;
-
-            // Comparison
-            bool operator == (const const_iterator2 &amp;it) const;
-        };
-
-        const_iterator2 begin2 () const;
-        const_iterator2 end2 () const;
-
-        class iterator2:
-            public container_reference&lt;matrix_range&gt;,
-            public random_access_iterator_base&lt;iterator2, value_type&gt; {
-        public:
-            typedef typename M::iterator2::iterator_category iterator_category;
-
-            // Construction and destruction
-            iterator2 (matrix_range &amp;mr, const iterator2_type &amp;it);
-
-            // Arithmetic
-            iterator2 &amp;operator ++ ();
-            iterator2 &amp;operator -- ();
-            iterator2 &amp;operator += (difference_type n);
-            iterator2 &amp;operator -= (difference_type n);
-            difference_type operator - (const iterator2 &amp;it) const;
-
-            // Dereference
-            reference_type operator * ();
-
-            iterator1 begin ();
-            iterator1 end ();
-
-            // Indices
-            size_type index1 () const;
-            size_type index2 () const;
-
-            // Comparison
-            bool operator == (const iterator2 &amp;it) const;
-        };
-
-        iterator2 begin2 ();
-        iterator2 end2 ();
-    };</code></pre>
-
-<h2><a name="matrix_slice"></a>Matrix Slice</h2>
-
-<p>The templated class <code>matrix_slice </code>allows to
-address a sliced sub matrix of a matrix.</p>
-
-<pre><code>    // Matrix based slice class
-    template&lt;class M&gt;
-    class matrix_slice:
-	public matrix_expression&lt;matrix_slice&lt;M&gt; &gt; {
-    public:      
-        typedef M matrix_type;
-        typedef typename M::size_type size_type;
-        typedef typename M::difference_type difference_type;
-        typedef typename M::value_type value_type;
-        typedef typename M::const_reference_type const_reference_type;
-        typedef typename M::reference_type reference_type;
-        typedef matrix_const_reference&lt;matrix_slice&lt;M&gt; &gt; const_closure_type;
-        typedef matrix_reference&lt;matrix_slice&lt;M&gt; &gt; closure_type;
-        typedef matrix_row&lt;matrix_slice&lt;M&gt; &gt; matrix_row_type;
-        typedef matrix_column&lt;matrix_slice&lt;M&gt; &gt; matrix_column_type;
-        typedef slice::const_iterator const_iterator1_type;
-        typedef slice::const_iterator iterator1_type;
-        typedef slice::const_iterator const_iterator2_type;
-        typedef slice::const_iterator iterator2_type;
-        typedef typename proxy_traits&lt;typename M::storage_category&gt;::storage_category storage_category;
-        typedef typename M::orientation_category orientation_category;
-
-        // Construction and destruction
-        matrix_slice (matrix_type &amp;data, const slice &amp;s1, const slice &amp;s2);
-        matrix_slice (matrix_type &amp;data, size_type start1, size_type stride1, size_type size1, size_type start2, size_type stride2, size_type size2);
-
-        size_type size1 () const;
-        size_type size2 () const;
-
-        // Element access
-        value_type operator () (size_type i, size_type j) const;
-        reference_type operator () (size_type i, size_type j);
-
-        matrix_row_type operator [] (size_type i);
-        matrix_row_type row (size_type i);
-        matrix_column_type column (size_type j);
-
-        matrix_slice project (const range &amp;r1, const range &amp;r2);
-        matrix_slice project (const slice &amp;s);
-
-        // Assignment
-        matrix_slice &amp;operator = (const matrix_slice &amp;ms);
-        matrix_slice &amp;assign_temporary (matrix_slice &amp;ms);
-        template&lt;class AE&gt;
-        matrix_slice &amp;operator = (const matrix_expression&lt;AE&gt; &amp;ae);
-        template&lt;class AE&gt;
-        matrix_slice &amp;assign (const matrix_expression&lt;AE&gt; &amp;ae);
-        template&lt;class AE&gt;
-        matrix_slice&amp; operator += (const matrix_expression&lt;AE&gt; &amp;ae);
-        template&lt;class AE&gt;
-        matrix_slice &amp;plus_assign (const matrix_expression&lt;AE&gt; &amp;ae);
-        template&lt;class AE&gt;
-        matrix_slice&amp; operator -= (const matrix_expression&lt;AE&gt; &amp;ae);
-        template&lt;class AE&gt;
-        matrix_slice &amp;minus_assign (const matrix_expression&lt;AE&gt; &amp;ae);
-        template&lt;class AT&gt;
-        matrix_slice&amp; operator *= (const AT &amp;at);
-
-        // Swapping
-	void swap (matrix_slice &amp;ms);
-	friend void swap (matrix_slice &amp;ms1, matrix_slice &amp;ms2);
-
-        // Iterators simply are indexes.
-
-        class iterator1;
-
-        class const_iterator2;
-
-        class const_iterator1:
-            public container_const_reference&lt;matrix_type&gt;,
-            public random_access_iterator_base&lt;const_iterator1, value_type&gt; {
-        public:
-            typedef typename M::const_iterator1::iterator_category iterator_category;
-
-            // Construction and destruction
-            const_iterator1 (const matrix_type &amp;m, const const_iterator1_type &amp;it1, const const_iterator2_type &amp;it2);
-            const_iterator1 (const iterator1 &amp;it);
-
-            // Arithmetic
-            const_iterator1 &amp;operator ++ ();
-            const_iterator1 &amp;operator -- ();
-            const_iterator1 &amp;operator += (difference_type n);
-            const_iterator1 &amp;operator -= (difference_type n);
-            difference_type operator - (const const_iterator1 &amp;it) const;
-
-            // Dereference
-            value_type operator * () const;
-
-            const_iterator2 begin () const;
-            const_iterator2 end () const;
-
-            // Indices
-            size_type index1 () const;
-            size_type index2 () const;
-
-            // Comparison
-            bool operator == (const const_iterator1 &amp;it) const;
-        };
-
-        const_iterator1 begin1 () const;
-        const_iterator1 end1 () const;
-
-        class iterator2;
-
-        class iterator1:
-            public container_reference&lt;matrix_type&gt;,
-            public random_access_iterator_base&lt;iterator1, value_type&gt; {
-        public:
-            typedef typename M::iterator1::iterator_category iterator_category;
-
-            // Construction and destruction
-            iterator1 (matrix_type &amp;m, const iterator1_type &amp;it1, const iterator2_type &amp;it2);
-
-            // Arithmetic
-            iterator1 &amp;operator ++ ();
-            iterator1 &amp;operator -- ();
-            iterator1 &amp;operator += (difference_type n);
-            iterator1 &amp;operator -= (difference_type n);
-            difference_type operator - (const iterator1 &amp;it) const;
-
-            // Dereference
-            reference_type operator * ();
-
-            iterator2 begin ();
-            iterator2 end ();
-
-            // Indices
-            size_type index1 () const;
-            size_type index2 () const;
-
-            // Comparison
-            bool operator == (const iterator1 &amp;it) const;
-        };
-
-        iterator1 begin1 ();
-        iterator1 end1 ();
-
-        class const_iterator2:
-            public container_const_reference&lt;matrix_type&gt;,
-            public random_access_iterator_base&lt;const_iterator2, value_type&gt; {
-        public:
-            typedef typename M::const_iterator2::iterator_category iterator_category;
-
-            // Construction and destruction
-            const_iterator2 (const matrix_type &amp;m, const const_iterator1_type &amp;it1, const const_iterator2_type &amp;it2);
-            const_iterator2 (const iterator2 &amp;it);
-
-            // Arithmetic
-            const_iterator2 &amp;operator ++ ();
-            const_iterator2 &amp;operator -- ();
-            const_iterator2 &amp;operator += (difference_type n);
-            const_iterator2 &amp;operator -= (difference_type n);
-            difference_type operator - (const const_iterator2 &amp;it) const;
-
-            // Dereference
-            value_type operator * () const;
-
-            const_iterator1 begin () const;
-            const_iterator1 end () const;
-
-            // Indices
-            size_type index1 () const;
-            size_type index2 () const;
-
-            // Comparison
-            bool operator == (const const_iterator2 &amp;it) const;
-        };
-
-        const_iterator2 begin2 () const;
-        const_iterator2 end2 () const;
-
-        class iterator2:
-            public container_reference&lt;matrix_type&gt;,
-            public random_access_iterator_base&lt;iterator2, value_type&gt; {
-        public:
-            typedef typename M::iterator2::iterator_category iterator_category;
-
-            // Construction and destruction
-            iterator2 (matrix_type &amp;m, const iterator1_type &amp;it1, const iterator2_type &amp;it2);
-
-            // Arithmetic
-            iterator2 &amp;operator ++ ();
-            iterator2 &amp;operator -- ();
-            iterator2 &amp;operator += (difference_type n);
-            iterator2 &amp;operator -= (difference_type n);
-            difference_type operator - (const iterator2 &amp;it) const;
-
-            // Dereference
-            reference_type operator * ();
-
-            iterator1 begin () const;
-            iterator1 end () const;
-
-            // Indices
-            size_type index1 () const;
-            size_type index2 () const;
-
-            // Comparison
-            bool operator == (const iterator2 &amp;it) const;
-        };
-
-        iterator2 begin2 ();
-        iterator2 end2 ();
     };</code></pre>
 </body>
 </html>

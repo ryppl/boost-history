@@ -32,17 +32,22 @@ struct test_my_matrix_vector {
 				std::cout << "column (m, " << i << ") = " << v1 << std::endl;
 			}
 
+// FIXME: MSVC ICE
+#if ! defined (USE_MSVC) || ! defined (_DEBUG)
 			// Outer product
 			initialize_vector (v1);
 			initialize_vector (v2);
 			m1 = numerics::outer_prod (v1, v2);
 			std::cout << "outer_prod (v1, v2) = " << m1 << std::endl;
+#endif
 
 			// Matrix vector product 
 			initialize_matrix (m1);
 			initialize_vector (v1);
             v2 = numerics::prod (m1, v1);
 			std::cout << "prod (m1, v1) = " << v2 << std::endl;
+            v2 = numerics::prod (v1, m1);
+			std::cout << "prod (v1, m1) = " << v2 << std::endl;
 		}
         catch (std::exception &e) {
 			std::cout << e.what () << std::endl;
@@ -84,36 +89,104 @@ struct test_my_matrix_vector {
 void test_matrix_vector () {
     std::cout << "test_matrix_vector" << std::endl;
 
+#ifdef USE_MATRIX
     std::cout << "float, bounded_array" << std::endl;
-    test_my_matrix_vector<numerics::vector<float, numerics::bounded_array<float, 3> >,
-                          numerics::matrix<float, numerics::bounded_array<float, 3 * 3> >, 3 > () ();
+    test_my_matrix_vector<numerics::vector<float, numerics::forward, numerics::bounded_array<float, 3> >,
+                          numerics::matrix<float, numerics::row_major<>, numerics::bounded_array<float, 3 * 3> >, 3> () ();
 
     std::cout << "double, bounded_array" << std::endl;
-    test_my_matrix_vector<numerics::vector<double, numerics::bounded_array<double, 3> >,
-                          numerics::matrix<double, numerics::bounded_array<double, 3 * 3> >, 3 > () ();
+    test_my_matrix_vector<numerics::vector<double, numerics::forward, numerics::bounded_array<double, 3> >,
+                          numerics::matrix<double, numerics::row_major<>, numerics::bounded_array<double, 3 * 3> >, 3> () ();
 
     std::cout << "std::complex<float>, bounded_array" << std::endl;
-    test_my_matrix_vector<numerics::vector<std::complex<float>, numerics::bounded_array<std::complex<float>, 3> >,
-                          numerics::matrix<std::complex<float>, numerics::bounded_array<std::complex<float>, 3 * 3> >, 3 > () ();
+    test_my_matrix_vector<numerics::vector<std::complex<float>, numerics::forward, numerics::bounded_array<std::complex<float>, 3> >,
+                          numerics::matrix<std::complex<float>, numerics::row_major<>, numerics::bounded_array<std::complex<float>, 3 * 3> >, 3> () ();
 
-    std::cout << "std::complex<float>, bounded_array" << std::endl;
-    test_my_matrix_vector<numerics::vector<std::complex<double>, numerics::bounded_array<std::complex<double>, 3> >,
-                          numerics::matrix<std::complex<double>, numerics::bounded_array<std::complex<double>, 3 * 3> >, 3 > () ();
+    std::cout << "std::complex<double>, bounded_array" << std::endl;
+    test_my_matrix_vector<numerics::vector<std::complex<double>, numerics::forward, numerics::bounded_array<std::complex<double>, 3> >,
+                          numerics::matrix<std::complex<double>, numerics::row_major<>, numerics::bounded_array<std::complex<double>, 3 * 3> >, 3> () ();
 
     std::cout << "float, unbounded_array" << std::endl;
-    test_my_matrix_vector<numerics::vector<float, numerics::unbounded_array<float> >,
-                          numerics::matrix<float, numerics::unbounded_array<float> >, 3 > () ();
+    test_my_matrix_vector<numerics::vector<float, numerics::forward, numerics::unbounded_array<float> >,
+                          numerics::matrix<float, numerics::row_major<>, numerics::unbounded_array<float> >, 3> () ();
 
     std::cout << "double, unbounded_array" << std::endl;
-    test_my_matrix_vector<numerics::vector<double, numerics::unbounded_array<double> >,
-                          numerics::matrix<double, numerics::unbounded_array<double> >, 3 > () ();
+    test_my_matrix_vector<numerics::vector<double, numerics::forward, numerics::unbounded_array<double> >,
+                          numerics::matrix<double, numerics::row_major<>, numerics::unbounded_array<double> >, 3> () ();
 
     std::cout << "std::complex<float>, unbounded_array" << std::endl;
-    test_my_matrix_vector<numerics::vector<std::complex<float>, numerics::unbounded_array<std::complex<float> > >,
-                          numerics::matrix<std::complex<float>, numerics::unbounded_array<std::complex<float> > >, 3 > () ();
+    test_my_matrix_vector<numerics::vector<std::complex<float>, numerics::forward, numerics::unbounded_array<std::complex<float> > >,
+                          numerics::matrix<std::complex<float>, numerics::row_major<>, numerics::unbounded_array<std::complex<float> > >, 3> () ();
+
+    std::cout << "std::complex<double>, unbounded_array" << std::endl;
+    test_my_matrix_vector<numerics::vector<std::complex<double>, numerics::forward, numerics::unbounded_array<std::complex<double> > >,
+                          numerics::matrix<std::complex<double>, numerics::row_major<>, numerics::unbounded_array<std::complex<double> > >, 3> () ();
+
+    std::cout << "float, std::vector" << std::endl;
+    test_my_matrix_vector<numerics::vector<float, numerics::forward, std::vector<float> >,
+                          numerics::matrix<float, numerics::row_major<>, std::vector<float> >, 3> () ();
+
+    std::cout << "double, std::vector" << std::endl;
+    test_my_matrix_vector<numerics::vector<double, numerics::forward, std::vector<double> >,
+                          numerics::matrix<double, numerics::row_major<>, std::vector<double> >, 3> () ();
+
+    std::cout << "std::complex<float>, std::vector" << std::endl;
+    test_my_matrix_vector<numerics::vector<std::complex<float>, numerics::forward, std::vector<std::complex<float> > >,
+                          numerics::matrix<std::complex<float>, numerics::row_major<>, std::vector<std::complex<float> > >, 3> () ();
+
+    std::cout << "std::complex<double>, std::vector" << std::endl;
+    test_my_matrix_vector<numerics::vector<std::complex<double>, numerics::forward, std::vector<std::complex<double> > >,
+                          numerics::matrix<std::complex<double>, numerics::row_major<>, std::vector<std::complex<double> > >, 3> () ();
+#endif
+
+#ifdef USE_VECTOR_OF_VECTOR
+    std::cout << "float, bounded_array" << std::endl;
+    test_my_matrix_vector<numerics::vector<float, numerics::forward, numerics::bounded_array<float, 3> >,
+                          numerics::vector_of_vector<float, numerics::row_major<>, numerics::bounded_array<numerics::bounded_array<float, 3>, 3> >, 3> () ();
+
+    std::cout << "double, bounded_array" << std::endl;
+    test_my_matrix_vector<numerics::vector<double, numerics::forward, numerics::bounded_array<double, 3> >,
+                          numerics::vector_of_vector<double, numerics::row_major<>, numerics::bounded_array<numerics::bounded_array<double, 3>, 3> >, 3> () ();
+
+    std::cout << "std::complex<float>, bounded_array" << std::endl;
+    test_my_matrix_vector<numerics::vector<std::complex<float>, numerics::forward, numerics::bounded_array<std::complex<float>, 3> >,
+                          numerics::vector_of_vector<std::complex<float>, numerics::row_major<>, numerics::bounded_array<numerics::bounded_array<std::complex<float>, 3>, 3> >, 3> () ();
+
+    std::cout << "std::complex<double>, bounded_array" << std::endl;
+    test_my_matrix_vector<numerics::vector<std::complex<double>, numerics::forward, numerics::bounded_array<std::complex<double>, 3> >,
+                          numerics::vector_of_vector<std::complex<double>, numerics::row_major<>, numerics::bounded_array<numerics::bounded_array<std::complex<double>, 3>, 3> >, 3> () ();
+
+    std::cout << "float, unbounded_array" << std::endl;
+    test_my_matrix_vector<numerics::vector<float, numerics::forward, numerics::unbounded_array<float> >,
+                          numerics::vector_of_vector<float, numerics::row_major<>, numerics::unbounded_array<numerics::unbounded_array<float> > >, 3> () ();
+
+    std::cout << "double, unbounded_array" << std::endl;
+    test_my_matrix_vector<numerics::vector<double, numerics::forward, numerics::unbounded_array<double> >,
+                          numerics::vector_of_vector<double, numerics::row_major<>, numerics::unbounded_array<numerics::unbounded_array<double> > >, 3> () ();
 
     std::cout << "std::complex<float>, unbounded_array" << std::endl;
-    test_my_matrix_vector<numerics::vector<std::complex<double>, numerics::unbounded_array<std::complex<double> > >,
-                          numerics::matrix<std::complex<double>, numerics::unbounded_array<std::complex<double> > >, 3 > () ();
+    test_my_matrix_vector<numerics::vector<std::complex<float>, numerics::forward, numerics::unbounded_array<std::complex<float> > >,
+                          numerics::vector_of_vector<std::complex<float>, numerics::row_major<>, numerics::unbounded_array<numerics::unbounded_array<std::complex<float> > > >, 3> () ();
+
+    std::cout << "std::complex<double>, unbounded_array" << std::endl;
+    test_my_matrix_vector<numerics::vector<std::complex<double>, numerics::forward, numerics::unbounded_array<std::complex<double> > >,
+                          numerics::vector_of_vector<std::complex<double>, numerics::row_major<>, numerics::unbounded_array<numerics::unbounded_array<std::complex<double> > > >, 3> () ();
+
+    std::cout << "float, std::vector" << std::endl;
+    test_my_matrix_vector<numerics::vector<float, numerics::forward, std::vector<float> >,
+                          numerics::vector_of_vector<float, numerics::row_major<>, std::vector<std::vector<float> > >, 3> () ();
+
+    std::cout << "double, std::vector" << std::endl;
+    test_my_matrix_vector<numerics::vector<double, numerics::forward, std::vector<double> >,
+                          numerics::vector_of_vector<double, numerics::row_major<>, std::vector<std::vector<double> > >, 3> () ();
+
+    std::cout << "std::complex<float>, std::vector" << std::endl;
+    test_my_matrix_vector<numerics::vector<std::complex<float>, numerics::forward, std::vector<std::complex<float> > >,
+                          numerics::vector_of_vector<std::complex<float>, numerics::row_major<>, std::vector<std::vector<std::complex<float> > > >, 3> () ();
+
+    std::cout << "std::complex<double>, std::vector" << std::endl;
+    test_my_matrix_vector<numerics::vector<std::complex<double>, numerics::forward, std::vector<std::complex<double> > >,
+                          numerics::vector_of_vector<std::complex<double>, numerics::row_major<>, std::vector<std::vector<std::complex<double> > > >, 3> () ();
+#endif
 }
 

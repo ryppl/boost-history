@@ -28,18 +28,18 @@
 namespace numerics {
 
     // Array based sparse vector class 
-    template<class T, class A, class F>
+    template<class T, class F, class A>
     class sparse_vector: 
-        public vector_expression<sparse_vector<T, A, F> > {
+        public vector_expression<sparse_vector<T, F, A> > {
     public:      
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
         typedef T value_type;
         typedef const T &const_reference_type;
         typedef T &reference_type;
-        typedef A array_type;
         typedef F functor_type;
-        typedef sparse_vector<T, A, F> self_type;
+        typedef A array_type;
+        typedef sparse_vector<T, F, A> self_type;
         typedef vector_const_reference<self_type> const_closure_type;
         typedef vector_reference<self_type> closure_type;
         typedef vector_range<self_type> vector_range_type;
@@ -69,7 +69,7 @@ namespace numerics {
         void resize (size_type size, size_type non_zeroes) {
             size_ = size;
             non_zeroes_ = non_zeroes_;
-            data_.resize (non_zeroes);
+//            data_.resize (non_zeroes);
         }
 
         NUMERICS_INLINE
@@ -92,14 +92,11 @@ namespace numerics {
 
         NUMERICS_INLINE
         value_type operator [] (size_type i) const { 
-            const_iterator_type it (data_.find (functor_type::element (i, size_)));
-            if (it == data_.end ())
-                throw external_logic ();
-            return (*it).second;
+            return (*this) (i); 
         }
         NUMERICS_INLINE
         reference_type operator [] (size_type i) { 
-            return data_ [functor_type::element (i, size_)]; 
+            return (*this) (i); 
         }
 
         NUMERICS_INLINE
@@ -199,8 +196,8 @@ namespace numerics {
             data_.clear ();
         }
         NUMERICS_INLINE
-        void insert (size_type i, const T &t) {
-            data_.insert (data_.end (), std::pair<size_type, T> (functor_type::element (i, size_), t));
+        void insert (size_type i, const_reference_type t) {
+            data_.insert (data_.end (), std::pair<size_type, value_type> (functor_type::element (i, size_), t));
         }
 
         class const_iterator;

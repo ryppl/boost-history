@@ -87,7 +87,7 @@ namespace numerics {
                 if (! data_)
                     throw std::bad_alloc ();
                 // The content of the array is intentionally not copied.
-                delete data_;
+                delete [] data_;
                 size_ = size;
                 data_ = data;
             }
@@ -100,7 +100,7 @@ namespace numerics {
 
         // Element access
         NUMERICS_INLINE
-        value_type operator [] (size_type i) const {
+        const_reference_type operator [] (size_type i) const {
             check<bad_index>::precondition (i < size_);
             return data_ [i];
         }
@@ -139,14 +139,14 @@ namespace numerics {
         }
 #endif
 
-        // Element insertion
         NUMERICS_INLINE
-        void clear () {
-            std::fill (begin (), end (), T (0));
+        void fill (const value_type &t) {
+            std::fill (begin (), end (), t);
         }
         NUMERICS_INLINE
         pointer_type insert (pointer_type it, const value_type &t) {
             check<bad_index>::precondition (begin () <= it && it < end ());
+            check<bad_index>::precondition (*it == value_type ());
             *it = t;
             return it;
         }
@@ -268,7 +268,7 @@ namespace numerics {
 
         // Element access
         NUMERICS_INLINE
-        value_type operator [] (size_type i) const {
+        const_reference_type operator [] (size_type i) const {
             check<bad_index>::precondition (i < size_);
             return data_ [i];
         }
@@ -308,12 +308,13 @@ namespace numerics {
 
         // Element insertion
         NUMERICS_INLINE
-        void clear () {
-            std::fill (begin (), end (), T (0));
+        void fill (const value_type &t) {
+            std::fill (begin (), end (), t);
         }
         NUMERICS_INLINE
         pointer_type insert (pointer_type it, const value_type &t) {
             check<bad_index>::precondition (begin () <= it && it < end ());
+            check<bad_index>::precondition (*it == value_type ());
             *it = t;
             return it;
         }
@@ -440,6 +441,7 @@ namespace numerics {
         // Composition
         NUMERICS_INLINE
         range composite (const range &r) const {
+            check<bad_size>::precondition (start_ + r.size_ <= size_);
             return range (start_ + r.start_, start_ + r.start_ + r.size_);
         }
 
@@ -587,10 +589,12 @@ namespace numerics {
         // Composition
         NUMERICS_INLINE
         slice composite (const range &r) const {
+            check<bad_size>::precondition (r.start () + r.size () <= size_);
             return slice (start_ + stride_ * r.start (), stride_, r.size ());
         }
         NUMERICS_INLINE
         slice composite (const slice &s) const {
+            check<bad_size>::precondition (s.start_ + s.stride_ * s.size_ <= size_);
             return slice (start_ + stride_ * s.start_, stride_ * s.stride_, s.size_);
         }
 

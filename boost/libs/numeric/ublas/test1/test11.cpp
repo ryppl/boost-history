@@ -114,8 +114,10 @@ struct test_my_vector {
 			V v1 (N), v2 (N), v3 (N);
             (*this) (v1, v2, v3);
 
+#ifdef USE_RANGE
             numerics::vector_range<V> vr1 (v1, 0, N), vr2 (v2, 0, N), vr3 (v3, 0, N);
             (*this) (vr1, vr2, vr3);
+#endif
 
 #ifdef USE_SLICE
             numerics::vector_slice<V> vs1 (v1, 0, 1, N), vs2 (v2, 0, 1, N), vs3 (v3, 0, 1, N);
@@ -136,27 +138,39 @@ void test_vector () {
     std::cout << "test_vector" << std::endl;
 
     std::cout << "float, bounded_array" << std::endl;
-    test_my_vector<numerics::vector<float, numerics::bounded_array<float, 3> >, 3 > () ();
+    test_my_vector<numerics::vector<float, numerics::forward, numerics::bounded_array<float, 3> >, 3 > () ();
 
     std::cout << "double, bounded_array" << std::endl;
-    test_my_vector<numerics::vector<double, numerics::bounded_array<double, 3> >, 3 > () ();
+    test_my_vector<numerics::vector<double, numerics::forward, numerics::bounded_array<double, 3> >, 3 > () ();
 
     std::cout << "std::complex<float>, bounded_array" << std::endl;
-    test_my_vector<numerics::vector<std::complex<float>, numerics::bounded_array<std::complex<float>, 3> >, 3 > () ();
+    test_my_vector<numerics::vector<std::complex<float>, numerics::forward, numerics::bounded_array<std::complex<float>, 3> >, 3 > () ();
 
-    std::cout << "std::complex<float>, bounded_array" << std::endl;
-    test_my_vector<numerics::vector<std::complex<double>, numerics::bounded_array<std::complex<double>, 3> >, 3 > () ();
+    std::cout << "std::complex<double>, bounded_array" << std::endl;
+    test_my_vector<numerics::vector<std::complex<double>, numerics::forward, numerics::bounded_array<std::complex<double>, 3> >, 3 > () ();
 
     std::cout << "float, unbounded_array" << std::endl;
-    test_my_vector<numerics::vector<float, numerics::unbounded_array<float> >, 3 > () ();
+    test_my_vector<numerics::vector<float, numerics::forward, numerics::unbounded_array<float> >, 3 > () ();
 
     std::cout << "double, unbounded_array" << std::endl;
-    test_my_vector<numerics::vector<double, numerics::unbounded_array<double> >, 3 > () ();
+    test_my_vector<numerics::vector<double, numerics::forward, numerics::unbounded_array<double> >, 3 > () ();
 
     std::cout << "std::complex<float>, unbounded_array" << std::endl;
-    test_my_vector<numerics::vector<std::complex<float>, numerics::unbounded_array<std::complex<float> > >, 3 > () ();
+    test_my_vector<numerics::vector<std::complex<float>, numerics::forward, numerics::unbounded_array<std::complex<float> > >, 3 > () ();
 
-    std::cout << "std::complex<float>, unbounded_array" << std::endl;
-    test_my_vector<numerics::vector<std::complex<double>, numerics::unbounded_array<std::complex<double> > >, 3 > () ();
+    std::cout << "std::complex<double>, unbounded_array" << std::endl;
+    test_my_vector<numerics::vector<std::complex<double>, numerics::forward, numerics::unbounded_array<std::complex<double> > >, 3 > () ();
+
+    std::cout << "float, std::vector" << std::endl;
+    test_my_vector<numerics::vector<float, numerics::forward, std::vector<float> >, 3 > () ();
+
+    std::cout << "double, std::vector" << std::endl;
+    test_my_vector<numerics::vector<double, numerics::forward, std::vector<double> >, 3 > () ();
+
+    std::cout << "std::complex<float>, std::vector" << std::endl;
+    test_my_vector<numerics::vector<std::complex<float>, numerics::forward, std::vector<std::complex<float> > >, 3 > () ();
+
+    std::cout << "std::complex<double>, std::vector" << std::endl;
+    test_my_vector<numerics::vector<std::complex<double>, numerics::forward, std::vector<std::complex<double> > >, 3 > () ();
 }
 

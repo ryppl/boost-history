@@ -23,6 +23,8 @@
 #pragma warning (disable: 4503)
 #pragma warning (disable: 4786)
 
+#define NUMERICS_ET_VALUE
+
 #define NUMERICS_TYPENAME
 
 #define NUMERICS_EXPLICIT explicit
@@ -54,6 +56,7 @@
 
 // Use iterators.
 #define NUMERICS_USE_ITERATOR
+// #define NUMERICS_USE_ITERATOR_INDEX
 
 #endif 
 
@@ -81,6 +84,8 @@ namespace std {
 
 #ifdef USE_GCC
 
+#define NUMERICS_ET_VALUE
+
 #define NUMERICS_TYPENAME typename
 
 #define NUMERICS_EXPLICIT explicit
@@ -95,6 +100,7 @@ namespace std {
 
 // Use iterators.
 #define NUMERICS_USE_ITERATOR
+// #define NUMERICS_USE_ITERATOR_INDEX
 
 namespace std {
 
@@ -130,6 +136,8 @@ namespace numerics {
 
 #ifdef USE_BCC
 
+#define NUMERICS_ET_REFERENCE
+
 #define NUMERICS_TYPENAME typename
 
 #define NUMERICS_EXPLICIT explicit
@@ -144,6 +152,7 @@ namespace numerics {
 
 // Use iterators.
 #define NUMERICS_USE_ITERATOR
+// #define NUMERICS_USE_ITERATOR_INDEX
 
 #endif 
 
@@ -179,20 +188,29 @@ namespace numerics {
     struct matrix_expression;
 
     struct forward;
+    struct backward;
+
     template<class V>
     class vector_range;
     template<class V>
     class vector_slice;
-    template<class T, class A = unbounded_array<T>, class F = forward>
+
+    template<class T, class F = forward, class A = unbounded_array<T> >
     class vector;
 
-    template<class T, class A = compressed_array<std::size_t, T>, class F = forward>
+    template<class T, class F = forward, class A = compressed_array<std::size_t, T> >
     class sparse_vector;
 
+    struct major_tag {};
+
+    struct row_major_tag /* : public major_tag */ {};
     template<class F1 = forward, class F2 = forward>
     struct row_major;
+
+    struct column_major_tag /* : public major_tag */ {};
     template<class F1 = forward, class F2 = forward>
     struct column_major;
+
     template<class M>
     class matrix_row;
     template<class M>
@@ -201,17 +219,26 @@ namespace numerics {
     class matrix_vector_range;
     template<class M>
     class matrix_vector_slice;
-    template<class T, class A = unbounded_array<T>, class F = row_major<> >
-    class matrix;
+
     template<class M>
     class matrix_range;
     template<class M>
     class matrix_slice;
-    template<class T, class A = unbounded_array<T>, class F = row_major<> >
-    class band_matrix;
 
-    template<class T, class A = compressed_array<std::size_t, T>, class F = row_major<> >
+    template<class T, class F = row_major<>, class A = unbounded_array<T> >
+    class matrix;
+
+    template<class T, class F = row_major<>, class A = unbounded_array<unbounded_array<T> > >
+    class vector_of_vector;
+
+    template<class T, class F = row_major<>, class A = unbounded_array<T> >
+    class banded_matrix;
+
+    template<class T, class F = row_major<>, class A = compressed_array<std::size_t, T> >
     class sparse_matrix;
+
+    template<class T, class F = row_major<>, class A = compressed_array<std::size_t, compressed_array<std::size_t, T> > >
+    class sparse_vector_of_sparse_vector;
 }
 
 #endif 

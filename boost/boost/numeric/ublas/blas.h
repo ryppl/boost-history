@@ -92,7 +92,7 @@ namespace numerics {
 		template<class V, class M, class C>
 		V &
 		tsv (V &v, const M &m, C) {
-			return v = solve (m, v, v, C ());
+			return v = solve (m, v, C ());
 		}
 
 		template<class V1, class T1, class T2, class M, class V2>
@@ -162,7 +162,7 @@ namespace numerics {
 		template<class M1, class T, class M2, class C>
 		M1 &
 		tsm (M1 &m1, const T &t, const M2 &m2, C) {
-			return m1 = solve (m2, m1, t * m1, C ());
+			return m1 = solve (m2, t * m1, C ());
 		}
 
 		template<class M1, class T1, class T2, class M2, class M3>

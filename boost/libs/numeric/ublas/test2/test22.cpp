@@ -90,6 +90,8 @@ void test_blas_2<V, M, N>::operator () () {
 		std::cout << "gmv (v1, 1, 1, herm (m), v2) = " << v1 << std::endl;
 #endif
 
+// FIXME: MSVC ICE
+#if ! defined (USE_MSVC) || ! defined (_DEBUG)
 		// _g_r
 		// _g_ru
 		// _g_rc
@@ -129,6 +131,7 @@ void test_blas_2<V, M, N>::operator () () {
 		initialize_matrix (m);
 		numerics::blas_2::hr2 (m, value_type (1), v1, v2);
 		std::cout << "hr2 (m, 1, v1, v2) = " << m << std::endl;
+#endif
 #endif
 	}
 	catch (std::exception &e) {

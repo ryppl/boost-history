@@ -202,10 +202,10 @@ void bench_1<T, N>::operator () (int runs) {
 	bench_c_inner_prod<T, N> () (runs);
 
 	header ("sparse_vector<compressed_array>");
-    bench_my_inner_prod<numerics::sparse_vector<T, numerics::compressed_array<std::size_t, T> >, N> () (runs);
+    bench_my_inner_prod<numerics::sparse_vector<T, numerics::forward, numerics::compressed_array<std::size_t, T> >, N> () (runs);
 
 	header ("sparse_vector<std::map>");
-    bench_my_inner_prod<numerics::sparse_vector<T, std::map<std::size_t, T> >, N> () (runs);
+    bench_my_inner_prod<numerics::sparse_vector<T, numerics::forward, std::map<std::size_t, T> >, N> () (runs);
 
 #ifdef USE_STD_VALARRAY
 	header ("std::valarray");
@@ -218,16 +218,16 @@ void bench_1<T, N>::operator () (int runs) {
 	bench_c_vector_add<T, N> () (runs);
 
 	header ("sparse_vector<compressed_array> safe");
-	bench_my_vector_add<numerics::sparse_vector<T, numerics::compressed_array<std::size_t, T> >, N> () (runs, safe_tag ());
+	bench_my_vector_add<numerics::sparse_vector<T, numerics::forward, numerics::compressed_array<std::size_t, T> >, N> () (runs, safe_tag ());
 
 	header ("sparse_vector<compressed_array> fast");
-	bench_my_vector_add<numerics::sparse_vector<T, numerics::compressed_array<std::size_t, T> >, N> () (runs, fast_tag ());
+	bench_my_vector_add<numerics::sparse_vector<T, numerics::forward, numerics::compressed_array<std::size_t, T> >, N> () (runs, fast_tag ());
 
 	header ("sparse_vector<std::map> safe");
-	bench_my_vector_add<numerics::sparse_vector<T, std::map<std::size_t, T> >, N> () (runs, safe_tag ());
+	bench_my_vector_add<numerics::sparse_vector<T, numerics::forward, std::map<std::size_t, T> >, N> () (runs, safe_tag ());
 
 	header ("sparse_vector<std::map> fast");
-	bench_my_vector_add<numerics::sparse_vector<T, std::map<std::size_t, T> >, N> () (runs, fast_tag ());
+	bench_my_vector_add<numerics::sparse_vector<T, numerics::forward, std::map<std::size_t, T> >, N> () (runs, fast_tag ());
 
 #ifdef USE_STD_VALARRAY
 	header ("std::valarray");

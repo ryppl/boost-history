@@ -130,29 +130,57 @@ struct test_my_matrix {
 void test_matrix () {
     std::cout << "test_matrix" << std::endl;
 
+#ifdef USE_SPARSE_MATRIX
     std::cout << "float, compressed_array" << std::endl;
-    test_my_matrix<numerics::sparse_matrix<float, numerics::compressed_array<std::size_t, float> >, 3 > () ();
-
-    std::cout << "float, std::map" << std::endl;
-    test_my_matrix<numerics::sparse_matrix<float, std::map<std::size_t, float> >, 3 > () ();
+    test_my_matrix<numerics::sparse_matrix<float, numerics::row_major<>, numerics::compressed_array<std::size_t, float> >, 3 > () ();
 
     std::cout << "double, compressed_array" << std::endl;
-    test_my_matrix<numerics::sparse_matrix<double, numerics::compressed_array<std::size_t, double> >, 3 > () ();
-
-    std::cout << "double, std::map" << std::endl;
-    test_my_matrix<numerics::sparse_matrix<double, std::map<std::size_t, double> >, 3 > () ();
+    test_my_matrix<numerics::sparse_matrix<double, numerics::row_major<>, numerics::compressed_array<std::size_t, double> >, 3 > () ();
 
     std::cout << "std::complex<float>, compressed_array" << std::endl;
-    test_my_matrix<numerics::sparse_matrix<std::complex<float>, numerics::compressed_array<std::size_t, std::complex<float> > >, 3 > () ();
-
-    std::cout << "std::complex<float>, std::map" << std::endl;
-    test_my_matrix<numerics::sparse_matrix<std::complex<float>, std::map<std::size_t, std::complex<float> > >, 3 > () ();
+    test_my_matrix<numerics::sparse_matrix<std::complex<float>, numerics::row_major<>, numerics::compressed_array<std::size_t, std::complex<float> > >, 3 > () ();
 
     std::cout << "std::complex<double>, compressed_array" << std::endl;
-    test_my_matrix<numerics::sparse_matrix<std::complex<double>, numerics::compressed_array<std::size_t, std::complex<double> > >, 3 > () ();
+    test_my_matrix<numerics::sparse_matrix<std::complex<double>, numerics::row_major<>, numerics::compressed_array<std::size_t, std::complex<double> > >, 3 > () ();
+
+    std::cout << "float, std::map" << std::endl;
+    test_my_matrix<numerics::sparse_matrix<float, numerics::row_major<>, std::map<std::size_t, float> >, 3 > () ();
+
+    std::cout << "double, std::map" << std::endl;
+    test_my_matrix<numerics::sparse_matrix<double, numerics::row_major<>, std::map<std::size_t, double> >, 3 > () ();
+
+    std::cout << "std::complex<float>, std::map" << std::endl;
+    test_my_matrix<numerics::sparse_matrix<std::complex<float>, numerics::row_major<>, std::map<std::size_t, std::complex<float> > >, 3 > () ();
 
     std::cout << "std::complex<double>, std::map" << std::endl;
-    test_my_matrix<numerics::sparse_matrix<std::complex<double>, std::map<std::size_t, std::complex<double> > >, 3 > () ();
+    test_my_matrix<numerics::sparse_matrix<std::complex<double>, numerics::row_major<>, std::map<std::size_t, std::complex<double> > >, 3 > () ();
+#endif
+
+#ifdef USE_SPARSE_VECTOR_OF_SPARSE_VECTOR
+    std::cout << "float, compressed_array" << std::endl;
+    test_my_matrix<numerics::sparse_vector_of_sparse_vector<float, numerics::row_major<>, numerics::compressed_array<std::size_t, numerics::compressed_array<std::size_t, float> > >, 3 > () ();
+
+    std::cout << "double, compressed_array" << std::endl;
+    test_my_matrix<numerics::sparse_vector_of_sparse_vector<double, numerics::row_major<>, numerics::compressed_array<std::size_t, numerics::compressed_array<std::size_t, double> > >, 3 > () ();
+
+    std::cout << "std::complex<float>, compressed_array" << std::endl;
+    test_my_matrix<numerics::sparse_vector_of_sparse_vector<std::complex<float>, numerics::row_major<>, numerics::compressed_array<std::size_t, numerics::compressed_array<std::size_t, std::complex<float> > > >, 3 > () ();
+
+    std::cout << "std::complex<double>, compressed_array" << std::endl;
+    test_my_matrix<numerics::sparse_vector_of_sparse_vector<std::complex<double>, numerics::row_major<>, numerics::compressed_array<std::size_t, numerics::compressed_array<std::size_t, std::complex<double> > > >, 3 > () ();
+
+    std::cout << "float, std::map" << std::endl;
+    test_my_matrix<numerics::sparse_vector_of_sparse_vector<float, numerics::row_major<>, std::map<std::size_t, std::map<std::size_t, float> > >, 3 > () ();
+
+    std::cout << "double, std::map" << std::endl;
+    test_my_matrix<numerics::sparse_vector_of_sparse_vector<double, numerics::row_major<>, std::map<std::size_t, std::map<std::size_t, double> > >, 3 > () ();
+
+    std::cout << "std::complex<float>, std::map" << std::endl;
+    test_my_matrix<numerics::sparse_vector_of_sparse_vector<std::complex<float>, numerics::row_major<>, std::map<std::size_t, std::map<std::size_t, std::complex<float> > > >, 3 > () ();
+
+    std::cout << "std::complex<double>, std::map" << std::endl;
+    test_my_matrix<numerics::sparse_vector_of_sparse_vector<std::complex<double>, numerics::row_major<>, std::map<std::size_t, std::map<std::size_t, std::complex<double> > > >, 3 > () ();
+#endif
 }
 
 

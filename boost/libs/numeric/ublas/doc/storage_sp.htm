@@ -13,8 +13,200 @@ content="text/html; charset=iso-8859-1">
 
 <h2><a name="compressed_array"></a>Compressed Array</h2>
 
-<p>The templated class <code>compressed_array</code> implements a
-simple std::map-like associative array using allocation via <code>new/delete</code>.</p>
+<h4>Description</h4>
+
+<p>The templated class <code>compressed_array&lt;I, T&gt; </code>implements
+a simple std::map-like associative container as a sorted array.</p>
+
+<h4>Example</h4>
+
+<pre>int main () {
+    numerics::compressed_array&lt;int, double&gt; a (3);
+    for (int i = 0; i &lt; a.size (); ++ i) {
+        a [i] = i;
+        std::cout &lt;&lt; a [i] &lt;&lt; std::endl;
+    }
+}</pre>
+
+<h4>Definition</h4>
+
+<p>Defined in the header storage_sp.h.</p>
+
+<h4>Template parameters</h4>
+
+<table border="1">
+    <tr>
+        <th>Parameter </th>
+        <th>Description </th>
+        <th>Default </th>
+    </tr>
+    <tr>
+        <td><tt>I</tt></td>
+        <td>The type of index stored in the array.</td>
+        <td>&nbsp;</td>
+    </tr>
+    <tr>
+        <td><tt>T</tt> </td>
+        <td>The type of object stored in the array. </td>
+        <td>&nbsp;</td>
+    </tr>
+</table>
+
+<h4>Model of</h4>
+
+<p>Sparse Storage Container. </p>
+
+<h4>Type requirements</h4>
+
+<p>None, except for those imposed by the requirements of Sparse
+Storage Container.</p>
+
+<h4>Public base classes</h4>
+
+<p>None. </p>
+
+<h4>Members</h4>
+
+<table border="1">
+    <tr>
+        <th>Member </th>
+        <th>Description </th>
+    </tr>
+    <tr>
+        <td><code>compressed_array ()</code> </td>
+        <td>Allocates a <code>compressed_array </code>that holds
+        at most zero elements.</td>
+    </tr>
+    <tr>
+        <td><code>compressed_array (size_type size)</code></td>
+        <td>Allocates a <code>compressed_array </code>that holds
+        at most <code>size</code> elements.</td>
+    </tr>
+    <tr>
+        <td><code>compressed_array (const compressed_array
+        &amp;a)</code></td>
+        <td>The copy constructor.</td>
+    </tr>
+    <tr>
+        <td><code>~compressed_array ()</code></td>
+        <td>Deallocates the <code>compressed_array </code>itself.
+        </td>
+    </tr>
+    <tr>
+        <td><code>void resize (size_type size)</code></td>
+        <td>Reallocates a <code>compressed_array </code>to hold
+        at most <code>size</code> elements. The content of the <code>compressed_array
+        </code>is preserved.</td>
+    </tr>
+    <tr>
+        <td><code>size_type size () const</code></td>
+        <td>Returns the size of the <code>compressed_array</code>.
+        </td>
+    </tr>
+    <tr>
+        <td><code>data_reference_type operator [] (index_type i)</code></td>
+        <td>Returns a reference of the element that is associated
+        with a particular index. If the <tt>compressed_array</tt>
+        does not already contain such an element, <tt>operator[]</tt>
+        inserts the default<tt> T ()</tt>.</td>
+    </tr>
+    <tr>
+        <td><code>compressed_array &amp;operator = (const
+        compressed_array &amp;a)</code></td>
+        <td>The assignment operator.</td>
+    </tr>
+    <tr>
+        <td><code>compressed_array &amp;assign_temporary
+        (compressed_array &amp;a)</code></td>
+        <td>Assigns a temporary. May change the array <code>a</code>.</td>
+    </tr>
+    <tr>
+        <td><code>void swap (compressed_array &amp;a)</code></td>
+        <td>Swaps the contents of the arrays. </td>
+    </tr>
+    <tr>
+        <td><code>void clear ()</code></td>
+        <td>Erases all of the array's elements. </td>
+    </tr>
+    <tr>
+        <td><code>pointer_type insert (pointer_type it, const
+        value_type &amp;p)</code></td>
+        <td>Inserts <tt>p</tt> into the array, using <tt>it</tt>
+        as a hint to where it will be inserted. </td>
+    </tr>
+    <tr>
+        <td><code>const_pointer_type find (index_type i) const</code></td>
+        <td>Finds an element whose index is <tt>i</tt>. </td>
+    </tr>
+    <tr>
+        <td><code>pointer_type find (index_type i)</code></td>
+        <td>Finds an element whose index is <tt>i</tt>. </td>
+    </tr>
+    <tr>
+        <td><code>const_pointer_type lower_bound (index_type i)
+        const</code></td>
+        <td>Finds the first element whose index is not less than <tt>i</tt>.</td>
+    </tr>
+    <tr>
+        <td><code>pointer_type lower_bound (index_type i)</code></td>
+        <td>Finds the first element whose index is not less than <tt>i</tt>.
+        </td>
+    </tr>
+    <tr>
+        <td><code>const_pointer_type upper_bound (index_type i)
+        const</code></td>
+        <td>Finds the first element whose index is greater than <tt>i</tt>.
+        </td>
+    </tr>
+    <tr>
+        <td><code>pointer_type upper_bound (index_type i)</code></td>
+        <td>Finds the first element whose index is greater than <tt>i</tt>.
+        </td>
+    </tr>
+    <tr>
+        <td><code>const_iterator begin () const</code></td>
+        <td>Returns a <tt>const_iterator</tt> pointing to the
+        beginning of the <code>compressed_array</code>. </td>
+    </tr>
+    <tr>
+        <td><code>const_iterator end () const</code></td>
+        <td>Returns a <tt>const_iterator</tt> pointing to the end
+        of the <code>compressed_array</code>. </td>
+    </tr>
+    <tr>
+        <td><code>iterator begin () </code></td>
+        <td>Returns a <tt>iterator</tt> pointing to the beginning
+        of the <code>compressed_array</code>. </td>
+    </tr>
+    <tr>
+        <td><code>iterator end () </code></td>
+        <td>Returns a <tt>iterator</tt> pointing to the end of
+        the <code>compressed_array</code>. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator rbegin () const</code></td>
+        <td>Returns a <tt>const_reverse_iterator</tt> pointing to
+        the beginning of the reversed <code>compressed_array</code>.
+        </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator rend () const</code></td>
+        <td>Returns a <tt>const_reverse_iterator</tt> pointing to
+        the end of the reversed <code>compressed_array</code>. </td>
+    </tr>
+    <tr>
+        <td><code>reverse_iterator rbegin () </code></td>
+        <td>Returns a <tt>reverse_iterator</tt> pointing to the
+        beginning of the reversed <code>compressed_array</code>. </td>
+    </tr>
+    <tr>
+        <td><code>reverse_iterator rend () </code></td>
+        <td>Returns a <tt>reverse_iterator</tt> pointing to the
+        end of the reversed <code>compressed_array</code>. </td>
+    </tr>
+</table>
+
+<h4>Interface</h4>
 
 <pre><code>    // Compressed array 
     template&lt;class I, class T&gt;
@@ -54,6 +246,10 @@ simple std::map-like associative array using allocation via <code>new/delete</co
 	void swap (compressed_array &amp;a);
 	friend void swap (compressed_array &amp;a1, compressed_array &amp;a2);
 
+        // Element insertion
+        void clear ();
+        pointer_type insert (pointer_type it, value_type &amp;p);
+
         // Element lookup
         const_pointer_type find (index_type i) const;
         pointer_type find (index_type i);
@@ -61,11 +257,6 @@ simple std::map-like associative array using allocation via <code>new/delete</co
         pointer_type lower_bound (index_type i);
         const_pointer_type upper_bound (index_type i) const;
         pointer_type upper_bound (index_type i);
-
-        // Element insertion
-        void clear ();
-        pointer_type insert (pointer_type it, value_type &amp;p);
-        void sort ();
 
         // Iterators simply are pointers.
 

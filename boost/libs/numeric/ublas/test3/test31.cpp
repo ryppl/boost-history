@@ -138,27 +138,27 @@ void test_vector () {
     std::cout << "test_vector" << std::endl;
 
     std::cout << "float, compressed_array" << std::endl;
-    test_my_vector<numerics::sparse_vector<float, numerics::compressed_array<std::size_t, float> >, 3 > () ();
-
-    std::cout << "float, std::map" << std::endl;
-    test_my_vector<numerics::sparse_vector<float, std::map<size_t, float> >, 3 > () ();
+    test_my_vector<numerics::sparse_vector<float, numerics::forward, numerics::compressed_array<std::size_t, float> >, 3 > () ();
 
     std::cout << "double, compressed_array" << std::endl;
-    test_my_vector<numerics::sparse_vector<double, numerics::compressed_array<std::size_t, double> >, 3 > () ();
-
-    std::cout << "double, std::map" << std::endl;
-    test_my_vector<numerics::sparse_vector<double, std::map<size_t, double> >, 3 > () ();
+    test_my_vector<numerics::sparse_vector<double, numerics::forward, numerics::compressed_array<std::size_t, double> >, 3 > () ();
 
     std::cout << "std::complex<float>, compressed_array" << std::endl;
-    test_my_vector<numerics::sparse_vector<std::complex<float>, numerics::compressed_array<std::size_t, std::complex<float> > >, 3 > () ();
-
-    std::cout << "std::complex<float>, std::map" << std::endl;
-    test_my_vector<numerics::sparse_vector<std::complex<float>, std::map<size_t, std::complex<float> > >, 3 > () ();
+    test_my_vector<numerics::sparse_vector<std::complex<float>, numerics::forward, numerics::compressed_array<std::size_t, std::complex<float> > >, 3 > () ();
 
     std::cout << "std::complex<double>, compressed_array" << std::endl;
-    test_my_vector<numerics::sparse_vector<std::complex<double>, numerics::compressed_array<std::size_t, std::complex<double> > >, 3 > () ();
+    test_my_vector<numerics::sparse_vector<std::complex<double>, numerics::forward, numerics::compressed_array<std::size_t, std::complex<double> > >, 3 > () ();
+
+    std::cout << "float, std::map" << std::endl;
+    test_my_vector<numerics::sparse_vector<float, numerics::forward, std::map<size_t, float> >, 3 > () ();
+
+    std::cout << "double, std::map" << std::endl;
+    test_my_vector<numerics::sparse_vector<double, numerics::forward, std::map<size_t, double> >, 3 > () ();
+
+    std::cout << "std::complex<float>, std::map" << std::endl;
+    test_my_vector<numerics::sparse_vector<std::complex<float>, numerics::forward, std::map<size_t, std::complex<float> > >, 3 > () ();
 
     std::cout << "std::complex<double>, std::map" << std::endl;
-    test_my_vector<numerics::sparse_vector<std::complex<double>, std::map<size_t, std::complex<double> > > , 3 > () ();
+    test_my_vector<numerics::sparse_vector<std::complex<double>, numerics::forward, std::map<size_t, std::complex<double> > > , 3 > () ();
 }
 

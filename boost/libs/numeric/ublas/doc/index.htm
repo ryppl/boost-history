@@ -57,13 +57,13 @@ similar efforts. Here we mention the following:</p>
 <p>BLAS seems to be the most widely used library for basic linear
 algebra constructions, so it could be called a de-facto standard.
 Its interface is procedural, the individual functions are
-somewhat abstracted from simple linear algebra operations. 
-Due to the fact that is has been implemented using Fortran 
-and its optimizations, it also seems to be one of the fastest 
-libraries available. As we decided to design and implement our library 
-in an object-oriented way, the technical approaches are distinct. 
-However anyone should be able to express BLAS abstractions in 
-terms of our library operators and to compare the efficiency of 
+somewhat abstracted from simple linear algebra operations. Due to
+the fact that is has been implemented using Fortran and its
+optimizations, it also seems to be one of the fastest libraries
+available. As we decided to design and implement our library in
+an object-oriented way, the technical approaches are distinct.
+However anyone should be able to express BLAS abstractions in
+terms of our library operators and to compare the efficiency of
 the implementations.</p>
 
 <p>Blitz++ is an impressive library implemented in C++. Its main
@@ -159,8 +159,8 @@ primitives:</p>
     </tr>
 </table>
 
-<p>We decided to use no operator overloading for the following other
-primitives:</p>
+<p>We decided to use no operator overloading for the following
+other primitives:</p>
 
 <table border="1">
     <tr>
@@ -235,8 +235,8 @@ direct assignment to the target is safe.</p>
 <p>Lazy expression evaluation normally leads to the definition of
 a class hierarchy of terms. This results in the usage of dynamic
 polymorphism to access single elements of vectors and matrices,
-which is also known to be too expensive in terms of time. A solution
-was found a couple of years ago independently by David
+which is also known to be too expensive in terms of time. A
+solution was found a couple of years ago independently by David
 Vandervoorde and Todd Veldhuizen and is commonly called
 expression templates. Expression templates contain lazy
 evaluation and replace dynamic polymorphism with static, i.e.
@@ -387,9 +387,9 @@ how BLAS calls may be mapped onto our classes. </p>
     </tr>
     <tr>
         <td><code>_t_sv</code></td>
-        <td><code>solve (A, x, x) </code>or<br>
-        <code>solve (trans (A), x, x) </code>or<code><br>
-        solve (herm (A), x, x)</code></td>
+        <td><code>x = solve (A, x, tag) </code>or<br>
+        <code>x = solve (trans (A), x, tag) </code>or<code><br>
+        x = solve (herm (A), x, tag)</code></td>
         <td><em>x &lt;- A</em><sup><em>-1</em></sup><em> x </em>or<em><br>
         x &lt;- A</em><sup><em>T</em></sup><sup><sup><em>-1</em></sup></sup><em>
         x </em>or<em><br>
@@ -474,9 +474,9 @@ how BLAS calls may be mapped onto our classes. </p>
     </tr>
     <tr>
         <td><code>_t_sm</code></td>
-        <td><code>solve (A, B, B) </code>or<br>
-        <code>solve (trans (A), B, B) </code>or<code><br>
-        solve (herm (A), B, B)</code></td>
+        <td><code>B = solve (A, B, tag) </code>or<br>
+        <code>B = solve (trans (A), B, tag) </code>or<code><br>
+        B = solve (herm (A), B, tag)</code></td>
         <td><em>B &lt;- A</em><sup><em>-1</em></sup><em> B </em>or<em><br>
         B &lt;- A</em><sup><em>T</em></sup><sup><sup><em>-1</em></sup></sup><em>
         B </em>or<em><br>
@@ -545,7 +545,7 @@ how BLAS calls may be mapped onto our classes. </p>
 <h4>Storage Layouts</h4>
 
 <p>The library supports conventional dense and basic sparse
-vector and matrix storage layouts. The description of the most 
+vector and matrix storage layouts. The description of the most
 common constructions of vectors and matrices comes next.</p>
 
 <table border="1">
@@ -554,35 +554,40 @@ common constructions of vectors and matrices comes next.</p>
         <th align="left">Comment</th>
     </tr>
     <tr>
-        <td><code>vector&lt;T, <br>
+        <td><code>vector&lt;T,<br>
+        &nbsp;forward,<br>
         &nbsp;std::vector&lt;T&gt; &gt; <br>
         &nbsp;&nbsp;v (size)</code></td>
         <td>Constructs a dense vector, storage is provided by a
         standard vector.</td>
     </tr>
     <tr>
-        <td><code>vector&lt;T, <br>
+        <td><code>vector&lt;T,<br>
+        &nbsp;forward,<br>
         &nbsp;unbounded_array&lt;T&gt; &gt; <br>
         &nbsp;&nbsp;v (size)</code></td>
         <td>Constructs a dense vector, storage is provided by a
         heap-based array.</td>
     </tr>
     <tr>
-        <td><code>vector&lt;T, <br>
+        <td><code>vector&lt;T,<br>
+        forward,<br>
         &nbsp;bounded_array&lt;T, N&gt; &gt; <br>
         &nbsp;&nbsp;v (size)</code></td>
         <td>Constructs a dense vector, storage is provided by a
         stack-based array.</td>
     </tr>
     <tr>
-        <td><code>sparse_vector&lt;T, <br>
+        <td><code>sparse_vector&lt;T,<br>
+        forward,<br>
         &nbsp;std::map&lt;std::size_t, T&gt; &gt; <br>
         &nbsp;&nbsp;v (size, non_zeroes)</code></td>
         <td>Constructs a sparse vector, storage is provided by a
         standard map.</td>
     </tr>
     <tr>
-        <td><code>sparse_vector&lt;T, <br>
+        <td><code>sparse_vector&lt;T,<br>
+        forward,<br>
         &nbsp;compressed_array&lt;std::size_t, T&gt; &gt; <br>
         &nbsp;&nbsp;v (size, non_zeroes)</code></td>
         <td>Constructs a sparse vector, storage is provided by a
@@ -594,81 +599,81 @@ common constructions of vectors and matrices comes next.</p>
         <td>Constructs a sub vector of a dense or sparse vector.</td>
     </tr>
     <tr>
-        <td><code>matrix&lt;T, <br>
-        &nbsp;std::vector&lt;T&gt;, <br>
-        &nbsp;row_major&lt;&gt; &gt; <br>
+        <td><code>matrix&lt;T,<br>
+        &nbsp;row_major&lt;&gt;,<br>
+        &nbsp;std::vector&lt;T&gt; &gt; <br>
         &nbsp;&nbsp;m (size1, size2)</code></td>
         <td>Constructs a dense matrix, storage is provided by a
         standard vector, orientation is row major.</td>
     </tr>
     <tr>
-        <td><code>matrix&lt;T, <br>
-        &nbsp;std::vector&lt;T&gt;, <br>
-        &nbsp;column_major&lt;&gt; &gt;<br>
+        <td><code>matrix&lt;T,<br>
+        &nbsp;column_major&lt;&gt;,<br>
+        &nbsp;std::vector&lt;T&gt; &gt;<br>
         &nbsp;&nbsp;m (size1, size2)</code></td>
         <td>Constructs a dense matrix, storage is provided by a
         standard vector, orientation is column major.</td>
     </tr>
     <tr>
-        <td><code>matrix&lt;T, <br>
-        &nbsp;unbounded_array&lt;T&gt;,<br>
-        &nbsp;row_major&lt;&gt; &gt;<br>
+        <td><code>matrix&lt;T,<br>
+        &nbsp;row_major&lt;&gt;, <br>
+        &nbsp;unbounded_array&lt;T&gt; &gt;<br>
         &nbsp;&nbsp;m (size1, size2)</code></td>
         <td>Constructs a dense matrix, storage is provided by a
         heap-based array, orientation is row major.</td>
     </tr>
     <tr>
-        <td><code>matrix&lt;T, <br>
-        &nbsp;unbounded_array&lt;T&gt;,<br>
-        &nbsp;column_major&lt;&gt; &gt;<br>
+        <td><code>matrix&lt;T,<br>
+        &nbsp;column_major&lt;&gt;,<br>
+        &nbsp;unbounded_array&lt;T&gt; &gt;<br>
         &nbsp;&nbsp;m (size1, size2)</code></td>
         <td>Constructs a dense matrix, storage is provided by a
         heap-based array, orientation is column major.</td>
     </tr>
     <tr>
-        <td><code>matrix&lt;T, <br>
-        &nbsp;bounded_array&lt;T, N1 * N2&gt;, <br>
-        &nbsp;row_major&lt;&gt; &gt;<br>
+        <td><code>matrix&lt;T,<br>
+        &nbsp;row_major&lt;&gt;,<br>
+        &nbsp;bounded_array&lt;T, N1 * N2&gt; &gt;<br>
         &nbsp;&nbsp;m (size1, size2)</code></td>
         <td>Constructs a dense matrix, storage is provided by a
         stack-based array, orientation is row major.</td>
     </tr>
     <tr>
-        <td><code>matrix&lt;T, <br>
-        &nbsp;bounded_array&lt;T, N1 * N2&gt;, <br>
-        &nbsp;column_major&lt;&gt; &gt;<br>
+        <td><code>matrix&lt;T,<br>
+        &nbsp;column_major&lt;&gt;,<br>
+        &nbsp;bounded_array&lt;T, N1 * N2&gt; &gt;<br>
         &nbsp;&nbsp;m (size1, size2)</code></td>
         <td>Constructs a dense matrix, storage is provided by a
         stack-based array, orientation is column major.</td>
     </tr>
     <tr>
         <td><code>sparse_matrix&lt;T, <br>
-        &nbsp;std::map&lt;std::size_t, T&gt;, <br>
-        &nbsp;row_major&lt;&gt; &gt;<br>
+        &nbsp;row_major&lt;&gt;,<br>
+        &nbsp;std::map&lt;std::size_t, T&gt; &gt;<br>
         &nbsp;&nbsp;m (size1, size2, non_zeroes)</code></td>
         <td>Constructs a sparse matrix, storage is provided by a
         standard map, orientation is row major.</td>
     </tr>
     <tr>
         <td><code>sparse_matrix&lt;T, <br>
-        &nbsp;std::map&lt;std::size_t, T&gt;, <br>
-        &nbsp;column_major&lt;&gt; &gt;<br>
+        &nbsp;column_major&lt;&gt;,<br>
+        &nbsp;std::map&lt;std::size_t, T&gt; &gt;<br>
         &nbsp;&nbsp;m (size1, size2, non_zeroes)</code></td>
         <td>Constructs a sparse matrix, storage is provided by a
         standard map, orientation is column major.</td>
     </tr>
     <tr>
         <td><code>sparse_matrix&lt;T, <br>
-        &nbsp;compressed_array&lt;std::size_t, T&gt;, <br>
-        &nbsp;row_major&lt;&gt; &gt; <br>
+        &nbsp;row_major&lt;&gt;,<br>
+        &nbsp;compressed_array&lt;std::size_t, T&gt; &gt; <br>
         &nbsp;&nbsp;m (size1, size2, non_zeroes)</code></td>
         <td>Constructs a sparse matrix, storage is provided by a
         compressed array, orientation is row major.</td>
     </tr>
     <tr>
         <td><code>sparse_matrix&lt;T, <br>
-        &nbsp;compressed_array&lt;std::size_t, T&gt;, <br>
-        &nbsp;column_major&lt;&gt; &gt; <br>
+        &nbsp;column_major&lt;&gt;,<br>
+        &nbsp;compressed_array&lt;std::size_t, T&gt; &gt; <br>
         &nbsp;&nbsp;m (size1, size2, non_zeroes)</code></td>
         <td>Constructs a sparse matrix, storage is provided by a
         compressed array, orientation is column major.</td>
@@ -733,14 +738,18 @@ GCC 2.95.2. This issue is under investigation.</p>
     <li><a href="vector.htm">Vector Related</a><ol type="1"
         start="1">
             <li><a href="vector.htm#vector">Vector</a></li>
-            <li><a href="vector.htm#vector_range">Vector Range</a></li>
-            <li><a href="vector.htm#vector_slice">Vector Slice</a></li>
         </ol>
     </li>
     <li><a href="vector_sp.htm">Sparse Vector Related</a><ol
         type="1" start="1">
             <li><a href="vector_sp.htm#sparse_vector">Sparse
                 Vector</a></li>
+        </ol>
+    </li>
+    <li><a href="vector_pr.htm">Vector Proxy Related</a><ol
+        type="1" start="1">
+            <li><a href="vector_pr.htm#vector_range">Vector Range</a></li>
+            <li><a href="vector_pr.htm#vector_slice">Vector Slice</a></li>
         </ol>
     </li>
     <li><a href="vector_et.htm">Vector Expression Related</a><ol
@@ -758,18 +767,23 @@ GCC 2.95.2. This issue is under investigation.</p>
     <li><a href="matrix.htm">Matrix Related</a><ol type="1"
         start="1">
             <li><a href="matrix.htm#matrix">Matrix</a></li>
-            <li><a href="matrix.htm#matrix_row">Matrix Row</a></li>
-            <li><a href="matrix.htm#matrix_column">Matrix Column</a></li>
-            <li><a href="matrix.htm#vector_range">Vector Range</a></li>
-            <li><a href="matrix.htm#vector_slice">Vector Slice</a></li>
-            <li><a href="matrix.htm#matrix_range">Matrix Range</a></li>
-            <li><a href="matrix.htm#matrix_slice">Matrix Slice</a></li>
         </ol>
     </li>
     <li><a href="matrix_sp.htm">Sparse Matrix Related</a><ol
         type="1" start="1">
             <li><a href="matrix_sp.htm#sparse_matrix">Sparse
                 Matrix</a></li>
+        </ol>
+    </li>
+    <li><a href="matrix.htm">Matrix Proxy Related</a><ol type="1"
+        start="1">
+            <li><a href="matrix_pr.htm#matrix_row">Matrix Row</a></li>
+            <li><a href="matrix_pr.htm#matrix_column">Matrix
+                Column</a></li>
+            <li><a href="matrix_pr.htm#vector_range">Vector Range</a></li>
+            <li><a href="matrix_pr.htm#vector_slice">Vector Slice</a></li>
+            <li><a href="matrix_pr.htm#matrix_range">Matrix Range</a></li>
+            <li><a href="matrix_pr.htm#matrix_slice">Matrix Slice</a></li>
         </ol>
     </li>
     <li><a href="matrix_et.htm">Matrix Expression Related</a><ol
@@ -1262,8 +1276,8 @@ dimension 100 and 100 x 100, respectively.</p>
 
 <p>We would like to thank all, which supported the development of
 this library so far: <br>
-David Abrahams, Beman Dawes, Joachim Kessel, Jens Maurer, Joachim Pyras, 
-Jeremy Siek, Markus Steffl, Marc Zimmermann and the members of <a
-href="http://www.boost.org">http://www.boost.org</a></p>
+David Abrahams, Beman Dawes, Joachim Kessel, Jens Maurer, Joachim
+Pyras, Jeremy Siek, Markus Steffl, Marc Zimmermann and the
+members of <a href="http://www.boost.org">http://www.boost.org</a></p>
 </body>
 </html>

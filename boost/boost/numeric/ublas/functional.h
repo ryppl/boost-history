@@ -620,7 +620,7 @@ namespace numerics {
     };
 
     template<class T1, class T2, class TR>
-    struct matrix_vector_prod: 
+    struct matrix_vector_prod1: 
         public matrix_vector_binary_functor<T1, T2, TR> {
         typedef typename matrix_vector_binary_functor<T1, T2, TR>::size_type size_type;
         typedef typename matrix_vector_binary_functor<T1, T2, TR>::difference_type difference_type;
@@ -664,144 +664,49 @@ namespace numerics {
         }
     };
 
-    // Ternary returning vector
-    template<class T1, class T2, class T3>
-    struct matrix_vector_ternary_functor {
-        typedef std::size_t size_type;
-        typedef std::ptrdiff_t difference_type;
-        typedef typename promote_traits<T1, T3>::promote_type value_type;
-    };
+    template<class T1, class T2, class TR>
+    struct matrix_vector_prod2: 
+        public matrix_vector_binary_functor<T1, T2, TR> {
+        typedef typename matrix_vector_binary_functor<T1, T2, TR>::size_type size_type;
+        typedef typename matrix_vector_binary_functor<T1, T2, TR>::difference_type difference_type;
+        typedef typename matrix_vector_binary_functor<T1, T2, TR>::value_type value_type;
 
-    struct matrix_tag {};
-    struct lower_triangular_tag: public matrix_tag {};
-    struct upper_triangular_tag: public matrix_tag {};
-    struct unit_lower_triangular_tag: public matrix_tag {};
-    struct unit_upper_triangular_tag: public matrix_tag {};
-
-    template<class T1, class T2, class T3, class C>
-    class matrix_vector_solve:
-        public matrix_vector_ternary_functor<T1, T2, T3> {
-    public:
-        typedef C matrix_category;
-        typedef typename matrix_vector_ternary_functor<T1, T2, T3>::size_type size_type;
-        typedef typename matrix_vector_ternary_functor<T1, T2, T3>::difference_type difference_type;
-        typedef typename matrix_vector_ternary_functor<T1, T2, T3>::value_type value_type;
-
+        template<class E1, class E2>
         NUMERICS_INLINE
-        matrix_vector_solve (): 
-            first_ (true) {}
-
-        // Operations: 
-        //  n * (n - 1) / 2 + n = n * (n + 1) / 2 multiplies,
-        //  n * (n - 1) / 2 plus
-
-        template<class E1, class E2, class E3>
-        // This function seems to be big. So we do not let the compiler inline it.
-        // NUMERICS_INLINE
-        value_type operator () (const matrix_expression<E1> &e1, 
-                                vector_expression<E2> &e2, 
-                                const vector_expression<E3> &e3, 
-                                lower_triangular_tag, 
+        value_type operator () (const vector_expression<E1> &e1, 
+                                const matrix_expression<E2> &e2, 
                                 size_type i) const { 
-            if (first_) {
-                check<bad_size>::precondition (e1 ().size1 () == e1 ().size2 ());
-                check<bad_size>::precondition (e1 ().size2 () == e2 ().size ());
-                check<bad_size>::precondition (e1 ().size1 () == e3 ().size ());
-                size_type size = e2 ().size ();
-                for (size_type m = 0; m < size; ++ m) 
-					e2 () (m) = e3 () (m);
-                for (size_type n = 0; n < size; ++ n) {
-                    check<singular>::precondition (e1 () (n, n) != T1 (0));
-                    e2 () (n) /= e1 () (n, n);
-                    for (size_type m = n + 1; m < size; ++ m) 
-                        e2 () (m) -= e1 () (m, n) * e2 () (n);
-                }
-                first_ = false;
-            }
-            return e2 () (i); 
+            size_type size = common (e1 ().size (), e2 ().size1 ());
+            value_type t (0);
+            for (size_type j = 0; j < size; ++ j)
+                t += e1 () (i) * e2 () (i, j);
+            return t; 
         }
-        template<class E1, class E2, class E3>
-        // This function seems to be big. So we do not let the compiler inline it.
-        // NUMERICS_INLINE
-        value_type operator () (const matrix_expression<E1> &e1, 
-                                vector_expression<E2> &e2, 
-                                const vector_expression<E3> &e3, 
-                                upper_triangular_tag, 
-                                size_type i) const { 
-            if (first_) {
-                check<bad_size>::precondition (e1 ().size1 () == e1 ().size2 ());
-                check<bad_size>::precondition (e1 ().size2 () == e2 ().size ());
-                check<bad_size>::precondition (e1 ().size1 () == e3 ().size ());
-                size_type size = e2 ().size ();
-                for (difference_type m = size - 1; m >= 0; -- m) 
-					e2 () (m) = e3 () (m);
-                for (difference_type n = size - 1; n >= 0; -- n) {
-                    check<singular>::precondition (e1 () (n, n) != T1 (0));
-                    e2 () (n) /= e1 () (n, n);
-                    for (difference_type m = n - 1; (signed) m >= 0; -- m) 
-                        e2 () (m) -= e1 () (m, n) * e2 () (n);
-                }
-                first_ = false;
-            }
-            return e2 () (i); 
-        }
-        template<class E1, class E2, class E3>
-        // This function seems to be big. So we do not let the compiler inline it.
-        // NUMERICS_INLINE
-        value_type operator () (const matrix_expression<E1> &e1, 
-                                vector_expression<E2> &e2, 
-                                const vector_expression<E3> &e3, 
-                                unit_lower_triangular_tag, 
-                                size_type i) const { 
-            if (first_) {
-                check<bad_size>::precondition (e1 ().size1 () == e1 ().size2 ());
-                check<bad_size>::precondition (e1 ().size2 () == e2 ().size ());
-                check<bad_size>::precondition (e1 ().size1 () == e3 ().size ());
-                size_type size = e2 ().size ();
-                for (size_type m = 0; m < size; ++ m) 
-					e2 () (m) = e3 () (m);
-                for (size_type n = 0; n < size; ++ n) {
-                    for (size_type m = n + 1; m < size; ++ m) 
-                        e2 () (m) -= e1 () (m, n) * e2 () (n);
-                }
-                first_ = false;
-            }
-            return e2 () (i); 
-        }
-        template<class E1, class E2, class E3>
-        // This function seems to be big. So we do not let the compiler inline it.
-        // NUMERICS_INLINE
-        value_type operator () (const matrix_expression<E1> &e1, 
-                                vector_expression<E2> &e2, 
-                                const vector_expression<E3> &e3, 
-                                unit_upper_triangular_tag, 
-                                size_type i) const { 
-            if (first_) {
-                check<bad_size>::precondition (e1 ().size1 () == e1 ().size2 ());
-                check<bad_size>::precondition (e1 ().size2 () == e2 ().size ());
-                check<bad_size>::precondition (e1 ().size1 () == e3 ().size ());
-                size_type size = e2 ().size ();
-                for (difference_type m = size - 1; m >= 0; -- m) 
-					e2 () (m) = e3 () (m);
-                for (difference_type n = size - 1; n >= 0; -- n) {
-                    for (difference_type m = n - 1; (signed) m >= 0; -- m) 
-                        e2 () (m) -= e1 () (m, n) * e2 () (n);
-                }
-                first_ = false;
-            }
-            return e2 () (i); 
-        }
-        template<class E1, class E2, class E3>
+        template<class I1, class I2>
         NUMERICS_INLINE
-        value_type operator () (const matrix_expression<E1> &e1, 
-                                vector_expression<E2> &e2, 
-                                const vector_expression<E3> &e3, 
-                                size_type i) const { 
-            return operator () (e1, e2, e3, matrix_category (), i);
+        value_type operator () (I1 it1, const I1 &it1_end, I2 it2, const I2 &it2_end, std::random_access_iterator_tag) const { 
+            value_type t (0);
+            difference_type size (common (it1_end - it1, it2_end - it2));
+//          for (difference_type j = 0; j < size; ++ j)
+            while (-- size >= 0)
+                t += *it1 * *it2, ++ it1, ++ it2;
+            return t; 
         }
-
-    private:
-        mutable bool first_;
+        template<class I1, class I2>
+        NUMERICS_INLINE
+        value_type operator () (I1 it1, const I1 &it1_end, I2 it2, const I2 &it2_end, std::bidirectional_iterator_tag) const { 
+            value_type t (0);
+            while (it1 != it1_end && it2 != it2_end) {
+                difference_type compare = it1.index2 () - it2.index ();
+                if (compare < 0) 
+                    ++ it1;
+                else if (compare == 0) 
+                    t += *it1 * *it2, ++ it1, ++ it2;
+                else if (compare > 0)
+                    ++ it2;
+            }
+            return t; 
+        }
     };
 
     // Binary returning matrix
@@ -855,161 +760,6 @@ namespace numerics {
             }
             return t; 
         }
-    };
-
-    // Ternary returning matrix
-    template<class T1, class T2, class T3>
-    struct matrix_matrix_ternary_functor {
-        typedef std::size_t size_type;
-        typedef std::ptrdiff_t difference_type;
-        typedef typename promote_traits<T1, T3>::promote_type value_type;
-    };
-
-    template<class T1, class T2, class T3, class C>
-    class matrix_matrix_solve:
-        public matrix_matrix_ternary_functor<T1, T2, T3> {
-    public:
-        typedef C matrix_category;
-        typedef typename matrix_matrix_ternary_functor<T1, T2, T3>::size_type size_type;
-        typedef typename matrix_matrix_ternary_functor<T1, T2, T3>::difference_type difference_type;
-        typedef typename matrix_matrix_ternary_functor<T1, T2, T3>::value_type value_type;
-
-        NUMERICS_INLINE
-        matrix_matrix_solve (): 
-            first_ (true) {}
-
-        // Operations: 
-        //  k * n * (n - 1) / 2 + k * n = k * n * (n + 1) / 2 multiplies,
-        //  k * n * (n - 1) / 2 plus
-
-        template<class E1, class E2, class E3>
-        // This function seems to be big. So we do not let the compiler inline it.
-        // NUMERICS_INLINE
-        value_type operator () (const matrix_expression<E1> &e1, 
-                                matrix_expression<E2> &e2, 
-                                const matrix_expression<E3> &e3, 
-                                lower_triangular_tag, 
-                                size_type i, 
-                                size_type j) const { 
-            if (first_) {
-                check<bad_size>::precondition (e1 ().size1 () == e1 ().size2 ());
-                check<bad_size>::precondition (e1 ().size2 () == e2 ().size1 ());
-                check<bad_size>::precondition (e1 ().size1 () == e3 ().size1 ());
-                check<bad_size>::precondition (e2 ().size2 () == e3 ().size2 ());
-                size_type size = common (e2 ().size1 (), e2 ().size2 ());
-                for (size_type l = 0; l < size; ++ l) 
-					for (size_type m = 0; m < size; ++ m) 
-						e2 () (l, m) = e3 () (l, m);
-                for (size_type n = 0; n < size; ++ n) {
-                    check<singular>::precondition (e1 () (n, n) != T1 (0));
-                    for (size_type l = 0; l < size; ++ l) {
-                        e2 () (n, l) /= e1 () (n, n);
-                        for (size_type m = n + 1; m < size; ++ m) 
-                            e2 () (m, l) -= e1 () (m, n) * e2 () (n, l);
-                    }
-                }
-                first_ = false;
-            }
-            return e2 () (i, j); 
-        }
-        template<class E1, class E2, class E3>
-        // This function seems to be big. So we do not let the compiler inline it.
-        // NUMERICS_INLINE
-        value_type operator () (const matrix_expression<E1> &e1, 
-                                matrix_expression<E2> &e2, 
-                                const matrix_expression<E3> &e3, 
-                                upper_triangular_tag, 
-                                size_type i, 
-                                size_type j) const { 
-            if (first_) {
-                check<bad_size>::precondition (e1 ().size1 () == e1 ().size2 ());
-                check<bad_size>::precondition (e1 ().size2 () == e2 ().size1 ());
-                check<bad_size>::precondition (e1 ().size1 () == e3 ().size1 ());
-                check<bad_size>::precondition (e2 ().size2 () == e3 ().size2 ());
-                size_type size = common (e2 ().size1 (), e2 ().size2 ());
-                for (difference_type l = size - 1; l >= 0; -- l) 
-					for (difference_type m = size - 1; m >= 0; -- m) 
-						e2 () (l, m) = e3 () (l, m);
-                for (difference_type n = size - 1; n >= 0; -- n) {
-                    check<singular>::precondition (e1 () (n, n) != T1 (0));
-                    for (difference_type l = size - 1; l >= 0; -- l) {
-                        e2 () (n, l) /= e1 () (n, n);
-                        for (difference_type m = n - 1; m >= 0; -- m) 
-                            e2 () (m, l) -= e1 () (m, n) * e2 () (n, l);
-                    }
-                }
-                first_ = false;
-            }
-            return e2 () (i, j); 
-        }
-        template<class E1, class E2, class E3>
-        // This function seems to be big. So we do not let the compiler inline it.
-        // NUMERICS_INLINE
-        value_type operator () (const matrix_expression<E1> &e1, 
-                                matrix_expression<E2> &e2, 
-                                const matrix_expression<E3> &e3, 
-                                unit_lower_triangular_tag, 
-                                size_type i, 
-                                size_type j) const { 
-            if (first_) {
-                check<bad_size>::precondition (e1 ().size1 () == e1 ().size2 ());
-                check<bad_size>::precondition (e1 ().size2 () == e2 ().size1 ());
-                check<bad_size>::precondition (e1 ().size1 () == e3 ().size1 ());
-                check<bad_size>::precondition (e2 ().size2 () == e3 ().size2 ());
-                size_type size = common (e2 ().size1 (), e2 ().size2 ());
-                for (size_type l = 0; l < size; ++ l) 
-					for (size_type m = 0; m < size; ++ m) 
-						e2 () (l, m) = e3 () (l, m);
-                for (size_type n = 0; n < size; ++ n) {
-                    for (size_type l = 0; l < size; ++ l) {
-                        for (size_type m = n + 1; m < size; ++ m) 
-                            e2 () (m, l) -= e1 () (m, n) * e2 () (n, l);
-                    }
-                }
-                first_ = false;
-            }
-            return e2 () (i, j); 
-        }
-        template<class E1, class E2, class E3>
-        // This function seems to be big. So we do not let the compiler inline it.
-        // NUMERICS_INLINE
-        value_type operator () (const matrix_expression<E1> &e1, 
-                                matrix_expression<E2> &e2, 
-                                const matrix_expression<E3> &e3, 
-                                unit_upper_triangular_tag, 
-                                size_type i, 
-                                size_type j) const { 
-            if (first_) {
-                check<bad_size>::precondition (e1 ().size1 () == e1 ().size2 ());
-                check<bad_size>::precondition (e1 ().size2 () == e2 ().size1 ());
-                check<bad_size>::precondition (e1 ().size1 () == e3 ().size1 ());
-                check<bad_size>::precondition (e2 ().size2 () == e3 ().size2 ());
-                size_type size = common (e2 ().size1 (), e2 ().size2 ());
-                for (difference_type l = size - 1; l >= 0; -- l) 
-					for (difference_type m = size - 1; m >= 0; -- m) 
-						e2 () (l, m) = e3 () (l, m);
-                for (difference_type n = size - 1; n >= 0; -- n) {
-                    for (difference_type l = size - 1; l >= 0; -- l) {
-                        for (difference_type m = n - 1; m >= 0; -- m) 
-                            e2 () (m, l) -= e1 () (m, n) * e2 () (n, l);
-                    }
-                }
-                first_ = false;
-            }
-            return e2 () (i, j); 
-        }
-        template<class E1, class E2, class E3>
-        NUMERICS_INLINE
-        value_type operator () (const matrix_expression<E1> &e1, 
-                                matrix_expression<E2> &e2, 
-                                const matrix_expression<E3> &e3, 
-                                size_type i, 
-                                size_type j) const { 
-            return operator () (e1, e2, e3, matrix_category (), i, j);
-        }
-
-    private:
-        mutable bool first_;
     };
 
 }

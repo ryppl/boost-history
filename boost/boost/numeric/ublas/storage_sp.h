@@ -87,7 +87,7 @@ namespace numerics {
                 if (! data_)
                     throw std::bad_alloc ();
                 std::copy (data_, data_ + size_, data);
-                delete data_;
+                delete [] data_;
                 capacity_ = size << 1;
                 data_ = data;
             }
@@ -104,7 +104,7 @@ namespace numerics {
         data_reference_type operator [] (index_type i) {
             pointer_type it = find (i);
             if (it == end ()) 
-                it = insert (end (), value_type (i, 0));
+                it = insert (end (), value_type (i, data_value_type ()));
             return it->second;
         }
 
@@ -136,52 +136,6 @@ namespace numerics {
             a1.swap (a2);
         }
 #endif
-
-        // Element lookup
-        // This function seems to be big. So we do not let the compiler inline it.
-        // NUMERICS_INLINE
-        const_pointer_type find (index_type i) const {
-            std::pair<const_pointer_type, const_pointer_type> pit;
-            pit = std::equal_range (begin (), end (), value_type (i, 0), less<value_type> ());
-            if (pit.first->first == i)
-                return pit.first;
-            else if (pit.second->first == i)
-                return pit.second;
-            else
-                return end ();
-        }
-        // This function seems to be big. So we do not let the compiler inline it.
-        // NUMERICS_INLINE
-        pointer_type find (index_type i) {
-            std::pair<pointer_type, pointer_type> pit;
-            pit = std::equal_range (begin (), end (), value_type (i, 0), less<value_type> ());
-            if (pit.first->first == i)
-                return pit.first;
-            else if (pit.second->first == i)
-                return pit.second;
-            else
-                return end ();
-        }
-        // This function seems to be big. So we do not let the compiler inline it.
-        // NUMERICS_INLINE
-        const_pointer_type lower_bound (index_type i) const {
-            return std::lower_bound (begin (), end (), value_type (i, 0), less<value_type> ());
-        }
-        // This function seems to be big. So we do not let the compiler inline it.
-        // NUMERICS_INLINE
-        pointer_type lower_bound (index_type i) {
-            return std::lower_bound (begin (), end (), value_type (i, 0), less<value_type> ());
-        }
-        // This function seems to be big. So we do not let the compiler inline it.
-        // NUMERICS_INLINE
-        const_pointer_type upper_bound (index_type i) const {
-            return std::upper_bound (begin (), end (), value_type (i, 0), less<value_type> ());
-        }
-        // This function seems to be big. So we do not let the compiler inline it.
-        // NUMERICS_INLINE
-        pointer_type upper_bound (index_type i) {
-            return std::upper_bound (begin (), end (), value_type (i, 0), less<value_type> ());
-        }
 
         // Element insertion
         // This function seems to be big. So we do not let the compiler inline it.
@@ -215,6 +169,58 @@ namespace numerics {
         // NUMERICS_INLINE
         void sort () {
             std::sort (begin (), end (), less<value_type> ()); 
+        }
+
+        // Element lookup
+        // This function seems to be big. So we do not let the compiler inline it.
+        // NUMERICS_INLINE
+        const_pointer_type find (index_type i) const {
+            std::pair<const_pointer_type, const_pointer_type> pit;
+//            pit = std::equal_range (begin (), end (), value_type (i, 0), less<value_type> ());
+            pit = std::equal_range (begin (), end (), value_type (i, data_value_type ()), less<value_type> ());
+            if (pit.first->first == i)
+                return pit.first;
+            else if (pit.second->first == i)
+                return pit.second;
+            else
+                return end ();
+        }
+        // This function seems to be big. So we do not let the compiler inline it.
+        // NUMERICS_INLINE
+        pointer_type find (index_type i) {
+            std::pair<pointer_type, pointer_type> pit;
+//            pit = std::equal_range (begin (), end (), value_type (i, 0), less<value_type> ());
+            pit = std::equal_range (begin (), end (), value_type (i, data_value_type ()), less<value_type> ());
+            if (pit.first->first == i)
+                return pit.first;
+            else if (pit.second->first == i)
+                return pit.second;
+            else
+                return end ();
+        }
+        // This function seems to be big. So we do not let the compiler inline it.
+        // NUMERICS_INLINE
+        const_pointer_type lower_bound (index_type i) const {
+//            return std::lower_bound (begin (), end (), value_type (i, 0), less<value_type> ());
+            return std::lower_bound (begin (), end (), value_type (i, data_value_type ()), less<value_type> ());
+        }
+        // This function seems to be big. So we do not let the compiler inline it.
+        // NUMERICS_INLINE
+        pointer_type lower_bound (index_type i) {
+//            return std::lower_bound (begin (), end (), value_type (i, 0), less<value_type> ());
+            return std::lower_bound (begin (), end (), value_type (i, data_value_type ()), less<value_type> ());
+        }
+        // This function seems to be big. So we do not let the compiler inline it.
+        // NUMERICS_INLINE
+        const_pointer_type upper_bound (index_type i) const {
+//            return std::upper_bound (begin (), end (), value_type (i, 0), less<value_type> ());
+            return std::upper_bound (begin (), end (), value_type (i, data_value_type ()), less<value_type> ());
+        }
+        // This function seems to be big. So we do not let the compiler inline it.
+        // NUMERICS_INLINE
+        pointer_type upper_bound (index_type i) {
+//            return std::upper_bound (begin (), end (), value_type (i, 0), less<value_type> ());
+            return std::upper_bound (begin (), end (), value_type (i, data_value_type ()), less<value_type> ());
         }
 
         // Iterators simply are pointers.

@@ -13,8 +13,165 @@ content="text/html; charset=iso-8859-1">
 
 <h2><a name="unbounded_array"></a>Unbounded Array</h2>
 
-<p>The templated class <code>unbounded_array</code> implements a
-simple C-like array using allocation via <code>new/delete</code>.</p>
+<h4>Description</h4>
+
+<p>The templated class <code>unbounded_array&lt;T&gt; </code>implements
+a simple C-like array using allocation via <code>new/delete</code>.</p>
+
+<h4>Example</h4>
+
+<pre>int main () {
+    numerics::unbounded_array&lt;double&gt; a (3);
+    for (int i = 0; i &lt; a.size (); ++ i) {
+        a [i] = i;
+        std::cout &lt;&lt; a [i] &lt;&lt; std::endl;
+    }
+}</pre>
+
+<h4>Definition</h4>
+
+<p>Defined in the header storage.h.</p>
+
+<h4>Template parameters</h4>
+
+<table border="1">
+    <tr>
+        <th>Parameter </th>
+        <th>Description </th>
+        <th>Default </th>
+    </tr>
+    <tr>
+        <td><tt>T</tt> </td>
+        <td>The type of object stored in the array. </td>
+        <td>&nbsp;</td>
+    </tr>
+</table>
+
+<h4>Model of</h4>
+
+<p>Storage Container. </p>
+
+<h4>Type requirements</h4>
+
+<p>None, except for those imposed by the requirements of Storage
+Container.</p>
+
+<h4>Public base classes</h4>
+
+<p>None. </p>
+
+<h4>Members</h4>
+
+<table border="1">
+    <tr>
+        <th>Member </th>
+        <th>Description </th>
+    </tr>
+    <tr>
+        <td><code>unbounded_array ()</code> </td>
+        <td>Allocates an uninitialized <code>unbounded_array </code>that
+        holds at most zero elements.</td>
+    </tr>
+    <tr>
+        <td><code>unbounded_array (size_type size)</code></td>
+        <td>Allocates an uninitialized <code>unbounded_array </code>that
+        holds at most <code>size</code> elements.</td>
+    </tr>
+    <tr>
+        <td><code>unbounded_array (const unbounded_array &amp;a)</code></td>
+        <td>The copy constructor.</td>
+    </tr>
+    <tr>
+        <td><code>~unbounded_array ()</code></td>
+        <td>Deallocates the <code>unbounded_array </code>itself. </td>
+    </tr>
+    <tr>
+        <td><code>void resize (size_type size)</code></td>
+        <td>Reallocates an <code>unbounded_array </code>to hold
+        at most <code>size</code> elements. The content of the <code>unbounded_array
+        </code>is not preserved.</td>
+    </tr>
+    <tr>
+        <td><code>size_type size () const</code></td>
+        <td>Returns the size of the <code>unbounded_array</code>.
+        </td>
+    </tr>
+    <tr>
+        <td><code>const_reference_type operator [] (size_type i)
+        const</code></td>
+        <td>Returns a <code>const </code>reference of the <tt>i</tt>-th
+        element. </td>
+    </tr>
+    <tr>
+        <td><code>reference_type operator [] (size_type i)</code></td>
+        <td>Returns a reference of the <tt>i</tt>-th element. </td>
+    </tr>
+    <tr>
+        <td><code>unbounded_array &amp;operator = (const
+        unbounded_array &amp;a)</code></td>
+        <td>The assignment operator.</td>
+    </tr>
+    <tr>
+        <td><code>unbounded_array &amp;assign_temporary
+        (unbounded_array &amp;a)</code></td>
+        <td>Assigns a temporary. May change the array <code>a</code>.</td>
+    </tr>
+    <tr>
+        <td><code>void swap (unbounded_array &amp;a)</code></td>
+        <td>Swaps the contents of the arrays. </td>
+    </tr>
+    <tr>
+        <td><code>void fill (const value_type &amp;t)</code></td>
+        <td>Fills the array with the value <tt>t</tt>.</td>
+    </tr>
+    <tr>
+        <td><code>pointer_type insert (pointer_type it, const
+        value_type &amp;t)</code></td>
+        <td>Inserts the value <tt>t</tt> at <tt>it</tt>.</td>
+    </tr>
+    <tr>
+        <td><code>const_iterator begin () const</code></td>
+        <td>Returns a <tt>const_iterator</tt> pointing to the
+        beginning of the <tt>unbounded_array</tt>. </td>
+    </tr>
+    <tr>
+        <td><code>const_iterator end () const</code></td>
+        <td>Returns a <tt>const_iterator</tt> pointing to the end
+        of the <tt>unbounded_array</tt>. </td>
+    </tr>
+    <tr>
+        <td><code>iterator begin () </code></td>
+        <td>Returns a <tt>iterator</tt> pointing to the beginning
+        of the <tt>unbounded_array</tt>. </td>
+    </tr>
+    <tr>
+        <td><code>iterator end () </code></td>
+        <td>Returns a <tt>iterator</tt> pointing to the end of
+        the <tt>unbounded_array</tt>. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator rbegin () const</code></td>
+        <td>Returns a <tt>const_reverse_iterator</tt> pointing to
+        the beginning of the reversed <tt>unbounded_array</tt>. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator rend () const</code></td>
+        <td>Returns a <tt>const_reverse_iterator</tt> pointing to
+        the end of the reversed <tt>unbounded_array</tt>. </td>
+    </tr>
+    <tr>
+        <td><code>reverse_iterator rbegin () </code></td>
+        <td>Returns a <tt>reverse_iterator</tt> pointing to the
+        beginning of the reversed <tt>unbounded_array</tt>. </td>
+    </tr>
+    <tr>
+        <td><code>reverse_iterator rend () </code></td>
+        <td>Returns a <tt>reverse_iterator</tt> pointing to the
+        end of the reversed <tt>unbounded_array</tt>. </td>
+    </tr>
+</table>
+
+<h4>Interface</h4>
 
 <pre><code>    // Unbounded array 
     template&lt;class T&gt;
@@ -40,7 +197,7 @@ simple C-like array using allocation via <code>new/delete</code>.</p>
         size_type size () const;
 
         // Element access
-        value_type operator [] (size_type i) const;
+        const_reference_type operator [] (size_type i) const;
         reference_type operator [] (size_type i);
 
         // Assignment
@@ -51,9 +208,8 @@ simple C-like array using allocation via <code>new/delete</code>.</p>
 	void swap (unbounded_array &amp;a);
 	friend void swap (unbounded_array &amp;a1, unbounded_array &amp;a2);
 
-        // Element insertion
-        void clear ();
-        pointer_type insert (pointer_type it, const value_type &amp;t);
+        void fill (const value_type &amp;t);
+	pointer_type insert (pointer_type it, const value_type &amp;t);
 
         // Iterators simply are pointers.
 
@@ -83,8 +239,169 @@ simple C-like array using allocation via <code>new/delete</code>.</p>
 
 <h2><a name="bounded_array"></a>Bounded Array</h2>
 
-<p>The templated class <code>bounded_array</code> implements a
-simple C-like array.</p>
+<h4>Description</h4>
+
+<p>The templated class <code>bounded_array&lt;T, N&gt; </code>implements
+a simple C-like array.</p>
+
+<h4>Example</h4>
+
+<pre>int main () {
+    numerics::bounded_array&lt;double, 3&gt; a (3);
+    for (int i = 0; i &lt; a.size (); ++ i) {
+        a [i] = i;
+        std::cout &lt;&lt; a [i] &lt;&lt; std::endl;
+    }
+}</pre>
+
+<h4>Definition</h4>
+
+<p>Defined in the header storage.h.</p>
+
+<h4>Template parameters</h4>
+
+<table border="1">
+    <tr>
+        <th>Parameter </th>
+        <th>Description </th>
+        <th>Default </th>
+    </tr>
+    <tr>
+        <td><tt>T</tt> </td>
+        <td>The type of object stored in the array. </td>
+        <td>&nbsp;</td>
+    </tr>
+    <tr>
+        <td><tt>N</tt></td>
+        <td>The allocation size of the array.</td>
+        <td>&nbsp;</td>
+    </tr>
+</table>
+
+<h4>Model of</h4>
+
+<p>Storage Container. </p>
+
+<h4>Type requirements</h4>
+
+<p>None, except for those imposed by the requirements of Storage
+Container.</p>
+
+<h4>Public base classes</h4>
+
+<p>None. </p>
+
+<h4>Members</h4>
+
+<table border="1">
+    <tr>
+        <th>Member </th>
+        <th>Description </th>
+    </tr>
+    <tr>
+        <td><code>bounded_array ()</code> </td>
+        <td>Allocates an uninitialized <code>bounded_array </code>that
+        holds at most zero elements.</td>
+    </tr>
+    <tr>
+        <td><code>bounded_array (size_type size)</code></td>
+        <td>Allocates an uninitialized <code>bounded_array </code>that
+        holds at most <code>size</code> elements.</td>
+    </tr>
+    <tr>
+        <td><code>bounded_array (const bounded_array &amp;a)</code></td>
+        <td>The copy constructor.</td>
+    </tr>
+    <tr>
+        <td><code>~bounded_array ()</code></td>
+        <td>Deallocates the <code>bounded_array </code>itself. </td>
+    </tr>
+    <tr>
+        <td><code>void resize (size_type size)</code></td>
+        <td>Reallocates a <code>bounded_array </code>to hold at
+        most <code>size</code> elements. The content of the <code>bounded_array
+        </code>is preserved.</td>
+    </tr>
+    <tr>
+        <td><code>size_type size () const</code></td>
+        <td>Returns the size of the <code>bounded_array</code>. </td>
+    </tr>
+    <tr>
+        <td><code>const_reference_type operator [] (size_type i)
+        const</code></td>
+        <td>Returns a <code>const </code>reference of the <tt>i</tt>-th
+        element. </td>
+    </tr>
+    <tr>
+        <td><code>reference_type operator [] (size_type i)</code></td>
+        <td>Returns a reference of the <tt>i</tt>-th element. </td>
+    </tr>
+    <tr>
+        <td><code>bounded_array &amp;operator = (const
+        bounded_array &amp;a)</code></td>
+        <td>The assignment operator.</td>
+    </tr>
+    <tr>
+        <td><code>bounded_array &amp;assign_temporary
+        (bounded_array &amp;a)</code></td>
+        <td>Assigns a temporary. May change the array <code>a</code>.</td>
+    </tr>
+    <tr>
+        <td><code>void swap (bounded_array &amp;a)</code></td>
+        <td>Swaps the contents of the arrays. </td>
+    </tr>
+    <tr>
+        <td><code>void fill (const value_type &amp;t)</code></td>
+        <td>Fills the array with the value <tt>t</tt>.</td>
+    </tr>
+    <tr>
+        <td><code>pointer_type insert (pointer_type it, const
+        value_type &amp;t)</code></td>
+        <td>Inserts the value <tt>t</tt> at <tt>it.</tt></td>
+    </tr>
+    <tr>
+        <td><code>const_iterator begin () const</code></td>
+        <td>Returns a <tt>const_iterator</tt> pointing to the
+        beginning of the <tt>bounded_array</tt>. </td>
+    </tr>
+    <tr>
+        <td><code>const_iterator end () const</code></td>
+        <td>Returns a <tt>const_iterator</tt> pointing to the end
+        of the <tt>bounded_array</tt>. </td>
+    </tr>
+    <tr>
+        <td><code>iterator begin () </code></td>
+        <td>Returns a <tt>iterator</tt> pointing to the beginning
+        of the <tt>bounded_array</tt>. </td>
+    </tr>
+    <tr>
+        <td><code>iterator end () </code></td>
+        <td>Returns a <tt>iterator</tt> pointing to the end of
+        the <tt>bounded_array</tt>. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator rbegin () const</code></td>
+        <td>Returns a <tt>const_reverse_iterator</tt> pointing to
+        the beginning of the reversed <tt>bounded_array</tt>. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator rend () const</code></td>
+        <td>Returns a <tt>const_reverse_iterator</tt> pointing to
+        the end of the reversed <tt>bounded_array</tt>. </td>
+    </tr>
+    <tr>
+        <td><code>reverse_iterator rbegin () </code></td>
+        <td>Returns a <tt>reverse_iterator</tt> pointing to the
+        beginning of the reversed <tt>bounded_array</tt>. </td>
+    </tr>
+    <tr>
+        <td><code>reverse_iterator rend () </code></td>
+        <td>Returns a <tt>reverse_iterator</tt> pointing to the
+        end of the reversed <tt>bounded_array</tt>. </td>
+    </tr>
+</table>
+
+<h4>Interface</h4>
 
 <pre><code>    // Bounded array 
     template&lt;class T, std::size_t N&gt;
@@ -109,7 +426,7 @@ simple C-like array.</p>
         size_type size () const;
 
         // Element access
-        value_type operator [] (size_type i) const;
+        const_reference_type operator [] (size_type i) const;
         reference_type operator [] (size_type i);
 
         // Assignment
@@ -119,6 +436,9 @@ simple C-like array.</p>
         // Swapping
     	void swap (bounded_array &amp;a);
 	friend void swap (bounded_array &amp;a1, bounded_array &amp;a2);
+
+        void fill (const value_type &amp;t);
+	pointer_type insert (pointer_type it, const value_type &amp;t);
 
         // Iterators simply are pointers.
 
@@ -131,10 +451,6 @@ simple C-like array.</p>
 
         iterator begin ();
         iterator end ();
-
-        // Element insertion
-        void clear ();
-        pointer_type insert (pointer_type it, const value_type &amp;t);
 
         // Reverse iterators
 
@@ -151,8 +467,97 @@ simple C-like array.</p>
 
 <h2><a name="range"></a>Range</h2>
 
+<h4>Description</h4>
+
 <p>The class <code>range </code>implements base functionality
 needed to address ranges of vectors and matrices.</p>
+
+<h4>Example</h4>
+
+<pre>int main () {
+    numerics::range r (0, 3);
+    for (int i = 0; i &lt; r.size (); ++ i) {
+        std::cout &lt;&lt; r (i) &lt;&lt; std::endl;
+    }
+}</pre>
+
+<h4>Definition</h4>
+
+<p>Defined in the header storage.h.</p>
+
+<h4>Model of</h4>
+
+<p>Index Set. </p>
+
+<h4>Type requirements</h4>
+
+<p>None, except for those imposed by the requirements of Index
+Set.</p>
+
+<h4>Public base classes</h4>
+
+<p>None. </p>
+
+<h4>Members</h4>
+
+<table border="1">
+    <tr>
+        <th>Member </th>
+        <th>Description </th>
+    </tr>
+    <tr>
+        <td><code>range (size_type start, size_type stop)</code> </td>
+        <td>Constructs a range from <code>start </code>to <code>stop</code>.</td>
+    </tr>
+    <tr>
+        <td><code>size_type start () const</code></td>
+        <td>Returns the beginning of the <code>range</code>. </td>
+    </tr>
+    <tr>
+        <td><code>size_type size () const</code></td>
+        <td>Returns the size of the <code>range</code>. </td>
+    </tr>
+    <tr>
+        <td><code>value_type operator [] (size_type i) const</code></td>
+        <td>Returns the value <code>start + i</code> of the <tt>i</tt>-th
+        element. </td>
+    </tr>
+    <tr>
+        <td><code>range composite (const range &amp;r) const</code></td>
+        <td>Returns the composite range from <code>start +
+        r.start ()</code> to <code>start + r.start () + r.size ()</code>.</td>
+    </tr>
+    <tr>
+        <td><code>bool operator == (const range &amp;r) const</code></td>
+        <td>Tests two ranges for equality.</td>
+    </tr>
+    <tr>
+        <td><code>bool operator != (const range &amp;r) const</code></td>
+        <td>Tests two ranges for inequality.</td>
+    </tr>
+    <tr>
+        <td><code>const_iterator begin () const</code></td>
+        <td>Returns a <tt>const_iterator</tt> pointing to the
+        beginning of the <tt>range</tt>. </td>
+    </tr>
+    <tr>
+        <td><code>const_iterator end () const</code></td>
+        <td>Returns a <tt>const_iterator</tt> pointing to the end
+        of the <tt>range</tt>. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator rbegin () const</code></td>
+        <td>Returns a <tt>const_reverse_iterator</tt> pointing to
+        the beginning of the reversed <tt>range</tt>. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator rend () const</code></td>
+        <td>Returns a <tt>const_reverse_iterator</tt> pointing to
+        the end of the reversed <tt>range</tt>. </td>
+    </tr>
+</table>
+
+<h4>Interface</h4>
 
 <pre><code>    // Range class
     class range {
@@ -218,8 +623,111 @@ needed to address ranges of vectors and matrices.</p>
 
 <h2><a name="slice"></a>Slice</h2>
 
+<h4>Description</h4>
+
 <p>The class <code>slice </code>implements base functionality
 needed to address slices of vectors and matrices.</p>
+
+<h4>Example</h4>
+
+<pre>int main () {
+    numerics::slice s (0, 1, 3);
+    for (int i = 0; i &lt; s.size (); ++ i) {
+        std::cout &lt;&lt; r (i) &lt;&lt; std::endl;
+    }
+}</pre>
+
+<h4>Definition</h4>
+
+<p>Defined in the header storage.h.</p>
+
+<h4>Model of</h4>
+
+<p>Index Set. </p>
+
+<h4>Type requirements</h4>
+
+<p>None, except for those imposed by the requirements of Index
+Set.</p>
+
+<h4>Public base classes</h4>
+
+<p>None. </p>
+
+<h4>Members</h4>
+
+<table border="1">
+    <tr>
+        <th>Member </th>
+        <th>Description </th>
+    </tr>
+    <tr>
+        <td><code>slice (size_type start, size_type stride,
+        size_type size)</code> </td>
+        <td>Constructs a slice from <code>start </code>to <code>start
+        + size </code>with stride <code>stride</code>.</td>
+    </tr>
+    <tr>
+        <td><code>size_type start () const</code></td>
+        <td>Returns the beginning of the <code>slice</code>. </td>
+    </tr>
+    <tr>
+        <td><code>size_type stride () const</code></td>
+        <td>Returns the stride of the <code>slice</code>. </td>
+    </tr>
+    <tr>
+        <td><code>size_type size () const</code></td>
+        <td>Returns the size of the <code>slice</code>. </td>
+    </tr>
+    <tr>
+        <td><code>value_type operator [] (size_type i) const</code></td>
+        <td>Returns the value <code>start + i * stride</code> of
+        the <tt>i</tt>-th element. </td>
+    </tr>
+    <tr>
+        <td><code>slice composite (const range &amp;r) const</code></td>
+        <td>Returns the composite slice from <code>start + stride
+        * r.start ()</code> to <code>start + stride * (r.start ()
+        + r.size ()) </code>with stride <code>stride</code>.</td>
+    </tr>
+    <tr>
+        <td><code>slice composite (const slice &amp;s) const</code></td>
+        <td>Returns the composite slice from <code>start + stride
+        * s.start ()</code> to <code>start + stride * s.stride ()
+        * (s.start () + s.size ()) </code>with stride <code>stride
+        * s.stride ()</code>.</td>
+    </tr>
+    <tr>
+        <td><code>bool operator == (const slice &amp;s) const</code></td>
+        <td>Tests two slices for equality.</td>
+    </tr>
+    <tr>
+        <td><code>bool operator != (const slice &amp;s) const</code></td>
+        <td>Tests two slices for inequality.</td>
+    </tr>
+    <tr>
+        <td><code>const_iterator begin () const</code></td>
+        <td>Returns a <tt>const_iterator</tt> pointing to the
+        beginning of the <tt>slice</tt>. </td>
+    </tr>
+    <tr>
+        <td><code>const_iterator end () const</code></td>
+        <td>Returns a <tt>const_iterator</tt> pointing to the end
+        of the <tt>slice</tt>. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator rbegin () const</code></td>
+        <td>Returns a <tt>const_reverse_iterator</tt> pointing to
+        the beginning of the reversed <tt>slice</tt>. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator rend () const</code></td>
+        <td>Returns a <tt>const_reverse_iterator</tt> pointing to
+        the end of the reversed <tt>slice</tt>. </td>
+    </tr>
+</table>
+
+<h4>Interface</h4>
 
 <pre><code>    // Slice class
     class slice {

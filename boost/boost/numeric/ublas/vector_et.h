@@ -278,63 +278,58 @@ namespace numerics {
         }
 
     private:
+#ifdef NUMERICS_ET_VALUE
         expression_type e_; 
+#endif
+#ifdef NUMERICS_ET_REFERENCE
+        const expression_type &e_; 
+#endif
+    };
+
+    template<class E, class F>
+    struct vector_unary_traits {
+        typedef vector_unary<typename E::const_closure_type, F> expression_type;
+#ifdef NUMERICS_USE_ET
+        typedef expression_type result_type; 
+#else
+        typedef vector<typename E::value_type> result_type;
+#endif
     };
 
     // (- v) [i] = - v [i]
     template<class E> 
     NUMERICS_INLINE
-#ifdef NUMERICS_USE_ET
-    vector_unary<typename E::const_closure_type, 
-                 scalar_negate<typename E::value_type> > 
-#else
-    vector<typename E::value_type>
-#endif
+    typename vector_unary_traits<E, scalar_negate<typename E::value_type> >::result_type
     operator - (const vector_expression<E> &e) {
-        return vector_unary<NUMERICS_TYPENAME E::const_closure_type, 
-                            scalar_negate<NUMERICS_TYPENAME E::value_type> > (e ());
+        typedef NUMERICS_TYPENAME vector_unary_traits<E, scalar_negate<NUMERICS_TYPENAME E::value_type> >::expression_type expression_type;
+        return expression_type (e ());
     }
 
     // (conj v) [i] = conj (v [i])
     template<class E> 
     NUMERICS_INLINE
-#ifdef NUMERICS_USE_ET
-    vector_unary<typename E::const_closure_type, 
-                 scalar_conj<typename E::value_type> > 
-#else
-    vector<E::value_type>
-#endif
+    typename vector_unary_traits<E, scalar_conj<typename E::value_type> >::result_type
     conj (const vector_expression<E> &e) {
-        return vector_unary<NUMERICS_TYPENAME E::const_closure_type, 
-                            scalar_conj<NUMERICS_TYPENAME E::value_type> > (e ());
+        typedef NUMERICS_TYPENAME vector_unary_traits<E, scalar_conj<NUMERICS_TYPENAME E::value_type> >::expression_type expression_type;
+        return expression_type (e ());
     }
 
     // (trans v) [i] = v [i]
     template<class E> 
     NUMERICS_INLINE
-#ifdef NUMERICS_USE_ET
-    vector_unary<typename E::const_closure_type, 
-                 scalar_identity<typename E::value_type> > 
-#else
-    vector<E::value_type>
-#endif
+    typename vector_unary_traits<E, scalar_identity<typename E::value_type> >::result_type
     trans (const vector_expression<E> &e) {
-        return vector_unary<NUMERICS_TYPENAME E::const_closure_type, 
-                            scalar_identity<NUMERICS_TYPENAME E::value_type> > (e ());
+        typedef NUMERICS_TYPENAME vector_unary_traits<E, scalar_identity<NUMERICS_TYPENAME E::value_type> >::expression_type expression_type;
+        return expression_type (e ());
     }
 
     // (herm v) [i] = conj (v [i])
     template<class E> 
     NUMERICS_INLINE
-#ifdef NUMERICS_USE_ET
-    vector_unary<typename E::const_closure_type, 
-                 scalar_conj<typename E::value_type> > 
-#else
-    vector<E::value_type>
-#endif
+    typename vector_unary_traits<E, scalar_conj<typename E::value_type> >::result_type
     herm (const vector_expression<E> &e) {
-        return vector_unary<NUMERICS_TYPENAME E::const_closure_type, 
-                            scalar_conj<NUMERICS_TYPENAME E::value_type> > (e ());
+        typedef NUMERICS_TYPENAME vector_unary_traits<E, scalar_conj<NUMERICS_TYPENAME E::value_type> >::expression_type expression_type;
+        return expression_type (e ());
     }
 
     template<class E1, class E2, class F>
@@ -414,8 +409,14 @@ namespace numerics {
             }
             NUMERICS_INLINE
             value_type dereference (std::bidirectional_iterator_tag) const {
+#ifndef USE_MSVC
                 value_type t1 = i_ - it1_.index () ? value_type (0) : *it1_;
                 value_type t2 = i_ - it2_.index () ? value_type (0) : *it2_;
+#else
+                value_type t1, t2;
+                if (i_ - it1_.index ()) t1 = value_type (0); else *it1_;
+                if (i_ - it2_.index ()) t2 = value_type (0); else *it2_;
+#endif
                 return functor_type () (t1, t2);
             }
 
@@ -479,42 +480,50 @@ namespace numerics {
         }
 
     private:
+#ifdef NUMERICS_ET_VALUE
         expression1_type e1_; 
         expression2_type e2_; 
+#endif
+#ifdef NUMERICS_ET_REFERENCE
+        const expression1_type &e1_; 
+        const expression2_type &e2_; 
+#endif
+    };
+
+    template<class E1, class E2, class F>
+    struct vector_binary_traits {
+        typedef vector_binary<typename E1::const_closure_type, 
+                              typename E2::const_closure_type, F> expression_type;
+#ifdef NUMERICS_USE_ET
+        typedef expression_type result_type; 
+#else
+        typedef vector<typename promote_traits<typename E1::value_type, 
+                                               typename E2::value_type>::promote_type> result_type;
+#endif
     };
 
     // (v1 + v2) [i] = v1 [i] + v2 [i]
     template<class E1, class E2>
     NUMERICS_INLINE
-#ifdef NUMERICS_USE_ET
-    vector_binary<typename E1::const_closure_type, 
-                  typename E2::const_closure_type, 
-                  scalar_plus<typename E1::value_type, typename E2::value_type> > 
-#else
-    vector<promote_traits<typename E1::value_type, typename E2::value_type>::promote_type>
-#endif
+    typename vector_binary_traits<E1, E2, scalar_plus<typename E1::value_type, 
+                                                      typename E2::value_type> >::result_type
     operator + (const vector_expression<E1> &e1, 
                 const vector_expression<E2> &e2) {
-        return vector_binary<NUMERICS_TYPENAME E1::const_closure_type, 
-                             NUMERICS_TYPENAME E2::const_closure_type, 
-                             scalar_plus<NUMERICS_TYPENAME E1::value_type, NUMERICS_TYPENAME E2::value_type> > (e1 (), e2 ());
+        typedef NUMERICS_TYPENAME vector_binary_traits<E1, E2, scalar_plus<NUMERICS_TYPENAME E1::value_type, 
+                                                                           NUMERICS_TYPENAME E2::value_type> >::expression_type expression_type;
+        return expression_type (e1 (), e2 ());
     }
 
     // (v1 - v2) [i] = v1 [i] - v2 [i]
     template<class E1, class E2>
     NUMERICS_INLINE
-#ifdef NUMERICS_USE_ET
-    vector_binary<typename E1::const_closure_type, 
-                  typename E2::const_closure_type, 
-                  scalar_minus<typename E1::value_type, typename E2::value_type> > 
-#else
-    vector<promote_traits<typename E1::value_type, typename E2::value_type>::promote_type>
-#endif
+    typename vector_binary_traits<E1, E2, scalar_minus<typename E1::value_type, 
+                                                       typename E2::value_type> >::result_type
     operator - (const vector_expression<E1> &e1, 
                 const vector_expression<E2> &e2) {
-        return vector_binary<NUMERICS_TYPENAME E1::const_closure_type, 
-                             NUMERICS_TYPENAME E2::const_closure_type, 
-                             scalar_minus<NUMERICS_TYPENAME E1::value_type, NUMERICS_TYPENAME E2::value_type> > (e1 (), e2 ());
+        typedef NUMERICS_TYPENAME vector_binary_traits<E1, E2, scalar_minus<NUMERICS_TYPENAME E1::value_type, 
+                                                                            NUMERICS_TYPENAME E2::value_type> >::expression_type expression_type;
+        return expression_type (e1 (), e2 ());
     }
 
     template<class E1, class E2, class F>
@@ -620,25 +629,35 @@ namespace numerics {
         }
 
     private:
+#ifdef NUMERICS_ET_VALUE
         expression1_type e1_; 
         expression2_type e2_; 
+#endif
+#ifdef NUMERICS_ET_REFERENCE
+        const expression1_type &e1_; 
+        const expression2_type &e2_; 
+#endif
+    };
+
+    template<class T1, class E2, class F>
+    struct vector_binary_scalar_traits {
+        typedef vector_binary_scalar<scalar_const_reference<T1>, 
+                                     typename E2::const_closure_type, F> expression_type;
+#ifdef NUMERICS_USE_ET
+        typedef expression_type result_type; 
+#else
+        typedef vector<typename promote_traits<T1, typename E2::value_type>::promote_type> result_type;
+#endif
     };
 
     // (t * v) [i] = t * v [i]
     template<class T1, class E2>
     NUMERICS_INLINE
-#ifdef NUMERICS_USE_ET
-    vector_binary_scalar<scalar_const_reference<T1>, 
-                         typename E2::const_closure_type, 
-                         scalar_multiplies<T1, typename E2::value_type> > 
-#else 
-    vector<promote_traits<T1, typename E2::value_type>::promote_type>
-#endif
+    typename vector_binary_scalar_traits<T1, E2, scalar_multiplies<T1, typename E2::value_type> >::result_type
     operator * (const T1 &e1, 
                 const vector_expression<E2> &e2) {
-        return vector_binary_scalar<scalar_const_reference<T1>, 
-                                    NUMERICS_TYPENAME E2::const_closure_type, 
-                                    scalar_multiplies<T1, NUMERICS_TYPENAME E2::value_type> > (e1, e2 ());
+        typedef NUMERICS_TYPENAME vector_binary_scalar_traits<T1, E2, scalar_multiplies<T1, NUMERICS_TYPENAME E2::value_type> >::expression_type expression_type;
+        return expression_type (e1, e2 ());
     }
 
     template<class E, class F>
@@ -665,72 +684,67 @@ namespace numerics {
         }
 
     private:
+#ifdef NUMERICS_ET_VALUE
         expression_type e_;
+#endif
+#ifdef NUMERICS_ET_REFERENCE
+        const expression_type &e_;
+#endif
+    };
+    
+    template<class E, class F>
+    struct vector_scalar_unary_traits {
+        typedef vector_scalar_unary<typename E::const_closure_type, F> expression_type;
+#ifdef NUMERICS_USE_ET
+        typedef expression_type result_type; 
+#else
+        typedef typename F::value_type result_type;
+#endif
     };
 
+    // sum v = sum (v [i])
     template<class E>
     NUMERICS_INLINE
-#ifdef NUMERICS_USE_ET
-    vector_scalar_unary<typename E::const_closure_type, 
-                        vector_sum<typename E::value_type> > 
-#else
-    typename E::value_type
-#endif
+    typename vector_scalar_unary_traits<E, vector_sum<typename E::value_type> >::result_type
     sum (const vector_expression<E> &e) {
-        return vector_scalar_unary<NUMERICS_TYPENAME E::const_closure_type, 
-                                   vector_sum<NUMERICS_TYPENAME E::value_type> > (e ());
+        typedef NUMERICS_TYPENAME vector_scalar_unary_traits<E, vector_sum<NUMERICS_TYPENAME E::value_type> >::expression_type expression_type;
+        return expression_type (e ());
     }
 
+    // norm_1 v = sum (abs (v [i]))
     template<class E>
     NUMERICS_INLINE
-#ifdef NUMERICS_USE_ET
-    vector_scalar_unary<typename E::const_closure_type, 
-                        vector_norm_1<typename E::value_type> > 
-#else
-    typename type_traits<typename E::value_type>::norm_type
-#endif
+    typename vector_scalar_unary_traits<E, vector_norm_1<typename E::value_type> >::result_type
     norm_1 (const vector_expression<E> &e) {
-        return vector_scalar_unary<NUMERICS_TYPENAME E::const_closure_type, 
-                                   vector_norm_1<NUMERICS_TYPENAME E::value_type> > (e ());
+        typedef NUMERICS_TYPENAME vector_scalar_unary_traits<E, vector_norm_1<NUMERICS_TYPENAME E::value_type> >::expression_type expression_type;
+        return expression_type (e ());
     }
 
+    // norm_2 v = sqrt (sum (v [i] * v [i]))
     template<class E>
     NUMERICS_INLINE
-#ifdef NUMERICS_USE_ET
-    vector_scalar_unary<typename E::const_closure_type, 
-                        vector_norm_2<typename E::value_type> > 
-#else
-    typename type_traits<typename E::value_type>::norm_type
-#endif
+    typename vector_scalar_unary_traits<E, vector_norm_2<typename E::value_type> >::result_type
     norm_2 (const vector_expression<E> &e) {
-        return vector_scalar_unary<NUMERICS_TYPENAME E::const_closure_type, 
-                                   vector_norm_2<NUMERICS_TYPENAME E::value_type> > (e ());
+        typedef NUMERICS_TYPENAME vector_scalar_unary_traits<E, vector_norm_2<NUMERICS_TYPENAME E::value_type> >::expression_type expression_type;
+        return expression_type (e ());
     }
 
+    // norm_inf v = max (abs (v [i]))
     template<class E>
     NUMERICS_INLINE
-#ifdef NUMERICS_USE_ET
-    vector_scalar_unary<typename E::const_closure_type, 
-                        vector_norm_inf<typename E::value_type> > 
-#else
-    typename type_traits<typename E::value_type>::norm_type
-#endif
+    typename vector_scalar_unary_traits<E, vector_norm_inf<typename E::value_type> >::result_type
     norm_inf (const vector_expression<E> &e) {
-        return vector_scalar_unary<NUMERICS_TYPENAME E::const_closure_type, 
-                                   vector_norm_inf<NUMERICS_TYPENAME E::value_type> > (e ());
+        typedef NUMERICS_TYPENAME vector_scalar_unary_traits<E, vector_norm_inf<NUMERICS_TYPENAME E::value_type> >::expression_type expression_type;
+        return expression_type (e ());
     }
 
+    // index_norm_inf v = min (i: abs (v [i]) == max (abs (v [i])))
     template<class E>
     NUMERICS_INLINE
-#ifdef NUMERICS_USE_ET
-    vector_scalar_unary<typename E::const_closure_type, 
-                        vector_index_norm_inf<typename E::value_type> > 
-#else
-    typename E::size_type
-#endif
+    typename vector_scalar_unary_traits<E, vector_index_norm_inf<typename E::value_type> >::result_type
     index_norm_inf (const vector_expression<E> &e) {
-        return vector_scalar_unary<NUMERICS_TYPENAME E::const_closure_type, 
-                                   vector_index_norm_inf<NUMERICS_TYPENAME E::value_type> > (e ());
+        typedef NUMERICS_TYPENAME vector_scalar_unary_traits<E, vector_index_norm_inf<NUMERICS_TYPENAME E::value_type> >::expression_type expression_type;
+        return expression_type (e ());
     }
 
     template<class E1, class E2, class F>
@@ -759,52 +773,56 @@ namespace numerics {
         }
 
     private:
+#ifdef NUMERICS_ET_VALUE
         expression1_type e1_;
         expression2_type e2_;
+#endif
+#ifdef NUMERICS_ET_REFERENCE
+        const expression1_type &e1_;
+        const expression2_type &e2_;
+#endif
     };
 
+    template<class E1, class E2, class F>
+    struct vector_scalar_binary_traits {
+        typedef vector_scalar_binary<typename E1::const_closure_type, 
+                                     typename E2::const_closure_type, F> expression_type;
+#ifdef NUMERICS_USE_ET
+        typedef expression_type result_type; 
+#else
+        typedef typename F::value_type result_type;
+#endif
+    };
+
+    // inner_prod (v1, v2) = sum (v1 [i] * v2 [i]
     template<class E1, class E2>
     NUMERICS_INLINE
-#ifdef NUMERICS_USE_ET
-    vector_scalar_binary<typename E1::const_closure_type, 
-                         typename E2::const_closure_type, 
-                         vector_inner_prod<typename E1::value_type, 
-                                           typename E2::value_type,
-                                           typename promote_traits<typename E1::value_type, 
-                                                                   typename E2::value_type>::promote_type> > 
-#else
-    typename promote_traits<typename E1::value_type, typename E2::value_type>::promote_type
-#endif
+    typename vector_scalar_binary_traits<E1, E2, vector_inner_prod<typename E1::value_type, 
+                                                                   typename E2::value_type,
+                                                                   typename promote_traits<typename E1::value_type, 
+                                                                                           typename E2::value_type>::promote_type> >::result_type 
     inner_prod (const vector_expression<E1> &e1, 
                 const vector_expression<E2> &e2) {
-        return vector_scalar_binary<NUMERICS_TYPENAME E1::const_closure_type, 
-                                    NUMERICS_TYPENAME E2::const_closure_type, 
-                                    vector_inner_prod<NUMERICS_TYPENAME E1::value_type, 
-                                                      NUMERICS_TYPENAME E2::value_type,
-                                                      NUMERICS_TYPENAME promote_traits<NUMERICS_TYPENAME E1::value_type, 
-                                                                                       NUMERICS_TYPENAME E2::value_type>::promote_type> > (e1 (), e2 ());
+        typedef NUMERICS_TYPENAME vector_scalar_binary_traits<E1, E2, vector_inner_prod<NUMERICS_TYPENAME E1::value_type, 
+                                                                                        NUMERICS_TYPENAME E2::value_type,
+                                                                                        NUMERICS_TYPENAME promote_traits<NUMERICS_TYPENAME E1::value_type, 
+                                                                                                                         NUMERICS_TYPENAME E2::value_type>::promote_type> >::expression_type expression_type;
+        return expression_type (e1 (), e2 ());
     }
 
     template<class E1, class E2>
     NUMERICS_INLINE
-#ifdef NUMERICS_USE_ET
-    vector_scalar_binary<typename E1::const_closure_type, 
-                         typename E2::const_closure_type, 
-                         vector_inner_prod<typename E1::value_type, 
-                                           typename E2::value_type,
-                                           typename type_traits<typename promote_traits<typename E1::value_type, 
-                                                                                        typename E2::value_type>::promote_type>::precision_type> > 
-#else
-    typename type_traits<typename promote_traits<typename E1::value_type, typename E2::value_type>::promote_type>::precision_type
-#endif
+    typename vector_scalar_binary_traits<E1, E2, vector_inner_prod<typename E1::value_type, 
+                                                                   typename E2::value_type,
+                                                                   typename type_traits<typename promote_traits<typename E1::value_type, 
+                                                                                                                typename E2::value_type>::promote_type>::precision_type> >::result_type 
     prec_inner_prod (const vector_expression<E1> &e1, 
                      const vector_expression<E2> &e2) {
-        return vector_scalar_binary<NUMERICS_TYPENAME E1::const_closure_type, 
-                                    NUMERICS_TYPENAME E2::const_closure_type, 
-                                    vector_inner_prod<NUMERICS_TYPENAME E1::value_type, 
-                                                      NUMERICS_TYPENAME E2::value_type,
-                                                      NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME promote_traits<NUMERICS_TYPENAME E1::value_type, 
-                                                                                                                          NUMERICS_TYPENAME E2::value_type>::promote_type>::precision_type> > (e1 (), e2 ());
+        typedef NUMERICS_TYPENAME vector_scalar_binary_traits<E1, E2, vector_inner_prod<NUMERICS_TYPENAME E1::value_type, 
+                                                                                        NUMERICS_TYPENAME E2::value_type,
+                                                                                        NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME promote_traits<NUMERICS_TYPENAME E1::value_type, 
+                                                                                                                                                       NUMERICS_TYPENAME E2::value_type>::promote_type>::precision_type> >::expression_type expression_type;
+        return expression_type (e1 (), e2 ());
     }
 
     template<class E>
@@ -910,32 +928,42 @@ namespace numerics {
         }
 
     private:
+#ifdef NUMERICS_ET_VALUE
         expression_type e_;
         range r_;
+#endif
+#ifdef NUMERICS_ET_REFERENCE
+        const expression_type &e_;
+        const range &r_;
+#endif
+    };
+
+    template<class E>
+    struct vector_expression_range_traits {
+        typedef vector_expression_range<typename E::const_closure_type> expression_type;
+#ifdef NUMERICS_USE_ET
+        typedef expression_type result_type; 
+#else
+        typedef vector<typename E::value_type> result_type;
+#endif
     };
 
     template<class E>
     NUMERICS_INLINE
-#ifdef NUMERICS_USE_ET
-    vector_expression_range<typename E::const_closure_type> 
-#else
-    vector<typename E::value_type>
-#endif
+    typename vector_expression_range_traits<E>::result_type
     project (const vector_expression<E> &e, 
              const range &r) {
-        return vector_expression_range<NUMERICS_TYPENAME E::const_closure_type> (e (), r);
+        typedef NUMERICS_TYPENAME vector_expression_range_traits<E>::expression_type expression_type;
+        return expression_type (e (), r);
     }
     template<class E>
     NUMERICS_INLINE
-#ifdef NUMERICS_USE_ET
-    vector_expression_range<typename E::const_closure_type> 
-#else
-    vector<typename E::value_type>
-#endif
+    typename vector_expression_range_traits<E>::result_type
     project (const vector_expression<E> &e, 
              typename E::size_type start,
              typename E::size_type stop) {
-        return vector_expression_range<NUMERICS_TYPENAME E::const_closure_type> (e (), start, stop);
+        typedef NUMERICS_TYPENAME vector_expression_range_traits<E>::expression_type expression_type;
+        return expression_type (e (), start, stop);
     }
 
     template<class E>
@@ -1040,33 +1068,43 @@ namespace numerics {
         }
 
     private:
+#ifdef NUMERICS_ET_VALUE
         expression_type e_;
         slice s_;
+#endif
+#ifdef NUMERICS_ET_REFERENCE
+        const expression_type &e_;
+        const slice &s_;
+#endif
+    };
+
+    template<class E>
+    struct vector_expression_slice_traits {
+        typedef vector_expression_slice<typename E::const_closure_type> expression_type;
+#ifdef NUMERICS_USE_ET
+        typedef expression_type result_type; 
+#else
+        typedef vector<typename E::value_type> result_type;
+#endif
     };
 
     template<class E>
     NUMERICS_INLINE
-#ifdef NUMERICS_USE_ET
-    vector_expression_slice<typename E::const_closure_type> 
-#else
-    vector<typename E::value_type>
-#endif
+    typename vector_expression_slice_traits<E>::result_type
     project (const vector_expression<E> &e, 
              const slice &s) {
-        return vector_expression_slice<NUMERICS_TYPENAME E::const_closure_type> (e (), s);
+        typedef NUMERICS_TYPENAME vector_expression_slice_traits<E>::expression_type expression_type;
+        return expression_type (e (), s);
     }
     template<class E>
     NUMERICS_INLINE
-#ifdef NUMERICS_USE_ET
-    vector_expression_slice<typename E::const_closure_type> 
-#else
-    vector<typename E::value_type>
-#endif
+    typename vector_expression_slice_traits<E>::result_type
     project (const vector_expression<E> &e, 
              typename E::size_type start,
              typename E::size_type stride,
              typename E::size_type size) {
-        return vector_expression_slice<NUMERICS_TYPENAME E::const_closure_type> (e (), start, stride, size);
+        typedef NUMERICS_TYPENAME vector_expression_slice_traits<E>::expression_type expression_type;
+        return expression_type (e (), start, stride, size);
     }
 
 }
