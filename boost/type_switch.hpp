@@ -82,9 +82,9 @@ private: // nonassignable
 public: // function call interface
 
     template <typename U>
-    void operator()(U& operand) const
+    void operator()(U&) const
     {
-        f_(operand);
+        f_(); // default_ shouldn't pass operand
     }
 
 };
