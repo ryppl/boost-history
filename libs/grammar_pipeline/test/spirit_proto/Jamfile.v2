@@ -1,0 +1,16 @@
+
+project
+        : requirements 
+            <library>../../../io/filters/build//mout
+            <library>../../../utility/build//utility
+        : default-build debug
+        ;
+  
+
+{
+    test-suite "spirit_proto"
+        : [ run main.cpp
+          ]
+        ;
+}
+    
