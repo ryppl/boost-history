@@ -906,10 +906,11 @@ the bounds. For another, intervals are used somewhat internally and
 there is seldom need to display them. But if this should be needed, the
 header is there.</p>
 
-<p><strong>Conversion from <code>interval<T1></code> to <code>interval<T2></code>.</strong>
+<p><strong>Conversion from <code>interval&lt;T1&gt;</code> to
+<code>interval&gt;T&gt;</code>.</strong>
 There is no such conversion in the library. Specifically, there is no
 way to change the base number type without explicitly casting both the
-lower and upper bounds from <code>T1</code> to <code>T1</code> and using
+lower and upper bounds from <code>T1</code> to <code>T2</code> and using
 a constructor. We did not want to provide this conversion because there
 is no easy way to make sure the inclusion property is guaranteed:
 a simple casting with loss of precision can lead to invalid or empty
@@ -921,11 +922,6 @@ exception is there is a loss of precision (as is done for instance in
 rounded to ensure the inclusion property. So we decided not to provide
 the conversion and leave it up to the user to do it himself or herself.
 </p>
-
-<p><strong>.</strong></p>
-
-<p><strong>.</strong></p>
-
 
 <h2><a name="acks">History and Acknowledgments</a></h2>
 
@@ -950,6 +946,6 @@ great starting point.</p>
 
 <p>Revised: 2002-08-30<br>
 Copyright (c) Guillaume Melquiond, Sylvain Pion, Hervé Brönnimann, 2002.<br>
-Work done at Polytechnic University.</p>
+Polytechnic University, 2002.</p>
 </body>
 </html>
