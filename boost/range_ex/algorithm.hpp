@@ -279,6 +279,7 @@ namespace boost
         return std::count(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),val);
     }
 
+    /// \overload
     template<typename Rng,typename Val>
     inline BOOST_DEDUCED_TYPENAME boost::range_difference<Rng const>::type
     count(Rng const & rng,Val const & val)
@@ -298,6 +299,7 @@ namespace boost
         return std::count_if(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),pred);
     }
 
+    /// \overload
     template<typename Rng,typename Pred>
     inline BOOST_DEDUCED_TYPENAME boost::range_difference<Rng const>::type
     count_if(Rng const & rng,Pred pred)
