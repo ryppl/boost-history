@@ -232,7 +232,8 @@ make1b( TARGET *t )
 
 	    if( t->actions )
 	    {
-		if( DEBUG_MAKE && !( ++counts->total % 100 ) )
+                ++counts->total;
+		if( DEBUG_MAKE && !( counts->total % 100 ) )
 		    printf( "...on %dth target...\n", counts->total );
 
 		pushsettings( t->settings );

@@ -93,7 +93,8 @@ static char**
 string_to_args( const char*  string, int*  pcount )
 {
   int    total    = strlen( string );
-  int    in_quote = 0, num_args;
+  int    in_quote = 0,
+      num_args = 0; /* was uninitialized -- dwa */
   char*  line;
   char*  p;
   char** arg;
@@ -147,7 +148,11 @@ string_to_args( const char*  string, int*  pcount )
       num_args++;
       
   /* allocate the args array */
+  /* dwa -- did you really mean to allocate only 2 additional bytes? */
+#if 0 /* was like this */
   args = (char**)malloc( num_args*sizeof(char*)+2 );
+#endif
+  args = (char**)malloc( (num_args + 2) * sizeof(char*) );
   if (!args)
   {
     free( line );
@@ -302,10 +307,21 @@ execcmd(
 	int pid;
 	int slot;
 	int max_line;
-	char *argv[ MAXARGC + 1 ];	/* +1 for NULL */
+        int raw_cmd = 0 ;
+	char *argv_static[ MAXARGC + 1 ];	/* +1 for NULL */
+        char **argv = argv_static;
 	char *p;
 
-        if ( !is_win95_defined )
+        /* Check to see if we need to hack around the line-length limitation. */
+        /* Look for a JAMSHELL setting of "%", indicating that the command
+         * should be invoked directly */
+        if ( shell && !strcmp(shell->string,"%") && !list_next(shell) )
+        {
+            raw_cmd = 1;
+            shell = 0;
+        }
+
+      if ( !is_win95_defined )
           set_is_win95();
           
 	/* Find a slot in the running commands table for this one. */
@@ -359,7 +375,7 @@ execcmd(
 	/* Frankly, if it is a single long line I don't think the */
 	/* command interpreter will do any better -- it will fail. */
 
-	if( p && *p || strlen( string ) > max_line || shell )
+	if( p && *p || !raw_cmd && strlen( string ) > max_line || shell )
 	{
 	    FILE *f;
 
@@ -401,7 +417,12 @@ execcmd(
 
 	    argv[i] = 0;
 	}
-	else
+	else if (raw_cmd)
+    {
+        int ignored;
+        argv = string_to_args(string, &ignored);
+    }
+    else
 	{
         /* don't worry, this is ignored on Win95/98, see later.. */
 	    argv[0] = "cmd.exe";
@@ -497,6 +518,11 @@ execcmd(
 	while( cmdsrunning >= MAXJOBS || cmdsrunning >= globs.jobs )
 	    if( !execwait() )
 		break;
+    
+    if (argv != argv_static)
+    {
+        free_args(argv);
+    }
 }
 
 /*

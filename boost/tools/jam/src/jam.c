@@ -160,6 +160,7 @@ extern char **environ;
 # endif
 # endif
 
+extern int yydebug;
 
 int  main( int argc, char **argv, char **arg_environ )
 {
@@ -246,6 +247,8 @@ int  main( int argc, char **argv, char **arg_environ )
 	    else while( i )
 		globs.debug[i--] = 1;
 	}
+        if ( globs.debug[10] )
+            yydebug = 1;
 
 	/* Set JAMDATE first */
 

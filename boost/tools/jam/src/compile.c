@@ -496,6 +496,88 @@ compile_rule(
 	return result;
 }
 
+static void argument_error( char* message, RULE* rule, LOL* actual, LIST* arg )
+{
+    printf( "### argument error\n# rule %s ( ", rule->name );
+    lol_print( &rule->arguments );
+    printf( ")\n# called with: ( " );
+    lol_print( actual );
+    printf( ")\n# %s %s", message, arg ? arg->string : "" );
+    printf("\n");
+    exit(1);
+}
+
+
+/*
+ * collect_arguments() - local argument checking and collection
+ */
+static SETTINGS *
+collect_arguments( RULE* rule, LOL* all_actual )
+{
+    SETTINGS *locals = 0;
+    
+    LOL *all_formal = &rule->arguments;
+    if ( all_formal->count >= 0 ) /* Nothing to set; nothing to check */
+    {
+        int max = all_formal->count > all_actual->count
+            ? all_formal->count
+            : all_actual->count;
+        
+        int n;
+        for ( n = 0; n < max ; ++n )
+        {
+            LIST *formal = lol_get( all_formal, n );
+            LIST *actual = lol_get( all_actual, n );
+            while ( formal )
+            {
+                char* name = formal->string;
+                char modifier = 0;
+                LIST* value = 0;
+                if ( formal->next )
+                {
+                    char *next = formal->next->string;
+                    if ( next && next[0] != 0 && next[1] == 0 )
+                        modifier = next[0];
+                }
+                
+                if ( !actual && modifier != '?' && modifier != '*' )
+                {
+                    argument_error( "missing argument", rule, all_actual, formal );
+                }
+
+                switch ( modifier )
+                {
+                case '+':
+                case '*':
+                    value = list_copy( 0, actual );
+                    actual = 0;
+                    /* skip an extra element for the modifier */
+                    formal = formal->next; 
+                    break;
+                case '?':
+                    /* skip an extra element for the modifier */
+                    formal = formal->next; 
+                    /* fall through */
+                default:
+                    if ( actual ) /* in case actual is missing */
+                    {
+                        value = list_new( 0, actual->string );
+                        actual = actual->next;
+                    }
+                }
+                
+                locals = addsettings( locals, 0, name, value );
+                formal = formal->next;
+            }
+            
+            if ( actual )
+            {
+                argument_error( "extra argument", rule, all_actual, actual );
+            }
+        }
+    }
+    return locals;
+}
 /*
  * evaluate_rule() - execute a rule invocation
  */
@@ -529,14 +611,15 @@ evaluate_rule(
     {
       rule = bindrule( rulename );
 
-	if( DEBUG_COMPILE )
-	{
+	  if( DEBUG_COMPILE )
+	  {
 	    debug_compile( 1, rulename );
 	    lol_print( args );
 	    printf( "\n" );
 	  }
 	}
-
+    
+    
 	/* Check traditional targets $(<) and sources $(>) */
 
 	if( !rule->actions && !rule->procedure )
@@ -570,9 +653,14 @@ evaluate_rule(
 
 	if( rule->procedure )
 	{
+        SETTINGS *local_args = collect_arguments( rule, args );
 	    PARSE *parse = rule->procedure;
 	    parse_refer( parse );
+        
+        pushsettings( local_args );
 	    result = (*parse->func)( parse, args );
+        popsettings( local_args );
+        
 	    parse_free( parse );
 	}
 
@@ -652,6 +740,7 @@ compile_set(
  *
  *	parse->string	rule name
  *	parse->left	rules for rule
+ *  parse->right optional list-of-lists describing arguments
  */
 
 LIST *
@@ -665,6 +754,22 @@ compile_setcomp(
 
 	if( rule->procedure )
 	    parse_free( rule->procedure );
+
+    if( rule->arguments.count >= 0 )
+    {
+        lol_free( &rule->arguments );
+        rule->arguments.count = -1;
+    }
+
+    /* Create new LOL describing argument requirements if supplied */
+    if (parse->right)
+    {
+        PARSE *p;
+        lol_init( &rule->arguments );
+        for( p = parse->right; p; p = p->left )
+            lol_add( &rule->arguments, (*p->right->func)( p->right, args ) );
+        
+    }
 
 	rule->procedure = parse->left;
 

@@ -22,7 +22,14 @@ else 		{ LOCATE_TARGET ?= bin.$(OSFULL[1]:L) ; }
 # We have some different files for UNIX, VMS, and NT.
 #
 
-if $(NT) 	{ code = execnt.c filent.c pathunix.c ; } 
+if $(NT) {
+     code = execnt.c filent.c pathunix.c ;
+     if $(OSTYPE) = cygwin
+     {
+        YACC ?= bison -t -d -l -v --yacc ;
+        YACCFILES = y.tab ;
+     }
+} 
 else if $(OS2)	
 { 
   # special case for OS/2. When building Jam with GCC/EMX
@@ -70,9 +77,10 @@ else            { code += jamgram.c ; }
 # easier to read/maintain.
 #
 
-if $(UNIX) && $(YACC)
+if ( $(UNIX) && $(YACC) ) || ( $(NT) && $(OSTYPE) = cygwin )
 {
-	GenFile jamgram.y jamgramtab.h : ./yyacc jamgram.yy ;
+    local SUFEXE = ; # yyacc is a script with no suffix - this handles cygwin
+    GenFile jamgram.y jamgramtab.h : ./yyacc jamgram.yy ;
 }
 
 #
@@ -133,7 +141,7 @@ rule Binary
     {
     case *-win32.zip       : Zip-Exe  $(<) : $(>) ;
     case *-os2.zip         : Zip-Exe  $(<) : $(>) ;
-    case *-linux-libc6.gz  : GZip-Exe $(<) : $(>) ;
+    case *-linux-libc6.tar : GZip-Exe $(<) : $(>) ;
     }
 }
 
@@ -147,9 +155,8 @@ rule Package
 
 	switch $(<) 
 	{
-	case *.tar  : Tar  $(<) : $(>) ;
-	case *.shar : Shar $(<) : $(>) ;
-	case *.zip  : Zip  $(<) : $(>) ;
+	case *.tar  : { Tar-Gz  $(<) : $(>) ; Tar-Bz2 $(<) : $(>) ; }
+	case *.zip  :   Zip     $(<) : $(>) ;
 	}
 }
 
@@ -185,8 +192,11 @@ actions Zip-Exe
 
 actions GZip-Exe
 {
-  strip $(LOCATE_TARGET)/jam
-  gzip -9c $(LOCATE_TARGET)/jam > $(<)
+  ln -s $(LOCATE_TARGET)/jam jam
+  strip jam
+  tar chf $(<) jam
+  rm -f jam
+  gzip -9 $(<)
 }
 
 
@@ -207,9 +217,8 @@ else if $(OS) = LINUX
   # for now, this should only be used for convenience
   # purposes, until we add .rpm and .deb support in..
   
-  Binary $(VERSION)-linux-libc6.gz : jam ;
+  Binary $(VERSION)-linux-libc6.tar : jam ;
 
-  Package $(VERSION).tar.gz        : jam ;
-  Package $(VERSION).tar.bz2       : jam ;
-  Package $(VERSION).zip           : jam ;
+  Package $(VERSION).tar : $(ALLSOURCE) ;
+  Package $(VERSION).zip : $(ALLSOURCE) ;
 }

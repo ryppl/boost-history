@@ -29,6 +29,10 @@ cmd_new(
 	LIST	*shell )
 {
 	CMD *cmd = (CMD *)malloc( sizeof( CMD ) );
+    /* lift line-length limitation entirely when JAMSHELL is just "%" */
+    int expand_line = ( shell && !strcmp(shell->string,"%") && !list_next(shell) );
+    int max_line = MAXLINE;
+    int allocated = -1;
 
 	cmd->rule = rule;
 	cmd->shell = shell;
@@ -37,15 +41,30 @@ cmd_new(
 	lol_init( &cmd->args );
 	lol_add( &cmd->args, targets );
 	lol_add( &cmd->args, sources );
+    cmd->buf = 0;
 
-	/* Bail if the result won't fit in MAXLINE */
-	/* We don't free targets/sources/shell if bailing. */
-
-	if( var_string( rule->actions, cmd->buf, MAXLINE, &cmd->args ) < 0 )
-	{
-	    cmd_free( cmd );
-	    return 0;
-	}
+    do
+    {
+        free(cmd->buf); /* free any buffer from previous iteration */
+        
+        cmd->buf = (char*)malloc(max_line + 1);
+        
+        if (cmd->buf == 0)
+            break;
+        
+        allocated = var_string( rule->actions, cmd->buf, max_line, &cmd->args );
+        
+        max_line = max_line * 2;
+    }
+    while( expand_line && allocated < 0 && max_line < INT_MAX / 2 );
+    
+    /* Bail if the result won't fit in MAXLINE */
+    /* We don't free targets/sources/shell if bailing. */
+    if( allocated < 0 )
+    {
+        cmd_free( cmd );
+        cmd = 0;
+    }
 
 	return cmd;
 }
@@ -59,5 +78,6 @@ cmd_free( CMD *cmd )
 {
 	lol_free( &cmd->args );
 	list_free( cmd->shell );
+    free( cmd->buf );
 	free( (char *)cmd );
 }

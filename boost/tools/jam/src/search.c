@@ -12,6 +12,46 @@
 # include "variable.h"
 # include "newstr.h"
 
+static void call_bind_rule(
+    char* target_,
+    char* boundname_ )
+{
+    LIST* bindrule = var_get( "BINDRULE" );
+    if( bindrule )
+    {
+        /* No guarantee that target is an allocated string, so be on the
+         * safe side */
+        char* target = copystr( target_ );
+        
+        /* Likewise, don't rely on implementation details of newstr.c: allocate
+         * a copy of boundname */
+        char* boundname = copystr( boundname_ );
+        if( boundname && target )
+        {
+            /* Prepare the argument list */
+            LOL args;
+            lol_init( &args );
+                    
+            /* First argument is the target name */
+            lol_add( &args, list_new( L0, target ) );
+                    
+            lol_add( &args, list_new( L0, boundname ) );
+            if( lol_get( &args, 1 ) )
+                evaluate_rule( bindrule->string, &args );
+            
+            /* Clean up */
+            lol_free( &args );
+        }
+        else
+        {
+            if( boundname )
+                freestr( boundname );
+            if( target )
+                freestr( target );
+        }
+    }
+}
+
 /*
  * search.c - find a target along $(SEARCH) or $(LOCATE) 
  */
@@ -24,6 +64,8 @@ search(
 	FILENAME f[1];
 	LIST	*varlist;
 	char	buf[ MAXJPATH ];
+        int     found = 0;
+        char    *boundname = 0;
 
 	/* Parse the filename */
 
@@ -43,8 +85,6 @@ search(
 		printf( "locate %s: %s\n", target, buf );
 
 	    timestamp( buf, time );
-
-	    return newstr( buf );
 	}
 	else if( varlist = var_get( "SEARCH" ) )
 	{
@@ -61,25 +101,36 @@ search(
 		timestamp( buf, time );
 
 		if( *time )
-		    return newstr( buf );
+                {
+                    found = 1;
+                    break;
+                }
 
 		varlist = list_next( varlist );
 	    }
 	}
 
-	/* Look for the obvious */
-	/* This is a questionable move.  Should we look in the */
-	/* obvious place if SEARCH is set? */
+        if (!found)
+        {
+            /* Look for the obvious */
+            /* This is a questionable move.  Should we look in the */
+            /* obvious place if SEARCH is set? */
 
-	f->f_root.ptr = 0;
-	f->f_root.len = 0;
+            f->f_root.ptr = 0;
+            f->f_root.len = 0;
 
-	file_build( f, buf, 1 );
+            file_build( f, buf, 1 );
 
-	if( DEBUG_SEARCH )
-	    printf( "search %s: %s\n", target, buf );
+            if( DEBUG_SEARCH )
+                printf( "search %s: %s\n", target, buf );
 
-	timestamp( buf, time );
+            timestamp( buf, time );
+        }
 
-	return newstr( buf );
+	boundname = newstr( buf );
+        
+        /* prepare a call to BINDRULE if the variable is set */
+        call_bind_rule( target, boundname );
+
+        return boundname;
 }

@@ -43,6 +43,7 @@ struct _rule {
 	PARSE	*procedure;		/* parse tree from RULE */
 	char	*actions;		/* command string from ACTIONS */
 	LIST	*bindlist;		/* variable to bind for actions */
+        LOL     arguments;              /* if count >= 0, stores argument info */
 	int	flags;			/* modifiers on ACTIONS */
 
 # define	RULE_NEWSRCS	0x01	/* $(>) is updated sources only */

@@ -445,7 +445,7 @@ int unlink( char *f ); 	/* In filevms.c */
 
 /* Jam private definitions below. */
 
-# define DEBUG_MAX	10
+# define DEBUG_MAX	11
 
 struct globs {
 	int	noexec;

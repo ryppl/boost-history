@@ -60,8 +60,6 @@ CFLAGS =
 # QNX rtp (neutrino)
 #CC = gcc
 
-include common.mk
-
 
 #
 #SOURCES = \
@@ -83,6 +81,8 @@ all: jam0
 # for other systems
 #all: jam0
 #	jam0
+
+include common.mk
 
 #jam0:
 #	$(CC) $(TARGET) $(CFLAGS) $(SOURCES) $(LINKLIBS)

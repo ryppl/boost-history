@@ -105,6 +105,7 @@
 # define pset( l,r,a ) 	  	parse_make( compile_set,l,r,P0,S0,S0,a )
 # define pset1( l,r,t,a )	parse_make( compile_settings,l,r,t,S0,S0,a )
 # define psetc( s,p )     	parse_make( compile_setcomp,p,P0,P0,s,S0,0 )
+# define psetc_args( s,p,a )    parse_make( compile_setcomp,p,a,P0,s,S0,0 )
 # define psete( s,l,s1,f ) 	parse_make( compile_setexec,l,P0,P0,s,s1,f )
 # define pswitch( l,r )   	parse_make( compile_switch,l,r,P0,S0,S0,0 )
 
@@ -165,6 +166,8 @@ rule	: _LBRACE block _RBRACE
 		{ $$.parse = pif( $2.parse, $4.parse, pnull() ); }
 	| IF cond _LBRACE block _RBRACE ELSE rule
 		{ $$.parse = pif( $2.parse, $4.parse, $7.parse ); }
+        | RULE ARG _LPAREN lol _RPAREN rule
+		{ $$.parse = psetc_args( $2.string, $6.parse, $4.parse ); }
 	| RULE ARG rule
 		{ $$.parse = psetc( $2.string, $3.parse ); }
 	| ACTIONS eflags ARG bindlist _LBRACE
