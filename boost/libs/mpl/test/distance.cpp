@@ -24,7 +24,7 @@ MPL_TEST_CASE()
     typedef begin<list>::type first;
     typedef end<list>::type last;
     
-    MPL_ASSERT_RELATION( (distance<first,last>::value), ==, 4 );
+    MPL_ASSERT_RELATION( (mpl::distance<first,last>::value), ==, 4 );
 }
 
 MPL_TEST_CASE()
@@ -33,5 +33,5 @@ MPL_TEST_CASE()
     typedef begin<range>::type first;
     typedef end<range>::type last;
     
-    MPL_ASSERT_RELATION( (distance<first,last>::value), ==, 10 );
+    MPL_ASSERT_RELATION( (mpl::distance<first,last>::value), ==, 10 );
 }

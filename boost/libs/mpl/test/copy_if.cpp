@@ -2,9 +2,9 @@
 // Copyright Aleksey Gurtovoy 2000-2004
 // Copyright David Abrahams 2003-2004
 //
-// Use, modification and distribution are subject to the Boost Software 
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
-// at http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
@@ -31,7 +31,7 @@ MPL_TEST_CASE()
     typedef copy_if<
           numbers
         , less<_,int_<5> >
-        , front_inserter< list0_c<int> >
+        , mpl::front_inserter< list0_c<int> >
         >::type result;
 
     MPL_ASSERT_RELATION(size<result>::value, ==, 5);
@@ -46,7 +46,7 @@ MPL_TEST_CASE()
     typedef reverse_copy_if<
           types
         , is_float<_>
-        , front_inserter< list0<> >
+        , mpl::front_inserter< list0<> >
         >::type result;
 
     MPL_ASSERT_RELATION(mpl::size<result>::value, ==, 4);

@@ -29,11 +29,11 @@
 #include <boost/mpl/aux_/config/eti.hpp>
 #include <boost/mpl/aux_/config/msvc.hpp>
 #include <boost/mpl/aux_/config/workaround.hpp>
+#if BOOST_WORKAROUND(BOOST_MSVC, <= 1300)
+#   include <boost/mpl/aux_/msvc_is_class.hpp>
+#endif
 
 #include <boost/type_traits/is_same.hpp>
-#if BOOST_WORKAROUND(BOOST_MSVC, <= 1300)
-#   include <boost/type_traits/is_class.hpp>
-#endif
 
 namespace boost { namespace mpl {
 
@@ -61,12 +61,12 @@ template<
     >
 struct is_sequence
     : if_<
-          boost::is_class<T> 
+          aux::msvc_is_class<T> 
         , aux::is_sequence_impl<T>
         , bool_<false>
         >::type
 {
-    BOOST_MPL_AUX_LAMBDA_SUPPORT(1,is_sequence,(T))
+    BOOST_MPL_AUX_LAMBDA_SUPPORT(1, is_sequence, (T))
 };
 
 #elif defined(BOOST_MPL_CFG_NO_HAS_XXX)
@@ -87,7 +87,7 @@ template<
 struct is_sequence
     : not_< is_same< typename begin<T>::type, void_ > >
 {
-    BOOST_MPL_AUX_LAMBDA_SUPPORT(1,is_sequence,(T))
+    BOOST_MPL_AUX_LAMBDA_SUPPORT(1, is_sequence, (T))
 };
 
 #endif // BOOST_MSVC

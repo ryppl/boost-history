@@ -12,6 +12,7 @@
 // $Revision$
 
 #include <boost/mpl/find_if.hpp>
+
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/distance.hpp>
 #include <boost/mpl/size.hpp>
@@ -27,19 +28,19 @@ MPL_TEST_CASE()
 {
     typedef find_if< types, boost::is_float<_> >::type iter;
     MPL_ASSERT(( is_same< iter::type, double > ));
-    MPL_ASSERT_RELATION( (distance<first_,iter>::value), ==, 6 );
+    MPL_ASSERT_RELATION( (mpl::distance<first_,iter>::value), ==, 6 );
 }
 
 MPL_TEST_CASE()
 {
     typedef find_if< types, boost::is_same<_,long> >::type iter;
     MPL_ASSERT(( is_same< iter::type, long > ));
-    MPL_ASSERT_RELATION( (distance<first_,iter>::value), ==, 2 );
+    MPL_ASSERT_RELATION( (mpl::distance<first_,iter>::value), ==, 2 );
 }
 
 MPL_TEST_CASE()
 {
     typedef find_if< types, boost::is_same<_,void> >::type iter;
     MPL_ASSERT(( is_same< iter, end<types>::type > ));
-    MPL_ASSERT_RELATION( (distance<first_,iter>::value), ==, size<types>::value );
+    MPL_ASSERT_RELATION( (mpl::distance<first_,iter>::value), ==, size<types>::value );
 }

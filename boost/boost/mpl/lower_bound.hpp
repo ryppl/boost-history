@@ -32,7 +32,7 @@
 #   include <boost/mpl/integral_c.hpp>
 #   include <boost/mpl/int.hpp>
 #   include <boost/mpl/eval_if.hpp>
-#   include <boost/mpl/next.hpp>
+#   include <boost/mpl/prior.hpp>
 #   include <boost/mpl/deref.hpp>
 #   include <boost/mpl/apply.hpp>
 #   include <boost/mpl/aux_/value_wknd.hpp>
@@ -105,7 +105,7 @@ struct lower_bound_step_impl
             , T
             >::type cond_;
 
-    typedef typename next< minus< Distance, offset_> >::type step_;
+    typedef typename prior< minus< Distance, offset_> >::type step_;
     typedef lower_bound_step< offset_,Predicate,T,DeferredIterator > step_forward_;
     typedef lower_bound_step< step_,Predicate,T,next<middle_> > step_backward_;
     typedef typename eval_if<

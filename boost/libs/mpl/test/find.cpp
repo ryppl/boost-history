@@ -32,6 +32,6 @@ MPL_TEST_CASE()
 
     typedef begin<types>::type types_first;
     typedef begin<values>::type values_first;
-    MPL_ASSERT_RELATION( (distance< types_first,types_iter >::value), ==, 3 );
-    MPL_ASSERT_RELATION( (distance< values_first,values_iter >::value), ==, 4 );
+    MPL_ASSERT_RELATION( (mpl::distance< types_first,types_iter >::value), ==, 3 );
+    MPL_ASSERT_RELATION( (mpl::distance< values_first,values_iter >::value), ==, 4 );
 }
