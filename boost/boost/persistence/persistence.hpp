@@ -33,6 +33,7 @@
 #include <limits>
 #include <typeinfo>
 
+#include <boost/config.hpp>
 #include <boost/type_traits.hpp>
 #include <boost/call_traits.hpp>
 
@@ -135,6 +136,7 @@ template<class Writer>
 class save_descriptor
 {
 public:
+  BOOST_STATIC_CONSTANT(bool, loading = true);
   save_descriptor(Writer & w)
     : writer(w), first(true)
   {
@@ -230,8 +232,8 @@ inline void load_sequence(Reader & reader, OutputIterator out)
 {
   std::size_t n;
   reader.start_sequence(n);
-  T tmp;
   while(reader.good() && n-- > 0 && !reader.end_sequence()) {
+    T tmp;
     load(reader, tmp);
     *out = tmp;
     ++out;
@@ -302,6 +304,7 @@ template<class Reader>
 class load_descriptor
 {
 public:
+  BOOST_STATIC_CONSTANT(bool, loading = true);
   load_descriptor(Reader & r) : reader(r) { reader.start_struct(); }
   ~load_descriptor() { reader.end_struct(); }
 
