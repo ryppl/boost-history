@@ -25,37 +25,14 @@ test_main(int, char*[])
 
 /// Testing push_back
 
-    {
-        char const* s = "Ruby";
-        typedef tuple<int, char, double, char const*> tuple_type;
-        tuple_type t1(1, 'x', 3.3, s);
 
-        {
-            std::cout << push_back(t1, 123456) << std::endl;
-            BOOST_TEST((push_back(t1, 123456)
-                == make_tuple(1, 'x', 3.3, s, 123456)));
-        }
-
-        {
-            std::cout << push_back(t1, "funny") << std::endl;
-            BOOST_TEST((push_back(t1, "funny")
-                == make_tuple(1, 'x', 3.3, s, std::string("funny"))));
-        }
-
-        {
-            std::cout << push_back(t1, t1) << std::endl;
-            BOOST_TEST((push_back(t1, t1)
-                == make_tuple(1, 'x', 3.3, s, t1)));
-        }
-    }
-/*
     {
         typedef boost::mpl::vector_c<int, 1, 2, 3, 4, 5> mpl_vec;
         std::cout << boost::fusion::push_back(mpl_vec(), boost::mpl::int_<6>()) << std::endl;
         BOOST_TEST((boost::fusion::push_back(mpl_vec(), boost::mpl::int_<6>())
             == make_tuple(1, 2, 3, 4, 5, 6)));
     }
-*/
+
     return 0;
 }
 

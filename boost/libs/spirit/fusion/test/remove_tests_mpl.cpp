@@ -44,28 +44,6 @@ test_main(int, char*[])
 
 /// Testing remove
 
-    X x; Y y;
-    typedef tuple<Y, char, long, X, bool, double> tuple_type;
-    tuple_type t(y, '@', 987654, x, true, 6.6);
-
-    {
-        std::cout << fusion::remove(t, identity<X>()) << std::endl;
-        BOOST_TEST((fusion::remove(t, identity<X>())
-            == make_tuple(y, '@', 987654, true, 6.6)));
-    }
-
-    {
-        std::cout << fusion::remove(t, identity<Y>()) << std::endl;
-        BOOST_TEST((fusion::remove(t, identity<Y>())
-            == make_tuple('@', 987654, x, true, 6.6)));
-    }
-
-    {
-        std::cout << fusion::remove(t, identity<long>()) << std::endl;
-        BOOST_TEST((fusion::remove(t, identity<long>())
-            == make_tuple(y, '@', x, true, 6.6)));
-    }
-/*
     {
         typedef vector<Y, char, long, X, bool, double> mpl_vec;
         BOOST_TEST((fusion::remove(mpl_vec(), identity<X>())
@@ -75,7 +53,7 @@ test_main(int, char*[])
         BOOST_TEST((fusion::remove(mpl_vec(), identity<long>())
             == tuple<Y, char, X, bool, double>()));
     }
-*/
+
     return 0;
 }
 

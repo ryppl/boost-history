@@ -33,25 +33,8 @@ test_main(int, char*[])
 
 /// Testing insert
 
-    {
-        char const* s = "Ruby";
-        typedef tuple<int, char, double, char const*> tuple_type;
-        tuple_type t1(1, 'x', 3.3, s);
-        tuple_iterator<2, tuple_type> pos(t1);
+    //Needed to split insert_tests.cpp because of compiler limit in MSVC 6.5
 
-        std::cout << insert(t1, pos, 123456) << std::endl;
-        BOOST_TEST((insert(t1, pos, 123456)
-            == make_tuple(1, 'x', 123456, 3.3, s)));
-
-        std::cout << insert(t1, end(t1), 123456) << std::endl;
-        BOOST_TEST((insert(t1, end(t1), 123456)
-            == make_tuple(1, 'x', 3.3, s, 123456)));
-
-        std::cout << insert(t1, begin(t1), "glad") << std::endl;
-        BOOST_TEST((insert(t1, begin(t1), "glad")
-            == make_tuple(std::string("glad"), 1, 'x', 3.3, s)));
-    }
-/*
     {
         typedef mpl::vector_c<int, 1, 2, 3, 4, 5> mpl_vec;
         typedef mpl::begin<mpl_vec>::type mpl_vec_begin;
@@ -61,8 +44,6 @@ test_main(int, char*[])
         BOOST_TEST((fusion::insert(mpl_vec(), mpl_vec_at3(), mpl::int_<66>())
             == make_tuple(1, 2, 3, 66, 4, 5)));
     }
-*/
+
     return 0;
 }
-
-
