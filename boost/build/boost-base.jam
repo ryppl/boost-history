@@ -1015,15 +1015,14 @@ rule find-compatible-subvariant
     local requirements = [ select-properties $(>)
                             : $(gTARGET_REQUIREMENTS($(<))) ] ;
                                 
-    local build-request = $(3) ;
-    local free-properties = [ segregate-free-properties requirements build-request ] ;
+    local free-properties = [ segregate-free-properties requirements ] ;
 
     # begin with the properties overridden by the target requirements
     local override-properties = $(requirements) ;
 
     # add properties from build-request, checking for compatibility
     local p ;
-    for p in [ difference $(build-request) : $(requirements) ]
+    for p in [ difference $(3) : $(requirements) ]
     {
         local f = $(p:G) ;
         if $(f) in $(requirements:G)
@@ -1058,18 +1057,13 @@ rule find-compatible-subvariant
 }
 
 
-# link-libraries libs... : toolset variant : dependent-properties
+# link-libraries libs... : toolset variant : dependent-simple-properties
 #
 # For each target specified in libs, generate build instructions
 # for a subvariant that can be linked with a dependent target with
 # dependent-properties, returning a list of the linkable targets.
 rule link-libraries
 {
-  # extract the simple properties from dependent-properties
-  local simple-properties
-            = [ difference $(3)
-                : [ get-properties $(gFREE_FEATURES) : $(3) ] ] ;
-
   local lib-path result ;
   for lib-path in $(<)
   {
@@ -1159,6 +1153,27 @@ else
   gIMPORT_SUFFIX(LIB) = .a ;
 }
 
+
+rule save-globals
+{
+    local v ;
+    for v in $(<)
+    {
+        $(v)($(>)) = $($(v)) ;
+    }
+}
+
+rule restore-globals
+{
+    local v ;
+    for v in $(<)
+    {
+        $(v) = $($(v)($(>))) ;
+    }
+}
+
+gSUBVARIANT_GLOBALS = TARGET_GRIST LOCATE_TARGET HDRGRIST gBUILD_PROPERTIES ;
+
 # subvariant-target target : subvariant-id build-properties : toolset variant
 #
 # Given target, a main target name gristed with $(SOURCE_GRIST), generate build
@@ -1194,6 +1209,18 @@ rule subvariant-target
 
     local target-files = [ FAppendSuffix $(subvariant) : $(SUF$(target-type)) ] ;
 
+    if $(gTARGET_LIBS($(<)))
+    {
+        # extract the simple properties from dependent-properties
+        local simple-properties = $(gBUILD_PROPERTIES) ;
+        segregate-free-properties simple-properties ;
+
+        # generate library build instructions
+        local libs = [ link-libraries $(gTARGET_LIBS($(<))) : $(3) : $(simple-properties) ] ;
+        NEEDLIBS on $(target-files) += $(libs) ;
+        DEPENDS $(target-files) : $(libs) ; 
+    }
+    
     # reverse these so that the Windows import library will be first, for
     # linking to DLLs
     gTARGET_FILES($(subvariant)) = [ reverse $(target-files) ] ;
@@ -1212,29 +1239,8 @@ rule subvariant-target
     # transfer target variables to the target file.
     set-target-variables $(target-files) ;
 
-    # dispatch to the appropriate declaration function. It would be much cleaner
-    # to be able to do this with some sort of indirection, but Jam doesn't yet
-    # support it.
-    switch $(target-type)
-    {
-      case EXE :
-        executable-file $(target-files) : $(gTARGET_SOURCES($(<))) ;
-      case LIB :
-        library-file $(target-files) : $(gTARGET_SOURCES($(<))) ;
-      case DLL :
-        dll-files $(target-files) : $(gTARGET_SOURCES($(<))) ;
-      case * : EXIT "unknown target type:" $(target-type) ;
-    }
-
-    if $(gTARGET_LIBS($(<)))
-    {
-        # generate library build instructions
-        local libs = [ link-libraries $(gTARGET_LIBS($(<))) : $(3) : $(>[2-]) ] ;
-        NEEDLIBS on $(target-files) += $(libs) ;
-        DEPENDS $(target-files) : $(libs) ; 
-    }
+    save-globals $(gSUBVARIANT_GLOBALS) : $(subvariant) ;
   }
-  return $(gTARGET_FILES($(subvariant))) ;
 }
 
 # main-target target : local-build
@@ -1274,7 +1280,12 @@ rule main-target
 # Declare an executable target.
 rule exe
 {
-    declare-local-target $(<) : $(2) : $(3) : $(4) : EXE ;
+    local subvariants = [ declare-local-target $(<) : $(2) : $(3) : $(4) : EXE ] ;
+    local s ;
+    for s in $(subvariants)
+    {
+        executable-file [ FAppendSuffix $(s) : $(SUFEXE) ] : $(gSUBVARIANT_SOURCES($(s)))
+    }
 }
 
 # dll target : sources : requirements : local-build
@@ -1282,7 +1293,12 @@ rule exe
 # Declare a shared library target.
 rule dll
 {
-    declare-local-target $(<) : $(2) : $(3) : $(4) : DLL ;
+    local subvariants = [ declare-local-target $(<) : $(2) : $(3) : $(4) : DLL ] ;
+    local s ;
+    for s in $(subvariants)
+    {
+        library-file [ FAppendSuffix $(s) : $(SUFEXE) ] : $(gSUBVARIANT_SOURCES($(s)))
+    }
 }
 
 # lib target : sources : requirements : local-build
@@ -1290,7 +1306,12 @@ rule dll
 # Declare a statically-linked library target.
 rule lib
 {
-    declare-local-target $(<) : $(2) : $(3) : $(4) : LIB ;
+    local subvariants = [ declare-local-target $(<) : $(2) : $(3) : $(4) : LIB ] ;
+    local s ;
+    for s in $(subvariants)
+    {
+        dll-files [ FAppendSuffix $(s) : $(SUFEXE) ] : $(gSUBVARIANT_SOURCES($(s)))
+    }
 }
 
 # unit-test target : sources : requirements : local-build
