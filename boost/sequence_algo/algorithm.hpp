@@ -58,17 +58,16 @@ namespace boost {
 // library, as well as PostIncrementOpConcept, and idem with Decrement
 // -- Herve
 
-#define BOOST_DEFINE_UNARY_PRE_OPERATOR_CONSTRAINT(OP,NAME) \
+#define BOOST_DEFINE_UNARY_PRE_INCREMENT_OP_CONSTRAINT(OP, NAME) \
   template <class TT> \
   struct NAME { \
-    void constraints() { (void)constraints_(); } \
-    bool constraints_() {  \
-      return OP a; \
+    void constraints() { \
+      OP a; \
     } \
     TT a; \
   }
-
-  BOOST_DEFINE_UNARY_OPERATOR_CONSTRAINT(++, PreIncrementOpConcept);
+  BOOST_DEFINE_UNARY_PRE_INCREMENT_OP_CONSTRAINT(++, PreIncrementOpConcept);
+#undef BOOST_DEFINE_UNARY_PRE_INCREMENT_OP_CONSTRAINT
 
   template <class ForwardIterator, class T>
   void iota(ForwardIterator first, ForwardIterator last, T value)
