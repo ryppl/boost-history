@@ -124,6 +124,7 @@ BOOST_MPL_AUX_INSERTER_ALGORITHM_DEF(4, transform2)
     : if_<                                                                      \
             or_<                                                                \
                 is_na<OperationOrInserter>                                      \
+              , is_lambda_expression< Seq2OrOperation >                         \
               , not_< is_sequence<Seq2OrOperation> >                            \
               >                                                                 \
           , transform_##1<Seq1,Seq2OrOperation,OperationOrInserter>             \

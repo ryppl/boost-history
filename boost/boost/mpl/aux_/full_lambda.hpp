@@ -33,7 +33,6 @@
 #   endif
 #endif
 
-#include <boost/mpl/aux_/lambda_expr.hpp>
 #include <boost/mpl/aux_/lambda_arity_param.hpp>
 #include <boost/mpl/aux_/config/use_preprocessed.hpp>
 
@@ -81,18 +80,6 @@ namespace boost { namespace mpl {
     BOOST_MPL_AUX_LAMBDA_ARITY_PARAM(param) \
     /**/
 
-template<
-      typename T
-    , typename Tag
-    AUX778076_ARITY_PARAM(typename Arity)
-    >
-struct lambda
-{
-    BOOST_MPL_AUX_IS_LAMBDA_EXPR(false_)
-    typedef T result_;
-    typedef T type;
-};
-
 
 #define n_ BOOST_MPL_LIMIT_METAFUNCTION_ARITY
 namespace aux {
@@ -114,10 +101,31 @@ struct lambda_or< BOOST_MPL_PP_ENUM(n_,false) >
 } // namespace aux
 #undef n_
 
+template<
+      typename T
+    , typename Tag
+    AUX778076_ARITY_PARAM(typename Arity)
+    >
+struct lambda
+{
+    typedef false_ is_le;
+    typedef T result_;
+    typedef T type;
+};
+
+template<
+      typename T
+    >
+struct is_lambda_expression
+    : lambda<T>::is_le
+{
+};
+
+
 template< int N, typename Tag >
 struct lambda< arg<N>,Tag AUX778076_ARITY_PARAM(int_<-1>) >
 {
-    BOOST_MPL_AUX_IS_LAMBDA_EXPR(true_)
+    typedef true_ is_le;
     typedef mpl::arg<N> result_; // qualified for the sake of MIPSpro 7.41
     typedef protect<result_> type; 
 };
@@ -131,7 +139,7 @@ struct lambda< arg<N>,Tag AUX778076_ARITY_PARAM(int_<-1>) >
 template< typename T, typename Tag >
 struct lambda< protect<T>,Tag AUX778076_ARITY_PARAM(int_<1>) >
 {
-    BOOST_MPL_AUX_IS_LAMBDA_EXPR(false_)
+    typedef false_ is_le;
     typedef protect<T> result_;
     typedef result_ type;
 };
@@ -147,7 +155,7 @@ struct lambda<
         AUX778076_ARITY_PARAM(int_<BOOST_PP_INC(BOOST_MPL_LIMIT_METAFUNCTION_ARITY)>)
         >
 {
-    BOOST_MPL_AUX_IS_LAMBDA_EXPR(false_)
+    typedef false_ is_le;
     typedef bind<F, AUX778076_BIND_PARAMS(T)> result_;
     typedef result_ type;
 };
@@ -300,9 +308,9 @@ struct lambda<
     BOOST_MPL_PP_REPEAT(i_, AUX778076_LAMBDA_TYPEDEF, T)
     BOOST_MPL_PP_REPEAT(i_, AUX778076_IS_LE_TYPEDEF, unused)
 
-    typedef aux::lambda_or<
+    typedef typename aux::lambda_or<
           BOOST_MPL_PP_REPEAT(i_, AUX778076_IS_LAMBDA_EXPR, unused)
-        > is_le;
+        >::type is_le;
 
     typedef aux::BOOST_PP_CAT(le_result,i_)<
           is_le, Tag, F, AUX778076_LAMBDA_PARAMS(i_, l)
@@ -329,7 +337,7 @@ struct lambda<
         AUX778076_ARITY_PARAM(int_<BOOST_PP_INC(i_)>)
         >
 {
-    BOOST_MPL_AUX_IS_LAMBDA_EXPR(false_)
+    typedef false_ is_le;
     typedef BOOST_PP_CAT(bind,i_)<
           F
         AUX778076_BIND_N_PARAMS(i_, T)

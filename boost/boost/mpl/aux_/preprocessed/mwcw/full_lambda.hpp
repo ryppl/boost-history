@@ -11,18 +11,6 @@
 
 namespace boost { namespace mpl {
 
-template<
-      typename T
-    , typename Tag
-   
-    >
-struct lambda
-{
-    typedef false_ is_le;
-    typedef T result_;
-    typedef T type;
-};
-
 namespace aux {
 
 template<
@@ -41,6 +29,26 @@ struct lambda_or< false,false,false,false,false >
 };
 
 } // namespace aux
+
+template<
+      typename T
+    , typename Tag
+   
+    >
+struct lambda
+{
+    typedef false_ is_le;
+    typedef T result_;
+    typedef T type;
+};
+
+template<
+      typename T
+    >
+struct is_lambda_expression
+    : lambda<T>::is_le
+{
+};
 
 template< int N, typename Tag >
 struct lambda< arg<N>, Tag >

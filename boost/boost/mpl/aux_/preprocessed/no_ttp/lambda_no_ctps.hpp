@@ -6,7 +6,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 //
 
-// Preprocessed version of "libs/mpl/test/apply.cpp" header
+// Preprocessed version of "boost/mpl/aux_/lambda_no_ctps.hpp" header
 // -- DO NOT modify by hand!
 
 namespace boost { namespace mpl {
@@ -212,10 +212,18 @@ struct lambda
 
     typedef typename l_::type type;
     typedef typename l_::is_le is_le;
-    BOOST_MPL_AUX_LAMBDA_SUPPORT(3, lambda, (T,Tag, Protect))
+    BOOST_MPL_AUX_LAMBDA_SUPPORT(3, lambda, (T, Tag, Protect))
 };
 
 BOOST_MPL_AUX_NA_SPEC2(1, 3, lambda)
+
+template<
+      typename T
+    >
+struct is_lambda_expression
+    : lambda<T>::is_le
+{
+};
 
 }}
 

@@ -19,7 +19,6 @@
 #include <boost/mpl/int_fwd.hpp>
 #include <boost/mpl/aux_/preprocessor/params.hpp>
 #include <boost/mpl/aux_/lambda_arity_param.hpp>
-#include <boost/mpl/aux_/lambda_expr.hpp>
 #include <boost/mpl/aux_/config/lambda.hpp>
 
 #if !defined(BOOST_MPL_CFG_NO_FULL_LAMBDA_SUPPORT)
@@ -35,7 +34,7 @@ struct lambda< \
     BOOST_MPL_AUX_LAMBDA_ARITY_PARAM(int_<i>) \
     > \
 { \
-    BOOST_MPL_AUX_IS_LAMBDA_EXPR(false_) \
+    typedef false_ is_le; \
     typedef name< BOOST_MPL_PP_PARAMS(i, T) > type; \
 }; \
 /**/

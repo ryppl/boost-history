@@ -116,6 +116,14 @@ struct lambda
 
 BOOST_MPL_AUX_NA_SPEC2(1, 3, lambda)
 
+template<
+      typename T
+    >
+struct is_lambda_expression
+    : lambda<T>::is_le
+{
+};
+
 #   undef AUX778076_LAMBDA_PARAMS
 
 }}
