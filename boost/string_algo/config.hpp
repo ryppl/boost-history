@@ -12,17 +12,10 @@
 
 #include <boost/config.hpp>
 
-// Config library defines BOOST_NO_DEDUCED_TYPENAME for VC++ 6.0 only
-// The bug is however also present in VC++7.0
-
-#ifdef BOOST_MSVC
-#   if BOOST_MSVC <= 1300  // 1300 == VC++ 7.0
-#       define BOOST_STRING_TYPENAME 
-#   else
-#       define BOOST_STRING_TYPENAME BOOST_DEDUCED_TYPENAME
-#   endif
-#else
-#   define BOOST_STRING_TYPENAME BOOST_DEDUCED_TYPENAME
+#ifdef BOOST_STRING_DEDUCED_TYPENAME
+#	error "macro already defined!"
 #endif
+
+#define BOOST_STRING_TYPENAME BOOST_DEDUCED_TYPENAME
 
 #endif  // BOOST_STRING_CONFIG_HPP
