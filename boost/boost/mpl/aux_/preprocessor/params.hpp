@@ -53,7 +53,7 @@
     /**/
 
 #   define BOOST_MPL_PP_PARAMS(n, param) \
-    BOOST_PP_REPEAT_1( \
+    BOOST_PP_REPEAT( \
           n \
         , BOOST_MPL_PP_AUX_PARAM_FUNC \
         , param \

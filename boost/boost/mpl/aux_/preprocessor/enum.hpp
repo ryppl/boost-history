@@ -50,7 +50,7 @@
     /**/
 
 #   define BOOST_MPL_PP_ENUM(n, param) \
-    BOOST_PP_REPEAT_1( \
+    BOOST_PP_REPEAT( \
           n \
         , BOOST_MPL_PP_AUX_ENUM_FUNC \
         , param \

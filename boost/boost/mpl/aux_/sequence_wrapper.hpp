@@ -224,7 +224,7 @@ struct AUX778076_SEQUENCE_NAME
 
 #if i_ == AUX778076_SEQUENCE_LIMIT
 
-//: primary template (not a specialization!)
+/// primary template (not a specialization!)
 template<
       AUX778076_SEQUENCE_N_PARAMS(i_)
     >

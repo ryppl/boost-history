@@ -28,14 +28,25 @@ struct greater_impl
 {
 };
 
+/// for Digital Mars C++/compilers with no CTPS support
+
+template<> struct greater_impl< na,na,0,0 >
+
+{
+    template< typename U1, typename U2 > struct apply
+    {
+        typedef apply type;
+    };
+};
+
 template< typename T > struct greater_tag
 {
     typedef typename T::tag type;
 };
 
 template<
-      typename N1
-    , typename N2
+      typename BOOST_MPL_AUX_NA_PARAM(N1)
+    , typename BOOST_MPL_AUX_NA_PARAM(N2)
     >
 struct greater
     : aux::msvc_eti_base< typename apply_wrap2<
@@ -49,6 +60,8 @@ struct greater
 
 {
 };
+
+BOOST_MPL_AUX_NA_SPEC2(2, 2, greater)
 
 }}
 

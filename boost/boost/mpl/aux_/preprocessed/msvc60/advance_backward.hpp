@@ -21,7 +21,6 @@ struct advance_backward<0>
         typedef iter0 type;
     };
 
-    // ETI workaround
     template<> struct apply<int>
     {
         typedef int type;
@@ -39,7 +38,6 @@ struct advance_backward<1>
         typedef iter1 type;
     };
 
-    // ETI workaround
     template<> struct apply<int>
     {
         typedef int type;
@@ -58,7 +56,6 @@ struct advance_backward<2>
         typedef iter2 type;
     };
 
-    // ETI workaround
     template<> struct apply<int>
     {
         typedef int type;
@@ -78,7 +75,6 @@ struct advance_backward<3>
         typedef iter3 type;
     };
 
-    // ETI workaround
     template<> struct apply<int>
     {
         typedef int type;
@@ -99,7 +95,6 @@ struct advance_backward<4>
         typedef iter4 type;
     };
 
-    // ETI workaround
     template<> struct apply<int>
     {
         typedef int type;

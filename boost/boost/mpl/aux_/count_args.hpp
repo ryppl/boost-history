@@ -46,7 +46,7 @@
 #   include <boost/preprocessor/repeat.hpp>
 #   include <boost/preprocessor/inc.hpp>
 
-#   define AUX778076_COUNT_ARGS_REPEAT BOOST_PP_REPEAT_1
+#   define AUX778076_COUNT_ARGS_REPEAT BOOST_PP_REPEAT
 #   define AUX778076_COUNT_ARGS_PARAMS(param) \
     BOOST_PP_ENUM_SHIFTED_PARAMS( \
           BOOST_PP_INC(AUX778076_COUNT_ARGS_ARITY) \

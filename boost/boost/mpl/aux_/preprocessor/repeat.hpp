@@ -41,7 +41,7 @@
 #   include <boost/preprocessor/repeat.hpp>
 
 #   define BOOST_MPL_PP_REPEAT(n,f,param) \
-    BOOST_PP_REPEAT_1(n,f,param) \
+    BOOST_PP_REPEAT(n,f,param) \
     /**/
 
 #endif 

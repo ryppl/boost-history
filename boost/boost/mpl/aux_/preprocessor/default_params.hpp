@@ -55,7 +55,7 @@
     /**/
 
 #   define BOOST_MPL_PP_DEFAULT_PARAMS(n, param, value) \
-    BOOST_PP_REPEAT_1( \
+    BOOST_PP_REPEAT( \
           n \
         , BOOST_MPL_PP_AUX_DEFAULT_PARAM_FUNC \
         , (param,value) \

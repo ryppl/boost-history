@@ -54,8 +54,8 @@ using BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE::_;
 BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_CLOSE
 BOOST_MPL_AUX_ADL_BARRIER_DECL(_)
 
-//: agurt, 17/mar/02: one more placeholder for the last 'apply#' 
-//: specialization
+/// agurt, 17/mar/02: one more placeholder for the last 'apply#' 
+/// specialization
 #define BOOST_PP_ITERATION_PARAMS_1 \
     (3,(1, BOOST_MPL_LIMIT_METAFUNCTION_ARITY + 1, <boost/mpl/placeholders.hpp>))
 #include BOOST_PP_ITERATE()

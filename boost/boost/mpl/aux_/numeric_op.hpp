@@ -22,6 +22,7 @@
 #   include <boost/mpl/apply_wrap.hpp>
 #   include <boost/mpl/if.hpp>
 #   include <boost/mpl/aux_/na.hpp>
+#   include <boost/mpl/aux_/na_spec.hpp>
 #   include <boost/mpl/aux_/msvc_eti_base.hpp>
 #   include <boost/mpl/aux_/config/eti.hpp>
 #endif
@@ -80,6 +81,19 @@ struct BOOST_PP_CAT(AUX778076_OP_NAME,_impl)
 {
 };
 
+/// for Digital Mars C++/compilers with no CTPS support
+#if !BOOST_WORKAROUND(BOOST_MSVC, <= 1300)
+template<> struct BOOST_PP_CAT(AUX778076_OP_NAME,_impl)<na,na>
+#else
+template<> struct BOOST_PP_CAT(AUX778076_OP_NAME,_impl)<na,na,0,0>
+#endif
+{
+    template< typename U1, typename U2 > struct apply 
+    {
+        typedef apply type;
+    };
+};
+
 
 template< typename T > struct BOOST_PP_CAT(AUX778076_OP_NAME,_tag)
 {
@@ -89,8 +103,8 @@ template< typename T > struct BOOST_PP_CAT(AUX778076_OP_NAME,_tag)
 
 #if AUX778076_OP_ARITY == 2
 template< 
-      typename N1
-    , typename N2
+      typename BOOST_MPL_AUX_NA_PARAM(N1)
+    , typename BOOST_MPL_AUX_NA_PARAM(N2)
     >
 struct AUX778076_OP_NAME
 #else
@@ -102,9 +116,9 @@ struct AUX778076_OP_NAME
 /**/
 
 template<
-      typename N1
-    , typename N2
-    , BOOST_MPL_PP_DEF_PARAMS_TAIL(2, typename N, na)
+      typename BOOST_MPL_AUX_NA_PARAM(N1)
+    , typename BOOST_MPL_AUX_NA_PARAM(N2)
+    BOOST_MPL_PP_DEF_PARAMS_TAIL(2, typename N, na)
     >
 struct AUX778076_OP_NAME
     : AUX778076_OP_N_CALLS(AUX778076_OP_ARITY, N)
@@ -137,6 +151,8 @@ struct AUX778076_OP_NAME
 #endif
 {
 };
+
+BOOST_MPL_AUX_NA_SPEC2(2, AUX778076_OP_ARITY, AUX778076_OP_NAME)
 
 }}
 

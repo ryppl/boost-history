@@ -25,14 +25,25 @@ struct modulus_impl
 {
 };
 
+/// for Digital Mars C++/compilers with no CTPS support
+
+template<> struct modulus_impl< na,na >
+
+{
+    template< typename U1, typename U2 > struct apply
+    {
+        typedef apply type;
+    };
+};
+
 template< typename T > struct modulus_tag
 {
     typedef typename T::tag type;
 };
 
 template<
-      typename N1
-    , typename N2
+      typename BOOST_MPL_AUX_NA_PARAM(N1)
+    , typename BOOST_MPL_AUX_NA_PARAM(N2)
     >
 struct modulus
     : modulus_impl<
@@ -41,6 +52,8 @@ struct modulus
         >::template apply< N1,N2 >::type
 {
 };
+
+BOOST_MPL_AUX_NA_SPEC2(2, 2, modulus)
 
 }}
 

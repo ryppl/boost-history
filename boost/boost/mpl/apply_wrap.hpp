@@ -145,7 +145,7 @@ struct BOOST_PP_CAT(apply_wrap,i_)
 #   endif // workarounds
 
 #if defined(BOOST_MPL_CFG_MSVC_ETI_BUG)
-//: workaround for ETI bug
+/// workaround for ETI bug
 template<>
 struct BOOST_PP_CAT(apply_wrap,i_)<AUX778076_APPLY_WRAP_SPEC_PARAMS(i_, int)>
 {
@@ -173,8 +173,8 @@ struct BOOST_PP_CAT(apply_wrap_impl,i_)<
     typedef typename F::template apply<
           AUX778076_APPLY_WRAP_PARAMS(i_, T)
 #if i_ == 0 && j_ == 0
-//: since the defaults are "lost", we have to pass *something* even for nullary
-//: metafunction classes
+/// since the defaults are "lost", we have to pass *something* even for nullary
+/// metafunction classes
         na
 #else
         BOOST_PP_COMMA_IF(BOOST_PP_AND(i_, j_)) BOOST_MPL_PP_ENUM(j_, na)

@@ -145,10 +145,10 @@ class pretty:
         self.reading_copyright = 0
         self.copyright = None
         
-        self.re_header_name_comment = re.compile( r'^\s*//\s+\$Source$$' )
+        self.re_header_name_comment = re.compile( r'^\s*//\s+\$[S]ource: /cvsroot/boost/boost/(.*),v\s*\$$' )
         self.header_was_written = 0
 
-        self.re_junk = re.compile(r'^\s*(#|//[^:]).*$')
+        self.re_junk = re.compile(r'^\s*(#|//[^/]|////).*$')
         self.re_c_comment_start = re.compile(r'^\s*/\*.*')
         self.re_c_comment_end = re.compile(r'^.*\*/\s*$')
         self.inside_c_comment = 0
@@ -156,7 +156,6 @@ class pretty:
         self.re_empty_line = re.compile(r'^\s*$')
         self.re_comma = re.compile(r'(\S+)\s*,\s*')
         self.re_assign = re.compile(r'([^<|^!|^>])\s*(=+)\s*')
-        self.re_marked_comment = re.compile(r'^(\s*//):(.*)$')
         self.re_marked_empty_comment = re.compile(r'^\s*//\s*$')
         self.re_typedef = re.compile(r'^\s+typedef\s+.*?;$')
         self.re_nsl = re.compile(r'^(\s+typedef\s+.*?;|\s*(private|public):\s*|\s*{\s*|\s*(\w|\d|,)+\s*)$')
@@ -231,7 +230,6 @@ class pretty:
 
         line = self.re_comma.sub( r'\1, ', line )
         line = self.re_assign.sub( r'\1 \2 ', line )
-        line = self.re_marked_comment.sub( r'\1\2', line )
         line = self.re_marked_empty_comment.sub( r'\n', line )
         line = self.re_type_const.sub( r'\2 \1', line )
         line = self.re_templ_args.sub( handle_args, line )

@@ -61,7 +61,7 @@ template<
     , BOOST_PP_ENUM_PARAMS(i_, T C)
     >
 struct BOOST_PP_CAT(BOOST_PP_CAT(vector,i_),_c)
-    : BOOST_PP_CAT(vector,i_)< BOOST_PP_REPEAT_1(i_,AUX778076_VECTOR_C_PARAM_FUNC,C) >
+    : BOOST_PP_CAT(vector,i_)< BOOST_PP_REPEAT(i_,AUX778076_VECTOR_C_PARAM_FUNC,C) >
 {
 };
 

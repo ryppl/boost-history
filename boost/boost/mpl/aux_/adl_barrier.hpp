@@ -24,8 +24,10 @@
 // of template instantiation symbols, so we apply the workaround on all 
 // platforms that can handle it
 
-#if BOOST_WORKAROUND(BOOST_MSVC, <= 1300) || BOOST_WORKAROUND(__BORLANDC__, < 0x600)
-
+#if BOOST_WORKAROUND(BOOST_MSVC, <= 1300) \
+    || BOOST_WORKAROUND(__BORLANDC__, < 0x600) \
+    || BOOST_WORKAROUND(__DMC__, BOOST_TESTED_AT(0x840)) \
+    
 #   define BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE boost::mpl
 #   define BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_OPEN namespace boost { namespace mpl {
 #   define BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_CLOSE }}
@@ -41,8 +43,7 @@
 
 #endif
 
-#if BOOST_WORKAROUND(BOOST_MPL_CFG_GCC, <= 0x0295) \
-    || BOOST_WORKAROUND(__DMC__, BOOST_TESTED_AT(0x840))
+#if BOOST_WORKAROUND(BOOST_MPL_CFG_GCC, <= 0x0295)
 #   define BOOST_MPL_AUX_ADL_BARRIER_DECL(type) \
     namespace boost { namespace mpl { using ::mpl_::type; } } \
 /**/

@@ -19,7 +19,13 @@
 
 #include <boost/type_traits/is_same.hpp>
 
-#include <vector>
+template< typename T > struct vector
+{
+#if defined(BOOST_MPL_CFG_NO_IMPLICIT_METAFUNCTIONS)
+    typedef vector type;
+#endif
+};
+
 
 MPL_TEST_CASE()
 {
@@ -27,12 +33,12 @@ MPL_TEST_CASE()
     typedef lambda<plus1>::type plus2;
     MPL_ASSERT(( boost::is_same< plus1,plus2 > ));
 
-    typedef lambda<std::vector<int> >::type v;
-    MPL_ASSERT(( boost::is_same< v,std::vector<int> > ));
+    typedef lambda<vector<int> >::type v;
+    MPL_ASSERT(( boost::is_same< v,vector<int> > ));
 
-    typedef lambda<std::vector<_1> >::type make_vector;
-    typedef make_vector::apply<int>::type v;
-    MPL_ASSERT(( boost::is_same< v,std::vector<int> > ));
+    typedef lambda<vector<_1> >::type make_vector;
+    typedef make_vector::apply<int>::type v_int;
+    MPL_ASSERT(( boost::is_same< v_int,vector<int> > ));
 }
 
 MPL_TEST_CASE()
@@ -55,32 +61,32 @@ MPL_TEST_CASE()
 MPL_TEST_CASE()
 {
     typedef lambda< lambda<_1> >::type make_lambda;
-    typedef make_lambda::apply< std::vector<int> >::type v;
-    MPL_ASSERT(( boost::is_same< v,std::vector<int> > ));
+    typedef make_lambda::apply< vector<int> >::type v;
+    MPL_ASSERT(( boost::is_same< v,vector<int> > ));
 
-    typedef make_lambda::apply< std::vector<_1> >::type make_vector;
+    typedef make_lambda::apply< vector<_1> >::type make_vector;
     typedef make_vector::apply<int>::type v_int;
-    MPL_ASSERT(( boost::is_same< v_int,std::vector<int> > ));
+    MPL_ASSERT(( boost::is_same< v_int,vector<int> > ));
 }
 
 MPL_TEST_CASE()
 {
-    typedef apply< _1, std::vector<int> >::type v;
-    MPL_ASSERT(( boost::is_same< v,std::vector<int> > ));
+    typedef apply< _1, vector<int> >::type v;
+    MPL_ASSERT(( boost::is_same< v,vector<int> > ));
 
-    typedef apply< _1, std::vector<_1> >::type v_lambda;
+    typedef apply< _1, vector<_1> >::type v_lambda;
     typedef apply<v_lambda,int>::type v_int;
-    MPL_ASSERT(( boost::is_same< v,std::vector<int> > ));
+    MPL_ASSERT(( boost::is_same< v,vector<int> > ));
 }
 
 MPL_TEST_CASE()
 {
-    typedef apply< lambda<_1>, std::vector<int> >::type v;
-    MPL_ASSERT(( boost::is_same< v,std::vector<int> > ));
+    typedef apply< lambda<_1>, vector<int> >::type v;
+    MPL_ASSERT(( boost::is_same< v,vector<int> > ));
 
-    typedef apply< lambda<_1>, std::vector<_1> >::type make_vector;
+    typedef apply< lambda<_1>, vector<_1> >::type make_vector;
     typedef make_vector::apply<int>::type v_int;
-    MPL_ASSERT(( boost::is_same< v,std::vector<int> > ));
+    MPL_ASSERT(( boost::is_same< v,vector<int> > ));
 }
 
 MPL_TEST_CASE()
@@ -120,15 +126,3 @@ MPL_TEST_CASE()
 
     MPL_ASSERT_RELATION( res::value, ==, 5 );
 }
-
-#if 0// defined(BOOST_MPL_HAS_APPLY)
-MPL_TEST_CASE()
-{
-#   define MAKE_APPLY_NAME(i) apply
-    BOOST_PP_REPEAT(
-          BOOST_MPL_LIMIT_METAFUNCTION_ARITY
-        , APPLY_TEST
-        , MAKE_APPLY_NAME
-        )
-}
-#endif

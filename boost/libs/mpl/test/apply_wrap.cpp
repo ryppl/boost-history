@@ -15,10 +15,7 @@
 #include <boost/mpl/limits/arity.hpp>
 #include <boost/mpl/aux_/preprocessor/params.hpp>
 #include <boost/mpl/aux_/preprocessor/enum.hpp>
-
 #include <boost/mpl/aux_/test.hpp>
-
-#include <boost/type_traits/is_same.hpp>
 
 #include <boost/preprocessor/repeat.hpp>
 #include <boost/preprocessor/comma_if.hpp>
@@ -65,17 +62,11 @@
 /**/
 
 namespace { namespace test {
-#if !BOOST_WORKAROUND(__DMC__, BOOST_TESTED_AT(0x840))
 BOOST_PP_REPEAT(
       BOOST_MPL_LIMIT_METAFUNCTION_ARITY
     , APPLY_FUNC_DEF
     , unused
     )
-#else
-APPLY_FUNC_DEF(0, 0, unused)
-APPLY_FUNC_DEF(0, 1, unused)
-APPLY_FUNC_DEF(0, 5, unused)
-#endif
 }}
 
 #define APPLY_0_TEST(i, apply_) \
@@ -100,27 +91,20 @@ APPLY_FUNC_DEF(0, 5, unused)
     { MPL_ASSERT(( boost::is_same<t2##i, char> )); } \
 /**/
 
-#define APPLY_TEST(z, i, APPLY_NAME) \
+#define APPLY_TEST(z, i, unused) \
     BOOST_PP_IF( \
           i \
         , APPLY_N_TEST \
         , APPLY_0_TEST \
-        )(i, APPLY_NAME(i)) \
+        )(i, BOOST_PP_CAT(apply_wrap,i)) \
 /**/
 
 
 MPL_TEST_CASE()
 {
-#if !BOOST_WORKAROUND(__DMC__, BOOST_TESTED_AT(0x840))
-#   define MAKE_APPLY_N_NAME(i) apply_wrap##i
     BOOST_PP_REPEAT(
           BOOST_MPL_LIMIT_METAFUNCTION_ARITY
         , APPLY_TEST
-        , MAKE_APPLY_N_NAME
+        , unused
         )
-#else
-    APPLY_0_TEST(0, apply_wrap0)
-    APPLY_N_TEST(1, apply_wrap1)
-    APPLY_N_TEST(5, apply_wrap5)
-#endif
 }

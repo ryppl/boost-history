@@ -36,6 +36,7 @@
 #   include <boost/mpl/limits/arity.hpp>
 #   include <boost/mpl/aux_/preprocessor/params.hpp>
 #   include <boost/mpl/aux_/preprocessor/default_params.hpp>
+#   include <boost/mpl/aux_/config/dmc_ambiguous_ctps.hpp>
 
 #   include <boost/preprocessor/comma_if.hpp>
 #   include <boost/preprocessor/iterate.hpp>
@@ -43,18 +44,26 @@
 
 namespace boost { namespace mpl {
 
-// local macro, #undef-ined at the end of the header
+// local macros, #undef-ined at the end of the header
+
+#   if defined(BOOST_MPL_CFG_DMC_AMBIGUOUS_CTPS)
+#       define AUX778076_DMC_PARAM() , int dummy_ = 0
+#   else
+#       define AUX778076_DMC_PARAM()
+#   endif
+
 #   define AUX778076_BIND_DEFAULT_PARAMS(param, value) \
     BOOST_MPL_PP_DEFAULT_PARAMS( \
           BOOST_MPL_LIMIT_METAFUNCTION_ARITY \
         , param \
         , value \
         ) \
+    AUX778076_DMC_PARAM() \
     /**/
 
 #   define AUX778076_BIND_N_PARAMS(n, param) \
-    BOOST_PP_COMMA_IF(n) \
-    BOOST_MPL_PP_PARAMS(n, param) \
+    BOOST_PP_COMMA_IF(n) BOOST_MPL_PP_PARAMS(n, param) \
+    AUX778076_DMC_PARAM() \
     /**/
 
 #if !defined(BOOST_MPL_CFG_NO_BIND_TEMPLATE)
@@ -70,7 +79,7 @@ struct bind;
 
 #   undef AUX778076_BIND_N_PARAMS
 #   undef AUX778076_BIND_DEFAULT_PARAMS
-
+#   undef AUX778076_DMC_PARAM
 }}
 
 #endif // BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS

@@ -29,7 +29,6 @@ struct apply0
 
 };
 
-// workaround for ETI bug
 template<>
 struct apply0<int>
 {
@@ -55,7 +54,6 @@ struct apply1
 
 };
 
-// workaround for ETI bug
 template<>
 struct apply1< int,int >
 {
@@ -82,7 +80,6 @@ struct apply2
 
 };
 
-// workaround for ETI bug
 template<>
 struct apply2< int,int,int >
 {
@@ -110,7 +107,6 @@ struct apply3
 
 };
 
-// workaround for ETI bug
 template<>
 struct apply3< int,int,int,int >
 {
@@ -139,7 +135,6 @@ struct apply4
 
 };
 
-// workaround for ETI bug
 template<>
 struct apply4< int,int,int,int,int >
 {
@@ -170,7 +165,6 @@ struct apply5
 
 };
 
-// workaround for ETI bug
 template<>
 struct apply5< int,int,int,int,int,int >
 {

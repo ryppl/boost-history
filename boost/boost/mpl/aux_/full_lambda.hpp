@@ -8,9 +8,9 @@
 
 // Copyright (c) Aleksey Gurtovoy 2001-2004
 //
-// Use, modification and distribution are subject to the Boost Software 
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
-// at http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
@@ -51,6 +51,7 @@
 #   include <boost/mpl/aux_/preprocessor/params.hpp>
 #   include <boost/mpl/aux_/preprocessor/enum.hpp>
 #   include <boost/mpl/aux_/preprocessor/repeat.hpp>
+#   include <boost/mpl/aux_/config/dmc_ambiguous_ctps.hpp>
 
 #   include <boost/preprocessor/iterate.hpp>
 #   include <boost/preprocessor/comma_if.hpp>
@@ -64,14 +65,14 @@ namespace boost { namespace mpl {
     BOOST_MPL_PP_PARAMS(i_, param) \
     /**/
 
-#   define AUX778076_LAMBDA_BIND_PARAMS(param) \
+#   define AUX778076_BIND_PARAMS(param) \
     BOOST_MPL_PP_PARAMS( \
           BOOST_MPL_LIMIT_METAFUNCTION_ARITY \
         , param \
         ) \
     /**/
 
-#   define AUX778076_LAMBDA_BIND_N_PARAMS(i_, param) \
+#   define AUX778076_BIND_N_PARAMS(i_, param) \
     BOOST_PP_COMMA_IF(i_) \
     BOOST_MPL_PP_PARAMS(i_, param) \
     /**/
@@ -92,7 +93,6 @@ struct lambda
     typedef T type;
 };
 
-#if !defined(BOOST_MPL_CFG_NO_LAMBDA_HEURISTIC)
 
 #define n_ BOOST_MPL_LIMIT_METAFUNCTION_ARITY
 namespace aux {
@@ -122,13 +122,12 @@ struct lambda< arg<N>,Tag AUX778076_ARITY_PARAM(int_<-1>) >
     typedef protect<result_> type; 
 };
 
-#endif // BOOST_MPL_CFG_NO_LAMBDA_HEURISTIC
 
-#define BOOST_PP_ITERATION_LIMITS (0, BOOST_MPL_LIMIT_METAFUNCTION_ARITY)
-#define BOOST_PP_FILENAME_1 <boost/mpl/aux_/full_lambda.hpp>
+#define BOOST_PP_ITERATION_PARAMS_1 \
+    (3,(0, BOOST_MPL_LIMIT_METAFUNCTION_ARITY, <boost/mpl/aux_/full_lambda.hpp>))
 #include BOOST_PP_ITERATE()
 
-//: special case for 'protect'
+/// special case for 'protect'
 template< typename T, typename Tag >
 struct lambda< protect<T>,Tag AUX778076_ARITY_PARAM(int_<1>) >
 {
@@ -137,25 +136,24 @@ struct lambda< protect<T>,Tag AUX778076_ARITY_PARAM(int_<1>) >
     typedef result_ type;
 };
 
-//: specializations for the main 'bind' form
+/// specializations for the main 'bind' form
 template<
-      typename F, AUX778076_LAMBDA_BIND_PARAMS(typename T)
+      typename F, AUX778076_BIND_PARAMS(typename T)
     , typename Tag
     >
 struct lambda<
-          bind<F,AUX778076_LAMBDA_BIND_PARAMS(T)>
+          bind<F,AUX778076_BIND_PARAMS(T)>
         , Tag
         AUX778076_ARITY_PARAM(int_<BOOST_PP_INC(BOOST_MPL_LIMIT_METAFUNCTION_ARITY)>)
         >
 {
     BOOST_MPL_AUX_IS_LAMBDA_EXPR(false_)
-    typedef bind<F, AUX778076_LAMBDA_BIND_PARAMS(T)> result_;
+    typedef bind<F, AUX778076_BIND_PARAMS(T)> result_;
     typedef result_ type;
 };
 
 
-#if defined(BOOST_MPL_CFG_EXTENDED_TEMPLATE_PARAMETERS_MATCHING) \
-    && !defined(BOOST_MPL_CFG_NO_LAMBDA_HEURISTIC)
+#if defined(BOOST_MPL_CFG_EXTENDED_TEMPLATE_PARAMETERS_MATCHING)
 
 template<
       typename F
@@ -181,9 +179,9 @@ struct lambda<
     typedef typename le_result_::type type;
 };
 
-#elif 1 // BOOST_WORKAROUND(__MWERKS__,BOOST_TESTED_AT(0x3003)) 
-//    || BOOST_WORKAROUND(__EDG_VERSION__,< 303) 
+#elif !defined(BOOST_MPL_CFG_DMC_AMBIGUOUS_CTPS)
 
+/// workaround for MWCW 8.3+/EDG < 303, leads to ambiguity on Digital Mars
 template<
       typename F, typename Tag1, typename Tag2
     >
@@ -204,8 +202,8 @@ struct lambda<
 #endif
 
 #   undef AUX778076_ARITY_PARAM
-#   undef AUX778076_LAMBDA_BIND_N_PARAMS
-#   undef AUX778076_LAMBDA_BIND_PARAMS
+#   undef AUX778076_BIND_N_PARAMS
+#   undef AUX778076_BIND_PARAMS
 #   undef AUX778076_LAMBDA_PARAMS
 
 #if !defined(BOOST_MPL_CFG_EXTENDED_TEMPLATE_PARAMETERS_MATCHING)
@@ -226,33 +224,7 @@ struct lambda<
 
 #if i_ > 0
 
-#if defined(BOOST_MPL_CFG_NO_LAMBDA_HEURISTIC)
-
-#   define AUX778076_LAMBDA_INVOCATION(unused, i_, T) \
-    BOOST_PP_COMMA_IF(i_) \
-    typename lambda< BOOST_PP_CAT(T, BOOST_PP_INC(i_)),Tag >::type \
-    /**/
-
-template<
-      template< AUX778076_LAMBDA_PARAMS(i_, typename P) > class F
-    , AUX778076_LAMBDA_PARAMS(i_, typename T)
-    , typename Tag
-    >
-struct lambda< 
-          F<AUX778076_LAMBDA_PARAMS(i_, T)>, Tag AUX778076_ARITY_PARAM(int_<i_>)
-        >
-{
-    typedef BOOST_PP_CAT(bind,i_)<
-          BOOST_PP_CAT(quote,i_)<F,Tag>
-        , BOOST_MPL_PP_REPEAT(i_, AUX778076_LAMBDA_INVOCATION, T)
-        > result_;
-
-    typedef protect<result_> type;
-
-#   undef AUX778076_LAMBDA_INVOCATION
-};
-
-#else // BOOST_MPL_CFG_NO_LAMBDA_HEURISTIC
+namespace aux {
 
 #   define AUX778076_RESULT(unused, i_, T) \
     BOOST_PP_COMMA_IF(i_) \
@@ -263,8 +235,6 @@ struct lambda<
     BOOST_PP_COMMA_IF(i_) \
     typename BOOST_PP_CAT(T, BOOST_PP_INC(i_))::type \
     /**/
-
-namespace aux {
 
 template<
       typename IsLE, typename Tag
@@ -301,14 +271,19 @@ struct BOOST_PP_CAT(le_result,i_)< true_,Tag,F,AUX778076_LAMBDA_PARAMS(i_, L) >
 } // namespace aux
 
 
-#   define AUX778076_LAMBDA_INVOCATION(unused, i_, T) \
+#   define AUX778076_LAMBDA_TYPEDEF(unused, i_, T) \
     typedef lambda< BOOST_PP_CAT(T, BOOST_PP_INC(i_)), Tag > \
         BOOST_PP_CAT(l,BOOST_PP_INC(i_)); \
     /**/
 
+#   define AUX778076_IS_LE_TYPEDEF(unused, i_, unused2) \
+    typedef typename BOOST_PP_CAT(l,BOOST_PP_INC(i_))::is_le \
+        BOOST_PP_CAT(is_le,BOOST_PP_INC(i_)); \
+    /**/
+
 #   define AUX778076_IS_LAMBDA_EXPR(unused, i_, unused2) \
     BOOST_PP_COMMA_IF(i_) \
-    BOOST_PP_CAT(l,BOOST_PP_INC(i_))::is_le::value \
+    BOOST_PP_CAT(is_le,BOOST_PP_INC(i_))::value \
     /**/
 
 template<
@@ -322,7 +297,9 @@ struct lambda<
         AUX778076_ARITY_PARAM(int_<i_>)
         >
 {
-    BOOST_MPL_PP_REPEAT(i_, AUX778076_LAMBDA_INVOCATION, T)
+    BOOST_MPL_PP_REPEAT(i_, AUX778076_LAMBDA_TYPEDEF, T)
+    BOOST_MPL_PP_REPEAT(i_, AUX778076_IS_LE_TYPEDEF, T)
+
     typedef typename aux::lambda_or<
           BOOST_MPL_PP_REPEAT(i_, AUX778076_IS_LAMBDA_EXPR, unused)
         >::type is_le;
@@ -337,17 +314,17 @@ struct lambda<
 
 
 #   undef AUX778076_IS_LAMBDA_EXPR
-#   undef AUX778076_LAMBDA_INVOCATION
+#   undef AUX778076_IS_LE_TYPEDEF
+#   undef AUX778076_LAMBDA_TYPEDEF
 
-#endif // BOOST_MPL_CFG_NO_LAMBDA_HEURISTIC
 #endif // i_ > 0
 
 template<
-      typename F AUX778076_LAMBDA_BIND_N_PARAMS(i_, typename T)
+      typename F AUX778076_BIND_N_PARAMS(i_, typename T)
     , typename Tag
     >
 struct lambda<
-          BOOST_PP_CAT(bind,i_)<F AUX778076_LAMBDA_BIND_N_PARAMS(i_, T)>
+          BOOST_PP_CAT(bind,i_)<F AUX778076_BIND_N_PARAMS(i_, T)>
         , Tag
         AUX778076_ARITY_PARAM(int_<BOOST_PP_INC(i_)>)
         >
@@ -355,7 +332,7 @@ struct lambda<
     BOOST_MPL_AUX_IS_LAMBDA_EXPR(false_)
     typedef BOOST_PP_CAT(bind,i_)<
           F
-        AUX778076_LAMBDA_BIND_N_PARAMS(i_, T)
+        AUX778076_BIND_N_PARAMS(i_, T)
         > result_;
         
     typedef result_ type;

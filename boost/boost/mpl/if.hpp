@@ -25,6 +25,7 @@
 
 #if !defined(BOOST_MPL_CFG_NO_FULL_LAMBDA_SUPPORT)
 #   include <boost/mpl/arg_fwd.hpp>
+#   include <boost/mpl/bind_fwd.hpp>
 #   include <boost/mpl/aux_/preprocessor/params.hpp>
 #   include <boost/mpl/aux_/preprocessor/default_params.hpp>
 #endif
@@ -192,7 +193,6 @@ BOOST_MPL_AUX_NA_ALGORITHM_SPEC(3, if_)
         ) \
     /**/
 
-template <class T1, class T2, class T3, class T4> struct bind3;
 template <template <class T1, class T2, class T3> class F, class tag> struct quote3;
 
 namespace aux

@@ -66,7 +66,7 @@
     /**/
 
 #   define BOOST_MPL_PP_EXT_PARAMS(i, j, param) \
-    BOOST_PP_REPEAT_1( \
+    BOOST_PP_REPEAT( \
           BOOST_PP_SUB_D(1,j,i) \
         , BOOST_MPL_PP_AUX_EXT_PARAM_FUNC \
         , (i,param) \

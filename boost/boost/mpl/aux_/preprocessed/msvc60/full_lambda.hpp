@@ -1,9 +1,9 @@
 
 // Copyright (c) Aleksey Gurtovoy 2001-2004
 //
-// Use, modification and distribution are subject to the Boost Software 
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
-// at http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 
 // Preprocessed version of "boost/mpl/aux_/full_lambda.hpp" header
@@ -113,8 +113,9 @@ struct lambda<
         >
 {
     typedef lambda< T1,Tag > l1;
+    typedef typename l1::is_le is_le1;
     typedef typename aux::lambda_or<
-          l1::is_le::value
+          is_le1::value
         >::type is_le;
 
     typedef aux::le_result1<
@@ -191,8 +192,12 @@ struct lambda<
     typedef lambda< T1,Tag > l1;
     typedef lambda< T2,Tag > l2;
     
+    typedef typename l1::is_le is_le1;
+    typedef typename l2::is_le is_le2;
+    
+
     typedef typename aux::lambda_or<
-          l1::is_le::value, l2::is_le::value
+          is_le1::value, is_le2::value
         >::type is_le;
 
     typedef aux::le_result2<
@@ -270,8 +275,13 @@ struct lambda<
     typedef lambda< T2,Tag > l2;
     typedef lambda< T3,Tag > l3;
     
+    typedef typename l1::is_le is_le1;
+    typedef typename l2::is_le is_le2;
+    typedef typename l3::is_le is_le3;
+    
+
     typedef typename aux::lambda_or<
-          l1::is_le::value, l2::is_le::value, l3::is_le::value
+          is_le1::value, is_le2::value, is_le3::value
         >::type is_le;
 
     typedef aux::le_result3<
@@ -352,9 +362,14 @@ struct lambda<
     typedef lambda< T3,Tag > l3;
     typedef lambda< T4,Tag > l4;
     
+    typedef typename l1::is_le is_le1;
+    typedef typename l2::is_le is_le2;
+    typedef typename l3::is_le is_le3;
+    typedef typename l4::is_le is_le4;
+    
+
     typedef typename aux::lambda_or<
-          l1::is_le::value, l2::is_le::value, l3::is_le::value
-        , l4::is_le::value
+          is_le1::value, is_le2::value, is_le3::value, is_le4::value
         >::type is_le;
 
     typedef aux::le_result4<
@@ -440,9 +455,16 @@ struct lambda<
     typedef lambda< T4,Tag > l4;
     typedef lambda< T5,Tag > l5;
     
+    typedef typename l1::is_le is_le1;
+    typedef typename l2::is_le is_le2;
+    typedef typename l3::is_le is_le3;
+    typedef typename l4::is_le is_le4;
+    typedef typename l5::is_le is_le5;
+    
+
     typedef typename aux::lambda_or<
-          l1::is_le::value, l2::is_le::value, l3::is_le::value
-        , l4::is_le::value, l5::is_le::value
+          is_le1::value, is_le2::value, is_le3::value, is_le4::value
+        , is_le5::value
         >::type is_le;
 
     typedef aux::le_result5<
@@ -473,7 +495,7 @@ struct lambda<
     typedef result_ type;
 };
 
-// special case for 'protect'
+/// special case for 'protect'
 template< typename T, typename Tag >
 struct lambda< protect<T>, Tag >
 {
@@ -482,7 +504,7 @@ struct lambda< protect<T>, Tag >
     typedef result_ type;
 };
 
-// specializations for the main 'bind' form
+/// specializations for the main 'bind' form
 
 template<
       typename F, typename T1, typename T2, typename T3, typename T4
@@ -499,6 +521,8 @@ struct lambda<
     typedef bind< F,T1,T2,T3,T4,T5 > result_;
     typedef result_ type;
 };
+
+/// workaround for MWCW 8.3+/EDG < 303, leads to ambiguity on Digital Mars
 
 template<
       typename F, typename Tag1, typename Tag2

@@ -11,7 +11,7 @@
 
 namespace boost { namespace mpl { namespace aux {
 
-// forward declaration
+/// forward declaration
 
 template<
       nttp_long N
@@ -44,7 +44,7 @@ template<> struct reverse_fold_chunk<0>
         typedef iter0 iterator;
     };
 
-    // ETI workaround
+    /// ETI workaround
     template<> struct result_< int,int,int,int,int >
     {
         typedef int state;
@@ -76,7 +76,7 @@ template<> struct reverse_fold_chunk<1>
         typedef iter1 iterator;
     };
 
-    // ETI workaround
+    /// ETI workaround
     template<> struct result_< int,int,int,int,int >
     {
         typedef int state;
@@ -113,7 +113,7 @@ template<> struct reverse_fold_chunk<2>
         typedef iter2 iterator;
     };
 
-    // ETI workaround
+    /// ETI workaround
     template<> struct result_< int,int,int,int,int >
     {
         typedef int state;
@@ -153,7 +153,7 @@ template<> struct reverse_fold_chunk<3>
         typedef iter3 iterator;
     };
 
-    // ETI workaround
+    /// ETI workaround
     template<> struct result_< int,int,int,int,int >
     {
         typedef int state;
@@ -196,7 +196,7 @@ template<> struct reverse_fold_chunk<4>
         typedef iter4 iterator;
     };
 
-    // ETI workaround
+    /// ETI workaround
     template<> struct result_< int,int,int,int,int >
     {
         typedef int state;
@@ -291,7 +291,7 @@ struct reverse_fold_chunk< -1 >
         typedef typename res_::iterator iterator;
     };
 
-    // ETI workaround
+    /// ETI workaround
     template<> struct result_< int,int,int,int,int >
     {
         typedef int state;

@@ -66,7 +66,7 @@
 
 namespace boost { namespace mpl { namespace aux {
 
-//: forward declaration
+/// forward declaration
 template<
       BOOST_MPL_AUX_NTTP_DECL(long, N)
     , typename First
@@ -261,7 +261,7 @@ struct AUX778076_FOLD_CHUNK_NAME<-1>
     };
 
 #if defined(BOOST_MPL_CFG_MSVC_60_ETI_BUG)
-    //: ETI workaround
+    /// ETI workaround
     template<> struct result_<int,int,int,int,int>
     {
         typedef int state;
@@ -396,7 +396,7 @@ template<> struct AUX778076_FOLD_CHUNK_NAME<n_>
     };
 
 #if defined(BOOST_MPL_CFG_MSVC_60_ETI_BUG)
-    //: ETI workaround
+    /// ETI workaround
     template<> struct result_<int,int,int,int,int>
     {
         typedef int state;

@@ -27,7 +27,6 @@
 #   include <boost/mpl/aux_/na.hpp>
 #   include <boost/mpl/aux_/arity_spec.hpp>
 #   include <boost/mpl/aux_/arg_typedef.hpp>
-#   include <boost/mpl/void.hpp>
 #endif
 
 #include <boost/mpl/aux_/config/use_preprocessed.hpp>
@@ -96,7 +95,7 @@ template<> struct arg<i_>
 {
     BOOST_STATIC_CONSTANT(int, value = i_);
     typedef arg<BOOST_PP_INC(i_)> next;
-    BOOST_MPL_AUX_ARG_TYPEDEF(void_, tag)
+    BOOST_MPL_AUX_ARG_TYPEDEF(na, tag)
 
     template<
           AUX778076_ARG_N_DEFAULT_PARAMS(typename U, na)
@@ -113,7 +112,7 @@ template<> struct arg<i_>
 template<> struct arg<-1>
 {
     BOOST_STATIC_CONSTANT(int, value = -1);
-    BOOST_MPL_AUX_ARG_TYPEDEF(void_, tag)
+    BOOST_MPL_AUX_ARG_TYPEDEF(na, tag)
 
     template<
           AUX778076_ARG_N_DEFAULT_PARAMS(typename U, na)

@@ -20,8 +20,8 @@ using BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE::_;
 BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_CLOSE
 BOOST_MPL_AUX_ADL_BARRIER_DECL(_)
 
-// agurt, 17/mar/02: one more placeholder for the last 'apply#' 
-// specialization
+/// agurt, 17/mar/02: one more placeholder for the last 'apply#' 
+/// specialization
 BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_OPEN
 typedef arg<1> _1;
 

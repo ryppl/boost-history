@@ -27,8 +27,8 @@ struct apply_wrap_impl0<
 {
     typedef typename F::template apply<
          
-// since the defaults are "lost", we have to pass *something* even for nullary
-// metafunction classes
+/// since the defaults are "lost", we have to pass *something* even for nullary
+/// metafunction classes
         na
         > type;
 };

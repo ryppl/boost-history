@@ -4,9 +4,9 @@
 
 // Copyright (c) Aleksey Gurtovoy 2000-2004
 //
-// Use, modification and distribution are subject to the Boost Software 
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
-// at http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
@@ -71,20 +71,20 @@
 #   include <boost/preprocessor/cat.hpp>
 
 #   define BOOST_MPL_PP_AUX_TAIL_PARAM_FUNC(unused, i, op) \
-    BOOST_PP_COMMA_IF(i) \
-    BOOST_PP_CAT( \
+    , BOOST_PP_CAT( \
           BOOST_PP_TUPLE_ELEM(3, 1, op) \
         , BOOST_PP_ADD_D(1, i, BOOST_PP_INC(BOOST_PP_TUPLE_ELEM(3, 0, op))) \
         ) BOOST_PP_TUPLE_ELEM(3, 2, op)() \
     /**/
 
 #   define BOOST_MPL_PP_DEF_PARAMS_TAIL_IMPL(i, param, value_func) \
-    BOOST_PP_REPEAT_1( \
+    BOOST_PP_REPEAT( \
           BOOST_PP_SUB_D(1, BOOST_MPL_LIMIT_METAFUNCTION_ARITY, i) \
         , BOOST_MPL_PP_AUX_TAIL_PARAM_FUNC \
         , (i, param, value_func) \
         ) \
     /**/
+
 
 #endif // BOOST_MPL_CFG_NO_OWN_PP_PRIMITIVES
 

@@ -11,7 +11,7 @@
 
 namespace boost { namespace mpl { namespace aux {
 
-// forward declaration
+/// forward declaration
 
 template<
       int N

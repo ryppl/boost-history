@@ -193,7 +193,7 @@ struct BOOST_PP_CAT(inherit,n)
 BOOST_MPL_AUX_NA_SPEC(n, BOOST_PP_CAT(inherit,n))
 
 #if n == BOOST_MPL_LIMIT_METAFUNCTION_ARITY
-//: primary template
+/// primary template
 template<
       BOOST_MPL_PP_DEFAULT_PARAMS(n, typename T, empty_base)
     >

@@ -168,7 +168,7 @@ struct iter_fold_if_impl
 {
  private:
     typedef iter_fold_if_null_step<Iterator,State> forward_step0;
-    BOOST_PP_REPEAT_1(
+    BOOST_PP_REPEAT(
           BOOST_MPL_LIMIT_UNROLLING
         , AUX_ITER_FOLD_FORWARD_STEP
         , unused
@@ -190,7 +190,7 @@ struct iter_fold_if_impl
             >
         >::type AUX_LAST_BACKWARD_STEP;
 
-    BOOST_PP_REPEAT_1(
+    BOOST_PP_REPEAT(
           BOOST_MPL_LIMIT_UNROLLING
         , AUX_ITER_FOLD_BACKWARD_STEP
         , unused

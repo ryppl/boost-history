@@ -41,7 +41,7 @@ struct apply_wrap0
         >::type type;
 };
 
-// workaround for ETI bug
+/// workaround for ETI bug
 template<>
 struct apply_wrap0<int>
 {
@@ -77,7 +77,7 @@ struct apply_wrap1
         >::type type;
 };
 
-// workaround for ETI bug
+/// workaround for ETI bug
 template<>
 struct apply_wrap1< int,int >
 {
@@ -113,7 +113,7 @@ struct apply_wrap2
         >::type type;
 };
 
-// workaround for ETI bug
+/// workaround for ETI bug
 template<>
 struct apply_wrap2< int,int,int >
 {
@@ -149,7 +149,7 @@ struct apply_wrap3
         >::type type;
 };
 
-// workaround for ETI bug
+/// workaround for ETI bug
 template<>
 struct apply_wrap3< int,int,int,int >
 {
@@ -191,7 +191,7 @@ struct apply_wrap4
         >::type type;
 };
 
-// workaround for ETI bug
+/// workaround for ETI bug
 template<>
 struct apply_wrap4< int,int,int,int,int >
 {
@@ -236,7 +236,7 @@ struct apply_wrap5
         >::type type;
 };
 
-// workaround for ETI bug
+/// workaround for ETI bug
 template<>
 struct apply_wrap5< int,int,int,int,int,int >
 {
