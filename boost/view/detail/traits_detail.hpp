@@ -60,48 +60,6 @@ struct default_iterator_traits {
 
 
 template< class AdaptedT,
-          class ConstAdaptedT
-        > 
-struct adapted_iterator_traits
-{
-  /// The type of the elements accessed through the iterator.
-  typedef typename AdaptedT::value_type      value_type;
-
-  /// The type of the iterator.
-  typedef AdaptedT                           iterator;
-  /// The type of the const_iterator.
-  typedef ConstAdaptedT                      const_iterator;
-
-  /// The type of a reference to an element.
-  typedef typename AdaptedT::reference       reference;
-  typedef typename ConstAdaptedT::reference  const_reference; // correct?
-  /// The type of a pointer to an element.
-  typedef typename AdaptedT::pointer         pointer;
-  typedef typename ConstAdaptedT::pointer    const_pointer;
-
-
-  typedef typename AdaptedT::difference_type  difference_type;
-
-  typedef typename AdaptedT::iterator_category iterator_category;
-
-  // These are specific to iterator_adapted types, yet sometimes necessary:
-
-  typedef typename AdaptedT::base_type base_iterator;
-  typedef typename ConstAdaptedT::base_type const_base_iterator;
-
-  typedef typename AdaptedT::policies_type   policies_type;
-  typedef typename ConstAdaptedT::policies_type const_policies_type;
-
-  // Not contained:
-
-  // size_type
-
-  // index_type
-  // data_type
-};
-
-#if 0
-template< class AdaptedT,
           class ConstAdaptedT,
           class ValueT       = typename AdaptedT::value_type,
           class ReferenceT   = typename AdaptedT::reference,
@@ -114,6 +72,11 @@ struct adapted_iterator_traits
   /// The type of the elements accessed through the iterator.
   typedef ValueT      value_type;
 
+  /// The type of the iterator.
+  typedef AdaptedT                           iterator;
+  /// The type of the const_iterator.
+  typedef ConstAdaptedT                      const_iterator;
+
   /// The type of a reference to an element.
   typedef ReferenceT       reference;
   typedef typename ConstAdaptedT::reference  const_reference; // correct?
@@ -121,10 +84,6 @@ struct adapted_iterator_traits
   typedef PointerT         pointer;
   typedef typename ConstAdaptedT::pointer    const_pointer;
 
-  /// The type of the iterator.
-  typedef AdaptedT                           iterator;
-  /// The type of the const_iterator.
-  typedef ConstAdaptedT                      const_iterator;
 
   typedef DifferenceT difference_type;
 
@@ -145,7 +104,6 @@ struct adapted_iterator_traits
   // index_type
   // data_type
 };
-#endif
 
 
 
