@@ -1,6 +1,6 @@
 //  Boost io/pointer_stream.hpp header file  ---------------------------------//
 
-//  Copyright 2003 Daryle Walker.  Use, modification, and distribution are
+//  Copyright 2003-2004 Daryle Walker.  Use, modification, and distribution are
 //  subject to the Boost Software License, Version 1.0.  (See accompanying file
 //  LICENSE_1_0.txt or a copy at <http://www.boost.org/LICENSE_1_0.txt>.)
 
@@ -354,6 +354,7 @@ basic_pointerbuf<Ch, Tr>::seekoff
         case ios_base::cur :
             newoff = this->pptr() - this->pbase();
             if ( !do_input ) break;  // can't do both areas with "cur"!
+            // Possible FALL-THROUGH
         default :
             goto bail;
         }
@@ -418,7 +419,7 @@ basic_pointerbuf<Ch, Tr>::pbackfail
             traits_type::assign( *this->gptr(), traits_type::to_char_type(c) );
         }
 
-        return traits_type::not_eof( c );
+        return traits_type::to_int_type( *this->gptr() );
     }
 
     return traits_type::eof();

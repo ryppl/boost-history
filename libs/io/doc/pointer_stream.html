@@ -225,8 +225,8 @@ protected:
     <dt><code>int_type  pbackfail( int_type c = traits_type::eof() );</code>
 	<dd>
 		<strong>Effects:</strong> moves the get area marker back one space, if the get area is active and the marker is not at the beginning of the array segment; if <var>c</var> is not an end-of-file value, then replaces the character at the (moved) marker with <var>c</var> (converted to a proper character value)<br>
-		<strong>Returns:</strong> an end-of-file value [<code>traits_type::eof()</code>] for failure, <i>i.e.</i> the get area is inactive or the marker is at the beginning of the array segment; any other value otherwise for success<br>
-		<strong>Rationale:</strong> moving the get area marker one space, if possible, and replacing the character there
+		<strong>Returns:</strong> an end-of-file value [<code>traits_type::eof()</code>] for failure, <i>i.e.</i> the get area is inactive or the marker is at the beginning of the array segment; an expanded copy of the (possibly changed) character at the (moved) marker otherwise for success<br>
+		<strong>Rationale:</strong> moving the get area marker one space back, if possible, and replacing the character there
 </dl>
 
 <h2><a name="pointer_s">Pointer-based Stream Class Templates</a></h2>
@@ -456,8 +456,8 @@ public:
 
 <hr>
 
-<p>Revised: 4 November 2003</p>
+<p>Revised: 1 January 2004</p>
 
-<p>Copyright 2003 Daryle Walker.  Use, modification, and distribution are subject to the Boost Software License, Version 1.0.  (See accompanying file <a href="../../../LICENSE_1_0.txt">LICENSE_1_0.txt</a> or a copy at &lt;<a href="http://www.boost.org/LICENSE_1_0.txt">http://www.boost.org/LICENSE_1_0.txt</a>&gt;.</p>
+<p>Copyright 2003-2004 Daryle Walker.  Use, modification, and distribution are subject to the Boost Software License, Version 1.0.  (See accompanying file <a href="../../../LICENSE_1_0.txt">LICENSE_1_0.txt</a> or a copy at &lt;<a href="http://www.boost.org/LICENSE_1_0.txt">http://www.boost.org/LICENSE_1_0.txt</a>&gt;.</p>
 </body>
 </html>
