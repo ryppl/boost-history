@@ -15,9 +15,9 @@ namespace boost { namespace numeric { namespace bindings { namespace lapack {
   int bwork_buffer_size = 0;
 
   template<> traits< double         >::getrf_type  traits< double         >::getrf = LAPACK_DGETRF ;
-  template<> traits< double_complex >::getrf_type  traits< double_complex >::getrf = LAPACK_ZGETRF ;
+  template<> traits< boost::numeric::bindings::traits::double_complex >::getrf_type  traits< boost::numeric::bindings::traits::double_complex >::getrf = LAPACK_ZGETRF ;
 
   template<> traits< double         >::getrs_type  traits< double         >::getrs = LAPACK_DGETRS ;
-  template<> traits< double_complex >::getrs_type  traits< double_complex >::getrs = LAPACK_ZGETRS ;
+  template<> traits< boost::numeric::bindings::traits::double_complex >::getrs_type  traits< boost::numeric::bindings::traits::double_complex >::getrs = LAPACK_ZGETRS ;
 
 }}}}
