@@ -1,4 +1,4 @@
-// (C) Copyright Jeremy Siek 2001. 
+// (C) Copyright Jeremy Siek 2001.
 // Permission to copy, use, modify, sell and distribute this software
 // is granted provided this copyright notice appears in all
 // copies. This software is provided "as is" without express or
@@ -15,12 +15,22 @@
 
 #include "bitset_test.hpp"
 
-#include "boost/config.hpp" // for BOOST_HAS_LONG_LONG
+#include "boost/config.hpp"
+
+
+// The usual workaround for VC6 bug related
+// to template parameters that don't appear
+// in the function's argument list.
+// We should have this available somewhere,
+// to avoid repeating it in every place. [gps]
+//
+#define BOOST_DUMMY_DEFAULT_ARGUMENT(t) t* = 0
 
 
 template <typename Block>
-void run_test_cases()
+void run_test_cases(BOOST_DUMMY_DEFAULT_ARGUMENT(Block))
 {
+  typedef boost::dynamic_bitset<Block> bitset_type;
   typedef bitset_test< boost::dynamic_bitset<Block> > Tests;
 
   std::string long_string(101, '0');
@@ -170,6 +180,66 @@ void run_test_cases()
     b[long_string.size()/2].flip();
     Tests::proper_subset(a, b);
   }
+
+  //=====================================================================
+  // Test find_first
+  {
+      // empty bitset
+      bitset_type b;
+      Tests::find_first(b);
+  }
+  {
+      // all-0s bitset
+      bitset_type b(4 * bitset_type::bits_per_block, 0ul);
+      Tests::find_first(b);
+  }
+  {
+      bitset_type b(1, 1ul);
+      Tests::find_first(b);
+  }
+  {
+      bitset_type b(4 * bitset_type::bits_per_block - 1, 0ul);
+      b.set(b.size()-1);
+      Tests::find_first(b);
+  }
+
+  //=====================================================================
+  // Test find_next
+  {
+      // empty bitset
+      bitset_type b;
+      Tests::find_next(b, 0);
+      Tests::find_next(b, 1);
+      Tests::find_next(b, 200);
+      Tests::find_next(b, b.npos);
+  }
+  {
+      // all-1 bitset
+      bitset_type b(16 * bitset_type::bits_per_block);
+      b.set();
+
+      // check that find_next miss no bits
+      for(bitset_type::size_type i = 0; i < b.size(); ++i) {
+          Tests::find_next(b, i);
+      }
+  }
+  {
+      // bitset with 1s at block boundary
+      const int num_blocks = 32;
+      const int bb = bitset_type::bits_per_block;
+      bitset_type b(num_blocks * bb);
+
+      bitset_type::size_type i;
+      for(i = 0; i < b.size(); i+=bb) {
+          b.set(i);
+          if ( (i+bb-1) < b.size())
+            b.set(i+bb-1);
+      }
+      for(i = 0; i < b.size(); ++i)
+          Tests::find_next(b, i);
+  }
+
+
   //=====================================================================
   // Test operator==
   {
@@ -391,7 +461,7 @@ void run_test_cases()
     assert(a >= b);
   }
   //=====================================================================
-  // Test b.test(pos)  
+  // Test b.test(pos)
   { // case pos >= b.size()
     boost::dynamic_bitset<Block> b;
     Tests::test_bit(b, 0);
@@ -405,7 +475,7 @@ void run_test_cases()
     Tests::test_bit(b, long_string.size()/2);
   }
   //=====================================================================
-  // Test b << pos  
+  // Test b << pos
   { // case pos == 0
     std::size_t pos = 0;
     boost::dynamic_bitset<Block> b(std::string("1010"));
@@ -422,7 +492,7 @@ void run_test_cases()
     Tests::operator_shift_left(b, pos);
   }
   //=====================================================================
-  // Test b >> pos  
+  // Test b >> pos
   { // case pos == 0
     std::size_t pos = 0;
     boost::dynamic_bitset<Block> b(std::string("1010"));
@@ -531,7 +601,7 @@ void run_test_cases()
 
 int
 test_main(int, char*[])
-{ 
+{
   run_test_cases<unsigned char>();
   run_test_cases<unsigned short>();
   run_test_cases<unsigned int>();
