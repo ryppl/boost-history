@@ -16,6 +16,38 @@
 namespace boost
 {
 
+namespace detail
+{
+
+template< typename T >
+class arrow_from_type
+{
+   T value;
+   public:
+      inline T * operator->();
+      inline const T * operator->() const;
+      inline arrow_from_type( const T & v );
+};
+
+template< typename T >
+T * arrow_from_type< T >::operator->()
+{
+   return &value;
+}
+
+template< typename T >
+const T * arrow_from_type< T >::operator->() const
+{
+   return &value;
+}
+
+template< typename T >
+arrow_from_type< T >::arrow_from_type( const T & v ): value( v )
+{
+}
+
+}
+
 /** Represents a scalar value property.
  * Implements a complete set of C++ operators for intuitive usage.
  */
@@ -31,10 +63,14 @@ class scalar_property: public Prop
       typedef typename Prop::constructor_type constructor_type;
       typedef typename Prop::index_type       index_type;
       typedef typename Prop::subscript_type   subscript_type;
+      typedef detail::arrow_from_type< value_type >
+                                              arrow_type;
    public:
       inline value_type get() const; /**< getter */
       inline value_type operator()() const; /**< getter */
       inline operator value_type() const; /**< getter */
+      inline arrow_type operator->(); /**< getter */
+      inline const arrow_type operator->() const; /**< getter */
    public:
       inline const value_type & set( const value_type & v ); /**< setter */
       inline const value_type & operator()( const value_type & v ); /**< setter */
@@ -83,6 +119,20 @@ scalar_property< Prop >::operator
 typename scalar_property< Prop >::value_type() const
 {
    return get();
+}
+
+template< typename Prop >
+typename scalar_property< Prop >::arrow_type
+scalar_property< Prop >::operator->()
+{
+   return arrow_type( get());
+}
+
+template< typename Prop >
+const typename scalar_property< Prop >::arrow_type
+scalar_property< Prop >::operator->() const
+{
+   return arrow_type( get());
 }
 
 // setters

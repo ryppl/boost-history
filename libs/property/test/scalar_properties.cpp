@@ -7,8 +7,14 @@
 #include <boost/property/value_property.hpp>
 #include <boost/test/minimal.hpp>
 
-typedef boost::scalar_property< boost::value_property<   int  > > valueprop;
-typedef boost::scalar_property< boost::aliased_property< char > > refprop;
+struct mytype
+{
+   inline long calc() const{ return 314159; }
+};
+
+typedef boost::scalar_property< boost::value_property<   int    > > valueprop;
+typedef boost::scalar_property< boost::value_property<   mytype > > objectprop;
+typedef boost::scalar_property< boost::aliased_property< char   > > refprop;
 
 int test_main( int, char *[] )
 {
@@ -103,6 +109,14 @@ int test_main( int, char *[] )
    k = 'a';
    BOOST_TEST( k == ch );
    BOOST_TEST( k == 'a' );
+
+   // accessing members of the property value
+
+   objectprop ob = mytype();
+
+   BOOST_TEST( ob().calc() == 314159 );
+   BOOST_TEST( ob -> calc() == 314159 );
+   BOOST_TEST( ob.get().calc() == 314159 );
 
    return 0;
 }
