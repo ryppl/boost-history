@@ -8,15 +8,12 @@
 
 #  include <boost/compressed_pair.hpp>
 
+   // type deduction:
+
+   BOOST_IO_CLASSIFY_TYPE( 2, boost::compressed_pair, boost::io::pair_type )
+
    namespace boost { namespace io
    {
-      // type deduction:
-
-      namespace detail
-      {
-         BOOST_IO_CLASSIFY_TYPE_2( boost::compressed_pair, boost::io::pair_type );
-      }
-
       // naryval:
 
       BOOST_IO_NARY_PARAM2( boost::compressed_pair, seperable_pair )

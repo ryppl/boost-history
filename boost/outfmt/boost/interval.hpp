@@ -8,15 +8,13 @@
 
 #  include <boost/numeric/interval.hpp>
 
+
+   // type deduction:
+
+   BOOST_IO_CLASSIFY_TYPE( 2, boost::numeric::interval, boost::io::nary2base_type )
+
    namespace boost { namespace io
    {
-      // type deduction:
-
-      namespace detail
-      {
-         BOOST_IO_CLASSIFY_TYPE_2( boost::numeric::interval, boost::io::nary2base_type );
-      }
-
       // naryval:
 
       BOOST_IO_NARY_PARAM2( boost::numeric::interval, inseperable_pair< T > )

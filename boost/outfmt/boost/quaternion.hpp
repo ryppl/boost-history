@@ -8,15 +8,12 @@
 
 #  include <boost/math/quaternion.hpp>
 
+   // type deduction:
+
+   BOOST_IO_CLASSIFY_TYPE( 1, boost::math::quaternion, boost::io::pair_type )
+
    namespace boost { namespace io
    {
-      // type deduction:
-
-      namespace detail
-      {
-         BOOST_IO_CLASSIFY_TYPE_1( boost::math::quaternion, boost::io::pair_type );
-      }
-
       // naryval:
 
       BOOST_IO_NARY_PARAM1( boost::math::quaternion, nary4_type< T > )

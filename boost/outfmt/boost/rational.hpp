@@ -7,15 +7,13 @@
 #  endif
 
 #  include <boost/rational.hpp>
+      
+   // type deduction:
+
+   BOOST_IO_CLASSIFY_TYPE( 1, boost::rational, boost::io::nary2int_type )
 
    namespace boost { namespace io
    {
-      // type deduction:
-
-      namespace detail
-      {
-         BOOST_IO_CLASSIFY_TYPE_1( boost::rational, boost::io::nary2int_type );
-      }
 
       // naryval:
 
