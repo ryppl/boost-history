@@ -22,11 +22,15 @@ struct checking_strict
 {
   static T inf() { return std::numeric_limits<T>::infinity(); }
   static T nan() { throw std::logic_error("boost::interval: NaN output"); }
-  static bool is_nan(const T& x)
-  { if (detail::is_nan(x)) throw std::logic_error("boost::interval: NaN input");
-    return false; }
-  static T empty_lower() { throw std::logic_error("boost::interval: Empty output"); }
-  static T empty_upper() { throw std::logic_error("boost::interval: Empty output"); }
+  static bool is_nan(const T& x) {
+      if (detail::is_nan(x))
+        throw std::logic_error("boost::interval: NaN input");
+      return false;
+    }
+  static T empty_lower()
+    { throw std::logic_error("boost::interval: Empty output"); }
+  static T empty_upper()
+    { throw std::logic_error("boost::interval: Empty output"); }
   static bool is_empty(const T& x, const T& y) { return false; }
 };
 
