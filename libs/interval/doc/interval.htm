@@ -19,7 +19,7 @@ href="../../../boost/interval.hpp">boost/interval.hpp</a>&gt;</h1>
 <table cols="2" width="80%">
   <tbody>
     <tr align=TOP>
-      <td align=TOP><b>Contents of this page:</b><br>
+      <td align=TOP><p><b>Contents of this page:</b><br>
         <a href="#intro">Introduction</a><br>
         <a href="#synopsis">Synopsis</a><br>
         <a href="#interval_traits">Template class
@@ -27,10 +27,12 @@ href="../../../boost/interval.hpp">boost/interval.hpp</a>&gt;</h1>
         <a href="#interval">Template class <tt>interval</tt></a><br>
         <a href="#opers">Operations and functions</a><br>
         <a href="#interval_lib">Interval support library</a><br>
-        <a href="#perfs">Performance notes</a><br>
-        <a href="#test">Test programs</a><br>
+        <a href="#perfs">Compilation and Performance notes</a><br>
+        <a href="#dangers">Common pitfalls and dangers</a><br>
+        <a href="#test">Test and example programs</a><br>
         <a href="#rationale">Rationale</a><br>
-        <a href="#acks">History and Acknowledgments</a></td>
+        <a href="#acks">History and Acknowledgments</a></p>
+      </td>
       <td align=TOP><b>Other pages associated with this page:</b><br>
         <a href="rounding.htm">Rounding policies</a><br>
         <a href="checking.htm">Checking policies</a><br>
@@ -157,7 +159,7 @@ behavior will be triggered when the result is indeterminate.</p>
 or always to <i>true</i>. If <i>false</i> is chosen, the comparison will be
 called "<i>certain</i>;" indeed, the result of [<i>a</i>,<i>b</i>] &lt;
 [<i>c</i>,<i>d</i>] will be <i>true</i> if and only if: &#8704; <i>x</i>
-&#8712; [<i>a</i>,<i>b</i>] &#8704; <i>y</i> &#8712; [<i>c</i>,<i>d</i>], 
+&#8712; [<i>a</i>,<i>b</i>] &#8704; <i>y</i> &#8712; [<i>c</i>,<i>d</i>],
 <i>x</i> &lt; <i>y</i>. If <i>true</i> is chosen, the comparison will be
 called "<i>possible</i>;" indeed, the result of [<i>a</i>,<i>b</i>] &lt;
 [<i>c</i>,<i>d</i>] will be <i>true</i> if and only if: &#8707; <i>x</i>
@@ -573,8 +575,8 @@ Some constants are hidden in the boost::interval_lib namespace:
   namespace interval_lib {
 
 template&lt;class I&gt; I pi();
-template&lt;class I&gt; I pi_1_2();
-template&lt;class I&gt; I pi_2_1();
+template&lt;class I&gt; I pi_half();
+template&lt;class I&gt; I pi_twice();
 
   } // namespce interval_lib
 } // namespace boost</pre>
@@ -644,183 +646,32 @@ document.</div>
     template &lt;class T&gt; struct checking_lax;
     template &lt;class T&gt; struct checking_strict;
 
+    <span style="color: #FF0000">/* some metaprogramming to convert a protected to unprotected rounding */</span>
+    template &lt;class Rounding&gt; struct unprotect_rounding;
+    template &lt;class Traits&gt; struct unprotect_traits;
+    template &lt;class I&gt; struct unprotect;
+
   } // namespace interval_lib
 } // namespace boost</pre>
 
 <p>Each component of the interval support library is detailed in its own
 page.</p>
 
-<h4 id="compare"><a href="comparisons.htm">Comparisons</a></h4>
+<ul>
+<li><h4><a href="comparisons.htm">Comparisons</a></h4></li>
+<li><h4><a href="rounding.htm">Rounding</a></h4></li>
+<li><h4><a href="checking.htm">Checking</a></h4></li>
+</ul>
 
-<h4><a href="rounding.htm">Rounding</a></h4>
+<h2><a name="perfs">Compilation And Performance Notes</a></h2>
 
-<h4 id="checking"><a href="checking.htm">Checking</a></h4>
+<h4>Compilation flags</h4>
 
-<h2 id="perf"><a name="perfs"></a>Performance Notes</h2>
-<b>THIS PARAGRAPH SHOULD BE MOVED TO THE ROUNDING POLICIES PAGE, SINCE IT
-DEALS MORE WITH THE INTERNAL DESIGN.  ANOTHER LESS DESIGN-ORIENTED AND MORE
-INFORMATIVE PARAGRAPH SUMMARIZING THE PERFORMANCE OF THE LIBRARY (WITH
-SEPARATE BENCHMARK PAGES) COULD BE WRITTEN IN ITS PLACE. -H</b>
+<h4>Compilation options</h4>
 
-<p>This paragraph deals mostly with the performance of the library with
-intervals using the floating-point unit (FPU) of the computer. Let's consider
-the sum of [<i>a</i>,<i>b</i>] and [<i>c</i>,<i>d</i>] as an example. The
-result is [down(<i>a</i>+<i>c</i>), up(<i>b</i>+<i>d</i>)]. down and up
-indicate the rounding mode needed.</p>
+<h4>Performance: choosing your policies</h4>
 
-<h3>Rounding Mode Switch</h3>
-If the FPU is able to use a different rounding mode for each operation, there
-is no problem. For example, it's the case for the Alpha processor: each
-floating-point instruction can specify a different rounding mode. However,
-the IEEE-754 Standard does not require such a behavior. So most of the FPUs
-only provide some instructions to set the rounding mode for all subsequent
-operations. And generally, these instructions need to flush the pipeline of
-the FPU.
-
-<p>In this situation, the time needed to sum [<i>a</i>,<i>b</i>] and
-[<i>c</i>,<i>d</i>] is far worse than the time needed to calculate
-<i>a</i>+<i>b</i> and <i>c</i>+<i>d</i> since the two additions cannot be
-parallelized. Consequently, the objective is to diminish the number of
-rounding mode switches.</p>
-
-<p>If this library is not used to provide exact computations, but only for
-pair arithmetic, the solution is quite simple: do not use rounding. In that
-case, doing the sum [<i>a</i>,<i>b</i>] and [<i>c</i>,<i>d</i>] will be as
-fast as computing <i>a</i>+<i>b</i> and <i>c</i>+<i>d</i>. Everything is
-perfect.</p>
-
-<p>However, if exact computations are required, such a solution is totally
-unthinkable. So, are we penniless? No, there is still a trick available.
-Indeed, down(<i>a</i>+<i>c</i>) = -up(-<i>a</i>-<i>c</i>) if the unary minus
-is an exact operation. It is now possible to calculate the whole sum with the
-same rounding mode. Generally, the cost of the mode switching is worse than
-the cost of the sign changes.</p>
-
-<p>Let's recapitulate. Before, when doing an addition, there were three
-rounding mode switches (down, up and restore). Now, with this little trick,
-there are only two switches (up and restore). It is better, but still a
-bottleneck when many operations are nested. Indeed, the generated code for
-[<i>a</i>,<i>b</i>] + [<i>c</i>,<i>d</i>] + [<i>e</i>,<i>f</i>] will probably
-look like:</p>
-<pre>up();
-t1 = -(-a - c);
-t2 = b + d;
-restore();
-up();
-x = -(-t1 - e);
-y = t2 + f;
-restore();</pre>
-If you think it is possible to do much better, you are right. For example,
-this is better (and probably optimal):
-<pre>up();
-x = -(-a - c - e);
-y = b + d + f;
-restore();</pre>
-Such a code will be generated by a compiler if the computations are made
-without initialization and restoration of the rounding mode. However, it
-would be far too easy if there was no drawback: because the rounding mode is
-not restored in the meantime, operations on floating-point numbers must be
-prohibited. This method can only be used if all the operations are operations
-on interval.
-
-<h4>Example</h4>
-<b>WE SHOULD HAVE MORE EXAMPLES LIKE THIS AND REGROUP THEM IN A PAGE ABOUT
-USING THE LIBRARY. -H</b>
-
-<p>Here is an example of the Horner scheme to compute the value of a polynom.
-The rounding mode switches are disabled for the whole computation.</p>
-<pre>// I is an interval class, the polynom is a simple array
-template&lt;class I&gt;
-I horner(const I&amp; x, const I p[], int n) {
-
-  // save and initialize the rounding mode
-  typename I::traits_type::rounding rnd;
-
-  // define the unprotected version of the interval type
-  typedef typename boost::interval_lib::unprotect&lt;I&gt;::type R;
-  
-  const R&amp; a = x;
-  R y = p[n - 1];
-  for(int i = n - 2; i &gt;= 0; i--) {
-    y = y * a + (const R&amp;)(p[i]);
-  }
-  return y;
-
-  // restore the rounding mode with the destruction of rnd
-}</pre>
-Please note that a rounding object is especially created in order to
-compensate for the protection loss. Each interval of type I is converted in
-an interval of type R before any operations. If this conversion is not done,
-the result is still correct, but the interest of this whole optimization has
-disappeared. Whenever possible, it is good to convert to const R&amp; instead
-of R: a smart compiler will be able to see that the old and the new object
-are the same and avoid the creation of a temporary object.
-
-<p>Just a last information about the types:</p>
-<pre>interval&lt;T, interval_traits&lt;..., Rounding, ...&gt; &gt;::traits_type::rounding <b>is</b> Rounding
-unprotect&lt;interval&lt;T, interval_traits&lt;..., Rounding, ...&gt; &gt; &gt;::type <b>is</b> interval&lt;T, interval_traits&lt;..., Rounding::unprotected, ...&gt; &gt;</pre>
-
-<h4>Uninteresting remark</h4>
-It was said at the beginning that the Alpha processors can use a specific
-rounding mode for each operation. However, due to the instruction format, the
-rounding toward plus infinity is not available. Only the rounding toward
-minus infinity can be used. So the trick using the change of sign becomes
-essential, but there is no need to save and restore the rounding mode on both
-sides of an operation.
-
-<h3>Extended Registers</h3>
-There is another problem besides the cost of the rounding mode switch. Some
-FPUs use extended registers (for example, float computations will be done
-with double registers, or double computations with long double registers).
-Consequently, many problems can arise.
-
-<p>The first one is due to to the extended precision of the mantissa. The
-rounding is also done on this extended precision. And consequently, we still
-have down(<i>a</i>+<i>b</i>) = -up(-<i>a</i>-<i>b</i>) in the extended
-registers. But back to the standard precision, we now have
-down(<i>a</i>+<i>b</i>) &lt; -up(-<i>a</i>-<i>b</i>) instead of an equality.
-A solution could be not to use this method. But there still are other
-problems, with the comparisons between numbers for example.</p>
-
-<p>Naturally, there is also a problem with the extended precision of the
-exponent. To illustrate this problem, let <i>m</i> be the biggest number
-before +<i>inf</i>. If we calculate 2*[<i>m</i>,<i>m</i>], the answer should
-be [<i>m</i>,<i>inf</i>]. But due to the extended registers, the FPU will
-first store [<i>2m</i>,<i>2m</i>] and then convert it to
-[<i>inf</i>,<i>inf</i>] at the end of the calculus (when the rounding mode is
-toward +<i>inf</i>). So the answer is no more accurate.</p>
-
-<p>There is only one solution: to force the FPU to convert the extended
-values back to standard precision after each operation. Some FPUs provide an
-instruction able to do this conversion (for example the PowerPC processors).
-But for the FPUs that do not provide it (the x86 processors), the only
-solution is to write the values to memory and read them back. Such an
-operation is obviously very expensive.</p>
-
-<h2><a name="rationale"></a>Rationale</h2>
-<b>NEEDS TO BE HEAVILY STRENGTHENED BY LOOKING AT MAILINGS AND GATHERING
-RATIONALE IN ALL THE DOCUMENTATION (REPLACING THE EXPLANATIONS THERE BY A
-LINK ``SEE RATIONALE''). -H</b>
-
-<p>The purpose of this library is to provide an efficient and generalized way
-to deal with interval arithmetic through the use of a templatized class
-boost::interval. The behavior of this class can be fixed by three policies.
-The first one specifies the way comparison operators are defined. The second
-one provides all the mathematical functions on the base type needed to define
-the functions on the interval type. The last one sets the way exceptional
-cases encoutered during computations are handled.</p>
-
-<p>The library provides specialized implementations of the second policy for
-the primitive types float and double. In order for these implementations to
-be correct and fast, the library need to work a lot with rounding modes. Some
-processors are directly dealt with and some mecanisms are provided in order
-to speed up the computations. It seems to be heavy and hazardous
-optimizations for a gain of only a few computer cycles; but in reality, the
-speed-up factor can easily go past 2 or 3 depending on the computer.
-Moreover, these optimizations do not impact the interface in some ugly
-way.</p>
-
-<h2>Pitfalls: a word of caution</h2>
+<h2><a name="dangers">Common Pitfalls and Dangers</a></h2>
 
 <h4>Comparisons</h4>
 One of the biggest problems is problably the correct use of the comparison
@@ -842,12 +693,12 @@ This is suitable for indexing intervals in a std::map, for instance.</p>
 
 <h4>Empty intervals</h4>
 The whole implementation of the library (except for the function
-boost::empty()) expects input intervals not to be empty. Moreover, if one of
-the input intervals of a function is empty, it is not guaranteed that the
-result will be empty. So empty intervals should not be considered the same as
-quiet NaNs but the same as signaling NaNs. It is the reason why the default
-checking policy will throw an exception whenever the result is an empty
-interval.
+<code>boost::empty()</code>) expects input intervals not to be empty.
+Moreover, if one of the input intervals of a function is empty, it is
+not guaranteed that the result will be empty. So empty intervals should
+not be considered the same as quiet NaNs but the same as signaling NaNs.
+It is the reason why the default checking policy will throw an exception
+whenever the result is an empty interval.
 
 <p>This must not be considered as a weakness of the library, however. Indeed,
 quiet NaNs exist in order not to throw exceptions when an operand is outside
@@ -871,7 +722,7 @@ will probably have an undefined behavior. And do not forget to create a
 rounding object as explained in the example. <b>HOW DOES THIS INTERACT WITH
 THREADING? -H</b>
 
-<h2><a name="test"></a>Test Programs</h2>
+<h2><a name="test"></a>Test and Example Programs</h2>
 <b>SOME OVERVIEW OF THE COMPILATION OPTIONS AND PERHAPS A SHORT EXPLANATION
 OF BJAM (OR A YET-MISSING MAKEFILE) WOULD BE GREAT. MANY USERS ARE STILL
 IGNORANT OF BJAM.  ALSO, MORE EXAMPLES COULD BE PROVIDED HERE OF VARIOUS USES
@@ -903,12 +754,37 @@ precision).</p>
 property of interval arithmetic by computing some functions and operations
 for both double and interval&lt;double&gt;.</p>
 
-<h2><a name="acks"></a>History and Acknowledgments</h2>
-This library was mostly inspired by previous work from Jens Maurer. Some
+<h2><a name="rationale">Rationale</a></h2>
+
+<p><b>NEEDS TO BE HEAVILY STRENGTHENED BY LOOKING AT MAILINGS AND GATHERING
+RATIONALE IN ALL THE DOCUMENTATION (REPLACING THE EXPLANATIONS THERE BY A
+LINK ``SEE RATIONALE''). -H</b></p>
+
+<p>The purpose of this library is to provide an efficient and generalized way
+to deal with interval arithmetic through the use of a templatized class
+boost::interval. The behavior of this class can be fixed by three policies.
+The first one specifies the way comparison operators are defined. The second
+one provides all the mathematical functions on the base type needed to define
+the functions on the interval type. The last one sets the way exceptional
+cases encoutered during computations are handled.</p>
+
+<p>The library provides specialized implementations of the second policy for
+the primitive types float and double. In order for these implementations to
+be correct and fast, the library need to work a lot with rounding modes. Some
+processors are directly dealt with and some mecanisms are provided in order
+to speed up the computations. It seems to be heavy and hazardous
+optimizations for a gain of only a few computer cycles; but in reality, the
+speed-up factor can easily go past 2 or 3 depending on the computer.
+Moreover, these optimizations do not impact the interface in some ugly
+way.</p>
+
+<h2><a name="acks">History and Acknowledgments</a></h2>
+
+<p>This library was mostly inspired by previous work from Jens Maurer. Some
 discussions about his work were reproduced <a
 href="http://www.mscs.mu.edu/%7Egeorgec/IFAQ/maurer1.html">here</a> and the
 work itself can be found <a
-href="http://www.rhein-main.de/people/jmaurer/interval.tar.gz">here</a>.
+href="http://www.rhein-main.de/people/jmaurer/interval.tar.gz">here</a>.</p>
 
 <p>Guillaume Melquiond started from the library left by Jens and added the
 policy design. Hervé Brönnimann and Sylvain Pion have provided some useful

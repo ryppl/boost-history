@@ -1,4 +1,5 @@
-<!DOCTYPE html public "-//w3c//dtd html 4.0 transitional//en">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
@@ -110,24 +111,9 @@ mathematical constants. <code>pi</code> clearly stands for the mathematical
 constant &pi;. <code>pi_half</code> stands for &pi;/2 and
 <code>pi_twice</code> stands for 2&pi;.</p>
 
-<p>The type <code>unprotected_rounding</code> is another rounding class that
-enables to work when nested inside rounding. For example, the first three
-lines below should all produce the same result (because the first operation
-is the rounding constructor, and the last is its destructor, which take care
-of setting the rounding modes); and the last line is allowed to have an
-undefined behavior (since no rounding constructor or destructor is ever
-called).</p>
-<pre>T c; { rounding rnd; c = rnd.add_down(a, b); }
-T c; { rounding rnd1; { rounding rnd2; c = rnd2.add_down(a, b); } }
-T c; { rounding rnd1; { rounding::unprotected_rounding rnd2; c = rnd2.add_down(a, b); } }
-T d; { rounding::unprotected_rounding rnd; d = rnd.add_down(a, b); }</pre>
-Naturally <code>rounding::unprotected_rounding</code> may simply be
-<code>rounding</code> itself. But it can improve performance if it is a
-simplified version with empty constructor and destructor. In order to avoid
-undefined behaviors, in the library, an object of type
-<code>rounding::unprotected_rounding</code> is guaranteed to be created only
-when an object of type <code>rounding</code> is already alive. See the <a
-href="#perf">performance notes</a> for some additional details.
+<p>The type <code>unprotected_rounding</code> allows to remove all controls.
+For reasons why one might to do this, see the <a
+href="#Protection">protection</a> paragraph below.</p>
 
 <h2>Overview of the provided classes</h2>
 A lot of classes are provided. The classes are organized by level. At the
@@ -244,6 +230,8 @@ struct rounded_transc_... : Rounding
 template &lt;class Rounding&gt;
 struct save_state_... : Rounding
 {
+  save_state_...();
+  ~save_state_...();
   typedef ... unprotected_rounding;
 };</pre>
 
@@ -251,28 +239,33 @@ struct save_state_... : Rounding
 <pre>namespace boost {
   namespace interval_lib {
 
-    /* basic rounding control */
+    <span style="color: #FF0000">/* basic rounding control */</span>
     template &lt;class T&gt;  struct rounding_control;
 
-    /* arithmetic functions rounding */
+    <span style="color: #FF0000">/* arithmetic functions rounding */</span>
     template &lt;class T, class Rounding = rounding_control&lt;T&gt; &gt; struct rounded_arith_exact;
     template &lt;class T, class Rounding = rounding_control&lt;T&gt; &gt; struct rounded_arith_std;
     template &lt;class T, class Rounding = rounding_control&lt;T&gt; &gt; struct rounded_arith_opp;
 
-    /* transcendental functions rounding */
+    <span style="color: #FF0000">/* transcendental functions rounding */</span>
     template &lt;class T, class Rounding&gt; struct rounded_transc_dummy;
     template &lt;class T, class Rounding = rounded_arith_exact&lt;T&gt; &gt; struct rounded_transc_exact;
     template &lt;class T, class Rounding = rounded_arith_std&lt;T&gt; &gt; struct rounded_transc_std;
     template &lt;class T, class Rounding = rounded_arith_opp&lt;T&gt; &gt; struct rounded_transc_opp;
 
-    /* rounding-state-saving classes */
+    <span style="color: #FF0000">/* rounding-state-saving classes */</span>
     template &lt;class Rounding&gt; struct save_state;
     template &lt;class Rounding&gt; struct save_state_nothing;
 
-    /* default policy for type T */
-    template &lt;class T&gt;  struct rounded_math;
+    <span style="color: #FF0000">/* default policy for type T */
+</span>    template &lt;class T&gt;  struct rounded_math;
     template &lt;&gt;  struct rounded_math&lt;float&gt;;
     template &lt;&gt;  struct rounded_math&lt;double&gt;;
+
+    <span style="color: #FF0000">/* some metaprogramming to convert a protected to unprotected rounding */</span>
+    template &lt;class Rounding&gt; struct unprotect_rounding;
+    template &lt;class Traits&gt; struct unprotect_traitsunprotect_traits;
+    template &lt;class I&gt; struct unprotect;
 
   } // namespace interval_lib
 } // namespace boost</pre>
@@ -282,11 +275,55 @@ We now describe each class in the order they appear in the definition of a
 rounding policy (this outermost-to-innermost order is the reverse order from
 the synopsis).
 
+<h3><a name="Protection">Protection control</a></h3>
+
+<p>Protection refers to the fact that the interval operations will be
+surrounded by rounding mode controls. Unprotecting a class means to remove
+all the rounding controls. Each rounding policy provides a type
+<code>unprotected_rounding</code>. The required type
+<code>unprotected_rounding</code> gives another rounding class that enables
+to work when nested inside rounding. For example, the first three lines below
+should all produce the same result (because the first operation is the
+rounding constructor, and the last is its destructor, which take care of
+setting the rounding modes); and the last line is allowed to have an
+undefined behavior (since no rounding constructor or destructor is ever
+called).</p>
+<pre>T c; { rounding rnd; c = rnd.add_down(a, b); }
+T c; { rounding rnd1; { rounding rnd2; c = rnd2.add_down(a, b); } }
+T c; { rounding rnd1; { rounding::unprotected_rounding rnd2; c = rnd2.add_down(a, b); } }
+T d; { rounding::unprotected_rounding rnd; d = rnd.add_down(a, b); }</pre>
+
+<p>Naturally <code>rounding::unprotected_rounding</code> may simply be
+<code>rounding</code> itself. But it can improve performance if it is a
+simplified version with empty constructor and destructor. In order to avoid
+undefined behaviors, in the library, an object of type
+<code>rounding::unprotected_rounding</code> is guaranteed to be created only
+when an object of type <code>rounding</code> is already alive. See the <a
+href="#perf">performance notes</a> for some additional details.</p>
+
+<p>The support library defines a metaprogramming class template
+<code>unprotect</code> which takes an interval type <code>I</code> and
+returns an interval type <code>unprotect&lt;I&gt;::type</code>  where the
+rounding policy has been unprotected. Some  information about the types:
+<code>interval&lt;T, interval_traits&lt;..., Rounding, ...&gt;
+&gt;::traits_type::rounding</code> <b>is</b> the same type as
+<code>Rounding</code>, and <code>unprotect&lt;interval&lt;T,
+interval_traits&lt;..., Rounding, ...&gt; &gt; &gt;::type</code> <b>is</b>
+the same type as <code>interval&lt;T, interval_traits&lt;...,
+Rounding::unprotected, ...&gt; &gt;</code>.</p>
+
+<p>There are corresponding metaprogramming classes
+<code>unprotect_traits</code> which return a traits type
+<code>unprotect_traits&lt;Traits&gt;::type</code> in which the rounding is
+unprotected, and <code>unprotect_rounding</code> whose return type
+<code>unprotect_rounding&lt;Rounding&gt;::type</code> is simply
+<code>typename Rounding::unprotected_rounding</code>.</p>
+
 <h3>State saving</h3>
 First comes <code>save_state</code>. This class is responsible for saving the
 current rounding mode and calling init in its constructor, and for restoring
-the saved rounding mode in its destructor. This class also correctly defines
-the unprotected variation.
+the saved rounding mode in its destructor. This class also defines the
+<code>unprotected_rounding</code> type.
 
 <p>If the rounding mode does not require any state-saving or initialization,
 <code>save_state_nothing</code> can be used instead of
@@ -376,6 +413,142 @@ as:</p>
 <pre>template &lt;&gt;  struct rounded_math&lt;float&gt;       : save_state&lt;rounded_transc_dummy&lt;float, rounded_arith_opp&lt;float&gt; &gt; &gt; {};
 template &lt;&gt;  struct rounded_math&lt;double&gt;      : save_state&lt;rounded_transc_dummy&lt;double, rounded_arith_opp&lt;double&gt; &gt; &gt; {};
 template &lt;&gt;  struct rounded_math&lt;long double&gt; : save_state&lt;rounded_transc_dummy&lt;long double, rounded_arith_opp&lt;long double&gt; &gt; &gt; {};</pre>
+<h2><a name="perf">Performance Issues</a></h2>
+
+<p>TThis paragraph deals mostly with the performance of the library with
+intervals using the floating-point unit (FPU) of the computer. Let's consider
+the sum of [<i>a</i>,<i>b</i>] and [<i>c</i>,<i>d</i>] as an example. The
+result is [down(<i>a</i>+<i>c</i>), up(<i>b</i>+<i>d</i>)], where down and up
+indicate the rounding mode needed.</p>
+
+<h3>Rounding Mode Switch</h3>
+
+<p>If the FPU is able to use a different rounding mode for each operation,
+there is no problem. For example, it's the case for the Alpha processor: each
+floating-point instruction can specify a different rounding mode. However,
+the IEEE-754 Standard does not require such a behavior. So most of the FPUs
+only provide some instructions to set the rounding mode for all subsequent
+operations. And generally, these instructions need to flush the pipeline of
+the FPU.</p>
+
+<p>In this situation, the time needed to sum [<i>a</i>,<i>b</i>] and
+[<i>c</i>,<i>d</i>] is far worse than the time needed to calculate
+<i>a</i>+<i>b</i> and <i>c</i>+<i>d</i> since the two additions cannot be
+parallelized. Consequently, the objective is to diminish the number of
+rounding mode switches.</p>
+
+<p>If this library is not used to provide exact computations, but only for
+pair arithmetic, the solution is quite simple: do not use rounding. In that
+case, doing the sum [<i>a</i>,<i>b</i>] and [<i>c</i>,<i>d</i>] will be as
+fast as computing <i>a</i>+<i>b</i> and <i>c</i>+<i>d</i>. Everything is
+perfect.</p>
+
+<p>However, if exact computations are required, such a solution is totally
+unthinkable. So, are we penniless? No, there is still a trick available.
+Indeed, down(<i>a</i>+<i>c</i>) = -up(-<i>a</i>-<i>c</i>) if the unary minus
+is an exact operation. It is now possible to calculate the whole sum with the
+same rounding mode. Generally, the cost of the mode switching is worse than
+the cost of the sign changes.</p>
+
+<p>Let's recapitulate. Before, when doing an addition, there were three
+rounding mode switches (down, up and restore). Now, with this little trick,
+there are only two switches (up and restore). It is better, but still a
+bottleneck when many operations are nested. Indeed, the generated code for
+[<i>a</i>,<i>b</i>] + [<i>c</i>,<i>d</i>] + [<i>e</i>,<i>f</i>] will probably
+look like:</p>
+<pre>up();
+t1 = -(-a - c);
+t2 = b + d;
+restore();
+up();
+x = -(-t1 - e);
+y = t2 + f;
+restore();</pre>
+
+<p>If you think it is possible to do much better, you are right. For example,
+this is better (and probably optimal):</p>
+<pre>up();
+x = -(-a - c - e);
+y = b + d + f;
+restore();</pre>
+
+<p>Such a code will be generated by a compiler if the computations are made
+without initialization and restoration of the rounding mode. However, it
+would be far too easy if there were no drawback: because the rounding mode is
+not restored in the meantime, operations on floating-point numbers must be
+prohibited. This method can only be used if all the operations are operations
+on interval.</p>
+
+<h4>Example</h4>
+
+<p>Here is an example of the Horner scheme to compute the value of a polynom.
+The rounding mode switches are disabled for the whole computation.</p>
+<pre>// I is an interval class, the polynom is a simple array
+template&lt;class I&gt;
+I horner(const I&amp; x, const I p[], int n) {
+
+  // save and initialize the rounding mode
+  typename I::traits_type::rounding rnd;
+
+  // define the unprotected version of the interval type
+  typedef typename boost::interval_lib::unprotect&lt;I&gt;::type R;
+  
+  const R&amp; a = x;
+  R y = p[n - 1];
+  for(int i = n - 2; i &gt;= 0; i--) {
+    y = y * a + (const R&amp;)(p[i]);
+  }
+  return y;
+
+  // restore the rounding mode with the destruction of rnd
+}</pre>
+
+<p>Please note that a rounding object is especially created in order to
+compensate for the protection loss. Each interval of type I is converted in
+an interval of type R before any operations. If this conversion is not done,
+the result is still correct, but the interest of this whole optimization has
+disappeared. Whenever possible, it is good to convert to const R&amp; instead
+of R: a smart compiler will be able to see that the old and the new object
+are the same and avoid the creation of a temporary object.</p>
+
+<h4>Uninteresting remark</h4>
+
+<p>It was said at the beginning that the Alpha processors can use a specific
+rounding mode for each operation. However, due to the instruction format, the
+rounding toward plus infinity is not available. Only the rounding toward
+minus infinity can be used. So the trick using the change of sign becomes
+essential, but there is no need to save and restore the rounding mode on both
+sides of an operation.</p>
+
+<h3>Extended Registers</h3>
+
+<p>There is another problem besides the cost of the rounding mode switch.
+Some FPUs use extended registers (for example, float computations will be
+done with double registers, or double computations with long double
+registers). Consequently, many problems can arise.</p>
+
+<p>The first one is due to to the extended precision of the mantissa. The
+rounding is also done on this extended precision. And consequently, we still
+have down(<i>a</i>+<i>b</i>) = -up(-<i>a</i>-<i>b</i>) in the extended
+registers. But back to the standard precision, we now have
+down(<i>a</i>+<i>b</i>) &lt; -up(-<i>a</i>-<i>b</i>) instead of an equality.
+A solution could be not to use this method. But there still are other
+problems, with the comparisons between numbers for example.</p>
+
+<p>Naturally, there is also a problem with the extended precision of the
+exponent. To illustrate this problem, let <i>m</i> be the biggest number
+before +<i>inf</i>. If we calculate 2*[<i>m</i>,<i>m</i>], the answer should
+be [<i>m</i>,<i>inf</i>]. But due to the extended registers, the FPU will
+first store [<i>2m</i>,<i>2m</i>] and then convert it to
+[<i>inf</i>,<i>inf</i>] at the end of the calculus (when the rounding mode is
+toward +<i>inf</i>). So the answer is no more accurate.</p>
+
+<p>There is only one solution: to force the FPU to convert the extended
+values back to standard precision after each operation. Some FPUs provide an
+instruction able to do this conversion (for example the PowerPC processors).
+But for the FPUs that do not provide it (the x86 processors), the only
+solution is to write the values to memory and read them back. Such an
+operation is obviously very expensive.</p>
 
 <h2>Some Examples</h2>
 

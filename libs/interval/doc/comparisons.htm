@@ -1,4 +1,5 @@
-<!DOCTYPE html public "-//w3c//dtd html 4.0 transitional//en">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
@@ -27,7 +28,7 @@ interval can now define the following operators:<code> &lt;, &gt;, &lt;=,
 &gt;=, ==, !=</code>. All these operators are defined for two interval
 parameters, or for one interval and a number.</p>
 
-<h3>Synopsis</h3>
+<h2>Synopsis</h2>
 
 <blockquote>
   <pre>namespace boost {
@@ -42,7 +43,7 @@ template&lt;class T&gt; struct compare_data;
 } // namespace boost</pre>
 </blockquote>
 
-<h3>Provided classes</h3>
+<h2>Provided classes</h2>
 Four classes are pre-defined for the comparison policy.
 <code>compare_certainly</code> implements the "certain" comparison (it is the
 comparison policy by default). <code>compare_possibly</code> implements the
@@ -73,7 +74,7 @@ true, <tt>compare_full&lt;T, Function&gt;</tt> is the same as
 <tt>compare_full</tt> is twice as slow and there is nothing that the compiler
 can do about it.
 
-<h3>Explicit comparison functions</h3>
+<h2>Explicit comparison functions</h2>
 The comparison operators are not really handy. For example, if less_than is a
 "certain" comparison, then &lt; and &gt; are also "certain" comparisons, but
 &lt;= and &gt;= are only "possible" comparisons. The reason of this
@@ -85,13 +86,16 @@ these two types of comparisons are equivalent.
 <p>To avoid these problems, it is probably better to use some explicit
 comparison functions. Their names are composed by cer (for "certain") or pos
 (for "possible") followed by lt, le, gt, ge, eq or ne. Each of these
-functions takes two parameters and returns a boolean. For example:</p>
+functions takes two parameters and returns a boolean. For example, to use the
+"certainly less than" comparison :</p>
 
 <blockquote>
   <pre>template&lt;class T, class Traits&gt;
 bool cerlt(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+
 template&lt;class T, class Traits&gt;
 bool cerlt(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
+
 template&lt;class T, class Traits&gt;
 bool cerlt(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);</pre>
 </blockquote>
