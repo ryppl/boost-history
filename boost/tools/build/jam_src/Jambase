@@ -15,20 +15,17 @@
 
 # Glob for patterns in the directories starting from the given
 # start directory, up to and including the root of the file-system.
-# The returned list of globs are in closest to farthest order.
-# Closest being the starting directory.
+# We stop globing as soon as we find at least one match.
 #
-rule glob-to-root # ( dir : patterns )
+rule find-to-root ( dir : patterns )
 {
-	local globs = [ GLOB $(<) : $(>:R=$(<)) ] ;
-	if $(<:P) != $(<)
-	{
-		return $(globs) [ glob-to-root $(<:P) : $(>) ] ;
-	}
-	else
-	{
-		return $(globs) ;
-	}
+    local globs = [ GLOB $(<) : $(>:R=$(<)) ] ;
+    while ! $(globs) && $(dir:P) != $(dir)
+    {
+        dir = $(dir:P) ;
+        globs = [ GLOB $(dir) : $(>:R=$(dir)) ] ;
+    }
+    return $(globs) ;
 }
 
 # This rule can be invoked from an optional boost-build.jam file
@@ -36,73 +33,78 @@ rule glob-to-root # ( dir : patterns )
 # them. The path indicated is relative to the location of the
 # boost-build.jam file.
 #
-rule boost-build # ( dir )
+rule boost-build ( dir )
 {
-	# Add the given directory to the path so we can hopefully find the
-	# build system.
-	#
-	if $(<)
-	{
-		BOOST_BUILD_PATH = $(<:R=$(gTARGET_LOCATION(<bjam>boost-build.jam))) $(BOOST_BUILD_PATH) ;
-	}
-	
-	# Try to find the build system bootstrap file 'boost-build.jam'.
-	#
-	local bootstrap-file =
-		[ GLOB $(BOOST_BUILD_PATH) : $(BOOST_BUILD_PATH)/boost-build.jam ] ;
-	
-	# There is no boost-build.jam we can find, exit with an error, and information.
-	#
-	if ! $(bootstrap-file)
-	{
-		EXIT
-			"Unable to load Boost.Build, could not find build system files."
-			"Attempted search in these directories from BOOST_BUILD_PATH:" '$(BOOST_BUILD_PATH)'
-			"Please consult the documentation at 'http://www.boost.org'." ;
-	}
-	
-	# Load the build system, now that we know where to start from.
-	#
-	include $(bootstrap-file[1]) ;
+    # Add the given directory to the path so we can hopefully find the
+    # build system.
+    #
+    if $(<)
+    {
+        BOOST_BUILD_PATH = $(dir:R=$(gFILE_LOCATION.boost-build.jam)) $(BOOST_BUILD_PATH) ;
+    }
+    
+    # Try to find the build system bootstrap file 'boost-build.jam'.
+    #
+    bootstrap-filename = boost-build.jam ;
+    local bootstrap-file =
+        [ GLOB $(BOOST_BUILD_PATH) : $(bootstrap-filename:R=$(BOOST_BUILD_PATH)) ] ;
+    
+    # There is no boost-build.jam we can find, exit with an error, and information.
+    #
+    if ! $(bootstrap-file)
+    {
+        EXIT
+            "Unable to load Boost.Build, could not find build system files."
+            "Attempted search in these directories from BOOST_BUILD_PATH:" '$(BOOST_BUILD_PATH)'
+            "Please consult the documentation at 'http://www.boost.org'." ;
+    }
+    
+    # Load the build system, now that we know where to start from.
+    #
+    include $(bootstrap-file[1]) ;
 }
 
 if [ SUBST $(ARGV[1]:B:L) (.*)(bjam)(.*) $2 ]
 {
-	# We attempt to load "boost-build.jam" by searching from the current invocation directory
-	# up to the root of the file-system and in the paths specified by BOOST_BUILD_PATH.
-	# Within this, one invokes the "boost-build" rule to indicate where the Boost.Build
-	# files are to load them.
-	#
-	local boost-build-file =
-		[ glob-to-root [ PWD ] : boost-build.jam ]
-		[ GLOB $(BOOST_BUILD_PATH) : $(BOOST_BUILD_PATH)/boost-build.jam ] ;
-	
-	# There is no boost-build.jam we can find, exit with an error, and information.
-	#
-	if ! $(boost-build-file)
-	{
-		EXIT
-			"Unable to load Boost.Build, could not find 'boost-build.jam'."
-			"Attempted search from" [ PWD ] "up to the root. And in these"
-			"directories from BOOST_BUILD_PATH:" '$(BOOST_BUILD_PATH)'
-			"Please consult the documentation at 'http://www.boost.org'." ;
-	}
-	
-	# Now load the boost-build.jam to get the build system loaded. This
-	# incidentaly loads the users jamfile and attempts to build targets.
-	#
-	gTARGET_LOCATION(<bjam>boost-build.jam) = $(boost-build-file[1]:D) ;
-	include $(boost-build-file[1]) ;
-	
-	# Check that, at minimum, the build system loaded.
-	#
-	if ! [ RULENAMES build-system ]
-	{
-		EXIT
-			"Unable to load Boost.Build, it seems that the build system files"
-			"where located, but the build system is not defined."
-			"Please consult the documentation at 'http://www.boost.org'." ;
-	}
+    # We attempt to load "boost-build.jam" by searching from the current invocation directory
+    # up to the root of the file-system and in the paths specified by BOOST_BUILD_PATH.
+    # Within this, one invokes the "boost-build" rule to indicate where the Boost.Build
+    # files are to load them.
+    #
+    local boost-build-filename = boost-build.jam ;
+    local boost-build-file =
+        [ find-to-root [ PWD ] : $(boost-build-filename) ]
+        [ GLOB $(BOOST_BUILD_PATH) : $(boost-build-filename:R=$(BOOST_BUILD_PATH)) ] ;
+    
+    # There is no boost-build.jam we can find, exit with an error, and information.
+    #
+    if ! $(boost-build-file)
+    {
+        EXIT
+            "Unable to load Boost.Build, could not find 'boost-build.jam'."
+            "Attempted search from" [ PWD ] "up to the root."
+            "And in these directories from BOOST_BUILD_PATH: "$(BOOST_BUILD_PATH[1])
+            ", "$(BOOST_BUILD_PATH[2-])
+            "Please consult the documentation at 'http://www.boost.org'." ;
+    }
+    
+    # Now load the boost-build.jam to get the build system loaded. This
+    # incidentaly loads the users jamfile and attempts to build targets.
+    #
+    gFILE_LOCATION.$(boost-build-filename) = $(boost-build-file[1]:D) ;
+    include $(boost-build-file[1]) ;
+    
+    # Check that, at minimum, the build system loaded.
+    #
+    if ! [ RULENAMES build-system ]
+    {
+        EXIT
+            "Unable to load Boost.Build, it seems that the build system files"
+            "where located, but the build system is not defined."
+            "Attempted to use, as the bootstrap, this file:"
+            $(boost-build-filename:R=$(gFILE_LOCATION.$(boost-build-filename))).
+            "Please consult the documentation at 'http://www.boost.org'." ;
+    }
 }
 else
 {
