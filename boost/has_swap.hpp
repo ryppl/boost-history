@@ -5,6 +5,7 @@
 # define HAS_SWAP_DWA2004411_HPP
 
 #include <boost/mpl/bool.hpp>
+#include <boost/detail/workaround.hpp>
 
 namespace boost {
 
@@ -31,7 +32,12 @@ namespace has_swap_
       static T& x;
         
       BOOST_STATIC_CONSTANT(bool, value = sizeof(swap(x,x),'x') == 1);
+      
+#if BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x564))
+      typedef boost::mpl::bool_<has_swap_impl<T>::value> type;
+#else
       typedef boost::mpl::bool_<value> type;
+#endif      
   };
 }
 template <class T>

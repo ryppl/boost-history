@@ -31,11 +31,16 @@ class X : public boost::movable<X>
         release();
     }
 
-# ifdef BOOST_NO_IMPLICIT_MOVE_ASSIGN_FOR_COPYABLE_TYPES
+# if defined(BOOST_NO_IMPLICIT_MOVE_ASSIGN_FOR_COPYABLE_TYPES)  \
+    && !BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x564))
+    
+    // We can do this as a fallback on compilers where it's supported;
+    // it amounts to a copy/swap for lvalues and a move for rvalues.
     X& operator=(X rhs)
     {
         return *this = boost::move_from<X>(rhs);
     }
+    
 # else
     BOOST_LVALUE_ASSIGN(
         X, (rhs), 

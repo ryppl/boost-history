@@ -11,17 +11,19 @@
 #include <boost/has_swap.hpp>
 
 #include <boost/preprocessor/seq/seq.hpp>
-#include <boost/preprocessor/seq/size.hpp>
-#include <boost/preprocessor/if.hpp>
+#include <boost/preprocessor/seq/elem.hpp>
 #include <boost/preprocessor/comparison/equal.hpp>
 
 #include <boost/detail/workaround.hpp>
 
-#if BOOST_WORKAROUND(BOOST_MSVC, <= 1300)
+#if BOOST_WORKAROUND(BOOST_MSVC, <= 1300) \
+    || BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x564))
 # define BOOST_NO_IMPLICIT_MOVE_ASSIGN_FOR_COPYABLE_TYPES
 #endif
 
-#if BOOST_WORKAROUND(BOOST_MSVC, >= 1310)
+#if BOOST_WORKAROUND(BOOST_MSVC, >= 1310)                       \
+    || BOOST_WORKAROUND(__MWERKS__, BOOST_TESTED_AT(0x3003))    \
+    || BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x564))
 # define BOOST_NO_IMPLICIT_MOVE_CTOR_FOR_COPYABLE_TYPES
 #endif
 
@@ -82,7 +84,8 @@ struct move_from
 // rvalue conversion in that case.
 template <class T>
 struct is_movable
-#if !defined(__EDG__) && BOOST_WORKAROUND(__GNUC__, >= 3)
+#if !defined(__EDG__) && BOOST_WORKAROUND(__GNUC__, >= 3)   \
+  || BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x564))
   : boost::is_convertible<T,move_from<T> >
 #else 
   : boost::is_convertible<move_from<T>,T>
@@ -224,7 +227,8 @@ namespace move_swap_
       using ::swap;
       swap(a,b);
 #else
-      move_swap(a,b, typename has_swap<T>::type());
+      typedef typename has_swap<T>::type has_swap_;
+      move_swap(a,b, has_swap_());
 #endif 
   }
 }
@@ -279,7 +283,7 @@ move_backward(BidirectionalIterator1 first, BidirectionalIterator1 last,
 #ifndef BOOST_NO_IMPLICIT_MOVE_CTOR_FOR_COPYABLE_TYPES
 # define BOOST_LVALUE_COPY_CTOR(klass, arg_init, body)                          \
     klass(klass& BOOST_PP_SEQ_HEAD(arg_init))                                   \
-        BOOST_MOVE_INITIALIZER_LIST(arg_init)                                   \
+        BOOST_PP_SEQ_ELEM(1, arg_init)                                          \
         body                                                                    \
                                                                                 \
     template <class BoostMove_##klass>                                          \
@@ -287,7 +291,7 @@ move_backward(BidirectionalIterator1 first, BidirectionalIterator1 last,
         BoostMove_##klass& BOOST_PP_SEQ_HEAD(arg_init)                          \
       , typename boost::enable_if_same<klass const,BoostMove_##klass>::type = 0 \
     )                                                                           \
-        BOOST_MOVE_INITIALIZER_LIST(arg_init)                                   \
+        BOOST_PP_SEQ_ELEM(1, arg_init)                                          \
         body
 
 #else
@@ -295,7 +299,7 @@ move_backward(BidirectionalIterator1 first, BidirectionalIterator1 last,
 // Generate a "regular" copy ctor.
 # define BOOST_LVALUE_COPY_CTOR(klass, arg_init, body)                          \
     klass(klass const& BOOST_PP_SEQ_HEAD(arg_init))                             \
-        BOOST_MOVE_INITIALIZER_LIST(arg_init)                                   \
+        BOOST_PP_SEQ_ELEM(1, arg_init)                                          \
         body 
  
 #endif 
@@ -343,17 +347,7 @@ move_backward(BidirectionalIterator1 first, BidirectionalIterator1 last,
 
 // Given a SEQ appropriate for the 2nd argument to
 // BOOST_LVALUE_COPY_CTOR, extract the initializer list.
-#define BOOST_MOVE_INITIALIZER_LIST(arg_init)           \
-    BOOST_PP_IIF(                                       \
-        BOOST_PP_EQUAL(BOOST_PP_SEQ_SIZE(arg_init), 1)  \
-      , BOOST_MOVE_NO_INIT                              \
-      , BOOST_MOVE_SEQ_2ND)(arg_init)
-
-// Return the 2nd element of a SEQ
-#define BOOST_MOVE_SEQ_2ND(seq) BOOST_PP_SEQ_HEAD(BOOST_PP_SEQ_TAIL(seq))
-
-// Generate an empty initializer list
-#define BOOST_MOVE_NO_INIT(seq)
+#define BOOST_MOVE_INITIALIZER_LIST(arg_init) 
 
 } // namespace boost
 

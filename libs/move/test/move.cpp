@@ -54,6 +54,8 @@ int main()
     SAY(" ------ test 1, direct init from rvalue ------- ");
 #ifdef __GNUC__ // GCC having trouble parsing the extra parens
     X z2((0, X() ));
+#elif BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x564))
+    X z2((0,X()));
 #else
     X z2((X()));
 #endif 
