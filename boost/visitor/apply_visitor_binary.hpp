@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-// boost visitor/binary_apply_visitor.hpp header file
+// boost visitor/apply_visitor_binary.hpp header file
 // See http://www.boost.org for updates, documentation, and revision history.
 //-----------------------------------------------------------------------------
 //
@@ -14,10 +14,10 @@
 // suitability of this software for any purpose. It is provided "as is" 
 // without express or implied warranty.
 
-#ifndef BOOST_VISITOR_BINARY_APPLY_VISITOR_HPP
-#define BOOST_VISITOR_BINARY_APPLY_VISITOR_HPP
+#ifndef BOOST_VISITOR_APPLY_VISITOR_BINARY_HPP
+#define BOOST_VISITOR_APPLY_VISITOR_BINARY_HPP
 
-#include "boost/visitor/unary_apply_visitor.hpp"
+#include "boost/visitor/apply_visitor_unary.hpp"
 #include "boost/preprocessor/define_forwarding_func.hpp"
 
 namespace boost {
@@ -103,7 +103,7 @@ public:
 
 }} // namespace detail::visitor
 
-#define BOOST_AUX_BINARY_APPLY_VISITOR(CV1__, CV2__, CV3__)                 \
+#define BOOST_AUX_APPLY_VISITOR_BINARY(CV1__, CV2__, CV3__)                 \
     template <typename Visitor, typename Visitable1, typename Visitable2>   \
         typename Visitor::result_type                                       \
     apply_visitor(                                                          \
@@ -121,12 +121,12 @@ public:
     /**/
 
 BOOST_PP_DEFINE_FORWARDING_FUNC(
-      BOOST_AUX_BINARY_APPLY_VISITOR
+      BOOST_AUX_APPLY_VISITOR_BINARY
     , 3
     )
 
-#undef BOOST_AUX_BINARY_APPLY_VISITOR
+#undef BOOST_AUX_APPLY_VISITOR_BINARY
 
 } // namespace boost
 
-#endif // BOOST_VISITOR_BINARY_APPLY_VISITOR_HPP
+#endif // BOOST_VISITOR_APPLY_VISITOR_BINARY_HPP

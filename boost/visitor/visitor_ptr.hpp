@@ -17,7 +17,7 @@
 #ifndef BOOST_VISITOR_PTR_HPP
 #define BOOST_VISITOR_PTR_HPP
 
-#include "boost/static_visitor.hpp"
+#include "boost/visitor/static_visitor.hpp"
 #include "boost/visitor/dynamic_visitor_base.hpp"
 #include "boost/visitor/dynamic_visitor_interface.hpp"
 

@@ -17,8 +17,8 @@
 #ifndef BOOST_APPLY_VISITOR_HPP
 #define BOOST_APPLY_VISITOR_HPP
 
-#include "boost/visitor/unary_apply_visitor.hpp"
-#include "boost/visitor/binary_apply_visitor.hpp"
-#include "boost/visitor/delayed_apply_visitor.hpp"
+#include "boost/visitor/apply_visitor_unary.hpp"
+#include "boost/visitor/apply_visitor_binary.hpp"
+#include "boost/visitor/apply_visitor_delayed.hpp"
 
 #endif // BOOST_APPLY_VISITOR_HPP

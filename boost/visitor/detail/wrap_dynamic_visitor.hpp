@@ -17,7 +17,7 @@
 #ifndef BOOST_VISITOR_DETAIL_WRAP_DYNAMIC_VISITOR_HPP
 #define BOOST_VISITOR_DETAIL_WRAP_DYNAMIC_VISITOR_HPP
 
-#include "boost/static_visitor.hpp"
+#include "boost/visitor/static_visitor.hpp"
 #include "boost/visitor/bad_visit.hpp"
 #include "boost/visitor/dynamic_visitor_base.hpp"
 #include "boost/visitor/dynamic_visitor_interface.hpp"

@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-// boost visitor/delayed_apply_visitor.hpp header file
+// boost visitor/apply_visitor_delayed.hpp header file
 // See http://www.boost.org for updates, documentation, and revision history.
 //-----------------------------------------------------------------------------
 //
@@ -14,11 +14,11 @@
 // suitability of this software for any purpose. It is provided "as is" 
 // without express or implied warranty.
 
-#ifndef BOOST_VISITOR_DELAYED_APPLY_VISITOR_HPP
-#define BOOST_VISITOR_DELAYED_APPLY_VISITOR_HPP
+#ifndef BOOST_VISITOR_APPLY_VISITOR_DELAYED_HPP
+#define BOOST_VISITOR_APPLY_VISITOR_DELAYED_HPP
 
-#include "boost/visitor/unary_apply_visitor.hpp"
-#include "boost/visitor/binary_apply_visitor.hpp"
+#include "boost/visitor/apply_visitor_unary.hpp"
+#include "boost/visitor/apply_visitor_binary.hpp"
 
 #include "boost/preprocessor/define_forwarding_func.hpp"
 
@@ -40,24 +40,27 @@ namespace boost {
 //
 
 template <typename Visitor>
-class delayed_apply_visitor_t
+class apply_visitor_delayed_t
 {
-public:
+public: // typedefs
+
     typedef typename Visitor::result_type
         result_type;
 
 private: // representation
+
     Visitor& visitor_;
 
 public: // structors
-    explicit delayed_apply_visitor_t(Visitor& visitor)
+
+    explicit apply_visitor_delayed_t(Visitor& visitor)
       : visitor_(visitor)
     {
     }
 
 public: // unary function operators
 
-#   define BOOST_AUX_DELAYED_APPLY_VISITOR_T_UNARY_FUNC_OPERATOR(CV__)    \
+#   define BOOST_AUX_apply_visitor_delayed_T_UNARY_FUNC_OPERATOR(CV__)    \
     template <typename Visitable>                       \
     result_type operator()(                             \
           CV__ Visitable& visitable                     \
@@ -68,15 +71,15 @@ public: // unary function operators
     /**/
 
     BOOST_PP_DEFINE_FORWARDING_FUNC(
-          BOOST_AUX_DELAYED_APPLY_VISITOR_T_UNARY_FUNC_OPERATOR
+          BOOST_AUX_apply_visitor_delayed_T_UNARY_FUNC_OPERATOR
         , 1
         )
 
-#   undef BOOST_AUX_DELAYED_APPLY_VISITOR_T_UNARY_FUNC_OPERATOR
+#   undef BOOST_AUX_apply_visitor_delayed_T_UNARY_FUNC_OPERATOR
 
 public: // binary function operators
 
-#   define BOOST_AUX_DELAYED_APPLY_VISITOR_T_BINARY_FUNC_OPERATOR(CV1__, CV2__)   \
+#   define BOOST_AUX_apply_visitor_delayed_T_BINARY_FUNC_OPERATOR(CV1__, CV2__)   \
     template <typename Visitable1, typename Visitable2>         \
     result_type operator()(                                     \
           CV1__ Visitable1& visitable1                          \
@@ -88,20 +91,20 @@ public: // binary function operators
     /**/
 
     BOOST_PP_DEFINE_FORWARDING_FUNC(
-          BOOST_AUX_DELAYED_APPLY_VISITOR_T_BINARY_FUNC_OPERATOR
+          BOOST_AUX_apply_visitor_delayed_T_BINARY_FUNC_OPERATOR
         , 2
         )
 
-#   undef BOOST_AUX_DELAYED_APPLY_VISITOR_T_BINARY_FUNC_OPERATOR
+#   undef BOOST_AUX_apply_visitor_delayed_T_BINARY_FUNC_OPERATOR
 
 };
 
 template <typename Visitor>
-delayed_apply_visitor_t<Visitor> apply_visitor(Visitor& visitor)
+apply_visitor_delayed_t<Visitor> apply_visitor(Visitor& visitor)
 {
-    return delayed_apply_visitor_t<Visitor>(visitor);
+    return apply_visitor_delayed_t<Visitor>(visitor);
 }
 
 } // namespace boost
 
-#endif // BOOST_VISITOR_DELAYED_APPLY_VISITOR_HPP
+#endif // BOOST_VISITOR_APPLY_VISITOR_DELAYED_HPP

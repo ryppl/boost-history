@@ -21,8 +21,8 @@
 #include "boost/call_traits.hpp"
 
 // The following are new/in-progress headers or fixes to existing headers:
-#include "boost/config/no_class_template_using_declarations.hpp"
-#include "boost/apply_visitor.hpp"
+#include "boost/config/no_using_declaration_overloads.hpp"
+#include "boost/visitor/apply_visitor.hpp"
 
 namespace boost {
 namespace type_switch {
@@ -69,7 +69,7 @@ struct error_Case_Is_Missing
         typedef TemplateCase type;
     };
 
-#if !defined(BOOST_NO_CLASS_TEMPLATE_USING_DECLARATIONS)
+#if !defined(BOOST_NO_USING_DECLARATION_OVERLOADS)
 
     // | Must provide operator(), but it should never be invoked. Accepts |
     // | an argument of an implementation-defined type, which should at   |
@@ -78,7 +78,7 @@ struct error_Case_Is_Missing
     {
     }
 
-#endif // !defined(BOOST_NO_CLASS_TEMPLATE_USING_DECLARATIONS)
+#endif // !defined(BOOST_NO_USING_DECLARATION_OVERLOADS)
 
 protected:
     ~error_Case_Is_Missing()
@@ -167,11 +167,11 @@ public:
         f_(operand);
     }
 
-#if !defined(BOOST_NO_CLASS_TEMPLATE_USING_DECLARATIONS)
+#if !defined(BOOST_NO_USING_DECLARATION_OVERLOADS)
 
     using NextCase::operator();
 
-#else// defined(BOOST_NO_CLASS_TEMPLATE_USING_DECLARATIONS)
+#else// defined(BOOST_NO_USING_DECLARATION_OVERLOADS)
 
     template <typename U>
     void operator()(U& operand)
@@ -185,7 +185,7 @@ public:
         NextCase::operator()(operand);
     }
 
-#endif // BOOST_NO_CLASS_TEMPLATE_USING_DECLARATIONS workaround
+#endif // BOOST_NO_USING_DECLARATION_OVERLOADS workaround
 
     };
 

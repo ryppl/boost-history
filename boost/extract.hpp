@@ -28,8 +28,8 @@
 #include "boost/mpl/or.hpp"
 #include "boost/mpl/bool.hpp"
 
-#include "boost/visitor/unary_apply_visitor.hpp"
-#include "boost/static_visitor.hpp"
+#include "boost/visitor/apply_visitor_unary.hpp"
+#include "boost/visitor/static_visitor.hpp"
 #include "boost/visitor/dynamic_visitor_base.hpp"
 #include "boost/visitor/dynamic_visitor_interface.hpp"
 
@@ -250,7 +250,7 @@ public: // operators
         return *p_;
     }
 
-#if !defined(BOOST_MSVC)
+#if !defined(BOOST_MSVC) || (defined(BOOST_MSVC) && BOOST_MSVC > 1300)
 
     operator T&() const
     {

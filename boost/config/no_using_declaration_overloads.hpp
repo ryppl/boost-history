@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-// boost config/no_class_template_using_declarations.hpp header file
+// boost config/no_using_declaration_overloads.hpp header file
 // See http://www.boost.org for updates, documentation, and revision history.
 //-----------------------------------------------------------------------------
 //
@@ -19,11 +19,11 @@
 // WARNING: The set of compilers flagged by this header is far from
 //   complete! Compilers may be tested with the <code> below.
 
-#ifndef BOOST_CONFIG_NO_CLASS_TEMPLATE_USING_DECLARATIONS_HPP
-#define BOOST_CONFIG_NO_CLASS_TEMPLATE_USING_DECLARATIONS_HPP
+#ifndef BOOST_CONFIG_NO_USING_DECLARATION_OVERLOADS_HPP
+#define BOOST_CONFIG_NO_USING_DECLARATION_OVERLOADS_HPP
 
 //////////////////////////////////////////////////////////////////////////
-// BOOST_NO_CLASS_TEMPLATE_USING_DECLARATIONS
+// BOOST_NO_USING_DECLARATION_OVERLOADS
 //
 // Defined if using declarations cannot be used in class templates as in
 // the following example:
@@ -48,10 +48,10 @@
 // </code>
 //
 
-#if defined(BOOST_MSVC) || ( defined(__GNUC__) && __GNUC__ < 3 )
+#if (defined(BOOST_MSVC) && BOOST_MSVC <= 1300) || ( defined(__GNUC__) && __GNUC__ < 3 )
 #
-#    define BOOST_NO_CLASS_TEMPLATE_USING_DECLARATIONS
+#    define BOOST_NO_USING_DECLARATION_OVERLOADS
 #
 #endif
 
-#endif // BOOST_CONFIG_NO_CLASS_TEMPLATE_USING_DECLARATIONS_HPP
+#endif // BOOST_CONFIG_NO_USING_DECLARATION_OVERLOADS_HPP

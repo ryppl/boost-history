@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-// boost visitor/unary_apply_visitor.hpp header file
+// boost visitor/apply_visitor_unary.hpp header file
 // See http://www.boost.org for updates, documentation, and revision history.
 //-----------------------------------------------------------------------------
 //
@@ -14,10 +14,10 @@
 // suitability of this software for any purpose. It is provided "as is" 
 // without express or implied warranty.
 
-#ifndef BOOST_VISITOR_UNARY_APPLY_VISITOR_HPP
-#define BOOST_VISITOR_UNARY_APPLY_VISITOR_HPP
+#ifndef BOOST_VISITOR_APPLY_VISITOR_UNARY_HPP
+#define BOOST_VISITOR_APPLY_VISITOR_UNARY_HPP
 
-#include "boost/static_visitable.hpp" // for is_static_visitable
+#include "boost/visitor/static_visitable.hpp" // for is_static_visitable
 #include "boost/visitor/dynamic_visitable_base.hpp"
 #include "boost/visitor/dynamic_visitor_base.hpp"
 #include "boost/visitor/dynamic_visitor_return_base.hpp"
@@ -201,4 +201,4 @@ BOOST_PP_DEFINE_FORWARDING_FUNC(
 
 } // namespace boost
 
-#endif // BOOST_VISITOR_UNARY_APPLY_VISITOR_HPP
+#endif // BOOST_VISITOR_APPLY_VISITOR_UNARY_HPP
