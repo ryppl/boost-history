@@ -155,6 +155,7 @@ class dynamic_bitset
   // this class definition to avoid problems with VC++. Similarly,
   // with the member functions of the nested class.
 
+  BOOST_STATIC_ASSERT(detail::dynamic_bitset_allowed_block_type<Block>::value);
 
 public:
     typedef Block block_type;
