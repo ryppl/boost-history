@@ -53,24 +53,20 @@
 #include <boost/assert.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/checked_delete.hpp>
-#include <boost/ct_if.hpp>
-#include "boost/optimally_inherit.hpp"
+#include <boost/type_traits/same_traits.hpp>
+#include <boost/mpl/if.hpp>
+
+#include "../optimally_inherit.hpp"
 
 //////////////////////////////////////////////////////////////////////////////
 // Configuration macros
 //////////////////////////////////////////////////////////////////////////////
 
-// These should get moved to config/compiler
-// bcc has flaky support for non-type class template parameters
-#ifdef __BORLANDC__
-# define BOOST_BCC_NON_TYPE_TEMPLATE_PARAMETERS
-#endif // __BORLANDC__
+#ifndef BOOST_MSVC6_MEMBER_TEMPLATES
+# error This library requires member template support.
+#endif
 
 //////////////////////////////////////////////////////////////////////////////
-
-#ifdef BOOST_BCC_NON_TYPE_TEMPLATE_PARAMETERS
-# include <boost/type_traits/same_traits.hpp>
-#endif // BOOST_BCC_NON_TYPE_TEMPLATE_PARAMETERS
 
 #ifdef BOOST_MSVC
 # pragma warning(push)
@@ -94,9 +90,9 @@
 //////////////////////////////////////////////////////////////////////////////
 #include <cassert>
 
-#if defined(__BORLANDC__) || defined(BOOST_MSVC)
-# include <pshpack1.h>
-#endif // defined(__BORLANDC__) || defined(BOOST_MSVC)
+//#if defined(__BORLANDC__) || defined(BOOST_MSVC)
+//# include <pshpack1.h>
+//#endif // defined(__BORLANDC__) || defined(BOOST_MSVC)
 
 namespace boost
 {
@@ -128,9 +124,9 @@ namespace boost
 //////////////////////////////////////////////////////////////////////////////
 
     template <typename> class ref_counted;
-    template <typename> class disallow_conversion;
-    template <typename> class assert_check;
-    template <typename> class default_storage;
+    template <typename> struct disallow_conversion;
+    template <typename> struct assert_check;
+    template <typename> class scalar_storage;
 
     template
     <
@@ -141,16 +137,16 @@ namespace boost
         template <typename> class OwnershipPolicy = ref_counted,
         template <typename> class ConversionPolicy = disallow_conversion,
         template <typename> class CheckingPolicy = assert_check,
-        template <typename> class StoragePolicy = default_storage
+        template <typename> class StoragePolicy = scalar_storage
 
 #else // BOOST_NO_TEMPLATE_TEMPLATES
 
-        class OwnershipPolicy = ref_counted<default_storage<T>::pointer_type>,
+        class OwnershipPolicy = ref_counted<scalar_storage<T>::pointer_type>,
         class ConversionPolicy = disallow_conversion<
-            default_storage<T>::pointer_type
+            scalar_storage<T>::pointer_type
         >,
-        class CheckingPolicy = assert_check<default_storage<T>::stored_type>,
-        class StoragePolicy = default_storage<T>
+        class CheckingPolicy = assert_check<scalar_storage<T>::stored_type>,
+        class StoragePolicy = scalar_storage<T>
 
 #endif // BOOST_NO_TEMPLATE_TEMPLATES
 
@@ -165,27 +161,27 @@ namespace boost
 
 #define BOOST_SMART_PTR1(T, OwnershipPolicy)                                 \
     boost::smart_ptr<T,                                                      \
-        OwnershipPolicy<boost::default_storage<T>::pointer_type>,            \
-        boost::disallow_conversion<boost::default_storage<T>::pointer_type>, \
-        boost::assert_check<boost::default_storage<T>::stored_type>,         \
-        boost::default_storage<T>                                            \
+        OwnershipPolicy<boost::scalar_storage<T>::pointer_type>,             \
+        boost::disallow_conversion<boost::scalar_storage<T>::pointer_type>,  \
+        boost::assert_check<boost::scalar_storage<T>::stored_type>,          \
+        boost::scalar_storage<T>                                             \
     >
 
 #define BOOST_SMART_PTR2(T, OwnershipPolicy, ConversionPolicy)               \
     boost::smart_ptr<T,                                                      \
-        OwnershipPolicy<boost::default_storage<T>::pointer_type>,            \
-        ConversionPolicy<boost::default_storage<T>::pointer_type>,           \
-        boost::assert_check<boost::default_storage<T>::stored_type>,         \
-        boost::default_storage<T>                                            \
+        OwnershipPolicy<boost::scalar_storage<T>::pointer_type>,             \
+        ConversionPolicy<boost::scalar_storage<T>::pointer_type>,            \
+        boost::assert_check<boost::scalar_storage<T>::stored_type>,          \
+        boost::scalar_storage<T>                                             \
     >
 
 #define BOOST_SMART_PTR3(T, OwnershipPolicy, ConversionPolicy,               \
             CheckingPolicy)                                                  \
     boost::smart_ptr<T,                                                      \
-        OwnershipPolicy<boost::default_storage<T>::pointer_type>,            \
-        ConversionPolicy<boost::default_storage<T>::pointer_type>,           \
-        CheckingPolicy<boost::default_storage<T>::stored_type>,              \
-        boost::default_storage<T>                                            \
+        OwnershipPolicy<boost::scalar_storage<T>::pointer_type>,             \
+        ConversionPolicy<boost::scalar_storage<T>::pointer_type>,            \
+        CheckingPolicy<boost::scalar_storage<T>::stored_type>,               \
+        boost::scalar_storage<T>                                             \
     >
 
 #define BOOST_SMART_PTR4(T, OwnershipPolicy, ConversionPolicy,               \
@@ -200,10 +196,19 @@ namespace boost
 #endif // BOOST_NO_TEMPLATE_TEMPLATES
 
 //////////////////////////////////////////////////////////////////////////////
+// Ownership categories that each OwnershipPolicy must declare
+//////////////////////////////////////////////////////////////////////////////
+
+    class copy_semantics_tag { };
+    class move_semantics_tag { };
+    class no_copy_semantics_tag { };
+
+//////////////////////////////////////////////////////////////////////////////
 // class template smart_ptr (definition)
 //////////////////////////////////////////////////////////////////////////////
 
 #ifndef BOOST_NO_TEMPLATE_TEMPLATES
+
 # define BOOST_SMART_POINTER_PARAMETERS                                      \
     template <typename> class OwnershipPolicy,                               \
     template <typename> class ConversionPolicy,                              \
@@ -214,7 +219,13 @@ namespace boost
     template <typename> class ConversionPolicy1,                             \
     template <typename> class CheckingPolicy1,                               \
     template <typename> class StoragePolicy1
-#else
+# define BOOST_STORAGE_POLICY       StoragePolicy<T>
+# define BOOST_CHECKING_POLICY      CheckingPolicy<typename StoragePolicy<T>::stored_type>
+# define BOOST_OWNERSHIP_POLICY     OwnershipPolicy<typename StoragePolicy<T>::pointer_type>
+# define BOOST_CONVERSION_POLICY    ConversionPolicy<typename StoragePolicy<T>::pointer_type>
+
+#else // BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
+
 # define BOOST_SMART_POINTER_PARAMETERS                                      \
     class OwnershipPolicy,                                                   \
     class ConversionPolicy,                                                  \
@@ -225,124 +236,103 @@ namespace boost
     class ConversionPolicy1,                                                 \
     class CheckingPolicy1,                                                   \
     class StoragePolicy1
+# define BOOST_STORAGE_POLICY       StoragePolicy
+# define BOOST_CHECKING_POLICY      CheckingPolicy
+# define BOOST_OWNERSHIP_POLICY     OwnershipPolicy
+# define BOOST_CONVERSION_POLICY    ConversionPolicy
+
 #endif // BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
 
 #define BOOST_SMART_POINTER_POLICIES                                         \
     OwnershipPolicy, ConversionPolicy, CheckingPolicy, StoragePolicy
-
 #define BOOST_CONVERSION_POLICIES                                            \
     OwnershipPolicy1, ConversionPolicy1, CheckingPolicy1, StoragePolicy1
 
-
     template <typename T, BOOST_SMART_POINTER_PARAMETERS>
     class smart_ptr
-
-#ifndef BOOST_NO_TEMPLATE_TEMPLATES
-
-        : public StoragePolicy<T>
-        , public CheckingPolicy<typename StoragePolicy<T>::stored_type>
-        , public OwnershipPolicy<typename StoragePolicy<T>::pointer_type>
-        , public ConversionPolicy<typename StoragePolicy<T>::pointer_type>
-
-#else // BOOST_NO_TEMPLATE_TEMPLATES
-
-        : public StoragePolicy
-        , public CheckingPolicy
-        , public OwnershipPolicy
-        , public ConversionPolicy
-
-#endif // BOOST_NO_TEMPLATE_TEMPLATES
-
+        : public optimally_inherit<
+            optimally_inherit<
+                BOOST_STORAGE_POLICY,
+                BOOST_OWNERSHIP_POLICY
+            >::type,
+            optimally_inherit<
+                BOOST_CHECKING_POLICY,
+                BOOST_CONVERSION_POLICY
+            >::type
+        >::type
     {
+    private:    // Policy types
+        typedef BOOST_STORAGE_POLICY                    storage_policy;
+        typedef BOOST_OWNERSHIP_POLICY                  ownership_policy;
+        typedef BOOST_CHECKING_POLICY                   checking_policy;
+        typedef BOOST_CONVERSION_POLICY                 conversion_policy;
+        typedef typename optimally_inherit<
+            optimally_inherit<
+                BOOST_STORAGE_POLICY,
+                BOOST_OWNERSHIP_POLICY
+            >::type,
+            optimally_inherit<
+                BOOST_CHECKING_POLICY,
+                BOOST_CONVERSION_POLICY
+            >::type
+        >::type                                             base_type;
+        typedef typename base_type::base1_type::base1_type  storage_base;
+        typedef typename base_type::base1_type::base2_type  ownership_base;
+        typedef typename base_type::base2_type::base1_type  checking_base;
+        typedef typename base_type::base2_type::base2_type  conversion_base;
+        typedef smart_ptr                                   this_type;
 
-#ifndef BOOST_NO_TEMPLATE_TEMPLATES
-
-        typedef StoragePolicy<T> storage_policy;
-        typedef OwnershipPolicy<typename StoragePolicy<T>::pointer_type>
-                                 ownership_policy;
-        typedef CheckingPolicy<typename StoragePolicy<T>::stored_type>
-                                 checking_policy;
-        typedef ConversionPolicy<typename StoragePolicy<T>::pointer_type>
-                                 conversion_policy;
-        typedef smart_ptr this_type;
-
-#else // BOOST_NO_TEMPLATE_TEMPLATES
-
-        typedef StoragePolicy storage_policy;
-        typedef OwnershipPolicy ownership_policy;
-        typedef CheckingPolicy checking_policy;
-        typedef ConversionPolicy conversion_policy;
-        typedef smart_ptr this_type;
-
-#endif // BOOST_NO_TEMPLATE_TEMPLATES
-
-    public:
-        typedef typename storage_policy::pointer_type   pointer_type;
-        typedef typename storage_policy::const_pointer_type
-                                                        const_pointer_type;
-        typedef typename storage_policy::stored_type    stored_type;
-        typedef typename storage_policy::const_stored_type
-                                                        const_stored_type;
-        typedef typename storage_policy::reference_type reference_type;
+    public:     // Pointer/Reference types
+        typedef typename storage_policy::pointer_type       pointer_type;
+        typedef typename storage_policy::const_pointer_type const_pointer_type;
+        typedef typename storage_policy::stored_type        stored_type;
+        typedef typename storage_policy::const_stored_type  const_stored_type;
+        typedef typename storage_policy::reference_type     reference_type;
         typedef typename storage_policy::const_reference_type
-                                                        const_reference_type;
+                                                            const_reference_type;
 
-#ifndef BOOST_BCC_NON_TYPE_TEMPLATE_PARAMETERS
-        typedef typename ct_if<
-            ownership_policy::destructive_copy_tag, this_type, const this_type
+        typedef typename mpl::if_c<
+            ::boost::is_same<
+                typename ownership_policy::ownership_category, move_semantics_tag
+            >::value,
+            this_type, this_type const
         >::type copy_arg;
-#else // BOOST_BCC_NON_TYPE_TEMPLATE_PARAMETERS
-        typedef typename ct_if_t<
-            typename ownership_policy::destructive_copy_tag, this_type,
-            const this_type
-        >::type copy_arg;
-#endif // BOOST_BCC_NON_TYPE_TEMPLATE_PARAMETERS
 
+    public:     // Constructors/Destructor
         smart_ptr()
         { checking_policy::on_default(get_impl(*this)); }
 
         smart_ptr(copy_arg& rhs)
-        : storage_policy(rhs), ownership_policy(rhs), checking_policy(rhs),
-            conversion_policy(rhs)
+        : base_type(static_cast<typename copy_arg::base_type&>(rhs))
         { get_impl_ref(*this) = ownership_policy::clone(get_impl_ref(rhs)); }
-
-#ifdef BOOST_MSVC6_MEMBER_TEMPLATES
 
         template <typename U, BOOST_CONVERSION_PARAMETERS>
         smart_ptr(smart_ptr<U, BOOST_CONVERSION_POLICIES> const& rhs)
-        : storage_policy(rhs), ownership_policy(rhs), checking_policy(rhs),
-            conversion_policy(rhs)
+        : base_type(static_cast<
+            typename smart_ptr<U, BOOST_CONVERSION_POLICIES>::base_type const&
+        >(rhs))
         { get_impl_ref(*this) = ownership_policy::clone(get_impl_ref(rhs)); }
 
         template <typename U, BOOST_CONVERSION_PARAMETERS>
         smart_ptr(smart_ptr<U, BOOST_CONVERSION_POLICIES>& rhs)
-        : storage_policy(rhs), ownership_policy(rhs), checking_policy(rhs),
-            conversion_policy(rhs)
+        : base_type(static_cast<
+            typename smart_ptr<U, BOOST_CONVERSION_POLICIES>::base_type const&
+        >(rhs))
         { get_impl_ref(*this) = ownership_policy::clone(get_impl_ref(rhs)); }
 
-#endif // BOOST_MSVC6_MEMBER_TEMPLATES
-
         smart_ptr(detail::by_ref<smart_ptr> rhs)
-        : storage_policy(rhs), ownership_policy(rhs), checking_policy(rhs),
-            conversion_policy(rhs)
+        : base_type(static_cast<typename smart_ptr::base_type const&>(rhs))
         { }
 
-#ifdef BOOST_MSVC6_MEMBER_TEMPLATES
-
         template <typename U>
-        smart_ptr(U p) : storage_policy(p), ownership_policy(p)
+        smart_ptr(U p)
+        : base_type(p, detail::init_first_tag())
         { checking_policy::on_init(get_impl(*this)); }
 
         template <typename U, typename V>
-        smart_ptr(U p, V v) : storage_policy(p, v), ownership_policy(p, v)
+        smart_ptr(U p, V v)
+        : base_type(p, v, detail::init_first_tag())
         { checking_policy::on_init(get_impl(*this)); }
-
-#else // BOOST_MSVC6_MEMBER_TEMPLATES
-
-        smart_ptr(stored_type const& p) : storage_policy(p)
-        { checking_policy::on_init(get_impl(*this)); }
-
-#endif // BOOST_MSVC6_MEMBER_TEMPLATES
 
         ~smart_ptr()
         {
@@ -352,6 +342,7 @@ namespace boost
             }
         }
 
+    public:     // Ownership modifiers
         operator detail::by_ref<smart_ptr>()
         {
             return detail::by_ref<smart_ptr>(*this);
@@ -362,8 +353,6 @@ namespace boost
             smart_ptr(rhs).swap(*this);
             return *this;
         }
-
-#ifdef BOOST_MSVC6_MEMBER_TEMPLATES
 
         template <typename U, BOOST_CONVERSION_PARAMETERS>
         smart_ptr& operator=(smart_ptr<U, BOOST_CONVERSION_POLICIES> const& rhs)
@@ -379,23 +368,16 @@ namespace boost
             return *this;
         }
 
-#endif // BOOST_MSVC6_MEMBER_TEMPLATES
-
         void swap(smart_ptr& rhs)
         {
-            ownership_policy::swap(rhs);
-            conversion_policy::swap(rhs);
-            checking_policy::swap(rhs);
-            storage_policy::swap(rhs);
+            base_type::swap(rhs);
         }
 
         friend inline void release(smart_ptr& sp, stored_type& p)
         {
             checking_policy::on_release(storage_policy::storage());
             p = get_impl_ref(sp);
-            get_impl_ref(sp) = storage_policy::default_value();
-            ownwership_policy& op = sp;
-            op = ownership_policy();
+            smart_ptr().swap(sp);
         }
 
         friend inline void reset(smart_ptr& sp, stored_type p)
@@ -403,6 +385,7 @@ namespace boost
             smart_ptr(p).swap(sp);
         }
 
+    public:     // Dereference
         pointer_type operator->()
         {
             checking_policy::on_dereference(get_impl_ref(*this));
@@ -427,26 +410,21 @@ namespace boost
             return storage_policy::get_reference();
         }
 
+    public:     // Comparison
         bool operator!() const // Enables "if (!sp) ..."
         { return !storage_policy::is_valid(); }
 
-        inline friend bool operator==(const smart_ptr& lhs,
-            const T* rhs)
+        inline friend bool operator==(smart_ptr const& lhs, T const* rhs)
         { return get_impl(lhs) == rhs; }
 
-        inline friend bool operator==(const T* lhs,
-            const smart_ptr& rhs)
+        inline friend bool operator==(T const* lhs, smart_ptr const& rhs)
         { return rhs == lhs; }
 
-        inline friend bool operator!=(const smart_ptr& lhs,
-            const T* rhs)
+        inline friend bool operator!=(smart_ptr const& lhs, T const* rhs)
         { return !(lhs == rhs); }
 
-        inline friend bool operator!=(const T* lhs,
-            const smart_ptr& rhs)
+        inline friend bool operator!=(T const* lhs, smart_ptr const& rhs)
         { return rhs != lhs; }
-
-#ifdef BOOST_MSVC6_MEMBER_TEMPLATES
 
         // Ambiguity buster
         template <typename U, BOOST_CONVERSION_PARAMETERS>
@@ -463,36 +441,16 @@ namespace boost
         bool operator<(smart_ptr<U, BOOST_CONVERSION_POLICIES> const& rhs) const
         { return *this < get_impl(rhs); }
 
-#else // BOOST_MSVC6_MEMBER_TEMPLATES
-
-        // Ambiguity buster
-        bool operator==(smart_ptr const& rhs) const
-        { return *this == get_impl(rhs); }
-
-        // Ambiguity buster
-        bool operator!=(smart_ptr const& rhs) const
-        { return !(*this == rhs); }
-
-        // Ambiguity buster
-        bool operator<(smart_ptr const& rhs) const
-        { return *this < get_impl(rhs); }
-
-#endif // BOOST_MSVC6_MEMBER_TEMPLATES
-
-    private:
-        // Helper for enabling 'if (sp)'
+    private:    // Helper for enabling 'if (sp)'
         class tester
         {
-#ifdef __GNUC__
         public:
-            void avoid_warning_about_all_private_members();
-#endif // __GNUC__
+            void avoid_gcc_warning_about_all_private_members();
         private:
             void operator delete(void*);
         };
 
-    public:
-        // enable 'if (sp)'
+    public:     // enable 'if (sp)'
         operator tester*() const
         {
             if (!*this) return 0;
@@ -501,46 +459,34 @@ namespace boost
         }
 
     private:
-#ifndef __BORLANDC__
         typedef typename conversion_policy::result_type automatic_conversion_result;
 
-    public:
+    public:     // Implicit conversion
         operator automatic_conversion_result() const
         { return get_impl(*this); }
-#else // __BORLANDC__
-
-// I somehow broke conversion support on bcc, and I can't get it back, so
-// we'll just ditch it for now.
-
-        // bcc ICE's on conversion operators to a dependent type of a base
-        // class.  To work around this, we use the original ct_if implemen-
-        // tation and explicitly define the conversion to T*, which breaks
-        // the genericity of the code, but covers the most common case.
-//        struct disallow_conversion_result
-//        {
-//            disallow_conversion_result(pointer_type)
-//            { }
-//        };
-
-//        typedef typename ct_if_t<
-//            typename conversion_policy::allow, T*, disallow_conversion_result
-//        >::type automatic_conversion_result;
-//        BOOST_STATIC_ASSERT((
-//            !conversion_policy::allow::value ||
-//            is_same<storage_policy::pointer_type, T*>::value
-//        ));
-#endif // __BORLANDC__
-
     };
 
 //////////////////////////////////////////////////////////////////////////////
-// class template default_storage
+// Default policies
+// These are the default policies provided for smart_ptr
+//////////////////////////////////////////////////////////////////////////////
+
+    class storage_policy_tag { };
+    class ownership_policy_tag { };
+    class conversion_policy_tag { };
+    class checking_policy_tag { };
+
+//////////////////////////////////////////////////////////////////////////////
+// class template scalar_storage
 // Implementation of the StoragePolicy used by smart_ptr
 //////////////////////////////////////////////////////////////////////////////
 
     template <typename T>
-    class default_storage
+    class scalar_storage
     {
+    public:
+        typedef storage_policy_tag policy_category;
+
     protected:
         typedef T*          stored_type;        // the type of the pointee_
         typedef T const*    const_stored_type;  //   object
@@ -549,48 +495,47 @@ namespace boost
         typedef T&          reference_type;     // type returned by operator*
         typedef T const&    const_reference_type;
 
-        default_storage() : pointee_(default_value())
+        scalar_storage() : pointee_(default_value())
         { }
-
-#ifndef BOOST_NO_MEMBER_TEMPLATES
-
-        template <typename U>
-        default_storage(const default_storage<U>&)
-        { }
-
-#else // BOOST_NO_MEMBER_TEMPLATES
 
         // The storage policy doesn't initialize the stored pointer
         //     which will be initialized by the OwnershipPolicy's Clone fn
-        default_storage(const default_storage&)
+        template <typename U>
+        scalar_storage(scalar_storage<U> const&) : pointee_(default_value())
         { }
 
-#endif // BOOST_NO_MEMBER_TEMPLATES
-
-        default_storage(const stored_type& p) : pointee_(p)
+        scalar_storage(stored_type const& p) : pointee_(p)
         { }
 
-        void swap(default_storage& rhs)
+        void swap(scalar_storage& rhs)
         { std::swap(pointee_, rhs.pointee_); }
 
-        pointer_type get_pointer() const
+        pointer_type get_pointer()
         { return pointee_; }
 
-        reference_type get_reference() const
+        const_pointer_type get_pointer() const
+        { return pointee_; }
+
+        reference_type get_reference()
+        { return *pointee_; }
+
+        const_reference_type get_reference() const
         { return *pointee_; }
 
         bool is_valid() const
         { return pointee_ != default_value(); }
 
     public:
-        // Accessors
-        friend inline pointer_type get_impl(const default_storage& sp)
+        friend inline pointer_type get_impl(scalar_storage& sp)
         { return sp.pointee_; }
 
-        friend inline stored_type& get_impl_ref(default_storage& sp)
+        friend inline const_pointer_type get_impl(scalar_storage const& sp)
         { return sp.pointee_; }
 
-        friend inline const stored_type& get_impl_ref(const default_storage& sp)
+        friend inline stored_type& get_impl_ref(scalar_storage& sp)
+        { return sp.pointee_; }
+
+        friend inline stored_type const& get_impl_ref(scalar_storage const& sp)
         { return sp.pointee_; }
 
     protected:
@@ -615,6 +560,9 @@ namespace boost
     template <typename T>
     class array_storage
     {
+    public:
+        typedef storage_policy_tag policy_category;
+
     protected:
         typedef T*          stored_type;        // the type of the pointee_
         typedef T const*    const_stored_type;  //   object
@@ -626,31 +574,28 @@ namespace boost
         array_storage() : pointee_(default_value())
         { }
 
-#ifndef BOOST_NO_MEMBER_TEMPLATES
-
-        template <typename U>
-        array_storage(const array_storage<U>&)
-        { }
-
-#else // BOOST_NO_MEMBER_TEMPLATES
-
         // The storage policy doesn't initialize the stored pointer
         //     which will be initialized by the OwnershipPolicy's Clone fn
-        array_storage(const default_storage&)
+        template <typename U>
+        array_storage(array_storage<U> const&)
         { }
 
-#endif // BOOST_NO_MEMBER_TEMPLATES
-
-        array_storage(const stored_type& p) : pointee_(p)
+        array_storage(stored_type const& p) : pointee_(p)
         { }
 
         void swap(array_storage& rhs)
         { std::swap(pointee_, rhs.pointee_); }
 
-        pointer_type get_pointer() const
+        pointer_type get_pointer()
         { return pointee_; }
 
-        reference_type get_reference() const
+        const_pointer_type get_pointer() const
+        { return pointee_; }
+
+        reference_type get_reference()
+        { return *pointee_; }
+
+        const_reference_type get_reference() const
         { return *pointee_; }
 
         bool is_valid() const
@@ -658,13 +603,13 @@ namespace boost
 
     public:
         // Accessors
-        friend inline pointer_type get_impl(const array_storage& sp)
+        friend inline pointer_type get_impl(array_storage const& sp)
         { return sp.pointee_; }
 
         friend inline stored_type& get_impl_ref(array_storage& sp)
         { return sp.pointee_; }
 
-        friend inline const stored_type& get_impl_ref(const array_storage& sp)
+        friend inline const stored_type& get_impl_ref(array_storage const& sp)
         { return sp.pointee_; }
 
         // gcc gets confused if this is std::size_t
@@ -674,7 +619,7 @@ namespace boost
             return get_pointer()[i];
         }
 
-        const reference_type operator[](int i) const
+        const_reference_type operator[](int i) const
         {
             BOOST_ASSERT(i >= 0);
             return get_pointer()[i];
@@ -695,6 +640,10 @@ namespace boost
     };
 
 ////////////////////////////////////////////////////////////////////////////////
+// Ownership Policies
+////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////
 // class template ref_counted
 // Implementation of the OwnershipPolicy used by smart_ptr
 // Provides a classic external reference counting implementation
@@ -704,16 +653,18 @@ namespace boost
     class ref_counted
     {
     public:
+        typedef ownership_policy_tag policy_category;
+        typedef copy_semantics_tag ownership_category;
+
+    protected:
         ref_counted()
         {
 //            pCount_ = static_cast<unsigned int*>(
 //                SmallObject<>::operator new(sizeof(unsigned int)));
 //            BOOST_ASSERT(pCount_);
 //            *pCount_ = 1;
-            pCount_ = new unsigned int(1);
+            pCount_ = new unsigned(1);
         }
-
-#ifndef BOOST_NO_MEMBER_TEMPLATES
 
         template <typename U>
         ref_counted(const ref_counted<U>& rhs)
@@ -724,16 +675,6 @@ namespace boost
 # endif // BOOST_NO_MEMBER_TEMPLATE_FRIENDS
         { }
 
-#else // BOOST_NO_MEMBER_TEMPLATES
-
-        ref_counted(const ref_counted& rhs)
-        : pCount_(rhs.pCount_)
-        { }
-
-#endif // BOOST_NO_MEMBER_TEMPLATES
-
-#ifndef BOOST_NO_MEMBER_TEMPLATES
-
         template <typename U>
         ref_counted(U)
         {
@@ -741,18 +682,16 @@ namespace boost
 //                SmallObject<>::operator new(sizeof(unsigned int)));
 //            BOOST_ASSERT(pCount_);
 //            *pCount_ = 1;
-            pCount_ = new unsigned int(1);
+            pCount_ = new unsigned(1);
         }
 
-#endif // BOOST_NO_MEMBER_TEMPLATES
-
-        P clone(const P& val)
+        P clone(P const& val)
         {
             ++*pCount_;
             return val;
         }
 
-        bool release(const P&)
+        bool release(P const&)
         {
             if (!--*pCount_)
             {
@@ -768,11 +707,9 @@ namespace boost
             std::swap(pCount_, rhs.pCount_);
         }
 
-#ifndef BOOST_BCC_NON_TYPE_TEMPLATE_PARAMETERS
-        enum { destructive_copy_tag = false };
-#else // BOOST_BCC_NON_TYPE_TEMPLATE_PARAMETERS
-        typedef false_type destructive_copy_tag;
-#endif // BOOST_BCC_NON_TYPE_TEMPLATE_PARAMETERS
+    public:
+        friend inline unsigned use_count(ref_counted const& p)
+        { return *(p.pCount_); }
 
     private:
 
@@ -781,7 +718,7 @@ namespace boost
 #endif // BOOST_NO_MEMBER_TEMPLATE_FRIENDS
 
         // Data
-        unsigned int* pCount_;
+        unsigned* pCount_;
     };
 
 //////////////////////////////////////////////////////////////////////////////
@@ -815,6 +752,10 @@ namespace boost
         template <typename P>
         class impl
         {
+        public:
+            typedef ownership_policy_tag policy_category;
+            typedef copy_semantics_tag ownership_category;
+
         protected:
 #ifndef BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
             typedef ThreadingModel<ref_counted_mt> threading_model;
@@ -834,26 +775,14 @@ namespace boost
                 pCount_ = new unsigned int(1);
             }
 
-#ifndef BOOST_NO_MEMBER_TEMPLATES
-
             template <typename U>
-            impl(const impl<U>& rhs)
+            impl(impl<U> const& rhs)
 # ifndef BOOST_NO_MEMBER_TEMPLATE_FRIENDS
             : pCount_(rhs.pCount_)
 # else // BOOST_NO_MEMBER_TEMPLATE_FRIENDS
             : pCount_(reinterpret_cast<const impl&>(rhs).pCount_)
 # endif // BOOST_NO_MEMBER_TEMPLATE_FRIENDS
             { }
-
-#else // BOOST_NO_MEMBER_TEMPLATES
-
-            impl(const impl& rhs)
-            : pCount_(rhs.pCount_)
-            { }
-
-#endif // BOOST_NO_MEMBER_TEMPLATES
-
-#ifndef BOOST_NO_MEMBER_TEMPLATES
 
             template <typename U>
             impl(U)
@@ -866,15 +795,13 @@ namespace boost
                 pCount_ = new unsigned int(1);
             }
 
-#endif // BOOST_NO_MEMBER_TEMPLATES
-
-            P clone(const P& val)
+            P clone(P const& val)
             {
                 threading_model::atomic_increment(*pCount_);
                 return val;
             }
 
-            bool release(const P&)
+            bool release(P const&)
             {
                 if (!threading_model::atomic_decrement(*pCount_))
                 {
@@ -890,12 +817,6 @@ namespace boost
             {
                 std::swap(pCount_, rhs.pCount_);
             }
-
-#ifndef BOOST_BCC_NON_TYPE_TEMPLATE_PARAMETERS
-            enum { destructive_copy_tag = false };
-#else // BOOST_BCC_NON_TYPE_TEMPLATE_PARAMETERS
-            typedef false_type destructive_copy_tag;
-#endif // BOOST_BCC_NON_TYPE_TEMPLATE_PARAMETERS
 
         private:
 
@@ -930,50 +851,33 @@ namespace boost
 ////////////////////////////////////////////////////////////////////////////////
 
     template <typename P>
-    class com_ref_counted
+    struct com_ref_counted
     {
-    protected:
+        typedef ownership_policy_tag policy_category;
+        typedef copy_semantics_tag ownership_category;
+
         com_ref_counted()
         { }
 
-#ifndef BOOST_NO_MEMBER_TEMPLATES
-
         template <typename U>
-        com_ref_counted(const com_ref_counted<U>&)
+        com_ref_counted(com_ref_counted<U> const&)
         { }
-
-#else // BOOST_NO_MEMBER_TEMPLATES
-
-        com_ref_counted(const com_ref_counted&)
-        { }
-
-#endif // BOOST_NO_MEMBER_TEMPLATES
-
-#ifndef BOOST_NO_MEMBER_TEMPLATES
 
         template <typename U>
         com_ref_counted(U p)
         { }
 
-#endif // BOOST_NO_MEMBER_TEMPLATES
-
-        static P clone(const P& val)
+        static P clone(P const& val)
         {
             val->AddRef();
             return val;
         }
 
-        static bool release(const P& val)
+        static bool release(P const& val)
         {
             val->Release();
             return false;
         }
-
-#ifndef BOOST_BCC_NON_TYPE_TEMPLATE_PARAMETERS
-        enum { destructive_copy_tag = false };
-#else // BOOST_BCC_NON_TYPE_TEMPLATE_PARAMETERS
-        typedef false_type destructive_copy_tag;
-#endif // BOOST_BCC_NON_TYPE_TEMPLATE_PARAMETERS
 
         static void swap(com_ref_counted&)
         { }
@@ -989,7 +893,7 @@ namespace boost
     {
         class ref_linked_base
         {
-        protected:
+        public:
             ref_linked_base() 
             { prev_ = next_ = this; }
 
@@ -1041,12 +945,6 @@ namespace boost
                 std::swap(next_->prev_, rhs.next_->prev_);
             }
 
-#ifndef BOOST_BCC_NON_TYPE_TEMPLATE_PARAMETERS
-            enum { destructive_copy_tag = false };
-#else // BOOST_BCC_NON_TYPE_TEMPLATE_PARAMETERS
-            typedef false_type destructive_copy_tag;
-#endif // BOOST_BCC_NON_TYPE_TEMPLATE_PARAMETERS
-
         private:
             mutable const ref_linked_base* prev_;
             mutable const ref_linked_base* next_;
@@ -1054,24 +952,22 @@ namespace boost
     }   // namespace detail
 
     template <typename P>
-    class ref_linked : public detail::ref_linked_base
+    struct ref_linked : public detail::ref_linked_base
     {
-    protected:
+        typedef ownership_policy_tag policy_category;
+        typedef copy_semantics_tag ownership_category;
+
         ref_linked()
         { }
-
-#ifndef BOOST_NO_MEMBER_TEMPLATES
 
         template <typename U>
         ref_linked(U)
         { }
 
-#endif // BOOST_NO_MEMBER_TEMPLATES
-
-        static P clone(const P& val)
+        static P clone(P const& val)
         { return val; }
 
-        static bool release(const P&)
+        static bool release(P const&)
         { return detail::ref_linked_base::release(); }
     };
 
@@ -1082,34 +978,21 @@ namespace boost
 ////////////////////////////////////////////////////////////////////////////////
 
     template <typename P>
-    class destructive_copy
+    struct destructive_copy
     {
-    protected:
+        typedef ownership_policy_tag policy_category;
+        typedef move_semantics_tag ownership_category;
+
         destructive_copy()
         { }
 
-#ifndef BOOST_NO_MEMBER_TEMPLATES
-
         template <typename U>
-        destructive_copy(const destructive_copy<U>&)
+        destructive_copy(destructive_copy<U> const&)
         { }
-
-#else // BOOST_NO_MEMBER_TEMPLATES
-
-        destructive_copy(const destructive_copy&)
-        { }
-
-#endif // BOOST_NO_MEMBER_TEMPLATES
-
-#ifndef BOOST_NO_MEMBER_TEMPLATES
 
         template <typename U>
         destructive_copy(U)
         { }
-
-#endif // BOOST_NO_MEMBER_TEMPLATES
-
-#ifndef BOOST_NO_MEMBER_TEMPLATES
 
         template <typename U>
         static P clone(U& val)
@@ -1119,30 +1002,11 @@ namespace boost
             return result;
         }
 
-#else // BOOST_NO_MEMBER_TEMPLATES
-
-        static P clone(P& val)
-        {
-            P result(val);
-            val = P();
-            return result;
-        }
-
-#endif // BOOST_NO_MEMBER_TEMPLATES
-
-        static bool release(const P&)
+        static bool release(P const&)
         { return true; }
 
         static void swap(destructive_copy&)
         { }
-
-        // If this flag is called destructive_copy, bcc complains that it has
-        //     the same name as the class.
-#ifndef BOOST_BCC_NON_TYPE_TEMPLATE_PARAMETERS
-        enum { destructive_copy_tag = true };
-#else // BOOST_BCC_NON_TYPE_TEMPLATE_PARAMETERS
-        typedef true_type destructive_copy_tag;
-#endif // BOOST_BCC_NON_TYPE_TEMPLATE_PARAMETERS
     };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1153,47 +1017,30 @@ namespace boost
 ////////////////////////////////////////////////////////////////////////////////
 
     template <typename P>
-    class deep_copy
+    struct deep_copy
     {
-    protected:
+        typedef ownership_policy_tag policy_category;
+        typedef copy_semantics_tag ownership_category;
+
         deep_copy()
         { }
 
-#ifndef BOOST_NO_MEMBER_TEMPLATES
-
         template <typename U>
-        deep_copy(const deep_copy<U>&)
+        deep_copy(deep_copy<U> const&)
         { }
-
-#else // BOOST_NO_MEMBER_TEMPLATES
-
-        deep_copy(const deep_copy&)
-        { }
-
-#endif // BOOST_NO_MEMBER_TEMPLATES
-
-#ifndef BOOST_NO_MEMBER_TEMPLATES
 
         template <typename U>
         deep_copy(U)
         { }
 
-#endif // BOOST_NO_MEMBER_TEMPLATES
-
-        static P clone(const P& val)
+        static P clone(P const& val)
         { return val->clone(); }
 
-        static bool release(const P& val)
+        static bool release(P const&)
         { return true; }
 
         static void swap(deep_copy&)
         { }
-
-#ifndef BOOST_BCC_NON_TYPE_TEMPLATE_PARAMETERS
-        enum { destructive_copy_tag = false };
-#else // BOOST_BCC_NON_TYPE_TEMPLATE_PARAMETERS
-        typedef false_type destructive_copy_tag;
-#endif // BOOST_BCC_NON_TYPE_TEMPLATE_PARAMETERS
     };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1203,50 +1050,33 @@ namespace boost
 ////////////////////////////////////////////////////////////////////////////////
 
     template <typename P>
-    class no_copy
+    struct no_copy
     {
-    protected:
+        typedef ownership_policy_tag policy_category;
+        typedef no_copy_semantics_tag ownership_category;
+
         no_copy()
         { }
 
-#ifndef BOOST_NO_MEMBER_TEMPLATES
-
         template <typename U>
-        no_copy(const no_copy<U>&)
+        no_copy(no_copy<U> const&)
         { }
-
-#else // BOOST_NO_MEMBER_TEMPLATES
-
-        no_copy(const no_copy&)
-        { }
-
-#endif // BOOST_NO_MEMBER_TEMPLATES
-
-#ifndef BOOST_NO_MEMBER_TEMPLATES
 
         template <typename U>
         no_copy(U)
         { }
 
-#endif // BOOST_NO_MEMBER_TEMPLATES
-
-        static P clone(const P&)
+        static P clone(P const&)
         {
+            // This Policy Disallows Value Copying
             BOOST_STATIC_ASSERT(false);
-            // This_Policy_Disallows_Value_Copying
         }
 
-        static bool release(const P&)
+        static bool release(P const&)
         { return true; }
 
         static void swap(no_copy&)
         { }
-
-#ifndef BOOST_BCC_NON_TYPE_TEMPLATE_PARAMETERS
-        enum { destructive_copy_tag = false };
-#else // BOOST_BCC_NON_TYPE_TEMPLATE_PARAMETERS
-        typedef false_type destructive_copy_tag;
-#endif // BOOST_BCC_NON_TYPE_TEMPLATE_PARAMETERS
     };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1256,14 +1086,15 @@ namespace boost
 ////////////////////////////////////////////////////////////////////////////////
 
     template <typename P>
-    class allow_conversion
+    struct allow_conversion
     {
-    protected:
-#ifndef __BORLANDC__
+        typedef conversion_policy_tag policy_category;
+
+//#ifndef __BORLANDC__
         typedef P result_type;
-#else // __BORLANDC__
-        typedef true_type allow;
-#endif // __BORLANDC__
+//#else // __BORLANDC__
+//        typedef true_type allow;
+//#endif // __BORLANDC__
 
         static void swap(allow_conversion&)
         { }
@@ -1277,25 +1108,26 @@ namespace boost
 ////////////////////////////////////////////////////////////////////////////////
 
     template <typename P>
-    class disallow_conversion
+    struct disallow_conversion
     {
-    protected:
-#ifndef __BORLANDC__
+        typedef conversion_policy_tag policy_category;
+
+//#ifndef __BORLANDC__
         struct disallow_conversion_result
         {
-            disallow_conversion_result(const P&)
+            disallow_conversion_result(P const&)
             { }
         };
 
         typedef disallow_conversion_result result_type;
-#else // __BORLANDC__
-        typedef false_type allow;
-#endif // __BORLANDC__
+//#else // __BORLANDC__
+//        typedef false_type allow;
+//#endif // __BORLANDC__
 
         disallow_conversion()
         { }
 
-        disallow_conversion(const allow_conversion<P>&)
+        disallow_conversion(allow_conversion<P> const&)
         { }
 
         static void swap(disallow_conversion&)
@@ -1320,41 +1152,32 @@ namespace boost
 ////////////////////////////////////////////////////////////////////////////////
 
     template <typename P>
-    class no_check
+    struct no_check
     {
-    protected:
+        typedef checking_policy_tag policy_category;
+
         no_check()
         { }
 
-#ifndef BOOST_NO_MEMBER_TEMPLATES
-
         template <typename U>
-        no_check(const no_check<U>&)
+        no_check(no_check<U> const&)
         { }
 
-#else // BOOST_NO_MEMBER_TEMPLATES
-
-        no_check(const no_check&)
+        static void on_default(P const&)
         { }
 
-#endif // BOOST_NO_MEMBER_TEMPLATES
-
-        static void on_default(const P&)
+        static void on_init(P const&)
         { }
 
-        static void on_init(const P&)
+        static void on_dereference(P const&)
         { }
 
-        static void on_dereference(const P&)
-        { }
-
-        static void on_release(const P&)
+        static void on_release(P const&)
         { }
 
         static void swap(no_check&)
         { }
     };
-
 
 ////////////////////////////////////////////////////////////////////////////////
 // class template assert_check
@@ -1363,42 +1186,31 @@ namespace boost
 ////////////////////////////////////////////////////////////////////////////////
 
     template <typename P>
-    class assert_check
+    struct assert_check
     {
-    protected:
+        typedef checking_policy_tag policy_category;
+
         assert_check()
         { }
 
-#ifndef BOOST_NO_MEMBER_TEMPLATES
-
         template <typename U>
-        assert_check(const assert_check<U>&)
+        assert_check(assert_check<U> const&)
         { }
 
         template <typename U>
-        assert_check(const no_check<U>&)
+        assert_check(no_check<U> const&)
         { }
 
-#else // BOOST_NO_MEMBER_TEMPLATES
-
-        assert_check(const assert_check&)
+        static void on_default(P const&)
         { }
 
-        assert_check(const no_check&)
+        static void on_init(P const&)
         { }
 
-#endif // BOOST_NO_MEMBER_TEMPLATES
-
-        static void on_default(const P&)
-        { }
-
-        static void on_init(const P&)
-        { }
-
-        static void on_dereference(const P& val)
+        static void on_dereference(P const& val)
         { assert(val); }
 
-        static void on_release(const P&)
+        static void on_release(P const&)
         { }
 
         static void swap(assert_check&)
@@ -1413,49 +1225,35 @@ namespace boost
 ////////////////////////////////////////////////////////////////////////////////
 
     template <typename P>
-    class assert_check_strict
+    struct assert_check_strict
     {
-    protected:
+        typedef checking_policy_tag policy_category;
+
         assert_check_strict()
         { }
 
-#ifndef BOOST_NO_MEMBER_TEMPLATES
-
         template <typename U>
-        assert_check_strict(const assert_check_strict<U>&)
+        assert_check_strict(assert_check_strict<U> const&)
         { }
 
         template <typename U>
-        assert_check_strict(const assert_check<U>&)
+        assert_check_strict(assert_check<U> const&)
         { }
 
         template <typename U>
-        assert_check_strict(const no_check<U>&)
+        assert_check_strict(no_check<U> const&)
         { }
 
-#else // BOOST_NO_MEMBER_TEMPLATES
-
-        assert_check_strict(const assert_check_strict&)
-        { }
-
-        assert_check_strict(const assert_check&)
-        { }
-
-        assert_check_strict(const no_check&)
-        { }
-
-#endif // BOOST_NO_MEMBER_TEMPLATES
-
-        static void on_default(const P& val)
+        static void on_default(P const& val)
         { assert(val); }
 
-        static void on_init(const P& val)
+        static void on_init(P const& val)
         { assert(val); }
 
-        static void on_dereference(const P& val)
+        static void on_dereference(P const& val)
         { assert(val); }
 
-        static void on_release(const P&)
+        static void on_release(P const&)
         { }
 
         static void swap(assert_check_strict&)
@@ -1469,59 +1267,42 @@ namespace boost
 ////////////////////////////////////////////////////////////////////////////////
 
     template <typename P>
-    class reject_null_static
+    struct reject_null_static
     {
-    protected:
+        typedef checking_policy_tag policy_category;
+
         reject_null_static()
         { }
 
-#ifndef BOOST_NO_MEMBER_TEMPLATES
-
         template <typename U>
-        reject_null_static(const reject_null_static<U>&)
+        reject_null_static(reject_null_static<U> const&)
         { }
 
         template <typename U>
-        reject_null_static(const no_check<U>&)
+        reject_null_static(no_check<U> const&)
         { }
 
         template <typename U>
-        reject_null_static(const assert_check<U>&)
+        reject_null_static(assert_check<U> const&)
         { }
 
         template <typename U>
-        reject_null_static(const assert_check_strict<U>&)
+        reject_null_static(assert_check_strict<U> const&)
         { }
 
-#else // BOOST_NO_MEMBER_TEMPLATES
-
-        reject_null_static(const reject_null_static&)
-        { }
-
-        reject_null_static(const no_check&)
-        { }
-
-        reject_null_static(const assert_check&)
-        { }
-
-        reject_null_static(const assert_check_strict&)
-        { }
-
-#endif // BOOST_NO_MEMBER_TEMPLATES
-
-        static void on_default(const P&)
+        static void on_default(P const&)
         {
+            // This Policy Does Not Allow Default Initialization
             BOOST_STATIC_ASSERT(false);
-            // This_Policy_Does_Not_Allow_Default_Initialization
         }
 
-        static void on_init(const P& val)
+        static void on_init(P const& val)
         { if (!val) throw null_pointer_error(); }
 
-        static void on_dereference(const P& val)
+        static void on_dereference(P const& val)
         { if (!val) throw null_pointer_error(); }
 
-        static void on_release(const P&)
+        static void on_release(P const&)
         { }
 
         static void swap(reject_null_static&)
@@ -1535,35 +1316,27 @@ namespace boost
 ////////////////////////////////////////////////////////////////////////////////
 
     template <typename P>
-    class reject_null
+    struct reject_null
     {
-    protected:
+        typedef checking_policy_tag policy_category;
+
         reject_null()
         { }
 
-#ifndef BOOST_NO_MEMBER_TEMPLATES
-
         template <typename U>
-        reject_null(const reject_null<U>&)
+        reject_null(reject_null<U> const&)
         { }
 
-#else // BOOST_NO_MEMBER_TEMPLATES
-
-        reject_null(const reject_null&)
+        static void on_default(P const&)
         { }
 
-#endif // BOOST_NO_MEMBER_TEMPLATES
-
-        static void on_default(const P& val)
+        static void on_init(P const&)
         { }
 
-        static void on_init(const P& val)
-        { }
-
-        static void on_dereference(const P& val)
+        static void on_dereference(P const& val)
         { if (!val) throw null_pointer_error(); }
 
-        static void on_release(const P&)
+        static void on_release(P const&)
         { }
 
         static void swap(reject_null&)
@@ -1577,45 +1350,34 @@ namespace boost
 ////////////////////////////////////////////////////////////////////////////////
 
     template <typename P>
-    class reject_null_strict
+    struct reject_null_strict
     {
-    protected:
+        typedef checking_policy_tag policy_category;
+
         reject_null_strict()
         { }
 
-#ifndef BOOST_NO_MEMBER_TEMPLATES
-
         template <typename U>
-        reject_null_strict(const reject_null_strict<U>&)
+        reject_null_strict(reject_null_strict<U> const&)
         { }
 
         template <typename U>
-        reject_null_strict(const reject_null<U>&)
+        reject_null_strict(reject_null<U> const&)
         { }
 
-#else // BOOST_NO_MEMBER_TEMPLATES
-
-        reject_null_strict(const reject_null_strict&)
-        { }
-
-        reject_null_strict(const reject_null&)
-        { }
-
-#endif // BOOST_NO_MEMBER_TEMPLATES
-
-        static void on_init(const P& val)
+        static void on_init(P const& val)
         { if (!val) throw null_pointer_error(); }
 
-        static void on_default(const P& val)
+        static void on_default(P const& val)
         {
+            // This Policy Does Not Allow Default Initialization
             BOOST_STATIC_ASSERT(false);
-            // This_Policy_Does_Not_Allow_Default_Initialization
         }
 
-        static void on_dereference(const P& val)
+        static void on_dereference(P const& val)
         { if (!val) throw null_pointer_error(); }
 
-        static void on_release(const P&)
+        static void on_release(P const&)
         { }
 
         static void swap(reject_null_strict&)
@@ -1713,12 +1475,13 @@ namespace std
 #undef BOOST_SMART_POINTER_POLICIES
 #undef BOOST_SMART_POINTER_PARAMETERS
 
-#if defined(__BORLANDC__) || defined(BOOST_MSVC)
-# include <poppack.h>
-#endif
+//#if defined(__BORLANDC__) || defined(BOOST_MSVC)
+//# include <poppack.h>
+//#endif
 
 #ifdef BOOST_MSVC
 # pragma warning(pop)
 #endif // BOOST_MSVC
 
 #endif // BOOST_SMART_PTR_20020920_HPP
+
