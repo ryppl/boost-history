@@ -743,6 +743,23 @@ void test_project_equivalences () {
 
 #endif
 
+void test_adaptor () {
+{
+        numerics::banded_matrix<double> bm (3, 3, 1, 1);
+        numerics::symmetric_adaptor<numerics::banded_matrix<double>, numerics::lower> sa (bm);
+        sa (0, 0) = sa (1, 1) = sa (2, 2) = 1;
+        sa (1, 0) = sa (2, 1) = 2;
+        std::cout << sa << std::endl; 
+}
+{
+        numerics::banded_matrix<double> bm (3, 3, 1, 0);
+        numerics::symmetric_adaptor<numerics::banded_matrix<double>, numerics::lower> sa (bm);
+        sa (0, 0) = sa (1, 1) = sa (2, 2) = 1;
+        sa (1, 0) = sa (2, 1) = 2;
+        std::cout << sa << std::endl;
+}
+}
+
 int main () {
 #ifdef LATER
     std::cout << sizeof (std::complex<float>) << std::endl;
@@ -767,6 +784,7 @@ int main () {
 #ifdef NUMERICS_DEPRECATED
     test_project_equivalences ();
 #endif
+    test_adaptor ();
     numerics::concept_checks ();
     return 0;
 }
