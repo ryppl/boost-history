@@ -7,7 +7,5 @@ compile apply_wrap.cpp ;
 compile debug_print.cpp ;
 compile has_rebind.cpp ;
 compile has_distance.cpp ;
-compile has_xxx.cpp ;
-compile no_has_xxx.cpp ;
 compile typeof.cpp ;
 compile template_arity.cpp ;
