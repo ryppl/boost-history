@@ -630,6 +630,98 @@ rounding_control&lt;T&gt; &gt;.</code>
 
 </ul>
 
+<h2>Checking</h2>
+
+<p>The last customizable part of <code>interval_traits</code> deals
+with exception handling. For example, when two intervals are divided,
+if the second contains zero, the result of the division is
+undefined. In this case, the answer will be the biggest interval in
+order to try to respect the basic property of the interval
+arithmetic. However, this behavior is not necessarily the one the user
+expect. And that is here this third parameter of
+<code>interval_traits</code> plays a part.</p>
+
+<p>An important fact to understand is: the behavior defined by this
+parameter is only invoked if the input intervals of a function are not
+fully included in the domain of the function. If the input intervals
+are inside this domain but the result are exceptionnal (for example in
+case of an overflow during the computations), the members of this
+checking class will not be called.</p>
+
+<p>There is another important matter. The checking policy does not
+allow to say what the results should be in case of problem. It is only
+allowed to point out the problem (through an exception for example).</p>
+
+<p>The checking class should be of the following type:</p>
+
+<pre>
+struct checking
+{
+  static void inverted_bound(const T&amp; l, const T&amp; u);
+  static void divide_by_zero(const T&amp; l, const T&amp; u);
+  static void sqrt_nan();
+  static void logarithmic_nan();
+  static void logarithmic_inf();
+  static void trigonometric_nan();
+  static void trigonometric_inf();
+  static void hyperbolic_nan();
+  static void hyperbolic_inf();
+};
+</pre>
+
+<p>The first function, <code>inverted_bound</code>, deals with the
+call to a constructor like <code>interval::interval(const T&amp; l,
+const T&amp; u)</code> or a function like <code>void
+interval::assign(const T&amp; l, const T&amp; u)</code> when
+<code>l</code> is not lesser or equal to <code>u</code>. It is
+generally a good idea to throw an exception if the function
+<code>inverted_bound</code> is called. The parameters of the function
+are the faulty bounds of the interval. If the function returns to the
+caller, the final result will be the empty interval.</p>
+
+<p><code>divide_by_zero</code> is called each time the second interval
+of a division contains zero. If the function returns to the caller,
+the final result will be the entire interval. The faulty interval is
+given as an argument in order for the user to differentiate between a
+loss of precision and a bug in the program.</p>
+
+<p>Indeed if the interval is [0,0], there clearly is a problem
+somewhere. It is generally not an error when a floating-point number
+is divided by zero, because it can be caused by a loss of precision or
+an underflow. However, it is not true anymore for the interval
+arithmetic when used to obtain "exact" results. Because the interval
+[0,0] means that the result is exactly zero.</p>
+
+<p>This is also the reason why the functions <code>sqrt_nan</code>,
+<code>logarithmic_nan</code>, <code>trigonometric_nan</code> and
+<code>hyperbolic_nan</code> are defined, since a function should not
+be called with an input completely outside of its definition
+domain. Like it was for <code>inverted_bound</code> and
+<code>divide_by_zero(0, 0)</code>, it usually is a good idea to throw
+an exception because the program is defective.</p>
+
+<p>The purpose of the functions <code>logarithmic_inf</code>,
+<code>trigonometric_inf</code>, <code>hyperbolic_inf</code> is
+different. These functions are called when the input intervals are
+partially outside the definition and that will lead to an infinite
+result. For example, <code>log</code>([-1,1]) will trigger
+<code>logarithmic_inf</code> but <code>exp</code>([0,1e1000]) will not
+trigger anything (although the upper bound will be infinity).</p>
+
+<p><code>sqrt_nan</code> is called by <code>sqrt</code>.
+<code>logarithmic_inf</code> and <code>logarithmic_nan</code> are
+called by <code>log</code>.  <code>trigonometric_nan</code> is called
+by <code>asin</code> and <code>acos</code>.
+<code>trigonometric_inf</code> is called by <code>tan</code>.
+<code>hyperbolic_nan</code> is called by <code>acosh</code> and
+<code>atanh</code>. <code>hyperbolic_inf</code> is called by
+<code>atanh</code>.</p>
+
+<p>As a side note, because the constant &pi; usually suffers from a
+lack of precision, <code>tan</code> is unfortunatelly unable to
+trigger <code>trigonometric_nan</code> on an input like [&pi;/2,
+&pi;/2].</p>
+
 <h2>Performance Notes</h2>
 
 <p>This paragraph deals mostly with the performance of the library
@@ -717,12 +809,10 @@ template&lt;class I&gt;
 I horner(const I&amp; x, const I p[], int n) {
 
   // define the unprotected version of the interval type
-  typedef boost::interval_lib::detail::unprotect&lt;I&gt; unprotected;
-  typedef typename unprotected::type R;
+  typedef typename boost::interval_lib::unprotect&lt;I&gt;::type R;
   
   // initialize and restore the rounding mode
-  typedef typename I::traits_type traits;
-  typename traits::rounding rnd;
+  typename I::traits_type::rounding rnd;
 
   R a = x;
   R y = p[n - 1];

@@ -52,7 +52,8 @@ typedef
 typedef
   boost::interval<double, interval_traits<double,
 					  compare_certainly<double>,
-					  my_rounded_arith> >
+					  my_rounded_arith,
+					  checking_lax<double> > >
   interval_type;
 //typedef boost::interval<double, boost::interval_traits<double> > interval_type;
 static const std::string interval_name = "boost::interval<double>";

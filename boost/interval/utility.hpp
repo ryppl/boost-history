@@ -266,10 +266,8 @@ bisect(const interval<T, Traits>& x)
 template<class T, class Traits>
 T dist(const interval<T, Traits>& x, const interval<T, Traits>& y)
 {
-  using std::abs;
-  typename Traits::rounding rnd;
-  rnd.tonearest();
-  return std::min(abs(x.lower() - y.lower()), abs(x.upper() - y.upper()));
+  typename interval_lib::detail::tonearest<typename Traits::rounding>::type rnd;
+  return std::min(std::abs(x.lower() - y.lower()), std::abs(x.upper() - y.upper()));
 }
 
 template<class T, class Traits>
@@ -295,8 +293,7 @@ interval<T, Traits> scale(const interval<T, Traits>& x,
 			  const T& mirror, const T& factor)
 {
   typename Traits::rounding rnd;
-  typedef interval_lib::detail::unprotect<Traits> unprotected;
-  typedef interval<T, typename unprotected::type> I;
+  typedef interval<T, typename interval_lib::unprotect<Traits>::type> I;
   return factor * ((I)x - mirror);
 }
 

@@ -69,7 +69,7 @@ template<class T>
 struct rounded_arithmetic;
 
 template<class T>
-struct checking_lax;
+struct checking_strict;
 
   } // namespace interval_lib
 
@@ -77,7 +77,7 @@ struct checking_lax;
 template<class T,
 	 class Compare = interval_lib::compare_certainly<T>,
 	 class Rounding = interval_lib::rounded_arithmetic<T>,
-	 class Checking = interval_lib::checking_lax<T> >
+	 class Checking = interval_lib::checking_strict<T> >
 struct interval_traits
 {
   typedef T base_type;

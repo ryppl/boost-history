@@ -367,7 +367,7 @@ bool operator!=(const interval<T, Traits>& x, const T& y)
 template<class T>
 struct compare_certainly
 {
-  static bool lessthan(const T& xl, const T& xu, const T& yl, const T& yu)
+  static bool lessthan(const T&, const T& xu, const T& yl, const T&)
   { return xu < yl; }
   static bool equalto(const T& xl, const T& xu, const T& yl, const T& yu)
   { return xu == yl && yu == xl; }
@@ -376,7 +376,7 @@ struct compare_certainly
 template<class T>
 struct compare_possibly
 {
-  static bool lessthan(const T& xl, const T& xu, const T& yl, const T& yu)
+  static bool lessthan(const T& xl, const T&, const T&, const T& yu)
   { return xl < yu; }
   static bool equalto(const T& xl, const T& xu, const T& yl, const T& yu)
   { return !(xu < yl || yu < xl); }

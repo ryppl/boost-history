@@ -33,7 +33,8 @@ typedef
 
 typedef interval<double, interval_traits<double,
 					 compare_certainly<double>,
-					 my_rounded_arith> > R;
+					 my_rounded_arith,
+					 checking_lax<double> > > R;
 
 static unsigned nb_errors;
 static std::string test_name;
@@ -110,7 +111,7 @@ void iterate_one_interval(UnaryFunction func, const std::string & msg,
 	func(r);
       }
   } catch(std::exception & ex) {
-    std::cerr << "Exception with " << msg << ex.what() << std::endl;
+    std::cerr << "Exception with " << msg << ": " << ex.what() << std::endl;
   }
   test::end();
 }

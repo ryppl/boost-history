@@ -72,8 +72,6 @@ struct save_state: Rounding
   ~save_state() { set_rounding_mode(mode); }
 };
 
-    namespace detail {
-
 template<class T>
 struct unprotect {
   typedef T type;
@@ -96,6 +94,8 @@ struct unprotect<interval<T, Traits> > {
   typedef interval<T, typename unprotect<Traits>::type> type;
 };
 
+    namespace detail {
+
 template<class Rounding>
 struct save_state_tonearest: Rounding {
   typename Rounding::rounding_mode mode;
@@ -113,7 +113,7 @@ struct tonearest {
 
 template<class Rounding>
 struct tonearest<save_state<Rounding> > {
-  typedef Rounding type;
+  typedef save_state_tonearest<Rounding> type;
 };
 
     } // namespace detail
@@ -178,17 +178,17 @@ struct ra_aux:
     unprotected;
 };
 
+    } // namespace detail
+
 template<class T>
 struct unprotect<rounded_arithmetic<T> > {
   typedef typename rounded_arithmetic<T>::unprotected type;
 };
 
-    } // namespace detail
-
 template<> struct rounded_arithmetic<float>: detail::ra_aux<float> {};
 template<> struct rounded_arithmetic<double>: detail::ra_aux<double> {};
 
-  } // namespace interval
+  } // namespace interval_lib
 } // namespace boost
 
 #endif // BOOST_INTERVAL_ROUNDED_ARITH_HPP

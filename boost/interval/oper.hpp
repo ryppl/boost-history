@@ -289,15 +289,14 @@ interval<T, Traits> operator/(const T& x, const interval<T, Traits>& y)
 template<class T, class Traits>
 interval<T, Traits> sqrt(const interval<T, Traits>& x)
 {
-  if (x.lower() < T(0)) {
+  if (x.upper() < T(0)) {
     typedef typename Traits::checking checking;
-    checking::negative_sqrt(x.lower(), x.upper());
-  }
-  if (x.upper() < T(0))
+    checking::sqrt_nan();
     return interval<T, Traits>::empty();
+  }
 
   typename Traits::rounding rnd;
-  T l = detail::sign(x.lower()) ? T(0) : rnd.sqrt_down(x.lower());
+  T l = (x.lower() <= T(0)) ? 0 : rnd.sqrt_down(x.lower());
   return interval<T, Traits>(l, rnd.sqrt_up(x.upper()), true);
 }
 
@@ -307,9 +306,9 @@ interval<T, Traits> square(const interval<T, Traits>& x)
   typedef interval<T, Traits> I;
   typename Traits::rounding rnd;
   if (detail::sign(x.lower()) && !detail::sign(x.upper())) {
-    return I(0, (-x.lower() > x.upper() ? 
-		 rnd.mul_up(x.lower(), x.lower()) :
-		 rnd.mul_up(x.upper(), x.upper())), true);
+    return I(T(0), (-x.lower() > x.upper() ? 
+		    rnd.mul_up(x.lower(), x.lower()) :
+		    rnd.mul_up(x.upper(), x.upper())), true);
   } else if (detail::sign(x.upper())) {
     return I(rnd.mul_down(x.upper(), x.upper()),
 	     rnd.mul_up(x.lower(), x.lower()), true);
