@@ -118,11 +118,12 @@ namespace boost { namespace numeric { namespace blasbindings {
     const value_type *y_ptr = yvtraits::storage( y ) ;
 
     value_type ret ;
-    blas< value_type >::dot( (bind_type*)&ret,
-                             &n, 
-                             (const bind_type*)x_ptr, &stride_x, 
-                             (const bind_type*)y_ptr, &stride_y 
-                             ) ;
+    blas< value_type >::dotc( (bind_type*)&ret,
+                              &n, 
+                              (const bind_type*)x_ptr, &stride_x, 
+                              (const bind_type*)y_ptr, &stride_y 
+                              ) ;
+    return ret ;
   }
 }}}
 

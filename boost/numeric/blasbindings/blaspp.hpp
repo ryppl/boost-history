@@ -15,10 +15,8 @@
 #endif
 
 #include <boost/numeric/blasbindings/blas.h>
+#include <boost/numeric/blasbindings/type.hpp>
 #include <boost/numeric/blasbindings/valuetraits.hpp>
-
-  typedef std::complex< float >  float_complex ;
-  typedef std::complex< double > double_complex ;
 
   template < typename T >
   struct blas

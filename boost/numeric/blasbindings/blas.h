@@ -17,7 +17,6 @@
 #endif
 
 #include <boost/numeric/blasbindings/fortran.h>
-#include <complex>
 
 //
 // make sure to match the library symbols
@@ -124,8 +123,7 @@
  * 
  */
 
-typedef float  fcomplex ;
-typedef double dcomplex ;
+#include <boost/numeric/blasbindings/type.h>
 
 extern "C"
 {
