@@ -354,8 +354,7 @@ namespace boost { namespace numerics {
         // Too unusual semantic.
         // check (&a1 != &a2, external_logic ());
         if (&a1 != &a2)
-                a1.swap (a2);
-        return a1;
+            a1.swap (a2);
     }
 
     // Set array 

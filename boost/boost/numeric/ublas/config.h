@@ -214,6 +214,8 @@
 // Comeau allows to use iterator_base_traits.
 #define NUMERICS_USE_ITERATOR_BASE_TRAITS
 
+#define NUMERICS_USE_LONG_DOUBLE
+
 #endif
 
 
