@@ -1,0 +1,37 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+
+<project name = "IO Formatting Manipulators" tools = "vc71">
+   <build file = "basic-facilities.exe" dir = "example" objs = "basic-facilities.obj">
+      <move src = "$@" dest = "../$@"/>
+   </build><build file = "format-options.exe" dir = "example" objs = "format-options.obj">
+      <move src = "$@" dest = "../$@"/>
+   </build><build file = "formatter.exe" dir = "example" objs = "formatter.obj">
+      <move src = "$@" dest = "../$@"/>
+   </build><build file = "stl_io.exe" dir = "example" objs = "stl_io.obj">
+      <move src = "$@" dest = "../$@"/>
+   </build><build file = "pair_output.exe" dir = "example" objs = "pair_output.obj">
+      <move src = "$@" dest = "../$@"/>
+   </build><build file = "boost_output.exe" dir = "example" objs = "boost_output.obj">
+      <move src = "$@" dest = "../$@"/>
+   </build><build file = "output2D.exe" dir = "example" objs = "output-2D.obj">
+      <move src = "$@" dest = "../$@"/>
+   </build><build file = "output3D.exe" dir = "example" objs = "output-3D.obj">
+      <move src = "$@" dest = "../$@"/>
+   </build><build file = "john-torjo.exe" dir = "example" objs = "john-torjo.obj">
+      <move src = "$@" dest = "../$@"/>
+   </build>
+
+   <run file = "basic-facilities" out = "output/basic-facilities.txt"/>
+   <run file = "format-options"   out = "output/format-options.txt"/>
+   <run file = "formatter"        out = "output/formatter.txt"/>
+   <run file = "stl_io"           out = "output/stl_io.txt"/>
+   <run file = "pair_output"      out = "output/pair_output.txt"/>
+   <run file = "boost_output"     out = "output/boost_output.txt"/>
+   <run file = "output2D"         out = "output/output2D.txt"/>
+   <run file = "output3D"         out = "output/output3D.txt"/>
+   <run file = "john-torjo"       out = "output/john-torjo.txt"/>
+
+   <clean>
+      <del files = "*.exe"/>
+   </clean>
+</project>
