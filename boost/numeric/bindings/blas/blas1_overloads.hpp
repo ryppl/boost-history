@@ -46,6 +46,12 @@ namespace boost { namespace numeric { namespace bindings { namespace blas { name
   inline float  nrm2(const int& n, const complex_f*   x, const int& incx) { return BLAS_SCNRM2( &n, complex_ptr(x), &incx ) ; }
   inline double nrm2(const int& n, const complex_d*  x, const int& incx) { return BLAS_DZNRM2( &n, complex_ptr(x), &incx ) ; }
   
+  // 1-norm
+  inline float  asum(const int& n, const float*   x, const int& incx) { return BLAS_SASUM( &n, x, &incx ) ; }
+  inline double asum(const int& n, const double*  x, const int& incx) { return BLAS_DASUM( &n, x, &incx ) ; }
+  inline float  asum(const int& n, const complex_f*   x, const int& incx) { return BLAS_SCASUM( &n, complex_ptr(x), &incx ) ; }
+  inline double asum(const int& n, const complex_d*  x, const int& incx) { return BLAS_DZASUM( &n, complex_ptr(x), &incx ) ; }
+  
 }}}}}
 
 #endif // BOOST_NUMERIC_BINDINGS_BLAS_BLAS1_OVERLOADS_HPP
