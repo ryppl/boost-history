@@ -35,7 +35,7 @@
 #include <boost/preprocessor/repetition/repeat.hpp>
 #include <boost/preprocessor/repetition/repeat_from_to.hpp>
 
-PREPROCESS_LATER(#include "boost/tupple/detail/tupple_detail.hpp")
+PREPROCESS_LATER(#include <boost/tupple/detail/tupple_detail.hpp>)
 PREPROCESS_LATER(#include <algorithm>)
 
 #ifndef TUPPLE_PARTIAL_SPEC
@@ -132,12 +132,12 @@ namespace tupple {
 #endif
 
 #define TYPEDEF(z,k,arg) typedef arg##k type##k;
-#define ARGTYPEDEF(z,k,p) typedef access_traits<p##k>::arg_type ARGTYPE(k);
+#define ARGTYPEDEF(z,k,p) typedef typename access_traits<p##k>::arg_type ARGTYPE(k);
 
 #define GETTYPE(k) get_type##k
-#define GETTYPEDEF(z,k,arg) typedef access_traits<arg##k>::non_const_type GETTYPE(k);
+#define GETTYPEDEF(z,k,arg) typedef typename access_traits<arg##k>::non_const_type GETTYPE(k);
 #define CONSTGETTYPE(k) const_get_type##k
-#define CONSTGETTYPEDEF(z,k,arg) typedef access_traits<arg##k>::const_type CONSTGETTYPE(k);
+#define CONSTGETTYPEDEF(z,k,arg) typedef typename access_traits<arg##k>::const_type CONSTGETTYPE(k);
 
 
 #define IF_INT0(T,E) E
@@ -251,7 +251,7 @@ TEMPLATE(k,T) struct TUPLE(k) TEMPLATESPEC(k,BOOST_PP_SUB(MAX_N,k),T)     \
 #define CONSTGETFCT(k,arg) GET(k)( const arg& t ) { return t.ELEM(k,A); }
 
 #define MAKETYPE(k,base,typ) base<BOOST_PP_ENUM(k,MAKETRAITS,typ)>
-#define MAKETRAITS(z,k,typ) make_tuple_traits<typ##k>::type
+#define MAKETRAITS(z,k,typ) typename make_tuple_traits<typ##k>::type
 #define MAKEARG(z,k,typ) const typ##k& THEELEM(k,A)
 
 #define THEELEMS(z,k,A) THEELEM(k,A)
@@ -383,70 +383,6 @@ GET_MAKE_TIE(9)
 
 
 
-#undef IF_INT0
-#undef IF_INT1
-#undef IF_INT2
-#undef IF_INT3
-#undef IF_INT4
-#undef IF_INT5
-#undef IF_INT6
-#undef IF_INT7
-#undef IF_INT8
-#undef IF_INT9
-
-#undef TYPEDEF
-#undef ARGTYPEDEF
-
-#undef GETTYPE
-#undef GETTYPEDEF
-#undef CONSTGETTYPE
-#undef CONSTGETTYPEDEF
-
-#undef TAILTYPE
-#undef DELAY_TAILTYPE
-#undef DELAY_TS
-
-#undef INITCTOR
-#undef COPYCTOR
-#undef COPYTAIL
-
-#undef ASSIGN
-#undef SWAP
-
-#undef TAILELEM
-#undef DELAY_ELEM
-
-#undef GET
-
-#undef GETCONSTMBR
-#undef GETMBR
-
-#undef MEMBER
-
-#undef ASSIGN_PAIR
-#undef PAIRASGM
-
-#undef GETFCTTYPE
-#undef GETFCT
-#undef CONSTGETFCTTYPE
-#undef CONSTGETFCT
-
-#undef MAKETYPE
-#undef MAKETRAITS
-#undef MAKEARG
-
-#undef REF
-#undef TIETYPE
-#undef TIEARG
-#undef THETIEELEMS
-#undef MAKETIE
-
-#undef STRUCT_TUPLE
-#undef GET_MAKE_TIE
-
-#undef N_FOLD_TUPLE
-#undef N_FOLD_SELECT
-
 #if 0
 //
 // === Part 2: Helpers for wrapping functions
@@ -525,11 +461,6 @@ FUNCTIONS(7)
 FUNCTIONS(8)
 FUNCTIONS(9)
 
-
-#undef FCTARG
-
-#undef FUNCTIONS
-
 #if 0
 //
 // === Part 3: Relational operators
@@ -605,18 +536,6 @@ NOTEQ(8)
 NOTEQ(9)
 PREPROCESS_LATER(#endif)
 
-#undef AND
-#undef OR
-
-#undef EQUAL
-#undef NOTEQ
-#undef LESS
-#undef LESSEQ
-#undef GREATER
-#undef GREATEREQ
-
-#undef RELATIONAL
-
 #define MINMAX(k) \
 template<class T> T minimal( const TUPLE(k)<BOOST_PP_ENUM(k,NTIMES,T)>& t ) {  \
   return std::min( t.head(), minimal( t.tail() ) );    \
@@ -637,8 +556,6 @@ MINMAX(7)
 MINMAX(8)
 MINMAX(9)
 
-#undef MINMAX
-
 
 #if 0
 // In case of no partial specialization, a workaround is required to use
@@ -650,17 +567,14 @@ MINMAX(9)
 
   namespace detail {
 
-    #define BASE_TYPE_SELECTOR(k) DELAY_BASE_TYPE_SELECTOR(k)
-    #define DELAY_BASE_TYPE_SELECTOR(k) tuple_base_type_selector##k
-
-    #define TEE(k) DELAY_TEE(k)
-    #define DELAY_TEE(k) T##k
+    #define BASE_TYPE_SELECTOR(k) _DELAY_(tuple_base_type_selector,k)
+    #define TEE(k) _DELAY_(T,k)
 
     #define BASE_TYPE_SELECT(k)                                               \
     TEMPLATE(k,T) struct BASE_TYPE_SELECTOR(k)                                \
     {                                                                         \
-      typedef ::boost::mpl::if_c<                                               \
-        ::boost::is_same< TEE(BOOST_PP_DEC(k)), null_type >::value,             \
+      typedef ::boost::mpl::if_c<                                             \
+        ::boost::is_same< TEE(BOOST_PP_DEC(k)), null_type >::value,           \
           BASE_TYPE_SELECTOR(BOOST_PP_DEC(k))                                 \
            < BOOST_PP_ENUM_PARAMS( BOOST_PP_DEC(k), T ) > ::type,             \
           TUPLE(k)< BOOST_PP_ENUM_PARAMS( k, T ) >                            \
@@ -686,13 +600,6 @@ MINMAX(9)
     BASE_TYPE_SELECT(7)
     BASE_TYPE_SELECT(8)
     BASE_TYPE_SELECT(9)
-
-    #undef BASE_TYPE_SELECTOR
-    #undef DELAY_BASE_TYPE_SELECTOR
-    #undef TEE
-    #undef DELAY_TEE
-
-    #undef BASE_TYPE_SELECT
 
   } // namespace detail
 
@@ -732,69 +639,10 @@ MINMAX(9)
     }
   };
 
-  #undef VEEVEE
-  #undef VEE
-
-  #undef REFLECT_CTOR
-
 #endif
-
-#if 0
-// === undef globals ===
-#endif
-
-#undef MYELEM0
-#undef MYELEM1
-#undef MYELEM2
-#undef MYELEM3
-#undef MYELEM4
-#undef MYELEM5
-#undef MYELEM6
-#undef MYELEM7
-#undef MYELEM8
-#undef MYELEM9
-
-#undef THEMYELEM0
-#undef THEMYELEM1
-#undef THEMYELEM2
-#undef THEMYELEM3
-#undef THEMYELEM4
-#undef THEMYELEM5
-#undef THEMYELEM6
-#undef THEMYELEM7
-#undef THEMYELEM8
-#undef THEMYELEM9
-
-#undef MAX_N
-
-#undef NULLTYPE
-
-#undef ELEM
-#undef THEELEM
-
-#undef THEELEMS
-
-#undef TYPE
-#undef TEMPLATE
-#undef TEMPLATENULL
-
-#undef NULLTYPES
-#undef TEMPLATESPEC
-#undef PTRFUNC_TEMPLATESPEC
-#undef FUNCOBJ_TEMPLATESPEC
-
-#undef CTORARG
-
-#undef NTIMES
-
-#undef ARGTYPE
-
-#undef OP_IF
 
 } // namespace tupple
 } // namespace boost
 
 
 PREPROCESS_LATER(#endif)
-
-#undef PREPROCESS_LATER
