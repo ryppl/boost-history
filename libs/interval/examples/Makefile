@@ -29,4 +29,5 @@ interval_speed_point: interval_speed.cpp interval_implementation_select.hpp
 
 clean:
 	rm -f $(TARGETS)
+	rm func2d.data
 
