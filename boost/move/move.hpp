@@ -6,6 +6,8 @@
 // Copyright (c) 2002-2003
 // Eric Friedman
 //
+// See below original copyright by Andrei Alexandrescu.
+//
 // Permission to use, copy, modify, distribute and sell this software
 // and its documentation for any purpose is hereby granted without fee, 
 // provided that the above copyright notice appears in all copies and 
@@ -18,8 +20,10 @@
 #define BOOST_MOVE_MOVE_HPP
 
 #include <iterator> // for iterator_traits
+#include <new> // for placement new
 
 #include "boost/config.hpp"
+#include "boost/detail/workaround.hpp"
 #include "boost/mpl/if.hpp"
 #include "boost/type_traits/is_base_and_derived.hpp"
 
@@ -97,7 +101,7 @@ public: // metafunction result
 //
 
 #if   defined(BOOST_NO_ARGUMENT_DEPENDENT_LOOKUP)   \
- || ( defined(__GNUC__) && __GNUC__ < 3 )
+ ||   BOOST_WORKAROUND(__GNUC__, BOOST_TESTED_AT(2))
 
 // [Indicate that move_swap by overload is disabled...]
 #define BOOST_NO_MOVE_SWAP_BY_OVERLOAD
@@ -111,7 +115,7 @@ inline void move_swap(T& lhs, T& rhs)
     rhs = boost::move(tmp);
 }
 
-#else// !defined(__GNUC__) || __GNUC__ >= 3
+#else// !workaround
 
 namespace detail { namespace move_swap {
 
@@ -133,7 +137,7 @@ inline void move_swap(T& lhs, T& rhs)
     swap(lhs, rhs);
 }
 
-#endif // __GNUC__ workaround (for 2.x and below)
+#endif // workaround
 
 //////////////////////////////////////////////////////////////////////////
 // function template move
@@ -173,26 +177,54 @@ move_backward(
 //////////////////////////////////////////////////////////////////////////
 // function template uninitialized_move
 //
-// Move-constructs each element in the reverse range (last, first] to the
+// Move-constructs each element in the range [first, last) to the
 // range that begins with iterator result.
 //
-template <typename InputIterator, typename OutputIterator>
-    OutputIterator
-uninitialized_move(
+template <class InputIterator, class ForwardIterator>
+ForwardIterator uninitialized_move(
       InputIterator first, InputIterator last
-    , OutputIterator result
+    , ForwardIterator result
     )
 {
-    typedef typename std::iterator_traits<
-          OutputIterator
-        >::value_type T;
-
-    for (; first != last; ++first, ++result)
-        new(*result) T(move(*first));
-
-    return result;
+    typedef typename std::iterator_traits<ForwardIterator>::value_type T;
+    ForwardIterator built = result;
+    try
+    {
+        for (; first != last; ++first, ++built)
+            new (&*built) T(move(*first));
+    }
+    catch (...)
+    {
+        for (; result != built; ++result)
+            result->~T();
+        throw;
+    }
+    return built;
 }
 
 } // namespace boost
 
 #endif // BOOST_MOVE_MOVE_HPP
+
+
+/* This file derivative of MoJO. Much thanks to Andrei for his initial work.
+ * See <http://www.cuj.com/experts/2102/alexandr.htm> for information on MOJO.
+
+ * Original copyright -- on mojo.h -- follows:
+
+////////////////////////////////////////////////////////////////////////////////
+// MOJO: MOving Joint Objects
+// Copyright (c) 2002 by Andrei Alexandrescu
+//
+// Created by Andrei Alexandrescu
+//
+// Permission to use, copy, modify, distribute and sell this software for any 
+//     purpose is hereby granted without fee, provided that the above copyright 
+//     notice appear in all copies and that both that copyright notice and this 
+//     permission notice appear in supporting documentation.
+// The author makes no representations about the suitability of this software 
+//     for any purpose. It is provided "as is" 
+//     without express or implied warranty.
+////////////////////////////////////////////////////////////////////////////////
+
+*/

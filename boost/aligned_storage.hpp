@@ -42,14 +42,16 @@ template <
 >
 class aligned_storage
 {
-private:
+private: // helpers, for representation (below)
+
     typedef typename mpl::apply_if_c<
           alignment_ == -1
         , mpl::identity<detail::max_align>
         , type_with_alignment<alignment_>
         >::type align_t;
 
-public:
+public: // constants
+
     BOOST_STATIC_CONSTANT(
           std::size_t
         , size = size_
@@ -64,27 +66,31 @@ public:
         );
 
 private: // representation
+
     union data_t
     {
         char buf[size];
         align_t dummy_;
     } data_;
 
-#if defined(__GNUC__)
+#if BOOST_WORKAROUND(__GNUC__, BOOST_TESTED_AT(2))
 
 public: // _should_ be noncopyable, but GCC compiler emits error
+
     aligned_storage(const aligned_storage&);
     aligned_storage& operator=(const aligned_storage&);
 
-#else// !defined(__GNUC__)
+#else// !BOOST_WORKAROUND(__GNUC__, ...)
 
 private: // noncopyable
+
     aligned_storage(const aligned_storage&);
     aligned_storage& operator=(const aligned_storage&);
 
-#endif// __GNUC__ workaround
+#endif// BOOST_WORKAROUND(__GNUC__, ...)
 
 public: // structors
+
     aligned_storage()
     {
     }
@@ -94,6 +100,7 @@ public: // structors
     }
 
 public: // accessors
+
     void* address()
     {
         return &data_.buf[0];
@@ -103,6 +110,7 @@ public: // accessors
     {
         return &data_.buf[0];
     }
+
 };
 
 } // namespace boost
