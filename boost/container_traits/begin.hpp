@@ -17,7 +17,8 @@
 #include <boost/container_traits/detail/begin.hpp>
 #else
 
-#include <boost/container_traits/result_iterator.hpp>
+#include <boost/container_traits/iterator.hpp>
+#include <boost/container_traits/const_iterator.hpp>
 #include <cstddef>
 #include <iterator>
 #include <utility>
@@ -30,14 +31,14 @@ namespace boost
 //////////////////////////////////////////////////////////////////////
 
 template< typename C >
-inline BOOST_DEDUCED_TYPENAME C::const_iterator
+inline BOOST_DEDUCED_TYPENAME container_const_iterator<C>::type
 begin( const C& c )
 {
     return c.begin(); 
 }
 
 template< typename C >
-inline BOOST_DEDUCED_TYPENAME container_result_iterator<C>::type
+inline BOOST_DEDUCED_TYPENAME container_iterator<C>::type
 begin( C& c )
 {
     return c.begin(); 

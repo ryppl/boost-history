@@ -26,7 +26,7 @@ namespace boost
     //////////////////////////////////////////////////////////////////////////
     
     template< typename C >
-    struct container_const_iterator_
+    struct container_const_iterator
     {
         typedef BOOST_DEDUCED_TYPENAME C::const_iterator type;
     };

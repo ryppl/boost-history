@@ -112,7 +112,7 @@ namespace boost
         } // namespace 'container_traits_detail'
     
     template< typename C >
-    inline BOOST_DEDUCED_TYPENAME ::boost::container_result_iterator<C>::type 
+    inline BOOST_DEDUCED_TYPENAME container_result_iterator<C>::type 
     begin( C& c )
     {
 		return container_traits_detail::container_begin< BOOST_DEDUCED_TYPENAME container_traits_detail::container<C>::type >::fun( c );
