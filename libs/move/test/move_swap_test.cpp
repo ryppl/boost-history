@@ -106,7 +106,7 @@ void swap(my_swappable& lhs, my_swappable& rhs)
 //////////////////////////////////////////////////////////////////////////
 // function template swap_test
 //
-// Tests the specified type for proper behavior under boost::swap.
+// Tests the specified type for proper behavior under boost::move_swap.
 //
 template <typename T>
 void swap_test()
@@ -132,15 +132,15 @@ void swap_test()
 //
 int test_main( int, char *[] )
 {
-    // test boost::swap on primitive, copyable type
+    // test boost::move_swap on primitive, copyable type
     swap_test< char >();
 
-    // test boost::swap on moveable, noncopyable type
+    // test boost::move_swap on moveable, noncopyable type
     swap_test< ns::my_moveable >();
 
 #if !defined(BOOST_NO_MOVE_SWAP_BY_OVERLOAD)
 
-    // test boost::swap on swappable, noncopyable type
+    // test boost::move_swap on swappable, noncopyable type
     swap_test< ns::my_swappable >();
 
 #endif // !defined(BOOST_NO_MOVE_SWAP_BY_OVERLOAD)
