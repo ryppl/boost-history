@@ -18,8 +18,11 @@
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/reverse_fold.hpp>
 #include <boost/mpl/pair_view.hpp>
+#include <boost/mpl/is_sequence.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/bind.hpp>
+#include <boost/mpl/or.hpp>
+#include <boost/mpl/not.hpp>
 #include <boost/mpl/aux_/na.hpp>
 #include <boost/mpl/aux_/inserter_algorithm.hpp>
 
@@ -117,7 +120,7 @@ template<
     >
 struct transform
   : if_<
-          is_na<Operation>
+          or_< is_na<Operation>, not_< is_sequence<Seq2OrOperation> > >
         , transform1<Seq1,Seq2OrOperation>
         , transform2<Seq1,Seq2OrOperation,Operation>
         >::type
