@@ -1,5 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
+
 <!--
    (C) Jeremy Siek 2001. Permission to copy, use, modify, sell and
    distribute this software is granted provided this copyright notice
@@ -43,6 +44,20 @@ align="middle" width="277" height="86">
 <p><!--end header-->
 <br clear="">
 </p>
+
+<!-- BEGIN TODO -->
+TODO:
+<ul>
+ <li> add find_first, find_next</li>
+ <li> ask to Jeremy about reference::operator& and about
+   making reference itself private</li>
+ <li>check the whole synopsis against code changes </li>
+</ul>
+<br>
+Note:
+   Other things to do are marked by "[gps]"
+<!-- END TODO -->
+
 
 <h1>dynamic_bitset&lt;Block, Allocator&gt;</h1>
 
@@ -131,6 +146,7 @@ public:
 
     class <a href="#reference">reference</a>
     {
+        void operator&(); // not defined
     public:
         // An automatically generated copy constructor.
 				
