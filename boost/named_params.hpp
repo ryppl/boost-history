@@ -34,7 +34,7 @@ template<class T>
 struct keyword;
 
 template <class Tag, typename has_default_ = mpl::true_, class Predicate = mpl::always<mpl::true_> >
-struct arg;
+struct named_param;
 
 namespace detail
 { 
@@ -314,7 +314,7 @@ namespace detail
           typename mpl::lambda<Predicate>::type
         , typename H::value_type
       >::type
-      keyword_passes_predicate(arg<typename H::key_type,HasDefault,Predicate>*);
+      keyword_passes_predicate(named_param<typename H::key_type,HasDefault,Predicate>*);
 
       using T::keyword_passes_predicate;
 #endif
@@ -441,7 +441,7 @@ struct keyword
 };
 
 template <class Tag, typename has_default_, class Predicate>
-struct arg
+struct named_param
 {
     typedef Tag key_type;
     typedef has_default_ has_default;
@@ -450,14 +450,14 @@ struct arg
 
 namespace detail
 {
-  BOOST_PYTHON_IS_XXX_DEF(arg,arg,3)
+  BOOST_PYTHON_IS_XXX_DEF(named_param,named_param,3)
 
   template <class T> struct get_key_type { typedef typename T::key_type type; };
   
   template <class T>
   struct key_type
     : mpl::apply_if<
-          is_arg<T>
+          is_named_param<T>
         , get_key_type<T>
         , mpl::identity<T>
       >
@@ -469,7 +469,7 @@ namespace detail
   template <class T>
   struct has_default
     : mpl::apply_if<
-          is_arg<T>
+          is_named_param<T>
         , get_has_default<T>
         , mpl::true_
       >
@@ -481,7 +481,7 @@ namespace detail
   template <class T>
   struct predicate
     : mpl::apply_if<
-          is_arg<T>
+          is_named_param<T>
         , get_predicate<T>
         , mpl::identity<mpl::always<mpl::true_> >
       >
@@ -491,7 +491,7 @@ namespace detail
   template <class T>
   struct as_arg
   {
-      typedef arg<
+      typedef named_param<
           typename key_type<T>::type
         , typename has_default<T>::type
         , typename predicate<T>::type
@@ -671,7 +671,7 @@ struct keywords
 
     // Instantiations are to be used as an optional argument to control SFINAE
     template<
-        class T0 // These are actual argument types
+        class T0 = detail::nil // These are actual argument types
       , class T1 = detail::nil
       , class T2 = detail::nil
       , class T3 = detail::nil
@@ -844,6 +844,7 @@ struct keywords
     template<class Params> \
     ret BOOST_PP_CAT(name, _with_named_params)(const Params&);\
     BOOST_PP_REPEAT_FROM_TO(lo, BOOST_PP_INC(hi), BOOST_NAMED_PARAMS_FUN_DECL, (ret, name, keywords)) \
+    template<class Params> \
     ret BOOST_PP_CAT(name, _with_named_params)(const Params& p)
  
 #endif // BOOST_NAMED_PARAMS_031014_HPP
