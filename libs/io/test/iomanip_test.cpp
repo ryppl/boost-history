@@ -7,15 +7,70 @@
 //  See <http://www.boost.org/libs/io/> for the library's home page.
 
 //  Revision History
-//   26 Oct 2003  Initial version (Daryle Walker)
+//   19 Nov 2003  Initial version (Daryle Walker)
 
 #include <boost/io/iomanip.hpp>      // for boost::io::newl, etc.
 #include <boost/test/unit_test.hpp>  // for main, BOOST_CHECK_EQUAL, etc.
 
 #include <iomanip>  // for std::setbase, etc.
 #include <ios>      // for std::ios_base, std::noskipws
-#include <sstream>  // for std::istringstream, std::ostringstream
+#include <ostream>  // for std::ostream, std::endl
+#include <sstream>  // for std::stringbuf, std::istringstream, etc.
 #include <string>   // for std::string
+
+
+// A stream-buffer that counts its flushes
+class flush_count_stringbuf
+    : public std::stringbuf
+{
+    typedef std::stringbuf  base_type;
+
+public:
+    // Root types
+    typedef base_type::char_type      char_type;
+    typedef base_type::traits_type  traits_type;
+
+    typedef base_type::allocator_type  allocator_type;
+
+    // Other types
+    typedef base_type::int_type  int_type;
+    typedef base_type::pos_type  pos_type;
+    typedef base_type::off_type  off_type;
+
+    // Lifetime management (use automatically-defined destructor)
+    explicit
+    flush_count_stringbuf
+    (
+        std::ios_base::openmode  which = std::ios_base::in | std::ios_base::out
+    )
+        : base_type( which )
+        , count_( 0ul )
+    {
+    }
+
+    explicit
+    flush_count_stringbuf
+    (
+        std::string const &      str,
+        std::ios_base::openmode  which = std::ios_base::in | std::ios_base::out
+    )
+        : base_type( str, which )
+        , count_( 0ul )
+    {
+    }
+
+    // Accessors
+    unsigned long  flush_count() const  { return this->count_; }
+
+protected:
+    // Overridden virtual functions
+    virtual  int  sync()  { return ++this->count_, this->base_type::sync(); }
+
+private:
+    // Member data
+    unsigned long  count_;
+
+};
 
 
 // Unit test for newl
@@ -26,11 +81,18 @@ newl_unit_test
 {
     using boost::io::newl;
 
-    std::ostringstream  oss;
-    oss << "Hello" << newl << "There";
-    BOOST_CHECK_EQUAL( oss.str(), "Hello\nThere" );
+    flush_count_stringbuf  fcsb;
+    std::ostream           os( &fcsb );
 
-    // NOTE: need to test the no-flush part, someday
+    // Do the test
+    os << "Hello" << newl << "There";
+    BOOST_CHECK_EQUAL( fcsb.str(), "Hello\nThere" );
+    BOOST_CHECK_EQUAL( 0ul, fcsb.flush_count() );
+
+    // Just to contrast....
+    os << ',' << std::endl << "Boosters!" << newl;
+    BOOST_CHECK_EQUAL( fcsb.str(), "Hello\nThere,\nBoosters!\n" );
+    BOOST_CHECK_EQUAL( 1ul, fcsb.flush_count() );
 }
 
 // Unit test for skipl
