@@ -23,18 +23,18 @@
 // ---- Configuration stuff -----------------------
 
 #if !(BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x551)) || defined(BOOST_NO_MEMBER_TEMPLATE_FRIENDS))
-#define BOOST_DYN_BITSET_USE_FRIENDS
+#define BOOST_DYNAMIC_BITSET_USE_FRIENDS
 #endif
 
 
-#ifdef BOOST_DYN_BITSET_USE_FRIENDS
-# define BOOST_DYN_BITSET_PRIVATE    private
+#ifdef BOOST_DYNAMIC_BITSET_USE_FRIENDS
+# define BOOST_DYNAMIC_BITSET_PRIVATE private
 #else
-# define BOOST_DYN_BITSET_PRIVATE    public
+# define BOOST_DYNAMIC_BITSET_PRIVATE public
 #endif
-
 
 // --------------------------------------------------
+
 
 namespace boost {
 

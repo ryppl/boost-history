@@ -298,7 +298,7 @@ public:
     size_type find_next(size_type pos) const;
 
 
-#ifdef BOOST_DYN_BITSET_USE_FRIENDS
+#ifdef BOOST_DYNAMIC_BITSET_USE_FRIENDS
     // lexicographical comparison
     template <typename B, typename A>
     friend bool operator==(const dynamic_bitset<B, A>& a,
@@ -344,7 +344,7 @@ private:
 
 
 
-BOOST_DYN_BITSET_PRIVATE:
+BOOST_DYNAMIC_BITSET_PRIVATE:
 
     bool m_unchecked_test(size_type pos) const;
     static size_type calc_num_blocks(size_type num_bits);
