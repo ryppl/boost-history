@@ -12,3 +12,12 @@ exe lapack
 	   <find-library>$(LAPACK_LIB)
         ;
 
+exe lapack_potr
+        : lapack_potr.cpp 
+	  <lib>../bindings_lapack
+        :  <include>$(BOOST_ROOT)
+	   <include>$(B_ROOT)
+	   <library-path>$(LAPACK_PATH)
+	   <find-library>$(LAPACK_LIB)
+        ;
+

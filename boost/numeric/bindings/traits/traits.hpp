@@ -17,11 +17,17 @@
  */
 
 #ifndef BOOST_NUMERIC_BINDINGS_TRAITS_H
+    typedef void (*potrf_type)(const char* uplo, const int* n, bind_type* a, const int* lda, int* info) ;
+    typedef void (*potrs_type)(const char* uplo, const int* n, const int* nrhs, const bind_type* a, const int* lda, bind_type* b, const int* ldb, int* info) ;
+
 #define BOOST_NUMERIC_BINDINGS_TRAITS_H
 
 #include <cstddef> 
 
 namespace boost { namespace numeric { namespace bindings { namespace traits {
+
+    static potrf_type potrf ;
+    static potrs_type potrs ;
 
   // vector_traits<> base:
   // .. implementation -- do not use it directly

@@ -25,4 +25,10 @@ namespace boost { namespace numeric { namespace bindings { namespace lapack {
 
   template<> traits< double         >::sytrs_type  traits< double         >::sytrs = LAPACK_DSYTRS ;
   template<> traits< boost::numeric::bindings::traits::double_complex >::sytrs_type  traits< boost::numeric::bindings::traits::double_complex >::sytrs = LAPACK_ZSYTRS ;
+ 
+  template<> traits< double         >::potrf_type  traits< double         >::potrf = LAPACK_DPOTRF ;
+  template<> traits< boost::numeric::bindings::traits::double_complex >::potrf_type  traits< boost::numeric::bindings::traits::double_complex >::potrf = LAPACK_ZPOTRF ;
+
+  template<> traits< double         >::potrs_type  traits< double         >::potrs = LAPACK_DPOTRS ;
+  template<> traits< boost::numeric::bindings::traits::double_complex >::potrs_type  traits< boost::numeric::bindings::traits::double_complex >::potrs = LAPACK_ZPOTRS ;
 }}}}
