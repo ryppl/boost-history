@@ -19,7 +19,6 @@
 
 #include <exception>
 
-
 #include "boost/utility/addressof.hpp"
 #include "boost/type_traits/is_pointer.hpp"
 #include "boost/type_traits/is_const.hpp"
@@ -64,38 +63,38 @@ template <typename Holder>
 struct extract_traits
 {
 private:
-	template <typename T>
+    template <typename T>
     static T* execute_impl(
-		  T& operand
-		, mpl::true_c// extract_self
-		)
+          T& operand
+        , mpl::true_c// extract_self
+        )
     {
         return boost::addressof(operand);
     }
 
-	template <typename T>
+    template <typename T>
     static const T* execute_impl(
-		  const T& operand
-		, mpl::true_c// extract_self
-		)
+          const T& operand
+        , mpl::true_c// extract_self
+        )
     {
         return boost::addressof(operand);
     }
 
-	template <typename T>
+    template <typename T>
     static T* execute_impl(
-		  T& operand
-		, mpl::false_c// extract_self
-		)
+          T& operand
+        , mpl::false_c// extract_self
+        )
     {
         return static_cast<T*>(0);
     }
 
-	template <typename T>
+    template <typename T>
     static const T* execute_impl(
-		  const T& operand
-		, mpl::false_c// extract_self
-		)
+          const T& operand
+        , mpl::false_c// extract_self
+        )
     {
         return static_cast<const T*>(0);
     }
@@ -104,27 +103,27 @@ private:
 
 public:
     template <typename T>
-	static T* execute(Holder& operand)
-	{
-		return execute_impl<T>(
-			  operand
-			, mpl::bool_c< is_same<Holder, T>::value >() // extract_self
-			);
-	}
+    static T* execute(Holder& operand)
+    {
+        return execute_impl<T>(
+              operand
+            , mpl::bool_c< is_same<Holder, T>::value >() // extract_self
+            );
+    }
 
-	template <typename T>
-	static const T* execute(const Holder& operand)
-	{
-		return execute_impl<T>(
-			  operand
-			, mpl::bool_c< is_same<Holder, const T>::value >() // extract_self
-			);
-	}
+    template <typename T>
+    static const T* execute(const Holder& operand)
+    {
+        return execute_impl<T>(
+              operand
+            , mpl::bool_c< is_same<Holder, const T>::value >() // extract_self
+            );
+    }
 
 #else// defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
 
 private:
-	template <typename T>
+    template <typename T>
     static T* execute_no_partial_spec_impl(
           Holder& operand
         , mpl::true_c// is_variant
@@ -133,7 +132,7 @@ private:
         return detail::variant_extract_pointer<T>(operand);
     }
 
-	template <typename T>
+    template <typename T>
     static const T* execute_no_partial_spec_impl(
           const Holder& operand
         , mpl::true_c// is_variant
@@ -142,28 +141,28 @@ private:
         return detail::variant_extract_pointer<const T>(operand);
     }
 
-	template <typename T>
+    template <typename T>
     static T* execute_no_partial_spec_impl(
           Holder& operand
         , mpl::false_c// is_variant
         )
     {
         return execute_impl(
-			  operand
-			, mpl::bool_c< is_same<Holder, T>::value >() // extract_self
-			);
+              operand
+            , mpl::bool_c< is_same<Holder, T>::value >() // extract_self
+            );
     }
 
-	template <typename T>
+    template <typename T>
     static const T* execute_no_partial_spec_impl(
           const Holder& operand
         , mpl::false_c// is_variant
         )
     {
         return execute_impl(
-			  operand
-			, mpl::bool_c< is_same<Holder, const T>::value >() // extract_self
-			);
+              operand
+            , mpl::bool_c< is_same<Holder, const T>::value >() // extract_self
+            );
     }
 
 public:
