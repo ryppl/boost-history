@@ -186,7 +186,7 @@ bool proper_subset(const interval<T, Traits> & a,
 
 template<class T, class Traits>
 bool overlap(const interval<T, Traits>& x,
-		    const interval<T, Traits>& y)
+	     const interval<T, Traits>& y)
 {
   return x.lower() <= y.lower() && y.lower() <= x.upper() ||
     y.lower() <= x.lower() && x.lower() <= y.upper();
@@ -199,8 +199,7 @@ bool singleton(const interval<T, Traits>& x)
 }
 
 template<class T, class Traits>
-bool equal(const interval<T, Traits>& x,
-		  const interval<T, Traits>& y)
+bool equal(const interval<T, Traits>& x, const interval<T, Traits>& y)
 {
   return x.lower() == y.lower() && x.upper() == y.upper();
 }
@@ -295,7 +294,7 @@ T dist(const T& x, const interval<T, Traits>& y)
 
 template<class T, class Traits>
 interval<T, Traits> scale(const interval<T, Traits>& x,
-				 const T& mirror, const T& factor)
+			  const T& mirror, const T& factor)
 {
   typename Traits::rounding rnd;
   typedef interval_lib::detail::unprotect<Traits> unprotected;

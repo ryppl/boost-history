@@ -158,32 +158,28 @@ template<class T, class Traits>
 interval<T, Traits> operator-(const interval<T, Traits>& x);
 
 template<class T, class Traits>
-interval<T, Traits> operator+(const interval<T, Traits>& x,
-			      const interval<T, Traits>& y);
+interval<T, Traits> operator+(const interval<T, Traits>& x, const interval<T, Traits>& y);
 template<class T, class Traits>
 interval<T, Traits> operator+(const interval<T, Traits>& x, const T& y);
 template<class T, class Traits>
 interval<T, Traits> operator+(const T& x, const interval<T, Traits>& y);
 
 template<class T, class Traits>
-interval<T, Traits> operator-(const interval<T, Traits>& x,
-			      const interval<T, Traits>& y);
+interval<T, Traits> operator-(const interval<T, Traits>& x, const interval<T, Traits>& y);
 template<class T, class Traits>
 interval<T, Traits> operator-(const interval<T, Traits>& x, const T& y);
 template<class T, class Traits>
 interval<T, Traits> operator-(const T& x, const interval<T, Traits>& y);
 
 template<class T, class Traits>
-interval<T, Traits> operator*(const interval<T, Traits>& x,
-			      const interval<T, Traits>& y);
+interval<T, Traits> operator*(const interval<T, Traits>& x, const interval<T, Traits>& y);
 template<class T, class Traits>
 interval<T, Traits> operator*(const interval<T, Traits>& x, const T& y);
 template<class T, class Traits>
 interval<T, Traits> operator*(const T& x, const interval<T, Traits>& y);
 
 template<class T, class Traits>
-interval<T, Traits> operator/(const interval<T, Traits>& x,
-			      const interval<T, Traits>& y);
+interval<T, Traits> operator/(const interval<T, Traits>& x, const interval<T, Traits>& y);
 template<class T, class Traits>
 interval<T, Traits> operator/(const interval<T, Traits>& x, const T& y);
 template<class T, class Traits>
@@ -338,24 +334,27 @@ bool empty(const interval<T, Traits>& b);
 template<class T, class Traits>
 bool in(const T& r, const interval<T, Traits>& b);
 template<class T, class Traits>
+bool in_zero(const interval<T, Traits>& b);
+template<class T, class Traits>
 bool subset(const interval<T, Traits>& a, const interval<T, Traits>& b);
 template<class T, class Traits>
-bool proper_subset(const interval<T, Traits>& a,
-		   const interval<T, Traits>& b);
+bool proper_subset(const interval<T, Traits>& a, const interval<T, Traits>& b);
 template<class T, class Traits>
 bool overlap(const interval<T, Traits>& x, const interval<T, Traits>& y);
 template<class T, class Traits>
-interval<T, Traits> intersect(const interval<T, Traits>& x,
-                              const interval<T, Traits>& y);
+interval<T, Traits> intersect(const interval<T, Traits>& x, const interval<T, Traits>& y);
 template<class T, class Traits>
-interval<T, Traits> hull(const interval<T, Traits>& x,
-			 const interval<T, Traits>& y);
+interval<T, Traits> hull(const interval<T, Traits>& x, const interval<T, Traits>& y);
 template<class T, class Traits>
 interval<T, Traits> hull(const interval<T, Traits>& x, const T& y);
 template<class T, class Traits>
 interval<T, Traits> hull(const T& x, const interval<T, Traits>& y);
 template<class T>
 interval<T> hull(const T& x, const T& y);
+template<class T, class Traits>
+bool singleton(const interval<T, Traits>& x);
+template<class T, class Traits>
+bool equal(const interval<T, Traits>& x, const interval<T, Traits>& y);
 
 template<class T, class Traits>
 std::pair<interval<T, Traits>, interval<T, Traits> >
@@ -369,18 +368,15 @@ template<class T, class Traits>
 T dist(const T& x, const interval<T, Traits>& y);
 
 template<class T, class Traits>
-interval<T, Traits> scale(const interval<T, Traits>& x,
-			  const T& mirror, const T& factor);
+interval<T, Traits> scale(const interval<T, Traits>& x, const T& mirror, const T& factor);
 template<class T, class Traits>
-interval<T, Traits> symmetric_scale(const interval<T, Traits>& x,
-				    const T& factor);
+interval<T, Traits> symmetric_scale(const interval<T, Traits>& x, const T& factor);
 
 template<class T, class Traits>
 interval<T, Traits> square(const interval<T, Traits>& x);
 
 template<class T, class Traits>
-interval<T, Traits> fmod(const interval<T, Traits>& x,
-			 const interval<T, Traits>& y);
+interval<T, Traits> fmod(const interval<T, Traits>& x, const interval<T, Traits>& y);
 template<class T, class Traits>
 interval<T, Traits> fmod(const interval<T, Traits>& x, const T& y);
 
@@ -392,12 +388,14 @@ template<class T, class Traits>
 interval<T, Traits> exp(const interval<T, Traits>& x);
 template<class T, class Traits>
 interval<T, Traits> log(const interval<T, Traits>& x);
+
+#if 0
 template<class T, class Traits>
 interval<T, Traits> log10(const interval<T, Traits>& x);
 template<class T> T pow(const T& x, long y);
 template<class T, class Traits>
-interval<T, Traits> pow(const interval<T, Traits>& x,
-			const interval<T, Traits>& y);
+interval<T, Traits> pow(const interval<T, Traits>& x, const interval<T, Traits>& y);
+#endif
 
 template<class T, class Traits>
 interval<T, Traits> sin(const interval<T, Traits>& x);
@@ -411,9 +409,11 @@ template<class T, class Traits>
 interval<T, Traits> acos(const interval<T, Traits>& x);
 template<class T, class Traits>
 interval<T, Traits> atan(const interval<T, Traits>& x);
+
+#if 0
 template<class T, class Traits>
-interval<T, Traits> atan2(const interval<T, Traits>& y,
-			  const interval<T, Traits>& x);
+interval<T, Traits> atan2(const interval<T, Traits>& y, const interval<T, Traits>& x);
+#endif
 
 template<class T, class Traits>
 interval<T, Traits> sinh(const interval<T, Traits>& x);
@@ -427,6 +427,20 @@ template<class T, class Traits>
 interval<T, Traits> acosh(const interval<T, Traits>& x);
 template<class T, class Traits>
 interval<T, Traits> atanh(const interval<T, Traits>& x);
+
+template<class T, class Traits>
+interval<T, Traits> max(const interval<T, Traits>& x, const interval<T, Traits>& y);
+template<class T, class Traits>
+interval<T, Traits> max(const interval<T, Traits>& x, const T& y);
+template<class T, class Traits>
+interval<T, Traits> max(const T& x, const interval<T, Traits>& y);
+
+template<class T, class Traits>
+interval<T, Traits> min(const interval<T, Traits>& x, const interval<T, Traits>& y);
+template<class T, class Traits>
+interval<T, Traits> min(const interval<T, Traits>& x, const T& y);
+template<class T, class Traits>
+interval<T, Traits> min(const T& x, const interval<T, Traits>& y);
 
 } // namespace boost
 
