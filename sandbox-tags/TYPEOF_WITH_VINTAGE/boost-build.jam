@@ -1,0 +1,7 @@
+# Set the BOOST environment variable on your command-line or in the
+# environment to point at the root of your regular Boost installation.
+# Defaults to finding the boost installation in the same directory as
+# the directory containing this file.
+BOOST ?= $(.boost-build-file:D)/../boost ;
+BOOST_ROOT = $(.boost-build-file:D) $(BOOST) ;
+boost-build $(BOOST)/tools/build/v1 ;
