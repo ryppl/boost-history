@@ -21,6 +21,7 @@
 #include <boost/mpl/iterator_tag.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/next.hpp>
+#include <boost/mpl/deref.hpp>
 #include <boost/mpl/long.hpp>
 #include <boost/mpl/void.hpp>
 #include <boost/mpl/aux_/config/ctps.hpp>
