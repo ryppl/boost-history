@@ -1,14 +1,15 @@
 /* boost interval.hpp header file
  *
  * Copyright Jens Maurer 2000
+ * Copyright Hervé Brönnimann, Guillaume Melquiond, Sylvain Pion, 2002
  * Permission to use, copy, modify, sell, and distribute this software
  * is hereby granted without free provided that the above copyright notice
  * appears in all copies and that both that copyright notice and this
  * permission notice appear in supporting documentation,
  *
- * Jens Maurer makes no representations about the suitability of this
- * software for any purpose. It is provided "as is" without express or
- * implied warranty.
+ * None of the above authors make any representation about the
+ * suitability of this software for any purpose. It is provided "as is"
+ * without express or implied warranty.
  *
  * $Id$
  */
@@ -20,75 +21,78 @@
 #include <boost/limits.hpp>
 
 namespace boost {
+
   namespace interval_lib {
 
-template<class T> struct compare_certainly;
-template<class T> struct rounded_math;
-template<class T> struct checking_strict;
+    template<class T> struct compare_certainly;
+    template<class T> struct rounded_math;
+    template<class T> struct checking_strict;
 
   } // namespace interval_lib
 
-// default traits class
-template<class T,
-	 class Compare = interval_lib::compare_certainly<T>,
-	 class Rounding = interval_lib::rounded_math<T>,
-	 class Checking = interval_lib::checking_strict<T> >
-struct interval_traits
-{
-  typedef T base_type;
-  typedef Compare compare;
-  typedef Rounding rounding;
-  typedef Checking checking;
-};
+  // default traits class
+  template<class T,
+           class Compare = interval_lib::compare_certainly<T>,
+           class Rounding = interval_lib::rounded_math<T>,
+           class Checking = interval_lib::checking_strict<T> >
+  struct interval_traits
+  {
+    typedef T base_type;
+    typedef Compare compare;
+    typedef Rounding rounding;
+    typedef Checking checking;
+  };
 
-template<class T, class Traits = interval_traits<T> >
-class interval
-{
-public:
-  typedef T base_type;
-  typedef std::numeric_limits<base_type> base_limits;
-  typedef Traits traits_type;
+  template<class T, class Traits = interval_traits<T> >
+  class interval
+  {
+  public:
+    typedef T base_type;
+    typedef std::numeric_limits<base_type> base_limits;
+    typedef Traits traits_type;
 
-  interval(const T& v = 0): low(v), up(v) {}
-  interval(const T& l, const T& u);
-
-  template<class Traits2>
-  interval(const interval<T, Traits2>& r): low(r.lower()), up(r.upper()) {}
-
-  // compiler-generated copy constructor and assignment operator are fine
-
-  interval& operator=(const T& x);
-  void assign(const T& l, const T& u);
-
-  static interval empty();
-  static interval entire();
-  static interval hull(const T& x, const T& y);
-
-  const T& lower() const { return low; }
-  const T& upper() const { return up;  }
-
-  interval& operator+= (const T& r);
-  interval& operator+= (const interval& r);
-  interval& operator-= (const T& r);
-  interval& operator-= (const interval& r);
-  interval& operator*= (const T& r);
-  interval& operator*= (const interval& r);
-  interval& operator/= (const T& r);
-  interval& operator/= (const interval& r);
-
-  // the following is for internal use only, it is not a published interface
-  // nevertheless, it's public because friends don't always work correctly.
-  interval(const T& l, const T& u, bool): low(l), up(u) {}
-  void set_empty();
-  void set_entire();
-  void set(const T& l, const T& u);
-
-private:
-  T low;
-  T up;
-};
-
-
+    interval(const T& v = 0): low(v), up(v) {}
+    interval(const T& l, const T& u);
+    
+    template<class Traits2>
+    interval(const interval<T, Traits2>& r): low(r.lower()), up(r.upper()) {}
+    
+    // compiler-generated copy constructor and assignment operator are fine
+    
+    interval& operator=(const T& x);
+    void assign(const T& l, const T& u);
+    // why not: assign_lower(const T& l);
+    // why not: assign_upper(const T& u);
+    
+    static interval empty();
+    static interval entire();
+    static interval hull(const T& x, const T& y);
+    
+    const T& lower() const { return low; }
+    const T& upper() const { return up;  }
+    
+    interval& operator+= (const T& r);
+    interval& operator+= (const interval& r);
+    interval& operator-= (const T& r);
+    interval& operator-= (const interval& r);
+    interval& operator*= (const T& r);
+    interval& operator*= (const interval& r);
+    interval& operator/= (const T& r);
+    interval& operator/= (const interval& r);
+    
+    // the following is for internal use only, it is not a published interface
+    // nevertheless, it's public because friends don't always work correctly.
+    interval(const T& l, const T& u, bool): low(l), up(u) {}
+    void set_empty();
+    void set_whole();
+    void set(const T& l, const T& u);
+    
+  private:
+    T low;
+    T up;
+  };
+  
+  
 /*
  * Non-Member Function Declarations
  */
@@ -430,7 +434,7 @@ template<class T, class Traits>
 struct less<boost::interval<T, Traits> >
 {
   bool operator()(const boost::interval<T, Traits> & x,
-		  const boost::interval<T, Traits> & y)
+                  const boost::interval<T, Traits> & y)
   {
     return lower(x) < lower(y) ||
       (lower(x) == lower(y) && upper(x) < upper(y));
