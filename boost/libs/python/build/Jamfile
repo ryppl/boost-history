@@ -95,7 +95,7 @@ rule python-test-target # test-target : sources :
 }
 actions python-test-target
 {
-    $(SHELL_EXPORT)PYTHONPATH="$(PYTHONPATH)"
+    $(SHELL_EXPORT)"PYTHONPATH=$(PYTHONPATH)"
     $(PYTHON) "$(>)" $(ARGS) > "$(<)"
 }
 
