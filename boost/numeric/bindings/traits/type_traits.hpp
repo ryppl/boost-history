@@ -17,7 +17,8 @@
 #ifndef BOOST_NUMERIC_BINDINGS_TRAITS_TYPE_TRAITS_HPP
 #define BOOST_NUMERIC_BINDINGS_TRAITS_TYPE_TRAITS_HPP
 
-#include <complex>
+#include <type.h>
+#include <type.hpp>
 
 namespace boost { namespace numeric { namespace bindings { namespace traits {
 
@@ -33,11 +34,11 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     typedef Real real_type; 
   };
 
-  inline const float*  real_cast(const std::complex< float  >* c) { return (const float* )( c ) ; }
-  inline const double* real_cast(const std::complex< double >* c) { return (const double*)( c ) ; }
+  inline const fcomplex_t*  complex_pointer(const complex_f* c) { return reinterpret_cast<const fcomplex_t*>( c ) ; }
+  inline const dcomplex_t*  complex_pointer(const complex_d* c) { return reinterpret_cast<const dcomplex_t*>( c ) ; }
 
-  inline float*  real_cast(std::complex< float  >* c) { return (float* )( c ) ; }
-  inline double* real_cast(std::complex< double >* c) { return (double*)( c ) ; }
+  inline       fcomplex_t*  complex_pointer(      complex_f* c) { return reinterpret_cast<      fcomplex_t*>( c ) ; }
+  inline       dcomplex_t*  complex_pointer(      complex_d* c) { return reinterpret_cast<      dcomplex_t*>( c ) ; }
 
 }}}}
 

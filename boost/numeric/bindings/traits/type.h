@@ -15,7 +15,25 @@
  * This header defines the C types that will be mapped to
  * COMPLEX and COMPLEX*16 of Fortran
  */
-typedef float  fcomplex ;
-typedef double dcomplex ;
+
+#ifndef BOOST_NUMERIC_BINDINGS_USE_COMPLEX_STRUCT 
+
+typedef float  fcomplex_t ;
+typedef double dcomplex_t ;
+
+#else
+
+typedef
+union {
+  float cmplx[2] ;
+  double align_struct_ ;
+} fcomplex_t ;
+
+typedef 
+struct
+  double cmplx[2] ;
+} dcomplex_t ;
+
+#endif /* BOOST_NUMERIC_BINDINGS_USE_COMPLEX_STRUCT */
 
 #endif /* BOOST_NUMERIC_BINDINGS_TRAITS_TYPE_H */
