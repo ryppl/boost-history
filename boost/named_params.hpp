@@ -27,6 +27,7 @@
 #include <boost/preprocessor/repetition/enum_shifted.hpp>
 #include <boost/preprocessor/repetition/enum_binary_params.hpp>
 #include <boost/preprocessor/repetition/enum_shifted_params.hpp>
+#include <boost/preprocessor/seq/elem.hpp>
 #include <boost/preprocessor/iteration/iterate.hpp>
 #include <boost/preprocessor/facilities/intercept.hpp>
 #include <boost/preprocessor/cat.hpp>
@@ -63,7 +64,8 @@ namespace aux
   no_t to_yesno(mpl::false_);
 
   // A placemarker for "no argument passed."
-  struct void_ {};
+  // MAINTAINER NOTE: Do not make this into a metafunction
+  struct void_ {}; 
 
   // A wrapper for the default value passed by the user when resolving
   // the value of the parameter with the given Keyword
@@ -725,64 +727,57 @@ namespace aux
       >
   {};
 
-#ifndef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
-  template <class ArgList>
-  struct satisfies_requirements_of<ArgList,void_>
-    : mpl::true_
-  {};
-#endif
-  
-  // Given actual argument types T0...Tn, return a list of
-  // tagged_argument<U0...Um> types where:
-  //
-  //   T0...Tm != empty_arg_list
-  //
-  // and
-  //
-  //   Ui = Ti is tagged_argument<...> ? Ti : tagged_argument<Ki,Ti>
-  //
-  template<
-      BOOST_PP_ENUM_BINARY_PARAMS(
-          BOOST_NAMED_PARAMS_MAX_ARITY, class T, = empty_arg_list BOOST_PP_INTERCEPT
-      )
-  >
+  // Helper for make_partial_arg_list, below.  Produce an arg_list
+  // node for the given ParameterSpec and ArgumentType, whose tail is
+  // determined by invoking the nullary metafunction TailFn.
+  template <class ParameterSpec, class ArgumentType, class TailFn>
   struct make_arg_list
   {
-      template<
-          BOOST_PP_ENUM_PARAMS(BOOST_NAMED_PARAMS_MAX_ARITY, class K)
-      >
-      struct apply
-      {
-          typedef arg_list<
-              typename as_tagged_argument<K0, T0>::type
-            , typename BOOST_PP_CAT(mpl::apply_wrap, BOOST_NAMED_PARAMS_MAX_ARITY)<
-                  make_arg_list<
-                      BOOST_PP_ENUM_SHIFTED_PARAMS(
-                          BOOST_NAMED_PARAMS_MAX_ARITY, T
-                      )
-                    , empty_arg_list
-                  >
-                , BOOST_PP_ENUM_SHIFTED_PARAMS(BOOST_NAMED_PARAMS_MAX_ARITY, K)
-                , empty_arg_list
-              >::type
-          > type;
-      };
+      typedef arg_list<
+          typename as_tagged_argument<ParameterSpec,ArgumentType>::type
+        , typename TailFn::type
+      > type;
   };
 
-  template <>
-  struct make_arg_list<
-      BOOST_PP_ENUM_PARAMS(BOOST_NAMED_PARAMS_MAX_ARITY, empty_arg_list BOOST_PP_INTERCEPT)
+  // Just like make_arg_list, except if ArgumentType is void_, the
+  // result is empty_arg_list.  Used to build arg_lists whose length
+  // depends on the number of non-default (void_) arguments passed to
+  // a class template.
+  template <
+      class ParameterSpec
+    , class ArgumentType
+    , class TailFn
   >
-  {
-      template<
-          BOOST_PP_ENUM_PARAMS(BOOST_NAMED_PARAMS_MAX_ARITY, class K)
+  struct make_partial_arg_list
+    : mpl::eval_if<
+          is_same<ArgumentType,void_>
+        , mpl::identity<empty_arg_list>
+        , make_arg_list<ParameterSpec, ArgumentType, TailFn>
       >
-      struct apply
-      {
-          typedef empty_arg_list type;
-      };
-  };
+  {};
 
+  // Generates:
+  //
+  //   make<
+  //       parameter_spec#0, argument_type#0
+  //     , make<
+  //           parameter_spec#1, argument_type#1
+  //         , ... mpl::identity<aux::empty_arg_list>
+  //    ...>
+  //   >
+#define BOOST_NAMED_PARAMS_make_arg_list(z, n, names)   \
+      BOOST_PP_SEQ_ELEM(0,names)<                       \
+          BOOST_PP_CAT(BOOST_PP_SEQ_ELEM(1,names), n),  \
+          BOOST_PP_CAT(BOOST_PP_SEQ_ELEM(2,names), n),
+      
+#define BOOST_NAMED_PARAMS_right_angle(z, n, text)    >
+    
+#define BOOST_NAMED_PARAMS_build_arg_list(n, make, parameter_spec, argument_type)   \
+  BOOST_PP_REPEAT(                                                                  \
+      n, BOOST_NAMED_PARAMS_make_arg_list, (make)(parameter_spec)(argument_type))   \
+  mpl::identity<aux::empty_arg_list>                                                \
+  BOOST_PP_REPEAT(n, BOOST_NAMED_PARAMS_right_angle, _)
+  
 } // namespace aux
 
 #define BOOST_PARAMETERS_TEMPLATE_ARGS(z, n, text) class BOOST_PP_CAT(PS, n) = aux::void_
@@ -801,11 +796,6 @@ struct parameters
     // parameters.  Otherwise, this is not a valid metafunction (no nested
     // ::type).
 
-# define BOOST_NAMED_PARAMS_passes_predicate(z, n, text)                \
-    typename mpl::and_<                                                 \
-        aux::satisfies_requirements_of<NamedList, BOOST_PP_CAT(PS, n)> ,
-      
-#define BOOST_NAMED_PARAMS_right_angle(z, n, text)    >
 
 #ifndef BOOST_NO_SFINAE
     // If NamedList satisfies the PS0, PS1, ..., this is a
@@ -820,50 +810,113 @@ struct parameters
             //       aux::satisfies_requirements_of<NamedList,PS1>...
             //           ..., mpl::true_
             // ...> >
-            BOOST_PP_REPEAT(BOOST_NAMED_PARAMS_MAX_ARITY, BOOST_NAMED_PARAMS_passes_predicate, _)
+            
+# define BOOST_NAMED_PARAMS_satisfies(z, n, text)                                   \
+            mpl::and_<                                                              \
+                aux::satisfies_requirements_of<NamedList, BOOST_PP_CAT(PS, n)> ,
+      
+            BOOST_PP_REPEAT(BOOST_NAMED_PARAMS_MAX_ARITY, BOOST_NAMED_PARAMS_satisfies, _)
             mpl::true_
             BOOST_PP_REPEAT(BOOST_NAMED_PARAMS_MAX_ARITY, BOOST_NAMED_PARAMS_right_angle, _)
-            
+
+# undef BOOST_NAMED_PARAMS_satisfies
+                                                                                    
           , mpl::identity<parameters>
           , aux::void_
         >
     {};
 #endif
     
-# undef BOOST_NAMED_PARAMS_passes_predicate
-# undef BOOST_NAMED_PARAMS_right_angle
     
-    // Instantiations are to be used as an optional argument to control SFINAE
+    // Specializations are to be used as an optional argument to
+    // eliminate overloads via SFINAE
     template<
         BOOST_PP_ENUM_BINARY_PARAMS(
-            BOOST_NAMED_PARAMS_MAX_ARITY, class T, = aux::empty_arg_list BOOST_PP_INTERCEPT
+            BOOST_NAMED_PARAMS_MAX_ARITY, class A, = aux::void_ BOOST_PP_INTERCEPT
         )       
     >
     struct restrict
 #ifndef BOOST_NO_SFINAE
       : restrict_base<
-            // Build a list of tagged_argument<PS,T> items for each keyword and actual 
-            BOOST_DEDUCED_TYPENAME BOOST_PP_CAT(mpl::apply, BOOST_NAMED_PARAMS_MAX_ARITY)<
-                aux::make_arg_list<
-                    BOOST_PP_ENUM_PARAMS(BOOST_NAMED_PARAMS_MAX_ARITY, T)
-                >
-              , BOOST_PP_ENUM_PARAMS(BOOST_NAMED_PARAMS_MAX_ARITY, PS)
-            >::type
-        >::type    
+            typename BOOST_NAMED_PARAMS_build_arg_list(
+                BOOST_NAMED_PARAMS_MAX_ARITY, aux::make_partial_arg_list, PS, A
+            )::type
+        >::type
     {};
 #else
     { typedef parameters type; };
-#endif 
+#endif
 
+    //
+    // The function call operator is used to build an arg_list that
+    // labels the positional parameters and maintains whatever other
+    // tags may have been specified by the caller.
+    //
     aux::empty_arg_list operator()() const
     {
        return aux::empty_arg_list();
     }
 
+    template<class A0>
+    typename
+      aux::make_arg_list<PS0,A0, mpl::identity<aux::empty_arg_list> >
+    ::type
+    operator()( A0 const& a0) const
+    {
+        typedef typename
+          aux::make_arg_list<PS0, A0, mpl::identity<aux::empty_arg_list> >
+        ::type result_type;
+
+        return result_type(
+            a0
+            // , void_(), void_(), void_() ...
+            BOOST_PP_ENUM_TRAILING_PARAMS(
+                BOOST_PP_SUB(BOOST_NAMED_PARAMS_MAX_ARITY, 1)
+              , aux::void_() BOOST_PP_INTERCEPT)
+        );
+    }
+
+    template<class A0, class A1>
+    typename
+      aux::make_arg_list<
+          PS0,A0
+        , aux::make_arg_list<
+              PS1,A1
+            , mpl::identity<aux::empty_arg_list>
+          >
+      >
+    ::type
+    operator()(A0 const& a0, A1 const& a1) const
+    {
+        typedef typename
+          aux::make_arg_list<
+              PS0,A0
+            , aux::make_arg_list<
+                  PS1,A1
+                , mpl::identity<aux::empty_arg_list>
+              >
+          >
+        ::type result_type;
+
+
+        return result_type(
+            a0, a1
+            // , void_(), void_() ...
+            BOOST_PP_ENUM_TRAILING_PARAMS(
+                BOOST_PP_SUB(BOOST_NAMED_PARAMS_MAX_ARITY, 2)
+              , aux::void_() BOOST_PP_INTERCEPT)
+        );
+    }
+
+    // Higher arities are handled by the preprocessor
 #define BOOST_PP_ITERATION_PARAMS_1 (3,( \
-        1,BOOST_NAMED_PARAMS_MAX_ARITY,<boost/detail/named_params_iterate.hpp> \
+        3,BOOST_NAMED_PARAMS_MAX_ARITY,<boost/detail/named_params_iterate.hpp> \
     ))
 #include BOOST_PP_ITERATE()
+    
+#undef BOOST_NAMED_PARAMS_build_arg_list
+#undef BOOST_NAMED_PARAMS_make_arg_list
+#undef BOOST_NAMED_PARAMS_right_angle
 
 };
 
