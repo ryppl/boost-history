@@ -31,8 +31,8 @@ MPL_TEST_CASE()
         , front_inserter< vector0<> >
         >::type result;
 
-    MPL_ASSERT_EQUAL(2,( size<result>::value, 10 ));
-    MPL_ASSERT(( equal< result,answer >::value ));
+    MPL_ASSERT_RELATION(size<result>::value,==, 10);
+    MPL_ASSERT(( equal< result,answer > ));
 }
 
 MPL_TEST_CASE()
@@ -43,6 +43,6 @@ MPL_TEST_CASE()
         , front_inserter<numbers>
         >::type result;
 
-    MPL_ASSERT_EQUAL(2,( size<result>::value, 20 ));
-    MPL_ASSERT(( equal< result,range_c<int,0,20> >::value ));
+    MPL_ASSERT_RELATION(size<result>::value, ==,  20);
+    MPL_ASSERT(( equal< result,range_c<int,0,20> > ));
 }
