@@ -122,6 +122,8 @@ void check(value_type a, value_type b)
 template < typename Iterator0, typename Iterator1 >
 void check(Iterator0 begin0, Iterator0 end0, Iterator1 begin1)
 {
+  typedef std::iterator_traits< Iterator0 >::value_type value_type ;
+
   Iterator0 it0 = begin0 ;
   Iterator1 end1 = begin1 + std::distance(begin0,end0);
   for(bool fail = false ; it0 != end0 || fail ; ++it0 ) ; // fail = ! ( *it0 < std::numeric_limits< typename Iterator0::value_type >::max() );
@@ -136,7 +138,7 @@ void check(Iterator0 begin0, Iterator0 end0, Iterator1 begin1)
     exit(1);
   }
 
-  if ( ! std::equal( begin0, end0, begin1, boost::numeric::bindings::is_equal< typename Iterator0::value_type >( std::abs( *begin0 ) * 1e-5 ) ) ) {
+  if ( ! std::equal( begin0, end0, begin1, boost::numeric::bindings::is_equal< typename Iterator0::value_type >( std::abs< value_type >( *begin0 ) * 1e-5 ) ) ) {
     std::cerr << "\n\nregression test failure : results are not identical" << std::endl;
     std::cerr << std::setprecision( 20 ) ;
     std::copy( begin0, end0, std::ostream_iterator< typename Iterator0::value_type >( std::cerr, " " ) ); std::cerr << std::endl;

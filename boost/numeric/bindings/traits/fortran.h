@@ -11,7 +11,7 @@
 #ifndef femtown_fortran_hpp
 #define femtown_fortran_hpp
 
-#if defined(__GNUC__) || defined(__ICC)
+#if defined(__GNUC__) || defined(__ICC) || defined(__sgi)
 #define BIND_FORTRAN_LOWERCASE_UNDERSCORE
 #elif defined(__IBMCPP__)
 #define BIND_FORTRAN_LOWERCASE

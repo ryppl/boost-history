@@ -66,7 +66,7 @@ namespace boost { namespace numeric { namespace bindings {
   {
     typedef typename value_traits< T >::value_type value_type ;
 
-    is_equal(const value_type & tolerance = value_type::TOLERANCE) : tolerance_( tolerance ) {}
+    is_equal(const value_type & tolerance) : tolerance_( tolerance ) {}
 
     bool operator()(const T& a, const T& b) const
     { return eq< T >(a,b,tolerance_) ; }
