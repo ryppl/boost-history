@@ -1,0 +1,46 @@
+[library range_ex
+    [version 1.0]
+    [authors [Niebler, Eric]]
+    [copyright 2004 Eric Niebler]
+    [category algorithms]
+    [purpose 
+        range-base versions of the std algorithms, and range adaptors
+        built on top of iterator_adaptor.
+    ]
+    [license
+        Distributed under the Boost Software License, Version 1.0.
+        (See accompanying file LICENSE_1_0.txt or copy at
+        <ulink url="http://www.boost.org/LICENSE_1_0.txt">
+            http://www.boost.org/LICENSE_1_0.txt
+        </ulink>)
+    ]
+]
+
+[/ QuickBook Document version 1.0 ]
+
+[/  Images   ]
+
+[def _note_               [$images/note.png]]
+[def _alert_              [$images/caution.png]]
+[def _detail_             [$images/note.png]]
+[def _tip_                [$images/tip.png]]
+
+[/  Links   ]
+
+[def _iterator_           [@http://boost.org/libs/iterator/doc/index.html Boost.Iterator]]
+[def _range_              [@http://boost.org/libs/range/index.html Boost.Range]]
+[def _iterator_range_     [@http://boost.org/libs/range/doc/utility_class.html#iter_range `boost::iterator_range<>`]]
+[def _sub_range_          [@http://boost.org/libs/range/doc/utility_class.html#sub_range `boost::sub_range<>`]]
+[def _foreach_            [`BOOST_FOREACH`]
+
+[section Introduction]
+
+Blah!
+
+[endsect]
+
+
+[xinclude autodoc.boostbook]
+
+
+

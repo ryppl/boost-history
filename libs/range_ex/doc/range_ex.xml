@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE library PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+     "http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<library
+    id="range_ex"
+    name="range_ex"
+    dirname="range_ex"
+    last-revision="$Date$" 
+    xmlns:xi="http://www.w3.org/2001/XInclude">
+  <libraryinfo>
+    <author>
+      <firstname>Eric</firstname>
+      <surname>Niebler</surname>
+    </author>
+
+    <copyright>
+      <year>2004</year>
+      <holder>Eric Niebler</holder>
+    </copyright>
+
+    <legalnotice>
+      <para>
+        Distributed under the Boost Software License, Version 1.0.
+        (See accompanying file LICENSE_1_0.txt or copy at
+        <ulink url="http://www.boost.org/LICENSE_1_0.txt">
+            http://www.boost.org/LICENSE_1_0.txt
+        </ulink>)
+    
+      </para>
+    </legalnotice>
+
+    <librarypurpose>
+      range-base versions of the std algorithms, and range adaptors
+        built on top of iterator_adaptor.
+        </librarypurpose>
+
+    <librarycategory name="category:algorithms"></librarycategory>
+
+  </libraryinfo>
+
+  <title>range_ex 1.0</title>
+
+
+
+<section id="range_ex.introduction">
+<title>Introduction</title>
+<para>
+Blah!</para>
+</section>
+<xi:include href="autodoc.boostbook" />
+
+</library>
+

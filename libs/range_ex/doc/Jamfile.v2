@@ -1,0 +1,31 @@
+project boost-sandbox/range_ex/doc ;
+import boostbook : boostbook ;
+import doxygen : doxygen ;
+
+doxygen autodoc
+    :
+        ../../../boost/range_ex/algorithm.hpp
+        ../../../boost/range_ex/filter.hpp
+        ../../../boost/range_ex/indirect.hpp
+        ../../../boost/range_ex/iterator_cast.hpp
+        ../../../boost/range_ex/reverse.hpp
+        ../../../boost/range_ex/transform.hpp
+    :
+        <doxygen:param>EXTRACT_ALL=YES
+        <doxygen:param>PREDEFINED=RANGE_EX_DOXYGEN_INVOKED
+        <doxygen:param>PREDEFINED=BOOST_DEDUCED_TYPENAME=typename
+        <doxygen:param>HIDE_UNDOC_MEMBERS=NO
+        <doxygen:param>EXTRACT_PRIVATE=NO
+        <doxygen:param>ENABLE_PREPROCESSING=YES
+        <doxygen:param>MACRO_EXPANSION=YES
+        <doxygen:param>EXPAND_ONLY_PREDEF=YES
+        <doxygen:param>SEARCH_INCLUDES=YES
+    ;
+
+boostbook range_ex
+    :
+        range_ex.xml
+    :
+        <xsl:param>nav.layout=none
+        <xsl:param>boost.root=../../../..
+    ;
