@@ -1,7 +1,9 @@
 subproject libs/numeric/ublas ;
 subinclude libs/numeric/ublas/blasbindings ;
+subinclude libs/numeric/ublas/lapackbindings ;
 
 lib ublas 
-        : blas.cpp
+        : blas.cpp lapack.cpp
         :  <include>$(BOOST_ROOT)
+	   <include>/usr/local/boost
         ;
