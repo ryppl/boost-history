@@ -15,6 +15,8 @@
 #ifndef BOOST_IO_FORMAT_DETAIL_SEQUENCE_HPP
 #define BOOST_IO_FORMAT_DETAIL_SEQUENCE_HPP
 
+#include <boost/io/format/format.hpp>
+
 namespace boost {
 namespace io {
 namespace detail {
