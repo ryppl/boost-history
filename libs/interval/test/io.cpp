@@ -1,0 +1,94 @@
+#include <boost/interval.hpp>
+#include <boost/interval/io.hpp>
+#include <boost/test/test_tools.hpp>
+
+#include <strstream>
+#include <iostream>
+#include <iomanip>
+
+using namespace boost;
+using namespace interval_lib;
+
+
+namespace my_namespace {
+
+template<class T>
+bool test(int precision) {
+  interval<T> pi_i( 3.1415926, 3.1415927 );
+  // write pi_i to a string
+  char pi_buffer[128] = {0};
+  std::ostrstream oss(pi_buffer, 128);
+  oss << std::setprecision(precision);
+  oss << pi_i;
+#ifdef BOOST_INTERVAL_VERBOSE
+  std::cerr << "FYI: printing [3.1415926,3.1415927] with precision "
+            << precision << " as "
+            << std::setprecision(precision) << pi_i << std::endl;
+#endif
+  // read pi_o from same string
+  interval<T> pi_o;
+  std::istrstream iss(pi_buffer);
+  iss >> pi_o;
+  // the result should be at least as imprecise 
+#ifdef BOOST_INTERVAL_VERBOSE
+  if (!subset(pi_i, pi_o))
+    std::cerr << "Error: getting [3.1415926,3.1415927] with precision "
+              << precision << " as " << std::setprecision(precision)
+              << "[" << pi_o.lower() << std::setprecision(precision)
+              << "," << pi_o.upper() << "]" << std::endl;
+  else
+    std::cerr << "Good: getting [3.1415926,3.1415927] with precision "
+              << precision << " as " << std::setprecision(precision)
+   	        << "[" << pi_o.lower() << std::setprecision(precision)
+              << "," << pi_o.upper() << "]" << std::endl;
+#endif
+  return subset(pi_i, pi_o);
+}
+
+} // namespace my_namespace
+
+int test_main(int, char *[]) {
+  using my_namespace::test;
+  BOOST_TEST(test<float>(0));
+  BOOST_TEST(test<float>(1));
+  BOOST_TEST(test<float>(2));
+  BOOST_TEST(test<float>(3));
+  BOOST_TEST(test<float>(4));
+  BOOST_TEST(test<float>(5));
+  BOOST_TEST(test<float>(6));
+  BOOST_TEST(test<float>(7));
+  BOOST_TEST(test<float>(8));
+  BOOST_TEST(test<double>(0));
+  BOOST_TEST(test<double>(1));
+  BOOST_TEST(test<double>(2));
+  BOOST_TEST(test<double>(3));
+  BOOST_TEST(test<double>(4));
+  BOOST_TEST(test<double>(5));
+  BOOST_TEST(test<double>(6));
+  BOOST_TEST(test<double>(7));
+  BOOST_TEST(test<double>(8));
+  BOOST_TEST(test<double>(9));
+  BOOST_TEST(test<double>(10));
+  BOOST_TEST(test<double>(11));
+  BOOST_TEST(test<double>(12));
+  BOOST_TEST(test<double>(13));
+  BOOST_TEST(test<double>(14));
+  BOOST_TEST(test<double>(15));
+  BOOST_TEST(test<long double>(0));
+  BOOST_TEST(test<long double>(1));
+  BOOST_TEST(test<long double>(2));
+  BOOST_TEST(test<long double>(3));
+  BOOST_TEST(test<long double>(4));
+  BOOST_TEST(test<long double>(5));
+  BOOST_TEST(test<long double>(6));
+  BOOST_TEST(test<long double>(7));
+  BOOST_TEST(test<long double>(8));
+  BOOST_TEST(test<long double>(9));
+  BOOST_TEST(test<long double>(10));
+  BOOST_TEST(test<long double>(11));
+  BOOST_TEST(test<long double>(12));
+  BOOST_TEST(test<long double>(13));
+  BOOST_TEST(test<long double>(14));
+  BOOST_TEST(test<long double>(15));
+  return 0;
+}
