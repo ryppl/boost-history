@@ -382,7 +382,7 @@ public:
                                                          dynamic_bitset<B, A>& b);
 
     template <typename B, typename A, typename stringT>
-    friend void to_string_helper (const dynamic_bitset<B, A> & b, stringT & s, std::size_t len);
+    friend void to_string_helper(const dynamic_bitset<B, A> & b, stringT & s, bool dump_all);
 
 
 #endif
@@ -404,6 +404,7 @@ private:
 BOOST_DYN_BITSET_PRIVATE:
 
     void m_rearrange_extracted_bits(size_type num_bits);
+    bool m_unchecked_test(size_type pos) const;
     static size_type calc_num_blocks(size_type num_bits);
     Block& m_highest_block();
 
@@ -922,10 +923,16 @@ dynamic_bitset<Block, Allocator>::flip()
 }
 
 template <typename Block, typename Allocator>
+bool dynamic_bitset<Block, Allocator>::m_unchecked_test(size_type pos) const
+{
+    return (m_bits[block_index(pos)] & bit_mask(pos)) != 0;
+}
+
+template <typename Block, typename Allocator>
 bool dynamic_bitset<Block, Allocator>::test(size_type pos) const
 {
     assert(pos < m_num_bits);
-    return (m_bits[block_index(pos)] & bit_mask(pos)) != 0;
+    return m_unchecked_test(pos);
 }
 
 template <typename Block, typename Allocator>
@@ -1011,7 +1018,8 @@ dynamic_bitset<Block, Allocator>::count() const
 
 
 template <typename B, typename A, typename stringT>
-void to_string_helper (const dynamic_bitset<B, A> & b, stringT & s, std::size_t len)
+void to_string_helper(const dynamic_bitset<B, A> & b, stringT & s,
+                      bool dump_all)
 {
     typedef typename stringT::traits_type Tr;
     typedef typename stringT::value_type  Ch;
@@ -1019,17 +1027,18 @@ void to_string_helper (const dynamic_bitset<B, A> & b, stringT & s, std::size_t 
     const Ch zero = BOOST_BITSET_CHAR(Ch, '0');
     const Ch one  = BOOST_BITSET_CHAR(Ch, '1');
 
-    // Note that this function is implemented through operator[] and
-    // uses only the public interface. Anyhow, this is a deceit because
-    // it may call operator[] itself with an index >= b.size() and so
-    // relies on an implementation detail of dynamic_bitset.
-    // To highlight this, the dependency on the "internals" is made
-    // explicit by granting it friendship.
-    //
-    assert (b.size() <= len /*&& len <= [G.P.S.]*/ );
+    // Note that this function may access (when
+    // dump_all == true) bits beyond position size() - 1
+
+    typedef typename dynamic_bitset<B, A>::size_type size_type;
+
+    const size_type len = dump_all?
+         dynamic_bitset<B, A>::bits_per_block * b.num_blocks():
+         b.size();
     s.assign (len, zero);
-    for (std::size_t i = 0; i < len; ++i) {
-        if (b[i]) // G.P.S. da decidere con Jeremy
+
+    for (size_type i = 0; i < len; ++i) {
+        if (b.m_unchecked_test(i))
             Tr::assign(s[len - 1 - i], one);
 
     }
@@ -1037,30 +1046,28 @@ void to_string_helper (const dynamic_bitset<B, A> & b, stringT & s, std::size_t 
 }
 
 
-
 // A comment similar to the one about the constructor from
 // basic_string can be done here. Thanks to James Kanze for
-// making me (Gennaro) realize this and many other things
-// about internationalization.
+// making me (Gennaro) realize this important separation of
+// concerns issue, as well as many things about i18n.
 //
 template <typename Block, typename Allocator, typename stringT> // G.P.S.
 inline void
 to_string(const dynamic_bitset<Block, Allocator>& b, stringT& s)
 {
-    to_string_helper (b, s, b.size());
+    to_string_helper(b, s, false);
 }
 
 
 // Differently from to_string this function dumps out
-// every bit of the internal representation (useful
-// for debugging purposes)
+// every bit of the internal representation (may be
+// useful for debugging purposes)
 //
 template <typename B, typename A, typename stringT>
 inline void
-dump_to_string(const dynamic_bitset<B, A>& b,
-               /*std::basic_string<CharT, Alloc>*/stringT& s) // G.P.S.
+dump_to_string(const dynamic_bitset<B, A>& b, stringT& s) // G.P.S.
 {
-    to_string_helper(b, s, b.m_num_blocks * (dynamic_bitset<B, A>::bits_per_block) );
+    to_string_helper(b, s, true /* =dump_all*/);
 }
 
 template <typename Block, typename Allocator, typename BlockOutputIterator>
