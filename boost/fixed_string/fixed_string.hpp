@@ -109,7 +109,7 @@
       class fixed_string: public fixed_string_base< CharT, CharStringPolicy >
       {
          private:
-            CharT                      str[ n ];
+            CharT                      str[ n + 1 ];
             size_t                     len;
          public: // validation checks
             struct ok{ typedef char value; };
@@ -183,7 +183,11 @@
             }
             inline void                          resize_( size_t sz, CharT c )
             {
-               if( sz > len )          CharStringPolicy::assign( str + len, sz - len, c );
+               if( sz > len )
+               {
+                  if( sz >= n )        sz = n;
+                  CharStringPolicy::assign( str + len, sz - len, c );
+               }
                len = sz;
                str[ len ] = CharT();
             }
@@ -199,28 +203,28 @@
             inline void                          assign_( const CharT * s, size_type l )
             {
                if( l == npos )         l = CharStringPolicy::length( s );
-               len = ( l > n ) ? ( n - 1 ) : l;
+               len = ( l >= n ) ? n : l;
                CharStringPolicy::copy( str, s, len );
                str[ len ] = CharT();
             }
             inline void                          append_( const CharT * s, size_type l = npos )
             {
                if( l == npos )         l = CharStringPolicy::length( s );
-               l = (( l + len ) > n ) ? ( n - len ) : l;
+               l = (( l + len ) >= n ) ? ( n - len ) : l;
                CharStringPolicy::copy( str + len, s, l );
-               len += l - 1;
+               len += l;
                str[ len ] = CharT();
             }
             inline int                           format_( const CharT * fmt, va_list args )
             {
                int                     ret = detail::format_policy< CharT >::format( str, n, fmt, args );
-               len = ( ret == -1 ) ? ( n - 1 ) : ret;
+               len = ( ret == -1 ) ? n : ret;
                str[ len ] = CharT();
                return( ret );
             }
             inline void                          push_back_( CharT c )
             {
-               if( len < ( n - 1 ))
+               if( len < n )
                {
                   str[   len ] = c;
                   str[ ++len ] = CharT();
