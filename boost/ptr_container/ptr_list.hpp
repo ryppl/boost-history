@@ -27,9 +27,9 @@ namespace boost
 {
 
 template< typename T, typename Allocator = std::allocator<T*> >
-class ptr_list : public detail::reversible_ptr_container< std::list<T*,Allocator>, T >
+class ptr_list : public detail::reversible_ptr_container< detail::default_config< std::list<T*,Allocator>, T > >
 {
-    typedef detail::reversible_ptr_container< std::list<T*,Allocator>, T > Base;
+    typedef detail::reversible_ptr_container< detail::default_config< std::list<T*,Allocator>, T > > Base;
     
 public: 
     BOOST_FORWARD_TYPEDEF( Base );

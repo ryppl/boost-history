@@ -69,6 +69,8 @@ namespace boost
                 
                 T** begin()
                 {
+                    // note: replace with assertion
+                    //
                     if( ptrs_.get() == 0 )
                         return 0;
                     return &ptrs_[0];

@@ -28,16 +28,16 @@ namespace boost
 namespace detail
 {
 
-    template< typename Container, typename T >
-    class associative_ptr_container : public reversible_ptr_container<Container,T>
+    template< typename Config >
+    class associative_ptr_container : public reversible_ptr_container<Config>
     {
-        typedef reversible_ptr_container<Container,T>          Base;
+        typedef reversible_ptr_container<Config> Base;
 
         //static std::pair<iterator,iterator> make_pair( const std::pair<ptr_iter,ptr_iter>& p )
         //{ return std::make_pair( make_indirection_iterator( p.first ), make_indirection_iterator( p.second ) ); }
         
     public: // typedefs
-        typedef Container                  C;
+        typedef typename Config::container_type             C;
         typedef BOOST_DEDUCED_TYPENAME C::key_type          key_type;
         typedef BOOST_DEDUCED_TYPENAME C::key_compare       key_compare;
         typedef BOOST_DEDUCED_TYPENAME C::value_compare     value_compare;

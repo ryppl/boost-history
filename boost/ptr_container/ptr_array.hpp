@@ -28,22 +28,23 @@ namespace boost
 template< typename T, std::size_t size >
 class ptr_array : public detail::reversible_ptr_container< ::boost::array<T*,size>, T >
 {
-    typedef detail::reversible_ptr_container< ::boost::array<T*,size>, T > Base;
+    typedef typename detail::reversible_ptr_container< ::boost::array<T*,size>, T > Base;
 
 public: // typedefs
     BOOST_FORWARD_TYPEDEF( Base );
     
 public:
 
-    ptr_array() : Base() {}
-    ptr_array( std::auto_ptr<ptr_array> r )                            : Base( r )             {}
+    explicit ptr_array() : Base() {}
+    explicit ptr_array( std::auto_ptr<ptr_array> r )                   : Base( r )             {}
     ptr_array( typename Base::release_type r )                         : Base( r )             {}
     template< typename InputIterator >
     ptr_array( InputIterator first, InputIterator last )               : Base( first, last ) {}
     void operator=( std::auto_ptr<ptr_array> r )                       { Base::operator=( r );}
 
     BOOST_PTR_CONTAINER_RELEASE_AND_CLONE( ptr_array );
-};
+    
+};                                                             
 
 }
 

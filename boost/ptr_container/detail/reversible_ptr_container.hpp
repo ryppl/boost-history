@@ -5,6 +5,9 @@
 # pragma once
 #endif
 
+#include <boost/type_traits/remove_pointer.hpp>
+#include <boost/mpl/if.hpp>
+#include <boost/ptr_container/detail/map_iterator.hpp>
 #include <boost/ptr_container/ptr_container_iterator.hpp>
 #include <boost/ptr_container/bad_pointer.hpp>
 #include <boost/ptr_container/bad_ptr_container_operation.hpp>
@@ -29,52 +32,90 @@ namespace boost
     
 namespace detail
 {
-
-    template< typename Container, typename T /*, typename ConcreteContainer*/ >
-    class reversible_ptr_container : less_than_comparable< reversible_ptr_container< Container, T /*, ConcreteContainer*/ >, 
-                                     equality_comparable< reversible_ptr_container< Container, T/*, ConcreteContainer*/ > > >
+    template< typename C, typename T >
+    struct default_config
     {
-        Container         c_;
+        typedef C                                                             container_type;
+        typedef T                                                             value_type;
+        typedef boost::indirect_iterator<typename C::iterator>                iterator;
+        typedef boost::indirect_iterator<typename C::const_iterator>          const_iterator;                
+        typedef boost::indirect_iterator<typename C::reverse_iterator>        reverse_iterator;
+        typedef boost::indirect_iterator<typename C::const_reverse_iterator>  const_reverse_iterator;                
+    };
+    
+    template< typename M, typename T >
+    struct map_config
+    {
+        typedef M                                                                            container_type;
+        typedef T                                                                            value_type;
+        typedef typename ptr_container::detail::map_iterator<typename M::iterator, value_type&> iterator;
+        typedef iterator const_iterator;
+        typedef typename ptr_container::detail::map_iterator<typename M::reverse_iterator, value_type&> reverse_iterator;
+        typedef reverse_iterator const_reverse_iterator;
+    };
+
+    template< typename Config >
+    class reversible_ptr_container : less_than_comparable< reversible_ptr_container< Config >, 
+                                     equality_comparable< reversible_ptr_container< Config > > >
+    {
+        typedef BOOST_DEDUCED_TYPENAME Config::container_type C;
+        C         c_;
 
     protected:
-        Container& c__()                { return c_; }
-        const Container& c__() const    { return c_; }
+        C& c__()                { return c_; }
+        const C& c__() const    { return c_; }
+
+        public: // typedefs
+
+    typedef  BOOST_DEDUCED_TYPENAME Config::value_type    value_type;
+    typedef  value_type*                                  ptr_type;
+    typedef  value_type&                                  reference;
+    typedef  const value_type&                            const_reference;
+    typedef  std::auto_ptr<value_type>                    auto_type;
+    typedef const auto_type                               const_auto_type;
 
     public: // typedefs
 
-        typedef Container                                         C;
         typedef BOOST_DEDUCED_TYPENAME C::iterator                ptr_iter; 
         typedef BOOST_DEDUCED_TYPENAME C::const_iterator          const_ptr_iter;
 
         ptr_iter dbegin() { return c_.begin(); }
         ptr_iter dend() { return c_.end(); }
+        
         typedef BOOST_DEDUCED_TYPENAME C::reverse_iterator        rev_ptr_iter;
         typedef BOOST_DEDUCED_TYPENAME C::const_reverse_iterator  const_rev_ptr_iter;
-        typedef ptr_container::detail::scoped_deleter<T>
+        typedef ptr_container::detail::scoped_deleter<value_type>
                                                                   scoped_deleter;
         typedef ptr_container::detail::size_undoer<C>             size_undoer;
         
-    public: // typedefs
-        typedef  T*                                           ptr_type;
-        typedef  std::auto_ptr<T>                             auto_type;
-        typedef const auto_type                               const_auto_type;
-        typedef  T                                            value_type;
-        typedef  T&                                           reference;
-        typedef  const T&                                     const_reference;
-        typedef  boost::indirect_iterator<ptr_iter>           iterator;
-        typedef  boost::indirect_iterator<const_ptr_iter>     const_iterator;
+        
+        template< typename T >
+        struct is_map
+        {
+            enum{ value =  isAssociative };
+        };
+        
+        typedef  typename Config::iterator        iterator;
+        typedef  typename Config::const_iterator  const_iterator;
+        //typedef  boost::indirect_iterator<const_ptr_iter>     const_iterator;
         typedef  BOOST_DEDUCED_TYPENAME C::difference_type    difference_type; 
         typedef  BOOST_DEDUCED_TYPENAME C::size_type          size_type;
         typedef  BOOST_DEDUCED_TYPENAME C::difference_type    difference_type;
         typedef  BOOST_DEDUCED_TYPENAME C::allocator_type     allocator_type;
-        typedef  indirect_iterator<rev_ptr_iter>              reverse_iterator;
-        typedef  indirect_iterator<const_rev_ptr_iter>        const_reverse_iterator;
+//        typedef  indirect_iterator<rev_ptr_iter>              reverse_iterator;
+//        typedef  indirect_iterator<const_rev_ptr_iter>        const_reverse_iterator;
+        typedef  typename Config::reverse_iterator           reverse_iterator;
+        typedef  typename Config::const_reverse_iterator     const_reverse_iterator;
+
         typedef  ptr_container_iterator<ptr_iter>                                     ptr_iterator;
         typedef  ptr_container_iterator<const_ptr_iter>                               const_ptr_iterator;
         //typedef  boost::indirect_iterator< ptr_iter, T,
         //                            reference, T* >    ptr_iterator;
         //typedef  boost::indirect_iterator< const_ptr_iter, BOOST_DEDUCED_TYPENAME detail::iterator_traits<const_ptr_iter>::value_type,
         //                            const_reference >    const_ptr_iterator;
+        
+        // swap_iterator sbegin(), end();
+        // non-mutable
 
 
     private: // implementation
@@ -91,17 +132,19 @@ namespace detail
         
         void     copy( const reversible_ptr_container& r ){ copy( r.begin(), r.end() );}
         
+        // consider moving this two to scoped_deleter as constructor
         void     make_clones( scoped_deleter& sd, size_type n, const_reference x  )
         {
             for( size_type i = 0; i != n; i++ )
                 sd.add( ::boost::make_clone( x ) );
         }
         
+        // consider moving this two to scoped_deleter as constructor
         template< typename InputIterator >
         void     make_clones( scoped_deleter& sd, InputIterator first, InputIterator last  ) // strong
         {
-            for( InputIterator i = first; i != last; i++ )
-                sd.add( ::boost::make_clone( *i ) );
+            for( ; first != last; ++first )
+                sd.add( ::boost::make_clone( *first ) );
         }
 
         void     copy_clones_and_release( scoped_deleter& sd ) // nothrow
@@ -172,7 +215,7 @@ namespace detail
         {
             int ii = 0;
             for( iterator i = first; i != last; ++i, ++ii )
-                delete *i.base();
+                delete &*i;
         }
 
         template< typename ForwardIterator >
@@ -273,7 +316,7 @@ namespace detail
                 scoped_deleter sd( n );      // strong
                 make_clones( sd, n, x );     // strong
                 size_undoer su( c_ );        // strong
-                c_.resize( n );              // strong or nothrow
+                c_.resize( n );              // strong or nothrow, commit
                 su.release();                // nothrow
                 copy_clones_and_release( sd, advance( c_.begin(), old_size ) ); // nothrow
             }
@@ -327,7 +370,7 @@ namespace detail
                 throw bad_pointer();
             
             auto_type ptr( x );                                                     // nothrow
-            iterator res = make_indirect_iterator( c_.insert( before.base(), x ) ); // strong
+            iterator res = make_indirect_iterator( c_.insert( before.base(), x ) ); // strong, commit
             ptr.release();                                                          // nothrow
             return res;
         }
@@ -338,7 +381,7 @@ namespace detail
         {
             scoped_deleter sd( n );                  // strong
             make_clones( sd, n, x );                 // strong 
-            insert_clones_and_release( sd, before ); // strong
+            insert_clones_and_release( sd, before ); // strong, commit
         }
         
         template< typename InputIterator >
@@ -346,7 +389,7 @@ namespace detail
         {
             scoped_deleter sd( std::distance( first, last ) ); // strong
             make_clones( sd, first, last );                    // strong
-            insert_clones_and_release( sd, before );           // strong 
+            insert_clones_and_release( sd, before );           // strong, commit 
         } 
                        
         iterator erase( iterator before ) 
@@ -372,7 +415,7 @@ namespace detail
                 throw bad_pointer();
             
             auto_type ptr( x ); // nothrow
-            c_.push_front( x ); // strong
+            c_.push_front( x ); // strong, commit
             ptr.release();      // nothrow
         } 
         void             push_front( const_reference x )         { push_front( ::boost::make_clone( x ) ); }
@@ -433,16 +476,14 @@ namespace detail
 
 
 
-    template< typename Container, typename T/*, typename PtrContainer*/ >
-    void swap( reversible_ptr_container<Container,T/*,PtrContainer*/>& x, reversible_ptr_container<Container,T/*,PtrContainer*/>& y )
+    template< typename C >
+    void swap( reversible_ptr_container<C>& x, reversible_ptr_container<C>& y )
     {
         x.swap( y );
     }
 
 #define BOOST_FORWARD_TYPEDEF( Base ) \
 typedef BOOST_DEDUCED_TYPENAME Base::ptr_type ptr_type; \
-typedef BOOST_DEDUCED_TYPENAME Base::auto_type auto_type; \
-typedef BOOST_DEDUCED_TYPENAME Base::const_auto_type const_auto_type; \
 typedef BOOST_DEDUCED_TYPENAME Base::value_type value_type; \
 typedef BOOST_DEDUCED_TYPENAME Base::reference reference; \
 typedef BOOST_DEDUCED_TYPENAME Base::const_reference const_reference; \

@@ -27,9 +27,9 @@ namespace boost
     
     template< typename Key, typename Compare = std::less<Key*>, 
               typename Allocator = std::allocator<Key*> >
-    class ptr_set : public detail::associative_ptr_container< std::set<Key*,Compare,Allocator>, Key >
+    class ptr_set : public detail::associative_ptr_container< detail::default_config< std::set<Key*,Compare,Allocator>, Key > >
     {
-        typedef detail::associative_ptr_container< std::set<Key*,Compare,Allocator>, Key > Base;
+        typedef detail::associative_ptr_container< std::set<Key*,Compare,Allocator>, Key, false > Base;
     
     public: // typedefs
         BOOST_FORWARD_ASSOC_TYPEDEF( Base );
@@ -53,9 +53,9 @@ namespace boost
         
         template< typename Key, typename Compare = std::less<Key*>, 
                   typename Allocator = std::allocator<Key*> >
-        class ptr_multiset : public detail::associative_ptr_container< std::multiset<Key*,Compare,Allocator>, Key >
+        class ptr_multiset : public detail::associative_ptr_container< std::multiset<Key*,Compare,Allocator>, Key, false >
         {
-            typedef detail::associative_ptr_container< std::multiset<Key*,Compare,Allocator>, Key > Base;
+            typedef detail::associative_ptr_container< std::multiset<Key*,Compare,Allocator>, Key, false > Base;
         
         public: // typedefs
             BOOST_FORWARD_ASSOC_TYPEDEF( Base );

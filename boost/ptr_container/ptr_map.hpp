@@ -28,16 +28,16 @@ namespace boost
 
 template< typename Key, typename T, typename Compare = std::less<Key>, 
           typename Allocator = std::allocator<T*> >
-class ptr_map : public detail::associative_ptr_container< std::map<Key,T*,Compare,Allocator>, T >
+class ptr_map : public detail::associative_ptr_container< detail::map_config< std::map<Key,T*,Compare,Allocator>, T > >
 {
-    typedef detail::associative_ptr_container< std::map<Key,T*,Compare,Allocator>, T > Base;
+    typedef detail::associative_ptr_container< detail::map_config< std::map<Key,T*,Compare,Allocator>, T > > Base;
 
 public: // typedefs
     BOOST_FORWARD_ASSOC_TYPEDEF( Base );
         
 public:
-    explicit ptr_map( const Compare& comp = Compare(), 
-             const allocator_type& alloc = allocator_type() ) : Base( comp, alloc ) ) {}
+    explicit ptr_map( const Compare& comp = Compare(), const Allocator& alloc = Allocator() ) 
+    : Base( comp, alloc ) {}
     explicit ptr_map( std::auto_ptr<ptr_map> r ) : Base( r ) {}
     template< typename InputIterator >
     ptr_map( InputIterator first, InputIterator last ) : Base( first, last ) {}
@@ -49,16 +49,16 @@ public:
 
 template< typename Key, typename T, typename Compare = std::less<Key>, 
           typename Allocator = std::allocator<T*> >
-class ptr_multimap : public detail::associative_ptr_container< std::map<Key,T*,Compare,Allocator>, T >
+class ptr_multimap : public detail::associative_ptr_container< detail::map_config< std::map<Key,T*,Compare,Allocator>, T > >
 {
-    typedef detail::associative_ptr_container< std::map<Key,T*,Compare,Allocator>, T > Base;
+    typedef detail::associative_ptr_container< detail::map_config< std::map<Key,T*,Compare,Allocator>, T > > Base;
 
 public: // typedefs
     BOOST_FORWARD_ASSOC_TYPEDEF( Base );
         
 public:
     ptr_multimap( const Compare& comp = Compare(), 
-                  const allocator_type& alloc = allocator_type() ) : Base( comp, alloc ) ) {}
+                  const allocator_type& alloc = allocator_type() ) : Base( comp, alloc ) {}
     ptr_multimap( std::auto_ptr<ptr_multimap> r ) : Base( r )             {}
     
     template< typename InputIterator >
