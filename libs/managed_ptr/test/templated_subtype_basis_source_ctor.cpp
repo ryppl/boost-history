@@ -23,7 +23,7 @@
 #include "boost/managed_ptr/rm_nondeduced.hpp"
 struct outparm{};//outer template parameter
 struct inparm{};//inner template parameter
-struct subinparm //derived class of inparm
+struct subinp //derived class of inparm
 : public inparm
 {};
 
@@ -60,6 +60,23 @@ namespace boost
           
         }//exit rm_nondeduced namespace
         
+          struct
+        inparm_source
+        {
+                typedef
+              inparm&
+            referent_type
+            ;
+              referent_type
+            my_ref
+            ;
+            inparm_source
+              ( referent_type a_ref
+              )
+            : my_ref(a_ref)
+            {}
+        };
+        
         template
           < typename Referent
           , typename OuterParm
@@ -67,7 +84,7 @@ namespace boost
           struct 
         basis_specializer
           < Referent
-          , typename outer_yes_tmpl<OuterParm>::template yes_nested_tmpl<Referent*>
+          , outer_yes_tmpl<OuterParm>
           >
         {
                 typedef
@@ -77,10 +94,6 @@ namespace boost
                 typedef
               outer_yes_tmpl<OuterParm>
             nesting_type
-            ;
-                typedef 
-              referent_type&
-            basis_source_type
             ;
             
             template
@@ -94,6 +107,28 @@ namespace boost
                 other
                 ;
             };
+            
+              struct
+            basis_source_type
+            : public inparm_source
+            {
+                basis_source_type(referent_type a_ref)
+                  : inparm_source(a_ref)
+                {}
+                
+                template
+                  < typename SuperRef
+                  >
+                  rebind<SuperRef>::other::basis_source_type
+                as_super(void)
+                {
+                    typedef rebind<SuperRef>::other::basis_source_type supr_type;
+                    inparm_source& l_vs=*this;
+                    supr_type& l_ss = static_cast<supr_type&>(l_vs);
+                    return l_ss;
+                }
+            };
+            
        };//end basis_specializer<Referent      
     
     }//exit managed_ptr namespace
@@ -122,26 +157,11 @@ class smart_ptr
     basis_source_type
     ;
 
-  #if 0
-  
     smart_ptr
-      ( typename basis_source_type a_basis
+      ( basis_source_type a_basis
       )
       : my_basis(a_basis)
     {}
-    
-  #else
-  
-    template
-      < typename SubRef
-      >
-    smart_ptr
-      ( typename basis_spec_type::rebind<SubRef>::other::basis_source_type a_basis
-      )
-      : my_basis(a_basis)
-    {}
-    
-  #endif
     
       basis_source_type
     my_basis
@@ -153,9 +173,27 @@ class smart_ptr
 using namespace boost;    
 int main(void)
 {
-    inparm* a_in=new inparm;
-    typedef smart_ptr<inparm,non_nested_tmpl> sp_non_nested_type;
-    sp_non_nested_type a_non_nested(a_in);
+    {
+    typedef smart_ptr<inparm,non_nested_tmpl> sp_base_type;
+    inparm*l_base_ptr=new inparm;
+    sp_base_type::basis_source_type l_base_src=l_base_ptr;
+    sp_base_type l_base_fr_base(l_base_src);
+    typedef smart_ptr<subinp,non_nested_tmpl> sp_sub_type;
+    subinp*l_sub_ptr=new subinp;
+    sp_sub_type::basis_source_type l_sub_src=l_sub_ptr;
+    sp_base_type l_base_fr_sub(l_sub_src);
+    }
+    {
+    typedef outer_yes_tmpl<outparm> out_tmpl;
+    typedef smart_ptr<inparm,out_tmpl::yes_nested_tmpl> sp_base_type;
+    inparm l_base_ref;
+    sp_base_type::basis_source_type l_base_src=l_base_ref;
+    sp_base_type l_base_fr_base(l_base_src);
+    typedef smart_ptr<subinp,out_tmpl::yes_nested_tmpl> sp_sub_type;
+    subinp l_sub_ref;
+    sp_sub_type::basis_source_type l_sub_src=l_sub_ref;
+    sp_base_type l_base_fr_sub(l_sub_src.as_super<inparm>());
+    }
     return 0;
 }    
 
