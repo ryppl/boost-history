@@ -66,6 +66,36 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
   }; 
 
 
+  // ublas::vector_range<> treated as matrix (nx1)
+  template <typename T, typename V>
+  struct matrix_detail_traits<boost::numeric::ublas::vector_range<T>, V> 
+  {
+#ifndef BOOST_NUMERIC_BINDINGS_NO_SANITY_CHECK
+    BOOST_STATIC_ASSERT( 
+      (boost::is_same< 
+         boost::numeric::ublas::vector_range<T>, 
+         typename boost::remove_const<V>::type 
+       >::value) );
+#endif
+
+    typedef boost::numeric::ublas::vector_range<T> identifier_type;
+    typedef V matrix_type; 
+    typedef general_t matrix_structure; 
+    typedef column_major_t ordering_type; 
+
+    typedef typename T::value_type value_type; 
+    typedef typename detail::generate_const<V,value_type>::type* pointer; 
+
+    static pointer storage (matrix_type& v) {
+      return vector_traits<V>::storage (v); 
+    }
+    static int size1 (matrix_type& v) { return v.size(); } 
+    static int size2 (matrix_type&) { return 1; }
+    static int storage_size (matrix_type& v) { return v.size(); }
+    static int leading_dimension (matrix_type& v) { return v.size(); }
+  }; 
+
+
 #ifndef BOOST_NUMERIC_BINDINGS_FORTRAN 
 
   // (undocumented) ublas::c_vector<>
