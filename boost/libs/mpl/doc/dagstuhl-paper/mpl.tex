@@ -2019,25 +2019,28 @@ but they are much less expressive.
 
 \section{An advanced example - compile-time FSM generator}
 
+
 Finite state machines (FSM) are an important tool of 
 describing and implementing controlling program behavior 
 \cite{HU79}, \cite{Mar98}. They also are a good example of the domain 
 where some \mping{} can be applied to reduce the amount of 
 repetitive and boilerplate operations one have to perform 
 in order to implement these simple mathematical models in 
-code. As a further illustration of the tools and techniques 
-described early in this paper, below we present a simple 
-state machine generator that takes a compile-time automata 
-description as its input, and produces a complete and 
-efficient FSM implementation as the output, - all within 
-the same language (\Cpp\ ), and at compile time.
+code. Below we present a simple state machine generator that 
+has been implemented using \Mpl facilities. The generator 
+takes a compile-time automata description, and turns it 
+into \Cpp code that implements the FSM at run-time. The 
+FSM description is basically a combination of states and 
+events + a state transition table (STT) that ties them 
+all together. The generator walks through the table and 
+generates the state machine's \code{process\_\-event} 
+method that is essentially what a FSM is about. 
 
-Suppose we want to implement a simple music player using a 
-finite state machine model. The state transition diagram for 
-the FSM is shown in Figure 1, and Table 1 present the 
-corresponding state transition table (STT). The SST format 
-reflects the way one usually describes the behavior of a FSM 
-in plain English. For example, the first line of the table 
+Suppose we want to implement a simple music player using 
+a finite state machine model. The state transition table 
+for the FSM is shown in Table 1. The STT format reflects 
+the way one usually describes the behavior of a FSM in 
+plain English. For example, the first line of the table 
 can be read as follows: ``If the model is in the \code{stopped}
 state, and the \code{play\_\-event} is received, then the 
 \code{do\_\-play} transition function is called, and the model 
@@ -2214,15 +2217,15 @@ player::process_event(event const& e)
 }
 
 %%% Not sure the part below is too relevant
-Note that despite seemed obviousness of optimization of making 
-a transition function to return the next state in not such a 
-good idea. While it will reduce the amount of lines required 
-to describe a single transition, it also would take the 
-transition control away from FSM driver function into 
-application-level code. For one, that would mean and you'd no 
-longer be able to say in what state the machine is going to 
-move after it handles a specific event - you'll have to look 
-into transition function itself. [...] 
+%%% Note that despite seemed obviousness of optimization of making 
+%%% a transition function to return the next state in not such a 
+%%% good idea. While it will reduce the amount of lines required 
+%%% to describe a single transition, it also would take the 
+%%% transition control away from FSM driver function into 
+%%% application-level code. For one, that would mean and you'd no 
+%%% longer be able to say in what state the machine is going to 
+%%% move after it handles a specific event - you'll have to look 
+%%% into transition function itself. [...] 
 
 Although there is nothing particularly wrong with implementing 
 a FSM's structure using nested \code{if} (or \code{switch-case})
@@ -2304,8 +2307,6 @@ location, and that's there the errors are most likely to creep in
 that's need to be changed, and many of such errors won't appear 
 until the runtime.
 
-[...]
-
 Note that all the implementations we've looked on has this common 
 trait - the transition table of our FSM is just a 5-lines table, 
 and ideally, we would like the skeleton implementation of the 
@@ -2313,11 +2314,9 @@ automata's controlling logic to be equally small (or, at least,
 to look equally small, e.g. to be encapsulated in some form so 
 we never see/worry about it). 
 
-Implementing it
+\subsection{Implementing it}
 
-First thing to think about is how we would like the generator's 
-input look like, in particular, how we want to represent a 
-transition table. To represent the TTS in \Cpp\ program, we define 
+To represent the TTS in \Cpp\ program, we define 
 a \code{transition} class template that represents a single line 
 of the table, and than the table itself can be represented as a 
 sequence of such lines:
@@ -2335,30 +2334,92 @@ typedef list<
 \end{codesamp}
 }
 
-pros:
-\begin{enumerate}
-\item readability, direct mapping between a FSM design and 
-    implementation ( one-to-one relation between the 
-    definition and the state table of the FSM )
-\item performance %%%??
-\item compile-time checking 
-\item FSM ``installation'' is done at compile-time; cost 
-    nothing in performance 
-\item only transition actions need to be implemented 
-    (no need to inherit, extend classes, etc.) 
-\item entry and exit methods can be supported easily 
-    (and will be called automatically); you also don't have 
-    to pay for them, if you don't use them 
-\end{enumerate}
+Now, the complete FSM will look like this:
 
-cons:
-\begin{enumerate}
-\item can't handle large FSMs (N transitions > 100) 
-\item compile times for FSMs with N transitions > 50 
-\end{enumerate}
+{\small
+\begin{codesamp}\begin{verbatim}
+class player
+    : state_machine<player>
+{
+ private:
+    typedef player self_t;
 
+    // state invariants
+    void stopped_state_invariant();
+    void playing_state_invariant();
+    void paused_state_invariant();
 
-Related work
+    // states (invariants are passed as non-type template arguments,
+    // and are called then the FSM enters the corresponding state)
+    typedef state<0, &self_t::stopped_state_invariant> stopped;
+    typedef state<1, &self_t::playing_state_invariant> playing;
+    typedef state<2, &self_t::paused_state_invariant> paused;
+
+ private:
+    // event declarations; events are represented as types, 
+    // and can carry a specific data for each event;
+    // but it's not needed for generator, so we define them later
+    struct play_event;
+    struct stop_event;
+    struct pause_event;
+
+    // transition functions
+    void do_play(play_event const&);
+    void do_stop(stop_event const&);
+    void do_pause(pause_event const&);
+    void do_resume(play_event const&);
+
+    // STT
+    friend class state_machine<player>;
+    typedef mpl::list<
+          transition<stopped, play_event,  playing, &player::do_play>
+        , transition<playing, stop_event,  stopped, &player::do_stop>
+        , transition<playing, pause_event, paused,  &player::do_pause>
+        , transition<paused,  play_event,  playing, &player::do_resume>
+        , transition<paused,  stop_event,  stopped, &player::do_stop>
+        >::type transition_table;
+};
+\end{verbatim}
+\end{codesamp}
+}
+
+That's all - the above will generate a complete FSM 
+implementation according to our specification. The only thing we 
+need to start using it is to define the events types (that were 
+just forward declared before):
+
+{\small
+\begin{codesamp}\begin{verbatim}
+// event definitions
+struct player::play_event
+    : player::event
+{
+};
+
+// ...
+\end{verbatim}
+\end{codesamp}
+}
+
+The usage is simple as well:
+
+{\small
+\begin{codesamp}\begin{verbatim}
+int main()
+{
+    // usage example
+    player p;
+    p.process_event(player::play_event());
+    p.process_event(player::pause_event());
+    p.process_event(player::play_event());
+    p.process_event(player::stop_event());
+    return 0;
+}
+\end{verbatim}
+\end{codesamp}
+}
+
+\subsection{Related work}
 
 A notable prior work in the field of automation of general-purpose 
 state machine implementation in \Cpp\ is the Robert Martin's State 
@@ -2390,10 +2451,17 @@ are used, and the FSMs are table driven.
 \section{Acknowledgements}
 \section{References}
 
-%% \begin{chapthebibliography}{1}
-%% \bibitem{Ale01}
-%% Andrei Alexandrescu, Modern C++ Design, Generic Programming and
-%% Design Patterns Applied, Addison-Wesley 2001, ISBN 0-201-70431-5  
+{%\normallatexbib
+\bibliographystyle{apalike}
+%%\chapbblname{chapbib}
+\chapbibliography{refs}
+}
+
+%%\begin{chapthebibliography}{1}
+
+%%\bibitem{Ale01}
+%%Andrei Alexandrescu, Modern C++ Design, Generic Programming and
+%%Design Patterns Applied, Addison-Wesley 2001, ISBN 0-201-70431-5  
 
 %% \bibitem{CE00}
 %% Krzysztof Czarnecki, Ulrich Eisenecker, Generative Programming:
@@ -2438,7 +2506,7 @@ are used, and the FSMs are table driven.
 %% Paul Hudak, Conception, Evolution, and Application of Functional
 %% Programming Languages, ACM Computing Surveys, Vol. 21, No. 3,
 %% September 1989
-%% \end{chapthebibliography}
+%%\end{chapthebibliography}
 
 \end{document}
 % LocalWords:  Aleksey David Gurtovoy Abrahams MPL STL Boost boost
