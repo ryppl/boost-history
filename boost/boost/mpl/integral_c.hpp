@@ -2,11 +2,11 @@
 #ifndef BOOST_MPL_INTEGRAL_C_HPP_INCLUDED
 #define BOOST_MPL_INTEGRAL_C_HPP_INCLUDED
 
-// Copyright (c) Aleksey Gurtovoy 2000-2003
+// Copyright (c) Aleksey Gurtovoy 2000-2004
 //
-// Use, modification and distribution are subject to the Boost Software 
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
-// at http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
@@ -34,7 +34,7 @@
 
 #if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION) \
  && !BOOST_WORKAROUND(__BORLANDC__, <= 0x551)
-namespace boost { namespace mpl {
+BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_OPEN
 // 'bool' constant doesn't have 'next'/'prior' members
 template< bool C >
 struct integral_c<bool, C>
@@ -43,7 +43,7 @@ struct integral_c<bool, C>
     typedef integral_c type;
     operator bool() const { return this->value; }
 };
-}}
+BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_CLOSE
 #endif
 
 #endif // BOOST_MPL_INTEGRAL_C_HPP_INCLUDED

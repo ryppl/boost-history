@@ -32,9 +32,10 @@
 #else
 
 #   define BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE mpl_
-#   define BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_OPEN namespace mpl_ {
+#   define BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_OPEN namespace mpl_ { namespace aux {}
 #   define BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_CLOSE \
-    } namespace boost { namespace mpl { using namespace mpl_; }} \
+    } namespace boost { namespace mpl { using namespace mpl_; \
+        namespace aux { using namespace mpl_::aux; } }} \
     /**/
 
 #endif
