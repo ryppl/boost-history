@@ -1,4 +1,4 @@
-# Boost Filesystem Library Build Jamfile
+# Boost String Algorithm Library Build Jamfile
 
 subproject libs/string_algo/test ;
 
