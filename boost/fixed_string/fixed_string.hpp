@@ -168,21 +168,26 @@
                len = sz;
                str[ len ] = CharT( '\0' );
             }
-            inline void                          reserve( size_type )
+            inline void                          reserve( size_type sz )
             {
+               if( sz < len )
+               {
+                  len = sz;
+                  str[ len ] = CharT( '\0' );
+               }
             }
          public: // string operations
-            inline CharT *                       assign( const CharT * s, size_type l = size_type( -1 ))
+            inline CharT *                       assign( const CharT * s, size_type l = npos )
             {
-               if( l == size_type( -1 )) l = StringPolicy::length( s ) + 1;
+               if( l == npos )         l = StringPolicy::length( s ) + 1;
                len = ( l > n ) ? ( n - 1 ) : l;
                CharT *                 ret = StringPolicy::copy( str, s, len );
                str[ len ] = CharT( '\0' );
                return( ret );
             }
-            inline CharT *                       append( const CharT * s, size_type l = size_type( -1 ))
+            inline CharT *                       append( const CharT * s, size_type l = npos )
             {
-               if( l == size_type( -1 )) l = StringPolicy::length( s ) + 1;
+               if( l == npos )         l = StringPolicy::length( s ) + 1;
                l = (( l + len ) > n ) ? ( n - len ) : l;
                CharT *                 ret = StringPolicy::copy( str + len - 1, s, l );
                len += l - 1;
@@ -191,7 +196,7 @@
             }
             inline void                          push_back( CharT c )
             {
-               if( len != n )
+               if( len < ( n - 1 ))
                {
                   str[   len ] = c;
                   str[ ++len ] = CharT( '\0' );
@@ -209,33 +214,31 @@
             {
                str[ 0 ] = CharT( '\0' );
             }
-            template< size_t m >
-            inline           fixed_string( const fixed_string< m > & s, size_type p, size_type l = size_type( -1 )): len( 0 )
+            inline           fixed_string( const fixed_string & s, size_type p = 0, size_type l = npos ): len( 0 )
             {
                assign( s.c_str(), p, l );
             }
-            inline           fixed_string( const CharT * s, size_type l = size_type( -1 ))
+            inline           fixed_string( const base_type & s, size_type p = 0, size_type l = npos ): len( 0 )
+            {
+               assign( s.c_str(), p, l );
+            }
+            inline           fixed_string( const CharT * s, size_type l ): len( 0 )
             {
                assign( s, l );
             }
+            inline           fixed_string( const CharT * s ): len( 0 )
+            {
+               assign( s );
+            }
+            inline           fixed_string( size_type l, CharT c ): len( 0 )
+            {
+               assign( l, c );
+            }
+            template< typename InputIterator >
+            inline           fixed_string( InputIterator first, InputIterator last ): len( 0 )
+            {
+               assign( first, last );
+            }
       };
-
-      template< size_t n, typename CharT, class StringPolicy >
-      bool operator==( const fixed_string< n, CharT, StringPolicy > & a, const fixed_string< n, CharT, StringPolicy > & b )
-      {
-         return( a.compare( b ) == 0 );
-      }
-
-      template< size_t n, typename CharT, class StringPolicy >
-      bool operator==( const fixed_string< n, CharT, StringPolicy > & a, const CharT * b )
-      {
-         return( a.compare( b ) == 0 );
-      }
-
-      template< size_t n, typename CharT, class StringPolicy >
-      bool operator==( const CharT * b, const fixed_string< n, CharT, StringPolicy > & a )
-      {
-         return( a.compare( b ) == 0 );
-      }
    }
 #endif
