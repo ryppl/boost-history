@@ -22,6 +22,8 @@
 // #else
 #endif
 
+#include "boost/socket/impl/socket_init.hpp"
+
 namespace boost
 {
   namespace socket
@@ -48,38 +50,6 @@ namespace boost
 #else
         typedef int socket_t;
 #endif
-
-
-// #if defined(USES_WINSOCK2)
-//  typedef unsigned long socket_type;
-//  typedef int size_type;
-//  typedef short family_type;
-//  typedef unsigned short port_type;
-//  enum { socket_error = -1,
-//         invalid_socket = -1
-//       };
-
-// #elif defined(__CYGWIN__)
-//  typedef int socket_type;
-//  typedef int size_type;
-//  typedef short family_type;
-//  typedef unsigned short port_type;
-//  enum {
-//    socket_error = -1,
-//    invalid_socket = -1
-//  };
-
-// #else
-//  typedef int socket_type;
-//  typedef socklen_t size_type;
-//  typedef short family_type;
-//  typedef unsigned short port_type;
-//  enum {
-//    socket_error = -1,
-//    invalid_socket = -1
-//  };
-// #endif
-
 
   } //namespace
 } //namespace

@@ -46,17 +46,23 @@ namespace boost
           : m_socket_impl()
       {}
 
-      socket_base(const socket_base& s)
-          : m_socket_impl(s.m_socket_impl),
-            m_error_policy(s.m_error_policy)
-      {}
-
       explicit socket_base(socket_t socket)
           : m_socket_impl(socket)
       {}
 
       ~socket_base()
       {}
+
+      void reset(socket_t socket = socket_t())
+      {
+        m_socket_impl.reset(socket);
+      }
+
+      //! releases ownership socket and leaves socket_base invalid.
+      socket_t release()
+      {
+        return m_socket_impl.release();
+      }
 
       template <typename SocketOption>
       int ioctl(SocketOption& option)
@@ -138,18 +144,16 @@ namespace boost
 
       //! accept a connection
       template <class Addr>
-      std::pair<self_t,int> accept(Addr& address)
+      int accept(self_t& socket, Addr& address)
       {
         boost::function_requires< AddressConcept<Addr> >();
         std::pair<void*,size_t> rep=address.representation();
-        std::pair<socket_impl,int> ret;
-        ret = m_socket_impl.accept(rep);
-        if (ret.second!=Success)
+        int ret = m_socket_impl.accept(socket.m_socket_impl, rep);
+        if (ret!=Success)
         {
-          int ret2=m_error_policy.handle_error(function::accept,ret.second);
-          return std::make_pair(self_t(),ret2);
+          return m_error_policy.handle_error(function::accept,ret);
         }
-        return std::make_pair(self_t(ret.first),Success);
+        return Success;
       }
 
       //! receive data

@@ -40,13 +40,13 @@ namespace boost
           : m_socket()
       {}
 
-      data_socket(const data_socket& s)
-          : m_socket(s.m_socket)
-      {}
+//       data_socket(const data_socket& s)
+//           : m_socket(s.m_socket)
+//       {}
 
-      explicit data_socket(const socket_base_t& s)
-          : m_socket(s)
-      {}
+//       explicit data_socket(const socket_base_t& s)
+//           : m_socket(s)
+//       {}
 
       explicit data_socket(socket_t socket)
           : m_socket(socket)
@@ -55,6 +55,16 @@ namespace boost
       // destructor
       ~data_socket() {}
 
+      void reset(socket_t socket = socket_t())
+      {
+        m_socket.reset(socket);
+      }
+
+      //! releases ownership socket and leaves socket_base invalid.
+      socket_t release()
+      {
+        return m_socket.release();
+      }
 
       template <typename SocketOption>
       int ioctl(SocketOption& option)

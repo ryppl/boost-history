@@ -50,10 +50,14 @@ void client_test()
 
     ip4::tcp_protocol protocol;
 
-    connector<> connector;
+    typedef connector<> connector_t;
+    typedef connector_t::data_connection_t data_connection_t;
+
+    connector_t connector;
 
     time_value timeout(10,0);
-    data_socket<> socket(connector.connect(protocol,addr));
+    data_connection_t socket;
+    BOOST_CHECK(connector.connect(socket,protocol,addr)==boost::socket::Success);
     BOOST_CHECK(socket.is_valid());
     BOOST_CHECK(socket.setsockopt(boost::socket::option::linger(1000))
                 ==boost::socket::Success);

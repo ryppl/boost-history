@@ -36,6 +36,7 @@ namespace boost
       typedef SocketBase socket_base_t;
       typedef typename socket_base_t::socket_t socket_t;
       typedef typename socket_base_t::error_policy error_policy;
+      typedef data_socket<socket_base_t> data_connection_t;
 
       template <typename SocketOption>
       int ioctl(SocketOption& option)
@@ -99,30 +100,31 @@ namespace boost
 
       //! accept a connection
       template <class Addr>
-      std::pair<data_socket<socket_base_t>,int>
-      accept(Addr& address)
+      int accept(data_connection_t& data_socket,
+                 Addr& address)
       {
-        std::pair<socket_base_t,int> ret=m_base.accept(address);
-        return std::make_pair(
-          data_socket<socket_base_t>(ret.first),
-          ret.second);
+        socket_base_t base_socket;
+        int ret=m_base.accept(base_socket, address);
+        data_socket.reset(base_socket.release());
+        return ret;
       }
 
 
       //! accept a connection
       /** Blocking version */
       template <class Addr>
-      std::pair<data_socket<socket_base_t>,int>
-      accept(Addr& address, std::size_t backlog)
+      int accept(data_connection_t& data_socket,
+                 Addr& address,
+                 std::size_t backlog)
       {
         const int listen_error=m_base.listen(backlog);
         if (listen_error!=Success && listen_error!=WouldBlock)
-          return std::make_pair(data_socket<socket_base_t>(),listen_error);
+          return listen_error;
 
-        std::pair<socket_base_t,int> ret=m_base.accept(address);
-        return std::make_pair(
-          data_socket<socket_base_t>(ret.first),
-          ret.second);
+        socket_base_t base_socket;
+        int ret=m_base.accept(base_socket,address);
+        data_socket.reset(base_socket.release());
+        return ret;
       }
 
 

@@ -31,21 +31,21 @@ namespace boost
 
     template <typename Element,
               typename Traits = std::char_traits<Element>,
-              typename SocketBase=socket_base<>
+              typename SocketType=data_socket< socket_base<> >
               >
     class basic_socket_streambuf
       : public std::basic_streambuf<Element, Traits>
     {
     public:
-      typedef SocketBase socket_base_t;
-      typedef typename socket_base_t::socket_t socket_t;
-      typedef typename socket_base_t::error_policy error_policy;
+      typedef SocketType data_socket_t;
+      typedef typename data_socket_t::socket_t socket_t;
+      typedef typename data_socket_t::error_policy error_policy;
 
       typedef Element char_type;
       typedef Traits traits_type;
       typedef typename Traits::int_type int_type;
 
-      explicit basic_socket_streambuf(socket_base<error_policy> & sock,
+      explicit basic_socket_streambuf(data_socket_t& sock,
                                       std::size_t bufsize=4096)
           : socket_(sock)
       {
@@ -133,7 +133,7 @@ namespace boost
       }
 
       Element* egbuf_;
-      socket_base<error_policy> socket_;
+      data_socket_t& socket_;
     };
 
   }// namespace

@@ -19,6 +19,7 @@
 #include "boost/socket/data_socket.hpp"
 #include "boost/socket/socket_streambuf.hpp"
 #include "boost/io/streambuf_wrapping.hpp"
+#include "boost/ref.hpp"
 
 namespace boost
 {
@@ -27,22 +28,22 @@ namespace boost
 
     template <typename Element,
               typename Traits = std::char_traits<Element>,
-              typename SocketBase=socket_base<>
+              typename SocketType=data_socket< socket_base<> >
               >
     class basic_socket_stream
       : public boost::io::basic_wrapping_iostream<
       basic_socket_streambuf<Element, Traits> >
     {
     public:
-      typedef SocketBase socket_base_t;
-      typedef typename socket_base_t::socket_t socket_t;
-      typedef typename socket_base_t::error_policy error_policy;
+      typedef SocketType data_socket_t;
+      typedef typename data_socket_t::socket_t socket_t;
+      typedef typename data_socket_t::error_policy error_policy;
       typedef Element  char_type;
       typedef Traits  traits_type;
 
-      explicit basic_socket_stream(data_socket<socket_base_t>& socket)
+      explicit basic_socket_stream(SocketType& socket)
           : boost::io::basic_wrapping_iostream<
-        basic_socket_streambuf<Element, Traits> >(socket.base())
+        basic_socket_streambuf<Element, Traits> >(boost::ref(socket))
       {}
     };  // boost::io::basic_array_stream
 

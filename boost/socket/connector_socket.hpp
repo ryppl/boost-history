@@ -36,41 +36,55 @@ namespace boost
       typedef SocketBase socket_base_t;
       typedef typename socket_base_t::socket_t socket_t;
       typedef typename socket_base_t::error_policy error_policy;
+      typedef data_socket<socket_base_t> data_connection_t;
 
       template <typename Protocol, typename Addr>
-      data_socket<socket_base_t> connect(
+      int connect(
+        data_connection_t& data_socket,
         const Protocol& protocol,
         const Addr& address)
       {
         socket_base_t socket;
-        socket.open(protocol);
-        socket.connect(address);
-        return data_socket<socket_base_t>(socket);
+        int err=socket.open(protocol);
+        if (err!=Success)
+          return err;
+
+        err=socket.connect(address);
+        if (err!=Success)
+          return err;
+
+        data_socket.reset(socket.release());
+        return Success;
       }
 
       template <typename Protocol, typename Addr>
-      data_socket<socket_base_t> connect(
+      int connect(
+        data_connection_t& data_socket,
         const Protocol& protocol,
         const Addr& address,
         const time_value& timeout)
       {
         socket_base_t socket_to_connect;
-        socket_to_connect.open(protocol);
+        int err=socket_to_connect.open(protocol);
+        if (err!=Success)
+          return err;
+
         option::non_blocking non_block(true);
         int ioctl_err=socket_to_connect.ioctl(non_block);
-        int err=socket_to_connect.connect(address);
+        err=socket_to_connect.connect(address);
         if (err==WouldBlock)
         {
           socket_set fdset;
           fdset.insert(socket_to_connect.socket());
           int sel = ::select(fdset.width(), 0, fdset.fdset(), 0,
                              (::timeval*)timeout.timevalue());
+          // this needs reworking !!!
           if (sel==-1)
             throw "unexpected select problem";
           else if (sel==0)
-            return data_socket<socket_base_t>();
+            return -1;
         }
-        return data_socket<socket_base_t>(socket_to_connect);
+        data_socket.reset(socket_to_connect.release());
       }
 
     };

@@ -19,7 +19,7 @@
 #endif
 
 #include "boost/socket/ip4/address.hpp"
-#include "boost/socket/impl/initialiser.hpp"
+#include "boost/socket/impl/socket_init.hpp"
 
 //! implementation
 #ifdef USES_WINSOCK2
@@ -80,8 +80,6 @@ namespace boost
 
     namespace ip4
     {
-      const boost::socket::impl::initialiser& address::m_initialiser(
-        boost::socket::impl::initialiser::uses_platform());
 
       address::address()
       {

@@ -12,7 +12,7 @@ subproject libs/socket/build ;
 CPP_SOURCE =
   socket_option
   default_socket_impl
-  impl/initialiser
+  impl/socket_init
   ip4/address ip4/protocol ;
 
 B_ROOT ?= c:/usr/boost ;

@@ -25,10 +25,6 @@ namespace boost
 {
   namespace socket
   {
-    namespace impl
-    {
-      class initialiser;
-    }
 
     namespace ip4
     {
@@ -56,7 +52,6 @@ namespace boost
 
       private:
         impl::address_storage address_;
-        static const boost::socket::impl::initialiser& m_initialiser;
       };
 
 

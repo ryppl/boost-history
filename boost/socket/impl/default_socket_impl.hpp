@@ -26,7 +26,6 @@ namespace boost
   {
     namespace impl
     {
-      class initialiser;
 
       //! Provides an implementation of SocketImplConcept
       /** This provides a platform neutral set of calls,
@@ -55,9 +54,15 @@ namespace boost
       public:
 
         default_socket_impl();
-        default_socket_impl(const default_socket_impl&);
+//         default_socket_impl(const default_socket_impl&);
         explicit default_socket_impl(socket_t socket);
         ~default_socket_impl();
+
+        //! release the socket handle
+        socket_t release();
+
+        //! reset the socket handle
+        void reset(socket_t socket = socket_t());
 
         int ioctl(int option, void* data);
 
@@ -75,8 +80,7 @@ namespace boost
         int listen(int backlog);
 
         //! accept a connection
-        std::pair<default_socket_impl,int>
-        accept(std::pair<void *,size_t>& address);
+        int accept(default_socket_impl&,std::pair<void *,size_t>& address);
 
         //! receive data
         int recv(void* data, size_t len, int flags=0);
@@ -114,7 +118,6 @@ namespace boost
 
       private:
         socket_t m_socket;
-        static const initialiser& m_initialiser;
       };
 
 

@@ -23,7 +23,11 @@
 #include "boost/socket/acceptor_socket.hpp"
 #include "boost/socket/socket_set.hpp"
 
+#include "boost/shared_ptr.hpp"
+#include "boost/bind.hpp"
+
 #include <iostream>
+#include <algorithm>
 #include <vector>
 #include <map>
 
@@ -41,7 +45,20 @@ using namespace boost::unit_test_framework;
 
 using namespace boost::socket;
 
-typedef std::map<data_socket<>, boost::socket::ip4::address> Clients;
+typedef boost::shared_ptr<data_socket<> > SocketPtr;
+typedef std::map<SocketPtr, boost::socket::ip4::address> Clients;
+
+struct socket_equal
+  : public std::binary_function<Clients::value_type,
+                                socket_base<>::socket_t,
+                                bool>
+{
+  bool operator()(const Clients::value_type& p,
+                  socket_base<>::socket_t s) const
+  {
+    return p.first->socket()==s;
+  }
+};
 
 void server_test()
 {
@@ -60,7 +77,10 @@ void server_test()
 
     option::non_blocking non_block(true);
 
-    acceptor_socket<> listening_socket;
+    typedef acceptor_socket<> acceptor_socket_t;
+    typedef acceptor_socket_t::data_connection_t data_connection_t;
+
+    acceptor_socket_t listening_socket;
     BOOST_CHECK(listening_socket.open(protocol,addr,6)==boost::socket::Success);
 
     boost::socket::socket_set master_set;
@@ -95,16 +115,16 @@ void server_test()
           while (true)
           {
             ip4::address client;
-            std::pair<data_socket<>,int> ret=listening_socket.accept(client);
-            if (ret.second==Success)
+            SocketPtr accepted_socket(new data_connection_t);
+            int ret=listening_socket.accept(*accepted_socket,client);
+            if (ret==Success)
             {
-              data_socket<>& accepted_socket=ret.first;
-              BOOST_CHECK(accepted_socket.ioctl(non_block)==boost::socket::Success);
-              master_set.insert(accepted_socket.socket());
+              BOOST_CHECK(accepted_socket->ioctl(non_block)==boost::socket::Success);
+              master_set.insert(accepted_socket->socket());
               BOOST_MESSAGE("Accepted client");
               BOOST_MESSAGE(client.ip());
               BOOST_MESSAGE(client.hostname());
-              std::cout << accepted_socket.socket() <<std::endl;
+              std::cout << accepted_socket->socket() <<std::endl;
               clients.insert(std::make_pair(accepted_socket, client));
 
             }
@@ -118,11 +138,16 @@ void server_test()
           BOOST_MESSAGE("Receiving data");
 
           std::string str;
-          data_socket<> data_socket(*i);
 
-          ip4::address& client=clients[data_socket];
-          BOOST_MESSAGE(client.hostname());
-          boost::socket::basic_socket_stream<char> ss(data_socket);
+          Clients::iterator client=
+            std::find_if( clients.begin(), clients.end(),
+                          boost::bind<bool>(socket_equal(),_1,*i));
+
+          BOOST_CHECK(client!=clients.end());
+
+          ip4::address& client_addr=client->second;
+          BOOST_MESSAGE(client_addr.hostname());
+          boost::socket::basic_socket_stream<char> ss(*client->first);
 
           while (!ss.eof() && !ss.fail())
           {
@@ -132,9 +157,8 @@ void server_test()
           }
           if (ss.eof())
           {
-            master_set.erase(data_socket.socket());
-            clients.erase(data_socket);
-            BOOST_CHECK(data_socket.close()==boost::socket::Success);
+            master_set.erase(client->first->socket());
+            clients.erase(client); // this will close the socket
           }
         }
       }

@@ -19,7 +19,6 @@
 #endif
 
 #include "boost/socket/impl/default_socket_impl.hpp"
-#include "boost/socket/impl/initialiser.hpp"
 #include "boost/socket/socket_exception.hpp"
 #include "boost/socket/socket_errors.hpp"
 
@@ -51,24 +50,39 @@ namespace boost
     namespace impl
     {
 
-      const initialiser&
-      default_socket_impl::m_initialiser(initialiser::uses_platform());
-
-
       default_socket_impl::default_socket_impl()
           : m_socket(invalid_socket)
       {}
 
-      default_socket_impl::default_socket_impl(const default_socket_impl& impl)
-          : m_socket(impl.m_socket)
-      {}
+//       default_socket_impl::default_socket_impl(const default_socket_impl& impl)
+//           : m_socket(impl.m_socket)
+//       {}
 
       default_socket_impl::default_socket_impl(socket_t socket)
           : m_socket(socket)
       {}
 
       default_socket_impl::~default_socket_impl()
-      {}
+      {
+        if (m_socket!=invalid_socket)
+          close();
+      }
+
+        //! release the socket handle
+      default_socket_impl::socket_t default_socket_impl::release()
+      {
+        socket_t socket=m_socket;
+        m_socket=invalid_socket;
+        return socket;
+      }
+
+      //! reset the socket handle
+      void default_socket_impl::reset(socket_t socket)
+      {
+        if (m_socket!=invalid_socket)
+          close();
+        m_socket=socket;
+      }
 
       int default_socket_impl::ioctl(int option, void* data)
       {
@@ -143,24 +157,23 @@ namespace boost
       }
 
       //! accept a connection
-      std::pair<default_socket_impl,int>
-      default_socket_impl::accept(std::pair<void *,size_t>& address)
+      int default_socket_impl::accept(default_socket_impl& new_socket,
+                                      std::pair<void *,size_t>& address)
       {
 #if defined(USES_WINSOCK2) || defined(__CYGWIN__)
         int len=address.second;
-        socket_t new_socket = ::accept(m_socket,
-                                       static_cast<sockaddr*>(address.first),
-                                       &len);
+        new_socket.reset(::accept(m_socket,
+                                  static_cast<sockaddr*>(address.first),
+                                  &len));
         address.second=len;
 #else
-        socket_t new_socket
-          = ::accept(m_socket,
-                     static_cast<sockaddr*>(address.first),
-                     &address.second);
+        new_socket.reset(::accept(m_socket,
+                                  static_cast<sockaddr*>(address.first),
+                                  &address.second));
 #endif
-        if (new_socket!=invalid_socket)
-          return std::make_pair(default_socket_impl(new_socket),Success);
-        return std::make_pair(default_socket_impl(),translate_error(-1));
+        if (new_socket.m_socket!=invalid_socket)
+          return Success;
+        return translate_error(-1);
       }
 
       //! receive data
