@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-// libs mpl/test/sort.cpp source file
+// libs mpl/test/max_element.cpp source file
 // See http://www.boost.org for updates, documentation, and revision history.
 //-----------------------------------------------------------------------------
 //
