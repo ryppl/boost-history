@@ -12,7 +12,7 @@
 
 #include <boost/preprocessor/seq/seq.hpp>
 #include <boost/preprocessor/seq/elem.hpp>
-#include <boost/preprocessor/comparison/equal.hpp>
+#include <boost/preprocessor/identity.hpp>
 
 #include <boost/detail/workaround.hpp>
 
@@ -283,7 +283,7 @@ move_backward(BidirectionalIterator1 first, BidirectionalIterator1 last,
 #ifndef BOOST_NO_IMPLICIT_MOVE_CTOR_FOR_COPYABLE_TYPES
 # define BOOST_LVALUE_COPY_CTOR(klass, arg_init, body)                          \
     klass(klass& BOOST_PP_SEQ_HEAD(arg_init))                                   \
-        BOOST_PP_SEQ_ELEM(1, arg_init)                                          \
+        BOOST_MOVE_INITIALIZER_LIST(arg_init)                                   \
         body                                                                    \
                                                                                 \
     template <class BoostMove_##klass>                                          \
@@ -291,7 +291,7 @@ move_backward(BidirectionalIterator1 first, BidirectionalIterator1 last,
         BoostMove_##klass& BOOST_PP_SEQ_HEAD(arg_init)                          \
       , typename boost::enable_if_same<klass const,BoostMove_##klass>::type = 0 \
     )                                                                           \
-        BOOST_PP_SEQ_ELEM(1, arg_init)                                          \
+        BOOST_MOVE_INITIALIZER_LIST(arg_init)                                   \
         body
 
 #else
@@ -299,7 +299,7 @@ move_backward(BidirectionalIterator1 first, BidirectionalIterator1 last,
 // Generate a "regular" copy ctor.
 # define BOOST_LVALUE_COPY_CTOR(klass, arg_init, body)                          \
     klass(klass const& BOOST_PP_SEQ_HEAD(arg_init))                             \
-        BOOST_PP_SEQ_ELEM(1, arg_init)                                          \
+        BOOST_MOVE_INITIALIZER_LIST(arg_init)                                   \
         body 
  
 #endif 
@@ -347,7 +347,11 @@ move_backward(BidirectionalIterator1 first, BidirectionalIterator1 last,
 
 // Given a SEQ appropriate for the 2nd argument to
 // BOOST_LVALUE_COPY_CTOR, extract the initializer list.
-#define BOOST_MOVE_INITIALIZER_LIST(arg_init) 
+#define BOOST_MOVE_DROP_ARG(x)
+#define BOOST_MOVE_KEEP_ARG(x) x
+#define BOOST_MOVE_3RD_OF_2ND(s) BOOST_PP_SEQ_ELEM(2,s)(BOOST_PP_SEQ_ELEM(1,s))
+#define BOOST_MOVE_INITIALIZER_LIST(arg_init) \
+    BOOST_MOVE_3RD_OF_2ND(arg_init (BOOST_MOVE_KEEP_ARG)(BOOST_MOVE_DROP_ARG))
 
 } // namespace boost
 
