@@ -21,30 +21,36 @@ namespace {
 } // namespace unnamed
 
 BOOST_LANGBINDING_DECL void insert(
-    bool rvalue, util::type_info type, converter_function x)
+    backend::id backend_, bool rvalue, util::type_info type, converter_function x)
 {
-    registration* r = get(type);
+    registration* r = lookup(type);
 
     if (!r)
     {
         r = &registry_().insert(std::make_pair(type, registration())).first->second;
     }
 
+    backend_registration& reg = r->get(backend_);
     converter_chain* cv = new converter_chain(x);
 
     if (rvalue)
     {
-        cv->next = r->rvalue_converters;
-        r->rvalue_converters = cv;
+        cv->next = reg.rvalue_converters;
+        reg.rvalue_converters = cv;
     }
     else
     {
-        cv->next = r->lvalue_converters;
-        r->lvalue_converters = cv;
+        cv->next = reg.lvalue_converters;
+        reg.lvalue_converters = cv;
     }
 }
 
-BOOST_LANGBINDING_DECL registration* get(util::type_info type)
+BOOST_LANGBINDING_DECL registration& acquire(util::type_info type)
+{
+    return registry_()[type];
+}
+
+BOOST_LANGBINDING_DECL registration* lookup(util::type_info type)
 {
     registry_type::iterator i(registry_().find(type));
     return i == registry_().end() ? 0 : &i->second;

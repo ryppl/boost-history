@@ -3,7 +3,6 @@
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/langbinding/function/make_function.hpp>
-#include <boost/langbinding/converter/converter.hpp>
 #include <boost/langbinding/converter/registry.hpp>
 
 #include <boost/lexical_cast.hpp>
@@ -13,13 +12,37 @@
 
 using namespace boost::langbinding::function;
 using namespace boost::langbinding::converter;
+using namespace boost::langbinding;
+
+struct dummy_plugin : backend::plugin
+{
+    dummy_plugin() {}
+
+ private:
+    // plugin implementations
+    void* call(
+        void* function
+      , backend::call_xxx_data& signature_constants
+      , void* result_storage
+      , void* const* arg_storage) const
+    {
+        return result_storage;
+    }
+
+    backend::override
+    find_override(char const* function_name, backend::class_instance const& instance) const
+    {
+        backend::override result = {0, 0};
+        return result;
+    } 
+} dummy;
 
 struct dispatcher
 {
     struct overload
     {
         invoker* invoke;
-        std::vector<registry::registration*> converters;
+        std::vector<registry::backend_registration*> converters;
     };
 
     std::list<overload> overloads;
@@ -32,18 +55,13 @@ struct dispatcher
         argument_type const* args = p->arguments();
         for (int i = 0; i < p->arity(); ++i)
         {
-            o.converters[i] = registry::get(args[i].type);
+            o.converters[i] = &registry::acquire(args[i].type).get(dummy.id());
         }
 
         o.invoke = p.release();
         overloads.push_back(o);
     }
 
-    struct rc_ : result_converter<void>
-    {
-        void* operator()() { return 0; }
-    };    
-    
     void execute(int arity, std::string* args)
     {
         void* arg_ptrs[10];
@@ -54,8 +72,6 @@ struct dispatcher
             *arg = args++;
         }
        
-        rc_ rc;
-        
         for (std::list<overload>::const_iterator i(overloads.begin()),
             end(overloads.end()); i != end; ++i)
         {
@@ -77,7 +93,7 @@ struct dispatcher
 
             if (found)
             {
-                i->invoke->invoke(converted_args, rc);
+                i->invoke->invoke(dummy, converted_args);
                 return;
             }
         }
@@ -93,25 +109,38 @@ void g(int x, float y)
 }
 
 template<class T>
-struct from_str : converter<from_str<T>, std::string, T>
+struct from_str
 {
-    static void construct(std::string const& src, void* storage)
+    from_str()
     {
-        new (storage) T(boost::lexical_cast<T>(src));
+        registry::insert(
+            dummy.id(), true, util::type_id<T>(), &from_str<T>::convertible);
+    }
+    
+    static void* construct(void* src_, void* storage)
+    {
+        std::string const& src = *static_cast<std::string const*>(src_);
+        return new (storage) T(boost::lexical_cast<T>(src));
     }
 
-    static void* convertible(std::string const& src)
+    static arg_conversion convertible(void* src_)
     {
+        std::string const& src = *static_cast<std::string const*>(src_);
+        arg_conversion result;
+        result.source = src_;
+        result.convertible = src_;
+        result.construct = &from_str<T>::construct;
+
         try
         {
             boost::lexical_cast<T>(src);
         }
         catch (boost::bad_lexical_cast&)
         {
-            return 0;
+            result.convertible = 0;
         }
 
-        return yes;
+        return result;
     }
 };
 

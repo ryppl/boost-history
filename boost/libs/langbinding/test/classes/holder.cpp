@@ -44,7 +44,7 @@ struct dummy_plugin : backend::plugin
         backend::override result = {0, 0};
 
         // If the XXX class is Z, we'll assume there's an override
-        if (instance.class_ == &Z_class)
+        if (instance.class_type == &Z_class)
         {
             // Since we need _something_, we'll store a pointer to the
             // number of "live" overrides.
