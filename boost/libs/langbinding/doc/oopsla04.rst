@@ -104,7 +104,7 @@ Functions are exposing using ``def``.
         def(char const* name, Fn fn, CallPolicies, SignatureTransformation);
     };
 
- * ``fn`` is a function or member functoin pointer.
+ * ``fn`` is a function or member function pointer.
  * ``CallPolicies`` and ``SignatureTransformation`` may be given in any
    order.
 
@@ -119,6 +119,20 @@ that function object.
 
     def("timestwo", &timestwo)
 
+.. note:: Signatures
+    
+    Function and member function pointers are treated the same by the library.
+    A member function::
+
+        R(X::*)(A0, .., AN)
+
+    Is treated as::
+
+        R(X&, A0, ..., AN)
+
+    Because of this, member functions can be used as free functions with an
+    additional first argument, and free functions can be exposed as class member
+    functions.    
 
 Parameters
 ==========
@@ -206,20 +220,47 @@ Classes are exposed using ``class_``.
     using a function type: ``Derived(Base)``.
 
  HolderType
-    This is the pointer type used to hold instances of ``T``. Defaults to an owning pointer.
+    This is the pointer type used to hold instances of ``T``. For example if
+    ``HolderType ::= std::auto_ptr<T>``, all new instances created in the target
+    language will be held by an ``auto_ptr<T>``. Defaults to an owning pointer.
+
+Constructors
+============
+
+Exposing constructors is done by calling ``def()``, passing an instance of ``init<>``.
+
+.. topic:: Synopsis
+
+  ::
+
+    template<class A0, class A1, ..., class AN>
+    struct init;
 
 .. parsed-literal::
 
     class_<X>("X")
-        .def(init<>())
+        .def(**init<>()**)
+        .def(**init<int, int>()**)
 
-Creates a wrapper for the class type ``X``, with a default constructor.
+Creates a wrapper for the class type ``X``, with a default constructor and a
+constructor taking two ``int`` parameters.
 
-.. parsed-literal::
+Holder Types
+============
 
-    class_<Y(X)>("X")
+Sometimes an interface passed instances of a class managed by smart pointers.
+In these cases it is important to be able to pass instances created in the
+target language environment to functions expecting a smart pointer. ::
 
-Creates a wrapper for the class type ``Y``, derived from ``X``.
+    void f(boost::shared_ptr<X> const&);
+
+To handle this we specify that our class instances is to be held with 
+``boost::shared_ptr<X>``::
+
+    class_<X, boost::shared_ptr<X> >("X")
+
+Now instances of ``X`` created in the target language can be safely passed to functions
+that expects a ``boost::shared_ptr``.
 
 .. parsed-literal::
 
@@ -227,6 +268,9 @@ Creates a wrapper for the class type ``Y``, derived from ``X``.
 
 Creates a wrapper for the class type ``Y``, with new instances being held in
 a ``boost::shared_ptr<X>``.
+
+Inheritance
+===========
 
 .. parsed-literal::
 
@@ -243,9 +287,19 @@ HolderTypes. For polymorphic types it is possible, with a little extra effort,
 to expose virtual functions to the target language, where they can be called
 and overridden. This is discussed in `Overridable Virtual Functions`_.
 
+Member functions are exposed using one of the ``class_<>::def()`` overloads.
+The parameters are exactly the same as with the global ``def()`` described
+in the previous section.
 
-Inheritance
-===========
+For example::
+
+    class_<X>("X")
+        .def("f", &f)
+
+Will expose the class ``X`` with a single member function ``f``.
+
+Inheritance2
+============
 
 To express inheritance relationships between types we use the function type
 syntax, choosen to emulate the syntax used in Python.
@@ -265,7 +319,7 @@ member functions from it's base.
 ------------------------------
 
 To be able to expose overridable virtual functions without being intrusive on
-the exposed class, we need to define a wrapper-class. This class inherits from
+the exposed class, we need to define a wrapper-class. This class derives from
 ``polymorphic<Base>`` and implements virtual dispatch overrides, as well as
 default implementation functions for every virtual function.
 
@@ -289,7 +343,8 @@ A typical wrapper-class will look something like this:
         }
     };
 
-    ...
+To expose this class and it's virtual function ``f``, we use class_ like
+this::
 
     class_<BaseWrap>("Base")
         .def("f", &Base::f, &BaseWrap::default_f)
