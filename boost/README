@@ -3,13 +3,13 @@ just enough to make Spirit work. Packaging instructions:
 
 1. Remove all CVS artifacts.
 2. Create a miniboost directory in this top level directory.
-3. Move boost directory into the miniboost directory.
+3. Move boost and tools directories into the miniboost directory.
 4. Move the contents of "mini-boost-dir" directory into the "miniboost" directory.
 5. Create a boost directory in this top level directory.
 6. Move miniboost/boost/spirit.hpp and miniboost/boost/spirit directory into the
    new boost directory.
 7. Move the contents of "top-level-dir" directory into 
-   this top level directory.
-8. Delete this readme, "top-level-dir" and "mini-boost-dir".
+   this top level directory (the readme there will replace this readme).
+8. Delete "top-level-dir" and "mini-boost-dir".
 9. Compress and release.
 
