@@ -6,6 +6,13 @@
 # This file is part of Jam - see jam.c for Copyright information.
 #
 
+# This file is ALSO:
+# (C) Copyright David Abrahams 2001. Permission to copy, use,
+# modify, sell and distribute this software is granted provided this
+# copyright notice appears in all copies. This software is provided
+# "as is" without express or implied warranty, and with no claim as
+# to its suitability for any purpose.
+
 #
 # JAMBASE - jam 2.3 ruleset providing make(1)-like functionality
 #
@@ -169,6 +176,7 @@ if $(NT)
     SUFLIB          ?= .lib ;
     SUFOBJ          ?= .obj ;
     SUFEXE          ?= .exe ;
+    SUFDLL          ?= .dll .lib ;
     NOARSCAN        ?= true ;
     
     # dwa 6/4/01 - removed compiler determination for boost
@@ -420,6 +428,7 @@ SHELLMODE       ?= 755 ;
 SLASH           ?= / ;
 STDHDRS         ?= /usr/include ;
 SUFEXE          ?= "" ;
+SUFDLL          ?= .so ;
 SUFLIB          ?= .a ;
 SUFOBJ          ?= .o ;
 UNDEFFLAG       ?= "-u _" ;
@@ -435,9 +444,10 @@ OSFULL = $(OS)$(OSVER)$(OSPLAT) $(OS)$(OSPLAT) $(OS)$(OSVER) $(OS) ;
 # Base dependencies - first for "bootstrap" kinds of rules
 #
 
-DEPENDS all : shell files lib exe obj ;
-DEPENDS all shell files lib exe obj : first ;
-NOTFILE all first shell files lib exe obj dirs clean uninstall ;
+# dwa 6/17/01 - added test
+DEPENDS all : shell files lib exe obj test ;
+DEPENDS all shell files lib exe obj test : first ;
+NOTFILE all first shell files lib exe obj dirs clean uninstall test ;
 ALWAYS clean uninstall ;
 
 #
@@ -494,7 +504,7 @@ rule Cc-platform-specifics
         CcMv $(<) : $(>) ;
     }
 
-    local _h = $(SEARCH_SOURCE) $(HDRS) $(SUBDIRHDRS) ;
+    local _h = $(SEARCH_SOURCE) $(HDRS) ;
 
     if $(VMS) && $(_h)
     {
@@ -802,11 +812,14 @@ rule LibraryFromObjects
     if ! ( $(NOARSCAN) || $(KEEPOBJS) ) { RmTemps $(_l) : $(>) ; }
 }
 
-# dwa 6/4/01 - modified for boost to dispatch through Link-action
+# dwa 6/4/01 - modified for boost to dispatch through Link-action and to pass
+# the target-type through.
+#
+# Link executable-target : object-target...
 rule Link
 {
     MODE on $(<) = $(EXEMODE) ;
-    Link-action $(<) : $(>) ;
+    Link-action $(<) : $(>) : $(3) ;
     Chmod $(<) ;
 }
 
@@ -936,7 +949,11 @@ rule Object
     # different from $(SEARCH_SOURCE).
 
     # Use unique to clean up confusing duplicates a bit
-    HDRS on $(<) = [ unique $(LOCATE_SOURCE) $(SEARCH_SOURCE) $(HDRS) $(SUBDIRHDRS) ] ;
+    HDRS on $(<) = [ unique $(LOCATE_SOURCE) $(SEARCH_SOURCE) $(HDRS) ] ;
+
+    # Set STDHDRS on the object so that multi-compiler builds will search for
+    # headers in the right places. 
+    STDHDRS on $(<) = $(STDHDRS) ;
 
     # handle #includes for source: Jam scans for headers with
     # the regexp pattern $(HDRSCAN) and then invokes $(HDRRULE)
@@ -952,16 +969,16 @@ rule Object
 
     if $(SEARCH_SOURCE)
     {
-        h = $(SEARCH_SOURCE) ;
+        h = $(SEARCH_SOURCE)$(SLASH)$(>:D) ;
     }
     else
     {
-        h = "" ;
+        h = $(>:D) ;
     }
 
     HDRRULE on $(>) = HdrRule ;
     HDRSCAN on $(>) = $(HDRPATTERN) ;
-    HDRSEARCH on $(>) = $(HDRS) $(SUBDIRHDRS) $(h) $(STDHDRS) ;
+    HDRSEARCH on $(>) = $(HDRS) $(h) $(STDHDRS) ;
     HDRGRIST on $(>) = $(HDRGRIST) ;
 
     # if source is not .c, generate .c with specific rule
@@ -1066,6 +1083,15 @@ rule subproject
    SubDir TOP [ split-path $(<) ] ;
 }
 
+# dwa 6/18/01 - added for boost
+# project-root
+#
+# Declares this directory to be the project root.
+rule project-root
+{
+    SubDir TOP ;
+}
+
 # dwa 6/7/01 - added for boost
 # subinclude path...
 #
@@ -1133,7 +1159,7 @@ rule SubDir
         include $(_r) ;
 
         # determine where toolset specifications and boost-base can be found. 
-        BOOST_TOOLSET_DIR ?= $($(<[1])) ;
+        BOOST_BUILD_INSTALLATION ?= $($(<[1])) ;
         BOOST_BASE_DIR ?= $($(<[1])) ;
         # and include boost-base
         include [ join-path $(BOOST_BASE_DIR) boost-base.jam ] ;
@@ -1162,7 +1188,6 @@ rule SubDir
 
     SUBDIRCCFLAGS = ;
     SUBDIRC++FLAGS = ;
-    SUBDIRHDRS = ;
 
     # This allows us to determine whether we're in the directory where jam was
     # invoked from so that we can make locally named targets
@@ -1174,6 +1199,12 @@ rule SubDir
     RELATIVE_SUBDIR_TOKENS = [ simplify-path-tokens [ split-path $($(<[1])) ] $(SUBDIR_TOKENS) ] ;
     RELATIVE_SUBDIR = [ join-path $(RELATIVE_SUBDIR_TOKENS) ] ;
 }
+# These are the global variables that get set up by SubDir. If you need to
+# invoke SubDir temporarily and then restore them, declare
+#       local $(gSUBDIR_GLOBALS) ;
+gSUBDIR_GLOBALS = SUBDIR SUBDIR_TOKENS SEARCH_SOURCE LOCATE_SOURCE LOCATE_TARGET
+    SOURCE_GRIST RELATIVE_SUBDIR RELATIVE_SUBDIR_TOKENS ; 
+
 
 # dwa 6/4/01 - added for boost
 # strip-grist value
@@ -1199,7 +1230,11 @@ rule strip-grist
 rule split-path
 {
     local parent = $(<:P) ;
-    if ! $(parent:G=)
+    if ( ! $(<:B) ) && ( $(<) != $(DOT) ) # handle the case where $(<) is all grist.
+    {
+        return $(<:G) ;
+    }
+    else if ! $(parent:G=)
     {
         return $(<) ;
     }
@@ -1563,6 +1598,7 @@ rule FRelPath
     }
 }
 
+# dwa 6/17/01 - modified for boost to handle multiple suffixes
 rule FAppendSuffix
 {
    # E.g., "FAppendSuffix yacc lex foo.bat : $(SUFEXE) ;"
@@ -1577,7 +1613,7 @@ rule FAppendSuffix
         {
             if $(_i:S)
             {
-                _o += $(_i) ;
+                _o += $(_i) $(_i:S=$(>[2-)) ;
             }
             else
             {

@@ -1,55 +1,12 @@
-# feature name : [values...] : [ PATH ]
-#
-# Declares a feature with the given name. If values is empty, declares a free
-# feature; declares a simple feature otherwise. "PATH" should be supplied for a
-# free feature whose values might be paths specified relative to the
-# (sub)project directory.
-rule feature
-{
-    gUNGRISTED(<$(<)>) = $(<) ;
-    gFEATURE_VALUES(<$(<)>) = $(>) ;
-    
-    if ( ! $(>) ) && ! ( <$(<)> in $(gFREE_FEATURES) )
-    {
-        gFREE_FEATURES += <$(<)> ;
-        if PATH in $(3)
-        {
-            gPATH_FEATURES += <$(<)> ;
-        }
-    }
-    else
-    {
-        if PATH in $(3)
-        {
-            ECHO "Simple feature" <$(<)> "qualified with PATH in 3rd"
-                  "argument. PATH ignored." ;
-        }
-    }
-}
+# (C) Copyright David Abrahams 2001. Permission to copy, use,
+# modify, sell and distribute this software is granted provided this
+# copyright notice appears in all copies. This software is provided
+# "as is" without express or implied warranty, and with no claim as
+# to its suitability for any purpose.
 
-rule ungrist
-{
-    local result = ; 
-    local x ;
-    for x in $(<)
-    {
-        if ! $(x:G)
-        {
-            result += $(x) ;
-        }
-        else if $(gUNGRISTED($(x)))
-        {
-            result += $(gUNGRISTED($(x))) ;
-        }
-        else
-        {
-            EXIT gUNGRISTED($(x)) "not defined!" ;
-        }
-    }
-    return $(result) ;
-}
-
+# Profiling feature support by Toon Knapen <toon@si-lab.com>.
 feature profiling : off on ;
+
 feature struct-alignment : auto 1 2 4 8 16 ;
 feature eh-model : default fast msvc ; # metrowerks only
 
@@ -61,47 +18,26 @@ feature runtime-build : debug release ;
 feature optimization : off speed space ;
 feature inlining : off on full ;
 feature debug-symbols : on off : ;
-feature user-interface : console gui : ;
+free-feature user-interface : console gui ;
 
 feature wide-character-support : on off ;
 feature exception-handling : on off ;
 
-feature define : : ; # <define>PYTHON=foo
-feature undef : : ; # <undef>PYTHON=foo
-feature "include" : : PATH ; # <include>../foo/bar/mumble
+free-feature define ; # <define>PYTHON=foo
+free-feature undef ; # <undef>PYTHON=foo
+path-feature "include" ; # <include>../foo/bar/mumble
 
-# feature-default <feature>...
-#
-# return the default values for the given feature(s)
-rule feature-default
-{
-    local result f ;
-    for f in $(<)
-    {
-        result += $(f)$(gFEATURE_VALUES($(f))[1]) ;
-    }
-    return $(result) ;
-}
 
-rule variant # name : properties
-{
-    local toolset ;
-    for toolset in $(TOOLS)
-    {
-        # We hijack select-properties to do our dirty work here.
-        # Because properties in a variant declaration are only qualified with
-        # toolset and not variant, we specify the toolset where
-        # select-properties expects a variant name. The first toolset parameter
-        # is neccessary to get the relevant-features correctly set. We supply
-        # the variant name as the target name, so that error messages will look
-        # coherent.
-        gBASE_PROPERTIES($(toolset),$(<))
-            = [ sort [ select-properties $(toolset) $(toolset) $(<) : $(>) ] ] ;
-    }
-}
+# Can the target participate in a shared library?
+feature shared-linkable : false true ;
 
-common-properties = 
-    <profiling>off
+gLINK_COMPATIBLE = <shared-linkable>true <target-type> ;
+
+##### Requirements by target type #####
+gTARGET_TYPE_REQUIREMENTS(DLL) = <shared-linkable>true ;
+
+##### Variant definitions ####
+COMMON_PROPERTIES ?= 
     <struct-alignment>auto
     <eh-model>default
     <threading>single
@@ -109,10 +45,16 @@ common-properties =
     <wide-character-support>on
     <exception-handling>on
     <user-interface>console
+    <shared-linkable>false
+    
+    # Borland link lines will need work to find the right libraries for unicode
+    # support - see borland-tools.jam 
+    <borland><wide-character-support>off
     ;
     
 variant debug :
-    $(common-properties)
+    $(COMMON_PROPERTIES)
+    <profiling>off
     <debug-symbols>on
     <runtime-build>debug
     <optimization>off
@@ -120,7 +62,8 @@ variant debug :
     ;
 
 variant release : 
-    $(common-properties)
+    $(COMMON_PROPERTIES)
+    <profiling>off
     <debug-symbols>off
     <runtime-build>release
     <optimization>speed
@@ -128,4 +71,14 @@ variant release :
     <define>NDEBUG
     ;
 
+# Profiling variant by Toon Knapen <toon@si-lab.com>
+variant profile :
+    $(COMMON_PROPERTIES)
+    <debug-symbols>off
+    <profiling>on
+    <runtime-build>release
+    <optimization>speed
+    <inlining>full
+    <define>NDEBUG
+    ;
 
