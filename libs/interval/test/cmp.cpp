@@ -1,6 +1,6 @@
+#include <boost/interval.hpp>
 #define BOOST_INCLUDE_MAIN
 #include <boost/test/test_tools.hpp>
-#include <boost/interval.hpp>
 
 template<class T, class Compare>
 struct my_interval {

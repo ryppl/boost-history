@@ -33,7 +33,7 @@ struct rounding_control<double>:
   detail::ieee_double_constants
 {
   static double force_rounding(const double& r) 
-  { volatile double r_ = r; return r_; }
+  { volatile double r_ = r; return r_; return r; }
 };
 
 template<>

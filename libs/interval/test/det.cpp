@@ -1,6 +1,6 @@
+#include <boost/interval.hpp>
 #define BOOST_INCLUDE_MAIN
 #include <boost/test/test_tools.hpp>
-#include <boost/interval.hpp>
 
 #define size 8
 
@@ -12,10 +12,10 @@ void det(I (&mat)[size][size]) {
 
   for(int i = 0; i < size - 1; i++) {
     int m = i, n = i;
-    I v = 0;
+    typename I::base_type v = 0;
     for(int a = i; a < size; a++)
       for(int b = i; b < size; b++) {
-	I w = abs(mat[a][b]);
+	typename I::base_type  w = abs(mat[a][b]).lower();
 	if (w > v) { m = a; n = b; v = w; }
       }
     if (n != i)
@@ -30,14 +30,14 @@ void det(I (&mat)[size][size]) {
 	mat[m][b] = mat[m][i];
 	mat[m][i] = t;
       }
-    if (((m + n) & 1) == 1)
-      mat[0][0] = -mat[0][0];
-    v = mat[i][i];
+    if (((m + n) & 1) == 1) { };
+    I c = mat[i][i];
     for(int j = i + 1; j < size; j++) {
-      I f = mat[j][i] / v;
+      I f = mat[j][i] / c;
       for(int k = i; k < size; k++)
 	mat[j][k] -= f * mat[i][k];
     }
+    if (in_zero(c)) return;
   }
 }
 
