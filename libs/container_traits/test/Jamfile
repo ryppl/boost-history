@@ -55,5 +55,12 @@ test-suite "container_traits"
 	    :
 	    : string_algo_compatibility
        ]         
+
+     : [ run 
+	    partial_workaround.cpp 
+	  : : 
+	    :
+	    : partial_workaround
+       ]         
     ;
 

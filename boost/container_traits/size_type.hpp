@@ -11,6 +11,10 @@
 # pragma once
 #endif
 
+#ifdef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
+#include <boost/container_traits/detail/const_iterator.hpp>
+#else
+
 #include <iterator>
 #include <cstddef>
 #include <utility>
@@ -105,5 +109,7 @@ namespace boost
     };
 
 } // namespace boost
+
+#endif // BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
 
 #endif

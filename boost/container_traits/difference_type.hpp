@@ -11,6 +11,10 @@
 # pragma once
 #endif
 
+#ifdef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
+#include <boost/container_traits/detail/differnce_type.hpp>
+#else
+
 #include <boost/detail/iterator.hpp>
 #include <iterator>
 #include <cstddef>
@@ -106,5 +110,7 @@ namespace boost
     };
 
 } // namespace boost
+
+#endif // BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
 
 #endif

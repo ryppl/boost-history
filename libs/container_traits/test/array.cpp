@@ -15,20 +15,35 @@ void check_array()
     const array_t ca           = { 1, 4 };
     BOOST_STATIC_CONSTANT( std::size_t, the_size = sizeof( sizer( my_array ) ) );
     BOOST_STATIC_ASSERT(( the_size == 9 ));
-    BOOST_STATIC_ASSERT(( is_same< container_traits<array_t>::value_type, int >::value ));
-    BOOST_STATIC_ASSERT(( is_same< container_traits<array_t>::iterator, int* >::value ));
-    BOOST_STATIC_ASSERT(( is_same< container_traits<array_t>::const_iterator, const int* >::value ));
-    BOOST_STATIC_ASSERT(( is_same< container_traits<array_t>::difference_type, std::ptrdiff_t >::value ));
-    BOOST_STATIC_ASSERT(( is_same< container_traits<array_t>::size_type, std::size_t >::value ));
-    BOOST_STATIC_ASSERT(( is_same< container_traits<array_t>::result_iterator, int* >::value ));
-    BOOST_STATIC_ASSERT(( is_same< container_traits<const array_t>::result_iterator, const int* >::value ));
-    //typedef container_traits<const array_t>::result_iterator iter;
+    BOOST_STATIC_ASSERT(( is_same< container_value_type<array_t>::type, int >::value ));
+    BOOST_STATIC_ASSERT(( is_same< container_iterator<array_t>::type, int* >::value ));
+    BOOST_STATIC_ASSERT(( is_same< container_const_iterator<array_t>::type, const int* >::value ));
+    BOOST_STATIC_ASSERT(( is_same< container_difference_type<array_t>::type, std::ptrdiff_t >::value ));
+    BOOST_STATIC_ASSERT(( is_same< container_size_type<array_t>::type, std::size_t >::value ));
+    BOOST_STATIC_ASSERT(( is_same< container_result_iterator<array_t>::type, int* >::value ));
+    BOOST_STATIC_ASSERT(( is_same< container_result_iterator<const array_t>::type, const int* >::value ));
+    
+    BOOST_STATIC_ASSERT(( is_same< container_value_type<const array_t>::type, const int >::value ));
+    BOOST_STATIC_ASSERT(( is_same< container_iterator<const array_t>::type, const int* >::value ));
+    BOOST_STATIC_ASSERT(( is_same< container_const_iterator<const array_t>::type, const int* >::value ));
+    BOOST_STATIC_ASSERT(( is_same< container_difference_type<const array_t>::type, std::ptrdiff_t >::value ));
+    BOOST_STATIC_ASSERT(( is_same< container_size_type<const array_t>::type, std::size_t >::value ));
+    BOOST_STATIC_ASSERT(( is_same< container_result_iterator<const array_t>::type, const int* >::value ));
+    BOOST_STATIC_ASSERT(( is_same< container_result_iterator<const array_t>::type, const int* >::value ));
+
+    //typedef container<const array_t>::result_iterator iter;
     //cout << typeid( iter() ).name() << endl;
     
     BOOST_CHECK( begin( my_array ) == my_array );
     BOOST_CHECK( end( my_array )   == my_array + size( my_array ) );
     BOOST_CHECK( empty( my_array ) == false );
     BOOST_CHECK( size( my_array ) == sizeof( sizer( my_array ) ) );
+    
+    BOOST_CHECK( begin( ca ) == ca );
+    BOOST_CHECK( end( ca )   == ca + size( ca ) );
+    BOOST_CHECK( empty( ca ) == false );
+    BOOST_CHECK( size( ca ) == sizeof( sizer( ca ) ) );
+
 }
 
 

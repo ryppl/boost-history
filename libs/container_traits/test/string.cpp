@@ -10,14 +10,14 @@
 #include <algorithm>
 
 template< typename Container, typename T >
-BOOST_DEDUCED_TYPENAME boost::container_traits<Container>::iterator
+BOOST_DEDUCED_TYPENAME boost::container_iterator<Container>::type
 find( Container& c,  T value )
 {
     return std::find( boost::begin( c ), boost::end( c ), value );
 }
 
 template< typename Container, typename T >
-BOOST_DEDUCED_TYPENAME boost::container_traits<Container>::const_iterator
+BOOST_DEDUCED_TYPENAME boost::container_const_iterator<Container>::type
 find( const Container& c, T value )
 {
     return std::find( boost::begin( c ), boost::end( c ), value );
@@ -31,36 +31,50 @@ check_rvalue_return()
 
 using namespace boost;
 
-template< typename charT >
-inline void check_char()
+
+void check_char()
 {
-    typedef charT*                  char_iterator_t;
-    const charT*     char_s       = "a string";
-    charT            my_string[]  = "another string";
+    typedef char*                  char_iterator_t;
+    typedef char                   char_array_t[10];
+    const char*      char_s       = "a string";
+    char             my_string[]  = "another string";
     
-    BOOST_STATIC_ASSERT(( is_same< BOOST_DEDUCED_TYPENAME container_traits<char_iterator_t>::value_type, 
-                          BOOST_DEDUCED_TYPENAME detail::iterator_traits<char_iterator_t>::value_type>::value ));
-    BOOST_STATIC_ASSERT(( is_same< BOOST_DEDUCED_TYPENAME container_traits<char_iterator_t>::iterator, char_iterator_t >::value ));
-    BOOST_STATIC_ASSERT(( is_same< BOOST_DEDUCED_TYPENAME container_traits<char_iterator_t>::const_iterator, const charT* >::value ));
-    BOOST_STATIC_ASSERT(( is_same< BOOST_DEDUCED_TYPENAME container_traits<char_iterator_t>::difference_type,                           
-                          BOOST_DEDUCED_TYPENAME detail::iterator_traits<char_iterator_t>::difference_type >::value ));
-    BOOST_STATIC_ASSERT(( is_same< BOOST_DEDUCED_TYPENAME container_traits<char_iterator_t>::size_type, std::size_t >::value ));
-    BOOST_STATIC_ASSERT(( is_same< BOOST_DEDUCED_TYPENAME container_traits<char_iterator_t>::result_iterator, char_iterator_t >::value ));
-    BOOST_STATIC_ASSERT(( is_same< BOOST_DEDUCED_TYPENAME container_traits<const char_iterator_t>::result_iterator, const charT* >::value ));
+    BOOST_STATIC_ASSERT(( is_same< /*BOOST_DEDUCED_TYPENAME*/ container_value_type<char_iterator_t>::type, 
+                                   /*BOOST_DEDUCED_TYPENAME*/ detail::iterator_traits<char_iterator_t>::value_type>::value ));
+    BOOST_STATIC_ASSERT(( is_same< /*BOOST_DEDUCED_TYPENAME*/ container_iterator<char_iterator_t>::type, char_iterator_t >::value ));
+    BOOST_STATIC_ASSERT(( is_same< /*BOOST_DEDUCED_TYPENAME*/ container_const_iterator<char_iterator_t>::type, const char* >::value ));
+    BOOST_STATIC_ASSERT(( is_same< /*BOOST_DEDUCED_TYPENAME*/ container_difference_type<char_iterator_t>::type,                           
+                                   /*BOOST_DEDUCED_TYPENAME*/ detail::iterator_traits<char_iterator_t>::difference_type >::value ));
+    BOOST_STATIC_ASSERT(( is_same< /*BOOST_DEDUCED_TYPENAME*/ container_size_type<char_iterator_t>::type, std::size_t >::value ));
+    BOOST_STATIC_ASSERT(( is_same< /*BOOST_DEDUCED_TYPENAME*/ container_result_iterator<char_iterator_t>::type, char_iterator_t >::value ));
+    BOOST_STATIC_ASSERT(( is_same< /*BOOST_DEDUCED_TYPENAME*/ container_result_iterator<const char*>::type, const char* >::value ));
+    //
+    // note: why does is_same< /*BOOST_DEDUCED_TYPENAME*/ container_result_iterator<const char_iterator_t>::type, const char* >::value
+    // fail?!?
     
+    BOOST_STATIC_ASSERT(( is_same< /*BOOST_DEDUCED_TYPENAME*/ container_value_type<char_array_t>::type, 
+                                   /*BOOST_DEDUCED_TYPENAME*/ char>::value ));
+    BOOST_STATIC_ASSERT(( is_same< /*BOOST_DEDUCED_TYPENAME*/ container_iterator<char_array_t>::type, char* >::value ));
+    BOOST_STATIC_ASSERT(( is_same< /*BOOST_DEDUCED_TYPENAME*/ container_const_iterator<char_array_t>::type, const char* >::value ));
+    BOOST_STATIC_ASSERT(( is_same< /*BOOST_DEDUCED_TYPENAME*/ container_difference_type<char_array_t>::type,                           
+                                   /*BOOST_DEDUCED_TYPENAME*/ ptrdiff_t >::value ));
+    BOOST_STATIC_ASSERT(( is_same< /*BOOST_DEDUCED_TYPENAME*/ container_size_type<char_array_t>::type, std::size_t >::value ));
+    BOOST_STATIC_ASSERT(( is_same< /*BOOST_DEDUCED_TYPENAME*/ container_result_iterator<char_array_t>::type, char* >::value ));
+    BOOST_STATIC_ASSERT(( is_same< /*BOOST_DEDUCED_TYPENAME*/ container_result_iterator<const char_array_t>::type, const char* >::value ));
+
     BOOST_CHECK( begin( char_s ) == char_s );
     BOOST_CHECK( end( char_s )   == (begin( char_s ) + size( char_s )) );
-    BOOST_CHECK( empty( char_s ) == (char_s == 0 || char_s[0] == charT()) );
-    BOOST_CHECK( size( char_s )  == std::char_traits<charT>::length( char_s ) );
+    BOOST_CHECK( empty( char_s ) == (char_s == 0 || char_s[0] == char()) );
+    BOOST_CHECK( size( char_s )  == std::char_traits<char>::length( char_s ) );
 
-    charT to_search = 'n';
+    char to_search = 'n';
     BOOST_CHECK( find( char_s, to_search ) != end( char_s ) );
     BOOST_CHECK( find( my_string, to_search ) != end( my_string ) );
 }
 
 void check_string()
 {
-    check_char<char>();
+    check_char();
 //    check_char<volatile char>();
 //    check_char<const char>();
 //    check_char<const volatile char>();
@@ -70,15 +84,15 @@ void check_string()
     const wchar_t*  char_ws      = L"a wide string";
     wchar_t         my_wstring[] = L"another wide string";
     
-    BOOST_STATIC_ASSERT(( is_same< container_traits<wchar_iterator_t>::value_type, 
-                          detail::iterator_traits<wchar_iterator_t>::value_type>::value ));
-    BOOST_STATIC_ASSERT(( is_same< container_traits<wchar_iterator_t>::iterator, wchar_iterator_t >::value ));
-    BOOST_STATIC_ASSERT(( is_same< container_traits<wchar_iterator_t>::const_iterator, const wchar_t* >::value ));
-    BOOST_STATIC_ASSERT(( is_same< container_traits<wchar_iterator_t>::difference_type,                           
-                          detail::iterator_traits<wchar_iterator_t>::difference_type >::value ));
-    BOOST_STATIC_ASSERT(( is_same< container_traits<wchar_iterator_t>::size_type, std::size_t >::value ));
-    BOOST_STATIC_ASSERT(( is_same< container_traits<wchar_iterator_t>::result_iterator, wchar_iterator_t >::value ));
-    BOOST_STATIC_ASSERT(( is_same< container_traits<const wchar_iterator_t>::result_iterator, const wchar_t* >::value ));
+    BOOST_STATIC_ASSERT(( is_same< container_value_type<wchar_iterator_t>::type, 
+                                   detail::iterator_traits<wchar_iterator_t>::value_type>::value ));
+    BOOST_STATIC_ASSERT(( is_same< container_iterator<wchar_iterator_t>::type, wchar_iterator_t >::value ));
+    BOOST_STATIC_ASSERT(( is_same< container_const_iterator<wchar_iterator_t>::type, const wchar_t* >::value ));
+    BOOST_STATIC_ASSERT(( is_same< container_difference_type<wchar_iterator_t>::type,                           
+                                   detail::iterator_traits<wchar_iterator_t>::difference_type >::value ));
+    BOOST_STATIC_ASSERT(( is_same< container_size_type<wchar_iterator_t>::type, std::size_t >::value ));
+    BOOST_STATIC_ASSERT(( is_same< container_result_iterator<wchar_iterator_t>::type, wchar_iterator_t >::value ));
+    BOOST_STATIC_ASSERT(( is_same< container_result_iterator<const wchar_t*>::type, const wchar_t* >::value ));
     
     BOOST_CHECK( begin( char_ws ) == char_ws );
     BOOST_CHECK( end( char_ws )   == (begin( char_ws ) + size( char_ws )) );

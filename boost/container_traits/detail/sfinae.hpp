@@ -12,7 +12,11 @@
 #endif
 
 #include <boost/type_traits/is_array.hpp>
-#include <boost/type_traits/is_pointer.hpp>
+#include <boost/type_traits/detail/yes_no_type.hpp>
+
+#include <iterator>
+#include <utility>
+
 
 namespace boost 
 {
@@ -29,14 +33,25 @@ namespace boost
         yes_type is_string_impl( const wchar_t* );
         no_type  is_string_impl( ... );
         
+        yes_type is_char_ptr_impl( char* );
+        no_type  is_char_ptr_impl( ... );
+        
+        yes_type is_const_char_ptr_impl( const char* );
+        no_type  is_const_char_ptr_impl( ... );
+
+        yes_type is_wchar_t_ptr_impl( wchar_t* );
+        no_type  is_wchar_t_ptr_impl( ... );
+        
+        yes_type is_const_wchar_t_ptr_impl( const wchar_t* );
+        no_type  is_const_wchar_t_ptr_impl( ... );
+        
         //////////////////////////////////////////////////////////////////////
         // pair
         //////////////////////////////////////////////////////////////////////
 
-        // pair selector
         template< typename Iterator >
         yes_type is_pair_impl( const std::pair<Iterator,Iterator>* );
-        no_type is_pair_impl( ... );
+        no_type  is_pair_impl( ... );
 
         //////////////////////////////////////////////////////////////////////
         // iterator
@@ -58,6 +73,6 @@ namespace boost
         
     } // namespace 'container_traits_detail'
     
-} // namespace boost
+} // namespace 'boost'
 
 #endif

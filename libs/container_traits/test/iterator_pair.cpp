@@ -17,28 +17,45 @@ void check_iterator_pair()
                              pair_t;
     typedef std::pair<vec_t::const_iterator,vec_t::const_iterator>
                              const_pair_t;
+    typedef const pair_t     const_pair_tt;
     pair_t                   pair       = std::make_pair( begin( vec ), end( vec ) );
     const_pair_t             const_pair = std::make_pair( begin( vec ), end( vec ) );
+    const_pair_tt            constness_pair( pair );
     
-    BOOST_STATIC_ASSERT(( is_same< container_traits<pair_t>::value_type, 
+    BOOST_STATIC_ASSERT(( is_same< container_value_type<pair_t>::type, 
                           detail::iterator_traits<pair_t::first_type>::value_type>::value ));
-    BOOST_STATIC_ASSERT(( is_same< container_traits<pair_t>::iterator, pair_t::first_type >::value ));
-    BOOST_STATIC_ASSERT(( is_same< container_traits<pair_t>::const_iterator, pair_t::first_type >::value ));
-    BOOST_STATIC_ASSERT(( is_same< container_traits<pair_t>::difference_type,                           
+    BOOST_STATIC_ASSERT(( is_same< container_iterator<pair_t>::type, pair_t::first_type >::value ));
+    BOOST_STATIC_ASSERT(( is_same< container_const_iterator<pair_t>::type, pair_t::first_type >::value ));
+    BOOST_STATIC_ASSERT(( is_same< container_difference_type<pair_t>::type,                           
                           detail::iterator_traits<pair_t::first_type>::difference_type >::value ));
-    BOOST_STATIC_ASSERT(( is_same< container_traits<pair_t>::size_type, std::size_t >::value ));
-    BOOST_STATIC_ASSERT(( is_same< container_traits<pair_t>::result_iterator, pair_t::first_type >::value ));
-    BOOST_STATIC_ASSERT(( is_same< container_traits<const_pair_t>::result_iterator, const_pair_t::first_type >::value ));
+    BOOST_STATIC_ASSERT(( is_same< container_size_type<pair_t>::type, std::size_t >::value ));
+    BOOST_STATIC_ASSERT(( is_same< container_result_iterator<pair_t>::type, pair_t::first_type >::value ));
+    BOOST_STATIC_ASSERT(( is_same< container_result_iterator<const_pair_t>::type, const_pair_t::first_type >::value ));
     
+    BOOST_STATIC_ASSERT(( is_same< container_value_type<const_pair_tt>::type, 
+                          detail::iterator_traits<const_pair_t::first_type>::value_type>::value ));
+    BOOST_STATIC_ASSERT(( is_same< container_iterator<const_pair_tt>::type, const_pair_tt::first_type >::value ));
+    BOOST_STATIC_ASSERT(( is_same< container_const_iterator<const_pair_tt>::type, const_pair_tt::first_type >::value ));
+    BOOST_STATIC_ASSERT(( is_same< container_difference_type<const_pair_tt>::type,                           
+                          detail::iterator_traits<const_pair_tt::first_type>::difference_type >::value ));
+    BOOST_STATIC_ASSERT(( is_same< container_size_type<const_pair_tt>::type, std::size_t >::value ));
+    BOOST_STATIC_ASSERT(( is_same< container_result_iterator<const_pair_tt>::type, const_pair_tt::first_type >::value ));
+    BOOST_STATIC_ASSERT(( is_same< container_result_iterator<const_pair_tt>::type, const_pair_tt::first_type >::value ));
+
     BOOST_CHECK( begin( pair ) == pair.first );
     BOOST_CHECK( end( pair )   == pair.second );
     BOOST_CHECK( empty( pair ) == (pair.first == pair.second) );
-    BOOST_CHECK( size( pair )  == std::distance( pair.first, pair.second ) );
+    BOOST_CHECK( size( pair )  == std::size_t( std::distance( pair.first, pair.second ) ) );
     
     BOOST_CHECK( begin( const_pair ) == const_pair.first );
     BOOST_CHECK( end( const_pair )   == const_pair.second );
     BOOST_CHECK( empty( const_pair ) == (const_pair.first == const_pair.second) );
-    BOOST_CHECK( size( const_pair )  == std::distance( const_pair.first, const_pair.second ) );
+    BOOST_CHECK( size( const_pair )  == std::size_t( std::distance( const_pair.first, const_pair.second ) ) );
+
+    BOOST_CHECK( begin( constness_pair ) == constness_pair.first );
+    BOOST_CHECK( end( constness_pair )   == constness_pair.second );
+    BOOST_CHECK( empty( constness_pair ) == (constness_pair.first == const_pair.second) );
+    BOOST_CHECK( size( constness_pair )  == std::size_t( std::distance( constness_pair.first, constness_pair.second ) ) );
 
 }
 

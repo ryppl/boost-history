@@ -21,22 +21,32 @@ using boost::unit_test_framework::test_suite;
 
 void check_iterator()
 {
-    const char*                         this_file = "iterator.cpp";
-    std::ifstream                       in( this_file );
-    typedef std::istream_iterator<char> iterator_t;
-    typedef std::vector<char>           vec_t;
+    const char*                          this_file = "iterator.cpp";
+    std::ifstream                        in( this_file );
+    typedef std::istream_iterator<char>  iterator_t;
+    typedef const iterator_t             const_iterator_t;
+    typedef std::vector<char>            vec_t;
 
     iterator_t iter     = iterator_t( in );
     vec_t      vec;
 
-    BOOST_STATIC_ASSERT(( is_same< container_traits<iterator_t>::value_type,
+    BOOST_STATIC_ASSERT(( is_same< container_value_type<iterator_t>::type,
                           detail::iterator_traits<iterator_t>::value_type>::value ));
-    BOOST_STATIC_ASSERT(( is_same< container_traits<iterator_t>::iterator, iterator_t >::value ));
-    BOOST_STATIC_ASSERT(( is_same< container_traits<iterator_t>::const_iterator, iterator_t >::value ));
-    BOOST_STATIC_ASSERT(( is_same< container_traits<iterator_t>::difference_type,
+    BOOST_STATIC_ASSERT(( is_same< container_iterator<iterator_t>::type, iterator_t >::value ));
+    BOOST_STATIC_ASSERT(( is_same< container_const_iterator<iterator_t>::type, iterator_t >::value ));
+    BOOST_STATIC_ASSERT(( is_same< container_difference_type<iterator_t>::type,
                           detail::iterator_traits<iterator_t>::difference_type >::value ));
-    BOOST_STATIC_ASSERT(( is_same< container_traits<iterator_t>::size_type, std::size_t >::value ));
-    BOOST_STATIC_ASSERT(( is_same< container_traits<iterator_t>::result_iterator, iterator_t >::value ));
+    BOOST_STATIC_ASSERT(( is_same< container_size_type<iterator_t>::type, std::size_t >::value ));
+    BOOST_STATIC_ASSERT(( is_same< container_result_iterator<iterator_t>::type, iterator_t >::value ));
+
+    BOOST_STATIC_ASSERT(( is_same< container_value_type<const_iterator_t>::type,
+                          detail::iterator_traits<const_iterator_t>::value_type>::value ));
+    BOOST_STATIC_ASSERT(( is_same< container_iterator<const_iterator_t>::type, iterator_t >::value ));
+    BOOST_STATIC_ASSERT(( is_same< container_const_iterator<const_iterator_t>::type, iterator_t >::value ));
+    BOOST_STATIC_ASSERT(( is_same< container_difference_type<const_iterator_t>::type,
+                          detail::iterator_traits<const_iterator_t>::difference_type >::value ));
+    BOOST_STATIC_ASSERT(( is_same< container_size_type<const_iterator_t>::type, std::size_t >::value ));
+    BOOST_STATIC_ASSERT(( is_same< container_result_iterator<const_iterator_t>::type, iterator_t >::value ));
 
     BOOST_CHECK( begin( iter ) == iter );
     BOOST_CHECK( end( iter )   == iterator_t() );

@@ -11,12 +11,12 @@
 # pragma once
 #endif
 
-#include <boost/container_traits/size.hpp>
 #include <boost/container_traits/result_iterator.hpp>
 #include <boost/container_traits/config.hpp>
 #include <cstddef>
 #include <iterator>
 #include <utility>
+#include <string>
 
 namespace boost 
 {
@@ -82,32 +82,46 @@ namespace boost
         //////////////////////////////////////////////////////////////////////
         // string
         //////////////////////////////////////////////////////////////////////
-
-        inline const char* end( const char* s )
-        {
-            return s + size( s );
-        }
         
+        //
+        // @note: borland workaround
+        //
+#define BOOST_END_IMPL( T )                        \
+    if( s == 0 || s[0] == 0 )                      \
+        return s;                                  \
+    return s + std::char_traits<T>::length( s ) 
+
+
+#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
+      
         inline char* end( char* s )
         {
-            return s + size( s );
+            BOOST_END_IMPL( char );
         }
-        
-        inline const wchar_t* end( const wchar_t* s )
-        {
-            return s + size( s );
-        }
-        
+
         inline wchar_t* end( wchar_t* s )
         {
-            return s + size( s );
+            BOOST_END_IMPL( wchar_t );
         }
+
+#endif
+        inline const char* end( const char* s )
+        {
+            BOOST_END_IMPL( char );
+        }
+
+        inline const wchar_t* end( const wchar_t* s )
+        {
+            BOOST_END_IMPL( wchar_t );
+        }
+        
+#undef BOOST_END_IMPL
 
         //////////////////////////////////////////////////////////////////////
         // iterator
         //////////////////////////////////////////////////////////////////////
 
-#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING     
+#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
 
         template< typename C, typename T, typename D, typename P >
         inline std::istream_iterator<C,T,D,P>
