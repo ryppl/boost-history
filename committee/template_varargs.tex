@@ -139,7 +139,7 @@ the pseudocode:
 
 \begin{verbatim}
 template<typename T1, typename T2, ..., typename TN>
-  void printf(const char* format, const T1& a1, const T2& a2, ..., const TN& aN);
+  void printf(const char* format, const T1&, const T2&, ..., const TN&);
 \end{verbatim}
 
 \noindent 
@@ -168,7 +168,7 @@ so that, for instance, a {\tt printf}-like function may pass the
 remaining arguments on like this:
 \begin{verbatim}
 template<typename T, ... Args>
-  void printf(const char* s, const T& next, Args args)
+  void printf(const char* s, const T& next, Args... args)
   {
     // print characters in s until we hit a formatting command
     // format ``next'' by converting it as appropriate
@@ -192,7 +192,7 @@ The ellipsis operator is valid following any of these constructs:
 \begin{itemize}
 \item An argument in a function call argument list.
 \item An argument in a template argument list.
-\item Following the type of a parameter in a parameter declaration
+\item The type of a parameter in a parameter declaration
 \end{itemize}
 
 In each case, the text of the argument (or parameter) preceding the
@@ -213,14 +213,11 @@ following declarations:
 \begin{verbatim}
 template<...> class list;
 template<...> class vector;
-
 template<... Args> void f(Args... args);
 template<... Args> void g(Args... args;)
-template<typename T> T id(T);
-
 \end{verbatim}
 
-\begin{figure}
+\begin{figure}[h]
 \centering
 \begin{tabular}{l|l}
 \textbf{Types \& Expressions} & \textbf{Expansion} \\\hline
@@ -237,13 +234,24 @@ template<typename T> T id(T);
 & \qquad\texttt{{ }typename add\_pointer<XN>::type>} \\
 
 \texttt{f(x*x)} & \texttt{f(x1*x1, x2*x2, ..., xN*xN)} \\
-
-
+\texttt{f(g(x, y...)...)} & \texttt{f(g(x1, y1, y2, ..., yM),} \\
+& \texttt{{ }{ }g(x2, y1, y2, ..., yM),} \\
+& \texttt{{ }{ }. . .} \\
+& \texttt{{ }{ }g(xN, y1, y2, ..., yM))} \\
 \end{tabular}
 \caption{Illustration of the expansions of types and
   expressions using template and value parameter packs.}
 \label{fig:expansions}
 \end{figure}
+
+Ellipsis operators may be nested, with each ellipsis binding to the
+argument text it follows. The same parameter pack may appear in
+multiple places within the argument text (and all will be replaced
+with the same type or argument from the parameter pack in each
+expansion). However, different parameter packs must not be present
+within the same argument text unless the ellipsis operators are
+nested. A program that attempts to apply the ellipsis operator to a
+type or value that is not a parameter pack is ill-formed.
 
 \subsection{Deducing template parameter packs from types}
 Template parameter packs can be deduced from template argument lists
@@ -361,26 +369,84 @@ prefers non-template functions to template functions when the
 conversion sequences are otherwise equal.
 
 \subsection{The types of variadic templates}
-Since parameter packs do not have a type, we specify the
-type of an instantiation of a typesafe variadic function to be equivalent
-to the type of a nontemplate function with all template parameters
-substituted and both template and value parameter packs unpacked
-in place. Revisiting the {\tt printf} definition
+A template parameter pack is an unspecified, compiler-specific class
+type; value parameter packs are instances of the corresponding
+template parameter pack. Any program attempting to instantiate a value
+parameter pack whose corresponding template parameter pack contains
+nontype template parameters or template template parameters is
+ill-formed. 
+
+The type of an instantiation of a typesafe variadic function is
+equivalent to the type of a nontemplate function with all template
+parameters substituted and both template and value parameter packs
+unpacked completely. Revisiting the {\tt printf} definition
 
 \begin{verbatim}
 template<typename T, ... Args>
-  void printf(const char*, const T&, const Args& args);
+  void printf(const char*, const T&, const Args&... args);
 \end{verbatim}
 
 and given a call {\tt printf(``\%i:\%f'', 5, 3.14f)}, the type of this
 {\tt printf} instantiation will be {\tt void(const char*, const int\&,
   const float\&)}. This type compatibility is logical within the
 context of templates (i.e., it follows the existing behavior of
-instantiations of function templates), necessary because parameter
-packs do not have a representation in the type system, and useful in the
+instantiations of function templates) and useful in the
 implementation of the polymorphic function adaptors~\cite{Gregor02}
 proposal, which has placed the most stress on the formulation of
 variadic templates thus far.
+
+The class type of a template parameter pack \texttt{<T1, T2, ..., TN}
+contains unnamed values here denoted \texttt{t1, t2, ..., tN} of types
+\texttt{T1, T2, ..., TN}, respectively, and must provide the following
+when all \texttt{Ti} are types:
+\begin{itemize}
+\item A default constructor that default-initializes \texttt{t1, t2,
+    ..., tN}, if the types \texttt{<T1, T2, ..., TN} have default
+  constructors.
+\item A copy constructor that copy-constructs \texttt{t1, t2,
+    ..., tN}, if the types \texttt{<T1, T2, ..., TN} have copy
+  constructors.
+\item A constructor that accepts $N$ arguments, of types \texttt{cv1
+    T1\&, cv2 t2\&, ..., cvN tN\&}, where \texttt{cvi} is equivalent to
+  the cv-qualifiers in the copy constructor of type \texttt{Ti}, and
+  copy-constructs each \texttt{ti} from the corresponding argument.
+
+\item A copy assignment operator that assigns to each \texttt{ti} from
+  the corresponding \texttt{ti} of the parameter pack on the
+  right-hand side.
+\end{itemize}
+
+Value parameter packs may (but are not required to) be implemented
+with the following pseudocode:
+\begin{verbatim}
+template<typename T1, typename T2, ..., typename TN>
+  struct __pp
+  {
+    // implicit default constructor
+    // implicit copy constructor
+    // implicit copy assignment operator
+   
+    __pp(cv1 T1& a1, cv2 T2& a2, ..., cvN TN& aN)
+      : t1(a1), t2(a2), ..., tN(aN) {}
+
+    T1 t1;
+    T2 t2;
+      .
+      .
+      .
+    TN tN;
+  };
+\end{verbatim}
+
+Implementations are permitted to perform an extra copy construction to
+construct a parameter pack from the arguments passed to a function,
+which may be unavoidable when variadic template functions are invoked
+via a function pointer. However, since we make no restrictions on the
+layout of parameter packs, and do not confine them to the same layout
+as, e.g., a structure containing the same types as in the example
+above, implementations may elide these copy constructions by
+performing parameter pack layout in a manner that coincides with the
+activation record for a particular platform.
 
 \section{Examples}
 To demonstrate the use of variadic templates, this section gives
