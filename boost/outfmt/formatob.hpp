@@ -22,6 +22,57 @@
       {
          public:
             const T &                  ob;
+         public:
+            typedef typename FmtObject::format_type        format_type;
+            typedef typename FmtObject::traits_type        traits_type;
+         public:
+            inline formatob_t &                  format
+                                                 (
+                                                    format_type o,
+                                                    format_type c,
+                                                    format_type s
+                                                 )
+            {
+               FmtObject::format( o, c, s );
+               return( *this );
+            }
+            inline formatob_t &                  format
+                                                 (
+                                                    format_type o,
+                                                    format_type c
+                                                 )
+            {
+               FmtObject::format( o, c );
+               return( *this );
+            }
+            inline formatob_t &                  format
+                                                 (
+                                                    format_type s
+                                                 )
+            {
+               FmtObject::format( s );
+               return( *this );
+            }
+
+            template< typename RT2, class FormatTraits2 >
+            inline formatob_t &                  format
+                                                 (
+                                                    const openclose_formatter_t< FormatType, RT2, FormatTraits2 > & fmt
+                                                 )
+            {
+               FmtObject::format( fmt );
+               return( *this );
+            }
+
+            template< typename RT2, class FormatTraits2 >
+            inline formatob_t &                  format
+                                                 (
+                                                    const formatter_t< FormatType, RT2, FormatTraits2 > & fmt
+                                                 )
+            {
+               FmtObject::format( fmt );
+               return( *this );
+            }
          public: // constructors
             inline           formatob_t( const formatob_t & fo ):
                FmtObject( fo ),
@@ -42,7 +93,7 @@
          template< typename CharT, class TraitsT, typename T, typename FormatType, typename FmtObject >
          inline std::basic_ostream< CharT, TraitsT > & operator<<
          (
-            std::basic_ostream< CharT, TraitsT >         & os,
+            std::basic_ostream< CharT, TraitsT > & os,
             const formatob_t< T, FormatType, FmtObject > & fo
          )
          {
