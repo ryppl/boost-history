@@ -54,3 +54,16 @@ MPL_TEST_CASE()
     MPL_ASSERT_RELATION( front<list1>::type::value, ==, 0 );
     MPL_ASSERT_RELATION( front<list2>::type::value, ==, 1 );
 }
+
+MPL_TEST_CASE()
+{
+    typedef list_c<unsigned,2,1> l2;
+    
+    typedef begin<l2>::type i1;
+    typedef next<i1>::type  i2;
+    typedef next<i2>::type  i3;
+    
+    MPL_ASSERT_RELATION( deref<i1>::type::value, ==, 2 );
+    MPL_ASSERT_RELATION( deref<i2>::type::value, ==, 1 );
+    MPL_ASSERT(( is_same< i3, end<l2>::type > ));
+}

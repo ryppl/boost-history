@@ -30,7 +30,7 @@ struct vector<
         >
     : vector0<  >
 {
-    typedef vector0<  > type;
+    typedef vector0<  >::type type;
 };
 
 template<
@@ -42,7 +42,7 @@ struct vector<
         >
     : vector1<T0>
 {
-    typedef vector1<T0> type;
+    typedef typename vector1<T0>::type type;
 };
 
 template<
@@ -54,7 +54,7 @@ struct vector<
         >
     : vector2< T0,T1 >
 {
-    typedef vector2< T0,T1 > type;
+    typedef typename vector2< T0,T1 >::type type;
 };
 
 template<
@@ -66,7 +66,7 @@ struct vector<
         >
     : vector3< T0,T1,T2 >
 {
-    typedef vector3< T0,T1,T2 > type;
+    typedef typename vector3< T0,T1,T2 >::type type;
 };
 
 template<
@@ -78,7 +78,7 @@ struct vector<
         >
     : vector4< T0,T1,T2,T3 >
 {
-    typedef vector4< T0,T1,T2,T3 > type;
+    typedef typename vector4< T0,T1,T2,T3 >::type type;
 };
 
 template<
@@ -90,7 +90,7 @@ struct vector<
         >
     : vector5< T0,T1,T2,T3,T4 >
 {
-    typedef vector5< T0,T1,T2,T3,T4 > type;
+    typedef typename vector5< T0,T1,T2,T3,T4 >::type type;
 };
 
 template<
@@ -103,7 +103,7 @@ struct vector<
         >
     : vector6< T0,T1,T2,T3,T4,T5 >
 {
-    typedef vector6< T0,T1,T2,T3,T4,T5 > type;
+    typedef typename vector6< T0,T1,T2,T3,T4,T5 >::type type;
 };
 
 template<
@@ -116,7 +116,7 @@ struct vector<
         >
     : vector7< T0,T1,T2,T3,T4,T5,T6 >
 {
-    typedef vector7< T0,T1,T2,T3,T4,T5,T6 > type;
+    typedef typename vector7< T0,T1,T2,T3,T4,T5,T6 >::type type;
 };
 
 template<
@@ -129,7 +129,7 @@ struct vector<
         >
     : vector8< T0,T1,T2,T3,T4,T5,T6,T7 >
 {
-    typedef vector8< T0,T1,T2,T3,T4,T5,T6,T7 > type;
+    typedef typename vector8< T0,T1,T2,T3,T4,T5,T6,T7 >::type type;
 };
 
 template<
@@ -142,7 +142,7 @@ struct vector<
         >
     : vector9< T0,T1,T2,T3,T4,T5,T6,T7,T8 >
 {
-    typedef vector9< T0,T1,T2,T3,T4,T5,T6,T7,T8 > type;
+    typedef typename vector9< T0,T1,T2,T3,T4,T5,T6,T7,T8 >::type type;
 };
 
 template<
@@ -155,7 +155,7 @@ struct vector<
         >
     : vector10< T0,T1,T2,T3,T4,T5,T6,T7,T8,T9 >
 {
-    typedef vector10< T0,T1,T2,T3,T4,T5,T6,T7,T8,T9 > type;
+    typedef typename vector10< T0,T1,T2,T3,T4,T5,T6,T7,T8,T9 >::type type;
 };
 
 template<
@@ -169,7 +169,7 @@ struct vector<
         >
     : vector11< T0,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10 >
 {
-    typedef vector11< T0,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10 > type;
+    typedef typename vector11< T0,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10 >::type type;
 };
 
 template<
@@ -183,7 +183,7 @@ struct vector<
         >
     : vector12< T0,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11 >
 {
-    typedef vector12< T0,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11 > type;
+    typedef typename vector12< T0,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11 >::type type;
 };
 
 template<
@@ -197,7 +197,7 @@ struct vector<
         >
     : vector13< T0,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12 >
 {
-    typedef vector13< T0,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12 > type;
+    typedef typename vector13< T0,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12 >::type type;
 };
 
 template<
@@ -211,7 +211,7 @@ struct vector<
         >
     : vector14< T0,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13 >
 {
-    typedef vector14< T0,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13 > type;
+    typedef typename vector14< T0,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13 >::type type;
 };
 
 template<
@@ -227,7 +227,7 @@ struct vector<
           T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14
         >
 {
-    typedef vector15< T0,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14 > type;
+    typedef typename vector15< T0,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14 >::type type;
 };
 
 template<
@@ -245,7 +245,7 @@ struct vector<
         , T15
         >
 {
-    typedef vector16< T0,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15 > type;
+    typedef typename vector16< T0,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15 >::type type;
 };
 
 template<
@@ -263,7 +263,7 @@ struct vector<
         , T15, T16
         >
 {
-    typedef vector17< T0,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16 > type;
+    typedef typename vector17< T0,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16 >::type type;
 };
 
 template<
@@ -281,7 +281,7 @@ struct vector<
         , T15, T16, T17
         >
 {
-    typedef vector18< T0,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17 > type;
+    typedef typename vector18< T0,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17 >::type type;
 };
 
 template<
@@ -299,7 +299,7 @@ struct vector<
         , T15, T16, T17, T18
         >
 {
-    typedef vector19< T0,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18 > type;
+    typedef typename vector19< T0,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18 >::type type;
 };
 
 /// primary template (not a specialization!)
@@ -316,7 +316,7 @@ struct vector
         , T15, T16, T17, T18, T19
         >
 {
-    typedef vector20< T0,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,T19 > type;
+    typedef typename vector20< T0,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,T19 >::type type;
 };
 
 }}
