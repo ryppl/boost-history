@@ -4,13 +4,12 @@
 //  warranty, and with no claim as to its suitability for any purpose.
 //  Copyright Toon Knapen and Kresimir Fresl
 
-#ifndef BOOST_BINDINGS_BLAS_BLAS1_HPP
-#define BOOST_BINDINGS_BLAS_BLAS1_HPP
+#ifndef BOOST_NUMERIC_BINDINGS_BLAS_BLAS1_HPP
+#define BOOST_NUMERIC_BINDINGS_BLAS_BLAS1_HPP
 
 #include <cassert> 
 
-#include <boost/numeric/bindings/blas/blaspp.hpp>
-#include <boost/numeric/bindings/traits/traits.hpp>
+#include <boost/numeric/bindings/blas/blas1_overloads.hpp>
 
 namespace boost { namespace numeric { namespace bindings { namespace blas {
 
@@ -28,10 +27,7 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
     const int stride = vtraits::stride( x ) ;
     value_type *x_ptr = vtraits::storage( x ) ;
 
-    blas< value_type >::scal( &n, 
-			      (bind_type*)&alpha, 
-			      (bind_type*)x_ptr, &stride 
-			      ) ;
+    detail::scal( n, alpha, x_ptr, stride ) ;
   }
 
 
@@ -54,11 +50,7 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
     const value_type *x_ptr = xvtraits::storage( x ) ;
     value_type *y_ptr = yvtraits::storage( y ) ;
 
-    blas< value_type >::axpy( &n, 
-			      (const bind_type*)&alpha, 
-			      (const bind_type*)x_ptr, &stride_x, 
-			      (bind_type*)y_ptr, &stride_y 
-			      ) ;
+    detail::axpy( n, alpha, x_ptr, stride_x, y_ptr, stride_y ) ; 
   }
 
 
@@ -177,4 +169,4 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
 
 }}}}
 
-#endif // BOOST_BINDINGS_BLAS_BLAS1_HPP
+#endif // BOOST_NUMERIC_BINDINGS_BLAS_BLAS1_HPP
