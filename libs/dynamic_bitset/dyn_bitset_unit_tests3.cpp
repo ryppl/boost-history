@@ -6,7 +6,6 @@
 // purpose.
 
 
-
 #include "bitset_test.hpp"
 #include "boost/dynamic_bitset.hpp"
 
@@ -14,17 +13,8 @@
 #include "boost/config.hpp"
 
 
-// The usual workaround for VC6 bug related
-// to template parameters that don't appear
-// in the function's parameter list.
-// We should have this available somewhere,
-// to avoid repeating it in every place. [gps]
-//
-#define BOOST_DUMMY_DEFAULT_ARGUMENT(t) t* = 0
-
-
 template <typename Block>
-void run_test_cases(BOOST_DUMMY_DEFAULT_ARGUMENT(Block))
+void run_test_cases( BOOST_EXPLICIT_TEMPLATE_TYPE(Block) )
 {
   // a bunch of typedefs to have handy later on
   typedef boost::dynamic_bitset<Block> bitset_type;

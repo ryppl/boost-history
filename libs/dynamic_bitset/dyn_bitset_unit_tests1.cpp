@@ -6,12 +6,11 @@
 // purpose.
 
 
-
 #include "bitset_test.hpp"
 #include "boost/dynamic_bitset.hpp"
 
 #include "boost/limits.hpp"
-#include "boost/config.hpp" // for BOOST_HAS_LONG_LONG
+#include "boost/config.hpp"
 
 
 template <typename Block>
@@ -23,7 +22,7 @@ void test_from_ulong(std::size_t n, unsigned long number)
 
 
 template <typename Block>
-void run_test_cases()
+void run_test_cases( BOOST_EXPLICIT_TEMPLATE_TYPE(Block) )
 {
   typedef boost::dynamic_bitset<Block> bitset_type;
   typedef bitset_test< bitset_type > Tests;
