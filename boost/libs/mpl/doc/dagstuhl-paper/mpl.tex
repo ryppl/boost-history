@@ -2,7 +2,7 @@
 
 \newcommand{\Cpp}{C\kern-0.05em\texttt{+\kern-0.03em+}%
 }
-\newcommand{\mpl}{\code{boost::mpl}}
+\newcommand{\Mpl}{Boost Meta\-program\-ming Library}
 \newcommand{\mping}{meta\-program\-ming}
 \newcommand{\mpgm}{meta\-program}
 \newcommand{\mpgms}{meta\-programs}
@@ -28,26 +28,26 @@ $^\ddag$ Boost Consulting \\
 
 \maketitle
 
-\begin{abstract} $\!$This paper describes the Boost \Cpp template
-\mping{} library (\mpl), an extensible compile-time framework
-of algorithms, sequences and function classes. The library brings
-together important abstractions from the generic and functional
-programming worlds to build a powerful and easy-to-use
-toolset which makes template \mping{}  practical
-enough for the real-world environments. The MPL is heavily influenced
-by its run-time equivalent - the Standard Template Library (STL), a
-part of the C++ standard library. Like the STL, it defines an open
-conceptual and implementation framework which can serve as a
-foundation for future contributions in the domain. The library's
-fundamental concepts and idioms enable the user to focus on solutions 
-without navigating the universe of possible ad-hoc approaches to a 
-given \mping{}  problem, even if no actual MPL code is used. 
-{\mpl} also provides a compile-time lambda expression facility enabling
-arbitrary currying and composition of class templates, a feature whose
-runtime counterpart is often cited as missing from the STL. This paper
-explains motivation, usage, design, and implementation of \mpl{} 
-library, gives some advanced examples of its real-life applications, 
-and offers some lessons learned about C++ template \mping{}.
+\begin{abstract} $\!$This paper describes the Boost \Cpp Template
+Meta\-program\-ming Library (MPL), an extensible compile-time
+framework of algorithms, sequences and function classes. The library
+brings together important abstractions from the generic and functional
+programming worlds to build a powerful and easy-to-use toolset which
+makes template \mping{} practical enough for the real-world
+environments. The MPL is heavily influenced by its run-time equivalent
+- the Standard Template Library (STL), a part of the C++ standard
+library. Like the STL, it defines an open conceptual and
+implementation framework which can serve as a foundation for future
+contributions in the domain. The library's fundamental concepts and
+idioms enable the user to focus on solutions without navigating the
+universe of possible ad-hoc approaches to a given \mping{} problem,
+even if no actual MPL code is used.  The \Mpl also provides a
+compile-time lambda expression facility enabling arbitrary currying
+and composition of class templates, a feature whose runtime
+counterpart is often cited as missing from the STL. This paper
+explains the motivation, usage, design, and implementation of the MPL
+with examples of its real-life applications, and offers some lessons
+learned about C++ template \mping{}.
 \end{abstract}
 
 
@@ -87,8 +87,8 @@ being aware of the transition.
 
 In \Cpp, it was discovered almost by accident that the template
 mechanism provides a rich facility for computation at compile-time. In
-this section, we'll explore the basic mechanisms used for
-metaprogramming in C++.
+this section, we'll explore the basic mechanisms and some common
+idioms used for metaprogramming in C++.
 
 \subsubsection{Numeric Computations}
 
@@ -151,6 +151,11 @@ the impact of the second definition is minimal, but in large
 metaprograms the cost of maintaining and understanding the terminating
 definitions can become significant.
 
+Note also that a \Cpp\ \mfn's return value must be \emph{named}. The
+name chosen here, \code{value}, is the same one used for all numeric
+returns in the \Mpl. As we'll see, establishing a consistent naming
+convention for \mfn\ returns is crucial to the power of the library.
+
 \subsubsection{Type Computations}
 
 How could we apply our \code{factorial<>} \mfn{}? We might, for example,
@@ -185,6 +190,54 @@ system provides a much richer set of expressions than anything we can
 use as a nontype template argument (e.g. the integers), \Cpp\ \mpgms\
 tend to be composed mostly of type computations.
 
+\subsubsection{Type Sequences}
+
+The ability to programmatically manipulate collections of types is a
+central tool of most interesting \Cpp\ metaprograms. Because this
+capability is so well-supported by the MPL, we'll provide just a brief
+introduction here. 
+
+Suppose a user wished to find the largest of an arbitrary collection
+of types. First, we'd need a way to represent the collection. One
+idea might be to store the types in a structure:
+
+{\footnotesize
+\begin{verbatim}
+struct types {
+  int t1;
+  long t2;
+  std::vector<double> t3;
+};
+\end{verbatim}
+}
+
+Unfortunately, this arrangement is not susceptible to the compile-time
+type introspection power that \Cpp\ gives us: there's no way to find
+out what the names of the members are, and even if we assume that
+they're named according to some convention as above, there's no way to
+now how many members there are. The key to solving this problem is to
+increase the uniformity of the representation. If we have a consistent
+wayt to get the first type of any sequence, and the rest of the
+sequence, we can easily access all members:
+
+{\footnotesize
+\begin{verbatim}
+template <class First, class Rest>
+struct cons
+{
+  typedef First first;
+  typedef Rest rest;
+};
+
+struct nil {};
+
+typedef
+  cons<int, cons<long, cons<std::vector<double>, nil> > >
+types;
+\end{verbatim}
+}
+
+The structure described by \code{types} above is similar to 
 \subsection{Why Metaprogramming?}
 
 It's worth asking why anyone would want to do this. After all, even a
@@ -266,6 +319,11 @@ all_permutations(T const& input);
   incorrectly). Anyone who has had to write parser tables by hand will
   tell you that the impracticality of this approach is the very reason
   YACC's existence.
+
+  In a language such as \Cpp, where the meta-data can be expressed in
+  the same language as the rest of the user's program, expressivity is
+  further enhanced: the user can invoke \mpgms\ directly, without
+  learning a foreign syntax or interrupting the flow of his code.
 \end{enumerate}
 
 So, the motivation for \mping{} comes down to the combination of three
@@ -277,37 +335,59 @@ expressivity from runtime to compile-time.
 
 \subsection{Why a Metaprogramming \emph{Library}?}
 
-Why do we need any library? 
+One might just as well ask why we need any generic library: 
+ 
 \begin{itemize}
-
-\item Boredom. Repeating the same idioms over and over is
-  \emph{tedious}. It makes programmers tired and reduces
-  productivity. Often the best libraries are ``plucked'' by an astute
-  programmer from a sea of drudgery.
-
-
-\item Correctness. When programmers get bored, they get sloppy. It's
-  better to code something once correctly than to code it ten times
-  incorrectly. It's better still if you can get a library to do the
-  work for you.
-
-\item Efficiency. With a centralized implementation for any given
-  function, optimizations and improvements are more likely to have
-  been applied.
 
 \item Quality. Code that is appropriate for a general-purpose library
   is usually incidental to the purpose of its users. To a library
-  developer, it is the central mission. On average, the containers
-  provided by any given \Cpp\ standard library implementation are
-  better-designed and implemented than the project-specific
-  implementations which abound, because library development was
-  treated as an end in itself rather than a task incidental to the
-  development of some other application.
+  developer, it is the central mission. On average, the containers and
+  algorithms provided by any given \Cpp\ standard library
+  implementation are more-flexible and better-implemented than the
+  project-specific implementations which abound, because library
+  development was treated as an end in itself rather than a task
+  incidental to the development of some other application. With a
+  centralized implementation for any given function, optimizations and
+  improvements are more likely to have been applied.
+
+\item Re-use. More important even than the re-use of code which all
+  libraries provide, a well-designed generic library establishes a
+  \emph{framework of concepts and idioms} which establish a reusable
+  mental model for approaching problems. Just ast the \Cpp\ Standard
+  Template Library gave us iterator concepts and a function object
+  protocol, the \Mpl\ provides type-iterators and meta-function class
+  protocol. A well-considered framework of idioms saves the \mpgmer{}
+  from considering irrelevant implementation details and allows her to
+  concentrate on the problem at hand.
+
+\item Portability. A good library can smooth over the ugly realities
+  of platform differences. While in theory a \mping\ library is fully
+  generic and shouldn't be concerned with these issues, in practice,
+  support for templates remains inconsistent even four years after
+  standardization. This should perhaps not be surprising: \Cpp\
+  templates are the language's furthest-reaching and most complicated
+  feature, which largely accounts for the power of \mping\ in \Cpp.
+
+\item Fun. Repeating the same idioms over and over is
+  \emph{tedious}. It makes programmers tired and reduces
+  productivity. Furthermore, when programmers get bored they get
+  sloppy, and buggy code is even more costly than slowly-written
+  code. Often the most useful libraries are simply patterns that have
+  been ``plucked'' by an astute programmer from a sea of
+  repetition. The MPL helps to reduce boredom by eliminating the need
+  for the most commonly-repeated boilerplate coding patterns.
 
 \end{itemize}
 
+As you can see, the \Mpl's development is motivated primarily by the
+same practical, real-world considerations that justify the development
+of any other library. Perhaps this is an indication that template
+\mping\ is finally ready to leave the realm of the esoteric and enter
+the lingua franca of every day programmers.
+%probably this paragraph would be better in the conclusions
 
 \subsection{What about portability? }
+
 \subsection{Relation to other work.}
 
 \section{Basic usage (What can I do with boost::mpl?)}
@@ -317,8 +397,8 @@ Why do we need any library?
 Conditional type selection is the simplest basic construct of \Cpp\
 template \mping{}. Veldhuizen [Vel95] was the first to show 
 how to implement it, and Czarnecki and Eisenecker [CE00] first 
-presented it as a standalone library primitive. \mpl\ defines the 
-corresponding facility as follows
+presented it as a standalone library primitive. The \Mpl\ defines the 
+corresponding facility as follows:
 
 {\footnotesize
 \begin{verbatim}
@@ -528,13 +608,13 @@ guaranteed not to do so), so we are guaranteed to get away with
 \code{aux::element\_\-type<char*>} as far as it won't end up being 
 selected as \code{func\_}.
 
-The above technique is so common in template metaprograms, that it 
-even make sense to facilate the selection of nested \code{type} 
-member by introducing a high level equivalent to \code{select\_if} 
-- the one that will do \code{func\_::type} operation (that is called 
-[nullary] function class application) as a part of its invocation. 
-\mpl provide such template - it's called \code{apply\_if}. Using it, 
-we can re-write the above code as simple as:
+The above technique is so common in template metaprograms, that it
+even make sense to facilate the selection of nested \code{type} member
+by introducing a high level equivalent to \code{select\_if} - the one
+that will do \code{func\_::type} operation (that is called [nullary]
+function class application) as a part of its invocation.  The \Mpl
+provides such template - it's called \code{apply\_if}. Using it, we
+can re-write the above code as simple as:
 
 {\footnotesize
 \begin{verbatim}
@@ -585,7 +665,7 @@ one of the arguments - namely \code{T} is just simple a type, so
 the refactoring just doesn't seem possible. An easiest way out of 
 this situation would be to pass to \code{select\_if} a real 
 nullary function instead of \code{T}, - the one that returns 
-\code{T} on its invocation. \mpl provides a simple way to do it -
+\code{T} on its invocation. The \Mpl provides a simple way to do it -
 we just substitute \code{T} with \code{boost::mpl::identity<T>},
 and \code{boost::select\_if} with more compact 
 \code{boost::apply\_if}:
