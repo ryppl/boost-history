@@ -178,6 +178,7 @@ if $(NT)
     SUFOBJ          ?= .obj ;
     SUFEXE          ?= .exe ;
     SUFDLL          ?= .dll .lib ;
+    gLINKABLE_PRODUCT_INDEX(DLL) = 2 ; # (the .lib is the ones to link)
     NOARSCAN        ?= true ;
     
     # dwa 6/4/01 - removed compiler determination for boost

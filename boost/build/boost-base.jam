@@ -108,6 +108,9 @@ rule dll-files
     main-from-objects [ FAppendSuffix $(<) : $(SUFDLL) ] : [ Objects $(>) ] : DLL ;
 }
 
+gLINK_FUNCTION(EXE) = Link ;
+gLINK_FUNCTION(DLL) = Link-DLL ;
+
 # main-from-objects exe-target : obj-target... : ("EXE"|"DLL")
 #
 # generate instructions to build the given "main" target from the given object
@@ -123,12 +126,7 @@ rule main-from-objects
 
     Clean clean : $(<) ;
 
-    switch $(3)
-    {
-      case EXE : Link $(<) : $(>) : $(3) ;
-      case DLL : Link-DLL $(<) : $(>) : $(3) ;
-      case * : EXIT "unknown main target type $(3)" ;
-    }
+    local ignored = [ $(gLINK_FUNCTION($(3))) $(<) : $(>) : $(3) ] ;
 }
 
 rule Link-DLL
@@ -1099,8 +1097,11 @@ rule link-libraries
     local lib-files
         = [ subvariant-target $(lib-target) : $(lib-subvariant) : $(>) ] ;
 
-    # Add the name of the built target file
-    result += $(lib-files[1]) ;
+    # Add the name of the linkable product to the result.
+    local type = $(gTARGET_TYPE($(lib-target))) ;
+    local index = $(gLINKABLE_PRODUCT_INDEX($(type))) ;
+    index ?= 1 ;
+    result += $(lib-files[$(index)]) ;
   }
   return $(result) ;
 }
@@ -1201,10 +1202,8 @@ rule subvariant-target
 
     local target-files = [ FAppendSuffix $(subvariant) : $(SUF$(target-type)) ] ;
 
-    # reverse these so that the Windows import library will be first, for
-    # linking to DLLs
-    gTARGET_FILES($(subvariant)) = [ reverse $(target-files) ] ;
-    gTARGET_FILES($(<)) += $(gTARGET_FILES($(subvariant))) ;
+    gTARGET_FILES($(subvariant)) = $(target-files) ;
+    gTARGET_FILES($(<)) += $(target-files) ;
 
     # Remember the path from the build root to the subvariant directory
     gSUBVARIANT_PATH($(subvariant)) = $(>[1]) ;
@@ -1227,19 +1226,10 @@ rule subvariant-target
     # transfer target variables to the target file.
     set-target-variables $(target-files) ;
 
-    # dispatch to the appropriate declaration function. It would be much cleaner
-    # to be able to do this with some sort of indirection, but Jam doesn't yet
-    # support it.
-    switch $(target-type)
-    {
-      case EXE :
-        executable-file $(target-files) : $(gTARGET_SOURCES($(<))) ;
-      case LIB :
-        library-file $(target-files) : $(gTARGET_SOURCES($(<))) ;
-      case DLL :
-        dll-files $(target-files) : $(gTARGET_SOURCES($(<))) ;
-      case * : EXIT "unknown target type:" $(target-type) ;
-    }
+    # dispatch to the appropriate declaration function. Here we are using an
+    # FTJam-only feature (thanks, David Turner!)
+    local ignored = [ $(gGENERATOR_FUNCTION($(target-type))) $(target-files)
+                        : $(gTARGET_SOURCES($(<))) ] ;
 
     if $(gTARGET_LIBS($(<)))
     {
@@ -1288,6 +1278,7 @@ rule main-target
   }
 }
 
+gGENERATOR_FUNCTION(EXE) = executable-file ;
 # exe target : sources : requirements : local-build
 #
 # Declare an executable target.
@@ -1296,6 +1287,7 @@ rule exe
     declare-local-target $(<) : $(2) : $(3) : $(4) : EXE ;
 }
 
+gGENERATOR_FUNCTION(DLL) = dll-files ;
 # dll target : sources : requirements : local-build
 #
 # Declare a shared library target.
@@ -1304,6 +1296,7 @@ rule dll
     declare-local-target $(<) : $(2) : $(3) : $(4) : DLL ;
 }
 
+gGENERATOR_FUNCTION(LIB) = library-file ;
 # lib target : sources : requirements : local-build
 #
 # Declare a statically-linked library target.
