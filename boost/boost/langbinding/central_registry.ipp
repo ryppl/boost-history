@@ -35,56 +35,59 @@
 #include <boost/langbinding/central_registry.hpp>
 #include <boost/langbinding/registry.ipp>
 
-namespace boost { namespace langbinding {
+#include <boost/mpl/aux_/config/msvc_typename.hpp>
 
-   namespace
-   {
-      template<class T>
-      struct implementation
-      {
-         typedef typename central_registry<T>::registry_ptr registry_ptr;
-
-         struct entry
-         {
-            registry_ptr registry_;
-         };
-
-         typedef boost::shared_ptr<entry> entry_ptr;
-
-         struct cmp_entry
-         {
-            bool operator()(
-                 const entry_ptr& lhs
-               , const entry_ptr& rhs) const
-            {
-               return lhs->registry_ < rhs->registry_;
-            }
-         };
-
-         typedef std::vector<entry_ptr> registry_t;
-         typedef std::map<std::string, entry_ptr> name_to_entry_t;
-
-         static registry_t& entries()
-         {
-            static registry_t x;
-            return x;
-         }
-
-         static name_to_entry_t& name_to_entry()
-         {
-            static name_to_entry_t x;
-            return x;
-         }
-      };
-
-      struct null_deleter
-      {
-         void operator()(const void*) const {};
-      };
-   }
+namespace
+{
+   using namespace boost::langbinding;
 
    template<class T>
-   BOOST_LANGBINDING_DECL
+   struct implementation
+   {
+      typedef typename central_registry<T>::registry_ptr registry_ptr;
+
+      struct entry
+      {
+         registry_ptr registry_;
+      };
+
+      typedef boost::shared_ptr<entry> entry_ptr;
+
+      struct cmp_entry
+      {
+         bool operator()(
+               const entry_ptr& lhs
+             , const entry_ptr& rhs) const
+         {
+            return lhs->registry_ < rhs->registry_;
+         }
+      };
+
+      typedef std::vector<entry_ptr> registry_t;
+      typedef std::map<std::string, entry_ptr> name_to_entry_t;
+
+      static registry_t& entries()
+      {
+         static registry_t x;
+         return x;
+      }
+
+      static name_to_entry_t& name_to_entry()
+      {
+         static name_to_entry_t x;
+         return x;
+      }
+   };
+
+   struct null_deleter
+   {
+      void operator()(const void*) const {};
+   };
+}
+
+namespace boost { namespace langbinding {
+   
+   template<class T>
    void central_registry<T>::register_module(const char* name, registry_ptr r)
    {
       std::cout << "central registry: registering module \""
@@ -100,14 +103,14 @@ namespace boost { namespace langbinding {
            implementation<T>::entries().begin()
          , implementation<T>::entries().end()
          , ptr
-         , typename implementation<T>::cmp_entry()
+         , implementation<T>::cmp_entry()
       );
 
       if (iter == implementation<T>::entries().end() ||
           (*iter)->registry_ != ptr->registry_)
       {
-         ptr = typename implementation<T>::entry_ptr(
-            new typename implementation<T>::entry);
+         ptr = BOOST_MSVC_TYPENAME implementation<T>::entry_ptr(
+            new BOOST_MSVC_TYPENAME implementation<T>::entry);
          ptr->registry_ = r;
 
          implementation<T>::entries().insert(
@@ -121,10 +124,9 @@ namespace boost { namespace langbinding {
    }
 
    template<class T>
-   BOOST_LANGBINDING_DECL
    void central_registry<T>::insert_converter(
            registry_ptr r
-         , const typename registry<T>::type_info_& type
+         , const typename registry<T>::type_info_& x
          , typename registry<T>::lvalue_from_function convert
       )
    {
@@ -138,14 +140,14 @@ namespace boost { namespace langbinding {
            implementation<T>::entries().begin()
          , implementation<T>::entries().end()
          , ptr
-         , typename implementation<T>::cmp_entry()
+         , implementation<T>::cmp_entry()
       );
 
       if (iter == implementation<T>::entries().end() ||
           (*iter)->registry_ != ptr->registry_)
       {
-         ptr = typename implementation<T>::entry_ptr(
-            new typename implementation<T>::entry);
+         ptr = BOOST_MSVC_TYPENAME implementation<T>::entry_ptr(
+            new BOOST_MSVC_TYPENAME implementation<T>::entry);
          ptr->registry_ = r;
 
          implementation<T>::entries().insert(
@@ -158,10 +160,9 @@ namespace boost { namespace langbinding {
    }
 
    template<class T>
-   BOOST_LANGBINDING_DECL
    void central_registry<T>::insert_converter(
            registry_ptr r
-         , const typename registry<T>::type_info_& type
+         , const typename registry<T>::type_info_& x
          , typename registry<T>::rvalue_from_stage1 convertible
          , typename registry<T>::rvalue_from_stage2 convert
       )
@@ -176,14 +177,14 @@ namespace boost { namespace langbinding {
            implementation<T>::entries().begin()
          , implementation<T>::entries().end()
          , ptr
-         , typename implementation<T>::cmp_entry()
+         , implementation<T>::cmp_entry()
       );
 
       if (iter == implementation<T>::entries().end() ||
           (*iter)->registry_ != ptr->registry_)
       {
-         ptr = typename implementation<T>::entry_ptr(
-            new typename implementation<T>::entry);
+         ptr = BOOST_MSVC_TYPENAME implementation<T>::entry_ptr(
+            new BOOST_MSVC_TYPENAME implementation<T>::entry);
          ptr->registry_ = r;
 
          implementation<T>::entries().insert(
@@ -196,7 +197,6 @@ namespace boost { namespace langbinding {
    }
 
    template<class T>
-   BOOST_LANGBINDING_DECL
    void central_registry<T>::import(
            registry_ptr r
          , const char* module)
@@ -211,11 +211,10 @@ namespace boost { namespace langbinding {
    }
 
    template<class T>
-   BOOST_LANGBINDING_DECL
    void central_registry<T>::import(
            registry_ptr r
          , const char* module
-         , const typename registry<T>::type_info_& type)
+         , const typename registry<T>::type_info_& x)
    {
       typename implementation<T>::name_to_entry_t::const_iterator iter
          = implementation<T>::name_to_entry().find(module);
@@ -223,7 +222,7 @@ namespace boost { namespace langbinding {
       assert(iter != implementation<T>::name_to_entry().end());
       typename implementation<T>::entry_ptr e = iter->second;
 
-      e->registry_->export_converters(type, *r);
+      e->registry_->export_converters(x, *r);
    }
 
 }}

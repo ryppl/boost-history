@@ -24,27 +24,24 @@
 #define BOOST_CENTRAL_LANGBINDING_REGISTRY
 
 #include <boost/langbinding/registry.hpp>
+#include <boost/langbinding/config.hpp>
 
 namespace boost { namespace langbinding {
 
-   #define BOOST_LANGBINDING_DECL
-
    template<class T>
-   struct central_registry
+   class BOOST_LANGBINDING_DECL central_registry
    {
+   public:
       typedef registry<T>* registry_ptr;
-
-      BOOST_LANGBINDING_DECL
+    
       static void register_module(const char* name, registry_ptr r);
 
-      BOOST_LANGBINDING_DECL
       static void insert_converter(
            registry_ptr r
          , const typename registry<T>::type_info_&
          , typename registry<T>::lvalue_from_function
       );
 
-      BOOST_LANGBINDING_DECL
       static void insert_converter(
            registry_ptr r
          , const typename registry<T>::type_info_&
@@ -52,14 +49,12 @@ namespace boost { namespace langbinding {
          , typename registry<T>::rvalue_from_stage2
       );
 
-      BOOST_LANGBINDING_DECL
-      static void central_registry<T>::import(
+      static void import(
            registry_ptr r
          , const char* module
       );
 
-      BOOST_LANGBINDING_DECL
-      static void central_registry<T>::import(
+      static void import(
            registry_ptr r
          , const char* module
          , const typename registry<T>::type_info_& type
