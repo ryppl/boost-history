@@ -19,6 +19,8 @@
 #ifndef BOOST_MOVE_MOVEABLE_HPP
 #define BOOST_MOVE_MOVEABLE_HPP
 
+#include "boost/utility/addressof.hpp"
+
 namespace boost {
 
 namespace detail {
@@ -33,19 +35,23 @@ template <typename T>
 class const_lvalue_ref
 {
 private: // representation
+
     const T* data_;
 
 public: // structors
+
     explicit const_lvalue_ref(const T& obj)
-        : data_(&obj)
+        : data_(boost::addressof(obj))
     {
     }
 
 public: // queries
+
     const T& get() const
     {
         return *data_;
     }
+
 };
 
 } // namespace detail
@@ -61,16 +67,19 @@ class move_source
     : private detail::const_lvalue_ref<T>
 {
 public: // structors
+
     explicit move_source(T& obj)
         : detail::const_lvalue_ref<T>(obj)
     {
     }
 
 public: // queries
+
     T& get() const
     {
         return const_cast<T&>(detail::const_lvalue_ref<T>::get());
     }
+
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -85,9 +94,11 @@ template <typename T>
 class move_return
 {
 private: // representation
+
     T returned_;
 
 public: // structors
+
     explicit move_return(T& returned)
         : returned_(move_source<T>(returned))
     {
@@ -102,10 +113,12 @@ public: // structors
     }
 
 public: // operators
+
     operator move_source<T>()
     {
         return move_source<T>(returned_);
     }
+
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -117,6 +130,7 @@ template <typename Deriving>
 class moveable
 {
 public: // operators
+
     operator detail::const_lvalue_ref<Deriving>() const
     {
         return detail::const_lvalue_ref<Deriving>(
@@ -139,8 +153,10 @@ public: // operators
     }
 
 protected: // noninstantiable
+
     moveable() { }
     ~moveable() { }
+
 };
 
 } // namespace boost
