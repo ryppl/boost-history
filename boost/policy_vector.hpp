@@ -1020,12 +1020,12 @@ public:
 
   // reverse iterator support
   typedef typename boost::reverse_iterator_generator<iterator, T,
-                            reference, pointer,
-                            random_access_iterator_tag, difference_type>::type
+                     reference, pointer,
+		     std::random_access_iterator_tag, difference_type>::type
 	  reverse_iterator;
   typedef typename boost::reverse_iterator_generator<const_iterator, T,
-                            const_reference, const_pointer,
-                            random_access_iterator_tag, difference_type>::type
+                     const_reference, const_pointer,
+		     std::random_access_iterator_tag, difference_type>::type
 	  const_reverse_iterator;
 
   reverse_iterator rbegin() { return reverse_iterator(end()); }
