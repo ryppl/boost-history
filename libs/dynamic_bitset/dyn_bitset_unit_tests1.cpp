@@ -32,8 +32,8 @@ void run_test_cases()
   for (std::size_t j = 0; j < long_string.size(); ++j)
     long_string[j] = '0' + (j % 2);
 
-  std::size_t N, ul_size = CHAR_BIT * sizeof(unsigned long),
-    block_size = CHAR_BIT * sizeof(Block);
+  std::size_t N, ul_width    = std::numeric_limits<unsigned long>::digits,
+                 block_width = std::numeric_limits<Block>::digits;
   unsigned long numbers[] = { 0, 40247,
                               std::numeric_limits<unsigned long>::max() };
 
@@ -44,25 +44,25 @@ void run_test_cases()
     N = 0;
     test_from_ulong<Block>(N, number);
 
-    N = std::size_t(0.7 * double(ul_size));
+    N = std::size_t(0.7 * double(ul_width));
     test_from_ulong<Block>(N, number);
 
-    N = 1 * ul_size;
+    N = 1 * ul_width;
     test_from_ulong<Block>(N, number);
 
-    N = std::size_t(1.3 * double(ul_size));
+    N = std::size_t(1.3 * double(ul_width));
     test_from_ulong<Block>(N, number);
 
-    N = std::size_t(0.7 * double(block_size));
+    N = std::size_t(0.7 * double(block_width));
     test_from_ulong<Block>(N, number);
 
-    N = block_size;
+    N = block_width;
     test_from_ulong<Block>(N, number);
 
-    N = std::size_t(1.3 * double(block_size));
+    N = std::size_t(1.3 * double(block_width));
     test_from_ulong<Block>(N, number);
 
-    N = 3 * block_size;
+    N = 3 * block_width;
     test_from_ulong<Block>(N, number);
   }
   //=====================================================================

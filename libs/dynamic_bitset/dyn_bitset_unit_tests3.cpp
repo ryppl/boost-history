@@ -8,8 +8,8 @@
 
 #include <cmath> // for pow
 
+#include "boost/limits.hpp"
 #include "boost/dynamic_bitset.hpp"
-
 #include "bitset_test.hpp"
 #include "boost/config.hpp"
 
@@ -35,7 +35,7 @@ void run_test_cases(BOOST_DUMMY_DEFAULT_ARGUMENT(Block))
   for (std::size_t i = 0; i < long_string.size(); ++i)
     long_string[i] = '0' + (i % 2);
 
-  std::size_t ul_size = CHAR_BIT * sizeof(unsigned long);
+  std::size_t ul_width = std::numeric_limits<unsigned long>::digits;
 
   //=====================================================================
   // Test b.to_long()
@@ -44,7 +44,7 @@ void run_test_cases(BOOST_DUMMY_DEFAULT_ARGUMENT(Block))
     Tests::to_ulong(b);
   }
   {
-    std::string ul_str(ul_size, '1');
+    std::string ul_str(ul_width, '1');
     boost::dynamic_bitset<Block> b(ul_str);
     Tests::to_ulong(b);
   }

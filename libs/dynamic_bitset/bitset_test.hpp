@@ -9,6 +9,8 @@
 #include <fstream>
 #include <algorithm> // for std::min
 
+#include "boost/config.hpp" // for BOOST_STATIC_CONSTANT
+#include "boost/limits.hpp"
 #include "boost/test/minimal.hpp"
 
 // Extract the bit at position n from num.
@@ -36,14 +38,15 @@ struct bitset_test {
   static void from_unsigned_long(Bitset b, unsigned long num)
   {
     // initializes the first M bit position to the cooresponding bit
-    // values in val. M is the smaller of N and the value CHAR_BIT *
-    // sizeof(unsigned long)
+    // values in val. M is the smaller of N and the width of unsigned
+    // long
 
     // missing from the std?
     //   if M < N then the remaining bit positions are initialized to zero
 
+    std::size_t ulong_width = std::numeric_limits<unsigned long>::digits;
     std::size_t N = b.size();
-    std::size_t M = std::min(N, CHAR_BIT * sizeof(unsigned long));
+    std::size_t M = std::min(N, ulong_width);
     std::size_t I;
     for (I = 0; I < M; ++I)
       BOOST_CHECK(b[I] == nth_bit(num, I));
@@ -90,6 +93,7 @@ struct bitset_test {
   }
 
   typedef typename Bitset::block_type Block;
+  BOOST_STATIC_CONSTANT(int, bits_per_block = Bitset::bits_per_block);
 
   // PRE: std::equal(first1, last1, first2) == true
   static void from_block_range(std::vector<Block> blocks)
@@ -98,19 +102,19 @@ struct bitset_test {
       Bitset bset(blocks.begin(), blocks.end());
       std::size_t n = blocks.size();
       for (std::size_t b = 0; b < n; ++b) {
-        for (std::size_t i = 0; i < sizeof(Block) * CHAR_BIT; ++i) {
-          std::size_t bit = b * sizeof(Block) * CHAR_BIT + i;
+        for (std::size_t i = 0; i < bits_per_block; ++i) {
+          std::size_t bit = b * bits_per_block + i;
           BOOST_CHECK(bset[bit] == nth_bit(blocks[b], i));
         }
       }
     }
     {
-      Bitset bset(blocks.size() * sizeof(Block) * CHAR_BIT);
+      Bitset bset(blocks.size() * bits_per_block);
       boost::from_block_range(blocks.begin(), blocks.end(), bset);
       std::size_t n = blocks.size();
       for (std::size_t b = 0; b < n; ++b) {
-        for (std::size_t i = 0; i < sizeof(Block) * CHAR_BIT; ++i) {
-          std::size_t bit = b * sizeof(Block) * CHAR_BIT + i;
+        for (std::size_t i = 0; i < bits_per_block; ++i) {
+          std::size_t bit = b * bits_per_block + i;
           BOOST_CHECK(bset[bit] == nth_bit(blocks[b], i));
         }
       }
@@ -463,7 +467,7 @@ struct bitset_test {
   static void to_ulong(const Bitset& lhs)
   {
     std::size_t N = lhs.size();
-    std::size_t n = CHAR_BIT * sizeof(unsigned long);
+    std::size_t n = std::numeric_limits<unsigned long>::digits;
     bool will_overflow = false;
     for (std::size_t I = n; I < N; ++I)
       if (lhs[I] != 0)
