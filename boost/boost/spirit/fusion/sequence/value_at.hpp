@@ -19,7 +19,9 @@ namespace boost { namespace fusion
         struct value_at_impl
         {
             template <typename Sequence, int N>
-            struct apply {};
+            struct apply {
+                typedef int type;
+            };
         };
 
         template <typename Sequence, int N>

@@ -59,6 +59,12 @@ namespace boost { namespace fusion
             return *this;
         }
 
+        typedef detail::tuple_builder<BOOST_PP_ENUM_PARAMS(FUSION_MAX_TUPLE_SIZE, T)> builder;
+        
+        typedef typename builder::begin begin;
+        typedef typename builder::end end;
+        typedef typename builder::size size;
+
         base_type& base() { return *this; }
         base_type const& base() const { return *this; }
     };

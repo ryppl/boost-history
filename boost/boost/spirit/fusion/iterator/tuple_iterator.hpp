@@ -27,17 +27,24 @@ namespace boost { namespace fusion
     struct void_t;
 
     template <int N, typename Tuple>
-    struct tuple_iterator : iterator_base<tuple_iterator<N, Tuple> >
+    struct tuple_iterator;
+
+    template <int N, typename Tuple>
+    struct tuple_iterator_base : iterator_base<tuple_iterator<N, Tuple> >
     {
         typedef mpl::int_<N> index;
         typedef Tuple tuple;
         typedef tuple_iterator_tag tag;
         typedef tuple_iterator<N, Tuple> self_type;
+    };
 
+    template <int N, typename Tuple>
+    struct tuple_iterator : tuple_iterator_base<N,Tuple>
+    {
         typedef typename
             mpl::apply_if<
                 mpl::less<index, typename Tuple::size>
-              , detail::tuple_iterator_next_traits_impl<self_type>
+              , detail::tuple_iterator_next_traits_impl<tuple_iterator_base<N,Tuple> >
               , mpl::identity<void_t>
             >::type
         next;
@@ -45,7 +52,7 @@ namespace boost { namespace fusion
         typedef typename
             mpl::apply_if<
                 mpl::less<index, typename Tuple::size>
-              , detail::tuple_iterator_value_traits_impl<self_type>
+              , detail::tuple_iterator_value_traits_impl<tuple_iterator_base<N,Tuple> >
               , mpl::identity<void_t>
             >::type
         type;

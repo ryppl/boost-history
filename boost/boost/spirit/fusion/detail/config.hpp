@@ -11,6 +11,9 @@
 #include <boost/config.hpp>
 #include <boost/detail/workaround.hpp>
 #include <boost/preprocessor/cat.hpp>
+#if BOOST_WORKAROUND(BOOST_MSVC,==1200)
+#include <boost/mpl/bool.hpp>
+#endif
 
 #if     (defined(BOOST_MSVC) && (BOOST_MSVC < 1310))                            \
     ||  (defined(__BORLANDC__) && (__BORLANDC__ <= 0x570))                      \
@@ -300,6 +303,58 @@ FUSION_MSVC_ETI_WRAPPER(value_type)
 # define FUSION_GET_VALUE_TYPE(T) typename T::value_type
 #endif
 
+#if BOOST_WORKAROUND(BOOST_MSVC, <= 1300)
+
+namespace boost {namespace fusion { namespace aux {
+template< typename T >
+struct msvc_never_true
+{
+    enum { value = false };
+};
+}}} //namespace boost::fusion::aux
+
+#endif
+
+namespace boost {namespace fusion { 
+#if BOOST_WORKAROUND(BOOST_MSVC, <= 1300)
+
+namespace aux {
+    // msvc_apply
+#define BOOST_MPL_AUX_MSVC_DTW_NAME msvc_apply
+#define BOOST_MPL_AUX_MSVC_DTW_ORIGINAL_NAME apply
+#define BOOST_MPL_AUX_MSVC_DTW_ARITY 1
+#include "boost/mpl/aux_/msvc_dtw.hpp"
+
+} //namespace aux
+
+template<typename A,typename B>
+struct fusion_apply
+{
+    typedef typename aux::msvc_apply<A>::template result_<B>::type type;
+};
+
+#else 
+template<typename A,typename B>
+struct fusion_apply
+{
+    typedef typename A::template apply<B>::type type;
+};
+#endif
+}} //namespace boost::fusion
+
+namespace boost {namespace fusion {namespace detail {
+#if BOOST_WORKAROUND(BOOST_MSVC, <= 1200)
+    template<typename T>
+    struct bool_base {};
+    template<>
+    struct bool_base<mpl::bool_<true> > : boost::mpl::bool_<true>{};
+    template<>
+    struct bool_base<mpl::bool_<false> > : boost::mpl::bool_<false>{};
+#else
+    template<typename T>
+    struct bool_base : T {};
+#endif
+}}}
 ///////////////////////////////////////////////////////////////////////////////
 //
 //   Borland is so flaky with const correctness of iterators. It's getting

@@ -20,6 +20,41 @@ namespace boost { namespace fusion
     template <typename Tag>
     struct begin_impl;
 
+    namespace range_detail
+    {
+        template <typename Sequence>
+        struct begin_traits_impl
+        {
+            typedef typename Sequence::begin_type type;
+
+            static type
+            call(Sequence const& s);
+        };
+
+        template <typename Sequence>
+        inline typename begin_traits_impl<Sequence>::type
+        begin_traits_impl<Sequence>::call(Sequence const& s)
+        {
+            return s.first;
+        }
+
+        template <typename Sequence>
+        struct end_traits_impl
+        {
+            typedef typename Sequence::end_type type;
+
+            static type
+            call(Sequence const& s);
+        };
+
+        template <typename Sequence>
+        inline typename end_traits_impl<Sequence>::type
+        end_traits_impl<Sequence>::call(Sequence const& s)
+        {
+            return s.last;
+        }
+    }
+
     namespace meta
     {
         template <typename Tag>
@@ -29,16 +64,8 @@ namespace boost { namespace fusion
         struct begin_impl<range_tag>
         {
             template <typename Sequence>
-            struct apply
-            {
-                typedef typename Sequence::begin_type type;
-
-                static type
-                call(Sequence const& s)
-                {
-                    return s.first;
-                }
-            };
+            struct apply : range_detail::begin_traits_impl<Sequence>
+            {};
         };
 
         template <typename Tag>
@@ -48,16 +75,8 @@ namespace boost { namespace fusion
         struct end_impl<range_tag>
         {
             template <typename Sequence>
-            struct apply
-            {
-                typedef typename Sequence::end_type type;
-
-                static type
-                call(Sequence const& s)
-                {
-                    return s.last;
-                }
-            };
+            struct apply : range_detail::end_traits_impl<Sequence>
+            {};
         };
     }
 }}

@@ -21,6 +21,43 @@ namespace boost { namespace fusion
     template <typename SequenceT>
     struct type_sequence;
 
+    namespace type_sequence_detail
+    {
+        template <typename Sequence>
+        struct begin_traits_impl
+        {
+            typedef type_sequence_iterator<
+                    typename mpl::begin<typename Sequence::sequence_type>::type>
+            type;
+
+            static type
+            call(Sequence);
+        };
+
+        template <typename Sequence>
+        begin_traits_impl<Sequence>::type begin_traits_impl<Sequence>::call(Sequence) 
+        {
+            FUSION_RETURN_DEFAULT_CONSTRUCTED;
+        }
+
+        template <typename Sequence>
+        struct end_traits_impl
+        {
+            typedef type_sequence_iterator<
+                    typename mpl::end<typename Sequence::sequence_type>::type>
+            type;
+
+            static type
+            call(Sequence);
+        };
+
+        template <typename Sequence>
+        end_traits_impl<Sequence>::type end_traits_impl<Sequence>::call(Sequence) 
+        {
+            FUSION_RETURN_DEFAULT_CONSTRUCTED;
+        }
+    }
+
     namespace meta
     {
         template <typename Tag>
@@ -30,18 +67,8 @@ namespace boost { namespace fusion
         struct begin_impl<type_sequence_tag>
         {
             template <typename Sequence>
-            struct apply
-            {
-                typedef type_sequence_iterator<
-                    typename mpl::begin<typename Sequence::sequence_type>::type>
-                type;
-
-                static type
-                call(Sequence)
-                {
-                    FUSION_RETURN_DEFAULT_CONSTRUCTED;
-                }
-            };
+            struct apply : type_sequence_detail::begin_traits_impl<Sequence>
+            {};
         };
 
         template <typename Tag>
@@ -51,18 +78,8 @@ namespace boost { namespace fusion
         struct end_impl<type_sequence_tag>
         {
             template <typename Sequence>
-            struct apply
-            {
-                typedef type_sequence_iterator<
-                    typename mpl::end<typename Sequence::sequence_type>::type>
-                type;
-
-                static type
-                call(Sequence)
-                {
-                    FUSION_RETURN_DEFAULT_CONSTRUCTED;
-                }
-            };
+            struct apply : type_sequence_detail::end_traits_impl<Sequence>
+            {};
         };
     }
 }}

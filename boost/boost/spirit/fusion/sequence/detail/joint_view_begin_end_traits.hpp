@@ -59,12 +59,36 @@ namespace boost { namespace fusion
                 }
 
                 static type
-                call(Sequence& s)
-                {
-                    return call(s, equal_to());
-                }
+                call(Sequence& s);
             };
         };
+
+        namespace joint_view_detail {
+            template<typename Sequence>
+            begin_impl<joint_view_tag>::apply<Sequence>::type
+            call(Sequence& s, mpl::true_) {
+                return s.concat;
+            }
+            template<typename Sequence>
+            begin_impl<joint_view_tag>::apply<Sequence>::type
+            call(Sequence& s, mpl::false_) {
+                return type(s.first, s.concat);
+            }
+        }
+
+        template<typename Sequence>
+        begin_impl<joint_view_tag>::apply<Sequence>::type 
+        begin_impl<joint_view_tag>::apply<Sequence>::call(Sequence& s)
+        {
+            return joint_view_detail::call(s, equal_to());
+        }
+
+        template<typename Sequence>
+        end_impl<joint_view_tag>::apply<Sequence>::type 
+        end_impl<joint_view_tag>::apply<Sequence>::call(Sequence& s)
+        {
+            return s.concat_last;
+        }
 
         template <typename Tag>
         struct end_impl;
@@ -78,12 +102,17 @@ namespace boost { namespace fusion
                 typedef typename Sequence::concat_last_type type;
 
                 static type
-                call(Sequence& s)
-                {
-                    return s.concat_last;
-                }
+                call(Sequence& s);
             };
         };
+
+        template<typename Sequence>
+        end_impl<joint_view_tag>::apply<Sequence>::type 
+        end_impl<joint_view_tag>::apply<Sequence>::call(Sequence& s)
+        {
+            return s.concat_last;
+        }
+
     }
 }}
 

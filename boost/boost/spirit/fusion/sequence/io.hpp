@@ -21,21 +21,22 @@ namespace boost { namespace fusion
     //  Sequence I/O (<< and >> operators)
     //
     ///////////////////////////////////////////////////////////////////////////
+
     template <typename OStream, typename Sequence>
     inline OStream&
-    operator<<(OStream& os, Sequence const& seq)
+    operator<<(OStream& os, sequence_base<Sequence> const& seq)
     {
         detail::print_sequence(os,
-            as_fusion_sequence<Sequence const>::convert(seq));
+            as_fusion_sequence<Sequence const>::convert(seq.cast()));
         return os;
     }
 
     template <typename IStream, typename Sequence>
     inline IStream&
-    operator>>(IStream& is, Sequence& seq)
+    operator>>(IStream& is, sequence_base<Sequence>& seq)
     {
         detail::read_sequence(is,
-            as_fusion_sequence<Sequence>::convert(seq));
+            as_fusion_sequence<Sequence>::convert(seq.cast()));
         return is;
     }
 }}

@@ -37,30 +37,38 @@ namespace boost { namespace fusion
         };
     }
 
-    template <typename Iterator>
-    typename meta::deref<Iterator>::type
-    deref(Iterator const& i)
-    {
-        typedef as_fusion_iterator<Iterator> converter;
-        typedef typename converter::type iter;
+    namespace deref_detail {
+        template <typename Iterator>
+        typename meta::deref<Iterator>::type
+        deref(Iterator const& i,mpl::true_)
+        {
+            typedef as_fusion_iterator<Iterator> converter;
+            typedef typename converter::type iter;
 
-        typename meta::deref<iter>::type result =
-            meta::deref_impl<FUSION_GET_TAG(iter)>::
-                template apply<iter>::call(converter::convert(i));
-        return result;
+            typename meta::deref<iter>::type result =
+                meta::deref_impl<FUSION_GET_TAG(iter)>::
+                    template apply<iter>::call(converter::convert(i));
+            return result;
+        }
+
+        template <typename Iterator>
+        inline typename meta::deref<Iterator>::type
+        deref(Iterator& i,mpl::false_)
+        {
+            typedef as_fusion_iterator<Iterator> converter;
+            typedef typename converter::type iter;
+
+            typename meta::deref<iter>::type result =
+                meta::deref_impl<FUSION_GET_TAG(iter)>::
+                    template apply<iter>::call(converter::convert(i));
+            return result;
+        }
     }
 
     template <typename Iterator>
-    inline typename meta::deref<Iterator>::type
-    deref(Iterator& i)
-    {
-        typedef as_fusion_iterator<Iterator> converter;
-        typedef typename converter::type iter;
-
-        typename meta::deref<iter>::type result =
-            meta::deref_impl<FUSION_GET_TAG(iter)>::
-                template apply<iter>::call(converter::convert(i));
-        return result;
+    typename meta::deref<Iterator>::type
+    deref(Iterator& i) {
+        return deref_detail::deref(i,is_const<Iterator>());
     }
 
     template <typename Iterator>

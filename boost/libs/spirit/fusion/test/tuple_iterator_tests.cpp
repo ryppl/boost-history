@@ -45,7 +45,8 @@ test_main(int, char*[])
 
 #if BOOST_WORKAROUND(BOOST_MSVC, <= 1200)
         // ?%$# VC6 I don't know why this is needed! $$$LOOK$$$
-        next(i);
+        //This is no longer needed...
+//        next(i);
 #endif
 
         BOOST_TEST(*i == 1);

@@ -10,7 +10,7 @@
 
 #include <boost/spirit/fusion/detail/config.hpp>
 #include <boost/spirit/fusion/sequence/as_fusion_sequence.hpp>
-
+#include <boost/type_traits/is_const.hpp>
 namespace boost { namespace fusion
 {
     namespace meta
@@ -35,6 +35,36 @@ namespace boost { namespace fusion
         };
     }
 
+#if BOOST_WORKAROUND(BOOST_MSVC,==1200)
+    namespace detail {
+        template <typename Sequence>
+        inline typename meta::begin<Sequence const>::type
+        begin(Sequence const& seq,mpl::bool_<true>)
+        {
+            typedef meta::begin<Sequence const> begin_meta;
+            return meta::begin_impl<BOOST_DEDUCED_TYPENAME begin_meta::seq::tag>::
+                template apply<BOOST_DEDUCED_TYPENAME begin_meta::seq const>::call(
+                    begin_meta::seq_converter::convert_const(seq));
+        }
+
+        template <typename Sequence>
+        inline typename meta::begin<Sequence>::type
+        begin(Sequence& seq,mpl::bool_<false>)
+        {
+            typedef meta::begin<Sequence> begin_meta;
+            return meta::begin_impl<BOOST_DEDUCED_TYPENAME begin_meta::seq::tag>::
+                template apply<BOOST_DEDUCED_TYPENAME begin_meta::seq>::call(
+                    begin_meta::seq_converter::convert(seq));
+        }
+    }
+
+    template <typename Sequence>
+    inline typename meta::begin<Sequence>::type
+    begin(Sequence& seq)
+    {
+        return detail::begin(seq,is_const<Sequence>());
+    }
+#else
     template <typename Sequence>
     inline typename meta::begin<Sequence const>::type
     begin(Sequence const& seq)
@@ -54,6 +84,7 @@ namespace boost { namespace fusion
             template apply<typename begin_meta::seq>::call(
                 begin_meta::seq_converter::convert(seq));
     }
+#endif
 }}
 
 #endif

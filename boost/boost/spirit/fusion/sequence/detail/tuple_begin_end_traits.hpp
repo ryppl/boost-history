@@ -132,10 +132,8 @@ namespace boost { namespace mpl
         template <typename Tuple, typename T>
         struct apply
         {
-            typedef typename
-                fusion::meta::generate<
-                    typename fusion::meta::push_front<Tuple, T>::type
-                >::type
+            typedef typename fusion::meta::push_front<Tuple, T> func1_;
+            typedef typename fusion::meta::generate<FUSION_GET_TYPE(func1_)>::type
             type;
         };
     };

@@ -35,11 +35,13 @@ namespace boost { namespace fusion
 
         template <typename I1, typename I2>
         struct equal_to
-            : equal_to_impl<typename as_fusion_iterator<I1>::type::tag>::
+            : detail::bool_base<
+              equal_to_impl<typename as_fusion_iterator<I1>::type::tag>::
                 template apply<
                     typename as_fusion_iterator<I1>::type
                   , typename as_fusion_iterator<I2>::type
-                >::type {};
+                >::type
+              > {};
     }
 }}
 

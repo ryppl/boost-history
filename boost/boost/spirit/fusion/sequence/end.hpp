@@ -35,24 +35,33 @@ namespace boost { namespace fusion
         };
     }
 
-    template <typename Sequence>
-    inline typename meta::end<Sequence const>::type
-    end(Sequence const& seq)
-    {
-        typedef meta::end<Sequence const> end_meta;
-        return meta::end_impl<typename end_meta::seq::tag>::
-            template apply<typename end_meta::seq const>::call(
-                end_meta::seq_converter::convert_const(seq));
-    }
+    namespace detail {
+        template <typename Sequence>
+        inline typename meta::end<Sequence const>::type
+        end(Sequence const& seq,mpl::true_)
+        {
+            typedef meta::end<Sequence const> end_meta;
+            return meta::end_impl<BOOST_DEDUCED_TYPENAME end_meta::seq::tag>::
+                template apply<BOOST_DEDUCED_TYPENAME end_meta::seq const>::call(
+                    end_meta::seq_converter::convert_const(seq));
+        }
 
+        template <typename Sequence>
+        inline typename meta::end<Sequence>::type
+        end(Sequence& seq,mpl::false_)
+        {
+            typedef meta::end<Sequence> end_meta;
+            return meta::end_impl<BOOST_DEDUCED_TYPENAME end_meta::seq::tag>::
+                template apply<BOOST_DEDUCED_TYPENAME end_meta::seq>::call(
+                    end_meta::seq_converter::convert(seq));
+        }
+
+    }
     template <typename Sequence>
     inline typename meta::end<Sequence>::type
     end(Sequence& seq)
     {
-        typedef meta::end<Sequence> end_meta;
-        return meta::end_impl<typename end_meta::seq::tag>::
-            template apply<typename end_meta::seq>::call(
-                end_meta::seq_converter::convert(seq));
+        return detail::end(seq,is_const<Sequence>());
     }
 }}
 
