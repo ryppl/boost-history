@@ -1,0 +1,8 @@
+subproject libs/numeric/bindings/lapack ;
+# subinclude libs/numeric/blasbindings/tst ;
+
+lib bindings_lapack 
+        : traits.cpp 
+        :  <include>$(BOOST_ROOT)
+	   <include>$(B_ROOT)
+        ;
