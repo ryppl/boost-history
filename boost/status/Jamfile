@@ -71,6 +71,7 @@ BOOST_TEST_SUFFIX ?= .test ;
 # dependency fails to build. Used for expected-failure tests.
 rule failed-test-file ( test-file : dependency + )
 {
+    catenate-output-on-failure $(test-file) : $(dependency[1]) ;
     DEPENDS $(test-file) : $(dependency) ;
     NOCARE $(dependency) ;
 }
@@ -79,22 +80,37 @@ rule failed-test-file ( test-file : dependency + )
 # dependency builds. Used for expected-failure tests.
 rule succeeded-test-file ( test-file : dependency + )
 {
+    catenate-output-on-failure $(test-file) : $(dependency[1]) ;
     DEPENDS $(test-file) : $(dependency) ;
     NOCARE $(dependency) ;
 }
 
-NEWLINE = "
-" ;
+rule catenate-output-on-failure ( test-file : dependency )
+{
+    if $(gTEST_OUTPUT_FILE($(dependency)))
+    {
+        output-file on $(test-file) = $(gTEST_OUTPUT_FILE($(dependency))) ;
+    }
+}
 
 if $(NT)
 {
+    CATENATE1 = "if exist \"" ;
+    CATENATE2 = "\" ( type \"" ;
+    CATENATE3 = "\"
+ECHO ****************************************************** )" ;
+    
     actions failed-test-file bind output-file source-files
     {
         echo "$(source-files)" > $(<:S=.test)
         if EXIST "$(>)". (
           if EXIST "$(<:S=.success)". del /f/q "$(<:S=.success)".
           echo "failed" > "$(<:S=.failure)"
-          echo ***************** failed test: $(<:B:S=) ******************** $(NEWLINE)"type "$(output-file)
+            
+          echo *
+          echo ***************** failed test: $(<:B:S=) ********************
+          $(CATENATE1)$(output-file)$(CATENATE2)$(output-file)$(CATENATE3)
+          echo *
         ) ELSE (
           if EXIST "$(<:S=.failure)". del /f/q "$(<:S=.failure)".
           echo succeeded > "$(<:S=.success)"
@@ -112,12 +128,17 @@ if $(NT)
           if EXIST "$(<:S=.success)". del /f/q "$(<:S=.success)".
           echo failed > "$(<:S=.failure)"
           echo failed > $(>)
-          echo ***************** failed test: $(<:B:S=) ******************** $(NEWLINE)"type "$(output-file)
+            
+          echo *
+          echo ***************** failed test: $(<:B:S=) ********************
+          $(CATENATE1)$(output-file)$(CATENATE2)$(output-file)$(CATENATE3)
+          echo *
         )
     }
 }
 else
 {
+    CATENATE = "cat " ;
 # need UNIX actions    
 }
 
@@ -227,7 +248,11 @@ rule run-test # target : sources : requirements
 }
 
 # The rule is just used for argument checking
-rule capture-run-output ( target : executable + ) { }
+rule capture-run-output ( target : executable + )
+{
+    gTEST_OUTPUT_FILE($(target)) = $(target:S=.output) ;
+}
+
 if $(UNIX)  
 {
     actions capture-run-output bind INPUT_FILES
