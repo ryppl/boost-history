@@ -2,6 +2,12 @@
 \usepackage{hyperref}
 \usepackage{fullpage}
 
+\newcommand{\comment}[2]{[{\Large\sc #1:} \textsf{#2}]}
+
+\newcommand{\doug}[1]{\comment{Doug}{#1}}
+\newcommand{\gary}[1]{\comment{Gary}{#1}}
+\newcommand{\jaakko}[1]{\comment{Jaakko}{#1}}
+
 \begin{document}
 
 \markboth{Doc. no: DRAFT}{Doc. no: DRAFT}
@@ -125,7 +131,14 @@ support $N$ arguments: instead, a single overload suffices for any
 number of arguments. The solution matches all three criteria (C1-C3)
 of the argument forwarding paper~\cite{Dimov02} by bundling the
 arguments into a single argument and providing an unbundling method to
-pass the arguments on to another function.
+pass the arguments on to another function. Note, that the solution
+directly supports only functions which accept an arbitrary 
+number of arguments. With additional library tools, it is possible
+to define perfectly forwarding functions that only match to
+invocations with a fixed number of arguments (or even with the number
+of arguments in a fixed range). This is explained in 
+Section~\ref{somewhere???}.
+\jaakko{Must add a section somewhere}
 
 \section{Syntax and Semantics}
 \subsection{Variadic templates}
@@ -141,6 +154,7 @@ arbitrary number of template arguments as:
 template<typename T, ... Elements> class Foo;
 \end{verbatim}
 
+\noindent
 Here, {\tt T} is the name of the template type parameter and {\tt
   Args} is the name of a ``type parameter pack'' containing
 the (possibly empty) set of template arguments given to {\tt
@@ -149,18 +163,24 @@ template template arguments but themselves have no representation in
 the C++ type system (i.e., they are not first-class entities in the
 type system as are integral constants, types, and templates).
 
+\jaakko{Changed the wording of the next to paragraphs to be
+more straightforward}.
 Function templates may also be declared to accept variable-length
-template parameter lists in the same manner as class templates. In
-this case (and barring reuse of the template parameter pack as the
-``type'' of the final function parameter, as described in the next
-section) arguments may only be specified explicitly when calling the
-function template; they are not deduced, e.g.,:
+template parameter lists in the same manner as class templates. 
+Arguments can be specified explicitly when calling the function
+template, e.g:
 
 \begin{verbatim}
 template<... Args> void f();
 // ... 
 f<int, double>(); // Args will be contain <int, double>
 \end{verbatim}
+%
+\jaakko{Is f() a valid call, giving Args = $<>$, or should it be f$<>$()?} 
+%
+The next section describes when the types of the elements in 
+a type parameter pack can be deduced from the argument types
+of the call. 
 
 \subsection{Typesafe variadic functions}
 When a function template header contains a template parameter pack,
@@ -174,8 +194,9 @@ template<... Args>
   void printf(const char* format, Args args);
 \end{verbatim}
 
+\noindent
 {\tt Args} is deduced as a template parameter pack containing the types of
-the arguments, then {\tt args} is a value parameter pack containing
+the arguments, and {\tt args} is a value parameter pack containing
 the function call arguments passed after the {\tt format}
 argument.\footnote{Note that, unlike C, we do not require but
   do allow arguments prior to the argument bundle.} Like template
@@ -197,6 +218,7 @@ those types via {\tt tuple<Elements...>}; should we wish to append an
 by David Vandevoorde (???), represents an unpacking (or
 ``uncurrying'') of a template parameter pack into separate
 arguments at the place in the instantiation.
+\jaakko{I'm not sure it was Daveed, is a general thank in the Acks ok?}
 
 Value parameter packs are similarly expanded within a function call,
 so that, for instance, a {\tt printf}-like function may pass the
@@ -221,7 +243,7 @@ template<typename T, ... Args>
 \subsection{Argument type deduction}
 The type of each element in the template parameter pack is deduced to
 achieve perfect argument forwarding. For an argument {\tt xi}, the
-type {\tt Ti} of the corresponding tuple element is the parameter type
+type {\tt Ti} of the corresponding parameter pack element is the parameter type
 of the {\tt forward} function determined by overload resolution using
 the following two candidates:
 \begin{verbatim}
@@ -302,13 +324,14 @@ support partial ordering with variadic templates, introduce two
 additional bullets:
 \begin{itemize}
 \item If after removing the variable-length template parameter list
-  designator from both templates the template parameter lists of the
+  designator \verb|...| from both templates the template parameter lists of the
   templates are of different length, append unique template variant
   parameters to the shorter template parameter list until the template
   parameter lists are of equal length.
 \item A binding of an argument to a variant parameter is weaker than a
   binding of an argument to a parameter of the same kind.
 \end{itemize}
+\jaakko{Note, added \texttt{...} in the first rule to clarify what the 'designator' is}
 
 \subsection{Overloading}
 \label{overloading}
@@ -327,12 +350,14 @@ prefers non-template functions to template functions when the
 conversion sequences are otherwise equal.
 
 \subsection{The types of variadic templates}
-Since parameter packs have no associated types, we specify the
+Since parameter packs do not have a type, we specify the
 type of an instantiation of a typesafe variadic function to be equivalent
 to the type of a nontemplate function with all template parameters
 substituted and both the template and value parameter packs unpacked
 at the end of the template and function parameter lists,
 respectively. Revisiting the {\tt printf} definition
+\jaakko{have no associated types $\rightarrow$ do not have a type. The 
+generic programmer in me immediately starts to think about concepts, associated types, ...}
 
 \begin{verbatim}
 template<typename T, ... Args>
@@ -613,7 +638,7 @@ input tuple.
 \begin{verbatim}
 template<... Args>
   auto reverse(tuple<>, Args args)
-  { return make_tuple(args..); }
+  { return make_tuple(args...); }
 
 template<typename Tuple, ... Args>
   auto reverse(const Tuple& t, Args args)
