@@ -228,7 +228,7 @@ rule capture-run-output1 ( target : executable )
     # Make sure no confusing output about setting or exporting PATH or
     # LD_LIBRARY_PATH is seen unless it is actually used.
     local p = $(gRUN_PATH($(executable))) ;
-    if $(gRUN_PATH($(executable))) 
+    if $(p)
     {
         RUN_PATH on $(target) = $(p) $(ENV_PATH) ;
         PATH_VAR on $(target) = PATH ;
@@ -240,15 +240,15 @@ rule capture-run-output1 ( target : executable )
     }
     
     p = $(gRUN_LD_LIBRARY_PATH($(executable))) ;
-    if $(UNIX) 
-    {
-    	RUN_LD_LIBRARY_PATH on $(target) = $(p) $(ENV_LD_LIBRARY_PATH) ;
-        LD_LIBRARY_PATH_VAR on $(target) = LD_LIBRARY_PATH ;
-    }
-    else
+    if $(NT)
     {
     	RUN_LD_LIBRARY_PATH on $(target) = ;
         LD_LIBRARY_PATH_VAR on $(target) = ;
+    }
+    else if $(p)
+    {
+    	RUN_LD_LIBRARY_PATH on $(target) = $(p) $(ENV_LD_LIBRARY_PATH) ;
+        LD_LIBRARY_PATH_VAR on $(target) = LD_LIBRARY_PATH ;
     }
     execute-test $(target) : $(executable) ;
 }
