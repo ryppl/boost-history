@@ -10,7 +10,8 @@
 #include <typeinfo>
 
 #if defined(__GNUC__) && (__GNUC__ >= 3)
-#  include <cxxabi.h>
+#  include <cxxabi.h> // abi::__cxa_demangle
+#  include <malloc.h> // free
 
    namespace boost { namespace detail
    {
