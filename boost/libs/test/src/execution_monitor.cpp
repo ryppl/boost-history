@@ -150,20 +150,20 @@ int boost::execution_monitor::execute( int timeout )
     //  easier than answering questions about non-const usage.
 
     catch( char const* ex )
-      { detail::report_error( execution_exception::cpp_exception_error, "C string:", ex ); }
+      { detail::report_error( execution_exception::cpp_exception_error, "C string: ", ex ); }
     catch( std::string const& ex )
       { detail::report_error( execution_exception::cpp_exception_error, "std::string", ex.c_str() ); }
 
     //  std:: exceptions
 
     catch( std::bad_alloc const& ex )
-      { detail::report_error( execution_exception::cpp_exception_error, "std::bad_alloc:", ex.what() ); }
+      { detail::report_error( execution_exception::cpp_exception_error, "std::bad_alloc: ", ex.what() ); }
 
 #if !defined(__BORLANDC__) || __BORLANDC__ > 0x0551
     catch( std::bad_cast const& ex )
-      { detail::report_error( execution_exception::cpp_exception_error, "std::bad_cast:", ex.what() ); }
+      { detail::report_error( execution_exception::cpp_exception_error, "std::bad_cast: ", ex.what() ); }
     catch( std::bad_typeid const& ex )
-      { detail::report_error( execution_exception::cpp_exception_error, "std::bad_typeid:", ex.what() ); }
+      { detail::report_error( execution_exception::cpp_exception_error, "std::bad_typeid: ", ex.what() ); }
 #else
     catch( std::bad_cast const& ex )
       { detail::report_error( execution_exception::cpp_exception_error, "std::bad_cast", "" ); }
@@ -172,27 +172,27 @@ int boost::execution_monitor::execute( int timeout )
 #endif
 
     catch( std::bad_exception const& ex )
-      { detail::report_error( execution_exception::cpp_exception_error, "std::bad_exception:", ex.what() ); }
+      { detail::report_error( execution_exception::cpp_exception_error, "std::bad_exception: ", ex.what() ); }
     catch( std::domain_error const& ex )
-      { detail::report_error( execution_exception::cpp_exception_error, "std::domain_error:", ex.what() ); }
+      { detail::report_error( execution_exception::cpp_exception_error, "std::domain_error: ", ex.what() ); }
     catch( std::invalid_argument const& ex )
-      { detail::report_error( execution_exception::cpp_exception_error, "std::invalid_argument:", ex.what() ); }
+      { detail::report_error( execution_exception::cpp_exception_error, "std::invalid_argument: ", ex.what() ); }
     catch( std::length_error const& ex )
-      { detail::report_error( execution_exception::cpp_exception_error, "std::length_error:", ex.what() ); }
+      { detail::report_error( execution_exception::cpp_exception_error, "std::length_error: ", ex.what() ); }
     catch( std::out_of_range const& ex )
-      { detail::report_error( execution_exception::cpp_exception_error, "std::out_of_range:", ex.what() ); }
+      { detail::report_error( execution_exception::cpp_exception_error, "std::out_of_range: ", ex.what() ); }
     catch( std::range_error const& ex )
-      { detail::report_error( execution_exception::cpp_exception_error, "std::range_error:", ex.what() ); }
+      { detail::report_error( execution_exception::cpp_exception_error, "std::range_error: ", ex.what() ); }
     catch( std::overflow_error const& ex )
-      { detail::report_error( execution_exception::cpp_exception_error, "std::overflow_error:", ex.what() ); }
+      { detail::report_error( execution_exception::cpp_exception_error, "std::overflow_error: ", ex.what() ); }
     catch( std::underflow_error const& ex )
-      { detail::report_error( execution_exception::cpp_exception_error, "std::underflow_error:", ex.what() ); }
+      { detail::report_error( execution_exception::cpp_exception_error, "std::underflow_error: ", ex.what() ); }
     catch( std::logic_error const& ex )
-      { detail::report_error( execution_exception::cpp_exception_error, "std::logic_error:", ex.what() ); }
+      { detail::report_error( execution_exception::cpp_exception_error, "std::logic_error: ", ex.what() ); }
     catch( std::runtime_error const& ex )
-      { detail::report_error( execution_exception::cpp_exception_error, "std::runtime_error:", ex.what() ); }
+      { detail::report_error( execution_exception::cpp_exception_error, "std::runtime_error: ", ex.what() ); }
     catch( std::exception const& ex )
-      { detail::report_error( execution_exception::cpp_exception_error, "std::exception:", ex.what() ); }
+      { detail::report_error( execution_exception::cpp_exception_error, "std::exception: ", ex.what() ); }
 
 #if   defined(BOOST_MS_STRCTURED_EXCEPTION_HANDLING)
     catch( detail::ms_se_exception const& ex )
