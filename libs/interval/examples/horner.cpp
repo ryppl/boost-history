@@ -11,10 +11,10 @@ I horner(const I& x, const I p[], int n) {
   // define the unprotected version of the interval type
   typedef typename boost::interval_lib::unprotect<I>::type R;
 
-  R a = x;
+  const R& a = x;
   R y = p[n - 1];
   for(int i = n - 2; i >= 0; i--) {
-    y = y * a + (R)(p[i]);
+    y = y * a + (const R&)(p[i]);
   }
   return y;
 

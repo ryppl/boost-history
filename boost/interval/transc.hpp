@@ -35,7 +35,7 @@ interval<T, Traits> fmod(const interval<T, Traits>& x,
   typedef interval<T, typename interval_lib::unprotect<Traits>::type> I;
   const T& yb = detail::sign(x.lower()) ? y.lower() : y.upper();
   T n = rnd.int_down(rnd.div_down(x.lower(), yb));
-  return (I)x - n * (I)y;
+  return (const I&)x - n * (const I&)y;
 }
 
 template<class T, class Traits> inline
@@ -44,7 +44,7 @@ interval<T, Traits> fmod(const interval<T, Traits>& x, const T& y)
   typename Traits::rounding rnd;
   typedef interval<T, typename interval_lib::unprotect<Traits>::type> I;
   T n = rnd.int_down(rnd.div_down(x.lower(), y));
-  return (I)x - n * I(y);
+  return (const I&)x - n * I(y);
 }
 
 template<class T, class Traits> inline
@@ -54,7 +54,7 @@ interval<T, Traits> fmod(const T& x, const interval<T, Traits>& y)
   typedef interval<T, typename interval_lib::unprotect<Traits>::type> I;
   const T& yb = detail::sign(x) ? y.lower() : y.upper();
   T n = rnd.int_down(rnd.div_down(x, yb));
-  return x - n * (I)y;
+  return x - n * (const I&)y;
 }
 
 template<class T, class Traits> inline
@@ -92,9 +92,9 @@ interval<T, Traits> cos(const interval<T, Traits>& x)
 
   // get lower bound within [0, pi]
   const I pi2 = interval_lib::pi_2_1<I>();
-  I tmp = fmod((I)x, pi2);
+  I tmp = fmod((const I&)x, pi2);
   if (width(tmp) >= pi2.lower())
-    return I(-1, 1, true);     // we are covering a full period
+    return interval<T, Traits>(-1, 1, true);     // we are covering a full period
   if (tmp.lower() >= rnd.pi_up())
     return -cos(tmp - interval_lib::pi<I>());
   T l = tmp.lower();
@@ -115,7 +115,7 @@ interval<T, Traits> sin(const interval<T, Traits>& x)
 {
   typename Traits::rounding rnd;
   typedef interval<T, typename interval_lib::unprotect<Traits>::type> I;
-  return cos((I)x - interval_lib::pi_1_2<I>());
+  return cos((const I&)x - interval_lib::pi_1_2<I>());
 }
 
 template<class T, class Traits> inline
@@ -126,7 +126,7 @@ interval<T, Traits> tan(const interval<T, Traits>& x)
 
   // get lower bound within [-pi/2, pi/2]
   const I pi = interval_lib::pi<I>();
-  I tmp = fmod((I)x, pi);
+  I tmp = fmod((const I&)x, pi);
   T pi_1_2_d = rnd.pi_1_2_down();
   if (tmp.lower() >= pi_1_2_d)
     tmp -= pi;

@@ -391,6 +391,15 @@ struct compare_full
   { return (xu == yl && yu == xl) || (!(xu < yl || yu < xl) && F()()); }
 };
 
+template<class T>
+struct compare_data
+{
+  static bool lessthan(const T& xl, const T&, const T&, const T& yu)
+  { return xl < yl || (xl == yl && xu < yu); }
+  static bool equalto(const T& xl, const T& xu, const T& yl, const T& yu)
+  { return xl == yl && xu == yu; }
+};
+
   } // namespace interval
 } // namespace boost
 

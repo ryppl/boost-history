@@ -22,224 +22,306 @@ typedef my_interval<double, boost::interval_lib::compare_full<double, my_functio
 #define TEST_EXN_N(e) \
   try { BOOST_TEST(e); } catch (...) { BOOST_TEST(false); }
 
+// comparisons between [1,2] and [3,4]
+
+static void test_c_12_34() {
+  const I_c a(1,2), b(3,4);
+
+  BOOST_TEST(a < b);
+  BOOST_TEST(a <= b);
+  BOOST_TEST(!(a > b));
+  BOOST_TEST(!(a >= b));
+
+  BOOST_TEST(b > a);
+  BOOST_TEST(b >= a);
+  BOOST_TEST(!(b < a));
+  BOOST_TEST(!(b <= a));
+
+  BOOST_TEST(!(a == b));
+  BOOST_TEST(a != b);
+}
+
+static void test_p_12_34() {
+  const I_p a(1,2), b(3,4);
+
+  BOOST_TEST(a < b);
+  BOOST_TEST(a <= b);
+  BOOST_TEST(!(a > b));
+  BOOST_TEST(!(a >= b));
+
+  BOOST_TEST(b > a);
+  BOOST_TEST(b >= a);
+  BOOST_TEST(!(b < a));
+  BOOST_TEST(!(b <= a));
+
+  BOOST_TEST(!(a == b));
+  BOOST_TEST(a != b);
+}
+
+static void test_f_12_34() {
+  const I_f a(1,2), b(3,4);
+
+  TEST_EXN_N(a < b) ;
+  TEST_EXN_N(a <= b);
+  TEST_EXN_N(!(a > b));
+  TEST_EXN_N(!(a >= b));
+
+  TEST_EXN_N(b > a);
+  TEST_EXN_N(b >= a);
+  TEST_EXN_N(!(b < a));
+  TEST_EXN_N(!(b <= a));
+
+  TEST_EXN_N(!(a == b));
+  TEST_EXN_N(a != b);
+}
+
+static void test_12_34() {
+  test_c_12_34();
+  test_p_12_34();
+  test_f_12_34();
+
+  const I a(1,2), b(3,4);
+
+  BOOST_TEST(cerlt(a, b));
+  BOOST_TEST(cerle(a, b));
+  BOOST_TEST(!cergt(a, b));
+  BOOST_TEST(!cerge(a, b));
+
+  BOOST_TEST(!cerlt(b, a));
+  BOOST_TEST(!cerle(b, a));
+  BOOST_TEST(cergt(b, a));
+  BOOST_TEST(cerge(b, a));
+
+  BOOST_TEST(poslt(a, b));
+  BOOST_TEST(posle(a, b));
+  BOOST_TEST(!posgt(a, b));
+  BOOST_TEST(!posge(a, b));
+
+  BOOST_TEST(!poslt(b, a));
+  BOOST_TEST(!posle(b, a));
+  BOOST_TEST(posgt(b, a));
+  BOOST_TEST(posge(b, a));
+
+  BOOST_TEST(!cereq(a, b));
+  BOOST_TEST(cerne(a, b));
+  BOOST_TEST(!poseq(a, b));
+  BOOST_TEST(posne(a, b));
+}
+
+// comparisons between [1,3] and [2,4]
+
+static void test_c_13_24() {
+  const I_c a(1,3), b(2,4);
+
+  BOOST_TEST(!(a < b));
+  BOOST_TEST(a <= b);
+  BOOST_TEST(!(a > b));
+  BOOST_TEST(a >= b);
+
+  BOOST_TEST(!(b < a));
+  BOOST_TEST(b <= a);
+  BOOST_TEST(!(b > a));
+  BOOST_TEST(b >= a);
+
+  BOOST_TEST(!(a == b));
+  BOOST_TEST(a != b);
+}
+
+static void test_p_13_24() {
+  const I_p a(1,3), b(2,4);
+
+  BOOST_TEST(a < b);
+  BOOST_TEST(!(a <= b));
+  BOOST_TEST(a > b);
+  BOOST_TEST(!(a >= b));
+
+  BOOST_TEST(b < a);
+  BOOST_TEST(!(b <= a));
+  BOOST_TEST(b > a);
+  BOOST_TEST(!(b >= a));
+
+  BOOST_TEST(a == b);
+  BOOST_TEST(!(a != b));
+}
+
+static void test_f_13_24() {
+  const I_f a(1,3), b(2,4);
+
+  TEST_EXN_Y(a < b);
+  TEST_EXN_Y(a <= b);
+  TEST_EXN_Y(a > b);
+  TEST_EXN_Y(a >= b);
+
+  TEST_EXN_Y(b < a);
+  TEST_EXN_Y(b <= a);
+  TEST_EXN_Y(b > a);
+  TEST_EXN_Y(b >= a);
+
+  TEST_EXN_Y(a == b);
+  TEST_EXN_Y(a != b);
+}
+
+static void test_13_24() {
+  test_c_13_24();
+  test_p_13_24();
+  test_f_13_24();
+
+  const I a(1,3), b(2,4);
+
+  BOOST_TEST(!cerlt(a, b));
+  BOOST_TEST(!cerle(a, b));
+  BOOST_TEST(!cergt(a, b));
+  BOOST_TEST(!cerge(a, b));
+
+  BOOST_TEST(!cerlt(b, a));
+  BOOST_TEST(!cerle(b, a));
+  BOOST_TEST(!cergt(b, a));
+  BOOST_TEST(!cerge(b, a));
+
+  BOOST_TEST(poslt(a, b));
+  BOOST_TEST(posle(a, b));
+  BOOST_TEST(posgt(a, b));
+  BOOST_TEST(posge(a, b));
+
+  BOOST_TEST(poslt(b, a));
+  BOOST_TEST(posle(b, a));
+  BOOST_TEST(posgt(b, a));
+  BOOST_TEST(posge(b, a));
+
+  BOOST_TEST(!cereq(a, b));
+  BOOST_TEST(!cerne(a, b));
+  BOOST_TEST(poseq(a, b));
+  BOOST_TEST(posne(a, b));
+}
+
+// comparisons between [1,2] and [2,3]
+
+static void test_c_12_23() {
+  const I_c a(1,2), b(2,3);
+
+  BOOST_TEST(!(a < b));
+  BOOST_TEST(a <= b);
+  BOOST_TEST(!(a > b));
+  BOOST_TEST(a >= b);
+
+  BOOST_TEST(!(b < a));
+  BOOST_TEST(b <= a);
+  BOOST_TEST(!(b > a));
+  BOOST_TEST(b >= a);
+
+  BOOST_TEST(!(a == b));
+  BOOST_TEST(a != b);
+}
+
+static void test_p_12_23() {
+  const I_p a(1,2), b(2,3);
+
+  BOOST_TEST(a < b);
+  BOOST_TEST(a <= b);
+  BOOST_TEST(!(a > b));
+  BOOST_TEST(!(a >= b));
+
+  BOOST_TEST(!(b < a));
+  BOOST_TEST(!(b <= a));
+  BOOST_TEST(b > a);
+  BOOST_TEST(b >= a);
+
+  BOOST_TEST(a == b);
+  BOOST_TEST(!(a != b));
+}
+
+static void test_f_12_23() {
+  const I_f a(1,2), b(2,3);
+
+  TEST_EXN_Y(a < b);
+  TEST_EXN_N(a <= b);
+  TEST_EXN_N(!(a > b));
+  TEST_EXN_Y(a >= b);
+
+  TEST_EXN_N(!(b < a));
+  TEST_EXN_Y(b <= a);
+  TEST_EXN_Y(b > a);
+  TEST_EXN_N(b >= a);
+
+  TEST_EXN_Y(a == b);
+  TEST_EXN_Y(a != b);
+}
+
+static void test_12_23() {
+  test_c_12_23();
+  test_p_12_23();
+  test_f_12_23();
+
+  const I a(1,2), b(2,3);
+
+  BOOST_TEST(!cerlt(a, b));
+  BOOST_TEST(cerle(a, b));
+  BOOST_TEST(!cergt(a, b));
+  BOOST_TEST(!cerge(a, b));
+
+  BOOST_TEST(!cerlt(b, a));
+  BOOST_TEST(!cerle(b, a));
+  BOOST_TEST(!cergt(b, a));
+  BOOST_TEST(cerge(b, a));
+
+  BOOST_TEST(poslt(a, b));
+  BOOST_TEST(posle(a, b));
+  BOOST_TEST(!posgt(a, b));
+  BOOST_TEST(posge(a, b));
+
+  BOOST_TEST(!poslt(b, a));
+  BOOST_TEST(posle(b, a));
+  BOOST_TEST(posgt(b, a));
+  BOOST_TEST(posge(b, a));
+
+  BOOST_TEST(!cereq(a, b));
+  BOOST_TEST(!cerne(a, b));
+  BOOST_TEST(poseq(a, b));
+  BOOST_TEST(posne(a, b));
+}
+
+
 int test_main(int, char *[])
 {
-  // comparisons between [1,2] and [3,4]
-  BOOST_TEST(I_c(1,2) < I_c(3,4));
-  BOOST_TEST(I_c(1,2) <= I_c(3,4));
-  BOOST_TEST(!(I_c(1,2) > I_c(3,4)));
-  BOOST_TEST(!(I_c(1,2) >= I_c(3,4)));
+  test_12_34();
+  test_13_24();
+  test_12_23();
 
-  BOOST_TEST(I_c(3,4) > I_c(1,2));
-  BOOST_TEST(I_c(3,4) >= I_c(1,2));
-  BOOST_TEST(!(I_c(3,4) < I_c(1,2)));
-  BOOST_TEST(!(I_c(3,4) <= I_c(1,2)));
+  { I_c a(1,2), b(1,2);
+    BOOST_TEST(!(a == b));
+    BOOST_TEST(a != b); }
 
-  BOOST_TEST(I_p(1,2) < I_p(3,4));
-  BOOST_TEST(I_p(1,2) <= I_p(3,4));
-  BOOST_TEST(!(I_p(1,2) > I_p(3,4)));
-  BOOST_TEST(!(I_p(1,2) >= I_p(3,4)));
+  { I_p a(1,2), b(1,2);
+    BOOST_TEST(a == b);
+    BOOST_TEST(!(a != b)); }
 
-  BOOST_TEST(I_p(3,4) > I_p(1,2));
-  BOOST_TEST(I_p(3,4) >= I_p(1,2));
-  BOOST_TEST(!(I_p(3,4) < I_p(1,2)));
-  BOOST_TEST(!(I_p(3,4) <= I_p(1,2)));
+  { I_f a(1,2), b(1,2);
+    TEST_EXN_Y(a == b);
+    TEST_EXN_Y(a != b); }
 
-  TEST_EXN_N(I_f(1,2) < I_f(3,4)) ;
-  TEST_EXN_N(I_f(1,2) <= I_f(3,4));
-  TEST_EXN_N(!(I_f(1,2) > I_f(3,4)));
-  TEST_EXN_N(!(I_f(1,2) >= I_f(3,4)));
+  { I a(1,2), b(1,2);
+    BOOST_TEST(!cereq(a, b));
+    BOOST_TEST(!cerne(a, b));
+    BOOST_TEST(poseq(a, b));
+    BOOST_TEST(posne(a, b)); }
 
-  TEST_EXN_N(I_f(3,4) > I_f(1,2));
-  TEST_EXN_N(I_f(3,4) >= I_f(1,2));
-  TEST_EXN_N(!(I_f(3,4) < I_f(1,2)));
-  TEST_EXN_N(!(I_f(3,4) <= I_f(1,2)));
+  { I_c a(1,1), b(1,1);
+    BOOST_TEST(a == b);
+    BOOST_TEST(!(a != b)); }
 
-  BOOST_TEST(cerlt(I(1,2), I(3,4)));
-  BOOST_TEST(cerle(I(1,2), I(3,4)));
-  BOOST_TEST(!cergt(I(1,2), I(3,4)));
-  BOOST_TEST(!cerge(I(1,2), I(3,4)));
+  { I_p a(1,1), b(1,1);
+    BOOST_TEST(a == b);
+    BOOST_TEST(!(a != b)); }
 
-  BOOST_TEST(!cerlt(I(3,4), I(1,2)));
-  BOOST_TEST(!cerle(I(3,4), I(1,2)));
-  BOOST_TEST(cergt(I(3,4), I(1,2)));
-  BOOST_TEST(cerge(I(3,4), I(1,2)));
+  { I_f a(1,1), b(1,1);
+    TEST_EXN_N(a == b);
+    TEST_EXN_N(!(a != b)); }
 
-  BOOST_TEST(poslt(I(1,2), I(3,4)));
-  BOOST_TEST(posle(I(1,2), I(3,4)));
-  BOOST_TEST(!posgt(I(1,2), I(3,4)));
-  BOOST_TEST(!posge(I(1,2), I(3,4)));
-
-  BOOST_TEST(!poslt(I(3,4), I(1,2)));
-  BOOST_TEST(!posle(I(3,4), I(1,2)));
-  BOOST_TEST(posgt(I(3,4), I(1,2)));
-  BOOST_TEST(posge(I(3,4), I(1,2)));
-
-  // comparisons between [1,3] and [2,4]
-  BOOST_TEST(!(I_c(1,3) < I_c(2,4)));
-  BOOST_TEST(I_c(1,3) <= I_c(2,4));
-  BOOST_TEST(!(I_c(1,3) > I_c(2,4)));
-  BOOST_TEST(I_c(1,3) >= I_c(2,4));
-
-  BOOST_TEST(!(I_c(2,4) < I_c(1,3)));
-  BOOST_TEST(I_c(2,4) <= I_c(1,3));
-  BOOST_TEST(!(I_c(2,4) > I_c(1,3)));
-  BOOST_TEST(I_c(2,4) >= I_c(1,3));
-
-  BOOST_TEST(I_p(1,3) < I_p(2,4));
-  BOOST_TEST(!(I_p(1,3) <= I_p(2,4)));
-  BOOST_TEST(I_p(1,3) > I_p(2,4));
-  BOOST_TEST(!(I_p(1,3) >= I_p(2,4)));
-
-  BOOST_TEST(I_p(2,4) < I_p(1,3));
-  BOOST_TEST(!(I_p(2,4) <= I_p(1,3)));
-  BOOST_TEST(I_p(2,4) > I_p(1,3));
-  BOOST_TEST(!(I_p(2,4) >= I_p(1,3)));
-
-  TEST_EXN_Y(I_f(1,3) < I_f(2,4));
-  TEST_EXN_Y(I_f(1,3) <= I_f(2,4));
-  TEST_EXN_Y(I_f(1,3) > I_f(2,4));
-  TEST_EXN_Y(I_f(1,3) >= I_f(2,4));
-
-  TEST_EXN_Y(I_f(2,4) < I_f(1,3));
-  TEST_EXN_Y(I_f(2,4) <= I_f(1,3));
-  TEST_EXN_Y(I_f(2,4) > I_f(1,3));
-  TEST_EXN_Y(I_f(2,4) >= I_f(1,3));
-
-  BOOST_TEST(!cerlt(I(1,3), I(2,4)));
-  BOOST_TEST(!cerle(I(1,3), I(2,4)));
-  BOOST_TEST(!cergt(I(1,3), I(2,4)));
-  BOOST_TEST(!cerge(I(1,3), I(2,4)));
-
-  BOOST_TEST(!cerlt(I(2,4), I(1,3)));
-  BOOST_TEST(!cerle(I(2,4), I(1,3)));
-  BOOST_TEST(!cergt(I(2,4), I(1,3)));
-  BOOST_TEST(!cerge(I(2,4), I(1,3)));
-
-  BOOST_TEST(poslt(I(1,3), I(2,4)));
-  BOOST_TEST(posle(I(1,3), I(2,4)));
-  BOOST_TEST(posgt(I(1,3), I(2,4)));
-  BOOST_TEST(posge(I(1,3), I(2,4)));
-
-  BOOST_TEST(poslt(I(2,4), I(1,3)));
-  BOOST_TEST(posle(I(2,4), I(1,3)));
-  BOOST_TEST(posgt(I(2,4), I(1,3)));
-  BOOST_TEST(posge(I(2,4), I(1,3)));
-
-  // comparisons between [1,2] and [2,3]
-  BOOST_TEST(!(I_c(1,2) < I_c(2,3)));
-  BOOST_TEST(I_c(1,2) <= I_c(2,3));
-  BOOST_TEST(!(I_c(1,2) > I_c(2,3)));
-  BOOST_TEST(I_c(1,2) >= I_c(2,3));
-
-  BOOST_TEST(!(I_c(2,3) < I_c(1,2)));
-  BOOST_TEST(I_c(2,3) <= I_c(1,2));
-  BOOST_TEST(!(I_c(2,3) > I_c(1,2)));
-  BOOST_TEST(I_c(2,3) >= I_c(1,2));
-
-  BOOST_TEST(I_p(1,2) < I_p(2,3));
-  BOOST_TEST(I_p(1,2) <= I_p(2,3));
-  BOOST_TEST(!(I_p(1,2) > I_p(2,3)));
-  BOOST_TEST(!(I_p(1,2) >= I_p(2,3)));
-
-  BOOST_TEST(!(I_p(2,3) < I_p(1,2)));
-  BOOST_TEST(!(I_p(2,3) <= I_p(1,2)));
-  BOOST_TEST(I_p(2,3) > I_p(1,2));
-  BOOST_TEST(I_p(2,3) >= I_p(1,2));
-
-  TEST_EXN_Y(I_f(1,2) < I_f(2,3));
-  TEST_EXN_N(I_f(1,2) <= I_f(2,3));
-  TEST_EXN_N(!(I_f(1,2) > I_f(2,3)));
-  TEST_EXN_Y(I_f(1,2) >= I_f(2,3));
-
-  TEST_EXN_N(!(I_f(2,3) < I_f(1,2)));
-  TEST_EXN_Y(I_f(2,3) <= I_f(1,2));
-  TEST_EXN_Y(I_f(2,3) > I_f(1,2));
-  TEST_EXN_N(I_f(2,3) >= I_f(1,2));
-
-  BOOST_TEST(!cerlt(I(1,2), I(2,3)));
-  BOOST_TEST(cerle(I(1,2), I(2,3)));
-  BOOST_TEST(!cergt(I(1,2), I(2,3)));
-  BOOST_TEST(!cerge(I(1,2), I(2,3)));
-
-  BOOST_TEST(!cerlt(I(2,3), I(1,2)));
-  BOOST_TEST(!cerle(I(2,3), I(1,2)));
-  BOOST_TEST(!cergt(I(2,3), I(1,2)));
-  BOOST_TEST(cerge(I(2,3), I(1,2)));
-
-  BOOST_TEST(poslt(I(1,2), I(2,3)));
-  BOOST_TEST(posle(I(1,2), I(2,3)));
-  BOOST_TEST(!posgt(I(1,2), I(2,3)));
-  BOOST_TEST(posge(I(1,2), I(2,3)));
-
-  BOOST_TEST(!poslt(I(2,3), I(1,2)));
-  BOOST_TEST(posle(I(2,3), I(1,2)));
-  BOOST_TEST(posgt(I(2,3), I(1,2)));
-  BOOST_TEST(posge(I(2,3), I(1,2)));
-
-  // equality between [1,2] and [3,4]
-  BOOST_TEST(!(I_c(1,2) == I_c(3,4)));
-  BOOST_TEST(I_c(1,2) != I_c(3,4));
-
-  BOOST_TEST(!(I_p(1,2) == I_p(3,4)));
-  BOOST_TEST(I_p(1,2) != I_p(3,4));
-
-  TEST_EXN_N(!(I_f(1,2) == I_f(3,4)));
-  TEST_EXN_N(I_f(1,2) != I_f(3,4));
-
-  BOOST_TEST(!cereq(I_c(1,2), I_c(3,4)));
-  BOOST_TEST(cerne(I_c(1,2), I_c(3,4)));
-
-  BOOST_TEST(!poseq(I_c(1,2), I_c(3,4)));
-  BOOST_TEST(posne(I_c(1,2), I_c(3,4)));
-
-  // equality between [1,3] and [2,4]
-  BOOST_TEST(!(I_c(1,3) == I_c(2,4)));
-  BOOST_TEST(I_c(1,3) != I_c(2,4));
-
-  BOOST_TEST(I_p(1,3) == I_p(2,4));
-  BOOST_TEST(!(I_p(1,3) != I_p(2,4)));
-
-  TEST_EXN_Y(I_f(1,3) == I_f(2,4));
-  TEST_EXN_Y(I_f(1,3) != I_f(2,4));
-
-  BOOST_TEST(!cereq(I_c(1,3), I_c(2,4)));
-  BOOST_TEST(!cerne(I_c(1,3), I_c(2,4)));
-
-  BOOST_TEST(poseq(I_c(1,3), I_c(2,4)));
-  BOOST_TEST(posne(I_c(1,3), I_c(2,4)));
-
-  // equality between [1,2] and [1,2]
-  BOOST_TEST(!(I_c(1,2) == I_c(1,2)));
-  BOOST_TEST(I_c(1,2) != I_c(1,2));
-
-  BOOST_TEST(I_p(1,2) == I_p(1,2));
-  BOOST_TEST(!(I_p(1,2) != I_p(1,2)));
-
-  TEST_EXN_Y(I_f(1,2) == I_f(1,2));
-  TEST_EXN_Y(I_f(1,2) != I_f(1,2));
-
-  BOOST_TEST(!cereq(I_c(1,2), I_c(1,2)));
-  BOOST_TEST(!cerne(I_c(1,2), I_c(1,2)));
-
-  BOOST_TEST(poseq(I_c(1,2), I_c(1,2)));
-  BOOST_TEST(posne(I_c(1,2), I_c(1,2)));
-
-  // equality between [1,1] and [1,1]
-  BOOST_TEST(I_c(1,1) == I_c(1,1));
-  BOOST_TEST(!(I_c(1,1) != I_c(1,1)));
-
-  BOOST_TEST(I_p(1,1) == I_p(1,1));
-  BOOST_TEST(!(I_p(1,1) != I_p(1,1)));
-
-  TEST_EXN_N(I_f(1,1) == I_f(1,1));
-  TEST_EXN_N(!(I_f(1,1) != I_f(1,1)));
-
-  BOOST_TEST(cereq(I_c(1,1), I_c(1,1)));
-  BOOST_TEST(!cerne(I_c(1,1), I_c(1,1)));
-
-  BOOST_TEST(poseq(I_c(1,1), I_c(1,1)));
-  BOOST_TEST(!posne(I_c(1,1), I_c(1,1)));
+  { I a(1,1), b(1,1);
+    BOOST_TEST(cereq(a, b));
+    BOOST_TEST(!cerne(a, b));
+    BOOST_TEST(poseq(a, b));
+    BOOST_TEST(!posne(a, b)); }
 
   return 0;
 }
