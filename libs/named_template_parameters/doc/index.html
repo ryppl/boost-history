@@ -121,7 +121,7 @@ instantiation are always mapped to be the
 <p>
 In situations such as this, instead of defining the <i>actual argument &rarr; 
 formal parameter</i> mapping
-by the ordering of the parameter list, it would be preferrable 
+by the ordering of the parameter list, it would be preferable 
 to use <i>names</i> for template parameters. 
 The syntax for this could be like:
 </p>
@@ -132,7 +132,7 @@ car&lt;Transmission = manual&gt;
 
 <p>
 This is pseudo-code and there is no direct support for this in C++, 
-but one can mimic the behaviour.
+but one can mimic the behavior.
 This technique is known as <i>Named Template Parameters</i> (NTP).
 </p>
 
@@ -206,7 +206,7 @@ We have used the convention <code><i>name</i>_is</code> in our named template
 parameters.
 The named template parameters are template classes themselves and can thus be 
 named freely, but it is advisable to use consistent naming convention.
-The orginal template parameters in the <code>car</code> template are named
+The original template parameters in the <code>car</code> template are named
 as <code>Model</code>, <code>Color</code>, <code>Seats</code> and 
 <code>Transmission</code>.
 This suggests the names <code>Model_is</code>, <code>Color_is</code>, 
@@ -228,7 +228,7 @@ template &lt;class T&gt struct Model_is : virtual public car_defaults
 <p>
 The class contains one typedef <code>Model</code> which is the name of the
 <i>feature</i> that it encapsulates. 
-We have chosen to name the features with the names of the orginal template
+We have chosen to name the features with the names of the original template
 arguments.
 Again, consistent naming is advisable.
 </p>
@@ -275,7 +275,7 @@ We explain this mechanism in section
 <h3 id = "class_that_supports_NTP">The class that needs to support NTPs</h3>
 
 <p>
-Having defined the named template parmatere templates and the default value class, we are ready to rewrite the <code>car</code> template itself.
+Having defined the named template parameter templates and the default value class, we are ready to rewrite the <code>car</code> template itself.
 Our original template definition without NTPs was:
 </p>
 
@@ -359,7 +359,7 @@ and <code>transmission</code> conveniently available as
 <p>
 We have now covered the basic mechanism.
 There are a few cases that this basic mechanism cannot cover.
-We have already alluded to the coexistense of unnamed and named 
+We have already alluded to the coexistence of unnamed and named 
 template parameters being possible, as well as having default values that 
 are dependent on the values of other features. 
 These are the topics of the next section.
@@ -385,7 +385,7 @@ car&lt;basic, Seats_is&lt;no_leather&gt;, Color_is&lt;black&gt; &gt;
 </pre>
 
 <p>
-To give this dual behaviour to a template parameter slot,
+To give this dual behavior to a template parameter slot,
 one wraps the template parameter with the <code>as_named</code> 
 metafunction in the argument tuple type.
 The argument tuple in our example becomes:
@@ -451,7 +451,7 @@ Here is our default value template:
 </p>
 
 <pre>
-using namspace boost;
+using namespace boost;
 
 template &lt;class Features&gt; struct nontrivial_car_defaults : public Features {
     typedef typename
@@ -467,7 +467,7 @@ template &lt;class Features&gt; struct nontrivial_car_defaults : public Features
 
 <p>
 The code of the metafunction is somewhat hard to read:
-<code>is_same</code> comes from the Boost tupe_traits library and test the 
+<code>is_same</code> comes from the Boost type_traits library and test the 
 equality of two types, <code>if_c</code> is a compile time if construct and is
 defined in the Boost Metaprogramming Library.
 The following pseudo code expresses the logic of the metafunction:
@@ -578,7 +578,7 @@ templates.
 
 <h4 id="nontype_parameters">Nontype template parameters</h4>
 
-<p>The scheme discribed here does not directly support nontype template 
+<p>The scheme described here does not directly support nontype template 
 parameters.
 The simplest solution to this is to use wrappers which can be used as
 type template parameters.
@@ -657,7 +657,7 @@ selitä, että kaikilla ei välttämättä ole oletusarvoa
 Note that in the case where some named template parameter does not have 
 a default value, 
 there is no need to specify a typedef for that feature.
-Alternatively, a typedef with a value like <code>boost::ntp::unsepcied</code> 
+Alternatively, a typedef with a value like <code>boost::ntp::unspecified</code> 
 can be used. This latter method may lead to more readable error messages, if
 the user fails to provide the named template argument in question.
 </p>
