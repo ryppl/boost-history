@@ -143,15 +143,10 @@ int main()
   using namespace boost;
   using namespace interval_lib;
 
-  typedef
-    save_state
-      <rounded_transc_opposite_trick
-         <double, rounded_arithmetic_opposite_trick
-                    <double, rounding_control<double> > > >
-    my_rounded_arith;
-  typedef boost::interval<double, interval_traits<double,
-						  compare_certainly<double>,
-                                                  my_rounded_arith> > I;
+  typedef interval<double, interval_traits<double,
+    compare_certainly<double>,
+    save_state<rounded_transc_opp<double> >,
+    checking_lax<double> > > I;
   std::cout << "Zero points of sin(x)/(x*x+1)\n";
   find_zeros(std::cout, test_func1d<I>, I(-11, 10));
   std::cout << "Zero points of sqrt(x*x-1)\n";

@@ -17,6 +17,8 @@ I horner(const I& x, const I p[], int n) {
     y = y * a + (R)(p[i]);
   }
   return y;
+
+  // restore the rounding mode with the destruction of rnd
 }
 
 int main() {

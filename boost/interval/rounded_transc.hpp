@@ -73,8 +73,8 @@ struct rounded_transc_exact: Rounding
   T atanh_up  (const T& x) { return std::atanh(x); }
 };
 
-template<class T, class Rounding = rounded_arithmetic_standard<T> >
-struct rounded_transc_standard: Rounding
+template<class T, class Rounding>
+struct rounded_transc_std: Rounding
 {
   T exp_down(const T& x) { return (downward(), force_rounding(std::exp(x))); }
   T exp_up  (const T& x) { return (upward()  , force_rounding(std::exp(x))); }
@@ -106,8 +106,8 @@ struct rounded_transc_standard: Rounding
   T atanh_up  (const T& x) { return (upward()  , force_rounding(std::atanh(x))); }
 };
 
-template<class T, class Rounding = rounded_arithmetic_opposite_trick<T> >
-struct rounded_transc_opposite_trick: Rounding
+template<class T, class Rounding>
+struct rounded_transc_opp: Rounding
 {
   T exp_down(const T& x)
   {

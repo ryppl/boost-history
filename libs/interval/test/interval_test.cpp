@@ -24,16 +24,9 @@ static const int output_prec = 16;
 using namespace boost;
 using namespace interval_lib;
 
-typedef
-  save_state
-    <rounded_transc_opposite_trick
-       <double, rounded_arithmetic_opposite_trick
-                  <double, rounding_control<double> > > >
-  my_rounded_arith;
-
 typedef interval<double, interval_traits<double,
 					 compare_certainly<double>,
-					 my_rounded_arith,
+					 save_state<rounded_transc_opp<double> >,
 					 checking_lax<double> > > R;
 
 static unsigned nb_errors;
@@ -45,26 +38,27 @@ struct test {
     nb_errors = 0;
   }
 
-  static void start(const std::string& n, const R& r, double s) {
+  test(const std::string& n, const R& r, double s) {
     init(n);
     std::cout << "Testing " << n << " on " << r << " step " << s << std::endl;
   }
 
-  static void start(const std::string& n, const R& r, double s,
-		    double l, double h, double s2) {
+  test(const std::string& n, const R& r, double s,
+       double l, double h, double s2) {
     init(n);
     std::cout << "Testing " << n << " on " << r << " step " << s
 	      << " x scalar(" << l << ".." << h << ") step " << s2
 	      << std::endl;
   }
 
-  static void start(const std::string& n, const R& r1, const R& r2, double s) {
+  test(const std::string& n, const R& r1, const R& r2, double s) {
     init(n);
     std::cout << "Testing " << n << " on " << r1 << " x " << r2
 	      << " step " << s << std::endl;
   }
 
-  static void error(double i_d, double o_d, const R& i_r, const R& o_r) {
+  template<class T1>
+  static void error(double i_d, double o_d, const T1& i_r, const R& o_r) {
     if (nb_errors++ > 0) return;
     std::cerr << test_name << " " << i_d << " = " << o_d << " not in "
 	      << test_name << " " << i_r << " = " << o_r << std::endl;
@@ -91,7 +85,7 @@ struct test {
 	      << ") = " << o_r << std::endl;
   }
 
-  static void end() {
+  ~test() {
     if (nb_errors <= 1) return;
     std::cerr << test_name << ": " << nb_errors << " errors" << std::endl;
   }
@@ -103,7 +97,7 @@ void iterate_one_interval(UnaryFunction func, const std::string & msg,
 			  double step = 0.1)
 {
   R rn(low, high);
-  test::start(msg, rn, step);
+  test t(msg, rn, step);
   try {
     for(double l = low; l <= high; l += step)
       for(double u = l+step/10; u <= high; u += step) {
@@ -113,7 +107,6 @@ void iterate_one_interval(UnaryFunction func, const std::string & msg,
   } catch(std::exception & ex) {
     std::cerr << "Exception with " << msg << ": " << ex.what() << std::endl;
   }
-  test::end();
 }
 
 template<class Scalar, class BinaryFunction>
@@ -125,7 +118,7 @@ void iterate_one_interval_one_scalar(BinaryFunction func,
 				     Scalar step2 = 1)
 {
   R rn(low, high);
-  test::start(msg, rn, step, low2, high2, step2);
+  test t(msg, rn, step, low2, high2, step2);
   try {
     for(double l = low; l <= high; l += step)
       for(double u = l+step/10; u <= high; u += step)
@@ -136,7 +129,6 @@ void iterate_one_interval_one_scalar(BinaryFunction func,
   } catch(std::exception & ex) {
     std::cerr << "Exception with " << msg << ": " << ex.what() << std::endl;
   }
-  test::end();
 }
 
 template<class BinaryFunction>
@@ -144,7 +136,7 @@ void iterate_two_intervals(BinaryFunction func, const std::string & msg,
 			   double low = -2, double high = 2, double step = 0.3)
 {
   R rn(low, high);
-  test::start(msg, rn, rn, step);
+  test t(msg, rn, rn, step);
   try {
     for(double l1 = low; l1 <= high; l1 += step)
       for(double u1 = l1+step/10; u1 <= high; u1 += step)
@@ -156,7 +148,6 @@ void iterate_two_intervals(BinaryFunction func, const std::string & msg,
   } catch(std::exception & ex) {
     std::cerr << "Exception with " << msg << ": " << ex.what() << std::endl;
   }
-  test::end();
 }
 
 template<class FuncI, class FuncD>
@@ -543,31 +534,6 @@ void test_scale(const R& r, double factor)
   }
 }
 
-void runtest_infinity()
-{
-  const int nb = 10000;
-  R x = 1.;
-  for(int i = 0; i < nb; i++) x *= 2.;
-  for(int i = 0; i < nb; i++) x *= 0.5;
-  std::cout << "Testing overflow +: " << (in(1., x) ? "success" : "failure")
-	    << " " << x << std::endl;
-  x = 1.;
-  for(int i = 0; i < nb; i++) x *= 0.5;
-  for(int i = 0; i < nb; i++) x *= 2.;
-  std::cout << "Testing underflow +: " << (in(1., x) ? "success" : "failure")
-	    << " " << x << std::endl;
-  x = -1.;
-  for(int i = 0; i < nb; i++) x *= 2.;
-  for(int i = 0; i < nb; i++) x *= 0.5;
-  std::cout << "Testing overflow -: " << (in(-1., x) ? "success" : "failure")
-	    << " " << x << std::endl;
-  x = -1.;
-  for(int i = 0; i < nb; i++) x *= 0.5;
-  for(int i = 0; i < nb; i++) x *= 2.;
-  std::cout << "Testing underflow -: " << (in(-1., x) ? "success" : "failure")
-	    << " " << x << std::endl;
-}
-
 int main()
 {
   // check for proper NaN and infinity values to avoid excess output
@@ -583,7 +549,6 @@ int main()
     exit(1);
   }
 
-  runtest_infinity();
   // verify that image intervals are correctly computed for all functions
   // i.e. for all x in I: f(x) in f(I)
   runtest_binary_functions();

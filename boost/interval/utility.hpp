@@ -116,8 +116,8 @@ template<class T, class Traits>
 interval<T, Traits> pred(const interval<T, Traits>& x)
 {
   typename Traits::rounding rnd;
-  T l = rnd.add_up(x.lower(), detail::smallest<T>());
-  T u = rnd.sub_down(x.upper(), detail::smallest<T>());
+  T l = rnd.add_up(x.lower(), interval_lib::detail::smallest<T>());
+  T u = rnd.sub_down(x.upper(), interval_lib::detail::smallest<T>());
   if (u < l)
     // We could not shrink the interval any further
     return x;
@@ -129,8 +129,8 @@ template<class T, class Traits>
 interval<T, Traits> succ(const interval<T, Traits>& x)
 {
   typename Traits::rounding rnd;
-  T l = rnd.sub_down(x.lower(), detail::smallest<T>());
-  T u = rnd.add_up(x.upper(), detail::smallest<T>());
+  T l = rnd.sub_down(x.lower(), interval_lib::detail::smallest<T>());
+  T u = rnd.add_up(x.upper(), interval_lib::detail::smallest<T>());
   return interval<T, Traits>(l, u);
 }
 

@@ -22,24 +22,18 @@
 #include <iosfwd>
 
 namespace boost {
-
   namespace interval_lib {
 
-template<class T>
-struct compare_certainly;
-
-template<class T>
-struct rounded_arithmetic;
-
-template<class T>
-struct checking_strict;
+template<class T> struct compare_certainly;
+template<class T> struct rounded_math;
+template<class T> struct checking_strict;
 
   } // namespace interval_lib
 
 // default traits class
 template<class T,
 	 class Compare = interval_lib::compare_certainly<T>,
-	 class Rounding = interval_lib::rounded_arithmetic<T>,
+	 class Rounding = interval_lib::rounded_math<T>,
 	 class Checking = interval_lib::checking_strict<T> >
 struct interval_traits
 {
@@ -64,10 +58,10 @@ public:
   interval(const interval<T, Traits2>& r): low(r.lower()), up(r.upper()) {}
 
   // compiler-generated copy constructor and assignment operator are fine
+
   interval& operator=(const T& x);
   void assign(const T& l, const T& u);
 
-  // constructor-like functions
   static interval empty();
   static interval entire();
   static interval hull(const T& x, const T& y);
@@ -443,7 +437,10 @@ struct less<boost::interval<T, Traits> >
 } // namespace std
 #endif
 
+#include <boost/interval/rounding.hpp>
 #include <boost/interval/rounded_arith.hpp>
+#include <boost/interval/rounded_transc.hpp>
+
 #include <boost/interval/checking.hpp>
 #include <boost/interval/compare.hpp>
 #include <boost/interval/utility.hpp>
@@ -451,5 +448,14 @@ struct less<boost::interval<T, Traits> >
 #include <boost/interval/oper.hpp>
 #include <boost/interval/misc.hpp>
 #include <boost/interval/transc.hpp>
+
+namespace boost {
+  namespace interval_lib {
+
+template<> struct rounded_math<float>: detail::rm_aux<float> {};
+template<> struct rounded_math<double>: detail::rm_aux<double> {};
+
+  } // namespace interval_lib
+} // namespace boost
 
 #endif // BOOST_INTERVAL_HPP

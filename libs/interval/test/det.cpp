@@ -56,7 +56,7 @@ struct variants {
             <double, compare_certainly<double>,
 	     save_state
 	       <rounded_transc_dummy
-                  <double, rounded_arithmetic_standard<double> > > > >
+                  <double, rounded_arith_std<double> > > > >
     I_sp;
 
   typedef typename unprotect<I_op>::type I_ou;

@@ -115,17 +115,17 @@ public:
   typedef std::numeric_limits&lt;base_type&gt; base_limits;
   typedef Traits traits_type;
 
-  interval(const T&amp; value = 0);
+  interval(const T&amp; v = 0);
   interval(const T&amp; l, const T&amp; u);
 
   template&lt;class Traits2&gt;
   interval(const interval&lt;T, Traits2&gt;&amp; r);
 
   // compiler-generated copy constructor and assignment operator are fine
+
   interval&amp; operator=(const T&amp; x);
   void assign(const T&amp; l, const T&amp; u);
 
-  // constructor-like functions
   static interval empty();
   static interval entire();
 
@@ -138,8 +138,8 @@ public:
   interval&amp; operator/= (const T&amp; r);
   interval&amp; operator/= (const interval&amp; r);
 
-  T lower() const;
-  T upper() const;
+  const T&amp; lower() const;
+  const T&amp; upper() const;
 };
 
 } // namespace boost
@@ -508,6 +508,36 @@ tests if two intervals are equal.</p>
 <p>The functions <code>square sqrt log exp sin cos tan asin acos atan
 sinh cosh tanh asinh acosh atanh</code> are also defined.
 
+<h4>Constructors and alike</h4>
+
+<p>The two main constructors accept one and two arguments of type
+<code>T</code>. The first one produces a singleton interval
+<code>[v,v]</code>; and the second one an interval
+<code>[l,u]</code>. The second one will use the checking policy if
+<code>u&lt;l</code>. If you are not sure the bounds are not inverted,
+it is better to use the <code>hull</code> function.</p>
+
+<p>There is also a constructor in order to change the traits parameter
+of an interval. But there is no constructor able to change the base
+type of an interval (it could lead to precision problems if the old
+base type could not be contained in the new one.</p>
+
+<p>There is also an <code>assign</code> function in order to directly
+change the bounds of an interval. It will behave like the second
+constructor if the bounds are inverted. There is no
+<code>assign</code> function that directly takes an interval or only
+one number as a parameter; just use the assignment operator in that
+case.</p>
+
+<p>Assignment operator, copy constructor and destructor are the ones
+the compiler automatically generates. There is also an assignment
+operator for the type <code>T</code>.</p>
+
+<p>The static functions <code>empty</code> and <code>entire</code>
+produces the corresponding intervals. Please be aware that the default
+implementation use NaN numbers for the empty interval and infinite
+numbers for the entire interval.</p>
+
 <h2 id="compare">Comparisons</h2>
 
 <h3>Synopsis</h3>
@@ -613,15 +643,15 @@ template&lt;class T, class Traits&gt;
 bool cerlt(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
 </pre>
 
-<h2 id="rounding">Rounded Arithmetic</h2>
+<h2 id="rounding">Rounded Computations</h2>
 
 <p>Here comes the tricky part. In order to be as general as possible,
 the library uses a class to compute all the necessary functions
 rounded upward or downward. This class is the second parameter of
 <code>interval_traits</code>. By default, it is
-<code>boost::interval_lib::rounded_arithmetic&lt;T&gt;</code>.</p>
+<code>boost::interval_lib::rounded_math&lt;T&gt;</code>.</p>
 
-<p>The class <code>boost::interval_lib::rounded_arithmetic</code> is
+<p>The class <code>boost::interval_lib::rounded_math</code> is
 already specialized for <code>float</code> and <code>double</code>. So
 if the base type of your intervals is not one of these two, a good
 solution would probably be a specialization of this class. But if the
@@ -685,9 +715,9 @@ struct rounding {
 </pre>
 
 <p>These functions do not have to worry about invalid
-arguments. Moreover, the argument of the <code>cos_</code> function
+arguments. Moreover, the argument of the <code>cos_</code> functions
 is between 0 and 2&pi;; and the argument of the <code>tan_</code>
-function is between -&pi;/2 and &pi;/2.</p>
+functions is between -&pi;/2 and &pi;/2.</p>
 
 <p>The functions <code>int_down</code> and <code>int_up</code>
 compute the nearest integer smaller or bigger than their
@@ -701,54 +731,56 @@ class able to work if nested inside <code>rounding</code>. Naturally
 <code>rounding::unprotected_rounding</code> may simply be
 <code>rounding</code> itself. But it can improve performance if it is
 a simplified version without constructor and destructor. See the <a
-href="#perf">performance notes</a> for an example.</p>
+href="#perf">performance notes</a> for an explication.</p>
 
 <p>The type <code>tonearest_rounding</code> also provides another
 rounding class. However, it does not have to be as complex as
 <code>rounding</code>. No members are required. The only purpose of
 this type is: the basic operators <code>+ - * /</code> will be rounded
 toward the nearest integer while an object of type
-<code>rounding::tonearest_rounding</code> is alive. This type is used
-by the functions <code>dist</code>, <code>median</code> and
-<code>bisect</code>.</p>
+<code>rounding::tonearest_rounding</code> is alive. This type must be
+defined in order for the functions <code>dist</code>,
+<code>median</code>, <code>bisect</code> and
+<code>symmetric_scale</code> to compile.</p>
 
 <h3>Provided classes</h3>
 
 <p>A lot of classes are provided. When they exist in two versions
-<code>_standard</code> and <code>_opposite_trick</code>, the first one
-does switch the rounding mode each time, and the second one tries to
-keep it oriented toward plus infinity. The main purpose of the
-<code>_opposite_trick</code> version is to speed up the computations
-(see the <a href="#perf">performance notes</a>). This version requires
-the rounding mode to be upward before entering any computation
-functions of the class. It guarantees the rounding mode will still be
-upward at the exit of the functions.</p>
+<code>_std</code> and <code>_opp</code>, the first one does switch the
+rounding mode each time, and the second one tries to keep it oriented
+toward plus infinity. The main purpose of the <code>_opp</code>
+version is to speed up the computations through the use of the
+"opposite trick" (see the <a href="#perf">performance notes</a>). This
+version requires the rounding mode to be upward before entering any
+computation functions of the class. It guarantees the rounding mode
+will still be upward at the exit of the functions.</p>
 
 <p>Please note that it is really a very bad idea to mix the
-<code>_opposite_trick</code> version with the <code>_standard</code>
-since they do not have compatible properties.</p>
+<code>_opp</code> version with the <code>_std</code> since they do not
+have compatible properties.</p>
 
 <p>There is a third version named <code>_exact</code> which computes
 the functions without changing the rouding mode. It is an "exact"
 version because it is intended for a base type that produces exact
-results.</p>
+results. The last version is the <code>_dummy</code> version. It does
+not do any computations but still produces compatible result.</p>
 
 <p>At the bottom is the class <code>rounding_control</code>. Then come
-<code>rounded_arithmetic_exact</code>,
-<code>rounded_arithmetic_standard</code> and
-<code>rounded_arithmetic_opposite_trick</code>. Then there are
+<code>rounded_arith_exact</code>, <code>rounded_arith_std</code> and
+<code>rounded_arith_opp</code>. Then there are
 <code>rounded_transc_dummy</code>, <code>rounded_transc_exact</code>,
-<code>rounded_transc_standard</code> and
-<code>rounded_transc_opposite_trick</code>. And finally are
+<code>rounded_transc_std</code> and
+<code>rounded_transc_opp</code>. And finally are
 <code>save_state</code> and <code>save_state_nothing</code>. Each of
 these classes provide a set of members that are required by the
 classes of the next stage. For example, a
 <code>rounded_transc_...</code> class needs the members of a
-<code>rounded_arithmetic_...</code> class.</p>
+<code>rounded_arith_...</code> class.</p>
 
 <p>Here comes what each class defines. Later, when they will be
 described more thoroughly, the requirements will not be
-repeated. Please come back here in order to see them.</p>
+repeated. Please come back here in order to see them. The inheritances
+are also shown to avoid repeating the same things over and over.</p>
 
 <pre>
 namespace boost {
@@ -773,8 +805,12 @@ struct rounding_control
   T pi_2_1_up  ();
 };
 
+template&lt;class T, class Rounding = rounding_control&lt;T&gt; &gt; struct rounded_arith_exact;
+template&lt;class T, class Rounding = rounding_control&lt;T&gt; &gt; struct rounded_arith_std;
+template&lt;class T, class Rounding = rounding_control&lt;T&gt; &gt; struct rounded_arith_opp;
+
 template&lt;class T, class Rounding&gt;
-struct rounded_arithmetic_...: Rounding
+struct rounded_arith_...: Rounding
 {
   void init();
   T add_down(T, T);
@@ -790,6 +826,11 @@ struct rounded_arithmetic_...: Rounding
   T int_down(T);
   T int_up  (T);
 };
+
+template&lt;class T, class Rounding&gt; struct rounded_transc_dummy;
+template&lt;class T, class Rounding = rounded_arith_exact&lt;T&gt; &gt; struct rounded_transc_exact;
+template&lt;class T, class Rounding = rounded_arith_std&lt;T&gt; &gt; struct rounded_transc_std;
+template&lt;class T, class Rounding = rounded_arith_opp&lt;T&gt; &gt; struct rounded_transc_opp;
 
 template&lt;class T, class Rounding&gt;
 struct rounded_transc_...: Rounding
@@ -822,8 +863,11 @@ struct rounded_transc_...: Rounding
   T atanh_up  (T);
 };
 
+template&lt;class Rounding&gt; struct save_state;
+template&lt;class Rounding&gt; struct save_state_nothing;
+
 template&lt;class Rounding&gt;
-struct save_state: Rounding
+struct save_state_...: Rounding
 {
   typedef ... unprotected_rounding;
   typedef ... tonearest_rounding;
@@ -833,31 +877,17 @@ struct save_state: Rounding
 } // namespace boost
 </pre>
 
-<p>So the following type will be an appropriate rounding policy:</p>
+<p>The default policy (aka <code>rounded_math&lt;T&gt;) is:</p>
 
 <pre>
-save_state&lt;
-  rounded_transc_...&lt;T,
-    rounded_arithmetic_...&lt;T,
-      rounding_control&lt;T&gt;
-    &gt;
-  &gt;
-&gt;
+save_state_nothing&lt;rounded_transc_dummy&lt;T, rounded_arith_exact&lt;T&gt; &gt; &gt;
 </pre>
 
-<p>and the default policies for <code>float</code> and
-<code>double</code> (given by <code>rounded_arithmetic&lt;T&gt;</code>
-where <code>T</code> is <code>float</code> or <code>double</code>)
-are:</p>
+<p>and the specializations for <code>float</code> and
+<code>double</code> are:</p>
 
 <pre>
-save_state&lt;
-  rounded_transc_dummy&lt;T,
-    rounded_arithmetic_opposite_trick&lt;T,
-      rounding_control&lt;T&gt;
-    &gt;
-  &gt;
-&gt;
+save_state&lt;rounded_transc_dummy&lt;T, rounded_arith_opp&lt;T&gt;
 </pre>
 
 <h4>State saving</h4>
@@ -875,19 +905,18 @@ destructor. This class also correctly defines the
 <h4>Transcendental functions</h4>
 
 <p>The <code>rounded_transc_exact</code>,
-<code>rounded_transc_standard</code> and
-<code>rounded_transc_opposite_trick</code> classes expect the
-<code>std</code> namespace to provide the functions <code>exp log cos
-tan acos asin atan cosh sinh tanh acosh asinh atanh</code>. For the
-<code>_standard</code> and <code>_opposite_trick</code> versions, all
-these functions should respect the current rounding mode fixed by a
-call to <code>downward</code> or <code>upward</code>.</p>
+<code>rounded_transc_std</code> and <code>rounded_transc_opp</code>
+classes expect the <code>std</code> namespace to provide the functions
+<code>exp log cos tan acos asin atan cosh sinh tanh acosh asinh
+atanh</code>. For the <code>_std</code> and <code>_opp</code>
+versions, all these functions should respect the current rounding mode
+fixed by a call to <code>downward</code> or <code>upward</code>.</p>
 
 <p>Unfortunately, it rarely is the case. It is the reason why the
 <code>rounded_transc_dummy</code> class is provided. This class does
-not depend on <code>std</code>. It is the reason why
-<code>rounded_transc_dummy</code> is the default class rather than
-<code>rounded_transc_opposite_trick</code>.</p>
+not depend on the functions from the <code>std</code> namespace. It is
+the reason why <code>rounded_transc_dummy</code> is the default class
+rather than <code>rounded_transc_opp</code>.</p>
 
 <p>However, there is no magic. The functions of
 <code>rounded_transc_dummy</code> do not compute anything. They only
@@ -896,20 +925,19 @@ return valid values. For example, <code>cos_down</code> always returns
 
 <h4>Basic functions</h4>
 
-<p>The <code>rounded_arithmetic_standard</code> and
-<code>rounded_arithmetic_opposite_trick</code> classes expect the
-operators <code>+ - * /</code> and the function <code>std::sqrt</code>
-to respect the current rounding mode.</p>
+<p>The <code>rounded_arith_std</code> and
+<code>rounded_arith_opp</code> classes expect the operators <code>+ -
+* /</code> and the function <code>std::sqrt</code> to respect the
+current rounding mode.</p>
 
-<p><code>rounded_arithmetic_opposite_trick</code> also requires
-<code>std::sqrt</code> to produce a square root rounded upward no more
-than 1 ulp away from the exact value (in order for
-<code>sqrt_down</code> to use <code>std::sqrt</code> without switching
-the rounding mode).</p>
+<p><code>rounded_arith_opp</code> also requires <code>std::sqrt</code>
+to produce a square root rounded upward no more than 1 ulp away from
+the exact value (in order for <code>sqrt_down</code> to use
+<code>std::sqrt</code> without switching the rounding mode).</p>
 
-<p><code>rounded_arithmetic_exact</code> requires
-<code>std::floor</code> and <code>std::ceil</code> to be defined since
-it can not rest on <code>to_int</code>.</p>
+<p><code>rounded_arith_exact</code> requires <code>std::floor</code>
+and <code>std::ceil</code> to be defined since it can not rest on
+<code>to_int</code>.</p>
 
 <h4>Rounding control</h4>
 
@@ -953,25 +981,21 @@ computer.</p>
 
 <li>if you need precise computations with the <code>float</code> or
 <code>double</code> types, use the default
-<code>rounded_arithmetic&lt;T&gt;</code>;
+<code>rounded_math&lt;T&gt;</code>;
 
 <li>for fast wide intervals without any rounding nor precision, use
-<code>save_state_nothing&lt;rounded_transc_exact&lt;T,
-rounded_arithmetic_exact&lt;T, rounding_control&lt;T&gt; &gt;
-&gt; &gt;</code>;
+<code>save_state_nothing&lt;rounded_transc_exact&lt;T&gt; &gt;</code>;
 
 <li>for an exact type (like <code>int</code> or <code>rational</code>
 with a little help for infinite and NaN values) without support for
 transcendental functions, the solution could be
 <code>save_state_nothing&lt;rounded_transc_dummy&lt;T,
-rounded_arithmetic_exact&lt;T, rounding_control&lt;T&gt; &gt;
-&gt; &gt;</code>;
+rounded_arith_exact&lt;T&gt; &gt; &gt;</code>;
 
 <li>for a symbolic type, use
-<code>save_state_nothing&lt;rounded_transc_exact&lt;T,
-rounded_arithmetic_exact&lt;T, my_rounding_control&gt; &gt;
-&gt;</code> (<code>my_rounding_control</code> should be defined in
-order to provide useful constants);
+<code>save_state_nothing&lt;rounded_transc_exact&lt;T&gt; &gt;</code>
+(<code>rounding_control&lt;T&gt;</code> should be specialized in order
+to provide useful constants);
 
 <li>if it is a more complex case than the previous ones, the best
 thing is probably to directly define your own policy.</p>
@@ -1199,7 +1223,7 @@ I horner(const I&amp; x, const I p[], int n) {
   }
   return y;
 
-  // restore the rounding mode by the destruction of rnd
+  // restore the rounding mode with the destruction of rnd
 }
 </pre>
 
