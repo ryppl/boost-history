@@ -40,6 +40,8 @@
 #ifndef BOOST_ALGORITHM_HPP
 # define BOOST_ALGORITHM_HPP
 
+#include <algorithm>
+
 # include <boost/detail/iterator.hpp>
 # include <boost/concept_check.hpp>
 
@@ -50,7 +52,6 @@
 // They have been checked into the detail directory because
 // there are some graph algorithms that use these functions.
 
-#include <algorithm>
 
 namespace boost {
 

@@ -11,12 +11,12 @@
 // Thu May 30     Proposed to put container interfaces
 //                into separate file for <algorithm> extensions [Herve]
 
+#ifndef BOOST_CONTAINER_ALGORITHM_HPP
+#define BOOST_CONTAINER_ALGORITHM_HPP
+
 // STL algorithm extensions 
 #include <boost/config.hpp>
 #include <boost/sequence_algo/algorithm.hpp>
-
-#ifndef BOOST_CONTAINER_ALGORITHM_HPP
-#define BOOST_CONTAINER_ALGORITHM_HPP
 
 namespace boost {
 
@@ -259,5 +259,7 @@ namespace boost {
   {
     return is_sorted(begin(c), end(c), comp);
   }
+
+} // namespace boost
 
 #endif // BOOST_CONTAINER_ALGORITHM_HPP
