@@ -25,7 +25,7 @@
 #include "boost/mpl/select_type.hpp" 
 #include "boost/mpl/int_t.hpp" 
 #include "boost/mpl/faked_typedef.hpp" 
-#include "boost/mpl/preprocessor/enumerate_default_params.hpp" 
+#include "boost/mpl/preprocessor/default_template_params.hpp" 
 #include "boost/type_traits/same_traits.hpp" 
 
 namespace boost {
@@ -105,12 +105,12 @@ struct default_case
 
 template<
       typename T
-    , BOOST_MPL_ENUMERATE_DEFAULT_PARAMS(typename C, null_argument)
+    , BOOST_MPL_DEFAULT_TEMPLATE_PARAMS(typename C, null_argument)
     > 
 struct switch_on
     : mpl::detail::switch_impl<
             T
-          , mpl::type_list<BOOST_MPL_ENUMERATE_PARAMS(C)>
+          , mpl::type_list<BOOST_MPL_TEMPLATE_PARAMS(C)>
           >::type
 {
 };

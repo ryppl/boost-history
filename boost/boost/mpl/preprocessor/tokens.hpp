@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-// boost mpl/math/abs.hpp header file
+// boost mpl/preprocessor/tokens.hpp header file
 // See http://www.boost.org for updates, documentation, and revision history.
 //-----------------------------------------------------------------------------
 //
@@ -14,43 +14,10 @@
 // suitability of this software for any purpose. It is provided "as is" 
 // without express or implied warranty.
 
-#ifndef BOOST_MPL_MATH_ABS_HPP
-#define BOOST_MPL_MATH_ABS_HPP
+#ifndef BOOST_MPL_PREPROCESSOR_TOKENS_HPP
+#define BOOST_MPL_PREPROCESSOR_TOKENS_HPP
 
-#include "boost/mpl/int_t.hpp"
-#include "boost/config.hpp"
+#define BOOST_MPL_PREPROCESSOR_PLUS_TOKEN() +
+#define BOOST_MPL_PREPROCESSOR_MINUS_TOKEN() -
 
-namespace boost {
-namespace mpl {
-
-namespace detail {
-// workaround for bcc integral constant expressions bugs
-template<long N>
-struct abs_impl
-{
-    BOOST_STATIC_CONSTANT(unsigned long, value = (N < 0 ? -N : N));
-};
-
-} // namespace detail
-
-template<long N>
-struct abs
-{
- private:
-    typedef mpl::detail::abs_impl<N> impl_;
-
- public:
-    BOOST_STATIC_CONSTANT(unsigned long, value = impl_::value);
-    typedef mpl::int_t<(impl_::value)> type;
-};
-
-template<typename N>
-struct abs_t
-    : abs<N::value>
-{
-};
-
-} // namespace mpl
-} // namespace boost 
-
-#endif // BOOST_MPL_MATH_ABS_HPP
+#endif // BOOST_MPL_PREPROCESSOR_TOKENS_HPP

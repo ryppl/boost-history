@@ -21,9 +21,9 @@
 #include "boost/mpl/insert.hpp"
 #include "boost/mpl/preprocessor/enumerate_n.hpp"
 #include "boost/mpl/preprocessor/config.hpp"
-#include "boost/preprocessor/sub.hpp"
+#include "boost/preprocessor/arithmetic/sub.hpp"
 #include "boost/preprocessor/dec.hpp"
-#include "boost/preprocessor/2nd_repeat.hpp"
+#include "boost/preprocessor/repeat_2nd.hpp"
 #include "boost/preprocessor/comma_if.hpp"
 
 namespace boost {
@@ -34,34 +34,34 @@ namespace detail {
 template<long N, typename Vector, typename T>
 struct type_vector_insert_algorithm;
 
-#define BOOST_MPL_TYPE_VECTOR_INSERT_ALGORITHM(i, unused1, unused2)           \
-    template<typename Vector, typename T>                                     \
-    struct type_vector_insert_algorithm<i, Vector, T>                         \
-    {                                                                         \
-        typedef type_vector<                                                  \
-            BOOST_MPL_ENUMERATE_FROM_N_TO_M(                                  \
-                  0                                                           \
-                , i                                                           \
-                , typename Vector::value_type_                                \
-                )                                                             \
-            BOOST_PREPROCESSOR_COMMA_IF(i) T                                  \
-            BOOST_PREPROCESSOR_COMMA_IF(                                      \
-                BOOST_PREPROCESSOR_SUB(BOOST_MPL_LAST_PARAMETER_INDEX, i)     \
-                )                                                             \
-                BOOST_MPL_ENUMERATE_FROM_N_TO_M(                              \
-                      i                                                       \
-                    , BOOST_MPL_LAST_PARAMETER_INDEX                          \
-                    , typename Vector::value_type_                            \
-                    )                                                         \
-            > sequence;                                                       \
-    };                                                                        \
+#define BOOST_MPL_LAST_PARAMETER BOOST_PREPROCESSOR_DEC(BOOST_MPL_PARAMETERS_NUMBER)
+#define BOOST_MPL_TYPE_VECTOR_INSERT_ALGORITHM(i, unused) \
+    template<typename Vector, typename T> \
+    struct type_vector_insert_algorithm<i, Vector, T> \
+    { \
+        typedef type_vector< \
+            BOOST_MPL_ENUMERATE_FROM_N_TO_M( \
+                  0 \
+                , i \
+                , typename Vector::value_type_ \
+                ) \
+            BOOST_PREPROCESSOR_COMMA_IF(i) T \
+            BOOST_PREPROCESSOR_COMMA_IF( \
+                BOOST_PREPROCESSOR_SUB(BOOST_MPL_LAST_PARAMETER, i) \
+                ) \
+                BOOST_MPL_ENUMERATE_FROM_N_TO_M( \
+                      i \
+                    , BOOST_MPL_LAST_PARAMETER \
+                    , typename Vector::value_type_ \
+                    ) \
+            > sequence; \
+    }; \
 /**/
 
 
-BOOST_PREPROCESSOR_2ND_REPEAT(
-      BOOST_PREPROCESSOR_DEC(BOOST_MPL_LAST_PARAMETER_INDEX)
+BOOST_PREPROCESSOR_REPEAT_2ND(
+      BOOST_PREPROCESSOR_DEC(BOOST_MPL_LAST_PARAMETER)
     , BOOST_MPL_TYPE_VECTOR_INSERT_ALGORITHM
-    , unused
     , unused
     )
 

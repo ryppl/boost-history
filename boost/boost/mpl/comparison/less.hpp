@@ -25,14 +25,31 @@
 namespace boost {
 namespace mpl {
 
+namespace detail {
+// workaround for bcc integral constant expressions bugs
+template< 
+      typename T1
+    , typename T2
+    >
+struct less_impl
+{
+    BOOST_STATIC_CONSTANT(bool, value = (T1::value < T2::value));
+};
+
+} // namespace detail
+
 template< 
       typename T1
     , typename T2
     >
 struct less
 {
-    BOOST_STATIC_CONSTANT(bool, value = (T1::value < T2::value));
-    typedef mpl::bool_t<value> type;
+ private:
+    typedef mpl::detail::less_impl<T1,T2> impl_;
+ 
+ public:
+    BOOST_STATIC_CONSTANT(bool, value = impl_::value);
+    typedef mpl::bool_t<(impl_::value)> type;
 };
 
 // shortcut form for 'less than N'
@@ -40,8 +57,10 @@ template<long N>
 struct lt
 {
     template<typename U> struct apply
-        : less< U,mpl::int_t<N> >
+//        : less< U,mpl::int_t<N> >
     {
+        typedef less< U,mpl::int_t<N> > type;
+        BOOST_STATIC_CONSTANT(bool, value = (less< U,mpl::int_t<N> >::value));
     };
 };
 

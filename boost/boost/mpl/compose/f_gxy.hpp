@@ -59,6 +59,23 @@ struct compose_f_gxy
     };
 };
 
+template<
+      typename UnaryFunction
+    , typename BinaryFunction
+    >
+struct compose_f_gyx
+{
+    template<typename U1, typename U2> struct apply
+        : mpl::detail::f_gxy<
+                UnaryFunction
+              , BinaryFunction
+              , U2
+              , U1
+              >::type
+    {
+    };
+};
+
 } // namespace mpl
 } // namespace boost 
 

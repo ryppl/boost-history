@@ -22,7 +22,7 @@
 #include "boost/mpl/list/algorithm.hpp"
 #include "boost/mpl/null.hpp"
 #include "boost/mpl/int_t.hpp"
-#include "boost/mpl/preprocessor/enumerate_default_params.hpp"
+#include "boost/mpl/preprocessor/default_template_params.hpp"
 #include "boost/mpl/preprocessor/config.hpp"
 #include "boost/preprocessor/repeat.hpp"
 #include "boost/preprocessor/comma_if.hpp"
@@ -47,26 +47,29 @@ struct list_traits<value_list_tag>
     };
 };
 
-#define BOOST_MPL_INT_VALUE_TEMPLATE_PARAMETER(i, param, unused)              \
-    BOOST_PREPROCESSOR_COMMA_IF(i) mpl::int_t<param##i>                       \
+#define BOOST_MPL_INT_VALUE_TEMPLATE_PARAMETER(i, param) \
+    BOOST_PREPROCESSOR_COMMA_IF(i) mpl::int_t<param##i> \
 /**/
 
-#define BOOST_MPL_ENUMERATE_INT_VALUE_PARAMS(param)                           \
-    BOOST_PREPROCESSOR_REPEAT(                                                \
-        BOOST_MPL_PARAMETERS_NUMBER                                           \
-      , BOOST_MPL_INT_VALUE_TEMPLATE_PARAMETER                                \
-      , param                                                                 \
-      , unused                                                                \
-      )                                                                       \
+#define BOOST_MPL_ENUMERATE_INT_VALUE_PARAMS(param) \
+    BOOST_PREPROCESSOR_REPEAT( \
+        BOOST_MPL_PARAMETERS_NUMBER \
+      , BOOST_MPL_INT_VALUE_TEMPLATE_PARAMETER \
+      , param \
+      ) \
 /**/
 
-template<BOOST_MPL_ENUMERATE_DEFAULT_PARAMS(long N, mpl::null_t::value)>
+template<BOOST_MPL_DEFAULT_TEMPLATE_PARAMS(long N, mpl::null_t::value)>
 struct value_list 
     : mpl::list_factory<
             value_list_tag
           , BOOST_MPL_ENUMERATE_INT_VALUE_PARAMS(N)
           >::type
 {
+    typedef typename mpl::list_factory<
+            value_list_tag
+          , BOOST_MPL_ENUMERATE_INT_VALUE_PARAMS(N)
+          >::type type;
 };
 
 #undef BOOST_MPL_INT_VALUE_TEMPLATE_PARAMETER

@@ -17,10 +17,10 @@
 #ifndef BOOST_MPL_TYPE_VECTOR_VECTOR_ELEMENT_HPP
 #define BOOST_MPL_TYPE_VECTOR_VECTOR_ELEMENT_HPP
 
+#include "boost/config.hpp"
 #include "boost/mpl/null.hpp"
 #include "boost/mpl/preprocessor/config.hpp"
 #include "boost/preprocessor/repeat.hpp"
-#include "boost/config.hpp"
 
 namespace boost {
 namespace mpl {
@@ -51,7 +51,7 @@ struct vector_element
 };
 
 // "real" vector_element
-#define BOOST_MPL_TYPE_VECTOR_ELEMENT(i, unused1, unused2)                    \
+#define BOOST_MPL_TYPE_VECTOR_ELEMENT(i, unused1)                             \
     template<typename Vector>                                                 \
     struct vector_element<Vector, i>                                          \
     {                                                                         \
@@ -70,7 +70,6 @@ struct vector_element
 BOOST_PREPROCESSOR_REPEAT(
       BOOST_MPL_PARAMETERS_NUMBER
     , BOOST_MPL_TYPE_VECTOR_ELEMENT
-    , unused
     , unused
     )
 

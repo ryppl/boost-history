@@ -18,12 +18,13 @@
 #define BOOST_MPL_TYPE_VECTOR_HPP
 
 #include "boost/config.hpp"
+#include "boost/mpl/preprocessor/template_params.hpp"
 #include "boost/mpl/type_vector/type_vector_fwd.hpp"
 #include "boost/mpl/type_vector/vector_element.hpp"
 #include "boost/mpl/type_vector/algorithm.hpp"
-#include "boost/mpl/nulls.hpp"
+#include "boost/mpl/null.hpp"
 #include "boost/mpl/preprocessor/config.hpp"
-#include "boost/mpl/preprocessor/arithmetic.hpp"
+#include "boost/mpl/preprocessor/tokens.hpp"
 #include "boost/type_traits/same_traits.hpp"
 #include "boost/preprocessor/repeat.hpp"
 #include "boost/preprocessor/if.hpp"
@@ -33,27 +34,28 @@ namespace boost {
 namespace mpl {
 
 // local macros, undefined at the end of the header
-#define BOOST_MPL_TYPE_VECTOR_ELEMENT_TYPEDEF(i, T, unused)                   \
-    typedef T##i value_type_##i;                                              \
+#define BOOST_MPL_TYPE_VECTOR_ELEMENT_TYPEDEF(i, T) \
+    typedef T##i value_type_##i; \
 /**/
 
-#define BOOST_MPL_IS_TYPE_VECTOR_ARGUMENT(i, T, unused)                       \
-    BOOST_PREPROCESSOR_IF(i, BOOST_MPL_PLUS, BOOST_PREPROCESSOR_EMPTY)()      \
-    !::boost::is_same<T##i, mpl::null_argument>::value                        \
+#define BOOST_MPL_IS_TYPE_VECTOR_ARGUMENT(i, T) \
+    BOOST_PREPROCESSOR_IF(i \
+        , BOOST_MPL_PREPROCESSOR_PLUS_TOKEN \
+        , BOOST_PREPROCESSOR_EMPTY)() \
+    !::boost::is_same<T##i, mpl::null_argument>::value \
 /**/
 
-#define BOOST_MPL_TYPE_VECTOR_SIZE(T)                                         \
-    BOOST_PREPROCESSOR_REPEAT(                                                \
-        BOOST_MPL_PARAMS_LIST_SIZE                                            \
-      , BOOST_MPL_IS_TYPE_VECTOR_ARGUMENT                                     \
-      , T                                                                     \
-      , unused                                                                \
-      )                                                                       \
+#define BOOST_MPL_TYPE_VECTOR_SIZE(T) \
+    BOOST_PREPROCESSOR_REPEAT( \
+        BOOST_MPL_PARAMETERS_NUMBER \
+      , BOOST_MPL_IS_TYPE_VECTOR_ARGUMENT \
+      , T \
+      ) \
 /**/
 
 // type_vector itself
 
-template<BOOST_MPL_ENUMERATE_PARAMS(typename T)>
+template<BOOST_MPL_TEMPLATE_PARAMS(typename T)>
 struct type_vector
 {
  private:
@@ -67,10 +69,9 @@ struct type_vector
     //    ...
     //    typedef TN value_type_N;
     BOOST_PREPROCESSOR_REPEAT(
-          BOOST_MPL_PARAMS_LIST_SIZE
+          BOOST_MPL_PARAMETERS_NUMBER
         , BOOST_MPL_TYPE_VECTOR_ELEMENT_TYPEDEF
         , T
-        , unused
         )
 
     BOOST_STATIC_CONSTANT(long, size = BOOST_MPL_TYPE_VECTOR_SIZE(T));
@@ -83,7 +84,6 @@ struct type_vector
 
 #undef BOOST_MPL_TYPE_VECTOR_SIZE
 #undef BOOST_MPL_IS_TYPE_VECTOR_ARGUMENT
-#undef BOOST_MPL_PLUS
 #undef BOOST_MPL_TYPE_VECTOR_ELEMENT_TYPEDEF
 
 } // namespace mpl

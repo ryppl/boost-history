@@ -17,12 +17,8 @@
 #ifndef BOOST_MPL_PREPROCESSOR_CONFIG_HPP
 #define BOOST_MPL_PREPROCESSOR_CONFIG_HPP
 
-#include "boost/preprocessor/dec.hpp"
-
-#define BOOST_MPL_PARAMETERS_NUMBER 15
-
-#define BOOST_MPL_LAST_PARAMETER_INDEX                                        \
-    BOOST_PREPROCESSOR_DEC(BOOST_MPL_TEMPLATE_PARAMETERS_NUMBER)              \
-/**/
+#if !defined(BOOST_MPL_PARAMETERS_NUMBER)
+#   define BOOST_MPL_PARAMETERS_NUMBER 15
+#endif
 
 #endif // BOOST_MPL_PREPROCESSOR_CONFIG_HPP

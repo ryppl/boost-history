@@ -18,14 +18,14 @@
 #define BOOST_MPL_TYPE_VECTOR_FWD_HPP
 
 #include "boost/mpl/null.hpp"
-#include "boost/mpl/preprocessor/enumerate_default_params.hpp"
+#include "boost/mpl/preprocessor/default_template_params.hpp"
 
 namespace boost {
 namespace mpl {
 
 struct type_vector_sequence_tag;
 
-template<BOOST_MPL_ENUMERATE_DEFAULT_PARAMS(typename T, mpl::null_argument)>
+template<BOOST_MPL_DEFAULT_TEMPLATE_PARAMS(typename T, mpl::null_argument)>
 struct type_vector;
 
 } // namespace mpl

@@ -21,7 +21,7 @@
 #include "boost/mpl/list/factory.hpp"
 #include "boost/mpl/list/algorithm.hpp"
 #include "boost/mpl/null.hpp"
-#include "boost/mpl/preprocessor/enumerate_default_params.hpp"
+#include "boost/mpl/preprocessor/default_template_params.hpp"
 
 namespace boost {
 namespace mpl {
@@ -36,10 +36,14 @@ struct list_traits<type_list_tag>
 };
 
 
-template<BOOST_MPL_ENUMERATE_DEFAULT_PARAMS(typename T, mpl::null_argument)>
+template<BOOST_MPL_DEFAULT_TEMPLATE_PARAMS(typename T, mpl::null_argument)>
 struct type_list
-    : mpl::list_factory<type_list_tag, BOOST_MPL_ENUMERATE_PARAMS(T)>::type
+    : mpl::list_factory<type_list_tag, BOOST_MPL_TEMPLATE_PARAMS(T)>::type
 {
+    typedef typename mpl::list_factory<
+          type_list_tag
+        , BOOST_MPL_TEMPLATE_PARAMS(T)
+        >::type type;
 };
 
 } // namespace mpl

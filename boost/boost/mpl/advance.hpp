@@ -43,7 +43,7 @@ struct advance
         
     typedef typename mpl::for_loop< 
           mpl::int_t<0>
-        , mpl::lt<mpl::abs<N>::value>
+        , mpl::lt<(mpl::abs<N>::value)>
         , next_func_
         , Iterator
         , mpl::compose_f_gxy<
@@ -58,7 +58,7 @@ struct advance
 
 template<typename Iterator, typename N>
 struct advance_t
-    : advance<Iterator,N::value>
+    : advance<Iterator, N::value>
 {
 };
 

@@ -17,23 +17,28 @@
 #ifndef BOOST_MPL_PREPROCESSOR_ENUMERATE_N_HPP
 #define BOOST_MPL_PREPROCESSOR_ENUMERATE_N_HPP
 
-#include "boost/preprocessor/add.hpp"
-#include "boost/preprocessor/sub.hpp"
+#include "boost/preprocessor/arithmetic/add.hpp"
+#include "boost/preprocessor/arithmetic/sub.hpp"
 #include "boost/preprocessor/repeat.hpp"
 #include "boost/preprocessor/comma_if.hpp"
 #include "boost/preprocessor/cat.hpp"
 
-#define BOOST_MPL_NUMBERED_EXPRESSION(i, expr, n)                             \
+#define BOOST_MPL_NUMBERED_EXPRESSION(i, expr_n_tp)                           \
     BOOST_PREPROCESSOR_COMMA_IF(i)                                            \
-    BOOST_PREPROCESSOR_CAT(expr, BOOST_PREPROCESSOR_ADD(i, n))                \
+    BOOST_PREPROCESSOR_CAT(                                                   \
+        BOOST_PREPROCESSOR_TUPLE_ELEM(2, 0, expr_n_tp)                        \
+      , BOOST_PREPROCESSOR_ADD(                                               \
+            i                                                                 \
+          , BOOST_PREPROCESSOR_TUPLE_ELEM(2, 1, expr_n_tp)                    \
+          )                                                                   \
+      )                                                                       \
 /**/
 
 #define BOOST_MPL_ENUMERATE_N(n, expr)                                        \
     BOOST_PREPROCESSOR_REPEAT(                                                \
         n                                                                     \
       , BOOST_MPL_NUMBERED_EXPRESSION                                         \
-      , expr                                                                  \
-      , 0                                                                     \
+      , (expr, 0)                                                             \
       )                                                                       \
 /**/
 
@@ -41,8 +46,7 @@
     BOOST_PREPROCESSOR_REPEAT(                                                \
         BOOST_PREPROCESSOR_SUB(m, n)                                          \
       , BOOST_MPL_NUMBERED_EXPRESSION                                         \
-      , expr                                                                  \
-      , n                                                                     \
+      , (expr, n)                                                             \
       )                                                                       \
 /**/
 

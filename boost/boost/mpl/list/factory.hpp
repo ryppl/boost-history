@@ -18,15 +18,14 @@
 #define BOOST_MPL_LIST_FACTORY_HPP
 
 #include "boost/mpl/list/traits.hpp"
-#include "boost/mpl/preprocessor/enumerate_params.hpp"
+#include "boost/mpl/preprocessor/template_params.hpp"
 #include "boost/mpl/preprocessor/enumerate_n.hpp"
 #include "boost/mpl/preprocessor/repeat_n.hpp"
-#include "boost/mpl/preprocessor/arithmetic.hpp"
+#include "boost/mpl/preprocessor/tokens.hpp"
 #include "boost/mpl/preprocessor/config.hpp"
 #include "boost/type_traits/same_traits.hpp"
-#include "boost/preprocessor/2nd_repeat.hpp"
+#include "boost/preprocessor/repeat_2nd.hpp"
 #include "boost/preprocessor/empty.hpp"
-#include "boost/preprocessor/unused.hpp"
 #include "boost/preprocessor/inc.hpp"
 #include "boost/preprocessor/dec.hpp"
 
@@ -38,7 +37,7 @@ namespace detail {
 template<long N>
 struct list_factory_part1
 {
-    template<typename Tag, BOOST_MPL_ENUMERATE_PARAMS(typename T)>
+    template<typename Tag, BOOST_MPL_TEMPLATE_PARAMS(typename T)>
     struct part2
     { 
         typedef typename mpl::list_traits<Tag>::null_node type;
@@ -49,7 +48,7 @@ struct list_factory_part1
 template<>                                                                    \
 struct list_factory_part1<N>                                                  \
 {                                                                             \
-    template<typename Tag, BOOST_MPL_ENUMERATE_PARAMS(typename T)>            \
+    template<typename Tag, BOOST_MPL_TEMPLATE_PARAMS(typename T)>             \
     struct part2                                                              \
     {                                                                         \
         typedef BOOST_MPL_ENUMERATE_N(N                                       \
@@ -60,14 +59,13 @@ struct list_factory_part1<N>                                                  \
 };                                                                            \
 /**/
 
-#define BOOST_MPL_LIST_FACTORY_SPEC(i, unused1, unused2)                      \
+#define BOOST_MPL_LIST_FACTORY_SPEC(i, unused)                                \
 	  BOOST_MPL_LIST_FACTORY_SPECIALIZATION(BOOST_PREPROCESSOR_INC(i))        \
 /**/
 
-BOOST_PREPROCESSOR_2ND_REPEAT(
+BOOST_PREPROCESSOR_REPEAT_2ND(
       BOOST_PREPROCESSOR_DEC(BOOST_MPL_PARAMETERS_NUMBER)
     , BOOST_MPL_LIST_FACTORY_SPEC
-    , unused
     , unused
     )
 
@@ -80,30 +78,37 @@ struct is_list_argument
         );
 };
 
-#define BOOST_MPL_IS_LIST_ARGUMENT(i, Tag, T)                                 \
-    BOOST_PREPROCESSOR_IF(i, BOOST_MPL_PLUS, BOOST_PREPROCESSOR_EMPTY)()      \
-    ::boost::mpl::detail::is_list_argument<Tag, T##i>::value                  \
+#define BOOST_MPL_IS_LIST_ARGUMENT(i, Tag_T_tuple) \
+    BOOST_PREPROCESSOR_IF(i, \
+          BOOST_MPL_PREPROCESSOR_PLUS_TOKEN \
+        , BOOST_PREPROCESSOR_EMPTY)() \
+    ::boost::mpl::detail::is_list_argument< \
+          BOOST_PREPROCESSOR_TUPLE_ELEM(2,0,Tag_T_tuple) \
+        , BOOST_PREPROCESSOR_CAT( \
+              BOOST_PREPROCESSOR_TUPLE_ELEM(2,1,Tag_T_tuple) \
+            , i \
+            ) \
+        >::value \
 /**/
 
-#define BOOST_MPL_LIST_ARGUMENTS_NUMBER(Tag, T)                               \
-    BOOST_PREPROCESSOR_REPEAT(                                                \
-        BOOST_MPL_PARAMETERS_NUMBER                                           \
-      , BOOST_MPL_IS_LIST_ARGUMENT                                            \
-      , Tag                                                                   \
-      , T                                                                     \
-      )                                                                       \
+#define BOOST_MPL_LIST_ARGUMENTS_NUMBER(Tag, T) \
+    BOOST_PREPROCESSOR_REPEAT( \
+        BOOST_MPL_PARAMETERS_NUMBER \
+      , BOOST_MPL_IS_LIST_ARGUMENT \
+      , (Tag, T) \
+      ) \
 /**/
 
 } // namespace detail
 
 
-template<typename Tag, BOOST_MPL_ENUMERATE_PARAMS(typename T)>
+template<typename Tag, BOOST_MPL_TEMPLATE_PARAMS(typename T)>
 struct list_factory
 {
     typedef typename mpl::detail::list_factory_part1<
                 BOOST_MPL_LIST_ARGUMENTS_NUMBER(Tag, T)
                 >::template part2< Tag
-                                  , BOOST_MPL_ENUMERATE_PARAMS(T)
+                                  , BOOST_MPL_TEMPLATE_PARAMS(T)
                                   >::type type;
 };
 

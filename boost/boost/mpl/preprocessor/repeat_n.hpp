@@ -19,13 +19,12 @@
 
 #include "boost/preprocessor/repeat.hpp"
 
-#define BOOST_MPL_IDENTITY_MACRO(n, expr, unused) expr
+#define BOOST_MPL_IDENTITY_MACRO(n, expr) expr
 #define BOOST_MPL_REPEAT_N(n, expr)                                           \
     BOOST_PREPROCESSOR_REPEAT(                                                \
         n                                                                     \
       , BOOST_MPL_IDENTITY_MACRO                                              \
       , expr                                                                  \
-      , unused                                                                \
       )                                                                       \
 /**/
 

@@ -17,14 +17,6 @@
 #ifndef BOOST_MPL_ET_HPP
 #define BOOST_MPL_ET_HPP
 
-namespace boost {
-namespace mpl {
-
-struct _1;
-struct _2;
-struct placeholder;
-
-} // namespace mpl
-} // namespace boost 
+#include "boost/mpl/et/placeholder.hpp"
 
 #endif // BOOST_MPL_ET_HPP
