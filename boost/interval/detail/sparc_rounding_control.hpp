@@ -1,21 +1,24 @@
-/* boost linux_rounding_control.hpp header file
+/* Boost interval/detail/sparc_rounding_control.hpp file
  *
  * Copyright Jens Maurer 2000
+ * Copyright Hervé Brönnimann, Guillaume Melquiond, Sylvain Pion 2002
  * Permission to use, copy, modify, sell, and distribute this software
- * is hereby granted without free provided that the above copyright notice
+ * is hereby granted without fee provided that the above copyright notice
  * appears in all copies and that both that copyright notice and this
  * permission notice appear in supporting documentation,
  *
- * Jens Maurer makes no representations about the suitability of this
- * software for any purpose. It is provided "as is" without express or
- * implied warranty.
- *
- * The basic code in this file was kindly provided by Jeremy Siek.
- *
- * See http://www.boost.org/ for most recent version including documentation.
+ * None of the above authors nor Polytechnic University make any
+ * representation about the suitability of this software for any
+ * purpose. It is provided "as is" without express or implied warranty.
  *
  * $Id$
+ *
+ * Revision history:
+ *   2002-08-31	 Prepared for boost formal review
+ *   2000-09-24	 Separated from interval.hpp
  */
+
+ /* The basic code in this file was kindly provided by Jeremy Siek. */
 
 #ifndef BOOST_INTERVAL_DETAIL_SPARC_ROUNDING_CONTROL_HPP
 #define BOOST_INTERVAL_DETAIL_SPARC_ROUNDING_CONTROL_HPP
