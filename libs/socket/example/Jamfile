@@ -1,6 +1,6 @@
 # declare the location of this subproject relative to the root
 
-subproject libs/sockets/example ;
+subproject libs/socket/example ;
 
 # bring in the rules for testing
 SEARCH on testing.jam = $(BOOST_BUILD_PATH) ;

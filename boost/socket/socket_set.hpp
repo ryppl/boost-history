@@ -88,12 +88,12 @@ namespace boost
         FD_ZERO(&set_);
       }
 
-      void remove(socket_type socket)
+      void erase(socket_type socket)
       {
         FD_CLR(socket, &set_) ;
       }
 
-      void add(socket_type socket)
+      void insert(socket_type socket)
       {
         FD_SET(socket, &set_);
       }
@@ -211,12 +211,12 @@ namespace boost
         FD_ZERO(&set_);
       }
 
-      void remove(socket_type socket)
+      void erase(socket_type socket)
       {
         FD_CLR(socket, &set_) ;
       }
 
-      void add(socket_type socket)
+      void insert(socket_type socket)
       {
         FD_SET(socket, &set_);
       }

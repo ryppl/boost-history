@@ -76,9 +76,11 @@ namespace boost
 
     //! platform independent, low level interface
     /** Implementation will depend on platform */
+    template <typename ErrorPolicy=default_error_policy>
     class socket_base
     {
     public:
+      typedef ErrorPolicy error_policy;
 
       socket_base()
           : socket_(invalid_socket)
@@ -110,7 +112,7 @@ namespace boost
                           &option.value);
 #endif
         if (ret==socket_error)
-          ret=check_error();
+          ret=error_policy::handle_error();
         return ret;
       }
 
@@ -124,7 +126,7 @@ namespace boost
                                option.level, option.option, &option.value,
                                &len);
         if (ret==socket_error)
-          check_error();
+          error_policy::handle_error();
         return ret;
       }
 
@@ -139,14 +141,14 @@ namespace boost
                                (char*)&option.value,
                                option.size());
         if (ret==socket_error)
-          check_error();
+          error_policy::handle_error();
         return ret;
       }
 
       // create a socket, Address family, type {SOCK_STREAM, SOCK_DGRAM },
       // protocol is af specific
       template <typename Protocol>
-      SocketError open(const Protocol& protocol)
+      int open(const Protocol& protocol)
       {
         boost::function_requires< ProtocolConcept<Protocol> >();
 
@@ -156,40 +158,40 @@ namespace boost
                            protocol.protocol());
         if (socket_==invalid_socket)
         {
-          SocketError err=check_error();
+          int err=error_policy::handle_error();
           return err;
         }
         return Success;
       }
 
       template <class Addr>
-      SocketError connect(const Addr& address)
+      int connect(const Addr& address)
       {
         boost::function_requires< AddressConcept<Addr> >();
         int ret= ::connect(socket_,
                            address.socket_address(),
                            address.size());
         if (ret!=Success)
-          return check_error();
+          return error_policy::handle_error();
         return Success;
       }
 
       template <class Addr>
-      SocketError bind(const Addr& address)
+      int bind(const Addr& address)
       {
         int ret=::bind(socket_,
                        address.socket_address(),
                        address.size());
         if (ret!=Success)
-          return check_error();
+          return error_policy::handle_error();
         return Success;
       }
 
-      SocketError listen(int backlog)
+      int listen(int backlog)
       {
         int ret=::listen(socket_, backlog);
         if (ret!=0)
-          return check_error();
+          return error_policy::handle_error();
         return Success;
      }
 
@@ -204,9 +206,9 @@ namespace boost
           = ::accept(socket_, address.socket_address(), &len);
         if (new_socket==invalid_socket)
         {
-          /*int ret=*/check_error();
+          /*int ret=*/error_policy::handle_error();
         }
-        return socket_base(new_socket);
+        return socket_base<error_policy>(new_socket);
       }
 
       //! receive data
@@ -214,6 +216,8 @@ namespace boost
       {
         int flags = 0;
         int ret=::recv(socket_, (char*)data, len,flags);
+        if (ret==socket_error)
+          return error_policy::handle_error();
         return ret;
       }
 
@@ -223,20 +227,22 @@ namespace boost
       {
         int flags = 0;
         int ret=::send(socket_, (const char*)data, len, flags);
+        if (ret==socket_error)
+          return error_policy::handle_error();
         return ret;
       }
 
       //! shut the socket down
-      SocketError shutdown(Direction how=Both)
+      int shutdown(Direction how=Both)
       {
         int ret = ::shutdown(socket_, static_cast<int>(how));
         if (ret!=Success)
-          return check_error();
+          return error_policy::handle_error();
         return Success;
       }
 
       //! close the socket
-      SocketError close()
+      int close()
       {
 #if defined(USES_WINSOCK2)
         int ret = ::closesocket(socket_);
@@ -244,7 +250,7 @@ namespace boost
         int ret = ::close(socket_);
 #endif
         if (ret!=Success)
-          return check_error();
+          return error_policy::handle_error();
 
         socket_=invalid_socket;
 
@@ -296,7 +302,8 @@ namespace boost
     };
 
 #ifdef _WIN32
-    bool socket_base::initialise()
+    template <typename ErrorPolicy>
+    bool socket_base<ErrorPolicy>::initialise()
     {
       WORD wVersionRequested;
       WSADATA wsaData;
@@ -315,17 +322,20 @@ namespace boost
       return false;
     }
 
-    void socket_base::finalise()
+    template <typename ErrorPolicy>
+    void socket_base<ErrorPolicy>::finalise()
     {
       WSACleanup();
     }
 #else
-    bool socket_base::initialise()
+    template <typename ErrorPolicy>
+    bool socket_base<ErrorPolicy>::initialise()
     {
       return true;
     }
 
-    void socket_base::finalise()
+    template <typename ErrorPolicy>
+    void socket_base<ErrorPolicy>::finalise()
     {
     }
 #endif

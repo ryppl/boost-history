@@ -38,7 +38,8 @@ using namespace boost::socket;
 void client_test()
 {
   BOOST_MESSAGE("starting");
-  socket_base::initialise();
+  // this call needs to happen automatically
+  socket_base<>::initialise();
 
   ip4::address addr;
   addr.port(3234);
@@ -47,10 +48,12 @@ void client_test()
 
   ip4::tcp_protocol protocol;
 
+  connector<> connector;
+
   try {
 
     time_value timeout(10,0);
-    data_socket socket(connect(protocol,addr,timeout));
+    data_socket<> socket(connector.connect(protocol,addr,timeout));
     BOOST_CHECK(socket.is_valid());
     BOOST_CHECK(socket.setsockopt(boost::socket::socket_option_linger(1000))
                 ==boost::socket::Success);

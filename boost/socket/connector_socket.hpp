@@ -26,41 +26,50 @@ namespace boost
 {
   namespace socket
   {
-    template <typename Protocol, typename Addr>
-    data_socket connect(const Protocol& protocol, const Addr& address)
+    template <typename ErrorPolicy=default_error_policy>
+    struct connector
     {
-      socket_base socket;
-      socket.open(protocol);
-      socket.connect(address);
-      return data_socket(socket);
-    }
+      typedef ErrorPolicy error_policy;
 
-    template <typename Protocol, typename Addr>
-    data_socket connect(const Protocol& protocol, const Addr& address,
-                        const time_value& timeout)
-    {
-      socket_base socket_to_connect;
-      socket_to_connect.open(protocol);
-      socket_option_non_blocking non_block(true);
-      socket_to_connect.ioctl(non_block);
-      SocketError err=socket_to_connect.connect(address);
-      if (err==WouldBlock)
+      template <typename Protocol, typename Addr>
+      data_socket<error_policy> connect(
+        const Protocol& protocol,
+        const Addr& address)
       {
-        socket_set fdset;
-        fdset.add(socket_to_connect.socket());
-        int sel=
-          ::select(fdset.width(),0,fdset.fdset(),0,
-                   (timeval*)timeout.timevalue());
-        if (sel==0)
-          throw socket_exception();
-        if (sel!=1)
-        {
-          check_error();
-          throw socket_exception();
-        }
+        socket_base<error_policy> socket;
+        socket.open(protocol);
+        socket.connect(address);
+        return data_socket<error_policy>(socket);
       }
-      return data_socket(socket_to_connect);
-    }
+
+      template <typename Protocol, typename Addr>
+      data_socket<error_policy> connect(
+        const Protocol& protocol,
+        const Addr& address,
+        const time_value& timeout)
+      {
+        socket_base<error_policy> socket_to_connect;
+        socket_to_connect.open(protocol);
+        socket_option_non_blocking non_block(true);
+        socket_to_connect.ioctl(non_block);
+        int err=socket_to_connect.connect(address);
+        if (err==WouldBlock)
+        {
+          socket_set fdset;
+          fdset.insert(socket_to_connect.socket());
+          int sel=
+            ::select(fdset.width(),0,fdset.fdset(),0,
+                     (timeval*)timeout.timevalue());
+          if (sel!=1)
+          {
+            error_policy::handle_error();
+            return data_socket<error_policy>(invalid_socket);
+          }
+        }
+        return data_socket<error_policy>(socket_to_connect);
+      }
+
+    };
 
   }// namespace
 }// namespace

@@ -29,15 +29,20 @@ namespace boost
   namespace socket
   {
 
-    template<class Element, class Traits = std::char_traits<Element> >
-    class basic_socket_streambuf : public std::basic_streambuf<Element, Traits>
+    template <typename Element,
+              typename Traits = std::char_traits<Element>,
+              typename ErrorPolicy=default_error_policy
+              >
+    class basic_socket_streambuf
+      : public std::basic_streambuf<Element, Traits>
     {
     public:
+      typedef ErrorPolicy error_policy;
       typedef Element char_type;
       typedef Traits traits_type;
       typedef typename Traits::int_type int_type;
 
-      explicit basic_socket_streambuf(socket_base& sock,
+      explicit basic_socket_streambuf(socket_base<error_policy> & sock,
                                       std::size_t bufsize=4096)
           : socket_(sock)
       {
@@ -102,9 +107,9 @@ namespace boost
           return Traits::eof();
         else if (r == socket_error)
         {
-          SocketError err=check_error();
+          int err=error_policy::handle_error();
           if (err!=WouldBlock)
-            throw socket_exception();
+            throw socket_exception("error in stream",err);
         }
         setg(eback(), gptr(), gptr() + r);
         return *gptr();
@@ -126,7 +131,7 @@ namespace boost
       }
 
       Element* egbuf_;
-      socket_base socket_;
+      socket_base<error_policy> socket_;
     };
 
   }// namespace

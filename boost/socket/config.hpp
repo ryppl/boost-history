@@ -23,7 +23,7 @@
 #elif defined(__CYGWIN__)
 
 #else
-
+#include "sys/socket.h"
 #endif
 
 namespace boost

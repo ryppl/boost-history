@@ -25,16 +25,20 @@ namespace boost
   namespace socket
   {
 
-    template < typename Element, class Traits = std::char_traits<Element> >
+    template <typename Element,
+              typename Traits = std::char_traits<Element>,
+              typename ErrorPolicy=default_error_policy
+              >
     class basic_socket_stream
       : public boost::io::basic_wrapping_iostream<
       basic_socket_streambuf<Element, Traits> >
     {
     public:
+      typedef ErrorPolicy error_policy;
       typedef Element  char_type;
       typedef Traits  traits_type;
 
-      explicit basic_socket_stream(data_socket& socket)
+      explicit basic_socket_stream(data_socket<error_policy>& socket)
           : boost::io::basic_wrapping_iostream<
         basic_socket_streambuf<Element, Traits> >(socket.base())
       {}

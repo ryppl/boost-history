@@ -37,12 +37,12 @@ using namespace boost::unit_test_framework;
 
 using namespace boost::socket;
 
-typedef std::map<data_socket, boost::socket::ip4::address> Clients;
+typedef std::map<data_socket<>, boost::socket::ip4::address> Clients;
 
 void server_test()
 {
   BOOST_MESSAGE("starting");
-  socket_base::initialise();
+  socket_base<>::initialise();
 
   Clients clients;
 
@@ -54,11 +54,11 @@ void server_test()
 
   socket_option_non_blocking non_block(true);
 
-  acceptor_socket listening_socket;
+  acceptor_socket<> listening_socket;
   BOOST_CHECK(listening_socket.open(protocol,addr,6)==boost::socket::Success);
 
   boost::socket::socket_set master_set;
-  master_set.add(listening_socket.socket());
+  master_set.insert(listening_socket.socket());
 
   while (true)
   {
@@ -73,7 +73,7 @@ void server_test()
                  0,
                  0)==socket_error)
     {
-      check_error();
+      default_error_policy::handle_error();
       return;
     }
 
@@ -89,11 +89,11 @@ void server_test()
         while (true)
         {
           ip4::address client;
-          data_socket accepted_socket=listening_socket.accept(client);
+          data_socket<> accepted_socket=listening_socket.accept(client);
           if (accepted_socket.is_valid())
           {
             BOOST_CHECK(accepted_socket.ioctl(non_block)==boost::socket::Success);
-            master_set.add(accepted_socket.socket());
+            master_set.insert(accepted_socket.socket());
             BOOST_MESSAGE("Accepted client");
             BOOST_MESSAGE(client.ip());
             BOOST_MESSAGE(client.hostname());
@@ -112,7 +112,7 @@ void server_test()
         BOOST_MESSAGE("Receiving data");
 
         std::string str;
-        data_socket data_socket(*i);
+        data_socket<> data_socket(*i);
 
         ip4::address& client=clients[data_socket];
         BOOST_MESSAGE(client.hostname());
@@ -126,7 +126,7 @@ void server_test()
         }
         if (ss.eof())
         {
-          master_set.remove(data_socket.socket());
+          master_set.erase(data_socket.socket());
           clients.erase(data_socket);
           BOOST_CHECK(data_socket.close()==boost::socket::Success);
         }

@@ -29,9 +29,12 @@ namespace boost
 
     //! acceptor
     /** interface for a socket that can accept connections. */
+    template <typename ErrorPolicy=default_error_policy>
     class acceptor_socket
     {
     public:
+      typedef ErrorPolicy error_policy;
+
       template <typename SocketOption>
       int ioctl(SocketOption& option)
       {
@@ -53,14 +56,14 @@ namespace boost
       //! Open a socket for passive connection acceptance
       /** Blocking version */
       template <typename Protocol, class Addr>
-      SocketError open(const Protocol& protocol,
-                       const Addr& address)
+      int open(const Protocol& protocol,
+               const Addr& address)
       {
-        const SocketError open_error=base_.open(protocol);
-        if (open_error!=Success)
+        const int open_error=base_.open(protocol);
+        if (open_error!=error_policy::Success)
           return open_error;
 
-        const SocketError bind_error=base_.bind(address);
+        const int bind_error=base_.bind(address);
         if (bind_error!=Success)
           return bind_error;
 
@@ -70,15 +73,15 @@ namespace boost
       //! Open a socket for passive connection acceptance
       /** Non-blocking version */
       template <typename Protocol, class Addr>
-      SocketError open(const Protocol& protocol,
+      int open(const Protocol& protocol,
                        const Addr& address,
                        std::size_t backlog)
       {
-        const SocketError open_error=base_.open(protocol);
+        const int open_error=base_.open(protocol);
         if (open_error!=Success)
           return open_error;
 
-        const SocketError bind_error=base_.bind(address);
+        const int bind_error=base_.bind(address);
         if (bind_error!=Success)
           return bind_error;
 
@@ -86,7 +89,7 @@ namespace boost
         socket_option_non_blocking non_block(true);
         base_.ioctl(non_block);
 
-        const SocketError listen_error=base_.listen(backlog);
+        const int listen_error=base_.listen(backlog);
         if (listen_error==Success || listen_error==WouldBlock)
           return Success;
         return listen_error;
@@ -94,21 +97,21 @@ namespace boost
 
       //! accept a connection
       template <class Addr>
-      data_socket accept(Addr& address)
+      data_socket<error_policy> accept(Addr& address)
       {
-        return data_socket(base_.accept(address));
+        return data_socket<error_policy>(base_.accept(address));
       }
 
 
       //! accept a connection
       /** Blocking version */
       template <class Addr>
-      socket_base accept(Addr& address, std::size_t backlog)
+      data_socket<error_policy> accept(Addr& address, std::size_t backlog)
       {
-        const SocketError listen_error=base_.listen(backlog);
+        const int listen_error=base_.listen(backlog);
         if (listen_error!=Success && listen_error!=WouldBlock)
-          return socket_base(INVALID_SOCKET);
-        return base_.accept(address);
+          return data_socket<error_policy>(INVALID_SOCKET);
+        return data_socket<error_policy>(base_.accept(address));
       }
 
 
@@ -125,12 +128,12 @@ namespace boost
       }
 
       //! obtain socket_base
-      socket_base& base()
+      socket_base<error_policy>& base()
       {
         return base_;
       }
     private:
-      socket_base base_;
+      socket_base<error_policy> base_;
     };
 
   }// namespace

@@ -28,9 +28,11 @@ namespace boost
 
     //! acceptor
     /** interface for a socket that can accept connections. */
+    template <typename ErrorPolicy=default_error_policy>
     class data_socket
     {
     public:
+      typedef ErrorPolicy error_policy;
 
       data_socket()
           : socket_()
@@ -40,7 +42,7 @@ namespace boost
           : socket_(s.socket_)
       {}
 
-      explicit data_socket(const socket_base& s)
+      explicit data_socket(const socket_base<error_policy>& s)
           : socket_(s)
       {}
 
@@ -84,13 +86,13 @@ namespace boost
       }
 
       //! shut the socket down
-      SocketError shutdown(Direction how=Both)
+      int shutdown(Direction how=Both)
       {
         return socket_.shutdown(how);
       }
 
       //! close the socket
-      SocketError close()
+      int close()
       {
         return socket_.close();
       }
@@ -107,8 +109,8 @@ namespace boost
         return socket_.socket();
       }
 
-      //! obtain OS socket
-      socket_base& base()
+      //! obtain a base socket
+      socket_base<error_policy>& base()
       {
         return socket_;
       }
@@ -132,7 +134,7 @@ namespace boost
       }
 
     private:
-      socket_base socket_;
+      socket_base<error_policy> socket_;
     };
 
   }
