@@ -11,12 +11,21 @@ All rights Reserved.
 
       <h2>Introduction</h2>
 
-      <p>This document is not intended to act as requirements for boost, but as
- a set of ``guideposts to uniformity'', for those cases where authors have no
- preference or are willing to change.  Nobody likes following arbitrary rules,
- and when compliance is voluntary, it's likely that nobody will. Therefore,
- wherever possible, choices are made with careful attention to engineering merit and
- the underlying rationale is presented.
+      <p>This document is not intended to act as requirements for
+ boost, but as a set of ``guideposts to uniformity'', for those cases
+ where authors have no preference or are willing to change.  Nobody
+ likes following arbitrary rules, and when compliance is voluntary,
+ it's likely that nobody will. Therefore, wherever possible, choices
+ are made with careful attention to engineering merit and the
+ underlying rationale is presented.
+
+ <p>All the same, the authors of these guidelines intend that they be
+ followed. We have learned long ago that bending the rules here or there at a
+ whim (even with justification) tends toward code rot. Eventually your program
+ grows such that all of your acceptable violations become unacceptable.  This
+ happens insidiously, so they never get addressed. So, if you choose to follow
+ these guidelines, we suggest that you resist the temptation to allow yourself
+ exceptions.
 
  <p>Because C++ is a markedly different language from C, good C++ code looks
  markedly different from good C code. Differences from good C style follow from
@@ -249,7 +258,7 @@ struct adaptor { typedef <b>InputIterator</b> base_iterator; };
       2.9.   <b>Avoid trademarks</b> in names (including ``Altra'').
 
       <p>
-      2.10.        <b>Data members</b> should have a ``<tt>m_</tt>''
+      2.10. <b>Data members</b> should have a ``<tt>m_</tt>''
       prefix, to distinguish them from an otherwise-identical member function
       name and to clarify their provenance in code which uses them. Non-member
       names must not have an ``<tt>m_</tt>'' prefix.
@@ -341,6 +350,13 @@ if (buffer-&gt;was_empty())
       common and powerful strategy for correctly evolving and modernizing old
       code). Solve the problems that type labels solve by writing small
       functions and declaring local variables close to their point of first use.
+
+      <p>Some names beginning with underscores are not reserved to the
+      implementation, but these names don't add enough expressiveness to the
+      language to be worth complicating the rules. Furthermore, in practice it
+      is not uncommon for system headers to define these names as macros,
+      effectively reserving them in <i>all</i> contexts. In order to maximize
+      portability, such names are banned.
 
       <h2><a name="expression_spacing">3. Expression spacing and bracketing</a></h2>
 
