@@ -89,5 +89,8 @@ void test_blas_1<V, N>::operator () () {
 
 template struct test_blas_1<numerics::vector<float>, 3>;
 template struct test_blas_1<numerics::vector<double>, 3>;
+
+#ifdef USE_STD_COMPLEX
 template struct test_blas_1<numerics::vector<std::complex<float> >, 3>;
 template struct test_blas_1<numerics::vector<std::complex<double> >, 3>;
+#endif

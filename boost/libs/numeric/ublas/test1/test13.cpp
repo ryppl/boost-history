@@ -129,6 +129,7 @@ void test_matrix () {
     std::cout << "test_matrix" << std::endl;
 
 #ifdef USE_MATRIX
+#ifdef USE_BOUNDED_ARRAY
     std::cout << "float, bounded_array" << std::endl;
     test_my_matrix<numerics::matrix<float, numerics::row_major<>, numerics::bounded_array<float, 3 * 3> >, 3 > () ();
 
@@ -140,7 +141,9 @@ void test_matrix () {
 
     std::cout << "std::complex<double>, bounded_array" << std::endl;
     test_my_matrix<numerics::matrix<std::complex<double>, numerics::row_major<>, numerics::bounded_array<std::complex<double>, 3 * 3> >, 3 > () ();
+#endif
 
+#ifdef USE_UNBOUNDED_ARRAY
     std::cout << "float, unbounded_array" << std::endl;
     test_my_matrix<numerics::matrix<float, numerics::row_major<>, numerics::unbounded_array<float> >, 3 > () ();
 
@@ -152,7 +155,9 @@ void test_matrix () {
 
     std::cout << "std::complex<double>, unbounded_array" << std::endl;
     test_my_matrix<numerics::matrix<std::complex<double>, numerics::row_major<>, numerics::unbounded_array<std::complex<double> > >, 3 > () ();
+#endif
 
+#ifdef USE_STD_VECTOR
     std::cout << "float, std::vector" << std::endl;
     test_my_matrix<numerics::matrix<float, numerics::row_major<>, std::vector<float> >, 3 > () ();
 
@@ -165,8 +170,10 @@ void test_matrix () {
     std::cout << "std::complex<double>, std::vector" << std::endl;
     test_my_matrix<numerics::matrix<std::complex<double>, numerics::row_major<>, std::vector<std::complex<double> > >, 3 > () ();
 #endif
+#endif
 
 #ifdef USE_VECTOR_OF_VECTOR
+#ifdef USE_BOUNDED_ARRAY
     std::cout << "float, bounded_array" << std::endl;
     test_my_matrix<numerics::vector_of_vector<float, numerics::row_major<>, numerics::bounded_array<numerics::bounded_array<float, 3>, 3> >, 3 > () ();
 
@@ -178,7 +185,9 @@ void test_matrix () {
 
     std::cout << "std::complex<double>, bounded_array" << std::endl;
     test_my_matrix<numerics::vector_of_vector<std::complex<double>, numerics::row_major<>, numerics::bounded_array<numerics::bounded_array<std::complex<double>, 3>, 3> >, 3 > () ();
+#endif
 
+#ifdef USE_UNBOUNDED_ARRAY
     std::cout << "float, unbounded_array" << std::endl;
     test_my_matrix<numerics::vector_of_vector<float, numerics::row_major<>, numerics::unbounded_array<numerics::unbounded_array<float> > >, 3 > () ();
 
@@ -190,7 +199,9 @@ void test_matrix () {
 
     std::cout << "std::complex<double>, unbounded_array" << std::endl;
     test_my_matrix<numerics::vector_of_vector<std::complex<double>, numerics::row_major<>, numerics::unbounded_array<numerics::unbounded_array<std::complex<double> > > >, 3 > () ();
+#endif
 
+#ifdef USE_STD_VECTOR
     std::cout << "float, std::vector" << std::endl;
     test_my_matrix<numerics::vector_of_vector<float, numerics::row_major<>, std::vector<std::vector<float > > >, 3 > () ();
 
@@ -202,6 +213,7 @@ void test_matrix () {
 
     std::cout << "std::complex<double>, std::vector" << std::endl;
     test_my_matrix<numerics::vector_of_vector<std::complex<double>, numerics::row_major<>, std::vector<std::vector<std::complex<double> > > >, 3 > () ();
+#endif
 #endif
 }
 

@@ -23,10 +23,12 @@ void test_matrix_vector ();
 
 void test_matrix ();
 
-// FIXME: compiler out of memory
-#ifndef USE_BCC
 #define USE_RANGE
-#endif
+// #define USE_SLICE
+
+// #define USE_BOUNDED_ARRAY
+#define USE_UNBOUNDED_ARRAY
+// #define USE_STD_VECTOR
 
 #define USE_MATRIX
 // #define USE_VECTOR_OF_VECTOR

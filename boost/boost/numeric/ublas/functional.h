@@ -24,101 +24,6 @@
 #include "traits.h"
 #include "math.h"
 
-#ifdef USE_GCC
-
-namespace numerics {
-
-    namespace detail {
-
-        NUMERICS_INLINE
-        float negate (const float &t) {
-            return - t;
-        }
-        NUMERICS_INLINE
-        double negate (const double &t) {
-            return - t;
-        }
-
-        template<class T>
-        NUMERICS_INLINE
-        std::complex<T> negate (const std::complex<T> &t) {
-//            return - t;
-            return std::complex<T> (- t.real (), - t.imag ());
-        }
-
-        NUMERICS_INLINE
-        float plus (const float &t1, const float &t2) {
-            return t1 + t2;
-        }
-        NUMERICS_INLINE
-        double plus (const double &t1, const double &t2) {
-            return t1 + t2;
-        }
-
-        template<class T>
-        NUMERICS_INLINE
-        std::complex<T> plus (const std::complex<T> &t1, const std::complex<T> &t2) {
-//            return t1 + t2;
-            return std::complex<T> (t1.real () + t2.real (), t1.imag () + t2.imag ());
-        }
-
-        NUMERICS_INLINE
-        float minus (const float &t1, const float &t2) {
-            return t1 - t2;
-        }
-        NUMERICS_INLINE
-        double minus (const double &t1, const double &t2) {
-            return t1 - t2;
-        }
-
-        template<class T>
-        NUMERICS_INLINE
-        std::complex<T> minus (const std::complex<T> &t1, const std::complex<T> &t2) {
-//            return t1 - t2;
-            return std::complex<T> (t1.real () - t2.real (), t1.imag () - t2.imag ());
-        }
-
-        NUMERICS_INLINE
-        float multiplies (const float &t1, const float &t2) {
-            return t1 * t2;
-        }
-        NUMERICS_INLINE
-        double multiplies (const double &t1, const double &t2) {
-            return t1 * t2;
-        }
-
-        template<class T>
-        NUMERICS_INLINE
-        std::complex<T> multiplies (const std::complex<T> &t1, const std::complex<T> &t2) {
-//            return t1 * t2;
-            return std::complex<T> (t1.real () * t2.real () - t1.imag () * t2.imag (), 
-                                    t1.real () * t2.imag () + t1.imag () * t2.real ());
-        }
-
-        NUMERICS_INLINE
-        float divides (const float &t1, const float &t2) {
-            return t1 / t2;
-        }
-        NUMERICS_INLINE
-        double divides (const double &t1, const double &t2) {
-            return t1 / t2;
-        }
-
-        template<class T>
-        NUMERICS_INLINE
-        std::complex<T> divides (const std::complex<T> &t1, const std::complex<T> &t2) {
-//            return t1 / t2;
-            T r1 (multiplies (t2, conj (t2)).real ());
-            std::complex<T> r2 (multiplies (t1, conj (t2)));
-            return std::complex<T> (r1 * r2.real (), r1 * r2.imag ());
-        }
-
-    }
-
-}
-
-#endif
-
 namespace numerics {
 
     // Scalar functors
@@ -146,11 +51,7 @@ namespace numerics {
 
         NUMERICS_INLINE
         value_type operator () (const value_type &t) const { 
-#ifndef USE_GCC
             return - t; 
-#else
-            return detail::negate (t);
-#endif
         }
     };
     template<class T>
@@ -181,11 +82,7 @@ namespace numerics {
 
         NUMERICS_INLINE
         value_type operator () (const value1_type &t1, const value2_type &t2) const { 
-#ifndef USE_GCC
             return t1 + t2; 
-#else
-            return detail::plus (t1, t2);
-#endif
         }
     };
     template<class T1, class T2>
@@ -197,11 +94,7 @@ namespace numerics {
 
         NUMERICS_INLINE
         value_type operator () (const value1_type &t1, const value2_type &t2) const { 
-#ifndef USE_GCC
             return t1 - t2; 
-#else
-            return detail::minus (t1, t2);
-#endif
         }
     };
     template<class T1, class T2>
@@ -213,11 +106,7 @@ namespace numerics {
 
         NUMERICS_INLINE
         value_type operator () (const value1_type &t1, const value2_type &t2) const { 
-#ifndef USE_GCC
             return t1 * t2; 
-#else
-            return detail::multiplies (t1, t2);
-#endif
         }
     };
     template<class T1, class T2>
@@ -229,11 +118,7 @@ namespace numerics {
 
         NUMERICS_INLINE
         value_type operator () (const value1_type &t1, const value2_type &t2) const { 
-#ifndef USE_GCC
             return t1 / t2; 
-#else
-            return detail::divides (t1, t2);
-#endif
         }
     };
 
@@ -364,7 +249,7 @@ namespace numerics {
     struct vector_scalar_norm_unary_functor {
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
-        typedef type_traits<T>::norm_type value_type;
+        typedef typename type_traits<T>::norm_type value_type;
     };
 
     template<class T>

@@ -39,7 +39,7 @@ void test_blas_3<M, N>::operator () () {
 		initialize_matrix (m2);
 		numerics::blas_3::tmm (m1, value_type (1), numerics::trans (m2), numerics::trans (m1));
 		std::cout << "tmm (m1, 1, trans (m2), trans (m1)) = " << m1 << std::endl;
-#ifdef USE_COMPLEX
+#ifdef USE_STD_COMPLEX
 		initialize_matrix (m1);
 		initialize_matrix (m2);
 		numerics::blas_3::tmm (m1, value_type (1), m2, numerics::herm (m1));
@@ -72,7 +72,7 @@ void test_blas_3<M, N>::operator () () {
 		initialize_upper_triangular (m2);
 		numerics::blas_3::tsm (m1, value_type (1), numerics::trans (m2), numerics::lower_triangular_tag ());
 		std::cout << "tsm (m1, 1, trans (m2)) = " << m1 << " " << numerics::prod (numerics::trans (m2), m1) - value_type (1) * m3 << std::endl;			
-#ifdef USE_COMPLEX
+#ifdef USE_STD_COMPLEX
 		initialize_matrix (m1);
 		initialize_upper_triangular (m2);
 		numerics::blas_3::tsm (m1, value_type (1), numerics::herm (m2), numerics::lower_triangular_tag ());
@@ -86,7 +86,7 @@ void test_blas_3<M, N>::operator () () {
 		initialize_lower_triangular (m2);
 		numerics::blas_3::tsm (m1, value_type (1), numerics::trans (m2), numerics::upper_triangular_tag ());
 		std::cout << "tsm (m1, 1, trans (m2)) = " << m1 << " " << numerics::prod (numerics::trans (m2), m1) - value_type (1) * m3 << std::endl;			
-#ifdef USE_COMPLEX
+#ifdef USE_STD_COMPLEX
 		initialize_matrix (m1);
 		initialize_lower_triangular (m2);
 		numerics::blas_3::tsm (m1, value_type (1), numerics::herm (m2), numerics::upper_triangular_tag ());
@@ -116,7 +116,7 @@ void test_blas_3<M, N>::operator () () {
 		initialize_matrix (m3);
 		numerics::blas_3::gmm (m1, value_type (1), value_type (1), numerics::trans (m2), numerics::trans (m3));
 		std::cout << "gmm (m1, 1, 1, trans (m2), trans (m3)) = " << m1 << std::endl;
-#ifdef USE_COMPLEX
+#ifdef USE_STD_COMPLEX
 		initialize_matrix (m1);
 		initialize_matrix (m2);
 		initialize_matrix (m3);
@@ -154,7 +154,7 @@ void test_blas_3<M, N>::operator () () {
 		numerics::blas_3::srk (m1, value_type (1), value_type (1), numerics::trans (m2));
 		std::cout << "srk (m1, 1, 1, trans (m2)) = " << m1 << std::endl;
 
-#ifdef USE_COMPLEX
+#ifdef USE_STD_COMPLEX
 		// h_rk
 		initialize_matrix (m1);
 		initialize_matrix (m2);
@@ -178,7 +178,7 @@ void test_blas_3<M, N>::operator () () {
 		numerics::blas_3::sr2k (m1, value_type (1), value_type (1), numerics::trans (m2), numerics::trans (m3));
 		std::cout << "sr2k (m1, 1, 1, trans (m2), trans (m3)) = " << m1 << std::endl;
 
-#ifdef USE_COMPLEX
+#ifdef USE_STD_COMPLEX
 		// h_r2k
 		initialize_matrix (m1);
 		initialize_matrix (m2);
@@ -202,5 +202,8 @@ void test_blas_3<M, N>::operator () () {
 
 template struct test_blas_3<numerics::matrix<float>, 3>;
 template struct test_blas_3<numerics::matrix<double>, 3>;
+
+#ifdef USE_STD_COMPLEX
 template struct test_blas_3<numerics::matrix<std::complex<float> >, 3>;
 template struct test_blas_3<numerics::matrix<std::complex<double> >, 3>;
+#endif

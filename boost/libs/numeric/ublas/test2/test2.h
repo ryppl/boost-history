@@ -64,6 +64,8 @@ struct test_blas_3 {
 	void operator () ();
 };
 
+// #define USE_STD_COMPLEX
+
 #endif 
 
 

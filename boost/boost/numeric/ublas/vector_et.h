@@ -383,7 +383,7 @@ namespace numerics {
             }
             NUMERICS_INLINE
             void decrement (std::random_access_iterator_tag) {
-                -- i, -- it1_, -- it2_;
+                -- i_, -- it1_, -- it2_;
             }
             NUMERICS_INLINE
             value_type dereference (std::random_access_iterator_tag) const {
@@ -983,7 +983,7 @@ namespace numerics {
             e_ (e), s_ (s) {}
         NUMERICS_INLINE
         vector_expression_slice (const expression_type &e, size_type start, size_type stride, size_type size): 
-            e_ (e), s_ (start, stride, stop) {}
+            e_ (e), s_ (start, stride, size) {}
 
         NUMERICS_INLINE
         size_type size () const { 

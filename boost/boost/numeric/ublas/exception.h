@@ -25,49 +25,49 @@ namespace numerics {
 
     struct divide_by_zero:
         public std::exception {
-        virtual const char *what () const {
+        virtual const char *what () const throw () {
             return "divide by zero";
         }
     };
     struct internal_logic:
         public std::exception {
-        virtual const char *what () const {
+        virtual const char *what () const throw () {
             return "internal logic";
         }
     };
     struct external_logic:
         public std::exception {
-        virtual const char *what () const {
+        virtual const char *what () const throw () {
             return "external logic";
         }
     };
     struct bad_size:
         public std::exception {
-        virtual const char *what () const {
+        virtual const char *what () const throw () {
             return "bad size";
         }
     };
     struct bad_index:
         public std::exception {
-        virtual const char *what () const {
+        virtual const char *what () const throw () {
             return "bad index";
         }
     };
     struct singular:
         public std::exception {
-        virtual const char *what () const {
+        virtual const char *what () const throw () {
             return "singular";
         }
     };
     struct non_triangular:
         public std::exception {
-        virtual const char *what () const {
+        virtual const char *what () const throw () {
             return "non triangular";
         }
     };
     struct non_band:
         public std::exception {
-        virtual const char *what () const {
+        virtual const char *what () const throw () {
             return "non band";
         }
     };

@@ -32,7 +32,7 @@ void test_blas_2<V, M, N>::operator () () {
 		initialize_matrix (m);
 		numerics::blas_2::tmv (v1, numerics::trans (m));
 		std::cout << "tmv (v1, trans (m)) = " << v1 << std::endl;
-#ifdef USE_COMPLEX
+#ifdef USE_STD_COMPLEX
 		initialize_vector (v1);
 		initialize_matrix (m);
 		numerics::blas_2::tmv (v1, numerics::herm (m));
@@ -50,7 +50,7 @@ void test_blas_2<V, M, N>::operator () () {
 		initialize_upper_triangular (m);
 		numerics::blas_2::tsv (v1, numerics::trans (m), numerics::lower_triangular_tag ());
         std::cout << "tsv (v1, trans (m)) = " << v1 << " " << numerics::prod (numerics::trans (m), v1) - v2 << std::endl;
-#ifdef USE_COMPLEX
+#ifdef USE_STD_COMPLEX
 		initialize_vector (v1);
 		initialize_vector (v2);
 		initialize_upper_triangular (m);
@@ -67,7 +67,7 @@ void test_blas_2<V, M, N>::operator () () {
 		initialize_lower_triangular (m);
 		numerics::blas_2::tsv (v1, numerics::trans (m), numerics::upper_triangular_tag ());
         std::cout << "tsv (v1, trans (m)) = " << v1 << " " << numerics::prod (numerics::trans (m), v1) - v2 << std::endl;
-#ifdef USE_COMPLEX
+#ifdef USE_STD_COMPLEX
 		initialize_vector (v1);
 		initialize_vector (v2);
 		initialize_lower_triangular (m);
@@ -85,7 +85,7 @@ void test_blas_2<V, M, N>::operator () () {
 		std::cout << "gmv (v1, 1, 1, m, v2) = " << v1 << std::endl;
 		numerics::blas_2::gmv (v1, value_type (1), value_type (1), numerics::trans (m), v2);
 		std::cout << "gmv (v1, 1, 1, trans (m), v2) = " << v1 << std::endl;
-#ifdef USE_COMPLEX
+#ifdef USE_STD_COMPLEX
 		numerics::blas_2::gmv (v1, value_type (1), value_type (1), numerics::herm (m), v2);
 		std::cout << "gmv (v1, 1, 1, herm (m), v2) = " << v1 << std::endl;
 #endif
@@ -109,7 +109,7 @@ void test_blas_2<V, M, N>::operator () () {
 		numerics::blas_2::sr (m, value_type (1), v1);
 		std::cout << "sr (m, 1, v1) = " << m << std::endl;
 
-#ifdef USE_COMPLEX
+#ifdef USE_STD_COMPLEX
 		// _h_r
 		initialize_vector (v1);
 		initialize_matrix (m);
@@ -124,7 +124,7 @@ void test_blas_2<V, M, N>::operator () () {
 		numerics::blas_2::sr2 (m, value_type (1), v1, v2);
 		std::cout << "sr2 (m, 1, v1, v2) = " << m << std::endl;
 
-#ifdef USE_COMPLEX
+#ifdef USE_STD_COMPLEX
 		// _h_r2
 		initialize_vector (v1);
 		initialize_vector (v2);
@@ -144,6 +144,9 @@ void test_blas_2<V, M, N>::operator () () {
 
 template struct test_blas_2<numerics::vector<float>, numerics::matrix<float>, 3>;
 template struct test_blas_2<numerics::vector<double>, numerics::matrix<double>, 3>;
+
+#ifdef USE_STD_COMPLEX
 template struct test_blas_2<numerics::vector<std::complex<float> >, numerics::matrix<std::complex<float> >, 3>;
 template struct test_blas_2<numerics::vector<std::complex<double> >, numerics::matrix<std::complex<double> >, 3>;
+#endif
 

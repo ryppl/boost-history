@@ -266,7 +266,7 @@ namespace numerics {
             }
             NUMERICS_INLINE
             iterator &operator -- () {
-                -- it;
+                -- it_;
                 return *this;
             }
             NUMERICS_INLINE
@@ -677,7 +677,7 @@ namespace numerics {
 
         NUMERICS_INLINE
         matrix_vector_range project (size_type start, size_type stop) {
-            return matrix_vector_range (data_, r1_.composite (start, stop), r2_.composite (start, stop));
+            return matrix_vector_range (data_, r1_.composite (range (start, stop)), r2_.composite (range (start, stop)));
         }
         NUMERICS_INLINE
         matrix_vector_range project (const range &r) {
@@ -1300,7 +1300,7 @@ namespace numerics {
 
         NUMERICS_INLINE
         matrix_range project (size_type start1, size_type stop1, size_type start2, size_type stop2) {
-            return matrix_range (data_, r1_.composite (start1, stop1), r2_.composite (start2, stop2));
+            return matrix_range (data_, r1_.composite (range (start1, stop1)), r2_.composite (range (start2, stop2)));
         }
         NUMERICS_INLINE
         matrix_range project (const range &r1, const range &r2) {

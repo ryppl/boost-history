@@ -143,6 +143,14 @@ struct bench_3 {
 struct safe_tag {};
 struct fast_tag {};
 
+// #define USE_STD_COMPLEX
+
+// #define USE_C_ARRAY
+// #define USE_BOUNDED_ARRAY
+#define USE_UNBOUNDED_ARRAY
+// #define USE_STD_VALARRAY
+#define USE_STD_VECTOR
+
 #endif 
 
 

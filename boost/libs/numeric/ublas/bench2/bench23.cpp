@@ -136,6 +136,7 @@ void bench_3<T, N>::operator () (int runs) {
     header ("C array");
 	bench_c_matrix_prod<T, N> () (runs);
 
+#ifdef USE_COMPRESSED_ARRAY
     header ("sparse_matrix<compressed_array, row_major>, sparse_matrix<compressed_array, column_major> safe");
     bench_my_matrix_prod<numerics::sparse_matrix<T, numerics::row_major<>, numerics::compressed_array<std::size_t, T> >, 
                          numerics::sparse_matrix<T, numerics::column_major<>, numerics::compressed_array<std::size_t, T> >, N> () (runs, safe_tag ());
@@ -143,7 +144,9 @@ void bench_3<T, N>::operator () (int runs) {
     header ("sparse_matrix<compressed_array, row_major>, sparse_matrix<compressed_array, column_major> fast");
 	bench_my_matrix_prod<numerics::sparse_matrix<T, numerics::row_major<>, numerics::compressed_array<std::size_t, T> >, 
                          numerics::sparse_matrix<T, numerics::column_major<>, numerics::compressed_array<std::size_t, T> >, N> () (runs, fast_tag ());
+#endif
 
+#ifdef USE_STD_MAP
     header ("sparse_matrix<std::map, row_major>, sparse_matrix<std::map, column_major> safe");
     bench_my_matrix_prod<numerics::sparse_matrix<T, numerics::row_major<>, std::map<std::size_t, T> >, 
                          numerics::sparse_matrix<T, numerics::column_major<>, std::map<std::size_t, T> >, N> () (runs, safe_tag ());
@@ -151,6 +154,7 @@ void bench_3<T, N>::operator () (int runs) {
     header ("sparse_matrix<std::map, row_major>, sparse_matrix<std::map, column_major> fast");
 	bench_my_matrix_prod<numerics::sparse_matrix<T, numerics::row_major<>, std::map<std::size_t, T> >, 
                          numerics::sparse_matrix<T, numerics::column_major<>, std::map<std::size_t, T> >, N> () (runs, fast_tag ());
+#endif
 
 #ifdef USE_STD_VALARRAY
     header ("std::valarray");
@@ -168,7 +172,7 @@ template struct bench_3<double, 10>;
 template struct bench_3<double, 30>;
 template struct bench_3<double, 100>;
 
-#ifndef USE_GCC
+#ifdef USE_STD_COMPLEX
 
 template struct bench_3<std::complex<float>, 3>;
 template struct bench_3<std::complex<float>, 10>;

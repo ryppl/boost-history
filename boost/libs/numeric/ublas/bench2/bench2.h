@@ -87,7 +87,8 @@ void initialize_matrix (M &m, numerics::column_major_tag) {
 template<class M>
 NUMERICS_INLINE
 void initialize_matrix (M &m) {
-    initialize_matrix (m, NUMERICS_TYPENAME M::orientation_category ());
+    typedef NUMERICS_TYPENAME M::orientation_category orientation_category;
+    initialize_matrix (m, orientation_category ());
 }
 
 template<class T>
@@ -157,6 +158,12 @@ struct bench_3 {
 
 struct safe_tag {};
 struct fast_tag {};
+
+// #define USE_STD_COMPLEX
+
+#define USE_COMPRESSED_ARRAY
+// #define USE_STD_MAP
+// #define USE_STD_VALARRAY
 
 #endif 
 

@@ -333,6 +333,7 @@ void bench_2<T, N>::operator () (int runs) {
 	header ("C array");
 	bench_c_outer_prod<T, N> () (runs);
 
+#ifdef USE_C_ARRAY
     header ("c_matrix, c_vector safe");
     bench_my_outer_prod<numerics::c_matrix<T, N, N>,
 						numerics::c_vector<T, N>, N> () (runs, safe_tag ());
@@ -340,7 +341,9 @@ void bench_2<T, N>::operator () (int runs) {
     header ("c_matrix, c_vector fast");
     bench_my_outer_prod<numerics::c_matrix<T, N, N>,
 						numerics::c_vector<T, N>, N> () (runs, fast_tag ());
+#endif
 
+#ifdef USE_BOUNDED_ARRAY
     header ("matrix<bounded_array>, vector<bounded_array> safe");
     bench_my_outer_prod<numerics::matrix<T, numerics::row_major<>, numerics::bounded_array<T, N * N> >,
 						numerics::vector<T, numerics::forward, numerics::bounded_array<T, N> >, N> () (runs, safe_tag ());
@@ -348,7 +351,9 @@ void bench_2<T, N>::operator () (int runs) {
     header ("matrix<bounded_array>, vector<bounded_array> fast");
 	bench_my_outer_prod<numerics::matrix<T, numerics::row_major<>, numerics::bounded_array<T, N * N> >, 
 						numerics::vector<T, numerics::forward, numerics::bounded_array<T, N> >, N> () (runs, fast_tag ());
+#endif
 
+#ifdef USE_UNBOUNDED_ARRAY
     header ("matrix<unbounded_array>, vector<unbounded_array> safe");
 	bench_my_outer_prod<numerics::matrix<T, numerics::row_major<>, numerics::unbounded_array<T> >, 
 						numerics::vector<T, numerics::forward, numerics::unbounded_array<T> >, N> () (runs, safe_tag ());
@@ -356,6 +361,7 @@ void bench_2<T, N>::operator () (int runs) {
     header ("matrix<unbounded_array>, vector<unbounded_array> fast");
 	bench_my_outer_prod<numerics::matrix<T, numerics::row_major<>, numerics::unbounded_array<T> >,
 						numerics::vector<T, numerics::forward, numerics::unbounded_array<T> >, N> () (runs, fast_tag ());
+#endif
 
 #ifdef USE_STD_VALARRAY
     header ("matrix<std::valarray>, vector<std::valarray> safe");
@@ -388,6 +394,7 @@ void bench_2<T, N>::operator () (int runs) {
 	header ("C array");
 	bench_c_matrix_vector_prod<T, N> () (runs);
 
+#ifdef USE_C_ARRAY
     header ("c_matrix, c_vector safe");
 	bench_my_matrix_vector_prod<numerics::c_matrix<T, N, N>,
 								numerics::c_vector<T, N>, N> () (runs, safe_tag ());
@@ -395,7 +402,9 @@ void bench_2<T, N>::operator () (int runs) {
     header ("c_matrix, c_vector fast");
 	bench_my_matrix_vector_prod<numerics::c_matrix<T, N, N>,
 								numerics::c_vector<T, N>, N> () (runs, fast_tag ());
+#endif
 
+#ifdef USE_BOUNDED_ARRAY
     header ("matrix<bounded_array>, vector<bounded_array> safe");
 	bench_my_matrix_vector_prod<numerics::matrix<T, numerics::row_major<>, numerics::bounded_array<T, N * N> >,
 								numerics::vector<T, numerics::forward, numerics::bounded_array<T, N> >, N> () (runs, safe_tag ());
@@ -403,7 +412,9 @@ void bench_2<T, N>::operator () (int runs) {
     header ("matrix<bounded_array>, vector<bounded_array> fast");
 	bench_my_matrix_vector_prod<numerics::matrix<T, numerics::row_major<>, numerics::bounded_array<T, N * N> >, 
 								numerics::vector<T, numerics::forward, numerics::bounded_array<T, N> >, N> () (runs, fast_tag ());
+#endif
 
+#ifdef USE_UNBOUNDED_ARRAY
     header ("matrix<unbounded_array>, vector<unbounded_array> safe");
 	bench_my_matrix_vector_prod<numerics::matrix<T, numerics::row_major<>, numerics::unbounded_array<T> >, 
 								numerics::vector<T, numerics::forward, numerics::unbounded_array<T> >, N> () (runs, safe_tag ());
@@ -411,6 +422,7 @@ void bench_2<T, N>::operator () (int runs) {
     header ("matrix<unbounded_array>, vector<unbounded_array> fast");
 	bench_my_matrix_vector_prod<numerics::matrix<T, numerics::row_major<>, numerics::unbounded_array<T> >,
 								numerics::vector<T, numerics::forward, numerics::unbounded_array<T> >, N> () (runs, fast_tag ());
+#endif
 
 #ifdef USE_STD_VALARRAY
     header ("matrix<std::valarray>, vector<std::valarray> safe");
@@ -442,23 +454,29 @@ void bench_2<T, N>::operator () (int runs) {
 	header ("C array");
 	bench_c_matrix_add<T, N> () (runs);
 
+#ifdef USE_C_ARRAY
 	header ("c_matrix safe");
 	bench_my_matrix_add<numerics::c_matrix<T, N, N>, N> () (runs, safe_tag ());
 
     header ("c_matrix fast");
 	bench_my_matrix_add<numerics::c_matrix<T, N, N>, N> () (runs, fast_tag ());
+#endif
 
+#ifdef USE_BOUNDED_ARRAY
     header ("matrix<bounded_array> safe");
 	bench_my_matrix_add<numerics::matrix<T, numerics::row_major<>, numerics::bounded_array<T, N * N> >, N> () (runs, safe_tag ());
 
 	header ("matrix<bounded_array> fast");
 	bench_my_matrix_add<numerics::matrix<T, numerics::row_major<>, numerics::bounded_array<T, N * N> >, N> () (runs, fast_tag ());
+#endif
 
+#ifdef USE_UNBOUNDED_ARRAY
 	header ("matrix<unbounded_array> safe");
 	bench_my_matrix_add<numerics::matrix<T, numerics::row_major<>, numerics::unbounded_array<T> >, N> () (runs, safe_tag ());
 
 	header ("matrix<unbounded_array> fast");
 	bench_my_matrix_add<numerics::matrix<T, numerics::row_major<>, numerics::unbounded_array<T> >, N> () (runs, fast_tag ());
+#endif
 
 #ifdef USE_STD_VALARRAY
 	header ("matrix<std::valarray> safe");
@@ -492,7 +510,7 @@ template struct bench_2<double, 10>;
 template struct bench_2<double, 30>;
 template struct bench_2<double, 100>;
 
-#ifndef USE_GCC
+#ifdef USE_STD_COMPLEX
 
 template struct bench_2<std::complex<float>, 3>;
 template struct bench_2<std::complex<float>, 10>;

@@ -90,11 +90,13 @@ int main (int argc, char *argv []) {
 	header ("double");
     peak<double> () (100000000);
 
+#ifdef USE_COMPLEX
 	header ("std:complex<float>");
     peak<std::complex<float> > () (100000000);
 
     header ("std:complex<double>");
     peak<std::complex<double> > () (100000000);
+#endif
 
     int scale = 1;
     if (argc > 1)
@@ -148,8 +150,7 @@ int main (int argc, char *argv []) {
     bench_2<double, 100> () (300 * scale);
     bench_3<double, 100> () (3 * scale);
 
-#ifndef USE_GCC
-
+#ifdef USE_STD_COMPLEX
 	header ("std::complex<float>, 3");
 
     bench_1<std::complex<float>, 3> () (1000000 * scale);
@@ -197,7 +198,6 @@ int main (int argc, char *argv []) {
     bench_1<std::complex<double>, 100> () (30000 * scale);
     bench_2<std::complex<double>, 100> () (300 * scale);
     bench_3<std::complex<double>, 100> () (3 * scale);
-
 #endif
 
     return 0;

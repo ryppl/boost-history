@@ -116,8 +116,10 @@ struct test_my_vector {
 			V v1 (N, N), v2 (N, N), v3 (N, N);
             (*this) (v1, v2, v3);
 
+#ifdef USE_RANGE
             numerics::vector_range<V> vr1 (v1, 0, N), vr2 (v2, 0, N), vr3 (v3, 0, N);
             (*this) (vr1, vr2, vr3);
+#endif
 
 #ifdef USE_SLICE
             numerics::vector_slice<V> vs1 (v1, 0, 1, N), vs2 (v2, 0, 1, N), vs3 (v3, 0, 1, N);
@@ -137,6 +139,7 @@ struct test_my_vector {
 void test_vector () {
     std::cout << "test_vector" << std::endl;
 
+#ifdef USE_COMPRESSED_ARRAY
     std::cout << "float, compressed_array" << std::endl;
     test_my_vector<numerics::sparse_vector<float, numerics::forward, numerics::compressed_array<std::size_t, float> >, 3 > () ();
 
@@ -148,7 +151,9 @@ void test_vector () {
 
     std::cout << "std::complex<double>, compressed_array" << std::endl;
     test_my_vector<numerics::sparse_vector<std::complex<double>, numerics::forward, numerics::compressed_array<std::size_t, std::complex<double> > >, 3 > () ();
+#endif
 
+#ifdef USE_STD_MAP
     std::cout << "float, std::map" << std::endl;
     test_my_vector<numerics::sparse_vector<float, numerics::forward, std::map<size_t, float> >, 3 > () ();
 
@@ -160,5 +165,6 @@ void test_vector () {
 
     std::cout << "std::complex<double>, std::map" << std::endl;
     test_my_vector<numerics::sparse_vector<std::complex<double>, numerics::forward, std::map<size_t, std::complex<double> > > , 3 > () ();
+#endif
 }
 

@@ -201,11 +201,15 @@ void bench_1<T, N>::operator () (int runs) {
 	header ("C array");
 	bench_c_inner_prod<T, N> () (runs);
 
+#ifdef USE_COMPRESSED_ARRAY
 	header ("sparse_vector<compressed_array>");
     bench_my_inner_prod<numerics::sparse_vector<T, numerics::forward, numerics::compressed_array<std::size_t, T> >, N> () (runs);
+#endif
 
+#ifdef USE_STD_MAP
 	header ("sparse_vector<std::map>");
     bench_my_inner_prod<numerics::sparse_vector<T, numerics::forward, std::map<std::size_t, T> >, N> () (runs);
+#endif
 
 #ifdef USE_STD_VALARRAY
 	header ("std::valarray");
@@ -217,17 +221,21 @@ void bench_1<T, N>::operator () (int runs) {
 	header ("C array");
 	bench_c_vector_add<T, N> () (runs);
 
+#ifdef USE_COMPRESSED_ARRAY
 	header ("sparse_vector<compressed_array> safe");
 	bench_my_vector_add<numerics::sparse_vector<T, numerics::forward, numerics::compressed_array<std::size_t, T> >, N> () (runs, safe_tag ());
 
 	header ("sparse_vector<compressed_array> fast");
 	bench_my_vector_add<numerics::sparse_vector<T, numerics::forward, numerics::compressed_array<std::size_t, T> >, N> () (runs, fast_tag ());
+#endif
 
+#ifdef USE_STD_MAP
 	header ("sparse_vector<std::map> safe");
 	bench_my_vector_add<numerics::sparse_vector<T, numerics::forward, std::map<std::size_t, T> >, N> () (runs, safe_tag ());
 
 	header ("sparse_vector<std::map> fast");
 	bench_my_vector_add<numerics::sparse_vector<T, numerics::forward, std::map<std::size_t, T> >, N> () (runs, fast_tag ());
+#endif
 
 #ifdef USE_STD_VALARRAY
 	header ("std::valarray");
@@ -245,7 +253,7 @@ template struct bench_1<double, 10>;
 template struct bench_1<double, 30>;
 template struct bench_1<double, 100>;
 
-#ifndef USE_GCC
+#ifdef USE_STD_COMPLEX
 
 template struct bench_1<std::complex<float>, 3>;
 template struct bench_1<std::complex<float>, 10>;

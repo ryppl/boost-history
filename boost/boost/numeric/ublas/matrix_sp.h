@@ -733,12 +733,9 @@ namespace numerics {
         typedef matrix_row<self_type> matrix_row_type;
         typedef matrix_column<self_type> matrix_column_type;
         typedef matrix_range<self_type> matrix_range_type;
-//        typedef typename A::data_value_type vector_data_value_type;
         typedef typename A::value_type::second_type vector_data_value_type;
         typedef typename A::const_iterator vector_const_iterator_type;
         typedef typename A::iterator vector_iterator_type;
-//        typedef typename A::data_value_type::const_iterator const_iterator_type;
-//        typedef typename A::data_value_type::iterator iterator_type;
         typedef typename A::value_type::second_type::const_iterator const_iterator_type;
         typedef typename A::value_type::second_type::iterator iterator_type;
         typedef sparse_tag storage_category;
@@ -787,10 +784,6 @@ namespace numerics {
         // Element access
         NUMERICS_INLINE
         value_type operator () (size_type i, size_type j) const {
-//            const_iterator_type it (data_.find (functor_type::element (i, size1_, j, size2_)));
-//            if (it == data_.end () || (*it).first != functor_type::element (i, size1_, j, size2_))
-//                return value_type (0);
-//            return (*it).second;
             vector_const_iterator_type itv (data_.find (functor_type::element1 (i, size1_, j, size2_)));
             if (itv == data_.end () || (*itv).first != functor_type::element1 (i, size1_, j, size2_))
                 return value_type (0);
@@ -801,7 +794,6 @@ namespace numerics {
         }
         NUMERICS_INLINE
         reference_type operator () (size_type i, size_type j) {
-//            return data_ [functor_type::element (i, size1_, j, size2_)]; 
             return data_ [functor_type::element1 (i, size1_, j, size2_)] [functor_type::element2 (i, size1_, j, size2_)]; 
         }
 
@@ -919,7 +911,6 @@ namespace numerics {
         }
         NUMERICS_INLINE
         void insert (size_type i, size_type j, const_reference_type t) {
-//            data_.insert (data_.end (), std::pair<size_type, T> (functor_type::element (i, size1_, j, size2_), t));
             vector_iterator_type itv (data_.find (functor_type::element1 (i, size1_, j, size2_)));
             if (itv == data_.end () || (*itv).first != functor_type::element1 (i, size1_, j, size2_)) 
                 itv = data_.insert (data_.end (), std::pair<size_type, vector_data_value_type> (functor_type::element1 (i, size1_, j, size2_), vector_data_value_type ()));
@@ -937,13 +928,6 @@ namespace numerics {
         const_iterator1 find1 (size_type i, size_type j) const {
             difference_type o (functor_type::one1 (size1_, size2_));
             if (o >= 1) {
-//                const_iterator_type it (data_.lower_bound (functor_type::element (i, size1_, j, size2_)));
-//                const_iterator_type it_end (data_.end ());
-//                while (it != it_end && functor_type::index2 ((*it).first, size1_, size2_) < j) {
-//                    i = functor_type::index1 ((*it).first, size1_, size2_);
-//                    it = data_.lower_bound (functor_type::element (i, size1_, j, size2_));
-//                }
-//                return const_iterator1 (*this, i, j, it);
                 check<internal_logic>::precondition (data_.begin () != data_.end ());
                 for (;;) {
                     vector_const_iterator_type itv (data_.lower_bound (functor_type::element1 (i, size1_, j, size2_)));
@@ -961,13 +945,6 @@ namespace numerics {
                     i = functor_type::index1 ((*itv).first, (*it).first);
                 }
             } else if (o <= -1) {
-//                const_iterator_type it (data_.upper_bound (functor_type::element (i, size1_, j, size2_)));
-//                const_iterator_type it_end (data_.end ());
-//                while (it != it_end && functor_type::index2 ((*it).first, size1_, size2_) < j) {
-//                    i = functor_type::index1 ((*it).first, size1_, size2_);
-//                    it = data_.upper_bound (functor_type::element (i, size1_, j, size2_));
-//                }
-//                return const_iterator1 (*this, i, j, it);
                 check<internal_logic>::precondition (data_.begin () != data_.end ());
                 for (;;) {
                     vector_const_iterator_type itv (data_.upper_bound (functor_type::element1 (i, size1_, j, size2_)));
@@ -992,13 +969,6 @@ namespace numerics {
         iterator1 find1 (size_type i, size_type j) {
             difference_type o (functor_type::one1 (size1_, size2_));
             if (o >= 1) {
-//                iterator_type it (data_.lower_bound (functor_type::element (i, size1_, j, size2_)));
-//                iterator_type it_end (data_.end ());
-//                while (it != it_end && functor_type::index2 ((*it).first, size1_, size2_) < j) {
-//                    i = functor_type::index1 ((*it).first, size1_, size2_);
-//                    it = data_.lower_bound (functor_type::element (i, size1_, j, size2_));
-//                }
-//                return iterator1 (*this, i, j, it);
                 check<internal_logic>::precondition (data_.begin () != data_.end ());
                 for (;;) {
                     vector_iterator_type itv (data_.lower_bound (functor_type::element1 (i, size1_, j, size2_)));
@@ -1016,13 +986,6 @@ namespace numerics {
                     i = functor_type::index1 ((*itv).first, (*it).first);
                 }
             } else if (o <= -1) {
-//                iterator_type it (data_.upper_bound (functor_type::element (i, size1_, j, size2_)));
-//                iterator_type it_end (data_.end ());
-//                while (it != it_end && functor_type::index2 ((*it).first, size1_, size2_) < j) {
-//                    i = functor_type::index1 ((*it).first, size1_, size2_);
-//                    it = data_.upper_bound (functor_type::element (i, size1_, j, size2_));
-//                }
-//                return iterator1 (*this, i, j, it);
                 check<internal_logic>::precondition (data_.begin () != data_.end ());
                 for (;;) {
                     vector_iterator_type itv (data_.upper_bound (functor_type::element1 (i, size1_, j, size2_)));
@@ -1047,13 +1010,6 @@ namespace numerics {
         const_iterator2 find2 (size_type i, size_type j) const {
             difference_type o (functor_type::one2 (size1_, size2_));
             if (o >= 1) {
-//                const_iterator_type it (data_.lower_bound (functor_type::element (i, size1_, j, size2_)));
-//                const_iterator_type it_end (data_.end ());
-//                while (it != it_end && functor_type::index1 ((*it).first, size1_, size2_) < i) {
-//                    j = functor_type::index2 ((*it).first, size1_, size2_);
-//                    it = data_.lower_bound (functor_type::element (i, size1_, j, size2_));
-//                }
-//                return const_iterator2 (*this, i, j, it);
                 check<internal_logic>::precondition (data_.begin () != data_.end ());
                 for (;;) {
                     vector_const_iterator_type itv (data_.lower_bound (functor_type::element1 (i, size1_, j, size2_)));
@@ -1071,13 +1027,6 @@ namespace numerics {
                     j = functor_type::index2 ((*itv).first, (*it).first);
                 }
             } else if (o <= -1) {
-//                const_iterator_type it (data_.upper_bound (functor_type::element (i, size1_, j, size2_)));
-//                const_iterator_type it_end (data_.end ());
-//                while (it != it_end && functor_type::index1 ((*it).first, size1_, size2_) < i) {
-//                    j = functor_type::index2 ((*it).first, size1_, size2_);
-//                    it = data_.upper_bound (functor_type::element (i, size1_, j, size2_));
-//                }
-//                return const_iterator2 (*this, i, j, it);
                 check<internal_logic>::precondition (data_.begin () != data_.end ());
                 for (;;) {
                     vector_const_iterator_type itv (data_.upper_bound (functor_type::element1 (i, size1_, j, size2_)));
@@ -1102,13 +1051,6 @@ namespace numerics {
         iterator2 find2 (size_type i, size_type j) {
             difference_type o (functor_type::one2 (size1_, size2_));
             if (o >= 1) {
-//                iterator_type it (data_.lower_bound (functor_type::element (i, size1_, j, size2_)));
-//                iterator_type it_end (data_.end ());
-//                while (it != it_end && functor_type::index1 ((*it).first, size1_, size2_) < i) {
-//                    j = functor_type::index2 ((*it).first, size1_, size2_);
-//                    it = data_.lower_bound (functor_type::element (i, size1_, j, size2_));
-//                }
-//                return iterator2 (*this, i, j, it);
                 check<internal_logic>::precondition (data_.begin () != data_.end ());
                 for (;;) {
                     vector_iterator_type itv (data_.lower_bound (functor_type::element1 (i, size1_, j, size2_)));
@@ -1126,13 +1068,6 @@ namespace numerics {
                     j = functor_type::index2 ((*itv).first, (*it).first);
                 }
             } else if (o <= -1) {
-//                iterator_type it (data_.upper_bound (functor_type::element (i, size1_, j, size2_)));
-//                iterator_type it_end (data_.end ());
-//                while (it != it_end && functor_type::index1 ((*it).first, size1_, size2_) < i) {
-//                    j = functor_type::index2 ((*it).first, size1_, size2_);
-//                    it = data_.upper_bound (functor_type::element (i, size1_, j, size2_));
-//                }
-//                return iterator2 (*this, i, j, it);
                 check<internal_logic>::precondition (data_.begin () != data_.end ());
                 for (;;) {
                     vector_iterator_type itv (data_.upper_bound (functor_type::element1 (i, size1_, j, size2_)));
@@ -1600,8 +1535,8 @@ namespace numerics {
         typedef NUMERICS_TYPENAME matrix_vector_binary1_traits<NUMERICS_TYPENAME E1::value_type, E1, 
                                                                NUMERICS_TYPENAME E2::value_type, E2>::result_type result_type;
 #endif
-        typedef result_type::size_type size_type;
-        typedef result_type::value_type value_type;
+        typedef NUMERICS_TYPENAME result_type::size_type size_type;
+        typedef NUMERICS_TYPENAME result_type::value_type value_type;
 
         check<bad_size>::precondition (e1 ().size2 () == e2 ().size ());
         result_type r (e1 ().size2 ());
@@ -1646,8 +1581,8 @@ namespace numerics {
         typedef NUMERICS_TYPENAME matrix_vector_binary1_traits<NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME E1::value_type>::precision_type, E1, 
                                                                NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME E2::value_type>::precision_type, E2>::result_type result_type;
 #endif
-        typedef result_type::size_type size_type;
-        typedef result_type::value_type value_type;
+        typedef NUMERICS_TYPENAME result_type::size_type size_type;
+        typedef NUMERICS_TYPENAME result_type::value_type value_type;
 
         check<bad_size>::precondition (e1 ().size2 () == e2 ().size ());
         result_type r (e1 ().size2 ());       

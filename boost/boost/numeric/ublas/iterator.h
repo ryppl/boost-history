@@ -74,13 +74,13 @@ namespace numerics {
         container_type &c_;
     };
 
-    template<class D, class T>
+    template<class I, class T>
     struct forward_iterator_base: 
         public std::iterator<std::forward_iterator_tag, T> {
-        typedef D derived_iterator_type;
-        typedef T value_type;
-        typedef const T &const_reference_type;
-        typedef T &reference_type;
+        typedef I derived_iterator_type;
+        typedef T derived_value_type;
+        typedef const T &derived_const_reference_type;
+        typedef T &derived_reference_type;
 
         // Arithmetic
         NUMERICS_INLINE
@@ -90,12 +90,14 @@ namespace numerics {
             ++ d;
             return tmp;
         }
+#ifndef USE_GCC
         NUMERICS_INLINE
         friend derived_iterator_type operator ++ (derived_iterator_type &d, int) {
             derived_iterator_type tmp (d);
             ++ d;
             return tmp;
         }
+#endif
 
         // Comparison
         NUMERICS_INLINE
@@ -105,13 +107,13 @@ namespace numerics {
         }
     };
 
-    template<class D, class T>
+    template<class I, class T>
     struct bidirectional_iterator_base: 
         public std::iterator<std::bidirectional_iterator_tag, T> {
-        typedef D derived_iterator_type;
-        typedef T value_type;
-        typedef const T &const_reference_type;
-        typedef T &reference_type;
+        typedef I derived_iterator_type;
+        typedef T derived_value_type;
+        typedef const T &derived_const_reference_type;
+        typedef T &derived_reference_type;
 
         // Arithmetic
         NUMERICS_INLINE
@@ -121,12 +123,14 @@ namespace numerics {
             ++ d;
             return tmp;
         }
+#ifndef USE_GCC
         NUMERICS_INLINE
         friend derived_iterator_type operator ++ (derived_iterator_type &d, int) {
             derived_iterator_type tmp (d);
             ++ d;
             return tmp;
         }
+#endif
         NUMERICS_INLINE
         derived_iterator_type operator -- (int) {
             derived_iterator_type &d (*static_cast<const derived_iterator_type *> (this));
@@ -134,12 +138,14 @@ namespace numerics {
             -- d;
             return tmp;
         }
+#ifndef USE_GCC
         NUMERICS_INLINE
         friend derived_iterator_type operator -- (derived_iterator_type &d, int) {
             derived_iterator_type tmp (d);
             -- d;
             return tmp;
         }
+#endif
 
         // Comparison
         NUMERICS_INLINE
@@ -149,15 +155,14 @@ namespace numerics {
         }
     };
 
-    template<class D, class T>
+    template<class I, class T, class D = std::ptrdiff_t>
     struct random_access_iterator_base:
         public std::iterator<std::random_access_iterator_tag, T> {
-        typedef D derived_iterator_type;
-        typedef T value_type;
-        typedef const T &const_reference_type;
-        typedef T &reference_type;
-        typedef std::size_t size_type;
-        typedef std::ptrdiff_t difference_type;
+        typedef I derived_iterator_type;
+        typedef T derived_value_type;
+        typedef const T &derived_const_reference_type;
+        typedef T &derived_reference_type;
+        typedef D derived_difference_type;
 
         // Arithmetic
         NUMERICS_INLINE
@@ -167,12 +172,14 @@ namespace numerics {
             ++ d;
             return tmp;
         }
+#ifndef USE_GCC
         NUMERICS_INLINE
         friend derived_iterator_type operator ++ (derived_iterator_type &d, int) {
             derived_iterator_type tmp (d);
             ++ d;
             return tmp;
         }
+#endif
         NUMERICS_INLINE
         derived_iterator_type operator -- (int) {
             derived_iterator_type &d (*static_cast<const derived_iterator_type *> (this));
@@ -180,40 +187,46 @@ namespace numerics {
             -- d;
             return tmp;
         }
+#ifndef USE_GCC
         NUMERICS_INLINE
         friend derived_iterator_type operator -- (derived_iterator_type &d, int) {
             derived_iterator_type tmp (d);
             -- d;
             return tmp;
         }
+#endif
         NUMERICS_INLINE
-        derived_iterator_type operator + (difference_type n) const {
+        derived_iterator_type operator + (derived_difference_type n) const {
             derived_iterator_type d (*static_cast<const derived_iterator_type *> (this));
             return d += n;
         }
+#ifndef USE_GCC
         NUMERICS_INLINE
-        friend derived_iterator_type operator + (const derived_iterator_type &d, difference_type n) {
+        friend derived_iterator_type operator + (const derived_iterator_type &d, derived_difference_type n) {
             derived_iterator_type tmp (d);
             return tmp += n;
         }
+#endif
         NUMERICS_INLINE
-        derived_iterator_type operator - (difference_type n) const {
+        derived_iterator_type operator - (derived_difference_type n) const {
             derived_iterator_type d (*static_cast<const derived_iterator_type *> (this));
             return d -= n;
         }
+#ifndef USE_GCC
         NUMERICS_INLINE
-        friend derived_iterator_type operator - (const derived_iterator_type &d, difference_type n) {
+        friend derived_iterator_type operator - (const derived_iterator_type &d, derived_difference_type n) {
             derived_iterator_type tmp (d);
             return tmp -= n;
         }
+#endif
 
         NUMERICS_INLINE
-        value_type operator [] (difference_type n) const {
+        derived_value_type operator [] (derived_difference_type n) const {
             const derived_iterator_type *d = static_cast<const derived_iterator_type *> (this);
             return *((*d) + n);
         }
         NUMERICS_INLINE
-        reference_type operator [] (difference_type n) {
+        derived_reference_type operator [] (derived_difference_type n) {
             const derived_iterator_type *d = static_cast<const derived_iterator_type *> (this);
             return *((*d) + n);
         }

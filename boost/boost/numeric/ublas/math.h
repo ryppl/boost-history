@@ -17,6 +17,8 @@
 #ifndef NUMERICS_MATH_H
 #define NUMERICS_MATH_H
 
+#include <cmath>
+
 #include "config.h"
 #include "exception.h"
 #include "traits.h"
@@ -149,13 +151,13 @@ namespace numerics {
 #ifndef USE_GCC
         template<class T>
         NUMERICS_INLINE
-        type_traits<std::complex<T> >::norm_type abs (const std::complex<T> &t) {
+        typename type_traits<std::complex<T> >::norm_type abs (const std::complex<T> &t) {
             return std::abs (t);
         }
 #else
         template<class T>
         NUMERICS_INLINE
-        type_traits<T>::norm_type abs (const T &t) {
+        typename type_traits<T>::norm_type abs (const T &t) {
             return std::abs (t);
         }
 #endif
@@ -179,14 +181,14 @@ namespace numerics {
 #ifndef USE_GCC
         template<class T>
         NUMERICS_INLINE
-        type_traits<std::complex<T> >::norm_type norm_1 (const std::complex<T> &t) {
+        typename type_traits<std::complex<T> >::norm_type norm_1 (const std::complex<T> &t) {
             // Oops, should have known that!
             return abs (t.real ()) + abs (t.imag ());
         }
 #else
         template<class T>
         NUMERICS_INLINE
-        type_traits<T>::norm_type norm_1 (const T &t) {
+        typename type_traits<T>::norm_type norm_1 (const T &t) {
             // Oops, should have known that!
             return abs (t.real ()) + abs (t.imag ());
         }
@@ -211,13 +213,13 @@ namespace numerics {
 #ifndef USE_GCC
         template<class T>
         NUMERICS_INLINE
-        type_traits<std::complex<T> >::norm_type norm_2 (const std::complex<T> &t) {
+        typename type_traits<std::complex<T> >::norm_type norm_2 (const std::complex<T> &t) {
             return abs (t);
         }
 #else
         template<class T>
         NUMERICS_INLINE
-        type_traits<T>::norm_type norm_2 (const T &t) {
+        typename type_traits<T>::norm_type norm_2 (const T &t) {
             return abs (t);
         }
 #endif
@@ -241,14 +243,14 @@ namespace numerics {
 #ifndef USE_GCC
         template<class T>
         NUMERICS_INLINE
-        type_traits<std::complex<T> >::norm_type norm_inf (const std::complex<T> &t) {
+        typename type_traits<std::complex<T> >::norm_type norm_inf (const std::complex<T> &t) {
             // Oops, should have known that!
             return std::max (abs (t.real ()), abs (t.imag ()));
         }
 #else
         template<class T>
         NUMERICS_INLINE
-        type_traits<T>::norm_type norm_inf (const T &t) {
+        typename type_traits<T>::norm_type norm_inf (const T &t) {
             // Oops, should have known that!
             return std::max (abs (t.real ()), abs (t.imag ()));
         }

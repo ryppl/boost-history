@@ -17,6 +17,8 @@
 #ifndef NUMERICS_CONFIG_H
 #define NUMERICS_CONFIG_H
 
+#include <cstddef>
+
 #ifdef USE_MSVC
 
 #pragma warning (disable: 4355)
@@ -102,13 +104,6 @@ namespace std {
 #define NUMERICS_USE_ITERATOR
 // #define NUMERICS_USE_ITERATOR_INDEX
 
-namespace std {
-
-    typedef unsigned size_t;
-    typedef signed ptrdiff_t;
-
-}
-
 namespace numerics {
 
     namespace detail {
@@ -190,10 +185,10 @@ namespace numerics {
     struct forward;
     struct backward;
 
-    template<class V>
-    class vector_range;
-    template<class V>
-    class vector_slice;
+    template<class F>
+    struct vector_assign_scalar;
+    template<class F>
+    struct vector_assign;
 
     template<class T, class F = forward, class A = unbounded_array<T> >
     class vector;
@@ -211,19 +206,12 @@ namespace numerics {
     template<class F1 = forward, class F2 = forward>
     struct column_major;
 
-    template<class M>
-    class matrix_row;
-    template<class M>
-    class matrix_column;
-    template<class M>
-    class matrix_vector_range;
-    template<class M>
-    class matrix_vector_slice;
-
-    template<class M>
-    class matrix_range;
-    template<class M>
-    class matrix_slice;
+    template<class F>
+    struct matrix_assign_scalar;
+    template<class F>
+    struct matrix_assign;
+    template<class F>
+    struct matrix_swap;
 
     template<class T, class F = row_major<>, class A = unbounded_array<T> >
     class matrix;

@@ -192,6 +192,41 @@ namespace numerics {
             return functor2_type::one () * size1;
         }
 
+        static 
+        NUMERICS_INLINE
+        size_type element1 (size_type i, size_type size1, size_type j, size_type size2) {
+            j = functor2_type::element (j, size2);
+            check<bad_index>::precondition (j <= size2);
+            return j;
+        }
+        static 
+        NUMERICS_INLINE
+        size_type element2 (size_type i, size_type size1, size_type j, size_type size2) {
+            i = functor1_type::element (i, size1);
+            check<bad_index>::precondition (i <= size1);
+            return i;
+        }
+        static 
+        NUMERICS_INLINE
+        size_type index1 (size_type index1, size_type index2) {
+            return index2;
+        }
+        static 
+        NUMERICS_INLINE
+        size_type index2 (size_type index1, size_type index2) {
+            return index1;
+        }
+        static 
+        NUMERICS_INLINE
+        size_type size1 (size_type size1, size_type size2) {
+            return size2;
+        }
+        static 
+        NUMERICS_INLINE
+        size_type size2 (size_type size1, size_type size2) {
+            return size1;
+        }
+
         // Iterating
         template<class I>
         static 
@@ -288,10 +323,10 @@ namespace numerics {
             // FIXME: switch to indexing version, if possible.
             typedef typename M::difference_type difference_type;
             typename M::iterator1 it1 (m.begin1 ());
-            difference_type size1 (m.end1 () - m.begin1 ());
+            difference_type size1 (m.end1 () - it1);
             while (-- size1 >= 0) {
                 typename M::iterator2 it2 (it1.begin ());
-                difference_type size2 (it1.end () - it1.begin ()); 
+                difference_type size2 (it1.end () - it2); 
                 while (-- size2 >= 0) 
 #ifndef NUMERICS_USE_ITERATOR_INDEX
                     functor_type () (*it2, t), ++ it2;
@@ -1420,12 +1455,10 @@ namespace numerics {
         // Element access
         NUMERICS_INLINE
         const_reference_type operator () (size_type i, size_type j) const {
-//          return data_ [functor_type::element (i, size1_, j, size2_)]; 
             return data_ [functor_type::element1 (i, size1_, j, size2_)] [functor_type::element2 (i, size1_, j, size2_)]; 
         }
         NUMERICS_INLINE
         reference_type operator () (size_type i, size_type j) {
-//          return data_ [functor_type::element (i, size1_, j, size2_)]; 
             return data_ [functor_type::element1 (i, size1_, j, size2_)] [functor_type::element2 (i, size1_, j, size2_)]; 
         }
 
@@ -1536,13 +1569,11 @@ namespace numerics {
         // Element insertion
         NUMERICS_INLINE
         void clear () {
-//            data_.fill (0);
-            for (size_type k = 0; k < functor_type::size1 (size1, size2); ++ k) 
+            for (size_type k = 0; k < functor_type::size1 (size1_, size2_); ++ k) 
                 data_ [k].fill (0);
         }
         NUMERICS_INLINE
         void insert (size_type i, size_type j, const_reference_type t) {
-//            data_ [functor_type::element (i, size1_, j, size2_)] = t;
             data_ [functor_type::element1 (i, size1_, j, size2_)] [functor_type::element2 (i, size1_, j, size2_)] = t; 
         }
 
@@ -1554,22 +1585,18 @@ namespace numerics {
         // Element lookup
         NUMERICS_INLINE
         const_iterator1 find1 (size_type i, size_type j) const {
-//            return const_iterator1 (*this, data_.begin () + functor_type::element (i, size1_, j, size2_));
             return const_iterator1 (*this, i, j, data_ [functor_type::element1 (i, size1_, j, size2_)].begin ()  + functor_type::element2 (i, size1_, j, size2_));
         }
         NUMERICS_INLINE
         iterator1 find1 (size_type i, size_type j) {
-//            return iterator1 (*this, data_.begin () + functor_type::element (i, size1_, j, size2_));
             return iterator1 (*this, i, j, data_ [functor_type::element1 (i, size1_, j, size2_)].begin ()  + functor_type::element2 (i, size1_, j, size2_));
         }
         NUMERICS_INLINE
         const_iterator2 find2 (size_type i, size_type j) const {
-//            return const_iterator2 (*this, data_.begin () + functor_type::element (i, size1_, j, size2_));
             return const_iterator2 (*this, i, j, data_ [functor_type::element1 (i, size1_, j, size2_)].begin ()  + functor_type::element2 (i, size1_, j, size2_));
         }
         NUMERICS_INLINE
         iterator2 find2 (size_type i, size_type j) {
-//            return iterator2 (*this, data_.begin () + functor_type::element (i, size1_, j, size2_));
             return iterator2 (*this, i, j, data_ [functor_type::element1 (i, size1_, j, size2_)].begin () + functor_type::element2 (i, size1_, j, size2_));
         }
 
@@ -1593,7 +1620,6 @@ namespace numerics {
             // Arithmetic
             NUMERICS_INLINE
             const_iterator1 &operator ++ () {
-//                functor_type::increment1 (it_, (*this) ().size1 (), (*this) ().size2 ());
                 ++ i_;
                 const vector_of_vector &m = (*this) ();
                 difference_type o (functor_type::one1 (m.size1 (), m.size2 ()));
@@ -1609,7 +1635,6 @@ namespace numerics {
             }
             NUMERICS_INLINE
             const_iterator1 &operator -- () {
-//                functor_type::decrement1 (it_, (*this) ().size1 (), (*this) ().size2 ());
                 -- i_;
                 const vector_of_vector &m = (*this) ();
                 difference_type o (functor_type::one1 (m.size1 (), m.size2 ()));
@@ -1625,21 +1650,20 @@ namespace numerics {
             }
             NUMERICS_INLINE
             const_iterator1 &operator += (difference_type n) {
-//                it_ += n * functor_type::one1 ((*this) ().size1 (), (*this) ().size2 ());
                 i_ += n;
+                const vector_of_vector &m = (*this) ();
                 it_ = m.find1 (i_, j_).it_;
                 return *this;
             }
             NUMERICS_INLINE
             const_iterator1 &operator -= (difference_type n) {
-//                it_ -= n * functor_type::one1 ((*this) ().size1 (), (*this) ().size2 ());
                 i_ -= n;
+                const vector_of_vector &m = (*this) ();
                 it_ = m.find1 (i_, j_).it_;
                 return *this;
             }
             NUMERICS_INLINE
             difference_type operator - (const const_iterator1 &it) const {
-//                return functor_type::distance1 (it_ - it.it_, (*this) ().size1 (), (*this) ().size2 ());
                 check<bad_index>::precondition (index2 () == it.index2 ());
                 return index1 () - it.index1 ();
             }
@@ -1712,7 +1736,6 @@ namespace numerics {
             // Arithmetic
             NUMERICS_INLINE
             iterator1 &operator ++ () {
-//                functor_type::increment1 (it_, (*this) ().size1 (), (*this) ().size2 ());
                 ++ i_;
                 vector_of_vector &m = (*this) ();
                 difference_type o (functor_type::one1 (m.size1 (), m.size2 ()));
@@ -1728,7 +1751,6 @@ namespace numerics {
             }
             NUMERICS_INLINE
             iterator1 &operator -- () {
-//                functor_type::decrement1 (it_, (*this) ().size1 (), (*this) ().size2 ());
                 -- i_;
                 vector_of_vector &m = (*this) ();
                 difference_type o (functor_type::one1 (m.size1 (), m.size2 ()));
@@ -1744,21 +1766,20 @@ namespace numerics {
             }
             NUMERICS_INLINE
             iterator1 &operator += (difference_type n) {
-//                it_ += n * functor_type::one1 ((*this) ().size1 (), (*this) ().size2 ());
                 i_ += n;
+                vector_of_vector &m = (*this) ();
                 it_ = m.find1 (i_, j_).it_;
                 return *this;
             }
             NUMERICS_INLINE
             iterator1 &operator -= (difference_type n) {
-//                it_ -= n * functor_type::one1 ((*this) ().size1 (), (*this) ().size2 ());
                 i_ -= n;
+                vector_of_vector &m = (*this) ();
                 it_ = m.find1 (i_, j_).it_;
                 return *this;
             }
             NUMERICS_INLINE
             difference_type operator - (const iterator1 &it) const {
-//                return functor_type::distance1 (it_ - it.it_, (*this) ().size1 (), (*this) ().size2 ());
                 check<bad_index>::precondition (index2 () == it.index2 ());
                 return index1 () - it.index1 ();
             }
@@ -1834,7 +1855,6 @@ namespace numerics {
             // Arithmetic
             NUMERICS_INLINE
             const_iterator2 &operator ++ () {
-//                functor_type::increment2 (it_, (*this) ().size1 (), (*this) ().size2 ());
                 ++ j_;
                 const vector_of_vector &m = (*this) ();
                 difference_type o (functor_type::one2 (m.size1 (), m.size2 ()));
@@ -1850,7 +1870,6 @@ namespace numerics {
             }
             NUMERICS_INLINE
             const_iterator2 &operator -- () {
-//                functor_type::decrement2 (it_, (*this) ().size1 (), (*this) ().size2 ());
                 -- j_;
                 const vector_of_vector &m = (*this) ();
                 difference_type o (functor_type::one2 (m.size1 (), m.size2 ()));
@@ -1866,21 +1885,20 @@ namespace numerics {
             }
             NUMERICS_INLINE
             const_iterator2 &operator += (difference_type n) {
-//                it_ += n * functor_type::one2 ((*this) ().size1 (), (*this) ().size2 ());
                 j_ += n;
+                const vector_of_vector &m = (*this) ();
                 it_ = m.find2 (i_, j_).it_;
                 return *this;
             }
             NUMERICS_INLINE
             const_iterator2 &operator -= (difference_type n) {
-//                it_ -= n * functor_type::one2 ((*this) ().size1 (), (*this) ().size2 ());
                 j_ -= n;
+                const vector_of_vector &m = (*this) ();
                 it_ = m.find2 (i_, j_).it_;
                 return *this;
             }
             NUMERICS_INLINE
             difference_type operator - (const const_iterator2 &it) const {
-//                return functor_type::distance2 (it_ - it.it_, (*this) ().size1 (), (*this) ().size2 ());
                 check<bad_index>::precondition (index1 () == it.index1 ());
                 return index2 () - it.index2 ();
             }
@@ -1953,7 +1971,6 @@ namespace numerics {
             // Arithmetic
             NUMERICS_INLINE
             iterator2 &operator ++ () {
-//                functor_type::increment2 (it_, (*this) ().size1 (), (*this) ().size2 ());
                 ++ j_;
                 vector_of_vector &m = (*this) ();
                 difference_type o (functor_type::one2 (m.size1 (), m.size2 ()));
@@ -1969,7 +1986,6 @@ namespace numerics {
             }
             NUMERICS_INLINE
             iterator2 &operator -- () {
-//                functor_type::decrement2 (it_, (*this) ().size1 (), (*this) ().size2 ());
                 -- j_;
                 vector_of_vector &m = (*this) ();
                 difference_type o (functor_type::one2 (m.size1 (), m.size2 ()));
@@ -1985,21 +2001,20 @@ namespace numerics {
             }
             NUMERICS_INLINE
             iterator2 &operator += (difference_type n) {
-//                it_ += n * functor_type::one2 ((*this) ().size1 (), (*this) ().size2 ());
                 j_ += n;
+                vector_of_vector &m = (*this) ();
                 it_ = m.find2 (i_, j_).it_;
                 return *this;
             }
             NUMERICS_INLINE
             iterator2 &operator -= (difference_type n) {
-//                it_ -= n * functor_type::one2 ((*this) ().size1 (), (*this) ().size2 ());
                 j_ -= n;
+                vector_of_vector &m = (*this) ();
                 it_ = m.find2 (i_, j_).it_;
                 return *this;
             }
             NUMERICS_INLINE
             difference_type operator - (const iterator2 &it) const {
-//                return functor_type::distance2 (it_ - it.it_, (*this) ().size1 (), (*this) ().size2 ());
                 check<bad_index>::precondition (index1 () == it.index1 ());
                 return index2 () - it.index2 ();
             }
@@ -2212,7 +2227,6 @@ namespace numerics {
         identity_matrix &operator = (const identity_matrix &m) { 
             check<bad_size>::precondition (size1_ == m.size1_);
             check<bad_size>::precondition (size2_ == m.size2_);
-            data_ = m.data_;
             return *this;
         }
         NUMERICS_INLINE
@@ -2280,7 +2294,6 @@ namespace numerics {
             check<bad_size>::precondition (size2_ == m.size2_);
             std::swap (size1_, m.size1_);
             std::swap (size2_, m.size2_);
-            data_.swap (m.data_);
         }
 #ifndef USE_GCC
         NUMERICS_INLINE
@@ -2288,16 +2301,6 @@ namespace numerics {
             m1.swap (m2);
         }
 #endif
-
-        // Element insertion
-        NUMERICS_INLINE
-        void clear () {
-            data_.fill (0);
-        }
-        NUMERICS_INLINE
-        void insert (size_type i, size_type j, const_reference_type t) {
-            data_.insert (data_.begin () + functor_type::element (i, size1_, j, size2_), t);
-        }
 
         class const_iterator1;
         class const_iterator2;
@@ -3216,9 +3219,9 @@ namespace numerics {
            const vector_expression<E2> &e2,
            lower_triangular_tag) {
         typedef NUMERICS_TYPENAME matrix_vector_solve_traits<E1, E2>::result_type result_type;
-        typedef result_type::size_type size_type;
-        typedef result_type::difference_type difference_type;
-        typedef result_type::value_type value_type;
+        typedef NUMERICS_TYPENAME result_type::size_type size_type;
+        typedef NUMERICS_TYPENAME result_type::difference_type difference_type;
+        typedef NUMERICS_TYPENAME result_type::value_type value_type;
 
         check<bad_size>::precondition (e1 ().size1 () == e1 ().size2 ());
         check<bad_size>::precondition (e1 ().size2 () == e2 ().size ());
@@ -3240,9 +3243,9 @@ namespace numerics {
            const vector_expression<E2> &e2,
            upper_triangular_tag) {
         typedef NUMERICS_TYPENAME matrix_vector_solve_traits<E1, E2>::result_type result_type;
-        typedef result_type::size_type size_type;
-        typedef result_type::difference_type difference_type;
-        typedef result_type::value_type value_type;
+        typedef NUMERICS_TYPENAME result_type::size_type size_type;
+        typedef NUMERICS_TYPENAME result_type::difference_type difference_type;
+        typedef NUMERICS_TYPENAME result_type::value_type value_type;
 
         check<bad_size>::precondition (e1 ().size1 () == e1 ().size2 ());
         check<bad_size>::precondition (e1 ().size2 () == e2 ().size ());
@@ -3264,9 +3267,9 @@ namespace numerics {
            const vector_expression<E2> &e2,
            unit_lower_triangular_tag) {
         typedef NUMERICS_TYPENAME matrix_vector_solve_traits<E1, E2>::result_type result_type;
-        typedef result_type::size_type size_type;
-        typedef result_type::difference_type difference_type;
-        typedef result_type::value_type value_type;
+        typedef NUMERICS_TYPENAME result_type::size_type size_type;
+        typedef NUMERICS_TYPENAME result_type::difference_type difference_type;
+        typedef NUMERICS_TYPENAME result_type::value_type value_type;
 
         check<bad_size>::precondition (e1 ().size1 () == e1 ().size2 ());
         check<bad_size>::precondition (e1 ().size2 () == e2 ().size ());
@@ -3286,9 +3289,9 @@ namespace numerics {
            const vector_expression<E2> &e2,
            unit_upper_triangular_tag) {
         typedef NUMERICS_TYPENAME matrix_vector_solve_traits<E1, E2>::result_type result_type;
-        typedef result_type::size_type size_type;
-        typedef result_type::difference_type difference_type;
-        typedef result_type::value_type value_type;
+        typedef NUMERICS_TYPENAME result_type::size_type size_type;
+        typedef NUMERICS_TYPENAME result_type::difference_type difference_type;
+        typedef NUMERICS_TYPENAME result_type::value_type value_type;
 
         check<bad_size>::precondition (e1 ().size1 () == e1 ().size2 ());
         check<bad_size>::precondition (e1 ().size2 () == e2 ().size ());
@@ -3308,9 +3311,9 @@ namespace numerics {
            const matrix_expression<E2> &e2,
            lower_triangular_tag) {
         typedef NUMERICS_TYPENAME matrix_vector_solve_traits<E1, E2>::result_type result_type;
-        typedef result_type::size_type size_type;
-        typedef result_type::difference_type difference_type;
-        typedef result_type::value_type value_type;
+        typedef NUMERICS_TYPENAME result_type::size_type size_type;
+        typedef NUMERICS_TYPENAME result_type::difference_type difference_type;
+        typedef NUMERICS_TYPENAME result_type::value_type value_type;
 
         check<bad_size>::precondition (e1 ().size () == e2 ().size1 ());
         check<bad_size>::precondition (e2 ().size1 () == e2 ().size2 ());
@@ -3332,9 +3335,9 @@ namespace numerics {
            const matrix_expression<E2> &e2,
            upper_triangular_tag) {
         typedef NUMERICS_TYPENAME matrix_vector_solve_traits<E1, E2>::result_type result_type;
-        typedef result_type::size_type size_type;
-        typedef result_type::difference_type difference_type;
-        typedef result_type::value_type value_type;
+        typedef NUMERICS_TYPENAME result_type::size_type size_type;
+        typedef NUMERICS_TYPENAME result_type::difference_type difference_type;
+        typedef NUMERICS_TYPENAME result_type::value_type value_type;
 
         check<bad_size>::precondition (e1 ().size () == e2 ().size1 ());
         check<bad_size>::precondition (e2 ().size1 () == e2 ().size2 ());
@@ -3356,9 +3359,9 @@ namespace numerics {
            const matrix_expression<E2> &e2,
            unit_lower_triangular_tag) {
         typedef NUMERICS_TYPENAME matrix_vector_solve_traits<E1, E2>::result_type result_type;
-        typedef result_type::size_type size_type;
-        typedef result_type::difference_type difference_type;
-        typedef result_type::value_type value_type;
+        typedef NUMERICS_TYPENAME result_type::size_type size_type;
+        typedef NUMERICS_TYPENAME result_type::difference_type difference_type;
+        typedef NUMERICS_TYPENAME result_type::value_type value_type;
 
         check<bad_size>::precondition (e1 ().size1 () == e1 ().size2 ());
         check<bad_size>::precondition (e1 ().size2 () == e2 ().size ());
@@ -3378,9 +3381,9 @@ namespace numerics {
            const matrix_expression<E2> &e2,
            unit_upper_triangular_tag) {
         typedef NUMERICS_TYPENAME matrix_vector_solve_traits<E1, E2>::result_type result_type;
-        typedef result_type::size_type size_type;
-        typedef result_type::difference_type difference_type;
-        typedef result_type::value_type value_type;
+        typedef NUMERICS_TYPENAME result_type::size_type size_type;
+        typedef NUMERICS_TYPENAME result_type::difference_type difference_type;
+        typedef NUMERICS_TYPENAME result_type::value_type value_type;
 
         check<bad_size>::precondition (e1 ().size () == e2 ().size1 ());
         check<bad_size>::precondition (e2 ().size1 () == e2 ().size2 ());
@@ -3411,9 +3414,9 @@ namespace numerics {
            const matrix_expression<E2> &e2,
            lower_triangular_tag) {
         typedef NUMERICS_TYPENAME matrix_matrix_solve_traits<E1, E2>::result_type result_type;
-        typedef result_type::size_type size_type;
-        typedef result_type::difference_type difference_type;
-        typedef result_type::value_type value_type;
+        typedef NUMERICS_TYPENAME result_type::size_type size_type;
+        typedef NUMERICS_TYPENAME result_type::difference_type difference_type;
+        typedef NUMERICS_TYPENAME result_type::value_type value_type;
 
         check<bad_size>::precondition (e1 ().size1 () == e1 ().size2 ());
         check<bad_size>::precondition (e1 ().size2 () == e2 ().size1 ());
@@ -3438,9 +3441,9 @@ namespace numerics {
            const matrix_expression<E2> &e2,
            upper_triangular_tag) {
         typedef NUMERICS_TYPENAME matrix_matrix_solve_traits<E1, E2>::result_type result_type;
-        typedef result_type::size_type size_type;
-        typedef result_type::difference_type difference_type;
-        typedef result_type::value_type value_type;
+        typedef NUMERICS_TYPENAME result_type::size_type size_type;
+        typedef NUMERICS_TYPENAME result_type::difference_type difference_type;
+        typedef NUMERICS_TYPENAME result_type::value_type value_type;
 
         check<bad_size>::precondition (e1 ().size1 () == e1 ().size2 ());
         check<bad_size>::precondition (e1 ().size2 () == e2 ().size1 ());
@@ -3465,9 +3468,9 @@ namespace numerics {
            const matrix_expression<E2> &e2,
            unit_lower_triangular_tag) {
         typedef NUMERICS_TYPENAME matrix_matrix_solve_traits<E1, E2>::result_type result_type;
-        typedef result_type::size_type size_type;
-        typedef result_type::difference_type difference_type;
-        typedef result_type::value_type value_type;
+        typedef NUMERICS_TYPENAME result_type::size_type size_type;
+        typedef NUMERICS_TYPENAME result_type::difference_type difference_type;
+        typedef NUMERICS_TYPENAME result_type::value_type value_type;
 
         check<bad_size>::precondition (e1 ().size1 () == e1 ().size2 ());
         check<bad_size>::precondition (e1 ().size2 () == e2 ().size1 ());
@@ -3490,9 +3493,9 @@ namespace numerics {
            const matrix_expression<E2> &e2,
            unit_upper_triangular_tag) {
         typedef NUMERICS_TYPENAME matrix_matrix_solve_traits<E1, E2>::result_type result_type;
-        typedef result_type::size_type size_type;
-        typedef result_type::difference_type difference_type;
-        typedef result_type::value_type value_type;
+        typedef NUMERICS_TYPENAME result_type::size_type size_type;
+        typedef NUMERICS_TYPENAME result_type::difference_type difference_type;
+        typedef NUMERICS_TYPENAME result_type::value_type value_type;
 
         check<bad_size>::precondition (e1 ().size1 () == e1 ().size2 ());
         check<bad_size>::precondition (e1 ().size2 () == e2 ().size1 ());

@@ -82,7 +82,7 @@ namespace numerics {
 
         NUMERICS_INLINE
         vector_range project (size_type start, size_type stop) {
-            return vector_range (data_, r_.composite (start, stop));
+            return vector_range (data_, r_.composite (range (start, stop)));
         }
         NUMERICS_INLINE
         vector_range project (const range &r) {

@@ -137,6 +137,7 @@ struct test_my_vector {
 void test_vector () {
     std::cout << "test_vector" << std::endl;
 
+#ifdef USE_BOUNDED_ARRAY
     std::cout << "float, bounded_array" << std::endl;
     test_my_vector<numerics::vector<float, numerics::forward, numerics::bounded_array<float, 3> >, 3 > () ();
 
@@ -148,7 +149,9 @@ void test_vector () {
 
     std::cout << "std::complex<double>, bounded_array" << std::endl;
     test_my_vector<numerics::vector<std::complex<double>, numerics::forward, numerics::bounded_array<std::complex<double>, 3> >, 3 > () ();
+#endif
 
+#ifdef USE_UNBOUNDED_ARRAY
     std::cout << "float, unbounded_array" << std::endl;
     test_my_vector<numerics::vector<float, numerics::forward, numerics::unbounded_array<float> >, 3 > () ();
 
@@ -160,7 +163,9 @@ void test_vector () {
 
     std::cout << "std::complex<double>, unbounded_array" << std::endl;
     test_my_vector<numerics::vector<std::complex<double>, numerics::forward, numerics::unbounded_array<std::complex<double> > >, 3 > () ();
+#endif
 
+#ifdef USE_STD_VECTOR
     std::cout << "float, std::vector" << std::endl;
     test_my_vector<numerics::vector<float, numerics::forward, std::vector<float> >, 3 > () ();
 
@@ -172,5 +177,6 @@ void test_vector () {
 
     std::cout << "std::complex<double>, std::vector" << std::endl;
     test_my_vector<numerics::vector<std::complex<double>, numerics::forward, std::vector<std::complex<double> > >, 3 > () ();
+#endif
 }
 

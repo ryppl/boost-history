@@ -26,11 +26,13 @@ int main () {
 	std::cout << "double" << std::endl;
     test_blas_1<numerics::vector<double>, 3> () ();
 
+#ifdef USE_STD_COMPLEX
 	std::cout << "std::complex<float>" << std::endl;
     test_blas_1<numerics::vector<std::complex<float> >, 3> () ();
 
 	std::cout << "std::complex<double>" << std::endl;
     test_blas_1<numerics::vector<std::complex<double> >, 3> () ();
+#endif
 
 	std::cout << "test_blas_2" << std::endl;
 
@@ -40,11 +42,13 @@ int main () {
 	std::cout << "double" << std::endl;
     test_blas_2<numerics::vector<double>, numerics::matrix<double>, 3> () ();
 
+#ifdef USE_STD_COMPLEX
 	std::cout << "std::complex<float>" << std::endl;
     test_blas_2<numerics::vector<std::complex<float> >, numerics::matrix<std::complex<float> >, 3> () ();
 
 	std::cout << "std::complex<double>" << std::endl;
     test_blas_2<numerics::vector<std::complex<double> >, numerics::matrix<std::complex<double> >, 3> () ();
+#endif
 
 	std::cout << "float" << std::endl;
     test_blas_3<numerics::matrix<float>, 3> () ();
@@ -52,11 +56,13 @@ int main () {
 	std::cout << "double" << std::endl;
     test_blas_3<numerics::matrix<double>, 3> () ();
 
+#ifdef USE_STD_COMPLEX
 	std::cout << "std::complex<float>" << std::endl;
     test_blas_3<numerics::matrix<std::complex<float> >, 3> () ();
 
 	std::cout << "std::complex<double>" << std::endl;
     test_blas_3<numerics::matrix<std::complex<double> >, 3> () ();
+#endif
     return 0;
 }
 

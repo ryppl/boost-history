@@ -994,7 +994,7 @@ namespace numerics {
             }
             NUMERICS_INLINE
             void decrement (std::random_access_iterator_tag) {
-                -- i, -- it1_, -- it2_;
+                -- i_, -- it1_, -- it2_;
             }
             NUMERICS_INLINE
             value_type dereference (std::random_access_iterator_tag) const {
@@ -1079,7 +1079,7 @@ namespace numerics {
             }
             NUMERICS_INLINE
             size_type index2 () const {
-                return common (it1_.index2 (), it2_index2 ());
+                return common (it1_.index2 (), it2_.index2 ());
             }
 
             // Comparison
@@ -1123,7 +1123,7 @@ namespace numerics {
             }
             NUMERICS_INLINE
             void decrement (std::random_access_iterator_tag) {
-                -- j, -- it1_, -- it2_;
+                -- j_, -- it1_, -- it2_;
             }
             NUMERICS_INLINE
             value_type dereference (std::random_access_iterator_tag) const {
@@ -1178,7 +1178,7 @@ namespace numerics {
             }
             NUMERICS_INLINE
             const_iterator2 &operator -= (difference_type n) {
-                j -= n, it1_ -= n, it2_ -= n;
+                j_ -= n, it1_ -= n, it2_ -= n;
                 return *this;
             }
             NUMERICS_INLINE
@@ -1932,7 +1932,7 @@ namespace numerics {
                const vector_expression<E2> &e2,
                row_major_tag) {
         typedef NUMERICS_TYPENAME matrix_vector_binary1_traits<NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME E1::value_type>::precision_type, E1, 
-                                                               NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME E2::value_type>::precision_type, E2>::expression_type (e1 (), e2 ());                                                                                                                      NUMERICS_TYPENAME E2::value_type>::promote_type>::precision_type> >:: expression_type expression_type;
+                                                               NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME E2::value_type>::precision_type, E2>::expression_type expression_type;
         return expression_type (e1 (), e2 ());
     }
 
@@ -1944,7 +1944,7 @@ namespace numerics {
     prec_prod (const matrix_expression<E1> &e1, 
                const vector_expression<E2> &e2) {
         typedef NUMERICS_TYPENAME matrix_vector_binary1_traits<NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME E1::value_type>::precision_type, E1, 
-                                                               NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME E2::value_type>::precision_type, E2>::expression_type (e1 (), e2 ());                                                                                                                      NUMERICS_TYPENAME E2::value_type>::promote_type>::precision_type> >:: expression_type expression_type;
+                                                               NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME E2::value_type>::precision_type, E2>::dispatch_category dispatch_category;
         return prec_prod (e1, e2, dispatch_category ());
     }
 
@@ -2107,7 +2107,7 @@ namespace numerics {
                const matrix_expression<E2> &e2,
                column_major_tag) {
         typedef NUMERICS_TYPENAME matrix_vector_binary2_traits<NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME E1::value_type>::precision_type, E1, 
-                                                               NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME E2::value_type>::precision_type, E2>::expression_type (e1 (), e2 ());                                                                                                                      NUMERICS_TYPENAME E2::value_type>::promote_type>::precision_type> >::expression_type expression_type;
+                                                               NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME E2::value_type>::precision_type, E2>::expression_type expression_type;
         return expression_type (e1 (), e2 ());
     }
 
@@ -2119,7 +2119,7 @@ namespace numerics {
     prec_prod (const vector_expression<E1> &e1, 
                const matrix_expression<E2> &e2) {
         typedef NUMERICS_TYPENAME matrix_vector_binary2_traits<NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME E1::value_type>::precision_type, E1, 
-                                                               NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME E2::value_type>::precision_type, E2>::expression_type (e1 (), e2 ());                                                                                                                      NUMERICS_TYPENAME E2::value_type>::promote_type>::precision_type> >::expression_type expression_type;
+                                                               NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME E2::value_type>::precision_type, E2>::dispatch_category dispatch_category;
         return prod (e1, e2, dispatch_category ());
     }
 
@@ -2303,11 +2303,11 @@ namespace numerics {
 
             NUMERICS_INLINE
             const_iterator1 begin () const {
-                return const_iterator1 ((*this) (), (this) ().expression1 ().begin1 (), it2_); 
+                return const_iterator1 ((*this) (), (*this) ().expression1 ().begin1 (), it2_); 
             }
             NUMERICS_INLINE
             const_iterator1 end () const {
-                return const_iterator1 ((*this) (), (this) ().expression1 ().end1 (), it2_); 
+                return const_iterator1 ((*this) (), (*this) ().expression1 ().end1 (), it2_); 
             }
 
             // Indices
@@ -2383,7 +2383,7 @@ namespace numerics {
     prec_prod (const matrix_expression<E1> &e1, 
                const matrix_expression<E2> &e2) {
         typedef NUMERICS_TYPENAME matrix_matrix_binary_traits<NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME E1::value_type>::precision_type, E1, 
-                                                              NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME E2::value_type>::precision_type, E2>::expression_type (e1 (), e2 ());                                                                                                                      NUMERICS_TYPENAME E2::value_type>::promote_type>::precision_type> >::expression_type expression_type;
+                                                              NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME E2::value_type>::precision_type, E2>::expression_type expression_type;
         return expression_type (e1 (), e2 ());
     }
 

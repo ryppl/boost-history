@@ -1029,7 +1029,7 @@ namespace numerics {
         // Element insertion
         NUMERICS_INLINE
         void clear () {
-            std::fill (data_, data_ + size, 0);
+            std::fill (data_, data_ + size_, 0);
         }
         NUMERICS_INLINE
         void insert (size_type i, const_reference_type t) {
@@ -1075,7 +1075,7 @@ namespace numerics {
             }
             NUMERICS_INLINE
             const_iterator &operator -- () {
-                -- it;
+                -- it_;
                 return *this;
             }
             NUMERICS_INLINE
