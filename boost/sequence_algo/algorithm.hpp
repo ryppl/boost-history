@@ -3,6 +3,13 @@
 // copyright notice appears in all copies. This software is provided
 // "as is" without express or implied warranty, and with no claim as
 // to its suitability for any purpose.
+//
+// Revision History:
+
+// 27 Jun 2002	Herve Bronnimann
+//    Added concept checking
+// 27 Jun 2002  Herve Bronnimann
+//    Shorter implementation of is_sorted
 
 /*
  *
@@ -32,7 +39,10 @@
 
 #ifndef BOOST_ALGORITHM_HPP
 # define BOOST_ALGORITHM_HPP
+
 # include <boost/detail/iterator.hpp>
+# include <boost/concept_check.hpp>
+
 // Algorithms on sequences
 //
 // The functions in this file have not yet gone through formal
@@ -44,33 +54,50 @@
 
 namespace boost {
 
+// The following should probably eventually be added to the concept checking
+// library, as well as PostIncrementOpConcept, and idem with Decrement
+// -- Herve
+
+#define BOOST_DEFINE_UNARY_PRE_OPERATOR_CONSTRAINT(OP,NAME) \
+  template <class TT> \
+  struct NAME { \
+    void constraints() { (void)constraints_(); } \
+    bool constraints_() {  \
+      return OP a; \
+    } \
+    TT a; \
+  }
+
+  BOOST_DEFINE_UNARY_OPERATOR_CONSTRAINT(++, PreIncrementOpConcept);
+
   template <class ForwardIterator, class T>
   void iota(ForwardIterator first, ForwardIterator last, T value)
   {
+    function_requires< ForwardIteratorConcept<ForwardIterator> >();
+    function_requires< PreIncrementOpConcept<T> >();
+#ifndef BOOST_NO_STD_ITERATOR_TRAITS
+    function_requires< ConvertibleConcept<T,
+      typename std::iterator_traits<ForwardIterator>::value_type > >();
+#endif
     for (; first != last; ++first, ++value)
       *first = value;
   }
  
-  template <typename InputIterator, typename Predicate>
-  bool any_if(InputIterator first, InputIterator last, Predicate p)
-  {
-    return std::find_if(first, last, p) != last;
-  }
-  template <typename Container, typename Predicate>
-  bool any_if(const Container& c, Predicate p)
-  {
-    return any_if(begin(c), end(c), p);
-  }
-
   template <typename InputIterator, typename T>
   bool contains(InputIterator first, InputIterator last, T value)
   {
+    function_requires< InputIteratorConcept<InputIterator> >();
     return std::find(first, last, value) != last;
   }
 
   template <typename InputIterator, typename Predicate>
   bool all(InputIterator first, InputIterator last, Predicate p)
   {
+    function_requires< InputIteratorConcept<InputIterator> >();
+#ifndef BOOST_NO_STD_ITERATOR_TRAITS
+    function_requires< UnaryPredicateConcept<Predicate,
+      typename std::iterator_traits<InputIterator>::value_type > >();
+#endif
     for (; first != last; ++first)
       if (!p(*first))
         return false;
@@ -80,13 +107,34 @@ namespace boost {
   template <typename InputIterator, typename Predicate>
   bool none(InputIterator first, InputIterator last, Predicate p)
   {
+    function_requires< InputIteratorConcept<InputIterator> >();
+#ifndef BOOST_NO_STD_ITERATOR_TRAITS
+    function_requires< UnaryPredicateConcept<Predicate,
+      typename std::iterator_traits<InputIterator>::value_type > >();
+#endif
     return std::find_if(first, last, p) == last;
+  }
+
+  template <typename InputIterator, typename Predicate>
+  bool any_if(InputIterator first, InputIterator last, Predicate p)
+  {
+    function_requires< InputIteratorConcept<InputIterator> >();
+#ifndef BOOST_NO_STD_ITERATOR_TRAITS
+    function_requires< UnaryPredicateConcept<Predicate,
+      typename std::iterator_traits<InputIterator>::value_type > >();
+#endif
+    return std::find_if(first, last, p) != last;
   }
 
   template<class ForwardIterator>
   inline bool
   is_sorted(ForwardIterator first, ForwardIterator last)
   {
+    function_requires< ForwardIteratorConcept<ForwardIterator> >();
+#ifndef BOOST_NO_STD_ITERATOR_TRAITS
+    function_requires< LessThanComparableConcept<
+      typename std::iterator_traits<ForwardIterator>::value_type > >();
+#endif
     if (first != last)
       for (ForwardIterator old = first; ++first != last; old = first)
         if (*first < *old)
@@ -99,6 +147,12 @@ namespace boost {
   is_sorted(ForwardIterator first, ForwardIterator last,
             StrictWeakOrdering comp)
   {
+    function_requires< ForwardIteratorConcept<ForwardIterator> >();
+#ifndef BOOST_NO_STD_ITERATOR_TRAITS
+    function_requires< BinaryPredicateConcept<StrictWeakOrdering,
+      typename std::iterator_traits<ForwardIterator>::value_type,
+      typename std::iterator_traits<ForwardIterator>::value_type > >();
+#endif
     if (first != last)
       for (ForwardIterator old = first; ++first != last; old = first)
         if (comp(*first, *old))
