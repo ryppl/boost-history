@@ -77,7 +77,7 @@ interval<T, Traits> interval<T, Traits>::empty()
 }
 
 template<class T, class Traits> inline
-interval<T, Traits> interval<T, Traits>::entire()
+interval<T, Traits> interval<T, Traits>::whole()
 {
   T inf = base_limits::infinity();
   return interval<T, Traits>(-inf, inf, true);

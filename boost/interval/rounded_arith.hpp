@@ -29,6 +29,11 @@ namespace boost {
 
     } // namespace detail
 
+  /*
+   * Three classes of rounding: exact, std, opp
+   * See documentation for details.
+   */
+
   template<class T, class Rounding>
   struct rounded_arith_exact: Rounding {
     void init() { }
@@ -49,53 +54,56 @@ namespace boost {
 
   template<class T, class Rounding>
   struct rounded_arith_std: Rounding {
+    #define ROUND_DOWN(EXPR) (downward(),   force_rounding( EXPR ))
+    #define ROUND_NEAR(EXPR) (to_nearest(), force_rounding( EXPR ))
+    #define ROUND_UP  (EXPR) (upward(),     force_rounding( EXPR ))
     void init() { }
-    T add_down (const T& x, const T& y) { return (downward(),
-                                            force_rounding(x+y)); }
-    T add_up   (const T& x, const T& y) { return (upward(),
-                                            force_rounding(x+y)); }
-    T sub_down (const T& x, const T& y) { return (downward(), 
-                                            force_rounding(x-y)); }
-    T sub_up   (const T& x, const T& y) { return (upward(), 
-                                            force_rounding(x-y)); }
-    T mul_down (const T& x, const T& y) { return (downward(), 
-                                            force_rounding(x*y)); }
-    T mul_up   (const T& x, const T& y) { return (upward(), 
-                                            force_rounding(x*y)); }
-    T div_down (const T& x, const T& y) { return (downward(), 
-                                            force_rounding(x/y)); }
-    T div_up   (const T& x, const T& y) { return (upward(), 
-                                            force_rounding(x/y)); }
-    T median   (const T& x, const T& y) { return (tonearest(), 
-                                            force_rounding((x + y) / 2)); }
-    T sqrt_down(const T& x)             { return (downward(), 
-                                            force_rounding(std::sqrt(x))); }
-    T sqrt_up  (const T& x)             { return (upward(),
-                                            force_rounding(std::sqrt(x))); }
-    T int_down (const T& x)             { return (downward(), to_int(x)); }
-    T int_up   (const T& x)             { return (upward(), to_int(x)); }
+    T add_down (const T& x, const T& y) { return ROUND_DOWN ( x + y        ); }
+    T add_up   (const T& x, const T& y) { return ROUND_UP   ( x + y        ); }
+    T sub_down (const T& x, const T& y) { return ROUND_DOWN ( x - y        ); }
+    T sub_up   (const T& x, const T& y) { return ROUND_UP   ( x - y        ); }
+    T mul_down (const T& x, const T& y) { return ROUND_DOWN ( x * y        ); }
+    T mul_up   (const T& x, const T& y) { return ROUND_UP   ( x * y        ); }
+    T div_down (const T& x, const T& y) { return ROUND_DOWN ( x / y        ); }
+    T div_up   (const T& x, const T& y) { return ROUND_UP   ( x / y        ); }
+    T median   (const T& x, const T& y) { return ROUND_NEAR ( (x+y)/2      ); }
+    T sqrt_down(const T& x)             { return ROUND_DOWN ( std::sqrt(x) ); }
+    T sqrt_up  (const T& x)             { return ROUND_UP   ( std::sqrt(x) ); }
+    T int_down (const T& x)             { return ROUND_DOWN ( to_int(x)    ); }
+    T int_up   (const T& x)             { return ROUND_UP   ( to_int(x)    ); }
+    #undef ROUND_DOWN
+    #undef ROUND_NEAR
+    #undef ROUND_UP
   };
   
   template<class T, class Rounding>
   struct rounded_arith_opp: Rounding {
     void init() { upward(); }
-    T add_down (const T& x, const T& y) { return -force_rounding((-x) - y); }
-    T add_up   (const T& x, const T& y) { return force_rounding(x + y); }
-    T sub_down (const T& x, const T& y) { return -force_rounding(y - x); }
-    T sub_up   (const T& x, const T& y) { return force_rounding(x - y); }
-    T mul_down (const T& x, const T& y) { return -force_rounding(x * (-y)); }
-    T mul_up   (const T& x, const T& y) { return force_rounding(x * y); }
-    T div_down (const T& x, const T& y) { return -force_rounding(x / (-y)); }
-    T div_up   (const T& x, const T& y) { return force_rounding(x / y); }
-    T median   (const T& x, const T& y) { tonearest();
-                                          T r = force_rounding((x + y) / 2);
+    #define ROUND_DOWN(EXPR) downward(),  force_rounding( EXPR )
+    #define ROUND_NEAR(EXPR) tonearest(), force_rounding( EXPR )
+    #define ROUND_UP  (EXPR)              force_rounding( EXPR )
+    T add_down (const T& x, const T& y) { return -ROUND_UP  ( (-x) - y ); }
+    T add_up   (const T& x, const T& y) { return ROUND_UP   ( x + y    ); }
+    T sub_down (const T& x, const T& y) { return -ROUND_UP  ( y - x    ); }
+    T sub_up   (const T& x, const T& y) { return ROUND_UP   ( x - y    ); }
+    T mul_down (const T& x, const T& y) { return -ROUND_UP  ( x * (-y) ); }
+    T mul_up   (const T& x, const T& y) { return ROUND_UP   ( x * y    ); }
+    T div_down (const T& x, const T& y) { return -ROUND_UP  ( x / (-y) ); }
+    T div_up   (const T& x, const T& y) { return ROUND_UP   ( x / y    ); }
+    T median   (const T& x, const T& y) { T r = ROUND_NEAR  ( (x + y) / 2  );
                                           upward();
-                                          return r; }
-    T sqrt_down(const T& x)             { return sub_down(std::sqrt(x),
-                                            detail::smallest<T>()); }
-    T sqrt_up  (const T& x)             { return force_rounding(std::sqrt(x)); }
+                                          return r;
+					}
+    T sqrt_down(const T& x)             { T r = ROUND_DOWN ( std::sqrt(x) );
+                                          upward();
+                                          return r;
+					}
+    T sqrt_up  (const T& x)             { return ROUND_UP   ( std::sqrt(x) ); }
     T int_down (const T& x)             { return -to_int(-x); }
     T int_up   (const T& x)             { return to_int(x); }
+    #undef ROUND_DOWN
+    #undef ROUND_NEAR
+    #undef ROUND_UP
   };
 
   } // namespace interval_lib

@@ -131,7 +131,7 @@ public:
   void assign(const T&amp; l, const T&amp; u);
 
   static interval empty();
-  static interval entire();
+  static interval whole();
 
   interval&amp; operator+= (const T&amp; r);
   interval&amp; operator+= (const interval&amp; r);
@@ -603,10 +603,10 @@ case.</p>
 the compiler automatically generates. There is also an assignment
 operator for the type <code>T</code>.</p>
 
-<p>The static functions <code>empty</code> and <code>entire</code>
+<p>The static functions <code>empty</code> and <code>whole</code>
 produces the corresponding intervals. Please be aware that the default
 implementation uses NaN numbers for the empty interval and infinite
-numbers for the entire interval.</p>
+numbers for the whole interval.</p>
 
 <h3>Constants</h3>
 
@@ -1159,7 +1159,7 @@ caller, the final result will be the empty interval.</p>
 
 <p><code>divide_by_zero</code> is called each time the second interval
 of a division contains zero. If the function returns to the caller,
-the final result will be the entire interval. The faulty interval is
+the final result will be the whole interval. The faulty interval is
 given as an argument in order for the user to differentiate between a
 loss of precision and a bug in the program.</p>
 

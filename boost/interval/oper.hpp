@@ -89,7 +89,7 @@ interval<T, Traits> multiplicative_inverse(const interval<T, Traits>& x)
   if (in_zero(x)) {
     typedef typename Traits::checking checking;
     checking::divide_by_zero(x.lower(), x.upper());
-    return interval<T, Traits>::entire();
+    return interval<T, Traits>::whole();
   }
   typename Traits::rounding rnd;
   return interval<T, Traits>(rnd.div_down(1, x.upper()),
@@ -211,7 +211,7 @@ interval<T, Traits> operator/(const interval<T, Traits>& x,
   if (in_zero(y)) {
     typedef typename Traits::checking checking;
     checking::divide_by_zero(y.lower(), y.upper());
-    return I::entire();
+    return I::whole();
   }
   typename Traits::rounding rnd;
   const T& xl = x.lower();
@@ -257,7 +257,7 @@ interval<T, Traits> operator/(const T& x, const interval<T, Traits>& y)
   if (in_zero(y)) {
     typedef typename Traits::checking checking;
     checking::divide_by_zero(y.lower(), y.upper());
-    return I::entire();
+    return I::whole();
   }
   typename Traits::rounding rnd;
   if (detail::sign(x))

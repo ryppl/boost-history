@@ -55,7 +55,7 @@ namespace boost {
   {
   public:
     typedef T base_type;
-    typedef std::numeric_limits<base_type> base_limits;
+    // typedef std::numeric_limits<base_type> base_limits;
     typedef Traits traits_type;
 
     interval(const T& v = 0): low(v), up(v) {}
@@ -68,11 +68,9 @@ namespace boost {
 
     interval& operator=(const T& x);
     void assign(const T& l, const T& u);
-    // why not: assign_lower(const T& l);
-    // why not: assign_upper(const T& u);
 
     static interval empty();
-    static interval entire();
+    static interval whole();
     static interval hull(const T& x, const T& y);
 
     const T& lower() const { return low; }
@@ -166,7 +164,6 @@ namespace boost {
   BOOST_INTERVAL_DEFINE_COMPARISON( operator!= )
 
   #undef BOOST_INTERVAL_DEFINE_COMPARISON
-
 
   /*
    * Interval bounds-related functions
@@ -309,23 +306,26 @@ namespace boost {
    */
 
   template<class T, class Traits>
-  interval<T,Traits> fmod(const interval<T,Traits>& x, const interval<T,Traits>& y);
+    interval<T,Traits>
+    fmod(const interval<T,Traits>& x, const interval<T,Traits>& y);
   template<class T, class Traits>
-  interval<T,Traits> fmod(const interval<T,Traits>& x, const T& y);
+    interval<T,Traits>
+    fmod(const interval<T,Traits>& x, const T& y);
   template<class T, class Traits>
-  interval<T,Traits> fmod(const T& x, const interval<T,Traits>& y);
+    interval<T,Traits>
+    fmod(const T& x, const interval<T,Traits>& y);
 
   template<class T, class Traits>
-  interval<T,Traits> sqrt(const interval<T,Traits>& x);
+    interval<T,Traits> sqrt(const interval<T,Traits>& x);
 
   /*
    * Transcendental functions: exp, log
    */
 
   template<class T, class Traits>
-  interval<T,Traits> exp(const interval<T,Traits>& x);
+    interval<T,Traits> exp(const interval<T,Traits>& x);
   template<class T, class Traits>
-  interval<T,Traits> log(const interval<T,Traits>& x);
+    interval<T,Traits> log(const interval<T,Traits>& x);
 #if 0
   template<class T, class Traits>
   interval<T,Traits> log10(const interval<T,Traits>& x);
@@ -338,17 +338,23 @@ namespace boost {
    */
 
   template<class T, class Traits>
-  interval<T,Traits> sin(const interval<T,Traits>& x);
+    interval<T,Traits> sin(const interval<T,Traits>& x);
+
   template<class T, class Traits>
-  interval<T,Traits> cos(const interval<T,Traits>& x);
+    interval<T,Traits> cos(const interval<T,Traits>& x);
+
   template<class T, class Traits>
-  interval<T,Traits> tan(const interval<T,Traits>& x);
+    interval<T,Traits> tan(const interval<T,Traits>& x);
+
   template<class T, class Traits>
-  interval<T,Traits> asin(const interval<T,Traits>& x);
+    interval<T,Traits> asin(const interval<T,Traits>& x);
+
   template<class T, class Traits>
-  interval<T,Traits> acos(const interval<T,Traits>& x);
+    interval<T,Traits> acos(const interval<T,Traits>& x);
+
   template<class T, class Traits>
-  interval<T,Traits> atan(const interval<T,Traits>& x);
+    interval<T,Traits> atan(const interval<T,Traits>& x);
+
 #if 0
   template<class T, class Traits>
   interval<T,Traits>
@@ -360,17 +366,22 @@ namespace boost {
    */
 
   template<class T, class Traits>
-  interval<T,Traits> sinh(const interval<T,Traits>& x);
+    interval<T,Traits> sinh(const interval<T,Traits>& x);
+
   template<class T, class Traits>
-  interval<T,Traits> cosh(const interval<T,Traits>& x);
+    interval<T,Traits> cosh(const interval<T,Traits>& x);
+
   template<class T, class Traits>
-  interval<T,Traits> tanh(const interval<T,Traits>& x);
+    interval<T,Traits> tanh(const interval<T,Traits>& x);
+
   template<class T, class Traits>
-  interval<T,Traits> asinh(const interval<T,Traits>& x);
+    interval<T,Traits> asinh(const interval<T,Traits>& x);
+
   template<class T, class Traits>
-  interval<T,Traits> acosh(const interval<T,Traits>& x);
+    interval<T,Traits> acosh(const interval<T,Traits>& x);
+
   template<class T, class Traits>
-  interval<T,Traits> atanh(const interval<T,Traits>& x);
+    interval<T,Traits> atanh(const interval<T,Traits>& x);
 
   /*
    * Interval trigonometric constants: pi, pi/2, 2*pi
@@ -388,7 +399,9 @@ namespace boost {
 
 
 #ifndef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
+
 namespace std {
+
   template<class T, class Traits>
   class numeric_limits<boost::interval<T,Traits> >
     : public std::numeric_limits<T>
@@ -404,7 +417,7 @@ namespace std {
     BOOST_STATIC_CONSTANT(float_round_style, round_style = round_indeterminate);
     BOOST_STATIC_CONSTANT(bool, is_iec559 = false);
 
-    static vt infinity() throw() { return vt::entire(); }
+    static vt infinity() throw() { return vt::whole(); }
     static vt quiet_NaN() throw() { return vt::empty(); }
     static vt signaling_NaN() throw()
       { return vt(bl::signaling_NaN(), bl::signaling_Nan()); }
@@ -430,6 +443,7 @@ namespace std {
 #endif
 
 } // namespace std
+
 #endif
 
 #include <boost/interval/rounding.hpp>
@@ -447,8 +461,19 @@ namespace boost {
 
   namespace interval_lib {
 
-  template<> struct rounded_math<float>: detail::rm_aux<float> {};
-  template<> struct rounded_math<double>: detail::rm_aux<double> {};
+  /*
+   * Two specializations of rounded_math<T>
+   */
+
+  template<>
+  struct rounded_math<float>
+    : save_state<rounded_transc_dummy<float, rounded_arith_opp<float> > >
+  {};
+
+  template<>
+  struct rounded_math<double>
+    : save_state<rounded_transc_dummy<double, rounded_arith_opp<double> > >
+  {};
 
   } // namespace interval_lib
 

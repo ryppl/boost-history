@@ -184,7 +184,7 @@ interval<T, Traits> tan(const interval<T, Traits>& x)
   if (tmp.lower() <= -pi_1_2_d || tmp.upper() >= pi_1_2_d) {
     typedef typename Traits::checking checking;
     checking::trigonometric_inf();
-    return interval<T, Traits>::entire();
+    return interval<T, Traits>::whole();
   }
   return interval<T, Traits>(rnd.tan_down(tmp.lower()),
 			     rnd.tan_up(tmp.upper()), true);

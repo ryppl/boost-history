@@ -543,10 +543,10 @@ int main()
   std::cout << "Infinity: " << inf << "\n";
   double nan = std::numeric_limits<double>::quiet_NaN();
   std::cout << "NaN: " << nan << "\n";
-  R entire = R::entire();
-  std::cout << "[-inf, inf]: " << entire << "\n";
-  if(inf < 10 || nan <= 10 || nan >= 10 || entire.lower() != -inf
-     || entire.upper() != inf) {
+  R whole = R::whole();
+  std::cout << "[-inf, inf]: " << whole << "\n";
+  if(inf < 10 || nan <= 10 || nan >= 10 || whole.lower() != -inf
+     || whole.upper() != inf) {
     std::cerr << "(terminated)\n";
     exit(1);
   }

@@ -59,28 +59,14 @@ namespace boost {
   template<class T, class Rounding = rounded_arith_opp<T> > 
   struct rounded_transc_opp;
 
-  template<class Rounding> 
-  struct save_state;
-
-  template<class Rounding> 
-  struct save_state_nothing;
-
-  namespace detail {
-
-    template<class T>
-    struct rm_aux : save_state<rounded_transc_dummy<T, rounded_arith_opp<T> > >
-    {};
-
-  } // namespace detail
-
-  template<class T>
-  struct rounded_math : save_state_nothing<rounded_transc_dummy<T, rounded_arith_exact<T> > >
-  {};
+  /*
+   * State-saving classes: allow to set and reset rounding control
+   */
 
   namespace detail {
 
     template<class Rounding>
-    struct save_state_unprotected: Rounding
+    struct save_state_unprotected : Rounding
     {
       typedef save_state_unprotected<Rounding> unprotected_rounding;
     };
@@ -88,7 +74,7 @@ namespace boost {
   } // namespace detail
 
   template<class Rounding>
-  struct save_state: Rounding
+  struct save_state : Rounding
   {
     typename Rounding::rounding_mode mode;
     save_state() {
@@ -100,11 +86,21 @@ namespace boost {
   };
   
   template<class Rounding>
-  struct save_state_nothing: Rounding
+  struct save_state_nothing : Rounding
   {
     typedef save_state_nothing<Rounding> unprotected_rounding;
   };
   
+  template<class T>
+  struct rounded_math
+    : save_state_nothing<rounded_transc_dummy<T, rounded_arith_exact<T> > >
+  {};
+
+  /*
+   * Protect / unprotect: control whether the rounding mode is set/reset
+   * at each operation, rather than once and for all.
+   */
+
   template<class Rounding>
   struct unprotect_rounding
   {
