@@ -20,6 +20,14 @@
 //////////////////////////////////////////////////////////////////////////////
 // Copyright (C) 2002-2003, David B. Held.
 //
+// 02-02-2004: Jonathan Turkanis added workarounds for Intel 7.1, Comeau 4.3.3,
+//             Codewarrior 8.0 and Borland 5.x: 
+//             - optimally_inherit disambiguation tags
+//             - MPL broken-compiler macros
+//             - self-referential 'type' typdefs for policies
+//             - Borland-specific version of get_policy
+//             - Borland-specific assignment operator
+//             - removed storage_policy_base
 // 08-08-2003: Finished tests for gcc-3.3
 // 10-01-2002: Added cast operators a la boost::shared_ptr<>
 // 09-30-2002: Completed most of the documentation
@@ -66,9 +74,11 @@
 #include <boost/throw_exception.hpp>
 #include <boost/type_traits/same_traits.hpp>
 #include <boost/type_traits/add_reference.hpp>
+#include <boost/mpl/at.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/aux_/void_spec.hpp>
 #include <boost/mpl/aux_/config/eti.hpp>
+#include <boost/mpl/aux_/lambda_support.hpp>
 
 #include "optimally_inherit.hpp"
 
@@ -265,11 +275,13 @@ namespace boost
             BOOST_MPL_AUX_LAMBDA_SUPPORT(1, get_category, (Policy))
         };
 
+#if !defined(__BORLANDC__) || (__BORLANDC__ >= 0x600)
         template <class Sequence, class Category, class Default>
         struct get_policy
         {
             typedef typename mpl::find_if<
                 Sequence, is_same<get_category<_>, Category>
+                //Sequence, has_category<Category>
             >::type iter_;
             typedef typename mpl::end<Sequence>::type last_;
             typedef typename mpl::apply_if<
@@ -277,6 +289,37 @@ namespace boost
                 mpl::identity<Default>, iter_
             >::type type;
         };
+#else // Borland 5.x: mimic find_if with at_c and nested if_'s.
+        template <class Sequence, class Category, class Default>
+        struct get_policy
+        {
+            typedef typename mpl::at_c<Sequence, 0>::type first;
+            typedef typename mpl::at_c<Sequence, 1>::type second;
+            typedef typename mpl::at_c<Sequence, 2>::type third;
+            typedef typename mpl::at_c<Sequence, 3>::type forth;
+            typedef typename
+                    mpl::if_<
+                      is_same<typename first::policy_category, Category>,
+                      first,
+                      typename
+                      mpl::if_<
+                        is_same<typename second::policy_category, Category>,
+                        second,
+                        typename
+                        mpl::if_<
+                          is_same<typename third::policy_category, Category>,
+                          third,
+                          typename
+                          mpl::if_<
+                            is_same<typename forth::policy_category, Category>,
+                            forth,
+                            Default
+                          >::type
+                        >::type
+                      >::type
+                    >::type type;
+        };
+#endif
 
 	    template <typename T, class Policies>
 	    struct storage_policy_
@@ -510,7 +553,7 @@ namespace boost
 
         template <typename U, BOOST_CONVERSION_PARAMETERS>
         smart_ptr(smart_ptr<U, BOOST_CONVERSION_POLICIES> const& rhs,
-            detail::static_cast_tag const&)
+            detail::static_cast_tag const& BOOST_SMART_PTR_DISAMBIGUATOR_TAG)
         : base_type(static_cast<
             typename smart_ptr<U, BOOST_CONVERSION_POLICIES>::base_type const&
         >(rhs))
@@ -522,7 +565,7 @@ namespace boost
 
         template <typename U, BOOST_CONVERSION_PARAMETERS>
         smart_ptr(smart_ptr<U, BOOST_CONVERSION_POLICIES> const& rhs,
-            detail::dynamic_cast_tag const&)
+            detail::dynamic_cast_tag const& BOOST_SMART_PTR_DISAMBIGUATOR_TAG)
         : base_type(static_cast<
             typename smart_ptr<U, BOOST_CONVERSION_POLICIES>::base_type const&
         >(rhs))
@@ -537,36 +580,44 @@ namespace boost
             }
         }
 
-        smart_ptr(detail::by_ref<smart_ptr> rhs)
+        smart_ptr(detail::by_ref< smart_ptr<T, P1, P2, P3, P4> > rhs)
         : base_type(static_cast<base_type&>(static_cast<smart_ptr&>(rhs)))
-        { }
+        { } // Borland won't accept 'by_ref<smart_ptr>' here.
 
         template <typename U>
         smart_ptr(U const& p)
-        : base_type(p, detail::init_first_tag())
+        : base_type(p, detail::init_first_tag() BOOST_SMART_PTR_DISAMBIGUATOR)
         { checking_policy::on_init(get_impl(*this)); }
 
         template <typename U, typename V>
         smart_ptr(U const& p, V const& v)
-        : base_type(p, v, detail::init_first_tag())
+        : base_type(p, v, detail::init_first_tag() BOOST_SMART_PTR_DISAMBIGUATOR)
         { checking_policy::on_init(get_impl(*this)); }
 
         template <typename U, typename V>
         smart_ptr(U const& p, V& v)
-        : base_type(p, v, detail::init_first_tag())
+        : base_type(p, v, detail::init_first_tag() BOOST_SMART_PTR_DISAMBIGUATOR)
         { checking_policy::on_init(get_impl(*this)); }
 
     public:     // Ownership modifiers
         operator detail::by_ref<smart_ptr>()
         {
             return detail::by_ref<smart_ptr>(*this);
-        }
+        } // Borland won't accept 'by_ref<smart_ptr>' here.
 
+ #if !defined(__BORLANDC__) || (__BORLANDC__ >= 0x600)
         smart_ptr& operator=(smart_ptr rhs)
         {
             swap(rhs);
             return *this;
         }
+ #else // Borland 5.x generates an operator= if the above signature is used.
+        smart_ptr& operator=(const smart_ptr& rhs)
+        {
+            swap(rhs);
+            return *this;
+        }
+ #endif
 
         void swap(this_type& rhs)
         {
@@ -605,7 +656,7 @@ namespace boost
         bool operator!() const // Enables "if (!sp) ..."
         { return !storage_policy::is_valid(); }
 
-#ifndef __BORLANDC__
+#if !defined(__BORLANDC__) || (__BORLANDC__ >= 0x600)
         inline friend bool operator==(smart_ptr const& lhs, T const* rhs)
         { return get_impl(lhs) == rhs; }
 
@@ -656,7 +707,7 @@ namespace boost
                                                 automatic_conversion_result;
 
 // VC6 gets horribly confused by the conversion operator
-#ifndef BOOST_MSVC
+#if !defined(BOOST_MSVC) || (BOOST_MSVC >= 1310)
     public:     // Implicit conversion
         operator automatic_conversion_result() const
         { return get_impl(*this); }
@@ -689,17 +740,20 @@ namespace boost
 // Implementation of the StoragePolicy used by smart_ptr
 //////////////////////////////////////////////////////////////////////////////
 
-    template <class Policy>
-    struct storage_policy_base
-    {
-        typedef Policy type;
-        typedef storage_policy_tag policy_category;
-    };
+// Increases size of policies on Borland 5.x
+//    template <class Policy>
+//    struct storage_policy_base
+//    {
+//        typedef Policy type;
+//        typedef storage_policy_tag policy_category;
+//    };
 
     template <typename T>
-    class scalar_storage : public storage_policy_base< scalar_storage<T> >
+    class scalar_storage //: public storage_policy_base< scalar_storage<T> >
     {
     public:
+        typedef scalar_storage type;
+        typedef storage_policy_tag policy_category;
         typedef T*          stored_type;        // the type of the pointee_
         typedef T const*    const_stored_type;  //   object
         typedef T*          pointer_type;       // type returned by operator->
@@ -764,7 +818,7 @@ namespace boost
         BOOST_MPL_AUX_LAMBDA_SUPPORT(1, scalar_storage, (T))
     };
 
-#ifdef __BORLANDC__
+#if defined(__BORLANDC__) && (__BORLANDC__ < 0x600)
     namespace mpl { BOOST_MPL_AUX_VOID_SPEC(1, scalar_storage) }
 #endif
 
@@ -774,9 +828,11 @@ namespace boost
 //////////////////////////////////////////////////////////////////////////////
 
     template <typename T>
-    class array_storage : public storage_policy_base< array_storage<T> >
+    class array_storage //: public storage_policy_base< array_storage<T> > 
     {
     public:
+        typedef array_storage type;
+        typedef storage_policy_tag policy_category;
         typedef T*          stored_type;        // the type of the pointee_
         typedef T const*    const_stored_type;  //   object
         typedef T*          pointer_type;       // type returned by operator->
@@ -853,7 +909,7 @@ namespace boost
         BOOST_MPL_AUX_LAMBDA_SUPPORT(1, array_storage, (T))
     };
 
-#ifdef __BORLANDC__
+#if defined(__BORLANDC__) && (__BORLANDC__ < 0x600)
     namespace mpl { BOOST_MPL_AUX_VOID_SPEC(1, array_storage) }
 #endif
 
@@ -958,7 +1014,7 @@ namespace boost
         BOOST_MPL_AUX_LAMBDA_SUPPORT(1, ref_counted, (P))
     };
 
-#ifdef __BORLANDC__
+#if defined(__BORLANDC__) && (__BORLANDC__ < 0x600)
     namespace mpl { BOOST_MPL_AUX_VOID_SPEC(1, ref_counted) }
 #endif
 
@@ -994,6 +1050,7 @@ namespace boost
         class impl
         {
         public:
+            typedef impl type;
             typedef ownership_policy_tag policy_category;
             typedef copy_semantics_tag ownership_category;
 
@@ -1082,6 +1139,8 @@ namespace boost
 
             // Data
             volatile int_type* count_;
+        public:
+            BOOST_MPL_AUX_LAMBDA_SUPPORT(1, impl, (P))
         };
     };
 
@@ -1109,6 +1168,7 @@ namespace boost
     template <typename P>
     struct com_ref_counted
     {
+        typedef com_ref_counted type;
         typedef ownership_policy_tag policy_category;
         typedef copy_semantics_tag ownership_category;
 
@@ -1148,7 +1208,13 @@ namespace boost
 
         static void swap(com_ref_counted&)
         { }
+
+        BOOST_MPL_AUX_LAMBDA_SUPPORT(1, com_ref_counted, (P))
     };
+ 
+#if defined(__BORLANDC__) && (__BORLANDC__ < 0x600)
+    namespace mpl { BOOST_MPL_AUX_VOID_SPEC(1, com_ref_counted) }
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 // class template ref_linked
@@ -1234,6 +1300,7 @@ namespace boost
     class ref_linked : public detail::ref_linked_base
     {
     public:
+        typedef ref_linked type;
         typedef ownership_policy_tag policy_category;
         typedef copy_semantics_tag ownership_category;
 
@@ -1266,7 +1333,13 @@ namespace boost
 
         static void reset(ref_linked&)
         { }
+
+        BOOST_MPL_AUX_LAMBDA_SUPPORT(1, ref_linked, (P))
     };
+
+#if defined(__BORLANDC__) && (__BORLANDC__ < 0x600)
+    namespace mpl { BOOST_MPL_AUX_VOID_SPEC(1, ref_linked) }
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 // class template destructive_copy
@@ -1277,6 +1350,7 @@ namespace boost
     template <typename P>
     struct destructive_copy
     {
+        typedef destructive_copy type;
         typedef ownership_policy_tag policy_category;
         typedef move_semantics_tag ownership_category;
 
@@ -1315,7 +1389,13 @@ namespace boost
 
         static void swap(destructive_copy&)
         { }
+        
+        BOOST_MPL_AUX_LAMBDA_SUPPORT(1, destructive_copy, (P))
     };
+
+#if defined(__BORLANDC__) && (__BORLANDC__ < 0x600)
+    namespace mpl { BOOST_MPL_AUX_VOID_SPEC(1, destructive_copy) }
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 // class template deep_copy
@@ -1327,6 +1407,7 @@ namespace boost
     template <typename P>
     struct deep_copy
     {
+        typedef deep_copy type;
         typedef ownership_policy_tag policy_category;
         typedef copy_semantics_tag ownership_category;
 
@@ -1360,7 +1441,13 @@ namespace boost
 
         static void swap(deep_copy&)
         { }
+
+        BOOST_MPL_AUX_LAMBDA_SUPPORT(1, deep_copy, (P))
     };
+
+#if defined(__BORLANDC__) && (__BORLANDC__ < 0x600)
+    namespace mpl { BOOST_MPL_AUX_VOID_SPEC(1, deep_copy) }
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 // class template no_copy
@@ -1371,6 +1458,7 @@ namespace boost
     template <typename P>
     struct no_copy
     {
+        typedef no_copy type;
         typedef ownership_policy_tag policy_category;
         typedef no_copy_semantics_tag ownership_category;
 
@@ -1407,6 +1495,8 @@ namespace boost
 
         static void swap(no_copy&)
         { }
+
+        BOOST_MPL_AUX_LAMBDA_SUPPORT(1, no_copy, (P))
     };
 
     struct no_copy_
@@ -1415,6 +1505,10 @@ namespace boost
         template <typename P>
         struct apply { typedef no_copy<P> type; };
     };
+
+#if defined(__BORLANDC__) && (__BORLANDC__ < 0x600)
+    namespace mpl { BOOST_MPL_AUX_VOID_SPEC(1, no_copy) }
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 // class template allow_conversion
@@ -1425,6 +1519,7 @@ namespace boost
     template <typename P>
     struct allow_conversion
     {
+        typedef allow_conversion type;
         typedef conversion_policy_tag policy_category;
 
         typedef P result_type;
@@ -1441,7 +1536,14 @@ namespace boost
 
         static void swap(allow_conversion&)
         { }
+        
+        BOOST_MPL_AUX_LAMBDA_SUPPORT(1, allow_conversion, (P))
     };
+
+#if defined(__BORLANDC__) && (__BORLANDC__ < 0x600)
+    namespace mpl { BOOST_MPL_AUX_VOID_SPEC(1, allow_conversion) }
+#endif
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // class template disallow_conversion
@@ -1484,7 +1586,7 @@ namespace boost
         BOOST_MPL_AUX_LAMBDA_SUPPORT(1, disallow_conversion, (P))
     };
 
-#ifdef __BORLANDC__
+#if defined(__BORLANDC__) && (__BORLANDC__ < 0x600)
     namespace mpl { BOOST_MPL_AUX_VOID_SPEC(1, disallow_conversion) }
 #endif
 
@@ -1497,6 +1599,7 @@ namespace boost
     template <typename P>
     struct no_check
     {
+        typedef no_check type;
         typedef checking_policy_tag policy_category;
 
         no_check()
@@ -1523,7 +1626,13 @@ namespace boost
 
         static void swap(no_check&)
         { }
+
+        BOOST_MPL_AUX_LAMBDA_SUPPORT(1, no_check, (P))
     };
+
+#if defined(__BORLANDC__) && (__BORLANDC__ < 0x600)
+    namespace mpl { BOOST_MPL_AUX_VOID_SPEC(1, no_check) }
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 // class template assert_check
@@ -1534,8 +1643,8 @@ namespace boost
     template <typename P>
     struct assert_check
     {
-        typedef checking_policy_tag policy_category;
         typedef assert_check type;
+        typedef checking_policy_tag policy_category;
 
         assert_check()
         { }
@@ -1566,11 +1675,10 @@ namespace boost
         static void swap(assert_check&)
         { }
 
-    public:
         BOOST_MPL_AUX_LAMBDA_SUPPORT(1, assert_check, (P))
     };
 
-#ifdef __BORLANDC__
+#if defined(__BORLANDC__) && (__BORLANDC__ < 0x600)
     namespace mpl { BOOST_MPL_AUX_VOID_SPEC(1, assert_check) }
 #endif
 
@@ -1584,6 +1692,7 @@ namespace boost
     template <typename P>
     struct assert_check_strict
     {
+        typedef assert_check_strict type;
         typedef checking_policy_tag policy_category;
 
         assert_check_strict()
@@ -1618,7 +1727,13 @@ namespace boost
 
         static void swap(assert_check_strict&)
         { }
+
+        BOOST_MPL_AUX_LAMBDA_SUPPORT(1, assert_check_strict, (P))
     };
+
+#if defined(__BORLANDC__) && (__BORLANDC__ < 0x600)
+    namespace mpl { BOOST_MPL_AUX_VOID_SPEC(1, assert_check_strict) }
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 // class template reject_null_static
@@ -1629,6 +1744,7 @@ namespace boost
     template <typename P>
     struct reject_null_static
     {
+        typedef reject_null_static type;
         typedef checking_policy_tag policy_category;
 
         reject_null_static()
@@ -1670,7 +1786,13 @@ namespace boost
 
         static void swap(reject_null_static&)
         { }
+
+        BOOST_MPL_AUX_LAMBDA_SUPPORT(1, reject_null_static, (P))
     };
+
+#if defined(__BORLANDC__) && (__BORLANDC__ < 0x600)
+    namespace mpl { BOOST_MPL_AUX_VOID_SPEC(1, reject_null_static) }
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 // class template reject_null
@@ -1681,6 +1803,7 @@ namespace boost
     template <typename P>
     struct reject_null
     {
+        typedef reject_null type;
         typedef checking_policy_tag policy_category;
 
         reject_null()
@@ -1707,7 +1830,13 @@ namespace boost
 
         static void swap(reject_null&)
         { }
+
+        BOOST_MPL_AUX_LAMBDA_SUPPORT(1, reject_null, (P))
     };
+    
+#if defined(__BORLANDC__) && (__BORLANDC__ < 0x600)
+    namespace mpl { BOOST_MPL_AUX_VOID_SPEC(1, reject_null_static) }
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 // class template reject_null_strict
@@ -1718,6 +1847,7 @@ namespace boost
     template <typename P>
     struct reject_null_strict
     {
+        typedef reject_null_strict type;
         typedef checking_policy_tag policy_category;
 
         reject_null_strict()
@@ -1751,7 +1881,13 @@ namespace boost
 
         static void swap(reject_null_strict&)
         { }
-    };
+
+        BOOST_MPL_AUX_LAMBDA_SUPPORT(1, reject_null_strict, (P))
+    };       
+
+#if defined(__BORLANDC__) && (__BORLANDC__ < 0x600)
+    namespace mpl { BOOST_MPL_AUX_VOID_SPEC(1, reject_null_strict) }
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 // free comparison operators for class template smart_ptr
@@ -1815,7 +1951,7 @@ namespace boost
         static_pointer_cast(smart_ptr<U, BOOST_SMART_POINTER_POLICIES> const& p)
     {
         return smart_ptr<T, BOOST_SMART_POINTER_POLICIES>(
-            p, detail::static_cast_tag()
+            p, detail::static_cast_tag() BOOST_SMART_PTR_DISAMBIGUATOR
         );
     }
 
@@ -1828,7 +1964,7 @@ namespace boost
         dynamic_pointer_cast(smart_ptr<U, BOOST_SMART_POINTER_POLICIES> const& p)
     {
         return smart_ptr<T, BOOST_SMART_POINTER_POLICIES>(
-            p, detail::dynamic_cast_tag()
+            p, detail::dynamic_cast_tag() BOOST_SMART_PTR_DISAMBIGUATOR
         );
     }
 
