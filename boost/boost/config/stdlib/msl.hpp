@@ -22,10 +22,11 @@
 
 #if defined(__MSL__) && (__MSL__ >= 0x5000)
 #  define BOOST_SYSTEM_HAS_STDINT_H
+#  define BOOST_HAS_UNISTD_H
 #endif
 
 
-#define BOOST_STDLIB "MSL Standard Library version " BOOST_STRINGIZE(__MSL_CPP__)
+#define BOOST_STDLIB "Metrowerks Standard Library version " BOOST_STRINGIZE(__MSL_CPP__)
 
 
 

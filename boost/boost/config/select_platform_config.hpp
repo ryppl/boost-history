@@ -39,6 +39,9 @@
 #elif defined(macintosh) || defined(__APPLE__) || defined(__APPLE_CC__)
    // mac os
 #  define BOOST_PLATFORM_CONFIG "boost/config/platform/mac.hpp"
+#elif defined(__IBMCPP__)
+   // IBM
+#  define BOOST_PLATFORM_CONFIG "boost/config/platform/aix.hpp"
 
 #endif
 

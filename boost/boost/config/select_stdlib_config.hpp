@@ -22,7 +22,7 @@
 #elif defined(__STD_RWCOMPILER_H__) || defined(_RWSTD_VER)
    // Rogue Wave library:
 #  define BOOST_STDLIB_CONFIG <boost/config/stdlib/roguewave.hpp>
-#elif defined(_YVALS) || defined(_CPPLIB_VER)
+#elif (defined(_YVALS) && !defined(__IBMCPP__)) || defined(_CPPLIB_VER)
    // Dinkumware Library:
 #  define BOOST_STDLIB_CONFIG <boost/config/stdlib/dinkumware.hpp>
 #elif defined(__GLIBCPP__)
@@ -34,7 +34,9 @@
 #elif defined(__MSL_CPP__)
    // MSL standard lib:
 #  define BOOST_STDLIB_CONFIG <boost/config/stdlib/msl.hpp>
-
+#  elif defined(__IBMCPP__)
+   // take the default VACPP std lib
+#  define BOOST_STDLIB_CONFIG <boost/config/stdlib/vacpp.hpp>
 #endif
 
 

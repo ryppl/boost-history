@@ -38,14 +38,14 @@
 #  endif
 
 //
-// If no cv-qualified specializations are allowed, then neither are cv-void ones:
+// If cv-qualified specializations are not allowed, then neither are cv-void ones:
 //
 #  if defined(BOOST_NO_CV_SPECIALIZATIONS) && !defined(BOOST_NO_CV_VOID_SPECIALIZATIONS)
 #     define BOOST_NO_CV_VOID_SPECIALIZATIONS
 #  endif
 
 //
-// If their is no numeric_limits template, then it can't have any compile time
+// If there is no numeric_limits template, then it can't have any compile time
 // constants either!
 //
 #  if defined(BOOST_NO_LIMITS) && !defined(BOOST_NO_LIMITS_COMPILE_TIME_CONSTANTS)
@@ -54,14 +54,14 @@
 
 //
 // if member templates are supported then so is the
-// VC6 sub-set of member templates:
+// VC6 subset of member templates:
 //
 #  if !defined(BOOST_NO_MEMBER_TEMPLATES) && !defined(BOOST_MSVC6_MEMBER_TEMPLATES)
 #     define BOOST_MSVC6_MEMBER_TEMPLATES
 #  endif
 
 //
-// Without partial specialistion, std::iterator_traits can't work:
+// Without partial specialization, std::iterator_traits can't work:
 //
 #  if defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION) && !defined(BOOST_NO_STD_ITERATOR_TRAITS)
 #     define BOOST_NO_STD_ITERATOR_TRAITS
@@ -84,7 +84,7 @@
 #  endif
 
 //
-// We can't have a working std::use_facet if their is no std::locale:
+// We can't have a working std::use_facet if there is no std::locale:
 //
 #  if defined(BOOST_NO_STD_LOCALE) && !defined(BOOST_NO_STD_USE_FACET)
 #     define BOOST_NO_STD_USE_FACET
@@ -98,7 +98,7 @@
 #  endif
 
 //
-// We can't have a <cwchar> if there is no <cwchar>:
+// We can't have a <cwctype> if there is no <cwchar>:
 //
 #  if defined(BOOST_NO_CWCHAR) && !defined(BOOST_NO_CWCTYPE)
 #     define BOOST_NO_CWCTYPE
@@ -122,7 +122,7 @@
 #  endif
 
 //
-// If we have a <unistd.h> then some optins can be deduced form it:
+// If we have a <unistd.h> then some optins can be deduced from it:
 //
 #  ifdef BOOST_HAS_UNISTD_H
 #     include <unistd.h>

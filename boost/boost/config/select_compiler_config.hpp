@@ -44,6 +44,9 @@
 #elif defined(__MRC__) || defined(__SC__)
 //  MPW MrCpp or SCpp --------------------------------------------------------
 #   define BOOST_COMPILER_CONFIG <boost/config/compiler/mpw.hpp>
+#elif defined(__IBMCPP__)
+//  IBM Visual Age  --------------------------------------------------------
+#   define BOOST_COMPILER_CONFIG <boost/config/compiler/vacpp.hpp>
 #elif defined _MSC_VER
 //  Microsoft Visual C++ (excluding Intel/EDG front end)  --------------------
 //
