@@ -184,10 +184,12 @@
          public: // 21.3.4: element access
             inline const_reference operator[]( size_type i ) const
             {
+               if( i > capacity())     ErrorPolicy::out_of_range(); // sanity check
                return( at_( i ));
             }
             inline reference       operator[]( size_type i )
             {
+               if( i > capacity())     ErrorPolicy::out_of_range(); // sanity check
                return( at_( i ));
             }
             inline const_reference               at( size_type i ) const
