@@ -64,8 +64,8 @@ namespace indexing {
       typedef set_traits<Container const> const_traits;
 
     public:
-      typedef assoc_algorithms<mutable_traits> mutable_algorithms;
-      typedef assoc_algorithms<const_traits>   const_algorithms;
+      typedef set_algorithms<mutable_traits> mutable_algorithms;
+      typedef set_algorithms<const_traits>   const_algorithms;
     };
 
     // std::multiset
@@ -78,8 +78,8 @@ namespace indexing {
       typedef set_traits<Container const> const_traits;
 
     public:
-      typedef assoc_algorithms<mutable_traits> mutable_algorithms;
-      typedef assoc_algorithms<const_traits>   const_algorithms;
+      typedef set_algorithms<mutable_traits> mutable_algorithms;
+      typedef set_algorithms<const_traits>   const_algorithms;
     };
 
     // std::map
@@ -92,8 +92,8 @@ namespace indexing {
       typedef map_traits<Container const> const_traits;
 
     public:
-      typedef assoc_algorithms<mutable_traits> mutable_algorithms;
-      typedef assoc_algorithms<const_traits>   const_algorithms;
+      typedef map_algorithms<mutable_traits> mutable_algorithms;
+      typedef map_algorithms<const_traits>   const_algorithms;
     };
 
     // std::multimap
@@ -106,8 +106,8 @@ namespace indexing {
       typedef map_traits<Container const> const_traits;
 
     public:
-      typedef assoc_algorithms<mutable_traits> mutable_algorithms;
-      typedef assoc_algorithms<const_traits>   const_algorithms;
+      typedef map_algorithms<mutable_traits> mutable_algorithms;
+      typedef map_algorithms<const_traits>   const_algorithms;
     };
 
     // std::vector
