@@ -344,58 +344,15 @@ template<typename T> struct enable_if<true, T> { typedef T type; };
 template<typename T> struct enable_if<false, T> {};
 \end{verbatim}
 
-We also rely on a tuple-specific version of the {\tt transform}
-function found in the standard library. The tuple transform transforms
-a tuple of length $N$ into another tuple of length $N$ by applying a
-function object to each element in the source tuple and initializing
-the corresponding element in the result tuple. Note that the types in
-the result tuple ({\tt U1}, {\tt U2}, ..., {\tt UN}) are the types
-returned from the transforming function object, as we assume these
-will be available (e.g., via a {\tt typeof} extension or using the
-library-defined {\tt result\_of}~\cite{Gregor03}). The following
-pseudo-definition defines {\tt transform}:
+\subsection{Function traits}
+We define a template {\tt function\_traits} that extracts the result
+type of a function:
 \begin{verbatim}
-// Type Ui is the type of f(std::get<i-1>(t))
-template<typename T1, typename T2, ..., typename TN, typename F>
-tuple<U1, U2, ..., UN> transform(const tuple<T1, T2, ..., TN>& t, F f)
-{ 
-  return tuple<U1, U2, ..., UN>(f(std::get<0>(t)), 
-                                f(std::get<1>(t)),
-                                      ...
-                                f(std::get<N-1>(t)));
-}
-\end{verbatim}
+template<...> struct function_traits;
 
-Transform can be implemented as follows using template varargs:
-
-\begin{verbatim}
-template<typename F>
-struct transformer
-{
-  transformer(F& f) : f(f) {}
-
-  // U1 is the type of f(a1)
-  template<typename T1, ... Args>
-  the-return-type operator()(T1& a1, Args args) const
-    { return tuple_cons<U1>(f(a1), std::apply(*this, args)); }
-
-  // U1 is the type of f(a1)
-  template<typename T1, ... Args>
-  the-return-type operator()(const T1& a1, Args args) const
-    { return tuple_cons<U1>(f(a1), std::apply(*this, args)); }
-
-  // basis case
-  tuple<> operator()() const { return tuple<>(); }
-
-private:
-  F& f;
-};
-
-template<typename Tuple, typename F>
-the-return-type transform(const Tuple& t, F f)
-{
-  return std::apply(transformer<F>(f), t);
-}
+template<typename R, ... Args> 
+  struct function_traits<R(Args)>
+  { typedef R result_type; };
 \end{verbatim}
 
 \subsection{Member pointer adaptor implementation}
@@ -415,21 +372,21 @@ struct mem_fn_adaptor
   
   template<... Args>
   result_type operator()(Class& object, Args args) const
-    { return std::apply(pmf, object, args); }
+    { return (object.*pmf)(args...); }
 
   template<... Args>
   result_type operator()(const Class& object, Args args) const
-    { return std::apply(pmf, object, args); }
+    { return (object.*pmf)(args...); }
 
   template<typename T, ... Args>
   typename enable_if<(!is_base_of<Class, T>::value), result_type>::type
   operator()(T& ptr, Args args) const
-    { return std::apply(pmf, *ptr, args); }
+    { return ((*ptr).*pmf)(args...); }
 
   template<typename T, ... Args>
   typename enable_if<(!is_base_of<Class, T>::value), result_type>::type
   operator()(const T& ptr, Args args) const
-    { return std::apply(pmf, *ptr, args); }
+    { return ((*ptr).*pmf)(args...); }
 
 private:
   FunctionType Class::*pmf;
@@ -446,7 +403,6 @@ struct mem_ptr_adaptor
   T& operator()(Class& object) const { return object.*pm; }
   const T& operator()(const Class& object) const { return object.*pm; }
 
-  
   template<typename Ptr> 
   typename enable_if<(!is_base_of<Class, Ptr>::value), const T&>::type
     operator()(Ptr& ptr) const { return (*ptr).*pm; }
@@ -476,16 +432,18 @@ mem_fn(T Class::*pm)
 \subsection{Tuple implementation}
 \label{tupleimpl}
 The following code implements the interesting portions of the Tuple
-proposal~\cite{Jarvi02} using template varargs as proposed here. Note
-that there is a mutual dependency: template varargs depend on tuples
-and tuples are specified as a class template accepting a
-variable-length template argument list. However, this mutual
-dependency is not problematic, because we split a tuple of length $N$
-into a head element and a tail tuple of length $N-1$, with the base
-case (length $0$) as an explicit specialization.
+proposal~\cite{Jarvi02} using variadic as proposed here. 
 
 \small
 \begin{verbatim}
+// Count the number of arguments in a template parameter pack
+template<...> struct count_args;
+
+template<> struct count_args<> : integral_constant<int, 0> {};
+
+template<typename T1, ... Args> struct count_args<T1, Args>
+  : integral_constant<int, (1 + count_args<Args...>::value)> {};
+
 // Derivation from tuple_base indicates that a type is a tuple
 class tuple_base {};
 
@@ -500,7 +458,7 @@ class tuple : public tuple_base
 {
   typedef T1 head_type;
   typedef typename add_reference<typename add_const<head_type>::type>::type head_param_type;
-  typedef Elements tail_type;
+  typedef tuple<Elements...> tail_type;
   typedef tuple self_type;
 
 public:
@@ -510,10 +468,10 @@ public:
 
   // enable_if condition ensures that we only match if N arguments are given
   template<... Tail> 
-  explicit tuple(typename enable_if<(Args::size == size - 1),
+  explicit tuple(typename enable_if<(count_args<Args...>::value == size - 1),
                                     head_param_type>::type head,
                  Tail tail)
-    : head(head), tail(tail) {}
+    : head(head), tail(tail...) {}
 
   // enable_if condition only allows us to attempt implicit conversions
   // from tuples of the appropriate length
@@ -591,16 +549,23 @@ private:
   tail_type tail;
 };
 
-struct convert_make_tuple_arg
-{
-  template<typename T> T operator()(T& t) { return t; }
-  template<typename T> T& operator()(reference_wrapper<T>& t) { return t.get(); }
-};
+// make_tuple implementation
+tuple<> make_tuple() { return tuple(); }
 
-template<... Args> the-return-type make_tuple(Args args)
-  { return transform(args, convert_make_tuple_arg()); }
+template<typename T1, ... Rest> 
+  auto make_tuple(const T1& t1, Rest rest)
+  { return tuple<T1, decltype(make_tuple(rest...))>(t1, make_tuple(rest...)); }
 
-template<... Args> Args tie(Args args) { return args; }
+template<typename T1, ... Rest> 
+  auto make_tuple(const reference_wrapper<T1>& t1, Rest rest)
+  { return tuple<T1&, decltype(make_tuple(rest...))>(t1, make_tuple(rest...)); }
+
+// tie implementation
+tuple<> tie() { return tuple(); }
+
+template<typename T1, ... Rest> 
+  auto tie(T1& t1, Rest rest)
+  { return tuple<T1&, decltype(tie(rest...))>(t1, tie(rest...)); }
 \end{verbatim}
 \normalsize
 
@@ -608,7 +573,11 @@ template<... Args> Args tie(Args args) { return args; }
 \label{functionimpl}
 This section implements the core interesting portions of class
 template {\tt function} from the function object wrapper
-proposal~\cite{Gregor02}.  
+proposal~\cite{Gregor02}. The implementation of this library is much
+more subtle than that of the prior libraries, particularly the use of
+template parameter deduction and explicit specification of function
+template arguments to resolve the address of an overloaded function.
+
 \small
 \begin{verbatim}
 struct bad_function_call : public std::exception {};
