@@ -155,10 +155,15 @@ void server_test()
             if (!ss.fail())
               BOOST_MESSAGE(str);
           }
+          if (!client->first->is_valid())
+            BOOST_MESSAGE("Socket closed");
+
           if (ss.eof())
           {
-            master_set.erase(client->first->socket());
-            clients.erase(client); // this will close the socket
+            // reading from socket should have forced it closed
+            BOOST_CHECK(!client->first->is_valid());
+            master_set.erase(*i);
+            clients.erase(client);
           }
         }
       }

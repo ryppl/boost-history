@@ -40,20 +40,16 @@ namespace boost
           : m_socket()
       {}
 
-//       data_socket(const data_socket& s)
-//           : m_socket(s.m_socket)
-//       {}
-
-//       explicit data_socket(const socket_base_t& s)
-//           : m_socket(s)
-//       {}
-
       explicit data_socket(socket_t socket)
           : m_socket(socket)
       {}
 
       // destructor
-      ~data_socket() {}
+      ~data_socket()
+      {
+        if (is_valid())
+          close();
+      }
 
       void reset(socket_t socket = socket_t())
       {
@@ -97,15 +93,13 @@ namespace boost
         return m_socket.send(data,len);
       }
 
-      //! shut the socket down
-      socket_errno shutdown(Direction how=Both)
-      {
-        return m_socket.shutdown(how);
-      }
-
       //! close the socket
-      socket_errno close()
+      socket_errno close(Direction how=Both)
       {
+        BOOST_ASSERT(is_valid());
+        socket_errno err=m_socket.shutdown(how);
+        if (err!=Success)
+          return err;
         return m_socket.close();
       }
 

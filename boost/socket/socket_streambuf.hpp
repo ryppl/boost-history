@@ -112,6 +112,7 @@ namespace boost
         {
           if (r!=WouldBlock)
             throw socket_exception("error in stream",r);
+          r=0;
         }
         setg(eback(), gptr(), gptr() + r);
         return *gptr();

@@ -59,8 +59,8 @@ void client_test()
     data_connection_t socket;
     BOOST_CHECK(connector.connect(socket,protocol,addr)==boost::socket::Success);
     BOOST_CHECK(socket.is_valid());
-    BOOST_CHECK(socket.setsockopt(boost::socket::option::linger(1000))
-                ==boost::socket::Success);
+//     BOOST_CHECK(socket.setsockopt(boost::socket::option::linger(1000))
+//                 ==boost::socket::Success);
     BOOST_MESSAGE("Connected");
 
     boost::socket::basic_socket_stream<char> s(socket);

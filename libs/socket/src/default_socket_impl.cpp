@@ -178,6 +178,8 @@ namespace boost
         int ret=::recv(m_socket, (char*)data, len,flags);
         if (ret==-1)
           return translate_error(ret);
+        if (ret==0)
+          return close();
         return ret;
       }
 
