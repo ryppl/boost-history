@@ -18,6 +18,12 @@
 
    // I/O support:
 
+#  if !defined(BOOST_IOFM_NO_OUTPUT_DEDUCTION) // automatic type deduction
+#     define BOOST_IOFM_ATD
+#  else
+#     define BOOST_IOFM_ATD , boost::io::containerfmt()
+#  endif
+
 #  if !defined(BOOST_IOFM_NO_BASIC_STREAM)
       // std::set
 
@@ -32,7 +38,7 @@
          const std::set< KeyT, Cmp, Allocator > & s
       )
       {
-         return( os << boost::io::formatob( s, boost::io::containerfmt()));
+         return( os << boost::io::formatob( s BOOST_IOFM_ATD ));
       }
 
       template
@@ -46,7 +52,7 @@
          std::set< KeyT, Cmp, Allocator >     & s
       )
       {
-         return( is >> boost::io::formatob( s, boost::io::containerfmt()));
+         return( is >> boost::io::formatob( s BOOST_IOFM_ATD ));
       }
 
       // std::multiset
@@ -62,7 +68,7 @@
          const std::multiset< KeyT, Cmp, Allocator > & ms
       )
       {
-         return( os << boost::io::formatob( ms, boost::io::containerfmt()));
+         return( os << boost::io::formatob( ms BOOST_IOFM_ATD ));
       }
 
       template
@@ -76,7 +82,7 @@
          std::multiset< KeyT, Cmp, Allocator > & ms
       )
       {
-         return( is >> boost::io::formatob( ms, boost::io::containerfmt()));
+         return( is >> boost::io::formatob( ms BOOST_IOFM_ATD ));
       }
 #  else
       // std::set
@@ -88,7 +94,7 @@
          const std::set< KeyT, Cmp, Allocator > & s
       )
       {
-         return( os << boost::io::formatob( s, boost::io::containerfmt()));
+         return( os << boost::io::formatob( s BOOST_IOFM_ATD ));
       }
 
       template< typename KeyT, class Cmp, class Allocator >
@@ -98,7 +104,7 @@
          std::set< KeyT, Cmp, Allocator > & s
       )
       {
-         return( is >> boost::io::formatob( s, boost::io::containerfmt()));
+         return( is >> boost::io::formatob( s BOOST_IOFM_ATD ));
       }
 
       // std::multiset
@@ -110,7 +116,7 @@
          const std::multiset< KeyT, Cmp, Allocator > & ms
       )
       {
-         return( os << boost::io::formatob( ms, boost::io::containerfmt()));
+         return( os << boost::io::formatob( ms BOOST_IOFM_ATD ));
       }
 
       template< typename KeyT, class Cmp, class Allocator >
@@ -120,7 +126,9 @@
          std::multiset< KeyT, Cmp, Allocator > & ms
       )
       {
-         return( is >> boost::io::formatob( ms, boost::io::containerfmt()));
+         return( is >> boost::io::formatob( ms BOOST_IOFM_ATD ));
       }
 #  endif
+
+#  undef BOOST_IOFM_ATD
 #endif

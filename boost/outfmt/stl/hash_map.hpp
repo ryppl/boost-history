@@ -36,6 +36,12 @@
 
    // I/O support:
 
+#  if !defined(BOOST_IOFM_NO_OUTPUT_DEDUCTION) // automatic type deduction
+#     define BOOST_IOFM_ATD
+#  else
+#     define BOOST_IOFM_ATD , boost::io::containerfmt( boost::io::pairfmt())
+#  endif
+
 #  if !defined(BOOST_IOFM_NO_BASIC_STREAM)
       // stdext::hash_map
 
@@ -46,14 +52,7 @@
          const BOOST_IOFM_STDEXT::hash_map< BOOST_IOFM_HASH_MAP_ARG > & m
       )
       {
-         return
-         (
-            os << boost::io::formatob
-            (
-               m,
-               boost::io::containerfmt( boost::io::pairfmt())
-            )
-         );
+         return( os << boost::io::formatob( m BOOST_IOFM_ATD  ));
       }
 
       template< typename CharT, class TraitsT, BOOST_IOFM_HASH_MAP_T >
@@ -63,14 +62,7 @@
          BOOST_IOFM_STDEXT::hash_map< BOOST_IOFM_HASH_MAP_ARG > & m
       )
       {
-         return
-         (
-            is >> boost::io::formatob
-            (
-               m,
-               boost::io::containerfmt( boost::io::pairfmt())
-            )
-         );
+         return( is >> boost::io::formatob( m BOOST_IOFM_ATD ));
       }
 
       // stdext::hash_multimap
@@ -82,14 +74,7 @@
          const BOOST_IOFM_STDEXT::hash_multimap< BOOST_IOFM_HASH_MAP_ARG > & mm
       )
       {
-         return
-         (
-            os << boost::io::formatob
-            (
-               mm,
-               boost::io::containerfmt( boost::io::pairfmt())
-            )
-         );
+         return( os << boost::io::formatob( mm BOOST_IOFM_ATD ));
       }
 
       template< typename CharT, class TraitsT, BOOST_IOFM_HASH_MAP_T >
@@ -99,14 +84,7 @@
          BOOST_IOFM_STDEXT::hash_multimap< BOOST_IOFM_HASH_MAP_ARG > & mm
       )
       {
-         return
-         (
-            is >> boost::io::formatob
-            (
-               mm,
-               boost::io::containerfmt( boost::io::pairfmt())
-            )
-         );
+         return( is >> boost::io::formatob( mm BOOST_IOFM_ATD ));
       }
 #  else
       // stdext::hash_map
@@ -118,14 +96,7 @@
          const BOOST_IOFM_STDEXT::hash_map< BOOST_IOFM_HASH_MAP_ARG > & m
       )
       {
-         return
-         (
-            os << boost::io::formatob
-            (
-               m,
-               boost::io::containerfmt( boost::io::pairfmt())
-            )
-         );
+         return( os << boost::io::formatob( m BOOST_IOFM_ATD ));
       }
 
       template< BOOST_IOFM_HASH_MAP_T >
@@ -135,14 +106,7 @@
          BOOST_IOFM_STDEXT::hash_map< BOOST_IOFM_HASH_MAP_ARG > & m
       )
       {
-         return
-         (
-            is >> boost::io::formatob
-            (
-               m,
-               boost::io::containerfmt( boost::io::pairfmt())
-            )
-         );
+         return( is >> boost::io::formatob( m BOOST_IOFM_ATD ));
       }
 
       // stdext::hash_multimap 
@@ -154,14 +118,7 @@
          const BOOST_IOFM_STDEXT::hash_multimap< BOOST_IOFM_HASH_MAP_ARG > & mm
       )
       {
-         return
-         (
-            os << boost::io::formatob
-            (
-               mm,
-               boost::io::containerfmt( boost::io::pairfmt())
-            )
-         );
+         return( os << boost::io::formatob( mm BOOST_IOFM_ATD ));
       }
 
       template< BOOST_IOFM_HASH_MAP_T >
@@ -171,14 +128,9 @@
          BOOST_IOFM_STDEXT::hash_multimap< BOOST_IOFM_HASH_MAP_ARG > & mm
       )
       {
-         return
-         (
-            is >> boost::io::formatob
-            (
-               mm,
-               boost::io::containerfmt( boost::io::pairfmt())
-            )
-         );
+         return( is >> boost::io::formatob( mm BOOST_IOFM_ATD ));
       }
 #  endif
+
+#  undef BOOST_IOFM_ATD
 #endif

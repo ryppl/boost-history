@@ -39,6 +39,12 @@
 
    // I/O support:
 
+#  if !defined(BOOST_IOFM_NO_OUTPUT_DEDUCTION) // automatic type deduction
+#     define BOOST_IOFM_ATD
+#  else
+#     define BOOST_IOFM_ATD , boost::io::pairfmt()
+#  endif
+
 #  if !defined(BOOST_IOFM_NO_BASIC_STREAM)
       template
       <
@@ -51,7 +57,7 @@
          const std::pair< T1, T2 >            & p
       )
       {
-         return( os << boost::io::formatob( p, boost::io::pairfmt()));
+         return( os << boost::io::formatob( p BOOST_IOFM_ATD ));
       }
 
       template
@@ -65,7 +71,7 @@
          std::pair< T1, T2 >                  & p
       )
       {
-         return( is >> boost::io::formatob( p, boost::io::pairfmt()));
+         return( is >> boost::io::formatob( p BOOST_IOFM_ATD ));
       }
 #  else
       template< typename T1, typename T2 >
@@ -75,7 +81,7 @@
          const std::pair< T1, T2 > & p
       )
       {
-         return( os << boost::io::formatob( p, boost::io::pairfmt()));
+         return( os << boost::io::formatob( p BOOST_IOFM_ATD ));
       }
 
       template< typename T1, typename T2 >
@@ -85,7 +91,9 @@
          std::pair< T1, T2 > & p
       )
       {
-         return( is >> boost::io::formatob( p, boost::io::pairfmt()));
+         return( is >> boost::io::formatob( p BOOST_IOFM_ATD ));
       }
 #  endif
+
+#  undef BOOST_IOFM_ATD
 #endif

@@ -17,6 +17,12 @@
 
    // I/O support:
 
+#  if !defined(BOOST_IOFM_NO_OUTPUT_DEDUCTION) // automatic type deduction
+#     define BOOST_IOFM_ATD
+#  else
+#     define BOOST_IOFM_ATD , boost::io::containerfmt()
+#  endif
+
 #  if !defined(BOOST_IOFM_NO_BASIC_STREAM)
       template< typename CharT, class TraitsT, typename T, class Allocator >
       inline std::basic_ostream< CharT, TraitsT > & operator<<
@@ -25,7 +31,7 @@
          const std::deque< T, Allocator >     & dq
       )
       {
-         return( os << boost::io::formatob( dq, boost::io::containerfmt()));
+         return( os << boost::io::formatob( dq BOOST_IOFM_ATD ));
       }
 
       template< typename CharT, class TraitsT, typename T, class Allocator >
@@ -35,7 +41,7 @@
          std::deque< T, Allocator >           & dq
       )
       {
-         return( is >> boost::io::formatob( dq, boost::io::containerfmt()));
+         return( is >> boost::io::formatob( dq BOOST_IOFM_ATD ));
       }
 #  else
       template< typename T, class Allocator >
@@ -45,7 +51,7 @@
          const std::deque< T, Allocator > & dq
       )
       {
-         return( os << boost::io::formatob( dq, boost::io::containerfmt()));
+         return( os << boost::io::formatob( dq BOOST_IOFM_ATD ));
       }
 
       template< typename T, class Allocator >
@@ -55,7 +61,9 @@
          std::deque< T, Allocator > & dq
       )
       {
-         return( is >> boost::io::formatob( dq, boost::io::containerfmt()));
+         return( is >> boost::io::formatob( dq BOOST_IOFM_ATD ));
       }
 #  endif
+
+#  undef BOOST_IOFM_ATD
 #endif

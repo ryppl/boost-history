@@ -18,6 +18,12 @@
 
    // I/O support:
 
+#  if !defined(BOOST_IOFM_NO_OUTPUT_DEDUCTION) // automatic type deduction
+#     define BOOST_IOFM_ATD
+#  else
+#     define BOOST_IOFM_ATD , boost::io::containerfmt( boost::io::pairfmt())
+#  endif
+
 #  if !defined(BOOST_IOFM_NO_BASIC_STREAM)
       // std::map
 
@@ -32,14 +38,7 @@
          const std::map< KeyT, T, Cmp, Allocator > & m
       )
       {
-         return
-         (
-            os << boost::io::formatob
-            (
-               m,
-               boost::io::containerfmt( boost::io::pairfmt())
-            )
-         );
+         return( os << boost::io::formatob( m BOOST_IOFM_ATD ));
       }
 
       template
@@ -53,14 +52,7 @@
          std::map< KeyT, T, Cmp, Allocator >  & m
       )
       {
-         return
-         (
-            is >> boost::io::formatob
-            (
-               m,
-               boost::io::containerfmt( boost::io::pairfmt())
-            )
-         );
+         return( is >> boost::io::formatob( m BOOST_IOFM_ATD ));
       }
 
       // std::multimap
@@ -76,14 +68,7 @@
          const std::multimap< KeyT, T, Cmp, Allocator > & mm
       )
       {
-         return
-         (
-            os << boost::io::formatob
-            (
-               mm,
-               boost::io::containerfmt( boost::io::pairfmt())
-            )
-         );
+         return( os << boost::io::formatob( mm BOOST_IOFM_ATD ));
       }
 
       template
@@ -97,14 +82,7 @@
          std::multimap< KeyT, T, Cmp, Allocator > & mm
       )
       {
-         return
-         (
-            is >> boost::io::formatob
-            (
-               mm,
-               boost::io::containerfmt( boost::io::pairfmt())
-            )
-         );
+         return( is >> boost::io::formatob( mm BOOST_IOFM_ATD ));
       }
 #  else
       // std::map
@@ -116,14 +94,7 @@
          const std::map< KeyT, T, Cmp, Allocator > & m
       )
       {
-         return
-         (
-            os << boost::io::formatob
-            (
-               m,
-               boost::io::containerfmt( boost::io::pairfmt())
-            )
-         );
+         return( os << boost::io::formatob( m BOOST_IOFM_ATD ));
       }
 
       template< typename KeyT, typename T, class Cmp, class Allocator >
@@ -133,14 +104,7 @@
          std::map< KeyT, T, Cmp, Allocator > & m
       )
       {
-         return
-         (
-            is >> boost::io::formatob
-            (
-               m,
-               boost::io::containerfmt( boost::io::pairfmt())
-            )
-         );
+         return( is >> boost::io::formatob( m BOOST_IOFM_ATD ));
       }
 
       // std::multimap
@@ -152,14 +116,7 @@
          const std::multimap< KeyT, T, Cmp, Allocator > & mm
       )
       {
-         return
-         (
-            os << boost::io::formatob
-            (
-               mm,
-               boost::io::containerfmt( boost::io::pairfmt())
-            )
-         );
+         return( os << boost::io::formatob( mm BOOST_IOFM_ATD ));
       }
 
       template< typename KeyT, typename T, class Cmp, class Allocator >
@@ -169,14 +126,9 @@
          std::multimap< KeyT, T, Cmp, Allocator > & mm
       )
       {
-         return
-         (
-            is >> boost::io::formatob
-            (
-               mm,
-               boost::io::containerfmt( boost::io::pairfmt())
-            )
-         );
+         return( is >> boost::io::formatob( mm BOOST_IOFM_ATD ));
       }
 #  endif
+
+#  undef BOOST_IOFM_ATD
 #endif

@@ -34,6 +34,12 @@
 
    // I/O support:
 
+#  if !defined(BOOST_IOFM_NO_OUTPUT_DEDUCTION) // automatic type deduction
+#     define BOOST_IOFM_ATD
+#  else
+#     define BOOST_IOFM_ATD , boost::io::containerfmt()
+#  endif
+
 #  if !defined(BOOST_IOFM_NO_BASIC_STREAM)
       // stdext::hash_set
 
@@ -44,7 +50,7 @@
          const BOOST_IOFM_STDEXT::hash_set< BOOST_IOFM_HASH_SET_ARG > & s
       )
       {
-         return( os << boost::io::formatob( s, boost::io::containerfmt()));
+         return( os << boost::io::formatob( s BOOST_IOFM_ATD ));
       }
 
       template< typename CharT, class TraitsT, BOOST_IOFM_HASH_SET_T >
@@ -54,7 +60,7 @@
          BOOST_IOFM_STDEXT::hash_set< BOOST_IOFM_HASH_SET_ARG > & s
       )
       {
-         return( is >> boost::io::formatob( s, boost::io::containerfmt()));
+         return( is >> boost::io::formatob( s BOOST_IOFM_ATD ));
       }
 
       // stdext::hash_multiset
@@ -66,7 +72,7 @@
          const BOOST_IOFM_STDEXT::hash_multiset< BOOST_IOFM_HASH_SET_ARG > & ms
       )
       {
-         return( os << boost::io::formatob( ms, boost::io::containerfmt()));
+         return( os << boost::io::formatob( ms BOOST_IOFM_ATD ));
       }
 
       template< typename CharT, class TraitsT, BOOST_IOFM_HASH_SET_T >
@@ -76,7 +82,7 @@
          BOOST_IOFM_STDEXT::hash_multiset< BOOST_IOFM_HASH_SET_ARG > & ms
       )
       {
-         return( is >> boost::io::formatob( ms, boost::io::containerfmt()));
+         return( is >> boost::io::formatob( ms BOOST_IOFM_ATD ));
       }
 #  else
       // stdext::hash_set
@@ -88,7 +94,7 @@
          const BOOST_IOFM_STDEXT::hash_set< BOOST_IOFM_HASH_SET_ARG > & s
       )
       {
-         return( os << boost::io::formatob( s, boost::io::containerfmt()));
+         return( os << boost::io::formatob( s BOOST_IOFM_ATD ));
       }
 
       template< BOOST_IOFM_HASH_SET_T >
@@ -98,7 +104,7 @@
          BOOST_IOFM_STDEXT::hash_set< BOOST_IOFM_HASH_SET_ARG > & s
       )
       {
-         return( is >> boost::io::formatob( s, boost::io::containerfmt()));
+         return( is >> boost::io::formatob( s BOOST_IOFM_ATD ));
       }
 
       // stdext::hash_multiset
@@ -110,7 +116,7 @@
          const BOOST_IOFM_STDEXT::hash_multiset< BOOST_IOFM_HASH_SET_ARG > & ms
       )
       {
-         return( os << boost::io::formatob( ms, boost::io::containerfmt()));
+         return( os << boost::io::formatob( ms BOOST_IOFM_ATD ));
       }
 
       template< BOOST_IOFM_HASH_SET_T >
@@ -120,7 +126,9 @@
          BOOST_IOFM_STDEXT::hash_multiset< BOOST_IOFM_HASH_SET_ARG > & ms
       )
       {
-         return( is >> boost::io::formatob( ms, boost::io::containerfmt()));
+         return( is >> boost::io::formatob( ms BOOST_IOFM_ATD ));
       }
 #  endif
+
+#  undef BOOST_IOFM_ATD
 #endif
