@@ -1031,8 +1031,8 @@ rule gen-source # source => object-file-names
     local immediate-target = $(<:D=:S=$(suffix):G=$(SOURCE_GRIST)) ;
     switch $(<:S)
     {
-     case .l* : Lex $(immediate-target) : $(<) ;
-     case .y* : Yacc $(immediate-target) : $(<) ;
+     case .l* : Lex $(immediate-target) : $(<) ; SEARCH on $(<) = $(SEARCH_SOURCE) ;
+     case .y* : Yacc $(immediate-target) : $(<) ; SEARCH on $(<) = $(SEARCH_SOURCE) ;
     }
     return [ Objects $(immediate-target) ] ;
 }
