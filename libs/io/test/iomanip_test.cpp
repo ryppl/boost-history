@@ -6,13 +6,11 @@
 //  warranty, and with no claim as to its suitability for any purpose. 
 
 //  Revision History
-//   24 Jul 2002  Initial version (Daryle Walker)
+//   11 Nov 2002  Initial version (Daryle Walker)
 
-#define  BOOST_INCLUDE_MAIN
-#include <boost/test/test_tools.hpp>  // main, BOOST_TEST, etc.
-
-#include <boost/cstdlib.hpp>     // for boost::exit_success
-#include <boost/io/iomanip.hpp>  // for boost::io::newl, etc.
+#include <boost/cstdlib.hpp>       // for boost::exit_success
+#include <boost/io/iomanip.hpp>    // for boost::io::newl, etc.
+#include <boost/test/minimal.hpp>  // for main, BOOST_TEST
 
 #include <sstream>  // for std::stringstream
 #include <string>   // for std::string
