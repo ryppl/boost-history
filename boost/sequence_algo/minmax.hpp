@@ -32,6 +32,20 @@
 namespace boost {
 
   template <class T>
+  std::pair<T&,T&>
+  minmax(T& a, T& b) {
+    if (b<a) return std::make_pair(b,a);
+    else     return std::make_pair(a,b);
+  }
+
+  template <class T, class BinaryPredicate>
+  std::pair<T&,T&>
+  minmax(T& a, T& b, BinaryPredicate comp) {
+    if (comp(b,a)) return std::make_pair(b,a);
+    else           return std::make_pair(a,b);
+  }
+
+  template <class T>
   std::pair<const T&,const T&>
   minmax(const T& a, const T& b) {
     if (b<a) return std::make_pair(b,a);
@@ -504,13 +518,12 @@ namespace boost {
     if (first != last) {
       if (!(*min_result < *first))
 	min_result = first;
-      else if (!(*first < *max_result))
+      if (!(*first < *max_result))
 	max_result = first, potential_max_result = last;
     }
     // resolve max_result being incorrect, with one extra comparison
     // (in which case potential_max_result is necessarily the correct result)
-    if (potential_max_result != last
-        && !(*potential_max_result < *max_result))
+    if (potential_max_result != last && !(*potential_max_result < *max_result))
       max_result = potential_max_result;
     return std::make_pair(min_result,max_result);
   }
@@ -554,7 +567,7 @@ namespace boost {
     if (first != last) {
       if (!comp(*min_result, *first))
 	min_result = first;
-      else if (!comp(*first, *max_result))
+      if (!comp(*first, *max_result))
 	max_result = first, potential_max_result = last;
     }
     // resolve max_result being incorrect, with one extra comparison
