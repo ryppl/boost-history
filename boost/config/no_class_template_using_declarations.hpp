@@ -22,19 +22,21 @@
 #ifndef BOOST_CONFIG_NO_CLASS_TEMPLATE_USING_DECLARATIONS_HPP
 #define BOOST_CONFIG_NO_CLASS_TEMPLATE_USING_DECLARATIONS_HPP
 
+//////////////////////////////////////////////////////////////////////////
 // BOOST_NO_CLASS_TEMPLATE_USING_DECLARATIONS
 //
-// Defined if using declarations cannot be used in class templates
-//   as in the following example:
+// Defined if using declarations cannot be used in class templates as in
+// the following example:
+//
 // <code>
 // struct test_base {
-//	static void f() { }
+//    static void f() { }
 // };
 //
 // template <typename T, typename base>
 // struct test_using : base {
-// 	using base::f;
-// 	static T f(const T& t) { return t; }
+//     using base::f;
+//     static T f(const T& t) { return t; }
 // };
 //
 // int main() {
@@ -44,8 +46,12 @@
 //  test.f(3.14);
 // }
 // </code>
-#if defined(BOOST_MSVC) || defined(__GNUC__)
-#	define BOOST_NO_CLASS_TEMPLATE_USING_DECLARATIONS
+//
+
+#if defined(BOOST_MSVC) || ( defined(__GNUC__) && __GNUC__ < 3 )
+#
+#    define BOOST_NO_CLASS_TEMPLATE_USING_DECLARATIONS
+#
 #endif
 
 #endif // BOOST_CONFIG_NO_CLASS_TEMPLATE_USING_DECLARATIONS_HPP
