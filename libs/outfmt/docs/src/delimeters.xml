@@ -274,7 +274,7 @@ Distributed under the Boost Software License, Version 1.0.
          The <code>boost::io::formatob</code> manipulator behaves like the outermost
          <link linkend = "outfmt.fmtobj">format object</link> it is created with. Therefore, it
          inherits that format object's formatting (either
-         <code>boost::io::openclose_formatter</code> or <code>boost::io::formatter</code).
+         <code>boost::io::openclose_formatter</code> or <code>boost::io::formatter</code>).
          This is why you can call the <code>format</code>
          function on the <code>boost::io::formatob</code> manipulator. For example:
       </para>
