@@ -1,3 +1,5 @@
+#ifndef PARSE_DWA20011020_H
+# define PARSE_DWA20011020_H
 /*
  * Copyright 1993, 2000 Christopher Seiwald.
  *
@@ -15,27 +17,30 @@
 typedef struct _PARSE PARSE;
 
 struct _PARSE {
-	LIST	*(*func)( PARSE *p, LOL *args );
-	PARSE	*left;
-	PARSE	*right;
-	PARSE	*third;
-	char	*string;
-	char	*string1;
-	int	num;
-	int	refs;
+    LIST    *(*func)( PARSE *p, LOL *args );
+    PARSE   *left;
+    PARSE   *right;
+    PARSE   *third;
+    char    *string;
+    char    *string1;
+    int num;
+    int refs;
+    struct module* module;
 } ;
 
-void 	parse_file( char *f );
-void 	parse_save( PARSE *p );
+void    parse_file( char *f );
+void    parse_save( PARSE *p );
 
 PARSE * parse_make( 
-	LIST 	*(*func)( PARSE *p, LOL *args ),
-	PARSE	*left,
-	PARSE	*right,
-	PARSE	*third,
-	char	*string,
-	char	*string1,
-	int	num );
+    LIST    *(*func)( PARSE *p, LOL *args ),
+    PARSE   *left,
+    PARSE   *right,
+    PARSE   *third,
+    char    *string,
+    char    *string1,
+    int num );
 
-void 	parse_refer( PARSE *p );
-void 	parse_free( PARSE *p );
+void    parse_refer( PARSE *p );
+void    parse_free( PARSE *p );
+
+#endif // PARSE_DWA20011020_H

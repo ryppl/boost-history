@@ -9,6 +9,7 @@
 # include "parse.h"
 # include "scan.h"
 # include "newstr.h"
+# include "modules.h"
 
 /*
  * parse.c - make and destroy parse trees as driven by the parser
@@ -85,6 +86,7 @@ parse_make(
 	p->string1 = string1;
 	p->num = num;
 	p->refs = 1;
+        p->module = 0;
 
 	return p;
 }

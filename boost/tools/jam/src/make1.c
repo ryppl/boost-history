@@ -275,7 +275,7 @@ make1c( TARGET *t )
 	if( cmd && t->status == EXEC_CMD_OK )
 	{
 	    if( DEBUG_MAKE )
-		if( DEBUG_MAKEQ || ! ( cmd->rule->flags & RULE_QUIETLY ) )
+		if( DEBUG_MAKEQ || ! ( cmd->rule->actions->flags & RULE_QUIETLY ) )
 	    {
 		printf( "%s ", cmd->rule->name );
 		list_print( lol_get( &cmd->args, 0 ) );
@@ -363,7 +363,7 @@ make1d(
           }
         }
         
-	if( status == EXEC_CMD_FAIL && ( cmd->rule->flags & RULE_IGNORE ) )
+	if( status == EXEC_CMD_FAIL && ( cmd->rule->actions->flags & RULE_IGNORE ) )
 	    status = EXEC_CMD_OK;
 
 	/* On interrupt, set intr so _everything_ fails */
@@ -386,7 +386,7 @@ make1d(
 	/* If the command was interrupted or failed and the target */
 	/* is not "precious", remove the targets */
 
-	if( status != EXEC_CMD_OK && !( cmd->rule->flags & RULE_TOGETHER ) )
+	if( status != EXEC_CMD_OK && !( cmd->rule->actions->flags & RULE_TOGETHER ) )
 	{
 	    LIST *targets = lol_get( &cmd->args, 0 );
 
@@ -428,6 +428,7 @@ make1cmds( ACTIONS *a0 )
 	for( ; a0; a0 = a0->next )
 	{
 	    RULE    *rule = a0->action->rule;
+            rule_actions *actions = rule->actions;
 	    SETTINGS *boundvars;
 	    LIST    *nt, *ns;
 	    ACTIONS *a1;
@@ -437,7 +438,7 @@ make1cmds( ACTIONS *a0 )
 	    /* Only do rules with commands to execute. */
 	    /* If this action has already been executed, use saved status */
 
-	    if( !rule->actions || a0->action->running )
+	    if( !actions || a0->action->running )
 		continue;
 
 	    a0->action->running = 1;
@@ -447,20 +448,20 @@ make1cmds( ACTIONS *a0 )
 	    /* on sources from each instance of this rule for this target. */
 
 	    nt = make1list( L0, a0->action->targets, 0 );
-	    ns = make1list( L0, a0->action->sources, rule->flags );
+	    ns = make1list( L0, a0->action->sources, actions->flags );
 
-	    if( rule->flags & RULE_TOGETHER )
+	    if( actions->flags & RULE_TOGETHER )
 		for( a1 = a0->next; a1; a1 = a1->next )
 		    if( a1->action->rule == rule && !a1->action->running )
 	    {
-		ns = make1list( ns, a1->action->sources, rule->flags );
+		ns = make1list( ns, a1->action->sources, actions->flags );
 		a1->action->running = 1;
 	    }
 
 	    /* If doing only updated (or existing) sources, but none have */
 	    /* been updated (or exist), skip this action. */
 
-	    if( !ns && ( rule->flags & ( RULE_NEWSRCS | RULE_EXISTING ) ) )
+	    if( !ns && ( actions->flags & ( RULE_NEWSRCS | RULE_EXISTING ) ) )
 	    {
 		list_free( nt );
 		continue;
@@ -468,7 +469,7 @@ make1cmds( ACTIONS *a0 )
 
 	    /* If we had 'actions xxx bind vars' we bind the vars now */
 
-	    boundvars = make1settings( rule->bindlist );
+	    boundvars = make1settings( actions->bindlist );
 	    pushsettings( boundvars );
 
 	    /*
@@ -509,7 +510,7 @@ make1cmds( ACTIONS *a0 )
 		    cmds->tail = cmd;
 		    start += chunk;
 		}
-		else if( ( rule->flags & RULE_PIECEMEAL ) && chunk > 1 )
+		else if( ( actions->flags & RULE_PIECEMEAL ) && chunk > 1 )
 		{
 		    /* Reduce chunk size slowly. */
 

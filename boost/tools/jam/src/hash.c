@@ -176,7 +176,7 @@ static void hashrehash( register struct hash *hp )
 	}
 }
 
-void hashenumerate( struct hash *hp, void (*f)(void*) )
+void hashenumerate( struct hash *hp, void (*f)(void*,void*), void* data )
 {
     int i;
     for( i = 0; i <= hp->items.list; i++ )
@@ -189,7 +189,7 @@ void hashenumerate( struct hash *hp, void (*f)(void*) )
         for( ; nel--; next += hp->items.size )
         {
             register ITEM *i = (ITEM *)next;
-            f(&i->data);
+            f(&i->data, data);
         }
     }
 }

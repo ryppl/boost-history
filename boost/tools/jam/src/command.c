@@ -29,19 +29,19 @@ cmd_new(
 	LIST	*sources,
 	LIST	*shell )
 {
-	CMD *cmd = (CMD *)malloc( sizeof( CMD ) );
+    CMD *cmd = (CMD *)malloc( sizeof( CMD ) );
     /* lift line-length limitation entirely when JAMSHELL is just "%" */
     int expand_line = ( shell && !strcmp(shell->string,"%") && !list_next(shell) );
     int max_line = MAXLINE;
     int allocated = -1;
 
-	cmd->rule = rule;
-	cmd->shell = shell;
-	cmd->next = 0;
+    cmd->rule = rule;
+    cmd->shell = shell;
+    cmd->next = 0;
 
-	lol_init( &cmd->args );
-	lol_add( &cmd->args, targets );
-	lol_add( &cmd->args, sources );
+    lol_init( &cmd->args );
+    lol_add( &cmd->args, targets );
+    lol_add( &cmd->args, sources );
     cmd->buf = 0;
 
     do
@@ -53,7 +53,7 @@ cmd_new(
         if (cmd->buf == 0)
             break;
         
-        allocated = var_string( rule->actions, cmd->buf, max_line, &cmd->args );
+        allocated = var_string( rule->actions->command, cmd->buf, max_line, &cmd->args );
         
         max_line = max_line * 2;
     }
@@ -67,7 +67,7 @@ cmd_new(
         cmd = 0;
     }
 
-	return cmd;
+    return cmd;
 }
 
 /*

@@ -26,6 +26,7 @@
 	{ "in", IN },
 	{ "include", INCLUDE },
 	{ "local", LOCAL },
+	{ "module", MODULE },
 	{ "on", ON },
 	{ "piecemeal", PIECEMEAL },
 	{ "quietly", QUIETLY },

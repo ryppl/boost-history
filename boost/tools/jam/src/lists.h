@@ -58,6 +58,7 @@ typedef struct _lol LOL;
 
 struct _lol {
 	int	count;
+    struct module* module;
 	LIST	*list[ LOL_MAX ];
 } ;
 

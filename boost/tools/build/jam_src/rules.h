@@ -4,6 +4,8 @@
  * This file is part of Jam - see jam.c for Copyright information.
  */
 
+#ifndef RULES_DWA_20011020_H
+# define RULES_DWA_20011020_H
 /*
  * rules.h -  targets, rules, and related information
  *
@@ -38,21 +40,37 @@ typedef struct _settings SETTINGS ;
 
 /* RULE - a generic jam rule, the product of RULE and ACTIONS */
 
+/* A rule's argument list */
+struct argument_list
+{
+    int reference_count;
+    LOL data[1];
+};
+
+/* The build actions corresponding to a rule */
+struct rule_actions
+{
+    int reference_count;
+    char* command;       /* command string from ACTIONS */
+    LIST* bindlist;
+    int flags;          /* modifiers on ACTIONS */
+
+# define    RULE_NEWSRCS    0x01    /* $(>) is updated sources only */
+# define    RULE_TOGETHER   0x02    /* combine actions on single target */
+# define    RULE_IGNORE 0x04    /* ignore return status of executes */
+# define    RULE_QUIETLY    0x08    /* don't mention it unless verbose */
+# define    RULE_PIECEMEAL  0x10    /* split exec so each $(>) is small */
+# define    RULE_EXISTING   0x20    /* $(>) is pre-exisitng sources only */
+};
+
+typedef struct rule_actions rule_actions;
+typedef struct argument_list argument_list;
+
 struct _rule {
-	char	*name;
-	PARSE	*procedure;		/* parse tree from RULE */
-	char	*actions;		/* command string from ACTIONS */
-	LIST	*bindlist;		/* variable to bind for actions */
-        LOL     arguments;              /* if count >= 0, stores argument info */
-	int	flags;			/* modifiers on ACTIONS */
-
-# define	RULE_NEWSRCS	0x01	/* $(>) is updated sources only */
-# define	RULE_TOGETHER	0x02	/* combine actions on single target */
-# define	RULE_IGNORE	0x04	/* ignore return status of executes */
-# define	RULE_QUIETLY	0x08	/* don't mention it unless verbose */
-# define	RULE_PIECEMEAL	0x10	/* split exec so each $(>) is small */
-# define	RULE_EXISTING	0x20	/* $(>) is pre-exisitng sources only */
-
+    char    *name;
+    PARSE   *procedure;     /* parse tree from RULE */
+    argument_list* arguments;  /* argument checking info, or NULL for unchecked */
+    rule_actions* actions;     /* build actions, or NULL for no actions */
 } ;
 
 /* ACTIONS - a chain of ACTIONs */
@@ -167,8 +185,10 @@ struct _target {
 	char	*cmds;			/* type-punned command list */
 } ;
 
-RULE 	*bindrule( char *rulename );
-TARGET *bindtarget( char *targetname );
+RULE 	*bindrule( char *rulename, struct module* );
+RULE*    new_rule_body( struct module* m, char* rulename, argument_list* args, PARSE* procedure );
+RULE*    new_rule_actions( struct module* m, char* rulename, char* command, LIST* bindlist, int flags );
+TARGET  *bindtarget( char *targetname );
 void 	touchtarget( char *t );
 TARGETS *targetlist( TARGETS *chain, LIST  *targets );
 TARGETS *targetentry( TARGETS *chain, TARGET *target );
@@ -178,3 +198,12 @@ void 	pushsettings( SETTINGS *v );
 void 	popsettings( SETTINGS *v );
 void 	freesettings( SETTINGS *v );
 void	donerules();
+
+argument_list* args_new();
+void    args_refer( argument_list* );
+void    args_free( argument_list* );
+
+void actions_refer(rule_actions*);
+void actions_free(rule_actions*);
+
+#endif // RULES_DWA_20011020_H

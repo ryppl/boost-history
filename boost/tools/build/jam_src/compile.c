@@ -17,6 +17,7 @@
 # include "search.h"
 # include "hdrmacro.h"
 # include "hash.h"
+# include "modules.h"
 
 # include <time.h>
 /*
@@ -117,32 +118,24 @@ static void lol_build( LOL* lol, char** elements )
         lol_add( lol, l );
 }
 
-static RULE* bind_builtin( char* name, LIST*(*f)(PARSE*, LOL*), int num, char** args )
+static RULE* bind_builtin( char* name, LIST*(*f)(PARSE*, LOL*), int flags, char** args )
 {
-    RULE* r = bindrule( name );
-    r->procedure = parse_make( f, P0, P0, P0, C0, C0, num );
+    argument_list* arg_list = 0;
+    RULE* builtin_rule;
+    
     if ( args )
     {
-        lol_free( &r->arguments );
-        lol_build( &r->arguments, args );
+        arg_list = args_new();
+        lol_build( arg_list->data, args );
     }
-    return r;
+
+    return new_rule_body( root_module(), name, arg_list,
+                                  parse_make( f, P0, P0, P0, C0, C0, flags ) );
 }
 
 static RULE* duplicate_rule( char* name, RULE* other )
 {
-    int i;
-    
-    RULE* r = bindrule( name );
-    r->procedure = other->procedure;
-    parse_refer( r->procedure );
-    
-    for (i = 0; i < other->arguments.count; ++i)
-    {
-        lol_add( &r->arguments,
-                 list_copy( L0, other->arguments.list[i] ) );
-    }
-    return r;
+    return new_rule_body( root_module(), name, other->arguments, other->procedure );
 }
 
 void
@@ -431,6 +424,38 @@ compile_include(
 	return L0;
 }
 
+LIST *
+compile_module(
+	PARSE	*p,
+	LOL	*args )
+{
+    /* Here we are entering a module declaration block. 
+     */
+    LIST* name = (*p->left->func)( p->left, args );
+    LIST* result;
+    module *save_module = args->module;
+    args->module = name ? bindmodule( name->string ) : root_module() ;
+
+    if ( save_module != args->module )
+    {
+        exit_module( save_module );
+        enter_module( args->module );
+    }
+    
+    result = (*p->right->func)( p->right, args );
+    
+    if ( save_module != args->module )
+    {
+        exit_module( args->module );
+        enter_module( save_module );
+        args->module = save_module;
+    }
+    
+    list_free( name );
+    return result;
+}
+
+
 /*
  * compile_list() - expand and return a list 
  *
@@ -528,6 +553,7 @@ compile_rule(
 	/* Build up the list of arg lists */
 
 	lol_init( nargs );
+    nargs->module = args->module;
 
 	for( p = parse->left; p; p = p->left )
 	    lol_add( nargs, (*p->right->func)( p->right, args ) );
@@ -544,7 +570,7 @@ compile_rule(
 static void argument_error( char* message, RULE* rule, LOL* actual, LIST* arg )
 {
     printf( "### argument error\n# rule %s ( ", rule->name );
-    lol_print( &rule->arguments );
+    lol_print( rule->arguments->data );
     printf( ")\n# called with: ( " );
     lol_print( actual );
     printf( ")\n# %s %s", message, arg ? arg->string : "" );
@@ -561,8 +587,8 @@ collect_arguments( RULE* rule, LOL* all_actual )
 {
     SETTINGS *locals = 0;
     
-    LOL *all_formal = &rule->arguments;
-    if ( all_formal->count >= 0 ) /* Nothing to set; nothing to check */
+    LOL *all_formal = rule->arguments ? rule->arguments->data : 0;
+    if ( all_formal ) /* Nothing to set; nothing to check */
     {
         int max = all_formal->count > all_actual->count
             ? all_formal->count
@@ -689,7 +715,7 @@ static void profile_exit(profile_frame* frame)
     profile_stack = frame->caller;
 }
 
-static void dump_profile_entry(void* p_)
+static void dump_profile_entry(void* p_, void* ignored)
 {
     profile_info* p = p_;
     clock_t total = p->cumulative;
@@ -699,7 +725,7 @@ static void dump_profile_entry(void* p_)
 void profile_dump()
 {
     if ( profile_hash )
-        hashenumerate( profile_hash, dump_profile_entry );
+        hashenumerate( profile_hash, dump_profile_entry, 0 );
 }
 
 /*
@@ -714,44 +740,37 @@ evaluate_rule(
     LIST	  *result = L0;
     RULE          *rule;
     profile_frame frame;
-
-    /* special case, if the rulename begins with "$(", we try */
-    /* to expand it.. this is needed by Boost..               */
-    if ( rulename[0] == '$' && rulename[1] == '(' )
-    {
-        LIST*  l;
-        
-        l = var_expand( L0, rulename, rulename+strlen(rulename), args, 0 );
-
-        if ( !l )
-        {
-            printf( "warning: unknown rule %s\n", rulename );
-            return result;
-        }
-            
-        if ( DEBUG_COMPILE )
-        {
-            debug_compile( 1, l->string );
-            lol_print( args );
-            printf( "\n" );
-        }
-        rulename = l->string;
-        rule = bindrule( l->string );
-        
-        list_free( l );
-    }
-    else
-    {
-        rule = bindrule( rulename );
-
-        if( DEBUG_COMPILE )
-        {
-	    debug_compile( 1, rulename );
-	    lol_print( args );
-	    printf( "\n" );
-        }
-    }
+    module    *prev_module = args->module;
     
+    LIST*  l = var_expand( L0, rulename, rulename+strlen(rulename), args, 0 );
+
+    if ( !l )
+    {
+        printf( "warning: rulename %s expands to empty string\n", rulename );
+        return result;
+    }
+
+    if ( DEBUG_COMPILE )
+    {
+        debug_compile( 1, l->string );
+        lol_print( args );
+        printf( "\n" );
+    }
+    rulename = l->string;
+    rule = bindrule( l->string, args->module );
+
+
+    if ( rule->procedure && rule->procedure->module != prev_module )
+    {
+        /* propagate current module to future rule invocations */
+        args->module = rule->procedure->module;
+        
+        /* swap variables */
+        exit_module( prev_module );
+        enter_module( rule->procedure->module );
+    }
+
+    list_free( l );
     
     if ( DEBUG_PROFILE )
         profile_enter( rulename, &frame );
@@ -798,6 +817,12 @@ evaluate_rule(
         popsettings( local_args );
         
         parse_free( parse );
+    }
+
+    if ( args->module != prev_module )
+    {
+        exit_module( rule->procedure->module );
+        enter_module( prev_module );
     }
 
     if ( DEBUG_PROFILE )
@@ -875,6 +900,46 @@ compile_set(
 }
 
 /*
+ * compile_set_module() - compile the "module local set variable" statement
+ *
+ *	parse->left     variable names
+ *	parse->right	variable values 
+ */
+LIST *
+compile_set_module(
+	PARSE	*parse,
+	LOL	*args )
+{
+	LIST	*nt = (*parse->left->func)( parse->left, args );
+	LIST	*ns = (*parse->right->func)( parse->right, args );
+	LIST	*l;
+
+	if( DEBUG_COMPILE )
+	{
+	    debug_compile( 0, "set module" );
+        printf( "(%s)", args->module->name );
+	    list_print( nt );
+	    printf( " = " );
+	    list_print( ns );
+	    printf( "\n" );
+	}
+
+	/* Call var_set to set variable */
+	/* var_set keeps ns, so need to copy it */
+
+	for( l = nt; l; l = list_next( l ) )
+    {
+        bind_module_var( args->module, l->string );
+	    var_set( l->string, list_copy( L0, ns ), VAR_SET );
+    }
+
+	list_free( nt );
+
+	return ns;
+}
+
+
+/*
  * compile_setcomp() - support for `rule` - save parse tree 
  *
  *	parse->string	rule name
@@ -885,38 +950,20 @@ compile_set(
 LIST *
 compile_setcomp(
 	PARSE	*parse,
-	LOL	*args )
+	LOL* args)
 {
-	RULE	*rule = bindrule( parse->string );
-
-	/* Free old one, if present */
-
-	if( rule->procedure )
-	    parse_free( rule->procedure );
-
-    if( rule->arguments.count >= 0 )
-    {
-        lol_free( &rule->arguments );
-        rule->arguments.count = -1;
-    }
-
+    argument_list* arg_list = 0;
+    
     /* Create new LOL describing argument requirements if supplied */
-    if (parse->right)
+    if ( parse->right )
     {
         PARSE *p;
-        lol_init( &rule->arguments );
+        arg_list = args_new();
         for( p = parse->right; p; p = p->left )
-            lol_add( &rule->arguments, (*p->right->func)( p->right, args ) );
-        
+            lol_add( arg_list->data, (*p->right->func)( p->right, args ) );
     }
-
-	rule->procedure = parse->left;
-
-	/* we now own this parse tree */
-	/* don't let parse_free() release it */
-
-	parse->left = 0;	
-
+    
+    new_rule_body( args->module, parse->string, arg_list, parse->left );
 	return L0;
 }
 
@@ -937,20 +984,9 @@ compile_setexec(
 	PARSE	*parse,
 	LOL	*args )
 {
-	RULE	*rule = bindrule( parse->string );
-	LIST	*bindlist = (*parse->left->func)( parse->left, args );
-	
-	/* Free old one, if present */
+	LIST* bindlist = (*parse->left->func)( parse->left, args );
 
-	if( rule->actions )
-	{
-	    freestr( rule->actions );
-	    list_free( rule->bindlist );
-	}
-
-	rule->actions = copystr( parse->string1 );
-	rule->bindlist = bindlist;
-	rule->flags = parse->num; /* XXX translate this properly */
+    new_rule_actions( args->module, parse->string, parse->string1, bindlist, parse->num );
 
 	return L0;
 }

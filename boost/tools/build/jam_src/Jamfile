@@ -77,7 +77,7 @@ else            { code += jamgram.c ; }
 # easier to read/maintain.
 #
 
-if ( $(UNIX) && $(YACC) ) || ( $(NT) && $(OSTYPE) = cygwin )
+if ( $(UNIX) || $(NT) ) && $(YACC)
 {
     local SUFEXE = ; # yyacc is a script with no suffix - this handles cygwin
     GenFile jamgram.y jamgramtab.h : ./yyacc jamgram.yy ;
@@ -101,7 +101,7 @@ Library         libjam.a :
 		    command.c compile.c $(code) expand.c glob.c
 		    hash.c headers.c hdrmacro.c lists.c make.c make1.c newstr.c
 		    option.c parse.c regexp.c rules.c scan.c search.c subst.c
-		    timestamp.c variable.c ;
+		    timestamp.c variable.c modules.c ;
 
 
 if $(BINDIR) 	{ InstallBin $(BINDIR) : jam ; }
@@ -118,7 +118,7 @@ ALLSOURCE =
 	filevms.c glob.c hash.c hash.h hdrmacro.c hdrmacro.h headers.c
 	headers.h jam.c jam.h jambase.c jambase.h jamgram.c jamgram.h
 	jamgram.y jamgram.yy jamgramtab.h lists.c lists.h make.c make.h
-	make1.c mkjambase.c newstr.c newstr.h option.c option.h parse.c
+	make1.c mkjambase.c modules.c newstr.c newstr.h option.c option.h parse.c
 	parse.h patchlevel.h pathmac.c pathunix.c pathvms.c regexp.c regexp.h
 	rules.c rules.h scan.c scan.h search.c search.h subst.c timestamp.c
 	timestamp.h variable.c variable.h yyacc

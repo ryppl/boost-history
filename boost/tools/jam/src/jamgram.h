@@ -29,20 +29,21 @@
 #define	IN	282
 #define	INCLUDE	283
 #define	LOCAL	284
-#define	ON	285
-#define	PIECEMEAL	286
-#define	QUIETLY	287
-#define	RETURN	288
-#define	RULE	289
-#define	SWITCH	290
-#define	TOGETHER	291
-#define	UPDATED	292
-#define	WHILE	293
-#define	_LBRACE	294
-#define	_BARBAR	295
-#define	_RBRACE	296
-#define	ARG	297
-#define	STRING	298
+#define	MODULE	285
+#define	ON	286
+#define	PIECEMEAL	287
+#define	QUIETLY	288
+#define	RETURN	289
+#define	RULE	290
+#define	SWITCH	291
+#define	TOGETHER	292
+#define	UPDATED	293
+#define	WHILE	294
+#define	_LBRACE	295
+#define	_BARBAR	296
+#define	_RBRACE	297
+#define	ARG	298
+#define	STRING	299
 
 
 extern YYSTYPE yylval;

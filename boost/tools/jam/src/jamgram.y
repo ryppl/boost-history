@@ -26,6 +26,7 @@
 %token IN
 %token INCLUDE
 %token LOCAL
+%token MODULE
 %token ON
 %token PIECEMEAL
 %token QUIETLY
@@ -101,10 +102,12 @@
 # define pincl( l )       	parse_make( compile_include,l,P0,P0,S0,S0,0 )
 # define plist( s )	  	parse_make( compile_list,P0,P0,P0,s,S0,0 )
 # define plocal( l,r,t )  	parse_make( compile_local,l,r,t,S0,S0,0 )
+# define pmodule( l,r )	  	parse_make( compile_module,l,r,P0,S0,S0,0 )
 # define pnull()	  	parse_make( compile_null,P0,P0,P0,S0,S0,0 )
 # define prule( s,p )     	parse_make( compile_rule,p,P0,P0,s,S0,0 )
 # define prules( l,r )	  	parse_make( compile_rules,l,r,P0,S0,S0,0 )
-# define pset( l,r,a ) 	  	parse_make( compile_set,l,r,P0,S0,S0,a )
+# define pset( l,r,a )          parse_make( compile_set,l,r,P0,S0,S0,a )
+# define psetmodule( l,r ) 	parse_make( compile_set_module,l,r,P0,S0,S0,0 )
 # define pset1( l,r,t,a )	parse_make( compile_settings,l,r,t,S0,S0,a )
 # define psetc( s,p )     	parse_make( compile_setcomp,p,P0,P0,s,S0,0 )
 # define psetc_args( s,p,a )    parse_make( compile_setcomp,p,a,P0,s,S0,0 )
@@ -142,11 +145,15 @@ rules	: rule
 		{ $$.parse = $1.parse; }
 	| rule rules
 		{ $$.parse = prules( $1.parse, $2.parse ); }
-	| LOCAL list _SEMIC block
-		{ $$.parse = plocal( $2.parse, pnull(), $4.parse ); }
-	| LOCAL list _EQUALS list _SEMIC block
-		{ $$.parse = plocal( $2.parse, $4.parse, $6.parse ); }
+	| LOCAL list assign_list_opt _SEMIC block
+		{ $$.parse = plocal( $2.parse, $3.parse, $5.parse ); }
 	;
+
+assign_list_opt : /* empty */
+                { $$.parse = pnull(); }
+        | _EQUALS list
+                { $$.parse = $2.parse; }
+        ;
 
 rule	: _LBRACE block _RBRACE
 		{ $$.parse = $2.parse; }
@@ -156,6 +163,8 @@ rule	: _LBRACE block _RBRACE
 		{ $$.parse = prule( $1.string, $2.parse ); }
 	| arg assign list _SEMIC
 		{ $$.parse = pset( $1.parse, $3.parse, $2.number ); }
+	| MODULE LOCAL list assign_list_opt _SEMIC
+		{ $$.parse = psetmodule( $3.parse, $4.parse ); }
 	| arg ON list assign list _SEMIC
 		{ $$.parse = pset1( $1.parse, $3.parse, $5.parse, $4.number ); }
 	| RETURN list _SEMIC
@@ -168,6 +177,8 @@ rule	: _LBRACE block _RBRACE
 		{ $$.parse = pswitch( $2.parse, $4.parse ); }
 	| IF cond _LBRACE block _RBRACE 
 		{ $$.parse = pif( $2.parse, $4.parse, pnull() ); }
+	| MODULE list _LBRACE block _RBRACE 
+		{ $$.parse = pmodule( $2.parse, $4.parse ); }
 	| WHILE cond _LBRACE block _RBRACE 
 		{ $$.parse = pwhile( $2.parse, $4.parse ); }
 	| IF cond _LBRACE block _RBRACE ELSE rule

@@ -11,6 +11,7 @@
 # include "rules.h"
 # include "newstr.h"
 # include "hash.h"
+# include "modules.h"
 
 /*
  * rules.c - access to RULEs, TARGETs, and ACTIONs
@@ -34,7 +35,6 @@
  * 08/23/94 (seiwald) - Support for '+=' (append to variable)
  */
 
-static struct hash *rulehash = 0;
 static struct hash *targethash = 0;
 
 
@@ -42,24 +42,19 @@ static struct hash *targethash = 0;
  * bindrule() - return pointer to RULE, creating it if necessary
  */
 
-RULE *
-bindrule( char *rulename )
+static RULE *
+enter_rule( char *rulename, module* m )
 {
 	RULE rule, *r = &rule;
 
-	if( !rulehash )
-	    rulehash = hashinit( sizeof( RULE ), "rules" );
-
 	r->name = rulename;
 
-	if( hashenter( rulehash, (HASHDATA **)&r ) )
+	if( hashenter( m->rules, (HASHDATA **)&r ) )
 	{
 	    r->name = newstr( rulename );	/* never freed */
 	    r->procedure = (PARSE *)0;
-	    r->actions = (char *)0;
-	    r->bindlist = L0;
-            r->arguments.count = -1;
-	    r->flags = 0;
+	    r->actions = 0;
+        r->arguments = 0;
 	}
 
 	return r;
@@ -165,6 +160,8 @@ actionlist(
 	return chain;
 }
 
+static SETTINGS* settings_freelist;
+
 /*
  * addsettings() - add a deferred "set" command to a target
  *
@@ -195,7 +192,13 @@ addsettings(
 
 	if( !v )
 	{
-	    v = (SETTINGS *)malloc( sizeof( *v ) );
+        v = settings_freelist;
+        
+        if ( v )
+            settings_freelist = v->next;
+        else
+            v = (SETTINGS *)malloc( sizeof( *v ) );
+        
 	    v->symbol = newstr( symbol );
 	    v->value = value;
 	    v->next = head;
@@ -250,19 +253,136 @@ freesettings( SETTINGS *v )
 
 	    freestr( v->symbol );
 	    list_free( v->value );
-	    free( (char *)v );
+        v->next = settings_freelist;
+        settings_freelist = v;
 
 	    v = n;
 	}
 }
 
 /*
- * donerules() - free RULE and TARGET tables
+ * donerules() - free TARGET tables
  */
 
 void
 donerules()
 {
-	hashdone( rulehash );
 	hashdone( targethash );
+    while ( settings_freelist )
+    {
+        SETTINGS* n = settings_freelist->next;
+        free( settings_freelist );
+        settings_freelist = n;
+    }
 }
+
+argument_list* args_new()
+{
+    argument_list* r = malloc( sizeof(argument_list) );
+    r->reference_count = 0;
+    lol_init(r->data);
+    return r;
+}
+
+void args_refer( argument_list* a )
+{
+    ++a->reference_count;
+}
+
+void args_free( argument_list* a )
+{
+    if (--a->reference_count <= 0)
+    {
+        lol_free(a->data);
+        free(a);
+    }
+}
+
+void actions_refer(rule_actions* a)
+{
+    ++a->reference_count;
+}
+
+void actions_free(rule_actions* a)
+{
+    if (--a->reference_count <= 0)
+    {
+        freestr(a->command);
+        list_free(a->bindlist);
+        free(a);
+    }
+}
+
+void set_rule_body( RULE* rule, argument_list* args, PARSE* procedure )
+{
+    if ( args )
+        args_refer( args );
+    if ( rule->arguments )
+        args_free( rule->arguments );
+    rule->arguments = args;
+    
+    if ( procedure )
+        parse_refer( procedure );
+    if ( rule->procedure )
+        parse_free( rule->procedure );
+    rule->procedure = procedure;
+}
+
+static RULE* global_rule( char* rulename, module* m )
+{
+    char global_name[4096];
+    strncpy(global_name, m->name, sizeof(global_name) - 1);
+    strncat(global_name, rulename, sizeof(global_name) - 1);
+    return enter_rule( global_name, root_module() );
+}
+
+RULE* new_rule_body( struct module* m, char* rulename, argument_list* args, PARSE* procedure )
+{
+    RULE* local = enter_rule( rulename, m );
+    RULE* global = global_rule( rulename, m );
+    procedure->module = m;
+    set_rule_body( local, args, procedure );
+    set_rule_body( global, args, procedure );
+    return local;
+}
+
+static void set_rule_actions( RULE* rule, rule_actions* actions )
+{
+    if ( actions )
+        actions_refer( actions );
+    if ( rule->actions )
+        actions_free( rule->actions );
+    rule->actions = actions;
+    
+}
+
+static rule_actions* actions_new( char* command, LIST* bindlist, int flags )
+{
+    rule_actions* result = malloc(sizeof(rule_actions));
+    result->command = copystr( command );
+    result->bindlist = bindlist;
+    result->flags = flags;
+    result->reference_count = 0;
+    return result;
+}
+
+RULE* new_rule_actions( struct module* m, char* rulename, char* command, LIST* bindlist, int flags )
+{
+    RULE* local = enter_rule( rulename, m );
+    RULE* global = global_rule( rulename, m );
+    set_rule_actions( local, actions_new( command, bindlist, flags ) );
+    set_rule_actions( global, local->actions );
+    return local;
+}
+
+RULE *bindrule( char *rulename, struct module* m )
+{
+	RULE rule, *r = &rule;
+	r->name = rulename;
+    
+	if ( hashcheck( m->rules, (HASHDATA **)&r ) )
+        return r;
+    else
+        return enter_rule( rulename, root_module() );
+}
+
