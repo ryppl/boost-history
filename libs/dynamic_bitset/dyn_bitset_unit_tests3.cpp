@@ -177,7 +177,6 @@ void run_test_cases( BOOST_EXPLICIT_TEMPLATE_TYPE(Block) )
     b[long_string.size()/2].flip();
     Tests::proper_subset(a, b);
   }
-
   //=====================================================================
   // Test find_first
   {
@@ -206,7 +205,6 @@ void run_test_cases( BOOST_EXPLICIT_TEMPLATE_TYPE(Block) )
       b.set(b.size() - 1);
       Tests::find_first(b);
   }
-
   //=====================================================================
   // Test find_next
   {
@@ -281,8 +279,6 @@ void run_test_cases( BOOST_EXPLICIT_TEMPLATE_TYPE(Block) )
       Tests::find_next(b, b.npos);
 
   }
-
-
   //=====================================================================
   // Test operator==
   {
@@ -623,7 +619,6 @@ void run_test_cases( BOOST_EXPLICIT_TEMPLATE_TYPE(Block) )
     boost::dynamic_bitset<Block> lhs(long_string.size(), 1), rhs(long_string);
     Tests::operator_sub(lhs, rhs);
   }
-
 
 }
 
