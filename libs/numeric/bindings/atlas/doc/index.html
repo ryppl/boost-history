@@ -1,7 +1,7 @@
 <html>
 <head>
 <link rel="stylesheet" type="text/css" href="boost.css">
-<title>Boost.Numeric.Bindings.Atlas</title>
+<title>Boost.Numeric.Bindings.ATLAS</title>
 </head>
 
 <body link="#0000ff" vlink="#800080">
@@ -11,12 +11,16 @@
 <h3><a href="../../../index.htm"><img height="86" width="277" alt="C++ Boost" src="../../../c++boost.gif" border="0"></a></h3>
 </td>
 <td valign="top">
-<h1 align="center">Boost.Numeric.Bindings.Atlas</h1>
+<h1 align="center">Boost.Numeric.Bindings.ATLAS</h1>
 </td>
 </tr>
 </table>
 <hr>
-<h2>Content</h2>
+
+<br>
+Back to <a href="../../doc/index.html">Bindings Library Synopsis</a>
+
+<h2>Contents</h2>
 <ol>
 <li><a href="#introduction">Introduction</a></li>
 <li><a href="#using_atlas">Using the ATLAS bindings</a></li>
@@ -290,13 +294,10 @@ Hermitian positive definite coefficient matrices<sup>[<a name="bnd.atl.3"
 href="#ftn.bnd.atl.3">3</a>]</sup>.
 
 <p>
-In general, LAPACK routines can be divided in
-<ul>
-<li><b>driver routines</b>, each of which solves complete problem (e.g. solving a system of linear equations); 
-<li><b>computational routines</b>, each of which performs a distinct computational task (e.g. <i>LU</i> factorization).
-</ul>
 For more informations about LAPACK routines see
 <a href="http://www.netlib.org/lapack/lug/">LAPACK Users' Guide</a>. 
+Also, see <a href="../../lapack/doc/index.html">LAPACK bindings</a>.
+
 
 <p>
 <h4>2.5.1 General system of linear equations</h4>
@@ -390,22 +391,22 @@ allocated and deallocated internally
   namespace atlas = boost::numeric::bindings::atlas;
 
   int main() {
-    // system matrix: 
-    ublas::matrix&lt;double, ublas::column_major&gt; a(3,3);  
-    a(0,0) = 1.; a(0,1) = 1.; a(0,2) = 1.;
-    a(1,0) = 2.; a(1,1) = 3.; a(1,2) = 1.;
-    a(2,0) = 1.; a(2,1) = -1.; a(2,2) = -1.;
-    std::cout &lt;&lt; "A: " &lt;&lt; a &lt;&lt; std::endl;
+    // system matrix A: 
+    ublas::matrix&lt;double, ublas::column_major&gt; A(3,3);  
+    A(0,0) = 1.; A(0,1) = 1.; A(0,2) = 1.;
+    A(1,0) = 2.; A(1,1) = 3.; A(1,2) = 1.;
+    A(2,0) = 1.; A(2,1) = -1.; A(2,2) = -1.;
+    std::cout &lt;&lt; "A: " &lt;&lt; A &lt;&lt; std::endl;
 
-    // right-hand side matrix:
-    ublas::matrix&lt;double, ublas::column_major&gt; b(3,1);  
-    b(0,0) = 4.; b(1,0) = 9.; b(2,0) = -2.;
-    std::cout &lt;&lt; "B: " &lt;&lt; b &lt;&lt; std::endl;
+    // right-hand side matrix B:
+    ublas::matrix&lt;double, ublas::column_major&gt; B(3,1);  
+    B(0,0) = 4.; B(1,0) = 9.; B(2,0) = -2.;
+    std::cout &lt;&lt; "B: " &lt;&lt; B &lt;&lt; std::endl;
 
     // solve system: 
-    atlas::gesv (a, b);
-    // b contains solution: 
-    std::cout &lt;&lt; "X: " &lt;&lt; b &lt;&lt; std::endl;
+    atlas::gesv (A, B);
+    // B now contains solution: 
+    std::cout &lt;&lt; "X: " &lt;&lt; B &lt;&lt; std::endl;
   }
 </pre> 
 Output is: 
@@ -427,21 +428,21 @@ Same system, but with <code>A</code> and <code>B</code> row major
   namespace atlas = boost::numeric::bindings::atlas;
 
   int main() {
-    // system matrix: 
-    ublas::matrix&lt;double, ublas::row_major&gt; a(3,3);  
-    a(0,0) = 1.; a(0,1) = 1.; a(0,2) = 1.;
-    a(1,0) = 2.; a(1,1) = 3.; a(1,2) = 1.;
-    a(2,0) = 1.; a(2,1) = -1.; a(2,2) = -1.;
-    std::cout &lt;&lt; "A: " &lt;&lt; a &lt;&lt; std::endl;
+    // system matrix A: 
+    ublas::matrix&lt;double, ublas::row_major&gt; A(3,3);  
+    A(0,0) = 1.; A(0,1) = 1.; A(0,2) = 1.;
+    A(1,0) = 2.; A(1,1) = 3.; A(1,2) = 1.;
+    A(2,0) = 1.; A(2,1) = -1.; A(2,2) = -1.;
+    std::cout &lt;&lt; "A: " &lt;&lt; A &lt;&lt; std::endl;
 
-    // right-hand side matrix:
-    ublas::matrix&lt;double, ublas::row_major&gt; b(1,3);  
-    b(0,0) = 4.; b(0,1) = 9.; b(0,2) = -2.;
-    std::cout &lt;&lt; "B: " &lt;&lt; b &lt;&lt; std::endl;
+    // right-hand side matrix B:
+    ublas::matrix&lt;double, ublas::row_major&gt; B(1,3);  
+    B(0,0) = 4.; B(0,1) = 9.; B(0,2) = -2.;
+    std::cout &lt;&lt; "B: " &lt;&lt; B &lt;&lt; std::endl;
 
     // solve system: 
-    atlas::gesv (a, b);
-    std::cout &lt;&lt; "X: " &lt;&lt; b &lt;&lt; std::endl;
+    atlas::gesv (A, B);
+    std::cout &lt;&lt; "X: " &lt;&lt; B &lt;&lt; std::endl;
   }
 </pre> 
 Output is: 
@@ -466,15 +467,15 @@ Output is:
 
   int main() {
     // n -- no. of equations; nrhs -- no. of right-hand side vectors
-    ublas::matrix&lt;double, ublas::column_major&gt; a(n,n);  // system matrix
-    ublas::matrix&lt;double, ublas::column_major&gt; b(n,nrhs);  // right-hand side matrix
-    // fill a &amp; b
+    ublas::matrix&lt;double, ublas::column_major&gt; A(n,n);  // system matrix
+    ublas::matrix&lt;double, ublas::column_major&gt; B(n,nrhs);  // right-hand side matrix
+    // fill A &amp; B
     std::vector&lt;int&gt; ipiv(n);  // pivot vector
 
-    int ierr = atlas::getrf (a, ipiv);  // factorise a
+    int ierr = atlas::getrf (A, ipiv);  // factorise A
     if (ierr == 0) {
-      atlas::getrs (a, ipiv, b);  // solve from factorization 
-      std::cout << "X: " << b << std::endl;
+      atlas::getrs (A, ipiv, B);  // solve from factorization 
+      std::cout << "X: " << B << std::endl;
     }
     else 
       std::cout << "matrix is singular: ierr = " << ierr << std::endl;
@@ -585,25 +586,25 @@ Hermitian positive definite matrix (lower triangular part is stored):
   typedef ublas::hermitian_adaptor&lt;cm_t, ublas::lower&gt; herm_t;
 
   int main() {
-    cm_t ca(3,3);  // matrix (storage)
-    herm_t ha(ca);  // hermitian adaptor 
-    ha(0,0) = cmplx_t (25,0);
-    ha(1,0) = cmplx_t (-5,5);  
-    ha(1,1) = cmplx_t (51,0);
-    ha(2,0) = cmplx_t (10,-5);
-    ha(2,1) = cmplx_t (4,6);
-    ha(2,2) = cmplx_t (71,0);
+    cm_t CA(3,3);  // matrix (storage)
+    herm_t HA(CA);  // hermitian adaptor 
+    HA(0,0) = cmplx_t (25,0);
+    HA(1,0) = cmplx_t (-5,5);  
+    HA(1,1) = cmplx_t (51,0);
+    HA(2,0) = cmplx_t (10,-5);
+    HA(2,1) = cmplx_t (4,6);
+    HA(2,2) = cmplx_t (71,0);
 
-    cm_t cb(3,2);  // right-hand side 
-    cb(0,0) = cmplx_t (60,-55);
-    cb(1,0) = cmplx_t (34,58);
-    cb(2,0) = cmplx_t (13,-152);
-    cb(0,1) = cmplx_t (70,10);
-    cb(1,1) = cmplx_t (-51,110);
-    cb(2,1) = cmplx_t (75,63);
+    cm_t CB(3,2);  // right-hand side 
+    CB(0,0) = cmplx_t (60,-55);
+    CB(1,0) = cmplx_t (34,58);
+    CB(2,0) = cmplx_t (13,-152);
+    CB(0,1) = cmplx_t (70,10);
+    CB(1,1) = cmplx_t (-51,110);
+    CB(2,1) = cmplx_t (75,63);
   
-    atlas::posv (ha, cb);  // solve system
-    std::cout &lt;&lt; "X: " &lt;&lt; cb &lt;&lt; std::endl; 
+    atlas::posv (HA, CB);  // solve system
+    std::cout &lt;&lt; "X: " &lt;&lt; CB &lt;&lt; std::endl; 
   }
 </pre>
 
@@ -625,25 +626,25 @@ Hermitian positive definite matrix (lower triangular part is stored):
   typedef ublas::symmetric_adaptor&lt;m_t, ublas::upper&gt; symm_t;
 
   int main() {
-    m_t a(5,5);  // matrix (storage)
-    // a = 
+    m_t A(5,5);  // matrix (storage)
+    // A = 
     //   [5 4 3 2 1]
     //   [0 5 4 3 2]
     //   [0 0 5 4 3]
     //   [0 0 0 5 4]
     //   [0 0 0 0 5]
-    symm_t sa(a);  // symmetric adaptor 
-    m_t a2(sa);  // copy of sa (full symmetric) 
+    symm_t SA(A);  // symmetric adaptor 
+    m_t A2(SA);  // copy of sa (full symmetric) 
 
-    atlas::potrf (sa);  // factorise sa
-    atlas::potri (sa);  // compute inverse 
+    atlas::potrf (SA);  // factorise sa
+    atlas::potri (SA);  // compute inverse 
 
-    // ri is (almost) identity matrix: 
-    m_t ri(5,5);
-    atlas::symm (a2, sa, ri);  
-    std::cout << "I = A * A^(-1): " << ri << std::endl;
-    atlas::symm (sa, a2, ri);  
-    std::cout << "I = A^(-1) * A: " << ri << std::endl;
+    // RI is (almost) identity matrix: 
+    m_t RI(5,5);
+    atlas::symm (A2, SA, RI);  
+    std::cout << "I = A * A^(-1): " << RI << std::endl;
+    atlas::symm (SA, A2, RI);  
+    std::cout << "I = A^(-1) * A: " << RI << std::endl;
   }
 </pre>
 (<a href="#level3blas">BLAS level 3</a> function <code>symm()</code>
