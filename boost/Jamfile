@@ -1,3 +1,8 @@
+#~ Copyright (C) 2003, Rene Rivera.
+#~ Use, modification and distribution is subject to the
+#~ Boost Software License, Version 1.0. (See accompanying
+#~ file LICENSE-1.0 or http://www.boost.org/LICENSE-1.0)
+
 if --help in $(ARGV)
 {
     ECHO "
@@ -26,11 +31,11 @@ Locations:
                             Default; ./stage
 
 Features:
-    --with-python[=PYTHON_ROOT]
+    --without-<library>     Do not build, stage, or install the specified
+                            <library>. By default all libraries attempt to build.
+    --with-python-root[=PYTHON_ROOT]
                             Build Boost.Python libraries with the Python
-                            devel packages located at PYTHON_ROOT. The
-                            Boost.Python libraries are built if possible
-                            by default.
+                            devel packages located at PYTHON_ROOT.
                             Default PYTHON_ROOT; C:\\tools\\python on Win32.
                             Default PYTHON_ROOT; /usr/local on Unix, Linux, etc.
                             Default PYTHON_ROOT; /usr on Cygwin.
@@ -83,7 +88,7 @@ local include-locate = [ MATCH "^--includedir=(.*)" : $(ARGV) ] ;
 include-locate ?= $(boost-locate)/include ;
 
 # location of python
-local python-root = [ MATCH "^--with-python=(.*)" : $(ARGV) ] ;
+local python-root = [ MATCH "^--with-python-root=(.*)" : $(ARGV) ] ;
 PYTHON_ROOT ?= $(python-root) ;
 
 # variant for pydebug build
@@ -93,12 +98,14 @@ if --with-pydebug in $(ARGV)
     with-debug-python = debug-python ;
 }
 
+# libraries to disable building, etc.
+local without-libraries = [ MATCH "^--without-(.*)" : $(ARGV) ] ;
+
 #
 project-root ;
 
 # bring in the rules for python
-SEARCH on <module@>python.jam = $(BOOST_BUILD_PATH) ;
-include <module@>python.jam ;
+import python ;
 
 #
 local version-tag = [ MATCH "^([^.]+).([^.]+)" : $(BOOST_VERSION) ] ;
@@ -106,36 +113,26 @@ if $(NT) { version-tag = $(version-tag:J=) ; }
 else { version-tag = $(version-tag:J=".") ; }
 version-tag = $(version-tag:J=) ;
 
-stage $(lib-locate:D=)
-    :
-        # please order by name to ease maintenance
-        <dll>libs/date_time/build/boost_date_time
-        <lib>libs/date_time/build/boost_date_time
-        <lib>libs/filesystem/build/boost_filesystem
-        [ cond [ check-python-config ] :
-            <dll>libs/python/build/boost_python
-            <lib>libs/python/build/boost_python ]
-        <dll>libs/regex/build/boost_regex
-        <lib>libs/regex/build/boost_regex
-        <dll>libs/signals/build/boost_signals
-        <lib>libs/signals/build/boost_signals
-        [ unless $(NT) :
-            <dll>libs/test/build/boost_prg_exec_monitor
-            <dll>libs/test/build/boost_test_exec_monitor
-            <dll>libs/test/build/boost_unit_test_framework ]
-        <lib>libs/test/build/boost_prg_exec_monitor
-        <lib>libs/test/build/boost_test_exec_monitor
-        <lib>libs/test/build/boost_unit_test_framework
-        <dll>libs/thread/build/boost_thread
-    :
-        <locate>$(lib-locate:D)
-        common-stage-tag <tag><postfix>-$(version-tag)
-        [ cond $(with-install) : <target>install : <target>all ]
-        [ cond $(with-stage) : <target>stage : <target>all ]
-    :
-        debug release [ cond $(with-debug-python) : debug-python ] <threading>single/multi
-        [ unless $(with-install) $(with-stage) : <suppress>true ]
-    ;
+#
+install-subinclude
+    [ MATCH ^(.*build/$(JAMFILE))$ : [ glob-tree $(BOOST_ROOT)/libs : $(JAMFILE) ] ]
+    : <exclude>$(without-libraries) ;
+
+if [ install-sources lib ]
+{
+    stage $(lib-locate:D=)
+        :
+            [ install-sources lib ]
+        :
+            <locate>$(lib-locate:D)
+            common-stage-tag <tag><postfix>-$(version-tag)
+            [ cond $(with-install) : <target>install : <target>all ]
+            [ cond $(with-stage) : <target>stage : <target>all ]
+        :
+            debug release [ cond $(with-debug-python) : debug-python ] <threading>single/multi
+            [ unless $(with-install) $(with-stage) : <suppress>true ]
+        ;
+}
 
 stage $(include-locate:D=)/boost-$(version-tag)
     :
