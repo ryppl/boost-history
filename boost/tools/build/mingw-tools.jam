@@ -42,7 +42,6 @@ rule Link-action
     if $(NT) {
         JAMSHELL on $(<) = % ;
     }
-    return ;
 }
 
 # for mingw, we repeat all libraries so that dependencies are always resolved
