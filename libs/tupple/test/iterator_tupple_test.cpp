@@ -20,11 +20,11 @@
 #include <functional>
 
 #include <boost/tupple/iterator_tupple.hpp>
-using namespace boost::tupple;
 
 
 void traits_detail_test()
 {
+  using namespace boost::tupple;
   //### There is still a const problem here! *sigh*
 
   BOOST_CHECK( typeid( detail::iterator_traits<char*>::value_type )        == typeid( char ) );
@@ -50,6 +50,8 @@ void traits_detail_test()
 
 void stl_iterator_test()
 {
+  using namespace boost::tupple;
+
   std::string str = "Yukon ho!";
   int  prime_array[10] = {2,3,5,7,11,13,17,19,23,29};
   std::vector<int> prime( prime_array, prime_array+10 );
@@ -107,6 +109,8 @@ void stl_iterator_test()
 
 void pointer_test()
 {
+  using namespace boost::tupple;
+
   char str[10]   = "Yukon ho!";
   int  prime[10] = {2,3,5,7,11,13,17,19,23,29};
 
