@@ -5,11 +5,12 @@
 // This software is provided "as is" without express or implied
 // warranty, and with no claim as to its suitability for any purpose.
 
-#ifndef FUNCTION_VIEW_HPP
-#define FUNCTION_VIEW_HPP
+#ifndef BOOST_VIEW_FUNCTION_VIEW_HPP
+#define BOOST_VIEW_FUNCTION_VIEW_HPP
 
-#include <boost/config.hpp>
-#include <boost/counting_iterator.hpp>
+
+#include <boost/iterator/counting_iterator.hpp>
+#include <boost/iterator/transform_iterator.hpp>
 
 #include "detail/traits_detail.hpp"
 
@@ -49,16 +50,12 @@ public:
   typedef function_view<FunctionT,ArgT,ResT> self_type;
 
   typedef traits::adapted_iterator_traits<
-             boost::transform_iterator_generator<
-               FunctionT, boost::counting_iterator_generator< ArgT >::type >::type,
-             boost::transform_iterator_generator<
-               FunctionT, boost::counting_iterator_generator< 
-#ifndef BOOST_MSVC
-               const
-#endif               
-                     ArgT >::type >::type
+             boost::transform_iterator<
+               FunctionT, boost::counting_iterator< ArgT > >,
+             boost::transform_iterator<
+               FunctionT, boost::counting_iterator< ArgT > >
            > iter_traits;
-           
+
   typedef traits::default_container_traits<
              ArgT,
                // size_type is the return type of operator-( argument_type,argument_type ).
@@ -68,22 +65,22 @@ public:
            > cont_traits;
 
   /// @name The traits types visible to the public.
-  //@{           
+  //@{
   typedef typename iter_traits::value_type       value_type;
-  
+
   typedef typename iter_traits::iterator         iterator;
   typedef typename iter_traits::const_iterator   const_iterator;
   typedef typename iter_traits::reference        reference;
   typedef typename iter_traits::const_reference  const_reference;
   typedef typename iter_traits::pointer          pointer;
   typedef typename iter_traits::const_pointer    const_pointer;
-  
+
   typedef typename iter_traits::difference_type  difference_type;
-  
+
   typedef typename cont_traits::size_type        size_type;
   typedef typename cont_traits::index_type       index_type;
   typedef typename cont_traits::data_type        data_type;
-  
+
   //@}
 
 
@@ -130,30 +127,31 @@ public:
   /// Basically, for a function_view v which has g as the generating function,
   /// writing v[n] is the same as writing g(n).
 
-  const data_type operator[]( index_type n ) const 
-  { 
-    typedef typename boost::counting_iterator_generator< ArgT >::traits::iterator_category 
-                     category_type;
-    return access< category_type >( n );
+  const data_type operator[]( index_type n ) const
+  {
+   typedef typename boost::detail::iterator_traits<
+                      boost::counting_iterator< ArgT >
+                    >::iterator_category category_type;
+    return access( n, category_type() );
   }
 
   //@}
 
 protected:
-  // Depending on the iterator category, operator[] might select one of 
+  // Depending on the iterator category, operator[] might select one of
   // two access functions:
 
-  template<class CategoryTag> const data_type access( index_type n ) const
+  template<class CategoryTag> const data_type access( index_type n, CategoryTag dummy ) const
   { return g(n); }
 
 #if 0 // Does not work for gcc-3.2 - is this even legal?
   template<> const data_type access< std::random_access_iterator_tag >( index_type n ) const
-  { return begin()[boost::counting_iterator_generator< ArgT >::type(n)-b]; }
+  { return begin()[boost::counting_iterator< ArgT >(n)-b]; }
 #endif
 
 protected:
   FunctionT g;
-  boost::counting_iterator_generator< ArgT >::type b,e;
+  boost::counting_iterator< ArgT > b,e;
 };
 
 

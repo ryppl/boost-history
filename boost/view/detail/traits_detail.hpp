@@ -1,12 +1,12 @@
 
-// Copyright (C) 2001, 2002 Roland Richter (roland@flll.jku.at)
+// Copyright (C) 2001-2003 Roland Richter <roland@flll.jku.at>
 // Permission to copy, use, modify, sell and distribute this software
 // is granted provided this copyright notice appears in all copies.
 // This software is provided "as is" without express or implied
 // warranty, and with no claim as to its suitability for any purpose.
 
-#ifndef VIEW_TRAITS_DETAIL_HPP
-#define VIEW_TRAITS_DETAIL_HPP
+#ifndef BOOST_VIEW_TRAITS_DETAIL_HPP
+#define BOOST_VIEW_TRAITS_DETAIL_HPP
 
 #include <boost/config.hpp>
 #include <boost/detail/iterator.hpp>
@@ -91,11 +91,11 @@ struct adapted_iterator_traits
 
   // These are specific to iterator_adapted types, yet sometimes necessary:
 
-  typedef typename AdaptedT::base_type base_iterator;
-  typedef typename ConstAdaptedT::base_type const_base_iterator;
+  //typedef typename AdaptedT::base_type base_iterator;
+  //typedef typename ConstAdaptedT::base_type const_base_iterator;
 
-  typedef typename AdaptedT::policies_type   policies_type;
-  typedef typename ConstAdaptedT::policies_type const_policies_type;
+  //typedef typename AdaptedT::policies_type   policies_type;
+  //typedef typename ConstAdaptedT::policies_type const_policies_type;
 
   // Not contained:
 

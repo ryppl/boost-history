@@ -5,10 +5,10 @@
 // This software is provided "as is" without express or implied
 // warranty, and with no claim as to its suitability for any purpose.
 
-#ifndef TRANSFORM_VIEW_HPP
-#define TRANSFORM_VIEW_HPP
+#ifndef BOOST_VIEW_TRANSFORM_VIEW_HPP
+#define BOOST_VIEW_TRANSFORM_VIEW_HPP
 
-#include <boost/iterator_adaptors.hpp>
+#include <boost/iterator/transform_iterator.hpp>
 
 #include "detail/traits_detail.hpp"
 #include "detail/ownership_detail.hpp"
@@ -17,7 +17,7 @@ namespace boost {
   namespace view {
 
 /**
- * @brief A view which returns the elements of the underlying collection, 
+ * @brief A view which returns the elements of the underlying collection,
  *        transformed by a function.
  *
  * <h2>Template paramters</h2>
@@ -30,42 +30,42 @@ class transform_view
 {
 private:
   typedef traits::adapted_iterator_traits<
-             boost::transform_iterator_generator<
-               FunctionT, typename ownership::wrap<ContainerT>::domain::iterator >::type,
-             boost::transform_iterator_generator<
-               FunctionT, typename ownership::wrap<ContainerT>::domain::const_iterator >::type
+             boost::transform_iterator<
+               FunctionT, typename ownership::wrap<ContainerT>::domain::iterator >,
+             boost::transform_iterator<
+               FunctionT, typename ownership::wrap<ContainerT>::domain::const_iterator >
            > iter_traits;
-           
+
   typedef traits::adapted_container_traits<
              ownership::wrap<ContainerT>::domain,
              typename traits::index_data_traits< typename ownership::wrap<ContainerT>::domain >::index_type,
              typename FunctionT::result_type
-           > cont_traits;          
+           > cont_traits;
 
 public:
   /// The view's own type (i.e. transform_view<...>).
   typedef transform_view< ContainerT, FunctionT > self_type;
-  
+
   /// The type of the underlying container.
   typedef ownership::wrap<ContainerT>::domain domain_type;
 
   /// @name The traits types visible to the public.
-  //@{           
+  //@{
   typedef typename iter_traits::value_type       value_type;
-  
+
   typedef typename iter_traits::iterator         iterator;
   typedef typename iter_traits::const_iterator   const_iterator;
   typedef typename iter_traits::reference        reference;
   typedef typename iter_traits::const_reference  const_reference;
   typedef typename iter_traits::pointer          pointer;
   typedef typename iter_traits::const_pointer    const_pointer;
-  
+
   typedef typename iter_traits::difference_type  difference_type;
-  
+
   typedef typename cont_traits::size_type        size_type;
   typedef typename cont_traits::index_type       index_type;
   typedef typename cont_traits::data_type        data_type;
-  
+
   //@}
 
   /// Creates a view of container \c theData transformed by the function \c theF.

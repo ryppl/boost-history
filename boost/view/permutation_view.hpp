@@ -5,11 +5,11 @@
 // This software is provided "as is" without express or implied
 // warranty, and with no claim as to its suitability for any purpose.
 
-#ifndef PERMUTATION_VIEW_HPP
-#define PERMUTATION_VIEW_HPP
+#ifndef BOOST_VIEW_PERMUTATION_VIEW_HPP
+#define BOOST_VIEW_PERMUTATION_VIEW_HPP
 
 #include <boost/config.hpp>
-#include <boost/permutation_iterator.hpp>
+#include <boost/iterator/permutation_iterator.hpp>
 
 #include "detail/traits_detail.hpp"
 #include "detail/ownership_detail.hpp"
@@ -33,33 +33,29 @@ public:
   typedef permutation_view<ContainerT,ReindexT> self_type;
 
   typedef traits::adapted_iterator_traits<
-#ifndef BOOST_MSVC
-            boost::permutation_iterator_generator<
-              typename ownership::wrap<ContainerT>::domain::iterator,
-              typename ReindexT::iterator
-            >::type,
-            boost::permutation_iterator_generator<
-              typename ownership::wrap<ContainerT>::domain::const_iterator,
-              typename ReindexT::const_iterator
-            >::type
-#else // MSVC++ wants the value_type explicitely.
-            boost::iterator_adaptor<
-              typename ownership::wrap<ContainerT>::domain::iterator,
-              boost::permutation_iterator_policies< typename ReindexT::iterator >,
-              typename ownership::wrap<ContainerT>::domain::value_type
-            >,
-            boost::iterator_adaptor<
-              typename ownership::wrap<ContainerT>::domain::const_iterator,
-              boost::permutation_iterator_policies< typename ReindexT::const_iterator >,
-              typename ownership::wrap<ContainerT>::domain::value_type
-            >
+            boost::permutation_iterator<
+              typename ownership::wrap<ContainerT>::domain::iterator
+            , typename ReindexT::iterator
+#ifdef BOOST_MSVC
+            , boost::use_default
+            , boost::use_default
+            , typename ownership::wrap<ContainerT>::domain::reference
 #endif
+            >,
+            boost::permutation_iterator<
+              typename ownership::wrap<ContainerT>::domain::const_iterator
+            , typename ReindexT::const_iterator
+#ifdef BOOST_MSVC
+            , boost::use_default
+            , boost::use_default
+            , typename ownership::wrap<ContainerT>::domain::const_reference
+#endif
+            >
           > iter_traits;
 
   typedef traits::adapted_container_traits<
             ReindexT,
             //### Should be index_type, which is not defined for every container
-
             typename ReindexT::size_type,
             typename ownership::wrap<ContainerT>::domain::reference
           > cont_traits;

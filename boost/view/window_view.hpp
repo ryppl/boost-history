@@ -5,10 +5,10 @@
 // This software is provided "as is" without express or implied
 // warranty, and with no claim as to its suitability for any purpose.
 
-#ifndef WINDOW_VIEW_HPP
-#define WINDOW_VIEW_HPP
+#ifndef BOOST_VIEW_WINDOW_VIEW_HPP
+#define BOOST_VIEW_WINDOW_VIEW_HPP
 
-#include <boost/iterator_adaptors.hpp>
+#include <boost/config.hpp>
 #include "cyclic_iterator.hpp"
 
 #include "detail/traits_detail.hpp"
@@ -32,36 +32,44 @@ public:
   typedef window_view<ContainerT> self_type;
 
   typedef traits::adapted_iterator_traits<
-          boost::view::cyclic_iterator_generator<
-              typename ownership::wrap<ContainerT>::domain::iterator,
-              typename ownership::wrap<ContainerT>::domain::value_type
-           >::type,
-           boost::view::cyclic_iterator_generator<
-              typename ownership::wrap<ContainerT>::domain::const_iterator,
-              typename ownership::wrap<ContainerT>::domain::value_type
-           >::type
+          boost::cyclic_iterator<
+              typename ownership::wrap<ContainerT>::domain::iterator
+#ifdef BOOST_MSVC
+            , boost::use_default
+            , boost::use_default
+            , typename ownership::wrap<ContainerT>::domain::reference
+#endif
+           >,
+           boost::cyclic_iterator<
+              typename ownership::wrap<ContainerT>::domain::const_iterator
+#ifdef BOOST_MSVC
+            , boost::use_default
+            , boost::use_default
+            , typename ownership::wrap<ContainerT>::domain::const_reference
+#endif
+           >
         > iter_traits;
 
   typedef traits::adapted_container_traits< ownership::wrap<ContainerT>::domain >
           cont_traits;
 
   /// @name The traits types visible to the public.
-  //@{           
+  //@{
   typedef typename iter_traits::value_type       value_type;
-  
+
   typedef typename iter_traits::iterator         iterator;
   typedef typename iter_traits::const_iterator   const_iterator;
   typedef typename iter_traits::reference        reference;
   typedef typename iter_traits::const_reference  const_reference;
   typedef typename iter_traits::pointer          pointer;
   typedef typename iter_traits::const_pointer    const_pointer;
-  
+
   typedef typename iter_traits::difference_type  difference_type;
-  
+
   typedef typename cont_traits::size_type        size_type;
   typedef typename cont_traits::index_type       index_type;
   typedef typename cont_traits::data_type        data_type;
-  
+
   //@}
 
   /// The type of the underlying container.
@@ -140,16 +148,12 @@ public:
   {
     if( theSize >= 0 )
     {
-      b = make_cyclic_iterator( *data ) + theI;
+      b = iterator( data->begin(), data->end() ) + theI;
       e = b + theSize;
     }
     else // theSize < 0
     {
-      // Sign of "-11 % 7" would be machine-dependent
-      //index_type theJ = ( theI - ( (-theSize) % data->size() ) + data->size() ) % data->size();
-      //b = make_cyclic_iterator( *data ) + theJ;
-      //e = b - theSize;
-      b = make_cyclic_iterator( *data, true ) - theI;
+      b = iterator( data->begin(), data->end(), true ) - theI;
       e = b - theSize;
     }
 

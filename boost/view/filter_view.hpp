@@ -1,14 +1,15 @@
 
-// Copyright (C) 2001,2002 Roland Richter (roland@flll.jku.at)
+// Copyright (C) 2001-2003 Roland Richter <roland@flll.jku.at>
 // Permission to copy, use, modify, sell and distribute this software
 // is granted provided this copyright notice appears in all copies.
 // This software is provided "as is" without express or implied
 // warranty, and with no claim as to its suitability for any purpose.
 
-#ifndef FILTER_VIEW_HPP
-#define FILTER_VIEW_HPP
+#ifndef BOOST_VIEW_FILTER_VIEW_HPP
+#define BOOST_VIEW_FILTER_VIEW_HPP
 
-#include <boost/iterator_adaptors.hpp>
+#include <boost/config.hpp>
+#include <boost/iterator/filter_iterator.hpp>
 
 #include "detail/traits_detail.hpp"
 #include "detail/ownership_detail.hpp"
@@ -32,40 +33,44 @@ class filter_view
 public:
   /// The view's own type.
   typedef filter_view<ContainerT,PredicateT> self_type;
-  
+
   typedef traits::adapted_iterator_traits<
-           boost::filter_iterator_generator<
+           boost::filter_iterator<
              PredicateT,
-             typename ownership::wrap<ContainerT>::domain::iterator,
-             typename ownership::wrap<ContainerT>::domain::value_type // Can not be deduced by MSVC?
-           >::type,
-           boost::filter_iterator_generator<
+             typename ownership::wrap<ContainerT>::domain::iterator
+#ifdef BOOST_MSVC
+           , typename ownership::wrap<ContainerT>::domain::reference
+#endif
+           >,
+           boost::filter_iterator<
              PredicateT,
-             typename ownership::wrap<ContainerT>::domain::const_iterator,
-             typename ownership::wrap<ContainerT>::domain::value_type 
-           >::type
+             typename ownership::wrap<ContainerT>::domain::const_iterator
+#ifdef BOOST_MSVC
+           , typename ownership::wrap<ContainerT>::domain::const_reference
+#endif
+           >
          > iter_traits;
-         
+
   typedef traits::adapted_container_traits< ownership::wrap<ContainerT>::domain >
            cont_traits;
 
   /// @name The traits types visible to the public.
-  //@{           
+  //@{
   typedef typename iter_traits::value_type       value_type;
-  
+
   typedef typename iter_traits::iterator         iterator;
   typedef typename iter_traits::const_iterator   const_iterator;
   typedef typename iter_traits::reference        reference;
   typedef typename iter_traits::const_reference  const_reference;
   typedef typename iter_traits::pointer          pointer;
   typedef typename iter_traits::const_pointer    const_pointer;
-  
+
   typedef typename iter_traits::difference_type  difference_type;
-  
+
   typedef typename cont_traits::size_type        size_type;
   typedef typename cont_traits::index_type       index_type;
   typedef typename cont_traits::data_type        data_type;
-  
+
   //@}
 
   /// The type of the underlying container.
@@ -98,17 +103,17 @@ public:
 
   /// Returns a const_iterator pointing to the begin of the view.
   const_iterator begin() const
-  { return const_iterator( data->begin(), iter_traits::const_policies_type( p,data->end() ) ); }
+  { return const_iterator( p, data->begin(), data->end() ); }
   /// Returns a iterator pointing to the begin of the view.
   iterator begin()
-  { return iterator( data->begin(), iter_traits::policies_type( p,data->end() ) ); }
+  { return iterator( p, data->begin(), data->end() ); }
 
   /// Returns a const_iterator pointing to the end of the view.
   const_iterator end() const
-  { return const_iterator( data->end(), iter_traits::const_policies_type( p,data->end() ) ); }
+  { return const_iterator( p, data->end(), data->end() ); }
   /// Returns a iterator pointing to the end of the view.
   iterator end()
-  { return iterator( data->end(), iter_traits::policies_type( p,data->end() ) ); }
+  { return iterator( p, data->end(), data->end() ); }
 
   /// Returns a const_reference for the first element of the view.
   const_reference front() const { return *(begin()); }
@@ -120,7 +125,7 @@ public:
 
 private:
   ownership::wrap<ContainerT>::type data;
-  PredicateT             p;
+  PredicateT p;
 };
 
 
