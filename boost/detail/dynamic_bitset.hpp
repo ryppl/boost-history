@@ -144,7 +144,27 @@ namespace boost {
     // -------------------------------------------------------
 
 
+    // Some library implementations simply return a dummy
+    // value such as
+    //
+    //   size_type(-1) / sizeof(T)
+    //
+    // from vector<>::max_size. This tries to get out more
+    // meaningful info.
+    //
+    template <typename T>
+    typename T::size_type vector_max_size_workaround(const T & v) {
 
+      typedef typename T::allocator_type allocator_type;
+
+      const typename allocator_type::size_type alloc_max =
+                                                  v.get_allocator().max_size();
+      const typename T::size_type container_max = v.max_size();
+
+      return alloc_max < container_max?
+                    alloc_max :
+                    container_max;
+    }
 
   } // namespace detail
 
