@@ -12,7 +12,7 @@
 
 namespace boost { namespace langbinding { namespace converter {
 
-}}} // namespace boost::langbinding::function
+}}} // namespace boost::langbinding::converter
 
 #endif // CONVERTER_040922_HPP
 
