@@ -26,7 +26,6 @@
 #   include <boost/mpl/if.hpp>
 #   include <boost/mpl/identity.hpp>
 #   include <boost/mpl/bool.hpp>
-#   include <boost/mpl/void.hpp>
 #   include <boost/mpl/aux_/na_spec.hpp>
 #   include <boost/mpl/aux_/lambda_support.hpp>
 #   include <boost/mpl/aux_/template_arity.hpp>
@@ -98,7 +97,7 @@ template< BOOST_MPL_AUX_NTTP_DECL(int, arity_) > struct lambda_impl
 
 template<
       typename BOOST_MPL_AUX_NA_PARAM(T)
-    , typename Tag = void_
+    , typename BOOST_MPL_AUX_NA_PARAM(Tag)
     , typename Protect = true_
     >
 struct lambda

@@ -26,9 +26,23 @@ struct less_impl
 };
 
 /// for Digital Mars C++/compilers with no CTPS support
-
 template<> struct less_impl< na,na >
+{
+    template< typename U1, typename U2 > struct apply
+    {
+        typedef apply type;
+    };
+};
 
+template< typename Tag > struct less_impl< na,Tag >
+{
+    template< typename U1, typename U2 > struct apply
+    {
+        typedef apply type;
+    };
+};
+
+template< typename Tag > struct less_impl< Tag,na >
 {
     template< typename U1, typename U2 > struct apply
     {

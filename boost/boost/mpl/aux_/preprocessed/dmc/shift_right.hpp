@@ -27,9 +27,23 @@ struct shift_right_impl
 };
 
 /// for Digital Mars C++/compilers with no CTPS support
-
 template<> struct shift_right_impl< na,na >
+{
+    template< typename U1, typename U2 > struct apply
+    {
+        typedef apply type;
+    };
+};
 
+template< typename Tag > struct shift_right_impl< na,Tag >
+{
+    template< typename U1, typename U2 > struct apply
+    {
+        typedef apply type;
+    };
+};
+
+template< typename Tag > struct shift_right_impl< Tag,na >
 {
     template< typename U1, typename U2 > struct apply
     {

@@ -17,11 +17,10 @@
 
 BOOST_MPL_HAS_XXX_TRAIT_DEF(xxx)
 
-struct a1;
-struct a2 {};
-struct a3 { void xxx(); };
-struct a4 { int xxx; };
-struct a5 { static int xxx(); };
+struct a1 {};
+struct a2 { void xxx(); };
+struct a3 { int xxx; };
+struct a4 { static int xxx(); };
 
 struct b1 { typedef int xxx; };
 struct b2 { struct xxx; };
@@ -48,13 +47,16 @@ MPL_TEST_CASE()
     MPL_ASSERT_NOT(( has_xxx<int[]> ));
     MPL_ASSERT_NOT(( has_xxx<int (*)()> ));
 
+    MPL_ASSERT_NOT(( has_xxx<a2> ));
     MPL_ASSERT_NOT(( has_xxx<a3> ));
     MPL_ASSERT_NOT(( has_xxx<a4> ));
-    MPL_ASSERT_NOT(( has_xxx<a5> ));
+    MPL_ASSERT_NOT(( has_xxx< enum_ > ));
 #endif
     MPL_ASSERT_NOT(( has_xxx<a1> ));
-    MPL_ASSERT_NOT(( has_xxx<a2> ));
     MPL_ASSERT_NOT(( has_xxx< outer< inner<int> > > ));
+    MPL_ASSERT_NOT(( has_xxx< incomplete > ));
+    MPL_ASSERT_NOT(( has_xxx< abstract > ));
+    MPL_ASSERT_NOT(( has_xxx< noncopyable > ));
 
 #if !defined(HAS_XXX_ASSERT)
 #   define HAS_XXX_ASSERT(x) MPL_ASSERT(x)

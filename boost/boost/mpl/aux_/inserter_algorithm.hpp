@@ -5,9 +5,9 @@
 // Copyright Aleksey Gurtovoy 2003-2004
 // Copyright David Abrahams 2003-2004
 //
-// Use, modification and distribution are subject to the Boost Software 
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
-// at http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
@@ -93,7 +93,6 @@ BOOST_MPL_AUX_NA_SPEC(arity, reverse_##name) \
 
 #   define BOOST_MPL_AUX_INSERTER_ALGORITHM_DEF(arity, name) \
 BOOST_MPL_AUX_COMMON_NAME_WKND(name) \
-BOOST_MPL_AUX_AGLORITHM_NAMESPACE_BEGIN \
 template< \
       BOOST_MPL_PP_PARAMS(BOOST_PP_DEC(arity), typename P) \
     > \
@@ -150,12 +149,10 @@ struct reverse_##name \
         >::type \
 { \
 }; \
-BOOST_MPL_AUX_AGLORITHM_NAMESPACE_END \
 BOOST_MPL_AUX_NA_SPEC(arity, name) \
 BOOST_MPL_AUX_NA_SPEC(arity, reverse_##name) \
 /**/
 
 #endif // BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
-
 
 #endif // BOOST_MPL_AUX_INSERTER_ALGORITHM_HPP_INCLUDED

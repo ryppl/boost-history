@@ -24,6 +24,7 @@ namespace boost { namespace mpl { namespace aux {
 template< bool > struct msvc_eti_base_impl
 {
     template< typename T > struct result_
+        : T
     {
         typedef T type;
     };
@@ -51,6 +52,7 @@ template<> struct msvc_eti_base<int>
 #else
 
 template< typename T > struct msvc_eti_base
+    : T
 {
     typedef T type;
 };

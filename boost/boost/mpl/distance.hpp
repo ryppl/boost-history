@@ -20,6 +20,7 @@
 #include <boost/mpl/long.hpp>
 #include <boost/mpl/next.hpp>
 #include <boost/mpl/tag.hpp>
+#include <boost/mpl/apply_wrap.hpp>
 #include <boost/mpl/aux_/msvc_eti_base.hpp>
 #include <boost/mpl/aux_/na_spec.hpp>
 
@@ -33,7 +34,7 @@ template< typename Tag > struct distance_impl
               iterator_range<First,Last>
             , long_<0>
             , next<>
-            >::type >::type
+            >::type >
     {
     };
 };
@@ -43,8 +44,11 @@ template<
     , typename BOOST_MPL_AUX_NA_PARAM(Last)
     >
 struct distance
-    : distance_impl< typename tag<First>::type >
-        ::template apply<First,Last>
+    : apply_wrap2<
+          distance_impl< typename tag<First>::type >
+        , First
+        , Last
+        >
 {
 };
 

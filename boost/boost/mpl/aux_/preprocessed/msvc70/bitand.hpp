@@ -30,9 +30,23 @@ struct bitand_impl
 };
 
 /// for Digital Mars C++/compilers with no CTPS support
+template<> struct bitand_impl< na,na >
+{
+    template< typename U1, typename U2 > struct apply
+    {
+        typedef apply type;
+    };
+};
 
-template<> struct bitand_impl< na,na,0,0 >
+template<> struct bitand_impl< na,integral_c_tag >
+{
+    template< typename U1, typename U2 > struct apply
+    {
+        typedef apply type;
+    };
+};
 
+template<> struct bitand_impl< integral_c_tag,na >
 {
     template< typename U1, typename U2 > struct apply
     {
@@ -41,8 +55,8 @@ template<> struct bitand_impl< na,na,0,0 >
 };
 
 template< typename T > struct bitand_tag
+    : tag< T,na >
 {
-    typedef typename T::tag type;
 };
 
 template<

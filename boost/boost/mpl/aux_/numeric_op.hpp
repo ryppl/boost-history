@@ -21,6 +21,7 @@
 #   include <boost/mpl/numeric_cast.hpp>
 #   include <boost/mpl/apply_wrap.hpp>
 #   include <boost/mpl/if.hpp>
+#   include <boost/mpl/tag.hpp>
 #   include <boost/mpl/aux_/na.hpp>
 #   include <boost/mpl/aux_/na_spec.hpp>
 #   include <boost/mpl/aux_/lambda_support.hpp>
@@ -90,11 +91,7 @@ struct AUX778076_OP_IMPL_NAME
 };
 
 /// for Digital Mars C++/compilers with no CTPS support
-#if !BOOST_WORKAROUND(BOOST_MSVC, <= 1300)
 template<> struct AUX778076_OP_IMPL_NAME<na,na>
-#else
-template<> struct AUX778076_OP_IMPL_NAME<na,na,0,0>
-#endif
 {
     template< typename U1, typename U2 > struct apply 
     {
@@ -102,11 +99,53 @@ template<> struct AUX778076_OP_IMPL_NAME<na,na,0,0>
     };
 };
 
+#if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
+template< typename Tag > struct AUX778076_OP_IMPL_NAME<na,Tag>
+{
+    template< typename U1, typename U2 > struct apply 
+    {
+        typedef apply type;
+    };
+};
 
+template< typename Tag > struct AUX778076_OP_IMPL_NAME<Tag,na>
+{
+    template< typename U1, typename U2 > struct apply 
+    {
+        typedef apply type;
+    };
+};
+#else
+template<> struct AUX778076_OP_IMPL_NAME<na,integral_c_tag>
+{
+    template< typename U1, typename U2 > struct apply 
+    {
+        typedef apply type;
+    };
+};
+
+template<> struct AUX778076_OP_IMPL_NAME<integral_c_tag,na>
+{
+    template< typename U1, typename U2 > struct apply 
+    {
+        typedef apply type;
+    };
+};
+#endif
+
+
+#if defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION) \
+    && BOOST_WORKAROUND(BOOST_MSVC, != 1200)
+template< typename T > struct AUX778076_OP_TAG_NAME
+    : tag<T,na>
+{
+};
+#else
 template< typename T > struct AUX778076_OP_TAG_NAME
 {
     typedef typename T::tag type;
 };
+#endif
 
 
 #if AUX778076_OP_ARITY == 2

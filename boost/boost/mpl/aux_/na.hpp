@@ -21,7 +21,11 @@
 BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_OPEN
 
 // n.a. == not available
-struct na { enum { value = 0 }; };
+struct na 
+{
+    typedef na type;
+    enum { value = 0 };
+};
 
 template< typename T >
 struct is_na

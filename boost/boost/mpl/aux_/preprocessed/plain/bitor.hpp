@@ -27,9 +27,23 @@ struct bitor_impl
 };
 
 /// for Digital Mars C++/compilers with no CTPS support
-
 template<> struct bitor_impl< na,na >
+{
+    template< typename U1, typename U2 > struct apply
+    {
+        typedef apply type;
+    };
+};
 
+template< typename Tag > struct bitor_impl< na,Tag >
+{
+    template< typename U1, typename U2 > struct apply
+    {
+        typedef apply type;
+    };
+};
+
+template< typename Tag > struct bitor_impl< Tag,na >
 {
     template< typename U1, typename U2 > struct apply
     {

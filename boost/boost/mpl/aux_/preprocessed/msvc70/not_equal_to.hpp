@@ -29,9 +29,23 @@ struct not_equal_to_impl
 };
 
 /// for Digital Mars C++/compilers with no CTPS support
+template<> struct not_equal_to_impl< na,na >
+{
+    template< typename U1, typename U2 > struct apply
+    {
+        typedef apply type;
+    };
+};
 
-template<> struct not_equal_to_impl< na,na,0,0 >
+template<> struct not_equal_to_impl< na,integral_c_tag >
+{
+    template< typename U1, typename U2 > struct apply
+    {
+        typedef apply type;
+    };
+};
 
+template<> struct not_equal_to_impl< integral_c_tag,na >
 {
     template< typename U1, typename U2 > struct apply
     {
@@ -40,8 +54,8 @@ template<> struct not_equal_to_impl< na,na,0,0 >
 };
 
 template< typename T > struct not_equal_to_tag
+    : tag< T,na >
 {
-    typedef typename T::tag type;
 };
 
 template<

@@ -88,6 +88,10 @@ struct name<BOOST_MPL_PP_PARAMS(i,T)>::rebind \
 
 #else // __EDG_VERSION__
 
+namespace boost { namespace mpl { namespace aux {
+struct has_rebind_tag;
+}}}
+
 #   define BOOST_MPL_AUX_LAMBDA_SUPPORT_SPEC(i, name, params) \
     BOOST_STATIC_CONSTANT(int, arity = i); \
     BOOST_PP_LIST_FOR_EACH_I_R( \
@@ -100,10 +104,19 @@ struct name<BOOST_MPL_PP_PARAMS(i,T)>::rebind \
     typedef BOOST_PP_CAT(name,_rebind) rebind; \
 /**/
 
+#   define BOOST_MPL_AUX_LAMBDA_SUPPORT_HAS_REBIND(i, name, params) \
+template< BOOST_MPL_PP_PARAMS(i,typename T) > \
+char operator|( \
+      ::boost::mpl::aux::has_rebind_tag \
+    , name<BOOST_MPL_PP_PARAMS(i,T)>* \
+    ); \
+/**/
+
 #   if !defined(__BORLANDC__)
 #   define BOOST_MPL_AUX_LAMBDA_SUPPORT(i, name, params) \
     BOOST_MPL_AUX_LAMBDA_SUPPORT_SPEC(i, name, params) \
 }; \
+BOOST_MPL_AUX_LAMBDA_SUPPORT_HAS_REBIND(i, name, params) \
 class BOOST_PP_CAT(name,_rebind) \
 { \
  public: \
@@ -116,6 +129,7 @@ class BOOST_PP_CAT(name,_rebind) \
 #   define BOOST_MPL_AUX_LAMBDA_SUPPORT(i, name, params) \
     BOOST_MPL_AUX_LAMBDA_SUPPORT_SPEC(i, name, params) \
 }; \
+BOOST_MPL_AUX_LAMBDA_SUPPORT_HAS_REBIND(i, name, params) \
 class BOOST_PP_CAT(name,_rebind) \
 { \
  public: \

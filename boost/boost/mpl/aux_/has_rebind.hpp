@@ -14,24 +14,49 @@
 // $Date$
 // $Revision$
 
-#include <boost/mpl/has_xxx.hpp>
-#include <boost/mpl/if.hpp>
-#include <boost/mpl/bool.hpp>
-#include <boost/type_traits/is_class.hpp>
+#include <boost/mpl/aux_/config/workaround.hpp>
+#include <boost/mpl/aux_/config/msvc.hpp>
+
+#if BOOST_WORKAROUND(BOOST_MSVC, <= 1200)
+#   include <boost/mpl/has_xxx.hpp>
+#   include <boost/mpl/if.hpp>
+#   include <boost/mpl/bool.hpp>
+#   include <boost/mpl/aux_/msvc_is_class.hpp>
+#else
+#   include <boost/mpl/aux_/config/static_constant.hpp>
+#endif
 
 namespace boost { namespace mpl { namespace aux {
+
+#if BOOST_WORKAROUND(BOOST_MSVC, <= 1200)
 
 BOOST_MPL_HAS_XXX_TRAIT_NAMED_DEF(has_rebind_impl, rebind, false)
 
 template< typename T >
 struct has_rebind
-    : if_c< 
-          ::boost::is_class<T>::value
+    : if_< 
+          msvc_is_class<T>
         , has_rebind_impl<T>
         , bool_<false>
         >::type
 {
 };
+
+#else 
+
+struct has_rebind_tag {};
+yes_tag operator|(has_rebind_tag, void const volatile*);
+
+template< typename T >
+struct has_rebind
+{
+    static T* get();
+    BOOST_STATIC_CONSTANT(bool, value = 
+          sizeof(has_rebind_tag() | get()) == sizeof(char)
+        );
+};
+
+#endif // BOOST_MSVC
 
 }}}
 

@@ -82,6 +82,15 @@ struct lambda< \
 { \
     typedef name< BOOST_MPL_AUX_NA_PARAMS(i) > type; \
 }; \
+template<> \
+struct lambda< \
+      name< BOOST_MPL_AUX_NA_PARAMS(i) > \
+    , na \
+    , false_ \
+    > \
+{ \
+    typedef name< BOOST_MPL_AUX_NA_PARAMS(i) > type; \
+}; \
 /**/
 #else
 #   define BOOST_MPL_AUX_NA_SPEC_LAMBDA(i, name) \

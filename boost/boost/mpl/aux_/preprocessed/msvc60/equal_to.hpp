@@ -29,9 +29,23 @@ struct equal_to_impl
 };
 
 /// for Digital Mars C++/compilers with no CTPS support
+template<> struct equal_to_impl< na,na >
+{
+    template< typename U1, typename U2 > struct apply
+    {
+        typedef apply type;
+    };
+};
 
-template<> struct equal_to_impl< na,na,0,0 >
+template<> struct equal_to_impl< na,integral_c_tag >
+{
+    template< typename U1, typename U2 > struct apply
+    {
+        typedef apply type;
+    };
+};
 
+template<> struct equal_to_impl< integral_c_tag,na >
 {
     template< typename U1, typename U2 > struct apply
     {

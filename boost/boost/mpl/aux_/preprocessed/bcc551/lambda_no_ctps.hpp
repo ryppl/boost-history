@@ -200,7 +200,7 @@ template<> struct lambda_impl<5>
 
 template<
       typename BOOST_MPL_AUX_NA_PARAM(T)
-    , typename Tag = void_
+    , typename BOOST_MPL_AUX_NA_PARAM(Tag)
     , typename Protect = true_
     >
 struct lambda
