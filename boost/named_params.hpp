@@ -19,6 +19,19 @@
 #include <boost/iterator/detail/config_def.hpp>
 #include <boost/python/detail/is_xxx.hpp>
 
+#include <boost/preprocessor/repetition/enum.hpp>
+#include <boost/preprocessor/repetition/enum_params.hpp>
+#include <boost/preprocessor/repetition/enum_trailing_params.hpp>
+#include <boost/preprocessor/arithmetic/sub.hpp>
+#include <boost/preprocessor/repetition/enum_shifted.hpp>
+#include <boost/preprocessor/repetition/enum_binary_params.hpp>
+#include <boost/preprocessor/repetition/enum_shifted_params.hpp>
+#include <boost/preprocessor/iteration/iterate.hpp>
+#include <boost/preprocessor/facilities/intercept.hpp>
+#include <boost/preprocessor/cat.hpp>
+
+#define BOOST_NAMED_PARAMS_MAX_ARITY 5
+
 #if defined(__GNUC__) && __GNUC__ < 3
 #   define BOOST_NAMED_PARAMS_GCC2 1
 #else
@@ -96,7 +109,9 @@ namespace detail
   struct nil
   {
       nil() {}
-      nil(nil,nil,nil,nil,nil) {}
+      nil(BOOST_PP_ENUM_PARAMS(
+              BOOST_NAMED_PARAMS_MAX_ARITY, nil BOOST_PP_INTERCEPT
+      )) {}
 
 #if BOOST_WORKAROUND(BOOST_MSVC, <= 1300) || BOOST_NAMED_PARAMS_GCC2
       // A metafunction class which, given a keyword, returns the base
@@ -236,20 +251,12 @@ namespace detail
       list() {}
 
       template<
-          class A0
-        , class A1
-        , class A2
-        , class A3
-        , class A4
+          BOOST_PP_ENUM_PARAMS(BOOST_NAMED_PARAMS_MAX_ARITY, class A)
       >
       list(
-          const A0& a0
-        , const A1& a1
-        , const A2& a2
-        , const A3& a3
-        , const A4& a4
+          BOOST_PP_ENUM_BINARY_PARAMS(BOOST_NAMED_PARAMS_MAX_ARITY, A, const & a)
       )
-         : T(a1, a2, a3, a4, nil())
+         : T(BOOST_PP_ENUM_SHIFTED_PARAMS(BOOST_NAMED_PARAMS_MAX_ARITY, a), nil())
          , head(a0)
       {}
 
@@ -603,42 +610,40 @@ namespace detail
   //   Ui = Ti is named<...> ? Ti : named<Ki,Ti>
   //
   template<
-      class T0 = nil
-    , class T1 = nil
-    , class T2 = nil
-    , class T3 = nil
-    , class T4 = nil
+      BOOST_PP_ENUM_BINARY_PARAMS(
+          BOOST_NAMED_PARAMS_MAX_ARITY, class T, = nil BOOST_PP_INTERCEPT
+      )
   >
   struct make_named_list
   {
       template<
-          class K0
-        , class K1
-        , class K2
-        , class K3
-        , class K4
+          BOOST_PP_ENUM_PARAMS(BOOST_NAMED_PARAMS_MAX_ARITY, class K)
       >
       struct apply
       {
           typedef list<
               typename as_named<K0, T0>::type
-            , typename mpl::apply5<
-                  make_named_list<T1, T2, T3, T4, nil>
-                , K1, K2, K3, K4, nil
+            , typename BOOST_PP_CAT(mpl::apply, BOOST_NAMED_PARAMS_MAX_ARITY)<
+                  make_named_list<
+                      BOOST_PP_ENUM_SHIFTED_PARAMS(
+                          BOOST_NAMED_PARAMS_MAX_ARITY, T
+                      )
+                    , nil
+                  >
+                , BOOST_PP_ENUM_SHIFTED_PARAMS(BOOST_NAMED_PARAMS_MAX_ARITY, K)
+                , nil
               >::type
           > type;
       };
   };
 
   template<>
-  struct make_named_list<nil,nil,nil,nil,nil>
+  struct make_named_list<
+      BOOST_PP_ENUM_PARAMS(BOOST_NAMED_PARAMS_MAX_ARITY, nil BOOST_PP_INTERCEPT)
+  >
   {
       template<
-          class K0
-        , class K1
-        , class K2
-        , class K3
-        , class K4
+          BOOST_PP_ENUM_PARAMS(BOOST_NAMED_PARAMS_MAX_ARITY, class K)
       >
       struct apply
       {
@@ -647,22 +652,30 @@ namespace detail
   };
 } // namespace detail
 
+#define BOOST_KEYWORDS_TEMPLATE_ARGS(z, n, text) class BOOST_PP_CAT(K, n) = detail::nil
+
 template<
      class K0
-   , class K1 = detail::nil
-   , class K2 = detail::nil
-   , class K3 = detail::nil
-   , class K4 = detail::nil
+   , BOOST_PP_ENUM_SHIFTED(BOOST_NAMED_PARAMS_MAX_ARITY, BOOST_KEYWORDS_TEMPLATE_ARGS, _)
 >
 struct keywords
 {
-    typedef keywords<K0,K1,K2,K3,K4> self_t;
+
+#undef BOOST_KEYWORDS_TEMPLATE_ARGS
+
+    typedef keywords<
+        BOOST_PP_ENUM_PARAMS(BOOST_NAMED_PARAMS_MAX_ARITY, K)
+    > self_t;
 
 #ifndef BOOST_NO_SFINAE
     // if the elements of NamedList match the criteria of overload
     // resolution, returns a type which can be constructed from
     // self_t.  Otherwise, this is not a valid metafunction (no nested
     // ::type).
+
+# define BOOST_PASSES_PREDICATE(z, n, text) \
+    detail::keyword_passes_predicate<NamedList, BOOST_PP_CAT(K, n)>
+
     template<class NamedList>
     struct restrict_base
     {
@@ -670,37 +683,32 @@ struct keywords
         typedef mpl::apply1<
             detail::restrict_keywords<
                 typename mpl::and_<
-                    detail::keyword_passes_predicate<NamedList, K0>
-                  , detail::keyword_passes_predicate<NamedList, K1>
-                  , detail::keyword_passes_predicate<NamedList, K2>
-                  , detail::keyword_passes_predicate<NamedList, K3>
-                  , detail::keyword_passes_predicate<NamedList, K4>
+                    BOOST_PP_ENUM(BOOST_NAMED_PARAMS_MAX_ARITY, BOOST_PASSES_PREDICATE, _)
                 >::type
             >
           , self_t
         > type;
     };
+
+# undef BOOST_PASSES_PREDICATE
+    
 #endif
 
     // Instantiations are to be used as an optional argument to control SFINAE
     template<
-        class T0 = detail::nil // These are actual argument types
-      , class T1 = detail::nil
-      , class T2 = detail::nil
-      , class T3 = detail::nil
-      , class T4 = detail::nil
+        BOOST_PP_ENUM_BINARY_PARAMS(
+            BOOST_NAMED_PARAMS_MAX_ARITY, class T, = detail::nil BOOST_PP_INTERCEPT
+        )       
     >
     struct restrict
 #ifndef BOOST_NO_SFINAE
       : restrict_base<
             // Build a list of named<K,T> items for each keyword and actual 
-            BOOST_DEDUCED_TYPENAME mpl::apply5<
-                detail::make_named_list<T0,T1,T2,T3,T4>
-              , K0
-              , K1
-              , K2
-              , K3
-              , K4
+            BOOST_DEDUCED_TYPENAME BOOST_PP_CAT(mpl::apply, BOOST_NAMED_PARAMS_MAX_ARITY)<
+                detail::make_named_list<
+                    BOOST_PP_ENUM_PARAMS(BOOST_NAMED_PARAMS_MAX_ARITY, T)
+                >
+              , BOOST_PP_ENUM_PARAMS(BOOST_NAMED_PARAMS_MAX_ARITY, K)
             >::type
         >::type
 #endif 
@@ -715,117 +723,18 @@ struct keywords
        return detail::nil();
     }
 
+#define BOOST_PP_ITERATION_PARAMS_1 (3,( \
+        1,BOOST_NAMED_PARAMS_MAX_ARITY,<boost/detail/named_params_iterate.hpp> \
+    ))
+#include BOOST_PP_ITERATE()
 
-    template<class A0>
-    detail::list<
-        BOOST_DEDUCED_TYPENAME detail::as_named<K0, A0>::type
-    >
-    operator()(const A0& a0) const
-    {
-        using detail::nil;
-       
-        // for cwpro8
-        typedef typename detail::as_named<K0, A0>::type t0;
-        
-        t0 n0(a0);
-
-        typedef detail::list<t0> list_t;
-        return list_t(n0, nil(), nil(), nil(), nil());
-    }
-
-    template<class A0, class A1>
-    detail::list<
-        BOOST_DEDUCED_TYPENAME detail::as_named<K0, A0>::type
-      , detail::list<
-            BOOST_DEDUCED_TYPENAME detail::as_named<K1, A1>::type
-        >
-    >
-    operator()(const A0& a0, const A1& a1) const
-    {
-        using detail::list;
-        using detail::nil;
-       
-        // for cwpro8
-        typedef typename detail::as_named<K0, A0>::type t0;
-        typedef typename detail::as_named<K1, A1>::type t1;
-        
-        t0 n0(a0);
-        t1 n1(a1);
-
-        typedef list<t0, list<t1> > list_t;
-        return list_t(n0, n1, nil(), nil(), nil());
-    }
-
-    template<class A0, class A1, class A2>
-    detail::list<
-        BOOST_DEDUCED_TYPENAME detail::as_named<K0, A0>::type
-      , detail::list<
-            BOOST_DEDUCED_TYPENAME detail::as_named<K1, A1>::type
-          , detail::list<
-                BOOST_DEDUCED_TYPENAME detail::as_named<K2, A2>::type
-            >
-        >
-    >
-    operator()(const A0& a0, const A1& a1, const A2& a2) const
-    {
-        using detail::list;
-        using detail::nil;
-       
-        // for cwpro8
-        typedef typename detail::as_named<K0, A0>::type t0;
-        typedef typename detail::as_named<K1, A1>::type t1;
-        typedef typename detail::as_named<K2, A2>::type t2;
-        
-        t0 n0(a0);
-        t1 n1(a1);
-        t2 n2(a2);
-
-        typedef list<t0, list<t1, list<t2> > > list_t;
-        return list_t(n0, n1, n2, nil(), nil());
-    }
-
-    template<class A0, class A1, class A2, class A3>
-    detail::list<
-        BOOST_DEDUCED_TYPENAME detail::as_named<K0, A0>::type
-      , detail::list<
-            BOOST_DEDUCED_TYPENAME detail::as_named<K1, A1>::type
-          , detail::list<
-                BOOST_DEDUCED_TYPENAME detail::as_named<K2, A2>::type
-              , detail::list<
-                    BOOST_DEDUCED_TYPENAME detail::as_named<K3, A3>::type
-                >
-            >
-        >
-    >
-    operator()(const A0& a0, const A1& a1, const A2& a2, const A3& a3) const
-    {
-        using detail::list;
-        using detail::nil;
-       
-        // for cwpro8
-        typedef typename detail::as_named<K0, A0>::type t0;
-        typedef typename detail::as_named<K1, A1>::type t1;
-        typedef typename detail::as_named<K2, A2>::type t2;
-        typedef typename detail::as_named<K3, A3>::type t3;
-
-        t0 n0(a0);
-        t1 n1(a1);
-        t2 n2(a2);
-        t3 n3(a3);
-
-        typedef list<t0, list<t1, list<t2, list<t3> > > > list_t;
-        return list_t(n0, n1, n2, n3, nil());
-    }
 };
 
 } // namespace boost
 
 #undef BOOST_NAMED_PARAMS_GCC2
 
-#include <boost/preprocessor/repetition/enum_params.hpp>
-#include <boost/preprocessor/repetition/enum_binary_params.hpp>
 #include <boost/preprocessor/tuple/elem.hpp>
-#include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/repetition/repeat_from_to.hpp>
 #include <boost/preprocessor/arithmetic/inc.hpp>
 #include <boost/preprocessor/logical/bool.hpp>
