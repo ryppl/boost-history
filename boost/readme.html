@@ -16,6 +16,7 @@ body {
 
 <body>
 <h1 align="left">Spirit 1.8.2 with miniboost</h1>
+<p align="left">This package comes bundled with <strong>miniboost</strong>: a re-packaged minimal subset of boost; just enough to use Spirit.</p>
 <ul>
   <li>The docs for Spirit are located in the <strong>libs/spirit/doc</strong> subdirectory.</li>
   <li>The library is under the <strong>boost</strong> subdirectory.</li>
@@ -25,19 +26,11 @@ body {
   <li>Questions, comments, complaints, bug-fixes? Please send them to the Spirit mailing list: <strong>spirit-general@lists.sourceforge.net</strong></li>
 </ul>
 <h2>Running the tests</h2>
-<p>The testsuite can be executed by using the Boost.Build system as described on the Boost pages: <strong><a href="http://www.boost.org">http://www.boost.org</a></strong>. This package comes bundled with <strong>miniboost</strong>: a re-packaged minimal subset of boost; just enough to use Spirit. For Spirit to compile using miniboost,<strong> the environment variable <span class="style1">SPIRIT_BOOST_HEADER_INCLUDE</span> must be set to the location of the miniboost directory. </strong></p>
+<p>The testsuite can be executed by using the Boost.Build system as described on the Boost pages: <strong><a href="http://www.boost.org">http://www.boost.org</a></strong>. </p>
 <p>For example, using MSVC 7.1:</p>
-<ol>
-  <li>Download the Spirit distrib (you've already done that) and unpack it somewhere.</li>
-  <li>Download a prebuilt executable of bjam.exe here: <a href="http://sourceforge.net/project/showfiles.php?group_id=7586&package_id=72941">http://sourceforge.net/project/showfiles.php?group_id=7586&amp;package_id=72941</a>. Put it somewhere in your path.</li>
+<ol><li>Download a prebuilt executable of <a href="http://sourceforge.net/project/showfiles.php?group_id=7586&package_id=72941">bjam.exe</a>. Put it somewhere in your path.</li>
   <li>With the latest Boost Build, you don't have to configure the tool if you installed VC7.1 in the default location.</li>
-  <li>Open a Command Prompt </li>
-  <li>Set the environment variable <span class="style1">SPIRIT_BOOST_HEADER_INCLUDE</span> to where miniboost is. Example:<br>
-    <br>
-  <span class="style1">set SPIRIT_BOOST_HEADER_INCLUDE=C:\dev\spirit\miniboost<br>
-  <br>
-  </span>  </li>
-  <li>Change to the directory to <strong>libs/spirit/test</strong>.</li>
+  <li>Change (<span class="style1">CD</span>)  the directory to <strong>libs/spirit/test</strong>.</li>
   <li>Call bjam:<br>
     <br>
     <span class="style1">bjam -sTOOLS=vc-7_1 test</span></li>
