@@ -1,3 +1,5 @@
+Test on the cvs_experiment_1 branch
+
 This directory contains tools for reporting regression test status.
 These tools are just parked here temporarily.
 
