@@ -61,9 +61,9 @@ else
     CATENATE = cat ;
 }
 
-actions **passed**
+actions **passed** bind source-files
 {
-    echo passed > $(<)
+    echo $(source-files) > $(<)
 }
 
 actions (failed-as-expected)
@@ -127,8 +127,12 @@ rule build-test ( test-file-generator test-file + : sources + : requirements * )
     # Get the actual name of the target to attempt to build
     local dependency = $(test-file[1]:S=$(SUF$(dependency-type))) ;
 
-    # Make sure that the dependency is erased, so as not to give a
-    # false indication of success.
+    # record the source file names so we can put them in the .test
+    # file.
+    source-files on $(test-file) = $(sources) ;
+    
+    # Make sure that the test-file is erased upon failure, so as not
+    # to give a false indication of success.
     RMOLD $(test-file) ;
     
     # Call dependency-type's generator function to attempt the build
@@ -138,7 +142,7 @@ rule build-test ( test-file-generator test-file + : sources + : requirements * )
     # Generator functions don't handle this job for us; perhaps they should.
     set-target-variables $(dependency) ;
     
-    if $(test-file:S) != .test
+    if $(test-file:S) != $(BOOST_TEST_SUFFIX)
     {
         EXIT unexpected test file suffix. Filename: $(test-file) ;
     }
