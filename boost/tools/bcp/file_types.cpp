@@ -19,9 +19,8 @@ bool bcp_implementation::is_source_file(const fs::path& p)
    static const boost::regex e(
       ".*\\."
       "(?:"
-         "c|cxx|h|hxx|inc|.?pp|yy?"
-      ")", 
-      boost::regex::perl | boost::regex::icase
+         "c|cxx|h|hxx|inc|.?pp"
+      ")"
       );
    return boost::regex_match(p.string(), e);
 }

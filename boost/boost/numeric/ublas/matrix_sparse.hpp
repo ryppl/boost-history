@@ -296,7 +296,7 @@ namespace boost { namespace numeric { namespace ublas {
         }
         BOOST_UBLAS_INLINE
         size_type non_zeros () const {
-            return detail::map_capacity (data ());
+            return data_.size ();
         }
         BOOST_UBLAS_INLINE
         const array_type &data () const {
@@ -311,7 +311,9 @@ namespace boost { namespace numeric { namespace ublas {
     private:
         BOOST_UBLAS_INLINE
         size_type restrict_nz (size_type non_zeros) const {
-            // Guarding against overflow - Thanks to Alexei Novakov for the hint.
+            non_zeros = (std::max) (non_zeros, (std::min) (size1_, size2_));
+            // Guarding against overflow.
+            // Thanks to Alexei Novakov for the hint.
             // non_zeros_ = (std::min) (non_zeros, size1_ * size2_);
             if (size1_ > 0 && non_zeros / size1_ >= size2_)
                 non_zeros = size1_ * size2_;
@@ -1352,7 +1354,7 @@ namespace boost { namespace numeric { namespace ublas {
         size_type non_zeros () const {
             size_type non_zeros = 0;
             for (vector_const_iterator_type itv = data_ ().begin (); itv != data_ ().end (); ++ itv)
-                non_zeros += detail::map_capacity (*itv);
+                non_zeros += (*itv).size ();
             return non_zeros;
         }
         BOOST_UBLAS_INLINE
