@@ -6,17 +6,18 @@
 		<meta http-equiv="Content-Language" content="en-us">
 		<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
 	</head>
-	<body bgcolor="#ffffff">
-		<ADDRESS>Document number: N1431=03-0013</ADDRESS>
+	<body bgColor="#ffffff">
+		<ADDRESS>Document number: N14XX=03-00XX</ADDRESS>
 		<ADDRESS>Programming Language C++, Library Subgroup</ADDRESS>
 		<ADDRESS>&nbsp;</ADDRESS>
 		<ADDRESS>Peter Dimov &lt;<A href="mailto:pdimov@mmltd.net">pdimov@mmltd.net</A>&gt;</ADDRESS>
 		<ADDRESS>Beman Dawes &lt;<A href="mailto:bdawes@acm.org">bdawes@acm.org</A>&gt;</ADDRESS>
 		<ADDRESS>Greg Colvin &lt;<A href="mailto:greg@colvin.org">greg@colvin.org</A>&gt;</ADDRESS>
 		<ADDRESS>&nbsp;</ADDRESS>
-		<ADDRESS>February 28, 2003</ADDRESS>
+		<ADDRESS>March 27, 2003</ADDRESS>
 		<h1>A Proposal to Add General Purpose Smart Pointers to the Library Technical 
 			Report</h1>
+		<h2><em>Revision 1</em></h2>
 		<h2>I. Motivation</h2>
 		<p>Resource management, particularly of dynamically allocated memory, has been a 
 			serious concern since the days of the earliest digital computers. Many modern 
@@ -78,7 +79,8 @@
 			applications such as caches.
 			<li>
 				Delivers exceptional expressive power without additional template 
-				parameterization, easing use by novices and experts alike. [<a href="#Deleter">III.B.2</a>][<A href="#Dimov03">Dimov03</A>]<li>
+				parameterization, easing use by novices and experts alike. [<A href="#Deleter">III.B.2</A>][<A href="#Dimov03">Dimov03</A>]
+			<li>
 			Supports encapsulation and implementation hiding via the ability to safely use 
 			incomplete classes and protected nonvirtual base destructors, and the ability 
 			to hide allocation details.
@@ -86,7 +88,8 @@
 			"Just works" in numerous tricky situations, such as calling the right 
 			destructor and crossing load-unit/heap boundaries.
 			<li>
-			Requires no language support.<li>
+			Requires no language support.
+			<li>
 			Does not prevent users or the Standard Library itself from later adding other 
 			smart pointers to meet additional needs.
 			<li>
@@ -138,7 +141,7 @@
 		<blockquote><pre>shared_ptr&lt;X&gt; p(new X);</pre>
 		</blockquote>
 		<p>It is very common for even expert implementations to leak the X object when the 
-			constructor throws an exception.</p>
+			smart pointer constructor throws an exception.</p>
 		<h4>Example 2</h4>
 		<blockquote><pre>p.reset(new X);</pre>
 		</blockquote>
@@ -248,16 +251,44 @@ void test()
 			one or more statically allocated reference counts for default-constructed 
 			pointer instances. Under this model, <EM>empty</EM> pointers do represent one 
 			or more equivalence classes under the ownership equivalence relation described 
-			in the previous section, and <code>use_count()</code> returns "realistic" 
+			in the previous section, and <code>use_count()</code> can return "realistic" 
 			values that increase and decrease as additional <EM>empty</EM> pointers are 
 			created or destroyed.</P>
 		<P>Another approach, used in the Boost implementation, is to not allocate a 
 			reference count at all for <EM>empty</EM> pointers, using a <code>NULL</code> pointer 
 			to count as an "<EM>empty</EM> mark". Under this scheme <EM>empty</EM> pointers 
 			have a constant <code>use_count()</code> (zero in the Boost implementation.)</P>
-		<P>The specification has been carefully balanced to not disallow either 
-			implementation, while at the same time offering as useful postconditions and 
-			behavior as possible under those constraints.</P>
+		<P>Having <EM>empty</EM> pointers always return zero from <code>use_count()</code>, 
+			and hence eliminating nearly all of the unspecified behavior, is a good thing 
+			from users' point of view. The following example (supplied by Howard Hinnant) 
+			illustrates the motivation for this additional requirement:</P>
+		<blockquote><pre>int main()
+{
+    try
+    {
+        shared_ptr&lt;int&gt; sp0;
+        weak_ptr&lt;int&gt; wp(sp0);
+        shared_ptr&lt;int&gt; sp(wp);
+        cout &lt;&lt; "Done\n";
+    }
+    catch (exception const &amp; e)
+    {
+        cerr &lt;&lt; e.what() &lt;&lt; '\n';
+    }
+}</pre>
+		</blockquote>
+		<P>The original version of the proposal conservatively assumed that imposing the 
+			requirement that <EM>empty</EM> pointers have <code>use_count() == 0</code> on 
+			implementations might effectively disallow implementation #1 as reliably 
+			detecting an <EM>empty</EM> pointer can be expensive. It was unspecified 
+			whether the code above would print <code>"Done"</code> or <code>"std::bad_weak_ptr"</code>.</P>
+		<P>We have since produced a proof of concept implementation that follows the first 
+			model and statisfies the requirement without significant size or performance 
+			implications. As a result, this version of the proposal requires <code>use_count() 
+				== 0</code> to hold for all <EM>empty</EM> pointers, and the code sample 
+			will reliably print <code>"std::bad_weak_ptr"</code>.</P>
+		<P>The authors thank Howard Hinnant for his observations and help with preparing 
+			the proof of concept implementation.</P>
 		<h3>B. shared_ptr</h3>
 		<h4>1. Pointer Constructor</h4>
 		<p>The <EM>shared_ptr</EM> constructor that takes a raw pointer is templated on the 
@@ -330,8 +361,8 @@ template&lt;class T, class A1, class A2&gt; shared_ptr&lt;T&gt; shared_new(A1 co
 			for many other examples for the tremendous expressive power gained by the 
 			custom deleter support.</EM></p>
 		<P>In the Boost implementation, supporting custom deleters does not impose 
-			additional memory overhead on the shared_ptr itself. See <a href="#Memory-footprint">
-				Memory Footprint</a> [E.1]. Earlier <EM>shared_ptr</EM> versions did not 
+			additional memory overhead on the shared_ptr itself. See <A href="#Memory-footprint">
+				Memory Footprint</A> [E.1]. Earlier <EM>shared_ptr</EM> versions did not 
 			offer the deleter constructor, but in order to meet the "just do the right 
 			thing" requirement (III.A.2), the implementation kept a deleter under the hood 
 			anyway.</P>
@@ -388,6 +419,10 @@ template&lt;class T, class A1, class A2&gt; shared_ptr&lt;T&gt; shared_new(A1 co
 			but not a constant time <code>use_count()</code>.</P>
 		<P>The return type of <code>use_count</code> is signed to avoid pitfalls such as <code>p.use_count() 
 				&gt; -1</code> evaluating to <code>false</code> [<A href="#Lakos96">Lakos96</A>].</P>
+		<P>The <code>long</code> return type of <code>use_count</code> does not imply that 
+			implementations should always use <code>long</code> for the reference count. In 
+			some cases, <code>size_t</code> or its signed equivalent may be a better 
+			candidate for the actual type used underneath.</P>
 		<h4>8. Conversion Operator</h4>
 		<p>To meet the "convertible to <code>bool</code>" requirement, <EM>shared_ptr</EM> has 
 			a conversion operator to an unspecified type (the Boost implementation uses a 
@@ -516,12 +551,12 @@ else
 		<p>Experienced smart pointer users often need the ability to obtain a <EM>shared_ptr</EM>
 			to <i>this</i> from within a member function. While the <A href="http://www.boost.org/libs/smart_ptr/sp_techniques.html#from_this">
 				technique</A> described in [<A href="#Dimov03">Dimov03</A>] solves the 
-			problem, this proposal provides direct support for this idiom via the <code>enable_shared_from_this</code>
-			helper class template. Encapsulating the boilerplate code in a standard helper 
-			has the additional benefit that users no longer need to manually initialize the 
-			internal <EM>weak_ptr</EM> member; <EM>shared_ptr</EM> automatically recognizes 
-			the <code>enable_shared_from_this</code> base class and performs the 
-			initialization automatically.</p>
+			problem, it leaves the initialization of the <EM>weak_ptr</EM> member to the 
+			user.</p>
+		<P>This proposal provides direct support for the idiom via the <code>enable_shared_from_this</code>
+			helper class template. In a typical implementation, the three <EM>shared_ptr</EM>
+			constructors that create unique pointers automatically detect the <code>enable_shared_from_this</code>
+			base and initialize its internal <EM>weak_ptr</EM> member.</P>
 		<h3>E. Size and Performance</h3>
 		<h4>1. <a name="Memory-footprint">Memory Footprint</a></h4>
 		<p>In the Boost implementation, the size of <EM>shared_ptr</EM> (and <EM>weak_ptr</EM>) 
@@ -616,7 +651,7 @@ else
 			implementation.</P>
 		<h3>F. Alternatives</h3>
 		<h4>1. Policy Based Smart Pointers</h4>
-		<p>A policy-based smart pointer (PBSP) design, popularized by Andrei Alexandrescu [<a href="#Alexandrescu01">Alexandrescu01</a>],
+		<p>A policy-based smart pointer (PBSP) design, popularized by Andrei Alexandrescu [<A href="#Alexandrescu01">Alexandrescu01</A>], 
 			could provide all of the features in the current proposal plus could be 
 			user-customizable to offer many other variations on the general smart pointer 
 			theme.</p>
@@ -631,7 +666,8 @@ else
 				Because parameterization discourages users and some PBSP designs require an 
 				uncomfortably large number of template parameters, the best choice for 
 				parameterization would benefit greatly from features not currently a part of 
-				C++, particularly named template parameters and/or typedef templates.</li>
+				C++, particularly named template parameters and/or typedef templates.
+			</li>
 		</ul>
 		<p>If and when a policy-based smart pointer design matures to the point where it is 
 			suitable for standardization, a <i>std::shared_ptr</i> typedef template or 
@@ -645,7 +681,7 @@ else
 			some future standard.</p>
 		<h4>2. Garbage Collection</h4>
 		<p>The detailed rationale for not providing automatic garbage collection as the 
-			default memory management technique for C++ is given by [<a href="#Stroustrup94a">Stroustrup94a</a>], 
+			default memory management technique for C++ is given by [<A href="#Stroustrup94a">Stroustrup94a</A>], 
 			who states that "Optional garbage collection is, I think, the right approach 
 			for C++".</p>
 		<p>Because the current proposal is for a purely library solution, it is 
@@ -722,7 +758,7 @@ else
       public:
         typedef T element_type;
 
-        <em>// constructors</em>
+        <em>// constructors</EM>
         shared_ptr();
         template&lt;class Y&gt; explicit shared_ptr(Y * p);
         template&lt;class Y, class D&gt; shared_ptr(Y * p, D d);
@@ -731,30 +767,30 @@ else
         template&lt;class Y&gt; explicit shared_ptr(weak_ptr&lt;Y&gt; const &amp; r);
         template&lt;class Y&gt; explicit shared_ptr(auto_ptr&lt;Y&gt; &amp; r);
 
-        <em>// destructor</em>
+        <em>// destructor</EM>
         ~shared_ptr();
 
-        <em>// assignment</em>
+        <em>// assignment</EM>
         shared_ptr &amp; operator=(shared_ptr const &amp; r);
         template&lt;class Y&gt; shared_ptr &amp; operator=(shared_ptr&lt;Y&gt; const &amp; r);
         template&lt;class Y&gt; shared_ptr &amp; operator=(auto_ptr&lt;Y&gt; &amp; r);
 
-        <em>// modifiers</em>
+        <em>// modifiers</EM>
         void swap(shared_ptr &amp; r);
         void reset();
         template&lt;class Y&gt; void reset(Y * p);
         template&lt;class Y, class D&gt; void reset(Y * p, D d);
 
-        <em>// observers</em>
+        <em>// observers</EM>
         T * get() const;
         T &amp; operator*() const;
         T * operator-&gt;() const;
         long use_count() const;
         bool unique() const;
-        operator <em>unspecified-bool-type</em>() const;
+        operator <em>unspecified-bool-type</EM>() const;
       };
 
-      <em>// comparison</em>
+      <em>// comparison</EM>
       template&lt;class T, class U&gt;
         bool operator==(shared_ptr&lt;T&gt; const &amp; a, shared_ptr&lt;U&gt; const &amp; b);
 
@@ -764,21 +800,21 @@ else
       template&lt;class T, class U&gt;
         bool operator&lt;(shared_ptr&lt;T&gt; const &amp; a, shared_ptr&lt;U&gt; const &amp; b);
 
-      <em>// other operators</em>
+      <em>// other operators</EM>
       template&lt;class E, class T, class Y&gt;
         basic_ostream&lt;E, T&gt; &amp; operator&lt;&lt; (basic_ostream&lt;E, T&gt; &amp; os, shared_ptr&lt;Y&gt; const &amp; p);
 
-      <em>// specialized algorithms</em>
+      <em>// specialized algorithms</EM>
       template&lt;class T&gt; void swap(shared_ptr&lt;T&gt; &amp; a, shared_ptr&lt;T&gt; &amp; b);
 
-      <em>// casts</em>
+      <em>// casts</EM>
       template&lt;class T, class U&gt;
         shared_ptr&lt;T&gt; static_pointer_cast(shared_ptr&lt;U&gt; const &amp; r);
 
       template&lt;class T, class U&gt;
         shared_ptr&lt;T&gt; dynamic_pointer_cast</A>(shared_ptr&lt;U&gt; const &amp; r);
 
-      <em>// get_deleter</em>
+      <em>// get_deleter</EM>
       template&lt;class D, class T&gt;
         D * get_deleter(shared_ptr&lt;T&gt; const &amp; p);
     }
@@ -798,7 +834,7 @@ else
 		<pre>    shared_ptr();
 </pre>
 		<p><b>Effects:</b> Constructs an <EM>empty</EM> <code>shared_ptr</code>.</p>
-		<p><b>Postconditions:</b> <code>get() == 0</code>.</p>
+		<p><b>Postconditions:</b> <code>use_count() == 0 &amp;&amp; get() == 0</code>.</p>
 		<p><b>Throws:</b> nothing.</p>
 		<pre>    template&lt;class Y&gt; explicit shared_ptr(Y * p);
 </pre>
@@ -837,12 +873,10 @@ else
 		<p><b>Throws:</b> nothing.</p>
 		<pre>    template&lt;class Y&gt; explicit shared_ptr(weak_ptr&lt;Y&gt; const &amp; r);
 </pre>
-		<p><b>Effects:</b> If <code>r</code> is <EM>empty</EM>, constructs an <EM>empty</EM>
-			<code>shared_ptr</code>; otherwise, constructs a <code>shared_ptr</code> that <EM>shares 
-				ownership</EM> with <code>r</code> and stores a copy of the pointer stored 
-			in <code>r</code>.</p>
+		<p><b>Effects:</b> Constructs a <code>shared_ptr</code> that <EM>shares ownership</EM>
+			with <code>r</code> and stores a copy of the pointer stored in <code>r</code>.</p>
 		<p><b>Postconditions:</b> <code>use_count() == r.use_count()</code>.</p>
-		<p><b>Throws:</b> <code>bad_weak_ptr</code> when <code>r.use_count() == 0</code>.</p>
+		<p><b>Throws:</b> <code>bad_weak_ptr</code> when <code>r.expired()</code>.</p>
 		<p><b>Exception safety:</b> If an exception is thrown, the constructor has no 
 			effect.</p>
 		<pre>    template&lt;class Y&gt; shared_ptr(auto_ptr&lt;Y&gt; &amp; r);
@@ -928,8 +962,8 @@ else
 		<pre>    long use_count() const;
 </pre>
 		<p><b>Returns:</b> the number of <code>shared_ptr</code> objects, <code>*this</code>
-			included, that <i>share ownership</i> with <code>*this</code>, or an 
-			unspecified nonnegative value when <code>*this</code> is <EM>empty</EM>.</p>
+			included, that <i>share ownership</i> with <code>*this</code>, or <code>0</code>
+			when <code>*this</code> is <EM>empty</EM>.</p>
 		<p><b>Throws:</b> nothing.</p>
 		<P><B>Notes:</B> <code>use_count()</code> is not necessarily efficient. Use only 
 			for debugging and testing purposes, not for production code.</P>
@@ -940,12 +974,12 @@ else
 		<P><B>Notes:</B> <code>unique()</code> may be faster than <code>use_count()</code>. 
 			If you are using <code>unique()</code> to implement copy on write, do not rely 
 			on a specific value when <code>get() == 0</code>.</P>
-		<pre>    operator <em>unspecified-bool-type</em> () const;
+		<pre>    operator <em>unspecified-bool-type</EM> () const;
 </pre>
 		<p><b>Returns:</b> an unspecified value that, when used in boolean contexts, is 
 			equivalent to <code>get() != 0</code>.</p>
 		<p><b>Throws:</b> nothing.</p>
-		<P><B>Notes:</B> This conversion operator allows <b>shared_ptr</b> objects to be 
+		<P><B>Notes:</B> This conversion operator allows <em>shared_ptr</em> objects to be 
 			used in boolean contexts, like <code>if (p &amp;&amp; p-&gt;valid()) {}</code>. 
 			The actual target type is typically a pointer to a member function, avoiding 
 			many of the implicit conversion pitfalls.</P>
@@ -1024,7 +1058,7 @@ else
 </pre>
 		<P><B>Returns:</B> If <code>*this</code> <EM>owns</EM> a deleter <code>d</code> of 
 			type cv-unqualified <code>D</code>, returns <code>&amp;d</code>; otherwise 
-			returns 0.</P>
+			returns <code>0</code>.</P>
 		<P><B>Throws:</B> nothing.</P>
 		<h3>D. Class template <code>weak_ptr</code></h3>
 		<p>The <code>weak_ptr</code> class template stores a "weak reference" to an object 
@@ -1036,35 +1070,35 @@ else
       public:
         typedef T element_type;
 
-        <em>// constructors</em>
+        <em>// constructors</EM>
         weak_ptr();
         template&lt;class Y&gt; weak_ptr(shared_ptr&lt;Y&gt; const &amp; r);
         weak_ptr(weak_ptr const &amp; r);
         template&lt;class Y&gt; weak_ptr(weak_ptr&lt;Y&gt; const &amp; r);
 
-        <em>// destructor</em>
+        <em>// destructor</EM>
         ~weak_ptr();
 
-        <em>// assignment</em>
+        <em>// assignment</EM>
         weak_ptr &amp; operator=(weak_ptr const &amp; r);
         template&lt;class Y&gt; weak_ptr &amp; operator=(weak_ptr&lt;Y&gt; const &amp; r);
         template&lt;class Y&gt; weak_ptr &amp; operator=(shared_ptr&lt;Y&gt; const &amp; r);
 
-        <em>// modifiers</em>
+        <em>// modifiers</EM>
         void swap(weak_ptr &amp; r);
         void reset();
 
-        <em>// observers</em>
+        <em>// observers</EM>
         long use_count() const;
         bool expired() const;
         shared_ptr&lt;T&gt; lock() const;
       };
 
-      <em>// comparison</em>
+      <em>// comparison</EM>
       template&lt;class T, class U&gt;
         bool operator&lt;(weak_ptr&lt;T&gt; const &amp; a, weak_ptr&lt;U&gt; const &amp; b);
 
-      <em>// specialized algorithms</em>
+      <em>// specialized algorithms</EM>
       template&lt;class T&gt;
         void swap(weak_ptr&lt;T&gt; &amp; a, weak_ptr&lt;T&gt; &amp; b);
     }
@@ -1113,9 +1147,9 @@ else
 		<h4><code>weak_ptr</code> observers</h4>
 		<pre>    long use_count() const;
 </pre>
-		<p><b>Returns:</b> if <code>*this</code> is <EM>empty</EM>, an unspecified 
-			nonnegative value; otherwise, the number of <code>shared_ptr</code> instances 
-			that <EM>share ownership</EM> with <code>*this</code>.</p>
+		<p><b>Returns:</b> <code>0</code> if <code>*this</code> is <EM>empty</EM>; 
+			otherwise, the number of <code>shared_ptr</code> instances that <EM>share ownership</EM>
+			with <code>*this</code>.</p>
 		<p><b>Throws:</b> nothing.</p>
 		<P><B>Notes:</B> <code>use_count()</code> is not necessarily efficient. Use only 
 			for debugging and testing purposes, not for production code.</P>
@@ -1154,6 +1188,20 @@ else
 		<p>A class can derive from the <code>enable_shared_from_this</code> class template, 
 			passing itself as a template parameter, to inherit the <code>shared_from_this</code>
 			member functions that obtain a <EM>shared_ptr</EM> instance pointing to <code>this</code>.</p>
+		<p>[<em>Example:</em></p>
+		<pre>    struct X: public enable_shared_from_this&lt;X&gt;
+    {
+    };
+
+    int main()
+    {
+        shared_ptr&lt;X&gt; p(new X);
+        shared_ptr&lt;X&gt; q = p-&gt;shared_from_this();
+        assert(p == q);
+        assert(!(p &lt; q ) &amp;&amp; !(q &lt; p)); // p and q must share ownership
+    }
+</pre>
+		<p><em>—end example.</em>]</p>
 		<pre>    namespace std {
       template&lt;class T&gt; class enable_shared_from_this {
       public:
@@ -1177,7 +1225,35 @@ else
 		</p>
 		<p><b>Postconditions:</b> <code>r.get() == this</code>.
 		</p>
-		<h2>V. References</h2>
+		<p>[<em>Note:</em> a typical implementation is shown below:</p>
+		<pre>    template&lt;class T&gt; class enable_shared_from_this
+    {
+    private:
+
+        weak_ptr&lt;T&gt; __weak_this;
+
+    public:
+
+        shared_ptr&lt;T&gt; shared_from_this() { return shared_ptr&lt;T&gt;(__weak_this); }
+        shared_ptr&lt;T const&gt; shared_from_this() const { return shared_ptr&lt;T const&gt;(__weak_this); }
+    };</pre>
+		<p>The three <EM>shared_ptr</EM> constructors that create unique pointers should 
+			detect the presence of an <EM>enable_shared_from_this</EM> base and assign the 
+			newly created <EM>shared_ptr</EM> to its <EM>__weak_this</EM> member. <em>—end 
+				note.</em>]</p>
+		<h2>V. Revision History</h2>
+		<p>Revision 1:</p>
+		<UL>
+			<LI>
+				Introduced a requirement that all empty pointers should have <code>use_count()</code> of 
+				zero, eliminating most unspecified behavior. The decision is explained in 
+				III.A.5.</LI>
+			<LI>
+				Added a note in III.B.7 that the underlying reference count type is not 
+				required to be <code>long</code>.</LI>
+			<LI>
+				Added an example and a note to IV.E.</LI></UL>
+		<h2>VI. References</h2>
 		<p>[<a name="Abrahams02">Abrahams02</a>] Dave Abrahams et al, <i>Boost.Python library 
 				documentation</i>, October 2002. Available online at <A href="http://www.boost.org/libs/python/">
 				http://www.boost.org/libs/python/</A></p>
