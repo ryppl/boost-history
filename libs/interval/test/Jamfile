@@ -47,3 +47,8 @@ unit-test pow
       <lib>../../test/build/test_exec_monitor
     : <include>$(BOOST_ROOT)
     ;
+
+exe interval_test
+    : interval_test.cpp
+    : <include>$(BOOST_ROOT)
+    ;

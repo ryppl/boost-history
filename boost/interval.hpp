@@ -450,6 +450,7 @@ namespace std {
 #include <boost/interval/rounding.hpp>
 #include <boost/interval/rounded_arith.hpp>
 #include <boost/interval/rounded_transc.hpp>
+#include <boost/interval/constants.hpp>
 
 #include <boost/interval/checking.hpp>
 #include <boost/interval/compare.hpp>

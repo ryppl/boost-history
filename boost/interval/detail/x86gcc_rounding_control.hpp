@@ -34,18 +34,7 @@ namespace boost {
   namespace interval_lib {
     namespace detail {
 
-struct fpu_rounding_modes
-{
-  unsigned short tonearest;
-  unsigned short downward;
-  unsigned short upward;
-  unsigned short towardzero;
-};
-
-// exceptions masked, extended precision
-static const fpu_rounding_modes rnd_mode = { 0x137f, 0x177f, 0x1b7f, 0x1f7f };
-
-struct x86_rounding_control
+struct x86_rounding
 {
   typedef unsigned short rounding_mode;
 
@@ -54,11 +43,6 @@ struct x86_rounding_control
 
   static void get_rounding_mode(rounding_mode& mode)
   { __asm__ __volatile__ ("fnstcw %0" : "=m"(mode)); }
-
-  static void downward()   { set_rounding_mode(rnd_mode.downward);   }
-  static void upward()     { set_rounding_mode(rnd_mode.upward);     }
-  static void tonearest()  { set_rounding_mode(rnd_mode.tonearest);  }
-  static void towardzero() { set_rounding_mode(rnd_mode.towardzero); }
 
   template<class T>
   static T to_int(T r)

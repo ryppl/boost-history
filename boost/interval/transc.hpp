@@ -148,7 +148,7 @@ interval<T, Traits> cos(const interval<T, Traits>& x)
   I tmp = fmod((const I&)x, pi2);
   if (width(tmp) >= pi2.lower())
     return interval<T, Traits>(-1, 1, true);     // we are covering a full period
-  if (tmp.lower() >= rnd.pi_up())
+  if (tmp.lower() >= interval_lib::constants::pi_upper<T>())
     return -cos(tmp - interval_lib::pi<I>());
   T l = tmp.lower();
   T u = tmp.upper();
@@ -156,7 +156,7 @@ interval<T, Traits> cos(const interval<T, Traits>& x)
   using std::min;
 
   // separate into monotone subintervals
-  if (u <= rnd.pi_down())
+  if (u <= interval_lib::constants::pi_lower<T>())
     return interval<T, Traits>(rnd.cos_down(u), rnd.cos_up(l), true);
   else if (u <= pi2.lower()) {
     T cu = rnd.cos_up(min(rnd.sub_down(pi2.lower(), u), l));
@@ -172,7 +172,9 @@ interval<T, Traits> sin(const interval<T, Traits>& x)
     return interval<T, Traits>::empty();
   typename Traits::rounding rnd;
   typedef typename interval_lib::unprotect<interval<T, Traits> >::type I;
-  return cos((const I&)x - interval_lib::pi_1_2<I>());
+  interval<T, Traits> r = cos((const I&)x - interval_lib::pi_1_2<I>());
+  (void)&rnd;
+  return r;
 }
 
 template<class T, class Traits> inline
@@ -186,7 +188,7 @@ interval<T, Traits> tan(const interval<T, Traits>& x)
   // get lower bound within [-pi/2, pi/2]
   const I pi = interval_lib::pi<I>();
   I tmp = fmod((const I&)x, pi);
-  T pi_1_2_d = rnd.pi_1_2_down();
+  const T pi_1_2_d = interval_lib::constants::pi_1_2_lower<T>();
   if (tmp.lower() >= pi_1_2_d)
     tmp -= pi;
   if (tmp.lower() <= -pi_1_2_d || tmp.upper() >= pi_1_2_d)
@@ -201,8 +203,8 @@ interval<T, Traits> asin(const interval<T, Traits>& x)
   if (interval_lib::detail::test_input(x) || x.upper() < T(-1) || x.lower() > T(1))
     return interval<T, Traits>::empty();
   typename Traits::rounding rnd;
-  T l = (x.lower() <= T(-1)) ? -rnd.pi_1_2_up() : rnd.asin_down(x.lower());
-  T u = (x.upper() >= T(1) ) ?  rnd.pi_1_2_up() : rnd.asin_up  (x.upper());
+  T l = (x.lower() <= T(-1)) ? -interval_lib::constants::pi_1_2_upper<T>() : rnd.asin_down(x.lower());
+  T u = (x.upper() >= T(1) ) ?  interval_lib::constants::pi_1_2_upper<T>() : rnd.asin_up  (x.upper());
   return interval<T, Traits>(l, u, true);
 }
 
@@ -212,8 +214,8 @@ interval<T, Traits> acos(const interval<T, Traits>& x)
   if (interval_lib::detail::test_input(x) || x.upper() < T(-1) || x.lower() > T(1))
     return interval<T, Traits>::empty();
   typename Traits::rounding rnd;
-  T l = (x.upper() >= T(1) ) ? 0           : rnd.acos_down(x.upper());
-  T u = (x.lower() <= T(-1)) ? rnd.pi_up() : rnd.acos_up  (x.lower());
+  T l = (x.upper() >= T(1) ) ? 0                                      : rnd.acos_down(x.upper());
+  T u = (x.lower() <= T(-1)) ? interval_lib::constants::pi_upper<T>() : rnd.acos_up  (x.lower());
   return interval<T, Traits>(l, u, true);
 }
 

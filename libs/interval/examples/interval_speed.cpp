@@ -1,4 +1,4 @@
-/* boost range_speed.cpp performance measurements
+/* boost interval_speed.cpp performance measurements
  *
  * Copyright Jens Maurer 2000
  * Permission to use, copy, modify, sell, and distribute this software
@@ -103,6 +103,9 @@ double do_timing1(UnaryFunction func, int iter,
 		 ForwardIterator v2_first)
 {
   boost::timer t;
+#ifdef USE_BOOST_UNPROTECTED
+  protected_rounding rnd;
+#endif
   for(int k = 0; k < iter; ++k) {
     ConstForwardIterator i1 = v1_first;
     ForwardIterator i2 = v2_first;
@@ -110,6 +113,9 @@ double do_timing1(UnaryFunction func, int iter,
       UNROLL(*i2 = func(*i1); ++i1; ++i2);
     }
   }
+#ifdef USE_BOOST_UNPROTECTED
+  (void)&rnd;
+#endif
   return t.elapsed();
 }
 
@@ -146,6 +152,9 @@ double do_timing2a(BinaryFunction func, int iter,
 		  ConstForwardIterator v2_first)
 {
   boost::timer t;
+#ifdef USE_BOOST_UNPROTECTED
+  protected_rounding rnd;
+#endif
   for(int k = 0; k < iter; ++k) {
     ForwardIterator i1 = v1_first;
     ConstForwardIterator i2 = v2_first;
@@ -153,6 +162,9 @@ double do_timing2a(BinaryFunction func, int iter,
       UNROLL4(func(*i1, *i2); ++i1; ++i2);
     }
   }
+#ifdef USE_BOOST_UNPROTECTED
+  (void)&rnd;
+#endif
   return t.elapsed();
 }
 
@@ -161,7 +173,7 @@ void mops2a(BinaryFunction func, unsigned int vsize,
 	   const std::string & s)
 {
   unsigned int iter = 5;
-  while(iter < 100000000/vsize) {
+  while(iter < 2*1000*1000*1000/vsize) {
     std::vector<interval_type> v1(vsize), v2(vsize);
     for(unsigned int i = 0; i < vsize; ++i) {
       v1[i] = random_element<interval_type>();
@@ -174,7 +186,7 @@ void mops2a(BinaryFunction func, unsigned int vsize,
       show_result(s, iter * vsize, ti);
       return;
     }
-    if(ti <= 0.01)
+    if(ti <= 0.01 && iter < 40*1000*1000)
       iter *= 50;      // jump to more appropriate iter values
     else
       iter *= std::max(2, static_cast<int>(0.5/ti));
@@ -190,19 +202,19 @@ double do_timing2(FuncR funcr, int iter, ConstForwardIterator v1_first,
 		 ForwardIterator v3_first)
 {
   boost::timer t;
+#ifdef USE_BOOST_UNPROTECTED
+  protected_rounding rnd;
+#endif
   for(int k = 0; k < iter; ++k) {
-#if 1
     ConstForwardIterator i1 = v1_first, i2 = v2_first;
     ForwardIterator i3 = v3_first;
     for(; i1 < v1_last; ) {
       UNROLL(*i3 = funcr(*i1, *i2); ++i1; ++i2; ++i3);
     }
-#else
-    for(unsigned int i = 0; i < v1.size(); ) {
-      v3[i] = funcr(v1[i], v2[i]); ++i;
-    }
-#endif
   }
+#ifdef USE_BOOST_UNPROTECTED
+  (void)&rnd;
+#endif
   double tmp = t.elapsed();
   for(int i = 0; i < (v1_last-v1_first); ++i) {
     volatile typename FuncR::result_type x = *(v3_first+i);

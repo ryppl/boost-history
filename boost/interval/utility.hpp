@@ -393,22 +393,22 @@ interval<T, Traits> min(const T& x, const interval<T, Traits>& y)
 template<class I> inline
 I pi()
 {
-  typedef typename I::traits_type::rounding rounding;
-  return I(rounding::pi_down(), rounding::pi_up(), true);
+  typedef typename I::base_type T;
+  return I(constants::pi_lower<T>(), constants::pi_upper<T>(), true);
 }
 
 template<class I> inline
 I pi_1_2()
 {
-  typedef typename I::traits_type::rounding rounding;
-  return I(rounding::pi_1_2_down(), rounding::pi_1_2_up(), true);
+  typedef typename I::base_type T;
+  return I(constants::pi_1_2_lower<T>(), constants::pi_1_2_upper<T>(), true);
 }
 
 template<class I> inline
 I pi_2_1()
 {
-  typedef typename I::traits_type::rounding rounding;
-  return I(rounding::pi_2_1_down(), rounding::pi_2_1_up(), true);
+  typedef typename I::base_type T;
+  return I(constants::pi_2_1_lower<T>(), constants::pi_2_1_upper<T>(), true);
 }
 
   } // namespace interval_lib

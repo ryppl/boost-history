@@ -18,11 +18,33 @@ bool test_mul(double al, double au, double bl, double bu) {
       && c.upper() == max(al*bl, al*bu, au*bl, au*bu);
 }
 
+bool test_mul1(double ac, double bl, double bu) {
+  I a(ac), b(bl, bu);
+  I c = ac * b;
+  I d = b * ac;
+  I e = a * b;
+  return equal(c, d) && equal(d, e);
+}
+
 bool test_div(double al, double au, double bl, double bu) {
   I a(al, au), b(bl, bu);
   I c = a / b;
   return c.lower() == min(al/bl, al/bu, au/bl, au/bu)
       && c.upper() == max(al/bl, al/bu, au/bl, au/bu);
+}
+
+bool test_div1(double al, double au, double bc) {
+  I a(al, au), b(bc);
+  I c = a / bc;
+  I d = a / b;
+  return equal(c, d);
+}
+
+bool test_div2(double ac, double bl, double bu) {
+  I a(ac), b(bl, bu);
+  I c = ac / b;
+  I d = a / b;
+  return equal(c, d);
 }
 
 bool test_square(double al, double au) {
@@ -50,12 +72,31 @@ int test_main(int, char*[]) {
   BOOST_TEST(test_mul(-3, -2, -5, 7));
   BOOST_TEST(test_mul(-3, -2, -7, -5));
 
+  BOOST_TEST(test_mul1(3, 5, 7));
+  BOOST_TEST(test_mul1(3, -5, 7));
+  BOOST_TEST(test_mul1(3, -7, -5));
+  BOOST_TEST(test_mul1(-3, 5, 7));
+  BOOST_TEST(test_mul1(-3, -5, 7));
+  BOOST_TEST(test_mul1(-3, -7, -5));
+
   BOOST_TEST(test_div(30, 42, 2, 3));
   BOOST_TEST(test_div(30, 42, -3, -2));
   BOOST_TEST(test_div(-30, 42, 2, 3));
   BOOST_TEST(test_div(-30, 42, -3, -2));
   BOOST_TEST(test_div(-42, -30, 2, 3));
   BOOST_TEST(test_div(-42, -30, -3, -2));
+
+  BOOST_TEST(test_div1(30, 42, 3));
+  BOOST_TEST(test_div1(30, 42, -3));
+  BOOST_TEST(test_div1(-30, 42, 3));
+  BOOST_TEST(test_div1(-30, 42, -3));
+  BOOST_TEST(test_div1(-42, -30, 3));
+  BOOST_TEST(test_div1(-42, -30, -3));
+
+  BOOST_TEST(test_div2(30, 2, 3));
+  BOOST_TEST(test_div2(30, -3, -2));
+  BOOST_TEST(test_div2(-30, 2, 3));
+  BOOST_TEST(test_div2(-30, -3, -2));
 
   BOOST_TEST(test_square(2, 3));
   BOOST_TEST(test_square(-2, 3));

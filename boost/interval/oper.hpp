@@ -192,24 +192,33 @@ interval<T, Traits> operator*(const interval<T, Traits>& x,
   if (interval_lib::detail::test_input(x, y))
     return interval<T, Traits>::empty();
   typename Traits::rounding rnd;
-  bool neg_x = detail::sign(x.upper());
-  bool neg_y = detail::sign(y.upper());
-  bool pos_x = !detail::sign(x.lower());
-  bool pos_y = !detail::sign(y.lower());
-  bool zro_x = !neg_x && !pos_x;
-  bool zro_y = !neg_y && !pos_y;
-  if (zro_x && zro_y)
-    return interval<T, Traits>(min(rnd.mul_down(x.lower(), y.upper()),
-				   rnd.mul_down(x.upper(), y.lower())),
-			       max(rnd.mul_up  (x.lower(), y.lower()),
-				   rnd.mul_up  (x.upper(), y.upper())), true);
-  else {
-    const T& xl = (neg_y || zro_y &&  pos_x) ? x.upper() : x.lower();
-    const T& xu = (neg_y || zro_y && !pos_x) ? x.lower() : x.upper();
-    const T& yl = (neg_x || zro_x &&  pos_y) ? y.upper() : y.lower();
-    const T& yu = (neg_x || zro_x && !pos_y) ? y.lower() : y.upper();
-    return interval<T, Traits>(rnd.mul_down(xl, yl), rnd.mul_up(xu, yu), true);
-  }
+  typedef interval<T, Traits> I;
+  const T& xl = x.lower();
+  const T& xu = x.upper();
+  const T& yl = y.lower();
+  const T& yu = y.upper();
+  if (detail::sign(xu))
+    if (detail::sign(yu))
+      return I(rnd.mul_down(xu, yu), rnd.mul_up(xl, yl), true);
+    else if (detail::sign(yl))
+      return I(rnd.mul_down(xl, yu), rnd.mul_up(xl, yl), true);
+    else
+      return I(rnd.mul_down(xl, yu), rnd.mul_up(xu, yl), true);
+  else if (detail::sign(xl))
+    if (detail::sign(yu))
+      return I(rnd.mul_down(xu, yl), rnd.mul_up(xl, yl), true);
+    else if (detail::sign(yl))
+      return I(min(rnd.mul_down(xl, yu), rnd.mul_down(xu, yl)),
+	       max(rnd.mul_up  (xl, yl), rnd.mul_up  (xu, yu)), true);
+    else
+      return I(rnd.mul_down(xl, yu), rnd.mul_up(xu, yu), true);
+  else
+    if (detail::sign(yu))
+      return I(rnd.mul_down(xu, yl), rnd.mul_up(xl, yu), true);
+    else if (detail::sign(yl))
+      return I(rnd.mul_down(xu, yl), rnd.mul_up(xu, yu), true);
+    else
+      return I(rnd.mul_down(xl, yl), rnd.mul_up(xu, yu), true);
 }
 
 template<class T, class Traits> inline
@@ -218,10 +227,12 @@ interval<T, Traits> operator*(const T& x, const interval<T, Traits>& y)
   if (interval_lib::detail::test_input(x, y))
     return interval<T, Traits>::empty();
   typename Traits::rounding rnd;
-  bool neg_x = detail::sign(x);
-  const T& yl = neg_x ? y.upper() : y.lower();
-  const T& yu = neg_x ? y.lower() : y.upper();
-  return interval<T, Traits>(rnd.mul_down(x, yl), rnd.mul_up(x, yu), true);
+  const T& yl = y.lower();
+  const T& yu = y.upper();
+  if (detail::sign(x))
+    return interval<T, Traits>(rnd.mul_down(x, yu), rnd.mul_up(x, yl), true);
+  else
+    return interval<T, Traits>(rnd.mul_down(x, yl), rnd.mul_up(x, yu), true);
 }
 
 template<class T, class Traits> inline
@@ -239,15 +250,26 @@ interval<T, Traits> operator/(const interval<T, Traits>& x,
     else              return interval<T, Traits>::whole();
   }
   typename Traits::rounding rnd;
-  bool neg_x = detail::sign(x.upper());
-  bool neg_y = detail::sign(y.upper());
-  bool pos_x = !detail::sign(x.lower());
-  bool zro_x = !pos_x && !neg_x;
-  const T& xl = neg_y ? x.upper() : x.lower();
-  const T& xu = neg_y ? x.lower() : x.upper();
-  const T& yl = (pos_x || zro_x &&  neg_y) ? y.upper() : y.lower();
-  const T& yu = (pos_x || zro_x && !neg_y) ? y.lower() : y.upper();
-  return interval<T, Traits>(rnd.div_down(xl, yl), rnd.div_up(xu, yu), true);
+  typedef interval<T, Traits> I;
+  const T& xl = x.lower();
+  const T& xu = x.upper();
+  const T& yl = y.lower();
+  const T& yu = y.upper();
+  if (detail::sign(xu))
+    if (detail::sign(yu))
+      return I(rnd.div_down(xu, yl), rnd.div_up(xl, yu), true);
+    else
+      return I(rnd.div_down(xl, yl), rnd.div_up(xu, yu), true);
+  else if (detail::sign(xl))
+    if (detail::sign(yu))
+      return I(rnd.div_down(xu, yu), rnd.div_up(xl, yu), true);
+    else
+      return I(rnd.div_down(xl, yl), rnd.div_up(xu, yl), true);
+  else
+    if (detail::sign(yu))
+      return I(rnd.div_down(xu, yu), rnd.div_up(xl, yl), true);
+    else
+      return I(rnd.div_down(xl, yu), rnd.div_up(xu, yl), true);
 }
 
 template<class T, class Traits> inline
@@ -260,10 +282,12 @@ interval<T, Traits> operator/(const T& x, const interval<T, Traits>& y)
     else              return interval<T, Traits>::whole();
   }
   typename Traits::rounding rnd;
-  bool neg_x = detail::sign(x);
-  const T& yl = !neg_x ? y.upper() : y.lower();
-  const T& yu = !neg_x ? y.lower() : y.upper();
-  return interval<T, Traits>(rnd.div_down(x, yl), rnd.div_up(x, yu), true);
+  const T& yl = y.lower();
+  const T& yu = y.upper();
+  if (detail::sign(x))
+    return interval<T, Traits>(rnd.div_down(x, yl), rnd.div_up(x, yu), true);
+  else
+    return interval<T, Traits>(rnd.div_down(x, yu), rnd.div_up(x, yl), true);
 }
 
 template<class T, class Traits> inline
@@ -272,10 +296,12 @@ interval<T, Traits> operator/(const interval<T, Traits>& x, const T& y)
   if (interval_lib::detail::test_input(x, y) || y == T(0))
     return interval<T, Traits>::empty();
   typename Traits::rounding rnd;
-  bool neg_y = detail::sign(y);
-  const T& xl = neg_y ? x.upper() : x.lower();
-  const T& xu = neg_y ? x.lower() : x.upper();
-  return interval<T, Traits>(rnd.div_down(xl, y), rnd.div_up(xu, y), true);
+  const T& xl = x.lower();
+  const T& xu = x.upper();
+  if (detail::sign(y))
+    return interval<T, Traits>(rnd.div_down(xu, y), rnd.div_up(xl, y), true);
+  else
+    return interval<T, Traits>(rnd.div_down(xl, y), rnd.div_up(xu, y), true);
 }
 
 template<class T, class Traits> inline

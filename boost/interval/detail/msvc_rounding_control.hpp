@@ -36,13 +36,10 @@ extern "C" { double rint(double); }
 struct x86_rounding_control
 {
   typedef unsigned int rounding_mode;
-  static void get_rounding_mode(rounding_mode& mode) { mode = _controlfp(0,0); }
+  static void get_rounding_mode(rounding_mode& mode)
+  { mode = _control87(0, 0); }
   static void set_rounding_mode(const rounding_mode mode)
-  { _controlfp(mode, _MCW_RC); } 
-  static void downward()       { _controlfp(_RC_DOWN, _MCW_RC); }
-  static void upward()         { _controlfp(_RC_UP,   _MCW_RC); }
-  static void tonearest()      { _controlfp(_RC_NEAR, _MCW_RC); }
-  static void towardzero()     { _controlfp(_RC_CHOP, _MCW_RC); }
+  { _control87(mode, 0xffff); }
   static double to_int(const double& x) { return rint(x); }
 };
 

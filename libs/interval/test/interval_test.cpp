@@ -26,10 +26,25 @@ using namespace interval_lib;
 
 typedef double T;
 
-typedef interval<T, interval_traits<T,
-				    compare_certainly<T>,
-				    save_state<rounded_transc_opp<T> >,
-				    checking_base<T> > > R;
+struct my_checking: checking_base<T> {
+  static bool is_nan(const T&) { return false; }
+  static bool is_empty(const T&, const T&) { return false; }
+};
+
+#ifdef USE_BOOST_FAST_X86
+#include <boost/interval/ext/x86_fast_rounding_control.hpp>
+#endif
+struct my_math:
+  save_state<rounded_transc_opp<T
+#ifdef USE_BOOST_FAST_X86
+    , rounded_arith_opp<T, x86_fast_rounding_control<T> >
+#endif
+  > >
+{};
+
+typedef
+  interval<T, interval_traits<T, compare_certainly<T>,
+			      my_math, my_checking> > R;
 
 unsigned nb_errors;
 std::string test_name;

@@ -37,30 +37,13 @@ namespace boost {
 
 extern "C" { double rint(double); }
 
-/*
- * If __STDC__ is not defined, <float.h> defines some constants for
- * use with _control87.  These macros do not start with an underscore
- * and thus pollute the user's namespace.  If __STDC__ is defined, no
- * such macros are defined at all.  We use our own constants in all
- * cases and check for a x86 CPU (see above) to be on the safe side.
- */
-struct x86_rounding_control
+struct x86_rounding
 {
-private:
-  static const unsigned int mask_rc = 0x0c00;
-  static const unsigned int rc_down = 0x0400;
-  static const unsigned int rc_up   = 0x0800;
-  static const unsigned int rc_near = 0x0000;
-  static const unsigned int rc_chop = 0x0c00;
-public:
   typedef unsigned int rounding_mode;
-  static void get_rounding_mode(rounding_mode& mode) { mode = _controlfp(0,0); }
+  static void get_rounding_mode(rounding_mode& mode)
+  { mode = _control87(0, 0); }
   static void set_rounding_mode(const rounding_mode mode)
-  { _controlfp(mode, mask_rc); } 
-  static void downward()   { _control87(rc_down, mask_rc); }
-  static void upward()     { _control87(rc_up,   mask_rc); }
-  static void tonearest()  { _control87(rc_near, mask_rc); }
-  static void towardzero() { _control87(rc_chop, mask_rc); }
+  { _control87(mode, 0xffff); } 
   static double to_int(const double& x) { return rint(x); }
 };
 

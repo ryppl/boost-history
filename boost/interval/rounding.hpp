@@ -128,8 +128,6 @@ namespace boost {
 
 } // namespace boost
 
-#include <boost/interval/detail/constants.hpp>
-
 // define appropriate specialization of rounding_control for built-in types
 #if defined(__i386__) || defined(__BORLANDC__) || defined(BOOST_MSVC)
 #  include <boost/interval/detail/x86_rounding_control.hpp>

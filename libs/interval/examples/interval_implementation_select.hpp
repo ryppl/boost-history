@@ -39,6 +39,9 @@
 #if defined(USE_BOOST)
 
 #include <boost/interval.hpp>
+#ifdef USE_BOOST_FAST_X86
+#include <boost/interval/ext/x86_fast_rounding_control.hpp>
+#endif
 using namespace boost;
 using namespace interval_lib;
 
@@ -47,12 +50,24 @@ struct my_checking: checking_base<double> {
   static bool is_empty(const double&, const double&) { return false; }
 };
 
+struct my_math:
+  save_state<rounded_transc_opp<double
+#ifdef USE_BOOST_FAST_X86
+    , rounded_arith_opp<double, x86_fast_rounding_control<double> >
+#endif
+  > >
+{};
+
 typedef
-  interval<double, interval_traits<double,
-				   compare_certainly<double>,
-				   save_state<rounded_transc_opp<double> >,
-				   my_checking> >
-  interval_type;
+  interval<double, interval_traits<double, compare_certainly<double>,
+				   my_math, my_checking> > interval_type_aux;
+
+#ifdef USE_BOOST_UNPROTECTED
+typedef unprotect<interval_type_aux>::type interval_type;
+typedef my_math protected_rounding;
+#else
+typedef interval_type_aux interval_type;
+#endif
 
 static const std::string interval_name = "boost::interval<double>";
 
