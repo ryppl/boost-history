@@ -36,13 +36,25 @@
             inline bool                          read( InputStream & is, Container & c ) const
             {
                c.clear();
-
+               get_typeid< Container >::value; // BCB workaround
+               return( read( is, c, seq_type< get_typeid< Container >::value >()));
+            }
+         private:
+            template< typename Container, class InputStream >
+            inline bool                          read
+                                                 (
+                                                    InputStream & is,
+                                                    Container   & c,
+                                                    seq_type< seq_container_type >
+                                                 ) const
+            {
                const base_type *       self = static_cast< const base_type * >( this );
                typename Container::value_type
                                        value;
 
                return(( *self ).readc( is, std::back_inserter( c ), value ));
             }
+            // [todo]: read( seq_type< assoc_container_type > ) -- map-like containers
          public:
             inline           container_output()
             {
