@@ -9,8 +9,8 @@
  * Authors assume no responsibility whatsoever for its use and makes 
  * no guarantees about its quality, correctness or reliability.
  *
- * First author acknowledges the support of the Faculty of Civil 
- * Engineering, University of Zagreb, Croatia.
+ * KF acknowledges the support of the Faculty of Civil Engineering, 
+ * University of Zagreb, Croatia.
  *
  */
 
@@ -21,10 +21,12 @@
 
 #ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
 
-#include <boost/static_assert.hpp> 
-#include <boost/type_traits/remove_const.hpp> 
-#include <boost/type_traits/is_same.hpp> 
 #include <boost/numeric/bindings/traits/detail/generate_const.hpp> 
+#include <boost/type_traits/remove_const.hpp> 
+#ifndef BOOST_NUMERIC_BINDINGS_NO_SANITY_CHECK
+#  include <boost/type_traits/is_same.hpp> 
+#  include <boost/static_assert.hpp> 
+#endif 
 
 namespace boost { namespace numeric { namespace bindings { namespace traits {
 
@@ -51,7 +53,11 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
   // e.g.  vector_detail_traits< std::vector<int>, std::vector<int> >
   // Note that  boost::remove_const<VType>::type == VIdentifier.
   template <typename VIdentifier, typename VType>
-  struct vector_detail_traits : default_vector_traits<VType, typename VType::value_type > {};
+  struct vector_detail_traits : default_vector_traits<VType, typename VType::value_type > 
+  {
+    typedef VIdentifier identifier_type; 
+    typedef VType       vector_type; 
+  };
 
   // vector_traits<> generic version: 
   template <typename V>
