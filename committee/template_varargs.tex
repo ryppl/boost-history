@@ -2,6 +2,7 @@
 \usepackage{hyperref}
 \usepackage{vmargin}
 \usepackage{amsmath}
+\usepackage{graphicx}
 \setpapersize{USletter}
 \setmarginsrb{1in}{1in}{1in}{1in}{0.25in}{0.25in}{0in}{0in}
 
@@ -21,7 +22,7 @@
 \date{}
 \maketitle
 
-\par\noindent Document number: NXXXX=04-0XXXX
+\par\noindent Document number: NXXXX=04-XXXX
 \par\noindent Date: \today
 \par\noindent Project: Programming Language C++, Evolution Working Group
 \par\noindent Reply-to: Douglas Gregor $<${\tt gregod@cs.rpi.edu}$>$
@@ -56,7 +57,7 @@ template<typename T1 = unused, typename T2 = unused,
 \end{verbatim}
 
 This technique is used by various C++ libraries~\cite{Tuples01,
-Jarvi02, Gurtovoy02}. Unfortunately, this method leads to very
+Jarvi02, Gurtovoy02}. Unfortunately, it leads to very
 long type names in error messages (compilers tend to print the
 defaulted arguments) and very long mangled names. It is also not
 scalable to additional arguments without resorting to preprocessor
@@ -81,85 +82,239 @@ typesafe C++ {\tt printf} that works for non-POD types.
 \section{Feature menu}
 Prior versions of this proposal~\cite{GJP03,GJP04a} described various
 points in the design space of variadic templates. In this version of
-the proposal, we have chosen to enumerate and discuss these design
-points, 
+the proposal, we have chosen to enumerate the various potential design
+decisions (mainly features) and discuss the impact of each on users
+and compilers. Fig.~\ref{fig:dependencies} illustrates the
+dependencies between features, such that an edge $A \rightarrow B$
+indicates that feature $A$ requires acceptence of feature $B$, e.g.,
+``Arbitrary matching patterns'' subsumes (and therefore requires
+acceptence of) ``const/volatile/reference patterns''. 
 
-\subsection{Basic variadics}
-Permits declaring variadic function and class templates and using the
-ellipsis to unpack arguments.
+\begin{figure}
+\center
+\includegraphics[width=6in,height=3in]{vt_deps}
+\caption{Feature dependency graph for variadic templates}
+\label{fig:dependencies}
+\end{figure}
 
-\subsection{First-class template parameter packs}
-Template parameter packs are normal C++ types, and are therefore
-``first class'' in the type system. For instance, one can do the
-following:
+The following sections describe each feature listed in
+Fig.~\ref{fig:dependencies}. Sec.~\ref{sec:menu} then provides several
+``specials'': prepacked sets of features that work well together and
+represent some overall goal for variadic templates. It is our hope
+that the committee will select a special or a set of features
+\textit{a la carte} for which we can draft a more formal
+specification. 
+
+\subsection{Basic variadic templates}
+\label{sec:basic}
+The most basic form of variadic templates requires the ability to
+declare class/struct/union and function templates that accept an
+arbitrary number of template arguments, declare function templates
+that accept an arbitrary number of (function) arguments, and access
+the ``extra'' template and function arguments.
+
+We adopt the use of the ellipsis operator ``\texttt{...}'' to
+represent variable-length argument lists. For variadic class templates
+we allow ``\texttt{...}'' as the ``kind'' of the last template
+parameter, which may optionally be followed by an identifier. The
+following class template accepts one type argument followed by zero or
+more other template arguments.
 
 \begin{verbatim}
-template<...> class tuple {};
-assert(is_same<tuple<int, double>, tuple<int, double> >::value);
+template<typename T, ... Tail> class tuple;
+
+typedef tuple<int, float, double, std::string, 5, std::vector> t;
 \end{verbatim}
+
+Variadic function templates are declared similarly, allowing one to
+explicitly specify any number of arguments:
+\begin{verbatim}
+template<... Args> void print_template_args();
+
+print_template_args<int, 17, 42.0, &X::m>();
+\end{verbatim}
+
+We refer to \texttt{Tail} and \texttt{Args} as ``template parameter
+packs'', because they pack together a set of template arguments into a
+single parameter. In their most basic form, template parameter packs
+provide only a single operation: unpacking via the ellipsis
+(\texttt{...}) operator). Unpacking splits a template parameter pack
+into its individual arguments, allowing each to be considered
+individually. For instance, the following code builds a recursive
+tuple from the types given:
+\begin{verbatim}
+template<typename Head, ... Tail> struct tuple { // #1
+  Head head;
+  tuple<Tail...> tail;
+};
+
+template<typename Head> struct tuple<Head> { // #2
+  Head head;
+};
+\end{verbatim}
+
+The instantiation of \texttt{tuple<int, double, std::string} uses the
+primary template (\#1) with \texttt{Head}=\texttt{int} and
+\texttt{Tail} containing \texttt{double} and \texttt{std::string},
+which we denote by \texttt{Tail}=\texttt{<double, std::string>}. The
+\texttt{tail} member is a tuple that will receive the template arguments
+\texttt{double} and \texttt{std::string}, in that order, due to the
+application of the \texttt{...} operator to the template parameter
+pack \texttt{Tail}. 
+
+The ellipsis operator represents both unpacking and packing arguments,
+depending on context. For instance, a partial specialization can fix
+some number of arguments and collect the rest in a template parameter
+pack:
+
+\begin{verbatim}
+// Searching for two adjacenct types...
+template<typename T, ... Elements> 
+struct adjacent_find : adjacent_find<Elements...> { };
+
+// Found adjacenct types!
+template<typename T, ... Rest>
+struct adjacent_find<T, T, Rest...> {
+  static const bool value = true; 
+  typedef T type;
+};
+
+// List is empty. We found nothing.
+template<> struct adjacent_find { static const bool value = false; };
+\end{verbatim}
+
+Here, the partial specialization matches the case where two adjacent
+types are the same and then collects the rest of the arguments into
+the template parameter pack \texttt{Rest}. The ellipsis operator can
+be applied to a parameter pack wherever there is a list of parameters
+(for packing) or arguments (for unpacking), including:
+\begin{itemize}
+  \item In a partial specialization (e.g., the \texttt{adjacent\_find} example)
+  \item In a \textit{template-id} (e.g., \texttt{tuple<Elements...>})
+  \item In a function type (e.g., \texttt{void(int, ArgTypes...)})
+\end{itemize}
+
+The ellipsis operator also applies to \textit{value} parameter packs,
+which store run-time values for type-safe variadic function
+templates. For instance, a type-safe \texttt{printf} might be declared
+as:
+
+\begin{verbatim}
+template<... Args> void printf(const char* s, Args args...);
+\end{verbatim}
+
+This declaration indicates that \texttt{printf} accepts a variable
+number of parameters (both template and function arguments): the
+\texttt{Args} template parameter pack contains the types of the
+arguments, whereas the \texttt{args} template parameter pack contains
+the values. The ellipsis operator following ``\texttt{args}''
+indicates that extra arguments to \texttt{printf} should be bundled
+into the \texttt{args} parameter pack and their types deduced and
+placed into the \texttt{Args} template parameter pack.
+
+The most basic formulation of variadic templates therefore consists
+of:
+\begin{itemize}
+\item The ability to declare template and value parameter packs
+\item The ability to unpack and pack template and value parameter
+  packs via the ellipsis operator.
+\item Partial ordering rules for class template partial
+  specializations and function templates in the presence of variadic
+  templates (discussed in a previous proposal~\cite{GJP04a}).
+\end{itemize}
 
 \subsection{First-class parameter packs}
-Parameter packs have actual storage and are CopyConstructible
-types. They can therefore be stored, copied, etc. This can be useful
-for building \texttt{tuple}~\cite{Jarvi02} facilities, e.g.,
+\label{sec:first-class-pp}
+In the basic formulation, template and value parameter packs are
+merely bundles of parameters that have no direct representation within
+the type system. However, we could make template parameter packs into
+actual types---albeit special ones that permit the use of the ellipsis
+operator---so that they could be passed to template arguments or
+compared against each other. Moreover, value parameter packs now have
+actual types based on the type of the associated template parameter
+pack, and may become first-class objects templates. Thus they can be
+default-constructed (if all types in them are default-constructible),
+copy-constructed or assigned (if all types of copy-constructible or
+assignable, respecitvely), and unpacked as needed. 
+
+First-class parameter packs have some advantages over the basic
+formulation of parameter packs, because it allows multiple arguments
+to be stored together without resorting to recursion as with the
+\texttt{tuple} template in Sec.~\ref{sec:basic}:
 \begin{verbatim}
 template<... Elements> 
-  class tuple
-  {
-  public:
-    tuple(Elements... elements) : elements(elements) { }
+class tuple
+{
+public:
+  tuple(Elements elements...) : elements(elements) { }
 
-  private:
-    Elements elements;
-  };
+private:
+  Elements elements;
+};
 \end{verbatim}
 
-Without first-class parameter packs, one typically needs to build
-tuple types recursively, unwrapping the (template) parameter pack at
-each step:
+Here we store members of every type in \texttt{Elements} in a single
+parameter pack within the tuple, instead of creating a chain of
+\texttt{tuple} instantiations where each stores a single element plus
+the next \texttt{tuple} in the chain. 
 
+\paragraph{User impact}: First-class parameter packs make writing some
+heterogenous data structures simpler because they can eliminate the
+need for recursive data structures. Performance (both compiler and
+generated code) will improve because the number of instantiations
+required to implement a heterogeneous data structure will be reduced
+from ${\cal O}(N)$ to ${\cal O}(1)$. This effect has already been seen
+when comparing the Boost.Tuples library~\cite{Tuples01}, which uses a
+recursive data structure, to a preprocessor-based library, which
+enumerates all data members. 
+
+First-class parameter packs may be somewhat confusing to users,
+because the distinction between a ``packed'' parameter pack and an
+unpacked one becomes very important. For instance, if one forgets to
+apply the ellipsis operator the compiler will pass the parameter pack
+itself, e.g.,
 \begin{verbatim}
-template<typename T, ... Rest>
-  class tuple : private tuple<Rest...>
-  {
-  public:
-    tuple(T head, Rest... rest) : tuple<Rest...>(rest...), head(head) { }
-
-  private:
-    T head;
-  };
-
-template<> class tuple {};
+template<... Args> void debugout(const std::string& s, Args args...)
+{
+  printf(("Debug: " + s).c_str(), args); // oops, should be "args..."
+}
 \end{verbatim}
 
-A smart compiler should theoretically be able to optimize this
-recursive version as well as the first-class, nonrecursive version
-above, the but in practice this does not occur. In any case, the
-recursive version places more burden on the compiler.
-\doug{Do we have this data around?}
+\paragraph{Compiler impact}: First-class parameter packs introduce
+more complexity into the implementation of variadic templates, because
+the compiler must construct actual types and objects for each
+parameter pack. In addition, there are some interesting interactions
+between the object model used for parameter packs and the method by
+which arguments are passed to function objects that require further
+consideration; see~\cite{GJP04a}. 
+
+\paragraph{Evaluation}: The most important realization with
+first-class parameter packs is that they can be emulated via recursive
+data structures. However, this emulation places an extra burden on
+users and compilers, and is known to result in poorer performance.
 
 \section{Initializer lists are parameter packs}
 Initializer lists are typeless entities stored in the compiler that
 can only be used in very restrictive ways for initializing
 aggregates. We could lift some of the restrictions on initializer
-lists by making them parameter packs. This would permit writing
+lists by making them (value) parameter packs. This would permit writing
 constructors and assignment operators that accept initializer lists,
 e.g.,
 
 \begin{verbatim}
 template<... Elements>
-  class tuple
-  {
-  public:
-    // #1: Build from an initializer list
-    tuple(Elements elements) : elements(elements) { }
+class tuple
+{
+public:
+  // #1: Build from an initializer list
+  tuple(Elements elements) : elements(elements) { }
 
-    // #2: Build from an initializer list, converting as necessary
-    template<... Args> tuple(Args args) : elements(args...) { }
+  // #2: Build from an initializer list, converting as necessary
+  template<... Args> tuple(Args args) : elements(args...) { }
 
-  private:
-    Elements elements;
-  };
+private:
+  Elements elements;
+};
 
 // Passes initializer list as parameter pack to constructor #1
 tuple<int, double, float> t1 = { 17, 3.14159, 2.718f };
@@ -172,63 +327,77 @@ Additionally, this change permits emulation of sequence
 constructors~\cite{DoReStr03} via parameter packs, e.g.,
 \begin{verbatim}
 template<typename T>
-  class vector
+class vector
+{
+public:
+  template<... Elements> vector(Elements elements)
   {
-  public:
-    template<... Elements> vector(Elements elements)
-    {
-      tr1::array<T, (pp_length<Elements>::value)> a = elements;
-      assign(a.begin(), a.end());
-    }
-  };
+    tr1::array<T, (pp_length<Elements>::value)> a = elements;
+    assign(a.begin(), a.end());
+  }
+};
 \end{verbatim}
 
 The construction of \texttt{a} actually performs aggregate
 initialization from the incoming parameter pack, which unfortunately
 requires one extra copy. This copy can be elided by implementing the
-constructor as a metaprogram:
+constructor as a metaprogram\footnote{See Sec.~\ref{sec:pp-size} for a
+  discussion of \texttt{pp\_length}}:
 
 \begin{verbatim}
 template<typename T>
-  class vector
+class vector
+{
+public:
+  template<... Elements> vector(Elements elements)
   {
-  public:
-    template<... Elements> vector(Elements elements)
-    {
-      reserve(pp_length<Elements>::value);
-      do_push_back(elements...);
-    }
+    reserve(pp_length<Elements...>::value);
+    do_push_back(elements...);
+  }
 
-    void push_back(const T&);
+  void push_back(const T&);
 
-  private:
-    template<... Rest>
-    void do_push_back(const T& x, Rest... rest) {
-      push_back(x);
-      do_push_back(rest...);
-    }
+private:
+  template<... Rest>
+  void do_push_back(const T& x, Rest... rest) {
+    push_back(x);
+    do_push_back(rest...);
+  }
 
-    void do_push_back() {}
-  };
+  void do_push_back() {}
+};
 \end{verbatim}
 
-\subsection{Parameter packs have a defined type}
-The type of parameter packs has been intentionally left unspecified,
-because they are true language entities. However, this need not always
-be the case. We could define the type of parameter packs and permit
-users to name this type directly as
-\texttt{std::parameter\_pack<Elements...>}. This gives us an
-alternative syntax for accepting parameter packs as function or
-template arguments: 
-\begin{verbatim}
-template<... Elements>
-  void f(parameter_pack<Elements...> p);
-\end{verbatim}
+\subsection{Ellipsis operator for classes}
+One extension of the ellipsis operator would permit it to be applied
+for any class type, which would have the effect of unpacking all of
+the fields in that class type into separate arguments. This
+information could be used for compile-time reflective metaprogramming,
+e.g., to perform automatic marshalling or to construct property
+inspectors. TBD TBD HERE HERE
+
 
 \subsection{Length of parameter packs}
-\label{sec:length-of-parameter-packs}
-Unpacking a template or value parameter pack in a \texttt{sizeof}
-expression will return its length, e.g.,
+\label{sec:pp-size}
+One can determine the number of elements in a template parameter pack
+with the following template:
+\begin{verbatim}
+template<...> struct pp_length;
+
+template<typename T, ... Rest>
+struct pp_length<T, Rest...> {
+  static const int value = 1 + pp_length<Rest...>::value; 
+};
+
+template<> struct pp_length<> {
+  static const int value = 0;
+};
+\end{verbatim}
+
+However, this requires ${\cal O}(N)$ instantiations for a parameter
+pack of length $N$, which can be inefficient to compile. This option
+proposed that unpacking a template or value parameter pack in a
+\texttt{sizeof} expression will return its length, e.g.,
 
 \begin{verbatim}
 template<... Args>
@@ -243,11 +412,11 @@ template<... Args>
 \subsection{Get Nth element for parameter pack}
 Parameter packs are only accessible linearly, by peeling off arguments
 at the front of the parameter pack. A general tuple, however, requires
-the ability to access the Nth element. For parameter packs, we would
-like to be able to access the Nth element. For this we propose to use
-the \texttt{[]} operator, but restrict the argument to integral
-constant expressions because the result type differs depending on the
-value of the argument. For instance,
+the ability to access the $N^{\text{th}}$ element. For parameter
+packs, we would like to be able to access the Nth element. For this we
+propose to use the \texttt{[]} operator, but restrict the argument to
+integral constant expressions because the result type differs
+depending on the value of the argument. For instance,
 
 \begin{verbatim}
 template<... Args>
@@ -310,6 +479,14 @@ template<... Args, typename R>
     typedef typename Args::[1] second_argument_type;
   };
 \end{verbatim}
+
+\textbf{Evaluation}: We sincerely hope that \texttt{decltype} will be
+available in C++0x to make the \texttt{::[]} operator unnecessary. In
+that case, permitting the \texttt{[]} operator on value parameter
+packs is sufficient to provide this capability.
+
+\subsection{Pairwise expansion}
+Use zipping tuples as the example
 
 \section{Syntax and Semantics}
 \subsection{Variadic templates}
@@ -698,508 +875,7 @@ template<typename T>
   }
 \end{verbatim}
 
-\section{Examples}
-To demonstrate the use of variadic templates, this section gives
-skeletal implementations of four library components using variadic
-templates,. All of these proposals were accepted by the library
-working group into the first library TR, and are implementable to some
-degree in C++03. However, all of them would benefit from variadic
-templates in that the implementations can be more complete, more
-useful, and more readable than their C++03 counterparts. The following
-libraries are implemented:
-
-\begin{itemize}
-\item Member pointer adaptors~\cite{Dimov03a}
-\item Tuples~\cite{Jarvi02}
-\item Function object wrappers~\cite{Gregor02}
-\item Function object binder~\cite{Dimov03b}
-\end{itemize}
-
-The implementations are not generally complete, but omit only features
-that are irrelevant to the discussion of variadic template. The
-implementations use several class templates (metafunctions) from the
-type traits proposal~\cite{Maddock03}. Additionally, we use the
-keyword {\tt auto} to make the examples cleaner and easier by omitting
-the messy---but expressible--return types; however, this proposal does
-not strictly depend on the {\tt decltype} proposal~\cite{Jarvi03}.
-
-\subsection{Building Blocks}
-\label{building_blocks}
-The class template {\tt enable\_if} is used liberally to help guide
-the overload process by eliminating candidates from the overload set
-that would otherwise cause ambiguities or be selected when they
-shouldn't be. It is defined as:
-
-\small
-\begin{verbatim}
-template<bool Cond, typename T> struct enable_if;
-template<typename T> struct enable_if<true, T> { typedef T type; };
-template<typename T> struct enable_if<false, T> {};
-\end{verbatim}
-\normalsize
-
-We can count the number of arguments in a parameter pack with this
-simple class template, using {\tt integral\_constant} from the type
-traits proposal~\cite{Maddock03} (part of the first library technical
-report~\cite{Austern03}):
-
-\small
-\begin{verbatim}
-// Count the number of arguments in a template parameter pack
-template<...> struct count_args;
-
-template<> struct count_args<> : integral_constant<int, 0> {};
-
-template<typename T1, ... Args> struct count_args<T1, Args...>
-  : integral_constant<int, (1 + count_args<Args...>::value)> {};
-\end{verbatim}
-\normalsize
-
-\subsection{Member pointer adaptor implementation}
-\label{mem_fnimpl}
-The following code implements the enhanced member pointer adaptor
-proposal~\cite{Dimov03a}. This implementation is complete.
-
-\small
-\begin{verbatim}
-// Adaptor for member function pointers
-template<typename Class, typename FunctionType>
-struct mem_fn_adaptor
-{
-  typedef typename function_traits<FunctionType>::result_type result_type;
-
-  mem_fn_adaptor(FunctionType Class::*pmf) : pmf(pmf) {}
-  
-  template<... Args>
-  result_type operator()(Class& object, Args... args) const
-    { return (object.*pmf)(args...); }
-
-  template<... Args>
-  result_type operator()(const Class& object, Args&... args) const
-    { return (object.*pmf)(args...); }
-
-  template<typename T, ... Args>
-  typename enable_if<(!is_base_of<Class, T>::value), result_type>::type
-  operator()(T& ptr, Args&... args) const
-    { return ((*ptr).*pmf)(args...); }
-
-  template<typename T, ... Args>
-  typename enable_if<(!is_base_of<Class, T>::value), result_type>::type
-  operator()(const T& ptr, Args&... args) const
-    { return ((*ptr).*pmf)(args...); }
-
-private:
-  FunctionType Class::*pmf;
-};
-
-// Adaptor for member data pointers (for completeness only)
-template<typename Class, typename T>
-struct mem_ptr_adaptor
-{
-  typedef const T& result_type;
-
-  mem_ptr_adaptor(T Class::*pm) : pm(pm) {}
-
-  T& operator()(Class& object) const { return object.*pm; }
-  const T& operator()(const Class& object) const { return object.*pm; }
-
-  template<typename Ptr> 
-  typename enable_if<(!is_base_of<Class, Ptr>::value), const T&>::type
-    operator()(Ptr& ptr) const { return (*ptr).*pm; }
-
-  template<typename Ptr> 
-  typename enable_if<(!is_base_of<Class, Ptr>::value), const T&>::type
-    operator()(const Ptr& ptr) const { return (*ptr).*pm; }
-
-private:
-  T Class::*pm;
-};
-
-template<typename Class, typename FunctionType>
-typename enable_if<(is_function<FunctionType>::value), 
-                   mem_fn_adaptor<Class, FunctionType> >::type
-mem_fn(FunctionType Class::*pmf)
-  { return mem_fn_adaptor<Class, FunctionType>(pmf); }
-
-template<typename Class, typename T>
-typename enable_if<(!is_function<T>::value), 
-                   mem_ptr_adaptor<Class, T> >::type
-mem_fn(T Class::*pm)
-  { return mem_ptr_adaptor<Class, T>(pm); }
-\end{verbatim}
-\normalsize 
-
-\subsection{Tuple implementation}
-\label{tupleimpl}
-The following code implements the interesting portions of the Tuple
-proposal~\cite{Jarvi02} using variadic as proposed here. 
-
-\small
-\begin{verbatim}
-// Derivation from tuple_base indicates that a type is a tuple
-class tuple_base {};
-
-// Determine if type T is a tuple
-template<typename T>
-struct is_tuple
-  { static const bool value = is_base_of<tuple_base, T>::value; };
-
-// A tuple of arbitrary length N
-template<... Elements>
-class tuple : public tuple_base 
-{
-public:
-  static const size_t size = count_args<Elements...>::value;
-
-  tuple() {}
-
-  // enable_if condition ensures that we only match if N arguments are given
-  explicit tuple(const Elements&... elements) : elements(elements) {}
-
-  // enable_if condition only allows us to attempt implicit conversions
-  // from tuples of the appropriate length
-  template<typename Tuple>
-  tuple(const Tuple& other,
-        typename enable_if<(is_tuple<Tuple>::value && size == Tuple::size), 
-                           void>::type* = 0)
-    : elements(other.elements...) {}
-
-  // enable_if condition only allows us to attempt assignment from tuples of
-  // the appropriate length
-  template<typename Tuple>
-  typename enable_if<(is_tuple<Tuple>::value && size == Tuple::size),
-                     tuple&>::type
-  operator=(const Tuple& other)
-  {
-    *this = tuple(other.elements...);
-    return *this;
-  }
-
-  Elements elements;
-};
-
-// tuple_element
-template<int I, typename Head, typename Tail>
-  struct tuple_element<I, tuple<Head, Tail...> >
-    : tuple_element<I-1, tuple<Tail...> > { };
-
-template<typename Head, typename Tail>
-  struct tuple_element<0, tuple<Head, Tail...> >
-  {
-    typedef Head type;
-  };
-
-// make_tuple implementation
-template<typename T>
-  struct make_tuple_element_type
-  {
-    typedef T type;
-  };
-
-template<typename T>
-  struct make_tuple_element_type<reference_wrapper<T> >
-  {
-    typedef T& type;
-  };
-
-template<... Elements> 
-  auto make_tuple(const Elements&... elements)
-  {
-    typedef tuple<typename make_tuple_element_type<Elements>::type...>
-      result_type;
-    return result_type(elements...);
-  }
-
-// tie implementation
-template<... Elements>
-  tuple<Elements> tie(Elements&... elements)
-  { return tuple<Elements&...>(elements...); }
-\end{verbatim}
-\normalsize
-
-\subsection{Function implementation}
-\label{functionimpl}
-This section implements the core interesting portions of class
-template {\tt function} from the function object wrapper
-proposal~\cite{Gregor02}. The implementation of this library is much
-more subtle than that of the prior libraries, particularly the use of
-template parameter deduction and explicit specification of function
-template arguments to resolve the address of an overloaded function
-within the constructor. The implementation is complete with one
-exception: it does not properly support function pointers. The
-modifications to account for function pointers are simple but are
-outside the scope of this proposal.
-
-\small
-\begin{verbatim}
-struct bad_function_call : public std::exception {};
-
-template<typename> struct function;
-
-template<typename R, ... ArgumentTypes>
-  struct function<R(ArgumentTypes...)>
-  {
-    typedef R result_type;
-
-    template<typename Functor>
-      auto functor_invoker(ArgumentTypes&... args) const
-      { return (*static_cast<Functor*>(functor))(args...); }
-    
-    template<typename Functor> 
-      static void* functor_manager(void* ptr, bool clone)
-      { 
-        const Functor* functor = static_cast<Functor*>(ptr);
-        if (clone) return new Functor(*functor); 
-        else { delete functor; return 0; }
-      }
-
-    static void* trivial_manager(const void* ptr, bool)
-    { return const_cast<void*>(ptr); }
-
-    Function function::* invoker;
-    mutable void*        functor;
-    void* (*manager)(void*, bool /* clone or delete */);
-
-    struct clear_type;
-
-  public:
-    function() : invoker(0), functor(0), manager(0) {}
-    
-    function(const function& other) : invoker(0), functor(0), manager(0)
-      { 
-        if (other.invoker) {
-          invoker = other.invoker;
-          functor = other.manager(other.functor, true);
-          manager = other.manager;
-        }
-      }
-
-    template<typename F> 
-      function(F f, 
-               typename enable_if<(!is_integral<F>::value, void*>::type = 0) 
-        : invoker(0), functor(0), manager(0)
-      {
-        invoker = &function::functor_invoker<F>;
-        functor = new Functor(f);
-        manager = &functor_manager<F>;
-      }
-
-    template<typename F> 
-      function(reference_wrapper<F> f) : invoker(0), functor(0), manager(0)
-      { 
-        invoker = &function::functor_invoker<F>;
-        functor = &f.get();
-        manager = &trivial_manager;
-      }
-    
-    template<typename T, typename C> 
-      function(T C::*pm) : invoker(0), functor(0), manager(0)
-      { *this = std::mem_fn(pm); }
-
-    function(clear_type*) : invoker(0), functor(0), manager(0) {}
-    
-    ~function() { if (invoker) manager(functor, false); }
-
-    function& operator=(const function& other)
-    {
-      function tmp(other);
-      tmp.swap(*this);
-      return *this;
-    }
-    
-    template<typename F> 
-      typename enable_if<(!is_integral<F>::value, function&>::type
-      operator=(F f)
-      {
-        function tmp(f);
-        tmp.swap(*this);
-        return *this;
-      }
-    
-    function& operator=(clear_type*)
-    {
-      if (invoker) { 
-        manager(functor, false);
-        invoker = 0;
-        functor = 0;
-        manager = 0;
-      }
-    }
-
-    operator bool() const { return invoker; }
-
-    result_type operator()(ArgumentTypes... args) const
-    {
-      if (!invoker) throw bad_function_call;
-      return (this->*invoker)(args...);
-    }
-    
-    void swap(function& other)
-    {
-      using std::swap;
-      swap(invoker, other.invoker);
-      swap(functor, functor);
-      swap(manager, manager);
-    }
-  };
-\end{verbatim}
-\normalsize
-
-\subsection{Bind implementation}
-\label{bindimpl}
-The following code implements the enhanced binder
-proposal~\cite{Dimov03b} using variadic templates and building on the
-existing member pointer adaptor code. This implementation is complete,
-with two exceptions (both of which require uninteresting but
-nontrivial code, expressible in C++03):
-\begin{itemize}
-  \item {\tt result\_type} is not specified in {\tt binder}
-  \item arity checking is not performed at bind time
-\end{itemize}
-
-\small
-\begin{verbatim}
-// Placeholders
-template<int N> struct placeholder {};
-
-namespace placeholders {
-  typedef placeholder<1> _1;
-  typedef placeholder<2> _2;
-  typedef placeholder<3> _3;
-}
-
-template<typename T> struct is_placeholder : integral_constant<size_t, 0> {};
-
-template<int N> 
-struct is_placeholder<placeholder<N> > : integral_constant<size_t, N> {};
-
-// Lambda
-template<typename X> X& lambda(const reference_wrapper<X>& x)
-  { return x.get(); }
-template<typename X> X& lambda(X& x)
-  { return x; }
-
-// Get placeholder argument
-template<typename T1, ... Args>
-  T1& get_placeholder_arg(placeholder<1>, T1& t1, Args&...)
-  { return t1; }
-
-template<typename T1, typename T2, ... Args>
-  T2& get_placeholder_arg(placeholder<2>, T1&, T2& t2, Args&...)
-  { return t2; }
-
-template<typename T1, typename T2, typename T3, ... Args>
-  T2& get_placeholder_arg(placeholder<3>, T1&, T2&, T3& t3, Args&...)
-  { return t3; }
-
-template<int N, typename T1, typename T2, typename T3, ... Args>
-  auto get_placeholder_arg(placeholder<N>, T1&, T2&, T3&, Args&... args)
-  { return get_placeholder_arg(placeholder<N-3>(), args...); }
-
-// Mu
-template<typename X, typename Args> X& mu(reference_wrapper<X>& x, Args&)
-  { return x.get(); }
-
-template<typename X, typename Args>
-auto 
-mu(X&, Args& args, 
-   typename enable_if<(is_placeholder<X>::value), void*>::type=0)
-{ 
-  return get_placeholder_arg(placeholder<is_placeholder<X>::value>(), args...);
-}
-
-template<typename X, typename Args>
-  auto 
-  mu(X& x, Args& args, 
-     typename enable_if<(is_bind_expression<X>::value), void*>::type = 0)
-  { return x(args...); }
-
-template<typename X, typename Args> X& mu(X& x, Args&)
-  { return x; }
-
-// Return type of bind(...)
-template<typename F, ... BoundArgs>
-struct binder
-{
-  binder(const F& f, const BoundArgs&... bound_args)
-    : f(f), bound_args(bound_args...) {}
-
-  template<... Args> auto operator()(Args&... args)
-    { return lambda(f)(mu(bound_args, args...)...); }
-
-  template<... Args> auto operator()(Args&... args) const
-    { return lambda(f)(mu(bound_args, args...)...); }
-
-private:
-  F f;
-  BoundArgs bound_args;
-};
-
-// Helper to construct binder objects
-template<typename F, ... BoundArgs>
-  binder<F, BoundArgs...> make_binder(F f, const BoundArgs&... bound_args)
-  { return binder<F, BoundArgs...>(f, bound_args...); }
-
-// Determine if a type T is a binder type
-template<typename T> struct is_bind_expression : integral_constant<bool, false> {};
-
-template<typename F, ... BoundArgs>
-struct is_bind_expression<binder<F, BoundArgs...> > : integral_constant<bool, true> {};
-
-// Bind overload for function objects and function pointers
-template<typename F, ... BoundArgs>
-  auto bind(F f, const BoundArgs&... bound_args)
-  { return binder<F, BoundArgs...>(f, bound_args...); }
-
-// Bind overload for member pointers (both function and data)
-template<typename Class, typename T, ... BoundArgs>
-  auto bind(T Class::*pm, const BoundArgs&... bound_args)
-  { return make_binder(mem_fn(f), bound_args...); }
-\end{verbatim}
-\normalsize
-
 \section{Alternatives \& Extensions}
-\subsection{Ellipsis operator for ordinary class types}
-One extension of the ellipsis operator would permit it to be applied
-for any class type, which would have the effect of unpacking all of
-the fields in that class type into separate arguments. This
-information could be used for compile-time reflective metaprogramming,
-e.g., to perform automatic marshalling or to construct property
-inspectors. There are several open questions to be considered for this
-extension:
-
-\begin{enumerate}
-\item How should base classes be handled? Base classes need to be
-  forbidden (severely limiting), enumerated as arguments in some
-  defined order, or have their fields enumerated. The middle option
-  provides the most information, assuming that some method exists to
-  distinguish a base class from a member.
-
-\item How should protected/private members or base classes be
-  handled? Enumerating protected and private members is essential for
-  many applications of compile-time reflection, but through this
-  operator one can easily (and even accidentally) break
-  encapsulation. 
-  
-\item Would it lead to confusing situations? The proposed ellipsis
-  operator is very different from other C++ operators, because it
-  essentially permits macro-like expansion via template parameters. If
-  extended to support arbitrary class types, problems involving the
-  use of the ellipsis operator might be harder to debug, because,
-  e.g., one may accidentally use \texttt{...} on a type that was never
-  meant to be unbundled. Without this extension, diagnosing errors in
-  the use of \texttt{...} would be very easy and very effective.
-
-\item What syntax should we use? If the ellipsis operator applies to
-  any class type, it is not clear what types the \texttt{...} binds
-  to. We will require a new syntax that explicitly states which types
-  to unpack.
-\end{enumerate}
-
-The combination of these factors (especially \#2) leads us to believe
-that reflection should be supported differently, although it is very
-likely that the underlying mechanism will take advantage of variadic
-templates. 
 
 \subsection{Parameter pack Nth element and size operators}
 Access to the N$^\text{th}$ element of a parameter pack requires a
@@ -1350,3 +1026,17 @@ parameter packs.
 \bibliographystyle{abbrv}
 \bibliography{template_varargs}
 \end{document}
+
+
+template<int N, ... PP>
+  inline decltype(PP()[N]) mu(arg<N>, PP&& pp) { return pp[N]; }
+
+template<typename T, typename PP>
+  inline T& mu(T& x, PP&) { return x; }
+
+template<... Args>
+operator()(Args&& args)
+{
+  return lambda(f)(mu(bound_args, args...)...);
+}
+
