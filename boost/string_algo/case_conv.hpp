@@ -10,6 +10,7 @@
 #ifndef BOOST_STRING_CASE_CONV_HPP
 #define BOOST_STRING_CASE_CONV_HPP
 
+#include <boost/string_algo/config.hpp>
 #include <algorithm>
 #include <locale>
 #include <boost/detail/iterator.hpp>
@@ -33,7 +34,8 @@ namespace boost {
             End, 
             Output,
             string_algo::detail::tolowerF<
-                typename detail::iterator_traits<InputIteratorT>::value_type>(Loc) );
+                BOOST_STRING_DEDUCED_TYPENAME 
+                    detail::iterator_traits<InputIteratorT>::value_type>(Loc) );
     }
 
     // const version of tolower
@@ -45,7 +47,7 @@ namespace boost {
             Input.begin(), 
             Input.end(), 
             std::back_inserter<SeqT>( Output ),
-            string_algo::detail::tolowerF<typename SeqT::value_type>(Loc) );
+            string_algo::detail::tolowerF<BOOST_STRING_DEDUCED_TYPENAME SeqT::value_type>(Loc) );
 
         return Output;
     }
@@ -58,7 +60,7 @@ namespace boost {
             Input.begin(), 
             Input.end(), 
             Input.begin(),
-            string_algo::detail::tolowerF<typename SeqT::value_type>(Loc) );
+            string_algo::detail::tolowerF<BOOST_STRING_DEDUCED_TYPENAME SeqT::value_type>(Loc) );
         
         return Input;
     }
@@ -79,7 +81,8 @@ namespace boost {
             End, 
             Output,
             string_algo::detail::toupperF<
-                typename detail::iterator_traits<InputIteratorT>::value_type>(Loc) );
+                BOOST_STRING_DEDUCED_TYPENAME 
+                    detail::iterator_traits<InputIteratorT>::value_type>(Loc) );
     }
 
     // const version of toupper
@@ -91,7 +94,7 @@ namespace boost {
             Input.begin(), 
             Input.end(), 
             std::back_inserter<SeqT>( Output ),
-            string_algo::detail::toupperF<typename SeqT::value_type>(Loc) );
+            string_algo::detail::toupperF<BOOST_STRING_DEDUCED_TYPENAME SeqT::value_type>(Loc) );
 
         return Output;
     }
@@ -104,7 +107,7 @@ namespace boost {
             Input.begin(), 
             Input.end(), 
             Input.begin(),
-            string_algo::detail::toupperF<typename SeqT::value_type>(Loc) );
+            string_algo::detail::toupperF<BOOST_STRING_DEDUCED_TYPENAME SeqT::value_type>(Loc) );
         
         return Input;
     }

@@ -10,6 +10,7 @@
 #ifndef BOOST_STRING_PREDICATE_HPP
 #define BOOST_STRING_PREDICATE_HPP
 
+#include <boost/string_algo/config.hpp>
 #include <boost/string_algo/find.hpp>
 #include <boost/string_algo/detail/predicate.hpp>
 
@@ -56,7 +57,7 @@ namespace boost {
         ForwardIterator2T SubBegin,
         ForwardIterator2T SubEnd )
     {
-        typedef typename boost::detail::
+        typedef BOOST_STRING_DEDUCED_TYPENAME boost::detail::
             iterator_traits<ForwardIterator1T>::iterator_category category;
 
         return string_algo::detail::
@@ -125,13 +126,40 @@ namespace boost {
         return ( pit==SubEnd ) && ( it==End );
     }
 
-    // start_with sequence version
+    // equals sequence version
     template< typename SeqT1, typename SeqT2 >
     inline bool equals( 
         const SeqT1& Input, 
         const SeqT2& Substr )
     {
         return equals( Input.begin(), Input.end(), Substr.begin(), Substr.end() );
+    }
+
+//  all predicate  -----------------------------------------------//
+
+    // all predicate iterator version
+    template< typename ForwardIterator1T, typename PredicateT >
+    inline bool all( 
+        ForwardIterator1T Begin, 
+        ForwardIterator1T End, 
+        PredicateT Predicate)
+    {
+        for( ForwardIterator1T It=Begin; It!=End; It++ )
+        {
+            if ( !Predicate(*It) )
+                return false;
+        }
+        
+        return true;
+    }
+
+    // all predicate sequence version
+    template< typename SeqT1, typename PredicateT >
+    inline bool all( 
+        const SeqT1& Input, 
+        PredicateT Predicate )
+    {
+        return all( Input.begin(), Input.end(), Predicate );
     }
 
 

@@ -10,6 +10,7 @@
 #ifndef BOOST_STRING_REPLACE_HPP
 #define BOOST_STRING_REPLACE_HPP
 
+#include <boost/string_algo/config.hpp>
 #include <boost/string_algo/iterator_range.hpp>
 #include <boost/string_algo/replace_impl.hpp>
 #include <boost/string_algo/detail/find.hpp>
@@ -39,10 +40,10 @@ namespace boost {
             Output,
             Range,
             string_algo::detail::
-                create_find_range( Range, string_algo::make_range( SearchBegin, SearchEnd ) ),
+                create_find_range( Range, make_range( SearchBegin, SearchEnd ) ),
             string_algo::detail::
                 identity_formatF< iterator_range<ForwardIterator2T> >(
-                    string_algo::make_range( FormatBegin, FormatEnd ) ) );
+                    make_range( FormatBegin, FormatEnd ) ) );
     }
 
     // replace_range output iterator version
@@ -53,8 +54,7 @@ namespace boost {
     inline OutputIteratorT replace_range_copy(
         OutputIteratorT Output,
         const InputT& Input,
-        typename InputT::const_iterator SearchBegin,
-        typename InputT::const_iterator SearchEnd,
+        const iterator_range<BOOST_STRING_DEDUCED_TYPENAME InputT::const_iterator>& SearchRange,
         const FormatT& Format )
     {
         return string_algo::replace_copy(
@@ -63,17 +63,34 @@ namespace boost {
             string_algo::detail::
                 create_find_range(
                     Input,
-                    string_algo::make_range( SearchBegin, SearchEnd ) ),
+                    SearchRange ),
             string_algo::detail::
                 identity_formatF<FormatT>( Format ) );
+    }
+
+    template< 
+        typename OutputIteratorT,
+        typename InputT, 
+        typename FormatT >
+    inline OutputIteratorT replace_range_copy(
+        OutputIteratorT Output,
+        const InputT& Input,
+        BOOST_STRING_DEDUCED_TYPENAME InputT::const_iterator SearchBegin,
+        BOOST_STRING_DEDUCED_TYPENAME InputT::const_iterator SearchEnd,
+        const FormatT& Format )
+    {
+        return replace_range_copy(
+            Output,
+            Input,
+            make_range( SearchBegin, SearchEnd ),
+            Format );
     }
 
     // replace_range sequence version
     template< typename InputT, typename FormatT >
     inline InputT replace_range_copy( 
         const InputT& Input,
-        typename InputT::const_iterator SearchBegin,
-        typename InputT::const_iterator SearchEnd,
+        iterator_range<BOOST_STRING_DEDUCED_TYPENAME InputT::const_iterator> SearchRange,
         const FormatT& Format )
     {
         return string_algo::replace_copy( 
@@ -81,17 +98,29 @@ namespace boost {
             string_algo::detail::
                 create_find_range(
                     Input,
-                    string_algo::make_range( SearchBegin, SearchEnd ) ),
+                    SearchRange ),
             string_algo::detail::
                 identity_formatF<FormatT>( Format ) );
+    }
+
+    template< typename InputT, typename FormatT >
+    inline InputT replace_range_copy( 
+        const InputT& Input,
+        BOOST_STRING_DEDUCED_TYPENAME InputT::const_iterator SearchBegin,
+        BOOST_STRING_DEDUCED_TYPENAME InputT::const_iterator SearchEnd,
+        const FormatT& Format )
+    {
+        return replace_range_copy( 
+            Input,
+            make_range( SearchBegin, SearchEnd ),
+            Format );
     }
 
     // replace_range in-place sequence version
     template< typename InputT, typename FormatT >
     inline InputT& replace_range( 
         InputT& Input,
-        typename InputT::iterator SearchBegin,
-        typename InputT::iterator SearchEnd,
+        iterator_range<BOOST_STRING_DEDUCED_TYPENAME InputT::iterator> SearchRange,
         const FormatT& Format )
     {
         return string_algo::replace( 
@@ -99,9 +128,22 @@ namespace boost {
             string_algo::detail::
                 create_find_range(
                     Input,
-                    string_algo::make_range( SearchBegin, SearchEnd ) ),
+                    SearchRange ),
             string_algo::detail::
                 identity_formatF<FormatT>( Format ) );
+    }
+
+    template< typename InputT, typename FormatT >
+    inline InputT& replace_range( 
+        InputT& Input,
+        BOOST_STRING_DEDUCED_TYPENAME InputT::iterator SearchBegin,
+        BOOST_STRING_DEDUCED_TYPENAME InputT::iterator SearchEnd,
+        const FormatT& Format )
+    {
+        return replace_range(
+            Input, 
+            make_range( SearchBegin, SearchEnd ),
+            Format );
     }
 
 //  replace_first --------------------------------------------------------------------//
@@ -129,10 +171,10 @@ namespace boost {
             string_algo::detail::
                 create_find_first( 
                         Range,      
-                        string_algo::make_range( SearchBegin, SearchEnd ) ),
+                        make_range( SearchBegin, SearchEnd ) ),
             string_algo::detail::
                 identity_formatF< iterator_range<ForwardIterator3T> >(
-                    string_algo::make_range( FormatBegin, FormatEnd ) ) );
+                    make_range( FormatBegin, FormatEnd ) ) );
     }
 
     // replace_first output iterator version
@@ -211,10 +253,10 @@ namespace boost {
             string_algo::detail::
                 create_find_lastF( 
                         Range,
-                        string_algo::make_range( SearchBegin, SearchEnd ) ),
+                        make_range( SearchBegin, SearchEnd ) ),
             string_algo::detail::
                 identity_formatF< iterator_range<ForwardIterator3T> >(
-                    string_algo::make_range( FormatBegin, FormatEnd ) ) );
+                    make_range( FormatBegin, FormatEnd ) ) );
     }
 
     // replace_last output iterator version
@@ -294,10 +336,10 @@ namespace boost {
             string_algo::detail::
                 create_find_nth( 
                     Range,
-                    string_algo::make_range( SearchBegin, SearchEnd ), Nth ),
+                    make_range( SearchBegin, SearchEnd ), Nth ),
             string_algo::detail::
                 identity_formatF< iterator_range<ForwardIterator3T> >(
-                    string_algo::make_range( FormatBegin, FormatEnd ) ) );
+                    make_range( FormatBegin, FormatEnd ) ) );
     }
 
     template< 
@@ -379,10 +421,10 @@ namespace boost {
             string_algo::detail::
                 create_find_first( 
                         Range,
-                        string_algo::make_range( SearchBegin, SearchEnd ) ),
+                        make_range( SearchBegin, SearchEnd ) ),
             string_algo::detail::
                 identity_formatF< iterator_range<ForwardIterator3T> >(
-                    string_algo::make_range( FormatBegin, FormatEnd ) ) );
+                    make_range( FormatBegin, FormatEnd ) ) );
     }
 
     // replace_all iterator version
@@ -436,6 +478,152 @@ namespace boost {
                 identity_formatF<FormatT>( Format ) );
     }
     
+
+//  replace_head --------------------------------------------------------------------//
+
+    // replace_head iterator version
+    template< 
+        typename OutputIteratorT,
+        typename ForwardIterator1T, 
+        typename ForwardIterator2T>
+    inline OutputIteratorT replace_head_copy(
+        OutputIteratorT Output,
+        ForwardIterator1T Begin,
+        ForwardIterator1T End,
+        unsigned int N,
+        ForwardIterator2T FormatBegin,
+        ForwardIterator2T FormatEnd )
+    {
+        iterator_range<ForwardIterator1T> Range( Begin, End );
+
+        return string_algo::replace_copy(
+            Output,
+            Range, 
+            string_algo::detail::create_find_head( Range, N ),
+            string_algo::detail::
+                identity_formatF< iterator_range<ForwardIterator2T> >(
+                    make_range( FormatBegin, FormatEnd ) ) );
+    }
+
+    template< 
+        typename OutputIteratorT,
+        typename InputT, 
+        typename FormatT >
+    inline OutputIteratorT replace_head_copy(
+        OutputIteratorT Output,
+        const InputT& Input,
+        unsigned int N,
+        const FormatT& Format )
+    {
+        return string_algo::replace_copy(
+            Output,
+            Input,
+            string_algo::detail::create_find_head( Input, N ),
+            string_algo::detail::
+                identity_formatF<FormatT>( Format ) );
+    }
+
+    // replace_head sequence version
+    template< typename InputT, typename FormatT >
+    inline InputT replace_head_copy( 
+        const InputT& Input,
+        unsigned int N,
+        const FormatT& Format )
+    {
+        return string_algo::replace_copy( 
+            Input,
+            string_algo::detail::create_find_head( Input, N ),
+            string_algo::detail::
+                identity_formatF<FormatT>( Format ) );
+    }
+
+    // replace_head in-place sequence version
+    template< typename InputT, typename FormatT >
+    inline InputT& replace_head( 
+        InputT& Input,
+        unsigned int N,
+        const FormatT& Format )
+    {
+        return string_algo::replace( 
+            Input, 
+            string_algo::detail::
+                create_find_head( Input, N ),
+            string_algo::detail::
+                identity_formatF<FormatT>( Format ) );
+    }
+
+//  replace_tail --------------------------------------------------------------------//
+
+    // replace_tail iterator version
+    template< 
+        typename OutputIteratorT,
+        typename ForwardIterator1T, 
+        typename ForwardIterator2T>
+    inline OutputIteratorT replace_tail_copy(
+        OutputIteratorT Output,
+        ForwardIterator1T Begin,
+        ForwardIterator1T End,
+        unsigned int N,
+        ForwardIterator2T FormatBegin,
+        ForwardIterator2T FormatEnd )
+    {
+        iterator_range<ForwardIterator1T> Range( Begin, End );
+
+        return string_algo::replace_copy(
+            Output,
+            Range, 
+            string_algo::detail::create_find_tail( Range, N ),
+            string_algo::detail::
+                identity_formatF< iterator_range<ForwardIterator2T> >(
+                    make_range( FormatBegin, FormatEnd ) ) );
+    }
+
+    template< 
+        typename OutputIteratorT,
+        typename InputT, 
+        typename FormatT >
+    inline OutputIteratorT replace_tail_copy(
+        OutputIteratorT Output,
+        const InputT& Input,
+        unsigned int N,
+        const FormatT& Format )
+    {
+        return string_algo::replace_copy(
+            Output,
+            Input,
+            string_algo::detail::create_find_tail( Input, N ),
+            string_algo::detail::
+                identity_formatF<FormatT>( Format ) );
+    }
+
+    // replace_tail sequence version
+    template< typename InputT, typename FormatT >
+    inline InputT replace_tail_copy( 
+        const InputT& Input,
+        unsigned int N,
+        const FormatT& Format )
+    {
+        return string_algo::replace_copy( 
+            Input,
+            string_algo::detail::create_find_tail( Input, N ),
+            string_algo::detail::
+                identity_formatF<FormatT>( Format ) );
+    }
+
+    // replace_tail in-place sequence version
+    template< typename InputT, typename FormatT >
+    inline InputT& replace_tail( 
+        InputT& Input,
+        unsigned int N,
+        const FormatT& Format )
+    {
+        return string_algo::replace( 
+            Input, 
+            string_algo::detail::
+                create_find_tail( Input, N ),
+            string_algo::detail::
+                identity_formatF<FormatT>( Format ) );
+    }
 
 } // namespace boost
 

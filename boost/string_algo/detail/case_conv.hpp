@@ -10,6 +10,7 @@
 #ifndef BOOST_STRING_CASE_CONV_DETAIL_HPP
 #define BOOST_STRING_CASE_CONV_DETAIL_HPP
 
+#include <boost/string_algo/config.hpp>
 #include <functional>
 #include <locale>
 
@@ -25,8 +26,10 @@ namespace boost {
             template< typename CharT >
             struct tolowerF : public std::unary_function< CharT, CharT > 
             {
-                typedef typename std::unary_function< CharT, CharT >::result_type result_type;
-                typedef typename std::unary_function< CharT, CharT >::argument_type argument_type;
+                typedef BOOST_STRING_DEDUCED_TYPENAME 
+                    std::unary_function< CharT, CharT >::result_type result_type;
+                typedef BOOST_STRING_DEDUCED_TYPENAME 
+                    std::unary_function< CharT, CharT >::argument_type argument_type;
 
                 // Constructor
                 tolowerF( const std::locale& Loc ) : m_Loc( Loc ) {}
@@ -44,8 +47,10 @@ namespace boost {
             template< typename CharT >
             struct toupperF : public std::unary_function< CharT, CharT > 
             {
-                typedef typename std::unary_function< CharT, CharT >::result_type result_type;
-                typedef typename std::unary_function< CharT, CharT >::argument_type argument_type;
+                typedef BOOST_STRING_DEDUCED_TYPENAME 
+                    std::unary_function< CharT, CharT >::result_type result_type;
+                typedef BOOST_STRING_DEDUCED_TYPENAME
+                    std::unary_function< CharT, CharT >::argument_type argument_type;
 
                 // Constructor
                 toupperF( const std::locale& Loc ) : m_Loc( Loc ) {}

@@ -10,6 +10,7 @@
 #ifndef BOOST_STRING_ITERATOR_RANGE_HPP
 #define BOOST_STRING_ITERATOR_RANGE_HPP
 
+#include <boost/string_algo/config.hpp>
 #include <utility>
 #include <iterator>
 #include <boost/detail/iterator.hpp>
@@ -28,11 +29,11 @@ namespace boost {
     {
     public:
         typedef iterator_range<IteratorT> type;
-        typedef typename boost::detail::
+        typedef BOOST_STRING_DEDUCED_TYPENAME boost::detail::
             iterator_traits<IteratorT>::value_type value_type;
-        typedef typename boost::detail::
+        typedef BOOST_STRING_DEDUCED_TYPENAME boost::detail::
             iterator_traits<IteratorT>::reference reference;
-        typedef typename boost::detail::
+        typedef BOOST_STRING_DEDUCED_TYPENAME boost::detail::
             iterator_traits<IteratorT>::difference_type difference_type;
         typedef IteratorT const_iterator;
         typedef IteratorT iterator;
@@ -107,29 +108,13 @@ namespace boost {
         IteratorT m_End;
     };
 
-    namespace string_algo {
-
-        // iterator_range contructor ( iterator version )
-        template< typename IteratorT >
-        inline iterator_range< IteratorT > make_range( IteratorT Begin, IteratorT End ) 
-        {   
-            return iterator_range< IteratorT >( Begin, End );
-        }
-        // iterator_range contructors ( sequence version )
-        template< typename SeqT >
-        inline iterator_range< typename SeqT::iterator > make_range( SeqT& Seq ) 
-        {   
-            return iterator_range< typename SeqT::iterator >( Seq.begin(), Seq.end() );
-        }
-        // iterator_range contructor ( const sequence version  )
-        template< typename SeqT >
-        inline iterator_range< typename SeqT::const_iterator > make_range_const( const SeqT& Seq ) 
-        {   
-            return iterator_range< typename SeqT::const_iterator >( Seq.begin(), Seq.end() );
-        }
-
-    } // namespace string_algo
-
+    // iterator_range contructor ( iterator version )
+    template< typename IteratorT >
+    inline iterator_range< IteratorT > make_range( IteratorT Begin, IteratorT End ) 
+    {   
+        return iterator_range< IteratorT >( Begin, End );
+    }
+  
 } // namespace boost
 
 

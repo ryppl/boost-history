@@ -10,6 +10,7 @@
 #ifndef BOOST_STRING_FIND_IMPL_HPP
 #define BOOST_STRING_FIND_IMPL_HPP
 
+#include <boost/string_algo/config.hpp>
 #include <functional>
 #include <boost/string_algo/iterator_range.hpp>
 
@@ -23,7 +24,7 @@ namespace boost {
         template< 
             typename ForwardIteratorT,
             typename FindF >
-        inline typename FindF::result_type 
+        inline BOOST_STRING_DEDUCED_TYPENAME FindF::result_type 
         find( 
             ForwardIteratorT Begin, 
             ForwardIteratorT End, 
@@ -35,12 +36,26 @@ namespace boost {
         template< 
             typename InputT,
             typename FindF >
-        inline typename FindF::result_type 
+        inline BOOST_STRING_DEDUCED_TYPENAME FindF::result_type 
         find( 
             InputT& Input, 
             FindF Find )
         {
             return Find( Input.begin(), Input.end() );
+        }
+
+        template< 
+            typename InputT,
+            typename FindF >
+        inline InputT 
+        find_copy( 
+            const InputT& Input, 
+            FindF Find )
+        {
+            BOOST_STRING_DEDUCED_TYPENAME FindF::result_type Result=
+                Find( Input.begin(), Input.end() );
+
+            return InputT( Result.begin(), Result.end() );
         }
 
     } // namespace string_algo

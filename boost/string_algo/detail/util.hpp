@@ -10,6 +10,7 @@
 #ifndef BOOST_STRING_UTIL_DETAIL_HPP
 #define BOOST_STRING_UTIL_DETAIL_HPP
 
+#include <boost/string_algo/config.hpp>
 #include <functional>
 
 namespace boost {
@@ -28,11 +29,16 @@ namespace boost {
             template< typename Type1, typename Type2 >
             struct equal_toF : public std::binary_function< Type1, Type2, bool > 
             {
-                typedef typename std::binary_function< Type1, Type2, bool >::result_type result_type;
-                typedef typename std::binary_function< Type1, Type2, bool >::first_argument_type first_argument_type;
-                typedef typename std::binary_function< Type1, Type2, bool >::second_argument_type second_argument_type;
+                typedef BOOST_STRING_DEDUCED_TYPENAME 
+                    std::binary_function< Type1, Type2, bool >::result_type result_type;
+                typedef BOOST_STRING_DEDUCED_TYPENAME 
+                    std::binary_function< Type1, Type2, bool >::first_argument_type first_argument_type;
+                typedef BOOST_STRING_DEDUCED_TYPENAME 
+                    std::binary_function< Type1, Type2, bool >::second_argument_type second_argument_type;
 
-                result_type operator ()( const first_argument_type& Arg1, const second_argument_type& Arg2 ) const
+                result_type operator ()( 
+                    const first_argument_type& Arg1, 
+                    const second_argument_type& Arg2 ) const
                 {
                     return Arg1==Arg2;
                 }

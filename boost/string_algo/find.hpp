@@ -10,6 +10,7 @@
 #ifndef BOOST_STRING_FIND_HPP
 #define BOOST_STRING_FIND_HPP
 
+#include <boost/string_algo/config.hpp>
 #include <boost/string_algo/input_policy.hpp>
 #include <boost/string_algo/iterator_range.hpp>
 #include <boost/string_algo/detail/find.hpp>
@@ -35,12 +36,13 @@ namespace boost {
             string_algo::detail::
                 create_find_first( 
                     Range,
-                    string_algo::make_range( SearchBegin, SearchEnd ) ) );
+                    make_range( SearchBegin, SearchEnd ) ) );
     }
 
     // find_first sequence version
     template< typename InputT, typename SearchT >
-    inline iterator_range< typename string_algo::input_policy<InputT>::iterator_type >
+    inline iterator_range< 
+        BOOST_STRING_DEDUCED_TYPENAME string_algo::input_policy<InputT>::iterator_type >
     find_first( 
         InputT& Input, 
         const SearchT& Search )
@@ -68,12 +70,13 @@ namespace boost {
             string_algo::detail::
                 create_find_last( 
                         Range,
-                        string_algo::make_range( SearchBegin, SearchEnd ) ) );
+                        make_range( SearchBegin, SearchEnd ) ) );
     }
 
     // find_last sequence version
     template< typename InputT, typename SearchT >
-    inline iterator_range< typename string_algo::input_policy<InputT>::iterator_type >
+    inline iterator_range< 
+        BOOST_STRING_DEDUCED_TYPENAME string_algo::input_policy<InputT>::iterator_type >
     find_last( 
         InputT& Input, 
         const SearchT& Search )
@@ -102,11 +105,12 @@ namespace boost {
             string_algo::detail::
                 create_find_nth( 
                     Range,
-                    string_algo::make_range( SearchBegin, SearchEnd ), Nth ) );
+                    make_range( SearchBegin, SearchEnd ), Nth ) );
     }
 
     template< typename InputT, typename SearchT >
-    inline iterator_range< typename string_algo::input_policy<InputT>::iterator_type >
+    inline iterator_range< 
+        BOOST_STRING_DEDUCED_TYPENAME string_algo::input_policy<InputT>::iterator_type >
     find_nth( 
         InputT& Input, 
         const SearchT& Search,
@@ -115,6 +119,84 @@ namespace boost {
         return string_algo::find( 
             Input, 
             string_algo::detail::create_find_nth( Input, Search, Nth ) );
+    }
+
+//  find_head ----------------------------------------------------------------------//
+
+    // find a head of the sequence
+    template< typename ForwardIterator1T >
+    inline iterator_range<ForwardIterator1T>
+    find_head( 
+        ForwardIterator1T Begin, 
+        ForwardIterator1T End, 
+        unsigned int N )
+    {
+        iterator_range<ForwardIterator1T> Range( Begin, End );
+
+        return string_algo::find( 
+            Range,
+            string_algo::detail::create_find_head( Range, N ) );
+    }
+
+    template< typename InputT >
+    inline iterator_range< 
+        BOOST_STRING_DEDUCED_TYPENAME string_algo::input_policy<InputT>::iterator_type >
+    find_head( 
+        InputT& Input, 
+        unsigned int N )
+    {
+        return string_algo::find( 
+            Input, 
+            string_algo::detail::create_find_head( Input, N ) );
+    }
+
+    template< typename InputT >
+    inline InputT find_head_copy( 
+        const InputT& Input, 
+        unsigned int N )
+    {
+        return string_algo::find_copy( 
+            Input, 
+            string_algo::detail::create_find_head( Input, N ) );
+    }
+
+//  find_tail ----------------------------------------------------------------------//
+
+    // find a head of the sequence
+    template< typename ForwardIterator1T >
+    inline iterator_range<ForwardIterator1T>
+    find_tail( 
+        ForwardIterator1T Begin, 
+        ForwardIterator1T End, 
+        unsigned int N )
+    {
+        iterator_range<ForwardIterator1T> Range( Begin, End );
+
+        return string_algo::find( 
+            Range,
+            string_algo::detail::create_find_tail( Range, N ) );
+    }
+
+    template< typename InputT >
+    inline iterator_range< 
+        BOOST_STRING_DEDUCED_TYPENAME string_algo::input_policy<InputT>::iterator_type >
+    find_tail( 
+        InputT& Input, 
+        unsigned int N )
+    {
+        return string_algo::find( 
+            Input, 
+            string_algo::detail::create_find_tail( Input, N ) );
+    }
+
+    template< typename InputT >
+    inline InputT find_tail_copy( 
+        const InputT& Input, 
+        unsigned int N )
+    {
+        return string_algo::find_copy( 
+            Input, 
+            string_algo::detail::create_find_tail( Input, N ) );
     }
 
 } // namespace boost

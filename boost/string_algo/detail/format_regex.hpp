@@ -10,6 +10,7 @@
 #ifndef BOOST_STRING_FORMAT_REGEX_DETAIL_HPP
 #define BOOST_STRING_FORMAT_REGEX_DETAIL_HPP
 
+#include <boost/string_algo/config.hpp>
 #include <string>
 #include <boost/regex.hpp>
 #include <boost/string_algo/detail/find_regex.hpp>
@@ -29,7 +30,7 @@ namespace boost {
             struct regex_formatF
             {
                 typedef StringT result_type;
-                typedef typename StringT::value_type char_type;
+                typedef BOOST_STRING_DEDUCED_TYPENAME StringT::value_type char_type;
                 typedef const result_type& result_reference_type;
 
                 // Construction

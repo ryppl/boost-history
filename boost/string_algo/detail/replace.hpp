@@ -10,8 +10,9 @@
 #ifndef BOOST_STRING_REPLACE_DETAIL_HPP
 #define BOOST_STRING_REPLACE_DETAIL_HPP
 
+#include <boost/string_algo/config.hpp>
 #include <algorithm>
-#include <boost/mpl/bool_c.hpp>
+#include <boost/mpl/bool.hpp>
 #include <boost/string_algo/sequence_traits.hpp>
 #include <boost/string_algo/detail/container.hpp>
 
@@ -109,7 +110,7 @@ namespace boost {
             };
 
             template<>
-            struct process_segment_helper< boost::mpl::true_c >
+            struct process_segment_helper< boost::mpl::true_ >
             {
                 // Optimized version of process_segment for list-like sequence
                 template< 
@@ -146,8 +147,9 @@ namespace boost {
             {
                 return 
                     process_segment_helper< 
-                        typename sequence_traits<InputT>::stable_iterators >()(
-                    Storage, Input, InsertIt, SegmentBegin, SegmentEnd );
+                        BOOST_STRING_DEDUCED_TYPENAME 
+                            sequence_traits<InputT>::stable_iterators >()(
+                                Storage, Input, InsertIt, SegmentBegin, SegmentEnd );
             }
             
 

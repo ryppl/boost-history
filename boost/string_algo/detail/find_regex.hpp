@@ -10,6 +10,7 @@
 #ifndef BOOST_STRING_FIND_REGEX_DETAIL_HPP
 #define BOOST_STRING_FIND_REGEX_DETAIL_HPP
 
+#include <boost/string_algo/config.hpp>
 #include <functional>
 #include <boost/regex.hpp>
 #include <boost/string_algo/iterator_range.hpp>
@@ -29,11 +30,16 @@ namespace boost {
             {
                 typedef regex_search_result<IteratorT> type;
                 typedef iterator_range<IteratorT> base_type;
-                typedef typename base_type::value_type value_type;
-                typedef typename base_type::reference reference;
-                typedef typename base_type::difference_type difference_type;
-                typedef typename base_type::const_iterator const_iterator;
-                typedef typename base_type::iterator iterator;
+                typedef BOOST_STRING_DEDUCED_TYPENAME 
+                    base_type::value_type value_type;
+                typedef BOOST_STRING_DEDUCED_TYPENAME 
+                    base_type::reference reference;
+                typedef BOOST_STRING_DEDUCED_TYPENAME 
+                    base_type::difference_type difference_type;
+                typedef BOOST_STRING_DEDUCED_TYPENAME 
+                    base_type::const_iterator const_iterator;
+                typedef BOOST_STRING_DEDUCED_TYPENAME 
+                    base_type::iterator iterator;
                 typedef match_results<iterator> match_results_type;
 
                 // Contruction
@@ -114,14 +120,17 @@ namespace boost {
 
             // Construction helper
             template<typename InputT, typename RegExT>
-            inline find_regexF<typename input_policy<InputT>::iterator_type, RegExT>
+            inline find_regexF<
+                BOOST_STRING_DEDUCED_TYPENAME input_policy<InputT>::iterator_type, 
+                RegExT>
             create_find_regex(
                 InputT&,
                 const RegExT& Rx, 
                 unsigned int MatchFlags=match_default )
             {
                 return find_regexF<
-                    typename input_policy<InputT>::iterator_type, RegExT>( Rx, MatchFlags );
+                    BOOST_STRING_DEDUCED_TYPENAME input_policy<InputT>::iterator_type, 
+                    RegExT>( Rx, MatchFlags );
             }
    
         } // namespace detail

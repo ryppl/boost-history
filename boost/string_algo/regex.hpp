@@ -10,6 +10,7 @@
 #ifndef BOOST_STRING_REGEX_HPP
 #define BOOST_STRING_REGEX_HPP
 
+#include <boost/string_algo/config.hpp>
 #include <boost/regex.hpp>
 #include <boost/string_algo/input_policy.hpp>
 #include <boost/string_algo/iterator_range.hpp>
@@ -49,13 +50,28 @@ namespace boost {
         typename InputT, 
         typename CharT, 
         typename RegexTraitsT, typename RegexAllocatorT>
-    inline iterator_range< typename string_algo::input_policy<InputT>::iterator_type >
+    inline iterator_range< 
+        BOOST_STRING_DEDUCED_TYPENAME string_algo::input_policy<InputT>::iterator_type >
     find_regex( 
         InputT& Input, 
         const reg_expression<CharT, RegexTraitsT, RegexAllocatorT>& Rx,
         unsigned int MatchFlags=match_default )
     {
         return string_algo::find( 
+            Input, 
+            string_algo::detail::create_find_regex( Input, Rx, MatchFlags ) );
+    }
+
+    template< 
+        typename InputT, 
+        typename CharT, 
+        typename RegexTraitsT, typename RegexAllocatorT>
+    inline InputT find_regex_copy( 
+        const InputT& Input, 
+        const reg_expression<CharT, RegexTraitsT, RegexAllocatorT>& Rx,
+        unsigned int MatchFlags=match_default )
+    {
+        return string_algo::find_copy( 
             Input, 
             string_algo::detail::create_find_regex( Input, Rx, MatchFlags ) );
     }
@@ -272,7 +288,8 @@ namespace boost {
             string_algo::detail::
                 create_find_regex( Range, Rx, MatchFlags ),
             string_algo::detail::empty_formatF<
-                typename boost::detail::iterator_traits<ForwardIteratorT>::value_type >() );
+                BOOST_STRING_DEDUCED_TYPENAME 
+                    boost::detail::iterator_traits<ForwardIteratorT>::value_type >() );
     }
 
     template< 
@@ -291,7 +308,8 @@ namespace boost {
             Input,
             string_algo::detail::
                 create_find_regex( Input, Rx, MatchFlags ),
-            string_algo::detail::empty_formatF<typename InputT::value_type>() );
+            string_algo::detail::
+                empty_formatF<BOOST_STRING_DEDUCED_TYPENAME InputT::value_type>() );
     }
 
     // erase_regex sequence version
@@ -308,7 +326,8 @@ namespace boost {
             Input, 
             string_algo::detail::
                 create_find_regex( Input, Rx, MatchFlags ),
-            string_algo::detail::empty_formatF<typename InputT::value_type>() );
+            string_algo::detail::
+                empty_formatF<BOOST_STRING_DEDUCED_TYPENAME InputT::value_type>() );
     }
 
     // erase_regex in-place sequence version
@@ -325,7 +344,8 @@ namespace boost {
             Input, 
             string_algo::detail::
                 create_find_regex( Input, Rx, MatchFlags ),
-            string_algo::detail::empty_formatF<typename InputT::value_type>() );
+            string_algo::detail::
+                empty_formatF<BOOST_STRING_DEDUCED_TYPENAME InputT::value_type>() );
     }
 
 //  erase_all_regex --------------------------------------------------------------------//
@@ -351,7 +371,8 @@ namespace boost {
             string_algo::detail::
                 create_find_regex( Range, Rx, MatchFlags ),
             string_algo::detail::empty_formatF<
-                typename boost::detail::iterator_traits<ForwardIteratorT>::value_type >() );
+                BOOST_STRING_DEDUCED_TYPENAME 
+                    boost::detail::iterator_traits<ForwardIteratorT>::value_type >() );
     }
 
     // erase_all_regex sequence version
@@ -371,7 +392,8 @@ namespace boost {
             Input,
             string_algo::detail::
                 create_find_regex( Input, Rx, MatchFlags ),
-            string_algo::detail::empty_formatF<typename InputT::value_type>() );
+            string_algo::detail::
+                empty_formatF<BOOST_STRING_DEDUCED_TYPENAME InputT::value_type>() );
     }
 
     // erase_all_regex sequence version
@@ -388,7 +410,8 @@ namespace boost {
             Input, 
             string_algo::detail::
                 create_find_regex( Input, Rx, MatchFlags ),
-            string_algo::detail::empty_formatF<typename InputT::value_type>() );
+            string_algo::detail::
+                empty_formatF<BOOST_STRING_DEDUCED_TYPENAME InputT::value_type>() );
     }
 
     // erase_all_regex in-place sequence version
@@ -405,7 +428,8 @@ namespace boost {
             Input, 
             string_algo::detail::
                 create_find_regex( Input, Rx, MatchFlags ),
-            string_algo::detail::empty_formatF<typename InputT::value_type>() );
+            string_algo::detail::
+                empty_formatF<BOOST_STRING_DEDUCED_TYPENAME InputT::value_type>() );
     }
 
 } // namespace boost

@@ -39,7 +39,8 @@ namespace boost {
             FindFT FindF,
             FormatFT FormatF )
         {
-            typedef typename FindFT::result_type search_result_type;
+            typedef BOOST_STRING_DEDUCED_TYPENAME 
+                FindFT::result_type search_result_type;
             
             // Find first match
             search_result_type M=FindF( Input.begin(), Input.end() );
@@ -54,7 +55,8 @@ namespace boost {
             // Copy the beginning of the sequence
             std::copy( Input.begin(), M.begin(), Output );
             // Format find result
-            typename FormatFT::result_type FResult=FormatF( M );
+            BOOST_STRING_DEDUCED_TYPENAME 
+                FormatFT::result_type FResult=FormatF( M );
             // Copy formated result
             std::copy( FResult.begin(), FResult.end(), Output );
             // Copy the rest of the sequence
@@ -73,7 +75,8 @@ namespace boost {
             FindFT FindF,
             FormatFT FormatF )
         {
-            typedef typename FindFT::result_type search_result_type;
+            typedef BOOST_STRING_DEDUCED_TYPENAME 
+                FindFT::result_type search_result_type;
 
             // Find first match
             search_result_type M=FindF( Input.begin(), Input.end() );
@@ -105,7 +108,8 @@ namespace boost {
             FindFT FindF,
             FormatFT FormatF )
         {
-            typedef typename FindFT::result_type search_result_type;
+            typedef BOOST_STRING_DEDUCED_TYPENAME 
+                FindFT::result_type search_result_type;
             
             // Find range for the match
             search_result_type M=FindF( Input.begin(), Input.end() );
@@ -141,8 +145,10 @@ namespace boost {
             FindFT FindF,
             FormatFT FormatF )
         {
-            typedef typename FindFT::result_type search_result_type;
-            typedef typename InputT::const_iterator input_iterator_type; 
+            typedef BOOST_STRING_DEDUCED_TYPENAME 
+                FindFT::result_type search_result_type;
+            typedef BOOST_STRING_DEDUCED_TYPENAME 
+                InputT::const_iterator input_iterator_type; 
         
             input_iterator_type LastMatch=Input.begin();
 
@@ -155,7 +161,8 @@ namespace boost {
                 // Copy the beginning of the sequence
                 std::copy( LastMatch, M.begin(), Output );
                 // Format find result
-                typename FormatFT::result_type FResult=FormatF( M );
+                BOOST_STRING_DEDUCED_TYPENAME 
+                    FormatFT::result_type FResult=FormatF( M );
                 // Copy formated result
                 std::copy( FResult.begin(), FResult.end(), Output );
 
@@ -180,8 +187,10 @@ namespace boost {
             FindFT FindF,
             FormatFT FormatF )
         {
-            typedef typename FindFT::result_type search_result_type;
-            typedef typename InputT::const_iterator input_iterator_type; 
+            typedef BOOST_STRING_DEDUCED_TYPENAME 
+                FindFT::result_type search_result_type;
+            typedef BOOST_STRING_DEDUCED_TYPENAME 
+                InputT::const_iterator input_iterator_type; 
 
             // Initialize last match
             input_iterator_type LastMatch=Input.begin();
@@ -220,11 +229,13 @@ namespace boost {
             FindFT FindF,
             FormatFT FormatF )
         {
-            typedef typename FindFT::result_type search_result_type;
-            typedef typename InputT::iterator input_iterator_type; 
+            typedef BOOST_STRING_DEDUCED_TYPENAME 
+                FindFT::result_type search_result_type;
+            typedef BOOST_STRING_DEDUCED_TYPENAME 
+                InputT::iterator input_iterator_type; 
             
             // Instantiate replacement storage
-            std::deque<typename InputT::value_type> Storage;
+            std::deque<BOOST_STRING_DEDUCED_TYPENAME InputT::value_type> Storage;
 
             // Initialize replacement iterators
             input_iterator_type InsertIt=Input.begin();

@@ -12,36 +12,12 @@
 
 #include <locale>
 #include <boost/string_algo/detail/trim.hpp>
+#include <boost/string_algo/classification.hpp>
 
 // some macros for simplify definition of trim functions
 #define BOOST_STRING_TRIM_SEQ_FWD( Alg, Seq, Pred ) Alg( Seq, Pred )
 
 namespace boost {
-
-//  trim specific predicates -------------------------------------//
-
-    // Construct isclassified functor
-    template< typename CharT >
-    inline string_algo::detail::is_classifiedF<CharT> 
-    is_classified( std::ctype_base::mask Type, const std::locale& Loc=std::locale() )
-    {
-        return string_algo::detail::is_classifiedF<CharT>( Type, Loc );
-    }
-
-    // Construct isspace functor to use with trim
-    template< typename CharT >
-    inline string_algo::detail::is_classifiedF<CharT> 
-    is_space( const std::locale& Loc=std::locale() )
-    {
-        return string_algo::detail::is_classifiedF<CharT>( std::ctype_base::space, Loc );
-    }
-
-    // Construct isfrom functor 
-    template< typename SeqT >
-    inline string_algo::detail::is_fromF<SeqT> is_from( const SeqT& Seq )
-    {
-        return string_algo::detail::is_fromF<SeqT>(Seq); 
-    }
 
 //  left trim  -----------------------------------------------//
 
@@ -170,48 +146,54 @@ namespace boost {
     {
         return 
             BOOST_STRING_TRIM_SEQ_FWD( 
-                trim_left_copy_if, Input, 
-                is_space<typename SeqT::value_type>( Loc ) );
+                trim_left_copy_if, 
+				Input, 
+				is_space<BOOST_STRING_DEDUCED_TYPENAME SeqT::value_type>( Loc ) );
     }
     template< typename SeqT >
     inline SeqT& trim_left( SeqT& Input, const std::locale& Loc=std::locale() )
     {
         return 
             BOOST_STRING_TRIM_SEQ_FWD( 
-                trim_left_if, Input, 
-                is_space<typename SeqT::value_type>( Loc ) );
+                trim_left_if, 
+				Input, 
+				is_space<BOOST_STRING_DEDUCED_TYPENAME SeqT::value_type>( Loc ) );
     }
     template< typename SeqT >
     inline SeqT trim_right_copy( const SeqT& Input, const std::locale& Loc=std::locale() )
     {
         return 
             BOOST_STRING_TRIM_SEQ_FWD( 
-                trim_right_copy_if, Input, 
-                is_space<typename SeqT::value_type>( Loc ) );
+                trim_right_copy_if, 
+				Input, 
+				is_space<BOOST_STRING_DEDUCED_TYPENAME SeqT::value_type>( Loc ) );
     }
     template< typename SeqT >
     inline SeqT& trim_right( SeqT& Input, const std::locale& Loc=std::locale() )
     {
         return 
             BOOST_STRING_TRIM_SEQ_FWD( 
-                trim_right_if, Input, 
-                is_space<typename SeqT::value_type>( Loc ) );
+                trim_right_if, 
+				Input, 
+				is_space<BOOST_STRING_DEDUCED_TYPENAME SeqT::value_type>( Loc ) );
     }
     template< typename SeqT >
     inline SeqT trim_copy( const SeqT& Input, const std::locale& Loc=std::locale() )
     {
         return
             BOOST_STRING_TRIM_SEQ_FWD( 
-                trim_copy_if, Input, 
-                is_space<typename SeqT::value_type>( Loc ) );
+                trim_copy_if, 
+				Input, 
+				is_space<BOOST_STRING_DEDUCED_TYPENAME SeqT::value_type>( Loc ) );
     }
     template< typename SeqT >
     inline SeqT& trim( SeqT& Input, const std::locale& Loc=std::locale() )
     {
         return
             BOOST_STRING_TRIM_SEQ_FWD( 
-                trim_if, Input, 
-                is_space<typename SeqT::value_type>( Loc ) );
+                trim_if, 
+				Input, 
+				is_space<BOOST_STRING_DEDUCED_TYPENAME SeqT::value_type>( Loc ) );
     }
 
 

@@ -11,7 +11,7 @@
 #define BOOST_STRING_SEQUENCE_TRAITS_HPP
 
 #include <boost/config.hpp>
-#include <boost/mpl/bool_c.hpp>
+#include <boost/mpl/bool.hpp>
 #include <boost/string_algo/detail/yes_no_type.hpp>
 
 namespace boost {
@@ -36,13 +36,13 @@ namespace boost {
 
         // const time insert tester
         /*
-            return yes_type is the container's insert method is working in constant time
+            return yes_type if the container's insert method is working in constant time
         */
         no_type sequence_has_const_time_insert(...);                        
 
         // const time erase tester
         /*
-            return yes_type is the container's erase method is working in constant time
+            return yes_type if the container's erase method is working in constant time
         */
         no_type sequence_has_const_time_erase(...);                     
 
@@ -52,7 +52,7 @@ namespace boost {
             Traits from this class template are used by various algorithms to achieve
             better performance for specific containers.
             This class template provides a default selection of sequence propoerties. 
-            New containers can specialized eighter by specializin the whole class,
+            New containers can specialized eihter by specializing the whole class,
             or by providing a specific overrides for tester functinons.
         */
         template< typename SequenceT >
@@ -72,10 +72,10 @@ namespace boost {
 
         public:
             // Container features
-            typedef ::boost::mpl::bool_c<native_replace_> native_replace;
-            typedef ::boost::mpl::bool_c<stable_iterators_> stable_iterators;
-            typedef ::boost::mpl::bool_c<const_time_insert_> const_time_insert;
-            typedef ::boost::mpl::bool_c<const_time_erase_> const_time_erase;                
+            typedef ::boost::mpl::bool_<native_replace_> native_replace;
+            typedef ::boost::mpl::bool_<stable_iterators_> stable_iterators;
+            typedef ::boost::mpl::bool_<const_time_insert_> const_time_insert;
+            typedef ::boost::mpl::bool_<const_time_erase_> const_time_erase;                
         };
 
     } // namespace string_algo

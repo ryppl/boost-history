@@ -10,6 +10,7 @@
 #ifndef BOOST_STRING_TRIM_DETAIL_HPP
 #define BOOST_STRING_TRIM_DETAIL_HPP
 
+#include <boost/string_algo/config.hpp>
 #include <algorithm>
 #include <functional>
 #include <locale>
@@ -31,10 +32,14 @@ namespace boost {
                 ForwardIteratorT InEnd, 
                 PredicateT IsSpace )
             {
-                return std::find_if( 
-                    InBegin, 
-                    InEnd, 
-                    std::not1(IsSpace));
+                ForwardIteratorT It=InBegin;
+                for(; It!=InEnd; It++ )
+                {
+                    if (!IsSpace(*It))
+                        return It;
+                }
+
+                return It;
             }
 
             // Search for first non matching character from the end of the sequence
@@ -44,7 +49,7 @@ namespace boost {
                 ForwardIteratorT InEnd, 
                 PredicateT IsSpace )
             {
-                typedef typename boost::detail::
+                typedef BOOST_STRING_DEDUCED_TYPENAME boost::detail::
                     iterator_traits<ForwardIteratorT>::iterator_category category;
 
                 return trim_end_if_iter_select( InBegin, InEnd, IsSpace, category() );
@@ -86,58 +91,6 @@ namespace boost {
 
                 return InBegin;
             }
-
-//  trim functors -----------------------------------------------//
-
-            // isclassified functor
-            template< typename CharT >
-            struct is_classifiedF : public std::unary_function< CharT, bool >
-            {
-                typedef typename std::unary_function< CharT, bool >::result_type result_type;
-                typedef typename std::unary_function< CharT, bool >::argument_type argument_type;
-
-                // Constructor from a ctype
-                is_classifiedF(std::ctype_base::mask Type, std::ctype<CharT> & Ct) : 
-                    m_Type(Type), m_CType(Ct) {}
-
-                // Constructor from a locale 
-                is_classifiedF(std::ctype_base::mask Type, std::locale const & Loc = std::locale()) :
-                    m_Type(Type), m_CType(std::use_facet< std::ctype<CharT> >(Loc)) {}
-
-                // Operation
-                result_type operator()( argument_type Ch ) const
-                {
-                    return m_CType.is(m_Type, Ch); 
-                }
-
-            private:
-                const std::ctype_base::mask m_Type;
-                const std::ctype<CharT>& m_CType;
-            };
-
-            // an isfrom functor 
-            /* 
-                returns true if the value is from specitied range
-            */
-            template< typename SeqT >
-            struct is_fromF : public std::unary_function< typename SeqT::value_type, bool > 
-            {
-                typedef typename SeqT::value_type CharT;
-                typedef typename std::unary_function< CharT, bool >::result_type result_type;
-                typedef typename std::unary_function< CharT, bool >::argument_type argument_type;
-
-                // Constructor 
-                is_fromF( const SeqT& Seq ) : m_Set( Seq.begin(), Seq.end() ) {}
-                
-                // Operation
-                result_type operator()( argument_type Ch ) const
-                {
-                    return m_Set.find( Ch )!=m_Set.end();
-                }
-            
-            private:
-                std::set<CharT> m_Set;                
-            };
 
         } // namespace detail
 
