@@ -5,10 +5,6 @@
 #ifndef BOOST_FIXED_STRING_HPP
 #define BOOST_FIXED_STRING_HPP
 #  include <boost/fixed_string/detail/basic_string_impl.hpp>
-#  include <boost/mpl/and.hpp>
-#  include <boost/mpl/equal_to.hpp>
-#  include <boost/mpl/int.hpp>
-#  include <boost/type_traits/is_same.hpp>
 
 #  include <string.h>
 #  include <stdio.h>
@@ -16,9 +12,6 @@
 
    namespace boost
    {
-      template< typename CharT, class CharStringPolicy >
-      struct fixed_string_base;
-
       namespace detail
       {
          template< typename CharT > class format_policy{};
@@ -49,89 +42,171 @@
                }
          };
 
-         template< typename CharT, class Policy = std::char_traits< CharT > >
-         struct fixed_string_iface
+         template< typename CharT, class CharStringPolicy = std::char_traits< CharT >, class FmtPolicy = format_policy< CharT > >
+         class fixed_string_impl
          {
-            typedef void                                             substring_type;
-            typedef Policy                                           traits_type;
-            typedef std::allocator< CharT >                          allocator_type;
-            typedef typename allocator_type::pointer                 iterator;
-            typedef typename allocator_type::const_pointer           const_iterator;
+            public:
+               typedef void                                          substring_type;
+               typedef CharStringPolicy                              traits_type;
+               typedef std::allocator< CharT >                       allocator_type;
+               typedef typename allocator_type::pointer              iterator;
+               typedef typename allocator_type::const_pointer        const_iterator;
 
-            typedef typename allocator_type::size_type               size_type;
-            typedef typename allocator_type::reference               reference;
-            typedef typename allocator_type::const_reference         const_reference;
+               typedef typename allocator_type::size_type            size_type;
+               typedef typename allocator_type::reference            reference;
+               typedef typename allocator_type::const_reference      const_reference;
+            private:
+               CharT *                 str;
+               size_type               cap;
+               size_type               len;
+            public: // iterators
+               inline iterator                   begin_()
+               {
+                  return( str );
+               }
+               inline const_iterator             begin_() const
+               {
+                  return( str );
+               }
+               inline iterator                   end_()
+               {
+                  return( str + len );
+               }
+               inline const_iterator             end_() const
+               {
+                  return( str + len );
+               }
+            public: // access
+               inline CharT *                    buffer_()
+               {
+                  return( str );
+               }
+               inline const CharT *              data_() const
+               {
+                  return( str );
+               }
+               inline const CharT *              c_str_() const
+               {
+                  return( str );
+               }
+               inline reference                  at_( size_type i )
+               {
+                  return( str[ i ]);
+               }
+               inline const_reference            at_( size_type i ) const
+               {
+                  return( str[ i ]);
+               }
+            public: // size and capacity
+               inline size_type                  length_() const
+               {
+                  return( len );
+               }               
+               inline size_type                  capacity_() const
+               {
+                  return( cap );
+               }
+               inline size_type                  max_size_() const
+               {
+                  return( cap );
+               }
+               inline void                       resize_( size_t sz, CharT c )
+               {
+                  if( sz > len )
+                  {
+                     if( sz >= cap )   sz = cap;
+                     traits_type::assign( str + len, sz - len, c );
+                  }
+                  len = sz;
+                  str[ len ] = CharT();
+               }
+               inline void                       reserve_( size_type sz )
+               {
+                  if( sz < len )
+                  {
+                     len = sz;
+                     str[ len ] = CharT();
+                  }
+               }
+            public: // string operations
+               inline void                       assign_( const CharT * s, size_type l )
+               {
+                  if( l == -1 )        l = traits_type::length( s );
+                  len = ( l >= cap ) ? cap : l;
+                  traits_type::copy( str, s, len );
+                  str[ len ] = CharT();
+               }
+               inline void                       append_( const CharT * s, size_type l = npos )
+               {
+                  if( l == -1 )        l = traits_type::length( s );
+                  l = (( l + len ) >= cap ) ? ( cap - len ) : l;
+                  traits_type::copy( str + len, s, l );
+                  len += l;
+                  str[ len ] = CharT();
+               }
+               inline int                        format_( const CharT * fmt, va_list args )
+               {
+                  int                  ret = FmtPolicy::format( str, cap, fmt, args );
+                  len = ( ret == -1 ) ? cap : ret;
+                  str[ len ] = CharT();
+                  return( ret );
+               }
+               inline void                       push_back_( CharT c )
+               {
+                  if( len < cap )
+                  {
+                     str[   len ] = c;
+                     str[ ++len ] = CharT();
+                  }
+               }
+               inline void                       swap_( fixed_string_impl & fsi )
+               {
+                  size_type            ml = min_( len, fsi.len );
+                  size_type            i  = 0;
 
-            virtual iterator                     begin_() = 0;
-            virtual const_iterator               begin_() const = 0;
-            virtual iterator                     end_() = 0;
-            virtual const_iterator               end_() const = 0;
+                  for( ; i < ml; ++i ) std::swap( str[ i ], fsi.str[ i ]);
 
-            virtual       CharT *                buffer_() = 0;
-            virtual const CharT *                data_()  const = 0;
-            virtual const CharT *                c_str_() const = 0;
-            virtual reference                    at_( size_type ) = 0;
-            virtual const_reference              at_( size_type ) const = 0;
+                  if( len > fsi.len ) // copy remainder of this into fsi
+                  {
+                     ml = min_( len, fsi.cap );
+                     for( ; i < ml; ++i )
+                        fsi.str[ i ] = str[ i ];
 
-            virtual size_type                    length_() const = 0;
-            virtual size_type                    capacity_() const = 0;
-            virtual size_type                    max_size_() const = 0;
+                     len     = fsi.len;
+                     fsi.len = ml;
+                  }
+                  else // copy remainder of fsi into this
+                  {
+                     ml = min_( fsi.len, cap );
+                     for( ; i < ml; ++i )
+                        str[ i ] = fsi.str[ i ];
 
-            virtual void                         resize_(  size_type, CharT ) = 0;
-            virtual void                         reserve_( size_type ) = 0;
+                     fsi.len = len;
+                     len     = ml;
+                  }
 
-            virtual void                         assign_( const CharT *, size_type ) = 0;
-            virtual void                         append_( const CharT *, size_type ) = 0;
-            virtual int                          format_( const CharT *, va_list )   = 0;
-            virtual void                         push_back_( CharT ) = 0;
-
-            virtual void                         swap_( fixed_string_iface< CharT, Policy > & ) = 0;
+                  fsi.str[ fsi.len ] = CharT();
+                  str[ len ]         = CharT();
+               }
+            public:
+               inline        fixed_string_impl( const CharT * b, size_t c, size_t l = 0 ):
+                  str( const_cast< CharT * >( b )), cap( c ), len( l )
+               {
+               }
+               virtual      ~fixed_string_impl()
+               {
+               }
          };
       }
 
-      template< typename CharT, class CharStringPolicy = std::char_traits< CharT > >
-      struct fixed_string_base: public detail::basic_string_impl< detail::fixed_string_iface< CharT, CharStringPolicy > >
+      template< typename CharT, class CharStringPolicy = std::char_traits< CharT >, class FmtPolicy = detail::format_policy< CharT > >
+      class fixed_string_base: public detail::basic_string_impl< detail::fixed_string_impl< CharT, CharStringPolicy, FmtPolicy > >
       {
          public:
-            typedef detail::basic_string_impl< detail::fixed_string_iface< CharT, CharStringPolicy > >
-                                                                     impl_type;
-         public: // extended interface
-            inline                operator const CharT *() const
-            {
-               return( c_str());
-            }
-            inline CharT *                       buffer()
-            {
-               return( buffer_());
-            }
-            inline int                           format( const CharT * fmt, va_list args )
-            {
-               return( format_( fmt, args ));
-            }
-      };
-
-      typedef fixed_string_base< char >                    char_string;
-      typedef fixed_string_base< wchar_t >                 wchar_string;
-
-      template< size_t n, typename CharT = char, class CharStringPolicy = std::char_traits< CharT > >
-      class fixed_string: public fixed_string_base< CharT, CharStringPolicy >
-      {
-         private:
-            BOOST_STATIC_CONSTANT( size_t, storage_c  = n + 1 );
-            BOOST_STATIC_CONSTANT( size_t, capacity_c = n );
-         public:
-            typedef fixed_string_base< CharT, CharStringPolicy >::impl_type base_type;
-            typedef fixed_string< n, CharT, CharStringPolicy >       this_type;
-         private:
-            CharT                      str[ storage_c ];
-            size_t                     len;
-         public: // validation checks
-            struct ok{ typedef char value; };
-            // string policy check: StringPolicy::char_type == CharT
-            struct char_string_policy_error{};
-            typedef typename mpl::if_< is_same< typename CharStringPolicy::char_type, CharT >,
-                                       ok, char_string_policy_error
-                                     >::type::value                  char_string_policy_check;
+            typedef detail::basic_string_impl< detail::fixed_string_impl< CharT, CharStringPolicy, FmtPolicy > >
+                                                                     base_type;
+            typedef fixed_string_base< CharT, CharStringPolicy, FmtPolicy >
+                                                                     this_type;
          public:
             typedef typename base_type::traits_type                  triats_type;
             typedef typename base_type::value_type                   value_type;
@@ -148,167 +223,147 @@
             typedef typename base_type::reverse_iterator             reverse_iterator;
             typedef typename base_type::const_reverse_iterator       const_reverse_iterator;
             typedef typename base_type::substring_type               substring_type;
-         private: // iterators
-            inline iterator                      begin_()
+            typedef typename base_type::string_type                  string_type;
+         public:
+            inline                operator const CharT *() const
             {
-               return( str );
+               return( c_str());
             }
-            inline const_iterator                begin_() const
+            inline CharT *                       buffer()
             {
-               return( str );
+               return( buffer_());
             }
-            inline iterator                      end_()
+            inline void                          recalc()
             {
-               return( str + len );
+               // recalculate string length after external modification
+               resize( ::strlen( c_str()));
             }
-            inline const_iterator                end_() const
+            inline int                           format( const CharT * fmt, va_list args )
             {
-               return( str + len );
+               return( format_( fmt, args ));
             }
-         private: // access
-            inline CharT *                       buffer_()
+         public: // assignment
+            inline this_type &    operator=( const this_type & s )
             {
-               return( str );
+               base_type::operator=( s );
+               return( *this );
             }
-            inline const CharT *                 data_() const
+            inline this_type &    operator=( const string_type & s )
             {
-               return( str );
+               base_type::operator=( s );
+               return( *this );
             }
-            inline const CharT *                 c_str_() const
+            inline this_type &    operator=( const value_type * s )
             {
-               return( str );
+               base_type::operator=( s );
+               return( *this );
             }
-            inline reference                     at_( size_type i )
+            inline this_type &    operator=( value_type c )
             {
-               return( str[ i ]);
+               base_type::operator=( c );
+               return( *this );
             }
-            inline const_reference               at_( size_type i ) const
+         private: // construction
+            inline           fixed_string_base();
+         public:
+            inline           fixed_string_base( const fixed_string_base & b ): base_type( b.data(), b.capacity())
             {
-               return( str[ i ]);
+               resize( b.length());
             }
-         private: // size and capacity
-            inline size_type                     length_() const
+            inline           fixed_string_base( CharT * b, size_t c ): base_type( b, c )
             {
-               return( len );
             }
-            inline size_type                     capacity_() const
-            {
-               return( capacity_c );
-            }
-            inline size_type                     max_size_() const
-            {
-               return( capacity_());
-            }
-            inline void                          resize_( size_t sz, CharT c )
-            {
-               if( sz > len )
-               {
-                  if( sz >= capacity_c )
-                     sz = capacity_c;
-                  triats_type::assign( str + len, sz - len, c );
-               }
-               len = sz;
-               str[ len ] = CharT();
-            }
-            inline void                          reserve_( size_type sz )
-            {
-               if( sz < len )
-               {
-                  len = sz;
-                  str[ len ] = CharT();
-               }
-            }
-         private: // string operations
-            inline void                          assign_( const CharT * s, size_type l )
-            {
-               if( l == npos )         l = triats_type::length( s );
-               len = ( l >= capacity_c ) ? capacity_c : l;
-               triats_type::copy( str, s, len );
-               str[ len ] = CharT();
-            }
-            inline void                          append_( const CharT * s, size_type l = npos )
-            {
-               if( l == npos )         l = triats_type::length( s );
-               l = (( l + len ) >= capacity_c ) ? ( capacity_c - len ) : l;
-               triats_type::copy( str + len, s, l );
-               len += l;
-               str[ len ] = CharT();
-            }
-            inline int                           format_( const CharT * fmt, va_list args )
-            {
-               int                     ret = detail::format_policy< CharT >::format( str, capacity_c, fmt, args );
-               len = ( ret == -1 ) ? capacity_c : ret;
-               str[ len ] = CharT();
-               return( ret );
-            }
-            inline void                          push_back_( CharT c )
-            {
-               if( len < capacity_c )
-               {
-                  str[   len ] = c;
-                  str[ ++len ] = CharT();
-               }
-            }
-            inline void                          swap_( boost::detail::fixed_string_iface< CharT, CharStringPolicy > & b )
-            {
-               this_type               a( b.data_(), b.length_());
-               b.assign_( data(), length());
-               *this = a;
-            }
+      };
+
+      typedef fixed_string_base< char >                    char_string;
+      typedef fixed_string_base< wchar_t >                 wchar_string;
+
+      template
+      < 
+         size_t n, typename CharT = char,
+         class CharStringPolicy = std::char_traits< CharT >,
+         class FmtPolicy        = detail::format_policy< CharT >
+      >
+      class fixed_string: public fixed_string_base< CharT, CharStringPolicy, FmtPolicy >
+      {
+         public:
+            typedef fixed_string_base< CharT, CharStringPolicy, FmtPolicy >    base_type;
+            typedef fixed_string< n,   CharT, CharStringPolicy, FmtPolicy >    this_type;
+         public:
+            typedef typename base_type::traits_type                  triats_type;
+            typedef typename base_type::value_type                   value_type;
+            typedef typename base_type::char_type                    char_type;
+            typedef typename base_type::allocator_type               allocator_type;
+            typedef typename base_type::size_type                    size_type;
+            typedef typename base_type::difference_type              difference_type;
+            typedef typename base_type::reference                    reference;
+            typedef typename base_type::const_reference              const_reference;
+            typedef typename base_type::reference                    pointer;
+            typedef typename base_type::const_reference              const_pointer;
+            typedef typename base_type::iterator                     iterator;
+            typedef typename base_type::const_iterator               const_iterator;
+            typedef typename base_type::reverse_iterator             reverse_iterator;
+            typedef typename base_type::const_reverse_iterator       const_reverse_iterator;
+            typedef typename base_type::substring_type               substring_type;
+            typedef typename base_type::string_type                  string_type;
+         private:
+            BOOST_STATIC_CONSTANT( size_t, storage_c  = n + 1 );
+            BOOST_STATIC_CONSTANT( size_t, capacity_c = n );
+         private:
+            CharT                      buf[ storage_c ];
          public:
             inline this_type                     substr( size_type pos, size_type n ) const
             {
                return( this_type( *this, pos, n ));
             }
-         public:
+         public: // assignment
             inline this_type &    operator=( const this_type & s )
             {
-               this_type::assign_( s.str, s.len );
+               base_type::operator=( s );
                return( *this );
             }
-            inline this_type &    operator=( const base_type & s )
+            inline this_type &    operator=( const string_type & s )
             {
-               this_type::assign_( s.c_str(), s.length());
+               base_type::operator=( s );
                return( *this );
             }
             inline this_type &    operator=( const value_type * s )
             {
-               this_type::assign_( s, triats_type::length( s ));
+               base_type::operator=( s );
                return( *this );
             }
             inline this_type &    operator=( value_type c )
             {
-               len = 0;
-               this_type::push_back_( c );
+               base_type::operator=( c );
                return( *this );
             }
          public: // construction
-            inline           fixed_string(): len( 0 )
+            inline           fixed_string(): base_type( buf, capacity_c )
             {
-               str[ 0 ] = CharT();
+               buf[ 0 ] = CharT();
             }
-            inline           fixed_string( const this_type & s ): len( 0 )
+            inline           fixed_string( const this_type & s ): base_type( buf, capacity_c )
             {
-               this_type::assign_( s.str, s.len );
+               assign( s );
             }
-            inline           fixed_string( const base_type & s, size_type p = 0, size_type l = npos ): len( 0 )
+            inline           fixed_string( const string_type & s, size_type p = 0, size_type l = npos ): base_type( buf, capacity_c )
             {
                assign( s, p, l );
             }
-            inline           fixed_string( const CharT * s, size_type l ): len( 0 )
+            inline           fixed_string( const CharT * s, size_type l ): base_type( buf, capacity_c )
             {
-               this_type::assign_( s, l );
+               assign( s, l );
             }
-            inline           fixed_string( const CharT * s ): len( 0 )
+            inline           fixed_string( const CharT * s ): base_type( buf, capacity_c )
             {
-               this_type::assign_( s, traits_type::length( s ));
+               assign( s, traits_type::length( s ));
             }
-            inline           fixed_string( size_type l, CharT c ): len( 0 )
+            inline           fixed_string( size_type l, CharT c ): base_type( buf, capacity_c )
             {
                assign( l, c );
             }
             template< typename InputIterator >
-            inline           fixed_string( InputIterator first, InputIterator last ): len( 0 )
+            inline           fixed_string( InputIterator first, InputIterator last ): base_type( buf, capacity_c )
             {
                assign( first, last );
             }
@@ -316,85 +371,85 @@
       
       // lhs + rhs
 
-      template< size_t n1, size_t n2, class C, class CSP >
-      inline fixed_string< ( n1 + n2 ), C, CSP > 
+      template< size_t n1, size_t n2, class C, class CSP, class FP >
+      inline fixed_string< ( n1 + n2 ), C, CSP, FP >
                                   operator+
                                   ( 
-                                     const fixed_string< n1, C, CSP > & lhs,
-                                     const fixed_string< n2, C, CSP > & rhs
+                                     const fixed_string< n1, C, CSP, FP > & lhs,
+                                     const fixed_string< n2, C, CSP, FP > & rhs
                                   )
       {
-         return( fixed_string< ( n1 + n2 ), C, CSP >( lhs ).append( rhs ));
+         return( fixed_string< ( n1 + n2 ), C, CSP, FP >( lhs ).append( rhs ));
       }
 
-      template< size_t n, class C, class CSP >
-      inline fixed_string< n, C, CSP > 
+      template< size_t n, class C, class CSP, class FP >
+      inline fixed_string< n, C, CSP, FP > 
                                   operator+
                                   ( 
-                                     const fixed_string< n, C, CSP > & lhs,
-                                     const typename fixed_string< n, C, CSP >::value_type * rhs
+                                     const fixed_string< n, C, CSP, FP > & lhs,
+                                     const typename fixed_string< n, C, CSP, FP >::value_type * rhs
                                   )
       {
-         return( fixed_string< n, C, CSP >( lhs ).append( rhs ));
+         return( fixed_string< n, C, CSP, FP >( lhs ).append( rhs ));
       }
 
-      template< size_t n, class C, class CSP >
-      inline fixed_string< n, C, CSP > 
+      template< size_t n, class C, class CSP, class FP >
+      inline fixed_string< n, C, CSP, FP > 
                                   operator+
                                   ( 
-                                     const typename fixed_string< n, C, CSP >::value_type * lhs,
-                                     const fixed_string< n, C, CSP > & rhs
+                                     const typename fixed_string< n, C, CSP, FP >::value_type * lhs,
+                                     const fixed_string< n, C, CSP, FP > & rhs
                                   )
       {
-         return( fixed_string< n, C, CSP >( lhs ).append( rhs ));
+         return( fixed_string< n, C, CSP, FP >( lhs ).append( rhs ));
       }
 
 #     if !defined(BOOST_MSVC) || ( BOOST_MSVC > 1200 )
-         template< size_t n, size_t m, class C, class CSP >
-         inline fixed_string< ( n + m ), C, CSP > 
+         template< size_t n, size_t m, class C, class CSP, class FP >
+         inline fixed_string< ( n + m ), C, CSP, FP > 
                                   operator+
                                   ( 
-                                     const fixed_string< n, C, CSP > & lhs,
-                                     const typename fixed_string< n, C, CSP >::value_type( & rhs )[ m ]
+                                     const fixed_string< n, C, CSP, FP > & lhs,
+                                     const typename fixed_string< n, C, CSP, FP >::value_type( & rhs )[ m ]
                                   )
          {
-            return( fixed_string< ( n + m ), C, CSP >( lhs ).append( rhs ));
+            return( fixed_string< ( n + m ), C, CSP, FP >( lhs ).append( rhs ));
          }
 
-         template< size_t n, size_t m, class C, class CSP >
-         inline fixed_string< ( n + m ), C, CSP > 
+         template< size_t n, size_t m, class C, class CSP, class FP >
+         inline fixed_string< ( n + m ), C, CSP, FP > 
                                   operator+
                                   ( 
-                                     const typename fixed_string< n, C, CSP >::value_type( & lhs )[ m ],
-                                     const fixed_string< n, C, CSP > & rhs
+                                     const typename fixed_string< n, C, CSP, FP >::value_type( & lhs )[ m ],
+                                     const fixed_string< n, C, CSP, FP > & rhs
                                   )
          {
-            return( fixed_string< ( n + m ), C, CSP >( lhs ).append( rhs ));
+            return( fixed_string< ( n + m ), C, CSP, FP >( lhs ).append( rhs ));
          }
 #     endif
 
-      template< size_t n, class C, class CSP >
-      inline fixed_string< ( n + 1 ), C, CSP > 
+      template< size_t n, class C, class CSP, class FP >
+      inline fixed_string< ( n + 1 ), C, CSP, FP > 
                                   operator+
                                   ( 
-                                     const fixed_string< n, C, CSP > & lhs,
-                                     typename fixed_string< n, C, CSP >::value_type rhs
+                                     const fixed_string< n, C, CSP, FP > & lhs,
+                                     typename fixed_string< n, C, CSP, FP >::value_type rhs
                                   )
       {
-         fixed_string< ( n + 1 ), C, CSP > res( lhs );
+         fixed_string< ( n + 1 ), C, CSP, FP > res( lhs );
          res.push_back( rhs );
          return( res );
       }
 
-      template< size_t n, class C, class CSP >
-      inline fixed_string< ( n + 1 ), C, CSP > 
+      template< size_t n, class C, class CSP, class FP >
+      inline fixed_string< ( n + 1 ), C, CSP, FP > 
                                   operator+
                                   ( 
-                                     typename fixed_string< n, C, CSP >::value_type lhs,
-                                     const fixed_string< n, C, CSP > & rhs
+                                     typename fixed_string< n, C, CSP, FP >::value_type lhs,
+                                     const fixed_string< n, C, CSP, FP > & rhs
                                   )
       {
-         fixed_string< ( n + 1 ), C, CSP > res;
+         fixed_string< ( n + 1 ), C, CSP, FP > res;
          res.push_back( lhs );
          res.append(    rhs );
          return( res );
