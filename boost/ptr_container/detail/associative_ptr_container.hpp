@@ -20,22 +20,17 @@
 #endif
 
 #include <boost/ptr_container/detail/reversible_ptr_container.hpp>
-//#include <vector>
 
 namespace boost
 {
 
 namespace detail
 {
-
     template< typename Config >
     class associative_ptr_container : public reversible_ptr_container<Config>
     {
         typedef reversible_ptr_container<Config> Base;
 
-        //static std::pair<iterator,iterator> make_pair( const std::pair<ptr_iter,ptr_iter>& p )
-        //{ return std::make_pair( make_indirection_iterator( p.first ), make_indirection_iterator( p.second ) ); }
-        
     public: // typedefs
         typedef typename Config::container_type             C;
         typedef BOOST_DEDUCED_TYPENAME C::key_type          key_type;
@@ -45,7 +40,7 @@ namespace detail
         BOOST_FORWARD_TYPEDEF( Base );
     
     protected:
-        void     insert_clones_and_release( scoped_deleter& sd ) // strong
+        void insert_clones_and_release( scoped_deleter& sd ) // strong
         {
             //
             // 'c_.insert' always provides the strong guarantee for T* elements
@@ -58,12 +53,14 @@ namespace detail
     public: // foundation
         
        template< typename Compare >
-       explicit associative_ptr_container( const Compare& comp, const allocator_type& alloc = allocator_type() ) : Base( comp, alloc ) 
-       { }
+       explicit associative_ptr_container( const Compare& comp, 
+                                           const allocator_type& alloc = allocator_type() ) 
+       : Base( comp, alloc ) { }
 
        template< typename InputIterator, typename Compare >
        associative_ptr_container( InputIterator first, InputIterator last, const Compare& comp, 
-                                 const allocator_type& alloc = allocator_type() ) : Base( comp, alloc )
+                                  const allocator_type& alloc = allocator_type() )
+       : Base( comp, alloc )
        { 
            difference_type n = std::distance( first, last ); 
            scoped_deleter sd( n );                  // strong
@@ -72,8 +69,15 @@ namespace detail
        }
 
     public: // associative container interface
-        key_compare    key_comp() const { return this->c_().key_comp();}
-        value_compare  value_comp() const { return this->c_().value_comp();}
+        key_compare key_comp() const 
+        {
+            return this->c_().key_comp();
+        }
+        
+        value_compare value_comp() const
+        {
+            return this->c_().value_comp();
+        }
         
         std::pair<iterator,bool> insert( const key_type& x ) // strong
         {
@@ -99,13 +103,41 @@ namespace detail
             sd.release();
         }
         
-        iterator        find( const key_type& x) { return make_indirection_iterator( this->c_().find( x ) );}
-        const_iterator  find( const key_type& x) const { return make_indirection_iterator( this->c_().find( x ) );}
-        size_type       count( const key_type& x ) const { return this->c_().count( x );}
-        iterator        lower_bound( const key_type& x) { return make_indirection_iterator( this->c_().lower_bound( x ) );} 
-        const_iterator  lower_bound( const key_type& x) const { return make_indirection_iterator( this->c_().lower_bound( x ) );} 
-        iterator        upper_bound( const key_type& x) { return make_indirection_iterator( this->c_().upper_bound( x ) );}
-        const_iterator  upper_bound( const key_type &x) const { return make_indirection_iterator( this->c_().upper_bound( x ) );}
+        iterator find( const key_type& x )
+        {
+            return make_indirection_iterator( this->c_().find( x ) );
+        }
+        
+        const_iterator find( const key_type& x ) const 
+        {
+            return make_indirection_iterator( this->c_().find( x ) );
+        }
+        
+        size_type count( const key_type& x ) const 
+        {
+            return this->c_().count( x ); 
+        }
+        
+        iterator lower_bound( const key_type& x )
+        {
+            return make_indirection_iterator( this->c_().lower_bound( x ) );
+        }
+         
+        const_iterator lower_bound( const key_type& x ) const 
+        {
+            return make_indirection_iterator( this->c_().lower_bound( x ) );        
+        } 
+        
+        iterator upper_bound( const key_type& x )
+        {
+            return make_indirection_iterator( this->c_().upper_bound( x ) ); 
+        }
+        
+        const_iterator upper_bound( const key_type& x ) const
+        {
+            return make_indirection_iterator( this->c_().upper_bound( x ) );
+        }
+        
         //std::pair<iterator, iterator>
         //                equal_range( const key_type& x) { return make_pair( this->c_().equal_range( x ) ); }
         //std::pair<const_iterator, const_iterator>
