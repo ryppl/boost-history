@@ -9,6 +9,11 @@
 #  pragma once
 #endif
 
+#if defined(BOOST_MSVC)
+#  pragma warning( push )
+#  pragma warning( disable : 4355 ) // 'this' : used in base member initializer list
+#endif
+
 #include <boost/gui/win/windows.hpp>
 #include <boost/property/scalar_property.hpp>
 #include <boost/property/readonly_aliased_property.hpp>
@@ -128,5 +133,9 @@ area::area
 }
 
 }}}
+
+#if defined(BOOST_MSVC)
+#  pragma warning( pop )
+#endif
 
 #endif

@@ -9,6 +9,11 @@
 #  pragma once
 #endif
 
+#if defined(BOOST_MSVC)
+#  pragma warning( push )
+#  pragma warning( disable : 4355 ) // 'this' : used in base member initializer list
+#endif
+
 #include <boost/gui/platform.hpp>
 #include <boost/gui/position.hpp>
 #include <boost/gui/size.hpp>
@@ -165,5 +170,9 @@ area::area
 }
 
 }}
+
+#if defined(BOOST_MSVC)
+#  pragma warning( pop )
+#endif
 
 #endif
