@@ -67,6 +67,27 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     return matrix_storage (m.data()); 
   }
 
+  template <typename T, typename F1, typename F2, typename A>
+  inline
+  typename ublas::symmetric_matrix<T,F1,F2,A>::pointer
+  matrix_storage(ublas::symmetric_matrix<T,F1,F2,A>& m) {
+    return &m.data().begin()[0] ;
+  }
+
+  template <typename T, typename F1, typename F2, typename A>
+  inline
+  typename ublas::symmetric_matrix<T,F1,F2,A>::const_pointer
+  matrix_storage(const ublas::symmetric_matrix<T,F1,F2,A>& m) {
+    return &m.data().begin()[0] ;
+  }
+
+  template <typename T, typename F1, typename F2, typename A>
+  inline
+  typename ublas::symmetric_matrix<T,F1,F2,A>::size_type
+  matrix_storage_size(const ublas::symmetric_matrix<T,F1,F2,A>& m) {
+    return ( matrix_size1( m ) * ( matrix_size1( m ) + 1 ) ) / 2 ;
+  }
+
   namespace detail {
 
     inline char m_uplo_tag (ublas::upper_tag const&) { return 'U'; } 

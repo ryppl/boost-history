@@ -2,7 +2,7 @@
 
 /*
  * 
- * Copyright (c) 2002, 2003 Kresimir Fresl and Toon Knapen 
+ * Copyright (c) 2002, 2003 Kresimir Fresl, Toon Knapen and Karl Meerbergen
  *
  * Permission to copy, modify, use and distribute this software 
  * for any non-commercial or commercial purpose is granted provided 
@@ -23,14 +23,25 @@
 
 #ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
 
+#include <boost/type_traits/remove_const.hpp> 
+
 namespace boost { namespace numeric { namespace bindings { namespace traits {
+
+  /// Auxiliary traits class to reduce the number of specializations.
+  /// MType is the actual matrix type.
+  /// MIdentifier is used to specialize the traits for a specific matrix type, e.g.
+  /// matrix_detail_traits< ublas::matrix<double>, ublas::matrix<double> const >
+  /// matrix_detail_traits< ublas::matrix<double>, ublas::matrix<double> >
+  /// Note that  remove_const<MType>::type  == MIdentifier²
+  template <typename MIdentifier, typename MType>
+  struct matrix_detail_traits {};
 
   /// matrix_traits<> generic version: 
   /// There is default implemented since there is no
   /// reasonable default. Most matrix libraries
   /// provide totally different functions.
   template <typename M>
-  struct matrix_traits {
+  struct matrix_traits : matrix_detail_traits< typename boost::remove_const<M>::type, M> {
     // typedefs:
     //   value_type
     //   pointer
@@ -64,7 +75,12 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
   struct lower_t {};
 
 
+  ///////////////////////////
+  //
   // free accessor functions
+  //
+  ///////////////////////////
+
   template <typename M>
   inline
   typename matrix_traits<M>::pointer matrix_storage (M& m) { 
