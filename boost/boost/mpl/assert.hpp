@@ -4,9 +4,9 @@
 
 // Copyright (c) Aleksey Gurtovoy 2000-2004
 //
-// Use, modification and distribution are subject to the Boost Software 
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
-// at http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
@@ -15,9 +15,10 @@
 // $Revision$
 
 #include <boost/mpl/aux_/test/assert.hpp>
-//#include <boost/preprocessor/cat.hpp>
 
+#define BOOST_MPL_ASSERT(pred)                      MPL_ASSERT(pred)
 #define BOOST_MPL_ASSERT_MSG(c, msg, types)         MPL_ASSERT_MSG(c, msg, types)
+#define BOOST_MPL_ASSERT_RELATION(x, rel, y)        MPL_ASSERT_RELATION(x, rel, y)
 
 /*
 #define BOOST_MPL_ASSERT_EQUAL(arity, tuple)        MPL_ASSERT_EQUAL(arity, tuple)

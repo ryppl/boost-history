@@ -1,5 +1,4 @@
-namespace boost {
-namespace mpl {
+BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_OPEN
 typedef arg< -1 > _;
 
 namespace placeholders {
@@ -37,5 +36,4 @@ typedef arg<6> _6;
 namespace placeholders {
 using boost::mpl::_6;
 }
-} // namespace mpl
-} // namespace boost 
+BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_CLOSE

@@ -9,9 +9,9 @@
 // Copyright (c) Peter Dimov 2001-2002
 // Copyright (c) Aleksey Gurtovoy 2001-2004
 //
-// Use, modification and distribution are subject to the Boost Software 
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
-// at http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
@@ -51,7 +51,7 @@
 #   include <boost/preprocessor/inc.hpp>
 #   include <boost/preprocessor/cat.hpp>
 
-namespace boost { namespace mpl {
+BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_OPEN
 
 // local macro, #undef-ined at the end of the header
 #if !defined(BOOST_MPL_CFG_NO_DEFAULT_PARAMETERS_IN_NESTED_TEMPLATES)
@@ -80,7 +80,7 @@ namespace boost { namespace mpl {
 
 BOOST_MPL_AUX_NONTYPE_ARITY_SPEC(1,int,arg)
 
-}}
+BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_CLOSE
 
 #endif // BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
 #endif // BOOST_MPL_ARG_HPP_INCLUDED

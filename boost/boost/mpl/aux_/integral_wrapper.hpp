@@ -1,21 +1,17 @@
 
-// + file: boost/mpl/aux_/intergal_wrapper.hpp
-// + last modified: 12/apr/03
-
-// Copyright (c) 2000-03
-// Aleksey Gurtovoy
+// Copyright (c) Aleksey Gurtovoy 2000-2004
 //
-// Permission to use, copy, modify, distribute and sell this software
-// and its documentation for any purpose is hereby granted without fee, 
-// provided that the above copyright notice appears in all copies and 
-// that both the copyright notice and this permission notice appear in 
-// supporting documentation. No representations are made about the 
-// suitability of this software for any purpose. It is provided "as is" 
-// without express or implied warranty.
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
-// no include guards, the header is intended for multiple inclusion!
+// $Source$
+// $Date$
+// $Revision$
+
+// NO INCLUDE GUARDS, THE HEADER IS INTENDED FOR MULTIPLE INCLUSION!
 
 #include <boost/mpl/aux_/static_cast.hpp>
 #include <boost/mpl/aux_/config/nttp.hpp>
@@ -36,11 +32,11 @@
 #   if BOOST_WORKAROUND(__MWERKS__, <= 0x2407)
 #       define AUX_WRAPPER_INST(value) AUX_WRAPPER_NAME< value >
 #   else 
-#       define AUX_WRAPPER_INST(value) mpl::AUX_WRAPPER_NAME< value >
+#       define AUX_WRAPPER_INST(value) BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE::AUX_WRAPPER_NAME< value >
 #   endif
 #endif
 
-namespace boost { namespace mpl {
+BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_OPEN
 
 template< AUX_WRAPPER_PARAMS(N) >
 struct AUX_WRAPPER_NAME
@@ -87,7 +83,7 @@ template< AUX_WRAPPER_PARAMS(N) >
 AUX_WRAPPER_VALUE_TYPE const AUX_WRAPPER_INST(N)::value;
 #endif
 
-}} // namespace boost::mpl
+BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_CLOSE
 
 #undef AUX_WRAPPER_NAME
 #undef AUX_WRAPPER_PARAMS

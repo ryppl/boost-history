@@ -1,4 +1,4 @@
-namespace boost { namespace mpl {
+BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_OPEN
 template<> struct arg<-1>
 {
     static int const value = -1;
@@ -107,4 +107,4 @@ template<> struct arg<5>
 };
 
 BOOST_MPL_AUX_NONTYPE_ARITY_SPEC(1, int, arg)
-}}
+BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_CLOSE

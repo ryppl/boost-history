@@ -14,10 +14,13 @@
 // $Date$
 // $Revision$
 
+#include <boost/mpl/aux_/adl_barrier.hpp>
 #include <boost/mpl/aux_/config/workaround.hpp>
 #include <boost/mpl/aux_/config/msvc.hpp>
 
-namespace boost { namespace mpl { namespace aux {
+BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_OPEN
+
+namespace aux {
 
 typedef char (&no_tag)[1];
 typedef char (&yes_tag)[2];
@@ -51,6 +54,8 @@ template<> struct weighted_tag<0>
 };
 #endif
 
-}}}
+} // namespace aux
+
+BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_CLOSE
 
 #endif // BOOST_MPL_AUX_YES_NO_HPP_INCLUDED

@@ -9,9 +9,9 @@
 // Copyright (c) Aleksey Gurtovoy 2001-2003
 // Copyright (c) Peter Dimov 2001-2003
 //
-// Use, modification and distribution are subject to the Boost Software 
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
-// at http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
@@ -39,8 +39,7 @@
 #   include <boost/preprocessor/iterate.hpp>
 #   include <boost/preprocessor/cat.hpp>
 
-namespace boost {
-namespace mpl {
+BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_OPEN
 
 // watch out for GNU gettext users, who #define _(x)
 #if !defined(_) || defined(BOOST_MPL_CFG_NO_UNNAMED_PLACEHOLDER_SUPPORT)
@@ -57,8 +56,7 @@ using boost::mpl::_;
     (3,(1, BOOST_MPL_LIMIT_METAFUNCTION_ARITY + 1, <boost/mpl/placeholders.hpp>))
 #include BOOST_PP_ITERATE()
 
-} // namespace mpl
-} // namespace boost 
+BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_CLOSE
 
 #endif // BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
 #endif // BOOST_MPL_PLACEHOLDERS_HPP_INCLUDED
