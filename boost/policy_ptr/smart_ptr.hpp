@@ -1,5 +1,7 @@
 //----------------------------------------------------------------------------
-// Copyright (C) 2004, David B. Held and Andrei Alexandrescu
+// Copyright (C) 2004, Andrei Alexandrescu and David B. Held
+// Distributed under the Boost Software License, Version 1.0. (See
+// http://www.boost.org/LICENSE_1_0.txt)
 //----------------------------------------------------------------------------
 #ifndef BOOST_SMART_PTR_HPP
 #define BOOST_SMART_PTR_HPP
@@ -228,15 +230,10 @@ namespace boost
                                                 automatic_conversion_result;
 
     public:             // Structors
-        smart_ptr()
+        smart_ptr(void)
         {
             checking_policy::on_default(get_impl(*this));
         }
-
-//      this isn't needed with the new move semantics
-//        smart_ptr(copy_arg rhs)
-//        : base_type(static_cast<copy_base>(rhs))
-//        { get_impl_ref(*this) = ownership_policy::clone(get_impl(rhs)); }
 
         smart_ptr(this_type const& rhs)
             : base_type(static_cast<base_type const&>(rhs))
@@ -290,11 +287,6 @@ namespace boost
                 this_type().swap(*this);
             }
         }
-
-//      away with this
-//        smart_ptr(detail::by_ref<smart_ptr> rhs)
-//        : base_type(static_cast<base_type&>(static_cast<smart_ptr&>(rhs)))
-//        { }
 
         template <typename U>
         smart_ptr(U& p)
@@ -362,12 +354,6 @@ namespace boost
         smart_ptr(U&, typename cant_move_from_const<U>::type = 0);
 
     public:             // Ownership modifiers
-//      and this
-//        operator detail::by_ref<smart_ptr>()
-//        {
-//            return detail::by_ref<smart_ptr>(*this);
-//        }
-
         smart_ptr&      operator=(this_type rhs)
         {
             swap(rhs);
@@ -392,7 +378,6 @@ namespace boost
         friend inline
         void            reset(this_type& sp, stored_type p)
         {
-//            BOOST_ASSERT(p == 0 || p != get_impl(sp));
             checking_policy::on_reset(sp, p);
             this_type(p).swap(sp);
         }
@@ -411,7 +396,6 @@ namespace boost
         }
 
     public:             // Comparison
-#ifndef __BORLANDC__
         friend inline
         bool            operator==(smart_ptr const& lhs, T const* rhs)
         {
@@ -435,23 +419,19 @@ namespace boost
         {
             return rhs != lhs;
         }
-#endif
 
-        // Ambiguity buster
         template <typename U, class Q1, class Q2, class Q3, class Q4>
         bool            operator==(smart_ptr<U, Q1, Q2, Q3, Q4> const& rhs) const
         {
             return get_impl(*this) == get_impl(rhs);
         }
 
-        // Ambiguity buster
         template <typename U, class Q1, class Q2, class Q3, class Q4>
         bool            operator!=(smart_ptr<U, Q1, Q2, Q3, Q4> const& rhs) const
         {
             return !(*this == rhs);
         }
 
-        // Ambiguity buster
         template <typename U, class Q1, class Q2, class Q3, class Q4>
         bool            operator<(smart_ptr<U, Q1, Q2, Q3, Q4> const& rhs) const
         {
@@ -471,16 +451,12 @@ namespace boost
             return !storage_policy::is_valid();
         }
 
-        // VC6 gets horribly confused by the conversion operator
-//#ifndef BOOST_MSVC
     public:             // Conversion to pointer_type
-                        operator automatic_conversion_result() const
+                        operator automatic_conversion_result(void) const
         {
             return get_impl(*this);
         }
-//#endif
     };
-    //------------------------------------------------------------------------
     //------------------------------------------------------------------------
 }   // namespace boost
 //----------------------------------------------------------------------------

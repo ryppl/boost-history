@@ -1,5 +1,7 @@
 //----------------------------------------------------------------------------
-// Copyright (C) 2004, David B. Held and Andrei Alexandrescu
+// Copyright (C) 2004, Andrei Alexandrescu and David B. Held
+// Distributed under the Boost Software License, Version 1.0. (See
+// http://www.boost.org/LICENSE_1_0.txt)
 //----------------------------------------------------------------------------
 #ifndef BOOST_REF_COUNTED_HPP
 #define BOOST_REF_COUNTED_HPP
@@ -10,15 +12,6 @@
 namespace boost
 {
     //------------------------------------------------------------------------
-    struct ref_counted
-    {
-        template <typename T>
-        struct apply
-        {
-            typedef ref_counted_<T> type;
-        };
-    };
-    //------------------------------------------------------------------------
     template <class StoragePolicy>
     class ref_counted_ : public StoragePolicy
     {
@@ -26,40 +19,60 @@ namespace boost
         typedef ownership_policy_tag                    policy_category;
         typedef copy_semantics_tag                      ownership_category;
         typedef StoragePolicy                           storage_policy;
+        typedef storage_policy                          base_type;
         typedef typename storage_policy::pointer_type   pointer_type;
 
     protected:          // Protected Interface
                         ref_counted(void)
                             : count_(0)                 { }
 
+                        ref_counted_(ref_counted_ const& rhs)
+                            : base_type(static_cast<base_type const&>(rhs)),
+                            count_(rhs.count_)          { }
+
                         template <typename U>
                         ref_counted_(ref_counted_<U> const& rhs)
-                            : count_(BOOST_SP_CONVERT_ARGUMENT(
+                            : base_type(static_cast<
+                                typename ref_counted_<U>::base_type const&
+                            >(rhs)),
+                            count_(BOOST_SP_CONVERT_ARGUMENT(
                                 ref_counted_, rhs, count_
                             ))                          { }
 
-        // gcc 3.0? incorrectly chooses the greedy c'tor below, instead of the
-        // conversion c'tor above.  So this weaker pointer c'tor must be
-        // used instead.
-#if !defined(BOOST_MSVC) && !defined(__GNUC__)
                         template <typename U>
-                        ref_counted_(U const&)
-#else
-                        ref_counted_(P const&)
-#endif
-                            : count_(new unsigned(1))
-        {
-//            count_ = static_cast<unsigned int*>(
-//                SmallObject<>::operator new(sizeof(unsigned int)));
-//            BOOST_ASSERT(count_);
-//            *count_ = 1;
-        }
+                        ref_counted_(U& p)
+                            : base_type(p), count_(new unsigned(1))
+                                                        { }
+
+                        template <typename U>
+                        ref_counted_(U const& p)
+                            : base_type(p), count_(new unsigned(1))
+                                                        { }
+
+                        template <typename U, typename V>
+                        ref_counted_(U& p, V& d)
+                            : base_type(p, d), count_(new unsigned(1))
+                                                        { }
+
+                        template <typename U, typename V>
+                        ref_counted_(U const& p, V& d)
+                            : base_type(p, d), count_(new unsigned(1))
+                                                        { }
+
+                        template <typename U, typename V>
+                        ref_counted_(U& p, V const& d)
+                            : base_type(p, d), count_(new unsigned(1))
+                                                        { }
+
+                        template <typename U, typename V>
+                        ref_counted_(U const& p, V const& d)
+                            : base_type(p, d), count_(new unsigned(1))
+                                                        { }
 
                        ~ref_counted_()
 		{
             if (!count_ || !--*count_)
             {
-//            SmallObject<>::operator delete(count_, sizeof(unsigned int));
                 delete count_;
             }
             else
@@ -109,6 +122,16 @@ namespace boost
         unsigned*       count_;
     };
     //------------------------------------------------------------------------
+    struct ref_counted
+    {
+        template <typename T>
+        struct apply
+        {
+            typedef ref_counted_<T> type;
+        };
+    };
+    //------------------------------------------------------------------------
 }   // namespace boost
 //----------------------------------------------------------------------------
 #endif // BOOST_REF_COUNTED_HPP
+

@@ -1,5 +1,7 @@
 //----------------------------------------------------------------------------
-// Copyright (C) 2004, David B. Held and Andrei Alexandrescu
+// Copyright (C) 2004, Andrei Alexandrescu and David B. Held
+// Distributed under the Boost Software License, Version 1.0. (See
+// http://www.boost.org/LICENSE_1_0.txt)
 //----------------------------------------------------------------------------
 #ifndef BOOST_SCALAR_STORAGE_HPP
 #define BOOST_SCALAR_STORAGE_HPP
@@ -12,17 +14,6 @@
 namespace boost
 {
     //------------------------------------------------------------------------
-    struct scalar_storage
-    {
-        template <typename T>
-        struct apply
-        {
-            typedef scalar_storage_<T> type;
-        };
-    };
-    //------------------------------------------------------------------------
-    // The storage policy doesn't initialize the stored pointer
-    //     which will be initialized by OwnershipPolicy::clone()
     template <typename T>
     class scalar_storage_
     {
@@ -108,6 +99,16 @@ namespace boost
         stored_type     p_;
     };
     //------------------------------------------------------------------------
+    struct scalar_storage
+    {
+        template <typename T>
+        struct apply
+        {
+            typedef scalar_storage_<T> type;
+        };
+    };
+    //------------------------------------------------------------------------
 }   // namespace boost
 //----------------------------------------------------------------------------
 #endif // BOOST_SCALAR_STORAGE_HPP
+
