@@ -20,6 +20,9 @@ int test_main( int, char*[] )
     algo_test< ptr_vector<Value>, Value >();
     algo_test_polymorphic< ptr_vector<Base>, Derived >();
 */
+    //c.insert( T() );
+    //c.insert( t );
+
     return 0;
 }
 

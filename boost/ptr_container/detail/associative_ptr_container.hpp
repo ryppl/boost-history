@@ -38,6 +38,7 @@ namespace detail
         typedef BOOST_DEDUCED_TYPENAME C::value_compare      value_compare;
         typedef BOOST_DEDUCED_TYPENAME Base::scoped_deleter  scoped_deleter;
         typedef BOOST_DEDUCED_TYPENAME Base::allocator_type  allocator_type;
+        typedef BOOST_DEDUCED_TYPENAME Base::object_type     object_type; 
         typedef BOOST_DEDUCED_TYPENAME Base::iterator        iterator; 
         typedef BOOST_DEDUCED_TYPENAME Base::const_iterator  const_iterator;
         typedef BOOST_DEDUCED_TYPENAME Base::size_type       size_type;
@@ -54,6 +55,15 @@ namespace detail
             this->c__().insert( sd.begin(), sd.end() ); 
             sd.release();
         }
+        
+        /*
+        template< typename InputIterator >
+        void insert_clones_and_release_map( scoped_deleter& sd,
+                                            InputIterator first, InputIterator last )
+        {
+            $this->c__().insert
+        }
+        */
 
     public: // foundation
         
@@ -97,20 +107,6 @@ namespace detail
         
         using Base::insert;
         
-        std::pair<iterator,bool> insert( const key_type& x ) // strong
-        {
-            return insert( make_clone ( x ) );
-        }
-        
-        std::pair<iterator,bool> insert( const key_type* x ) // strong
-        {
-            auto_ptr<key_type> ptr( x );
-            std::pair<typename C::iterator,bool> res = this->c__().insert( x );
-            if( res.second )
-                ptr.release();
-            return std::make_pair( make_indirection_iterator( res.first ), res.second );
-        }
-        
         template< typename InputIterator >
         void insert( InputIterator first, InputIterator last )
         {
@@ -141,12 +137,12 @@ namespace detail
 
         iterator find( const key_type& x )
         {
-            return make_indirection_iterator( this->c__().find( x ) );
+            return iterator( this->c__().find( x ) );
         }
         
         const_iterator find( const key_type& x ) const 
         {
-            return make_indirection_iterator( this->c__().find( x ) );
+            return const_iterator( this->c__().find( x ) );
         }
         
         size_type count( const key_type& x ) const 
@@ -156,22 +152,22 @@ namespace detail
         
         iterator lower_bound( const key_type& x )
         {
-            return make_indirection_iterator( this->c__().lower_bound( x ) );
+            return iterator( this->c__().lower_bound( x ) );
         }
          
         const_iterator lower_bound( const key_type& x ) const 
         {
-            return make_indirection_iterator( this->c__().lower_bound( x ) );        
+            return const_iterator( this->c__().lower_bound( x ) );        
         } 
         
         iterator upper_bound( const key_type& x )
         {
-            return make_indirection_iterator( this->c__().upper_bound( x ) ); 
+            return iterator( this->c__().upper_bound( x ) ); 
         }
         
         const_iterator upper_bound( const key_type& x ) const
         {
-            return make_indirection_iterator( this->c__().upper_bound( x ) );
+            return const_iterator( this->c__().upper_bound( x ) );
         }
         
         template< typename PtrContainer >
@@ -205,11 +201,12 @@ namespace detail
     
 } // namespace 'detail'
 
-#define BOOST_FORWARD_ASSOC_TYPEDEF( Base ) \
-BOOST_FORWARD_TYPEDEF( Base ); \
-typedef BOOST_DEDUCED_TYPENAME Base::key_type key_type; \
-typedef BOOST_DEDUCED_TYPENAME Base::key_compare key_compare; \
+#define BOOST_FORWARD_ASSOC_TYPEDEF( Base )                      \
+BOOST_FORWARD_TYPEDEF( Base );                                   \
+typedef BOOST_DEDUCED_TYPENAME Base::key_type key_type;          \
+typedef BOOST_DEDUCED_TYPENAME Base::key_compare key_compare;    \
 typedef BOOST_DEDUCED_TYPENAME Base::value_compare value_compare
+
 
     /////////////////////////////////////////////////////////////////////////
     // default predicates:
@@ -217,7 +214,7 @@ typedef BOOST_DEDUCED_TYPENAME Base::value_compare value_compare
     template< typename T >
     struct ptr_less
     {
-        bool operator()( const T* l, const T* r )
+        bool operator()( const T* l, const T* r ) const
         {
             return *l < *r;
         }

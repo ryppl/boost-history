@@ -16,6 +16,9 @@ int test_main( int, char*[] )
     associative_container_test< ptr_multimap<int, Base>, Derived >();
     associative_container_test< ptr_multimap<int, Value>, Value >();
     
+    //c.insert( T() );
+    //c.insert( t );
+
 
     return 0;
 }

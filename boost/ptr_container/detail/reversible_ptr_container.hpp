@@ -45,12 +45,12 @@ namespace detail
     template< typename M, typename T >
     struct map_config
     {
-        typedef M                                                                            container_type;
-        typedef T                                                                            value_type;
-        typedef typename ptr_container::detail::map_iterator<typename M::iterator, T&>       iterator;
-        typedef ptr_container::detail::map_iterator<typename M::const_iterator, const T&>    const_iterator;
-        typedef typename ptr_container::detail::map_iterator<typename M::reverse_iterator, T&> reverse_iterator;
-        typedef typename ptr_container::detail::map_iterator<typename M::const_reverse_iterator, const T&> const_reverse_iterator;
+        typedef M                                                                                         container_type;
+        typedef T                                                                                         value_type;
+        typedef typename ptr_container::detail::map_iterator<typename M::iterator, T>                     iterator;
+        typedef typename ptr_container::detail::map_iterator<typename M::const_iterator, const T>         const_iterator;
+        typedef typename ptr_container::detail::map_iterator<typename M::reverse_iterator, T>             reverse_iterator;
+        typedef typename ptr_container::detail::map_iterator<typename M::const_reverse_iterator, const T> const_reverse_iterator;
     };
 
     template< typename Config >
@@ -65,8 +65,12 @@ namespace detail
         C& c__()                { return c_; }
         const C& c__() const    { return c_; }
     
+
+    protected:
+        typedef BOOST_DEDUCED_TYPENAME Config::value_type     T;
+
     public: // typedefs
-        typedef  BOOST_DEDUCED_TYPENAME Config::value_type    object_type, T;
+        typedef  T                                            object_type;
         typedef  T*                                           value_type;
         typedef  T*                                           pointer;
         typedef  T&                                           reference;
@@ -81,9 +85,9 @@ namespace detail
         typedef  BOOST_DEDUCED_TYPENAME C::allocator_type                  allocator_type;
 
         typedef BOOST_DEDUCED_TYPENAME C::iterator                         ptr_iterator; 
-        typedef BOOST_DEDUCED_TYPENAME C::const_iterator                   const_ptr_iterator;
+        typedef BOOST_DEDUCED_TYPENAME C::const_iterator                   ptr_const_iterator;
         typedef BOOST_DEDUCED_TYPENAME C::reverse_iterator                 ptr_reverse_iterator; 
-        typedef BOOST_DEDUCED_TYPENAME C::const_reverse_iterator           const_ptr_reverse_iterator;
+        typedef BOOST_DEDUCED_TYPENAME C::const_reverse_iterator           ptr_const_reverse_iterator;
         
     protected: // implementation
             
@@ -298,22 +302,22 @@ namespace detail
         }
 
     public: // container requirements
-        iterator                begin()            { return make_indirect_iterator( c_.begin() ); }
-        const_iterator          begin() const      { return make_indirect_iterator( c_.begin() ); }
-        iterator                end()              { return make_indirect_iterator( c_.end() ); }
-        const_iterator          end() const        { return make_indirect_iterator( c_.end() ); }
-        reverse_iterator        rbegin()           { return make_indirect_iterator( c_.rbegin() ); } 
-        const_reverse_iterator  rbegin() const     { return make_indirect_iterator( c_.rbegin() ); } 
-        reverse_iterator        rend()             { return make_indirect_iterator( c_.rend() ); } 
-        const_reverse_iterator  rend() const       { return make_indirect_iterator( c_.rend() ); } 
-        ptr_iterator            ptr_begin()        { return c_.begin(); }
-        const_ptr_iterator      ptr_begin() const  { return c_.begin(); }
-        ptr_iterator            ptr_end()          { return c_.end(); }
-        const_ptr_iterator      ptr_end() const    { return c_.end(); }
-        ptr_iterator            ptr_rbegin()       { return c_.rbegin(); }
-        const_ptr_iterator      ptr_rbegin() const { return c_.rbegin(); }
-        ptr_iterator            ptr_rend()         { return c_.rend(); }
-        const_ptr_iterator      ptr_rend() const   { return c_.rend(); }
+        iterator                   begin()            { return iterator( c_.begin() ); }
+        const_iterator             begin() const      { return const_iterator( c_.begin() ); }
+        iterator                   end()              { return iterator( c_.end() ); }
+        const_iterator             end() const        { return const_iterator( c_.end() ); }
+        reverse_iterator           rbegin()           { return reverse_iterator( c_.rbegin() ); } 
+        const_reverse_iterator     rbegin() const     { return const_reverse_iterator( c_.rbegin() ); } 
+        reverse_iterator           rend()             { return reverse_iterator( c_.rend() ); } 
+        const_reverse_iterator     rend() const       { return const_reverse_iterator( c_.rend() ); } 
+        ptr_iterator               ptr_begin()        { return c_.begin(); }
+        ptr_const_iterator         ptr_begin() const  { return c_.begin(); }
+        ptr_iterator               ptr_end()          { return c_.end(); }
+        ptr_const_iterator         ptr_end() const    { return c_.end(); }
+        ptr_reverse_iterator       ptr_rbegin()       { return c_.rbegin(); }
+        ptr_const_reverse_iterator ptr_rbegin() const { return c_.rbegin(); }
+        ptr_reverse_iterator       ptr_rend()         { return c_.rend(); }
+        ptr_const_reverse_iterator ptr_rend() const   { return c_.rend(); }
 
         void swap( reversible_ptr_container& r ) // notrow
         { 
@@ -404,9 +408,9 @@ namespace detail
             if( 0 == x )
                 throw bad_pointer();
             
-            std::auto_ptr<T> ptr( x );                                              // nothrow
-            iterator res = make_indirect_iterator( c_.insert( before.base(), x ) ); // strong, commit
-            ptr.release();                                                          // nothrow
+            std::auto_ptr<T> ptr( x );                                // nothrow
+            iterator res = iterator( c_.insert( before.base(), x ) ); // strong, commit
+            ptr.release();                                            // nothrow
             return res;
         }
                 
@@ -433,13 +437,13 @@ namespace detail
         iterator erase( iterator before ) // nothrow 
         { 
             remove( before ); 
-            return make_indirect_iterator( c_.erase( before.base() ) );
+            return iterator( c_.erase( before.base() ) );
         }
         
         iterator erase( iterator first, iterator last ) // notrow 
         {
             remove( first, last ); 
-            return make_indirect_iterator( c_.erase( first.base(), last.base() ) );
+            return iterator( c_.erase( first.base(), last.base() ) );
         }
         
         void clear()                               
@@ -611,19 +615,31 @@ typedef BOOST_DEDUCED_TYPENAME Base::reverse_const_ptr_iterator reverse_const_pt
     // is buggy on most compilers, so we use a macro instead
     //
 #define BOOST_PTR_CONTAINER_RELEASE_AND_CLONE( PC ) \
-    std::auto_ptr<PC> release()           \
-    {                                     \
-      std::auto_ptr<PC> ptr( new PC );    \
-      this->swap( *ptr );                       \
-      return ptr;                         \
-    }                                     \
-                                          \
-    using Base::release;                  \
-                                          \
-    std::auto_ptr<PC> clone() const       \
-    {                                     \
+                                                    \
+    PC( std::auto_ptr<PC> r )                       \
+    : Base( r ) { }                                 \
+                                                    \
+    void operator=( std::auto_ptr<PC> r )           \
+    {                                               \
+        Base::operator=( r );                       \
+    }                                               \
+                                                    \
+    std::auto_ptr<PC> release()                     \
+    {                                               \
+      std::auto_ptr<PC> ptr( new PC );              \
+      this->swap( *ptr );                           \
+      return ptr;                                   \
+    }                                               \
+                                                    \
+    using Base::release;                            \
+                                                    \
+    std::auto_ptr<PC> clone() const                 \
+    {                                               \
        return std::auto_ptr<PC>( new PC( this->begin(), this->end() ) ); \
-    }
+    }                                               \
+                                                    \
+    PC( const PC& );                                \
+    PC& operator=( const PC& )                                      
     
     
     } // namespace 'detail'

@@ -25,51 +25,51 @@
 namespace boost
 {
 
-template< typename T, typename Allocator = std::allocator<T*> >
-class ptr_vector : public detail::reversible_ptr_container< detail::default_config< std::vector<T*,Allocator>, T > >
-{
-    typedef detail::reversible_ptr_container< detail::default_config< std::vector<T*,Allocator>, T > > Base;
-
-public: 
-    //BOOST_FORWARD_TYPEDEF( Base );
-    typedef typename Base::size_type size_type;
-
-public:
-    explicit ptr_vector( const Allocator& alloc = Allocator() )               
-    : Base( alloc ) {}
-    
-    ptr_vector( size_type n, const T& x, 
-                const Allocator& alloc = Allocator() )  
-    : Base( n, x, alloc ) {}
-    
-    ptr_vector( std::auto_ptr<ptr_vector> r )                                          
-    : Base( r ) {}
-    
-    template< typename InputIterator >
-    ptr_vector( InputIterator first, InputIterator last, 
-                const Allocator& alloc = Allocator() ) 
-    : Base( first, last, alloc ) {}
-    
-    void operator=( std::auto_ptr<ptr_vector> r )                                   
+    template< typename T, typename Allocator = std::allocator<T*> >
+    class ptr_vector : public detail::reversible_ptr_container< detail::default_config< std::vector<T*,Allocator>, T > >
     {
-        Base::operator=( r );
-    }
+        typedef detail::reversible_ptr_container< detail::default_config< std::vector<T*,Allocator>, T > > Base;
     
-    BOOST_PTR_CONTAINER_RELEASE_AND_CLONE( ptr_vector );
+    public: 
+        typedef typename Base::size_type size_type;
     
-public: // vector interface
-    
-    size_type capacity() const
-    {
-        return this->c__().capacity();
-    }
-    
-    void reserve( size_type n )
-    {
-        this->c__().reserve( n ); 
-    }
+    public:
+        explicit ptr_vector( const Allocator& alloc = Allocator() )               
+        : Base( alloc ) {}
+        
+        ptr_vector( size_type n, const T& x, 
+                    const Allocator& alloc = Allocator() )  
+        : Base( n, x, alloc ) {}
+        
+        template< typename InputIterator >
+        ptr_vector( InputIterator first, InputIterator last, 
+                    const Allocator& alloc = Allocator() ) 
+        : Base( first, last, alloc ) {}
+        
+        BOOST_PTR_CONTAINER_RELEASE_AND_CLONE( ptr_vector );
+        
+    public: // vector interface
+        
+        size_type capacity() const
+        {
+            return this->c__().capacity();
+        }
+        
+        void reserve( size_type n )
+        {
+            this->c__().reserve( n ); 
+        }    
+    };
 
-};
+    //////////////////////////////////////////////////////////////////////////////
+    // clonability
+    
+    template< typename T, typename A >
+    ptr_vector<T,A>* make_clone( const ptr_vector<T,A>& r )
+    {
+        std::auto_ptr<ptr_vector<T,A> > p( r.clone() );
+        return p.release();
+    }
 
 #undef BOOST_FORWARD_TYPEDEF
 #undef BOOST_PTR_CONTAINER_RELEASE_AND_CLONE

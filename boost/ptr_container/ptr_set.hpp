@@ -32,28 +32,39 @@ namespace boost
         typedef detail::associative_ptr_container< detail::default_config< std::set<Key*,Compare,Allocator>, Key > > Base;
     
     public: // typedefs
-        //BOOST_FORWARD_ASSOC_TYPEDEF( Base );
-        
+       
+        typedef BOOST_DEDUCED_TYPENAME Base::iterator     iterator;                 
+        typedef BOOST_DEDUCED_TYPENAME Base::ptr_iterator ptr_iterator;         
+
     public:
         explicit ptr_set( const Compare& comp = Compare(), 
                           const Allocator& alloc = Allocator() ) : Base( comp, alloc ) 
         { }
         
-        ptr_set( std::auto_ptr<ptr_set> r ) : Base( r )                
-        { }
-
         template< typename InputIterator >
         ptr_set( InputIterator first, InputIterator last, const Compare& comp = Compare(), 
                  const Allocator& alloc = Allocator() ) 
         : Base( first, last, comp, alloc )
         { }
-           
-        void operator=( std::auto_ptr<ptr_set> r ) 
-        {
-            Base::operator=( r );
-        }
-        
+
         BOOST_PTR_CONTAINER_RELEASE_AND_CLONE( ptr_set );
+        
+        using Base::insert;                                                    
+        
+        std::pair<iterator,bool> insert( const Key& x )   
+        {  
+            return this->insert( make_clone ( x ) );
+        }                                                   
+
+        std::pair<iterator,bool> insert( Key* x )                       
+        {       
+            std::auto_ptr<Key> ptr( x );                                
+            std::pair<ptr_iterator,bool> res = this->c__().insert( x );       
+            if( res.second )                                                 
+                ptr.release();                                                  
+            return std::make_pair( iterator( res.first ), res.second );     
+        }
+
     };
         
         
@@ -65,16 +76,14 @@ namespace boost
         typedef detail::associative_ptr_container< detail::default_config< std::multiset<Key*,Compare,Allocator>, Key > > Base;
         
     public: // typedefs
-        //BOOST_FORWARD_ASSOC_TYPEDEF( Base );
+        
+        typedef BOOST_DEDUCED_TYPENAME Base::iterator     iterator;              
+        typedef BOOST_DEDUCED_TYPENAME Base::ptr_iterator ptr_iterator;  
         
     public:
         explicit ptr_multiset( const Compare& comp = Compare(), 
                                const Allocator& alloc = Allocator() )
         : Base( comp, alloc ) 
-        { }
-
-        
-        ptr_multiset( std::auto_ptr<ptr_multiset> r ) : Base( r )                
         { }
         
         template< typename InputIterator >
@@ -83,13 +92,41 @@ namespace boost
                       const Allocator& alloc = Allocator() ) 
         : Base( first, last, comp, alloc ) { }
         
-        void operator=( std::auto_ptr<ptr_multiset> r ) 
-        {
-            Base::operator=( r );
+        BOOST_PTR_CONTAINER_RELEASE_AND_CLONE( ptr_multiset );
+                                                                            
+        using Base::insert;                                                     
+        
+        iterator insert( const Key& x )                                 
+        {                                                                       
+            return this->insert( make_clone ( x ) );                            
+        }                                                                       
+        
+        iterator insert( Key* x )                                       
+        {                                                                       
+            std::auto_ptr<Key> ptr( x );                                
+            ptr_iterator res = this->c__().insert( x );                         
+            ptr.release();                                                      
+            return iterator( res );                                             
         }
         
-        BOOST_PTR_CONTAINER_RELEASE_AND_CLONE( ptr_multiset );
     };
+
+    //////////////////////////////////////////////////////////////////////////////
+    // clonability
+
+    template< typename K, typename C, typename A >
+    ptr_set<K,C,A>* make_clone( const ptr_set<K,C,A>& r )
+    {
+        std::auto_ptr<ptr_set<K,C,A> > p( r.clone() );
+        return p.release();
+    }
+
+    template< typename K, typename C, typename A >
+    ptr_multiset<K,C,A>* make_clone( const ptr_multiset<K,C,A>& r )
+    {
+        std::auto_ptr<ptr_multiset<K,C,A> > p( r.clone() );
+        return p.release();
+    }
 
 }
 

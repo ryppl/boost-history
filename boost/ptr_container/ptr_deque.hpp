@@ -24,39 +24,40 @@
 
 namespace boost
 {
-
-template< typename T, typename Allocator = std::allocator<T*> >
-class ptr_deque : public detail::reversible_ptr_container< detail::default_config< std::deque<T*,Allocator>, T > >
-{
-    typedef detail::reversible_ptr_container< detail::default_config< std::deque<T*,Allocator>, T > > Base;
     
-public:
-    typedef BOOST_DEDUCED_TYPENAME Base::size_type        size_type;
-    typedef BOOST_DEDUCED_TYPENAME Base::const_reference  const_reference;
-    
-public: 
-
-    explicit ptr_deque( const Allocator& alloc = Allocator() ) 
-    : Base( alloc ) { }
-    
-    ptr_deque( size_type n, const_reference x, const Allocator& alloc = Allocator() )  
-    : Base( n, x, alloc ) { }
-    
-    ptr_deque( std::auto_ptr<ptr_deque> r )  
-    : Base( r ) { }
-    
-    template< typename InputIterator >
-    ptr_deque( InputIterator first, InputIterator last )
-    : Base( first, last ) { }
-    
-    void operator=( auto_ptr<ptr_deque> r )              
+    template< typename T, typename Allocator = std::allocator<T*> >
+    class ptr_deque : public detail::reversible_ptr_container< detail::default_config< std::deque<T*,Allocator>, T > >
     {
-        Base::operator=( r );
+        typedef detail::reversible_ptr_container< detail::default_config< std::deque<T*,Allocator>, T > > Base;
+        
+    public:
+        typedef BOOST_DEDUCED_TYPENAME Base::size_type        size_type;
+        typedef BOOST_DEDUCED_TYPENAME Base::const_reference  const_reference;
+        
+    public: 
+    
+        explicit ptr_deque( const Allocator& alloc = Allocator() ) 
+        : Base( alloc ) { }
+        
+        ptr_deque( size_type n, const_reference x, const Allocator& alloc = Allocator() )  
+        : Base( n, x, alloc ) { }
+        
+        template< typename InputIterator >
+        ptr_deque( InputIterator first, InputIterator last )
+        : Base( first, last ) { }
+        
+        BOOST_PTR_CONTAINER_RELEASE_AND_CLONE( ptr_deque );
+    };
+
+    //////////////////////////////////////////////////////////////////////////////
+    // clonability
+    
+    template< typename T, typename A >
+    ptr_deque<T,A>* make_clone( const ptr_deque<T,A>& r )
+    {
+        std::auto_ptr<ptr_deque<T,A> > p( r.clone() );
+        return p.release();
     }
-
-    BOOST_PTR_CONTAINER_RELEASE_AND_CLONE( ptr_deque );
-};
-
 
 }
 

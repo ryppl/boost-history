@@ -22,6 +22,7 @@
 #include <boost/config.hpp>
 #include <boost/utility.hpp>
 #include <boost/operators.hpp>
+#include <boost/static_assert.hpp>
 #include <boost/type_traits/remove_pointer.hpp>
 #include <boost/detail/iterator.hpp>
 #include <iosfwd>
@@ -33,12 +34,21 @@ namespace boost
     {
         namespace detail
         {
-            template< typename I, typename R >
-            class map_iterator : bidirectional_iterator_helper< map_iterator<I,R>, typename iterator_traits<I>::value_type, 
+            template< typename I, typename V >
+            class map_iterator : bidirectional_iterator_helper< map_iterator<I,V>, typename iterator_traits<I>::value_type, 
                                                                 std::ptrdiff_t, typename iterator_traits<I>::value_type*, 
-                                                                R >     
+                                                                V& >     
             {
                 I iter_;
+                typedef typename iterator_traits<I>::value_type  pair_t;
+                typedef typename pair_t::first_type              key_type;
+                
+            public:
+                typedef std::ptrdiff_t difference_type;
+                typedef V              value_type;
+                typedef V*             pointer;
+                typedef V&             reference;
+                typedef                std::bidirectional_iterator_tag  iterator_category;        
                 
             public:
                 explicit map_iterator( const I& i ) : iter_( i )         {}
@@ -51,7 +61,7 @@ namespace boost
                     return *this;
                 }
                 
-                R operator*() const
+                V& operator*() const
                 {
                     return *iter_->second;
                 }
@@ -78,15 +88,15 @@ namespace boost
                     return iter_;
                 }
                 
+                key_type key() const
+                {
+                    return iter_->first;
+                }
+                
             }; // class 'map_iterator'
         } // namespace 'detail'
     } // nameespace 'ptr_container'
     
-    template<typename I, typename R>
-    inline ptr_container::detail::map_iterator<I,R> make_indirection_iterator( ptr_container::detail::map_iterator<I,R>& i )
-    {
-        return ptr_container::detail::map_iterator<I,R>( i );
-    }
 }
 
 #endif
