@@ -78,8 +78,6 @@ polymorphism, metaprogramming, compile-time
 %==============================================================================
 \section{Introduction}
 
-\subsection{What is Metaprogramming?}
-
 Metaprogramming is usually defined as the creation of programs which
 generate other programs. Parser generators such as YACC are examples
 of one kind of program-generating program. The input language to YACC
@@ -96,6 +94,8 @@ system. The \mdat\ thus undergoes two translation steps, and the
 user is always very conscious of the boundary between his \mdat\
 and the rest of his program.
 % need bibliography reference for YACC
+
+\subsection{Native Language Metaprogramming}
 
 A more interesting form of \mping{} is available in languages
 such as Scheme, where the generated program specification is given in
@@ -1352,7 +1352,7 @@ metaprogramming tasks? Let's return to our \code{largest}
 example to see if we can rewrite it in a better way with what 
 \code{mpl} has to offer. Well, actually there is not 
 much to look at, because implementation of it with MPL is a 
-one-liner:
+one-liner (we'll spread it out here for readability):
 
 {\small
 \begin{codesamp}\begin{verbatim}
@@ -1371,22 +1371,20 @@ struct largest
 \end{codesamp}
 }
 
-%%% agurt: I sound like a sales person below :)
-No more termination conditions with a tricky patterns matching, 
-no more partial specializations, and that's even more important, 
-it's \emph{obvious} that's the above code does - even although 
+No more termination conditions with a tricky pattern matching, 
+no more partial specializations, and even more importantly, 
+it's \emph{obvious} what the above code does - even although 
 it's all templates - something that you cannot say about the 
 original version.
 
 \subsubsection{iter\_fold as the main iteration 
 algorithm}
 
-For the purpose of examination a little bit more of the 
-library's internal structure, let's look at how the 
-\code{max\_\-element} algorithm from the above example is 
-implemented. One might expect that \emph{now} we will again 
-see all these awkward partial specializations, esoteric 
-patterns matching, etc. Well, let's see:
+For the purpose of examining a little bit more of the library's
+internal structure, let's look at how \code{max\_\-element} from the
+above example is implemented. One might expect that \emph{now} we will
+again see all these awkward partial specializations, esoteric pattern
+matching, etc. Well, let's see:
 
 {\small
 \begin{codesamp}\begin{verbatim}
@@ -1428,36 +1426,34 @@ struct max_element
 \end{codesamp}
 }
 
-First thing to notice here is that this algorithm is in fact 
-implemented in terms of another one - \code{iter\_\-fold}. 
-In fact, this is probably the most important point of the 
-example, because all other generic sequence algorithms in 
-the library are implemented either in terms of \code{iter\_\-fold}
-(or it's counterpart \code{iter\_\-fold\_\-if}) as well. In particular, 
-that means that if you would ever need to implement your own 
-sequence algorithm, there is a huge chance that you'll be able 
-to do it using either \code{iter\_\-fold} or \code{iter\_\-fold\_\-if} - 
-in other words, that means that you won't have to resort to 
-implementing hand-crafted iteration and everything that is 
-associated with it (patterns matching/special cases for 
-termination condition, workarounds for lack of partial 
-specialization, etc.) yourself. Also, that means that if the 
-library took special care for making such iteration as much 
-effective as it's possible (for example, using such techniques 
-as recursion unrolling), your brand-new algorithm will 
-automatically benefit from these optimizations as well. And of 
-course it means that your algorithm will work with any 
-sequence that is a model of \code{mpl}'s 
-ForwardSequence, because it's the only requirement of 
-\code{iter\_\-fold}/\code{iter\_\-fold\_\-if} pair.
+<<<<<<< mpl.tex The first thing to notice here is that this algorithm
+is implemented in terms of another one: \code{iter\_\-fold}.  In fact,
+this is probably the most important point of the example, because
+nearly all other generic sequence algorithms in the library are
+implemented in terms of \code{iter\_\-fold}.  If a user ever should
+need to implement her own sequence algorithm, she'll almost certainly
+be able to do it using this primitive, which means she won't have to
+resort to implementing hand-crafted iteration, pattern matching of
+special cases for loop termination, or workarounds for lack of partial
+specialization. It also means that her algorithm will automatically
+benefit any optimizations the library has implemented, (e.g. recursion
+unrolling), and that it will work with any sequence that is a model of
+ForwardSequence, because \code{iter\_\-fold} does not require any more
+of its sequence argument.
 
-\code{iter\_\-fold} is basically a compile-time equivalent of 
-\code{fold}/\code{reduce} functions that are one of the basic 
-and well-known primitives in many functional programming 
-languages. A more familiar to a \Cpp\ programmer analogy would 
-be \code{std::accumulate} algorithm from the \Cpp\ standard 
-library. \code{iter\_\-fold} is defined in \code{mpl} 
-as follows:
+\code{iter\_\-fold} is basically a compile-time equivalent of the
+\emph{fold} or \emph{reduce} functions that comprise the basic and
+well-known primitives of many functional programming languages. An
+analogy more familiar to a \Cpp\ programmer would be
+\code{std::accumulate} algorithm from the \Cpp\ standard
+library. However, \code{iter\_\-fold} is designed to take advantage of
+the natural characteristics of recursive traversal: it accepts
+\emph{two} \mfn\ class arguments, the first of which is applied to the
+state ``on the way in'' and the second of which is applied ``on the
+way out''.
+
+The
+interface to \code{iter\_\-fold} is defined in \code{mpl} as follows:
 
 {\small
 \begin{codesamp}\begin{verbatim}
@@ -1477,48 +1473,27 @@ struct iter_fold
 
 % it's not really ``implementation-defined'', but unspecified.
 
-The algorithm ``returns'' the result of two-way successive 
+The algorithm ``returns'' the result of two-way successive
 applications of binary \code{ForwardOp} and \code{BackwardOp}
-operations to iterators in range 
-[\code{begin<Sequence>::type}, \code{end<Sequence>::type}) 
-and previous result of an operation; 
-the \code{InitialState} is logically placed before the 
-sequence and included in the forward traversal. The result 
-\code{type} is identical to the \code{InitialState} if the 
-sequence is empty. 
-The library also provides a little bit more high-level 
-\code{fold} and \code{fold\_\-reverse} algorithms that wrap 
-\code{iter\_\-fold} to accommodate it's most common usage 
-patterns.
+operations to iterators in range [\code{begin<Sequence>::type},
+\code{end<Sequence>::type}) and previous result of an operation; the
+\code{InitialState} is logically placed before the sequence and
+included in the forward traversal. The result \code{type} is identical
+to \code{InitialState} if the sequence is empty.  Of course the MPL
+also provides higher-level \code{fold} and \code{fold\_\-reverse}
+algorithms which wrap \code{iter\_\-fold} to accommodate its most
+common usage patterns.
 
-As the name suggests, the key difference between is that 
-\code{iter\_\-fold} and \code{iter\_\-fold\_\-if} is that the 
-latter \emph{terminates} the iteration as soon as its 
-predicate satisfied, while \code{iter\_\-fold} always 
-iterates the whole sequence (backward and forward). 
+\subsubsection{Sequences of Numbers}
 
-An obvious generalization here would be to add yet another 
-parameter to \code{iter\_\-fold} so it become possible to 
-implement everything in terms of the single iteration 
-metafunction, but we decided that this would be an 
-over-generalization. For one, it would mean that the 
-termination condition would be always calculated even 
-although for most uses of \code{iter\_\-fold} it's not needed. 
-An overhead like this just goes against the library's strike 
-for maximum compile-time performance.
-
-
-\subsubsection{Sequences of Types, but there are Shortcuts for Numbers}
-
-What we've seen so far were sequences (and algorithms on 
-sequences) of types. It's very much possible and easy to 
-manipulate values using the library as well. The only thing 
-to remember is that in \Cpp\ class template non-type template 
-parameters is one more example of non-polymorphic behavior. %%% (??).
-That means, that if you declared a metafunction to take a 
-non-type template parameter - let's say \emph{long} - 
-it's not possible to pass anything besides compile-time 
-integral constants to it:
+What we've seen so far were sequences (and algorithms on sequences) of
+types. It's very much possible and easy to manipulate values using the
+library as well. The only thing to remember is that in \Cpp\ class
+template non-type template parameters give us one more example of
+non-polymorphic behavior.  In other words, if you declared a
+metafunction to take a non-type template parameter, e.g.  \emph{long},
+it's not possible to pass anything besides compile-time integral
+constants to it:
 
 {\small
 \begin{codesamp}\begin{verbatim}
@@ -2430,25 +2405,35 @@ implements the FSM using a variation of State design pattern \cite{Hun91},
 are used, and the FSMs are table driven. 
 
 
-\section{About implementation}
-
-\section{Lessons learned}
-
-\section{Conclusions}
-
 \begin{glossary}
+  \term{Metaprogramming} the creation of programs which generate other
+  programs.
+
+  \term{Metadata} the program specification processed by a \mpgm.
+
+  \term{Meta-language} defines the \mdat constructs accepted by the \mpgm.
+
   \term{Higher-Order Function} is a function that can take other
   functions as arguments, and/or return functions as
   results. Higher-order functions are a distinguishing features of the
   modern functional languages \cite{Hud79}.
 
   \term{polymorphic} A function is \emph{polymorphic} if it can take
-  arguments of an arbitrary type (a \Cpp\ term from run-time world
+  arguments of an arbitrary type (a \Cpp\ term from the run-time world
   would be ``generic'')
 \end{glossary}
 
-
 \section{Acknowledgements}
+
+Aleksey Gurtovoy originated most of the ideas behind and wrote nearly
+all of the MPL's implementation.
+
+Peter Dimov contributed the \code{bind} functionality without which
+compile-time lambda expressions wouldn't have been possible.
+
+The \Mpl\ implementation would have been much more difficult without
+Vesa Karvonen's wonderful Boost Preprocessor Metaprogramming Library.
+
 \section{References}
 
 {%\normallatexbib
