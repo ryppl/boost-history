@@ -26,7 +26,7 @@ namespace io
 {
 
 
-//  Pointer-using stream-buffer class template declaration  ------------------//
+//  Pointer-using stream-buffer class template declarations  -----------------//
 
 template < typename Ch, class Tr >
 class basic_pointerbuf
@@ -72,6 +72,47 @@ protected:
 
 };  // boost::io::basic_pointerbuf
 
+template < typename Ch, class Tr >
+class basic_constpointerbuf
+    : public std::basic_streambuf<Ch, Tr>
+{
+    typedef std::basic_streambuf<Ch, Tr>   base_type;
+    typedef basic_constpointerbuf          self_type;
+
+public:
+    // Template arguments
+    typedef Ch  char_type;
+    typedef Tr  traits_type;
+
+    // Other types
+    typedef typename Tr::int_type  int_type;
+    typedef typename Tr::pos_type  pos_type;
+    typedef typename Tr::off_type  off_type;
+
+    // Lifetime management (use automatically-defined destructor)
+    basic_constpointerbuf( char_type const *b, char_type const *e );
+
+    // Extra buffer management
+    self_type *  pubsetbuf( char_type const *s, std::streamsize n );
+
+    // Accessors
+    char_type const *  begin_pointer() const;
+    char_type const *  end_pointer() const;
+
+    std::streamsize  gcount() const;
+
+protected:
+    // Overriden virtual functions
+    virtual  base_type *  setbuf( char_type *s, std::streamsize n );
+
+    virtual  pos_type  seekoff( off_type off, std::ios_base::seekdir way,
+     std::ios_base::openmode which = std::ios_base::in | std::ios_base::out );
+
+    virtual  pos_type  seekpos( pos_type sp,
+     std::ios_base::openmode which = std::ios_base::in | std::ios_base::out );
+
+};  // boost::io::basic_constpointerbuf
+
 
 //  Pointer-using stream class template declarations  ------------------------//
 
@@ -106,6 +147,42 @@ BOOST_PRIVATE_WRAPPER( pointerstream, iostream, (std::ios_base::in
  | std::ios_base::out), openmode(0) );
 
 #undef BOOST_PRIVATE_WRAPPER
+
+template < typename Ch, class Tr >
+class basic_iconstpointerstream
+    : public basic_wrapping_istream< basic_constpointerbuf<Ch, Tr> >
+{
+    typedef basic_constpointerbuf<Ch, Tr>      streambuf_type;
+    typedef basic_wrapping_istream<streambuf_type>  base_type;
+
+public:
+    // Template arguments
+    typedef Ch  char_type;
+    typedef Tr  traits_type;
+
+    // Other types
+    typedef typename Tr::int_type  int_type;
+    typedef typename Tr::pos_type  pos_type;
+    typedef typename Tr::off_type  off_type;
+
+    // Lifetime management (use automatically-defined destructor)
+    basic_iconstpointerstream( char_type const *b, char_type const *e )
+        : base_type( b, e )
+    {
+    }
+
+    // Accessors
+    char_type const *  begin_pointer() const
+    {
+        return this->rdbuf()->begin_pointer();
+    }
+
+    char_type const *  end_pointer() const
+    {
+        return this->rdbuf()->end_pointer();
+    }
+
+};  // boost::io::basic_iconstpointerstream
 
 
 //  Pointer-using stream-buffer class template member function definitions  --//
@@ -346,6 +423,126 @@ basic_pointerbuf<Ch, Tr>::pbackfail
     }
 
     return traits_type::eof();
+}
+
+template < typename Ch, class Tr >
+inline
+basic_constpointerbuf<Ch, Tr>::basic_constpointerbuf
+(
+    typename basic_constpointerbuf<Ch, Tr>::char_type const *  b,
+    typename basic_constpointerbuf<Ch, Tr>::char_type const *  e
+)
+{
+    char_type * const  mb = const_cast<char_type *>( b );
+
+    this->setg( mb, mb, const_cast<char_type *>(e) );
+}
+
+template < typename Ch, class Tr >
+inline
+basic_constpointerbuf<Ch, Tr> *
+basic_constpointerbuf<Ch, Tr>::pubsetbuf
+(
+    typename basic_constpointerbuf<Ch, Tr>::char_type const *  s,
+    std::streamsize                                            n
+)
+{
+    return static_cast<self_type *>(
+     this->base_type::pubsetbuf(const_cast<char_type *>( s ), n) );
+}
+
+template < typename Ch, class Tr >
+inline
+typename basic_constpointerbuf<Ch, Tr>::char_type const *
+basic_constpointerbuf<Ch, Tr>::begin_pointer
+(
+) const
+{
+    return const_cast<char_type const *>( this->eback() );
+}
+
+template <typename Ch, class Tr >
+inline
+typename basic_constpointerbuf<Ch, Tr>::char_type const *
+basic_constpointerbuf<Ch, Tr>::end_pointer
+(
+) const
+{
+    return const_cast<char_type const *>( this->egptr() );
+}
+
+template < typename Ch, class Tr >
+inline
+std::streamsize
+basic_constpointerbuf<Ch, Tr>::gcount
+(
+) const
+{
+    return static_cast<std::streamsize>( this->gptr() - this->eback() );
+}
+
+template < typename Ch, class Tr >
+inline
+std::basic_streambuf<Ch, Tr> *
+basic_constpointerbuf<Ch, Tr>::setbuf
+(
+    typename basic_constpointerbuf<Ch, Tr>::char_type *  s,
+    std::streamsize                                      n
+)
+{
+    this->setg( s, s, s + n );
+    return this;
+}
+
+template < typename Ch, class Tr >
+typename basic_constpointerbuf<Ch, Tr>::pos_type
+basic_constpointerbuf<Ch, Tr>::seekoff
+(
+    typename basic_constpointerbuf<Ch, Tr>::off_type  off,
+    std::ios_base::seekdir                            way,
+    std::ios_base::openmode                           which
+      // = std::ios_base::in | std::ios_base::out
+)
+{
+    using std::ios_base;
+
+    char_type * const  begin_ptr = this->eback();
+    char_type * const  end_ptr = this->egptr();
+    char_type * const  cur_ptr = this->gptr();
+    pos_type const     invalid( static_cast<off_type>(-1) );
+    pos_type           answer = invalid;
+
+    if ( char_type * const  base_ptr = (ios_base::beg == way) ? begin_ptr
+     : (ios_base::end == way) ? end_ptr : (ios_base::cur == way) ? cur_ptr
+     : NULL )
+    {
+        if ( (which & ios_base::in) != 0 )
+        {
+            off_type const  new_index = off_type( base_ptr - begin_ptr ) + off;
+
+            if ( (new_index >= off_type( 0 )) && (new_index <= off_type( end_ptr
+             - begin_ptr )) )
+            {
+                this->gbump( new_index - off_type(cur_ptr - begin_ptr) );
+                answer = pos_type( new_index );
+            }
+        }
+    }
+
+    return answer;
+}
+
+template < typename Ch, class Tr >
+inline
+typename basic_constpointerbuf<Ch, Tr>::pos_type
+basic_constpointerbuf<Ch, Tr>::seekpos
+(
+    typename basic_constpointerbuf<Ch, Tr>::pos_type  sp,
+    std::ios_base::openmode                           which
+      // = std::ios_base::in | std::ios_base::out
+)
+{
+    return this->self_type::seekoff( off_type(sp), std::ios_base::beg, which );
 }
 
 

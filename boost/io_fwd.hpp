@@ -100,6 +100,11 @@ typedef basic_pointerbuf<char>      pointerbuf;
 typedef basic_pointerbuf<wchar_t>  wpointerbuf;
 
 template < typename Ch, class Tr = ::std::char_traits<Ch> >
+    class basic_constpointerbuf;
+typedef basic_constpointerbuf<char>      constpointerbuf;
+typedef basic_constpointerbuf<wchar_t>  wconstpointerbuf;
+
+template < typename Ch, class Tr = ::std::char_traits<Ch> >
     class basic_ipointerstream;
 typedef basic_ipointerstream<char>      ipointerstream;
 typedef basic_ipointerstream<wchar_t>  wipointerstream;
@@ -113,6 +118,11 @@ template < typename Ch, class Tr = ::std::char_traits<Ch> >
     class basic_pointerstream;
 typedef basic_pointerstream<char>      pointerstream;
 typedef basic_pointerstream<wchar_t>  wpointerstream;
+
+template < typename Ch, class Tr = ::std::char_traits<Ch> >
+    class basic_iconstpointerstream;
+typedef basic_iconstpointerstream<char>      iconstpointerstream;
+typedef basic_iconstpointerstream<wchar_t>  wiconstpointerstream;
 
 
 }  // namespace io

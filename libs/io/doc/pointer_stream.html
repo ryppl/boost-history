@@ -16,12 +16,21 @@
 	<li><a href="#header">Header Synopsis</a></li>
 	<li><a href="#pointer_sb">Pointer-based Stream Buffer Class Template</a>
 		<ul>
-			<li><a href="#m_types">Member Types</a></li>
-			<li><a href="#m_ctr">Constructors</a></li>
-			<li><a href="#m_observe">Observer Member Functions</a></li>
-			<li><a href="#m_override">Overridden Virtual Functions</a></li>
+			<li><a href="#mps_types">Member Types</a></li>
+			<li><a href="#mps_ctr">Constructors</a></li>
+			<li><a href="#mps_observe">Observer Member Functions</a></li>
+			<li><a href="#mps_override">Overridden Virtual Functions</a></li>
 		</ul></li>
 	<li><a href="#pointer_s">Pointer-based Stream Class Templates</a></li>
+	<li><a href="#cpointer_sb">Pointer-to-Constant-based Stream Buffer Class Template</a>
+		<ul>
+			<li><a href="#mcs_types">Member Types</a></li>
+			<li><a href="#mcs_ctr">Constructors</a></li>
+			<li><a href="#mcs_mutate">Mutator Member Functions</a></li>
+			<li><a href="#mcs_observe">Observer Member Functions</a></li>
+			<li><a href="#mcs_override">Overridden Virtual Functions</a></li>
+		</ul></li>
+	<li><a href="#cpointer_s">Pointer-to-Constant-based Stream Class Templates</a></li>
 	<li><a href="#refer">References</a></li>
 	<li><a href="#credits">Credits</a>
 		<ul>
@@ -32,7 +41,7 @@
 
 <h2><a name="rationale">Rationale</a></h2>
 
-<p>The default buffering strategy of C++ I/O stream buffers is an array sub-sequence of characters delineated by a beginning and (one-past-the-) ending pointers.  The stream buffer class template in this library allows an independently-allocated block of memory be used as the buffer.  This allows streaming operations to be performed on the memory block without forcing a copying step before and/or after other operations.</p>
+<p>The default buffering strategy of C++ I/O stream buffers is an array sub-sequence of characters delineated by a beginning and (one-past-the-) ending pointers.  The stream buffer class templates in this library allow independently-allocated blocks of memory to be used as buffers.  This allows streaming operations to be performed on memory blocks without forcing a copying step before and/or after other operations.</p>
 
 <h2><a name="header">Header Synopsis</a></h2>
 
@@ -50,6 +59,11 @@ typedef basic_pointerbuf&lt;char&gt;      pointerbuf;
 typedef basic_pointerbuf&lt;wchar_t&gt;  wpointerbuf;
 
 template &lt; typename Ch, class Tr = ::std::char_traits&lt;Ch&gt; &gt;
+    class basic_constpointerbuf;
+typedef basic_constpointerbuf&lt;char&gt;      constpointerbuf;
+typedef basic_constpointerbuf&lt;wchar_t&gt;  wconstpointerbuf;
+
+template &lt; typename Ch, class Tr = ::std::char_traits&lt;Ch&gt; &gt;
     class basic_ipointerstream;
 typedef basic_ipointerstream&lt;char&gt;      ipointerstream;
 typedef basic_ipointerstream&lt;wchar_t&gt;  wipointerstream;
@@ -63,6 +77,11 @@ template &lt; typename Ch, class Tr = ::std::char_traits&lt;Ch&gt; &gt;
     class basic_pointerstream;
 typedef basic_pointerstream&lt;char&gt;      pointerstream;
 typedef basic_pointerstream&lt;wchar_t&gt;  wpointerstream;
+
+template &lt; typename Ch, class Tr = ::std::char_traits&lt;Ch&gt; &gt;
+    class basic_iconstpointerstream;
+typedef basic_iconstpointerstream&lt;char&gt;      iconstpointerstream;
+typedef basic_iconstpointerstream&lt;wchar_t&gt;  wconstipointerstream;
 
 }
 }
@@ -121,7 +140,7 @@ protected:
 
 <p>The type-based template arguments <var>Ch</var> and <var>Tr</var> represent the character type and character-traits type used for the stream buffer, respectively.  The character type is the utilized array-segment's element type.</p>
 
-<h3><a name="m_types">Member Types</a></h3>
+<h3><a name="mps_types">Member Types</a></h3>
 
 <dl>
 	<dt><code>char_type</code>
@@ -140,7 +159,7 @@ protected:
 	<dd>a synonym for the stream buffer's offset type
 </dl>
 
-<h3><a name="m_ctr">Constructors</a></h3>
+<h3><a name="mps_ctr">Constructors</a></h3>
 
 <p><strong>Note:</strong> the automatically-defined destructor is used.</p>
 
@@ -151,7 +170,7 @@ protected:
 		<strong>Note:</strong> the array-segment is neither bounds-checked nor validated; if <var>b</var> is greater than or unordered with <var>e</var>, either border pointer is <code>NULL</code>, or the memory block is invalidated any time this stream buffer uses it, then operations with this stream buffer are undefined
 </dl>
 
-<h3><a name="m_observe">Observer Member Functions</a></h3>
+<h3><a name="mps_observe">Observer Member Functions</a></h3>
 
 <dl>
     <dt><code>char_type *  begin_pointer() const;</code>
@@ -180,7 +199,7 @@ protected:
 		<strong>Rationale:</strong> in case the opening mode needs to be confirmed
 </dl>
 
-<h3><a name="m_override">Overridden Virtual Functions</a></h3>
+<h3><a name="mps_override">Overridden Virtual Functions</a></h3>
 
 <p><strong>Note:</strong> if the selected area, given by <var>which</var>, is unspecified, both the input and output areas are changed (<i>i.e.</i> the value of <var>which</var> is <code>(std::ios_base::in | std::ios_base::out)</code>).</p>
 
@@ -212,7 +231,7 @@ protected:
 
 <h2><a name="pointer_s">Pointer-based Stream Class Templates</a></h2>
 
-<p>The <code>boost::io::basic_ipointerstream</code>, <code>boost::io::basic_opointerstream</code>, and <code>boost::io::basic_pointerstream</code> class templates are stream classes that use an internal <code>basic_pointerbuf</code> object.  They are implemented with the <a href="streambuf_wrapping.html">stream-buffer-wrapping stream base library</a>.  (Do the appropriate substitutions for <var>M</var> and <var>stream</var>; <em>i</em> and <em>istream</em> for input, <em>o</em> and <em>ostream</em> for output, nothing and <em>iostream</em> for dual.)
+<p>The <code>boost::io::basic_ipointerstream</code>, <code>boost::io::basic_opointerstream</code>, and <code>boost::io::basic_pointerstream</code> class templates are stream classes that use an internal <a href="#pointer_sb"><code>basic_pointerbuf</code></a> object.  They are implemented with the <a href="streambuf_wrapping.html">stream-buffer-wrapping stream base library</a>.  (Do the appropriate substitutions for <var>M</var> and <var>stream</var>; <em>i</em> and <em>istream</em> for input, <em>o</em> and <em>ostream</em> for output, nothing and <em>iostream</em> for dual.)
 
 <blockquote><pre>
 #include &lt;boost/io/streambuf_wrapping.hpp&gt;
@@ -247,6 +266,171 @@ public:
 
 <p>The mode passed to the stream buffer is modified by input and output streams.  Input streams combine <code>std::ios_base::in</code> with the given mode before passing the mode to the internal stream buffer.  Output streams attach the <code>std::ios_base::out</code> value instead.  Combined streams don't do any modifications to the opening mode.</p>
 
+<h2><a name="cpointer_sb">Pointer-to-Constant-based Stream Buffer Class Template</a></h2>
+
+<p>The <code>boost::io::basic_constpointerbuf</code> is like a <a href="#pointer_sb"><code>basic_pointerbuf</code></a>, except the array segement has its elements treated as constants.  The stream buffer supports only read-only operations, <i>i.e.</i> input without mutating put-back.  (This stream buffer also does <em>not</em> manage the array-segment's lifetime.)</p>
+
+<blockquote><pre>
+#include &lt;ios&gt;        <i>// for std::streamsize, std::ios_base</i>
+#include &lt;streambuf&gt;  <i>// for std::basic_streambuf</i>
+
+template &lt; typename Ch, class Tr &gt;
+class boost::io::basic_constpointerbuf
+    : public std::basic_streambuf&lt;Ch, Tr&gt;
+{
+public:
+    // Template arguments
+    typedef Ch  char_type;
+    typedef Tr  traits_type;
+
+    // Other types
+    typedef typename Tr::int_type  int_type;
+    typedef typename Tr::pos_type  pos_type;
+    typedef typename Tr::off_type  off_type;
+
+    // Lifetime
+    basic_constpointerbuf( char_type const *b, char_type const *e );
+
+    // Buffer management
+    basic_constpointerbuf *  pubsetbuf( char_type const *s, std::streamsize n );
+
+    // Accessors
+    char_type const *  begin_pointer() const;
+    char_type const *  end_pointer() const;
+
+    std::streamsize  gcount() const;
+
+protected:
+    // Overridden virtual functions
+    virtual  std::basic_streambuf&lt;Ch, Tr&gt; *  setbuf( char_type *s,
+     std::streamsize n );
+
+    virtual  pos_type  seekoff( off_type off, std::ios_base::seekdir way,
+     std::ios_base::openmode which = std::ios_base::in | std::ios_base::out );
+
+    virtual  pos_type  seekpos( pos_type sp,
+     std::ios_base::openmode which = std::ios_base::in | std::ios_base::out );
+
+};
+</pre></blockquote>
+
+<p>The type-based template arguments <var>Ch</var> and <var>Tr</var> represent the character type and character-traits type used for the stream buffer, respectively.  The character type is the utilized array-segment's element type.</p>
+
+<h3><a name="mcs_types">Member Types</a></h3>
+
+<dl>
+	<dt><code>char_type</code>
+	<dd>a synonym for the stream buffer's character type
+
+	<dt><code>traits_type</code>
+	<dd>a synonym for the stream buffer's character-traits type
+
+	<dt><code>int_type</code>
+	<dd>a synonym for the stream buffer's character with end-of-file type
+
+	<dt><code>pos_type</code>
+	<dd>a synonym for the stream buffer's position type
+
+	<dt><code>off_type</code>
+	<dd>a synonym for the stream buffer's offset type
+</dl>
+
+<h3><a name="mcs_ctr">Constructors</a></h3>
+
+<p><strong>Note:</strong> the automatically-defined destructor is used.</p>
+
+<dl>
+	<dt><code>basic_constpointerbuf( char_type const *b, char_type const *e );</code>
+	<dd>
+		<strong>Effects:</strong> enables input by setting the bounds of the get area to the array-segment between <var>b</var> and <var>e</var>; sets the current-position pointer of the get area to the beginning of the array-segment<br>
+		<strong>Note:</strong> the array-segment is neither bounds-checked nor validated; if <var>b</var> is greater than or unordered with <var>e</var>, either border pointer is <code>NULL</code>, or the memory block is invalidated any time this stream buffer uses it, then operations with this stream buffer are undefined
+</dl>
+
+<h3><a name="mcs_mutate">Mutator Member Functions</a></h3>
+
+<dl>
+    <dt><code>basic_constpointerbuf *  pubsetbuf( char_type const *s, std::streamsize n );</code>
+	<dd>
+		<strong>Effects:</strong> calls <code>this-&gt;std::basic_streambuf&lt;Ch, Tr&gt;::pubsetbuf( const_cast&lt;char_type *&gt;(s), n )</code><br>
+		<strong>Returns:</strong> <code>this</code><br>
+		<strong>Rationale:</strong> an alternate method to change the utilized array-segment without forcing the user to use a <code>const_cast</code>
+</dl>
+
+<h3><a name="mcs_observe">Observer Member Functions</a></h3>
+
+<dl>
+    <dt><code>char_type const *  begin_pointer() const;</code>
+	<dd>
+		<strong>Returns:</strong> a pointer to the first element of the utilized array-segment<br>
+		<strong>Rationale:</strong> useful to read the utilized array-segment
+
+    <dt><code>char_type const *  end_pointer() const;</code>
+	<dd>
+		<strong>Returns:</strong> a pointer to the one-past-the-end element of the utilized array-segment<br>
+		<strong>Rationale:</strong> useful to read the utilized array-segment
+
+    <dt><code>std::streamsize  gcount() const;</code>
+	<dd>
+		<strong>Returns:</strong> the current number of characters valid in the get area<br>
+		<strong>Rationale:</strong> required to analyze just the read-from portion of the utilized array-segment
+</dl>
+
+<h3><a name="mcs_override">Overridden Virtual Functions</a></h3>
+
+<p><strong>Note:</strong> if the selected area, given by <var>which</var>, is ommitted, both the input and output areas are specified (<i>i.e.</i> the value of <var>which</var> is <code>(std::ios_base::in | std::ios_base::out)</code>).</p>
+
+<dl>
+    <dt><code>std::basic_streambuf&lt;Ch, Tr&gt; *  setbuf( char_type *s, std::streamsize n );</code>
+	<dd>
+		<strong>Effects:</strong> changes the get area to use a new array segment, which is defined as being between <var>s</var> and <code><var>s</var> + <var>n</var></code>; resets current-position pointer of the get area to the beginning of the new array segment; if <var>s</var> is <code>NULL</code>, <var>n</var> is negative, <code><var>s</var> + <var>n</var></code> is an invalid value, or the new memory block is invalidated any time this stream buffer uses it, then further operations with this stream buffer are undefined<br>
+		<strong>Returns:</strong> <code>this</code><br>
+		<strong>Rationale:</strong> changing the array-segment used
+
+    <dt><code>pos_type  seekoff( off_type off, std::ios_base::seekdir way, std::ios_base::openmode which );</code>
+	<dd>
+		<strong>Effects:</strong> if <code>(which &amp; std::ios_base::in) != 0</code>, then shifts the marker of the get area by the amount <var>off</var> from base-point <var>way</var>; the base-point is the start of the utilized array-segment if <code>way == std::ios_base::beg</code>, one-past-the-end of the utilized array-segment if <code>way == std::ios_base::end</code>, and the current marker position if <code>way == std::ios_base::cur</code>; a request for the get-area marker must be indicated (requests for the put area are ignored); the index into the utilized array-segment of the get-area marker is changed to the value of <var>off</var>, which can be nonpositive, added to the base-point index<br>
+		<strong>Returns:</strong> the new stream position for the marker of the get area, if the parameters are a valid combination and the indicated destination exists; an invalid stream position [typically <code>pos_type(off_type(-1))</code>] otherwise<br>
+		<strong>Rationale:</strong> moving the get area marker to a relatively-defined location
+
+    <dt><code>pos_type  seekpos( pos_type sp, std::ios_base::openmode which );</code>
+	<dd>
+		<strong>Effects:</strong> if <code>(which &amp; std::ios_base::in) != 0</code>, then moves the get area marker to the location designated by <var>sp</var>; a request for the get-area marker must be indicated (requests for the put area are ignored); the position <var>sp</var> corresponds to the index of the (after-move) current element of the utilized array-segment [<code>index == off_type(sp)</code>]<br>
+		<strong>Returns:</strong> a copy of <var>sp</var>, if <var>sp</var> is a valid destination and the get area marker was successfully moved to that destination; an invalid stream position [typically <code>pos_type(off_type(-1))</code>] otherwise<br>
+		<strong>Rationale:</strong> moving the get area marker to an absolutely-defined location
+</dl>
+
+<h2><a name="cpointer_s">Pointer-to-Constant-based Stream Class Templates</a></h2>
+
+<p>The <code>boost::io::basic_iconstpointerstream</code> class template is a stream class that uses an internal <a href="#cpointer_sb"><code>basic_constpointerbuf</code></a> object.  It is implemented with the <a href="streambuf_wrapping.html">stream-buffer-wrapping stream base library</a>.  (There's no point to have anything but an input-only stream.)
+
+<blockquote><pre>
+#include &lt;boost/io/streambuf_wrapping.hpp&gt;
+
+template &lt; typename Ch, class Tr &gt;
+class boost::io::basic_iconstpointerstream
+    : public boost::io::basic_wrapping_istream&lt;
+       boost::io::basic_constpointerbuf&lt;Ch, Tr&gt; &gt;
+{
+public:
+    // Template arguments
+    typedef Ch  char_type;
+    typedef Tr  traits_type;
+
+    // Other types
+    typedef typename Tr::int_type  int_type;
+    typedef typename Tr::pos_type  pos_type;
+    typedef typename Tr::off_type  off_type;
+
+    // Constructor (forwarded to the internal streambuf)
+    basic_iconstpointerstream( char_type const *b, char_type const *e );
+
+    // Accessors (forwarded to the internal streambuf)
+    char_type const *  begin_pointer() const;
+    char_type const *  end_pointer() const;
+
+};
+</pre></blockquote>
+
 <h2><a name="refer">References</a></h2>
 
 <ul>
@@ -272,7 +456,7 @@ public:
 
 <hr>
 
-<p>Revised: 28 October 2003</p>
+<p>Revised: 4 November 2003</p>
 
 <p>Copyright &copy; Daryle Walker 2003.  Permission to copy, use, modify, sell and distribute this document is granted provided this copyright notice appears in all copies.  This document is provided &quot;as is&quot; without express or implied warranty, and with no claim as to its suitability for any purpose.</p>
 </body>

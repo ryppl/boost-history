@@ -6,7 +6,7 @@
 //  warranty, and with no claim as to its suitability for any purpose.
 
 //  Revision History
-//   28 Oct 2003  Initial version (Daryle Walker)
+//   04 Nov 2003  Initial version (Daryle Walker)
 
 #include <boost/io/pointer_stream.hpp>  // for ...::basic_ipointerstream, etc.
 #include <boost/test/unit_test.hpp>     // for main, BOOST_CHECK, etc.
@@ -235,6 +235,84 @@ pointerstream_unit_test
     BOOST_CHECK_EQUAL( "Roosters!", scratch );
 }
 
+// Unit test for pointer-to-const stream-buffer
+void
+constpointerbuf_unit_test
+(
+)
+{
+    using std::ios_base;
+
+    std::size_t const           buffer_length = 7;
+    char const                  buffer[ buffer_length ] = { '\0' };
+    boost::io::constpointerbuf  pb( buffer, buffer + buffer_length );
+
+    // Initialization
+    BOOST_CHECK_EQUAL( pb.begin_pointer(), buffer );
+    BOOST_CHECK_EQUAL( pb.end_pointer(), buffer + buffer_length );
+
+    BOOST_CHECK_EQUAL( 0, pb.gcount() );
+
+    // New buffer
+    char const         buffer2[] = "Wow, pointers!";
+    std::size_t const  buffer2_length = sizeof(buffer2) / sizeof(buffer2[0]) - 1;
+
+    pb.pubsetbuf( buffer2, buffer2_length );
+    BOOST_CHECK_EQUAL( pb.begin_pointer(), buffer2 );
+    BOOST_CHECK_EQUAL( pb.end_pointer(), buffer2 + buffer2_length );
+    BOOST_CHECK_EQUAL( 0, pb.gcount() );
+}
+
+// Unit test for pointer-to-const input stream
+void
+iconstpointerstream_unit_test
+(
+)
+{
+    typedef std::char_traits<char>  traits_type;
+    typedef traits_type::off_type   off_type;
+    typedef traits_type::pos_type   pos_type;
+
+    char const                      buffer[] = "Hi there, Boosters!\n";
+    std::size_t const               buffer_length = sizeof(buffer) / sizeof(buffer[0]) - 1;
+    boost::io::iconstpointerstream  icps( buffer, buffer + buffer_length );
+
+    // Initialization
+    BOOST_CHECK_EQUAL( icps.begin_pointer(), buffer );
+    BOOST_CHECK_EQUAL( icps.end_pointer(), buffer + buffer_length );
+
+    BOOST_CHECK_EQUAL( 0, icps.rdbuf()->gcount() );
+
+    // Input
+    std::string  scratch;
+
+    icps >> scratch;
+    BOOST_CHECK_EQUAL( "Hi", scratch );
+    BOOST_CHECK_EQUAL( static_cast<int>(' '), icps.peek() );
+    BOOST_CHECK_EQUAL( pos_type(off_type( 2 )), icps.tellg() );
+
+    BOOST_CHECK_EQUAL( 2, icps.rdbuf()->gcount() );
+
+    // Seeking and input
+    icps.seekg( pos_type(off_type( 4 )) );
+    BOOST_CHECK_EQUAL( static_cast<int>('h'), icps.peek() );
+    BOOST_CHECK_EQUAL( pos_type(off_type( 4 )), icps.tellg() );
+    BOOST_CHECK_EQUAL( 4, icps.rdbuf()->gcount() );
+
+    icps.seekg( off_type(8 - static_cast<int>( buffer_length )), std::ios_base::end );
+    BOOST_CHECK_EQUAL( static_cast<int>(','), icps.peek() );
+    BOOST_CHECK_EQUAL( pos_type(off_type( 8 )), icps.tellg() );
+    BOOST_CHECK_EQUAL( 8, icps.rdbuf()->gcount() );
+
+    // Put-back
+    icps.unget();
+    BOOST_CHECK_EQUAL( static_cast<int>('e'), icps.peek() );
+    BOOST_CHECK_EQUAL( pos_type(off_type( 7 )), icps.tellg() );
+    BOOST_CHECK_EQUAL( 7, icps.rdbuf()->gcount() );
+
+    BOOST_CHECK( !icps.putback('R') );
+}
+
 
 // Unit test program
 boost::unit_test_framework::test_suite *
@@ -251,6 +329,8 @@ init_unit_test_suite
     test->add( BOOST_TEST_CASE(opointerstream_unit_test) );
     test->add( BOOST_TEST_CASE(ipointerstream_unit_test) );
     test->add( BOOST_TEST_CASE(pointerstream_unit_test) );
+    test->add( BOOST_TEST_CASE(constpointerbuf_unit_test) );
+    test->add( BOOST_TEST_CASE(iconstpointerstream_unit_test) );
 
     return test;
 }
