@@ -77,19 +77,19 @@ namespace boost
       {
         return tail_type( );
       }
-      get_type0 front( )
+      get_type0 first( )
       {
         return m0;
       }
-      const_get_type0 front( ) const
+      const_get_type0 first( ) const
       {
         return m0;
       }
-      get_type0 back( )
+      get_type0 last( )
       {
         return m0;
       }
-      const_get_type0 back( ) const
+      const_get_type0 last( ) const
       {
         return m0;
       }
@@ -168,19 +168,19 @@ namespace boost
       {
         return tail_type( m1 );
       }
-      get_type0 front( )
+      get_type0 first( )
       {
         return m0;
       }
-      const_get_type0 front( ) const
+      const_get_type0 first( ) const
       {
         return m0;
       }
-      get_type1 back( )
+      get_type1 last( )
       {
         return m1;
       }
-      const_get_type1 back( ) const
+      const_get_type1 last( ) const
       {
         return m1;
       }
@@ -269,19 +269,19 @@ namespace boost
       {
         return tail_type( m1, m2 );
       }
-      get_type0 front( )
+      get_type0 first( )
       {
         return m0;
       }
-      const_get_type0 front( ) const
+      const_get_type0 first( ) const
       {
         return m0;
       }
-      get_type2 back( )
+      get_type2 last( )
       {
         return m2;
       }
-      const_get_type2 back( ) const
+      const_get_type2 last( ) const
       {
         return m2;
       }
@@ -386,19 +386,19 @@ namespace boost
       {
         return tail_type( m1, m2, m3 );
       }
-      get_type0 front( )
+      get_type0 first( )
       {
         return m0;
       }
-      const_get_type0 front( ) const
+      const_get_type0 first( ) const
       {
         return m0;
       }
-      get_type3 back( )
+      get_type3 last( )
       {
         return m3;
       }
-      const_get_type3 back( ) const
+      const_get_type3 last( ) const
       {
         return m3;
       }
@@ -518,19 +518,19 @@ namespace boost
       {
         return tail_type( m1, m2, m3, m4 );
       }
-      get_type0 front( )
+      get_type0 first( )
       {
         return m0;
       }
-      const_get_type0 front( ) const
+      const_get_type0 first( ) const
       {
         return m0;
       }
-      get_type4 back( )
+      get_type4 last( )
       {
         return m4;
       }
-      const_get_type4 back( ) const
+      const_get_type4 last( ) const
       {
         return m4;
       }
@@ -667,19 +667,19 @@ namespace boost
       {
         return tail_type( m1, m2, m3, m4, m5 );
       }
-      get_type0 front( )
+      get_type0 first( )
       {
         return m0;
       }
-      const_get_type0 front( ) const
+      const_get_type0 first( ) const
       {
         return m0;
       }
-      get_type5 back( )
+      get_type5 last( )
       {
         return m5;
       }
-      const_get_type5 back( ) const
+      const_get_type5 last( ) const
       {
         return m5;
       }
@@ -832,19 +832,19 @@ namespace boost
       {
         return tail_type( m1, m2, m3, m4, m5, m6 );
       }
-      get_type0 front( )
+      get_type0 first( )
       {
         return m0;
       }
-      const_get_type0 front( ) const
+      const_get_type0 first( ) const
       {
         return m0;
       }
-      get_type6 back( )
+      get_type6 last( )
       {
         return m6;
       }
-      const_get_type6 back( ) const
+      const_get_type6 last( ) const
       {
         return m6;
       }
@@ -1015,19 +1015,19 @@ namespace boost
       {
         return tail_type( m1, m2, m3, m4, m5, m6, m7 );
       }
-      get_type0 front( )
+      get_type0 first( )
       {
         return m0;
       }
-      const_get_type0 front( ) const
+      const_get_type0 first( ) const
       {
         return m0;
       }
-      get_type7 back( )
+      get_type7 last( )
       {
         return m7;
       }
-      const_get_type7 back( ) const
+      const_get_type7 last( ) const
       {
         return m7;
       }
@@ -1215,19 +1215,19 @@ namespace boost
       {
         return tail_type( m1, m2, m3, m4, m5, m6, m7, m8 );
       }
-      get_type0 front( )
+      get_type0 first( )
       {
         return m0;
       }
-      const_get_type0 front( ) const
+      const_get_type0 first( ) const
       {
         return m0;
       }
-      get_type8 back( )
+      get_type8 last( )
       {
         return m8;
       }
-      const_get_type8 back( ) const
+      const_get_type8 last( ) const
       {
         return m8;
       }

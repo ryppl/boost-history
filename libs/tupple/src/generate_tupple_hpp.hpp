@@ -234,11 +234,11 @@ TEMPLATE(k,T) struct TUPLE(k) TEMPLATESPEC(k,BOOST_PP_SUB(MAX_N,k),T)     \
      BOOST_PP_ENUM(BOOST_PP_DEC(k),TAILELEM,_) );                         \
   }                                                                       \
                                                                           \
-  GETTYPE(0)      front()       { return ELEM(0,_); }                     \
-  CONSTGETTYPE(0) front() const { return ELEM(0,_); }                     \
-  DELAY_GETTYPE(BOOST_PP_DEC(k))      back()                              \
+  GETTYPE(0)      first()       { return ELEM(0,_); }                     \
+  CONSTGETTYPE(0) first() const { return ELEM(0,_); }                     \
+  DELAY_GETTYPE(BOOST_PP_DEC(k))      last()                              \
     { return DELAY_ELEM(BOOST_PP_DEC(k),_); }                             \
-  DELAY_CONSTGETTYPE(BOOST_PP_DEC(k))  back() const                       \
+  DELAY_CONSTGETTYPE(BOOST_PP_DEC(k))  last() const                       \
     { return DELAY_ELEM(BOOST_PP_DEC(k),_); }                             \
                                                                           \
   BOOST_PP_REPEAT(k,GETCONSTMBR,_)                                        \
