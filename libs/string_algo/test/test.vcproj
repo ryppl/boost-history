@@ -32,20 +32,32 @@
 				RuntimeLibrary="1"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="TRUE"
+				Detect64BitPortabilityProblems="FALSE"
 				DebugInformationFormat="3"
-				CompileAsManaged="0"/>
+				CompileAsManaged="0">
+				<IntelOptions
+					Optimization="0"
+					MinimalRebuild="1"
+					ExceptionHandling="0"
+					BasicRuntimeChecks="0"
+					RuntimeLibrary="1"
+					AllOptions="/c  /I &quot;..\..\..\\&quot; /Zi /nologo /W3 /Od /D &quot;WIN32&quot; /D &quot;_DEBUG&quot; /D &quot;_CONSOLE&quot; /D &quot;_MBCS&quot; /Gm /MTd /Fo&quot;Debug/&quot; /Fd&quot;Debug/vc70.pdb&quot; /Gd /TP /EHa"/>
+			</Tool>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
 				OutputFile="$(OutDir)/test.exe"
 				LinkIncremental="2"
+				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories=""
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/test.pdb"
 				SubSystem="1"
-				TargetMachine="1"/>
+				TargetMachine="1">
+				<IntelOptions
+					AllOptions="/NOLOGO /OUT:&quot;Debug/test.exe&quot; /INCREMENTAL /DEBUG /PDB:&quot;Debug/test.pdb&quot; /SUBSYSTEM:CONSOLE /TLBID:1 /MACHINE:IX86  kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib"/>
+			</Tool>
 			<Tool
 				Name="VCMIDLTool"/>
 			<Tool
@@ -81,19 +93,34 @@
 				EnableFunctionLevelLinking="TRUE"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="TRUE"
-				DebugInformationFormat="3"/>
+				Detect64BitPortabilityProblems="FALSE"
+				DebugInformationFormat="3">
+				<IntelOptions
+					Optimization="2"
+					InlineFuncExpansion="1"
+					OmitFramePtrs="1"
+					StringPooling="1"
+					ExceptionHandling="0"
+					RuntimeLibrary="4"
+					BufferSecurityCheck="1"
+					FunctionLevelLinking="1"
+					AllOptions="/c  /I &quot;..\..\..\\&quot; /Zi /nologo /W3 /O2 /Ob1 /Oy /D &quot;WIN32&quot; /D &quot;NDEBUG&quot; /D &quot;_CONSOLE&quot; /D &quot;_MBCS&quot; /GF /FD /ML /GS /Gy /Fo&quot;Release/&quot; /Fd&quot;Release/vc70.pdb&quot; /Gd /TP /EHa"/>
+			</Tool>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
 				OutputFile="$(OutDir)/test.exe"
 				LinkIncremental="1"
+				SuppressStartupBanner="TRUE"
 				GenerateDebugInformation="TRUE"
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				TargetMachine="1"/>
+				TargetMachine="1">
+				<IntelOptions
+					AllOptions="/NOLOGO /OUT:&quot;Release/test.exe&quot; /INCREMENTAL:NO /DEBUG /PDB:&quot;Release/test.pdb&quot; /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /TLBID:1 /MACHINE:IX86  kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib"/>
+			</Tool>
 			<Tool
 				Name="VCMIDLTool"/>
 			<Tool
@@ -115,36 +142,26 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm">
 			<File
-				RelativePath="conv_test.cpp">
-			</File>
+				RelativePath="conv_test.cpp"/>
 			<File
-				RelativePath="find_test.cpp">
-			</File>
+				RelativePath="find_test.cpp"/>
 			<File
-				RelativePath="predicate_test.cpp">
-			</File>
+				RelativePath="predicate_test.cpp"/>
 			<File
-				RelativePath="regex_test.cpp">
-			</File>
+				RelativePath="regex_test.cpp"/>
 			<File
-				RelativePath="replace_test.cpp">
-			</File>
+				RelativePath="replace_test.cpp"/>
 			<File
-				RelativePath="test_main.cpp">
-			</File>
+				RelativePath="test_main.cpp"/>
 			<File
-				RelativePath="trim_test.cpp">
-			</File>
+				RelativePath="trim_test.cpp"/>
 		</Filter>
 		<Filter
 			Name="Header Files"
-			Filter="h;hpp;hxx;hm;inl;inc">
-		</Filter>
+			Filter="h;hpp;hxx;hm;inl;inc"/>
 		<Filter
 			Name="Resource Files"
-			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
-		</Filter>
+			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"/>
 	</Files>
-	<Globals>
-	</Globals>
+	<Globals/>
 </VisualStudioProject>

@@ -44,6 +44,33 @@
       the specified format sequence. <code>erase_last</code> removes this
       occurrence from the input sequence.
     </p>
+    <table border="1" height="28" width="730">
+      <tr>
+        <th height="30" valign="top" align="left" width="181">Function</th>
+        <th height="30" width="533" align="left">Description</th>
+      </tr>
+      <tr>
+        <td height="28" valign="top" align="left" width="181"><code><a name="replace_last_copy">replace_last_copy</a></code></td>
+        <td height="28" valign="top" align="left" width="533">Replace the last
+          occurrence of the search string with the format string. Copy version.</td>
+      </tr>
+      <tr>
+        <td height="30" valign="top" align="left" width="181"><code><a name="replace_last">replace_last</a></code></td>
+        <td height="30" valign="top" align="left" width="533">Replace the last
+          occurrence of the search string with the format string. In-place
+          version.</td>
+      </tr>
+      <tr>
+        <td height="30" valign="top" align="left" width="181"><code><a name="erase_last_copy">erase_last_copy</a></code></td>
+        <td height="28" valign="top" align="left" width="533">Remove the last
+          occurrence from the sequence. Copy version.</td>
+      </tr>
+      <tr>
+        <td height="30" valign="top" align="left" width="181"><code><a name="erase_last">erase_last</a></code></td>
+        <td height="30" valign="top" align="left" width="533">Remove the last
+          occurrence from the sequence. In-place version.</td>
+      </tr>
+    </table>
     <h3><a name="synopsis">Synopsis</a></h3>
     <p>
       The algorithm is provided in 4 subvariants. Three variants with copy
@@ -60,7 +87,7 @@
         <b>typename</b> ForwardIterator2T, 
         <b>typename</b> ForwardIterator3T,
         <b>typename</b> OutputIteratorT &gt;
-    <b>inline</b> OutputIteratorT replace_last_copy(
+    <b>inline</b> OutputIteratorT <a href="#replace_last_copy">replace_last_copy</a>(
         OutputIteratorT Output,
         ForwardIterator1T Begin,
         ForwardIterator1T End,
@@ -72,7 +99,7 @@
         <b>typename</b> ForwardIterator1T, 
         <b>typename</b> ForwardIterator2T, 
         <b>typename</b> OutputIteratorT &gt;
-    <b>inline</b> OutputIteratorT erase_last_copy(
+    <b>inline</b> OutputIteratorT <a href="#erase_last_copy">erase_last_copy</a>(
         OutputIteratorT Output,
         ForwardIterator1T Begin,
         ForwardIterator1T End,
@@ -90,7 +117,7 @@
         <b>typename</b> SearchT,
         <b>typename</b> FormatT,
         <b>typename</b> OutputIteratorT &gt;
-    <b>inline</b> OutputIteratorT replace_last_copy(
+    <b>inline</b> OutputIteratorT <a href="#replace_last_copy">replace_last_copy</a>(
         OutputIteratorT Output,
         <b>const</b> InputT&amp; Input,
         <b>const</b> SearchT&amp; Search,
@@ -100,7 +127,7 @@
         <b>typename</b> InputT, 
         <b>typename</b> SearchT,
         <b>typename</b> OutputIteratorT &gt;
-    <b>inline</b> OutputIteratorT erase_last_copy(
+    <b>inline</b> OutputIteratorT <a href="#erase_last_copy">erase_last_copy</a>(
         OutputIteratorT Output,
         <b>const</b> InputT&amp; Input,
         <b>const</b> SearchT&amp; Search );
@@ -111,13 +138,13 @@
     <pre><b>namespace</b> boost {
 
     <b>template</b>&lt; <b>typename</b> InputT, <b>typename</b> SearchT, <b>typename</b> FormatT &gt;
-    <b>inline</b> InputT replace_last_copy( 
+    <b>inline</b> InputT <a href="#replace_last_copy">replace_last_copy</a>( 
         <b>const</b> InputT&amp; Input,
         <b>const</b> SearchT&amp; Search,
         <b>const</b> FormatT&amp; Format );
 
     <b>template</b>&lt; <b>typename</b> InputT, <b>typename</b> SearchT &gt;
-    <b>inline</b> InputT erase_last_copy( 
+    <b>inline</b> InputT <a href="#erase_last_copy">erase_last_copy</a>( 
         <b>const</b> InputT&amp; Input,
         <b>const</b> SearchT&amp; Search );
 }</pre>
@@ -125,13 +152,13 @@
     <pre><b>namespace</b> boost {
 
     <b>template</b>&lt; <b>typename</b> InputT, <b>typename</b> SearchT, <b>typename</b> FormatT &gt;
-    <b>inline</b> InputT&amp; replace_last( 
+    <b>inline</b> InputT&amp; <a href="#replace_last">replace_last</a>( 
         InputT&amp; Input,
         <b>const</b> SearchT&amp; Search,
         <b>const</b> FormatT&amp; Format );
 
     <b>template</b>&lt; <b>typename</b> InputT, <b>typename</b> SearchT &gt;
-    <b>inline</b> InputT&amp; erase_last( 
+    <b>inline</b> InputT&amp; <a href="#erase_last">erase_last</a>( 
         InputT&amp; Input,
         <b>const</b> SearchT&amp; Search );
 }</pre>

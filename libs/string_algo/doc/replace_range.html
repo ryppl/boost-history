@@ -43,6 +43,32 @@
       substitutes this range with the specified format sequence. <code>erase_range</code>
       removes this sequence.
     </p>
+    <table border="1" height="28" width="730">
+      <tr>
+        <th height="30" valign="top" align="left" width="181">Function</th>
+        <th height="30" width="533" align="left">Description</th>
+      </tr>
+      <tr>
+        <td height="28" valign="top" align="left" width="181"><code><a name="replace_range_copy">replace_range_copy</a></code></td>
+        <td height="28" valign="top" align="left" width="533">Replace the
+          specified range with the format string. Copy version.</td>
+      </tr>
+      <tr>
+        <td height="30" valign="top" align="left" width="181"><code><a name="replace_range">replace_range</a></code></td>
+        <td height="30" valign="top" align="left" width="533">Replace the
+          specified range with the format string. In-place version.</td>
+      </tr>
+      <tr>
+        <td height="30" valign="top" align="left" width="181"><code><a name="erase_range_copy">erase_range_copy</a></code></td>
+        <td height="28" valign="top" align="left" width="533">Remove the
+          specified range from the sequence. Copy version.</td>
+      </tr>
+      <tr>
+        <td height="30" valign="top" align="left" width="181"><code><a name="erase_range">erase_range</a></code></td>
+        <td height="30" valign="top" align="left" width="533">Remove the
+          specified range from the sequence. In-place version.</td>
+      </tr>
+    </table>
     <h3><a name="synopsis">Synopsis</a></h3>
     <p>
       The algorithm is provided in 4 subvariants. Three variants with copy
@@ -58,7 +84,7 @@
         <b>typename</b> ForwardIterator1T, 
         <b>typename</b> ForwardIterator2T,
         <b>typename</b> OutputIteratorT &gt;
-    <b>inline</b> OutputIteratorT replace_range_copy(
+    <b>inline</b> OutputIteratorT <a href="#replace_range_copy">replace_range_copy</a>(
         OutputIteratorT Output,
         ForwardIterator1T Begin,
         ForwardIterator1T End,
@@ -70,7 +96,7 @@
    <b>template</b>&lt; 
         <b>typename</b> ForwardIterator1T, 
         <b>typename</b> OutputIteratorT &gt;
-    <b>inline</b> OutputIteratorT erase_range_copy(
+    <b>inline</b> OutputIteratorT <a href="#erase_range_copy">erase_range_copy</a>(
         OutputIteratorT Output,
         ForwardIterator1T Begin,
         ForwardIterator1T End,
@@ -87,7 +113,7 @@
         <b>typename</b> InputT, 
         <b>typename</b> FormatT,
         <b>typename</b> OutputIteratorT &gt;
-    <b>inline</b> OutputIteratorT replace_range_copy(
+    <b>inline</b> OutputIteratorT <a href="#replace_range_copy">replace_range_copy</a>(
         OutputIteratorT Output,
         <b>const</b> InputT&amp; Input,
 	<b>typename</b> InputT::const_iterator SearchBegin,
@@ -95,7 +121,7 @@
         <b>const</b> FormatT&amp; Format );
 
     <b>template</b>&lt; <b>typename</b> InputT, <b>typename</b> OutputIteratorT &gt;
-    <b>inline</b> OutputIteratorT erase_range_copy(
+    <b>inline</b> OutputIteratorT <a href="#erase_range_copy">erase_range_copy</a>(
         OutputIteratorT Output,
         <b>const</b> InputT&amp; Input,
 	<b>typename</b> InputT::const_iterator SearchBegin,
@@ -107,14 +133,14 @@
     <pre><b>namespace</b> boost {
 
     <b>template</b>&lt; <b>typename</b> InputT, <b>typename</b> FormatT &gt;
-    <b>inline</b> InputT replace_range_copy( 
+    <b>inline</b> InputT <a href="#replace_range_copy">replace_range_copy</a>( 
         <b>const</b> InputT&amp; Input,
 	<b>typename</b> InputT::const_iterator SearchBegin,
 	<b>typename</b> InputT::const_iterator SearchEnd,
         <b>const</b> FormatT&amp; Format );
 
     <b>template</b>&lt; <b>typename</b> InputT &gt;
-    <b>inline</b> InputT erase_range_copy( 
+    <b>inline</b> InputT <a href="#erase_range_copy">erase_range_copy</a>( 
         <b>const</b> InputT&amp; Input,
         <b>typename</b> InputT::const_iterator SearchBegin,
         <b>typename</b> InputT::const_iterator SearchEnd );
@@ -125,13 +151,13 @@
     <pre><b>namespace</b> boost {
 
     <b>template</b>&lt; <b>typename</b> InputT, <b>typename</b> FormatT &gt;
-    <b>inline</b> InputT&amp; replace_range( 
+    <b>inline</b> InputT&amp; <a href="#replace_range">replace_range</a>( 
         InputT&amp; Input,
         <b>typename</b> InputT::iterator SearchBegin,
         <b>typename</b> InputT::iterator SearchEnd,
         <b>const</b> FormatT&amp; Format );</pre>
     <pre>    <b>template</b>&lt; <b>typename</b> InputT &gt;
-    <b>inline</b> InputT&amp; erase_range( 
+    <b>inline</b> InputT&amp; <a href="#erase_range">erase_range</a>( 
         InputT&amp; Input,
         <b>typename</b> InputT::iterator SearchBegin,
         <b>typename</b> InputT::iterator SearchEnd );

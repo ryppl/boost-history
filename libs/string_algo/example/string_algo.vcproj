@@ -30,18 +30,29 @@
 				RuntimeLibrary="5"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="TRUE"
-				DebugInformationFormat="4"/>
+				Detect64BitPortabilityProblems="FALSE"
+				DebugInformationFormat="4">
+				<IntelOptions
+					Optimization="0"
+					MinimalRebuild="1"
+					BasicRuntimeChecks="3"
+					RuntimeLibrary="5"
+					AllOptions="/c  /I &quot;..\..\..\\&quot; /ZI /nologo /W3 /Od /D &quot;WIN32&quot; /D &quot;_DEBUG&quot; /D &quot;_CONSOLE&quot; /D &quot;_MBCS&quot; /Gm /EHsc /RTC1 /MLd /Fo&quot;Debug/&quot; /Fd&quot;Debug/vc70.pdb&quot; /Gd /TP"/>
+			</Tool>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
 				OutputFile="$(OutDir)/string_algo.exe"
 				LinkIncremental="2"
+				SuppressStartupBanner="TRUE"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/string_algo.pdb"
 				SubSystem="1"
-				TargetMachine="1"/>
+				TargetMachine="1">
+				<IntelOptions
+					AllOptions="/NOLOGO /OUT:&quot;Debug/string_algo.exe&quot; /INCREMENTAL /DEBUG /PDB:&quot;Debug/string_algo.pdb&quot; /SUBSYSTEM:CONSOLE /TLBID:1 /MACHINE:IX86  kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib"/>
+			</Tool>
 			<Tool
 				Name="VCMIDLTool"/>
 			<Tool
@@ -75,19 +86,33 @@
 				EnableFunctionLevelLinking="TRUE"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="TRUE"
-				DebugInformationFormat="3"/>
+				Detect64BitPortabilityProblems="FALSE"
+				DebugInformationFormat="3">
+				<IntelOptions
+					Optimization="2"
+					InlineFuncExpansion="1"
+					OmitFramePtrs="1"
+					StringPooling="1"
+					RuntimeLibrary="4"
+					BufferSecurityCheck="1"
+					FunctionLevelLinking="1"
+					AllOptions="/c  /I &quot;..\..\..\\&quot; /Zi /nologo /W3 /O2 /Ob1 /Oy /D &quot;WIN32&quot; /D &quot;NDEBUG&quot; /D &quot;_CONSOLE&quot; /D &quot;_MBCS&quot; /GF /FD /EHsc /ML /GS /Gy /Fo&quot;Release/&quot; /Fd&quot;Release/vc70.pdb&quot; /Gd /TP"/>
+			</Tool>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
 				OutputFile="$(OutDir)/string_algo.exe"
 				LinkIncremental="1"
+				SuppressStartupBanner="TRUE"
 				GenerateDebugInformation="TRUE"
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				TargetMachine="1"/>
+				TargetMachine="1">
+				<IntelOptions
+					AllOptions="/NOLOGO /OUT:&quot;Release/string_algo.exe&quot; /INCREMENTAL:NO /DEBUG /PDB:&quot;Release/string_algo.pdb&quot; /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /TLBID:1 /MACHINE:IX86  kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib"/>
+			</Tool>
 			<Tool
 				Name="VCMIDLTool"/>
 			<Tool
@@ -109,132 +134,94 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm">
 			<File
-				RelativePath="conv_example.cpp">
-			</File>
+				RelativePath="conv_example.cpp"/>
 			<File
-				RelativePath="find_example.cpp">
-			</File>
+				RelativePath="find_example.cpp"/>
 			<File
-				RelativePath="main.cpp">
-			</File>
+				RelativePath="main.cpp"/>
 			<File
-				RelativePath="predicate_example.cpp">
-			</File>
+				RelativePath="predicate_example.cpp"/>
 			<File
-				RelativePath="regex_example.cpp">
-			</File>
+				RelativePath="regex_example.cpp"/>
 			<File
-				RelativePath="replace_example.cpp">
-			</File>
+				RelativePath="replace_example.cpp"/>
 			<File
-				RelativePath="rle_example.cpp">
-			</File>
+				RelativePath="rle_example.cpp"/>
 			<File
-				RelativePath="trim_example.cpp">
-			</File>
+				RelativePath="trim_example.cpp"/>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc">
 			<File
-				RelativePath="..\..\..\boost\string_algo\case_conv.hpp">
-			</File>
+				RelativePath="..\..\..\boost\string_algo\case_conv.hpp"/>
 			<File
-				RelativePath="..\..\..\boost\string_algo\config.hpp">
-			</File>
+				RelativePath="..\..\..\boost\string_algo\config.hpp"/>
 			<File
-				RelativePath="..\..\..\boost\string_algo\container_traits.hpp">
-			</File>
+				RelativePath="..\..\..\boost\string_algo\container_traits.hpp"/>
 			<File
-				RelativePath="..\..\..\boost\string_algo\erase.hpp">
-			</File>
+				RelativePath="..\..\..\boost\string_algo\erase.hpp"/>
 			<File
-				RelativePath="..\..\..\boost\string_algo\find.hpp">
-			</File>
+				RelativePath="..\..\..\boost\string_algo\find.hpp"/>
 			<File
-				RelativePath="..\..\..\boost\string_algo\find_impl.hpp">
-			</File>
+				RelativePath="..\..\..\boost\string_algo\find_impl.hpp"/>
 			<File
-				RelativePath="..\..\..\boost\string_algo\iterator_range.hpp">
-			</File>
+				RelativePath="..\..\..\boost\string_algo\iterator_range.hpp"/>
 			<File
-				RelativePath="..\..\..\boost\string_algo\predicate.hpp">
-			</File>
+				RelativePath="..\..\..\boost\string_algo\predicate.hpp"/>
 			<File
-				RelativePath="..\..\..\boost\string_algo\regex.hpp">
-			</File>
+				RelativePath="..\..\..\boost\string_algo\regex.hpp"/>
 			<File
-				RelativePath="..\..\..\boost\string_algo\replace.hpp">
-			</File>
+				RelativePath="..\..\..\boost\string_algo\replace.hpp"/>
 			<File
-				RelativePath="..\..\..\boost\string_algo\replace_impl.hpp">
-			</File>
+				RelativePath="..\..\..\boost\string_algo\replace_impl.hpp"/>
 			<File
-				RelativePath="..\..\..\boost\string_algo.hpp">
-			</File>
+				RelativePath="..\..\..\boost\string_algo.hpp"/>
 			<File
-				RelativePath="..\..\..\boost\string_algo_regex.hpp">
-			</File>
+				RelativePath="..\..\..\boost\string_algo_regex.hpp"/>
 			<File
-				RelativePath="..\..\..\boost\string_algo\traits.hpp">
-			</File>
+				RelativePath="..\..\..\boost\string_algo\traits.hpp"/>
 			<File
-				RelativePath="..\..\..\boost\string_algo\trim.hpp">
-			</File>
+				RelativePath="..\..\..\boost\string_algo\trim.hpp"/>
 			<Filter
 				Name="Detail"
 				Filter="">
 				<File
-					RelativePath="..\..\..\boost\string_algo\detail\case_conv.hpp">
-				</File>
+					RelativePath="..\..\..\boost\string_algo\detail\case_conv.hpp"/>
 				<File
-					RelativePath="..\..\..\boost\string_algo\detail\container.hpp">
-				</File>
+					RelativePath="..\..\..\boost\string_algo\detail\container.hpp"/>
 				<File
-					RelativePath="..\..\..\boost\string_algo\detail\find.hpp">
-				</File>
+					RelativePath="..\..\..\boost\string_algo\detail\find.hpp"/>
 				<File
-					RelativePath="..\..\..\boost\string_algo\detail\find_regex.hpp">
-				</File>
+					RelativePath="..\..\..\boost\string_algo\detail\find_regex.hpp"/>
 				<File
-					RelativePath="..\..\..\boost\string_algo\detail\format.hpp">
-				</File>
+					RelativePath="..\..\..\boost\string_algo\detail\format.hpp"/>
 				<File
-					RelativePath="..\..\..\boost\string_algo\detail\format_regex.hpp">
-				</File>
+					RelativePath="..\..\..\boost\string_algo\detail\format_regex.hpp"/>
 				<File
-					RelativePath="..\..\..\boost\string_algo\detail\iterator_range_base.hpp">
-				</File>
+					RelativePath="..\..\..\boost\string_algo\detail\iterator_range_base.hpp"/>
 				<File
-					RelativePath="..\..\..\boost\string_algo\detail\predicate.hpp">
-				</File>
+					RelativePath="..\..\..\boost\string_algo\detail\predicate.hpp"/>
 				<File
-					RelativePath="..\..\..\boost\string_algo\detail\replace.hpp">
-				</File>
+					RelativePath="..\..\..\boost\string_algo\detail\replace.hpp"/>
 				<File
-					RelativePath="..\..\..\boost\string_algo\detail\trim.hpp">
-				</File>
+					RelativePath="..\..\..\boost\string_algo\detail\trim.hpp"/>
 				<File
-					RelativePath="..\..\..\boost\string_algo\detail\util.hpp">
-				</File>
+					RelativePath="..\..\..\boost\string_algo\detail\util.hpp"/>
 				<File
-					RelativePath="..\..\..\boost\string_algo\detail\yes_no_type.hpp">
-				</File>
+					RelativePath="..\..\..\boost\string_algo\detail\yes_no_type.hpp"/>
 			</Filter>
 		</Filter>
 		<Filter
 			Name="Resource Files"
-			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
-		</Filter>
+			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"/>
 		<Filter
 			Name="Doc"
 			Filter=""
 			ParseFiles="FALSE">
 			<File
-				RelativePath="..\doc\todo.txt">
-			</File>
+				RelativePath="..\doc\todo.txt"/>
 		</Filter>
 	</Files>
-	<Globals>
-	</Globals>
+	<Globals/>
 </VisualStudioProject>

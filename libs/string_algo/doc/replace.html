@@ -27,11 +27,11 @@
         <ul>
           <li><a href="#overview">Overview</a></li>
           <li><a href="#description">Description</a></li>
-          <li><a href="#rationale">Rationale</a>
-            <ul>
-              <li><a href="#implementation">Design and Implementation</a></li>
-            </ul>
-          </li>
+        </ul>
+      </li>
+      <li><a href="#rationale">Rationale</a>
+        <ul>
+          <li><a href="#implementation">Design and Implementation</a></li>
         </ul>
       </li>
     </ul>
@@ -57,64 +57,64 @@
     </p>
     <table border="1" width="723">
       <tr>
-        <th height="30" valign="top" align="center" width="176">Function</th>
+        <th height="30" valign="top" align="left" width="176">Function</th>
         <th height="30" width="531">Description</th>
       </tr>
       <tr>
-        <td height="28" valign="top" align="center" width="176"><code><a href="replace_range.html">replace_range<br>
+        <td height="28" valign="top" align="left" width="176"><code><a href="replace_range.html">replace_range<br>
           erase_range</a></code></td>
-        <td height="28" valign="top" align="center" width="531">Replace the
+        <td height="28" valign="top" align="left" width="531">Replace the
           specified range with the format string /<br>
           Remove the specified range from the sequence.</td>
       </tr>
       <tr>
-        <td height="28" valign="top" align="center" width="176"><code><a href="replace_first.html">replace_first<br>
+        <td height="28" valign="top" align="left" width="176"><code><a href="replace_first.html">replace_first<br>
           erase_first</a></code></td>
-        <td height="28" valign="top" align="center" width="531">Replace the
-          first occurrence of the search string with the format string /<br>
-          Remove the occurrence from the sequence.</td>
-      </tr>
-      <tr>
-        <td height="30" valign="top" align="center" width="176"><code><a href="replace_last.html">replace_last<br>
-          erase_last</a></code></td>
-        <td height="30" valign="top" align="center" width="531">Replace the last
+        <td height="28" valign="top" align="left" width="531">Replace the first
           occurrence of the search string with the format string /<br>
           Remove the occurrence from the sequence.</td>
       </tr>
       <tr>
-        <td height="30" valign="top" align="center" width="176"><code><a href="replace_nth.html">replace_nth<br>
+        <td height="30" valign="top" align="left" width="176"><code><a href="replace_last.html">replace_last<br>
+          erase_last</a></code></td>
+        <td height="30" valign="top" align="left" width="531">Replace the last
+          occurrence of the search string with the format string /<br>
+          Remove the occurrence from the sequence.</td>
+      </tr>
+      <tr>
+        <td height="30" valign="top" align="left" width="176"><code><a href="replace_nth.html">replace_nth<br>
           erase_nth</a></code></td>
-        <td height="28" valign="top" align="center" width="531">Replace the n-th
+        <td height="28" valign="top" align="left" width="531">Replace the n-th
           occurrence of the search string with the format string /<br>
           Remove the occurrence from the sequence.<br>
           Position is 0-based.</td>
       </tr>
       <tr>
-        <td height="30" valign="top" align="center" width="176"><code><a href="replace_all.html">replace_all<br>
+        <td height="30" valign="top" align="left" width="176"><code><a href="replace_all.html">replace_all<br>
           erase_all</a></code></td>
-        <td height="28" valign="top" align="center" width="531">Replace all
+        <td height="28" valign="top" align="left" width="531">Replace all
           occurrences of the search string with the format string /<br>
-          Remove all the occurrence from the sequence.</td>
+          Remove all occurrences from the sequence.</td>
       </tr>
       <tr>
-        <td height="30" valign="top" align="center" width="176"><code><a href="replace_regex.html">replace_regex<br>
+        <td height="30" valign="top" align="left" width="176"><code><a href="replace_regex.html">replace_regex<br>
           erase_regex</a></code></td>
-        <td height="30" valign="top" align="center" width="531">Format a
-          substring matching given regular expression with the specified format
-          /<br>
+        <td height="30" valign="top" align="left" width="531">Format a substring
+          matching given regular expression with the specified format /<br>
           Remove the substring from the sequence.</td>
       </tr>
       <tr>
-        <td height="30" valign="top" align="center" width="176"><code><a href="replace_regex.html">replace_all_regex<br>
+        <td height="30" valign="top" align="left" width="176"><code><a href="replace_regex.html">replace_all_regex<br>
           erase_all_regex</a></code></td>
-        <td height="30" valign="top" align="center" width="531">Format all
+        <td height="30" valign="top" align="left" width="531">Format all
           substrings matching given regular expression with the specified format
           /<br>
           Remove all the matching substrings from the sequence.</td>
       </tr>
     </table>
-    <h3><a name="rationale">Rationale</a></h3>
-    <h4><a name="implementation">Design and </a><a name="implementation">Implementation</a></h4>
+    <hr>
+    <h2><a name="rationale">Rationale</a></h2>
+    <h3><a name="implementation">Design and </a><a name="implementation">Implementation</a></h3>
     <p>
       The replace algorithms are implemented using a layered structure. The
       lower layer implements generic substitution of a range in an input

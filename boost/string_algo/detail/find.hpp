@@ -139,7 +139,6 @@ namespace boost {
             struct find_lastF
             {
                 typedef ForwardIteratorT input_iterator_type;
-                typedef iterator_range<input_iterator_type> result_type;
 
                 typedef SearchT search_type;
                 typedef const SearchT& search_reference_type;
@@ -239,7 +238,6 @@ namespace boost {
             struct find_nthF
             {
                 typedef ForwardIteratorT input_iterator_type;
-                typedef iterator_range<input_iterator_type> result_type;
 
                 typedef SearchT search_type;
                 typedef const SearchT& search_reference_type;

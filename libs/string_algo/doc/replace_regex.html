@@ -45,6 +45,56 @@
       Every such an occurrence is formatted using the given format (<code>replace</code>
       algorithms) or erased (<code>erase</code> algorithms).
     </p>
+    <table border="1" height="28" width="673">
+      <tr>
+        <th height="30" valign="top" align="left" width="181">Function</th>
+        <th height="30" width="476" align="left">Description</th>
+      </tr>
+      <tr>
+        <td height="28" valign="top" align="left" width="181"><code><a name="replace_regex_copy">replace_regex_copy</a></code></td>
+        <td height="28" valign="top" align="left" width="476">Format a substring
+          matching given regular expression with the specified format. Copy
+          version.</td>
+      </tr>
+      <tr>
+        <td height="30" valign="top" align="left" width="181"><code><a name="replace_regex">replace_regex</a></code></td>
+        <td height="30" valign="top" align="left" width="476">Format a substring
+          matching given regular expression with the specified format. In-place
+          version.</td>
+      </tr>
+      <tr>
+        <td height="30" valign="top" align="left" width="181"><code><a name="erase_regex_copy">erase_regex_copy</a></code></td>
+        <td height="28" valign="top" align="left" width="476">Remove the
+          matching substring from the sequence. Copy version.</td>
+      </tr>
+      <tr>
+        <td height="30" valign="top" align="left" width="181"><code><a name="erase_regex">erase_regex</a></code></td>
+        <td height="30" valign="top" align="left" width="476">Remove the
+          matching substring from the sequence. In-place version.</td>
+      </tr>
+      <tr>
+        <td height="28" valign="top" align="left" width="181"><code><a name="replace_all_regex_copy">replace_all_regex_copy</a></code></td>
+        <td height="28" valign="top" align="left" width="476">Format all
+          substrings matching given regular expression with the specified
+          format. Copy version.</td>
+      </tr>
+      <tr>
+        <td height="30" valign="top" align="left" width="181"><code><a name="replace_all_regex">replace_all_regex</a></code></td>
+        <td height="30" valign="top" align="left" width="476">Format all
+          substrings matching given regular expression with the specified
+          format. In-place version.</td>
+      </tr>
+      <tr>
+        <td height="30" valign="top" align="left" width="181"><code><a name="erase_all_regex_copy">erase_all_regex_copy</a></code></td>
+        <td height="28" valign="top" align="left" width="476">Remove all the
+          matching substrings from the sequence. Copy version.</td>
+      </tr>
+      <tr>
+        <td height="30" valign="top" align="left" width="181"><code><a name="erase_all_regex">erase_all_regex</a></code></td>
+        <td height="30" valign="top" align="left" width="476">Remove all the
+          matching substrings from the sequence. In-place version.</td>
+      </tr>
+    </table>
     <h3><a name="synopsis">Synopsis</a></h3>
     <p>
       Every algorithm is provided in 4 sub variants. Three variants with copy
@@ -62,7 +112,7 @@
         <b>typename</b> RegexTraitsT, <b>typename</b> RegexAllocatorT,
         <b>typename</b> FormatStringTraitsT, <b>typename</b> FormatStringAllocatorT,
         <b>typename</b> OutputIteratorT &gt;
-    <b>inline</b> OutputIteratorT replace_regex_copy(
+    <b>inline</b> OutputIteratorT <a href="#replace_regex_copy">replace_regex_copy</a>(
         OutputIteratorT Output,
         ForwardIteratorT Begin,
         ForwardIteratorT End,
@@ -76,7 +126,7 @@
         <b>typename</b> RegexTraitsT, <b>typename</b> RegexAllocatorT,
         <b>typename</b> FormatStringTraitsT, <b>typename</b> FormatStringAllocatorT,
         <b>typename</b> OutputIteratorT &gt;
-    <b>inline</b> OutputIteratorT replace_all_regex_copy(
+    <b>inline</b> OutputIteratorT <a href="#replace_all_regex_copy">replace_all_regex_copy</a>(
         OutputIteratorT Output,
         ForwardIteratorT Begin,
         ForwardIteratorT End,
@@ -84,23 +134,25 @@
         <b>const</b> std::basic_string&lt;CharT, FormatStringTraitsT, FormatStringAllocatorT&gt;&amp; Format,
         <b>unsigned</b> <b>int</b> MatchFlags=match_default,
         <b>unsigned</b> <b>int</b> FormatFlags=0 );</pre>
-    <pre>    <b>template</b>&lt; 
+    <div align="left">
+      <pre>    <b>template</b>&lt; 
         <b>typename</b> ForwardIteratorT,
         <b>typename</b> CharT, 
         <b>typename</b> RegexTraitsT, <b>typename</b> RegexAllocatorT,
         <b>typename</b> OutputIteratorT &gt;
-    <b>inline</b> OutputIteratorT erase_regex_copy(
+    <b>inline</b> OutputIteratorT <a href="#erase_regex_copy">erase_regex_copy</a>(
         OutputIteratorT Output,
         ForwardIteratorT Begin,
         ForwardIteratorT End,
         <b>const</b> reg_expression&lt;CharT, RegexTraitsT, RegexAllocatorT&gt;&amp; Rx,
         <b>unsigned</b> <b>int</b> MatchFlags=match_default );</pre>
+    </div>
     <pre>    <b>template</b>&lt; 
         <b>typename</b> ForwardIteratorT,
         <b>typename</b> CharT, 
         <b>typename</b> RegexTraitsT, <b>typename</b> RegexAllocatorT,
         <b>typename</b> OutputIteratorT &gt;
-    <b>inline</b> OutputIteratorT erase_all_regex_copy(
+    <b>inline</b> OutputIteratorT <a href="#erase_all_regex_copy">erase_all_regex_copy</a>(
         OutputIteratorT Output,
         ForwardIteratorT Begin,
         ForwardIteratorT End,
@@ -119,7 +171,7 @@
         <b>typename</b> RegexTraitsT, <b>typename</b> RegexAllocatorT,
         <b>typename</b> FormatStringTraitsT, <b>typename</b> FormatStringAllocatorT,
         <b>typename</b> OutputIteratorT &gt;
-    <b>inline</b> OutputIteratorT replace_regex_copy(
+    <b>inline</b> OutputIteratorT <a href="#replace_regex_copy">replace_regex_copy</a>(
         OutputIteratorT Output,
         <b>const</b> InputT&amp; Input,
         <b>const</b> reg_expression&lt;CharT, RegexTraitsT, RegexAllocatorT&gt;&amp; Rx,
@@ -132,7 +184,7 @@
         <b>typename</b> RegexTraitsT, <b>typename</b> RegexAllocatorT,
         <b>typename</b> FormatStringTraitsT, <b>typename</b> FormatStringAllocatorT,
         <b>typename</b> OutputIteratorT &gt;
-    <b>inline</b> OutputIteratorT replace_all_regex_copy(
+    <b>inline</b> OutputIteratorT <a href="#replace_all_regex_copy">replace_all_regex_copy</a>(
         OutputIteratorT Output,
         <b>const</b> InputT&amp; Input,
         <b>const</b> reg_expression&lt;CharT, RegexTraitsT, RegexAllocatorT&gt;&amp; Rx,
@@ -144,7 +196,7 @@
         <b>typename</b> CharT, 
         <b>typename</b> RegexTraitsT, <b>typename</b> RegexAllocatorT,
         <b>typename</b> OutputIteratorT &gt;
-    <b>inline</b> OutputIteratorT erase_regex_copy(
+    <b>inline</b> OutputIteratorT <a href="#erase_regex_copy">erase_regex_copy</a>(
         OutputIteratorT Output,
         <b>const</b> InputT&amp; Input,
         <b>const</b> reg_expression&lt;CharT, RegexTraitsT, RegexAllocatorT&gt;&amp; Rx,
@@ -154,7 +206,7 @@
         <b>typename</b> CharT, 
         <b>typename</b> RegexTraitsT, <b>typename</b> RegexAllocatorT,
         <b>typename</b> OutputIteratorT &gt;
-    <b>inline</b> OutputIteratorT erase_all_regex_copy(
+    <b>inline</b> OutputIteratorT <a href="#erase_all_regex_copy">erase_all_regex_copy</a>(
         OutputIteratorT Output,
         <b>const</b> InputT&amp; Input,
         <b>const</b> reg_expression&lt;CharT, RegexTraitsT, RegexAllocatorT&gt;&amp; Rx,
@@ -170,7 +222,7 @@
         <b>typename</b> CharT, 
         <b>typename</b> RegexTraitsT, <b>typename</b> RegexAllocatorT,
         <b>typename</b> FormatStringTraitsT, <b>typename</b> FormatStringAllocatorT &gt;
-    <b>inline</b> InputT replace_regex_copy( 
+    <b>inline</b> InputT <a href="#replace_regex_copy">replace_regex_copy</a>( 
         <b>const</b> InputT&amp; Input,
         <b>const</b> reg_expression&lt;CharT, RegexTraitsT, RegexAllocatorT&gt;&amp; Rx,
         <b>const</b> std::basic_string&lt;CharT, FormatStringTraitsT, FormatStringAllocatorT&gt;&amp; Format,
@@ -181,7 +233,7 @@
         <b>typename</b> CharT, 
         <b>typename</b> RegexTraitsT, <b>typename</b> RegexAllocatorT,
         <b>typename</b> FormatStringTraitsT, <b>typename</b> FormatStringAllocatorT &gt;
-    <b>inline</b> InputT replace_all_regex_copy( 
+    <b>inline</b> InputT <a href="#replace_all_regex_copy">replace_all_regex_copy</a>( 
         <b>const</b> InputT&amp; Input,
         <b>const</b> reg_expression&lt;CharT, RegexTraitsT, RegexAllocatorT&gt;&amp; Rx,
         <b>const</b> std::basic_string&lt;CharT, FormatStringTraitsT, FormatStringAllocatorT&gt;&amp; Format,
@@ -191,7 +243,7 @@
         <b>typename</b> InputT, 
         <b>typename</b> CharT, 
         <b>typename</b> RegexTraitsT, <b>typename</b> RegexAllocatorT,
-    <b>inline</b> InputT erase_regex_copy( 
+    <b>inline</b> InputT <a href="#erase_regex_copy">erase_regex_copy</a>( 
         <b>const</b> InputT&amp; Input,
         <b>const</b> reg_expression&lt;CharT, RegexTraitsT, RegexAllocatorT&gt;&amp; Rx,
         <b>unsigned</b> <b>int</b> MatchFlags=match_default );</pre>
@@ -199,7 +251,7 @@
         <b>typename</b> InputT, 
         <b>typename</b> CharT, 
         <b>typename</b> RegexTraitsT, <b>typename</b> RegexAllocatorT,
-    <b>inline</b> InputT erase_all_regex_copy( 
+    <b>inline</b> InputT <a href="#erase_all_regex_copy">erase_all_regex_copy</a>( 
         <b>const</b> InputT&amp; Input,
         <b>const</b> reg_expression&lt;CharT, RegexTraitsT, RegexAllocatorT&gt;&amp; Rx,
         <b>unsigned</b> <b>int</b> MatchFlags=match_default );
@@ -214,7 +266,19 @@
         <b>typename</b> CharT, 
         <b>typename</b> RegexTraitsT, typename RegexAllocatorT,
         <b>typename</b> FormatStringTraitsT, typename FormatStringAllocatorT &gt;
-    <b>inline</b> InputT&amp; replace_regex( 
+    <b>inline</b> InputT&amp; <a href="#replace_regex">replace_regex</a>( 
+        InputT&amp; Input,
+        <b>const</b> reg_expression&lt;CharT, RegexTraitsT, RegexAllocatorT&gt;&amp; Rx,
+        <b>const</b> std::basic_string&lt;CharT, FormatStringTraitsT, FormatStringAllocatorT&gt;&amp; Format,
+        <b>unsigned</b> <b>int</b> MatchFlags=match_default,
+        <b>unsigned</b> <b>int</b> FormatFlags=0 );
+
+    <b>template</b>&lt; 
+        <b>typename</b> InputT, 
+        <b>typename</b> CharT, 
+        <b>typename</b> RegexTraitsT, typename RegexAllocatorT,
+        <b>typename</b> FormatStringTraitsT, typename FormatStringAllocatorT &gt;
+    <b>inline</b> InputT&amp; <a href="#replace_all_regex">replace_all_regex</a>( 
         InputT&amp; Input,
         <b>const</b> reg_expression&lt;CharT, RegexTraitsT, RegexAllocatorT&gt;&amp; Rx,
         <b>const</b> std::basic_string&lt;CharT, FormatStringTraitsT, FormatStringAllocatorT&gt;&amp; Format,
@@ -225,7 +289,7 @@
         <b>typename</b> InputT, 
         <b>typename</b> CharT, 
         <b>typename</b> RegexTraitsT, typename RegexAllocatorT &gt;
-    <b>inline</b> InputT&amp; erase_regex( 
+    <b>inline</b> InputT&amp; <a href="#erase_regex">erase_regex</a>( 
         InputT&amp; Input,
         <b>const</b> reg_expression&lt;CharT, RegexTraitsT, RegexAllocatorT&gt;&amp; Rx,
         <b>unsigned</b> <b>int</b> MatchFlags=match_default );
@@ -233,20 +297,8 @@
     <b>template</b>&lt; 
         <b>typename</b> InputT, 
         <b>typename</b> CharT, 
-        <b>typename</b> RegexTraitsT, typename RegexAllocatorT,
-        <b>typename</b> FormatStringTraitsT, typename FormatStringAllocatorT &gt;
-    <b>inline</b> InputT&amp; replace_all_regex( 
-        InputT&amp; Input,
-        <b>const</b> reg_expression&lt;CharT, RegexTraitsT, RegexAllocatorT&gt;&amp; Rx,
-        <b>const</b> std::basic_string&lt;CharT, FormatStringTraitsT, FormatStringAllocatorT&gt;&amp; Format,
-        <b>unsigned</b> <b>int</b> MatchFlags=match_default,
-        <b>unsigned</b> <b>int</b> FormatFlags=0 );
-
-    <b>template</b>&lt; 
-        <b>typename</b> InputT, 
-        <b>typename</b> CharT, 
         <b>typename</b> RegexTraitsT, typename RegexAllocatorT &gt;
-    <b>inline</b> InputT&amp; erase_all_regex( 
+    <b>inline</b> InputT&amp; <a href="#erase_all_regex">erase_all_regex</a>( 
         InputT&amp; Input,
         <b>const</b> reg_expression&lt;CharT, RegexTraitsT, RegexAllocatorT&gt;&amp; Rx,
         <b>unsigned</b> <b>int</b> MatchFlags=match_default );
@@ -295,26 +347,28 @@
         <td width="443" height="31" valign="top"><code><b>const</b>
           reg_expression&lt;CharT, RegexTraitsT, RegexAllocatorT&gt;&amp; Rx</code></td>
         <td width="703" height="31" valign="top">Regular expression used for
-          searching. See Regex++ documentation for deails.</td>
+          searching. See <a href="http://www.boost.org/libs/regex/index.htm">Regex++
+          documentation</a> for deails.</td>
       </tr>
       <tr>
         <td width="443" height="31" valign="top"><code><b>const</b>
           std::basic_string&lt;CharT, FormatStringTraitsT,
           FormatStringAllocatorT&gt;&amp; Format</code></td>
-        <td width="703" height="31" valign="top">Format specification. See
-          Regex++ documenation for deatail.</td>
+        <td width="703" height="31" valign="top">Format specification. See <a href="http://www.boost.org/libs/regex/index.htm">Regex++
+          documenation</a> for deatail.</td>
       </tr>
       <tr>
         <td width="443" height="31" valign="top"><code><b>unsigned</b> <b>int</b>
           MatchFlags=match_default</code></td>
         <td width="703" height="31" valign="top">Match flags defining some
-          properties of search algorithm. See Regex++ documentation for deails.</td>
+          properties of search algorithm. See <a href="http://www.boost.org/libs/regex/index.htm">Regex++
+          documentation</a> for deails.</td>
       </tr>
       <tr>
         <td width="443" height="31" valign="top"><b>unsigned</b> <b>int</b>
           FormatFlags=0</td>
-        <td width="703" height="31" valign="top">Format flags. See Regex++
-          documentation for deails.</td>
+        <td width="703" height="31" valign="top">Format flags. See <a href="http://www.boost.org/libs/regex/index.htm">Regex++
+          documentation</a> for deails.</td>
       </tr>
     </table>
     <h3><a name="examples">Examples</a></h3>

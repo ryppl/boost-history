@@ -52,27 +52,27 @@
     </p>
     <table border="1" width="597">
       <tr>
-        <th height="30" valign="top" align="center" width="146">Function</th>
-        <th height="30" width="435" valign="top" align="center">Description</th>
+        <th height="30" valign="top" align="left" width="146">Function</th>
+        <th height="30" width="435" valign="top" align="left">Description</th>
       </tr>
       <tr>
-        <td height="28" valign="top" align="center" width="146"><code>starts_with</code></td>
-        <td height="28" valign="top" align="center" width="435">Checks if the
+        <td height="28" valign="top" align="left" width="146"><code><a name="starts_with">starts_with</a></code></td>
+        <td height="28" valign="top" align="left" width="435">Checks if the
           substring is a prefix of the input.</td>
       </tr>
       <tr>
-        <td height="30" valign="top" align="center" width="146"><code>ends_with</code></td>
-        <td height="30" valign="top" align="center" width="435">Checks if the
+        <td height="30" valign="top" align="left" width="146"><code><a name="ends_with">ends_with</a></code></td>
+        <td height="30" valign="top" align="left" width="435">Checks if the
           substring is a suffix of the input.</td>
       </tr>
       <tr>
-        <td height="30" valign="top" align="center" width="146"><code>contains</code></td>
-        <td height="28" valign="top" align="center" width="435">Checks if the
+        <td height="30" valign="top" align="left" width="146"><code><a name="contains">contains</a></code></td>
+        <td height="28" valign="top" align="left" width="435">Checks if the
           input contains an instance of substring.</td>
       </tr>
       <tr>
-        <td height="30" valign="top" align="center" width="146"><code>equals</code></td>
-        <td height="30" valign="top" align="center" width="435">Checks if both
+        <td height="30" valign="top" align="left" width="146"><code><a name="equals">equals</a></code></td>
+        <td height="30" valign="top" align="left" width="435">Checks if both
           operands are equal.<br>
           ( Note: this is two-directional equivalent of <code>std::equal</code>
           algorithm)</td>
@@ -85,25 +85,25 @@
     <pre><b>namespace</b> boost {
 
     <b>template</b>&lt; <b>typename</b> ForwardIterator1T, <b>typename</b> ForwardIterator2T &gt;
-    <b>inline</b> <b>bool</b> starts_with( 
+    <b>inline</b> <b>bool</b> <a href="#starts_with">starts_with</a>( 
         ForwardIterator1T Begin, 
         ForwardIterator1T End, 
         ForwardIterator2T SubBegin,
         ForwardIterator2T SubEnd );</pre>
     <pre>    <b>template</b>&lt; <b>typename</b> ForwardIterator1T, <b>typename</b> ForwardIterator2T &gt;
-    <b>inline</b> <b>bool</b> ends_with( 
+    <b>inline</b> <b>bool</b> <a href="#ends_with">ends_with</a>( 
         ForwardIterator1T Begin, 
         ForwardIterator1T End, 
         ForwardIterator2T SubBegin,
         ForwardIterator2T SubEnd );</pre>
     <pre>    <b>template</b>&lt; <b>typename</b> ForwardIterator1T, <b>typename</b> ForwardIterator2T &gt;
-    <b>inline</b> <b>bool</b> contains( 
+    <b>inline</b> <b>bool</b> <a href="#contains">contains</a>( 
         ForwardIterator1T Begin, 
         ForwardIterator1T End, 
         ForwardIterator2T SubBegin,
         ForwardIterator2T SubEnd );</pre>
     <pre>    <b>template</b>&lt; <b>typename</b> ForwardIterator1T, <b>typename</b> ForwardIterator2T &gt;
-    <b>inline</b> <b>bool</b> equals( 
+    <b>inline</b> <b>bool</b> <a href="#equals">equals</a>( 
         ForwardIterator1T Begin, 
         ForwardIterator1T End, 
         ForwardIterator2T SubBegin,
@@ -115,13 +115,13 @@
     <pre><b>namespace</b> boost {
 
     <b>template</b>&lt; <b>typename</b> SeqT1, <b>typename </b>SeqT2 &gt;
-    <b>inline</b> <b>bool</b> starts_with( <b>const</b> SeqT1&amp; Input, <b>const</b> SeqT2&amp; Substr );</pre>
+    <b>inline</b> <b>bool</b> <a href="#starts_with">starts_with</a>( <b>const</b> SeqT1&amp; Input, <b>const</b> SeqT2&amp; Substr );</pre>
     <pre>    <b>template</b>&lt; <b>typename</b> SeqT1, <b>typename </b>SeqT2 &gt;
-    <b>inline</b> <b>bool</b> ends_with( <b>const</b> SeqT1&amp; Input, <b>const</b> SeqT2&amp; Substr );</pre>
+    <b>inline</b> <b>bool</b> <a href="#ends_with">ends_with</a>( <b>const</b> SeqT1&amp; Input, <b>const</b> SeqT2&amp; Substr );</pre>
     <pre>    <b>template</b>&lt; <b>typename</b> SeqT1, <b>typename </b>SeqT2 &gt;
-    <b>inline</b> <b>bool</b> contains( <b>const</b> SeqT1&amp; Input, <b>const</b> SeqT2&amp; Substr );</pre>
+    <b>inline</b> <b>bool</b> <a href="#contains">contains</a>( <b>const</b> SeqT1&amp; Input, <b>const</b> SeqT2&amp; Substr );</pre>
     <pre>    <b>template</b>&lt; <b>typename</b> SeqT1, <b>typename </b>SeqT2 &gt;
-    <b>inline</b> <b>bool</b> equals( <b>const</b> SeqT1&amp; Input, <b>const</b> SeqT2&amp; Substr );
+    <b>inline</b> <b>bool</b> <a href="#equals">equals</a>( <b>const</b> SeqT1&amp; Input, <b>const</b> SeqT2&amp; Substr );
 }</pre>
     <p>
       Parameters:

@@ -44,6 +44,33 @@
       the specified format sequence. <code>erase_nth</code> removes this
       occurrence from the input sequence.
     </p>
+    <table border="1" height="28" width="730">
+      <tr>
+        <th height="30" valign="top" align="left" width="181">Function</th>
+        <th height="30" width="533" align="left">Description</th>
+      </tr>
+      <tr>
+        <td height="28" valign="top" align="left" width="181"><code><a name="replace_nth_copy">replace_nth_copy</a></code></td>
+        <td height="28" valign="top" align="left" width="533">Replace the n-th
+          occurrence of the search string with the format string. Copy version.</td>
+      </tr>
+      <tr>
+        <td height="30" valign="top" align="left" width="181"><code><a name="replace_nth">replace_nth</a></code></td>
+        <td height="30" valign="top" align="left" width="533">Replace the n-th
+          occurrence of the search string with the format string. In-place
+          version.</td>
+      </tr>
+      <tr>
+        <td height="30" valign="top" align="left" width="181"><code><a name="erase_nth_copy">erase_nth_copy</a></code></td>
+        <td height="28" valign="top" align="left" width="533">Remove the n-th
+          occurrence from the sequence. Copy version.</td>
+      </tr>
+      <tr>
+        <td height="30" valign="top" align="left" width="181"><code><a name="erase_nth">erase_nth</a></code></td>
+        <td height="30" valign="top" align="left" width="533">Remove the n-th
+          occurrence from the sequence. In-place version.</td>
+      </tr>
+    </table>
     <h3><a name="synopsis">Synopsis</a></h3>
     <p>
       The algorithm is provided in 4 subvariants. Three variants with copy
@@ -60,7 +87,7 @@
         <b>typename</b> ForwardIterator2T, 
         <b>typename</b> ForwardIterator3T,
         <b>typename</b> OutputIteratorT &gt;
-    <b>inline</b> OutputIteratorT replace_nth_copy(
+    <b>inline</b> OutputIteratorT <a href="#replace_nth_copy">replace_nth_copy</a>(
         OutputIteratorT Output,
         ForwardIterator1T Begin,
         ForwardIterator1T End,
@@ -73,7 +100,7 @@
         <b>typename</b> ForwardIterator1T, 
         <b>typename</b> ForwardIterator2T, 
         <b>typename</b> OutputIteratorT &gt;
-    <b>inline</b> OutputIteratorT erase_nth_copy(
+    <b>inline</b> OutputIteratorT <a href="#erase_nth_copy">erase_nth_copy</a>(
         OutputIteratorT Output,
         ForwardIterator1T Begin,
         ForwardIterator1T End,
@@ -92,7 +119,7 @@
         <b>typename</b> SearchT,
         <b>typename</b> FormatT,
         <b>typename</b> OutputIteratorT &gt;
-    <b>inline</b> OutputIteratorT replace_nth_copy(
+    <b>inline</b> OutputIteratorT <a href="#replace_nth_copy">replace_nth_copy</a>(
         OutputIteratorT Output,
         <b>const</b> InputT&amp; Input,
 	<b>const</b> SearchT&amp; Search,
@@ -103,7 +130,7 @@
         <b>typename</b> InputT, 
         <b>typename</b> SearchT,
         <b>typename</b> OutputIteratorT &gt;
-    <b>inline</b> OutputIteratorT erase_nth_copy(
+    <b>inline</b> OutputIteratorT <a href="#erase_nth_copy">erase_nth_copy</a>(
         OutputIteratorT Output,
         <b>const</b> InputT&amp; Input,
         <b>const</b> SearchT&amp; Search,
@@ -115,14 +142,14 @@
     <pre><b>namespace</b> boost {
 
     <b>template</b>&lt; <b>typename</b> InputT, <b>typename</b> SearchT, <b>typename</b> FormatT &gt;
-    <b>inline</b> InputT replace_nth_copy( 
+    <b>inline</b> InputT <a href="#replace_nth_copy">replace_nth_copy</a>( 
         <b>const</b> InputT&amp; Input,
         <b>const</b> SearchT&amp; Search,
 	<b>unsigned</b> <b>int</b> Nth,
         <b>const</b> FormatT&amp; Format );
 
     <b>template</b>&lt; <b>typename</b> InputT, <b>typename</b> SearchT &gt;
-    <b>inline</b> InputT erase_nth_copy( 
+    <b>inline</b> InputT <a href="#erase_nth_copy">erase_nth_copy</a>( 
         <b>const</b> InputT&amp; Input,
         <b>const</b> SearchT&amp; Search,
 	<b>unsigned</b> <b>int</b> Nth );
@@ -131,14 +158,14 @@
     <pre><b>namespace</b> boost {
 
     <b>template</b>&lt; <b>typename</b> InputT, <b>typename</b> SearchT, <b>typename</b> FormatT &gt;
-    <b>inline</b> InputT&amp; replace_nth( 
+    <b>inline</b> InputT&amp; <a href="#replace_nth">replace_nth</a>( 
         InputT&amp; Input,
         <b>const</b> SearchT&amp; Search,
 	<b>unsigned</b> <b>int</b> Nth,
         <b>const</b> FormatT&amp; Format );
 
     <b>template</b>&lt; <b>typename</b> InputT, <b>typename</b> SearchT &gt;
-    <b>inline</b> InputT&amp; erase_nth( 
+    <b>inline</b> InputT&amp; <a href="#erase_nth">erase_nth</a>( 
         InputT&amp; Input,
         <b>const</b> SearchT&amp; Search,
 	<b>unsigned</b> <b>int</b> Nth );
