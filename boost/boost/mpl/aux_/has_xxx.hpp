@@ -15,6 +15,7 @@
 // $Date$
 // $Revision$
 
+#include <boost/mpl/bool.hpp>
 #include <boost/mpl/aux_/type_wrapper.hpp>
 #include <boost/mpl/aux_/yes_no.hpp>
 #include <boost/mpl/aux_/config/msvc_typename.hpp>
@@ -52,12 +53,13 @@ struct trait                                                            \
           sizeof((trait##_helper)(static_cast<t_*>(0)))                 \
             == sizeof(boost::mpl::aux::yes_tag)                         \
         );                                                              \
+    typedef bool_<value> type;                                          \
 };                                                                      \
 /**/
 
 #    else  // conforming compilers
 
-#      define BOOST_MPL_HAS_XXX_TRAIT_NAMED_DEF(trait, name, unused)    \
+#      define BOOST_MPL_HAS_XXX_TRAIT_NAMED_DEF(trait, name, unused)        \
 template< typename T >                                                      \
 struct trait                                                                \
 {                                                                           \
@@ -81,6 +83,7 @@ struct trait                                                                \
         sizeof(helpers::test(static_cast<t_*>(0)))                          \
         == sizeof(boost::mpl::aux::yes_tag)                                 \
     );                                                                      \
+    typedef bool_<value> type;                                              \
 };                                                                          \
 /**/
 
@@ -151,6 +154,7 @@ struct BOOST_PP_CAT(trait,_impl) : T                                            
         sizeof(test(static_cast<void(*)(name)>(0)))                                 \
             != sizeof(boost::mpl::aux::no_tag)                                      \
         );                                                                          \
+    typedef bool_<value> type;                                                      \
 };                                                                                  \
                                                                                     \
 template< typename T > struct trait                                                 \
@@ -182,6 +186,7 @@ BOOST_MPL_AUX_HAS_XXX_TRAIT_SPEC(trait, long double)                            
 template<> struct trait<T>                                  \
 {                                                           \
     BOOST_STATIC_CONSTANT(bool,value = false);              \
+    typedef bool_<false> type;                              \
 };                                                          \
 /**/
 
@@ -211,7 +216,8 @@ template<> struct trait<T>                                  \
 template< typename T >                                                      \
 struct trait                                                                \
 {                                                                           \
-     BOOST_STATIC_CONSTANT(bool, value = default_value);                    \
+    BOOST_STATIC_CONSTANT(bool, value = default_value);                     \
+    typedef bool_<default_value> type;                                      \
 };                                                                          \
 /**/
 
