@@ -20,110 +20,160 @@
 
 namespace boost
 {
-
 namespace assignment
-{
-    
-    namespace detail
+{   
+    template< typename ValueType, typename InputIterator >
+    class fixed_size_assigner
     {
+    public:
+        typedef ValueType      value_type;
+        typedef InputIterator  iterator;
 
-        //
-        // @note: An iterator-based approach seems appropriate
-        //        when we need to initialize a fixed sized container
-        //        because the storage underneath will often be an array.
-        //
-    
-        template< typename I, typename V >
-        inline void insert_by_iterator( I& i, const V& v )
+        fixed_size_assigner( const iterator& begin, const iterator& end )
+        : iter_( begin ), end_( end ), begin_( begin ) 
+        {}
+
+
+
+        fixed_size_assigner( const iterator& begin, const iterator& end,
+                             const value_type& v ) 
+        : iter_( begin ), end_( end ), begin_( begin ) 
         {
-            *i = v;
+            insert_( v );
         }
-    
-    	
-    	template< typename V, typename I >
-    	class fixed_size_assigner
-    	{
-    	public:
-    	    typedef V  value_type;
-    	    typedef I  iterator;
-    
-            fixed_size_assigner( const iterator& begin, const iterator& end )
-            : iter_( begin ), end_( end ), copied_once_( false ) 
-            { }
-            
-            
-            
-    	    fixed_size_assigner( const iterator& begin, const iterator& end,
-    				 const value_type& v ) 
-    		: iter_( begin ), end_( end ), copied_once_( false ) 
-    	    {
-                insert_( v );
-    	    }
-    	    
-    
-    
-    	    fixed_size_assigner( const fixed_size_assigner& r ) 
-    		: iter_( r.iter_ ), end_( r.end_ ), copied_once_( true )
-    	    {
-    	    }
-    
-    
-    
-    	    ~fixed_size_assigner()
-    	    {
-        		if ( iter_ != end_ )
-        		    if ( copied_once_ && !std::uncaught_exception() )
-        			throw assign_exception( " Exception: container"
-        					      " initialized with too"
-        					      " few elements! " );
-    	    }
-    
-    
-    	    
-    	    fixed_size_assigner& operator,( const value_type& v )
-    	    {
-                insert_( v );
-                return *this;
-    	    }
-    
-    	
-            
-            fixed_size_assigner& operator()( const value_type& v )
-            {
-                insert_( v );
-                return *this;
-            }
-            
-            
-            
-            fixed_size_assigner& operator<<( const value_type& v )
-            {
-                insert_( v );
-                return *this;
-            }
-                        
-        private:
-    	    
-    	    fixed_size_assigner& operator=( const fixed_size_assigner& );
-    	    
-    	    void insert_( const value_type& v )
-    	    {
-        		if ( iter_ == end_ )
-        		    throw assign_exception( " Exception: trying to write"
-        					  " past the end of the container! " );
-                insert_by_iterator( iter_, v );
-        		++iter_;		
-    	    }
-    
-    	    iterator       iter_;
-    	    const iterator end_;
-    	    bool           copied_once_;
-    	};
-    
-    } // namespace 'detail'
+
+
+
+        fixed_size_assigner( const fixed_size_assigner& r ) 
+        : iter_( r.iter_ ), end_( r.end_ ), begin_( r.begin_ )
+        {}
+
+
+
+        ~fixed_size_assigner()
+        {
+            if( has_assignment_commenced() )
+                if( iter_ != end_ && !std::uncaught_exception() )
+                    throw assignment_exception( " Exception: container"
+                                                " initialized with too"
+                                                " few elements! " );
+        }
+
+
+
+        fixed_size_assigner& operator,( const value_type& v )
+        {
+            insert_( v );
+            return *this;
+        }
+
+
+
+        fixed_size_assigner& operator()( const value_type& v )
+        {
+            insert_( v );
+            return *this;
+        }
+
+
+
+        template< typename T, typename T2 >
+        insert_assigner& operator()( const T& t, const T2& t2 )
+        {
+            insert_( value_type( t, t2 ) );
+            return *this;
+        }
+
+
+
+        template< typename T, typename T2, typename T3 >
+        fixed_size_assigner& operator()( const T& t, const T2& t2, const T3& t3 )
+        {
+            insert_( value_type( t, t2, t3 ) );
+            return *this;
+        }
+
+
+
+        template< typename T, typename T2, typename T3, typename T4 >
+        fixed_size_assigner& operator()( const T& t, const T2& t2, const T3& t3,
+                                         const T4& t4 )
+        {
+            insert_( value_type( t, t2, t3, t4 ) );
+            return *this;
+        }
+
+
+
+        template< typename T, typename T2, typename T3, typename T4,
+        typename T5 >
+        fixed_size_assigner& operator()( const T& t, const T2& t2, const T3& t3,
+                                         const T4& t4, const T5& t5 )
+        {
+            insert_( value_type( t, t2, t3, t4, t5 ) );
+            return *this;
+        }
+
+
+
+        template< typename T, typename T2, typename T3, typename T4,
+        typename T5, typename T6 >
+        fixed_size_assigner& operator()( const T& t, const T2& t2, const T3& t3,
+                                         const T4& t4, const T5& t5, const T6& t6 )
+        {
+            insert_( value_type( t, t2, t3, t4, t5, t6 ) );
+            return *this;
+        }
+
+
+    private:
+
+        fixed_size_assigner& operator=( const fixed_size_assigner& );
+
+        void insert_( const value_type& v )
+        {
+            if( iter_ == end_ )
+                throw assignment_exception( " Exception: trying to write"
+                                            " past the end of the container! " );
+            *iter_ = v;
+            ++iter_;        
+        }
+
+
+
+        bool has_assignment_commenced()
+        {
+            return iter_ != begin_;
+        }
+
+        iterator        iter_;
+        const iterator  end_;
+        const iterator  begin_;
+    };
+
+    //////////////////////////////////////////////////////////////////////////
+    // default templates
+    //////////////////////////////////////////////////////////////////////////
+
+    template< typename C >
+    inline fixed_size_assigner<typename C::value_type, typename C::iterator>
+    assign_all( C& c )
+    {
+        return fixed_size_assigner<typename C::value_type, typename C::iterator>
+        ( c.begin(), c.end() );
+    }
+
+
+
+    template< typename C >
+    inline fixed_size_assigner<typename C::value_type, typename C::iterator>
+    operator<<( C& c, typename C::value_type v )
+    {
+        return fixed_size_assigner<typename C::value_type,typename C::iterator>
+        ( c.begin(), c.end(), v ); 
+    }
 
 } // namespace 'assignment'
-
 } // namespace 'boost'
 
 #endif

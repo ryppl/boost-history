@@ -17,103 +17,132 @@
 
 namespace boost
 {
-    
-    namespace assignment
+namespace assignment
+{
+    template< typename C, typename V = typename C::value_type > 
+    class insert_assigner
     {
-        namespace detail
+    public:
+        typedef V  value_type;
+
+        explicit insert_assigner( C& c ) : c_( c )
+        {}
+
+
+
+        insert_assigner( C& c, const value_type& v )
+        : c_( c )
         {
-                
-            template< typename C, typename V = typename C::value_type > 
-            class insert_assigner
-            {
-            public:
-                typedef V  value_type;
+            insert_( v );
+        }
+
+
+
+        insert_assigner& operator,( const value_type& v )
+        {
+            insert_( v );
+            return *this;
+        }
+
+
+
+        insert_assigner& operator()( const value_type& v )
+        {
+            insert_( v );
+            return *this;
+        }
+
+        
+        
+        template< typename T, typename T2 >
+        insert_assigner& operator()( const T& t, const T2& t2 )
+        {
+            insert_( value_type( t, t2 ) );
+            return *this;
+        }
+
+
+
+        template< typename T, typename T2, typename T3 >
+        insert_assigner& operator()( const T& t, const T2& t2, const T3& t3 )
+        {
+            insert_( value_type( t, t2, t3 ) );
+            return *this;
+        }
+
+
+
+        template< typename T, typename T2, typename T3, typename T4 >
+        insert_assigner& operator()( const T& t, const T2& t2, const T3& t3,
+                                     const T4& t4 )
+        {
+            insert_( value_type( t, t2, t3, t4 ) );
+            return *this;
+        }
+
+
+
+        template< typename T, typename T2, typename T3, typename T4,
+        typename T5 >
+        insert_assigner& operator()( const T& t, const T2& t2, const T3& t3,
+                                     const T4& t4, const T5& t5 )
+        {
+            insert_( value_type( t, t2, t3, t4, t5 ) );
+            return *this;
+        }
+
+
+
+        template< typename T, typename T2, typename T3, typename T4,
+        typename T5, typename T6 >
+        insert_assigner& operator()( const T& t, const T2& t2, const T3& t3,
+                                     const T4& t4, const T5& t5, const T6& t6 )
+        {
+            insert_( value_type( t, t2, t3, t4, t5, t6 ) );
+            return *this;
+        }
+
+    private:
+        
+        void insert_( const value_type& v )
+        {
+            make_iterator_insertion( c_, v );
+        }
+
+        insert_assigner& operator=( const insert_assigner& );
+        C& c_;
+    };
     
-                explicit insert_assigner( C& c ) : c_( c )
-                {}
+    //////////////////////////////////////////////////////////////////////////
+    // default templates
+    //////////////////////////////////////////////////////////////////////////
+    
+    template< typename C > 
+    inline insert_assigner<C> 
+    operator+=( C& c, const typename C::value_type& v )
+    {
+        return insert_assigner<C>( c, v );
+    }
     
     
     
-                insert_assigner( C& c, const value_type& v )
-                : c_( c )
-                {
-                    insert( c_, v );
-                }
-    
-    
-    
-                insert_assigner& operator,( const value_type& v )
-                {
-                    insert( c_, v );
-                    return *this;
-                }
-    
-    
-                /*
-                insert_assigner& operator<<( const value-type& v )
-                {
-                    insert( c_, v );
-                    return *this;
-                }*/
-    
-    
-    
-                template< typename T, typename T2 >
-                insert_assigner& operator()( const T& t, const T2& t2 )
-                {
-                    insert( c_, value_type( t, t2 ) );
-                    return *this;
-                }
-    
-    
-    
-                template< typename T, typename T2, typename T3 >
-                insert_assigner& operator()( const T& t, const T2& t2, const T3& t3 )
-                {
-                    insert( c_, value_type( t, t2, t3 ) );
-                    return *this;
-                }
-    
-    
-    
-                template< typename T, typename T2, typename T3, typename T4 >
-                insert_assigner& operator()( const T& t, const T2& t2, const T3& t3,
-                                      const T4& t4 )
-                {
-                    insert( c_, value_type( t, t2, t3, t4 ) );
-                    return *this;
-                }
-    
-    
-    
-                template< typename T, typename T2, typename T3, typename T4,
-                typename T5 >
-                insert_assigner& operator()( const T& t, const T2& t2, const T3& t3,
-                                      const T4& t4, const T5& t5 )
-                {
-                    insert( c_, value_type( t, t2, t3, t4, t5 ) );
-                    return *this;
-                }
-    
-    
-    
-                template< typename T, typename T2, typename T3, typename T4,
-                typename T5, typename T6 >
-                insert_assigner& operator()( const T& t, const T2& t2, const T3& t3,
-                                      const T4& t4, const T5& t5, const T6& t6 )
-                {
-                    insert( c_, value_type( t, t2, t3, t4, t5, t6 ) );
-                    return *this;
-                }
-    
-            private:
-    
-                insert_assigner& operator=( const insert_assigner& );
-                C& c_;
-            };
-            
-        } // namespace 'detail'
-    } // namespace 'assignment'
+    template< typename C >
+    inline insert_assigner<C> 
+    insert( C& c )
+    {
+        return insert_assigner<C>( c );
+    }
+
+
+    template< typename C >
+    inline insert_assigner<C> 
+    assign( C& c )
+    {
+        c.clear();
+        return insert_assigner<C>( c );
+    }
+
+} // namespace 'assignment'
 } // namespace 'boost'
 
 #endif

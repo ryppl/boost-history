@@ -21,10 +21,10 @@ namespace boost
 {    
     namespace assignment
     {
-        class assign_exception : public std::exception
+        class assignment_exception : public std::exception
         {
             public:
-        	assign_exception( const char* what ) : what_( what )
+        	assignment_exception( const char* what ) : what_( what )
         	{ }
         
         

@@ -74,6 +74,13 @@ struct six
 	  const string&, const string&, const string& ) { }
 };
 
+
+struct takes_ref
+{
+    int& i_;
+    takes_ref( int& i) : i_(i) {}
+};
+
 int main()
 {
         
