@@ -235,8 +235,8 @@ void run_test_cases( BOOST_EXPLICIT_TEMPLATE_TYPE(Block) )
       b.set();
 
       // check
-      const bitset_type::size_type larger_than_size = 5 + b.size();
-      for(bitset_type::size_type i = 0; i <= larger_than_size; ++i) {
+      const typename bitset_type::size_type larger_than_size = 5 + b.size();
+      for(typename bitset_type::size_type i = 0; i <= larger_than_size; ++i) {
           Tests::find_next(b, i);
       }
       Tests::find_next(b, b.npos);
@@ -247,16 +247,16 @@ void run_test_cases( BOOST_EXPLICIT_TEMPLATE_TYPE(Block) )
       const int block_width = bitset_type::bits_per_block;
 
       bitset_type b(num_blocks * block_width);
-      bitset_type::size_type i = block_width - 1;
+      typename bitset_type::size_type i = block_width - 1;
       for ( ; i < b.size(); i += block_width) {
 
         b.set(i);
-        bitset_type::size_type first_in_block = i - (block_width - 1);
+        typename bitset_type::size_type first_in_block = i - (block_width - 1);
         b.set(first_in_block);
       }
 
       // check
-      const bitset_type::size_type larger_than_size = 5 + b.size();
+      const typename bitset_type::size_type larger_than_size = 5 + b.size();
       for (i = 0; i <= larger_than_size; ++i) {
           Tests::find_next(b, i);
       }
@@ -265,16 +265,16 @@ void run_test_cases( BOOST_EXPLICIT_TEMPLATE_TYPE(Block) )
   }
   {
       // bitset with alternate 1s and 0s
-      const bitset_type::size_type sz = 1000;
+      const typename bitset_type::size_type sz = 1000;
       bitset_type b(sz);
 
-      bitset_type::size_type i = 0;
+      typename bitset_type::size_type i = 0;
       for ( ; i < sz; ++i) {
         b[i] = (i%2 == 0);
       }
 
       // check
-      const bitset_type::size_type larger_than_size = 5 + b.size();
+      const typename bitset_type::size_type larger_than_size = 5 + b.size();
       for (i = 0; i <= larger_than_size; ++i) {
           Tests::find_next(b, i);
       }
