@@ -12,6 +12,7 @@
 // $Revision$
 
 #include <boost/mpl/for_each.hpp>
+
 #include <boost/mpl/list.hpp>
 #include <boost/mpl/range_c.hpp>
 #include <boost/mpl/identity.hpp>

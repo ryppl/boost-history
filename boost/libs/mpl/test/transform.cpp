@@ -2,9 +2,9 @@
 // Copyright Aleksey Gurtovoy 2000-2004
 // Copyright David Abrahams 2003-2004
 //
-// Use, modification and distribution are subject to the Boost Software 
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
-// at http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
@@ -13,14 +13,14 @@
 // $Revision$
 
 #include <boost/mpl/transform.hpp>
+
 #include <boost/mpl/list.hpp>
 #include <boost/mpl/list_c.hpp>
 #include <boost/mpl/equal.hpp>
 #include <boost/mpl/equal_to.hpp>
 #include <boost/mpl/plus.hpp>
-#include <boost/type_traits/add_pointer.hpp>
-
 #include <boost/mpl/aux_/test.hpp>
+#include <boost/type_traits/add_pointer.hpp>
 
 
 MPL_TEST_CASE()

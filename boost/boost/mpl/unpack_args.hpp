@@ -8,9 +8,9 @@
 
 // Copyright Aleksey Gurtovoy 2002-2004
 //
-// Use, modification and distribution are subject to the Boost Software 
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
-// at http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
@@ -22,6 +22,7 @@
 #   include <boost/mpl/apply.hpp>
 #   include <boost/mpl/at.hpp>
 #   include <boost/mpl/size.hpp>
+#   include <boost/mpl/aux_/config/nttp.hpp>
 #endif
 
 #include <boost/mpl/aux_/config/use_preprocessed.hpp>
@@ -36,7 +37,6 @@
 
 #   include <boost/mpl/limits/arity.hpp>
 #   include <boost/mpl/aux_/preprocessor/repeat.hpp>
-#   include <boost/mpl/aux_/config/nttp.hpp>
 #   include <boost/mpl/aux_/config/ctps.hpp>
 #   include <boost/preprocessor/iterate.hpp>
 #   include <boost/preprocessor/cat.hpp>
@@ -60,7 +60,7 @@ namespace aux {
 template< int size, typename F, typename Args >
 struct unpack_args_impl;
 #else
-template< BOOST_AUX_NTTP_DECL(int, size) > struct unpack_args_impl
+template< BOOST_MPL_AUX_NTTP_DECL(int, size) > struct unpack_args_impl
 {
     template< typename F, typename Args > struct apply;
 };

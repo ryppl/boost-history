@@ -142,6 +142,7 @@ template<> \
 struct name< BOOST_MPL_PP_ENUM(i, int) > \
 { \
     typedef int type; \
+    enum { value = 0 }; \
 }; \
 /**/
 #else

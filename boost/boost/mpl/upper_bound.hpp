@@ -17,8 +17,9 @@
 #include <boost/mpl/less.hpp>
 #include <boost/mpl/lambda.hpp>
 #include <boost/mpl/aux_/na_spec.hpp>
+#include <boost/mpl/aux_/config/workaround.hpp>
 
-#if defined(__BORLANDC__) && (__BORLANDC__ <= 0x561 || !defined(BOOST_STRICT_CONFIG))
+#if BOOST_WORKAROUND(__BORLANDC__, < 0x600)
 #   define BOOST_MPL_CFG_STRIPPED_DOWN_UPPER_BOUND_IMPL
 #endif
 
@@ -31,6 +32,7 @@
 #   include <boost/mpl/integral_c.hpp>
 #   include <boost/mpl/int.hpp>
 #   include <boost/mpl/eval_if.hpp>
+#   include <boost/mpl/prior.hpp>
 #   include <boost/mpl/deref.hpp>
 #   include <boost/mpl/apply.hpp>
 #   include <boost/mpl/aux_/value_wknd.hpp>
@@ -102,7 +104,7 @@ struct upper_bound_step_impl
             , typename deref<middle_>::type
             >::type cond_;
 
-    typedef typename minus< Distance, offset_, integral_c<long,1> >::type step_;
+    typedef typename prior< minus< Distance, offset_ > >::type step_;
     typedef upper_bound_step< offset_,Predicate,T,DeferredIterator > step_forward_;
     typedef upper_bound_step< step_,Predicate,T,next<middle_> > step_backward_;
     typedef typename eval_if<

@@ -12,6 +12,7 @@
 // $Revision$
 
 #include <boost/mpl/upper_bound.hpp>
+
 #include <boost/mpl/distance.hpp>
 #include <boost/mpl/list_c.hpp>
 #include <boost/mpl/less.hpp>

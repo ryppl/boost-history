@@ -29,9 +29,10 @@ struct vector_c_chooser<0>
         >
     struct result_
     {
-        typedef vector0_c<
+        typedef typename vector0_c<
               T
-            > type;
+            >::type type;
+
     };
 };
 
@@ -49,9 +50,10 @@ struct vector_c_chooser<1>
         >
     struct result_
     {
-        typedef vector1_c<
+        typedef typename vector1_c<
               T, C0
-            > type;
+            >::type type;
+
     };
 };
 
@@ -69,9 +71,10 @@ struct vector_c_chooser<2>
         >
     struct result_
     {
-        typedef vector2_c<
+        typedef typename vector2_c<
               T, C0, C1
-            > type;
+            >::type type;
+
     };
 };
 
@@ -89,9 +92,10 @@ struct vector_c_chooser<3>
         >
     struct result_
     {
-        typedef vector3_c<
+        typedef typename vector3_c<
               T, C0, C1, C2
-            > type;
+            >::type type;
+
     };
 };
 
@@ -109,9 +113,10 @@ struct vector_c_chooser<4>
         >
     struct result_
     {
-        typedef vector4_c<
+        typedef typename vector4_c<
               T, C0, C1, C2, C3
-            > type;
+            >::type type;
+
     };
 };
 
@@ -129,9 +134,10 @@ struct vector_c_chooser<5>
         >
     struct result_
     {
-        typedef vector5_c<
+        typedef typename vector5_c<
               T, C0, C1, C2, C3, C4
-            > type;
+            >::type type;
+
     };
 };
 
@@ -149,9 +155,10 @@ struct vector_c_chooser<6>
         >
     struct result_
     {
-        typedef vector6_c<
+        typedef typename vector6_c<
               T, C0, C1, C2, C3, C4, C5
-            > type;
+            >::type type;
+
     };
 };
 
@@ -169,9 +176,10 @@ struct vector_c_chooser<7>
         >
     struct result_
     {
-        typedef vector7_c<
+        typedef typename vector7_c<
               T, C0, C1, C2, C3, C4, C5, C6
-            > type;
+            >::type type;
+
     };
 };
 
@@ -189,9 +197,10 @@ struct vector_c_chooser<8>
         >
     struct result_
     {
-        typedef vector8_c<
+        typedef typename vector8_c<
               T, C0, C1, C2, C3, C4, C5, C6, C7
-            > type;
+            >::type type;
+
     };
 };
 
@@ -209,9 +218,10 @@ struct vector_c_chooser<9>
         >
     struct result_
     {
-        typedef vector9_c<
+        typedef typename vector9_c<
               T, C0, C1, C2, C3, C4, C5, C6, C7, C8
-            > type;
+            >::type type;
+
     };
 };
 
@@ -229,9 +239,10 @@ struct vector_c_chooser<10>
         >
     struct result_
     {
-        typedef vector10_c<
+        typedef typename vector10_c<
               T, C0, C1, C2, C3, C4, C5, C6, C7, C8, C9
-            > type;
+            >::type type;
+
     };
 };
 
@@ -249,9 +260,10 @@ struct vector_c_chooser<11>
         >
     struct result_
     {
-        typedef vector11_c<
+        typedef typename vector11_c<
               T, C0, C1, C2, C3, C4, C5, C6, C7, C8, C9, C10
-            > type;
+            >::type type;
+
     };
 };
 
@@ -269,9 +281,10 @@ struct vector_c_chooser<12>
         >
     struct result_
     {
-        typedef vector12_c<
+        typedef typename vector12_c<
               T, C0, C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11
-            > type;
+            >::type type;
+
     };
 };
 
@@ -289,9 +302,10 @@ struct vector_c_chooser<13>
         >
     struct result_
     {
-        typedef vector13_c<
+        typedef typename vector13_c<
               T, C0, C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12
-            > type;
+            >::type type;
+
     };
 };
 
@@ -309,9 +323,10 @@ struct vector_c_chooser<14>
         >
     struct result_
     {
-        typedef vector14_c<
+        typedef typename vector14_c<
               T, C0, C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12, C13
-            > type;
+            >::type type;
+
     };
 };
 
@@ -329,9 +344,10 @@ struct vector_c_chooser<15>
         >
     struct result_
     {
-        typedef vector15_c<
+        typedef typename vector15_c<
               T, C0, C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12, C13, C14
-            > type;
+            >::type type;
+
     };
 };
 
@@ -349,9 +365,10 @@ struct vector_c_chooser<16>
         >
     struct result_
     {
-        typedef vector16_c<
+        typedef typename vector16_c<
               T, C0, C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12, C13, C14, C15
-            > type;
+            >::type type;
+
     };
 };
 
@@ -369,9 +386,10 @@ struct vector_c_chooser<17>
         >
     struct result_
     {
-        typedef vector17_c<
+        typedef typename vector17_c<
               T, C0, C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12, C13, C14, C15, C16
-            > type;
+            >::type type;
+
     };
 };
 
@@ -389,9 +407,10 @@ struct vector_c_chooser<18>
         >
     struct result_
     {
-        typedef vector18_c<
+        typedef typename vector18_c<
               T, C0, C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12, C13, C14, C15, C16, C17
-            > type;
+            >::type type;
+
     };
 };
 
@@ -409,9 +428,10 @@ struct vector_c_chooser<19>
         >
     struct result_
     {
-        typedef vector19_c<
+        typedef typename vector19_c<
               T, C0, C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12, C13, C14, C15, C16, C17, C18
-            > type;
+            >::type type;
+
     };
 };
 
@@ -429,9 +449,10 @@ struct vector_c_chooser<20>
         >
     struct result_
     {
-        typedef vector20_c<
+        typedef typename vector20_c<
               T, C0, C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12, C13, C14, C15, C16, C17, C18, C19
-            > type;
+            >::type type;
+
     };
 };
 

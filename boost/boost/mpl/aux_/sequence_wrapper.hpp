@@ -263,9 +263,15 @@ struct BOOST_PP_CAT(AUX778076_SEQUENCE_NAME,_chooser)<i_>
         >
     struct result_
     {
+#if i_ > 0 || defined(AUX778076_SEQUENCE_INTEGRAL_WRAPPER)
+        typedef typename AUX778076_SEQUENCE_NAME_N(i_)<
+              AUX778076_SEQUENCE_N_ARGS(i_)
+            >::type type;
+#else
         typedef AUX778076_SEQUENCE_NAME_N(i_)<
               AUX778076_SEQUENCE_N_ARGS(i_)
-            > type;
+            >::type type;
+#endif
     };
 };
 

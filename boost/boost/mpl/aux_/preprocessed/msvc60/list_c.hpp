@@ -31,9 +31,10 @@ struct list_c_chooser<0>
         >
     struct result_
     {
-        typedef list0_c<
+        typedef typename list0_c<
               T
-            > type;
+            >::type type;
+
     };
 };
 
@@ -53,9 +54,10 @@ struct list_c_chooser<1>
         >
     struct result_
     {
-        typedef list1_c<
+        typedef typename list1_c<
               T, C0
-            > type;
+            >::type type;
+
     };
 };
 
@@ -75,9 +77,10 @@ struct list_c_chooser<2>
         >
     struct result_
     {
-        typedef list2_c<
+        typedef typename list2_c<
               T, C0, C1
-            > type;
+            >::type type;
+
     };
 };
 
@@ -97,9 +100,10 @@ struct list_c_chooser<3>
         >
     struct result_
     {
-        typedef list3_c<
+        typedef typename list3_c<
               T, C0, C1, C2
-            > type;
+            >::type type;
+
     };
 };
 
@@ -119,9 +123,10 @@ struct list_c_chooser<4>
         >
     struct result_
     {
-        typedef list4_c<
+        typedef typename list4_c<
               T, C0, C1, C2, C3
-            > type;
+            >::type type;
+
     };
 };
 
@@ -141,9 +146,10 @@ struct list_c_chooser<5>
         >
     struct result_
     {
-        typedef list5_c<
+        typedef typename list5_c<
               T, C0, C1, C2, C3, C4
-            > type;
+            >::type type;
+
     };
 };
 
@@ -163,9 +169,10 @@ struct list_c_chooser<6>
         >
     struct result_
     {
-        typedef list6_c<
+        typedef typename list6_c<
               T, C0, C1, C2, C3, C4, C5
-            > type;
+            >::type type;
+
     };
 };
 
@@ -185,9 +192,10 @@ struct list_c_chooser<7>
         >
     struct result_
     {
-        typedef list7_c<
+        typedef typename list7_c<
               T, C0, C1, C2, C3, C4, C5, C6
-            > type;
+            >::type type;
+
     };
 };
 
@@ -207,9 +215,10 @@ struct list_c_chooser<8>
         >
     struct result_
     {
-        typedef list8_c<
+        typedef typename list8_c<
               T, C0, C1, C2, C3, C4, C5, C6, C7
-            > type;
+            >::type type;
+
     };
 };
 
@@ -229,9 +238,10 @@ struct list_c_chooser<9>
         >
     struct result_
     {
-        typedef list9_c<
+        typedef typename list9_c<
               T, C0, C1, C2, C3, C4, C5, C6, C7, C8
-            > type;
+            >::type type;
+
     };
 };
 
@@ -251,9 +261,10 @@ struct list_c_chooser<10>
         >
     struct result_
     {
-        typedef list10_c<
+        typedef typename list10_c<
               T, C0, C1, C2, C3, C4, C5, C6, C7, C8, C9
-            > type;
+            >::type type;
+
     };
 };
 
@@ -273,9 +284,10 @@ struct list_c_chooser<11>
         >
     struct result_
     {
-        typedef list11_c<
+        typedef typename list11_c<
               T, C0, C1, C2, C3, C4, C5, C6, C7, C8, C9, C10
-            > type;
+            >::type type;
+
     };
 };
 
@@ -295,9 +307,10 @@ struct list_c_chooser<12>
         >
     struct result_
     {
-        typedef list12_c<
+        typedef typename list12_c<
               T, C0, C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11
-            > type;
+            >::type type;
+
     };
 };
 
@@ -317,9 +330,10 @@ struct list_c_chooser<13>
         >
     struct result_
     {
-        typedef list13_c<
+        typedef typename list13_c<
               T, C0, C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12
-            > type;
+            >::type type;
+
     };
 };
 
@@ -339,9 +353,10 @@ struct list_c_chooser<14>
         >
     struct result_
     {
-        typedef list14_c<
+        typedef typename list14_c<
               T, C0, C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12, C13
-            > type;
+            >::type type;
+
     };
 };
 
@@ -361,9 +376,10 @@ struct list_c_chooser<15>
         >
     struct result_
     {
-        typedef list15_c<
+        typedef typename list15_c<
               T, C0, C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12, C13, C14
-            > type;
+            >::type type;
+
     };
 };
 
@@ -383,9 +399,10 @@ struct list_c_chooser<16>
         >
     struct result_
     {
-        typedef list16_c<
+        typedef typename list16_c<
               T, C0, C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12, C13, C14, C15
-            > type;
+            >::type type;
+
     };
 };
 
@@ -405,9 +422,10 @@ struct list_c_chooser<17>
         >
     struct result_
     {
-        typedef list17_c<
+        typedef typename list17_c<
               T, C0, C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12, C13, C14, C15, C16
-            > type;
+            >::type type;
+
     };
 };
 
@@ -427,9 +445,10 @@ struct list_c_chooser<18>
         >
     struct result_
     {
-        typedef list18_c<
+        typedef typename list18_c<
               T, C0, C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12, C13, C14, C15, C16, C17
-            > type;
+            >::type type;
+
     };
 };
 
@@ -449,9 +468,10 @@ struct list_c_chooser<19>
         >
     struct result_
     {
-        typedef list19_c<
+        typedef typename list19_c<
               T, C0, C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12, C13, C14, C15, C16, C17, C18
-            > type;
+            >::type type;
+
     };
 };
 
@@ -471,9 +491,10 @@ struct list_c_chooser<20>
         >
     struct result_
     {
-        typedef list20_c<
+        typedef typename list20_c<
               T, C0, C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12, C13, C14, C15, C16, C17, C18, C19
-            > type;
+            >::type type;
+
     };
 };
 

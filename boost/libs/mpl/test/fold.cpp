@@ -1,9 +1,9 @@
 
 // Copyright Aleksey Gurtovoy 2000-2004
 //
-// Use, modification and distribution are subject to the Boost Software 
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
-// at http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
@@ -38,7 +38,7 @@ MPL_TEST_CASE()
         , if_< boost::is_float<_2>,next<_1>,_1 >
         >::type number_of_floats;
 
-    MPL_ASSERT_RELATION(number_of_floats::value, ==, 4);
+    MPL_ASSERT_RELATION( number_of_floats::value, ==, 4 );
 }
 
 MPL_TEST_CASE()
