@@ -89,8 +89,9 @@
       << DEMANGLE(*this).name() \
       << "(" << std::hex << this << std::dec << "): "
 #else
-#  define BOOST_GUI_LOG(id)   /##/
-#  define BOOST_GUI_LOGOB(id) /##/
+#  define BOOST_GUI_TRACE     false && std::cerr
+#  define BOOST_GUI_LOG(id)   BOOST_GUI_TRACE
+#  define BOOST_GUI_LOGOB(id) BOOST_GUI_TRACE
 #endif
 
 #endif
