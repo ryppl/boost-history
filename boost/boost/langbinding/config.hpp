@@ -1,4 +1,5 @@
 // Copyright (c) 2003 Daniel Wallin
+// Copyright (C) 2003 Rene Rivera
 
 // Permission is hereby granted, free of charge, to any person or organization 
 // obtaining a copy of the software covered by this license (the "Software") 
@@ -24,10 +25,16 @@
 #ifndef BOOST_LANGBINDING_CONFIG
 #define BOOST_LANGBINDING_CONFIG
 
-#ifdef BOOST_LANGBINDING_BUILD
-  #define BOOST_LANGBINDING_DECL __declspec(dllexport)
-#else
-  #define BOOST_LANGBINDING_DECL __declspec(dllimport)
+#if (defined(_WIN32) || defined(__CYGWIN__))
+  #ifdef BOOST_LANGBINDING_BUILD
+    #define BOOST_LANGBINDING_DECL __declspec(dllexport)
+  #else
+    #define BOOST_LANGBINDING_DECL __declspec(dllimport)
+  #endif
+#endif
+
+#ifndef BOOST_LANGBINDING_DECL
+  #define BOOST_LANGBINDING_DECL
 #endif
 
 #endif
