@@ -13,10 +13,10 @@ flags gcc-stlport STDHDRS : $(STLPORT_ROOT)$(SLASH)stlport $(GCC_INCLUDE_DIRECTO
 flags gcc-stlport STDLIBPATH : $(STLPORT_ROOT)$(SLASH)lib $(GCC_STDLIB_DIRECTORY) ;
 
 flags gcc-stlport DEFINES <runtime-build>debug : _STLP_DEBUG ;
-flags gcc-stlport STLPORT_LIB <runtime-link>static/<runtime-build>debug    : stlport_cygwin_stldebug ;
-flags gcc-stlport STLPORT_LIB <runtime-link>static/<runtime-build>release  : stlport_cygwin ;
-flags gcc-stlport STLPORT_LIB <runtime-link>dynamic/<runtime-build>debug    : stlport_cygwin_stldebug.dll.4.5.b8 ;
-flags gcc-stlport STLPORT_LIB <runtime-link>dynamic/<runtime-build>release  : stlport_cygwin.dll.4.5.b8 ;
+flags gcc-stlport FINDLIBS <runtime-link>static/<runtime-build>debug    : stlport_cygwin_stldebug ;
+flags gcc-stlport FINDLIBS <runtime-link>static/<runtime-build>release  : stlport_cygwin ;
+flags gcc-stlport FINDLIBS <runtime-link>dynamic/<runtime-build>debug    : stlport_cygwin_stldebug.dll.4.5.b8 ;
+flags gcc-stlport FINDLIBS <runtime-link>dynamic/<runtime-build>release  : stlport_cygwin.dll.4.5.b8 ;
 flags gcc-stlport CFLAGS <runtime-link>dynamic    : -D_STLP_USE_DYNAMIC_LIB ;
 
 

@@ -35,8 +35,8 @@ flags gcc LINKFLAGS <shared-linkable>true : -fPIC ;
 
 flags gcc LINKFLAGS <target-type>DLL : -shared ;
 flags gcc LIBPATH <library-path> ;
-flags gcc STLPORT_LIB ;
 flags gcc NEEDLIBS <library-file> ;
+flags gcc FINDLIBS <find-library> ;
 
 #### Link ####
 
@@ -53,7 +53,7 @@ rule Link-action
 # for gcc, we repeat all libraries so that dependencies are always resolved
 actions gcc-Link-action bind NEEDLIBS
 {
-    $(GCC_BIN_DIRECTORY)g++ $(IMPLIB_COMMAND)$(<[2]) $(LINKFLAGS) -o "$(<[1])" -L$(LIBPATH) -L$(STDLIBPATH) "$(>)" "$(NEEDLIBS)" "$(NEEDLIBS)" -l$(STLPORT_LIB)
+    $(GCC_BIN_DIRECTORY)g++ $(IMPLIB_COMMAND)$(<[2]) $(LINKFLAGS) -o "$(<[1])" -L$(LIBPATH) -L$(STDLIBPATH) "$(>)" "$(NEEDLIBS)" "$(NEEDLIBS)" -l$(FINDLIBS)
 }
 
 # older actions
