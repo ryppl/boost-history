@@ -2,21 +2,18 @@
 #ifndef BOOST_MPL_BITAND_HPP_INCLUDED
 #define BOOST_MPL_BITAND_HPP_INCLUDED
 
-// + file: boost/mpl/bitand.hpp
-// + last modified: 25/feb/03
-
-// Copyright (c) 2000-03
-// Aleksey Gurtovoy, Jaap Suter
+// Copyright (c) Aleksey Gurtovoy 2000-2003
+// Copyright (c) Jaap Suter 2000-2003
 //
-// Permission to use, copy, modify, distribute and sell this software
-// and its documentation for any purpose is hereby granted without fee, 
-// provided that the above copyright notice appears in all copies and 
-// that both the copyright notice and this permission notice appear in 
-// supporting documentation. No representations are made about the 
-// suitability of this software for any purpose. It is provided "as is" 
-// without express or implied warranty.
+// Use, modification and distribution are subject to the Boost Software 
+// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
+// at http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
+
+// $Source$
+// $Date$
+// $Revision$
 
 #include <boost/mpl/integral_c.hpp>
 #include <boost/mpl/aux_/typeof.hpp>
