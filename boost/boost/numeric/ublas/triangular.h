@@ -1104,7 +1104,7 @@ namespace numerics {
         array_type data_;
     };
 
-    // Triangular matrix adaptor class 
+    // Triangular matrix adaptor class
     template<class M, class F>
     class triangular_adaptor: 
         public matrix_expression<triangular_adaptor<M, F> > {
@@ -1147,11 +1147,11 @@ namespace numerics {
             data_ (m.data_) {}
 
         NUMERICS_INLINE
-        size_type size1 () const { 
+        size_type size1 () const {
             return data_.size1 ();
         }
         NUMERICS_INLINE
-        size_type size2 () const { 
+        size_type size2 () const {
             return data_.size2 ();
         }
         NUMERICS_INLINE
@@ -1168,8 +1168,10 @@ namespace numerics {
         value_type operator () (size_type i, size_type j) const {
             check (i < size1 (), bad_index ());
             check (j < size2 (), bad_index ());
+            // Need the const member dispatched.
+            const matrix_type &data = data_;
             if (functor_type::other (i, j))
-                return data_ (i, j);
+                return data (i, j);
             else if (functor_type::one (i, j))
                 return value_type (1);
             else
@@ -1198,12 +1200,12 @@ namespace numerics {
 
         // Assignment
         NUMERICS_INLINE
-        triangular_adaptor &operator = (const triangular_adaptor &m) { 
-            matrix_assign<scalar_assign<value_type, value_type> > () (*this, m); 
+        triangular_adaptor &operator = (const triangular_adaptor &m) {
+            matrix_assign<scalar_assign<value_type, value_type> > () (*this, m);
             return *this;
         }
         NUMERICS_INLINE
-        triangular_adaptor &assign_temporary (triangular_adaptor &m) { 
+        triangular_adaptor &assign_temporary (triangular_adaptor &m) {
             *this = m;
             return *this;
         }

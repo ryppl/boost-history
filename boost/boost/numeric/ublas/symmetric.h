@@ -1,4 +1,4 @@
-//  
+//
 //  Copyright (c) 2000-2002
 //  Joerg Walter, Mathias Koch
 //  
@@ -80,7 +80,7 @@ namespace numerics {
             size_ (0), 
             data_ (0) {}
         NUMERICS_INLINE
-        symmetric_matrix (size_type size1, size_type size2 = size1): 
+        symmetric_matrix (size_type size1, size_type size2 = size1):
             size_ (common (size1, size2)),
             data_ (functor1_type::packed_size (size1, size2)) {}
         NUMERICS_INLINE
@@ -162,7 +162,7 @@ namespace numerics {
             return *this;
         }
         NUMERICS_INLINE
-        symmetric_matrix &assign_temporary (symmetric_matrix &m) { 
+        symmetric_matrix &assign_temporary (symmetric_matrix &m) {
             swap (m);
             return *this;
         }
@@ -897,7 +897,7 @@ namespace numerics {
 
     // Symmetric matrix adaptor class 
     template<class M, class F>
-    class symmetric_adaptor: 
+    class symmetric_adaptor:
         public matrix_expression<symmetric_adaptor<M, F> > {
     public:      
         typedef const M const_matrix_type;
@@ -938,7 +938,7 @@ namespace numerics {
             check (data_.size1 () == data_.size2 (), bad_size ());
         }
         NUMERICS_INLINE
-        symmetric_adaptor (const symmetric_adaptor &m): 
+        symmetric_adaptor (const symmetric_adaptor &m):
             data_ (m.data_) {
             check (data_.size1 () == data_.size2 (), bad_size ());
         }
@@ -965,10 +965,12 @@ namespace numerics {
         value_type operator () (size_type i, size_type j) const {
             check (i < size1 (), bad_index ());
             check (j < size2 (), bad_index ());
+            // Need the const member dispatched.
+            const matrix_type &data = data_;
             if (functor_type::other (i, j))
-                return data_ (i, j);
+                return data (i, j);
             else
-                return data_ (j, i);
+                return data (j, i);
         }
         NUMERICS_INLINE
         reference operator () (size_type i, size_type j) {
@@ -1004,7 +1006,7 @@ namespace numerics {
         }
         template<class AE>
         NUMERICS_INLINE
-        symmetric_adaptor &operator = (const matrix_expression<AE> &ae) { 
+        symmetric_adaptor &operator = (const matrix_expression<AE> &ae) {
             matrix_assign<scalar_assign<value_type, value_type> > () (*this, matrix<value_type> (ae)); 
             return *this;
         }
@@ -1023,7 +1025,7 @@ namespace numerics {
         template<class AE>
         NUMERICS_INLINE
         symmetric_adaptor &plus_assign (const matrix_expression<AE> &ae) { 
-            matrix_assign<scalar_plus_assign<value_type, NUMERICS_TYPENAME AE::value_type> > () (*this, ae); 
+            matrix_assign<scalar_plus_assign<value_type, NUMERICS_TYPENAME AE::value_type> > () (*this, ae);
             return *this;
         }
         template<class AE>
@@ -1134,7 +1136,7 @@ namespace numerics {
         }
         NUMERICS_INLINE
         iterator1 find_last1 (int rank, size_type i, size_type j) {
-            if (rank == 1) 
+            if (rank == 1)
                 i = functor_type::restrict1 (i, j);
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
             return iterator1 (*this, i);
@@ -1236,7 +1238,7 @@ namespace numerics {
             // Dereference
             NUMERICS_INLINE
             value_type operator * () const {
-                return (*this) () (it1_, it2_); 
+                return (*this) () (it1_, it2_);
             }
 
             NUMERICS_INLINE
@@ -1266,7 +1268,7 @@ namespace numerics {
                 return it2_;
             }
 
-            // Assignment 
+            // Assignment
             NUMERICS_INLINE
             const_iterator1 &operator = (const const_iterator1 &it) {
                 container_const_reference<symmetric_adaptor>::assign (&it ());
@@ -1467,7 +1469,7 @@ namespace numerics {
             // Dereference
             NUMERICS_INLINE
             value_type operator * () const {
-                return (*this) () (it1_, it2_); 
+                return (*this) () (it1_, it2_);
             }
 
             NUMERICS_INLINE

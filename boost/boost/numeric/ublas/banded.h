@@ -966,7 +966,7 @@ namespace numerics {
 
     // Banded matrix adaptor class 
     template<class M>
-    class banded_adaptor: 
+    class banded_adaptor:
         public matrix_expression<banded_adaptor<M> > {
     public:      
         typedef const M const_matrix_type;
@@ -1034,18 +1034,20 @@ namespace numerics {
         value_type operator () (size_type i, size_type j) const {
             check (i < size1 (), bad_index ());
             check (j < size2 (), bad_index ());
+            // Need the const member dispatched.
+            const matrix_type &data = data_;
 #ifdef NUMERICS_OWN_BANDED
             size_type k = std::max (i, j);
             size_type l = lower_ + j - i;
             if (k < std::max (size1 (), size2 ()) &&
-                l < lower_ + 1 + upper_) 
-                return data_ (i, j); 
+                l < lower_ + 1 + upper_)
+                return data (i, j);
 #else
             size_type k = j;
             size_type l = upper_ + i - j;
             if (k < size2 () &&
-                l < lower_ + 1 + upper_) 
-                return data_ (i, j); 
+                l < lower_ + 1 + upper_)
+                return data (i, j);
 #endif
             return value_type ();
         }

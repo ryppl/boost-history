@@ -904,7 +904,7 @@ namespace numerics {
         array_type data_;
     };
 
-    // Hermitean matrix adaptor class 
+    // Hermitean matrix adaptor class
     template<class M, class F>
     class hermitean_adaptor: 
         public matrix_expression<hermitean_adaptor<M, F> > {
@@ -974,13 +974,15 @@ namespace numerics {
         value_type operator () (size_type i, size_type j) const {
             check (i < size1 (), bad_index ());
             check (j < size2 (), bad_index ());
-        // if (i == j) 
-            //     return detail::real (data_ (i, i));
-            // else 
-        if (functor_type::other (i, j))
-                return data_ (i, j);
+            // Need the const member dispatched.
+            const matrix_type &data = data_;
+            // if (i == j)
+            //     return detail::real (data (i, i));
+            // else
+            if (functor_type::other (i, j))
+                return data (i, j);
             else
-                return detail::conj (data_ (j, i));
+                return detail::conj (data (j, i));
         }
         NUMERICS_INLINE
         reference operator () (size_type i, size_type j) {
