@@ -28,6 +28,6 @@ MPL_TEST_CASE()
     typedef advance_c<first,10>::type iter1;
     typedef advance_c<last,-10>::type iter2;
 
-    MPL_ASSERT_SAME(2,( iter1, last ));
-    MPL_ASSERT_SAME(2,( iter2, first ));
+    MPL_ASSERT(( boost::is_same<iter1, last> ));
+    MPL_ASSERT(( boost::is_same<iter2, first> ));
 }
