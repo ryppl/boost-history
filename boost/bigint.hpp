@@ -102,31 +102,43 @@ class bigint : boost::operators<bigint> {
     return os;
   }
       
+public:
+  enum base_type {octal=8, decimal=10, hexadecimal=16};
+private:
 
   std::istream& from_istream(std::istream& is) {
 
     if(!is.good()) return is;
 
-    // RG - add support for hexadecimal and octal!
     // Manage prefix and postfix operations (RAII object)
     std::istream::sentry ipfx(is);
     
     if(ipfx) {
+      std::ios_base::fmtflags flags = is.flags();
+      base_type base;
+      if (flags & std::ios_base::dec) {
+        base = decimal;
+      } else if (flags & std::ios_base::hex) {
+        base = hexadecimal;
+      } else { // if (flags & std::ios_base::oct)
+        base = octal;
+      }
+
       // Read the number into a string, then initialize from that.
       std::string str;
       char c;
 
       // check for minus sign.
       is.get(c);
-      if(!(c == '-' || std::isdigit(c))) {
+      if(!(c == '-' || std::isxdigit(c))) {
         is.putback(c);
         // signal error
         is.clear(is.rdstate() | std::ios::failbit);
       } else {
         str.push_back(c);
 
-        // read in ASCII digits till it stops.
-        while(is.get(c) && isdigit(c))
+        // read in ASCII (hexadecimal) digits till it stops.
+        while(is.get(c) && isxdigit(c))
           str.push_back(c);
         if(is.fail())
           // clear error state
@@ -134,7 +146,7 @@ class bigint : boost::operators<bigint> {
         else
           // put back the last character retrieved
           is.putback(c);
-        *this = bigint(str);
+        *this = bigint(str,base);
       }
     }
     return is;
@@ -232,16 +244,13 @@ class bigint : boost::operators<bigint> {
     return rem;
   }
 
-public:
-  enum base_type {octal=8, decimal=10, hexadecimal=16};
-private:
   void from_string(std::string const& str, base_type a_base) {
 
     // RG: This may be better placed in a separate function.
     // Verify the goodness of the number
-    char const* valid_octals = "-01234567";
-    char const* valid_decimals = "-0123456789";
-    char const* valid_hexadecimals = "-0123456789abcdefABCDEF";
+    char const* valid_octals = "01234567";
+    char const* valid_decimals = "0123456789";
+    char const* valid_hexadecimals = "0123456789abcdefABCDEF";
 
     char const* valid;
     int factor;
@@ -263,12 +272,13 @@ private:
       break;
     }
 
-    // RG: All this could probably be stated better
+    // Error checking
     assert(!str.empty());
-    assert(str.find_first_not_of(valid) == std::string::npos);
-    assert(str[0] != '-' ||
-	   str.find_first_not_of(valid+1,1) == std::string::npos);
     assert(str[0] != '-' || str.size() > 1);
+    if(str[0] != '-') 
+      assert(str.find_first_not_of(valid) == std::string::npos);
+    else
+      assert(str.find_first_not_of(valid,1) == std::string::npos);
 
     std::string::const_iterator start = str.begin();
 
@@ -283,7 +293,7 @@ private:
     while (i != str.end()) {
       for(buffer_t::iterator j = buffer.begin(); j != buffer.end(); ++j)
         *j *= factor;
-      buffer.front() += *i - '0';
+      buffer.front() += isdigit(*i) ? *i - '0' : 10 + tolower(*i) - 'a';
       this->normalize();
       ++i;
     }
