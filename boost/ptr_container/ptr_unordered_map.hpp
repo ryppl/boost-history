@@ -12,8 +12,8 @@
  *
  */
 
-#ifndef BOOST_PTR_CONTAINER_PTR_MAP_HPP
-#define BOOST_PTR_CONTAINER_PTR_MAP_HPP
+#ifndef BOOST_PTR_CONTAINER_PTR_UNORDERED_MAP_HPP
+#define BOOST_PTR_CONTAINER_PTR_UNORDEERD_MAP_HPP
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1200)
 # pragma once
@@ -25,7 +25,7 @@
 namespace boost
 {
     template< typename M, typename T >
-    struct map_config
+    struct unordered_map_config
     {
         typedef M                                                                                                               container_type;
         typedef T                                                                                                               value_type;
@@ -37,10 +37,10 @@ namespace boost
     };
 
     
-    
+
     template< typename Key, typename T, typename Compare = std::less<Key>, 
               typename Allocator = std::allocator< std::pair<const Key, T*> > >
-    class ptr_map : public detail::associative_ptr_container< detail::map_config< std::map<Key,T*,Compare,Allocator>, T > >
+    class ptr_unordered_map : public detail::associative_ptr_container< detail::map_config< std::map<Key,T*,Compare,Allocator>, T > >
     {
         typedef detail::associative_ptr_container< detail::map_config< std::map<Key,T*,Compare,Allocator>, T > > Base;
     
@@ -124,7 +124,7 @@ namespace boost
 
     template< typename Key, typename T, typename Compare = std::less<Key>, 
               typename Allocator = std::allocator< std::pair<const Key, T*> > >
-    class ptr_multimap : public detail::associative_ptr_container< detail::map_config< std::multimap<Key,T*,Compare,Allocator>, T > >
+    class ptr_unordered_multimap : public detail::associative_ptr_container< detail::map_config< std::multimap<Key,T*,Compare,Allocator>, T > >
     {
         typedef detail::associative_ptr_container< detail::map_config< std::multimap<Key,T*,Compare,Allocator>, T > > Base;
     

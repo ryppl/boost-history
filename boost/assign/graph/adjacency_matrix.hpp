@@ -20,21 +20,6 @@
 #endif
 
 #include <boost/graph/adjacency_matrix.hpp>
-#include <boost/assign/graph/detail/tuple_inserter.hpp>
-
-namespace boost
-{
-namespace assignment
-{
-    template< typename D, typename VP, typename EP,
-              typename GP, typename A, typename Tuple >
-    inline void make_insertion( adjacency_matrix<D,VP,EP,GP,A>& g, const Tuple& t )
-    { 
-        detail::make_graph_insertion_impl< tuples::length<Tuple>::value >()( g, t ); 
-    }   
-}
-}   
-
 #include <boost/assign/tuple_insert_assigner.hpp>        
 
 namespace boost

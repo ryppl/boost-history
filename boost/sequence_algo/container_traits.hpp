@@ -126,9 +126,9 @@ namespace boost
 	    true_t  is_iterator( const std::front_insert_iterator<C>* );
 	    template< typename C >
 	    true_t  is_iterator( const std::insert_iterator<C>* );
-	    template< typename T, typename C, typename Tr >
-	    true_t  is_iterator( const std::istream_iterator<T,C,Tr>* );
-	    template< typename T, typename C, typename Tr >
+	    template< typename T, typename C, typename Tr, typename D >
+	    true_t  is_iterator( const std::istream_iterator<T,C,Tr,D>* ); 
+        template< typename T, typename C, typename Tr >
 	    true_t  is_iterator( const std::ostream_iterator<T,C,Tr>* );
 	    template< typename C, typename Tr >
 	    true_t  is_iterator( const std::istreambuf_iterator<C,Tr>* );
@@ -373,17 +373,16 @@ namespace boost
 	    static inline iterator 
 	    begin( const I& i )
 	    {
-		return i;
+            return i;
 	    }
 	    
-	    //
-	    // @todo: does this holds for all iterators?
-	    //
- 	    template< typename I >
- 	    static inline iterator
- 	    end( const I& i )
+ 
+        
+ 	    template< typename T, typename C, typename TR, typename D >
+ 	    static inline std::istream_iterator<T,C,TR,D>
+ 	    end( const std::istream_iterator<T,C,TR,D>& i )
  	    {
- 		return iterator();
+            return std::istream_iterator<T,C,TR,D>();
  	    }
 
 	};
@@ -491,6 +490,8 @@ namespace boost
 	                          >::type 
 		                  >::type 
 	                          >::type container_helper_t;
+    typedef container_helper_t        ch_t;
+        
     public:
 	typedef container_helper_t                             function_t;
 	typedef typename container_helper_t::size_type         size_type;

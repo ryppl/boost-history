@@ -14,6 +14,7 @@
 
 #include <boost/multi_array.hpp>
 #include <boost/assign/fixed_size_assigner.hpp>
+#include <boost/assign/array/multi_array.hpp>
 #include <iostream>
 #include <algorithm>
 #include <iterator>
@@ -58,7 +59,7 @@ int main()
                         (7,7)(8,8)(9,9);
         
         // use plain comma-separated list
-        A << 1,1, 2,2, 3,3, 
+        A << 1.,1, 2,2, 3,3, 
              4,4, 5,5, 6,6,
              7,7, 8,8, 9,9; 
     	

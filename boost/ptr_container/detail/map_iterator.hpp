@@ -31,8 +31,8 @@ namespace boost
         namespace detail
         {
             template< typename I, typename K, typename V > // I = original iterator, K = key type, V = return value type of operator*()
-            class map_iterator : bidirectional_iterator_helper< map_iterator<I,K,V>, std::pair<K,V>, 
-                                                                std::ptrdiff_t, std::pair<K,V>*, 
+            class map_iterator : bidirectional_iterator_helper< map_iterator<I,K,V>, std::pair<K,V>, // V*? 
+                                                                std::ptrdiff_t, std::pair<K,V>*,     // V*?
                                                                 V& >     
             {
                 I iter_;

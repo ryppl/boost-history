@@ -27,7 +27,7 @@
 
 using namespace std;
 using namespace boost;
-using namespace std::rel_ops;
+//using namespace std::rel_ops;
 
 //////////////////////////////////////////////////////////////////////////////
 // Test class 1: a class hierarchy

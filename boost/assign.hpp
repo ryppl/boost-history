@@ -21,5 +21,7 @@
 
 #include <boost/assign/stl.hpp>
 #include <boost/assign/ublas.hpp>
+#include <boost/assign/array/multi_array.hpp>
+#include <boost/assign/graph.hpp>
 
 #endif

@@ -58,18 +58,8 @@ namespace detail
         typedef T                                                             object_type;
     };
     
-    template< typename M, typename T >
-    struct map_config
-    {
-        typedef M                                                                                                               container_type;
-        typedef T                                                                                                               value_type;
-        typedef typename ptr_container::detail::map_iterator<typename M::iterator, typename M::key_type, T>                     iterator;
-        typedef typename ptr_container::detail::map_iterator<typename M::const_iterator, typename M::key_type, const T>         const_iterator;
-        typedef typename ptr_container::detail::map_iterator<typename M::reverse_iterator, typename M::key_type, T>             reverse_iterator;
-        typedef typename ptr_container::detail::map_iterator<typename M::const_reverse_iterator, typename M::key_type, const T> const_reverse_iterator;
-        typedef std::pair<const typename M::key_type, T*>                                                                       object_type;
-    };
-
+    
+    
     template< typename Config >
     class reversible_ptr_container : less_than_comparable< reversible_ptr_container< Config >, 
                                      equality_comparable< reversible_ptr_container< Config > > >, noncopyable
@@ -543,7 +533,8 @@ namespace detail
         
         std::auto_ptr<T> release_back() // nothrow
         {
-            if( empty() ) throw bad_ptr_container_operation( "'release_back()' on empty container" );
+            if( empty() ) 
+                throw bad_ptr_container_operation( "'release_back()' on empty container" );
             std::auto_ptr<T> ptr( c_.back() ); // nothrow
             c_.pop_back();                     // nothrow
             return ptr; 
@@ -563,11 +554,14 @@ namespace detail
         { 
             if( 0 == x )
                 throw bad_pointer( "Null pointer in 'replace()'" );
+            
+            std::auto_ptr<T> ptr( x );
+            
             if( empty() )
                 throw bad_ptr_container_operation( "'replace()' on empty container" );
 
-            std::auto_ptr<T> ptr( &*where ); // nothrow
-            *where.base() = x;               // nothrow, commit
+            std::auto_ptr<T> old( &*where ); // nothrow
+            *where.base() = x.release();     // nothrow, commit
         }
         
         void replace( size_type idx, T* x ) // strong
@@ -581,8 +575,7 @@ namespace detail
                 throw bad_index( "'replace()' out of bounds" );
             
             std::auto_ptr<T> old( c_[idx] ); // nothrow
-            c_[idx] = ptr.get();              // nothrow, commit
-            ptr.release();                    // nothrow
+            c_[idx] = ptr.release();         // nothrow, commit
         } 
                                   
         template< typename PtrContainer >
@@ -635,7 +628,7 @@ namespace detail
         {
             iterator i = begin();
             iterator e = end();
-            while( i != e )
+            while( i != e ) // bogus due to invalid iterators?
             {
                 iterator next_ = next( i );
                 

@@ -1,4 +1,4 @@
-// (C) Copyright Thorsten Ottosen 2002. Permission to copy, use, modify,
+// (C) Copyright Thorsten Ottosen 2002-3. Permission to copy, use, modify,
 // sell and distribute this software is granted provided this
 // copyright notice appears in all copies. This software is provided
 // "as is" without express or implied warranty, and with no claim as
@@ -15,14 +15,6 @@
 
 // Problem: should member functions be called automatically? Or should the user 
 // know that it is better to call map::find() than find( map )?
-
-// Thu May 30     I strongly disagree to have two different type for
-//                begin() and end() in std::pair<Iter1,Iter2>
-//                -- makes no sense if they describe a range [Herve]
-
-// Thu May 30     Proposed to put container interfaces
-//                into separate file for <algorithm> extensions [Herve]
-
 
 #ifndef BOOST_SEQUENCE_ALGO_CONTAINER_ALGORITHM_HPP
 #define BOOST_SEQUENCE_ALGO_CONTAINER_ALGORITHM_HPP
@@ -43,35 +35,35 @@ namespace boost
 template< typename C1, typename C2 >
 struct pair_return
 {
-    typedef typename std::pair
+    typedef BOOST_DEDUCED_TYPENAME std::pair
     < 
     typename container_traits<C1>::iterator,
     typename container_traits<C2>::iterator 
     > 
     mutable_pair;
 
-    typedef typename std::pair
+    typedef BOOST_DEDUCED_TYPENAME std::pair
     <
     typename container_traits<C1>::iterator,
     typename container_traits<C2>::const_iterator 
     >                                          
     mutable_const_pair;
 
-    typedef typename std::pair
+    typedef BOOST_DEDUCED_TYPENAME std::pair
     < 
     typename container_traits<C1>::const_iterator,
     typename container_traits<C2>::iterator 
     >                                         
     const_mutable_pair;
 
-    typedef typename std::pair
+    typedef BOOST_DEDUCED_TYPENAME std::pair
     < 
     typename container_traits<C1>::const_iterator,
     typename container_traits<C2>::const_iterator 
     >                                       
     const_pair;
 
-    typedef typename std::pair
+    typedef BOOST_DEDUCED_TYPENAME std::pair
     <
     typename container_traits<C1>::result_iterator,
     typename container_traits<C2>::result_iterator
@@ -107,28 +99,28 @@ for_each( const Container& c, UnaryOperation fun )
 namespace detail
 {
     template< typename C, typename T >
-    inline typename container_traits<C>::iterator 
+    inline BOOST_DEDUCED_TYPENAME container_traits<C>::iterator 
     find_impl( C& c, const T& value, associative_container_tag )
     {
         return c.find( value );
     }
 
     template< typename C, typename T >
-    inline typename container_traits<C>::const_iterator 
+    inline BOOST_DEDUCED_TYPENAME container_traits<C>::const_iterator 
     find_impl( const C& c, const T& value, associative_container_tag )
     {
         return c.find( value );
     }
 
     template< typename C, typename T >
-    inline typename container_traits<C>::iterator 
+    inline BOOST_DEDUCED_TYPENAME container_traits<C>::iterator 
     find_impl( C& c, const T& value, ... )
     {
         return std::find( begin( c ), end( c ), value );
     }
 
     template< typename C, typename T >
-    inline typename container_traits<C>::const_iterator 
+    inline BOOST_DEDUCED_TYPENAME container_traits<C>::const_iterator 
     find_impl( const C& c, const T& value, ... )
     {
         return std::find( begin( c ), end( c ), value );
@@ -136,7 +128,7 @@ namespace detail
 }
 
 template< typename Container, typename T >
-inline typename container_traits<Container>::iterator 
+inline BOOST_DEDUCED_TYPENAME container_traits<Container>::iterator 
 find( Container& c, const T& value )
 {
     return detail::find_impl( c, value, 
@@ -144,7 +136,7 @@ find( Container& c, const T& value )
 }    
 
 template< typename Container, typename T >
-inline typename container_traits<Container>::const_iterator 
+inline BOOST_DEDUCED_TYPENAME container_traits<Container>::const_iterator 
 find( const Container& c, const T& value )
 {
     return detail::find_impl( c, value, 
@@ -154,14 +146,14 @@ find( const Container& c, const T& value )
 
 
 template< typename Container, typename Predicate >
-inline typename container_traits<Container>::iterator 
+inline BOOST_DEDUCED_TYPENAME container_traits<Container>::iterator 
 find_if( Container& c, Predicate pred )
 {
     return std::find_if( begin( c ), end( c ), pred );
 }
 
 template< typename Container, typename Predicate >
-inline typename container_traits<Container>::const_iterator
+inline BOOST_DEDUCED_TYPENAME container_traits<Container>::const_iterator
 find_if( const Container& c, Predicate pred )
 {
     return std::find_if( begin( c ), end( c ), pred );
@@ -172,28 +164,28 @@ namespace ext
 {
 
     template< typename Container >
-    inline typename container_traits<Container>::iterator
+    inline BOOST_DEDUCED_TYPENAME container_traits<Container>::iterator
     adjacent_find( Container& c )
     {
         return std::adjacent_find( begin( c ), end( c ) );
     }
 
     template< typename Container >
-    inline typename container_traits<Container>::const_iterator
+    inline BOOST_DEDUCED_TYPENAME container_traits<Container>::const_iterator
     adjacent_find( const Container& c )
     {
         return std::adjacent_find( begin( c ), end( c ) );
     }
 
     template< typename Container, typename BinaryPredicate >
-    inline typename container_traits<Container>::iterator 
+    inline BOOST_DEDUCED_TYPENAME container_traits<Container>::iterator 
     adjacent_find( Container& c, BinaryPredicate pred )
     {
         return std::adjacent_find( begin( c ), end( c ), pred );
     }
 
     template< typename Container, typename BinaryPredicate >
-    inline typename container_traits<Container>::const_iterator 
+    inline BOOST_DEDUCED_TYPENAME container_traits<Container>::const_iterator 
     adjacent_find( const Container& c, BinaryPredicate pred )
     {
         return std::adjacent_find( begin( c ), end( c ), pred );
@@ -205,7 +197,7 @@ namespace ext
 
 
 template< typename Container1, typename Container2 >
-inline typename container_traits<Container1>::iterator 
+inline BOOST_DEDUCED_TYPENAME container_traits<Container1>::iterator 
 find_first_of( Container1& c1, const Container2& c2 )
 {
     return std::find_first_of( begin( c1 ), end( c1 ), 
@@ -213,7 +205,7 @@ find_first_of( Container1& c1, const Container2& c2 )
 }
 
 template< typename Container1, typename Container2 >
-inline typename container_traits<Container1>::const_iterator 
+inline BOOST_DEDUCED_TYPENAME container_traits<Container1>::const_iterator 
 find_first_of( const Container1& c1, const Container2& c2 )
 {
     return std::find_first_of( begin( c1 ), end( c1 ), 
@@ -222,7 +214,7 @@ find_first_of( const Container1& c1, const Container2& c2 )
 
 template< typename Container1, typename Container2, 
 typename BinaryPredicate >
-inline typename container_traits<Container1>::iterator 
+inline BOOST_DEDUCED_TYPENAME container_traits<Container1>::iterator 
 find_first_of( Container1& c1, const Container2& c2, 
                BinaryPredicate pred )
 {
@@ -232,7 +224,7 @@ find_first_of( Container1& c1, const Container2& c2,
 
 template< typename Container1, typename Container2, 
 typename BinaryPredicate >
-inline typename container_traits<Container1>::const_iterator 
+inline BOOST_DEDUCED_TYPENAME container_traits<Container1>::const_iterator 
 find_first_of( const Container1& c1, const Container2& c2, 
                BinaryPredicate pred )
 {
@@ -244,14 +236,14 @@ find_first_of( const Container1& c1, const Container2& c2,
 namespace detail
 {
     template< typename Container, typename T >
-    inline typename container_traits<Container>::difference_type
+    inline BOOST_DEDUCED_TYPENAME container_traits<Container>::difference_type
     count_impl( const Container& c, const T& value, associative_container_tag )
     {
         return c.count( value );
     }
 
     template< typename Container, typename T >
-    inline typename container_traits<Container>::difference_type
+    inline BOOST_DEDUCED_TYPENAME container_traits<Container>::difference_type
     count_impl( const Container& c, const T& value, ... )
     {
         return std::count( begin( c ), end( c ), value );
@@ -259,7 +251,7 @@ namespace detail
 }
 
 template< typename Container, typename T >
-inline typename container_traits<Container>::difference_type
+inline BOOST_DEDUCED_TYPENAME container_traits<Container>::difference_type
 count( const Container& c, const T& value )
 {
     return detail::count_impl( c, value, 
@@ -269,7 +261,7 @@ count( const Container& c, const T& value )
 
 
 template< typename Container, typename Predicate >
-inline typename container_traits<Container>::difference_type
+inline BOOST_DEDUCED_TYPENAME container_traits<Container>::difference_type
 count_if( const Container& c, Predicate pred )
 {
     return std::count_if( begin( c ), end( c ), pred );
@@ -336,14 +328,14 @@ namespace ext
 
 
 template< typename Container1, typename Container2 >
-inline typename container_traits<Container1>::iterator 
+inline BOOST_DEDUCED_TYPENAME container_traits<Container1>::iterator 
 search( Container1& c1, const Container2& c2 )
 {
     return std::search( begin( c1 ), end( c1 ), begin( c2 ), end( c2 ) );
 }
 
 template< typename Container1, typename Container2 >
-inline typename container_traits<Container1>::const_iterator 
+inline BOOST_DEDUCED_TYPENAME container_traits<Container1>::const_iterator 
 search( const Container1& c1, const Container2& c2 )
 {
     return std::search( begin( c1 ), end( c1 ), begin( c2 ), end( c2 ) );
@@ -351,7 +343,7 @@ search( const Container1& c1, const Container2& c2 )
 
 template< typename Container1, typename Container2,
 typename BinaryPredicate >
-inline typename container_traits<Container1>::iterator
+inline BOOST_DEDUCED_TYPENAME container_traits<Container1>::iterator
 search( Container1& c1, const Container2& c2, BinaryPredicate pred )
 {
     return std::search( begin( c1 ), end( c1 ), 
@@ -360,7 +352,7 @@ search( Container1& c1, const Container2& c2, BinaryPredicate pred )
 
 template< typename Container1, typename Container2,
 typename BinaryPredicate >
-inline typename container_traits<Container1>::const_iterator
+inline BOOST_DEDUCED_TYPENAME container_traits<Container1>::const_iterator
 search( const Container1& c1, const Container2& c2, BinaryPredicate pred )
 {
     return std::search( begin( c1 ), end( c1 ), 
@@ -373,14 +365,14 @@ namespace ext
 {
 
     template< typename Container, typename Integer, typename T >
-    inline typename container_traits<Container>::iterator 
+    inline BOOST_DEDUCED_TYPENAME container_traits<Container>::iterator 
     search_n( Container& c, Integer count, const T& value )
     {
         return std::search_n( begin( c ), end( c ), count, value );
     }
 
     template< typename Container, typename Integer, typename T >
-    inline typename container_traits<Container>::const_iterator 
+    inline BOOST_DEDUCED_TYPENAME container_traits<Container>::const_iterator 
     search_n( const Container& c, Integer count, const T& value )
     {
         return std::search_n( begin( c ), end( c ), count, value );
@@ -388,7 +380,7 @@ namespace ext
 
     template< typename Container, typename Integer, 
     typename T, typename BinaryPredicate >
-    inline typename container_traits<Container>::iterator
+    inline BOOST_DEDUCED_TYPENAME container_traits<Container>::iterator
     search_n( Container& c, Integer count, const T& value,
               BinaryPredicate pred )
     {
@@ -397,7 +389,7 @@ namespace ext
 
     template< typename Container, typename Integer, 
     typename T, typename BinaryPredicate >
-    inline typename container_traits<Container>::const_iterator
+    inline BOOST_DEDUCED_TYPENAME container_traits<Container>::const_iterator
     search_n( const Container& c, Integer count, const T& value,
               BinaryPredicate pred )
     {
@@ -408,7 +400,7 @@ namespace ext
 
 
 template< typename Container1, typename Container2 >
-inline typename container_traits<Container1>::iterator 
+inline BOOST_DEDUCED_TYPENAME container_traits<Container1>::iterator 
 find_end( Container1& c1, const Container2& c2 )
 {
     return std::find_end( begin( c1 ), end( c1 ),
@@ -416,7 +408,7 @@ find_end( Container1& c1, const Container2& c2 )
 }
 
 template< typename Container1, typename Container2 >
-inline typename container_traits<Container1>::const_iterator 
+inline BOOST_DEDUCED_TYPENAME container_traits<Container1>::const_iterator 
 find_end( const Container1& c1, const Container2& c2 )
 {
     return std::find_end( begin( c1 ), end( c1 ),
@@ -425,7 +417,7 @@ find_end( const Container1& c1, const Container2& c2 )
 
 template< typename Container1, typename Container2,
 typename BinaryPredicate >
-inline typename container_traits<Container1>::iterator 
+inline BOOST_DEDUCED_TYPENAME container_traits<Container1>::iterator 
 find_end( Container1& c1, const Container2& c2, BinaryPredicate pred )
 {
     return std::find_end( begin( c1 ), end( c1 ), 
@@ -434,7 +426,7 @@ find_end( Container1& c1, const Container2& c2, BinaryPredicate pred )
 
 template< typename Container1, typename Container2,
 typename BinaryPredicate >
-inline typename container_traits<Container1>::const_iterator 
+inline BOOST_DEDUCED_TYPENAME container_traits<Container1>::const_iterator 
 find_end( const Container1& c1, const Container2& c2, 
           BinaryPredicate pred )
 {
@@ -582,7 +574,7 @@ namespace ext
 namespace detail
 {
     template< typename C, typename T >
-    inline typename container_traits<C>::iterator 
+    inline BOOST_DEDUCED_TYPENAME container_traits<C>::iterator 
     remove_impl( C& c, const T& t, list_tag )
     {
         c.remove( t );
@@ -590,14 +582,14 @@ namespace detail
     }
 
     template< typename C, typename T >
-    inline typename container_traits<C>::iterator 
+    inline BOOST_DEDUCED_TYPENAME container_traits<C>::iterator 
     remove_impl( C& c, const T& t, ... )
     {
         return std::remove( begin( c ), end( c ), t );
     }
 
     template< typename C, typename BP >
-    inline typename container_traits<C>::iterator 
+    inline BOOST_DEDUCED_TYPENAME container_traits<C>::iterator 
     remove_if_impl( C& c, BP bp, list_tag )
     {
         c.remove_if( bp );
@@ -605,7 +597,7 @@ namespace detail
     }
 
     template< typename C, typename BP >
-    inline typename container_traits<C>::iterator 
+    inline BOOST_DEDUCED_TYPENAME container_traits<C>::iterator 
     remove_if_impl( C& c, BP bp, ... )
     {
         return std::remove_if( begin( c ), end( c ), bp );
@@ -613,7 +605,7 @@ namespace detail
 }
 
 template< typename Container, typename T >
-inline typename container_traits<Container>::iterator
+inline BOOST_DEDUCED_TYPENAME container_traits<Container>::iterator
 remove( Container& c, const T& what )
 {
     return detail::remove_impl( c, what, 
@@ -623,7 +615,7 @@ remove( Container& c, const T& what )
 
 
 template< typename Container, typename Predicate >
-inline typename container_traits<Container>::iterator
+inline BOOST_DEDUCED_TYPENAME container_traits<Container>::iterator
 remove_if( Container& c, Predicate pred )
 {
     return detail::remove_if_impl( c, pred, 
@@ -653,7 +645,7 @@ remove_copy_if( const Container& c, OutputIterator result, Predicate pred )
 namespace detail
 {
     template< typename C >
-    inline typename container_traits<C>::iterator 
+    inline BOOST_DEDUCED_TYPENAME container_traits<C>::iterator 
     unique_impl( C& c, list_tag )
     {
         c.unique();
@@ -661,14 +653,14 @@ namespace detail
     }
 
     template< typename C >
-    inline typename container_traits<C>::iterator 
+    inline BOOST_DEDUCED_TYPENAME container_traits<C>::iterator 
     unique_impl( C& c, ... )
     {
         return std::unique( begin( c ), end( c ) );
     }
 
     template< typename C, typename BP >
-    inline typename container_traits<C>::iterator 
+    inline BOOST_DEDUCED_TYPENAME container_traits<C>::iterator 
     unique_impl2( C& c, BP bp , list_tag )
     {
         c.unique( bp );
@@ -676,7 +668,7 @@ namespace detail
     }
 
     template< typename C, typename BP >
-    inline typename container_traits<C>::iterator 
+    inline BOOST_DEDUCED_TYPENAME container_traits<C>::iterator 
     unique_impl2( C& c, BP bp , ... )
     {
         return std::unique( begin( c ), end( c ), bp );
@@ -686,14 +678,14 @@ namespace detail
 namespace ext
 {
     template< typename Container >
-    inline typename container_traits<Container>::iterator
+    inline BOOST_DEDUCED_TYPENAME container_traits<Container>::iterator
     unique( Container& c )
     {
         return detail::unique_impl( c, container_traits<Container>::container_id() );
     }
 
     template< typename Container, typename BinaryPredicate >
-    inline typename container_traits<Container>::iterator
+    inline BOOST_DEDUCED_TYPENAME container_traits<Container>::iterator
     unique( Container& c, BinaryPredicate pred )
     {
         return detail::unique_impl2( c, pred, 
@@ -888,7 +880,7 @@ namespace ext
 
 
 template< typename Container1, typename InputIterator >
-inline typename container_traits<InputIterator>::iterator
+inline BOOST_DEDUCED_TYPENAME container_traits<InputIterator>::iterator
 partial_sort_copy( const Container1& c1, InputIterator& c2 )
 {
     return std::partial_sort_copy( begin( c1 ), end( c1 ), 
@@ -896,7 +888,7 @@ partial_sort_copy( const Container1& c1, InputIterator& c2 )
 }
 
 template< typename Container1, typename InputIterator, typename Compare >
-inline typename container_traits<InputIterator>::iterator
+inline BOOST_DEDUCED_TYPENAME container_traits<InputIterator>::iterator
 partial_sort_copy( const Container1& c1, InputIterator& c2, Compare comp )
 {
     return std::partial_sort_copy( begin( c1 ), end( c1 ), 
@@ -930,28 +922,28 @@ namespace ext
 namespace detail
 {
     template< typename Container, typename T >
-    inline typename container_traits<Container>::iterator
+    inline BOOST_DEDUCED_TYPENAME container_traits<Container>::iterator
     lower_bound( Container& c, const T& value, associative_container_tag ) 
     {
         return c.lower_bound( value );
     }
 
     template< typename Container, typename T >
-    inline typename container_traits<Container>::const_iterator
+    inline BOOST_DEDUCED_TYPENAME container_traits<Container>::const_iterator
     lower_bound( const Container& c, const T& value, associative_container_tag ) 
     {
         return c.lower_bound( value );
     }
 
     template< typename Container, typename T >
-    inline typename container_traits<Container>::iterator
+    inline BOOST_DEDUCED_TYPENAME container_traits<Container>::iterator
     lower_bound( Container& c, const T& value, ... )
     {
         return std::lower_bound( begin( c ), end( c ), value );
     }
 
     template< typename Container, typename T >
-    inline typename container_traits<Container>::const_iterator
+    inline BOOST_DEDUCED_TYPENAME container_traits<Container>::const_iterator
     lower_bound( const Container& c, const T& value, ... )
     {
         return std::lower_bound( begin( c ), end( c ), value );
@@ -959,7 +951,7 @@ namespace detail
 }
 
 template< typename Container, typename T >
-inline typename container_traits<Container>::iterator
+inline BOOST_DEDUCED_TYPENAME container_traits<Container>::iterator
 lower_bound( Container& c, const T& value )
 {
     return detail::lower_bound( c, value, 
@@ -967,7 +959,7 @@ lower_bound( Container& c, const T& value )
 }
 
 template< typename Container, typename T >
-inline typename container_traits<Container>::const_iterator
+inline BOOST_DEDUCED_TYPENAME container_traits<Container>::const_iterator
 lower_bound( const Container& c, const T& value )
 {
     return detail::lower_bound( c, value, 
@@ -977,14 +969,14 @@ lower_bound( const Container& c, const T& value )
 namespace ext
 {
     template< typename Container, typename T, typename Compare >
-    inline typename container_traits<Container>::iterator
+    inline BOOST_DEDUCED_TYPENAME container_traits<Container>::iterator
     lower_bound( Container& c, const T& value, Compare comp )
     {
         return std::lower_bound( begin( c ), end( c ), value, comp );
     }
 
     template< typename Container, typename T, typename Compare >
-    inline typename container_traits<Container>::const_iterator
+    inline BOOST_DEDUCED_TYPENAME container_traits<Container>::const_iterator
     lower_bound( const Container& c, const T& value, Compare comp )
     {
         return std::lower_bound( begin( c ), end( c ), value, comp );
@@ -996,28 +988,28 @@ namespace ext
 namespace detail
 {
     template< typename Container, typename T >
-    inline typename container_traits<Container>::iterator
+    inline BOOST_DEDUCED_TYPENAME container_traits<Container>::iterator
     upper_bound( Container& c, const T& value, associative_container_tag ) 
     {
         return c.upper_bound( value );
     }
 
     template< typename Container, typename T >
-    inline typename container_traits<Container>::const_iterator
+    inline BOOST_DEDUCED_TYPENAME container_traits<Container>::const_iterator
     upper_bound( const Container& c, const T& value, associative_container_tag ) 
     {
         return c.upper_bound( value );
     }
 
     template< typename Container, typename T >
-    inline typename container_traits<Container>::iterator
+    inline BOOST_DEDUCED_TYPENAME container_traits<Container>::iterator
     upper_bound( Container& c, const T& value, ... )
     {
         return std::upper_bound( begin( c ), end( c ), value );
     }
 
     template< typename Container, typename T >
-    inline typename container_traits<Container>::const_iterator
+    inline BOOST_DEDUCED_TYPENAME container_traits<Container>::const_iterator
     upper_bound( const Container& c, const T& value, ... )
     {
         return std::upper_bound( begin( c ), end( c ), value );
@@ -1025,7 +1017,7 @@ namespace detail
 }
 
 template< typename Container, typename T >
-inline typename container_traits<Container>::iterator
+inline BOOST_DEDUCED_TYPENAME container_traits<Container>::iterator
 upper_bound( Container& c, const T& value )
 {
     return detail::upper_bound( c, value,                                 
@@ -1033,7 +1025,7 @@ upper_bound( Container& c, const T& value )
 }
 
 template< typename Container, typename T >
-inline typename container_traits<Container>::const_iterator
+inline BOOST_DEDUCED_TYPENAME container_traits<Container>::const_iterator
 upper_bound( const Container& c, const T& value )
 {
     return detail::upper_bound( c, value,                               
@@ -1043,14 +1035,14 @@ upper_bound( const Container& c, const T& value )
 namespace ext
 {
     template< typename Container, typename T, typename Compare >
-    inline typename container_traits<Container>::iterator
+    inline BOOST_DEDUCED_TYPENAME container_traits<Container>::iterator
     upper_bound( Container& c, const T& value, Compare comp )
     {
         return std::upper_bound( begin( c ), end( c ), value, comp );
     }
 
     template< typename Container, typename T, typename Compare >
-    inline typename container_traits<Container>::const_iterator
+    inline BOOST_DEDUCED_TYPENAME container_traits<Container>::const_iterator
     upper_bound( const Container& c, const T& value, Compare comp )
     {
         return std::upper_bound( begin( c ), end( c ), value, comp );
@@ -1063,28 +1055,28 @@ namespace detail
 {
 
     template< typename Container, typename T >
-    inline typename pair_return<Container,Container>::mutable_pair 
+    inline BOOST_DEDUCED_TYPENAME pair_return<Container,Container>::mutable_pair 
     equal_range( Container& c, const T& value, associative_container_tag )
     {
         return c.equal_range( value );
     }
 
     template< typename Container, typename T >
-    inline typename pair_return<Container,Container>::const_pair 
+    inline BOOST_DEDUCED_TYPENAME pair_return<Container,Container>::const_pair 
     equal_range( const Container& c, const T& value, associative_container_tag )
     {
         return c.equal_range( value );
     }
 
     template< typename Container, typename T >
-    inline typename pair_return<Container,Container>::mutable_pair 
+    inline BOOST_DEDUCED_TYPENAME pair_return<Container,Container>::mutable_pair 
     equal_range( Container& c, const T& value, ... )
     {
         return std::equal_range( begin( c ), end( c ), value );
     }
 
     template< typename Container, typename T >
-    inline typename pair_return<Container,Container>::const_pair 
+    inline BOOST_DEDUCED_TYPENAME pair_return<Container,Container>::const_pair 
     equal_range( const Container& c, const T& value, ... )
     {
         return std::equal_range( begin( c ), end( c ), value );
@@ -1092,7 +1084,7 @@ namespace detail
 }
 
 template< typename Container, typename T >
-inline typename pair_return<Container,Container>::mutable_pair 
+inline BOOST_DEDUCED_TYPENAME pair_return<Container,Container>::mutable_pair 
 equal_range( Container& c, const T& value )
 {
     return detail::equal_range( c, value, 
@@ -1100,7 +1092,7 @@ equal_range( Container& c, const T& value )
 }
 
 template< typename Container, typename T >
-inline typename pair_return<Container,Container>::const_pair 
+inline BOOST_DEDUCED_TYPENAME pair_return<Container,Container>::const_pair 
 equal_range( const Container& c, const T& value )
 {
     return detail::equal_range( c, value, 
@@ -1111,14 +1103,14 @@ namespace ext
 {
 
     template< typename Container, typename T, typename Compare >
-    inline typename pair_return<Container,Container>::mutable_pair
+    inline BOOST_DEDUCED_TYPENAME pair_return<Container,Container>::mutable_pair
     equal_range( Container& c, const T& value, Compare comp )
     {
         return std::equal_range( begin( c ), end( c ), value, comp );
     }
 
     template< typename Container, typename T, typename Compare >
-    inline typename pair_return<Container,Container>::const_pair
+    inline BOOST_DEDUCED_TYPENAME pair_return<Container,Container>::const_pair
     equal_range( const Container& c, const T& value, Compare comp )
     {
         return std::equal_range( begin( c ), end( c ), value, comp );
@@ -1144,7 +1136,7 @@ binary_search_( const Container& c, const T& value, Compare comp )
 
 
 template< typename Container1, typename Container2, typename Container3 > 
-inline typename container_traits<Container3>::iterator
+inline BOOST_DEDUCED_TYPENAME container_traits<Container3>::iterator
 merge( const Container1& c1, const Container2& c2, Container3& c3 )
 {
     return std::merge( begin( c1 ), end( c1 ), begin( c2 ), 
@@ -1153,7 +1145,7 @@ merge( const Container1& c1, const Container2& c2, Container3& c3 )
 
 template< typename Container1, typename Container2, typename Container3, 
 typename Compare >
-inline typename container_traits<Container3>::iterator
+inline BOOST_DEDUCED_TYPENAME container_traits<Container3>::iterator
 merge( const Container1& c1, const Container2& c2, Container3& c3,
        Compare comp )
 {
@@ -1183,7 +1175,7 @@ inplace_merge_( Container& c,
 
 
 template< typename Container, typename Predicate >
-inline typename container_traits<Container>::iterator
+inline BOOST_DEDUCED_TYPENAME container_traits<Container>::iterator
 partition( Container& c, Predicate pred )
 {
     return std::partition( begin( c ), end( c ), pred );
@@ -1192,7 +1184,7 @@ partition( Container& c, Predicate pred )
 
 
 template< typename Container, typename Predicate >
-inline typename container_traits<Container>::iterator
+inline BOOST_DEDUCED_TYPENAME container_traits<Container>::iterator
 stable_partition( Container& c, Predicate pred )
 {
     return std::stable_partition( begin( c ), end( c ), pred );
@@ -1389,28 +1381,28 @@ namespace ext
 namespace ext
 {
     template< typename Container >
-    inline typename container_traits<Container>::iterator
+    inline BOOST_DEDUCED_TYPENAME container_traits<Container>::iterator
     min_element( Container& c )
     {
         return std::min_element( begin( c ), end( c ) );
     }
 
     template< typename Container >
-    inline typename container_traits<Container>::const_iterator
+    inline BOOST_DEDUCED_TYPENAME container_traits<Container>::const_iterator
     min_element( const Container& c )
     {
         return std::min_element( begin( c ),end( c ) );
     }
 
     template< typename Container, typename BinaryPredicate >
-    inline typename container_traits<Container>::iterator
+    inline BOOST_DEDUCED_TYPENAME container_traits<Container>::iterator
     min_element( Container& c, BinaryPredicate pred )
     {
         return std::min_element( begin( c ), end( c ), pred );
     }
 
     template< typename Container, typename BinaryPredicate >
-    inline typename container_traits<Container>::const_iterator
+    inline BOOST_DEDUCED_TYPENAME container_traits<Container>::const_iterator
     min_element( const Container& c, BinaryPredicate pred )
     {
         return std::min_element( begin( c ), end( c ), pred );
@@ -1419,28 +1411,28 @@ namespace ext
 
 
     template< typename Container >
-    inline typename container_traits<Container>::iterator
+    inline BOOST_DEDUCED_TYPENAME container_traits<Container>::iterator
     max_element( Container& c )
     {
         return std::max_element( begin( c ), end( c ) );
     }
 
     template< typename Container >
-    inline typename container_traits<Container>::const_iterator
+    inline BOOST_DEDUCED_TYPENAME container_traits<Container>::const_iterator
     max_element( const Container& c )
     {
         return std::max_element( begin( c ), end( c ) );
     }
 
     template< typename Container, typename BinaryPredicate >
-    inline typename container_traits<Container>::iterator
+    inline BOOST_DEDUCED_TYPENAME container_traits<Container>::iterator
     max_element( Container& c, BinaryPredicate pred )
     {
         return std::max_element( begin( c ), end( c ), pred );
     }
 
     template< typename Container, typename BinaryPredicate >
-    inline typename container_traits<Container>::const_iterator
+    inline BOOST_DEDUCED_TYPENAME container_traits<Container>::const_iterator
     max_element( const Container& c, BinaryPredicate pred )
     {
         return std::max_element( begin( c ), end( c ), pred );
