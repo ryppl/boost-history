@@ -1,0 +1,39 @@
+#  Boost container_traits library test suite Jamfile  ----------------------------
+#
+#  (C) Copyright Thorsten Ottosen 2003. Permission to copy, use, modify, sell and
+#  distribute this software is granted provided this copyright notice appears
+#  in all copies. This software is provided "as is" without express or implied
+#  warranty, and with no claim as to its suitability for any purpose.
+#
+#  (C) Copyright Pavol Droba 2003. Permission to copy, use, modify, sell and
+#  distribute this software is granted provided this copyright notice appears
+#  in all copies. This software is provided "as is" without express or implied
+#  warranty, and with no claim as to its suitability for any purpose.
+#
+#  See http://www.boost.org for updates, documentation, and revision history.
+
+subproject libs/stat/test ;
+
+# bring in rules for testing
+# SEARCH on testing.jam = $(BOOST_BUILD_PATH) ;
+# include testing.jam ;
+import testing ;
+
+rule stat-test ( name )
+{
+    return [ 
+      run $(name).cpp 
+#      <lib>$(BOOST_ROOT)libs/test/build/boost_test_exec_monitor
+      : : : <include>$(BOOST_ROOT) 
+           ]
+    ;
+}
+
+test-suite stat : 
+    [ stat-test univariate ]
+    [ stat-test bivariate ]
+    [ stat-test regression ]
+#    [ stat-test multivariate ]
+    
+    ;
+

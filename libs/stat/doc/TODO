@@ -1,0 +1,30 @@
+1. Guarantee only one iterator indirection
+3. property -> simple_property?
+5. summer interface should use inheritance + make data private + only allow functions to be called
+   to get values. mean-etc can be calculated lazily (problems with thread, better have freestanding helpers a la mean( const summer& s ).
+6. consider removing least square ilne without correlation coefficient; afterall, if you don't inspect the CC, you cannot 
+   use the very much (the saving is only a mere 2n)
+   
+7. problem: how do we distinguish between collection overloads and matrix overloads? eg
+
+        T mean( const Collection& );
+	(T,T) (bi)mean( const Collection&, const Collection& ); 
+	T variance( const Collection& ); 
+	(T,T) (bi)variance( const Collection&, const Collection& );
+	T covariance( const Collection&, const Collection& );
+	T correlation_coefficient( const Collection&, const Collection& );
+	Vector mean_vector( const Matrix& ); 
+	Matrix covariance_matrix( const Matrix& );
+	Matrix correlation_matrix( const Matrix& );
+	T      correlation( const Matrix&, size_t row, size_t column );
+	
+Solution 1: remove iterator based algorithms and require that they are used 
+            with make_iterator_range(); 
+
+8. investigate if an major interface can be used throughout instead of 
+   row_type_of and column_type of.
+   
+9. element_x_y() seems more generic than relying on column_iterator/row_iterator for matrix_operations.
+   What is the performance panalty?
+   
+10. change interface to sue boost.range 	        
