@@ -27,7 +27,7 @@ namespace boost { namespace numerics {
 
     // Array based sparse matrix class 
     template<class T, class F, class A>
-    class sparse_matrix: 
+    class sparse_matrix:
         public matrix_expression<sparse_matrix<T, F, A> > {
     public:      
         typedef std::size_t size_type;
@@ -470,7 +470,7 @@ namespace boost { namespace numerics {
             NUMERICS_INLINE
             const_iterator1 &operator ++ () {
                 const sparse_matrix &m = (*this) ();
-                if (rank_ == 1 && functor_type::one1 (m.size1 (), m.size2 ()) == 1)
+                if (rank_ == 1 && functor_type::fast1 ())
                     ++ it_;
                 else
                     *this = m.find1 (rank_, index1 () + 1, j_);
@@ -479,7 +479,7 @@ namespace boost { namespace numerics {
             NUMERICS_INLINE
             const_iterator1 &operator -- () {
                 const sparse_matrix &m = (*this) ();
-                if (rank_ == 1 && functor_type::one1 (m.size1 (), m.size2 ()) == 1)
+                if (rank_ == 1 && functor_type::fast1 ())
                     -- it_;
                 else
                     *this = m.find1 (rank_, index1 () - 1, j_);
@@ -605,7 +605,7 @@ namespace boost { namespace numerics {
             NUMERICS_INLINE
             iterator1 &operator ++ () {
                 sparse_matrix &m = (*this) ();
-                if (rank_ == 1 && functor_type::one1 (m.size1 (), m.size2 ()) == 1)
+                if (rank_ == 1 && functor_type::fast1 ())
                     ++ it_;
                 else
                     *this = m.find1 (rank_, index1 () + 1, j_);
@@ -614,7 +614,7 @@ namespace boost { namespace numerics {
             NUMERICS_INLINE
             iterator1 &operator -- () {
                 sparse_matrix &m = (*this) ();
-                if (rank_ == 1 && functor_type::one1 (m.size1 (), m.size2 ()) == 1)
+                if (rank_ == 1 && functor_type::fast1 ())
                     -- it_;
                 else
                     *this = m.find1 (rank_, index1 () - 1, j_);
@@ -745,7 +745,7 @@ namespace boost { namespace numerics {
             NUMERICS_INLINE
             const_iterator2 &operator ++ () {
                 const sparse_matrix &m = (*this) ();
-                if (rank_ == 1 && functor_type::one2 (m.size1 (), m.size2 ()) == 1)
+                if (rank_ == 1 && functor_type::fast2 ())
                     ++ it_;
                 else
                     *this = m.find2 (rank_, i_, index2 () + 1);
@@ -754,7 +754,7 @@ namespace boost { namespace numerics {
             NUMERICS_INLINE
             const_iterator2 &operator -- () {
                 const sparse_matrix &m = (*this) ();
-                if (rank_ == 1 && functor_type::one2 (m.size1 (), m.size2 ()) == 1)
+                if (rank_ == 1 && functor_type::fast2 ())
                     -- it_;
                 else
                     *this = m.find2 (rank_, i_, index2 () - 1);
@@ -880,7 +880,7 @@ namespace boost { namespace numerics {
             NUMERICS_INLINE
             iterator2 &operator ++ () {
                 sparse_matrix &m = (*this) ();
-                if (rank_ == 1 && functor_type::one2 (m.size1 (), m.size2 ()) == 1)
+                if (rank_ == 1 && functor_type::fast2 ())
                     ++ it_;
                 else
                     *this = m.find2 (rank_, i_, index2 () + 1);
@@ -889,7 +889,7 @@ namespace boost { namespace numerics {
             NUMERICS_INLINE
             iterator2 &operator -- () {
                 sparse_matrix &m = (*this) ();
-                if (rank_ == 1 && functor_type::one2 (m.size1 (), m.size2 ()) == 1)
+                if (rank_ == 1 && functor_type::fast2 ())
                     -- it_;
                 else
                     *this = m.find2 (rank_, i_, index2 () - 1);
@@ -1553,7 +1553,7 @@ namespace boost { namespace numerics {
             NUMERICS_INLINE
             const_iterator1 &operator ++ () {
                 const sparse_vector_of_sparse_vector &m = (*this) ();
-                if (rank_ == 1 && functor_type::one1 (m.size1 (), m.size2 ()) == 1)
+                if (rank_ == 1 && functor_type::fast1 ())
                     ++ it_;
                 else {
                     i_ = index1 () + 1;
@@ -1570,7 +1570,7 @@ namespace boost { namespace numerics {
             NUMERICS_INLINE
             const_iterator1 &operator -- () {
                 const sparse_vector_of_sparse_vector &m = (*this) ();
-                if (rank_ == 1 && functor_type::one1 (m.size1 (), m.size2 ()) == 1)
+                if (rank_ == 1 && functor_type::fast1 ())
                     -- it_;
                 else {
                     i_ = index1 () - 1;
@@ -1704,7 +1704,7 @@ namespace boost { namespace numerics {
             NUMERICS_INLINE
             iterator1 &operator ++ () {
                 sparse_vector_of_sparse_vector &m = (*this) ();
-                if (rank_ == 1 && functor_type::one1 (m.size1 (), m.size2 ()) == 1)
+                if (rank_ == 1 && functor_type::fast1 ())
                     ++ it_;
                 else {
                     i_ = index1 () + 1;
@@ -1721,7 +1721,7 @@ namespace boost { namespace numerics {
             NUMERICS_INLINE
             iterator1 &operator -- () {
                 sparse_vector_of_sparse_vector &m = (*this) ();
-                if (rank_ == 1 && functor_type::one1 (m.size1 (), m.size2 ()) == 1)
+                if (rank_ == 1 && functor_type::fast1 ())
                     -- it_;
                 else {
                     i_ = index1 () - 1;
@@ -1860,7 +1860,7 @@ namespace boost { namespace numerics {
             NUMERICS_INLINE
             const_iterator2 &operator ++ () {
                 const sparse_vector_of_sparse_vector &m = (*this) ();
-                if (rank_ == 1 && functor_type::one2 (m.size1 (), m.size2 ()) == 1)
+                if (rank_ == 1 && functor_type::fast2 ())
                     ++ it_;
                 else {
                     j_ = index2 () + 1;
@@ -1877,7 +1877,7 @@ namespace boost { namespace numerics {
             NUMERICS_INLINE
             const_iterator2 &operator -- () {
                 const sparse_vector_of_sparse_vector &m = (*this) ();
-                if (rank_ == 1 && functor_type::one2 (m.size1 (), m.size2 ()) == 1)
+                if (rank_ == 1 && functor_type::fast2 ())
                     -- it_;
                 else {
                     j_ = index2 () - 1;
@@ -2011,7 +2011,7 @@ namespace boost { namespace numerics {
             NUMERICS_INLINE
             iterator2 &operator ++ () {
                 sparse_vector_of_sparse_vector &m = (*this) ();
-                if (rank_ == 1 && functor_type::one2 (m.size1 (), m.size2 ()) == 1)
+                if (rank_ == 1 && functor_type::fast2 ())
                     ++ it_;
                 else {
                     j_ = index2 () + 1;
@@ -2028,7 +2028,7 @@ namespace boost { namespace numerics {
             NUMERICS_INLINE
             iterator2 &operator -- () {
                 sparse_vector_of_sparse_vector &m = (*this) ();
-                if (rank_ == 1 && functor_type::one2 (m.size1 (), m.size2 ()) == 1)
+                if (rank_ == 1 && functor_type::fast2 ())
                     -- it_;
                 else {
                     j_ = index2 () - 1;
@@ -2226,7 +2226,7 @@ namespace boost { namespace numerics {
         }
         NUMERICS_INLINE
         compressed_matrix (size_type size1, size_type size2, size_type non_zeros = 0): 
-            size1_ (size1), size2_ (size2), non_zeros_ (non_zeros), 
+            size1_ (size1), size2_ (size2), non_zeros_ (non_zeros),
             filled1_ (0), filled2_ (0),
             index1_data_ (functor_type::size1 (size1_, size2_)),
             index2_data_ (non_zeros), value_data_ (non_zeros) {
@@ -2536,7 +2536,7 @@ namespace boost { namespace numerics {
             for (;;) {
                 size_type element1 (functor_type::element1 (i, size1_, j, size2_));
                 size_type element2 (functor_type::element2 (i, size1_, j, size2_));
-                vector_const_iterator_type itv (index1_data ().begin () + element1);
+                vector_const_iterator_type itv (index1_data ().begin () + std::min (filled1_, element1));
                 if (filled1_ <= element1)
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
                     return const_iterator1 (*this, i);
@@ -2584,7 +2584,7 @@ namespace boost { namespace numerics {
             for (;;) {
                 size_type element1 (functor_type::element1 (i, size1_, j, size2_));
                 size_type element2 (functor_type::element2 (i, size1_, j, size2_));
-                vector_iterator_type itv (index1_data ().begin () + element1);
+                vector_iterator_type itv (index1_data ().begin () + std::min (filled1_, element1));
                 if (filled1_ <= element1)
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
                     return iterator1 (*this, i);
@@ -2632,7 +2632,7 @@ namespace boost { namespace numerics {
             for (;;) {
                 size_type element1 (functor_type::element1 (i, size1_, j, size2_));
                 size_type element2 (functor_type::element2 (i, size1_, j, size2_));
-                vector_const_iterator_type itv (index1_data ().begin () + element1);
+                vector_const_iterator_type itv (index1_data ().begin () + std::min (filled1_, element1));
                 if (filled1_ <= element1)
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
                     return const_iterator2 (*this, j);
@@ -2680,7 +2680,7 @@ namespace boost { namespace numerics {
             for (;;) {
                 size_type element1 (functor_type::element1 (i, size1_, j, size2_));
                 size_type element2 (functor_type::element2 (i, size1_, j, size2_));
-                vector_iterator_type itv (index1_data ().begin () + element1);
+                vector_iterator_type itv (index1_data ().begin () + std::min (filled1_, element1));
                 if (filled1_ <= element1)
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
                     return iterator2 (*this, j);
@@ -2788,7 +2788,7 @@ namespace boost { namespace numerics {
             NUMERICS_INLINE
             const_iterator1 &operator ++ () {
                 const compressed_matrix &m = (*this) ();
-                if (rank_ == 1 && functor_type::one1 (m.size1 (), m.size2 ()) == 1)
+                if (rank_ == 1 && functor_type::fast1 ())
                     ++ it_;
                 else {
                     i_ = index1 () + 1;
@@ -2800,7 +2800,7 @@ namespace boost { namespace numerics {
             NUMERICS_INLINE
             const_iterator1 &operator -- () {
                 const compressed_matrix &m = (*this) ();
-                if (rank_ == 1 && functor_type::one1 (m.size1 (), m.size2 ()) == 1)
+                if (rank_ == 1 && functor_type::fast1 ())
                     -- it_;
                 else {
                     i_ = index1 () - 1;
@@ -2824,13 +2824,13 @@ namespace boost { namespace numerics {
 
             NUMERICS_INLINE
             const_iterator2 begin () const {
-                    const compressed_matrix &m = (*this) ();
-                    return m.find_first2 (1, index1 (), 0); 
+                const compressed_matrix &m = (*this) ();
+                return m.find_first2 (1, index1 (), 0);
             }
             NUMERICS_INLINE
             const_iterator2 end () const {
                 const compressed_matrix &m = (*this) ();
-                return m.find_last2 (1, index1 (), m.size2 ()); 
+                return m.find_last2 (1, index1 (), m.size2 ());
             }
             NUMERICS_INLINE
             const_reverse_iterator2 rbegin () const {
@@ -2859,7 +2859,7 @@ namespace boost { namespace numerics {
                 }
             }
 
-            // Assignment 
+            // Assignment
             NUMERICS_INLINE
             const_iterator1 &operator = (const const_iterator1 &it) {
                 container_const_reference<compressed_matrix>::assign (&it ());
@@ -2880,7 +2880,7 @@ namespace boost { namespace numerics {
                     return it_ == it.it_;
                 } else {
                     return i_ == it.i_ && j_ == it.j_;
-                }  
+                }
             }
 
         private:
@@ -2929,7 +2929,7 @@ namespace boost { namespace numerics {
             NUMERICS_INLINE
             iterator1 &operator ++ () {
                 compressed_matrix &m = (*this) ();
-                if (rank_ == 1 && functor_type::one1 (m.size1 (), m.size2 ()) == 1)
+                if (rank_ == 1 && functor_type::fast1 ())
                     ++ it_;
                 else {
                     i_ = index1 () + 1;
@@ -2941,7 +2941,7 @@ namespace boost { namespace numerics {
             NUMERICS_INLINE
             iterator1 &operator -- () {
                 compressed_matrix &m = (*this) ();
-                if (rank_ == 1 && functor_type::one1 (m.size1 (), m.size2 ()) == 1)
+                if (rank_ == 1 && functor_type::fast1 ())
                     -- it_;
                 else {
                     i_ = index1 () - 1;
@@ -3021,7 +3021,7 @@ namespace boost { namespace numerics {
                     return it_ == it.it_;
                 } else {
                     return i_ == it.i_ && j_ == it.j_;
-                }  
+                }
             }
 
         private:
@@ -3075,7 +3075,7 @@ namespace boost { namespace numerics {
             NUMERICS_INLINE
             const_iterator2 &operator ++ () {
                 const compressed_matrix &m = (*this) ();
-                if (rank_ == 1 && functor_type::one2 (m.size1 (), m.size2 ()) == 1)
+                if (rank_ == 1 && functor_type::fast2 ())
                     ++ it_;
                 else {
                     j_ = index2 () + 1;
@@ -3087,7 +3087,7 @@ namespace boost { namespace numerics {
             NUMERICS_INLINE
             const_iterator2 &operator -- () {
                 const compressed_matrix &m = (*this) ();
-                if (rank_ == 1 && functor_type::one2 (m.size1 (), m.size2 ()) == 1)
+                if (rank_ == 1 && functor_type::fast2 ())
                     -- it_;
                 else {
                     j_ = index2 () - 1;
@@ -3112,12 +3112,12 @@ namespace boost { namespace numerics {
             NUMERICS_INLINE
             const_iterator1 begin () const {
                 const compressed_matrix &m = (*this) ();
-                return m.find_first1 (1, 0, index2 ()); 
+                return m.find_first1 (1, 0, index2 ());
             }
             NUMERICS_INLINE
             const_iterator1 end () const {
                 const compressed_matrix &m = (*this) ();
-                return m.find_last1 (1, m.size1 (), index2 ()); 
+                return m.find_last1 (1, m.size1 (), index2 ());
             }
             NUMERICS_INLINE
             const_reverse_iterator1 rbegin () const {
@@ -3167,7 +3167,7 @@ namespace boost { namespace numerics {
                     return it_ == it.it_;
                 } else {
                     return i_ == it.i_ && j_ == it.j_;
-                }  
+                }
             }
 
         private:
@@ -3216,7 +3216,7 @@ namespace boost { namespace numerics {
             NUMERICS_INLINE
             iterator2 &operator ++ () {
                 compressed_matrix &m = (*this) ();
-                if (rank_ == 1 && functor_type::one2 (m.size1 (), m.size2 ()) == 1)
+                if (rank_ == 1 && functor_type::fast2 ())
                     ++ it_;
                 else {
                     j_ = index2 () + 1;
@@ -3228,7 +3228,7 @@ namespace boost { namespace numerics {
             NUMERICS_INLINE
             iterator2 &operator -- () {
                 compressed_matrix &m = (*this) ();
-                if (rank_ == 1 && functor_type::one2 (m.size1 (), m.size2 ()) == 1)
+                if (rank_ == 1 && functor_type::fast2 ())
                     -- it_;
                 else {
                     j_ = index2 ();
@@ -3258,7 +3258,7 @@ namespace boost { namespace numerics {
             NUMERICS_INLINE
             iterator1 end () const {
                 compressed_matrix &m = (*this) ();
-                return m.find_last1 (1, m.size1 (), index2 ()); 
+                return m.find_last1 (1, m.size1 (), index2 ());
             }
             NUMERICS_INLINE
             reverse_iterator1 rbegin () const {
@@ -3287,7 +3287,7 @@ namespace boost { namespace numerics {
                 }
             }
 
-            // Assignment 
+            // Assignment
             NUMERICS_INLINE
             iterator2 &operator = (const iterator2 &it) {
                 container_reference<compressed_matrix>::assign (&it ());
@@ -3308,7 +3308,7 @@ namespace boost { namespace numerics {
                     return it_ == it.it_;
                 } else {
                     return i_ == it.i_ && j_ == it.j_;
-                }  
+                }
             }
 
         private:

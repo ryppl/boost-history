@@ -124,6 +124,8 @@
 #ifdef BOOST_MSVC
 
 // Open problems:
+// MSVC lacks some specializations in <cmath>
+#define NUMERICS_C_MATH
 // MSVC's conditional operator is said to be defect?
 #define NUMERICS_CONDITIONAL_DEFECT
 // MSVC allows to implement free function as friends.
@@ -149,7 +151,7 @@
 // }
 // But boost provides it for us.
 
-// This seems to be a problem in boost.config, should be fixed in CVS already.
+// This seems to be a problem in boost.config, but won't be fixed.
 #ifdef __SGI_STL_PORT
 #define BOOST_MSVC_STD_ITERATOR
 #endif
@@ -169,6 +171,10 @@
 // GCC 2.95.3 is known not to accept NUMERICS_MUTABLE_TEMPORARY (this seems to be correct).
 // GCC 2.95.3 allows to use iterator_base_traits.
 #define NUMERICS_USE_ITERATOR_BASE_TRAITS
+// GCC 2.95.3 needs NUMERICS_REVERSE_ITERATOR_OVERLOADS (this seems to be arguable).
+#define NUMERICS_REVERSE_ITERATOR_OVERLOADS
+
+#define NUMERICS_USE_LONG_DOUBLE
 
 #endif
 
@@ -177,7 +183,6 @@
 #ifdef __BORLANDC__
 
 // Open problems:
-// BCC is known not to accept NUMERICS_FLOAT_FUNCTION (this seems to be arguable).
 // BCC allows to implement free function as friends.
 #define NUMERICS_FRIEND_FUNCTION
 
@@ -189,6 +194,8 @@
 #ifdef __ICC
 
 // Open problems:
+// ICC lacks some specializations in <cmath>
+#define NUMERICS_C_MATH
 // ICC allows to implement free function as friends.
 #define NUMERICS_FRIEND_FUNCTION
 // ICC sometimes needs qualified type names.
@@ -201,8 +208,7 @@
 // Thanks to Kresimir Fresl for porting to Comeau.
 #ifdef __COMO__
 
-// Comeau allows to implement free function as friends.
-#define NUMERICS_FRIEND_FUNCTION
+// Comeau 4.2.45 seems to have problems with NUMERICS_FRIEND_FUNCTION (this seems to be arguable).
 // Comeau allows to use iterator_base_traits.
 #define NUMERICS_USE_ITERATOR_BASE_TRAITS
 

@@ -958,7 +958,8 @@ namespace boost { namespace numerics {
         typedef const matrix_range<const_self_type> const_matrix_range_type;
         typedef matrix_range<self_type> matrix_range_type;
 #endif
-        typedef typename proxy_traits<typename M::storage_category>::storage_category storage_category;
+        typedef typename storage_restrict_traits<typename M::storage_category,
+                                                 packed_proxy_tag>::storage_category storage_category;
         typedef typename F::packed_category packed_category;
         typedef typename M::orientation_category orientation_category;
 

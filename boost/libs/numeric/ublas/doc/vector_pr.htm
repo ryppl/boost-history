@@ -232,7 +232,8 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         typedef vector_reference&lt;vector_range&lt;vector_type&gt; &gt; closure_type;
         typedef typename V::const_iterator const_iterator_type;
         typedef typename V::iterator iterator_type;
-        typedef typename proxy_traits&lt;typename V::storage_category&gt;::storage_category storage_category;
+        typedef typename storage_restrict_traits&lt;typename V::storage_category,
+                                                 dense_proxy_tag&gt;::storage_category storage_category;
 
         // Construction and destruction
         vector_range (); 
@@ -597,7 +598,8 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         typedef vector_reference&lt;vector_slice&lt;vector_type&gt; &gt; closure_type;
         typedef slice::const_iterator const_iterator_type;
         typedef slice::const_iterator iterator_type;
-        typedef typename proxy_traits&lt;typename V::storage_category&gt;::storage_category storage_category;
+        typedef typename storage_restrict_traits&lt;typename V::storage_category,
+                                                 dense_proxy_tag&gt;::storage_category storage_category;
 
         // Construction and destruction
         vector_slice ();

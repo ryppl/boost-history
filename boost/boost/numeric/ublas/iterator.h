@@ -150,8 +150,20 @@ namespace boost { namespace numerics {
         }
     };
 
+#ifndef NUMERICS_FRIEND_FUNCTION
     template<class IC, class I, class T>
-    struct bidirectional_iterator_base: 
+    NUMERICS_INLINE
+    typename forward_iterator_base<IC, I, T>::derived_iterator_type operator ++ (forward_iterator_base<IC, I, T> &it, int) {
+        typedef NUMERICS_TYPENAME forward_iterator_base<IC, I, T>::derived_iterator_type derived_iterator_type;
+        derived_iterator_type &d (static_cast<derived_iterator_type &> (it));
+        derived_iterator_type tmp (d);
+        ++ d;
+        return tmp;
+    }
+#endif
+
+    template<class IC, class I, class T>
+    struct bidirectional_iterator_base:
         public boost::iterator<IC, T> {
         typedef I derived_iterator_type;
         typedef T derived_value_type;
@@ -197,6 +209,27 @@ namespace boost { namespace numerics {
             return ! (*d == it);
         }
     };
+
+#ifndef NUMERICS_FRIEND_FUNCTION
+    template<class IC, class I, class T>
+    NUMERICS_INLINE
+    typename bidirectional_iterator_base<IC, I, T>::derived_iterator_type operator ++ (bidirectional_iterator_base<IC, I, T> &it, int) {
+        typedef NUMERICS_TYPENAME bidirectional_iterator_base<IC, I, T>::derived_iterator_type derived_iterator_type;
+        derived_iterator_type &d (static_cast<derived_iterator_type &> (it));
+        derived_iterator_type tmp (d);
+        ++ d;
+        return tmp;
+    }
+    template<class IC, class I, class T>
+    NUMERICS_INLINE
+    typename bidirectional_iterator_base<IC, I, T>::derived_iterator_type operator -- (bidirectional_iterator_base<IC, I, T> &it, int) {
+        typedef NUMERICS_TYPENAME bidirectional_iterator_base<IC, I, T>::derived_iterator_type derived_iterator_type;
+        derived_iterator_type &d (static_cast<derived_iterator_type &> (it));
+        derived_iterator_type tmp (d);
+        -- d;
+        return tmp;
+    }
+#endif
 
     template<class IC, class I, class T, class D = std::ptrdiff_t>
     struct random_access_iterator_base:
@@ -274,12 +307,48 @@ namespace boost { namespace numerics {
         }
     };
 
+#ifndef NUMERICS_FRIEND_FUNCTION
+    template<class IC, class I, class T>
+    NUMERICS_INLINE
+    typename random_access_iterator_base<IC, I, T>::derived_iterator_type operator ++ (random_access_iterator_base<IC, I, T> &it, int) {
+        typedef NUMERICS_TYPENAME random_access_iterator_base<IC, I, T>::derived_iterator_type derived_iterator_type;
+        derived_iterator_type &d (static_cast<derived_iterator_type &> (it));
+        derived_iterator_type tmp (d);
+        ++ d;
+        return tmp;
+    }
+    template<class IC, class I, class T>
+    NUMERICS_INLINE
+    typename random_access_iterator_base<IC, I, T>::derived_iterator_type operator -- (random_access_iterator_base<IC, I, T> &it, int) {
+        typedef NUMERICS_TYPENAME random_access_iterator_base<IC, I, T>::derived_iterator_type derived_iterator_type;
+        derived_iterator_type &d (static_cast<derived_iterator_type &> (it));
+        derived_iterator_type tmp (d);
+        -- d;
+        return tmp;
+    }
+    template<class IC, class I, class T>
+    NUMERICS_INLINE
+    typename random_access_iterator_base<IC, I, T>::derived_iterator_type operator + (const random_access_iterator_base<IC, I, T> &it, std::ptrdiff_t n) {
+        typedef NUMERICS_TYPENAME random_access_iterator_base<IC, I, T>::derived_iterator_type derived_iterator_type;
+        derived_iterator_type tmp (static_cast<const derived_iterator_type &> (it));
+        return tmp += n;
+    }
+    template<class IC, class I, class T>
+    NUMERICS_INLINE
+    typename random_access_iterator_base<IC, I, T>::derived_iterator_type operator - (const random_access_iterator_base<IC, I, T> &it, std::ptrdiff_t n) {
+        typedef NUMERICS_TYPENAME random_access_iterator_base<IC, I, T>::derived_iterator_type derived_iterator_type;
+        derived_iterator_type tmp (static_cast<const derived_iterator_type &> (it));
+        return tmp -= n;
+    }
+#endif
+
 #ifdef BOOST_MSVC_STD_ITERATOR
 
     template <class I, class T, class R>
     class reverse_iterator:
-        public std::reverse_iterator<I, T, R> {
+        public std::reverse_bidirectional_iterator<I, T, R> {
     public:
+        typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
         typedef I iterator_type;
         typedef T value_type;
@@ -289,23 +358,21 @@ namespace boost { namespace numerics {
         // Construction and destruction
         NUMERICS_INLINE
         reverse_iterator ():
-            std::reverse_iterator<iterator_type, value_type, reference> () {}
+            std::reverse_bidirectional_iterator<iterator_type, value_type, reference> () {}
         NUMERICS_INLINE
         reverse_iterator (const iterator_type &it):
-            std::reverse_iterator<iterator_type, value_type, reference> (it) {}
+            std::reverse_bidirectional_iterator<iterator_type, value_type, reference> (it) {}
 
         // Arithmetic
         NUMERICS_INLINE
         reverse_iterator &operator += (difference_type n) {
             // Comeau recommends...
-            this->base () -= n;
-            return *this;
+            return *this = this->base () - n;
         }
         NUMERICS_INLINE
         reverse_iterator &operator -= (difference_type n) {
             // Comeau recommends...
-            this->base () += n;
-            return *this;
+            return *this = this->base () + n;
         }
 
         NUMERICS_INLINE
@@ -315,9 +382,10 @@ namespace boost { namespace numerics {
         }
 
         NUMERICS_INLINE
-        difference_type index () const {
+        size_type index () const {
             // Comeau recommends...
-            return this->base ().index ();
+            iterator_type tmp (this->base ());
+            return (-- tmp).index ();
         }
     };
 
@@ -333,11 +401,17 @@ namespace boost { namespace numerics {
         reverse_iterator<I, T, R> tmp (it);
         return tmp -= n;
     }
+    template<class I, class T, class R>
+    NUMERICS_INLINE
+    std::ptrdiff_t operator - (const reverse_iterator<I, T, R> &it1, const reverse_iterator<I, T, R> &it2) {
+        return it2.base () - it1.base ();
+    }
 
     template <class I, class T, class R>
     class reverse_iterator1:
-        public std::reverse_iterator<I, T, R> {
+        public std::reverse_bidirectional_iterator<I, T, R> {
     public:
+        typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
         typedef I iterator_type;
         typedef T value_type;
@@ -351,23 +425,21 @@ namespace boost { namespace numerics {
         // Construction and destruction
         NUMERICS_INLINE
         reverse_iterator1 ():
-            std::reverse_iterator<iterator_type, value_type, reference> () {}
+            std::reverse_bidirectional_iterator<iterator_type, value_type, reference> () {}
         NUMERICS_INLINE
         reverse_iterator1 (const iterator_type &it):
-            std::reverse_iterator<iterator_type, value_type, reference> (it) {}
+            std::reverse_bidirectional_iterator<iterator_type, value_type, reference> (it) {}
 
         // Arithmetic
         NUMERICS_INLINE
         reverse_iterator1 &operator += (difference_type n) {
             // Comeau recommends...
-            this->base () -= n;
-            return *this;
+            return *this = this->base () - n;
         }
         NUMERICS_INLINE
         reverse_iterator1 &operator -= (difference_type n) {
             // Comeau recommends...
-            this->base () += n;
-            return *this;
+            return *this = this->base () + n;
         }
 
         NUMERICS_INLINE
@@ -377,14 +449,16 @@ namespace boost { namespace numerics {
         }
 
         NUMERICS_INLINE
-        difference_type index1 () const {
+        size_type index1 () const {
             // Comeau recommends...
-            return this->base ().index1 ();
+            iterator_type tmp (this->base ());
+            return (-- tmp).index1 ();
         }
         NUMERICS_INLINE
-        difference_type index2 () const {
+        size_type index2 () const {
             // Comeau recommends...
-            return this->base ().index2 ();
+            iterator_type tmp (this->base ());
+            return (-- tmp).index2 ();
         }
 
 #ifndef NUMERICS_USE_CANONICAL_ITERATOR
@@ -421,11 +495,17 @@ namespace boost { namespace numerics {
         reverse_iterator1<I, T, R> tmp (it);
         return tmp -= n;
     }
+    template<class I, class T, class R>
+    NUMERICS_INLINE
+    std::ptrdiff_t operator - (const reverse_iterator1<I, T, R> &it1, const reverse_iterator1<I, T, R> &it2) {
+        return it2.base () - it1.base ();
+    }
 
     template <class I, class T, class R>
     class reverse_iterator2:
-        public std::reverse_iterator<I, T, R> {
+        public std::reverse_bidirectional_iterator<I, T, R> {
     public:
+        typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
         typedef I iterator_type;
         typedef T value_type;
@@ -439,23 +519,21 @@ namespace boost { namespace numerics {
         // Construction and destruction
         NUMERICS_INLINE
         reverse_iterator2 ():
-            std::reverse_iterator<iterator_type, value_type, reference> () {}
+            std::reverse_bidirectional_iterator<iterator_type, value_type, reference> () {}
         NUMERICS_INLINE
         reverse_iterator2 (const iterator_type &it):
-            std::reverse_iterator<iterator_type, value_type, reference> (it) {}
+            std::reverse_bidirectional_iterator<iterator_type, value_type, reference> (it) {}
 
         // Arithmetic
         NUMERICS_INLINE
         reverse_iterator2 &operator += (difference_type n) {
             // Comeau recommends...
-            this->base () -= n;
-            return *this;
+            return *this = this->base () - n;
         }
         NUMERICS_INLINE
         reverse_iterator2 &operator -= (difference_type n) {
             // Comeau recommends...
-            this->base () += n;
-            return *this;
+            return *this = this->base () + n;
         }
 
         NUMERICS_INLINE
@@ -465,14 +543,16 @@ namespace boost { namespace numerics {
         }
 
         NUMERICS_INLINE
-        difference_type index1 () const {
+        size_type index1 () const {
             // Comeau recommends...
-            return this->base ().index1 ();
+            iterator_type tmp (this->base ());
+            return (-- tmp).index1 ();
         }
         NUMERICS_INLINE
-        difference_type index2 () const {
+        size_type index2 () const {
             // Comeau recommends...
-            return this->base ().index2 ();
+            iterator_type tmp (this->base ());
+            return (-- tmp).index2 ();
         }
 
 #ifndef NUMERICS_USE_CANONICAL_ITERATOR
@@ -509,6 +589,11 @@ namespace boost { namespace numerics {
         reverse_iterator2<I, T, R> tmp (it);
         return tmp -= n;
     }
+    template<class I, class T, class R>
+    NUMERICS_INLINE
+    std::ptrdiff_t operator - (const reverse_iterator2<I, T, R> &it1, const reverse_iterator2<I, T, R> &it2) {
+        return it2.base () - it1.base ();
+    }
 
 #else
 
@@ -516,6 +601,7 @@ namespace boost { namespace numerics {
     class reverse_iterator:
         public std::reverse_iterator<I> {
     public:
+        typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
         typedef I iterator_type;
         typedef typename I::container_type container_type;
@@ -528,19 +614,43 @@ namespace boost { namespace numerics {
         reverse_iterator (const iterator_type &it):
             std::reverse_iterator<iterator_type> (it) {}
 
+#ifdef NUMERICS_REVERSE_ITERATOR_OVERLOADS
         // Arithmetic
+        NUMERICS_INLINE
+        reverse_iterator &operator ++ () {
+            // Comeau recommends...
+            return *this = -- this->base ();
+        }
+        NUMERICS_INLINE
+        reverse_iterator operator ++ (int) {
+            // Comeau recommends...
+            reverse_iterator tmp (*this);
+            *this = -- this->base ();
+            return tmp;
+        }
+        NUMERICS_INLINE
+        reverse_iterator &operator -- () {
+            // Comeau recommends...
+            return *this = ++ this->base ();
+        }
+        NUMERICS_INLINE
+        reverse_iterator operator -- (int) {
+            // Comeau recommends...
+            reverse_iterator tmp (*this);
+            *this = ++ this->base ();
+            return tmp;
+        }
         NUMERICS_INLINE
         reverse_iterator &operator += (difference_type n) {
             // Comeau recommends...
-            this->base () -= n;
-            return *this;
+            return *this = this->base () - n;
         }
         NUMERICS_INLINE
         reverse_iterator &operator -= (difference_type n) {
             // Comeau recommends...
-            this->base () += n;
-            return *this;
+            return *this = this->base () + n;
         }
+#endif
 
 #ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
@@ -553,6 +663,10 @@ namespace boost { namespace numerics {
             reverse_iterator tmp (it);
             return tmp -= n;
         }
+        NUMERICS_INLINE
+        friend difference_type operator - (const reverse_iterator &it1, const reverse_iterator &it2) {
+            return it2.base () - it1.base ();
+        }
 #endif
 
         NUMERICS_INLINE
@@ -562,16 +676,38 @@ namespace boost { namespace numerics {
         }
 
         NUMERICS_INLINE
-        difference_type index () const {
+        size_type index () const {
             // Comeau recommends...
-            return this->base ().index ();
+            iterator_type tmp (this->base ());
+            return (-- tmp).index ();
         }
     };
+
+#ifndef NUMERICS_FRIEND_FUNCTION
+    template<class I>
+    NUMERICS_INLINE
+    reverse_iterator<I> operator + (const reverse_iterator<I> &it, std::ptrdiff_t n) {
+        reverse_iterator<I> tmp (it);
+        return tmp += n;
+    }
+    template<class I>
+    NUMERICS_INLINE
+    reverse_iterator<I> operator - (const reverse_iterator<I> &it, std::ptrdiff_t n) {
+        reverse_iterator<I> tmp (it);
+        return tmp -= n;
+    }
+    template<class I>
+    NUMERICS_INLINE
+    std::ptrdiff_t operator - (const reverse_iterator<I> &it1, const reverse_iterator<I> &it2) {
+        return it2.base () - it1.base ();
+    }
+#endif
 
     template <class I>
     class reverse_iterator1:
         public std::reverse_iterator<I> {
     public:
+        typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
         typedef I iterator_type;
         typedef typename I::container_type container_type;
@@ -588,19 +724,43 @@ namespace boost { namespace numerics {
         reverse_iterator1 (const iterator_type &it):
             std::reverse_iterator<iterator_type> (it) {}
 
+#ifdef NUMERICS_REVERSE_ITERATOR_OVERLOADS
         // Arithmetic
+        NUMERICS_INLINE
+        reverse_iterator1 &operator ++ () {
+            // Comeau recommends...
+            return *this = -- this->base ();
+        }
+        NUMERICS_INLINE
+        reverse_iterator1 operator ++ (int) {
+            // Comeau recommends...
+            reverse_iterator1 tmp (*this);
+            *this = -- this->base ();
+            return tmp;
+        }
+        NUMERICS_INLINE
+        reverse_iterator1 &operator -- () {
+            // Comeau recommends...
+            return *this = ++ this->base ();
+        }
+        NUMERICS_INLINE
+        reverse_iterator1 operator -- (int) {
+            // Comeau recommends...
+            reverse_iterator1 tmp (*this);
+            *this = ++ this->base ();
+            return tmp;
+        }
         NUMERICS_INLINE
         reverse_iterator1 &operator += (difference_type n) {
             // Comeau recommends...
-            this->base () -= n;
-            return *this;
+            return *this = this->base () - n;
         }
         NUMERICS_INLINE
         reverse_iterator1 &operator -= (difference_type n) {
             // Comeau recommends...
-            this->base () += n;
-            return *this;
+            return *this = this->base () + n;
         }
+#endif
 
 #ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
@@ -613,6 +773,10 @@ namespace boost { namespace numerics {
             reverse_iterator1 tmp (it);
             return tmp -= n;
         }
+        NUMERICS_INLINE
+        friend difference_type operator - (const reverse_iterator1 &it1, const reverse_iterator1 &it2) {
+            return it2.base () - it1.base ();
+        }
 #endif
 
         NUMERICS_INLINE
@@ -622,14 +786,16 @@ namespace boost { namespace numerics {
         }
 
         NUMERICS_INLINE
-        difference_type index1 () const {
+        size_type index1 () const {
             // Comeau recommends...
-            return this->base ().index1 ();
+            iterator_type tmp (this->base ());
+            return (-- tmp).index1 ();
         }
         NUMERICS_INLINE
-        difference_type index2 () const {
+        size_type index2 () const {
             // Comeau recommends...
-            return this->base ().index2 ();
+            iterator_type tmp (this->base ());
+            return (-- tmp).index2 ();
         }
 
 #ifndef NUMERICS_USE_CANONICAL_ITERATOR
@@ -654,10 +820,31 @@ namespace boost { namespace numerics {
 #endif
     };
 
+#ifndef NUMERICS_FRIEND_FUNCTION
+    template<class I>
+    NUMERICS_INLINE
+    reverse_iterator1<I> operator + (const reverse_iterator1<I> &it, std::ptrdiff_t n) {
+        reverse_iterator1<I> tmp (it);
+        return tmp += n;
+    }
+    template<class I>
+    NUMERICS_INLINE
+    reverse_iterator1<I> operator - (const reverse_iterator1<I> &it, std::ptrdiff_t n) {
+        reverse_iterator1<I> tmp (it);
+        return tmp -= n;
+    }
+    template<class I>
+    NUMERICS_INLINE
+    std::ptrdiff_t operator - (const reverse_iterator1<I> &it1, const reverse_iterator1<I> &it2) {
+        return it2.base () - it1.base ();
+    }
+#endif
+
     template <class I>
     class reverse_iterator2:
         public std::reverse_iterator<I> {
     public:
+        typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
         typedef I iterator_type;
         typedef typename I::container_type container_type;
@@ -674,19 +861,43 @@ namespace boost { namespace numerics {
         reverse_iterator2 (const iterator_type &it):
             std::reverse_iterator<iterator_type> (it) {}
 
+#ifdef NUMERICS_REVERSE_ITERATOR_OVERLOADS
         // Arithmetic
+        NUMERICS_INLINE
+        reverse_iterator2 &operator ++ () {
+            // Comeau recommends...
+            return *this = -- this->base ();
+        }
+        NUMERICS_INLINE
+        reverse_iterator2 operator ++ (int) {
+            // Comeau recommends...
+            reverse_iterator2 tmp (*this);
+            *this = -- this->base ();
+            return tmp;
+        }
+        NUMERICS_INLINE
+        reverse_iterator2 &operator -- () {
+            // Comeau recommends...
+            return *this = ++ this->base ();
+        }
+        NUMERICS_INLINE
+        reverse_iterator2 operator -- (int) {
+            // Comeau recommends...
+            reverse_iterator2 tmp (*this);
+            *this = ++ this->base ();
+            return tmp;
+        }
         NUMERICS_INLINE
         reverse_iterator2 &operator += (difference_type n) {
             // Comeau recommends...
-            this->base () -= n;
-            return *this;
+            return *this = this->base () - n;
         }
         NUMERICS_INLINE
         reverse_iterator2 &operator -= (difference_type n) {
             // Comeau recommends...
-            this->base () += n;
-            return *this;
+            return *this = this->base () + n;
         }
+#endif
 
 #ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
@@ -699,6 +910,10 @@ namespace boost { namespace numerics {
             reverse_iterator2 tmp (it);
             return tmp -= n;
         }
+        NUMERICS_INLINE
+        friend difference_type operator - (const reverse_iterator2 &it1, const reverse_iterator2 &it2) {
+            return it2.base () - it1.base ();
+        }
 #endif
 
         NUMERICS_INLINE
@@ -708,14 +923,16 @@ namespace boost { namespace numerics {
         }
 
         NUMERICS_INLINE
-        difference_type index1 () const {
+        size_type index1 () const {
             // Comeau recommends...
-            return this->base ().index1 ();
+            iterator_type tmp (this->base ());
+            return (-- tmp).index1 ();
         }
         NUMERICS_INLINE
-        difference_type index2 () const {
+        size_type index2 () const {
             // Comeau recommends...
-            return this->base ().index2 ();
+            iterator_type tmp (this->base ());
+            return (-- tmp).index2 ();
         }
 
 #ifndef NUMERICS_USE_CANONICAL_ITERATOR
@@ -740,44 +957,33 @@ namespace boost { namespace numerics {
 #endif
     };
 
+#ifndef NUMERICS_FRIEND_FUNCTION
+    template<class I>
+    NUMERICS_INLINE
+    reverse_iterator2<I> operator + (const reverse_iterator2<I> &it, std::ptrdiff_t n) {
+        reverse_iterator2<I> tmp (it);
+        return tmp += n;
+    }
+    template<class I>
+    NUMERICS_INLINE
+    reverse_iterator2<I> operator - (const reverse_iterator2<I> &it, std::ptrdiff_t n) {
+        reverse_iterator2<I> tmp (it);
+        return tmp -= n;
+    }
+    template<class I>
+    NUMERICS_INLINE
+    std::ptrdiff_t operator - (const reverse_iterator2<I> &it1, const reverse_iterator2<I> &it2) {
+        return it2.base () - it1.base ();
+    }
 #endif
 
-#ifndef NUMERICS_FRIEND_FUNCTION
-// The following operators are underspecified and conflict with std::complex operators
-// If we really need these, they have to be specialized.
-//     template<class I>
-//     NUMERICS_INLINE
-//     I operator ++ (I &it, int) {
-//         I tmp (it);
-//         ++ it;
-//         return tmp;
-//     }
-//     template<class I>
-//     NUMERICS_INLINE
-//     I operator -- (I &it, int) {
-//         I tmp (it);
-//         -- it;
-//         return tmp;
-//     }
-//     template<class I>
-//     NUMERICS_INLINE
-//     I operator + (const I &it, std::ptrdiff_t n) {
-//         I tmp (it);
-//         return tmp += n;
-//     }
-//     template<class I>
-//     NUMERICS_INLINE
-//     I operator - (const I &it, std::ptrdiff_t n) {
-//         I tmp (it);
-//         return tmp -= n;
-//     }
 #endif
 
     template<class C, class IC>
     class indexed_iterator:
-        public container_reference<C>, 
+        public container_reference<C>,
         public random_access_iterator_base<IC,
-                                           indexed_iterator<C, IC>, 
+                                           indexed_iterator<C, IC>,
                                            typename C::value_type,
                                            typename C::difference_type> {
     public:

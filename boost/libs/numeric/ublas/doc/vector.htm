@@ -635,5 +635,221 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         const_reverse_iterator rbegin () const;
         const_reverse_iterator rend () const;
     };</code></pre>
+
+<h2><a name="zero_vector"></a>Zero Vector</h2>
+
+<h4>Description</h4>
+
+<p>The templated class <code>zero_vector&lt;T&gt; </code>represents
+zero vectors.</p>
+
+<h4>Example</h4>
+
+<pre>int main () {
+    numerics::zero_vector&lt;double&gt; v (3);
+    std::cout &lt;&lt; v &lt;&lt; std::endl;
+}</pre>
+
+<h4>Definition</h4>
+
+<p>Defined in the header vector.h.</p>
+
+<h4>Template parameters</h4>
+
+<table border="1">
+    <tr>
+        <th>Parameter </th>
+        <th>Description </th>
+        <th>Default </th>
+    </tr>
+    <tr>
+        <td><code>T</code> </td>
+        <td>The type of object stored in the vector. </td>
+        <td>&nbsp;</td>
+    </tr>
+</table>
+
+<h4>Model of</h4>
+
+<p><a href="expression.htm#vector_expression">Vector Expression</a>.
+</p>
+
+<h4>Type requirements</h4>
+
+<p>None, except for those imposed by the requirements of <a
+href="expression.htm#vector_expression">Vector Expression</a>.</p>
+
+<h4>Public base classes</h4>
+
+<p><code>vector_expression&lt;zero_vector&lt;T&gt; &gt;</code> </p>
+
+<h4>Members</h4>
+
+<table border="1">
+    <tr>
+        <th>Member </th>
+        <th>Description </th>
+    </tr>
+    <tr>
+        <td><code>zero_vector ()</code> </td>
+        <td>Constructs a <code>zero_vector</code> that holds
+        zero elements.</td>
+    </tr>
+    <tr>
+        <td><code>zero_vector (size_type size)</code></td>
+        <td>Constructs a <code>zero_vector</code>
+        that holds <code>size</code> elements.</td>
+    </tr>
+    <tr>
+        <td><code>zero_vector (const zero_vector &amp;v)</code></td>
+        <td>The copy constructor.</td>
+    </tr>
+    <tr>
+        <td><code>void resize (size_type size)</code></td>
+        <td>Resizes a <code>zero_vector</code> to hold <code>size</code>
+        elements. </td>
+    </tr>
+    <tr>
+        <td><code>size_type size () const</code></td>
+        <td>Returns the size of the <code>zero_vector</code>. </td>
+    </tr>
+    <tr>
+        <td><code>value_type operator () (size_type i) const</code></td>
+        <td>Returns the value of the <code>i</code>-th element. </td>
+    </tr>
+    <tr>
+        <td><code>zero_vector &amp;operator = (const zero_vector
+        &amp;v)</code></td>
+        <td>The assignment operator.</td>
+    </tr>
+    <tr>
+        <td><code>zero_vector &amp;assign_temporary (zero_vector
+        &amp;v)</code></td>
+        <td>Assigns a temporary. May change the zero vector <code>v</code>.</td>
+    </tr>
+    <tr>
+        <td><code>void swap (zero_vector &amp;v)</code></td>
+        <td>Swaps the contents of the zero vectors. </td>
+    </tr>
+    <tr>
+        <td><code>const_iterator begin () const</code></td>
+        <td>Returns a <code>const_iterator</code> pointing to the
+        beginning of the <code>zero_vector</code>. </td>
+    </tr>
+    <tr>
+        <td><code>const_iterator end () const</code></td>
+        <td>Returns a <code>const_iterator</code> pointing to the
+        end of the <code>zero_vector</code>. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator rbegin () const</code></td>
+        <td>Returns a <code>const_reverse_iterator</code>
+        pointing to the beginning of the reversed <code>zero_vector</code>.
+        </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator rend () const</code></td>
+        <td>Returns a <code>const_reverse_iterator</code>
+        pointing to the end of the reversed <code>zero_vector</code>.
+        </td>
+    </tr>
+</table>
+
+<h4>Interface</h4>
+
+<pre><code>    // Zero vector class 
+    template&lt;class T&gt;
+    class zero_vector: 
+        public vector_expression&lt;zero_vector&lt;T&gt; &gt; {
+    public:      
+        typedef std::size_t size_type;
+        typedef std::ptrdiff_t difference_type;
+        typedef T value_type;
+        typedef const T &amp;const_reference;
+        typedef T &amp;reference;
+        typedef const T *const_pointer;
+        typedef T *pointer;
+        typedef const zero_vector&lt;T&gt; const_self_type;
+        typedef zero_vector&lt;T&gt; self_type;
+        typedef const vector_const_reference&lt;const_self_type&gt; const_closure_type;
+        typedef size_type const_iterator_type;
+        typedef sparse_tag storage_category;
+
+        // Construction and destruction
+        zero_vector ();
+        zero_vector (size_type size);
+        zero_vector (const zero_vector &amp;v);
+
+        // Accessors
+        size_type size () const;
+        size_type index () const;
+
+        // Resizing
+        void resize (size_type size);
+
+        // Element access
+        value_type operator () (size_type i) const;
+
+        value_type operator [] (size_type i) const;
+
+        // Assignment
+        zero_vector &amp;operator = (const zero_vector &amp;v);
+        zero_vector &amp;assign_temporary (zero_vector &amp;v);
+
+        // Swapping
+        void swap (zero_vector &amp;v);
+        friend void swap (zero_vector &amp;v1, zero_vector &amp;v2);
+
+        class const_iterator;
+
+        // Element lookup
+        const_iterator find_first (size_type i) const;
+        const_iterator find_last (size_type i) const;
+
+        // Iterator simply is an index.
+
+        class const_iterator:
+            public container_const_reference&lt;zero_vector&gt;,
+            public bidirectional_iterator_base&lt;const_iterator, value_type&gt; {
+        public:
+            typedef sparse_bidirectional_iterator_tag iterator_category;
+            typedef typename zero_vector::difference_type difference_type;
+            typedef typename zero_vector::value_type value_type;
+            typedef typename zero_vector::value_type reference;
+            typedef typename zero_vector::const_pointer pointer;
+
+            // Construction and destruction
+            const_iterator ();
+            const_iterator (const zero_vector &amp;v, const const_iterator_type &amp;it);
+
+            // Arithmetic
+            const_iterator &amp;operator ++ ();
+            const_iterator &amp;operator -- ();
+
+            // Dereference
+            value_type operator * () const;
+
+            // Index
+            size_type index () const;
+
+            // Assignment 
+            const_iterator &amp;operator = (const const_iterator &amp;it);
+
+            // Comparison
+            bool operator == (const const_iterator &amp;it) const;
+        };
+
+        typedef const_iterator iterator;
+
+        const_iterator begin () const;
+        const_iterator end () const;
+
+        // Reverse iterator
+
+        typedef reverse_iterator&lt;const_iterator&gt; const_reverse_iterator;
+
+        const_reverse_iterator rbegin () const;
+        const_reverse_iterator rend () const;
+    };</code></pre>
 </body>
 </html>

@@ -10,11 +10,11 @@ subinclude libs/numeric/ublas/bench2 ;
 subinclude libs/numeric/ublas/bench3 ;
 
 SOURCES = concepts ;
-       
+
 exe concepts
-	: $(SOURCES).cpp 
+	: $(SOURCES).cpp
 	: <include>$(BOOST_ROOT)
+	: <define>EXTERNAL
 	  <borland><*><cxxflags>"-w-8026 -w-8027 -w-8057 -w-8084 -w-8092"
 	;
-
 

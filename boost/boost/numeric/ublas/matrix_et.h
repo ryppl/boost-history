@@ -4584,7 +4584,7 @@ sparse_bidirectional_iterator_tag ());
 #ifdef NUMERICS_USE_INVARIANT_HOISTING
                 return functor_type () (it1_begin_, it1_end_, it2_.begin (), it2_.end (), packed_random_access_iterator_tag ()); 
 #else
-                return functor_type () (it1_.begin (), it1_.end (), it2_.begin (), it2_.end (), packed_random_access_iterator_tag ()); 
+                return functor_type () (it1_.begin (), it1_.end (), it2_.begin (), it2_.end (), packed_random_access_iterator_tag ());
 #endif
             }
 
@@ -4592,7 +4592,7 @@ sparse_bidirectional_iterator_tag ());
             NUMERICS_INLINE
             value_type dereference (sparse_bidirectional_iterator_tag) const {
 #ifdef NUMERICS_USE_INVARIANT_HOISTING
-                return functor_type () (it1_begin_, it1_end_, it2_.begin (), it2_.end (), sparse_bidirectional_iterator_tag ()); 
+                return functor_type () (it1_begin_, it1_end_, it2_.begin (), it2_.end (), sparse_bidirectional_iterator_tag ());
 #else
                 return functor_type () (it1_.begin (), it1_.end (), it2_.begin (), it2_.end (), sparse_bidirectional_iterator_tag ()); 
 #endif

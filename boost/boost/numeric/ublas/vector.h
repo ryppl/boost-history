@@ -832,9 +832,9 @@ namespace boost { namespace numerics {
         array_type data_;
     };
 
-    // Unit vector class 
+    // Unit vector class
     template<class T>
-    class unit_vector: 
+    class unit_vector:
         public vector_expression<unit_vector<T> > {
     public:      
         typedef std::size_t size_type;
@@ -1053,11 +1053,204 @@ namespace boost { namespace numerics {
         size_type index_;
     };
 
-    // Scalar vector class 
+    // Zero vector class
     template<class T>
-    class scalar_vector: 
+    class zero_vector:
+        public vector_expression<zero_vector<T> > {
+    public:
+        typedef std::size_t size_type;
+        typedef std::ptrdiff_t difference_type;
+        typedef T value_type;
+        typedef const T &const_reference;
+        typedef T &reference;
+        typedef const T *const_pointer;
+        typedef T *pointer;
+        typedef const zero_vector<T> const_self_type;
+        typedef zero_vector<T> self_type;
+        typedef const vector_const_reference<const_self_type> const_closure_type;
+#ifdef NUMERICS_DEPRECATED
+        typedef const vector_range<const_self_type> const_vector_range_type;
+#endif
+        typedef size_type const_iterator_type;
+        typedef sparse_tag storage_category;
+
+        // Construction and destruction
+        NUMERICS_INLINE
+        zero_vector ():
+            size_ (0) {}
+        NUMERICS_INLINE
+        zero_vector (size_type size, size_type index):
+            size_ (size) {}
+        NUMERICS_INLINE
+        zero_vector (const zero_vector &v):
+            size_ (v.size_) {}
+
+        // Accessors
+        NUMERICS_INLINE
+        size_type size () const {
+            return size_;
+        }
+
+        // Resizing
+        NUMERICS_INLINE
+        void resize (size_type size) {
+            size_ = size;
+        }
+
+        // Element access
+        NUMERICS_INLINE
+        value_type operator () (size_type i) const {
+            return value_type ();
+        }
+
+        NUMERICS_INLINE
+        value_type operator [] (size_type i) const {
+            return (*this) (i);
+        }
+
+        // Assignment
+        NUMERICS_INLINE
+        zero_vector &operator = (const zero_vector &v) {
+            check (size_ == v.size_, bad_size ());
+            size_ = v.size_;
+            return *this;
+        }
+        NUMERICS_INLINE
+        zero_vector &assign_temporary (zero_vector &v) {
+            swap (v);
+            return *this;
+        }
+
+        // Swapping
+        NUMERICS_INLINE
+        void swap (zero_vector &v) {
+            check (this != &v, external_logic ());
+            check (size_ == v.size_, bad_size ());
+            std::swap (size_, v.size_);
+        }
+#ifdef NUMERICS_FRIEND_FUNCTION
+        NUMERICS_INLINE
+        friend void swap (zero_vector &v1, zero_vector &v2) {
+            v1.swap (v2);
+        }
+#endif
+
+        class const_iterator;
+
+        // Element lookup
+        NUMERICS_INLINE
+        const_iterator find_first (size_type i) const {
+            return const_iterator (*this, 0);
+        }
+        NUMERICS_INLINE
+        const_iterator find_last (size_type i) const {
+            return const_iterator (*this, 0);
+        }
+
+        // Iterators simply are pointers.
+
+        class const_iterator:
+            public container_const_reference<zero_vector>,
+            public bidirectional_iterator_base<sparse_bidirectional_iterator_tag,
+                                               const_iterator, value_type> {
+        public:
+            typedef sparse_bidirectional_iterator_tag iterator_category;
+#ifndef BOOST_MSVC_STD_ITERATOR
+            typedef typename zero_vector::difference_type difference_type;
+            typedef typename zero_vector::value_type value_type;
+            typedef typename zero_vector::value_type reference;
+            typedef typename zero_vector::const_pointer pointer;
+#endif
+
+            // Construction and destruction
+            NUMERICS_INLINE
+            const_iterator ():
+                container_const_reference<zero_vector> (), it_ () {}
+            NUMERICS_INLINE
+            const_iterator (const zero_vector &v, const const_iterator_type &it):
+                container_const_reference<zero_vector> (v), it_ (it) {}
+
+            // Arithmetic
+            NUMERICS_INLINE
+            const_iterator &operator ++ () {
+                ++ it_;
+                return *this;
+            }
+            NUMERICS_INLINE
+            const_iterator &operator -- () {
+                -- it_;
+                return *this;
+            }
+
+            // Dereference
+            NUMERICS_INLINE
+            value_type operator * () const {
+                check (index () < (*this) ().size (), bad_index ());
+                return (*this) () (index ());
+            }
+
+            // Index
+            NUMERICS_INLINE
+            size_type index () const {
+                return it_;
+            }
+
+            // Assignment
+            NUMERICS_INLINE
+            const_iterator &operator = (const const_iterator &it) {
+                container_const_reference<zero_vector>::assign (&it ());
+                it_ = it.it_;
+                return *this;
+            }
+
+            // Comparison
+            NUMERICS_INLINE
+            bool operator == (const const_iterator &it) const {
+                check (&(*this) () == &it (), external_logic ());
+                return it_ == it.it_;
+            }
+
+        private:
+            const_iterator_type it_;
+        };
+
+        typedef const_iterator iterator;
+
+        NUMERICS_INLINE
+        const_iterator begin () const {
+            return find_first (0);
+        }
+        NUMERICS_INLINE
+        const_iterator end () const {
+            return find_last (size_);
+        }
+
+        // Reverse iterator
+
+#ifdef BOOST_MSVC_STD_ITERATOR
+        typedef reverse_iterator<const_iterator, value_type, value_type> const_reverse_iterator;
+#else
+        typedef reverse_iterator<const_iterator> const_reverse_iterator;
+#endif
+
+        NUMERICS_INLINE
+        const_reverse_iterator rbegin () const {
+            return const_reverse_iterator (end ());
+        }
+        NUMERICS_INLINE
+        const_reverse_iterator rend () const {
+            return const_reverse_iterator (begin ());
+        }
+
+    private:
+        size_type size_;
+    };
+
+    // Scalar vector class
+    template<class T>
+    class scalar_vector:
         public vector_expression<scalar_vector<T> > {
-    public:      
+    public:
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
         typedef T value_type;
@@ -1076,13 +1269,13 @@ namespace boost { namespace numerics {
 
         // Construction and destruction
         NUMERICS_INLINE
-        scalar_vector (): 
+        scalar_vector ():
             size_ (0), value_ () {}
         NUMERICS_INLINE
-        scalar_vector (size_type size, const value_type &value): 
+        scalar_vector (size_type size, const value_type &value):
             size_ (size), value_ (value) {}
         NUMERICS_INLINE
-        scalar_vector (const scalar_vector &v): 
+        scalar_vector (const scalar_vector &v):
             size_ (v.size_), value_ (v.value_) {}
 
         // Accessors

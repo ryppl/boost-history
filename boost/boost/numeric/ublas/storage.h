@@ -47,7 +47,7 @@ namespace boost { namespace numerics {
         return std::min (size1, size2);
     }
 #define common(size1, size2) common_impl_ex ((size1), (size2), __FILE__, __LINE__)
-#else 
+#else
 //    template<class T>
 //    NUMERICS_INLINE
 //    const T &common_impl (const T &size1, const T &size2) {
@@ -928,7 +928,7 @@ namespace boost { namespace numerics {
         range (): 
             start_ (), size_ () {}
         NUMERICS_INLINE
-        range (size_type start, size_type stop): 
+        range (size_type start, size_type stop):
             start_ (start), size_ (stop - start) {
             check (start <= stop, bad_size ());
         }
@@ -1028,7 +1028,8 @@ namespace boost { namespace numerics {
             // Assignment 
             NUMERICS_INLINE
             const_iterator &operator = (const const_iterator &it) {
-                assign (&it ());
+                // Comeau recommends...
+                this->assign (&it ());
                 it_ = it.it_;
                 return *this;
             }
@@ -1090,28 +1091,28 @@ namespace boost { namespace numerics {
 
         // Construction and destruction
         NUMERICS_INLINE
-        slice (): 
+        slice ():
             start_ (), stride_ (), size_ () {}
         NUMERICS_INLINE
         slice (size_type start, difference_type stride, size_type size):
             start_ (start), stride_ (stride), size_ (size) {}
 
         NUMERICS_INLINE
-        size_type start () const { 
-            return start_; 
+        size_type start () const {
+            return start_;
         }
         NUMERICS_INLINE
-        difference_type stride () const { 
+        difference_type stride () const {
             return stride_;
         }
         NUMERICS_INLINE
-        size_type size () const { 
-            return size_; 
+        size_type size () const {
+            return size_;
         }
 
         // Element access
         NUMERICS_INLINE
-        value_type operator () (size_type i) const { 
+        value_type operator () (size_type i) const {
             check (i < size_, bad_index ());
             return start_ + i * stride_;
         }
@@ -1135,7 +1136,7 @@ namespace boost { namespace numerics {
         }
         NUMERICS_INLINE
         bool operator != (const slice &s) const {
-            return ! (*this == s); 
+            return ! (*this == s);
         }
 
         // Iterator simply is a index.
@@ -1201,7 +1202,8 @@ namespace boost { namespace numerics {
             // Assignment 
             NUMERICS_INLINE
             const_iterator &operator = (const const_iterator &it) {
-                assign (&it ());
+                // Comeau recommends...
+                this->assign (&it ());
                 it_ = it.it_;
                 return *this;
             }
@@ -1210,7 +1212,7 @@ namespace boost { namespace numerics {
             NUMERICS_INLINE
             bool operator == (const const_iterator &it) const {
                 check (&(*this) () == &it (), external_logic ());
-                return it_ == it.it_; 
+                return it_ == it.it_;
             }
 
         private:
@@ -1220,11 +1222,11 @@ namespace boost { namespace numerics {
 
         NUMERICS_INLINE
         const_iterator begin () const {
-            return const_iterator (*this, start_); 
+            return const_iterator (*this, start_);
         }
         NUMERICS_INLINE
         const_iterator end () const {
-            return const_iterator (*this, start_ + stride_ * size_); 
+            return const_iterator (*this, start_ + stride_ * size_);
         }
 
         // Reverse iterator
@@ -1248,6 +1250,211 @@ namespace boost { namespace numerics {
         size_type start_;
         difference_type stride_;
         size_type size_;
+    };
+
+    // Indirect array class
+    template<class A = unbounded_array<std::size_t> >
+    class indirect_array {
+    public:
+        typedef A array_type;
+        typedef const A const_array_type;
+        typedef std::size_t size_type;
+        typedef std::ptrdiff_t difference_type;
+        typedef difference_type value_type;
+        typedef const difference_type &const_reference;
+        typedef difference_type reference;
+        typedef const difference_type *const_pointer;
+        typedef difference_type *pointer;
+        typedef difference_type const_iterator_type;
+
+        // Construction and destruction
+        NUMERICS_INLINE
+        indirect_array ():
+            size_ (), data_ () {}
+        NUMERICS_INLINE
+        indirect_array (size_type size, const array_type &data):
+            size_ (size), data_ (data) {}
+        NUMERICS_INLINE
+        indirect_array (pointer start, pointer stop):
+            size_ (stop - start), data_ (stop - start) {
+            std::copy (start, stop, data_.begin ());
+        }
+
+        NUMERICS_INLINE
+        size_type size () const {
+            return size_;
+        }
+        NUMERICS_INLINE
+        const_array_type data () const {
+            return data_;
+        }
+        NUMERICS_INLINE
+        array_type data () {
+            return data_;
+        }
+
+        // Element access
+        NUMERICS_INLINE
+        value_type operator () (size_type i) const {
+            check (i < size_, bad_index ());
+            return data_ [i];
+        }
+
+        // Composition
+        NUMERICS_INLINE
+        indirect_array composite (const range &r) const {
+            check (r.start () + r.size () <= size_, bad_size ());
+            array_type data (r.size ());
+            for (size_type i = 0; i < r.size (); ++ i)
+                data [i] = data_ [r.start () + i];
+            return indirect_array (r.size (), data);
+        }
+        NUMERICS_INLINE
+        indirect_array composite (const slice &s) const {
+            check (s.start () + s.stride () * s.size () <= size (), bad_size ());
+            array_type data (s.size ());
+            for (size_type i = 0; i < s.size (); ++ i)
+                data [i] = data_ [s.start () + s.stride () * i];
+            return indirect_array (s.size (), data);
+        }
+        NUMERICS_INLINE
+        indirect_array composite (const indirect_array &ia) const {
+            array_type data (ia.size_);
+            for (size_type i = 0; i < ia.size_; ++ i) {
+                check (ia.data_ [i] <= size_, bad_size ());
+                data [i] = data_ [ia.data_ [i]];
+            }
+            return indirect_array (ia.size_, data);
+        }
+
+        // Comparison
+        NUMERICS_INLINE
+        bool operator == (const indirect_array &ia) const {
+            if (size_ != ia.size_)
+                return false;
+            for (size_type i = 0; i < common (size_, ia.size_); ++ i)
+                if (data_ [i] != ia.data_ [i])
+                    return false;
+            return true;
+        }
+        NUMERICS_INLINE
+        bool operator != (const indirect_array &ia) const {
+            return ! (*this == ia);
+        }
+
+        // Iterator simply is a index.
+
+#ifdef NUMERICS_USE_INDEXED_ITERATOR
+        typedef indexed_const_iterator<indirect_array, std::random_access_iterator_tag> const_iterator;
+#else
+        class const_iterator:
+            public container_const_reference<indirect_array>,
+            public random_access_iterator_base<std::random_access_iterator_tag,
+                                               const_iterator, value_type> {
+        public:
+#ifndef BOOST_MSVC_STD_ITERATOR
+            typedef typename indirect_array::difference_type difference_type;
+            typedef typename indirect_array::value_type value_type;
+            typedef typename indirect_array::const_reference reference;
+            typedef typename indirect_array::const_pointer pointer;
+#endif
+
+            // Construction and destruction
+            NUMERICS_INLINE
+            const_iterator ():
+                container_const_reference<indirect_array> (), it_ () {}
+            NUMERICS_INLINE
+            const_iterator (const indirect_array &ia, const const_iterator_type &it):
+                container_const_reference<indirect_array> (ia), it_ (it) {}
+
+            // Arithmetic
+            NUMERICS_INLINE
+            const_iterator &operator ++ () {
+                ++ it_;
+                return *this;
+            }
+            NUMERICS_INLINE
+            const_iterator &operator -- () {
+                -- it_;
+                return *this;
+            }
+            NUMERICS_INLINE
+            const_iterator &operator += (difference_type n) {
+                it_ += n;
+                return *this;
+            }
+            NUMERICS_INLINE
+            const_iterator &operator -= (difference_type n) {
+                it_ -= n;
+                return *this;
+            }
+            NUMERICS_INLINE
+            difference_type operator - (const const_iterator &it) const {
+                return it_ - it.it_;
+            }
+
+            // Dereference
+            NUMERICS_INLINE
+            value_type operator * () const {
+                return (*this) () (it_);
+            }
+
+            // Index
+            NUMERICS_INLINE
+            size_type index () const {
+                return it_;
+            }
+
+            // Assignment
+            NUMERICS_INLINE
+            const_iterator &operator = (const const_iterator &it) {
+                // Comeau recommends...
+                this->assign (&it ());
+                it_ = it.it_;
+                return *this;
+            }
+
+            // Comparison
+            NUMERICS_INLINE
+            bool operator == (const const_iterator &it) const {
+                check (&(*this) () == &it (), external_logic ());
+                return it_ == it.it_;
+            }
+
+        private:
+            const_iterator_type it_;
+        };
+#endif
+
+        NUMERICS_INLINE
+        const_iterator begin () const {
+            return const_iterator (*this, 0);
+        }
+        NUMERICS_INLINE
+        const_iterator end () const {
+            return const_iterator (*this, size_);
+        }
+
+        // Reverse iterator
+
+#ifdef BOOST_MSVC_STD_ITERATOR
+        typedef std::reverse_iterator<const_iterator, value_type, value_type> const_reverse_iterator;
+#else
+        typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+#endif
+
+        NUMERICS_INLINE
+        const_reverse_iterator rbegin () const {
+            return const_reverse_iterator (end ());
+        }
+        NUMERICS_INLINE
+        const_reverse_iterator rend () const {
+            return const_reverse_iterator (begin ());
+        }
+
+    private:
+        size_type size_;
+        array_type data_;
     };
 
 }}

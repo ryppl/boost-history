@@ -584,6 +584,11 @@ common constructions of vectors and matrices comes next.</p>
         vector.</td>
     </tr>
     <tr>
+        <td><code>zero_vector&lt;T&gt; <br>
+        &nbsp;&nbsp;v (size)</code></td>
+        <td>Constructs a zero vector.</td>
+    </tr>
+    <tr>
         <td><code>sparse_vector&lt;T,<br>
         &nbsp;std::map&lt;std::size_t, T&gt; &gt; <br>
         &nbsp;&nbsp;v (size, non_zeroes)</code></td>
@@ -654,6 +659,11 @@ common constructions of vectors and matrices comes next.</p>
         <td><code>identity_matrix&lt;T&gt;<br>
         &nbsp;&nbsp;m (size)</code></td>
         <td>Constructs an identity matrix.</td>
+    </tr>
+    <tr>
+        <td><code>zero_matrix&lt;T&gt;<br>
+        &nbsp;&nbsp;m (size1, size2)</code></td>
+        <td>Constructs a zero matrix.</td>
     </tr>
     <tr>
         <td><code>sparse_matrix&lt;T, <br>
@@ -774,6 +784,7 @@ optimization to be fragile.</p>
     <li><a href="vector.htm">Vector</a><ul type="circle">
             <li><a href="vector.htm#vector">Vector</a></li>
             <li><a href="vector.htm#unit_vector">Unit Vector</a></li>
+            <li><a href="vector.htm#zero_vector">Zero Vector</a></li>
         </ul>
     </li>
     <li><a href="vector_sp.htm">Sparse Vector</a><ul
@@ -803,6 +814,8 @@ optimization to be fragile.</p>
     <li><a href="matrix.htm">Matrix</a><ul type="circle">
             <li><a href="matrix.htm#matrix">Matrix</a></li>
             <li><a href="matrix.htm#identity_matrix">Identity
+                Matrix</a></li>
+            <li><a href="matrix.htm#zero_matrix">Zero
                 Matrix</a></li>
         </ul>
     </li>

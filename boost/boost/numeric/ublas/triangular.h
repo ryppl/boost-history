@@ -1156,7 +1156,8 @@ namespace boost { namespace numerics {
         typedef const matrix_range<const_self_type> const_matrix_range_type;
         typedef matrix_range<self_type> matrix_range_type;
 #endif
-        typedef typename proxy_traits<typename M::storage_category>::storage_category storage_category;
+        typedef typename storage_restrict_traits<typename M::storage_category,
+                                                 packed_proxy_tag>::storage_category storage_category;
         typedef typename F::packed_category packed_category;
         typedef typename M::orientation_category orientation_category;
 
@@ -1938,23 +1939,21 @@ namespace boost { namespace numerics {
     template<class M, class F>
     typename triangular_adaptor<M, F>::matrix_type triangular_adaptor<M, F>::nil_;
 
-    // FIXME: don't we need iterator versions?
     template<class E1, class E2>
     struct matrix_vector_solve_traits {
         typedef typename promote_traits<typename E1::value_type, typename E2::value_type>::promote_type promote_type;
         typedef vector<promote_type> result_type;
     };
 
-    // Operations: 
-    //  n * (n - 1) / 2 + n = n * (n + 1) / 2 multiplies,
-    //  n * (n - 1) / 2 plus
+    // Operations:
+    //  n * (n - 1) / 2 + n = n * (n + 1) / 2 multiplications,
+    //  n * (n - 1) / 2 additions
 
+    // Dense (proxy) case
     template<class E1, class E2>
     NUMERICS_INLINE
-    void inplace_solve (const matrix_expression<E1> &e1, 
-                        E2 &e2,
-                        lower_tag,
-                        vector_tag) {
+    void inplace_solve (const matrix_expression<E1> &e1, E2 &e2,
+                        lower_tag, vector_tag, dense_proxy_tag) {
         typedef NUMERICS_TYPENAME E2::size_type size_type;
         typedef NUMERICS_TYPENAME E2::difference_type difference_type;
         typedef NUMERICS_TYPENAME E2::value_type value_type;
@@ -1965,16 +1964,55 @@ namespace boost { namespace numerics {
         for (size_type n = 0; n < size; ++ n) {
             check (e1 () (n, n) != value_type (), singular ());
             value_type t = e2 (n) /= e1 () (n, n);
-            for (size_type m = n + 1; m < size; ++ m) 
+            for (size_type m = n + 1; m < size; ++ m)
                 e2 (m) -= e1 () (m, n) * t;
         }
     }
+    // Sparse (proxy) case
     template<class E1, class E2>
     NUMERICS_INLINE
-    void inplace_solve (const matrix_expression<E1> &e1, 
-                        E2 &e2,
-                        upper_tag,
-                        vector_tag) {
+    void inplace_solve (const matrix_expression<E1> &e1, E2 &e2,
+                        lower_tag, vector_tag, unknown_storage_tag) {
+        typedef NUMERICS_TYPENAME E2::size_type size_type;
+        typedef NUMERICS_TYPENAME E2::difference_type difference_type;
+        typedef NUMERICS_TYPENAME E2::value_type value_type;
+
+        check (e1 ().size1 () == e1 ().size2 (), bad_size ());
+        check (e1 ().size2 () == e2.size (), bad_size ());
+        size_type size = e2.size ();
+        for (size_type n = 0; n < size; ++ n) {
+            check (e1 () (n, n) != value_type (), singular ());
+            value_type t = e2 (n) /= e1 () (n, n);
+            typename E2::iterator ite2 (e2.find_first (n + 1));
+            typename E2::iterator ite2_end (e2.find_last (e2.size ()));
+            typename E1::const_iterator1 it1e1 (e1 ().find_first1 (1, n + 1, n));
+            typename E1::const_iterator1 it1e1_end (e1 ().find_last1 (1, e1 ().size1 (), n));
+            size_type m (0);
+            while (ite2 != ite2_end && it1e1 != it1e1_end) {
+                m = std::min (ite2.index (), it1e1.index1 ());
+                if (m == ite2.index () && m == it1e1.index1 ())
+                    *ite2 -= *it1e1 * t;
+                if (ite2.index () <= m)
+                    ++ ite2;
+                if (it1e1.index1 () <= m)
+                    ++ it1e1;
+            }
+        }
+    }
+    // Dispatcher
+    template<class E1, class E2>
+    NUMERICS_INLINE
+    void inplace_solve (const matrix_expression<E1> &e1, E2 &e2,
+                        lower_tag, vector_tag) {
+        typedef NUMERICS_TYPENAME E1::storage_category dispatch_category;
+        inplace_solve (e1, e2, lower_tag (), vector_tag (), dispatch_category ());
+    }
+
+    // Dense (proxy) case
+    template<class E1, class E2>
+    NUMERICS_INLINE
+    void inplace_solve (const matrix_expression<E1> &e1, E2 &e2,
+                        upper_tag, vector_tag, dense_proxy_tag) {
         typedef NUMERICS_TYPENAME E2::size_type size_type;
         typedef NUMERICS_TYPENAME E2::difference_type difference_type;
         typedef NUMERICS_TYPENAME E2::value_type value_type;
@@ -1985,35 +2023,15 @@ namespace boost { namespace numerics {
         for (difference_type n = size - 1; n >= 0; -- n) {
             check (e1 () (n, n) != value_type (), singular ());
             value_type t = e2 (n) /= e1 () (n, n);
-            for (difference_type m = n - 1; m >= 0; -- m) 
+            for (difference_type m = n - 1; m >= 0; -- m)
                 e2 (m) -= e1 () (m, n) * t;
         }
     }
+    // Sparse (proxy) case
     template<class E1, class E2>
     NUMERICS_INLINE
-    void inplace_solve (const matrix_expression<E1> &e1, 
-                        E2 &e2,
-                        unit_lower_tag,
-                        vector_tag) {
-        typedef NUMERICS_TYPENAME E2::size_type size_type;
-        typedef NUMERICS_TYPENAME E2::difference_type difference_type;
-        typedef NUMERICS_TYPENAME E2::value_type value_type;
-
-        check (e1 ().size1 () == e1 ().size2 (), bad_size ());
-        check (e1 ().size2 () == e2.size (), bad_size ());
-        size_type size = e2.size ();
-        for (size_type n = 0; n < size; ++ n) {
-            value_type t = e2 (n);
-            for (size_type m = n + 1; m < size; ++ m) 
-                e2 (m) -= e1 () (m, n) * t;
-        }
-    }
-    template<class E1, class E2>
-    NUMERICS_INLINE
-    void inplace_solve (const matrix_expression<E1> &e1, 
-                        E2 &e2,
-                        unit_upper_tag,
-                        vector_tag) {
+    void inplace_solve (const matrix_expression<E1> &e1, E2 &e2,
+                        upper_tag, vector_tag, unknown_storage_tag) {
         typedef NUMERICS_TYPENAME E2::size_type size_type;
         typedef NUMERICS_TYPENAME E2::difference_type difference_type;
         typedef NUMERICS_TYPENAME E2::value_type value_type;
@@ -2022,16 +2040,37 @@ namespace boost { namespace numerics {
         check (e1 ().size2 () == e2.size (), bad_size ());
         size_type size = e2.size ();
         for (difference_type n = size - 1; n >= 0; -- n) {
-            value_type t = e2 (n);
-            for (difference_type m = n - 1; m >= 0; -- m) 
-                e2 (m) -= e1 () (m, n) * t;
+            check (e1 () (n, n) != value_type (), singular ());
+            value_type t = e2 (n) /= e1 () (n, n);
+            typename E2::reverse_iterator ite2 (e2.find_last (n));
+            typename E2::reverse_iterator ite2_rend (e2.find_first (0));
+            typename E1::const_reverse_iterator1 it1e1 (e1 ().find_last1 (1, n, n));
+            typename E1::const_reverse_iterator1 it1e1_rend (e1 ().find_first1 (1, 0, n));
+            size_type m (0);
+            while (ite2 != ite2_rend && it1e1 != it1e1_rend) {
+                m = std::max (ite2.index (), it1e1.index1 ());
+                if (m == ite2.index () && m == it1e1.index1 ())
+                    *ite2 -= *it1e1 * t;
+                if (ite2.index () >= m)
+                    ++ ite2;
+                if (it1e1.index1 () >= m)
+                    ++ it1e1;
+            }
         }
+    }
+    // Dispatcher
+    template<class E1, class E2>
+    NUMERICS_INLINE
+    void inplace_solve (const matrix_expression<E1> &e1, E2 &e2,
+                        upper_tag, vector_tag) {
+        typedef NUMERICS_TYPENAME E1::storage_category dispatch_category;
+        inplace_solve (e1, e2, upper_tag (), vector_tag (), dispatch_category ());
     }
 
     template<class E1, class E2, class C>
     NUMERICS_INLINE
     typename matrix_vector_solve_traits<E1, E2>::result_type
-    solve (const matrix_expression<E1> &e1, 
+    solve (const matrix_expression<E1> &e1,
            const vector_expression<E2> &e2,
            C) {
         typename matrix_vector_solve_traits<E1, E2>::result_type r (e2);
@@ -2039,12 +2078,11 @@ namespace boost { namespace numerics {
         return r;
     }
 
+    // Dense (proxy) case
     template<class E1, class E2>
     NUMERICS_INLINE
-    void inplace_solve (E1 &e1,
-                        const matrix_expression<E2> &e2, 
-                        vector_tag, 
-                        lower_tag) {
+    void inplace_solve (E1 &e1, const matrix_expression<E2> &e2,
+                        vector_tag, lower_tag, dense_proxy_tag) {
         typedef NUMERICS_TYPENAME E1::size_type size_type;
         typedef NUMERICS_TYPENAME E1::difference_type difference_type;
         typedef NUMERICS_TYPENAME E1::value_type value_type;
@@ -2055,16 +2093,55 @@ namespace boost { namespace numerics {
         for (size_type n = 0; n < size; ++ n) {
             check (e2 (n, n) != value_type (), singular ());
             value_type t = e1 (n) /= e2 (n, n);
-            for (size_type m = n + 1; m < size; ++ m) 
+            for (size_type m = n + 1; m < size; ++ m)
                 e1 (m) -= t * e2 (n, m);
         }
     }
+    // Sparse (proxy) case
     template<class E1, class E2>
     NUMERICS_INLINE
-    void inplace_solve (E1 &e1,
-                        const matrix_expression<E2> &e2, 
-                        vector_tag, 
-                        upper_tag) {
+    void inplace_solve (E1 &e1, const matrix_expression<E2> &e2,
+                        vector_tag, lower_tag, unknown_storage_tag) {
+        typedef NUMERICS_TYPENAME E1::size_type size_type;
+        typedef NUMERICS_TYPENAME E1::difference_type difference_type;
+        typedef NUMERICS_TYPENAME E1::value_type value_type;
+
+        check (e1 ().size () == e2.size1 (), bad_size ());
+        check (e2.size1 () == e2.size2 (), bad_size ());
+        size_type size = e1.size ();
+        for (size_type n = 0; n < size; ++ n) {
+            check (e2 (n, n) != value_type (), singular ());
+            value_type t = e1 (n) /= e2 (n, n);
+            typename E1::iterator ite1 (e1.find_first (n + 1));
+            typename E1::iterator ite1_end (e1.find_last (e2.size ()));
+            typename E2::const_iterator2 it2e2 (e2 ().find_first2 (1, n, n + 1));
+            typename E2::const_iterator2 it2e2_end (e2 ().find_last2 (1, n, e2 ().size2 ()));
+            size_type m (0);
+            while (ite1 != ite1_end && it2e2 != it2e2_end) {
+                m = std::min (ite1.index (), it2e2.index2 ());
+                if (m == ite1.index () && m == it2e2.index2 ())
+                    *ite1 -= *it2e2 * t;
+                if (ite1.index () <= m)
+                    ++ ite1;
+                if (it2e2.index2 () <= m)
+                    ++ it2e2;
+            }
+        }
+    }
+    // Dispatcher
+    template<class E1, class E2>
+    NUMERICS_INLINE
+    void inplace_solve (E1 &e1, const matrix_expression<E2> &e2,
+                        vector_tag, lower_tag) {
+        typedef NUMERICS_TYPENAME E2::storage_category dispatch_category;
+        inplace_solve (e1, e2, lower_tag (), vector_tag (), dispatch_category ());
+    }
+
+    // Dense (proxy) case
+    template<class E1, class E2>
+    NUMERICS_INLINE
+    void inplace_solve (E1 &e1, const matrix_expression<E2> &e2,
+                        vector_tag, upper_tag, dense_proxy_tag) {
         typedef NUMERICS_TYPENAME E1::size_type size_type;
         typedef NUMERICS_TYPENAME E1::difference_type difference_type;
         typedef NUMERICS_TYPENAME E1::value_type value_type;
@@ -2075,53 +2152,54 @@ namespace boost { namespace numerics {
         for (difference_type n = size - 1; n >= 0; -- n) {
             check (e2 (n, n) != value_type (), singular ());
             value_type t = e1 (n) /= e2 (n, n);
-            for (difference_type m = n - 1; m >= 0; -- m) 
+            for (difference_type m = n - 1; m >= 0; -- m)
                 e1 (m) -= t * e2 (n, m);
         }
     }
+    // Sparse (proxy) case
     template<class E1, class E2>
     NUMERICS_INLINE
-    void inplace_solve (E1 &e1,
-                        const matrix_expression<E2> &e2, 
-                        vector_tag, 
-                        unit_lower_tag) {
-        typedef NUMERICS_TYPENAME E2::size_type size_type;
-        typedef NUMERICS_TYPENAME E2::difference_type difference_type;
-        typedef NUMERICS_TYPENAME E2::value_type value_type;
+    void inplace_solve (E1 &e1, const matrix_expression<E2> &e2,
+                        vector_tag, upper_tag, unknown_storage_tag) {
+        typedef NUMERICS_TYPENAME E1::size_type size_type;
+        typedef NUMERICS_TYPENAME E1::difference_type difference_type;
+        typedef NUMERICS_TYPENAME E1::value_type value_type;
 
         check (e1 ().size () == e2.size1 (), bad_size ());
         check (e2.size1 () == e2.size2 (), bad_size ());
         size_type size = e1.size ();
-        for (size_type n = 0; n < size; ++ n) {
-            value_type t = e1 (n);
-            for (size_type m = n + 1; m < size; ++ m) 
-                e1 (m) -= t * e2 (n, m);
+        for (difference_type n = size - 1; n >= 0; -- n) {
+            check (e2 (n, n) != value_type (), singular ());
+            value_type t = e1 (n) /= e2 (n, n);
+            typename E1::reverse_iterator ite1 (e1.find_last (n));
+            typename E1::reverse_iterator ite1_rend (e1.find_first (0));
+            typename E2::const_reverse_iterator2 it2e2 (e2 ().find_last2 (1, n, n));
+            typename E2::const_reverse_iterator2 it2e2_rend (e2 ().find_first2 (1, n, 0));
+            size_type m (0);
+            while (ite1 != ite1_rend && it2e2 != it2e2_rend) {
+                m = std::max (ite1.index (), it2e2.index2 ());
+                if (m == ite1.index () && m == it2e2.index1 ())
+                    *ite1 -= *it2e2 * t;
+                if (ite1.index () >= m)
+                    ++ ite1;
+                if (it2e2.index2 () >= m)
+                    ++ it2e2;
+            }
         }
     }
+    // Dispatcher
     template<class E1, class E2>
     NUMERICS_INLINE
-    void inplace_solve (E1 &e1,
-                        const matrix_expression<E2> &e2, 
-                        vector_tag, 
-                        unit_upper_tag) {
-        typedef NUMERICS_TYPENAME E2::size_type size_type;
-        typedef NUMERICS_TYPENAME E2::difference_type difference_type;
-        typedef NUMERICS_TYPENAME E2::value_type value_type;
-
-        check (e1 ().size1 () == e1 ().size2 (), bad_size ());
-        check (e1 ().size2 () == e2.size (), bad_size ());
-        size_type size = e1.size ();
-        for (difference_type n = size - 1; n >= 0; -- n) {
-            value_type t = e1 (n);
-            for (difference_type m = n - 1; m >= 0; -- m) 
-                e1 (m) -= t * e2 (n, m);
-        }
+    void inplace_solve (E1 &e1, const matrix_expression<E2> &e2,
+                        vector_tag, upper_tag) {
+        typedef NUMERICS_TYPENAME E2::storage_category dispatch_category;
+        inplace_solve (e1, e2, upper_tag (), vector_tag (), dispatch_category ());
     }
 
     template<class E1, class E2, class C>
     NUMERICS_INLINE
     typename matrix_vector_solve_traits<E1, E2>::result_type
-    solve (const vector_expression<E1> &e1, 
+    solve (const vector_expression<E1> &e1,
            const matrix_expression<E2> &e2,
            C) {
         typename matrix_vector_solve_traits<E1, E2>::result_type r (e1);
@@ -2129,23 +2207,21 @@ namespace boost { namespace numerics {
         return r;
     }
 
-    // FIXME: don't we need iterator versions?
     template<class E1, class E2>
     struct matrix_matrix_solve_traits {
         typedef typename promote_traits<typename E1::value_type, typename E2::value_type>::promote_type promote_type;
         typedef matrix<promote_type> result_type;
     };
 
-    // Operations: 
-    //  k * n * (n - 1) / 2 + k * n = k * n * (n + 1) / 2 multiplies,
-    //  k * n * (n - 1) / 2 plus
+    // Operations:
+    //  k * n * (n - 1) / 2 + k * n = k * n * (n + 1) / 2 multiplications,
+    //  k * n * (n - 1) / 2 additions
 
+    // Dense (proxy) case
     template<class E1, class E2>
     NUMERICS_INLINE
-    void inplace_solve (const matrix_expression<E1> &e1, 
-                        E2 &e2,
-                        lower_tag,
-                        matrix_tag) {
+    void inplace_solve (const matrix_expression<E1> &e1, E2 &e2,
+                        lower_tag, matrix_tag, dense_proxy_tag) {
         typedef NUMERICS_TYPENAME E2::size_type size_type;
         typedef NUMERICS_TYPENAME E2::difference_type difference_type;
         typedef NUMERICS_TYPENAME E2::value_type value_type;
@@ -2158,17 +2234,62 @@ namespace boost { namespace numerics {
             check (e1 () (n, n) != value_type (), singular ());
             for (size_type l = 0; l < size2; ++ l) {
                 value_type t = e2 (n, l) /= e1 () (n, n);
-                for (size_type m = n + 1; m < size1; ++ m) 
+                for (size_type m = n + 1; m < size1; ++ m)
                     e2 (m, l) -= e1 () (m, n) * t;
             }
         }
     }
+    // Sparse (proxy) case
     template<class E1, class E2>
     NUMERICS_INLINE
-    void inplace_solve (const matrix_expression<E1> &e1, 
-                        E2 &e2,
-                        upper_tag,
-                        matrix_tag) {
+    void inplace_solve (const matrix_expression<E1> &e1, E2 &e2,
+                        lower_tag, matrix_tag, unknown_storage_tag) {
+        typedef NUMERICS_TYPENAME E2::size_type size_type;
+        typedef NUMERICS_TYPENAME E2::difference_type difference_type;
+        typedef NUMERICS_TYPENAME E2::value_type value_type;
+
+        check (e1 ().size1 () == e1 ().size2 (), bad_size ());
+        check (e1 ().size2 () == e2.size1 (), bad_size ());
+        size_type size1 = e2.size1 ();
+        size_type size2 = e2.size2 ();
+        for (size_type n = 0; n < size1; ++ n) {
+            check (e1 () (n, n) != value_type (), singular ());
+            typename E2::iterator2 it2e2 (e2.find_first2 (0, n, 0));
+            typename E2::iterator2 it2e2_end (e2.find_last2 (0, n, size2));
+            while (it2e2 != it2e2_end) {
+                value_type t = *it2e2 /= e1 () (n, n);
+                typename E2::iterator1 it2e1 (e2.find_first1 (1, n + 1, it2e2.index2 ()));
+                typename E2::iterator1 it2e1_end (e2.find_last1 (1, e2.size1 (), it2e2.index2 ()));
+                typename E1::const_iterator1 it1e1 (e1 ().find_first1 (1, n + 1, n));
+                typename E1::const_iterator1 it1e1_end (e1 ().find_last1 (1, e1 ().size1 (), n));
+                size_type m (0);
+                while (it2e1 != it2e1_end && it1e1 != it1e1_end) {
+                    m = std::min (it2e1.index1 (), it1e1.index1 ());
+                    if (m == it2e1.index1 () && m == it1e1.index1 ())
+                        *it2e1 -= *it1e1 * t;
+                    if (it2e1.index1 () <= m)
+                        ++ it2e1;
+                    if (it1e1.index1 () <= m)
+                        ++ it1e1;
+                }
+                ++ it2e2;
+            }
+        }
+    }
+    // Dispatcher
+    template<class E1, class E2>
+    NUMERICS_INLINE
+    void inplace_solve (const matrix_expression<E1> &e1, E2 &e2,
+                        lower_tag, matrix_tag) {
+        typedef NUMERICS_TYPENAME E1::storage_category dispatch_category;
+        inplace_solve (e1, e2, lower_tag (), matrix_tag (), dispatch_category ());
+    }
+
+    // Dense (proxy) case
+    template<class E1, class E2>
+    NUMERICS_INLINE
+    void inplace_solve (const matrix_expression<E1> &e1, E2 &e2,
+                        upper_tag, matrix_tag, dense_proxy_tag) {
         typedef NUMERICS_TYPENAME E2::size_type size_type;
         typedef NUMERICS_TYPENAME E2::difference_type difference_type;
         typedef NUMERICS_TYPENAME E2::value_type value_type;
@@ -2181,39 +2302,16 @@ namespace boost { namespace numerics {
             check (e1 () (n, n) != value_type (), singular ());
             for (difference_type l = size2 - 1; l >= 0; -- l) {
                 value_type t = e2 (n, l) /= e1 () (n, n);
-                for (difference_type m = n - 1; m >= 0; -- m) 
+                for (difference_type m = n - 1; m >= 0; -- m)
                     e2 (m, l) -= e1 () (m, n) * t;
             }
         }
     }
+    // Sparse (proxy) case
     template<class E1, class E2>
     NUMERICS_INLINE
-    void inplace_solve (const matrix_expression<E1> &e1, 
-                        E2 &e2,
-                        unit_lower_tag,
-                        matrix_tag) {
-        typedef NUMERICS_TYPENAME E2::size_type size_type;
-        typedef NUMERICS_TYPENAME E2::difference_type difference_type;
-        typedef NUMERICS_TYPENAME E2::value_type value_type;
-
-        check (e1 ().size1 () == e1 ().size2 (), bad_size ());
-        check (e1 ().size2 () == e2.size1 (), bad_size ());
-        size_type size1 = e2.size1 ();
-        size_type size2 = e2.size2 ();
-        for (size_type n = 0; n < size1; ++ n) {
-            for (size_type l = 0; l < size2; ++ l) {
-                value_type t = e2 (n, l);
-                for (size_type m = n + 1; m < size1; ++ m) 
-                    e2 (m, l) -= e1 () (m, n) * t;
-            }
-        }
-    }
-    template<class E1, class E2>
-    NUMERICS_INLINE
-    void inplace_solve (const matrix_expression<E1> &e1, 
-                        E2 &e2,
-                        unit_upper_tag,
-                        matrix_tag) {
+    void inplace_solve (const matrix_expression<E1> &e1, E2 &e2,
+                        upper_tag, matrix_tag, unknown_storage_tag) {
         typedef NUMERICS_TYPENAME E2::size_type size_type;
         typedef NUMERICS_TYPENAME E2::difference_type difference_type;
         typedef NUMERICS_TYPENAME E2::value_type value_type;
@@ -2223,18 +2321,42 @@ namespace boost { namespace numerics {
         size_type size1 = e2.size1 ();
         size_type size2 = e2.size2 ();
         for (difference_type n = size1 - 1; n >= 0; -- n) {
-            for (difference_type l = size2 - 1; l >= 0; -- l) {
-                value_type t = e2 (n, l);
-                for (difference_type m = n - 1; m >= 0; -- m) 
-                    e2 (m, l) -= e1 () (m, n) * t;
+            check (e1 () (n, n) != value_type (), singular ());
+            typename E2::reverse_iterator2 it2e2 (e2.find_last2 (0, n, size2));
+            typename E2::reverse_iterator2 it2e2_rend (e2.find_first2 (0, n, 0));
+            while (it2e2 != it2e2_rend) {
+                value_type t = *it2e2 /= e1 () (n, n);
+                typename E2::reverse_iterator1 it2e1 (e2.find_last1 (1, n, it2e2.index2 ()));
+                typename E2::reverse_iterator1 it2e1_end (e2.find_first1 (1, 0, it2e2.index2 ()));
+                typename E1::const_reverse_iterator1 it1e1 (e1 ().find_last1 (1, n, n));
+                typename E1::const_reverse_iterator1 it1e1_end (e1 ().find_first1 (1, 0, n));
+                size_type m (0);
+                while (it2e1 != it2e1_end && it1e1 != it1e1_end) {
+                    m = std::max (it2e1.index1 (), it1e1.index1 ());
+                    if (m == it2e1.index1 () && m == it1e1.index1 ())
+                        *it2e1 -= *it1e1 * t;
+                    if (it2e1.index1 () <= m)
+                        ++ it2e1;
+                    if (it1e1.index1 () <= m)
+                        ++ it1e1;
+                }
+                ++ it2e2;
             }
         }
+    }
+    // Dispatcher
+    template<class E1, class E2>
+    NUMERICS_INLINE
+    void inplace_solve (const matrix_expression<E1> &e1, E2 &e2,
+                        upper_tag, matrix_tag) {
+        typedef NUMERICS_TYPENAME E1::storage_category dispatch_category;
+        inplace_solve (e1, e2, upper_tag (), matrix_tag (), dispatch_category ());
     }
 
     template<class E1, class E2, class C>
     NUMERICS_INLINE
     typename matrix_matrix_solve_traits<E1, E2>::result_type
-    solve (const matrix_expression<E1> &e1, 
+    solve (const matrix_expression<E1> &e1,
            const matrix_expression<E2> &e2,
            C) {
         typename matrix_matrix_solve_traits<E1, E2>::result_type r (e2);

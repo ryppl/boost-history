@@ -220,7 +220,8 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         typedef vector_reference&lt;matrix_row&lt;matrix_type&gt; &gt; closure_type;
         typedef typename M::const_iterator2 const_iterator_type;
         typedef typename M::iterator2 iterator_type;
-        typedef typename proxy_traits&lt;typename M::storage_category&gt;::storage_category storage_category;
+        typedef typename storage_restrict_traits&lt;typename M::storage_category,
+                                                 dense_proxy_tag&gt;::storage_category storage_category;
 
         // Construction and destruction
         matrix_row ();
@@ -575,7 +576,8 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         typedef vector_reference&lt;matrix_column&lt;matrix_type&gt; &gt; closure_type;
         typedef typename M::const_iterator1 const_iterator_type;
         typedef typename M::iterator1 iterator_type;
-        typedef typename proxy_traits&lt;typename M::storage_category&gt;::storage_category storage_category;
+        typedef typename storage_restrict_traits&lt;typename M::storage_category,
+                                                 dense_proxy_tag&gt;::storage_category storage_category;
 
         // Construction and destruction
         matrix_column ();
@@ -934,7 +936,8 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         typedef range::const_iterator iterator1_type;
         typedef range::const_iterator const_iterator2_type;
         typedef range::const_iterator iterator2_type;
-        typedef typename proxy_traits&lt;typename M::storage_category&gt;::storage_category storage_category;
+        typedef typename storage_restrict_traits&lt;typename M::storage_category,
+                                                 dense_proxy_tag&gt;::storage_category storage_category;
 
         // Construction and destruction
         matrix_vector_range ();
@@ -1295,7 +1298,8 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         typedef slice::const_iterator iterator1_type;
         typedef slice::const_iterator const_iterator2_type;
         typedef slice::const_iterator iterator2_type;
-        typedef typename proxy_traits&lt;typename M::storage_category&gt;::storage_category storage_category;
+        typedef typename storage_restrict_traits&lt;typename M::storage_category,
+                                                 dense_proxy_tag&gt;::storage_category storage_category;
 
         // Construction and destruction
         matrix_vector_slice ();
@@ -1709,7 +1713,8 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         typedef typename M::iterator1 iterator1_type;
         typedef typename M::const_iterator2 const_iterator2_type;
         typedef typename M::iterator2 iterator2_type;
-        typedef typename proxy_traits&lt;typename M::storage_category&gt;::storage_category storage_category;
+        typedef typename storage_restrict_traits&lt;typename M::storage_category,
+                                                 dense_proxy_tag&gt;::storage_category storage_category;
         typedef typename M::orientation_category orientation_category;
 
         // Construction and destruction
@@ -2235,7 +2240,8 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         typedef slice::const_iterator iterator1_type;
         typedef slice::const_iterator const_iterator2_type;
         typedef slice::const_iterator iterator2_type;
-        typedef typename proxy_traits&lt;typename M::storage_category&gt;::storage_category storage_category;
+        typedef typename storage_restrict_traits&lt;typename M::storage_category,
+                                                 dense_proxy_tag&gt;::storage_category storage_category;
         typedef typename M::orientation_category orientation_category;
 
         // Construction and destruction
