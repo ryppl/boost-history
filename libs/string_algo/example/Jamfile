@@ -1,4 +1,11 @@
-# Boost Filesystem Library Build Jamfile
+#  Boost string_algo library examples Jamfile  ---------------------------------
+#
+#  (C) Copyright Pavol Droba 2003. Permission to copy, use, modify, sell and
+#  distribute this software is granted provided this copyright notice appears
+#  in all copies. This software is provided "as is" without express or implied
+#  warranty, and with no claim as to its suitability for any purpose.
+#
+#  See http://www.boost.org for updates, documentation, and revision history.
 
 subproject libs/string_algo/example ;
 
@@ -10,12 +17,14 @@ exe string_algo
     trim_example.cpp
     find_example.cpp 
     replace_example.cpp
+    regex_example.cpp
     rle_example.cpp
     :
     <include>$(BOOST_ROOT)     # this automatically points to the boost-sandbox root
     :
     <library-path>$(BOOST)/libs/regex/build/bin-stage/
-    <find-library>boost_regex
+    <*><debug><find-library>boost_regex_debug
+    <*><release><find-library>boost_regex 
     debug
     ;
 

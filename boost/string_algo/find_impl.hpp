@@ -20,13 +20,27 @@ namespace boost {
 //  Generic find functions -------------------------------------//
 
         // find sequence version
-        template< typename FindF >
+        template< 
+			typename InputIteratorT,
+			typename FindF >
         inline typename FindF::result_type 
         find( 
-            typename FindF::input_reference_type Input, 
-            const FindF& Find )
+            InputIteratorT Begin, 
+			InputIteratorT End, 
+            FindF Find )
         {
-            return Find( Input );
+            return Find( Begin, End );
+        }
+
+		template< 
+			typename InputT,
+			typename FindF >
+        inline typename FindF::result_type 
+        find( 
+            InputT& Input, 
+            FindF Find )
+        {
+            return Find( Input.begin(), Input.end() );
         }
 
     } // namespace string_algo

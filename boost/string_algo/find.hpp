@@ -28,12 +28,14 @@ namespace boost {
         SearchIteratorT SearchBegin,
         SearchIteratorT SearchEnd )
     {
-        return string_algo::find( 
-            string_algo::make_range( Begin, End ),
+		iterator_range<InputIteratorT> Range( Begin, End );
+
+		return string_algo::find( 
+            Range,
             string_algo::detail::
-                create_find_firstF< iterator_range<InputIteratorT> >::
-                    create_const( 
-                        string_algo::make_range( SearchBegin, SearchEnd ) ) );
+                create_find_first( 
+					Range,
+                    string_algo::make_range( SearchBegin, SearchEnd ) ) );
     }
 
     // find_first sequence version
@@ -45,10 +47,7 @@ namespace boost {
     {
         return string_algo::find( 
             Input, 
-            string_algo::detail::find_firstF<
-                InputT, 
-                SearchT, 
-                typename string_algo::input_policy<InputT>::policy>( Search ) );
+            string_algo::detail::create_find_first(	Input, Search ) );
     }
 
 //  find_last  -----------------------------------------------//
@@ -62,11 +61,13 @@ namespace boost {
         SearchIteratorT SearchBegin,
         SearchIteratorT SearchEnd )
     {
-        return string_algo::find( 
-            string_algo::make_range( Begin, End ),
+		iterator_range<InputIteratorT> Range( Begin, End );
+
+		return string_algo::find( 
+            Range,
             string_algo::detail::
-                create_find_lastF< iterator_range<InputIteratorT> >::
-                    create_const( 
+                create_find_last( 
+						Range,
                         string_algo::make_range( SearchBegin, SearchEnd ) ) );
     }
 
@@ -79,10 +80,7 @@ namespace boost {
     {
         return string_algo::find( 
             Input, 
-            string_algo::detail::find_lastF<
-                InputT, 
-                SearchT, 
-                typename string_algo::input_policy<InputT>::policy>( Search ) );
+            string_algo::detail::create_find_last( Input, Search ) );
     }
 
 //  find_nth ----------------------------------------------------------------------//
@@ -97,12 +95,14 @@ namespace boost {
         SearchIteratorT SearchEnd,
         unsigned int Nth )
     {
-        return string_algo::find( 
-            string_algo::make_range( Begin, End ),
+		iterator_range<InputIteratorT> Range( Begin, End );
+
+		return string_algo::find( 
+            Range,
             string_algo::detail::
-                create_find_nthF< iterator_range<InputIteratorT> >::
-                    create_const( 
-                        string_algo::make_range( SearchBegin, SearchEnd ), Nth ) );
+                create_find_nth( 
+					Range,
+                    string_algo::make_range( SearchBegin, SearchEnd ), Nth ) );
     }
 
     template< typename InputT, typename SearchT >
@@ -114,10 +114,7 @@ namespace boost {
     {
         return string_algo::find( 
             Input, 
-            string_algo::detail::find_nthF<
-                InputT, 
-                SearchT, 
-                typename string_algo::input_policy<InputT>::policy>( Search, Nth ) );
+            string_algo::detail::create_find_nth( Input, Search, Nth ) );
     }
 
 } // namespace boost

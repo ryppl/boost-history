@@ -7,15 +7,15 @@
 
 //  See http://www.boost.org for updates, documentation, and revision history.
 
-#ifndef BOOST_STRING_ALGO_HPP
-#define BOOST_STRING_ALGO_HPP
+#ifndef BOOST_STRING_ALGO_REGEX_HPP
+#define BOOST_STRING_ALGO_REGEX_HPP
 
-#include <boost/string_algo/iterator_range.hpp>
 #include <boost/string_algo/trim.hpp>
 #include <boost/string_algo/conv.hpp>
 #include <boost/string_algo/predicate.hpp>
 #include <boost/string_algo/find.hpp>
 #include <boost/string_algo/replace.hpp>
 #include <boost/string_algo/erase.hpp>
+#include <boost/string_algo/regex.hpp>
 
-#endif  // BOOST_STRING_ALGO_HPP
+#endif  // BOOST_STRING_ALGO_REGEX_HPP

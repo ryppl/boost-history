@@ -35,12 +35,13 @@ namespace boost {
         const reg_expression<CharT, RegexTraitsT, RegexAllocatorT>& Rx,
         unsigned int MatchFlags=match_default )
     {
-        // Forward the call to the functor
+		iterator_range<InputIteratorT> Range( Begin, End );
+
+		// Forward the call to the functor
         return string_algo::find( 
-            string_algo::make_range( Begin, End ),
+			Range,
             string_algo::detail::
-                create_find_regexF< iterator_range<InputIteratorT> >::
-                    create_const( Rx, MatchFlags ) );
+                create_find_regex( Range, Rx, MatchFlags ) );
     }
 
     // find_first sequence const version
@@ -58,10 +59,7 @@ namespace boost {
     {
         return string_algo::find( 
             Input, 
-            string_algo::detail::find_regexF<
-                InputT,
-                reg_expression<CharT, RegexTraitsT, RegexAllocatorT>,
-                typename string_algo::input_policy<InputT>::policy >( Rx, MatchFlags ) );
+            string_algo::detail::create_find_regex( Input, Rx, MatchFlags ) );
     }
 
 //  replace_regex --------------------------------------------------------------------//
@@ -82,14 +80,15 @@ namespace boost {
         unsigned int MatchFlags=match_default,
         unsigned int FormatFlags=0 )
     {
-        return string_algo::replace_copy( 
+		iterator_range<InputIteratorT> Range( Begin, End );
+
+		return string_algo::replace_copy( 
             Output,
-            string_algo::make_range( Begin, End ), 
+			Range,
             string_algo::detail::
-                create_find_regexF< iterator_range<InputIteratorT> >::
-                    create_const( Rx, MatchFlags ),
+                create_find_regex( Range, Rx, MatchFlags ),
             string_algo::detail::
-                create_regex_formatF( Format, FormatFlags ) );
+                create_regex_format( Format, FormatFlags ) );
     }
 
     template< 
@@ -110,9 +109,9 @@ namespace boost {
             Output,
             Input,
             string_algo::detail::
-                create_find_regexF< InputT >::create_const( Rx, MatchFlags ),
+                create_find_regex( Input, Rx, MatchFlags ),
             string_algo::detail::
-                create_regex_formatF( Format, FormatFlags ) );
+                create_regex_format( Format, FormatFlags ) );
     }
 
     // replace_regex sequence version
@@ -131,9 +130,9 @@ namespace boost {
         return string_algo::replace_copy( 
             Input,
             string_algo::detail::
-                create_find_regexF< InputT >::create_const( Rx, MatchFlags ),
+                create_find_regex( Input, Rx, MatchFlags ),
             string_algo::detail::
-                create_regex_formatF( Format, FormatFlags ) );
+                create_regex_format( Format, FormatFlags ) );
     }
 
     // replace_regex in-place sequence version
@@ -152,9 +151,9 @@ namespace boost {
         return string_algo::replace( 
             Input,
             string_algo::detail::
-                create_find_regexF< InputT >::create( Rx, MatchFlags ),
+                create_find_regex( Input, Rx, MatchFlags ),
             string_algo::detail::
-                create_regex_formatF( Format, FormatFlags ) );
+                create_regex_format( Format, FormatFlags ) );
     }
 
 //  replace_all_regex --------------------------------------------------------------------//
@@ -175,14 +174,15 @@ namespace boost {
         unsigned int MatchFlags=match_default,
         unsigned int FormatFlags=0 )
     {
-        return string_algo::replace_all_copy( 
+		iterator_range<InputIteratorT> Range( Begin, End );
+
+		return string_algo::replace_all_copy( 
             Output,
-            string_algo::make_range( Begin, End ), 
+			Range,
             string_algo::detail::
-                create_find_regexF< iterator_range<InputIteratorT> >::
-                    create_const( Rx, MatchFlags ),
+                create_find_regex( Range, Rx, MatchFlags ),
             string_algo::detail::
-                create_regex_formatF( Format, FormatFlags ) );
+                create_regex_format( Format, FormatFlags ) );
     }
 
     // replace_all_regex sequence version
@@ -204,10 +204,9 @@ namespace boost {
             Output,
             Input,
             string_algo::detail::
-                create_find_regexF< InputT >::
-                    create_const( Rx, MatchFlags ),
+                create_find_regex( Input, Rx, MatchFlags ),
             string_algo::detail::
-                create_regex_formatF( Format, FormatFlags ) );
+                create_regex_format( Format, FormatFlags ) );
     }
 
     // replace_all_regex sequence version
@@ -226,10 +225,9 @@ namespace boost {
         return string_algo::replace_all_copy( 
             Input,
             string_algo::detail::
-                create_find_regexF< InputT >::
-                    create_const( Rx, MatchFlags ),
+                create_find_regex( Input, Rx, MatchFlags ),
             string_algo::detail::
-                create_regex_formatF( Format, FormatFlags ) );
+                create_regex_format( Format, FormatFlags ) );
     }
 
     // replace_all_regex in-place sequence version
@@ -248,9 +246,9 @@ namespace boost {
         return string_algo::replace_all( 
             Input,
             string_algo::detail::
-                create_find_regexF< InputT >::create( Rx, MatchFlags ),
+                create_find_regex( Input, Rx, MatchFlags ),
             string_algo::detail::
-                create_regex_formatF( Format, FormatFlags ) );
+                create_regex_format( Format, FormatFlags ) );
     }
 
 //  erase_regex --------------------------------------------------------------------//
@@ -268,12 +266,13 @@ namespace boost {
         const reg_expression<CharT, RegexTraitsT, RegexAllocatorT>& Rx,
         unsigned int MatchFlags=match_default )
     {
-        return string_algo::replace_copy( 
+		iterator_range<InputIteratorT> Range( Begin, End );
+
+		return string_algo::replace_copy( 
             Output,
-            string_algo::make_range( Begin, End ), 
-            string_algo::detail::
-                create_find_regexF< iterator_range<InputIteratorT> >::
-                    create_const( Rx, MatchFlags ),
+			Range,
+			string_algo::detail::
+                create_find_regex( Range, Rx, MatchFlags ),
             string_algo::detail::empty_formatF<
                 typename boost::detail::iterator_traits<InputIteratorT>::value_type >() );
     }
@@ -293,7 +292,7 @@ namespace boost {
             Output,
             Input,
             string_algo::detail::
-                create_find_regexF< InputT >::create_const( Rx, MatchFlags ),
+                create_find_regex( Input, Rx, MatchFlags ),
             string_algo::detail::empty_formatF<typename InputT::value_type>() );
     }
 
@@ -310,7 +309,7 @@ namespace boost {
         return string_algo::replace_copy( 
             Input, 
             string_algo::detail::
-                create_find_regexF< InputT >::create_const( Rx, MatchFlags ),
+                create_find_regex( Input, Rx, MatchFlags ),
             string_algo::detail::empty_formatF<typename InputT::value_type>() );
     }
 
@@ -327,7 +326,7 @@ namespace boost {
         return string_algo::replace( 
             Input, 
             string_algo::detail::
-                create_find_regexF< InputT >::create( Rx, MatchFlags ),
+                create_find_regex( Input, Rx, MatchFlags ),
             string_algo::detail::empty_formatF<typename InputT::value_type>() );
     }
 
@@ -346,12 +345,13 @@ namespace boost {
         const reg_expression<CharT, RegexTraitsT, RegexAllocatorT>& Rx,
         unsigned int MatchFlags=match_default )
     {
-        return string_algo::replace_all_copy( 
+		iterator_range<InputIteratorT> Range( Begin, End );
+
+		return string_algo::replace_all_copy( 
             Output,
-            string_algo::make_range( Begin, End ), 
+            Range,
             string_algo::detail::
-                create_find_regexF< iterator_range<InputIteratorT> >::
-                    create_const( Rx, MatchFlags ),
+                create_find_regex( Range, Rx, MatchFlags ),
             string_algo::detail::empty_formatF<
                 typename boost::detail::iterator_traits<InputIteratorT>::value_type >() );
     }
@@ -372,7 +372,7 @@ namespace boost {
             Output,
             Input,
             string_algo::detail::
-                create_find_regexF< InputT >::create_const( Rx, MatchFlags ),
+                create_find_regex( Input, Rx, MatchFlags ),
             string_algo::detail::empty_formatF<typename InputT::value_type>() );
     }
 
@@ -389,7 +389,7 @@ namespace boost {
         return string_algo::replace_all_copy( 
             Input, 
             string_algo::detail::
-                create_find_regexF< InputT >::create_const( Rx, MatchFlags ),
+                create_find_regex( Input, Rx, MatchFlags ),
             string_algo::detail::empty_formatF<typename InputT::value_type>() );
     }
 
@@ -406,7 +406,7 @@ namespace boost {
         return string_algo::replace_all( 
             Input, 
             string_algo::detail::
-                create_find_regexF< InputT >::create( Rx, MatchFlags ),
+                create_find_regex( Input, Rx, MatchFlags ),
             string_algo::detail::empty_formatF<typename InputT::value_type>() );
     }
 

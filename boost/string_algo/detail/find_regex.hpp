@@ -13,8 +13,6 @@
 #include <functional>
 #include <boost/regex.hpp>
 #include <boost/string_algo/iterator_range.hpp>
-#include <boost/string_algo/detail/find_base.hpp>
-
 
 namespace boost {
 
@@ -63,41 +61,28 @@ namespace boost {
             /*
                 Regex based search functor
             */
-            template< 
-                typename InputT, 
-                typename RegExT, 
-                typename InputPolicy=mutable_input_policy >
-            struct find_regexF : public find_baseF<InputT, InputPolicy>
+            template<typename InputIteratorT, typename RegExT>
+            struct find_regexF
             {
-                typedef find_baseF<InputT, InputPolicy> base_type;
-
-                typedef typename base_type::input_type input_type;
-                typedef typename base_type::input_iterator_type input_iterator_type;
-                typedef typename base_type::input_reference_type input_reference_type;
-
-                typedef RegExT regex_type;
-                typedef const RegExT& regex_reference_type;
-
+                typedef InputIteratorT input_iterator_type;
                 typedef regex_search_result< input_iterator_type > result_type;
-                        
+
+				typedef RegExT regex_type;
+                typedef const RegExT& regex_reference_type;
+                    
                 // Construction
                 find_regexF( regex_reference_type Rx, unsigned int MatchFlags = match_default ) : 
                     m_Rx(Rx), m_MatchFlags(MatchFlags) {}   
 
                 // Operation
-                result_type operator()( input_reference_type Input ) const
-                {
-                    return operator()( Input, Input.begin() );
-                }
-
                 result_type operator()( 
-                    input_reference_type Input, 
-                    input_iterator_type From ) const
+					input_iterator_type Begin, 
+                    input_iterator_type End ) const
                 {
                     // instantiate match result
                     match_results<input_iterator_type> result;
                     // search for a match
-                    if ( regex_search( From, Input.end(), result, m_Rx, m_MatchFlags ) )
+                    if ( regex_search( Begin, End, result, m_Rx, m_MatchFlags ) )
                     {
                         // construct a result
                         return result_type( result );
@@ -105,37 +90,27 @@ namespace boost {
                     else
                     {
                         // empty result
-                        return result_type( Input.end() );
+                        return result_type( End );
                     }
                 }
 
             private:
-                RegExT m_Rx;            // Regexp
-                unsigned m_MatchFlags;  // match flags
+                regex_reference_type m_Rx; // Regexp
+                unsigned m_MatchFlags;     // match flags
             };
 
             // Construction helper
-            template< typename InputT > 
-            struct create_find_regexF 
-            { 
-                template< typename RegExT > 
-                static 
-                find_regexF<InputT, RegExT, mutable_input_policy> 
-                create( const RegExT& Rx, unsigned int MatchFlags=match_default ) 
-                { 
-                    return find_regexF<InputT, RegExT, mutable_input_policy>( Rx, MatchFlags ); 
-                } 
-            
-                template< typename RegExT > 
-                static 
-                find_regexF<InputT, RegExT, const_input_policy> 
-                create_const( const RegExT& Rx, unsigned int MatchFlags=match_default ) 
-                { 
-                    return find_regexF<InputT, RegExT, const_input_policy>( Rx, MatchFlags ); 
-                } 
-            };
-
-        
+			template<typename InputT, typename RegExT>
+			find_regexF<typename input_policy<InputT>::iterator_type, RegExT>
+			create_find_regex(
+				InputT&,
+				const RegExT& Rx, 
+				unsigned int MatchFlags=match_default )
+			{
+				return find_regexF<
+					typename input_policy<InputT>::iterator_type, RegExT>( Rx, MatchFlags );
+			}
+   
         } // namespace detail
 
     } // namespace string_algo

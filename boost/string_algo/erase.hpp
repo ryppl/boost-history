@@ -30,12 +30,14 @@ namespace boost {
         InputIteratorT SearchBegin,
         InputIteratorT SearchEnd )
     {
-        return string_algo::replace_copy(
+        iterator_range<InputIteratorT> Range( Begin, End );
+
+		return string_algo::replace_copy(
             Output,
-            string_algo::make_range( Begin, End ), 
+            Range, 
             string_algo::detail::
-                create_find_rangeF< iterator_range<InputIteratorT> >::
-                    create_const( 
+                create_find_range( 
+						Range,
                         string_algo::make_range( SearchBegin, SearchEnd ) ),
             string_algo::detail::empty_formatF< 
                 typename boost::detail::iterator_traits<InputIteratorT>::value_type >() );
@@ -52,7 +54,8 @@ namespace boost {
             Output,
             Input,
             string_algo::detail::
-                create_find_rangeF< InputT >::create_const(
+                create_find_range(
+					Input,
                     string_algo::make_range( SearchBegin, SearchEnd ) ),
             string_algo::detail::
                 empty_formatF<typename InputT::value_type>() );
@@ -68,7 +71,8 @@ namespace boost {
         return string_algo::replace_copy( 
             Input,
             string_algo::detail::
-                create_find_rangeF< InputT >::create_const(
+                create_find_range(
+					Input,
                     string_algo::make_range( SearchBegin, SearchEnd ) ),
             string_algo::detail::
                 empty_formatF<typename InputT::value_type>() );
@@ -84,7 +88,8 @@ namespace boost {
         return string_algo::replace( 
             Input, 
             string_algo::detail::
-                create_find_rangeF< InputT >::create(
+                create_find_range(
+					Input,
                     string_algo::make_range( SearchBegin, SearchEnd ) ),
             string_algo::detail::
                 empty_formatF<typename InputT::value_type>() );
@@ -104,12 +109,15 @@ namespace boost {
         SearchIteratorT SearchBegin,
         SearchIteratorT SearchEnd )
     {
+		iterator_range<InputIteratorT> Range( Begin, End );
+
         return string_algo::replace_copy(
             Output,
-            string_algo::make_range( Begin, End ), 
+            Range, 
             string_algo::detail::
-                create_find_firstF< iterator_range<InputIteratorT> >::
-                    create_const( string_algo::make_range( SearchBegin, SearchEnd ) ),
+                create_find_first( 
+					Range,
+					string_algo::make_range( SearchBegin, SearchEnd ) ),
             string_algo::detail::empty_formatF< 
                 typename boost::detail::iterator_traits<InputIteratorT>::value_type >() );
     }
@@ -127,7 +135,7 @@ namespace boost {
             Output,
             Input,
             string_algo::detail::
-                create_find_firstF<InputT>::create_const( Search ),
+                create_find_first( Input, Search ),
             string_algo::detail::
                 empty_formatF<typename InputT::value_type>() );
     }
@@ -141,7 +149,7 @@ namespace boost {
         return string_algo::replace_copy( 
             Input, 
             string_algo::detail::
-                create_find_firstF<InputT>::create_const( Search ),
+                create_find_first( Input, Search ),
             string_algo::detail::
                 empty_formatF<typename InputT::value_type>() );
     }
@@ -155,7 +163,7 @@ namespace boost {
         return string_algo::replace( 
             Input, 
             string_algo::detail::
-                create_find_firstF<InputT>::create( Search ),
+                create_find_first( Input, Search ),
             string_algo::detail::
                 empty_formatF<typename InputT::value_type>() );
     }
@@ -174,12 +182,15 @@ namespace boost {
         SearchIteratorT SearchBegin,
         SearchIteratorT SearchEnd )
     {
-        return string_algo::replace_copy(
+		iterator_range<InputIteratorT> Range( Begin, End );
+
+		return string_algo::replace_copy(
             Output,
-            string_algo::make_range( Begin, End ), 
+            Range, 
             string_algo::detail::
-                create_find_lastF< iterator_range<InputIteratorT> >::
-                    create_const( string_algo::make_range( SearchBegin, SearchEnd ) ),
+                create_find_last( 
+					Range,
+					string_algo::make_range( SearchBegin, SearchEnd ) ),
             string_algo::detail::empty_formatF< 
                 typename boost::detail::iterator_traits<InputIteratorT>::value_type >() );
     }
@@ -197,7 +208,7 @@ namespace boost {
             Output,
             Input,
             string_algo::detail::
-                create_find_lastF<InputT>::create_const( Search ),
+                create_find_last( Input, Search ),
             string_algo::detail::
                 empty_formatF<typename InputT::value_type>() );
     }
@@ -211,7 +222,7 @@ namespace boost {
         return string_algo::replace_copy( 
             Input, 
             string_algo::detail::
-                create_find_lastF<InputT>::create_const( Search ),
+                create_find_last( Input, Search ),
             string_algo::detail::
                 empty_formatF<typename InputT::value_type>() );
     }
@@ -225,7 +236,7 @@ namespace boost {
         return string_algo::replace( 
             Input, 
             string_algo::detail::
-                create_find_lastF<InputT>::create( Search ),
+                create_find_last( Input, Search ),
             string_algo::detail::
                 empty_formatF<typename InputT::value_type>() );
     }
@@ -245,12 +256,15 @@ namespace boost {
         SearchIteratorT SearchEnd,
         unsigned int Nth )
     {
-        return string_algo::replace_copy(
+		iterator_range<InputIteratorT> Range( Begin, End );
+
+		return string_algo::replace_copy(
             Output,
-            string_algo::make_range( Begin, End ), 
+            Range, 
             string_algo::detail::
-                create_find_lastF< iterator_range<InputIteratorT> >::
-                    create_const( string_algo::make_range( SearchBegin, SearchEnd ), Nth ),
+                create_find_last( 
+					Range,
+					string_algo::make_range( SearchBegin, SearchEnd ), Nth ),
             string_algo::detail::empty_formatF< 
                 typename boost::detail::iterator_traits<InputIteratorT>::value_type >() );
     }
@@ -269,7 +283,7 @@ namespace boost {
             Output,
             Input,
             string_algo::detail::
-                create_find_lastF<InputT>::create_const( Search, Nth ),
+                create_find_last( Input, Search, Nth ),
             string_algo::detail::
                 empty_formatF<typename InputT::value_type>() );
     }
@@ -284,7 +298,7 @@ namespace boost {
         return string_algo::replace_copy( 
             Input, 
             string_algo::detail::
-                create_find_lastF<InputT>::create_const( Search, Nth ),
+                create_find_last( Input, Search, Nth ),
             string_algo::detail::
                 empty_formatF<typename InputT::value_type>() );
     }
@@ -299,7 +313,7 @@ namespace boost {
         return string_algo::replace( 
             Input, 
             string_algo::detail::
-                create_find_lastF<InputT>::create( Search, Nth ),
+                create_find_last( Input, Search, Nth ),
             string_algo::detail::
                 empty_formatF<typename InputT::value_type>() );
     }
@@ -319,12 +333,15 @@ namespace boost {
         SearchIteratorT SearchBegin,
         SearchIteratorT SearchEnd )
     {
-        return string_algo::replace_all_copy(
+		iterator_range<InputIteratorT> Range( Begin, End );
+
+		return string_algo::replace_all_copy(
             Output,
-            string_algo::make_range( Begin, End ), 
+            Range,
             string_algo::detail::
-                create_find_firstF< iterator_range<InputIteratorT> >::
-                    create_const( string_algo::make_range( SearchBegin, SearchEnd ) ),
+                create_find_first( 
+					Range,
+					string_algo::make_range( SearchBegin, SearchEnd ) ),
             string_algo::detail::empty_formatF< 
                 typename boost::detail::iterator_traits<InputIteratorT>::value_type >() );
     }
@@ -342,7 +359,7 @@ namespace boost {
             Output,
             Input,
             string_algo::detail::
-                create_find_firstF<InputT>::create_const( Search ),
+                create_find_first( Input, Search ),
             string_algo::detail::
                 empty_formatF<typename InputT::value_type>() );
     }
@@ -356,7 +373,7 @@ namespace boost {
         return string_algo::replace_all_copy( 
             Input, 
             string_algo::detail::
-                create_find_firstF<InputT>::create_const( Search ),
+                create_find_first( Input, Search ),
             string_algo::detail::
                 empty_formatF<typename InputT::value_type>() );
     }
@@ -370,7 +387,7 @@ namespace boost {
         return string_algo::replace_all( 
             Input, 
             string_algo::detail::
-                create_find_firstF<InputT>::create( Search ),
+                create_find_first( Input, Search ),
             string_algo::detail::
                 empty_formatF<typename InputT::value_type>() );
     }

@@ -121,6 +121,9 @@
 				RelativePath="predicate_example.cpp">
 			</File>
 			<File
+				RelativePath="regex_example.cpp">
+			</File>
+			<File
 				RelativePath="replace_example.cpp">
 			</File>
 			<File
@@ -170,6 +173,9 @@
 				RelativePath="..\..\..\boost\string_algo.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\boost\string_algo_regex.hpp">
+			</File>
+			<File
 				RelativePath="..\..\..\boost\string_algo\traits.hpp">
 			</File>
 			<File
@@ -186,9 +192,6 @@
 				</File>
 				<File
 					RelativePath="..\..\..\boost\string_algo\detail\find.hpp">
-				</File>
-				<File
-					RelativePath="..\..\..\boost\string_algo\detail\find_base.hpp">
 				</File>
 				<File
 					RelativePath="..\..\..\boost\string_algo\detail\find_regex.hpp">

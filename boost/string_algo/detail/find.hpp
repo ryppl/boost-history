@@ -13,7 +13,6 @@
 #include <boost/detail/iterator.hpp>
 #include <boost/string_algo/iterator_range.hpp>
 #include <boost/string_algo/traits.hpp>
-#include <boost/string_algo/detail/find_base.hpp>
 
 namespace boost {
 
@@ -28,15 +27,10 @@ namespace boost {
                 This functor actually does not perform any find operation.
                 It always returns given iterator range as a result.
             */
-            template< typename InputT, typename InputPolicy=mutable_input_policy >
-            struct find_rangeF : public find_baseF<InputT, InputPolicy>
+            template< typename InputIteratorT >
+            struct find_rangeF
             {
-                typedef find_baseF<InputT, InputPolicy> base_type;
-
-                typedef typename base_type::input_type input_type;
-                typedef typename base_type::input_iterator_type input_iterator_type;
-                typedef typename base_type::input_reference_type input_reference_type;
-
+                typedef InputIteratorT input_iterator_type;
                 typedef iterator_range<input_iterator_type> result_type;
 
                 // Construction
@@ -48,7 +42,9 @@ namespace boost {
                     m_Range(Range) {}
 
                 // Operation
-                result_type operator()( input_reference_type ) const
+                result_type operator()( 
+					input_iterator_type, 
+                    input_iterator_type ) const
                 {
                     return m_Range;
                 }
@@ -58,22 +54,15 @@ namespace boost {
             };
 
             // Construction helper
-            template< typename InputT > 
-            struct create_find_rangeF 
-            { 
-                static find_rangeF<InputT, mutable_input_policy> 
-                create(const iterator_range<typename InputT::iterator>& Range) 
-                { 
-                    return find_rangeF<InputT, mutable_input_policy>(Range); 
-                } 
-            
-                static find_rangeF<InputT, const_input_policy> 
-                create_const(const iterator_range<typename InputT::const_iterator>& Range) 
-                { 
-                    return find_rangeF<InputT, const_input_policy>(Range); 
-                } 
-            };
-
+            template<typename InputT>
+			find_rangeF<typename input_policy<InputT>::iterator_type>
+			create_find_range( 
+				InputT&, 
+				const iterator_range<typename input_policy<InputT>::iterator_type>& Range )
+			{
+				return find_rangeF<typename input_policy<InputT>::iterator_type>(Range); 
+			};
+		
 //  find first functor -----------------------------------------------//
 
             // find a subsequnce in the sequence ( functor )
@@ -81,14 +70,11 @@ namespace boost {
                 Returns a pair <begin,end> marking the subsequence in the sequence. 
                 If the find fails, functor returns <End,End>
             */
-            template< typename InputT, typename SearchT, typename InputPolicy=mutable_input_policy >
-            struct find_firstF : public find_baseF<InputT, InputPolicy>
+            template< typename InputIteratorT, typename SearchT >
+            struct find_firstF
             {
-                typedef find_baseF<InputT, InputPolicy> base_type;
-
-                typedef typename base_type::input_type input_type;
-                typedef typename base_type::input_iterator_type input_iterator_type;
-                typedef typename base_type::input_reference_type input_reference_type;
+                typedef InputIteratorT input_iterator_type;
+                typedef iterator_range<input_iterator_type> result_type;
 
                 typedef SearchT search_type;
                 typedef const SearchT& search_reference_type;
@@ -100,24 +86,19 @@ namespace boost {
                 find_firstF( search_reference_type Search ) : m_Search( Search ) {}
 
                 // Operation
-                result_type operator()( input_reference_type Input ) const
-                {
-                    return operator()( Input, Input.begin() );
-                }
-
                 result_type operator()( 
-                    input_reference_type Input, 
-                    input_iterator_type From ) const
+                    input_iterator_type Begin, 
+                    input_iterator_type End ) const
                 {
                     // Outer loop
-                    for(input_iterator_type OuterIt=From;
-                        OuterIt!=Input.end();
+                    for(input_iterator_type OuterIt=Begin;
+                        OuterIt!=End;
                         OuterIt++)
                     {
                         input_iterator_type InnerIt=OuterIt;
                         search_iterator_type SubstrIt=m_Search.begin();
                         for(;
-                            InnerIt!=Input.end() && SubstrIt!=m_Search.end();
+                            InnerIt!=End && SubstrIt!=m_Search.end();
                             InnerIt++,SubstrIt++)
                         {
                             if( !( (*InnerIt)==(*SubstrIt) ) ) 
@@ -129,7 +110,7 @@ namespace boost {
                             return result_type( OuterIt, InnerIt );
                     }
 
-                    return result_type( Input.end(), Input.end() );
+                    return result_type( End, End );
                 }
 
             private:
@@ -137,25 +118,15 @@ namespace boost {
             };
 
             // Construction helper
-            template< typename InputT > 
-            struct create_find_firstF 
-            { 
-                template< typename SearchT > 
-                static 
-                find_firstF<InputT, SearchT, mutable_input_policy> 
-                create( const SearchT& Search ) 
-                { 
-                    return find_firstF<InputT, SearchT, mutable_input_policy>( Search ); 
-                } 
-            
-                template< typename SearchT > 
-                static 
-                find_firstF<InputT, SearchT, const_input_policy> 
-                create_const( const SearchT& Search ) 
-                { 
-                    return find_firstF<InputT, SearchT, const_input_policy>( Search ); 
-                } 
-            };
+			template<typename InputT, typename SearchT>
+			find_firstF<typename input_policy<InputT>::iterator_type, SearchT>
+			create_find_first(
+				InputT&,
+				const SearchT& Search )
+			{
+				return find_firstF<
+					typename input_policy<InputT>::iterator_type, SearchT>( Search );
+			}
 
 //  find last functor -----------------------------------------------//
 
@@ -164,49 +135,49 @@ namespace boost {
                 Returns a pair <begin,end> marking the subsequence in the sequence. 
                 If the find fails, returns <End,End>
             */
-            template< typename InputT, typename SearchT, typename InputPolicy=mutable_input_policy >
-            struct find_lastF : public find_baseF<InputT, InputPolicy>
+            template< typename InputIteratorT, typename SearchT >
+            struct find_lastF
             {
-                typedef find_baseF<InputT, InputPolicy> base_type;
-
-                typedef typename base_type::input_type input_type;
-                typedef typename base_type::input_iterator_type input_iterator_type;
-                typedef typename base_type::input_reference_type input_reference_type;
+                typedef InputIteratorT input_iterator_type;
+                typedef iterator_range<input_iterator_type> result_type;
 
                 typedef SearchT search_type;
                 typedef const SearchT& search_reference_type;
                 typedef typename SearchT::const_iterator search_iterator_type;
 
-                typedef find_firstF< input_type, search_type, InputPolicy > find_first_type;
+                typedef find_firstF< input_iterator_type, search_type > find_first_type;
                 typedef iterator_range<input_iterator_type> result_type;
 
                 // Construction
                 find_lastF( search_reference_type Search ) : m_Search( Search ) {}
 
                 // Operation
-                result_type operator()( input_reference_type Input ) const
+                result_type operator()(                     
+					input_iterator_type Begin, 
+                    input_iterator_type End  ) const
                 {
                     typedef typename boost::detail::
                         iterator_traits<input_iterator_type>::iterator_category category;
 
-                    return findit( Input, category() );
+                    return findit( Begin, End, category() );
                 }   
 
             private:
                 // forward iterator
                 result_type findit( 
-                    input_reference_type Input,
+					input_iterator_type Begin, 
+                    input_iterator_type End, 
                     std::forward_iterator_tag ) const
                 {
                     find_first_type find_first( m_Search );
 
-                    result_type M=find_first( Input );
+                    result_type M=find_first( Begin, End );
                     result_type Last=M;
 
                     while( !M.empty() )
                     {
                         Last=M;
-                        M=find_first( Input, M.end() );
+                        M=find_first( M.end(), End );
                     }
 
                     return Last;
@@ -214,19 +185,20 @@ namespace boost {
 
                 // bidirectional iterator
                 result_type findit( 
-                    input_reference_type Input,
+					input_iterator_type Begin, 
+                    input_iterator_type End, 
                     std::bidirectional_iterator_tag ) const
                 {
                     // Outer loop
-                    for(input_iterator_type OuterIt=Input.end();
-                        OuterIt!=Input.begin(); )
+                    for(input_iterator_type OuterIt=End;
+                        OuterIt!=Begin; )
                     {
                         input_iterator_type OuterIt2=--OuterIt;
 
                         input_iterator_type InnerIt=OuterIt2;
                         search_iterator_type SubstrIt=m_Search.begin();
                         for(;
-                            InnerIt!=Input.end() && SubstrIt!=m_Search.end();
+                            InnerIt!=End && SubstrIt!=m_Search.end();
                             InnerIt++,SubstrIt++)
                         {
                             if( !( (*InnerIt)==(*SubstrIt) ) ) 
@@ -238,7 +210,7 @@ namespace boost {
                             return result_type( OuterIt2, InnerIt );
                     }
 
-                    return result_type( Input.end(), Input.end() );
+                    return result_type( End, End );
                 }
 
             private:
@@ -246,25 +218,15 @@ namespace boost {
             };
 
             // Construction helper
-            template< typename InputT > 
-            struct create_find_lastF 
-            { 
-                template< typename SearchT > 
-                    static 
-                    find_lastF<InputT, SearchT, mutable_input_policy> 
-                    create( const SearchT& Search ) 
-                { 
-                    return find_lastF<InputT, SearchT, mutable_input_policy>( Search ); 
-                } 
-            
-                template< typename SearchT > 
-                    static 
-                    find_lastF<InputT, SearchT, const_input_policy> 
-                    create_const( const SearchT& Search ) 
-                { 
-                    return find_lastF<InputT, SearchT, const_input_policy>( Search ); 
-                } 
-            };
+			template<typename InputT, typename SearchT>
+			find_lastF<typename input_policy<InputT>::iterator_type, SearchT>
+			create_find_last(
+				InputT&,
+				const SearchT& Search )
+			{
+				return find_lastF<
+					typename input_policy<InputT>::iterator_type, SearchT>( Search );
+			}
 
 //  find n-th functor -----------------------------------------------//
 
@@ -273,20 +235,17 @@ namespace boost {
                 Returns a pair <begin,end> marking the subsequence in the sequence. 
                 If the find fails, returns <End,End>
             */
-            template< typename InputT, typename SearchT, typename InputPolicy=mutable_input_policy >
-            struct find_nthF : public find_baseF<InputT, InputPolicy>
+            template< typename InputIteratorT, typename SearchT >
+            struct find_nthF
             {
-                typedef find_baseF<InputT, InputPolicy> base_type;
-
-                typedef typename base_type::input_type input_type;
-                typedef typename base_type::input_iterator_type input_iterator_type;
-                typedef typename base_type::input_reference_type input_reference_type;
+                typedef InputIteratorT input_iterator_type;
+                typedef iterator_range<input_iterator_type> result_type;
 
                 typedef SearchT search_type;
                 typedef const SearchT& search_reference_type;
                 typedef typename SearchT::const_iterator search_iterator_type;
 
-                typedef find_firstF< input_type, search_type, InputPolicy > find_first_type;
+                typedef find_firstF< input_iterator_type, search_type> find_first_type;
                 typedef typename find_first_type::result_type result_type;
 
                 // Constructor
@@ -294,24 +253,19 @@ namespace boost {
                     m_Search( Search ), m_Nth( Nth ) {}
 
                 // Operation
-                result_type operator()( input_reference_type Input ) const
-                {
-                    return operator()( Input, Input.begin() );
-                }
-
                 result_type operator()( 
-                    input_reference_type Input, 
-                    input_iterator_type From ) const
+					input_iterator_type Begin, 
+                    input_iterator_type End ) const
                 {
                     // Instantiate find funtor 
                     find_first_type find_first( m_Search );
 
-                    result_type M( From, From );
+                    result_type M( Begin, Begin );
 
                     for( unsigned int n=0; n<=m_Nth; n++ )
                     {
                         // find next match        
-                        M=find_first( Input, M.end() );
+                        M=find_first( M.end(), End );
 
                         if ( M.empty() )
                         {
@@ -329,25 +283,16 @@ namespace boost {
             };
 
             // Construction helper
-            template< typename InputT > 
-            struct create_find_nthF 
-            { 
-                template< typename SearchT > 
-                    static 
-                    find_nthF<InputT, SearchT, mutable_input_policy> 
-                    create( const SearchT& Search, unsigned int Nth ) 
-                { 
-                    return find_nthF<InputT, SearchT, mutable_input_policy>( Search, Nth ); 
-                } 
-            
-                template< typename SearchT > 
-                    static 
-                    find_nthF<InputT, SearchT, const_input_policy> 
-                    create_const( const SearchT& Search, unsigned int Nth ) 
-                { 
-                    return find_nthF<InputT, SearchT, const_input_policy>( Search, Nth ); 
-                } 
-            };
+			template<typename InputT, typename SearchT>
+			find_nthF<typename input_policy<InputT>::iterator_type, SearchT>
+			create_find_nth(
+				InputT&,
+				const SearchT& Search,
+				unsigned int Nth )
+			{
+				return find_nthF<
+					typename input_policy<InputT>::iterator_type, SearchT>( Search, Nth );
+			}
 
         } // namespace detail
 

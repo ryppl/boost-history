@@ -37,13 +37,13 @@ namespace boost {
         inline OutputIteratorT replace_copy(
             OutputIteratorT Output,
             const InputT& Input,
-            const FindFT& FindF,
-            const FormatFT& FormatF )
+            FindFT FindF,
+            FormatFT FormatF )
         {
             typedef typename FindFT::result_type search_result_type;
             
             // Find first match
-            search_result_type M=FindF( Input );
+            search_result_type M=FindF( Input.begin(), Input.end() );
 
             if ( M.empty() )
             {
@@ -71,13 +71,13 @@ namespace boost {
             typename FormatFT >
         inline InputT replace_copy(
             const InputT& Input,
-            const FindFT& FindF,
-            const FormatFT& FormatF )
+            FindFT FindF,
+            FormatFT FormatF )
         {
             typedef typename FindFT::result_type search_result_type;
 
             // Find first match
-            search_result_type M=FindF( Input );
+            search_result_type M=FindF( Input.begin(), Input.end() );
 
             if ( M.empty() )
             {
@@ -103,13 +103,13 @@ namespace boost {
             typename FormatFT >
         inline InputT& replace( 
             InputT& Input,
-            const FindFT& FindF,
-            const FormatFT& FormatF )
+            FindFT FindF,
+            FormatFT FormatF )
         {
             typedef typename FindFT::result_type search_result_type;
             
             // Find range for the match
-            search_result_type M=FindF( Input );
+            search_result_type M=FindF( Input.begin(), Input.end() );
 
             if ( M.empty() )
             {
@@ -139,8 +139,8 @@ namespace boost {
         inline OutputIteratorT replace_all_copy(
             OutputIteratorT Output,
             const InputT& Input,
-            const FindFT& FindF,
-            const FormatFT& FormatF )
+            FindFT FindF,
+            FormatFT FormatF )
         {
             typedef typename FindFT::result_type search_result_type;
             typedef typename InputT::const_iterator input_iterator_type; 
@@ -148,7 +148,7 @@ namespace boost {
             input_iterator_type LastMatch=Input.begin();
 
             // Find first match
-            search_result_type M=FindF( Input );
+            search_result_type M=FindF( Input.begin(), Input.end() );
 
             // Iterate throug all matches
             while( !M.empty() )
@@ -162,7 +162,7 @@ namespace boost {
 
                 // Proceed to the next match
                 LastMatch=M.end();
-                M=FindF( Input, LastMatch );
+                M=FindF( LastMatch, Input.end() );
             }
 
             // Copy the rest of the sequence
@@ -178,8 +178,8 @@ namespace boost {
             typename FormatFT >
         inline InputT replace_all_copy(
             const InputT& Input,
-            const FindFT& FindF,
-            const FormatFT& FormatF )
+            FindFT FindF,
+            FormatFT FormatF )
         {
             typedef typename FindFT::result_type search_result_type;
             typedef typename InputT::const_iterator input_iterator_type; 
@@ -187,7 +187,7 @@ namespace boost {
             // Initialize last match
             input_iterator_type LastMatch=Input.begin();
             // Find first match
-            search_result_type M=FindF( Input );
+            search_result_type M=FindF( Input.begin(), Input.end() );
 
             // Output temporary
             InputT Output;
@@ -202,7 +202,7 @@ namespace boost {
 
                 // Proceed to the next match
                 LastMatch=M.end();
-                M=FindF( Input, LastMatch );
+                M=FindF( LastMatch, Input.end() );
             }
 
             // Copy the rest of the sequence
@@ -218,8 +218,8 @@ namespace boost {
             typename FormatFT >
         inline InputT& replace_all( 
             InputT& Input,
-            const FindFT& FindF,
-            const FormatFT& FormatF )
+            FindFT FindF,
+            FormatFT FormatF )
         {
             typedef typename FindFT::result_type search_result_type;
             typedef typename InputT::iterator input_iterator_type; 
@@ -232,7 +232,7 @@ namespace boost {
             input_iterator_type SearchIt=Input.begin();
             
             // Find range for a first match
-            search_result_type M=FindF( Input );
+            search_result_type M=FindF( Input.begin(), Input.end() );
 
             while ( !M.empty() )
             {
@@ -251,7 +251,7 @@ namespace boost {
                 detail::copy_to_storage( Storage, FormatF(M) );
 
                 // Find range for a next match
-                M=FindF( Input, SearchIt );
+                M=FindF( SearchIt, Input.end() );
             }
 
             // process the last segment

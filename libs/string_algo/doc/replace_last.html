@@ -34,15 +34,15 @@
       header <code>erase_last</code> is included <a href="../../../boost/string_algo/erase.hpp">&lt;boost/string_algo/erase.hpp&gt;</a>
       header ( both in <code>boost</code> namespace ).
     <p align="left">
-      Algorithm finds a last occurence of the search string within the input
-      sequence. <code>replace_last</code> substitutes this occurence with
-      specified format sequence. <code>erase_last</code> removes this occurence
+      Algorithm finds a last occurrence of the search string within the input
+      sequence. <code>replace_last</code> substitutes this occurrence with
+      specified format sequence. <code>erase_last</code> removes this occurrence
       from the input sequence.
     </p>
     <h2><a name="synopsis">Synopsis</a></h2>
     <p>
-      Every algorithm is provided in 4 subvariants. Three variants with copy
-      semantics ( all have suffix <code>_copy</code> ) and one in-place variant.
+      Algorithm is provided in 4 subvariants. Three variants with copy semantics
+      ( all have suffix <code>_copy</code> ) and one in-place variant.
     </p>
     <p>
       Copy variant with iterator based input. Result is copied into an output
@@ -122,7 +122,7 @@
       <br>
       Parameters:
     </p>
-    <table border="0" width="574" height="1">
+    <table border="1" width="574" height="1">
       <tr>
         <td width="418" height="31" valign="top"><code><b>typename</b>
           OutputIteratorT</code></td>
@@ -136,17 +136,27 @@
       </tr>
       <tr>
         <td width="443" height="31" valign="top"><code><b>typename</b>
-          FormatIteratorT</code></td>
+          SearchIteratorT</code></td>
         <td width="703" height="31" valign="top">Forward iterator delimiting a
           search sequence</td>
+      </tr>
+      <tr>
+        <td width="443" height="31" valign="top"><code><b>typename</b>
+          FormatIteratorT</code></td>
+        <td width="703" height="31" valign="top">Forward iterator delimiting a
+          format sequence</td>
       </tr>
       <tr>
         <td width="443" height="31" valign="top"><code><b>typename</b> InputT</code></td>
         <td width="703" height="31" valign="top">Input sequence type</td>
       </tr>
       <tr>
-        <td width="443" height="31" valign="top"><code><b>typename </b>FormatT</code></td>
+        <td width="443" height="31" valign="top"><code><b>typename </b>SearchT</code></td>
         <td width="703" height="31" valign="top">Search sequence type</td>
+      </tr>
+      <tr>
+        <td width="443" height="31" valign="top"><code><b>typename </b>FormatT</code></td>
+        <td width="703" height="31" valign="top">Format sequence type</td>
       </tr>
       <tr>
         <td width="418" height="31" valign="top"><code>OutputIteratorT Output</code></td>
@@ -162,12 +172,12 @@
         <td width="703" height="31" valign="top">End of an input sequence</td>
       </tr>
       <tr>
-        <td width="443" height="31" valign="top"><code>InputIteratorT
+        <td width="443" height="31" valign="top"><code>SearchIteratorT
           SearchBegin</code></td>
         <td width="703" height="31" valign="top">Begin of a search range</td>
       </tr>
       <tr>
-        <td width="443" height="31" valign="top"><code>InputIteratorT SearchEnd</code></td>
+        <td width="443" height="31" valign="top"><code>SearchIteratorT SearchEnd</code></td>
         <td width="703" height="31" valign="top">End of a search range</td>
       </tr>
       <tr>
@@ -180,13 +190,19 @@
         <td width="703" height="31" valign="top">End of a format sequence</td>
       </tr>
       <tr>
-        <td width="443" height="31" valign="top"><code>InputT&amp; Input</code></td>
-        <td width="703" height="31" valign="top">An input sequence</td>
+        <td width="443" height="31" valign="top"><code>[<b>const</b>]
+          InputT&amp; Input</code></td>
+        <td width="703" height="31" valign="top">An input sequence [const]</td>
+      </tr>
+      <tr>
+        <td width="443" height="31" valign="top"><code><b>const</b> SearchT&amp;
+          Search</code></td>
+        <td width="703" height="31" valign="top">A search sequence</td>
       </tr>
       <tr>
         <td width="443" height="31" valign="top"><code><b>const</b> FormatT&amp;
           Format</code></td>
-        <td width="703" height="31" valign="top">A search sequence</td>
+        <td width="703" height="31" valign="top">A format sequence</td>
       </tr>
     </table>
     <h2><a name="examples">Examples</a></h2>

@@ -1,195 +1,194 @@
 <!doctype html public "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 
-<head>
-  <meta name="author" content="Pavol Droba, mailto:droba@topmail.sk">
-  <meta name="GENERATOR" content="Microsoft FrontPage 4.0">
-  <meta name="ProgId" content="FrontPage.Editor.Document">
-  <title>String Algorithm Library</title>
-</head>
+  <head>
+    <meta name="author" content="Pavol Droba, mailto:droba@topmail.sk">
+    <meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+    <meta name="ProgId" content="FrontPage.Editor.Document">
+    <title>String Algorithm Library</title>
+  </head>
 
-<body text="#000000" bgcolor="#FFFFFF">
+  <body text="#000000" bgcolor="#FFFFFF">
 
-  <div align="left">
-    <table border="0" width="799" height="134">
+    <div align="left">
+      <table border="0" width="799" height="134">
+        <tr>
+          <td width="288" height="134"><img id="IMG1" src="cboost.gif" align="middle" border="0" width="277" height="86"></td>
+          <td width="1152" height="134">
+            <h1 align="center">&nbsp;String Algorithm Library&nbsp;</h1>
+            <h2 align="center">Predicates</h2>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <ul>
+      <li>
+        <p align="left">
+          <a href="#predicates">Predicates</a>
+        <ul>
+          <li>
+            <p align="left">
+              <a href="#overview">Overview</a></li>
+          <li><a href="#description">Description</a></li>
+          <li><a href="#synopsis">Synopsis</a></li>
+          <li><a href="#examples">Examples</a></li>
+        </ul>
+      </li>
+    </ul>
+    <hr>
+    <h2><a name="predicates">Predicates</a></h2>
+    <h3><a name="overview">Overview</a></h3>
+    <p>
+      Predicates are included in <a href="../../../boost/string_algo/predicate.hpp">&lt;boost/string_algo/predicate.hpp&gt;</a>
+      header ( in <code>boost</code> namespace ).<br>
+      Provided algorithms are resolving if a substring is contained in the input
+      string under various conditions. This includes suffix and prefix check,
+      equality check and containment check.
+    </p>
+    <h3><a name="description">Description</a></h3>
+    <p>
+      &nbsp;Following table shows the summary of all predicates. Each algorithm
+      returns a <code>bool</code> value representing a success of condition
+      check.
+    </p>
+    <table border="1" height="28" width="827">
       <tr>
-        <td width="288" height="134"><img id="IMG1" src="cboost.gif"
-          align="middle" border="0" width="277" height="86"></td>
-        <td width="1152" height="134">
-          <h1 align="center">&nbsp;String Algorithm Library&nbsp;</h1>
-          <h2 align="center">Predicates</h2>
-        </td>
+        <th height="30" valign="top" align="center" width="107">Function</th>
+        <th height="30" width="234">Description</th>
+        <th height="30" width="464">Example</th>
+      </tr>
+      <tr>
+        <td height="28" valign="top" align="center" width="107"><code>starts_with</code></td>
+        <td height="28" valign="top" align="center" width="234">Checks if the
+          substring is a prefix of the input.</td>
+        <td height="28" valign="top" align="center" width="464"><code>bool
+          b=starts_with( begin, end, subbegin, subend );<br>
+          bool b=starts_with( string(&quot;123abc&quot;),
+          string(&quot;123&quot;) );</code></td>
+      </tr>
+      <tr>
+        <td height="30" valign="top" align="center" width="107"><code>ends_with</code></td>
+        <td height="30" valign="top" align="center" width="234">Checks if the
+          substring is a suffix of the input.</td>
+        <td height="30" valign="top" align="center" width="464"><code>bool
+          b=starts_with( begin, end, subbegin, subend );<br>
+          bool b=starts_with( string(&quot;123abc&quot;),
+          string(&quot;abc&quot;) );</code></td>
+      </tr>
+      <tr>
+        <td height="30" valign="top" align="center" width="107"><code>contains</code></td>
+        <td height="28" valign="top" align="center" width="234">Checks if the
+          input contains an instance of substring.</td>
+        <td height="28" valign="top" align="center" width="464"><code>bool
+          b=starts_with( begin, end, subbegin, subend );<br>
+          bool b=starts_with( string(&quot;123abc&quot;),
+          string(&quot;23a&quot;) );</code></td>
+      </tr>
+      <tr>
+        <td height="30" valign="top" align="center" width="107"><code>equals</code></td>
+        <td height="30" valign="top" align="center" width="234">Checks if both
+          operands are equal.<br>
+          ( Note: this is two-directional equivalent of <code>std::equal</code>
+          algorithm)</td>
+        <td height="30" valign="top" align="center" width="464"><code>bool
+          b=starts_with( begin, end, subbegin, subend );<br>
+          bool b=starts_with( string(&quot;123abc&quot;),
+          string(&quot;123abc&quot;) );</code></td>
       </tr>
     </table>
-  </div>
-  <ul>
-    <li>
-      <p align="left">
-        <a href="#predicates">Predicates</a>
-      <ul>
-        <li>
-          <p align="left">
-            <a href="#overview">Overview</a></li>
-        <li><a href="#description">Description</a></li>
-        <li><a href="#synopsis">Synopsis</a></li>
-        <li><a href="#examples">Examples</a></li>
-      </ul>
-    </li>
-  </ul>
-  <hr>
-  <h2><a name="predicates">Predicates</a></h2>
-  <h3><a name="overview">Overview</a></h3>
-  <p>
-    Predicates are included in <a
-    href="../../../boost/string_algo/predicate.hpp">&lt;boost/string_algo/predicate.hpp&gt;</a>
-    header ( in <code>boost</code> namespace ).<br>
-    Provided algorithms are resolving if a substring is contained in the input
-    string under various contidions. This includes suffix and prefix chech,
-    equality check and containment check.
-  </p>
-  <h3><a name="description">Description</a></h3>
-  <p>
-    &nbsp;Following table shows the summary of all predicates. Each algoritm
-    returns a <code>bool</code> value representing a success of condition check.
-  </p>
-  <table border="1" height="28" width="827">
-    <tr>
-      <th height="30" valign="top" align="center" width="107">Function</th>
-      <th height="30" width="234">Description</th>
-      <th height="30" width="464">Example</th>
-    </tr>
-    <tr>
-      <td height="28" valign="top" align="center" width="107"><code>starts_with</code></td>
-      <td height="28" valign="top" align="center" width="234">Checks if the
-        subsring is a prefix of the input.</td>
-      <td height="28" valign="top" align="center" width="464"><code>bool
-        b=starts_with( begin, end, subbegin, subend );<br>
-        bool b=starts_with( string(&quot;123abc&quot;), string(&quot;123&quot;)
-        );</code></td>
-    </tr>
-    <tr>
-      <td height="30" valign="top" align="center" width="107"><code>ends_with</code></td>
-      <td height="30" valign="top" align="center" width="234">Checks if the
-        subsring is a suffix of the input.</td>
-      <td height="30" valign="top" align="center" width="464"><code>bool
-        b=starts_with( begin, end, subbegin, subend );<br>
-        bool b=starts_with( string(&quot;123abc&quot;), string(&quot;abc&quot;)
-        );</code></td>
-    </tr>
-    <tr>
-      <td height="30" valign="top" align="center" width="107"><code>contains</code></td>
-      <td height="28" valign="top" align="center" width="234">Checks if the
-        input contains an instance of substring.</td>
-      <td height="28" valign="top" align="center" width="464"><code>bool
-        b=starts_with( begin, end, subbegin, subend );<br>
-        bool b=starts_with( string(&quot;123abc&quot;), string(&quot;23a&quot;)
-        );</code></td>
-    </tr>
-    <tr>
-      <td height="30" valign="top" align="center" width="107"><code>equals</code></td>
-      <td height="30" valign="top" align="center" width="234">Checks if both
-        operands are equal.<br>
-        ( Note: this is two-directional equivalent od <code>std::equal</code>
-        algorithm)</td>
-      <td height="30" valign="top" align="center" width="464"><code>bool
-        b=starts_with( begin, end, subbegin, subend );<br>
-        bool b=starts_with( string(&quot;123abc&quot;),
-        string(&quot;123abc&quot;) );</code></td>
-    </tr>
-  </table>
-  <h3><a name="synopsis">Synopsis</a></h3>
-  <p>
-    Iterator based variants.&nbsp;
-  </p>
-  <pre>    <b>template</b>&lt; <b>typename</b> InputIteratorT, <b>typename</b> SubIteratorT &gt;
+    <h3><a name="synopsis">Synopsis</a></h3>
+    <p>
+      Iterator based variants.&nbsp;
+    </p>
+    <pre>    <b>template</b>&lt; <b>typename</b> InputIteratorT, <b>typename</b> SubIteratorT &gt;
     <b>inline</b> <b>bool</b> starts_with( 
         InputIteratorT Begin, 
         InputIteratorT End, 
         SubIteratorT SubBegin,
         SubIteratorT SubEnd );</pre>
-  <pre>    <b>template</b>&lt; <b>typename</b> InputIteratorT, <b>typename</b> SubIteratorT &gt;
+    <pre>    <b>template</b>&lt; <b>typename</b> InputIteratorT, <b>typename</b> SubIteratorT &gt;
     <b>inline</b> <b>bool</b> ends_with( 
         InputIteratorT Begin, 
         InputIteratorT End, 
         SubIteratorT SubBegin,
         SubIteratorT SubEnd );</pre>
-  <pre>    <b>template</b>&lt; <b>typename</b> InputIteratorT, <b>typename</b> SubIteratorT &gt;
+    <pre>    <b>template</b>&lt; <b>typename</b> InputIteratorT, <b>typename</b> SubIteratorT &gt;
     <b>inline</b> <b>bool</b> contains( 
         InputIteratorT Begin, 
         InputIteratorT End, 
         SubIteratorT SubBegin,
         SubIteratorT SubEnd );</pre>
-  <pre>    <b>template</b>&lt; <b>typename</b> InputIteratorT, <b>typename</b> SubIteratorT &gt;
+    <pre>    <b>template</b>&lt; <b>typename</b> InputIteratorT, <b>typename</b> SubIteratorT &gt;
     <b>inline</b> <b>bool</b> equals( 
         InputIteratorT Begin, 
         InputIteratorT End, 
         SubIteratorT SubBegin,
         SubIteratorT SubEnd );</pre>
-  <p>
-    Sequence variants.
-  </p>
-  <pre>    <b>template</b>&lt; <b>typename</b> SeqT1, <b>typename </b>SeqT2 &gt;
+    <p>
+      Sequence variants.
+    </p>
+    <pre>    <b>template</b>&lt; <b>typename</b> SeqT1, <b>typename </b>SeqT2 &gt;
     <b>inline</b> <b>bool</b> starts_with( <b>const</b> SeqT1&amp; Input, <b>const</b> SeqT2&amp; Substr );</pre>
-  <pre>    <b>template</b>&lt; <b>typename</b> SeqT1, <b>typename </b>SeqT2 &gt;
+    <pre>    <b>template</b>&lt; <b>typename</b> SeqT1, <b>typename </b>SeqT2 &gt;
     <b>inline</b> <b>bool</b> ends_with( <b>const</b> SeqT1&amp; Input, <b>const</b> SeqT2&amp; Substr );</pre>
-  <pre>    <b>template</b>&lt; <b>typename</b> SeqT1, <b>typename </b>SeqT2 &gt;
+    <pre>    <b>template</b>&lt; <b>typename</b> SeqT1, <b>typename </b>SeqT2 &gt;
     <b>inline</b> <b>bool</b> contains( <b>const</b> SeqT1&amp; Input, <b>const</b> SeqT2&amp; Substr );</pre>
-  <pre>    <b>template</b>&lt; <b>typename</b> SeqT1, <b>typename </b>SeqT2 &gt;
+    <pre>    <b>template</b>&lt; <b>typename</b> SeqT1, <b>typename </b>SeqT2 &gt;
     <b>inline</b> <b>bool</b> equals( <b>const</b> SeqT1&amp; Input, <b>const</b> SeqT2&amp; Substr );</pre>
-  <p>
-    Parameters:
-  </p>
-  <div align="left">
-    <table border="0" width="574" height="1">
-      <tr>
-        <td width="437" height="31" valign="top"><code><b>typename</b>
-          InputIteratorT</code></td>
-        <td width="709" height="31" valign="top">A forward iterator type</td>
-      </tr>
-      <tr>
-        <td width="437" height="31" valign="top"><code><b>typename</b>
-          SubIteratorT</code></td>
-        <td width="709" height="31" valign="top">A forward iterator type</td>
-      </tr>
-      <tr>
-        <td width="437" height="31" valign="top"><code><b>typename</b> SeqT1, <b>typename</b>
-          SeqT2</code></td>
-        <td width="709" height="31" valign="top">A sequence types</td>
-      </tr>
-      <tr>
-        <td width="437" height="31" valign="top"><code>InputIteratorT Begin</code></td>
-        <td width="709" height="31" valign="top">Begin of an input sequence</td>
-      </tr>
-      <tr>
-        <td width="437" height="31" valign="top"><code>InputIteratorT End</code></td>
-        <td width="709" height="31" valign="top">End of an input sequence</td>
-      </tr>
-      <tr>
-        <td width="437" height="31" valign="top"><code>SubIteratorT SubBegin</code></td>
-        <td width="709" height="31" valign="top">Begin of a substring sequence</td>
-      </tr>
-      <tr>
-        <td width="437" height="31" valign="top"><code>SubIteratorT SubEnd</code></td>
-        <td width="709" height="31" valign="top">End of a substring sequence</td>
-      </tr>
-      <tr>
-        <td width="437" height="31" valign="top"><code><b>const</b> Seq1T&amp;
-          Input</code></td>
-        <td width="709" height="31" valign="top">An input sequence</td>
-      </tr>
-      <tr>
-        <td width="437" height="31" valign="top"><code><b>const</b> Seq2T&amp;
-          Substr</code></td>
-        <td width="709" height="31" valign="top">An substring sequence</td>
-      </tr>
-    </table>
-  </div>
-  <h3><a name="examples">Examples</a></h3>
-  <p>
-    Following example shows basic usage of predicate algorithms. More examples
-    can be found in the library tests in <a href="../test/predicate_test.cpp">&lt;libs/string_algo/test/predicate_test.cpp&gt;</a>.
-  </p>
-  <pre>#include &lt;string&gt;
+    <p>
+      Parameters:
+    </p>
+    <div align="left">
+      <table border="1" width="574" height="1">
+        <tr>
+          <td width="437" height="31" valign="top"><code><b>typename</b>
+            InputIteratorT</code></td>
+          <td width="709" height="31" valign="top">A forward iterator type</td>
+        </tr>
+        <tr>
+          <td width="437" height="31" valign="top"><code><b>typename</b>
+            SubIteratorT</code></td>
+          <td width="709" height="31" valign="top">A forward iterator type</td>
+        </tr>
+        <tr>
+          <td width="437" height="31" valign="top"><code><b>typename</b> SeqT1, <b>typename</b>
+            SeqT2</code></td>
+          <td width="709" height="31" valign="top">A sequence types</td>
+        </tr>
+        <tr>
+          <td width="437" height="31" valign="top"><code>InputIteratorT Begin</code></td>
+          <td width="709" height="31" valign="top">Begin of an input sequence</td>
+        </tr>
+        <tr>
+          <td width="437" height="31" valign="top"><code>InputIteratorT End</code></td>
+          <td width="709" height="31" valign="top">End of an input sequence</td>
+        </tr>
+        <tr>
+          <td width="437" height="31" valign="top"><code>SubIteratorT SubBegin</code></td>
+          <td width="709" height="31" valign="top">Begin of a substring sequence</td>
+        </tr>
+        <tr>
+          <td width="437" height="31" valign="top"><code>SubIteratorT SubEnd</code></td>
+          <td width="709" height="31" valign="top">End of a substring sequence</td>
+        </tr>
+        <tr>
+          <td width="437" height="31" valign="top"><code><b>const</b> Seq1T&amp;
+            Input</code></td>
+          <td width="709" height="31" valign="top">An input sequence</td>
+        </tr>
+        <tr>
+          <td width="437" height="31" valign="top"><code><b>const</b> Seq2T&amp;
+            Substr</code></td>
+          <td width="709" height="31" valign="top">An substring sequence</td>
+        </tr>
+      </table>
+    </div>
+    <h3><a name="examples">Examples</a></h3>
+    <p>
+      Following example shows basic usage of predicate algorithms. More examples
+      can be found in the library tests in <a href="../test/predicate_test.cpp">&lt;libs/string_algo/test/predicate_test.cpp&gt;</a>.
+    </p>
+    <pre>#include &lt;string&gt;
 #include &lt;iostream&gt;
 #include &lt;boost/string_algo/predicate.hpp&gt;
 
@@ -218,15 +217,15 @@ void predicate_example()
 
     cout &lt;&lt; endl;
 }   </pre>
-  <hr>
-  <p>
-    (C) Copyright Pavol Droba 2003. Permission to copy, use, modify, sell and
-    distribute this software is granted provided this copyright notice appears
-    in all copies. This software is provided &quot;as is&quot; without express
-    or implied warranty, and with no claim as to its suitability for any
-    purpose.
-  </p>
+    <hr>
+    <p>
+      (C) Copyright Pavol Droba 2003. Permission to copy, use, modify, sell and
+      distribute this software is granted provided this copyright notice appears
+      in all copies. This software is provided &quot;as is&quot; without express
+      or implied warranty, and with no claim as to its suitability for any
+      purpose.
+    </p>
 
-</body>
+  </body>
 
 </html>

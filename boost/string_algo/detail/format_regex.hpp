@@ -13,7 +13,7 @@
 #include <string>
 #include <boost/regex.hpp>
 #include <boost/string_algo/traits.hpp>
-#include <boost/string_algo/detail/util.hpp>
+#include <boost/string_algo/detail/find_regex.hpp>
 
 namespace boost {
 
@@ -37,8 +37,9 @@ namespace boost {
                 regex_formatF( const StringT& Fmt, unsigned int Flags=0 ) :
                     m_Fmt(Fmt), m_Flags( Flags ) {}
 
-                template< typename ReplaceT >
-                result_type operator()( const ReplaceT& Replace ) const
+                template<typename InputIteratorT>
+                result_type operator()( 
+					const regex_search_result<InputIteratorT>& Replace ) const
                 {
                     return regex_format( 
                         Replace.match_results(), m_Fmt, m_Flags );                      
@@ -51,7 +52,7 @@ namespace boost {
             // Construction helper
             template< typename CharT, typename TraitsT, typename AllocT >
             inline regex_formatF< std::basic_string< CharT, TraitsT, AllocT> >
-            create_regex_formatF( 
+            create_regex_format( 
                 const std::basic_string<CharT, TraitsT, AllocT>& Format,
                 unsigned int Flags=0 )
             {

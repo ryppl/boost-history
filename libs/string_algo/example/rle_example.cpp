@@ -18,7 +18,6 @@
 #include <limits>
 #include <boost/detail/iterator.hpp>
 #include <boost/string_algo/replace_impl.hpp>
-#include <boost/string_algo/detail/find_base.hpp>
 
 // replace mark specification, specialize for a specific element type
 template< typename T > T repeat_mark() { return std::numeric_limits<T>::max(); };
@@ -32,14 +31,10 @@ template< typename T > T repeat_mark() { return std::numeric_limits<T>::max(); }
     Find a sequence which can be compressed. It has to be at least 3-character long
     sequence of repetitive characters 
 */
-template< typename InputT, typename InputPolicy >
-struct find_compressF : public boost::string_algo::detail::find_baseF<InputT, InputPolicy>
+template<typename InputIteratorT>
+struct find_compressF 
 {
-    typedef boost::string_algo::detail::find_baseF<InputT, InputPolicy> base_type;
-
-    typedef typename base_type::input_type input_type;
-    typedef typename base_type::input_iterator_type input_iterator_type;
-    typedef typename base_type::input_reference_type input_reference_type;
+    typedef InputIteratorT input_iterator_type;
     typedef typename boost::detail::iterator_traits<input_iterator_type>::value_type value_type;
     typedef boost::iterator_range<input_iterator_type> result_type;
 
@@ -47,33 +42,28 @@ struct find_compressF : public boost::string_algo::detail::find_baseF<InputT, In
     find_compressF() {}
 
     // Operation
-    result_type operator()( input_reference_type Input ) const
-    {
-        return operator()( Input, Input.begin() );
-    }
-
     result_type operator()( 
-        input_reference_type Input, 
-        input_iterator_type From ) const
+        input_iterator_type Begin, 
+        input_iterator_type End ) const
     {
         // begin of matchin segment
-        input_iterator_type MStart=Input.end();
+        input_iterator_type MStart=End;
         // Repetition counter
         value_type Cnt=0;
 
         // Search for a sequence of repetitive characters
-        for(input_iterator_type It=From; It!=Input.end();)
+        for(input_iterator_type It=Begin; It!=End;)
         {
             input_iterator_type It2=It++;
 
-            if ( It==Input.end() || Cnt>=std::numeric_limits<value_type>::max() )
+            if ( It==End || Cnt>=std::numeric_limits<value_type>::max() )
             {
                 return result_type( MStart, It );
             }
 
             if ( *It==*It2 )
             {
-                if ( MStart==Input.end() )
+                if ( MStart==End )
                 {
                     // Mark the start
                     MStart=It2;
@@ -84,20 +74,20 @@ struct find_compressF : public boost::string_algo::detail::find_baseF<InputT, In
             }
             else
             {
-                if ( MStart!=Input.end() )
+                if ( MStart!=End )
                 {
                     if ( Cnt>2 )
                         return result_type( MStart, It );
                     else
                     {
-                        MStart=Input.end();
+                        MStart=End;
                         Cnt=0;
                     }
                 }
             }
         }
 
-        return result_type( Input.end(), Input.end() );
+        return result_type( End, End );
     }
 };
 
@@ -135,14 +125,10 @@ struct format_compressF
 /*
     find a repetition block
 */
-template< typename InputT, typename InputPolicy >
-struct find_decompressF : public boost::string_algo::detail::find_baseF<InputT, InputPolicy>
+template<typename InputIteratorT>
+struct find_decompressF
 {
-    typedef boost::string_algo::detail::find_baseF<InputT, InputPolicy> base_type;
-
-    typedef typename base_type::input_type input_type;
-    typedef typename base_type::input_iterator_type input_iterator_type;
-    typedef typename base_type::input_reference_type input_reference_type;
+    typedef InputIteratorT input_iterator_type;
     typedef typename boost::detail::iterator_traits<input_iterator_type>::value_type value_type;
     typedef boost::iterator_range<input_iterator_type> result_type;
 
@@ -150,32 +136,27 @@ struct find_decompressF : public boost::string_algo::detail::find_baseF<InputT, 
     find_decompressF() {}
 
     // Operation
-    result_type operator()( input_reference_type Input ) const
-    {
-        return operator()( Input, Input.begin() );
-    }
-
     result_type operator()( 
-        input_reference_type Input, 
-        input_iterator_type From ) const
+        input_iterator_type Begin, 
+        input_iterator_type End ) const
     {
-        for(input_iterator_type It=From; It!=Input.end(); It++)
+        for(input_iterator_type It=Begin; It!=End; It++)
         {
             if( *It==repeat_mark<value_type>() )
             {
                 // Repeat mark found, extract body
                 input_iterator_type It2=It++; 
                 
-                if ( It==Input.end() ) break;
+                if ( It==End ) break;
                     It++; 
-                if ( It==Input.end() ) break;
+                if ( It==End ) break;
                     It++;
                 
                 return result_type( It2, It );
             }
         }
 
-        return result_type( Input.end(), Input.end() );
+        return result_type( End, End );
     }
 };
 
@@ -223,14 +204,14 @@ void rle_example()
 
     string compress=string_algo::replace_all_copy( 
         original, 
-        find_compressF<string,string_algo::const_input_policy>(), 
+		find_compressF<string::const_iterator>(), 
         format_compressF<string>() );
 
     cout << "Compressed string: " << compress << endl;
 
     string decompress=string_algo::replace_all_copy( 
         compress, 
-        find_decompressF<string,string_algo::const_input_policy>(), 
+		find_decompressF<string::const_iterator>(), 
         format_decompressF<string>() );
 
     cout << "Decompressed string: " << decompress << endl;
@@ -239,14 +220,14 @@ void rle_example()
 
     string_algo::replace_all( 
         original, 
-        find_compressF<string,string_algo::mutable_input_policy>(), 
+		find_compressF<string::iterator>(), 
         format_compressF<string>() );
     
     cout << "Compressed string: " << original << endl;
 
     string_algo::replace_all( 
         original, 
-        find_decompressF<string,string_algo::mutable_input_policy>(), 
+		find_decompressF<string::iterator>(), 
         format_decompressF<string>() );
 
     cout << "Decompressed string: " << original << endl;

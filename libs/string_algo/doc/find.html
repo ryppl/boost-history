@@ -37,15 +37,21 @@
           <li><a href="#ua_examples">Examples</a></li>
         </ul>
       </li>
+      <li><a href="#rationale">Rationale</a>
+        <ul>
+          <li><a href="#rational_usability">Usability</a></li>
+          <li><a href="#rationale_efficiency">Efficiency considerations</a></li>
+        </ul>
+      </li>
     </ul>
     <hr>
     <h2><a name="overview">Overview</a></h2>
     <p>
       Find algorithms are used to search for a substring matching a specific
       criteria. Result is given as a pair of iterators (represented by an
-      instance of <code>iterator_range</code>) pointing into input sequence.
+      instance of <code>iterator_range</code>) pointing into the input sequence.
       Matching criteria is specific for each algorithm. Library includes
-      searching for first, last and n-th occurence of a substring as well as
+      searching for first, last and n-th occurrence of a substring as well as
       regular expression matching.
     </p>
     <hr>
@@ -74,15 +80,15 @@
         <b>typedef</b> IteratorT iterator;</pre>
     <pre>        iterator_range();
         iterator_range( iterator Begin, iterator End );
-        <b>template</b>&lt; <b>typename</b> OtherItT &gt;
+        <b>template</b>&lt;<b>typename</b> OtherItT&gt;
         iterator_range( <b>const</b> iterator_range&lt;OtherItT&gt;&amp; Other );
 
-        <b>template</b>&lt; <b>typename</b> OtherItT &gt;
+        <b>template</b>&lt;<b>typename</b> OtherItT&gt;
         iterator_range&amp; <b>operator</b>=( <b>const</b> iterator_range&lt;OtherItT&gt;&amp; Other );
 
-        <b>template</b>&lt; <b>typename</b> OtherItT &gt; 
+        <b>template</b>&lt;<b>typename</b> OtherItT&gt; 
         <b>bool</b> <b>operator</b>==( <b>const</b> iterator_range&lt;OtherItT&gt;&amp; Other );
-        <b>template</b>&lt; <b>typename</b> OtherItT &gt; 
+        <b>template</b>&lt;<b>typename</b> OtherItT&gt; 
         <b>bool</b> <b>operator</b>!=( <b>const</b> iterator_range&lt;OtherItT&gt;&amp; Other );
         IteratorT begin() <b>const</b>;
         IteratorT end() <b>const</b>;
@@ -92,7 +98,7 @@
     <p>
       Class members:
     </p>
-    <table border="0" width="704" height="1">
+    <table border="1" width="704" height="1">
       <tr>
         <td width="528" height="31" valign="top"><code><b>typename</b> IteratorT</code></td>
         <td width="748" height="31" valign="top">An iterator type, to be
@@ -104,30 +110,31 @@
       </tr>
       <tr>
         <td width="528" height="31" valign="top"><code>value_type</code></td>
-        <td width="748" height="31" valign="top">value_type of the contained
-          iterator</td>
+        <td width="748" height="31" valign="top"><code>value_type</code> of the
+          contained iterator</td>
       </tr>
       <tr>
         <td width="528" height="31" valign="top"><code>difference_type</code></td>
-        <td width="748" height="31" valign="top">difference_type of the
-          container iterator</td>
+        <td width="748" height="31" valign="top"><code>difference_type</code> of
+          the container iterator</td>
       </tr>
       <tr>
         <td width="528" height="31" valign="top"><code>const_iterator</code></td>
-        <td width="748" height="31" valign="top">const_iterator type</td>
+        <td width="748" height="31" valign="top"><code>const_iterator</code>
+          type</td>
       </tr>
       <tr>
         <td width="528" height="31" valign="top"><code>iterator</code></td>
-        <td width="748" height="31" valign="top">iterator type</td>
+        <td width="748" height="31" valign="top"><code>iterator</code> type</td>
       </tr>
       <tr>
         <td width="528" height="31" valign="top"><code>iterator_range()</code></td>
-        <td width="748" height="31" valign="top">Default contructor</td>
+        <td width="748" height="31" valign="top">Default constructor</td>
       </tr>
       <tr>
         <td width="528" height="31" valign="top"><code>iterator_range(<br>
           &nbsp;&nbsp;&nbsp; iterator Begin, iterator End )</code></td>
-        <td width="748" height="31" valign="top">Contructor from a pair of
+        <td width="748" height="31" valign="top">Constructor from a pair of
           iterators</td>
       </tr>
       <tr>
@@ -201,7 +208,7 @@
       <tr>
         <td height="28" valign="top" align="center"><code>find_first</code></td>
         <td height="28" valign="top" align="center" width="234">Find the first
-          occurence of a substring in the input range.</td>
+          occurrence of a substring in the input range.</td>
         <td height="28" valign="top" align="center" width="464"><code>find_first(
           Begin, End, SubstrBegin, SubstrEnd );<br>
           find_first( Input, string(&quot;23&quot;) );</code></td>
@@ -209,7 +216,7 @@
       <tr>
         <td height="30" valign="top" align="center"><code>find_last</code></td>
         <td height="30" valign="top" align="center" width="234">Find the last
-          occurence of a substring.</td>
+          occurrence of a substring.</td>
         <td height="30" valign="top" align="center" width="464"><code>find_last(
           Begin, End, SubstrBegin, SubstrEnd );<br>
           find_last( Input, string(&quot;23&quot;) );</code></td>
@@ -217,7 +224,7 @@
       <tr>
         <td height="30" valign="top" align="center"><code>find_nth</code></td>
         <td height="28" valign="top" align="center" width="234">Find the n-th
-          occurence of a substring.<br>
+          occurrence of a substring.<br>
           Position is 0-based.</td>
         <td height="28" valign="top" align="center" width="464"><code>find_nth(
           Begin, End, SubstrBegin, SubstrEnd, 2 );<br>
@@ -226,7 +233,7 @@
       <tr>
         <td height="30" valign="top" align="center"><code>find_regex</code></td>
         <td height="30" valign="top" align="center" width="234">Find a first
-          substring mathing a given regex.</td>
+          substring matching a given regex.</td>
         <td height="30" valign="top" align="center" width="464"><code>find_regex(
           Begin, End, Rx );<br>
           find_regex( Input, regex(&quot;[A-Z].*xxx&quot;), match_any );</code></td>
@@ -305,7 +312,7 @@
     <p>
       Parameters:
     </p>
-    <table border="0" width="574" height="1">
+    <table border="1" width="574" height="1">
       <tr>
         <td width="443" height="31" valign="top"><code><b>typename</b>
           InputIteratorT</code></td>
@@ -362,13 +369,13 @@
         <td width="443" height="31" valign="top"><code><b>const</b>
           reg_expression&lt;CharT, RegexTraitsT, RegexAllocatorT&gt;&amp; Rx</code></td>
         <td width="703" height="31" valign="top">Regular expression used for
-          searching</td>
+          searching. See Regex++ documentation for deails.</td>
       </tr>
       <tr>
         <td width="443" height="31" valign="top"><code><b>unsigned</b> <b>int</b>
           MatchFlags=match_default</code></td>
         <td width="703" height="31" valign="top">Match flags defining some
-          properties of search algorithm.</td>
+          properties of search. See Regex++ documentation for deails. algorithm.</td>
       </tr>
     </table>
     <h4>Remark on <code>find_regex</code></h4>
@@ -409,6 +416,41 @@ void find_example()
     cout &lt;&lt; &quot;str1 with upper-cased part matching cde: &quot; &lt;&lt; str1 &lt;&lt; endl;</pre>
     <pre>    cout &lt;&lt; endl;
 }</pre>
+    <h2><a name="rationale">Rationale</a></h2>
+    <h3><a name="rational_usability">Usability</a></h3>
+    <p>
+      Find algorithms have similar functionality to of <code>std::search</code>
+      algorithm. They provide different interface which is more suitable for
+      common string operations.
+    </p>
+    <p>
+      Instead of returning just the start of matching subsequence they return a
+      range, which is more convinient. This feature also allows a partitioning
+      of&nbsp; the input sequence into three parts: prefix, substring and
+      suffix.&nbsp;<br>
+      <br>
+      Besides of the iterator-based variant, there are also variants which
+      accept a container as an input. It is more convinient to write&nbsp; <code>find_first(
+      str1, str2 )</code> then <code>find_first( str1.begin(), str1.end(),
+      str2.begin(), str2.end() )</code>
+    </p>
+    <p>
+      Another difference is an addition of various searching methods besides <code>find_first</code>,
+      including <code>find_regex</code>.
+    </p>
+    <h3><a name="rationale_efficiency">Efficiency considerations</a></h3>
+    <p>
+      Currently the library contains only naive implementation of find algoritms
+      with complexity O(n.m) where n is the size of the input sequence and m is
+      the size of the seach sequence. There are algorithms with complexity O(n),
+      but for smaller sequence a contant overhead is rather big. For small m
+      &lt;&lt; n current implementation provides acceptable efficiency. Even C++
+      standard defines a required complexity for search algorithm only O(n.m).
+    </p>
+    <p>
+      It is possible that feature versions of library will contain also
+      algoritms with linear complexity as an option.
+    </p>
     <hr>
     <p>
       (C) Copyright Pavol Droba 2003. Permission to copy, use, modify, sell and

@@ -16,7 +16,9 @@ extern void trim_example();
 extern void predicate_example();
 extern void find_example();
 extern void replace_example();
+extern void regex_example();
 extern void rle_example();
+
 
 int main()
 {
@@ -25,6 +27,7 @@ int main()
     predicate_example();
     find_example();
     replace_example();
+    regex_example();
     rle_example();
 
     cout << "Done." << endl;
