@@ -542,8 +542,6 @@ nastiness within its implementation of \code{applyN}, but anyone
 writing portable \mpgms\ is required to use the library instead of
 taking what might be considered the more obvious approach.
 
-\subsection{Relation to other work.}
-
 \section{Basic usage (What can I do with mpl?)}
 
 \subsection{Conditional type selection}
@@ -586,10 +584,13 @@ spelling it manually every time via (partial) class template
 specialization quickly becomes impractical. The template also 
 important from the point of encapsulating the compiler 
 workarounds (for example, not all \Cpp\ compilers support 
-partial template specialization). However, the way \Cpp\ 
-template instantiation mechanism works imposes some subtle 
-limitations on applicability of the primitive, comparing to 
-a manually implemented equivalent of the selection code. 
+partial template specialization). 
+
+\subsubsection{Delayed Evaluation}
+
+The way \Cpp\ template instantiation mechanism works imposes some
+subtle limitations on applicability of the type selection primitive,
+compared to a manually implemented equivalent of the selection code.
 
 %%% This section digresses into dealing with what I would title
 %%% "Delayed Evaluation". While a /very/ important topic, I would
@@ -601,8 +602,8 @@ a manually implemented equivalent of the selection code.
 For example, suppose we are implementing a \code{pointed\_\-type}
 traits template such as \code{pointed\_\-type<T>::type} instantiated
 for a \code{T} that is either a plain pointer
-(\code{U*}), \code{std::auto\_ptr<U>}, or any of the \code{boost}
-smart pointers, e.g. \code{boost::scoped\_ptr<U>}, will give you 
+(\code{U*}), \code{std::auto\_\-ptr<U>}, or any of the \code{boost}
+smart pointers, e.g. \code{boost::scoped\_\-ptr<U>}, will give you 
 the pointed type (\code{U}):
 
 {\small
@@ -614,43 +615,25 @@ BOOST_MPL_ASSERT_IS_SAME(pointed_type< boost::scoped_ptr<my> >::type, my);
 \end{codesamp}
 }
 
-An obvious way to implement \code{pointed\_type} would be to 
-use partial specialization to distinguish between plain 
-pointers and everything else:
 
-{\small
-\begin{codesamp}\begin{verbatim}
-// general case, handles std::auto_ptr and boost pointers
-template< typename T >
-struct pointed_type
-{
-    typedef typename T::element_type type;
-};
-
-// specialization for plain pointers
-template< typename T >
-struct pointed_type<T*>
-{
-    typedef T type;
-};
-\end{verbatim}
-\end{codesamp}
-}
-
-but if partial specialization is unavailable, then 
-\code{select\_if} seems to be the right tool. Unfortunately,
-the straightforward approach does not work:
+Unfortunately, the straightforward application of \code{select\_\-if}
+to this problem does not work:\footnote{Although it would be easy to
+implement \code{pointed\_\-type} using partial specialization to
+distinguish the case where \code{T} is a pointer, \code{select\_\-if}
+is likely to be the right tool for dealing with more--complex
+conditionals. For the purposes of exposition, please suspend
+disbelief!}
 
 {\small
 \begin{codesamp}\begin{verbatim}
 template< typename T >
 struct pointed_type
-{
-    typedef typename mpl::select_if<
+    : mpl::select_if<
           boost::is_pointer<T>
         , typename boost::remove_pointer<T>::type
         , typename T::element_type // #1
-        >::type type;
+        >
+{
 };
 
 // the following code causes compilation error in line #1:
@@ -660,50 +643,43 @@ typedef pointed_type<char*>::type result;
 \end{codesamp}
 }
 
-Clearly, \code{typename T::element\_type} expression is not 
-valid in case of \code{T == char*}, and that's what the 
-compiler is complaining about. Implementing the selection code 
-manually solves the problem: 
+Clearly, the expression \code{typename T::element\_\-type} is not
+valid in case of \code{T == char*}, and that's what the compiler is
+complaining about. Implementing the selection code manually solves the
+problem:
 
 {\small
 \begin{codesamp}\begin{verbatim}
 namespace aux {
 // general case
-template< bool >
+template<typename T, bool is_pointer = false>
 struct select_pointed_type
 {
-    template< typename T > struct result
-    {
-        typedef typename T::element_type type;
-    };
+  typedef typename T::element_type type;
 };
 
 // specialization for plain pointers
-template<>
-struct select_pointed_type<true>
+template<typename  T>
+struct select_pointed_type<T,true>
 {
-    template< typename T > struct result
-    {
-        typedef typename
-            boost::remove_pointer<T>::type type;
-    };
+  typedef typename boost::remove_pointer<T>::type type;
 };
 }
 
 template< typename T >
 struct pointed_type
+   : aux::select_pointed_type<
+          T, boost::is_pointer<T>::value
+        >
 {
-    typedef typename aux::select_pointed_type<
-          boost::is_pointer<T>::value
-        >::template result<T>::type type;
 };
 \end{verbatim}
 \end{codesamp}
 }
 
-But this quickly becomes awkward if needs to be done 
-repeatedly. We can try to workaround the problem with 
-\code{select\_\-if} code as follows:
+But this quickly becomes awkward if needs to be done repeatedly, and
+this awkwardness is compounded when partial specialization is not
+available. We can try to work around the problem as follows:
 
 {\small
 \begin{codesamp}\begin{verbatim}
@@ -711,7 +687,7 @@ namespace aux {
 template< typename T >
 struct element_type
 {
-	typedef typename T::element_type type;
+     typedef typename T::element_type type;
 };
 }
 
@@ -729,11 +705,11 @@ struct pointed_type
 }
 
 but this doesn't work either - the access to the 
-\code{element\_type<T>}'s nested \code{type} member still 
-forces the compiler to instantiate \code{element\_type<T>}
+\code{element\_\-type<T>}'s nested \code{type} member still 
+forces the compiler to instantiate \code{element\_\-type<T>}
 with \code{T == char*}, and that instantiation is of course 
 invalid. Also, although in our case this does not lead to a 
-compile error, the \code{boost::remove\_pointer<T>} template 
+compile error, the \code{boost::remove\_\-pointer<T>} template 
 gets always instantiated as well, and for the same reason 
 (because we are accessing it's nested \code{type} member). 
 Such unnecessary instantiation that is not fatal from 
@@ -772,14 +748,14 @@ struct pointed_type
 Now the compiler has no reasons instantiate both 
 \code{boost::remove\_\-pointer<T>} and 
 \code{aux::element\_\-type<T>} even although they are used as 
-actual parameters to the \code{select\_if} template (and is 
+actual parameters to the \code{select\_\-if} template (and is 
 guaranteed not to do so), so we are guaranteed to get away with 
 \code{aux::element\_\-type<char*>} as far as it won't end up being 
 selected as \code{func\_}.
 
 The above technique is so common in template metaprograms, that it
 even make sense to facilitate the selection of nested \code{type} member
-by introducing a high level equivalent to \code{select\_if} - the one
+by introducing a high level equivalent to \code{select\_\-if} - the one
 that will do \code{func\_::type} operation (that is called [nullary]
 function class application) as a part of its invocation.  The \Mpl
 provides such template - it's called \code{apply\_if}. Using it, we
@@ -802,9 +778,9 @@ struct pointed_type
 
 To make our techniques review complete, let's consider a slightly 
 different example - suppose we want to define a high-level wrapper 
-around \code{boost::remove\_pointer} traits template [], which will 
+around \code{boost::remove\_\-pointer} traits template [], which will 
 strip the pointer qualification conditionally. We will call it 
-\code{remove\_pointer\_if}:
+\code{remove\_\-pointer\_\-if}:
 
 {\small
 \begin{codesamp}\begin{verbatim}
@@ -824,22 +800,20 @@ struct remove_pointer_if
 \end{codesamp}
 }
 
-Now the above works from the first time, but it suffers from the 
-problem we mentioned early - \code{boost::remove\_pointer<T>} gets 
-instantiated even if its result is never used. In metaprogramming 
-world compilation time is an important resource \cite{Abr01}, and it's 
-one of the things that gets wasted by unnecessary template 
-instantiations. We've just seen how to deal with the problem in 
-case when both arguments to \code{select\_if} template are the 
-results of nullary function class applications, but in this example 
-one of the arguments - namely \code{T} is just simple a type, so 
-the refactoring just doesn't seem possible. An easiest way out of 
-this situation would be to pass to \code{select\_if} a real 
-nullary function instead of \code{T}, - the one that returns 
-\code{T} on its invocation. The \Mpl provides a simple way to do it -
-we just substitute \code{T} with \code{mpl::identity<T>},
-and \code{boost::select\_if} with more compact 
-\code{boost::apply\_if}:
+Now the above works the first time, but it suffers from the problem we
+mentioned earlier - \code{boost::remove\_\-pointer<T>} gets
+instantiated even if its result is never used. In the \mping\ world
+compilation time is an important resource \cite{Abr01}, and it is
+wasted by unnecessary template instantiations. We've just seen how to
+deal with the problem in when both arguments to \code{select\_\-if}
+are the results of nullary function class applications, but in this
+example one of the arguments (\code{T}) is just a simple type,
+so the refactoring just doesn't seem possible. An easiest way out of
+this situation would be to pass to \code{select\_\-if} a real nullary
+function instead of \code{T}, - the one that returns \code{T} on its
+invocation. The \Mpl provides a simple way to do it - we just
+substitute \code{mpl::identity<T>} and \code{boost::apply\_\-if} for \code{T} and
+\code{boost::select\_\-if}:
 
 {\small
 \begin{codesamp}\begin{verbatim}
@@ -860,7 +834,6 @@ struct remove_pointer_if
 }
 
 Which gives us exactly what we wanted.
-
 
 %%% This intro material needs to come earlier, since you talk about
 %%% nullary functions in the previous section.  
@@ -946,7 +919,7 @@ struct derive3
 }
 
 This looks different, but it seems to work.\footnote{In fact it's
-  already broken: \code{apply\_twice} doesn't even fit the \mfn\
+  already broken: \code{apply\_\-twice} doesn't even fit the \mfn\
   concept since it requires a template (rather than a type) as its first
   parameter, which breaks the \mfn\ protocol!} However, things begin
   to break down noticeably when we want to ``return'' a \mfn\ from our
@@ -1328,7 +1301,7 @@ typedef mpl::transform<
 \end{codesamp}
 }
 
-Note that \code{tiny\_list} is a model of 
+Note that \code{tiny\_\-list} is a model of 
 BidirectionalSequence (it would be RandomAccess if 
 we added \code{advance} member to \code{tiny\_\-list\_\-iterator}:
 
@@ -1354,14 +1327,14 @@ struct tiny_list_iterator
 
 ).
 
-While the \code{tiny\_list} itself might be not that 
+While the \code{tiny\_\-list} itself might be not that 
 interesting - after all, it can hold only 3 elements, if 
 the technique above can be automated so we would be able to 
 define not so tiny sequence - with 5, 10, 20, etc. number 
 of elements, when it would be very valuable (random access 
 is almost as important at compile-time as it is at run-time 
 - for example searching something in a sorted random-access 
-sequence using \code{lower\_bound} can be up to N 
+sequence using \code{lower\_\-bound} can be up to N 
 [need to measure!] time faster than doing the same operation 
 on forward-access only \code{list}). External code generation 
 is one option here, but there is also a solution within the 
@@ -1369,7 +1342,7 @@ language, although it's not a template metaprogramming,
 but preprocessor metaprogramming \cite{PRE}. In fact, 
 \code{mpl::vector} - a fixed-size type sequence that 
 provides random-access iterators - is implemented very like 
-the above \code{tiny\_list}. 
+the above \code{tiny\_\-list}. 
 
 \subsubsection{Why Library-Provided Iteration is Important}
 
@@ -1410,7 +1383,7 @@ algorithms}
 
 For the purpose of examination a little bit more of the 
 library's internal structure, let's look at how the 
-\code{max\_element} algorithm from the above example is 
+\code{max\_\-element} algorithm from the above example is 
 implemented. One might expect that \emph{now} we will again 
 see all these awkward partial specializations, esoteric 
 patterns matching, etc. Well, let's see:
@@ -1456,16 +1429,16 @@ struct max_element
 }
 
 First thing to notice here is that this algorithm is in fact 
-implemented in terms of another one - \code{iter\_fold}. 
+implemented in terms of another one - \code{iter\_\-fold}. 
 In fact, this is probably the most important point of the 
 example, because all other generic sequence algorithms in 
-the library are implemented either in terms of \code{iter\_fold}
+the library are implemented either in terms of \code{iter\_\-fold}
 (or it's counterpart \code{find\_if}) as well. In particular, 
 % Do you really mean to say these are counterparts? You had iter_find
 % in the section title.
 that means that if you would ever need to implement your own 
 sequence algorithm, there is a huge chance that you'll be able 
-to do it using either \code{iter\_fold} or \code{find\_if} - 
+to do it using either \code{iter\_\-fold} or \code{find\_if} - 
 in other words, that means that you won't have to resort to 
 implementing hand-crafted iteration and everything that is 
 associated with it (patterns matching/special cases for 
@@ -1478,14 +1451,14 @@ automatically benefit from these optimizations as well. And of
 course it means that your algorithm will work with any 
 sequence that is a model of \code{mpl}'s 
 ForwardSequence, because it's the only requirement of 
-\code{iter\_fold}/\code{find\_if} pair.
+\code{iter\_\-fold}/\code{find\_if} pair.
 
-\code{iter\_fold} is basically a compile-time equivalent of 
+\code{iter\_\-fold} is basically a compile-time equivalent of 
 \code{fold}/\code{reduce} functions that are one of the basic 
 and well-known primitives in many functional programming 
 languages. A more familiar to a \Cpp\ programmer analogy would 
 be \code{std::accumulate} algorithm from the \Cpp\ standard 
-library. \code{iter\_fold} is defined in \code{mpl} 
+library. \code{iter\_\-fold} is defined in \code{mpl} 
 as follows:
 
 {\small
@@ -1516,25 +1489,25 @@ sequence and included in the forward traversal. The result
 \code{type} is identical to the \code{InitialState} if the 
 sequence is empty. 
 The library also provides a little bit more high-level 
-\code{fold} and \code{fold\_reverse} algorithms that wrap 
-\code{iter\_fold} to accommodate it's most common usage 
+\code{fold} and \code{fold\_\-reverse} algorithms that wrap 
+\code{iter\_\-fold} to accommodate it's most common usage 
 patterns.
 
-You may wonder why \code{find\_if} - which seems to be much 
+You may wonder why \code{find\_\-if} - which seems to be much 
 more high-level - is placed on the same line with the 
-\code{iter\_fold}. Well, one thing about it is that 
-\code{find\_if} is the only sequence algorithm that is not 
-itself implemented using \code{iter\_fold}. The key difference 
-is that \code{find\_if} \emph{terminates} the iteration as 
-soon as its predicate satisfied, while \code{iter\_fold} 
+\code{iter\_\-fold}. Well, one thing about it is that 
+\code{find\_\-if} is the only sequence algorithm that is not 
+itself implemented using \code{iter\_\-fold}. The key difference 
+is that \code{find\_\-if} \emph{terminates} the iteration as 
+soon as its predicate satisfied, while \code{iter\_\-fold} 
 always iterates the whole sequence (backward and forward). 
 An obvious generalization here would be to add yet another 
-parameter to \code{iter\_fold} so it become possible to 
+parameter to \code{iter\_\-fold} so it become possible to 
 implement everything in terms of the single iteration 
 metafunction, but we decided that this would be an 
 over-generalization. For one, it would mean that the 
 termination condition would be always calculated even 
-although for most uses of \code{iter\_fold} it's not needed. 
+although for most uses of \code{iter\_\-fold} it's not needed. 
 An overhead like this just goes against the library's strike 
 for maximum compile-time performance.
 
@@ -1606,7 +1579,7 @@ where you often don't know (and don't care) if the
 \mfns\ you are using operate on types, integral 
 values, other \mfns\, or something else, like 
 fixed-point or rational numbers (\code{mpl::fixed\_c} 
-and \code{mpl::rational\_c}).
+and \code{mpl::rational\_\-c}).
 
 But from user's perspective, the above example is much more
 verbose than the shorter one, the one that was incorrect. So, 
@@ -1760,9 +1733,9 @@ the code that uses them. While runtime performance is not an issue for
 bottleneck to advanced \Cpp\ software development \cite{Abr01}.
 
 The \Mpl\ provides four built-in sequences: \code{type\_\-list},
-\code{value\_\-list} (really just a \code{type\_list} of value
-wrappers), \code{type\_vector}, a randomly--accessible sequence of
-fixed maximum size, and \code{range\_c}, a randomly--accessible
+\code{value\_\-list} (really just a \code{type\_\-list} of value
+wrappers), \code{type\_\-vector}, a randomly--accessible sequence of
+fixed maximum size, and \code{range\_\-c}, a randomly--accessible
 sequence of consecutive integral values. More important, however, is
 its ability to adapt to arbitrary sequence types. The only core
 operations that a sequence is required to provide in order to be used
@@ -1918,8 +1891,6 @@ unrolling is used.
 
 \subsection{Code generation facilities}
 
-\subsection{execute}
-
 There are cases, especially in domain of numeric computations, then 
 you want make some part of calculations at compile-time, and then 
 pass the results to a run-time part of the program for further 
@@ -1945,7 +1916,7 @@ typedef /*...*/ result_data;
 }
 
 Suppose the \code{result\_\-data} here is a sequence of 
-\code{mpl::fixed\_c} types that keeps the results of your 
+\code{mpl::fixed\_\-c} types that keeps the results of your 
 algorithm, and now you want to feed that result to run-time part 
 of the algorithm. With \code{boost::mpl} you can do it this way:
 
@@ -1977,9 +1948,9 @@ double my_algorithm()
 \end{codesamp}
 }
 
-\code{for\_each<...>::\-execute} call there is what actually 
+\code{for\_\-each<...>::\-execute} call there is what actually 
 transfers the compile-time \code{result\_\-data} into run-time 
-\code{std::vector<double> results}. The \code{for\_each} algorithm 
+\code{std::vector<double> results}. The \code{for\_\-each} algorithm 
 is one of the explicit facilities the library provides for run-time 
 code generation:
 
@@ -2006,7 +1977,7 @@ struct for_each
 \end{codesamp}
 }
 
-The semantics of \code{for\_each::\-execute} is simple: it 
+The semantics of \code{for\_\-each::\-execute} is simple: it 
 iterates over a \code{Sequence} and applies the \code{Operation}
 for each element \code{E} of the sequence:
 
@@ -2423,55 +2394,55 @@ are used, and the FSMs are table driven.
 \section{Acknowledgements}
 \section{References}
 
-\begin{chapthebibliography}{1}
-\bibitem{Ale01}
-Andrei Alexandrescu, Modern C++ Design, Generic Programming and
-Design Patterns Applied, Addison-Wesley 2001, ISBN 0-201-70431-5  
+%% \begin{chapthebibliography}{1}
+%% \bibitem{Ale01}
+%% Andrei Alexandrescu, Modern C++ Design, Generic Programming and
+%% Design Patterns Applied, Addison-Wesley 2001, ISBN 0-201-70431-5  
 
-\bibitem{CE00}
-Krzysztof Czarnecki, Ulrich Eisenecker, Generative Programming:
-Methods, Tools, and Applications, Addison-Wesley 2000, ISBN
-0-201-30977-7 
+%% \bibitem{CE00}
+%% Krzysztof Czarnecki, Ulrich Eisenecker, Generative Programming:
+%% Methods, Tools, and Applications, Addison-Wesley 2000, ISBN
+%% 0-201-30977-7 
 
-\bibitem{ISO98}
-ISO/IEC 14882:1998(E), Programming Language C++, http://www.ansi.org
+%% \bibitem{ISO98}
+%% ISO/IEC 14882:1998(E), Programming Language C++, http://www.ansi.org
 
-\bibitem{Mar98}
-Robert C. Martin, UML Tutorial: Finite State Machines, Engineering
-Notebook Column, C++ Report, June 98,
-http://www.objectmentor.com/resources/articles/umlfsm.pdf  
+%% \bibitem{Mar98}
+%% Robert C. Martin, UML Tutorial: Finite State Machines, Engineering
+%% Notebook Column, C++ Report, June 98,
+%% http://www.objectmentor.com/resources/articles/umlfsm.pdf  
 
-\bibitem{SMC}
-SMC - Finite State Machine Compiler (C++),
-http://www.objectmentor.com/resources/downloads/index  
+%% \bibitem{SMC}
+%% SMC - Finite State Machine Compiler (C++),
+%% http://www.objectmentor.com/resources/downloads/index  
 
-\bibitem{GHJ+95}
-Erich Gamma, Richard Helm, Ralph Johnson, and John Vlissides,
-Design Patterns, Elements of Reusable Object-Oriented Software,
-Addison-Wesley 1995, ISBN 0-201-63361-2  
+%% \bibitem{GHJ+95}
+%% Erich Gamma, Richard Helm, Ralph Johnson, and John Vlissides,
+%% Design Patterns, Elements of Reusable Object-Oriented Software,
+%% Addison-Wesley 1995, ISBN 0-201-63361-2  
 
-\bibitem{HU79}
-Hopcroft and Ullman, Introduction to automata theory, languages and
-computations, Addison-Wesley 1979, ISBN 0-201-02988-X  
+%% \bibitem{HU79}
+%% Hopcroft and Ullman, Introduction to automata theory, languages and
+%% computations, Addison-Wesley 1979, ISBN 0-201-02988-X  
 
-\bibitem{Vel95a}
-T. Veldhuizen, Using C++ template metaprograms, C++ Report Vol. 7
-No. 4 (May 1995), pp. 36--43. Reprinted in C++ Gems, ed. Stanley Lippman,
-ISBN 1-884842-37-2. Available online at
-http://extreme.indiana.edu/~tveldhui/papers/Template-Metaprograms/meta-art.h
-tml. 
+%% \bibitem{Vel95a}
+%% T. Veldhuizen, Using C++ template metaprograms, C++ Report Vol. 7
+%% No. 4 (May 1995), pp. 36--43. Reprinted in C++ Gems, ed. Stanley Lippman,
+%% ISBN 1-884842-37-2. Available online at
+%% http://extreme.indiana.edu/~tveldhui/papers/Template-Metaprograms/meta-art.h
+%% tml. 
 
-\bibitem{Vel95b}
-T. Veldhuizen, Expression Templates, C++ Report, Vol. 7 No. 5 June
-1995, pp. 26-31. Reprinted in C++ Gems, ed. Stanley Lippman, ISBN
-1-884842-37-2. Available online at
-http://osl.iu.edu/~tveldhui/papers/Expression-Templates/exprtmpl.html.  
+%% \bibitem{Vel95b}
+%% T. Veldhuizen, Expression Templates, C++ Report, Vol. 7 No. 5 June
+%% 1995, pp. 26-31. Reprinted in C++ Gems, ed. Stanley Lippman, ISBN
+%% 1-884842-37-2. Available online at
+%% http://osl.iu.edu/~tveldhui/papers/Expression-Templates/exprtmpl.html.  
 
-\bibitem{Hud89}
-Paul Hudak, Conception, Evolution, and Application of Functional
-Programming Languages, ACM Computing Surveys, Vol. 21, No. 3,
-September 1989
-\end{chapthebibliography}
+%% \bibitem{Hud89}
+%% Paul Hudak, Conception, Evolution, and Application of Functional
+%% Programming Languages, ACM Computing Surveys, Vol. 21, No. 3,
+%% September 1989
+%% \end{chapthebibliography}
 
 \end{document}
 % LocalWords:  Aleksey David Gurtovoy Abrahams MPL STL Boost boost
