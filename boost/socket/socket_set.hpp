@@ -105,7 +105,7 @@ namespace boost
 
       bool is_set(socket_t socket) const
       {
-        return FD_ISSET(socket, &set_);
+          return FD_ISSET(socket, &set_) ? true : false;
       }
 
       fd_set* fdset()

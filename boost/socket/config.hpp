@@ -12,12 +12,21 @@
 #pragma once
 #endif
 
+#include "boost\config.hpp"
+
 /// include guard
 #ifndef BOOST_SOCKET_CONFIG_HPP
 #define BOOST_SOCKET_CONFIG_HPP 1
 
 #if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
- #define USES_WINSOCK2 1
+
+#define USES_WINSOCK2 1
+#define BOOST_HAS_WINSOCKETS // this  should move into platform/compiler config headers
+
+#else
+
+#define BOOST_HAS_UNIXSOCKETS // this  should move into platform/compiler config headers
+
 #endif
 
 #include "boost/date_time/posix_time/posix_time_types.hpp"

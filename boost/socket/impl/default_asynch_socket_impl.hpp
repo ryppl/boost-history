@@ -63,7 +63,7 @@ namespace boost
                     @arg completionRoutine a function to be called when accept completes.
                 */
                 socket_errno async_accept(
-                    default_asynch_socket_impl& socket,
+                    default_asynch_socket_impl& newSocket,
                     std::pair<void *,size_t>& remoteAddress,
                     completion_callback_t completionRoutine);
 

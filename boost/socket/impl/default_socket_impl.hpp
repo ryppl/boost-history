@@ -118,7 +118,7 @@ namespace boost
         bool operator!=(const default_socket_impl& socket) const;
 
         //! translate platform specific to general errors
-        socket_errno translate_error(int return_value);
+        static socket_errno translate_error(int return_value);
 
       private:
         socket_t m_socket;
