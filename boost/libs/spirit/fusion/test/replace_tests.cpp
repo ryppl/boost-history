@@ -49,9 +49,9 @@ test_main(int, char*[])
     }
 
     {
-        typedef vector_c<int, 1, 2, 3, 4, 5> mpl_vec;
+        typedef mpl::vector_c<int, 1, 2, 3, 4, 5> mpl_vec;
         typedef mpl::begin<mpl_vec>::type mpl_vec_begin;
-        typedef advance<mpl_vec_begin, int_<3> >::type mpl_vec_at3;
+        typedef mpl::advance<mpl_vec_begin, int_<3> >::type mpl_vec_at3;
 
         std::cout << replace(mpl_vec(), mpl_vec_at3(), int_<66>()) << std::endl;
         BOOST_TEST((replace(mpl_vec(), mpl_vec_at3(), int_<66>())

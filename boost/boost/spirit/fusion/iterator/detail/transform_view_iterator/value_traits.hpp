@@ -32,7 +32,7 @@ namespace boost { namespace fusion
                 value_type;
 
                 typedef typename Iterator::transform_type transform_type;
-                typedef typename fusion_apply<transform_type,value_type>::type type;
+                typedef typename fusion_apply1<transform_type,value_type>::type type;
             };
         };
     }

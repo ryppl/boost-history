@@ -61,12 +61,12 @@ namespace boost { namespace fusion
             inline typename apply<Sequence, Position, T>::type
             operator()(Sequence& seq, Position const& pos, T const& x) const
             {
-                typedef apply<Sequence, Position, T> meta;
-                typedef typename meta::left_type left_type;
-                typedef typename meta::right_type right_type;
-                typedef typename meta::left_insert_type left_insert_type;
-                typedef typename meta::insert_type insert_type;
-                typedef typename meta::type result;
+                typedef apply<Sequence, Position, T> meta_type;
+                typedef typename meta_type::left_type left_type;
+                typedef typename meta_type::right_type right_type;
+                typedef typename meta_type::left_insert_type left_insert_type;
+                typedef typename meta_type::insert_type insert_type;
+                typedef typename meta_type::type result;
 
                 left_type left(fusion::begin(seq), pos);
                 right_type right(pos, fusion::end(seq));

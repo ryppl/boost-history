@@ -57,23 +57,38 @@ namespace boost { namespace fusion
             >::type
         type;
 
-        tuple_iterator(tuple& t)
-            : t(t) {}
-
+#if BOOST_WORKAROUND(BOOST_MSVC,==1200)
+        tuple_iterator(tuple_iterator const& i);
+#else
         template <int N2, typename Tuple2>
         tuple_iterator(tuple_iterator<N2, Tuple2> const& i)
-            : t(static_cast<tuple&>(i.get_tuple())) {}
+        : t(static_cast<tuple&>(i.get_tuple())) {}
+#endif
+        tuple_iterator(tuple& t);
 
         tuple&
-        get_tuple() const
-        {
-            return t;
-        }
-
+        get_tuple() const;
     private:
 
         tuple& t;
     };
+
+#if BOOST_WORKAROUND(BOOST_MSVC,==1200)
+    template <int N, typename Tuple>
+    tuple_iterator<N,Tuple>::tuple_iterator(tuple_iterator const& i)
+    : t(static_cast<tuple&>(i.get_tuple())) {}
+#endif
+
+    template <int N, typename Tuple>
+    tuple_iterator<N,Tuple>::tuple_iterator(tuple& t)
+    : t(t) {}
+
+    template <int N, typename Tuple>
+    typename tuple_iterator<N,Tuple>::tuple&
+    tuple_iterator<N,Tuple>::get_tuple() const
+    {
+        return t;
+    }
 }}
 
 #endif

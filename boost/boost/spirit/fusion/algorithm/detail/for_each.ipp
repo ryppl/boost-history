@@ -27,7 +27,7 @@ namespace boost { namespace fusion { namespace detail
     {
         f(*first);
         detail::for_each(fusion::next(first), last, f
-            , meta::equal_to<typename meta::next<First>::type, Last>());
+            , meta::equal_to<BOOST_DEDUCED_TYPENAME meta::next<First>::type, Last>());
     }
 }}}
 

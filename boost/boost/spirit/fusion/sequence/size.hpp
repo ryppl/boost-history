@@ -34,7 +34,7 @@ namespace boost { namespace fusion
         template <typename Sequence>
         struct size
             : size_impl<typename as_fusion_sequence<Sequence>::type::tag>::
-                template apply<typename as_fusion_sequence<Sequence>::type>::type
+                template apply<typename as_fusion_sequence<Sequence>::type>
         {};
     }
 }}

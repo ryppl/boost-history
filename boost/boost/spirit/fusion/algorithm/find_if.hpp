@@ -42,8 +42,8 @@ namespace boost { namespace fusion
             {
                 typedef
                     detail::static_find_if<
-                        typename meta::begin<Sequence const>::type
-                      , typename meta::end<Sequence const>::type
+                        BOOST_DEDUCED_TYPENAME meta::begin<Sequence const>::type
+                      , BOOST_DEDUCED_TYPENAME meta::end<Sequence const>::type
                       , Pred
                     >
                 filter;
@@ -57,12 +57,11 @@ namespace boost { namespace fusion
             {
                 typedef
                     detail::static_find_if<
-                        typename meta::begin<Sequence>::type
-                      , typename meta::end<Sequence>::type
+                        BOOST_DEDUCED_TYPENAME meta::begin<Sequence>::type
+                      , BOOST_DEDUCED_TYPENAME meta::end<Sequence>::type
                       , Pred
                     >
                 filter;
-
                 return filter::call(fusion::begin(seq));
             }
         };

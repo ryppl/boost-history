@@ -26,9 +26,9 @@ namespace boost { namespace fusion
             return x;
         }
         template<typename T>
-        static type_sequence<T> convert_const(T const& x, mpl::false_) {
+        static type_sequence<T const> convert_const(T const& x, mpl::false_) {
             BOOST_STATIC_ASSERT(mpl::is_sequence<T>::value);
-            return type_sequence<T>();
+            return type_sequence<T const>();
         }
         template<typename T>
         static T& convert(T& x, mpl::true_)
@@ -58,7 +58,7 @@ namespace boost { namespace fusion
         mpl::if_<
             fusion::is_sequence<T>
           , T const&
-          , type_sequence<T>
+          , type_sequence<T const>
         >::type
         convert_const(T const& x);
         
@@ -76,7 +76,7 @@ namespace boost { namespace fusion
     mpl::if_<
         fusion::is_sequence<T>
       , T const&
-      , type_sequence<T>
+      , type_sequence<T const>
     >::type
     as_fusion_sequence<T>::convert_const(T const& x) {
         return fusion_sequence_detail::convert_const(x,fusion::is_sequence<T>());

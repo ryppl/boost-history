@@ -32,8 +32,9 @@ namespace boost { namespace fusion
         typedef typename concat_converter::type concat_type;
 
         typedef joint_view_iterator_tag tag;
+#if! BOOST_WORKAROUND(BOOST_MSVC,==1200)
         BOOST_STATIC_ASSERT((!meta::equal_to<first_type, last_type>::value));
-
+#endif
         joint_view_iterator(First const& first, Concat const& concat)
             : first(first_converter::convert(first))
             , concat(concat_converter::convert(concat))

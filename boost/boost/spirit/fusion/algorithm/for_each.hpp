@@ -43,8 +43,8 @@ namespace boost { namespace fusion
                       , fusion::end(seq)
                       , f
                       , meta::equal_to<
-                            typename meta::begin<Sequence>::type
-                          , typename meta::end<Sequence>::type>());
+                            BOOST_DEDUCED_TYPENAME meta::begin<Sequence>::type
+                          , BOOST_DEDUCED_TYPENAME meta::end<Sequence>::type>());
             }
 
             template <typename Sequence, typename F>
@@ -56,8 +56,8 @@ namespace boost { namespace fusion
                       , fusion::end(seq)
                       , f
                       , meta::equal_to<
-                            typename meta::begin<Sequence>::type
-                          , typename meta::end<Sequence>::type>());
+                            BOOST_DEDUCED_TYPENAME meta::begin<Sequence>::type
+                          , BOOST_DEDUCED_TYPENAME meta::end<Sequence>::type>());
             }
         };
     }

@@ -43,9 +43,9 @@ namespace boost { namespace fusion
             {
                 typedef
                     detail::static_find_if<
-                        typename meta::begin<Sequence const>::type
-                      , typename meta::end<Sequence const>::type
-                      , is_same<mpl::_, typename T::type>
+                        BOOST_DEDUCED_TYPENAME meta::begin<Sequence const>::type
+                      , BOOST_DEDUCED_TYPENAME meta::end<Sequence const>::type
+                      , is_same<mpl::_, BOOST_DEDUCED_TYPENAME T::type>
                     >
                 filter;
 
@@ -58,9 +58,9 @@ namespace boost { namespace fusion
             {
                 typedef
                     detail::static_find_if<
-                        typename meta::begin<Sequence>::type
-                      , typename meta::end<Sequence>::type
-                      , is_same<mpl::_, typename T::type>
+                        BOOST_DEDUCED_TYPENAME meta::begin<Sequence>::type
+                      , BOOST_DEDUCED_TYPENAME meta::end<Sequence>::type
+                      , is_same<mpl::_, BOOST_DEDUCED_TYPENAME T::type>
                     >
                 filter;
 

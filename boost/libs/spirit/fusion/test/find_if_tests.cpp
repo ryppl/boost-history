@@ -34,6 +34,7 @@ test_main(int, char*[])
         typedef tuple<int, char, int, double> tuple_type;
         tuple_type t(12345, 'x', 678910, 3.36);
 
+        find_if(t, is_same<_, char>());
         std::cout << *find_if(t, is_same<_, char>()) << std::endl;
 //        BOOST_TEST((*find_if(t, is_same<_, char>()) == 'x'));
 

@@ -38,7 +38,7 @@ namespace boost { namespace fusion
             {
                 return filter_view<
                     Sequence const
-                  , mpl::not_<is_same<mpl::_, typename T::type>
+                  , mpl::not_<is_same<mpl::_, BOOST_DEDUCED_TYPENAME T::type>
                 > >(seq);
             }
 
@@ -50,7 +50,7 @@ namespace boost { namespace fusion
             {
                 return filter_view<
                     Sequence
-                  , mpl::not_<is_same<mpl::_, typename T::type>
+                  , mpl::not_<is_same<mpl::_, BOOST_DEDUCED_TYPENAME T::type>
                 > >(seq);
             }
         };

@@ -21,8 +21,8 @@ namespace boost { namespace fusion
         struct deref_impl;
 
         template <>
-        struct deref_impl<filter_view_iterator_tag>
-            : detail::adapt_deref_traits {};
+        struct deref_impl<filter_view_iterator_tag> : detail::adapt_deref_traits
+        {};
     }
 }}
 

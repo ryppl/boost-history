@@ -47,7 +47,7 @@ struct count_ints
     struct apply
     {
         typedef typename
-            if_<
+        boost::mpl::if_<
                 is_same<T, int>
               , typename boost::mpl::next<CountT>::type
               , CountT

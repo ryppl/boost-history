@@ -33,11 +33,15 @@ namespace boost { namespace fusion
         typedef last_iter last_type;
         typedef Pred pred_type;
 
-        filter_iterator(First const& first)
-            : first(filter::call(first_converter::convert(first))) {}
+        filter_iterator(First const& first);
 
         first_type first;
     };
+
+    template <typename First, typename Last, typename Pred>
+    filter_iterator<First,Last,Pred>::filter_iterator(First const& first)
+    :   first(filter::call(first_converter::convert(first))) 
+    {}
 }}
 
 #endif

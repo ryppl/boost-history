@@ -22,6 +22,64 @@ namespace boost { namespace fusion
     template <typename First, typename Last, typename Concat>
     struct joint_view_iterator;
 
+    namespace joint_view_detail {
+        template <typename Sequence>
+        struct begin_traits_impl
+        {
+            typedef typename Sequence::first_type first_type;
+            typedef typename Sequence::last_type last_type;
+            typedef typename Sequence::concat_type concat_type;
+            typedef boost::fusion::meta::equal_to<first_type, last_type> equal_to;
+
+            typedef typename
+                boost::mpl::if_<
+                    equal_to
+                  , concat_type
+                  , boost::fusion::joint_view_iterator<first_type, last_type, concat_type>
+                >::type
+            type;
+
+            static type
+            call(Sequence& s);
+        };
+
+        template<typename Sequence>
+        typename begin_traits_impl<Sequence>::type
+        call(Sequence& s, boost::mpl::true_) {
+            return s.concat;
+        }
+
+        template<typename Sequence>
+        typename begin_traits_impl<Sequence>::type
+        call(Sequence& s, boost::mpl::false_) {
+            typedef begin_traits_impl<Sequence>::type type;
+            return type(s.first, s.concat);
+        }
+
+        template<typename Sequence>
+        typename begin_traits_impl<Sequence>::type 
+        begin_traits_impl<Sequence>::call(Sequence& s)
+        {
+            return joint_view_detail::call(s, equal_to());
+        }
+
+        template <typename Sequence>
+        struct end_traits_impl
+        {
+            typedef typename Sequence::concat_last_type type;
+
+            static type
+            call(Sequence& s);
+        };
+
+        template<typename Sequence>
+        typename end_traits_impl<Sequence>::type 
+        end_traits_impl<Sequence>::call(Sequence& s)
+        {
+            return s.concat_last;
+        }
+    }
+
     namespace meta
     {
         template <typename Tag>
@@ -31,64 +89,9 @@ namespace boost { namespace fusion
         struct begin_impl<joint_view_tag>
         {
             template <typename Sequence>
-            struct apply
-            {
-                typedef typename Sequence::first_type first_type;
-                typedef typename Sequence::last_type last_type;
-                typedef typename Sequence::concat_type concat_type;
-                typedef meta::equal_to<first_type, last_type> equal_to;
-
-                typedef typename
-                    mpl::if_<
-                        equal_to
-                      , concat_type
-                      , joint_view_iterator<first_type, last_type, concat_type>
-                    >::type
-                type;
-
-                static type
-                call(Sequence& s, mpl::true_)
-                {
-                    return s.concat;
-                }
-
-                static type
-                call(Sequence& s, mpl::false_)
-                {
-                    return type(s.first, s.concat);
-                }
-
-                static type
-                call(Sequence& s);
-            };
+            struct apply : joint_view_detail::begin_traits_impl<Sequence>
+            {};
         };
-
-        namespace joint_view_detail {
-            template<typename Sequence>
-            begin_impl<joint_view_tag>::apply<Sequence>::type
-            call(Sequence& s, mpl::true_) {
-                return s.concat;
-            }
-            template<typename Sequence>
-            begin_impl<joint_view_tag>::apply<Sequence>::type
-            call(Sequence& s, mpl::false_) {
-                return type(s.first, s.concat);
-            }
-        }
-
-        template<typename Sequence>
-        begin_impl<joint_view_tag>::apply<Sequence>::type 
-        begin_impl<joint_view_tag>::apply<Sequence>::call(Sequence& s)
-        {
-            return joint_view_detail::call(s, equal_to());
-        }
-
-        template<typename Sequence>
-        end_impl<joint_view_tag>::apply<Sequence>::type 
-        end_impl<joint_view_tag>::apply<Sequence>::call(Sequence& s)
-        {
-            return s.concat_last;
-        }
 
         template <typename Tag>
         struct end_impl;
@@ -97,22 +100,9 @@ namespace boost { namespace fusion
         struct end_impl<joint_view_tag>
         {
             template <typename Sequence>
-            struct apply
-            {
-                typedef typename Sequence::concat_last_type type;
-
-                static type
-                call(Sequence& s);
-            };
+            struct apply : joint_view_detail::end_traits_impl<Sequence>
+            {};
         };
-
-        template<typename Sequence>
-        end_impl<joint_view_tag>::apply<Sequence>::type 
-        end_impl<joint_view_tag>::apply<Sequence>::call(Sequence& s)
-        {
-            return s.concat_last;
-        }
-
     }
 }}
 

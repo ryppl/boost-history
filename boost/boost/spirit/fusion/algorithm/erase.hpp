@@ -25,7 +25,9 @@ namespace boost { namespace fusion
         {
             typedef typename meta::begin<Sequence>::type first_type;
             typedef typename meta::end<Sequence>::type last_type;
+#if! BOOST_WORKAROUND(BOOST_MSVC,==1200)
             BOOST_STATIC_ASSERT((!meta::equal_to<Position, last_type>::value));
+#endif
 
             typedef typename meta::next<Position>::type next_type;
             typedef range<first_type, Position> left_type;
@@ -45,10 +47,10 @@ namespace boost { namespace fusion
             typename apply<Sequence const, Position>::type
             operator()(Sequence const& seq, Position const& pos) const
             {
-                typedef apply<Sequence const, Position> meta;
-                typedef typename meta::left_type left_type;
-                typedef typename meta::right_type right_type;
-                typedef typename meta::type result_type;
+                typedef apply<Sequence const, Position> meta_type;
+                typedef typename meta_type::left_type left_type;
+                typedef typename meta_type::right_type right_type;
+                typedef typename meta_type::type result_type;
 
                 left_type left(fusion::begin(seq), pos);
                 right_type right(fusion::next(pos), fusion::end(seq));

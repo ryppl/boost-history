@@ -61,7 +61,7 @@ namespace boost { namespace fusion { namespace borland_only {
 //
 ///////////////////////////////////////////////////////////////////////////////
 #if BOOST_WORKAROUND(BOOST_MSVC, <= 1301) && !defined(NDEBUG)
-# define FUSION_RETURN_DEFAULT_CONSTRUCTED type r; return r
+# define FUSION_RETURN_DEFAULT_CONSTRUCTED type r=type(); return r
 #else
 # define FUSION_RETURN_DEFAULT_CONSTRUCTED return type()
 #endif
@@ -320,24 +320,40 @@ namespace boost {namespace fusion {
 
 namespace aux {
     // msvc_apply
-#define BOOST_MPL_AUX_MSVC_DTW_NAME msvc_apply
+#define BOOST_MPL_AUX_MSVC_DTW_NAME msvc_apply1
 #define BOOST_MPL_AUX_MSVC_DTW_ORIGINAL_NAME apply
 #define BOOST_MPL_AUX_MSVC_DTW_ARITY 1
+#include "boost/mpl/aux_/msvc_dtw.hpp"
+
+#define BOOST_MPL_AUX_MSVC_DTW_NAME msvc_apply2
+#define BOOST_MPL_AUX_MSVC_DTW_ORIGINAL_NAME apply
+#define BOOST_MPL_AUX_MSVC_DTW_ARITY 2
 #include "boost/mpl/aux_/msvc_dtw.hpp"
 
 } //namespace aux
 
 template<typename A,typename B>
-struct fusion_apply
+struct fusion_apply1
 {
-    typedef typename aux::msvc_apply<A>::template result_<B>::type type;
+    typedef typename aux::msvc_apply1<A>::template result_<B>::type type;
+};
+
+template<typename A,typename B,typename C>
+struct fusion_apply2
+{
+    typedef typename aux::msvc_apply2<A>::template result_<B,C>::type type;
 };
 
 #else 
 template<typename A,typename B>
-struct fusion_apply
+struct fusion_apply1
 {
     typedef typename A::template apply<B>::type type;
+};
+template<typename A,typename B,typename C>
+struct fusion_apply2
+{
+    typedef typename A::template apply<B,C>::type type;
 };
 #endif
 }} //namespace boost::fusion

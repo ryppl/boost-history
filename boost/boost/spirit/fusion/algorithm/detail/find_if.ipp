@@ -59,6 +59,15 @@ namespace boost { namespace fusion { namespace detail
     };
 
     template <typename First, typename Last, typename Pred>
+    struct static_find_if;
+
+    namespace static_find_if_detail {
+        template <typename First,typename Last,typename Pred,typename Iterator>
+        typename main_find_if<First,Last,typename mpl::lambda<Pred>::type>::type
+        call(static_find_if<First,Last,Pred> const& obj,Iterator const& iter);
+    }
+
+    template <typename First, typename Last, typename Pred>
     struct static_find_if
     {
         typedef typename
@@ -69,28 +78,38 @@ namespace boost { namespace fusion { namespace detail
             >::type
         type;
 
-        template <typename Iterator>
+        //Workaround to please MSVC
+        template<typename Iterator>
         static type
-        call(Iterator const& iter, mpl::true_)
+        call(Iterator const& iter)
+        {
+            return static_find_if_detail::call(static_find_if<First,Last,Pred>(),iter);
+        }
+    };
+
+    namespace static_find_if_detail {
+        template <typename First,typename Last,typename Pred,typename Iterator>
+        typename static_find_if<First,Last,Pred>::type
+        call(static_find_if<First,Last,Pred> const&, Iterator const& iter, mpl::true_)
         {
             return iter;
         };
 
-        template <typename Iterator>
-        static type
-        call(Iterator const& iter, mpl::false_)
+        template <typename First,typename Last,typename Pred,typename Iterator>
+        typename static_find_if<First,Last,Pred>::type
+        call(static_find_if<First,Last,Pred> const& obj,Iterator const& iter, mpl::false_)
         {
-            return call(fusion::next(iter));
+            return call(obj,fusion::next(iter));
         };
 
-        template <typename Iterator>
-        static type
-        call(Iterator const& iter)
+        template <typename First,typename Last,typename Pred,typename Iterator>
+        typename main_find_if<First,Last,typename mpl::lambda<Pred>::type>::type
+        call(static_find_if<First,Last,Pred> const& obj,Iterator const& iter)
         {
-            typedef meta::equal_to<Iterator, type> found;
-            return call(iter, found());
-        };
-    };
+            typedef meta::equal_to<Iterator, static_find_if<First,Last,Pred>::type> found;
+            return call(obj,iter, found());
+        };        
+    }
 
 }}}
 

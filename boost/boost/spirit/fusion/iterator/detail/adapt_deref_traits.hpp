@@ -12,22 +12,31 @@
 
 namespace boost { namespace fusion { namespace detail
 {
-    struct adapt_deref_traits
-    {
-        template <typename Iterator>
-        struct apply
+    namespace adapt_deref_detail {
+        template<typename Iterator>
+        struct deref_traits_impl
         {
             typedef typename
                 meta::deref<typename Iterator::first_type>::type
             type;
 
             static type
-            call(Iterator const& i)
-            {
-                return *i.first;
-            }
-        };
+            call(Iterator const& i);
+        };        
+
+        template<typename Iterator>
+        typename deref_traits_impl<Iterator>::type
+        deref_traits_impl<Iterator>::call(Iterator const& i)
+        {
+            return *i.first;
+        }
+    }
+    struct adapt_deref_traits {
+        template<typename Iterator>
+        struct apply : adapt_deref_detail::deref_traits_impl<Iterator>
+        {};
     };
+
 }}}
 
 #endif

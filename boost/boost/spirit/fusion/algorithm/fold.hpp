@@ -45,8 +45,8 @@ namespace boost { namespace fusion
                   , state
                   , f
                   , is_same<
-                        typename meta::begin<Sequence const>::type
-                      , typename meta::end<Sequence const>::type>()
+                        BOOST_DEDUCED_TYPENAME meta::begin<Sequence const>::type
+                      , BOOST_DEDUCED_TYPENAME meta::end<Sequence const>::type>()
                 );
             }
 
@@ -60,8 +60,8 @@ namespace boost { namespace fusion
                   , state
                   , f
                   , is_same<
-                        typename meta::begin<Sequence>::type
-                      , typename meta::end<Sequence>::type>()
+                        BOOST_DEDUCED_TYPENAME meta::begin<Sequence>::type
+                      , BOOST_DEDUCED_TYPENAME meta::end<Sequence>::type>()
                 );
             }
         };

@@ -47,10 +47,10 @@ test_main(int, char*[])
         type_sequence_iterator<begin_type> iter;
         tuple_type t1(iter);
         std::cout << t1 << std::endl;
-/*
-        BOOST_TEST(t1 == tuple_type());*/
+
+        BOOST_TEST(t1 == tuple_type());
     }
-/*
+
     {
         typedef list<int, double, X, int> mpl_list1;
         type_sequence<mpl_list1> view;
@@ -105,7 +105,7 @@ test_main(int, char*[])
         }
     }
 
-#endif*/
+#endif
 
     return 0;
 }

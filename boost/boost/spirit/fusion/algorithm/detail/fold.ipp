@@ -20,7 +20,7 @@ namespace boost { namespace fusion { namespace detail
     template <typename Iterator, typename State, typename F>
     struct fold_apply
     {
-        typedef typename F::template apply<
+        typedef fusion_apply2<F,
             typename meta::value_of<Iterator>::type, State
         >::type type;
     };
@@ -78,7 +78,7 @@ namespace boost { namespace fusion { namespace detail
           , last
           , f(*first, state)
           , f
-          , is_same<typename meta::next<First>::type, Last>()
+          , is_same<BOOST_DEDUCED_TYPENAME meta::next<First>::type, Last>()
         );
     }
 }}}

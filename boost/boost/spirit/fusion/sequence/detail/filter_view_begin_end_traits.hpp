@@ -20,6 +20,45 @@ namespace boost { namespace fusion
     template <typename First, typename Last, typename Pred>
     struct filter_iterator;
 
+    namespace filter_view_detail {
+        template <typename Sequence>
+        struct begin_traits_impl
+        {
+            typedef typename Sequence::first_type first_type;
+            typedef typename Sequence::last_type last_type;
+            typedef typename Sequence::pred_type pred_type;
+            typedef filter_iterator<first_type, last_type, pred_type> type;
+
+            static type
+            call(Sequence& s);
+        };
+
+        template <typename Sequence>
+        typename begin_traits_impl<Sequence>::type
+        begin_traits_impl<Sequence>::call(Sequence& s)
+        {
+            return type(s.first);
+        }
+
+        template <typename Sequence>
+        struct end_traits_impl
+        {
+            typedef typename Sequence::last_type last_type;
+            typedef typename Sequence::pred_type pred_type;
+            typedef filter_iterator<last_type, last_type, pred_type> type;
+
+            static type
+            call(Sequence& s);
+        };
+
+        template <typename Sequence>
+        typename end_traits_impl<Sequence>::type
+        end_traits_impl<Sequence>::call(Sequence& s)
+        {
+            return type(s.last);
+        }
+    }
+
 	namespace meta
 	{
         template <typename Tag>
@@ -29,19 +68,8 @@ namespace boost { namespace fusion
         struct begin_impl<filter_view_tag>
         {
             template <typename Sequence>
-            struct apply
-            {
-                typedef typename Sequence::first_type first_type;
-                typedef typename Sequence::last_type last_type;
-                typedef typename Sequence::pred_type pred_type;
-                typedef filter_iterator<first_type, last_type, pred_type> type;
-
-                static type
-                call(Sequence& s)
-                {
-                    return type(s.first);
-                }
-            };
+            struct apply : filter_view_detail::begin_traits_impl<Sequence>
+            {};
         };
 
         template <typename Tag>
@@ -51,18 +79,8 @@ namespace boost { namespace fusion
         struct end_impl<filter_view_tag>
         {
             template <typename Sequence>
-            struct apply
-            {
-                typedef typename Sequence::last_type last_type;
-                typedef typename Sequence::pred_type pred_type;
-                typedef filter_iterator<last_type, last_type, pred_type> type;
-
-                static type
-                call(Sequence& s)
-                {
-                    return type(s.last);
-                }
-            };
+            struct apply : filter_view_detail::end_traits_impl<Sequence>
+            {};
         };
 	}
 }}

@@ -23,7 +23,7 @@ namespace boost { namespace fusion
             deref_type;
 
             typedef typename Iterator::transform_type transform_type;
-            typedef typename fusion_apply<transform_type,deref_type>::type type;
+            typedef typename fusion_apply1<transform_type,deref_type>::type type;
 
             static type
             call(Iterator const& i);
