@@ -132,6 +132,12 @@
                   len = sz;
                   str[ len ] = CharT();
                }
+               inline void                       setlength_( size_t sz )
+               {
+                  if( sz >= cap ) sz = cap;
+                  len = sz;
+                  str[ len ] = CharT();
+               }
                inline void                       reserve_( size_type sz )
                {
                   if( sz < len )
@@ -246,10 +252,11 @@
             {
                return( buffer_());
             }
-            inline void                          recalc()
+            inline void                          setlength( size_type sz = npos )
             {
                // recalculate string length after external modification
-               resize( ::strlen( c_str()));
+               if( sz == npos ) sz = ::strlen( c_str());
+               recalc_( sz );
             }
             inline int                           format( const CharT * fmt, va_list args )
             {
