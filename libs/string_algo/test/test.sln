@@ -1,0 +1,21 @@
+Microsoft Visual Studio Solution File, Format Version 7.00
+Global
+	GlobalSection(SourceCodeControl) = preSolution
+		SccNumberOfProjects = 1
+		SccProjectName0 = string_algo/libs/string_algo/test
+		SccLocalPath0 = .
+		SccProvider0 = MSSCCI:Jalindi\u0020Igloo
+		CanCheckoutShared = true
+		SolutionUniqueID = {5E7D4279-421E-4892-BDC4-FBD5F8E0CEA5}
+	EndGlobalSection
+	GlobalSection(SolutionConfiguration) = preSolution
+	EndGlobalSection
+	GlobalSection(ProjectDependencies) = postSolution
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal
