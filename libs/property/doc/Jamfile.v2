@@ -1,0 +1,4 @@
+project boost/property ;
+import boostbook : boostbook ;
+
+boostbook property : property.xml ;

@@ -1,0 +1,337 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+
+<!DOCTYPE library PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+          "http://www.boost.org/tools/boostbook/dtd/boostbook.dtd"
+>
+
+<library name = "Property" dirname = "property" id = "prop"
+   last-revision = "$Date$"
+   xmlns:xi = "http://www.w3.org/2003/XInclude"
+>
+<title>C++ Properties</title>
+
+<libraryinfo>
+   <author><firstname>Reece</firstname><surname>Dunn</surname></author>
+   <copyright><year>2004</year><holder>Reece H. Dunn</holder></copyright>
+   <legalnotice><para>
+      Distributed under the Boost Software License, Version 1.0.
+      (See accompanying file LICENSE_1_0.txt or copy at
+      <ulink url = "http://www.boost.org/LICENSE_1_0.txt">http://www.boost.org/LICENSE_1_0.txt</ulink>)
+   </para></legalnotice>
+   <librarypurpose>
+      A library implementation of C++/CLI-style properties with full C++
+      integration.
+   </librarypurpose>
+   <librarycategory name = "category:"/>
+</libraryinfo>
+
+<section id = "prop.background"><title>Background</title>
+   <para>
+      The concept of a property originated in GUI and Rapid Application
+      Development (RAD) environments, providing introspection/reflection and
+      RAD-based value manipulation. A property is an entity that behaves
+      like a public data member, but the value is retrieved through a
+      getter function and assigned using a setter function.
+   </para><para>
+      In C++/CLI, a property is implemented like this:
+   </para>
+<programlisting>
+   class object
+   {
+      int val;
+      public:
+         property int Val
+         {
+            int get() const{ return this -> val; }
+            void set( int v ){ this -> val = v; }
+         }
+   };
+</programlisting>
+   <para>
+      It can be accessed like a standard data member:
+   </para>
+<programlisting>
+   object ob;
+   ob.Val = 5; // calls Val.set( 5 );
+   assert( ob.Val == 5 ); // calls Val.get();
+</programlisting>
+   <para>
+      Borland and MS VC++ provide a similar mechanism for defining properties
+      in C++, for example:
+   </para>
+<programlisting>
+   class object
+   {
+      int val;
+      public:
+         int get_val() const{ return val; }
+         void set_val( int v ){ val = v; }
+         __declspec(property(get=get_val, set=set_val)) Val;
+   };
+</programlisting>
+</section><section id = "prop.motivation"><title>Why Are Properties Useful?</title>
+
+   <para>
+      One of the principles of OOP is that of encapsulation. This is where
+      you prevent direct manipulation of an objects internal state, but provide
+      methods and constructors to control it. A motivation for this is to
+      validate the data (for example, ensuring that the month value is in
+      range), however this leads to potentially non-intuitive usage, for
+      example:
+   </para>
+<programlisting>
+   date d;
+   d.set_month(  7 );  // ok
+   d.set_month( 13 ); // error: thow?
+</programlisting>
+   <para>
+      The use of properties here can simplify such usage by providing a more
+      intuitive C++-style syntax:
+   </para>
+<programlisting>
+   date d;
+   d.month =  7;  // ok
+   d.month = 13; // error: thow?
+</programlisting>
+   <para>
+      Another use is in writing more generic code. For example, GUI libraries
+      provide a data structure for providing a rectangle in 2D cartesian
+      coordinates. If you want to provide access to the rectangle data without
+      restricting yourself to a particular platform, properties become
+      essential. They allow you to define xpos, ypos, width and height
+      properties and map them to the corresponding implementation.
+   </para><para>
+      If you are a COM programmer, the C++ classes that define a COM interface
+      have many get/set functions for various data elements. Using properties
+      allows you to write code with these interfaces in a more intuitive way.
+   </para>
+</section><section id = "prop.cpp"><title>Properties In C++</title>
+   <para>
+      So far we have seen property mechanisms that require intervention by the
+      compiler to add the boilerplate code needed for properties to interact
+      with C++. As such, properties are compiler-dependant and are not
+      available to a purely C++98 conforming compiler. Therefore, code using
+      properties is not portable.
+   </para><para>
+      As well as not being standard code, properties do not always interact
+      with normal C++ code as you would expect. For example, if you have a
+      property that is declared as an array of a type that has a subscript
+      operator (like std::map), the compiler will complain if you attempt to
+      access the subscript operator together with indexing the property. For
+      example:
+   </para>
+<programlisting>
+   struct object
+   {
+      property std::map&lt; std::string, int &gt; data[];
+   };
+   object ob;
+   ob.data[ 5 ][ "Martin" ] = 5;
+      // error: set_data does not take 3 parameters
+</programlisting>
+   <para>
+      Lois Goldthwaite has published a proposal for C++ properties implemented
+      as a library solution (N1615). I have used that for the inspiration for
+      this library.
+   </para>
+</section><section id = "prop.type"><title>Properties Overview</title>
+   <para>
+      In describing properties, I have borrowed terminology from Tensor
+      algebra. As such, the number of indices associated with a property is
+      given by the Rank of that property. For example, a matrix property would
+      be of rank 2 since it has two indices.
+   </para><para>
+      The implementation of properties is split into two groups. There are the
+      classes that provide the boilerplate code required to provide the natural
+      usage of a property from within C++. This group is defined independantly
+      of how a property is stored and manipulated.
+   </para><para>
+      The second group provide get and set functions to allow access to the
+      property. They have the following typedefs:
+   </para>
+   <table><title>Property Typedefs</title><tgroup cols = "2" align = "left" valign = "top">
+      <thead><row>
+         <entry>typedef</entry>
+         <entry>description</entry>
+      </row></thead>
+      <tbody>
+         <row>
+            <entry><simpara><code>value_type</code></simpara></entry>
+            <entry><simpara>
+               The base type of the property.
+            </simpara></entry>
+         </row><row>
+            <entry><simpara><code>constructor_type</code></simpara></entry>
+            <entry><simpara>
+               This is the type of the value that is passed to the property
+               implementation in order to initialize that property. For
+               example, passing a reference to a variable if the property is
+               an aliasing property.
+            </simpara></entry>
+         </row><row>
+            <entry><simpara><code>subscript_type</code></simpara></entry>
+            <entry><simpara>
+               If <code>value_type</code> provides subscripting facilities,
+               this type specifies the value returned by the subscript
+               operator.
+            </simpara></entry>
+         </row><row>
+            <entry><simpara><code>index_type</code></simpara></entry>
+            <entry><simpara>
+               If <code>value_type</code> provides subscripting facilities,
+               this specifies the type of the index used by the subscript
+               operator.
+            </simpara></entry>
+         </row>
+      </tbody>
+   </tgroup></table>
+   <para>
+      In order to simplify the creation of these typedefs, the property
+      library provides two classes:
+   </para>
+<programlisting>
+   template
+   &lt;
+      typename ValueType, typename ConstructorType = ValueType,
+      typename SubscriptType = ValueType &amp;, typename Index = int
+   &gt;
+   struct boost::property_type;
+
+   template&lt; typename Prop, typename ConstructorType = Prop &gt;
+   struct boost::inherited_property_type;
+</programlisting>
+   <para>
+      <code>boost::property_type</code> will define a new property type and
+      <code>boost::inherited_property_type</code> will take the types
+      as defined in <code>Prop</code> and bring them into scope of this
+      property, except for <code>constructor_type</code> that is defined
+      independantly.
+   </para>
+
+</section><section id = "prop.scalar"><title>Scalar Properties</title>
+   <para>
+      A scalar property is one that has a rank of 0, i.e. it contains only a
+      single element. It has the form:
+   </para>
+<programlisting>
+   template&lt; typename Prop &gt;
+   class boost::scalar_property;
+</programlisting>
+   <para>
+      where <code>Prop</code> is a class implementing get and set functions,
+      having the form:
+   </para>
+<programlisting>
+   struct Prop: public boost::property_type&lt; ... &gt;
+   {
+      value_type get() const;
+      void set( const value_type &amp; v );
+
+      inline Prop( constructor_type c );
+   };
+</programlisting>
+
+   <section id = "prop.simpprop"><title>Simple Properties</title>
+      <para>
+         A simple property is one that is a wrapper for a data value. There are
+         two basic types:
+      </para><para>
+         A value property holds its own data and provides a property interface
+         to it. This is implemented via the <code>boost::value_property</code>
+         class, for example:
+      </para>
+<programlisting>
+   scalar_property&lt; value_property&lt; int &gt; &gt; ival( 0 );
+   ival = 7;
+</programlisting>
+      <para>
+         An aliased property is a property that holds a reference to an
+         external data type that stores the real value. This is implemented
+         via the <code>boost::aliased_property</code> class, for example:
+      </para>
+<programlisting>
+   int i;
+   scalar_property&lt; aliased_property&lt; int &gt; &gt; ival( i );
+   ival = 2;
+   assert( i == 2 );
+</programlisting>
+      <para>
+         The original example at the beginning of this guide can be expressed
+         more cleanly as an aliased property. For example:
+      </para>
+<programlisting>
+   class object
+   {
+      int val;
+      public:
+         scalar_property&lt; aliased_property&lt; int &gt; &gt; Val;
+         object(): Val( val ){}
+   };
+</programlisting>
+   </section><section id = "prop.objprop"><title>Object Properties</title>
+      <para>
+         An object property is a property that is a wrapper around getter and
+         setter functions in a class. This is implemented via the
+         <code>boost::readonly_object_property</code> class for properties
+         that only supply a get method and <code>boost::object_property</code>
+         for properties that have both get and set methods.
+      </para><para>
+         The original example at the beginning of this guide can be expressed
+         via an object property if the get and set functions are needed. For
+         example:
+      </para>
+<programlisting>
+   class object
+   {
+      int val;
+      public:
+         int get_Val() const{ return val; }
+         void set_Val( const int &amp; v ){ val = v; }
+         scalar_property&lt; object_property
+         &lt;
+            int, object,
+            &amp;object::get_Val, &amp;object::set_Val
+         &gt; &gt; Val;
+         object(): Val( this ){}
+   };
+</programlisting>
+      <para>
+         Note how the decleration of the set method differs from the C++/CLI
+         version requiring the value to be defined as a const reference.
+      </para>
+   </section>
+</section>
+
+<bibliography>
+
+<biblioentry id ="cit:wg21:n1600">
+<abbrev>N1600</abbrev>
+<authorgroup><author>
+   <surname>Vandevoorde</surname>
+   <firstname>Daveed</firstname>
+</author></authorgroup>
+<title>C++/CLI Properties</title>
+<orgname>ISO/IEC JTC1/SC22/WG21</orgname>
+<pubdate>2004</pubdate>
+<bibliomisc>
+   <ulink url = "http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2004/n1600.html">http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2004/n1600.html</ulink>
+</bibliomisc>
+</biblioentry>
+
+<biblioentry id ="cit:wg21:n1615">
+<abbrev>N1615</abbrev>
+<authorgroup><author>
+   <surname>Goldthwaite</surname>
+   <firstname>Lois</firstname>
+</author></authorgroup>
+<title>C++ Properties -- A Library Solution</title>
+<orgname>ISO/IEC JTC1/SC22/WG21</orgname>
+<pubdate>2004</pubdate>
+<bibliomisc>
+   <ulink url = "http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2004/n1615.pdf">http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2004/n1615.pdf</ulink>
+</bibliomisc>
+</biblioentry>
+
+</bibliography>
+
+</library>
