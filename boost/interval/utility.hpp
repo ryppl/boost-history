@@ -35,196 +35,192 @@ namespace boost {
  * Utility Functions
  */
 
-template<class T, class Traits> inline
-const T& lower(const interval<T, Traits>& x)
+template<class T, class Policies> inline
+const T& lower(const interval<T, Policies>& x)
 {
   return x.lower();
 }
 
-template<class T, class Traits> inline
-const T& upper(const interval<T, Traits>& x)
+template<class T, class Policies> inline
+const T& upper(const interval<T, Policies>& x)
 {
   return x.upper();
 }
 
-template<class T, class Traits> inline
-T checked_lower(const interval<T, Traits>& x)
+template<class T, class Policies> inline
+T checked_lower(const interval<T, Policies>& x)
 {
   if (empty(x)) {
-    typedef typename Traits::checking checking;
+    typedef typename Policies::checking checking;
     return checking::nan();
   }
   return low;
 }
 
-template<class T, class Traits> inline
-T checked_upper(const interval<T, Traits>& x)
+template<class T, class Policies> inline
+T checked_upper(const interval<T, Policies>& x)
 {
   if (empty(x)) {
-    typedef typename Traits::checking checking;
+    typedef typename Policies::checking checking;
     return checking::nan();
   }
   return up;
 }
 
-template<class T, class Traits> inline
-T width(const interval<T, Traits>& x)
+template<class T, class Policies> inline
+T width(const interval<T, Policies>& x)
 {
   if (interval_lib::detail::test_input(x)) return 0;
-  typename Traits::rounding rnd;
+  typename Policies::rounding rnd;
   return rnd.sub_up(x.upper(), x.lower());
 }
 
-template<class T, class Traits> inline
-T median(const interval<T, Traits>& x)
+template<class T, class Policies> inline
+T median(const interval<T, Policies>& x)
 {
-  typedef typename Traits::checking checking;
   if (interval_lib::detail::test_input(x)) {
+    typedef typename Policies::checking checking;
     return checking::nan();
   }
-  typename Traits::rounding rnd;
+  typename Policies::rounding rnd;
   return rnd.median(x.lower(), x.upper());
 }
 
-template<class T, class Traits> inline
-interval<T, Traits> widen(const interval<T, Traits>& x, const T& v)
+template<class T, class Policies> inline
+interval<T, Policies> widen(const interval<T, Policies>& x, const T& v)
 {
   if (interval_lib::detail::test_input(x))
-    return interval<T, Traits>::empty();
-  typename Traits::rounding rnd;
-  return interval<T, Traits>(rnd.sub_down(x.lower(), v),
-			     rnd.add_up  (x.upper(), v), true);
+    return interval<T, Policies>::empty();
+  typename Policies::rounding rnd;
+  return interval<T, Policies>(rnd.sub_down(x.lower(), v),
+			       rnd.add_up  (x.upper(), v), true);
 }
 
 /*
  * Set-like operations
  */
 
-template<class T, class Traits> inline
-bool empty(const interval<T, Traits>& x)
+template<class T, class Policies> inline
+bool empty(const interval<T, Policies>& x)
 {
   return interval_lib::detail::test_input(x);
-  //return typename Traits::checking::is_empty(x.lower(), x.upper());
 }
 
-template<class T, class Traits> inline
-bool in_zero(const interval<T, Traits>& x)
+template<class T, class Policies> inline
+bool in_zero(const interval<T, Policies>& x)
 {
   if (interval_lib::detail::test_input(x)) return false;
   return x.lower() <= T(0) && T(0) <= x.upper();
 }
 
-template<class T, class Traits> inline
-bool in(const T& r, const interval<T, Traits>& x)
+template<class T, class Policies> inline
+bool in(const T& x, const interval<T, Policies>& y)
 {
-  if (interval_lib::detail::test_input(r, x)) return false;
-  return x.lower() <= r && r <= x.upper();
+  if (interval_lib::detail::test_input(x, y)) return false;
+  return y.lower() <= x && x <= y.upper();
 }
 
-template<class T, class Traits> inline
-bool subset(const interval<T, Traits>& x,
-	    const interval<T, Traits>& y)
+template<class T, class Policies> inline
+bool subset(const interval<T, Policies>& x,
+	    const interval<T, Policies>& y)
 {
-  if (interval_lib::detail::test_input(x, y))
-    return empty(x);
-  return y.lower() <= x.lower() && x.upper() <= y.upper();
+  if (empty(x)) return true;
+  return !empty(y) && y.lower() <= x.lower() && x.upper() <= y.upper();
 }
 
-template<class T, class Traits> inline
-bool proper_subset(const interval<T, Traits>& a,
-		   const interval<T, Traits>& b)
+template<class T, class Policies1, class Policies2> inline
+bool proper_subset(const interval<T, Policies1>& x,
+		   const interval<T, Policies2>& y)
 {
-  if (interval_lib::detail::test_input(x, y))
-    return empty(x) && !empty(y);
-  return y.lower() < x.lower() && x.upper() <= y.upper() ||
-	 y.lower() <= x.lower() && x.upper() < y.upper();
+  if (empty(y)) return false;
+  if (empty(x)) return true;
+  return y.lower() <= x.lower() && x.upper() <= y.upper() &&
+         (y.lower() != x.lower() || x.upper() != y.upper());
 }
 
-template<class T, class Traits> inline
-bool overlap(const interval<T, Traits>& x,
-	     const interval<T, Traits>& y)
+template<class T, class Policies1, class Policies2> inline
+bool overlap(const interval<T, Policies1>& x,
+	     const interval<T, Policies2>& y)
 {
   if (interval_lib::detail::test_input(x, y)) return false;
   return x.lower() <= y.lower() && y.lower() <= x.upper() ||
          y.lower() <= x.lower() && x.lower() <= y.upper();
 }
 
-template<class T, class Traits> inline
-bool singleton(const interval<T, Traits>& x)
+template<class T, class Policies> inline
+bool singleton(const interval<T, Policies>& x)
 {
- if (interval_lib::detail::test_input(x)) return false;
- return x.lower() == x.upper();
+ return !empty(x) && x.lower() == x.upper();
 }
 
-template<class T, class Traits> inline
-bool equal(const interval<T, Traits>& x, const interval<T, Traits>& y)
+template<class T, class Policies1, class Policies2> inline
+bool equal(const interval<T, Policies1>& x, const interval<T, Policies2>& y)
 {
-  if (interval_lib::detail::test_input(x, y))
-    return empty(x) && empty(y);
-  return x.lower() == y.lower() && x.upper() == y.upper();
+  if (empty(x)) return empty(y);
+  return !empty(y) && x.lower() == y.lower() && x.upper() == y.upper();
 }
 
-template<class T, class Traits> inline
-interval<T, Traits> intersect(const interval<T, Traits>& x,
-			      const interval<T, Traits>& y)
+template<class T, class Policies> inline
+interval<T, Policies> intersect(const interval<T, Policies>& x,
+				const interval<T, Policies>& y)
 {
   BOOST_INTERVAL_using_max(min);
   BOOST_INTERVAL_using_max(max);
   if (interval_lib::detail::test_input(x, y))
-    return interval<T, Traits>::empty();
+    return interval<T, Policies>::empty();
   const T& l = max(x.lower(), y.lower());
   const T& u = min(x.upper(), y.upper());
-  if (l <= u) return interval<T, Traits>(l, u, true);
-  else        return interval<T, Traits>::empty();
+  if (l <= u) return interval<T, Policies>(l, u, true);
+  else        return interval<T, Policies>::empty();
 }
 
-template<class T, class Traits> inline
-interval<T, Traits> hull(const interval<T, Traits>& x,
-			 const interval<T, Traits>& y)
+template<class T, class Policies> inline
+interval<T, Policies> hull(const interval<T, Policies>& x,
+			   const interval<T, Policies>& y)
 {
   BOOST_INTERVAL_using_max(min);
   BOOST_INTERVAL_using_max(max);
   bool bad_x = interval_lib::detail::test_input(x);
   bool bad_y = interval_lib::detail::test_input(y);
   if (bad_x)
-    if (bad_y) return interval<T, Traits>::empty();
+    if (bad_y) return interval<T, Policies>::empty();
     else       return y;
   else
     if (bad_y) return x;
-  return interval<T, Traits>(min(x.lower(), y.lower()),
-			     max(x.upper(), y.upper()), true);
+  return interval<T, Policies>(min(x.lower(), y.lower()),
+			       max(x.upper(), y.upper()), true);
 }
 
-template<class T, class Traits> inline
-interval<T, Traits> hull(const interval<T, Traits>& x, const T& y)
+template<class T, class Policies> inline
+interval<T, Policies> hull(const interval<T, Policies>& x, const T& y)
 {
   BOOST_INTERVAL_using_max(min);
   BOOST_INTERVAL_using_max(max);
   bool bad_x = interval_lib::detail::test_input(x);
-  bool bad_y = interval_lib::detail::test_input<T, Traits>(y);
+  bool bad_y = interval_lib::detail::test_input<T, Policies>(y);
   if (bad_y)
-    if (bad_x) return interval<T, Traits>::empty();
+    if (bad_x) return interval<T, Policies>::empty();
     else       return x;
   else
-    if (bad_x) return interval<T, Traits>(y, y, true);
-  return interval<T, Traits>(min(x.lower(), y),
-			     max(x.upper(), y), true);
+    if (bad_x) return interval<T, Policies>(y, y, true);
+  return interval<T, Policies>(min(x.lower(), y),
+			       max(x.upper(), y), true);
 }
 
-template<class T, class Traits> inline
-interval<T, Traits> hull(const T& x, const interval<T, Traits>& y)
+template<class T, class Policies> inline
+interval<T, Policies> hull(const T& x, const interval<T, Policies>& y)
 {
   BOOST_INTERVAL_using_max(min);
   BOOST_INTERVAL_using_max(max);
-  bool bad_x = interval_lib::detail::test_input<T, Traits>(x);
+  bool bad_x = interval_lib::detail::test_input<T, Policies>(x);
   bool bad_y = interval_lib::detail::test_input(y);
   if (bad_x)
-    if (bad_y) return interval<T, Traits>::empty();
+    if (bad_y) return interval<T, Policies>::empty();
     else       return y;
   else
-    if (bad_y) return interval<T, Traits>(x, x, true);
-  return interval<T, Traits>(min(x, y.lower()),
-			     max(x, y.upper()), true);
+    if (bad_y) return interval<T, Policies>(x, x, true);
+  return interval<T, Policies>(min(x, y.lower()),
+			       max(x, y.upper()), true);
 }
 
 template<class T> inline
@@ -233,11 +229,11 @@ interval<T> hull(const T& x, const T& y)
   return interval<T>::hull(x, y);
 }
 
-template<class T, class Traits> inline
-std::pair<interval<T, Traits>, interval<T, Traits> >
-bisect(const interval<T, Traits>& x)
+template<class T, class Policies> inline
+std::pair<interval<T, Policies>, interval<T, Policies> >
+bisect(const interval<T, Policies>& x)
 {
-  typedef interval<T, Traits> I;
+  typedef interval<T, Policies> I;
   if (interval_lib::detail::test_input(x))
     return std::pair<I,I>(I::empty(), I::empty());
   const T m = median(x);
@@ -248,77 +244,77 @@ bisect(const interval<T, Traits>& x)
  * Elementary functions
  */
 
-template<class T, class Traits> inline
-interval<T, Traits> abs(const interval<T, Traits>& x)
+template<class T, class Policies> inline
+interval<T, Policies> abs(const interval<T, Policies>& x)
 {
   BOOST_INTERVAL_using_max(max);
   if (interval_lib::detail::test_input(x))
-    return interval<T, Traits>::empty();
+    return interval<T, Policies>::empty();
   if (!detail::is_neg(x.lower())) return x;
   if (detail::is_neg(x.upper())) return -x;
-  return interval<T, Traits>(0, max(-x.lower(), x.upper()), true);
+  return interval<T, Policies>(0, max(-x.lower(), x.upper()), true);
 }
 
-template<class T, class Traits> inline
-interval<T, Traits> max(const interval<T, Traits>& x,
-			const interval<T, Traits>& y)
+template<class T, class Policies> inline
+interval<T, Policies> max(const interval<T, Policies>& x,
+			  const interval<T, Policies>& y)
 {
   BOOST_INTERVAL_using_max(max);
   if (interval_lib::detail::test_input(x, y))
-    return interval<T, Traits>::empty();
-  return interval<T, Traits>(max(x.lower(), y.lower()),
-			     max(x.upper(), y.upper()), true);
+    return interval<T, Policies>::empty();
+  return interval<T, Policies>(max(x.lower(), y.lower()),
+			       max(x.upper(), y.upper()), true);
 }
 
-template<class T, class Traits> inline
-interval<T, Traits> max(const interval<T, Traits>& x, const T& y)
+template<class T, class Policies> inline
+interval<T, Policies> max(const interval<T, Policies>& x, const T& y)
 {
   BOOST_INTERVAL_using_max(max);
   if (interval_lib::detail::test_input(x, y))
-    return interval<T, Traits>::empty();
-  return interval<T, Traits>(max(x.lower(), y),
-			     max(x.upper(), y), true);
+    return interval<T, Policies>::empty();
+  return interval<T, Policies>(max(x.lower(), y),
+			       max(x.upper(), y), true);
 }
 
-template<class T, class Traits> inline
-interval<T, Traits> max(const T& x, const interval<T, Traits>& y)
+template<class T, class Policies> inline
+interval<T, Policies> max(const T& x, const interval<T, Policies>& y)
 {
   BOOST_INTERVAL_using_max(max);
   if (interval_lib::detail::test_input(x, y))
-    return interval<T, Traits>::empty();
-  return interval<T, Traits>(max(x, y.lower()),
-			     max(x, y.upper()), true);
+    return interval<T, Policies>::empty();
+  return interval<T, Policies>(max(x, y.lower()),
+			       max(x, y.upper()), true);
 }
 
-template<class T, class Traits> inline
-interval<T, Traits> min(const interval<T, Traits>& x,
-			const interval<T, Traits>& y)
+template<class T, class Policies> inline
+interval<T, Policies> min(const interval<T, Policies>& x,
+			  const interval<T, Policies>& y)
 {
   BOOST_INTERVAL_using_max(min);
   if (interval_lib::detail::test_input(x, y))
-    return interval<T, Traits>::empty();
-  return interval<T, Traits>(min(x.lower(), y.lower()),
-			     min(x.upper(), y.upper()), true);
+    return interval<T, Policies>::empty();
+  return interval<T, Policies>(min(x.lower(), y.lower()),
+			       min(x.upper(), y.upper()), true);
 }
 
-template<class T, class Traits> inline
-interval<T, Traits> min(const interval<T, Traits>& x, const T& y)
+template<class T, class Policies> inline
+interval<T, Policies> min(const interval<T, Policies>& x, const T& y)
 {
   BOOST_INTERVAL_using_max(min);
   if (interval_lib::detail::test_input(x, y))
-    return interval<T, Traits>::empty();
-  return interval<T, Traits>(min(x.lower(), y),
-			     min(x.upper(), y), true);
+    return interval<T, Policies>::empty();
+  return interval<T, Policies>(min(x.lower(), y),
+			       min(x.upper(), y), true);
 }
 
-template<class T, class Traits> inline
-interval<T, Traits> min(const T& x, const interval<T, Traits>& y)
+template<class T, class Policies> inline
+interval<T, Policies> min(const T& x, const interval<T, Policies>& y)
 {
   BOOST_INTERVAL_using_max(min);
   if (interval_lib::detail::test_input(x, y))
-    return interval<T, Traits>::empty();
-  return interval<T, Traits>(min(x, y.lower()),
-			     min(x, y.upper()), true);
+    return interval<T, Policies>::empty();
+  return interval<T, Policies>(min(x, y.lower()),
+			       min(x, y.upper()), true);
 }
 
 } // namespace boost

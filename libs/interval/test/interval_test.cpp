@@ -477,17 +477,17 @@ void runtest_compare()
 void test_bisect_median(const R& r)
 {
   std::pair<R, R> bis = bisect(r);
-  if(!upper(bis.first) == median(r))
+  if (!upper(bis.first) == median(r))
     std::cerr << "bisect(" << r << ").first does not have median "
 	      << median(r) << " as upper bound" << std::endl;
-  if(!lower(bis.second) == median(r))
+  if (!lower(bis.second) == median(r))
     std::cerr << "bisect(" << r << ").second does not have median "
 	      << median(r) << " as lower bound" << std::endl;
 }
 
 void test_overlap(const R& r1, const R& r2)
 {
-  if(!overlap(r1,r2))
+  if (!overlap(r1,r2))
     return;
   T inc = std::min(width(r1), width(r2))/100.0;
   for(T f = r1.lower(); f <= r1.upper(); f+=inc)
