@@ -70,7 +70,7 @@ class indexed_set:
 {
 private:
 #if !defined(BOOST_NO_MEMBER_TEMPLATE_FRIENDS)
-  template<typename,typename,typename,typename> friend class detail::null_index;
+  template<typename,typename,typename,typename> friend class detail::index_base;
   template<typename,typename>                   friend class detail::header_holder;
   template<typename,typename>                   friend class detail::converter;
 #endif

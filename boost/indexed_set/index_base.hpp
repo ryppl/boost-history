@@ -5,8 +5,8 @@
  * See http://www.boost.org/libs/indexed_set for library home page.
  */
 
-#ifndef BOOST_INDEXED_SET_NULL_INDEX_HPP
-#define BOOST_INDEXED_SET_NULL_INDEX_HPP
+#ifndef BOOST_INDEXED_SET_INDEX_BASE_HPP
+#define BOOST_INDEXED_SET_INDEX_BASE_HPP
 
 #include <boost/config.hpp> /* keep it first to prevent some nasty warnings in MSVC */
 #include <boost/call_traits.hpp>
@@ -23,7 +23,7 @@ namespace indexed_sets{
 
 namespace detail{
 
-/* null_index is anything but null! The role of this class is threefold:
+/* The role of this class is threefold:
  *   - tops the linear hierarchy of indices.
  *   - terminates some cascading backbone function calls (insert_, etc.),
  *   - grants access to the backbone functions of the final indexed_set class
@@ -32,7 +32,7 @@ namespace detail{
  */
 
 template<typename Value,typename IndexSpecifierList,typename Allocator>
-class null_index
+class index_base
 {
 protected:
   typedef index_node_base<Value>                          node_type;
@@ -48,7 +48,7 @@ private:
   typedef typename call_traits<Value>::param_type value_param_type;
 
 protected:
-  explicit null_index(const ctor_args_list&,const Allocator&){}
+  explicit index_base(const ctor_args_list&,const Allocator&){}
 
   std::pair<node_type*,bool> insert_(value_param_type v,node_type* x)
   {
@@ -67,7 +67,7 @@ protected:
     detail::allocator::destroy(&x->value);
   }
 
-  void swap_(null_index<Value,IndexSpecifierList,Allocator>&){}
+  void swap_(index_base<Value,IndexSpecifierList,Allocator>&){}
 
   bool update_(value_param_type v,node_type* x)
   {

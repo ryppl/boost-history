@@ -16,7 +16,7 @@
 #include <boost/indexed_set/header_holder.hpp>
 #include <boost/indexed_set/index_fwd.hpp>
 #include <boost/indexed_set/msvc_index_specifier.hpp>
-#include <boost/indexed_set/null_index.hpp>
+#include <boost/indexed_set/index_base.hpp>
 #include <boost/indexed_set/prevent_eti.hpp>
 #include <boost/static_assert.hpp>
 
@@ -62,7 +62,7 @@ struct indexed_set_base_type
     indexed_set<Value,IndexSpecifierList,Allocator>,
     typename mpl::iter_fold_backward<
       typename IndexSpecifierList::type,
-      null_index<Value,IndexSpecifierList,Allocator>,
+      index_base<Value,IndexSpecifierList,Allocator>,
       mpl::bind2<
         index_applier<Allocator>,
         mpl::_2,
