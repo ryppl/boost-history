@@ -880,9 +880,9 @@ template<typename R, ... ArgumentTypes>
 \subsection{Bind implementation}
 \label{bindimpl}
 The following code implements the enhanced binder
-proposal~\cite{Dimov03b} using variadic templates, and building on the
-existing tuple and member pointer adaptor code. This implementation is
-complete, with two exceptions (both of which require uninteresting but
+proposal~\cite{Dimov03b} using variadic templates and building on the
+existing member pointer adaptor code. This implementation is complete,
+with two exceptions (both of which require uninteresting but
 nontrivial code, expressible in C++03):
 \begin{itemize}
   \item {\tt result\_type} is not specified in {\tt binder}
@@ -911,39 +911,43 @@ template<typename X> X& lambda(const reference_wrapper<X>& x)
 template<typename X> X& lambda(X& x)
   { return x; }
 
+// Get placeholder argument
+template<typename T1, ... Args>
+  T1& get_placeholder_arg(placeholder<1>, T1& t1, Args&...)
+  { return t1; }
+
+template<typename T1, typename T2, ... Args>
+  T2& get_placeholder_arg(placeholder<2>, T1&, T2& t2, Args&...)
+  { return t2; }
+
+template<typename T1, typename T2, typename T3, ... Args>
+  T2& get_placeholder_arg(placeholder<3>, T1&, T2&, T3& t3, Args&...)
+  { return t3; }
+
+template<int N, typename T1, typename T2, typename T3, ... Args>
+  auto get_placeholder_arg(placeholder<N>, T1&, T2&, T3&, Args&... args)
+  { return get_placeholder_arg(placeholder<N-3>(), args...); }
+
 // Mu
 template<typename X, typename Args> X& mu(reference_wrapper<X>& x, Args&)
   { return x.get(); }
 
 template<typename X, typename Args>
-typename enable_if<(is_placeholder<X>::value),
-                   typename tuple_element<X, is_placeholder<X>::value-1>::type
-                   >::type
-mu(X&, Args& args)
-  { return std::get<is_placeholder<X>::value-1>(args); }
+auto 
+mu(X&, Args& args, 
+   typename enable_if<(is_placeholder<X>::value), void*>::type=0)
+{ 
+  return get_placeholder_arg(placeholder<is_placeholder<X>::value>(), args...);
+}
 
 template<typename X, typename Args>
   auto 
   mu(X& x, Args& args, 
      typename enable_if<(is_bind_expression<X>::value), void*>::type = 0)
-  { return apply(x, args); }
+  { return x(args...); }
 
 template<typename X, typename Args> X& mu(X& x, Args&)
   { return x; }
-
-// Unary function object that calls mu with the object 'x' it receives
-// and the bound arguments from binder_t.
-template<typename BoundArgs>
-struct apply_mu_t
-{
-  explicit apply_mu_t(BoundArgs& bound_args) : bound_args(bound_args) {}
-
-  template<typename X> auto operator()(X& x) const
-    { return mu(x, bound_args); }
-
-private:
-  BoundArgs bound_args;
-};
 
 // Return type of bind(...)
 template<typename F, typename BoundArgs>
@@ -953,10 +957,10 @@ struct binder
     : f(f), bound_args(bound_args) {}
 
   template<... Args> auto operator()(Args&... args)
-    { return apply(lambda(f), transform(tie(args...), apply_mu(bound_args))); }
+    { return lambda(f)(mu(bound_args, args...)...); }
 
   template<... Args> auto operator()(Args&... args) const
-    { return apply(lambda(f), transform(tie(args...), apply_mu(bound_args))); }
+    { return lambda(f)(mu(bound_args, args...)...); }
 
 private:
   F f;
@@ -977,12 +981,12 @@ struct is_bind_expression<binder<F, BoundArgs> > : integral_constant<bool, true>
 // Bind overload for function objects and function pointers
 template<typename F, ... BoundArgs>
   auto bind(F f, const BoundArgs&... bound_args)
-  { return make_binder(f, make_tuple(bound_args...)); }
+  { return binder<F, BoundArgs>(f, bound_args); }
 
 // Bind overload for member pointers (both function and data)
 template<typename Class, typename T, ... BoundArgs>
   auto bind(T Class::*pm, const BoundArgs&... bound_args)
-  { return make_binder(mem_fn(f), make_tuple(bound_args...)); }
+  { return make_binder(mem_fn(f), bound_args...); }
 \end{verbatim}
 \normalsize
 
