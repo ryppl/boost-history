@@ -9,8 +9,14 @@ if $(NT)
     PYTHON_LIB_PATH = $(PYTHON_ROOT)/libs ;
 
     # common properties required for compiling any Python module.
-    PYTHON_PROPERTIES ?= <gcc><*><define>SIZEOF_LONG=4
-                        <gcc><*><define>USE_DL_IMPORT ;
+    PYTHON_PROPERTIES ?=
+        <gcc><*><define>SIZEOF_LONG=4
+        <gcc><*><define>USE_DL_IMPORT
+                        
+        # if you don't request multithreading, you can't get the DLL runtime,
+        # which is needed for the python modules to  work right                
+        <msvc><*><threading>multi
+        ;
                         
     SHELL_EXPORT ?= set ;
 }
@@ -68,8 +74,8 @@ rule boost-python-test
 {
     SEARCH on $(>[1]) = $(SEARCH_SOURCE) ;
     local gPYTHON_TEST_ARGS = $(5) $(PYTHON_TEST_ARGS) ;
-    declare-local-target $(<:S=.test) : $(2) : $(3) : $(4) : PYTHON_TEST ;
-    declare-local-target $(<:S=.run) : $(2) : $(3) : $(4) : PYTHON_RUNTEST ;
+    declare-local-target $(<:S=.test) : $(2) : $(PYTHON_PROPERTIES) : $(4) : PYTHON_TEST ;
+    declare-local-target $(<:S=.run) : $(2) : $(PYTHON_PROPERTIES) : $(4) : PYTHON_RUNTEST ;
 }
 
 # how do we invoke python?
