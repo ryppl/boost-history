@@ -46,14 +46,6 @@ namespace boost { namespace numeric { namespace ublas {
         typedef banded_matrix<T, F, A> self_type;
         typedef const matrix_const_reference<const_self_type> const_closure_type;
         typedef matrix_reference<self_type> closure_type;
-#ifdef BOOST_UBLAS_DEPRECATED
-        typedef const matrix_row<const_self_type> const_matrix_row_type;
-        typedef matrix_row<self_type> matrix_row_type;
-        typedef const matrix_column<const_self_type> const_matrix_column_type;
-        typedef matrix_column<self_type> matrix_column_type;
-        typedef const matrix_range<const_self_type> const_matrix_range_type;
-        typedef matrix_range<self_type> matrix_range_type;
-#endif
         typedef packed_tag storage_category;
         typedef typename F::orientation_category orientation_category;
 
@@ -169,17 +161,6 @@ namespace boost { namespace numeric { namespace ublas {
             return zero_;
         }
 
-#ifdef BOOST_UBLAS_DEPRECATED
-        BOOST_UBLAS_INLINE
-        const_matrix_row_type operator [] (size_type i) const {
-            return const_matrix_row_type (*this, i);
-        }
-        BOOST_UBLAS_INLINE
-        matrix_row_type operator [] (size_type i) {
-            return matrix_row_type (*this, i);
-        }
-#endif
-
         // Assignment
         BOOST_UBLAS_INLINE
         banded_matrix &operator = (const banded_matrix &m) { 
@@ -212,7 +193,7 @@ namespace boost { namespace numeric { namespace ublas {
         }
         template<class AE>
         BOOST_UBLAS_INLINE
-        banded_matrix &reset (const matrix_expression<AE> &ae) { 
+        banded_matrix &reset (const matrix_expression<AE> &ae) {
             self_type temporary (ae, lower_, upper_);
             resize (temporary.size1 (), temporary.size2 (), lower_, upper_);
             return assign_temporary (temporary);
@@ -1043,36 +1024,28 @@ namespace boost { namespace numeric { namespace ublas {
         typedef banded_adaptor<M> self_type;
         typedef const matrix_const_reference<const_self_type> const_closure_type;
         typedef matrix_reference<self_type> closure_type;
-#ifdef BOOST_UBLAS_DEPRECATED
-        typedef const matrix_row<const_self_type> const_matrix_row_type;
-        typedef matrix_row<self_type> matrix_row_type;
-        typedef const matrix_column<const_self_type> const_matrix_column_type;
-        typedef matrix_column<self_type> matrix_column_type;
-        typedef const matrix_range<const_self_type> const_matrix_range_type;
-        typedef matrix_range<self_type> matrix_range_type;
-#endif
         typedef typename storage_restrict_traits<typename M::storage_category,
                                                  packed_proxy_tag>::storage_category storage_category;
         typedef typename M::orientation_category orientation_category;
 
         // Construction and destruction
         BOOST_UBLAS_INLINE
-        banded_adaptor (): 
+        banded_adaptor ():
             data_ (nil_), lower_ (0), upper_ (0) {}
         BOOST_UBLAS_INLINE
-        banded_adaptor (matrix_type &data, size_type lower = 0, size_type upper = 0): 
+        banded_adaptor (matrix_type &data, size_type lower = 0, size_type upper = 0):
             data_ (data), lower_ (lower), upper_ (upper) {}
         BOOST_UBLAS_INLINE
-        banded_adaptor (const banded_adaptor &m): 
+        banded_adaptor (const banded_adaptor &m):
             data_ (m.data_), lower_ (m.lower_), upper_ (m.upper_) {}
 
         // Accessors
         BOOST_UBLAS_INLINE
-        size_type size1 () const { 
+        size_type size1 () const {
             return data_.size1 ();
         }
         BOOST_UBLAS_INLINE
-        size_type size2 () const { 
+        size_type size2 () const {
             return data_.size2 ();
         }
         BOOST_UBLAS_INLINE
@@ -1092,6 +1065,7 @@ namespace boost { namespace numeric { namespace ublas {
             return data_;
         }
 
+#ifdef BOOST_UBLAS_DEPRECATED
         // Resetting
         BOOST_UBLAS_INLINE
         void reset (matrix_type &data, size_type lower = 0, size_type upper = 0) {
@@ -1102,6 +1076,7 @@ namespace boost { namespace numeric { namespace ublas {
             lower_ = lower;
             upper_ = upper;
         }
+#endif
 
         // Element access
         BOOST_UBLAS_INLINE
@@ -1145,17 +1120,6 @@ namespace boost { namespace numeric { namespace ublas {
             external_logic ().raise ();
             return zero_;
         }
-
-#ifdef BOOST_UBLAS_DEPRECATED
-        BOOST_UBLAS_INLINE
-        const_matrix_row_type operator [] (size_type i) const {
-            return const_matrix_row_type (*this, i);
-        }
-        BOOST_UBLAS_INLINE
-        matrix_row_type operator [] (size_type i) {
-            return matrix_row_type (*this, i);
-        }
-#endif
 
         // Assignment
         BOOST_UBLAS_INLINE
