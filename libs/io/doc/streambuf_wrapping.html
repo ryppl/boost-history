@@ -35,7 +35,7 @@ wrapping new stream-buffer classes in streams.</p>
 <h2><a name="rationale">Rationale</a></h2>
 
 <p>To extend the C++ IOStream system with a new character sink and/or
-source, a stream-buffer class (template) is defined with the appropiate
+source, a stream-buffer class (template) is defined with the appropriate
 transfer (and buffering) properties.  The actual I/O is done with a
 stream object, that sends/receives characters via a stream-buffer
 object.  The Standard stream base class templates are designed to use
@@ -48,7 +48,7 @@ stream.</p>
 code to connect with their internal stream buffer.  This library
 provides base class templates that provide standard ways of using an
 internal stream buffer, accessing that stream buffer, and checking if
-that stream didn't switch to an external stream buffer.</p>
+the stream buffer's stream switched to an external stream buffer.</p>
 
 <h2><a name="header">Header Synopsis</a></h2>
 
@@ -254,9 +254,9 @@ forwarding to the stream buffer's interface.</p>
 
 <hr>
 
-<p>Revised: 11 November 2002</p>
+<p>Revised: 23 May 2003</p>
 
-<p>Copyright &copy; Daryle Walker 2002.  Permission to copy, use,
+<p>Copyright &copy; Daryle Walker 2003.  Permission to copy, use,
 modify, sell and distribute this document is granted provided this
 copyright notice appears in all copies.  This document is provided
 &quot;as is&quot; without express or implied warranty, and with no claim
