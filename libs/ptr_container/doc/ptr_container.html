@@ -99,7 +99,7 @@
                  container.<h3  >Synopsis:</h3><pre>             
 namespace boost
 {      
-    template< typename T, typename Allocator = std::allocator< T* > >
+    template< typename T >
     class ptr_container 
     {
     public: // typedefs
@@ -110,15 +110,15 @@ namespace boost
         typedef  <b>implementation defined</b>                       const_iterator;
         typedef  <b>implementation defined</b>                       difference_type; 
         typedef  <b>implementation defined</b>                       size_type;
-        typedef  Allocator                                    allocator_type;
-        typedef  typename Allocator::pointer                  pointer;
-        typedef  typename Allocator::const_pointer            const_pointer; 
-        typedef  std::reverse_iterator< iterator >            reverse_iterator;
-        typedef  std::reverse_iterator< const_iterator >      const_reverse_iterator;
+        typedef  <b>implementation defined</b>                       allocator_type;
+        typedef  <b>implementation defined</b>                       pointer;
+        typedef  <b>implementation defined</b>                       const_pointer; 
+        typedef  <b>implementation defined</b>                       reverse_iterator;
+        typedef  <b>implementation defined</b>                       const_reverse_iterator;
         typedef  <b>implementation defined</b>                       ptr_iterator;
         typedef  <b>implementation defined</b>                       ptr_const_iterator;
-        typedef  std::reverse_iterator< ptr_iterator >        ptr_reverse_iterator;
-        typedef  std::reverse_iterator< ptr_const_iterator >  ptr_const_reverse_iterator;        
+        typedef  <b>implementation defined</b>                       ptr_reverse_iterator;
+        typedef  <b>implementation defined</b>                       ptr_const_reverse_iterator;        
     
     public: // construct/copy/destroy
         explicit ptr_container( const allocator_type& = allocator_type() );
@@ -265,7 +265,7 @@ assign( InputIterator first, InputIterator last );</pre><blockquote  ><p  ><b  >
     else
     ; //do nothing </pre></p><p  ><b  >Postconditions: </b><code  >size() == sz</code></p><p  ><b  >Exception safety: </b>Strong guarantee</p></blockquote><p  ><h3  >Semantics: <i  >element access</i></h3></p><code  >T& front();</code><blockquote  ><p  ><b  >Requirements: </b><code  >not empty()</code></p><p  ><b  >Effects: </b><code  >return *begin()</code></p><p  ><b  >Throws: </b>Nothing</p></blockquote><code  >const T& front() const;</code><blockquote  ><p  ><b  >Requirements: </b><code  >not empty()</code></p><p  ><b  >Effects: </b><code  >return *begin()</code></p><p  ><b  >Throws: </b>Nothing</p></blockquote><code  >T& back();</code><blockquote  ><p  ><b  >Requirements: </b><code  >not empty()</code></p><p  ><b  >Effects: </b><code  >return *--end()</code></p><p  ><b  >Throws: </b>Nothing</p></blockquote><code  >const T& back() const;</code><blockquote  ><p  ><b  >Requirements: </b><code  >not empty()</code></p><p  ><b  >Effects: </b><code  >return *--end()</code></p><p  ><b  >Throws: </b>Nothing</p></blockquote><p  ><h3  >Semantics: <i  >modifiers</i></h3></p><code  >void push_back( T* x );</code><blockquote  ><p  ><b  >Requirements: </b><code  >x</code> is heap-allocated and cannot be <code  >0</code></p><p  ><b  >Effects: </b>Inserts the pointer into container and takes ownership of it</p><p  ><b  >Throws: </b><code  >bad_pointer</code> if <code  >x</code> is <code  >0</code></p><p  ><b  >Exception safety: </b>Strong guarantee</p></blockquote><code  >void push_back( const T& x );</code><blockquote  ><p  ><b  >Effects: </b><code  >push_back( make_clone( x ) );</code></p><p  ><b  >Exception safety: </b>Strong guarantee</p></blockquote><code  >void pop_back();</code><blockquote  ><p  ><b  >Effects: </b>Removes the last element in the container if it exists</p><p  ><b  >Postconditions: </b><code  >not empty()</code> implies <code  >size()</code> is one less</p><p  ><b  >Exception safety: </b>Nothrow guarantee</p></blockquote><code  >iterator insert( iterator position, T* x );</code><blockquote  ><p  ><b  >Requirements: </b><code  >position</code> is a valid iterator from the container and <code  >x</code> is heap-allocated and cannot be <code  >0</code></p><p  ><b  >Effects: </b>Inserts <code  >x</code> before <code  >position</code> and returns an iterator pointing to it</p><p  ><b  >Throws: </b><code  >bad_pointer</code> if <code  >x</code> is <code  >0</code></p><p  ><b  >Exception safety: </b>Strong guarantee</p></blockquote><code  >iterator insert( iterator position, const T& x );</code><blockquote  ><p  ><b  >Requirements: </b><code  >position</code> is a valid iterator from the container</p><p  ><b  >Effects: </b><code  >return insert( position, make_clone( x ) );</code></p><p  ><b  >Exception safety: </b>Strong guarantee</p></blockquote><code  >void insert( iterator position, size_type n, const T& x );</code><blockquote  ><p  ><b  >Requirements: </b><code  >position</code> is a valid iterator from the container</p><p  ><b  >Effects: </b>Inserts <code  >n</code> clones of <code  >x</code> before <code  >position</code> into the container </p><p  ><b  >Exception safety: </b>Strong guarantee</p></blockquote><pre  >template&lt; typename InputIterator &gt;
 void insert( iterator position, InputIterator first, InputIterator last );</pre><blockquote  ><p  ><b  >Requirements: </b><code  >position</code> is a valid iterator from the container</p><p  ><b  >Effects: </b>Inserts a cloned range before <code  >position</code></p><p  ><b  >Exception safety: </b>Strong guarantee</p></blockquote><code  >iterator erase( iterator position );</code><blockquote  ><p  ><b  >Requirements: </b><code  >position</code> is a valid iterator from the container</p><p  ><b  >Effects: </b>Removes the element defined by <code  >position</code> and returns an
-                      iterator to the following element</p><p  ><b  >Throws: </b>Nothing</p></blockquote><code  >iterator erase( iterator first, iterator last );</code><blockquote  ><p  ><b  >Requirements: </b><code  >(first,last]</code> is a valid range</p><p  ><b  >Effects: </b>Removes the range of element defined by <code  >position</code> and returns an
+                      iterator to the following element</p><p  ><b  >Throws: </b>Nothing</p></blockquote><code  >iterator erase( iterator first, iterator last );</code><blockquote  ><p  ><b  >Requirements: </b><code  >[first,last)</code> is a valid range</p><p  ><b  >Effects: </b>Removes the range of element defined by <code  >[first,last)</code> and returns an
                  iterator to the following element</p><p  ><b  >Throws: </b>Nothing</p></blockquote><p  ><h3  >Semantics: <i  >pointer container requirements</i></h3></p><code  >std::auto_ptr&lt; T &gt; release_back();</code><blockquote  ><p  ><b  >Requirements: </b><code  >not empty()</code></p><p  ><b  >Effects: </b>Releases ownership of the last pointer in the container</p><p  ><b  >Postconditions: </b><code  >size()</code> is one less </p><p  ><b  >Throws: </b><code  >bad_ptr_container_operation</code> if the container is empty</p><p  ><b  >Exception safety: </b>Strong guarantee</p></blockquote><pre  >template&lt; typename PtrContainer &gt;
 void  transfer( iterator before, typename PtrContainer::iterator object, 
                 PtrContainer& from );</pre><blockquote  ><p  ><b  >Requirements: </b><code  >not from.empty()</code></p><p  ><b  >Effects: </b>Inserts the object defined by <code  >object</code>into the container 
@@ -340,7 +340,7 @@ namespace boost
     class ptr_vector 
     {
         //
-        // reversible ptr_container requirements + 
+        // ptr_container requirements + ptr_sequence requirements + 
         // 
 
     public: // capacity
@@ -356,7 +356,64 @@ namespace boost
     }; //  class 'ptr_vector'
     
 } // namespace 'boost'  
-    </pre> <p  ><h3  >Semantics: <i  >capacity</i></h3></p><code  >size_type capacity() const;</code><blockquote  ><p  ><b  >Effects: </b>Returns the size of the allocated buffer</p><p  ><b  >Throws: </b>Nothing</p></blockquote><p  ><h3  >Semantics: <i  >element access</i></h3></p><code  >T& operator[]( size_type n );</code><blockquote  ><p  ><b  >Requirements: </b><code  >n &lt; size()</code></p><p  ><b  >Effects: </b>Returns a reference to the n'th element</p></blockquote><code  >const T& operator[]( size_type n ) const;</code><blockquote  ><p  ><b  >Requirements: </b><code  >n &lt; size()</code></p><p  ><b  >Effects: </b>Returns a const reference to the n'th element</p></blockquote><code  >T& at( size_type n );</code><blockquote  ><p  ><b  >Requirements: </b><code  >n &lt; size()</code></p><p  ><b  >Effects: </b>Returns a reference to the n'th element</p><p  ><b  >Throws: </b><code  >std::out_of_range</code> if <code  >n &gt;=size()</code></p></blockquote><code  >const T& at( size_type n );</code><blockquote  ><p  ><b  >Requirements: </b><code  >n &lt; size()</code></p><p  ><b  >Effects: </b>Returns a const reference to the n'th element</p><p  ><b  >Throws: </b><code  >std::out_of_range</code> if <code  >n &gt;= size()</code></p></blockquote><hr size="1" ><h2  >Pseudo class <code  >ptr_associative_container&lt;&gt;</code></h2><a name="Pseudo class <code  >ptr_associative_container&lt;&gt;</code>" ></a><hr size="1" ><h2  > Class <code  >ptr_set&lt;&gt;</code></h2><a name=" Class <code  >ptr_set&lt;&gt;</code>" ></a><hr size="1" ><h2  > Class <code  >ptr_multiset&lt;&gt;</code></h2><a name=" Class <code  >ptr_multiset&lt;&gt;</code>" ></a><hr size="1" ><h2  > Class <code  >ptr_map&lt;&gt;</code></h2><a name=" Class <code  >ptr_map&lt;&gt;</code>" ></a><hr size="1" ><h2  > Class <code  >ptr_multimap&lt;&gt;</code></h2><a name=" Class <code  >ptr_multimap&lt;&gt;</code>" ></a><hr size="1" ><h2  > Iterator operations</h2><a name=" Iterator operations" ></a><hr size="1" ><h2  > Map iterator operations</h2><a name=" Map iterator operations" ></a><hr size="1" ><h2  >Exception classes</h2><a name="Exception classes" ></a><hr size="1" ><h2  >Examples</h2><a name="Examples" ></a><p  >Some examples are given in the accompanying test
+    </pre> <p  ><h3  >Semantics: <i  >capacity</i></h3></p><code  >size_type capacity() const;</code><blockquote  ><p  ><b  >Effects: </b>Returns the size of the allocated buffer</p><p  ><b  >Throws: </b>Nothing</p></blockquote><p  ><h3  >Semantics: <i  >element access</i></h3></p><code  >T& operator[]( size_type n );</code><blockquote  ><p  ><b  >Requirements: </b><code  >n &lt; size()</code></p><p  ><b  >Effects: </b>Returns a reference to the n'th element</p></blockquote><code  >const T& operator[]( size_type n ) const;</code><blockquote  ><p  ><b  >Requirements: </b><code  >n &lt; size()</code></p><p  ><b  >Effects: </b>Returns a const reference to the n'th element</p></blockquote><code  >T& at( size_type n );</code><blockquote  ><p  ><b  >Requirements: </b><code  >n &lt; size()</code></p><p  ><b  >Effects: </b>Returns a reference to the n'th element</p><p  ><b  >Throws: </b><code  >std::out_of_range</code> if <code  >n &gt;=size()</code></p></blockquote><code  >const T& at( size_type n );</code><blockquote  ><p  ><b  >Requirements: </b><code  >n &lt; size()</code></p><p  ><b  >Effects: </b>Returns a const reference to the n'th element</p><p  ><b  >Throws: </b><code  >std::out_of_range</code> if <code  >n &gt;= size()</code></p></blockquote><hr size="1" ><h2  >Pseudo class <code  >ptr_associative_container&lt;&gt;</code></h2><a name="Pseudo class <code  >ptr_associative_container&lt;&gt;</code>" ></a><h3  >Synopsis:</h3><pre>             
+namespace boost
+{
+    template< typename T >
+    class ptr_associative_container
+    {
+    public: // typedefs
+        typedef <b>implementation defined</b>   key_type;
+        typedef <b>implementation defined</b>   key_compare;
+        typedef <b>implementation defined</b>   value_compare;
+
+    public: // observers
+        key_compare    key_comp() const;
+        value_compare  value_comp() const;
+
+    public: // modifiers         
+        template< typename InputIterator >
+        void       insert( InputIterator first, InputIterator last );     
+        void       erase( iterator position ); 
+        size_type  erase( const key_type& x );
+        void       erase( iterator first, iterator last );
+        
+    public: // pointer container requirements
+        template< typename PtrContainer >
+        void transfer( typename PtrContainer::iterator object, PtrContainer& from );
+    
+    }; //  class 'ptr_associative_container'
+    
+} // namespace 'boost'  
+    </pre> <p  ><h3  >Semantics: <i  >observers</i></h3></p><code  >key_compare key_comp() const;</code><blockquote  ></blockquote><code  >value_compare value_comp() const;</code><blockquote  ></blockquote><p  ><h3  >Semantics: <i  >modifiers</i></h3></p><pre  >template&lt; typename InputIterator &gt;
+void insert( InputIterator first, InputIterator last );</pre><blockquote  ><p  ><b  >Requirements: </b><code  >[first,last)</code> is a valid range</p><p  ><b  >Effects: </b>Inserts a cloned range </p><p  ><b  >Exception safety: </b>Basic guarantee</p></blockquote><code  >void erase( iterator position );</code><blockquote  ><p  ><b  >Requirements: </b><code  >position</code> is a valid iterator from the container</p><p  ><b  >Effects: </b>Removes the element defined by <code  >position.</code></p><p  ><b  >Throws: </b>Nothing</p></blockquote><code  >size_type erase( const key_type& x );</code><blockquote  ><p  ><b  >Effects: </b>Removes all the elements in the container with a key equivalent to <code  >x</code> and return the number of erased elements.</p><p  ><b  >Throws: </b>Nothing</p></blockquote><code  >void erase( iterator first, iterator last );</code><blockquote  ><p  ><b  >Requirements: </b><code  >[first,last)</code> is a valid range</p><p  ><b  >Effects: </b>Removes the range of elements defined by <code  >[first,last).</code></p><p  ><b  >Throws: </b>Nothing</p></blockquote><p  ><h3  >Semantics: <i  >pointer container requirements</i></h3></p><pre  >template&lt; typename PtrContainer &gt;
+void transfer( typename PtrContainer::iterator object, PtrContainer& from );</pre><blockquote  ><p  ><b  >Requirements: </b><code  >not from.empty()</code></p><p  ><b  >Effects: </b>Inserts the object defined by <code  >object</code>into the container 
+                     and remove it from <code  >from.</code></p><p  ><b  >Postconditions: </b><code  >size()</code> is one more, <code  >from.size()</code> is one less.</p><p  ><b  >Exception safety: </b>Strong guarantee</p></blockquote><hr size="1" ><h2  > Class <code  >ptr_set&lt;&gt;</code></h2><a name=" Class <code  >ptr_set&lt;&gt;</code>" ></a><h3  >Synopsis:</h3><pre>             
+    namespace boost
+    {
+    template< typename Key, typename Compare = ptr_less<Key>, 
+              typename Allocator = std::allocator<Key*> > >
+    class ptr_set
+    {
+        //
+        // ptr_container requirements + ptr_associative_container requirements +
+        //
+        
+    public: // modifiers         
+        std::pair<iterator,bool>  insert( Key* x );                         
+        std::pair<iterator,bool>  insert( const Key& x );
+
+    public: // set algorithms
+        iterator                        find( const Key& x ) const;                                            
+        size_type                       count( const Key& x ) const;                                          
+        iterator                        lower_bound( const Key& x ) const;                                     
+        iterator                        upper_bound( const Key& x ) const;                                     
+        std::pair< iterator,iterator >  equal_range( const Key& x ) const;                 
+
+    }; //  class 'ptr_set'
+
+} // namespace 'boost'  
+</pre> <p  ><h3  >Semantics: <i  >modifers</i></h3></p><code  >std::pair&lt;iterator,bool&gt; insert( Key* x );</code><blockquote  ></blockquote><code  >std::pair&lt;iterator,bool&gt; insert( const Key& x );</code><blockquote  ></blockquote><p  ><h3  >Semantics: <i  >set algorithms</i></h3></p><code  >iterator find( const Key& x ) const;</code><blockquote  ></blockquote><code  >size_type count( const Key& x ) const;</code><blockquote  ></blockquote><code  >iterator lower_bound( const Key& x ) const; </code><blockquote  ></blockquote><code  >iterator upper_bound( const Key& x ) const; </code><blockquote  ></blockquote><code  >std::pair&lt;iterator,iterator&gt; xequal_range( const Key& x ) const; </code><hr size="1" ><h2  > Class <code  >ptr_multiset&lt;&gt;</code></h2><a name=" Class <code  >ptr_multiset&lt;&gt;</code>" ></a><hr size="1" ><h2  > Class <code  >ptr_map&lt;&gt;</code></h2><a name=" Class <code  >ptr_map&lt;&gt;</code>" ></a><hr size="1" ><h2  > Class <code  >ptr_multimap&lt;&gt;</code></h2><a name=" Class <code  >ptr_multimap&lt;&gt;</code>" ></a><hr size="1" ><h2  > Iterator operations</h2><a name=" Iterator operations" ></a><hr size="1" ><h2  > Map iterator operations</h2><a name=" Map iterator operations" ></a><hr size="1" ><h2  >Exception classes</h2><a name="Exception classes" ></a><hr size="1" ><h2  >Examples</h2><a name="Examples" ></a><p  >Some examples are given in the accompanying test
                       files:</p><ul  ><li  > <a href="../test/incomplete_type_test.cpp" target="_self" ><code  >incomplete_type_test.cpp</code></a>  shows how to implement the Composite pattern.</li><li  > <a href="../test/associative_test_data.hpp" target="_self" ><code  >associative_test_data.hpp</code></a>  shows the common interface for all associative containers.</li><li  > <a href="../test/sequence_test_data.hpp" target="_self" ><code  >sequence_test_data.hpp</code></a>  shows the common interface for all sequences.</li></ul><hr size="1" ><h2  >Portability</h2><a name="Portability" ></a><p  >This library does not rely on any difficult template code, and so it should work
                         with most compilers---even the older onces.</p><p  >Most of the tests have been run successfully on these compilers:<ul  ><li  >vc7.1</li><li  >gcc3.3.1</li><li  >como4.3.3</li><li  >bcc6</li></ul></p><hr size="1" ><h2  >FAQ</h2><a name="FAQ" ></a><ol  ><p  ><i  >Since a pointer container is not Copy-Constructible and Assignable, I cannot 
                  put them into standard containers; what do I do?</i> Since they are Clonable, you simply put them in a pointer container.</p><p  ><i  >Calling <code  >assign()</code> is very costly and I do not really need to store

@@ -508,7 +508,7 @@ function ptrContainerRef()
 "<pre>             
 namespace boost
 {      
-    template< typename T, typename Allocator = std::allocator< T* > >
+    template< typename T >
     class ptr_container 
     {
     public: // typedefs
@@ -519,15 +519,15 @@ namespace boost
         typedef  <b>implementation defined</b>                       const_iterator;
         typedef  <b>implementation defined</b>                       difference_type; 
         typedef  <b>implementation defined</b>                       size_type;
-        typedef  Allocator                                    allocator_type;
-        typedef  typename Allocator::pointer                  pointer;
-        typedef  typename Allocator::const_pointer            const_pointer; 
-        typedef  std::reverse_iterator< iterator >            reverse_iterator;
-        typedef  std::reverse_iterator< const_iterator >      const_reverse_iterator;
+        typedef  <b>implementation defined</b>                       allocator_type;
+        typedef  <b>implementation defined</b>                       pointer;
+        typedef  <b>implementation defined</b>                       const_pointer; 
+        typedef  <b>implementation defined</b>                       reverse_iterator;
+        typedef  <b>implementation defined</b>                       const_reverse_iterator;
         typedef  <b>implementation defined</b>                       ptr_iterator;
         typedef  <b>implementation defined</b>                       ptr_const_iterator;
-        typedef  std::reverse_iterator< ptr_iterator >        ptr_reverse_iterator;
-        typedef  std::reverse_iterator< ptr_const_iterator >  ptr_const_reverse_iterator;        
+        typedef  <b>implementation defined</b>                       ptr_reverse_iterator;
+        typedef  <b>implementation defined</b>                       ptr_const_reverse_iterator;        
     
     public: // construct/copy/destroy
         explicit ptr_container( const allocator_type& = allocator_type() );
@@ -979,8 +979,8 @@ void insert( iterator position, InputIterator first, InputIterator last );" ) .
             ) .
         code( "iterator erase( iterator first, iterator last );" ) .
         blockQuote( 
-            requirements( code("(first,last]") . " is a valid range" ) .
-            effects( "Removes the range of element defined by ". code( "position" ) ." and returns an
+            requirements( code("[first,last)") . " is a valid range" ) .
+            effects( "Removes the range of element defined by ". code( "[first,last)" ) ." and returns an
                  iterator to the following element" ) .
             throws( "Nothing" ) 
             ) .
@@ -1264,16 +1264,139 @@ namespace boost
 function ptrAssociativeContainerRef()
 {
     $res = beginSection( ptrAssociativeContainerLink() );
+    $synopsis = beginSynopsis() . 
+"<pre>             
+namespace boost
+{
+    template< typename T >
+    class ptr_associative_container
+    {
+    public: // typedefs
+        typedef <b>implementation defined</b>   key_type;
+        typedef <b>implementation defined</b>   key_compare;
+        typedef <b>implementation defined</b>   value_compare;
+
+    public: // observers
+        key_compare    key_comp() const;
+        value_compare  value_comp() const;
+
+    public: // modifiers         
+        template< typename InputIterator >
+        void       insert( InputIterator first, InputIterator last );     
+        void       erase( iterator position ); 
+        size_type  erase( const key_type& x );
+        void       erase( iterator first, iterator last );
+        
+    public: // pointer container requirements
+        template< typename PtrContainer >
+        void transfer( typename PtrContainer::iterator object, PtrContainer& from );
     
+    }; //  class 'ptr_associative_container'
     
-    return $res;
+} // namespace 'boost'  
+    </pre> ";
+    
+    $details = beginDetails( "observers" ) .
+        code( "key_compare key_comp() const;" ) .
+        blockQuote( "" ) .
+        code( "value_compare value_comp() const;" ) .
+        blockQuote( "" ) .
+        /////////////////////////////////////////////////////////////////////
+        beginDetails( "modifiers" ) .
+        pre( "template< typename InputIterator >
+void insert( InputIterator first, InputIterator last );" ) . 
+        blockQuote( 
+            requirements( code("[first,last)") . " is a valid range" ) .
+            effects( "Inserts a cloned range " ) .
+            exceptionSafety( "Basic guarantee" ) 
+       ) .
+        code( "void erase( iterator position );" ) . 
+        blockQuote( 
+            requirements( code("position") . " is a valid iterator from the container" ) .
+            effects( "Removes the element defined by ". code( "position." ) ) .
+            throws( "Nothing" ) 
+            ) .
+        code( "size_type erase( const key_type& x );" ) .
+        blockQuote(
+            effects( "Removes all the elements in the container with a key equivalent to " 
+                     . code( "x" ) . " and return the number of erased elements." ) .
+            throws( "Nothing" )  
+             ) .  
+        code( "void erase( iterator first, iterator last );" ) .
+        blockQuote( 
+            requirements( code("[first,last)") . " is a valid range" ) .
+            effects( "Removes the range of elements defined by ". code( "[first,last)." ) ) .
+            throws( "Nothing" ) 
+            ) .
+
+        /////////////////////////////////////////////////////////////////////
+        beginDetails( "pointer container requirements" ) .
+        pre( "template< typename PtrContainer >
+void transfer( typename PtrContainer::iterator object, PtrContainer& from );" ) .
+        blockQuote( 
+            requirements( code( "not from.empty()" ) ) .
+            effects( "Inserts the object defined by " . code( "object" ) . "into the container 
+                     and remove it from " . code( "from." ) ) .
+            postconditions( code( "size()" ) . " is one more, " . code( "from.size()" ) . " is one less." ) .  
+            exceptionSafety( "Strong guarantee" ) 
+            ) ;
+
+    
+    return $res . $synopsis .$details ;
 }
 
 
 
 function setRef() 
 {
-    return beginSection( setLink() );
+    $res = beginSection( setLink() );
+    
+    $synopsis = beginSynopsis() . 
+"<pre>             
+    namespace boost
+    {
+    template< typename Key, typename Compare = ptr_less<Key>, 
+              typename Allocator = std::allocator<Key*> > >
+    class ptr_set
+    {
+        //
+        // ptr_container requirements + ptr_associative_container requirements +
+        //
+        
+    public: // modifiers         
+        std::pair<iterator,bool>  insert( Key* x );                         
+        std::pair<iterator,bool>  insert( const Key& x );
+
+    public: // set algorithms
+        iterator                        find( const Key& x ) const;                                            
+        size_type                       count( const Key& x ) const;                                          
+        iterator                        lower_bound( const Key& x ) const;                                     
+        iterator                        upper_bound( const Key& x ) const;                                     
+        std::pair< iterator,iterator >  equal_range( const Key& x ) const;                 
+
+    }; //  class 'ptr_set'
+
+} // namespace 'boost'  
+</pre> ";
+
+    $details = beginDetails( "modifers" ) .
+        code( "std::pair<iterator,bool> insert( Key* x );" ) .
+        blockQuote( "" ) .                         
+        code( "std::pair<iterator,bool> insert( const Key& x );" ) .
+        blockQuote( "" ) .
+        /////////////////////////////////////////////////////////////////////
+        beginDetails( "set algorithms" ) .
+        code( "iterator find( const Key& x ) const;" ) .
+        blockQuote( "" ) .
+        code( "size_type count( const Key& x ) const;" ) .  
+        blockQuote( "" ) .
+        code( "iterator lower_bound( const Key& x ) const; " ) . 
+        blockQuote( "" ) .
+        code( "iterator upper_bound( const Key& x ) const; " ) .
+        blockQuote( "" ) .
+        code( "std::pair<iterator,iterator> xequal_range( const Key& x ) const; " ) ;               
+
+    return $res . $synopsis . $details; 
 }
 
 
