@@ -30,7 +30,7 @@ using namespace std;
 #include "rcombo.hpp"
 using namespace boost;
 
-#define DIM(a)	(sizeof(a)/sizeof(a)[0])
+#define DIM(a)    (sizeof(a)/sizeof(a)[0])
 
 char numerals[] = { '6', '3', '2', '5', '4', '1' };
   
@@ -66,11 +66,11 @@ namespace std {
 
 inline void PrintLetters(int r)
 {
-	copy(numerals, numerals + r, ostream_iterator<char>(cout, "  "));
-	cout << "|  ";
-	copy(numerals + r, numerals + DIM(numerals), ostream_iterator<char>(cout, "  "));
-	cout << '\n';
-}	// PrintLetters
+    copy(numerals, numerals + r, ostream_iterator<char>(cout, "  "));
+    cout << "|  ";
+    copy(numerals + r, numerals + DIM(numerals), ostream_iterator<char>(cout, "  "));
+    cout << '\n';
+}    // PrintLetters
 
 
 
@@ -80,106 +80,106 @@ inline void PrintLetters(int r)
 int main(int argc, char** argv)
 {
 #ifdef __MWERKS__
-	argc = ccommand(&argv);
+    argc = ccommand(&argv);
 #endif
-	
+    
     unsigned r = argc < 2 ? 3 : lexical_cast<unsigned>(argv[1]);
 
     cout << "\nr is equal to " << r << ". Change on command line, e.g., "
         << argv[0] << " 5\n\n";
-	
-	cout << "Please select a function to test:\n\n"
-		<< "1. Next r-permutation\n"
-		<< "2. Previous r-permutation\n"
-		<< "3. Next r-combination\n"
-		<< "4. Previous r-combination\n"
-		<< "5. Next r-permutation with compare functor\n"
-		<< "6. Previous r-permutation with compare functor\n"
-		<< "7. Next r-combination with compare functor\n"
-		<< "8. Previous r-combination with compare functor\n"
-		<< "\nEnter the number of your selection (or anything else to quit): ";
-	unsigned selection;
-	cin >> selection;
-	
-	cout << "\nR-permutations and r-combinations appear to the left of the\n"
-		<< "vertical bar.\n";
+    
+    cout << "Please select a function to test:\n\n"
+        << "1. Next r-permutation\n"
+        << "2. Previous r-permutation\n"
+        << "3. Next r-combination\n"
+        << "4. Previous r-combination\n"
+        << "5. Next r-permutation with compare functor\n"
+        << "6. Previous r-permutation with compare functor\n"
+        << "7. Next r-combination with compare functor\n"
+        << "8. Previous r-combination with compare functor\n"
+        << "\nEnter the number of your selection (or anything else to quit): ";
+    unsigned selection;
+    cin >> selection;
+    
+    cout << "\nR-permutations and r-combinations appear to the left of the\n"
+        << "vertical bar.\n";
 
-	unsigned count = 1;
-	
-	switch(selection)
-	{
-	case 1:
-		cout << "\n\tNext r-permutations\n\n";
-		sort(numerals, numerals + DIM(numerals));
-		do {
-			cout << setw(3) << count++ << ". ";
-			PrintLetters(r);
-		} while(next_r_permutation(numerals, numerals + r, numerals + DIM(numerals)));
-		break;
-	case 2:
-		cout << "\n\tPrevious r-permutations\n\n";
-		sort(numerals, numerals + DIM(numerals), greater<char>());
-		do {
-			cout << setw(3) << count++ << ". ";
-			PrintLetters(r);
-		} while(prev_r_permutation(numerals, numerals + r, numerals + DIM(numerals)));
-		break;
-	case 3:
-		cout <<  "\n\tNext r-combinations\n\n";
-		sort(numerals, numerals + DIM(numerals));
-		do {
-			cout << setw(3) << count++ << ". ";
-			PrintLetters(r);
-		} while(next_r_combination(numerals, numerals + r, numerals + DIM(numerals)));
-		break;
-	case 4:
-		cout <<  "\n\tPrevious r-combinations\n\n";
-		sort(numerals, numerals + DIM(numerals));
-		rotate(numerals, numerals + DIM(numerals) - r, numerals + DIM(numerals));
-		do {
-			cout << setw(3) << count++ << ". ";
-			PrintLetters(r);
-		} while(prev_r_combination(numerals, numerals + r, numerals + DIM(numerals)));
-		break;
-	case 5:
-		cout <<  "\n\tNext r-permutations using compare functor\n\n";
-		sort(numerals, numerals + DIM(numerals), greater<char>());
-		do {
-			cout << setw(3) << count++ << ". ";
-			PrintLetters(r);
-		} while(next_r_permutation(numerals, numerals + r, numerals + DIM(numerals), greater<char>()));
-		break;
-	case 6:
-		cout <<  "\n\tPrevious r-permutations using compare functor\n\n";
-		sort(numerals, numerals + DIM(numerals));
-		do {
-			cout << setw(3) << count++ << ". ";
-			PrintLetters(r);
-		} while(prev_r_permutation(numerals, numerals + r, numerals + DIM(numerals), greater<char>()));
-		break;
-	case 7:
-		cout <<  "\n\tNext r-combinations using compare functor\n\n";
-		sort(numerals, numerals + DIM(numerals), greater<char>());
-		do {
-			cout << setw(3) << count++ << ". ";
-			PrintLetters(r);
-		} while(next_r_combination(numerals, numerals + r, numerals + DIM(numerals), greater<char>()));
-		break;
-	case 8:
-		cout <<  "\n\tPrevious r-combinations using compare functor\n\n";
-		sort(numerals, numerals + DIM(numerals), greater<char>());
-		rotate(numerals, numerals + DIM(numerals) - r, numerals + DIM(numerals));
-		do {
-			cout << setw(3) << count++ << ". ";
-			PrintLetters(r);
-		} while(prev_r_combination(numerals, numerals + r, numerals + DIM(numerals), greater<char>()));
-		break;
-	}	// switch
-	
-	// Print numerals again to verify that last function call resets string.
-	cout << "  1. ";
-	PrintLetters(r);
-	cout << "\nAll done!" << endl;
-	return 0;
+    unsigned count = 1;
+    
+    switch(selection)
+    {
+    case 1:
+        cout << "\n\tNext r-permutations\n\n";
+        sort(numerals, numerals + DIM(numerals));
+        do {
+            cout << setw(3) << count++ << ". ";
+            PrintLetters(r);
+        } while(next_r_permutation(numerals, numerals + r, numerals + DIM(numerals)));
+        break;
+    case 2:
+        cout << "\n\tPrevious r-permutations\n\n";
+        sort(numerals, numerals + DIM(numerals), greater<char>());
+        do {
+            cout << setw(3) << count++ << ". ";
+            PrintLetters(r);
+        } while(prev_r_permutation(numerals, numerals + r, numerals + DIM(numerals)));
+        break;
+    case 3:
+        cout <<  "\n\tNext r-combinations\n\n";
+        sort(numerals, numerals + DIM(numerals));
+        do {
+            cout << setw(3) << count++ << ". ";
+            PrintLetters(r);
+        } while(next_r_combination(numerals, numerals + r, numerals + DIM(numerals)));
+        break;
+    case 4:
+        cout <<  "\n\tPrevious r-combinations\n\n";
+        sort(numerals, numerals + DIM(numerals));
+        rotate(numerals, numerals + DIM(numerals) - r, numerals + DIM(numerals));
+        do {
+            cout << setw(3) << count++ << ". ";
+            PrintLetters(r);
+        } while(prev_r_combination(numerals, numerals + r, numerals + DIM(numerals)));
+        break;
+    case 5:
+        cout <<  "\n\tNext r-permutations using compare functor\n\n";
+        sort(numerals, numerals + DIM(numerals), greater<char>());
+        do {
+            cout << setw(3) << count++ << ". ";
+            PrintLetters(r);
+        } while(next_r_permutation(numerals, numerals + r, numerals + DIM(numerals), greater<char>()));
+        break;
+    case 6:
+        cout <<  "\n\tPrevious r-permutations using compare functor\n\n";
+        sort(numerals, numerals + DIM(numerals));
+        do {
+            cout << setw(3) << count++ << ". ";
+            PrintLetters(r);
+        } while(prev_r_permutation(numerals, numerals + r, numerals + DIM(numerals), greater<char>()));
+        break;
+    case 7:
+        cout <<  "\n\tNext r-combinations using compare functor\n\n";
+        sort(numerals, numerals + DIM(numerals), greater<char>());
+        do {
+            cout << setw(3) << count++ << ". ";
+            PrintLetters(r);
+        } while(next_r_combination(numerals, numerals + r, numerals + DIM(numerals), greater<char>()));
+        break;
+    case 8:
+        cout <<  "\n\tPrevious r-combinations using compare functor\n\n";
+        sort(numerals, numerals + DIM(numerals), greater<char>());
+        rotate(numerals, numerals + DIM(numerals) - r, numerals + DIM(numerals));
+        do {
+            cout << setw(3) << count++ << ". ";
+            PrintLetters(r);
+        } while(prev_r_combination(numerals, numerals + r, numerals + DIM(numerals), greater<char>()));
+        break;
+    }    // switch
+    
+    // Print numerals again to verify that last function call resets string.
+    cout << "  1. ";
+    PrintLetters(r);
+    cout << "\nAll done!" << endl;
+    return 0;
 }
 
