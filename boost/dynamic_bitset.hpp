@@ -55,14 +55,24 @@
 # define BOOST_BITSET_CHAR(type, c)  (c)
 #endif
 
+// ----------------------
+// gps - A HACK to avoid a g++ bug - c++/8419
+//       See: http://gcc.gnu.org/bugzilla/show_bug.cgi?id=8419
+//
+//       To be moved to detail/dynamic_bitset.hpp
+//
+namespace boost { namespace detail {
+    template <typename T> inline T make_non_const(T t) { return t; }
+} }
 
+// ------------------------
 
 
 namespace boost {
 
 template
 
-# if BOOST_WORKAROUND(BOOST_MSVC, <= 1300)  // 1300 == VC++ 7.0
+#if defined(BOOST_MSVC) && BOOST_WORKAROUND(BOOST_MSVC, <= 1300)  // 1300 == VC++ 7.0
    // VC++ (up to 7.0) wants the default arguments again
    <typename Block = unsigned long, typename Allocator = std::allocator<Block> >
 # else
@@ -301,7 +311,7 @@ public:
     size_type find_next(size_type pos) const;
 
 
-#ifdef BOOST_DYNAMIC_BITSET_USE_FRIENDS
+#if !defined BOOST_DYNAMIC_BITSET_DONT_USE_FRIENDS
     // lexicographical comparison
     template <typename B, typename A>
     friend bool operator==(const dynamic_bitset<B, A>& a,
@@ -333,7 +343,7 @@ public:
 
 
 private:
-    BOOST_STATIC_CONSTANT(int, ulong_width = std::numeric_limits<unsigned long>::digits);
+    BOOST_STATIC_CONSTANT(block_width_type, ulong_width = std::numeric_limits<unsigned long>::digits);
     typedef std::vector<block_type, allocator_type> buffer_type;
 
     void m_zero_unused_bits();
@@ -467,6 +477,11 @@ dynamic_bitset<Block, Allocator>
 operator-(const dynamic_bitset<Block, Allocator>& b1,
           const dynamic_bitset<Block, Allocator>& b2);
 
+// namespace scope swap
+template<typename Block, typename Allocator>
+void swap(dynamic_bitset<Block, Allocator>& b1,
+          dynamic_bitset<Block, Allocator>& b2);
+
 
 template <typename Block, typename Allocator, typename stringT>
 void
@@ -516,7 +531,7 @@ dynamic_bitset(size_type num_bits, unsigned long value, const Allocator& alloc)
   typedef unsigned long num_type;
 
   // cut off all bits in value that have pos >= num_bits, if any
-  if (num_bits < ulong_width) {
+  if (num_bits < static_cast<size_type>(ulong_width)) {
       const num_type mask = (num_type(1) << num_bits) - 1;
       value &= mask;
   }
@@ -528,7 +543,7 @@ dynamic_bitset(size_type num_bits, unsigned long value, const Allocator& alloc)
       for(size_type i = 0; value != 0; ++i) {
 
           m_bits[i] = static_cast<block_type>(value);
-          value >>= bits_per_block;
+          value >>= detail::make_non_const(bits_per_block); //bits_per_block; // gps - gcc bug c++/8419
       }
   }
 
@@ -552,7 +567,7 @@ inline dynamic_bitset<Block, Allocator>::
 
 template <typename Block, typename Allocator>
 inline void dynamic_bitset<Block, Allocator>::
-swap(dynamic_bitset<Block, Allocator>& b)
+swap(dynamic_bitset<Block, Allocator>& b) // no throw
 {
     std::swap(m_bits, b.m_bits);
     std::swap(m_num_bits, b.m_num_bits);
@@ -1081,7 +1096,7 @@ to_ulong() const
   unsigned long result = 0;
   for (size_type i = 0; i <= last_block; ++i) {
 
-    assert(bits_per_block * i < ulong_width);
+    assert((size_type)bits_per_block * i < (size_type)ulong_width); // gps
 
     unsigned long piece = m_bits[i];
     result |= (piece << (bits_per_block * i));
@@ -1307,14 +1322,72 @@ inline bool operator>=(const dynamic_bitset<Block, Allocator>& a,
 // stream operations
 
 #ifdef BOOST_OLD_IOSTREAMS
-template < typename Block, typename Allocator>
+template < typename Block, typename Alloc>
 std::ostream&
-operator<<(std::ostream& os, const dynamic_bitset<Block, Allocator>& b)
+operator<<(std::ostream& os, const dynamic_bitset<Block, Alloc>& b)
 {
-    std::string s;
-    to_string(b, s);
-    os << s.c_str(); // - G.P.S.
+    // NOTE: since this is aimed at "classic" iostreams, exception
+    // masks on the stream are not supported. The library that
+    // ships with gcc 2.95 has an exceptions() member function but
+    // nothing is actually implemented; not even the class ios::failure.
+
+    using namespace std;
+
+    const ios::iostate ok = ios::goodbit;
+    ios::iostate err = ok;
+
+    if (os.opfx()) { // gps
+
+        //try
+        typedef typename dynamic_bitset<Block, Alloc>::size_type bitsetsize_type;
+
+        const bitsetsize_type sz = b.size();
+        std::streambuf * buf = os.rdbuf();
+        size_t npad = os.width() <= 0  // careful: os.width() is signed (and can be < 0)
+            || (bitsetsize_type) os.width() <= sz? 0 : os.width() - sz; //- gps
+
+        const char fill_char = os.fill();
+        const ios::fmtflags adjustfield = os.flags() & ios::adjustfield;
+
+        // if needed fill at left; pad is decresed along the way
+        if (adjustfield != ios::left) {
+            for (; 0 < npad; --npad)
+                if (fill_char != buf->sputc(fill_char)) {
+                    err |= ios::failbit;   // gps
+                    break;
+                }
+        }
+
+        if (err == ok) {
+            // output the bitset
+            for (bitsetsize_type i = b.size(); 0 < i; --i) {// G.P.S.
+                const char dig = b.test(i-1)? '1' : '0';
+                if (EOF == buf->sputc(dig)) { // ok?? gps
+                    err |= ios::failbit;
+                    break;
+                }
+            }
+        }
+
+        if (err == ok) {
+            // if needed fill at right
+            for (; 0 < npad; --npad) {
+                if (fill_char != buf->sputc(fill_char)) {
+                    err |= ios::failbit;
+                    break;
+                }
+            }
+        }
+
+        os.osfx();
+        os.width(0);
+ 
+    } // if opfx
+
+    if(err != ok)
+        os.setstate(err); // assume this does NOT throw - gps
     return os;
+
 }
 #else
 
@@ -1400,51 +1473,75 @@ operator<<(std::basic_ostream<Ch, Tr>& os,
 
 
 #ifdef BOOST_OLD_IOSTREAMS
-template <typename Block, typename Allocator>
+
+    // gps - A sentry-like class that calls isfx in its
+    // destructor. Necessary because bit_appender::do_append may throw.
+    class pseudo_sentry {
+        std::istream & m_r;
+        const bool m_ok;
+    public:
+        explicit pseudo_sentry(std::istream & r) : m_r(r), m_ok(r.ipfx(0)) { }
+        ~pseudo_sentry() { m_r.isfx(); }
+        operator bool() const { return m_ok; }
+    };
+
+template <typename Block, typename Alloc>
 std::istream&
-operator>>(std::istream& is, dynamic_bitset<Block, Allocator>& b)
+operator>>(std::istream& is, dynamic_bitset<Block, Alloc>& b)
 {
-    typedef char CharT;
-    std::string buf;
-    typedef typename std::string::size_type size_type;
-    const size_type N = b.size();
-    buf.reserve(N);
 
-    // skip whitespace
-    if (is.flags() & std::ios::skipws) {
-        char c;
-        do {
-            is.get(c);
-        }
-        while (is && isspace(c));
+// Extractor for classic IO streams (libstdc++ < 3.0)
+// ----------------------------------------------------//
+//  It's assumed that the stream buffer functions, and
+//  the stream's setstate() _cannot_ throw.
 
-        if (is)
-            is.putback(c);
+
+    typedef dynamic_bitset<Block, Alloc> bitset_type;
+    typedef typename bitset_type::size_type size_type;
+
+	std::ios::iostate err = std::ios::goodbit; // gps
+    pseudo_sentry cerberos(is); // skips whitespaces
+    if(cerberos) {
+
+        b.clear();
+
+        const std::streamsize w = is.width();
+        const size_type limit = w > 0 && static_cast<size_type>(w) < b.max_size()// gps
+                                                         ? w : b.max_size();
+        typename bitset_type::bit_appender appender(b);
+        std::streambuf * buf = is.rdbuf();
+        for(int c = buf->sgetc(); appender.get_count() < limit; c = buf->snextc() ) {
+
+            if (c == EOF) {
+                err |= std::ios::eofbit; // G.P.S.
+                break;
+            }
+            else if (char(c) != '0' && char(c) != '1')
+                break; // non digit character
+
+            else {
+                try {
+                    //throw std::bad_alloc(); // gps
+                    appender.do_append(char(c) == '1');
+                }
+                catch(...) {
+                    is.setstate(std::ios::failbit); // assume this can't throw
+                    throw;
+                }
+            }
+
+        } // for
     }
 
-    size_type i;
-    for (i = 0; i < N; ++i)
-    {
-        CharT c;
-        is.get(c);
-        if (c == '0' || c == '1')
-            buf += c;
-        else
-        {
-            is.putback(c);
-            break;
-        }
-    }
+    is.width(0); // gps
+    if (b.size() == 0)
+        err |= std::ios::failbit;
+    if (err != std::ios::goodbit) // gps
+        is.setstate (err); // may throw
 
-    if (i == 0)
-        is.clear(is.rdstate() | std::ios::failbit);
-    else
-    {
-        dynamic_bitset<Block, Allocator> tmp(buf);
-        b.swap(tmp);
-    }
     return is;
 }
+
 #else // BOOST_OLD_IOSTREAMS
 
 template <typename Ch, typename Tr, typename Block, typename Alloc>
@@ -1561,6 +1658,17 @@ operator-(const dynamic_bitset<Block, Allocator>& x,
 {
     dynamic_bitset<Block, Allocator> b(x);
     return b -= y;
+}
+
+//-----------------------------------------------------------------------------
+// namespace scope swap
+
+template<typename Block, typename Allocator>
+inline void
+swap(dynamic_bitset<Block, Allocator>& left,
+     dynamic_bitset<Block, Allocator>& right) // no throw
+{
+    left.swap(right); // gps
 }
 
 
