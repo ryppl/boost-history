@@ -51,13 +51,14 @@ class step_iterator
              step_iterator<Iterator, ValueT, CategoryT, ReferenceT, DifferenceT>, 
              Iterator, ValueT, CategoryT, ReferenceT, DifferenceT >
 {
+  friend class iterator_core_access;
+
+public:
+
   typedef iterator_adaptor< 
              step_iterator<Iterator, ValueT, CategoryT, ReferenceT, DifferenceT>, 
              Iterator, ValueT, CategoryT, ReferenceT, DifferenceT > super_type;
 
-  friend class iterator_core_access;
-
-public:
   typedef typename super_type::difference_type difference_type;
 
   static difference_type infinite_distance()
