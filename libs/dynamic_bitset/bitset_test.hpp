@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <fstream>
+#include <string>
 #include <algorithm> // for std::min
 
 #include "boost/config.hpp" // for BOOST_STATIC_CONSTANT
@@ -17,13 +18,25 @@
 template <typename Block>
 inline bool nth_bit(Block num, std::size_t n)
 {
-  // Move the nth bit to position 0 and then clear all other bits.
+  // Move the nth bit to position 0 and then mask out all other bits.
   return (num >> n) & 1;
 }
-inline unsigned long max_num(std::size_t num_bits)
+
+
+// A long, 'irregular', string useful for various tests
+std::string get_long_string()
 {
-  using namespace std; // for std::pow, VC++ workaround -JGS
-  return (unsigned long)(pow((double)2, (double)num_bits));
+  const char * p =
+  //    6         5         4         3         2         1
+  // 3210987654321098765432109876543210987654321098765432109876543210
+    "1110011100011110000011110000011111110000000000000110101110000000"
+    "1010101000011100011101010111110000101011111000001111100011100011"
+    "0000000110000001000000111100000111100010101111111000000011100011"
+    "1111111111111111111111111111111111111111111111111111111111111100"
+    "1000001100000001111111111111110000000011111000111100001010100000"
+    "101000111100011010101110011011000000010";
+
+  return std::string(p);
 }
 
 
