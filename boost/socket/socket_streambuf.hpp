@@ -8,6 +8,9 @@
 // about the suitability of this software for any purpose.
 // It is provided "as is" without express or implied warranty.
 
+// based on code posted by Dylan ???  to
+// http://lists.boost.org/MailArchives/boost/msg21797.php
+
 #ifdef _MSC_VER
 #pragma once
 #endif
