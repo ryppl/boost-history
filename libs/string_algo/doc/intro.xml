@@ -22,10 +22,10 @@
         The library has layered structure to simplify the usage without sacrificing the
         generalization. 
 
-        Easy-to-use interface, defined in the namespace <code>boost</code>, represents the first layer. 
-        Algorithms and classes defined here, do not offer a lot of customization opportunities 
-        rather they are provided in more different variants, so an user can chose the 
-        one that suites her needs.
+        The easy-to-use interface, defined in the namespace <code>boost</code>, represents the first layer. 
+        Algorithms and classes defined here do not offer a lot of customization opportunities 
+        rather they are provided in more different variants, so a user can chose the 
+        one that suits her needs.
 
         The second layer, defined in the namespace <code>boost::string_algo</code>, on the 
         other hand, is generic. Basically it contains the same set of algorithms as the first layer,
@@ -33,12 +33,13 @@
         The first layer is implemented as set of wrappers around the second layer.
     </para>
     <para>
-        Documentation is divided into several sections. For a quick start read the 
+        The documentation is divided into several sections. For a quick start read the 
         <link linkend="string_algo.usage">Usage</link> section. 
         <link linkend="string_algo.design">The Design Topics</link>,
         <link linkend="string_algo.concept">Concepts</link> and <link linkend="string_algo.rationale">Rationale</link>
         provide some explanation about the library design and structure an explain how it should be used.
         See the <link linkend="string_algo.reference">Reference</link> for the complete list of provided utilities
-        and algorithms.
+        and algorithms. Functions and classes in the reference are organized by the headers in which they are defined.
+        The reference contains links to the detailed description for every entity in the library.
     </para>
 </section>

@@ -12,22 +12,22 @@
 
         <para>
             When designing a library it is always a problem to find a balance between generalization
-            and usability. Generic utility can have a wider range of usage with more options for extensibility,
+            and usability. A generic utility can have a wider range of usage with more options for extensibility,
             but it can also bring unwanted complexity for everyday usage. 
         </para>
         <para>
-            Imagine a library for drawing geometric objects. It can contain one generic function draw()
+            Imagine a library for drawing geometric objects. It can contain one generic function <code>draw()</code>
             with many parameters specifying what to draw, like size, number of edges, shape etc.
             This would allow you to draw almost anything, but usually a user only needs to draw 
             only a triangle or a square and she will have to specify this simple request in a 
-            very complicated way.For this purpose two functions, draw_triangle() and
-            draw_square(), would suit much better then a generic draw() function.
+            very complicated way.For this purpose two functions, <code>draw_triangle()</code> and
+            <code>draw_square()</code>, would suit much better then a generic <code>draw()</code> function.
         </para>
         <para>
             The String Algorithm Library solves this problem by dividing the interface into two layers.
             The first layer (defined in the namespace boost) contains ready to use algorithms specialized
             for common tasks. They are provided in multiple variants to better suit specific needs.
-            The second layer (defined in the namespace boost::string_algo), provides generic interfaces with
+            The second layer (defined in the namespace <code>boost::string_algo</code>), provides generic interfaces with
             more options for extending and tunning. 
         <para>
         </para>
@@ -70,7 +70,7 @@
             provides also regex variants of some algorithms. The library does not try to replace
             <libraryname>Boost.Regex</libraryname>, but it merely wraps its functionality in a new interface.
             As a part of this library regex algorithms integrate smoothly with other components which 
-            bring additional value.
+            brings additional value.
         </para>
     </section>
 </section>

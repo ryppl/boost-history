@@ -12,7 +12,7 @@
         <title>First Example</title>
         
         <para>
-            Using the algorithms is straightforward. Lets have a look at the first example:
+            Using the algorithms is straightforward. Let us have a look at the first example:
         </para>
         <programlisting>
     #include &lt;boost/string_algo.hpp&gt;
@@ -64,7 +64,7 @@
                     Copy versions return a transformed input as a result. Mutable variants return 
                     a reference to the input. Thus both versions allow a simple chaining of
                     transformations within one expression (i.e. one can write 
-                    <code>trim_copy(toupper_copy(s))</code> as well as <code>trim(to_upper(s))</code>). 
+                    <code>trim_copy(to_upper_copy(s))</code> as well as <code>trim(to_upper(s))</code>). 
                 </para>
             </listitem>
             <listitem>
@@ -87,8 +87,8 @@
         <title>Case conversion</title>
         
         <para>
-            STL has a nice way of converting character case. Unfortunately, if works only
-            for a single character and we want to convert a string. 
+            STL has a nice way of converting character case. Unfortunately, it works only
+            for a single character and we want to convert a string, 
         </para>
         <programlisting>
     string str1("HeLlO WoRld!");
@@ -108,8 +108,8 @@
     bool is_executable( string&amp; filename )
     {
         return 
-            iends_with( filename, ".exe" ) ||
-            iends_with( filename, ".com" );
+            iends_with(filename, ".exe") ||
+            iends_with(filename, ".com");
     }
 
     // ...
@@ -130,12 +130,13 @@
         </programlisting>
         <para>
             The predicates are resolving if a substring is contained in the input string
-            under various conditions. If a string starts with the substring, ends with the substring, 
+            under various conditions. The conditions are if a string starts with the substring, 
+            ends with the substring, 
             simply contains the substring or if both strings are equal. See the reference for 
             <headername>boost/string_algo/predicate.hpp</headername> for more details. 
             In addition the algorithm <functionname>all()</functionname> checks
             all elements of a container to satisfy a condition specified by a predicate. 
-            This predicate can be any unary predicate, but the library provide a bunch of 
+            This predicate can be any unary predicate, but the library provides a bunch of 
             useful string-related predicates ready for use.
             These are located in the <headername>boost/string_algo/classification.hpp</headername> header.
         </para>
@@ -176,10 +177,10 @@
     char text[]="hello dolly!";
     iterator_range&lt;char*&gt; result=find_last(text,"ll");
 
-    transform( result.begin(), result.end(), result.begin(), bind2nd( plus&lt;char&gt;(), 1 );
+    transform( result.begin(), result.end(), result.begin(), bind2nd(plus&lt;char&gt;(), 1) );
     // text = "hello dommy!"            
 
-    to_upper( result ); // text == "hello doMMy!"
+    to_upper(result); // text == "hello doMMy!"
         </programlisting>
         <para>
             We have used <functionname>find_last()</functionname> to search the <code>text</code> for "ll".
@@ -200,21 +201,21 @@
         <title>Replace Algorithms</title>
         <para>
             Find algorithms can be used for searching for a specific part of the sequence. Replace goes one step
-            further. After a matching part is found, it is substituted with something else. Substitution is computed
+            further. After a matching part is found, it is substituted with something else. The substitution is computed
             from an original, using some transformation. 
         </para>
         <programlisting>
     string str1="Hello  Dolly,   Hello World!"
-    replace_first( str1, "Dolly", "Jane" );     // str1 == "Hello  Jane,   Hello World!"
-    replace_last( str1, "Hello", "Goodbye");    // str1 == "Hello  Jane,   Goodbye World!"
-    erase_all( str1, " " );                     // str1 == "HelloJane,GoodbyeWorld!"
-    erase_head( str1, 6 );                      // str1 == "Jane,GoodbyeWorld!"
+    replace_first(str1, "Dolly", "Jane");      // str1 == "Hello  Jane,   Hello World!"
+    replace_last(str1, "Hello", "Goodbye");    // str1 == "Hello  Jane,   Goodbye World!"
+    erase_all(str1, " ");                      // str1 == "HelloJane,GoodbyeWorld!"
+    erase_head(str1, 6);                       // str1 == "Jane,GoodbyeWorld!"
         </programlisting>
         <para>
             For the complete list of replace and erase functions see the 
             <link linkend="string_algo.reference">reference</link>.
             There is a lot of predefined function for common usage, however, the library allows you to 
-            define custom replace that suits your need. There is a generic <functionname>replace()</functionname> 
+            define a custom <code>replace()</code> that suits a specific need. There is a generic <functionname>replace()</functionname> 
             function which takes two parameters.
             The first one is a <link linkend="string_algo.finder_concept">Finder</link> object, the second one is 
             a <link linkend="string_algo.formatter_concept">Formatter</link> object. 
@@ -246,7 +247,7 @@
     split( SplitVec, str1, is_any_of&lt;char&gt;("-*") ); // SplitVec == { "hello abc","ABC","aBc goodbye" }
         </programlisting>
         <para>
-            <code>[hello]</code> designates an iterator_range delimiting this substring.                       
+            <code>[hello]</code> designates an <code>iterator_range</code> delimiting this substring.                       
         </para>
         <para>
             The result of a split algorithm is a <emphasis>container of containers</emphasis>. There is only one restriction:

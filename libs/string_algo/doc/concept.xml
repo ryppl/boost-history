@@ -81,7 +81,7 @@
         </para>
         <para>
             Note, that it is only required that the finder works with a particular iterator type. However,
-            finder operation can be defined as a template, allowing the finder to work with any iterator.
+            a Finder operation can be defined as a template, allowing the Finder to work with any iterator.
         </para>
         <para>
             <emphasis role="bold">Examples</emphasis>

@@ -74,7 +74,6 @@
             Its definition can be found in the header <headername>boost/string_algo/container_traits.hpp</headername>.
         </para>
         <para>
-immutable content ? Can't I modify a range?
             In the table C denotes a container and c is an object of C. 
         </para>
         <table>
@@ -96,24 +95,24 @@ immutable content ? Can't I modify a range?
                     <row>
                         <entry><classname>container_difference_type&lt;C&gt;</classname>::type</entry>
                         <entry><code>C::difference_type</code></entry>
-                        <entry>Container's difference type</entry>
+                        <entry>difference type of the container</entry>
                     </row>
                     <row>
                         <entry><classname>container_iterator&lt;C&gt;</classname>::type</entry>
                         <entry><code>C::iterator</code></entry>
-                        <entry>Container's iterator type</entry>
+                        <entry>iterator type of the container</entry>
                     </row>
                     <row>
                         <entry><classname>container_const_iterator&lt;C&gt;</classname>::type</entry>
                         <entry><code>C::const_iterator</code></entry>
-                        <entry>Container's const_iterator type</entry>
+                        <entry>const_iterator type of the container</entry>
                     </row>
                     <row>
                         <entry><classname>container_result_iterator&lt;C&gt;</classname>::type</entry>
                         <entry></entry>
                         <entry>
-                            Container's result_iterator type. This type maps to C::iterator
-                            for mutable container and C::const_iterator for const containers.
+                            result_iterator type of the container. This type maps to <code>C::iterator</code>
+                            for mutable container and <code>C::const_iterator</code> for const containers.
                         </entry>
                     </row>
                     <row>
@@ -161,13 +160,13 @@ immutable content ? Can't I modify a range?
         <para>
             Major difference between <code>std::list</code> and <code>std::vector</code> is not in the interfaces
             they provide, rather in the inner details of the class and the way how it performs 
-            various operation. Problem is that it is not possible to infer this difference from the 
+            various operation. The problem is that it is not possible to infer this difference from the 
             definitions of classes without some special mechanism.
-            However some algorithms can run significantly faster with the knowledge of properties
-            of a particular container properties.
+            However some algorithms can run significantly faster with the knowledge of the properties
+            of a particular container.
         </para>
         <para>
-            Sequence traits allow to specify additional properties of a sequence container (see Std.&sect;32.2).
+            Sequence traits allows one to specify additional properties of a sequence container (see Std.&sect;32.2).
             These properties are then used by algorithms to select optimized handling for some operations.
             The sequence traits are declared in the header 
             <headername>boost/string_algo/sequence_traits.hpp</headername>.
@@ -224,7 +223,7 @@ immutable content ? Can't I modify a range?
         <title>Find Algorithms</title>
 
         <para>
-            Find algorithms have similar functionality to <code>std::search</code> algorithm. They provide a different 
+            Find algorithms have similar functionality to <code>std::search()</code> algorithm. They provide a different 
             interface which is more suitable for common string operations. 
             Instead of returning just the start of matching subsequence they return a range which is necessary 
             when the length of the matching subsequence is not known beforehand. 
@@ -244,7 +243,8 @@ immutable content ? Can't I modify a range?
             Currently the library contains only naive implementation of find algorithms with complexity 
             O(n * m) where n is the size of the input sequence and m is the size of the search sequence. 
             There are algorithms with complexity O(n), but for smaller sequence a constant overhead is 
-            rather big. For small m &lt;&lt; n current implementation provides acceptable efficiency. 
+            rather big. For small m &lt;&lt; n (m magnitued smaller than n) the current implementation 
+            provides acceptable efficiency. 
             Even the C++ standard defines the required complexity for search algorithm as O(n * m). 
             It is possible that a future version of library will also contain algorithms with linear 
             complexity as an option
