@@ -29,15 +29,13 @@
 #   include <boost/mpl/aux_/arity_spec.hpp>
 #   include <boost/mpl/aux_/type_wrapper.hpp>
 #   include <boost/mpl/aux_/yes_no.hpp>
+#   include <boost/mpl/aux_/config/static_constant.hpp>
 #   if defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
 #       include <boost/type_traits/is_reference.hpp>
 #   endif 
 #endif
 
-#include <boost/mpl/aux_/config/lambda.hpp>
-#include <boost/mpl/aux_/config/ctps.hpp>
-#include <boost/mpl/aux_/config/static_constant.hpp>
-
+#include <boost/mpl/aux_/config/bind.hpp>
 #include <boost/mpl/aux_/config/use_preprocessed.hpp>
 
 #if !defined(BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS) \
@@ -56,9 +54,13 @@
 #   include <boost/mpl/aux_/preprocessor/default_params.hpp>
 #   include <boost/mpl/aux_/preprocessor/def_params_tail.hpp>
 #   include <boost/mpl/aux_/preprocessor/partial_spec_params.hpp>
+#   include <boost/mpl/aux_/preprocessor/ext_params.hpp>
+#   include <boost/mpl/aux_/preprocessor/repeat.hpp>
 #   include <boost/mpl/aux_/preprocessor/enum.hpp>
 #   include <boost/mpl/aux_/preprocessor/add.hpp>
 #   include <boost/mpl/aux_/config/dmc_ambiguous_ctps.hpp>
+#   include <boost/mpl/aux_/config/ctps.hpp>
+#   include <boost/mpl/aux_/config/ttp.hpp>
 #   include <boost/mpl/aux_/config/dtp.hpp>
 #   include <boost/mpl/aux_/config/nttp.hpp>
 
@@ -293,6 +295,20 @@ template< typename T > struct is_bind_template
     (3,(0, BOOST_MPL_LIMIT_METAFUNCTION_ARITY, <boost/mpl/bind.hpp>))
 #include BOOST_PP_ITERATE()
 
+#if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION) \
+    && !defined(BOOST_MPL_CFG_NO_TEMPLATE_TEMPLATE_PARAMETERS)
+/// if_/eval_if specializations
+#   define AUX778076_SPEC_NAME if_
+#   define BOOST_PP_ITERATION_PARAMS_1 (3,(3, 3, <boost/mpl/bind.hpp>))
+#   include BOOST_PP_ITERATE()
+
+#if !defined(BOOST_MPL_CFG_DMC_AMBIGUOUS_CTPS)
+#   define AUX778076_SPEC_NAME eval_if
+#   define BOOST_PP_ITERATION_PARAMS_1 (3,(3, 3, <boost/mpl/bind.hpp>))
+#   include BOOST_PP_ITERATE()
+#endif
+#endif
+
 // real C++ version is already taken care of
 #if defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION) \
     && !defined(BOOST_MPL_CFG_NO_BIND_TEMPLATE)
@@ -342,6 +358,46 @@ BOOST_MPL_AUX_ARITY_SPEC(
 
 #   define i_ BOOST_PP_FRAME_ITERATION(1)
 
+#if defined(AUX778076_SPEC_NAME)
+
+// lazy metafunction specialization
+template< template< BOOST_MPL_PP_PARAMS(i_, typename T) > class F, typename Tag >
+struct BOOST_PP_CAT(quote,i_);
+
+template< BOOST_MPL_PP_PARAMS(i_, typename T) > struct AUX778076_SPEC_NAME;
+
+template<
+      typename Tag AUX778076_BIND_N_PARAMS(i_, typename T)
+    >
+struct BOOST_PP_CAT(bind,i_)< 
+      BOOST_PP_CAT(quote,i_)<AUX778076_SPEC_NAME,Tag>
+    AUX778076_BIND_N_PARAMS(i_,T)
+    >
+{
+    template<
+          AUX778076_BIND_NESTED_DEFAULT_PARAMS(typename U, na)
+        >
+    struct apply
+    {
+     private:
+        typedef mpl::arg<1> n1;
+#       define BOOST_PP_ITERATION_PARAMS_2 (3,(1, i_, <boost/mpl/bind.hpp>))
+#       include BOOST_PP_ITERATE()
+
+        typedef typename AUX778076_SPEC_NAME<
+              typename t1::type
+            , BOOST_MPL_PP_EXT_PARAMS(2, BOOST_PP_INC(i_), t)
+            >::type f_;
+
+     public:
+        typedef typename f_::type type;
+    };
+};
+
+#undef AUX778076_SPEC_NAME
+
+#else // AUX778076_SPEC_NAME
+
 template<
       typename F AUX778076_BIND_N_PARAMS(i_, typename T) AUX778076_DMC_PARAM()
     >
@@ -371,13 +427,20 @@ struct BOOST_PP_CAT(bind,i_)
 #   endif
 
      public:
+
+#   define AUX778076_ARG(unused, i_, t) \
+    BOOST_PP_COMMA_IF(i_) \
+    typename BOOST_PP_CAT(t,BOOST_PP_INC(i_))::type \
+/**/
+
         typedef typename BOOST_PP_CAT(apply_wrap,i_)<
               f_ 
-            AUX778076_BIND_N_PARAMS(i_,t)
+            BOOST_PP_COMMA_IF(i_) BOOST_MPL_PP_REPEAT(i_, AUX778076_ARG, t)
             >::type type;
+
+#   undef AUX778076_ARG
     };
 };
-
 
 namespace aux {
 
@@ -413,7 +476,6 @@ BOOST_MPL_AUX_ARITY_SPEC(BOOST_PP_INC(i_), BOOST_PP_CAT(bind,i_))
 #   if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
     
 #if i_ == BOOST_MPL_LIMIT_METAFUNCTION_ARITY
-
 /// primary template (not a specialization!)
 template<
       typename F AUX778076_BIND_N_PARAMS(i_, typename T) AUX778076_DMC_PARAM()
@@ -422,9 +484,7 @@ struct bind
     : BOOST_PP_CAT(bind,i_)<F AUX778076_BIND_N_PARAMS(i_,T) >
 {
 };
-
 #else
-
 template<
       typename F AUX778076_BIND_N_PARAMS(i_, typename T) AUX778076_DMC_PARAM()
     >
@@ -432,10 +492,9 @@ struct bind< F AUX778076_BIND_N_SPEC_PARAMS(i_, T, na) >
     : BOOST_PP_CAT(bind,i_)<F AUX778076_BIND_N_PARAMS(i_,T) >
 {
 };
+#endif
 
-#endif // i_ == BOOST_MPL_LIMIT_METAFUNCTION_ARITY
-
-#   else
+#   else // BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
 
 namespace aux {
 
@@ -456,6 +515,8 @@ struct bind_chooser<i_>
 #   endif // BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
 #   endif // BOOST_MPL_CFG_NO_BIND_TEMPLATE
 
+#endif // AUX778076_SPEC_NAME
+
 #   undef i_
 
 ///// iteration, depth == 2
@@ -468,10 +529,10 @@ struct bind_chooser<i_>
         typedef aux::replace_unnamed_arg< BOOST_PP_CAT(T,j_),BOOST_PP_CAT(n,j_) > BOOST_PP_CAT(r,j_);
         typedef typename BOOST_PP_CAT(r,j_)::type BOOST_PP_CAT(a,j_);
         typedef typename BOOST_PP_CAT(r,j_)::next_arg BOOST_PP_CAT(n,BOOST_PP_INC(j_));
-        typedef typename aux::resolve_bind_arg<BOOST_PP_CAT(a,j_), AUX778076_BIND_PARAMS(U)>::type BOOST_PP_CAT(t,j_);
+        typedef aux::resolve_bind_arg<BOOST_PP_CAT(a,j_), AUX778076_BIND_PARAMS(U)> BOOST_PP_CAT(t,j_);
         ///
 #   else
-        typedef typename aux::resolve_bind_arg< BOOST_PP_CAT(T,j_),AUX778076_BIND_PARAMS(U)>::type BOOST_PP_CAT(t,j_);
+        typedef aux::resolve_bind_arg< BOOST_PP_CAT(T,j_),AUX778076_BIND_PARAMS(U)> BOOST_PP_CAT(t,j_);
 
 #   endif
 #   undef j_

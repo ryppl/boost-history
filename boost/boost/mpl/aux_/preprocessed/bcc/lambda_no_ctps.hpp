@@ -199,9 +199,9 @@ template<> struct lambda_impl<5>
 } // namespace aux
 
 template<
-      typename BOOST_MPL_AUX_NA_PARAM(T)
-    , typename BOOST_MPL_AUX_NA_PARAM(Tag)
-    , typename Protect = true_
+      typename T
+    , typename Tag
+    , typename Protect
     >
 struct lambda
 {

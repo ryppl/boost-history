@@ -76,7 +76,7 @@ struct name< BOOST_MPL_AUX_NA_PARAMS(i) > \
 template<> \
 struct lambda< \
       name< BOOST_MPL_AUX_NA_PARAMS(i) > \
-    , na \
+    , void_ \
     , true_ \
     > \
 { \
@@ -85,7 +85,7 @@ struct lambda< \
 template<> \
 struct lambda< \
       name< BOOST_MPL_AUX_NA_PARAMS(i) > \
-    , na \
+    , void_ \
     , false_ \
     > \
 { \
@@ -94,10 +94,10 @@ struct lambda< \
 /**/
 #else
 #   define BOOST_MPL_AUX_NA_SPEC_LAMBDA(i, name) \
-template<> \
+template< typename Tag > \
 struct lambda< \
       name< BOOST_MPL_AUX_NA_PARAMS(i) > \
-    , na \
+    , Tag \
     BOOST_MPL_AUX_LAMBDA_ARITY_PARAM(int_<-1>) \
     > \
 { \

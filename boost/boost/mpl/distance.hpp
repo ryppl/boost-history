@@ -44,15 +44,13 @@ template<
     , typename BOOST_MPL_AUX_NA_PARAM(Last)
     >
 struct distance
-    : apply_wrap2<
-          distance_impl< typename tag<First>::type >
-        , First
-        , Last
-        >
+    : distance_impl< typename tag<First>::type >
+        ::template apply<First, Last>
 {
+    BOOST_MPL_AUX_LAMBDA_SUPPORT(2, distance, (First, Last))
 };
 
-// BOOST_MPL_AUX_NA_SPEC(2, distance)
+BOOST_MPL_AUX_NA_SPEC(2, distance)
 
 }}
 

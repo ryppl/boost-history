@@ -16,7 +16,7 @@
 // $Revision$
 
 #include <boost/mpl/long.hpp>
-#include <boost/mpl/void_fwd.hpp>
+#include <boost/mpl/void.hpp>
 #include <boost/mpl/next.hpp>
 #include <boost/mpl/prior.hpp>
 #include <boost/mpl/set/aux_/set0.hpp>

@@ -16,10 +16,10 @@
 
 #include <boost/mpl/aux_/config/preprocessor.hpp>
 
-// BOOST_MPL_PP_EXT_PARAMS(1,1,T): <nothing>
-// BOOST_MPL_PP_EXT_PARAMS(1,2,T): T1
-// BOOST_MPL_PP_EXT_PARAMS(1,3,T): T1, T2
-// BOOST_MPL_PP_EXT_PARAMS(1,n,T): T1, T2, .., Tn-1
+// BOOST_MPL_PP_EXT_PARAMS(2,2,T): <nothing>
+// BOOST_MPL_PP_EXT_PARAMS(2,3,T): T2
+// BOOST_MPL_PP_EXT_PARAMS(2,4,T): T2, T3
+// BOOST_MPL_PP_EXT_PARAMS(2,n,T): T2, T3, .., Tn-1
 
 #if !defined(BOOST_MPL_CFG_NO_OWN_PP_PRIMITIVES)
 

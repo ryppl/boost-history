@@ -148,19 +148,20 @@ template<> struct trait<T> \
 // MSVC 7.1+
 
 #   define BOOST_MPL_HAS_XXX_TRAIT_NAMED_DEF(trait, name, unused) \
+template< typename T > struct BOOST_PP_CAT(trait,_wrapper_); \
 template< typename T > \
-boost::mpl::aux::yes_tag BOOST_PP_CAT(trait,_helper)( \
-      boost::mpl::aux::type_wrapper<T> const volatile* \
-    , boost::mpl::aux::type_wrapper<BOOST_MSVC_TYPENAME T::name>* = 0 \
+boost::mpl::aux::yes_tag BOOST_PP_CAT(trait,_helper_)( \
+      BOOST_PP_CAT(trait,_wrapper_)<T> const volatile* \
+    , BOOST_PP_CAT(trait,_wrapper_)<BOOST_MSVC_TYPENAME T::name>* = 0 \
     ); \
 \
-boost::mpl::aux::no_tag BOOST_PP_CAT(trait,_helper)(...); \
+boost::mpl::aux::no_tag BOOST_PP_CAT(trait,_helper_)(...); \
 \
 template< typename T > struct trait \
 { \
-    typedef boost::mpl::aux::type_wrapper<T> t_; \
+    typedef BOOST_PP_CAT(trait,_wrapper_)<T> t_; \
     BOOST_STATIC_CONSTANT(bool, value = \
-          sizeof((BOOST_PP_CAT(trait,_helper))(static_cast<t_*>(0))) \
+          sizeof((BOOST_PP_CAT(trait,_helper_))(static_cast<t_*>(0))) \
             == sizeof(boost::mpl::aux::yes_tag) \
         ); \
     typedef bool_<value> type; \

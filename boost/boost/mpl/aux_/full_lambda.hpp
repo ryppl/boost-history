@@ -27,6 +27,7 @@
 #   include <boost/mpl/bool.hpp>
 #   include <boost/mpl/int_fwd.hpp>
 #   include <boost/mpl/aux_/template_arity.hpp>
+#   include <boost/mpl/aux_/na_spec.hpp>
 #   include <boost/mpl/aux_/config/ttp.hpp>
 #   if defined(BOOST_MPL_CFG_EXTENDED_TEMPLATE_PARAMETERS_MATCHING)
 #       include <boost/mpl/if.hpp>
@@ -45,7 +46,6 @@
 #else
 
 #   include <boost/mpl/limits/arity.hpp>
-#   include <boost/mpl/aux_/na_spec.hpp>
 #   include <boost/mpl/aux_/preprocessor/default_params.hpp>
 #   include <boost/mpl/aux_/preprocessor/params.hpp>
 #   include <boost/mpl/aux_/preprocessor/enum.hpp>
@@ -215,9 +215,9 @@ struct lambda<
 #   undef AUX778076_LAMBDA_PARAMS
 
 #if !defined(BOOST_MPL_CFG_EXTENDED_TEMPLATE_PARAMETERS_MATCHING)
-//BOOST_MPL_AUX_NA_SPEC(2, lambda)
+BOOST_MPL_AUX_NA_SPEC(2, lambda)
 #else
-//BOOST_MPL_AUX_NA_SPEC2(2, 3, lambda)
+BOOST_MPL_AUX_NA_SPEC2(2, 3, lambda)
 #endif
 
 }}

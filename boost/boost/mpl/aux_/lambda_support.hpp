@@ -90,6 +90,7 @@ struct name<BOOST_MPL_PP_PARAMS(i,T)>::rebind \
 
 namespace boost { namespace mpl { namespace aux {
 struct has_rebind_tag;
+template< typename T > struct has_rebind;
 }}}
 
 #   define BOOST_MPL_AUX_LAMBDA_SUPPORT_SPEC(i, name, params) \
@@ -108,7 +109,7 @@ struct has_rebind_tag;
 template< BOOST_MPL_PP_PARAMS(i,typename T) > \
 char operator|( \
       ::boost::mpl::aux::has_rebind_tag \
-    , name<BOOST_MPL_PP_PARAMS(i,T)>* \
+    , ::boost::mpl::aux::has_rebind< name<BOOST_MPL_PP_PARAMS(i,T)> >* \
     ); \
 /**/
 

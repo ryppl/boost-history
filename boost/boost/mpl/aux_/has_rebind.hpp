@@ -23,6 +23,7 @@
 #   include <boost/mpl/bool.hpp>
 #   include <boost/mpl/aux_/msvc_is_class.hpp>
 #else
+#   include <boost/mpl/aux_/type_wrapper.hpp>
 #   include <boost/mpl/aux_/config/static_constant.hpp>
 #endif
 
@@ -50,7 +51,7 @@ yes_tag operator|(has_rebind_tag, void const volatile*);
 template< typename T >
 struct has_rebind
 {
-    static T* get();
+    static has_rebind<T>* get();
     BOOST_STATIC_CONSTANT(bool, value = 
           sizeof(has_rebind_tag() | get()) == sizeof(char)
         );

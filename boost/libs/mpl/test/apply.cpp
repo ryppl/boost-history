@@ -112,7 +112,7 @@ MPL_TEST_CASE()
 
 MPL_TEST_CASE()
 {
-#if !BOOST_WORKAROUND(__MWERKS__, BOOST_TESTED_AT(0x0302))
+#if !BOOST_WORKAROUND(__MWERKS__, BOOST_TESTED_AT(0x3003))
     typedef lambda< lambda< bind2<plus<>,_1,_1> > >::type make_lambda;
     typedef apply_wrap1< make_lambda::type, int_<5> >::type res;
     MPL_ASSERT_RELATION( res::value, ==, 10 );

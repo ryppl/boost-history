@@ -530,5 +530,7 @@ struct lambda<
     typedef result_ type;
 };
 
+BOOST_MPL_AUX_NA_SPEC(2, lambda)
+
 }}
 

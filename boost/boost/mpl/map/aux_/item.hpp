@@ -15,7 +15,7 @@
 // $Date$
 // $Revision$
 
-#include <boost/mpl/void_fwd.hpp>
+#include <boost/mpl/void.hpp>
 #include <boost/mpl/pair.hpp>
 #include <boost/mpl/long.hpp>
 #include <boost/mpl/next.hpp>
@@ -33,9 +33,9 @@ namespace boost { namespace mpl {
 
 #if defined(BOOST_MPL_CFG_TYPEOF_BASED_SEQUENCES)
 
-aux::type_wrapper<void_> operator|(map0<> const&, void*);
+aux::type_wrapper<void_> operator|(map0<> const&, void const volatile*);
 aux::type_wrapper<void_> operator||(map0<> const&, long_<1>);
-aux::no_tag operator/(map0<> const&, void*);
+aux::no_tag operator/(map0<> const&, void const volatile*);
 
 #   if defined(BOOST_MPL_CFG_USE_OPERATORS_SPECIALIZATION)
 

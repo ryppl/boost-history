@@ -19,7 +19,7 @@
 // $Revision$
 
 #if !defined(BOOST_MPL_PREPROCESSING_MODE)
-#   include <boost/mpl/aux_/na.hpp>
+#   include <boost/mpl/void.hpp>
 #   include <boost/mpl/aux_/has_type.hpp>
 #endif
 
@@ -108,7 +108,7 @@ template<> struct quote_impl<false>
 
 template<
       template< BOOST_MPL_PP_PARAMS(i_, typename P) > class F
-    , typename Tag = na
+    , typename Tag = void_
     >
 struct BOOST_PP_CAT(quote,i_)
 {

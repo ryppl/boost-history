@@ -13,8 +13,14 @@
 // $Revision$
 
 #include <boost/mpl/bind.hpp>
+#include <boost/mpl/quote.hpp>
+#include <boost/mpl/if.hpp>
+#include <boost/mpl/next.hpp>
+#include <boost/mpl/bool.hpp>
 #include <boost/mpl/apply_wrap.hpp>
 #include <boost/mpl/aux_/test.hpp>
+
+#include <boost/type_traits/is_float.hpp>
 
 namespace {
 
@@ -67,3 +73,17 @@ MPL_TEST_CASE() // metafunction class composition
     MPL_ASSERT(( boost::is_same<r51,int> ));
     MPL_ASSERT(( boost::is_same<r52,int> ));
 }
+
+#if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION) \
+    && !defined(BOOST_MPL_CFG_NO_TEMPLATE_TEMPLATE_PARAMETERS) \
+    && !BOOST_WORKAROUND(__MWERKS__, BOOST_TESTED_AT(0x3003))
+MPL_TEST_CASE() // if_ evaluation
+{
+    typedef bind3< quote3<if_>, _1, bind1< quote1<next>, _2>, _3 > f;
+    typedef apply_wrap3< f,true_,int_<0>,int >::type r1;
+    typedef apply_wrap3< f,false_,int,int_<0> >::type r2;
+    
+    MPL_ASSERT(( boost::is_same<r1,int_<1> > ));
+    MPL_ASSERT(( boost::is_same<r2,int_<0> > ));
+}
+#endif

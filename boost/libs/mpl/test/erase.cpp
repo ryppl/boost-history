@@ -23,20 +23,23 @@
 MPL_TEST_CASE()
 {
     typedef list<int,char,long,short,char,long,double,long> types;
+    typedef find<types,short>::type iter;
+    
+    typedef erase<types, iter>::type result;
+    MPL_ASSERT_RELATION( size<result>::value, ==, 7 );
+
+    typedef find<result,short>::type result_iter;
+    MPL_ASSERT(( is_same< result_iter, end<result>::type > ));
+}
+
+MPL_TEST_CASE()
+{
     typedef list_c<int,1,0,5,1,7,5,0,5> values;
+    typedef find< values, integral_c<int,7> >::type iter;
 
-    typedef find<types,short>::type types_iter;
-    typedef find< values, integral_c<int,7> >::type values_iter;
+    typedef erase<values, iter>::type result;
+    MPL_ASSERT_RELATION( size<result>::value, ==, 7 );
 
-    typedef erase<types, types_iter>::type result_types;
-    typedef erase<values, values_iter>::type result_values;
-
-    MPL_ASSERT_RELATION( size<result_types>::value, ==, 7 );
-    MPL_ASSERT_RELATION( size<result_values>::value, ==, 7 );
-
-    typedef find<result_types,short>::type result_types_iter;
-    typedef find<result_values, integral_c<int,7> >::type result_values_iter;
-
-    MPL_ASSERT(( is_same< result_types_iter, end<result_types>::type > ));
-    MPL_ASSERT(( is_same< result_values_iter, end<result_values>::type > ));
+    typedef find<result, integral_c<int,7> >::type result_iter;
+    MPL_ASSERT(( is_same< result_iter, end<result>::type > ));
 }
