@@ -14,6 +14,7 @@
 
 #include <boost/config.hpp>                 // for BOOST_STATIC_CONSTANT
 #include <boost/io/streambuf_wrapping.hpp>  // for basic_wrapping_istream, etc.
+#include <boost/noncopyable.hpp>            // for boost::noncopyable
 
 #include <cstddef>    // for std::size_t, NULL
 #include <ios>        // for std::streamsize, std::ios_base
@@ -32,6 +33,7 @@ namespace io
 template < std::size_t N, typename Ch, class Tr >
 class basic_array_streambuf
     : public std::basic_streambuf<Ch, Tr>
+    , private boost::noncopyable
 {
     typedef std::basic_streambuf<Ch, Tr>   base_type;
     typedef basic_array_streambuf          self_type;
@@ -51,8 +53,6 @@ public:
     // Constructors
     explicit  basic_array_streambuf( std::ios_base::openmode which
      = std::ios_base::in | std::ios_base::out );
-
-    basic_array_streambuf( self_type const &c );
 
     basic_array_streambuf( char_type const *b, char_type const *e,
      std::ios_base::openmode which = std::ios_base::in | std::ios_base::out );
@@ -94,9 +94,6 @@ protected:
      std::ios_base::openmode which = std::ios_base::in | std::ios_base::out );
 
 private:
-    // Limit copying
-    self_type &  operator =( self_type const &c );  // not implemented
-
     // Helpers
     void  setup_buffers( std::ios_base::openmode which );
 
@@ -161,24 +158,6 @@ basic_array_streambuf<N, Ch, Tr>::basic_array_streambuf
 {
     traits_type::assign( this->array_, self_type::array_size, char_type() );
     this->setup_buffers( which );
-}
-
-template < std::size_t N, typename Ch, class Tr >
-inline
-basic_array_streambuf<N, Ch, Tr>::basic_array_streambuf
-(
-    basic_array_streambuf<N, Ch, Tr> const &  c
-)
-    : base_type()  // copying is done later
-{
-    // Do base class copying from here since copy construction is controversial
-    this->pubimbue( c.getloc() );
-
-    // Copy from this level
-    traits_type::copy( this->array_, c.array_, self_type::array_size );
-
-    // Do any reconnections
-    this->setup_buffers( c.open_mode() );
 }
 
 template < std::size_t N, typename Ch, class Tr >

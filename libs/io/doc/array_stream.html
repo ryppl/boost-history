@@ -43,9 +43,9 @@ represents the virtual array as an actual array that is stored in the
 stream buffer.  This library is fairly uninteresting; meant mainly as a
 test case for the <a
 href="streambuf_wrapping.html">stream-buffer-wrapping stream base
-library</a>, but it may have real-life applications.  For outputting,
+library</a>, but it may have real-life applications.  For writing,
 an user can observe how inserted objects are represented.  For
-inputting, an user can have the internal array mapped to some
+reading, an user can have the internal array mapped to some
 inspection process.</p>
 
 <h2><a name="header">Header Synopsis</a></h2>
@@ -104,8 +104,6 @@ public:
     // Constructors
     explicit  basic_array_streambuf( std::ios_base::openmode which
      = std::ios_base::in | std::ios_base::out );
-
-    basic_array_streambuf( basic_array_streambuf const &amp;c );
 
     basic_array_streambuf( char_type const *b, char_type const *e,
      std::ios_base::openmode which = std::ios_base::in | std::ios_base::out );
@@ -166,7 +164,13 @@ character type is the array's element type.</p>
 
 <p><strong>Note 1:</strong> the automatically-defined destructor is used.</p>
 
-<p><strong>Note 2:</strong> the standard assignment operator is disabled.</p>
+<p><strong>Note 2:</strong> the standard-assignment operator and the copy
+constructor are disabled.  The base class has unspecified copying semantics,
+which gives <code>std::basic_streambuf&lt;&gt;</code> the standard member-wise
+copying.  However, the internals of the base stream-buffer classes are too
+under-specified to know if the default copying semantics are safe.  Therefore,
+derived stream-buffer classes should either not specify copy semantics as well
+or explicitly disable copying.</p>
 
 <p><strong>Note 3:</strong> all the constructors set the bounds of the
 get and put areas based on the given opening mode.  If the opening mode
@@ -188,19 +192,13 @@ constructor parameter is omitted, it defaults to allowing input and output.</p>
 			<var>which</var>; sets all elements of the internal
                         array to the default value of the elements' type
 
-	<dt><code>basic_array_streambuf( basic_array_streambuf const &amp;c );</code>
-	<dd>
-		<strong>Effects:</strong> default-constructs the base class
-			subobject; copies the locale information from <var>c</var>;
-                        copies the element values in <var>c</var>'s internal
-                        array to the new object's internal array and sets the
-                        bounds as a copy of <var>c</var>'s opening mode
 	<dt><code>basic_array_streambuf( char_type const *b, char_type const *e,
 		std::ios_base::openmode which );</code>
 	<dd>
 		<strong>Effects:</strong> sets the bounds based on <var>which</var>;
 			copies the values of the array-segment between <var>b</var>
                         and <var>e</var> to the internal array
+
 	<dt><code>template &lt; typename InputIterator &gt;
 		basic_array_streambuf( InputIterator b, InputIterator e,
 		 std::ios_base::openmode which );</code>
@@ -419,7 +417,7 @@ modifications to the opening mode.</p>
 
 <hr>
 
-<p>Revised: 9 June 2003</p>
+<p>Revised: 19 July 2003</p>
 
 <p>Copyright &copy; Daryle Walker 2003.  Permission to copy, use,
 modify, sell and distribute this document is granted provided this

@@ -6,7 +6,7 @@
 //  warranty, and with no claim as to its suitability for any purpose. 
 
 //  Revision History
-//   09 Jun 2003  Initial version (Daryle Walker)
+//   19 Jul 2003  Initial version (Daryle Walker)
 
 #include <boost/bind.hpp>             // for boost::bind, _1
 #include <boost/io/array_stream.hpp>  // for boost::io::basic_array_istream, etc.
@@ -98,11 +98,6 @@ astreambuf_constructor_unit_test
     std::list<char>  l( alphabet, alphabet + alphabet_length );
     astreambuf       asb_i( l.begin(), l.end() );
     BOOST_CHECK( equal(asb_i.array_begin(), asb_i.array_end(), alphabet,
-     traits_type::eq) );
-
-    // Copy construction
-    astreambuf  asb_c( asb_i );
-    BOOST_CHECK( equal(asb_c.array_begin(), asb_c.array_end(), alphabet,
      traits_type::eq) );
 }
 
