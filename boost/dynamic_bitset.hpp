@@ -1,4 +1,4 @@
-// (C) Copyright Chuck Allison and Jeremy Siek 2001, 2002. 
+// (C) Copyright Chuck Allison and Jeremy Siek 2001, 2002.
 //
 // Permission to copy, use, modify, sell and distribute this software
 // is granted provided this copyright notice appears in all
@@ -15,7 +15,7 @@
 //
 //  The changes up to the marking "---" line below are referred
 //  to:
-//       v. 1.25   of    boost/dynamic_bitset.hpp 
+//       v. 1.25   of    boost/dynamic_bitset.hpp
 //       v. 1.10   of    boost/detail/dynamic_bitset.hpp
 //       v. 1.3    of    boost/dynamic_bitset_fwd.hpp    [no change]
 //
@@ -137,7 +137,7 @@ namespace boost {
  template <typename Block, typename Allocator>
 #endif
 
-class dynamic_bitset : 
+class dynamic_bitset :
 #ifdef BOOST_DYN_BITSET_USE_FRIENDS
     private
 #else
@@ -159,7 +159,7 @@ public:
         friend class dynamic_bitset<Block, Allocator>;
         dynamic_bitset* bs;
         size_type bit;
-        reference(); // intentionally not implemented 
+        reference(); // intentionally not implemented
         reference(dynamic_bitset& bs_, size_type bit_) : bs(&bs_), bit(bit_){ }
     public:
         reference& operator=(bool value)          // for b[i] = x
@@ -168,30 +168,30 @@ public:
                 bs->set(bit);
             else
                 bs->reset(bit);
-            return *this;       
+            return *this;
         }
         reference& operator|=(bool value)         // for b[i] |= x
         {
             if (value)
                 bs->set(bit);
-            return *this;       
+            return *this;
         }
         reference& operator&=(bool value)         // for b[i] &= x
         {
             if (! (value && bs->test(bit)))
                 bs->reset(bit);
-            return *this;       
+            return *this;
         }
         reference& operator^=(bool value)         // for b[i] ^= x
         {
             bs->set(bit, bs->test(bit) ^ value);
-            return *this;       
+            return *this;
         }
         reference& operator-=(bool value)         // for b[i] -= x
         {
             if (!value)
                 bs->reset(bit);
-            return *this;       
+            return *this;
         }
         reference& operator=(const reference& j)  // for b[i] = b[j]
         {
@@ -199,34 +199,34 @@ public:
                 bs->set(bit);
             else
                 bs->reset(bit);
-            return *this;           
+            return *this;
         }
         reference& operator|=(const reference& j) // for b[i] |= b[j]
         {
             if (j.bs->test(j.bit))
                 bs->set(bit);
-            return *this;           
+            return *this;
         }
         reference& operator&=(const reference& j) // for b[i] &= b[j]
         {
             if (! (j.bs->test(j.bit) && bs->test(bit)))
                 bs->reset(bit);
-            return *this;           
+            return *this;
         }
         reference& operator^=(const reference& j) // for b[i] ^= b[j]
         {
             bs->set(bit, bs->test(bit) ^ j.bs->test(j.bit));
-            return *this;           
+            return *this;
         }
         reference& operator-=(const reference& j) // for b[i] -= b[j]
         {
             if (!j.bs->test(j.bit))
                 bs->reset(bit);
-            return *this;           
+            return *this;
         }
         bool operator~() const                    // flips the bit
         {
-            return ! bs->test(bit);         
+            return ! bs->test(bit);
         }
         operator bool() const                     // for x = b[i]
         {
@@ -235,7 +235,7 @@ public:
         reference& flip()                         // for b[i].flip();
         {
             bs->flip(bit);
-            return *this;           
+            return *this;
         }
     };
     typedef bool const_reference;
@@ -252,7 +252,7 @@ public:
 #if defined(BOOST_OLD_IOSTREAMS)
     explicit
     dynamic_bitset(const std::string& s,
-               std::string::size_type pos = 0, 
+               std::string::size_type pos = 0,
                std::string::size_type n = std::string::npos,
                const Allocator& alloc = Allocator())
         : detail::dynamic_bitset_base<Block, Allocator>
@@ -262,9 +262,9 @@ public:
     // in the code below are to avoid a g++ 3.2 bug and a Borland bug. -JGS
     template <typename CharT, typename Traits, typename Alloc>
     explicit
-    dynamic_bitset(const std::basic_string<CharT, Traits, Alloc>& s, 
-        typename std::basic_string<CharT, Traits, Alloc>::size_type pos = 0, 
-        typename std::basic_string<CharT, Traits, Alloc>::size_type n 
+    dynamic_bitset(const std::basic_string<CharT, Traits, Alloc>& s,
+        typename std::basic_string<CharT, Traits, Alloc>::size_type pos = 0,
+        typename std::basic_string<CharT, Traits, Alloc>::size_type n
             = (std::basic_string<CharT, Traits, Alloc>::npos),
         const Allocator& alloc = Allocator())
         : detail::dynamic_bitset_base<Block, Allocator>
@@ -273,7 +273,7 @@ public:
     {
         // Locate sub string
         assert(pos <= s.size()); // [gps]
-        from_string(s, pos, std::min(n, s.size() - pos));   
+        from_string(s, pos, std::min(n, s.size() - pos));
     }
 
     // The first bit in *first is the least significant bit, and the
@@ -282,8 +282,8 @@ public:
     dynamic_bitset(BlockInputIterator first, BlockInputIterator last,
                const Allocator& alloc = Allocator())
         : detail::dynamic_bitset_base<Block, Allocator>
-            (detail::initial_num_blocks(first, last) 
-            * bits_per_block, alloc)           
+            (detail::initial_num_blocks(first, last)
+            * bits_per_block, alloc)
     {
         if (first != last) {
             if (this->m_num_bits == 0) { // dealing with input iterators
@@ -293,7 +293,7 @@ public:
                 for (std::size_t i = 0; first != last; ++first, ++i)
                     set_block_(i, *first);
             }
-        }   
+        }
     }
 
 
@@ -332,7 +332,7 @@ public:
                         append(*first);
                 }
             }
-        }       
+        }
     }
 
 
@@ -364,7 +364,7 @@ public:
     bool operator[](size_type pos) const { return test_(pos); } //[gps]
 
     unsigned long to_ulong() const;
-  
+
     size_type size() const;
     size_type num_blocks() const;
 
@@ -375,23 +375,23 @@ public:
 #ifdef BOOST_DYN_BITSET_USE_FRIENDS
     // lexicographical comparison
     template <typename B, typename A>
-    friend bool operator==(const dynamic_bitset<B, A>& a, 
+    friend bool operator==(const dynamic_bitset<B, A>& a,
                            const dynamic_bitset<B, A>& b);
     template <typename B, typename A>
-    friend bool operator<(const dynamic_bitset<B, A>& a, 
+    friend bool operator<(const dynamic_bitset<B, A>& a,
                           const dynamic_bitset<B, A>& b);
     template <typename B, typename A>
-    friend bool operator>(const dynamic_bitset<B, A>& a, 
+    friend bool operator>(const dynamic_bitset<B, A>& a,
                           const dynamic_bitset<B, A>& b);
 
     template <typename B, typename A, typename BlockOutputIterator>
-    friend void to_block_range(const dynamic_bitset<B, A>& b, 
+    friend void to_block_range(const dynamic_bitset<B, A>& b,
                                BlockOutputIterator result);
 
     template <typename BlockIterator, typename B, typename A>
     friend void from_block_range(BlockIterator first, BlockIterator last,
                                  dynamic_bitset<B, A>& result);
-    
+
 
     template <typename CharT, typename Traits, typename B, typename A>
     friend std::basic_istream<CharT, Traits>& operator>>(std::basic_istream<CharT, Traits>& is,
@@ -456,25 +456,25 @@ public:
 
 // comparison
 template <typename Block, typename Allocator>
-bool operator!=(const dynamic_bitset<Block, Allocator>& a, 
+bool operator!=(const dynamic_bitset<Block, Allocator>& a,
                 const dynamic_bitset<Block, Allocator>& b);
 
 template <typename Block, typename Allocator>
-bool operator<=(const dynamic_bitset<Block, Allocator>& a, 
+bool operator<=(const dynamic_bitset<Block, Allocator>& a,
                 const dynamic_bitset<Block, Allocator>& b);
 
 template <typename Block, typename Allocator>
-bool operator>(const dynamic_bitset<Block, Allocator>& a, 
+bool operator>(const dynamic_bitset<Block, Allocator>& a,
                const dynamic_bitset<Block, Allocator>& b);
 
 template <typename Block, typename Allocator>
-bool operator>=(const dynamic_bitset<Block, Allocator>& a, 
+bool operator>=(const dynamic_bitset<Block, Allocator>& a,
                 const dynamic_bitset<Block, Allocator>& b);
 
 // stream operators
 #ifdef BOOST_OLD_IOSTREAMS
 template <typename Block, typename Allocator>
-std::ostream& operator<<(std::ostream& os, 
+std::ostream& operator<<(std::ostream& os,
                          const dynamic_bitset<Block, Allocator>& b);
 
 template <typename Block, typename Allocator>
@@ -482,24 +482,24 @@ std::istream& operator>>(std::istream& is, dynamic_bitset<Block,Allocator>& b);
 #else
 template <typename CharT, typename Traits, typename Block, typename Allocator>
 std::basic_ostream<CharT, Traits>&
-operator<<(std::basic_ostream<CharT, Traits>& os, 
+operator<<(std::basic_ostream<CharT, Traits>& os,
            const dynamic_bitset<Block, Allocator>& b);
 
 template <typename CharT, typename Traits, typename Block, typename Allocator>
 std::basic_istream<CharT, Traits>&
-operator>>(std::basic_istream<CharT, Traits>& is, 
+operator>>(std::basic_istream<CharT, Traits>& is,
            dynamic_bitset<Block, Allocator>& b);
 #endif
 
 // bitset operations
 template <typename Block, typename Allocator>
 dynamic_bitset<Block, Allocator>
-operator&(const dynamic_bitset<Block, Allocator>& b1, 
+operator&(const dynamic_bitset<Block, Allocator>& b1,
           const dynamic_bitset<Block, Allocator>& b2);
 
 template <typename Block, typename Allocator>
 dynamic_bitset<Block, Allocator>
-operator|(const dynamic_bitset<Block, Allocator>& b1, 
+operator|(const dynamic_bitset<Block, Allocator>& b1,
           const dynamic_bitset<Block, Allocator>& b2);
 
 template <typename Block, typename Allocator>
@@ -514,12 +514,12 @@ operator-(const dynamic_bitset<Block, Allocator>& b1,
 
 
 template <typename Block, typename Allocator, typename stringT>
-void 
+void
 to_string(const dynamic_bitset<Block, Allocator>& b, stringT & s); // G.P.S.
 
 template <typename Block, typename Allocator, typename BlockOutputIterator>
 void
-to_block_range(const dynamic_bitset<Block, Allocator>& b, 
+to_block_range(const dynamic_bitset<Block, Allocator>& b,
                BlockOutputIterator result);
 
 
@@ -545,7 +545,7 @@ from_block_range(BlockIterator first, BlockIterator last,
 #ifdef BOOST_OLD_IOSTREAMS
 template <typename Block, typename Allocator>
 inline std::ostream&
-operator<<(std::ostream& os, 
+operator<<(std::ostream& os,
            const typename dynamic_bitset<Block, Allocator>::reference& br)
 {
     return os << (bool)br;
@@ -553,7 +553,7 @@ operator<<(std::ostream& os,
 #else
 template <typename CharT, typename Traits, typename Block, typename Allocator>
 inline std::basic_ostream<CharT, Traits>&
-operator<<(std::basic_ostream<CharT, Traits>& os, 
+operator<<(std::basic_ostream<CharT, Traits>& os,
            const typename dynamic_bitset<Block, Allocator>::reference& br)
 {
     return os << (bool)br;
@@ -758,7 +758,7 @@ dynamic_bitset<Block, Allocator>::operator<<=(size_type n)
         block_type *& b       = this->m_bits;
 
         // PRE: div != 0  or  r != 0
-        
+
         if (r != 0) {
 
             block_type const rs = bits_per_block - r;
@@ -767,7 +767,7 @@ dynamic_bitset<Block, Allocator>::operator<<=(size_type n)
                 b[i+div] = (b[i] << r) | (b[i-1] >> rs);
             }
             b[div] = b[0] << r;
-            
+
         }
         else {
             for (size_type i = last-div; i>0; --i) {
@@ -775,12 +775,12 @@ dynamic_bitset<Block, Allocator>::operator<<=(size_type n)
             }
             b[div] = b[0];
         }
-        
-        
+
+
         // div blocks are zero filled at the less significant end
         std::fill(b, b+div, static_cast<block_type>(0));
-        
-        
+
+
     }
 
     return *this;
@@ -803,7 +803,7 @@ dynamic_bitset<Block, Allocator>::operator>>=(size_type n)
         size_type i;
         for (i = 0; i < this->m_num_bits - n; ++i)
             set_(i,test_(i+n));
-        
+
         for (i = this->m_num_bits - n; i < this->m_num_bits; ++i)
             reset_(i);
     }
@@ -841,7 +841,7 @@ dynamic_bitset<B, A> & dynamic_bitset<B, A>::operator>>=(size_type n) {
         size_type  const div   = n / bits_per_block;   // div is <= last
         size_type  const r     = n % bits_per_block;
         block_type *& b        = this->m_bits;
-        
+
         // PRE: div != 0  or  r != 0
 
         if (r != 0) {
@@ -863,8 +863,8 @@ dynamic_bitset<B, A> & dynamic_bitset<B, A>::operator>>=(size_type n) {
             // b[last-div] = b[last] >> 0;
         }
 
-        
-        
+
+
         // div blocks are zero filled at the most significant end
         std::fill(b + (this->m_num_blocks-div), b + this->m_num_blocks, static_cast<block_type>(0));
     }
@@ -1007,7 +1007,7 @@ dynamic_bitset<Block, Allocator>::count() const
 }
 
 The actual algorithm used is based on using a lookup
-table. 
+table.
 
 
   The basic idea of the method is to pick up X bits at a time
@@ -1015,7 +1015,7 @@ table.
   the binary representation of a number N. Then, to use a table
   of 1<<X elements where table[N] is the number of '1' digits
   in the binary representation of N (i.e. in our X bits).
-  
+
   Note that the table can be oversized (i.e. can even have more
   than 1<<X elements; in that case only the first 1<<X will be
   actually used) but it cannot be undersized.
@@ -1064,7 +1064,7 @@ dynamic_bitset<Block, Allocator>::count() const
             do {
                 num += detail::count<>::table[value & ((1<<max_bit)-1)];
             } while (value >>= max_bit);
-            
+
             ++p;
         }
     }
@@ -1127,16 +1127,16 @@ to_string(const dynamic_bitset<Block, Allocator>& b, stringT& s)
 // for debugging purposes)
 //
 template <typename B, typename A, typename stringT>
-inline void 
-dump_to_string(const dynamic_bitset<B, A>& b, 
+inline void
+dump_to_string(const dynamic_bitset<B, A>& b,
                /*std::basic_string<CharT, Alloc>*/stringT& s) // G.P.S.
 {
-    to_string_helper(b, s, b.m_num_blocks * (dynamic_bitset<B, A>::bits_per_block) ); 
+    to_string_helper(b, s, b.m_num_blocks * (dynamic_bitset<B, A>::bits_per_block) );
 }
 
 template <typename Block, typename Allocator, typename BlockOutputIterator>
 inline void
-to_block_range(const dynamic_bitset<Block, Allocator>& b, 
+to_block_range(const dynamic_bitset<Block, Allocator>& b,
                BlockOutputIterator result)
 {
     assert (b.m_bits != 0 || b.m_num_blocks == 0);
@@ -1145,14 +1145,14 @@ to_block_range(const dynamic_bitset<Block, Allocator>& b,
 
 template <typename Block, typename Allocator>
 unsigned long dynamic_bitset<Block, Allocator>::
-to_ulong() const 
+to_ulong() const
 {
   const std::overflow_error
     overflow("boost::bit_set::operator unsigned long()");
 
   if (this->m_num_blocks == 0)
     return 0;
-  
+
   if (sizeof(Block) >= sizeof(unsigned long)) {
     for (size_type i = 1; i < this->m_num_blocks; ++i)
       if (this->m_bits[i])
@@ -1229,7 +1229,7 @@ is_proper_subset_of(const dynamic_bitset<Block, Allocator>& a) const
 // comparison
 
 template <typename Block, typename Allocator>
-bool operator==(const dynamic_bitset<Block, Allocator>& a, 
+bool operator==(const dynamic_bitset<Block, Allocator>& a,
                 const dynamic_bitset<Block, Allocator>& b)
 {
     using namespace std;
@@ -1239,7 +1239,7 @@ bool operator==(const dynamic_bitset<Block, Allocator>& a,
 }
 
 template <typename Block, typename Allocator>
-inline bool operator!=(const dynamic_bitset<Block, Allocator>& a, 
+inline bool operator!=(const dynamic_bitset<Block, Allocator>& a,
                        const dynamic_bitset<Block, Allocator>& b)
 {
     return !(a == b);
@@ -1272,14 +1272,14 @@ bool operator<(const dynamic_bitset<Block, Allocator>& a,
 }
 
 template <typename Block, typename Allocator>
-inline bool operator<=(const dynamic_bitset<Block, Allocator>& a, 
+inline bool operator<=(const dynamic_bitset<Block, Allocator>& a,
                        const dynamic_bitset<Block, Allocator>& b)
 {
     return !(a > b);
 }
 
 template <typename Block, typename Allocator>
-inline bool operator>(const dynamic_bitset<Block, Allocator>& a, 
+inline bool operator>(const dynamic_bitset<Block, Allocator>& a,
                       const dynamic_bitset<Block, Allocator>& b)
 {
 #if 0 // [gps]
@@ -1309,7 +1309,7 @@ inline bool operator>(const dynamic_bitset<Block, Allocator>& a,
 }
 
 template <typename Block, typename Allocator>
-inline bool operator>=(const dynamic_bitset<Block, Allocator>& a, 
+inline bool operator>=(const dynamic_bitset<Block, Allocator>& a,
                        const dynamic_bitset<Block, Allocator>& b)
 {
     return !(a < b);
@@ -1359,11 +1359,11 @@ operator<<(std::basic_ostream<CharT, Traits>& os,
     if (oprefix) {
 
         try {
-            
+
 
             typedef typename dynamic_bitset<Block, Allocator>::size_type bitsetsize_type;
             typedef basic_streambuf<CharT, Traits> buffer_type; // G.P.S.
-            
+
             buffer_type * buf = os.rdbuf();
             size_t npad = os.width() <= 0  // careful: os.width() is signed (and can be < 0)
                 || (bitsetsize_type) os.width() <= b.size()? 0 : os.width() - b.size(); //- G.P.S.
@@ -1373,7 +1373,7 @@ operator<<(std::basic_ostream<CharT, Traits>& os,
             if (npad && !pad_left) { // fills at left
                 for (; err == ios_base::goodbit && 0 < npad; --npad)
                     if (Traits::eq_int_type(Traits::eof(),
-                        buf->sputc(os.fill()))) 
+                        buf->sputc(os.fill())))
                           err |= ios_base::failbit;   // G.P.S.
             }
 
@@ -1389,7 +1389,7 @@ operator<<(std::basic_ostream<CharT, Traits>& os,
             // in case fill at right
             for (; err == ios_base::goodbit && 0 < npad; --npad)
                 if (Traits::eq_int_type(Traits::eof(),
-                    buf->sputc(os.fill()))) 
+                    buf->sputc(os.fill())))
                       err |= ios_base::failbit;
 
 
@@ -1401,12 +1401,12 @@ operator<<(std::basic_ostream<CharT, Traits>& os,
             //
             bool rethrow_original = false;
             try { os.setstate(ios_base::failbit); } catch (...) { rethrow_original = true; }
-            
+
             if (rethrow_original)
                 throw;
         }
     }
-    
+
     // set the error bits: note that this may throw
     if(err != ios_base::goodbit)
         os.setstate(err);
@@ -1482,7 +1482,7 @@ template <typename Stream>
 Stream & operator>>( Stream& is, const bs_limit& m)
 {
     is.iword(bs_limit::bsTypeIdx) = static_cast<long> (m.type_);
-    
+
     if (m.type_ != bs_limit::inf)
         is.iword(bs_limit::bsLimitIdx) = m.m_n;
 
@@ -1510,7 +1510,7 @@ template <typename B, typename A>
 void from_vect_of_blocks(std::vector<B> const & vect,
                                 typename dynamic_bitset<B, A>::size_type nbits, dynamic_bitset<B, A>& b)
 {
-    
+
     typedef typename dynamic_bitset<B, A>::size_type size_type;
     size_type const bits_per_block = dynamic_bitset<B, A>::bits_per_block;
 
@@ -1520,7 +1520,7 @@ void from_vect_of_blocks(std::vector<B> const & vect,
 
     if (!nbits)
         return; // G.P.S.
-    
+
     size_type const r = nbits % bits_per_block;
     size_type const lasti = b.m_num_blocks - 1; // G.P.S.
     size_type const rs = bits_per_block - r;
@@ -1627,7 +1627,7 @@ operator>>(std::basic_istream<CharT, Traits>& is,
 
             basic_streambuf <CharT, Traits> * buf = is.rdbuf();// basic_streambuf è giusto?
             typename vector<Block>::iterator it;
-            
+
             Block  mask      = 0;
             size_t bits_read = 0;
             typename Traits::int_type c = buf->sgetc(); // G.P.S.
@@ -1638,17 +1638,17 @@ operator>>(std::basic_istream<CharT, Traits>& is,
                     vect.push_back(0);
                     it = vect.end() - 1;
                 }
-                
-                if (Traits::eq_int_type(Traits::eof(), c)) 
+
+                if (Traits::eq_int_type(Traits::eof(), c))
                     err |= ios_base::eofbit;   // G.P.S.
                 else {
                     CharT to_c = Traits::to_char_type(c);
-                    
+
                     if (Traits::eq(to_c, one))
                         *it |= mask;
                     else if (!Traits::eq(to_c, zero)) // G.P.S.
                         break; // non digit character
-                    
+
                     mask >>= 1;
                     ++bits_read;
                 }
@@ -1658,7 +1658,7 @@ operator>>(std::basic_istream<CharT, Traits>& is,
                 from_vect_of_blocks(vect, bits_read, b);
 
         }
-        
+
     }
 
     catch (...) {
@@ -1666,10 +1666,10 @@ operator>>(std::basic_istream<CharT, Traits>& is,
         // bad_alloc originating from the initial vector<>::reserve()
         bool rethrow_original = false;
         try { is.setstate(ios_base::failbit); } catch(...) { rethrow_original = true; }
-        
+
         if (rethrow_original)
             throw;
-        
+
     }
 
     // Set error bits: note that this may throw
@@ -1677,7 +1677,7 @@ operator>>(std::basic_istream<CharT, Traits>& is,
         is.setstate (err);
 
     return is;
-    
+
 }
 #endif
 
