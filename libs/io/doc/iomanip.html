@@ -68,8 +68,10 @@ appropiate for the stream's character type and locale, into stream
 <p><strong>Returns:</strong> <var>os</var></p>
 
 <p><strong>Rationale:</strong> gives a method of inserting a newline
-that looks object-based, without the additional flushing behavior of
-<code>std::endl</code></p>
+that looks object-based, without either the additional flushing behavior
+of <code>std::endl</code>, or the background formatting adjustments of
+using <code>'\n'</code> (or <code>&quot;\n&quot;</code>) directly with
+<code>operator &lt;&lt;</code></p>
 
 <h2><a name="skipl">Line-skipping Input Manipulator</a></h2>
 
@@ -85,8 +87,8 @@ is passed, or the stream's end is reached</p>
 
 <p><strong>Returns:</strong> <var>is</var></p>
 
-<p><strong>Rationale:</strong> a dual to <a
-href="#newl"><code>boost::io::newl</code></a></p>
+<p><strong>Rationale:</strong> a counterpart to <a
+href="#newl"><code>newl</code></a></p>
 
 <h2><a name="refer">References</a></h2>
 
@@ -105,19 +107,19 @@ href="#newl"><code>boost::io::newl</code></a></p>
 	<dt><a href="http://www.josuttis.com">Nicolai Josuttis</a>
 	<dd>Section 13.6.2 of his <cite>The C++ Standard Library: A Tutorial
 		and Reference</cite> book is the basis of <a
-		href="#skipl"><code>boost::io::skipl</code></a> (called
+		href="#skipl"><code>skipl</code></a> (called
 		<code>ignore_line</code> in the book).
 
 	<dt><a href="../../../people/dietmar_kuehl.htm">Dietmar Kuehl</a>
 	<dd><a href="news:94atsm$27u$6@news.BelWue.DE">Posted the idea</a>
-		that led to <a href="#newl"><code>boost::io::newl</code></a> on
+		that led to <a href="#newl"><code>newl</code></a> on
 		<a
 		href="news:comp.lang.c++.moderated">comp.lang.c++.moderated</a>.
 
 	<dt><a href="../../../people/daryle_walker.html">Daryle Walker</a>
 	<dd>Started the library.  Contributed the initial versions of <a
-		href="#skipl"><code>boost::io::skipl</code></a> and <a
-		href="#newl"><code>boost::io::newl</code></a>.  Contributed
+		href="#skipl"><code>skipl</code></a> and <a
+		href="#newl"><code>newl</code></a>.  Contributed
 		<cite><a
 		href="../test/iomanip_test.cpp">iomanip_test.cpp</a></cite>.
 </dl>
@@ -131,9 +133,9 @@ href="#newl"><code>boost::io::newl</code></a></p>
 
 <hr>
 
-<p>Revised: 20 November 2002</p>
+<p>Revised: 23 May 2003</p>
 
-<p>Copyright &copy; Daryle Walker 2002.  Permission to copy, use,
+<p>Copyright &copy; Daryle Walker 2003.  Permission to copy, use,
 modify, sell and distribute this document is granted provided this
 copyright notice appears in all copies.  This document is provided
 &quot;as is&quot; without express or implied warranty, and with no claim
