@@ -19,8 +19,6 @@
 
 #include <boost/container_traits/config.hpp>
 #include <string>
-#include <boost/type_traits/is_array.hpp>
-#include <boost/type_traits/is_pointer.hpp>
 #include <boost/type_traits/is_const.hpp>
 #include <boost/type_traits/is_convertible.hpp>
 #include <boost/type_traits/remove_pointer.hpp>
@@ -34,9 +32,6 @@
 
 namespace boost {
     namespace container_traits_detail {
-
-        using type_traits::yes_type;
-        using type_traits::no_type;
         
 // Default container traits -----------------------------------------------------------------
 
@@ -58,43 +53,6 @@ namespace boost {
             typedef BOOST_DEDUCED_TYPENAME ContainerT::difference_type difference_type;
             typedef BOOST_DEDUCED_TYPENAME ContainerT::size_type size_type;
             
-            // static operations
-            template< typename C >
-            static size_type size( const C& c )
-            {
-                return c.size();
-            }
-
-            template< typename C >
-            static bool empty( const C& c )
-            {
-                return c.empty();
-            }
-
-            template< typename C >
-            static iterator begin( C& c )
-            {
-                return c.begin();
-            }
-
-            template< typename C >
-            static const_iterator begin( const C& c )
-            {
-                return c.begin();
-            }
-
-            template< typename C >
-            static iterator end( C& c )
-            {
-                return c.end();
-            }
-
-            template< typename C >
-            static const_iterator end( const C& c )
-            {
-                return c.end();
-            }
-
         }; 
 
         template<typename T>
@@ -105,10 +63,6 @@ namespace boost {
 
 // Pair container traits ---------------------------------------------------------------------
                 
-        // pair selector
-        template< typename T, typename U >
-        yes_type is_pair_impl( const std::pair<T,U>* );
-        no_type is_pair_impl( ... );
 
         template<typename T> struct is_pair
         {
@@ -138,30 +92,6 @@ namespace boost {
             typedef element_type const_iterator;
             typedef element_type result_iterator;
 
-            // static operations
-            template< typename P >
-            static size_type size( const P& p )
-            {
-                return std::distance( p.first, p.second );
-            }
-
-            template< typename P >
-            static bool empty( const P& p )
-            {
-                return p.first==p.second;
-            }
-
-            template< typename P > 
-            static const_iterator begin( const P& p )
-            {
-                return p.first;
-            }
-
-            template< typename P >
-            static const_iterator end( const P& p )
-            {
-                return p.second;
-            }
         }; // 'pair_container_helper'
 
         template<typename T>
@@ -439,42 +369,6 @@ namespace boost {
             BOOST_STATIC_CONSTANT( size_type, array_size = traits_type::array_size );
 
             // static operations
-            template< typename A >
-            static size_type size( const A& a )
-            {
-                return array_length_type::length(a);
-            }
-
-            template< typename A >
-            static bool empty( const A& a )
-            {
-                return array_length_type::empty(a);
-            }
-            
-            template< typename A >
-            static iterator begin( A& a )
-            {
-                return a;
-            }
-
-            template< typename A >
-            static const_iterator begin( const A& a )
-            {
-                return a;
-            }
-
-            template< typename A >
-            static iterator end( A& a )
-            {
-                return a + array_length_type::length( a ); // note: problemematic if &a[0] since a can be 0
-            }
-
-            template< typename A >
-            static const_iterator end( const A& a )
-            {
-                return a + array_length_type::length( a );
-            }
-
         }; 
 
         template<typename T>
@@ -564,79 +458,6 @@ namespace boost {
 
 // Iterator container traits ---------------------------------------------------------------
         
-#ifdef BOOST_MSVC_STD_ITERATOR
-        template< typename T1, T2 >
-        yes_type is_iterator_impl( const std::iterator<T2,T2>* );
-#else        
-#if BOOST_DINKUMWARE_STDLIB == 1
-        template< typename C, typename T, typename D >
-        yes_type is_iterator_impl( const std::iterator<C,T,D>* );
-#else
-        template< typename C, typename T, typename D, typename P, typename R >
-        yes_type is_iterator_impl( const std::iterator<C,T,D,P,R>* );
-#endif
-#endif
-        no_type  is_iterator_impl( ... ); 
-        
-        template< typename T >
-        struct is_iterator
-        {
-        private:
-            static T* t;
-        public:
-            BOOST_STATIC_CONSTANT( bool, value = sizeof( is_iterator_impl(t) ) 
-                                   == sizeof( yes_type ) );
-        };
-        
-        
-        
-        template< typename IteratorT >
-        struct iterator_container_traits
-        {
-            typedef BOOST_DEDUCED_TYPENAME 
-                detail::iterator_traits<IteratorT>::value_type  value_type;
-            typedef IteratorT                                   iterator;
-            typedef IteratorT                                   const_iterator;
-            typedef BOOST_DEDUCED_TYPENAME
-                detail::iterator_traits<IteratorT>::difference_type
-                                                                difference_type;
-            typedef std::size_t                                 size_type;
-            typedef IteratorT                                   result_iterator;
-            
-            template< typename I >
-            static inline iterator
-            begin( const I& i )
-            {
-                return i;
-            }
-            
-            template< typename I >
-            static inline iterator
-            end( const I& i )
-            {
-                return I();
-            }
-            
-            template< typename I >
-            static inline bool
-            empty( const I& i )
-            {
-                return i == end( i );
-            }
-            
-            template< typename I >
-            static inline size_type 
-            size( const I& i );
-
-        };
-        
-        
-        
-        template<typename T>
-        struct iterator_container_traits_selector
-        {
-            typedef iterator_container_traits<T> type;
-        };
 
 // sizer helper -------------------------------------------------------------------------
         
