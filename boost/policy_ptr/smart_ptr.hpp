@@ -1706,7 +1706,9 @@ namespace boost
         bool operator()(smart_ptr<T, BOOST_SMART_POINTER_POLICIES> const& lhs,
                         smart_ptr<T, BOOST_SMART_POINTER_POLICIES> const& rhs) const
         {
-            return less<T*>()(get_impl(lhs), get_impl(rhs));
+            return std::less<typename StoragePolicy::pointer_type>()(
+                get_impl(lhs), get_impl(rhs)
+            );
         }
     };
 
@@ -1731,3 +1733,4 @@ namespace boost
 #endif // BOOST_MSVC
 
 #endif // BOOST_SMART_PTR_20020920_HPP
+
