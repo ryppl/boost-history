@@ -349,7 +349,7 @@ int main()
   si.push_front(4);                       /* 40       */
   ss.insert(2);                           /* 402      */
   ss.insert(5);                           /* 4025     */
-  ss.push_front(3);                       /* 34025    */
+  si.push_front(3);                       /* 34025    */
   si.push_back(6);                        /* 340256   */
   si.push_back(1);                        /* 3402561  */
   si.insert(project<1>(ss,ss.find(2)),8); /* 34082561 */
