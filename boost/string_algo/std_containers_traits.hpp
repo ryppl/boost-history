@@ -10,7 +10,12 @@
 #ifndef BOOST_STRING_STD_CONTAINERS_TRAITS_HPP
 #define BOOST_STRING_STD_CONTAINERS_TRAITS_HPP
 
+#include <boost/config>
 #include <boost/string_algo/std/string_traits.hpp>
 #include <boost/string_algo/std/list_traits.hpp>
+
+#ifdef BOOST_HAS_SLIST
+#   include <boost/string_algo/slist_traits.hpp>
+#endif
 
 #endif  // BOOST_STRING_STD_CONTAINERS_TRAITS_HPP
