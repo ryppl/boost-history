@@ -102,8 +102,11 @@
 // #define NUMERICS_USE_DUFF_DEVICE
 
 // When to switch from indexing to iterating
+// Empirically determined with MSVC.
 // #define NUMERICS_ITERATOR_THRESHOLD 0
+#ifndef NUMERICS_ITERATOR_THRESHOLD
 #define NUMERICS_ITERATOR_THRESHOLD 32
+#endif
 // #define NUMERICS_ITERATOR_THRESHOLD 128
 
 // ET options
@@ -176,6 +179,8 @@
 
 #define NUMERICS_USE_LONG_DOUBLE
 
+#define NUMERICS_SPECIALIZE_ASSIGN
+
 #endif
 
 
@@ -200,6 +205,8 @@
 #define NUMERICS_FRIEND_FUNCTION
 // ICC sometimes needs qualified type names.
 #define NUMERICS_QUALIFIED_TYPENAME
+
+#define NUMERICS_SPECIALIZE_ASSIGN
 
 #endif
 

@@ -19,11 +19,11 @@
 
 #include <functional>
 
-#include "config.h"
-#include "exception.h"
-#include "traits.h"
-#include "math.h"
-#include "duff.h"
+#include <boost/numeric/ublas/config.h>
+#include <boost/numeric/ublas/exception.h>
+#include <boost/numeric/ublas/traits.h>
+#include <boost/numeric/ublas/math.h>
+#include <boost/numeric/ublas/duff.h>
 
 namespace boost { namespace numerics {
 
@@ -84,19 +84,19 @@ namespace boost { namespace numerics {
         typedef typename scalar_real_unary_functor<T>::result_type result_type;
 
         NUMERICS_INLINE
-        result_type operator () (const argument_type &t) const { 
-            return detail::real (t); 
+        result_type operator () (const argument_type &t) const {
+            return detail::real (t);
         }
     };
     template<class T>
-    struct scalar_imag: 
+    struct scalar_imag:
         public scalar_real_unary_functor<T> {
         typedef typename scalar_real_unary_functor<T>::argument_type argument_type;
         typedef typename scalar_real_unary_functor<T>::result_type result_type;
 
         NUMERICS_INLINE
-        result_type operator () (const argument_type &t) const { 
-            return detail::imag (t); 
+        result_type operator () (const argument_type &t) const {
+            return detail::imag (t);
         }
     };
 
@@ -109,15 +109,15 @@ namespace boost { namespace numerics {
     };
 
     template<class T1, class T2>
-    struct scalar_plus: 
-        public scalar_binary_functor<T1, T2> { 
+    struct scalar_plus:
+        public scalar_binary_functor<T1, T2> {
         typedef typename scalar_binary_functor<T1, T2>::argument1_type argument1_type;
         typedef typename scalar_binary_functor<T1, T2>::argument2_type argument2_type;
         typedef typename scalar_binary_functor<T1, T2>::result_type result_type;
 
         NUMERICS_INLINE
-        result_type operator () (const argument1_type &t1, const argument2_type &t2) const { 
-            return t1 + t2; 
+        result_type operator () (const argument1_type &t1, const argument2_type &t2) const {
+            return t1 + t2;
         }
     };
     template<class T1, class T2>
@@ -145,15 +145,15 @@ namespace boost { namespace numerics {
         }
     };
     template<class T1, class T2>
-    struct scalar_divides: 
-        public scalar_binary_functor<T1, T2> { 
+    struct scalar_divides:
+        public scalar_binary_functor<T1, T2> {
         typedef typename scalar_binary_functor<T1, T2>::argument1_type argument1_type;
         typedef typename scalar_binary_functor<T1, T2>::argument2_type argument2_type;
         typedef typename scalar_binary_functor<T1, T2>::result_type result_type;
 
         NUMERICS_INLINE
-        result_type operator () (const argument1_type &t1, const argument2_type &t2) const { 
-            return t1 / t2; 
+        result_type operator () (const argument1_type &t1, const argument2_type &t2) const {
+            return t1 / t2;
         }
     };
 
@@ -161,68 +161,68 @@ namespace boost { namespace numerics {
     struct computed_assign_tag {};
 
     template<class T1, class T2>
-    struct scalar_assign: 
+    struct scalar_assign:
         public scalar_binary_functor<T1, T2> {
         typedef typename scalar_binary_functor<T1, T2>::argument1_type argument1_type;
         typedef typename scalar_binary_functor<T1, T2>::argument2_type argument2_type;
         typedef assign_tag assign_category;
 
         NUMERICS_INLINE
-        void operator () (argument1_type &t1, const argument2_type &t2) const { 
+        void operator () (argument1_type &t1, const argument2_type &t2) const {
             t1 = t2;
         }
     };
     template<class T1, class T2>
-    struct scalar_plus_assign: 
+    struct scalar_plus_assign:
         public scalar_binary_functor<T1, T2> {
         typedef typename scalar_binary_functor<T1, T2>::argument1_type argument1_type;
         typedef typename scalar_binary_functor<T1, T2>::argument2_type argument2_type;
         typedef computed_assign_tag assign_category;
 
         NUMERICS_INLINE
-        void operator () (argument1_type &t1, const argument2_type &t2) const { 
+        void operator () (argument1_type &t1, const argument2_type &t2) const {
             t1 += t2;
         }
     };
     template<class T1, class T2>
-    struct scalar_minus_assign: 
+    struct scalar_minus_assign:
         public scalar_binary_functor<T1, T2> {
         typedef typename scalar_binary_functor<T1, T2>::argument1_type argument1_type;
         typedef typename scalar_binary_functor<T1, T2>::argument2_type argument2_type;
         typedef computed_assign_tag assign_category;
 
         NUMERICS_INLINE
-        void operator () (argument1_type &t1, const argument2_type &t2) const { 
+        void operator () (argument1_type &t1, const argument2_type &t2) const {
             t1 -= t2;
         }
     };
     template<class T1, class T2>
-    struct scalar_multiplies_assign: 
+    struct scalar_multiplies_assign:
         public scalar_binary_functor<T1, T2> {
         typedef typename scalar_binary_functor<T1, T2>::argument1_type argument1_type;
         typedef typename scalar_binary_functor<T1, T2>::argument2_type argument2_type;
         typedef computed_assign_tag assign_category;
 
         NUMERICS_INLINE
-        void operator () (argument1_type &t1, const argument2_type &t2) const { 
+        void operator () (argument1_type &t1, const argument2_type &t2) const {
             t1 *= t2;
         }
     };
     template<class T1, class T2>
-    struct scalar_divides_assign: 
+    struct scalar_divides_assign:
         public scalar_binary_functor<T1, T2> {
         typedef typename scalar_binary_functor<T1, T2>::argument1_type argument1_type;
         typedef typename scalar_binary_functor<T1, T2>::argument2_type argument2_type;
         typedef computed_assign_tag assign_category;
 
         NUMERICS_INLINE
-        void operator () (argument1_type &t1, const argument2_type &t2) const { 
+        void operator () (argument1_type &t1, const argument2_type &t2) const {
             t1 /= t2;
         }
     };
 
     template<class T1, class T2>
-    struct scalar_swap: 
+    struct scalar_swap:
         public scalar_binary_functor<T1, T2> {
         typedef typename scalar_binary_functor<T1, T2>::argument1_type argument1_type;
         typedef typename scalar_binary_functor<T1, T2>::argument2_type argument2_type;
@@ -641,7 +641,7 @@ namespace boost { namespace numerics {
     };
 
     template<class T1, class T2, class TR>
-    struct matrix_vector_prod1: 
+    struct matrix_vector_prod1:
         public matrix_vector_binary_functor<T1, T2, TR> {
         typedef typename matrix_vector_binary_functor<T1, T2, TR>::size_type size_type;
         typedef typename matrix_vector_binary_functor<T1, T2, TR>::difference_type difference_type;
@@ -650,9 +650,9 @@ namespace boost { namespace numerics {
 
         template<class E1, class E2>
         NUMERICS_INLINE
-        result_type operator () (const matrix_expression<E1> &e1, 
-                                 const vector_expression<E2> &e2, 
-                                 size_type i) const { 
+        result_type operator () (const matrix_expression<E1> &e1,
+                                 const vector_expression<E2> &e2,
+                                 size_type i) const {
             size_type size = common (e1 ().size2 (), e2 ().size ());
             result_type t (0);
 #ifndef NUMERICS_USE_DUFF_DEVICE
@@ -662,12 +662,12 @@ namespace boost { namespace numerics {
             size_type j (0);
             DD (size, 4, r, (t += e1 () (i, j) * e2 () (j), ++ j));
 #endif
-            return t; 
+            return t;
         }
         // Dense case
         template<class I1, class I2>
         NUMERICS_INLINE
-        result_type operator () (difference_type size, I1 it1, I2 it2) const { 
+        result_type operator () (difference_type size, I1 it1, I2 it2) const {
             result_type t (0);
 #ifndef NUMERICS_USE_DUFF_DEVICE
             while (-- size >= 0)
@@ -675,7 +675,7 @@ namespace boost { namespace numerics {
 #else
             DD (size, 4, r, (t += *it1 * *it2, ++ it1, ++ it2));
 #endif
-            return t; 
+            return t;
         }
         // Packed case
         template<class I1, class I2>
@@ -700,25 +700,25 @@ namespace boost { namespace numerics {
             difference_type size (std::min (size_type (it1_end - it1), size_type (it2_end - it2)));
             while (-- size >= 0)
                 t += *it1 * *it2, ++ it1, ++ it2;
-            return t; 
+            return t;
 #endif
         }
         // Sparse case
         template<class I1, class I2>
         NUMERICS_INLINE
-        result_type operator () (I1 it1, const I1 &it1_end, I2 it2, const I2 &it2_end, sparse_bidirectional_iterator_tag) const { 
+        result_type operator () (I1 it1, const I1 &it1_end, I2 it2, const I2 &it2_end, sparse_bidirectional_iterator_tag) const {
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
             result_type t (0);
             while (it1 != it1_end && it2 != it2_end) {
                 difference_type compare = it1.index () - it2.index ();
-                if (compare < 0) 
+                if (compare < 0)
                     ++ it1;
-                else if (compare == 0) 
+                else if (compare == 0)
                     t += *it1 * *it2, ++ it1, ++ it2;
                 else if (compare > 0)
                     ++ it2;
             }
-            return t; 
+            return t;
 #else
             result_type t (0);
             while (it1 != it1_end && it2 != it2_end) {
@@ -994,6 +994,497 @@ namespace boost { namespace numerics {
                     t = u;  
             }
             return t; 
+        }
+    };
+
+    // This functor computes the address translation
+    // matrix [i] [j] -> storage [i * size2 + j]
+    struct row_major {
+        typedef std::size_t size_type;
+        typedef std::ptrdiff_t difference_type;
+        typedef row_major_tag orientation_category;
+
+        // Indexing
+        static
+        NUMERICS_INLINE
+        size_type element (size_type i, size_type size1, size_type j, size_type size2) {
+            check (i <= size1, bad_index ());
+            check (j <= size2, bad_index ());
+            return i * size2 + j;
+        }
+        static
+        NUMERICS_INLINE
+        difference_type distance1 (difference_type k, size_type size1, size_type size2) {
+            return size2 != 0 ? k / size2 : 0;
+        }
+        static
+        NUMERICS_INLINE
+        difference_type distance2 (difference_type k, size_type size1, size_type size2) {
+            return k;
+        }
+        static
+        NUMERICS_INLINE
+        size_type index1 (difference_type k, size_type size1, size_type size2) {
+            return size2 != 0 ? k / size2 : 0;
+        }
+        static
+        NUMERICS_INLINE
+        size_type index2 (difference_type k, size_type size1, size_type size2) {
+            return size2 != 0 ? k % size2 : 0;
+        }
+        static
+        NUMERICS_INLINE
+        bool fast1 () {
+            return false;
+        }
+        static
+        NUMERICS_INLINE
+        size_type one1 (size_type size1, size_type size2) {
+            return size2;
+        }
+        static
+        NUMERICS_INLINE
+        bool fast2 () {
+            return true;
+        }
+        static
+        NUMERICS_INLINE
+        size_type one2 (size_type size1, size_type size2) {
+            return 1;
+        }
+
+        static
+        NUMERICS_INLINE
+        size_type lower_element (size_type i, size_type size1, size_type j, size_type size2) {
+            check (i <= size1, bad_index ());
+            check (j <= size2, bad_index ());
+            check (i >= j, bad_index ());
+            // sigma_i (i + 1) = (i + 1) * i / 2
+            // i = 0 1 2 3, sigma = 0 1 3 6
+            return ((i + 1) * i) / 2 + j;
+        }
+        static
+        NUMERICS_INLINE
+        size_type upper_element (size_type i, size_type size1, size_type j, size_type size2) {
+            check (i <= size1, bad_index ());
+            check (j <= size2, bad_index ());
+            check (i <= j, bad_index ());
+            // sigma_i (size - i) = size * i - i * (i - 1) / 2
+            // i = 0 1 2 3, sigma = 0 4 7 9
+            return (i * (2 * std::max (size1, size2) - i + 1)) / 2 + j - i;
+        }
+
+        static
+        NUMERICS_INLINE
+        size_type element1 (size_type i, size_type size1, size_type j, size_type size2) {
+            check (i <= size1, bad_index ());
+            return i;
+        }
+        static
+        NUMERICS_INLINE
+        size_type element2 (size_type i, size_type size1, size_type j, size_type size2) {
+            check (j <= size2, bad_index ());
+            return j;
+        }
+        static
+        NUMERICS_INLINE
+        size_type index1 (size_type index1, size_type index2) {
+            return index1;
+        }
+        static
+        NUMERICS_INLINE
+        size_type index2 (size_type index1, size_type index2) {
+            return index2;
+        }
+        static
+        NUMERICS_INLINE
+        size_type size1 (size_type size1, size_type size2) {
+            return size1;
+        }
+        static
+        NUMERICS_INLINE
+        size_type size2 (size_type size1, size_type size2) {
+            return size2;
+        }
+
+        // Iterating
+        template<class I>
+        static
+        NUMERICS_INLINE
+        void increment1 (I &it, size_type size1, size_type size2) {
+            it += size2;
+        }
+        template<class I>
+        static
+        NUMERICS_INLINE
+        void decrement1 (I &it, size_type size1, size_type size2) {
+            it -= size2;
+        }
+        template<class I>
+        static
+        NUMERICS_INLINE
+        void increment2 (I &it, size_type size1, size_type size2) {
+            ++ it;
+        }
+        template<class I>
+        static
+        NUMERICS_INLINE
+        void decrement2 (I &it, size_type size1, size_type size2) {
+            -- it;
+        }
+    };
+
+    // This functor computes the address translation
+    // matrix [i] [j] -> storage [i + j * size1]
+    struct column_major {
+        typedef std::size_t size_type;
+        typedef std::ptrdiff_t difference_type;
+        typedef column_major_tag orientation_category;
+
+        // Indexing
+        static
+        NUMERICS_INLINE
+        size_type element (size_type i, size_type size1, size_type j, size_type size2) {
+            check (i <= size1, bad_index ());
+            check (j <= size2, bad_index ());
+            return i + j * size1;
+        }
+        static
+        NUMERICS_INLINE
+        difference_type distance1 (difference_type k, size_type size1, size_type size2) {
+            return k;
+        }
+        static
+        NUMERICS_INLINE
+        difference_type distance2 (difference_type k, size_type size1, size_type size2) {
+            return size1 != 0 ? k / size1 : 0;
+        }
+        static
+        NUMERICS_INLINE
+        size_type index1 (difference_type k, size_type size1, size_type size2) {
+            return size1 != 0 ? k % size1 : 0;
+        }
+        static
+        NUMERICS_INLINE
+        size_type index2 (difference_type k, size_type size1, size_type size2) {
+            return size1 != 0 ? k / size1 : 0;
+        }
+        static
+        NUMERICS_INLINE
+        bool fast1 () {
+            return true;
+        }
+        static
+        NUMERICS_INLINE
+        size_type one1 (size_type size1, size_type size2) {
+            return 1;
+        }
+        static
+        NUMERICS_INLINE
+        bool fast2 () {
+            return false;
+        }
+        static
+        NUMERICS_INLINE
+        size_type one2 (size_type size1, size_type size2) {
+            return size1;
+        }
+
+        static
+        NUMERICS_INLINE
+        size_type lower_element (size_type i, size_type size1, size_type j, size_type size2) {
+            check (i <= size1, bad_index ());
+            check (j <= size2, bad_index ());
+            check (i >= j, bad_index ());
+            // sigma_j (size - j) = size * j - j * (j - 1) / 2
+            // j = 0 1 2 3, sigma = 0 4 7 9
+            return i - j + (j * (2 * std::max (size1, size2) - j + 1)) / 2;
+        }
+        static
+        NUMERICS_INLINE
+        size_type upper_element (size_type i, size_type size1, size_type j, size_type size2) {
+            check (i <= size1, bad_index ());
+            check (j <= size2, bad_index ());
+            check (i <= j, bad_index ());
+            // sigma_j (j + 1) = (j + 1) * j / 2
+            // j = 0 1 2 3, sigma = 0 1 3 6
+            return i + ((j + 1) * j) / 2;
+        }
+
+        static
+        NUMERICS_INLINE
+        size_type element1 (size_type i, size_type size1, size_type j, size_type size2) {
+            check (j <= size2, bad_index ());
+            return j;
+        }
+        static
+        NUMERICS_INLINE
+        size_type element2 (size_type i, size_type size1, size_type j, size_type size2) {
+            check (i <= size1, bad_index ());
+            return i;
+        }
+        static
+        NUMERICS_INLINE
+        size_type index1 (size_type index1, size_type index2) {
+            return index2;
+        }
+        static
+        NUMERICS_INLINE
+        size_type index2 (size_type index1, size_type index2) {
+            return index1;
+        }
+        static
+        NUMERICS_INLINE
+        size_type size1 (size_type size1, size_type size2) {
+            return size2;
+        }
+        static
+        NUMERICS_INLINE
+        size_type size2 (size_type size1, size_type size2) {
+            return size1;
+        }
+
+        // Iterating
+        template<class I>
+        static
+        NUMERICS_INLINE
+        void increment1 (I &it, size_type size1, size_type size2) {
+            ++ it;
+        }
+        template<class I>
+        static
+        NUMERICS_INLINE
+        void decrement1 (I &it, size_type size1, size_type size2) {
+            -- it;
+        }
+        template<class I>
+        static
+        NUMERICS_INLINE
+        void increment2 (I &it, size_type size1, size_type size2) {
+            it += size1;
+        }
+        template<class I>
+        static
+        NUMERICS_INLINE
+        void decrement2 (I &it, size_type size1, size_type size2) {
+            it -= size1;
+        }
+    };
+
+    struct lower {
+        typedef std::size_t size_type;
+        typedef lower_tag packed_category;
+
+        static
+        NUMERICS_INLINE
+        size_type packed_size (size_type size1, size_type size2) {
+            size_type size = std::max (size1, size2);
+            return ((size + 1) * size) / 2;
+        }
+
+        static
+        NUMERICS_INLINE
+        bool zero (size_type i, size_type j) {
+            return j > i;
+        }
+        static
+        NUMERICS_INLINE
+        bool one (size_type i, size_type j) {
+            return false;
+        }
+        static
+        NUMERICS_INLINE
+        bool other (size_type i, size_type j) {
+            return j <= i;
+        }
+        template<class F>
+        static
+        NUMERICS_INLINE
+        size_type element (F, size_type i, size_type size1, size_type j, size_type size2) {
+            return F::lower_element (i, size1, j, size2);
+        }
+
+        static
+        NUMERICS_INLINE
+        size_type restrict1 (size_type i, size_type j) {
+            return std::max (i, j);
+        }
+        static
+        NUMERICS_INLINE
+        size_type restrict2 (size_type i, size_type j) {
+            return std::min (i + 1, j);
+        }
+        static
+        NUMERICS_INLINE
+        size_type mutable_restrict1 (size_type i, size_type j) {
+            return std::max (i, j);
+        }
+        static
+        NUMERICS_INLINE
+        size_type mutable_restrict2 (size_type i, size_type j) {
+            return std::min (i + 1, j);
+        }
+    };
+    struct upper {
+        typedef std::size_t size_type;
+        typedef upper_tag packed_category;
+
+        static
+        NUMERICS_INLINE
+        size_type packed_size (size_type size1, size_type size2) {
+            size_type size = std::max (size1, size2);
+            return ((size + 1) * size) / 2;
+        }
+
+        static
+        NUMERICS_INLINE
+        bool zero (size_type i, size_type j) {
+            return j < i;
+        }
+        static
+        NUMERICS_INLINE
+        bool one (size_type i, size_type j) {
+            return false;
+        }
+        static
+        NUMERICS_INLINE
+        bool other (size_type i, size_type j) {
+            return j >= i;
+        }
+        template<class F>
+        static
+        NUMERICS_INLINE
+        size_type element (F, size_type i, size_type size1, size_type j, size_type size2) {
+            return F::upper_element (i, size1, j, size2);
+        }
+
+        static
+        NUMERICS_INLINE
+        size_type restrict1 (size_type i, size_type j) {
+            return std::min (i, j + 1);
+        }
+        static
+        NUMERICS_INLINE
+        size_type restrict2 (size_type i, size_type j) {
+            return std::max (i, j);
+        }
+        static
+        NUMERICS_INLINE
+        size_type mutable_restrict1 (size_type i, size_type j) {
+            return std::min (i, j + 1);
+        }
+        static
+        NUMERICS_INLINE
+        size_type mutable_restrict2 (size_type i, size_type j) {
+            return std::max (i, j);
+        }
+    };
+    struct unit_lower {
+        typedef std::size_t size_type;
+        typedef unit_lower_tag packed_category;
+
+        static
+        NUMERICS_INLINE
+        size_type packed_size (size_type size1, size_type size2) {
+            size_type size = std::max (size1, size2);
+            return ((size + 1) * size) / 2;
+        }
+
+        static
+        NUMERICS_INLINE
+        bool zero (size_type i, size_type j) {
+            return j > i;
+        }
+        static
+        NUMERICS_INLINE
+        bool one (size_type i, size_type j) {
+            return j == i;
+        }
+        static
+        NUMERICS_INLINE
+        bool other (size_type i, size_type j) {
+            return j < i;
+        }
+        template<class F>
+        static
+        NUMERICS_INLINE
+        size_type element (F, size_type i, size_type size1, size_type j, size_type size2) {
+            return F::lower_element (i, size1, j, size2);
+        }
+
+        static
+        NUMERICS_INLINE
+        size_type restrict1 (size_type i, size_type j) {
+            return std::max (i, j);
+        }
+        static
+        NUMERICS_INLINE
+        size_type restrict2 (size_type i, size_type j) {
+            return std::min (i + 1, j);
+        }
+        static
+        NUMERICS_INLINE
+        size_type mutable_restrict1 (size_type i, size_type j) {
+            return std::max (i, j);
+        }
+        static
+        NUMERICS_INLINE
+        size_type mutable_restrict2 (size_type i, size_type j) {
+            return std::min (i, j);
+        }
+    };
+    struct unit_upper {
+        typedef std::size_t size_type;
+        typedef unit_upper_tag packed_category;
+
+        static
+        NUMERICS_INLINE
+        size_type packed_size (size_type size1, size_type size2) {
+            size_type size = std::max (size1, size2);
+            return ((size + 1) * size) / 2;
+        }
+
+        static
+        NUMERICS_INLINE
+        bool zero (size_type i, size_type j) {
+            return j < i;
+        }
+        static
+        NUMERICS_INLINE
+        bool one (size_type i, size_type j) {
+            return j == i;
+        }
+        static
+        NUMERICS_INLINE
+        bool other (size_type i, size_type j) {
+            return j > i;
+        }
+        template<class F>
+        static
+        NUMERICS_INLINE
+        size_type element (F, size_type i, size_type size1, size_type j, size_type size2) {
+            return F::upper_element (i, size1, j, size2);
+        }
+
+        static
+        NUMERICS_INLINE
+        size_type restrict1 (size_type i, size_type j) {
+            return std::min (i, j + 1);
+        }
+        static
+        NUMERICS_INLINE
+        size_type restrict2 (size_type i, size_type j) {
+            return std::max (i, j);
+        }
+        static
+        NUMERICS_INLINE
+        size_type mutable_restrict1 (size_type i, size_type j) {
+            return std::min (i, j);
+        }
+        static
+        NUMERICS_INLINE
+        size_type mutable_restrict2 (size_type i, size_type j) {
+            return std::max (i, j);
         }
     };
 

@@ -20,7 +20,7 @@
 #include <exception>
 #include <iostream>
 
-#include "config.h"
+#include <boost/numeric/ublas/config.h>
 
 namespace boost { namespace numerics {
 

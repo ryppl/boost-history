@@ -19,7 +19,7 @@
 
 #include <iterator>
 
-#include "config.h"
+#include <boost/numeric/ublas/config.h>
 
 // Using GCC the following is missing:
 //

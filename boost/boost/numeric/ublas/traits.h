@@ -20,7 +20,7 @@
 #include <cmath>
 #include <complex>
 
-#include "config.h"
+#include <boost/numeric/ublas/config.h>
 
 // Promote traits borrowed from Todd Veldhuizen
 
@@ -591,12 +591,6 @@ namespace boost { namespace numerics {
     struct iterator_restrict_traits {
         typedef I1 iterator_category;
     };
-
-    // FIXME: eliminate this.
-    // template<>
-    // struct iterator_restrict_traits<std::random_access_iterator_tag, std::bidirectional_iterator_tag> {
-    //     typedef std::bidirectional_iterator_tag iterator_category;
-    // };
 
     template<>
     struct iterator_restrict_traits<packed_random_access_iterator_tag, sparse_bidirectional_iterator_tag> {

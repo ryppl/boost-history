@@ -17,9 +17,9 @@
 #ifndef NUMERICS_MATRIX_PR_H
 #define NUMERICS_MATRIX_PR_H
 
-#include "config.h"
-#include "vector_et.h"
-#include "matrix_et.h"
+#include <boost/numeric/ublas/config.h>
+#include <boost/numeric/ublas/vector_et.h>
+#include <boost/numeric/ublas/matrix_et.h>
 
 // Iterators based on ideas of Jeremy Siek
 
@@ -80,8 +80,14 @@ namespace boost { namespace numerics {
 
         // Resetting
         NUMERICS_INLINE
+        void reset (matrix_type &data) {
+            // data_ = data;
+            data_.reset (data);
+        }
+        NUMERICS_INLINE
         void reset (matrix_type &data, size_type i) {
-            data () = data;
+            // data_ = data;
+            data_.reset (data);
             i_ = i;
         }
 
@@ -813,8 +819,14 @@ namespace boost { namespace numerics {
 
         // Resetting
         NUMERICS_INLINE
+        void reset (matrix_type &data) {
+            // data_ = data;
+            data_.reset (data);
+        }
+        NUMERICS_INLINE
         void reset (matrix_type &data, size_type j) {
-            data () = data;
+            // data_ = data;
+            data_.reset (data);
             j_ = j;
         }
 
@@ -1549,8 +1561,14 @@ namespace boost { namespace numerics {
 
         // Resetting
         NUMERICS_INLINE
+        void reset (matrix_type &data) {
+            // data_ = data;
+            data_.reset (data);
+        }
+        NUMERICS_INLINE
         void reset (matrix_type &data, const range &r1, const range &r2) {
-            data () = data;
+            // data_ = data;
+            data_.reset (data);
             r1_ = r1;
             r2_ = r2;
         }
@@ -2001,8 +2019,14 @@ namespace boost { namespace numerics {
 
         // Resetting
         NUMERICS_INLINE
+        void reset (matrix_type &data) {
+            // data_ = data;
+            data_.reset (data);
+        }
+        NUMERICS_INLINE
         void reset (matrix_type &data, const slice &s1, const slice &s2) {
-            data () = data;
+            // data_ = data;
+            data_.reset (data);
             s1_ = s1;
             s2_ = s2;
         }
@@ -2448,8 +2472,14 @@ namespace boost { namespace numerics {
 
         // Resetting
         NUMERICS_INLINE
+        void reset (matrix_type &data) {
+            // data_ = data;
+            data_.reset (data);
+        }
+        NUMERICS_INLINE
         void reset (matrix_type &data, const indirect_array<> &ia1, const indirect_array<> &ia2) {
-            data () = data;
+            // data_ = data;
+            data_.reset (data);
             ia1_ = ia1;
             ia2_ = ia2;
         }
@@ -2919,8 +2949,14 @@ namespace boost { namespace numerics {
 
         // Resetting
         NUMERICS_INLINE
+        void reset (matrix_type &data) {
+            // data_ = data;
+            data_.reset (data);
+        }
+        NUMERICS_INLINE
         void reset (matrix_type &data, const range &r1, const range &r2) {
-            data () = data;
+            // data_ = data;
+            data_.reset (data);
             r1_ = r1;
             r2_ = r2;
         }
@@ -3842,8 +3878,14 @@ namespace boost { namespace numerics {
 
         // Resetting
         NUMERICS_INLINE
+        void reset (matrix_type &data) {
+            // data_ = data;
+            data_.reset (data);
+        }
+        NUMERICS_INLINE
         void reset (matrix_type &data, const slice &s1, const slice &s2) {
-            data () = data;
+            // data_ = data;
+            data_.reset (data);
             s1_ = s1;
             s2_ = s2;
         }
@@ -4766,8 +4808,14 @@ namespace boost { namespace numerics {
 
         // Resetting
         NUMERICS_INLINE
+        void reset (matrix_type &data) {
+            // data_ = data;
+            data_.reset (data);
+        }
+        NUMERICS_INLINE
         void reset (matrix_type &data, const indirect_array<> &ia1, const indirect_array<> &ia2) {
-            data () = data;
+            // data_ = data;
+            data_.reset (data);
             ia1_ = ia1;
             ia2_ = ia2;
         }

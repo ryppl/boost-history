@@ -17,8 +17,8 @@
 #ifndef NUMERICS_VECTOR_PR_H
 #define NUMERICS_VECTOR_PR_H
 
-#include "config.h"
-#include "vector_et.h"
+#include <boost/numeric/ublas/config.h>
+#include <boost/numeric/ublas/vector_et.h>
 
 // Iterators based on ideas of Jeremy Siek
 
@@ -84,8 +84,14 @@ namespace boost { namespace numerics {
 
         // Resetting
         NUMERICS_INLINE
+        void reset (vector_type &data) {
+            // data_ = data;
+            data_.reset (data);
+        }
+        NUMERICS_INLINE
         void reset (vector_type &data, const range &r) {
-            data () = data;
+            // data_ = data;
+            data_.reset (data);
             r_ = r;
         }
 
@@ -595,8 +601,14 @@ namespace boost { namespace numerics {
 
         // Resetting
         NUMERICS_INLINE
+        void reset (vector_type &data) {
+            // data_ = data;
+            data_.reset (data);
+        }
+        NUMERICS_INLINE
         void reset (vector_type &data, const slice &s) {
-            data () = data;
+            // data_ = data;
+            data_.reset (data);
             s_ = s;
         }
 
@@ -1103,8 +1115,14 @@ namespace boost { namespace numerics {
 
         // Resetting
         NUMERICS_INLINE
+        void reset (vector_type &data) {
+            // data_ = data;
+            data_.reset (data);
+        }
+        NUMERICS_INLINE
         void reset (vector_type &data, const indirect_array<> &ia) {
-            data () = data;
+            // data_ = data;
+            data_.reset (data);
             ia_ = ia;
         }
 

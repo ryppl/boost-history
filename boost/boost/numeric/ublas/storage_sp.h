@@ -21,10 +21,17 @@
 #include <map>
 #include <set>
 
-#include "config.h"
-#include "exception.h"
-#include "iterator.h"
-#include "storage.h"
+#include <boost/numeric/ublas/config.h>
+#include <boost/numeric/ublas/exception.h>
+#include <boost/numeric/ublas/iterator.h>
+#include <boost/numeric/ublas/storage.h>
+
+#ifndef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
+// This fixes a [1] = a [0] = 1, but won't work on broken compilers.
+// Thanks to Marc Duflot for spotting this.
+#define NUMERICS_STRICT_SPARSE_ELEMENT_ASSIGN
+#include <complex>
+#endif
 
 namespace boost { namespace numerics {
 
@@ -36,16 +43,70 @@ namespace boost { namespace numerics {
         }
     };
 
-    // Map array 
+#ifdef NUMERICS_STRICT_SPARSE_ELEMENT_ASSIGN
+    template<class D>
+    struct inner_map_traits {
+        typedef typename D::index_type index_type;
+        typedef typename D::data_const_reference data_const_reference;
+        typedef typename D::data_reference data_reference;
+    };
+    template<>
+    struct inner_map_traits<float> {
+        typedef std::size_t index_type;
+        typedef void data_const_reference;
+        typedef void data_reference;
+    };
+    template<>
+    struct inner_map_traits<double> {
+        typedef std::size_t index_type;
+        typedef void data_const_reference;
+        typedef void data_reference;
+    };
+#ifdef NUMERICS_USE_LONG_DOUBLE
+    template<>
+    struct inner_map_traits<long double> {
+        typedef std::size_t index_type;
+        typedef void data_const_reference;
+        typedef void data_reference;
+    };
+#endif
+    template<>
+    struct inner_map_traits<std::complex<float> > {
+        typedef std::size_t index_type;
+        typedef void data_const_reference;
+        typedef void data_reference;
+    };
+    template<>
+    struct inner_map_traits<std::complex<double> > {
+        typedef std::size_t index_type;
+        typedef void data_const_reference;
+        typedef void data_reference;
+    };
+#ifdef NUMERICS_USE_LONG_DOUBLE
+    template<>
+    struct inner_map_traits<std::complex<long double> > {
+        typedef std::size_t index_type;
+        typedef void data_const_reference;
+        typedef void data_reference;
+    };
+#endif
+#endif
+
+    // Map array
     template<class I, class T>
     class map_array {
-    public:      
+    public:
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
         typedef I index_type;
         typedef T data_value_type;
         typedef const T &data_const_reference;
+#ifndef NUMERICS_STRICT_SPARSE_ELEMENT_ASSIGN
         typedef T &data_reference;
+#else
+        class proxy;
+        typedef proxy data_reference;
+#endif
         typedef std::pair<I, T> value_type;
         typedef const std::pair<I, T> &const_reference;
         typedef std::pair<I, T> &reference;
@@ -54,29 +115,29 @@ namespace boost { namespace numerics {
 
         // Construction and destruction
         NUMERICS_INLINE
-        map_array (): 
-            capacity_ (0), data_ (new value_type [0]), size_ (0) { 
+        map_array ():
+            capacity_ (0), data_ (new value_type [0]), size_ (0) {
             if (! data_)
                 throw std::bad_alloc ();
         }
         NUMERICS_EXPLICIT NUMERICS_INLINE
-        map_array (size_type size): 
-            capacity_ (size), data_ (new value_type [size]), size_ (0) { 
+        map_array (size_type size):
+            capacity_ (size), data_ (new value_type [size]), size_ (0) {
             if (! data_)
                 throw std::bad_alloc ();
         }
         NUMERICS_INLINE
-        map_array (const map_array &a): 
-            capacity_ (a.size_), data_ (new value_type [a.size_]), size_ (a.size_) { 
+        map_array (const map_array &a):
+            capacity_ (a.size_), data_ (new value_type [a.size_]), size_ (a.size_) {
             if (! data_)
                 throw std::bad_alloc ();
             *this = a;
         }
         NUMERICS_INLINE
-        ~map_array () { 
+        ~map_array () {
             if (! data_)
                 throw std::bad_alloc ();
-            delete [] data_; 
+            delete [] data_;
         }
 
         // Resizing
@@ -97,17 +158,148 @@ namespace boost { namespace numerics {
         }
 
         NUMERICS_INLINE
-        size_type size () const { 
-            return size_; 
+        size_type size () const {
+            return size_;
         }
+
+#ifdef NUMERICS_STRICT_SPARSE_ELEMENT_ASSIGN
+        class proxy:
+            public container_reference<map_array> {
+        public:
+#ifdef BOOST_MSVC
+            typedef I index_type;
+            typedef T data_value_type;
+            typedef const T &data_const_reference;
+            typedef T &data_reference;
+            typedef std::pair<I, T> *pointer;
+#else
+            typedef typename map_array::index_type index_type;
+            typedef typename map_array::data_value_type data_value_type;
+            typedef const typename map_array::data_value_type &data_const_reference;
+            typedef typename map_array::data_value_type &data_reference;
+            typedef std::pair<index_type, data_value_type> *pointer;
+#endif
+
+            // Construction and destruction
+            NUMERICS_INLINE
+            proxy (map_array &a, pointer it):
+                container_reference<map_array> (a), it_ (it), i_ (it->first), d_ (it->second) {}
+            NUMERICS_INLINE
+            proxy (map_array &a, index_type i):
+                container_reference<map_array> (a), it_ (), i_ (i), d_ () {
+                pointer it = (*this) ().find (i_);
+                if (it == (*this) ().end ())
+                    it = (*this) ().insert ((*this) ().end (), value_type (i_, d_));
+                d_ = it->second;
+            }
+            NUMERICS_INLINE
+            ~proxy () {
+                if (! it_)
+                    it_ = (*this) ().find (i_);
+                it_->second = d_;
+            }
+
+            // Element access
+            // FIXME: GCC 3.1 warn's, if enabled
+            // NUMERICS_INLINE
+            // const inner_map_traits<data_value_type>::data_const_reference
+            // operator [] (typename inner_map_traits<data_value_type>::index_type i) const {
+            //     return d_ [i];
+            // }
+            NUMERICS_INLINE
+            typename inner_map_traits<data_value_type>::data_reference
+            operator [] (typename inner_map_traits<data_value_type>::index_type i) {
+                return d_ [i];
+            }
+
+            // Assignment
+            template<class D>
+            NUMERICS_INLINE
+            proxy &operator = (const D &d) {
+                d_ = d;
+                return *this;
+            }
+            NUMERICS_INLINE
+            proxy &operator = (const proxy &p) {
+                d_ = p.d_;
+                return *this;
+            }
+            template<class D>
+            NUMERICS_INLINE
+            proxy &operator += (const D &d) {
+                d_ += d;
+                return *this;
+            }
+            NUMERICS_INLINE
+            proxy &operator += (const proxy &p) {
+                d_ += p.d_;
+                return *this;
+            }
+            template<class D>
+            NUMERICS_INLINE
+            proxy &operator -= (const D &d) {
+                d_ -= d;
+                return *this;
+            }
+            NUMERICS_INLINE
+            proxy &operator -= (const proxy &p) {
+                d_ -= p.d_;
+                return *this;
+            }
+            template<class D>
+            NUMERICS_INLINE
+            proxy &operator *= (const D &d) {
+                d_ *= d;
+                return *this;
+            }
+            NUMERICS_INLINE
+            proxy &operator *= (const proxy &p) {
+                d_ *= p.d_;
+                return *this;
+            }
+            template<class D>
+            NUMERICS_INLINE
+            proxy &operator /= (const D &d) {
+                d_ /= d;
+                return *this;
+            }
+            NUMERICS_INLINE
+            proxy &operator /= (const proxy &p) {
+                d_ /= p.d_;
+                return *this;
+            }
+
+            // Conversion
+            // FIXME: GCC 3.1 warn's, if enabled
+            //  NUMERICS_INLINE
+            //  operator const data_const_reference () const {
+            //      return d_;
+            //  }
+            NUMERICS_INLINE
+            operator data_reference () {
+                return d_;
+            }
+
+        private:
+            pointer it_;
+            index_type i_;
+            data_value_type d_;
+        };
+#endif
 
         // Element access
         NUMERICS_INLINE
         data_reference operator [] (index_type i) {
+#ifndef NUMERICS_STRICT_SPARSE_ELEMENT_ASSIGN
             pointer it = find (i);
-            if (it == end ()) 
+            if (it == end ())
                 it = insert (end (), value_type (i, data_value_type ()));
             return it->second;
+#else
+            // This fixes a [1] = a [0] = 1.
+            // Thanks to Marc Duflot for spotting this.
+            return data_reference (*this, i);
+#endif
         }
 
         // Assignment
@@ -123,7 +315,7 @@ namespace boost { namespace numerics {
             return *this;
         }
         NUMERICS_INLINE
-        map_array &assign_temporary (map_array &a) { 
+        map_array &assign_temporary (map_array &a) {
             swap (a);
             return *this;
         }
@@ -154,7 +346,7 @@ namespace boost { namespace numerics {
                 resize (size () + 1);
                 *(it = end () - 1) = p;
                 return it;
-            } 
+            }
 #ifdef NUMERICS_APPEND_ONLY
             throw external_logic ();
 #else
@@ -182,7 +374,7 @@ namespace boost { namespace numerics {
             resize (size () + it2 - it1);
             it = begin () + n;
             std::copy (it1, it2, it);
-            std::sort (begin (), end (), less<value_type> ()); 
+            std::sort (begin (), end (), less<value_type> ());
 #endif
         }
         // This function seems to be big. So we do not let the compiler inline it.
@@ -357,10 +549,31 @@ namespace boost { namespace numerics {
             a1.swap (a2);
     }
 
-    // Set array 
+#ifdef NUMERICS_STRICT_SPARSE_ELEMENT_ASSIGN
+    template<class A>
+    struct map_traits {
+        typedef void proxy;
+    };
+    template<class I, class T>
+    struct map_traits<std::map<I, T> > {
+        typedef typename std::map<I, T>::mapped_type &reference;
+        static reference make_reference (std::map<I, T> &a, typename std::map<I, T>::iterator it) {
+            return (*it).second;
+        }
+    };
+    template<class I, class T>
+    struct map_traits<map_array<I, T> > {
+        typedef typename map_array<I, T>::data_reference reference;
+        static reference make_reference (map_array<I, T> &a, typename map_array<I, T>::iterator it) {
+            return reference (a, it);
+        }
+    };
+#endif
+
+    // Set array
     template<class I>
     class set_array {
-    public:      
+    public:
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
         typedef I index_type;
@@ -372,14 +585,14 @@ namespace boost { namespace numerics {
 
         // Construction and destruction
         NUMERICS_INLINE
-        set_array (): 
-            capacity_ (0), data_ (new value_type [0]), size_ (0) { 
+        set_array ():
+            capacity_ (0), data_ (new value_type [0]), size_ (0) {
             if (! data_)
                 throw std::bad_alloc ();
         }
         NUMERICS_EXPLICIT NUMERICS_INLINE
-        set_array (size_type size): 
-            capacity_ (size), data_ (new value_type [size]), size_ (0) { 
+        set_array (size_type size):
+            capacity_ (size), data_ (new value_type [size]), size_ (0) {
             if (! data_)
                 throw std::bad_alloc ();
         }
@@ -415,15 +628,15 @@ namespace boost { namespace numerics {
         }
 
         NUMERICS_INLINE
-        size_type size () const { 
-            return size_; 
+        size_type size () const {
+            return size_;
         }
 
         // Element access
         NUMERICS_INLINE
         const_reference operator [] (index_type i) {
             pointer it = find (i);
-            if (it == end ()) 
+            if (it == end ())
                 it = insert (end (), i);
             return *it;
         }

@@ -17,9 +17,9 @@
 #ifndef VECTOR_ET_H
 #define VECTOR_ET_H
 
-#include "config.h"
-#include "exception.h"
-#include "functional.h"
+#include <boost/numeric/ublas/config.h>
+#include <boost/numeric/ublas/exception.h>
+#include <boost/numeric/ublas/functional.h>
 
 // Expression templates based on ideas of Todd Veldhuizen and Geoffrey Furnish
 // Iterators based on ideas of Jeremy Siek
@@ -130,19 +130,23 @@ namespace boost { namespace numerics {
 
         // Accessors
         NUMERICS_INLINE
-        size_type size () const { 
-            return e_.size (); 
+        size_type size () const {
+            return e_.size ();
+        }
+        NUMERICS_INLINE
+        const expression_type &expression () const {
+            return e_;
         }
 
         // Element access
         NUMERICS_INLINE
-        value_type operator () (size_type i) const { 
-            return e_ (i); 
+        value_type operator () (size_type i) const {
+            return e_ (i);
         }
 
         NUMERICS_INLINE
-        value_type operator [] (size_type i) const { 
-            return e_ [i]; 
+        value_type operator [] (size_type i) const {
+            return e_ [i];
         }
 
         typedef const_iterator_type const_iterator;
@@ -224,8 +228,16 @@ namespace boost { namespace numerics {
 
         // Accessors
         NUMERICS_INLINE
-        size_type size () const { 
-            return e_.size (); 
+        size_type size () const {
+            return e_.size ();
+        }
+        NUMERICS_INLINE
+        const expression_type &expression () const {
+            return e_;
+        }
+        NUMERICS_INLINE
+        expression_type &expression () {
+            return e_;
         }
 
         // Resizing
@@ -356,27 +368,31 @@ namespace boost { namespace numerics {
 
         // Construction and destruction
         NUMERICS_INLINE
-        vector_unary (): 
+        vector_unary ():
             e_ () {}
         NUMERICS_INLINE
-        vector_unary (const expression_type &e): 
+        vector_unary (const expression_type &e):
             e_ (e) {}
 
         // Accessors
         NUMERICS_INLINE
-        size_type size () const { 
-            return e_.size (); 
+        size_type size () const {
+            return e_.size ();
+        }
+        NUMERICS_INLINE
+        const expression_type &expression () const {
+            return e_;
         }
 
         // Element access
         NUMERICS_INLINE
         value_type operator () (size_type i) const {
-            return functor_type () (e_ (i)); 
+            return functor_type () (e_ (i));
         }
 
         NUMERICS_INLINE
-        value_type operator [] (size_type i) const { 
-            return functor_type () (e_ [i]); 
+        value_type operator [] (size_type i) const {
+            return functor_type () (e_ [i]);
         }
 
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
@@ -634,20 +650,28 @@ namespace boost { namespace numerics {
         size_type size () const { 
             return common (e1_.size (), e2_.size ()); 
         }
+        NUMERICS_INLINE
+        const expression1_type &expression1 () const {
+            return e1_;
+        }
+        NUMERICS_INLINE
+        const expression2_type &expression2 () const {
+            return e2_;
+        }
 
         // Element access
         NUMERICS_INLINE
-        value_type operator () (size_type i) const { 
+        value_type operator () (size_type i) const {
             return functor_type () (e1_ (i), e2_ (i));
         }
 
         NUMERICS_INLINE
-        value_type operator [] (size_type i) const { 
-            return functor_type () (e1_ [i], e2_ [i]); 
+        value_type operator [] (size_type i) const {
+            return functor_type () (e1_ [i], e2_ [i]);
         }
 
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
-        typedef typename iterator_restrict_traits<typename const_iterator1_type::iterator_category, 
+        typedef typename iterator_restrict_traits<typename const_iterator1_type::iterator_category,
                                                   typename const_iterator2_type::iterator_category>::iterator_category iterator_category;
         typedef indexed_const_iterator<const_closure_type, iterator_category> const_iterator;
         typedef const_iterator iterator;
@@ -977,19 +1001,27 @@ namespace boost { namespace numerics {
 
         // Accessors
         NUMERICS_INLINE
-        size_type size () const { 
-            return e2_.size (); 
+        size_type size () const {
+            return e2_.size ();
+        }
+        NUMERICS_INLINE
+        const expression1_type &expression1 () const {
+            return e1_;
+        }
+        NUMERICS_INLINE
+        const expression2_type &expression2 () const {
+            return e2_;
         }
 
         // Element access
         NUMERICS_INLINE
-        value_type operator () (size_type i) const { 
-            return functor_type () (e1_, e2_ (i)); 
+        value_type operator () (size_type i) const {
+            return functor_type () (e1_, e2_ (i));
         }
 
         NUMERICS_INLINE
-        value_type operator [] (size_type i) const { 
-            return functor_type () (e1_, e2_ [i]); 
+        value_type operator [] (size_type i) const {
+            return functor_type () (e1_, e2_ [i]);
         }
 
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
@@ -1209,19 +1241,27 @@ namespace boost { namespace numerics {
 
         // Accessors
         NUMERICS_INLINE
-        size_type size () const { 
+        size_type size () const {
             return e1_.size (); 
+        }
+        NUMERICS_INLINE
+        const expression1_type &expression1 () const {
+            return e1_;
+        }
+        NUMERICS_INLINE
+        const expression2_type &expression2 () const {
+            return e2_;
         }
 
         // Element access
         NUMERICS_INLINE
-        value_type operator () (size_type i) const { 
+        value_type operator () (size_type i) const {
             return functor_type () (e1_ (i), e2_);
         }
 
         NUMERICS_INLINE
-        value_type operator [] (size_type i) const { 
-            return functor_type () (e1_ [i], e2_); 
+        value_type operator [] (size_type i) const {
+            return functor_type () (e1_ [i], e2_);
         }
 
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
@@ -1357,7 +1397,7 @@ namespace boost { namespace numerics {
         }
         NUMERICS_INLINE
         const_iterator end () const {
-            return find_last (size ()); 
+            return find_last (size ());
         }
 
         // Reverse iterator
@@ -1438,6 +1478,12 @@ namespace boost { namespace numerics {
         NUMERICS_INLINE
         vector_scalar_unary (const expression_type &e):
             e_ (e) {}
+
+        // Accessors
+        NUMERICS_INLINE
+        const expression_type &expression () const {
+            return e_;
+        }
 
         // Dense random access specialization
         NUMERICS_INLINE
@@ -1549,11 +1595,21 @@ namespace boost { namespace numerics {
 
         // Construction and destruction
         NUMERICS_INLINE
-        vector_scalar_binary (): 
+        vector_scalar_binary ():
             e1_ (), e2_ () {}
         NUMERICS_INLINE
-        vector_scalar_binary (const expression1_type &e1, const expression2_type  &e2): 
+        vector_scalar_binary (const expression1_type &e1, const expression2_type  &e2):
             e1_ (e1), e2_ (e2) {}
+
+        // Accessors
+        NUMERICS_INLINE
+        const expression1_type &expression1 () const {
+            return e1_;
+        }
+        NUMERICS_INLINE
+        const expression2_type &expression2 () const {
+            return e2_;
+        }
 
         // Dense random access specialization
         NUMERICS_INLINE
@@ -1561,8 +1617,8 @@ namespace boost { namespace numerics {
             difference_type size = common (e1_.size (), e2_.size ());
             if (size >= NUMERICS_ITERATOR_THRESHOLD)
                 return functor_type () (size, e1_.begin (), e2_.begin ());
-            else 
-                return functor_type () (e1_, e2_); 
+            else
+                return functor_type () (e1_, e2_);
         }
 
         // Packed bidirectional specialization

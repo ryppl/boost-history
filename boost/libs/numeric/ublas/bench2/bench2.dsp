@@ -159,6 +159,10 @@ SOURCE=..\..\..\..\boost\numeric\ublas\matrix.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\boost\numeric\ublas\matrix_as.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\boost\numeric\ublas\matrix_et.h
 # End Source File
 # Begin Source File
@@ -192,6 +196,10 @@ SOURCE=..\..\..\..\boost\numeric\ublas\triangular.h
 # Begin Source File
 
 SOURCE=..\..\..\..\boost\numeric\ublas\vector.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\boost\numeric\ublas\vector_as.h
 # End Source File
 # Begin Source File
 

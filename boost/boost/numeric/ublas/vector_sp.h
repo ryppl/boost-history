@@ -17,24 +17,28 @@
 #ifndef NUMERICS_VECTOR_SP_H
 #define NUMERICS_VECTOR_SP_H
 
-#include "config.h"
-#include "storage_sp.h"
-#include "vector.h"
+#include <boost/numeric/ublas/config.h>
+#include <boost/numeric/ublas/storage_sp.h>
+#include <boost/numeric/ublas/vector.h>
 
 // Iterators based on ideas of Jeremy Siek
 
 namespace boost { namespace numerics {
 
-    // Array based sparse vector class 
+    // Array based sparse vector class
     template<class T, class A>
-    class sparse_vector: 
+    class sparse_vector:
         public vector_expression<sparse_vector<T, A> > {
-    public:      
+    public:
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
         typedef T value_type;
         typedef const T &const_reference;
+#ifndef NUMERICS_STRICT_SPARSE_ELEMENT_ASSIGN
         typedef T &reference;
+#else
+        typedef typename map_traits<A>::reference reference;
+#endif
         typedef const T *const_pointer;
         typedef T *pointer;
         typedef A array_type;
@@ -53,29 +57,29 @@ namespace boost { namespace numerics {
 
         // Construction and destruction
         NUMERICS_INLINE
-        sparse_vector (): 
+        sparse_vector ():
             size_ (0), non_zeros_ (0), data_ () {}
         NUMERICS_INLINE
-        sparse_vector (size_type size, size_type non_zeros = 0): 
+        sparse_vector (size_type size, size_type non_zeros = 0):
             size_ (size), non_zeros_ (non_zeros), data_ () {}
         NUMERICS_INLINE
-        sparse_vector (const sparse_vector &v): 
+        sparse_vector (const sparse_vector &v):
             size_ (v.size_), non_zeros_ (v.non_zeros_), data_ (v.data_) {}
         template<class AE>
         NUMERICS_INLINE
-        sparse_vector (const vector_expression<AE> &ae, size_type non_zeros = 0): 
-            size_ (ae ().size ()), non_zeros_ (non_zeros), data_ () { 
+        sparse_vector (const vector_expression<AE> &ae, size_type non_zeros = 0):
+            size_ (ae ().size ()), non_zeros_ (non_zeros), data_ () {
             vector_assign<scalar_assign<value_type, NUMERICS_TYPENAME AE::value_type> > () (*this, ae);
         }
 
         // Accessors
         NUMERICS_INLINE
-        size_type size () const { 
-            return size_; 
+        size_type size () const {
+            return size_;
         }
         NUMERICS_INLINE
-        size_type non_zeros () const { 
-            return data_.size (); 
+        size_type non_zeros () const {
+            return data_.size ();
         }
         NUMERICS_INLINE
         const_array_type &data () const {
@@ -104,16 +108,16 @@ namespace boost { namespace numerics {
         }
         NUMERICS_INLINE
         reference operator () (size_type i) {
-            return data () [i]; 
+            return data () [i];
         }
 
         NUMERICS_INLINE
-        value_type operator [] (size_type i) const { 
-            return (*this) (i); 
+        value_type operator [] (size_type i) const {
+            return (*this) (i);
         }
         NUMERICS_INLINE
-        reference operator [] (size_type i) { 
-            return (*this) (i); 
+        reference operator [] (size_type i) {
+            return (*this) (i);
         }
 
         // Assignment
@@ -131,7 +135,7 @@ namespace boost { namespace numerics {
             return *this;
         }
         NUMERICS_INLINE
-        sparse_vector &assign_temporary (sparse_vector &v) { 
+        sparse_vector &assign_temporary (sparse_vector &v) {
             swap (v);
             return *this;
         }
@@ -400,7 +404,11 @@ namespace boost { namespace numerics {
             NUMERICS_INLINE
             reference operator * () const {
                 check (index () < (*this) ().size (), bad_index ());
+#ifndef NUMERICS_STRICT_SPARSE_ELEMENT_ASSIGN
                 return (*it_).second;
+#else
+                return map_traits<array_type>::make_reference ((*this) ().data (), it_);
+#endif
             }
 
             // Index

@@ -17,10 +17,10 @@
 #ifndef NUMERICS_HERMITEAN_H
 #define NUMERICS_HERMITEAN_H
 
-#include "config.h"
-#include "storage.h"
-#include "vector_et.h"
-#include "matrix_et.h"
+#include <boost/numeric/ublas/config.h>
+#include <boost/numeric/ublas/storage.h>
+#include <boost/numeric/ublas/vector_et.h>
+#include <boost/numeric/ublas/matrix_et.h>
 
 // Iterators based on ideas of Jeremy Siek
 // Hermitean matrices are square. Thanks to Peter Schmitteckert for spotting this.
@@ -1016,7 +1016,10 @@ namespace boost { namespace numerics {
         NUMERICS_INLINE
         void reset (matrix_type &data) {
             check (data.size1 () == data.size2 (), bad_size ());
-            data () = data;
+            // References are not retargetable.
+            // Thanks to Michael Stevens for spotting this.
+            // data_ = data;
+            data_.reset (data);
         }
 
         // Element access

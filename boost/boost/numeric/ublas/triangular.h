@@ -17,233 +17,16 @@
 #ifndef NUMERICS_TRIANGULAR_H
 #define NUMERICS_TRIANGULAR_H
 
-#include "config.h"
-#include "storage.h"
-#include "vector_et.h"
-#include "matrix_et.h"
+#include <boost/numeric/ublas/config.h>
+#include <boost/numeric/ublas/storage.h>
+#include <boost/numeric/ublas/vector_et.h>
+#include <boost/numeric/ublas/matrix_et.h>
 
 // Iterators based on ideas of Jeremy Siek
 
 namespace boost { namespace numerics {
 
-    struct lower {
-        typedef std::size_t size_type;
-        typedef lower_tag packed_category;
-
-        static
-        NUMERICS_INLINE
-        size_type packed_size (size_type size1, size_type size2) {
-            size_type size = std::max (size1, size2);
-            return ((size + 1) * size) / 2;
-        }
-
-        static 
-        NUMERICS_INLINE
-        bool zero (size_type i, size_type j) {
-            return j > i;
-        }
-        static 
-        NUMERICS_INLINE
-        bool one (size_type i, size_type j) {
-            return false;
-        }
-        static 
-        NUMERICS_INLINE
-        bool other (size_type i, size_type j) {
-            return j <= i;
-        }
-        template<class F>
-        static 
-        NUMERICS_INLINE
-        size_type element (F, size_type i, size_type size1, size_type j, size_type size2) {
-            return F::lower_element (i, size1, j, size2);
-        }
-
-        static 
-        NUMERICS_INLINE
-        size_type restrict1 (size_type i, size_type j) {
-            return std::max (i, j);
-        }
-        static 
-        NUMERICS_INLINE
-        size_type restrict2 (size_type i, size_type j) {
-            return std::min (i + 1, j);
-        }
-        static 
-        NUMERICS_INLINE
-        size_type mutable_restrict1 (size_type i, size_type j) {
-            return std::max (i, j);
-        }
-        static 
-        NUMERICS_INLINE
-        size_type mutable_restrict2 (size_type i, size_type j) {
-            return std::min (i + 1, j);
-        }
-    };
-    struct upper {
-        typedef std::size_t size_type;
-        typedef upper_tag packed_category;
-
-        static
-        NUMERICS_INLINE
-        size_type packed_size (size_type size1, size_type size2) {
-            size_type size = std::max (size1, size2);
-            return ((size + 1) * size) / 2;
-        }
-
-        static 
-        NUMERICS_INLINE
-        bool zero (size_type i, size_type j) {
-            return j < i;
-        }
-        static 
-        NUMERICS_INLINE
-        bool one (size_type i, size_type j) {
-            return false;
-        }
-        static 
-        NUMERICS_INLINE
-        bool other (size_type i, size_type j) {
-            return j >= i;
-        }
-        template<class F>
-        static 
-        NUMERICS_INLINE
-        size_type element (F, size_type i, size_type size1, size_type j, size_type size2) {
-            return F::upper_element (i, size1, j, size2);
-        }
-
-        static 
-        NUMERICS_INLINE
-        size_type restrict1 (size_type i, size_type j) {
-            return std::min (i, j + 1);
-        }
-        static 
-        NUMERICS_INLINE
-        size_type restrict2 (size_type i, size_type j) {
-            return std::max (i, j);
-        }
-        static 
-        NUMERICS_INLINE
-        size_type mutable_restrict1 (size_type i, size_type j) {
-            return std::min (i, j + 1);
-        }
-        static 
-        NUMERICS_INLINE
-        size_type mutable_restrict2 (size_type i, size_type j) {
-            return std::max (i, j);
-        }
-    };
-    struct unit_lower {
-        typedef std::size_t size_type;
-        typedef unit_lower_tag packed_category;
-
-        static
-        NUMERICS_INLINE
-        size_type packed_size (size_type size1, size_type size2) {
-            size_type size = std::max (size1, size2);
-            return ((size + 1) * size) / 2;
-        }
-
-        static 
-        NUMERICS_INLINE
-        bool zero (size_type i, size_type j) {
-            return j > i;
-        }
-        static 
-        NUMERICS_INLINE
-        bool one (size_type i, size_type j) {
-            return j == i;
-        }
-        static 
-        NUMERICS_INLINE
-        bool other (size_type i, size_type j) {
-            return j < i;
-        }
-        template<class F>
-        static 
-        NUMERICS_INLINE
-        size_type element (F, size_type i, size_type size1, size_type j, size_type size2) {
-            return F::lower_element (i, size1, j, size2);
-        }
-
-        static 
-        NUMERICS_INLINE
-        size_type restrict1 (size_type i, size_type j) {
-            return std::max (i, j);
-        }
-        static 
-        NUMERICS_INLINE
-        size_type restrict2 (size_type i, size_type j) {
-            return std::min (i + 1, j);
-        }
-        static 
-        NUMERICS_INLINE
-        size_type mutable_restrict1 (size_type i, size_type j) {
-            return std::max (i, j);
-        }
-        static 
-        NUMERICS_INLINE
-        size_type mutable_restrict2 (size_type i, size_type j) {
-            return std::min (i, j);
-        }
-    };
-    struct unit_upper {
-        typedef std::size_t size_type;
-        typedef unit_upper_tag packed_category;
-
-        static
-        NUMERICS_INLINE
-        size_type packed_size (size_type size1, size_type size2) {
-            size_type size = std::max (size1, size2);
-            return ((size + 1) * size) / 2;
-        }
-
-        static 
-        NUMERICS_INLINE
-        bool zero (size_type i, size_type j) {
-            return j < i;
-        }
-        static 
-        NUMERICS_INLINE
-        bool one (size_type i, size_type j) {
-            return j == i;
-        }
-        static 
-        NUMERICS_INLINE
-        bool other (size_type i, size_type j) {
-            return j > i;
-        }
-        template<class F>
-        static 
-        NUMERICS_INLINE
-        size_type element (F, size_type i, size_type size1, size_type j, size_type size2) {
-            return F::upper_element (i, size1, j, size2);
-        }
-
-        static 
-        NUMERICS_INLINE
-        size_type restrict1 (size_type i, size_type j) {
-            return std::min (i, j + 1);
-        }
-        static 
-        NUMERICS_INLINE
-        size_type restrict2 (size_type i, size_type j) {
-            return std::max (i, j);
-        }
-        static 
-        NUMERICS_INLINE
-        size_type mutable_restrict1 (size_type i, size_type j) {
-            return std::min (i, j);
-        }
-        static 
-        NUMERICS_INLINE
-        size_type mutable_restrict2 (size_type i, size_type j) {
-            return std::max (i, j);
-        }
-    };
-
-    // Array based triangular matrix class 
+    // Array based triangular matrix class
     template<class T, class F1, class F2, class A>
     class triangular_matrix: 
         public matrix_expression<triangular_matrix<T, F1, F2, A> > {
@@ -1196,7 +979,10 @@ namespace boost { namespace numerics {
         // Resetting
         NUMERICS_INLINE
         void reset (matrix_type &data) {
-            data () = data;
+            // References are not retargetable.
+            // Thanks to Michael Stevens for spotting this.
+            // data_ = data;
+            data_.reset (data);
         }
 
         // Element access

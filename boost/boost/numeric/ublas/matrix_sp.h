@@ -17,24 +17,28 @@
 #ifndef NUMERICS_MATRIX_SP_H
 #define NUMERICS_MATRIX_SP_H
 
-#include "config.h"
-#include "storage_sp.h"
-#include "matrix.h"
+#include <boost/numeric/ublas/config.h>
+#include <boost/numeric/ublas/storage_sp.h>
+#include <boost/numeric/ublas/matrix.h>
 
 // Iterators based on ideas of Jeremy Siek
 
 namespace boost { namespace numerics {
 
-    // Array based sparse matrix class 
+    // Array based sparse matrix class
     template<class T, class F, class A>
     class sparse_matrix:
         public matrix_expression<sparse_matrix<T, F, A> > {
-    public:      
+    public:
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
         typedef T value_type;
         typedef const T &const_reference;
+#ifndef NUMERICS_STRICT_SPARSE_ELEMENT_ASSIGN
         typedef T &reference;
+#else
+        typedef typename map_traits<A>::reference reference;
+#endif
         typedef const T *const_pointer;
         typedef T *pointer;
         typedef F functor_type;
@@ -642,7 +646,11 @@ namespace boost { namespace numerics {
                 if (rank_ == 1) {
                     check (index1 () < (*this) ().size1 (), bad_index ());
                     check (index2 () < (*this) ().size2 (), bad_index ());
+#ifndef NUMERICS_STRICT_SPARSE_ELEMENT_ASSIGN
                     return (*it_).second;
+#else
+                    return map_traits<array_type>::make_reference ((*this) ().data (), it_);
+#endif
                 } else {
                     return (*this) () (i_, j_);
                 }
@@ -687,7 +695,7 @@ namespace boost { namespace numerics {
                 }
             }
 
-            // Assignment 
+            // Assignment
             NUMERICS_INLINE
             iterator1 &operator = (const iterator1 &it) {
                 container_reference<sparse_matrix>::assign (&it ());
@@ -917,7 +925,11 @@ namespace boost { namespace numerics {
                 if (rank_ == 1) {
                     check (index1 () < (*this) ().size1 (), bad_index ());
                     check (index2 () < (*this) ().size2 (), bad_index ());
+#ifndef NUMERICS_STRICT_SPARSE_ELEMENT_ASSIGN
                     return (*it_).second;
+#else
+                    return reference ((*this) ().data (), it_);
+#endif
                 } else {
                     return (*this) () (i_, j_);
                 }
@@ -1053,12 +1065,16 @@ namespace boost { namespace numerics {
     template<class T, class F, class A>
     class sparse_vector_of_sparse_vector:
         public matrix_expression<sparse_vector_of_sparse_vector<T, F, A> > {
-    public:      
+    public:
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
         typedef T value_type;
         typedef const T &const_reference;
+#ifndef NUMERICS_STRICT_SPARSE_ELEMENT_ASSIGN
         typedef T &reference;
+#else
+        typedef typename map_traits<typename A::data_value_type>::reference reference;
+#endif
         typedef const T *const_pointer;
         typedef T *pointer;
         typedef A array_type;
@@ -1091,7 +1107,7 @@ namespace boost { namespace numerics {
             data_ [functor_type::size1 (size1_, size2_)] = vector_data_value_type ();
         }
         NUMERICS_INLINE
-        sparse_vector_of_sparse_vector (size_type size1, size_type size2, size_type non_zeros = 0): 
+        sparse_vector_of_sparse_vector (size_type size1, size_type size2, size_type non_zeros = 0):
             size1_ (size1), size2_ (size2), non_zeros_ (non_zeros), data_ () {
             data_ [functor_type::size1 (size1_, size2_)] = vector_data_value_type ();
         }
@@ -1100,18 +1116,18 @@ namespace boost { namespace numerics {
             size1_ (m.size1_), size2_ (m.size2_), non_zeros_ (m.non_zeros_), data_ (m.data_) {}
         template<class AE>
         NUMERICS_INLINE
-        sparse_vector_of_sparse_vector (const matrix_expression<AE> &ae, size_type non_zeros = 0): 
-            size1_ (ae ().size1 ()), size2_ (ae ().size2 ()), non_zeros_ (non_zeros), data_ () { 
+        sparse_vector_of_sparse_vector (const matrix_expression<AE> &ae, size_type non_zeros = 0):
+            size1_ (ae ().size1 ()), size2_ (ae ().size2 ()), non_zeros_ (non_zeros), data_ () {
             matrix_assign<scalar_assign<value_type, NUMERICS_TYPENAME AE::value_type> > () (*this, ae);
         }
 
         // Accessors
         NUMERICS_INLINE
-        size_type size1 () const { 
+        size_type size1 () const {
             return size1_;
         }
         NUMERICS_INLINE
-        size_type size2 () const { 
+        size_type size2 () const {
             return size2_;
         }
         NUMERICS_INLINE
@@ -1184,7 +1200,7 @@ namespace boost { namespace numerics {
             return *this;
         }
         NUMERICS_INLINE
-        sparse_vector_of_sparse_vector &assign_temporary (sparse_vector_of_sparse_vector &m) { 
+        sparse_vector_of_sparse_vector &assign_temporary (sparse_vector_of_sparse_vector &m) {
             swap (m);
             return *this;
         }
@@ -3413,7 +3429,8 @@ namespace boost { namespace numerics {
     template<class T1, class A1, class T2, class E2>
     struct matrix_vector_binary1_traits<T1, sparse_matrix<T1, column_major, A1>, 
                                         T2, E2> {
-        typedef sparse_column_major_tag dispatch_category;
+        typedef sparse_tag storage_category;
+        typedef column_major_tag orientation_category;
         typedef NUMERICS_TYPENAME promote_traits<T1, T2>::promote_type promote_type;
         typedef sparse_vector<promote_type> result_type;
     };
@@ -3423,20 +3440,21 @@ namespace boost { namespace numerics {
     // This function seems to be big. So we do not let the compiler inline it.
     // NUMERICS_INLINE
 #ifdef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
-    sparse_vector<typename promote_traits<typename E1::value_type, 
+    sparse_vector<typename promote_traits<typename E1::value_type,
                                           typename E2::value_type>::promote_type>
 #else
-    typename matrix_vector_binary1_traits<typename E1::value_type, E1, 
+    typename matrix_vector_binary1_traits<typename E1::value_type, E1,
                                           typename E2::value_type, E2>::result_type
 #endif
-    prod (const matrix_expression<E1> &e1, 
-          const vector_expression<E2> &e2, 
-          sparse_column_major_tag) {
+    prod (const matrix_expression<E1> &e1,
+          const vector_expression<E2> &e2,
+          sparse_tag,
+          column_major_tag) {
 #ifdef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
-        typedef sparse_vector<NUMERICS_TYPENAME promote_traits<NUMERICS_TYPENAME E1::value_type, 
+        typedef sparse_vector<NUMERICS_TYPENAME promote_traits<NUMERICS_TYPENAME E1::value_type,
                                                                NUMERICS_TYPENAME E2::value_type>::promote_type> result_type;
 #else
-        typedef NUMERICS_TYPENAME matrix_vector_binary1_traits<NUMERICS_TYPENAME E1::value_type, E1, 
+        typedef NUMERICS_TYPENAME matrix_vector_binary1_traits<NUMERICS_TYPENAME E1::value_type, E1,
                                                                NUMERICS_TYPENAME E2::value_type, E2>::result_type result_type;
 #endif
         typedef NUMERICS_TYPENAME result_type::size_type size_type;
@@ -3507,7 +3525,8 @@ namespace boost { namespace numerics {
 #endif
     prec_prod (const matrix_expression<E1> &e1, 
                const vector_expression<E2> &e2,
-               sparse_column_major_tag) {        
+               sparse_tag,
+               column_major_tag) {
 #ifdef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
         typedef sparse_vector<NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME promote_traits<NUMERICS_TYPENAME E1::value_type, 
                                                                                              NUMERICS_TYPENAME E2::value_type>::promote_type>::precision_type> result_type;
@@ -3575,7 +3594,8 @@ namespace boost { namespace numerics {
     template<class T1, class E1, class T2, class A2>
     struct matrix_vector_binary2_traits<T1, E1,
                                         T2, sparse_matrix<T2, column_major, A2> > {
-        typedef sparse_row_major_tag dispatch_category;
+        typedef sparse_tag storage_category;
+        typedef row_major_tag orientation_category;
         typedef NUMERICS_TYPENAME promote_traits<T1, T2>::promote_type promote_type;
         typedef sparse_vector<promote_type> result_type;
     };
@@ -3593,7 +3613,8 @@ namespace boost { namespace numerics {
 #endif
     prod (const vector_expression<E1> &e1, 
           const matrix_expression<E2> &e2, 
-          sparse_row_major_tag) {
+          sparse_tag,
+          row_major_tag) {
 #ifdef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
         typedef sparse_vector<NUMERICS_TYPENAME promote_traits<NUMERICS_TYPENAME E1::value_type, 
                                                                NUMERICS_TYPENAME E2::value_type>::promote_type> result_type;
@@ -3669,7 +3690,8 @@ namespace boost { namespace numerics {
 #endif
     prec_prod (const vector_expression<E1> &e1,
                const matrix_expression<E2> &e2, 
-               sparse_row_major_tag) {        
+               sparse_tag,
+               row_major_tag) {
 #ifdef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
         typedef sparse_vector<NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME promote_traits<NUMERICS_TYPENAME E1::value_type, 
                                                                                              NUMERICS_TYPENAME E2::value_type>::promote_type>::precision_type> result_type;
@@ -3737,7 +3759,8 @@ namespace boost { namespace numerics {
     template<class T1, class A1, class T2, class A2>
     struct matrix_matrix_binary_traits<T1, sparse_matrix<T1, column_major, A1> ,
                                        T2, sparse_matrix<T2, column_major, A2> > {
-        typedef sparse_column_major_tag dispatch_category;
+        typedef sparse_tag storage_category;
+        typedef column_major_tag orientation_category;
         typedef NUMERICS_TYPENAME promote_traits<T1, T2>::promote_type promote_type;
         typedef sparse_matrix<promote_type, row_major> result_type;
     };
@@ -3755,7 +3778,8 @@ namespace boost { namespace numerics {
 #endif
     prod (const matrix_expression<E1> &e1,
           const matrix_expression<E2> &e2,
-          sparse_column_major_tag) {
+          sparse_tag,
+          column_major_tag) {
 #ifdef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
         typedef sparse_matrix<NUMERICS_TYPENAME promote_traits<NUMERICS_TYPENAME E1::value_type,
                                                                NUMERICS_TYPENAME E2::value_type>::promote_type, row_major> result_type;
@@ -3830,7 +3854,8 @@ namespace boost { namespace numerics {
 #endif
     prec_prod (const matrix_expression<E1> &e1,
                const matrix_expression<E2> &e2,
-               sparse_column_major_tag) {
+               sparse_tag,
+               column_major_tag) {
 #ifdef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
         typedef sparse_matrix<NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME promote_traits<NUMERICS_TYPENAME E1::value_type,
                                                                                              NUMERICS_TYPENAME E2::value_type>::promote_type>::precision_type, row_major> result_type;
@@ -3897,7 +3922,8 @@ namespace boost { namespace numerics {
     template<class T1, class A1, class T2, class A2>
     struct matrix_matrix_binary_traits<T1, sparse_matrix<T1, row_major, A1> ,
                                        T2, sparse_matrix<T2, row_major, A2> > {
-        typedef sparse_row_major_tag dispatch_category;
+        typedef sparse_tag storage_category;
+        typedef row_major_tag orientation_category;
         typedef NUMERICS_TYPENAME promote_traits<T1, T2>::promote_type promote_type;
         typedef sparse_matrix<promote_type, column_major> result_type;
     };
@@ -3915,7 +3941,8 @@ namespace boost { namespace numerics {
 #endif
     prod (const matrix_expression<E1> &e1,
           const matrix_expression<E2> &e2,
-          sparse_row_major_tag) {
+          sparse_tag,
+          row_major_tag) {
 #ifdef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
         typedef sparse_matrix<NUMERICS_TYPENAME promote_traits<NUMERICS_TYPENAME E1::value_type,
                                                                NUMERICS_TYPENAME E2::value_type>::promote_type, column_major> result_type;
@@ -3990,7 +4017,8 @@ namespace boost { namespace numerics {
 #endif
     prec_prod (const matrix_expression<E1> &e1,
                const matrix_expression<E2> &e2,
-               sparse_row_major_tag) {
+               sparse_tag,
+               row_major_tag) {
 #ifdef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
         typedef sparse_matrix<NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME promote_traits<NUMERICS_TYPENAME E1::value_type,
                                                                                              NUMERICS_TYPENAME E2::value_type>::promote_type>::precision_type, column_major> result_type;

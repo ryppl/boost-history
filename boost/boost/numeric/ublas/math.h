@@ -19,8 +19,8 @@
 
 #include <algorithm>
 
-#include "config.h"
-#include "traits.h"
+#include <boost/numeric/ublas/config.h>
+#include <boost/numeric/ublas/traits.h>
 
 namespace boost { namespace numerics {
 

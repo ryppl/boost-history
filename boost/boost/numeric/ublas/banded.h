@@ -17,10 +17,10 @@
 #ifndef NUMERICS_BANDED_H
 #define NUMERICS_BANDED_H
 
-#include "config.h"
-#include "storage.h"
-#include "vector_et.h"
-#include "matrix_et.h"
+#include <boost/numeric/ublas/config.h>
+#include <boost/numeric/ublas/storage.h>
+#include <boost/numeric/ublas/vector_et.h>
+#include <boost/numeric/ublas/matrix_et.h>
 
 // Iterators based on ideas of Jeremy Siek
 
@@ -1062,7 +1062,10 @@ namespace boost { namespace numerics {
         // Resetting
         NUMERICS_INLINE
         void reset (matrix_type &data, size_type lower = 0, size_type upper = 0) {
-            data () = data;
+            // References are not retargetable.
+            // Thanks to Michael Stevens for spotting this.
+            // data_ = data;
+            data_.reset (data);
             lower_ = lower;
             upper_ = upper;
         }

@@ -22,7 +22,7 @@ to address a range of a vector.</p>
 
 <pre>int main () {
     numerics::vector&lt;double&gt; v (3);
-    numerics::vector_range&lt;numerics::matrix&lt;double&gt; &gt; vr (v, range (0, 3));
+    numerics::vector_range&lt;numerics::vector&lt;double&gt; &gt; vr (v, range (0, 3));
     for (int i = 0; i &lt; vr.size (); ++ i)
         vr (i) = i;
     std::cout &lt;&lt; vr &lt;&lt; std::endl;

@@ -107,7 +107,7 @@ struct bench_cpp_outer_prod {
             for (int i = 0; i < runs; ++ i) {
                 for (int j = 0; j < N; ++ j) {
                     for (int k = 0; k < N; ++ k) {
-                        m3 [N * j + k] = - v1 [j] * v2 [k];
+                        m [N * j + k] = - v1 [j] * v2 [k];
                     }
                 }
 //                sink_vector (m);
