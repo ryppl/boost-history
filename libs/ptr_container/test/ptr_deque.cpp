@@ -12,8 +12,8 @@ int test_main( int, char*[] )
     reversible_container_test< ptr_deque<Base>, Derived >();
     reversible_container_test< ptr_deque<Value>, Value >();
 
-    algo_test< ptr_vector<Value>, Value >();
-    algo_test_polymorphic< ptr_vector<Base>, Derived >();
+    algo_test< ptr_deque<Value>, Value >();
+    algo_test_polymorphic< ptr_deque<Base>, Derived >();
 
     return 0;
 }

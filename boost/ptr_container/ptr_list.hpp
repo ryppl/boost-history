@@ -19,7 +19,7 @@
 # pragma once
 #endif
 
-#include <boost/ptr_container/detail/reversible_ptr_container>
+#include <boost/ptr_container/detail/reversible_ptr_container.hpp>
 #include <boost/utility.hpp>
 #include <list>
 
@@ -30,11 +30,14 @@ template< typename T, typename Allocator = std::allocator<T*> >
 class ptr_list : public detail::reversible_ptr_container< std::list<T*,Allocator>, T >
 {
     typedef detail::reversible_ptr_container< std::list<T*,Allocator>, T > Base;
+    
+public: 
+    BOOST_FORWARD_TYPEDEF( Base );
 
 public:
-    ptr_list()                                                 : Base() {}
-    ptr_list( auto_ptr<ptr_list> r )                           : Base( r )             {}
-    ptr_list( typename Base::release_type r )                  : Base( r )             {}
+    explicit ptr_list( const allocator_type& alloc = allocator_type() )                                   : Base( alloc ) {}
+    ptr_list( size_type n, const_reference x, const allocator_type& alloc = allocator_type() )   : Base( n, x, alloc ) {}
+    explicit ptr_list( auto_ptr<ptr_list> r )                           : Base( r )             {}
     template< typename InputIterator >
     ptr_list( InputIterator first, InputIterator last )        : Base( first, last ) {}
     void operator=( std::auto_ptr<ptr_list> r )                { Base::operator=( r );}
@@ -44,17 +47,18 @@ public:
 private:
     class equal
     {
-        const_reference value_;
+        const T& value_;
+        
     public:
-        remover( const_reference v ) : value_( v )
+        equal( const T& v ) : value_( v )
         { }
         
-        bool operator( const_reference x )
+        bool operator()( const T& x ) const
         {
-            return x == value_ );
+            return x == value_;
         }
         
-        bool operator( const_reference l, const_reference r )
+        bool operator()( const T& l, const T& r ) const
         {
             return l == r;
         }
@@ -63,22 +67,22 @@ private:
     class less_than
     {
     public:
-        bool operator()( const_reference l, const_reference r )
+        bool operator()( const T& l, const T& r ) const
         {
             return l < r;
         }
         
-        bool operator( const T* l, const T* r )
+        bool operator()( const T* l, const T* r ) const 
         {
             return *l < *r;
         }
-    }
+    };
 
 public: 
-    void  splice( iterator before, ptr_list& x )                    { c_.splice( before.base(), x.c_ );}
-    void  splice( iterator before, ptr_list& x, iterator i )        { c_.splice( before.base(), x.c_, i.base() );}
+    void  splice( iterator before, ptr_list& x )                    { c_.splice( before.base(), x.c_ ); }
+    void  splice( iterator before, ptr_list& x, iterator i )        { c_.splice( before.base(), x.c_, i.base() ); }
     void  splice( iterator before, ptr_list& x, iterator first, iterator last )
-                                                                    { c_.splice( before.base(), x.c_, first.base(), last.base() );}
+                                                                    { c_.splice( before.base(), x.c_, first.base(), last.base() ); }
     void  remove( const_reference value )                           
     {
         remove_if( equal( value ) ); 
@@ -87,7 +91,7 @@ public:
     template< typename Predicate > 
     void  remove_if( Predicate pred )                               
     { 
-        iterator í = this->begin();
+        iterator i = this->begin();
         iterator e = this->end();
         for(; i != e; ++i )
             if( pred( *i ) != false )
@@ -102,16 +106,16 @@ public:
     template< typename BinaryPredicate >
     void  unique( BinaryPredicate binary_pred )                     
     {
-        iterator í = this->begin();
+        iterator i = this->begin();
         iterator e = prior( this->end() );
         for(; i != e; ++i )
-            if( binary_pred( *i, *next( i ) )
+            if( binary_pred( *i, *next( i ) ) )
                 erase( i );    
     }
     
-    void  merge( ptr_listr& x )                                 
+    void  merge( ptr_list& x )                                 
     {
-        merge( x, less_than() };
+        merge( x, less_than() );
     }
 
     template< typename Compare > 

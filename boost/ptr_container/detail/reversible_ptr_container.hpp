@@ -7,6 +7,7 @@
 
 #include <boost/ptr_container/ptr_container_iterator.hpp>
 #include <boost/ptr_container/bad_pointer.hpp>
+#include <boost/ptr_container/bad_ptr_container_operation.hpp>
 #include <boost/ptr_container/detail/scoped_deleter.hpp>
 #include <boost/ptr_container/detail/size_undoer.hpp>
 #include <boost/ptr_container/make_clone.hpp>
@@ -39,11 +40,14 @@ namespace detail
         Container& c__()                { return c_; }
         const Container& c__() const    { return c_; }
 
-    protected: // typedefs
+    public: // typedefs
 
         typedef Container                                         C;
         typedef BOOST_DEDUCED_TYPENAME C::iterator                ptr_iter; 
         typedef BOOST_DEDUCED_TYPENAME C::const_iterator          const_ptr_iter;
+
+        ptr_iter dbegin() { return c_.begin(); }
+        ptr_iter dend() { return c_.end(); }
         typedef BOOST_DEDUCED_TYPENAME C::reverse_iterator        rev_ptr_iter;
         typedef BOOST_DEDUCED_TYPENAME C::const_reverse_iterator  const_rev_ptr_iter;
         typedef ptr_container::detail::scoped_deleter<T>
@@ -67,12 +71,17 @@ namespace detail
         typedef  indirect_iterator<const_rev_ptr_iter>        const_reverse_iterator;
         typedef  ptr_container_iterator<ptr_iter>                                     ptr_iterator;
         typedef  ptr_container_iterator<const_ptr_iter>                               const_ptr_iterator;
- 
+        //typedef  boost::indirect_iterator< ptr_iter, T,
+        //                            reference, T* >    ptr_iterator;
+        //typedef  boost::indirect_iterator< const_ptr_iter, BOOST_DEDUCED_TYPENAME detail::iterator_traits<const_ptr_iter>::value_type,
+        //                            const_reference >    const_ptr_iterator;
+
+
     private: // implementation
-        struct deleter
+        struct deleter_ptr
         {
             template< typename U >
-            void operator()( const U& u ) { delete &u; }
+            void operator()( const U* u ) { delete u; }
         };
 
     protected:
@@ -159,7 +168,12 @@ namespace detail
         
         void     remove_all()                            { remove( begin(), end() ); }
         void     remove( iterator i )                    { remove( i, i ); }
-        void     remove( iterator first, iterator last ) { std::for_each( first, last, deleter() ); }
+        void     remove( iterator first, iterator last ) 
+        {
+            int ii = 0;
+            for( iterator i = first; i != last; ++i, ++ii )
+                delete *i.base();
+        }
 
         template< typename ForwardIterator >
         ForwardIterator advance( ForwardIterator begin, size_type n ) 
@@ -239,10 +253,10 @@ namespace detail
         const_reverse_iterator  rbegin() const { return make_indirect_iterator( c_.rbegin() ); } 
         reverse_iterator        rend()         { return make_indirect_iterator( c_.rend() ); } 
         const_reverse_iterator  rend() const   { return make_indirect_iterator( c_.rend() ); } 
-        ptr_iterator            ptr_begin()       { return make_ptr_container_iterator( c_.begin() ); }
-        const_ptr_iterator      ptr_begin() const { return make_ptr_container_iterator( c_.begin() ); }
-        ptr_iterator            ptr_end()         { return make_ptr_container_iterator( c_.end() ); }
-        const_ptr_iterator      ptr_end() const   { return make_ptr_container_iterator( c_.end() ); }
+        ptr_iterator            ptr_begin()       { return ptr_iterator( c_.begin() ); }
+        const_ptr_iterator      ptr_begin() const { return const_ptr_iterator( c_.begin() ); }
+        ptr_iterator            ptr_end()         { return ptr_iterator( c_.end() ); }
+        const_ptr_iterator      ptr_end() const   { return const_ptr_iterator( c_.end() ); }
  /*       ptr_iterator            ptr_rbegin()       { return make_ptr_container_iterator( c_.rbegin() ); }
         const_ptr_iterator      ptr_rbegin() const { return make_ptr_container_iterator( c_.rbegin() ); }
         ptr_iterator            ptr_rend()         { return make_ptr_container_iterator( c_.rend() ); }
@@ -372,9 +386,12 @@ namespace detail
         const_reference  at( size_type n ) const                 { assert( n < size() ); return *c_.at( n ); }
 
     public: // access interface
-        auto_type        release_front()                         { auto_type ptr( c_.front() ); c_.pop_front(); return ptr; }
-        auto_type        release_back()                          { auto_type ptr( c_.back() ); c_.pop_back(); return ptr; }
-        auto_type        release( iterator before )              { auto_type ptr( &*before ); c_.erase( before.base() ); return ptr; }
+        auto_type        release_front()                         { if( empty() ) throw bad_ptr_container_operation( "'release_front()' on empty container" ); 
+                                                                   auto_type ptr( c_.front() ); c_.pop_front(); return ptr; }
+        auto_type        release_back()                          { if( empty() ) throw bad_ptr_container_operation( "'release_back()' on empty container" );
+                                                                   auto_type ptr( c_.back() ); c_.pop_back(); return ptr; }
+        auto_type        release( iterator before )              { if( empty() ) throw bad_ptr_container_operation( "'release()' on empty container" ); 
+                                                                   auto_type ptr( &*before ); c_.erase( before.base() ); return ptr; }
 //        
 //        template< typename PtrContainer >
 //        std::auto_ptr<PtrContainer> release_impl()

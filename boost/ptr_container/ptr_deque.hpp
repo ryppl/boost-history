@@ -29,12 +29,15 @@ template< typename T, typename Allocator = std::allocator<T*> >
 class ptr_deque : public detail::reversible_ptr_container< std::deque<T*,Allocator>, T >
 {
     typedef detail::reversible_ptr_container< std::deque<T*,Allocator>, T > Base;
+    
+public: 
+    BOOST_FORWARD_TYPEDEF( Base );
 
 public: 
 
-    ptr_deque() : Base() {}
-    ptr_deque( std::auto_ptr<ptr_deque> r )              : Base( r )             {}
-    ptr_deque( typename Base::release_type r )           : Base( r )                {}
+    explicit ptr_deque( const allocator_type& alloc = allocator_type() ) : Base( alloc ) {}
+    ptr_deque( size_type n, const_reference x, const allocator_type& alloc = allocator_type() )   : Base( n, x, alloc ) {}
+    explicit ptr_deque( std::auto_ptr<ptr_deque> r )              : Base( r )             {}
     template< typename InputIterator >
     ptr_deque( InputIterator first, InputIterator last ) : Base( first, last ) {}
     void operator=( auto_ptr<ptr_deque> r )              { Base::operator=( r ); }

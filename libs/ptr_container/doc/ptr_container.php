@@ -74,14 +74,11 @@ function introduction()
                                 problems; simply use " . code( "ptr_vector< vector<T> >." ) .
                            li( "Offers more explicit control of lifetime issues." ) ) )     
                             
-                           ) .
-                 P( "The main disadvantages are " . 
-                    ulist( li( "The containers cannot be used with all mutable algorithms; eg. invoking " . 
-                               code( "std::unique()" ) . " is undefined " ) 
-                           ) 
-                    );  
+                           );
+  
+
                      
-   $examples = p( "Below is given some example that show how the usage compares to a container of smart pointers:" . 
+   $examples = p( "Below is given some examples that show how the usage compares to a container of smart pointers:" . 
                   pre( "
                        
     using namespace boost;
@@ -152,7 +149,7 @@ function introduction()
                  elements_.push_back( c );
              }
           
-             void remove( elements::iterator c )
+             void remove( composite_t::iterator c )
              {
                  elements_.erase( c );
              }
@@ -220,23 +217,43 @@ function reference()
                                without cloning the objects again. " )
                          );
 
-     $overview   .= P( "The documentation is divided into an explanation for each container:" ) .
-                    ulist( item( arrayLink() ) .
+     $overview   .= p( "The documentation is divided into a common section and an explanation for each container. The common section
+                        shows the interface that all of the classes have in common and the indvisual parts shows the interface
+                        that is only part of some of the individual classes:" ) .
+                    ulist( item( ptrContainerLink() ) .
+                           item( arrayLink() ) .
                            item( dequeLink() ) .
                            item( listLink() ) .
                            item( vectorLink() ) .
                            item( setLink() ) .
-                           item( mapLink() )
+                           item( mapLink() ) . 
+                           item( exceptionLink() )
                            );
-     $overview   .= hr() . arrayRef() . 
+     $usage = p( "The recommended usage pattern of the container classes are the 
+                same as the for normal standard containers." . code( "ptr_vector") .  ", " .  
+              code("ptr_list")  .  " and " .  code("ptr_deque") .  " offer the programmer 
+                different complexity tradeoffs and should be used accordingly. " . code( "ptr_vector" ) . 
+                " is the type of sequence that should be used by default. " . code("ptr_list") . " should be used when there 
+             are frequent insertions and deletions from the middle of the sequence. " . code("ptr_deque" ) ." is 
+              the data structure of choice when most insertions and deletions take place at 
+            the beginning or at the end of the sequence.  An associative container supports  
+            unique keys if it may contain at most one element for each key.  Otherwise, it 
+            supports equivalent keys. " .  code( "ptr_set" ) . " and " . code( "ptr_map" ) . " support unique keys. 
+                " . code( "ptr_multiset" ) . " and " . code( "ptr_multimap" ) . 
+                " support equivalent keys." );
+
+     $overview   .= $usage . vSpace( 1 ) . 
+                    hr() . ptrContainerRef() . 
+                    hr() . arrayRef() . 
                     hr() . dequeRef() .
                     hr() . listRef() .
                     hr() . vectorRef() .
                     hr() . setRef() . 
-                    hr() . mapRef();
+                    hr() . mapRef() . 
+                    hr() . exceptionRef();
      
-    return $overview . vSpace( 1 ); 
-}
+     return $overview;
+}   
 
 
 
@@ -337,6 +354,13 @@ function cIs( $type )
 
 
 
+function ptrContainerLink()
+{
+    return "Pseudo class " . code( "ptr_container<>" ); 
+}
+
+
+
 function arrayLink()
 {
     return " Class " . code( "ptr_array<>" );
@@ -379,40 +403,24 @@ function mapLink()
 
 
 
-function arrayRef()
-{ 
-    return beginSection( arrayLink() );
+function exceptionLink()
+{
+    return "Exception classes";
 }
 
 
 
-function dequeRef()
+function ptrContainerRef()
 {
-    return beginSection( dequeLink() );
-}
-                    
-
-
-function listRef() 
-{
-    return beginSection( listLink() );
-}
-
-
-
-function vectorRef() 
-{
-    $res      = beginSection( vectorLink() );
+    $res      = beginSection( ptrContainerLink() );
     $synopsis = beginSynopsis() . 
 "<pre>             
 namespace boost
-{
+{      
     template< typename T, typename Allocator = std::allocator< T* > >
     class ptr_container 
     {
     public: // typedefs
-        typedef  std::auto_ptr< T >                           auto_type;
-        typedef  const auto_type                              const_auto_type;
         typedef  T                                            value_type;
         typedef  T&                                           reference;
         typedef  const T&                                     const_reference;
@@ -420,26 +428,25 @@ namespace boost
         typedef  <b>implementation defined</b>                       const_iterator;
         typedef  <b>implementation defined</b>                       difference_type; 
         typedef  <b>implementation defined</b>                       size_type;
-	typedef  Allocator                                    allocator_type;
-	typedef  typename Allocator::pointer                  pointer;
-	typedef  typename Allocator::const_pointer            const_pointer; 
+        typedef  Allocator                                    allocator_type;
+        typedef  typename Allocator::pointer                  pointer;
+        typedef  typename Allocator::const_pointer            const_pointer; 
         typedef  std::reverse_iterator< iterator >            reverse_iterator;
         typedef  std::reverse_iterator< const_iterator >      const_reverse_iterator;
-        
+    
     public: // construct/copy/destroy
-        explicit ptr_vector( const allocator_type& = allocator_type() );
-        ptr_vector( size_type n, const_reference x, const allocator_type& = allocator_type() );
-        ptr_vector( ptr_vector& r );
-        ptr_vector( release_type r );
+        explicit ptr_container( const allocator_type& = allocator_type() );
+        ptr_container( size_type n, const_reference x, const allocator_type& = allocator_type() );
+        ptr_container( auto_ptr< ptr_container > r );
         template< typename InputIterator >
-        ptr_vector( InputIterator first, InputIterator last, const allocator_type& = allocator_type() );
-        ~ptr_vector();
-        ptr_vector& operator=( ptr_vector& r );	
+        ptr_container( InputIterator first, InputIterator last, const allocator_type& = allocator_type() );
+        ~ptr_container();
+        void operator=( std::auto_ptr< ptr_container > r )  
         template< typename InputIterator >
         assign( InputIterator first, InputIterator last );
         assign( size_type n, const_reference u );
         allocator_type get_allocator() const;                                      
-
+    
     public: // iterators
         iterator                begin();
         const_iterator          begin() const;
@@ -449,15 +456,15 @@ namespace boost
         const_reverse_iterator  rbegin();
         reverse_iterator        rend();
         const_reverse_iterator  rend();
-	
+    
     public: // capacity
         size_type  size() const;
         size_type  max_size() const;
         void     resize( size_type sz, ptr_type = new value_type() );
         size_type  capacity() const;
-    	bool       empty() const;	
+        bool       empty() const;	
         void       reserve( size_type n );
-  
+    
     public: // element access
         reference        operator[]( size_type n );
         const_reference  operator[]( size_type n ) const;
@@ -469,84 +476,95 @@ namespace boost
         const_reference  back() const;
     
     public: // modifiers
-        void      push_back( ptr_type x );
+        void      push_back( T* x );
+        void      push_back( const_reference x );
         void      pop_back();
-	iterator  insert( iterator position, const_reference x );
-	void      insert( iterator position, size_type n, ptr_type x );
+    iterator  insert( iterator position, const_reference x );
+    void      insert( iterator position, size_type n, ptr_type x );
         template< typename InputIterator >
         void      insert( iterator position, InputIterator first, InputIterator last ); 
         iterator  erase( iterator position );
         iterator  erase( iterator first, iterator last );
-        void      swap( ptr_vector& r );
+        void      swap( ptr_container& r );
         void      clear():
-	
+    
     public: // pointer container requirements
-	
-        ptr_vector  clone();
-        auto_type   release_back();
-        auto_type   release( iterator position );
-  
-    }; //  class 'ptr_vector'
-
-    template < typename T, typename Allocator >
-    bool operator==( const ptr_vector< T,Allocator >& x,
-	             const ptr_vector< T,Allocator >& y);
+    
+        std::auto_ptr< ptr_container >  clone() const;    
+        std::auto_ptr< ptr_container >  release();
+        std::auto_ptr< T >              release_back();
+        std::auto_ptr< T >              release( iterator position );
+    
+    }; //  class 'ptr_container'
     
     template < typename T, typename Allocator >
-    bool operator<( const ptr_vector< T,Allocator >& x,
-		    const ptr_vector< T,Allocator >& y);
+    bool operator==( const ptr_container< T,Allocator >& x,
+                 const ptr_container< T,Allocator >& y);
     
     template < typename T, typename Allocator >
-    bool operator!=( const ptr_vector< T,Allocator >& x,
-	             const ptr_vector< T,Allocator >& y);
+    bool operator<( const ptr_container< T,Allocator >& x,
+            const ptr_container< T,Allocator >& y);
+    
+    template < typename T, typename Allocator >
+    bool operator!=( const ptr_container< T,Allocator >& x,
+                 const ptr_container< T,Allocator >& y);
     
     template < typename T, typename Allocator>
-    bool operator>( const ptr_vector< T,Allocator >& x,
-		    const ptr_vector< T,Allocator >& y);
-   
-    template < typename T, typename Allocator>
-    bool operator>=( const ptr_vector< T,Allocator >& x,
-	             const ptr_vector< T,Allocator >& y);
+    bool operator>( const ptr_container< T,Allocator >& x,
+            const ptr_container< T,Allocator >& y);
     
     template < typename T, typename Allocator>
-    bool operator<=( const ptr_vector< T,Allocator >& x,
-	             const ptr_vector< T,Allocator >& y);
-
+    bool operator>=( const ptr_container< T,Allocator >& x,
+                 const ptr_container< T,Allocator >& y);
+    
+    template < typename T, typename Allocator>
+    bool operator<=( const ptr_container< T,Allocator >& x,
+                 const ptr_container< T,Allocator >& y);
+    
     template< typename T, typaname Allocator  >
-    void swap( ptr_vector< T,Allocator >& x, 
-               ptr_vector< T,Allocator >& y );
-
+    void swap( ptr_container< T,Allocator >& x, 
+               ptr_container< T,Allocator >& y );
+    
 } // namespace 'boost'  
-</pre> ";
+    </pre> ";
     
     $details  = beginDetails( "construct/copy/destroy" ) .        
-        code( "explicit ptr_vector( const allocator_type& = allocator_type() );" ) .
+        code( "explicit ptr_container( const allocator_type& = allocator_type() );" ) .
         blockQuote( 
             effects( "Constructs an empty container" ) .
             postconditions( code( "size() == 0" ) ) .
             ""//exceptionSafety( "If an exception is thrown, the constructor has no effect" )
             ) .
-        code( "ptr_vector( size_type n, const_reference x, const allocator_type& = allocator_type() )" ) .
+        code( "ptr_container( size_type n, const_reference x, const allocator_type& = allocator_type() )" ) .
         blockQuote( 
             effects( "Constructs a container with " . code( "n" ) . " clones of " . code( "x" ) ) .
             postconditions( code( "size() == n" ) ) .
             ""//exceptionSafety( "If an exception is thrown, the constructor has no effect" )
             ) . 
+        code( "explicit ptr_container( std::auto_ptr< ptr_container > r );" ) .
+        blockQuote( 
+            effects( "Constructs a container by taking ownership of the supplied pointers" )  
+            ) . 
         pre( "template< typename InputIterator >
-ptr_vector( InputIterator first, InputIterator last, const allocator_type& = allocator_type() ); " ) .
+    ptr_container( InputIterator first, InputIterator last, const allocator_type& = allocator_type() ); " ) .
         blockQuote( 
            requirements( code("(first,last]") . " is a valid range"  ) .
            effects( "Constructs a container with a cloned range of " . code( "(first,last]" ) ) .
            postconditions( code( "size() == std::distance( first, last )" ) ) .
            ""//exceptionSafety( "Strong guarantee" )
            ) .
-        code( "~ptr_vector();" ) .
+        code( "~ptr_container();" ) .
         blockQuote( 
-            effects( "Deletes the containers pointers and then the data itself" ) .
+            effects( "Deletes the stored pointers and then the container itself" ) .
             throws( "Nothing" )
             ) .
+        code( "void operator=( std::auto_ptr< ptr_container > r );" ) . 
+        blockQuote( 
+            effects( "Deletes the stored pointers and then takes ownership of the supplied pointers" ) .
+            throws( "Nothing" ) 
+            ) .
         pre( "template< typename InputIterator >
-assign( InputIterator first, InputIterator last );" ) .
+    assign( InputIterator first, InputIterator last );" ) .
         blockQuote(
             requirements( code("(first,last]") . " is a valid range"  ) .
             effects( code( "clear(); insert( first, last );" ) ) .
@@ -617,17 +635,6 @@ assign( InputIterator first, InputIterator last );" ) .
             effects( "Returns the maximum number of stored elements" ) .
             throws( "Nothing" ) 
             ) .
-        code( "void resize( size_type sz, const_reference x );" ) .
-        blockQuote(
-            effects( pre( "if ( sz > size() )
-    insert( end(), sz-size(), x );
-else if ( sz < size() )
-    erase( begin()+sz, end() );
-else
-   ; //do nothing " )  ) .
-            postconditions( code( "size() == sz" ) ) .
-            exceptionSafety( "strong guarantee" )
-            ) .
         code( "bool empty() const;" ) .
         blockQuote( 
             effects( "Returns whether the container is empty or not" ) .
@@ -654,23 +661,25 @@ else
             effects( code( "return *end()" ) ) .
             throws( "Nothing" ) 
             ) .    
+        /////////////////////////////////////////////////////////////////////
     beginDetails( "modifiers" ) .
-        code( "void push_back( const_reference x );" ) .
-        blockQuote(
-            effects( code( "push_back( make_clone( x ) );" ) ) .
-            exceptionSafety( "Strong guarantee" ) 
-            ) .
-        code( "void push_back( ptr_type x );" ) .
+        code( "void push_back( T* x );" ) .
         blockQuote(
             requirements( code("x") . " is heap-allocated and cannot be " . code("0") ) .
             effects( "Inserts the pointer into container and takes ownership of it" ) .
             throws( code("bad_pointer") . " if " . code( "x" ) . " is " . code( "0" ) ) .
             exceptionSafety( "Strong guarantee" ) 
             ) .
+        code( "void push_back( const_reference x );" ) .
+        blockQuote(
+            effects( code( "push_back( make_clone( x ) );" ) ) .
+            exceptionSafety( "Strong guarantee" ) 
+            ) .
         code( "void pop_back();" ) .
         blockQuote( 
-            effects( "Removes the last element in the container" ) .
-            throws( "Nothing" ) 
+            effects( "Removes the last element in the container if it exists" ) .
+            postconditions( code( "not empty()" ) .  " implies " . code("size()") . " is one less" ) .
+            exceptionSafety( "Nothrow guaarantee" ) 
             ) .
         code( "iterator insert( iterator position, const_reference x );" ) .
         blockQuote( 
@@ -695,7 +704,7 @@ else
             exceptionSafety( "Strong guarantee" ) 
             ) .
         pre( "template< typename InputIterator >
-void insert( iterator position, InputIterator first, InputIterator last );" ) .
+    void insert( iterator position, InputIterator first, InputIterator last );" ) .
         blockQuote( 
             requirements( code("position") . " is a valid iterator from the container" ) .
             effects( "Inserts a cloned range before " . code("position") ) .
@@ -715,7 +724,7 @@ void insert( iterator position, InputIterator first, InputIterator last );" ) .
                  iterator to the following element" ) .
             throws( "Nothing" ) 
             ) .
-        code( "void swap( ptr_vector& r );" ) .
+        code( "void swap( ptr_container& r );" ) .
         blockQuote( 
             effects( "Swaps the content of the two containers" ) .
             throws( "Nothing" ) 
@@ -725,12 +734,274 @@ void insert( iterator position, InputIterator first, InputIterator last );" ) .
             effects( "Destroys all object of the container " ) .
             postconditions( code( "empty() == true" ) ) . 
             throws( "Nothing" ) 
+            ) .
+    /////////////////////////////////////////////////////////////////////////
+    beginDetails( "pointer container requirements" ) .
+        code( "std::auto_ptr< ptr_container >  clone() const;" ) .
+    blockQuote( 
+        effects( "Returns a deep copy of the container" ) .
+        throws( code("std::bad_alloc" ) . " if there is not enough memory to make a clone of the container" ) . 
+        complexity( "Linear" ) 
+        ) .
+        code( "std::auto_ptr< ptr_container >  release();" ) .
+        blockQuote( 
+        effects( "Releases ownership of the container. This is a useful way of returning
+                 a container from a function." ) .
+        postconditions( code( "empty() == true" ) ) .
+        exceptionSafety( "Strong guarantee" ) .
+        throws( code("std::bad_alloc")  . " if the return value cannot be allocated" ) 
+        ) .
+        code( "std::auto_ptr< T > release_back();" ) .
+        blockQuote( 
+            requirements( code("not empty()" ) ) .
+            effects( "Releases ownership of the last pointer in the container" ) .
+            postconditions( code("size()") . " is one less " ) .
+            throws( code("bad_ptr_container_operation") . " if the container is empty" ) .
+            exceptionSafety( "Strong guarantee" ) 
+            ) .
+        code( "std::auto_ptr< T > release( iterator position );" ) .
+        blockQuote( 
+            requirements( code( "not empty()" ) ) . 
+            effects( "Releases ownership of the pointer referred to by " . code( "position" ) ) .
+            postconditions( code("size()") . " is one less " ) . 
+            throws( code("bad_ptr_container_operation") . " if the container is empty" ) .
+            exceptionSafety( "Strong guarantee" ) 
             )
- 
                   ;
-                
     
+
     return $res . $synopsis . $details;
+
+}
+
+
+
+function arrayRef()
+{ 
+    return beginSection( arrayLink() );
+}
+
+
+
+function dequeRef()
+{
+    $res = beginSection( dequeLink() );
+    $synopsis = beginSynopsis() . 
+"<pre>             
+namespace boost
+{
+    template< typename T, typename Allocator = std::allocator< T* > >
+    class ptr_deque 
+    {
+        //
+        // reversible ptr_container requirements + 
+        // 
+        
+    public: // element access
+        reference        operator[]( size_type n );
+        const_reference  operator[]( size_type n ) const;
+        reference        at( size_type n );
+        const_reference  at( size_type n ) const;
+    
+   public: // modifiers
+        void                push_front( T* );
+        void                push_front( const_reference x );
+        void                pop_front();
+        std::auto_ptr< T >  release_front(); 
+    
+    }; //  class 'ptr_deque'
+    
+} // namespace 'boost'  
+    </pre> ";
+
+    $details =  beginDetails( "element access" ) .
+        code( "reference operator[]( size_type n );" ) .
+        blockQuote( 
+            see( "ptr_vector::operator[]" ) 
+            ) .
+        code( "const_reference operator[]( size_type n ) const;" ) . 
+        blockQuote(
+            see( "ptr_vector::operator[]" ) 
+            ) .
+        code( "reference at( size_type n );" ) . 
+        blockQuote( 
+            see( "ptr_vector::at()" ) 
+            ) .
+        code( "const_reference at( size_type n );" ) . 
+        blockQuote( 
+            see( "ptr_vector::at()" ) 
+            ) .
+        beginDetails( "modifiers" ) .
+        code( "void push_front( T* );" ) .
+        blockQuote(
+            requirements( code("x") . " is heap-allocated and cannot be " . code("0") ) .
+            effects( "Inserts the pointer into container and takes ownership of it" ) .
+            throws( code("bad_pointer") . " if " . code( "x" ) . " is " . code( "0" ) ) .
+            exceptionSafety( "Strong guarantee" ) 
+            ) .
+        code( "void push_front( const_reference x );" ) .
+        blockQuote(
+            effects( code( "push_back( make_clone( x ) );" ) ) .
+            exceptionSafety( "Strong guarantee" ) 
+            ) .
+        code( "void pop_front()" ) .
+        blockQuote( 
+            effects( "Removes the first element of the container if it exists" ) .
+            postconditions( code( "not empty()" ) .  " implies " . code("size()") . " is one less" ) .
+            exceptionSafety( "Nothrow guarantee" )
+            ) .    
+        code( "std::auto_ptr< T > release_front();" ) .
+        blockQuote( 
+            requirements( code( "not empty()" ) ) .
+            effects( "Releases ownership of the first pointer in the container" ) .
+            postconditions( code("size()") . " is one less " ) .
+            throws( code("bad_ptr_container_operation") . " if the container is empty" ) .
+            exceptionSafety( "Strong guarantee" ) 
+            );
+    
+    return $res . $synopsis . $details; 
+}
+                    
+
+
+function listRef() 
+{
+    $res = beginSection( listLink() );
+    $synopsis = beginSynopsis() . 
+"<pre>             
+namespace boost
+{
+template< typename T, typename Allocator = std::allocator< T* > >
+class ptr_list 
+{
+    //
+    // reversible ptr_container requirements + 
+    // 
+
+public: // modifiers
+    void                push_front( T* );
+    void                pop_front();
+    std::auto_ptr< T >  release_front(); 
+
+public: // list operations
+    void  splice( iterator before, ptr_list& x );
+    void  splice( iterator before, ptr_list& x, iterator i );
+    void  splice( iterator before, ptr_list& x, iterator first, iterator last );
+    
+    // Q: are they really faster as member functions???    
+    void  remove( const_reference value );                           
+    template< typename Predicate > 
+    void  remove_if( Predicate pred );                               
+      
+    void  unique();    
+    template< typename BinaryPredicate >
+    void  unique( BinaryPredicate binary_pred );                     
+    
+    void  merge( ptr_list& x ); 
+    template< typename Compare > 
+    void  merge( ptr_list& x, Compare comp );
+    
+    void  sort();    
+    template< typename Compare > 
+    void  sort( Compare comp );                             
+    
+    void  reverse();
+
+}; //  class 'ptr_list'
+
+} // namespace 'boost'  
+</pre> ";
+    
+    $details = beginDetails( "modifiers" ) .
+        code( "void push_front( T* );" ) .
+        blockQuote(
+            see( code( "deque::push_front()" ) )
+            ) .
+        code( "void pop_front()" ) .
+        blockQuote( 
+            see( code( "deque::pop_front()" ) )
+            ) .    
+        code( "std::auto_ptr< T > release_front();" ) .
+        blockQuote( 
+            see( code( "deque::release_front()" ) )
+            );
+    
+    return $res . $synopsis . $details; 
+}
+
+
+
+function vectorRef() 
+{
+    $res = beginSection( vectorLink() );
+    $synopsis = beginSynopsis() . 
+"<pre>             
+namespace boost
+{
+    template< typename T, typename Allocator = std::allocator< T* > >
+    class ptr_vector 
+    {
+        //
+        // reversible ptr_container requirements + 
+        // 
+
+    public: // capacity
+        size_type  capacity() const;
+        void       reserve( size_type n );
+    
+    public: // element access
+        reference        operator[]( size_type n );
+        const_reference  operator[]( size_type n ) const;
+        reference        at( size_type n );
+        const_reference  at( size_type n ) const;
+        
+    }; //  class 'ptr_vector'
+    
+} // namespace 'boost'  
+    </pre> ";
+
+    $details = beginDetails( "capacity" ) .
+        code( "size_type capacity() const;" ) .
+        blockQuote( 
+            effects( "Returns the size of the allocated buffer" ) .
+            throws( "Nothing" ) 
+            ) .
+        code( "void resize( size_type sz, const_reference x );" ) .
+        blockQuote(
+            effects( pre( "if ( sz > size() )
+    insert( end(), sz-size(), x );
+    else if ( sz < size() )
+    erase( begin()+sz, end() );
+    else
+    ; //do nothing " )  ) .
+            postconditions( code( "size() == sz" ) ) .
+            exceptionSafety( "Strong guarantee" )
+            ) .
+        beginDetails( "element access" ) .
+        code( "reference operator[]( size_type n );" ) .
+        blockQuote( 
+            requirements( code( "n < size()" ) ) .
+            effects( "Returns a reference to the n'th element" ) 
+            ) .
+        code( "const_reference operator[]( size_type n ) const;" ) . 
+        blockQuote( 
+            requirements( code( "n < size()" ) ) .
+            effects( "Returns a const reference to the n'th element" ) 
+            ) .
+        code( "reference at( size_type n );" ) . 
+        blockQuote( 
+            requirements( code( "n < size()" ) ) .
+            effects( "Returns a reference to the n'th element" ) .
+            throws( code("std::out_of_range") . " if " . code("n >=size()" ) ) 
+            ) .
+        code( "const_reference at( size_type n );" ) . 
+        blockQuote( 
+            requirements( code( "n < size()" ) ) .
+            effects( "Returns a const reference to the n'th element" ) .
+            throws( code("std::out_of_range") . " if " . code("n >= size()" ) ) 
+            );
+    
+    return $res . $synopsis . $details; 
 }
 
 
@@ -747,6 +1018,13 @@ function mapRef()
     return beginSection( mapLink() );
 }
      
+
+
+function exceptionRef()
+{
+    return beginSection( exceptionLink() );
+}
+
 
 
 function beginSynopsis()
@@ -783,10 +1061,12 @@ function postconditions( $text )
 }
 
 
+
 function throws( $text )
 {
     return p( b( "Throws: " ) . $text );
 }
+
 
 
 function exceptionSafety( $text )
@@ -796,7 +1076,17 @@ function exceptionSafety( $text )
 
 
 
+function complexity( $text )
+{
+    return p( b( "Complexity: " ) . $text );
+}
 
+
+
+function see( $link )
+{
+    return p( "See description in " . $link );
+}
 
 
 

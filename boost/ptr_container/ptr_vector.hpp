@@ -35,8 +35,8 @@ public:
 
 public:
     explicit ptr_vector( const allocator_type& alloc = allocator_type() )                : Base( alloc ) {}
-    explicit ptr_vector( size_type n, const_reference x, const allocator_type& alloc = allocator_type() )   : Base( n, x, alloc ) {}
-    ptr_vector( std::auto_ptr<ptr_vector> r )                                            : Base( r )             {}
+    ptr_vector( size_type n, const_reference x, const allocator_type& alloc = allocator_type() )   : Base( n, x, alloc ) {}
+    explicit ptr_vector( std::auto_ptr<ptr_vector> r )                                            : Base( r )             {}
     template< typename InputIterator >
     ptr_vector( InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type() ) : Base( first, last, alloc ) {}
     void operator=( std::auto_ptr<ptr_vector> r )                                    { Base::operator=( r ); }

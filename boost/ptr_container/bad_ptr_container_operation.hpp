@@ -12,8 +12,8 @@
  *
  */
 
-#ifndef BOOST_PTR_CONTAINER_BAD_POINTER_HPP
-#define BOOST_PTR_CONTAINER_BAD_POINTER_HPP
+#ifndef BOOST_PTR_CONTAINER_BAD_PTR_CONTAINER_OPERATION__HPP
+#define BOOST_PTR_CONTAINER_BAD_PTR_CONTAINER_OPERATION__HPP
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 # pragma once
@@ -23,12 +23,16 @@
 
 namespace boost
 {
-    class bad_pointer : public std::exception
+    class bad_ptr_container_operation : public std::exception
     {
+        const char* what_;
     public:
+        bad_ptr_container_operation( const char* what ) : what_( what )
+        { }
+        
         virtual const char* what() const throw()
         {
-            return "Null pointer not allowed in a pointer container!";
+            return what_;
         }
     };
 }

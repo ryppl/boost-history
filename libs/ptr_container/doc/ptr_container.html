@@ -5,7 +5,7 @@
                      safe manner. In this respect it is intended to solve 
                      the so-called <i  >polymorphic class problem.</i></p><p  >The main advantages are <ul  ><li  >Exception-safe and fool proof pointer storage and manipulation.</li><li  >Exception-guarantees are generally much better than with standard containers (at least the strong guarantee)</li><li  >Notational convinience compared to the use of containers of smart pointers.</li><li  >Iterators are automatically indirected so the comparison operations can be kept
                                 on object basis instead of making/adding pointer based variants.</li><li  >No memory-overhead as containers of smart_pointers can have.</li><li  >Faster than using containers of smart pointers.</li><li  >Provides an elegant solution to <code  >vector&lt; vector&lt;T&gt; &gt;</code> performance
-                                problems; simply use <code  >ptr_vector&lt; vector&lt;T&gt; &gt;.</code><li  >Offers more explicit control of lifetime issues.</li></li></ul></p><p  >The main disadvantages are <ul  ><li  >The containers cannot be used with all mutable algorithms; eg. invoking <code  >std::unique()</code> is undefined </li></ul></p><p  >Below is given some example that show how the usage compares to a container of smart pointers:<pre  >
+                                problems; simply use <code  >ptr_vector&lt; vector&lt;T&gt; &gt;.</code><li  >Offers more explicit control of lifetime issues.</li></li></ul></p><p  >Below is given some examples that show how the usage compares to a container of smart pointers:<pre  >
                        
     using namespace boost;
     using namespace std;
@@ -74,7 +74,7 @@
                  elements_.push_back( c );
              }
           
-             void remove( elements::iterator c )
+             void remove( composite_t::iterator c )
              {
                  elements_.erase( c );
              }
@@ -117,15 +117,23 @@
                               sense to clone an object in which case a large subset of the operations are still workable.</li><li  ><i  >Whenever objects are inserted into a container, they are cloned before insertion. 
                                  Whenever pointers are inserted into a container, ownership is transferred to the container.</i> All containers take ownership of the stored pointers and therefor it need to have its
                                own copies. </li><li  ><i  >Ownership can be tranferred from a container on a per pointer basis.</i> This can of course also be convinient. Whenever it happens, an <code  >std::auto_ptr&lt;&gt;</code> is used to provide an exception-safe transfer. </li><li  ><i  >Ownership can be transferred from a container to another container on a per iterator range basis.</i> This makes it possible to exchange data safely between different pointer containers
-                               without cloning the objects again. </li></ul><p  >The documentation is divided into an explanation for each container:</p><ul  ><li  ><a href="# Class <code  >ptr_array&lt;&gt;</code>" > Class <code  >ptr_array&lt;&gt;</code></a></li><li  ><a href="# Class <code  >ptr_deque&lt;&gt;</code>" > Class <code  >ptr_deque&lt;&gt;</code></a></li><li  ><a href="# Class <code  >ptr_list&lt;&gt;</code>" > Class <code  >ptr_list&lt;&gt;</code></a></li><li  ><a href="# Class <code  >ptr_vector&lt;&gt;</code>" > Class <code  >ptr_vector&lt;&gt;</code></a></li><li  ><a href="# Class <code  >ptr_set&lt;&gt;</code>" > Class <code  >ptr_set&lt;&gt;</code></a></li><li  ><a href="# Class <code  >ptr_map&lt;&gt;</code>" > Class <code  >ptr_map&lt;&gt;</code></a></li></ul><hr size="1" ><h2  > Class <code  >ptr_array&lt;&gt;</code></h2><a name=" Class <code  >ptr_array&lt;&gt;</code>" ></a><hr size="1" ><h2  > Class <code  >ptr_deque&lt;&gt;</code></h2><a name=" Class <code  >ptr_deque&lt;&gt;</code>" ></a><hr size="1" ><h2  > Class <code  >ptr_list&lt;&gt;</code></h2><a name=" Class <code  >ptr_list&lt;&gt;</code>" ></a><hr size="1" ><h2  > Class <code  >ptr_vector&lt;&gt;</code></h2><a name=" Class <code  >ptr_vector&lt;&gt;</code>" ></a><h3  >Synopsis:</h3><pre>             
+                               without cloning the objects again. </li></ul><p  >The documentation is divided into a common section and an explanation for each container. The common section
+                        shows the interface that all of the classes have in common and the indvisual parts shows the interface
+                        that is only part of some of the individual classes:</p><ul  ><li  ><a href="#Pseudo class <code  >ptr_container&lt;&gt;</code>" >Pseudo class <code  >ptr_container&lt;&gt;</code></a></li><li  ><a href="# Class <code  >ptr_array&lt;&gt;</code>" > Class <code  >ptr_array&lt;&gt;</code></a></li><li  ><a href="# Class <code  >ptr_deque&lt;&gt;</code>" > Class <code  >ptr_deque&lt;&gt;</code></a></li><li  ><a href="# Class <code  >ptr_list&lt;&gt;</code>" > Class <code  >ptr_list&lt;&gt;</code></a></li><li  ><a href="# Class <code  >ptr_vector&lt;&gt;</code>" > Class <code  >ptr_vector&lt;&gt;</code></a></li><li  ><a href="# Class <code  >ptr_set&lt;&gt;</code>" > Class <code  >ptr_set&lt;&gt;</code></a></li><li  ><a href="# Class <code  >ptr_map&lt;&gt;</code>" > Class <code  >ptr_map&lt;&gt;</code></a></li><li  ><a href="#Exception classes" >Exception classes</a></li></ul><p  >The recommended usage pattern of the container classes are the 
+                same as the for normal standard containers.<code  >ptr_vector</code>, <code  >ptr_list</code> and <code  >ptr_deque</code> offer the programmer 
+                different complexity tradeoffs and should be used accordingly. <code  >ptr_vector</code> is the type of sequence that should be used by default. <code  >ptr_list</code> should be used when there 
+             are frequent insertions and deletions from the middle of the sequence. <code  >ptr_deque</code> is 
+              the data structure of choice when most insertions and deletions take place at 
+            the beginning or at the end of the sequence.  An associative container supports  
+            unique keys if it may contain at most one element for each key.  Otherwise, it 
+            supports equivalent keys. <code  >ptr_set</code> and <code  >ptr_map</code> support unique keys. 
+                <code  >ptr_multiset</code> and <code  >ptr_multimap</code> support equivalent keys.</p><br><hr size="1" ><h2  >Pseudo class <code  >ptr_container&lt;&gt;</code></h2><a name="Pseudo class <code  >ptr_container&lt;&gt;</code>" ></a><h3  >Synopsis:</h3><pre>             
 namespace boost
-{
+{      
     template< typename T, typename Allocator = std::allocator< T* > >
     class ptr_container 
     {
     public: // typedefs
-        typedef  std::auto_ptr< T >                           auto_type;
-        typedef  const auto_type                              const_auto_type;
         typedef  T                                            value_type;
         typedef  T&                                           reference;
         typedef  const T&                                     const_reference;
@@ -133,26 +141,25 @@ namespace boost
         typedef  <b>implementation defined</b>                       const_iterator;
         typedef  <b>implementation defined</b>                       difference_type; 
         typedef  <b>implementation defined</b>                       size_type;
-	typedef  Allocator                                    allocator_type;
-	typedef  typename Allocator::pointer                  pointer;
-	typedef  typename Allocator::const_pointer            const_pointer; 
+        typedef  Allocator                                    allocator_type;
+        typedef  typename Allocator::pointer                  pointer;
+        typedef  typename Allocator::const_pointer            const_pointer; 
         typedef  std::reverse_iterator< iterator >            reverse_iterator;
         typedef  std::reverse_iterator< const_iterator >      const_reverse_iterator;
-        
+    
     public: // construct/copy/destroy
-        explicit ptr_vector( const allocator_type& = allocator_type() );
-        ptr_vector( size_type n, const_reference x, const allocator_type& = allocator_type() );
-        ptr_vector( ptr_vector& r );
-        ptr_vector( release_type r );
+        explicit ptr_container( const allocator_type& = allocator_type() );
+        ptr_container( size_type n, const_reference x, const allocator_type& = allocator_type() );
+        ptr_container( auto_ptr< ptr_container > r );
         template< typename InputIterator >
-        ptr_vector( InputIterator first, InputIterator last, const allocator_type& = allocator_type() );
-        ~ptr_vector();
-        ptr_vector& operator=( ptr_vector& r );	
+        ptr_container( InputIterator first, InputIterator last, const allocator_type& = allocator_type() );
+        ~ptr_container();
+        void operator=( std::auto_ptr< ptr_container > r )  
         template< typename InputIterator >
         assign( InputIterator first, InputIterator last );
         assign( size_type n, const_reference u );
         allocator_type get_allocator() const;                                      
-
+    
     public: // iterators
         iterator                begin();
         const_iterator          begin() const;
@@ -162,15 +169,15 @@ namespace boost
         const_reverse_iterator  rbegin();
         reverse_iterator        rend();
         const_reverse_iterator  rend();
-	
+    
     public: // capacity
         size_type  size() const;
         size_type  max_size() const;
         void     resize( size_type sz, ptr_type = new value_type() );
         size_type  capacity() const;
-    	bool       empty() const;	
+        bool       empty() const;	
         void       reserve( size_type n );
-  
+    
     public: // element access
         reference        operator[]( size_type n );
         const_reference  operator[]( size_type n ) const;
@@ -182,65 +189,158 @@ namespace boost
         const_reference  back() const;
     
     public: // modifiers
-        void      push_back( ptr_type x );
+        void      push_back( T* x );
+        void      push_back( const_reference x );
         void      pop_back();
-	iterator  insert( iterator position, const_reference x );
-	void      insert( iterator position, size_type n, ptr_type x );
+    iterator  insert( iterator position, const_reference x );
+    void      insert( iterator position, size_type n, ptr_type x );
         template< typename InputIterator >
         void      insert( iterator position, InputIterator first, InputIterator last ); 
         iterator  erase( iterator position );
         iterator  erase( iterator first, iterator last );
-        void      swap( ptr_vector& r );
+        void      swap( ptr_container& r );
         void      clear():
-	
+    
     public: // pointer container requirements
-	
-        ptr_vector  clone();
-        auto_type   release_back();
-        auto_type   release( iterator position );
-  
-    }; //  class 'ptr_vector'
-
-    template < typename T, typename Allocator >
-    bool operator==( const ptr_vector< T,Allocator >& x,
-	             const ptr_vector< T,Allocator >& y);
+    
+        std::auto_ptr< ptr_container >  clone() const;    
+        std::auto_ptr< ptr_container >  release();
+        std::auto_ptr< T >              release_back();
+        std::auto_ptr< T >              release( iterator position );
+    
+    }; //  class 'ptr_container'
     
     template < typename T, typename Allocator >
-    bool operator<( const ptr_vector< T,Allocator >& x,
-		    const ptr_vector< T,Allocator >& y);
+    bool operator==( const ptr_container< T,Allocator >& x,
+                 const ptr_container< T,Allocator >& y);
     
     template < typename T, typename Allocator >
-    bool operator!=( const ptr_vector< T,Allocator >& x,
-	             const ptr_vector< T,Allocator >& y);
+    bool operator<( const ptr_container< T,Allocator >& x,
+            const ptr_container< T,Allocator >& y);
+    
+    template < typename T, typename Allocator >
+    bool operator!=( const ptr_container< T,Allocator >& x,
+                 const ptr_container< T,Allocator >& y);
     
     template < typename T, typename Allocator>
-    bool operator>( const ptr_vector< T,Allocator >& x,
-		    const ptr_vector< T,Allocator >& y);
-   
-    template < typename T, typename Allocator>
-    bool operator>=( const ptr_vector< T,Allocator >& x,
-	             const ptr_vector< T,Allocator >& y);
+    bool operator>( const ptr_container< T,Allocator >& x,
+            const ptr_container< T,Allocator >& y);
     
     template < typename T, typename Allocator>
-    bool operator<=( const ptr_vector< T,Allocator >& x,
-	             const ptr_vector< T,Allocator >& y);
-
+    bool operator>=( const ptr_container< T,Allocator >& x,
+                 const ptr_container< T,Allocator >& y);
+    
+    template < typename T, typename Allocator>
+    bool operator<=( const ptr_container< T,Allocator >& x,
+                 const ptr_container< T,Allocator >& y);
+    
     template< typename T, typaname Allocator  >
-    void swap( ptr_vector< T,Allocator >& x, 
-               ptr_vector< T,Allocator >& y );
+    void swap( ptr_container< T,Allocator >& x, 
+               ptr_container< T,Allocator >& y );
+    
+} // namespace 'boost'  
+    </pre> <p  ><h3  >Semantics: <i  >construct/copy/destroy</i></h3></p><code  >explicit ptr_container( const allocator_type& = allocator_type() );</code><blockquote  ><p  ><b  >Effects: </b>Constructs an empty container</p><p  ><b  >Postconditions: </b><code  >size() == 0</code></p></blockquote><code  >ptr_container( size_type n, const_reference x, const allocator_type& = allocator_type() )</code><blockquote  ><p  ><b  >Effects: </b>Constructs a container with <code  >n</code> clones of <code  >x</code></p><p  ><b  >Postconditions: </b><code  >size() == n</code></p></blockquote><code  >explicit ptr_container( std::auto_ptr&lt; ptr_container &gt; r );</code><blockquote  ><p  ><b  >Effects: </b>Constructs a container by taking ownership of the supplied pointers</p></blockquote><pre  >template&lt; typename InputIterator &gt;
+    ptr_container( InputIterator first, InputIterator last, const allocator_type& = allocator_type() ); </pre><blockquote  ><p  ><b  >Requirements: </b><code  >(first,last]</code> is a valid range</p><p  ><b  >Effects: </b>Constructs a container with a cloned range of <code  >(first,last]</code></p><p  ><b  >Postconditions: </b><code  >size() == std::distance( first, last )</code></p></blockquote><code  >~ptr_container();</code><blockquote  ><p  ><b  >Effects: </b>Deletes the stored pointers and then the container itself</p><p  ><b  >Throws: </b>Nothing</p></blockquote><code  >void operator=( std::auto_ptr&lt; ptr_container &gt; r );</code><blockquote  ><p  ><b  >Effects: </b>Deletes the stored pointers and then takes ownership of the supplied pointers</p><p  ><b  >Throws: </b>Nothing</p></blockquote><pre  >template&lt; typename InputIterator &gt;
+    assign( InputIterator first, InputIterator last );</pre><blockquote  ><p  ><b  >Requirements: </b><code  >(first,last]</code> is a valid range</p><p  ><b  >Effects: </b><code  >clear(); insert( first, last );</code></p><p  ><b  >Postconditions: </b><code  >size() == std::distance( first, last )</code></p><p  ><b  >Exception safety: </b>strong guarantee</p></blockquote><code  >assign( size_type n, const_reference u )</code><blockquote  ><p  ><b  >Effects: </b><code  >clear(); insert( begin(), n, u );</code></p><p  ><b  >Postconditions: </b><code  >size() == n</code></p><p  ><b  >Exception safety: </b>Strong guarantee</p></blockquote><code  >allocator_type get_allocator() const</code><blockquote  ><p  ><b  >Effects: </b>Returns a copy of the allocator of the container object</p></blockquote><p  ><h3  >Semantics: <i  >iterators</i></h3></p><code  >iterator begin();</code><blockquote  ><p  ><b  >Effects: </b>Returns a mutable iterator with <code  >value_type T</code></p><p  ><b  >Throws: </b>Nothing</p></blockquote><code  >const_iterator begin() const;</code><blockquote  ><p  ><b  >Effects: </b>Returns a non-mutable iterator with <code  >value_type T</code></p><p  ><b  >Throws: </b>Nothing</p></blockquote><code  >iterator end();</code><blockquote  ><p  ><b  >Effects: </b>Returns a mutable iterator with <code  >value_type T</code></p><p  ><b  >Throws: </b>Nothing</p></blockquote><code  >const_iterator end() const;</code><blockquote  ><p  ><b  >Effects: </b>Returns a non-mutable iterator with <code  >value_type T</code></p><p  ><b  >Throws: </b>Nothing</p></blockquote><code  >iterator rbegin();</code><blockquote  ><p  ><b  >Effects: </b>Returns a mutable iterator with <code  >value_type T</code></p><p  ><b  >Throws: </b>Nothing</p></blockquote><code  >const_iterator rbegin() const;</code><blockquote  ><p  ><b  >Effects: </b>Returns a non-mutable iterator with <code  >value_type T</code></p><p  ><b  >Throws: </b>Nothing</p></blockquote><code  >iterator rend();</code><blockquote  ><p  ><b  >Effects: </b>Returns a mutable iterator with <code  >value_type T</code></p><p  ><b  >Throws: </b>Nothing</p></blockquote><code  >const_iterator rend() const;</code><blockquote  ><p  ><b  >Effects: </b>Returns a non-mutable iterator with <code  >value_type T</code></p><p  ><b  >Throws: </b>Nothing</p></blockquote><p  ><h3  >Semantics: <i  >capacity</i></h3></p><code  >size_type size() const;</code><blockquote  ><p  ><b  >Effects: </b>Returns the number of stored elements</p><p  ><b  >Throws: </b>Nothing</p></blockquote><code  >size_type max_size() const;</code><blockquote  ><p  ><b  >Effects: </b>Returns the maximum number of stored elements</p><p  ><b  >Throws: </b>Nothing</p></blockquote><code  >bool empty() const;</code><blockquote  ><p  ><b  >Effects: </b>Returns whether the container is empty or not</p><p  ><b  >Throws: </b>Nothing</p></blockquote><p  ><h3  >Semantics: <i  >element access</i></h3></p><code  >reference front();</code><blockquote  ><p  ><b  >Effects: </b><code  >return *begin()</code></p><p  ><b  >Throws: </b>Nothing</p></blockquote><code  >const_reference front() const;</code><blockquote  ><p  ><b  >Effects: </b><code  >return *begin()</code></p><p  ><b  >Throws: </b>Nothing</p></blockquote><code  >reference back();</code><blockquote  ><p  ><b  >Effects: </b><code  >return *end()</code></p><p  ><b  >Throws: </b>Nothing</p></blockquote><code  >const_reference back() const;</code><blockquote  ><p  ><b  >Effects: </b><code  >return *end()</code></p><p  ><b  >Throws: </b>Nothing</p></blockquote><p  ><h3  >Semantics: <i  >modifiers</i></h3></p><code  >void push_back( T* x );</code><blockquote  ><p  ><b  >Requirements: </b><code  >x</code> is heap-allocated and cannot be <code  >0</code></p><p  ><b  >Effects: </b>Inserts the pointer into container and takes ownership of it</p><p  ><b  >Throws: </b><code  >bad_pointer</code> if <code  >x</code> is <code  >0</code></p><p  ><b  >Exception safety: </b>Strong guarantee</p></blockquote><code  >void push_back( const_reference x );</code><blockquote  ><p  ><b  >Effects: </b><code  >push_back( make_clone( x ) );</code></p><p  ><b  >Exception safety: </b>Strong guarantee</p></blockquote><code  >void pop_back();</code><blockquote  ><p  ><b  >Effects: </b>Removes the last element in the container if it exists</p><p  ><b  >Postconditions: </b><code  >not empty()</code> implies <code  >size()</code> is one less</p><p  ><b  >Exception safety: </b>Nothrow guaarantee</p></blockquote><code  >iterator insert( iterator position, const_reference x );</code><blockquote  ><p  ><b  >Requirements: </b><code  >position</code> is a valid iterator from the container</p><p  ><b  >Effects: </b><code  >return insert( position, make_clone( x ) );</code></p><p  ><b  >Exception safety: </b>Strong guarantee</p></blockquote><code  >iterator insert( iterator position, ptr_type x );</code><blockquote  ><p  ><b  >Requirements: </b><code  >position</code> is a valid iterator from the container and <code  >x</code> is heap-allocated and cannot be <code  >0</code></p><p  ><b  >Effects: </b>Inserts <code  >x</code> before <code  >position</code> and returns an iterator pointing to it</p><p  ><b  >Throws: </b><code  >bad_pointer</code> if <code  >x</code> is <code  >0</code></p><p  ><b  >Exception safety: </b>Strong guarantee</p></blockquote><code  >void insert( iterator position, size_type n, const_reference x );</code><blockquote  ><p  ><b  >Requirements: </b><code  >position</code> is a valid iterator from the container</p><p  ><b  >Effects: </b>Inserts <code  >n</code> clones of <code  >x</code> before <code  >position</code> into the container </p><p  ><b  >Exception safety: </b>Strong guarantee</p></blockquote><pre  >template&lt; typename InputIterator &gt;
+    void insert( iterator position, InputIterator first, InputIterator last );</pre><blockquote  ><p  ><b  >Requirements: </b><code  >position</code> is a valid iterator from the container</p><p  ><b  >Effects: </b>Inserts a cloned range before <code  >position</code></p><p  ><b  >Exception safety: </b>Strong guarantee</p></blockquote><code  >iterator erase( iterator position );</code><blockquote  ><p  ><b  >Requirements: </b><code  >position</code> is a valid iterator from the container</p><p  ><b  >Effects: </b>Removes the element defined by <code  >position</code> and returns an
+                      iterator to the following element</p><p  ><b  >Throws: </b>Nothing</p></blockquote><code  >iterator erase( iterator first, iterator last );</code><blockquote  ><p  ><b  >Requirements: </b><code  >(first,last]</code> is a valid range</p><p  ><b  >Effects: </b>Removes the range of element defined by <code  >position</code> and returns an
+                 iterator to the following element</p><p  ><b  >Throws: </b>Nothing</p></blockquote><code  >void swap( ptr_container& r );</code><blockquote  ><p  ><b  >Effects: </b>Swaps the content of the two containers</p><p  ><b  >Throws: </b>Nothing</p></blockquote><code  >void clear();</code><blockquote  ><p  ><b  >Effects: </b>Destroys all object of the container </p><p  ><b  >Postconditions: </b><code  >empty() == true</code></p><p  ><b  >Throws: </b>Nothing</p></blockquote><p  ><h3  >Semantics: <i  >pointer container requirements</i></h3></p><code  >std::auto_ptr&lt; ptr_container &gt;  clone() const;</code><blockquote  ><p  ><b  >Effects: </b>Returns a deep copy of the container</p><p  ><b  >Throws: </b><code  >std::bad_alloc</code> if there is not enough memory to make a clone of the container</p><p  ><b  >Complexity: </b>Linear</p></blockquote><code  >std::auto_ptr&lt; ptr_container &gt;  release();</code><blockquote  ><p  ><b  >Effects: </b>Releases ownership of the container. This is a useful way of returning
+                 a container from a function.</p><p  ><b  >Postconditions: </b><code  >empty() == true</code></p><p  ><b  >Exception safety: </b>Strong guarantee</p><p  ><b  >Throws: </b><code  >std::bad_alloc</code> if the return value cannot be allocated</p></blockquote><code  >std::auto_ptr&lt; T &gt; release_back();</code><blockquote  ><p  ><b  >Requirements: </b><code  >not empty()</code></p><p  ><b  >Effects: </b>Releases ownership of the last pointer in the container</p><p  ><b  >Postconditions: </b><code  >size()</code> is one less </p><p  ><b  >Throws: </b><code  >bad_ptr_container_operation</code> if the container is empty</p><p  ><b  >Exception safety: </b>Strong guarantee</p></blockquote><code  >std::auto_ptr&lt; T &gt; release( iterator position );</code><blockquote  ><p  ><b  >Requirements: </b><code  >not empty()</code></p><p  ><b  >Effects: </b>Releases ownership of the pointer referred to by <code  >position</code></p><p  ><b  >Postconditions: </b><code  >size()</code> is one less </p><p  ><b  >Throws: </b><code  >bad_ptr_container_operation</code> if the container is empty</p><p  ><b  >Exception safety: </b>Strong guarantee</p></blockquote><hr size="1" ><h2  > Class <code  >ptr_array&lt;&gt;</code></h2><a name=" Class <code  >ptr_array&lt;&gt;</code>" ></a><hr size="1" ><h2  > Class <code  >ptr_deque&lt;&gt;</code></h2><a name=" Class <code  >ptr_deque&lt;&gt;</code>" ></a><h3  >Synopsis:</h3><pre>             
+namespace boost
+{
+    template< typename T, typename Allocator = std::allocator< T* > >
+    class ptr_deque 
+    {
+        //
+        // reversible ptr_container requirements + 
+        // 
+        
+    public: // element access
+        reference        operator[]( size_type n );
+        const_reference  operator[]( size_type n ) const;
+        reference        at( size_type n );
+        const_reference  at( size_type n ) const;
+    
+   public: // modifiers
+        void                push_front( T* );
+        void                push_front( const_reference x );
+        void                pop_front();
+        std::auto_ptr< T >  release_front(); 
+    
+    }; //  class 'ptr_deque'
+    
+} // namespace 'boost'  
+    </pre> <p  ><h3  >Semantics: <i  >element access</i></h3></p><code  >reference operator[]( size_type n );</code><blockquote  ><p  >See description in ptr_vector::operator[]</p></blockquote><code  >const_reference operator[]( size_type n ) const;</code><blockquote  ><p  >See description in ptr_vector::operator[]</p></blockquote><code  >reference at( size_type n );</code><blockquote  ><p  >See description in ptr_vector::at()</p></blockquote><code  >const_reference at( size_type n );</code><blockquote  ><p  >See description in ptr_vector::at()</p></blockquote><p  ><h3  >Semantics: <i  >modifiers</i></h3></p><code  >void push_front( T* );</code><blockquote  ><p  ><b  >Requirements: </b><code  >x</code> is heap-allocated and cannot be <code  >0</code></p><p  ><b  >Effects: </b>Inserts the pointer into container and takes ownership of it</p><p  ><b  >Throws: </b><code  >bad_pointer</code> if <code  >x</code> is <code  >0</code></p><p  ><b  >Exception safety: </b>Strong guarantee</p></blockquote><code  >void push_front( const_reference x );</code><blockquote  ><p  ><b  >Effects: </b><code  >push_back( make_clone( x ) );</code></p><p  ><b  >Exception safety: </b>Strong guarantee</p></blockquote><code  >void pop_front()</code><blockquote  ><p  ><b  >Effects: </b>Removes the first element of the container if it exists</p><p  ><b  >Postconditions: </b><code  >not empty()</code> implies <code  >size()</code> is one less</p><p  ><b  >Exception safety: </b>Nothrow guarantee</p></blockquote><code  >std::auto_ptr&lt; T &gt; release_front();</code><blockquote  ><p  ><b  >Requirements: </b><code  >not empty()</code></p><p  ><b  >Effects: </b>Releases ownership of the first pointer in the container</p><p  ><b  >Postconditions: </b><code  >size()</code> is one less </p><p  ><b  >Throws: </b><code  >bad_ptr_container_operation</code> if the container is empty</p><p  ><b  >Exception safety: </b>Strong guarantee</p></blockquote><hr size="1" ><h2  > Class <code  >ptr_list&lt;&gt;</code></h2><a name=" Class <code  >ptr_list&lt;&gt;</code>" ></a><h3  >Synopsis:</h3><pre>             
+namespace boost
+{
+template< typename T, typename Allocator = std::allocator< T* > >
+class ptr_list 
+{
+    //
+    // reversible ptr_container requirements + 
+    // 
+
+public: // modifiers
+    void                push_front( T* );
+    void                pop_front();
+    std::auto_ptr< T >  release_front(); 
+
+public: // list operations
+    void  splice( iterator before, ptr_list& x );
+    void  splice( iterator before, ptr_list& x, iterator i );
+    void  splice( iterator before, ptr_list& x, iterator first, iterator last );                                                                    { c_.splice( before.base(), x.c_, first.base(), last.base() );}
+    
+    // Q: are they really faster as member functions???    
+    void  remove( const_reference value );                           
+    template< typename Predicate > 
+    void  remove_if( Predicate pred );                               
+      
+    void  unique();    
+    template< typename BinaryPredicate >
+    void  unique( BinaryPredicate binary_pred );                     
+    
+    void  merge( ptr_list& x ); 
+    template< typename Compare > 
+    void  merge( ptr_list& x, Compare comp );
+    
+    void  sort();    
+    template< typename Compare > 
+    void  sort( Compare comp );                             
+    
+    void  reverse();
+
+}; //  class 'ptr_list'
 
 } // namespace 'boost'  
-</pre> <p  ><h3  >Semantics: <i  >construct/copy/destroy</i></h3></p><code  >explicit ptr_vector( const allocator_type& = allocator_type() );</code><blockquote  ><p  ><b  >Effects: </b>Constructs an empty container</p><p  ><b  >Postconditions: </b><code  >size() == 0</code></p></blockquote><code  >ptr_vector( size_type n, const_reference x, const allocator_type& = allocator_type() )</code><blockquote  ><p  ><b  >Effects: </b>Constructs a container with <code  >n</code> clones of <code  >x</code></p><p  ><b  >Postconditions: </b><code  >size() == n</code></p></blockquote><pre  >template&lt; typename InputIterator &gt;
-ptr_vector( InputIterator first, InputIterator last, const allocator_type& = allocator_type() ); </pre><blockquote  ><p  ><b  >Requirements: </b><code  >(first,last]</code> is a valid range</p><p  ><b  >Effects: </b>Constructs a container with a cloned range of <code  >(first,last]</code></p><p  ><b  >Postconditions: </b><code  >size() == std::distance( first, last )</code></p></blockquote><code  >~ptr_vector();</code><blockquote  ><p  ><b  >Effects: </b>Deletes the containers pointers and then the data itself</p><p  ><b  >Throws: </b>Nothing</p></blockquote><pre  >template&lt; typename InputIterator &gt;
-assign( InputIterator first, InputIterator last );</pre><blockquote  ><p  ><b  >Requirements: </b><code  >(first,last]</code> is a valid range</p><p  ><b  >Effects: </b><code  >clear(); insert( first, last );</code></p><p  ><b  >Postconditions: </b><code  >size() == std::distance( first, last )</code></p><p  ><b  >Exception safety: </b>strong guarantee</p></blockquote><code  >assign( size_type n, const_reference u )</code><blockquote  ><p  ><b  >Effects: </b><code  >clear(); insert( begin(), n, u );</code></p><p  ><b  >Postconditions: </b><code  >size() == n</code></p><p  ><b  >Exception safety: </b>Strong guarantee</p></blockquote><code  >allocator_type get_allocator() const</code><blockquote  ><p  ><b  >Effects: </b>Returns a copy of the allocator of the container object</p></blockquote><p  ><h3  >Semantics: <i  >iterators</i></h3></p><code  >iterator begin();</code><blockquote  ><p  ><b  >Effects: </b>Returns a mutable iterator with <code  >value_type T</code></p><p  ><b  >Throws: </b>Nothing</p></blockquote><code  >const_iterator begin() const;</code><blockquote  ><p  ><b  >Effects: </b>Returns a non-mutable iterator with <code  >value_type T</code></p><p  ><b  >Throws: </b>Nothing</p></blockquote><code  >iterator end();</code><blockquote  ><p  ><b  >Effects: </b>Returns a mutable iterator with <code  >value_type T</code></p><p  ><b  >Throws: </b>Nothing</p></blockquote><code  >const_iterator end() const;</code><blockquote  ><p  ><b  >Effects: </b>Returns a non-mutable iterator with <code  >value_type T</code></p><p  ><b  >Throws: </b>Nothing</p></blockquote><code  >iterator rbegin();</code><blockquote  ><p  ><b  >Effects: </b>Returns a mutable iterator with <code  >value_type T</code></p><p  ><b  >Throws: </b>Nothing</p></blockquote><code  >const_iterator rbegin() const;</code><blockquote  ><p  ><b  >Effects: </b>Returns a non-mutable iterator with <code  >value_type T</code></p><p  ><b  >Throws: </b>Nothing</p></blockquote><code  >iterator rend();</code><blockquote  ><p  ><b  >Effects: </b>Returns a mutable iterator with <code  >value_type T</code></p><p  ><b  >Throws: </b>Nothing</p></blockquote><code  >const_iterator rend() const;</code><blockquote  ><p  ><b  >Effects: </b>Returns a non-mutable iterator with <code  >value_type T</code></p><p  ><b  >Throws: </b>Nothing</p></blockquote><p  ><h3  >Semantics: <i  >capacity</i></h3></p><code  >size_type size() const;</code><blockquote  ><p  ><b  >Effects: </b>Returns the number of stored elements</p><p  ><b  >Throws: </b>Nothing</p></blockquote><code  >size_type max_size() const;</code><blockquote  ><p  ><b  >Effects: </b>Returns the maximum number of stored elements</p><p  ><b  >Throws: </b>Nothing</p></blockquote><code  >void resize( size_type sz, const_reference x );</code><blockquote  ><p  ><b  >Effects: </b><pre  >if ( sz &gt; size() )
+</pre> <p  ><h3  >Semantics: <i  >modifiers</i></h3></p><code  >void push_front( T* );</code><blockquote  ><p  >See description in <code  >deque::push_front()</code></p></blockquote><code  >void pop_front()</code><blockquote  ><p  >See description in <code  >deque::pop_front()</code></p></blockquote><code  >std::auto_ptr&lt; T &gt; release_front();</code><blockquote  ><p  >See description in <code  >deque::release_front()</code></p></blockquote><hr size="1" ><h2  > Class <code  >ptr_vector&lt;&gt;</code></h2><a name=" Class <code  >ptr_vector&lt;&gt;</code>" ></a><h3  >Synopsis:</h3><pre>             
+namespace boost
+{
+    template< typename T, typename Allocator = std::allocator< T* > >
+    class ptr_vector 
+    {
+        //
+        // reversible ptr_container requirements + 
+        // 
+
+    public: // capacity
+        size_type  capacity() const;
+        void       reserve( size_type n );
+    
+    public: // element access
+        reference        operator[]( size_type n );
+        const_reference  operator[]( size_type n ) const;
+        reference        at( size_type n );
+        const_reference  at( size_type n ) const;
+        
+    }; //  class 'ptr_vector'
+    
+} // namespace 'boost'  
+    </pre> <p  ><h3  >Semantics: <i  >capacity</i></h3></p><code  >size_type capacity() const;</code><blockquote  ><p  ><b  >Effects: </b>Returns the size of the allocated buffer</p><p  ><b  >Throws: </b>Nothing</p></blockquote><code  >void resize( size_type sz, const_reference x );</code><blockquote  ><p  ><b  >Effects: </b><pre  >if ( sz &gt; size() )
     insert( end(), sz-size(), x );
-else if ( sz &lt; size() )
+    else if ( sz &lt; size() )
     erase( begin()+sz, end() );
-else
-   ; //do nothing </pre></p><p  ><b  >Postconditions: </b><code  >size() == sz</code></p><p  ><b  >Exception safety: </b>strong guarantee</p></blockquote><code  >bool empty() const;</code><blockquote  ><p  ><b  >Effects: </b>Returns whether the container is empty or not</p><p  ><b  >Throws: </b>Nothing</p></blockquote><p  ><h3  >Semantics: <i  >element access</i></h3></p><code  >reference front();</code><blockquote  ><p  ><b  >Effects: </b><code  >return *begin()</code></p><p  ><b  >Throws: </b>Nothing</p></blockquote><code  >const_reference front() const;</code><blockquote  ><p  ><b  >Effects: </b><code  >return *begin()</code></p><p  ><b  >Throws: </b>Nothing</p></blockquote><code  >reference back();</code><blockquote  ><p  ><b  >Effects: </b><code  >return *end()</code></p><p  ><b  >Throws: </b>Nothing</p></blockquote><code  >const_reference back() const;</code><blockquote  ><p  ><b  >Effects: </b><code  >return *end()</code></p><p  ><b  >Throws: </b>Nothing</p></blockquote><p  ><h3  >Semantics: <i  >modifiers</i></h3></p><code  >void push_back( const_reference x );</code><blockquote  ><p  ><b  >Effects: </b><code  >push_back( make_clone( x ) );</code></p><p  ><b  >Exception safety: </b>Strong guarantee</p></blockquote><code  >void push_back( ptr_type x );</code><blockquote  ><p  ><b  >Requirements: </b><code  >x</code> is heap-allocated and cannot be <code  >0</code></p><p  ><b  >Effects: </b>Inserts the pointer into container and takes ownership of it</p><p  ><b  >Throws: </b><code  >bad_pointer</code> if <code  >x</code> is <code  >0</code></p><p  ><b  >Exception safety: </b>Strong guarantee</p></blockquote><code  >void pop_back();</code><blockquote  ><p  ><b  >Effects: </b>Removes the last element in the container</p><p  ><b  >Throws: </b>Nothing</p></blockquote><code  >iterator insert( iterator position, const_reference x );</code><blockquote  ><p  ><b  >Requirements: </b><code  >position</code> is a valid iterator from the container</p><p  ><b  >Effects: </b><code  >return insert( position, make_clone( x ) );</code></p><p  ><b  >Exception safety: </b>Strong guarantee</p></blockquote><code  >iterator insert( iterator position, ptr_type x );</code><blockquote  ><p  ><b  >Requirements: </b><code  >position</code> is a valid iterator from the container and <code  >x</code> is heap-allocated and cannot be <code  >0</code></p><p  ><b  >Effects: </b>Inserts <code  >x</code> before <code  >position</code> and returns an iterator pointing to it</p><p  ><b  >Throws: </b><code  >bad_pointer</code> if <code  >x</code> is <code  >0</code></p><p  ><b  >Exception safety: </b>Strong guarantee</p></blockquote><code  >void insert( iterator position, size_type n, const_reference x );</code><blockquote  ><p  ><b  >Requirements: </b><code  >position</code> is a valid iterator from the container</p><p  ><b  >Effects: </b>Inserts <code  >n</code> clones of <code  >x</code> before <code  >position</code> into the container </p><p  ><b  >Exception safety: </b>Strong guarantee</p></blockquote><pre  >template&lt; typename InputIterator &gt;
-void insert( iterator position, InputIterator first, InputIterator last );</pre><blockquote  ><p  ><b  >Requirements: </b><code  >position</code> is a valid iterator from the container</p><p  ><b  >Effects: </b>Inserts a cloned range before <code  >position</code></p><p  ><b  >Exception safety: </b>Strong guarantee</p></blockquote><code  >iterator erase( iterator position );</code><blockquote  ><p  ><b  >Requirements: </b><code  >position</code> is a valid iterator from the container</p><p  ><b  >Effects: </b>Removes the element defined by <code  >position</code> and returns an
-                      iterator to the following element</p><p  ><b  >Throws: </b>Nothing</p></blockquote><code  >iterator erase( iterator first, iterator last );</code><blockquote  ><p  ><b  >Requirements: </b><code  >(first,last]</code> is a valid range</p><p  ><b  >Effects: </b>Removes the range of element defined by <code  >position</code> and returns an
-                 iterator to the following element</p><p  ><b  >Throws: </b>Nothing</p></blockquote><code  >void swap( ptr_vector& r );</code><blockquote  ><p  ><b  >Effects: </b>Swaps the content of the two containers</p><p  ><b  >Throws: </b>Nothing</p></blockquote><code  >void clear();</code><blockquote  ><p  ><b  >Effects: </b>Destroys all object of the container </p><p  ><b  >Postconditions: </b><code  >empty() == true</code></p><p  ><b  >Throws: </b>Nothing</p></blockquote><hr size="1" ><h2  > Class <code  >ptr_set&lt;&gt;</code></h2><a name=" Class <code  >ptr_set&lt;&gt;</code>" ></a><hr size="1" ><h2  > Class <code  >ptr_map&lt;&gt;</code></h2><a name=" Class <code  >ptr_map&lt;&gt;</code>" ></a><br><hr size="1" ><h2  >Examples</h2><a name="Examples" ></a><p  >Some good examples are given in the accompanying test
+    else
+    ; //do nothing </pre></p><p  ><b  >Postconditions: </b><code  >size() == sz</code></p><p  ><b  >Exception safety: </b>Strong guarantee</p></blockquote><p  ><h3  >Semantics: <i  >element access</i></h3></p><code  >reference operator[]( size_type n );</code><blockquote  ><p  ><b  >Requirements: </b><code  >n &lt; size()</code></p><p  ><b  >Effects: </b>Returns a reference to the n'th element</p></blockquote><code  >const_reference operator[]( size_type n ) const;</code><blockquote  ><p  ><b  >Requirements: </b><code  >n &lt; size()</code></p><p  ><b  >Effects: </b>Returns a const reference to the n'th element</p></blockquote><code  >reference at( size_type n );</code><blockquote  ><p  ><b  >Requirements: </b><code  >n &lt; size()</code></p><p  ><b  >Effects: </b>Returns a reference to the n'th element</p><p  ><b  >Throws: </b><code  >std::out_of_range</code> if <code  >n &gt;=size()</code></p></blockquote><code  >const_reference at( size_type n );</code><blockquote  ><p  ><b  >Requirements: </b><code  >n &lt; size()</code></p><p  ><b  >Effects: </b>Returns a const reference to the n'th element</p><p  ><b  >Throws: </b><code  >std::out_of_range</code> if <code  >n &gt;= size()</code></p></blockquote><hr size="1" ><h2  > Class <code  >ptr_set&lt;&gt;</code></h2><a name=" Class <code  >ptr_set&lt;&gt;</code>" ></a><hr size="1" ><h2  > Class <code  >ptr_map&lt;&gt;</code></h2><a name=" Class <code  >ptr_map&lt;&gt;</code>" ></a><hr size="1" ><h2  >Exception classes</h2><a name="Exception classes" ></a><hr size="1" ><h2  >Examples</h2><a name="Examples" ></a><p  >Some good examples are given in the accompanying test
                       files:</p><ul  ><li  > <a href="../test/iterator.cpp" target="_self" ><code  >iterator.cpp</code></a> </li> shows how to implement a container version of <code  >std::copy()</code> that works with <code  >std::ifstream_iterator&lt;&gt;.</code><li  > <a href="../test/iterator.cpp" target="_self" ><code  >string.cpp</code></a> </li> shows how to implement a container version of <code  >std::find()</code> that works with <code  >char[],wchar_t[],char*,wchar_t*.</code></ul><hr size="1" ><h2  >Portability</h2><a name="Portability" ></a><p  >Full support for built-in arrays require that the
                         compiler supports class template partial specialization, however,
                         a work-around for built-in types have been made.</p><p  >Notice that some compilers cannot do function template ordering
@@ -252,3 +352,4 @@ void insert( iterator position, InputIterator first, InputIterator last );</pre>
     Permission to copy, use, modify, sell and distribute this software is granted provided this copyright notice appears
      in all copies. This software is provided "as is" without express or implied warranty, and with no
          claim as to its suitability for any purpose.</p><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br></body></html>
+ <!-- Copyright Dezide Aps 2003-2004 -->

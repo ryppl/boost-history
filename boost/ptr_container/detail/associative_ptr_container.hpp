@@ -75,14 +75,14 @@ namespace detail
         key_compare    key_comp() const { return this->c_().key_comp();}
         value_compare  value_comp() const { return this->c_().value_comp();}
         
-        std::pair<iterator,bool> insert( const Key& x ) // strong
+        std::pair<iterator,bool> insert( const key_type& x ) // strong
         {
             return insert( ::boost::make_clone ( x ) );
         }
         
-        std::pair<iterator,bool> insert( const Key* x ) // strong
+        std::pair<iterator,bool> insert( const key_type* x ) // strong
         {
-            auto_ptr<Key> ptr( x );
+            auto_ptr<key_type> ptr( x );
             std::pair<ptr_iter,bool> res = this->c__().insert( x );
             if( res.second )
                 ptr.release();

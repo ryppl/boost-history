@@ -27,6 +27,8 @@
 #include <boost/iterator/indirect_iterator.hpp>
 #include <iosfwd>
 #include <iostream>
+#include <cassert>
+
 using namespace std;
 
 namespace boost
@@ -34,43 +36,54 @@ namespace boost
     template< typename ValueType, typename PtrIterator >
     class iterator_proxy
     {
-        typedef BOOST_DEDUCED_TYPENAME ::boost::remove_pointer<ValueType>::type indirected_value_type;
-        
+        typedef BOOST_DEDUCED_TYPENAME ::boost::remove_pointer<ValueType>::type T;
+        typedef iterator_proxy<ValueType,PtrIterator>                           this_type;
+            
         PtrIterator& i_;
         
         void shallow_copy( PtrIterator to, PtrIterator from )
         {
-            
+            static int i = 0;
+            ++i;
+            cout << i << " ";
             *to = *from; 
         }
         
     public:
-        iterator_proxy( PtrIterator& i ) : i_( i ) 
-        { }
+        explicit iterator_proxy( PtrIterator& i ) : i_( i ) 
+        {
+            //cout << " (i)cons " ; 
+        }
         
         
         
         iterator_proxy( const iterator_proxy& r ) : i_( r.i_ ) 
-        { }
-        
-        
-        
-        void operator=( const iterator_proxy& r )
         {
-//            cout << " (i)sc ";
-            shallow_copy( i_, r.i_ );
+            //cout << " (i)ccons " ; 
         }
         
         
-
+        
+        iterator_proxy& operator=( const iterator_proxy& r )
+        {
+            // this is wrong! copy the iterator aftawards!!
+            //cout << " (i)sc ";
+            shallow_copy( i_, r.i_ );
+            i_ = r.i_;
+            return *this;
+        }
+        
+        
+/*
         void operator=( const ValueType& r )
         {
-//            cout << " (i)= VT ";
+            //cout << " (i)= VT sc ";
+            assert( r != (void*)0xfeeefeee );
             *i_ = r;
         }
-
+*/
         
-        
+/*        
         indirected_value_type& operator*()
         {
         //    cout << " (i)*() ";
@@ -83,10 +96,21 @@ namespace boost
       //      cout << " (i)*() const ";
             return **i_;
         }
+ */     
+        bool operator==( const this_type& r ) const
+        {
+            return **i_ == **r.i_;
+        }
+        
+        bool operator<( const this_type& r ) const
+        {
+            return **i_ < **r.i_;
+        }
+
         
         
-        
-        bool operator==( const indirected_value_type& r )
+   /*     
+        bool operator==( const T& r ) const
         {
     //        cout << " (i)== ";
             return **i_ == r;
@@ -94,63 +118,50 @@ namespace boost
         
         
         
-        bool operator<( const indirected_value_type& r )
+        bool operator<( const T& r ) const
         {
   //          cout << " (i)< ";
             return **i_ < r;
-        }
-      
+        }*/
+      /*
         operator const indirected_value_type&()  // for assignment, consider reference parameter + overload
         {
 //            cout << " (i)VT const ";
             return **i_;
         }
-       
+       */
+        /*
         operator const ValueType() const
         {
+            **i_;
+            assert( *i_ != (void*)0x00375A38 );
             return *i_;
         }
         
+        */
+        
     }; // class 'indirect_type';
     
-    template< typename C, typename I >
-    inline std::ostream& operator<<( std::ostream& out, const iterator_proxy<C,I>& r )
-    {
-        return out << *r;
-    }
-    
-    template< typename PtrIterator >
-    struct types
-    {   
-        typedef BOOST_DEDUCED_TYPENAME detail::iterator_traits<PtrIterator>::value_type  ptr_value_type;
-        typedef BOOST_DEDUCED_TYPENAME ::boost::remove_pointer<ptr_value_type>::type     VT;
-        typedef VT&                                                                      R;
-        typedef ptr_value_type                                                           P;
-    };
-    
     template< typename PI > // pointer iterator
-    class ptr_container_iterator : public random_access_iterator_helper<  ptr_container_iterator<PI>,
-                                                                          BOOST_DEDUCED_TYPENAME types<PI>::VT,
-                                                                          std::ptrdiff_t,
-                                                                          BOOST_DEDUCED_TYPENAME types<PI>::P,
-                                                                          BOOST_DEDUCED_TYPENAME types<PI>::R >
+    class ptr_container_iterator 
     {
     public:
-        typedef PI                                                                       ptr_iterator;                                              
-        typedef BOOST_DEDUCED_TYPENAME detail::iterator_traits<ptr_iterator>::value_type ptr_value_type;
-        typedef ptr_value_type                                                           pointer;
-        typedef pointer                                                                  value_type;
-        typedef BOOST_DEDUCED_TYPENAME ::boost::remove_pointer<ptr_value_type>::type     indirected_value_type;
-
-        typedef value_type&                                                              reference;
-        typedef const value_type&                                                        const_reference;
+        typedef PI                                                                       ptr_iterator;                                                      
+        typedef BOOST_DEDUCED_TYPENAME detail::iterator_traits<ptr_iterator>::value_type value_type_t;
+        typedef BOOST_DEDUCED_TYPENAME ::boost::remove_pointer<value_type_t>::type         T;
+        typedef T*                                                                       pointer;
+        typedef iterator_proxy<T*,ptr_iterator>                                          proxy_type;
+        typedef                                        proxy_type                        value_type;
+       // typedef proxy_type                                                               value_type;
+        typedef proxy_type&                                                              reference;
+        //typedef const proxy_type&                                                        const_reference;
         typedef ptr_container_iterator<ptr_iterator>                                     this_type;
         typedef BOOST_DEDUCED_TYPENAME detail::iterator_traits<ptr_iterator>::iterator_category
                                                                                          iterator_category;
         typedef BOOST_DEDUCED_TYPENAME detail::iterator_traits<ptr_iterator>::difference_type 
                                                                                          difference_type;
     public:
-        typedef iterator_proxy<value_type,ptr_iterator>                                  proxy_type;
+       
         
     private:
         ptr_iterator ptr_iterator_;
@@ -158,7 +169,7 @@ namespace boost
                                        
     public:
         
-        ptr_container_iterator( ptr_iterator r = ptr_iterator() ) : ptr_iterator_( r ), proxy_( ptr_iterator_ )
+        explicit ptr_container_iterator( ptr_iterator r ) : ptr_iterator_( r ), proxy_( ptr_iterator_ )
         {
         }
         
@@ -171,6 +182,7 @@ namespace boost
         ptr_container_iterator& operator=( const ptr_container_iterator& r )
         {
             ptr_iterator_ = r.ptr_iterator_;
+            //proxy_        = proxy_type( ptr_iterator_ );
             return *this;
         }
 
@@ -186,6 +198,16 @@ namespace boost
             return proxy_;
         }
         
+        pointer operator->()
+        {
+            return *ptr_iterator_;
+        }
+        
+        const pointer operator->() const
+        {
+            return *ptr_iterator_;
+        }
+        
         bool operator<( const this_type& r ) const
         {
             //cout << " < ";
@@ -198,11 +220,25 @@ namespace boost
             return ptr_iterator_ == r.ptr_iterator_; 
         }
         
+        bool operator!=( const this_type& r ) const
+        {
+            //cout << " == ";
+            return !( *this == r );
+        }
+
+        
         this_type& operator++()
         {
             //cout << " ++ " << **ptr_iterator_ << endl;
             ++ptr_iterator_;
             return *this;
+        }
+        
+        this_type operator++( int ) 
+        {
+            this_type res( *this );
+            ++*this;
+            return res;
         }
         
         this_type& operator--()
@@ -212,16 +248,35 @@ namespace boost
             return *this;
         }
         
+        this_type operator--( int ) 
+        {
+            this_type res( *this );
+            --*this;
+            return res;
+        }
+        
         this_type& operator+=( difference_type n )
         {
             ptr_iterator_ += n;
             return *this;
         }
         
+        friend this_type operator+( const this_type& x, int i )
+        {
+            this_type res( x );
+            return res += i;
+        }
+        
         this_type& operator-=( difference_type n )
         {
             ptr_iterator_ -= n;
             return *this;
+        }
+        
+        friend this_type operator-( const this_type& x, int i )
+        {
+            this_type res( x );
+            return res -= i;
         }
 
         friend difference_type operator-( const this_type& x, const this_type& y )
@@ -230,6 +285,7 @@ namespace boost
         }
     };
 
+         
     template< typename PI >
     inline ptr_container_iterator<PI> make_ptr_container_iterator( PI pi )
     {

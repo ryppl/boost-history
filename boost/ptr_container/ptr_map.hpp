@@ -33,14 +33,15 @@ class ptr_map : public detail::associative_ptr_container< std::map<Key,T*,Compar
     typedef detail::associative_ptr_container< std::map<Key,T*,Compare,Allocator>, T > Base;
 
 public: // typedefs
-
-    public:
-    ptr_map() : Base() {}
-    ptr_map( ptr_map& r ) : Base( r )             {}
-    ptr_map( typename Base::release_type r ) : Base( r )                {}
+    BOOST_FORWARD_ASSOC_TYPEDEF( Base );
+        
+public:
+    explicit ptr_map( const Compare& comp = Compare(), 
+             const allocator_type& alloc = allocator_type() ) : Base( comp, alloc ) ) {}
+    explicit ptr_map( std::auto_ptr<ptr_map> r ) : Base( r ) {}
     template< typename InputIterator >
     ptr_map( InputIterator first, InputIterator last ) : Base( first, last ) {}
-    void operator=( ptr_map& r ) { Base::operator=( r );}
+    void operator=( std::auto_ptr<ptr_map> r ) { Base::operator=( r );}
 
 };
 
@@ -48,19 +49,21 @@ public: // typedefs
 
 template< typename Key, typename T, typename Compare = std::less<Key>, 
           typename Allocator = std::allocator<T*> >
-class ptr_multimap : public associative_ptr_container< std::map<Key,T*,Compare,Allocator>, T >
+class ptr_multimap : public detail::associative_ptr_container< std::map<Key,T*,Compare,Allocator>, T >
 {
-    typedef associative_ptr_container< std::map<Key,T*,Compare,Allocator>, T > Base;
+    typedef detail::associative_ptr_container< std::map<Key,T*,Compare,Allocator>, T > Base;
 
 public: // typedefs
-
-    public:
-    ptr_multimap() : Base() {}
-    ptr_multimap( ptr_multimap& r ) : Base( r )             {}
-    ptr_multimap( typename Base::release_type r ) : Base( r )                {}
+    BOOST_FORWARD_ASSOC_TYPEDEF( Base );
+        
+public:
+    ptr_multimap( const Compare& comp = Compare(), 
+                  const allocator_type& alloc = allocator_type() ) : Base( comp, alloc ) ) {}
+    ptr_multimap( std::auto_ptr<ptr_multimap> r ) : Base( r )             {}
+    
     template< typename InputIterator >
     ptr_multimap( InputIterator first, InputIterator last ) : Base( first, last ) {}
-    void operator=( ptr_multimap& r ) { Base::operator=( r );}
+    void operator=( std::auto_ptr<ptr_multimap> r ) { Base::operator=( r );}
 
 };
 
