@@ -22,24 +22,39 @@ namespace boost {
     //       performance reasons. I don't believe this is unreasonable, but if
     //       someone can justify any reason where this is unreasonable, I will
     //       happily look at specializing integral/non integral functions.
-    template<typename size_type, typename ItIn1, typename ItIn2, typename ItSubSeq>
+    template<typename size_type,
+             typename ItIn1,
+             typename ItIn2,
+             typename ItSubSeq>
     inline
     size_type
-    longest_common_subsequence(ItIn1 begin_first, ItIn1 end_first,
-                               ItIn2 begin_second, ItIn2 end_second,
+    longest_common_subsequence(ItIn1    begin_first,
+                               ItIn1    end_first,
+                               ItIn2    begin_second,
+                               ItIn2    end_second,
                                ItSubSeq subsequence)
     {
         std::allocator<size_type> alloc;
-        return longest_common_subsequence<size_type>(begin_first, end_first,
-                                                     begin_second, end_second,
-                                                     subsequence, alloc);
+        return longest_common_subsequence<size_type>(begin_first,
+                                                     end_first,
+                                                     begin_second,
+                                                     end_second,
+                                                     subsequence,
+                                                     alloc);
     }
 
-    template<typename size_type, typename Alloc, typename ItIn1, typename ItIn2, typename ItSubSeq>
+    template<typename size_type,
+             typename Alloc,
+             typename ItIn1,
+             typename ItIn2,
+             typename ItSubSeq>
     size_type
-    longest_common_subsequence(ItIn1 begin_first, ItIn1 end_first,
-                               ItIn2 begin_second, ItIn2 end_second,
-                               ItSubSeq subsequence, Alloc &alloc)
+    longest_common_subsequence(ItIn1     begin_first,
+                               ItIn1     end_first,
+                               ItIn2     begin_second,
+                               ItIn2     end_second,
+                               ItSubSeq  subsequence,
+                               Alloc    &alloc)
     {
         // calculate the length of each subsequence
         std::ptrdiff_t size_first  = std::distance<>(begin_first, end_first);
@@ -96,10 +111,11 @@ namespace boost {
     inline
     size_type
     longest_common_subsequence_length(ItIn1 begin_first, ItIn1 end_first,
-                                                ItIn2 begin_second, ItIn2 end_second)
+                                      ItIn2 begin_second, ItIn2 end_second)
     {
         std::allocator<size_type> alloc;
-        return longest_common_subsequence_length<size_type>(begin_first, end_first, begin_second, end_second, alloc);
+        return longest_common_subsequence_length<size_type>(
+            begin_first, end_first, begin_second, end_second, alloc);
     }
 
     template<typename size_type, typename Alloc, typename ItIn1, typename ItIn2>

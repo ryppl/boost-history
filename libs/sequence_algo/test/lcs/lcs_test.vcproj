@@ -121,10 +121,10 @@
 				RelativePath="crc_string.hpp">
 			</File>
 			<File
-				RelativePath="..\..\..\boost\detail\lcs_detail.hpp">
+				RelativePath="..\..\..\..\boost\sequence_algo\detail\lcs_detail.hpp">
 			</File>
 			<File
-				RelativePath="..\..\..\boost\longest_common_subsequence.hpp">
+				RelativePath="..\..\..\..\boost\sequence_algo\longest_common_subsequence.hpp">
 			</File>
 		</Filter>
 		<Filter

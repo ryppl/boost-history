@@ -18,10 +18,16 @@ namespace boost {
     namespace detail {
 
         // recursive lcs algorithm
-        template<typename size_type, typename ItIn1, typename ItIn2, typename ItSubSeq>
-        size_type linear_space_lcs(ItIn1 begin_first, ItIn1 end_first,
-                                   ItIn2 begin_second, ItIn2 end_second,
-                                   ItSubSeq subsequence, size_type *pA)
+        template<typename size_type,
+                 typename ItIn1,
+                 typename ItIn2,
+                 typename ItSubSeq>
+        size_type linear_space_lcs(ItIn1      begin_first,
+                                   ItIn1      end_first,
+                                   ItIn2      begin_second,
+                                   ItIn2      end_second,
+                                   ItSubSeq   subsequence,
+                                   size_type *pA)
         {
 #ifdef BOOST_STATIC_ASSERT  // Not supported for BCC 5.5.1
             BOOST_STATIC_ASSERT(boost::is_integral<size_type>::value);
@@ -116,9 +122,12 @@ namespace boost {
                 if (size_second > 2  &&  pO[size_first] > 0)
                 {
                     ItIn1 left_it   = begin_first;
-                    ItIn1 left_ite  = begin_first;      std::advance<>(left_ite, pO[size_first]);
+                    ItIn1 left_ite  = begin_first;
+                    std::advance<>(left_ite, pO[size_first]);
+
                     ItIn2 right_it  = begin_second;
-                    ItIn2 right_ite = begin_second;     std::advance<>(right_ite, size_second>>1);
+                    ItIn2 right_ite = begin_second;
+                    std::advance<>(right_ite, size_second>>1);
 
                     if ((size_second>>1) > 0  &&  pO[size_first] > 0)
                     {

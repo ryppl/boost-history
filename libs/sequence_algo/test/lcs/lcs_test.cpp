@@ -53,22 +53,29 @@ static void test_character_seq(const char *str1, const char *str2)
 // the Dunkumware STl does not implement a push_back method
 // on std::basic_string
 #if defined(BOOST_MSVC)  &&  (_MSC_VER <= 1200)
-    std::vector<char> subsequence;
+    typedef
+    std::vector<char>
+    subsequence_t;
 #else
-    std::string subsequence;
+    typedef
+    std::string
+    subsequence_t;
 #endif
 
-    signed short llcs;
+    signed short  llcs;
+    subsequence_t subsequence;
     llcs = boost::longest_common_subsequence<signed short>(str1, str1+strlen(str1),
                                                            str2, str2+strlen(str2),
                                                            std::back_inserter<>(subsequence));
 
     std::cout << "Longest Common Subsequence: \"";
 #if defined(BOOST_MSVC)  &&  (_MSC_VER <= 1200)
-    std::vector<char>::const_iterator it  = subsequence.begin();
-    std::vector<char>::const_iterator ite = subsequence.end();
+{
+    subsequence_t::const_iterator it  = subsequence.begin();
+    subsequence_t::const_iterator ite = subsequence.end();
     for (; it!=ite; ++it)
         std::cout << *it;
+}
 #else
     std::cout << subsequence;
 #endif
@@ -83,6 +90,29 @@ static void test_character_seq(const char *str1, const char *str2)
     BOOST_ASSERT(llcs == boost::longest_common_subsequence_length<signed short>(str1, str1+strlen(str1),
                                                                                 str2, str2+strlen(str2),
                                                                                 alloc));
+
+    subsequence_t::const_iterator       it  = subsequence.begin();
+    const subsequence_t::const_iterator ite = subsequence.end();
+    while (it != ite)
+    {
+        if (*str1 == *str2)
+        {
+            std::cout << "Keep     '" << *str1 << "'" << std::endl;
+            ++str1;
+            ++str2;
+            ++it;
+        }
+        else if (*it != *str1)
+            std::cout << "Deleted  '" << *str1++ << "' from first" << std::endl;
+        else if (*it != *str2)
+            std::cout << "Inserted '" << *str2++ << "' into second" << std::endl;
+    }
+    
+    while (*str1 != 0)
+        std::cout << "Deleted  '" << *str1++ << "' from first" << std::endl;
+
+    while (*str2 != 0)
+        std::cout << "Inserted '" << *str2++ << "' into second" << std::endl;
 }
 
 
