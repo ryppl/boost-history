@@ -37,8 +37,8 @@ struct f2
 
 int main()
 {
-    typedef mpl::apply_1<f1, int>::type t1;
-    typedef mpl::apply_2<f2, int, long>::type t2;
+    typedef mpl::apply1<f1, int>::type t1;
+    typedef mpl::apply2<f2, int, long>::type t2;
 
     BOOST_MPL_ASSERT_IS_SAME(t1, int);
     BOOST_MPL_ASSERT_IS_SAME(t2, long);
@@ -50,13 +50,13 @@ int main()
 
 
 // should not compile
-//    typedef mpl::apply_0<f1, int>::type t0;
-//    typedef mpl::apply_1<f1, int, long>::type t1;
-//    typedef mpl::apply_2<f1, int>::type t2;
-//    typedef mpl::apply_2<f1, int, int>::type t3;
+//    typedef mpl::apply0<f1, int>::type t0;
+//    typedef mpl::apply1<f1, int, long>::type t1;
+//    typedef mpl::apply2<f1, int>::type t2;
+//    typedef mpl::apply2<f1, int, int>::type t3;
 
-//    typedef mpl::apply_1<f2, int>::type t4;
-//    typedef mpl::apply_2<f2, int>::type t5;
+//    typedef mpl::apply1<f2, int>::type t4;
+//    typedef mpl::apply2<f2, int>::type t5;
 
     return 0;
 }
