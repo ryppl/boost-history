@@ -17,6 +17,8 @@
 #ifndef BOOST_VISITOR_DYNAMIC_VISITOR_INTERFACE_HPP
 #define BOOST_VISITOR_DYNAMIC_VISITOR_INTERFACE_HPP
 
+#include "boost/type_traits/add_reference.hpp"
+
 namespace boost {
 
 //////////////////////////////////////////////////////////////////////////
@@ -29,7 +31,7 @@ namespace boost {
 template <typename T>
 struct dynamic_visitor_interface
 {
-    virtual void visit(T&) = 0;
+    virtual void visit( typename add_reference<T>::type ) = 0;
 
 protected:
     ~dynamic_visitor_interface()
