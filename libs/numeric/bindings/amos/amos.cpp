@@ -17,41 +17,61 @@ namespace boost { namespace numeric { namespace bindings { namespace amos {
     { for( ; begin != end ; begin += stride, ++it1 ) std::swap( *begin, *it1 ) ; }
 
     template <>
-    void besi< float >(const float * z, const float * fnu, const int * kode, const int * n, float* cy, int * nz, int * error)
-    { AMOS_CBESI( z, fnu, kode, n, cy, nz, error ) ; }
-    
-    template <>
     void besi< double >(const double * z, const double * fnu, const int * kode, const int * n, double* cy, int * nz, int * error)
     { 
-      AMOS_ZBESI( z, z + *n, fnu, kode, n, cy, cy + *n, nz, error ) ; 
-      swap((double*)(z  + 1), (double*)(z  + *n - 1), 2, (double*)(z  + *n) ) ;
-      swap((double*)(cy + 1), (double*)(cy + *n - 1), 2, (double*)(cy + *n) ) ;
+      *error = 0 ;
+      AMOS_DBESI( z, fnu, kode, n, cy, nz ) ; 
     }
     
     template <>
-    void besj< float >(const float * z, const float * fnu, const int * kode, const int * n, float* cy, int * nz, int * error)
+    void besi< std::complex< float > >(const float * z, const float * fnu, const int * kode, const int * n, float* cy, int * nz, int * error)
+    { AMOS_CBESI( z, fnu, kode, n, cy, nz, error ) ; }
+    
+    template <>
+    void besi< std::complex< double > >(const double * z, const double * fnu, const int * kode, const int * n, double* cy, int * nz, int * error)
+    { 
+      AMOS_ZBESI( z, z + 1, fnu, kode, n, cy, cy + *n, nz, error ) ; 
+      swap((double*)(cy + 1), (double*)(cy + *n - 1), 2, (double*)(cy + *n) ) ;
+    }
+    
+
+
+    template <>
+    void besj< double >(const double * z, const double * fnu, const int * kode, const int * n, double* cy, int * nz, int * error)
+    { 
+      *error = 0 ;
+      AMOS_DBESJ( z, fnu, n, cy, nz ) ; 
+    }
+    
+    template <>
+    void besj< std::complex< float > >(const float * z, const float * fnu, const int * kode, const int * n, float* cy, int * nz, int * error)
     { AMOS_CBESJ( z, fnu, kode, n, cy, nz, error ) ; }
     
     template <>
-    void besj< double >(const double * z, const double * fnu, const int * kode, const int * n, double* cy, int * nz, int * error)
+    void besj< std::complex< double > >(const double * z, const double * fnu, const int * kode, const int * n, double* cy, int * nz, int * error)
     { 
       AMOS_ZBESJ( z, z+1, fnu, kode, n, cy, cy + 1, nz, error ) ; 
       swap((double*)(z  + 1), (double*)(z  + *n - 1), 2, (double*)(z  + *n) ) ;
       swap((double*)(cy + 1), (double*)(cy + *n - 1), 2, (double*)(cy + *n) ) ;
     }
     
+
+
     template <>
-    void besy< float >(const float * z, const float * fnu, const int * kode, const int * n, float* cy, int * nz, float * wrk, int * error)
+    void besy< double >(const double * z, const double * fnu, const int * kode, const int * n, double* cy, int * nz, double * wrk, int * error)
+    { AMOS_DBESY( z, fnu, n, cy ) ; }
+    
+    template <>
+    void besy< std::complex< float > >(const float * z, const float * fnu, const int * kode, const int * n, float* cy, int * nz, float * wrk, int * error)
     { AMOS_CBESY( z, fnu, kode, n, cy, nz, wrk, error ) ; }
     
     template <>
-    void besy< double >(const double * z, const double * fnu, const int * kode, const int * n, double* cy, int * nz, double * wrk, int * error)
+    void besy< std::complex< double > >(const double * z, const double * fnu, const int * kode, const int * n, double* cy, int * nz, double * wrk, int * error)
     { 
       AMOS_ZBESY( z, z+1, fnu, kode, n, cy, cy + 1, nz, wrk, wrk + 1, error ) ; 
       swap((double*)(z  + 1), (double*)(z  + *n - 1), 2, (double*)(z  + *n) ) ;
       swap((double*)(cy + 1), (double*)(cy + *n - 1), 2, (double*)(cy + *n) ) ;
     }
-    
   }
 
 }}}}
