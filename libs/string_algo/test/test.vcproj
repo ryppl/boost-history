@@ -108,6 +108,9 @@
 				RelativePath="case_conv_test.cpp">
 			</File>
 			<File
+				RelativePath="string_predicate_test.cpp">
+			</File>
+			<File
 				RelativePath="test_main.cpp">
 			</File>
 			<File

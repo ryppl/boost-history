@@ -13,12 +13,14 @@
 // Include tests
 extern void trim_test();
 extern void case_conv_test();
+extern void string_predicate_test();
 
 // test main 
 int test_main( int, char*[] )
 {
-	trim_test();
-	case_conv_test();
+    trim_test();
+    case_conv_test();
+    string_predicate_test();
 
-	return 0;
+    return 0;
 }

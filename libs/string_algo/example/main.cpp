@@ -57,11 +57,28 @@ void convtest()
 	cout << "*" << str1 << "*" << endl;
 }
 
+void algo()
+{
+	string str1("123xxx321");
+	wstring str2(L"abc");
+	string str3("");
+
+	cout << (is_prefix( str1, string("123") )?"true":"false") << endl; 
+	cout << (is_prefix( str1, string("1234") )?"true":"false") << endl; 
+	cout << (is_suffix( str1, string("321") )?"true":"false") << endl; 
+	cout << (is_suffix( str1, string("123") )?"true":"false") << endl; 
+
+	cout << (is_prefix( str2, string("abc") )?"true":"false") << endl; 
+	cout << (is_suffix( str2, string("abc") )?"true":"false") << endl; 
+
+	cout << (is_prefix( str2, string("abcd") )?"true":"false") << endl; 
+	cout << (is_suffix( str2, string("abcd") )?"true":"false") << endl; 
+
+}
+
 int main()
 {
-	trimtest();
-	cout << endl << "%%" << endl << endl;
-	convtest();
+	algo();
 
 	cout << "Done." << endl;
 	cin.get();

@@ -17,27 +17,27 @@ using namespace boost;
 
 void case_conv_test()
 {
-	string str1("AbCdEfG 123 xxxYYYzZzZ");
-	string str2("AbCdEfG 123 xxxYYYzZzZ");
-	string str3("");
+    string str1("AbCdEfG 123 xxxYYYzZzZ");
+    string str2("AbCdEfG 123 xxxYYYzZzZ");
+    string str3("");
 
-	// *** value passing tests *** //
+    // *** value passing tests *** //
 
-	BOOST_CHECK( tolower( str1 )=="abcdefg 123 xxxyyyzzzz" );
-	BOOST_CHECK( toupper( str1 )=="ABCDEFG 123 XXXYYYZZZZ" );
+    BOOST_CHECK( tolower( str1 )=="abcdefg 123 xxxyyyzzzz" );
+    BOOST_CHECK( toupper( str1 )=="ABCDEFG 123 XXXYYYZZZZ" );
 
-	BOOST_CHECK( tolower( str3 )=="" );
-	BOOST_CHECK( toupper( str3 )=="" );
+    BOOST_CHECK( tolower( str3 )=="" );
+    BOOST_CHECK( toupper( str3 )=="" );
 
-	// *** inplace tests *** //
+    // *** inplace tests *** //
 
-	tolower_in( str1 );
-	BOOST_CHECK( str1=="abcdefg 123 xxxyyyzzzz" );
-	toupper_in( str2 );
-	BOOST_CHECK( str2=="ABCDEFG 123 XXXYYYZZZZ" );
+    tolower_in( str1 );
+    BOOST_CHECK( str1=="abcdefg 123 xxxyyyzzzz" );
+    toupper_in( str2 );
+    BOOST_CHECK( str2=="ABCDEFG 123 XXXYYYZZZZ" );
 
-	tolower_in( str3 );
-	BOOST_CHECK( str3=="" );
-	toupper_in( str3 );
-	BOOST_CHECK( str3=="" );
+    tolower_in( str3 );
+    BOOST_CHECK( str3=="" );
+    toupper_in( str3 );
+    BOOST_CHECK( str3=="" );
 }

@@ -118,6 +118,9 @@
 				RelativePath="..\..\..\boost\string_algo.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\boost\string_algo\string_predicate.hpp">
+			</File>
+			<File
 				RelativePath="..\..\..\boost\string_algo\trim.hpp">
 			</File>
 		</Filter>
