@@ -280,7 +280,7 @@ void cpp_tests(const reg_expression<C, T, A>& e, bool recurse = true)
                           matches[j] << "," << matches[j+1] << ")" << endl;
                }
             }
-            else if(((m[i].first - search_text.begin()) != matches[j]) || ((m[i].second - search_text.begin()) != matches[j+1]))
+            else if(((m[i].first - x) != matches[j]) || ((m[i].second - x) != matches[j+1]))
             {
                begin_error();
                cout << "regex++ API result mismatch in sub-expression " << i <<

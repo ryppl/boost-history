@@ -138,9 +138,9 @@ istream& get_line(istream& is, string_type& s, char delim)
    nstring_type t;
    get_line(is, t, delim);
    s.erase(s.begin(), s.end());
-   nstring_type::iterator i, j;
-   i = t.begin();
-   j = t.end();
+   const char* i, *j;
+   i = t.c_str();
+   j = t.c_str() + t.size();
    wchar_t* buf = new wchar_t[MB_CUR_MAX + 1];
    int cchars;
    while(i != j)

@@ -198,7 +198,7 @@ struct debug_iterator : public BOOST_RE_RA_ITERATOR(T, ptrdiff_t)
 
   debug_iterator(T c, T f, T l)
     : cur(c), first(f), last(l) {}
-  debug_iterator() : cur(0), first(0), last(0) {}
+  debug_iterator() : cur(), first(), last() {}
   debug_iterator(const debug_iterator& x)
     : cur(x.cur), first(x.first), last(x.last) {}
 
