@@ -140,7 +140,7 @@ public:
   void assign(InputIterator first,InputIterator last)
   {
     BOOST_INDEXED_SET_SEQ_INDEX_CHECK_INVARIANT;
-    erase(begin(),end());
+    clear();
     for(;first!=last;++first)push_back(*first);
   }
 #endif
@@ -148,7 +148,7 @@ public:
   void assign(size_type n,value_param_type value)
   {
     BOOST_INDEXED_SET_SEQ_INDEX_CHECK_INVARIANT;
-    erase(begin(),end());
+    clear();
     for(size_type i=0;i<n;++i)push_back(value);
   }
     
@@ -176,8 +176,19 @@ public:
   size_type size()const{return final_size_();}
   size_type max_size()const{return final_max_size_();}
 
-  /* access: no need to provide non-const versions as
-   * sequenced_index::iterator==index::const_iterator
+  void resize(size_type n,value_param_type x=value_type())
+  {
+    BOOST_INDEXED_SET_SEQ_INDEX_CHECK_INVARIANT;
+    if(n>size())insert(end(),n-size(),x);
+    else if(n<size()){
+      iterator it=begin();
+      std::advance(it,n);
+      erase(it,end());
+    }   
+  }
+
+  /* access: no non-const versions provided as sequenced_index
+   * handles const elements.
    */
 
   const_reference front()const{return *begin();}
@@ -200,12 +211,20 @@ public:
     return std::pair<iterator,bool>(make_iterator(p.first),p.second);
   }
 
+  void insert(iterator position,size_type n,value_param_type x)
+  {
+    BOOST_INDEXED_SET_CHECK_VALID_ITERATOR(position);
+    BOOST_INDEXED_SET_CHECK_IS_OWNER(position,*this);
+    BOOST_INDEXED_SET_SEQ_INDEX_CHECK_INVARIANT;
+    for(size_type i=0;i<n;++i)insert(position,x);
+  }
+ 
 #if !defined(BOOST_NO_MEMBER_TEMPLATES)||defined(BOOST_MSVC6_MEMBER_TEMPLATES)
   template<typename InputIterator>
-  void insert(InputIterator first,InputIterator last)
+  void insert(iterator position,InputIterator first,InputIterator last)
   {
     BOOST_INDEXED_SET_SEQ_INDEX_CHECK_INVARIANT;
-    for(;first!=last;++first)push_back(*first);
+    for(;first!=last;++first)insert(position,*first);
   }
 #endif
 
@@ -394,7 +413,7 @@ public:
   void sort()
   {
     BOOST_INDEXED_SET_SEQ_INDEX_CHECK_INVARIANT;
-    sequenced_index_sort(header(),std::less<value_type>(),get_allocator());
+    sequenced_index_sort(header(),std::less<value_type>());
   }
 
 #if !defined(BOOST_NO_MEMBER_TEMPLATES)||defined(BOOST_MSVC6_MEMBER_TEMPLATES)
@@ -402,7 +421,7 @@ public:
   void sort(Compare comp)
   {
     BOOST_INDEXED_SET_SEQ_INDEX_CHECK_INVARIANT;
-    sequenced_index_sort(header(),comp,get_allocator());
+    sequenced_index_sort(header(),comp);
   }
 #endif
 
@@ -432,8 +451,7 @@ BOOST_INDEXED_SET_PROTECTED_IF_MEMBER_TEMPLATE_FRIENDS:
 #endif
 
   {
-    /* Copy ctor just takes the compare objects from x. The rest is done in
-     * subsequent call to copy_().
+    /* The actual copying takes place in subsequent call to copy_().
      */
   }
 
@@ -579,11 +597,6 @@ private:
   static void relink(node_type* position,node_type* first,node_type* last)
   {
     sequenced_index_node_impl::relink(position->impl(),first->impl(),last->impl());
-  }
-
-  static void swap(node_type* x,node_type* y)
-  {
-    sequenced_index_node_impl::swap(x->impl(),y->impl());
   }
 
 #if defined(BOOST_INDEXED_SET_ENABLE_SAFE_MODE)
