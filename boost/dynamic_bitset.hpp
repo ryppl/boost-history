@@ -55,18 +55,6 @@
 # define BOOST_BITSET_CHAR(type, c)  (c)
 #endif
 
-// ----------------------
-// gps - A HACK to avoid a g++ bug - c++/8419
-//       See: http://gcc.gnu.org/bugzilla/show_bug.cgi?id=8419
-//
-//       To be moved to detail/dynamic_bitset.hpp
-//
-namespace boost { namespace detail {
-    template <typename T> inline T make_non_const(T t) { return t; }
-} }
-
-// ------------------------
-
 
 namespace boost {
 
