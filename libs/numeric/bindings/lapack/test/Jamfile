@@ -45,3 +45,27 @@ exe ublas_hbev
         ;
 
 
+
+exe ublas_heev
+        : ublas_heev.cpp 
+        :  <include>$(BOOST_ROOT)
+	   <include>$(B_ROOT)
+	   <library-path>$(LAPACK_PATH)
+	   <library-path>$(BLAS_PATH)
+	   <find-library>$(LAPACK_LIB)
+	   <find-library>$(BLAS_LIB)
+        ;
+
+
+
+exe ublas_syev
+        : ublas_syev.cpp 
+        :  <include>$(BOOST_ROOT)
+	   <include>$(B_ROOT)
+	   <library-path>$(LAPACK_PATH)
+	   <library-path>$(BLAS_PATH)
+	   <find-library>$(LAPACK_LIB)
+	   <find-library>$(BLAS_LIB)
+        ;
+
+
