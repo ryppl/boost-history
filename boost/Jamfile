@@ -109,9 +109,7 @@ import python ;
 
 #
 local version-tag = [ MATCH "^([^.]+).([^.]+)" : $(BOOST_VERSION) ] ;
-if $(NT) { version-tag = $(version-tag:J=) ; }
-else { version-tag = $(version-tag:J=".") ; }
-version-tag = $(version-tag:J=) ;
+version-tag = $(version-tag:J="_") ;
 
 #
 install-subinclude
