@@ -19,7 +19,7 @@
 #ifndef BOOST_NUMERIC_BINDINGS_TRAITS_BOOST_ARRAY_H
 #define BOOST_NUMERIC_BINDINGS_TRAITS_BOOST_ARRAY_H
 
-#include <boost/numeric/bindings/traits/traits.hpp>
+#include <boost/numeric/bindings/traits/vector_traits.hpp>
 #include <boost/array.hpp>
 
 #endif 

@@ -19,7 +19,7 @@
 #ifndef BOOST_NUMERIC_BINDINGS_TRAITS_STD_VECTOR_H
 #define BOOST_NUMERIC_BINDINGS_TRAITS_STD_VECTOR_H
 
-#include <boost/numeric/bindings/traits/traits.hpp>
+#include <boost/numeric/bindings/traits/vector_traits.hpp>
 #include <vector>
 
 namespace boost { namespace numeric { namespace bindings { namespace traits {
