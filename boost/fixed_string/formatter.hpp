@@ -9,11 +9,11 @@
 
    namespace boost
    {
-      template< size_t n, typename CharT = char, class StringTraits = string_traits< CharT > >
-      class formatterex: public fixed_string< n, CharT, StringTraits >
+      template< size_t n, typename CharT = char, class CharStringTraits = std::char_traits< CharT > >
+      class formatterex: public fixed_string< n, CharT, CharStringTraits >
       {
          public:
-            inline const char *   operator()( const char * fs ... ) throw()
+            inline formatterex &  operator()( const char * fs ... ) throw()
             {
                va_list                 args;
                va_start( args, fs );
