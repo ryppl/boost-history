@@ -1017,6 +1017,114 @@ struct f_gx3
 \end{verbatim}
 }
 
+Or, for example, that means that you cannot have a list of 
+ct-metafunctions:
+
+{\footnotesize
+\begin{verbatim}
+template< typename T1, typename T2 >
+struct my_func
+{
+    typedef /* ... */ type;
+};
+
+typedef boost::mpl::list< 
+      my_func
+    , boost::is_same
+    , boost::is_convertible
+    > func_list; // error!
+\end{verbatim}
+}
+
+You would need to have a special kind of list to do the above, 
+and then yet another special kind of list for \emph{unary} 
+ct-metafunction, etc.
+
+So, basically, representing metafunctions as plain class 
+template would lead to duplication of almost every library 
+facility. "function class" metafunction form solves all these 
+problems. On the other hand, it seems that accepting function 
+classes as \emph{the} form of representation of compile-time 
+function entites imposes code duplication danger in as well: 
+if the library's own primitives, algorithms, etc. are 
+represented as class templates, that means that you either 
+cannot reuse these algorithms in context of higher-order 
+functions, or you have to duplicate all algorithms in second 
+form, so, for instance, there would be two versions of 
+\code{find}:
+
+{\footnotesize
+\begin{verbatim}
+// user-friendly form
+template<
+      typename Sequence
+    , typename T
+    >
+struct find
+{
+    typedef /* ... */ type;
+};
+
+// "function class" form
+struct find
+{
+    template< typename Sequence, typename T >
+    struct apply
+    {
+        typedef /* ... */ type;
+    };
+};
+\end{verbatim}
+}
+
+Of course, the third option is to eliminate 
+"user-friendly form" completely so one would always 
+have to write
+
+{\footnotesize
+\begin{verbatim}
+typedef boost::mpl::find::apply<list,long>::type iter;
+// or, if you prefer,
+// typedef boost::mpl::apply< boost::mpl::find,list,long >::type iter;
+\end{verbatim}
+}
+
+instead of 
+
+{\footnotesize
+\begin{verbatim}
+typedef boost::mpl::find<list,long>::type iter;
+\end{verbatim}
+}
+
+but that's would hurt usability, considering that the direct 
+invocations of library's algorithms are more often-used than 
+passing algorithms as arguments to another 
+algorithms/functions. 
+
+The library's answer to this dilemma is lambda expressions. 
+Lambda is the mechanism that enables curring of 
+ct-metafunctions and converting them into function classes, 
+so when you want to pass \code{find} algorithm as an argument 
+to a higher-oder function, you just write:
+
+{\footnotesize
+\begin{verbatim}
+typedef boost::mpl::apply< my_f, boost::mpl::find<_1,_2> >::type result;
+\end{verbatim}
+}
+
+and then you want just use %%find%% directly in your code, 
+you still have the intuitive
+
+{\footnotesize
+\begin{verbatim}
+typedef boost::mpl::find<list,long>::type iter;
+\end{verbatim}
+}
+
+
+[to be continiued]
 
 Metafunctions are important by encapsulating an operation into 
 compile-time invocable entity, they give you a possibility to 
