@@ -88,7 +88,8 @@ struct interval_traits
 template<class T, class Compare, class Rounding, class Checking>
 struct unprotect<interval_traits<T, Compare, Rounding, Checking> > {
   typedef
-    interval_traits<T, Compare, unprotect<Rounding>::type, Checking> type;
+    interval_traits<T, Compare, typename unprotect<Rounding>::type, Checking>
+    type;
 };
 
     }

@@ -54,7 +54,7 @@
 template<class T>
 T test_func2d(T x, T y)
 {
-  return sin(x)*cos(y) - exp(x*y)/45.0 * (pow(x+y,2)+100.0) - 
+  return sin(x)*cos(y) - exp(x*y)/45.0 * (square(x+y)+100.0) - 
     cos(sin(y))*y/4.0;
 }
 
@@ -80,7 +80,7 @@ void find_zeros(std::ostream & os, Function f, I searchrange)
     I range = l.front();
     l.pop_front();
     I val = f(range);
-    if(in(0, val)) {
+    if (in_zero(val)) {
       if(width(range) < 1e-6) {
 	os << range << '\n';
 	continue;
@@ -114,7 +114,7 @@ void find_zeros(std::ostream & os, Function f, I rx, I ry)
     rectangle rect = l.front();
     l.pop_front();
     I val = f(rect.first, rect.second);
-    if(in(0, val)) {
+    if (in_zero(val)) {
       if(width(rect.first) < epsilon && width(rect.second) < epsilon) {
 	os << median(rect.first) << " " << median(rect.second) << " "
 	   << lower(rect.first) << " " << upper(rect.first) << " "
@@ -140,7 +140,18 @@ void find_zeros(std::ostream & os, Function f, I rx, I ry)
 
 int main()
 {
-  typedef boost::interval<double> I;
+  using namespace boost;
+  using namespace interval_lib;
+
+  typedef
+    save_state
+      <rounded_transc_opposite_trick
+         <double, rounded_arithmetic_opposite_trick
+                    <double, rounding_control<double> > > >
+    my_rounded_arith;
+  typedef boost::interval<double, interval_traits<double,
+						  compare_certainly<double>,
+                                                  my_rounded_arith> > I;
   std::cout << "Zero points of sin(x)/(x*x+1)\n";
   find_zeros(std::cout, test_func1d<I>, I(-11, 10));
   std::cout << "Zero points of sqrt(x*x-1)\n";

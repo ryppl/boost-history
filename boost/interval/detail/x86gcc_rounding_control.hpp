@@ -50,34 +50,34 @@ namespace boost {
 // namespace {
   struct fpu_rounding_modes
   {
-    unsigned short mode_tonearest;
-    unsigned short mode_downward;
-    unsigned short mode_upward;
-    unsigned short mode_towardzero;
+    unsigned short tonearest;
+    unsigned short downward;
+    unsigned short upward;
+    unsigned short towardzero;
   };
-  extern const fpu_rounding_modes rounding_mode_data /*__attribute__((weak))*/;
+  extern const fpu_rounding_modes rnd_mode /*__attribute__((weak))*/;
 // }
 
 struct x86gcc_rounding_control
 {
   typedef unsigned short rounding_mode;
 
-  void set_rounding_mode(const rounding_mode& mode) const
+  static void set_rounding_mode(const rounding_mode& mode)
   {
-    __asm__ __volatile__ ("fldcw %0" : : "m" (*&mode));
+    __asm__ __volatile__ ("fldcw %0" : : "m"(mode));
   }
 
-  rounding_mode get_rounding_mode() const
+  static rounding_mode get_rounding_mode()
   {
-    rounding_mode cw;
-    __asm__ __volatile__ ("fnstcw %0" : "=m" (*&cw));
-    return cw;
+    rounding_mode tmp;
+    __asm__ __volatile__ ("fnstcw %0" : "=m"(tmp));
+    return tmp;
   }
 
-  void downward()   { set_rounding_mode(rounding_mode_data.mode_downward); }
-  void upward()     { set_rounding_mode(rounding_mode_data.mode_upward); }
-  void tonearest()  { set_rounding_mode(rounding_mode_data.mode_tonearest); }
-  void towardzero() { set_rounding_mode(rounding_mode_data.mode_towardzero); }
+  static void downward()   { set_rounding_mode(rnd_mode.downward);   }
+  static void upward()     { set_rounding_mode(rnd_mode.upward);     }
+  static void tonearest()  { set_rounding_mode(rnd_mode.tonearest);  }
+  static void towardzero() { set_rounding_mode(rnd_mode.towardzero); }
 
   template<class T>
   static T to_int(T r)
@@ -88,32 +88,27 @@ struct x86gcc_rounding_control
   }
 };
 
-// namespace {
-  // exceptions masked, extended precision
-const fpu_rounding_modes rounding_mode_data = 
-  { 0x137f, 0x177f, 0x1b7f, 0x1f7f };
-// }
+// exceptions masked, extended precision
+const fpu_rounding_modes rnd_mode = { 0x137f, 0x177f, 0x1b7f, 0x1f7f };
 
     } // namespace detail
 
 template<>
-struct rounding_control<float>: detail::x86gcc_rounding_control
+struct rounding_control<float>:
+  detail::x86gcc_rounding_control,
+  detail::ieee_float_constants
 {
   static float force_rounding(const float& r) 
   { volatile float r_ = r; return r_; }
 };
 
 template<>
-struct rounding_control<double>: detail::x86gcc_rounding_control
+struct rounding_control<double>:
+  detail::x86gcc_rounding_control,
+  detail::ieee_double_constants
 {
   static double force_rounding(const double& r) 
   { volatile double r_ = r; return r_; }
-  static double pi_down()     { return 3.14159; }
-  static double pi_up()       { return 3.14160; }
-  static double pi_1_2_down() { return 1.57079; }
-  static double pi_1_2_up()   { return 1.57080; }
-  static double pi_2_1_down() { return 6.28318; }
-  static double pi_2_1_up()   { return 6.28319; }
 };
 
 template<>

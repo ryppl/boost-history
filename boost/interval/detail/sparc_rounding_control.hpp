@@ -35,11 +35,12 @@ namespace boost {
 
 struct sparc_rounding_control
 {
-  // gcc requires this before the calls below for proper optimization
-  void set_rounding_mode(unsigned int mode)
+  typedef unsigned int rounding_mode;
+
+  static void set_rounding_mode(const rounding_mode& mode)
   {
 #if defined(__GNUC__)
-    __asm__ __volatile__("ld %0, %%fsr" : : "m" (mode));
+    __asm__ __volatile__("ld %0, %%fsr" : : "m"(mode));
 #elif defined(__KCC)
     asm("sethi %hi(mode), %o1");
     asm("ld [%o1+%lo(mode)], %fsr");
@@ -47,11 +48,12 @@ struct sparc_rounding_control
 #error Unsupported compiler for Sun Solaris rounding control.
 #endif
   }
-  unsigned int get_rounding_mode()
+
+  static rounding_mode get_rounding_mode()
   {
-    unsigned int mode;
+    rounding_mode mode;
 #if defined(__GNUC__)
-    __asm__ __volatile__("st %%fsr, %0" : "=m" (mode));
+    __asm__ __volatile__("st %%fsr, %0" : "=m"(mode));
 #elif defined(__KCC)
 #error KCC on Sun SPARC get_round_mode: please fix me
     asm("st %fsr, [mode]");
@@ -60,26 +62,34 @@ struct sparc_rounding_control
 #endif
     return mode;
   }
-  void downward() { set_rounding_mode(0xc0000000); }
-  void upward() { set_rounding_mode(0x80000000); }
-  void tonearest() { set_rounding_mode(0x00000000); }
-  void towardzero() { set_rounding_mode(0x40000000); }
-  static double force_rounding(const double& x) { return x; }
-  typedef unsigned int rounding_mode;
+
+  static void downward()   { set_rounding_mode(0xc0000000); }
+  static void upward()     { set_rounding_mode(0x80000000); }
+  static void tonearest()  { set_rounding_mode(0x00000000); }
+  static void towardzero() { set_rounding_mode(0x40000000); }
 };
 
     } // namespace detail
 
 template<>
-struct rounding_control<float>: detail::sparc_rounding_control
+struct rounding_control<float>:
+  detail::sparc_rounding_control,
+  detail::ieee_float_constants
 {
 private:
   rounding_control() {}
 };
 
+extern "C" { double rint(double); }
+
 template<>
-struct rounding_control<double>: detail::sparc_rounding_control
-{};
+struct rounding_control<double>:
+  detail::sparc_rounding_control,
+  detail::ieee_double_constants
+{
+  static double force_rounding(const double& x) { return x; }
+  static double to_int(const double& x) { return rint(x); }
+};
 
   } // namespace interval_lib
 } // namespace boost

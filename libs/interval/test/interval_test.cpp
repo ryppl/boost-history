@@ -31,9 +31,59 @@ typedef
                   <double, rounding_control<double> > > >
   my_rounded_arith;
 
-typedef boost::interval<double, interval_traits<double,
-						compare_certainly<double>,
-						my_rounded_arith> > R;
+typedef interval<double, interval_traits<double,
+					 compare_certainly<double>,
+					 my_rounded_arith> > R;
+
+static unsigned nb_errors;
+static std::string test_name;
+
+struct test {
+  static void init(const std::string& n) {
+    test_name = n;
+    nb_errors = 0;
+  }
+
+  static void start(const std::string& n, const R& r, double s) {
+    init(n);
+    std::cout << "Testing " << n << " on " << r << " step " << s << std::endl;
+  }
+
+  static void start(const std::string& n, const R& r, double s,
+		    double l, double h, double s2) {
+    init(n);
+    std::cout << "Testing " << n << " on " << r << " step " << s
+	      << " x scalar(" << l << " .. " << h << ") step " << s2
+	      << std::endl;
+  }
+
+  static void start(const std::string& n, const R& r1, const R& r2, double s) {
+    init(n);
+    std::cout << "Testing " << n << " on " << r1 << " x " << r2
+	      << " step " << s << std::endl;
+  }
+
+  static void error(double i_d, double o_d, const R& i_r, const R& o_r) {
+    if (nb_errors++ > 0) return;
+    std::cerr << test_name << " " << i_d << " = " << o_d << " not in "
+	      << test_name << " " << i_r << " = " << o_r << std::endl;
+  }
+
+  template<class T1, class T2>
+  static void error(double i_d1, double i_d2, double o_d,
+		    const T1& i_r1, const T2& i_r2, const R& o_r) {
+    if (nb_errors++ > 0) return;
+    std::cerr << i_d1 << " " << test_name << " " << i_d2 << " = " << o_d
+	      << " not in "
+	      << i_r1 << " " << test_name << " " << i_r2 << " = " << o_r
+	      << std::endl;
+  }
+
+  static void end() {
+    if (nb_errors <= 1) return;
+    std::cerr << test_name << ": " << nb_errors << " errors" << std::endl;
+  }
+};
 
 template<class UnaryFunction>
 void iterate_one_interval(UnaryFunction func, const std::string & msg,
@@ -41,18 +91,17 @@ void iterate_one_interval(UnaryFunction func, const std::string & msg,
 			  double step = 0.1)
 {
   R rn(low, high);
-  std::cout << "Testing " << msg << " on " << rn
-	    << " step " << step << std::endl;
-  for(double l = low; l <= high; l += step)
-    for(double u = l+step/10; u <= high; u += step) {
-      R r(l, u);
-      try {
+  test::start(msg, rn, step);
+  try {
+    for(double l = low; l <= high; l += step)
+      for(double u = l+step/10; u <= high; u += step) {
+	R r(l, u);
 	func(r);
-      } catch(std::exception & ex) {
-	std::cout << "Exception at " << msg << "(" << r << "): " 
-		  << ex.what() << std::endl;
       }
-    }
+  } catch(std::exception & ex) {
+    std::cerr << "Exception with " << msg << ex.what() << std::endl;
+  }
+  test::end();
 }
 
 template<class Scalar, class BinaryFunction>
@@ -64,21 +113,18 @@ void iterate_one_interval_one_scalar(BinaryFunction func,
 				     Scalar step2 = 1)
 {
   R rn(low, high);
-  std::cout << "Testing " << msg << " on " << rn << " step " << step
-	    << " x scalar(" << low2 << " .. " << high2
-	    << ") step " << step2 << std::endl;
-  for(double l = low; l <= high; l += step)
-    for(double u = l+step/10; u <= high; u += step)
-      for(Scalar x = low2; x <= high2; x += step2) {
-	R r(l, u);
-	try {
+  test::start(msg, rn, step, low2, high2, step2);
+  try {
+    for(double l = low; l <= high; l += step)
+      for(double u = l+step/10; u <= high; u += step)
+	for(Scalar x = low2; x <= high2; x += step2) {
+	  R r(l, u);
 	  func(r, x);
-	} catch(std::exception & ex) {
-	  std::cout << "Exception at " 
-		    << r << " " << msg << " " << x << ": "
-		    << ex.what() << std::endl;
 	}
-      }
+  } catch(std::exception & ex) {
+    std::cerr << "Exception with " << msg << ": " << ex.what() << std::endl;
+  }
+  test::end();
 }
 
 template<class BinaryFunction>
@@ -86,21 +132,18 @@ void iterate_two_intervals(BinaryFunction func, const std::string & msg,
 			   double low = -2, double high = 2, double step = 0.3)
 {
   R rn(low, high);
-  std::cout << "Testing " << msg << " on " << rn << " x " << rn
-	    << " step " << step << std::endl;
-  for(double l1 = low; l1 <= high; l1 += step)
-    for(double u1 = l1+step/10; u1 <= high; u1 += step)
-      for(double l2 = low; l2 <= high; l2 += step)
-	for(double u2 = l2+step/10; u2 <= high; u2 += step) {
-	  R r1(l1, u1), r2(l2, u2);
-	  try {
+  test::start(msg, rn, rn, step);
+  try {
+    for(double l1 = low; l1 <= high; l1 += step)
+      for(double u1 = l1+step/10; u1 <= high; u1 += step)
+	for(double l2 = low; l2 <= high; l2 += step)
+	  for(double u2 = l2+step/10; u2 <= high; u2 += step) {
+	    R r1(l1, u1), r2(l2, u2);
 	    func(r1, r2);
-	  } catch(std::exception & ex) {
-	    std::cout << "Exception at " 
-		      << r1 << " "  << msg << " "  << r2 << ": " 
-		      << ex.what() << std::endl;
 	  }
-	}
+  } catch(std::exception & ex) {
+    std::cerr << "Exception with " << msg << ": " << ex.what() << std::endl;
+  }
 }
 
 template<class FuncI, class FuncD>
@@ -115,11 +158,7 @@ struct test_binary_function : std::binary_function<R, R, void>
       for(double g = r2.lower(); g <= r2.upper(); g += width(r2) / 10.0) {
 	double presult = funcd(f,g);
 	if (presult == presult /* NaN check */ && !in(presult, result))
-	  std::cout << f << " " << name << " " << g
-		    << " = " << std::setprecision(output_prec) << funcd(f,g)
-		    << " not in " 
-		    << r1 << " " << name << " " << r2
-		    << " = " << result << std::endl;
+	  test::error(f, g, presult, r1, r2, result);
       }
   }
 private:
@@ -143,13 +182,11 @@ struct test_binary_scalar_function
   void operator()(const R& r, typename FuncI::second_argument_type x)
   {
     R result = funcr(r, x);
-    for(double f = r.lower(); f <= r.upper(); f += width(r) / 10.0)
-      if (!empty(result) && !in(funcd(f,x), result))
-	std::cout << f << " " << name << " " << x
-		  << " = " << std::setprecision(output_prec) << funcd(f,x)
-		  << " not in " 
-		  << r << " " << name << " " << x
-		  << " = " << result << std::endl;
+    for(double f = r.lower(); f <= r.upper(); f += width(r) / 10.0) {
+      double presult = funcd(f, x);
+      if (!empty(result) && !in(presult, result))
+	test::error(f, x, presult, r, x, result);
+    }
   }
 private:
   FuncI funcr;
@@ -183,13 +220,11 @@ struct test_scalar_binary_function
   void operator()(const R& r, typename FuncI::first_argument_type x)
   {
     R result = funcr(x, r);
-    for(double f = r.lower(); f <= r.upper(); f += width(r) / 10.0)
+    for(double f = r.lower(); f <= r.upper(); f += width(r) / 10.0) {
+      double presult = funcd(x, f);
       if(!empty(result) && !in(funcd(x, f), result))
-	std::cout << x << " " << name << " " << f
-		  << " = " << std::setprecision(output_prec) << funcd(x,f)
-		  << " not in " 
-		  << f << " " << name << " " << r
-		  << " = " << result << std::endl;
+	test::error(x, f, presult, x, r, result);
+    }
   }
 private:
   FuncI funcr;
@@ -265,20 +300,6 @@ void runtest_binary_functions()
   // definition, neither are the relational operators
 }
 
-// unary func
-template<class FuncR, class FuncD>
-void check(FuncR rfunc, FuncD dfunc, const R& r, const std::string& func)
-{
-  R result = rfunc(r);
-  // std::cout << func << " " << r << " = " << result << std::endl;
-  for(double f = r.lower(); f <= r.upper(); f+=width(r)/10.0)
-    if(!empty(result) && !in(dfunc(f), result))
-      std::cout << func << "(" << f << ") = "
-		<< std::setprecision(output_prec) << dfunc(f) << " not in " 
-		<< func << "(" << r << ") = " << result 
-		<< std::endl;
-}
-
 template<class FuncR, class FuncD>
 struct test_unary_function : std::unary_function<R, void>
 {
@@ -290,10 +311,7 @@ struct test_unary_function : std::unary_function<R, void>
     for(double f = r.lower(); f <= r.upper(); f += width(r) / 10.0) {
       double presult = funcd(f);
       if (presult == presult /* NaN check */ && !in(presult, result))
-	std::cout << name << "(" << f << ") = "
-		  << std::setprecision(output_prec) << funcd(f) << " not in " 
-		  << name << "(" << r << ") = " << result 
-		  << std::endl;
+	test::error(f, presult, r, result);
     }
   }
 private:
@@ -374,19 +392,13 @@ struct test_compare
   void operator()(const R& r1, const R& r2)
   {
     bool result = funcr(r1,r2);
-    if(!result)
-      return;
-    for(double f = r1.lower(); f <= r1.upper(); f+=width(r1)/10.0)
-      for(double g = r2.lower(); g <= r2.upper(); g+=width(r2)/10.0)
-	if(!funcd(f,g)) {
-	  if(result) {
-	  std::cout << f << " " << name << " " << g
-		    << " = " << funcd(f,g)
-		    << ", but " 
-		    << r1 << " " << name << " " << r2
-		    << " = " << result << std::endl;
-	  }
-	}
+    if (!result) return;
+    for(double f = r1.lower(); f <= r1.upper(); f += width(r1)/10.0)
+      for(double g = r2.lower(); g <= r2.upper(); g += width(r2)/10.0) {
+	bool presult = funcd(f, g);
+	if (!presult && result)
+	  test::error(f, g, presult, r1, r2, result);
+      }
   }
 private:
   FuncR funcr;
@@ -423,10 +435,10 @@ void test_bisect_median(const R& r)
 {
   std::pair<R, R> bis = bisect(r);
   if(!upper(bis.first) == median(r))
-    std::cout << "bisect(" << r << ".first does not have median "
+    std::cerr << "bisect(" << r << ").first does not have median "
 	      << median(r) << " as upper bound" << std::endl;
   if(!lower(bis.second) == median(r))
-    std::cout << "bisect(" << r << ".second does not have median "
+    std::cerr << "bisect(" << r << ").second does not have median "
 	      << median(r) << " as lower bound" << std::endl;
 }
 
@@ -438,7 +450,7 @@ void test_overlap(const R& r1, const R& r2)
   for(double f = r1.lower(); f <= r1.upper(); f+=inc)
     if(in(f, r1) && in(f, r2))
       return;
-  std::cout << "No overlap found for " << r1 << " and " << r2 << std::endl;
+  std::cerr << "No overlap found for " << r1 << " and " << r2 << std::endl;
 }
 
 #if 0
@@ -451,7 +463,7 @@ void test_combine(const R& r1, const R& r2)
       f <= std::max(r1.upper(), r2.upper());
       f += std::min(width(r1), width(r2))/100.0) {
     if(!in(f, comb))
-      std::cout << "combine(" << r1 << ", " << r2 << ") = " 
+      std::cerr << "combine(" << r1 << ", " << r2 << ") = " 
 		<< comb << " does not contain "
 		<< f << std::endl;
   }
@@ -467,7 +479,7 @@ void test_intersect(const R& r1, const R& r2)
       f <= std::max(r1.upper(), r2.upper());
       f += std::min(width(r1), width(r2))/100.0) {
     if(in(f,r1) && in(f,r2) && !in(f,is))
-      std::cout << "intersect(" << r1 << ", " << r2 << ") = "
+      std::cerr << "intersect(" << r1 << ", " << r2 << ") = "
 		<< is << " does not contain "
 		<< f << std::endl;
   }
@@ -480,7 +492,7 @@ void test_hull(const R& r1, const R& r2)
       f <= std::max(r1.upper(), r2.upper());
       f += width(h)/100)
     if(!in(f,h))
-      std::cout << "hull(" << r1 << ", " << r2 << ") = "
+      std::cerr << "hull(" << r1 << ", " << r2 << ") = "
 		<< h << " does not contain "
 		<< f << std::endl;
 }
@@ -491,7 +503,7 @@ void test_scale(const R& r, double factor)
     R res = scale(r, m, factor);
     for(double f = r.lower(); f < r.upper(); f += width(r)/10) {
       if(!in((f-m) * factor, res))
-	std::cout << "scale(" << r << ", " << m << ", " << f << ") = "
+	std::cerr << "scale(" << r << ", " << m << ", " << f << ") = "
 		  << res << " does not contain "
 		  << "scale(" << f << ", ...) = " << (f-m)*factor
 		  << std::endl;
@@ -527,14 +539,14 @@ void runtest_infinity()
 int main()
 {
   // check for proper NaN and infinity values to avoid excess output
-  double infty = std::numeric_limits<double>::infinity();
-  std::cout << "Infinity: " << infty << "\n";
+  double inf = std::numeric_limits<double>::infinity();
+  std::cout << "Infinity: " << inf << "\n";
   double nan = std::numeric_limits<double>::quiet_NaN();
   std::cout << "NaN: " << nan << "\n";
   R entire = R::entire();
   std::cout << "[-inf, inf]: " << entire << "\n";
-  if(infty < 10 || nan <= 10 || nan >= 10 || entire.lower() != -infty
-     || entire.upper() != infty) {
+  if(inf < 10 || nan <= 10 || nan >= 10 || entire.lower() != -inf
+     || entire.upper() != inf) {
     std::cerr << "(terminated)\n";
     exit(1);
   }
@@ -554,5 +566,5 @@ int main()
 		  // Borland C++ requires this explicit conversion
 					  std::string("scale"),
 					  -5, 5, 0.17, -5, -5, 0.17);
-  return 0;   // MSVC warns errorneously if missing
+  return 0;
 }

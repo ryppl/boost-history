@@ -1,5 +1,5 @@
-#ifndef BOOST_DETAIL_PPC_ROUNDING_CONTROL_HPP
-#define BOOST_DETAIL_PPC_ROUNDING_CONTROL_HPP
+#ifndef BOOST_INTERVAL_DETAIL_PPC_ROUNDING_CONTROL_HPP
+#define BOOST_INTERVAL_DETAIL_PPC_ROUNDING_CONTROL_HPP
 
 #ifndef BOOST_INTERVAL_HPP
 #error Internal header file: This header must be included by <boost/interval.hpp> only.
@@ -29,26 +29,32 @@ static const rounding_mode_struct mode_towardzero = { 0xFFF8000000000000LL };
 
 struct ppc_rounding_control
 {
-  void set_rounding_mode(double mode) const
+  typedef double rounding_mode;
+
+  static void set_rounding_mode(const rounding_mode mode)
   {
-    __asm__ __volatile__ ("mtfsf 255,%0" : : "f" (mode));
+    __asm__ __volatile__ ("mtfsf 255,%0" : : "f"(mode));
   }
-  double get_rounding_mode() const
+
+  static rounding_mode get_rounding_mode()
   {
-   double tmp;
-    __asm__ __volatile__ ("mffs %0" : "=f" (tmp));
+    rounding_mode tmp;
+    __asm__ __volatile__ ("mffs %0" : "=f"(tmp));
     return tmp;
   }
-  void downward() { set_rounding_mode(mode_downward.dmode); }
-  void upward() { set_rounding_mode(mode_upward.dmode); }
-  void tonearest() { set_rounding_mode(mode_tonearest.dmode); }
-  void towardzero() { set_rounding_mode(mode_towardzero.dmode); }
 
-  typedef double rounding_mode;
+  static void downward()   { set_rounding_mode(mode_downward.dmode);   }
+  static void upward()     { set_rounding_mode(mode_upward.dmode);     }
+  static void tonearest()  { set_rounding_mode(mode_tonearest.dmode);  }
+  static void towardzero() { set_rounding_mode(mode_towardzero.dmode); }
 };
 
+    } // namespace detail
+
 template<>
-struct rounding_control<float>: ppc_rounding_control
+struct rounding_control<float>:
+  detail::ppc_rounding_control,
+  detail::ieee_float_constants
 {
   static float force_rounding(const float r)
   {
@@ -58,15 +64,18 @@ struct rounding_control<float>: ppc_rounding_control
   }
 };
 
-    } // namespace detail
+extern "C" { double rint(double); }
 
 template<>
-struct rounding_control<double>: ppc_rounding_control
+struct rounding_control<double>:
+  detail::ppc_rounding_control,
+  detail::ieee_double_constants
 {
   static double force_rounding(const double& r) { return r; }
+  static double to_int(const double& r) { return rint(r); }
 };
 
   } // namespace interval_lib
 } // namespace boost
 
-#endif /* BOOST_DETAIL_PPC_ROUNDING_CONTROL_HPP */
+#endif /* BOOST_INTERVAL_DETAIL_PPC_ROUNDING_CONTROL_HPP */

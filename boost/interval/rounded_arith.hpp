@@ -97,6 +97,8 @@ struct rounding_control
   } // namespace interval
 } // namespace boost
 
+#include <boost/interval/detail/constants.hpp>
+
 // define appropriate specialization of rounding_control for built-in types
 #if defined(__STDC__) && __STDC_VERSION__ >= 199901L || \
     defined(__linux__) && defined(__USE_ISOC99)
@@ -146,7 +148,7 @@ struct ra_aux:
 
 template<class T>
 struct unprotect<rounded_arithmetic<T> > {
-  typedef rounded_arithmetic<T>::unprotected type;
+  typedef typename rounded_arithmetic<T>::unprotected type;
 };
 
     } // namespace detail

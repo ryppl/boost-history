@@ -27,7 +27,8 @@ template<class T, class Traits>
 interval<T, Traits> fmod(const interval<T, Traits>& x, const T& y)
 {
   typename Traits::rounding rnd;
-  typedef interval<T, interval_lib::detail::unprotect<Traits>::type> I;
+  typedef interval_lib::detail::unprotect<Traits> unprotected;
+  typedef interval<T, typename unprotected::type> I;
   T n = rnd.int_down(rnd.div_down(x.lower(), y));
   return (I)x - n * I(y);
 }
@@ -37,7 +38,8 @@ inline interval<T, Traits> fmod(const interval<T, Traits>& x,
 				const interval<T, Traits>& y)
 {
   typename Traits::rounding rnd;
-  typedef interval<T, interval_lib::detail::unprotect<Traits>::type> I;
+  typedef interval_lib::detail::unprotect<Traits> unprotected;
+  typedef interval<T, typename unprotected::type> I;
   const T& yb = detail::sign(x.lower()) ? y.lower() : y.upper();
   T n = rnd.int_down(rnd.div_down(x.lower(), yb));
   return (I)x - n * (I)y;
@@ -77,7 +79,8 @@ template<class T, class Traits>
 interval<T, Traits> cos(const interval<T, Traits>& x)
 {
   typename Traits::rounding rnd;
-  typedef interval<T, interval_lib::detail::unprotect<Traits>::type> I;
+  typedef interval_lib::detail::unprotect<Traits> unprotected;
+  typedef interval<T, typename unprotected::type> I;
   I pi(rnd.pi_down(), rnd.pi_up(), true);
   I pi2(rnd.pi_2_1_down(), rnd.pi_2_1_up(), true);
 
@@ -104,7 +107,8 @@ template<class T, class Traits>
 inline interval<T, Traits> sin(const interval<T, Traits>& x)
 {
   typedef typename Traits::rounding rnd;
-  typedef interval<T, interval_lib::detail::unprotect<Traits>::type> I;
+  typedef interval_lib::detail::unprotect<Traits> unprotected;
+  typedef interval<T, typename unprotected::type> I;
   I pi_2(rnd::pi_1_2_down(), rnd::pi_1_2_up(), true);
   return cos((I)x - pi_2);
 }
@@ -113,7 +117,8 @@ template<class T, class Traits>
 interval<T, Traits> tan(const interval<T, Traits>& x)
 {
   typename Traits::rounding rnd;
-  typedef interval<T, interval_lib::detail::unprotect<Traits>::type> I;
+  typedef interval_lib::detail::unprotect<Traits> unprotected;
+  typedef interval<T, typename unprotected::type> I;
 
   I pi(rnd.pi_down(), rnd.pi_up(), true);
   // get us within [-pi/2, pi/2]
@@ -123,7 +128,7 @@ interval<T, Traits> tan(const interval<T, Traits>& x)
   if (tmp.lower() <= -rnd.pi_1_2_down() || tmp.upper() >= rnd.pi_1_2_down()) {
     typedef typename Traits::checking checking;
     checking::trigonometric_inf();
-    return I::entire();
+    return interval<T, Traits>::entire();
   }
   return interval<T, Traits>(rnd.tan_down(tmp.lower()),
 			     rnd.tan_up(tmp.upper()), true);
