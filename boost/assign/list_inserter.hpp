@@ -17,6 +17,7 @@
 
 #include <boost/mpl/if.hpp>
 #include <boost/type_traits/is_void.hpp>
+#include <cstddef>
 
 namespace boost
 {

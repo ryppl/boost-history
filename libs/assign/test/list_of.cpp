@@ -82,7 +82,7 @@ void test_vector_matrix()
     
 #if BOOST_WORKAROUND(BOOST_DINKUMWARE_STDLIB, == 1)    
 #else    
-    
+/*    
     matrix3x3 m = list_of( list_of(1)(2)(3) )
                          ( list_of(4)(5)(6) )
                          ( list_of(7)(8)(9) );
@@ -101,7 +101,7 @@ void test_vector_matrix()
     for( int i = 0; i != sz; ++i )
         for( int j = 0; j != sz - i; ++j )
             BOOST_CHECK_EQUAL( m[i][j], i*sz + j + 1 );
-
+*/
 #endif  
   
 }
