@@ -27,7 +27,7 @@ void linear_test()
 
   linear_view::const_iterator it = v.begin();
   generate_linear g;
-  
+
   for( int i = 0; it != v.end(); ++i, ++it )
   {
     BOOST_CHECK( *it  == g(i) );
@@ -48,7 +48,7 @@ void square_test()
   BOOST_CHECK( v.size() == 10 );
 
   square_view::const_iterator it = v.begin();
-  
+
   for( int i = -5; it != v.end(); ++i, ++it )
   {
     BOOST_CHECK( *it  == generate_square(i) );
@@ -74,7 +74,7 @@ void alpha_order_test()
 
   alpha_order_type ao( 'A', 'F', alpha_order('A') );
 
-  BOOST_CHECK( ao.size() == 5 ); 
+  BOOST_CHECK( ao.size() == 5 );
 
   int i = 0;
   char c = 'A';
@@ -90,12 +90,12 @@ void alpha_order_test()
 
 void two_dim_test()
 {
-  typedef boost::counting_iterator_generator< intpair >::type count_iter;
+  typedef boost::counting_iterator< intpair > count_iter;
 
   intpair zero( std::make_pair(0,0), 3 );
 
   count_iter cit( zero );
-  
+
   ++cit; BOOST_CHECK( *cit == intpair( std::make_pair(1,0), 3 ) );
   ++cit; BOOST_CHECK( *cit == intpair( std::make_pair(2,0), 3 ) );
   ++cit; BOOST_CHECK( *cit == intpair( std::make_pair(0,1), 3 ) );
@@ -103,7 +103,7 @@ void two_dim_test()
   ++cit; BOOST_CHECK( *cit == intpair( std::make_pair(2,1), 3 ) );
 
   typedef boost::view::function_view<norm> two_dim_type;
-  
+
   two_dim_type td( zero, intpair( std::make_pair(2,1), 3 ), norm() );
 
   BOOST_CHECK( td.size() == intpair( std::make_pair(2,1), 3 ) );
@@ -111,7 +111,7 @@ void two_dim_test()
   BOOST_CHECK( td[ zero ] == 0 );
   BOOST_CHECK( td[ intpair(1,0,3) ] == 1 );
   BOOST_CHECK( td[ intpair(2,0,3) ] == 2 );
-  
+
   BOOST_CHECK( td[ intpair(0,1,3) ] == 3 );
   BOOST_CHECK( td[ intpair(1,1,3) ] == 4 );
   BOOST_CHECK( td[ intpair(2,1,3) ] == 5 );

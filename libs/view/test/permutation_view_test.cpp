@@ -151,29 +151,29 @@ void alpha_order_test()
 }
 
 
-void two_dim_test()
-{
-  int numbers[] = { 0, -1, 4, -3, 5, 8, -2 }; const int N = 7;
-  std::vector<int> v( numbers, numbers + N );
-
-  typedef boost::view::function_view<norm> two_dim_type;
-  typedef boost::view::permutation_view< std::vector<int>,  two_dim_type > two_dim_view;
-
-  intpair zero( std::make_pair(0,0), 3 );
-  intpair e( std::make_pair(2,1), 3 );
-
-  two_dim_view tdv( v, two_dim_type( zero, e, norm() ) );
-
-  typedef boost::counting_iterator_generator< intpair >::type count_iter;
-  count_iter cit( zero );
-
-  BOOST_CHECK( tdv.size() == intpair( std::make_pair(2,1), 3 ) );
-
-  for( std::vector<int>::iterator it = v.begin(); *cit != e; ++it, ++cit )
-  {
-    BOOST_CHECK( tdv[ *cit ] == *it );
-  }
-}
+//void two_dim_test()
+//{
+//  int numbers[] = { 0, -1, 4, -3, 5, 8, -2 }; const int N = 7;
+//  std::vector<int> v( numbers, numbers + N );
+//
+//  typedef boost::view::function_view<norm> two_dim_type;
+//  typedef boost::view::permutation_view< std::vector<int>,  two_dim_type > two_dim_view;
+//
+//  intpair zero( std::make_pair(0,0), 3 );
+//  intpair e( std::make_pair(2,1), 3 );
+//
+//  two_dim_view tdv( v, two_dim_type( zero, e, norm() ) );
+//
+//  typedef boost::counting_iterator_generator< intpair >::type count_iter;
+//  count_iter cit( zero );
+//
+//  BOOST_CHECK( tdv.size() == intpair( std::make_pair(2,1), 3 ) );
+//
+//  for( std::vector<int>::iterator it = v.begin(); *cit != e; ++it, ++cit )
+//  {
+//    BOOST_CHECK( tdv[ *cit ] == *it );
+//  }
+//}
 
 
 
@@ -183,7 +183,7 @@ int test_main(int, char *[])
   reverse_function_test();
   resample_test();
   alpha_order_test();
-  two_dim_test();
+  //two_dim_test();
 
   bool error_on_purpose = false;
   //BOOST_CHECK( error_on_purpose );

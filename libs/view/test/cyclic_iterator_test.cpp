@@ -14,10 +14,20 @@ void cyclic_iterator_test()
 
   std::vector<int> v( numbers, numbers + N );
 
-  typedef boost::view::cyclic_iterator_generator< std::vector<int>::iterator, int >::type
+#ifdef BOOST_MSVC  
+  typedef boost::cyclic_iterator< std::vector<int>::iterator
+                                , boost::use_default 
+                                , boost::use_default
+                                , std::vector<int>::reference >
           cyclic_int_iter;
 
-  cyclic_int_iter begin = boost::view::make_cyclic_iterator( v );
+  cyclic_int_iter begin( v.begin(), v.end() );
+#else
+  typedef boost::cyclic_iterator< std::vector<int>::iterator >
+          cyclic_int_iter;
+
+  cyclic_int_iter begin = boost::make_cyclic_iterator( v );
+#endif
 
   cyclic_int_iter forward( begin );
   cyclic_int_iter backward( begin );
@@ -27,11 +37,11 @@ void cyclic_iterator_test()
   for( ; i < 2*N; ++i, --j )
   {
     BOOST_CHECK( std::distance( begin, forward ) == i );
-    BOOST_CHECK( forward.policies().past_the_end == (i/N) );
+    BOOST_CHECK( forward.pastTheEnd == (i/N) );
     BOOST_CHECK( *forward == v[i%N] );
 
     BOOST_CHECK( std::distance( begin, backward ) == j );
-    BOOST_CHECK( backward.policies().past_the_end == ( (j-N+1)/N ) );
+    BOOST_CHECK( backward.pastTheEnd == ( (j-N+1)/N ) );
     BOOST_CHECK( *backward == v[ (j+2*N)%N ] );
 
     ++forward;
@@ -44,11 +54,11 @@ void cyclic_iterator_test()
   for( i = 0, j = 0; i < 4*N; i += 2, j -= 2 )
   {
     BOOST_CHECK( std::distance( begin, forward ) == i );
-    BOOST_CHECK( forward.policies().past_the_end == (i/N) );
+    BOOST_CHECK( forward.pastTheEnd == (i/N) );
     BOOST_CHECK( *forward == v[i%N] );
 
     BOOST_CHECK( std::distance( begin, backward ) == j );
-    BOOST_CHECK( backward.policies().past_the_end == ( (j-N+1)/N ) );
+    BOOST_CHECK( backward.pastTheEnd == ( (j-N+1)/N ) );
     BOOST_CHECK( *backward == v[ (j+4*N)%N ] );
 
     std::advance( forward, 2 );
@@ -64,10 +74,18 @@ void reverse_cyclic_iterator_test()
 
   std::vector<int> v( numbers, numbers + N );
 
-  typedef boost::view::cyclic_iterator_generator< std::vector<int>::iterator, int >::type
+#if BOOST_MSVC  
+  typedef boost::cyclic_iterator< std::vector<int>::iterator
+                                , int, boost::use_default, int& >
           cyclic_int_iter;
 
-  cyclic_int_iter rbegin = boost::view::make_cyclic_iterator( v, true );
+  cyclic_int_iter rbegin( v.begin(), v.end(), true );
+#else
+  typedef boost::cyclic_iterator< std::vector<int>::iterator >
+          cyclic_int_iter;
+
+  cyclic_int_iter rbegin = boost::make_cyclic_iterator( v, true );
+#endif
 
   cyclic_int_iter rforward( rbegin );
   cyclic_int_iter rbackward( rbegin );
@@ -77,11 +95,11 @@ void reverse_cyclic_iterator_test()
   for( ; i < 2*N; ++i, --j )
   {
     BOOST_CHECK( std::distance( rbegin, rforward ) == i );
-    BOOST_CHECK( rforward.policies().past_the_end == ( (-i-N+1)/N ) );
+    BOOST_CHECK( rforward.pastTheEnd == ( (-i-N+1)/N ) );
     BOOST_CHECK( *rforward == v[(-i+2*N)%N] );
 
     BOOST_CHECK( std::distance( rbegin, rbackward ) == j );
-    BOOST_CHECK( rbackward.policies().past_the_end == ( -j/N ) );
+    BOOST_CHECK( rbackward.pastTheEnd == ( -j/N ) );
     BOOST_CHECK( *rbackward == v[ -j%N ] );
 
     ++rforward;
@@ -94,11 +112,11 @@ void reverse_cyclic_iterator_test()
   for( i = 0, j = 0; i < 4*N; i += 2, j -= 2 )
   {
     BOOST_CHECK( std::distance( rbegin, rforward ) == i );
-    BOOST_CHECK( rforward.policies().past_the_end == ((-i-N+1)/N) );
+    BOOST_CHECK( rforward.pastTheEnd == ((-i-N+1)/N) );
     BOOST_CHECK( *rforward == v[(-i+4*N)%N] );
 
     BOOST_CHECK( std::distance( rbegin, rbackward ) == j );
-    BOOST_CHECK( rbackward.policies().past_the_end == ( -j/N ) );
+    BOOST_CHECK( rbackward.pastTheEnd == ( -j/N ) );
     BOOST_CHECK( *rbackward == v[ -j%N ] );
 
     std::advance( rforward, 2 );
