@@ -34,29 +34,25 @@ namespace boost {
   template <class T>
   std::pair<T&,T&>
   minmax(T& a, T& b) {
-    if (b<a) return std::make_pair(b,a);
-    else     return std::make_pair(a,b);
+    return (b<a) ? std::make_pair(b,a) : std::make_pair(a,b);
   }
 
   template <class T, class BinaryPredicate>
   std::pair<T&,T&>
   minmax(T& a, T& b, BinaryPredicate comp) {
-    if (comp(b,a)) return std::make_pair(b,a);
-    else           return std::make_pair(a,b);
+    return comp(b,a) ? std::make_pair(b,a) : std::make_pair(a,b);
   }
 
   template <class T>
   std::pair<const T&,const T&>
   minmax(const T& a, const T& b) {
-    if (b<a) return std::make_pair(b,a);
-    else     return std::make_pair(a,b);
+    return (b<a) ? std::make_pair(b,a) : std::make_pair(a,b);
   }
 
   template <class T, class BinaryPredicate>
   std::pair<const T&,const T&>
   minmax(const T& a, const T& b, BinaryPredicate comp) {
-    if (comp(b,a)) return std::make_pair(b,a);
-    else           return std::make_pair(a,b);
+    return comp(b,a) ? std::make_pair(b,a) : std::make_pair(a,b);
   }
 
   template <class ForwardIter>
@@ -84,9 +80,7 @@ namespace boost {
         if (*max_result < *second)
           max_result = second;
       } else {
-        // could be that *first == *second
         if (*second < *min_result)
-          // Glisse: min_result = (*first > *second) ? second : first;
           min_result = second, potential_min_result = first;
         if (*max_result < *first)
           max_result = first;
@@ -429,18 +423,24 @@ namespace boost {
     first = ++second; if (first != last) ++second;
     while (second != last)  {
       if (*first < *second) {
-        if (!(*min_result < *first))   min_result = first;
-        if (*max_result < *second)     max_result = second;
+        if (!(*min_result < *first))
+	  min_result = first;
+        if (*max_result < *second)
+	  max_result = second;
       } else {
-        if (!(*min_result < *second))  min_result = second;
-        if (*max_result < *first)      max_result = first;
+        if (!(*min_result < *second))
+	  min_result = second;
+        if (*max_result < *first)
+	  max_result = first;
       }
       first = ++second; if (first != last) ++second;
     }
     // if the number of elements is odd, treat last element
     if (first != last) {
-      if (!(*min_result < *first))    min_result = first;
-      else if (*max_result < *first)  max_result = first;
+      if (!(*min_result < *first))
+        min_result = first;
+      else if (*max_result < *first)
+        max_result = first;
     }
     return std::make_pair(min_result, max_result);
   }
@@ -465,18 +465,24 @@ namespace boost {
     first = ++second; if (first != last) ++second;
     while (second != last)  {
       if (comp(*first, *second)) {
-        if (!comp(*min_result, *first))   min_result = first;
-        if (comp(*max_result, *second))   max_result = second;
+        if (!comp(*min_result, *first))
+	  min_result = first;
+        if (comp(*max_result, *second))i
+	  max_result = second;
       } else {
-        if (!comp(*min_result, *second)) min_result = second;
-        if (comp(*max_result, *first))   max_result = first;
+        if (!comp(*min_result, *second))
+	  min_result = second;
+        if (comp(*max_result, *first))
+	  max_result = first;
       }
       first = ++second; if (first != last) ++second;
     }
     // if the number of elements is odd, treat last element
     if (first != last) {
-      if (!comp(*min_result, *first))    min_result = first;
-      else if (comp(*max_result, *first))  max_result = first;
+      if (!comp(*min_result, *first))
+        min_result = first;
+      else if (comp(*max_result, *first))
+        max_result = first;
     }
     return std::make_pair(min_result, max_result);
   }
@@ -491,7 +497,8 @@ namespace boost {
     ForwardIter max_result = first;
     // one element
     ForwardIter second = first; ++second;
-    if (second == last) return std::make_pair(min_result,max_result);
+    if (second == last)
+      return std::make_pair(min_result,max_result);
     // treat first pair with at most 1 comparison
     ForwardIter potential_max_result = last;
     if (*first < *second)
