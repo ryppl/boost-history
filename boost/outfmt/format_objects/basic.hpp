@@ -6,6 +6,8 @@
 #     pragma once
 #  endif
 
+#include <boost/outfmt/detail/select.hpp>
+
    namespace boost { namespace io
    {
       namespace detail
@@ -62,8 +64,8 @@
             static inline OutputStream &         write( OutputStream & os, const T & value )
             {
                os << '"';
-               T::const_iterator       last = value.end();
-               for( T::const_iterator i = value.begin(); i != last; ++i )
+               typename T::const_iterator       last = value.end();
+               for(typename T::const_iterator i = value.begin(); i != last; ++i )
                {
                   switch( *i ) // only escape \ and " characters
                   {
@@ -87,26 +89,22 @@
             template< typename T, class InputStream >
             inline bool                          read( InputStream & is, T & value ) const
             {
-               return
-               (
-                  BOOST_DEDUCED_TYPENAME select
-                  <
-                     is_std_string< T >, detail::string_object,
-                     mpl::true_,         detail::simple_object
-                  >::type::read( is, value )
-               );
+               typedef BOOST_DEDUCED_TYPENAME select
+                       <
+                           is_std_string< T >, detail::string_object,
+                           mpl::true_,         detail::simple_object
+                       >::type reader;
+               return ( reader::read( is, value ) );
             }
             template< typename T, class OutputStream >
             inline OutputStream &                write( OutputStream & os, const T & value ) const
             {
-               return
-               (
-                  BOOST_DEDUCED_TYPENAME select
-                  <
-                     is_std_string< T >, detail::string_object,
-                     mpl::true_,         detail::simple_object
-                  >::type::write( os, value )
-               );
+                typedef BOOST_DEDUCED_TYPENAME select
+                        <
+                            is_std_string< T >, detail::string_object,
+                            mpl::true_,         detail::simple_object
+                        >::type writer;
+                return ( writer::write( os, value ) );
             }
          public:
             inline           basic_object()
