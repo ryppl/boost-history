@@ -39,7 +39,6 @@ Distributed under the Boost Software License, Version 1.0.
    </libraryinfo>
 
    <xi:include href = "src/introduction.xml"/>
-   <xi:include href = "src/stlio.xml"/>
    <xi:include href = "src/manipulators.xml"/>
    <xi:include href = "src/delimeters.xml"/>
    <xi:include href = "src/format-objects.xml"/>

@@ -7,9 +7,15 @@ Distributed under the Boost Software License, Version 1.0.
 
 <section id = "outfmt.manipulators"><title>Manipulators</title>
    <para>
-      It is often necessary to override the way a type is formatted to a stream, or to format a
-      subrange of a container or array. The manipulators in this library serve this purpose.
+      It is often necessary to override the way a type is formatted (written to/read from) to
+      a stream, or to format a subrange of a container or array. The manipulators in this
+      library serve this purpose. For example:
    </para>
+   <programlisting>
+      int a[] = { 5, 4, 3, 2, 1 };
+      std::cout &lt;&lt; boost::io::formatob( boost::io::range( a, a + 5 ));
+      std::cin  &gt;&gt; boost::io::formatob( boost::io::range( a, a + 5 ));
+      // output: [ 5, 4, 3, 2, 1 ]</programlisting>
    <section id = "outfmt.manip"><title>boost::io::formatob</title>
       <para>
          The manipulators are available by including <code>boost/outfmt/formatob.hpp</code>. In
@@ -17,37 +23,60 @@ Distributed under the Boost Software License, Version 1.0.
          files listed in the <link linkend = "outfmt.stlio">STL I/O</link> section.
       </para>
 
-      <programlisting>   boost::io::formatobex&lt; FormatType &gt;( const T &amp; ob );</programlisting>
+      <programlisting>   boost::io::formatobex&lt; DelimeterType &gt;( const T &amp; ob );</programlisting>
       <para>
-         This will format <code>ob</code> automatically according to what type <code>T</code> is,
-         including complex, nested constructs. It allows you to specify the type used to store
-         the <link linkend = "outfmt.delimeters">delimeters</link> (see that section for more info).
+         This will format <code>ob</code> according to it's underlying type.
+         <code>DelimeterType</code> allows you to specify the type used to store the
+         <link linkend = "outfmt.delimeters">delimeters</link> (see that section for more info).
       </para>
+      <programlisting>
+   std::vector&lt; float &gt; v; // = { 1.1f, 2.2f, 3.3f };
+   std::cout &lt;&lt; boost::io::formatobex&lt; std::string &gt;( v );
+   // output: [ 1.1, 2.2, 3.3 ]
+   std::cout &lt;&lt; boost::io::formatobex&lt; std::string &gt;
+                (
+                   std::make_pair( 7, 3.14159 )
+                );
+   // output: ( 7, 3.14159 )</programlisting>
 
       <programlisting>   boost::io::formatob( const T &amp; ob );</programlisting>
       <para>
-         This will format <code>ob</code> automatically according to what type <code>T</code> is,
-         including complex, nested constructs. This is equivalent to using
-         <code>boost::io::formatobex&lt; const char * &gt;</code>
+         This will format <code>ob</code> according to it's underlying type. This is
+         equivalent to using <code>boost::io::formatobex&lt; const char * &gt;</code>
       </para>
 
-      <programlisting>   boost::io::formatob( const T &amp; ob, const FmtObject &amp; fo );</programlisting>
+      <programlisting>
+   std::vector&lt; float &gt; v; // = { 1.1f, 2.2f, 3.3f };
+   std::cout &lt;&lt; boost::io::formatobex&lt; std::string &gt;( v );
+   // output: [ 1.1, 2.2, 3.3 ]</programlisting>
+
       <para>
-         This will format <code>ob</code> automatically according to what type <code>T</code> is,
-         including complex, nested constructs. Here, the format type is taken from
-         <code>FmtObject::format_type</code>, where <code>FmtObject</code> is a
-         <link linkend = "outfmt.fmtobj">format object</link>. This allows the nested
+         Note that the type construct is automatically deduced and the corresponding
+         <link linkend = "outfmt.fmtobj">format object</link> is constructed.
+      </para>
+
+      <programlisting>   boost::io::formatob( const T &amp; ob, const FormatObject &amp; fo );</programlisting>
+      <para>
+         This will format <code>ob</code> based on the <link linkend = "outfmt.fmtobj">format
+         object</link> it is passed (<code>FormatObject</code>). Here, the format type is
+         taken from <code>FormatObject::format_type</code>. This allows the nested
          constructs to be formatted.
       </para>
 
       <programlisting>
-   std::vector&lt; float &gt; v;
-   std::cout &lt;&lt; boost::io::formatob( v ); // output: [  ]
-   std::cout &lt;&lt; boost::io::formatob( std::make_pair( 7, 3.14159 )); // output: ( 7, 3.14159 )</programlisting>
+   std::pair&lt; char, std::vector&lt; float &gt; &gt; po;
+   std::cout &lt;&lt; boost::io::formatob( po,
+                   boost::io::pairfmt
+                   (
+                      boost::io::basicfmt(),
+                      boost::io::containerfmt().format( "[{ ", " }]" )
+                   ).format( " : " )
+                ).format( "&lt; ", " &gt;" );
+   // output: &lt; a : [{ 1.1, 2.2, 3.3 }] &gt;</programlisting>
    </section>
    <section id = "outfmt.range"><title>boost::io::range</title>
       <para>
-         If you need to specify a range or sub-range, <code>boost::io::format</code> will not recongnise
+         If you need to specify a range or sub-range, <code>boost::io::formatob</code> will not recongnise
          it unless it is a container.
       </para>
 

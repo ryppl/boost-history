@@ -13,9 +13,9 @@ Distributed under the Boost Software License, Version 1.0.
    <section id = "outfmt.serialization"><title>Serialization</title>
       <para>
          This library can be used to perform simple serialization. See
-         <code>libs/outfmt/example/serialize.cpp</code> for examples on doing this.
-         Robert Ramey's Boost.Serialization library is now a part of Boost and
-         offers better serialization facilities.
+         <ulink url = "../../example/serialize.cpp">libs/outfmt/example/serialize.cpp</ulink>
+         for examples on doing this. Robert Ramey's Boost.Serialization library is
+         now a part of Boost and offers better serialization facilities.
       </para>
    </section><section id = "outfmt.dataread"><title>Reading In Data: A Simple Parser</title>
       <para>

@@ -7,18 +7,68 @@ Distributed under the Boost Software License, Version 1.0.
 
 <section id = "outfmt.evolution"><title>Library Evolution</title>
    <section id = "outfmt.future"><title>Future Directions</title>
-      <section id = "outfmt.future-str"><title>Improved String Formatting</title>
+      <section id = "outfmt.future-trans"><title>Transformation/Mapping</title>
          <para>
-            At present, the string formatting is restricted to std::string and is
-            not very flexible. I would like to integrate strings more properly
-            into the framework, possibly adding escape/unescape functionality.
+            Sometimes you need to transform elements in a sequence during the
+            read and write process. For example, if you are writing to an XML
+            file you need to convert certain characters (like mapping &lt; to
+            &amp;lt;). This is a generic version of the character escaping/unescaping
+            concept.
+         </para><para>
+            This would allow a simple <code>string_escaper_t</code> type to be
+            constructed that converts <code>"</code> to <code>\"</code> and
+            <code>\</code> to <code>\\</code>. A std::string object can then be
+            formatted using:
          </para>
-      </section><section id = "outfmt.future-data"><title>Position/Context Information</title>
+         <programlisting>   boost::io::containerfmt( boost::io::string_escaper());</programlisting>
+         <para>
+            You can also use the escaper concept to create <code>xml_escaper_t</code>
+            and <code>html_escaper_t</code> classes.
+         </para>
+      </section><section id = "outfmt.future-str"><title>String Formatting</title>
+         <para>
+            Provide a class for formatting a generic string type. Given that
+            <code>'\0'</code> terminates a string, the <code>boost::io::stringfmt_t</code>
+            class will stop output on a null value. It should also use <code>s[ i ]</code>
+            because this should be portable with other string types
+            (<code>std::string</code>, <code>CString</code>, <code>CBStr</code>,
+            <code>QtString</code>, etc.).
+         </para>
+      </section><section id = "outfmt.future-posctx"><title>Position/Context Information</title>
          <para>
             Add support for context information, including the length of the
             sub-list being outputted and the current position within that
             sub-list. Other context information may be added at a future
-            date. How does this interact with <code>boost::io::state_object</code>?
+            date. How does this interact with <code>boost::io::statefmt_t</code>?
+         </para>
+      </section><section id = "outfmt.future-data"><title>Dynamic Delimeter Generation</title>
+         <para>
+            If the delimeter type is allowed to be a function object, more complex formatting
+            can be achieved. For example, it would become possible to create a box around a
+            2D array dynamically based on the length of the array instead of using a fixed
+            string representation. This would require position/contect information to achieve
+            it.
+         </para><para>
+            It is currently possible to use a FormatObject that will do this, but that requires
+            more work.
+         </para>
+      </section>
+   </section><section id = "outfmt.issues"><title>Known Issues</title>
+      <section id = "outfmt.issues.pair"><title>std::pair</title>
+         <para>
+            Reading in a <code>std::pair</code> type is currently broken.
+         </para>
+      </section><section id = "outfmt.issues.string"><title>strings</title>
+         <para>
+            Reading in a string that contains spaces will no longer work, since I have
+            removed escaping of <code>std::string</code> types. This should be supported
+            once generic transformation is supported.
+         </para>
+      </section><section id = "outfmt.issues.typededuction"><title>Type Deduction</title>
+         <para>
+            Type deduction is currently broken on older compilers (MS VC 6.5 and
+            GCC 2.95). This means that several of the examples will not compile
+            on them, since I now assume that type deduction is supported.
          </para>
       </section>
    </section><section id = "outfmt.portability"><title>Portability</title>
@@ -65,7 +115,7 @@ Distributed under the Boost Software License, Version 1.0.
             </listitem><listitem>Boost Developers:
                For their feedback and support during the development of the library,
                specifically: Paul A. Bristow; Terje Sletteb&#xF8;; Gennadiy Rozental;
-               John Torjo;Jonathan Turkanis; and Pavel Vozenilek.
+               John Torjo; Jonathan Turkanis; and Pavel Vozenilek.
             </listitem>
          </orderedlist>
       </para>
