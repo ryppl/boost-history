@@ -108,8 +108,8 @@ struct rounding_control<pexpr> {
 
 rounding_control<pexpr>::rounding_mode rounding_control<pexpr>::mode = RND_M;
 
-  };
-};
+  }
+}
 
 template<class I>
 bool test_neg() {

@@ -19,6 +19,7 @@
 #include <iomanip>
 #include <functional>
 #include <string>
+#include <algorithm>
 
 static const int output_prec = 16;
 
