@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 2001-2003 Daniel Nuffer
     http://spirit.sourceforge.net/
 
@@ -10,9 +10,9 @@
 =============================================================================*/
 #define BOOST_SPIRIT_DUMP_PARSETREE_AS_XML
 
-#include "boost/spirit/core.hpp"
-#include "boost/spirit/tree/ast.hpp"
-#include "boost/spirit/tree/tree_to_xml.hpp"
+#include <boost/spirit/core.hpp>
+#include <boost/spirit/tree/ast.hpp>
+#include <boost/spirit/tree/tree_to_xml.hpp>
 #include "tree_calc_grammar.hpp"
 
 #include <iostream>

@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 2001-2003 Daniel Nuffer
     http://spirit.sourceforge.net/
 
@@ -8,8 +8,8 @@
     software is provided "as is" without express or implied warranty, and
     with no claim as to its suitability for any purpose.
 =============================================================================*/
-#include "boost/spirit/core.hpp"
-#include "boost/spirit/tree/ast.hpp"
+#include <boost/spirit/core.hpp>
+#include <boost/spirit/tree/ast.hpp>
 
 #include <iostream>
 #include <stack>

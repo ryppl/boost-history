@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 2002-2003 Joel de Guzman
     http://spirit.sourceforge.net/
 
@@ -18,7 +18,7 @@
 
 //#define BOOST_SPIRIT_DEBUG        // define this for debug output
 
-#include "boost/spirit/core.hpp"
+#include <boost/spirit/core.hpp>
 #include <iostream>
 #include <string>
 

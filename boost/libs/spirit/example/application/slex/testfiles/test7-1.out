@@ -18,8 +18,7 @@ A1
 ag
 AG
 aG
-1Z 	 
-
+1Z 	 
 @#
 @2
 @ 
@@ -44,7 +43,7 @@ matched token #12 :
 
 matched token #5 :1Z
 matched token #6 : 	
-matched token #7 : 
+matched token #7 : 
 matched token #8 :
 
 matched token #9 :@#
@@ -62,8 +61,7 @@ A1
 ag
 AG
 aG
-1Z 	 
-.
+1Z 	 .
 @#
 @2
 @ 
@@ -88,7 +86,7 @@ matched token #12 :
 
 matched token #5 :1Z
 matched token #6 : 	
-matched token #7 : 
+matched token #7 : 
 matched token #8 :.
 
 matched token #9 :@#

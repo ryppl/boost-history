@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 1998-2003 Joel de Guzman
     http://spirit.sourceforge.net/
 
@@ -15,7 +15,7 @@
 //  [ JDG 5/10/2002 ]
 //
 ////////////////////////////////////////////////////////////////////////////
-#include "boost/spirit/core.hpp"
+#include <boost/spirit/core.hpp>
 #include <iostream>
 #include <string>
 
