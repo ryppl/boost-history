@@ -1,10 +1,10 @@
 //-----------------------------------------------------------------------------
-// boost mpl/aux/none.hpp header file
+// boost mpl/aux/pred.hpp header file
 // See http://www.boost.org for updates, documentation, and revision history.
 //-----------------------------------------------------------------------------
 //
 // Copyright (c) 2001-02
-// Peter Dimov, Aleksey Gurtovoy
+// Aleksey Gurtovoy
 //
 // Permission to use, copy, modify, distribute and sell this software
 // and its documentation for any purpose is hereby granted without fee, 
@@ -14,23 +14,24 @@
 // suitability of this software for any purpose. It is provided "as is" 
 // without express or implied warranty.
 
-#ifndef BOOST_MPL_AUX_NONE_HPP_INCLUDED
-#define BOOST_MPL_AUX_NONE_HPP_INCLUDED
+#ifndef BOOST_MPL_AUX_PRED_HPP_INCLUDED
+#define BOOST_MPL_AUX_PRED_HPP_INCLUDED
 
 namespace boost {
 namespace mpl {
-namespace aux {
 
-struct none;
+// wrapper class to help users to deal with "legacy" metafunctions 
+// (i.e. the ones that do not provide the '::type' interface)
+//
+// usage example: mpl::pred< boost::is_same<mpl::_1, int> >
 
-template<typename> struct reject_if_none {}; 
-template<> struct reject_if_none<none>; // never defined
+template<typename Pred>
+struct pred : Pred
+{
+    typedef pred type;
+};
 
-template<typename> struct reject_if_not_none; // never defined
-template<> struct reject_if_not_none<none> {};
-
-} // namespace aux
 } // namespace mpl
 } // namespace boost 
 
-#endif // BOOST_MPL_AUX_NONE_HPP_INCLUDED
+#endif // BOOST_MPL_AUX_PRED_HPP_INCLUDED

@@ -14,58 +14,52 @@
 // suitability of this software for any purpose. It is provided "as is" 
 // without express or implied warranty.
 
-#ifndef BOOST_MPL_APPLY_HPP
-#define BOOST_MPL_APPLY_HPP
+#ifndef BOOST_MPL_APPLY_HPP_INCLUDED
+#define BOOST_MPL_APPLY_HPP_INCLUDED
 
-#include "boost/mpl/limits/apply.hpp"
-#include "boost/mpl/aux_/none.hpp"
+#include "boost/mpl/limits/arity.hpp"
 #include "boost/mpl/aux_/count_if_not.hpp"
 #include "boost/mpl/aux_/preprocessor.hpp"
+#include "boost/mpl/aux_/none.hpp"
 
 #include "boost/preprocessor/repeat_2nd.hpp"
-#include "boost/preprocessor/comma_if.hpp"
 #include "boost/preprocessor/if.hpp"
+#include "boost/preprocessor/comma.hpp"
+#include "boost/preprocessor/empty.hpp"
+#include "boost/preprocessor/inc.hpp"
 #include "boost/config.hpp"
 
 namespace boost {
 namespace mpl {
 
-#define BOOST_MPL_AUX_APPLY_N_PARAMS(n, param, value) \
-    BOOST_MPL_TEMPLATE_PARAMETERS(0, n, param) \
-    BOOST_PREPROCESSOR_COMMA_IF(n) \
-    BOOST_MPL_DEFAULT_TEMPLATE_PARAMETERS( \
-          n \
-        , BOOST_MPL_APPLY_PARAMETERS_NUMBER \
+#define BOOST_MPL_AUX_APPLY_PARAMS(param) \
+    BOOST_MPL_TEMPLATE_PARAMETERS( \
+          1 \
+        , BOOST_PREPROCESSOR_INC(BOOST_MPL_FUNCTION_CLASS_MAX_ARITY) \
         , param \
-        , value \
         ) \
 /**/
 
 #define BOOST_MPL_AUX_APPLY_DEFAULT_PARAMS(param, value) \
     BOOST_MPL_DEFAULT_TEMPLATE_PARAMETERS( \
-          0 \
-        , BOOST_MPL_APPLY_PARAMETERS_NUMBER \
+          1 \
+        , BOOST_PREPROCESSOR_INC(BOOST_MPL_FUNCTION_CLASS_MAX_ARITY) \
         , param \
         , value \
         ) \
 /**/
 
-#define BOOST_MPL_AUX_APPLY_PARAMS(param) \
-    BOOST_MPL_TEMPLATE_PARAMETERS( \
-          0 \
-        , BOOST_MPL_APPLY_PARAMETERS_NUMBER \
-        , param \
-        ) \
+#define BOOST_MPL_AUX_APPLY_VARIABLE_PARAMS(sep, n, param) \
+    BOOST_PREPROCESSOR_IF(n, sep, BOOST_PREPROCESSOR_EMPTY)() \
+    BOOST_MPL_TEMPLATE_PARAMETERS(1, BOOST_PREPROCESSOR_INC(n), param) \
 /**/
 
+
 #define BOOST_MPL_AUX_APPLY_0_TEMPLATE_DEF(unused) \
-template< typename F, BOOST_MPL_AUX_APPLY_N_PARAMS(0, typename T, aux::none) > \
-struct apply_0 \
+template<typename F> \
+struct apply0 \
 { \
- private: \
-    typedef char arity_constraint[sizeof(aux::reject_if_not_none<T0>)]; \
- public: \
-    typedef typename F::apply::type type; \
+    typedef typename F::type type; \
 }; \
 /**/
 
@@ -81,56 +75,69 @@ struct msvc_never_true
 
 // warning: not a legal C++; workaround for MSVC's dependent template typedef bug 
 #define BOOST_MPL_AUX_APPLY_N_TEMPLATE_DEF(n) \
-template< typename F, BOOST_MPL_AUX_APPLY_N_PARAMS(n, typename T, aux::none) > \
-struct apply_##n \
+template< \
+      typename F \
+      BOOST_MPL_AUX_APPLY_VARIABLE_PARAMS(BOOST_PREPROCESSOR_COMMA, n, typename T) \
+    > \
+struct BOOST_PREPROCESSOR_CAT(apply, n) \
 { \
  private: \
-    typedef char arity_constraint[sizeof(aux::reject_if_not_none<T##n>)]; \
-    template<bool> struct F##_wrapper : F {}; \
-    template<> struct F##_wrapper<true> \
-    { template<BOOST_MPL_TEMPLATE_PARAMETERS(0, n, typename P)> struct apply; }; \
+    template<bool> struct BOOST_PREPROCESSOR_CAT(F,_wrapper) : F {}; \
+    template<> struct BOOST_PREPROCESSOR_CAT(F,_wrapper)<true> \
+    { \
+        template< BOOST_MPL_AUX_APPLY_VARIABLE_PARAMS( \
+              BOOST_PREPROCESSOR_EMPTY \
+            , n \
+            , typename P \
+            ) > struct apply; \
+    }; \
  public: \
-    typedef typename F##_wrapper< aux::msvc_never_true<F>::value > \
-        ::template apply<BOOST_MPL_TEMPLATE_PARAMETERS(0, n, T)>::type type; \
+    typedef typename BOOST_PREPROCESSOR_CAT(F,_wrapper)< \
+          aux::msvc_never_true<F>::value \
+        >::template apply< BOOST_MPL_AUX_APPLY_VARIABLE_PARAMS( \
+                BOOST_PREPROCESSOR_EMPTY \
+              , n \
+              , T \
+              ) >::type type; \
 }; \
 /**/
 
 #else
 
 #define BOOST_MPL_AUX_APPLY_N_TEMPLATE_DEF(n) \
-template< typename F, BOOST_MPL_AUX_APPLY_N_PARAMS(n, typename T, aux::none) > \
-struct apply_##n \
+template< \
+      typename F \
+      BOOST_MPL_AUX_APPLY_VARIABLE_PARAMS(BOOST_PREPROCESSOR_COMMA, n, typename T) \
+    > \
+struct BOOST_PREPROCESSOR_CAT(apply,n) \
 { \
- private: \
-    typedef char arity_constraint[sizeof(aux::reject_if_not_none<T##n>)]; \
- public: \
     typedef typename F \
-        ::template apply<BOOST_MPL_TEMPLATE_PARAMETERS(0, n, T)>::type type; \
+        ::template apply< BOOST_MPL_AUX_APPLY_VARIABLE_PARAMS( \
+                BOOST_PREPROCESSOR_EMPTY \
+              , n \
+              , T \
+              ) >::type type; \
 }; \
 /**/
 
 #endif // #if defined(BOOST_MSVC) && (BOOST_MSVC <= 1200)
 
 namespace aux {
-template<long N>
-struct apply_impl
-{
-    template< typename F, BOOST_MPL_AUX_APPLY_PARAMS(typename T) >
-    struct result;
-};
-} // namespace aux
+// to be able to define specializations
+template<int> struct apply_impl_chooser;
+}
 
-#define BOOST_MPL_AUX_APPLY_IMPL_TEMPLATE_DEF(n) \
+#define BOOST_MPL_AUX_APPLY_IMPL_CHOOSER_DEF(n) \
 namespace aux { \
 template<> \
-struct apply_impl<n> \
+struct apply_impl_chooser<n> \
 { \
     template< typename F, BOOST_MPL_AUX_APPLY_PARAMS(typename T) > \
-    struct result \
+    struct result_ \
     { \
-        typedef typename mpl::apply_##n< \
+        typedef typename mpl::BOOST_PREPROCESSOR_CAT(apply,n)< \
               F \
-            , BOOST_MPL_AUX_APPLY_PARAMS(T) \
+              BOOST_MPL_AUX_APPLY_VARIABLE_PARAMS(BOOST_PREPROCESSOR_COMMA, n, T) \
             >::type type; \
     }; \
 }; \
@@ -143,31 +150,29 @@ struct apply_impl<n> \
         , BOOST_MPL_AUX_APPLY_N_TEMPLATE_DEF \
         , BOOST_MPL_AUX_APPLY_0_TEMPLATE_DEF \
         )(n) \
-    BOOST_MPL_AUX_APPLY_IMPL_TEMPLATE_DEF(n) \
+    BOOST_MPL_AUX_APPLY_IMPL_CHOOSER_DEF(n) \
 /**/
 
 
-// apply_# 
+// apply# 
 BOOST_PREPROCESSOR_REPEAT_2ND(
-      BOOST_MPL_APPLY_PARAMETERS_NUMBER
+      BOOST_PREPROCESSOR_INC(BOOST_MPL_FUNCTION_CLASS_MAX_ARITY)
     , BOOST_MPL_AUX_APPLY_TEMPLATE_DEF
     , unused
     )
 
 #if !defined(BOOST_MSVC) || (BOOST_MSVC > 1200)
-// using 'apply' name for a top-level template gives an ICE on MSVC
+// agurt, 15/jan/02: top-level 'apply' template gives an ICE on MSVC
+// (for known reasons); numbered form works, though
 template< typename F, BOOST_MPL_AUX_APPLY_DEFAULT_PARAMS(typename T, aux::none) >
 struct apply
 {
  private:
-    typedef aux::count_if_not<
-          aux::none
-        , BOOST_MPL_AUX_APPLY_PARAMS(T)
-        > arity_;
+    typedef aux::count_if_not< aux::none, BOOST_MPL_AUX_APPLY_PARAMS(T) > arity_;
 
  public:
-    typedef typename aux::apply_impl< arity_::value >
-        ::template result< F, BOOST_MPL_AUX_APPLY_PARAMS(T) >::type type;
+    typedef typename aux::apply_impl_chooser< arity_::value >
+        ::template result_< F, BOOST_MPL_AUX_APPLY_PARAMS(T) >::type type;
 };
 
 #define BOOST_MPL_HAS_APPLY
@@ -177,11 +182,11 @@ struct apply
 #undef BOOST_MPL_AUX_APPLY_TEMPLATE_DEF
 #undef BOOST_MPL_AUX_APPLY_N_TEMPLATE_DEF
 #undef BOOST_MPL_AUX_APPLY_0_TEMPLATE_DEF
-#undef BOOST_MPL_AUX_APPLY_PARAMS
+#undef BOOST_MPL_AUX_APPLY_VARIABLE_PARAMS
 #undef BOOST_MPL_AUX_APPLY_DEFAULT_PARAMS
-#undef BOOST_MPL_AUX_APPLY_N_PARAMS
+#undef BOOST_MPL_AUX_APPLY_PARAMS
 
 } // namespace mpl
 } // namespace boost 
 
-#endif // BOOST_MPL_APPLY_HPP
+#endif // BOOST_MPL_APPLY_HPP_INCLUDED

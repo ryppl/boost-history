@@ -1,9 +1,9 @@
 //-----------------------------------------------------------------------------
-// boost mpl/aux/none.hpp header file
+// boost mpl/aux/type_wrapper.hpp header file
 // See http://www.boost.org for updates, documentation, and revision history.
 //-----------------------------------------------------------------------------
 //
-// Copyright (c) 2001-02
+// Copyright (c) 2000-02
 // Peter Dimov, Aleksey Gurtovoy
 //
 // Permission to use, copy, modify, distribute and sell this software
@@ -14,23 +14,17 @@
 // suitability of this software for any purpose. It is provided "as is" 
 // without express or implied warranty.
 
-#ifndef BOOST_MPL_AUX_NONE_HPP_INCLUDED
-#define BOOST_MPL_AUX_NONE_HPP_INCLUDED
+#ifndef BOOST_MPL_AUX_TYPE_WRAPPER_HPP_INCLUDED
+#define BOOST_MPL_AUX_TYPE_WRAPPER_HPP_INCLUDED
 
 namespace boost {
 namespace mpl {
 namespace aux {
 
-struct none;
-
-template<typename> struct reject_if_none {}; 
-template<> struct reject_if_none<none>; // never defined
-
-template<typename> struct reject_if_not_none; // never defined
-template<> struct reject_if_not_none<none> {};
+template<typename T> struct type_wrapper {};
 
 } // namespace aux
 } // namespace mpl
 } // namespace boost 
 
-#endif // BOOST_MPL_AUX_NONE_HPP_INCLUDED
+#endif // BOOST_MPL_AUX_TYPE_WRAPPER_HPP_INCLUDED

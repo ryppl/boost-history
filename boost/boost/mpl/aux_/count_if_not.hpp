@@ -20,6 +20,7 @@
 #include "boost/mpl/limits/top.hpp"
 #include "boost/mpl/aux_/preprocessor.hpp"
 
+#include "boost/preprocessor/repeat.hpp"
 #include "boost/preprocessor/empty.hpp"
 #include "boost/type_traits/same_traits.hpp"
 
