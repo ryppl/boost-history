@@ -1,0 +1,54 @@
+C++ = KCC ;
+BOOST = .. ;
+MTL = .. ;
+HDRS += $(MTL) $(BOOST) ;
+
+if $(C++) = g++
+{
+	LINK = g++ ;
+	C++FLAGS += -Wall -pedantic -ftemplate-depth-50 ;
+}
+else if $(C++) = KCC
+{
+	LINK = KCC ;
+	C++FLAGS += --strict --diag_suppress=450 ;
+#          450=use of long long in boost
+	OPTIM = ;
+}
+
+actions RunExamples
+{
+	./vec_add_example
+	./vec_dot_example
+	./vec_expr_example
+	./vec_scale_example
+	./sparse_vec_dot_example
+	./mat_add_example
+	./mat_scale_example
+	$(RM) run-examples
+#	this makes jam think we are done
+	touch run-examples
+}
+
+Main vec_add_example : vec_add_example.cpp ;
+Main vec_dot_example : vec_dot_example.cpp ;
+Main vec_expr_example : vec_expr_example.cpp ;
+Main vec_scale_example : vec_scale_example.cpp ;
+Main sparse_vec_dot_example : sparse_vec_dot_example.cpp ;
+Main mat_add_example : mat_add_example.cpp ;
+Main mat_scale_example : mat_scale_example.cpp ;
+
+DEPENDS run-examples : vec_add_example vec_dot_example vec_expr_example vec_scale_example sparse_vec_dot_example mat_add_example mat_scale_example ;
+
+
+RunExamples run-examples ;
+
+DEPENDS all : run-examples ;
+
+actions SqueakyClean
+{
+	rm -rf ti_files *~ run-examples
+}
+
+DEPENDS squeaky-clean : clean ;
+SqueakyClean squeaky-clean ;

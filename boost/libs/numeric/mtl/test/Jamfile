@@ -1,0 +1,53 @@
+C++ = KCC ;
+BOOST = .. ;
+MTL = .. ;
+HDRS += $(MTL) $(BOOST) ;
+
+if $(C++) = g++
+{
+	LINK = g++ ;
+	C++FLAGS += -Wall -pedantic -ftemplate-depth-50 ;
+}
+else if $(C++) = KCC
+{
+	LINK = KCC ;
+	C++FLAGS += --strict --diag_suppress=450 ;
+#          450=use of long long in boost
+	OPTIM = ;
+}
+
+actions RunTests
+{
+	./ds_dot_test
+	./sd_dot_test
+	./sparse_vec_scale_test
+	./ext_sp_vec_test
+	./matvec_test
+#       this one is broken
+#       ./sd_vec_add_test
+	$(RM) run-tests
+#	this makes jam think we are done
+	touch run-tests
+}
+
+Main ds_dot_test : ds_dot_test.cpp ;
+Main sd_dot_test : sd_dot_test.cpp ;
+Main sparse_vec_scale_test : sparse_vec_scale_test.cpp ;
+Main ext_sp_vec_test : ext_sp_vec_test.cpp ;
+Main matvec_test : matvec_test.cpp ;
+# this one is broken
+#Main sd_vec_add_test : sd_vec_add_test.cpp ;
+
+DEPENDS run-tests : ds_dot_test sd_dot_test sparse_vec_scale_test ext_sp_vec_test matvec_test ;
+
+RunTests run-tests ;
+
+DEPENDS all : run-tests ;
+
+actions SqueakyClean
+{
+	rm -rf ti_files *~ run-tests
+}
+
+DEPENDS squeaky-clean : clean ;
+SqueakyClean squeaky-clean ;

@@ -1,0 +1,95 @@
+C++ = KCC ;
+BOOST = .. ;
+MTL = .. ;
+HDRS += $(MTL) $(BOOST) ;
+
+# override Jambase, which uses "-o foo.o" instead of just "-c"
+actions Fortran
+{
+	$(FORTRAN) $(FORTRANFLAGS) -c $(>)
+}
+
+if $(C++) = g++
+{
+	FORTRAN = g77 ;
+	FORTRANFLAGS = -O3 ;
+	LINK = g++ ;
+	C++FLAGS += -ftemplate-depth-50 ;
+	OPTIM = -O3 ;
+	LINKLIBS += -lg2c ;
+
+#       location of libg2c fortran runtime library
+	switch $(OS)
+	{
+	case SOLARIS :
+		LINKFLAGS += -L/usr/local/src/gnu/lib/gcc-lib/sparc-sun-solaris2.7/2.95.2 ;
+	case LINUX :
+		LINKFLAGS += -L/afs/nd.edu/user1/lsc/Software/LINUX86_2/usr/local/lib/gcc-lib/i686-pc-linux-gnu/2.95.2 ;
+	}
+
+}
+else if $(C++) = KCC
+{
+	LINK = KCC ;
+	C++FLAGS += --no_exceptions --strict --diag_suppress=450 ;
+#          450=use of long long in boost
+	LINKFLAGS += --no_exceptions ;
+	OPTIM = +K3 --inline_auto_space_time=10000 --inline_generated_space_time=10000 --inline_keyword_space_time=10000 --inline_implicit_space_time=10000 ;
+	switch $(OS)
+	{
+	case SOLARIS :
+		FORTRANFLAGS = -fast -xO4  -xtarget=native -xarch=v8plusa ;
+		OPTIM += -fast --backend -xO4 --backend -xtarget=native --backend -xarch=v8plusa ;
+#               location of fortran and sunmath libraries
+		LINKFLAGS += -L/opt/SUNWspro/SC5.0/lib ;
+		LINKLIBS += -lF77 -lM77 -lm --backend -xlic_lib=sunperf -lsunmath ;
+	case LINUX :
+#               location of libg2c fortran runtime library
+		FORTRANFLAGS = -O3 ;
+		LINKFLAGS += -L/afs/nd.edu/user1/lsc/Software/LINUX86_2/usr/local/lib/gcc-lib/i686-pc-linux-gnu/2.95.2 ;
+		LINKLIBS += -lg2c ;
+	}
+}
+
+Main time_dot : time_dot.cpp ddot.f lsame.f xerbla.f ;
+Main time_vecadd : time_vecadd.cpp daxpy.f lsame.f xerbla.f ;
+Main time_matvec : time_matvec.cpp dgemv.f lsame.f xerbla.f ;
+Main do_timing : do_timing.cpp ;
+
+# tell jam how to run the timing experiments
+actions TimeMatvec
+{
+	$(RM) time_matvec.dat
+	./do_timing time_matvec 50 800 50 3 > time_matvec.dat
+}
+
+actions TimeDot
+{
+	$(RM) time_dot.dat
+	./do_timing time_dot 100 5000 500 3 > time_dot.dat
+}
+
+actions TimeVecadd
+{
+	$(RM) time_vecadd.dat
+	./do_timing time_vecadd 100 5000 500 3 > time_vecadd.dat
+}
+
+DEPENDS time_matvec.dat : time_matvec do_timing ;
+TimeMatvec time_matvec.dat ;
+
+DEPENDS time_dot.dat : time_dot do_timing ;
+TimeDot time_dot.dat ;
+
+DEPENDS time_vecadd.dat : time_vecadd do_timing ;
+TimeVecadd time_vecadd.dat ;
+
+DEPENDS all : time_vecadd.dat time_matvec.dat time_dot.dat ;
+
+actions SqueakyClean
+{
+	rm -rf ti_files *~ time_vecadd.dat time_matvec.dat time_dot.dat
+}
+
+DEPENDS squeaky-clean : clean ;
+SqueakyClean squeaky-clean ;
