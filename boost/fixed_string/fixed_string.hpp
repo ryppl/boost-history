@@ -57,10 +57,18 @@
       {
          virtual const char *                    c_str()  const = 0;
          virtual const char *                    data()   const = 0;
-         virtual size_t                          length() const = 0;
          virtual char &                          at( size_t i ) = 0;
+
+         virtual size_t                          length()   const = 0;
+         virtual size_t                          capacity() const = 0;
+         virtual size_t                          max_size() const = 0;
+
+         virtual void                            resize(  size_t, char ) = 0;
+         virtual void                            reserve( size_t ) = 0;
+
          virtual char *                          assign(  const char * s, size_t l = size_t( -1 )) = 0;
          virtual char *                          append(  const char * s, size_t l = size_t( -1 )) = 0;
+         virtual void                            push_back( char ) = 0;
          virtual int                             format(  const char * fmt, va_list args ) = 0;
       };
 
@@ -68,10 +76,18 @@
       {
          virtual const wchar_t *                 c_str()  const = 0;
          virtual const wchar_t *                 data()   const = 0;
-         virtual size_t                          length() const = 0;
          virtual wchar_t &                       at( size_t i ) = 0;
+
+         virtual size_t                          length()   const = 0;
+         virtual size_t                          capacity() const = 0;
+         virtual size_t                          max_size() const = 0;
+
+         virtual void                            resize(  size_t, wchar_t ) = 0;
+         virtual void                            reserve( size_t ) = 0;
+
          virtual wchar_t *                       assign(  const wchar_t * s, size_t l = size_t( -1 )) = 0;
          virtual wchar_t *                       append(  const wchar_t * s, size_t l = size_t( -1 )) = 0;
+         virtual void                            push_back( wchar_t ) = 0;
          virtual int                             format(  const wchar_t * fmt, va_list args ) = 0;
       };
 
@@ -121,7 +137,7 @@
             }
             inline reference                     at( size_type i )
             {
-               if( i < 0 || i >= n )   throw( std::out_of_range( "boost::char_string" ));
+               if( i >= n )            throw( std::out_of_range( "" ));
                return( str[ i ]);
             }
          public: // size and capacity
@@ -137,13 +153,22 @@
             {
                return( capacity());
             }
+            inline void                          resize( size_t sz, CharT c )
+            {
+               if( sz > len )          StringPolicy::assign( str + len, sz - len, c );
+               len = sz;
+               str[ len ] = CharT( '\0' );
+            }
+            inline void                          reserve( size_type )
+            {
+            }
          public: // string operations
             inline CharT *                       assign( const CharT * s, size_type l = size_type( -1 ))
             {
                if( l == size_type( -1 )) l = StringPolicy::length( s ) + 1;
                len = ( l > n ) ? ( n - 1 ) : l;
                CharT *                 ret = StringPolicy::copy( str, s, len );
-               str[ len ] = '\0';
+               str[ len ] = CharT( '\0' );
                return( ret );
             }
             inline CharT *                       append( const CharT * s, size_type l = size_type( -1 ))
@@ -152,20 +177,28 @@
                l = (( l + len ) > n ) ? ( n - len ) : l;
                CharT *                 ret = StringPolicy::copy( str + len - 1, s, l );
                len += l;
-               str[ len ] = '\0';
+               str[ len ] = CharT( '\0' );
                return( ret );
+            }
+            inline void                          push_back( CharT c )
+            {
+               if( len != n )
+               {
+                  str[   len ] = c;
+                  str[ ++len ] = CharT( '\0' );
+               }
             }
             inline int                           format( const CharT * fmt, va_list args )
             {
                int                     ret = detail::format_policy< CharT >::format( str, n, fmt, args );
                len = ( ret == -1 ) ? ( n - 1 ) : ret;
-               str[ len ] = '\0';
+               str[ len ] = CharT( '\0' );
                return( ret );
             }
          public: // construction
             inline           fixed_string(): len( 0 )
             {
-               str[ 0 ] = '\0';
+               str[ 0 ] = CharT( '\0' );
             }
             template< size_t m >
             inline           fixed_string( const fixed_string< m > & s, size_type p, size_type l = size_type( -1 )): len( 0 )
