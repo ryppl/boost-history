@@ -311,6 +311,304 @@ Why do we need any library?
 \subsection{Relation to other work.}
 
 \section{Basic usage (What can I do with boost::mpl?)}
+
+\subsection{Conditional type selection}
+
+Conditional type selection is the simplest basic construct of \Cpp\
+template \mping{}. Veldhuizen [Vel95] was the first to show 
+how to implement it, and Czarnecki and Eisenecker [CE00] first 
+presented it as a standalone library primitive. \mpl\ defines the 
+corresponding facility as follows
+
+{\footnotesize
+\begin{verbatim}
+// definition
+template<
+      typename Condition
+    , typename T1
+    , typename T2
+    >
+struct select_if
+{
+    typedef implementation-defined type;
+};
+
+// usage/semantics
+typedef boost::mpl::select_if<boost::mpl::true_c,char,long>::type t1;
+typedef boost::mpl::select_if<boost::mpl::false_c,char,long>::type t2;
+
+BOOST_MPL_ASSERT_IS_SAME(t1, char);
+BOOST_MPL_ASSERT_IS_SAME(t2, long);
+\end{verbatim}
+}
+
+The construct is important because template \mpgms{} often 
+contain a lot of decision-making code, and, as we will show, 
+spelling it manually every time via (partial) class template 
+specialization quickly becomes impractical. The template also 
+important from the point of encapsulating the compiler 
+workarounds (for example, not all \Cpp\ compilers support 
+partial template specialization). However, the way \Cpp\ 
+template instantiation mechanism works imposes some subtle 
+limitations on applicability of the primitive, comparing to 
+a manually implemented equivalent of the selection code. 
+Below we present ???.
+
+
+For example, suppose we are implementing a \code{pointed\_type}
+traits template such as \code{pointed\_\-type<T>::type} 
+instantiated for a \code{T} that is either a plain pointer 
+(\code{U*}), \code{std::auto\_ptr<U>}, or any of the \code{boost}
+smart pointers, e.g. \code{boost::scoped\_ptr<U>}, will give you 
+the pointed type (\code{U}):
+
+{\footnotesize
+\begin{verbatim}
+BOOST_MPL_ASSERT_IS_SAME(pointed_type<my*>::type, my);
+BOOST_MPL_ASSERT_IS_SAME(pointed_type< std::auto_ptr<my> >::type, my);
+BOOST_MPL_ASSERT_IS_SAME(pointed_type< boost::scoped_ptr<my> >::type, my);
+\end{verbatim}
+}
+
+An obvious way to implement \code{pointed\_type} would be to 
+use partial specialization to distingiush between plain 
+pointers and everything else:
+
+{\footnotesize
+\begin{verbatim}
+// general case, handles std::auto_ptr and boost pointers
+template< typename T >
+struct pointed_type
+{
+    typedef typename T::element_type type;
+};
+
+// specialization for plain pointers
+template< typename T >
+struct pointed_type<T*>
+{
+    typedef T type;
+};
+\end{verbatim}
+}
+
+but if partial specialization is unavailable, then 
+\code{select\_if} seems to be the right tool. Unfortunately,
+the straighforward approach does not work:
+
+{\footnotesize
+\begin{verbatim}
+template< typename T >
+struct pointed_type
+{
+    typedef typename boost::mpl::select_if<
+          boost::is_pointer<T>
+        , typename boost::remove_pointer<T>::type
+        , typename T::element_type // #1
+        >::type type;
+};
+
+// the following code causes compilation error in line #1:
+// name followed by "::" must be a class or namespace name
+typedef pointed_type<char*>::type result;
+\end{verbatim}
+}
+
+Clearly, \code{typename T::element\_type} expression is not 
+valid in case of \code{T == char*}, and that's what the 
+compiler is complaning about. Implementing the selection code 
+manually solves the problem: 
+
+{\footnotesize
+\begin{verbatim}
+namespace aux {
+// general case
+template< bool >
+struct select_pointed_type
+{
+    template< typename T > struct result
+    {
+        typedef typename T::element_type type;
+    };
+};
+
+// specialization for plain pointers
+template<>
+struct select_pointed_type<true>
+{
+    template< typename T > struct result
+    {
+        typedef typename
+            boost::remove_pointer<T>::type type;
+    };
+};
+}
+
+template< typename T >
+struct pointed_type
+{
+    typedef typename aux::select_pointed_type<
+          boost::is_pointer<T>::value
+        >::template result<T>::type type;
+};
+\end{verbatim}
+}
+
+But this quickly becomes awkward if needs to be done 
+repeatedly. We can try to workaround the problem with 
+\code{select\_\-if} code as follows:
+
+{\footnotesize
+\begin{verbatim}
+namespace aux {
+template< typename T >
+struct element_type
+{
+	typedef typename T::element_type type;
+};
+}
+
+template< typename T >
+struct pointed_type
+{
+    typedef typename boost::mpl::select_if<
+          boost::is_pointer<T>
+        , typename boost::remove_pointer<T>::type
+        , typename aux::element_type<T>::type
+        >::type type;
+};
+\end{verbatim}
+}
+
+but this does't work either - the access to the 
+\code{element\_type<T>}'s nested \code{type} member still 
+forces the compiler to instantiate \code{element\_type<T>}
+with \code{T == char*}, and that instantiation is of course 
+invalid. Also, although in our case this does not lead to a 
+compile error, the \code{boost::remove\_pointer<T>} template 
+gets always instantiated as well, and for the same reason 
+(because we are accessing it's nested \code{type} memeber). 
+Such unnecessary instantiation that is not fatal from 
+compiler's point of view may or may be not a problem, 
+depending on the "weight" of the template (how much the 
+instantiation taxes the compiler), but a general rule of 
+thumb would be to avoid such code.
+
+Returning to our error, to make the above code compile, we 
+need to factor the act of "asking" \code{aux::element\_\-type<T>}
+of its nested \code{type} out of the \code{select\_\-if} 
+invocation. The fact that both \code{boost::remove\_\-pointer<T>}
+trait template and \code{aux::element\_\-type<T>} use the same 
+naming convention for their result types makes the refactoring 
+easier:
+
+{\footnotesize
+\begin{verbatim}
+template< typename T >
+struct pointed_type
+{
+ private:
+    typedef typename boost::mpl::select_if<
+          boost::is_pointer<T>
+        , boost::remove_pointer<T>
+        , aux::element_type<T>
+        >::type func_;
+
+ public:
+    typedef typename func_::type type;
+};
+\end{verbatim}
+}
+
+Now the compiler has no reasons instantiate both 
+\code{boost::remove\_\-pointer<T>} and 
+\code{aux::element\_\-type<T>} even although they are used as 
+actual parameters to the \code{select\_if} template (and is 
+guaranteed not to do so), so we are guaranteed to get away with 
+\code{aux::element\_\-type<char*>} as far as it won't end up being 
+selected as \code{func\_}.
+
+The above technique is so common in template metaprograms, that it 
+even make sense to facilate the selection of nested \code{type} 
+member by introducing a high level equivalent to \code{select\_if} 
+- the one that will do \code{func\_::type} operation (that is called 
+[nullary] function class application) as a part of its invocation. 
+\mpl provide such template - it's called \code{apply\_if}. Using it, 
+we can re-write the above code as simple as:
+
+{\footnotesize
+\begin{verbatim}
+template< typename T >
+struct pointed_type
+{
+    typedef typename boost::mpl::apply_if<
+          boost::is_pointer<T>
+        , boost::remove_pointer<T>
+        , aux::element_type<T>
+        >::type type;
+};
+\end{verbatim}
+}
+
+To make our techniques review complete, let's consider a slightly 
+different example - suppose we want to define a high-level wrapper 
+around \code{boost::remove\_pointer} traits template [], which will 
+strip the pointer qualification conditionally. We will call it 
+\code{remove\_pointer\_if}:
+
+{\footnotesize
+\begin{verbatim}
+template<
+      typename Condition
+    , typename T
+    >
+struct remove_pointer_if
+{
+    typedef typename boost::mpl::select_if<
+          Condition
+        , typename boost::remove_pointer<T>::type
+        , T
+        >::type type;
+};
+\end{verbatim}
+}
+
+Now the above works from the first time, but it suffers from the 
+problem we mentioned early - \code{boost::remove\_pointer<T>} gets 
+instantiated even if its result is never used. In metaprogramming 
+world compilation time is an important resource [Abr01], and it's 
+one of the things that gets wasted by unnecessary template 
+instantiations. We've just seen how to deal with the problem in 
+case when both arguments to \code{select\_if} template are the 
+results of nullary function class applications, but in this example 
+one of the arguments - namely \code{T} is just simple a type, so 
+the refactoring just doesn't seem possible. An easiest way out of 
+this situation would be to pass to \code{select\_if} a real 
+nullary function instead of \code{T}, - the one that returns 
+\code{T} on its invocation. \mpl provides a simple way to do it -
+we just substitute \code{T} with \code{boost::mpl::identity<T>},
+and \code{boost::select\_if} with more compact 
+\code{boost::apply\_if}:
+
+{\footnotesize
+\begin{verbatim}
+template<
+      typename Condition
+    , typename T
+    >
+struct remove_pointer_if
+{
+    typedef typename boost::mpl::apply_if<
+          Condition
+        , boost::remove_pointer<T>
+        , boost::mpl::identity<T>
+        >::type type;
+};
+\end{verbatim}
+}
+
+Which gives us exactly what we wanted.
+
 \subsection{Sequences, algorithms, and iterators}
 \subsection{Function classes, simple composition}
 \subsection{Lambda facility}
