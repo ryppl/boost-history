@@ -36,6 +36,7 @@
 //     Phil Nash
 //     Peter Dimov
 //     Greg Colvin
+//     Doug Gregor
 //     Other Boost members
 //     And, of course, Andrei Alexandrescu
 //
@@ -59,6 +60,7 @@
 #include <boost/config.hpp>
 #include <boost/assert.hpp>
 #include <boost/static_assert.hpp>
+#include <boost/utility.hpp>
 #include <boost/checked_delete.hpp>
 #include <boost/throw_exception.hpp>
 #include <boost/type_traits/same_traits.hpp>
@@ -155,7 +157,7 @@ namespace boost
 //////////////////////////////////////////////////////////////////////////////
 
     struct empty_policy
-    { typedef void policy_category; };
+    { typedef mpl::void_ policy_category; };
 
     template <typename> class ref_counted;
     template <typename> struct disallow_conversion;
@@ -394,10 +396,6 @@ namespace boost
                 BOOST_CONVERSION_POLICY
             >::type
         >::type                                             base_type;
-//        typedef typename base_type::base1_type::base1_type  storage_base;
-//        typedef typename base_type::base1_type::base2_type  ownership_base;
-//        typedef typename base_type::base2_type::base1_type  checking_base;
-//        typedef typename base_type::base2_type::base2_type  conversion_base;
         typedef smart_ptr                                   this_type;
 
     public:     // Pointer/Reference types
@@ -480,22 +478,6 @@ namespace boost
             }
         }
 
-        template <typename U, BOOST_CONVERSION_PARAMETERS>
-        smart_ptr(smart_ptr<U, BOOST_CONVERSION_POLICIES> const& rhs,
-            detail::polymorphic_cast_tag const&)
-        : base_type(static_cast<
-            typename smart_ptr<U, BOOST_CONVERSION_POLICIES>::base_type const&
-        >(rhs))
-        {
-            get_impl_ref(*this) = ownership_policy::clone(
-                dynamic_cast<pointer_type>(get_impl(rhs))
-            );
-            if (!*this)
-            {
-                boost::throw_exception(std::bad_cast());
-            }
-        }
-
         smart_ptr(detail::by_ref<smart_ptr> rhs)
         : base_type(static_cast<base_type&>(static_cast<smart_ptr&>(rhs)))
         { }
@@ -528,16 +510,16 @@ namespace boost
 
         smart_ptr& operator=(copy_arg rhs)
         {
-            smart_ptr(rhs).swap(*this);
+            this_type(rhs).swap(*this);
             return *this;
         }
 
-        template <typename U, BOOST_CONVERSION_PARAMETERS>
+/*        template <typename U, BOOST_CONVERSION_PARAMETERS>
         smart_ptr& operator=(smart_ptr<U, BOOST_CONVERSION_POLICIES> rhs)
         {
             swap(rhs);
             return *this;
-        }
+        } */
 
         void swap(this_type& rhs)
         {
@@ -547,7 +529,7 @@ namespace boost
         friend inline void release(this_type& sp, stored_type& p)
         {
             checking_policy::on_release(get_impl(sp));
-            p = get_impl(sp);
+            p = get_impl_ref(sp);
             get_impl_ref(sp) = storage_policy::default_value();
             sp.reset();
         }
@@ -663,7 +645,8 @@ namespace boost
                             const_reference_type;
 
     protected:
-        scalar_storage() : pointee_(default_value())
+        scalar_storage()
+        : pointee_(default_value())
         { }
 
         // The storage policy doesn't initialize the stored pointer
@@ -710,7 +693,6 @@ namespace boost
         { return 0; }
 
     private:
-        // Data
         stored_type pointee_;
 
 	public:
@@ -749,6 +731,9 @@ namespace boost
         array_storage(array_storage<U> const&)
         { }
 
+        array_storage(array_storage const&)
+        { }
+
         array_storage(stored_type const& p) : pointee_(p)
         { }
 
@@ -768,7 +753,6 @@ namespace boost
         { return pointee_ != default_value(); }
 
     public:
-        // Accessors
         friend inline pointer_type get_impl(array_storage const& sp)
         { return sp.pointee_; }
 
@@ -790,7 +774,6 @@ namespace boost
         { return 0; }
 
     private:
-        // Data
         stored_type pointee_;
 
 	public:
@@ -821,24 +804,24 @@ namespace boost
 
     protected:
         ref_counted()
+        : count_(new unsigned(1))
         {
-//            pCount_ = static_cast<unsigned int*>(
+//            count_ = static_cast<unsigned int*>(
 //                SmallObject<>::operator new(sizeof(unsigned int)));
-//            BOOST_ASSERT(pCount_);
-//            *pCount_ = 1;
-            pCount_ = new unsigned(1);
+//            BOOST_ASSERT(count_);
+//            *count_ = 1;
         }
 
         template <typename U>
         ref_counted(ref_counted<U> const& rhs)
 # ifndef BOOST_NO_MEMBER_TEMPLATE_FRIENDS
-        : pCount_(rhs.pCount_)
+        : count_(rhs.count_)
 # else // BOOST_NO_MEMBER_TEMPLATE_FRIENDS
-        : pCount_(reinterpret_cast<ref_counted const&>(rhs).pCount_)
+        : count_(reinterpret_cast<ref_counted const&>(rhs).count_)
 # endif // BOOST_NO_MEMBER_TEMPLATE_FRIENDS
         { }
 
-        // GCC incorrectly chooses the greedy c'tor below, instead of the
+        // gcc incorrectly chooses the greedy c'tor below, instead of the
         // conversion c'tor above.  So this weaker pointer c'tor must be
         // used instead.
 #if !defined(BOOST_MSVC) && !defined(__GNUC__)
@@ -847,55 +830,56 @@ namespace boost
 #else
         ref_counted(P const&)
 #endif
+        : count_(new unsigned(1))
         {
-//            pCount_ = static_cast<unsigned int*>(
+//            count_ = static_cast<unsigned int*>(
 //                SmallObject<>::operator new(sizeof(unsigned int)));
-//            BOOST_ASSERT(pCount_);
-//            *pCount_ = 1;
-            pCount_ = new unsigned(1);
+//            BOOST_ASSERT(count_);
+//            *count_ = 1;
         }
 
 		~ref_counted()
-		{ delete pCount_; }
-		//SmallObject<>::operator delete(pCount_, sizeof(unsigned int));
+		{ delete count_; }
+		//SmallObject<>::operator delete(count_, sizeof(unsigned int));
 
         P clone(P const& val)
         {
-            ++*pCount_;
+            ++*count_;
             return val;
         }
 
         bool release(P const&)
         {
-            if (!--*pCount_) return true;
-			pCount_ = 0;
+            if (!--*count_) return true;
+			count_ = 0;
             return false;
         }
 
 		bool reset()
 		{
-			if (*pCount_ == 1) return true;
-			pCount_ = new unsigned(1);
+			if (*count_ == 1) return true;
+			count_ = new unsigned(1);
 			return false;
 		}
 
         void swap(ref_counted& rhs)
         {
-            std::swap(pCount_, rhs.pCount_);
+            std::swap(count_, rhs.count_);
         }
 
     public:
         friend inline unsigned use_count(ref_counted const& p)
-        { return *(p.pCount_); }
+        { return p.count_ ? *(p.count_) : 0; }
 
     private:
+        ref_counted& operator=(ref_counted const&);
 
 #ifndef BOOST_NO_MEMBER_TEMPLATE_FRIENDS
         template <typename U> friend class ref_counted;
 #endif // BOOST_NO_MEMBER_TEMPLATE_FRIENDS
 
         // Data
-        unsigned* pCount_;
+        unsigned* count_;
 
 	public:
         BOOST_MPL_AUX_LAMBDA_SUPPORT(1, ref_counted, (P))
@@ -950,48 +934,52 @@ namespace boost
 
         protected:
             impl()
+            : count_(new unsigned(1))
             {
-//                pCount_ = static_cast<unsigned int*>(
+//                count_ = static_cast<unsigned int*>(
 //                    SmallObject<ThreadingModel>::operator new(
 //                        sizeof(unsigned int)));
-//                BOOST_ASSERT(pCount_);
-//                *pCount_ = 1;
-                pCount_ = new unsigned int(1);
+//                BOOST_ASSERT(count_);
+//                *count_ = 1;
             }
 
             template <typename U>
             impl(impl<U> const& rhs)
 # ifndef BOOST_NO_MEMBER_TEMPLATE_FRIENDS
-            : pCount_(rhs.pCount_)
+            : count_(rhs.count_)
 # else // BOOST_NO_MEMBER_TEMPLATE_FRIENDS
-            : pCount_(reinterpret_cast<const impl&>(rhs).pCount_)
+            : count_(reinterpret_cast<const impl&>(rhs).count_)
 # endif // BOOST_NO_MEMBER_TEMPLATE_FRIENDS
+            { }
+
+            impl(impl const& rhs)
+            : count_(rhs.count_)
             { }
 
             template <typename U>
             impl(U const&)
+            : count_ = new unsigned(1)
             {
-//                pCount_ = static_cast<unsigned int*>(
+//                count_ = static_cast<unsigned int*>(
 //                    SmallObject<ThreadingModel>::operator new(
 //                        sizeof(unsigned int)));
-//                BOOST_ASSERT(pCount_);
-//                *pCount_ = 1;
-                pCount_ = new unsigned int(1);
+//                BOOST_ASSERT(count_);
+//                *count_ = 1;
             }
 
             P clone(P const& val)
             {
-                threading_model::atomic_increment(*pCount_);
+                threading_model::atomic_increment(*count_);
                 return val;
             }
 
             bool release(P const&)
             {
-                if (!threading_model::atomic_decrement(*pCount_))
+                if (!threading_model::atomic_decrement(*count_))
                 {
-//                    SmallObject<ThreadingModel>::operator delete(pCount_,
+//                    SmallObject<ThreadingModel>::operator delete(count_,
 //                        sizeof(unsigned int));
-                    delete pCount_;
+                    delete count_;
                     return true;
                 }
                 return false;
@@ -999,17 +987,18 @@ namespace boost
 
             void swap(impl& rhs)
             {
-                std::swap(pCount_, rhs.pCount_);
+                std::swap(count_, rhs.count_);
             }
 
         private:
+            ref_counted_mt& operator=(ref_counted_mt const&);
 
 #ifndef BOOST_NO_MEMBER_TEMPLATE_FRIENDS
             template <typename U> friend class impl;
 #endif // BOOST_NO_MEMBER_TEMPLATE_FRIENDS
 
             // Data
-            volatile int_type* pCount_;
+            volatile int_type* count_;
         };
     };
 
@@ -1045,6 +1034,9 @@ namespace boost
 
         template <typename U>
         com_ref_counted(com_ref_counted<U> const&)
+        { }
+
+        com_ref_counted(com_ref_counted const&)
         { }
 
         template <typename U>
@@ -1149,6 +1141,10 @@ namespace boost
         : detail::ref_linked_base(rhs)
         { }
 
+        ref_linked(ref_linked const& rhs)
+        : detail::ref_linked_base(rhs)
+        { }
+
         template <typename U>
         ref_linked(U const&)
         { }
@@ -1177,6 +1173,9 @@ namespace boost
 
         template <typename U>
         destructive_copy(destructive_copy<U> const&)
+        { }
+
+        destructive_copy(destructive_copy const&)
         { }
 
         template <typename U>
@@ -1218,6 +1217,9 @@ namespace boost
         deep_copy(deep_copy<U> const&)
         { }
 
+        deep_copy(deep_copy const&)
+        { }
+
         template <typename U>
         deep_copy(U const&)
         { }
@@ -1249,6 +1251,9 @@ namespace boost
 
         template <typename U>
         no_copy(no_copy<U> const&)
+        { }
+
+        no_copy(no_copy const&)
         { }
 
         template <typename U>
@@ -1285,7 +1290,10 @@ namespace boost
         { }
 
         template <typename U>
-        allow_conversion(allow_conversion<U> const&, long)
+        allow_conversion(allow_conversion<U> const&)
+        { }
+
+        allow_conversion(allow_conversion const&)
         { }
 
         static void swap(allow_conversion&)
@@ -1318,6 +1326,9 @@ namespace boost
 
         template <typename U>
         disallow_conversion(disallow_conversion<U> const&)
+        { }
+
+        disallow_conversion(disallow_conversion const&)
         { }
 
         template <typename U>
@@ -1363,6 +1374,9 @@ namespace boost
         no_check(no_check<U> const&)
         { }
 
+        no_check(no_check const&)
+        { }
+
         static void on_default(P const&)
         { }
 
@@ -1398,6 +1412,9 @@ namespace boost
         assert_check(assert_check<U> const&)
         { }
 
+        assert_check(assert_check const&)
+        { }
+
         template <typename U>
         assert_check(no_check<U> const&)
         { }
@@ -1417,6 +1434,7 @@ namespace boost
         static void swap(assert_check&)
         { }
 
+    public:
         BOOST_MPL_AUX_LAMBDA_SUPPORT(1, assert_check, (P))
     };
 
@@ -1441,6 +1459,9 @@ namespace boost
 
         template <typename U>
         assert_check_strict(assert_check_strict<U> const&)
+        { }
+
+        assert_check_strict(assert_check_strict const&)
         { }
 
         template <typename U>
@@ -1483,6 +1504,9 @@ namespace boost
 
         template <typename U>
         reject_null_static(reject_null_static<U> const&)
+        { }
+
+        reject_null_static(reject_null_static const&)
         { }
 
         template <typename U>
@@ -1534,6 +1558,9 @@ namespace boost
         reject_null(reject_null<U> const&)
         { }
 
+        reject_null(reject_null const&)
+        { }
+
         static void on_default(P const&)
         { }
 
@@ -1566,6 +1593,9 @@ namespace boost
 
         template <typename U>
         reject_null_strict(reject_null_strict<U> const&)
+        { }
+
+        reject_null_strict(reject_null_strict const&)
         { }
 
         template <typename U>
@@ -1719,9 +1749,9 @@ namespace boost
         bool operator()(smart_ptr<T, BOOST_SMART_POINTER_POLICIES> const& lhs,
                         smart_ptr<T, BOOST_SMART_POINTER_POLICIES> const& rhs) const
         {
-            return std::less<typename StoragePolicy::pointer_type>()(
-                get_impl(lhs), get_impl(rhs)
-            );
+            return std::less<typename
+                smart_ptr<T, BOOST_SMART_POINTER_POLICIES>::pointer_type
+            >()(get_impl(lhs), get_impl(rhs));
         }
     };
 
