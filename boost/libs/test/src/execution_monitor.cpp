@@ -86,7 +86,7 @@ namespace boost
 //  Initial entry point:  boost::execution_monitor::execute() 
 //          which calls:    boost::detail::catch_signals().
 
-    int catch_signals( execution_monitor & em, int timeout );
+    int catch_signals( execution_monitor & exmon, int timeout );
     //  timeout is in seconds. 0 implies none.
 
 # ifdef BOOST_MS_SE_TRANSLATOR
@@ -205,7 +205,7 @@ namespace boost
         longjmp(unit_test_jump_buffer(), sig);
     }
 
-    int catch_signals( execution_monitor & em, int timeout )
+    int catch_signals( execution_monitor & exmon, int timeout )
     // 
     {
         volatile int sigtype;
@@ -226,7 +226,7 @@ namespace boost
         sigtype = setjmp(unit_test_jump_buffer());
         if(sigtype == 0)
         {
-            result = em.function();
+            result = exmon.function();
         }
         else
         {
@@ -272,11 +272,11 @@ namespace boost
 # elif defined(__BORLANDC__)
 
     // this works for Borland but not other Win32 compilers (which trap too many cases)
-    int catch_signals( execution_monitor & em, int )
+    int catch_signals( execution_monitor & exmon, int )
     {
       int result;
 
-      __try { result = em.function(); }
+      __try { result = exmon.function(); }
 
       __except (1)
       {
@@ -288,9 +288,9 @@ namespace boost
 
 # else  // default signal handler
 
-    int catch_signals( execution_monitor & em, int )
+    int catch_signals( execution_monitor & exmon, int )
     {
-      return em.function();
+      return exmon.function();
     }
 
 # endif  // choose signal handler
