@@ -71,7 +71,7 @@ interval<T, Policies> cos(const interval<T, Policies>& x)
   T l = tmp.lower();
   T u = tmp.upper();
 
-  using std::min;
+  BOOST_INTERVAL_using_max(min);
 
   // separate into monotone subintervals
   if (u <= interval_lib::constants::pi_lower<T>())

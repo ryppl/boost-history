@@ -85,15 +85,15 @@ interval<T, Policies> pow(const interval<T, Policies>& x, int pwr)
   bool sgnu = detail::is_neg(x.upper());
   bool odd_pwr = pwr & 1;
   
-  if (sgnu) {        // [-2,-1]
+  if (detail::is_neg(x.upper())) {        // [-2,-1]
     T yl = pow_aux(-x.upper(), pwr, rnd);
     T yu = pow_aux(-x.lower(), pwr, rnd);
-    if (odd_pwr)     // [-2,-1]^1
+    if (pwr & 1)     // [-2,-1]^1
       return interval<T, Policies>(-yu, -yl, true);
     else             // [-2,-1]^2
       return interval<T, Policies>(yl, yu, true);
-  } else if (sgnl) { // [-1,1]
-    if (odd_pwr) {   // [-1,1]^1
+  } else if (detail::is_neg(x.lower())) { // [-1,1]
+    if (pwr & 1) {   // [-1,1]^1
       return interval<T, Policies>(-pow_aux(-x.lower(), pwr, rnd),
 				   pow_aux(x.upper(), pwr, rnd), true);
     } else {         // [-1,1]^2
@@ -101,7 +101,7 @@ interval<T, Policies> pow(const interval<T, Policies>& x, int pwr)
       T y = pow_aux(max(-x.lower(), x.upper()), pwr, rnd);
       return interval<T, Policies>(0, y, true);
     }
-  } else {           // [1,2]
+  } else {                                // [1,2]
     return interval<T, Policies>(pow_aux(x.lower(), pwr, rnd),
 				 pow_aux(x.upper(), pwr, rnd), true);
   }
