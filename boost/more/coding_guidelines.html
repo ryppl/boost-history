@@ -1600,7 +1600,7 @@ std::copy(s.data(),
 <pre>
 <a name="overload_for_const_correctness">// Free functions</a>
 char* next_word(char* s);
-char* const next_word(char* const s);
+char const* next_word(char const* s);
  
 // in a class
 iterator begin();
@@ -1675,7 +1675,7 @@ struct grunt
 class my_string
 {
  public:
-    char* const c_string() const; // right
+    char const* c_string() const; // right
     operator char const*() const; // wrong
 </pre>
       </table>
