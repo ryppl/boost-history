@@ -6,6 +6,8 @@
 #include <boost/lambda/if.hpp>
 #include <boost/lambda/switch.hpp>
 #include <boost/lambda/loops.hpp>
+#include <boost/lambda/casts.hpp>
+#include <boost/lambda/numeric.hpp>
 #include <boost/lambda/exceptions.hpp>
 #include <boost/static_assert.hpp>
 #define BOOST_INCLUDE_MAIN
@@ -14,66 +16,39 @@
 // The class we're testing.
 #include <boost/smart_enum.hpp>
 
-// Helper class that will eventually move into the library header.
-
-template<typename enumT>
-class LambdaIncrementor
-    {
-  public:
-    typedef enumT enum_type;
-    typedef boost::function<void, enum_type, int, enum_type&> function_type;
-
-    LambdaIncrementor(const function_type f) : fun(f) { }
-
-    enum_type operator() (int val, int n) const
-        {
-        enum_type res;
-        fun(enum_type(val), n, res);
-        return res;
-        }
-  private:
-    function_type fun;
-    };
+enum myEnum { north = 17, east = 4, south = 92, west = -5 };
 
 // There will to be some serious magic going on here soon. Trust me:
 // The following "using" statement should make you nervous.
 
 using namespace boost::lambda;
 
-enum myEnum { north = 17, east = 4, south = 92, west = -5 };
-
-struct MagicIncrementor : public LambdaIncrementor<myEnum>
-    {
-    MagicIncrementor() : LambdaIncrementor<myEnum>((
-        // Verify that _1 is a valid myEnum
-        if_then_else(_1 != north && _1 != east && _1 != south && _1 != west,
-                     throw_exception(std::out_of_range("invalid myEnum!")),
-                     _3 = _1),
-        // Now increment it appropriately
-        _2 = _2 % 4,
-        if_then_else(_2 >= 0,
-                     while_loop(var(_2)-- > 0, switch_statement(_3,
-                                                                case_statement<north>(_3 = east),
-                                                                case_statement<east> (_3 = south),
-                                                                case_statement<south>(_3 = west),
-                                                                case_statement<west> (_3 = north)
-                                                               )),
-                     while_loop(var(_2)++ < 0, switch_statement(_3,
-                                                                case_statement<north>(_3 = west),
-                                                                case_statement<east> (_3 = north),
-                                                                case_statement<south>(_3 = east),
-                                                                case_statement<west> (_3 = south)
-                                                               ))
-                    )
-                                                   ))
-        {
-        }
-    };
-
 int test_main(int, char*[])
     {
-    typedef smart_enum<myEnum, MagicIncrementor> my_enum_t;
-    my_enum_t e(north);
+    typedef smart_enum<myEnum, boost::function<myEnum, int, int> > my_enum_t;
+    my_enum_t e(north, (
+        // Verify that _1 is a valid myEnum.
+
+        if_then(_1 != north && _1 != east && _1 != south && _1 != west,
+                throw_exception(std::out_of_range("invalid myEnum!"))),
+
+        // Our enum is wrapped, what allows for two nice short-cuts.
+
+        _2 = _2 % 4,
+        if_then(_2 < 0, _2 = 4 + _2),
+
+        // Now increment appropriately.
+
+        while_loop(--_2 >= 0, switch_statement(
+                       _1,
+                       case_statement<north>(_1 = east),
+                       case_statement<east> (_1 = south),
+                       case_statement<south>(_1 = west),
+                       case_statement<west> (_1 = north))),
+
+        // Return result.
+
+        ll_static_cast<myEnum>(_1)));
 
     // Test operator++
     BOOST_CRITICAL_TEST(e == north);
