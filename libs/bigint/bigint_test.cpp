@@ -20,11 +20,14 @@
 int main() {
   using boost::bigint;
 
-  std::ostringstream os;
-  bigint x1("10001");
-  os << x1;
-  assert(os.str() == "10001");
+  {
+    std::ostringstream os;
+    bigint x1("100012000230003");
+    os << x1;
+    assert(os.str() == "100012000230003");
+  }
 
+  bigint x1("10001");
   bigint x2(x1);
   assert(x1 == x2);
  

@@ -73,6 +73,34 @@ class bigint : boost::operators<bigint> {
     return os;
   }
 
+  // RG - new implementation of streaming in a base-agnostic form
+  std::ostream& to_ostream(std::ostream& os) const {
+
+    if(!os.good()) return os;
+
+    if(this->negative()) {
+      os << '-';
+      return (-(*this)).to_ostream(os);
+    }
+    
+    // RG - for now written specifically for decimal notation
+    std::vector<char> text;
+    bigint quotient = *this;
+    bigint remainder;
+    quotient.quotient_remainder(bigint(10),quotient,remainder);
+    // remainder will be < 10, so no truncation worries
+    text.push_back(remainder.buffer.back() + '0');
+    while (!quotient.is_zero()) {
+      quotient.quotient_remainder(bigint(10),quotient,remainder);
+      text.push_back(remainder.buffer.back() + '0');
+    }
+
+    // spit it out!
+    std::copy(text.rbegin(),text.rend(),
+              std::ostream_iterator<char>(os,""));
+    return os;
+  }
+      
 
   std::istream& from_istream(std::istream& is) {
 
@@ -467,7 +495,7 @@ void swap(bigint& lhs, bigint& rhs) {
 
 inline
 std::ostream& operator<<(std::ostream& os, bigint const& rhs) {
-  return rhs.print(os);
+  return rhs.to_ostream(os);
 }
 
 inline
