@@ -21,7 +21,6 @@ template< typename Seq, int value > struct front_test
     MPL_ASSERT_RELATION( t::value, ==, value );
 };
 
-
 MPL_TEST_CASE()
 {
     front_test< range_c<int,1,10>, 1 >();
