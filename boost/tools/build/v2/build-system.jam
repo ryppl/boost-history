@@ -20,6 +20,7 @@ import feature ;
 import property-set ;
 import build-request ;
 import errors : error ;
+import project-roots ;
 import "class" : new ;
 
 import builtin ;
@@ -73,6 +74,11 @@ if --version in [ modules.peek : ARGV ]
 # subprojects using target ids.
 current-project = [ project.target [ project.load "." ] ] ;
 
+if [ MATCH (--dump-projects) : [ modules.peek : ARGV ] ]
+{
+    project-roots.print ;
+}
+
 if ! [ feature.values <toolset> ] 
 {
     ECHO "warning: no toolsets are configured." ;
@@ -117,7 +123,7 @@ for local id in $(target-ids)
     }
     else
     {
-        local t = [ $(current-project).find $(id) ] ;
+        local t = [ targets.find $(id) : $(current-project) ] ;
         if ! $(t)
         {
             error target $(id) does not exist ;

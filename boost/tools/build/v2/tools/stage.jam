@@ -57,7 +57,6 @@ import regex ;
 import generators ;
 import feature ;
 import project ;
-import property-set ;
 
 feature.feature <traverse-dependencies> : off on : incidental ;
 feature.feature <include-type> : : free incidental ;
@@ -94,7 +93,7 @@ class stage-target-class : basic-target
         local targets = [ generators.construct $(self.project) : $(type) :
             $(property-set) : $(source) : * ] ;
 
-        return $(targets[2-]) ;
+        return $(targets) ;
     }
     
     # Constructs the targets of types for which there is no STAGED_* type.
@@ -190,7 +189,7 @@ class stage-target-class : basic-target
             }            
         }
         
-        return [ property-set.empty ] $(result) ;
+        return $(result) ;
     }   
     
     rule select-included ( source-targets * : types-to-include * )
@@ -234,15 +233,7 @@ class stage-target-class : basic-target
         {
             result += [ $(i).all-referenced-targets ] ;
         }
-        local result2 ;
-        for local r in $(result)
-        {
-            if $(r:G) != <use>
-            {
-                result2 += $(r:G=) ;
-            }            
-        }        
-        result = [ sequence.unique $(result2) ] ;        
+        result = [ sequence.unique $(result) ] ;        
     }
         
     rule check-for-link-compatibility ( * : * )

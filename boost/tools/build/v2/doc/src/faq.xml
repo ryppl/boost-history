@@ -79,7 +79,7 @@ exe a : a_obj ;
 
     </section>
 
-    <section id="bbv2.faq.envar">
+    <section>
       <title>
       Accessing environment variables
       </title>

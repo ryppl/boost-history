@@ -170,20 +170,13 @@ class project-target : abstract-target
     import "class" : new ;
     import errors ;
         
-    rule __init__ ( name : project-module parent-project ?
-        : requirements * : default-build * )
+    rule __init__ ( name : project-module : requirements * : default-build * )
     {    
         abstract-target.__init__ $(name) : $(__name__) ;
         
         self.project-module = $(project-module) ;
-        self.location = [ project.attribute $(project-module) location ] ;
         self.requirements = $(requirements) ;
         self.default-build = $(default-build) ;
-        
-        if $(parent-project)
-        {            
-            inherit $(parent-project) ;
-        }        
     }
 
     # This is needed only by the 'make' rule. Need to find the
@@ -202,14 +195,9 @@ class project-target : abstract-target
     # Generates all possible targets contained in this project.
     rule generate ( property-set * )
     {
-        if --debug-targets in [ modules.peek : ARGV ]
-        {
-            ECHO "Building project" [ name ] " ('$(__name__)') with" [ $(property-set).raw ] ;
-        }
-                
         local usage-requirements = [ property-set.empty ] ;
         local targets ;
-                
+        
         for local t in [ targets-to-build ] 
         {
             local g = [ $(t).generate $(property-set) ] ;
@@ -295,76 +283,6 @@ class project-target : abstract-target
             return true ;
         } 
     }
-
-    # Find and return the target with the specified id, treated
-    # relative to self.
-    rule find ( id : no-error ? )
-    {
-        local result ;    
-        local project = $(self.project) ;
-        local current-location = [ get location ] ;
-        
-        local split = [ MATCH (.*)//(.*) : $(id) ] ;        
-        local project-part = $(split[1]) ;
-        local target-part = $(split[2]) ;
-
-        local extra-error-message ;
-        if $(project-part)
-        {
-            # There's explicit project part in id. Looks up the
-            # project and pass the request to it.
-            local pm = [ project.find $(project-part) : $(current-location) ] ;
-            if $(pm)
-            {
-                project-target = [ project.target $(pm) ] ;                
-                result = [ $(project-target).find $(target-part) : no-error ] ;
-            }                      
-            else
-            {
-                extra-error-message = "error: could not find project '$(project-part)'" ;
-            }            
-        }
-        else
-        {            
-            # Interpret id as project-id
-            local project-module = [ project.find $(id) : $(current-location) ] ;
-            if $(project-module)
-            {
-                result = [ project.target $(project-module) ] ;
-            }        
-
-            
-            # Interpret target-name as name of main target
-            if ! $(result)
-            {
-                result = [ main-target $(id) ] ;
-            }
-
-            # Interpret as filename            
-            if ! $(result)
-            {
-                result = [ new file-reference [ path.make $(id) ] : $(project) ] ;        
-                if ! [ $(result).exists ]
-                {
-                    # File actually does not exist.
-                    # Reset 'target' so that an error is issued.
-                    result = ;
-                }                
-            }
-        }
-                
-        if ! $(result) && ! $(no-error)
-        {
-            ECHO "error: Unable to find file or target named" ;
-            ECHO "error:     '$(id)'" ;
-            ECHO "error: referred from project at" ;
-            ECHO "error:     '$(current-location)'" ;
-            ECHO $(extra-error-message) ;
-            EXIT ;
-        }        
-        return $(result) ;
-    }
-
     
     rule build-main-targets ( )
     {
@@ -384,67 +302,6 @@ class project-target : abstract-target
             $(target).add-alternative $(a) ;            
         }    
     }                            
-    
-    # Accessor, add a constant.
-    rule add-constant (
-        name # Variable name of the constant.
-        : value # Value of the constant.
-        : type ? # Optional type of value.
-        )
-    {
-        switch $(type)
-        {
-            case path :
-                value = [ path.root [ path.make $(value) ] $(self.location) ] ;
-                # Now make the value absolute path
-                value = [ path.root $(value) [ path.pwd ] ] ;
-                # Constants should be in platform-native form
-                value = [ path.native $(value) ] ;
-        }
-        if ! $(name) in $(self.constants)
-        {
-            self.constants += $(name) ;
-        }
-        self.constant.$(name) = $(value) ;
-        # Inject the constant in the scope of project-root module
-        modules.poke $(self.project-module) : $(name) : $(value) ;
-    }
-    
-    rule inherit ( parent )
-    {
-        for local c in [ modules.peek $(parent) : self.constants ] 
-        {
-            # No need to pass the type. Path constants were converted to
-            # absolute paths already by parent.
-            add-constant $(c) 
-              : [ modules.peek $(parent) : self.constant.$(c) ] ;
-        }       
-
-        # Import rules from parent 
-        local this-module = [ project-module ] ;
-        local parent-module = [ $(parent).project-module ] ;
-        # Don't import rules which comes from 'project-rules', they
-        # must be imported localized.
-        local user-rules = [ set.difference 
-            [ RULENAMES $(parent-module) ] :
-            [ RULENAMES project-rules ] ] ;
-        IMPORT $(parent-module) : $(user-rules) : $(this-module) : $(user-rules) ;
-        EXPORT $(this-module) : $(user-rules) ;
-    }
-    
-    
-    # Intern the constants from this project into the specified module.
-    #
-    rule intern-constants (
-        target-module # The module to intern into.
-        )
-    {
-        for local c in $(self.constants)
-        {
-            modules.poke $(target-module) : $(c) : $(self.constant.$(c)) ;
-        }
-    }
-
 }
 
 
@@ -748,6 +605,90 @@ if "--quiet" in [ modules.peek : ARGV ]
 }
 
 
+rule find ( id : project )
+{
+    local current-location = [ $(project).get location ] ;
+    local target ;    
+    
+    local split = [ MATCH (.*)//(.*) : $(id) ] ;
+    
+    local project-part = $(split[1]) ;
+    local target-part = $(split[2]) ;
+    if ! $(split)
+    {
+        target-part = $(id) ;
+    }
+        
+    # Make a more convenient name
+    local have-project-reference = $(split) ;
+    
+    # The project used for finding main targets and for providing base directory
+    # for file paths.
+    local base-project ;
+    if $(project-part) 
+    {
+        local pm = [ project.find $(project-part) : $(current-location) ] ;
+        # If we can't find a project, it means project part is invalid.
+        # Don't assign any value to base-project, the below code will eventually
+        # return empty result.
+        if $(pm)
+        {                  
+            base-project = [ project.target $(pm) ] ;
+        }        
+    }
+    else
+    {
+        # No project part in id. Resolve references relatively to the referring
+        # project.
+        base-project = $(project) ;
+    }
+    
+    
+    # Interpret target-part as project-id
+    if ! $(have-project-reference)
+    {   
+        local project-module = [ project.find $(target-part) : $(current-location) ] ;
+        if $(project-module)
+        {
+            target = [ project.target $(project-module) ] ;
+        }        
+    }
+    
+    # Interpret target-name as name of main target
+    if ! $(target) && $(base-project)
+    {
+        if [ $(base-project).has-main-target $(target-part) ] 
+        {
+            target = [ $(base-project).main-target $(target-part) ] ;
+        }
+    }
+    
+    if ! $(target) && ! $(have-project-reference)
+    {
+        target = [ new file-reference [ path.make $(target-part) ] : $(project) ] ;        
+        if ! [ $(target).exists ]
+        {
+            # File actually does not exist.
+            # Reset 'target' so that an error is issued.
+            target = ;
+        }                
+    }
+        
+    if ! $(target)
+    {
+        ECHO "error: Unable to find file or target named" ;
+        ECHO "error:     '$(id)'" ;
+        ECHO "error: referred from project at" ;
+        ECHO "error:     '$(current-location)'" ;
+        EXIT ;
+        
+        
+        errors.error "Unable to resolve target-id $(id)" : 
+          "Reference was made from project at '$(current-location)'" ;
+    }        
+    return $(target) ;
+}
+
 # Given a target-reference, made in context of 'project',
 # returns the abstract-target instance that is referred to, as well
 # as properties explicitly specified for this reference.
@@ -764,7 +705,8 @@ rule resolve-reference ( target-reference : project )
     }
 
     # Find the target
-    local target = [ $(project).find $(id) ] ;
+    local target = 
+      [ find $(id) :  $(project) ] ;
     
     # Do a sanity check
     if $(sproperties) && [ class.is-a $(target) : file-reference ] 
@@ -1080,15 +1022,11 @@ class basic-target : abstract-target
                 
                 local result = 
                   [ construct $(source-targets) : $(rproperties) ] ;
-                
-                local gur = $(result[1]) ;
-                result = $(result[2-]) ;
 
                 local s = [ create-subvariant $(result) : $(property-set) : $(source-targets)
                   : $(rproperties) : $(usage-requirements) ] ;
 
                 local ur = [ compute-usage-requirements $(s) ] ;
-                ur = [ $(ur).add $(gur) ] ;
                 $(s).set-usage-requirements $(ur) ;
                 self.generated.$(property-set) = $(ur) $(result) ;
 

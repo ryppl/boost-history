@@ -379,7 +379,7 @@ class abstract-file-target : virtual-target
         local path = [ path ] ;
         if $(path)
         {
-            # The target will be generated to a known path. Just use the path
+            # The target will be generated to a know path. Just use the path
             # for identification, since path is as unique as it can get.
             return p$(path) ;            
         }
@@ -395,12 +395,7 @@ class abstract-file-target : virtual-target
             {
                 local ps = [ $(self.action).properties ] ;     
                 local property-grist = [ $(ps).as-path ] ;
-                # 'property-grist' can be empty when 'ps' is an empty
-                # property set.
-                if $(property-grist)
-                {                    
-                    location-grist = $(location-grist)/$(property-grist) ;
-                }                
+                location-grist = $(location-grist)/$(property-grist) ;
             }            
                         
             return l$(location-grist) ;
@@ -523,11 +518,6 @@ class notfile-target : abstract-file-target
         abstract-file-target.__init__ $(name) : : $(project) ;
     }
     
-    # Returns nothing, to indicate that target path is not known.
-    rule path ( )
-    {
-        return ;
-    }
             
     rule actualize-location ( target )
     {
@@ -1101,19 +1091,17 @@ class subvariant
     # Returns all targets referenced by this subvariant,
     # either directly or indirectly, and 
     # either as sources, or as dependency properties.
-    # Targets referred with dependency property are returned a properties,
-    # not targets.
     rule all-referenced-targets ( )
     {
         # Find directly referenced targets.
         local deps = [ $(self.build-properties).dependency ] ;
-        local all-targets = $(self.sources) $(deps) ;
+        local all-targets = $(self.sources) $(deps:G=) ;
         
         # Find other subvariants.
         local r ;
         for local t in $(all-targets)
         {            
-            r += [ $(t:G=).creating-subvariant ] ;
+            r += [ $(t).creating-subvariant ] ;
         }
         r = [ sequence.unique $(r) ] ;
         for local s in $(r) 
