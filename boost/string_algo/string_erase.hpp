@@ -28,12 +28,12 @@ namespace boost {
         typename InputIterator, 
         typename MatchIterator, 
         typename OutputIterator,
-		typename FindT >
+        typename FindT >
     inline OutputIterator erase_copy(
         InputIterator Begin, InputIterator End,
         MatchIterator MatchBegin, MatchIterator MatchEnd,
         OutputIterator Output,
-		FindT Find )
+        FindT Find )
     {
         return replace_copy( Begin, End, MatchBegin, MatchBegin, End, End, Output, Find );
     }
@@ -43,7 +43,7 @@ namespace boost {
     InputSeqT erase_copy( 
         const InputSeqT& Input,
         const MatchSeqT& Match,
-		FindT Find )
+        FindT Find )
     {
         return replace_copy( Input, Match, InputSeqT(), Find );
     }
@@ -53,7 +53,7 @@ namespace boost {
     InputSeqT& erase( 
         InputSeqT& Input,
         const MatchSeqT& Match,
-		FindF Find )
+        FindF Find )
     {
         return replace( Input, Match, InputSeqT(), Find );
     }
@@ -73,11 +73,11 @@ namespace boost {
         MatchIterator MatchEnd,
         OutputIterator Output )
     {
-		return erase_copy(
-			Begin, End, 
-			MatchBegin, MatchEnd,
-			Output,
-			string_algo::find_firstF< InputIterator, MatchIterator >() );
+        return erase_copy(
+            Begin, End, 
+            MatchBegin, MatchEnd,
+            Output,
+            string_algo::find_firstF< InputIterator, MatchIterator >() );
     }
 
     // erase_first sequence version
@@ -87,10 +87,10 @@ namespace boost {
         const MatchSeqT& Match )
     {
         return erase_copy( 
-			Input, Match, 
-			string_algo::find_firstF< 
-				typename InputSeqT::const_iterator,
-				typename MatchSeqT::const_iterator >() );
+            Input, Match, 
+            string_algo::find_firstF< 
+                typename InputSeqT::const_iterator,
+                typename MatchSeqT::const_iterator >() );
     }
 
     // erase_first in-place sequence version
@@ -102,10 +102,10 @@ namespace boost {
         const MatchSeqT& Match )
     {
         return erase( 
-			Input, Match, 
-			string_algo::find_firstF< 
-				typename InputSeqT::iterator,
-				typename MatchSeqT::const_iterator >() );
+            Input, Match, 
+            string_algo::find_firstF< 
+                typename InputSeqT::iterator,
+                typename MatchSeqT::const_iterator >() );
     }
 
 //  erase_last  --------------------------------------------------------//
@@ -122,11 +122,11 @@ namespace boost {
         MatchIterator MatchEnd,
         OutputIterator Output )
     {
-		return erase_copy(
-			Begin, End, 
-			MatchBegin, MatchEnd,
-			Output,
-			string_algo::find_lastF< InputIterator, MatchIterator >() );
+        return erase_copy(
+            Begin, End, 
+            MatchBegin, MatchEnd,
+            Output,
+            string_algo::find_lastF< InputIterator, MatchIterator >() );
     }
 
     // erase_last sequence version
@@ -136,10 +136,10 @@ namespace boost {
         const MatchSeqT& Match )
     {
         return erase_copy( 
-			Input, Match, 
-			string_algo::find_lastF< 
-				typename InputSeqT::const_iterator,
-				typename MatchSeqT::const_iterator >() );
+            Input, Match, 
+            string_algo::find_lastF< 
+                typename InputSeqT::const_iterator,
+                typename MatchSeqT::const_iterator >() );
     }
 
     // erase_last in-place sequence version
@@ -151,10 +151,10 @@ namespace boost {
         const MatchSeqT& Match )
     {
         return erase( 
-			Input, Match, 
-			string_algo::find_lastF< 
-				typename InputSeqT::iterator,
-				typename MatchSeqT::const_iterator >() );
+            Input, Match, 
+            string_algo::find_lastF< 
+                typename InputSeqT::iterator,
+                typename MatchSeqT::const_iterator >() );
     }
 
 //  erase_nth  --------------------------------------------------------//
@@ -169,14 +169,14 @@ namespace boost {
         InputIterator End,
         MatchIterator MatchBegin,
         MatchIterator MatchEnd,
-		unsigned int Nth,
+        unsigned int Nth,
         OutputIterator Output )
     {
-		return erase_copy(
-			Begin, End, 
-			MatchBegin, MatchEnd,
-			Output,
-			string_algo::find_nthF< InputIterator, MatchIterator >(Nth) );
+        return erase_copy(
+            Begin, End, 
+            MatchBegin, MatchEnd,
+            Output,
+            string_algo::find_nthF< InputIterator, MatchIterator >(Nth) );
     }
 
     // erase_nth sequence version
@@ -184,13 +184,13 @@ namespace boost {
     InputSeqT erase_nth_copy( 
         const InputSeqT& Input,
         const MatchSeqT& Match,
-		unsigned int Nth ) 
+        unsigned int Nth ) 
     {
         return erase_copy( 
-			Input, Match, 
-			string_algo::find_nthF< 
-				typename InputSeqT::const_iterator,
-				typename MatchSeqT::const_iterator >(Nth) );
+            Input, Match, 
+            string_algo::find_nthF< 
+                typename InputSeqT::const_iterator,
+                typename MatchSeqT::const_iterator >(Nth) );
     }
 
     // erase_nth in-place sequence version
@@ -200,13 +200,13 @@ namespace boost {
     InputSeqT& erase_nth( 
         InputSeqT& Input,
         const MatchSeqT& Match, 
-		unsigned int Nth )
+        unsigned int Nth )
     {
         return erase( 
-			Input, Match, 
-			string_algo::find_nthF< 
-				typename InputSeqT::iterator,
-				typename MatchSeqT::const_iterator >(Nth) );
+            Input, Match, 
+            string_algo::find_nthF< 
+                typename InputSeqT::iterator,
+                typename MatchSeqT::const_iterator >(Nth) );
     }
 
 

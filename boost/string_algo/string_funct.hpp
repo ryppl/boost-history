@@ -136,10 +136,10 @@ namespace boost {
 
     // Construct isclassified functor
     template< typename CharT >
-	string_algo::detail::isclassifiedF<CharT> 
+    string_algo::detail::isclassifiedF<CharT> 
     if_isclassified( std::ctype_base::mask Type, const std::locale& Loc=std::locale() )
     {
-		return string_algo::detail::isclassifiedF<CharT>( Type, Loc );
+        return string_algo::detail::isclassifiedF<CharT>( Type, Loc );
     }
 
     // Construct isspace functor to use with trim
@@ -147,7 +147,7 @@ namespace boost {
     string_algo::detail::isclassifiedF<CharT> 
     if_isspace( const std::locale& Loc=std::locale() )
     {
-		return string_algo::detail::isclassifiedF<CharT>( std::ctype_base::space, Loc );
+        return string_algo::detail::isclassifiedF<CharT>( std::ctype_base::space, Loc );
     }
 
     // Construct isfrom functor 
@@ -155,7 +155,7 @@ namespace boost {
     string_algo::detail::isfromF<SeqT> 
     if_isfrom( const SeqT& Seq )
     {
-		return string_algo::detail::isfromF<SeqT>(Seq); 
+        return string_algo::detail::isfromF<SeqT>(Seq); 
     }
 
 

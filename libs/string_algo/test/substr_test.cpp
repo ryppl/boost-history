@@ -41,7 +41,7 @@ void find_test()
     cv_result=find_last( str1.begin(), str1.end(), str2.begin(), str2.end() );
     BOOST_CHECK( string( cv_result.first, cv_result.second)==str2 );
 
-	nc_result=BOOST_STRING_NON_CONST_FUNCTION(find_first)( str1, string("abc") );
+    nc_result=BOOST_STRING_NON_CONST_FUNCTION(find_first)( str1, string("abc") );
     BOOST_CHECK( string( nc_result.first, nc_result.second)==string("abc") );
     cv_result=find_first( str1, str2 );
     BOOST_CHECK( string( cv_result.first, cv_result.second)==string("abc") );
@@ -86,15 +86,15 @@ void replace_test()
     BOOST_CHECK( replace_last_copy( string("1abc3abc2"), string("abc"), string("Z") )==string("1abc3Z2") );
     BOOST_CHECK( replace_last_copy( string("1abc3abc2"), string("abc"), string("XXXX") )==string("1abc3XXXX2") );
 
-	BOOST_CHECK( replace_all_copy( string("1abc3abc2"), string("abc"), string("YYY") )==string("1YYY3YYY2") );
+    BOOST_CHECK( replace_all_copy( string("1abc3abc2"), string("abc"), string("YYY") )==string("1YYY3YYY2") );
     BOOST_CHECK( replace_all_copy( string("1abc3abc2"), string("abc"), string("Z") )==string("1Z3Z2") );
     BOOST_CHECK( replace_all_copy( string("1abc3abc2"), string("abc"), string("XXXX") )==string("1XXXX3XXXX2") );
 
     BOOST_CHECK( erase_first_copy( string("1abc3abc2"), string("abc") )==string("13abc2") );
-	BOOST_CHECK( erase_last_copy( string("1abc3abc2"), string("abc") )==string("1abc32") );
+    BOOST_CHECK( erase_last_copy( string("1abc3abc2"), string("abc") )==string("1abc32") );
     BOOST_CHECK( erase_all_copy( string("1abc3abc2"), string("abc") )==string("132") );
 
-	// nth variants test
+    // nth variants test
     BOOST_CHECK( replace_nth_copy( string("1abc3abc2"), string("abc"), 0, string("YYY") )==string("1YYY3abc2") );
     BOOST_CHECK( replace_nth_copy( string("1abc3abc2"), string("abc"), 1, string("Z") )==string("1abc3Z2") );
     BOOST_CHECK( replace_nth_copy( string("1abc3abc2"), string("abc"), 2, string("XXXX") )==string("1abc3abc2") );

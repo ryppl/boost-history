@@ -100,22 +100,22 @@ void substr()
 
     cout << endl;
 
-	cout << " --------------------- " << endl;
+    cout << " --------------------- " << endl;
 
-	for ( unsigned int n=0; n<5; n++ )
-	{
-	    pair<string::iterator, string::iterator> fresult=
-			find_nth( str1.begin(), str1.end(), str2.begin(), str2.end(), n );
+    for ( unsigned int n=0; n<5; n++ )
+    {
+        pair<string::iterator, string::iterator> fresult=
+            find_nth( str1.begin(), str1.end(), str2.begin(), str2.end(), n );
 
-		cout << string( fresult.first, str1.end() ) << endl;
-		cout << string( str1.begin(), fresult.second ) << endl;
-	
-		cout << endl;
-	}
+        cout << string( fresult.first, str1.end() ) << endl;
+        cout << string( str1.begin(), fresult.second ) << endl;
+    
+        cout << endl;
+    }
 
-	cout << " --------------------- " << endl;
+    cout << " --------------------- " << endl;
 
-	fresult=BOOST_STRING_NON_CONST_FUNCTION(find_first)( str1, str2 );
+    fresult=BOOST_STRING_NON_CONST_FUNCTION(find_first)( str1, str2 );
     cout << string( fresult.first, str1.end() ) << endl;
     cout << string( str1.begin(), fresult.second ) << endl;
 

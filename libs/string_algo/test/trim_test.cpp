@@ -38,20 +38,20 @@ void trim_test()
     BOOST_CHECK( trim_right_copy( string("") )=="" );
     BOOST_CHECK( trim_copy( string("") )=="" );
 
-	// iterator tests
-	string str;
-	trim_left_copy_if( str1.begin(), str1.end(), std::back_inserter(str), if_isspace<char>() );
-	BOOST_CHECK( str=="1x x x x1     " );
+    // iterator tests
+    string str;
+    trim_left_copy_if( str1.begin(), str1.end(), std::back_inserter(str), if_isspace<char>() );
+    BOOST_CHECK( str=="1x x x x1     " );
 
-	str.clear();
-	trim_right_copy_if( str1.begin(), str1.end(), std::back_inserter(str), if_isspace<char>() );
-	BOOST_CHECK( str=="     1x x x x1" );
+    str.clear();
+    trim_right_copy_if( str1.begin(), str1.end(), std::back_inserter(str), if_isspace<char>() );
+    BOOST_CHECK( str=="     1x x x x1" );
 
-	str.clear();
-	trim_copy_if( str1.begin(), str1.end(), std::back_inserter(str), if_isspace<char>() );
-	BOOST_CHECK( str=="1x x x x1" );
+    str.clear();
+    trim_copy_if( str1.begin(), str1.end(), std::back_inserter(str), if_isspace<char>() );
+    BOOST_CHECK( str=="1x x x x1" );
 
-	// *** inplace tests *** //
+    // *** inplace tests *** //
 
     // general string test
     trim_left( str1 );

@@ -14,30 +14,30 @@
 
 namespace boost {
 
-	namespace string_algo{
+    namespace string_algo{
 
-		// Search element compare traits
-		template< typename T1, typename T2 >
-		struct compare_traits
-		{
-			// Element comparison functor
-			typedef typename detail::equal_toF< T1, T2 > compare_type;
-		};
+        // Search element compare traits
+        template< typename T1, typename T2 >
+        struct compare_traits
+        {
+            // Element comparison functor
+            typedef typename detail::equal_toF< T1, T2 > compare_type;
+        };
 
-		// Substring search traits ( generic )
-		template< typename InputIterator, typename SubstrIterator >
-		struct search_traits
-		{
-			// Element comparison functor
-			typedef typename compare_traits<
-				typename InputIterator::value_type,
-				typename SubstrIterator::value_type>::compare_type compare_function_type;
-			
-			// Range type
-			typedef std::pair< InputIterator, InputIterator> range_type;
-		};
+        // Substring search traits ( generic )
+        template< typename InputIterator, typename SubstrIterator >
+        struct search_traits
+        {
+            // Element comparison functor
+            typedef typename compare_traits<
+                typename InputIterator::value_type,
+                typename SubstrIterator::value_type>::compare_type compare_function_type;
+            
+            // Range type
+            typedef std::pair< InputIterator, InputIterator> range_type;
+        };
 
-	} // namespace string_algo
+    } // namespace string_algo
 
 } // namespace boost
 

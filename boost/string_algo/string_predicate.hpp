@@ -30,10 +30,10 @@ namespace boost {
         SubIterator SubEnd )
     {
         // Instantiate comp from search traits
-		typename string_algo::search_traits< InputIterator, SubIterator >
-			::compare_function_type Comp;
+        typename string_algo::search_traits< InputIterator, SubIterator >
+            ::compare_function_type Comp;
 
-		InputIterator it=Begin;
+        InputIterator it=Begin;
         SubIterator pit=SubBegin;
         for(;
             it!=End && pit!=SubEnd;

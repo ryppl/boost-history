@@ -20,64 +20,64 @@ namespace boost {
 
 //  replace_substr ----------------------------------------------------------------------//
 
-	namespace string_algo {
-		
-		namespace detail {
+    namespace string_algo {
+        
+        namespace detail {
 
-			// Replace a range in the sequence with another range
-			/*
-			Returns the iterator pointing just after inserted subrange.
-			Note:
-			Function first tries to replace elements in the input sequence,
-			up to To position with the elements form Repl sequence.
-			The rest of the Repl is then inserted thereafter.
-			If the Repl sequence is shorter, overlaping elements are erased from the Input
-			*/
-			template< typename InputSeqT, typename ReplSeqT >
-				inline typename InputSeqT::iterator
-				replace_substr(
-				InputSeqT& Input,
-				typename InputSeqT::iterator From,
-				typename InputSeqT::iterator To,
-				ReplSeqT& Repl )
-			{       
-				typename InputSeqT::iterator InsertIt=From;
-				bool bReplace=(InsertIt!=To);
+            // Replace a range in the sequence with another range
+            /*
+            Returns the iterator pointing just after inserted subrange.
+            Note:
+            Function first tries to replace elements in the input sequence,
+            up to To position with the elements form Repl sequence.
+            The rest of the Repl is then inserted thereafter.
+            If the Repl sequence is shorter, overlaping elements are erased from the Input
+            */
+            template< typename InputSeqT, typename ReplSeqT >
+                inline typename InputSeqT::iterator
+                replace_substr(
+                InputSeqT& Input,
+                typename InputSeqT::iterator From,
+                typename InputSeqT::iterator To,
+                ReplSeqT& Repl )
+            {       
+                typename InputSeqT::iterator InsertIt=From;
+                bool bReplace=(InsertIt!=To);
 
-				for( typename ReplSeqT::const_iterator ReplIt=Repl.begin();
-					ReplIt!=Repl.end();
-					ReplIt++)
-				{
-					if ( bReplace )
-					{
-						// Replace mode
-						*InsertIt=*ReplIt;
+                for( typename ReplSeqT::const_iterator ReplIt=Repl.begin();
+                    ReplIt!=Repl.end();
+                    ReplIt++)
+                {
+                    if ( bReplace )
+                    {
+                        // Replace mode
+                        *InsertIt=*ReplIt;
 
-						InsertIt++;
-						bReplace=(InsertIt!=To);
-					}
-					else
-					{
-						// Insert mode
-						InsertIt=Input.insert( InsertIt, *ReplIt );
-						// Advance to the next item
-						InsertIt++;
-					}
-				}
+                        InsertIt++;
+                        bReplace=(InsertIt!=To);
+                    }
+                    else
+                    {
+                        // Insert mode
+                        InsertIt=Input.insert( InsertIt, *ReplIt );
+                        // Advance to the next item
+                        InsertIt++;
+                    }
+                }
 
-				// Erase the overlapping elements
-				if ( bReplace )
-				{
-					InsertIt=Input.erase( InsertIt, To );
-				}
+                // Erase the overlapping elements
+                if ( bReplace )
+                {
+                    InsertIt=Input.erase( InsertIt, To );
+                }
 
-				// Return InputIt iterator
-				return InsertIt;
-			}
-		
-		} // namespace detail
-	
-	} // namespace string_algo
+                // Return InputIt iterator
+                return InsertIt;
+            }
+        
+        } // namespace detail
+    
+    } // namespace string_algo
 
 // generic replace  -----------------------------------------------------------------//
 
@@ -85,20 +85,20 @@ namespace boost {
     /*
         Create new sequence into output interator as a copy of input sequence,
         but with the match replaced with substitute range. The match is searched 
-		using find functor.
+        using find functor.
     */
     template< 
         typename InputIterator, 
         typename MatchIterator, 
         typename ReplIterator,
         typename OutputIterator,
-		typename FindT >
+        typename FindT >
     inline OutputIterator replace_copy(
         InputIterator Begin, InputIterator End,
         MatchIterator MatchBegin, MatchIterator MatchEnd,
         ReplIterator ReplBegin, ReplIterator ReplEnd,
         OutputIterator Output,
-		FindT Find )
+        FindT Find )
     {
         // Find first match
         typename string_algo::search_traits<InputIterator, MatchIterator>::range_type M=
@@ -118,7 +118,7 @@ namespace boost {
         // Copy the rest of the sequence
         std::copy( M.second, End, Output );
 
-		return Output;
+        return Output;
     }
 
     // replace_first sequence version
@@ -126,12 +126,12 @@ namespace boost {
         typename InputSeqT,
         typename MatchSeqT,
         typename ReplSeqT,
-		typename FindT >
+        typename FindT >
     InputSeqT replace_copy( 
         const InputSeqT& Input,
         const MatchSeqT& Match,
         const ReplSeqT& Repl,
-		FindT Find )
+        FindT Find )
     {
         InputSeqT Output;
         replace_copy( 
@@ -139,7 +139,7 @@ namespace boost {
             Match.begin(), Match.end(), 
             Repl.begin(), Repl.end(), 
             std::back_inserter( Output ),
-			Find );
+            Find );
 
         return Output;
     }
@@ -149,18 +149,18 @@ namespace boost {
         typename InputSeqT,
         typename MatchSeqT,
         typename ReplSeqT,
-		typename FindF >
+        typename FindF >
     InputSeqT& replace( 
         InputSeqT& Input,
         const MatchSeqT& Match,
         const ReplSeqT& Repl,
-		FindF Find )
+        FindF Find )
     {
         // Find range for the match
         typename string_algo::search_traits<
-			typename InputSeqT::iterator, 
-			typename MatchSeqT::const_iterator>::range_type M=
-				Find( Input.begin(), Input.end(), Match.begin(), Match.end() );
+            typename InputSeqT::iterator, 
+            typename MatchSeqT::const_iterator>::range_type M=
+                Find( Input.begin(), Input.end(), Match.begin(), Match.end() );
 
         if ( M.first==M.second )
         {
@@ -169,7 +169,7 @@ namespace boost {
         }
 
         // Replace match
-		string_algo::detail::replace_substr( Input, M.first, M.second, Repl );
+        string_algo::detail::replace_substr( Input, M.first, M.second, Repl );
         
         return Input;
     }
@@ -191,13 +191,13 @@ namespace boost {
         ReplIterator ReplEnd,
         OutputIterator Output )
     {
-		return replace_copy(
-			Begin, End, 
-			MatchBegin, MatchEnd,
-			ReplBegin, ReplEnd,
-			Output,
-			string_algo::find_firstF< InputIterator, MatchIterator >() );
-	}
+        return replace_copy(
+            Begin, End, 
+            MatchBegin, MatchEnd,
+            ReplBegin, ReplEnd,
+            Output,
+            string_algo::find_firstF< InputIterator, MatchIterator >() );
+    }
 
     // replace_first sequence version
     template< typename InputSeqT, typename MatchSeqT, typename ReplSeqT >
@@ -207,10 +207,10 @@ namespace boost {
         const ReplSeqT& Repl )
     {
         return replace_copy( 
-			Input, Match, Repl, 
-			string_algo::find_firstF< 
-				typename InputSeqT::const_iterator,
-				typename MatchSeqT::const_iterator >() );
+            Input, Match, Repl, 
+            string_algo::find_firstF< 
+                typename InputSeqT::const_iterator,
+                typename MatchSeqT::const_iterator >() );
     }
 
     // replace_first in-place sequence version
@@ -221,10 +221,10 @@ namespace boost {
         const ReplSeqT& Repl )
     {
         return replace( 
-			Input, Match, Repl, 
-			string_algo::find_firstF< 
-				typename InputSeqT::iterator,
-				typename MatchSeqT::const_iterator >() );
+            Input, Match, Repl, 
+            string_algo::find_firstF< 
+                typename InputSeqT::iterator,
+                typename MatchSeqT::const_iterator >() );
     }
 
 //  replace_last --------------------------------------------------------------------//
@@ -244,13 +244,13 @@ namespace boost {
         ReplIterator ReplEnd,
         OutputIterator Output )
     {
-		return replace_copy(
-			Begin, End, 
-			MatchBegin, MatchEnd,
-			ReplBegin, ReplEnd,
-			Output,
-			string_algo::find_lastF< InputIterator, MatchIterator >() );
-	}
+        return replace_copy(
+            Begin, End, 
+            MatchBegin, MatchEnd,
+            ReplBegin, ReplEnd,
+            Output,
+            string_algo::find_lastF< InputIterator, MatchIterator >() );
+    }
 
     // replace_last sequence version
     template< typename InputSeqT, typename MatchSeqT, typename ReplSeqT >
@@ -260,10 +260,10 @@ namespace boost {
         const ReplSeqT& Repl )
     {
         return replace_copy( 
-			Input, Match, Repl, 
-			string_algo::find_lastF< 
-				typename InputSeqT::const_iterator,
-				typename MatchSeqT::const_iterator >() );
+            Input, Match, Repl, 
+            string_algo::find_lastF< 
+                typename InputSeqT::const_iterator,
+                typename MatchSeqT::const_iterator >() );
     }
 
     // replace_last in-place sequence version
@@ -274,10 +274,10 @@ namespace boost {
         const ReplSeqT& Repl )
     {
         return replace( 
-			Input, Match, Repl, 
-			string_algo::find_lastF< 
-				typename InputSeqT::iterator,
-				typename MatchSeqT::const_iterator >() );
+            Input, Match, Repl, 
+            string_algo::find_lastF< 
+                typename InputSeqT::iterator,
+                typename MatchSeqT::const_iterator >() );
     }
 
 //  replace_nth --------------------------------------------------------------------//
@@ -293,32 +293,32 @@ namespace boost {
         InputIterator End,
         MatchIterator MatchBegin,
         MatchIterator MatchEnd,
-		unsigned int Nth,
+        unsigned int Nth,
         ReplIterator ReplBegin,
         ReplIterator ReplEnd,
         OutputIterator Output )
     {
-		return replace_copy(
-			Begin, End, 
-			MatchBegin, MatchEnd,
-			ReplBegin, ReplEnd,
-			Output,
-			string_algo::find_nthF< InputIterator, MatchIterator >(Nth) );
-	}
+        return replace_copy(
+            Begin, End, 
+            MatchBegin, MatchEnd,
+            ReplBegin, ReplEnd,
+            Output,
+            string_algo::find_nthF< InputIterator, MatchIterator >(Nth) );
+    }
 
     // replace_nth sequence version
     template< typename InputSeqT, typename MatchSeqT, typename ReplSeqT >
     InputSeqT replace_nth_copy( 
         const InputSeqT& Input,
         const MatchSeqT& Match,
-		unsigned int Nth,
+        unsigned int Nth,
         const ReplSeqT& Repl )
     {
         return replace_copy( 
-			Input, Match, Repl, 
-			string_algo::find_nthF< 
-				typename InputSeqT::const_iterator,
-				typename MatchSeqT::const_iterator >(Nth) );
+            Input, Match, Repl, 
+            string_algo::find_nthF< 
+                typename InputSeqT::const_iterator,
+                typename MatchSeqT::const_iterator >(Nth) );
     }
 
     // replace_nth in-place sequence version
@@ -326,14 +326,14 @@ namespace boost {
     InputSeqT& replace_nth( 
         InputSeqT& Input,
         const MatchSeqT& Match,
-		unsigned int Nth,
+        unsigned int Nth,
         const ReplSeqT& Repl )
     {
         return replace( 
-			Input, Match, Repl, 
-			string_algo::find_nthF< 
-				typename InputSeqT::iterator,
-				typename MatchSeqT::const_iterator >(Nth) );
+            Input, Match, Repl, 
+            string_algo::find_nthF< 
+                typename InputSeqT::iterator,
+                typename MatchSeqT::const_iterator >(Nth) );
     }
 
 //  replace_all    ----------------------------------------------------------------//
@@ -414,8 +414,8 @@ namespace boost {
     {
         // Find the first match
         typename string_algo::search_traits<
-			typename InputSeqT::iterator, 
-			typename MatchSeqT::iterator>::range_type M=
+            typename InputSeqT::iterator, 
+            typename MatchSeqT::iterator>::range_type M=
             find_first( Input.begin(), Input.end(), Match.begin(), Match.end() );
 
         // Iterate throug all matches
