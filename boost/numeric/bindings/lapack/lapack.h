@@ -288,6 +288,24 @@ extern "C" {
                      const int * ldvs, dcomplex_t* work, const int * lwork, double* rwork,
                      bool* bwork, int* info );
 
+  void LAPACK_SSYEV( const char* jobz, const char* uplo, const int *n,
+                     float* a, const int * lda, float* w,
+                     float* work, const int * lwork, int* info );
+
+  void LAPACK_DSYEV( const char* jobz, const char* uplo, const int *n,
+                     double* a, const int * lda, double* w,
+                     double* work, const int * lwork, int* info );
+
+  void LAPACK_CHEEV( const char* jobz, const char* uplo, const int *n,
+                     fcomplex_t* a, const int * lda, float* w,
+                     fcomplex_t* work, const int * lwork, float* rwork,
+                     int* info );
+
+  void LAPACK_ZHEEV( const char* jobz, const char* uplo, const int *n,
+                     dcomplex_t* a, const int * lda, double* w,
+                     dcomplex_t* work, const int * lwork, double* rwork,
+                     int* info );
+
 
   void LAPACK_CTREVC( const char* side, const char* howmny, const logical_t* select, const int *n,
                      fcomplex_t* t, const int * ldt, fcomplex_t* vl, const int* ldvl,

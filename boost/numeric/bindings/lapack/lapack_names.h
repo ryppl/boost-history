@@ -150,6 +150,11 @@
 #define LAPACK_CGEES FORTRAN_ID( cgees )
 #define LAPACK_ZGEES FORTRAN_ID( zgees )
 
+#define LAPACK_SSYEV FORTRAN_ID( ssyev )
+#define LAPACK_DSYEV FORTRAN_ID( dsyev )
+#define LAPACK_CHEEV FORTRAN_ID( cheev )
+#define LAPACK_ZHEEV FORTRAN_ID( zheev )
+
 
 #define LAPACK_STREVC FORTRAN_ID( strevc )
 #define LAPACK_DTREVC FORTRAN_ID( dtrevc )
