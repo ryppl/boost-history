@@ -22,8 +22,7 @@ if $(NT)
 }
 else if $(UNIX)
 {
-    PYTHON_INCLUDES ?= <include>/usr/include/python1.5 ;
-    PYTHON_LIBS ?= /usr/lib/python1.5/config/libpython1.5.a ;
+    PYTHON_INCLUDES ?= <include>/software/python-2.0/include/python2.0  ;
     SHELL_EXPORT ?= export ;
 }
 
@@ -95,7 +94,8 @@ rule python-test-target # test-target : sources :
 }
 actions python-test-target
 {
-    $(SHELL_EXPORT)PYTHONPATH=$(PYTHONPATH)
+    PYTHONPATH=$(PYTHONPATH)
+    $(SHELL_EXPORT)PYTHONPATH
     $(PYTHON) "$(>)" $(ARGS) > "$(<)"
 }
 
@@ -109,7 +109,8 @@ rule python-runtest-target # test-target : sources :
 }
 actions python-runtest-target
 {
-    $(SHELL_EXPORT)PYTHONPATH=$(PYTHONPATH)
+    PYTHONPATH=$(PYTHONPATH)
+    $(SHELL_EXPORT)PYTHONPATH
     $(PYTHON) "$(>)" $(ARGS)
 }
 
