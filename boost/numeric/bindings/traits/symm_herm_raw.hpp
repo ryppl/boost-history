@@ -16,12 +16,77 @@
 #define BOOST_NUMERIC_BINDINGS_TRAITS_SYMM_HERM_RAW_HPP
 
 #include <boost/numeric/bindings/traits/matrix_raw.hpp> 
-#include <boost/numeric/ublas/symmetric.hpp> 
-#include <boost/numeric/ublas/hermitian.hpp> 
+#ifndef BOOST_UBLAS_HAVE_BINDINGS
+#  include <boost/numeric/ublas/symmetric.hpp> 
+#  include <boost/numeric/ublas/hermitian.hpp> 
+#endif 
 
 namespace boost { namespace numeric { namespace bindings { namespace traits {
 
   namespace ublas = boost::numeric::ublas; 
+
+  template <typename M, typename F>
+  BOOST_UBLAS_INLINE
+  int leading_dimension (const ublas::symmetric_adaptor<M, F> &m) {
+    return bindings::traits::leading_dimension (m.data());
+  }
+
+  template <typename M, typename F>
+  BOOST_UBLAS_INLINE
+  int leading_dimension (const ublas::hermitian_adaptor<M, F> &m) {
+    return bindings::traits::leading_dimension (m.data());
+  }
+
+
+
+  template <typename M, typename F>
+  BOOST_UBLAS_INLINE
+  int matrix_storage_size (const ublas::symmetric_adaptor<M, F> &m) {
+    return matrix_storage_size (m.data()); 
+  }
+
+  template <typename M, typename F>
+  BOOST_UBLAS_INLINE
+  int matrix_storage_size (const ublas::hermitian_adaptor<M, F> &m) {
+    return matrix_storage_size (m.data()); 
+  }
+
+  template<typename T, typename F1, typename F2, typename A>
+  BOOST_UBLAS_INLINE
+  int matrix_storage_size (const ublas::symmetric_matrix<T,F1,F2,A> &m) {
+    return (int) ((m.size1() * (m.size1() + 1)) / 2); 
+  }
+
+  template<typename T, typename F1, typename F2, typename A>
+  BOOST_UBLAS_INLINE
+  int matrix_storage_size (const ublas::hermitian_matrix<T,F1,F2,A> &m) {
+    return (int) ((m.size1() * (m.size1() + 1)) / 2); 
+  }
+
+
+
+#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
+  template<typename T, typename F1, typename F2, typename A>
+  BOOST_UBLAS_INLINE
+  typename ublas::symmetric_matrix<T,F1,F2,A>::const_pointer 
+  matrix_storage (const ublas::symmetric_matrix<T,F1,F2,A> &m) {
+    return &m.data().begin()[0];
+  }
+#endif
+  // We need data_const() mostly due to MSVC 6.0.
+  // But how shall we write portable code otherwise?
+  template<typename T, typename F1, typename F2, typename A>
+  BOOST_UBLAS_INLINE
+  typename ublas::symmetric_matrix<T,F1,F2,A>::const_pointer 
+  matrix_storage_const (const ublas::symmetric_matrix<T,F1,F2,A> &m) {
+    return &m.data().begin()[0];
+  }
+  template<typename T, typename F1, typename F2, typename A>
+  BOOST_UBLAS_INLINE
+  typename ublas::symmetric_matrix<T,F1,F2,A>::pointer 
+  matrix_storage (ublas::symmetric_matrix<T,F1,F2,A> &m) {
+    return &m.data().begin()[0];
+  }
 
 #ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
   template <typename M, typename F>
@@ -45,6 +110,30 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     return matrix_storage (m.data()); 
   }
 
+
+#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
+  template<typename T, typename F1, typename F2, typename A>
+  BOOST_UBLAS_INLINE
+  typename ublas::hermitian_matrix<T,F1,F2,A>::const_pointer 
+  matrix_storage (const ublas::hermitian_matrix<T,F1,F2,A> &m) {
+    return &m.data().begin()[0];
+  }
+#endif
+  // We need data_const() mostly due to MSVC 6.0.
+  // But how shall we write portable code otherwise?
+  template<typename T, typename F1, typename F2, typename A>
+  BOOST_UBLAS_INLINE
+  typename ublas::hermitian_matrix<T,F1,F2,A>::const_pointer 
+  matrix_storage_const (const ublas::hermitian_matrix<T,F1,F2,A> &m) {
+    return &m.data().begin()[0];
+  }
+  template<typename T, typename F1, typename F2, typename A>
+  BOOST_UBLAS_INLINE
+  typename ublas::hermitian_matrix<T,F1,F2,A>::pointer 
+  matrix_storage (ublas::hermitian_matrix<T,F1,F2,A> &m) {
+    return &m.data().begin()[0];
+  }
+
 #ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
   template <typename M, typename F>
   BOOST_UBLAS_INLINE
@@ -65,27 +154,6 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
   BOOST_UBLAS_INLINE
   typename M::pointer matrix_storage (ublas::hermitian_adaptor<M, F> &m) {
     return matrix_storage (m.data()); 
-  }
-
-  template <typename T, typename F1, typename F2, typename A>
-  inline
-  typename ublas::symmetric_matrix<T,F1,F2,A>::pointer
-  matrix_storage(ublas::symmetric_matrix<T,F1,F2,A>& m) {
-    return &m.data().begin()[0] ;
-  }
-
-  template <typename T, typename F1, typename F2, typename A>
-  inline
-  typename ublas::symmetric_matrix<T,F1,F2,A>::const_pointer
-  matrix_storage(const ublas::symmetric_matrix<T,F1,F2,A>& m) {
-    return &m.data().begin()[0] ;
-  }
-
-  template <typename T, typename F1, typename F2, typename A>
-  inline
-  typename ublas::symmetric_matrix<T,F1,F2,A>::size_type
-  matrix_storage_size(const ublas::symmetric_matrix<T,F1,F2,A>& m) {
-    return ( matrix_size1( m ) * ( matrix_size1( m ) + 1 ) ) / 2 ;
   }
 
   namespace detail {
