@@ -2130,6 +2130,8 @@ rule stage ( name : sources + : requirements * : local-build * )
     local stage-id =
         [ grist-targets $(name) ] ;
     local arch-subdirs = [ get-values <architecture-subdirs> : $(requirements) ] ;
+    local tree-root = [ get-values <tree-subdirs> : $(requirements) ] ;
+    if $(tree-root) { tree-root = [ split-path $(tree-root) ] ; }
 
     # Supress the regular build of this target
     local gSUPPRESS_FAKE_TARGETS =  [ get-values <suppress> : $(local-build) ] ;
@@ -2197,10 +2199,11 @@ rule stage ( name : sources + : requirements * : local-build * )
                     local sv-files = ;
                     for local sv in $(target-subvariant)
                     {
-                        local files = $(gFILES($(target-subvariant))) ;
-                        files ?= $(target-subvariant) ;
-                        sv-files += $(files) ;
+                        local sv-file = $(gFILES($(sv))) ;
+                        sv-file ?= $(sv) ;
+                        sv-files += $(sv-file) ;
                     }
+                    sv-files = [ unique $(sv-files) ] ;
                     for local sv in $(sv-files)
                     {
                         local renamed-target =
@@ -2223,18 +2226,29 @@ rule stage ( name : sources + : requirements * : local-build * )
     local destination-files = ;
     for local file in $(files)
     {
-        local destination-file = $(file:D=) ;
-        if $(file:G) { destination-file = $(file-tagged($(file)):G=:D=) ; }
+        local destination-file ;
+        local destination-subdir ;
+        if $(file:G)
+        {
+            destination-file = $(file-tagged($(file)):G=:D=) ;
+            destination-subdir = $(file-subdir($(file))) ;
+        }
+        else
+        {
+            destination-file = $(file:D=) ;
+            destination-subdir = [ strip-initial $(tree-root) : [ split-path $(file:D) ] ] ;
+        }
         destination-file =
-            [ grist-targets $(destination-file) : [ split-path $(stage-dir) ] ] ;
+            [ grist-targets $(destination-file) : [ split-path $(stage-dir) ] $(destination-subdir) ] ;
         destination-files += $(destination-file) ;
         {
             local FILEMODE = $(FILEMODE) ;
             if $(file-mode($(file))) { FILEMODE = $(file-mode($(file))) ; }
             MakeLocate $(destination-file) :
-                [ FDirName [ split-path $(LOCATE_TARGET)/$(stage-dir) ] $(file-subdir($(file))) ] ;
+                [ FDirName [ split-path $(LOCATE_TARGET)/$(stage-dir) ] $(destination-subdir) ] ;
             FileClone $(destination-file) : $(file) ;
-            declare-fake-targets $(stage-id)/$(destination-file:G=) : $(destination-file) ;
+            local target = $(stage-id) $(destination-subdir) $(destination-file:G=) ;
+            declare-fake-targets $(target:J=/) : $(destination-file) ;
         }
     }
     declare-fake-targets $(stage-id) : $(destination-files) ;

@@ -50,21 +50,40 @@ rule common-stage-tag ( toolset variant : properties * )
     return $(properties) <tag><prefix>-$(tags:J=-) ;
 }
 
-rule unless ( test : no-value * : yes-value * ) { if ! $(test) { return $(no-value) ; } else { return $(yes-value) ; } }
-rule cond ( test : yes-value * : no-value * ) { if $(test) { return $(yes-value) ; } else { return $(no-value) ; } }
+rule glob-tree ( root : patterns * )
+{
+    local e ;
+    local f = [ GLOB $(root) : $(patterns) ] ;
+    local files ;
+    for e in $(f)
+    {
+        if $(e:D=) != CVS { files += $(e) ; }
+    }
+    local d = [ difference [ GLOB $(root) : * ] : $(files) ] ;
+    for e in $(d)
+    {
+        if ! ( $(e:D=) in . .. ) { files += [ glob-tree $(e) : $(patterns) ] ; }
+    }
+    return $(files) ;
+}
+
+rule unless ( test : no-value * : yes-value * )
+{ if ! $(test) { return $(no-value) ; } else { return $(yes-value) ; } }
+
+rule cond ( test : yes-value * : no-value * )
+{ if $(test) { return $(yes-value) ; } else { return $(no-value) ; } }
 
 stage lib
     :
         # please order by name to ease maintenance
-        <dll>libs/date_time/build/boost_date_time
+        #~ <dll>libs/date_time/build/boost_date_time
         <lib>libs/date_time/build/boost_date_time
         <lib>libs/filesystem/build/boost_filesystem
-        #~ <lib>libs/graph/build/libbgl-viz
         <dll>libs/python/build/boost_python
         <lib>libs/python/build/boost_python
         <dll>libs/regex/build/boost_regex
         <lib>libs/regex/build/boost_regex
-        <dll>libs/signals/build/boost_signals
+        #~ <dll>libs/signals/build/boost_signals
         <lib>libs/signals/build/boost_signals
         [ unless $(NT) :
             <dll>libs/test/build/boost_prg_exec_monitor
@@ -80,4 +99,13 @@ stage lib
     :
         debug
         release
+    ;
+
+stage include/boost-$(version-tag)
+    :
+        [ glob-tree $(BOOST_ROOT)/boost/compatibility/cpp_c_headers : c* ]
+        [ glob-tree $(BOOST_ROOT)/boost : *.hpp *.ipp ]
+    :
+        <tree-subdirs>$(BOOST_ROOT)
+    :
     ;
