@@ -63,7 +63,10 @@ class ios_all_word_saver;
 
 //  From <boost/io/iomanip.hpp>  ---------------------------------------------//
 
-// Only has function templates
+class multi_newl;
+class multi_skipl;
+
+// Also has function templates
 
 
 //  From <boost/io/streambuf_wrapping.hpp>  ----------------------------------//

@@ -7,7 +7,7 @@
 //  See <http://www.boost.org/libs/io/> for the library's home page.
 
 //  Revision History
-//   19 Nov 2003  Initial version (Daryle Walker)
+//   25 Nov 2003  Initial version (Daryle Walker)
 
 #include <boost/io/iomanip.hpp>      // for boost::io::newl, etc.
 #include <boost/test/unit_test.hpp>  // for main, BOOST_CHECK_EQUAL, etc.
@@ -156,6 +156,49 @@ resetios_unit_test
     BOOST_CHECK_EQUAL( ' ', ss.fill() );
 }
 
+// Unit test for multi_newl
+void
+multi_newl_unit_test
+(
+)
+{
+    using boost::io::multi_newl;
+
+    flush_count_stringbuf  fcsb;
+    std::ostream           os( &fcsb );
+
+    // Just like newl
+    os << "Hello" << multi_newl( 1, false ) << "There";
+    BOOST_CHECK_EQUAL( fcsb.str(), "Hello\nThere" );
+    BOOST_CHECK_EQUAL( 0ul, fcsb.flush_count() );
+
+    // Doing several
+    os << ',' << multi_newl( 2 ) << "Boosters!";
+    BOOST_CHECK_EQUAL( fcsb.str(), "Hello\nThere,\n\nBoosters!" );
+    BOOST_CHECK_EQUAL( 0ul, fcsb.flush_count() );
+
+    // Do a flush
+    os << multi_newl( 3, true );
+    BOOST_CHECK_EQUAL( fcsb.str(), "Hello\nThere,\n\nBoosters!\n\n\n" );
+    BOOST_CHECK_EQUAL( 1ul, fcsb.flush_count() );
+}
+
+// Unit test for multi_skipl
+void
+multi_skipl_unit_test
+(
+)
+{
+    using boost::io::multi_skipl;
+
+    std::istringstream  iss( "Hello\nThere\nBoosters!" );
+    std::string         scratch;
+
+    // Skip over two lines
+    iss >> multi_skipl( 2 ) >> scratch;
+    BOOST_CHECK_EQUAL( scratch, "Boosters!" );
+}
+
 
 // Unit test program
 boost::unit_test_framework::test_suite *
@@ -171,6 +214,8 @@ init_unit_test_suite
     test->add( BOOST_TEST_CASE(newl_unit_test) );
     test->add( BOOST_TEST_CASE(skipl_unit_test) );
     test->add( BOOST_TEST_CASE(resetios_unit_test) );
+    test->add( BOOST_TEST_CASE(multi_newl_unit_test) );
+    test->add( BOOST_TEST_CASE(multi_skipl_unit_test) );
 
     return test;
 }
