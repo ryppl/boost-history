@@ -178,7 +178,7 @@ inline void register_conversion(
 
     inheritance_graph::instance().add_cast(
         static_type_id<Source>()
-      , static_type_id<Target*>()
+      , static_type_id<Target>()
       , &generator::execute
       , is_downcast
     );
