@@ -530,10 +530,12 @@ template<class F> struct result_traits<unspecified, F>
 
 // bind_t
 
-template<class R, class F, class L> class bind_t
+template <class R>
+struct bind_t_generator
 {
-public:
-
+  template<class F, class L>
+  struct implementation
+  {
 #if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION) && !defined(BOOST_NO_FUNCTION_TEMPLATE_ORDERING)
 
     typedef typename result_traits<R, F>::type result_type;
@@ -544,7 +546,7 @@ public:
 
 #endif
 
-    bind_t(F f, L const & l): f_(f), l_(l) {}
+    implementation(F f, L const & l): f_(f), l_(l) {}
 
     result_type operator()()
     {
@@ -687,7 +689,179 @@ private:
     F f_;
     L l_;
 
-    bind_t & operator= (bind_t const &);
+    implementation & operator= (implementation const &);
+  };
+};
+
+template <>
+struct bind_t_generator<void>
+{
+  template<class F, class L>
+  struct implementation
+  {
+#if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION) && !defined(BOOST_NO_FUNCTION_TEMPLATE_ORDERING)
+
+    typedef typename result_traits<void, F>::type result_type;
+
+#else
+
+    typedef R result_type;
+
+#endif
+
+    implementation(F f, L const & l): f_(f), l_(l) {}
+
+    result_type operator()()
+    {
+        list0 a;
+        l_(type<result_type>(), f_, a);
+    }
+
+    result_type operator()() const
+    {
+        list0 a;
+        l_(type<result_type>(), f_, a);
+    }
+
+    template<class A1> result_type operator()(A1 & a1)
+    {
+        list1<A1 &> a(a1);
+        l_(type<result_type>(), f_, a);
+    }
+
+    template<class A1> result_type operator()(A1 & a1) const
+    {
+        list1<A1 &> a(a1);
+        l_(type<result_type>(), f_, a);
+    }
+
+    template<class A1, class A2> result_type operator()(A1 & a1, A2 & a2)
+    {
+        list2<A1 &, A2 &> a(a1, a2);
+        l_(type<result_type>(), f_, a);
+    }
+
+    template<class A1, class A2> result_type operator()(A1 & a1, A2 & a2) const
+    {
+        list2<A1 &, A2 &> a(a1, a2);
+        l_(type<result_type>(), f_, a);
+    }
+
+    template<class A1, class A2, class A3> result_type operator()(A1 & a1, A2 & a2, A3 & a3)
+    {
+        list3<A1 &, A2 &, A3 &> a(a1, a2, a3);
+        l_(type<result_type>(), f_, a);
+    }
+
+    template<class A1, class A2, class A3> result_type operator()(A1 & a1, A2 & a2, A3 & a3) const
+    {
+        list3<A1 &, A2 &, A3 &> a(a1, a2, a3);
+        l_(type<result_type>(), f_, a);
+    }
+
+    template<class A1, class A2, class A3, class A4> result_type operator()(A1 & a1, A2 & a2, A3 & a3, A4 & a4)
+    {
+        list4<A1 &, A2 &, A3 &, A4 &> a(a1, a2, a3, a4);
+        l_(type<result_type>(), f_, a);
+    }
+
+    template<class A1, class A2, class A3, class A4> result_type operator()(A1 & a1, A2 & a2, A3 & a3, A4 & a4) const
+    {
+        list4<A1 &, A2 &, A3 &, A4 &> a(a1, a2, a3, a4);
+        l_(type<result_type>(), f_, a);
+    }
+
+    template<class A1, class A2, class A3, class A4, class A5> result_type operator()(A1 & a1, A2 & a2, A3 & a3, A4 & a4, A5 & a5)
+    {
+        list5<A1 &, A2 &, A3 &, A4 &, A5 &> a(a1, a2, a3, a4, a5);
+        l_(type<result_type>(), f_, a);
+    }
+
+    template<class A1, class A2, class A3, class A4, class A5> result_type operator()(A1 & a1, A2 & a2, A3 & a3, A4 & a4, A5 & a5) const
+    {
+        list5<A1 &, A2 &, A3 &, A4 &, A5 &> a(a1, a2, a3, a4, a5);
+        l_(type<result_type>(), f_, a);
+    }
+
+    template<class A1, class A2, class A3, class A4, class A5, class A6> result_type operator()(A1 & a1, A2 & a2, A3 & a3, A4 & a4, A5 & a5, A6 & a6)
+    {
+        list6<A1 &, A2 &, A3 &, A4 &, A5 &, A6 &> a(a1, a2, a3, a4, a5, a6);
+        l_(type<result_type>(), f_, a);
+    }
+
+    template<class A1, class A2, class A3, class A4, class A5, class A6> result_type operator()(A1 & a1, A2 & a2, A3 & a3, A4 & a4, A5 & a5, A6 & a6) const
+    {
+        list6<A1 &, A2 &, A3 &, A4 &, A5 &, A6 &> a(a1, a2, a3, a4, a5, a6);
+        l_(type<result_type>(), f_, a);
+    }
+
+    template<class A1, class A2, class A3, class A4, class A5, class A6, class A7> result_type operator()(A1 & a1, A2 & a2, A3 & a3, A4 & a4, A5 & a5, A6 & a6, A7 & a7)
+    {
+        list7<A1 &, A2 &, A3 &, A4 &, A5 &, A6 &, A7 &> a(a1, a2, a3, a4, a5, a6, a7);
+        l_(type<result_type>(), f_, a);
+    }
+
+    template<class A1, class A2, class A3, class A4, class A5, class A6, class A7> result_type operator()(A1 & a1, A2 & a2, A3 & a3, A4 & a4, A5 & a5, A6 & a6, A7 & a7) const
+    {
+        list7<A1 &, A2 &, A3 &, A4 &, A5 &, A6 &, A7 &> a(a1, a2, a3, a4, a5, a6, a7);
+        l_(type<result_type>(), f_, a);
+    }
+
+    template<class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8> result_type operator()(A1 & a1, A2 & a2, A3 & a3, A4 & a4, A5 & a5, A6 & a6, A7 & a7, A8 & a8)
+    {
+        list8<A1 &, A2 &, A3 &, A4 &, A5 &, A6 &, A7 &, A8 &> a(a1, a2, a3, a4, a5, a6, a7, a8);
+        l_(type<result_type>(), f_, a);
+    }
+
+    template<class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8> result_type operator()(A1 & a1, A2 & a2, A3 & a3, A4 & a4, A5 & a5, A6 & a6, A7 & a7, A8 & a8) const
+    {
+        list8<A1 &, A2 &, A3 &, A4 &, A5 &, A6 &, A7 &, A8 &> a(a1, a2, a3, a4, a5, a6, a7, a8);
+        l_(type<result_type>(), f_, a);
+    }
+
+    template<class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9> result_type operator()(A1 & a1, A2 & a2, A3 & a3, A4 & a4, A5 & a5, A6 & a6, A7 & a7, A8 & a8, A9 & a9)
+    {
+        list9<A1 &, A2 &, A3 &, A4 &, A5 &, A6 &, A7 &, A8 &, A9 &> a(a1, a2, a3, a4, a5, a6, a7, a8, a9);
+        l_(type<result_type>(), f_, a);
+    }
+
+    template<class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9> result_type operator()(A1 & a1, A2 & a2, A3 & a3, A4 & a4, A5 & a5, A6 & a6, A7 & a7, A8 & a8, A9 & a9) const
+    {
+        list9<A1 &, A2 &, A3 &, A4 &, A5 &, A6 &, A7 &, A8 &, A9 &> a(a1, a2, a3, a4, a5, a6, a7, a8, a9);
+        l_(type<result_type>(), f_, a);
+    }
+
+    template<class A> result_type eval(A & a)
+    {
+        l_(type<result_type>(), f_, a);
+    }
+
+    template<class A> result_type eval(A & a) const
+    {
+        l_(type<result_type>(), f_, a);
+    }
+
+    template<class V> void accept(V & v) const
+    {
+        v(f_);
+        l_.accept(v);
+    }
+
+private:
+
+    F f_;
+    L l_;
+
+    implementation & operator= (implementation const &);
+  };
+};
+
+template<class R, class F, class L> class bind_t
+  : public bind_t_generator<R>::template implementation<F, L>
+{
+    typedef typename bind_t_generator<R>::template implementation<F, L> base;
+ public:
+    bind_t(F f, L const & l): base(f, l) {}
 };
 
 // add_value
