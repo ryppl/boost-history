@@ -24,6 +24,7 @@
 #include <iostream>
 #include <string>        // for non-explicit string constructor
 // #include <locale>
+#include <boost/interval.hpp>
 
 
 namespace boost {
@@ -33,9 +34,9 @@ namespace boost {
  */
 
 #if 0
-template<class Ch, class ChTr, class T, class Traits>
+template<class Ch, class ChTr, class T, class Policies>
 std::basic_ostream<Ch, ChTr>&
-operator<<(std::basic_ostream<Ch, ChTr>& os, const interval<T, Traits>& r)
+operator<<(std::basic_ostream<Ch, ChTr>& os, const interval<T, Policies>& r)
 {
   typename std::basic_ostream<Ch, ChTr>::sentry sentry(os);
   if (sentry) {
@@ -46,15 +47,15 @@ operator<<(std::basic_ostream<Ch, ChTr>& os, const interval<T, Traits>& r)
 }
 #else
 // Ensure generation of outer bounds in all cases
-template<class T, class Traits> inline
-std::ostream& operator<<(std::ostream& os, const interval<T, Traits>& r)
+template<class T, class Policies> inline
+std::ostream& operator<<(std::ostream& os, const interval<T, Policies>& r)
 {
   std::streamsize p = os.precision(); // decimal notation
   // FIXME poor man's power of 10, only up to 1E-15
   p = (p>15) ? 15 : p-1;
   double eps = 1.0; while (p>0) { eps /= 10.0; --p; }
   // widen the interval so output is correct
-  interval<T, Traits> eps_i(-eps/2.0, eps/2.0), r_wide = r+eps_i;
+  interval<T, Policies> r_wide = widen(r, eps / 2.0);
   os << "[" << r_wide.lower() << "," << r_wide.upper() << "]";
   return os;
 }
@@ -62,9 +63,9 @@ std::ostream& operator<<(std::ostream& os, const interval<T, Traits>& r)
 
 
 #if 0 // FIXME: make the code work for g++ 3.*
-template<class Ch, class ChTr, class T, class Traits>
+template<class Ch, class ChTr, class T, class Policies>
 std::basic_istream<Ch, ChTr>&
-operator>>(std::basic_istream<Ch, ChTr>& is, const interval<T, Traits>& r)
+operator>>(std::basic_istream<Ch, ChTr>& is, const interval<T, Policies>& r)
 {
   T l = 0, u = 0;
   std::locale loc = is.getloc();
@@ -86,12 +87,12 @@ operator>>(std::basic_istream<Ch, ChTr>& is, const interval<T, Traits>& r)
     u = l;
   }
   if(is)
-    r = succ(interval<T, Traits>(l, r));   // round outward by 1 ulp
+    r = succ(interval<T, Policies>(l, r));   // round outward by 1 ulp
   return is;
 }
 #else
-template<class T, class Traits> inline
-std::istream& operator>>(std::istream& is, interval<T, Traits>& r)
+template<class T, class Policies> inline
+std::istream& operator>>(std::istream& is, interval<T, Policies>& r)
 {
   T l, u;
   char c = 0;

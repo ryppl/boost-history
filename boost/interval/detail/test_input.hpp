@@ -13,41 +13,41 @@ bool is_neg(const T& x) { return x < T(0); }
   namespace interval_lib {
     namespace detail {
 
-template<class T, class Traits> inline
-bool test_input(const interval<T, Traits>& x) {
-  typedef typename Traits::checking checking;
+template<class T, class Policies> inline
+bool test_input(const interval<T, Policies>& x) {
+  typedef typename Policies::checking checking;
   return checking::is_empty(x.lower(), x.upper());
 }
 
-template<class T, class Traits1, class Traits2> inline
-bool test_input(const interval<T, Traits1>& x, const interval<T, Traits2>& y) {
-  typedef typename Traits1::checking checking1;
-  typedef typename Traits2::checking checking2;
+template<class T, class Policies1, class Policies2> inline
+bool test_input(const interval<T, Policies1>& x, const interval<T, Policies2>& y) {
+  typedef typename Policies1::checking checking1;
+  typedef typename Policies2::checking checking2;
   return checking1::is_empty(x.lower(), x.upper()) ||
 	 checking2::is_empty(y.lower(), y.upper());
 }
 
-template<class T, class Traits> inline
-bool test_input(const T& x, const interval<T, Traits>& y) {
-  typedef typename Traits::checking checking;
+template<class T, class Policies> inline
+bool test_input(const T& x, const interval<T, Policies>& y) {
+  typedef typename Policies::checking checking;
   return checking::is_nan(x) || checking::is_empty(y.lower(), y.upper());
 }
 
-template<class T, class Traits> inline
-bool test_input(const interval<T, Traits>& x, const T& y) {
-  typedef typename Traits::checking checking;
+template<class T, class Policies> inline
+bool test_input(const interval<T, Policies>& x, const T& y) {
+  typedef typename Policies::checking checking;
   return checking::is_empty(x.lower(), x.upper()) || checking::is_nan(y);
 }
 
-template<class T, class Traits> inline
+template<class T, class Policies> inline
 bool test_input(const T& x) {
-  typedef typename Traits::checking checking;
+  typedef typename Policies::checking checking;
   return checking::is_nan(x);
 }
 
-template<class T, class Traits> inline
+template<class T, class Policies> inline
 bool test_input(const T& x, const T& y) {
-  typedef typename Traits::checking checking;
+  typedef typename Policies::checking checking;
   return checking::is_nan(x) || checking::is_nan(y);
 }
 

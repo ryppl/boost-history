@@ -118,59 +118,59 @@ private:
   T up;
 };
 
-template<class T, class Traits> inline
-interval<T, Traits>::interval(const T& v): low(v), up(v)
+template<class T, class Policies> inline
+interval<T, Policies>::interval(const T& v): low(v), up(v)
 {
   if (checking::is_nan(v)) set_empty();
 }
 
-template<class T, class Traits> inline
-interval<T, Traits>::interval(const T& l, const T& u): low(l), up(u)
+template<class T, class Policies> inline
+interval<T, Policies>::interval(const T& l, const T& u): low(l), up(u)
 {
   if (checking::is_nan(l) || checking::is_nan(u) || !(l <= u))
     set_empty();
 }
 
-template<class T, class Traits> inline
-interval<T, Traits>& interval<T, Traits>::operator=(const T& x)
+template<class T, class Policies> inline
+interval<T, Policies>& interval<T, Policies>::operator=(const T& x)
 {
   if (checking::is_nan(x)) set_empty();
   else low = up = x;
   return *this;
 }
 
-template<class T, class Traits> inline
-void interval<T, Traits>::assign(const T& l, const T& u)
+template<class T, class Policies> inline
+void interval<T, Policies>::assign(const T& l, const T& u)
 {
   if (checking::is_nan(l) || checking::is_nan(u) || !(l <= u))
     set_empty();
   else set(l, u);
 }
 
-template<class T, class Traits> inline
-void interval<T, Traits>::set(const T& l, const T& u)
+template<class T, class Policies> inline
+void interval<T, Policies>::set(const T& l, const T& u)
 {
   low = l;
   up  = u;
 }
 
-template<class T, class Traits> inline
-void interval<T, Traits>::set_empty()
+template<class T, class Policies> inline
+void interval<T, Policies>::set_empty()
 {
   low = checking::empty_lower();
   up  = checking::empty_upper();
 }
 
-template<class T, class Traits> inline
-void interval<T, Traits>::set_whole()
+template<class T, class Policies> inline
+void interval<T, Policies>::set_whole()
 {
   const T& inf = checking::inf();
   low = -inf;
   up  =  inf;
 }
 
-template<class T, class Traits> inline
-interval<T, Traits> interval<T, Traits>::hull(const T& x, const T& y)
+template<class T, class Policies> inline
+interval<T, Policies> interval<T, Policies>::hull(const T& x, const T& y)
 {
   bool bad_x = checking::is_nan(x);
   bool bad_y = checking::is_nan(y);
@@ -183,28 +183,28 @@ interval<T, Traits> interval<T, Traits>::hull(const T& x, const T& y)
   else       return interval(y, x, true);
 }
 
-template<class T, class Traits> inline
-interval<T, Traits> interval<T, Traits>::empty()
+template<class T, class Policies> inline
+interval<T, Policies> interval<T, Policies>::empty()
 {
-  return interval<T, Traits>(checking::empty_lower(),
-			     checking::empty_upper(), true);
+  return interval<T, Policies>(checking::empty_lower(),
+			       checking::empty_upper(), true);
 }
 
-template<class T, class Traits> inline
-interval<T, Traits> interval<T, Traits>::whole()
+template<class T, class Policies> inline
+interval<T, Policies> interval<T, Policies>::whole()
 {
   const T& inf = checking::inf();
-  return interval<T, Traits>(-inf, inf, true);
+  return interval<T, Policies>(-inf, inf, true);
 }
 
-template<class T, class Traits> inline
-const T& interval<T, Traits>::lower() const
+template<class T, class Policies> inline
+const T& interval<T, Policies>::lower() const
 {
   return low;
 }
 
-template<class T, class Traits> inline
-const T& interval<T, Traits>::upper() const
+template<class T, class Policies> inline
+const T& interval<T, Policies>::upper() const
 {
   return up;
 }

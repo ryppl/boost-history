@@ -117,12 +117,12 @@ namespace boost {
     typedef typename Rounding::unprotected_rounding type;
   };
   
-  template<class Traits>
+  template<class Policies>
   struct unprotect_policies
   {
     typedef interval_policies<
-              typename unprotect_rounding<typename Traits::rounding>::type,
-              typename Traits::checking
+              typename unprotect_rounding<typename Policies::rounding>::type,
+              typename Policies::checking
             > type;
   };
   
