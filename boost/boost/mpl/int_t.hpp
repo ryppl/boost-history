@@ -30,8 +30,8 @@ struct int_t
     typedef int_t<N> type;
 
     // increment/decrement support
-    typedef int_t<N + 1> next;
-    typedef int_t<N - 1> prior;
+    typedef int_t<(N + 1)> next;
+    typedef int_t<(N - 1)> prior;
 
     // user-declared default ctor is required for definition of namespace 
     // scope constants _0, _1, etc.

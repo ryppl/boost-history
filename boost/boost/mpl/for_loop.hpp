@@ -82,12 +82,12 @@ struct for_loop : mpl::detail::for_loop_context<
     typedef typename next_iteration_::executed executed;
 
     template<typename T>
-    static void inline execute(T t)
+    static inline void execute(T t)
     {
         next_iteration_::execute(t);
     }
     
-    static void inline execute()
+    static inline void execute()
     {
         next_iteration_::execute();
     }
@@ -125,13 +125,13 @@ struct for_loop_iteration
     typedef typename next_iteration_::executed executed;
 
     template<typename T>
-    static void inline execute(T t)
+    static inline void execute(T t)
     {
         loop_statement_::execute(t);
         next_iteration_::execute(t);
     }
         
-    static void inline execute()
+    static inline void execute()
     {
         loop_statement_::execute();
         next_iteration_::execute();
@@ -144,10 +144,10 @@ struct for_loop_null_iteration
     typedef Loop executed;
     
     template<typename T>
-    static void inline execute(T t)
+    static inline void execute(T t)
     {}
     
-    static void inline execute()
+    static inline void execute()
     {}
 };
 
