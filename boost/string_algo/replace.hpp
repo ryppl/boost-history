@@ -18,6 +18,90 @@
 
 namespace boost {
 
+//  replace_range --------------------------------------------------------------------//
+
+    // replace_range iterator version
+    template< 
+        typename InputIteratorT, 
+        typename FormatIteratorT,
+        typename OutputIteratorT >
+    inline OutputIteratorT replace_range_copy(
+        OutputIteratorT Output,
+        InputIteratorT Begin,
+        InputIteratorT End,
+        InputIteratorT SearchBegin,
+        InputIteratorT SearchEnd,
+        FormatIteratorT FormatBegin,
+        FormatIteratorT FormatEnd )
+    {
+        return string_algo::replace_copy(
+            Output,
+            string_algo::make_range( Begin, End ), 
+            string_algo::detail::
+                create_find_rangeF< iterator_range<InputIteratorT> >::
+                    create_const( 
+                        string_algo::make_range( SearchBegin, SearchEnd ) ),
+            string_algo::detail::
+                identity_formatF< iterator_range<FormatIteratorT> >(
+                    string_algo::make_range( FormatBegin, FormatEnd ) ) );
+    }
+
+    // replace_range iterator version
+    template< 
+        typename InputT, 
+        typename FormatT,
+        typename OutputIteratorT >
+    inline OutputIteratorT replace_range_copy(
+        OutputIteratorT Output,
+        const InputT& Input,
+		typename InputT::const_iterator SearchBegin,
+		typename InputT::const_iterator SearchEnd,
+        const FormatT& Format )
+    {
+        return string_algo::replace_copy(
+            Output,
+            Input,
+            string_algo::detail::
+                create_find_rangeF< InputT >::create_const(
+					string_algo::make_range( SearchBegin, SearchEnd ) ),
+            string_algo::detail::
+                identity_formatF<FormatT>( Format ) );
+    }
+
+    // replace_range sequence version
+    template< typename InputT, typename FormatT >
+    InputT replace_range_copy( 
+        const InputT& Input,
+		typename InputT::const_iterator SearchBegin,
+		typename InputT::const_iterator SearchEnd,
+        const FormatT& Format )
+    {
+        return string_algo::replace_copy( 
+            Input,
+            string_algo::detail::
+                create_find_rangeF< InputT >::create_const(
+					string_algo::make_range( SearchBegin, SearchEnd ) ),
+            string_algo::detail::
+                identity_formatF<FormatT>( Format ) );
+    }
+
+    // replace_range in-place sequence version
+    template< typename InputT, typename FormatT >
+    InputT& replace_range( 
+        InputT& Input,
+		typename InputT::iterator SearchBegin,
+		typename InputT::iterator SearchEnd,
+        const FormatT& Format )
+    {
+        return string_algo::replace( 
+            Input, 
+            string_algo::detail::
+                create_find_rangeF< InputT >::create(
+					string_algo::make_range( SearchBegin, SearchEnd ) ),
+            string_algo::detail::
+                identity_formatF<FormatT>( Format ) );
+    }
+
 //  replace_first --------------------------------------------------------------------//
 
     // replace_first iterator version

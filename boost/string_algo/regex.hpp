@@ -50,7 +50,7 @@ namespace boost {
         typename RegexTraitsT, typename RegexAllocatorT>
     inline string_algo::detail::
         regex_search_result< 
-			typename string_algo::input_policy<InputT>::iterator_type >
+            typename string_algo::input_policy<InputT>::iterator_type >
     find_regex( 
         InputT& Input, 
         const reg_expression<CharT, RegexTraitsT, RegexAllocatorT>& Rx,
@@ -59,9 +59,9 @@ namespace boost {
         return string_algo::find( 
             Input, 
             string_algo::detail::find_regexF<
-				InputT,
-				reg_expression<CharT, RegexTraitsT, RegexAllocatorT>,
-				typename string_algo::input_policy<InputT>::policy >( Rx, MatchFlags ) );
+                InputT,
+                reg_expression<CharT, RegexTraitsT, RegexAllocatorT>,
+                typename string_algo::input_policy<InputT>::policy >( Rx, MatchFlags ) );
     }
 
 //  replace_regex --------------------------------------------------------------------//

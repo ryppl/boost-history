@@ -44,24 +44,24 @@ namespace boost {
             };
         };
 
-//	input policy selector  -----------------------------------------------//
+//  input policy selector  -----------------------------------------------//
 
-		template< typename InputT >
-		struct input_policy
-		{
-			typedef typename mpl::if_<	
-				is_const<InputT>,
-				const_input_policy,
-				mutable_input_policy >::type policy;
+        template< typename InputT >
+        struct input_policy
+        {
+            typedef typename mpl::if_<  
+                is_const<InputT>,
+                const_input_policy,
+                mutable_input_policy >::type policy;
 
-		private:
-			typedef typename policy::template input_policy<InputT> input_policy_type;
+        private:
+            typedef typename policy::template input_policy<InputT> input_policy_type;
 
-		public:
-			typedef InputT input_type;
-			typedef typename input_policy_type::iterator_type iterator_type;
-			typedef typename input_policy_type::reference_type reference_type;
-		};
+        public:
+            typedef InputT input_type;
+            typedef typename input_policy_type::iterator_type iterator_type;
+            typedef typename input_policy_type::reference_type reference_type;
+        };
 
     } // namespace string_algo
 

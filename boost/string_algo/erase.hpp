@@ -19,6 +19,82 @@
 
 namespace boost {
 
+//  erase_range -------------------------------------------------------//
+
+    // erase_range iterator version
+    template< 
+        typename InputIteratorT, 
+        typename OutputIteratorT >
+    inline OutputIteratorT erase_range_copy(
+        OutputIteratorT Output,
+        InputIteratorT Begin,
+        InputIteratorT End,
+        InputIteratorT SearchBegin,
+        InputIteratorT SearchEnd )
+    {
+        return string_algo::replace_copy(
+            Output,
+            string_algo::make_range( Begin, End ), 
+            string_algo::detail::
+                create_find_rangeF< iterator_range<InputIteratorT> >::
+                    create_const( 
+                        string_algo::make_range( SearchBegin, SearchEnd ) ),
+            string_algo::detail::empty_formatF< 
+                typename boost::detail::iterator_traits<InputIteratorT>::value_type >() );
+    }
+
+    // erase_range iterator version
+    template< 
+        typename InputT, 
+        typename OutputIteratorT >
+    inline OutputIteratorT erase_range_copy(
+        OutputIteratorT Output,
+        const InputT& Input,
+		typename InputT::const_iterator SearchBegin,
+		typename InputT::const_iterator SearchEnd )
+    {
+        return string_algo::replace_copy(
+            Output,
+            Input,
+            string_algo::detail::
+                create_find_rangeF< InputT >::create_const(
+					string_algo::make_range( SearchBegin, SearchEnd ) ),
+            string_algo::detail::
+                empty_formatF<typename InputT::value_type>() );
+    }
+
+    // erase_range sequence version
+    template< typename InputT >
+    InputT erase_range_copy( 
+        const InputT& Input,
+		typename InputT::const_iterator SearchBegin,
+		typename InputT::const_iterator SearchEnd )
+    {
+        return string_algo::replace_copy( 
+            Input,
+            string_algo::detail::
+                create_find_rangeF< InputT >::create_const(
+					string_algo::make_range( SearchBegin, SearchEnd ) ),
+            string_algo::detail::
+                empty_formatF<typename InputT::value_type>() );
+    }
+
+    // replace_first in-place sequence version
+    template< typename InputT >
+    InputT& erase_range( 
+        InputT& Input,
+		typename InputT::iterator SearchBegin,
+		typename InputT::iterator SearchEnd )
+    {
+        return string_algo::replace( 
+            Input, 
+            string_algo::detail::
+                create_find_rangeF< InputT >::create(
+					string_algo::make_range( SearchBegin, SearchEnd ) ),
+            string_algo::detail::
+                empty_formatF<typename InputT::value_type>() );
+    }
+
 //  erase_first  --------------------------------------------------------//
 
     // erase_first iterator version

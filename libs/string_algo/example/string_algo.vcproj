@@ -109,7 +109,22 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm">
 			<File
+				RelativePath="conv_example.cpp">
+			</File>
+			<File
+				RelativePath="find_example.cpp">
+			</File>
+			<File
 				RelativePath="main.cpp">
+			</File>
+			<File
+				RelativePath="predicate_example.cpp">
+			</File>
+			<File
+				RelativePath="rle_example.cpp">
+			</File>
+			<File
+				RelativePath="trim_example.cpp">
 			</File>
 		</Filter>
 		<Filter
@@ -182,6 +197,9 @@
 					RelativePath="..\..\..\boost\string_algo\detail\format_regex.hpp">
 				</File>
 				<File
+					RelativePath="..\..\..\boost\string_algo\detail\predicate.hpp">
+				</File>
+				<File
 					RelativePath="..\..\..\boost\string_algo\detail\replace.hpp">
 				</File>
 				<File
@@ -201,7 +219,8 @@
 		</Filter>
 		<Filter
 			Name="Doc"
-			Filter="">
+			Filter=""
+			ParseFiles="FALSE">
 			<File
 				RelativePath="..\doc\todo.txt">
 			</File>

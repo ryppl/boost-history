@@ -55,7 +55,7 @@ namespace boost {
                 typedef const result_type& result_reference_type;
 
                 template< typename ReplaceT >
-                result_type operator()( ReplaceT ) const
+                result_type operator()( const ReplaceT& ) const
                 {
                     return result_type();
                 }

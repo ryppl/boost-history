@@ -10,7 +10,6 @@
 #ifndef BOOST_STRING_FIND_BASE_DETAIL_HPP
 #define BOOST_STRING_FIND_BASE_DETAIL_HPP
 
-#include <functional>
 #include <boost/string_algo/iterator_range.hpp>
 #include <boost/string_algo/traits.hpp>
 
@@ -29,11 +28,11 @@ namespace boost {
             template< typename InputT, typename InputPolicy=mutable_input_policy >
             struct find_baseF
             {
-                typedef typename InputPolicy::input_policy<InputT> input_policy;
+                typedef typename InputPolicy::template input_policy<InputT> policy;
 
-                typedef typename input_policy::input_type input_type;
-                typedef typename input_policy::iterator_type input_iterator_type;
-                typedef typename input_policy::reference_type input_reference_type;
+                typedef typename policy::input_type input_type;
+                typedef typename policy::iterator_type input_iterator_type;
+                typedef typename policy::reference_type input_reference_type;
             };
 
         } // namespace detail

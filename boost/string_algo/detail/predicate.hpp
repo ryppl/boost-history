@@ -15,52 +15,52 @@
 
 namespace boost {
 
-	namespace string_algo {
+    namespace string_algo {
 
-		namespace detail {
+        namespace detail {
 
 //  ends_with predicate implementation ----------------------------------//
 
-			template< typename InputIteratorT, typename SubIteratorT >
-			inline bool ends_with_iter_select( 
-				InputIteratorT Begin, 
-				InputIteratorT End, 
-				SubIteratorT SubBegin,
-				SubIteratorT SubEnd,
-				std::bidirectional_iterator_tag )
-			{
-				InputIteratorT it=End;
-				SubIteratorT pit=SubEnd;
-				for(;it!=Begin && pit!=SubBegin;)
-				{
-					if( !( (*(--it))==(*(--pit)) ) )
-						return false;
-				}
+            template< typename InputIteratorT, typename SubIteratorT >
+            inline bool ends_with_iter_select( 
+                InputIteratorT Begin, 
+                InputIteratorT End, 
+                SubIteratorT SubBegin,
+                SubIteratorT SubEnd,
+                std::bidirectional_iterator_tag )
+            {
+                InputIteratorT it=End;
+                SubIteratorT pit=SubEnd;
+                for(;it!=Begin && pit!=SubBegin;)
+                {
+                    if( !( (*(--it))==(*(--pit)) ) )
+                        return false;
+                }
 
-				return pit==SubBegin;
-			}
+                return pit==SubBegin;
+            }
 
-			template< typename InputIteratorT, typename SubIteratorT >
-			inline bool ends_with_iter_select( 
-				InputIteratorT Begin, 
-				InputIteratorT End, 
-				SubIteratorT SubBegin,
-				SubIteratorT SubEnd,
-				std::forward_iterator_tag )
-			{
-				if ( SubBegin==SubEnd )
-				{
-					// empty subsequence check
-					return true;
-				}
+            template< typename InputIteratorT, typename SubIteratorT >
+            inline bool ends_with_iter_select( 
+                InputIteratorT Begin, 
+                InputIteratorT End, 
+                SubIteratorT SubBegin,
+                SubIteratorT SubEnd,
+                std::forward_iterator_tag )
+            {
+                if ( SubBegin==SubEnd )
+                {
+                    // empty subsequence check
+                    return true;
+                }
 
-				iterator_range<InputIteratorT> Result
-					=find_last( Begin, End, SubBegin, SubEnd );
+                iterator_range<InputIteratorT> Result
+                    =find_last( Begin, End, SubBegin, SubEnd );
 
-				return !Result.empty() && Result.end()==End;
-			}
+                return !Result.empty() && Result.end()==End;
+            }
 
-		} // namespace detail
+        } // namespace detail
 
     } // namespace string_algo
 

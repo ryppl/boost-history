@@ -64,26 +64,6 @@ namespace boost {
             return Output;
         }
 
-        // replace iterator version
-        template< 
-            typename InputIteratorT, 
-            typename OutputIteratorT,
-            typename FindFT,
-            typename FormatFT >
-        inline OutputIteratorT replace_copy(
-            OutputIteratorT Output,
-            InputIteratorT Begin,
-            InputIteratorT End,
-            const FindFT& FindF,
-            const FormatFT& FormatF )
-        {
-            return replace_copy(
-                make_range( Begin, End ),
-                Output,
-                FindF,
-                FormatF );
-        }
-
         // replace sequence version
         template< 
             typename InputT, 
@@ -189,26 +169,6 @@ namespace boost {
             std::copy( LastMatch, Input.end(), Output );
 
             return Output;
-        }
-
-        // replace_all generic version
-        template< 
-            typename InputIteratorT, 
-            typename OutputIteratorT,
-            typename FindFT,
-            typename FormatFT >
-        inline OutputIteratorT replace_all_copy(
-            OutputIteratorT Output,
-            InputIteratorT Begin,
-            InputIteratorT End,
-            const FindFT& FindF,
-            const FormatFT& FormatF )
-        {
-            return replace_all_copy(
-                make_range( Begin, End ),
-                Output,
-                FindF,
-                FormatF );
         }
 
         // replace_all sequence version

@@ -38,17 +38,17 @@ namespace boost {
 
     // find_first sequence version
     template< typename InputT, typename SearchT >
-	inline iterator_range< typename string_algo::input_policy<InputT>::iterator_type >
+    inline iterator_range< typename string_algo::input_policy<InputT>::iterator_type >
     find_first( 
-		InputT& Input, 
+        InputT& Input, 
         const SearchT& Search )
     {
         return string_algo::find( 
             Input, 
             string_algo::detail::find_firstF<
-				InputT, 
-				SearchT, 
-				typename string_algo::input_policy<InputT>::policy>( Search ) );
+                InputT, 
+                SearchT, 
+                typename string_algo::input_policy<InputT>::policy>( Search ) );
     }
 
 //  find_last  -----------------------------------------------//
@@ -72,17 +72,17 @@ namespace boost {
 
     // find_last sequence version
     template< typename InputT, typename SearchT >
-	inline iterator_range< typename string_algo::input_policy<InputT>::iterator_type >
+    inline iterator_range< typename string_algo::input_policy<InputT>::iterator_type >
     find_last( 
-		InputT& Input, 
+        InputT& Input, 
         const SearchT& Search )
     {
         return string_algo::find( 
             Input, 
             string_algo::detail::find_lastF<
-				InputT, 
-				SearchT, 
-				typename string_algo::input_policy<InputT>::policy>( Search ) );
+                InputT, 
+                SearchT, 
+                typename string_algo::input_policy<InputT>::policy>( Search ) );
     }
 
 //  find_nth ----------------------------------------------------------------------//
@@ -106,18 +106,18 @@ namespace boost {
     }
 
     template< typename InputT, typename SearchT >
-	inline iterator_range< typename string_algo::input_policy<InputT>::iterator_type >
+    inline iterator_range< typename string_algo::input_policy<InputT>::iterator_type >
     find_nth( 
-		InputT& Input, 
+        InputT& Input, 
         const SearchT& Search,
         unsigned int Nth )
     {
         return string_algo::find( 
             Input, 
             string_algo::detail::find_nthF<
-				InputT, 
-				SearchT, 
-				typename string_algo::input_policy<InputT>::policy>( Search, Nth ) );
+                InputT, 
+                SearchT, 
+                typename string_algo::input_policy<InputT>::policy>( Search, Nth ) );
     }
 
 } // namespace boost

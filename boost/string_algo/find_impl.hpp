@@ -19,18 +19,6 @@ namespace boost {
 
 //  Generic find functions -------------------------------------//
 
-        // find iterator version
-        template< typename FindF >
-        inline typename FindF::result_type 
-        find( 
-            typename FindF::input_iterator_type Begin, 
-            typename FindF::input_iterator_type End, 
-            const FindF& Find )
-        {
-            // Forward the call to the functor
-            return Find( make_range( Begin, End ) );
-        }
-
         // find sequence version
         template< typename FindF >
         inline typename FindF::result_type 

@@ -10,7 +10,6 @@
 #ifndef BOOST_STRING_FIND_DETAIL_HPP
 #define BOOST_STRING_FIND_DETAIL_HPP
 
-#include <functional>
 #include <boost/detail/iterator.hpp>
 #include <boost/string_algo/iterator_range.hpp>
 #include <boost/string_algo/traits.hpp>
@@ -21,6 +20,59 @@ namespace boost {
     namespace string_algo {
 
         namespace detail {
+
+//  find range functor -----------------------------------------------//
+
+            // find a range in the sequence ( functor )
+            /*
+				This functor actually does not perform any find operation.
+				It always returns given iterator range as a result.
+			*/
+            template< typename InputT, typename InputPolicy=mutable_input_policy >
+            struct find_rangeF : public find_baseF<InputT, InputPolicy>
+            {
+                typedef find_baseF<InputT, InputPolicy> base_type;
+
+                typedef typename base_type::input_type input_type;
+                typedef typename base_type::input_iterator_type input_iterator_type;
+                typedef typename base_type::input_reference_type input_reference_type;
+
+                typedef iterator_range<input_iterator_type> result_type;
+
+                // Construction
+                find_rangeF( 
+					input_iterator_type Begin, 
+					input_iterator_type End ) : m_Range(Begin, End) {}
+
+                find_rangeF(const iterator_range<input_iterator_type>& Range) : 
+					m_Range(Range) {}
+
+				// Operation
+                result_type operator()( input_reference_type ) const
+                {
+                    return m_Range;
+                }
+
+            private:
+                iterator_range<input_iterator_type> m_Range;
+            };
+
+            // Construction helper
+            template< typename InputT > 
+            struct create_find_rangeF 
+            { 
+                static find_rangeF<InputT, mutable_input_policy> 
+				create(const iterator_range<typename InputT::iterator>& Range) 
+                { 
+                    return find_rangeF<InputT, mutable_input_policy>(Range); 
+                } 
+            
+                static find_rangeF<InputT, const_input_policy> 
+                create_const(const iterator_range<typename InputT::const_iterator>& Range) 
+                { 
+                    return find_rangeF<InputT, const_input_policy>(Range); 
+                } 
+            };
 
 //  find first functor -----------------------------------------------//
 
@@ -125,7 +177,7 @@ namespace boost {
                 typedef const SearchT& search_reference_type;
                 typedef typename SearchT::const_iterator search_iterator_type;
 
-                typedef find_firstF< input_type, search_type, InputPolicy > find_firstF;
+                typedef find_firstF< input_type, search_type, InputPolicy > find_first_type;
                 typedef iterator_range<input_iterator_type> result_type;
 
                 // Construction
@@ -146,7 +198,7 @@ namespace boost {
                     input_reference_type Input,
                     std::forward_iterator_tag ) const
                 {
-                    find_firstF find_first( m_Search );
+                    find_first_type find_first( m_Search );
 
                     result_type M=find_first( Input );
                     result_type Last=M;
@@ -234,8 +286,8 @@ namespace boost {
                 typedef const SearchT& search_reference_type;
                 typedef typename SearchT::const_iterator search_iterator_type;
 
-                typedef find_firstF< input_type, search_type, InputPolicy > find_firstF;
-                typedef typename find_firstF::result_type result_type;
+                typedef find_firstF< input_type, search_type, InputPolicy > find_first_type;
+                typedef typename find_first_type::result_type result_type;
 
                 // Constructor
                 find_nthF( search_reference_type Search, unsigned int Nth ) : 
@@ -252,7 +304,7 @@ namespace boost {
                     input_iterator_type From ) const
                 {
                     // Instantiate find funtor 
-                    find_firstF find_first( m_Search );
+                    find_first_type find_first( m_Search );
 
                     result_type M( From, From );
 

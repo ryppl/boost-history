@@ -5,6 +5,11 @@ subproject libs/string_algo/example ;
 exe string_algo
 	:
 	main.cpp
+	conv_example.cpp
+	predicate_example.cpp
+	trim_example.cpp
+	find_example.cpp 
+	rle_example.cpp
 	:
 	<include>$(BOOST_ROOT)     # this automatically points to the boost-sandbox root
 	:

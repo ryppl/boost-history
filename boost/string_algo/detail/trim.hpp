@@ -10,6 +10,7 @@
 #ifndef BOOST_STRING_TRIM_DETAIL_HPP
 #define BOOST_STRING_TRIM_DETAIL_HPP
 
+#include <algorithm>
 #include <functional>
 #include <locale>
 #include <set>

@@ -31,7 +31,7 @@ namespace boost {
     // Construct isspace functor to use with trim
     template< typename CharT >
     inline string_algo::detail::isclassifiedF<CharT> 
-	isspace( const std::locale& Loc=std::locale() )
+    isspace( const std::locale& Loc=std::locale() )
     {
         return string_algo::detail::isclassifiedF<CharT>( std::ctype_base::space, Loc );
     }
