@@ -21,11 +21,30 @@ Distributed under the Boost Software License, Version 1.0.
          The manipulators are available by including <code>boost/outfmt/formatob.hpp</code>. In
          order to add support for various STL and Boost types you need to include the appropriate
          files listed in the <link linkend = "outfmt.stlio">STL I/O</link> section.
+      </para><para>
+         <code>boost::io::formatob</code> is where all the magic happens. Basically, the way
+         <code>boost::io::formatob</code> works is that it uses the manipulator technique to
+         create a <code>boost::io::formatob_t</code> class. This class stores a reference to
+         the object being outputted so it can be routed to the format object for rendering
+         to/from the stream. More information on how this process works can be found in the
+         <link linkend = "outfmt.fmtobj">format object</link> section.
       </para>
+
+      <programlisting>   boost::io::formatob( const T &amp; ob );</programlisting>
+      <para>
+         This will format <code>ob</code> according to its underlying type. This is
+         equivalent to using <code>boost::io::formatobex&lt; const char * &gt;</code>
+         (see below).
+      </para>
+
+      <programlisting>
+   std::vector&lt; float &gt; v; // = { 1.1f, 2.2f, 3.3f };
+   std::cout &lt;&lt; boost::io::formatob( v );
+   // output: [ 1.1, 2.2, 3.3 ]</programlisting>
 
       <programlisting>   boost::io::formatobex&lt; DelimeterType &gt;( const T &amp; ob );</programlisting>
       <para>
-         This will format <code>ob</code> according to it's underlying type.
+         This will format <code>ob</code> according to its underlying type.
          <code>DelimeterType</code> allows you to specify the type used to store the
          <link linkend = "outfmt.delimeters">delimeters</link> (see that section for more info).
       </para>
@@ -39,17 +58,6 @@ Distributed under the Boost Software License, Version 1.0.
                 );
    // output: ( 7, 3.14159 )</programlisting>
 
-      <programlisting>   boost::io::formatob( const T &amp; ob );</programlisting>
-      <para>
-         This will format <code>ob</code> according to it's underlying type. This is
-         equivalent to using <code>boost::io::formatobex&lt; const char * &gt;</code>
-      </para>
-
-      <programlisting>
-   std::vector&lt; float &gt; v; // = { 1.1f, 2.2f, 3.3f };
-   std::cout &lt;&lt; boost::io::formatobex&lt; std::string &gt;( v );
-   // output: [ 1.1, 2.2, 3.3 ]</programlisting>
-
       <para>
          Note that the type construct is automatically deduced and the corresponding
          <link linkend = "outfmt.fmtobj">format object</link> is constructed.
@@ -59,8 +67,8 @@ Distributed under the Boost Software License, Version 1.0.
       <para>
          This will format <code>ob</code> based on the <link linkend = "outfmt.fmtobj">format
          object</link> it is passed (<code>FormatObject</code>). Here, the format type is
-         taken from <code>FormatObject::format_type</code>. This allows the nested
-         constructs to be formatted.
+         taken from <code>FormatObject::format_type</code>. This allows nested constructs
+         to be formatted.
       </para>
 
       <programlisting>
@@ -76,29 +84,30 @@ Distributed under the Boost Software License, Version 1.0.
    </section>
    <section id = "outfmt.range"><title>boost::io::range</title>
       <para>
-         If you need to specify a range or sub-range, <code>boost::io::formatob</code> will not recongnise
-         it unless it is a container.
+         The purpose of <code>boost::io::range</code> is to make a range of elements
+         <code>[ first, last )</code> behave as a single container-like type that
+         can be processed by <code>boost::io::formatob</code>.
       </para>
 
       <programlisting>
    boost::io::range( ForwardIterator first, ForwardIterator last );</programlisting>
       <para>
-         This creates the range <code>[first, last)</code> that can be used by <code>boost::io::format</code>.
+         This creates the range <code>[first, last)</code> that can be used by <code>boost::io::formatob</code>.
       </para>
 
       <programlisting>
    boost::io::range( const std::pair&lt; ForwardIterator, ForwardIterator &gt; pi );</programlisting>
       <para>
-         This creates the range <code>[pi.first, pi.second)</code> that can be used by <code>boost::io::format</code>.
-         Normally, <code>boost::io::format</code> interprets a <code>std::pair</code> type as a 2-ary sequence. If
-         the pair type specifies a range, you need to use this function to inform <code>boost::io::format</code>
+         This creates the range <code>[pi.first, pi.second)</code> that can be used by <code>boost::io::formatob</code>.
+         Normally, <code>boost::io::formatob</code> interprets a <code>std::pair</code> type as a 2-ary sequence. If
+         the pair type specifies a range, you need to use this function to inform <code>boost::io::formatob</code>
          that it is a range.
       </para>
 
       <programlisting>
    boost::io::range( const Container &amp; c );</programlisting>
       <para>
-         This creates the range <code>[c.begin(), c.end())</code>. <code>boost::io::format</code> provides
+         This creates the range <code>[c.begin(), c.end())</code>. <code>boost::io::formatob</code> provides
          native support for containers, specifically dynamic construction of the container when reading it
          in from a stream. This is here for completeness and for when you want to specifically keep the
          number of elements in the container the same.
@@ -107,7 +116,7 @@ Distributed under the Boost Software License, Version 1.0.
       <programlisting>
    boost::io::range( const T a[ n ] );</programlisting>
       <para>
-         This creates the range <code>[a, a + n)</code>. <code>boost::io::format</code> provides
+         This creates the range <code>[a, a + n)</code>. <code>boost::io::formatob</code> provides
          native support for arrays, this is here for completeness only.
       </para>
 

@@ -19,6 +19,16 @@ Distributed under the Boost Software License, Version 1.0.
       and <ulink url = "../../example/formatter.cpp">libs/outfmt/example/formatter.cpp</ulink>
       contain examples of using the <code>format</code> function to control the way the sequential
       type is rendered.
+   </para><para>
+      A formatter class holds a collection of delimeters allowing read access to those delimeters
+      and write access using the <code>format</code> function. See
+      <link linkend = "outfmt.delimeters.openclose">boost::io::openclose_formatter</link> and
+      <link linkend = "outfmt.delimeters.fmt">boost::io::formatter</link> for more information.
+   </para><para>
+      Note that the library assumes that the delimeter values only change when set by a call
+      to the <code>format</code> function, therefore you cannot have the concept of a "rotating"
+      delimeter! (As a future extension, I am looking at adding support for delimeter values to
+      be functors that will allow this concept to be implemented.)
    </para>
 
    <section id = "outfmt.delimeters.traits"><title>FormatTraits</title>
@@ -259,6 +269,19 @@ Distributed under the Boost Software License, Version 1.0.
                          boost::io::range( i, i + 2 )
                       ).format( fmt ); // output: | 1 : 2 |</programlisting>
       </section>
+   </section><section id = "outfmt.delimeters.fmtob"><title>Why does boost::io::formatob have a format function?</title>
+      <para>
+         The <code>boost::io::formatob</code> manipulator behaves like the outermost
+         <link linkend = "outfmt.fmtobj">format object</link> it is created with. Therefore, it
+         inherits that format object's formatting (either
+         <code>boost::io::openclose_formatter</code> or <code>boost::io::formatter</code).
+         This is why you can call the <code>format</code>
+         function on the <code>boost::io::formatob</code> manipulator. For example:
+      </para>
+      <programlisting>   std::cout &lt;&lt; boost::io::formatob( v, boost::io::containerfmt().format( " : " ));</programlisting>
+      <para>and</para>
+      <programlisting>   std::cout &lt;&lt; boost::io::formatob( v, boost::io::containerfmt()).format( " : " );</programlisting>
+      <para>are functionally the same.</para>
    </section><section id = "outfmt.delimeters.fmttypes"><title>Why openclose_formatter and formatter types?</title>
       <para>
          Sometimes you only want to specify the open and closing sections of a sequence formatting. Using

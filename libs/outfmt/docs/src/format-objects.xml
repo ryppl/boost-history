@@ -22,7 +22,7 @@ Distributed under the Boost Software License, Version 1.0.
          Nested sequential types will be mapped apropriately using automatic type deduction.
          You can customize this writing behavior by specifying a second parameter to
          <code>boost::io::formatob</code>.
-
+      </para><para>
          The <code>FormatObject</code> class has to provide a write function having this
          syntax:
       </para>
@@ -47,7 +47,14 @@ Distributed under the Boost Software License, Version 1.0.
          the <code>FormatObject</code> may divert processing to a nested
          <code>FormatObject</code> making it possible to format complex nested
          constructs.
+      </para><para>
+         When outputting a sequential type, the format object accesses the delimeter
+         values, for example:
       </para>
+      <programlisting>
+      os &lt;&lt; open()      &lt;&lt; p.first
+         &lt;&lt; separator() &lt;&lt; p.second
+         &lt;&lt; close();</programlisting>
    </section><section id = "outfmr.fmtobj-in"><title>Input Facilities</title>
       <para>
          When reading an object from a stream using <code>boost::io::formatob( ex )</code>,
@@ -56,7 +63,7 @@ Distributed under the Boost Software License, Version 1.0.
          Nested sequential types will be mapped apropriately using automatic type deduction.
          You can customize this writing behavior by specifying a second parameter to
          <code>boost::io::formatob</code>.
-
+      </para><para>
          The <code>FormatObject</code> class has to provide a read function having this
          syntax:
       </para>
@@ -80,13 +87,29 @@ Distributed under the Boost Software License, Version 1.0.
          it in the <code>value</code> object. If there is an error during the read
          operation (e.g. the delimeters are incorrect), the function returns
          <code>false</code>.
+      </para><para>
+         Note that here <code>is</code> will be a <code>boost::io::detail::input_helper</code>
+         object that wraps around the calling input stream, accommodating implementation
+         differences and providing extra functionality such as <code>match</code> for
+         matching character or string types.
+      </para><para>
+         When reading in an object, the format object uses <code>is.match</code> to check
+         a string, for example:
       </para>
+      <programlisting>   if( !is.match( open())) return false;</programlisting>
    </section><section id = "outfmr.fmtobj-creating"><title>Creating A Format Object</title>
       <para>
-         A format object will usually derive from either
-         <code>boost::io::openclose_formatter_t</code> or <code>boost::io::formatter_t</code>
-         to allow control over the formatting at that level (for example the outermost
-         array of a 3D array). Format objects usually have the following form:
+         Format objects are responsible for rendering a sequence to/from a stream. In
+         the case of a std::pair, it will have the following format:
+      </para>
+      <programlisting>   open() &lt;&lt; first &lt;&lt; separator() &lt;&lt; second &lt;&lt; close()</programlisting>
+      <para>
+         Where <code>open()</code>, <code>close()</code> and <code>separator()</code> are
+         the delimeter values taken from either <code>boost::io::openclose_formatter_t</code>
+         or <code>boost::io::formatter_t</code>. Therefore, a format object will derive
+         from one of these unless it does not specifically process sequence constructs
+         (for example, an XML character escaper would not derive from these classes).
+         Format objects usually have the following form:
       </para>
       <programlisting>
    template&lt; typename DelimeterType, class FormatObject &gt;
@@ -105,13 +128,33 @@ Distributed under the Boost Software License, Version 1.0.
    };</programlisting>
       <para>
          where <code>FormatTraits</code> is a class denoting the default delimeter values
-         (for example <code>boost::io::detail::default_nary_traits</code>),
+         (for example <code>boost::io::detail::default_nary_traits</code>), and
          <code>format_type</code> is the delimeter type (needed for nested format object
          constructs).
       </para><para>
-         An example of creating a custom formatter can be found at
-         <ulink url = "../../example/john-torjo.cpp">libs/outfmt/example/john-torjo.cpp</ulink>.
+         Here <code>fmt_object</code> is the outer format object, used to render a specific
+         sequence type (e.g. arrays). It applies the inner format object (<code>fo</code>)
+         to the elements within the sequence instead of formatting them directly. This
+         allows nested types to be properly formatted.
+      </para><para>
+         The example file
+         <ulink url = "../../example/john-torjo.cpp">libs/outfmt/example/john-torjo.cpp</ulink>
+         creates a custom format object for rendering the following:
       </para>
+      <programlisting>   [position] object</programlisting>
+      <para>
+         where <code>position</code> is the current index within the sequence, starting at
+         <code>0</code> and <code>object</code> is the value of the element in the sequence
+         at that index.
+      </para><para>
+         You may also want to provide creator functions to allow the format object to be
+         constructed from within the input/output statement. For example, using the XML
+         character escaper:
+      </para>
+      <programlisting>
+   std::cout &lt;&lt; boost::io::formatob( str,
+                   boost::io::containerfmt( xml::char_escaper())
+                ).format( "", "", "" );</programlisting>
    </section><section id = "outfmr.fmtobj-simple"><title>Simple Types</title>
       <section id = "outfmr.fmtobj-basic"><title>boost::io::basicfmt_t</title>
          <programlisting>   class boost::io::basicfmt_t</programlisting>

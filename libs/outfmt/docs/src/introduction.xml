@@ -13,10 +13,11 @@ Distributed under the Boost Software License, Version 1.0.
       Library (STL) provides a mechanism for storing collections of objects, but
       does not provide I/O support via streams.
    </para><para>
-      This lack of stream support seems to be a defect of STL design (and indeed it
-      is), but there is a valid reason for not providing such a facility: how should
-      the list be rendered? Different applications want different ways for the list
-      to be represented. Is it possible to configure how the list is formatted?
+      The lack of stream support on STL containers creates a gap that needs to be
+      filled. There is a valid reason for not providing such a facility as part of
+      the standard library: how should the container be rendered? There is no good
+      default way for doing this. Different applications want different ways for
+      the list to be represented. Is it possible to configure how the list is formatted?
       What about nested constructs, <code>std::pair</code>, arrays and other complex
       constructs?
    </para><para>
@@ -40,8 +41,8 @@ Distributed under the Boost Software License, Version 1.0.
    #include &lt;boost/outfmt/stl/vector.hpp&gt;
    std::vector&lt; int &gt; vec;
 
-   std::cin &gt;&gt; boost::io::formatob( vec )
-            &gt;&gt; boost::io::formatob( vec ).format( "{ ", " }" );</programlisting>
+   std::cin &gt;&gt; boost::io::formatob( vec1 )
+            &gt;&gt; boost::io::formatob( vec2 ).format( "{ ", " }" );</programlisting>
 
    <para>
       Here, <code>boost::io::formatob</code> is a
@@ -88,13 +89,21 @@ Distributed under the Boost Software License, Version 1.0.
       </para>
       <programlisting>
    std::list&lt; int &gt; l;
-   std::cin &gt;&gt; l; // read in a list
+   std::cin  &gt;&gt; l; // read in a list
    std::cout &lt;&lt; l; // format the list</programlisting>
       <para>
          Given the input <code>"[1, 2  , 3, 4 ]"</code>, the output will be:
       </para>
       <programlisting>[ 1, 2, 3, 4 ]</programlisting>
       <para>
+         The above is the equivalent of:
+      </para>
+      <programlisting>
+   std::cin  &gt;&gt; boost::io::formatob( l ); // read in a list
+   std::cout &lt;&lt; boost::io::formatob( l ); // format the list</programlisting>
+      <para>
+         using the <code>boost::io::formatob</code> <link linkend = "outfmt.manip">manipulator</link>.
+      </para><para>
          N-ary types (e.g. <code>std::pair</code>, <code>boost::rational</code>,
          <code>boost::math::quaternion</code>) are rendered using parenthesis instead
          of square brackets. See <ulink url = "../../example/stl_io.cpp">libs/outfmt/example/stl_io.cpp</ulink> for

@@ -11,11 +11,10 @@
 #include <boost/outfmt/formatob.hpp>
 #include <boost/outfmt/stl/list.hpp>
 
-template< class DelimeterType >
 class positionfmt_t // Create a Format Object that maintains position information
 {
    public: // needed for deduction of the nested format type:
-      typedef DelimeterType                                          format_type;
+      typedef const char *                                           format_type;
    private:
       long pos;
    public:
@@ -91,7 +90,7 @@ int main()
                    boost::io::containerfmt( boost::io::wrappedfmt
                    (
                       // create an instance of a position Format Object:
-                      positionfmt_t< const char * >()
+                      positionfmt_t()
                    ).format( "{", "}" ))
                 )
                 .format( "", "" )
@@ -116,7 +115,7 @@ int main()
              << boost::io::formatob
                 (
                    names,
-                   boost::io::containerfmt( positionfmt_t< const char * >())
+                   boost::io::containerfmt( positionfmt_t())
                 )
                 .format( "", "" )
              << '\n' << '\n';
@@ -151,7 +150,7 @@ int main()
              << boost::io::formatob
                 (
                    names,
-                   boost::io::containerfmt( positionfmt_t< const char * >())
+                   boost::io::containerfmt( positionfmt_t())
                 )
                 .format( "\n", "", "\n" )
              << '\n' << '\n';
@@ -167,7 +166,7 @@ int main()
              << boost::io::formatob
                 (
                    names,
-                   boost::io::containerfmt( positionfmt_t< const char * >())
+                   boost::io::containerfmt( positionfmt_t())
                 )
                 .format( "\n'", "'", "'\n'" )
              << '\n' << '\n';
