@@ -39,19 +39,19 @@ namespace boost
       typedef data_socket<socket_base_t> data_connection_t;
 
       template <typename SocketOption>
-      int ioctl(SocketOption& option)
+      socket_errno ioctl(SocketOption& option)
       {
         return m_base.ioctl(option);
       }
 
       template <typename SocketOption>
-      int getsockopt(SocketOption& option)
+      socket_errno getsockopt(SocketOption& option)
       {
         return m_base.getsockopt(option);
       }
 
       template <typename SocketOption>
-      int setsockopt(const SocketOption& option)
+      socket_errno setsockopt(const SocketOption& option)
       {
         return m_base.setsockopt(option);
       }
@@ -59,14 +59,14 @@ namespace boost
       //! Open a socket for passive connection acceptance
       /** Blocking version */
       template <typename Protocol, class Addr>
-      int open(const Protocol& protocol,
-               const Addr& address)
+      socket_errno open(const Protocol& protocol,
+                        const Addr& address)
       {
-        const int open_error=m_base.open(protocol);
-        if (open_error!=error_policy::Success)
+        const socket_errno open_error=m_base.open(protocol);
+        if (open_error!=Success)
           return open_error;
 
-        const int bind_error=m_base.bind(address);
+        const socket_errno bind_error=m_base.bind(address);
         if (bind_error!=Success)
           return bind_error;
 
@@ -76,15 +76,15 @@ namespace boost
       //! Open a socket for passive connection acceptance
       /** Non-blocking version */
       template <typename Protocol, class Addr>
-      int open(const Protocol& protocol,
-                       const Addr& address,
-                       std::size_t backlog)
+      socket_errno open(const Protocol& protocol,
+                        const Addr& address,
+                        std::size_t backlog)
       {
-        const int open_error=m_base.open(protocol);
+        const socket_errno open_error=m_base.open(protocol);
         if (open_error!=Success)
           return open_error;
 
-        const int bind_error=m_base.bind(address);
+        const socket_errno bind_error=m_base.bind(address);
         if (bind_error!=Success)
           return bind_error;
 
@@ -92,7 +92,7 @@ namespace boost
         option::non_blocking non_block(true);
         m_base.ioctl(non_block);
 
-        const int listen_error=m_base.listen(backlog);
+        const socket_errno listen_error=m_base.listen(backlog);
         if (listen_error==Success || listen_error==WouldBlock)
           return Success;
         return listen_error;
@@ -100,11 +100,11 @@ namespace boost
 
       //! accept a connection
       template <class Addr>
-      int accept(data_connection_t& data_socket,
-                 Addr& address)
+      socket_errno accept(data_connection_t& data_socket,
+                          Addr& address)
       {
         socket_base_t base_socket;
-        int ret=m_base.accept(base_socket, address);
+        socket_errno ret=m_base.accept(base_socket, address);
         data_socket.reset(base_socket.release());
         return ret;
       }
@@ -113,23 +113,23 @@ namespace boost
       //! accept a connection
       /** Blocking version */
       template <class Addr>
-      int accept(data_connection_t& data_socket,
-                 Addr& address,
-                 std::size_t backlog)
+      socket_errno accept(data_connection_t& data_socket,
+                          Addr& address,
+                          std::size_t backlog)
       {
-        const int listen_error=m_base.listen(backlog);
+        const socket_errno listen_error=m_base.listen(backlog);
         if (listen_error!=Success && listen_error!=WouldBlock)
           return listen_error;
 
         socket_base_t base_socket;
-        int ret=m_base.accept(base_socket,address);
+        socket_errno ret=m_base.accept(base_socket,address);
         data_socket.reset(base_socket.release());
         return ret;
       }
 
 
       //! close a connection
-      int close()
+      socket_errno close()
       {
         return m_base.close();
       }

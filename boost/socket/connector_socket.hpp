@@ -39,13 +39,13 @@ namespace boost
       typedef data_socket<socket_base_t> data_connection_t;
 
       template <typename Protocol, typename Addr>
-      int connect(
+      socket_errno connect(
         data_connection_t& data_socket,
         const Protocol& protocol,
         const Addr& address)
       {
         socket_base_t socket;
-        int err=socket.open(protocol);
+        socket_errno err=socket.open(protocol);
         if (err!=Success)
           return err;
 
@@ -58,26 +58,26 @@ namespace boost
       }
 
       template <typename Protocol, typename Addr>
-      int connect(
+      socket_errno connect(
         data_connection_t& data_socket,
         const Protocol& protocol,
         const Addr& address,
         const time_value& timeout)
       {
         socket_base_t socket_to_connect;
-        int err=socket_to_connect.open(protocol);
+        socket_errno err=socket_to_connect.open(protocol);
         if (err!=Success)
           return err;
 
         option::non_blocking non_block(true);
-        int ioctl_err=socket_to_connect.ioctl(non_block);
+        socket_errno ioctl_err=socket_to_connect.ioctl(non_block);
         err=socket_to_connect.connect(address);
         if (err==WouldBlock)
         {
           socket_set fdset;
           fdset.insert(socket_to_connect.socket());
-          int sel = ::select(fdset.width(), 0, fdset.fdset(), 0,
-                             (::timeval*)timeout.timevalue());
+          socket_errno sel = ::select(fdset.width(), 0, fdset.fdset(), 0,
+                                      (::timeval*)timeout.timevalue());
           // this needs reworking !!!
           if (sel==-1)
             throw "unexpected select problem";

@@ -17,6 +17,7 @@
 #define BOOST_SOCKET_IMPL_DEFAULT_SOCKET_IMPL_HPP 1
 
 #include "boost/socket/config.hpp"
+#include "boost/socket/socket_errors.hpp"
 #include "boost/config.hpp"
 
 
@@ -64,23 +65,26 @@ namespace boost
         //! reset the socket handle
         void reset(socket_t socket = socket_t());
 
-        int ioctl(int option, void* data);
+        socket_errno ioctl(int option, void* data);
 
-        int getsockopt(int level, int optname, void *data, size_t& optlen);
+        socket_errno getsockopt(
+          int level, int optname, void *data, size_t& optlen);
 
-        int setsockopt(int level,int optname, void const* data,
-                       size_t optlen);
+        socket_errno setsockopt(
+          int level,int optname, void const* data, size_t optlen);
 
-        int open(family_t family, protocol_type_t type, protocol_t protocol);
+        socket_errno open(
+          family_t family, protocol_type_t type, protocol_t protocol);
 
-        int connect(const std::pair<void const*,size_t>& address);
+        socket_errno connect(const std::pair<void const*,size_t>& address);
 
-        int bind(const std::pair<void const*,size_t>& address);
+        socket_errno bind(const std::pair<void const*,size_t>& address);
 
-        int listen(int backlog);
+        socket_errno listen(int backlog);
 
         //! accept a connection
-        int accept(default_socket_impl&,std::pair<void *,size_t>& address);
+        socket_errno accept(
+          default_socket_impl&, std::pair<void *,size_t>& address);
 
         //! receive data
         int recv(void* data, size_t len, int flags=0);
@@ -90,10 +94,10 @@ namespace boost
         int send(const void* data, size_t len, int flags=0);
 
         //! shut the socket down
-        int shutdown(Direction how=Both);
+        socket_errno shutdown(Direction how=Both);
 
         //! close the socket
-        int close();
+        socket_errno close();
 
         //! check for a valid socket
         bool is_valid() const;
@@ -114,7 +118,7 @@ namespace boost
         bool operator!=(const default_socket_impl& socket) const;
 
         //! translate platform specific to general errors
-        int translate_error(int return_value);
+        socket_errno translate_error(int return_value);
 
       private:
         socket_t m_socket;

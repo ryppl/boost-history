@@ -24,6 +24,7 @@
 #include "boost/socket/concept/address.hpp"
 
 #include "boost/concept_check.hpp"
+#include "boost/assert.hpp"
 
 namespace boost
 {
@@ -65,35 +66,35 @@ namespace boost
       }
 
       template <typename SocketOption>
-      int ioctl(SocketOption& option)
+      socket_errno ioctl(SocketOption& option)
       {
-        int ret = m_socket_impl.ioctl(option.optname(), option.data());
+        socket_errno ret = m_socket_impl.ioctl(option.optname(), option.data());
         if (ret!=Success)
           return m_error_policy.handle_error(function::ioctl,ret);
         return Success;
       }
 
       template <typename SocketOption>
-      int getsockopt(SocketOption& option)
+      socket_errno getsockopt(SocketOption& option)
       {
         BOOST_STATIC_ASSERT(option.can_get);
         int len=option.size();
-        int ret = ::getsockopt(socket_,
-                               option.level, option.option, &option.value,
-                               &len);
+        socket_errno ret = ::getsockopt(socket_,
+                                        option.level, option.option, &option.value,
+                                        &len);
         if (ret!=Success)
           return m_error_policy.handle_error(function::getsockopt,ret);
         return Success;
       }
 
       template <typename SocketOption>
-      int setsockopt(const SocketOption& option)
+      socket_errno setsockopt(const SocketOption& option)
       {
         BOOST_STATIC_ASSERT(option.can_set);
-        int ret = m_socket_impl.setsockopt(option.level(),
-                                           option.optname(),
-                                           option.data(),
-                                           option.size());
+        socket_errno ret = m_socket_impl.setsockopt(option.level(),
+                                                    option.optname(),
+                                                    option.data(),
+                                                    option.size());
         if (ret!=Success)
           return m_error_policy.handle_error(function::setsockopt,ret);
         return Success;
@@ -102,53 +103,53 @@ namespace boost
       // create a socket, Address family, type {SOCK_STREAM, SOCK_DGRAM },
       // protocol is af specific
       template <typename Protocol>
-      int open(const Protocol& protocol)
+      socket_errno open(const Protocol& protocol)
       {
         boost::function_requires< ProtocolConcept<Protocol> >();
 
         // SOCKET socket(int af,int type,int protocol);
-        int ret = m_socket_impl.open(protocol.family(),
-                                     protocol.type(),
-                                     protocol.protocol());
+        socket_errno ret = m_socket_impl.open(protocol.family(),
+                                              protocol.type(),
+                                              protocol.protocol());
         if (ret!=Success)
           return m_error_policy.handle_error(function::open,ret);
         return Success;
       }
 
       template <class Addr>
-      int connect(const Addr& address)
+      socket_errno connect(const Addr& address)
       {
         boost::function_requires< AddressConcept<Addr> >();
-        int ret= m_socket_impl.connect(address.representation());
+        socket_errno ret= m_socket_impl.connect(address.representation());
         if (ret!=Success)
           return m_error_policy.handle_error(function::connect,ret);
         return Success;
       }
 
       template <class Addr>
-      int bind(const Addr& address)
+      socket_errno bind(const Addr& address)
       {
-        int ret=m_socket_impl.bind(address.representation());
+        socket_errno ret=m_socket_impl.bind(address.representation());
         if (ret!=Success)
           return m_error_policy.handle_error(function::bind,ret);
         return Success;
       }
 
-      int listen(int backlog)
+      socket_errno listen(int backlog)
       {
-        int ret=m_socket_impl.listen(backlog);
+        socket_errno ret=m_socket_impl.listen(backlog);
         if (ret!=Success)
           return m_error_policy.handle_error(function::listen,ret);
         return Success;
-     }
+      }
 
       //! accept a connection
       template <class Addr>
-      int accept(self_t& socket, Addr& address)
+      socket_errno accept(self_t& socket, Addr& address)
       {
         boost::function_requires< AddressConcept<Addr> >();
         std::pair<void*,size_t> rep=address.representation();
-        int ret = m_socket_impl.accept(socket.m_socket_impl, rep);
+        socket_errno ret = m_socket_impl.accept(socket.m_socket_impl, rep);
         if (ret!=Success)
         {
           return m_error_policy.handle_error(function::accept,ret);
@@ -161,7 +162,8 @@ namespace boost
       {
         int ret=m_socket_impl.recv(data, len);
         if (ret<0)
-          return m_error_policy.handle_error(function::recv,ret);
+          return m_error_policy.handle_error(function::recv,
+                                             static_cast<socket_errno>(ret));
         return ret;
       }
 
@@ -171,27 +173,30 @@ namespace boost
       {
         int ret=m_socket_impl.send(data, len);
         if (ret<0)
-          return m_error_policy.handle_error(function::send,ret);
+          return m_error_policy.handle_error(function::send,
+                                             static_cast<socket_errno>(ret));
         return ret;
       }
 
       //! shut the socket down
-      int shutdown(Direction how=Both)
+      socket_errno shutdown(Direction how=Both)
       {
-        int ret = m_socket_impl.shutdown(how);
+        socket_errno ret = m_socket_impl.shutdown(how);
         if (ret!=Success)
           return m_error_policy.handle_error(function::shutdown,ret);
         return Success;
       }
 
       //! close the socket
-      int close()
+      socket_errno close()
       {
-        int ret=m_socket_impl.close();
+        BOOST_ASSERT(m_socket_impl.is_valid()
+                     && "trying to close invalid handle");
+        socket_errno ret=m_socket_impl.close();
         if (ret!=Success)
-          return m_error_policy.handle_error(function::close, ret );
+          m_error_policy.handle_error(function::close, ret);
         return Success;
-     }
+      }
 
       //! check for a valid socket
       bool is_valid() const

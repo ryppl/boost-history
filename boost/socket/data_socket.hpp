@@ -67,19 +67,19 @@ namespace boost
       }
 
       template <typename SocketOption>
-      int ioctl(SocketOption& option)
+      socket_errno ioctl(SocketOption& option)
       {
         return m_socket.ioctl(option);
       }
 
       template <typename SocketOption>
-      int getsockopt(SocketOption& option)
+      socket_errno getsockopt(SocketOption& option)
       {
         return m_socket.getsockopt(option);
       }
 
       template <typename SocketOption>
-      int setsockopt(const SocketOption& option)
+      socket_errno setsockopt(const SocketOption& option)
       {
         return m_socket.setsockopt(option);
       }
@@ -98,13 +98,13 @@ namespace boost
       }
 
       //! shut the socket down
-      int shutdown(Direction how=Both)
+      socket_errno shutdown(Direction how=Both)
       {
         return m_socket.shutdown(how);
       }
 
       //! close the socket
-      int close()
+      socket_errno close()
       {
         return m_socket.close();
       }

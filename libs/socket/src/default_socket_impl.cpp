@@ -54,10 +54,6 @@ namespace boost
           : m_socket(invalid_socket)
       {}
 
-//       default_socket_impl::default_socket_impl(const default_socket_impl& impl)
-//           : m_socket(impl.m_socket)
-//       {}
-
       default_socket_impl::default_socket_impl(socket_t socket)
           : m_socket(socket)
       {}
@@ -68,7 +64,7 @@ namespace boost
           close();
       }
 
-        //! release the socket handle
+      //! release the socket handle
       default_socket_impl::socket_t default_socket_impl::release()
       {
         socket_t socket=m_socket;
@@ -84,7 +80,7 @@ namespace boost
         m_socket=socket;
       }
 
-      int default_socket_impl::ioctl(int option, void* data)
+      socket_errno default_socket_impl::ioctl(int option, void* data)
       {
 #ifdef USES_WINSOCK2
         return translate_error(
@@ -94,7 +90,7 @@ namespace boost
 #endif
       }
 
-      int default_socket_impl::getsockopt(
+      socket_errno default_socket_impl::getsockopt(
         int level, int optname, void *data, size_t& optlen)
       {
 #if defined(USES_WINSOCK2) || defined(__CYGWIN__)
@@ -108,7 +104,7 @@ namespace boost
 #endif
       }
 
-      int default_socket_impl::setsockopt(
+      socket_errno default_socket_impl::setsockopt(
         int level,int optname, void const* data, size_t optlen)
       {
 #ifdef USES_WINSOCK2
@@ -122,7 +118,7 @@ namespace boost
 #endif
       }
 
-      int default_socket_impl::open(
+      socket_errno default_socket_impl::open(
         family_t family, protocol_type_t type, protocol_t protocol)
       {
         m_socket = ::socket(family, type, protocol);
@@ -131,7 +127,7 @@ namespace boost
         return translate_error(-1);
       }
 
-      int default_socket_impl::connect(
+      socket_errno default_socket_impl::connect(
         const std::pair<void const*,size_t>& address)
       {
         return translate_error(
@@ -141,7 +137,7 @@ namespace boost
           );
       }
 
-      int default_socket_impl::bind(
+      socket_errno default_socket_impl::bind(
         const std::pair<void const*,size_t>& address)
       {
         return translate_error(
@@ -151,14 +147,14 @@ namespace boost
           );
       }
 
-      int default_socket_impl::listen(int backlog)
+      socket_errno default_socket_impl::listen(int backlog)
       {
         return translate_error( ::listen(m_socket, backlog) );
       }
 
       //! accept a connection
-      int default_socket_impl::accept(default_socket_impl& new_socket,
-                                      std::pair<void *,size_t>& address)
+      socket_errno default_socket_impl::accept(default_socket_impl& new_socket,
+                                        std::pair<void *,size_t>& address)
       {
 #if defined(USES_WINSOCK2) || defined(__CYGWIN__)
         int len=address.second;
@@ -196,13 +192,13 @@ namespace boost
       }
 
       //! shut the socket down
-      int default_socket_impl::shutdown(Direction how)
+      socket_errno default_socket_impl::shutdown(Direction how)
       {
         return translate_error(::shutdown(m_socket, static_cast<int>(how)));
       }
 
       //! close the socket
-      int default_socket_impl::close()
+      socket_errno default_socket_impl::close()
       {
 #if defined(USES_WINSOCK2)
         int ret = ::closesocket(m_socket);
@@ -257,7 +253,7 @@ namespace boost
 
 
 #if defined(USES_WINSOCK2)
-      int default_socket_impl::translate_error(int return_value)
+      socket_errno default_socket_impl::translate_error(int return_value)
       {
         if (return_value==0)
           return Success;
@@ -271,91 +267,91 @@ namespace boost
           case WSAEWOULDBLOCK :
             return WouldBlock;
           case WSAEACCES :
-           return boost::socket::error::permission_denied;
+            return boost::socket::permission_denied;
           case WSAEADDRINUSE :
-            return boost::socket::error::address_already_in_use;
+            return boost::socket::address_already_in_use;
           case WSAEADDRNOTAVAIL :
-            return boost::socket::error::cannot_assign_requested_address;
+            return boost::socket::cannot_assign_requested_address;
           case WSAEAFNOSUPPORT :
-            return boost::socket::error::address_family_not_supported_by_protocol_family;
+            return boost::socket::address_family_not_supported_by_protocol_family;
           case WSAEALREADY :
-            return boost::socket::error::operation_already_in_progress;
+            return boost::socket::operation_already_in_progress;
           case WSAECONNABORTED :
-            return boost::socket::error::software_caused_connection_abort;
+            return boost::socket::software_caused_connection_abort;
           case WSAECONNREFUSED :
-            return boost::socket::error::connection_refused;
+            return boost::socket::connection_refused;
           case WSAECONNRESET :
-            return boost::socket::error::connection_reset_by_peer;
+            return boost::socket::connection_reset_by_peer;
           case WSAEDESTADDRREQ :
-            return boost::socket::error::destination_address_required;
+            return boost::socket::destination_address_required;
           case WSAEFAULT :
-            return boost::socket::error::bad_address;
+            return boost::socket::bad_address;
           case WSAEHOSTDOWN :
-            return boost::socket::error::host_is_down;
+            return boost::socket::host_is_down;
           case WSAEHOSTUNREACH :
-            return boost::socket::error::no_route_to_host;
+            return boost::socket::no_route_to_host;
           case WSAEINPROGRESS :
-            return boost::socket::error::operation_now_in_progress;
+            return boost::socket::operation_now_in_progress;
           case WSAEINTR :
-            return boost::socket::error::interrupted_function_call;
+            return boost::socket::interrupted_function_call;
           case WSAEINVAL :
-            return boost::socket::error::invalid_argument;
+            return boost::socket::invalid_argument;
           case WSAEMFILE :
-            return boost::socket::error::too_many_open_files;
+            return boost::socket::too_many_open_files;
           case WSAEMSGSIZE :
-            return boost::socket::error::message_too_long;
+            return boost::socket::message_too_long;
           case WSAENETDOWN :
-            return boost::socket::error::network_is_down;
+            return boost::socket::network_is_down;
           case WSAENETRESET :
-            return boost::socket::error::network_dropped_connection_on_reset;
+            return boost::socket::network_dropped_connection_on_reset;
           case WSAENETUNREACH :
-            return boost::socket::error::network_is_unreachable;
+            return boost::socket::network_is_unreachable;
           case WSAENOBUFS :
-            return boost::socket::error::no_buffer_space_available;
+            return boost::socket::no_buffer_space_available;
           case WSAENOPROTOOPT :
-            return boost::socket::error::bad_protocol_option;
+            return boost::socket::bad_protocol_option;
           case WSAENOTCONN :
-            return boost::socket::error::socket_is_not_connected;
+            return boost::socket::socket_is_not_connected;
           case WSAENOTSOCK :
-            return boost::socket::error::socket_operation_on_nonsocket;
+            return boost::socket::socket_operation_on_nonsocket;
           case WSAEOPNOTSUPP :
-            return boost::socket::error::operation_not_supported;
+            return boost::socket::operation_not_supported;
           case WSAEPFNOSUPPORT :
-            return boost::socket::error::protocol_family_not_supported;
+            return boost::socket::protocol_family_not_supported;
           case WSAEPROCLIM :
-            return boost::socket::error::too_many_processes;
+            return boost::socket::too_many_processes;
           case WSAEPROTONOSUPPORT :
-            return boost::socket::error::protocol_not_available;
+            return boost::socket::protocol_not_available;
           case WSAEPROTOTYPE :
-            return boost::socket::error::protocol_wrong_type_for_socket;
+            return boost::socket::protocol_wrong_type_for_socket;
           case WSAESHUTDOWN :
-            return boost::socket::error::cannot_send_after_socket_shutdown;
+            return boost::socket::cannot_send_after_socket_shutdown;
           case WSAESOCKTNOSUPPORT :
-            return boost::socket::error::socket_type_not_supported;
+            return boost::socket::socket_type_not_supported;
           case WSAETIMEDOUT :
-            return boost::socket::error::connection_timed_out;
+            return boost::socket::connection_timed_out;
           case WSATYPE_NOT_FOUND :
-            return boost::socket::error::class_type_not_found;
+            return boost::socket::class_type_not_found;
           case WSAHOST_NOT_FOUND :
-            return boost::socket::error::host_not_found;
+            return boost::socket::host_not_found;
           case WSA_INVALID_HANDLE :
-            return boost::socket::error::specified_event_object_handle_is_invalid;
+            return boost::socket::specified_event_object_handle_is_invalid;
           case WSA_NOT_ENOUGH_MEMORY :
-            return boost::socket::error::insufficient_memory_available;
+            return boost::socket::insufficient_memory_available;
           case WSANO_DATA :
-            return boost::socket::error::valid_name_no_data_record_of_requested_type;
+            return boost::socket::valid_name_no_data_record_of_requested_type;
           case WSANO_RECOVERY :
-            return boost::socket::error::this_is_a_nonrecoverable_error;
+            return boost::socket::this_is_a_nonrecoverable_error;
           case WSASYSCALLFAILURE :
-            return boost::socket::error::system_call_failure;
+            return boost::socket::system_call_failure;
           case WSASYSNOTREADY :
-            return boost::socket::error::network_subsystem_is_unavailable;
+            return boost::socket::network_subsystem_is_unavailable;
           case WSATRY_AGAIN :
-            return boost::socket::error::nonauthoritative_host_not_found;
+            return boost::socket::nonauthoritative_host_not_found;
           case WSAEDISCON :
-            return boost::socket::error::graceful_shutdown_in_progress;
+            return boost::socket::graceful_shutdown_in_progress;
           case WSA_OPERATION_ABORTED :
-            return boost::socket::error::overlapped_operation_aborted;
+            return boost::socket::overlapped_operation_aborted;
 
           case WSANOTINITIALISED :
           case WSAVERNOTSUPPORTED :
@@ -363,13 +359,13 @@ namespace boost
           case WSA_IO_INCOMPLETE :
           case WSA_IO_PENDING :
           default:
-            return boost::socket::error::system_specific_error;
+            return boost::socket::system_specific_error;
         }
       }
 
 #else
 
-      int default_socket_impl::translate_error(int return_value)
+      socket_errno default_socket_impl::translate_error(int return_value)
       {
         if (return_value==0)
           return Success;
@@ -381,63 +377,63 @@ namespace boost
           case EAGAIN :
             return WouldBlock;
           case EBADF :
-            return boost::socket::error::not_a_valid_descriptor;
+            return boost::socket::not_a_valid_descriptor;
           case EOPNOTSUPP :
-            return boost::socket::error::operation_not_supported_on_transport_endpoint;
+            return boost::socket::operation_not_supported_on_transport_endpoint;
           case EPFNOSUPPORT :
-            return boost::socket::error::protocol_family_not_supported;
+            return boost::socket::protocol_family_not_supported;
           case ECONNRESET :
-            return boost::socket::error::connection_reset_by_peer;
+            return boost::socket::connection_reset_by_peer;
           case ENOBUFS :
-            return boost::socket::error::no_buffer_space_available;
+            return boost::socket::no_buffer_space_available;
           case EAFNOSUPPORT :
-            return boost::socket::error::address_family_not_supported_by_protocol_family;
+            return boost::socket::address_family_not_supported_by_protocol_family;
           case EPROTOTYPE :
-            return boost::socket::error::protocol_wrong_type_for_socket;
+            return boost::socket::protocol_wrong_type_for_socket;
           case ENOTSOCK :
-            return boost::socket::error::socket_operation_on_nonsocket;
+            return boost::socket::socket_operation_on_nonsocket;
           case ENOPROTOOPT :
-            return boost::socket::error::protocol_not_available;
+            return boost::socket::protocol_not_available;
           case ESHUTDOWN :
-            return boost::socket::error::cannot_send_after_socket_shutdown;
+            return boost::socket::cannot_send_after_socket_shutdown;
           case ECONNREFUSED :
-            return boost::socket::error::connection_refused;
+            return boost::socket::connection_refused;
           case EADDRINUSE :
-            return boost::socket::error::address_already_in_use;
+            return boost::socket::address_already_in_use;
           case ECONNABORTED :
-            return boost::socket::error::connection_aborted;
+            return boost::socket::connection_aborted;
           case ENETUNREACH :
-            return boost::socket::error::network_is_unreachable;
+            return boost::socket::network_is_unreachable;
           case ENETDOWN :
-            return boost::socket::error::network_interface_is_not_configured;
+            return boost::socket::network_interface_is_not_configured;
           case ETIMEDOUT :
-            return boost::socket::error::connection_timed_out;
+            return boost::socket::connection_timed_out;
           case EHOSTDOWN :
-            return boost::socket::error::host_is_down;
+            return boost::socket::host_is_down;
           case EHOSTUNREACH :
-            return boost::socket::error::host_is_unreachable;
+            return boost::socket::host_is_unreachable;
           case EINPROGRESS :
-            return boost::socket::error::connection_already_in_progress;
+            return boost::socket::connection_already_in_progress;
           case EALREADY :
-            return boost::socket::error::socket_is_already_connected;
+            return boost::socket::socket_is_already_connected;
           case EDESTADDRREQ :
-            return boost::socket::error::destination_address_required;
+            return boost::socket::destination_address_required;
           case EMSGSIZE :
-            return boost::socket::error::message_too_long;
+            return boost::socket::message_too_long;
           case EPROTONOSUPPORT :
-            return boost::socket::error::unknown_protocol;
+            return boost::socket::unknown_protocol;
           case ESOCKTNOSUPPORT :
-            return boost::socket::error::socket_type_not_supported;
+            return boost::socket::socket_type_not_supported;
           case EADDRNOTAVAIL :
-            return boost::socket::error::address_not_available;
+            return boost::socket::address_not_available;
           case ENETRESET :
-            return boost::socket::error::net_reset;
+            return boost::socket::net_reset;
           case EISCONN :
-            return boost::socket::error::socket_is_already_connected;
+            return boost::socket::socket_is_already_connected;
           case ENOTCONN :
-            return boost::socket::error::socket_is_not_connected;
+            return boost::socket::socket_is_not_connected;
           default:
-            return boost::socket::error::system_specific_error;
+            return boost::socket::system_specific_error;
         }
       }
 #endif
