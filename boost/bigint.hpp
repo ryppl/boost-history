@@ -248,6 +248,14 @@ private:
 
   void from_string(std::string const& str, base_type a_base) {
 
+    // Throw bad_value on an error
+    struct {
+      std::string const& str_;
+      void operator()(bool b) {
+        if (!b) throw bigint::bad_value(str_);
+      }
+    } check = { str };
+
     // RG: This may be better placed in a separate function.
     // Verify the goodness of the number
     char const* valid_octals = "01234567";
@@ -275,12 +283,12 @@ private:
     }
 
     // Error checking
-    assert(!str.empty());
-    assert(str[0] != '-' || str.size() > 1);
+    check(!str.empty());
+    check(str[0] != '-' || str.size() > 1);
     if(str[0] != '-') 
-      assert(str.find_first_not_of(valid) == std::string::npos);
+      check(str.find_first_not_of(valid) == std::string::npos);
     else
-      assert(str.find_first_not_of(valid,1) == std::string::npos);
+      check(str.find_first_not_of(valid,1) == std::string::npos);
 
     std::string::const_iterator start = str.begin();
 

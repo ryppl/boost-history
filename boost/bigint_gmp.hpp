@@ -85,7 +85,7 @@ public:
   explicit bigint(std::string const& str, base_type base = decimal) {
     if(mpz_init_set_str(gmp_value_, str.c_str(),base) < 0) {
       mpz_clear(gmp_value_);
-      throw std::runtime_error("Bad value");
+      throw bigint::bad_value(str);
     }
   }
   

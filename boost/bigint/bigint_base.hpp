@@ -32,6 +32,11 @@ class bigint_base {
 public:
   enum base_type {octal=8, decimal=10, hexadecimal=16};
 
+  struct bad_value : public std::runtime_error {
+    bad_value(std::string const& number) :
+      std::runtime_error("Bad value: " + number) { }
+  };
+  
 protected:  
 
   template <typename T>

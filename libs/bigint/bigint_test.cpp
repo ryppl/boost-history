@@ -325,4 +325,18 @@ int main() {
     } catch (std::ios_base::failure&) { }
   }
    
+  // bad_value exception SHOULD happen
+  try {
+    bigint x("555y");
+  } catch (bigint::bad_value& q) {
+    assert(q.what() == std::string("Bad value: 555y"));
+  }
+
+  // bad_value is-a std::runtime exception.
+  try {
+    bigint x("555y");
+  } catch (std::runtime_error& q) {
+    assert(q.what() == std::string("Bad value: 555y"));
+  }
+
 }
