@@ -5,8 +5,9 @@
 #include <iomanip>
 
 #include "blas.hpp"
-#include <boost/numeric/blasbindings/blas_traits/ublas_vector.hpp>
-#include <boost/numeric/blasbindings/blas_traits/ublas_matrix.hpp>
+#include <boost/numeric/blasbindings/storage_traits/ublas.hpp>
+#include <boost/numeric/blasbindings/traits/ublas_vector.hpp>
+#include <boost/numeric/blasbindings/traits/ublas_matrix.hpp>
 #include <boost/numeric/blasbindings/blas2.hpp>
 #include <boost/numeric/blasbindings/transpose.hpp>
 #include <boost/numeric/ublas/io.hpp>

@@ -14,6 +14,7 @@ namespace boost { namespace numeric { namespace blasbindings {
   struct storage_traits<boost::numeric::ublas::unbounded_array<T> > {
     typedef boost::numeric::ublas::unbounded_array<T> allocator_type;
     typedef typename allocator_type::pointer          pointer; 
+    typedef typename allocator_type::const_pointer    const_pointer; 
 
     static pointer storage (allocator_type& a) 
     { return a.begin() ; }
@@ -23,7 +24,8 @@ namespace boost { namespace numeric { namespace blasbindings {
   template <typename T>
   struct storage_traits<boost::numeric::ublas::unbounded_array<T> const> {
     typedef boost::numeric::ublas::unbounded_array<T> const allocator_type;
-    typedef typename allocator_type::pointer const          pointer; 
+    typedef typename allocator_type::const_pointer          pointer; 
+    typedef typename allocator_type::const_pointer          const_pointer; 
 
     static pointer storage (allocator_type& a) 
     { return a.begin() ; }

@@ -6,10 +6,12 @@
 
 #include "blas.hpp"
 #include <boost/numeric/blasbindings/blas1.hpp>
-#include <boost/numeric/blasbindings/blas_traits/ublas_vector.hpp>
-#include <boost/numeric/blasbindings/blas_traits/ublas_matrix.hpp>
-#include <boost/numeric/blasbindings/storage_traits/ublas_vector.hpp>
-#include <boost/numeric/blasbindings/storage_traits/ublas_matrix.hpp>
+#include <boost/numeric/blasbindings/storage_traits/ublas.hpp>
+#include <boost/numeric/blasbindings/traits/ublas_vector.hpp>
+//#include <boost/numeric/blasbindings/blas_traits/ublas_vector.hpp>
+//#include <boost/numeric/blasbindings/blas_traits/ublas_matrix.hpp>
+//#include <boost/numeric/blasbindings/storage_traits/ublas_vector.hpp>
+//#include <boost/numeric/blasbindings/storage_traits/ublas_matrix.hpp>
 
 template < typename VectorType >
 void test_scal(std::ostream& os, int runs, int runs_i, int size, int size_i, typename VectorType::value_type alpha, VectorType& vector_native, VectorType& vector_toblas)
