@@ -70,6 +70,28 @@ vector<string> theSegs(tri, &tri[12]);
 vector<string> theSegs;
 #endif
 
+const int R = 4;    // select 4 three-letter at a time
+
+#if _MSC_VER <= 1200
+//
+// Versions 6.0 and earlier of Microsoft's C++ compiler do not support
+// partial template specialization, so we'll need to explicitly specialize
+// iterator_traits for the container type, which is char* in this test app.
+// It is required only before the call to the default version of
+// prev_r_permutation,the one without the user-supplied compare function.
+//
+namespace std {
+   template<>
+   struct iterator_traits<string*> {
+       typedef random_access_iterator_tag iterator_category;
+       typedef ptrdiff_t difference_type;
+       typedef string value_type;
+       typedef string* pointer;
+       typedef string& reference;
+   };
+}   // namespace std
+#endif  // MSC_VER
+
 
 // WordSearch -----------------------------------------------------------//
 
@@ -80,7 +102,7 @@ vector<string> theSegs;
 void WordSearch()
 {
     // sort to start the permutation series
-    sort(theSegs.begin(), theSegs.end());
+    partial_sort(theSegs.begin(), theSegs.begin() + R, theSegs.end());
 
     // display the initial set of 3-letter word segments
     copy(theSegs.begin(), theSegs.end(), ostream_iterator<string>(cout, "\t"));
@@ -93,11 +115,11 @@ void WordSearch()
             cout << trial_word << '\n';
             break;
         }    // if
-    } while(boost::next_r_permutation(theSegs.begin(), theSegs.begin() + 4,
+    } while(boost::next_r_permutation(theSegs.begin(), theSegs.begin() + R,
         theSegs.end()));
 
     // Delete the segments for the found word.
-    theSegs.erase(theSegs.begin(), theSegs.begin() + 4);
+    theSegs.erase(theSegs.begin(), theSegs.begin() + R);
 
 }    // WordSearch()
     
@@ -175,7 +197,7 @@ int main()
             cout << ++count << ". " << trial_word << '\n';
         }
     } while(count < 3 &&
-        boost::next_r_permutation(theSegs.begin(), theSegs.begin() + 4,
+        boost::next_r_permutation(theSegs.begin(), theSegs.begin() + R,
             theSegs.end()));
 
 

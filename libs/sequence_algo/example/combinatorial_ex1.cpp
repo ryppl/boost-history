@@ -115,7 +115,7 @@ int main(int argc, char** argv)
 	    {
 	    case 1:
 	        cout << "\n\tNext r-permutations\n\n";
-	        sort(numerals, numerals + DIM(numerals));
+	        partial_sort(numerals, numerals + r, numerals + DIM(numerals));
 	        do {
 	            cout << setw(3) << count++ << ". ";
 	            PrintLetters(r);
@@ -123,7 +123,7 @@ int main(int argc, char** argv)
 	        break;
 	    case 2:
 	        cout << "\n\tPrevious r-permutations\n\n";
-	        sort(numerals, numerals + DIM(numerals), greater<char>());
+	        partial_sort(numerals, numerals + r, numerals + DIM(numerals), greater<char>());
 	        do {
 	            cout << setw(3) << count++ << ". ";
 	            PrintLetters(r);
@@ -131,7 +131,7 @@ int main(int argc, char** argv)
 	        break;
 	    case 3:
 	        cout <<  "\n\tNext r-combinations\n\n";
-	        sort(numerals, numerals + DIM(numerals));
+	        partial_sort(numerals, numerals + r, numerals + DIM(numerals));
 	        do {
 	            cout << setw(3) << count++ << ". ";
 	            PrintLetters(r);
@@ -148,7 +148,7 @@ int main(int argc, char** argv)
 	        break;
 	    case 5:
 	        cout <<  "\n\tNext r-permutations using compare functor\n\n";
-	        sort(numerals, numerals + DIM(numerals), greater<char>());
+	        partial_sort(numerals, numerals + r, numerals + DIM(numerals), greater<char>());
 	        do {
 	            cout << setw(3) << count++ << ". ";
 	            PrintLetters(r);
@@ -156,7 +156,7 @@ int main(int argc, char** argv)
 	        break;
 	    case 6:
 	        cout <<  "\n\tPrevious r-permutations using compare functor\n\n";
-	        sort(numerals, numerals + DIM(numerals));
+	        partial_sort(numerals, numerals + r, numerals + DIM(numerals));
 	        do {
 	            cout << setw(3) << count++ << ". ";
 	            PrintLetters(r);
@@ -164,7 +164,7 @@ int main(int argc, char** argv)
 	        break;
 	    case 7:
 	        cout <<  "\n\tNext r-combinations using compare functor\n\n";
-	        sort(numerals, numerals + DIM(numerals), greater<char>());
+	        partial_sort(numerals, numerals + r, numerals + DIM(numerals), greater<char>());
 	        do {
 	            cout << setw(3) << count++ << ". ";
 	            PrintLetters(r);
