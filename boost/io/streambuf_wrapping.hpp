@@ -39,8 +39,11 @@ namespace io
           typename StreamBuf::traits_type >  base_type; \
     public: \
         typedef StreamBuf                        streambuf_type; \
-        typedef typename StreamBuf::char_type    char_type; \
-        typedef typename StreamBuf::traits_type  traits_type; \
+        typedef typename StreamBuf::char_type         char_type; \
+        typedef typename StreamBuf::int_type           int_type; \
+        typedef typename StreamBuf::pos_type           pos_type; \
+        typedef typename StreamBuf::off_type           off_type; \
+        typedef typename StreamBuf::traits_type     traits_type; \
         streambuf_type *  rdbuf() \
         { return &this->pbase_type::member; } \
         streambuf_type const *  rdbuf() const \

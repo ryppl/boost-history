@@ -94,6 +94,11 @@ public:
     typedef Ch  char_type;
     typedef Tr  traits_type;
 
+    // Other types
+    typedef typename Tr::int_type  int_type;
+    typedef typename Tr::pos_type  pos_type;
+    typedef typename Tr::off_type  off_type;
+
     // Constructors
     basic_array_streambuf();
     basic_array_streambuf( basic_array_streambuf const &amp;c );
@@ -126,6 +131,15 @@ character type is the array's element type.</p>
 
 	<dt><code>traits_type</code>
 	<dd>a synonym for the stream buffer's character-traits type
+
+	<dt><code>int_type</code>
+	<dd>a synonym for the stream buffer's character with end-of-file type
+
+	<dt><code>pos_type</code>
+	<dd>a synonym for the stream buffer's position type
+
+	<dt><code>off_type</code>
+	<dd>a synonym for the stream buffer's offset type
 </dl>
 
 <h3><a name="m_ctr">Constructors</a></h3>
@@ -226,6 +240,11 @@ public:
     typedef Ch  char_type;
     typedef Tr  traits_type;
 
+    // Other types
+    typedef typename Tr::int_type  int_type;
+    typedef typename Tr::pos_type  pos_type;
+    typedef typename Tr::off_type  off_type;
+
     // Constructors (forwarded to the internal streambuf)
     basic_array_<var>stream</var>();
     basic_array_<var>stream</var>( char_type const *b, char_type const *e );
@@ -273,7 +292,7 @@ public:
 
 <hr>
 
-<p>Revised: 6 June 2003</p>
+<p>Revised: 7 June 2003</p>
 
 <p>Copyright &copy; Daryle Walker 2003.  Permission to copy, use,
 modify, sell and distribute this document is granted provided this

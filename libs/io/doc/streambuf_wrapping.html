@@ -95,6 +95,10 @@ public:
     typedef typename StreamBuf::char_type    char_type;
     typedef typename StreamBuf::traits_type  traits_type;
 
+    typedef typename StreamBuf::int_type  int_type;
+    typedef typename StreamBuf::pos_type  pos_type;
+    typedef typename StreamBuf::off_type  off_type;
+
     // Accessors
     streambuf_type *  rdbuf();
 
@@ -122,8 +126,9 @@ protected:
 
 <p>The template argument <var>StreamBuf</var> should represent a
 stream-buffer class.  The class must have member types
-<code>char_type</code> and <code>traits_type</code> and (publically)
-derive from <code>std::basic_streambuf&lt;char_type,
+<code>char_type</code>, <code>traits_type</code>, <code>int_type</code>,
+<code>pos_type</code>, and <code>off_type</code>.  The class must
+(publically) derive from <code>std::basic_streambuf&lt;char_type,
 traits_type&gt;</code>.</p>
 
 <p>These class templates are only meant for (direct) derivation.  A
@@ -143,6 +148,15 @@ forwarding to the stream buffer's interface.</p>
 
 	<dt><code>traits_type</code>
 	<dd>a synonym for the stream buffer's character-traits type
+
+	<dt><code>int_type</code>
+	<dd>a synonym for the stream buffer's character with end-of-file type
+
+	<dt><code>pos_type</code>
+	<dd>a synonym for the stream buffer's position type
+
+	<dt><code>off_type</code>
+	<dd>a synonym for the stream buffer's offset type
 </dl>
 
 <h3><a name="m_ctr">Constructors</a></h3>
@@ -407,7 +421,7 @@ typedef basic_nulostream&lt;wchar_t&gt;  wnulostream;
 
 <hr>
 
-<p>Revised: 26 May 2003</p>
+<p>Revised: 7 June 2003</p>
 
 <p>Copyright &copy; Daryle Walker 2003.  Permission to copy, use,
 modify, sell and distribute this document is granted provided this

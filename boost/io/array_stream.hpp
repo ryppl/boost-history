@@ -42,6 +42,11 @@ public:
     typedef Ch  char_type;
     typedef Tr  traits_type;
 
+    // Other types
+    typedef typename Tr::int_type  int_type;
+    typedef typename Tr::pos_type  pos_type;
+    typedef typename Tr::off_type  off_type;
+
     // Constructors
     basic_array_streambuf();
 #if !defined(__GNUC__) || (__GNUC__ < 3) || ((__GNUC__ == 3) && (__GNUC_MINOR__ < 1))
@@ -91,6 +96,9 @@ private:
         BOOST_STATIC_CONSTANT( std::size_t, array_size = N ); \
         typedef Ch  char_type; \
         typedef Tr  traits_type; \
+        typedef typename Tr::int_type  int_type; \
+        typedef typename Tr::pos_type  pos_type; \
+        typedef typename Tr::off_type  off_type; \
         basic_array_##SuffixF() \
             {} \
         basic_array_##SuffixF( char_type const *b, char_type const *e ) \
