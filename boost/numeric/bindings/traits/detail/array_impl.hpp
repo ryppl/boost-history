@@ -1,5 +1,3 @@
-// (-*- C++ -*- header)  
-
 /*
  * 
  * Copyright (c) Kresimir Fresl 2003
@@ -42,15 +40,15 @@
  in `info'.
  */
 
-
 #include <new>
+#include <boost/noncopyable.hpp> 
 
 namespace boost { namespace numeric { namespace bindings { 
 
   namespace traits { namespace detail {
 
     template <typename T> 
-    class array {
+    class array : private noncopyable {
     public:
 
       array (int n) {
@@ -76,9 +74,6 @@ namespace boost { namespace numeric { namespace bindings {
     private:
       int sz; 
       T* stg; 
-
-      array (array const&);
-      void operator= (array const&); 
     };
 
   }}

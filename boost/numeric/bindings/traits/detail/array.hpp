@@ -1,5 +1,3 @@
-// (-*- C++ -*- header)  
-
 /*
  * 
  * Copyright (c) Kresimir Fresl 2003
