@@ -25,6 +25,15 @@ namespace io
 {
 
 
+//  Forward declarations  ----------------------------------------------------//
+
+template < typename Ch, class Tr = ::std::char_traits<Ch> >
+    class basic_ios_form;
+
+typedef basic_ios_form<char>      ios_form;
+typedef basic_ios_form<wchar_t>  wios_form;
+
+
 //  Form-based I/O manipulator class template and operator declarations  -----//
 
 template < typename Ch, class Tr >

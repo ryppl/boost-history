@@ -27,6 +27,19 @@ namespace io
 {
 
 
+//  Forward declarations  ----------------------------------------------------//
+
+template < std::size_t N, typename Ch, class Tr = ::std::char_traits<Ch> >
+    class basic_array_streambuf;
+
+template < std::size_t N, typename Ch, class Tr = ::std::char_traits<Ch> >
+    class basic_array_istream;
+template < std::size_t N, typename Ch, class Tr = ::std::char_traits<Ch> >
+    class basic_array_ostream;
+template < std::size_t N, typename Ch, class Tr = ::std::char_traits<Ch> >
+    class basic_array_stream;
+
+
 //  Array-using streambuf class template declaration  ------------------------//
 
 template < std::size_t N, typename Ch, class Tr >

@@ -23,7 +23,12 @@ namespace io
 {
 
 
-//  I/O-manipulator function (template) declarations  ------------------------//
+//  Forward declarations  ----------------------------------------------------//
+
+template < typename Ch = char >
+    class multi_basic_newer;
+
+class multi_newer;
 
 multi_newer    multi_newl( std::streamsize count, bool final_flush = false );
 

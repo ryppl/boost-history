@@ -25,7 +25,12 @@ namespace io
 {
 
 
-//  I/O-manipulator function (template) declarations  ------------------------//
+//  Forward declarations  ----------------------------------------------------//
+
+template < typename Ch = char >
+    class multi_basic_skipper;
+
+class multi_skipper;
 
 multi_skipper  multi_skipl( std::streamsize count, bool final_sync = false );
 

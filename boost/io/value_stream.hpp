@@ -25,6 +25,27 @@ namespace io
 {
 
 
+//  Forward declarations  ----------------------------------------------------//
+
+template < typename Ch, class Tr = ::std::char_traits<Ch> >
+    class basic_valuebuf;
+
+typedef basic_valuebuf<char>      valuebuf;
+typedef basic_valuebuf<wchar_t>  wvaluebuf;
+
+template < typename Ch, class Tr = ::std::char_traits<Ch> >
+    class basic_ivaluestream;
+
+typedef basic_ivaluestream<char>      ivaluestream;
+typedef basic_ivaluestream<wchar_t>  wivaluestream;
+
+template < typename Ch, class Tr = ::std::char_traits<Ch> >
+    class basic_ovaluestream;
+
+typedef basic_ovaluestream<char>      ovaluestream;
+typedef basic_ovaluestream<wchar_t>  wovaluestream;
+
+
 //  Constant-value stream-buffer class template declaration  -----------------//
 
 template < typename Ch, class Tr >

@@ -24,6 +24,27 @@ namespace io
 {
 
 
+//  Forward declarations  ----------------------------------------------------//
+
+template < typename Ch, class Tr = ::std::char_traits<Ch> >
+    class basic_nullbuf;
+
+typedef basic_nullbuf<char>      nullbuf;
+typedef basic_nullbuf<wchar_t>  wnullbuf;
+
+template < typename Ch, class Tr = ::std::char_traits<Ch> >
+    class basic_onullstream;
+
+typedef basic_onullstream<char>      onullstream;
+typedef basic_onullstream<wchar_t>  wonullstream;
+
+template < typename Ch, class Tr = ::std::char_traits<Ch> >
+    class basic_inullstream;
+
+typedef basic_inullstream<char>      inullstream;
+typedef basic_inullstream<wchar_t>  winullstream;
+
+
 //  Voided stream-buffer class template declaration  -------------------------//
 
 template < typename Ch, class Tr >

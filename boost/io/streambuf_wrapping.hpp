@@ -24,6 +24,18 @@ namespace io
 {
 
 
+//  Forward declarations  ----------------------------------------------------//
+
+template < class StreamBuf >
+    class basic_wrapping_istream;
+
+template < class StreamBuf >
+    class basic_wrapping_ostream;
+
+template < class StreamBuf >
+    class basic_wrapping_iostream;
+
+
 //  Implementation detail stuff  ---------------------------------------------//
 
 namespace detail
