@@ -102,7 +102,7 @@ struct checking_no_empty: Checking
   }
 };
 
-template<class T, class Checking>
+template<class T, class Checking = checking_base<T> >
 struct checking_no_nan: Checking
 {
   static bool is_nan(const T&)
@@ -111,7 +111,7 @@ struct checking_no_nan: Checking
   }
 };
 
-template<class T, class Checking,
+template<class T, class Checking = checking_base<T>,
 	 class Exception = exception_invalid_number>
 struct checking_catch_nan: Checking
 {

@@ -19,6 +19,9 @@ public:
 
   } // namespace interval_lib;
 
+template<class T, class Policies> inline
+bool empty(const interval<T, Policies>& x);
+
 /*
  * interval class
  */

@@ -181,50 +181,71 @@ interval<T, Policies> operator*(const interval<T, Policies>& x,
 {
   BOOST_INTERVAL_using_max(min);
   BOOST_INTERVAL_using_max(max);
-  if (interval_lib::detail::test_input(x, y))
-    return interval<T, Policies>::empty();
-  typename Policies::rounding rnd;
   typedef interval<T, Policies> I;
+  if (interval_lib::detail::test_input(x, y))
+    return I::empty();
+  typename Policies::rounding rnd;
   const T& xl = x.lower();
   const T& xu = x.upper();
   const T& yl = y.lower();
   const T& yu = y.upper();
-  if (detail::is_neg(xu))
-    if (detail::is_neg(yu))
-      return I(rnd.mul_down(xu, yu), rnd.mul_up(xl, yl), true);
-    else if (detail::is_neg(yl))
-      return I(rnd.mul_down(xl, yu), rnd.mul_up(xl, yl), true);
+
+  if (detail::is_neg(xl))
+    if (detail::is_pos(xu))
+      if (detail::is_neg(yl))
+	if (detail::is_pos(yu)) // M * M
+	  return I(min(rnd.mul_down(xl, yu), rnd.mul_down(xu, yl)),
+		   max(rnd.mul_up  (xl, yl), rnd.mul_up  (xu, yu)), true);
+	else                    // M * N
+	  return I(rnd.mul_down(xu, yl), rnd.mul_up(xl, yl), true);
+      else
+	if (detail::is_pos(yu)) // M * P
+	  return I(rnd.mul_down(xl, yu), rnd.mul_up(xu, yu), true);
+	else                    // M * Z
+	  return I(0, 0, true);
     else
-      return I(rnd.mul_down(xl, yu), rnd.mul_up(xu, yl), true);
-  else if (detail::is_neg(xl))
-    if (detail::is_neg(yu))
-      return I(rnd.mul_down(xu, yl), rnd.mul_up(xl, yl), true);
-    else if (detail::is_neg(yl))
-      return I(min(rnd.mul_down(xl, yu), rnd.mul_down(xu, yl)),
-	       max(rnd.mul_up  (xl, yl), rnd.mul_up  (xu, yu)), true);
-    else
-      return I(rnd.mul_down(xl, yu), rnd.mul_up(xu, yu), true);
+      if (detail::is_neg(yl))
+	if (detail::is_pos(yu)) // N * M
+	  return I(rnd.mul_down(xl, yu), rnd.mul_up(xl, yl), true);
+	else                    // N * N
+	  return I(rnd.mul_down(xu, yu), rnd.mul_up(xl, yl), true);
+      else
+	if (detail::is_pos(yu)) // N * P
+	  return I(rnd.mul_down(xl, yu), rnd.mul_up(xu, yl), true);
+	else                    // N * Z
+	  return I(0, 0, true);
   else
-    if (detail::is_neg(yu))
-      return I(rnd.mul_down(xu, yl), rnd.mul_up(xl, yu), true);
-    else if (detail::is_neg(yl))
-      return I(rnd.mul_down(xu, yl), rnd.mul_up(xu, yu), true);
-    else
-      return I(rnd.mul_down(xl, yl), rnd.mul_up(xu, yu), true);
+    if (detail::is_pos(xu))
+      if (detail::is_neg(yl))
+	if (detail::is_pos(yu)) // P * M
+	  return I(rnd.mul_down(xu, yl), rnd.mul_up(xu, yu), true);
+	else                    // P * N
+	  return I(rnd.mul_down(xu, yl), rnd.mul_up(xl, yu), true);
+      else
+	if (detail::is_pos(yu)) // P * P
+	  return I(rnd.mul_down(xl, yl), rnd.mul_up(xu, yu), true);
+	else                    // P * Z
+	  return I(0, 0, true);
+    else                        // Z * ?
+      return I(0, 0, true);
 }
 
 template<class T, class Policies> inline
 interval<T, Policies> operator*(const T& x, const interval<T, Policies>& y)
 { 
+  typedef interval<T, Policies> I;
   if (interval_lib::detail::test_input(x, y))
-    return interval<T, Policies>::empty();
+    return I::empty();
   typename Policies::rounding rnd;
   const T& yl = y.lower();
   const T& yu = y.upper();
+  // x is supposed not to be infinite
   if (detail::is_neg(x))
-    return interval<T, Policies>(rnd.mul_down(x, yu), rnd.mul_up(x, yl), true);
+    return I(rnd.mul_down(x, yu), rnd.mul_up(x, yl), true);
+  else if (detail::is_zero(x))
+    return I(0, 0, true);
   else
-    return interval<T, Policies>(rnd.mul_down(x, yl), rnd.mul_up(x, yu), true);
+    return I(rnd.mul_down(x, yl), rnd.mul_up(x, yu), true);
 }
 
 template<class T, class Policies> inline

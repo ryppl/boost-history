@@ -60,6 +60,12 @@ unit-test pow
     : <include>$(BOOST_ROOT)
     ;
 
+unit-test test_float
+    : test_float.cpp
+      <lib>../../test/build/boost_test_exec_monitor
+    : <include>$(BOOST_ROOT)
+    ;
+
 exe interval_test
     : interval_test.cpp
     : <include>$(BOOST_ROOT)

@@ -109,7 +109,7 @@ interval, the base numbers have to be totally ordered so, for instance,
 <code>complex&lt;T&gt;</code> is not usable as base number type for
 intervals.  The mathematical functions for the base number type should also
 be compatible with the total order (for instance if x&gt;y and z&gt;t, then
-it should also hold that x+y &gt; y+t), so modulo types are not usable
+it should also hold that x+z &gt; y+t), so modulo types are not usable
 either.</p>
 
 <p>Secondly, the computations must be exact or provide some rounding methods
@@ -351,36 +351,10 @@ template&lt;class T, class Traits&gt;  bool operator!=(const T&amp; x, const int
 
 } // namespace boost</pre>
 
-<h2 id="interval_traits">Template class <code>interval_policies</code></h2>
-
-<p>The <code>interval</code> class requires two template parameters, the
-first one is the type of the bounds. And the second one is a class defining
-three policies. This second parameter should look like:</p>
-<pre>struct policies {
-  typedef ... rounding;
-  typedef ... checking;
-};</pre>
-
-<p>The requirements of these three types are detailed in their respective
-pages: <a href="#rounding">rounding policies</a>, and <a
-href="#checking">checking policies</a>. In order to allow an easier
-definition of this parameter, the class <code>interval_policies</code> is
-defined as follows:</p>
-<pre>namespace boost {
-
-template &lt;class Rounding, class Checking&gt;
-struct interval_policies
-{
-  typedef Rounding rounding;
-  typedef Checking checking;
-};
-
-} // namespace boost</pre>
-
 <h2><a name="interval"></a>Template class <code>interval</code></h2>
 The public interface of the template class interval itself is kept at a
 simplest minimum:
-<pre>template &lt;class T, class Policies = typename interval_lib::default_policies&lt;T&gt;::type &gt;
+<pre>template &lt;class T, class Policies = typename interval_lib::default_policies&lt;T&gt;::type&gt;
 class interval
 {
   public:
@@ -733,10 +707,9 @@ of long double support can be done with the option
 <code>-Wno-long-double</code>. The tests and examples have successfully been
 compiled with gcc 2.95 on x86 (Debian, FreeBSD), on sparc (Debian); with gcc
 2.95 and stlport on x86 (Solaris), sparc (Solaris), and powerpc (Debian);
-with gcc 2.96, 3.04, 3.1.1, and 3.2 on x86 (Debian); and with SunPRO 5.3
-(Solaris). There are some issues with Borland on x86 (Windows), and Visual
-C++ which we're working on. We know some workarounds but they wouldn't be
-portable enough to put into the library.
+with gcc 2.96, 3.04, 3.1.1, and 3.2 on x86 (Debian); with Intel cc 6.0 and
+7.0 on x86 (Debian); and with SunPRO 5.3 (Solaris). There are some issues
+with Borland on x86 (Windows), and Visual C++ which we're working on.
 
 <h2 id="dangers">Common Pitfalls and Dangers</h2>
 

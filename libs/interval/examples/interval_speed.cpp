@@ -39,7 +39,7 @@
  * output figure "million operations per second".
  */
 
-void show_result(const std::string & s, int iter, double t)
+static void show_result(const std::string & s, int iter, double t)
 {
   std::cout.precision(2);
   std::cout << s << " "
@@ -445,7 +445,7 @@ void transc_test(unsigned int vsize)
 #endif // HAVE_TRANSCENDENTAL
 }
 
-void run_test(unsigned int vsize)
+static void run_test(unsigned int vsize)
 {
   std::cout << "Testing with vector size = " << vsize << std::endl;
   base_arith_test<interval_type>(vsize, interval_name);
@@ -459,7 +459,7 @@ void run_test(unsigned int vsize)
  * The speed differences between L1 cache, L2 cache and main memory
  * are usually clearly visible as sharp steps in the curve.
  */
-void test_vector_size_effects()
+static void test_vector_size_effects()
 {
   for(int i = 1; i < 1000000; i *= 2) {
     std::cout << "vector<> size: " << i << " ";

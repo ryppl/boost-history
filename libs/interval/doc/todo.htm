@@ -11,39 +11,34 @@
 <h1>TODO list for the Interval Arithmetic library</h1>
 
 <h2>Comments from the review process</h2>
-
 <ul>
   <li>It would be nice to have a 100% portable Rouding policy class based on
-      LIA-1 only, with no additional requirement such as IEEE 754 or even
-      more.</li>
-  <li>Comparison policies should be removed, and replaced by a mecanism using
-      different namespaces to specify comparison operators.</li>
-  <li>For pi and other constants, we should fetch them from the Math constants
-      library when it is ready.</li>
+    LIA-1 only, with no additional requirement such as IEEE 754 or even
+  more.</li>
+  <li>For pi and other constants, we should fetch them from the Math
+    constants library when it is ready.</li>
 </ul>
 
 <h2>Various items</h2>
-
 <ul>
   <li>Support the <code>-mfpmath=sse</code> option of g++ for Pentium IV
-      optimized code.  This requires a different rounding policy class.</li>
+    optimized code.  This requires a different rounding policy class.</li>
   <li>Have an optimized specialization of <code>interval&lt;double&gt;</code>
-      using SSE2 instructions ?  Tricky.</li>
+    using SSE2 instructions ?  Tricky.</li>
   <li>Write a traits specialization for <code>interval&lt;MPFR&gt;</code>,
-      and other non-built-in number types.</li>
+    and other non-built-in number types.</li>
   <li>Have a robust implementation of transcendental functions over the
-      built-in floating point types (e.g. using MPFR) ?</li>
+    built-in floating point types (e.g. using MPFR) ?</li>
   <li>Safe conversions from <code>interval&lt;double&gt;</code> to
-      <code>interval&lt;float&gt;</code>? Requires partial
-      specialization.</li>
-  <li>It would be nice to use the expression template mecanism to automatically
-      use the more efficient unprotected rounding mode version for small
-      subexpressions (although you can do bigger expressions by hand).</li>
+    <code>interval&lt;float&gt;</code>? Requires partial specialization.</li>
+  <li>It would be nice to use the expression template mecanism to
+    automatically use the more efficient unprotected rounding mode version
+    for small subexpressions (although you can do bigger expressions by
+  hand).</li>
 </ul>
-
 <hr>
 
-<p>Revised: 2002-09-12<br>
+<p>Revised: 2003-01-19<br>
 Copyright (c) Guillaume Melquiond, Sylvain Pion, Hervé Brönnimann, 2002.<br>
 Polytechnic University.</p>
 </body>

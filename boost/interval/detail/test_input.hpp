@@ -13,6 +13,9 @@ bool is_neg(const T& x) { return x < static_cast<T>(0); }
 template<class T> inline
 bool is_zero(const T& x) { return x == static_cast<T>(0); }
 
+template<class T> inline
+bool is_pos(const T& x) { return x > static_cast<T>(0); }
+
   } // namespace detail
 
   namespace interval_lib {

@@ -16,7 +16,7 @@ first parameter of <code>policies</code>, it is also the type named
 <code>rounding</code> in the policy definition of <code>interval</code>.</p>
 
 <p>By default, it is <code>boost::interval_lib::rounded_math&lt;T&gt;</code>.
- The class <code>boost::interval_lib::rounded_math</code> is already
+The class <code>boost::interval_lib::rounded_math</code> is already
 specialized for the standard floating types (<code>float</code> ,
 <code>double</code> and <code>long double</code>). So if the base type of
 your intervals is not one of these, a good solution would probably be to
@@ -101,7 +101,7 @@ of its two arguments rounded to its nearest representable number. The
 functions <code>int_down</code> and <code>int_up</code> compute the nearest
 integer smaller or bigger than their argument.</p>
 
-<p>The type <code>unprotected_rounding</code> allows to remove all controls. 
+<p>The type <code>unprotected_rounding</code> allows to remove all controls.
 For reasons why one might to do this, see the <a
 href="#Protection">protection</a> paragraph below.</p>
 
@@ -248,8 +248,6 @@ struct save_state_... : Rounding
     template &lt;&gt;  struct rounded_math&lt;double&gt;;
 
     <span style="color: #FF0000">/* some metaprogramming to convert a protected to unprotected rounding */</span>
-    template &lt;class Rounding&gt; struct unprotect_rounding;
-    template &lt;class Traits&gt; struct unprotect_traitsunprotect_traits;
     template &lt;class I&gt; struct unprotect;
 
   } // namespace interval_lib
@@ -291,19 +289,12 @@ href="#perf">performance notes</a> for some additional details.</p>
 <code>unprotect</code> which takes an interval type <code>I</code> and
 returns an interval type <code>unprotect&lt;I&gt;::type</code>  where the
 rounding policy has been unprotected. Some  information about the types:
-<code>interval&lt;T, interval_traits&lt;..., Rounding, ...&gt;
+<code>interval&lt;T, interval_lib::policies&lt;Rounding, _&gt;
 &gt;::traits_type::rounding</code> <b>is</b> the same type as
 <code>Rounding</code>, and <code>unprotect&lt;interval&lt;T,
-interval_traits&lt;..., Rounding, ...&gt; &gt; &gt;::type</code> <b>is</b>
-the same type as <code>interval&lt;T, interval_traits&lt;...,
-Rounding::unprotected, ...&gt; &gt;</code>.</p>
-
-<p>There are corresponding metaprogramming classes
-<code>unprotect_traits</code> which return a traits type
-<code>unprotect_traits&lt;Traits&gt;::type</code> in which the rounding is
-unprotected, and <code>unprotect_rounding</code> whose return type
-<code>unprotect_rounding&lt;Rounding&gt;::type</code> is simply
-<code>typename Rounding::unprotected_rounding</code>.</p>
+interval_lib::policies&lt;Rounding, _&gt; &gt; &gt;::type</code> <b>is</b>
+the same type as <code>interval&lt;T,
+interval_lib::policies&lt;Rounding::unprotected, _&gt; &gt;</code>.</p>
 
 <h3>State saving</h3>
 
@@ -327,17 +318,18 @@ rounding mode fixed by a call to downward or upward.</p>
 
 <p><strong>Please note:</strong> Unfortunately, the latter is rarely the
 case. It is the reason why a class <code>rounded_transc_dummy</code>  is
-provided which does not depend on the functions from the std namespace. It is
-also the reason why <code>rounded_transc_dummy</code> is the default class,
-rather than <code>rounded_transc_opp</code>. There is no magic, however. The
-functions of <code>rounded_transc_dummy</code> do not compute anything. They
-only return valid values. For example, <code>cos_down</code> always returns
--1. In this way, we do verify the inclusion property for the default
-implementation, even if this has strictly no value for the user. In order to
-have useful values, another policy should be used explicitely, which will
-most likely lead to a violation of the inclusion property. In this way, we
-ensure that the violation is clearly pointed out to the user who then knows
-what he stands against.</p>
+provided which does not depend on the functions from the std namespace. There
+is no magic, however. The functions of <code>rounded_transc_dummy</code> do
+not compute anything. They only return valid values. For example,
+<code>cos_down</code> always returns -1. In this way, we do verify the
+inclusion property for the default implementation, even if this has strictly
+no value for the user. In order to have useful values, another policy should
+be used explicitely, which will most likely lead to a violation of the
+inclusion property. In this way, we ensure that the violation is clearly
+pointed out to the user who then knows what he stands against. This class
+could have been used as the default transcendental rounding class, but it was
+decided it would be better for the compilation to fail due to missing
+declarations rather than succeed thanks to valid but unusable functions.</p>
 
 <h3>Basic arithmetic functions</h3>
 
@@ -381,7 +373,7 @@ to the current rounding mode.</p>
 
 <p>The non-specialized version of <code>rounding_control</code> does not do
 anything. The functions for the rounding mode are empty, and
-<code>to_int</code> and <code>force_rounding</code> are identity functions. 
+<code>to_int</code> and <code>force_rounding</code> are identity functions.
 The <code>pi_</code> constant functions return suitable integers (for
 example, <code>pi_up</code> returns <code>T(4)</code>).</p>
 
@@ -393,13 +385,13 @@ to best use the floating point unit of the computer.</p>
 
 <p>The default policy (aka <code>rounded_math&lt;T&gt;</code>) is simply
 defined as:</p>
-<pre>template &lt;class T&gt; struct rounded_math&lt;T&gt; : save_state_nothing&lt;rounded_transc_dummy&lt;T, rounded_arith_exact&lt;T&gt; &gt; &gt; {};</pre>
+<pre>template &lt;class T&gt; struct rounded_math&lt;T&gt; : save_state_nothing&lt;rounded_arith_exact&lt;T&gt; &gt; {};</pre>
 
-<p>and the specializations for <code>float</code> and <code>double</code> use
-<code>rounded_arith_opp</code>, as in:</p>
-<pre>template &lt;&gt;  struct rounded_math&lt;float&gt;       : save_state&lt;rounded_transc_dummy&lt;float, rounded_arith_opp&lt;float&gt; &gt; &gt; {};
-template &lt;&gt;  struct rounded_math&lt;double&gt;      : save_state&lt;rounded_transc_dummy&lt;double, rounded_arith_opp&lt;double&gt; &gt; &gt; {};
-template &lt;&gt;  struct rounded_math&lt;long double&gt; : save_state&lt;rounded_transc_dummy&lt;long double, rounded_arith_opp&lt;long double&gt; &gt; &gt; {};</pre>
+<p>and the specializations for <code>float</code>, <code>double</code> and
+<code>long double</code> use <code>rounded_arith_opp</code>, as in:</p>
+<pre>template &lt;&gt; struct rounded_math&lt;float&gt;       : save_state&lt;rounded_arith_opp&lt;float&gt; &gt;       {};
+template &lt;&gt; struct rounded_math&lt;double&gt;      : save_state&lt;rounded_arith_opp&lt;double&gt; &gt;      {};
+template &lt;&gt; struct rounded_math&lt;long double&gt; : save_state&lt;rounded_arith_opp&lt;long double&gt; &gt; {};</pre>
 
 <h2 id="perf">Performance Issues</h2>
 
@@ -466,7 +458,8 @@ without initialization and restoration of the rounding mode. However, it
 would be far too easy if there were no drawback: because the rounding mode is
 not restored in the meantime, operations on floating-point numbers must be
 prohibited. This method can only be used if all the operations are operations
-on interval.</p>
+on intervals (or operations between an interval and a floating point
+number).</p>
 
 <h4 id="perfexp">Example</h4>
 
@@ -559,7 +552,7 @@ operation is obviously very expensive.</p>
 </ul>
 <hr>
 
-<p>Revised: 2002-01-15<br>
+<p>Revised: 2003-01-15<br>
 Copyright (c) Guillaume Melquiond, Sylvain Pion, Hervé Brönnimann, 2002.<br>
 Polytechnic University.</p>
 </body>

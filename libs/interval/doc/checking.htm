@@ -29,7 +29,6 @@ behaviors and it would be sad to arbitrarily select one of these.</p>
 
 <p>The checking class should satisfy the following requirement (in the form
 of an interface):</p>
-
 <pre>/* requirements for checking policy */
 struct checking
 {
@@ -73,14 +72,17 @@ the inputs is declared invalid, the the function will try to produce an
 invalid value or an input interval.</p>
 
 <h2>Synopsis</h2>
-
 <pre>namespace boost {
   namespace interval_lib {
 
-template&lt;class T&gt; struct checking_base;
-template&lt;class T, class Checking = checking_base&lt;T&gt;, class Exception = exception_create_empty&lt;T&gt; &gt; struct checking_no_empty;
-template&lt;class T, class Checking&gt; struct checking_no_nan;
-template&lt;class T, class Checking, class Exception = exception_invalid_number&lt;T&gt; &gt; struct checking_catch_nan;
+template&lt;class T&gt;
+struct checking_base;
+template&lt;class T, class Checking = checking_base&lt;T&gt;, class Exception = exception_create_empty&lt;T&gt; &gt;
+struct checking_no_empty;
+template&lt;class T, class Checking = checking_base&lt;T&gt; &gt;
+struct checking_no_nan;
+template&lt;class T, class Checking = checking_base&lt;T&gt;, class Exception = exception_invalid_number&lt;T&gt; &gt;
+struct checking_catch_nan;
 
 template&lt;class T&gt; struct exception_create_empty { T operator()(); };
 template&lt;class T&gt; struct exception_invalid_number { void operator()(); };
@@ -105,7 +107,7 @@ used for <code>nan</code>, <code>empty_lower</code>,
 <code>nan</code>, <code>inf</code> returns
 <code>numeric_limits::infinity()</code> if possible, or is an
 <code>assert(false</code>) otherwise. Finally, <code>is_empty(T l,T u)</code>
-is always defined by <code>u&lt;l</code>.</p>
+is always defined by <code>!(l&lt;=u)</code>.</p>
 
 <p>Next comes <code>checking_no_empty</code>. Using it means that each time
 an empty interval should be produced (by <code>empty_lower</code> and
@@ -135,8 +137,8 @@ they will correctly deal with them.</p>
 <p><code>exception_create_empty</code> throws <code>std::runtime_error</code>
 with the message <code>"boost::interval: empty interval created"</code> and
 <code>exception_invalid_number</code> throws
-<code>std::invalid_argument</code> with the message
-<code>"boost::interval: invalid number"</code>.</p>
+<code>std::invalid_argument</code> with the message <code>"boost::interval:
+invalid number"</code>.</p>
 
 <h2>Customizing your own checking policy</h2>
 
@@ -173,11 +175,10 @@ invalid interval bounds unless the user passes invalid numbers to the
 constructors. So you can put an assert inside if you do not trust the
 library. :-)</p>
 
-<p>And finally, you need to decide what to do with <code>nan</code> if
-it has not already been decided at the beginning, and with
-<code>inf</code>. These functions should return a value or start an
-exceptional behavior (especially if the base type does not have
-corresponding values).</p>
+<p>And finally, you need to decide what to do with <code>nan</code> if it has
+not already been decided at the beginning, and with <code>inf</code>. These
+functions should return a value or start an exceptional behavior (especially
+if the base type does not have corresponding values).</p>
 
 <h2>Some examples</h2>
 <ul>
@@ -185,16 +186,22 @@ corresponding values).</p>
     manipulate data, even if they contain invalid numbers and empty
     intervals, then <code>checking_base&lt;T&gt;</code> is a possibility.</li>
   <li>If you do not want empty intervals to be created and are not sure all
-    the numbers are valid, then
-    <code>checking_catch_nan&lt;T,checking_no_empty&lt;T&gt; &gt;</code> can
-    help you. This is the default policy and it is also called
-    <code>interval_lib::checking_strict</code>.</li>
+    the numbers are valid, then <code>checking_catch_nan&lt;T,
+    checking_no_empty&lt;T&gt; &gt;</code> can help you. This is the default
+    policy and it is also called
+  <code>interval_lib::checking_strict</code>.</li>
   <li>If all the numbers will be valid and if no empty interval is supposed
     to be created (or if you do not want them to be created), then you can
     use <code>checking_no_nan&lt;T, checking_no_empty&lt;T&gt; &gt;</code>.
     Please note that if <code>T</code> does not have a way to represent
     invalid numbers, then this policy will behave the same way as
     <code>checking_no_empty&lt;T&gt;</code>.</li>
+  <li>If all numerical data are valid but the algorithm can produce and
+    manipulate empty intervals, then <code>checking_no_nan&lt;T&gt;</code>
+    should be used.</li>
+  <li>Similarly, if invalid data have to be signaled and the algorithm can
+    manipulate empty intervals, the <code>checking_catch_nan&lt;T&gt;</code>
+    is a solution.</li>
   <li>If you do not mind having undefined results when an empty interval or
     an interval number is produced, your best bet is to create your own
     policy by overloading <code>checking_base</code> and modifying
@@ -202,10 +209,9 @@ corresponding values).</p>
     return <code>false</code>. It is probably the fastest checking policy
     available; however, it suffers from its deficient security.</li>
 </ul>
-
 <hr>
 
-<p>Revised: 2002-08-30<br>
+<p>Revised: 2003-01-19<br>
 Copyright (c) Guillaume Melquiond, Sylvain Pion, Hervé Brönnimann, 2002.<br>
 Polytechnic University.</p>
 </body>
