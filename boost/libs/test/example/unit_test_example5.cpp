@@ -1,4 +1,4 @@
-//  (C) Copyright Gennadiy Rozental & Ullrich Koethe 2001.
+//  (C) Copyright Gennadiy Rozental 2001.
 //  Permission to copy, use, modify, sell and distribute this software
 //  is granted provided this copyright notice appears in all copies.
 //  This software is provided "as is" without express or implied warranty,
@@ -150,7 +150,7 @@ struct massive_hash_function_test : test_suite {
             m_test_data.push_back( test_data );
         }
 
-        add( BOOST_PARAM_USER_TEST_CASE( &hash_function_tester::test, instance, m_test_data.begin(), m_test_data.end() ) );
+        add( BOOST_PARAM_CLASS_TEST_CASE( &hash_function_tester::test, instance, m_test_data.begin(), m_test_data.end() ) );
     }
 
     std::list<hash_function_test_data> m_test_data;

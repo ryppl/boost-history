@@ -170,13 +170,13 @@ test_main( int argc, char * argv[] ) {
                     test.add( BOOST_TEST_CASE( &bad_function ) );
                     break;
                 case tct_user_test_case:
-                    test.add( BOOST_USER_TEST_CASE( &bad_test::test, bad_test_instance ) );
+                    test.add( BOOST_CLASS_TEST_CASE( &bad_test::test, bad_test_instance ) );
                     break;
                 case tct_param_free_function:
                     test.add( BOOST_PARAM_TEST_CASE( &bad_function_param, (int*)params, params+1 ) );
                     break;
                 case tct_param_user_test_case:
-                    test.add( BOOST_PARAM_USER_TEST_CASE( &bad_test::test_param, bad_test_instance, (int*)params, params+1 ) );
+                    test.add( BOOST_PARAM_CLASS_TEST_CASE( &bad_test::test_param, bad_test_instance, (int*)params, params+1 ) );
                     break;
                 }
 

@@ -119,9 +119,9 @@ struct account_test_suite : public test_suite {
         // add member function test cases to a test suite
         boost::shared_ptr<account_test> instance( new account_test( init_value ) );
 
-        add( BOOST_USER_TEST_CASE( &account_test::test_init, instance ), 4 );
-        add( BOOST_USER_TEST_CASE( &account_test::test_deposit, instance ), 1 );
-        add( BOOST_USER_TEST_CASE( &account_test::test_withdraw, instance ) );
+        add( BOOST_CLASS_TEST_CASE( &account_test::test_init, instance ), 4 );
+        add( BOOST_CLASS_TEST_CASE( &account_test::test_deposit, instance ), 1 );
+        add( BOOST_CLASS_TEST_CASE( &account_test::test_withdraw, instance ) );
     }
 };
 

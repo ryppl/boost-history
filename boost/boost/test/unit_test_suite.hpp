@@ -17,7 +17,7 @@
 
 // BOOST
 #include <boost/config.hpp> // for distance workaround
-#include <boost/smart_ptr.hpp>
+#include <boost/shared_ptr.hpp>
 
 // STL
 #include <stdexcept>
@@ -25,11 +25,11 @@
 
 #define BOOST_TEST_CASE( function ) \
 boost::unit_test_framework::create_test_case((function), #function )
-#define BOOST_USER_TEST_CASE( function, tc_instance ) \
+#define BOOST_CLASS_TEST_CASE( function, tc_instance ) \
 boost::unit_test_framework::create_test_case((function), #function, tc_instance )
 #define BOOST_PARAM_TEST_CASE( function, begin, end ) \
 boost::unit_test_framework::create_test_case((function), #function, (begin), (end) )
-#define BOOST_PARAM_USER_TEST_CASE( function, tc_instance, begin, end ) \
+#define BOOST_PARAM_CLASS_TEST_CASE( function, tc_instance, begin, end ) \
 boost::unit_test_framework::create_test_case((function), #function, tc_instance, (begin), (end) )
 #define BOOST_TEST_SUITE( testsuite_name ) \
 ( new boost::unit_test_framework::test_suite( testsuite_name ) )
