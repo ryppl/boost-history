@@ -1,17 +1,15 @@
-// (-*- C++ -*- header)  
-
 /*
  * 
- * Copyright (c) Kresimir Fresl 2002 
+ * Copyright (c) 2002, 2003 Kresimir Fresl, Toon Knapen and Karl Meerbergen
  *
  * Permission to copy, modify, use and distribute this software 
  * for any non-commercial or commercial purpose is granted provided 
  * that this license appear on all copies of the software source code.
  *
- * Author assumes no responsibility whatsoever for its use and makes 
+ * Authors assume no responsibility whatsoever for its use and makes 
  * no guarantees about its quality, correctness or reliability.
  *
- * Author acknowledges the support of the Faculty of Civil Engineering, 
+ * KF acknowledges the support of the Faculty of Civil Engineering, 
  * University of Zagreb, Croatia.
  *
  */
@@ -25,32 +23,24 @@
 
 #include <vector>
 
+
 namespace boost { namespace numeric { namespace bindings { namespace traits {
 
   // std::vector<>
-  template <typename T, typename Alloc>
-  struct vector_traits<std::vector<T, Alloc> > 
-  : default_vector_traits<std::vector<T, Alloc> >
+  template <typename T, typename Alloc, typename V>
+  struct vector_detail_traits<std::vector<T, Alloc>, V> 
+  : default_vector_traits< V, T >
   {
-    // g++ 3.2 doesn't accept, como does:
-    //   using typename 
-    //   default_vector_traits<std::vector<T, Alloc> >::pointer; 
-    // therefore: 
-    //   typedef typename 
-    //   default_vector_traits<std::vector<T, Alloc> >::pointer pointer; 
-    // but `T*' is probably the best solution (certainly the simplest)
-    static T* storage (std::vector<T, Alloc>& v) {
-      return &v.front(); 
-    }
-  }; 
 
-  template <typename T, typename Alloc>
-  struct vector_traits<std::vector<T, Alloc> const> 
-  : default_vector_traits<std::vector<T, Alloc> const>
-  {
-    static T const* storage (std::vector<T, Alloc> const& v) {
-      return &v.front(); 
-    }
+#ifndef BOOST_NUMERIC_BINDINGS_NO_SANITY_CHECK
+    BOOST_STATIC_ASSERT( (boost::is_same< std::vector<T, Alloc>, typename boost::remove_const<V>::type >::value) );
+#endif
+
+    typedef std::vector<T,Alloc>                            identifier_type;  
+    typedef V                                               vector_type;
+    typedef typename default_vector_traits< V, T >::pointer pointer;
+
+    static pointer storage (vector_type& v) { return &v.front(); }
   }; 
 
 }}}}  
