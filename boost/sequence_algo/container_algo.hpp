@@ -1315,8 +1315,7 @@ namespace boost
     /////////////////////////////////////////////////////////////////////////
     // Boost algorithm extensions
     /////////////////////////////////////////////////////////////////////////
-
-    /*
+    
     template< typename Container, typename T >
     void 
     iota( Container& c, const T& value )
@@ -1374,7 +1373,21 @@ namespace boost
     {
         return is_sorted( begin( c ), end( c ), comp );
     }
-*/
+
+    template<class Container>
+    void
+    grow(Container& container, std::size_t by_how_much = 1)
+    {
+        container.resize(container.size() + by_how_much);
+    }
+
+    template<class Container>
+    void
+    grow_to(Container& container, std::size_t to_what_size)
+    {
+        container.resize(max(container.size(), to_what_size));
+    }
+
 
 }
 
