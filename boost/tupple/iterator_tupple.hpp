@@ -5,8 +5,8 @@
 // This software is provided `as is' without express or implied
 // warranty, and with no claim as to its suitability for any purpose.
 
-#ifndef BOOST_ITERATOR_TUPPLE_HPP
-#define BOOST_ITERATOR_TUPPLE_HPP
+#ifndef BOOST_TUPPLE_ITERATOR_TUPPLE_HPP
+#define BOOST_TUPPLE_ITERATOR_TUPPLE_HPP
 
 #include <boost/config.hpp>
 
