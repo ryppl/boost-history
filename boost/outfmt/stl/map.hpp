@@ -20,7 +20,7 @@
    // I/O support:
 
 #  if !defined(BOOST_IOFM_NO_BASIC_STREAM)
-      // std::map 
+      // std::map
 
       template
       <
