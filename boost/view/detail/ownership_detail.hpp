@@ -1,12 +1,12 @@
 
-// Copyright (C) 2001, 2002 Roland Richter (roland@flll.jku.at)
+// Copyright (C) 2001-2003 Roland Richter <roland@flll.jku.at>
 // Permission to copy, use, modify, sell and distribute this software
 // is granted provided this copyright notice appears in all copies.
 // This software is provided "as is" without express or implied
 // warranty, and with no claim as to its suitability for any purpose.
 
-#ifndef VIEW_OWNERSHIP_DETAIL_HPP
-#define VIEW_OWNERSHIP_DETAIL_HPP
+#ifndef BOOST_VIEW_OWNERSHIP_DETAIL_HPP
+#define BOOST_VIEW_OWNERSHIP_DETAIL_HPP
 
 #include <algorithm>
 #include <boost/config.hpp>
