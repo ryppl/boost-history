@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>indirect_cmp</title>
+  </head>
+  <body>
+    <h1><img src="../../../c++boost.gif" alt="C++ Boost" width="277" height="86" /><br />indirect_cmp</h1>
+    <p>This function object adaptor imposes an external ordering on the elements it compares, an ordering other than that which is intrinsic to the elements themselves.  The ability to impose external ordering is vital for graph operations such as <a href="../../graph/doc/dijkstra_shortest_paths.html">Dijkstra's shortest paths algorithm</a>, which orders vertices according to their distance from the source (and the vertices themselves have no intrinsic ordering).</p>
+
+    <h3>Where Defined</h3>
+    <p><a href="../../../boost/pending/indirect_cmp.hpp"><tt>boost/indirect_cmp.hpp</tt></a></p>
+
+    <h3>Template Parameters</h3>
+    <table border="1">
+      <tr>
+        <th>Parameter</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+      <tr valign="top">
+        <td><tt>ReadablePropertyMap</tt></td>
+        <td>The type of the external property map whose key type <tt>K</tt> is the type of the elements to be compared and whose value type <tt>V</tt> is the type of criterion by which the elements are compared.</td>
+        <td> </td>
+      </tr>
+      <tr valign="top">
+        <td><tt>Compare</tt></td>
+        <td>The type of the function object used to compare the values stored in the external property map.</td>
+        <td> </td>
+      </tr>
+    </table>
+
+    <h3>Models</h3>
+    <ul>
+      <li><a href="http://www.sgi.com/tech/stl/BinaryPredicate.html">Binary Predicate</a></li>
+      <li><a href="http://www.sgi.com/tech/stl/AdaptableBinaryPredicate.html">Adaptable Binary Predicate</a></li>
+    </ul>
+
+    <h3>Type Requirements</h3>
+    <ul>
+      <li>ReadablePropertyMap is a model of <a href="../../property_map/ReadablePropertyMap.html">Readable Property Map</a></li>
+      <li><tt>K</tt> is the type of <tt>indirect_cmp</tt>'s arguments.</li>
+      <li><tt>V</tt> is <a href="http://www.sgi.com/tech/stl/LessThanComparable.html">LessThan Comparable</a>.</li>
+    </ul>
+
+    <h3>Public Base Classes</h3>
+    <p>None.</p>
+
+    <h3>Members</h3>
+    <table border="1">
+      <tr>
+        <th>Member</th>
+        <th>Where Defined</th>
+        <th>Description</th>
+      </tr>
+      <tr valign="top">
+        <td><tt>first_argument_type</tt></td>
+        <td><a href="http://www.sgi.com/tech/stl/AdaptableBinaryPredicate.html">Adaptable Binary Predicate</a></td>
+        <td>The type of the first argument: <tt>K</tt></td>
+      </tr>
+      <tr valign="top">
+        <td><tt>second_argument_type</tt></td>
+        <td><a href="http://www.sgi.com/tech/stl/AdaptableBinaryPredicate.html">Adaptable Binary Predicate</a></td>
+        <td>The type of the second argument: <tt>K</tt></td>
+      </tr>
+      <tr valign="top">
+        <td><tt>result_type</tt></td>
+        <td><a href="http://www.sgi.com/tech/stl/AdaptableBinaryPredicate.html">Adaptable Binary Predicate</a></td>
+        <td>The type of the result: <tt>bool</tt></td>
+      </tr>
+      <tr valign="top">
+        <td>
+<pre>indirect_cmp(
+    const ReadablePropertyMap&amp; df,
+    const Compare&amp; c)</pre>
+        </td>
+        <td><pre>indirect_cmp</pre></td>
+        <td><p>The constructor.  <tt>c</tt> defaults to <tt>Compare()</tt>.</p></td>
+      </tr>
+      <tr valign="top">
+        <td><tt>bool operator()(const K&amp; x, const K&amp; y)</tt></td>
+        <td><a href="http://www.sgi.com/tech/stl/BinaryFunction.html">Binary Function</a></td>
+        <td>The function call operator.  The return value is <tt>c(get(df, x), get(df, y))</tt>.</td>
+      </tr>
+    </table>
+
+    <h3>Non-Member Functions</h3>
+    <table border="1">
+      <tr>
+        <th>Function</th>
+        <th>Description</th>
+      </tr>
+      <tr valign="top">
+        <td>
+<pre>template &lt;typename Compare, typename ReadablePropertyMap&gt;
+  indirect_cmp&lt;ReadablePropertyMap, Compare&gt;
+  make_indirect_cmp(const Compare&amp; cmp, ReadablePropertyMap pmap)</pre>
+        </td>
+        <td>Constructs and returns a new <tt>indirect_cmp</tt> function object whose <tt>()</tt> operator takes in two <tt>K</tt> arguments <tt>x</tt> and <tt>y</tt> returns <tt>cmp(get(map, x), get(map, y))</tt>.</td>
+      </tr>
+    </table>
+
+    <h3>Example</h3>
+    <p>See <a href="../example/priority_queue.cpp"><tt>example/priority_queue.cpp</tt></a> for an example of using the <tt>indirect_cmp</tt> function object adaptor.</p>
+
+    <hr />
+    <table border="0">
+      <tr valign="top">
+        <td>Copyright &copy; 2004</td>
+        <td><a href="../../../people/jeremy_siek.htm">Jeremy Siek</a>, Univ. of Notre Dame (<a href="mailto:jsiek@lsc.nd.edu">jsiek@lsc.nd.edu</a>)<br /><a href="http://www.lsc.nd.edu/~llee1">Lie-Quan Lee</a>, Univ. of Notre Dame (<a href="mailto:llee1@lsc.nd.edu">llee1@lsc.nd.edu</a>)<br /><a href="http://www.lsc.nd.edu/~lums">Andrew Lumsdaine</a>, Univ. of Notre Dame (<a href="mailto:lums@lsc.nd.edu">lums@lsc.nd.edu</a>)</td>
+      </tr>
+    </table>
+
+    <p>Use, modification, and distribution are subject to the Boost Software License, Version 1.0 at <a href="../../../LICENSE_1_0.txt">http://www.boost.org/LICENSE_1_0.txt</a></p>
+  </body>
+</html>
+

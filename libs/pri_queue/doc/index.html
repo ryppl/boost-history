@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>Boost Priority Queues</title>
+  </head>
+  <body>
+    <h1><img src="../../c++boost.gif" alt="C++ Boost" width="277" height="86" /><br />Boost Priority Queues</h1>
+    <p>A <strong>priority queue</strong> is a queue that enforces some ordering policy on its elements during its entire lifetime.  The basic priority queue provides two operations: a <em>push</em> operation, which inserts an element, and a <em>pop</em> operation, which removes the minimum element according to the queue's ordering policy.  Even the simple <a href="../../utility/queue.html">queue</a> can be thought of as a priority queue where the minimum element is the one least recently inserted.  Most priority queue implementations, however, impose <em>external</em> ordering policies, which are not intrinsic to either the queues or the elements themselves.  Most priority queues also provide one or more <em>update</em> operations for maintaining the integrity of their internal structures when their ordering policies <em>change</em>.  This ability to update a priority queue is vital for applications such as thread scheduling and <a href="../../graph/doc/">graph algorithms</a>.</p>
+    <p>Boost provides the following priority queues.  All of them model the <a href="../../utility/Buffer.html">Buffer</a> concept.  With the exception of the <tt>fenced_priority_queue</tt>, they also model the <a href="../../utility/UpdatableBuffer.html">Updatable Buffer</a> concept.</p>
+    <ul>
+      <li><a href="./mutable_queue.html">mutable_queue</a></li>
+      <li><a href="./fibonacci_heap.html">fibonacci_heap</a></li>
+    </ul>
+    <p>The <a href="./indirect_cmp.html">indirect_cmp</a> function object adaptor provides the actual external ordering on a priority queue's elements.  Without <tt>indirect_cmp</tt>, the priority queue's <tt>update</tt> operation is next to useless.</p>
+    <p>The priority queue is a standard data structure, and is discussed in all algorithm books worth their ink.  For more ideas on their general usage, see <a href="http://www.leekillough.com/heaps/">http://www.leekillough.com/heaps/</a>.</p>
+    <hr />
+    <table border="0">
+      <tr valign="top">
+        <td>Copyright &copy; 2004</td>
+        <td><a href="../../people/jeremy_siek.htm">Jeremy Siek</a>, Univ. of Notre Dame (<a href="mailto:jsiek@lsc.nd.edu">jsiek@lsc.nd.edu</a>)</td>
+      </tr>
+    </table>
+    <p>Use, modification, and distribution are subject to the Boost Software License, Version 1.0 at <a href="../../LICENSE_1_0.txt">http://www.boost.org/LICENSE_1_0.txt</a></p>
+  </body>
+</html>
+

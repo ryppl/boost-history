@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>fenced_priority_queue</title>
+  </head>
+  <body>
+    <h1><img src="../../../c++boost.gif" alt="C++ Boost" width="277" height="86" /><br />fenced_priority_queue</h1>
+    <p>This class implements a fenced priority queue.  This is similar to a normal <a href="http://www.sgi.com/tech/stl/priority_queue.html">priority queue</a> (sorts its members, and only returns the first), except that members cannot be sorted around a "fence" that can be placed into the buffer.  This fence is inserted using the <tt>fence()</tt> member function or (possibly) implicitly by the <tt>top()</tt> and <tt>pop()</tt> methods, and is removed automatically when the elements around it are popped.</p>
+    <p>The implementation is as follows:  <tt>Q</tt> is an unsorted queue that contains the already-sorted list data, and <tt>PQ</tt> is a priority queue that contains new elements (since the last fence) that have yet to be sorted.  New elements are inserted into <tt>PQ</tt>, and a fence moves all elements in <tt>PQ</tt> into the back of <tt>Q</tt> in sorted order.  Elements are then popped from the front of <tt>Q</tt>, and if that is empty the front of <tt>PQ</tt>.</p>
+    <p>If a fenced priority queue is initialized for implicit fencing, and neither <tt>Q</tt> nor <tt>PQ</tt> are empty before a new <tt>fence()</tt> operation, the old fence is automatically removed.  Thus, there can be no more than one fence in an implicitly fenced priority queue at a time.  Furthermore, the top element is not necessarily the largest element in this case.</p>
+    <p>This implementation is used for vertex ordering by out-degree in the <a href="../../graph/doc/cuthill_mckee_ordering.html">Cuthill-McKee ordering algorithm</a>.</p>
+
+    <h3>Where Defined</h3>
+    <p><a href="../../../boost/pending/fenced_priority_queue.hpp"><tt>boost/fenced_priority_queue.hpp</tt></a></p>
+
+    <h3>Template Parameters</h3>
+    <table border="1">
+      <tr>
+        <th>Parameter</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+      <tr valign="top">
+        <td><tt>T</tt></td>
+        <td>The type of object stored in the <tt>fenced_priority_queue</tt>.</td>
+        <td> </td>
+      </tr>
+      <tr valign="top">
+        <td><tt>Compare</tt></td>
+        <td>The comparison function used to determine whether one <tt>T</tt> element is smaller than another.  If <tt>Compare(x,y)</tt> is true, then x is smaller than y.</td>
+        <td><tt><a href="http://www.sgi.com/tech/stl/less.html">std::less</a>&lt;T&gt;</tt></td>
+      </tr>
+      <tr valign="top">
+        <td><tt>implicit_fence</tt></td>
+        <td>Whether or not a <tt>top()</tt> or <tt>pop()</tt> operation automatically executes a <tt>fence()</tt> operation.</td>
+        <td><tt>true</tt></td>
+      </tr>
+      <tr valign="top">
+        <td><tt>Buffer</tt></td>
+        <td>The underlying container used to implement the unsorted queue.</td>
+        <td><tt><a href="../../utility/queue.html">boost::queue</a>&lt;T&gt;</tt></td>
+      </tr>
+    </table>
+
+    <h3>Models</h3>
+    <ul>
+      <li><a href="http://www.sgi.com/tech/stl/DefaultConstructible.html">Default Constructible</a></li>
+      <li><a href="../../utility/Buffer.html">Buffer</a></li>
+    </ul>
+
+    <h3>Type Requirements</h3>
+    <ul>
+      <li><tt>T</tt> is a model of <a href="http://www.sgi.com/tech/stl/Assignable.html">Assignable</a>.</li>
+      <li><tt>Buffer</tt> is a model of <a href="../../utility/Buffer.html">Buffer</a>.</li>
+      <li><tt>Buffer::value_type</tt> is the same type as <tt>T</tt>.</li>
+      <li><tt>Compare</tt> is a model of <a href="http://www.sgi.com/tech/stl/BinaryPredicate.html">Binary Predicate</a>.</li>
+      <li><tt>Compare</tt> induces a strict weak ordering, as defined in the <a href="http://www.sgi.com/tech/stl/LessThanComparable.html">LessThan Comparable</a> requirements, on its argument type.</li>
+      <li><tt>implicit_fence</tt> is of type <tt>bool</tt>.</li>
+      <li><tt>T</tt> is convertible to <tt>Compare</tt>'s argument type.</li>
+    </ul>
+
+    <h3>Public Base Classes</h3>
+    <p>None.</p>
+
+    <h3>Members</h3>
+    <table border="1">
+      <tr>
+        <th>Member</th>
+        <th>Where Defined</th>
+        <th>Description</th>
+      </tr>
+      <tr valign="top">
+        <td><tt>value_type</tt></td>
+        <td><a href="../../utility/Buffer.html">Buffer</a></td>
+        <td>The type of object stored in the <tt>fenced_priority_queue</tt>.  This is the same as <tt>T</tt> and <tt>Buffer::value_type</tt>.</td>
+      </tr>
+      <tr valign="top">
+        <td><tt>size_type</tt></td>
+        <td><a href="../../utility/Buffer.html">Buffer</a></td>
+        <td>An unsigned integral type.  This is the same as <tt>Buffer::size_type</tt>.</td>
+      </tr>
+      <tr valign="top">
+        <td><tt>fenced_priority_queue()</tt></td>
+        <td><a href="http://www.sgi.com/tech/stl/DefaultConstructible.html">Default Constructible</a></td>
+        <td>The default constructor.  Creates an empty <tt>fenced_priority_queue</tt>, using <tt><a href="http://www.sgi.com/tech/stl/less.html">std::less</a>&lt;T&gt;</tt> as the comparison function.</td>
+      </tr>
+      <tr valign="top">
+        <td><tt>fenced_priority_queue(const Compare&amp; comp)</tt></td>
+        <td><tt>fenced_priority_queue</tt></td>
+        <td>The constructor.  Creates an empty <tt>fenced_priority_queue</tt>, using <tt>comp</tt> as the comparison function.</td>
+      </tr>
+      <tr valign="top">
+        <td><tt>bool empty() const</tt></td>
+        <td><a href="../../utility/Buffer.html">Buffer</a></td>
+        <td>Returns <tt>true</tt> if the <tt>fenced_priority_queue</tt> contains no elements, and <tt>false</tt> otherwise.  <tt>empty()</tt> is equivalent to <tt>size() == 0</tt>.</td>
+      </tr>
+      <tr valign="top">
+        <td><tt>size_type size() const</tt></td>
+        <td><a href="../../utility/Buffer.html">Buffer</a></td>
+        <td>Returns the number of elements contained in the <tt>fenced_priority_queue</tt>.</td>
+      </tr>
+      <tr valign="top">
+        <td><tt>void push(const value_type&amp; x)</tt></td>
+        <td><a href="../../utility/Buffer.html">Buffer</a></td>
+        <td>Inserts <tt>x</tt> into the <tt>fenced_priority_queue</tt>.<br />Postcondition: <tt>size()</tt> will be incremented by 1.</td>
+      </tr>
+      <tr valign="top">
+        <td><tt>value_type&amp; top()</tt></td>
+        <td><a href="../../utility/Buffer.html">Buffer</a></td>
+        <td>Performs a <tt>fence()</tt> operation if <tt>implicit_fence</tt> is <tt>true</tt>.  Returns a mutable reference to the top element in <tt>Q</tt> if <tt>Q</tt> is not empty.  Otherwise, returns a mutable reference to the largest element in <tt>PQ</tt>, as determined by the comparison function <tt>Compare</tt>.  That is, for every other element <tt>x</tt> in <tt>PQ</tt>, <tt>Compare(top(), x)</tt> is <tt>true</tt>.<br />Precondition: <tt>empty()</tt> is <tt>false</tt>.</td>
+      </tr>
+      <tr valign="top">
+        <td><tt>const value_type&amp; top() const</tt></td>
+        <td><a href="../../utility/Buffer.html">Buffer</a></td>
+        <td>Performs a <tt>fence()</tt> operation if <tt>implicit_fence</tt> is <tt>true</tt>.  Returns a const reference to the top element in <tt>Q</tt> if <tt>Q</tt> is not empty.  Otherwise, returns a const reference to the largest element in <tt>PQ</tt>, as determined by the comparison function <tt>Compare</tt>.  That is, for every other element <tt>x</tt> in <tt>PQ</tt>, <tt>Compare(top(), x)</tt> is <tt>true</tt>.<br />Precondition: <tt>empty()</tt> is <tt>false</tt>.</td>
+      </tr>
+      <tr valign="top">
+        <td><tt>void pop()</tt></td>
+        <td><a href="../../utility/Buffer.html">Buffer</a></td>
+        <td>Performs a <tt>fence()</tt> operation if <tt>implicit_fence</tt> is <tt>true</tt>.  Removes the top element from <tt>Q</tt> if <tt>Q</tt> is not empty.  Otherwise, removes the largest element from <tt>PQ</tt>.<br />Postcondition: <tt>size()</tt> will be decremented by 1.</td>
+      </tr>
+      <tr valign="top">
+        <td><tt>void fence()</tt></td>
+        <td><tt>fenced_priority_queue</tt></td>
+        <td>Inserts all elements in <tt>PQ</tt> into the back of <tt>Q</tt> in sorted order, as determined by the comparison function <tt>Compare</tt>.</td>
+      </tr>
+    </table>
+
+    <h3>Complexity</h3>
+    <p>Let <tt>m = Q.size()</tt> and <tt>n = PQ.size()</tt>.</p>
+    <ul>
+      <li>The time complexity of the <tt>push()</tt> operation is <tt>O(log (m + n))</tt>.</li>
+      <li>The time complexity of the <tt>fence()</tt> operation is <tt>O(n log (m + n))</tt>.</li>
+      <li>The time complexity of the <tt>top()</tt> and <tt>pop()</tt> operations is the same as that of the <tt>fence()</tt> operation if the <tt>fenced_priority_queue</tt> is implicitly fenced, and <tt>O(1)</tt> otherwise.</li>
+    </ul>
+
+    <h3>Example</h3>
+    <p>See <a href="../example/fenced_priority_queue.cpp"><tt>example/fenced_priority_queue.cpp</tt></a> for an example of using the <tt>fenced_priority_queue</tt> class template.</p>
+
+    <hr />
+    <table border="0">
+      <tr valign="top">
+        <td>Copyright &copy; 2004</td>
+        <td><a href="../../../people/jeremy_siek.htm">Jeremy Siek</a>, Univ. of Notre Dame (<a href="mailto:jsiek@lsc.nd.edu">jsiek@lsc.nd.edu</a>)<br /><a href="http://www.lsc.nd.edu/~llee1">Lie-Quan Lee</a>, Univ. of Notre Dame (<a href="mailto:llee1@lsc.nd.edu">llee1@lsc.nd.edu</a>)<br /><a href="http://www.lsc.nd.edu/~lums">Andrew Lumsdaine</a>, Univ. of Notre Dame (<a href="mailto:lums@lsc.nd.edu">lums@lsc.nd.edu</a>)</td>
+      </tr>
+    </table>
+    <p>Use, modification, and distribution are subject to the Boost Software License, Version 1.0 at <a href="../../../LICENSE_1_0.txt">http://www.boost.org/LICENSE_1_0.txt</a></p>
+  </body>
+</html>
+
