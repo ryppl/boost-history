@@ -20,12 +20,15 @@
 
 #ifdef USES_WINSOCK2
 
+#include <winsock2.h>
 #include <Ws2tcpip.h>
 
 #else
 
 #ifdef __CYGWIN__
+#include "sys/socket.h"
 #include "cygwin/in_systm.h"
+#include "cygwin/in.h"
 #endif
 
 #include <netinet/in.h>

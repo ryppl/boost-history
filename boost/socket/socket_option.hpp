@@ -21,6 +21,7 @@
 #if defined(USES_WINSOCK2)
 #include <Winsock2.h>
 #else
+#include <fcntl.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <errno.h>
@@ -81,13 +82,27 @@ namespace boost
     typedef bool bool_t;
 #endif
 
+    // this just lets us use the socket_option structure for ioctl's
     #define SOL_IOCTL 99
+
     //! non-blocking
-    typedef socket_option<SOL_IOCTL, FIONBIO, false, true, u_long>
-      socket_option_non_blocking;
+#ifdef O_NONBLOCK
+    typedef socket_option<SOL_IOCTL, O_NONBLOCK, false, true, u_long>
+    socket_option_non_blocking;
+#elif defined(FNONBIO)
+    typedef socket_option<SOL_IOCTL, FNONBIO, false, true, u_long>
+    socket_option_non_blocking;
+#endif
+
+#ifdef _WIN32
+     typedef socket_option<SOL_IOCTL, FIONBIO, false, true, u_long>
+     socket_option_non_blocking;
+#endif
+#ifdef FIONREAD //JKG -- FIONREAD isn't available on Linux at least...
     //! amount of data that can be read
     typedef socket_option<SOL_IOCTL, FIONREAD, false, true, u_long>
-      socket_option_data_pending;
+    socket_option_data_pending;
+#endif
     //! all OOB data read
     typedef socket_option<SOL_IOCTL, SIOCATMARK, false, true, u_long>
       socket_option_at_mark;
@@ -103,8 +118,13 @@ namespace boost
 #endif
     typedef socket_option<SOL_SOCKET, SO_DEBUG, true, true, bool>
       socket_option_debug;
+//JKG removed temporary for Linux with gcc3.2 on Mandrake 9
+//Linux certainly has SO_LINGER but not DONTLINGER -- maybe we
+//will need to define it?
+#ifdef SO_DONTLINGER
     typedef socket_option<SOL_SOCKET, SO_DONTLINGER, true, true, bool>
-      socket_option_dontlinger;
+    socket_option_dontlinger;
+#endif
     typedef socket_option<SOL_SOCKET, SO_DONTROUTE, true, true, bool>
       socket_option_dontroute;
     typedef socket_option<SOL_SOCKET, SO_ERROR, true, false, bool>

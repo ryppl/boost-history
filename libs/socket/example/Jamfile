@@ -19,6 +19,7 @@ rule socket-example ( example-name : sources + )
 	<gcc><*><find-library>unit_test_framework
 	<borland><*><find-library>libunit_test_framework
 	<bcc56><*><find-library>libunit_test_framework
+	<bcc56><*><cxxflags>-Q
 	<vc7><*><find-library>libunit_test_framework
 	<msvc><*><find-library>libunit_test_framework
 	  <runtime-link>static

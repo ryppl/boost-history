@@ -199,7 +199,7 @@ namespace boost
       {
         boost::function_requires< AddressConcept<Addr> >();
 
-        int len=address.size();
+        size_type len=address.size();
         socket_type new_socket
           = ::accept(socket_, address.socket_address(), &len);
         if (new_socket==invalid_socket)
@@ -210,7 +210,7 @@ namespace boost
       }
 
       //! receive data
-      int recv(void* data, int len)
+      int recv(void* data, size_type len)
       {
         int flags = 0;
         int ret=::recv(socket_, (char*)data, len,flags);
@@ -219,7 +219,7 @@ namespace boost
 
       //! send data
       /** Returns the number of bytes sent */
-      int send(const void* data, int len)
+      int send(const void* data, size_type len)
       {
         int flags = 0;
         int ret=::send(socket_, (const char*)data, len, flags);

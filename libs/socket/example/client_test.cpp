@@ -20,7 +20,6 @@
 
 #include "boost/socket/connector_socket.hpp"
 #include "boost/socket/ip4.hpp"
-#include "boost/socket/ip4.hpp"
 #include "boost/socket/socketstream.hpp"
 
 #include <iostream>

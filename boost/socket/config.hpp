@@ -17,28 +17,46 @@
 #define BOOST_SOCKETS_CONFIG_HPP 1
 
 #if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
-#define USES_WINSOCK2 1
+ #include <Winsock2.h>
+ #define USES_WINSOCK2 1
+
 #elif defined(__CYGWIN__)
-#else
-#error "not ported"
-#endif
 
-#ifdef USES_WINSOCK2
-#include <Winsock2.h>
-typedef SOCKET socket_type;
-typedef int size_type;
-enum { socket_error = SOCKET_ERROR,
-       invalid_socket = INVALID_SOCKET
-};
 #else
 
-typedef int socket_type;
-typedef int size_type;
-enum {
-  socket_error = -1,
-  invalid_socket = -1
-};
-
 #endif
+
+namespace boost
+{
+  namespace socket
+  {
+
+#if defined(USES_WINSOCK2)
+ typedef SOCKET socket_type;
+ typedef int size_type;
+ enum { socket_error = SOCKET_ERROR,
+        invalid_socket = INVALID_SOCKET
+      };
+
+#elif defined(__CYGWIN__)
+ typedef int socket_type;
+ typedef int size_type;
+ enum {
+   socket_error = -1,
+   invalid_socket = -1
+ };
+
+#else
+ typedef int socket_type;
+ typedef socklen_t size_type;
+ enum {
+   socket_error = -1,
+   invalid_socket = -1
+ };
+#endif
+
+
+  } //namespace
+} //namespace
 
 #endif
