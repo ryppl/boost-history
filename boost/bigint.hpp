@@ -97,7 +97,12 @@ class bigint : boost::operators<bigint> {
       // read in ASCII digits till it stops.
       while(is.get(c) && isdigit(c))
 	str.push_back(c);
-      is.putback(c);
+      if(is.fail())
+        // clear error state
+        is.clear();
+      else
+        // put back the last character retrieved
+        is.putback(c);
       *this = bigint(str);
       return is;
     }
