@@ -9,8 +9,6 @@
 #include <fstream>
 #include <algorithm>
 
-#ifdef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
-
 template< typename Container, typename T >
 BOOST_DEDUCED_TYPENAME boost::container_traits<Container>::iterator
 find( Container& c,  T value )
@@ -19,28 +17,13 @@ find( Container& c,  T value )
 }
 
 template< typename Container, typename T >
-BOOST_DEDUCE_TYPENAME boost::container_traits<Container>::const_iterator
+BOOST_DEDUCED_TYPENAME boost::container_traits<Container>::const_iterator
 find( const Container& c, T value )
 {
     return std::find( boost::begin( c ), boost::end( c ), value );
 }
 
-#else
-
-//
-// On a conforming compiler it is much easier...
-//
-template< typename Container, typename T >
-BOOST_DEDUCED_TYPENAME boost::container_traits<Container>::result_iterator
-find( Container& c, T value )
-{
-    return std::find( boost::begin( c ), boost::end( c ), value );
-}
-
-#endif
-
 using namespace boost;
-using boost::unit_test_framework::test_suite;
 
 template< typename charT >
 inline void check_char()
