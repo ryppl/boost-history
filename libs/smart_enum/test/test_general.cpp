@@ -84,7 +84,7 @@ class smart_enum
         value -= 1;
         return tmp;
         }
-
+#if 0
     friend bool operator== (self_type& lhs, self_type& rhs)
         {
         return (lhs.m_value == rhs.m_value);
@@ -93,7 +93,7 @@ class smart_enum
         {
         return (lhs.m_value != rhs.m_value);
         }
-
+#endif
   private:
     enum_type m_value;
     };
