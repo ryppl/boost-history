@@ -36,6 +36,10 @@ namespace string_util_impl {
 	template< typename CharT >
 	    struct isspaceF : public std::binary_function< CharT, std::locale, bool > 
 	{
+        typedef typename std::binary_function< CharT, std::locale, CharT >::result_type result_type;
+        typedef typename std::binary_function< CharT, std::locale, CharT >::first_argument_type first_argument_type;
+        typedef typename std::binary_function< CharT, std::locale, CharT >::second_argument_type second_argument_type;
+
 		result_type operator ()( first_argument_type Ch, const second_argument_type& Loc ) const
 	    {
 			return isspace_impl( Ch, Loc );
