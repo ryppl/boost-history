@@ -117,7 +117,7 @@ namespace boost
 			typedef T                                  result_type;
 			typedef T                                  const_result_type;
 		};
-		
+
 		template< typename T, size_t sz >
 		struct container_algo_make_tag< T[sz] >
 		{
@@ -204,7 +204,7 @@ namespace boost
 
 		template< typename T, size_t sz >
 		inline typename
-		container_algo_make_tag<T[sz]>::result_type	
+		container_algo_make_tag<T[sz]>::result_type 
 		begin( const T t[sz] )
 		{
 			return begin( t );
@@ -212,7 +212,7 @@ namespace boost
 
 		template< typename T, size_t sz >
 		inline typename
-		container_algo_make_tag<T[sz]>::result_type	
+		container_algo_make_tag<T[sz]>::result_type 
 		end( T t[sz] )
 		{
 			return end( t );
@@ -220,7 +220,7 @@ namespace boost
 
 		template< typename T, size_t sz >
 		inline typename
-		container_algo_make_tag<T[sz]>::result_type	
+		container_algo_make_tag<T[sz]>::result_type 
 		end( const T t[sz] )
 		{
 			return end( t );
@@ -233,7 +233,7 @@ namespace boost
 		{
 			return size( t );
 		}
-		
+
 	} // namespace detail
 
 	template <typename T>
@@ -352,56 +352,100 @@ namespace boost
 #define BOOST_FWD_ALGO21( A, X )  return std::A( begin( c1 ), end( c1 ),    \
                                                  begin( c2 ), end( c2 ), X );
 
-#define BOOST_FWD_ALGO_FUN( A, F ) /*CHECK_FUN*/ BOOST_FWD_ALGO1( A, F )
-#define BOOST_FWD_ALGO_PRED( A, P ) /*CHECK_PRED*/ BOOST_FWD_ALGO1( A, P ) 
-#define BOOST_FWD_ALGO_BPRED( A, P ) /*CHECK_BPRED*/ BOOST_FWD_ALGO1( A, P )
-#define BOOST_FWD_ALGO2_BPRED( A, P ) /*CHECK_BPRED*/ BOOST_FWD_ALGO21( A, P )
+	/**
+	 * naming convention: fun, pred, value
+	 * */
+#define BOOST_FWD_ALGO_FUN( A ) /*CHECK_FUN*/      BOOST_FWD_ALGO1( A, fun )
+#define BOOST_FWD_ALGO_EQ( A ) /*CHECL_EQ*/        BOOST_FWD_ALGO1( A, value )
+#define BOOST_FWD_ALGO_PRED( A ) /*CHECK_PRED*/       BOOST_FWD_ALGO1( A, pred ) 
+#define BOOST_FWD_ALGO_BPRED( A ) /*CHECK_BPRED*/     BOOST_FWD_ALGO1( A, pred )
+#define BOOST_FWD_ALGO2_BPRED( A ) /*CHECK_BPRED*/ BOOST_FWD_ALGO21( A, pred ) )
+#define BOOST_ALGO_START1( A, R, C, Arg1 )     R A( C c, Arg1 arg1 )                                                            
+	#define XXXXXXXX return std::A( begin( c ), end( c ), arg1 );         
+
+	#define CHECK_UNARY_FUNCTION( Fun, Container )               
+	#define CHECK_BINARY_PREDICATE( Pred, Container1, Container2 )
+	#define CHECK_EQAULITY_COMPARABLE( T )
+
+	///////////////////////////////////////////////////////////////////////////
+	// Return type deduction
+	///////////////////////////////////////////////////////////////////////////
+
+	template< typename T >
+	struct mutable_return
+	{
+		typedef typename T::iterator  iterator;
+	};
+
+
+
+	template< typename T, size_t sz >
+	struct mutable_return< T[sz] >
+	{
+		typedef typename array_traits<T[sz]>::iterator  iterator;
+
+	};
+
+
+
+	template< typename T >
+	struct const_return
+	{
+		typedef typename T::const_iterator  iterator;
+	};
+
+
+
+	template< typename T, size_t sz >
+	struct const_return< T[sz] >
+	{
+		typedef const typename array_traits<const T[sz]>::iterator  iterator;
+	};
 
 	///////////////////////////////////////////////////////////////////////////
 	// Nonmodifying Sequence Operations
 	///////////////////////////////////////////////////////////////////////////
-	// POSSIBLE problem: const iterator versions?
-	//  #define BOOST_ALGO( A, C, X )
-
-	#define CHECK_UNARY_FUNCTION( Fun, Container )               
-	#define CHECK_BINARY_PREDICATE( Pred, Container1, Container2 )
 
 	template< typename Container, typename Unary_function >
 	inline Unary_function 
-	for_each( Container& c, Unary_function f )
+	for_each( const Container& c, Unary_function fun )
 	{
-		BOOST_FWD_ALGO_FUN( for_each, f );
-		//return std::for_each( begin( c ), end( c ), f );
+		BOOST_FWD_ALGO_FUN( for_each );
 	}
-
-	#define BOOST_ALGO_START1( A, R, C, Arg1 )     R A( C c, Arg1 arg1 )                                                            
-	#define XXXXXXXX return std::A( begin( c ), end( c ), arg1 );         
 
 
 
 	template< typename Container, typename T >
-	typename Container::iterator 
-	find( const Container& c, const T& value )
+	typename mutable_return<Container>::iterator 
+	find( Container& c, const T& value )
 	{
-		return std::find( begin( c ), end( c ), value );
+		BOOST_FWD_ALGO_EQ( find );
 	}
 
-	// map/set? Can't they be tagged --> associate container tag?
-	/*    template<class T>
-		typename std::set<T>::const_iterator 
-		find( const std::set<T> &the_set, 
-			  const typename std::set<T>::value_type &value);
-		/*
-			template<class T1, class T2>
-			typename std::map<T1, T2>::iterator 
-			find(std::map<T1, T2> &the_map, 
-				 const typename std::map<T1, T2>::key_type &value);
-		*/
-
-	// non-const version?
+	template< typename Container, typename T >
+	typename const_return<Container>::iterator 
+	find( const Container& c, const T& value )
+	{
+		BOOST_FWD_ALGO_EQ( find );
+	}
+	
+	
+	
 	template< typename Container, typename Predicate >
-	typename Container::iterator 
-	find_if( const Container& c, Predicate pred );
+	typename mutable_return<Container>::iterator 
+	find_if( Container& c, Predicate pred )
+	{
+		BOOST_FWD_ALGO_PRED( find_if );
+	}
+	
+	template< typename Container, typename Predicate >
+	typename const_return<Container>::iterator 
+	find_if( const Container& c, Predicate pred )
+	{
+		BOOST_FWD_ALGO_PRED( find_if );
+	}	
+	
+	
 
 	template< typename Container >
 	typename Container::iterator 

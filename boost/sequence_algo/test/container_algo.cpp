@@ -89,8 +89,10 @@ namespace
 		int                 a[] = { 1, 2, 4, 2, 6, 7, 9, 3, 2, 5, 5, 3, 3 }; \
 		const int           ca[] = { 1, 2, 3, 5, 7, 9, 11 };                 \
 		vector<int>         v( a, a + sizeof( a ) / sizeof( a[0] ) );        \
-		const vector<int>   cv( v );
-
+		const vector<int>   cv( v );                                         \
+		typedef vector<int>::iterator        iterator;                       \
+		typedef vector<int>::const_iterator  const_iterator;                 \
+		iterator iter; const_iterator citer;
 
 	int    unary_function( int i );
 	bool   predicate( int i );
@@ -135,7 +137,10 @@ namespace
 	void test_find()
 	{
 		TEST_DATA;
-//		find( a
+		find( a, 5 );
+		find( ca, 5 );
+		iter = find( v, 3 );
+		citer = find( cv, 3 );
 	}
 	
 	void test_find_if()
