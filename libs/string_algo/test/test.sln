@@ -1,18 +1,86 @@
 Microsoft Visual Studio Solution File, Format Version 7.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_conv", "test_conv.vcproj", "{AABCAAB0-BFE2-4330-B33C-CE58B27043D7}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_find", "test_find.vcproj", "{B0804250-CBAB-4A14-9722-222D1186510C}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_predicate", "test_predicate.vcproj", "{497A0148-45ED-4A74-A2B8-11BB90A797CB}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_regex", "test_regex.vcproj", "{267816EF-73E9-44B0-989F-CFFD4B11EE78}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_replace", "test_replace.vcproj", "{ABB995F8-C485-4F0F-9D21-CDDF78DAC26D}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_trim", "test_trim.vcproj", "{1852F5DC-6B66-478D-ACC3-53374390BD73}"
+EndProject
 Global
 	GlobalSection(SourceCodeControl) = preSolution
-		SccNumberOfProjects = 1
+		SccNumberOfProjects = 7
 		SccProjectName0 = string_algo/libs/string_algo/test
 		SccLocalPath0 = .
 		SccProvider0 = MSSCCI:Jalindi\u0020Igloo
 		CanCheckoutShared = true
 		SolutionUniqueID = {5E7D4279-421E-4892-BDC4-FBD5F8E0CEA5}
+		SccProjectUniqueName1 = test_conv.vcproj
+		SccProjectName1 = string_algo
+		SccLocalPath1 = ..\\..\\..
+		CanCheckoutShared = true
+		SccProjectFilePathRelativizedFromConnection1 = libs\\string_algo\\test\\
+		SccProjectUniqueName2 = test_find.vcproj
+		SccProjectName2 = string_algo
+		SccLocalPath2 = ..\\..\\..
+		CanCheckoutShared = true
+		SccProjectFilePathRelativizedFromConnection2 = libs\\string_algo\\test\\
+		SccProjectUniqueName3 = test_predicate.vcproj
+		SccProjectName3 = string_algo
+		SccLocalPath3 = ..\\..\\..
+		CanCheckoutShared = true
+		SccProjectFilePathRelativizedFromConnection3 = libs\\string_algo\\test\\
+		SccProjectUniqueName4 = test_regex.vcproj
+		SccProjectName4 = string_algo
+		SccLocalPath4 = ..\\..\\..
+		CanCheckoutShared = true
+		SccProjectFilePathRelativizedFromConnection4 = libs\\string_algo\\test\\
+		SccProjectUniqueName5 = test_replace.vcproj
+		SccProjectName5 = string_algo
+		SccLocalPath5 = ..\\..\\..
+		CanCheckoutShared = true
+		SccProjectFilePathRelativizedFromConnection5 = libs\\string_algo\\test\\
+		SccProjectUniqueName6 = test_trim.vcproj
+		SccProjectName6 = string_algo
+		SccLocalPath6 = ..\\..\\..
+		CanCheckoutShared = true
+		SccProjectFilePathRelativizedFromConnection6 = libs\\string_algo\\test\\
 	EndGlobalSection
 	GlobalSection(SolutionConfiguration) = preSolution
+		ConfigName.0 = Debug
+		ConfigName.1 = Release
 	EndGlobalSection
 	GlobalSection(ProjectDependencies) = postSolution
 	EndGlobalSection
 	GlobalSection(ProjectConfiguration) = postSolution
+		{AABCAAB0-BFE2-4330-B33C-CE58B27043D7}.Debug.ActiveCfg = Debug|Win32
+		{AABCAAB0-BFE2-4330-B33C-CE58B27043D7}.Debug.Build.0 = Debug|Win32
+		{AABCAAB0-BFE2-4330-B33C-CE58B27043D7}.Release.ActiveCfg = Release|Win32
+		{AABCAAB0-BFE2-4330-B33C-CE58B27043D7}.Release.Build.0 = Release|Win32
+		{B0804250-CBAB-4A14-9722-222D1186510C}.Debug.ActiveCfg = Debug|Win32
+		{B0804250-CBAB-4A14-9722-222D1186510C}.Debug.Build.0 = Debug|Win32
+		{B0804250-CBAB-4A14-9722-222D1186510C}.Release.ActiveCfg = Release|Win32
+		{B0804250-CBAB-4A14-9722-222D1186510C}.Release.Build.0 = Release|Win32
+		{497A0148-45ED-4A74-A2B8-11BB90A797CB}.Debug.ActiveCfg = Debug|Win32
+		{497A0148-45ED-4A74-A2B8-11BB90A797CB}.Debug.Build.0 = Debug|Win32
+		{497A0148-45ED-4A74-A2B8-11BB90A797CB}.Release.ActiveCfg = Release|Win32
+		{497A0148-45ED-4A74-A2B8-11BB90A797CB}.Release.Build.0 = Release|Win32
+		{267816EF-73E9-44B0-989F-CFFD4B11EE78}.Debug.ActiveCfg = Debug|Win32
+		{267816EF-73E9-44B0-989F-CFFD4B11EE78}.Debug.Build.0 = Debug|Win32
+		{267816EF-73E9-44B0-989F-CFFD4B11EE78}.Release.ActiveCfg = Release|Win32
+		{267816EF-73E9-44B0-989F-CFFD4B11EE78}.Release.Build.0 = Release|Win32
+		{ABB995F8-C485-4F0F-9D21-CDDF78DAC26D}.Debug.ActiveCfg = Debug|Win32
+		{ABB995F8-C485-4F0F-9D21-CDDF78DAC26D}.Debug.Build.0 = Debug|Win32
+		{ABB995F8-C485-4F0F-9D21-CDDF78DAC26D}.Release.ActiveCfg = Release|Win32
+		{ABB995F8-C485-4F0F-9D21-CDDF78DAC26D}.Release.Build.0 = Release|Win32
+		{1852F5DC-6B66-478D-ACC3-53374390BD73}.Debug.ActiveCfg = Debug|Win32
+		{1852F5DC-6B66-478D-ACC3-53374390BD73}.Debug.Build.0 = Debug|Win32
+		{1852F5DC-6B66-478D-ACC3-53374390BD73}.Release.ActiveCfg = Release|Win32
+		{1852F5DC-6B66-478D-ACC3-53374390BD73}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

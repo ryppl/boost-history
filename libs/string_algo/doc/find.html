@@ -139,7 +139,7 @@
         <b>typename</b> ForwardIterator1T, 
         <b>typename</b> CharT, 
         <b>typename</b> RegexTraitsT, <b>typename</b> RegexAllocatorT&gt;
-    <b>inline</b> string_algo::detail::regex_search_result&lt;ForwardIterator1T&gt;
+    <b>inline</b> iterator_range&lt;ForwardIterator1T&gt;
     <a href="#find_regex">find_regex</a>( 
         ForwardIterator1T Begin, 
         ForwardIterator1T End, 
@@ -173,8 +173,7 @@
         <b>typename</b> InputT, 
         <b>typename</b> CharT, 
         <b>typename</b> RegexTraitsT, <b>typename</b> RegexAllocatorT&gt;
-    <b>inline</b> string_algo::detail::
-        regex_search_result&lt;<b>typename</b> string_algo::input_policy&lt;InputT&gt;::iterator_type&gt;
+    <b>inline</b> iterator_range&lt;<b>typename</b> string_algo::input_policy&lt;InputT&gt;::iterator_type&gt;
     <a href="#find_regex">find_regex</a>( 
         InputT&amp; Input, 
         <b>const</b> reg_expression&lt;CharT, RegexTraitsT, RegexAllocatorT&gt;&amp; Rx,
@@ -254,16 +253,6 @@
           documentation</a> for deails. algorithm.</td>
       </tr>
     </table>
-    <h4>Remark on <code>find_regex</code></h4>
-    <p>
-      <code>find_regex</code> returns <code>regex_search_result</code> instead
-      of&nbsp; <code>iterator_range</code>. <code>regex_search_result</code> is
-      convertible to the<code> iterator_range</code> and it has similar
-      interface,&nbsp; but in addition it contains a <code>match_results</code>
-      from <code>regex_search</code> (defined in Regex++) algorithm. It is
-      defined in <a href="../../../boost/string_algo/detail/find_regex.hpp">&lt;boost/string_algo/detail/find_regex.hpp&gt;</a>
-      header.
-    </p>
     <h3><a name="ua_examples">Examples</a></h3>
     <p>
       Following example shows basic usage of predicate algorithms. More examples

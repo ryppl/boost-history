@@ -25,11 +25,16 @@ namespace boost {
             // regex search result
             template<typename IteratorT>
             struct regex_search_result : 
-                public iterator_range_base<IteratorT>
+                public iterator_range<IteratorT>
             {
-                typedef IteratorT iterator_type;
-                typedef match_results<iterator_type> match_results_type;
-                typedef iterator_range_base<iterator_type> base_type;
+                typedef regex_search_result<IteratorT> type;
+				typedef iterator_range<IteratorT> base_type;
+				typedef typename base_type::value_type value_type;
+				typedef typename base_type::reference reference;
+				typedef typename base_type::difference_type difference_type;
+				typedef typename base_type::const_iterator const_iterator;
+				typedef typename base_type::iterator iterator;
+				typedef match_results<iterator> match_results_type;
 
                 // Contruction
 

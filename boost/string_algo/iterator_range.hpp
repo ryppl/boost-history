@@ -13,7 +13,6 @@
 #include <utility>
 #include <iterator>
 #include <boost/detail/iterator.hpp>
-#include <boost/string_algo/detail/iterator_range_base.hpp>
 
 namespace boost {
 
@@ -25,47 +24,87 @@ namespace boost {
         string algorithms.
     */
     template<typename IteratorT> 
-    class iterator_range : 
-        public string_algo::detail::iterator_range_base<IteratorT>
+    class iterator_range
     {
     public:
         typedef iterator_range<IteratorT> type;
-        typedef string_algo::detail::iterator_range_base<IteratorT> base_type;
-        typedef typename base_type::value_type value_type;
-        typedef typename base_type::reference reference;
-        typedef typename base_type::difference_type difference_type;
-        typedef typename base_type::const_iterator const_iterator;
-        typedef typename base_type::iterator iterator;
+        typedef typename boost::detail::
+            iterator_traits<IteratorT>::value_type value_type;
+        typedef typename boost::detail::
+            iterator_traits<IteratorT>::reference reference;
+        typedef typename boost::detail::
+            iterator_traits<IteratorT>::difference_type difference_type;
+        typedef IteratorT const_iterator;
+        typedef IteratorT iterator;
 
         // Constructors
-        iterator_range() : base_type() {}
+        iterator_range() {}
         
         iterator_range( iterator Begin, iterator End ) : 
-            base_type( Begin, End ) {}
+            m_Begin(Begin), m_End(End) {}
 
         iterator_range( const std::pair<IteratorT,IteratorT>& Range ) : 
-            base_type( Range.first, Range.second ) {}
+            m_Begin(Range.first), m_End(Range.second) {}
 
         iterator_range( const iterator_range& Other ) :
-            base_type( Other.begin(), Other.end() ) {}
+            m_Begin(Other.begin()), m_End(Other.end()) {}
 
         template< typename OtherItT >
-        iterator_range( const string_algo::detail::iterator_range_base<OtherItT>& Other ) :
-            base_type( Other.begin(), Other.end() ) {}
+        iterator_range( const iterator_range<OtherItT>& Other ) :
+            m_Begin(Other.begin()), m_End(Other.end()) {}
 
         // Assignment
         iterator_range& operator=( const iterator_range& Other )
         {
-            base_type::operator=( Other );
+            m_Begin=Other.begin(); m_End=Other.end();
             return *this;
         }
 
         template< typename OtherItT >
-        iterator_range& operator=( const string_algo::detail::iterator_range_base<OtherItT>& Other )
+        iterator_range& operator=( const iterator_range<OtherItT>& Other )
         {
-            base_type::operator=( Other );
+            m_Begin=Other.begin(); m_End=Other.end();
             return *this;
         }
+
+		// Comparison
+        template< typename OtherItT > 
+        bool operator==( const iterator_range<OtherItT>& Other )
+        {
+            return m_Begin==Other.begin() && m_End==Other.end();
+        }
+
+        template< typename OtherItT > 
+        bool operator!=( const iterator_range<OtherItT>& Other )
+        {
+            return m_Begin!=Other.begin() || m_End!=Other.end();
+        }
+
+        // Operations
+        IteratorT begin() const 
+        { 
+            return m_Begin; 
+        }
+
+        IteratorT end() const 
+        { 
+            return m_End; 
+        } 
+
+        bool empty() const 
+        { 
+            return m_Begin==m_End; 
+        }
+        
+        difference_type size() const
+        { 
+            return std::distance( m_Begin, m_End ); 
+        }
+
+    private:
+        // begin and end iterators
+        IteratorT m_Begin;
+        IteratorT m_End;
     };
 
     namespace string_algo {

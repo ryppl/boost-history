@@ -28,7 +28,7 @@ namespace boost {
         typename ForwardIteratorT, 
         typename CharT, 
         typename RegexTraitsT, typename RegexAllocatorT>
-    inline string_algo::detail::regex_search_result<ForwardIteratorT>
+    inline iterator_range<ForwardIteratorT>
     find_regex( 
         ForwardIteratorT Begin, 
         ForwardIteratorT End, 
@@ -49,9 +49,7 @@ namespace boost {
         typename InputT, 
         typename CharT, 
         typename RegexTraitsT, typename RegexAllocatorT>
-    inline string_algo::detail::
-        regex_search_result< 
-            typename string_algo::input_policy<InputT>::iterator_type >
+    inline iterator_range< typename string_algo::input_policy<InputT>::iterator_type >
     find_regex( 
         InputT& Input, 
         const reg_expression<CharT, RegexTraitsT, RegexAllocatorT>& Rx,
