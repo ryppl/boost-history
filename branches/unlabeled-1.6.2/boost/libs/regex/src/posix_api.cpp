@@ -15,44 +15,34 @@
  
  /*
   *   LOCATION:    see http://www.boost.org for most recent version.
-  *   FILE:        wide_posix_api.cpp
+  *   FILE:        posix_api.cpp
   *   VERSION:     3.03
-  *   DESCRIPTION: Implements the wide character POSIX API wrappers.
+  *   DESCRIPTION: Implements the Posix API wrappers.
   */
 
-#include <boost/re_detail/regex_config.hpp>
-
-#ifndef BOOST_RE_NO_WCSTRING
-
-#include <boost/regex.hpp>
-
-#ifndef BOOST_RE_NO_WCHAR_H
-#include <cwchar>
-#endif
-#include <cstring>
 #include <cstdio>
+#include <boost/regex.hpp>
 
 namespace boost{
 
-namespace {
+namespace{
 
-unsigned int wmagic_value = 28631;
+unsigned int magic_value = 25631;
 
-const wchar_t* wnames[] = {L"REG_NOERROR", L"REG_NOMATCH", L"REG_BADPAT", L"REG_ECOLLATE",
-                        L"REG_ECTYPE", L"REG_EESCAPE", L"REG_ESUBREG", L"REG_EBRACK",
-                        L"REG_EPAREN", L"REG_EBRACE", L"REG_BADBR", L"REG_ERANGE",
-                        L"REG_ESPACE", L"REG_BADRPT", L"REG_EMPTY", L"REG_E_UNKNOWN"};
+const char* names[] = {"REG_NOERROR", "REG_NOMATCH", "REG_BADPAT", "REG_ECOLLATE",
+                        "REG_ECTYPE", "REG_EESCAPE", "REG_ESUBREG", "REG_EBRACK",
+                        "REG_EPAREN", "REG_EBRACE", "REG_BADBR", "REG_ERANGE",
+                        "REG_ESPACE", "REG_BADRPT", "REG_EMPTY", "REG_E_UNKNOWN"};
+} // namespace
 
-}
-
-BOOST_RE_IX_DECL int BOOST_RE_CCALL regcompW(regex_tW* expression, const wchar_t* ptr, int f)
+BOOST_RE_IX_DECL int BOOST_RE_CCALL regcompA(regex_tA* expression, const char* ptr, int f)
 {
    BOOST_RE_GUARD_STACK
-   if(expression->re_magic != wmagic_value)
+   if(expression->re_magic != magic_value)
    {
       expression->guts = 0;
       try{
-      expression->guts = new wregex();
+      expression->guts = new regex();
       } catch(...)
       {
          return REG_ESPACE;
@@ -61,8 +51,8 @@ BOOST_RE_IX_DECL int BOOST_RE_CCALL regcompW(regex_tW* expression, const wchar_t
    // set default flags:
    jm_uintfast32_t flags = (f & REG_EXTENDED) ? regbase::extended : regbase::basic;
    expression->eflags = (f & REG_NEWLINE) ? match_not_dot_newline : 0;
-
    // and translate those that are actually set:
+
    if(f & REG_NOCOLLATE)
       flags |= regbase::nocollate;
 
@@ -78,29 +68,29 @@ BOOST_RE_IX_DECL int BOOST_RE_CCALL regcompW(regex_tW* expression, const wchar_t
    if(f & REG_NEWLINE_ALT)
       flags |= regbase::newline_alt;
 
-   const wchar_t* p2;
+   const char* p2;
    if(f & REG_PEND)
       p2 = expression->re_endp;
-   else p2 = ptr + std::wcslen(ptr);
+   else p2 = ptr + std::strlen(ptr);
 
    int result;
 
    try{
-      expression->re_magic = wmagic_value;
-      ((wregex*)(expression->guts))->set_expression(ptr, p2, flags);
-      expression->re_nsub = ((wregex*)(expression->guts))->mark_count() - 1;
-      result = ((wregex*)(expression->guts))->error_code();
+      expression->re_magic = magic_value;
+      ((regex*)(expression->guts))->set_expression(ptr, p2, flags);
+      expression->re_nsub = ((regex*)(expression->guts))->mark_count() - 1;
+      result = ((regex*)(expression->guts))->error_code();
    } catch(...)
    {
       result = REG_E_UNKNOWN;
    }
    if(result)
-      regfreeW(expression);
+      regfreeA(expression);
    return result;
 
 }
 
-BOOST_RE_IX_DECL unsigned int BOOST_RE_CCALL regerrorW(int code, const regex_tW* e, wchar_t* buf, unsigned int buf_size)
+BOOST_RE_IX_DECL unsigned int BOOST_RE_CCALL regerrorA(int code, const regex_tA* e, char* buf, unsigned int buf_size)
 {
    BOOST_RE_GUARD_STACK
    unsigned int result = 0;
@@ -109,47 +99,47 @@ BOOST_RE_IX_DECL unsigned int BOOST_RE_CCALL regerrorW(int code, const regex_tW*
       code &= ~REG_ITOA;
       if(code <= REG_E_UNKNOWN)
       {
-         result = std::wcslen(wnames[code]) + 1;
+         result = std::strlen(names[code]) + 1;
          if(buf_size >= result)
-            std::wcscpy(buf, wnames[code]);
+            std::strcpy(buf, names[code]);
          return result;
       }
       return result;
    }
-#if !defined(BOOST_RE_NO_SWPRINTF)
    if(code == REG_ATOI)
    {
-      wchar_t localbuf[5];
+      char localbuf[5];
       if(e == 0)
          return 0;
       for(int i = 0; i <= REG_E_UNKNOWN; ++i)
       {
-         if(std::wcscmp(e->re_endp, wnames[i]) == 0)
+         if(std::strcmp(e->re_endp, names[i]) == 0)
          {
-            std::swprintf(localbuf, 5, L"%d", i);
-            if(std::wcslen(localbuf) < buf_size)
-               std::wcscpy(buf, localbuf);
-            return std::wcslen(localbuf) + 1;
+            std::sprintf(localbuf, "%d", i);
+            if(std::strlen(localbuf) < buf_size)
+               std::strcpy(buf, localbuf);
+            return std::strlen(localbuf) + 1;
          }
       }
-      std::swprintf(localbuf, 5, L"%d", 0);
-      if(std::wcslen(localbuf) < buf_size)
-         std::wcscpy(buf, localbuf);
-      return std::wcslen(localbuf) + 1;
+      std::sprintf(localbuf, "%d", 0);
+      if(std::strlen(localbuf) < buf_size)
+         std::strcpy(buf, localbuf);
+      return std::strlen(localbuf) + 1;
    }
-#endif
    if(code <= REG_E_UNKNOWN)
    {
-      regex_traits<wchar_t> rt;
-      const regex_traits<wchar_t>* pt = &rt;
-      if(e && (e->re_magic == wmagic_value))
-         pt = &((wregex*)(e->guts))->get_traits();
-      (void)pt; // warning suppression
-      std::string p = pt->error_string(code);
-      unsigned int len = pt->strwiden((wchar_t*)0, 0, p.c_str());
+      std::string p;
+      if((e) && (e->re_magic == magic_value))
+         p = ((regex*)(e->guts))->get_traits().error_string(code);
+      else
+      {
+         boost::regex_traits<char> t;
+         p = t.error_string(code);
+      }
+      unsigned int len = p.size();
       if(len < buf_size)
       {
-         pt->strwiden(buf, buf_size, p.c_str());
+         std::strcpy(buf, p.c_str());
       }
       return len + 1;
    }
@@ -158,14 +148,14 @@ BOOST_RE_IX_DECL unsigned int BOOST_RE_CCALL regerrorW(int code, const regex_tW*
    return 0;
 }
 
-BOOST_RE_IX_DECL int BOOST_RE_CCALL regexecW(const regex_tW* expression, const wchar_t* buf, unsigned int n, regmatch_t* array, int eflags)
+BOOST_RE_IX_DECL int BOOST_RE_CCALL regexecA(const regex_tA* expression, const char* buf, unsigned int n, regmatch_t* array, int eflags)
 {
    BOOST_RE_GUARD_STACK
    bool result = false;
    jm_uintfast32_t flags = match_default | expression->eflags;
-   const wchar_t* end;
-   const wchar_t* start;
-   wcmatch m;
+   const char* end;
+   const char* start;
+   cmatch m;
    
    if(eflags & REG_NOTBOL)
       flags |= match_not_bol;
@@ -179,13 +169,13 @@ BOOST_RE_IX_DECL int BOOST_RE_CCALL regexecW(const regex_tW* expression, const w
    else
    {
       start = buf;
-      end = buf + std::wcslen(buf);
+      end = buf + std::strlen(buf);
    }
 
    try{
-   if(expression->re_magic == wmagic_value)
+   if(expression->re_magic == magic_value)
    {
-      result = regex_search(start, end, m, *(wregex*)(expression->guts), flags);
+      result = regex_search(start, end, m, *(regex*)(expression->guts), flags);
    }
    else
       return result;
@@ -214,18 +204,16 @@ BOOST_RE_IX_DECL int BOOST_RE_CCALL regexecW(const regex_tW* expression, const w
    return REG_NOMATCH;
 }
 
-BOOST_RE_IX_DECL void BOOST_RE_CCALL regfreeW(regex_tW* expression)
+BOOST_RE_IX_DECL void BOOST_RE_CCALL regfreeA(regex_tA* expression)
 {
    BOOST_RE_GUARD_STACK
-   if(expression->re_magic == wmagic_value)
+   if(expression->re_magic == magic_value)
    {
-      delete (wregex*)(expression->guts);
+      delete (regex*)(expression->guts);
    }
    expression->re_magic = 0;
 }
 
-} // namespace boost;
-
-#endif
+} // namespace boost
 
 
