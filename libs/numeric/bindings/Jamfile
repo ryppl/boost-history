@@ -1,4 +1,4 @@
 subproject libs/numeric/bindings ;
-subinclude list/numeric/bindings/amos ;
-subinclude list/numeric/bindings/blas ;
-subinclude list/numeric/bindings/lapack ;
+subinclude libs/numeric/bindings/amos ;
+subinclude libs/numeric/bindings/blas ;
+subinclude libs/numeric/bindings/lapack ;
