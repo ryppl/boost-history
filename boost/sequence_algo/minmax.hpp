@@ -79,15 +79,15 @@ namespace boost {
       if (*first < *second) {
         if (*first < *min_result) {
           min_result = first;
-	  potential_min_result = last;
-	}
+          potential_min_result = last;
+        }
         if (*max_result < *second)
           max_result = second;
       } else {
         if (*second < *min_result) {
           min_result = second;
-	  potential_min_result = first;
-	}
+          potential_min_result = first;
+        }
         if (*max_result < *first)
           max_result = first;
       }
@@ -130,15 +130,15 @@ namespace boost {
       if (comp(*first, *second)) {
         if (comp(*first, *min_result)) {
           min_result = first;
-	  potential_min_result = last;
-	}
+          potential_min_result = last;
+        }
         if (comp(*max_result, *second))
           max_result = second;
       } else {
         if (comp(*second, *min_result)) {
           min_result = second;
-	  potential_min_result = first;
-	}
+          potential_min_result = first;
+        }
         if (comp(*max_result, *first))
           max_result = first;
       }
@@ -434,14 +434,14 @@ namespace boost {
     while (second != last)  {
       if (*first < *second) {
         if (!(*min_result < *first))
-	  min_result = first;
+          min_result = first;
         if (*max_result < *second)
-	  max_result = second;
+          max_result = second;
       } else {
         if (!(*min_result < *second))
-	  min_result = second;
+          min_result = second;
         if (*max_result < *first)
-	  max_result = first;
+          max_result = first;
       }
       first = ++second; if (first != last) ++second;
     }
@@ -476,14 +476,14 @@ namespace boost {
     while (second != last)  {
       if (comp(*first, *second)) {
         if (!comp(*min_result, *first))
-	  min_result = first;
+          min_result = first;
         if (comp(*max_result, *second))
-	  max_result = second;
+          max_result = second;
       } else {
         if (!comp(*min_result, *second))
-	  min_result = second;
+          min_result = second;
         if (comp(*max_result, *first))
-	  max_result = first;
+          max_result = first;
       }
       first = ++second; if (first != last) ++second;
     }
