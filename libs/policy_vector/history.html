@@ -1,0 +1,1426 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="Keywords" content="array, block, carray, c_array, array wrapper, adapter, adaptor, STL, C++ Standard Library, array.hpppolicy_vector, policies, policy classes">
+   <meta name="GENERATOR" content="Mozilla/4.77 [en] (X11; U; Linux 2.2.20 i686) [Netscape]">
+   <meta name="Author" content="Herve Bronnimann">
+   <title>An STL-compliant policy vector</title>
+</head>
+<body text="#000000" bgcolor="#FFFFFF" link="#186ABF">
+&nbsp;
+<table WIDTH="100%" HEIGHT="40" >
+<tr>
+<td BGCOLOR="#DDDDDD"><b><font face="Arial,helvetica"><font color="#000000"><font size=+1>CS903
+Homework 5</font></font></font></b>
+<br><b><font face="Arial,helvetica"><font color="#000000"><font size=+1>Class
+policy_vector&lt;T, ...></font></font></font></b></td>
+</tr>
+</table>
+
+<p><font face="Arial,Helvetica"><font size=-1>[<a href="#intro">intro</a>]
+[<a href="#one_policy">one policy</a>] [<a href="#resize_policies">resizing
+policies</a>] [<a href="#other_policies">other policies</a>] [<a href="#checking_policy">checking
+policies</a>] [<a href="#iterator_policy">iterator policies</a>] [<a href="#interface">interface</a>]
+[<a href="#code">code</a>]</font></font>
+<p><font face="Arial,Helvetica"><font size=-1>Copyright (c) Herve Bronnimann,
+Polytechnic University, 2002.</font></font>
+<br>&nbsp;
+<h3>
+<a NAME="intro"></a><font face="Arial,Helvetica"><font color="#FF0000">Introduction</font></font></h3>
+<font face="Arial,Helvetica"><font size=-1>For this homework, we want to
+implement a policy-based vector. As indicated in the format of the homework,
+the first question will be to design the vector class, and design the policies.
+It's a big job, so just like I wouldn't want to put a whole piece of cake
+into my mouth, but cut it up into pieces, I'll do the same here.</font></font>
+<p><font face="Arial,Helvetica"><font size=-1>Instead of giving you a single
+file representing the solution, I'll walk you into how I managed to get
+this file, by showing you the successive versions. Hopefully, it's also
+going to help you for your project as well.</font></font>
+<p><font face="Arial,Helvetica"><font size=-1>So we need to provide a bunch
+of policies. Swell! If I can't do it with ONE policy, I won't be able to
+do it. So my first goal here is to do a vector with a single policy. We'll
+see if we can do that, then add more policies, starting with resizing.</font></font>
+<h3>
+<a NAME="one_policy"></a><font face="Arial,Helvetica"><font color="#FF0000">A
+one-policy vector</font></font></h3>
+<font face="Arial,Helvetica"><font size=-1>I will shamelessly start with
+<a href="http://www.boost.org/libs/array/array.html">boost::array&lt;></a>
+class (including the nice font from the library's web page :)</font></font>
+<br><font face="Arial,Helvetica"><font size=-1>From that library's web
+page, I can see that the boost::array class implements a fixed-size array,
+except that it doesn't support allocators, and swap does not work in constant
+time (because it basically encapsulates an array, so swapping two arrays
+will simply swap all the elements). At this point, array looks like:</font></font>
+<p><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;
+template&lt;class T, std::size_t N></font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;
+class array {</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+public:</font></font></font>
+<br><font face="Courier New,Courier"><font size=-1><font color="#000099">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+T elems[N];&nbsp;&nbsp;&nbsp; </font><font color="#993300">// fixed-size
+array of elements of type T</font></font></font>
+<br><font face="Courier New,Courier"><font color="#993300"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// size(), empty(), max_size(), etc.</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;
+};</font></font></font>
+<p><font face="Arial,Helvetica"><font size=-1>This is taken from the original
+<a href="array.hpp">array.hpp</a>
+in boost.</font></font>
+<p><font face="Arial,Helvetica"><font size=-1><b>Our first policy.</b>
+Perhaps here is our first policy choice: what would change if we support
+swaps in constant time? Basically, we would provide one more level of indirection,
+and allocate the array using new (or some other allocator). What would
+change? Well, first, the array would store something else, like a pointer
+to the beginning of the storage. We have to worry about allocating and
+deallocating, but if we do it in the constructor, this ensures that there
+is always a non-empty storage. The code would look like:</font></font>
+<p><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;
+template&lt;class T, std::size_t N></font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;
+class array {</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+public:</font></font></font>
+<br><font face="Courier New,Courier"><font size=-1><font color="#000099">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+T* elems;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </font><font color="#663300">//
+fix</font><font color="#993300">ed-size array of elements of type T</font></font></font>
+<p><font face="Courier New,Courier"><font size=-1><font color="#000099">&nbsp;
+</font><font color="#993300">//
+constructors and destructor</font></font></font>
+<br><font face="Courier New,Courier"><font size=-1><font color="#000099">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+array() : elems( </font><font color="#FF0000">new</font><font color="#000099">
+T</font><font color="#FF0000">[N]</font><font color="#000099"> ) {}</font></font></font>
+<br><font face="Courier New,Courier"><font size=-1><font color="#000099">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+array(T rhs[N]) : elems( </font><font color="#FF0000">new</font><font color="#000099">
+T</font><font color="#FF0000">[N] </font><font color="#000099">) { std::copy(rhs,
+rhs+N, begin()); }</font></font></font>
+<br><font face="Courier New,Courier"><font size=-1><font color="#000099">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+~array() { </font><font color="#FF0000">delete[] </font><font color="#000099">elems;
+}</font></font></font>
+<br><font face="Courier New,Courier"><font size=-1><font color="#000099">&nbsp;
+</font><font color="#993300">//
+size(), empty(), max_size(), etc.</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;
+};</font></font></font>
+<p><font face="Arial,Helvetica"><font size=-1>The full code can be found
+in <a href="array1.hpp">array1.hpp</a>,
+and it differs from <a href="array.hpp">array.hpp</a>
+in <a href="diff1">very
+few lines</a>.</font></font>
+<p><font face="Arial,Helvetica"><font size=-1>By the way, every time we
+make change to a file, it's a good idea to test that the changes we made
+are OK with the compiler. In this case, the boost array library provides
+a short file to test array (called <a href="http://www.boost.org/libs/array/array5.cpp">array5.cpp</a>).
+We save this file into <a href="testing_array.cpp">test_array.cpp</a>
+and change the include statement to include array1.hpp instead of array.hpp.
+Please check that the test still compiles!</font></font>
+<p><font face="Arial,Helvetica"><font size=-1><b>Making policy a template
+parameter</b>. Given the small amount of changes, can we make this into
+a policy? Let's call the first version of array (array.hpp) the policy
+fixed_aggregate_array, and the second version of array (array1.hpp) the
+policy fixed_allocated_array. Also we're going to rename the array&lt;>
+class into a policy_vector&lt;> class. Both policies are examples of fixed
+sized storage policies. Since policies are decided at compile-time, the
+best way to do it in C++ is to make them template parameters of the policy_vector
+class, as is done in the textbook. (This way, the compiler can optimize
+aggressively.)</font></font>
+<p><font face="Arial,Helvetica"><font size=-1>What goes from the array
+into the policies? Essentially what differs between array.hpp and array1.hpp,
+since the rest is identical and should remain in the array (sorry, now
+we call that the policy_vector) class. So basically the declaration of
+elems and the constructors should go into the policy. Now if policy_vector
+inherits from storage_policy, all is well. We just have to add the few
+forward declarations in policy_vector which cannot be automatically part
+of the class via the inheritance. So we get a skeletton which looks like:</font></font>
+<p><font face="Courier New,Courier"><font size=-1><font color="#3333FF">&nbsp;</font><font color="#000099">&nbsp;&nbsp;&nbsp;
+template &lt;class T, std::size_t N></font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;
+class fixed_aggregate_array {</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+public:</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+typedef std::size_t&nbsp;&nbsp;&nbsp; size_type;</font></font></font>
+<br><font face="Courier New,Courier"><font size=-1><font color="#000099">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+T elems[N];&nbsp;&nbsp;&nbsp; </font><font color="#993300">// fixed-size
+policy_vector of elements of type T</font></font></font>
+<br><font face="Courier New,Courier"><font size=-1><font color="#000099">&nbsp;
+</font><font color="#993300">//
+constructors and destructor (see array.hpp)</font></font></font>
+<br><font face="Courier New,Courier"><font color="#993300"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// size(), empty(), max_size(), etc.</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;
+};</font></font></font>
+<p><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;
+template &lt;class T, std::size_t N></font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;
+class fixed_allocated_array {</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+public:</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+typedef std::size_t&nbsp;&nbsp;&nbsp; size_type;</font></font></font>
+<br><font face="Courier New,Courier"><font size=-1><font color="#000099">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+T* elems;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </font><font color="#993300">//
+fixed-size policy_vector of elements of type T</font></font></font>
+<br><font face="Courier New,Courier"><font size=-1><font color="#000099">&nbsp;
+</font><font color="#993300">//
+constructors and destructor (see array1.hpp)</font></font></font>
+<br><font face="Courier New,Courier"><font color="#993300"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// size(), empty(), max_size(), etc.</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;
+};</font></font></font>
+<p><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;
+template &lt; class T, std::size_t N,</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+template &lt;class T2,std::size_t N> class StoragePolicy ></font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;
+class policy_vector : public StoragePolicy&lt;T,N>;</font></font></font>
+<p><font face="Arial,Helvetica"><font size=-1>Oh, but also, since these
+are fixed-size policies, shouldn't we have size() and the size-related
+member functions be members of the policy as well? They are basically identical
+and could remain in the policy_vector class, but as soon as we start talking
+about different kinds of variable-size policies, we'll want to separate
+them. So might as well do it now. This leads to our first version of policy_vector&lt;T,N,StoragePolicy>.
+How do we test policies? Basically, as I said in class, we'll have to make
+the testing function a template, and pass a different policy for testing
+each time.</font></font>
+<p><font face="Arial,Helvetica"><font size=-1>The full code can be found
+in <a href="policy_vector1.hpp">policy_vector1.hpp</a>,
+and testing the code in <a href="testing_vector1.cpp">testing_vector1.cpp</a>.
+<b><font color="#FF0000">Please
+take some time now to read both files, and to understand the changes with
+the original array class! </font></b>Also, if you would like to stop reading
+here and try yourself to do resizing policies, this would be a good thing
+to do right now. If you get stuck, or once you're done, please continue
+reading to see how I propose to do it.</font></font>
+<h3>
+<a NAME="resize_policies"></a><font face="Arial,Helvetica"><font color="#FF0000">Resizing
+policies</font></font></h3>
+<font size=-1><font face="Arial,Helvetica">Success! We have made our first
+policy. That is, we now have </font><font face="Courier New,Courier">fixed_aggregate_array&lt;T,N></font><font face="Arial,Helvetica">
+and </font><font face="Courier New,Courier">fixed_allocated_array&lt;T,N></font><font face="Arial,Helvetica">.
+They are both fixed-size, however, and the </font><font face="Courier New,Courier">std::vector&lt;></font><font face="Arial,Helvetica">
+class is variable-size. So let's think about the difference between fixed
+and variable sizes. What's changing?</font></font>
+<p><font size=-1><font face="Arial,Helvetica"><b>Putting a variable size
+policy. </b>First of all, a few minutes of reflexion and staring at the
+</font><font face="Courier New,Courier">boost::array&lt;></font><font face="Arial,Helvetica">
+class, one notices that i</font><font face="Courier New,Courier">nsert()</font><font face="Arial,Helvetica">
+and </font><font face="Courier New,Courier">delete()</font><font face="Arial,Helvetica">,
+as well as </font><font face="Courier New,Courier">push_back()</font><font face="Arial,Helvetica">,
+</font><font face="Courier New,Courier">pop_back()</font><font face="Arial,Helvetica">,
+make no sense with fixed size. This is why they are not part of </font><font face="Courier New,Courier">boost::array&lt;></font><font face="Arial,Helvetica">.
+But our resizing policy will have to provide that. Also there will be some
+change with </font><font face="Courier New,Courier">size()</font><font face="Arial,Helvetica">
+and </font><font face="Courier New,Courier">max_size()</font><font face="Arial,Helvetica">
+which are static functions for fixed-sized objects. Not so any more for
+resizing policies.</font></font>
+<p><font size=-1><font face="Arial,Helvetica">There will be changes in
+the declaration of the class too. For now, N is a template parameter of
+policy_vector, but this also makes no sense with variable sizes, since
+N is no longer fixed at compile time, so it's not a template parameter
+any more. So N should be a template parameter for the fixed storage policies.
+But then the policy becomes a class, instead of a class template (currently,
+</font><font face="Courier New,Courier">fixed_allocated_array</font><font face="Arial,Helvetica">
+is a class template, but when we want to have </font><font face="Courier New,Courier">fixed_allocated_array&lt;N></font><font face="Arial,Helvetica">
+it can no longer be a template).</font></font>
+<p><font size=-1><font face="Arial,Helvetica">These changes are important
+and they force us to do a little bit of C++ gymnastics! For instance, we
+used to pass T (the type of the elements) to the StoragePolicy when declaring
+the policy_vector: simply inherit from </font><font face="Courier New,Courier">StoragePolicy&lt;T,N></font><font face="Arial,Helvetica">.
+But now since we can no longer pass template arguments to the policy, we
+will have to explicitly pass it to the storage policy when declaring the
+policy_vector. So the user will have to declare something like:</font></font>
+<pre><font face="Courier New,Courier"><font color="#000099">&nbsp;&nbsp;&nbsp; typedef&nbsp; policy_vector&lt; float, fixed_allocated_array&lt;float, 5> >&nbsp;&nbsp;&nbsp; </font><font color="#FF0000">fixed_array_float_5</font><font color="#000099">;</font></font></pre>
+<font size=-1><font face="Arial,Helvetica">It makes things ugly and longer
+than they should be. Moreover, it's not possible to convert a vector of
+int into a vector of float, unless we also provide a way to convert the
+fixed storage policy for int to a fixed policy for float (in the manner
+of the </font><font face="Courier New,Courier">std::allocator&lt;T>::rebind&lt;U></font><font face="Arial,Helvetica">
+mechanism). So what are we going to do? Is this the end of policies?</font></font>
+<p><a NAME="policy_vector_storage"></a><font face="Arial,Helvetica"><font size=-1><b>How
+to design nice storage policies. </b>Here&nbsp; we come to the place where
+the assignment becomes the hardest, in my opinion. I totally understand
+those who got stuck here. We're going to have to work our way out, and
+there is no happy end in sight yet... Fortunately, there
+<b>is</b> a way
+out.</font></font>
+<p><font size=-1><font face="Arial,Helvetica">Since the storage policy
+does not know about the types of the element, we need to store the elements
+somewhere else. (In order to declare the storage "</font><font face="Courier New,Courier">T*
+elems</font><font face="Arial,Helvetica">" or "</font><font face="Courier New,Courier">T
+elems[N]</font><font face="Arial,Helvetica">", we need to know T obviously!&nbsp;In
+case you're pointing to here from the library main page, please read the
+previous paragraphs, and especially from <a href="#resize_policies">here</a>.)
+So let us declare another class called policy_vector_storage, which will
+be templated by T and by the StoragePolicy. Now, we need to declare a different
+kind of storage for each storage policy: the natural way to do this in
+C++ is to use partial specialization. It is simply required that each storage
+policy should specialization the second template parameter of the policy_vector_storage
+class! The code looks like:</font></font>
+<p><font face="Courier New,Courier"><font size=-1><font color="#000099">&nbsp;
+</font><font color="#993300">//
+Policies are empty, but will serve to specialize the policy_vector_storage</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;
+template &lt;std::size_t N> struct fixed_aggregate_array;</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;
+template &lt;std::size_t N> struct fixed_allocated_array;</font></font></font>
+<p><font face="Courier New,Courier"><font size=-1><font color="#000099">&nbsp;
+</font><font color="#993300">//
+to be partially specialized later</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;
+template &lt; class T, class StoragePolicy> struct policy_vector_storage
+{};</font></font></font>
+<p><font face="Courier New,Courier"><font size=-1><font color="#000099">&nbsp;
+</font><font color="#993300">//
+partial template specialization for fixed_aggregate_policy</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;
+template &lt; class T, std::size_t N></font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;
+struct policy_vector_storage&lt;T, fixed_aggregate_array&lt;N> ></font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;
+{</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;
+T elems[N];</font></font></font>
+<br><font face="Courier New,Courier"><font size=-1><font color="#000099">&nbsp;
+</font><font color="#993300">//
+constructors and destructor (see array.hpp)</font></font></font>
+<br><font face="Courier New,Courier"><font color="#993300"><font size=-1>&nbsp;&nbsp;&nbsp;
+// size(), empty(), max_size(), etc.</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;
+};</font></font></font>
+<p><font face="Courier New,Courier"><font size=-1><font color="#000099">&nbsp;
+</font><font color="#993300">//
+partial template specialization for fixed_allocate_policy</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;
+template &lt; class T, std::size_t N></font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;
+struct policy_vector_storage&lt;T, fixed_allocated_array&lt;N> ></font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;
+{</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;
+T* elems;</font></font></font>
+<br><font face="Courier New,Courier"><font size=-1><font color="#000099">&nbsp;
+</font><font color="#993300">//
+constructors and destructor (see array.hpp)</font></font></font>
+<br><font face="Courier New,Courier"><font color="#993300"><font size=-1>&nbsp;&nbsp;&nbsp;
+// size(), empty(), max_size(), etc.</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;
+};</font></font></font>
+<p><font size=-1><font face="Arial,Helvetica">So without adding the variable
+length storage policy, let's simply change the previous code to introduce
+the policy_vector_storage class, and change the format of our policies.
+Note that we can still have relevant code in the StoragePolicy (for example
+dealing with </font><font face="Courier New,Courier">size()</font><font face="Arial,Helvetica">,
+etc.) but the code that needs to know both about the storage policy and
+the type of elements is part of the partial specialization:</font></font>
+<p><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;
+template &lt; class T, class StoragePolicy ></font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;
+class policy_vector</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+: public policy_vector_storage&lt; T, StoragePolicy ></font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+, public StoragePolicy</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;
+{</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+typedef policy_vector_storage&lt;T,StoragePolicy> storage;</font></font></font>
+<br><font face="Courier New,Courier"><font size=-1><font color="#000099">&nbsp;
+</font><font color="#993300">//
+constructors</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+policy_vector() : storage() {}</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+policy_vector(T rhs[static_size]) : storage(rhs) {}</font></font></font>
+<br><font face="Courier New,Courier"><font size=-1><font color="#000099">&nbsp;
+</font><font color="#993300">//
+....</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;
+}</font></font></font>
+<p><font face="Arial,Helvetica"><font size=-1>The resulting code is in
+<a href="policy_vector2.hpp">policy_vector2.hpp</a>
+and the testing code is in <a href="testing_vector2.cpp">testing_vector2.cpp</a>.
+Before we go any further, let's compile the code and check that it works.
+Of course, it didn't work the first time, and I had to do minor variations
+to make the compilation errors and warnings go away, but it was not too
+hard to go from policy_vector1 to policy_vector2, I hope. The net effect
+is to have declarations like:</font></font>
+<p><font face="Courier New,Courier"><font size=-1><font color="#000099">&nbsp;&nbsp;&nbsp;
+typedef policy_vector&lt; float, fixed_allocated_array&lt;5> >&nbsp; </font><font color="#FF0000">fixed_array_float_5</font><font color="#000099">;</font></font></font>
+<p><font size=-1><font face="Arial,Helvetica"><b>Keeping the storage policies
+small. </b>There is one more thing, which will make the resize policy classes
+much smaller. C++ is a very tricky language but we are going to use a nice
+feature of it, which seems weird but very useful in this case. I said that
+</font><font face="Courier New,Courier">insert()</font><font face="Arial,Helvetica">
+and all the other modifying functions should be in the resize policy. But
+policy_vector is a class template, and if its member functions are therefore
+function templates, not functions. And C++ says that a template which is
+never instantiated will not even be compiled! So we can provide a member
+function insert to our policy_vector class template, and as long as we
+use a fixed-size storage policy as the template parameter and never call
+the </font><font face="Courier New,Courier">insert()</font><font face="Arial,Helvetica">
+member function, things will be fine. If we call insert, and insert uses
+some member functions of the storage policy, then we better have a variable-size
+policy as the template parameter or else, things will not compile and the
+error messages will be pretty ugly!</font></font>
+<p><font face="Arial,Helvetica"><font size=-1>All in all, all that the
+resize policy needs to provide is the size-related member functions (these
+are not static any more, they depend on the actual number of elements),
+and a reserve member function which makes sure there is at least the required
+amount of storage available. Thus insert will be able to call the reserve
+function to make sure that there is enough space. One last thing though:
+what is our resizing strategy? Do we double each time, or add a constant
+number of elements, or what? Again, that should be left as a policy. Only
+we don't want it to be a policy of the policy_vector, since it would not
+make sense for the fixed-size storage policies. So we need to make the
+resizing strategy a policy of the variable-size policy!</font></font>
+<p><font face="Arial,Helvetica"><font size=-1>If you think about it for
+a minute, it's the only thing that makes sense: we'd like to say things
+like "fixed-size vector" or "variable-sized vector in which we double (or
+triple, or add 10%, or add 10 elements each time)". In C++, the declarations
+would look like:</font></font>
+<p><font face="Courier New,Courier"><font color="#FF0000"><font size=-1>&nbsp;&nbsp;
+// resize_before_insert(size, capacity, n, new_size) returns true if</font></font></font>
+<br><font face="Courier New,Courier"><font color="#FF0000"><font size=-1>&nbsp;&nbsp;
+//&nbsp;&nbsp; resizing may be needed after inserting n elements,</font></font></font>
+<br><font face="Courier New,Courier"><font color="#FF0000"><font size=-1>&nbsp;&nbsp;
+//&nbsp;&nbsp; and new_size stores the new capacity after the resizing</font></font></font>
+<br><font face="Courier New,Courier"><font color="#FF0000"><font size=-1>&nbsp;&nbsp;
+// resize_after_delete(size, capacity, new_size) does same thing for</font></font></font>
+<br><font face="Courier New,Courier"><font color="#FF0000"><font size=-1>&nbsp;&nbsp;
+//&nbsp;&nbsp; deletions</font></font></font>
+<p><font face="Courier New,Courier"><font color="#993300"><font size=-1>&nbsp;&nbsp;
+//Adds a constant number of elements</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;
+struct incremental_resize {</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;
+bool resize_before_insert(size_type size, size_type capacity,</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+size_type n, size_type &amp;new_size)</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+{ return (new_size = capacity + ((size+n-capacity+N-1)/N)*N) != capacity;
+}</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;
+bool resize_after_delete(size_type, size_type, size_type&amp;)</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+{ return false; }</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;
+};</font></font></font>
+<p><font face="Courier New,Courier"><font color="#993300"><font size=-1>&nbsp;&nbsp;
+//Doubles when out of space, never shrinks</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;
+struct double_resize {</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;
+typedef std::size_t size_type;</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;
+bool resize_before_insert(size_type size, size_type capacity,</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+size_type n, size_type &amp;new_size)</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+{</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+new_size = capacity;</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+while (size+n >= new_size) new_size *= 2;</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+return new_size != capacity;</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+}</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;
+bool resize_after_delete(size_type, size_type, size_type&amp;)</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+{ return false; }</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;
+};</font></font></font>
+<p><font face="Courier New,Courier"><font color="#993300"><font size=-1>&nbsp;&nbsp;
+//Doubles when out of space, shrinks when less than a quarter is used</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;
+struct halfdouble_resize {</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;
+typedef std::size_t size_type;</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;
+bool resize_before_insert(size_type size, size_type capacity,</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+size_type n, size_type &amp;new_size)</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+{</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+new_size = capacity;</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+while (size+n >= new_size) new_size *= 2;</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+return new_size != capacity;</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+}</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;
+bool resize_after_delete(size_type size, size_type capacity,</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+size_type &amp;new_size)</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+{</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+new_size = capacity;</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+while (size &lt; new_size/4) new_size /= 2;</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+return new_size != capacity;</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+}</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;
+};</font></font></font>
+<p><font face="Courier New,Courier"><font color="#FF0000"><font size=-1>&nbsp;&nbsp;
+// Finally the storage policy</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;
+template &lt; class ResizePolicy = double_resize></font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;
+struct variable_allocated_array : public ResizePolicy {</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;
+typedef std::size_t&nbsp;&nbsp;&nbsp; size_type;</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;
+};</font></font></font>
+<p><font face="Courier New,Courier"><font color="#993300"><font size=-1>&nbsp;&nbsp;
+// and the partial specialization of policy_vector_storage</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;
+template &lt; class T, class ResizePolicy ></font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;
+struct policy_vector_storage&lt;T, variable_allocated_array&lt;ResizePolicy>
+></font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;
+{</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;
+typedef policy_vector_storage&lt;T, variable_allocated_array&lt;ResizePolicy>
+> Self;</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;
+
+typedef std::size_t&nbsp;&nbsp;&nbsp; size_type;</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;
+size_type nelems, maxelems;</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;
+T* elems;</font></font></font>
+<br><font face="Courier New,Courier"><font color="#993300"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;
+// constructors and destructor (same as array1.hpp,</font></font></font>
+<br><font face="Courier New,Courier"><font color="#993300"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;
+/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+but with variable nelems instead of N)</font></font></font>
+<br><font face="Courier New,Courier"><font color="#993300"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;
+// size(), empty(), max_size(), etc.</font></font></font>
+<br><font face="Courier New,Courier"><font color="#993300"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;
+// special for variable size</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;
+size_type capacity() const { return maxelems; }</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;
+void reserve(size_type new_capacity);</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;
+};</font></font></font>
+<p><font face="Arial,Helvetica"><font size=-1><b>Wrapping it up: resizing
+policies. </b>Let's wrap it up. We need to provide the new variable size
+policies and change a few things in the code of the policy_vector class,
+to make it work with both fixed-size and variable-size. Moreover, we need
+to add the insert-like functions; for now, let's just add push_back() and
+pop_back(). The code is in <a href="policy_vector3.hpp">policy_vector3.hpp</a>,
+and we can test this code with <a href="testing_vector3.cpp">testing_vector3.cpp</a>.
+Since testing both kinds of vectors (fixed vs. variable size) is different,
+we need two testing functions. The part which is common is in a single
+function and is called by both testing function, to avoid repeating the
+code.</font></font>
+<p><font face="Arial,Helvetica"><font size=-1><b>Note</b>: I spent about
+half a day debugging a segmentation fault, which came about because I was
+deleting[] the same piece of memory twice... The reason was a missing operator=()
+which made the default operator=() a shallow copy, instead of a deep copy.&nbsp;
+There was another bug, that I didn't use copy_backward properly (the result
+argument must be the <i>end</i> of the copy zone, where you start copying
+if you do it backward; I was using the beginning instead, hence lots of
+seg faults).</font></font>
+<p><font face="Arial,Helvetica"><font size=-1>Once we make sure that it
+works, we can add all the other insertion/deletion member functions to
+make it look more like </font></font><tt>std::vector&lt;></tt><font face="Arial,Helvetica"><font size=-1>.
+The code is in <a href="policy_vector3.hpp">policy_vector4.hpp</a>,
+and we can test this code with <a href="testing_vector3.cpp">testing_vector4.cpp</a>.
+For instance, we can have declarations like:</font></font>
+<p><font face="Courier New,Courier"><font size=-1><font color="#000099">&nbsp;&nbsp;&nbsp;
+typedef policy_vector&lt; float, fixed_aggregated_array&lt;16> > 
+</font><font color="#FF0000">fixed_float_array_16</font><font color="#000099">;</font></font></font>
+<br><font face="Courier New,Courier"><font size=-1><font color="#000099">&nbsp;&nbsp;&nbsp;
+typedef policy_vector&lt; float, fixed_allocated_array&lt;16> >&nbsp; 
+</font><font color="#FF0000">fixed_float_vector_16</font><font color="#000099">;</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;
+typedef policy_vector&lt; float, variable_allocated_array&lt;double_resize>
+></font></font></font>
+<br><font face="Courier New,Courier"><font size=-1><font color="#FF0000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+standard_float_vector</font><font color="#000099">;</font></font></font>
+<h3>
+<a NAME="other_policies"></a><font face="Arial,Helvetica"><font color="#FF0000">Other
+policies</font></font></h3>
+<font face="Arial,Helvetica"><font size=-1>At this point, it is not too
+hard to add more policies, like a checking policy, an iterator policy&nbsp;
+(well, that one may still pose problems...), and perhaps even a conversion
+policy. The boost::policy_based library also proposes a policy for the
+element type (pod_element, uninit_pod, or any_element). I feel that that's
+not a policy since it can be derived directly from the type T stored in
+policy_vector, for instance by using the boost::type_traits library.</font></font>
+<p><a NAME="checking_policy"></a><font face="Arial,Helvetica"><font size=-1><b><font color="#000000">Checking
+policy.</font></b> The checking policy defines whether operator[] checks
+for out-of-range argument or not (the member function at() should always
+check, regardless of the checking policy). Therefore, one way to have this
+done is that the checking policy simply defines the operator[]. In this
+case, iit must know the beginning of the storage to compute the return
+value. Unfortunately, it cannot since that information is part of the storage
+policy. Another way to have it done is simply to have a function that checks
+for bounds. Since that function is not part of the std::vector interface,
+we can pass it any arguments we want, including the size of the vector.
+So the checking policy looks like:</font></font>
+<p><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;
+class no_check {</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;
+protected:</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;
+static void range_check (size_type, size_type) {}</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;
+};</font></font></font>
+<p><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;
+class exception_check {</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;
+protected:</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;
+static void range_check (size_type i, size_type size) {</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+if (i >= size) throw std::range_error("policy_vector");</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;
+}</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;
+};</font></font></font>
+<p><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;
+class assert_check {</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;
+protected:</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;
+static void range_check (size_type i, size_type size) {</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+assert(i &lt; size);</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;
+}</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;
+};</font></font></font>
+<p><font face="Arial,Helvetica"><font size=-1>And the policy_vector::operator[]
+should be changed very simply to:</font></font>
+<p><font face="Courier New,Courier"><font color="#993300"><font size=-1>&nbsp;&nbsp;&nbsp;
+// operator[]</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;
+reference operator[](size_type i) {</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+range_check(i, size());</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+return elems[i];</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;
+}</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;
+const_reference operator[](size_type i) const {</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+range_check(i, size());</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+return elems[i];</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;
+}</font></font></font>
+<p><font face="Arial,Helvetica"><font size=-1>The code for the policy_vector
+class with checking policies is in <a href="policy_vector5.hpp">policy_vector5.hpp</a>
+and the code for testing it (which differs from its previous versions,
+since we have many more classes to test) can be found in <a href="testing_vector5.cpp">testing_vector5.cpp</a>.</font></font>
+<p><a NAME="iterator_policy"></a><font size=-1><font face="Arial,Helvetica"><b>Iterator
+policy.</b> The iterator policy should define the iterator type as either
+a raw pointer, or a pair &lt;base, index>. The problem with the index is
+that the base may change due to resizing/reallocating. So we need to contain
+a reference/pointer to the policy_vector instead. But the policy_vector
+is templated by&nbsp; the iterator policy: doesn't that actually create
+a cyclic dependency? It turns out that there is a way out of the dilemma:
+simply template the IteratorPolicy by a vector type, and pass the actual
+policy_vector type to IteratorPolicy when IteratorPolicy needs to be instantiated
+(that's when policy_vector inherits from the IteratorPolicy). It's legal,
+since all we store is a pointer to the vector, there is no cyclic dependency
+(storing a pointer to vector does not trigger instantiation of vector;
+it's the same trick when in C we have a </font><font face="Courier New,Courier">struct
+edge; </font><font face="Arial,Helvetica">forward declaration, then </font><font face="Courier New,Courier">struct
+node { edge* e; }</font><font face="Arial,Helvetica"> and later </font><font face="Courier New,Courier">struct
+edge { node* u, v; }</font><font face="Arial,Helvetica"> : there too there
+is no dependency).</font></font>
+<p><font size=-1><font face="Arial,Helvetica">Who should provide begin()
+and end()? If we put this in the iterator policy, again we have a problem
+(same as in check) that the beginning of storage is part of the storage
+policy, therefore not known to the iterator policy. So like with checking,
+we must pass something which is enough to find the&nbsp;&nbsp; beginning
+of storage. In fact, it's convenient to adopt indices as the internal representation
+for iterators in policy_vector, and have the iterator policy convert this
+internal representation to the actual iterator type. So the policy only
+has to provide the types and two member functions: </font><font face="Courier New,Courier">make_iterator(v,n)</font><font face="Arial,Helvetica">
+and </font><font face="Courier New,Courier">make_const_iterator(v,n)</font><font face="Arial,Helvetica">.</font></font>
+<p><font face="Arial,Helvetica"><font size=-1>So our iterator policies
+looks like:</font></font>
+<p><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;
+template &lt;class V></font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;
+class raw_pointer_iterator {</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+private:</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+typedef typename V::value_type T;</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+protected:</font></font></font>
+<br><font face="Courier New,Courier"><font size=-1><font color="#000099">&nbsp;
+</font><font color="#993300">//
+type definitions</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+typedef T*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+iterator;</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+typedef const T*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; const_iterator;</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+typedef std::size_t&nbsp;&nbsp;&nbsp; size_type;</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+typedef std::ptrdiff_t difference_type;</font></font></font>
+<br><font face="Courier New,Courier"><font size=-1><font color="#000099">&nbsp;
+</font><font color="#993300">//
+operators</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+static iterator</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+make_iterator(V* vector, size_type n) {</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+return vector->elems+n;</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+}</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+static const_iterator</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+make_const_iterator(const V* vector, size_type n) {</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+return vector->elems+n;</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+}</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+};</font></font></font>
+<p><font face="Arial,Helvetica"><font size=-1>For the index iterator policy,
+we need an auxilliary class index_iterator_wrapper which stores a pair&lt;vector*,int>,
+and provides all the usual operations of random access iterators (operator*,
+operator->, operator[], operator++, operator+=, etc.). It's not too hard
+to write such a class. An advantage of having this auxilliary class, which
+knows about the vector, is that it can check the iterator before dereferencing
+it, according to the vector's checking policy.</font></font>
+<p><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;
+template &lt;class V></font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;
+class index_iterator {</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+private:</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+typedef typename V::value_type T;</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+protected:</font></font></font>
+<br><font face="Courier New,Courier"><font size=-1><font color="#000099">&nbsp;
+</font><font color="#993300">//
+type definitions</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+typedef index_iterator_wrapper&lt;V,T,T*,T&amp;>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+iterator;</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+typedef index_iterator_wrapper&lt;const V,T,const T*,const T&amp;>&nbsp;
+const_iterator;</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+typedef std::size_t&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+size_type;</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+typedef std::ptrdiff_t&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+difference_type;</font></font></font>
+<br><font face="Courier New,Courier"><font size=-1><font color="#000099">&nbsp;
+</font><font color="#993300">//
+operators</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+static iterator</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+make_iterator(V* vector, size_type n) {</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+return iterator(vector,n);</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+}</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+static const_iterator</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+make_const_iterator(const V* vector, size_type n) {</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+return const_iterator(vector,n);</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+}</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+};</font></font></font>
+<p><font face="Arial,Helvetica"><font size=-1>Very similar to the index
+iterator policy, we can also provide a real class encapsulating a pointer,
+let's call it pointer_iterator_wrapper, which stores a pair&lt;vector*,T*>.
+The purpose of it is not only to have an iterator class (instead of a builtin
+type T*), but we also use it to check the iterator before dereferencing
+it, according to the vector's checking policy. Note that the checking routines
+are usually static, and that we don't need to access the vector storage
+since we store the pointer directly, but we still need to store a pointer
+to vector, as in index_iterator_wrapper, in order to have access to the
+vector size (for checking).</font></font>
+<p><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;
+template &lt;class V></font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;
+class checked_pointer_iterator {</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+private:</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+typedef typename V::value_type T;</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+protected:</font></font></font>
+<br><font face="Courier New,Courier"><font size=-1><font color="#000099">&nbsp;
+</font><font color="#993300">//
+type definitions</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+typedef pointer_iterator_wrapper&lt;V,T,T*,T&amp;>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+iterator;</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+typedef pointer_iterator_wrapper&lt;const V,T,const T*,const T&amp;>&nbsp;
+const_iterator;</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+typedef std::size_t&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+size_type;</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+typedef std::ptrdiff_t&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+difference_type;</font></font></font>
+<br><font face="Courier New,Courier"><font size=-1><font color="#000099">&nbsp;
+</font><font color="#993300">//
+operators</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+static iterator</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+make_iterator(V* vector, size_type n) {</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+return iterator(vector,vector->elems+n);</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+}</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+static const_iterator</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+make_const_iterator(const V* vector, size_type n) {</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+return const_iterator(vector,vector->elems+n);</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+}</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+};</font></font></font>
+<p><font face="Arial,Helvetica"><font size=-1>The declaration of policy_vector
+is now a little bit more complicated:</font></font>
+<p><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;
+template &lt; class T,</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+class StoragePolicy,</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+template &lt;class V> class IteratorPolicy></font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;
+class policy_vector</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+: public policy_vector_storage&lt; T, StoragePolicy ></font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+, public StoragePolicy</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+, public IteratorPolicy&lt; policy_vector&lt;T,StoragePolicy,IteratorPolicy>
+></font></font></font>
+<p><font face="Arial,Helvetica"><font size=-1>And the changes to policy_vector
+members are simply:</font></font>
+<p><font face="Courier New,Courier"><font color="#993300"><font size=-1>&nbsp;&nbsp;&nbsp;
+// type definitions</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;
+typedef typename IteratorPolicy::iterator&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+iterator;</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;
+typedef typename IteratorPolicy::const_iterator&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+const_iterator;</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;
+typedef typename IteratorPolicy::size_t&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+size_type;</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;
+typedef typename IteratorPolicy::difference_type&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+difference_type;</font></font></font>
+<br><font face="Courier New,Courier"><font color="#993300"><font size=-1>&nbsp;&nbsp;&nbsp;
+// iterator support</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;
+iterator begin() { return make_iterator(this,0); }</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;
+const_iterator begin() const { return make_const_iterator(this,0); }</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;
+iterator end() { return make_iterator(this,size()); }</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;
+const_iterator end() const { return make_const_iterator(this,size()); }</font></font></font>
+<p><font face="Arial,Helvetica"><font size=-1>The code for the policy_vector
+class with iterator and checking policies is in <a href="policy_vector6.hpp">policy_vector6.hpp</a>,
+and the code for testing it can be found in <a href="testing_vector6.cpp">testing_vector6.cpp</a>.</font></font>
+<p><a NAME="conversion_policy"></a><font face="Arial,Helvetica"><font size=-1><b>Conversion
+policy</b>. When we started with fixed-size arrays, it was natural to have
+the assignment from a plain array of the same size, and we also gave a
+meaning to the assignment when the sizes differ. When adding variable-size
+arrays, this distinguo was made obsolete. But std::vector does not have
+an assignment from plain arrays (indeed the range constructor and assignment
+suffice). So this conversion is pure syntactic sugar, and we could have
+a policy that defines what it means to convert from a fixed-size array
+(for variable size) of from a fixed-size array of a different size (for
+fixed-size array).</font></font>
+<br><font face="Arial,Helvetica"><font size=-1>At this point, policy_vector
+has already five template parameters, and adding a conversion policy would
+make the design even more intricate. We opt to allow the conversion in
+all cases, since little harm could be done. If a stricter control is needed,
+it is not hard to make it a policy.</font></font>
+<h3>
+<a NAME="conclusion"></a><b><font face="Arial,Helvetica"><font color="#FF0000">Conclusion</font></font></b></h3>
+<font face="Arial,Helvetica"><font size=-1>The code is now almost ready
+for "production," whatever that means. We need to take care of a few details,
+mainly memory allocation. Up to now, we have not bothered with default
+construction when resizing a (or creating an empty) table. The class </font></font><tt>std::vector</tt><font face="Arial,Helvetica"><font size=-1>
+pays attention to this very closely. Another area where we want to be careful
+is handling exceptions safely. Using the SGI STL vector class (distributed
+with the compiler g++, for instance), we adapt the code accordingly. Also,
+we need to free the storage when destroying the policy_vector.</font></font>
+<p><font size=-1><font face="Arial,Helvetica">We are forced into two minor
+changes from policy_vector6: One minor point about initialization is that,
+when creating a fixed-size array, the standard [Initialization,12.6] mandates
+that all the elements are default-constructed, whereas we need to use construct,
+unitialized_copy, etc. from &lt;memory> for variable size vectors. Another
+minor point is about the assign member functions: it must be a member of
+</font><font face="Courier New,Courier">policy_vector_storage</font><font face="Arial,Helvetica">,
+because we'd like to provide the same function </font><font face="Courier New,Courier">assign(first,last)</font><font face="Arial,Helvetica">,
+but with different semantics for fixed and variable size storage policies
+(so it couldn't be in the </font><font face="Courier New,Courier">policy_vector</font><font face="Arial,Helvetica">
+class, unlike the insert and erase functions); but it also needs to do
+resizing, and hence be aware of the resize policy. This leads us to the
+minor change of having the </font><font face="Courier New,Courier">policy_vector_storage</font><font face="Arial,Helvetica">
+class inherit from the storage policy (instead of the </font><font face="Courier New,Courier">policy_vector</font><font face="Arial,Helvetica">
+class); since the </font><font face="Courier New,Courier">policy_vector</font><font face="Arial,Helvetica">
+inherits from the </font><font face="Courier New,Courier">policy_vector_storage</font><font face="Arial,Helvetica">
+class, it still inherits from the storage policy.</font></font>
+<p><font face="Arial,Helvetica"><font size=-1>All in all, the final code
+for the policy_vector class&nbsp; is in <a href="policy_vector7.hpp">policy_vector7.hpp</a>,
+and the code for testing it can be found in <a href="testing_vector7.cpp">testing_vector7.cpp</a>.
+In summary, we have a class template
+</font></font><font face="Courier New,Courier">policy_vector&lt;T,
+StoragePolicy, CheckingPolicy, IteratorPolicy, Alloc></font><font face="Arial,Helvetica"><font size=-1>
+where the policies can be any of</font></font>
+<ol>
+<li>
+<font face="Courier New,Courier">StoragePolicy</font><font face="Arial,Helvetica"><font size=-1>:
+the storage policy can be one of two fixed-size storage policies:</font></font></li>
+
+<ol>
+<li>
+<font face="Courier New,Courier">fixed_aggregate_array&lt;N></font><font face="Arial,Helvetica"><font size=-1>:
+similar to boost::array</font></font></li>
+
+<li>
+<font face="Courier New,Courier">fixed_allocated_array&lt;N,Alloc=STLDefaultAllocator></font><font face="Arial,Helvetica"><font size=-1>:
+similar to std::vector, without insert/erase.</font></font></li>
+</ol>
+<font face="Arial,Helvetica"><font size=-1>In addition to these, there
+is one variable-size storage policy, which itself can be parameterized
+by the resizing behavior:</font></font>
+<ol>
+<li>
+<font size=-1><font face="Arial,Helvetica">(*) </font><font face="Courier New,Courier">variable_allocated_array&lt;ResizePolicy,
+initN=0, Alloc=STLDefaultAllocator></font><font face="Arial,Helvetica">:
+similar to std::vector, with the following resizing policies:</font></font></li>
+
+<ol>
+<li>
+<font size=-1><font face="Courier New,Courier">incremental_resize&lt;N></font><font face="Arial,Helvetica">:
+grows by adding a constant number of elements if full before insertion
+(<font color="#FF0000">WARNING</font>: this is not a recommend policy in
+most cases; it is conceptually useful in some situations where we know
+we won't resize too much and storage is at a premium). No shrinking.</font></font></li>
+
+<li>
+<font size=-1><font face="Arial,Helvetica">(*) </font><font face="Courier New,Courier">multiply_resize&lt;N></font><font face="Arial,Helvetica">:
+grows by increasing the number of elements by a constant factor N if full
+before insertion (default: (*) N=2). No shrinking.</font></font></li>
+
+<li>
+<font size=-1><font face="Courier New,Courier">multiply_divide_resize&lt;N></font><font face="Arial,Helvetica">:
+grows by increasing the number of elements by a constant factor N of elements
+if full before insertion, and shrinks table by N if it holds fewer than
+max_size()/(N*N) elements (ensures that table won't grow in the next N
+insertions).</font></font></li>
+</ol>
+</ol>
+
+<li>
+<font size=-1><font face="Courier New,Courier">CheckingPolicy</font><font face="Arial,Helvetica">:
+if S is the size_type of vector, then conceptually we can have the following
+checks for operator[] and for the iterators:</font></font></li>
+
+<ol>
+<li>
+<font size=-1><font face="Arial,Helvetica">(*) </font><font face="Courier New,Courier">no_check&lt;S></font></font></li>
+
+<li>
+<font face="Courier New,Courier"><font size=-1>exception_check&lt;S></font></font></li>
+
+<li>
+<font face="Courier New,Courier"><font size=-1>assert_check&lt;S></font></font></li>
+</ol>
+<font size=-1><font face="Arial,Helvetica">Note that the member function
+</font><font face="Courier New,Courier">at(i)</font><font face="Arial,Helvetica">
+always throws an exception (namely, </font><font face="Courier New,Courier">std::range_error</font><font face="Arial,Helvetica">)
+if i is not in the range </font><font face="Courier New,Courier">[0,size())</font><font face="Arial,Helvetica">,
+regardless of the checking policy.</font></font>
+<li>
+<font size=-1><font face="Courier New,Courier">IteratorPolicy</font><font face="Arial,Helvetica">:
+if T is the size of the elements, and V is the policy_vector type, we provide
+three policies:</font></font></li>
+
+<ol>
+<li>
+<font size=-1><font face="Arial,Helvetica">(*) </font><font face="Courier New,Courier">raw_pointer_iterator&lt;T,V></font><font face="Arial,Helvetica">:
+defines iterator type as T* (as in std::vector)</font></font></li>
+
+<li>
+<font size=-1><font face="Courier New,Courier">checked_pointer_iterator&lt;T,V></font><font face="Arial,Helvetica">:
+defines iterator type as a wrapper around T*. Dereferencing the iterator
+performs a check according to the checking policy of V. (Internally stores
+a pointer to the vector.) In particular, if the iterator is invalidated
+because of a resizing of the vector, the check will fail, providing the
+opportunity to handle the situation gracefully.</font></font></li>
+
+<li>
+<font size=-1><font face="Courier New,Courier">index_iterator&lt;T,V></font><font face="Arial,Helvetica">:
+defines iterator type as an index and a base pointer. (Internally stores
+a pointer to the vector.) In particular, this kind of iterator is never
+invalidated by resizing the vector (although it could fail to be within
+the bounds if enough deletions have been performed since its creation).</font></font></li>
+</ol>
+</ol>
+<font size=-1><font face="Arial,Helvetica">The default choice for policies
+are the ones that make policy_vector behave like </font><font face="Courier New,Courier">std::vector</font><font face="Arial,Helvetica">,
+i.e. the ones marked by (*) in the table above. For instance, if there
+were partially specialized template typedefs in C++ (one can always dream:),
+we could write :</font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;
+template &lt;class T, class Alloc=STL_default_allocator></font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;
+typedef policy_vector&lt; T,</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+variable_allocated_array&lt;multiply_resize&lt;2>>,</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+no_check,</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+raw_pointer_iterator,</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Alloc</font></font></font>
+<br><font face="Courier New,Courier"><font size=-1><font color="#000099">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+> </font><font color="#FF0000">std_vector</font><font color="#000099">;
+</font><font color="#FF0000">//
+same as std::vector&lt;T, Alloc></font></font></font>
+<h3>
+<a NAME="interface"></a><font face="Arial,Helvetica"><font color="#FF0000">Class
+interface</font></font></h3>
+<font face="Arial,Helvetica"><font size=-1>The class template
+</font></font><font face="Courier New,Courier">policy_vector&lt;T,
+StoragePolicy, CheckingPolicy, IteratorPolicy, Alloc></font><font face="Arial,Helvetica"><font size=-1>
+provides the following interface:</font></font>
+<table BORDER=0 NOSAVE >
+<tr VALIGN=TOP NOSAVE>
+<td NOSAVE><b><font face="Arial, Helvetica, sans-serif"><font size=-1>Types:</font></font></b></td>
+
+<td></td>
+</tr>
+
+<tr>
+<td><font face="Courier New, Courier, mono"><font size=-1>allocator_type</font></font></td>
+
+<td><font face="Arial, Helvetica, sans-serif"><font size=-1>type of the
+allocator</font></font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New, Courier, mono"><font size=-1>value_type</font></font></td>
+
+<td><font face="Arial, Helvetica, sans-serif"><font size=-1>type of the
+elements</font></font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New, Courier, mono"><font size=-1>iterator</font></font></td>
+
+<td><font face="Arial, Helvetica, sans-serif"><font size=-1>type of the
+iterator (random-access iterator), as per </font></font><font face="Courier New,Courier">iterator_policy</font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New, Courier, mono"><font size=-1>const_iterator</font></font></td>
+
+<td><font face="Arial, Helvetica, sans-serif"><font size=-1>type of iterator
+that considers elements as being constant, as per </font></font><font face="Courier New,Courier">iterator_policy</font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New, Courier, mono"><font size=-1>reference</font></font></td>
+
+<td><font face="Arial, Helvetica, sans-serif"><font size=-1>type of element
+reference</font></font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New, Courier, mono"><font size=-1>const_reference</font></font></td>
+
+<td><font face="Arial, Helvetica, sans-serif"><font size=-1>type of element
+reference that considers elements as being constant</font></font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New, Courier, mono"><font size=-1>size_type</font></font></td>
+
+<td><font face="Arial, Helvetica, sans-serif"><font size=-1>type for signed
+size values</font></font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New, Courier, mono"><font size=-1>difference_type</font></font></td>
+
+<td><font face="Arial, Helvetica, sans-serif"><font size=-1>type for unsigned
+difference values</font></font></td>
+</tr>
+
+<tr>
+<td><b><font face="Arial, Helvetica, sans-serif"><font size=-1>Operations:</font></font></b></td>
+
+<td></td>
+</tr>
+
+<tr VALIGN=TOP NOSAVE>
+<td NOSAVE><font face="Courier New, Courier, mono"><font size=-1>policy_vector(<i>a</i>)</font></font></td>
+
+<td><font face="Arial, Helvetica, sans-serif"><font size=-1>default constructor,
+creates default array for </font></font><font face="Courier New,Courier">storage_policy</font><font face="Arial,Helvetica"><font size=-1>,
+with allocator </font></font><tt>a</tt><font face="Arial,Helvetica"><font size=-1>
+(default:</font></font><tt> </tt><font face="Courier New,Courier">allocator_type</font><font face="Arial,Helvetica"><font size=-1>
+in all the constructors below when present)</font></font></td>
+</tr>
+
+<tr VALIGN=TOP NOSAVE>
+<td NOSAVE><font face="Courier New, Courier, mono"><font size=-1>policy_vector(</font><i>v</i><font size=-1>)</font></font></td>
+
+<td><font face="Arial, Helvetica, sans-serif"><font size=-1>copy constructor,
+copies all elements of </font></font><font face="Courier New, Courier, mono">v</font><font face="Arial, Helvetica, sans-serif"><font size=-1>
+(</font></font><font face="Courier New, Courier, mono">v</font><font face="Arial, Helvetica, sans-serif"><font size=-1>
+must have </font></font><tt>type</tt><font face="Arial, Helvetica, sans-serif"><font size=-1>
+and policies that can be assigned to </font></font><font face="Courier New,Courier">policy_vector</font><font face="Arial, Helvetica, sans-serif"><font size=-1>'s
+counterparts)</font></font></td>
+</tr>
+
+<tr VALIGN=TOP NOSAVE>
+<td NOSAVE><font face="Courier New, Courier, mono"><font size=-1>policy_vector(</font><i>n</i><font size=-1>)</font></font></td>
+
+<td><font face="Arial,Helvetica"><font size=-1>creates vector with </font></font><tt>n</tt><font face="Arial,Helvetica"><font size=-1>
+elements (or smallest of </font></font><font face="Courier New,Courier">n</font><font face="Arial,Helvetica"><font size=-1>
+and </font></font><font face="Courier New,Courier">storage_policy::static_size</font><font face="Arial,Helvetica"><font size=-1>if
+fixed size), all default constructed</font></font></td>
+</tr>
+
+<tr VALIGN=TOP NOSAVE>
+<td NOSAVE><font face="Courier New, Courier, mono"><font size=-1>policy_vector(</font><i>n,val,a</i><font size=-1>)</font></font></td>
+
+<td><font face="Arial,Helvetica"><font size=-1>creates vector with </font></font><tt>n</tt><font face="Arial,Helvetica"><font size=-1>elements
+(or smallest of </font></font><font face="Courier New,Courier">n</font><font face="Arial,Helvetica"><font size=-1>
+and </font></font><font face="Courier New,Courier">storage_policy::static_size</font><font face="Arial,Helvetica"><font size=-1>
+if fixed size), all initialized to </font></font><font face="Courier New,Courier">val</font></td>
+</tr>
+
+<tr VALIGN=TOP NOSAVE>
+<td NOSAVE><font face="Courier New, Courier, mono"><font size=-1>template
+&lt;class Iter></font></font>
+<br><font face="Courier New, Courier, mono"><font size=-1>policy_vector(</font><i>first,last,a</i><font size=-1>)</font></font></td>
+
+<td><font face="Arial,Helvetica"><font size=-1>creates vector with </font></font><tt>n</tt><font face="Arial,Helvetica"><font size=-1>
+elements (or smallest of </font></font><font face="Courier New,Courier">n</font><font face="Arial,Helvetica"><font size=-1>
+and </font></font><font face="Courier New,Courier">storage_policy::static_size</font><font face="Arial,Helvetica"><font size=-1>
+if fixed size), initialized as in </font></font><font face="Courier New,Courier">[first,last)</font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New, Courier, mono"><font size=-1>operator=</font></font></td>
+
+<td><font face="Arial, Helvetica, sans-serif"><font size=-1>assignment,
+assigns all elements</font></font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New, Courier, mono"><font size=-1>assign(<i>val</i>)</font></font></td>
+
+<td><font face="Arial, Helvetica, sans-serif"><font size=-1>assigns </font></font><tt>val</tt><font face="Arial, Helvetica, sans-serif"><font size=-1>
+to all elements</font></font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New, Courier, mono"><font size=-1>assign(<i>n</i>,<i>val</i>)</font></font></td>
+
+<td><font size=-1><font face="Arial,Helvetica">assigns </font><font face="Courier New,Courier">val</font><font face="Arial,Helvetica">
+to first </font><font face="Courier New,Courier">n</font><font face="Arial,Helvetica">
+elements (or up to </font><font face="Courier New,Courier">storage_policy::static_size</font><font face="Arial,Helvetica">
+if fixed size)</font></font></td>
+</tr>
+
+<tr NOSAVE>
+<td NOSAVE><font face="Courier New,Courier"><font size=-1>template &lt;class
+<i>Iter</i>></font></font>
+<br><font face="Courier New,Courier"><font size=-1>assign(<i>first,last</i>)</font></font></td>
+
+<td><font size=-1><font face="Arial,Helvetica">assigns the elements of
+</font><font face="Courier New,Courier">[first,last)</font><font face="Arial,Helvetica">
+to the vector (or up to </font><font face="Courier New,Courier">storage_policy::static_size</font><font face="Arial,Helvetica">
+if fixed size)</font></font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New, Courier, mono"><font size=-1>begin()</font></font></td>
+
+<td><font face="Arial, Helvetica, sans-serif"><font size=-1>returns iterator
+for the first element</font></font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New, Courier, mono"><font size=-1>end()</font></font></td>
+
+<td><font face="Arial, Helvetica, sans-serif"><font size=-1>returns iterator
+for position after the last element</font></font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New, Courier, mono"><font size=-1>rbegin()</font></font></td>
+
+<td><font face="Arial, Helvetica, sans-serif"><font size=-1>returns reverse
+iterator for position of first element of reverse iteration</font></font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New, Courier, mono"><font size=-1>rend()</font></font></td>
+
+<td><font face="Arial, Helvetica, sans-serif"><font size=-1>returns reverse
+iterator for position behind last element of reverse iteration&nbsp;</font></font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New, Courier, mono"><font size=-1>operator[<i>i</i>]</font></font></td>
+
+<td><font size=-1><font face="Arial, Helvetica, sans-serif">returns element
+with index </font><i><font face="Courier New, Courier, mono">i</font></i><font face="Arial, Helvetica, sans-serif">
+(range checking according to checking policy)</font></font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New, Courier, mono"><font size=-1>at(<i>i</i>)</font></font></td>
+
+<td><font size=-1><font face="Arial, Helvetica, sans-serif">returns element
+with index </font><i><font face="Courier New, Courier, mono">i</font></i><font face="Arial, Helvetica, sans-serif">
+(t</font><font face="Arial,Helvetica">hrows</font></font><tt>std::range_error</tt><font size=-1><font face="Arial, Helvetica, sans-serif">
+if </font><i><font face="Courier New, Courier, mono">i</font></i><font face="Arial, Helvetica, sans-serif">
+is not valid)</font></font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New, Courier, mono"><font size=-1>front()</font></font></td>
+
+<td><font face="Arial, Helvetica, sans-serif"><font size=-1>returns first
+element (caller has to ensure that it exists)</font></font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New, Courier, mono"><font size=-1>back()</font></font></td>
+
+<td><font face="Arial, Helvetica, sans-serif"><font size=-1>returns last
+element (caller has to ensure that it exists)</font></font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New, Courier, mono"><font size=-1>size()</font></font></td>
+
+<td><font face="Arial, Helvetica, sans-serif"><font size=-1>returns number
+of elements</font></font></td>
+</tr>
+
+<tr VALIGN=TOP NOSAVE>
+<td><font face="Courier New, Courier, mono"><font size=-1>empty()</font></font></td>
+
+<td NOSAVE><font face="Arial, Helvetica, sans-serif"><font size=-1>returns
+whether vector is empty</font></font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New, Courier, mono"><font size=-1>max_size()</font></font></td>
+
+<td><font face="Arial, Helvetica, sans-serif"><font size=-1>returns maximum
+possible number of elements</font></font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New, Courier, mono"><font size=-1>swap(v)</font></font></td>
+
+<td><font face="Arial, Helvetica, sans-serif"><font size=-1>swap elements
+with vector v</font></font></td>
+</tr>
+
+<tr>
+<td><font size=-1><font face="Courier New, Courier, mono">==</font><font face="Arial, Helvetica, sans-serif">,
+</font><font face="Courier New, Courier, mono">!=</font></font></td>
+
+<td><font face="Arial, Helvetica, sans-serif"><font size=-1>checks for
+equality</font></font></td>
+</tr>
+
+<tr>
+<td><font size=-1><font face="Courier New, Courier, mono">&lt;</font><font face="Arial, Helvetica, sans-serif">,
+</font><font face="Courier New, Courier, mono">&lt;=</font><font face="Arial, Helvetica, sans-serif">,
+</font><font face="Courier New, Courier, mono">></font><font face="Arial, Helvetica, sans-serif">,
+</font><font face="Courier New, Courier, mono">>=</font></font></td>
+
+<td><font face="Arial, Helvetica, sans-serif"><font size=-1>compares vector
+lexicographically</font></font></td>
+</tr>
+
+<tr>
+<td><b><font face="Arial, Helvetica, sans-serif"><font size=-1>Static arrays
+only:</font></font></b></td>
+
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td><font face="Courier New, Courier, mono"><font size=-1>static_size</font></font></td>
+
+<td><font face="Arial, Helvetica, sans-serif"><font size=-1>yields size
+at compile time</font></font></td>
+</tr>
+
+<tr VALIGN=TOP NOSAVE>
+<td NOSAVE><font face="Courier New,Courier">t<font size=-1>emplate &lt;class
+<i>T2</i>></font></font>
+<br><font face="Courier New,Courier"><font size=-1>policy_vector(<i>T2
+x[static_size],a</i>)</font></font></td>
+
+<td><font face="Arial,Helvetica"><font size=-1>creates vector with elements
+copies of those in x (converted to T)</font></font></td>
+</tr>
+
+<tr VALIGN=TOP NOSAVE>
+<td NOSAVE><font face="Courier New,Courier"><font size=-1>template &lt;class
+<i>T2</i>></font></font>
+<br><font face="Courier New,Courier"><font size=-1>operator=(<i>T2 x[static_size]</i>)</font></font></td>
+
+<td><font face="Arial,Helvetica"><font size=-1>copies elements from x (converted
+to T)</font></font></td>
+</tr>
+
+<tr>
+<td><b><font face="Arial,Helvetica"><font size=-1>Dynamic arrays only:</font></font></b></td>
+
+<td></td>
+</tr>
+
+<tr VALIGN=TOP NOSAVE>
+<td NOSAVE><font face="Courier New,Courier"><font size=-1>capacity()</font></font></td>
+
+<td><font face="Arial,Helvetica"><font size=-1>returns the maximum number
+of elements that can be inserted before triggering a resizing</font></font></td>
+</tr>
+
+<tr VALIGN=TOP NOSAVE>
+<td NOSAVE><font face="Courier New,Courier"><font size=-1>reserve(<i>n</i>)</font></font></td>
+
+<td><font face="Arial,Helvetica"><font size=-1>makes sure that the vector
+has enough room to store n elements (may shrink if holds less than n, depending
+on resizing policy)</font></font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New,Courier"><font size=-1>insert(<i>pos, x</i>)</font></font></td>
+
+<td><font size=-1><font face="Arial,Helvetica">inserts </font><font face="Courier New,Courier">x</font><font face="Arial,Helvetica">
+at (before) position pos</font></font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New,Courier"><font size=-1>insert(<i>pos, first,
+last</i>)</font></font></td>
+
+<td><font size=-1><font face="Arial,Helvetica">inserts all the elements
+of </font><font face="Courier New,Courier">[first,last)</font><font face="Arial,Helvetica">
+before position pos</font></font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New,Courier"><font size=-1>insert(<i>pos, n , x</i>)</font></font></td>
+
+<td><font face="Arial,Helvetica"><font size=-1>inserts n copies of x before
+position pos</font></font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New,Courier"><font size=-1>erase(<i>pos</i>)</font></font></td>
+
+<td><font face="Arial,Helvetica"><font size=-1>removes the element at position
+pos</font></font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New,Courier"><font size=-1>erase(<i>first, last</i>)</font></font></td>
+
+<td><font size=-1><font face="Arial,Helvetica">removes the elements in
+the range </font><font face="Courier New,Courier">[first,last)</font></font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New,Courier"><font size=-1>clear()</font></font></td>
+
+<td><font face="Arial,Helvetica"><font size=-1>removes all the elements</font></font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New,Courier">resize(<i>n, x</i>)</font></td>
+
+<td><font face="Arial,Helvetica"><font size=-1>resizes the vector so that
+it contains n elements (padding with x if necessary)</font></font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New,Courier">resize(<i>n</i>)</font></td>
+
+<td><font size=-1><font face="Arial,Helvetica">resizes the vector so that
+it contains n elements (padding with </font><font face="Courier New,Courier">T()</font><font face="Arial,Helvetica">
+if necessary)</font></font></td>
+</tr>
+</table>
+
+<h3>
+<a NAME="code"></a><font face="Arial,Helvetica"><font color="#FF0000">Code</font></font></h3>
+<font face="Arial,Helvetica"><font size=-1>First version (one single policy):
+<a href="policy_vector1.hpp">policy_vector1.hpp</a>
+<a href="testing_vector1.cpp">testing_vector1.cpp</a></font></font>
+<br><font face="Arial,Helvetica"><font size=-1>Second version (two fixed-size
+policies):&nbsp; <a href="policy_vector2.hpp">policy_vector2.hpp</a>
+<a href="testing_vector2.cpp">testing_vector2.cpp</a></font></font>
+<br><font face="Arial,Helvetica"><font size=-1>Third version (one more
+variable-size policy, only push and pop):&nbsp; <a href="policy_vector3.hpp">policy_vector3.hpp</a>
+<a href="testing_vector3.cpp">testing_vector3.cpp</a></font></font>
+<br><font face="Arial,Helvetica"><font size=-1>Fourth version (with insert
+etc.):&nbsp; <a href="policy_vector4.hpp">policy_vector4.hpp</a>
+<a href="testing_vector4.cpp">testing_vector4.cpp</a></font></font>
+<br>Fifth version (with checking policy):<font face="Arial,Helvetica"><font size=-1><a href="policy_vector5.hpp">policy_vector5.hpp</a>
+
+<a href="testing_vector5.cpp">testing_vector5.cpp</a></font></font>
+<br>Sixth version (with iterator policy):<font face="Arial,Helvetica"><font size=-1><a href="policy_vector6.hpp">policy_vector6.hpp</a>
+
+<a href="testing_vector6.cpp">testing_vector6.cpp</a></font></font>
+<br>Final version (STL-like): <font face="Arial,Helvetica"><font size=-1><a href="policy_vector7.hpp">policy_vector7.hpp</a>
+
+<a href="testing_vector7.cpp">testing_vector7.cpp</a></font></font>
+<p><font face="Arial,Helvetica"><font size=-1>[<a href="#intro">intro</a>]
+[<a href="#one_policy">one policy</a>] [<a href="#resize_policies">resizing
+policies</a>] [<a href="#other_policies">other policies</a>] [<a href="#checking_policy">checking
+policies</a>] [<a href="#iterator_policy">iterator policies</a>] [<a href="#interface">interface</a>]
+[<a href="#code">code</a>]</font></font>
+<br>&nbsp;
+</body>
+</html>

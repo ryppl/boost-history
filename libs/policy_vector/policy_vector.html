@@ -1,0 +1,1123 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="Keywords" content="array, block, carray, c_array, array wrapper, adapter, adaptor, STL, C++ Standard Library, array.hpppolicy_vector, policies, policy classes">
+   <meta name="GENERATOR" content="Mozilla/4.77 [en] (X11; U; Linux 2.2.20 i686) [Netscape]">
+   <meta name="Author" content="Herve Bronnimann">
+   <title>An STL-compliant policy vector</title>
+</head>
+<body text="#000000" bgcolor="#FFFFFF" link="#186ABF">
+&nbsp;
+<table WIDTH="100%" HEIGHT="40" >
+<tr>
+<td BGCOLOR="#DDDDDD"><b><font face="Arial,helvetica"><font color="#000000"><font size=+1>Class
+policy_vector&lt;T, ...></font></font></font></b></td>
+</tr>
+</table>
+
+<ol>
+<li>
+<font face="Arial,Helvetica"><font size=-1><a href="#intro">Introduction</a></font></font></li>
+
+<li>
+<font face="Arial,Helvetica"><font size=-1><a href="#requirements">Requirements
+on policies</a>:</font></font></li>
+
+<ol>
+<li>
+<font face="Arial,Helvetica"><font size=-1><a href="#storage policies">storage
+policies</a></font></font></li>
+
+<li>
+<font face="Arial,Helvetica"><font size=-1><a href="#resizing policies">resizing
+policies</a></font></font></li>
+
+<li>
+<font face="Arial,Helvetica"><font size=-1><a href="#checking policies">checking
+policies</a></font></font></li>
+
+<li>
+<font face="Arial,Helvetica"><font size=-1><a href="#iterator policies">iterator
+policies</a></font></font></li>
+</ol>
+
+<li>
+<font face="Arial,Helvetica"><font size=-1><a href="#synopsis">Synopsis</a></font></font></li>
+
+<li>
+<font face="Arial,Helvetica"><font size=-1><a href="#rationale">Rationale</a></font></font></li>
+
+<li>
+<font face="Arial,Helvetica"><font size=-1><a href="#interface">Interface</a></font></font></li>
+
+<li>
+<font face="Arial,Helvetica"><font size=-1><a href="#acknowledgements">Acknowledgments</a></font></font></li>
+</ol>
+
+<h3>
+<a NAME="intro"></a><font face="Arial,Helvetica"><font color="#FF0000">Introduction</font></font></h3>
+
+<blockquote><font face="Arial,Helvetica"><font size=-1>The std::vector&lt;>
+class template is a very useful variable-size container class. However,
+its behavior depends on the implementation of the standard C++ library.
+For instance, the resizing behavior is fixed by the implementation (usually
+doubling) and the user has no control over it; the iterator is usually
+a pointer (for efficiency) although the standard only specifies that it
+is implementation-defined; as a result, the iterator invalidation rules
+are also implementation dependent although a good implementation will make
+them as innocuous as possible.</font></font>
+<p><font face="Arial,Helvetica"><font size=-1>It is sometimes desirable
+to control the behavior of the container.&nbsp; For instance, in debugging
+or regression testing phase, one might want to check against range bounds
+for every access or iterator dereferencing, but avoid the cost penalty
+in normal usage. This can currently be achieved by using at() instead of
+operator[], but involves changing the user code.</font></font>
+<p><font face="Arial,Helvetica"><font size=-1>There are various ways of
+doing this: a collection of separate class templates would do fine. There
+is enough commonality to justify a common base, however, and one could
+provide a hierarchy of containers. My own feeling is that a class hierarchy
+is not appropriate here since the different choice modify the behavior,
+and provide variation, rather than extend the functionality. Having read
+Modern C++ Design, by Andrei Alexandrescu, I thought this would be a nice
+policy-based design.</font></font>
+<p><font size=-1><font face="Arial,Helvetica">I identify three independent
+behaviors that might turn into policies. First, the underlying storage
+model can be an array, or allocated on the heap, and may provide growing
+and/or shrinking. This gives rise to a <b>storage policy</b>. (There might
+also be more exotic models, for instance </font><font face="Courier New,Courier">external_storage_policy</font><font face="Arial,Helvetica">,
+where the container resides on disk, and is loaded by blocks into the main
+memory.) Next, does accessing the elements by indices invoke checking?
+The std::vector class achieves this by providing an unchecked operator[]
+and a member at() which checks; the iterators never check (in most implementations).
+This introduces a <b>checking policy</b>, which is completely independent
+from the storage policies. Finally, the iterator type might be a raw pointer,
+or something more sophisticated like a smart pointer. This is our final
+policy, the <b>iterator policy</b>. There could be some degree of interaction
+between checking and iterator policy, if desired.</font></font></blockquote>
+
+<h3>
+<a NAME="intro"></a><font face="Arial,Helvetica"><font color="#FF0000">Overview</font></font></h3>
+
+<blockquote><font face="Arial,Helvetica"><font size=-1>This library provides
+a class template
+</font></font><font face="Courier New,Courier">policy_vector&lt;T,
+Alloc, StoragePolicy, CheckingPolicy, IteratorPolicy></font><font face="Arial,Helvetica"><font size=-1>
+where the policies can be user-defined or any of the predefined policies:</font></font>
+<ol>
+<li>
+<a NAME="allocator_policy"></a><font face="Courier New,Courier">Alloc</font><font face="Arial,Helvetica"><font size=-1>:
+although it's a stretch to consider allocator a policy, I'll provide one
+allocator policy in case allocation is not needed (e.g. for fixed aggregate
+array)</font></font></li>
+
+<ol>
+<li>
+<font size=-1><font face="Courier New,Courier">no_allocator_policy</font><font face="Arial,Helvetica">:
+specifies that no allocation is needed. Should be used only for the storage
+policies which do not have use for allocators (fixed storage, not allocated).</font></font></li>
+</ol>
+<font face="Arial,Helvetica"><font size=-1>For all other policies, std::allocator&lt;T>
+is the default allocator, and can be used if</font></font>
+<li>
+<a NAME="storage_policy"></a><font face="Courier New,Courier"><a href="#storage policies">StoragePolicy</a></font><font face="Arial,Helvetica"><font size=-1>:
+the storage policy can be one of three fixed-size storage policies:</font></font></li>
+
+<ol>
+<li>
+<font face="Courier New,Courier">fixed_aggregate_array&lt;N></font><font size=-1><font face="Arial,Helvetica">:
+similar to </font><font face="Courier New,Courier">boost::array</font></font></li>
+
+<li>
+<font face="Courier New,Courier">fixed_allocated_array&lt;N,Alloc=STLDefaultAllocator></font><font face="Arial,Helvetica"><font size=-1>:
+similar to vector, but without insert/erase and all the size-modifying
+operations.</font></font></li>
+
+<li>
+<font size=-1><font face="Courier New,Courier">fixed_external_static_array&lt;T,N></font><font face="Arial,Helvetica">:
+stores a pointer to the beginning of an array whose size is known at compile-time.
+Does not store the array itself nor control its allocation/deallocation.</font></font></li>
+
+<li>
+<font size=-1><font face="Courier New,Courier">fixed_external_range&lt;Iterator,ConstIterator></font><font face="Arial,Helvetica">:
+stores the iterators to provide access to a range [first,last). Does not
+store the range nor control its allocation/deallocation.</font></font></li>
+</ol>
+<i><font face="Arial,Helvetica"><font size=-1>Note that the last two policies
+are evil, in the sense that they have exactly the same semantics as pointers
+(no management of any kind). Thus it is possible to have two containers
+pointing to the same memory space, or pointing to a since-deallocated block
+of memory, etc. These policies, if they should be useful, would probably
+benefit from smart-pointer concepts such as copy on write, sharing, etc.</font></font></i>
+<br><font face="Arial,Helvetica"><font size=-1>In addition to these, there
+is one variable-size storage policy, which itself can be parameterized
+by the resizing behavior:</font></font>
+<ol>
+<li>
+<font size=-1><font face="Courier New,Courier">variable_allocated_array&lt;ResizePolicy,
+initN=0></font><font face="Arial,Helvetica">: similar to std::vector, with
+the following <a href="#resizing policies">resizing policies</a>:</font></font></li>
+
+<ol>
+<li>
+<font size=-1><font face="Courier New,Courier">incremental_resize&lt;N></font><font face="Arial,Helvetica">:
+grows by adding a constant number of elements if full before insertion
+(<font color="#FF0000">WARNING</font>: this is not a recommended policy
+in most cases because of its quadratic behavior; it is conceptually useful
+in some situations where we know we won't resize too much and storage is
+at a premium). No shrinking.</font></font></li>
+
+<li>
+<font size=-1><font face="Courier New,Courier">multiply_resize&lt;N></font><font face="Arial,Helvetica">:
+grows by increasing the number of elements by a constant factor N if full
+before insertion (default: (N=2). No shrinking.</font></font></li>
+
+<li>
+<font size=-1><font face="Courier New,Courier">multiply_divide_resize&lt;N></font><font face="Arial,Helvetica">:
+grows by increasing the number of elements by a constant factor N of elements
+if full before insertion, and shrinks table by N if it holds fewer than
+max_size()/(N*N) elements (ensures that table won't grow in the next N
+insertions).</font></font></li>
+
+<li>
+<font size=-1><font face="Courier New,Courier">dynamic_divide_resize</font><font face="Arial,Helvetica">:
+allows to modify the policy at runtime, if it is know, for instance, that
+incremental resize might lead to less memory overhead in some portions
+of the algorithm, while exponential resize is still needed in the remaining
+portion of the program.</font></font></li>
+</ol>
+</ol>
+
+<li>
+<a NAME="checking_policy"></a><font size=-1><font face="Courier New,Courier"><a href="#checking policies">CheckingPolicy</a></font><font face="Arial,Helvetica">:
+if S is the size_type of vector, then conceptually we can have the following
+checks for operator[] and for the iterators:</font></font></li>
+
+<ol>
+<li>
+<font face="Courier New,Courier"><font size=-1>no_check&lt;S></font></font></li>
+
+<li>
+<font face="Courier New,Courier"><font size=-1>exception_check&lt;S></font></font></li>
+
+<li>
+<font face="Courier New,Courier"><font size=-1>assert_check&lt;S></font></font></li>
+</ol>
+<font size=-1><font face="Arial,Helvetica">Note that the member function
+</font><font face="Courier New,Courier">at(i)</font><font face="Arial,Helvetica">
+always throws an exception (namely, </font><font face="Courier New,Courier">std::range_error</font><font face="Arial,Helvetica">)
+if i is not in the range </font><font face="Courier New,Courier">[0,size())</font><font face="Arial,Helvetica">,
+regardless of the checking policy.</font></font>
+<li>
+<a NAME="iterator_policy"></a><font size=-1><font face="Courier New,Courier"><a href="#iterator policies">IteratorPolicy</a></font><font face="Arial,Helvetica">:
+if T is the size of the elements, and V is the policy_vector type, we provide
+the following policies:</font></font></li>
+
+<ol>
+<li>
+<font size=-1><font face="Courier New,Courier">raw_pointer_iterator&lt;T,V></font><font face="Arial,Helvetica">:
+defines iterator type as T* (as in std::vector)</font></font></li>
+
+<li>
+<font size=-1><font face="Courier New,Courier">pointer_iterator&lt;T,V,check></font><font face="Arial,Helvetica">:
+defines iterator type as a wrapper around T*.</font></font></li>
+
+<li>
+<font size=-1><font face="Courier New,Courier">checked_pointer_iterator&lt;T,V></font><font face="Arial,Helvetica">:
+defines iterator type as a wrapper around T*. Dereferencing the iterator
+performs a check according to the checking policy of V. (Internally stores
+a pointer to the vector.) In particular, if the iterator is invalidated
+because of a resizing of the vector, the check will fail, providing the
+opportunity to handle the situation gracefully.</font></font></li>
+
+<li>
+<font size=-1><font face="Courier New,Courier">index_iterator&lt;T,V></font><font face="Arial,Helvetica">:
+defines iterator type as an index and a base pointer. (Internally stores
+a pointer to the vector.) In particular, this kind of iterator is never
+invalidated by resizing the vector (although it could fail to be within
+the bounds if enough deletions have been performed since its creation).</font></font></li>
+
+<li>
+<font size=-1><font face="Courier New,Courier">checked_index_iterator&lt;T,V></font><font face="Arial,Helvetica">:
+defines iterator type as an index and a base pointer, as before. In addition,
+dereferencing the iterator performs a check according to the checking policy
+of V.</font></font></li>
+
+<li>
+<font size=-1><font face="Courier New,Courier">iterator_adaptor&lt;T,V></font><font face="Arial,Helvetica">:
+for use exclusively with the </font><font face="Courier New,Courier">fixed_external_range&lt;Iterator,ConstIterator></font><font face="Arial,Helvetica">
+storage policy. (It won't work with other storage policies). In all other
+iterator policies provided here, it is assumed that the storage is simply
+given by a pointer to T, but this is not the case here.</font></font></li>
+
+<li>
+<font size=-1><font face="Courier New,Courier">checked_iterator_adaptor&lt;T,V></font><font face="Arial,Helvetica">:
+for use exclusively with the </font><font face="Courier New,Courier">fixed_external_range&lt;Iterator,ConstIterator></font><font face="Arial,Helvetica">storage
+policy, as with previous iterator policy. In addition, dereferencing the
+iterator performs a check according to the checking policy of V.</font></font></li>
+</ol>
+</ol>
+<font size=-1><font face="Arial,Helvetica">In order to allow the declarations
+</font><font face="Courier New,Courier">typename
+policy_vector&lt;T></font><font face="Arial,Helvetica"> or </font><font face="Courier New,Courier">policy_vector&lt;T,Alloc></font><font face="Arial,Helvetica">,
+the policies have default template parameters for compilers which allow
+it. The default choice for policies are the ones that make policy_vector
+behave like </font><font face="Courier New,Courier">std::vector</font><font face="Arial,Helvetica">.
+For instance, if there were partially specialized template typedefs in
+C++ (one can always dream:), we could write for the SGI STL implementation:</font></font>
+<p><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;
+template &lt;class T, class Alloc /* = STL_default_allocator */ ></font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;
+typedef policy_vector&lt; T, Alloc,</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+variable_allocated_array&lt; multiply_resize&lt;2> >,</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+no_check,</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+raw_pointer_iterator</font></font></font>
+<br><font face="Courier New,Courier"><font size=-1><font color="#000099">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+> </font><font color="#FF0000">std_vector</font><font color="#000099">;
+</font><font color="#FF0000">//
+same as std::vector&lt;T,Alloc></font></font></font>
+<p><font face="Arial,Helvetica"><font color="#000000"><font size=-1>On
+the other hand, here are a couple of other potentially useful definitions
+for fixed-:</font></font></font>
+<p><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;
+template &lt;class T, std::size_t N></font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;
+typedef policy_vector&lt; T, no_allocator_policy,</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+fixed_aggregate_array&lt;N>,</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+no_check,</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+raw_pointer_iterator</font></font></font>
+<br><font face="Courier New,Courier"><font size=-1><font color="#000099">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+> </font><font color="#FF0000">boost_array; // same as boost::array&lt;T,N></font></font></font>
+<p><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;
+template &lt;class T, std::size_t N></font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;
+typedef policy_vector&lt; T, no_allocator_policy,</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+fixed_external_static_array&lt;T,N>,</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+no_check,</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+raw_pointer_iterator</font></font></font>
+<br><font face="Courier New,Courier"><font size=-1><font color="#000099">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+> </font><font color="#FF0000">array_adapter</font><font color="#000099">;
+</font><font color="#FF0000">//
+see Message ASPN:1195295 by Victor Wagner</font></font></font>
+<p><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;
+template &lt;class Iterator, class ConstIterator></font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;
+typedef policy_vector&lt; T, no_allocator_policy,</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+fixed_external_range&lt;Iterator,ConstIterator>,</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+no_check,</font></font></font>
+<br><font face="Courier New,Courier"><font color="#000099"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+checked_iterator_adaptor,</font></font></font>
+<br><font face="Courier New,Courier"><font size=-1><font color="#000099">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+> </font><font color="#FF0000">range_adapter</font><font color="#000099">;
+</font><font color="#FF0000">//
+inspired by the former</font></font></font></blockquote>
+
+<h3>
+<a NAME="requirements"></a><b><font face="Arial,Helvetica"><font color="#FF0000">Requirements
+on policies</font></font></b></h3>
+
+<blockquote><font face="Arial,Helvetica"><font color="#000000"><font size=-1>As
+is usual with policies, we strive to keep the requirements at the simplest
+to ease the task of creating more policies. However, storage issues are
+a bit more complicated, so developing your&nbsp; own storage policy requires
+some understanding of the design. Please read the <a href="#rationale">rationale</a>
+and <a href="history.html#policy_vector_storage">design history</a>. For
+the rest, I hope the policy design is general enough to encompass the widest
+usage. If you cannot create your policy using the following requirements,
+let me know and we'll work it out.</font></font></font></blockquote>
+
+<blockquote><a NAME="allocators"></a><b><font face="Arial,Helvetica"><font color="#FF0000"><font size=+0>Allocator</font></font></font></b>
+<br><font face="Arial,Helvetica"><font color="#000000"><font size=-1>The
+requirements for allocators are those of the C++ Standard Template Library.
+In addition, there is an empty class no_allocator_policy for use as a template
+parameter of policy vectors which do not need to be allocated (fixed aggregate
+array, for instance).</font></font></font><font face="Arial,Helvetica"><font color="#000000"><font size=-1></font></font></font>
+<p><a NAME="storage policies"></a><b><font face="Arial,Helvetica"><font color="#FF0000">Storage
+policies</font></font></b>
+<br><font color="#000000"><font size=-1><font face="Arial,Helvetica">In
+most designs, we would expect that the storage policy owns the data and
+is responsible for allocating and deallocating. Not so here, for reasons
+detailed in the <a href="#rationale">rationale</a> (and specifically, <a href="history.html#policy_vector_storage">in
+the design history here</a>).<i> </i>We adopt a two-tier mechanism, where
+</font><font face="Courier New,Courier">policy_vector</font><font face="Arial,Helvetica">
+inherits from a class template </font><font face="Courier New,Courier">policy_vector_storage&lt;T,Alloc,StoragePolicy></font><font face="Arial,Helvetica">.
+At instantiation, policy_vector binds these template parameters to its
+first three template arguments. In turn, this class template must be specialized
+for each storage policy, to provide the required members detailed below.
+So the storage policy acts only as a type to partially specialize the third
+template parameter of </font><font face="Courier New,Courier">policy_vector_storage&lt;T,Alloc,StoragePolicy></font><font face="Arial,Helvetica">,
+and therefore has no requirements. However, the partial specialization
+</font><font face="Courier New,Courier">policy_vector_storage&lt;T,Alloc,storage_policy></font><font face="Arial,Helvetica">
+must provide the required members detailed below:</font></font></font>
+<br>&nbsp;
+<center><table BORDER=2 WIDTH="80%" NOSAVE >
+<tr ALIGN=CENTER VALIGN=CENTER NOSAVE>
+<th NOSAVE><font face="Arial,Helvetica"><font size=-1>Member requirement</font></font></th>
+
+<th NOSAVE><font face="Arial,Helvetica"><font size=-1>Description</font></font></th>
+
+<th NOSAVE><font face="Arial,Helvetica"><font size=-1>Default</font></font></th>
+</tr>
+
+<tr>
+<td><font face="Courier New,Courier"><font size=-1>PVS::size_type</font></font></td>
+
+<td><font face="Arial,Helvetica"><font size=-1>An unsigned integral type
+that can represent any nonnegative value of the container's distance type.</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>std::size_t</font></font></td>
+</tr>
+
+<tr NOSAVE>
+<td NOSAVE><font face="Courier New,Courier"><font size=-1>PVS::iterator</font></font></td>
+
+<td></td>
+
+<td></td>
+</tr>
+
+<tr>
+<td><font face="Courier New,Courier"><font size=-1>PVS::const_iterator</font></font></td>
+
+<td></td>
+
+<td></td>
+</tr>
+
+<tr>
+<td></td>
+
+<td></td>
+
+<td></td>
+</tr>
+
+<caption ALIGN=BOTTOM><b><font face="Arial,Helvetica"><font size=-1>Requirements
+for partial specialization of policy_vector_storage&lt;T,Alloc,StoragePolicy>.</font></font></b>
+<br><font size=-1><font face="Courier New,Courier">PVS</font><font face="Arial,Helvetica">
+: a model of </font><font face="Courier New,Courier">policy_vector_storage&lt;T,Alloc,StoragePolicy></font><font face="Arial,Helvetica">,</font></font>
+<br><font size=-1><font face="Courier New,Courier">pvs, pvs1, pvs2</font><font face="Arial,Helvetica">
+: objects of type </font><font face="Courier New,Courier">PVS</font><font face="Arial,Helvetica">;
+</font><font face="Courier New,Courier">x</font><font face="Arial,Helvetica">
+: object of type </font><font face="Courier New,Courier">T</font><font face="Arial,Helvetica">;
+</font><font face="Courier New,Courier">a</font><font face="Arial,Helvetica">
+: object of type </font><font face="Courier New,Courier">Alloc</font><font face="Arial,Helvetica">.</font></font></caption>
+</table></center>
+<a NAME="resizing policies"></a><b><font face="Arial,Helvetica"><font color="#FF0000">Resizing
+policies</font></font></b>
+<br><font color="#000000"><font size=-1><font face="Arial,Helvetica">The
+resizing policies are just small classes that compute new sizes as used
+by the partial specializations </font><font face="Courier New,Courier">policy_vector_storage&lt;T,Alloc,variable_allocated_array&lt;...>
+></font><font face="Arial,Helvetica">.&nbsp; They have a very simple requirement:</font></font></font>
+<br>&nbsp;
+<center><table BORDER=2 NOSAVE >
+<tr ALIGN=CENTER VALIGN=CENTER NOSAVE>
+<th NOSAVE><font face="Arial,Helvetica"><font size=-1>Member requirement</font></font></th>
+
+<th NOSAVE><font face="Arial,Helvetica"><font size=-1>Description</font></font></th>
+
+<th NOSAVE><font face="Arial,Helvetica"><font size=-1>Default</font></font></th>
+</tr>
+
+<tr>
+<td><font face="Courier New,Courier"><font size=-1>rp.resize_before_insert(size,capacity,</font></font>
+<br><font face="Courier New,Courier"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+n,new_capacity);</font></font></td>
+
+<td><font face="Arial,Helvetica"><font size=-1>Returns true if a vector
+of given size and capacity should be reallocated after insertion of n elements,
+false otherwise. If returns true, then new_capacity holds the new capacity
+which should be used in the reallocation.</font></font></td>
+
+<td><font face="Arial,Helvetica"><font size=-1>Returns (size+n>capacity),</font></font>
+<br><font face="Arial,Helvetica"><font size=-1>new_capacity =&nbsp; 2^k*capacity;</font></font>
+<br><font face="Arial,Helvetica"><font size=-1>where k is the smallest
+so that !(size+n>new_capacity);</font></font></td>
+</tr>
+
+<tr NOSAVE>
+<td NOSAVE><font face="Courier New,Courier"><font size=-1>rp.resize_after_erase(size,capacity,</font></font>
+<br><font face="Courier New,Courier"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+new_capacity);</font></font></td>
+
+<td><font face="Arial,Helvetica"><font size=-1>Returns true if a vector
+of given size and capacity should be shrunk after erasure of some of its
+elements. In this case, new_capacity holds the new capacity (smaller than
+capacity) which should be used in the reallocation.</font></font></td>
+
+<td><font face="Arial,Helvetica"><font size=-1>Returns false.</font></font></td>
+</tr>
+
+<caption ALIGN=BOTTOM><b><font face="Arial,Helvetica"><font size=-1>Requirements
+for template parameter ResizePolicy of variable_allocated_array&lt;ResizePolicy,initN>.</font></font></b>
+<br><font size=-1><font face="Arial,Helvetica">RP : a model of ResizePolicy,
+rp: object of type RP; size,capacity,n,new_capacity : objects of type </font><font face="Courier New,Courier">typename
+variable_allocated_array&lt;ResizePolicy,initN>::size_type</font><font face="Arial,Helvetica">.</font></font></caption>
+</table></center>
+
+<p><a NAME="checking policies"></a><b><font face="Arial,Helvetica"><font color="#FF0000">Checking
+policies</font></font></b>
+<br><font face="Arial,Helvetica"><font color="#000000"><font size=-1>The
+checking policies specify a checking mechanism. So that it does not depend
+on the other policies, a simple uniform interface based solely on size_type
+(provided as a template parameter) is chosen. The requirements are kept
+at the simplest:</font></font></font>
+<br>&nbsp;
+<center><table BORDER=2 WIDTH="80%" NOSAVE >
+<tr ALIGN=CENTER VALIGN=CENTER NOSAVE>
+<th NOSAVE><font face="Arial,Helvetica"><font size=-1>Member requirement</font></font></th>
+
+<th NOSAVE><font face="Courier New,Courier"><font size=-1>Description</font></font></th>
+
+<th NOSAVE><font face="Courier New,Courier"><font size=-1>Default</font></font></th>
+</tr>
+
+<tr>
+<td><font face="Courier New,Courier"><font size=-1>cp.range_check(n,size);</font></font></td>
+
+<td><font face="Arial,Helvetica"><font size=-1>Applies policy checking
+behavior (nothing, assert, throws exception, ...) if access the n-th element
+in a vector of given size would result in out-of-range violation.</font></font></td>
+
+<td><font face="Arial,Helvetica"><font size=-1>Does nothing.</font></font></td>
+</tr>
+
+<caption ALIGN=BOTTOM><b><font face="Arial,Helvetica"><font size=-1>Requirements
+for template &lt;class size_type> struct CheckingPolicy.</font></font></b>
+<br><font face="Arial,Helvetica"><font size=-1>CP : a model of CheckingPolicy&lt;size_type>;
+cp: objects of type CP; n, size : objects of type size_type.</font></font></caption>
+</table></center>
+
+<p><a NAME="iterator policies"></a><b><font face="Arial,Helvetica"><font color="#FF0000">Iterator
+policies</font></font></b>
+<br><font face="Arial,Helvetica"><font color="#000000"><font size=-1>The
+iterator policies specify the iterator, const_iterator, size_type and difference_type.
+In addition, to decouple the iterator and storage policies, a uniform interface
+based on indices is adopted to construct iterators. So that some iterators
+may have access to the beginning of storage, constructing an iterator takes
+a pointer to the policy_vector and an index. The requirements are rather
+short:</font></font></font>
+<br>&nbsp;
+<center><table BORDER=2 NOSAVE >
+<tr ALIGN=CENTER VALIGN=CENTER NOSAVE>
+<th NOSAVE><font face="Arial,Helvetica"><font size=-1>Member requirement</font></font></th>
+
+<th NOSAVE><font face="Arial,Helvetica"><font size=-1>Description</font></font></th>
+
+<th NOSAVE><font face="Arial,Helvetica"><font size=-1>Default</font></font></th>
+</tr>
+
+<tr NOSAVE>
+<td><font face="Courier New,Courier"><font size=-1>IP::size_type</font></font></td>
+
+<td NOSAVE><font face="Arial,Helvetica"><font size=-1>An unsigned integral
+type that can represent any nonnegative value of the container's distance
+type.</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>std::size_t</font></font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New,Courier"><font size=-1>IP::difference_type</font></font></td>
+
+<td><font face="Arial,Helvetica"><font size=-1>A signed integral type used
+to represent the distance between two of the container's iterators. This
+type must be the same as the iterator's distance type.</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>std::ptrdiff_t</font></font></td>
+</tr>
+
+<tr NOSAVE>
+<td NOSAVE><font face="Courier New,Courier"><font size=-1>IP::iterator</font></font></td>
+
+<td><font face="Arial,Helvetica"><font size=-1>Iterator type.</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>typename V::value_type*</font></font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New,Courier"><font size=-1>IP::const_iterator</font></font></td>
+
+<td><font face="Arial,Helvetica"><font size=-1>Non-mutable iterator type.</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>typename V::value_type
+const*</font></font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New,Courier"><font size=-1>ip.make_iterator(v,n);</font></font></td>
+
+<td><font face="Arial,Helvetica"><font size=-1>Returns an iterator that
+points at the nth element of v.</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>iterator(v,n);</font></font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New,Courier"><font size=-1>ip.make_const_iterator(w,n);</font></font></td>
+
+<td><font face="Arial,Helvetica"><font size=-1>Returns a non-mutable iterator
+that points at the nth element of w.</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>const_iterator(w,n);</font></font></td>
+</tr>
+
+<caption ALIGN=BOTTOM><b><font face="Arial,Helvetica"><font size=-1>Requirements
+for template &lt;class T, class V> struct IteratorPolicy.</font></font></b>
+<br><font face="Arial,Helvetica"><font size=-1>IP : a model of IteratorPolicy&lt;T,V>;&nbsp;</font></font>
+<br><font face="Arial,Helvetica"><font size=-1>ip : objects of type IP;
+n : object of type difference_type; v : object of type V* ; w : object
+of type const V*</font></font></caption>
+</table></center>
+</blockquote>
+
+<h3>
+<a NAME="synopsis"></a><font face="Arial,Helvetica"><font color="#FF0000">Synopsis</font></font></h3>
+
+<blockquote><font face="Courier New,Courier"><font size=-1>namespace boost
+{</font></font>
+<p><font face="Courier New,Courier"><font size=-1>&nbsp; // <a href="#allocators">Allocator
+policies</a></font></font>
+<br><font face="Courier New,Courier"><font size=-1>&nbsp; typedef int <a href="#allocator_policy">no_allocator_policy</a>;</font></font>
+<p><font face="Courier New,Courier"><font size=-1>&nbsp; // <a href="#resizing policies">Resizing
+policies for variable allocated array</a></font></font>
+<br><font face="Courier New,Courier"><font size=-1>&nbsp; template &lt;std::size_t
+N> struct <a href="#storage_policy">incremental_resize</a>;</font></font>
+<br><font face="Courier New,Courier"><font size=-1>&nbsp; template &lt;std::size_t
+N> struct <a href="#storage_policy">multiply_resize</a>;</font></font>
+<br><font face="Courier New,Courier"><font size=-1>&nbsp; template &lt;std::size_t
+N> struct <a href="#storage_policy">multiply_divide_resize</a>;</font></font>
+<p><font face="Courier New,Courier"><font size=-1>&nbsp; // <a href="#storage policies">Storage
+policies</a></font></font>
+<br><font face="Courier New,Courier"><font size=-1>&nbsp; template &lt;std::size_t
+N>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+struct <a href="#storage_policy">fixed_aggregate_array</a>;</font></font>
+<br><font face="Courier New,Courier"><font size=-1>&nbsp; template &lt;std::size_t
+N>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+struct <a href="#storage_policy">fixed_allocated_array</a>;</font></font>
+<br><font face="Courier New,Courier"><font size=-1>&nbsp; template &lt;class
+T, std::size_t N>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+struct <a href="#storage_policy">fixed_external_static_array</a>;</font></font>
+<br><font face="Courier New,Courier"><font size=-1>&nbsp; template &lt;class
+Iterator, class ConstIterator> struct <a href="#storage_policy">fixed_external_range</a>;</font></font>
+<br><font face="Courier New,Courier"><font size=-1>&nbsp; template &lt;class
+ResizePolicy = multiply_resize&lt;2>, std::size_t initN = 0 ></font></font>
+<br><font face="Courier New,Courier"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+struct <a href="#storage_policy">variable_allocated_array</a>;</font></font>
+<p><font face="Courier New,Courier"><font size=-1>&nbsp; // <a href="#storage policies">Policy
+storage</a> (each storage policy defines a partial specialization)</font></font>
+<br><font face="Courier New,Courier"><font size=-1>&nbsp; template &lt;
+class T, class Alloc, class StoragePolicy > struct policy_vector_storage;</font></font>
+<p><font face="Courier New,Courier"><font size=-1>&nbsp; // <a href="#checking policies">Checking
+policies</a></font></font>
+<br><font face="Courier New,Courier"><font size=-1>&nbsp; template &lt;class
+size_type> struct <a href="#checking_policy">no_check</a>;</font></font>
+<br><font face="Courier New,Courier"><font size=-1>&nbsp; template &lt;class
+size_type> struct <a href="#checking_policy">exception_check</a>;</font></font>
+<br><font face="Courier New,Courier"><font size=-1>&nbsp; template &lt;class
+size_type> struct <a href="#checking_policy">assert_check</a>;</font></font>
+<p><font face="Courier New,Courier"><font size=-1>&nbsp; // <a href="#iterator policies">Iterator
+policies</a></font></font>
+<br><font face="Courier New,Courier"><font size=-1>&nbsp; template &lt;class
+T, class V> struct raw_pointer_iterator;</font></font>
+<br><font face="Courier New,Courier"><font size=-1>&nbsp; template &lt;class
+T, class V> struct pointer_iterator;</font></font>
+<br><font face="Courier New,Courier"><font size=-1>&nbsp; template &lt;class
+T, class V> struct checked_pointer_iterator;</font></font>
+<br><font face="Courier New,Courier"><font size=-1>&nbsp; template &lt;class
+T, class V> struct index_iterator;</font></font>
+<br><font face="Courier New,Courier"><font size=-1>&nbsp; template &lt;class
+T, class V> struct checked_index_iterator;</font></font>
+<br><font face="Courier New,Courier"><font size=-1>&nbsp; template &lt;class
+T, class V> struct checked_iterator_adaptor;</font></font>
+<p><font face="Courier New,Courier"><font size=-1>&nbsp; // Policy vector</font></font>
+<br><font face="Courier New,Courier"><font size=-1>&nbsp; template &lt;
+class T, class Alloc = std::allocator&lt;T>,</font></font>
+<br><font face="Courier New,Courier"><font size=-1>&nbsp;&nbsp;&nbsp; class
+StoragePolicy = variable_allocated_array&lt;multiply_resize&lt;2>, 0>,</font></font>
+<br><font face="Courier New,Courier"><font size=-1>&nbsp;&nbsp;&nbsp; template
+&lt;class S> class CheckingPolicy = no_check,</font></font>
+<br><font face="Courier New,Courier"><font size=-1>&nbsp;&nbsp;&nbsp; template
+&lt;class T2, class V2> class IteratorPolicy = raw_pointer_iterator</font></font>
+<br><font face="Courier New,Courier"><font size=-1>&nbsp; ></font></font>
+<br><font face="Courier New,Courier"><font size=-1>&nbsp; class <a href="#interface">policy_vector</a>;
+// see interface below</font></font>
+<p><font face="Courier New,Courier"><font size=-1>} // namespace boost</font></font></blockquote>
+
+<h3>
+<a NAME="rationale"></a><font face="Arial,Helvetica"><font color="#FF0000">Rationale</font></font></h3>
+
+<blockquote><font face="Arial,Helvetica"><font size=-1>Ross Smith proposed
+a policy-based design. I learned from his design, in particular, I reused
+the iterator wrapper. Nevertheless, I feel that having more than one template
+parameter is not a hindrance (esp. for someone who is used to boost). In
+turn, specifying policies by a bit mask is not error-prone, limits the
+number of policies, and most importantly does not allow user-defined policies.
+Also, having POD types is not a policy, it's totally determined by the
+value type of the container, and the optimizations that use memcopy should
+be part of the allocator (in particular, it can be provided by deriving
+from the standard allocator and reimplementing reallocate). Also, as Ross
+mentions, his design needs to be modified to avoid default construction.</font></font>
+<p><font face="Arial,Helvetica"><font size=-1>The first external storage
+policies was suggested by Victor Wagner on the boost mailing list, while
+I imagined the second as a starightforward extension. I am less and less
+convinced their benefits outweigh their dangers, but I provide them anyway
+as an example of how the policy design presented can suit unforeseen situations.
+In particular, using the external range policy in conjunction with a smart
+pointer that will point to 0 when the range is deallocated, will provide
+safety via the checking policy (while checking, the policy vector will
+discover that its storage has been deallocated, and raise the correct exception
+behavior).</font></font>
+<p><font size=-1><font face="Arial,Helvetica">Name rationale: all policies
+have names that describe them, but do not otherwise have the suffix _policy.
+I felt it would be too redundant, but I guess this could easily be changed.
+An exception was made only for </font><font face="Courier New,Courier">no_allocator_policy</font><font face="Arial,Helvetica">,
+since the name no_allocator seems a bit too general, and the usual value
+of the template parameter, </font><font face="Courier New,Courier">std::allocator&lt;T></font><font face="Arial,Helvetica">,
+has about just as many letters anyway.</font></font>
+<p><font face="Arial,Helvetica"><font size=-1>Since I assigned this as
+a succession of homeworks in my class <a href="http://geometry.poly.edu/cs903/">CS903</a>,
+I wrote a solution. Instead of giving a single file representing the solution,
+<a href="history.html">here's
+a walk into how I managed to get the design</a>, by showing you the successive
+versions. It's as good as a <a href="#rationale">rationale</a> for the
+design as one gets. In particular, you'll find the <a href="history.html#policy_vector_storage">explanation</a>&nbsp;
+for the choice of the two-tier mechanism for storage_policy and policy_vector_storage.</font></font></blockquote>
+
+<h3>
+<a NAME="interface"></a><font face="Arial,Helvetica"><font color="#FF0000">Class
+interface</font></font></h3>
+
+<blockquote><font face="Arial,Helvetica"><font size=-1>The class template
+</font></font><font face="Courier New,Courier">policy_vector&lt;T,
+Alloc, StoragePolicy, CheckingPolicy, IteratorPolicy></font><font face="Arial,Helvetica"><font size=-1>
+provides the following interface:</font></font></blockquote>
+
+<table BORDER=0 NOSAVE >
+<tr VALIGN=TOP NOSAVE>
+<td NOSAVE><b><font face="Arial, Helvetica, sans-serif"><font size=-1>Types:</font></font></b></td>
+
+<td></td>
+</tr>
+
+<tr>
+<td><font face="Courier New, Courier, mono"><font size=-1>allocator_type</font></font></td>
+
+<td><font size=-1><font face="Arial, Helvetica, sans-serif">type of the
+allocator (</font><font face="Courier New,Courier">typedef Alloc</font><font face="Arial, Helvetica, sans-serif">)</font></font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New, Courier, mono"><font size=-1>value_type</font></font></td>
+
+<td><font size=-1><font face="Arial, Helvetica, sans-serif">type of the
+elements (</font><font face="Courier New,Courier">typedef T</font><font face="Arial, Helvetica, sans-serif">)</font></font></td>
+</tr>
+
+<tr NOSAVE>
+<td VALIGN=TOP NOSAVE><font face="Courier New,Courier"><font size=-1>pointer</font></font></td>
+
+<td><font face="Arial,Helvetica"><font size=-1>type of pointer to an element</font></font>
+<br><font size=-1><font face="Arial,Helvetica">(</font><font face="Courier New,Courier">typedef
+typename allocator_type::pointer</font><font face="Arial,Helvetica">)</font></font></td>
+</tr>
+
+<tr NOSAVE>
+<td VALIGN=TOP NOSAVE><font face="Courier New,Courier"><font size=-1>const_pointer</font></font></td>
+
+<td><font face="Arial,Helvetica"><font size=-1>type of pointer to an element
+considered constant</font></font>
+<br><font size=-1><font face="Arial,Helvetica">(</font><font face="Courier New,Courier">typedef
+typename allocator_type::const_pointer</font><font face="Arial,Helvetica">)</font></font></td>
+</tr>
+
+<tr NOSAVE>
+<td VALIGN=TOP NOSAVE><font face="Courier New, Courier, mono"><font size=-1>iterator</font></font></td>
+
+<td><font face="Arial, Helvetica, sans-serif"><font size=-1>type of the
+iterator (random-access iterator)</font></font>
+<br><font size=-1><font face="Courier New,Courier">(typedef typename iterator_policy::iterator</font><font face="Arial,Helvetica">)</font></font></td>
+</tr>
+
+<tr NOSAVE>
+<td VALIGN=TOP NOSAVE><font face="Courier New, Courier, mono"><font size=-1>const_iterator</font></font></td>
+
+<td><font face="Arial,Helvetica"><font size=-1>type of iterator that considers
+elements as being constant</font></font>
+<br><font size=-1><font face="Arial,Helvetica">(</font><font face="Courier New,Courier">typedef
+typename iterator_policy::const_</font></font><font face="Courier New,Courier">iterator</font><font face="Arial,Helvetica">)</font></td>
+</tr>
+
+<tr NOSAVE>
+<td VALIGN=TOP NOSAVE><font face="Courier New, Courier, mono"><font size=-1>reference</font></font></td>
+
+<td><font face="Arial,Helvetica"><font size=-1>type of element reference</font></font>
+<br><font size=-1><font face="Arial,Helvetica">(</font><font face="Courier New,Courier">typedef
+typename allocator_type::reference</font><font face="Arial, Helvetica, sans-serif">)</font></font></td>
+</tr>
+
+<tr NOSAVE>
+<td VALIGN=TOP NOSAVE><font face="Courier New, Courier, mono"><font size=-1>const_reference</font></font></td>
+
+<td><font face="Arial,Helvetica"><font size=-1>type of element reference
+that considers elements as being constant</font></font>
+<br><font size=-1><font face="Arial,Helvetica">(</font><font face="Courier New,Courier">typedef
+typename allocator_type::const_reference</font><font face="Arial, Helvetica, sans-serif">)</font></font></td>
+</tr>
+
+<tr NOSAVE>
+<td VALIGN=TOP NOSAVE><font face="Courier New, Courier, mono"><font size=-1>size_type</font></font></td>
+
+<td><font face="Arial, Helvetica, sans-serif"><font size=-1>type for unsigned
+size values</font></font>
+<br><font size=-1><font face="Arial, Helvetica, sans-serif">(</font><font face="Courier New,Courier">typedef
+typename iterator_policy::size_type</font><font face="Arial, Helvetica, sans-serif">)</font></font></td>
+</tr>
+
+<tr NOSAVE>
+<td VALIGN=TOP NOSAVE><font face="Courier New, Courier, mono"><font size=-1>difference_type</font></font></td>
+
+<td><font face="Arial, Helvetica, sans-serif"><font size=-1>type for signed
+difference values</font></font>
+<br><font size=-1><font face="Arial, Helvetica, sans-serif">(</font><font face="Courier New,Courier">typedef
+typename iterator_policy::difference_type</font><font face="Arial, Helvetica, sans-serif">)</font></font></td>
+</tr>
+
+<tr>
+<td><b><font face="Arial, Helvetica, sans-serif"><font size=-1>Operations:</font></font></b></td>
+
+<td></td>
+</tr>
+
+<tr VALIGN=TOP NOSAVE>
+<td NOSAVE><font face="Courier New, Courier, mono"><font size=-1>policy_vector(<i>a,sp,cp,ip</i>)</font></font></td>
+
+<td><font face="Arial, Helvetica, sans-serif"><font size=-1>default constructor,
+creates default array for </font></font><font face="Courier New,Courier">storage_policy</font><font face="Arial,Helvetica"><font size=-1>,
+with allocator </font></font><tt>a</tt><font face="Arial,Helvetica"><font size=-1>
+(default:</font></font><tt> </tt><font face="Courier New,Courier">allocator_type()</font><font size=-1><font face="Arial,Helvetica">,
+and policies sp (default: </font><font face="Courier New,Courier">storage_policy</font><font face="Arial,Helvetica">()),
+cp (default: </font><font face="Courier New,Courier">checking_policy</font><font face="Arial,Helvetica">()),
+and ip (default: </font><font face="Courier New,Courier">iterator_policy</font><font face="Arial,Helvetica">()).&nbsp;</font></font>
+<br><font face="Arial,Helvetica"><font size=-1><b>Note: </b>The allocator
+and policies are also default in all the constructors below when present.</font></font></td>
+</tr>
+
+<tr VALIGN=TOP NOSAVE>
+<td NOSAVE><font face="Courier New, Courier, mono"><font size=-1>policy_vector(</font><i>v</i><font size=-1>)</font></font></td>
+
+<td><font face="Arial, Helvetica, sans-serif"><font size=-1>copy constructor,
+copies all elements of </font></font><font face="Courier New, Courier, mono">v</font><font face="Arial, Helvetica, sans-serif"><font size=-1>
+(</font></font><font face="Courier New, Courier, mono">v</font><font face="Arial, Helvetica, sans-serif"><font size=-1>
+must have </font></font><tt>type</tt><font face="Arial, Helvetica, sans-serif"><font size=-1>
+and policies that can be assigned to </font></font><font face="Courier New,Courier">policy_vector</font><font face="Arial, Helvetica, sans-serif"><font size=-1>'s
+counterparts)</font></font></td>
+</tr>
+
+<tr VALIGN=TOP NOSAVE>
+<td NOSAVE><font face="Courier New, Courier, mono"><font size=-1>policy_vector(</font><i>n,a,sp,cp,ip</i><font size=-1>)</font></font></td>
+
+<td><font face="Arial,Helvetica"><font size=-1>creates vector with </font></font><font face="Courier New,Courier">n</font><font face="Arial,Helvetica"><font size=-1>
+elements (or smallest of </font></font><font face="Courier New,Courier">n</font><font face="Arial,Helvetica"><font size=-1>
+and </font></font><font face="Courier New,Courier">storage_policy::static_size</font><font face="Arial,Helvetica"><font size=-1>if
+fixed size), all default constructed</font></font></td>
+</tr>
+
+<tr VALIGN=TOP NOSAVE>
+<td NOSAVE><font face="Courier New, Courier, mono"><font size=-1>policy_vector(</font><i>n,val,a,sp,cp,ip</i><font size=-1>)</font></font></td>
+
+<td><font face="Arial,Helvetica"><font size=-1>creates vector with </font></font><font face="Courier New,Courier">n</font><font face="Arial,Helvetica"><font size=-1>
+elements (or smallest of </font></font><font face="Courier New,Courier">n</font><font face="Arial,Helvetica"><font size=-1>
+and </font></font><font face="Courier New,Courier">storage_policy::static_size</font><font face="Arial,Helvetica"><font size=-1>
+if fixed size), all initialized to </font></font><font face="Courier New,Courier">val</font></td>
+</tr>
+
+<tr VALIGN=TOP NOSAVE>
+<td NOSAVE><font face="Courier New, Courier, mono"><font size=-1>template
+&lt;class Iter></font></font>
+<br><font face="Courier New, Courier, mono"><font size=-1>policy_vector(</font><i>first,last,a,sp,cp,ip</i><font size=-1>)</font></font></td>
+
+<td><font face="Arial,Helvetica"><font size=-1>&nbsp;creates vector with
+</font></font><font face="Courier New,Courier">n</font><font face="Arial,Helvetica"><font size=-1>
+elements (or smallest of </font></font><font face="Courier New,Courier">n</font><font face="Arial,Helvetica"><font size=-1>
+and </font></font><font face="Courier New,Courier">storage_policy::static_size</font><font face="Arial,Helvetica"><font size=-1>
+if fixed size), initialized as in </font></font><font face="Courier New,Courier">[first,last)</font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New, Courier, mono"><font size=-1>operator=</font></font></td>
+
+<td><font face="Arial, Helvetica, sans-serif"><font size=-1>assignment,
+assigns all elements</font></font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New, Courier, mono"><font size=-1>assign(<i>val</i>)</font></font></td>
+
+<td><font face="Arial, Helvetica, sans-serif"><font size=-1>assigns </font></font><tt>val</tt><font face="Arial, Helvetica, sans-serif"><font size=-1>
+to all elements</font></font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New, Courier, mono"><font size=-1>assign(<i>n</i>,<i>val</i>)</font></font></td>
+
+<td><font size=-1><font face="Arial,Helvetica">assigns </font><font face="Courier New,Courier">val</font><font face="Arial,Helvetica">
+to first </font><font face="Courier New,Courier">n</font><font face="Arial,Helvetica">
+elements (or up to </font><font face="Courier New,Courier">storage_policy::static_size</font><font face="Arial,Helvetica">
+if fixed size)</font></font></td>
+</tr>
+
+<tr NOSAVE>
+<td NOSAVE><font face="Courier New,Courier"><font size=-1>template &lt;class
+<i>Iter</i>></font></font>
+<br><font face="Courier New,Courier"><font size=-1>assign(<i>first,last</i>)</font></font></td>
+
+<td><font size=-1><font face="Arial,Helvetica">assigns the elements of
+</font><font face="Courier New,Courier">[first,last)</font><font face="Arial,Helvetica">
+to the vector (or up to </font><font face="Courier New,Courier">storage_policy::static_size</font><font face="Arial,Helvetica">
+if fixed size)</font></font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New, Courier, mono"><font size=-1>begin()</font></font></td>
+
+<td><font face="Arial, Helvetica, sans-serif"><font size=-1>returns iterator
+for the first element</font></font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New, Courier, mono"><font size=-1>end()</font></font></td>
+
+<td><font face="Arial, Helvetica, sans-serif"><font size=-1>returns iterator
+for position after the last element</font></font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New, Courier, mono"><font size=-1>rbegin()</font></font></td>
+
+<td><font face="Arial, Helvetica, sans-serif"><font size=-1>returns reverse
+iterator for position of first element of reverse iteration</font></font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New, Courier, mono"><font size=-1>rend()</font></font></td>
+
+<td><font face="Arial, Helvetica, sans-serif"><font size=-1>returns reverse
+iterator for position behind last element of reverse iteration&nbsp;</font></font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New, Courier, mono"><font size=-1>operator[<i>i</i>]</font></font></td>
+
+<td><font size=-1><font face="Arial, Helvetica, sans-serif">returns element
+with index </font><i><font face="Courier New, Courier, mono">i</font></i><font face="Arial, Helvetica, sans-serif">
+(range checking according to checking policy)</font></font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New, Courier, mono"><font size=-1>at(<i>i</i>)</font></font></td>
+
+<td><font size=-1><font face="Arial, Helvetica, sans-serif">returns element
+with index </font><i><font face="Courier New, Courier, mono">i</font></i><font face="Arial, Helvetica, sans-serif">
+(t</font><font face="Arial,Helvetica">hrows</font></font><tt>std::range_error</tt><font size=-1><font face="Arial, Helvetica, sans-serif">
+if </font><i><font face="Courier New, Courier, mono">i</font></i><font face="Arial, Helvetica, sans-serif">
+is not valid)</font></font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New, Courier, mono"><font size=-1>front()</font></font></td>
+
+<td><font face="Arial, Helvetica, sans-serif"><font size=-1>returns first
+element (caller has to ensure that it exists)</font></font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New, Courier, mono"><font size=-1>back()</font></font></td>
+
+<td><font face="Arial, Helvetica, sans-serif"><font size=-1>returns last
+element (caller has to ensure that it exists)</font></font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New, Courier, mono"><font size=-1>size()</font></font></td>
+
+<td><font face="Arial, Helvetica, sans-serif"><font size=-1>returns number
+of elements</font></font></td>
+</tr>
+
+<tr VALIGN=TOP NOSAVE>
+<td><font face="Courier New, Courier, mono"><font size=-1>empty()</font></font></td>
+
+<td NOSAVE><font face="Arial, Helvetica, sans-serif"><font size=-1>returns
+whether vector is empty</font></font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New, Courier, mono"><font size=-1>max_size()</font></font></td>
+
+<td><font face="Arial, Helvetica, sans-serif"><font size=-1>returns maximum
+possible number of elements</font></font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New, Courier, mono"><font size=-1>swap(v)</font></font></td>
+
+<td><font face="Arial, Helvetica, sans-serif"><font size=-1>swap elements
+with vector v</font></font></td>
+</tr>
+
+<tr>
+<td><font size=-1><font face="Courier New, Courier, mono">==</font><font face="Arial, Helvetica, sans-serif">,
+</font><font face="Courier New, Courier, mono">!=</font></font></td>
+
+<td><font face="Arial, Helvetica, sans-serif"><font size=-1>checks for
+equality</font></font></td>
+</tr>
+
+<tr>
+<td><font size=-1><font face="Courier New, Courier, mono">&lt;</font><font face="Arial, Helvetica, sans-serif">,
+</font><font face="Courier New, Courier, mono">&lt;=</font><font face="Arial, Helvetica, sans-serif">,
+</font><font face="Courier New, Courier, mono">></font><font face="Arial, Helvetica, sans-serif">,
+</font><font face="Courier New, Courier, mono">>=</font></font></td>
+
+<td><font face="Arial, Helvetica, sans-serif"><font size=-1>compares vector
+lexicographically</font></font></td>
+</tr>
+
+<tr>
+<td><b><font face="Arial, Helvetica, sans-serif"><font size=-1>Static arrays
+only:</font></font></b></td>
+
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td><font face="Courier New, Courier, mono"><font size=-1>static_size</font></font></td>
+
+<td><font face="Arial, Helvetica, sans-serif"><font size=-1>yields size
+at compile time</font></font></td>
+</tr>
+
+<tr VALIGN=TOP NOSAVE>
+<td NOSAVE><font face="Courier New,Courier">t<font size=-1>emplate &lt;class
+<i>T2</i>></font></font>
+<br><font face="Courier New,Courier"><font size=-1>policy_vector(<i>T2
+x[static_size],a,sp,cp,ip</i>)</font></font></td>
+
+<td><font face="Arial,Helvetica"><font size=-1>creates vector with elements
+copies of those in x (converted to T)</font></font></td>
+</tr>
+
+<tr VALIGN=TOP NOSAVE>
+<td NOSAVE><font face="Courier New,Courier"><font size=-1>template &lt;class
+<i>T2</i>></font></font>
+<br><font face="Courier New,Courier"><font size=-1>operator=(<i>T2 x[static_size]</i>)</font></font></td>
+
+<td><font face="Arial,Helvetica"><font size=-1>copies elements from x (converted
+to T)</font></font></td>
+</tr>
+
+<tr>
+<td><b><font face="Arial,Helvetica"><font size=-1>Dynamic arrays only:</font></font></b></td>
+
+<td></td>
+</tr>
+
+<tr VALIGN=TOP NOSAVE>
+<td NOSAVE><font face="Courier New,Courier"><font size=-1>capacity()</font></font></td>
+
+<td><font face="Arial,Helvetica"><font size=-1>returns the maximum number
+of elements that can be inserted before triggering a resizing</font></font></td>
+</tr>
+
+<tr VALIGN=TOP NOSAVE>
+<td NOSAVE><font face="Courier New,Courier"><font size=-1>reserve(<i>n</i>)</font></font></td>
+
+<td><font face="Arial,Helvetica"><font size=-1>makes sure that the vector
+has enough room to store n elements (may shrink if holds less than n, depending
+on resizing policy)</font></font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New,Courier"><font size=-1>insert(<i>pos, x</i>)</font></font></td>
+
+<td><font size=-1><font face="Arial,Helvetica">inserts </font><font face="Courier New,Courier">x</font><font face="Arial,Helvetica">
+at (before) position pos</font></font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New,Courier"><font size=-1>insert(<i>pos, first,
+last</i>)</font></font></td>
+
+<td><font size=-1><font face="Arial,Helvetica">inserts all the elements
+of </font><font face="Courier New,Courier">[first,last)</font><font face="Arial,Helvetica">
+before position pos</font></font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New,Courier"><font size=-1>insert(<i>pos, n , x</i>)</font></font></td>
+
+<td><font face="Arial,Helvetica"><font size=-1>inserts n copies of x before
+position pos</font></font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New,Courier"><font size=-1>erase(<i>pos</i>)</font></font></td>
+
+<td><font face="Arial,Helvetica"><font size=-1>removes the element at position
+pos</font></font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New,Courier"><font size=-1>erase(<i>first, last</i>)</font></font></td>
+
+<td><font size=-1><font face="Arial,Helvetica">removes the elements in
+the range </font><font face="Courier New,Courier">[first,last)</font></font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New,Courier"><font size=-1>clear()</font></font></td>
+
+<td><font face="Arial,Helvetica"><font size=-1>removes all the elements</font></font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New,Courier">resize(<i>n, x</i>)</font></td>
+
+<td><font face="Arial,Helvetica"><font size=-1>resizes the vector so that
+it contains n elements (padding with x if necessary)</font></font></td>
+</tr>
+
+<tr>
+<td><font face="Courier New,Courier">resize(<i>n</i>)</font></td>
+
+<td><font size=-1><font face="Arial,Helvetica">resizes the vector so that
+it contains n elements (padding with </font><font face="Courier New,Courier">T()</font><font face="Arial,Helvetica">
+if necessary)</font></font></td>
+</tr>
+</table>
+
+<h3>
+<a NAME="acknowledgements"></a><font face="Arial,Helvetica"><font color="#FF0000">Acknowledgments</font></font></h3>
+<font face="Arial,Helvetica"><font size=-1>Thanks to Nico Josuttis for
+providing the starting point <a href="http:///www.boost.org/libs/array/array.html">boost::array</a></font></font>
+<br><font face="Arial,Helvetica"><font size=-1>Thanks to Ross Smith for
+his <a href="http://groups.yahoo.com/group/boost/files/">policy_based</a>
+which helped.</font></font>
+<br>
+<hr WIDTH="100%">
+<br><b><font face="Arial,Helvetica">Copyright (c) 2002&nbsp;&nbsp; Herve
+Bronnimann, Polytechnic University.</font></b>
+</body>
+</html>
