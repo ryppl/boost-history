@@ -95,9 +95,9 @@ public:
     typedef typename StreamBuf::traits_type  traits_type;
 
     // Accessors
-    streambuf_type *  get_internal_streambuf();
+    streambuf_type *  rdbuf();
 
-    streambuf_type const *  get_internal_streambuf() const;
+    streambuf_type const *  rdbuf() const;
 
     bool  is_using_internal_streambuf() const;
 
@@ -128,7 +128,7 @@ traits_type&gt;</code>.</p>
 <p>These class templates are only meant for (direct) derivation.  A
 derived class is a stream class (template) that should support the
 public (and protected) member interface of its internal stream buffer. 
-The <code>get_internal_streambuf</code> member functions can be used for
+The <code>rdbuf</code> member functions can be used for
 forwarding to the stream buffer's interface.</p>
 
 <h3><a name="m_types">Member Types</a></h3>
@@ -196,7 +196,7 @@ forwarding to the stream buffer's interface.</p>
 <h3><a name="m_observe">Observer Member Functions</a></h3>
 
 <dl>
-	<dt><code>streambuf_type *  get_internal_streambuf();</code>
+	<dt><code>streambuf_type *  rdbuf();</code>
 	<dd>
 		<p><strong>Returns:</strong> a pointer to the internal stream
 			buffer</p>
@@ -205,7 +205,7 @@ forwarding to the stream buffer's interface.</p>
 			stream is currently using; helps forward function calls to
 			the internal stream buffer</p>
 
-	<dt><code>streambuf_type const *  get_internal_streambuf()
+	<dt><code>streambuf_type const *  rdbuf()
 		const;</code>
 	<dd>
 		<p><strong>Returns:</strong> a pointer to the internal stream
@@ -215,8 +215,9 @@ forwarding to the stream buffer's interface.</p>
 
 	<dt><code>bool  is_using_internal_streambuf() const;</code>
 	<dd>
-		<p><strong>Returns:</strong> <code>this->get_internal_streambuf() ==
-			this->rdbuf()</code></p>
+		<p><strong>Returns:</strong> <code>this-&gt;rdbuf() ==
+			this-&gt;std::basic_ios&lt;char_type,
+                        traits_type&gt;::rdbuf()</code></p>
 		<p><strong>Rationale:</strong> the only reliable way to check if
 			a stream is using its internal stream buffer; if
 			<code>false</code> is returned, then no modifying operations

@@ -1,6 +1,6 @@
 //  Boost io/streambuf_wrapping.hpp header file  -----------------------------//
 
-//  (C) Copyright Daryle Walker 2002.  Permission to copy, use, modify, sell and
+//  (C) Copyright Daryle Walker 2003.  Permission to copy, use, modify, sell and
 //  distribute this software is granted provided this copyright notice appears 
 //  in all copies.  This software is provided "as is" without express or implied 
 //  warranty, and with no claim as to its suitability for any purpose. 
@@ -50,13 +50,13 @@ public:
 
     // Accessors
     streambuf_type *
-    get_internal_streambuf()
+    rdbuf()
     {
         return &this->pbase_type::member;
     }
 
     streambuf_type const *
-    get_internal_streambuf() const
+    rdbuf() const
     {
         return &this->pbase_type::member;
     }
@@ -64,7 +64,7 @@ public:
     bool
     is_using_internal_streambuf() const
     {
-        return this->get_internal_streambuf() == this->base_type::rdbuf();
+        return this->rdbuf() == this->base_type::rdbuf();
     }
 
 protected:
@@ -130,21 +130,21 @@ protected:
     template< typename T1 >
     explicit  basic_wrapping_istream( T1 x1 )
         : base1_type( x1 )
-        , base2_type( this->base1_type::get_internal_streambuf() )
+        , base2_type( this->base1_type::rdbuf() )
     {
     }
 
     template< typename T1, typename T2 >
     basic_wrapping_istream( T1 x1, T2 x2 )
         : base1_type( x1, x2 )
-        , base2_type( this->base1_type::get_internal_streambuf() )
+        , base2_type( this->base1_type::rdbuf() )
     {
     }
 
     template< typename T1, typename T2, typename T3 >
     basic_wrapping_istream( T1 x1, T2 x2, T3 x3 )
         : base1_type( x1, x2, x3 )
-        , base2_type( this->base1_type::get_internal_streambuf() )
+        , base2_type( this->base1_type::rdbuf() )
     {
     }
 
@@ -177,21 +177,21 @@ protected:
     template< typename T1 >
     explicit  basic_wrapping_ostream( T1 x1 )
         : base1_type( x1 )
-        , base2_type( this->base1_type::get_internal_streambuf() )
+        , base2_type( this->base1_type::rdbuf() )
     {
     }
 
     template< typename T1, typename T2 >
     basic_wrapping_ostream( T1 x1, T2 x2 )
         : base1_type( x1, x2 )
-        , base2_type( this->base1_type::get_internal_streambuf() )
+        , base2_type( this->base1_type::rdbuf() )
     {
     }
 
     template< typename T1, typename T2, typename T3 >
     basic_wrapping_ostream( T1 x1, T2 x2, T3 x3 )
         : base1_type( x1, x2, x3 )
-        , base2_type( this->base1_type::get_internal_streambuf() )
+        , base2_type( this->base1_type::rdbuf() )
     {
     }
 
@@ -224,21 +224,21 @@ protected:
     template< typename T1 >
     explicit  basic_wrapping_iostream( T1 x1 )
         : base1_type( x1 )
-        , base2_type( this->base1_type::get_internal_streambuf() )
+        , base2_type( this->base1_type::rdbuf() )
     {
     }
 
     template< typename T1, typename T2 >
     basic_wrapping_iostream( T1 x1, T2 x2 )
         : base1_type( x1, x2 )
-        , base2_type( this->base1_type::get_internal_streambuf() )
+        , base2_type( this->base1_type::rdbuf() )
     {
     }
 
     template< typename T1, typename T2, typename T3 >
     basic_wrapping_iostream( T1 x1, T2 x2, T3 x3 )
         : base1_type( x1, x2, x3 )
-        , base2_type( this->base1_type::get_internal_streambuf() )
+        , base2_type( this->base1_type::rdbuf() )
     {
     }
 
@@ -254,7 +254,7 @@ basic_wrapping_istream<StreamBuf>::basic_wrapping_istream
     streambuf_type const &  s
 )
     : base1_type( s )
-    , base2_type( this->base1_type::get_internal_streambuf() )
+    , base2_type( this->base1_type::rdbuf() )
 {
 }
 
@@ -264,7 +264,7 @@ basic_wrapping_istream<StreamBuf>::basic_wrapping_istream
 (
 )
     : base1_type()
-    , base2_type( this->base1_type::get_internal_streambuf() )
+    , base2_type( this->base1_type::rdbuf() )
 {
 }
 
@@ -275,7 +275,7 @@ basic_wrapping_ostream<StreamBuf>::basic_wrapping_ostream
     streambuf_type const &  s
 )
     : base1_type( s )
-    , base2_type( this->base1_type::get_internal_streambuf() )
+    , base2_type( this->base1_type::rdbuf() )
 {
 }
 
@@ -285,7 +285,7 @@ basic_wrapping_ostream<StreamBuf>::basic_wrapping_ostream
 (
 )
     : base1_type()
-    , base2_type( this->base1_type::get_internal_streambuf() )
+    , base2_type( this->base1_type::rdbuf() )
 {
 }
 
@@ -296,7 +296,7 @@ basic_wrapping_iostream<StreamBuf>::basic_wrapping_iostream
     streambuf_type const &  s
 )
     : base1_type( s )
-    , base2_type( this->base1_type::get_internal_streambuf() )
+    , base2_type( this->base1_type::rdbuf() )
 {
 }
 
@@ -306,7 +306,7 @@ basic_wrapping_iostream<StreamBuf>::basic_wrapping_iostream
 (
 )
     : base1_type()
-    , base2_type( this->base1_type::get_internal_streambuf() )
+    , base2_type( this->base1_type::rdbuf() )
 {
 }
 

@@ -1,6 +1,6 @@
 //  Boost io/array_stream.hpp header file  -----------------------------------//
 
-//  (C) Copyright Daryle Walker 2002.  Permission to copy, use, modify, sell and
+//  (C) Copyright Daryle Walker 2003.  Permission to copy, use, modify, sell and
 //  distribute this software is granted provided this copyright notice appears 
 //  in all copies.  This software is provided "as is" without express or implied 
 //  warranty, and with no claim as to its suitability for any purpose. 
@@ -200,7 +200,7 @@ basic_array_istream<N, Ch, Tr>::array_begin
 (
 )
 {
-    return this->get_internal_streambuf()->array_begin();
+    return this->rdbuf()->array_begin();
 }
 
 template < std::size_t N, typename Ch, class Tr >
@@ -210,7 +210,7 @@ basic_array_istream<N, Ch, Tr>::array_end
 (
 )
 {
-    return this->get_internal_streambuf()->array_end();
+    return this->rdbuf()->array_end();
 }
 
 template < std::size_t N, typename Ch, class Tr >
@@ -220,7 +220,7 @@ basic_array_istream<N, Ch, Tr>::array_begin
 (
 ) const
 {
-    return this->get_internal_streambuf()->array_begin();
+    return this->rdbuf()->array_begin();
 }
 
 template < std::size_t N, typename Ch, class Tr >
@@ -230,7 +230,7 @@ basic_array_istream<N, Ch, Tr>::array_end
 (
 ) const
 {
-    return this->get_internal_streambuf()->array_end();
+    return this->rdbuf()->array_end();
 }
 
 template < std::size_t N, typename Ch, class Tr >
@@ -240,7 +240,7 @@ basic_array_ostream<N, Ch, Tr>::array_begin
 (
 )
 {
-    return this->get_internal_streambuf()->array_begin();
+    return this->rdbuf()->array_begin();
 }
 
 template < std::size_t N, typename Ch, class Tr >
@@ -250,7 +250,7 @@ basic_array_ostream<N, Ch, Tr>::array_end
 (
 )
 {
-    return this->get_internal_streambuf()->array_end();
+    return this->rdbuf()->array_end();
 }
 
 template < std::size_t N, typename Ch, class Tr >
@@ -260,7 +260,7 @@ basic_array_ostream<N, Ch, Tr>::array_begin
 (
 ) const
 {
-    return this->get_internal_streambuf()->array_begin();
+    return this->rdbuf()->array_begin();
 }
 
 template < std::size_t N, typename Ch, class Tr >
@@ -270,7 +270,7 @@ basic_array_ostream<N, Ch, Tr>::array_end
 (
 ) const
 {
-    return this->get_internal_streambuf()->array_end();
+    return this->rdbuf()->array_end();
 }
 
 template < std::size_t N, typename Ch, class Tr >
@@ -280,7 +280,7 @@ basic_array_stream<N, Ch, Tr>::array_begin
 (
 )
 {
-    return this->get_internal_streambuf()->array_begin();
+    return this->rdbuf()->array_begin();
 }
 
 template < std::size_t N, typename Ch, class Tr >
@@ -290,7 +290,7 @@ basic_array_stream<N, Ch, Tr>::array_end
 (
 )
 {
-    return this->get_internal_streambuf()->array_end();
+    return this->rdbuf()->array_end();
 }
 
 template < std::size_t N, typename Ch, class Tr >
@@ -300,7 +300,7 @@ basic_array_stream<N, Ch, Tr>::array_begin
 (
 ) const
 {
-    return this->get_internal_streambuf()->array_begin();
+    return this->rdbuf()->array_begin();
 }
 
 template < std::size_t N, typename Ch, class Tr >
@@ -310,7 +310,7 @@ basic_array_stream<N, Ch, Tr>::array_end
 (
 ) const
 {
-    return this->get_internal_streambuf()->array_end();
+    return this->rdbuf()->array_end();
 }
 
 
