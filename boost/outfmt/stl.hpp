@@ -10,7 +10,6 @@
 #  include <boost/outfmt/formatob.hpp>
 
 #  include <boost/outfmt/stl/pair.hpp>
-#  include <boost/outfmt/stl/string.hpp>
 #  include <boost/outfmt/stl/complex.hpp>
 
 #  include <boost/outfmt/stl/list.hpp>
