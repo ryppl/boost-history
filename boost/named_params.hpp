@@ -30,9 +30,9 @@ namespace detail
   struct no_t { char x[128]; };
   
   template<class KW, class Default>
-  struct keyword_default
+  struct named_default
   {
-      keyword_default(Default& x)
+      named_default(Default& x)
         : default_(x)
       {}
       
@@ -42,7 +42,7 @@ namespace detail
   struct nil
   {
       template<class K, class Default>
-      Default& operator[](const keyword_default<K, Default>& x) const
+      Default& operator[](const named_default<K, Default>& x) const
       {
           return x.default_;
       }
@@ -69,7 +69,7 @@ namespace detail
       }
 
       template<class Default>
-      typename H::value_type& operator[](const keyword_default<typename H::key_type, Default>& x) const
+      typename H::value_type& operator[](const named_default<typename H::key_type, Default>& x) const
       {
           return head[x];
       }
@@ -101,7 +101,7 @@ namespace detail
       }
 
       template<class Default>
-      T& operator[](const keyword_default<KW, Default>& x) const
+      T& operator[](const named_default<KW, Default>& x) const
       {
           return val;
       }
@@ -142,18 +142,18 @@ struct keyword
 #endif
     
    template<class Default>
-   detail::keyword_default<Derived, Default>
+   detail::named_default<Derived, Default>
    operator|(Default& default_) const
    {
-      return detail::keyword_default<Derived, Default>(default_);
+      return detail::named_default<Derived, Default>(default_);
    }
    
 #if !BOOST_WORKAROUND(BOOST_MSVC, == 1200)  // partial ordering bug
    template<class Default>
-   detail::keyword_default<Derived, const Default>
+   detail::named_default<Derived, const Default>
    operator|(const Default& default_) const
    {
-      return detail::keyword_default<Derived, const Default>(default_);
+      return detail::named_default<Derived, const Default>(default_);
    }
 #endif 
 };
