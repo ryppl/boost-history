@@ -13,6 +13,7 @@
 #include <functional>
 #include <locale>
 #include <set>
+#include <boost/detail/iterator.hpp>
 
 namespace boost {
 
@@ -23,8 +24,8 @@ namespace boost {
 //  trim iterator helper -----------------------------------------------//
 
             // Search for first non matching character from the beginning of the sequence
-            template< typename Iterator, typename Predicate >
-            inline Iterator trim_begin_if( Iterator InBegin, Iterator InEnd, Predicate IsSpace )
+            template< typename IteratorT, typename PredicateT >
+            inline IteratorT trim_begin_if( IteratorT InBegin, IteratorT InEnd, PredicateT IsSpace )
             {
                 return std::find_if( 
                     InBegin, 
@@ -33,10 +34,44 @@ namespace boost {
             }
 
             // Search for first non matching character from the end of the sequence
-            template< typename Iterator, typename Predicate >
-            inline Iterator trim_end_if( Iterator InBegin, Iterator InEnd, Predicate IsSpace )
+            template< typename IteratorT, typename PredicateT >
+            inline IteratorT trim_end_if( IteratorT InBegin, IteratorT InEnd, PredicateT IsSpace )
             {
-                for( Iterator It=InEnd; It!=InBegin;  )
+				typedef typename boost::detail::
+					iterator_traits<IteratorT>::iterator_category category;
+
+				return trim_end_if_iter_select( InBegin, InEnd, IsSpace, category() );
+			}
+
+            template< typename IteratorT, typename PredicateT >
+            inline IteratorT trim_end_if_iter_select( 
+				IteratorT InBegin, 
+				IteratorT InEnd, 
+				PredicateT IsSpace,
+				std::forward_iterator_tag )
+            {
+				IteratorT TrimIt=InBegin;
+
+                for( IteratorT It=InBegin; It!=InEnd; It++ )
+                {
+                    if ( !IsSpace(*It) ) 
+					{
+						TrimIt=It;
+						TrimIt++;
+					}
+                }
+
+                return TrimIt;
+            }
+
+            template< typename IteratorT, typename PredicateT >
+            inline IteratorT trim_end_if_iter_select( 
+				IteratorT InBegin, 
+				IteratorT InEnd, 
+				PredicateT IsSpace,
+				std::bidirectional_iterator_tag )
+            {
+                for( IteratorT It=InEnd; It!=InBegin;  )
                 {
                     if ( !IsSpace(*(--It)) )
                         return ++It;
@@ -59,18 +94,18 @@ namespace boost {
                     m_Type(Type), m_CType(Ct) {}
 
                 // Constructor from a locale 
-                isclassifiedF(std::ctype_base::mask Type, std::locale const & Loc = std::locale())
-                    : m_Type(Type), m_CType(std::use_facet< std::ctype<CharT> >(Loc)) {}
+                isclassifiedF(std::ctype_base::mask Type, std::locale const & Loc = std::locale()) :
+                    m_Type(Type), m_CType(std::use_facet< std::ctype<CharT> >(Loc)) {}
 
                 // Operation
                 result_type operator ()( argument_type Ch ) const
                 {
-                    return m_CType.is(m_Type, Ch);
+                    return m_CType.is(m_Type, Ch); 
                 }
 
             private:
-                const std::ctype<CharT>& m_CType;
                 const std::ctype_base::mask m_Type;
+                const std::ctype<CharT>& m_CType;
             };
 
             // an isfrom functor 
@@ -90,11 +125,11 @@ namespace boost {
                 // Operation
                 result_type operator ()( argument_type Ch ) const
                 {
-					return m_Set.find( Ch )!=m_Set.end();
+                    return m_Set.find( Ch )!=m_Set.end();
                 }
             
             private:
-				std::set<CharT> m_Set;                
+                std::set<CharT> m_Set;                
             };
 
         } // namespace detail

@@ -10,172 +10,160 @@
 #ifndef BOOST_STRING_DETAIL_CONTAINER_HPP
 #define BOOST_STRING_DETAIL_CONTAINER_HPP
 
+#include <boost/mpl/bool_c.hpp>
+#include <boost/string_algo/container_traits.hpp>
+
 namespace boost {
 
     namespace string_algo {
 
         namespace detail {
 
-
-//  insert functor  -------------------------------------------//
+//  insert helpers  -------------------------------------------------//
         
-            template< typename InputT >
-            struct insertF
+            template< typename InputT, typename InsertT >
+            inline void insert(
+                InputT& Input,
+                typename InputT::iterator At,
+                const InsertT& Insert )
             {
-                typedef InputT input_type;
-                typedef typename input_type::iterator input_iterator_type;
-                typedef input_type& input_reference_type;
+                insert( Input, At, Insert.begin(), Insert.end() );
+            }
 
-                // Sequence variant
-				template< typename InsertT >
-                void operator()(
-                    input_reference_type Input,
-                    input_iterator_type At,
-                    const InsertT& Insert )
-                {
-                    Input.insert( At, Insert.begin(), Insert.end() );
-                }
-
-                // Iterator variant
-				template< typename InsertIteratorT >
-                void operator()(
-                    input_reference_type Input,
-                    input_iterator_type At,
-					InsertIteratorT Begin,
-                    InsertIteratorT End )
-                {
-                    Input.insert( At, Begin, End );
-                }
-            };
+            template< typename InputT, typename InsertIteratorT >
+            inline void insert(
+                InputT& Input,
+                typename InputT::iterator At,
+                InsertIteratorT Begin,
+                InsertIteratorT End )
+            {
+                Input.insert( At, Begin, End );
+            }
             
-//  erase functor  -------------------------------------------//
+//  erase helper  ---------------------------------------------------//
 
-            // Erase a range in the sequence ( functor )
+            // Erase a range in the sequence
             /*
                 Returns the iterator pointing just after the erase subrange
             */
             template< typename InputT >
-            struct eraseF
+            inline typename InputT::iterator erase(
+                InputT& Input,
+                typename InputT::iterator From,
+                typename InputT::iterator To )
             {
-                typedef InputT input_type;
-                typedef typename InputT::iterator input_iterator_type;
-                typedef input_type& input_reference_type;
+                return Input.erase( From, To );
+            }
 
-                input_iterator_type operator()(
-                    input_reference_type Input,
-                    input_iterator_type From,
-                    input_iterator_type To )
-                {
-                    return Input.erase( From, To );
-                }
-            };
-
-//  replace functor  -------------------------------------------//
+//  replace helper  -------------------------------------------------//
         
-            template< typename InputT >
-            struct replaceF
+            template< typename InputT, typename InsertT >
+            inline void replace(
+                InputT& Input,
+                typename InputT::iterator From,
+                typename InputT::iterator To,
+                const InsertT& Insert )
             {
-                typedef InputT input_type;
-                typedef typename input_type::iterator input_iterator_type;
-                typedef input_type& input_reference_type;
+                replace( Input, From, To, Insert.begin(), Insert.end() );
+            }
 
-                // Sequence variant
-				template< typename InsertT >
-                void operator()(
-                    input_reference_type Input,
-                    input_iterator_type From,
-                    input_iterator_type To,
-					const InsertT& Insert )
-                {
-					input_iterator_type At=Input.erase( From, To );
-					if ( !Insert.empty() )
-					{
-						Input.insert( At, Insert.begin(), Insert.end() );
-					}
-                }
-
-                // Iterator variant
-				template< typename InsertIteratorT >
-                void operator()(
-                    input_reference_type Input,
-                    input_iterator_type From,
-                    input_iterator_type To,
-					InsertIteratorT Begin,
-                    InsertIteratorT End )
-                {
-                    input_iterator_type At=Input.erase( From, To );
-					if ( Begin!=End )
-					{
-						Input.insert( At, Begin, End );
-					}
-                }
-            };
-
-//  replace_iter functor  -------------------------------------------//
-
-            // Replace a range in the sequence with another range ( functor )
-            /*
-                Returns the iterator pointing just after inserted subrange.
-				( This is an important difference from ordinary replace )
-                Note:
-                    Function first tries to replace elements in the input sequence,
-                    up to To position with the elements form Repl sequence.
-                    The rest of the Repl is then inserted thereafter.
-                    If the Repl sequence is shorter, overlaping elements are erased from the Input
-            */
-            template< typename InputT >
-            struct replace_iterF
+            template< typename InputT, typename InsertIteratorT >
+            inline void replace(
+                InputT& Input,
+                typename InputT::iterator From,
+                typename InputT::iterator To,
+                InsertIteratorT Begin,
+                InsertIteratorT End )
             {
-                typedef InputT input_type;
-                typedef typename InputT::iterator input_iterator_type;
-                typedef input_type& input_reference_type;
+                replace_nat( 
+                    Input, From, To, Begin, End, 
+                    has_replace_select(container_traits_select(Input)) );
+            }
 
-                // Operation
-				template< typename ReplaceT >
-                input_iterator_type operator()(
-                    input_reference_type Input,
-                    input_iterator_type From,
-                    input_iterator_type To,
-                    const ReplaceT& Repl )
-                {       
-					typedef typename ReplaceT::const_iterator replace_iterator_type;
+//  replace helper implementation  ----------------------------------//
 
-                    input_iterator_type InsertIt=From;
-                    bool bReplace=(InsertIt!=To);
+            // Container has native replace method
+            template< typename InputT, typename InsertIteratorT >
+            inline void replace_nat(
+                InputT& Input,
+                typename InputT::iterator From,
+                typename InputT::iterator To,
+                InsertIteratorT Begin,
+                InsertIteratorT End,
+                boost::mpl::true_c  )
+            {
+                Input.replace( From, To, Begin, End );
+            }
 
-                    for(replace_iterator_type ReplIt=Repl.begin();
-                        ReplIt!=Repl.end();
-                        ReplIt++)
-                    {
-                        if ( bReplace )
-                        {
-                            // Replace mode
-                            *InsertIt=*ReplIt;
-
-                            InsertIt++;
-                            bReplace=(InsertIt!=To);
-                        }
-                        else
-                        {
-                            // Insert mode
-                            InsertIt=Input.insert( InsertIt, *ReplIt );
-                            // Advance to the next item
-                            InsertIt++;
-                        }
-                    }
-
-                    // Erase the overlapping elements
-                    if ( bReplace )
-                    {
-                        InsertIt=Input.erase( InsertIt, To );
-                    }
-
-                    // Return InputIt iterator
-                    return InsertIt;
+            // No native replace method
+            template< typename InputT, typename InsertIteratorT >
+            inline void replace_nat(
+                InputT& Input,
+                typename InputT::iterator From,
+                typename InputT::iterator To,
+                InsertIteratorT Begin,
+                InsertIteratorT End,
+                boost::mpl::false_c ) 
+            {
+                replace_opt(
+                    Input, From, To, Begin, End,
+                    const_time_insert_select( container_traits_select(Input) ),
+                    const_time_erase_select( container_traits_select(Input) ) );
+            }
+            
+            // Const-time erase and insert methods -> use them
+            template< typename InputT, typename InsertIteratorT >
+            inline void replace_opt(
+                InputT& Input,
+                typename InputT::iterator From,
+                typename InputT::iterator To,
+                InsertIteratorT Begin,
+                InsertIteratorT End,
+                boost::mpl::true_c,
+                boost::mpl::true_c ) 
+            {
+                typename InputT::iterator At=Input.erase( From, To );
+                if ( Begin!=End )
+                {
+                    Input.insert( At, Begin, End );
                 }
-            };
+            }
 
-		} // namespace detail
+            // Optimized version of replace for generic sequence containers
+            // Assumption: insert and erase are expensive
+            template< typename InputT, typename InsertIteratorT >
+            inline void replace_opt(
+                InputT& Input,
+                typename InputT::iterator From,
+                typename InputT::iterator To,
+                InsertIteratorT Begin,
+                InsertIteratorT End,
+                ... )
+            {
+                // Copy data to the container ( as much as possible )
+                InsertIteratorT InsertIt=Begin;
+                typename InputT::iterator InputIt=From;
+                for(; InsertIt!=End && InputIt!=To; InsertIt++, InputIt++ )
+                {
+                    *InputIt=*InsertIt;
+                }
+                
+                if ( InsertIt!=End )
+                {
+                    // Replace sequence is longer, insert it
+                    Input.insert( InputIt, InsertIt, End );
+                }
+                else
+                {
+                    if ( InputIt!=To )
+                    {
+                        // Replace sequence is shorter, erase the rest
+                        Input.erase( InputIt, To );
+                    }
+                }
+            }
+
+        } // namespace detail
 
     } // namespace string_algo
 

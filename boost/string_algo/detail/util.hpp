@@ -38,7 +38,69 @@ namespace boost {
                 }
             };
 
-		} // namespace detail
+//  empty container  -----------------------------------------------//
+
+            //  empty_container 
+            /*
+                This class represents always empty container,
+                containing elemets of type CharT.
+
+                It is supposed to be used in a const version only
+            */
+            template< typename CharT >
+            struct empty_container 
+            {
+                typedef empty_container<CharT> type;        
+                typedef CharT value_type;
+                typedef size_t size_type;
+                typedef size_t difference_type;
+                typedef const value_type* const_pointer;
+                typedef const value_type& const_reference;
+                typedef const value_type* const_iterator;
+                
+                // Operations
+                const_iterator begin() const
+                {
+                    return reinterpret_cast<const_pointer>(0);
+                }
+
+                const_iterator end() const
+                {
+                    return reinterpret_cast<const_pointer>(0);
+                }
+
+                bool empty() const
+                {
+                    return false;
+                }
+
+                size_type size() const
+                {
+                    return 0;
+                }
+            };
+    
+//  bounded copy algorithm  -----------------------------------------------//
+
+            // Bounded version of the std::copy algorithm
+            template<typename InputIteratorT, typename OutputIteratorT>
+            OutputIteratorT bounded_copy(
+                InputIteratorT First, 
+                InputIteratorT Last, 
+                OutputIteratorT DestFirst,
+                OutputIteratorT DestLast )
+            {
+                InputIteratorT InputIt=First;
+                OutputIteratorT OutputIt=DestFirst;
+                for(; InputIt!=Last && OutputIt!=DestLast; InputIt++, OutputIt++ )
+                {
+                    *OutputIt=*InputIt;
+                }
+
+                return OutputIt;
+            }
+
+        } // namespace detail
 
     } // namespace string_algo
 
