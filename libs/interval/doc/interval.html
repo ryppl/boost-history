@@ -17,10 +17,10 @@ Header &lt;<a href="../../boost/interval.hpp">boost/interval.hpp</a>&gt;</h1>
 
 <h3>Interval Arithmetic</h3>
 
-<p>As it is implied by its name, this library is intended to help
-manipulating mathematical intervals. Such an interval is a pair of
-numbers which represents all the numbers between these two. The
-purpose of this library is to extend the usual arithmetic functions to
+<p>As implied by its name, this library is intended to help
+manipulating mathematical intervals. An interval is a pair of numbers
+which represents all the numbers between these two. The purpose of
+this library is to extend the usual arithmetic functions to
 intervals. And it is underlied by this property: if <i>f</i> is a
 function on a set of numbers, <b>for each</b> <i>x</i> <b>in</b> the
 interval [<i>a</i>,<i>b</i>], <i>f</i>(<i>x</i>) is <b>in</b>
@@ -88,62 +88,123 @@ solution, {<i>false</i>,<i>true</i>} can be transformed in
 <b>exists</b> <i>x</i> <b>in</b> [<i>a</i>,<i>b</i>] and <i>y</i>
 <b>in</b> [<i>c</i>,<i>d</i>] such as <i>x</i> &lt; <i>y</i>.</p>
 
+<h2><code>interval</code> Class</h2>
 
-<h2>Performance Notes</h2>
+<p>This class is templated by a base type and a traits type. Here is
+the synopsis of the class :</p>
 
-<p>This paragraph deals mostly with the performance of the library
-with intervals using the floating point unit (FPU) of the
-computer. Let's consider the sum of [<i>a</i>,<i>b</i>] and
-[<i>c</i>,<i>d</i>] as an example. The result is
-[<code>down</code>(<i>a</i>+<i>c</i>),
-<code>up</code>(<i>b</i>+<i>d</i>)]. <code>down</code> and
-<code>up</code> indicate the rounding mode needed.</p>
+<pre>
+namespace boost {
 
-<p>If the FPU is able to use a different rounding mode for each
-operation, there is no problem. However, the standard does not require
-such behavior. So most of the FPUs only provide some instructions to
-set the rounding mode for all subsequent operations. And generally,
-these instructions need to flush the pipeline of the FPU. In that
-case, the time needed to sum [<i>a</i>,<i>b</i>] and
-[<i>c</i>,<i>d</i>] is far worse than the time needed to calculate
-<i>a</i>+<i>b</i> and <i>c</i>+<i>d</i>.</p>
+template&lt;class T, class Traits = interval_traits&lt;T&gt; &gt;
+class interval
+{
+public:
+  typedef T base_type;
+  typedef std::numeric_limits&lt;base_type&gt; base_limits;
+  typedef Traits traits_type;
 
-<p>In order to avoid this situation, a trick can be used to diminish
-the number of rounding mode switch. Indeed,
-<code>down</code>(<i>a</i>+<i>c</i>) =
--<code>up</code>(-<i>a</i>-<i>c</i>) if the unary minus is an exact
-operation. It is now possible to calculate the whole sum with the same
-rounding mode. Generally, the cost of the mode switching is worse than
-the cost of the sign changes. The performance would be almost optimal
-if the rounding mode was set at the beginning of the program once and
-for all.</p>
+  interval(const T&amp; value = 0);
+  interval(const T&amp; l, const T&amp; u);
 
-<p>However, the precision of the result is not always needed if the
-user only want to work with wide intervals. In that case, it can be
-better to remove all the rounding mode switches. The precision of the
-result will no more be guaranteed, but the performance will be
-optimal.</p>
+  template&lt;class Traits2&gt;
+  interval(const interval&lt;T, Traits2&gt;&amp; r);
 
-<p>There is another problem besides the cost of the rounding mode
-switch on the FPUs which use extended registers (for example,
-<code>float</code> computations with <code>double</code> registers, or
-<code>double</code> computations with <code>long double</code>
-registers). To illustrate the problem, let <i>m</i> be the biggest
-number before +<i>inf</i>. If we calculate 2*[<i>m</i>,<i>m</i>], the
-answer should be [<i>m</i>,<i>inf</i>]. But due to the extended
-registers, the FPU will first obtain [<i>2m</i>,<i>2m</i>] and then
-convert it to [<i>inf</i>,<i>inf</i>] (because we have considered the
-rounding mode to be toward +<i>inf</i>). So the answer is no more
-accurate. There is only one solution, to force the FPU to convert the
-extended values back to standard values before applying the sign
-change. In that case, the result will be
-[-(-<i>m</i>),<i>inf</i>].</p>
+  // compiler-generated copy constructor and assignment operator are fine
+  interval&amp; operator=(const T&amp; x);
+  void assign(const T&amp; l, const T&amp; u);
 
-<p>Unfortunately, such a conversion is not possible on the x86
-FPUs. The only way is to force the FPU to write the values to memory
-and read them back. Such an operation is obviously very expensive.</p>
+  // constructor-like functions
+  static interval empty();
+  static interval entire();
 
-<h2>Rounded Arithmetic</h2>
+  interval&amp; operator+= (const T&amp; r);
+  interval&amp; operator+= (const interval&amp; r);
+  interval&amp; operator-= (const T&amp; r);
+  interval&amp; operator-= (const interval&amp; r);
+  interval&amp; operator*= (const T&amp; r);
+  interval&amp; operator*= (const interval&amp; r);
+  interval&amp; operator/= (const T&amp; r);
+  interval&amp; operator/= (const interval&amp; r);
+
+  T lower() const;
+  T upper() const;
+};
+
+} // namespace boost
+</pre>
+
+<p>There is also a bunch of functions defined outside the class:</p>
+
+<pre>
+</pre>
+
+<h2>Operations</h2>
+
+<h3>Basic Arithmetic Operations</h3>
+
+<p>The basic operations are the unary minus and <code>sqrt</code>, and
+the binary <code>+ - * /</code>. There is also the multiplicative
+inverse. The unary operations take an interval and returns an
+interval. The binary operations take two intervals, or one interval
+and a number, and returns an interval.</p>
+
+<h3>Assignment Operators</h3>
+
+There are also some assignment operators <code>+= -= *=
+/=</code>. There is not much to say.
+
+<h2>Comparisons</h2>
+
+<p>As it was said before, the definition of the comparison operators
+induces a slight problem. If their return type is restricted to
+<code>bool</code>, there are many ways to define them. It is the
+reason why the class <code>interval</code> is influenced by a
+comparison policy. So the class <code>interval_traits</code> requires
+an argument describing a class providing the following functions:</p>
+
+<pre>
+struct interval_compare {
+  static bool lessthan(const T&amp; x_low, const T&amp; x_up, const T&amp; y_low, const T&amp; y_up);
+  static bool equalto(const T&amp; x_low, const T&amp; x_up, const T&amp; y_low, const T&amp; y_up);
+};
+</pre>
+
+<p>The functions <code>lessthan</code> and <code>equalto</code>
+compares two intervals given their bounds. Thanks to this comparison
+class, the class <code>interval</code> can now define the following
+operators: <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>,
+<code>&gt;=</code>, <code>==</code>, <code>!=</code>. All these
+functions are defined for two interval parameters, or for one interval
+and a number.</p>
+
+<p>However, these operators are not really handy. For example, if
+<code>lessthan</code> is a "certain" comparison, then
+<code>&lt;</code> and <code>&gt;</code> are also "certain" comparison,
+but <code>&lt;=</code> and <code>&gt;=</code> are only "possible"
+comparison. The reason of this discordance is: it is impossible to
+have <code>&lt;</code> and <code>&lt;=</code> both "possible" or
+"certain", and to have <code>(x&lt;=y) == !(y&lt;x)</code>. However,
+if you do not consider overlapping intervals, these two types of
+comparisons are equivalent.</p>
+
+<p>To avoid these problems, it is probably better to use some explicit
+comparison functions. Their names are composed by <code>cer</code>
+(for "certain") or <code>pos</code> (for "possible") followed by
+<code>lt</code>, <code>le</code>, <code>gt</code>, <code>ge</code>,
+<code>eq</code> or <code>ne</code>. Each of these functions takes two
+parameters and returns a boolean. For example:</p>
+
+<pre>
+template&lt;class T, class Traits&gt;
+bool cerlt(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+template&lt;class T, class Traits&gt;
+bool cerlt(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
+template&lt;class T, class Traits&gt;
+bool cerlt(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+</pre>
+
+<h2>Rounded Arithmetic (FIXME: to update)</h2>
 
 <p>Here comes the tricky part. In order to be as general as possible,
 the library uses a complex class hierarchy. The class
@@ -269,124 +330,150 @@ rounding_control&lt;T&gt; &gt;.</code>
 
 </ul>
 
-<h2><code>interval</code> Class</h2>
+<h2>Performance Notes</h2>
 
-<p>This class is templated by a base type and a traits type. Here is the synopsis of the class :</p>
+<p>This paragraph deals mostly with the performance of the library
+with intervals using the floating point unit (FPU) of the
+computer. Let's consider the sum of [<i>a</i>,<i>b</i>] and
+[<i>c</i>,<i>d</i>] as an example. The result is
+[<code>down</code>(<i>a</i>+<i>c</i>),
+<code>up</code>(<i>b</i>+<i>d</i>)]. <code>down</code> and
+<code>up</code> indicate the rounding mode needed.</p>
+
+<h3>Rounding Mode Switch</h3>
+
+<p>If the FPU is able to use a different rounding mode for each
+operation, there is no problem. For example, it's the case for the
+Alpha processor: each floating-point instruction can specify a
+different rounding mode. However, the standard does not require such a
+behavior. So most of the FPUs only provide some instructions to set
+the rounding mode for all subsequent operations. And generally, these
+instructions need to flush the pipeline of the FPU.</p>
+
+<p>In this situation, the time needed to sum [<i>a</i>,<i>b</i>] and
+[<i>c</i>,<i>d</i>] is far worse than the time needed to calculate
+<i>a</i>+<i>b</i> and <i>c</i>+<i>d</i> since the two additions cannot
+be parallelized. Consequently, the objective is to diminish the number
+of rounding mode switch.</p>
+
+<p>If this library is not used to provide exact computations, but only
+for pair arithmetic, the solution is quite simple: do not use
+rounding. In that case, doing the sum [<i>a</i>,<i>b</i>] and
+[<i>c</i>,<i>d</i>] will be as fast as computing <i>a</i>+<i>b</i> and
+<i>c</i>+<i>d</i>. Everything is perfect.</p>
+
+<p>However, if exact computations are required, such a solution is
+totally unthinkable. So, are we penniless? No, there is still a trick
+available. Indeed, <code>down</code>(<i>a</i>+<i>c</i>) =
+-<code>up</code>(-<i>a</i>-<i>c</i>) if the unary minus is an exact
+operation. It is now possible to calculate the whole sum with the same
+rounding mode. Generally, the cost of the mode switching is worse than
+the cost of the sign changes.</p>
+
+<p>Let's recapitulate. Before, when doing an addition, there were
+three rounding mode switches (<code>down</code>, <code>up</up> and
+restore). Now, with this little trick, there are only two switches
+(<code>up</up> and restore). It is better, but still a bottleneck when
+many operations are nested. Indeed, the generated code for
+[<i>a</i>,<i>b</i>] + [<i>c</i>,<i>d</i>] + [<i>e</i>,<i>f</i>] will
+probably look like:</p>
+
+<blockquote>
+<pre>
+up();
+t1 = -(-a - c);
+t2 = b + d;
+restore();
+up();
+x = -(-t1 - e);
+y = t2 + f;
+restore();
+</pre>
+</blockquote>
+
+<p>If you think it is possible to do much better, you are right. For
+example, this is better (and probably optimal):</p>
+
+<blockquote>
+<pre>
+up();
+x = -(-a - c - e);
+y = b + d + f;
+restore();
+</pre>
+</blockquote>
+
+<p>Such a code will be generated by a compiler if the computations are
+made without initialization and restoration of the rounding
+mode. However, it would be far too easy if there was no drawback:
+because the rounding mode is not restored in the meantime, operations
+on floating point numbers must be prohibited. This method can only be
+used if all the operations are operations on interval. Here is an
+example of the Horner scheme to compute the value of a polynom.</p>
 
 <pre>
-namespace boost {
+// I is an interval class, the polynom is a simple array
+template&lt;class I&gt;
+I horner(const I&amp; x, const I p[], int n) {
 
-template&lt;class T, class Traits = interval_traits&lt;T&gt; &gt;
-class interval
-{
-public:
-  typedef T base_type;
-  typedef std::numeric_limits&lt;base_type&gt; base_limits;
-  typedef Traits traits_type;
+  // define the unprotected version of the interval type
+  typedef boost::interval_lib::detail::unprotect&lt;I&gt; unprotected;
+  typedef typename unprotected::type R;
+  
+  // initialize and restore the rounding mode
+  typedef typename I::traits_type traits;
+  typename traits::rounding rnd;
 
-  interval(const T&amp; value = 0);
-  interval(const T&amp; l, const T&amp; u);
-
-  template&lt;class Traits2&gt;
-  interval(const interval&lt;T, Traits2&gt;&amp; r);
-
-  // compiler-generated copy constructor and assignment operator are fine
-  interval&amp; operator=(const T&amp; x);
-  void assign(const T&amp; l, const T&amp; u);
-
-  // constructor-like functions
-  static interval empty();
-  static interval entire();
-
-  interval&amp; operator+= (const T&amp; r);
-  interval&amp; operator+= (const interval&amp; r);
-  interval&amp; operator-= (const T&amp; r);
-  interval&amp; operator-= (const interval&amp; r);
-  interval&amp; operator*= (const T&amp; r);
-  interval&amp; operator*= (const interval&amp; r);
-  interval&amp; operator/= (const T&amp; r);
-  interval&amp; operator/= (const interval&amp; r);
-
-  T lower() const;
-  T upper() const;
-};
-
-} // namespace boost
+  R a = x;
+  R y = p[n - 1];
+  for(int i = n - 2; i >= 0; i--) {
+    y = y * a + (R)(p[i]);
+  }
+  return y;
+}
 </pre>
 
-<p>There is also a bunch of functions defined outside the class:</p>
+<p>It was said at the beginning that the Alpha processors can use a
+specific rounding mode for each operation. However, due to the
+instruction format, the rounding toward plus infinity is not
+available. Only the rounding toward minus infinity can be used. So the
+trick using the change of sign becomes essential, but there is no need
+to save and restore the rounding mode on both sides of an
+operation.</p>
 
-<pre>
-</pre>
+<h3>Extended Registers</h3>
 
-<h2>Comparisons</h2>
+<p>There is another problem besides the cost of the rounding mode
+switch. Some FPUs use extended registers (for example,
+<code>float</code> computations will be done with <code>double</code>
+registers, or <code>double</code> computations with <code>long
+double</code> registers). Consequently, many problems can arise.</p>
 
-<p>As it was said before, the definition of the comparison operators
-induces a slight problem. If their return type is restricted to
-<code>bool</code>, there are many ways to define them. It is the
-reason why the class <code>interval</code> is influenced by a
-comparison policy. So the class <code>interval_traits</code> requires
-an argument describing a class providing the following functions:</p>
+<p>The first one is due to to the extended precision of the
+mantissa. The rounding is also done on this extended precision. And
+consequently, we still have <code>down</code>(<i>a</i>+<i>b</i>) =
+-<code>up</code>(-<i>a</i>-<i>b</i>) in the extended registers. But
+back to the standard precision, we now have
+<code>down</code>(<i>a</i>+<i>b</i>) &lt;
+-<code>up</code>(-<i>a</i>-<i>b</i>) instead of an equality. A
+solution could be not to use this method. But there still are other
+problems, with the comparisons between numbers for example.</p>
 
-<pre>
-struct interval_compare {
-  static bool lessthan(const T&amp; x_low, const T&amp; x_up, const T&amp; y_low, const T&amp; y_up);
-  static bool equalto(const T&amp; x_low, const T&amp; x_up, const T&amp; y_low, const T&amp; y_up);
-};
-</pre>
+<p>Naturally, there is also a problem with the extended precision of
+the exponent. To illustrate this problem, let <i>m</i> be the biggest
+number before +<i>inf</i>. If we calculate 2*[<i>m</i>,<i>m</i>], the
+answer should be [<i>m</i>,<i>inf</i>]. But due to the extended
+registers, the FPU will first store [<i>2m</i>,<i>2m</i>] and then
+convert it to [<i>inf</i>,<i>inf</i>] at the end of the calculus (when
+the rounding mode is toward +<i>inf</i>). So the answer is no more
+accurate.</p>
 
-<p>The functions <code>lessthan</code> and <code>equalto</code>
-compares two intervals given their bounds. Thanks to this comparison
-class, the class <code>interval</code> can now define the following
-operators: <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>,
-<code>&gt;=</code>, <code>==</code>, <code>!=</code>. All these
-functions are defined for two interval parameters, or for one interval
-and a number.</p>
-
-<p>However, these operators are not really handy. For example, if
-<code>lessthan</code> is a "certain" comparison, then
-<code>&lt;</code> et <code>&gt;</code> are also "certain" comparison,
-but <code>&lt;=</code> and <code>&gt;=</code> are only "possible"
-comparison. The reason of this discordance is: it is impossible to
-have <code>&lt;</code> and <code>&lt;=</code> both "possible" or
-"certain", and to have <code>(x&lt;=y) == !(y&lt;x)</code>. However,
-if you do not consider overlapping intervals, these two types of
-comparisons are equivalent.</p>
-
-<p>To avoid these problems, it is probably better to use some explicit
-comparison functions. Their names are composed by <code>cer</code>
-(for "certain") or <code>pos</code> (for "possible") followed by
-<code>lt</code>, <code>le</code>, <code>gt</code>, <code>ge</code>,
-<code>eq</code> or <code>ne</code>. Each of these functions takes two
-parameters and returns a boolean. For example:</p>
-
-<pre>
-template&lt;class T, class Traits&gt;
-bool cerlt(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
-template&lt;class T, class Traits&gt;
-bool cerlt(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
-template&lt;class T, class Traits&gt;
-bool cerlt(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
-</pre>
-
-<h2>Operations</h2>
-
-<h3>Basic Arithmetic Operations</h3>
-
-The basic operations are the unary minus and <code>sqrt</code>, and
-the binary <code>+ - * /</code>. There is also the multiplicative
-inverse. The unary operations take an interval and returns an
-interval. The binary operations take two intervals, or one interval
-and a number, and returns an interval.
-
-<pre>
-</pre>
-
-<h3>Assignment Operators</h3>
-
-There are also some assignment operators <code>+= -= *=
-/=</code>. There is not much to say.
-
+<p>There is only one solution: to force the FPU to convert the
+extended values back to standard precision after each operation. Some
+FPUs provide an instruction able to do this conversion (for example
+the PowerPC processors). But for the FPUs that do not provide it (the
+x86 processors), the only solution is to write the values to memory
+and read them back. Such an operation is obviously very expensive.</p>
 
 
 </body>

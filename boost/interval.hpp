@@ -42,6 +42,8 @@
 #ifndef BOOST_INTERVAL_HPP
 #define BOOST_INTERVAL_HPP
 
+#include <boost/config.hpp>
+
 // FIXME: nécessaire pour utiliser g++ 3.*
 #if __GNUC__==3
 # define BOOST_NO_LIMITS
@@ -51,8 +53,6 @@
 #include <boost/limits.hpp>
 #include <cmath>         // for abs, exp, log, sin, cos, tan, etc.
 #include <iosfwd>
-#include <boost/config.hpp>
-//#include <boost/mathconst.hpp>
 
 #ifdef BOOST_INTERVAL_USE_FRIEND_OPERATORS
 #include <boost/operators.hpp>
