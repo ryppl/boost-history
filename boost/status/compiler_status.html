@@ -5,27 +5,23 @@
 content="text/html; charset=iso-8859-1">
 <meta name="ProgId" content="FrontPage.Editor.Document">
 <meta name="GENERATOR" content="Microsoft FrontPage 4.0">
-<title>Compiler Status Report</title>
+<title>Boost Compiler Status Report</title>
 </head>
 
 <body bgcolor="#FFFFFF" text="#000000">
 
-<table border="1" cellpadding="2" bgcolor="#007F7F">
-    <tr>
-        <td bgcolor="#FFFFFF"><img src="../c++boost.gif"
-        alt="c++boost.gif (8819 bytes)" width="277" height="86"></td>
-        <td><a href="../index.htm"><font color="#FFFFFF" size="4"
-        face="Arial">Home</font></a></td>
-        <td><a href="libraries.htm"><font color="#FFFFFF"
-        size="4" face="Arial">Libraries</font></a></td>
-        <td><a href="../people/people.htm"><font color="#FFFFFF"
-        size="4" face="Arial">People</font></a></td>
-        <td><a href="../more/faq.htm"><font color="#FFFFFF"
-        size="4" face="Arial">FAQ</font></a></td>
-        <td><a href="../more/index.htm"><font color="#FFFFFF"
-        size="4" face="Arial">More</font></a></td>
-    </tr>
+
+<table border="1" bgcolor="#007F7F" cellpadding="2">
+  <tr>
+    <td bgcolor="#FFFFFF"><img src="../c++boost.gif" alt="c++boost.gif (8819 bytes)" width="277" height="86"></td>
+    <td><a href="../index.htm"><font face="Arial" color="#FFFFFF"><big>Home</big></font></a></td>
+    <td><a href="../libs/libraries.htm"><font face="Arial" color="#FFFFFF"><big>Libraries</big></font></a></td>
+    <td><a href="../people/people.htm"><font face="Arial" color="#FFFFFF"><big>People</big></font></a></td>
+    <td><a href="../more/faq.htm"><font face="Arial" color="#FFFFFF"><big>FAQ</big></font></a></td>
+    <td><a href="../more/index.htm"><font face="Arial" color="#FFFFFF"><big>More</big></font></a></td>
+  </tr>
 </table>
+
 
 <h1>Compiler Status</h1>
 
@@ -45,24 +41,29 @@ may have crippled functionality.&nbsp; Even if the current
 release of a compiler supports a boost library, older version of
 the compiler may not work properly.</p>
 
-<h2>Compiler Status Tables</h2>
+<h2><a name="Compiler Status Tables">Compiler Status Tables</a></h2>
 
 <ul>
-    <li><a href="cs-linux.html">Linux/x86</a>
-        <a href="ftp://boost.sourceforge.net/pub/boost/regression-logs/linux.log.gz">[compiler messages]</a>
+    <li><a href="cs-beos.html">BeOS5/Intel</a> 
+        <a href="ftp://boost.sourceforge.net/pub/boost/regression-logs/beos.log.gz">[compiler messages]</a>
         Contributed by
-        <a href="../people/jens_maurer.htm">Jens Maurer</a></li>
-    <li><a href="cs-beos.html">BeOS5/Intel</a> Contributed by
         <a href="../people/john_maddock.htm">John Maddock</a></li>
-    <li><a href="cs-win32.html">Windows NT / Windows 2000</a>
-        <a href="ftp://boost.sourceforge.net/pub/boost/regression-logs/win32.zip">[compiler messages]</a>
-        Contributed by
-	<a href="../people/beman_dawes.html">Beman Dawes</a></li>
     <li><a href="cs-tru64.html">Compaq Tru64 Unix 5.0</a>
         <a href="ftp://boost.sourceforge.net/pub/boost/regression-logs/alpha.log.gz">[compiler messages]</a>
         Contributed by
 	<a href="../people/jens_maurer.htm">Jens Maurer</a>
 	in co-operation with Ralf W. Grosse-Kunstleve</li>
+    <li><a href="cs-hpux.html">HP/UX 10.x</a>
+        Contributed by Thomas Matelich</li>
+        
+    <li><a href="cs-linux.html">Linux/x86</a>
+        <a href="ftp://boost.sourceforge.net/pub/boost/regression-logs/linux.log.gz">[compiler messages]</a>
+        Contributed by
+        <a href="../people/jens_maurer.htm">Jens Maurer</a></li>
+    <li><a href="cs-win32.html">Microsoft Windows NT / Windows 2000</a>
+        <a href="ftp://boost.sourceforge.net/pub/boost/regression-logs/win32.zip">[compiler messages]</a>
+        Contributed by
+	<a href="../people/beman_dawes.html">Beman Dawes</a></li>
     <li><a href="cs-irix.html">SGI IRIX 6.5</a>
         <a href="ftp://boost.sourceforge.net/pub/boost/regression-logs/irix.log.gz">[compiler messages]</a>
         Contributed by
@@ -73,17 +74,14 @@ the compiler may not work properly.</p>
         Contributed by
 	<a href="../people/jens_maurer.htm">Jens Maurer</a>
 	in co-operation with Andrew Lumsdaine</li>
+        
 </ul>
 
-<p>Boost releases are run through a regression test which
+<p>Boost releases are run through a <a href="../more/regression.html"> regression test
+suite</a> which
 automatically generates the above tables. Unless otherwise
 indicated, the C++ Standard Library implementation is the one
 shipped with the compiler.</p>
-
-<p>The <a href="regression.cpp">regression.cpp</a> test program was contributed
-by Jens Maurer, generalizing and improving an earlier program by Beman Dawes.
-The <a href="compiler.cfg">compiler.cfg</a> and <a href="regression.cfg">regression.cfg
-</a>configuration files control the test.</p>
 
 <p><b>Warning:</b> These tables are not a good indication of a
 particular compiler's compliance with the C++ Standard.&nbsp; The
@@ -100,6 +98,7 @@ library tests have not yet been included.</p>
 <hr>
 
 <p>Revised <!--webbot bot="Timestamp" s-type="EDITED"
-s-format="%d %B %Y" startspan -->22 January 2001<!--webbot bot="Timestamp" endspan i-checksum="32180" --></p>
+s-format="%d %B %Y" startspan -->10 February 2001<!--webbot bot="Timestamp" endspan i-checksum="40602" --></p>
 </body>
 </html>
+
