@@ -1,0 +1,20 @@
+subproject libs/container_traits/test ;
+
+template base : 
+    ## Requirements ##
+    : <include>$(BOOST_ROOT)
+      <include>../../.. 
+      
+    
+    ## default-BUILD ##
+    : debug 
+      <debug>static
+    ;
+
+exe  array : <template>base array.cpp ;
+exe  iterator : <template>base iterator.cpp ;
+exe  iterator_pair   : <template>base iterator_pair.cpp ;
+exe  std_container : <template>base std_container.cpp ;
+exe  string : <template>base string.cpp ;
+
+
