@@ -3,7 +3,7 @@
 
 <head>
   <title>Assignment Library</title>
-  <meta content="Thorsten, mailto:nesotto@cs.auc.dk" name="author">
+  <meta content="Thorsten, mailto:nesotto_AT_cs.auc.dk" name="author">
 </head>
 
 <body text="#000000" bgcolor="#ffffff">
@@ -32,7 +32,7 @@
         <li><a href="#insert_assigner">Class <code>insert_assigner</code></a></li>
         <li><a href="#tuple_insert_assigner">Class 
                     <code>tuple_insert_assigner</code></a> </li>
-        <li><a href="#fixed_assigner">Class <code>fixed_sized_assigner</code></a></li> 
+        <li><a href="#fixed_assigner">Class <code>fixed_size_assigner</code></a></li> 
         <li><a href="#fixed_tuple_assigner">Class 
                     <code>fixed_size_tuple_assigner</code></a> </li>                
       </ul>
@@ -63,7 +63,7 @@
       The library comes with predefined operators for the standard library
       and some of the libraries from boost. It also gives access to a 
       few classes that makes it simple to extend the functionality to
-      new handle new container types. Below are given some examples.
+      handle new container types. Below are given some examples.
   </p>
   <p>
     To fill a vector with values you write   
@@ -135,7 +135,7 @@
     This section will describe how to use the library. At the end of this 
     section is an overview of the semantics of the functions and operators.
     If you plan to extend the functionality of this library, you should
-    stick to the same samantics.
+    stick to the same semantics.
     Examples showing the basic usage of the library can be found in the 
     <code>libs/assign/test</code> directory.  
   </p>
@@ -145,22 +145,22 @@
   responsible for the insertion or the assignment. The object does
   the insertion or assignment by overloading <code>operator,()</code>
   and <code>operator()()</code>. Often overloading of 
-  <code>operator,()</code> is discouraged because it can lead to suprising
+  <code>operator,()</code> is discouraged because it can lead to surprising
   results, but the approach taken in this library is safe since the
   user never deals with objects that have overloaded <code>operator,()</code>
   directly.
   </p>
   <p>
   Most of the code in this document use <code>int</code> in the examples, 
-  but of course it works for arbitrary types as they constructible, copy 
-  constructible and assignable. The inserted data need not be constant data,
-  but can be variables or data return from functions; the only requirement 
+  but of course it works for arbitrary types as long as they are Constructible, 
+Copy Constructible and Assignable. The inserted data need not be constant data,
+  but can be variables or data returned from functions; the only requirement 
   is that the data is convertible to the type stored in the container.
    </p>
    <p>
    Each section shows you which header to
   include to use the library. Everything is put in namespace 
-  <code>boost::assigment</code>. </p>
+  <code>boost::assignment</code>. </p>
   <h3><a name="stl">Standard containers </a></h3>
   <p>
   <code>#include &lt;boost/assign/stl.hpp&gt;</code>
@@ -171,7 +171,7 @@
   <pre>
   {
       container&lt;int> c;    
-      c += 1,2,3,4,5,6;        // 'c' holdss the values in the list 
+      c += 1,2,3,4,5,6;        // 'c' holds the values in the list 
       insert( c )(7)(8)(9);    // 7,8,9 is inserted at the end
       assign( c )(1)(2)(3)(4); // 'c' is reset, then the values are added
   }
@@ -179,7 +179,7 @@
   Both <code>operator+=()</code> and <code>insert()</code> returns an object 
   that can insert elements at the end of the container. <code>assign()</code> 
   does the same, but clears
-  the container first. If the contained objects are cubersome to construct,
+  the container first. If the contained objects are cumbersome to construct,
   it is preferable to use the <code>operator()()</code> to insert elements.
   </p>
 
@@ -191,14 +191,14 @@
   <pre>
       boost::array&lt;int,6&gt; my_array;
       my_array << 1,2,3,4,5,6;        // 'my_array' holds {1,2,3,4,5,6}   
-                                      // regardless of their prior valiues
+                                      // regardless of the prior values
       assign_all( my_array )(7)(8)(9)(10)(11)(12); // also overwrites
   </pre>
   This is easier when the <code>array</code> template is used inside a class, or 
-  when your compiler does not support initilization for the <code>array</code> 
+  when your compiler does not support initialization for the <code>array</code> 
   template. Both <code>operator<<()</code> and <code>assign_all()</code> will
   throw an <a href="#exception"> <code>assignment_exception</code></a> if
-  too few values are specified or is one tries to write past the end of the 
+  too few values are specified or if one tries to write past the end of the 
   array. This way it is impossible to have an <code>array</code> with undefined 
   elements.
 
@@ -227,7 +227,7 @@
   The first version makes it a bit easier to visualize 3D arrays.
   Both <code>operator<<()</code> and <code>assign_all()</code> will
   throw an <a href="#exception"> <code>assignment_exception</code></a> if
-  too few values are specified or is one tries to write past the end of the 
+  too few values are specified or if one tries to write past the end of the 
   array. This way it is impossible to have an <code>multi_array</code> with 
   undefined elements. 
 
@@ -238,9 +238,8 @@
   </p>
   Here is an example that fill values into these two containers:
   <pre> 
-      typedef property < edge_weight_t, double > Weight;  
+      typedef property < edge_weight_t, double > Weight, W;  
       typedef adjacency_list<vecS, vecS, directedS, no_property, Weight > MyGraphType; 
-      typedef MyGraphType::edge_property_type Weight,W;
       MyGraphType G(5);
       insert( G )(4,6);
       insert( G )(1,2,W(1.2))(2,3,W(3.4));
@@ -254,7 +253,7 @@
   It is possible to use <code>assign_all()</code> or <code>operator<<()</code> 
   with both vectors and matrices from <code>boost::ublas</code>. The
   following example shows how it is done. For all of the examples, the
-  samantics are the same, that is, the contained elements are overwritten by
+  semantics are the same, that is, the contained elements are overwritten by
   the elements in the list.
   <p>
   <i>Please note that only <code>row_major</code> storage layout is 
@@ -306,7 +305,7 @@
   <h3><a name="semantics">Semantics of functions and overloaded operators</a></h3>
   <p>
   The functions <code>insert(),</code> and <code>assign()</code> and 
-  <code>operator+=()</code> all return a instance of class 
+  <code>operator+=()</code> all return an instance of class 
   <a href="#insert_assigner"><code>insert_assigner</code></a>. The function
   <code>assign_all()</code> and <code>operator<<()</code> both return an 
    instance of class 
@@ -411,8 +410,9 @@
   </p>
     
   <h3><a name="tuple_insert_assigner">Class <code>tuple_insert_assigner</code></a></h3>
-  This class is responsible for inserting elements into diverse containers. It 
-  does so by calling <code>make_tuple_insertion()</code> from
+  This class is responsible for assigning tuples of elements of a container 
+  at once. An example is to assign the elements of a matrix row-wise. The 
+  class works by calling <code>make_tuple_insertion()</code> from
   within <code>operator,()</code> and <code>operator()()</code>. The arguments 
   to <code>operator()()</code> will <b>not</b> be used to construct a new 
   object; instead each argument will be forwarded to <code>make_tuple_insertion()</code>
@@ -445,17 +445,17 @@
   </pre>
   </p>
 
-  <h3><a name="fixed_assigner">Class <code>fixed_sized_assigner</code></a></h3> 
+  <h3><a name="fixed_assigner">Class <code>fixed_size_assigner</code></a></h3> 
   <p>
       This class is responsible for inserting elements into fixed size containers, 
-      that is, typically containers that use an array underneith. It does so by 
+      that is, typically containers that use an array underneath. It does so by 
       using an input iterator from within <code>operator,()</code> and 
       <code>operator()()</code>. The arguments to <code>operator()()</code> will be 
       passed to the constructor of <code>Container::value_type</code>. 
   </p>
   <p>
      The destructor throws an <code>assignment_exception</code> if some elements in 
-     the range have not been assigned to wheres <code>operator,()</code> and 
+     the range have not been assigned to whereas <code>operator,()</code> and 
      <code>operator()()</code>
      throws if one tries to write past the end of the range. <i>Of course, 
      the destructor only throws if <code>std::uncaught_exception()</code> 
@@ -497,9 +497,9 @@
   }
   </pre>
     <h3><a name="fixed_tuple_assigner">Class 
-<code>fixed_sized_tuple_assigner</code></a></h3> <p>
+<code>fixed_size_tuple_assigner</code></a></h3> <p>
       This class is responsible for inserting elements into fixed size containers, 
-      that is, typically containers that use an array underneith. It does so by 
+      that is, typically containers that use an array underneath. It does so by 
       using an input iterator from within <code>operator,()</code> and 
       <code>operator()()</code>. The arguments to <code>operator()()</code> will  
       <b>not</b> be used to construct a new object, but will passed directly
@@ -507,7 +507,7 @@
   </p>
   <p>
      The destructor throws an <code>assignment_exception</code> if some elements in 
-     the range have not been assigned to wheres <code>operator,()</code> and 
+     the range have not been assigned to whereas <code>operator,()</code> and 
      <code>operator()()</code>
      throws if one tries to write past the end of the range. <i>Of course, 
      the destructor only throws if <code>std::uncaught_exception()</code> 
@@ -574,7 +574,7 @@
   </pre>
       
   <h3><a name="make_tuple_insertion">Function 
-<code>make_insertion()</code></a></h3>
+<code>make_tuple_insertion()</code></a></h3>
   The default versions from 
   <code>&lt;boost/assign/make_tuple_insertion.hpp&gt;</code> is: <pre>
     template< typename InputIterator, typename T >
@@ -640,7 +640,8 @@
   The idea for an initialization library is not new . The functionality of this 
   library resembles Leor Zolman's STL Container Initialization Library a great 
   deal, but it does not rely on string passing to achieve its goals. 
-   
+  </p> 
+  <p>
   The  
   The library is non-intrusive and puts only a minimum of requirements 
   on its supported classes.
@@ -653,7 +654,10 @@ Initialization Library overloads
  return an object that is responsible for the initialization. Therefore it takes 
 explicit
       action from the programmer to begin using the overloaded <code>operator,()</CODE>.
-     
+  </p>
+  <p>
+  There has recently been some discussion about enhancing the language to 
+support better initialization (see <a href="#initializer">[4]</a>).
   </p>
   
   <hr>
@@ -663,18 +667,22 @@ explicit
       <li> <a name="meyers">     Scott. Meyers, "More Effective C++", Item 7, Addison Wesley, 1996       
       <li> <a name="gmcl">       K. Czarnecki and U.W. Eisenecker, "Generative programming", Addison-Wesley, 2000        
       <li> <a name="blitz">      <a href=http://www.oonumerics.org/blitz/> http://www.oonumerics.org/blitz/ </A>     
- </OL>
-  </p>
+      <li> <a name="initializer"> 
+          Gabriel Dos Reis and Bjarne Stroustrup, 
+          <a href=http://anubis.dkuug.dk/jtc1/sc22/wg21/docs/papers/2003/n1509.pdf> "Generalized Initializer
+            Lists", </a> 2003  </a>
+ </OL> 
+ </p>
   <hr>
   <p>
-    (C) Copyright Thorsten Ottosen 2003 (nesotto@cs.auc.dk). Permission to copy, 
-    use, modify, sell and distribute this software is granted provided this 
+    (C) Copyright Thorsten Ottosen 2003 (nesotto_AT_cs.auc.dk). Permission to 
+copy, use, modify, sell and distribute this software is granted provided this 
     copyright notice appears
     in all copies. This software is provided &quot;as is&quot; without express
     or implied warranty, and with no claim as to its suitability for any
     purpose.
   </p>
 
-</body>
+  </body>
 
 </html>

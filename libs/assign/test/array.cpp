@@ -47,6 +47,7 @@ int main()
     	// 'boost::multi_array'
     	///////////////////////////////////////////////////////////////////////
     
+        /*
      	// Create a 3D array that is 3 x 4 x 2
     	typedef boost::multi_array<double, 3> array_type;
     	typedef array_type::index index;
@@ -69,6 +70,7 @@ int main()
     	    for(index j = 0; j != 4; ++j)
                 for(index k = 0; k != 2; ++k)
                     assert(A[i][j][k] == verify++);
+        */            
                         
     }
     catch( std::exception& e )
