@@ -1508,7 +1508,7 @@ namespace boost
     inline OutIter set_intersection(Rng1 const & rng1,Rng2 const & rng2,OutIter out)
     {
         return std::set_intersection(range_ex_detail::adl_begin(rng1),range_ex_detail::adl_end(rng1),
-                                     range_ex_detail::adl_begin(rng1),range_ex_detail::adl_end(rng1),out);
+                                     range_ex_detail::adl_begin(rng2),range_ex_detail::adl_end(rng2),out);
     }
 
     /// \overload
@@ -1516,7 +1516,7 @@ namespace boost
     inline OutIter set_intersection(Rng1 const & rng1,Rng2 const & rng2,OutIter out,Cmp cmp)
     {
         return std::set_intersection(range_ex_detail::adl_begin(rng1),range_ex_detail::adl_end(rng1),
-                                     range_ex_detail::adl_begin(rng1),range_ex_detail::adl_end(rng1),out,cmp);
+                                     range_ex_detail::adl_begin(rng2),range_ex_detail::adl_end(rng2),out,cmp);
     }
 
     /// \brief template function set_difference
