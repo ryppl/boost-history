@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
-  "http://www.cs.rpi.edu/~gregod/boost/tools/boostbook/dtd/boostbook.dtd">
+  "http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
 <section>
-  <title>A uniform method for computing function object return types</title>
+  <title>A uniform method for computing function object return types (revision 1)</title>
 
   <variablelist>
-    <varlistentry><term>Document number</term><listitem><simpara>N1437=03-0019</simpara></listitem></varlistentry>
-    <varlistentry><term>Date</term><listitem><simpara>27 February 2003</simpara></listitem></varlistentry>
+    <varlistentry><term>Document number</term><listitem><simpara>N1454=03-0037</simpara></listitem></varlistentry>
+    <varlistentry><term>Revises document number</term><listitem><simpara>N1437=03-0019</simpara></listitem></varlistentry>
+    <varlistentry><term>Date</term><listitem><simpara>9 April 2003</simpara></listitem></varlistentry>
     <varlistentry><term>Project</term><listitem><simpara>Programming Language C++, Library Working Group</simpara></listitem></varlistentry>
     <varlistentry><term>Reply-to</term><listitem><simpara>Douglas Gregor <email>gregod@cs.rpi.edu</email></simpara></listitem></varlistentry>
   </variablelist>
@@ -224,23 +225,25 @@ public:
 
           <purpose>Determines the result type of function object call expressions.</purpose>
 
-          <para>Given an lvalue <code>f</code> of type <code>F</code>
-          and lvalues <code>t1</code>, <code>t2</code>, ...,
-          <code>tN</code> of types <code>T1</code>, <code>T2</code>,
-          ..., <code>TN</code>, respectively, the <code>type</code>
-          member type defines the result type of the expression
-          <code>f(t1, t2, ..., tN)</code>.</para>
+          <description>
+            <para>Given an lvalue <code>f</code> of type
+            <code>F</code> and lvalues <code>t1</code>,
+            <code>t2</code>, ..., <code>tN</code> of types
+            <code>T1</code>, <code>T2</code>, ..., <code>TN</code>,
+            respectively, the <code>type</code> member type defines
+            the result type of the expression <code>f(t1, t2, ...,
+            tN)</code>.</para>
  
-          <para>The implementation may determine the member type
-          <code>type</code> via any means that produces the exact type
-          of the expression <code>f(t1, t2, ..., tN)</code> for the
-          given types.</para>
+            <para>The implementation may determine the member type
+            <code>type</code> via any means that produces the exact
+            type of the expression <code>f(t1, t2, ..., tN)</code> for
+            the given types.</para>
 
-          <para>If the implementation cannot determine the type of the
-          expression <code>f(t1, t2, ..., tN)</code>, or if the
-          expression is ill-formed, the implementation shall use the
-          following process to determine the member type
-          <code>type</code>:
+            <para>If the implementation cannot determine the type of
+            the expression <code>f(t1, t2, ..., tN)</code>, or if the
+            expression is ill-formed, the implementation shall use the
+            following process to determine the member type
+            <code>type</code>:
             <orderedlist spacing="compact">
               <listitem><para>If <code>F</code> is a function type, <code>type</code> is the return type of the function type <code>F</code>.</para></listitem>
               <listitem><para>If <code>F</code> is a member function type, <code>type</code> is the return type of the member function type <code>F</code>.</para></listitem>
@@ -253,7 +256,8 @@ public:
                 </orderedlist></para></listitem>
               <listitem><para>Otherwise, the program is ill-formed.</para></listitem>
             </orderedlist>
-          </para>           
+            </para>           
+          </description>
         </class>
       </namespace>
     </header>
