@@ -46,50 +46,11 @@ typedef
   interval<double, interval_traits<double,
 				   compare_certainly<double>,
 				   save_state<rounded_transc_opp<double> >,
-				   checking_lax<double> > >
+				   checking_nothing<double> > >
   interval_type;
-//typedef boost::interval<double, boost::interval_traits<double> > interval_type;
+
 static const std::string interval_name = "boost::interval<double>";
-using namespace boost;     // not generally recommended
-#define UNROLL(x) UNROLL4(x)
 
-#elif defined(USE_BOOST_INDET)
-
-// In order to show the performance benefits of avoiding rounding mode
-// switches, this ugly hack avoids restoring the mode after each operation.
-// It violates the interface specification for boost::interval<> !!!
-
-namespace boost {
-namespace detail {
-  template<class T> struct global_rounding_control { };
-} // namespace detail
-} // namespace boost
-// platform-specific
-#define BOOST_INTERVAL_HPP
-#define rounding_control global_rounding_control
-//#include <boost/detail/isoc99_rounding_control.hpp>
-#include <boost/detail/x86gcc_rounding_control.hpp>
-#undef rounding_control
-#undef BOOST_INTERVAL_HPP
-#include <boost/interval.hpp>
-
-namespace boost {
-namespace detail {
-  static global_rounding_control<double> singleton_global_rounding_control;
-  template<>
-  struct rounding_control<double>
-  {
-    void upward() { singleton_global_rounding_control.upward(); }
-    void downward() { singleton_global_rounding_control.downward(); }
-    void tonearest() { singleton_global_rounding_control.tonearest(); }
-    void towardzero() { singleton_global_rounding_control.towardzero(); }
-  };
-} // namespace detail
-} // namespace boost
-
-typedef boost::interval<double, boost::interval_traits<double> > interval_type;
-static const std::string interval_name = "boost::interval<double,indet>";
-using namespace boost;        // not generally recommended
 #define UNROLL(x) UNROLL4(x)
 
 #elif defined(USE_RVINTERVAL)

@@ -11,29 +11,34 @@ struct checking_nothing
 {
   static T inf() { return std::numeric_limits<T>::infinity(); }
   static T nan() { return std::numeric_limits<T>::quiet_NaN(); }
-  static bool is_nan(const T& x) { return detail::is_nan(x); }
-  BOOST_STATIC_CONSTANT(bool, test_nan_input = false);
+  static bool is_nan(const T& x) { return false; }
   static T empty_lower() { return std::numeric_limits<T>::quiet_NaN(); }
   static T empty_upper() { return std::numeric_limits<T>::quiet_NaN(); }
-  static bool is_empty(const T& x, const T& y) { return !(x <= y); }
-  BOOST_STATIC_CONSTANT(bool, test_empty_input = false);
+  static bool is_empty(const T& x, const T& y) { return false; }
 };
-
-template<class T>
-struct checking_lax: checking_nothing<T>
-{};
 
 template<class T>
 struct checking_strict
 {
   static T inf() { return std::numeric_limits<T>::infinity(); }
+  static T nan() { throw std::logic_error("boost::interval: NaN output"); }
+  static bool is_nan(const T& x)
+  { if (detail::is_nan(x)) throw std::logic_error("boost::interval: NaN input");
+    return false; }
+  static T empty_lower() { throw std::logic_error("boost::interval: Empty output"); }
+  static T empty_upper() { throw std::logic_error("boost::interval: Empty output"); }
+  static bool is_empty(const T& x, const T& y) { return false; }
+};
+
+template<class T>
+struct checking_complete
+{
+  static T inf() { return std::numeric_limits<T>::infinity(); }
   static T nan() { return std::numeric_limits<T>::quiet_NaN(); }
   static bool is_nan(const T& x) { return detail::is_nan(x); }
-  BOOST_STATIC_CONSTANT(bool, test_nan_input = false);
-  static T empty_lower() { throw; }
-  static T empty_upper() { throw; }
+  static T empty_lower() { return T(1); }
+  static T empty_upper() { return T(0); }
   static bool is_empty(const T& x, const T& y) { return !(x <= y); }
-  BOOST_STATIC_CONSTANT(bool, test_empty_input = false);
 };
 
     namespace detail {
@@ -41,42 +46,40 @@ struct checking_strict
 template <class T> inline bool is_nan(const T& x) { return x != x; }
 
 template<class T, class Traits> inline
-bool test_input(const interval<T, Traits>& r) {
+bool test_input(const interval<T, Traits>& x) {
   typedef typename Traits::checking checking;
-  return (checking::test_empty_input && empty(r));
+  return checking::is_empty(x.lower(), x.upper());
 }
 
 template<class T, class Traits> inline
 bool test_input(const interval<T, Traits>& x, const interval<T, Traits>& y) {
   typedef typename Traits::checking checking;
-  return (checking::test_empty_input && (empty(x) || empty(y)));
+  return checking::is_empty(x.lower(), x.upper()) ||
+	 checking::is_empty(y.lower(), y.upper());
 }
 
 template<class T, class Traits> inline
 bool test_input(const T& x, const interval<T, Traits>& y) {
   typedef typename Traits::checking checking;
-  return (checking::test_nan_input && checking::is_nan(x) ||
-	  checking::test_empty_input && empty(y));
+  return checking::is_nan(x) || checking::is_empty(y.lower(), y.upper());
 }
 
 template<class T, class Traits> inline
 bool test_input(const interval<T, Traits>& x, const T& y) {
   typedef typename Traits::checking checking;
-  return (checking::test_empty_input && empty(x) ||
-	  checking::test_nan_input && checking::is_nan(y));
+  return checking::is_empty(x.lower(), x.upper()) || checking::is_nan(y);
 }
 
 template<class T, class Traits> inline
 bool test_input(const T& x) {
   typedef typename Traits::checking checking;
-  return (checking::test_nan_input && checking::is_nan(x));
+  return checking::is_nan(x);
 }
 
 template<class T, class Traits> inline
 bool test_input(const T& x, const T& y) {
   typedef typename Traits::checking checking;
-  return (checking::test_nan_input && checking::is_nan(x) ||
-	  checking::test_nan_input && checking::is_nan(y));
+  return checking::is_nan(x) || checking::is_nan(y);
 }
 
     } // namespace detail

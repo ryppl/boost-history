@@ -94,7 +94,7 @@ struct rounding_control<float>:
   detail::sparc_rounding_control,
   detail::ieee_float_constants
 {
-  static float force_rounding(const float& x) { return x; }
+  static const float& force_rounding(const float& x) { return x; }
   static float to_int(const float& x) { return rintf(x); }
 };
 
@@ -103,7 +103,7 @@ struct rounding_control<double>:
   detail::sparc_rounding_control,
   detail::ieee_double_constants
 {
-  static double force_rounding(const double& x) { return x; }
+  static const double& force_rounding(const double& x) { return x; }
   static double to_int(const double& x) { return rint(x); }
 };
 

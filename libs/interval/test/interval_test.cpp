@@ -27,7 +27,7 @@ using namespace interval_lib;
 typedef interval<double, interval_traits<double,
 					 compare_certainly<double>,
 					 save_state<rounded_transc_opp<double> >,
-					 checking_lax<double> > > R;
+					 checking_nothing<double> > > R;
 
 unsigned nb_errors;
 std::string test_name;

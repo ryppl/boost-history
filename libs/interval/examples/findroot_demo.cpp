@@ -58,7 +58,7 @@ struct test_func2d
 {
   T operator()(T x, T y) const
   {
-    return sin(x)*cos(y) - exp(x*y)/45.0 * (square(x+y)+100.0) - 
+    return sin(x)*cos(y) - exp(x*y)/45.0 * (pow(x+y, 2)+100.0) - 
       cos(sin(y))*y/4.0;
   }
 };
@@ -157,7 +157,7 @@ int main()
   typedef interval<double, interval_traits<double,
     compare_certainly<double>,
     save_state<rounded_transc_opp<double> >,
-    checking_lax<double> > > I;
+    checking_complete<double> > > I;
 
   std::cout << "Zero points of sin(x)/(x*x+1)\n";
   find_zeros(std::cout, test_func1d<I>(), I(-11, 10));

@@ -181,14 +181,12 @@ using namespace interval_lib;
 
 struct my_checking
 {
-  static pexpr inf() { return pexpr(); }
-  static pexpr nan() { return pexpr(); }
+  static pexpr inf() { throw; }
+  static pexpr nan() { throw; }
   static bool is_nan(const pexpr&) { return false; }
-  BOOST_STATIC_CONSTANT(bool, test_nan_input = false);
-  static pexpr empty_lower() { return pexpr(); }
-  static pexpr empty_upper() { return pexpr(); }
+  static pexpr empty_lower() { throw; }
+  static pexpr empty_upper() { throw; }
   static bool is_empty(const pexpr&, const pexpr&) { return false; }
-  BOOST_STATIC_CONSTANT(bool, test_empty_input = false);
 };
 
 template<class Rounding>

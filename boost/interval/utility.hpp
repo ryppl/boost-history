@@ -151,8 +151,9 @@ interval<T, Traits> widen(const interval<T, Traits>& x, const T& v)
 template<class T, class Traits> inline
 bool empty(const interval<T, Traits>& x)
 {
-  typedef typename Traits::checking checking;
-  return checking::is_empty(x.lower(), x.upper());
+  return interval_lib::detail::test_input(x);
+  //typedef typename Traits::checking checking;
+  //return checking::is_empty(x.lower(), x.upper());
 }
 
 template<class T, class Traits> inline

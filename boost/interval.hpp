@@ -63,9 +63,7 @@ namespace boost {
     template<class Traits2>
     interval(const interval<T, Traits2>& r): low(r.lower()), up(r.upper())
     {
-      typedef typename Traits::checking checking;
-      if (checking::test_empty_input && boost::empty(r))
-	set_empty();
+      if (boost::empty(r)) set_empty();
     }
 
     // compiler-generated copy constructor and assignment operator are fine
