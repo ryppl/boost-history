@@ -87,8 +87,5 @@
 #     if( _MSC_VER < 1300 )
 #        define BOOST_IOFM_NO_LIB_INTERVAL // JDT: trouble with interval/detail/bugs.hpp
 #     endif
-#     if( _MSC_VER <= 1300 )
-#        define BOOST_IOFM_NO_FMT_DEFAULT  // RHD: workaround for VC6/VC7.0
-#     endif
 #  endif
 #endif

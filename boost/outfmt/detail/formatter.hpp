@@ -83,13 +83,19 @@
                              (
                                 format_type o,
                                 format_type c,
-                                format_type s
-#                               if !defined(BOOST_IOFM_NO_FMT_DEFAULT)
-                                   = traits_type::separator_default
-#                               endif
+                                format_type s // = traits_type::separator_default
                              ):
                openclose_formatter_t< FormatType, ReferenceType, FormatTraits >( o, c ),
                fmt_separator( s )
+            {
+            }
+            inline           formatter_t // VC workaround
+                             (
+                                format_type o,
+                                format_type c
+                             ):
+               openclose_formatter_t< FormatType, ReferenceType, FormatTraits >( o, c ),
+               fmt_separator( traits_type::separator_default )
             {
             }
             inline           formatter_t( format_type s ):
@@ -101,13 +107,19 @@
             inline           formatter_t
                              (
                                 const openclose_formatter_t< FormatType, RT2, FormatTraits2 > & fmt,
-                                format_type s
-#                               if !defined(BOOST_IOFM_NO_FMT_DEFAULT)
-                                   = traits_type::separator_default
-#                               endif
+                                format_type s // = traits_type::separator_default
                              ):
                openclose_formatter_t< FormatType, ReferenceType, FormatTraits >( fmt ),
                fmt_separator( s )
+            {
+            }
+            template< typename RT2, class FormatTraits2 >
+            inline           formatter_t // VC workaround
+                             (
+                                const openclose_formatter_t< FormatType, RT2, FormatTraits2 > & fmt
+                             ):
+               openclose_formatter_t< FormatType, ReferenceType, FormatTraits >( fmt ),
+               fmt_separator( traits_type::separator_default )
             {
             }
             template< typename RT2, class FormatTraits2 >
@@ -147,12 +159,17 @@
                              (
                                 format_type o,
                                 format_type c,
-                                format_type s
-#                               if !defined(BOOST_IOFM_NO_FMT_DEFAULT)
-                                   = traits_type::separator_default
-#                               endif
+                                format_type s // = traits_type::separator_default
                              ):
                formatter_t< FormatType, formatter, FormatTraits >( o, c, s )
+            {
+            }
+            inline           formatter // VC workaround
+                             (
+                                format_type o,
+                                format_type c
+                             ):
+               formatter_t< FormatType, formatter, FormatTraits >( o, c, traits_type::separator_default )
             {
             }
             inline           formatter( format_type s ):
@@ -163,12 +180,17 @@
             inline           formatter
                              (
                                 const openclose_formatter_t< FormatType, RT2, FormatTraits2 > & fmt,
-                                format_type s
-#                               if !defined(BOOST_IOFM_NO_FMT_DEFAULT)
-                                   = traits_type::separator_default
-#                               endif
+                                format_type s // = traits_type::separator_default
                              ):
                formatter_t< FormatType, formatter, FormatTraits >( fmt, s )
+            {
+            }
+            template< typename RT2, class FormatTraits2 >
+            inline           formatter // VC workaround
+                             (
+                                const openclose_formatter_t< FormatType, RT2, FormatTraits2 > & fmt
+                             ):
+               formatter_t< FormatType, formatter, FormatTraits >( fmt, traits_type::separator_default )
             {
             }
 #           if !defined(BOOST_MSVC) || _MSC_VER > 1200
