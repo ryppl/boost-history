@@ -11,7 +11,7 @@ namespace boost { namespace langbinding { namespace backend {
 class plugin;
 
 // For each plugin there is a unique class derived from this one, and
-// for each wrapped C++ class there is be an instance of that derived
+// for each wrapped C++ class there is an instance of that derived
 // class.
 struct class_ : boost::noncopyable
 {
