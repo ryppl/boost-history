@@ -48,6 +48,19 @@
          {
             return( fo( os, fo.ob ));
          }
+         
+         template< typename CharT, class TraitsT, typename T, typename FormatType, typename Inputter >
+         inline std::basic_istream< CharT, TraitsT > & operator>>
+         (
+            std::basic_istream< CharT, TraitsT >        & is,
+            const formatob_t< T, FormatType, Inputter > & fo
+         )
+         {
+            boost::io::detail::input_helper< std::basic_istream< CharT, TraitsT > >
+                                                 in( is );
+            fo.read( in, const_cast< T & >( fo.ob ));
+            return( is );
+         }
 #     else
          template< typename T, typename FormatType, typename Outputter >
          inline std::ostream & operator<<
@@ -57,6 +70,19 @@
          )
          {
             return( fo( os, fo.ob ));
+         }
+
+         template< typename T, typename FormatType, typename Inputter >
+         inline std::istream & operator>>
+         (
+            std::istream & is,
+            const formatob_t< T, FormatType, Inputter > & fo
+         )
+         {
+            boost::io::detail::input_helper< std::istream >
+                                                 in( is );
+            fo.read( in, const_cast< T & >( fo.ob ));
+            return( is );
          }
 #     endif
 
