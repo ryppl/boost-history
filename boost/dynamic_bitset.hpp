@@ -41,6 +41,7 @@
 #include "boost/dynamic_bitset_fwd.hpp"
 #include "boost/detail/dynamic_bitset.hpp"
 #include "boost/detail/iterator.hpp" // used to implement append(Iter, Iter)
+#include "boost/static_assert.hpp"
 #include "boost/limits.hpp"
 #include "boost/lowest_bit.hpp" // used by find_first/next
 
@@ -988,7 +989,8 @@ dynamic_bitset<Block, Allocator>::count() const
     using namespace detail::dynamic_bitset_count_impl;
 
     const bool no_padding = bits_per_block == CHAR_BIT * sizeof(Block);
-    const mode m = table_width >= CHAR_BIT && no_padding? access_by_bytes : access_by_blocks;
+    const mode m = table_width >= CHAR_BIT && no_padding
+                     ? access_by_bytes : access_by_blocks;
 
     return do_count(m_bits.begin(), num_blocks(), Block(0), (mode_to_type<m>*) 0 );
 
