@@ -65,7 +65,7 @@ struct dispatcher
     void execute(int arity, std::string* args)
     {
         void* arg_ptrs[10];
-        arg_conversion converted_args[10];
+        from_xxx_data converted_args[10];
 
         for (void** arg = arg_ptrs; arg != arg_ptrs + arity; ++arg)
         {
@@ -81,7 +81,7 @@ struct dispatcher
             {
                 converted_args[j] = registry::convert(
                     arg_ptrs[j]
-                  , i->converters[j]->rvalue_converters
+                  , i->converters[j]->rvalue_from_xxx
                 );
 
                 if (!converted_args[j].convertible)
@@ -123,10 +123,10 @@ struct from_str
         return new (storage) T(boost::lexical_cast<T>(src));
     }
 
-    static arg_conversion convertible(void* src_)
+    static from_xxx_data convertible(void* src_)
     {
         std::string const& src = *static_cast<std::string const*>(src_);
-        arg_conversion result;
+        from_xxx_data result;
         result.source = src_;
         result.convertible = src_;
         result.construct = &from_str<T>::construct;

@@ -18,6 +18,22 @@
 #include <boost/langbinding/converter/registry.hpp>
 #include <boost/langbinding/converter/registered.hpp>
 
+//
+// A typical backend holder converter could look something like:
+//
+//   void* to_xxx_instance(void* src, holder_installer const& installer)
+//   {
+//       /* create language specific instance of the given class */
+//       my_class const* class_ = (my_class const*)installer.class_();
+//       my_instance* x = class_->create(installer.sizeof_());
+//
+//       /* create language neutral instance object and install holder */
+//       class_instance instance(class_, x);
+//       installer.install(src, instance, x->holder_storage);
+//       return x;
+//   }
+//
+
 namespace boost { namespace langbinding { namespace function {
 
 namespace aux { namespace get_pointer_ {
@@ -27,8 +43,10 @@ namespace aux { namespace get_pointer_ {
     typedef char (&yes)[1];
     typedef char (&no)[2];
 
+    no_overload_tag operator,(no_overload_tag, int);
+
     no_overload_tag get_pointer(any);
-    yes check(...);
+    yes check(int);
     no check(no_overload_tag);
 
     using boost::get_pointer;
@@ -39,7 +57,7 @@ namespace aux { namespace get_pointer_ {
         static typename add_reference<T>::type x;
 
         BOOST_STATIC_CONSTANT(bool,
-            value = sizeof(get_pointer_::check(get_pointer(x))) == 1
+            value = sizeof(get_pointer_::check( (get_pointer(x), 0) )) == 1
         );
 
         typedef mpl::bool_<value> type;
@@ -47,12 +65,12 @@ namespace aux { namespace get_pointer_ {
 
 }} // namespace aux::get_pointer_
 
+typedef void (*installer_function)(
+     void* src, backend::class_instance instance, void* storage);
+
 namespace aux {
 
     using get_pointer_::has_get_pointer;
-
-    typedef void (*holder_installer)(
-        void* src, backend::class_instance instance, void* storage);
 
     // T is a smart pointer of some sort. Uses get_pointer() to extract
     // the pointee type.
@@ -68,7 +86,7 @@ namespace aux {
             new (storage) classes::instance_holder<T>(instance, ptr, 0);
         }
 
-        static aux::holder_installer get()
+        static installer_function get()
         {
             return &ptr_holder_installer<T>::install;
         }
@@ -106,7 +124,7 @@ namespace aux {
             new (storage) classes::instance_holder<ptr_type>(instance, ptr, 0);
         }
 
-        static aux::holder_installer get()
+        static installer_function get()
         {
             return &value_holder_installer<T>::install;
         }
@@ -126,7 +144,7 @@ namespace aux {
     template<class T>
     struct no_installer
     {
-        static aux::holder_installer get()
+        static installer_function get()
         {
             return 0;
         }
@@ -141,27 +159,30 @@ struct holder_installer
 {
     holder_installer();
     holder_installer(
-        aux::holder_installer installer
+        installer_function installer
       , backend::class_ const* class_
       , std::size_t sizeof_);
 
+    // installs a holder in the given storage.
     void install(void* src, backend::class_instance instance, void* storage) const
     {
         assert(m_installer);
         m_installer(src, instance, storage);
     }
 
+    // returns the class_ object representing the held class.
     backend::class_ const* class_() const
     {
         return m_class;
     }
 
+    // returns the size of the holder.
     std::size_t sizeof_() const
     {
         return m_sizeof;
     }
-    
-    typedef aux::holder_installer const holder_installer::* safe_bool;
+
+    typedef installer_function const holder_installer::* safe_bool;
 
     operator safe_bool() const
     {
@@ -169,7 +190,7 @@ struct holder_installer
     }
 
 private:
-    aux::holder_installer m_installer;
+    installer_function m_installer;
     backend::class_ const* const m_class;
     std::size_t m_sizeof;
 };
@@ -182,7 +203,7 @@ inline holder_installer::holder_installer()
 }
 
 inline holder_installer::holder_installer(
-    aux::holder_installer installer
+    installer_function installer
   , backend::class_ const* class_
   , std::size_t sizeof_
   )
@@ -192,13 +213,11 @@ inline holder_installer::holder_installer(
 {
 }
 
-typedef void* (*result_converter_callback)(void*, holder_installer const&);
-
 template<class T>
 struct result_converter
 {
     explicit result_converter(
-        result_converter_callback callback
+        converter::to_xxx_function callback
       , backend::plugin const& backend_
       )
       : callback(callback)
@@ -229,6 +248,7 @@ struct result_converter
         >
     > has_installer;
 
+    // auxiliry function responsible for creating holder_installer
     template<class U>
     holder_installer make_installer(mpl::false_, U&) const
     {
@@ -261,14 +281,14 @@ struct result_converter
     }
 
 private:
-    result_converter_callback callback;
+    converter::to_xxx_function callback;
     backend::plugin const& backend_;
 };
 
 template<>
 struct result_converter<void>
 {
-    result_converter(result_converter_callback, backend::plugin const&)
+    result_converter(converter::to_xxx_function, backend::plugin const&)
     {
     }
 

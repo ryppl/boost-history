@@ -56,7 +56,7 @@ void* to_xxx(void* src, holder_installer const& installer)
 
 int main()
 {
-    arg_conversion args[2] = { 
+    from_xxx_data args[2] = { 
         0, &x, 0
       , 0, &y, 0
     };

@@ -17,13 +17,13 @@ namespace boost { namespace langbinding { namespace converter { namespace regist
 
 struct converter_chain
 {
-    converter_chain(converter_function);
+    converter_chain(from_xxx_function);
 
-    converter_function convertible;
+    from_xxx_function convertible;
     converter_chain* next;
 };
 
-inline converter_chain::converter_chain(converter_function x)
+inline converter_chain::converter_chain(from_xxx_function x)
     : convertible(x)
     , next(0)
 {
@@ -35,15 +35,15 @@ struct backend_registration
 
     backend::class_* class_;
     to_xxx_function to_xxx;
-    converter_chain* lvalue_converters;
-    converter_chain* rvalue_converters;
+    converter_chain* lvalue_from_xxx;
+    converter_chain* rvalue_from_xxx;
 };
 
 inline backend_registration::backend_registration()
     : class_(0)
     , to_xxx(0)
-    , lvalue_converters(0)
-    , rvalue_converters(0)
+    , lvalue_from_xxx(0)
+    , rvalue_from_xxx(0)
 {
 }
 
@@ -68,11 +68,11 @@ inline backend_registration& registration::get(backend::id id)
 }
 
 BOOST_LANGBINDING_DECL void insert(
-    backend::id, bool rvalue, util::type_info, converter_function);
+    backend::id, bool rvalue, util::type_info, from_xxx_function);
 
 BOOST_LANGBINDING_DECL registration& acquire(util::type_info);
 BOOST_LANGBINDING_DECL registration* lookup(util::type_info);
-BOOST_LANGBINDING_DECL arg_conversion convert(void* src, converter_chain* chain);
+BOOST_LANGBINDING_DECL from_xxx_data convert(void* src, converter_chain* chain);
 
 }}}} // namespace boost::langbinding::converter::registry
 

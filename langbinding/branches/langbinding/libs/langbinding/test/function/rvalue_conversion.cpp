@@ -43,7 +43,7 @@ void* construct(void* src, void* storage)
 
 int main()
 {
-    boost::langbinding::converter::arg_conversion args[2] = { 
+    from_xxx_data args[2] = { 
         { 0, 0, &construct }
       , { 0, &y, 0 }
     };

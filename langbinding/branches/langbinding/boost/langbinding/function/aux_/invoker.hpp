@@ -12,6 +12,10 @@
 #include <boost/mpl/iterator_range.hpp>
 #include <boost/mpl/front.hpp>
 
+#include <boost/type_traits/remove_cv.hpp>
+#include <boost/type_traits/remove_reference.hpp>
+#include <boost/type_traits/remove_pointer.hpp>
+
 #include <boost/spirit/fusion/sequence/type_sequence.hpp>
 #include <boost/spirit/fusion/algorithm/transform.hpp>
 #include <boost/spirit/fusion/sequence/generate.hpp>
@@ -42,40 +46,16 @@ struct fill_argument_types
     template<class T>
     void operator()(wrap<T>)
     {
-        arg->type = strip((T(*)())0);
+        typedef typename remove_cv<
+            typename remove_pointer<
+                typename remove_reference<T>::type
+            >::type
+        >::type stripped_type;
+
+        arg->type = util::type_id<stripped_type>();
         arg->lvalue = is_pointer<T>() 
             || boost::detail::is_reference_to_non_const<T>();
         ++arg;
-    }
-
-    template<class T>
-    static util::type_info strip(T(*)())
-    {
-        return util::type_id<T>();
-    }
-
-    template<class T>
-    static util::type_info strip(T&(*)())
-    {
-        return util::type_id<T>();
-    }
-
-    template<class T>
-    static util::type_info strip(T const&(*)())
-    {
-        return util::type_id<T>();
-    }
-
-    template<class T>
-    static util::type_info strip(T*(*)())
-    {
-        return util::type_id<T>();
-    }
-
-    template<class T>
-    static util::type_info strip(T const*(*)())
-    {
-        return util::type_id<T>();
     }
 
     argument_type* arg;
@@ -135,7 +115,7 @@ struct invoker : boost::langbinding::function::invoker
 
     void* invoke(
         backend::plugin const& backend_
-      , converter::arg_conversion* args) const
+      , converter::from_xxx_data* args) const
     {
         aux::fusion_arg_iterator arg_iterator(args);
 
