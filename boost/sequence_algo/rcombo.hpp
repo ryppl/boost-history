@@ -29,10 +29,10 @@ namespace boost {
     inline bool
     is_sorted(ForwardIterator first, ForwardIterator last)
     {
-	    for(--last; first != last; first++)
-		    if (*next(first) < *first)
-			    return false;
-	    return true;
+        for(--last; first != last; first++)
+            if (*next(first) < *first)
+                return false;
+        return true;
     }
 
     // is_sorted -------------------------------------------------------//
@@ -44,10 +44,10 @@ namespace boost {
     inline bool
     is_sorted(ForwardIterator first, ForwardIterator last, Compare comp)
     {
-	    for(--last; first != last; first++)
-		    if (comp(*next(first), *first))
-			    return false;
-	    return true;
+        for(--last; first != last; first++)
+            if (comp(*next(first), *first))
+                return false;
+        return true;
     }
 
     // smallest_greater -------------------------------------------------//
@@ -62,16 +62,16 @@ namespace boost {
     inline ForwardIterator
     smallest_greater(ForwardIterator first, ForwardIterator last, const T& x)
     {
-	    ForwardIterator hold = last;
-	    for (; first != last; first++)
-		    if (x < *first)
-			    if (hold == last)
-				    hold = first;
-			    else
-				    if (*first < *hold)
-					    hold = first;
-	    return hold;
-    }	// smallest_greater
+        ForwardIterator hold = last;
+        for (; first != last; first++)
+            if (x < *first)
+                if (hold == last)
+                    hold = first;
+                else
+                    if (*first < *hold)
+                        hold = first;
+        return hold;
+    }    // smallest_greater
 
     // smallest_greater -------------------------------------------------//
 
@@ -87,59 +87,59 @@ namespace boost {
     smallest_greater(ForwardIterator first, ForwardIterator last,
         const T& x, Compare comp)
     {
-	    ForwardIterator hold = last;
-	    for (; first != last; first++)
-		    if (comp(x, *first))
-			    if (hold == last)
-				    hold = first;
-			    else
-				    if (comp(*first, *hold))
-					    hold = first;
-	    return hold;
-    }	// smallest_greater
+        ForwardIterator hold = last;
+        for (; first != last; first++)
+            if (comp(x, *first))
+                if (hold == last)
+                    hold = first;
+                else
+                    if (comp(*first, *hold))
+                        hold = first;
+        return hold;
+    }    // smallest_greater
 
 
     // largest_less -----------------------------------------------------//
 
     // Returns an iterator pointing to the largest object in [first, last)
-    // less than x. last is returned if the value doesn't exist.
+    // less than x. last is returned if no such value is present.
 
     template<class ForwardIterator, class T>
     inline ForwardIterator
     largest_less(ForwardIterator first, ForwardIterator last, const T& x)
     {
-	    ForwardIterator hold = last;
-	    for(; first != last; first++)
-		    if (*first < x)
-			    if (hold == last)
-				    hold = first;
-			    else
-				    if (*hold < *first)
-					    hold = first;
-	    return hold;
-    }	// largest_less
+        ForwardIterator hold = last;
+        for(; first != last; first++)
+            if (*first < x)
+                if (hold == last)
+                    hold = first;
+                else
+                    if (*hold < *first)
+                        hold = first;
+        return hold;
+    }    // largest_less
 
     // largest_less -------------------------------------------------------//
 
     // Returns an iterator pointing to the largest object in [first, last)
     // less than x, based on a user-supplied binary comparison operator.
-    // last is returned if the value doesn't exist.
+    // last is returned if no such object is present.
 
     template<class ForwardIterator, class T, class Compare>
     inline ForwardIterator
     largest_less(ForwardIterator first, ForwardIterator last,
         const T& x, Compare comp)
     {
-	    ForwardIterator hold = last;
-	    for(; first != last; first++)
-		    if (comp(*first, x))
-			    if (hold == last)
-				    hold = first;
-			    else
-				    if (comp(*hold, *first))
-					    hold = first;
-	    return hold;
-    }	// largest_less
+        ForwardIterator hold = last;
+        for(; first != last; first++)
+            if (comp(*first, x))
+                if (hold == last)
+                    hold = first;
+                else
+                    if (comp(*hold, *first))
+                        hold = first;
+        return hold;
+    }    // largest_less
 
 
     // next_r_permutation -----------------------------------------------//
@@ -157,33 +157,33 @@ namespace boost {
     template<class RandomAccessIterator>
     bool
     next_r_permutation(RandomAccessIterator first, RandomAccessIterator r,
-	    RandomAccessIterator last)
+        RandomAccessIterator last)
     {
-	    if (!(first < r && r <= last))
-		    return false;
-		    
-	    RandomAccessIterator i = r - 1;
-	    while(true)
-	    {
-		    // find smallest element greater than *i after index i.
-		    RandomAccessIterator k = smallest_greater(i + 1, last, *i);
-		    
-		    if (k == last)			// Didn't find it.
-			    if (i == first)
-			    {
-				    sort(first, last);	// O(n lg n)
-				    return false;	// we're done--end of permutations
-			    }
-			    else
-				    --i;
-		    else
-		    {
-			    iter_swap(i, k);
-			    partial_sort(i + 1, r, last);	// O(n lg n), heapsort
-			    return true;
-		    }	// else
-	    }	// while
-    }	// next_r_permutation
+        if (!(first < r && r <= last))
+            return false;
+            
+        RandomAccessIterator i = r - 1;
+        while(true)
+        {
+            // find smallest element greater than *i after index i.
+            RandomAccessIterator k = smallest_greater(i + 1, last, *i);
+            
+            if (k == last)            // Didn't find it.
+                if (i == first)
+                {
+                    sort(first, last);    // O(n lg n)
+                    return false;    // we're done--end of permutations
+                }
+                else
+                    --i;
+            else
+            {
+                iter_swap(i, k);
+                partial_sort(i + 1, r, last);    // O(n lg n), heapsort
+                return true;
+            }    // else
+        }    // while
+    }    // next_r_permutation
 
     // next_r_permutation -----------------------------------------------//
 
@@ -193,33 +193,33 @@ namespace boost {
     template<class RandomAccessIterator, class Compare>
     bool
     next_r_permutation(RandomAccessIterator first, RandomAccessIterator r,
-	    RandomAccessIterator last, Compare comp)
+        RandomAccessIterator last, Compare comp)
     {
-	    if (!(first < r && r <= last))
-		    return false;
-		    
-	    RandomAccessIterator i = r - 1;
-	    while(true)
-	    {
-		    // find smallest element greater than *i after index i.
-		    RandomAccessIterator k = smallest_greater(i + 1, last, *i, comp);
-		    
-		    if (k == last)			// Didn't find it.
-			    if (i == first)
-			    {
-				    sort(first, last, comp);
-				    return false;	// we're done--end of permutations
-			    }
-			    else
-				    --i;
-		    else
-		    {
-			    iter_swap(i, k);
-			    partial_sort(i + 1, r, last, comp);	// O(n lg n), heapsort
-			    return true;
-		    }	// else
-	    }	// while
-    }	// next_r_permutation
+        if (!(first < r && r <= last))
+            return false;
+            
+        RandomAccessIterator i = r - 1;
+        while(true)
+        {
+            // find smallest element greater than *i after index i.
+            RandomAccessIterator k = smallest_greater(i + 1, last, *i, comp);
+            
+            if (k == last)            // Didn't find it.
+                if (i == first)
+                {
+                    sort(first, last, comp);
+                    return false;    // we're done--end of permutations
+                }
+                else
+                    --i;
+            else
+            {
+                iter_swap(i, k);
+                partial_sort(i + 1, r, last, comp);    // O(n lg n), heapsort
+                return true;
+            }    // else
+        }    // while
+    }    // next_r_permutation
 
     // prev_r_permutation -----------------------------------------------//
 
@@ -237,35 +237,35 @@ namespace boost {
     template<class RandomAccessIterator>
     bool
     prev_r_permutation(RandomAccessIterator first, RandomAccessIterator r,
-	    RandomAccessIterator last)
+        RandomAccessIterator last)
     {
-	    if (!(first < r && r <= last))
-		    return false;
+        if (!(first < r && r <= last))
+            return false;
 
         typedef typename iterator_traits<RandomAccessIterator>::value_type T;
-	    
-	    RandomAccessIterator i = r - 1;
-	    while(true)
-	    {
-		    // find smallest element greater than *i after index i.
-		    RandomAccessIterator k = largest_less(i + 1, last, *i);
-		    
-		    if (k == last)			// Didn't find it.
-			    if (i == first)
-			    {
-				    sort(first, last, greater<T>());
-				    return false;	// we're done--end of permutations
-			    }
-			    else
-				    --i;
-		    else
-		    {
-			    iter_swap(i, k);
-			    partial_sort(i + 1, r, last, greater<T>());	// O(n lg n), heapsort
-			    return true;
-		    }	// else
-	    }	// while
-    }	// prev_r_permutation
+        
+        RandomAccessIterator i = r - 1;
+        while(true)
+        {
+            // find smallest element greater than *i after index i.
+            RandomAccessIterator k = largest_less(i + 1, last, *i);
+            
+            if (k == last)            // Didn't find it.
+                if (i == first)
+                {
+                    sort(first, last, greater<T>());
+                    return false;    // we're done--end of permutations
+                }
+                else
+                    --i;
+            else
+            {
+                iter_swap(i, k);
+                partial_sort(i + 1, r, last, greater<T>());    // O(n lg n), heapsort
+                return true;
+            }    // else
+        }    // while
+    }    // prev_r_permutation
 
     // prev_r_permutation -----------------------------------------------//
 
@@ -275,33 +275,33 @@ namespace boost {
     template<class RandomAccessIterator, class Compare>
     bool
     prev_r_permutation(RandomAccessIterator first, RandomAccessIterator r,
-	    RandomAccessIterator last, Compare comp)
+        RandomAccessIterator last, Compare comp)
     {
-	    if (!(first < r && r <= last))
-		    return false;
+        if (!(first < r && r <= last))
+            return false;
 
-	    RandomAccessIterator i = r - 1;
-	    while(true)
-	    {
-		    // find smallest element greater than *i after index i.
-		    RandomAccessIterator k = largest_less(i + 1, last, *i, comp);
-		    
-		    if (k == last)			// Didn't find it.
-			    if (i == first)
-			    {
-				    sort(first, last, not2(comp));
-				    return false;	// we're done--end of permutations
-			    }
-			    else
-				    --i;
-		    else
-		    {
-			    iter_swap(i, k);
-			    partial_sort(i + 1, r, last, not2(comp));	// O(n lg n), heapsort 
-			    return true;
-		    }	// else
-	    }	// while
-    }	// prev_r_permutation
+        RandomAccessIterator i = r - 1;
+        while(true)
+        {
+            // find smallest element greater than *i after index i.
+            RandomAccessIterator k = largest_less(i + 1, last, *i, comp);
+            
+            if (k == last)            // Didn't find it.
+                if (i == first)
+                {
+                    sort(first, last, not2(comp));
+                    return false;    // we're done--end of permutations
+                }
+                else
+                    --i;
+            else
+            {
+                iter_swap(i, k);
+                partial_sort(i + 1, r, last, not2(comp));    // O(n lg n), heapsort 
+                return true;
+            }    // else
+        }    // while
+    }    // prev_r_permutation
 
 
     // next_r_combination -----------------------------------------------//
@@ -319,36 +319,36 @@ namespace boost {
     template<class RandomAccessIterator>
     bool
     next_r_combination(RandomAccessIterator first, RandomAccessIterator r,
-	    RandomAccessIterator last)
+        RandomAccessIterator last)
     {
-	    if (!(first < r && r <= last && is_sorted(first, r)))
-		    return false;
+        if (!(first < r && r <= last && is_sorted(first, r)))
+            return false;
 
-	    RandomAccessIterator i = r - 1;
-	    while(true)
-	    {
-		    RandomAccessIterator j = smallest_greater(r, last, *i);
-		    if (j == last)
-			    if (i == first)
-			    {
-				    sort(first, last);
-				    return false;
-			    }
-			    else
-				    --i;
-		    else
-		    {
-			    iter_swap(i, j);
-			    for(++i; i < r; i++)
-			    {
-				    j = smallest_greater(r, last, *(i - 1));
-				    if (j != last)
-					    iter_swap(i, j);
-			    }	// for
-			    return true;
-		    }	// else
-	    }	// while
-    }	// next_r_combination
+        RandomAccessIterator i = r - 1;
+        while(true)
+        {
+            RandomAccessIterator j = smallest_greater(r, last, *i);
+            if (j == last)
+                if (i == first)
+                {
+                    sort(first, last);
+                    return false;
+                }
+                else
+                    --i;
+            else
+            {
+                iter_swap(i, j);
+                for(++i; i < r; i++)
+                {
+                    j = smallest_greater(r, last, *(i - 1));
+                    if (j != last)
+                        iter_swap(i, j);
+                }    // for
+                return true;
+            }    // else
+        }    // while
+    }    // next_r_combination
 
     // next_r_combination -----------------------------------------------//
 
@@ -358,36 +358,36 @@ namespace boost {
     template<class RandomAccessIterator, class Compare>
     bool
     next_r_combination(RandomAccessIterator first, RandomAccessIterator r,
-	    RandomAccessIterator last, Compare comp)
+        RandomAccessIterator last, Compare comp)
     {
-	    if (!(first < r && r <= last && is_sorted(first, r, comp)))
-		    return false;
+        if (!(first < r && r <= last && is_sorted(first, r, comp)))
+            return false;
 
-	    RandomAccessIterator i = r - 1;
-	    while(true)
-	    {
-		    RandomAccessIterator j = smallest_greater(r, last, *i, comp);
-		    if (j == last)
-			    if (i == first)
-			    {
-				    sort(first, last, comp);
-				    return false;
-			    }
-			    else
-				    --i;
-		    else
-		    {
-			    iter_swap(i, j);
-			    for(++i; i < r; i++)
-			    {
-				    j = smallest_greater(r, last, *(i - 1), comp);
-				    if (j != last)
-					    iter_swap(i, j);
-			    }	// for
-			    return true;
-		    }	// else
-	    }	// while
-    }	// next_r_combination
+        RandomAccessIterator i = r - 1;
+        while(true)
+        {
+            RandomAccessIterator j = smallest_greater(r, last, *i, comp);
+            if (j == last)
+                if (i == first)
+                {
+                    sort(first, last, comp);
+                    return false;
+                }
+                else
+                    --i;
+            else
+            {
+                iter_swap(i, j);
+                for(++i; i < r; i++)
+                {
+                    j = smallest_greater(r, last, *(i - 1), comp);
+                    if (j != last)
+                        iter_swap(i, j);
+                }    // for
+                return true;
+            }    // else
+        }    // while
+    }    // next_r_combination
 
 
     // prev_r_combination -----------------------------------------------//
@@ -405,24 +405,24 @@ namespace boost {
     template<class RandomAccessIterator>
     bool
     prev_r_combination(RandomAccessIterator first, RandomAccessIterator r,
-	    RandomAccessIterator last)
+        RandomAccessIterator last)
     {
-	    if (!(first < r && r <= last && is_sorted(first, r)))
-		    return false;
+        if (!(first < r && r <= last && is_sorted(first, r)))
+            return false;
 
-	    sort(r, last);
-	    for (RandomAccessIterator i = last - 1; i >= r; i--)
-		    for (RandomAccessIterator j = first; j < r; j++)
-			    if (*i < *j)
-			    {
-				    iter_swap(j, i);
-				    sort(++j, last);	// O(n lg n)
-				    rotate(j, j + (last - r), last); // 2*[n/2]+[m/2]+[(n-m)/2] exchanges
-				    return true;
-			    }	// if
-	    rotate(first, first + (last - r), last);
-	    return false;
-    }	// prev_r_combination
+        sort(r, last);
+        for (RandomAccessIterator i = last - 1; i >= r; i--)
+            for (RandomAccessIterator j = first; j < r; j++)
+                if (*i < *j)
+                {
+                    iter_swap(j, i);
+                    sort(++j, last);    // O(n lg n)
+                    rotate(j, j + (last - r), last); // 2*[n/2]+[m/2]+[(n-m)/2] exchanges
+                    return true;
+                }    // if
+        rotate(first, first + (last - r), last);
+        return false;
+    }    // prev_r_combination
 
     // prev_r_combination -----------------------------------------------//
 
@@ -432,25 +432,25 @@ namespace boost {
     template<class RandomAccessIterator, class Compare>
     bool
     prev_r_combination(RandomAccessIterator first, RandomAccessIterator r,
-	    RandomAccessIterator last, Compare comp)
+        RandomAccessIterator last, Compare comp)
     {
-	    if (!(first < r && r <= last && is_sorted(first, r, comp)))
-		    return false;
+        if (!(first < r && r <= last && is_sorted(first, r, comp)))
+            return false;
 
-	    sort(r, last, comp);
-	    for (RandomAccessIterator i = last - 1; i >= r; i--)
-		    for (RandomAccessIterator j = first; j < r; j++)
-			    if (comp(*i, *j))
-			    {
-				    iter_swap(j, i);
-				    sort(++j, last, comp);	// O(n lg n)
-				    rotate(j, last - (r - j), last); // 2*[n/2]+[m/2]+[(n-m)/2] exchanges
-				    return true;
-			    }	// if
-	    rotate(first, first + (last - r), last);
-	    return false;
-    }	// prev_r_combination
+        sort(r, last, comp);
+        for (RandomAccessIterator i = last - 1; i >= r; i--)
+            for (RandomAccessIterator j = first; j < r; j++)
+                if (comp(*i, *j))
+                {
+                    iter_swap(j, i);
+                    sort(++j, last, comp);    // O(n lg n)
+                    rotate(j, last - (r - j), last); // 2*[n/2]+[m/2]+[(n-m)/2] exchanges
+                    return true;
+                }    // if
+        rotate(first, first + (last - r), last);
+        return false;
+    }    // prev_r_combination
 
-}	// namespace boost
+}    // namespace boost
 
-#endif	// BOOST_RCOMBO_HPP
+#endif    // BOOST_RCOMBO_HPP
