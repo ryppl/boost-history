@@ -261,13 +261,6 @@ namespace boost {
 
 #if 0
   template<class T, class Traits>
-    T dist(const interval<T,Traits>& x, const interval<T,Traits>& y);
-  template<class T, class Traits>
-    T dist(const interval<T,Traits>& x, const T& y);
-  template<class T, class Traits>
-    T dist(const T& x, const interval<T,Traits>& y);
-
-  template<class T, class Traits>
     interval<T,Traits>
     scale(const interval<T,Traits>& x, const T& mirror, const T& factor);
   template<class T, class Traits>
