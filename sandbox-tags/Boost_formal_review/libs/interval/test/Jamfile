@@ -1,0 +1,54 @@
+subproject libs/interval/test ;
+
+unit-test add
+    : add.cpp
+      <lib>../../test/build/test_exec_monitor
+    : <include>$(BOOST_ROOT)
+    ;
+
+unit-test cmp
+    : cmp.cpp
+      <lib>../../test/build/test_exec_monitor
+    : <include>$(BOOST_ROOT)
+    ;
+
+unit-test det
+    : det.cpp
+      <lib>../../test/build/test_exec_monitor
+    : <include>$(BOOST_ROOT)
+    ;
+
+unit-test fmod
+    : fmod.cpp
+      <lib>../../test/build/test_exec_monitor
+    : <include>$(BOOST_ROOT)
+    ;
+
+unit-test mul
+    : mul.cpp
+      <lib>../../test/build/test_exec_monitor
+    : <include>$(BOOST_ROOT)
+    ;
+
+unit-test overflow
+    : overflow.cpp
+      <lib>../../test/build/test_exec_monitor
+    : <include>$(BOOST_ROOT)
+    ;
+
+unit-test pi
+    : pi.cpp
+      <lib>../../test/build/test_exec_monitor
+    : <include>$(BOOST_ROOT)
+    ;
+
+unit-test pow
+    : pow.cpp
+      <lib>../../test/build/test_exec_monitor
+    : <include>$(BOOST_ROOT)
+    ;
+
+exe interval_test
+    : interval_test.cpp
+    : <include>$(BOOST_ROOT)
+    ;

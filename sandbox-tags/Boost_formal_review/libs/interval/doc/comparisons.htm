@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <link rel="stylesheet" type="text/css" href="../../../boost.css">
+  <title>Interval-comparisons.htm</title>
+</head>
+
+<body>
+<h1>Comparison policies</h1>
+
+<h2 id="compare">Comparisons</h2>
+
+<p>As was said before, the definition of the comparison operators induces a
+slight problem. If their return type is restricted to bool, there are many
+ways to define them. It is the reason why the class interval is influenced by
+a comparison policy. So the class <code>interval_traits</code> requires an
+argument describing a class that provides the following functions:</p>
+
+<pre>struct interval_compare {
+  static bool less_than(T x_low, T x_up, T y_low, T y_up);
+  static bool equal_to(T x_low, T x_up, T y_low, T y_up);
+};</pre>
+
+<p>The functions <code>less_than</code> and <code>equal_to</code>
+compare two intervals given their bounds. Thanks to this comparison
+class, the class interval can now define the following operators:
+<code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>,
+<code>&gt;=</code>, <code>==</code>, <code>!=</code>. All these
+operators are defined for two interval parameters, or for one interval
+and a number.</p>
+
+<h2>Synopsis</h2>
+
+<pre>namespace boost {
+  namespace interval_lib {
+
+template&lt;class T&gt; struct compare_certainly;
+template&lt;class T&gt; struct compare_possibly;
+template&lt;class T, class Function&gt; struct compare_full;
+template&lt;class T&gt; struct compare_data;
+
+  } // namespace interval_lib
+} // namespace boost</pre>
+
+<h2>Provided classes</h2>
+
+<p>Four classes are pre-defined for the comparison policy.
+<code>compare_certainly</code> implements the "certain" comparison (it
+is the comparison policy by default). <code>compare_possibly</code>
+implements the "possible" comparison. And <code>compare_full</code>
+allows the user to specify a behavior in case of a non-boolean result
+(an exception for example).</p>
+
+<p>The last class, <code>compare_data</code>, does not have any mathematical
+fundation. The equality is the physical equality, and the less operator is
+the lexicographic order.</p>
+
+<p>As you have probably guessed, the <code>Function</code> parameter
+of <code>compare_full</code> is the type of a function object called
+in case of a non-boolean result. So it must have an operator of
+signature <code>bool Function::operator()()</code>. Here is a little
+example of the behavior of the comparison operators when
+<code>compare_full</code> is the chosen policy:</p>
+
+<ul>
+  <li><code>[1,2] &lt;  [2,3]</code> will return <code>Function()()</code>,</li>
+  <li><code>[1,2] &lt;= [2,3]</code> will return <code>true</code>,</li>
+  <li><code>[1,2] &gt;  [2,3]</code> will return <code>false</code>, and</li>
+  <li><code>[1,2] &gt;= [2,3]</code> will return <code>!Function()()</code>.</li>
+</ul>
+
+<p>As a side note, if Function is the constant function object
+<code>false</code>, <code>compare_full&lt;T, Function&gt;</code> is
+the same as <code>compare_certainly</code>. Similarly, if
+<code>Function</code> always returns true, <code>compare_full&lt;T,
+Function&gt;</code> is the same as <code>compare_possibly</code>. But
+it is better to use either <code>compare_certainly</code> or
+<code>compare_possibly</code>, since <code>compare_full</code> is
+twice as slow and there is nothing that the compiler can do about it.</p>
+
+<h2>Explicit comparison functions</h2>
+
+<p>The comparison operators are not really handy. For example, if
+less_than is a "certain" comparison, then <code>&lt;</code> and
+<code>&gt;</code> are also "certain" comparisons, but
+<code>&lt;=</code> and <code>&gt;=</code> are only "possible"
+comparisons. The reason of this discordance is: it is impossible to
+have <code>&lt;</code> and <code>&lt;=</code> both "possible", and to
+have <code>(x&lt;=y) == !(y&lt;x)</code> at the same time (and the
+"certain" comparison has the same problem). However, if you do not
+consider overlapping intervals, these two types of comparisons are
+equivalent.</p>
+
+<p>To avoid these problems, it is probably better to use some explicit
+comparison functions. Their names are composed by <code>cer</code>
+(for "certain") or <code>pos</code> (for "possible") followed by
+<code>lt</code>, <code>le</code>, <code>gt</code>, <code>ge</code>,
+<code>eq</code> or <code>ne</code>. Each of these functions takes two
+parameters and returns a boolean. For example, to use the "certainly
+less than" comparison :</p>
+
+<pre>namespace boost {
+  namespace interval_lib {
+
+template&lt;class T, class Traits&gt;
+bool cerlt(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+
+template&lt;class T, class Traits&gt;
+bool cerlt(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
+
+template&lt;class T, class Traits&gt;
+bool cerlt(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+
+  } // namespace interval_lib
+} // namespace boost</pre>
+
+<hr>
+
+<p>Revised: 2002-08-30<br>
+Copyright (c) Guillaume Melquiond, Sylvain Pion, Hervé Brönnimann, 2002.<br>
+Polytechnic University.</p>
+</body>
+</html>
