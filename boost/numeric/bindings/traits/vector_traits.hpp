@@ -17,8 +17,6 @@
 #ifndef BOOST_NUMERIC_BINDINGS_TRAITS_VECTOR_TRAITS_HPP
 #define BOOST_NUMERIC_BINDINGS_TRAITS_VECTOR_TRAITS_HPP
 
-#include <boost/numeric/bindings/traits/config.hpp>
-
 #include <boost/numeric/bindings/traits/config.hpp> 
 
 #ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
@@ -29,24 +27,16 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
   /// used in the default vector_traits and the different
   /// specialisation to automatically define most of the
   /// functions.
-  ///
-  /// portability:
-  /// no second template which is set to V::value_type by default since
-  /// not portable
-  template <typename V, typename T >
+  template <typename V, typename T = typename V::value_type >
   struct default_vector_traits {
-#ifndef BOOST_NO_CV_TEMPLATE_TEMPLATES
     typedef T value_type; 
     typedef T*   pointer; 
     // assumption: iterator==pointer
     // .. e.g. ublas::(un)bounded_array 
     static pointer storage (V& v) { return v.begin(); }
-#endif // BOOST_NO_CV_TEMPLATE_TEMPLATES
     static int size (V& v) { return v.size(); } 
     static int stride (V& v) { return 1; } 
   }; 
-
-#ifndef BOOST_NO_CV_TEMPLATE_TEMPLATES
 
   /// Specialisation for const vectors, mainly because
   /// of the effect on the pointer type
@@ -58,8 +48,6 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     static int size (V const& v) { return v.size(); } 
     static int stride (V const& v) { return 1; } 
   }; 
-
-#endif // BOOST_NO_CV_TEMPLATE_TEMPLATES
 
   // vector_traits<> generic version: 
   template <typename V>
