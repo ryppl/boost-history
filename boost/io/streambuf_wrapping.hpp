@@ -14,7 +14,6 @@
 
 #include <boost/utility/base_from_member.hpp>  // for boost::base_from_member
 
-#include <ios>      // for std::basic_ios
 #include <istream>  // for std::basic_istream and std::basic_iostream
 #include <ostream>  // for std::basic_ostream
 
