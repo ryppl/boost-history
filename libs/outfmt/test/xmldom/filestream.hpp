@@ -49,10 +49,10 @@
 
       bool filestream::open( const std::string & fn )
       {
-         static_cast< std::ifstream * >( this ) -> open( fn.c_str());
+          static_cast< std::ifstream * >( this ) -> open( fn.c_str() );
          filename = fn;
          line     = 1;
-         return( getch());
+         return(getch() != 0);
       }
 
       filestream::filestream():

@@ -9,7 +9,7 @@
       cch = 0;
       if( pbbuf.empty() && isgood )
       {
-         isgood = bool( get( cch ));
+         isgood = !get(cch).fail(); // Converting to bool causes VC7.1 warning.
          if( cch == '\n' )             ++line;
       }
       else
