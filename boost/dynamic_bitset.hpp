@@ -86,9 +86,6 @@
 
 #include <cassert>
 #include <string>
-//#include <istream>             // for stream extraction
-//#include <ostream>             // for stream insertion
-//#include <cstring>             // for memset, memcpy, memcmp, etc.
 #include <stdexcept>           // for std::overflow_error
 #include <algorithm>           // for std::swap, std::min, std::copy, std::fill
 #include <vector>
@@ -319,7 +316,6 @@ public:
     // subscript
     reference operator[](size_type pos) {
         return reference(this->m_bits[this->block_index(pos)], this->bit_index(pos));
-        //return reference(*this, pos); // G.P.S.
     }
     bool operator[](size_type pos) const { return test(pos); }
 
@@ -373,7 +369,6 @@ public:
 
 private:
     void m_zero_unused_bits();
-    void set_block_(size_type blocknum, Block b);
     size_type m_do_find_from(size_type first_block) const;
 
 
@@ -418,14 +413,11 @@ private:
 
     // [gps] moved here
     static size_type block_index(size_type pos) { return pos / bits_per_block; }
-    static /*size_type*/int bit_index(size_type pos) { return pos % bits_per_block; }
+    static int bit_index(size_type pos) { return pos % bits_per_block; }
     static Block bit_mask(size_type pos) { return Block(1) << bit_index(pos); }
 
-#ifdef BOOST_DYN_BITSET_USE_FRIENDS
-private:
-#else
-public:
-#endif // G.P.S.
+
+BOOST_DYN_BITSET_PRIVATE:
 
     static size_type calc_num_blocks(size_type num_bits)
     { return (num_bits + (bits_per_block - 1)) / bits_per_block; }
@@ -544,7 +536,6 @@ operator<<(std::basic_ostream<CharT, Traits>& os,
 
 template <typename Block, typename Allocator>
 dynamic_bitset<Block, Allocator>::dynamic_bitset(const Allocator& alloc)
-  //: detail::dynamic_bitset_base<Block, Allocator>(0, alloc) { }
   : m_bits(alloc), m_num_bits(0)
 {
 
@@ -1695,14 +1686,6 @@ operator-(const dynamic_bitset<Block, Allocator>& x,
 
 //-----------------------------------------------------------------------------
 // private member functions
-
-
-template <typename Block, typename Allocator>
-inline void dynamic_bitset<Block, Allocator>::
-set_block_(size_type blocknum, Block value)
-{
-    this->m_bits[blocknum] = value;
-}
 
 
 // If size() is not a multiple of bits_per_block
