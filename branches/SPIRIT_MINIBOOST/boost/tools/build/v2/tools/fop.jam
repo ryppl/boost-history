@@ -1,0 +1,46 @@
+#  Copyright (C) 2003 Doug Gregor. Permission to copy, use, modify,
+#  sell and distribute this software is granted provided this
+#  copyright notice appears in all copies. This software is provided
+#  "as is" without express or implied warranty, and with no claim as
+#  to its suitability for any purpose.
+
+#  This module defines rules to handle generation of PDF and PostScript files
+#  from XSL Formatting Objects via Apache FOP
+
+import os ;
+import generators ;
+import common ;
+import errors ; 
+
+generators.register-standard fop.render : FO : PDF ;
+generators.register-standard fop.render : FO : PS ;
+
+rule init ( fop-command ? : java-home ? )
+{
+    fop-command = [ common.get-invocation-command fop : fop : $(fop-command) 
+      : [ modules.peek : FOP_DIR ] ] ;
+        
+    if $(.initialized)
+    {
+        if $(FOP_COMMAND) != $(fop-command) || $(JAVA_HOME) != $(java-home)
+        {
+            errors.user-error "fop: reinitialization with different options" ;
+        }        
+    }
+    else
+    {
+        .initialized = true ;
+        FOP_COMMAND = $(fop-command) ;
+        if $(java-home) 
+        {            
+            JAVA_HOME_SETUP = [ common.variable-setting-command JAVA_HOME $(java-home) ] ;
+        }    
+    }
+}
+
+actions render
+{
+  $(JAVA_HOME_SETUP)
+  $(FOP_COMMAND) $(>) $(<)
+}
+
