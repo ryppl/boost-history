@@ -29,7 +29,7 @@
 #     define BOOST_NO_STD_ALLOCATOR
 #  endif
 #  define BOOST_HAS_PARTIAL_STD_ALLOCATOR
-#  if (defined(_MSC_VER) && (_MSC_VER < 1300)) && !defined(__BORLANDC__)
+#  if defined(BOOST_MSVC) && (BOOST_MSVC < 1300)
       // if this lib version is set up for vc6 then there is no std::use_facet:
 #     define BOOST_NO_STD_USE_FACET
 #     define BOOST_HAS_TWO_ARG_USE_FACET
@@ -59,6 +59,15 @@
 #     define BOOST_NO_STD_MIN_MAX
 #     define BOOST_NO_MS_INT64_NUMERIC_LIMITS
 #  endif
+#endif
+
+//
+// std extension namespace is stdext for vc7.1 and later, 
+// the same applies to other compilers that sit on top
+// of vc7.1 (Intel and Comeau):
+//
+#if defined(_MSC_VER) && (_MSC_VER >= 1310) && !defined(__BORLANDC__)
+#  define BOOST_STD_EXTENSION_NAMESPACE stdext
 #endif
 
 
