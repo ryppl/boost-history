@@ -39,22 +39,20 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 #define BOOST_SMART_POINTER_BASIC_INTERFACE
-#define UTILITY_OBJECT_TRACKED_TRACE_MODE
-#define TEST_CYCLE
-//#define TEST_STLCONT
-
-#include <iomanip>
-#include <typeinfo>
-#include "boost/utility/trace_scope.hpp"
+//#define UTILITY_OBJECT_TRACKED_TRACE_MODE
+//#include "boost/utility/trace_scope.hpp"
 #include "libs/utility/src/obj_id.cpp"
 #include "libs/utility/src/object_tracked.cpp"
 #include <string>
 #include <iostream>
 #include "boost/test/unit_test.hpp"
 #include "boost/managed_ptr/marg_ostream_refcnt_overhead_ptr.hpp"
-#ifdef TEST_CYCLE
-#include "boost/managed_ptr/prox_visitor_refcycle_abs.hpp"
-#include "boost/managed_ptr/prox_visitor_refcycle_abs.cpp"
+#define INCLUDE_REFCYCLE
+#ifdef INCLUDE_REFCYCLE
+#include "boost/managed_ptr/refcycle_prox_visitor_abs.hpp"
+#include "boost/managed_ptr/refcycle_prox_visitor_abs.cpp"
+#define TEST_CYCLE
+#define TEST_STLCONT
 #endif
 #include "parent2children.hpp"
 
@@ -163,8 +161,8 @@ template
   >
   std::string
 owner_policy_name
-  < managed_ptr::curry_prox_visitor_refcycle_counted
-    <managed_ptr::prox_visitor_refcycle_abs>
+  < managed_ptr::refcycle_counted_curry_prox_visitor
+    <managed_ptr::refcycle_prox_visitor_abs>
     ::owner
   >
   (void)
@@ -198,7 +196,7 @@ void default_test(void)
 void init_const_test(smart_ptr<object,OwnershipPolicy<_> > const& p)
 {
   #ifdef TRACE_SCOPE_HPP
-    utility::trace_scope ts("init_const_test");
+    utility::trace_scope ts(owner_policy_name<OwnershipPolicy>()+"init_const_test");
   #endif
     BOOST_CHECK_EQUAL(p->foo(), 42);
     BOOST_CHECK_EQUAL((*p).bar(), 3.14159);
@@ -208,13 +206,14 @@ void init_const_test(smart_ptr<object,OwnershipPolicy<_> > const& p)
 void init_test(void)
 {
   #ifdef TRACE_SCOPE_HPP
-    utility::trace_scope ts("init_test");
+    utility::trace_scope ts(owner_policy_name<OwnershipPolicy>()+"init_test");
   #endif
     utility::object_tracked::our_members.reset();
     {
         managed_ptr::basis_adaptor<OwnershipPolicy<object*> > 
           l_basis_arg(managed_ptr::default_ctor_tag);
         smart_ptr<object,OwnershipPolicy<_> > p(l_basis_arg.as_basis_source());
+        BOOST_CHECK_EQUAL(use_count(p), unsigned(1));
         BOOST_CHECK_EQUAL(p->foo(), 42);
         BOOST_CHECK_EQUAL((*p).bar(), 3.14159);
         init_const_test(p);
@@ -229,19 +228,19 @@ void init_test(void)
 void copy_test(void)
 {
   #ifdef TRACE_SCOPE_HPP
-    utility::trace_scope ts("copy_test");
+    utility::trace_scope ts(owner_policy_name<OwnershipPolicy>()+"copy_test");
   #endif
     utility::object_tracked::our_members.reset();
     utility::object_tracked const* dead(0);
     {
       #ifdef TRACE_SCOPE_HPP
-        utility::trace_scope ts("nest-outer");
+        utility::trace_scope ts("nest_outer");
       #endif
         typedef managed_ptr::basis_adaptor<OwnershipPolicy<object*> > 
           basis_adaptor_super_type;
         typedef typename basis_adaptor_super_type::basis_spec_type
           basis_spec_super_type;
-        basis_adaptor_super_type l_object_basis;
+        basis_adaptor_super_type l_object_basis(managed_ptr::default_ctor_tag);
         dead=l_object_basis.referent();
         typedef smart_ptr<object, OwnershipPolicy<_>, assert_check<_> > sp_object_type;
         sp_object_type p(l_object_basis.as_basis_source());
@@ -249,7 +248,7 @@ void copy_test(void)
         utility::object_tracked const* dead_child(0);
         {
           #ifdef TRACE_SCOPE_HPP
-            utility::trace_scope ts("nest-inner");
+            utility::trace_scope ts("nest_inner");
           #endif
             smart_ptr<object, scalar_storage<_>, OwnershipPolicy<_> > q(p);
             BOOST_CHECK(p == q);
@@ -257,17 +256,19 @@ void copy_test(void)
             BOOST_CHECK_EQUAL(use_count(p), 2u );
             BOOST_CHECK_EQUAL(use_count(q), 2u );
             {
-          #ifdef TRACE_SCOPE_HPP
-            utility::trace_scope ts("copy_test:reset call:");
-          #endif
-            typedef typename basis_adaptor_super_type::template rebind<child>::other
-              basis_adaptor_der_type;
-            basis_adaptor_der_type l_child_basis(managed_ptr::default_ctor_tag);
-            l_child_basis.referent()->age_put(3);
-            dead_child=l_child_basis.referent();
-            typename basis_adaptor_der_type::basis_source_type 
-              l_basis_adapt_der_src(l_child_basis.as_basis_source());
-            sub_reset<child>(q, l_basis_adapt_der_src);
+              #ifdef TRACE_SCOPE_HPP
+                utility::trace_scope ts("copy_test:reset call:");
+              #endif
+                typedef typename basis_adaptor_super_type::template rebind<child>::other
+                  basis_adaptor_der_type;
+                basis_adaptor_der_type l_child_basis(managed_ptr::default_ctor_tag);
+                dead_child=l_child_basis.referent();
+                typename basis_adaptor_der_type::basis_source_type 
+                  l_basis_adapt_der_src(l_child_basis.as_basis_source());
+                reset<child>(q, l_basis_adapt_der_src);
+                //***DIFF_POLICY_PTR : explicit template argument is needed
+                //   because it's used in non-deduced context in the 
+                //   reset declaration.
             }
             BOOST_CHECK_EQUAL(use_count(q), 1u );
             smart_ptr<child,OwnershipPolicy<_> > c(
@@ -277,7 +278,7 @@ void copy_test(void)
             smart_ptr<child,OwnershipPolicy<_> > d(dynamic_pointer_cast<child>(q));
             BOOST_CHECK_EQUAL(use_count(q), 3u );
         }
-        BOOST_CHECK(!utility::object_tracked::our_members.contains(dead_child));
+        BOOST_CHECK( !utility::object_tracked::our_members.contains(dead_child) );
         BOOST_CHECK_EQUAL(use_count(p), 1u );
     }
     BOOST_CHECK(!utility::object_tracked::our_members.contains(dead));
@@ -287,7 +288,7 @@ void copy_test(void)
 void assign_test(void)
 {
   #ifdef TRACE_SCOPE_HPP
-    utility::trace_scope ts("assign_test");
+    utility::trace_scope ts(owner_policy_name<OwnershipPolicy>()+"assign_test");
   #endif
     utility::object_tracked::our_members.reset();
     using boost::swap;
@@ -331,7 +332,7 @@ void assign_test(void)
 void conversion_test(void)
 {
   #ifdef TRACE_SCOPE_HPP
-    utility::trace_scope ts("conversion_test");
+    utility::trace_scope ts(owner_policy_name<OwnershipPolicy>()+"conversion_test");
   #endif
     utility::object_tracked::our_members.reset();
     utility::object_tracked const* dead(0);
@@ -351,7 +352,7 @@ void conversion_test(void)
 void concept_interface_test(void)
 {
   #ifdef TRACE_SCOPE_HPP
-    utility::trace_scope ts("concept_interface_test");
+    utility::trace_scope ts(owner_policy_name<OwnershipPolicy>()+"concept_interface_test");
   #endif
     typedef managed_ptr::basis_adaptor<OwnershipPolicy<object*> > basis_adaptor_object_type;
     typedef smart_ptr<object, OwnershipPolicy<_> > smart_ptr_object_type;
@@ -380,6 +381,104 @@ void concept_interface_test(void)
 
 };//end owner_tests<OwnershipPolicy> class
 
+#ifdef TEST_CYCLE
+void auto_overhead_test(void)
+{
+  #ifdef TRACE_SCOPE_HPP
+    utility::trace_scope ts("auto_overhead_test");
+  #endif
+    utility::object_tracked::our_members.reset();
+        typedef
+      smart_ptr
+        < object
+        , managed_ptr::refcycle_counted_curry_prox_visitor
+          < managed_ptr::refcycle_prox_visitor_abs
+          >
+          ::owner
+          < _
+          >
+        >
+    object_sp_type
+    ;
+        typedef
+      object_sp_type::basis_source_type
+    object_source_type
+    ;
+        typedef
+      object_sp_type::basis_sink_type
+    object_sink_type
+    ;
+    {
+      #ifdef TRACE_SCOPE_HPP
+        utility::trace_scope ts("create/destroy sink");
+      #endif
+          object_sink_type 
+        l_obj_sink(managed_ptr::default_ctor_tag)
+        ;
+    }//exit create/destroy sink
+    BOOST_CHECK(utility::object_tracked::our_members.size()==0);
+    {
+      #ifdef TRACE_SCOPE_HPP
+        utility::trace_scope ts("release to source while refcount>1");
+      #endif
+          object_sink_type 
+        l_obj_sink(managed_ptr::default_ctor_tag)
+        ;
+        BOOST_CHECK(l_obj_sink.is_valid());
+          object_source_type 
+        l_obj_source(l_obj_sink)
+        ;
+        {
+          #ifdef TRACE_SCOPE_HPP
+            utility::trace_scope ts("create sp1; sink release; destroy sp1");
+          #endif
+              object_sp_type
+            l_obj_sp1(l_obj_source)
+            ;
+            BOOST_CHECK(!l_obj_sink.is_valid());
+            {
+              #ifdef TRACE_SCOPE_HPP
+                utility::trace_scope ts("create sp2; sink release; destroy sp2");
+              #endif
+                  object_sp_type
+                l_obj_sp2(l_obj_sp1)
+                ;
+                  bool
+                l_caught_bad_release
+                =false
+                ;
+                try
+                {
+                    release(l_obj_sp2,l_obj_sink);
+                }
+                catch (managed_ptr::bad_release&)
+                {
+                    l_caught_bad_release=true;
+                }
+                BOOST_CHECK(l_caught_bad_release);
+                BOOST_CHECK_EQUAL(use_count(l_obj_sp1), unsigned(2));
+            }
+            BOOST_CHECK_EQUAL(use_count(l_obj_sp1), unsigned(1));
+              bool
+            l_caught_bad_release
+            =false
+            ;
+            try
+            {
+                release(l_obj_sp1,l_obj_sink);
+            }
+            catch (managed_ptr::bad_release&)
+            {
+                l_caught_bad_release=true;
+            }
+            BOOST_CHECK(!l_caught_bad_release);
+            BOOST_CHECK_EQUAL(use_count(l_obj_sp1), unsigned(0));
+            BOOST_CHECK(l_obj_sink.is_valid());
+        }
+    }//exit release to source while refcount>1
+    BOOST_CHECK(utility::object_tracked::our_members.size()==0);
+}//end auto_overhead_test
+#endif
 void deep_copy_test(void)
 {
   #ifdef TRACE_SCOPE_HPP
@@ -491,22 +590,22 @@ void prox_extern_array_test(void)
         typedef
       smart_ptr
         < container_type
-        , managed_ptr::curry_prox_visitor_refcycle_counted
-          < managed_ptr::prox_visitor_refcycle_abs
+        , managed_ptr::refcycle_counted_curry_prox_visitor
+          < managed_ptr::refcycle_prox_visitor_abs
           >
           ::owner
           < _
           >
         >
-    sp_container_type
+    container_sp_type
     ;
         typedef
-      sp_container_type::basis_sink_type
-    basis_sink_type
+      container_sp_type::basis_sink_type
+    container_sink_type
     ;
         typedef
-      sp_container_type::basis_source_type
-    basis_source_type
+      container_sp_type::basis_source_type
+    container_source_type
     ;
   #ifdef TRACE_SCOPE_HPP
     utility::trace_scope ts("prox_extern_array_test");
@@ -514,29 +613,23 @@ void prox_extern_array_test(void)
     utility::object_tracked::our_members.reset();
     unsigned const container_capacity=4;
     {
-        typedef managed_ptr::curry_prox_visitor_refcycle_counted
-          < managed_ptr::prox_visitor_refcycle_abs
-          >
-          ::owner
-          < container_type*
-          >
-        ownership_type;
-        basis_sink_type sink_container(boost::mpl::vector<int>(),container_capacity);
-        basis_source_type src_container(sink_container);
-        managed_ptr::basis_specializer
-          < container_type
-          , managed_ptr::curry_prox_visitor_refcycle_counted<managed_ptr::prox_visitor_refcycle_abs>
-          >::basis_source_type const& l_bs_src=src_container;
-//        ownership_type::this_source_type const& l_this_src=l_bs_src;
-        ownership_type l_owner(l_bs_src);
+      #ifdef TRACE_SCOPE_HPP
+        utility::trace_scope ts("basis_source creation");
+      #endif
+        container_sink_type sink_container(boost::mpl::vector<int>(),container_capacity);
+        container_source_type src_container(sink_container);
+        container_sp_type sp_container(src_container);
+        BOOST_CHECK_EQUAL(use_count(sp_container), unsigned(1));
     }
+    BOOST_CHECK_EQUAL(utility::object_tracked::our_members.size(), 0);
+    utility::object_tracked::our_members.reset();
     {
       #ifdef TRACE_SCOPE_HPP
         utility::trace_scope ts("block");
       #endif
-        basis_sink_type sink_container(boost::mpl::vector<int>(),container_capacity);
-        basis_source_type src_container(sink_container);
-        sp_container_type p(src_container);
+        container_sink_type sink_container(boost::mpl::vector<int>(),container_capacity);
+        container_source_type src_container(sink_container);
+        container_sp_type p(src_container);
         BOOST_CHECK_EQUAL(use_count(p), unsigned(1));
         //BOOST_CHECK_EQUAL(sizeof(p), sizeof(element*) + sizeof(int));
         container_type& rp=*p;
@@ -548,7 +641,7 @@ void prox_extern_array_test(void)
         BOOST_CHECK_EQUAL(rp[0].x(), 3);
         BOOST_CHECK_EQUAL(rp[3].x(), 11);
         BOOST_CHECK_EQUAL(rp[1].x(), 5);
-        sp_container_type q;
+        container_sp_type q;
         q = p;
         BOOST_CHECK_EQUAL(use_count(p), unsigned(2));
         BOOST_CHECK(q == p);
@@ -556,15 +649,14 @@ void prox_extern_array_test(void)
           #ifdef TRACE_SCOPE_HPP
             utility::trace_scope ts("reset(q,z)");
           #endif
-            basis_sink_type z;
-            reset(q, basis_source_type(z));
-          #ifdef TRACE_SCOPE_HPP
-            mout()<<"z is valid="<<z.is_valid()<<"\n";
-          #endif
+            container_sink_type z;
+            reset(q, container_source_type(z));
+            BOOST_CHECK(!q);
+            BOOST_CHECK(!(z.is_valid()));
         }
         BOOST_CHECK_EQUAL(use_count(p), unsigned(1));
-        basis_sink_type x;
-        basis_source_type ix(x);
+        container_sink_type x;
+        container_source_type ix(x);
         {
           #ifdef TRACE_SCOPE_HPP
             utility::trace_scope ts("release(p,ix)");
@@ -591,52 +683,105 @@ void prox_extern_array_test(void)
 
 #ifdef TEST_CYCLE
 
-#include "binary_node_tests.hpp"
     typedef 
   boost::parent2children::parent_scalar
     < boost::ref_counted
     >
-ref_counted_node_scalar_type
+refcnt_scalar
 ;
 
     typedef
-  boost::managed_ptr::prox_visitor_refcycle_abs
+  boost::managed_ptr::refcycle_prox_visitor_abs
 prox_visitor_type
 ;
 
     typedef
   boost::parent2children::parent_scalar
-    < boost::managed_ptr::curry_prox_visitor_refcycle_counted
+    < boost::managed_ptr::refcycle_counted_curry_prox_visitor
       < prox_visitor_type
       >
       ::owner 
     >
-refcycle_counted_node_scalar_type
+refcycle_scalar
 ;
 
-DECLARE_PROX_CHILDREN_FOR_REFERENT_VISITOR(refcycle_counted_node_scalar_type, prox_visitor_refcycle_abs)
+DECLARE_PROX_CHILDREN_FOR_REFERENT_VISITOR(refcycle_scalar, refcycle_prox_visitor_abs)
 
 #ifdef TEST_STLCONT
     typedef
   boost::parent2children::parent_vector
-    < boost::managed_ptr::curry_prox_visitor_refcycle_counted
-      < boost::managed_ptr::prox_visitor_refcycle_abs
+    < boost::managed_ptr::refcycle_counted_curry_prox_visitor
+      < boost::managed_ptr::refcycle_prox_visitor_abs
       >
       ::owner 
     >
-refcycle_counted_node_vector_type
+refcycle_vector
 ;
 
-DECLARE_PROX_CHILDREN_FOR_REFERENT_VISITOR(refcycle_counted_node_vector_type, prox_visitor_refcycle_abs)
+DECLARE_PROX_CHILDREN_FOR_REFERENT_VISITOR(refcycle_vector, refcycle_prox_visitor_abs)
 
 #endif
+
+#include "binary_node_tests.hpp"
+namespace boost
+{
+  namespace binary_node_tests
+  {
+        typedef
+      void(*
+    test_fun_type
+      )(void)
+    ;
+    
+    template
+      < test_fun_type TestFun
+      >
+      bool
+    expect_pass
+      (void)
+    {
+        return true;
+    }
+    
+    template
+      <
+      >
+      bool
+    expect_pass
+      < test<refcnt_scalar>::simple_cycle_1_external_sp
+      >
+      (void)
+      {
+          return false;
+      }
+
+    template
+      < test_fun_type TestFun
+      >
+        static
+      void
+    run(void)
+    {
+      #ifdef TRACE_SCOPE_HPP
+        utility::trace_scope ts("binary_node_tests::run<TestFun>");
+      #endif
+        utility::object_tracked::our_members.reset();
+        (*TestFun)(); //Assumes that TestFun uses objects derived from object_tracked
+        unsigned n_members = utility::object_tracked::our_members.size();
+        BOOST_CHECK_EQUAL(n_members == 0u, expect_pass<TestFun>());
+    }
+    
+  }//exit binary_node_tests namespace
+}//exit boost namespace
+
 
 namespace boost
 {
 namespace managed_ptr
 {
-
 struct enum_prox_children
+//Purpose:
+//  Enumerate the children of a node at a given depth. 
 : public prox_visitor_type
 {
       struct
@@ -666,9 +811,11 @@ struct enum_prox_children
     
       void_owner_set_type
     my_visited_children
+    //The nodes that were "enumerated"
     ;
       unsigned
     my_depth
+    //depth at which enumeration is done.
     ;
     enum_prox_children(unsigned a_depth)
     : my_depth(a_depth)
@@ -677,10 +824,8 @@ struct enum_prox_children
       void 
     visit_children
     ( void_owner_type& a_void_owner
-      //The above has been static__cast'd from the arg
-      //to previous method.
     , prox_iter_acc_type& l_iter 
-      //^iterator over the children of a_esp
+      //^iterator over the children of a_void_owner
     )
     {
         if(my_depth>0)
@@ -709,19 +854,37 @@ template
   >
   std::string
 binary_node_name
-  < refcycle_counted_node_scalar_type
+  < refcycle_scalar
   >
   (void)
 {
-    return std::string("<refcycle_counted_node_scalar_type>::");
+    return std::string("<refcycle_scalar>::");
 }
+
+#ifdef TEST_STLCONT
+  
+template
+  <
+  >
+  std::string
+binary_node_name
+  < refcycle_vector
+  >
+  (void)
+{
+    return std::string("<refcycle_vector>::");
+}
+
+#endif
   
 template
   < typename BinaryNode
   >
 void refcycle_enum_children_test(void)
 {
+  #ifdef TRACE_SCOPE_HPP
     utility::trace_scope ts(binary_node_name<BinaryNode>()+"refcycle_enum_children_test");
+  #endif
     typedef prox_children<prox_visitor_type>::prox_descriptor prox_desc_type;
     typedef prox_children<prox_visitor_type>::detail_iterators::prox_iterator_con_described 
       desc_iter_type;
@@ -731,24 +894,34 @@ void refcycle_enum_children_test(void)
         typename binary_node_type::sp_type sp_parent;
         boost::mpl::vector<void> default_ctor;
         {
+          #ifdef TRACE_SCOPE_HPP
             utility::trace_scope ts("sp_parent=i.as_basis_source()");
+          #endif
             basis_adapt_type i(default_ctor);
             sp_parent = i.as_basis_source();
             BOOST_CHECK(bool(sp_parent));
         }
         {
+          #ifdef TRACE_SCOPE_HPP
             utility::trace_scope ts("enum_children(1)");
+          #endif
             enum_prox_children enum_children(1);
             {
               #ifdef TRACE_SCOPE_HPP
                 utility::trace_scope ts("left_child test");
               #endif
                 basis_adapt_type i(default_ctor);
+              #ifdef TRACE_SCOPE_HPP
                 mout()<<":enum_children(1)::b4 = i.as_basis_source()\n";
+              #endif
                 sp_parent->left() = i.as_basis_source();
+              #ifdef TRACE_SCOPE_HPP
                 mout()<<":enum_children(1)::b4 visit_prox\n";
+              #endif
                 enum_children.visit_prox(sp_parent);
+              #ifdef TRACE_SCOPE_HPP
                 mout()<<":enum_children(1)::b4 visited_children=\n";
+              #endif
                 typedef enum_prox_children::void_owner_set_type void_owner_set_type;
                 void_owner_set_type& visited_children=enum_children.my_visited_children;
               #ifdef TRACE_SCOPE_HPP
@@ -774,68 +947,62 @@ void refcycle_enum_children_test(void)
 }//exit managed_ptr namespace
 }//exit boost namespace
 
-#endif
+#endif //TEST_CYCLE
 
 using namespace boost;
 
-#if 1
 #define ADD_REFCOUNT_TESTS(OWNER_POLICY) \
     test->add(BOOST_TEST_CASE(&owner_tests<OWNER_POLICY>::default_test)); \
     test->add(BOOST_TEST_CASE(&owner_tests<OWNER_POLICY>::init_test)); \
+    test->add(BOOST_TEST_CASE(&owner_tests<OWNER_POLICY>::copy_test)); \
     test->add(BOOST_TEST_CASE(&owner_tests<OWNER_POLICY>::assign_test)); \
     test->add(BOOST_TEST_CASE(&owner_tests<OWNER_POLICY>::conversion_test)); \
     test->add(BOOST_TEST_CASE(&owner_tests<OWNER_POLICY>::concept_interface_test)); \
     
-#endif    
-//    test->add(BOOST_TEST_CASE(&owner_tests<OWNER_POLICY>::copy_test)); \
 
 test::test_suite* init_unit_test_suite(int argc, char* argv[])
 {
     test::test_suite* test = BOOST_TEST_SUITE("Basic smart_ptr framework tests");
-#if 1
+  #if 1
+    test->add(BOOST_TEST_CASE(&auto_overhead_test));
     test->add(BOOST_TEST_CASE(&deep_copy_test));
     test->add(BOOST_TEST_CASE(&no_copy_test));
     test->add(BOOST_TEST_CASE(&array_test));
+  #endif
   #ifdef TEST_STLCONT
     test->add(BOOST_TEST_CASE(&prox_extern_array_test));
   #endif
-#endif
+  #if 1
     ADD_REFCOUNT_TESTS(ref_counted);
-    ADD_REFCOUNT_TESTS(managed_ptr::curry_prox_visitor_refcycle_counted<managed_ptr::prox_visitor_refcycle_abs>::owner);
+    ADD_REFCOUNT_TESTS(managed_ptr::refcycle_counted_curry_prox_visitor<managed_ptr::refcycle_prox_visitor_abs>::owner);
+  #endif
   #ifdef TEST_CYCLE
-    typedef refcycle_counted_node_scalar_type refcycle_scalar;
-    test->add(BOOST_TEST_CASE(&managed_ptr::refcycle_enum_children_test<refcycle_scalar>));
+    //test->add(BOOST_TEST_CASE(&managed_ptr::refcycle_enum_children_test<refcycle_scalar>));
     #ifdef TEST_STLCONT
-    typedef refcycle_counted_node_vector_type refcycle_vector;
     test->add(BOOST_TEST_CASE(&managed_ptr::refcycle_enum_children_test<refcycle_vector>));
     #endif
     {//begin binary_node_tests
       #define BINARY_NODE_TESTS
       #ifdef BINARY_NODE_TESTS
         namespace bnt = binary_node_tests;
-        {
-            typedef ref_counted_node_scalar_type refcnt_scalar;
         #if 1
+        {
             test->add(BOOST_TEST_CASE(&bnt::run<bnt::test<refcnt_scalar>::simple_list>));
             test->add(BOOST_TEST_CASE(&bnt::run<bnt::test<refcnt_scalar>::simple_cycle_1_external_sp>));
-        #else
-        #endif
         }
         {
-        #if 1
            test->add(BOOST_TEST_CASE(&bnt::run<bnt::test<refcycle_scalar>::simple_list>));
            test->add(BOOST_TEST_CASE(&bnt::run<bnt::test<refcycle_scalar>::simple_cycle_1_external_sp>));
            test->add(BOOST_TEST_CASE(&bnt::run<bnt::test<refcycle_scalar>::simple_cycle_2_external_sp>));
-        #else
-        #endif
         }
-        {
+        #endif
         #ifdef TEST_STLCONT
+        {
             test->add(BOOST_TEST_CASE(&bnt::run<bnt::test<refcycle_vector>::simple_list>));
             test->add(BOOST_TEST_CASE(&bnt::run<bnt::test<refcycle_vector>::simple_cycle_1_external_sp>));
             test->add(BOOST_TEST_CASE(&bnt::run<bnt::test<refcycle_vector>::simple_cycle_2_external_sp>));
-        #endif
         }
+        #endif
       #endif 
     }//end binary_node_tests
     

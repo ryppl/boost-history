@@ -1,14 +1,24 @@
+UTF_SOURCES =
+  execution_monitor
+  test_tools
+  unit_test_parameters
+  unit_test_log
+  unit_test_monitor
+  unit_test_result
+  unit_test_suite
+  unit_test_main
+  supplied_log_formatters
+  ;
+
 import testing ;
 
 project manged_ptr_test
-        : requirements <hardcode-dll-paths>true <toolset>intel_linux
-        : default-build debug
         ;
 {
     test-suite "managed_ptr"
         : [ run smart_ptr_test.cpp 
-            ../../io/filters/src/mout.cpp
-            ../../../../libs/test/build//boost_unit_test_framework
+            $(BOOST_ROOT)/libs/test/src/$(UTF_SOURCES).cpp
+            $(BOOST_ROOT)/development_lje/libs/io/filters/src/mout.cpp
           ]
         ;
     

@@ -95,13 +95,17 @@ namespace boost
         
         ~parent_vector(void)
         {
+          #ifdef BOOST_MANAGED_PTR_TRACE_MODE
             mout()<<"parent_vector-"<<":this="<<this<<":obj_id="<<id_get()<<"\n";
+          #endif
         }
         
         parent_vector(void)
         : my_sp_children(2)
         {
+          #ifdef BOOST_MANAGED_PTR_TRACE_MODE
             mout()<<"parent_vector+"<<":this="<<this<<":obj_id="<<id_get()<<"\n";
+          #endif
         }
           sp_type&
         left(void)

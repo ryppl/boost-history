@@ -1,8 +1,8 @@
 //template specializations for smart_ptr basis adaptors
 #ifndef BOOST_MANAGED_PTR_BASIS_ADAPTOR_HPP_LJE20031230
 #define BOOST_MANAGED_PTR_BASIS_ADAPTOR_HPP_LJE20031230
-#include "boost/managed_ptr/basis_specializer4curry_prox_visitor_refcycle_counted.hpp"
-#include "boost/managed_ptr/prox_visitor_refcycle_abs.hpp"
+#include "boost/managed_ptr/basis_specializer4refcycle_counted_curry_prox_visitor.hpp"
+#include "boost/managed_ptr/refcycle_prox_visitor_abs.hpp"
 namespace boost
 {
 namespace managed_ptr
@@ -105,7 +105,7 @@ template
   class
 basis_adaptor_nester
   < Referent
-  , curry_prox_visitor_refcycle_counted<ProxVisitor> 
+  , refcycle_counted_curry_prox_visitor<ProxVisitor> 
   >
 {
  public:
@@ -114,7 +114,7 @@ basis_adaptor_nester
     referent_type
     ;
         typedef
-      curry_prox_visitor_refcycle_counted<ProxVisitor>
+      refcycle_counted_curry_prox_visitor<ProxVisitor>
     nesting_type
     ;
         typedef
@@ -149,8 +149,10 @@ basis_adaptor_nester
       basis_source_type
     as_basis_source(void)
     {
+      #ifdef TRACE_SCOPE_HPP
         utility::trace_scope 
           ts("basis_adaptor_nestor<Referent,curry_prox...>::as_basis_source");
+      #endif
         return my_new.as_refwrap();
     }
     
