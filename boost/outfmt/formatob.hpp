@@ -83,6 +83,8 @@
                FmtObject::format( fmt );
                return( *this );
             }
+         private:
+            inline           formatob_t();
          public: // constructors
             inline           formatob_t( const formatob_t & fo ):
                FmtObject( fo ),
