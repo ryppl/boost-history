@@ -9,7 +9,9 @@
 // about the suitability of this software for any purpose.  It is
 // provided "as is" without express or implied warranty.
 //
-// Thanks to Malte Starostik for POSIX 64 bit support changes
+// Thanks to:
+//  Malte Starostik for POSIX 64 bit support changes
+//  Scott Kirkwood for portability fixes
 //
 //
 // Synopsis:
@@ -19,12 +21,17 @@
 //  template<typename T> class memory_mapped_file
 //  template<typename T> class file
 
+#ifndef BOOST_MEMMAP_INCLUDED
+#define BOOST_MEMMAP_INCLUDED
 
 #if !defined(BOOST_MMAP_POSIX)  &&  !defined(BOOST_MMAP_WINDOWS)
 #error No memory map configuration defined: BOOST_MMAP_POSIX or BOOST_MMAP_WINDOWS
 #endif
 
 #include <sys/stat.h>
+#include <exception>
+#include <string>
+#include <errno.h>
 #include "boost/config.hpp"
 #include "boost/utility.hpp"
 
@@ -82,7 +89,7 @@ namespace boost {
 
 
     // returns the size of an open file
-    filesize_t get_file_size(file_handle_t handle)
+    inline filesize_t get_file_size(file_handle_t handle)
     {
 #if defined(BOOST_MMAP_POSIX)
         struct stat info;
@@ -219,8 +226,8 @@ namespace boost {
     // cross platform default ctor
     template <typename T, typename F>
     inline memory_mapped_file<T, F>::memory_mapped_file()
-    : err_(0),
-        ptr_(0)
+      : ptr_(0),
+        err_(0)
     {
         memset(&detail_, 0, sizeof(detail_));
     }
@@ -228,8 +235,8 @@ namespace boost {
     template <typename T, typename F>
     inline memory_mapped_file<T, F>::memory_mapped_file(file_handle_t &handle,
                                                  file_access    access)
-      : err_(0),
-        ptr_(0)
+      : ptr_(0),
+        err_(0)
     {
         memset(&detail_, 0, sizeof(detail_));
         if (access == readonly)
@@ -240,8 +247,8 @@ namespace boost {
 
     template <typename T, typename F>
     inline memory_mapped_file<T, F>::memory_mapped_file(F &file, file_access access)
-      : err_(0),
-        ptr_(0)
+      : ptr_(0),
+        err_(0)
     {
         memset(&detail_, 0, sizeof(detail_));
         if (access == readonly)
@@ -270,3 +277,5 @@ namespace boost {
 #   include "memmap/mmf_posix.hpp"   // platform specific code for POSIX
 #   include "memmap/file_posix.hpp"  // platform specific code for POSIX
 #endif
+
+#endif  // BOOST_MEMMAP_INCLUDED

@@ -132,39 +132,51 @@ void test3(void)
 {
     boost::file<> newfile;
     if (!newfile.open_readonly("Hello World.txt"))
+    {
         if (newfile.create("Hello World.txt"))
             std::cout << newfile.filepath().c_str() << " Created" << std::endl;
 
-    newfile.open_readonly("Hello World.txt");
+        newfile.open_readonly("Hello World.txt");
+    }
 }
 
 
 
 int main(int, char **)
 {
-    test1();
-    test2();
-    test3();
-
-    boost::file<> newfile;
-    if (newfile.create("Hello.txt"))
+    try
     {
-        std::cout << newfile.filepath().c_str() << " Created" << std::endl;
-        newfile.close();
-        if (newfile.open_readonly("Hello.txt"))
+        test1();
+        test2();
+        test3();
+
+        boost::file<> newfile;
+        if (newfile.create("Hello.txt"))
         {
-            std::cout << newfile.filepath().c_str() << " Opened read-only" << std::endl;
+            std::cout << newfile.filepath().c_str() << " Created" << std::endl;
             newfile.close();
-            if (newfile.open_readwrite("Hello.txt"))
-                std::cout << newfile.filepath().c_str() << " Opened read-write" << std::endl;
+            if (newfile.open_readonly("Hello.txt"))
+            {
+                std::cout << newfile.filepath().c_str() << " Opened read-only" << std::endl;
+                newfile.close();
+                if (newfile.open_readwrite("Hello.txt"))
+                    std::cout << newfile.filepath().c_str() << " Opened read-write" << std::endl;
+                else
+                    std::cerr << "Failed to open the file readwrite" << newfile.filepath().c_str() << ": Error " << newfile.error() << std::endl;
+            }
             else
-                std::cerr << "Failed to open the file readwrite" << newfile.filepath().c_str() << ": Error " << newfile.error() << std::endl;
+                std::cerr << "Failed to open the file readonly" << newfile.filepath().c_str() << ": Error " << newfile.error() << std::endl;
         }
         else
-            std::cerr << "Failed to open the file readonly" << newfile.filepath().c_str() << ": Error " << newfile.error() << std::endl;
+            std::cerr << "Failed to create file " << newfile.filepath().c_str() << ": Error " << newfile.error() << std::endl;
     }
-    else
-        std::cerr << "Failed to create file " << newfile.filepath().c_str() << ": Error " << newfile.error() << std::endl;
-
+    catch (const std::exception &e)
+    {
+        std::cerr << std::endl
+                  << "Caught exception: "
+                  << e.what()
+                  << std::endl;
+    }
+    
     return 0;
 }
