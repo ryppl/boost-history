@@ -506,9 +506,64 @@ else
 			the <code>enable_shared_from_this</code> base class and performs the 
 			initialization automatically.</p>
 		<h3>E. Size and Performance</h3>
-		<h4>1.
+		<h4>1. Memory Footprint
 		</h4>
-		<p>[...]</p>
+		<p>In the Boost implementation, the size of <EM>shared_ptr</EM> (and <EM>weak_ptr</EM>) 
+			is twice the size of a raw pointer. More precisely, <code>sizeof(shared_ptr&lt;T&gt;) 
+				== sizeof(weak_ptr&lt;T&gt;) == sizeof(T*) + sizeof(C*)</code>, where <code>C</code>
+			is a structure holding the reference counts and other information. This "twin 
+			pointer" layout is typical for most existing reference counted smart pointers.</p>
+		<P>The count structure <code>C</code> has the following members:</P>
+		<UL>
+			<LI>
+				Virtual table pointer (<code>C</code>
+			is polymorphic);
+			<LI>
+			Use count;
+			<LI>
+			Weak count;
+			<LI>
+			Mutex (for multithreaded builds);
+			<LI>
+			Original pointer passed to the constructor;
+			<LI>
+				Deleter.</LI></UL>
+		<P>On a typical implementation where a pointer and a long are both four bytes in 
+			size and no custom deleters are used, <code>sizeof(C)</code> is 20 in 
+			singlethreaded builds, 24 in multithreaded builds on Windows (the 
+			implementation uses a custom spinlock-based mutex), and 44 on Linux using the 
+			platform's <code>pthread_mutex_t</code>.</P>
+		<P>It is possible to save four bytes when the deleter is an empty class (most 
+			deleters are) by taking advantage of the empty base optimization, for example 
+			by using a helper component such as <code><A href="http://www.boost.org/libs/utility/compressed_pair.htm">
+					boost::compressed_pair</A></code> [<A href="#Boost00">Boost00</A>]. 
+			The Boost implementation does not attempt to optimize out the deleter in order 
+			to minimize dependencies and maximize portability (<code>boost::shared_ptr</code>
+			is a critical dependency for many Boost libraries and it is important for it to 
+			work reliably on all supported platforms.)</P>
+		<P>The mutex presents another target for platform-specific optimizations. On 
+			Windows, we have been able to use a simple one-word spinlock instead of a 6 
+			word <code>CRITICAL_SECTION</code>. The portable architecture of the 
+			implementation that abstracts the mutex concept in a separate class prevents 
+			further optimizations, like reusing the use count word as the spinlock, or 
+			using the Windows API <code>InterlockedIncrement</code>, <code>InterlockedDecrement</code>, 
+			and <code>InterlockedCompareExchange</code> primitives to attempt to eliminate 
+			the mutex altogether. Nevertheless, we believe that such optimizations are 
+			possible.</P>
+		<P>The rest of the members of the count structure are a "necessary evil" as far as 
+			size is concerned. The virtual table pointer is required for the polymorphic 
+			behavior needed for destroying the original pointer using its original type, 
+			and to support dynamic libraries on platforms such as Windows where the 
+			application and the dynamic library can have their own incompatible versions of <code>
+				::operator new</code> and <code>::operator delete</code>. The weak count 
+			supports <EM>weak_ptr</EM>. The original pointer passed at construction time 
+			needs to be remembered for <code>shared_ptr&lt;X&gt;</code> to be able to 
+			correctly destroy the object when <code>X</code> is incomplete or 
+			</CODE>void</CODE>, <code>~X</code> is inaccessible, or <code>~X</code> is not 
+			virtual.</P>
+		<P>An earlier, less featured, version of <code>boost::shared_ptr</code> used a 
+			single long as <code>C</code>. The transition to the new version having a much 
+			larger count structure went painlessly, and we registered no user complaints.</P>
 		<h3>F. Alternatives</h3>
 		<h4>1. Policy Based Smart Pointers</h4>
 		<p>[...]</p>
@@ -1040,6 +1095,9 @@ else
 				Synchronization</i>, HP Labs Technical Report HPL-2002-335, December 2002. 
 			Available online at <a href="http://www.hpl.hp.com/techreports/2002/HPL-2002-335.html">
 				http://www.hpl.hp.com/techreports/2002/HPL-2002-335.html</a></p>
+		<p>[<a name="Boost00">Boost00</a>] Boost compressed_pair utility component documentation. 
+			Available online at <a href="http://www.boost.org/libs/utility/compressed_pair.htm">
+				http://www.boost.org/libs/utility/compressed_pair.htm</a></p>
 		<p>[<a name="Boost03a">Boost03a</a>] Boost Smart Pointer Library, source file <em>sp_debug_hooks.cpp</em>. 
 			Available online at <a href="http://www.boost.org/libs/smart_ptr/src/sp_debug_hooks.cpp">
 				http://www.boost.org/libs/smart_ptr/src/sp_debug_hooks.cpp</a></p>
