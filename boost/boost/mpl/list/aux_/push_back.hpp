@@ -20,6 +20,8 @@
 
 namespace boost { namespace mpl {
 
+template< typename Tag > struct has_push_back_impl;
+
 template<>
 struct has_push_back_impl< aux::list_tag >
 {
