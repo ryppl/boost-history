@@ -1,4 +1,6 @@
 // (C) Copyright 2003-2004: Reece H. Dunn
+// Use, modification, and distribution are subject to the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef BOOST_CHAR_STRING_HPP
 #define BOOST_CHAR_STRING_HPP
@@ -12,7 +14,6 @@
 #  include <stddef.h>
 
 #  if defined(BOOST_MSVC) && (BOOST_MSVC <= 1200) // MS VC6 has problems with 'const char( & s )[ m ]' syntax
-#     define BOOST_STRING_NOCHARARRAY
 #     define BOOST_STRING_NOSTD_REVITERATOR
 #  endif
 
@@ -49,11 +50,12 @@
          };
       }
 
-      template< size_t n, bool null_terminate = true, typename CharT = char, class StringPolicy = std::char_traits< CharT > >
+      template< size_t n, typename CharT = char, class StringPolicy = std::char_traits< CharT > >
       class char_string
       {
          private:
             CharT                      str[ n ];
+            size_t                     len;
          public:
             struct buffer_ok{ typedef char value; };
             struct zero_buffer_error{};
@@ -126,26 +128,26 @@
          public:
             inline const_reference operator[]( size_type i ) const
             {
-               if( i < 0 || i >= n )             throw( std::out_of_range( "char_string< n >" ));
+               if( i < 0 || i >= n )             throw( std::out_of_range( "boost::char_string" ));
                return( str[ i ]);
             }
             inline reference operator[]( size_type i )
             {
-               if( i < 0 || i >= n )             throw( std::out_of_range( "char_string< n >" ));
+               if( i < 0 || i >= n )             throw( std::out_of_range( "boost::char_string" ));
                return( str[ i ]);
             }
          public: // size and capacity
             inline size_type                     size() const
             {
-               return( StringPolicy::length( str ));
+               return( len );
             }
             inline size_type                     length() const
             {
-               return( size());
+               return( len );
             }
             inline bool                          empty() const
             {
-               return( size() == 0 );
+               return( len == 0 );
             }
             inline size_type                     capacity() const
             {
@@ -159,9 +161,9 @@
             inline CharT *                       copy( const CharT * s, size_type l = size_type( -1 ))
             {
                if( l == size_type( -1 )) l = StringPolicy::length( s ) + 1;
-               CharT *                 ret = StringPolicy::copy( str, s, ( l > n ) ? n : l );
-               if( null_terminate && l >= n )
-                  str[ n - 1 ] = '\0';
+               len = ( l > n ) ? ( n - 1 ) : l;
+               CharT *                 ret = StringPolicy::copy( str, s, len );
+               str[ len ] = '\0';
                return( ret );
             }
             inline CharT *                       copy( const CharT * s, size_type off, size_type l )
@@ -174,13 +176,18 @@
             {
                return( copy( s.c_str(), off, ( l >= m ) ? m : l ));
             }
-#           if !defined(BOOST_MSVC) || (BOOST_MSVC > 1200)
+         public:
             template< size_t m >
-            inline CharT *                       copy( const CharT( & s )[ m ], size_type off = 0, size_type l = size_type( -1 ))
+            inline char_string &  operator=( const char_string< m > & s )
             {
-               return( copy( static_cast< const CharT * >( s ), off, ( l >= m ) ? m : l ));
+               copy( s );
+               return( *this );
             }
-#           endif
+            inline char_string &  operator=( const CharT * s )
+            {
+               copy( s );
+               return( *this );
+            }
          public: // comparison
             inline int                           comp( const CharT * s, size_type l = size_type( -1 )) const
             {
@@ -191,62 +198,41 @@
             {
                return( StringPolicy::compare( str, s, n ));
             }
-#           if !defined(BOOST_MSVC) || (BOOST_MSVC > 1200)
-            template< size_t m >
-            inline int                           comp( const CharT( & s )[ m ] ) const
-            {
-               return( comp( static_cast< const CharT * >( s ), m ));
-            }
-#           endif
          public: // formatting
             inline int                           format( const CharT * fmt, va_list args )
             {
                int                     ret = detail::format_policy< CharT >::format( str, n, fmt, args );
-               if( null_terminate && ret >= n )
-                  str[ n - 1 ] = '\0';
+               len = ( ret == -1 ) ? ( n - 1 ) : ret;
+               str[ len ] = '\0';
                return( ret );
             }
          public: // construction
-            inline           char_string()
+            inline           char_string(): len( 0 )
             {
                str[ 0 ] = '\0';
             }
             template< size_t m >
-            inline           char_string( const char_string< m > & s, size_type p, size_type l = size_type( -1 ))
+            inline           char_string( const char_string< m > & s, size_type p, size_type l = size_type( -1 )): len( 0 )
             {
                copy( s.c_str(), p, l );
             }
       };
 
-      template< size_t n, bool nt, typename CharT, class StringPolicy >
+      template< size_t n,typename CharT, class StringPolicy >
       inline std::basic_ostream< CharT, StringPolicy > & 
                                   operator<<
                                   (
-                                     std::basic_ostream< CharT, StringPolicy >       & os,
-                                     const char_string< n, nt, CharT, StringPolicy > & str
+                                     std::basic_ostream< CharT, StringPolicy >   & os,
+                                     const char_string< n, CharT, StringPolicy > & str
                                   )
       {
          return( os << str.c_str());
       }
 
-      template< size_t n, bool nt, typename CharT, class StringPolicy >
-      bool operator==( const char_string< n, nt, CharT, StringPolicy > & a, const char_string< n, nt, CharT, StringPolicy > & b )
+      template< size_t n, typename CharT, class StringPolicy >
+      bool operator==( const char_string< n, CharT, StringPolicy > & a, const char_string< n, CharT, StringPolicy > & b )
       {
          return( a.comp( b ) == 0 );
       }
-
-#     if !defined(BOOST_MSVC) || (BOOST_MSVC > 1200)
-      template< size_t n, size_t m, bool nt, typename CharT, class StringPolicy >
-      bool operator==( const char_string< n, nt, CharT, StringPolicy > & a, const CharT( & b )[ m ] )
-      {
-         return( a.comp( b ) == 0 );
-      }
-
-      template< size_t n, size_t m, bool nt, typename CharT, class StringPolicy >
-      bool operator==( const CharT( & b )[ m ], const char_string< n, nt, CharT, StringPolicy > & a )
-      {
-         return( a.comp( b ) == 0 );
-      }
-#     endif
    }
 #endif

@@ -1,14 +1,16 @@
 // (C) Copyright 2003-2004: Reece H. Dunn
+// Use, modification, and distribution are subject to the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef BOOST_FORMATTER_HPP
 #define BOOST_FORMATTER_HPP
-#  include <boost/char_string.hpp>
+#  include <boost/fixed_string/char_string.hpp>
 #  include <cstdarg>
 
    namespace boost
    {
-      template< size_t n, bool nt = true, typename CharT = char, class StringTraits = string_traits< CharT > >
-      class formatterex: public char_string< n, nt, CharT, StringTraits >
+      template< size_t n, typename CharT = char, class StringTraits = string_traits< CharT > >
+      class formatterex: public char_string< n, CharT, StringTraits >
       {
          public:
             inline const char *   operator()( const char * fs ... ) throw()
