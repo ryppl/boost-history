@@ -459,7 +459,7 @@ template&lt;class T, class A1, class A2&gt; shared_ptr&lt;T&gt; shared_new(A1 co
 			the existing smart pointers with a <EM>shared_ptr</EM> "shell". When the 
 			library receives a <EM>shared_ptr</EM> from the client, it can extract the 
 			original wrapped smart pointer (if there is one) by using <code>get_deleter</code>.</P>
-		<P>The <A href="http://www.boost.org/libs/python/">Boost.Python library</A> [<A href="#Abrahams02">Abrahams02</A>]
+		<P>The <A href="http://www.boost.org/libs/python/">Boost.Python library</A> [<A href="#Abrahams02">Abrahams02</A>] 
 			uses <code>get_deleter</code> to extract the original Python object from a <EM>shared_ptr</EM>.</P>
 		<h3>C. weak_ptr</h3>
 		<h4>1. Default Constructor</h4>
@@ -625,6 +625,11 @@ else
 		<p>Because the current proposal is for a purely library solution, it is 
 			complementary rather than competitive with any future proposal to add optional 
 			garbage collection as a built-in feature of the language itself.</p>
+		<P>The Boost implementation includes an experimental collector [<A href="#Boost03b">Boost03b</A>] 
+			based on the algorithm described in [<A href="#Christopher84">Christopher84</A>]
+			that can be used to detect and free unreachable objects with cyclic <EM>shared_ptr</EM>
+			references. We have only limited experience with this feature, and it is not 
+			part of this proposal.</P>
 		<h2>IV. Proposed Text</h2>
 		<h3>A. Additions to header &lt;memory&gt; synopsis (20.4)</h3>
 		<pre>  class bad_weak_ptr;
@@ -1147,7 +1152,8 @@ else
 		<p><b>Postconditions:</b> <code>r.get() == this</code>.
 		</p>
 		<h2>V. References</h2>
-		<p>[<a name="Abrahams02">Abrahams02</a>] Dave Abrahams et al, <i>Boost.Python library documentation</i>, October 2002. Available online at <A href="http://www.boost.org/libs/python/">
+		<p>[<a name="Abrahams02">Abrahams02</a>] Dave Abrahams et al, <i>Boost.Python library 
+				documentation</i>, October 2002. Available online at <A href="http://www.boost.org/libs/python/">
 				http://www.boost.org/libs/python/</A></p>
 		<p>[<a name="Berger02">Berger02</a>] Emery D. Berger, Benjamin G. Zorn, Kathryn S. 
 			McKinley, <i>Reconsidering Custom Memory Allocation</i>, ACM SIGPLAN Notices, 
@@ -1197,8 +1203,8 @@ else
 			C++ committee document N1377=02-0035, September 2002. Available online at <a href="http://std.dkuug.dk/jtc1/sc22/wg21/docs/papers/2002/n1377.htm">
 				http://std.dkuug.dk/jtc1/sc22/wg21/docs/papers/2002/n1377.htm</a></p>
 		<p>[<a name="Lakos96">Lakos96</a>] John Lakos, <i><a href="http://www.awl.com/cseng/titles/0-201-63362-0/">
-					Large-Scale C++ Software Design</a></i>, section 9.2.2, page 637, Addison-Wesley, July 1996, ISBN 
-			0-201-63362-0.</p>
+					Large-Scale C++ Software Design</a></i>, section 9.2.2, page 637, 
+			Addison-Wesley, July 1996, ISBN 0-201-63362-0.</p>
 		<p>[<a name="Meyers01">Meyers01</a>] Scott Meyers, <i><a href="http://www.awl.com/cseng/titles/0-201-74962-9/">
 					Effective STL</a></i>, page 39, Addison-Wesley, June 2001, ISBN 
 			0-201-74962-9.</p>
