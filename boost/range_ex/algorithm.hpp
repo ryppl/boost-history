@@ -37,6 +37,7 @@
 #include <algorithm>
 #include <boost/iterator/iterator_traits.hpp>
 #include <boost/utility/enable_if.hpp>
+#include <boost/range/difference_type.hpp>
 #include "./detail/adl_begin_end.hpp"
 #include "./detail/has_find.hpp"
 #include "./detail/has_remove.hpp"
@@ -71,6 +72,7 @@ namespace boost
     ///
     /// range-based version of the for_each std algorithm
     ///
+    /// \pre Rng meets the requirements for a Input range
     template<typename Rng,typename Fun>
     inline Fun for_each(Rng & rng,Fun fun)
     {
@@ -111,6 +113,7 @@ namespace boost
     ///
     /// range-based version of the find std algorithm
     ///
+    /// \pre Rng meets the requirements for a Input range
     template<typename Rng,typename Val>
     inline BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng>::type
     find(Rng & rng,Val const & val)
@@ -130,6 +133,7 @@ namespace boost
     ///
     /// range-based version of the find_if std algorithm
     ///
+    /// \pre Rng meets the requirements for a Input range
     template<typename Rng,typename Pred>
     inline BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng>::type
     find_if(Rng & rng,Pred pred)
@@ -149,6 +153,8 @@ namespace boost
     ///
     /// range-based version of the find_end std algorithm
     ///
+    /// \pre Rng1 meets the requirements for a Forward range
+    /// \pre Rng2 meets the requirements for a Forward range
     template<typename Rng1,typename Rng2>
     inline BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng1>::type
     find_end(Rng1 & rng1,Rng2 const & rng2)
@@ -188,6 +194,8 @@ namespace boost
     ///
     /// range-based version of the find_first_of std algorithm
     ///
+    /// \pre Rng1 meets the requirements for a Forward range
+    /// \pre Rng2 meets the requirements for a Forward range
     template<typename Rng1,typename Rng2>
     inline BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng1>::type
     find_first_of(Rng1 & rng1,Rng2 const & rng2)
@@ -227,6 +235,7 @@ namespace boost
     ///
     /// range-based version of the adjacent_find std algorithm
     ///
+    /// \pre Rng meets the requirements for a Forward range
     template<typename Rng>
     inline BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng>::type
     adjacent_find(Rng & rng)
@@ -262,16 +271,16 @@ namespace boost
     ///
     /// range-based version of the count std algorithm
     ///
+    /// \pre Rng meets the requirements for an Input range
     template<typename Rng,typename Val>
-    inline BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_difference<Rng>::type
     count(Rng & rng,Val const & val)
     {
         return std::count(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),val);
     }
 
-    /// \overload
     template<typename Rng,typename Val>
-    inline BOOST_DEDUCED_TYPENAME boost::range_const_iterator<Rng>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_difference<Rng const>::type
     count(Rng const & rng,Val const & val)
     {
         return std::count(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),val);
@@ -281,16 +290,16 @@ namespace boost
     ///
     /// range-based version of the count_if std algorithm
     ///
+    /// \pre Rng meets the requirements for an Input range
     template<typename Rng,typename Pred>
-    inline BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_difference<Rng>::type
     count_if(Rng & rng,Pred pred)
     {
         return std::count_if(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),pred);
     }
 
-    /// \overload
     template<typename Rng,typename Pred>
-    inline BOOST_DEDUCED_TYPENAME boost::range_const_iterator<Rng>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_difference<Rng const>::type
     count_if(Rng const & rng,Pred pred)
     {
         return std::count_if(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),pred);
@@ -300,6 +309,8 @@ namespace boost
     ///
     /// range-based version of the mismatch std algorithm
     ///
+    /// \pre Rng meets the requirements for an Input range
+    /// \pre InIter meets the requirements for an Input iterator
     template<typename Rng,typename InIter>
     inline std::pair<BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng>::type,InIter>
     mismatch(Rng & rng,InIter first)
@@ -335,6 +346,8 @@ namespace boost
     ///
     /// range-based version of the equal std algorithm
     ///
+    /// \pre Rng meets the requirements for an Input range
+    /// \pre InIter meets the requirements for an Input iterator
     template<typename Rng,typename InIter>
     inline bool equal(Rng & rng,InIter first)
     {
@@ -366,6 +379,8 @@ namespace boost
     ///
     /// range-based version of the search std algorithm
     ///
+    /// \pre Rng1 meets the requirements for a Forward range
+    /// \pre Rng2 meets the requirements for a Forward range
     template<typename Rng1,typename Rng2>
     inline BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng1>::type
     search(Rng1 & rng1,Rng2 const & rng2)
@@ -409,6 +424,8 @@ namespace boost
     ///
     /// range-based version of the copy std algorithm
     ///
+    /// \pre Rng meets the requirements for an Input range
+    /// \pre OutIter meets the requirements for an Output iterator
     template<typename Rng,typename OutIter>
     inline OutIter copy(Rng const & rng,OutIter out)
     {
@@ -419,6 +436,8 @@ namespace boost
     ///
     /// range-based version of the copy_backwards std algorithm
     ///
+    /// \pre Rng meets the requirements for a Bidirectional range
+    /// \pre BidiIter meets the requirements for a Bidirectional iterator
     template<typename Rng,typename BidiIter>
     inline BidiIter copy_backward(Rng const & rng,BidiIter out)
     {
@@ -429,6 +448,9 @@ namespace boost
     ///
     /// range-based version of the transform std algorithm
     ///
+    /// \pre Rng meets the requirements for an Input range
+    /// \pre InIter meets the requirements for an Input iterator
+    /// \pre OutIter meets the requirements for an Output iterator
     template<typename Rng,typename OutIter,typename UnaryOp>
     inline OutIter transform(Rng const & rng,OutIter out,UnaryOp fun)
     {
@@ -446,6 +468,7 @@ namespace boost
     ///
     /// range-based version of the replace std algorithm
     ///
+    /// \pre Rng meets the requirements for a Forward range
     template<typename Rng,typename Val>
     inline void replace(Rng & rng,Val const & what,Val const & with_what)
     {
@@ -463,6 +486,7 @@ namespace boost
     ///
     /// range-based version of the replace_if std algorithm
     ///
+    /// \pre Rng meets the requirements for a Forward range
     template<typename Rng,typename Pred,typename Val>
     inline void replace_if(Rng & rng,Pred pred,Val const & val)
     {
@@ -480,6 +504,8 @@ namespace boost
     ///
     /// range-based version of the replace_copy std algorithm
     ///
+    /// \pre Rng meets the requirements for an Input range
+    /// \pre OutIter meets the requirements for an Output iterator
     template<typename Rng,typename OutIter,typename Val>
     inline OutIter replace_copy(Rng const & rng,OutIter out,Val const & what,Val const & with_what)
     {
@@ -490,6 +516,8 @@ namespace boost
     ///
     /// range-based version of the replace_copy_if std algorithm
     ///
+    /// \pre Rng meets the requirements for an Input range
+    /// \pre OutIter meets the requirements for an Output iterator
     template<typename Rng,typename OutIter,typename Pred,typename Val>
     inline OutIter replace_copy_if(Rng const & rng,OutIter out,Pred pred,Val const & val)
     {
@@ -500,6 +528,7 @@ namespace boost
     ///
     /// range-based version of the fill std algorithm
     ///
+    /// \pre Rng meets the requirements for a Forward range
     template<typename Rng,typename Val>
     inline void fill(Rng & rng,Val const & val)
     {
@@ -517,9 +546,11 @@ namespace boost
     ///
     /// range-based version of the fill_n std algorithm
     ///
+    /// \pre Rng meets the requirements for an Output range
     template<typename Rng,typename Int,typename Val>
     inline void fill_n(Rng & rng,Int size,Val const & val)
     {
+        // BUGBUG an Output range? Rethink this, and output ranges in general.
         std::fill_n(range_ex_detail::adl_begin(rng),size,val);
     }
 
@@ -534,6 +565,7 @@ namespace boost
     ///
     /// range-based version of the generate std algorithm
     ///
+    /// \pre Rng meets the requirements for a Forward range
     template<typename Rng,typename Generator>
     inline void generate(Rng & rng,Generator gen)
     {
@@ -551,6 +583,7 @@ namespace boost
     ///
     /// range-based version of the generate_n std algorithm
     ///
+    /// \pre Rng meets the requirements for an Output range
     template<typename Rng,typename Int,typename Generator>
     void generate_n(Rng & rng,Int size,Generator gen)
     {
@@ -592,6 +625,7 @@ namespace boost
     ///
     /// range-based version of the remove std algorithm
     ///
+    /// \pre Rng meets the requirements for a Forward range
     template<typename Rng,typename Val>
     inline BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng>::type
     remove(Rng & rng,Val const & val)
@@ -635,6 +669,7 @@ namespace boost
     ///
     /// range-based version of the remove_if std algorithm
     ///
+    /// \pre Rng meets the requirements for a Forward range
     template<typename Rng,typename Pred>
     inline BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng>::type
     remove_if(Rng & rng,Pred pred)
@@ -654,6 +689,8 @@ namespace boost
     ///
     /// range-based version of the remove_copy std algorithm
     ///
+    /// \pre Rng meets the requirements for an Input range
+    /// \pre OutIter meets the requirements for an Output iterator
     template<typename Rng,typename OutIter,typename Val>
     inline OutIter remove_copy(Rng const & rng,OutIter out,Val const & val)
     {
@@ -664,6 +701,8 @@ namespace boost
     ///
     /// range-based version of the remove_copy_if std algorithm
     ///
+    /// \pre Rng meets the requirements for an Input range
+    /// \pre OutIter meets the requirements for an Output iterator
     template<typename Rng,typename OutIter,typename Pred>
     inline OutIter remove_copy_if(Rng const & rng,OutIter out,Pred pred)
     {
@@ -672,7 +711,7 @@ namespace boost
 
     namespace range_ex_detail
     {
-        template<typename Rng,typename Val>
+        template<typename Rng>
         inline BOOST_DEDUCED_TYPENAME boost::lazy_enable_if<
             has_unique<Rng>
           , boost::range_result_iterator<Rng>
@@ -683,7 +722,7 @@ namespace boost
             return range_ex_detail::adl_end(rng);
         }
 
-        template<typename Rng,typename Val>
+        template<typename Rng>
         inline BOOST_DEDUCED_TYPENAME boost::lazy_disable_if<
             has_unique<Rng>
           , boost::range_result_iterator<Rng>
@@ -692,12 +731,34 @@ namespace boost
         {
             return std::unique(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng));
         }
+
+        template<typename Rng,typename Pred>
+        inline BOOST_DEDUCED_TYPENAME boost::lazy_enable_if<
+            has_unique<Rng>
+          , boost::range_result_iterator<Rng>
+        >::type
+        unique_if_impl(Rng & rng,Pred pred)
+        {
+            rng.unique(pred);
+            return range_ex_detail::adl_end(rng);
+        }
+
+        template<typename Rng,typename Pred>
+        inline BOOST_DEDUCED_TYPENAME boost::lazy_disable_if<
+            has_unique<Rng>
+          , boost::range_result_iterator<Rng>
+        >::type
+        unique_if_impl(Rng & rng,Pred pred)
+        {
+            return std::unique(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),pred);
+        }
     }
 
     /// \brief template function unique
     ///
     /// range-based version of the unique std algorithm
     ///
+    /// \pre Rng meets the requirements for a Forward range
     template<typename Rng>
     inline BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng>::type
     unique(Rng & rng)
@@ -713,36 +774,12 @@ namespace boost
         return range_ex_detail::unique_impl(rng);
     }
 
-    namespace range_ex_detail
-    {
-        template<typename Rng,typename Pred>
-        inline BOOST_DEDUCED_TYPENAME boost::lazy_enable_if<
-            has_unique<Rng>
-          , boost::range_result_iterator<Rng>
-        >::type
-        unique_impl(Rng & rng,Pred pred)
-        {
-            rng.unique(pred);
-            return range_ex_detail::adl_end(rng);
-        }
-
-        template<typename Rng,typename Pred>
-        inline BOOST_DEDUCED_TYPENAME boost::lazy_disable_if<
-            has_unique<Rng>
-          , boost::range_result_iterator<Rng>
-        >::type
-        unique_impl(Rng & rng,Pred pred)
-        {
-            return std::unique(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),pred);
-        }
-    }
-
     /// \overload
     template<typename Rng,typename Pred>
     inline BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng>::type
     unique(Rng & rng,Pred pred)
     {
-        return range_ex_detail::unique_impl(rng,pred);
+        return range_ex_detail::unique_if_impl(rng,pred);
     }
 
     /// \overload
@@ -750,13 +787,15 @@ namespace boost
     inline BOOST_DEDUCED_TYPENAME boost::range_const_iterator<Rng>::type
     unique(Rng const & rng,Pred pred)
     {
-        return range_ex_detail::unique_impl(rng,pred);
+        return range_ex_detail::unique_if_impl(rng,pred);
     }
 
     /// \brief template function unique_copy
     ///
     /// range-based version of the unique_copy std algorithm
     ///
+    /// \pre Rng meets the requirements for an Input range
+    /// \pre OutIter meets the requirements for an Output iterator
     template<typename Rng,typename OutIter>
     inline OutIter unique_copy(Rng const & rng,OutIter out)
     {
@@ -772,7 +811,7 @@ namespace boost
 
     namespace range_ex_detail
     {
-        template<typename Rng,typename Val>
+        template<typename Rng>
         inline BOOST_DEDUCED_TYPENAME boost::enable_if<
             has_reverse<Rng>
         >::type
@@ -781,7 +820,7 @@ namespace boost
             rng.reverse();
         }
 
-        template<typename Rng,typename Val>
+        template<typename Rng>
         inline BOOST_DEDUCED_TYPENAME boost::disable_if<
             has_reverse<Rng>
         >::type
@@ -795,6 +834,7 @@ namespace boost
     ///
     /// range-based version of the reverse std algorithm
     ///
+    /// \pre Rng meets the requirements for a Bidirectional range
     template<typename Rng>
     inline void reverse(Rng & rng)
     {
@@ -812,6 +852,8 @@ namespace boost
     ///
     /// range-based version of the reverse_copy std algorithm
     ///
+    /// \pre Rng meets the requirements for a Bidirectional range
+    /// \pre OutIter meets the requirements for an Output iterator
     template<typename Rng,typename OutIter>
     inline OutIter reverse_copy(Rng const & rng,OutIter out)
     {
@@ -822,6 +864,7 @@ namespace boost
     ///
     /// range-based version of the rotate std algorithm
     ///
+    /// \pre Rng meets the requirements for a Forward range
     template<typename Rng>
     inline void rotate(Rng & rng,
         BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng>::type middle)
@@ -841,6 +884,8 @@ namespace boost
     ///
     /// range-based version of the rotate_copy std algorithm
     ///
+    /// \pre Rng meets the requirements for a Forward range
+    /// \pre OutIter meets the requirements for an Output iterator
     template<typename Rng,typename OutIter>
     inline OutIter rotate_copy(Rng & rng,
         BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng>::type middle,
@@ -862,6 +907,7 @@ namespace boost
     ///
     /// range-based version of the random_shuffle std algorithm
     ///
+    /// \pre Rng meets the requirements for a Random Access range
     template<typename Rng>
     inline void random_shuffle(Rng & rng)
     {
@@ -893,6 +939,7 @@ namespace boost
     ///
     /// range-based version of the partition std algorithm
     ///
+    /// \pre Rng meets the requirements for a Bidirectional range
     template<typename Rng,typename Pred>
     inline BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng>::type
     partition(Rng & rng,Pred pred)
@@ -929,7 +976,7 @@ namespace boost
 
     namespace range_ex_detail
     {
-        template<typename Rng,typename Val>
+        template<typename Rng>
         inline BOOST_DEDUCED_TYPENAME boost::enable_if<
             has_sort<Rng>
         >::type
@@ -938,7 +985,7 @@ namespace boost
             rng.sort();
         }
 
-        template<typename Rng,typename Val>
+        template<typename Rng>
         inline BOOST_DEDUCED_TYPENAME boost::disable_if<
             has_sort<Rng>
         >::type
@@ -952,6 +999,7 @@ namespace boost
     ///
     /// range-based version of the sort std algorithm
     ///
+    /// \pre Rng meets the requirements for a Random Access range
     template<typename Rng>
     inline void sort(Rng & rng)
     {
@@ -1004,6 +1052,7 @@ namespace boost
     ///
     /// range-based version of the stable_sort std algorithm
     ///
+    /// \pre Rng meets the requirements for a Random Access range
     template<typename Rng>
     inline void stable_sort(Rng & rng)
     {
@@ -1035,6 +1084,7 @@ namespace boost
     ///
     /// range-based version of the partial_sort std algorithm
     ///
+    /// \pre Rng meets the requirements for a Random Access range
     template<typename Rng>
     inline void partial_sort(Rng & rng,
         BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng>::type middle)
@@ -1072,6 +1122,8 @@ namespace boost
     ///
     /// range-based version of the partial_sort_copy std algorithm
     ///
+    /// \pre Rng1 meets the requirements for a Input range
+    /// \pre Rng2 meets the requirements for a Random Access range
     template<typename Rng1,typename Rng2>
     inline BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng2>::type
     partial_sort_copy(Rng1 const & rng1,Rng2 & rng2)
@@ -1111,6 +1163,7 @@ namespace boost
     ///
     /// range-based version of the nth_element std algorithm
     ///
+    /// \pre Rng meets the requirements for a Random Access range
     template<typename Rng>
     inline void nth_element(Rng & rng,
         BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng>::type nth)
@@ -1144,7 +1197,6 @@ namespace boost
         std::nth_element(range_ex_detail::adl_begin(rng),nth,range_ex_detail::adl_end(rng),cmp);
     }
 
-
     namespace range_ex_detail
     {
         template<typename Rng,typename Val>
@@ -1172,6 +1224,7 @@ namespace boost
     ///
     /// range-based version of the lower_bound std algorithm
     ///
+    /// \pre Rng meets the requirements for a Forward range
     template<typename Rng,typename Val>
     inline BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng>::type
     lower_bound(Rng & rng,Val const & val)
@@ -1230,6 +1283,7 @@ namespace boost
     ///
     /// range-based version of the upper_bound std algorithm
     ///
+    /// \pre Rng meets the requirements for a Forward range
     template<typename Rng,typename Val>
     inline BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng>::type
     upper_bound(Rng & rng,Val const & val)
@@ -1288,6 +1342,7 @@ namespace boost
     ///
     /// range-based version of the equal_range std algorithm
     ///
+    /// \pre Rng meets the requirements for a Forward range
     template<typename Rng,typename Val>
     inline BOOST_DEDUCED_TYPENAME range_ex_detail::iter_pair<Rng>::type
     equal_range(Rng & rng,Val const & val)
@@ -1323,6 +1378,7 @@ namespace boost
     ///
     /// range-based version of the binary_search std algorithm
     ///
+    /// \pre Rng meets the requirements for a Forward range
     template<typename Rng,typename Val>
     inline bool binary_search(Rng const & rng,Val const & val)
     {
@@ -1359,6 +1415,7 @@ namespace boost
     ///
     /// range-based version of the inplace_merge std algorithm
     ///
+    /// \pre Rng meets the requirements for a Bidirectional range
     template<typename Rng>
     inline void inplace_merge(Rng & rng,
         BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng>::type middle)
@@ -1400,6 +1457,8 @@ namespace boost
     ///
     /// range-based version of the includes std algorithm
     ///
+    /// \pre Rng1 meets the requirements for an Input range
+    /// \pre Rng2 meets the requirements for an Input range
     template<typename Rng1,typename Rng2>
     inline bool includes(Rng1 const & rng1,Rng2 const & rng2)
     {
@@ -1419,6 +1478,8 @@ namespace boost
     ///
     /// range-based version of the set_union std algorithm
     ///
+    /// \pre Rng1 meets the requirements for an Input range
+    /// \pre Rng2 meets the requirements for an Input range
     template<typename Rng1,typename Rng2,typename OutIter>
     inline OutIter set_union(Rng1 const & rng1,Rng2 const & rng2,OutIter out)
     {
@@ -1438,6 +1499,8 @@ namespace boost
     ///
     /// range-based version of the set_intersection std algorithm
     ///
+    /// \pre Rng1 meets the requirements for an Input range
+    /// \pre Rng2 meets the requirements for an Input range
     template<typename Rng1,typename Rng2,typename OutIter>
     inline OutIter set_intersection(Rng1 const & rng1,Rng2 const & rng2,OutIter out)
     {
@@ -1457,6 +1520,8 @@ namespace boost
     ///
     /// range-based version of the set_difference std algorithm
     ///
+    /// \pre Rng1 meets the requirements for an Input range
+    /// \pre Rng2 meets the requirements for an Input range
     template<typename Rng1,typename Rng2,typename OutIter>
     inline OutIter set_difference(Rng1 const & rng1,Rng2 const & rng2,OutIter out)
     {
@@ -1476,6 +1541,8 @@ namespace boost
     ///
     /// range-based version of the set_symmetric_difference std algorithm
     ///
+    /// \pre Rng1 meets the requirements for an Input range
+    /// \pre Rng2 meets the requirements for an Input range
     template<typename Rng1,typename Rng2,typename OutIter>
     inline OutIter set_symmetric_difference(Rng1 const & rng1,Rng2 const & rng2,OutIter out)
     {
@@ -1499,6 +1566,7 @@ namespace boost
     ///
     /// range-based version of the push_heap std algorithm
     ///
+    /// \pre Rng meets the requirements for a Random Access range
     template<typename Rng>
     inline void push_heap(Rng & rng)
     {
@@ -1530,6 +1598,7 @@ namespace boost
     ///
     /// range-based version of the pop_heap std algorithm
     ///
+    /// \pre Rng meets the requirements for a Random Access range
     template<typename Rng>
     inline void pop_heap(Rng & rng)
     {
@@ -1561,6 +1630,7 @@ namespace boost
     ///
     /// range-based version of the make_heap std algorithm
     ///
+    /// \pre Rng meets the requirements for a Random Access range
     template<typename Rng>
     inline void make_heap(Rng & rng)
     {
@@ -1627,6 +1697,7 @@ namespace boost
     ///
     /// range-based version of the min_element std algorithm
     ///
+    /// \pre Rng meets the requirements for a Forward range
     template<typename Rng>
     inline BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng>::type
     min_element(Rng & rng)
@@ -1662,6 +1733,7 @@ namespace boost
     ///
     /// range-based version of the max_element std algorithm
     ///
+    /// \pre Rng meets the requirements for a Forward range
     template<typename Rng>
     inline BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng>::type
     max_element(Rng & rng)
@@ -1697,6 +1769,8 @@ namespace boost
     ///
     /// range-based version of the lexicographic_compare std algorithm
     ///
+    /// \pre Rng1 meets the requirements for an Input range
+    /// \pre Rng2 meets the requirements for an Input range
     template<typename Rng1,typename Rng2>
     inline bool lexicographical_compare(Rng1 const & rng1,Rng2 const & rng2)
     {
@@ -1720,6 +1794,7 @@ namespace boost
     ///
     /// range-based version of the next_permutation std algorithm
     ///
+    /// \pre Rng meets the requirements for a Bidirectional range
     template<typename Rng>
     inline bool next_permutation(Rng & rng)
     {
@@ -1751,6 +1826,7 @@ namespace boost
     ///
     /// range-based version of the prev_permutation std algorithm
     ///
+    /// \pre Rng meets the requirements for a Bidirectional range
     template<typename Rng>
     inline bool prev_permutation(Rng & rng)
     {
