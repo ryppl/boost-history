@@ -13,9 +13,11 @@
 #endif
 
 /// include guard
-#ifndef ADDRESS_HPP
-#define ADDRESS_HPP 1
+#ifndef BOOST_SOCKET_CONCEPT_ADDRESS_HPP
+#define BOOST_SOCKET_CONCEPT_ADDRESS_HPP 1
 
+#include <utility>
+#include <string>
 
 namespace boost
 {
@@ -31,31 +33,32 @@ namespace boost
     {
       void constraints()
       {
-        //short family() const
+        // family_type family() const
         address.family();
-//         //! set the address based on a string
-//         // void addr(const char* addr)
-//         address.hostname("");
 
-//         //! return the (host ordered) port number
-//         //unsigned short port() const
-//         address.port();
-//         //! set the (host ordered) port number
-//         // void port(unsigned short port)
-//         address.port(1);
-
-        // should return something that can be passed to other functions
-        // sockaddr& socket_address()
-        address.socket_address();
-
-        bool x = address < address;
+        // should return something that can be passed to C API
+        std::pair<void*,size_t> rep=address.representation();
         address=address;
+
+        boost::ignore_unused_variable_warning(rep);
+
+        const_constraints();
+      }
+
+      void const_constraints() const
+      {
+        std::pair<void const*,size_t> rep=address.representation();
+        // convert to string
+        std::string s=address.to_string();
+
+        // make sure we can use this as a key
+        bool x = address < address;
         bool y = address==address;
         bool z = address!=address;
+        boost::ignore_unused_variable_warning(rep);
         boost::ignore_unused_variable_warning(x);
         boost::ignore_unused_variable_warning(y);
         boost::ignore_unused_variable_warning(z);
-
       }
 
     private:
