@@ -1,4 +1,4 @@
-#~ Copyright (C) 2003, Rene Rivera.
+#~ Copyright 2003, Rene Rivera.
 #~ Use, modification and distribution are subject to the
 #~ Boost Software License, Version 1.0. (See accompanying file
 #~ LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -124,7 +124,7 @@ if [ install-sources lib ]
             [ install-sources lib ]
         :
             <locate>$(lib-locate:D)
-            [ common-names ]
+            common-variant-tag
             [ cond $(with-install) : <target>install : <target>all ]
             [ cond $(with-stage) : <target>stage : <target>all ]
         :
