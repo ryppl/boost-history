@@ -76,49 +76,53 @@ class bigint : boost::operators<bigint> {
   // RG - new implementation of streaming in a base-agnostic form
   std::ostream& to_ostream(std::ostream& os) const {
 
-    static char const decimals[] = {'0','1','2','3','4','5','6','7','8','9'};
-    static char const hexadecimals[] = {'0','1','2','3','4','5','6','7','8',
-                                        '9','a','b','c','d','e','f'};
-
-    // obviously decimals would work fine...
-    static char const octals[] = {'0','1','2','3','4','5','6','7'};
-
-    std::ios_base::fmtflags flags = os.flags();
-
-    int outbase;
-    char const* outchars;
-    if (flags & std::ios_base::dec) {
-      outbase = 10;
-      outchars = decimals;
-    } else if (flags & std::ios_base::hex) {
-      outbase = 16;
-      outchars = hexadecimals;
-    } else { // if (flags & std::ios_base::oct)
-      outbase = 8;
-      outchars = hexadecimals;
-    }
-
     if(!os.good()) return os;
 
-    if(this->negative()) {
-      os << '-';
-      return (-(*this)).to_ostream(os);
-    }
+    // Manage prefix and postfix operations (RAII object)
+    std::ostream::sentry opfx(os);
     
-    std::vector<char> text;
-    bigint quotient = *this;
-    bigint remainder;
-    quotient.quotient_remainder(bigint(outbase),quotient,remainder);
-    // invariant: remainder < length of outchars.
-    text.push_back(outchars[remainder.buffer.back()]);
-    while (!quotient.is_zero()) {
-      quotient.quotient_remainder(bigint(outbase),quotient,remainder);
-      text.push_back(outchars[remainder.buffer.back()]);
-    }
+    if(opfx) {
+      static char const decimals[] = {'0','1','2','3','4','5','6','7','8','9'};
+      static char const hexadecimals[] = {'0','1','2','3','4','5','6','7','8',
+                                          '9','a','b','c','d','e','f'};
+      // obviously decimals would work fine...
+      static char const octals[] = {'0','1','2','3','4','5','6','7'};
 
-    // spit it out!
-    std::copy(text.rbegin(),text.rend(),
-              std::ostream_iterator<char>(os,""));
+      std::ios_base::fmtflags flags = os.flags();
+
+      int outbase;
+      char const* outchars;
+      if (flags & std::ios_base::dec) {
+        outbase = 10;
+        outchars = decimals;
+      } else if (flags & std::ios_base::hex) {
+        outbase = 16;
+        outchars = hexadecimals;
+      } else { // if (flags & std::ios_base::oct)
+        outbase = 8;
+        outchars = hexadecimals;
+      }
+
+      if(this->negative()) {
+        os << '-';
+        return (-(*this)).to_ostream(os);
+      }
+    
+      std::vector<char> text;
+      bigint quotient = *this;
+      bigint remainder;
+      quotient.quotient_remainder(bigint(outbase),quotient,remainder);
+      // invariant: remainder < length of outchars.
+      text.push_back(outchars[remainder.buffer.back()]);
+      while (!quotient.is_zero()) {
+        quotient.quotient_remainder(bigint(outbase),quotient,remainder);
+        text.push_back(outchars[remainder.buffer.back()]);
+      }
+
+      // spit it out!
+      std::copy(text.rbegin(),text.rend(),
+                std::ostream_iterator<char>(os,""));
+    }
     return os;
   }
       
