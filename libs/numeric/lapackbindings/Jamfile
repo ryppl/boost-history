@@ -1,8 +1,0 @@
-subproject libs/numeric/lapackbindings ;
-# subinclude libs/numeric/blasbindings/tst ;
-
-lib lapackbindings 
-        : lapack.cpp 
-        :  <include>$(BOOST_ROOT)
-	   <include>$(B_ROOT)
-        ;
