@@ -9,7 +9,7 @@ content="text/html; charset=iso-8859-1">
 
 <body bgcolor="#FFFFFF">
 
-<h1>Vector Expressions</h1>
+<h1><img src="c++boost.gif" alt="c++boost.gif" align="center">Vector Expressions</h1>
 
 <h2><a name="vector_expression"></a>Vector Expression</h2>
 
@@ -557,7 +557,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
 
             // Comparison
             bool operator == (const const_iterator &amp;it) const;
-            bool operator < (const const_iterator &amp;it) const;
+            bool operator &lt;(const const_iterator &amp;it) const;
         };
 
         const_iterator begin () const;
@@ -793,10 +793,10 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         // enhances them with the binary functor.
 
         class const_iterator:
-            public container_const_reference&lt;vector_binary&gt;, 
+            public container_const_reference&lt;vector_binary&gt;,
             public random_access_iterator_base&lt;const_iterator, value_type&gt; {
         public:
-            typedef typename restrict_traits&lt;typename E1::const_iterator::iterator_category, 
+            typedef typename restrict_traits&lt;typename E1::const_iterator::iterator_category,
                                              typename E2::const_iterator::iterator_category&gt;::iterator_category iterator_category;
             typedef typename vector_binary::difference_type difference_type;
             typedef typename vector_binary::value_type value_type;
@@ -805,8 +805,10 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
 
             // Construction and destruction
             const_iterator ();
-            const_iterator (const vector_binary &amp;vb, size_type i, const const_iterator1_type &amp;it1, const const_iterator2_type &amp;it2);
-            
+            const_iterator (const vector_binary &amp;vb, size_type i,
+                            const const_iterator1_type &amp;it1, const const_iterator1_type &amp;it1_end,
+                            const const_iterator2_type &amp;it2, const const_iterator2_type &amp;it2_end);
+
             // Dense specializations
             void increment (dense_random_access_iterator_tag);
             void decrement (dense_random_access_iterator_tag);
@@ -840,7 +842,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
 
             // Comparison
             bool operator == (const const_iterator &amp;it) const;
-            bool operator < (const const_iterator &amp;it) const;
+            bool operator &lt;(const const_iterator &amp;it) const;
         };
 
         const_iterator begin () const;
@@ -1129,7 +1131,7 @@ F&gt; &gt;</code></p>
 
             // Comparison
             bool operator == (const const_iterator1 &amp;it) const;
-            bool operator < (const const_iterator1 &amp;it) const;
+            bool operator &lt;(const const_iterator1 &amp;it) const;
         };
 
         const_iterator1 begin1 () const;
@@ -1176,7 +1178,7 @@ F&gt; &gt;</code></p>
 
             // Comparison
             bool operator == (const const_iterator2 &amp;it) const;
-            bool operator < (const const_iterator2 &amp;it) const;
+            bool operator &lt;(const const_iterator2 &amp;it) const;
         };
 
         const_iterator2 begin2 () const;
@@ -1421,7 +1423,7 @@ vector_expression&lt;vector_binary_scalar2&lt;E1, E2, F&gt; &gt; </code>resp.</p
 
             // Comparison
             bool operator == (const const_iterator &amp;it) const;
-            bool operator < (const const_iterator &amp;it) const;
+            bool operator &lt;(const const_iterator &amp;it) const;
         };
 
         const_iterator begin () const;
@@ -1510,7 +1512,7 @@ vector_expression&lt;vector_binary_scalar2&lt;E1, E2, F&gt; &gt; </code>resp.</p
 
             // Comparison
             bool operator == (const const_iterator &amp;it) const;
-            bool operator < (const const_iterator &amp;it) const;
+            bool operator &lt;(const const_iterator &amp;it) const;
         };
 
         const_iterator begin () const;
@@ -1743,5 +1745,16 @@ double precision inner product of the vector expressions<code>.</code></p>
 
     std::cout &lt;&lt; inner_prod (v1, v2) &lt;&lt; std::endl;
 }</pre>
+
+<hr>
+
+<p>Copyright (©) 2000-2002 Joerg Walter, Mathias Koch <br> 
+Permission to copy, use, modify, sell and distribute this document is granted 
+provided this copyright notice appears in all copies. This document is provided 
+``as is'' without express or implied warranty, and with no claim as to its suitability 
+for any purpose.</p>
+
+<p>Last revised: 8/3/2002</p>
+
 </body>
 </html>

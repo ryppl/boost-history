@@ -9,7 +9,7 @@ content="text/html; charset=iso-8859-1">
 
 <body bgcolor="#FFFFFF">
 
-<h1>Vector </h1>
+<h1><img src="c++boost.gif" alt="c++boost.gif" align="center">Vector</h1>
 
 <h2><a name="vector"></a>Vector</h2>
 
@@ -367,7 +367,7 @@ href="container.htm#vector">Vector</a>.</p>
 
             // Comparison
             bool operator == (const const_iterator &amp;it) const;
-            bool operator < (const const_iterator &amp;it) const;
+            bool operator &lt; (const const_iterator &amp;it) const;
         };
 
         const_iterator begin () const;
@@ -405,7 +405,7 @@ href="container.htm#vector">Vector</a>.</p>
 
             // Comparison
             bool operator == (const iterator &amp;it) const;
-            bool operator < (const iterator &amp;it) const;
+            bool operator &lt; (const const_iterator &amp;it) const;
         };
 
         iterator begin ();
@@ -639,7 +639,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
 
             // Comparison
             bool operator == (const const_iterator &amp;it) const;
-            bool operator < (const const_iterator &amp;it) const;
+            bool operator &lt; (const const_iterator &amp;it) const;
         };
 
         typedef const_iterator iterator;
@@ -875,5 +875,16 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         const_reverse_iterator rbegin () const;
         const_reverse_iterator rend () const;
     };</code></pre>
+
+<hr>
+
+<p>Copyright (©) 2000-2002 Joerg Walter, Mathias Koch <br> 
+Permission to copy, use, modify, sell and distribute this document is granted 
+provided this copyright notice appears in all copies. This document is provided 
+``as is'' without express or implied warranty, and with no claim as to its suitability 
+for any purpose.</p>
+
+<p>Last revised: 8/3/2002</p>
+
 </body>
 </html>

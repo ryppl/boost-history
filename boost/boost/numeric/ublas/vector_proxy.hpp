@@ -53,25 +53,25 @@ namespace boost { namespace numeric { namespace ublas {
 
         // Construction and destruction
         BOOST_UBLAS_INLINE
-        vector_range (): 
+        vector_range ():
             data_ (nil_), r_ () {}
         BOOST_UBLAS_INLINE
-        vector_range (vector_type &data, const range &r): 
+        vector_range (vector_type &data, const range &r):
             data_ (data), r_ (r) {}
 #ifdef BOOST_UBLAS_DEPRECATED
         BOOST_UBLAS_INLINE
-        vector_range (vector_type &data, size_type start, size_type stop): 
+        vector_range (vector_type &data, size_type start, size_type stop):
             data_ (data), r_ (start, stop) {}
 #endif
 
         // Accessors
         BOOST_UBLAS_INLINE
-        size_type start () const { 
-            return r_.start (); 
+        size_type start () const {
+            return r_.start ();
         }
         BOOST_UBLAS_INLINE
-        size_type size () const { 
-            return r_.size (); 
+        size_type size () const {
+            return r_.size ();
         }
         BOOST_UBLAS_INLINE
         const_vector_type &data () const {
@@ -82,6 +82,7 @@ namespace boost { namespace numeric { namespace ublas {
             return data_;
         }
 
+#ifdef BOOST_UBLAS_DEPRECATED
         // Resetting
         BOOST_UBLAS_INLINE
         void reset (vector_type &data) {
@@ -94,6 +95,7 @@ namespace boost { namespace numeric { namespace ublas {
             data_.reset (data);
             r_ = r;
         }
+#endif
 
         // Element access
         BOOST_UBLAS_INLINE
@@ -102,25 +104,21 @@ namespace boost { namespace numeric { namespace ublas {
         }
         BOOST_UBLAS_INLINE
         reference operator () (size_type i) {
-            return data () (r_ (i)); 
+            return data () (r_ (i));
         }
 
         BOOST_UBLAS_INLINE
-        const_reference operator [] (size_type i) const { 
-            return (*this) (i); 
+        const_reference operator [] (size_type i) const {
+            return (*this) (i);
         }
         BOOST_UBLAS_INLINE
-        reference operator [] (size_type i) { 
-            return (*this) (i); 
+        reference operator [] (size_type i) {
+            return (*this) (i);
         }
 
         BOOST_UBLAS_INLINE
-        vector_range<const_vector_type> project (const range &r) const {
-            return vector_range<const_vector_type> (data (), r_.composite (r));
-        }
-        BOOST_UBLAS_INLINE
-        vector_range<vector_type> project (const range &r) {
-            return vector_range<vector_type> (data (), r_.composite (r));
+        vector_range<vector_type> project (const range &r) const {
+            return vector_range<vector_type> (data_, r_.compose (r));
         }
 
         // Assignment
@@ -523,12 +521,7 @@ namespace boost { namespace numeric { namespace ublas {
     }
     template<class V>
     BOOST_UBLAS_INLINE
-    vector_range<V> project (vector_range<V> &data, const range &r) {
-        return data.project (r);
-    }
-    template<class V>
-    BOOST_UBLAS_INLINE
-    const vector_range<const V> project (const vector_range<const V> &data, const range &r) {
+    vector_range<V> project (const vector_range<V> &data, const range &r) {
         return data.project (r);
     }
 #endif
@@ -595,6 +588,7 @@ namespace boost { namespace numeric { namespace ublas {
             return data_;
         }
 
+#ifdef BOOST_UBLAS_DEPRECATED
         // Resetting
         BOOST_UBLAS_INLINE
         void reset (vector_type &data) {
@@ -607,6 +601,7 @@ namespace boost { namespace numeric { namespace ublas {
             data_.reset (data);
             s_ = s;
         }
+#endif
 
         // Element access
         BOOST_UBLAS_INLINE
@@ -628,20 +623,12 @@ namespace boost { namespace numeric { namespace ublas {
         }
 
         BOOST_UBLAS_INLINE
-        vector_slice<const_vector_type> project (const range &r) const {
-            return vector_slice<const_vector_type>  (data (), s_.composite (r));
+        vector_slice<vector_type> project (const range &r) const {
+            return vector_slice<vector_type>  (data_, s_.compose (r));
         }
         BOOST_UBLAS_INLINE
-        vector_slice<vector_type> project (const range &r) {
-            return vector_slice<vector_type>  (data (), s_.composite (r));
-        }
-        BOOST_UBLAS_INLINE
-        vector_slice<const_vector_type> project (const slice &s) const {
-            return vector_slice<const_vector_type>  (data (), s_.composite (s));
-        }
-        BOOST_UBLAS_INLINE
-        vector_slice<vector_type> project (const slice &s) {
-            return vector_slice<vector_type>  (data (), s_.composite (s));
+        vector_slice<vector_type> project (const slice &s) const {
+            return vector_slice<vector_type>  (data_, s_.compose (s));
         }
 
         // Assignment
@@ -1023,12 +1010,7 @@ namespace boost { namespace numeric { namespace ublas {
 #ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
     template<class V>
     BOOST_UBLAS_INLINE
-    vector_slice<V> project (vector_slice<V> &data, const range &r) {
-        return data.project (r);
-    }
-    template<class V>
-    BOOST_UBLAS_INLINE
-    const vector_slice<const V> project (const vector_slice<const V> &data, const range &r) {
+    vector_slice<V> project (const vector_slice<V> &data, const range &r) {
         return data.project (r);
     }
 #endif
@@ -1045,24 +1027,22 @@ namespace boost { namespace numeric { namespace ublas {
     }
     template<class V>
     BOOST_UBLAS_INLINE
-    vector_slice<V> project (vector_slice<V> &data, const slice &s) {
-        return data.project (s);
-    }
-    template<class V>
-    BOOST_UBLAS_INLINE
-    const vector_slice<const V> project (const vector_slice<const V> &data, const slice &s) {
+    vector_slice<V> project (const vector_slice<V> &data, const slice &s) {
         return data.project (s);
     }
 #endif
 
     // Vector based indirection class
     // Contributed by Toon Knapen.
-    template<class V>
+    // Extended and optimized by Kresimir Fresl.
+    template<class V, class IA>
     class vector_indirect:
-        public vector_expression<vector_indirect<V> > {
+        public vector_expression<vector_indirect<V, IA> > {
     public:
         typedef const V const_vector_type;
         typedef V vector_type;
+        typedef const IA const_indirect_array_type;
+        typedef IA indirect_array_type;
         typedef typename V::size_type size_type;
         typedef typename V::difference_type difference_type;
         typedef typename V::value_type value_type;
@@ -1071,15 +1051,15 @@ namespace boost { namespace numeric { namespace ublas {
         typedef typename V::const_pointer const_pointer;
         typedef typename V::pointer pointer;
 #ifdef BOOST_UBLAS_ET_CLOSURE_REFERENCE
-        typedef const vector_const_reference<const vector_indirect<vector_type> > const_closure_type;
-        typedef vector_reference<vector_indirect<vector_type> > closure_type;
+        typedef const vector_const_reference<const vector_indirect<vector_type, indirect_array_type> > const_closure_type;
+        typedef vector_reference<vector_indirect<vector_type, indirect_array_type> > closure_type;
 #endif
 #ifdef BOOST_UBLAS_ET_CLOSURE_VALUE
-        typedef const vector_indirect<vector_type> const_closure_type;
-        typedef vector_indirect<vector_type> closure_type;
+        typedef const vector_indirect<vector_type, indirect_array_type> const_closure_type;
+        typedef vector_indirect<vector_type, indirect_array_type> closure_type;
 #endif
-        typedef indirect_array<>::const_iterator const_iterator_type;
-        typedef indirect_array<>::const_iterator iterator_type;
+        typedef typename IA::const_iterator const_iterator_type;
+        typedef typename IA::const_iterator iterator_type;
         typedef typename storage_restrict_traits<typename V::storage_category,
                                                  dense_proxy_tag>::storage_category storage_category;
 
@@ -1088,7 +1068,10 @@ namespace boost { namespace numeric { namespace ublas {
         vector_indirect ():
             data_ (nil_), ia_ () {}
         BOOST_UBLAS_INLINE
-        vector_indirect (vector_type &data, const indirect_array<> &ia):
+        vector_indirect (vector_type &data, size_type size):
+            data_ (data), ia_ (size) {}
+        BOOST_UBLAS_INLINE
+        vector_indirect (vector_type &data, const indirect_array_type &ia):
             data_ (data), ia_ (ia) {}
 
         // Accessors
@@ -1104,7 +1087,16 @@ namespace boost { namespace numeric { namespace ublas {
         vector_type &data () {
             return data_;
         }
+        BOOST_UBLAS_INLINE
+        const_indirect_array_type &indirect () const {
+            return ia_;
+        }
+        BOOST_UBLAS_INLINE
+        indirect_array_type &indirect () {
+            return ia_;
+        }
 
+#ifdef BOOST_UBLAS_DEPRECATED
         // Resetting
         BOOST_UBLAS_INLINE
         void reset (vector_type &data) {
@@ -1112,11 +1104,12 @@ namespace boost { namespace numeric { namespace ublas {
             data_.reset (data);
         }
         BOOST_UBLAS_INLINE
-        void reset (vector_type &data, const indirect_array<> &ia) {
+        void reset (vector_type &data, const indirect_array_type &ia) {
             // data_ = data;
             data_.reset (data);
             ia_ = ia;
         }
+#endif
 
         // Element access
         BOOST_UBLAS_INLINE
@@ -1138,28 +1131,16 @@ namespace boost { namespace numeric { namespace ublas {
         }
 
         BOOST_UBLAS_INLINE
-        vector_indirect<const_vector_type> project (const range &r) const {
-            return vector_indirect<const_vector_type>  (data (), ia_.composite (r));
+        vector_indirect<vector_type, indirect_array_type> project (const range &r) const {
+            return vector_indirect<vector_type, indirect_array_type> (data_, ia_.compose (r));
         }
         BOOST_UBLAS_INLINE
-        vector_indirect<vector_type> project (const range &r) {
-            return vector_indirect<vector_type>  (data (), ia_.composite (r));
+        vector_indirect<vector_type, indirect_array_type> project (const slice &s) const {
+            return vector_indirect<vector_type, indirect_array_type> (data_, ia_.compose (s));
         }
         BOOST_UBLAS_INLINE
-        vector_indirect<const_vector_type> project (const slice &s) const {
-            return vector_indirect<const_vector_type>  (data (), ia_.composite (s));
-        }
-        BOOST_UBLAS_INLINE
-        vector_indirect<vector_type> project (const slice &s) {
-            return vector_indirect<vector_type>  (data (), ia_.composite (s));
-        }
-        BOOST_UBLAS_INLINE
-        vector_indirect<const_vector_type> project (const indirect_array<> &ia) const {
-            return vector_indirect<const_vector_type>  (data (), ia_.composite (ia));
-        }
-        BOOST_UBLAS_INLINE
-        vector_indirect<vector_type> project (const indirect_array<> &ia) {
-            return vector_indirect<vector_type>  (data (), ia_.composite (ia));
+        vector_indirect<vector_type, indirect_array_type> project (const indirect_array_type &ia) const {
+            return vector_indirect<vector_type, indirect_array_type> (data_, ia_.compose (ia));
         }
 
         // Assignment
@@ -1244,9 +1225,9 @@ namespace boost { namespace numeric { namespace ublas {
 #endif
 
 #ifdef BOOST_UBLAS_USE_INDEXED_ITERATOR
-        typedef indexed_iterator<vector_indirect<vector_type>,
+        typedef indexed_iterator<vector_indirect<vector_type, indirect_array_type>,
                                  BOOST_UBLAS_TYPENAME vector_type::iterator::iterator_category> iterator;
-        typedef indexed_const_iterator<vector_indirect<vector_type>,
+        typedef indexed_const_iterator<vector_indirect<vector_type, indirect_array_type>,
                                        BOOST_UBLAS_TYPENAME vector_type::const_iterator::iterator_category> const_iterator;
 #else
         class const_iterator;
@@ -1530,55 +1511,40 @@ namespace boost { namespace numeric { namespace ublas {
 
     private:
         vector_type &data_;
-        indirect_array<> ia_;
+        indirect_array_type ia_;
         static vector_type nil_;
     };
 
-    template<class V>
-    typename vector_indirect<V>::vector_type vector_indirect<V>::nil_;
+    template<class V, class IA>
+    typename vector_indirect<V, IA>::vector_type vector_indirect<V, IA>::nil_;
 
     // Projections
 #ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
-    template<class V>
+    template<class V, class IA>
     BOOST_UBLAS_INLINE
-    vector_indirect<V> project (vector_indirect<V> &data, const range &r) {
+    vector_indirect<V, IA> project (const vector_indirect<V, IA> &data, const range &r) {
         return data.project (r);
     }
-    template<class V>
+    template<class V, class IA>
     BOOST_UBLAS_INLINE
-    const vector_indirect<const V> project (const vector_indirect<const V> &data, const range &r) {
-        return data.project (r);
-    }
-    template<class V>
-    BOOST_UBLAS_INLINE
-    vector_indirect<V> project (vector_indirect<V> &data, const slice &s) {
-        return data.project (s);
-    }
-    template<class V>
-    BOOST_UBLAS_INLINE
-    const vector_indirect<const V> project (const vector_indirect<const V> &data, const slice &s) {
+    vector_indirect<V, IA> project (const vector_indirect<V, IA> &data, const slice &s) {
         return data.project (s);
     }
 #endif
-    template<class V>
+    template<class V, class IA>
     BOOST_UBLAS_INLINE
-    vector_indirect<V> project (V &data, const indirect_array<> &ia) {
-        return vector_indirect<V> (data, ia);
+    vector_indirect<V, IA > project (V &data, const IA &ia) {
+        return vector_indirect<V, IA > (data, ia);
     }
 #ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
-    template<class V>
+    template<class V, class IA>
     BOOST_UBLAS_INLINE
-    const vector_indirect<const V> project (const V &data, const indirect_array<> &ia) {
-        return vector_indirect<const V> (data, ia);
+    const vector_indirect<const V, IA> project (const V &data, const IA &ia) {
+        return vector_indirect<const V, IA> (data, ia);
     }
-    template<class V>
+    template<class V, class IA>
     BOOST_UBLAS_INLINE
-    vector_indirect<V> project (vector_indirect<V> &data, const indirect_array<> &ia) {
-        return data.project (ia);
-    }
-    template<class V>
-    BOOST_UBLAS_INLINE
-    const vector_indirect<const V> project (const vector_indirect<const V> &data, const indirect_array<> &ia) {
+    vector_indirect<V, IA> project (const vector_indirect<V, IA> &data, const IA &ia) {
         return data.project (ia);
     }
 #endif

@@ -28,8 +28,10 @@ namespace boost { namespace numeric { namespace ublas {
 
     template<class T>
     struct type_traits {
+        typedef type_traits<T> self_type;
         typedef T value_type;
         typedef const T &const_reference;
+        typedef T &reference;
         typedef T real_type;
         typedef T precision_type;
 
@@ -38,26 +40,59 @@ namespace boost { namespace numeric { namespace ublas {
 
         static
         BOOST_UBLAS_INLINE
-        real_type real (const value_type &t);
+        real_type real (const_reference t);
         static
         BOOST_UBLAS_INLINE
-        real_type imag (const value_type &t);
+        real_type imag (const_reference t);
         static
         BOOST_UBLAS_INLINE
-        value_type conj (const value_type &t);
+        value_type conj (const_reference t);
 
         static
         BOOST_UBLAS_INLINE
-        real_type abs (const value_type &t);
+        real_type abs (const_reference t);
         static
         BOOST_UBLAS_INLINE
-        value_type sqrt (const value_type &t);
+        value_type sqrt (const_reference t);
+
+        static
+        BOOST_UBLAS_INLINE
+        real_type norm_1 (const_reference t) {
+            // Oops, should have known that!
+            return type_traits<real_type>::abs (self_type::real (t)) +
+                   type_traits<real_type>::abs (self_type::imag (t));
+        }
+        static
+        BOOST_UBLAS_INLINE
+        real_type norm_2 (const_reference t) {
+            return self_type::abs (t);
+        }
+        static
+        BOOST_UBLAS_INLINE
+        real_type norm_inf (const_reference t) {
+            // Oops, should have known that!
+            return std::max (type_traits<real_type>::abs (self_type::real (t)),
+                             type_traits<real_type>::abs (self_type::imag (t)));
+        }
+
+        static
+        BOOST_UBLAS_INLINE
+        bool equals (const_reference t1, const_reference t2) {
+            // Check, that the values match at least half.
+            static real_type sqrt_epsilon (type_traits<real_type>::sqrt (std::numeric_limits<real_type>::epsilon ()));
+            return self_type::norm_inf (t1 - t2) < sqrt_epsilon *
+                   std::max (std::max (self_type::norm_inf (t1),
+                                       self_type::norm_inf (t2)),
+                             std::numeric_limits<real_type>::min ());
+        }
     };
 
     template<>
     struct type_traits<float> {
+        typedef type_traits<float> self_type;
         typedef float value_type;
         typedef float const_reference;
+        typedef float &reference;
         typedef float real_type;
         typedef double precision_type;
 
@@ -66,23 +101,23 @@ namespace boost { namespace numeric { namespace ublas {
 
         static
         BOOST_UBLAS_INLINE
-        real_type real (const value_type &t) {
+        real_type real (const_reference t) {
                 return t;
         }
         static
         BOOST_UBLAS_INLINE
-        real_type imag (const value_type &t) {
+        real_type imag (const_reference t) {
                 return 0;
         }
         static
         BOOST_UBLAS_INLINE
-        value_type conj (const value_type &t) {
+        value_type conj (const_reference t) {
                 return t;
         }
 
         static
         BOOST_UBLAS_INLINE
-        real_type abs (const value_type &t) {
+        real_type abs (const_reference t) {
 #ifdef BOOST_UBLAS_C_MATH
             return ::fabsf (t);
 #else
@@ -91,18 +126,47 @@ namespace boost { namespace numeric { namespace ublas {
         }
         static
         BOOST_UBLAS_INLINE
-        value_type sqrt (const value_type &t) {
+        value_type sqrt (const_reference t) {
 #ifdef BOOST_UBLAS_C_MATH
             return ::sqrtf (t);
 #else
             return std::sqrt (t);
 #endif
         }
+
+        static
+        BOOST_UBLAS_INLINE
+        real_type norm_1 (const_reference t) {
+            return self_type::abs (t);
+        }
+        static
+        BOOST_UBLAS_INLINE
+        real_type norm_2 (const_reference t) {
+            return self_type::abs (t);
+        }
+        static
+        BOOST_UBLAS_INLINE
+        real_type norm_inf (const_reference t) {
+            return self_type::abs (t);
+        }
+
+        static
+        BOOST_UBLAS_INLINE
+        bool equals (const_reference t1, const_reference t2) {
+            // Check, that the values match at least half.
+            static real_type sqrt_epsilon (type_traits<real_type>::sqrt (std::numeric_limits<real_type>::epsilon ()));
+            return self_type::norm_inf (t1 - t2) < sqrt_epsilon *
+                   std::max (std::max (self_type::norm_inf (t1),
+                                       self_type::norm_inf (t2)),
+                             std::numeric_limits<real_type>::min ());
+        }
     };
     template<>
     struct type_traits<double> {
+        typedef type_traits<double> self_type;
         typedef double value_type;
         typedef double const_reference;
+        typedef double &reference;
         typedef double real_type;
 #ifndef BOOST_UBLAS_USE_LONG_DOUBLE
         typedef double precision_type;
@@ -115,23 +179,23 @@ namespace boost { namespace numeric { namespace ublas {
 
         static
         BOOST_UBLAS_INLINE
-        real_type real (const value_type &t) {
+        real_type real (const_reference t) {
                 return t;
         }
         static
         BOOST_UBLAS_INLINE
-        real_type imag (const value_type &t) {
+        real_type imag (const_reference t) {
                 return 0;
         }
         static
         BOOST_UBLAS_INLINE
-        value_type conj (const value_type &t) {
+        value_type conj (const_reference t) {
                 return t;
         }
 
         static
         BOOST_UBLAS_INLINE
-        real_type abs (const value_type &t) {
+        real_type abs (const_reference t) {
 #ifdef BOOST_UBLAS_C_MATH
             return ::fabs (t);
 #else
@@ -140,19 +204,48 @@ namespace boost { namespace numeric { namespace ublas {
         }
         static
         BOOST_UBLAS_INLINE
-        value_type sqrt (const value_type &t) {
+        value_type sqrt (const_reference t) {
 #ifdef BOOST_UBLAS_C_MATH
             return ::sqrt (t);
 #else
             return std::sqrt (t);
 #endif
         }
+
+        static
+        BOOST_UBLAS_INLINE
+        real_type norm_1 (const_reference t) {
+            return self_type::abs (t);
+        }
+        static
+        BOOST_UBLAS_INLINE
+        real_type norm_2 (const_reference t) {
+            return self_type::abs (t);
+        }
+        static
+        BOOST_UBLAS_INLINE
+        real_type norm_inf (const_reference t) {
+            return self_type::abs (t);
+        }
+
+        static
+        BOOST_UBLAS_INLINE
+        bool equals (const_reference t1, const_reference t2) {
+            // Check, that the values match at least half.
+            static real_type sqrt_epsilon (type_traits<real_type>::sqrt (std::numeric_limits<real_type>::epsilon ()));
+            return self_type::norm_inf (t1 - t2) < sqrt_epsilon *
+                   std::max (std::max (self_type::norm_inf (t1),
+                                       self_type::norm_inf (t2)),
+                             std::numeric_limits<real_type>::min ());
+        }
     };
 #ifdef BOOST_UBLAS_USE_LONG_DOUBLE
     template<>
     struct type_traits<long double> {
+        typedef type_traits<long double> self_type;
         typedef long double value_type;
         typedef long double const_reference;
+        typedef long double &reference;
         typedef long double real_type;
         typedef long double precision_type;
 
@@ -161,23 +254,23 @@ namespace boost { namespace numeric { namespace ublas {
 
         static
         BOOST_UBLAS_INLINE
-        real_type real (const value_type &t) {
+        real_type real (const_reference t) {
                 return t;
         }
         static
         BOOST_UBLAS_INLINE
-        real_type imag (const value_type &t) {
+        real_type imag (const_reference t) {
                 return 0;
         }
         static
         BOOST_UBLAS_INLINE
-        value_type conj (const value_type &t) {
+        value_type conj (const_reference t) {
                 return t;
         }
 
         static
         BOOST_UBLAS_INLINE
-        real_type abs (const value_type &t) {
+        real_type abs (const_reference t) {
 #ifdef BOOST_UBLAS_C_MATH
             return ::fabsl (t);
 #else
@@ -186,20 +279,49 @@ namespace boost { namespace numeric { namespace ublas {
         }
         static
         BOOST_UBLAS_INLINE
-        value_type sqrt (const value_type &t) {
+        value_type sqrt (const_reference t) {
 #ifdef BOOST_UBLAS_C_MATH
             return ::sqrtl (t);
 #else
             return std::sqrt (t);
 #endif
         }
+
+        static
+        BOOST_UBLAS_INLINE
+        real_type norm_1 (const_reference t) {
+            return self_type::abs (t);
+        }
+        static
+        BOOST_UBLAS_INLINE
+        real_type norm_2 (const_reference t) {
+            return self_type::abs (t);
+        }
+        static
+        BOOST_UBLAS_INLINE
+        real_type norm_inf (const_reference t) {
+            return self_type::abs (t);
+        }
+
+        static
+        BOOST_UBLAS_INLINE
+        bool equals (const_reference t1, const_reference t2) {
+            // Check, that the values match at least half.
+            static real_type sqrt_epsilon (type_traits<real_type>::sqrt (std::numeric_limits<real_type>::epsilon ()));
+            return self_type::norm_inf (t1 - t2) < sqrt_epsilon *
+                   std::max (std::max (self_type::norm_inf (t1),
+                                       self_type::norm_inf (t2)),
+                             std::numeric_limits<real_type>::min ());
+        }
     };
 #endif
 
     template<>
     struct type_traits<std::complex<float> > {
+        typedef type_traits<std::complex<float> > self_type;
         typedef std::complex<float> value_type;
         typedef const std::complex<float> &const_reference;
+        typedef std::complex<float> &reference;
         typedef float real_type;
         typedef std::complex<double> precision_type;
 
@@ -208,38 +330,71 @@ namespace boost { namespace numeric { namespace ublas {
 
         static
         BOOST_UBLAS_INLINE
-        real_type real (const value_type &t) {
+        real_type real (const_reference t) {
                 // return t.real ();
                 return std::real (t);
         }
         static
         BOOST_UBLAS_INLINE
-        real_type imag (const value_type &t) {
+        real_type imag (const_reference t) {
                 // return t.imag ();
                 return std::imag (t);
         }
         static
         BOOST_UBLAS_INLINE
-        value_type conj (const value_type &t) {
+        value_type conj (const_reference t) {
                 // return t.conj ();
                 return std::conj (t);
         }
 
         static
         BOOST_UBLAS_INLINE
-        real_type abs (const value_type &t) {
+        real_type abs (const_reference t) {
                 return std::abs (t);
         }
         static
         BOOST_UBLAS_INLINE
-        value_type sqrt (const value_type &t) {
+        value_type sqrt (const_reference t) {
                 return std::sqrt (t);
+        }
+
+        static
+        BOOST_UBLAS_INLINE
+        real_type norm_1 (const_reference t) {
+            // Oops, should have known that!
+            return type_traits<real_type>::abs (self_type::real (t)) + 
+                   type_traits<real_type>::abs (self_type::imag (t));
+        }
+        static
+        BOOST_UBLAS_INLINE
+        real_type norm_2 (const_reference t) {
+            return self_type::abs (t);
+        }
+        static
+        BOOST_UBLAS_INLINE
+        real_type norm_inf (const_reference t) {
+            // Oops, should have known that!
+            return std::max (type_traits<real_type>::abs (self_type::real (t)), 
+                             type_traits<real_type>::abs (self_type::imag (t)));
+        }
+
+        static
+        BOOST_UBLAS_INLINE
+        bool equals (const_reference t1, const_reference t2) {
+            // Check, that the values match at least half.
+            static real_type sqrt_epsilon (type_traits<real_type>::sqrt (std::numeric_limits<real_type>::epsilon ()));
+            return self_type::norm_inf (t1 - t2) < sqrt_epsilon *
+                   std::max (std::max (self_type::norm_inf (t1),
+                                       self_type::norm_inf (t2)),
+                             std::numeric_limits<real_type>::min ());
         }
     };
     template<>
     struct type_traits<std::complex<double> > {
+        typedef type_traits<std::complex<double> > self_type;
         typedef std::complex<double> value_type;
         typedef const std::complex<double> &const_reference;
+        typedef std::complex<double> &reference;
         typedef double real_type;
 #ifndef BOOST_UBLAS_USE_LONG_DOUBLE
         typedef std::complex<double> precision_type;
@@ -252,39 +407,72 @@ namespace boost { namespace numeric { namespace ublas {
 
         static
         BOOST_UBLAS_INLINE
-        real_type real (const value_type &t) {
+        real_type real (const_reference t) {
                 // return t.real ();
                 return std::real (t);
         }
         static
         BOOST_UBLAS_INLINE
-        real_type imag (const value_type &t) {
+        real_type imag (const_reference t) {
                 // return t.imag ();
                 return std::imag (t);
         }
         static
         BOOST_UBLAS_INLINE
-        value_type conj (const value_type &t) {
+        value_type conj (const_reference t) {
                 // return t.conj ();
                 return std::conj (t);
         }
 
         static
         BOOST_UBLAS_INLINE
-        real_type abs (const value_type &t) {
+        real_type abs (const_reference t) {
                 return std::abs (t);
         }
         static
         BOOST_UBLAS_INLINE
-        value_type sqrt (const value_type &t) {
+        value_type sqrt (const_reference t) {
                 return std::sqrt (t);
+        }
+
+        static
+        BOOST_UBLAS_INLINE
+        real_type norm_1 (const_reference t) {
+            // Oops, should have known that!
+            return type_traits<real_type>::abs (self_type::real (t)) + 
+                   type_traits<real_type>::abs (self_type::imag (t));
+        }
+        static
+        BOOST_UBLAS_INLINE
+        real_type norm_2 (const_reference t) {
+            return self_type::abs (t);
+        }
+        static
+        BOOST_UBLAS_INLINE
+        real_type norm_inf (const_reference t) {
+            // Oops, should have known that!
+            return std::max (type_traits<real_type>::abs (self_type::real (t)), 
+                             type_traits<real_type>::abs (self_type::imag (t)));
+        }
+
+        static
+        BOOST_UBLAS_INLINE
+        bool equals (const_reference t1, const_reference t2) {
+            // Check, that the values match at least half.
+            static real_type sqrt_epsilon (type_traits<real_type>::sqrt (std::numeric_limits<real_type>::epsilon ()));
+            return self_type::norm_inf (t1 - t2) < sqrt_epsilon *
+                   std::max (std::max (self_type::norm_inf (t1),
+                                       self_type::norm_inf (t2)),
+                             std::numeric_limits<real_type>::min ());
         }
     };
 #ifdef BOOST_UBLAS_USE_LONG_DOUBLE
     template<>
     struct type_traits<std::complex<long double> > {
+        typedef type_traits<std::complex<long double> > self_type;
         typedef std::complex<long double> value_type;
         typedef const std::complex<long double> &const_reference;
+        typedef std::complex<long double> &reference;
         typedef long double real_type;
         typedef std::complex<long double> precision_type;
 
@@ -293,32 +481,63 @@ namespace boost { namespace numeric { namespace ublas {
 
         static
         BOOST_UBLAS_INLINE
-        real_type real (const value_type &t) {
+        real_type real (const_reference t) {
                 // return t.real ();
                 return std::real (t);
         }
         static
         BOOST_UBLAS_INLINE
-        real_type imag (const value_type &t) {
+        real_type imag (const_reference t) {
                 // return t.imag ();
                 return std::imag (t);
         }
         static
         BOOST_UBLAS_INLINE
-        value_type conj (const value_type &t) {
+        value_type conj (const_reference t) {
                 // return t.conj ();
                 return std::conj (t);
         }
 
         static
         BOOST_UBLAS_INLINE
-        real_type abs (const value_type &t) {
+        real_type abs (const_reference t) {
                 return std::abs (t);
         }
         static
         BOOST_UBLAS_INLINE
-        value_type sqrt (const value_type &t) {
+        value_type sqrt (const_reference t) {
                 return std::sqrt (t);
+        }
+
+        static
+        BOOST_UBLAS_INLINE
+        real_type norm_1 (const_reference t) {
+            // Oops, should have known that!
+            return type_traits<real_type>::abs (self_type::real (t)) + 
+                   type_traits<real_type>::abs (self_type::imag (t));
+        }
+        static
+        BOOST_UBLAS_INLINE
+        real_type norm_2 (const_reference t) {
+            return self_type::abs (t);
+        }
+        static
+        BOOST_UBLAS_INLINE
+        real_type norm_inf (const_reference t) {
+            // Oops, should have known that!
+            return std::max (type_traits<real_type>::abs (self_type::real (t)), 
+                             type_traits<real_type>::abs (self_type::imag (t)));
+        }
+
+        static
+        BOOST_UBLAS_INLINE
+        bool equals (const_reference t1, const_reference t2) {
+            // Check, that the values match at least half.
+            static real_type sqrt_epsilon (type_traits<real_type>::sqrt (std::numeric_limits<real_type>::epsilon ()));
+            return self_type::norm_inf (t1 - t2) < sqrt_epsilon *
+                   std::max (std::max (self_type::norm_inf (t1),
+                                       self_type::norm_inf (t2)),
+                             std::numeric_limits<real_type>::min ());
         }
     };
 #endif

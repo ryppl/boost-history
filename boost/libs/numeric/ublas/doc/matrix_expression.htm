@@ -9,7 +9,7 @@ content="text/html; charset=iso-8859-1">
 
 <body bgcolor="#FFFFFF">
 
-<h1>Matrix Expressions</h1>
+<h1><img src="c++boost.gif" alt="c++boost.gif" align="center">Matrix Expressions</h1>
 
 <h2><a name="matrix_expression"></a>Matrix Expression</h2>
 
@@ -718,7 +718,7 @@ matrix_expression&lt;matrix_unary2&lt;E, F&gt; &gt; </code>resp.</p>
 
             // Comparison
             bool operator == (const const_iterator1 &amp;it) const;
-            bool operator < (const const_iterator1 &amp;it) const;
+            bool operator &lt;(const const_iterator1 &amp;it) const;
         };
 
         const_iterator1 begin1 () const;
@@ -764,7 +764,7 @@ matrix_expression&lt;matrix_unary2&lt;E, F&gt; &gt; </code>resp.</p>
 
             // Comparison
             bool operator == (const const_iterator2 &amp;it) const;
-            bool operator < (const const_iterator2 &amp;it) const;
+            bool operator &lt;(const const_iterator2 &amp;it) const;
         };
 
         const_iterator2 begin2 () const;
@@ -866,7 +866,7 @@ matrix_expression&lt;matrix_unary2&lt;E, F&gt; &gt; </code>resp.</p>
 
             // Comparison
             bool operator == (const const_iterator1 &amp;it) const;
-            bool operator < (const const_iterator1 &amp;it) const;
+            bool operator &lt;(const const_iterator1 &amp;it) const;
         };
 
         const_iterator1 begin1 () const;
@@ -912,7 +912,7 @@ matrix_expression&lt;matrix_unary2&lt;E, F&gt; &gt; </code>resp.</p>
 
             // Comparison
             bool operator == (const const_iterator2 &amp;it) const;
-            bool operator < (const const_iterator2 &amp;it) const;
+            bool operator &lt;(const const_iterator2 &amp;it) const;
         };
 
         const_iterator2 begin2 () const;
@@ -1205,7 +1205,9 @@ href="expression.htm#matrix_expression">Matrix Expression</a>. </p>
 
             // Construction and destruction
             const_iterator1 ();
-            const_iterator1 (const matrix_binary &amp;mb, size_type i, size_type j, const const_iterator11_type &amp;it1, const const_iterator21_type &amp;it2);
+            const_iterator1 (const matrix_binary &amp;mb, size_type i, size_type j,
+                             const const_iterator11_type &amp;it1, const const_iterator11_type &amp;it1_end,
+                             const const_iterator21_type &amp;it2, const const_iterator21_type &amp;it2_end);
 
             // Dense specializations
             void increment (dense_random_access_iterator_tag);
@@ -1246,7 +1248,7 @@ href="expression.htm#matrix_expression">Matrix Expression</a>. </p>
 
             // Comparison
             bool operator == (const const_iterator1 &amp;it) const;
-            bool operator < (const const_iterator1 &amp;it) const;
+            bool operator &lt;(const const_iterator1 &amp;it) const;
         };
 
         const_iterator1 begin1 () const;
@@ -1267,7 +1269,9 @@ href="expression.htm#matrix_expression">Matrix Expression</a>. </p>
 
             // Construction and destruction
             const_iterator2 ();
-            const_iterator2 (const matrix_binary &amp;mb, size_type i, size_type j, const const_iterator12_type &amp;it1, const const_iterator22_type &amp;it2);
+            const_iterator2 (const matrix_binary &amp;mb, size_type i, size_type j,
+                             const const_iterator12_type &amp;it1, const const_iterator12_type &amp;it1_end,
+                             const const_iterator22_type &amp;it2, const const_iterator22_type &amp;it2_end);
 
             // Dense specializations
             void increment (dense_random_access_iterator_tag);
@@ -1308,7 +1312,7 @@ href="expression.htm#matrix_expression">Matrix Expression</a>. </p>
 
             // Comparison
             bool operator == (const const_iterator2 &amp;it) const;
-            bool operator < (const const_iterator2 &amp;it) const;
+            bool operator &lt;(const const_iterator2 &amp;it) const;
         };
 
         const_iterator2 begin2 () const;
@@ -1611,7 +1615,7 @@ matrix_expression&lt;matrix_binary_scalar2&lt;E1, E2, F&gt; &gt; </code>resp.</p
 
             // Comparison
             bool operator == (const const_iterator1 &amp;it) const;
-            bool operator < (const const_iterator1 &amp;it) const;
+            bool operator &lt;(const const_iterator1 &amp;it) const;
         };
 
         const_iterator1 begin1 () const;
@@ -1657,7 +1661,7 @@ matrix_expression&lt;matrix_binary_scalar2&lt;E1, E2, F&gt; &gt; </code>resp.</p
 
             // Comparison
             bool operator == (const const_iterator2 &amp;it) const;
-            bool operator < (const const_iterator2 &amp;it) const;
+            bool operator &lt;(const const_iterator2 &amp;it) const;
         };
 
         const_iterator2 begin2 () const;
@@ -1762,7 +1766,7 @@ matrix_expression&lt;matrix_binary_scalar2&lt;E1, E2, F&gt; &gt; </code>resp.</p
 
             // Comparison
             bool operator == (const const_iterator1 &amp;it) const;
-            bool operator < (const const_iterator1 &amp;it) const;
+            bool operator &lt;(const const_iterator1 &amp;it) const;
         };
 
         const_iterator1 begin1 () const;
@@ -1808,7 +1812,7 @@ matrix_expression&lt;matrix_binary_scalar2&lt;E1, E2, F&gt; &gt; </code>resp.</p
 
             // Comparison
             bool operator == (const const_iterator2 &amp;it) const;
-            bool operator < (const const_iterator2 &amp;it) const;
+            bool operator &lt;(const const_iterator2 &amp;it) const;
         };
 
         const_iterator2 begin2 () const;
@@ -2142,7 +2146,7 @@ E2, F&gt; &gt;</code> resp.</p>
 
             // Comparison
             bool operator == (const const_iterator &amp;it) const;
-            bool operator < (const const_iterator &amp;it) const;
+            bool operator &lt;(const const_iterator &amp;it) const;
         };
 
         const_iterator begin () const;
@@ -2238,7 +2242,7 @@ E2, F&gt; &gt;</code> resp.</p>
 
             // Comparison
             bool operator == (const const_iterator &amp;it) const;
-            bool operator < (const const_iterator &amp;it) const;
+            bool operator &lt;(const const_iterator &amp;it) const;
         };
 
         const_iterator begin () const;
@@ -2719,7 +2723,7 @@ F&gt; &gt;</code>.</p>
 
             // Comparison
             bool operator == (const const_iterator1 &amp;it) const;
-            bool operator < (const const_iterator1 &amp;it) const;
+            bool operator &lt;(const const_iterator1 &amp;it) const;
         };
 
         const_iterator1 begin1 () const;
@@ -2775,7 +2779,7 @@ F&gt; &gt;</code>.</p>
 
             // Comparison
             bool operator == (const const_iterator2 &amp;it) const;
-            bool operator < (const const_iterator2 &amp;it) const;
+            bool operator &lt;(const const_iterator2 &amp;it) const;
         };
 
         const_iterator2 begin2 () const;
@@ -2952,5 +2956,16 @@ product of the matrix expressions.</p>
 
     std::cout &lt;&lt; solve (m1, m2, lower_tag ()) &lt;&lt; std::endl;
 }</pre>
+
+<hr>
+
+<p>Copyright (©) 2000-2002 Joerg Walter, Mathias Koch <br> 
+Permission to copy, use, modify, sell and distribute this document is granted 
+provided this copyright notice appears in all copies. This document is provided 
+``as is'' without express or implied warranty, and with no claim as to its suitability 
+for any purpose.</p>
+
+<p>Last revised: 8/3/2002</p>
+
 </body>
 </html>

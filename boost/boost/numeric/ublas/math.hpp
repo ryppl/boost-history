@@ -17,6 +17,8 @@
 #ifndef BOOST_UBLAS_MATH_H
 #define BOOST_UBLAS_MATH_H
 
+#ifdef BOOST_UBLAS_DEPRECATED
+
 #include <algorithm>
 
 #include <boost/numeric/ublas/config.hpp>
@@ -60,26 +62,32 @@ namespace boost { namespace numeric { namespace ublas {
         template<class T>
         BOOST_UBLAS_INLINE
         typename type_traits<T>::real_type norm_1 (const T &t) {
-            // Oops, should have known that!
-            return abs (real (t)) + abs (imag (t));
+            return type_traits<T>::norm_1 (t);
         }
 
         template<class T>
         BOOST_UBLAS_INLINE
         typename type_traits<T>::real_type norm_2 (const T &t) {
-            return abs (t);
+            return type_traits<T>::norm_2 (t);
         }
 
         template<class T>
         BOOST_UBLAS_INLINE
         typename type_traits<T>::real_type norm_inf (const T &t) {
-            // Oops, should have known that!
-            return std::max (abs (real (t)), abs (imag (t)));
+            return type_traits<T>::norm_inf (t);
+        }
+
+        template<class T>
+        BOOST_UBLAS_INLINE
+        bool equals (const T &t1, const T &t2) {
+            return type_traits<T>::equals (t1, t2);
         }
 
     }
 
 }}}
+
+#endif
 
 #endif
 

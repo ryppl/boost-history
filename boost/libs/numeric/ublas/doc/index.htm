@@ -4,745 +4,50 @@
 <meta http-equiv="Content-Type"
 content="text/html; charset=iso-8859-1">
 <meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
-<title>Basic Linear Algebra Classes With Expression Templates</title>
+<title>Boost Basic Linear Algebra</title>
 </head>
 
 <body bgcolor="#FFFFFF">
 
-<h1>Basic Linear Algebra C++ Classes With Expression Templates </h1>
+<h1><img src="c++boost.gif" alt="c++boost.gif" align="center"> 
+Basic Linear Algebra</h1>
 
-<p>by Joerg Walter and Mathias Koch</p>
+<p>uBLAS is a C++ template class library that provides <a
+href="http://www.netlib.org/blas">BLAS</a> level 1, 2, 3
+functionality for dense, packed and sparse matrices. The design
+and implementation unify mathematical notation via operator
+overloading and efficient code generation via expression
+templates. </p>
 
-<h2>Rationale</h2>
+<h2>Functionality</h2>
 
-<p><cite>It would be nice if every kind of numeric software could
-be written in C++ without loss of efficiency, but unless
-something can be found that achieves this without compromising
-the C++ type system it may be preferable to rely on Fortran,
-assembler or architecture-specific extensions (Bjarne
-Stroustrup).</cite></p>
+<p>uBLAS provides templated C++ classes for dense, unit and
+sparse vectors, dense, identity, triangular, banded, symmetric,
+hermitian and sparse matrices. Views into vectors and matrices
+can be constructed via ranges or slices and adaptor classes. The
+library covers the usual basic linear algebra operations on
+vectors and matrices: reductions like different norms, addition
+and subtraction of vectors and matrices and multiplication with a
+scalar, inner and outer products of vectors, matrix vector and
+matrix matrix products and triangular solver. The glue between
+containers, views and expression templated operations is a mostly
+<a href="http://www.sgi.com/tech/stl">STL</a> conforming iterator
+interface.</p>
 
-<p>This C++ library is directed towards scientific computing on
-the level of basic linear algebra constructions with matrices and
-vectors and their corresponding abstract operations. The primary
-design goals were:</p>
+<p>Dense, packed and sparse matrix classes are tested with the <a
+href="http://www.netlib.org/clapack">CLAPACK</a> test suite.</p>
 
-<ul type="disc">
-    <li>mathematical notation</li>
-    <li>efficiency</li>
-    <li>functionality</li>
-    <li>compatibility</li>
-</ul>
-
-<p>Another intention was to evaluate, if the abstraction penalty
-resulting from the use of such matrix and vector classes is
-acceptable.</p>
-
-<h2>Resources</h2>
-
-<p>The development of this library was guided by a couple of
-similar efforts. Here we mention the following:</p>
+<p>Known limitations:</p>
 
 <ul type="disc">
-    <li><a href="http://www.netlib.org/blas/index.html">BLAS</a>
-        by Jack Dongarra et al.</li>
-    <li><a href="http://www.oonumerics.org/blitz/">Blitz++</a> by
-        Todd Veldhuizen</li>
-    <li><a href="http://www.acl.lanl.gov/pooma/">POOMA</a> by
-        Scott Haney et al.</li>
-    <li><a href="http://www.lsc.nd.edu/research/mtl/">MTL</a> by
-        Jeremy Siek et al.</li>
+    <li>The implementation assumes a linear memory address model.</li>
+    <li>Tuning was focussed on dense matrices.</li>
 </ul>
 
-<p>BLAS seems to be the most widely used library for basic linear
-algebra constructions, so it could be called a de-facto standard.
-Its interface is procedural, the individual functions are
-somewhat abstracted from simple linear algebra operations. Due to
-the fact that is has been implemented using Fortran and its
-optimizations, it also seems to be one of the fastest libraries
-available. As we decided to design and implement our library in
-an object-oriented way, the technical approaches are distinct.
-However anyone should be able to express BLAS abstractions in
-terms of our library operators and to compare the efficiency of
-the implementations.</p>
-
-<p>Blitz++ is an impressive library implemented in C++. Its main
-design seems to be oriented towards multidimensional arrays and
-their associated operators including tensors. The author of
-Blitz++ states, that the library achieves performance on par or
-better than corresponding Fortran code due to his implementation
-technique using expression templates and template metaprograms.
-However we see some reasons, to develop an own design and
-implementation approach. We do not know whether anybody tries to
-implement traditional linear algebra and other numerical
-algorithms using Blitz++. We also presume that even today Blitz++
-needs the most advanced C++ compiler technology due to its
-implementation idioms. On the other hand, Blitz++ convinced us,
-that the use of expression templates is mandatory to reduce the
-abstraction penalty to an acceptable limit.</p>
-
-<p>POOMA's design goals seem to parallel Blitz++'s in many parts
-. It extends Blitz++'s concepts with classes from the domains of
-partial differential equations and theoretical physics. The
-implementation supports even parallel architectures.</p>
-
-<p>MTL is another approach supporting basic linear algebra
-operations in C++. Its design mainly seems to be influenced by
-BLAS and the C++ Standard Template Library. We share the insight
-that a linear algebra library has to provide functionality
-comparable to BLAS. On the other hand we think, that the concepts
-of the C++ standard library have not yet been proven to support
-numerical computations as needed. As another difference MTL
-currently does not seem to use expression templates. This may
-result in one of two consequences: a possible loss of
-expressiveness or a possible loss of performance.</p>
-
-<h2>Concepts</h2>
-
-<h3>Mathematical Notation</h3>
-
-<p>The usage of mathematical notation may ease the development of
-scientific algorithms. So a C++ library implementing basic linear
-algebra concepts carefully should overload selected C++ operators
-on matrix and vector classes.</p>
-
-<p>We decided to use operator overloading for the following
-primitives:</p>
-
-<table border="1">
-    <tr>
-        <th align="left">Description</th>
-        <th align="left">Operator</th>
-    </tr>
-    <tr>
-        <td>Indexing of vectors and matrices</td>
-        <td><code>vector::operator(size_t i)<br>
-        matrix::operator(size_t i, size_t j)</code></td>
-    </tr>
-    <tr>
-        <td>Assignment of vectors and matrices</td>
-        <td><code>vector::operator = (const vector_expression
-        &amp;)<br>
-        vector::operator += (const vector_expression &amp;)<br>
-        vector::operator -= (const vector_expression &amp;)<br>
-        vector::operator *= (const scalar_expression &amp;)<br>
-        matrix::operator = (const matrix_expression &amp;)<br>
-        matrix::operator += (const matrix_expression &amp;)<br>
-        matrix::operator -= (const matrix_expression &amp;)<br>
-        matrix::operator *= (const scalar_expression &amp;)</code></td>
-    </tr>
-    <tr>
-        <td>Unary operations on vectors and matrices</td>
-        <td><code>vector_expression operator - (const
-        vector_expression &amp;)<br>
-        matrix_expression operator - (const matrix_expression
-        &amp;)</code></td>
-    </tr>
-    <tr>
-        <td>Binary operations on vectors and matrices</td>
-        <td><code>vector_expression operator + (const
-        vector_expression &amp;, const vector_expression &amp;)<br>
-        vector_expression operator - (const vector_expression
-        &amp;, const vector_expression &amp;)<br>
-        matrix_expression operator + (const matrix_expression
-        &amp;, const matrix_expression &amp;)<br>
-        matrix_expression operator - (const matrix_expression
-        &amp;, const matrix_expression &amp;)</code></td>
-    </tr>
-    <tr>
-        <td>Multiplication of vectors and matrices with a scalar</td>
-        <td><code>vector_expression operator * (const
-        scalar_expression &amp;, const vector_expression &amp;)<br>
-        vector_expression operator * (const vector_expression
-        &amp;, const scalar_expression &amp;)<br>
-        matrix_expression operator * (const scalar_expression
-        &amp;, const matrix_expression &amp;)<br>
-        matrix_expression operator * (const matrix_expression
-        &amp;, const scalar_expression &amp;)</code></td>
-    </tr>
-</table>
-
-<p>We decided to use no operator overloading for the following
-other primitives:</p>
-
-<table border="1">
-    <tr>
-        <th align="left">Description</th>
-        <th align="left">Function</th>
-    </tr>
-    <tr>
-        <td>Left multiplication of vectors with a matrix</td>
-        <td><code>vector_expression prod (const matrix_expression
-        &amp;, const vector_expression &amp;)</code></td>
-    </tr>
-    <tr>
-        <td>Multiplication of matrices</td>
-        <td><code>matrix_expression prod (const matrix_expression
-        &amp;, const matrix_expression &amp;)</code></td>
-    </tr>
-    <tr>
-        <td>Inner product of vectors</td>
-        <td><code>scalar_expression inner_prod (const
-        vector_expression &amp;, const vector_expression &amp;)</code></td>
-    </tr>
-    <tr>
-        <td>Outer product of vectors</td>
-        <td><code>matrix_expression outer_prod (const
-        vector_expression &amp;, const vector_expression &amp;)</code></td>
-    </tr>
-    <tr>
-        <td>Transpose of a matrix</td>
-        <td><code>matrix_expression trans (const
-        matrix_expression &amp;)</code></td>
-    </tr>
-</table>
-
-<h3>Efficiency</h3>
-
-<p>To achieve the goal of efficiency for numerical computing, one
-has to overcome two difficulties in formulating abstractions with
-C++, namely temporaries and virtual function calls. Expression
-templates solve these problems, but tend to slow down compilation
-times.</p>
-
-<h4>Eliminating Temporaries</h4>
-
-<p>Abstract formulas on vectors and matrices normally compose a
-couple of unary and binary operations. The conventional way of
-evaluating such a formula is first to evaluate every leaf
-operation of a composition into a temporary and next to evaluate
-the composite resulting in another temporary. This method is very
-expensive in terms of time and space. The approach to solve this
-problem is to use lazy evaluation as known from modern functional
-programming languages. The principle of this approach is to
-evaluate a complex expression element wise and to assign it
-directly to the target.</p>
-
-<p>An interesting and somewhat dangerous fact results. One may
-get serious side effects using element wise evaluation on vectors
-or matrices. Consider the matrix vector product <em>x = A x</em>.
-Evaluation of <em>A</em><sub><em>1</em></sub><em>x</em> and
-assignment to <em>x</em><sub><em>1</em></sub> changes the right
-hand side, so that the evaluation of <em>A</em><sub><em>2</em></sub><em>x
-</em>returns a wrong result. Our solution for this problem is to
-evaluate the right hand side of an assignment into a temporary
-and then to assign this temporary to the left hand side. To allow
-further optimizations, we provide a corresponding member function
-for every assignment operator. By using this member function a
-programmer can confirm, that the left and right hand sides of an
-assignment are independent, so that element wise evaluation and
-direct assignment to the target is safe.</p>
-
-<h4>Eliminating Virtual Function Calls</h4>
-
-<p>Lazy expression evaluation normally leads to the definition of
-a class hierarchy of terms. This results in the usage of dynamic
-polymorphism to access single elements of vectors and matrices,
-which is also known to be too expensive in terms of time. A
-solution was found a couple of years ago independently by David
-Vandervoorde and Todd Veldhuizen and is commonly called
-expression templates. Expression templates contain lazy
-evaluation and replace dynamic polymorphism with static, i.e.
-compile time polymorphism. Expression templates heavily depend on
-the famous Barton-Nackman trick, also coined 'curiously defined
-recursive templates' by Jim Coplien.</p>
-
-<p>Expression templates form the base of our implementation.</p>
-
-<h4>Compilation times</h4>
-
-<p>It is also a well known fact, that expression templates
-challenge currently available compilers. We were able to
-significantly reduce the amount of needed expression templates
-using the Barton-Nackman trick consequently.</p>
-
-<p>Also we decided to support a dual conventional implementation
-of vector and matrix operations to support the development cycle.</p>
-
-<h3>Functionality</h3>
-
-<p>Every C++ library supporting linear algebra will be measured
-against the long-standing Fortran package BLAS. We now describe
-how BLAS calls may be mapped onto our classes. </p>
-
-<h4>Blas Level 1</h4>
-
-<table border="1">
-    <tr>
-        <th align="left">BLAS Call</th>
-        <th align="left">Mapped Library Expression</th>
-        <th align="left">Mathematical Description</th>
-        <th align="left">Comment</th>
-    </tr>
-    <tr>
-        <td><code>_asum</code></td>
-        <td><code>norm_1 (x)</code> </td>
-        <td><em>sum |x</em><sub><em>i</em></sub><em>|</em></td>
-        <td>Computes the sum norm of a vector.</td>
-    </tr>
-    <tr>
-        <td><code>_nrm2</code></td>
-        <td><code>norm_2 (x)</code></td>
-        <td><em>sqrt (sum |x</em><sub><em>i</em></sub>|<sup><em>2</em></sup><em>)</em></td>
-        <td>Computes the euclidean norm of a vector.</td>
-    </tr>
-    <tr>
-        <td><code>i_amax</code></td>
-        <td><code>norm_inf (x)<br>
-        norm_inf_index (x)</code></td>
-        <td><em>max |x</em><sub><em>i</em></sub><em>|</em></td>
-        <td>Computes the maximum norm of a vector.<br>
-        BLAS computes the index of the first element having this
-        value.</td>
-    </tr>
-    <tr>
-        <td><code>_dot<br>
-        _dotu<br>
-        _dotc</code></td>
-        <td><code>inner_prod (x, y)</code>or<code><br>
-        inner_prod (conj (x), y)</code></td>
-        <td><em>x</em><sup><em>T</em></sup><em> y</em> or<br>
-        <em>x</em><sup><em>H</em></sup><em> y</em></td>
-        <td>Computes the inner product of two vectors. <br>
-        BLAS implements certain loop unrollment.</td>
-    </tr>
-    <tr>
-        <td><code>dsdot<br>
-        sdsdot</code></td>
-        <td><code>a + prec_inner_prod (x, y)</code></td>
-        <td><em>a + x</em><sup><em>T</em></sup><em> y</em></td>
-        <td>Computes the inner product in double precision. </td>
-    </tr>
-    <tr>
-        <td><code>_copy</code></td>
-        <td><code>x = y <br>
-        y.assign (x)</code></td>
-        <td><em>x &lt;- y</em></td>
-        <td>Copies one vector to another. <br>
-        BLAS implements certain loop unrollment.</td>
-    </tr>
-    <tr>
-        <td><code>_swap</code></td>
-        <td><code>swap (x, y)</code></td>
-        <td><em>x &lt;-&gt; y</em></td>
-        <td>Swaps two vectors. <br>
-        BLAS implements certain loop unrollment.</td>
-    </tr>
-    <tr>
-        <td><code>_scal<br>
-        csscal<br>
-        zdscal</code></td>
-        <td><code>x *= a</code></td>
-        <td><em>x &lt;- a x</em></td>
-        <td>Scales a vector. <br>
-        BLAS implements certain loop unrollment.</td>
-    </tr>
-    <tr>
-        <td><code>_axpy</code></td>
-        <td><code>y += a * x</code></td>
-        <td><em>y &lt;- a x + y</em></td>
-        <td>Adds a scaled vector. <br>
-        BLAS implements certain loop unrollment.</td>
-    </tr>
-    <tr>
-        <td><code>_rot<br>
-        _rotm<br>
-        csrot<br>
-        zdrot</code></td>
-        <td><code>t.assign (a * x + b * y), <br>
-        y.assign (- b * x + a * y),<br>
-        x.assign (t)</code></td>
-        <td><em>(x, y) &lt;- (a x + b y, -b x + a y)</em></td>
-        <td>Applies a plane rotation.</td>
-    </tr>
-    <tr>
-        <td><code>_rotg<br>
-        _rotmg</code></td>
-        <td>&nbsp;</td>
-        <td><em>(a, b) &lt;- <br>
-        &nbsp; (? a / sqrt (a</em><sup><em>2</em></sup> + <em>b</em><sup><em>2</em></sup><em>),
-        <br>
-        &nbsp; &nbsp; ? b / sqrt (a</em><sup><em>2</em></sup> + <em>b</em><sup><em>2</em></sup><em>))
-        </em>or<em><br>
-        (1, 0) &lt;- (0, 0)</em></td>
-        <td>Constructs a plane rotation.</td>
-    </tr>
-</table>
-
-<h4>Blas Level 2</h4>
-
-<table border="1">
-    <tr>
-        <th align="left">BLAS Call</th>
-        <th align="left">Mapped Library Expression</th>
-        <th align="left">Mathematical Description</th>
-        <th align="left">Comment</th>
-    </tr>
-    <tr>
-        <td><code>_t_mv</code></td>
-        <td><code>x = prod (A, x)</code> or<code><br>
-        x = prod (trans (A), x)</code> or<code><br>
-        x = prod (herm (A), x)</code></td>
-        <td><em>x &lt;- A x </em>or<em><br>
-        x &lt;- A</em><sup><em>T</em></sup><em> x </em>or<em><br>
-        x &lt;- A</em><sup><em>H</em></sup><em> x</em></td>
-        <td>Computes the product of a matrix with a vector.</td>
-    </tr>
-    <tr>
-        <td><code>_t_sv</code></td>
-        <td><code>x = solve (A, x, tag) </code>or<br>
-        <code>x = solve (trans (A), x, tag) </code>or<code><br>
-        x = solve (herm (A), x, tag)</code></td>
-        <td><em>x &lt;- A</em><sup><em>-1</em></sup><em> x </em>or<em><br>
-        x &lt;- A</em><sup><em>T</em></sup><sup><sup><em>-1</em></sup></sup><em>
-        x </em>or<em><br>
-        x &lt;- A</em><sup><em>H</em></sup><sup><sup><em>-1</em></sup></sup><em>
-        x</em></td>
-        <td>Solves a linear equation for a triangular matrix.</td>
-    </tr>
-    <tr>
-        <td><code>_g_mv<br>
-        _s_mv<br>
-        _h_mv</code></td>
-        <td><code>y = a * prod (A, x) + b * y </code>or<code><br>
-        y = a * prod (trans (A), x) + b * y </code>or<code><br>
-        y = a * prod (herm (A), x) + b * y</code></td>
-        <td><em>y &lt;- A x + b y </em>or<em><br>
-        y &lt;- A</em><sup><em>T</em></sup><em> x + b y<br>
-        y &lt;- A</em><sup><em>H</em></sup><em> x + b y</em></td>
-        <td>Adds the scaled product of a matrix with a vector.</td>
-    </tr>
-    <tr>
-        <td><code>_g_r<br>
-        _g_ru<br>
-        _g_rc</code></td>
-        <td><code>A += a * outer_prod (x, y)</code> or<code><br>
-        A += a * outer_prod (x, conj (y))</code></td>
-        <td><em>A &lt;- a x y</em><sup><em>T</em></sup><em> + A </em>or<em><br>
-        A &lt;- a x y</em><sup><em>H</em></sup><em> + A</em></td>
-        <td>Performs a rank <em>1</em> update.</td>
-    </tr>
-    <tr>
-        <td><code>_s_r<br>
-        _h_r</code></td>
-        <td><code>A += a * outer_prod (x, x)</code> or<code><br>
-        A += a * outer_prod (x, conj (x))</code></td>
-        <td><em>A &lt;- a x x</em><sup><em>T</em></sup><em> + A</em>
-        or<em><br>
-        A &lt;- a x x</em><sup><em>H</em></sup><em> + A</em></td>
-        <td>Performs a symmetric or hermitian rank <em>1</em>
-        update.</td>
-    </tr>
-    <tr>
-        <td><code>_s_r2<br>
-        _h_r2</code></td>
-        <td><code>A += a * outer_prod (x, y) +<br>
-        &nbsp;a * outer_prod (y, x)) </code>or<code><br>
-        A += a * outer_prod (x, conj (y)) +<br>
-        &nbsp;conj (a) * outer_prod (y, conj (x)))</code></td>
-        <td><em>A &lt;- a x y</em><sup><em>T</em></sup><em> + a y
-        x</em><sup><em>T</em></sup><em> + A</em> or<em><br>
-        A &lt;- a x y</em><sup><em>H</em></sup><em> + a</em><sup><em>-</em></sup><em>
-        y x</em><sup><em>H</em></sup><em> + A</em> </td>
-        <td>Performs a symmetric or hermitian rank <em>2</em>
-        update.</td>
-    </tr>
-</table>
-
-<h4>Blas Level 3</h4>
-
-<table border="1">
-    <tr>
-        <th align="left">BLAS Call</th>
-        <th align="left">Mapped Library Expression</th>
-        <th align="left">Mathematical Description</th>
-        <th align="left">Comment</th>
-    </tr>
-    <tr>
-        <td><code>_t_mm</code></td>
-        <td><code>B = a * prod (A, B) </code>or<br>
-        <code>B = a * prod (trans (A), B) </code>or<br>
-        <code>B = a * prod (A, trans (B)) </code>or<br>
-        <code>B = a * prod (trans (A), trans (B)) </code>or<br>
-        <code>B = a * prod (herm (A), B) </code>or<br>
-        <code>B = a * prod (A, herm (B)) </code>or<br>
-        <code>B = a * prod (herm (A), trans (B)) </code>or<br>
-        <code>B = a * prod (trans (A), herm (B)) </code>or<br>
-        <code>B = a * prod (herm (A), herm (B))</code></td>
-        <td><em>B &lt;- a op (A) op (B) </em>with<br>
-        &nbsp; <em>op (X) = X </em>or<br>
-        &nbsp; <em>op (X) = X</em><sup><em>T</em></sup><em> </em>or<br>
-        &nbsp; <em>op (X) = X</em><sup><em>H</em></sup></td>
-        <td>Computes the scaled product of two matrices.</td>
-    </tr>
-    <tr>
-        <td><code>_t_sm</code></td>
-        <td><code>B = solve (A, B, tag) </code>or<br>
-        <code>B = solve (trans (A), B, tag) </code>or<code><br>
-        B = solve (herm (A), B, tag)</code></td>
-        <td><em>B &lt;- A</em><sup><em>-1</em></sup><em> B </em>or<em><br>
-        B &lt;- A</em><sup><em>T</em></sup><sup><sup><em>-1</em></sup></sup><em>
-        B </em>or<em><br>
-        B &lt;- A</em><sup><em>H</em></sup><sup><sup><em>-1</em></sup></sup><em>
-        B</em></td>
-        <td>Solves a linear equation for a triangular matrix.</td>
-    </tr>
-    <tr>
-        <td><code>_g_mm<br>
-        _s_mm<br>
-        _h_mm</code></td>
-        <td><code>C = a * prod (A, B) + b * C </code>or<br>
-        <code>C = a * prod (trans (A), B) + b * C </code>or<br>
-        <code>C = a * prod (A, trans (B)) + b * C </code>or<br>
-        <code>C = a * prod (trans (A), trans (B)) + b * C </code>or<br>
-        <code>C = a * prod (herm (A), B) + b * C </code>or<br>
-        <code>C = a * prod (A, herm (B)) + b * C </code>or<br>
-        <code>C = a * prod (herm (A), trans (B)) + b * C </code>or<br>
-        <code>C = a * prod (trans (A), herm (B)) + b * C </code>or<br>
-        <code>C = a * prod (herm (A), herm (B)) + b * C</code></td>
-        <td><em>C &lt;- a op (A) op (B) + b C </em>with<br>
-        &nbsp; <em>op (X) = X </em>or<br>
-        &nbsp; <em>op (X) = X</em><sup><em>T</em></sup><em> </em>or<br>
-        &nbsp; <em>op (X) = X</em><sup><em>H</em></sup></td>
-        <td>Adds the scaled product of two matrices.</td>
-    </tr>
-    <tr>
-        <td><code>_s_rk<br>
-        _h_rk</code></td>
-        <td><code>B = a * prod (A, trans (A)) + b * B </code>or<br>
-        <code>B = a * prod (trans (A), A) + b * B </code>or<br>
-        <code>B = a * prod (A, herm (A)) + b * B </code>or<br>
-        <code>B = a * prod (herm (A), A) + b * B</code></td>
-        <td><em>B &lt;- a A A</em><sup><em>T</em></sup><em> + b B
-        </em>or<em><br>
-        B &lt;- a A</em><sup><em>T</em></sup><em> A + b B </em>or<br>
-        <em>B &lt;- a A A</em><sup><em>H</em></sup><em> + b B </em>or<em><br>
-        B &lt;- a A</em><sup><em>H</em></sup><em> A + b B </em></td>
-        <td>Performs a symmetric or hermitian rank <em>k</em>
-        update.</td>
-    </tr>
-    <tr>
-        <td><code>_s_r2k<br>
-        _h_r2k</code></td>
-        <td><code>C = a * prod (A, trans (B)) +<br>
-        &nbsp;a * prod (B, trans (A)) + b * C </code>or<br>
-        <code>C = a * prod (trans (A), B) +<br>
-        &nbsp;a * prod (trans (B), A) + b * C </code>or<br>
-        <code>C = a * prod (A, herm (B)) +<br>
-        &nbsp;conj (a) * prod (B, herm (A)) + b * C </code>or<br>
-        <code>C = a * prod (herm (A), B) +<br>
-        &nbsp;conj (a) * prod (herm (B), A) + b * C</code></td>
-        <td><em>C &lt;- a A B</em><sup><em>T</em></sup><em> + a B
-        A</em><sup><em>T</em></sup><em> + b C </em>or<em><br>
-        C &lt;- a A</em><sup><em>T</em></sup><em> B + a B</em><sup><em>T</em></sup><em>A
-        + b C </em>or<em><br>
-        C &lt;- a A B</em><sup><em>H</em></sup><em> + a</em><sup><em>-</em></sup><em>
-        B A</em><sup><em>H</em></sup><em> + b C</em> or<em><br>
-        C &lt;- a A</em><sup><em>H</em></sup><em> B + a</em><sup><em>-</em></sup><em>
-        B</em><sup><em>H</em></sup><em> A + b C</em></td>
-        <td>Performs a symmetric or hermitian rank <em>2 k</em>
-        update.</td>
-    </tr>
-</table>
-
-<h4>Storage Layouts</h4>
-
-<p>The library supports conventional dense and basic sparse
-vector and matrix storage layouts. The description of the most
-common constructions of vectors and matrices comes next.</p>
-
-<table border="1">
-    <tr>
-        <th align="left">Construction</th>
-        <th align="left">Comment</th>
-    </tr>
-    <tr>
-        <td><code>vector&lt;T,<br>
-        &nbsp;std::vector&lt;T&gt; &gt; <br>
-        &nbsp;&nbsp;v (size)</code></td>
-        <td>Constructs a dense vector, storage is provided by a
-        standard vector.</td>
-    </tr>
-    <tr>
-        <td><code>vector&lt;T,<br>
-        &nbsp;unbounded_array&lt;T&gt; &gt; <br>
-        &nbsp;&nbsp;v (size)</code></td>
-        <td>Constructs a dense vector, storage is provided by a
-        heap-based array.</td>
-    </tr>
-    <tr>
-        <td><code>vector&lt;T,<br>
-        &nbsp;bounded_array&lt;T, N&gt; &gt; <br>
-        &nbsp;&nbsp;v (size)</code></td>
-        <td>Constructs a dense vector, storage is provided by a
-        stack-based array.</td>
-    </tr>
-    <tr>
-        <td><code>unit_vector&lt;T&gt; <br>
-        &nbsp;&nbsp;v (size, index)</code></td>
-        <td>Constructs the <code>index</code>-th canonical unit
-        vector.</td>
-    </tr>
-    <tr>
-        <td><code>zero_vector&lt;T&gt; <br>
-        &nbsp;&nbsp;v (size)</code></td>
-        <td>Constructs a zero vector.</td>
-    </tr>
-    <tr>
-        <td><code>sparse_vector&lt;T,<br>
-        &nbsp;std::map&lt;std::size_t, T&gt; &gt; <br>
-        &nbsp;&nbsp;v (size, non_zeroes)</code></td>
-        <td>Constructs a sparse vector, storage is provided by a
-        standard map.</td>
-    </tr>
-    <tr>
-        <td><code>sparse_vector&lt;T,<br>
-        &nbsp;map_array&lt;std::size_t, T&gt; &gt; <br>
-        &nbsp;&nbsp;v (size, non_zeroes)</code></td>
-        <td>Constructs a sparse vector, storage is provided by a
-        map array.</td>
-    </tr>
-    <tr>
-        <td><code>vector_range&lt;V&gt; <br>
-        &nbsp;&nbsp;vr (v, range)</code></td>
-        <td>Constructs a sub vector of a dense or sparse vector.</td>
-    </tr>
-    <tr>
-        <td><code>matrix&lt;T,<br>
-        &nbsp;row_major,<br>
-        &nbsp;std::vector&lt;T&gt; &gt; <br>
-        &nbsp;&nbsp;m (size1, size2)</code></td>
-        <td>Constructs a dense matrix, storage is provided by a
-        standard vector, orientation is row major.</td>
-    </tr>
-    <tr>
-        <td><code>matrix&lt;T,<br>
-        &nbsp;column_major,<br>
-        &nbsp;std::vector&lt;T&gt; &gt;<br>
-        &nbsp;&nbsp;m (size1, size2)</code></td>
-        <td>Constructs a dense matrix, storage is provided by a
-        standard vector, orientation is column major.</td>
-    </tr>
-    <tr>
-        <td><code>matrix&lt;T,<br>
-        &nbsp;row_major, <br>
-        &nbsp;unbounded_array&lt;T&gt; &gt;<br>
-        &nbsp;&nbsp;m (size1, size2)</code></td>
-        <td>Constructs a dense matrix, storage is provided by a
-        heap-based array, orientation is row major.</td>
-    </tr>
-    <tr>
-        <td><code>matrix&lt;T,<br>
-        &nbsp;column_major,<br>
-        &nbsp;unbounded_array&lt;T&gt; &gt;<br>
-        &nbsp;&nbsp;m (size1, size2)</code></td>
-        <td>Constructs a dense matrix, storage is provided by a
-        heap-based array, orientation is column major.</td>
-    </tr>
-    <tr>
-        <td><code>matrix&lt;T,<br>
-        &nbsp;row_major,<br>
-        &nbsp;bounded_array&lt;T, N1 * N2&gt; &gt;<br>
-        &nbsp;&nbsp;m (size1, size2)</code></td>
-        <td>Constructs a dense matrix, storage is provided by a
-        stack-based array, orientation is row major.</td>
-    </tr>
-    <tr>
-        <td><code>matrix&lt;T,<br>
-        &nbsp;column_major,<br>
-        &nbsp;bounded_array&lt;T, N1 * N2&gt; &gt;<br>
-        &nbsp;&nbsp;m (size1, size2)</code></td>
-        <td>Constructs a dense matrix, storage is provided by a
-        stack-based array, orientation is column major.</td>
-    </tr>
-    <tr>
-        <td><code>identity_matrix&lt;T&gt;<br>
-        &nbsp;&nbsp;m (size)</code></td>
-        <td>Constructs an identity matrix.</td>
-    </tr>
-    <tr>
-        <td><code>zero_matrix&lt;T&gt;<br>
-        &nbsp;&nbsp;m (size1, size2)</code></td>
-        <td>Constructs a zero matrix.</td>
-    </tr>
-    <tr>
-        <td><code>sparse_matrix&lt;T, <br>
-        &nbsp;row_major,<br>
-        &nbsp;std::map&lt;std::size_t, T&gt; &gt;<br>
-        &nbsp;&nbsp;m (size1, size2, non_zeroes)</code></td>
-        <td>Constructs a sparse matrix, storage is provided by a
-        standard map, orientation is row major.</td>
-    </tr>
-    <tr>
-        <td><code>sparse_matrix&lt;T, <br>
-        &nbsp;column_major,<br>
-        &nbsp;std::map&lt;std::size_t, T&gt; &gt;<br>
-        &nbsp;&nbsp;m (size1, size2, non_zeroes)</code></td>
-        <td>Constructs a sparse matrix, storage is provided by a
-        standard map, orientation is column major.</td>
-    </tr>
-    <tr>
-        <td><code>sparse_matrix&lt;T, <br>
-        &nbsp;row_major,<br>
-        &nbsp;map_array&lt;std::size_t, T&gt; &gt; <br>
-        &nbsp;&nbsp;m (size1, size2, non_zeroes)</code></td>
-        <td>Constructs a sparse matrix, storage is provided by a
-        map array, orientation is row major.</td>
-    </tr>
-    <tr>
-        <td><code>sparse_matrix&lt;T, <br>
-        &nbsp;column_major,<br>
-        &nbsp;map_array&lt;std::size_t, T&gt; &gt; <br>
-        &nbsp;&nbsp;m (size1, size2, non_zeroes)</code></td>
-        <td>Constructs a sparse matrix, storage is provided by a
-        map array, orientation is column major.</td>
-    </tr>
-    <tr>
-        <td><code>matrix_row&lt;M&gt; <br>
-        &nbsp;&nbsp;mr (m, i)</code></td>
-        <td>Constructs a sub vector of a dense or sparse matrix,
-        containing the i-th row.</td>
-    </tr>
-    <tr>
-        <td><code>matrix_column&lt;M&gt; <br>
-        &nbsp;&nbsp;mc (m, j)</code></td>
-        <td>Constructs a sub vector of a dense or sparse matrix,
-        containing the j-th column.</td>
-    </tr>
-    <tr>
-        <td><code>matrix_range&lt;M&gt; <br>
-        &nbsp;&nbsp;mr (m, range1, range2)</code></td>
-        <td>Constructs a sub matrix of a dense or sparse matrix.</td>
-    </tr>
-</table>
-
-<h3>Compatibility</h3>
-
-<p>For compatibility reasons we provide array like indexing for
-vectors and matrices, although this should be more expensive for
-matrices due to the needed temporary proxy objects.</p>
-
-<p>To support the most widely used C++ compilers our design and
-implementation do not essentially depend on partial template
-specialization. So the test and benchmark programs successfully
-compile with MSVC 6.0, BCC 5.5, GCC 2.95.x / 3.0.x and ICC 5.0.1.</p>
-
-<p>The library presumes standard compliant allocation through <code>operator
-new </code>and <code>operator delete</code>. So programs which
-are intended to run under MSVC 6.0 should set a correct new
-handler throwing a <code>std::bad_alloc</code> exception 
-via <code>_set_new_handler</code> to detect out of
-memory conditions.</p>
-
-<p>To get the most performance out of the box with MSVC 6.0, you
-should change the preprocessor definition of <code>BOOST_UBLAS_INLINE
-</code>from <code>inline </code>to <code>__forceinline </code>in
-the header file config.hpp<code>.</code> But we suspect this
-optimization to be fragile.</p>
-
-<h2>Reference</h2>
+<h2>Documentation</h2>
 
 <ul>
+    <li><a href="overview.htm">Overview</a></li>
     <li><a href="expression.htm">Expression Concepts</a><ul
         type="circle">
             <li><a href="expression.htm#scalar_expression">Scalar
@@ -898,473 +203,80 @@ optimization to be fragile.</p>
     </li>
 </ul>
 
-<h2>Benchmark Results</h2>
+<h2>Supported Platforms</h2>
 
-<p>The following tables contain results of our benchmark,
-compiled with MSVC 6.0 and run on an Intel Pentium II with 333
-Mhz. First we comment the results for double vectors and matrices
-of dimension 3 and 3 x 3, respectively.</p>
+<p>The main development platform for uBLAS was MSVC 6.0 with
+Dinkumware STL. Other compilers known to accept the library are</p>
 
-<table border="1">
-    <tr>
-        <th align="left">Operation</th>
-        <th align="left">Implementation</th>
-        <th align="left">Elapsed [s]</th>
-        <th align="left">MFLOP/s</th>
-        <th align="left">Comment</th>
-    </tr>
-    <tr>
-        <td rowspan="4">inner_prod</td>
-        <td>C Array</td>
-        <td align="right">0.1 </td>
-        <td align="right">47.6837 </td>
-        <td rowspan="4">No significant abstraction penalty</td>
-    </tr>
-    <tr>
-        <td>c_vector</td>
-        <td align="right">0.06 </td>
-        <td align="right">79.4729 </td>
-    </tr>
-    <tr>
-        <td>vector&lt;unbounded_array&gt;</td>
-        <td align="right">0.11 </td>
-        <td align="right">43.3488 </td>
-    </tr>
-    <tr>
-        <td>vector&lt;std::vector&gt;</td>
-        <td align="right">0.11 </td>
-        <td align="right">43.3488 </td>
-    </tr>
-    <tr>
-        <td rowspan="7">vector + vector</td>
-        <td>C array</td>
-        <td align="right">0.05 </td>
-        <td align="right">114.441 </td>
-        <td rowspan="7">Abstraction penalty: factor 2</td>
-    </tr>
-    <tr>
-        <td>c_vector safe</td>
-        <td align="right">0.22 </td>
-        <td align="right">26.0093 </td>
-    </tr>
-    <tr>
-        <td>c_vector fast</td>
-        <td align="right">0.11 </td>
-        <td align="right">52.0186 </td>
-    </tr>
-    <tr>
-        <td>vector&lt;unbounded_array&gt; safe</td>
-        <td align="right">1.05 </td>
-        <td align="right">5.44957 </td>
-    </tr>
-    <tr>
-        <td>vector&lt;unbounded_array&gt; fast</td>
-        <td align="right">0.16 </td>
-        <td align="right">35.7628 </td>
-    </tr>
-    <tr>
-        <td>vector&lt;std::vector&gt; safe</td>
-        <td align="right">1.16 </td>
-        <td align="right">4.9328 </td>
-    </tr>
-    <tr>
-        <td>vector&lt;std::vector&gt; fast</td>
-        <td align="right">0.16 </td>
-        <td align="right">35.7628 </td>
-    </tr>
-    <tr>
-        <td rowspan="7">outer_prod</td>
-        <td>C array</td>
-        <td align="right">0.06 </td>
-        <td align="right">85.8307 </td>
-        <td rowspan="7">Abstraction penalty: factor 2</td>
-    </tr>
-    <tr>
-        <td>c_matrix, c_vector safe</td>
-        <td align="right">0.22 </td>
-        <td align="right">23.4084 </td>
-    </tr>
-    <tr>
-        <td>c_matrix, c_vector fast</td>
-        <td align="right">0.11 </td>
-        <td align="right">46.8167 </td>
-    </tr>
-    <tr>
-        <td>matrix&lt;unbounded_array&gt;,
-        vector&lt;unbounded_array&gt; safe</td>
-        <td align="right">0.38 </td>
-        <td align="right">13.5522 </td>
-    </tr>
-    <tr>
-        <td>matrix&lt;unbounded_array&gt;,
-        vector&lt;unbounded_array&gt; fast</td>
-        <td align="right">0.16 </td>
-        <td align="right">32.1865 </td>
-    </tr>
-    <tr>
-        <td>matrix&lt;std::vector&gt;, vector&lt;std::vector&gt;
-        safe</td>
-        <td align="right">0.5 </td>
-        <td align="right">10.2997 </td>
-    </tr>
-    <tr>
-        <td>matrix&lt;std::vector&gt;, vector&lt;std::vector&gt;
-        fast</td>
-        <td align="right">0.11 </td>
-        <td align="right">46.8167 </td>
-    </tr>
-    <tr>
-        <td rowspan="7">prod (matrix, vector)</td>
-        <td>C array</td>
-        <td align="right">0.06 </td>
-        <td align="right">71.5256 </td>
-        <td rowspan="7">No significant abstraction penalty</td>
-    </tr>
-    <tr>
-        <td>c_matrix, c_vector safe</td>
-        <td align="right">0.11 </td>
-        <td align="right">39.0139 </td>
-    </tr>
-    <tr>
-        <td>c_matrix, c_vector fast</td>
-        <td align="right">0.11 </td>
-        <td align="right">39.0139 </td>
-    </tr>
-    <tr>
-        <td>matrix&lt;unbounded_array&gt;,
-        vector&lt;unbounded_array&gt; safe</td>
-        <td align="right">0.33 </td>
-        <td align="right">13.0046 </td>
-    </tr>
-    <tr>
-        <td>matrix&lt;unbounded_array&gt;,
-        vector&lt;unbounded_array&gt; fast</td>
-        <td align="right">0.11 </td>
-        <td align="right">39.0139 </td>
-    </tr>
-    <tr>
-        <td>matrix&lt;std::vector&gt;, vector&lt;std::vector&gt;
-        safe</td>
-        <td align="right">0.38 </td>
-        <td align="right">11.2935 </td>
-    </tr>
-    <tr>
-        <td>matrix&lt;std::vector&gt;, vector&lt;std::vector&gt;
-        fast</td>
-        <td align="right">0.05 </td>
-        <td align="right">85.8307 </td>
-    </tr>
-    <tr>
-        <td rowspan="7">matrix + matrix</td>
-        <td>C array</td>
-        <td align="right">0.11 </td>
-        <td align="right">46.8167 </td>
-        <td rowspan="7">No significant abstraction penalty</td>
-    </tr>
-    <tr>
-        <td>c_matrix safe</td>
-        <td align="right">0.17 </td>
-        <td align="right">30.2932 </td>
-    </tr>
-    <tr>
-        <td>c_matrix fast</td>
-        <td align="right">0.11 </td>
-        <td align="right">46.8167 </td>
-    </tr>
-    <tr>
-        <td>matrix&lt;unbounded_array&gt; safe</td>
-        <td align="right">0.44 </td>
-        <td align="right">11.7042 </td>
-    </tr>
-    <tr>
-        <td>matrix&lt;unbounded_array&gt; fast</td>
-        <td align="right">0.16 </td>
-        <td align="right">32.1865 </td>
-    </tr>
-    <tr>
-        <td>matrix&lt;std::vector&gt; safe</td>
-        <td align="right">0.6 </td>
-        <td align="right">8.58307 </td>
-    </tr>
-    <tr>
-        <td>matrix&lt;std::vector&gt; fast</td>
-        <td align="right">0.17 </td>
-        <td align="right">30.2932 </td>
-    </tr>
-    <tr>
-        <td rowspan="7">prod (matrix, matrix)</td>
-        <td>C array</td>
-        <td align="right">0.11 </td>
-        <td align="right">39.0139 </td>
-        <td rowspan="7">No significant abstraction penalty</td>
-    </tr>
-    <tr>
-        <td>c_matrix safe</td>
-        <td align="right">0.11 </td>
-        <td align="right">39.0139 </td>
-    </tr>
-    <tr>
-        <td>c_matrix fast</td>
-        <td align="right">0.11 </td>
-        <td align="right">39.0139 </td>
-    </tr>
-    <tr>
-        <td>matrix&lt;unbounded_array&gt; safe</td>
-        <td align="right">0.22 </td>
-        <td align="right">19.507 </td>
-    </tr>
-    <tr>
-        <td>matrix&lt;unbounded_array&gt; fast</td>
-        <td align="right">0.11 </td>
-        <td align="right">39.0139 </td>
-    </tr>
-    <tr>
-        <td>matrix&lt;std::vector&gt; safe</td>
-        <td align="right">0.27 </td>
-        <td align="right">15.8946 </td>
-    </tr>
-    <tr>
-        <td>matrix&lt;std::vector&gt; fast</td>
-        <td align="right">0.11 </td>
-        <td align="right">39.0139 </td>
-    </tr>
-</table>
+<ul>
+    <li>MSVC 6.0 with STLPort-4.5.3</li>
+    <li>BCC 5.5</li>
+    <li>GCC 2.95.x, 3.0.x, 3.1</li>
+    <li>ICC 5.0, 6.0</li>
+    <li>Comeau 4.2.x</li>
+    <li>MWCW</li>
+</ul>
 
-<p>Next we comment the results for double vectors and matrices of
-dimension 100 and 100 x 100, respectively.</p>
+<h2>Download</h2>
 
-<table border="1">
-    <tr>
-        <th align="left">Operation</th>
-        <th align="left">Implementation</th>
-        <th align="left">Elapsed [s]</th>
-        <th align="left">MFLOP/s</th>
-        <th align="left">Comment</th>
-    </tr>
-    <tr>
-        <td rowspan="4">inner_prod</td>
-        <td>C Array</td>
-        <td align="right">0.05 </td>
-        <td align="right">113.869 </td>
-        <td rowspan="4">No significant abstraction penalty</td>
-    </tr>
-    <tr>
-        <td>c_vector</td>
-        <td align="right">0.06 </td>
-        <td align="right">94.8906 </td>
-    </tr>
-    <tr>
-        <td>vector&lt;unbounded_array&gt;</td>
-        <td align="right">0.05 </td>
-        <td align="right">113.869 </td>
-    </tr>
-    <tr>
-        <td>vector&lt;std::vector&gt;</td>
-        <td align="right">0.06 </td>
-        <td align="right">94.8906 </td>
-    </tr>
-    <tr>
-        <td rowspan="7">vector + vector</td>
-        <td>C array</td>
-        <td align="right">0.05 </td>
-        <td align="right">114.441 </td>
-        <td rowspan="7">No significant abstraction penalty</td>
-    </tr>
-    <tr>
-        <td>c_vector safe</td>
-        <td align="right">0.11 </td>
-        <td align="right">52.0186 </td>
-    </tr>
-    <tr>
-        <td>c_vector fast</td>
-        <td align="right">0.11 </td>
-        <td align="right">52.0186 </td>
-    </tr>
-    <tr>
-        <td>vector&lt;unbounded_array&gt; safe</td>
-        <td align="right">0.11 </td>
-        <td align="right">52.0186 </td>
-    </tr>
-    <tr>
-        <td>vector&lt;unbounded_array&gt; fast</td>
-        <td align="right">0.06 </td>
-        <td align="right">95.3674 </td>
-    </tr>
-    <tr>
-        <td>vector&lt;std::vector&gt; safe</td>
-        <td align="right">0.17 </td>
-        <td align="right">33.6591 </td>
-    </tr>
-    <tr>
-        <td>vector&lt;std::vector&gt; fast</td>
-        <td align="right">0.11 </td>
-        <td align="right">52.0186 </td>
-    </tr>
-    <tr>
-        <td rowspan="7">outer_prod</td>
-        <td>C array</td>
-        <td align="right">0.05 </td>
-        <td align="right">114.441 </td>
-        <td rowspan="7">No significant abstraction penalty</td>
-    </tr>
-    <tr>
-        <td>c_matrix, c_vector safe</td>
-        <td align="right">0.28 </td>
-        <td align="right">20.4359 </td>
-    </tr>
-    <tr>
-        <td>c_matrix, c_vector fast</td>
-        <td align="right">0.11 </td>
-        <td align="right">52.0186 </td>
-    </tr>
-    <tr>
-        <td>matrix&lt;unbounded_array&gt;,
-        vector&lt;unbounded_array&gt; safe</td>
-        <td align="right">0.27 </td>
-        <td align="right">21.1928 </td>
-    </tr>
-    <tr>
-        <td>matrix&lt;unbounded_array&gt;,
-        vector&lt;unbounded_array&gt; fast</td>
-        <td align="right">0.06 </td>
-        <td align="right">95.3674 </td>
-    </tr>
-    <tr>
-        <td>matrix&lt;std::vector&gt;, vector&lt;std::vector&gt;
-        safe</td>
-        <td align="right">0.28 </td>
-        <td align="right">20.4359 </td>
-    </tr>
-    <tr>
-        <td>matrix&lt;std::vector&gt;, vector&lt;std::vector&gt;
-        fast</td>
-        <td align="right">0.11 </td>
-        <td align="right">52.0186 </td>
-    </tr>
-    <tr>
-        <td rowspan="7">prod (matrix, vector)</td>
-        <td>C array</td>
-        <td align="right">0.11 </td>
-        <td align="right">51.7585 </td>
-        <td rowspan="7">No significant abstraction penalty</td>
-    </tr>
-    <tr>
-        <td>c_matrix, c_vector safe</td>
-        <td align="right">0.11 </td>
-        <td align="right">51.7585 </td>
-    </tr>
-    <tr>
-        <td>c_matrix, c_vector fast</td>
-        <td align="right">0.05 </td>
-        <td align="right">113.869 </td>
-    </tr>
-    <tr>
-        <td>matrix&lt;unbounded_array&gt;,
-        vector&lt;unbounded_array&gt; safe</td>
-        <td align="right">0.11 </td>
-        <td align="right">51.7585 </td>
-    </tr>
-    <tr>
-        <td>matrix&lt;unbounded_array&gt;,
-        vector&lt;unbounded_array&gt; fast</td>
-        <td align="right">0.06 </td>
-        <td align="right">94.8906 </td>
-    </tr>
-    <tr>
-        <td>matrix&lt;std::vector&gt;, vector&lt;std::vector&gt;
-        safe</td>
-        <td align="right">0.1 </td>
-        <td align="right">56.9344 </td>
-    </tr>
-    <tr>
-        <td>matrix&lt;std::vector&gt;, vector&lt;std::vector&gt;
-        fast</td>
-        <td align="right">0.06 </td>
-        <td align="right">94.8906 </td>
-    </tr>
-    <tr>
-        <td rowspan="7">matrix + matrix</td>
-        <td>C array</td>
-        <td align="right">0.22 </td>
-        <td align="right">26.0093 </td>
-        <td rowspan="7">No significant abstraction penalty</td>
-    </tr>
-    <tr>
-        <td>c_matrix safe</td>
-        <td align="right">0.49 </td>
-        <td align="right">11.6776 </td>
-    </tr>
-    <tr>
-        <td>c_matrix fast</td>
-        <td align="right">0.22 </td>
-        <td align="right">26.0093 </td>
-    </tr>
-    <tr>
-        <td>matrix&lt;unbounded_array&gt; safe</td>
-        <td align="right">0.39 </td>
-        <td align="right">14.6719 </td>
-    </tr>
-    <tr>
-        <td>matrix&lt;unbounded_array&gt; fast</td>
-        <td align="right">0.22 </td>
-        <td align="right">26.0093 </td>
-    </tr>
-    <tr>
-        <td>matrix&lt;std::vector&gt; safe</td>
-        <td align="right">0.44 </td>
-        <td align="right">13.0046 </td>
-    </tr>
-    <tr>
-        <td>matrix&lt;std::vector&gt; fast</td>
-        <td align="right">0.27 </td>
-        <td align="right">21.1928 </td>
-    </tr>
-    <tr>
-        <td rowspan="7">prod (matrix, matrix)</td>
-        <td>C array</td>
-        <td align="right">0.06 </td>
-        <td align="right">94.8906 </td>
-        <td rowspan="7">No significant abstraction penalty</td>
-    </tr>
-    <tr>
-        <td>c_matrix safe</td>
-        <td align="right">0.06 </td>
-        <td align="right">94.8906 </td>
-    </tr>
-    <tr>
-        <td>c_matrix fast</td>
-        <td align="right">0.05 </td>
-        <td align="right">113.869 </td>
-    </tr>
-    <tr>
-        <td>matrix&lt;unbounded_array&gt; safe</td>
-        <td align="right">0.11 </td>
-        <td align="right">51.7585 </td>
-    </tr>
-    <tr>
-        <td>matrix&lt;unbounded_array&gt; fast</td>
-        <td align="right">0.17 </td>
-        <td align="right">33.4908 </td>
-    </tr>
-    <tr>
-        <td>matrix&lt;std::vector&gt; safe</td>
-        <td align="right">0.11 </td>
-        <td align="right">51.7585 </td>
-    </tr>
-    <tr>
-        <td>matrix&lt;std::vector&gt; fast</td>
-        <td align="right">0.16 </td>
-        <td align="right">35.584 </td>
-    </tr>
-</table>
+<p>You can download the current stable release of the source code
+from <a href="http://www.genesys-e.org/ublas/downloads/ublas.zip">here</a>. 
+Prerequisite is the latest stable release of the <a href="http://www.boost.org">Boost</a>
+libraries Configuration, Timer and optionally SmartPointer.</p>
 
-<h2>Acknowledgements</h2>
+<h2>CVS Access</h2>
 
-<p>We would like to thank all, which supported the development of
-this library: <br>
+<p>You can also check out the latest version via anonymous CVS.
+Here's how: </p>
+
+<pre> cvs -d:pserver:anonymous@cvs.boost.sourceforge.net:/cvsroot/boost login
+     (password is empty)
+ cvs -d:pserver:anonymous@cvs.boost.sourceforge.net:/cvsroot/boost checkout -r matrix_development boost/boost/numeric/ublas
+ cvs -d:pserver:anonymous@cvs.boost.sourceforge.net:/cvsroot/boost checkout -r matrix_development boost/libs/numeric/ublas</pre>
+
+<p>If you have gzip installed on your system, you can speed up
+the transfer using</p>
+
+<pre> cvs -d:pserver:anonymous@cvs.boost.sourceforge.net:/cvsroot/boost -z9 checkout -r matrix_development boost/boost/numeric/ublas
+ cvs -d:pserver:anonymous@cvs.boost.sourceforge.net:/cvsroot/boost -z9 checkout -r matrix_development boost/libs/numeric/ublas</pre>
+
+<p>You can also <a
+href="http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/boost">view</a>
+the CVS archive. You may find the library <a
+href="http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/boost/boost/boost/numeric/ublas/?only_with_tag=matrix_development">here</a>.
+Documentation and test programs reside <a
+href="http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/boost/boost/libs/numeric/ublas/?only_with_tag=matrix_development">here</a>.</p>
+
+<h2>Mailing lists</h2>
+
+<p>uBLAS has no dedicated mailing list. Feel free to use the
+mailing lists of <a href="http://www.boost.org">Boost</a>.</p>
+
+<h2>Authors and Credits</h2>
+
+<p>
+
+<p>uBLAS initially was written by Joerg Walter and Mathias Koch. 
+We would like to thank all, which supported the development of this library: 
 David Abrahams, Fernando Cacciola, Beman Dawes, Kresimir Fresl, Joachim Kessel, 
 Toon Knapen, Jens Maurer, Gary Powell, Joachim Pyras, Peter Schmitteckert, 
-Jeremy Siek, Markus Steffl, Michael Stevens, Martin Weiser, Marc Zimmermann and 
-the members of <a href="http://www.boost.org">http://www.boost.org</a></p>
+Jeremy Siek, Markus Steffl, Michael Stevens, Benedikt Weber, Martin Weiser, 
+Marc Zimmermann and the members of <a href="http://www.boost.org">Boost</a></p>
+
+<h2>Contact Information</h2>
+
+<p>If you have a problem, or have found a bug, please send us a <a
+href="mailto:ublas@genesys-e.org">note</a>. </p>
+
+<hr>
+
+<p>Copyright (©) 2000-2002 Joerg Walter, Mathias Koch <br> 
+Permission to copy, use, modify, sell and distribute this document is granted 
+provided this copyright notice appears in all copies. This document is provided 
+``as is'' without express or implied warranty, and with no claim as to its suitability 
+for any purpose.</p>
+
+<p>Last revised: 8/3/2002</p>
+
 </body>
 </html>

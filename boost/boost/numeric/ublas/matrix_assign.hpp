@@ -24,6 +24,20 @@
 
 namespace boost { namespace numeric { namespace ublas {
 
+    template<class E1, class E2>
+    static
+    BOOST_UBLAS_INLINE
+    bool equals (const matrix_expression<E1> &e1, const matrix_expression<E2> &e2) {
+        typedef BOOST_UBLAS_TYPENAME type_traits<BOOST_UBLAS_TYPENAME promote_traits<BOOST_UBLAS_TYPENAME E1::value_type,
+                                                                                     BOOST_UBLAS_TYPENAME E2::value_type>::promote_type>::real_type real_type;
+        // Check, that the values match at least half.
+        static real_type sqrt_epsilon (type_traits<real_type>::sqrt (std::numeric_limits<real_type>::epsilon ()));
+        return norm_inf (e1 - e2) < sqrt_epsilon *
+               std::max<real_type> (std::max<real_type> (norm_inf (e1),
+                                                         norm_inf (e2)),
+                                    std::numeric_limits<real_type>::min ());
+    }
+
 #ifdef BOOST_UBLAS_ENABLE_SPECIALIZED_ASSIGN
     // Iterating row major case
     template<class F, class M, class T>
@@ -34,20 +48,18 @@ namespace boost { namespace numeric { namespace ublas {
         typedef F functor_type;
         typedef typename M::difference_type difference_type;
         difference_type size1 (m.size1 ());
+        difference_type size2 (m.size2 ());
         typename M::iterator1 it1 (m.begin1 ());
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
-        // This fails for size2 == 0
-        BOOST_UBLAS_CHECK (m.end1 () - it1 == size1, bad_size ());
-#endif
+        BOOST_UBLAS_CHECK (size2 == 0 || m.end1 () - it1 == size1, bad_size ());
         while (-- size1 >= 0) {
-            difference_type size2 (m.size2 ());
             typename matrix_row<M>::iterator it2 ((*it1).begin ());
             BOOST_UBLAS_CHECK ((*it1).end () - it2 == size2, bad_size ());
+            difference_type temp_size2 (size2);
 #ifndef BOOST_UBLAS_USE_DUFF_DEVICE
-            while (-- size2 >= 0)
+            while (-- temp_size2 >= 0)
                 functor_type () (*it2, t), ++ it2;
 #else
-            DD (size2, 4, r, (functor_type () (*it2, t), ++ it2));
+            DD (temp_size2, 4, r, (functor_type () (*it2, t), ++ it2));
 #endif
             ++ it1;
         }
@@ -55,20 +67,18 @@ namespace boost { namespace numeric { namespace ublas {
         typedef F functor_type;
         typedef typename M::difference_type difference_type;
         difference_type size1 (m.size1 ());
+        difference_type size2 (m.size2 ());
         typename M::iterator1 it1 (m.begin1 ());
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
-        // This fails for size2 == 0
-        BOOST_UBLAS_CHECK (m.end1 () - it1 == size1, bad_size ());
-#endif
+        BOOST_UBLAS_CHECK (size2 == 0 || m.end1 () - it1 == size1, bad_size ());
         while (-- size1 >= 0) {
-            difference_type size2 (m.size2 ());
             typename M::iterator2 it2 (it1.begin ());
             BOOST_UBLAS_CHECK (it1.end () - it2 == size2, bad_size ());
+            difference_type temp_size2 (size2);
 #ifndef BOOST_UBLAS_USE_DUFF_DEVICE
-            while (-- size2 >= 0)
+            while (-- temp_size2 >= 0)
                 functor_type () (*it2, t), ++ it2;
 #else
-            DD (size2, 4, r, (functor_type () (*it2, t), ++ it2));
+            DD (temp_size2, 4, r, (functor_type () (*it2, t), ++ it2));
 #endif
             ++ it1;
         }
@@ -83,20 +93,18 @@ namespace boost { namespace numeric { namespace ublas {
         typedef F functor_type;
         typedef typename M::difference_type difference_type;
         difference_type size2 (m.size2 ());
+        difference_type size1 (m.size1 ());
         typename M::iterator2 it2 (m.begin2 ());
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
-        // This fails for size1 == 0
-        BOOST_UBLAS_CHECK (m.end2 () - it2 == size2, bad_size ());
-#endif
+        BOOST_UBLAS_CHECK (size1 == 0 || m.end2 () - it2 == size2, bad_size ());
         while (-- size2 >= 0) {
-            difference_type size1 (m.size1 ());
             typename matrix_column<M>::iterator it1 ((*it2).begin ());
             BOOST_UBLAS_CHECK ((*it2).end () - it1 == size1, bad_size ());
+            difference_type temp_size1 (size1);
 #ifndef BOOST_UBLAS_USE_DUFF_DEVICE
-            while (-- size1 >= 0)
+            while (-- temp_size1 >= 0)
                 functor_type () (*it1, t), ++ it1;
 #else
-            DD (size1, 4, r, (functor_type () (*it1, t), ++ it1));
+            DD (temp_size1, 4, r, (functor_type () (*it1, t), ++ it1));
 #endif
             ++ it2;
         }
@@ -104,20 +112,18 @@ namespace boost { namespace numeric { namespace ublas {
         typedef F functor_type;
         typedef typename M::difference_type difference_type;
         difference_type size2 (m.size2 ());
+        difference_type size1 (m.size1 ());
         typename M::iterator2 it2 (m.begin2 ());
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
-        // This fails for size1 == 0
-        BOOST_UBLAS_CHECK (m.end2 () - it2 == size2, bad_size ());
-#endif
+        BOOST_UBLAS_CHECK (size1 == 0 || m.end2 () - it2 == size2, bad_size ());
         while (-- size2 >= 0) {
-            difference_type size1 (m.size1 ());
             typename M::iterator1 it1 (it2.begin ());
             BOOST_UBLAS_CHECK (it2.end () - it1 == size1, bad_size ());
+            difference_type temp_size1 (size1);
 #ifndef BOOST_UBLAS_USE_DUFF_DEVICE
-            while (-- size1 >= 0)
+            while (-- temp_size1 >= 0)
                 functor_type () (*it1, t), ++ it1;
 #else
-            DD (size1, 4, r, (functor_type () (*it1, t), ++ it1));
+            DD (temp_size1, 4, r, (functor_type () (*it1, t), ++ it1));
 #endif
             ++ it2;
         }
@@ -166,17 +172,18 @@ namespace boost { namespace numeric { namespace ublas {
     template<class F, class M, class T, class C>
     // This function seems to be big. So we do not let the compiler inline it.
     // BOOST_UBLAS_INLINE
-    void evaluate_matrix_assign_scalar (const F &f, M &m, const T &t, dense_proxy_tag, C) {
+    void evaluate_matrix_assign_scalar (const F &f, M &m, const T &t, dense_proxy_tag, C c) {
         typedef F functor_type;
         typedef typename M::size_type size_type;
         typedef typename M::difference_type difference_type;
+        typedef C orientation_category;
         difference_type size1 (m.size1 ());
         difference_type size2 (m.size2 ());
         if (size1 >= BOOST_UBLAS_ITERATOR_THRESHOLD &&
             size2 >= BOOST_UBLAS_ITERATOR_THRESHOLD)
-            iterating_matrix_assign_scalar (functor_type (), m, t, C ());
+            iterating_matrix_assign_scalar (functor_type (), m, t, orientation_category ());
         else
-            indexing_matrix_assign_scalar (functor_type (), m, t, C ());
+            indexing_matrix_assign_scalar (functor_type (), m, t, orientation_category ());
     }
     // Packed (proxy) row major case
     template<class F, class M, class T>
@@ -315,40 +322,36 @@ namespace boost { namespace numeric { namespace ublas {
 #ifdef BOOST_UBLAS_USE_CANONICAL_ITERATOR
             typedef typename M::difference_type difference_type;
             difference_type size1 (m.size1 ());
+            difference_type size2 (m.size2 ());
             typename M::iterator1 it1 (m.begin1 ());
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
-            // This fails for size2 == 0
-            BOOST_UBLAS_CHECK (m.end1 () - it1 == size1, bad_size ());
-#endif
+            BOOST_UBLAS_CHECK (size2 == 0 || m.end1 () - it1 == size1, bad_size ());
             while (-- size1 >= 0) {
-                difference_type size2 (m.size2 ());
                 typename matrix_row<M>::iterator it2 ((*it1).begin ());
                 BOOST_UBLAS_CHECK ((*it1).end () - it2 == size2, bad_size ());
+                difference_type temp_size2 (size2);
 #ifndef BOOST_UBLAS_USE_DUFF_DEVICE
-                while (-- size2 >= 0)
+                while (-- temp_size2 >= 0)
                     functor_type () (*it2, t), ++ it2;
 #else
-                DD (size2, 4, r, (functor_type () (*it2, t), ++ it2));
+                DD (temp_size2, 4, r, (functor_type () (*it2, t), ++ it2));
 #endif
                 ++ it1;
             }
 #else
             typedef typename M::difference_type difference_type;
             difference_type size1 (m.size1 ());
+            difference_type size2 (m.size2 ());
             typename M::iterator1 it1 (m.begin1 ());
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
-            // This fails for size2 == 0
-            BOOST_UBLAS_CHECK (m.end1 () - it1 == size1, bad_size ());
-#endif
+            BOOST_UBLAS_CHECK (size2 == 0 || m.end1 () - it1 == size1, bad_size ());
             while (-- size1 >= 0) {
-                difference_type size2 (m.size2 ());
                 typename M::iterator2 it2 (it1.begin ());
                 BOOST_UBLAS_CHECK (it1.end () - it2 == size2, bad_size ());
+                difference_type temp_size2 (size2);
 #ifndef BOOST_UBLAS_USE_DUFF_DEVICE
-                while (-- size2 >= 0)
+                while (-- temp_size2 >= 0)
                     functor_type () (*it2, t), ++ it2;
 #else
-                DD (size2, 4, r, (functor_type () (*it2, t), ++ it2));
+                DD (temp_size2, 4, r, (functor_type () (*it2, t), ++ it2));
 #endif
                 ++ it1;
             }
@@ -362,40 +365,36 @@ namespace boost { namespace numeric { namespace ublas {
 #ifdef BOOST_UBLAS_USE_CANONICAL_ITERATOR
             typedef typename M::difference_type difference_type;
             difference_type size2 (m.size2 ());
+            difference_type size1 (m.size1 ());
             typename M::iterator2 it2 (m.begin2 ());
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
-            // This fails for size1 == 0
-            BOOST_UBLAS_CHECK (m.end2 () - it2 == size2, bad_size ());
-#endif
+            BOOST_UBLAS_CHECK (size1 == 0 || m.end2 () - it2 == size2, bad_size ());
             while (-- size2 >= 0) {
-                difference_type size1 (m.size1 ());
                 typename matrix_column<M>::iterator it1 ((*it2).begin ());
                 BOOST_UBLAS_CHECK ((*it2).end () - it1 == size1, bad_size ());
+                difference_type temp_size1 (size1);
 #ifndef BOOST_UBLAS_USE_DUFF_DEVICE
-                while (-- size1 >= 0)
+                while (-- temp_size1 >= 0)
                     functor_type () (*it1, t), ++ it1;
 #else
-                DD (size1, 4, r, (functor_type () (*it1, t), ++ it1));
+                DD (temp_size1, 4, r, (functor_type () (*it1, t), ++ it1));
 #endif
                 ++ it2;
             }
 #else
             typedef typename M::difference_type difference_type;
             difference_type size2 (m.size2 ());
+            difference_type size1 (m.size1 ());
             typename M::iterator2 it2 (m.begin2 ());
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
-            // This fails for size1 == 0
-            BOOST_UBLAS_CHECK (m.end2 () - it2 == size2, bad_size ());
-#endif
+            BOOST_UBLAS_CHECK (size1 == 0 || m.end2 () - it2 == size2, bad_size ());
             while (-- size2 >= 0) {
-                difference_type size1 (m.size1 ());
                 typename M::iterator1 it1 (it2.begin ());
                 BOOST_UBLAS_CHECK (it2.end () - it1 == size1, bad_size ());
+                difference_type temp_size1 (size1);
 #ifndef BOOST_UBLAS_USE_DUFF_DEVICE
-                while (-- size1 >= 0)
+                while (-- temp_size1 >= 0)
                     functor_type () (*it1, t), ++ it1;
 #else
-                DD (size1, 4, r, (functor_type () (*it1, t), ++ it1));
+                DD (temp_size1, 4, r, (functor_type () (*it1, t), ++ it1));
 #endif
                 ++ it2;
             }
@@ -442,16 +441,17 @@ namespace boost { namespace numeric { namespace ublas {
         template<class M, class T, class C>
         // This function seems to be big. So we do not let the compiler inline it.
         // BOOST_UBLAS_INLINE
-        void operator () (M &m, const T &t, dense_proxy_tag, C) {
+        void operator () (M &m, const T &t, dense_proxy_tag, C c) {
             typedef typename M::size_type size_type;
             typedef typename M::difference_type difference_type;
+            typedef C orientation_category;
             difference_type size1 (m.size1 ());
             difference_type size2 (m.size2 ());
             if (size1 >= BOOST_UBLAS_ITERATOR_THRESHOLD &&
                 size2 >= BOOST_UBLAS_ITERATOR_THRESHOLD)
-                iterating_assign (m, t, C ());
+                iterating_assign (m, t, orientation_category ());
             else
-                indexing_assign (m, t, C ());
+                indexing_assign (m, t, orientation_category ());
         }
         // Packed (proxy) row major case
         template<class M, class T>
@@ -648,27 +648,22 @@ namespace boost { namespace numeric { namespace ublas {
         typedef F functor_type;
         typedef typename M::difference_type difference_type;
         difference_type size1 (BOOST_UBLAS_SAME (m.size1 (), e ().size1 ()));
+        difference_type size2 (BOOST_UBLAS_SAME (m.size2 (), e ().size2 ()));
         typename M::iterator1 it1 (m.begin1 ());
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
-        // This fails for size2 == 0
-        BOOST_UBLAS_CHECK (m.end1 () - it1 == size1, bad_size ());
-#endif
+        BOOST_UBLAS_CHECK (size2 == 0 || m.end1 () - it1 == size1, bad_size ());
         typename E::const_iterator1 it1e (e ().begin1 ());
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
-        // This fails for size2 == 0
-        BOOST_UBLAS_CHECK (e ().end1 () - it1e == size1, bad_size ());
-#endif
+        BOOST_UBLAS_CHECK (size2 == 0 || e ().end1 () - it1e == size1, bad_size ());
         while (-- size1 >= 0) {
-            difference_type size2 (BOOST_UBLAS_SAME (m.size2 (), e ().size2 ()));
             typename matrix_row<M>::iterator it2 ((*it1).begin ());
             BOOST_UBLAS_CHECK ((*it1).end () - it2 == size2, bad_size ());
             typename matrix_row<const E>::const_iterator it2e ((*it1e).begin ());
             BOOST_UBLAS_CHECK ((*it1e).end () - it2e == size2, bad_size ());
+            difference_type temp_size2 (size2);
 #ifndef BOOST_UBLAS_USE_DUFF_DEVICE
-            while (-- size2 >= 0)
+            while (-- temp_size2 >= 0)
                 functor_type () (*it2, *it2e), ++ it2, ++ it2e;
 #else
-            DD (size2, 2, r, (functor_type () (*it2, *it2e), ++ it2, ++ it2e));
+            DD (temp_size2, 2, r, (functor_type () (*it2, *it2e), ++ it2, ++ it2e));
 #endif
             ++ it1, ++ it1e;
         }
@@ -676,27 +671,22 @@ namespace boost { namespace numeric { namespace ublas {
         typedef F functor_type;
         typedef typename M::difference_type difference_type;
         difference_type size1 (BOOST_UBLAS_SAME (m.size1 (), e ().size1 ()));
+        difference_type size2 (BOOST_UBLAS_SAME (m.size2 (), e ().size2 ()));
         typename M::iterator1 it1 (m.begin1 ());
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
-        // This fails for size2 == 0
-        BOOST_UBLAS_CHECK (m.end1 () - it1 == size1, bad_size ());
-#endif
+        BOOST_UBLAS_CHECK (size2 == 0 || m.end1 () - it1 == size1, bad_size ());
         typename E::const_iterator1 it1e (e ().begin1 ());
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
-        // This fails for size2 == 0
-        BOOST_UBLAS_CHECK (e ().end1 () - it1e == size1, bad_size ());
-#endif
+        BOOST_UBLAS_CHECK (size2 == 0 || e ().end1 () - it1e == size1, bad_size ());
         while (-- size1 >= 0) {
-            difference_type size2 (BOOST_UBLAS_SAME (m.size2 (), e ().size2 ()));
             typename M::iterator2 it2 (it1.begin ());
             BOOST_UBLAS_CHECK (it1.end () - it2 == size2, bad_size ());
             typename E::const_iterator2 it2e (it1e.begin ());
             BOOST_UBLAS_CHECK (it1e.end () - it2e == size2, bad_size ());
+            difference_type temp_size2 (size2);
 #ifndef BOOST_UBLAS_USE_DUFF_DEVICE
-            while (-- size2 >= 0)
+            while (-- temp_size2 >= 0)
                 functor_type () (*it2, *it2e), ++ it2, ++ it2e;
 #else
-            DD (size2, 2, r, (functor_type () (*it2, *it2e), ++ it2, ++ it2e));
+            DD (temp_size2, 2, r, (functor_type () (*it2, *it2e), ++ it2, ++ it2e));
 #endif
             ++ it1, ++ it1e;
         }
@@ -711,27 +701,22 @@ namespace boost { namespace numeric { namespace ublas {
         typedef F functor_type;
         typedef typename M::difference_type difference_type;
         difference_type size2 (BOOST_UBLAS_SAME (m.size2 (), e ().size2 ()));
+        difference_type size1 (BOOST_UBLAS_SAME (m.size1 (), e ().size1 ()));
         typename M::iterator2 it2 (m.begin2 ());
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
-        // This fails for size1 == 0
-        BOOST_UBLAS_CHECK (m.end2 () - it2 == size2, bad_size ());
-#endif
+        BOOST_UBLAS_CHECK (size1 == 0 || m.end2 () - it2 == size2, bad_size ());
         typename E::const_iterator2 it2e (e ().begin2 ());
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
-        // This fails for size1 == 0
-        BOOST_UBLAS_CHECK (e ().end2 () - it2e == size2, bad_size ());
-#endif
+        BOOST_UBLAS_CHECK (size1 == 0 || e ().end2 () - it2e == size2, bad_size ());
         while (-- size2 >= 0) {
-            difference_type size1 (BOOST_UBLAS_SAME (m.size1 (), e ().size1 ()));
             typename matrix_column<M>::iterator it1 ((*it2).begin ());
             BOOST_UBLAS_CHECK ((*it2).end () - it1 == size1, bad_size ());
             typename matrix_column<const E>::const_iterator it1e ((*it2e).begin ());
             BOOST_UBLAS_CHECK ((*it2e).end () - it1e == size1, bad_size ());
+            difference_type temp_size1 (size1);
 #ifndef BOOST_UBLAS_USE_DUFF_DEVICE
-            while (-- size1 >= 0)
+            while (-- temp_size1 >= 0)
                 functor_type () (*it1, *it1e), ++ it1, ++ it1e;
 #else
-            DD (size1, 2, r, (functor_type () (*it1, *it1e), ++ it1, ++ it1e));
+            DD (temp_size1, 2, r, (functor_type () (*it1, *it1e), ++ it1, ++ it1e));
 #endif
             ++ it2, ++ it2e;
         }
@@ -739,27 +724,22 @@ namespace boost { namespace numeric { namespace ublas {
         typedef F functor_type;
         typedef typename M::difference_type difference_type;
         difference_type size2 (BOOST_UBLAS_SAME (m.size2 (), e ().size2 ()));
+        difference_type size1 (BOOST_UBLAS_SAME (m.size1 (), e ().size1 ()));
         typename M::iterator2 it2 (m.begin2 ());
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
-        // This fails for size1 == 0
-        BOOST_UBLAS_CHECK (m.end2 () - it2 == size2, bad_size ());
-#endif
+        BOOST_UBLAS_CHECK (size1 == 0 || m.end2 () - it2 == size2, bad_size ());
         typename E::const_iterator2 it2e (e ().begin2 ());
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
-        // This fails for size1 == 0
-        BOOST_UBLAS_CHECK (e ().end2 () - it2e == size2, bad_size ());
-#endif
+        BOOST_UBLAS_CHECK (size1 == 0 || e ().end2 () - it2e == size2, bad_size ());
         while (-- size2 >= 0) {
-            difference_type size1 (BOOST_UBLAS_SAME (m.size1 (), e ().size1 ()));
             typename M::iterator1 it1 (it2.begin ());
             BOOST_UBLAS_CHECK (it2.end () - it1 == size1, bad_size ());
             typename E::const_iterator1 it1e (it2e.begin ());
             BOOST_UBLAS_CHECK (it2e.end () - it1e == size1, bad_size ());
+            difference_type temp_size1 (size1);
 #ifndef BOOST_UBLAS_USE_DUFF_DEVICE
-            while (-- size1 >= 0)
+            while (-- temp_size1 >= 0)
                 functor_type () (*it1, *it1e), ++ it1, ++ it1e;
 #else
-            DD (size1, 2, r, (functor_type () (*it1, *it1e), ++ it1, ++ it1e));
+            DD (temp_size1, 2, r, (functor_type () (*it1, *it1e), ++ it1, ++ it1e));
 #endif
             ++ it2, ++ it2e;
         }
@@ -808,17 +788,18 @@ namespace boost { namespace numeric { namespace ublas {
     template<class F, class M, class E, class C>
     // This function seems to be big. So we do not let the compiler inline it.
     // BOOST_UBLAS_INLINE
-    void evaluate_matrix_assign (const F &f, M &m, const matrix_expression<E> &e, dense_proxy_tag, C) {
+    void evaluate_matrix_assign (const F &f, M &m, const matrix_expression<E> &e, dense_proxy_tag, C c) {
         typedef F functor_type;
         typedef typename M::size_type size_type;
         typedef typename M::difference_type difference_type;
+        typedef C orientation_category;
         difference_type size1 (BOOST_UBLAS_SAME (m.size1 (), e ().size1 ()));
         difference_type size2 (BOOST_UBLAS_SAME (m.size2 (), e ().size2 ()));
         if (size1 >= BOOST_UBLAS_ITERATOR_THRESHOLD &&
             size2 >= BOOST_UBLAS_ITERATOR_THRESHOLD)
-            iterating_matrix_assign (functor_type (), m, e, C ());
+            iterating_matrix_assign (functor_type (), m, e, orientation_category ());
         else
-            indexing_matrix_assign (functor_type (), m, e, C ());
+            indexing_matrix_assign (functor_type (), m, e, orientation_category ());
     }
     // Packed (proxy) row major case
     template<class F, class M, class E>
@@ -831,12 +812,17 @@ namespace boost { namespace numeric { namespace ublas {
         typedef F functor_type;
         typedef typename M::size_type size_type;
         typedef typename M::value_type value_type;
+#ifdef BOOST_UBLAS_TYPE_CHECK
+        matrix<value_type, row_major> cm (m.size1 (), m.size2 ());
+        evaluate_matrix_assign (scalar_assign<value_type, value_type> (), cm, m, sparse_proxy_tag (), row_major_tag ());
+        evaluate_matrix_assign (functor_type (), cm, e, sparse_proxy_tag (), row_major_tag ());
+#endif
         typename M::iterator1 it1 (m.begin1 ());
         typename M::iterator1 it1_end (m.end1 ());
         typename E::const_iterator1 it1e (e ().begin1 ());
         typename E::const_iterator1 it1e_end (e ().end1 ());
-        if (it1e != it1e_end && it1e.index1 () < it1.index1 ())
-            it1e += std::min (it1.index1 () - it1e.index1 (), size_type (it1e_end - it1e));
+        if (it1e != it1e_end && it1e.index () < it1.index ())
+            it1e += std::min (it1.index () - it1e.index (), size_type (it1e_end - it1e));
         while (it1 != it1_end && it1e != it1e_end && it1.index () < it1e.index ()) {
             typename matrix_row<M>::iterator it2 ((*it1).begin ());
             typename matrix_row<M>::iterator it2_end ((*it1).end ());
@@ -876,23 +862,8 @@ namespace boost { namespace numeric { namespace ublas {
             }
             ++ it1;
         }
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
-        {
-            // Need the const member dispatched.
-            const M &cm = m;
-            typename E::const_iterator1 it1e (e ().begin1 ());
-            typename E::const_iterator1 it1e_end (e ().end1 ());
-            while (it1e != it1e_end) {
-                typename matrix_row<const E>::const_iterator it2e ((*it1e).begin ());
-                typename matrix_row<const E>::const_iterator it2e_end ((*it1e).end ());
-                while (it2e != it2e_end) {
-                    // FIXME: we need a better floating point comparison...
-                    BOOST_UBLAS_CHECK (*it2e == cm (it1e.index (), it2e.index ()), bad_index ());
-                    ++ it2e;
-                }
-                ++ it1e;
-            }
-        }
+#ifdef BOOST_UBLAS_TYPE_CHECK
+        BOOST_UBLAS_CHECK (equals (m, cm), external_logic ());
 #endif
 #else
         BOOST_UBLAS_CHECK (m.size1 () == e ().size1 (), bad_size ());
@@ -900,6 +871,11 @@ namespace boost { namespace numeric { namespace ublas {
         typedef F functor_type;
         typedef typename M::size_type size_type;
         typedef typename M::value_type value_type;
+#ifdef BOOST_UBLAS_TYPE_CHECK
+        matrix<value_type, row_major> cm (m.size1 (), m.size2 ());
+        evaluate_matrix_assign (scalar_assign<value_type, value_type> (), cm, m, sparse_proxy_tag (), row_major_tag ());
+        evaluate_matrix_assign (functor_type (), cm, e, sparse_proxy_tag (), row_major_tag ());
+#endif
         typename M::iterator1 it1 (m.begin1 ());
         typename M::iterator1 it1_end (m.end1 ());
         typename E::const_iterator1 it1e (e ().begin1 ());
@@ -945,23 +921,8 @@ namespace boost { namespace numeric { namespace ublas {
             }
             ++ it1;
         }
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
-        {
-            // Need the const member dispatched.
-            const M &cm = m;
-            typename E::const_iterator1 it1e (e ().begin1 ());
-            typename E::const_iterator1 it1e_end (e ().end1 ());
-            while (it1e != it1e_end) {
-                typename E::const_iterator2 it2e (it1e.begin ());
-                typename E::const_iterator2 it2e_end (it1e.end ());
-                while (it2e != it2e_end) {
-                    // FIXME: we need a better floating point comparison...
-                    BOOST_UBLAS_CHECK (*it2e == cm (it2e.index1 (), it2e.index2 ()), bad_index ());
-                    ++ it2e;
-                }
-                ++ it1e;
-            }
-        }
+#ifdef BOOST_UBLAS_TYPE_CHECK
+        BOOST_UBLAS_CHECK (equals (m, cm), external_logic ());
 #endif
 #endif
     }
@@ -976,12 +937,17 @@ namespace boost { namespace numeric { namespace ublas {
         typedef F functor_type;
         typedef typename M::size_type size_type;
         typedef typename M::value_type value_type;
+#ifdef BOOST_UBLAS_TYPE_CHECK
+        matrix<value_type, column_major> cm (m.size1 (), m.size2 ());
+        evaluate_matrix_assign (scalar_assign<value_type, value_type> (), cm, m, sparse_proxy_tag (), column_major_tag ());
+        evaluate_matrix_assign (functor_type (), cm, e, sparse_proxy_tag (), column_major_tag ());
+#endif
         typename M::iterator2 it2 (m.begin2 ());
         typename M::iterator2 it2_end (m.end2 ());
         typename E::const_iterator2 it2e (e ().begin2 ());
         typename E::const_iterator2 it2e_end (e ().end2 ());
-        if (it2e != it2e_end && it2e.index2 () < it2.index2 ())
-            it2e += std::min (it2.index2 () - it2e.index2 (), size_type (it2e_end - it2e));
+        if (it2e != it2e_end && it2e.index () < it2.index ())
+            it2e += std::min (it2.index () - it2e.index (), size_type (it2e_end - it2e));
         while (it2 != it2_end && it2e != it2e_end && it2.index () < it2e.index ()) {
             typename matrix_column<M>::iterator it1 ((*it2).begin ());
             typename matrix_column<M>::iterator it1_end ((*it2).end ());
@@ -1021,23 +987,8 @@ namespace boost { namespace numeric { namespace ublas {
             }
             ++ it2;
         }
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
-        {
-            // Need the const member dispatched.
-            const M &cm = m;
-            typename E::const_iterator2 it2e (e ().begin2 ());
-            typename E::const_iterator2 it2e_end (e ().end2 ());
-            while (it2e != it2e_end) {
-                typename matrix_column<const E>::const_iterator it1e ((*it2e).begin ());
-                typename matrix_column<const E>::const_iterator it1e_end ((*it2e).end ());
-                while (it1e != it1e_end) {
-                    // FIXME: we need a better floating point comparison...
-                    BOOST_UBLAS_CHECK (*it1e == cm (it2e.index (), it1e.index ()), bad_index ());
-                    ++ it1e;
-                }
-                ++ it2e;
-            }
-        }
+#ifdef BOOST_UBLAS_TYPE_CHECK
+        BOOST_UBLAS_CHECK (equals (m, cm), external_logic ());
 #endif
 #else
         BOOST_UBLAS_CHECK (m.size2 () == e ().size2 (), bad_size ());
@@ -1045,6 +996,11 @@ namespace boost { namespace numeric { namespace ublas {
         typedef F functor_type;
         typedef typename M::size_type size_type;
         typedef typename M::value_type value_type;
+#ifdef BOOST_UBLAS_TYPE_CHECK
+        matrix<value_type, column_major> cm (m.size1 (), m.size2 ());
+        evaluate_matrix_assign (scalar_assign<value_type, value_type> (), cm, m, sparse_proxy_tag (), column_major_tag ());
+        evaluate_matrix_assign (functor_type (), cm, e, sparse_proxy_tag (), column_major_tag ());
+#endif
         typename M::iterator2 it2 (m.begin2 ());
         typename M::iterator2 it2_end (m.end2 ());
         typename E::const_iterator2 it2e (e ().begin2 ());
@@ -1090,23 +1046,8 @@ namespace boost { namespace numeric { namespace ublas {
             }
             ++ it2;
         }
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
-        {
-            // Need the const member dispatched.
-            const M &cm = m;
-            typename E::const_iterator2 it2e (e ().begin2 ());
-            typename E::const_iterator2 it2e_end (e ().end2 ());
-            while (it2e != it2e_end) {
-                typename E::const_iterator1 it1e (it2e.begin ());
-                typename E::const_iterator1 it1e_end (it2e.end ());
-                while (it1e != it1e_end) {
-                    // FIXME: we need a better floating point comparison...
-                    BOOST_UBLAS_CHECK (*it1e == cm (it1e.index2 (), it1e.index1 ()), bad_index ());
-                    ++ it1e;
-                }
-                ++ it2e;
-            }
-        }
+#ifdef BOOST_UBLAS_TYPE_CHECK
+        BOOST_UBLAS_CHECK (equals (m, cm), external_logic ());
 #endif
 #endif
     }
@@ -1210,11 +1151,10 @@ namespace boost { namespace numeric { namespace ublas {
                         functor_type () (*it2, value_type ());
                         ++ it2;
                     } else if (compare > 0) {
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
                         // Need the const member dispatched.
                         const M &cm = m;
-                        // FIXME: we need a better floating point comparison...
-                        BOOST_UBLAS_CHECK (*it2e == cm (it1e.index (), it2e.index ()), bad_index ());
+                        BOOST_UBLAS_CHECK (functor_type::check (cm (it1e.index (), it2e.index ()), *it2e), external_logic ());
 #endif
                         ++ it2e;
                     }
@@ -1223,12 +1163,11 @@ namespace boost { namespace numeric { namespace ublas {
                     functor_type () (*it2, value_type ());
                     ++ it2;
                 }
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
                 while (it2e != it2e_end) {
                     // Need the const member dispatched.
                     const M &cm = m;
-                    // FIXME: we need a better floating point comparison...
-                    BOOST_UBLAS_CHECK (*it2e == cm (it1e.index (), it2e.index ()), bad_index ());
+                    BOOST_UBLAS_CHECK (functor_type::check (cm (it1e.index (), it2e.index ()), *it2e), external_logic ());
                     ++ it2e;
                 }
 #endif
@@ -1242,14 +1181,13 @@ namespace boost { namespace numeric { namespace ublas {
                 }
                 ++ it1;
             } else if (compare > 0) {
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
                 typename matrix_row<const E>::const_iterator it2e ((*it1e).begin ());
                 typename matrix_row<const E>::const_iterator it2e_end ((*it1e).end ());
                 while (it2e != it2e_end) {
                     // Need the const member dispatched.
                     const M &cm = m;
-                    // FIXME: we need a better floating point comparison...
-                    BOOST_UBLAS_CHECK (*it2e == cm (it1e.index (), it2e.index ()), bad_index ());
+                    BOOST_UBLAS_CHECK (functor_type::check (cm (it1e.index (), it2e.index ()), *it2e), external_logic ());
                     ++ it2e;
                 }
 #endif
@@ -1265,15 +1203,14 @@ namespace boost { namespace numeric { namespace ublas {
             }
             ++ it1;
         }
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
         while (it1e != it1e_end) {
             typename matrix_row<const E>::const_iterator it2e ((*it1e).begin ());
             typename matrix_row<const E>::const_iterator it2e_end ((*it1e).end ());
             while (it2e != it2e_end) {
                 // Need the const member dispatched.
                 const M &cm = m;
-                // FIXME: we need a better floating point comparison...
-                BOOST_UBLAS_CHECK (*it2e == cm (it1e.index (), it2e.index ()), bad_index ());
+                BOOST_UBLAS_CHECK (functor_type::check (cm (it1e.index (), it2e.index ()), *it2e), external_logic ());
                 ++ it2e;
             }
             ++ it1e;
@@ -1304,11 +1241,10 @@ namespace boost { namespace numeric { namespace ublas {
                         functor_type () (*it2, value_type ());
                         ++ it2;
                     } else if (compare > 0) {
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
                         // Need the const member dispatched.
                         const M &cm = m;
-                        // FIXME: we need a better floating point comparison...
-                        BOOST_UBLAS_CHECK (*it2e == cm (it2e.index1 (), it2e.index2 ()), bad_index ());
+                        BOOST_UBLAS_CHECK (functor_type::check (cm (it2e.index1 (), it2e.index2 ()), *it2e), external_logic ());
 #endif
                         ++ it2e;
                     }
@@ -1317,12 +1253,11 @@ namespace boost { namespace numeric { namespace ublas {
                     functor_type () (*it2, value_type ());
                     ++ it2;
                 }
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
                 while (it2e != it2e_end) {
                     // Need the const member dispatched.
                     const M &cm = m;
-                    // FIXME: we need a better floating point comparison...
-                    BOOST_UBLAS_CHECK (*it2e == cm (it2e.index1 (), it2e.index2 ()), bad_index ());
+                    BOOST_UBLAS_CHECK (functor_type::check (cm (it2e.index1 (), it2e.index2 ()), *it2e), external_logic ());
                     ++ it2e;
                 }
 #endif
@@ -1336,14 +1271,13 @@ namespace boost { namespace numeric { namespace ublas {
                 }
                 ++ it1;
             } else if (compare > 0) {
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
                 typename E::const_iterator2 it2e (it1e.begin ());
                 typename E::const_iterator2 it2e_end (it1e.end ());
                 while (it2e != it2e_end) {
                     // Need the const member dispatched.
                     const M &cm = m;
-                    // FIXME: we need a better floating point comparison...
-                    BOOST_UBLAS_CHECK (*it2e == cm (it2e.index1 (), it2e.index2 ()), bad_index ());
+                    BOOST_UBLAS_CHECK (functor_type::check (cm (it2e.index1 (), it2e.index2 ()), *it2e), external_logic ());
                     ++ it2e;
                 }
 #endif
@@ -1359,15 +1293,14 @@ namespace boost { namespace numeric { namespace ublas {
             }
             ++ it1;
         }
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
         while (it1e != it1e_end) {
             typename E::const_iterator2 it2e (it1e.begin ());
             typename E::const_iterator2 it2e_end (it1e.end ());
             while (it2e != it2e_end) {
                 // Need the const member dispatched.
                 const M &cm = m;
-                // FIXME: we need a better floating point comparison...
-                BOOST_UBLAS_CHECK (*it2e == cm (it2e.index1 (), it2e.index2 ()), bad_index ());
+                BOOST_UBLAS_CHECK (functor_type::check (cm (it2e.index1 (), it2e.index2 ()), *it2e), external_logic ());
                 ++ it2e;
             }
             ++ it1e;
@@ -1405,11 +1338,10 @@ namespace boost { namespace numeric { namespace ublas {
                         functor_type () (*it1, value_type ());
                         ++ it1;
                     } else if (compare > 0) {
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
                         // Need the const member dispatched.
                         const M &cm = m;
-                        // FIXME: we need a better floating point comparison...
-                        BOOST_UBLAS_CHECK (*it1e == cm (it1e.index (), it2e.index ()), bad_index ());
+                        BOOST_UBLAS_CHECK (functor_type::check (cm (it1e.index (), it2e.index ()), *it1e), external_logic ());
 #endif
                         ++ it1e;
                     }
@@ -1418,12 +1350,11 @@ namespace boost { namespace numeric { namespace ublas {
                     functor_type () (*it1, value_type ());
                     ++ it1;
                 }
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
                 while (it1e != it1e_end) {
                     // Need the const member dispatched.
                     const M &cm = m;
-                    // FIXME: we need a better floating point comparison...
-                    BOOST_UBLAS_CHECK (*it1e == cm (it1e.index (), it2e.index ()), bad_index ());
+                    BOOST_UBLAS_CHECK (functor_type::check (cm (it1e.index (), it2e.index ()), *it1e), external_logic ());
                     ++ it1e;
                 }
 #endif
@@ -1437,14 +1368,13 @@ namespace boost { namespace numeric { namespace ublas {
                 }
                 ++ it2;
             } else if (compare > 0) {
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
                 typename matrix_column<const E>::const_iterator it1e ((*it2e).begin ());
                 typename matrix_column<const E>::const_iterator it1e_end ((*it2e).end ());
                 while (it1e != it1e_end) {
                     // Need the const member dispatched.
                     const M &cm = m;
-                    // FIXME: we need a better floating point comparison...
-                    BOOST_UBLAS_CHECK (*it1e == cm (it1e.index (), it2e.index ()), bad_index ());
+                    BOOST_UBLAS_CHECK (functor_type::check (cm (it1e.index (), it2e.index ()), *it1e), external_logic ());
                     ++ it1e;
                 }
 #endif
@@ -1460,15 +1390,14 @@ namespace boost { namespace numeric { namespace ublas {
             }
             ++ it2;
         }
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
         while (it2e != it2e_end) {
             typename matrix_column<const E>::const_iterator it1e ((*it2e).begin ());
             typename matrix_column<const E>::const_iterator it1e_end ((*it2e).end ());
             while (it1e != it1e_end) {
                 // Need the const member dispatched.
                 const M &cm = m;
-                // FIXME: we need a better floating point comparison...
-                BOOST_UBLAS_CHECK (*it1e == cm (it1e.index (), it2e.index ()), bad_index ());
+                BOOST_UBLAS_CHECK (functor_type::check (cm (it1e.index (), it2e.index ()), *it1e), external_logic ());
                 ++ it1e;
             }
             ++ it2e;
@@ -1499,11 +1428,10 @@ namespace boost { namespace numeric { namespace ublas {
                         functor_type () (*it1, value_type ());
                         ++ it1;
                     } else if (compare > 0) {
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
                         // Need the const member dispatched.
                         const M &cm = m;
-                        // FIXME: we need a better floating point comparison...
-                        BOOST_UBLAS_CHECK (*it1e == cm (it1e.index1 (), it1e.index2 ()), bad_index ());
+                        BOOST_UBLAS_CHECK (functor_type::check (cm (it1e.index1 (), it1e.index2 ()), *it1e), external_logic ());
 #endif
                         ++ it1e;
                     }
@@ -1512,12 +1440,11 @@ namespace boost { namespace numeric { namespace ublas {
                     functor_type () (*it1, value_type ());
                     ++ it1;
                 }
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
                 while (it1e != it1e_end) {
                     // Need the const member dispatched.
                     const M &cm = m;
-                    // FIXME: we need a better floating point comparison...
-                    BOOST_UBLAS_CHECK (*it1e == cm (it1e.index1 (), it1e.index2 ()), bad_index ());
+                    BOOST_UBLAS_CHECK (functor_type::check (cm (it1e.index1 (), it1e.index2 ()), *it1e), external_logic ());
                     ++ it1e;
                 }
 #endif
@@ -1531,14 +1458,13 @@ namespace boost { namespace numeric { namespace ublas {
                 }
                 ++ it2;
             } else if (compare > 0) {
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
                 typename E::const_iterator1 it1e (it2e.begin ());
                 typename E::const_iterator1 it1e_end (it2e.end ());
                 while (it1e != it1e_end) {
                     // Need the const member dispatched.
                     const M &cm = m;
-                    // FIXME: we need a better floating point comparison...
-                    BOOST_UBLAS_CHECK (*it1e == cm (it1e.index1 (), it1e.index2 ()), bad_index ());
+                    BOOST_UBLAS_CHECK (functor_type::check (cm (it1e.index1 (), it1e.index2 ()), *it1e), external_logic ());
                     ++ it1e;
                 }
 #endif
@@ -1554,15 +1480,14 @@ namespace boost { namespace numeric { namespace ublas {
             }
             ++ it2;
         }
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
         while (it2e != it2e_end) {
             typename E::const_iterator1 it1e (it2e.begin ());
             typename E::const_iterator1 it1e_end (it2e.end ());
             while (it1e != it1e_end) {
                 // Need the const member dispatched.
                 const M &cm = m;
-                // FIXME: we need a better floating point comparison...
-                BOOST_UBLAS_CHECK (*it1e == cm (it1e.index1 (), it1e.index2 ()), bad_index ());
+                BOOST_UBLAS_CHECK (functor_type::check (cm (it1e.index1 (), it1e.index2 ()), *it1e), external_logic ());
                 ++ it1e;
             }
             ++ it2e;
@@ -1587,54 +1512,44 @@ namespace boost { namespace numeric { namespace ublas {
 #ifdef BOOST_UBLAS_USE_CANONICAL_ITERATOR
             typedef typename M::difference_type difference_type;
             difference_type size1 (BOOST_UBLAS_SAME (m.size1 (), e ().size1 ()));
+            difference_type size2 (BOOST_UBLAS_SAME (m.size2 (), e ().size2 ()));
             typename M::iterator1 it1 (m.begin1 ());
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
-            // This fails for size2 == 0
-            BOOST_UBLAS_CHECK (m.end1 () - it1 == size1, bad_size ());
-#endif
+            BOOST_UBLAS_CHECK (size2 == 0 || m.end1 () - it1 == size1, bad_size ());
             typename E::const_iterator1 it1e (e ().begin1 ());
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
-            // This fails for size2 == 0
-            BOOST_UBLAS_CHECK (e ().end1 () - it1e == size1, bad_size ());
-#endif
+            BOOST_UBLAS_CHECK (size2 == 0 || e ().end1 () - it1e == size1, bad_size ());
             while (-- size1 >= 0) {
-                difference_type size2 (BOOST_UBLAS_SAME (m.size2 (), e ().size2 ()));
                 typename matrix_row<M>::iterator it2 ((*it1).begin ());
                 BOOST_UBLAS_CHECK ((*it1).end () - it2 == size2, bad_size ());
                 typename matrix_row<const E>::const_iterator it2e ((*it1e).begin ());
                 BOOST_UBLAS_CHECK ((*it1e).end () - it2e == size2, bad_size ());
+                difference_type temp_size2 (size2);
 #ifndef BOOST_UBLAS_USE_DUFF_DEVICE
-                while (-- size2 >= 0)
+                while (-- temp_size2 >= 0)
                     functor_type () (*it2, *it2e), ++ it2, ++ it2e;
 #else
-                DD (size2, 2, r, (functor_type () (*it2, *it2e), ++ it2, ++ it2e));
+                DD (temp_size2, 2, r, (functor_type () (*it2, *it2e), ++ it2, ++ it2e));
 #endif
                 ++ it1, ++ it1e;
             }
 #else
             typedef typename M::difference_type difference_type;
             difference_type size1 (BOOST_UBLAS_SAME (m.size1 (), e ().size1 ()));
+            difference_type size2 (BOOST_UBLAS_SAME (m.size2 (), e ().size2 ()));
             typename M::iterator1 it1 (m.begin1 ());
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
-            // This fails for size2 == 0
-            BOOST_UBLAS_CHECK (m.end1 () - it1 == size1, bad_size ());
-#endif
+            BOOST_UBLAS_CHECK (size2 == 0 || m.end1 () - it1 == size1, bad_size ());
             typename E::const_iterator1 it1e (e ().begin1 ());
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
-            // This fails for size2 == 0
-            BOOST_UBLAS_CHECK (e ().end1 () - it1e == size1, bad_size ());
-#endif
+            BOOST_UBLAS_CHECK (size2 == 0 || e ().end1 () - it1e == size1, bad_size ());
             while (-- size1 >= 0) {
-                difference_type size2 (BOOST_UBLAS_SAME (m.size2 (), e ().size2 ()));
                 typename M::iterator2 it2 (it1.begin ());
                 BOOST_UBLAS_CHECK (it1.end () - it2 == size2, bad_size ());
                 typename E::const_iterator2 it2e (it1e.begin ());
                 BOOST_UBLAS_CHECK (it1e.end () - it2e == size2, bad_size ());
+                difference_type temp_size2 (size2);
 #ifndef BOOST_UBLAS_USE_DUFF_DEVICE
-                while (-- size2 >= 0)
+                while (-- temp_size2 >= 0)
                     functor_type () (*it2, *it2e), ++ it2, ++ it2e;
 #else
-                DD (size2, 2, r, (functor_type () (*it2, *it2e), ++ it2, ++ it2e));
+                DD (temp_size2, 2, r, (functor_type () (*it2, *it2e), ++ it2, ++ it2e));
 #endif
                 ++ it1, ++ it1e;
             }
@@ -1648,54 +1563,44 @@ namespace boost { namespace numeric { namespace ublas {
 #ifdef BOOST_UBLAS_USE_CANONICAL_ITERATOR
             typedef typename M::difference_type difference_type;
             difference_type size2 (BOOST_UBLAS_SAME (m.size2 (), e ().size2 ()));
+            difference_type size1 (BOOST_UBLAS_SAME (m.size1 (), e ().size1 ()));
             typename M::iterator2 it2 (m.begin2 ());
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
-            // This fails for size1 == 0
-            BOOST_UBLAS_CHECK (m.end2 () - it2 == size2, bad_size ());
-#endif
+            BOOST_UBLAS_CHECK (size1 == 0 || m.end2 () - it2 == size2, bad_size ());
             typename E::const_iterator2 it2e (e ().begin2 ());
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
-            // This fails for size1 == 0
-            BOOST_UBLAS_CHECK (e ().end2 () - it2e == size2, bad_size ());
-#endif
+            BOOST_UBLAS_CHECK (size1 == 0 || e ().end2 () - it2e == size2, bad_size ());
             while (-- size2 >= 0) {
-                difference_type size1 (BOOST_UBLAS_SAME (m.size1 (), e ().size1 ()));
                 typename matrix_column<M>::iterator it1 ((*it2).begin ());
                 BOOST_UBLAS_CHECK ((*it2).end () - it1 == size1, bad_size ());
                 typename matrix_column<const E>::const_iterator it1e ((*it2e).begin ());
                 BOOST_UBLAS_CHECK ((*it2e).end () - it1e == size1, bad_size ());
+                difference_type temp_size1 (size1);
 #ifndef BOOST_UBLAS_USE_DUFF_DEVICE
-                while (-- size1 >= 0)
+                while (-- temp_size1 >= 0)
                     functor_type () (*it1, *it1e), ++ it1, ++ it1e;
 #else
-                DD (size1, 2, r, (functor_type () (*it1, *it1e), ++ it1, ++ it1e));
+                DD (temp_size1, 2, r, (functor_type () (*it1, *it1e), ++ it1, ++ it1e));
 #endif
                 ++ it2, ++ it2e;
             }
 #else
             typedef typename M::difference_type difference_type;
             difference_type size2 (BOOST_UBLAS_SAME (m.size2 (), e ().size2 ()));
+            difference_type size1 (BOOST_UBLAS_SAME (m.size1 (), e ().size1 ()));
             typename M::iterator2 it2 (m.begin2 ());
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
-            // This fails for size1 == 0
-            BOOST_UBLAS_CHECK (m.end2 () - it2 == size2, bad_size ());
-#endif
+            BOOST_UBLAS_CHECK (size1 == 0 || m.end2 () - it2 == size2, bad_size ());
             typename E::const_iterator2 it2e (e ().begin2 ());
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
-            // This fails for size1 == 0
-            BOOST_UBLAS_CHECK (e ().end2 () - it2e == size2, bad_size ());
-#endif
+            BOOST_UBLAS_CHECK (size1 == 0 || e ().end2 () - it2e == size2, bad_size ());
             while (-- size2 >= 0) {
-                difference_type size1 (BOOST_UBLAS_SAME (m.size1 (), e ().size1 ()));
                 typename M::iterator1 it1 (it2.begin ());
                 BOOST_UBLAS_CHECK (it2.end () - it1 == size1, bad_size ());
                 typename E::const_iterator1 it1e (it2e.begin ());
                 BOOST_UBLAS_CHECK (it2e.end () - it1e == size1, bad_size ());
+                difference_type temp_size1 (size1);
 #ifndef BOOST_UBLAS_USE_DUFF_DEVICE
-                while (-- size1 >= 0)
+                while (-- temp_size1 >= 0)
                     functor_type () (*it1, *it1e), ++ it1, ++ it1e;
 #else
-                DD (size1, 2, r, (functor_type () (*it1, *it1e), ++ it1, ++ it1e));
+                DD (temp_size1, 2, r, (functor_type () (*it1, *it1e), ++ it1, ++ it1e));
 #endif
                 ++ it2, ++ it2e;
             }
@@ -1742,16 +1647,17 @@ namespace boost { namespace numeric { namespace ublas {
         template<class M, class E, class C>
         // This function seems to be big. So we do not let the compiler inline it.
         // BOOST_UBLAS_INLINE
-        void operator () (M &m, const matrix_expression<E> &e, dense_proxy_tag, C) {
+        void operator () (M &m, const matrix_expression<E> &e, dense_proxy_tag, C c) {
             typedef typename M::size_type size_type;
             typedef typename M::difference_type difference_type;
+            typedef C orientation_category;
             difference_type size1 (BOOST_UBLAS_SAME (m.size1 (), e ().size1 ()));
             difference_type size2 (BOOST_UBLAS_SAME (m.size2 (), e ().size2 ()));
             if (size1 >= BOOST_UBLAS_ITERATOR_THRESHOLD &&
                 size2 >= BOOST_UBLAS_ITERATOR_THRESHOLD)
-                iterating_assign (m, e, C ());
+                iterating_assign (m, e, orientation_category ());
             else
-                indexing_assign (m, e, C ());
+                indexing_assign (m, e, orientation_category ());
         }
         // Packed (proxy) row major case
         template<class M, class E>
@@ -1763,12 +1669,17 @@ namespace boost { namespace numeric { namespace ublas {
             BOOST_UBLAS_CHECK (m.size2 () == e ().size2 (), bad_size ());
             typedef typename M::size_type size_type;
             typedef typename M::value_type value_type;
+#ifdef BOOST_UBLAS_TYPE_CHECK
+            matrix<value_type, row_major> cm (m.size1 (), m.size2 ());
+            matrix_assign<scalar_assign<value_type, value_type> > () (cm, m, sparse_proxy_tag (), row_major_tag ());
+            matrix_assign<functor_type> () (cm, e, sparse_proxy_tag (), row_major_tag ());
+#endif
             typename M::iterator1 it1 (m.begin1 ());
             typename M::iterator1 it1_end (m.end1 ());
             typename E::const_iterator1 it1e (e ().begin1 ());
             typename E::const_iterator1 it1e_end (e ().end1 ());
-            if (it1e != it1e_end && it1e.index1 () < it1.index1 ())
-                it1e += std::min (it1.index1 () - it1e.index1 (), size_type (it1e_end - it1e));
+            if (it1e != it1e_end && it1e.index () < it1.index ())
+                it1e += std::min (it1.index () - it1e.index (), size_type (it1e_end - it1e));
             while (it1 != it1_end && it1e != it1e_end && it1.index () < it1e.index ()) {
                 typename matrix_row<M>::iterator it2 ((*it1).begin ());
                 typename matrix_row<M>::iterator it2_end ((*it1).end ());
@@ -1808,29 +1719,19 @@ namespace boost { namespace numeric { namespace ublas {
                 }
                 ++ it1;
             }
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
-            {
-                // Need the const member dispatched.
-                const M &cm = m;
-                typename E::const_iterator1 it1e (e ().begin1 ());
-                typename E::const_iterator1 it1e_end (e ().end1 ());
-                while (it1e != it1e_end) {
-                    typename matrix_row<const E>::const_iterator it2e ((*it1e).begin ());
-                    typename matrix_row<const E>::const_iterator it2e_end ((*it1e).end ());
-                    while (it2e != it2e_end) {
-                        // FIXME: we need a better floating point comparison...
-                        BOOST_UBLAS_CHECK (*it2e == cm (it1e.index (), it2e.index ()), bad_index ());
-                        ++ it2e;
-                    }
-                    ++ it1e;
-                }
-            }
+#ifdef BOOST_UBLAS_TYPE_CHECK
+            BOOST_UBLAS_CHECK (equals (m, cm), external_logic ());
 #endif
 #else
             BOOST_UBLAS_CHECK (m.size1 () == e ().size1 (), bad_size ());
             BOOST_UBLAS_CHECK (m.size2 () == e ().size2 (), bad_size ());
             typedef typename M::size_type size_type;
             typedef typename M::value_type value_type;
+#ifdef BOOST_UBLAS_TYPE_CHECK
+            matrix<value_type, row_major> cm (m.size1 (), m.size2 ());
+            matrix_assign<scalar_assign<value_type, value_type> > () (cm, m, sparse_proxy_tag (), row_major_tag ());
+            matrix_assign<functor_type> () (cm, e, sparse_proxy_tag (), row_major_tag ());
+#endif
             typename M::iterator1 it1 (m.begin1 ());
             typename M::iterator1 it1_end (m.end1 ());
             typename E::const_iterator1 it1e (e ().begin1 ());
@@ -1876,23 +1777,8 @@ namespace boost { namespace numeric { namespace ublas {
                 }
                 ++ it1;
             }
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
-            {
-                // Need the const member dispatched.
-                const M &cm = m;
-                typename E::const_iterator1 it1e (e ().begin1 ());
-                typename E::const_iterator1 it1e_end (e ().end1 ());
-                while (it1e != it1e_end) {
-                    typename E::const_iterator2 it2e (it1e.begin ());
-                    typename E::const_iterator2 it2e_end (it1e.end ());
-                    while (it2e != it2e_end) {
-                        // FIXME: we need a better floating point comparison...
-                        BOOST_UBLAS_CHECK (*it2e == cm (it2e.index1 (), it2e.index2 ()), bad_index ());
-                        ++ it2e;
-                    }
-                    ++ it1e;
-                }
-            }
+#ifdef BOOST_UBLAS_TYPE_CHECK
+            BOOST_UBLAS_CHECK (equals (m, cm), external_logic ());
 #endif
 #endif
         }
@@ -1906,12 +1792,17 @@ namespace boost { namespace numeric { namespace ublas {
             BOOST_UBLAS_CHECK (m.size1 () == e ().size1 (), bad_size ());
             typedef typename M::size_type size_type;
             typedef typename M::value_type value_type;
+#ifdef BOOST_UBLAS_TYPE_CHECK
+            matrix<value_type, column_major> cm (m.size1 (), m.size2 ());
+            matrix_assign<scalar_assign<value_type, value_type> > () (cm, m, sparse_proxy_tag (), column_major_tag ());
+            matrix_assign<functor_type> () (cm, e, sparse_proxy_tag (), column_major_tag ());
+#endif
             typename M::iterator2 it2 (m.begin2 ());
             typename M::iterator2 it2_end (m.end2 ());
             typename E::const_iterator2 it2e (e ().begin2 ());
             typename E::const_iterator2 it2e_end (e ().end2 ());
-            if (it2e != it2e_end && it2e.index2 () < it2.index2 ())
-                it2e += std::min (it2.index2 () - it2e.index2 (), size_type (it2e_end - it2e));
+            if (it2e != it2e_end && it2e.index () < it2.index ())
+                it2e += std::min (it2.index () - it2e.index (), size_type (it2e_end - it2e));
             while (it2 != it2_end && it2e != it2e_end && it2.index () < it2e.index ()) {
                 typename matrix_column<M>::iterator it1 ((*it2).begin ());
                 typename matrix_column<M>::iterator it1_end ((*it2).end ());
@@ -1951,29 +1842,19 @@ namespace boost { namespace numeric { namespace ublas {
                 }
                 ++ it2;
             }
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
-            {
-                // Need the const member dispatched.
-                const M &cm = m;
-                typename E::const_iterator2 it2e (e ().begin2 ());
-                typename E::const_iterator2 it2e_end (e ().end2 ());
-                while (it2e != it2e_end) {
-                    typename matrix_column<const E>::const_iterator it1e ((*it2e).begin ());
-                    typename matrix_column<const E>::const_iterator it1e_end ((*it2e).end ());
-                    while (it1e != it1e_end) {
-                        // FIXME: we need a better floating point comparison...
-                        BOOST_UBLAS_CHECK (*it1e == cm (it2e.index (), it1e.index ()), bad_index ());
-                        ++ it1e;
-                    }
-                    ++ it2e;
-                }
-            }
+#ifdef BOOST_UBLAS_TYPE_CHECK
+            BOOST_UBLAS_CHECK (equals (m, cm), external_logic ());
 #endif
 #else
             BOOST_UBLAS_CHECK (m.size2 () == e ().size2 (), bad_size ());
             BOOST_UBLAS_CHECK (m.size1 () == e ().size1 (), bad_size ());
             typedef typename M::size_type size_type;
             typedef typename M::value_type value_type;
+#ifdef BOOST_UBLAS_TYPE_CHECK
+            matrix<value_type, column_major> cm (m.size1 (), m.size2 ());
+            matrix_assign<scalar_assign<value_type, value_type> > () (cm, m, sparse_proxy_tag (), column_major_tag ());
+            matrix_assign<functor_type> () (cm, e, sparse_proxy_tag (), column_major_tag ());
+#endif
             typename M::iterator2 it2 (m.begin2 ());
             typename M::iterator2 it2_end (m.end2 ());
             typename E::const_iterator2 it2e (e ().begin2 ());
@@ -2019,23 +1900,8 @@ namespace boost { namespace numeric { namespace ublas {
                 }
                 ++ it2;
             }
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
-            {
-                // Need the const member dispatched.
-                const M &cm = m;
-                typename E::const_iterator2 it2e (e ().begin2 ());
-                typename E::const_iterator2 it2e_end (e ().end2 ());
-                while (it2e != it2e_end) {
-                    typename E::const_iterator1 it1e (it2e.begin ());
-                    typename E::const_iterator1 it1e_end (it2e.end ());
-                    while (it1e != it1e_end) {
-                        // FIXME: we need a better floating point comparison...
-                        BOOST_UBLAS_CHECK (*it1e == cm (it1e.index2 (), it1e.index1 ()), bad_index ());
-                        ++ it1e;
-                    }
-                    ++ it2e;
-                }
-            }
+#ifdef BOOST_UBLAS_TYPE_CHECK
+            BOOST_UBLAS_CHECK (equals (m, cm), external_logic ());
 #endif
 #endif
         }
@@ -2134,11 +2000,10 @@ namespace boost { namespace numeric { namespace ublas {
                             functor_type () (*it2, value_type ());
                             ++ it2;
                         } else if (compare > 0) {
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
                             // Need the const member dispatched.
                             const M &cm = m;
-                            // FIXME: we need a better floating point comparison...
-                            BOOST_UBLAS_CHECK (*it2e == cm (it1e.index (), it2e.index ()), bad_index ());
+                            BOOST_UBLAS_CHECK (functor_type::check (cm (it1e.index (), it2e.index ()), *it2e), external_logic ());
 #endif
                             ++ it2e;
                         }
@@ -2147,12 +2012,11 @@ namespace boost { namespace numeric { namespace ublas {
                         functor_type () (*it2, value_type ());
                         ++ it2;
                     }
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
                     while (it2e != it2e_end) {
                         // Need the const member dispatched.
                         const M &cm = m;
-                        // FIXME: we need a better floating point comparison...
-                        BOOST_UBLAS_CHECK (*it2e == cm (it1e.index (), it2e.index ()), bad_index ());
+                        BOOST_UBLAS_CHECK (functor_type::check (cm (it1e.index (), it2e.index ()), *it2e), external_logic ());
                         ++ it2e;
                     }
 #endif
@@ -2166,14 +2030,13 @@ namespace boost { namespace numeric { namespace ublas {
                     }
                     ++ it1;
                 } else if (compare > 0) {
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
                     typename matrix_row<const E>::const_iterator it2e ((*it1e).begin ());
                     typename matrix_row<const E>::const_iterator it2e_end ((*it1e).end ());
                     while (it2e != it2e_end) {
                         // Need the const member dispatched.
                         const M &cm = m;
-                        // FIXME: we need a better floating point comparison...
-                        BOOST_UBLAS_CHECK (*it2e == cm (it1e.index (), it2e.index ()), bad_index ());
+                        BOOST_UBLAS_CHECK (functor_type::check (cm (it1e.index (), it2e.index ()), *it2e), external_logic ());
                         ++ it2e;
                     }
 #endif
@@ -2189,15 +2052,14 @@ namespace boost { namespace numeric { namespace ublas {
                 }
                 ++ it1;
             }
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
             while (it1e != it1e_end) {
                 typename matrix_row<const E>::const_iterator it2e ((*it1e).begin ());
                 typename matrix_row<const E>::const_iterator it2e_end ((*it1e).end ());
                 while (it2e != it2e_end) {
                     // Need the const member dispatched.
                     const M &cm = m;
-                    // FIXME: we need a better floating point comparison...
-                    BOOST_UBLAS_CHECK (*it2e == cm (it1e.index (), it2e.index ()), bad_index ());
+                    BOOST_UBLAS_CHECK (functor_type::check (cm (it1e.index (), it2e.index ()), *it2e), external_logic ());
                     ++ it2e;
                 }
                 ++ it1e;
@@ -2227,11 +2089,10 @@ namespace boost { namespace numeric { namespace ublas {
                             functor_type () (*it2, value_type ());
                             ++ it2;
                         } else if (compare > 0) {
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
                             // Need the const member dispatched.
                             const M &cm = m;
-                            // FIXME: we need a better floating point comparison...
-                            BOOST_UBLAS_CHECK (*it2e == cm (it2e.index1 (), it2e.index2 ()), bad_index ());
+                            BOOST_UBLAS_CHECK (functor_type::check (cm (it2e.index1 (), it2e.index2 ()), *it2e), external_logic ());
 #endif
                             ++ it2e;
                         }
@@ -2240,12 +2101,11 @@ namespace boost { namespace numeric { namespace ublas {
                         functor_type () (*it2, value_type ());
                         ++ it2;
                     }
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
                     while (it2e != it2e_end) {
                         // Need the const member dispatched.
                         const M &cm = m;
-                        // FIXME: we need a better floating point comparison...
-                        BOOST_UBLAS_CHECK (*it2e == cm (it2e.index1 (), it2e.index2 ()), bad_index ());
+                        BOOST_UBLAS_CHECK (functor_type::check (cm (it2e.index1 (), it2e.index2 ()), *it2e), external_logic ());
                         ++ it2e;
                     }
 #endif
@@ -2259,14 +2119,13 @@ namespace boost { namespace numeric { namespace ublas {
                     }
                     ++ it1;
                 } else if (compare > 0) {
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
                     typename E::const_iterator2 it2e (it1e.begin ());
                     typename E::const_iterator2 it2e_end (it1e.end ());
                     while (it2e != it2e_end) {
                         // Need the const member dispatched.
                         const M &cm = m;
-                        // FIXME: we need a better floating point comparison...
-                        BOOST_UBLAS_CHECK (*it2e == cm (it2e.index1 (), it2e.index2 ()), bad_index ());
+                        BOOST_UBLAS_CHECK (functor_type::check (cm (it2e.index1 (), it2e.index2 ()), *it2e), external_logic ());
                         ++ it2e;
                     }
 #endif
@@ -2282,15 +2141,14 @@ namespace boost { namespace numeric { namespace ublas {
                 }
                 ++ it1;
             }
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
             while (it1e != it1e_end) {
                 typename E::const_iterator2 it2e (it1e.begin ());
                 typename E::const_iterator2 it2e_end (it1e.end ());
                 while (it2e != it2e_end) {
                     // Need the const member dispatched.
                     const M &cm = m;
-                    // FIXME: we need a better floating point comparison...
-                    BOOST_UBLAS_CHECK (*it2e == cm (it2e.index1 (), it2e.index2 ()), bad_index ());
+                    BOOST_UBLAS_CHECK (functor_type::check (cm (it2e.index1 (), it2e.index2 ()), *it2e), external_logic ());
                     ++ it2e;
                 }
                 ++ it1e;
@@ -2327,11 +2185,10 @@ namespace boost { namespace numeric { namespace ublas {
                             functor_type () (*it1, value_type ());
                             ++ it1;
                         } else if (compare > 0) {
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
                             // Need the const member dispatched.
                             const M &cm = m;
-                            // FIXME: we need a better floating point comparison...
-                            BOOST_UBLAS_CHECK (*it1e == cm (it1e.index (), it2e.index ()), bad_index ());
+                            BOOST_UBLAS_CHECK (functor_type::check (cm (it1e.index (), it2e.index ()), *it1e), external_logic ());
 #endif
                             ++ it1e;
                         }
@@ -2340,12 +2197,11 @@ namespace boost { namespace numeric { namespace ublas {
                         functor_type () (*it1, value_type ());
                         ++ it1;
                     }
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
                     while (it1e != it1e_end) {
                         // Need the const member dispatched.
                         const M &cm = m;
-                        // FIXME: we need a better floating point comparison...
-                        BOOST_UBLAS_CHECK (*it1e == cm (it1e.index (), it2e.index ()), bad_index ());
+                        BOOST_UBLAS_CHECK (functor_type::check (cm (it1e.index (), it2e.index ()), *it1e), external_logic ());
                         ++ it1e;
                     }
 #endif
@@ -2359,14 +2215,13 @@ namespace boost { namespace numeric { namespace ublas {
                     }
                     ++ it2;
                 } else if (compare > 0) {
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
                     typename matrix_column<const E>::const_iterator it1e ((*it2e).begin ());
                     typename matrix_column<const E>::const_iterator it1e_end ((*it2e).end ());
                     while (it1e != it1e_end) {
                         // Need the const member dispatched.
                         const M &cm = m;
-                        // FIXME: we need a better floating point comparison...
-                        BOOST_UBLAS_CHECK (*it1e == cm (it1e.index (), it2e.index ()), bad_index ());
+                        BOOST_UBLAS_CHECK (functor_type::check (cm (it1e.index (), it2e.index ()), *it1e), external_logic ());
                         ++ it1e;
                     }
 #endif
@@ -2382,15 +2237,14 @@ namespace boost { namespace numeric { namespace ublas {
                 }
                 ++ it2;
             }
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
             while (it2e != it2e_end) {
                 typename matrix_column<const E>::const_iterator it1e ((*it2e).begin ());
                 typename matrix_column<const E>::const_iterator it1e_end ((*it2e).end ());
                 while (it1e != it1e_end) {
                     // Need the const member dispatched.
                     const M &cm = m;
-                    // FIXME: we need a better floating point comparison...
-                    BOOST_UBLAS_CHECK (*it1e == cm (it1e.index (), it2e.index ()), bad_index ());
+                    BOOST_UBLAS_CHECK (functor_type::check (cm (it1e.index (), it2e.index ()), *it1e), external_logic ());
                     ++ it1e;
                 }
                 ++ it2e;
@@ -2420,11 +2274,10 @@ namespace boost { namespace numeric { namespace ublas {
                             functor_type () (*it1, value_type ());
                             ++ it1;
                         } else if (compare > 0) {
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
                             // Need the const member dispatched.
                             const M &cm = m;
-                            // FIXME: we need a better floating point comparison...
-                            BOOST_UBLAS_CHECK (*it1e == cm (it1e.index1 (), it1e.index2 ()), bad_index ());
+                            BOOST_UBLAS_CHECK (functor_type::check (cm (it1e.index1 (), it1e.index2 ()), *it1e), external_logic ());
 #endif
                             ++ it1e;
                         }
@@ -2433,12 +2286,11 @@ namespace boost { namespace numeric { namespace ublas {
                         functor_type () (*it1, value_type ());
                         ++ it1;
                     }
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
                     while (it1e != it1e_end) {
                         // Need the const member dispatched.
                         const M &cm = m;
-                        // FIXME: we need a better floating point comparison...
-                        BOOST_UBLAS_CHECK (*it1e == cm (it1e.index1 (), it1e.index2 ()), bad_index ());
+                        BOOST_UBLAS_CHECK (functor_type::check (cm (it1e.index1 (), it1e.index2 ()), *it1e), external_logic ());
                         ++ it1e;
                     }
 #endif
@@ -2452,14 +2304,13 @@ namespace boost { namespace numeric { namespace ublas {
                     }
                     ++ it2;
                 } else if (compare > 0) {
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
                     typename E::const_iterator1 it1e (it2e.begin ());
                     typename E::const_iterator1 it1e_end (it2e.end ());
                     while (it1e != it1e_end) {
                         // Need the const member dispatched.
                         const M &cm = m;
-                        // FIXME: we need a better floating point comparison...
-                        BOOST_UBLAS_CHECK (*it1e == cm (it1e.index1 (), it1e.index2 ()), bad_index ());
+                        BOOST_UBLAS_CHECK (functor_type::check (cm (it1e.index1 (), it1e.index2 ()), *it1e), external_logic ());
                         ++ it1e;
                     }
 #endif
@@ -2475,15 +2326,14 @@ namespace boost { namespace numeric { namespace ublas {
                 }
                 ++ it2;
             }
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
             while (it2e != it2e_end) {
                 typename E::const_iterator1 it1e (it2e.begin ());
                 typename E::const_iterator1 it1e_end (it2e.end ());
                 while (it1e != it1e_end) {
                     // Need the const member dispatched.
                     const M &cm = m;
-                    // FIXME: we need a better floating point comparison...
-                    BOOST_UBLAS_CHECK (*it1e == cm (it1e.index1 (), it1e.index2 ()), bad_index ());
+                    BOOST_UBLAS_CHECK (functor_type::check (cm (it1e.index1 (), it1e.index2 ()), *it1e), external_logic ());
                     ++ it1e;
                 }
                 ++ it2e;
@@ -2501,7 +2351,7 @@ namespace boost { namespace numeric { namespace ublas {
                                                   assign_category,
                                                   BOOST_UBLAS_TYPENAME E::const_iterator1::iterator_category,
                                                   BOOST_UBLAS_TYPENAME E::const_iterator2::iterator_category>::storage_category storage_category;
-            // FIXME: can we improve the dispatch here?
+            // FIXME: can't we improve the dispatch here?
             // typedef typename E::orientation_category orientation_category;
             typedef typename M::orientation_category orientation_category;
 #ifndef BOOST_UBLAS_ENABLE_SPECIALIZED_ASSIGN
@@ -2707,11 +2557,10 @@ namespace boost { namespace numeric { namespace ublas {
                         // throw external_logic ();
                         external_logic ().raise ();
                     } else if (compare > 0) {
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
                         // Need the const member dispatched.
                         const M &cm = m;
-                        // FIXME: we need a better floating point comparison...
-                        BOOST_UBLAS_CHECK (*it2e == cm (it1e.index (), it2e.index ()), bad_index ());
+                        BOOST_UBLAS_CHECK (functor_type::check (cm (it1e.index (), it2e.index ()), *it2e), external_logic ());
 #endif
                         ++ it2e;
                     }
@@ -2721,12 +2570,11 @@ namespace boost { namespace numeric { namespace ublas {
                     // throw external_logic ();
                     external_logic ().raise ();
                 }
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
                 while (it2e != it2e_end) {
                     // Need the const member dispatched.
                     const M &cm = m;
-                    // FIXME: we need a better floating point comparison...
-                    BOOST_UBLAS_CHECK (*it2e == cm (it1e.index (), it2e.index ()), bad_index ());
+                    BOOST_UBLAS_CHECK (functor_type::check (cm (it1e.index (), it2e.index ()), *it2e), external_logic ());
                     ++ it2e;
                 }
 #endif
@@ -2741,14 +2589,13 @@ namespace boost { namespace numeric { namespace ublas {
                 }
                 ++ it1;
             } else if (compare > 0) {
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
                 typename matrix_row<const E>::const_iterator it2e ((*it1e).begin ());
                 typename matrix_row<const E>::const_iterator it2e_end ((*it1e).end ());
                 while (it2e != it2e_end) {
                     // Need the const member dispatched.
                     const M &cm = m;
-                    // FIXME: we need a better floating point comparison...
-                    BOOST_UBLAS_CHECK (*it2e == cm (it1e.index (), it2e.index ()), bad_index ());
+                    BOOST_UBLAS_CHECK (functor_type::check (cm (it1e.index (), it2e.index ()), *it2e), external_logic ());
                     ++ it2e;
                 }
 #endif
@@ -2765,15 +2612,14 @@ namespace boost { namespace numeric { namespace ublas {
             }
             ++ it1;
         }
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
         while (it1e != it1e_end) {
             typename matrix_row<const E>::const_iterator it2e ((*it1e).begin ());
             typename matrix_row<const E>::const_iterator it2e_end ((*it1e).end ());
             while (it2e != it2e_end) {
                 // Need the const member dispatched.
                 const M &cm = m;
-                // FIXME: we need a better floating point comparison...
-                BOOST_UBLAS_CHECK (*it2e == cm (it1e.index (), it2e.index ()), bad_index ());
+                BOOST_UBLAS_CHECK (functor_type::check (cm (it1e.index (), it2e.index ()), *it2e), external_logic ());
                 ++ it2e;
             }
             ++ it1e;
@@ -2805,11 +2651,10 @@ namespace boost { namespace numeric { namespace ublas {
                         // throw external_logic ();
                         external_logic ().raise ();
                     } else if (compare > 0) {
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
                         // Need the const member dispatched.
                         const M &cm = m;
-                        // FIXME: we need a better floating point comparison...
-                        BOOST_UBLAS_CHECK (*it2e == cm (it2e.index1 (), it2e.index2 ()), bad_index ());
+                        BOOST_UBLAS_CHECK (functor_type::check (cm (it2e.index1 (), it2e.index2 ()), *it2e), external_logic ());
 #endif
                         ++ it2e;
                     }
@@ -2819,12 +2664,11 @@ namespace boost { namespace numeric { namespace ublas {
                     // throw external_logic ();
                     external_logic ().raise ();
                 }
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
                 while (it2e != it2e_end) {
                     // Need the const member dispatched.
                     const M &cm = m;
-                    // FIXME: we need a better floating point comparison...
-                    BOOST_UBLAS_CHECK (*it2e == cm (it2e.index1 (), it2e.index2 ()), bad_index ());
+                    BOOST_UBLAS_CHECK (functor_type::check (cm (it2e.index1 (), it2e.index2 ()), *it2e), external_logic ());
                     ++ it2e;
                 }
 #endif
@@ -2839,14 +2683,13 @@ namespace boost { namespace numeric { namespace ublas {
                 }
                 ++ it1;
             } else if (compare > 0) {
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
                 typename E::const_iterator2 it2e (it1e.begin ());
                 typename E::const_iterator2 it2e_end (it1e.end ());
                 while (it2e != it2e_end) {
                     // Need the const member dispatched.
                     const M &cm = m;
-                    // FIXME: we need a better floating point comparison...
-                    BOOST_UBLAS_CHECK (*it2e == cm (it2e.index1 (), it2e.index2 ()), bad_index ());
+                    BOOST_UBLAS_CHECK (functor_type::check (cm (it2e.index1 (), it2e.index2 ()), *it2e), external_logic ());
                     ++ it2e;
                 }
 #endif
@@ -2863,15 +2706,14 @@ namespace boost { namespace numeric { namespace ublas {
             }
             ++ it1;
         }
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
         while (it1e != it1e_end) {
             typename E::const_iterator2 it2e (it1e.begin ());
             typename E::const_iterator2 it2e_end (it1e.end ());
             while (it2e != it2e_end) {
                 // Need the const member dispatched.
                 const M &cm = m;
-                // FIXME: we need a better floating point comparison...
-                BOOST_UBLAS_CHECK (*it2e == cm (it2e.index1 (), it2e.index2 ()), bad_index ());
+                BOOST_UBLAS_CHECK (functor_type::check (cm (it2e.index1 (), it2e.index2 ()), *it2e), external_logic ());
                 ++ it2e;
             }
             ++ it1e;
@@ -2910,11 +2752,10 @@ namespace boost { namespace numeric { namespace ublas {
                         // throw external_logic ();
                         external_logic ().raise ();
                     } else if (compare > 0) {
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
                         // Need the const member dispatched.
                         const M &cm = m;
-                        // FIXME: we need a better floating point comparison...
-                        BOOST_UBLAS_CHECK (*it1e == cm (it1e.index (), it2e.index ()), bad_index ());
+                        BOOST_UBLAS_CHECK (functor_type::check (cm (it1e.index (), it2e.index ()), *it1e), external_logic ());
 #endif
                         ++ it1e;
                     }
@@ -2924,12 +2765,11 @@ namespace boost { namespace numeric { namespace ublas {
                     // throw external_logic ();
                     external_logic ().raise ();
                 }
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
                 while (it1e != it1e_end) {
                     // Need the const member dispatched.
                     const M &cm = m;
-                    // FIXME: we need a better floating point comparison...
-                    BOOST_UBLAS_CHECK (*it1e == cm (it1e.index (), it2e.index ()), bad_index ());
+                    BOOST_UBLAS_CHECK (functor_type::check (cm (it1e.index (), it2e.index ()), *it1e), external_logic ());
                     ++ it1e;
                 }
 #endif
@@ -2944,14 +2784,13 @@ namespace boost { namespace numeric { namespace ublas {
                 }
                 ++ it2;
             } else if (compare > 0) {
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
                 typename matrix_column<const E>::const_iterator it1e ((*it2e).begin ());
                 typename matrix_column<const E>::const_iterator it1e_end ((*it2e).end ());
                 while (it1e != it1e_end) {
                     // Need the const member dispatched.
                     const M &cm = m;
-                    // FIXME: we need a better floating point comparison...
-                    BOOST_UBLAS_CHECK (*it1e == cm (it1e.index (), it2e.index ()), bad_index ());
+                    BOOST_UBLAS_CHECK (functor_type::check (cm (it1e.index (), it2e.index ()), *it1e), external_logic ());
                     ++ it1e;
                 }
 #endif
@@ -2968,15 +2807,14 @@ namespace boost { namespace numeric { namespace ublas {
             }
             ++ it2;
         }
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
         while (it2e != it2e_end) {
             typename matrix_column<const E>::const_iterator it1e ((*it2e).begin ());
             typename matrix_column<const E>::const_iterator it1e_end ((*it2e).end ());
             while (it1e != it1e_end) {
                 // Need the const member dispatched.
                 const M &cm = m;
-                // FIXME: we need a better floating point comparison...
-                BOOST_UBLAS_CHECK (*it1e == cm (it1e.index (), it2e.index ()), bad_index ());
+                BOOST_UBLAS_CHECK (functor_type::check (cm (it1e.index (), it2e.index ()), *it1e), external_logic ());
                 ++ it1e;
             }
             ++ it2e;
@@ -3008,11 +2846,10 @@ namespace boost { namespace numeric { namespace ublas {
                         // throw external_logic ();
                         external_logic ().raise ();
                     } else if (compare > 0) {
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
                         // Need the const member dispatched.
                         const M &cm = m;
-                        // FIXME: we need a better floating point comparison...
-                        BOOST_UBLAS_CHECK (*it1e == cm (it1e.index1 (), it1e.index2 ()), bad_index ());
+                        BOOST_UBLAS_CHECK (functor_type::check (cm (it1e.index1 (), it1e.index2 ()), *it1e), external_logic ());
 #endif
                         ++ it1e;
                     }
@@ -3022,12 +2859,11 @@ namespace boost { namespace numeric { namespace ublas {
                     // throw external_logic ();
                     external_logic ().raise ();
                 }
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
                 while (it1e != it1e_end) {
                     // Need the const member dispatched.
                     const M &cm = m;
-                    // FIXME: we need a better floating point comparison...
-                    BOOST_UBLAS_CHECK (*it1e == cm (it1e.index1 (), it1e.index2 ()), bad_index ());
+                    BOOST_UBLAS_CHECK (functor_type::check (cm (it1e.index1 (), it1e.index2 ()), *it1e), external_logic ());
                     ++ it1e;
                 }
 #endif
@@ -3042,14 +2878,13 @@ namespace boost { namespace numeric { namespace ublas {
                 }
                 ++ it2;
             } else if (compare > 0) {
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
                 typename E::const_iterator1 it1e (it2e.begin ());
                 typename E::const_iterator1 it1e_end (it2e.end ());
                 while (it1e != it1e_end) {
                     // Need the const member dispatched.
                     const M &cm = m;
-                    // FIXME: we need a better floating point comparison...
-                    BOOST_UBLAS_CHECK (*it1e == cm (it1e.index1 (), it1e.index2 ()), bad_index ());
+                    BOOST_UBLAS_CHECK (functor_type::check (cm (it1e.index1 (), it1e.index2 ()), *it1e), external_logic ());
                     ++ it1e;
                 }
 #endif
@@ -3066,15 +2901,14 @@ namespace boost { namespace numeric { namespace ublas {
             }
             ++ it2;
         }
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
         while (it2e != it2e_end) {
             typename E::const_iterator1 it1e (it2e.begin ());
             typename E::const_iterator1 it1e_end (it2e.end ());
             while (it1e != it1e_end) {
                 // Need the const member dispatched.
                 const M &cm = m;
-                // FIXME: we need a better floating point comparison...
-                BOOST_UBLAS_CHECK (*it1e == cm (it1e.index1 (), it1e.index2 ()), bad_index ());
+                BOOST_UBLAS_CHECK (functor_type::check (cm (it1e.index1 (), it1e.index2 ()), *it1e), external_logic ());
                 ++ it1e;
             }
             ++ it2e;
@@ -3260,11 +3094,10 @@ namespace boost { namespace numeric { namespace ublas {
                             // throw external_logic ();
                             external_logic ().raise ();
                         } else if (compare > 0) {
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
                             // Need the const member dispatched.
                             const M &cm = m;
-                            // FIXME: we need a better floating point comparison...
-                            BOOST_UBLAS_CHECK (*it2e == cm (it1e.index (), it2e.index ()), bad_index ());
+                            BOOST_UBLAS_CHECK (functor_type::check (cm (it1e.index (), it2e.index ()), *it2e), external_logic ());
 #endif
                             ++ it2e;
                         }
@@ -3274,12 +3107,11 @@ namespace boost { namespace numeric { namespace ublas {
                         // throw external_logic ();
                         external_logic ().raise ();
                     }
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
                     while (it2e != it2e_end) {
                         // Need the const member dispatched.
                         const M &cm = m;
-                        // FIXME: we need a better floating point comparison...
-                        BOOST_UBLAS_CHECK (*it2e == cm (it1e.index (), it2e.index ()), bad_index ());
+                        BOOST_UBLAS_CHECK (functor_type::check (cm (it1e.index (), it2e.index ()), *it2e), external_logic ());
                         ++ it2e;
                     }
 #endif
@@ -3294,14 +3126,13 @@ namespace boost { namespace numeric { namespace ublas {
                     }
                     ++ it1;
                 } else if (compare > 0) {
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
                     typename matrix_row<const E>::const_iterator it2e ((*it1e).begin ());
                     typename matrix_row<const E>::const_iterator it2e_end ((*it1e).end ());
                     while (it2e != it2e_end) {
                         // Need the const member dispatched.
                         const M &cm = m;
-                        // FIXME: we need a better floating point comparison...
-                        BOOST_UBLAS_CHECK (*it2e == cm (it1e.index (), it2e.index ()), bad_index ());
+                        BOOST_UBLAS_CHECK (functor_type::check (cm (it1e.index (), it2e.index ()), *it2e), external_logic ());
                         ++ it2e;
                     }
 #endif
@@ -3318,15 +3149,14 @@ namespace boost { namespace numeric { namespace ublas {
                 }
                 ++ it1;
             }
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
             while (it1e != it1e_end) {
                 typename matrix_row<const E>::const_iterator it2e ((*it1e).begin ());
                 typename matrix_row<const E>::const_iterator it2e_end ((*it1e).end ());
                 while (it2e != it2e_end) {
                     // Need the const member dispatched.
                     const M &cm = m;
-                    // FIXME: we need a better floating point comparison...
-                    BOOST_UBLAS_CHECK (*it2e == cm (it1e.index (), it2e.index ()), bad_index ());
+                    BOOST_UBLAS_CHECK (functor_type::check (cm (it1e.index (), it2e.index ()), *it2e), external_logic ());
                     ++ it2e;
                 }
                 ++ it1e;
@@ -3357,11 +3187,10 @@ namespace boost { namespace numeric { namespace ublas {
                             // throw external_logic ();
                             external_logic ().raise ();
                         } else if (compare > 0) {
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
                             // Need the const member dispatched.
                             const M &cm = m;
-                            // FIXME: we need a better floating point comparison...
-                            BOOST_UBLAS_CHECK (*it2e == cm (it2e.index1 (), it2e.index2 ()), bad_index ());
+                            BOOST_UBLAS_CHECK (functor_type::check (cm (it2e.index1 (), it2e.index2 ()), *it2e), external_logic ());
 #endif
                             ++ it2e;
                         }
@@ -3371,12 +3200,11 @@ namespace boost { namespace numeric { namespace ublas {
                         // throw external_logic ();
                         external_logic ().raise ();
                     }
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
                     while (it2e != it2e_end) {
                         // Need the const member dispatched.
                         const M &cm = m;
-                        // FIXME: we need a better floating point comparison...
-                        BOOST_UBLAS_CHECK (*it2e == cm (it2e.index1 (), it2e.index2 ()), bad_index ());
+                        BOOST_UBLAS_CHECK (functor_type::check (cm (it2e.index1 (), it2e.index2 ()), *it2e), external_logic ());
                         ++ it2e;
                     }
 #endif
@@ -3391,14 +3219,13 @@ namespace boost { namespace numeric { namespace ublas {
                     }
                     ++ it1;
                 } else if (compare > 0) {
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
                     typename E::const_iterator2 it2e (it1e.begin ());
                     typename E::const_iterator2 it2e_end (it1e.end ());
                     while (it2e != it2e_end) {
                         // Need the const member dispatched.
                         const M &cm = m;
-                        // FIXME: we need a better floating point comparison...
-                        BOOST_UBLAS_CHECK (*it2e == cm (it2e.index1 (), it2e.index2 ()), bad_index ());
+                        BOOST_UBLAS_CHECK (functor_type::check (cm (it2e.index1 (), it2e.index2 ()), *it2e), external_logic ());
                         ++ it2e;
                     }
 #endif
@@ -3415,15 +3242,14 @@ namespace boost { namespace numeric { namespace ublas {
                 }
                 ++ it1;
             }
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
             while (it1e != it1e_end) {
                 typename E::const_iterator2 it2e (it1e.begin ());
                 typename E::const_iterator2 it2e_end (it1e.end ());
                 while (it2e != it2e_end) {
                     // Need the const member dispatched.
                     const M &cm = m;
-                    // FIXME: we need a better floating point comparison...
-                    BOOST_UBLAS_CHECK (*it2e == cm (it2e.index1 (), it2e.index2 ()), bad_index ());
+                    BOOST_UBLAS_CHECK (functor_type::check (cm (it2e.index1 (), it2e.index2 ()), *it2e), external_logic ());
                     ++ it2e;
                 }
                 ++ it1e;
@@ -3461,11 +3287,10 @@ namespace boost { namespace numeric { namespace ublas {
                             // throw external_logic ();
                             external_logic ().raise ();
                         } else if (compare > 0) {
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
                             // Need the const member dispatched.
                             const M &cm = m;
-                            // FIXME: we need a better floating point comparison...
-                            BOOST_UBLAS_CHECK (*it1e == cm (it1e.index (), it2e.index ()), bad_index ());
+                            BOOST_UBLAS_CHECK (functor_type::check (cm (it1e.index (), it2e.index ()), *it1e), external_logic ());
 #endif
                             ++ it1e;
                         }
@@ -3475,12 +3300,11 @@ namespace boost { namespace numeric { namespace ublas {
                         // throw external_logic ();
                         external_logic ().raise ();
                     }
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
                     while (it1e != it1e_end) {
                         // Need the const member dispatched.
                         const M &cm = m;
-                        // FIXME: we need a better floating point comparison...
-                        BOOST_UBLAS_CHECK (*it1e == cm (it1e.index (), it2e.index ()), bad_index ());
+                        BOOST_UBLAS_CHECK (functor_type::check (cm (it1e.index (), it2e.index ()), *it1e), external_logic ());
                         ++ it1e;
                     }
 #endif
@@ -3495,14 +3319,13 @@ namespace boost { namespace numeric { namespace ublas {
                     }
                     ++ it2;
                 } else if (compare > 0) {
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
                     typename matrix_column<const E>::const_iterator it1e ((*it2e).begin ());
                     typename matrix_column<const E>::const_iterator it1e_end ((*it2e).end ());
                     while (it1e != it1e_end) {
                         // Need the const member dispatched.
                         const M &cm = m;
-                        // FIXME: we need a better floating point comparison...
-                        BOOST_UBLAS_CHECK (*it1e == cm (it1e.index (), it2e.index ()), bad_index ());
+                        BOOST_UBLAS_CHECK (functor_type::check (cm (it1e.index (), it2e.index ()), *it1e), external_logic ());
                         ++ it1e;
                     }
 #endif
@@ -3519,15 +3342,14 @@ namespace boost { namespace numeric { namespace ublas {
                 }
                 ++ it2;
             }
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
             while (it2e != it2e_end) {
                 typename matrix_column<const E>::const_iterator it1e ((*it2e).begin ());
                 typename matrix_column<const E>::const_iterator it1e_end ((*it2e).end ());
                 while (it1e != it1e_end) {
                     // Need the const member dispatched.
                     const M &cm = m;
-                    // FIXME: we need a better floating point comparison...
-                    BOOST_UBLAS_CHECK (*it1e == cm (it1e.index (), it2e.index ()), bad_index ());
+                    BOOST_UBLAS_CHECK (functor_type::check (cm (it1e.index (), it2e.index ()), *it1e), external_logic ());
                     ++ it1e;
                 }
                 ++ it2e;
@@ -3558,11 +3380,10 @@ namespace boost { namespace numeric { namespace ublas {
                             // throw external_logic ();
                             external_logic ().raise ();
                         } else if (compare > 0) {
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
                             // Need the const member dispatched.
                             const M &cm = m;
-                            // FIXME: we need a better floating point comparison...
-                            BOOST_UBLAS_CHECK (*it1e == cm (it1e.index1 (), it1e.index2 ()), bad_index ());
+                            BOOST_UBLAS_CHECK (functor_type::check (cm (it1e.index1 (), it1e.index2 ()), *it1e), external_logic ());
 #endif
                             ++ it1e;
                         }
@@ -3572,12 +3393,11 @@ namespace boost { namespace numeric { namespace ublas {
                         // throw external_logic ();
                         external_logic ().raise ();
                     }
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
                     while (it1e != it1e_end) {
                         // Need the const member dispatched.
                         const M &cm = m;
-                        // FIXME: we need a better floating point comparison...
-                        BOOST_UBLAS_CHECK (*it1e == cm (it1e.index1 (), it1e.index2 ()), bad_index ());
+                        BOOST_UBLAS_CHECK (functor_type::check (cm (it1e.index1 (), it1e.index2 ()), *it1e), external_logic ());
                         ++ it1e;
                     }
 #endif
@@ -3592,14 +3412,13 @@ namespace boost { namespace numeric { namespace ublas {
                     }
                     ++ it2;
                 } else if (compare > 0) {
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
                     typename E::const_iterator1 it1e (it2e.begin ());
                     typename E::const_iterator1 it1e_end (it2e.end ());
                     while (it1e != it1e_end) {
                         // Need the const member dispatched.
                         const M &cm = m;
-                        // FIXME: we need a better floating point comparison...
-                        BOOST_UBLAS_CHECK (*it1e == cm (it1e.index1 (), it1e.index2 ()), bad_index ());
+                        BOOST_UBLAS_CHECK (functor_type::check (cm (it1e.index1 (), it1e.index2 ()), *it1e), external_logic ());
                         ++ it1e;
                     }
 #endif
@@ -3616,15 +3435,14 @@ namespace boost { namespace numeric { namespace ublas {
                 }
                 ++ it2;
             }
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
             while (it2e != it2e_end) {
                 typename E::const_iterator1 it1e (it2e.begin ());
                 typename E::const_iterator1 it1e_end (it2e.end ());
                 while (it1e != it1e_end) {
                     // Need the const member dispatched.
                     const M &cm = m;
-                    // FIXME: we need a better floating point comparison...
-                    BOOST_UBLAS_CHECK (*it1e == cm (it1e.index1 (), it1e.index2 ()), bad_index ());
+                    BOOST_UBLAS_CHECK (functor_type::check (cm (it1e.index1 (), it1e.index2 ()), *it1e), external_logic ());
                     ++ it1e;
                 }
                 ++ it2e;
@@ -3641,7 +3459,7 @@ namespace boost { namespace numeric { namespace ublas {
             typedef typename matrix_swap_traits<BOOST_UBLAS_TYPENAME M::storage_category,
                                                 BOOST_UBLAS_TYPENAME E::const_iterator1::iterator_category,
                                                 BOOST_UBLAS_TYPENAME E::const_iterator2::iterator_category>::storage_category storage_category;
-            // FIXME: can we improve the dispatch here?
+            // FIXME: can't we improve the dispatch here?
             // typedef typename E::orientation_category orientation_category;
             typedef typename M::orientation_category orientation_category;
 #ifndef BOOST_UBLAS_ENABLE_SPECIALIZED_ASSIGN

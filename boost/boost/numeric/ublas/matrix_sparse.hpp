@@ -49,14 +49,6 @@ namespace boost { namespace numeric { namespace ublas {
         typedef sparse_matrix<T, F, A> self_type;
         typedef const matrix_const_reference<const_self_type> const_closure_type;
         typedef matrix_reference<self_type> closure_type;
-#ifdef BOOST_UBLAS_DEPRECATED
-        typedef const matrix_row<const_self_type> const_matrix_row_type;
-        typedef matrix_row<self_type> matrix_row_type;
-        typedef const matrix_column<const_self_type> const_matrix_column_type;
-        typedef matrix_column<self_type> matrix_column_type;
-        typedef const matrix_range<const_self_type> const_matrix_range_type;
-        typedef matrix_range<self_type> matrix_range_type;
-#endif
         typedef typename A::const_iterator const_iterator_type;
         typedef typename A::iterator iterator_type;
         typedef sparse_tag storage_category;
@@ -122,17 +114,6 @@ namespace boost { namespace numeric { namespace ublas {
         reference operator () (size_type i, size_type j) {
             return data () [functor_type::element (i, size1_, j, size2_)];
         }
-
-#ifdef BOOST_UBLAS_DEPRECATED
-        BOOST_UBLAS_INLINE
-        const_matrix_row_type operator [] (size_type i) const {
-            return const_matrix_row_type (*this, i);
-        }
-        BOOST_UBLAS_INLINE
-        matrix_row_type operator [] (size_type i) {
-            return matrix_row_type (*this, i);
-        }
-#endif
 
         // Assignment
         BOOST_UBLAS_INLINE
@@ -1096,14 +1077,6 @@ namespace boost { namespace numeric { namespace ublas {
         typedef sparse_vector_of_sparse_vector<T, F, A> self_type;
         typedef const matrix_const_reference<const_self_type> const_closure_type;
         typedef matrix_reference<self_type> closure_type;
-#ifdef BOOST_UBLAS_DEPRECATED
-        typedef const matrix_row<const_self_type> const_matrix_row_type;
-        typedef matrix_row<self_type> matrix_row_type;
-        typedef const matrix_column<const_self_type> const_matrix_column_type;
-        typedef matrix_column<self_type> matrix_column_type;
-        typedef const matrix_range<const_self_type> const_matrix_range_type;
-        typedef matrix_range<self_type> matrix_range_type;
-#endif
         typedef typename A::value_type::second_type vector_data_value_type;
         typedef typename A::const_iterator vector_const_iterator_type;
         typedef typename A::iterator vector_iterator_type;
@@ -1183,17 +1156,6 @@ namespace boost { namespace numeric { namespace ublas {
         reference operator () (size_type i, size_type j) {
             return data () [functor_type::element1 (i, size1_, j, size2_)] [functor_type::element2 (i, size1_, j, size2_)];
         }
-
-#ifdef BOOST_UBLAS_DEPRECATED
-        BOOST_UBLAS_INLINE
-        const_matrix_row_type operator [] (size_type i) const {
-            return const_matrix_row_type (*this, i);
-        }
-        BOOST_UBLAS_INLINE
-        matrix_row_type operator [] (size_type i) {
-            return matrix_row_type (*this, i);
-        }
-#endif
 
         // Assignment
         BOOST_UBLAS_INLINE
@@ -2256,14 +2218,6 @@ namespace boost { namespace numeric { namespace ublas {
         typedef compressed_matrix<T, F, IA, TA> self_type;
         typedef const matrix_const_reference<const_self_type> const_closure_type;
         typedef matrix_reference<self_type> closure_type;
-#ifdef BOOST_UBLAS_DEPRECATED
-        typedef const matrix_row<const_self_type> const_matrix_row_type;
-        typedef matrix_row<self_type> matrix_row_type;
-        typedef const matrix_column<const_self_type> const_matrix_column_type;
-        typedef matrix_column<self_type> matrix_column_type;
-        typedef const matrix_range<const_self_type> const_matrix_range_type;
-        typedef matrix_range<self_type> matrix_range_type;
-#endif
         typedef typename IA::const_iterator vector_const_iterator_type;
         typedef typename IA::iterator vector_iterator_type;
         typedef typename IA::const_iterator const_iterator_type;
@@ -2392,17 +2346,6 @@ namespace boost { namespace numeric { namespace ublas {
                 insert (i, j, value_type ());
             return value_data () [it - index2_data ().begin ()];
         }
-
-#ifdef BOOST_UBLAS_DEPRECATED
-        BOOST_UBLAS_INLINE
-        const_matrix_row_type operator [] (size_type i) const {
-            return const_matrix_row_type (*this, i);
-        }
-        BOOST_UBLAS_INLINE
-        matrix_row_type operator [] (size_type i) {
-            return matrix_row_type (*this, i);
-        }
-#endif
 
         // Assignment
         BOOST_UBLAS_INLINE

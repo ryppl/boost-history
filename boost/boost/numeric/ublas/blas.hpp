@@ -139,9 +139,9 @@ namespace boost { namespace numeric { namespace ublas {
         M &
         hr2 (M &m, const T &t, const V1 &v1, const V2 &v2) {
 #ifdef BOOST_UBLAS_USE_ET
-            return m += t * outer_prod (v1, conj (v2)) + detail::conj (t) * outer_prod (v2, conj (v1));
-#else 
-            return m = m + t * outer_prod (v1, conj (v2)) + detail::conj (t) * outer_prod (v2, conj (v1));
+            return m += t * outer_prod (v1, conj (v2)) + type_traits<T>::conj (t) * outer_prod (v2, conj (v1));
+#else
+            return m = m + t * outer_prod (v1, conj (v2)) + type_traits<T>::conj (t) * outer_prod (v2, conj (v1));
 #endif 
         }
 
@@ -186,7 +186,7 @@ namespace boost { namespace numeric { namespace ublas {
         template<class M1, class T1, class T2, class M2, class M3>
         M1 &
         hr2k (M1 &m1, const T1 &t1, const T2 &t2, const M2 &m2, const M3 &m3) {
-            return m1 = t1 * m1 + t2 * prod (m2, herm (m3)) + detail::conj (t2) * prod (m3, herm (m2));
+            return m1 = t1 * m1 + t2 * prod (m2, herm (m3)) + type_traits<T2>::conj (t2) * prod (m3, herm (m2));
         }
 
     }

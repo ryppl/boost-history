@@ -22,7 +22,6 @@
 #include <boost/numeric/ublas/config.hpp>
 #include <boost/numeric/ublas/exception.hpp>
 #include <boost/numeric/ublas/traits.hpp>
-#include <boost/numeric/ublas/math.hpp>
 #include <boost/numeric/ublas/duff.hpp>
 
 namespace boost { namespace numeric { namespace ublas {
@@ -32,48 +31,48 @@ namespace boost { namespace numeric { namespace ublas {
     // Unary
     template<class T>
     struct scalar_unary_functor {
-        typedef T argument_type;
-        typedef T result_type;
+        typedef typename type_traits<T>::const_reference argument_type;
+        typedef typename type_traits<T>::value_type result_type;
     };
 
     template<class T>
-    struct scalar_identity: 
+    struct scalar_identity:
         public scalar_unary_functor<T> {
         typedef typename scalar_unary_functor<T>::argument_type argument_type;
         typedef typename scalar_unary_functor<T>::result_type result_type;
 
         BOOST_UBLAS_INLINE
-        result_type operator () (const argument_type &t) const { 
-            return t; 
+        result_type operator () (argument_type t) const {
+            return t;
         }
     };
     template<class T>
-    struct scalar_negate: 
+    struct scalar_negate:
         public scalar_unary_functor<T> {
         typedef typename scalar_unary_functor<T>::argument_type argument_type;
         typedef typename scalar_unary_functor<T>::result_type result_type;
 
         BOOST_UBLAS_INLINE
-        result_type operator () (const argument_type &t) const { 
-            return - t; 
+        result_type operator () (argument_type t) const {
+            return - t;
         }
     };
     template<class T>
-    struct scalar_conj: 
+    struct scalar_conj:
         public scalar_unary_functor<T> {
         typedef typename scalar_unary_functor<T>::argument_type argument_type;
         typedef typename scalar_unary_functor<T>::result_type result_type;
 
         BOOST_UBLAS_INLINE
-        result_type operator () (const argument_type &t) const { 
-            return detail::conj (t); 
+        result_type operator () (argument_type t) const {
+            return type_traits<result_type>::conj (t);
         }
     };
 
     // Unary returning real
     template<class T>
     struct scalar_real_unary_functor {
-        typedef T argument_type;
+        typedef typename type_traits<T>::const_reference argument_type;
         typedef typename type_traits<T>::real_type result_type;
     };
 
@@ -84,8 +83,8 @@ namespace boost { namespace numeric { namespace ublas {
         typedef typename scalar_real_unary_functor<T>::result_type result_type;
 
         BOOST_UBLAS_INLINE
-        result_type operator () (const argument_type &t) const {
-            return detail::real (t);
+        result_type operator () (argument_type t) const {
+            return type_traits<result_type>::real (t);
         }
     };
     template<class T>
@@ -95,16 +94,16 @@ namespace boost { namespace numeric { namespace ublas {
         typedef typename scalar_real_unary_functor<T>::result_type result_type;
 
         BOOST_UBLAS_INLINE
-        result_type operator () (const argument_type &t) const {
-            return detail::imag (t);
+        result_type operator () (argument_type t) const {
+            return type_traits<result_type>::imag (t);
         }
     };
 
     // Binary
     template<class T1, class T2>
     struct scalar_binary_functor {
-        typedef T1 argument1_type;
-        typedef T2 argument2_type;
+        typedef typename type_traits<T1>::const_reference argument1_type;
+        typedef typename type_traits<T2>::const_reference argument2_type;
         typedef typename promote_traits<T1, T2>::promote_type result_type;
     };
 
@@ -116,32 +115,32 @@ namespace boost { namespace numeric { namespace ublas {
         typedef typename scalar_binary_functor<T1, T2>::result_type result_type;
 
         BOOST_UBLAS_INLINE
-        result_type operator () (const argument1_type &t1, const argument2_type &t2) const {
+        result_type operator () (argument1_type t1, argument2_type t2) const {
             return t1 + t2;
         }
     };
     template<class T1, class T2>
-    struct scalar_minus: 
-        public scalar_binary_functor<T1, T2> { 
+    struct scalar_minus:
+        public scalar_binary_functor<T1, T2> {
         typedef typename scalar_binary_functor<T1, T2>::argument1_type argument1_type;
         typedef typename scalar_binary_functor<T1, T2>::argument2_type argument2_type;
         typedef typename scalar_binary_functor<T1, T2>::result_type result_type;
 
         BOOST_UBLAS_INLINE
-        result_type operator () (const argument1_type &t1, const argument2_type &t2) const {
-            return t1 - t2; 
+        result_type operator () (argument1_type t1, argument2_type t2) const {
+            return t1 - t2;
         }
     };
     template<class T1, class T2>
-    struct scalar_multiplies: 
-        public scalar_binary_functor<T1, T2> { 
+    struct scalar_multiplies:
+        public scalar_binary_functor<T1, T2> {
         typedef typename scalar_binary_functor<T1, T2>::argument1_type argument1_type;
         typedef typename scalar_binary_functor<T1, T2>::argument2_type argument2_type;
         typedef typename scalar_binary_functor<T1, T2>::result_type result_type;
 
         BOOST_UBLAS_INLINE
-        result_type operator () (const argument1_type &t1, const argument2_type &t2) const { 
-            return t1 * t2; 
+        result_type operator () (argument1_type t1, argument2_type t2) const {
+            return t1 * t2;
         }
     };
     template<class T1, class T2>
@@ -152,9 +151,17 @@ namespace boost { namespace numeric { namespace ublas {
         typedef typename scalar_binary_functor<T1, T2>::result_type result_type;
 
         BOOST_UBLAS_INLINE
-        result_type operator () (const argument1_type &t1, const argument2_type &t2) const {
+        result_type operator () (argument1_type t1, argument2_type t2) const {
             return t1 / t2;
         }
+    };
+
+    template<class T1, class T2>
+    struct scalar_binary_assign_functor {
+        typedef typename type_traits<T1>::reference argument1_type;
+        typedef typename type_traits<T2>::const_reference argument2_type;
+        typedef typename type_traits<T1>::value_type check_argument1_type;
+        typedef typename type_traits<T2>::value_type check_argument2_type;
     };
 
     struct assign_tag {};
@@ -162,74 +169,127 @@ namespace boost { namespace numeric { namespace ublas {
 
     template<class T1, class T2>
     struct scalar_assign:
-        public scalar_binary_functor<T1, T2> {
-        typedef typename scalar_binary_functor<T1, T2>::argument1_type argument1_type;
-        typedef typename scalar_binary_functor<T1, T2>::argument2_type argument2_type;
+        public scalar_binary_assign_functor<T1, T2> {
+        typedef typename scalar_binary_assign_functor<T1, T2>::argument1_type argument1_type;
+        typedef typename scalar_binary_assign_functor<T1, T2>::argument2_type argument2_type;
+        typedef typename scalar_binary_assign_functor<T1, T2>::check_argument1_type check_argument1_type;
+        typedef typename scalar_binary_assign_functor<T1, T2>::check_argument2_type check_argument2_type;
         typedef assign_tag assign_category;
 
         BOOST_UBLAS_INLINE
-        void operator () (argument1_type &t1, const argument2_type &t2) const {
+        void operator () (argument1_type t1, argument2_type t2) const {
             t1 = t2;
+        }
+        static
+        BOOST_UBLAS_INLINE
+        bool check (check_argument1_type t1, check_argument2_type t2) {
+            return type_traits<check_argument1_type>::equals (t1, check_argument1_type (0)) &&
+                   type_traits<check_argument2_type>::equals (t2, check_argument2_type (0));
         }
     };
     template<class T1, class T2>
     struct scalar_plus_assign:
-        public scalar_binary_functor<T1, T2> {
-        typedef typename scalar_binary_functor<T1, T2>::argument1_type argument1_type;
-        typedef typename scalar_binary_functor<T1, T2>::argument2_type argument2_type;
+        public scalar_binary_assign_functor<T1, T2> {
+        typedef typename scalar_binary_assign_functor<T1, T2>::argument1_type argument1_type;
+        typedef typename scalar_binary_assign_functor<T1, T2>::argument2_type argument2_type;
+        typedef typename scalar_binary_assign_functor<T1, T2>::check_argument1_type check_argument1_type;
+        typedef typename scalar_binary_assign_functor<T1, T2>::check_argument2_type check_argument2_type;
         typedef computed_assign_tag assign_category;
 
         BOOST_UBLAS_INLINE
-        void operator () (argument1_type &t1, const argument2_type &t2) const {
+        void operator () (argument1_type t1, argument2_type t2) const {
             t1 += t2;
+        }
+        static
+        BOOST_UBLAS_INLINE
+        bool check (check_argument1_type t1, check_argument2_type t2) {
+            return type_traits<check_argument2_type>::equals (t2, check_argument2_type (0));
         }
     };
     template<class T1, class T2>
     struct scalar_minus_assign:
-        public scalar_binary_functor<T1, T2> {
-        typedef typename scalar_binary_functor<T1, T2>::argument1_type argument1_type;
-        typedef typename scalar_binary_functor<T1, T2>::argument2_type argument2_type;
+        public scalar_binary_assign_functor<T1, T2> {
+        typedef typename scalar_binary_assign_functor<T1, T2>::argument1_type argument1_type;
+        typedef typename scalar_binary_assign_functor<T1, T2>::argument2_type argument2_type;
+        typedef typename scalar_binary_assign_functor<T1, T2>::check_argument1_type check_argument1_type;
+        typedef typename scalar_binary_assign_functor<T1, T2>::check_argument2_type check_argument2_type;
         typedef computed_assign_tag assign_category;
 
         BOOST_UBLAS_INLINE
-        void operator () (argument1_type &t1, const argument2_type &t2) const {
+        void operator () (argument1_type t1, argument2_type t2) const {
             t1 -= t2;
+        }
+        static
+        BOOST_UBLAS_INLINE
+        bool check (check_argument1_type t1, check_argument2_type t2) {
+            return type_traits<check_argument2_type>::equals (t2, check_argument2_type (0));
         }
     };
     template<class T1, class T2>
     struct scalar_multiplies_assign:
-        public scalar_binary_functor<T1, T2> {
-        typedef typename scalar_binary_functor<T1, T2>::argument1_type argument1_type;
-        typedef typename scalar_binary_functor<T1, T2>::argument2_type argument2_type;
+        public scalar_binary_assign_functor<T1, T2> {
+        typedef typename scalar_binary_assign_functor<T1, T2>::argument1_type argument1_type;
+        typedef typename scalar_binary_assign_functor<T1, T2>::argument2_type argument2_type;
+        typedef typename scalar_binary_assign_functor<T1, T2>::check_argument1_type check_argument1_type;
+        typedef typename scalar_binary_assign_functor<T1, T2>::check_argument2_type check_argument2_type;
         typedef computed_assign_tag assign_category;
 
         BOOST_UBLAS_INLINE
-        void operator () (argument1_type &t1, const argument2_type &t2) const {
+        void operator () (argument1_type t1, argument2_type t2) const {
             t1 *= t2;
+        }
+        static
+        BOOST_UBLAS_INLINE
+        bool check (check_argument1_type t1, check_argument2_type t2) {
+            return type_traits<check_argument2_type>::equals (t2, check_argument2_type (1));
         }
     };
     template<class T1, class T2>
     struct scalar_divides_assign:
-        public scalar_binary_functor<T1, T2> {
-        typedef typename scalar_binary_functor<T1, T2>::argument1_type argument1_type;
-        typedef typename scalar_binary_functor<T1, T2>::argument2_type argument2_type;
+        public scalar_binary_assign_functor<T1, T2> {
+        typedef typename scalar_binary_assign_functor<T1, T2>::argument1_type argument1_type;
+        typedef typename scalar_binary_assign_functor<T1, T2>::argument2_type argument2_type;
+        typedef typename scalar_binary_assign_functor<T1, T2>::check_argument1_type check_argument1_type;
+        typedef typename scalar_binary_assign_functor<T1, T2>::check_argument2_type check_argument2_type;
         typedef computed_assign_tag assign_category;
 
         BOOST_UBLAS_INLINE
-        void operator () (argument1_type &t1, const argument2_type &t2) const {
+        void operator () (argument1_type t1, argument2_type t2) const {
             t1 /= t2;
+        }
+        static
+        BOOST_UBLAS_INLINE
+        bool check (check_argument1_type t1, check_argument2_type t2) {
+            return type_traits<check_argument2_type>::equals (t2, check_argument2_type (1));
         }
     };
 
     template<class T1, class T2>
+    struct scalar_binary_swap_functor {
+        typedef typename type_traits<T1>::reference argument1_type;
+        typedef typename type_traits<T2>::reference argument2_type;
+        typedef typename promote_traits<T1, T2>::promote_type result_type;
+        typedef typename type_traits<T1>::value_type check_argument1_type;
+        typedef typename type_traits<T2>::value_type check_argument2_type;
+    };
+
+    template<class T1, class T2>
     struct scalar_swap:
-        public scalar_binary_functor<T1, T2> {
-        typedef typename scalar_binary_functor<T1, T2>::argument1_type argument1_type;
-        typedef typename scalar_binary_functor<T1, T2>::argument2_type argument2_type;
+        public scalar_binary_swap_functor<T1, T2> {
+        typedef typename scalar_binary_swap_functor<T1, T2>::argument1_type argument1_type;
+        typedef typename scalar_binary_swap_functor<T1, T2>::argument2_type argument2_type;
+        typedef typename scalar_binary_swap_functor<T1, T2>::result_type result_type;
+        typedef typename scalar_binary_swap_functor<T1, T2>::check_argument1_type check_argument1_type;
+        typedef typename scalar_binary_swap_functor<T1, T2>::check_argument2_type check_argument2_type;
 
         BOOST_UBLAS_INLINE
-        void operator () (argument1_type &t1, argument2_type &t2) const {
+        void operator () (argument1_type t1, argument2_type t2) const {
             std::swap (t1, t2);
+        }
+        static
+        BOOST_UBLAS_INLINE
+        bool check (check_argument1_type t1, check_argument2_type t2) {
+            return type_traits<result_type>::equals (t1, t2);
         }
     };
 
@@ -273,7 +333,7 @@ namespace boost { namespace numeric { namespace ublas {
         // Sparse case
         template<class I>
         BOOST_UBLAS_INLINE
-        result_type operator () (I it, const I &it_end) const { 
+        result_type operator () (I it, const I &it_end) const {
             result_type t (0);
             while (it != it_end) 
                 t += *it, ++ it;
@@ -292,7 +352,7 @@ namespace boost { namespace numeric { namespace ublas {
     };
 
     template<class T>
-    struct vector_norm_1: 
+    struct vector_norm_1:
         public vector_scalar_real_unary_functor<T> {
         typedef typename vector_scalar_real_unary_functor<T>::size_type size_type;
         typedef typename vector_scalar_real_unary_functor<T>::difference_type difference_type;
@@ -306,7 +366,7 @@ namespace boost { namespace numeric { namespace ublas {
             real_type t (0);
             size_type size (e ().size ());
             for (size_type i = 0; i < size; ++ i) {
-                real_type u (detail::norm_1 (e () (i)));
+                real_type u (type_traits<value_type>::norm_1 (e () (i)));
                 t += u;
             }
             return t; 
@@ -317,7 +377,7 @@ namespace boost { namespace numeric { namespace ublas {
         result_type operator () (difference_type size, I it) const { 
             real_type t (0);
             while (-- size >= 0) {
-                real_type u (detail::norm_1 (*it));
+                real_type u (type_traits<value_type>::norm_1 (*it));
                 t += u;
                 ++ it;
             }
@@ -329,7 +389,7 @@ namespace boost { namespace numeric { namespace ublas {
         result_type operator () (I it, const I &it_end) const { 
             real_type t (0);
             while (it != it_end) {
-                real_type u (detail::norm_1 (*it));
+                real_type u (type_traits<value_type>::norm_1 (*it));
                 t += u;
                 ++ it;
             }
@@ -352,16 +412,16 @@ namespace boost { namespace numeric { namespace ublas {
             real_type t (0);
             size_type size (e ().size ());
             for (size_type i = 0; i < size; ++ i) {
-                real_type u (detail::norm_2 (e () (i)));
+                real_type u (type_traits<value_type>::norm_2 (e () (i)));
                 t +=  u * u;
             }
-            return detail::sqrt (t);
+            return type_traits<real_type>::sqrt (t);
 #else
             real_type scale (0);
             real_type sum_squares (1);
             size_type size (e ().size ());
             for (size_type i = 0; i < size; ++ i) {
-                real_type u (detail::norm_2 (e () (i)));
+                real_type u (type_traits<value_type>::norm_2 (e () (i)));
                 if (scale < u) {
                     real_type v (scale / u);
                     sum_squares = sum_squares * v * v + real_type (1);
@@ -371,7 +431,7 @@ namespace boost { namespace numeric { namespace ublas {
                     sum_squares += v * v;
                 }
             }
-            return scale * detail::sqrt (sum_squares);
+            return scale * type_traits<real_type>::sqrt (sum_squares);
 #endif
         }
         // Dense case
@@ -381,16 +441,16 @@ namespace boost { namespace numeric { namespace ublas {
 #ifndef BOOST_UBLAS_SCALED_NORM
             real_type t (0);
             while (-- size >= 0) {
-                real_type u (detail::norm_2 (*it));
+                real_type u (type_traits<value_type>::norm_2 (*it));
                 t +=  u * u;
                 ++ it;
             }
-            return detail::sqrt (t);
+            return type_traits<real_type>::sqrt (t);
 #else
             real_type scale (0);
             real_type sum_squares (1);
             while (-- size >= 0) {
-                real_type u (detail::norm_2 (*it));
+                real_type u (type_traits<value_type>::norm_2 (*it));
                 if (scale < u) {
                     real_type v (scale / u);
                     sum_squares = sum_squares * v * v + real_type (1);
@@ -401,7 +461,7 @@ namespace boost { namespace numeric { namespace ublas {
                 }
                 ++ it;
             }
-            return scale * detail::sqrt (sum_squares);
+            return scale * type_traits<real_type>::sqrt (sum_squares);
 #endif
         }
         // Sparse case
@@ -411,16 +471,16 @@ namespace boost { namespace numeric { namespace ublas {
 #ifndef BOOST_UBLAS_SCALED_NORM
             real_type t (0);
             while (it != it_end) {
-                real_type u (detail::norm_2 (*it));
+                real_type u (type_traits<value_type>::norm_2 (*it));
                 t +=  u * u;
                 ++ it;
             }
-            return detail::sqrt (t);
+            return type_traits<real_type>::sqrt (t);
 #else
             real_type scale (0);
             real_type sum_squares (1);
             while (it != it_end) {
-                real_type u (detail::norm_2 (*it));
+                real_type u (type_traits<value_type>::norm_2 (*it));
                 if (scale < u) {
                     real_type v (scale / u);
                     sum_squares = sum_squares * v * v + real_type (1);
@@ -431,7 +491,7 @@ namespace boost { namespace numeric { namespace ublas {
                 }
                 ++ it;
             }
-            return scale * detail::sqrt (sum_squares);
+            return scale * type_traits<real_type>::sqrt (sum_squares);
 #endif
         }
     };
@@ -450,7 +510,7 @@ namespace boost { namespace numeric { namespace ublas {
             real_type t (0);
             size_type size (e ().size ());
             for (size_type i = 0; i < size; ++ i) {
-                real_type u (detail::norm_inf (e () (i)));
+                real_type u (type_traits<value_type>::norm_inf (e () (i)));
                 if (u > t) 
                     t = u;
             }
@@ -462,7 +522,7 @@ namespace boost { namespace numeric { namespace ublas {
         result_type operator () (difference_type size, I it) const { 
             real_type t (0);
             while (-- size >= 0) {
-                real_type u (detail::norm_inf (*it));
+                real_type u (type_traits<value_type>::norm_inf (*it));
                 if (u > t) 
                     t = u;
                 ++ it;
@@ -475,7 +535,7 @@ namespace boost { namespace numeric { namespace ublas {
         result_type operator () (I it, const I &it_end) const { 
             real_type t (0);
             while (it != it_end) {
-                real_type u (detail::norm_inf (*it));
+                real_type u (type_traits<value_type>::norm_inf (*it));
                 if (u > t) 
                     t = u;
                 ++ it;
@@ -510,7 +570,7 @@ namespace boost { namespace numeric { namespace ublas {
             real_type t (-1);
             size_type size (e ().size ());
             for (size_type i = 0; i < size; ++ i) {
-                real_type u (detail::norm_inf (e () (i)));
+                real_type u (type_traits<value_type>::norm_inf (e () (i)));
                 if (u > t) {
                     i_norm_inf = i;
                     t = u;
@@ -525,7 +585,7 @@ namespace boost { namespace numeric { namespace ublas {
             result_type i_norm_inf (-1);
             real_type t (-1);
             while (-- size >= 0) {
-                real_type u (detail::norm_inf (*it));
+                real_type u (type_traits<value_type>::norm_inf (*it));
                 if (u > t) {
                     i_norm_inf = it.index ();
                     t = u;
@@ -541,7 +601,7 @@ namespace boost { namespace numeric { namespace ublas {
             result_type i_norm_inf (-1);
             real_type t (-1);
             while (it != it_end) {
-                real_type u (detail::norm_inf (*it));
+                real_type u (type_traits<value_type>::norm_inf (*it));
                 if (u > t) {
                     i_norm_inf = it.index ();
                     t = u;
@@ -936,7 +996,7 @@ namespace boost { namespace numeric { namespace ublas {
                 real_type u (0);
                 size_type size1 (e ().size1 ());
                 for (size_type i = 0; i < size1; ++ i) {
-                    real_type v (detail::norm_1 (e () (i, j)));
+                    real_type v (type_traits<value_type>::norm_1 (e () (i, j)));
                     u += v;
                 }
                 if (u > t) 
@@ -962,11 +1022,11 @@ namespace boost { namespace numeric { namespace ublas {
             for (size_type i = 0; i < size1; ++ i) {
                 size_type size2 (e ().size2 ());
                 for (size_type j = 0; j < size2; ++ j) {
-                    real_type u (detail::norm_2 (e () (i, j)));
+                    real_type u (type_traits<value_type>::norm_2 (e () (i, j)));
                     t +=  u * u;
                 }
             }
-            return detail::sqrt (t); 
+            return type_traits<real_type>::sqrt (t); 
         }
     };
     template<class T>
@@ -987,7 +1047,7 @@ namespace boost { namespace numeric { namespace ublas {
                 real_type u (0);
                 size_type size2 (e ().size2 ());
                 for (size_type j = 0; j < size2; ++ j) {
-                    real_type v (detail::norm_inf (e () (i, j)));
+                    real_type v (type_traits<value_type>::norm_inf (e () (i, j)));
                     u += v;
                 }
                 if (u > t) 

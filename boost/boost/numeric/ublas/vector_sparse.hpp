@@ -48,10 +48,6 @@ namespace boost { namespace numeric { namespace ublas {
         typedef sparse_vector<T, A> self_type;
         typedef const vector_const_reference<const_self_type> const_closure_type;
         typedef vector_reference<self_type> closure_type;
-#ifdef BOOST_UBLAS_DEPRECATED
-        typedef const vector_range<const_self_type> const_vector_range_type;
-        typedef vector_range<self_type> vector_range_type;
-#endif
         typedef typename A::const_iterator const_iterator_type;
         typedef typename A::iterator iterator_type;
         typedef sparse_tag storage_category;
@@ -513,10 +509,6 @@ namespace boost { namespace numeric { namespace ublas {
         typedef compressed_vector<T, IA, TA> self_type;
         typedef const vector_const_reference<const_self_type> const_closure_type;
         typedef vector_reference<self_type> closure_type;
-#ifdef BOOST_UBLAS_DEPRECATED
-        typedef const vector_range<const_self_type> const_vector_range_type;
-        typedef vector_range<self_type> vector_range_type;
-#endif
         typedef typename IA::const_iterator const_iterator_type;
         typedef typename IA::iterator iterator_type;
         typedef sparse_tag storage_category;

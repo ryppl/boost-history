@@ -65,14 +65,6 @@ namespace boost { namespace numeric { namespace ublas {
         typedef hermitian_matrix<T, F1, F2, A> self_type;
         typedef const matrix_const_reference<const_self_type> const_closure_type;
         typedef matrix_reference<self_type> closure_type;
-#ifdef BOOST_UBLAS_DEPRECATED
-        typedef const matrix_row<const_self_type> const_matrix_row_type;
-        typedef matrix_row<self_type> matrix_row_type;
-        typedef const matrix_column<const_self_type> const_matrix_column_type;
-        typedef matrix_column<self_type> matrix_column_type;
-        typedef const matrix_range<const_self_type> const_matrix_range_type;
-        typedef matrix_range<self_type> matrix_range_type;
-#endif
         typedef packed_tag storage_category;
         typedef typename F1::packed_category packed_category;
         typedef typename F2::orientation_category orientation_category;
@@ -142,12 +134,12 @@ namespace boost { namespace numeric { namespace ublas {
             BOOST_UBLAS_CHECK (i < size_, bad_index ());
             BOOST_UBLAS_CHECK (j < size_, bad_index ());
             // if (i == j)
-                //    return detail::real (data () [functor1_type::element (functor2_type (), i, size_, i, size_)]);
+            //    return type_traits<value_type>::real (data () [functor1_type::element (functor2_type (), i, size_, i, size_)]);
             // else 
             if (functor1_type::other (i, j))
                 return data () [functor1_type::element (functor2_type (), i, size_, j, size_)];
             else
-                return detail::conj (data () [functor1_type::element (functor2_type (), j, size_, i, size_)]);
+                return type_traits<value_type>::conj (data () [functor1_type::element (functor2_type (), j, size_, i, size_)]);
         }
         BOOST_UBLAS_INLINE
         reference operator () (size_type i, size_type j) {
@@ -159,20 +151,9 @@ namespace boost { namespace numeric { namespace ublas {
                 // Raising exceptions abstracted as requested during review.
                 // throw external_logic ();
                 external_logic ().raise ();
-                return conj_ = detail::conj (data () [functor1_type::element (functor2_type (), j, size_, i, size_)]);
+                return conj_ = type_traits<value_type>::conj (data () [functor1_type::element (functor2_type (), j, size_, i, size_)]);
             }
         }
-
-#ifdef BOOST_UBLAS_DEPRECATED
-        BOOST_UBLAS_INLINE
-        const_matrix_row_type operator [] (size_type i) const {
-            return const_matrix_row_type (*this, i);
-        }
-        BOOST_UBLAS_INLINE
-        matrix_row_type operator [] (size_type i) {
-            return matrix_row_type (*this, i);
-        }
-#endif
 
         // Assignment
         BOOST_UBLAS_INLINE
@@ -251,7 +232,7 @@ namespace boost { namespace numeric { namespace ublas {
             // Multiplication is only allowed for real scalars,
             // otherwise the resulting matrix isn't hermitian.
             // Thanks to Peter Schmitteckert for spotting this.
-            BOOST_UBLAS_CHECK (detail::imag (at) == 0, non_real ());
+            BOOST_UBLAS_CHECK (type_traits<value_type>::imag (at) == 0, non_real ());
             matrix_assign_scalar<scalar_multiplies_assign<value_type, AT> > () (*this, at);
             return *this;
         }
@@ -261,7 +242,7 @@ namespace boost { namespace numeric { namespace ublas {
             // Multiplication is only allowed for real scalars,
             // otherwise the resulting matrix isn't hermitian.
             // Thanks to Peter Schmitteckert for spotting this.
-            BOOST_UBLAS_CHECK (detail::imag (at) == 0, non_real ());
+            BOOST_UBLAS_CHECK (type_traits<value_type>::imag (at) == 0, non_real ());
             matrix_assign_scalar<scalar_divides_assign<value_type, AT> > () (*this, at);
             return *this;
         }
@@ -302,8 +283,8 @@ namespace boost { namespace numeric { namespace ublas {
                 data () [functor1_type::element (functor2_type (), i, size_, j, size_)] = t;
             } else {
                 BOOST_UBLAS_CHECK (data () [functor1_type::element (functor2_type (), j, size_, i, size_)] == value_type (), bad_index ());
-                // data ().insert (data ().begin () + functor1_type::element (functor2_type (), j, size_, i, size_), detail::conj (t));
-                data () [functor1_type::element (functor2_type (), j, size_, i, size_)] = detail::conj (t);
+                // data ().insert (data ().begin () + functor1_type::element (functor2_type (), j, size_, i, size_), type_traits<value_type>::conj (t));
+                data () [functor1_type::element (functor2_type (), j, size_, i, size_)] = type_traits<value_type>::conj (t);
             }
         }
         BOOST_UBLAS_INLINE
@@ -1001,14 +982,6 @@ namespace boost { namespace numeric { namespace ublas {
         typedef hermitian_adaptor<M, F> self_type;
         typedef const matrix_const_reference<const_self_type> const_closure_type;
         typedef matrix_reference<self_type> closure_type;
-#ifdef BOOST_UBLAS_DEPRECATED
-        typedef const matrix_row<const_self_type> const_matrix_row_type;
-        typedef matrix_row<self_type> matrix_row_type;
-        typedef const matrix_column<const_self_type> const_matrix_column_type;
-        typedef matrix_column<self_type> matrix_column_type;
-        typedef const matrix_range<const_self_type> const_matrix_range_type;
-        typedef matrix_range<self_type> matrix_range_type;
-#endif
         typedef typename storage_restrict_traits<typename M::storage_category,
                                                  packed_proxy_tag>::storage_category storage_category;
         typedef typename F::packed_category packed_category;
@@ -1049,6 +1022,7 @@ namespace boost { namespace numeric { namespace ublas {
             return data_;
         }
 
+#ifndef BOOST_UBLAS_DEPRECATED
         // Resetting
         BOOST_UBLAS_INLINE
         void reset (matrix_type &data) {
@@ -1058,6 +1032,7 @@ namespace boost { namespace numeric { namespace ublas {
             // data_ = data;
             data_.reset (data);
         }
+#endif
 
         // Element access
         BOOST_UBLAS_INLINE
@@ -1065,12 +1040,12 @@ namespace boost { namespace numeric { namespace ublas {
             BOOST_UBLAS_CHECK (i < size1 (), bad_index ());
             BOOST_UBLAS_CHECK (j < size2 (), bad_index ());
             // if (i == j)
-            //     return detail::real (data () (i, i));
+            //     return type_traits<value_type>::real (data () (i, i));
             // else
             if (functor_type::other (i, j))
                 return data () (i, j);
             else
-                return detail::conj (data () (j, i));
+                return type_traits<value_type>::conj (data () (j, i));
         }
         BOOST_UBLAS_INLINE
         reference operator () (size_type i, size_type j) {
@@ -1082,20 +1057,9 @@ namespace boost { namespace numeric { namespace ublas {
                 // Raising exceptions abstracted as requested during review.
                 // throw external_logic ();
                 external_logic ().raise ();
-                return conj_ = detail::conj (data () (j, i));
+                return conj_ = type_traits<value_type>::conj (data () (j, i));
             }
         }
-
-#ifdef BOOST_UBLAS_DEPRECATED
-        BOOST_UBLAS_INLINE
-        const_matrix_row_type operator [] (size_type i) const {
-            return const_matrix_row_type (*this, i);
-        }
-        BOOST_UBLAS_INLINE
-        matrix_row_type operator [] (size_type i) {
-            return matrix_row_type (*this, i);
-        }
-#endif
 
         // Assignment
         BOOST_UBLAS_INLINE
@@ -1150,7 +1114,7 @@ namespace boost { namespace numeric { namespace ublas {
             // Multiplication is only allowed for real scalars,
             // otherwise the resulting matrix isn't hermitian.
             // Thanks to Peter Schmitteckert for spotting this.
-            BOOST_UBLAS_CHECK (detail::imag (at) == 0, non_real ());
+            BOOST_UBLAS_CHECK (type_traits<value_type>::imag (at) == 0, non_real ());
             matrix_assign_scalar<scalar_multiplies_assign<value_type, AT> > () (*this, at);
             return *this;
         }
@@ -1160,7 +1124,7 @@ namespace boost { namespace numeric { namespace ublas {
             // Multiplication is only allowed for real scalars,
             // otherwise the resulting matrix isn't hermitian.
             // Thanks to Peter Schmitteckert for spotting this.
-            BOOST_UBLAS_CHECK (detail::imag (at) == 0, non_real ());
+            BOOST_UBLAS_CHECK (type_traits<value_type>::imag (at) == 0, non_real ());
             matrix_assign_scalar<scalar_divides_assign<value_type, AT> > () (*this, at);
             return *this;
         }

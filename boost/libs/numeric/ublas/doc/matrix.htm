@@ -9,7 +9,7 @@ content="text/html; charset=iso-8859-1">
 
 <body bgcolor="#FFFFFF">
 
-<h1>Matrix</h1>
+<h1><img src="c++boost.gif" alt="c++boost.gif" align="center">Matrix</h1>
 
 <h2><a name="matrix"></a>Matrix</h2>
 
@@ -432,7 +432,7 @@ href="container.htm#matrix">Matrix</a>.</p>
 
             // Comparison
             bool operator == (const const_iterator1 &amp;it) const;
-            bool operator < (const const_iterator1 &amp;it) const;
+            bool operator &lt;(const const_iterator1 &amp;it) const;
         };
 
         const_iterator1 begin1 () const;
@@ -478,7 +478,7 @@ href="container.htm#matrix">Matrix</a>.</p>
 
             // Comparison
             bool operator == (const iterator1 &amp;it) const;
-            bool operator < (const iterator1 &amp;it) const;
+            bool operator &lt;(const iterator1 &amp;it) const;
         };
 
         iterator1 begin1 ();
@@ -525,7 +525,7 @@ href="container.htm#matrix">Matrix</a>.</p>
 
             // Comparison
             bool operator == (const const_iterator2 &amp;it) const;
-            bool operator < (const const_iterator2 &amp;it) const;
+            bool operator &lt;(const const_iterator2 &amp;it) const;
         };
 
         const_iterator2 begin2 () const;
@@ -571,7 +571,7 @@ href="container.htm#matrix">Matrix</a>.</p>
 
             // Comparison
             bool operator == (const iterator2 &amp;it) const;
-            bool operator < (const iterator2 &amp;it) const;
+            bool operator &lt;(const iterator2 &amp;it) const;
         };
 
         iterator2 begin2 ();
@@ -840,7 +840,7 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
 
             // Comparison
             bool operator == (const const_iterator1 &amp;it) const;
-            bool operator < (const const_iterator1 &amp;it) const;
+            bool operator &lt;(const const_iterator1 &amp;it) const;
         };
 
         typedef const_iterator1 iterator1;
@@ -888,7 +888,7 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
 
             // Comparison
             bool operator == (const const_iterator2 &amp;it) const;
-            bool operator < (const const_iterator2 &amp;it) const;
+            bool operator &lt;(const const_iterator2 &amp;it) const;
         };
 
         typedef const_iterator2 iterator2;
@@ -1207,6 +1207,17 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         const_reverse_iterator2 rbegin2 () const;
         const_reverse_iterator2 rend2 () const;
     };</code></pre>
+
+
+<hr>
+
+<p>Copyright (©) 2000-2002 Joerg Walter, Mathias Koch <br> 
+Permission to copy, use, modify, sell and distribute this document is granted 
+provided this copyright notice appears in all copies. This document is provided 
+``as is'' without express or implied warranty, and with no claim as to its suitability 
+for any purpose.</p>
+
+<p>Last revised: 8/3/2002</p>
 
 </body>
 </html>

@@ -24,6 +24,20 @@
 
 namespace boost { namespace numeric { namespace ublas {
 
+    template<class E1, class E2>
+    static
+    BOOST_UBLAS_INLINE
+    bool equals (const vector_expression<E1> &e1, const vector_expression<E2> &e2) {
+        typedef BOOST_UBLAS_TYPENAME type_traits<BOOST_UBLAS_TYPENAME promote_traits<BOOST_UBLAS_TYPENAME E1::value_type,
+                                                                                     BOOST_UBLAS_TYPENAME E2::value_type>::promote_type>::real_type real_type;
+        // Check, that the values match at least half.
+        static real_type sqrt_epsilon (type_traits<real_type>::sqrt (std::numeric_limits<real_type>::epsilon ()));
+        return norm_inf (e1 - e2) < sqrt_epsilon *
+               std::max<real_type> (std::max<real_type> (norm_inf (e1),
+                                                         norm_inf (e2)),
+                                    std::numeric_limits<real_type>::min ());
+    }
+
 #ifdef BOOST_UBLAS_ENABLE_SPECIALIZED_ASSIGN
     // Iterating case
     template<class F, class V, class T>
@@ -314,6 +328,11 @@ namespace boost { namespace numeric { namespace ublas {
         typedef F functor_type;
         typedef typename V::size_type size_type;
         typedef typename V::value_type value_type;
+#ifdef BOOST_UBLAS_TYPE_CHECK
+        vector<value_type> cv (v.size ());
+        evaluate_vector_assign (scalar_assign<value_type, value_type> (), cv, v, sparse_proxy_tag ());
+        evaluate_vector_assign (functor_type (), cv, e, sparse_proxy_tag ());
+#endif
         typename V::iterator it (v.begin ());
         typename V::iterator it_end (v.end ());
         typename E::const_iterator ite (e ().begin ());
@@ -332,18 +351,8 @@ namespace boost { namespace numeric { namespace ublas {
             functor_type () (*it, value_type ());
             ++ it;
         }
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
-        {
-            // Need the const member dispatched.
-            const V &cv = v;
-            typename E::const_iterator ite (e ().begin ());
-            typename E::const_iterator ite_end (e ().end ());
-            while (ite != ite_end) {
-                // FIXME: we need a better floating point comparison...
-                BOOST_UBLAS_CHECK (*ite == cv (ite.index ()), bad_index ());
-                ++ ite;
-            }
-        }
+#ifdef BOOST_UBLAS_TYPE_CHECK
+        BOOST_UBLAS_CHECK (equals (v, cv), external_logic ());
 #endif
     }
     // Sparse case
@@ -379,11 +388,10 @@ namespace boost { namespace numeric { namespace ublas {
                 functor_type () (*it, value_type ());
                 ++ it;
             } else if (compare > 0) {
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
                 // Need the const member dispatched.
                 const V &cv = v;
-                // FIXME: we need a better floating point comparison...
-                BOOST_UBLAS_CHECK (*ite == cv (ite.index ()), bad_index ());
+                BOOST_UBLAS_CHECK (functor_type::check (cv (ite.index ()), *ite), external_logic ());
 #endif
                 ++ ite;
             }
@@ -392,12 +400,11 @@ namespace boost { namespace numeric { namespace ublas {
             functor_type () (*it, value_type ());
             ++ it;
         }
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
         while (ite != ite_end) {
             // Need the const member dispatched.
             const V &cv = v;
-            // FIXME: we need a better floating point comparison...
-            BOOST_UBLAS_CHECK (*ite == cv (ite.index ()), bad_index ());
+            BOOST_UBLAS_CHECK (functor_type::check (cv (ite.index ()), *ite), external_logic ());
             ++ ite;
         }
 #endif
@@ -466,6 +473,11 @@ namespace boost { namespace numeric { namespace ublas {
             BOOST_UBLAS_CHECK (v.size () == e ().size (), bad_size ());
             typedef typename V::size_type size_type;
             typedef typename V::value_type value_type;
+#ifdef BOOST_UBLAS_TYPE_CHECK
+            vector<value_type> cv (v.size ());
+            vector_assign<scalar_assign<value_type, value_type> > () (cv, v, sparse_proxy_tag ());
+            vector_assign<functor_type> () (cv, e, sparse_proxy_tag ());
+#endif
             typename V::iterator it (v.begin ());
             typename V::iterator it_end (v.end ());
             typename E::const_iterator ite (e ().begin ());
@@ -484,18 +496,8 @@ namespace boost { namespace numeric { namespace ublas {
                 functor_type () (*it, value_type ());
                 ++ it;
             }
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
-            {
-                // Need the const member dispatched.
-                const V &cv = v;
-                typename E::const_iterator ite (e ().begin ());
-                typename E::const_iterator ite_end (e ().end ());
-                while (ite != ite_end) {
-                    // FIXME: we need a better floating point comparison...
-                    BOOST_UBLAS_CHECK (*ite == cv (ite.index ()), bad_index ());
-                    ++ ite;
-                }
-            }
+#ifdef BOOST_UBLAS_TYPE_CHECK
+            BOOST_UBLAS_CHECK (equals (v, cv), external_logic ());
 #endif
         }
         // Sparse case
@@ -530,11 +532,10 @@ namespace boost { namespace numeric { namespace ublas {
                     functor_type () (*it, value_type ());
                     ++ it;
                 } else if (compare > 0) {
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
                     // Need the const member dispatched.
                     const V &cv = v;
-                    // FIXME: we need a better floating point comparison...
-                    BOOST_UBLAS_CHECK (*ite == cv (ite.index ()), bad_index ());
+                    BOOST_UBLAS_CHECK (functor_type::check (cv (ite.index ()), *ite), external_logic ());
 #endif
                     ++ ite;
                 }
@@ -543,12 +544,11 @@ namespace boost { namespace numeric { namespace ublas {
                 functor_type () (*it, value_type ());
                 ++ it;
             }
-#ifdef BOOST_UBLAS_BOUNDS_CHECK_EX
+#ifdef BOOST_UBLAS_BOUNDS_CHECK
             while (ite != ite_end) {
                 // Need the const member dispatched.
                 const V &cv = v;
-                // FIXME: we need a better floating point comparison...
-                BOOST_UBLAS_CHECK (*ite == cv (ite.index ()), bad_index ());
+                BOOST_UBLAS_CHECK (functor_type::check (cv (ite.index ()), *ite), external_logic ());
                 ++ ite;
             }
 #endif

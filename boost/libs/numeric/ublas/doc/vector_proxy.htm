@@ -9,7 +9,7 @@ content="text/html; charset=iso-8859-1">
 
 <body bgcolor="#FFFFFF">
 
-<h1>Vector Proxies</h1>
+<h1><img src="c++boost.gif" alt="c++boost.gif" align="center">Vector Proxies</h1>
 
 <h2><a name="vector_range"></a>Vector Range</h2>
 
@@ -246,8 +246,6 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         const_vector_type &amp;data () const;
         vector_type &amp;data ();
 
-        // Resetting
-        void reset (vector_type &amp;data, const range &amp;r);
 
         // Element access
         const_reference operator () (size_type i) const;
@@ -256,8 +254,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         const_reference operator [] (size_type i) const;
         reference operator [] (size_type i);
 
-        vector_range&lt;const_vector_type&gt; project (const range &amp;r) const;
-        vector_range&lt;vector_type&gt; project (const range &amp;r);
+        vector_range&lt;vector_type&gt; project (const range &amp;r) const;
 
         // Assignment
         vector_range &amp;operator = (const vector_range &amp;vr);
@@ -327,7 +324,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
 
             // Comparison
             bool operator == (const const_iterator &amp;it) const;
-            bool operator < (const const_iterator &amp;it) const;
+            bool operator &lt;(const const_iterator &amp;it) const;
         };
 
         const_iterator begin () const;
@@ -365,7 +362,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
 
             // Comparison
             bool operator == (const iterator &amp;it) const;
-            bool operator < (const iterator &amp;it) const;
+            bool operator &lt;(const iterator &amp;it) const;
         };
 
         iterator begin ();
@@ -616,8 +613,6 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         const_vector_type &amp;data () const;
         vector_type &amp;data ();
 
-        // Resetting
-        void reset (vector_type &amp;data, const slice &amp;s);
 
         // Element access
         const_reference operator () (size_type i) const;
@@ -626,10 +621,8 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         const_reference operator [] (size_type i) const;
         reference operator [] (size_type i);
 
-        vector_slice&lt;const_vector_type&gt; project (const range &amp;r) const;
-        vector_slice&lt;vector_type&gt; project (const range &amp;r);
-        vector_slice&lt;const_vector_type&gt; project (const slice &amp;s) const;
-        vector_slice&lt;vector_type&gt; project (const slice &amp;s);
+        vector_slice&lt;vector_type&gt; project (const range &amp;r) const;
+        vector_slice&lt;vector_type&gt; project (const slice &amp;s) const;
 
         // Assignment
         vector_slice &amp;operator = (const vector_slice &amp;vs);
@@ -699,7 +692,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
 
             // Comparison
             bool operator == (const const_iterator &amp;it) const;
-            bool operator < (const const_iterator &amp;it) const;
+            bool operator &lt;(const const_iterator &amp;it) const;
         };
 
         const_iterator begin () const;
@@ -737,7 +730,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
 
             // Comparison
             bool operator == (const iterator &amp;it) const;
-            bool operator < (const iterator &amp;it) const;
+            bool operator &lt;(const iterator &amp;it) const;
         };
 
         iterator begin ();
@@ -755,5 +748,16 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         reverse_iterator rbegin ();
         reverse_iterator rend ();
     };</code></pre>
+
+<hr>
+
+<p>Copyright (©) 2000-2002 Joerg Walter, Mathias Koch <br> 
+Permission to copy, use, modify, sell and distribute this document is granted 
+provided this copyright notice appears in all copies. This document is provided 
+``as is'' without express or implied warranty, and with no claim as to its suitability 
+for any purpose.</p>
+
+<p>Last revised: 8/3/2002</p>
+
 </body>
 </html>

@@ -91,6 +91,8 @@
 
 // Bounds check
 #define BOOST_UBLAS_BOUNDS_CHECK
+// Type check for packed matrices
+#define BOOST_UBLAS_TYPE_CHECK
 
 #endif
 
@@ -129,8 +131,6 @@
 // Open problems:
 // MSVC lacks some specializations in <cmath>
 #define BOOST_UBLAS_C_MATH
-// MSVC's conditional operator is said to be defect?
-#define BOOST_UBLAS_CONDITIONAL_DEFECT
 // MSVC allows to implement free function as friends.
 #define BOOST_UBLAS_FRIEND_FUNCTION
 
@@ -252,6 +252,9 @@ namespace boost { namespace numeric { namespace ublas {
     template<class T>
     class unbounded_array;
 
+    template<class A = unbounded_array<std::size_t> >
+    class indirect_array;
+
     template<class I, class T>
     class map_array;
 
@@ -269,7 +272,7 @@ namespace boost { namespace numeric { namespace ublas {
     class vector_range;
     template<class E>
     class vector_slice;
-    template<class E>
+    template<class E, class IA = indirect_array<> >
     class vector_indirect;
 
     template<class E>
@@ -288,7 +291,7 @@ namespace boost { namespace numeric { namespace ublas {
     class matrix_range;
     template<class E>
     class matrix_slice;
-    template<class E>
+    template<class E, class IA = indirect_array<> >
     class matrix_indirect;
 
     template<class F>
@@ -308,7 +311,7 @@ namespace boost { namespace numeric { namespace ublas {
     template<class T, class A = map_array<std::size_t, T> >
     class sparse_vector;
 
-    template<class T, class AI = unbounded_array<std::size_t>, class AT = unbounded_array<T> >
+    template<class T, class IA = unbounded_array<std::size_t>, class TA = unbounded_array<T> >
     class compressed_vector;
 
     struct unknown_orientation_tag {};

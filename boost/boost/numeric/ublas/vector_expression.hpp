@@ -111,29 +111,29 @@ namespace boost { namespace numeric { namespace ublas {
 
 #ifdef BOOST_UBLAS_ENABLE_PROXY_SHORTCUTS
         BOOST_UBLAS_INLINE
-        const_vector_range_type operator () (const range &r) const {
+        const_vector_range_type project (const range &r) const {
             return const_vector_range_type (operator () (), r);
         }
         BOOST_UBLAS_INLINE
-        vector_range_type operator () (const range &r) {
+        vector_range_type project (const range &r) {
             return vector_range_type (operator () (), r);
         }
         BOOST_UBLAS_INLINE
-        const_vector_slice_type operator () (const slice &s) const {
+        const_vector_slice_type project (const slice &s) const {
             return const_vector_slice_type (operator () (), s);
         }
         BOOST_UBLAS_INLINE
-        vector_slice_type operator () (const slice &s) {
+        vector_slice_type project (const slice &s) {
             return vector_slice_type (operator () (), s);
         }
         template<class A>
         BOOST_UBLAS_INLINE
-        const_vector_indirect_type operator () (const indirect_array<A> &ia) const {
+        const_vector_indirect_type project (const indirect_array<A> &ia) const {
             return const_vector_indirect_type (operator () (), ia);
         }
         template<class A>
         BOOST_UBLAS_INLINE
-        vector_indirect_type operator () (const indirect_array<A> &ia) {
+        vector_indirect_type project (const indirect_array<A> &ia) {
             return vector_indirect_type (operator () (), ia);
         }
 #endif
@@ -152,9 +152,6 @@ namespace boost { namespace numeric { namespace ublas {
         typedef typename E::const_pointer const_pointer;
         typedef const_pointer pointer;
         typedef typename E::const_iterator const_iterator_type;
-#ifdef BOOST_UBLAS_DEPRECATED
-        typedef const vector_range<const E> const_vector_range_type;
-#endif
         typedef unknown_storage_tag storage_category;
 
         // Construction and destruction
@@ -249,10 +246,6 @@ namespace boost { namespace numeric { namespace ublas {
         typedef typename E::pointer pointer;
         typedef typename E::const_iterator const_iterator_type;
         typedef typename E::iterator iterator_type;
-#ifdef BOOST_UBLAS_DEPRECATED
-        typedef const vector_range<const E> const_vector_range_type;
-        typedef vector_range<E> vector_range_type;
-#endif
         typedef unknown_storage_tag storage_category;
 
         // Construction and destruction
@@ -398,9 +391,6 @@ namespace boost { namespace numeric { namespace ublas {
         typedef const_pointer pointer;
         typedef const vector_unary<E, F> const_closure_type;
         typedef typename E::const_iterator const_iterator_type;
-#ifdef BOOST_UBLAS_DEPRECATED
-        typedef const vector_range<const_closure_type> const_vector_range_type;
-#endif
         typedef unknown_storage_tag storage_category;
 
         // Construction and destruction
@@ -671,9 +661,6 @@ namespace boost { namespace numeric { namespace ublas {
         typedef const vector_binary<E1, E2, F> const_closure_type;
         typedef typename E1::const_iterator const_iterator1_type;
         typedef typename E2::const_iterator const_iterator2_type;
-#ifdef BOOST_UBLAS_DEPRECATED
-        typedef const vector_range<const_closure_type> const_vector_range_type;
-#endif
         typedef unknown_storage_tag storage_category;
 
         // Construction and destruction
@@ -723,23 +710,27 @@ namespace boost { namespace numeric { namespace ublas {
         BOOST_UBLAS_INLINE
         const_iterator find_first (size_type i) const {
             const_iterator1_type it1 (e1_.find_first (i));
+            const_iterator1_type it1_end (e1_.find_last (size ()));
             const_iterator2_type it2 (e2_.find_first (i));
+            const_iterator2_type it2_end (e2_.find_last (size ()));
             i = std::min (it1.index (), it2.index ());
 #ifdef BOOST_UBLAS_USE_INDEXED_ITERATOR
             return const_iterator (*this, i);
 #else
-            return const_iterator (*this, i, it1, it2);
+            return const_iterator (*this, i, it1, it1_end, it2, it2_end);
 #endif
         }
         BOOST_UBLAS_INLINE
         const_iterator find_last (size_type i) const {
             const_iterator1_type it1 (e1_.find_last (i));
+            const_iterator1_type it1_end (e1_.find_first (0));
             const_iterator2_type it2 (e2_.find_last (i));
+            const_iterator2_type it2_end (e2_.find_first (0));
             i = std::max (it1.index (), it2.index ());
 #ifdef BOOST_UBLAS_USE_INDEXED_ITERATOR
             return const_iterator (*this, i);
 #else
-            return const_iterator (*this, i, it1, it2);
+            return const_iterator (*this, i, it1, it1_end, it2, it2_end);
 #endif
         }
 
@@ -773,11 +764,13 @@ namespace boost { namespace numeric { namespace ublas {
             // Construction and destruction
             BOOST_UBLAS_INLINE
             const_iterator ():
-                container_const_reference<vector_binary> (), i_ (), it1_ (), it2_ () {}
+                container_const_reference<vector_binary> (), i_ (), it1_ (), it1_end_ (), it2_ (), it2_end_ () {}
             BOOST_UBLAS_INLINE
-            const_iterator (const vector_binary &vb, size_type i, const const_iterator1_type &it1, const const_iterator2_type &it2):
-                container_const_reference<vector_binary> (vb), i_ (i), it1_ (it1), it2_ (it2) {}
-            
+            const_iterator (const vector_binary &vb, size_type i,
+                            const const_iterator1_type &it1, const const_iterator1_type &it1_end,
+                            const const_iterator2_type &it2, const const_iterator2_type &it2_end):
+                container_const_reference<vector_binary> (vb), i_ (i), it1_ (it1), it1_end_ (it1_end), it2_ (it2), it2_end_ (it2_end) {}
+
             // Dense specializations
             BOOST_UBLAS_INLINE
             void increment (dense_random_access_iterator_tag) {
@@ -795,30 +788,34 @@ namespace boost { namespace numeric { namespace ublas {
             // Packed specializations
             BOOST_UBLAS_INLINE
             void increment (packed_random_access_iterator_tag) {
-                if (it1_.index () <= i_)
-                    ++ it1_;
-                if (it2_.index () <= i_)
-                    ++ it2_;
+                if (it1_ != it1_end_)
+                    if (it1_.index () <= i_)
+                        ++ it1_;
+                if (it2_ != it2_end_)
+                    if (it2_.index () <= i_)
+                        ++ it2_;
                 ++ i_;
             }
             BOOST_UBLAS_INLINE
             void decrement (packed_random_access_iterator_tag) {
-                if (i_ <= it1_.index ())
-                    -- it1_;
-                if (i_ <= it2_.index ())
-                    -- it2_;
+                if (it1_ != it1_end_)
+                    if (i_ <= it1_.index ())
+                        -- it1_;
+                if (it2_ != it2_end_)
+                    if (i_ <= it2_.index ())
+                        -- it2_;
                 -- i_;
             }
             BOOST_UBLAS_INLINE
             value_type dereference (packed_random_access_iterator_tag) const {
-#ifndef BOOST_UBLAS_CONDITIONAL_DEFECT
-                value_type t1 = i_ - it1_.index () ? value_type () : *it1_;
-                value_type t2 = i_ - it2_.index () ? value_type () : *it2_;
-#else
-                value_type t1, t2;
-                if (i_ - it1_.index ()) t1 = value_type (); else t1 = *it1_;
-                if (i_ - it2_.index ()) t2 = value_type (); else t2 = *it2_;
-#endif
+                value_type t1 = value_type ();
+                if (it1_ != it1_end_)
+                    if (it1_.index () == i_)
+                        t1 = *it1_;
+                value_type t2 = value_type ();
+                if (it2_ != it2_end_)
+                    if (it2_.index () == i_)
+                        t2 = *it2_;
                 return functor_type () (t1, t2);
             }
 
@@ -826,17 +823,17 @@ namespace boost { namespace numeric { namespace ublas {
             BOOST_UBLAS_INLINE
             void increment (sparse_bidirectional_iterator_tag) {
                 size_type index1 = (*this) ().size ();
-                if (it1_ != it1_ ().end ()) {
+                if (it1_ != it1_end_) {
                     if  (it1_.index () <= i_)
                         ++ it1_;
-                    if (it1_ != it1_ ().end ())
+                    if (it1_ != it1_end_)
                         index1 = it1_.index ();
                 }
                 size_type index2 = (*this) ().size ();
-                if (it2_ != it2_ ().end ()) {
+                if (it2_ != it2_end_) {
                     if (it2_.index () <= i_)
                         ++ it2_;
-                    if (it2_ != it2_ ().end ())
+                    if (it2_ != it2_end_)
                         index2 = it2_.index ();
                 }
                 i_ = std::min (index1, index2);
@@ -844,17 +841,17 @@ namespace boost { namespace numeric { namespace ublas {
             BOOST_UBLAS_INLINE
             void decrement (sparse_bidirectional_iterator_tag) {
                 size_type index1 = (*this) ().size ();
-                if (it1_ != it1_ ().end ()) {
+                if (it1_ != it1_end_) {
                     if (i_ <= it1_.index ())
                         -- it1_;
-                    if (it1_ != it1_ ().end ())
+                    if (it1_ != it1_end_)
                         index1 = it1_.index ();
                 }
                 size_type index2 = (*this) ().size ();
-                if (it2_ != it2_ ().end ()) {
+                if (it2_ != it2_end_) {
                     if (i_ <= it2_.index ())
                         -- it2_;
-                    if (it2_ != it2_ ().end ())
+                    if (it2_ != it2_end_)
                         index2 = it2_.index ();
                 }
                 i_ = std::max (index1, index2);
@@ -862,11 +859,11 @@ namespace boost { namespace numeric { namespace ublas {
             BOOST_UBLAS_INLINE
             value_type dereference (sparse_bidirectional_iterator_tag) const {
                 value_type t1 = value_type ();
-                if (it1_ != it1_ ().end ())
+                if (it1_ != it1_end_)
                     if (it1_.index () == i_)
                         t1 = *it1_;
                 value_type t2 = value_type ();
-                if (it2_ != it2_ ().end ())
+                if (it2_ != it2_end_)
                     if (it2_.index () == i_)
                         t2 = *it2_;
                 return functor_type () (t1, t2);
@@ -934,7 +931,9 @@ namespace boost { namespace numeric { namespace ublas {
         private:
             size_type i_;
             const_iterator1_type it1_;
+            const_iterator1_type it1_end_;
             const_iterator2_type it2_;
+            const_iterator2_type it2_end_;
         };
 #endif
 
@@ -1027,9 +1026,6 @@ namespace boost { namespace numeric { namespace ublas {
         typedef const vector_binary_scalar1<E1, E2, F> const_closure_type;
         typedef typename E1::value_type const_iterator1_type;
         typedef typename E2::const_iterator const_iterator2_type;
-#ifdef BOOST_UBLAS_DEPRECATED
-        typedef const vector_range<const_closure_type> const_vector_range_type;
-#endif
         typedef unknown_storage_tag storage_category;
 
         // Construction and destruction
@@ -1269,9 +1265,6 @@ namespace boost { namespace numeric { namespace ublas {
         typedef const vector_binary_scalar2<E1, E2, F> const_closure_type;
         typedef typename E1::const_iterator const_iterator1_type;
         typedef typename E2::value_type const_iterator2_type;
-#ifdef BOOST_UBLAS_DEPRECATED
-        typedef const vector_range<const_closure_type> const_vector_range_type;
-#endif
         typedef unknown_storage_tag storage_category;
 
         // Construction and destruction

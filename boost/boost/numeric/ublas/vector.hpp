@@ -51,10 +51,6 @@ namespace boost { namespace numeric { namespace ublas {
         typedef vector<T, A> self_type;
         typedef const vector_const_reference<const_self_type> const_closure_type;
         typedef vector_reference<self_type> closure_type;
-#ifdef BOOST_UBLAS_DEPRECATED
-        typedef const vector_range<const_self_type> const_vector_range_type;
-        typedef vector_range<self_type> vector_range_type;
-#endif
         typedef typename A::const_iterator const_iterator_type;
         typedef typename A::iterator iterator_type;
         typedef dense_tag storage_category;
@@ -542,9 +538,6 @@ namespace boost { namespace numeric { namespace ublas {
         typedef const unit_vector<T> const_self_type;
         typedef unit_vector<T> self_type;
         typedef const vector_const_reference<const_self_type> const_closure_type;
-#ifdef BOOST_UBLAS_DEPRECATED
-        typedef const vector_range<const_self_type> const_vector_range_type;
-#endif
         typedef size_type const_iterator_type;
         typedef packed_tag storage_category;
 
@@ -782,9 +775,6 @@ namespace boost { namespace numeric { namespace ublas {
         typedef const zero_vector<T> const_self_type;
         typedef zero_vector<T> self_type;
         typedef const vector_const_reference<const_self_type> const_closure_type;
-#ifdef BOOST_UBLAS_DEPRECATED
-        typedef const vector_range<const_self_type> const_vector_range_type;
-#endif
         typedef size_type const_iterator_type;
         typedef sparse_tag storage_category;
 
@@ -986,9 +976,6 @@ namespace boost { namespace numeric { namespace ublas {
         typedef const scalar_vector<T> const_self_type;
         typedef scalar_vector<T> self_type;
         typedef const vector_const_reference<const_self_type> const_closure_type;
-#ifdef BOOST_UBLAS_DEPRECATED
-        typedef const vector_range<const_self_type> const_vector_range_type;
-#endif
         typedef size_type const_iterator_type;
         typedef dense_tag storage_category;
 
@@ -1220,10 +1207,6 @@ namespace boost { namespace numeric { namespace ublas {
         typedef c_vector<T, N> self_type;
         typedef const vector_const_reference<const_self_type> const_closure_type;
         typedef vector_reference<self_type> closure_type;
-#ifdef BOOST_UBLAS_DEPRECATED
-        typedef const vector_range<const_self_type> const_vector_range_type;
-        typedef vector_range<self_type> vector_range_type;
-#endif
         typedef const T *const_iterator_type;
         typedef T *iterator_type;
         typedef dense_tag storage_category;

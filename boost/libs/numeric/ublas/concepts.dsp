@@ -99,6 +99,10 @@ SOURCE=.\concepts.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
+SOURCE=..\..\..\boost\numeric\ublas\banded.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\boost\numeric\ublas\blas.hpp
 # End Source File
 # Begin Source File
@@ -241,6 +245,10 @@ SOURCE=.\doc\matrix_proxy.htm
 # Begin Source File
 
 SOURCE=.\doc\matrix_sparse.htm
+# End Source File
+# Begin Source File
+
+SOURCE=.\doc\overview.htm
 # End Source File
 # Begin Source File
 

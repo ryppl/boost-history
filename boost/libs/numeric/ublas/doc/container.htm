@@ -9,13 +9,13 @@ content="text/html; charset=iso-8859-1">
 
 <body bgcolor="#FFFFFF">
 
-<h1>Container Concepts</h1>
+<h1><img src="c++boost.gif" alt="c++boost.gif" align="center">Container Concepts</h1>
 
 <h2><a name="vector"></a>Vector </h2>
 
 <h4>Description</h4>
 
-<p>A Vector describes common aspects of dense and sparse vectors.
+<p>A Vector describes common aspects of dense, packed and sparse vectors.
 </p>
 
 <h4>Refinement of </h4>
@@ -186,6 +186,8 @@ the vector.</p>
 
 <ul>
     <li><code>vector&lt;T, A&gt;</code></li>
+    <li><code>unit_vector&lt;T&gt;</code></li>
+    <li><code>zero_vector&lt;T&gt;</code></li>
     <li><code>sparse_vector&lt;T, A&gt;</code></li>
 </ul>
 
@@ -193,7 +195,7 @@ the vector.</p>
 
 <h4>Description</h4>
 
-<p>A Matrix describes common aspects of dense and sparse
+<p>A Matrix describes common aspects of dense, packed and sparse
 matrices. </p>
 
 <h4>Refinement of </h4>
@@ -370,10 +372,22 @@ the matrix.</p>
 
 <ul>
     <li><code>matrix&lt;T, F, A&gt;</code></li>
+    <li><code>identity_matrix&lt;T&gt;</code></li>
+    <li><code>zero_matrix&lt;T&gt;</code></li>
     <li><code>triangular_matrix&lt;T, F1, F2, A&gt;</code></li>
     <li><code>symmetric_matrix&lt;T, F1, F2, A&gt;</code></li>
     <li><code>banded_matrix&lt;T, F, A&gt;</code></li>
     <li><code>sparse_matrix&lt;T, F, A&gt;</code></li>
 </ul>
+<hr>
+
+<p>Copyright (©) 2000-2002 Joerg Walter, Mathias Koch <br> 
+Permission to copy, use, modify, sell and distribute this document is granted 
+provided this copyright notice appears in all copies. This document is provided 
+``as is'' without express or implied warranty, and with no claim as to its suitability 
+for any purpose.</p>
+
+<p>Last revised: 8/3/2002</p>
+
 </body>
 </html>
