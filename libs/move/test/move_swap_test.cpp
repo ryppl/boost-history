@@ -134,9 +134,9 @@ void swap_test()
 # pragma warning(disable: 4675) // resolved overload was found by argument-dependent lookup -- duh!
 #endif
     
-#if BOOST_WORKAROUND(__GNUC__, == 2)                            \
-    || defined(BOOST_NO_ARGUMENT_DEPENDENT_LOOKUP)              \
-    || BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x564))
+#if !defined(__EDG__) && BOOST_WORKAROUND(__GNUC__, == 2)           \
+    || defined(BOOST_NO_ARGUMENT_DEPENDENT_LOOKUP)                  \
+    || defined(BOOST_FUNCTION_SCOPE_USING_DECLARATION_BREAKS_ADL)
 # define swap boost::move_swap
 #else
     using boost::swap;
