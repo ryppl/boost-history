@@ -1,4 +1,6 @@
-\documentclass{netobjectdays}
+\documentclass{kapproc}
+%\usepackage{semantic}
+%\usepackage{math}
 
 \newcommand{\Cpp}{C\kern-0.05em\texttt{+\kern-0.03em+}%
 }
@@ -16,18 +18,15 @@
 
 \begin{document}
 
-\title{The Boost \Cpp\ Template Metaprogramming Library}
+\articletitle{The Boost \Cpp\ Template Metaprogramming Library}
 
-\author{Aleksey Gurtovoy$^\dag$ and David Abrahams$^\ddag$ \\
-\\
-$^\dag$ MetaCommunications, Inc. \\
-\texttt{agurtovoy@meta-comm.com}\\
-\\
-$^\ddag$ Boost Consulting \\
-\texttt{david.abrahams@rcn.com}
-}
+\author{Aleksey Gurtovoy} 
+ \affil{MetaCommunications, Inc.}
+\email{agurtovoy@meta-comm.com}
+\author{David Abrahams}
+ \affil{Boost Consulting}
+\email{david.abrahams@rcn.com}
 
-\maketitle
 
 \begin{abstract} $\!$This paper describes the Boost \Cpp Template
 Meta\-program\-ming Library (MPL), an extensible compile-time
@@ -51,7 +50,12 @@ with examples of its real-life applications, and offers some lessons
 learned about C++ template \mping{}.
 \end{abstract}
 
+\begin{keywords}
+programming languages, type systems, generic programming,
+polymorphism, metaprogramming, compile-time
+\end{keywords}
 
+%==============================================================================
 \section{Introduction}
 
 \subsection{What is Metaprogramming?}
@@ -246,7 +250,7 @@ analogue of a singly-linked list. Now that we've adjusted the
 structure so that the \Cpp\ template machinery can ``peel it apart'',
 let's examine a simple function which does so. Suppose a user wished
 to find the largest of an arbitrary collection of types. We can apply
-the recursive metafunction formula which should by now be familiar:
+the recursive \mfn\ formula which should by now be familiar:
 
 {\footnotesize
 \begin{verbatim}
@@ -334,7 +338,7 @@ tricky hacks and for template specializations.
 %%% we've done above? We could rewrite and cut most of this section...
 
 It's worth asking why anyone would want to do this. After all, even a
-simple toy example like the factorial metafunction is somewhat
+simple toy example like the factorial \mfn\ is somewhat
 esoteric. To show how the type computation can be put to work, let's
 examine a simple example. The following code produces an array
 containing all possible permutations of another array:
@@ -819,12 +823,10 @@ struct remove_pointer_if
 Which gives us exactly what we wanted.
 
 
-\subsection{Metafunctions, function classes and lambda}
-
 %%% This intro material needs to come earlier, since you talk about
 %%% nullary functions in the previous section.  
 
-\subsubsection{The Form of Metafunctions}
+\subsection{The Form of Metafunctions}
 
 In \Cpp\, the basic underlying language construct which allows
 parameterized compile-time computation is the \emph{class template}. A
@@ -872,7 +874,18 @@ form as ``compile-time functions'', and [CE00] have introduced
 ``template \mfn'' as an equivalent term (they also use the simpler
 term ``\mfn'' as do we). While syntactically simple, however, this
 form of \mfn\ does not always interact optimally with the rest of
-\Cpp. In order to pass such a \mfn\ to another template, we need to
+\Cpp. In particular, the use of simple \mfns\ makes the use of
+higher--order functions difficult.
+
+\begin{glossary}
+  \term{Higher-Order Function} is a function that can take other
+  functions as arguments, and/or return functions as
+  results. Higher-order functions are a distinguishing features of the
+  modern functional languages [Hud89].
+\end{glossary}
+
+
+In order to pass such a \mfn\ to another template, we need to
 use \emph{template template parameters}:
 
 {\footnotesize
@@ -925,11 +938,10 @@ However, now we have another problem: \Cpp\ strictly enforces the
 parameter, so we \emph{still} can't embed \code{derive3} in a
 \code{cons} list. Fortunately, the truism that ``there is no problem
 in software which can't be solved by adding yet another level of
-indirection'' applies here. To elevate \mfns\ to the status of
-first-class objects, the MPL introduces the concept of a ``\mfn\
-class'':\footnote{This form should look familiar to anyone acquainted
-with function objects in STL, with the nested \code{apply} template
-taking the same role as the runtime function-call operator}
+indirection''\footnote{Andrew Koening calls this ``The Fundamental
+Theorem of Software Engineering''} applies here. To elevate \mfns\ to
+the status of first-class objects, the MPL introduces the concept of a
+``\mfn\ class'':
 
 {\footnotesize
 \begin{verbatim}
@@ -945,18 +957,33 @@ struct derive
 \end{verbatim}
 }
 
+This form should look familiar to anyone acquainted with function
+objects in STL, with the nested \code{apply} template taking the same
+role as the runtime function-call operator. In fact, compile-time
+metafunction classes have the same relationship to metafunctions that
+runtime function objects have to functions:
 
+{\footnotesize
+\begin{verbatim}
+// function form of add
+template <class T> T add(T x, T y) { return x + y; }
 
-%%% Should make the link between MPL metafunction classes and STL function
-%%% objects 
+// function object form of add
+struct add
+{
+  template<class T>
+  T operator()(T x, T y) { return x + y; }
+};
+\end{verbatim}
+}
 
 These two forms exist because of some idiosyncrasy in 
 how templates are defined in C++, - in particular, because 
 of the lack of so called template typedefs [Sut01]. The 
 latter makes it unnecessary awkward and tedious to define 
-and work with higher-order ct-metafunctions (i.e. class 
-template metafunctions that returns another class template 
-metafunctions):
+and work with higher-order ct-\mfns\ (i.e. class 
+template \mfns\ that returns another class template 
+\mfns):
 
 %%% Should make the link between template typedefs and closures
 
@@ -1046,7 +1073,7 @@ but in general this doesn't scale.
 There are some problems with correctness of the above 
 approach as well - deriving the \code{type} members of 
 \code{bind1st} and \code{compose\_f\_gx} templates from 
-the ct-metafunctions they are composing (\code{F} and 
+the ct-\mfns\ they are composing (\code{F} and 
 \code{G}) \emph{changes the type of the result}. 
 For instance:
 
@@ -1068,7 +1095,7 @@ BOOST_STATIC_ASSERT((boost::is_convertible<result,expected_result>::value));
 
 This may or may be not a problem, depending on how you 
 want to use the result of a type computation algorithm 
-that applies higher-order metafunctions internally. 
+that applies higher-order \mfns\ internally. 
 Unfortunately, within the current language inheritance 
 is the only way to "return" a class template.
 
@@ -1080,28 +1107,21 @@ is the only way to "return" a class template.
 %% templates (ct-metafunctions) is not a option.}
 
 
-Definitions: 
-\begin{itemize}
-  \item  A \emph{higher-order function} is a function 
-  that can take other functions as arguments, and/or 
-  return functions as results. Higher-order functions 
-  is one of the distinguishing features of the modern 
-  functional languages [Hud89]. 
-
-  \item A function is \emph{polymorphic} if it can 
-  take arguments of an arbitrary type (a \Cpp\ term 
-  from run-time world would be "generic")
-\end{itemize}
+\begin{glossary}
+  \term{polymorphic} A function is \emph{polymorphic} if it can take
+  arguments of an arbitrary type (a \Cpp\ term from run-time world
+  would be "generic")
+\end{glossary}
 
 \Cpp\ templates are \emph{polymorphic} regarding the type 
 arguments (type template parameters) they take. However they 
-are not polymorphic regarding ct-metafunctions (class 
+are not polymorphic regarding ct-\mfns\ (class 
 template template parameters). In particular, the language 
 rules dictate the compiler to enforce \emph{strict arity} of 
 the class templates being passed as template template 
 parameters. Moreover, polymorphism \emph{between} types and 
-ct-metafunctions is not supported, and the syntax of 
-"returning" ct-metafunctions is different from syntax of 
+ct-\mfns\ is not supported, and the syntax of 
+"returning" ct-\mfns\ is different from syntax of 
 returning a type. All this seriously limits the 
 applicability of higher-order functions, leads to 
 unnecessary code duplication, and has an overall negative 
@@ -1162,7 +1182,7 @@ struct f_gx3
 }
 
 Or, for example, that means that you cannot have a list of 
-ct-metafunctions:
+ct-\mfns:
 
 {\footnotesize
 \begin{verbatim}
@@ -1184,7 +1204,7 @@ You would need to have a special kind of list to do the above,
 and then yet another special kind of list for \emph{unary} 
 ct-metafunction, etc.
 
-So, basically, representing metafunctions as plain class 
+So, basically, representing \mfns\ as plain class 
 template would lead to duplication of almost every library 
 facility. "function class" metafunction form solves all these 
 problems. On the other hand, it seems that accepting function 
@@ -1248,7 +1268,7 @@ algorithms/functions.
 
 The library's answer to this dilemma is lambda expressions. 
 Lambda is the mechanism that enables currying of 
-ct-metafunctions and converting them into function classes, 
+ct-\mfns\ and converting them into function classes, 
 so when you want to pass \code{find} algorithm as an argument 
 to a higher-order function, you just write:
 
@@ -1680,7 +1700,7 @@ least duplication of most of the library facilities (ideally,
 if going this route, all the templates should be re-implemented 
 for every integral type - \code{char}, \code{int}, \code{short},
 \code{long}, etc.) - the same situation as we would have if we 
-had chosen to represent metafunctions as ordinary class templates.
+had chosen to represent \mfns\ as ordinary class templates.
 The solution for this issue is the same as well - we represent 
 integral values by wrapping them in types, so, for example, to 
 create a list of numbers you write:
@@ -1700,8 +1720,8 @@ typedef mpl::list<
 Wrapping integral constants into types to make them 
 first-class citizens is important well inside metaprograms, 
 where you often don't know (and don't care) if the 
-metafunctions you are using operate on types, integral 
-values, other metafunctions, or something else, like 
+\mfns\ you are using operate on types, integral 
+values, other \mfns\, or something else, like 
 fixed-point or rational numbers (\code{mpl::fixed\_c} 
 and \code{mpl::rational\_c}).
 
@@ -1750,7 +1770,7 @@ In many cases the default implementations provided by the library
 are sufficient.
 Currently the only requirement that a "foreign" sequence should 
 conform to in order to be used with the library algorithms is to 
-implement external \code{begin}/\code{end} metafunctions; you 
+implement external \code{begin}/\code{end} \mfns; you 
 don't have to modify your sequence code; with the requirement to 
 provide these as nested functions that wouldn't be the case anymore. 
 
@@ -1850,9 +1870,9 @@ the code that uses them. While runtime performance is not an issue for
 bottleneck to advanced \Cpp\ software development [Abr01].
 
 The \Mpl\ provides four built-in sequences: \code{type\_\-list},
-\code{value\_\-list} (really just a \code{type\_\-list} of value
-wrappers), \code{type\_\-vector}, a randomly-accessible sequence of
-fixed maximum size, and \code{range\_c}, a randomly-accessible
+\code{value\_\-list} (really just a \code{type\_list} of value
+wrappers), \code{type\_vector}, a randomly--accessible sequence of
+fixed maximum size, and \code{range\_c}, a randomly--accessible
 sequence of consecutive integral values. More important, however, is
 its ability to adapt to arbitrary sequence types. The only core
 operations that a sequence is required to provide in order to be used
