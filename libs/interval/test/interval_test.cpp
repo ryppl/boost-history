@@ -29,7 +29,7 @@ typedef double T;
 typedef interval<T, interval_traits<T,
 				    compare_certainly<T>,
 				    save_state<rounded_transc_opp<T> >,
-				    checking_nothing<T> > > R;
+				    checking_base<T> > > R;
 
 unsigned nb_errors;
 std::string test_name;

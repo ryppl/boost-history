@@ -44,7 +44,7 @@ extern "C" { double rint(double); }
  * such macros are defined at all.  We use our own constants in all
  * cases and check for a x86 CPU (see above) to be on the safe side.
  */
-struct bcc_rounding_control
+struct x86_rounding_control
 {
 private:
   static const unsigned int mask_rc = 0x0c00;

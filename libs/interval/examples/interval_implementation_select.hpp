@@ -42,11 +42,16 @@
 using namespace boost;
 using namespace interval_lib;
 
+struct my_checking: checking_base<double> {
+  static bool is_nan(const double&) { return false; }
+  static bool is_empty(const double&, const double&) { return false; }
+};
+
 typedef
   interval<double, interval_traits<double,
 				   compare_certainly<double>,
 				   save_state<rounded_transc_opp<double> >,
-				   checking_nothing<double> > >
+				   my_checking> >
   interval_type;
 
 static const std::string interval_name = "boost::interval<double>";

@@ -2,48 +2,111 @@
 #define BOOST_INTERVAL_CHECKING_HPP
 
 #include <stdexcept>
+#include <cassert>
 
 namespace boost {
   namespace interval_lib {
 
 template<class T>
-struct checking_nothing
+struct exception_create_empty
 {
-  static T inf() { return std::numeric_limits<T>::infinity(); }
-  static T nan() { return std::numeric_limits<T>::quiet_NaN(); }
-  static bool is_nan(const T&) { return false; }
-  static T empty_lower() { return std::numeric_limits<T>::quiet_NaN(); }
-  static T empty_upper() { return std::numeric_limits<T>::quiet_NaN(); }
-  static bool is_empty(const T&, const T&) { return false; }
+  T operator()()
+  {
+    throw std::runtime_error("boost::interval: empty interval created");
+  }
 };
 
 template<class T>
-struct checking_strict
+struct exception_invalid_number
 {
-  static T inf() { return std::numeric_limits<T>::infinity(); }
-  static T nan() { throw std::logic_error("boost::interval: NaN output"); }
-  static bool is_nan(const T& x) {
-      if (detail::is_nan(x))
-        throw std::logic_error("boost::interval: NaN input");
-      return false;
-    }
+  void operator()()
+  {
+    throw std::invalid_argument("boost::interval: invalid number");
+  }
+};
+
+template<class T>
+struct checking_base
+{
+  static T inf()
+  {
+    assert(std::numeric_limits<T>::has_infinity);
+    return std::numeric_limits<T>::infinity();
+  }
+  static T nan()
+  {
+    assert(std::numeric_limits<T>::has_quiet_NaN);
+    return std::numeric_limits<T>::quiet_NaN();
+  }
+  static bool is_nan(const T& x)
+  {
+    return std::numeric_limits<T>::has_quiet_NaN && (x != x);
+  }
   static T empty_lower()
-    { throw std::logic_error("boost::interval: Empty output"); }
+  {
+    return (std::numeric_limits<T>::has_quiet_NaN ?
+	    std::numeric_limits<T>::quiet_NaN() : T(1));
+  }
   static T empty_upper()
-    { throw std::logic_error("boost::interval: Empty output"); }
-  static bool is_empty(const T&, const T&) { return false; }
+  {
+    return (std::numeric_limits<T>::has_quiet_NaN ?
+	    std::numeric_limits<T>::quiet_NaN() : T(0));
+  }
+  static bool is_empty(const T& l, const T& u)
+  {
+    return !(l <= u);
+  }
+};
+
+template<class T, class Checking = checking_base<T>,
+	 class Exception = exception_create_empty<T> >
+struct checking_no_empty: Checking
+{
+  static T nan()
+  {
+    assert(false);
+    return Checking::nan();
+  }
+  static T empty_lower()
+  {
+    Exception()();
+    return Checking::empty_lower();
+  }
+  static T empty_upper()
+  {
+    Exception()();
+    return Checking::empty_upper();
+  }
+  static T is_empty(const T&, const T&)
+  {
+    return false;
+  }
+};
+
+template<class T, class Checking>
+struct checking_no_nan: Checking
+{
+  static bool is_nan(const T&)
+  {
+    return false;
+  }
+};
+
+template<class T, class Checking,
+	 class Exception = exception_invalid_number<T> >
+struct checking_catch_nan: Checking
+{
+  static bool is_nan(const T& x)
+  {
+    if (Checking::is_nan(x)) Exception()();
+    return false;
+  }
 };
 
 template<class T>
-struct checking_complete
-{
-  static T inf() { return std::numeric_limits<T>::infinity(); }
-  static T nan() { return std::numeric_limits<T>::quiet_NaN(); }
-  static bool is_nan(const T& x) { return detail::is_nan(x); }
-  static T empty_lower() { return T(1); }
-  static T empty_upper() { return T(0); }
-  static bool is_empty(const T& x, const T& y) { return !(x <= y); }
-};
+struct checking_strict:
+  checking_catch_nan<T, checking_no_empty<T> >
+{};
 
     namespace detail {
 
