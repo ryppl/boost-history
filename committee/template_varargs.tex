@@ -24,11 +24,11 @@ typesafe manner.
 
 \section{Motivation}
 \subsection{Variable-length template parameter lists}
-Variable-length template parameter lists allow a class or function
-template to accept some number (possibly zero) of template arguments
-beyond the number of template parameters specified. This behavior can
-be simulated in C++ via a long list of defaulted template parameters,
-e.g., a typelist wrapper may appear as:
+Variable-length template parameter lists (varargs) allow a class or
+function template to accept some number (possibly zero) of template
+arguments beyond the number of template parameters specified. This
+behavior can be simulated in C++ via a long list of defaulted template
+parameters, e.g., a typelist wrapper may appear as:
 
 \begin{verbatim}
 struct unused;
@@ -57,22 +57,19 @@ This language feature is primarily designed for library developers,
 and is drawn from experience in library development where these
 techniques have been simulated in one way or
 another~\cite{Gurtovoy02,Lambda02,Tuples01,Function01,Bind01}. Novice
-users aren't likely to use this feature, as any use of a heterogenous
-type container ({\tt tuple}, in this case) requires some degree of
-metaprogramming, although advanced users may require this
-functionality. 
+users aren't likely to use this feature, as generically manipulating
+heterogeneous type container (tuples, in this case) requires some
+degree of metaprogramming.
 
 \subsection{Typesafe Variable-length Function Parameter Lists}
-Variable-length function parameter lists (denoted by an ellipsis at
-the end of a function parameter list) allow an arbitrary number of
-function call arguments to be passed to a function that declares fewer
-parameters than it is passed. This feature is rarely used in C++ code
-(except for compatibility with C libraries), because passing non-POD
-types through {\tt ...} invokes undefined behavior. However, such a
-feature is useful in some contexts, e.g., for implementing a type-safe
-C++ {\tt printf} that works for non-POD types. The lack of such a
-facility has resulted in odd syntax for formatting~\cite{Krempp02},
-e.g.:
+Variable-length function parameter lists allow more arguments to be
+passed to a function than are declared by the function. This feature
+is rarely used in C++ code (except for compatibility with C
+libraries), because passing non-POD types through {\tt ...} invokes
+undefined behavior. However, a typesafe form of such a feature would
+be useful in many contexts, e.g., for implementing a typesafe C++
+{\tt printf} that works for non-POD types. The lack of such a facility
+has resulted in odd syntax for formatting~\cite{Krempp02}:
 \begin{verbatim}
 format("writing %1%, x=%2%: %3%-th try") % "toto" % 40.23 % 50
 \end{verbatim}
@@ -106,13 +103,14 @@ void f(E e, T1& a1, T2& a2, T3& a3) { e(a1, a2, a3); }
 // repeat up to N arguments
 \end{verbatim}
 
-This proposal solves both issues: arguments are passed via the ``Const
-+ Non-const reference'' option \#3 enumerated in~\cite{Dimov02}, which
-results in ``perfect'' forwarding of arguments, but does not require
-$2^N$ overloads to support $N$ arguments: instead, a single overload
+However, this idiom fails to accept literal values. This proposal
+solves both issues: arguments are passed via the ``Const + Non-const
+reference'' option \#3 enumerated in~\cite{Dimov02}, which results in
+``perfect'' forwarding of arguments, but does not require $2^N$
+overloads to support $N$ arguments: instead, a single overload
 suffices for any number of arguments. The solution matches all three
-criteria (C1-C3) of the argument forwarding paper~\cite{Dimov02}, but
-bundling the arguments into a single argument and provides an
+criteria (C1-C3) of the argument forwarding paper~\cite{Dimov02} by
+bundling the arguments into a single argument and providing an
 unbundling method to pass the arguments on to another function.
 
 \section{Syntax and Semantics}
@@ -125,7 +123,7 @@ parameters may precede the ``...''. Thus we can define, for instance,
 a class {\tt Foo} accepting a template type parameter followed by an
 arbitrary number of template arguments as:
 \begin{verbatim}
-template<typename T, ... Args> class Foo;
+template<typename T, ... Elements> class Foo;
 \end{verbatim}
 
 Here, {\tt T} is the name of the template type parameter and {\tt
@@ -135,7 +133,7 @@ Given the instantiation {\tt Foo<int, float, double, std::string>},
 {\tt Elements} would be {\tt std::tuple<float, double, std::string>}
 (note that {\tt T} is {\tt int}). 
 
-Nontype and template template arguments are not placed directly in
+Nontype and template template arguments cannot be placed directly in
 the tuple (see~\cite{Jarvi02}), so they are wrapped in {\tt
   nontype\_template\_arg} or {\tt template\_template\_arg}, respectively. 
 
@@ -158,29 +156,25 @@ struct template_template_arg {
 };
 \end{verbatim}
 
-The {\tt Designator>} type is an unspecified type that uniquely
+The {\tt Designator} type is an unspecified type that uniquely
 identifies the class template (e.g., {\tt std::vector}) but that is
-itself not a template. The {\tt apply} member class template accepts
-some number of template arguments and instantiates the template
-designated by the {\tt Designator} with those parameters. Thus
-instantiating {\tt Foo<int, std::vector>} results in {\tt Args} being
-{\tt std::tuple<template\_template\_arg<X> >} (where {\tt X} is
+itself not a template\footnote{This definition may be expanded to
+  allow typedef templates or template aliases as well, if they can be
+  passed as template arguments.}. The {\tt apply} member class
+template accepts some number of template arguments and instantiates
+the template designated by the {\tt Designator} with those parameters.
+Thus instantiating {\tt Foo<int, std::vector>} results in {\tt Args}
+being {\tt std::tuple<template\_template\_arg<X> >} (where {\tt X} is
 unspecied and unique to {\tt std::vector}) and where {\tt
   template\_template\_arg<X>::apply<int>::type} is equivalent to {\tt
-  std::vector<int>}. 
-
-Default template arguments will be applied when fewer template
-arguments are specified in {\tt Args} than are defined for {\tt U}.
-Thus, the instantiation {\tt Foo<int, std::vector, 17>} would result
-in Args being the tuple \\ {\tt std::tuple<template\_template\_arg<???>,
-  nontype\_template\_arg<int, 17>}.
+  std::vector<int>}.
 
 Function templates may also be declared to accept variable-length
 template parameter lists in the same manner as class templates. In
-this case (and barring an ellipsis in the function parameter list, as
-described in the next section) arguments may only by specified
-explicitly when calling the function template; they are not deduced,
-e.g.,:
+this case (and barring reuse of the vararg type as the final function
+parameter, as described in the next section) arguments may only by
+specified explicitly when calling the function template; they are not
+deduced, e.g.,:
 
 \begin{verbatim}
 template<... Args> void f();
@@ -189,7 +183,7 @@ f<int, double>(); // Args will be std::tuple<int, double>
 \end{verbatim}
 
 \subsection{Typesafe variable-length function parameter lists}
-When a function template contains an ellipsis (followed by an
+When a function template header contains an ellipsis (followed by an
 identifier), that identifier may be reused as the type of the final
 parameter in the function's parameter list to accept the tuple of
 arguments passed to the function. For instance, a C++ {\tt printf} may
@@ -216,11 +210,10 @@ template<typename F, typename T1, typename T2, ..., typename TN>
 the-return-type apply(F& f, tuple<T1, T2, ..., TN>& t);
 
 template<typename F, typename Class, typename T1, typename T2, ..., typename TN>
-the-return-type apply(F Class::*pm, Class& obj, tuple<T1, T2, ..., TN>& t);
+the-return-type apply(F Class::*pm cv, Class& obj, tuple<T1, T2, ..., TN>& t);
 
 template<typename F, typename Class, typename T1, typename T2, ..., typename TN>
-the-return-type apply(F Class::*pm, const Class& obj, tuple<T1, T2, ..., TN>& t);
-
+the-return-type apply(F Class::*pm cv, const Class& obj, tuple<T1, T2, ..., TN>& t);
 \end{verbatim}
 A call expression {\tt std::apply(f, t)} where {\tt f} is a function
 object and {\tt t} is of type {\tt std::tuple<T1, T2, ..., TN>}
@@ -231,7 +224,7 @@ to or derived from the type of the member function pointer's class
 type, and {\tt t} is of type {\tt std::tuple<T1, T2, ..., TN>} returns
 {\tt (obj.*pmf)(get<1>(t), get<2>(t), ..., get<N>(t))}.
 
-With this definition, we can define a function {\tt g} that forwards
+With these definitions, we can define a function {\tt g} that forwards
 perfectly to its function object parameter {\tt f}:
 \begin{verbatim}
 template<typename F, ... Args>
@@ -276,14 +269,16 @@ parameter.
 
 Paragraph 3 of 14.5.5.2 [temp.func.order] describes the rules for
 transforming a template for the purpose of partial ordering. To
-support partial ordering with template varargs, introduce an
-additional bullet:
+support partial ordering with template varargs, introduce two
+additional bullets:
 \begin{itemize}
 \item If after removing the variable-length template parameter list
   designator from both templates the template parameter lists of the
   templates are of different length, append unique template variant
-  parameters to the shorted template parameter list until the template
+  parameters to the shorter template parameter list until the template
   parameter lists are of equal length.
+\item A binding of an argument to a variant parameter is weaker than a
+  binding of an argument to a parameter of the same kind.
 \end{itemize}
 
 \subsection{Overloading}
@@ -328,11 +323,15 @@ where one may need to forward a set of function arguments whose types
 are fixed (see Section~\ref{functionimpl}).
 
 \section{Examples}
-This section gives skeletal implementations of four library
-components, including Tuples, all of which were accepted by the
-library working group into the first library TR. The implementations
-are not complete, but omit only features that are irrelevant to the
-discussion of template varargs. 
+To demonstrate the use of varargs templates, this section gives
+skeletal implementations of four library components using vararg
+templates, including Tuples. All of these proposals were accepted by
+the library working group into the first library TR, and are
+implementable to some degree in C++03. However, all of them would
+benefit from template varargs in that the implementations can be more
+complete, more useful, and more readable than their C++03
+counterparts. The implementations are not complete, but omit only
+features that are irrelevant to the discussion of template varargs.
 
 \subsection{Member pointer adaptor implementation}
 The following code implements the enhanced member pointer adaptor
@@ -356,11 +355,11 @@ struct mem_fn_adaptor
   the-return-type operator()(const Class& object, Args args) const
     { return std::apply(pmf, object, args); }
 
-  template<typename T, ..., Args>
+  template<typename T, ... Args>
   the-return-type operator()(T& ptr, Args args) const
     { return std::apply(pmf, *ptr, args); }
 
-  template<typename T, ..., Args>
+  template<typename T, ... Args>
   the-return-type operator()(const T& ptr, Args args) const
     { return std::apply(pmf, *ptr, args); }
 
@@ -488,6 +487,10 @@ public:
     tail = other.tail;
     return *this;
   }
+
+private:
+  head_type head;
+  tail_type tail;
 };
 
 // Tuple is tuple tuple<T1, T2, ..., TN>
