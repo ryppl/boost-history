@@ -1,9 +1,8 @@
 
-// Copyright (C) 2001-2003 Roland Richter <roland@flll.jku.at>
-// Permission to copy, use, modify, sell and distribute this software
-// is granted provided this copyright notice appears in all copies.
-// This software is provided "as is" without express or implied
-// warranty, and with no claim as to its suitability for any purpose.
+// Copyright Roland Richter 2001-2004.
+// Distributed under the Boost Software License, Version 1.0.
+// See accompanying file LICENSE_1_0.txt
+// or copy at http://www.boost.org/LICENSE_1_0.txt
 
 #ifndef BOOST_VIEW_FUNCTION_VIEW_HPP
 #define BOOST_VIEW_FUNCTION_VIEW_HPP
@@ -11,8 +10,7 @@
 
 #include <boost/iterator/counting_iterator.hpp>
 #include <boost/iterator/transform_iterator.hpp>
-
-#include "detail/traits_detail.hpp"
+#include <boost/iterator/iterator_traits.hpp>
 
 namespace boost {
   namespace view {
@@ -49,40 +47,24 @@ public:
   /// The view's own type.
   typedef function_view<FunctionT,ArgT,ResT> self_type;
 
-  typedef traits::adapted_iterator_traits<
-             boost::transform_iterator<
-               FunctionT, boost::counting_iterator< ArgT > >,
-             boost::transform_iterator<
-               FunctionT, boost::counting_iterator< ArgT > >
-           > iter_traits;
-
-  typedef traits::default_container_traits<
-             ArgT,
-               // size_type is the return type of operator-( argument_type,argument_type ).
-               // This "should" be convertible to argument_type; or should it be long int?
-             ArgT,
-             ResT
-           > cont_traits;
-
   /// @name The traits types visible to the public.
   //@{
-  typedef typename iter_traits::value_type       value_type;
+  typedef boost::transform_iterator< FunctionT, boost::counting_iterator< ArgT > > iterator;
+    
+  typedef typename boost::iterator_value<iterator>::type      value_type;
+  typedef typename boost::iterator_reference<iterator>::type  reference;
+  typedef typename boost::iterator_pointer<iterator>::type    pointer;
+  typedef typename boost::iterator_difference<iterator>::type difference_type;
 
-  typedef typename iter_traits::iterator         iterator;
-  typedef typename iter_traits::const_iterator   const_iterator;
-  typedef typename iter_traits::reference        reference;
-  typedef typename iter_traits::const_reference  const_reference;
-  typedef typename iter_traits::pointer          pointer;
-  typedef typename iter_traits::const_pointer    const_pointer;
+  typedef boost::transform_iterator< FunctionT, boost::counting_iterator< ArgT > > const_iterator;
 
-  typedef typename iter_traits::difference_type  difference_type;
+  typedef typename boost::iterator_reference<const_iterator>::type  const_reference;
+  typedef typename boost::iterator_pointer<const_iterator>::type    const_pointer;
 
-  typedef typename cont_traits::size_type        size_type;
-  typedef typename cont_traits::index_type       index_type;
-  typedef typename cont_traits::data_type        data_type;
-
+  typedef ArgT        size_type;
+  typedef ArgT        index_type;
+  typedef ResT        data_type;
   //@}
-
 
   /// Creates a view of [theB,theE).
   function_view( index_type theB, index_type theE,

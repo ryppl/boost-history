@@ -1,14 +1,13 @@
 
-// Copyright (C) 2001-2003 Roland Richter <roland@flll.jku.at>
-// Permission to copy, use, modify, sell and distribute this software
-// is granted provided this copyright notice appears in all copies.
-// This software is provided "as is" without express or implied
-// warranty, and with no claim as to its suitability for any purpose.
+// Copyright Roland Richter 2001-2004.
+// Distributed under the Boost Software License, Version 1.0.
+// See accompanying file LICENSE_1_0.txt
+// or copy at http://www.boost.org/LICENSE_1_0.txt
 
 #ifndef BOOST_VIEW_RANGE_VIEW_HPP
 #define BOOST_VIEW_RANGE_VIEW_HPP
 
-#include "detail/traits_detail.hpp"
+#include <boost/detail/iterator.hpp>
 
 
 namespace boost {
@@ -36,28 +35,23 @@ public:
   /// The view's own type.
   typedef range_view<IteratorT,ConstIteratorT,ValueT,ReferenceT,PointerT,CategoryT,DifferenceT> self_type;
 
-  typedef traits::default_iterator_traits< 
-    IteratorT, ConstIteratorT,
-    ValueT, ReferenceT, PointerT, CategoryT, DifferenceT > iter_traits;
-
-  typedef traits::default_container_traits< long,long, ReferenceT > cont_traits;
-
   /// @name The traits types visible to the public.
   //@{           
-  typedef typename iter_traits::value_type       value_type;
+  typedef ValueT       value_type;
   
-  typedef typename iter_traits::iterator         iterator;
-  typedef typename iter_traits::const_iterator   const_iterator;
-  typedef typename iter_traits::reference        reference;
-  typedef typename iter_traits::const_reference  const_reference;
-  typedef typename iter_traits::pointer          pointer;
-  typedef typename iter_traits::const_pointer    const_pointer;
+  typedef IteratorT         iterator;
+  typedef ReferenceT        reference;
+  typedef PointerT          pointer;
+
+  typedef ConstIteratorT    const_iterator;
+  typedef boost::detail::iterator_traits<ConstIteratorT>::reference  const_reference;
+  typedef boost::detail::iterator_traits<ConstIteratorT>::pointer    const_pointer;
   
-  typedef typename iter_traits::difference_type  difference_type;
+  typedef DifferenceT  difference_type;
   
-  typedef typename cont_traits::size_type        size_type;
-  typedef typename cont_traits::index_type       index_type;
-  typedef typename cont_traits::data_type        data_type;
+  typedef std::size_t       size_type;
+  typedef std::size_t       index_type;
+  typedef ReferenceT        data_type;
   
   //@}
 

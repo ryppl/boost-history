@@ -1,18 +1,18 @@
 
-// Copyright (C) 2001-2003 Roland Richter <roland@flll.jku.at>
-// Permission to copy, use, modify, sell and distribute this software
-// is granted provided this copyright notice appears in all copies.
-// This software is provided "as is" without express or implied
-// warranty, and with no claim as to its suitability for any purpose.
+// Copyright Roland Richter 2001-2004.
+// Distributed under the Boost Software License, Version 1.0.
+// See accompanying file LICENSE_1_0.txt
+// or copy at http://www.boost.org/LICENSE_1_0.txt
 
 #ifndef BOOST_VIEW_WINDOW_VIEW_HPP
 #define BOOST_VIEW_WINDOW_VIEW_HPP
 
 #include <boost/config.hpp>
 #include "cyclic_iterator.hpp"
+#include <boost/iterator/iterator_traits.hpp>
 
-#include "detail/traits_detail.hpp"
 #include "detail/ownership_detail.hpp"
+
 
 namespace boost {
   namespace view {
@@ -31,64 +31,59 @@ public:
   /// The view's own type.
   typedef window_view<ContainerT> self_type;
 
-  typedef traits::adapted_iterator_traits<
-          boost::cyclic_iterator<
+  /// The type of the underlying container.
+  typedef ownership::wrap<ContainerT>::domain domain_type;
+
+  /// The type of the underlying containers' const iterator.
+  typedef typename domain_type::const_iterator domain_const_iterator;
+
+  /// @name The traits types visible to the public.
+  //@{
+  typedef boost::cyclic_iterator<
               typename ownership::wrap<ContainerT>::domain::iterator
 #ifdef BOOST_MSVC
             , boost::use_default
             , boost::use_default
             , typename ownership::wrap<ContainerT>::domain::reference
 #endif
-           >,
-           boost::cyclic_iterator<
+                                > iterator;
+    
+  typedef typename boost::iterator_value<iterator>::type      value_type;
+  typedef typename boost::iterator_reference<iterator>::type  reference;
+  typedef typename boost::iterator_pointer<iterator>::type    pointer;
+  typedef typename boost::iterator_difference<iterator>::type difference_type;
+
+  typedef boost::cyclic_iterator<
               typename ownership::wrap<ContainerT>::domain::const_iterator
 #ifdef BOOST_MSVC
             , boost::use_default
             , boost::use_default
             , typename ownership::wrap<ContainerT>::domain::const_reference
 #endif
-           >
-        > iter_traits;
+                                > const_iterator;
+  
+  typedef typename boost::iterator_reference<const_iterator>::type  const_reference;
+  typedef typename boost::iterator_pointer<const_iterator>::type    const_pointer;
 
-  typedef traits::adapted_container_traits< ownership::wrap<ContainerT>::domain >
-          cont_traits;
 
-  /// @name The traits types visible to the public.
-  //@{
-  typedef typename iter_traits::value_type       value_type;
+  typedef typename domain_type::size_type size_type;
 
-  typedef typename iter_traits::iterator         iterator;
-  typedef typename iter_traits::const_iterator   const_iterator;
-  typedef typename iter_traits::reference        reference;
-  typedef typename iter_traits::const_reference  const_reference;
-  typedef typename iter_traits::pointer          pointer;
-  typedef typename iter_traits::const_pointer    const_pointer;
-
-  typedef typename iter_traits::difference_type  difference_type;
-
-  typedef typename cont_traits::size_type        size_type;
-  typedef typename cont_traits::index_type       index_type;
-  typedef typename cont_traits::data_type        data_type;
-
+  typedef typename domain_type::size_type       index_type;
+  typedef typename boost::iterator_reference<iterator>::type       data_type;
   //@}
-
-  /// The type of the underlying container.
-  typedef ownership::wrap<ContainerT>::domain domain_type;
-
-  /// The type of the underlying containers' iterator.
-  typedef typename domain_type::iterator domain_iterator;
-
-  /// The type of the underlying containers' const iterator.
-  typedef typename domain_type::const_iterator domain_const_iterator;
 
   /// Creates a view of range [theB,theE).
   window_view( const domain_type& theData, domain_const_iterator theB, domain_const_iterator theE )
     : data( theData )
-  { select( theB-theData.begin(),theE-theB ); }
+  { select( theB-theData.begin(), std::distance( theB, theE ) ); }
 
   window_view( const domain_type& theData, domain_const_iterator theB, difference_type theSize )
     : data( theData )
-  { select( theB-theData.begin(),theSize ); }
+  { select( theB-theData.begin(), theSize ); }
+
+  window_view( const domain_type& theData, size_type theI, difference_type theSize )
+    : data( theData )
+  { select( theI, theSize ); }
 
   /// The copy constructor.
   window_view( const window_view& rhs )
@@ -161,7 +156,7 @@ public:
   //@}
 
   /// Shifts the window n steps to right if n>0 and left if n<0.
-  void rotate( difference_type n = 1 )
+  void shift( difference_type n = 1 )
   {
     std::advance(b,n);
     std::advance(e,n);

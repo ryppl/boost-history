@@ -1,17 +1,15 @@
 
-// Copyright (C) 2001-2003 Roland Richter <roland@flll.jku.at>
-// Permission to copy, use, modify, sell and distribute this software
-// is granted provided this copyright notice appears in all copies.
-// This software is provided "as is" without express or implied
-// warranty, and with no claim as to its suitability for any purpose.
+// Copyright Roland Richter 2001-2004.
+// Distributed under the Boost Software License, Version 1.0.
+// See accompanying file LICENSE_1_0.txt
+// or copy at http://www.boost.org/LICENSE_1_0.txt
 
 #ifndef BOOST_VIEW_PERMUTATION_VIEW_HPP
 #define BOOST_VIEW_PERMUTATION_VIEW_HPP
 
-#include <boost/config.hpp>
 #include <boost/iterator/permutation_iterator.hpp>
+#include <boost/iterator/iterator_traits.hpp>
 
-#include "detail/traits_detail.hpp"
 #include "detail/ownership_detail.hpp"
 
 
@@ -31,50 +29,39 @@ class permutation_view
 public:
   /// The view's own type.
   typedef permutation_view<ContainerT,ReindexT> self_type;
-
-  typedef traits::adapted_iterator_traits<
-            boost::permutation_iterator<
-              typename ownership::wrap<ContainerT>::domain::iterator
-            , typename ReindexT::iterator
-            >,
-            boost::permutation_iterator<
-              typename ownership::wrap<ContainerT>::domain::const_iterator
-            , typename ReindexT::const_iterator
-            >
-          > iter_traits;
-
-  typedef traits::adapted_container_traits<
-            ReindexT,
-            //### Should be index_type, which is not defined for every container
-            typename ReindexT::size_type,
-            typename ownership::wrap<ContainerT>::domain::reference
-          > cont_traits;
-          
-  /// @name The traits types visible to the public.
-  //@{           
-  typedef typename iter_traits::value_type       value_type;
-  
-  typedef typename iter_traits::iterator         iterator;
-  typedef typename iter_traits::const_iterator   const_iterator;
-  typedef typename iter_traits::reference        reference;
-  typedef typename iter_traits::const_reference  const_reference;
-  typedef typename iter_traits::pointer          pointer;
-  typedef typename iter_traits::const_pointer    const_pointer;
-  
-  typedef typename iter_traits::difference_type  difference_type;
-  
-  typedef typename cont_traits::size_type        size_type;
-  typedef typename cont_traits::index_type       index_type;
-  typedef typename cont_traits::data_type        data_type;
-  
-  //@}          
-          
           
   /// The type of the underlying container.
   typedef ownership::wrap<ContainerT>::domain domain_type;
 
   /// The type of the reindexing scheme.
   typedef ReindexT reindex_type;
+          
+  /// @name The traits types visible to the public.
+  //@{           
+
+  typedef boost::permutation_iterator<
+              typename ownership::wrap<ContainerT>::domain::iterator
+            , typename ReindexT::iterator
+                                     > iterator;
+    
+  typedef typename boost::iterator_value<iterator>::type      value_type;
+  typedef typename boost::iterator_reference<iterator>::type  reference;
+  typedef typename boost::iterator_pointer<iterator>::type    pointer;
+  typedef typename boost::iterator_difference<iterator>::type difference_type;
+
+  typedef boost::permutation_iterator<
+              typename ownership::wrap<ContainerT>::domain::const_iterator
+            , typename ReindexT::const_iterator
+                                     > const_iterator;
+    
+  typedef typename boost::iterator_reference<const_iterator>::type  const_reference;
+  typedef typename boost::iterator_pointer<const_iterator>::type    const_pointer;
+
+  typedef typename ReindexT::size_type                       size_type;
+  typedef typename ReindexT::size_type                       index_type;
+  typedef typename boost::iterator_reference<iterator>::type data_type;
+  //@}          
+
 
   /// Creates a view of the given container and the given reindexing scheme.
   permutation_view( const domain_type& theData, const reindex_type& theReindex )

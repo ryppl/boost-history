@@ -1,16 +1,16 @@
 
-// Copyright (C) 2001-2003 Roland Richter <roland@flll.jku.at>
-// Permission to copy, use, modify, sell and distribute this software
-// is granted provided this copyright notice appears in all copies.
-// This software is provided "as is" without express or implied
-// warranty, and with no claim as to its suitability for any purpose.
+// Copyright Roland Richter 2001-2004.
+// Distributed under the Boost Software License, Version 1.0.
+// See accompanying file LICENSE_1_0.txt
+// or copy at http://www.boost.org/LICENSE_1_0.txt
+
 
 #ifndef BOOST_VIEW_TRANSFORM_VIEW_HPP
 #define BOOST_VIEW_TRANSFORM_VIEW_HPP
 
 #include <boost/iterator/transform_iterator.hpp>
+#include <boost/iterator/iterator_traits.hpp>
 
-#include "detail/traits_detail.hpp"
 #include "detail/ownership_detail.hpp"
 
 namespace boost {
@@ -28,20 +28,6 @@ namespace boost {
 template< class ContainerT, class FunctionT >
 class transform_view
 {
-private:
-  typedef traits::adapted_iterator_traits<
-             boost::transform_iterator<
-               FunctionT, typename ownership::wrap<ContainerT>::domain::iterator >,
-             boost::transform_iterator<
-               FunctionT, typename ownership::wrap<ContainerT>::domain::const_iterator >
-           > iter_traits;
-
-  typedef traits::adapted_container_traits<
-             ownership::wrap<ContainerT>::domain,
-             typename traits::index_data_traits< typename ownership::wrap<ContainerT>::domain >::index_type,
-             typename FunctionT::result_type
-           > cont_traits;
-
 public:
   /// The view's own type (i.e. transform_view<...>).
   typedef transform_view< ContainerT, FunctionT > self_type;
@@ -51,21 +37,27 @@ public:
 
   /// @name The traits types visible to the public.
   //@{
-  typedef typename iter_traits::value_type       value_type;
+  typedef boost::transform_iterator< 
+            FunctionT, 
+            typename ownership::wrap<ContainerT>::domain::const_iterator 
+          > iterator;
 
-  typedef typename iter_traits::iterator         iterator;
-  typedef typename iter_traits::const_iterator   const_iterator;
-  typedef typename iter_traits::reference        reference;
-  typedef typename iter_traits::const_reference  const_reference;
-  typedef typename iter_traits::pointer          pointer;
-  typedef typename iter_traits::const_pointer    const_pointer;
+  typedef typename boost::iterator_value<iterator>::type      value_type;
+  typedef typename boost::iterator_reference<iterator>::type  reference;
+  typedef typename boost::iterator_pointer<iterator>::type    pointer;
+  typedef typename boost::iterator_difference<iterator>::type difference_type;
 
-  typedef typename iter_traits::difference_type  difference_type;
+  typedef boost::transform_iterator<
+            FunctionT, 
+            typename ownership::wrap<ContainerT>::domain::const_iterator
+          > const_iterator;
+  
+  typedef typename boost::iterator_reference<const_iterator>::type  const_reference;
+  typedef typename boost::iterator_pointer<const_iterator>::type    const_pointer;
 
-  typedef typename cont_traits::size_type        size_type;
-  typedef typename cont_traits::index_type       index_type;
-  typedef typename cont_traits::data_type        data_type;
-
+  typedef typename domain_type::size_type size_type;
+  typedef typename domain_type::size_type index_type;
+  typedef typename FunctionT::result_type data_type;
   //@}
 
   /// Creates a view of container \c theData transformed by the function \c theF.
