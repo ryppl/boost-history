@@ -1,6 +1,6 @@
 //  boost cpp_main_example program  ------------------------------------------//
 
-#include <boost/test/cpp_main.cpp> // included rather than linked implementation
+#include <libs/test/src//cpp_main.cpp> // included rather than linked implementation
 
 int add( int i, int j ) { return i+j; }
 
