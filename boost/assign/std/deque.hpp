@@ -28,7 +28,7 @@ namespace boost
 namespace assignment
 {
 
-    template< typename V, typename A, typename V2 >
+    template< typename V, typename A, class V2 >
     inline void make_insertion( std::deque<V,A>& c, V2 v )
     {
         c.push_back( v );

@@ -29,11 +29,11 @@ namespace assignment
 // do nothing: a default version ***** up vc6 
 
 #else 
-
+/*
     template< typename C, typename V >
-    inline void make_insertion( C& c, const V& v );
-/*    {
-        c.insert( c.end(), v );
+    inline void make_insertion( C& c, const V& v )
+    {
+        c.dont_compile( v );
     }
 */
 #endif

@@ -34,17 +34,18 @@ namespace assignment
 
 
 
-        insert_assigner& operator,( value_type v )
+        template< class U >
+        insert_assigner& operator,( U u )
         {
-            insert_( v );
+            insert_( u );
             return *this;
         }
 
 
-
-        insert_assigner& operator()( value_type v )
+        template< class U >
+        insert_assigner& operator()( U u )
         {
-            insert_( v );
+            insert_( u );
             return *this;
         }
 
@@ -100,9 +101,9 @@ namespace assignment
 
     private:
         
-        void insert_( value_type v )
+        void insert_( value_type u )
         {
-            make_insertion( c_, v );
+            make_insertion( c_, u );
         }
 
         insert_assigner& operator=( const insert_assigner& );

@@ -16,6 +16,10 @@ test-suite "assign"
             list_of.cpp
 	    : list_of
        ]         
+    : [ run
+            list_inserter.cpp
+	    : list_inserter
+       ]         
 
     ;
 
