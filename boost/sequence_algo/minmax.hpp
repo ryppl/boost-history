@@ -10,7 +10,7 @@
 #ifndef BOOST_MINMAX_H
 #define BOOST_MINMAX_H
 
-#include <utility>
+#include <utility> // for std::pair and std::make_pair
 
 /* PROPOSED STANDARD EXTENSIONS:
  *
@@ -157,83 +157,6 @@ namespace boost {
 
 }
  
-/* PROPOSED STANDARD EXTENSIONS:
- *
- * min_element_if(first, last, predicate)
- * Effect: returns the smallest element of the subsequence of [first,last)
- *         satisfying the predicate (or last if none)
- *
- * min_element_if(first, last, comp, predicate)
- * Effect: returns the smallest element, for the order comp, of the subsequence
- *         of [first,last) satisfying the predicate (or last if none)
- *
- * max_element_if(first, last, predicate)
- * Effect: returns the largest element of the subsequence of [first,last)
- *         satisfying the predicate (or last if none)
- *
- * max_element_if(first, last, comp, predicate)
- * Effect: returns the largest element, for the order comp, of the subsequence
- *         of [first,last) satisfying the predicate (or last if none)
- */
-
-  template <class ForwardIter, class UnaryPredicate>
-  ForwardIter
-  min_element_if(ForwardIter first, ForwardIter last, UnaryPredicate cond)
-  {
-    while (first != last && !cond(*first))
-      ++first;
-    if (first == last) return last;
-    ForwardIter min_result = first;
-    while (++first != last)
-      if (cond(*first) && *first < *min_result)
-        min_result = first;
-    return min_result;
-  }
-
-  template <class ForwardIter, class BinaryPredicate, class UnaryPredicate>
-  ForwardIter
-  min_element_if(ForwardIter first, ForwardIter last,
-                 BinaryPredicate comp, UnaryPredicate cond)
-  {
-    while (first != last && !cond(*first))
-      ++first;
-    if (first == last) return last;
-    ForwardIter min_result = first;
-    while (++first != last)
-      if (cond(*first) && comp(*first, *min_result))
-        min_result = first;
-    return min_result;
-  }
-
-  template <class ForwardIter, class UnaryPredicate>
-  ForwardIter
-  max_element_if(ForwardIter first, ForwardIter last, UnaryPredicate cond)
-  {
-    while (first != last && !cond(*first))
-      ++first;
-    if (first == last) return last;
-    ForwardIter max_result = first;
-    while (++first != last)
-      if (cond(*first) && *max_result < *first)
-        max_result = first;
-    return max_result;
-  }
-
-  template <class ForwardIter, class BinaryPredicate, class UnaryPredicate>
-  ForwardIter
-  max_element_if(ForwardIter first, ForwardIter last,
-                 BinaryPredicate comp, UnaryPredicate cond)
-  {
-    while (first != last && !cond(*first))
-      ++first;
-    if (first == last) return last;
-    ForwardIter max_result = first;
-    while (++first != last)
-      if (cond(*first) && comp(*max_result, *first))
-        max_result = first;
-    return max_result;
-  }
-
 
 /* PROPOSED BOOST EXTENSIONS
  * In the description below, [rfirst,rlast) denotes the reversed range
