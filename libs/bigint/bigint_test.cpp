@@ -219,6 +219,10 @@ int main() {
     hexstr << std::hex << bigint(2147483647);
     assert(hexstr.str() == "7fffffff");
 
+    std::ostringstream uphexstr;
+    uphexstr << std::hex << std::uppercase << bigint(2147483647);
+    assert(uphexstr.str() == "7FFFFFFF");
+
     std::ostringstream octstr;
     octstr << std::oct << bigint(2147483647);
     assert(octstr.str() == "17777777777");

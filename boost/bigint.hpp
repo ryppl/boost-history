@@ -25,7 +25,8 @@ namespace boost {
   // Volume 2: Seminumerical Algorithms, Chapter 4.3 by Donald Knuth.  
 
   // The implementation uses std::vector<int> as its buffer format and a fixed
-  // radix of 10,000 for easy conversion to and from ascii strings.
+  // radix of 10,000, which was used early on for easy conversion to 
+  // and from ascii strings, but is now subject to change.
 
   // Bigits (base 10,000 digits) are stored in reverse order (most significant
   // bigits at the end of the vector) to take advantage of std::vector's fast
@@ -37,43 +38,13 @@ namespace boost {
 
 class bigint : boost::operators<bigint> {
   BOOST_STATIC_CONSTANT(int, radix = 10000);
-#if 0
-  BOOST_STATIC_CONSTANT(int, chars_per_digit = 4);
-#else
-  enum { chars_per_digit = 4 };	// RG: gcc3 was giving trouble...
-#endif // 0 
   typedef std::vector<int> buffer_t;
   buffer_t buffer;
 
   friend std::ostream& operator<<(std::ostream& os, bigint const& rhs);
   friend std::istream& operator>>(std::istream& is, bigint& rhs);
 
-  std::ostream& print(std::ostream& os) const {
-
-    if(!os.good()) return os;
-
-    // Is the bigint negative?
-    if(buffer.back() == -1)
-      return os << '-' << -(*this); 
-    
-    // Store fill character
-    char old_fill = os.fill();
-    for(buffer_t::const_reverse_iterator i = buffer.rbegin();
-	i != buffer.rend(); ++i) {
-      assert(*i < radix);
-
-      // Don't print leading zeros
-      if(i != buffer.rbegin())
-	os << std::setw(chars_per_digit) << std::setfill('0');
-
-      os << *i;
-    }
-    // Restore fill character
-    os.fill(old_fill);
-    return os;
-  }
-
-  // RG - new implementation of streaming in a base-agnostic form
+  // Streaming in a base-agnostic form
   std::ostream& to_ostream(std::ostream& os) const {
 
     if(!os.good()) return os;
@@ -82,13 +53,23 @@ class bigint : boost::operators<bigint> {
     std::ostream::sentry opfx(os);
     
     if(opfx) {
-      static char const decimals[] = {'0','1','2','3','4','5','6','7','8','9'};
-      static char const hexadecimals[] = {'0','1','2','3','4','5','6','7','8',
-                                          '9','a','b','c','d','e','f'};
-      // obviously decimals would work fine...
-      static char const octals[] = {'0','1','2','3','4','5','6','7'};
 
       std::ios_base::fmtflags flags = os.flags();
+
+      if(this->negative()) {
+        os << '-';
+        if (flags & std::ios_base::showpos) os << std::noshowpos;
+        return (-(*this)).to_ostream(os) << std::setiosflags(flags);
+      } else if(flags & std::ios_base::showpos) {
+        os << '+';
+      }
+
+      static char const decimals[] = {'0','1','2','3','4','5','6','7','8','9'};
+      static char const lowerhex[] = {'0','1','2','3','4','5','6','7','8',
+                                          '9','a','b','c','d','e','f'};
+      static char const upperhex[] = {'0','1','2','3','4','5','6','7','8',
+                                          '9','A','B','C','D','E','F'};
+      static char const octals[] = {'0','1','2','3','4','5','6','7'};
 
       int outbase;
       char const* outchars;
@@ -97,15 +78,10 @@ class bigint : boost::operators<bigint> {
         outchars = decimals;
       } else if (flags & std::ios_base::hex) {
         outbase = 16;
-        outchars = hexadecimals;
+        outchars = (flags & std::ios_base::uppercase) ? upperhex : lowerhex;
       } else { // if (flags & std::ios_base::oct)
         outbase = 8;
-        outchars = hexadecimals;
-      }
-
-      if(this->negative()) {
-        os << '-';
-        return (-(*this)).to_ostream(os);
+        outchars = octals;
       }
     
       std::vector<char> text;
@@ -131,6 +107,7 @@ class bigint : boost::operators<bigint> {
 
     if(!is.good()) return is;
 
+    // RG - add support for hexadecimal and octal!
     // Manage prefix and postfix operations (RAII object)
     std::istream::sentry ipfx(is);
     
