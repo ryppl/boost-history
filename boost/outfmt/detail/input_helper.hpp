@@ -6,6 +6,7 @@
 #     pragma once
 #  endif
 
+#  include <ios>
 #  include <boost/noncopyable.hpp>
 
    namespace boost { namespace io { namespace detail
@@ -67,7 +68,7 @@
             }
             inline void                          clear
                                                  (
-                                                    iosbase_type::iostate s =
+                                                    typename iosbase_type::iostate s =
 #                                                   if defined(BOOST_MSVC)
                                                        0 // MS VC has problems with iosbase_type::goodbit
 #                                                   else
@@ -77,7 +78,7 @@
             {
                is.clear( s );
             }
-            inline void                          setstate( iosbase_type::iostate s )
+            inline void                          setstate( typename iosbase_type::iostate s )
             {
                is.setstate( s );
             }
@@ -162,7 +163,7 @@
                // compare
                ForwardIterator         rlast = first;
                --rlast; // [review]: check logic
-               
+
                while(( first != last ) && match( *first ))
                   ++first;
 
@@ -170,9 +171,9 @@
                {
                   while( --last != rlast ) // [review]: check logic
                      is.putback( *last );
-                     
+
                   return( false );
-               }                  
+               }
                return( true );
             }
          public: // constructors
