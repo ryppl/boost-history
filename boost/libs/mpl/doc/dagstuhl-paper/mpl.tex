@@ -232,7 +232,7 @@ struct nil {};
 
 typedef
   cons<int, cons<long, cons<std::vector<double>, nil> > >
-types;
+my_types;
 \end{verbatim}
 }
 
@@ -281,11 +281,9 @@ struct largest<cons<First,nil> >
 
 int main()
 {
-   std::cout
-         << typeid(largest<
-                      cons<int, cons<char, cons<double, nil> > >
-                   >::type).name()
-         << std::endl;
+   // print ht ename of the largest of my_types
+   std::cout << typeid(largest<my_types>::type).name()
+             << std::endl;
 }
 
 \end{verbatim}
@@ -294,17 +292,17 @@ int main()
 There are several things worth noticing about this code:
 \begin{itemize}
 
-\item It uses a few ad-hoc, esoteric techniques (``hacks''). The
-  default template argument \code{choose1} in \code{choose\_\-larger}
-  (labelled ``hands off!'') is one example. Without it, we would have
-  needed yet another template to provide the implementation of
-  \code{choose\_\-larger}, or we would have had to provide the
-  computation explicitly as a parameter to the template - perhaps not
-  bad for this example, but it would make choose\_\-larger much less
-  useful and more error-prone. The other hack is the derivation of a
-  specialization of \code{largest} from \code{choose\_\-larger}. This is
-  a code-saving device which allows the programmer to avoid writing
-  \code{typedef typename}...\code{::type type} in the template body.
+\item It uses a few ad-hoc, esoteric techniques, or ``hacks''. The
+  default template argument \code{choose1} (labelled ``hands off!'')
+  is one example. Without it, we would have needed yet another
+  template to provide the implementation of \code{choose\_\-larger},
+  or we would have had to provide the computation explicitly as a
+  parameter to the template - perhaps not bad for this example, but it
+  would make choose\_\-larger much less useful and more
+  error-prone. The other hack is the derivation of a specialization of
+  \code{largest} from \code{choose\_\-larger}. This is a code-saving
+  device which allows the programmer to avoid writing \code{typedef
+  typename}...\code{::type type} in the template body.
 
 \item Even this simple metaprogram uses three separate partial
   specializations. The \code{largest} \mfn\ uses \emph{two}
@@ -320,11 +318,15 @@ There are several things worth noticing about this code:
 
 \subsection{Why Metaprogramming?}
 
+%%% maybe we don't need another example of a metaprogram given what
+%%% we've done above? We could rewrite and cut most of this section...
+
 It's worth asking why anyone would want to do this. After all, even a
 simple toy example like the factorial metafunction is somewhat
 esoteric. To show how the type computation can be put to work, let's
 examine a simple example. The following code produces an array
 containing all possible permutations of another array:
+
 {\footnotesize
 \begin{verbatim}
 // Can't return an array in C++, so we need this wrapper
@@ -357,6 +359,9 @@ all_permutations(T const& in)
 }
 \end{verbatim}
 }
+
+
+%%% ...up to this point
 
 The runtime definition of \code{factorial} would be useless in
 \code{all\_\-permutations} above, since in \Cpp\ the sizes of array
@@ -480,6 +485,9 @@ how to implement it, and Czarnecki and Eisenecker [CE00] first
 presented it as a standalone library primitive. The \Mpl\ defines the 
 corresponding facility as follows:
 
+%%% It would be a good idea to introduce/motivate the use of true_c/false_c
+%%% types in place of bool parameters. 
+
 {\footnotesize
 \begin{verbatim}
 // definition
@@ -514,10 +522,16 @@ limitations on applicability of the primitive, comparing to
 a manually implemented equivalent of the selection code. 
 Below we present ???.
 
+%%% This section digresses into dealing with what I would title
+%%% "Delayed Evaluation". While a /very/ important topic, I would
+%%% cover it elsewhere, enabling you to avoid using Partial Spec. as
+%%% an excuse for dealing with it. Delayed evaluation for correctness
+%%% deserves a mention but I think you might have one too many
+%%% examples of unsuccessful attempts to deal with it ;-) 
 
 For example, suppose we are implementing a \code{pointed\_\-type}
-traits template such as \code{pointed\_\-type<T>::type} 
-instantiated for a \code{T} that is either a plain pointer 
+traits template such as \code{pointed\_\-type<T>::type} instantiated
+for a \code{T} that is either a plain pointer
 (\code{U*}), \code{std::auto\_ptr<U>}, or any of the \code{boost}
 smart pointers, e.g. \code{boost::scoped\_ptr<U>}, will give you 
 the pointed type (\code{U}):
@@ -772,15 +786,17 @@ Which gives us exactly what we wanted.
 
 \subsection{Metafunctions, function classes and lambda}
 
-A \emph{metafunction} is an entity of a certain structure 
-that represents a function invocable at compile-time. 
-In \Cpp\, the basic underlying language construct of any 
-model of metafunction concept is a \emph{class template}: 
-it can take types and/or non-type arguments as actual 
-template parameters and "return" types or non-type values 
-through its nested type/static const data members 
-declarations. Obviously, a bare class template is the 
-simplest possible model of the concept:
+%%% This intro material needs to come earlier, since you talk about
+%%% nullary functions in the previous section.  
+
+A \emph{metafunction} is an entity of a certain structure that
+represents a function invocable at compile-time.  In \Cpp\, the basic
+underlying language construct of any model of metafunction concept is
+a \emph{class template}: it can take types and/or non-type arguments
+as actual template parameters and "return" types or non-type values
+through its nested type/static const data members
+declarations. Obviously, a bare class template is the simplest
+possible model of the concept:
 
 {\footnotesize
 \begin{verbatim}
@@ -830,6 +846,8 @@ struct f
 
 Figure 1. Two common forms of metafunction concept.
 
+%%% Should make the link between MPL metafunction classes and STL function
+%%% objects 
 
 These two forms exist because of some idiosyncrasy in 
 how templates are defined in C++, - in particular, because 
@@ -838,6 +856,8 @@ latter makes it unnecessary awkward and tedious to define
 and work with higher-order ct-metafunctions (i.e. class 
 template metafunctions that returns another class template 
 metafunctions):
+
+%%% Should make the link between template typedefs and closures
 
 {\footnotesize
 \begin{verbatim}
@@ -891,9 +911,15 @@ struct some_type_computation
 \end{verbatim}
 }
 
+%%% Can you make your case here with just bind1st? compose_f_gx is
+%%% probably not too familiar to most people, and the code here is
+%%% pretty complicated.
+
 In this example, passing the body of 
 \code{is\_T\_or\_const\_T} predicate directly to 
 \code{find\_if} would make things a little bit prettier, 
+
+%%% What point are you trying to make here? Consider cutting this.
 
 {\footnotesize
 \begin{verbatim}
@@ -945,8 +971,13 @@ that applies higher-order metafunctions internally.
 Unfortunately, within the current language inheritence 
 is the only way to "return" a class template.
 
-\emph{MORE IMPORTANLY - why representing metafunctions as plain class 
+%%% A marginal issue. We don't have true closures either but it
+%%% doesn't seem to cause problems... or maybe it does (we can't declare
+%%% a variable to hold the result of bind)
+
+\emph{MORE IMPORTANLY - why representing metafunctions as plain class
 templates (ct-metafunctions) is not a option.}
+
 
 Definitions: 
 \begin{itemize}
@@ -976,9 +1007,21 @@ unnecessary code duplication, and has an overall negitave
 effect on the both conceptual and implementation clarity, 
 simplicity and size of the library.
 
+%%% I think we should have a separate section to discuss
+%%% limitations/complaints about C++ and possible suggestions for ways
+%%% to make metaprogramming better. That would allow you to
+%%% concentrate focus on ``here's what the lib does, here's how''
+%%% where appropriate.
+
 For example, that means that you cannot write a single 
 generic metafunction that passes the result of one 
 function's execution as the argument to another function:
+
+%%% FWIW, when you start using template template parameters, using
+%%% ``typename'' (instead of ``class'') for type template parameters
+%%% really hurts readability IMO. We have 3 keywords that look quite
+%%% similar: template typedef typename. I undestand the theoretical
+%%% reasons for doing it this way.
 
 {\footnotesize
 \begin{verbatim}
@@ -1126,6 +1169,8 @@ typedef boost::mpl::find<list,long>::type iter;
 
 [to be continiued]
 
+%%% Should say ``metafunction classes'' below?
+
 Metafunctions are important by encapsulating an operation into 
 compile-time invocable entity, they give you a possibility to 
 defer its execution. You can store the entity, pass it around, 
@@ -1244,13 +1289,15 @@ goes into the \code{playing} state".
 \end{verbatim}
 \end{table}
 
+%%% can we kill the ``_event'' suffix here?
+
 The transition table provides us with complete formal 
 definition of the target FSM, and there are sereval ways to 
 transform that definition into code. For example, if we define
 states as members of enumeration type, and events as classes 
-derived from some base %%event%% class (they need to be passed 
-to action functions, and they may contain some event-specific 
-information for an action), 
+derived from some base %%event%%
+class (they need to be passed to action functions, and they may
+contain some event-specific information for an action), 
 
 {\footnotesize
 \begin{verbatim}
