@@ -4,8 +4,8 @@
 #include <stdlib.h>
 #include <iomanip>
 
-#include <math/test/blas.hpp>
-#include <math/blas2.hpp>
+#include "blas.hpp"
+#include <boost/numeric/ublas/blas2.hpp>
 #include <boost/numeric/ublas/io.hpp>
 
 template < typename ValueType, typename MatrixType, typename VectorType >

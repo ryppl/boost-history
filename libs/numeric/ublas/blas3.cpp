@@ -4,8 +4,8 @@
 #include <stdlib.h>
 #include <iomanip>
 
-#include <math/test/blas.hpp>
-#include <math/blas3.hpp>
+#include "blas.hpp"
+#include <boost/numeric/ublas/blas3.hpp>
 
 template < typename ValueType, typename MatrixTypeA, typename MatrixTypeB, typename MatrixTypeC >
 void test_gemm(std::ostream& os, int runs, int runs_i, int size, int size_i, ValueType alpha, ValueType beta, MatrixTypeA &a, MatrixTypeB& b, MatrixTypeC &c_native, MatrixTypeC &c_toblas)

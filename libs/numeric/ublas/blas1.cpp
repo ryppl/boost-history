@@ -4,8 +4,8 @@
 #include <stdlib.h>
 #include <iomanip>
 
-#include <math/test/blas.hpp>
-#include <math/blas1.hpp>
+#include "blas.hpp"
+#include <boost/numeric/ublas/blas1.hpp>
 
 template < typename VectorType >
 void test_scal(std::ostream& os, int runs, int runs_i, int size, int size_i, typename VectorType::value_type alpha, VectorType& vector_native, VectorType& vector_toblas)
