@@ -17,9 +17,9 @@
 #ifndef BOOST_MPL_FOLD_HPP_INCLUDED
 #define BOOST_MPL_FOLD_HPP_INCLUDED
 
-#include <boost/mpl/apply.hpp>
-#include <boost/mpl/identity.hpp>
-#include <boost/mpl/begin_end.hpp>
+#include "boost/mpl/apply.hpp"
+#include "boost/mpl/begin_end.hpp"
+#include "boost/mpl/identity/project2nd.hpp"
 #include "boost/mpl/lambda.hpp"
 
 namespace boost {
@@ -66,22 +66,13 @@ struct iter_fold_impl<
     typedef State type;
 };
 
-struct select2nd
-{
-    template <class T, class U>
-    struct apply
-    {
-        typedef U type;
-    };
-};
-
 } // namespace aux
 
 template<
       typename Sequence
     , typename State
     , typename ForwardOp
-    , typename BackwardOp = aux::select2nd
+    , typename BackwardOp = project2nd<_1,_2>
     >
 struct iter_fold
 {
