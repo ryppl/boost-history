@@ -232,12 +232,15 @@ namespace
 		//
 		TEST_DATA;
 		int seeking[] = { 1, 2, 3 };
-		pair<const int*,const int*> pa;
-		pa = mismatch( a, seeking );
-		pa = mismatch( ca, seeking );
-		
-		pair<iterator, int*>             pv  = mismatch( v, seeking );
-		//pair<iterator, int*>             pcv = mismatch( cv, seeking );
+		pair<int*, int*>            pa  = mismatch( a, seeking );
+		pair<const int*, int*>      pca = mismatch( ca, seeking );
+		pair<iterator, int*>        pv  = mismatch( v, seeking );
+		pair<const_iterator, int*>  pcv = mismatch( cv, seeking );
+				 
+		pa  = mismatch_( a, seeking, bin_predicate() ); 
+		pca = mismatch_( ca, seeking, bin_predicate() );
+		pv  = mismatch_( v, seeking, bin_predicate() );
+		pcv = mismatch_( cv, seeking, bin_predicate() );
 	}
 	
 	

@@ -36,7 +36,9 @@
 #include <boost/detail/iterator.hpp>
 
 //#include <boost/sequence_algo/algorithm.hpp>
-
+/**
+*   make_pair( first, last );
+*/
 #include <algorithm>
 #include <numeric>
 
@@ -368,12 +370,12 @@ namespace boost
 	                                                begin( c2 ) );
 #define BOOST_FWD_ALGO_BEBX( A, X )  return  std::A( begin( c1 ), end( c1 ), \
                                                      begin( c2 ), X );  
-//
-// naming convention: 
-//  fun   = Unary_function,
-//  pred  = Predicate
-//  value = T (equality compareable)
-//	
+	//
+	// naming convention: 
+	//  fun   = Unary_function,
+	//  pred  = Predicate
+	//  value = T (equality compareable)
+	//	
 
 #define BOOST_FWD_ALGO_FUN( A )                                              \
     /* @note: don't work with functors :(                                    \
@@ -381,7 +383,7 @@ namespace boost
                   typename function_traits<Unary_function>::arg1_type > >(); \
     */				                                                         \
     BOOST_FWD_ALGO_BEX( A, fun )
-	
+
 #define BOOST_FWD_ALGO_EQ( A ) /*CHECL_EQ*/      BOOST_FWD_ALGO_BEX( A, value )
 #define BOOST_FWD_ALGO_PRED( A ) /*CHECK_PRED*/    BOOST_FWD_ALGO_BEX( A, pred ) 
 #define BOOST_FWD_ALGO_BPRED( A ) /*CHECK_BPRED*/  BOOST_FWD_ALGO_BEX( A, pred )
@@ -442,8 +444,18 @@ namespace boost
 	struct pair_return
 	{
 		typedef typename std::pair< typename mutable_return<T1>::iterator,
-		typename mutable_return<T2>::iterator > iter_pair;
+		typename mutable_return<T2>::iterator > mutable_pair;
+		
+		typedef typename std::pair< typename mutable_return<T1>::iterator,
+		typename const_return<T2>::iterator > mutable_const_pair;
+		
+		typedef typename std::pair< typename const_return<T1>::iterator,
+		typename mutable_return<T2>::iterator > const_mutable_pair;
+		
+		typedef typename std::pair< typename const_return<T1>::iterator,
+		typename const_return<T2>::iterator > const_pair;
 	};
+
 
 	///////////////////////////////////////////////////////////////////////////
 	// Nonmodifying Sequence Operations
@@ -573,28 +585,28 @@ namespace boost
 
 
 	template< typename Container1, typename Container2 >
-	inline typename pair_return<Container1,Container2>::iter_pair
+	inline typename pair_return<Container1,Container2>::mutable_pair
 	mismatch( Container1& c1, Container2& c2 )
 	{
 		BOOST_FWD_ALGO_BEB( mismatch );
 	}
 
 	template< typename Container1, typename Container2 >
-	inline typename pair_return< const Container1,Container2>::iter_pair
+	inline typename pair_return<Container1,Container2>::const_mutable_pair
 	mismatch( const Container1& c1, Container2& c2 )
 	{
 		BOOST_FWD_ALGO_BEB( mismatch );
 	}
 
 	template< typename Container1, typename Container2 >
-	inline typename pair_return<Container1, const Container2>::iter_pair
+	inline typename pair_return<Container1,Container2>::mutable_const_pair 
 	mismatch( Container1& c1, const Container2& c2 )
 	{
 		BOOST_FWD_ALGO_BEB( mismatch );
 	}
 
 	template< typename Container1, typename Container2 >
-	inline typename pair_return<const Container1, const Container2>::iter_pair
+	inline typename pair_return<Container1,Container2>::const_pair
 	mismatch( const Container1& c1, const Container2& c2 )
 	{
 		BOOST_FWD_ALGO_BEB( mismatch );
@@ -602,16 +614,32 @@ namespace boost
 
 	template< typename Container1, typename Container2, 
 	typename Binary_predicate >
-	inline typename pair_return<Container1,Container2>::iter_pair
-	mismatch( Container1& c1, const Container2& c2, Binary_predicate pred )
+	inline typename pair_return<Container1, Container2>::mutable_pair
+	mismatch_( Container1& c1, Container2& c2, Binary_predicate pred )
 	{
 		BOOST_FWD_ALGO3_BPRED( mismatch );
 	}
 
 	template< typename Container1, typename Container2, 
 	typename Binary_predicate >
-	inline typename pair_return<Container1,Container2>::iter_pair
-	mismatch( const Container1& c1, const Container2& c2, Binary_predicate pred )
+	inline typename pair_return<Container1,Container2>::const_mutable_pair
+	mismatch_( const Container1& c1, Container2& c2, Binary_predicate pred )
+	{
+		BOOST_FWD_ALGO3_BPRED( mismatch );
+	}
+
+	template< typename Container1, typename Container2, 
+	typename Binary_predicate >
+	inline typename pair_return<Container1,Container2>::mutable_const_pair
+	mismatch_( Container1& c1, const Container2& c2, Binary_predicate pred )
+	{
+		BOOST_FWD_ALGO3_BPRED( mismatch );
+	}
+
+	template< typename Container1, typename Container2, 
+	typename Binary_predicate >
+	inline typename pair_return<Container1,Container2>::const_pair
+	mismatch_( const Container1& c1, const Container2& c2, Binary_predicate pred )
 	{
 		BOOST_FWD_ALGO3_BPRED( mismatch );
 	}
