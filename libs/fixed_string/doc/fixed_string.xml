@@ -393,7 +393,7 @@
                      <emphasis role = "bold">]</emphasis>
                   </simpara></entry>
                </row><row>
-                  <entry><simpara><code>recalc()</code></simpara></entry>
+                  <entry><simpara><code>setlength( size_type sz = npos )</code></simpara></entry>
                   <entry><simpara><code>void</code></simpara></entry>
                   <entry><simpara>
                      Recalculate the size of the string after external modification.
@@ -402,6 +402,22 @@
                         <code>capacity()</code>, otherwise unpredictable behaviour
                         will occur.
                      <emphasis role = "bold">]</emphasis>
+                  </simpara></entry>
+               </row><row>
+                  <entry><simpara><code>newlength()</code></simpara></entry>
+                  <entry><simpara><code>length_proxy</code></simpara></entry>
+                  <entry><simpara>
+                     This method allows you to use the class with functions that return the
+                     length of the string in a parameter, e.g.:
+                     <programlisting>   get_string( buf, buf.newlength());</programlisting>.
+                  </simpara></entry>
+               </row><row>
+                  <entry><simpara><code>ncapacity</code></simpara></entry>
+                  <entry><simpara><code>size_t</code></simpara></entry>
+                  <entry><simpara>
+                     This is a static constant that contains the capacity of the string. It
+                     is useful for copying fixed_string objects:
+                     <programlisting>   boost::fixed_string&lt; buf.ncapacity &gt; duplicate( buf );</programlisting>
                   </simpara></entry>
                </row><row>
                   <entry><simpara><code>format( const char_type * fmt, va_list args )</code></simpara></entry>
