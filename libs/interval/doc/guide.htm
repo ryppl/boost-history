@@ -17,8 +17,7 @@ base type is robust enough, you can go to the next step: the choice of the
 policies.</p>
 
 <p>As you should already know if you did not come to this page by accident,
-the <code>interval</code> class expect a traits argument describing the three
-policies: <a href="comparisons.htm">comparison</a>, <a
+the <code>interval</code> class expect a policies argument describing the <a
 href="rounding.htm">rounding</a> and <a href="checking.htm">checking</a>
 policies. The first thing to do is to verify if the default policies are or
 are not adapted to your case. If your base type is not <code>float</code>,
@@ -29,11 +28,11 @@ rounding policy will be suitable.</p>
 
 <p>The default policies define an interval type that performs precise
 computations (for <code>float</code>, <code>double</code>, <code>long
-double</code>) and "certain" comparisons, detects invalid numbers and throws
-exception each times an empty interval is created. This is a brief
-description and you should refer to the corresponding sections for a more
-precise description of the default policies. Unless you need some special
-behavior, this default type is usable in a lot of situations.</p>
+double</code>), detects invalid numbers and throws exception each times an
+empty interval is created. This is a brief description and you should refer
+to the corresponding sections for a more precise description of the default
+policies. Unless you need some special behavior, this default type is usable
+in a lot of situations.</p>
 
 <p>After having completely defined the interval type (and its policies), the
 only thing left to do is to verify that the constants are defined and
@@ -98,15 +97,11 @@ interval by converting it to another type. For example, this happens when you
 use an unprotected version of the interval type in order to speed up the
 computations; it is a change of the rounding policy. It also happens when you
 want to temporarily allow empty intervals to be created; it is a change of
-the checking policy. Another example: when an algorithm only uses the
-comparison operators and the current ones are not the one you want the
-algorithm to use; it is change of the compare policy. These changes should
-not be prohibited: they can greatly enhance a program (lisibility, interest,
-performance).</p>
-
+the checking policy. These changes should not be prohibited: they can greatly
+enhance a program (lisibility, interest, performance).</p>
 <hr>
 
-<p>Revised: 2002-08-30<br>
+<p>Revised: 2003-01-15<br>
 Copyright (c) Guillaume Melquiond, Sylvain Pion, Hervé Brönnimann, 2002.<br>
 Polytechnic University.</p>
 </body>

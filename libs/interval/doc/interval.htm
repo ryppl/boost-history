@@ -596,11 +596,11 @@ thrown if the base type or one of the three policies throws an exception.</p>
 
 <p>The interval support library consists of a collection of classes that can
 be used and combined to fabricate almost various commonly-needed interval
-traits, via the <code>interval_traits</code> class template. In contrast to
-the basic classes and functions which are used in conjunction with
-<code>interval&lt;T&gt;</code> (and the default traits as the implicit second
-template parameter in this type), which belong simply to the namespace boost,
-these components belong to the namespace <code>boost::interval_lib</code>.</p>
+policies. In contrast to the basic classes and functions which are used in
+conjunction with <code>interval&lt;T&gt;</code> (and the default policies as
+the implicit second template parameter in this type), which belong simply to
+the namespace <code>boost</code>, these components belong to the namespace
+<code>boost::interval_lib</code>.</p>
 
 <p>We merely give the synopsis here and defer each section to a separate web
 page since it is only intended for the advanced user. This allows to expand
@@ -611,14 +611,8 @@ document.</p>
 <pre>namespace boost {
 namespace interval_lib {
 
-<font color="#ff0000">/* built-in comparison policies */
-</font>template &lt;class T&gt;  struct compare_certainly;
-template &lt;class T&gt;  struct compare_possibly;
-template &lt;class T&gt;  struct compare_data;
-template &lt;class T, class Function&gt;  struct compare_full;
-
-<font color="#ff0000">/* built-in rounding policy and its specializations */
-</font>template &lt;class T&gt;  struct rounded_math;
+<font color="#ff0000">/* built-in rounding policy and its specializations */</font>
+template &lt;class T&gt;  struct rounded_math;
 template &lt;&gt;         struct rounded_math&lt;float&gt;;
 template &lt;&gt;         struct rounded_math&lt;double&gt;;
 template &lt;&gt;         struct rounded_math&lt;long double&gt;;
@@ -638,18 +632,19 @@ template &lt;class T, class Rounding = rounded_arith_opp&lt;T&gt; &gt;  struct r
 template &lt;class Rounding&gt; struct save_state;
 template &lt;class Rounding&gt; struct save_state_nothing;
 
-<font color="#ff0000">/* built-in checking policies */
-</font>template &lt;class T&gt; struct checking_nothing;
+<font color="#ff0000">/* built-in checking policies */</font>
+template &lt;class T&gt; struct checking_nothing;
 template &lt;class T&gt; struct checking_lax;
 template &lt;class T&gt; struct checking_strict;
 
-<span style="color: #FF0000">/* some metaprogramming to convert a protected to unprotected rounding */</span>
-template &lt;class Rounding&gt; struct unprotect_rounding;
-template &lt;class Traits&gt; struct unprotect_traits;
-template &lt;class I&gt; struct unprotect;
+<span style="color: #FF0000">/* some metaprogramming to manipulate interval policies */</span>
+template &lt;class Rounding, class Checking&gt; struct policies;
+template &lt;class OldInterval, class NewRounding&gt; struct change_rounding;
+template &lt;class OldInterval, class NewChecking&gt; struct change_checking;
+template &lt;class OldInterval&gt; struct unprotect;
 
-<span style="color: #FF0000">/* constants, need to be explicitly templated */
-</span>template&lt;class I&gt; I pi();
+<span style="color: #FF0000">/* constants, need to be explicitly templated */</span>
+template&lt;class I&gt; I pi();
 template&lt;class I&gt; I pi_half();
 template&lt;class I&gt; I pi_twice();
 
@@ -705,6 +700,13 @@ template &lt;class T, class Traits&gt;  bool posne(const interval&lt;T, Traits&g
 template &lt;class T, class Traits&gt;  bool posne(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
 template &lt;class T, class Traits&gt;  bool posne(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
 
+<font color="#ff0000">/* comparison namespaces */</font>
+namespace compare {
+  namespace lexicographic;
+  namespace set;
+  namespace tribool;
+} // namespace compare
+
 } // namespace interval_lib
 } // namespace boost</pre>
 
@@ -742,22 +744,15 @@ portable enough to put into the library.
 
 <p>One of the biggest problems is problably the correct use of the comparison
 functions and operators. First, functions and operators do not try to know if
-two intervals are the same mathematical object. So, if the comparison policy
-is <code>compare_certainly</code>, then <code>x != x</code> is always true
-unless <code>x</code> is a singleton interval; and the same problem arises
-with <code>cereq</code> and <code>cerne</code>.</p>
+two intervals are the same mathematical object. So, if the comparison used is
+"certain", then <code>x != x</code> is always true unless <code>x</code> is a
+singleton interval; and the same problem arises with <code>cereq</code> and
+<code>cerne</code>.</p>
 
-<p>Another misleading interpretation of the comparison is: (still with the
-example of <code>compare_certainly</code>) [a,b] &lt; [c,d] is true if and
-only if it is true for each pair of element in [a,b] and [c,d]. But [a,b]
-&lt;= [c,d] is true if and only if it is true for at least one pair.</p>
-
-<p>So the best way to handle comparisons is probably to never use operators
-and only call explicit functions like <code>cerlt</code>. And if you need to
-compare intervals, not as mathematical objects but as computer data,
-<code>compare_data</code> is a good candidate since it defines a physical
-equality and a strict ordering. This is suitable for indexing intervals in a
-<code>std::map</code>, for instance.</p>
+<p>Another misleading interpretation of the comparison is: you cannot always
+expect [a,b] &lt; [c,d] to be !([a,b] &gt;= [c,d]) since the comparison is
+not necessarily total. Equality and less comparison should be seen as two
+distincts relational operators.</p>
 
 <h4>Interval values and references</h4>
 
@@ -766,7 +761,12 @@ x</code>. All the functions of the library only consider the value of an
 interval and not the reference of an interval. In particular, you should not
 expect (unless <code>x</code> is a singleton) the following values to be
 equal: <code>x/x</code> and 1, <code>x*x</code> and <code>square(x)</code>,
-<code>x-x</code> and 0, etc.</p>
+<code>x-x</code> and 0, etc. So the main cause of wide intervals is that
+interval arithmetic does not identify different occurences of the same
+variable. So, whenever possible, the user has to rewrite the formulas to
+eliminate multiple occurences of the same variable. For example,
+<code>square(x)-2*x</code> is far less precise than
+<code>square(x-1)-1</code>.</p>
 
 <h4>Unprotected rounding</h4>
 
@@ -796,19 +796,18 @@ fixed-precision bigfloat library types (MPFR, etc.)</p>
 class template with only one template argument, the diversity of uses for an
 interval arithmetic practically forced us to use policies. The behavior of
 this class can be fixed by three policies. These policies are packaged into a
-single traits class, rather than making interval with four template
-parameters. This is both for ease of use (the traits class can be picked by
-default) and for readability.</p>
+single policy class, rather than making <code>interval</code> with three
+template parameters. This is both for ease of use (the policy class can be
+picked by default) and for readability.</p>
 
-<p>The first policy specifies the way comparison operators are defined. The
-second one provides all the mathematical functions on the base type needed to
-define the functions on the interval type. The last one sets the way
-exceptional cases encountered during computations are handled.</p>
+<p>The first policy provides all the mathematical functions on the base type
+needed to define the functions on the interval type. The second one sets the
+way exceptional cases encountered during computations are handled.</p>
 
 <p>We could foresee situations where any combination of these policies would
 be appropriate. Moreover, we wanted to enable the user of the library to
-reuse the interval class template while at the same time choosing his own
-behavior. See the page <a>Choosing your own interval type</a>for some
+reuse the <code>interval</code> class template while at the same time
+choosing his own behavior. See this <a href="guide.htm">page</a>  for some
 examples.</p>
 
 <p><strong>Rounding policy.</strong> The library provides specialized
@@ -833,12 +832,12 @@ ulp while making the intervals tighter (if a result is a representable
 singleton, there is no use to widen the interval). We decided to drop those
 functions.</p>
 
-<p><strong>Specialization of <code>std::less</code>.</strong> There is no
-need to specialize <code>std::less</code> for intervals. Depending on the
-result wanted, the comparison policy can be changed using the template
-constructor, which has the effect of redefining the <code>operator
-&lt;</code>. Hence, use the policy <code>compare_data</code> to insert
-intervals in <code>std::map</code>.</p>
+<p><strong>Specialization of <code>std::less</code>.</strong> Since the
+operator <code>&lt;</code> depends on the comparison namespace chosen locally
+chosen by the user, it is not possible to correctly specialize
+<code>std::less</code>. So you have to explicitely provide such a class to
+all the algorithms and templates that could require it (for example,
+<code>std::map</code>).</p>
 
 <p><strong>Input/output.</strong> The basic header
 <code>boost/interval.hpp</code> does not include the I/O operators for the
@@ -848,8 +847,8 @@ guarantee the inclusion property (they do so for <code>float</code>,
 <code>double</code>, and <code>long double</code>). But they cannot guarantee
 it for any base number type, especially since it is not know how the type
 will be displayed (for example, there could be trouble if the type is a
-symbolic type that uses the character `[` or `]').  For this, we would need
-an extra i/o policy. It was not felt worth the trouble. For one thing, it's
+symbolic type that uses the character `[` or `]'). For this, we would need an
+extra i/o policy. It was not felt worth the trouble. For one thing, it's
 always possible to display the bounds. For another, intervals are used
 somewhat internally and there is seldom need to display them. But if this
 should be needed, the header is there.</p>
