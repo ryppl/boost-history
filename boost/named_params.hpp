@@ -60,6 +60,16 @@ namespace detail
       Default& default_;
   };
 
+  template<class KW, class Default>
+  struct lazy_named_default
+  {
+      lazy_named_default(const Default& x)
+        : default_(x)
+      {}
+
+      const Default& default_;
+  };
+
   struct nil
   {
       nil() {}
@@ -89,17 +99,31 @@ namespace detail
               typedef Default type;
           };
       };
-      
+
       template<class K, class Default>
       Default& get(const named_default<K, Default>& x) const
       {
           return x.default_;
+      }
+
+      template<class K, class Default>
+      typename Default::result_type get(
+          const lazy_named_default<K, Default>& x) const
+      {
+          return x.default_();
       }
 #else
       template<class K, class Default>
       Default& operator[](const named_default<K, Default>& x) const
       {
           return x.default_;
+      }
+
+      template<class K, class Default>
+      typename Default::result_type operator[](
+          const lazy_named_default<K, Default>& x) const
+      {
+          return x.default_();
       }
 #endif
       // No keyword was found if we get here, so we should only return
@@ -200,13 +224,32 @@ namespace detail
           return sublist.get(x);
       }
 
+      template<class KW, class Default>
+      typename mpl::apply2<
+          key_value_type,KW
+        , typename Default::result_type
+      >::type
+      operator[](const lazy_named_default<KW, Default>& x) const
+      {
+          typename mpl::apply1<key_owner,KW>::type const& sublist = *this;
+          return sublist.get(x);
+      }
+
       typename H::value_type& get(const keyword<typename H::key_type>& x) const
       {
           return head[x];
       }
 
       template<class Default>
-      typename H::value_type& get(const named_default<typename H::key_type, Default>& x) const
+      typename H::value_type& get(
+          const named_default<typename H::key_type, Default>& x) const
+      {
+          return head[x];
+      }
+
+      template<class Default>
+      typename H::value_type& get(
+          const lazy_named_default<typename H::key_type, Default>& x) const
       {
           return head[x];
       }
@@ -224,6 +267,13 @@ namespace detail
           return head[x];
       }
 
+      template<class Default>
+      typename H::value_type&
+      operator[](const lazy_named_default<typename H::key_type, Default>& x) const
+      {
+          return head[x];
+      }
+      
       using T::operator[];
 
       template <class HasDefault, class Predicate>
@@ -254,6 +304,12 @@ namespace detail
 
       template<class Default>
       T& operator[](const named_default<KW, Default>& x) const
+      {
+          return val;
+      }
+
+      template<class Default>
+      T& operator[](const lazy_named_default<KW, Default>& x) const
       {
           return val;
       }
@@ -342,6 +398,13 @@ struct keyword
        return detail::named_default<Tag, const Default>(default_);
    }
 #endif 
+
+   template<class Default>
+   detail::lazy_named_default<Tag, Default>
+   operator||(const Default& default_) const
+   {
+       return detail::lazy_named_default<Tag, Default>(default_);
+   }
 };
 
 template <class Tag, typename has_default_, class Predicate>
@@ -749,6 +812,6 @@ struct keywords
     ret BOOST_PP_CAT(name, _with_named_params)(const Params&);\
     BOOST_PP_REPEAT_FROM_TO(lo, BOOST_PP_INC(hi), BOOST_NAMED_PARAMS_FUN_DECL, (ret, name, keywords)) \
     ret BOOST_PP_CAT(name, _with_named_params)(const Params& p)
-
+ 
 #endif // BOOST_NAMED_PARAMS_031014_HPP
 
