@@ -44,7 +44,7 @@ struct get_result_of<F, FArgs, false>
 };
 
 template<typename F>
-struct get_result_of<F, F(), false>
+struct get_result_of<F, F(void), false>
 {
   typedef void type;
 };
