@@ -4,8 +4,13 @@
 
 #ifndef BOOST_CHAR_STRING_HPP
 #define BOOST_CHAR_STRING_HPP
+#  if defined(BOOST_FIXED_STRING_HPP)
+#     error cannot use both fixed_string.hpp and char_string.hpp
+#  endif
+
 #  include <boost/config.hpp>
 #  include <boost/mpl/if.hpp>
+#  include <boost/mpl/or.hpp>
 #  include <boost/mpl/equal_to.hpp>
 #  include <boost/mpl/int.hpp>
 #  include <boost/type_traits/is_same.hpp>
@@ -57,21 +62,45 @@
       {
          virtual const char *                    c_str()  const = 0;
          virtual size_t                          length() const = 0;
+         virtual char &                          at( size_t i ) = 0;
          virtual char *                          assign(  const char * s, size_t l = size_t( -1 )) = 0;
          virtual char *                          append(  const char * s, size_t l = size_t( -1 )) = 0;
          virtual int                             compare( const char * s, size_t l = size_t( -1 )) const = 0;
          virtual int                             format(  const char * fmt, va_list args ) = 0;
       };
+
+      template< class StringPolicy >
+      inline std::basic_ostream< char, StringPolicy > & 
+                                  operator<<
+                                  (
+                                     std::basic_ostream< char, StringPolicy > & os,
+                                     const char_string                        & str
+                                  )
+      {
+         return( os << str.c_str());
+      }
       
       struct wchar_string
       {
-         virtual const wchar_t *                 c_str() const = 0;
+         virtual const wchar_t *                 c_str()  const = 0;
          virtual size_t                          length() const = 0;
+         virtual wchar_t &                       at( size_t i ) = 0;
          virtual wchar_t *                       assign(  const wchar_t * s, size_t l = size_t( -1 )) = 0;
          virtual wchar_t *                       append(  const wchar_t * s, size_t l = size_t( -1 )) = 0;
          virtual int                             compare( const wchar_t * s, size_t l = size_t( -1 )) const = 0;
          virtual int                             format(  const wchar_t * fmt, va_list args ) = 0;
       };
+
+      template< class StringPolicy >
+      inline std::basic_ostream< wchar_t, StringPolicy > & 
+                                  operator<<
+                                  (
+                                     std::basic_ostream< wchar_t, StringPolicy > & os,
+                                     const wchar_string                          & str
+                                  )
+      {
+         return( os << str.c_str());
+      }
       
       // fixed capacity string implementation (std::basic_string-style interface)
 
@@ -81,12 +110,23 @@
          private:
             CharT                      str[ n ];
             size_t                     len;
-         public:
-            struct buffer_ok{ typedef char value; };
+         public: // validation checks
+            struct ok{ typedef char value; };
+            // zero-buffer check: n != 0
             struct zero_buffer_error{};
             typedef typename mpl::if_< mpl::equal_to< mpl::int_< n >, mpl::int_< 0 > >, 
-                                       zero_buffer_error, buffer_ok 
+                                       zero_buffer_error, ok 
                                      >::type::value                  zero_buffer_check;
+            // character type check: CharT == char || CharT == wchar_t
+            struct char_type_error{};
+            typedef typename mpl::if_< mpl::or_< is_same< CharT, char >, is_same< CharT, wchar_t > >,
+                                       ok, char_type_error
+                                     >::type::value                  char_type_check;
+            // string policy check: StringPolicy::char_type == CharT
+            struct string_policy_error{};
+            typedef typename mpl::if_< is_same< typename StringPolicy::char_type, CharT >,
+                                       ok, string_policy_error
+                                     >::type::value                  string_policy_check;
          public: // types
             typedef StringPolicy                                     policy_type;
             typedef typename StringPolicy::char_type                 value_type;
@@ -301,17 +341,6 @@
                assign( s, l );
             }
       };
-
-      template< size_t n,typename CharT, class StringPolicy >
-      inline std::basic_ostream< CharT, StringPolicy > & 
-                                  operator<<
-                                  (
-                                     std::basic_ostream< CharT, StringPolicy >    & os,
-                                     const fixed_string< n, CharT, StringPolicy > & str
-                                  )
-      {
-         return( os << str.c_str());
-      }
 
       template< size_t n, typename CharT, class StringPolicy >
       bool operator==( const fixed_string< n, CharT, StringPolicy > & a, const fixed_string< n, CharT, StringPolicy > & b )
