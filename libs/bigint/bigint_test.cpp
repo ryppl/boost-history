@@ -352,4 +352,20 @@ int main() {
     assert(x == 16);
   }
 
+  {
+    // test out streaming in hex numbers with a base starter.
+    bigint x;
+    std::istringstream is("0x20");
+    is >> std::hex >> x;
+    assert(x == 32);
+  }
+
+  {
+    // test out streaming in oct numbers with a base starter.
+    bigint x;
+    std::istringstream is("020");
+    is >> std::oct >> x;
+    assert(x == 16);
+  }
+
 }

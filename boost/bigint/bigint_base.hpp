@@ -63,13 +63,32 @@ protected:
           base = octal;
         }
 
+        //
         // Read the number into a string, then initialize from that.
+        //
         std::string str;
         char c;
 
-        // check for minus sign.
         is.get(c);
-        if(!(c == '-' || std::isxdigit(c))) {
+
+        // check for minus sign.
+        if(c == '-') {
+          str.push_back(c);
+          is.get(c);
+        }
+
+        // handle hexadecimal base indicator (0x or 0X).
+        if(c == '0') {
+          str.push_back(c);
+          is.get(c);
+          if(tolower(c) == 'x' && base == hexadecimal) {
+            str.push_back(c);
+            is.get(c);
+          }
+        }
+
+        // RG - do better than isxdigit! switch on base type!
+        if(!std::isxdigit(c)) {
           is.putback(c);
           // signal error
           is.setstate(std::ios::failbit);
