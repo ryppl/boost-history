@@ -19,11 +19,11 @@ namespace detail{
 
 /* definition of red-black nodes for indexed_set::index */
 
-template<typename Key>
+template<typename Value>
 struct index_node_base
 {
-  typedef Key value_type;
-  value_type  value;
+  typedef Value value_type;
+  value_type    value;
 
 private:
   index_node_base(); /* this class is not intended to be cted, merely allocated */
