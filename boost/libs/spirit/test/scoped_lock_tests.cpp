@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (C) 2003 Martin Wille
     http://spirit.sourceforge.net/
 
@@ -62,4 +62,4 @@ main()
     return 0;
 }
 
-#endif // !defined(HAVE_BOOST)
+#endif // defined(DONT_HAVE_BOOST)

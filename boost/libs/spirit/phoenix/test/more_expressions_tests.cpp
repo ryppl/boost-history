@@ -1,5 +1,5 @@
 /*=============================================================================
-    Phoenix V1.0
+    Phoenix v1.1
     Copyright (c) 2001-2003 Joel de Guzman
 
     Permission to copy, use, modify, sell and distribute this software is
@@ -11,10 +11,10 @@
 #include <cassert>
 
 #define PHOENIX_LIMIT 15
-#include "boost/spirit/phoenix/primitives.hpp"
-#include "boost/spirit/phoenix/composite.hpp"
-#include "boost/spirit/phoenix/functions.hpp"
-#include "boost/spirit/phoenix/operators.hpp"
+#include <boost/spirit/phoenix/primitives.hpp>
+#include <boost/spirit/phoenix/composite.hpp>
+#include <boost/spirit/phoenix/functions.hpp>
+#include <boost/spirit/phoenix/operators.hpp>
 
 using namespace phoenix;
 using namespace std;

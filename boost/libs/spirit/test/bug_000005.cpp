@@ -1,6 +1,6 @@
 /*=============================================================================
-    Spirit v1.6.1
-    Copyright (c) 2003 Vaclav Vesely
+    Spirit v1.7.0
+    Copyright (c) 2003 Joel de Guzman
     http://spirit.sourceforge.net/
 
     Permission to copy, use, modify, sell and distribute this software is
@@ -11,8 +11,8 @@
 // Most trailing space bug
 // http://article.gmane.org/gmane.comp.parsers.spirit.general/4029
 
-#include <boost/test/included/unit_test_framework.hpp>
 #include <boost/spirit/core.hpp>
+#include <boost/test/included/unit_test_framework.hpp>
 
 using namespace std;
 using namespace boost;

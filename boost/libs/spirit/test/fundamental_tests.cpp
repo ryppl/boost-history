@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.0
+    Spirit v1.7.0
     Copyright (c) 2001-2003 Joel de Guzman
     http://spirit.sourceforge.net/
 
@@ -19,7 +19,7 @@
 
 #include <boost/static_assert.hpp>
 
-#include "boost/spirit/core.hpp"
+#include <boost/spirit/core.hpp>
 
 using namespace std;
 using namespace boost::spirit;

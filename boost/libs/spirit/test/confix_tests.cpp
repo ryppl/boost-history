@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 2003 2003 Vaclav Vesely
     http://spirit.sourceforge.net/
 
@@ -8,9 +8,9 @@
     software is provided "as is" without express or implied warranty, and
     with no claim as to its suitability for any purpose.
 =============================================================================*/
-#include <boost/test/included/unit_test_framework.hpp>
 #include <boost/spirit/core.hpp>
 #include <boost/spirit/utility/confix.hpp>
+#include <boost/test/included/unit_test_framework.hpp>
 
 using namespace boost;
 using namespace unit_test_framework;

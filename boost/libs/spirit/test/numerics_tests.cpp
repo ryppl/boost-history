@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.0
+    Spirit v1.7.0
     Copyright (c) 2001-2003 Joel de Guzman
     Copyright (c) 2001-2003 Hartmut Kaiser
     http://spirit.sourceforge.net/
@@ -9,7 +9,7 @@
     software is provided "as is" without express or implied warranty, and
     with no claim as to its suitability for any purpose.
 =============================================================================*/
-#include "boost/spirit/core.hpp"
+#include <boost/spirit/core.hpp>
 #include <iostream>
 #include <assert.h>
 
@@ -61,8 +61,7 @@ struct ts_real_parser_policies : public ureal_parser_policies<T>
             T n;
             while (match<> next = (',' >> uint3_3_p[assign(n)]).parse(scan))
             {
-                hit.value() *= 1000;
-                hit.value() += n;
+                hit.value((hit.value() * 1000) + n);
                 scan.concat_match(hit, next);
             }
             return hit;
@@ -73,6 +72,24 @@ struct ts_real_parser_policies : public ureal_parser_policies<T>
 
 real_parser<double, ts_real_parser_policies<double> > const
     ts_real_p = real_parser<double, ts_real_parser_policies<double> >();
+
+template <typename T>
+struct no_trailing_dot : public real_parser_policies<T>
+{
+    static const bool allow_trailing_dot = false;
+};
+
+real_parser<double, no_trailing_dot<double> > const
+    notrdot_real_p = real_parser<double, no_trailing_dot<double> >();
+
+template <typename T>
+struct no_leading_dot : public real_parser_policies<T>
+{
+    static const bool allow_leading_dot = false;
+};
+
+real_parser<double, no_leading_dot<double> > const
+    nolddot_real_p = real_parser<double, no_leading_dot<double> >();
 
 ///////////////////////////////////////////////////////////////////////////////
 int
@@ -263,6 +280,9 @@ main()
     assert(!parse("-1234", strict_real_p[assign(d)]).full);             //  Bad. Strict real
     assert(parse("123.", strict_real_p[assign(d)]).full && d == 123);   //  Good.
     assert(parse("3.E6", strict_real_p[assign(d)]).full && d == 3e6);   //  Good.
+
+    assert(!parse("1234.", notrdot_real_p[assign(d)]).full);            //  Bad trailing dot
+    assert(!parse(".1234", nolddot_real_p[assign(d)]).full);            //  Bad leading dot
 
 //  Special thousands separated numbers
 

@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.0
+    Spirit v1.7.0
     Copyright (c) 2001-2003 Joel de Guzman
     http://spirit.sourceforge.net/
 
@@ -13,10 +13,10 @@
 
 using namespace std;
 
-#include "boost/spirit/core.hpp"
-#include "boost/spirit/attribute/closure.hpp"
-#include "boost/spirit/attribute/parametric.hpp"
-#include "boost/spirit/phoenix/binders.hpp"
+#include <boost/spirit/core.hpp>
+#include <boost/spirit/attribute/closure.hpp>
+#include <boost/spirit/attribute/parametric.hpp>
+#include <boost/spirit/phoenix/binders.hpp>
 using namespace boost::spirit;
 using namespace phoenix;
 

@@ -1,5 +1,5 @@
 #==============================================================================
-#   Spirit v1.6.1
+#   Spirit v1.7.0
 #   Copyright (c) 2002 Joel de Guzman
 #   Copyright (c) 2003 Martin Wille
 #   http://spirit.sourceforge.net/
@@ -126,6 +126,7 @@ else
           [ run $(spirit-src)if_tests.cpp <template>normal ]
           [ run $(spirit-src)for_tests.cpp <template>normal ]
           [ run $(spirit-src)while_tests.cpp <template>normal ]
+          [ run $(spirit-src)lazy_tests.cpp <template>normal ]
         ;
 
     test-suite "spirit.utility"
@@ -140,6 +141,7 @@ else
           [ run $(spirit-src)symbols_tests.cpp <template>normal ]
           [ run $(spirit-src)escape_char_parser_tests.cpp <template>opt ]
           [ run $(spirit-src)scoped_lock_tests.cpp <template>multi-threading ]
+          [ run $(spirit-src)distinct_tests.cpp <template>normal ]
         ;
 
     test-suite "spirit.iterator"

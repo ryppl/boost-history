@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.0
+    Spirit v1.7.0
     Copyright (c) 1998-2003 Joel de Guzman
     http://spirit.sourceforge.net/
 
@@ -14,7 +14,9 @@
 using namespace std;
 
 //#define BOOST_SPIRIT_DEBUG
-#include "boost/spirit/core.hpp"
+#define BOOST_SPIRIT_RULE_SCANNERTYPE_LIMIT 3
+
+#include <boost/spirit/core.hpp>
 using namespace boost::spirit;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -57,6 +59,77 @@ aliasing_tests()
 }
 
 void
+rule_template_param_tests()
+{
+    // test that rules can be issued its template params in any order:
+    
+    rule<> rx1;
+    rule<scanner<> > rx2;
+    rule<scanner<>, parser_context> rx3;
+    rule<scanner<>, parser_context, parser_address_tag> rx4;
+   
+    rule<parser_context> rx5;
+    rule<parser_context, parser_address_tag> rx6;
+    rule<parser_context, parser_address_tag, scanner<> > rx7;
+ 
+    rule<parser_address_tag> rx8;
+    rule<parser_address_tag, scanner<> > rx9;
+    rule<parser_address_tag, scanner<>, parser_context> rx10;
+
+    rule<parser_address_tag, parser_context> rx11;
+    rule<parser_address_tag, parser_context, scanner<> > rx12;
+
+    rule<parser_context, scanner<> > rx13;
+    rule<parser_context, scanner<>, parser_address_tag> rx14;
+}
+
+//  More than one simultaneous scanner types for rules are supported for 
+//  compilers only, which support partial template specialization.
+#if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
+struct my_grammar : public grammar<my_grammar>
+{
+    template <typename ScannerT>
+    struct definition 
+    {
+        definition(my_grammar const& self)
+        {
+            r = lower_p;
+            rr = +(lexeme_d[r] >> as_lower_d[r] >> r);
+        }
+
+        typedef scanner_list<
+            ScannerT
+          , typename lexeme_scanner<ScannerT>::type
+          , typename as_lower_scanner<ScannerT>::type
+        > scanners;
+
+        rule<scanners> r;
+        rule<ScannerT> rr;
+        rule<ScannerT> const& start() const { return rr; }
+    };
+};
+#endif // !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
+
+void
+rule_2_or_more_scanners_tests()
+{
+#if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
+    { // 2 scanners
+        typedef scanner_list<scanner<>, phrase_scanner_t> scanners;
+        
+        rule<scanners>  r = +anychar_p;
+        assert(parse("abcdefghijk", r).full);
+        assert(parse("a b c d e f g h i j k", r, space_p).full);
+    }
+    
+    { // 3 scanners
+        my_grammar g;
+        assert(parse("abcdef aBc d e f aBc d E f", g, space_p).full);
+    }
+#endif // !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
+}
+
+void
 rule_tests()
 {
     rule<>  a = ch_p('a');
@@ -92,6 +165,8 @@ rule_tests()
     assert(pi.length == 14);
 
     aliasing_tests();
+    rule_template_param_tests();
+    rule_2_or_more_scanners_tests();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 2003 Giovanni Bajo
     http://spirit.sourceforge.net/
 
@@ -52,6 +52,9 @@ struct InstanciateTest
     void operator()(BaseIterT )
     {
         InstanciateTestOne<position_iterator<BaseIterT> >();
+        InstanciateTestOne<position_iterator2<BaseIterT> >();
+        InstanciateTestOne<position_iterator<BaseIterT, file_position_without_column> >();
+        InstanciateTestOne<position_iterator2<BaseIterT, file_position_without_column> >();
     }
 };
 
@@ -65,6 +68,7 @@ void CheckInstantiation(void);
 void CheckConstructors(void);
 void CheckBasicFunctionality(void);
 void CheckColumnCounting(void);
+void CheckLineExtraction(void);
 
 void CheckInstantiation(void)
 {
@@ -95,6 +99,7 @@ int main(void)
     CheckConstructors();
     CheckBasicFunctionality();
     CheckColumnCounting();
+    CheckLineExtraction();
 
     cout << "Test completed successfully" << endl;
     return 0;
@@ -277,6 +282,76 @@ void AssertIterString(IterT begin, IterT end, string s)
 }
 
 template <typename IterT>
+void CheckLineExtractionOne(IterT iter)
+{
+    IterT end;
+
+    // At the start, we are on a newline, which is an empty
+    //  string
+    assert(iter.get_currentline() == string());
+    assert(
+        string(iter.get_currentline_begin(), iter.get_currentline_end())
+        == string());
+
+    ++iter; // a
+    ++iter; // b
+    ++iter; // c
+    assert(iter.get_currentline() == line1);
+    AssertIterString(
+        iter.get_currentline_begin(),
+        iter.get_currentline_end(),
+        line1);
+
+    ++iter; // d
+    ++iter; // newline
+    ++iter; // e
+
+    // check that copy construction and assignment do
+    //  not interfere with get_currentline
+    IterT iter2(iter);
+    IterT iter3; iter3 = iter;
+    assert(iter2.get_currentline() == line2);
+    assert(iter3.get_currentline() == line2);
+    AssertIterString(
+        iter2.get_currentline_begin(),
+        iter2.get_currentline_end(),
+        line2);
+    AssertIterString(
+        iter3.get_currentline_begin(),
+        iter3.get_currentline_end(),
+        line2);
+
+    ++iter; // f
+    ++iter; // g
+    ++iter; // h
+    ++iter; // newline
+
+    // Check when the iterator is on a newline
+    assert(iter.get_currentline() == line2);
+    AssertIterString(
+        iter.get_currentline_begin(),
+        iter.get_currentline_end(),
+        line2);
+
+    ++iter;
+    assert(iter == end);
+}
+
+
+void CheckLineExtraction(void)
+{
+    typedef string::const_iterator iter_t;
+
+    CheckLineExtractionOne(
+        position_iterator2<iter_t, file_position>
+            (linebuf.begin(), linebuf.end(), ""));
+
+    CheckLineExtractionOne(
+        position_iterator2<iter_t, file_position_without_column>
+            (linebuf.begin(), linebuf.end(), ""));
+}
+
+template <typename IterT>
 void CheckEmptySequence(void)
 {
     typedef IterT iter_t;
@@ -293,19 +368,24 @@ void CheckEmptySequence(void)
     assert(iter3 == iter_t());
 }
 
-template <typename IterC>
+template <typename IterC, typename Iter>
 void CheckConstructors(void)
 {
     char a[20];
     std::string name = "abc";
 
+    file_position_without_column pos(name,1);
     file_position posc(name,1,1);
     typedef IterC iterc_t;
+    typedef Iter iter_t;
 
     assert(iterc_t(a,a+20,name).get_position() == posc);
     assert(iterc_t(a,a+20,name,1).get_position() == posc);
     assert(iterc_t(a,a+20,name,1,1).get_position() == posc);
     assert(iterc_t(a,a+20,posc).get_position() == posc);
+    assert(iter_t(a,a+20,name).get_position() == pos);
+    assert(iter_t(a,a+20,name,1).get_position() == pos);
+    assert(iter_t(a,a+20,pos).get_position() == pos);
 
     // Check copy constructor and assignment. Notice that we want
     //  an implicit copy constructor.
@@ -317,7 +397,16 @@ void CheckConstructors(void)
     assert(ic1.get_position() == ic2.get_position());
     assert(ic1.get_position() == ic3.get_position());
 
+    iter_t i1(a,a+20,name);
+    iter_t i2 = i1;
+    iter_t i3; i3 = i1;
+    assert(i1 == i2);
+    assert(i1 == i3);
+    assert(i1.get_position() == i2.get_position());
+    assert(i1.get_position() == i3.get_position());
+
     // Check construction with an empty sequence
+    CheckEmptySequence<iter_t>();
     CheckEmptySequence<iterc_t>();
 }
 
@@ -330,7 +419,14 @@ void CheckConstructors(void)
 {
     test_impl::CheckConstructors
     <
-        position_iterator<char*, file_position>
+        position_iterator<char*, file_position>,
+        position_iterator<char*, file_position_without_column>
+    >();
+
+    test_impl::CheckConstructors
+    <
+        position_iterator2<char*, file_position>,
+        position_iterator2<char*, file_position_without_column>
     >();
 }
 
@@ -340,10 +436,16 @@ void CheckBasicFunctionality(void)
     typedef const char* iter_t;
 
     test_impl::CheckIncrement(position_iterator<iter_t>(a, a+10, ""));
+    test_impl::CheckIncrement(position_iterator2<iter_t>(a, a+10, ""));
+    test_impl::CheckIncrement(position_iterator<iter_t, file_position_without_column>(a, a+10, ""));
+    test_impl::CheckIncrement(position_iterator2<iter_t, file_position_without_column>(a, a+10, ""));
 
     const char* b = "\n0123\r\n4567\n89\n\r";
 
     test_impl::CheckLineCounting(position_iterator<iter_t>(b, b+15, ""));
+    test_impl::CheckLineCounting(position_iterator2<iter_t>(b, b+15, ""));
+    test_impl::CheckLineCounting(position_iterator<iter_t, file_position_without_column>(b, b+15, ""));
+    test_impl::CheckLineCounting(position_iterator2<iter_t, file_position_without_column>(b, b+15, ""));
 }
 
 
@@ -353,6 +455,12 @@ void CheckColumnCounting(void)
     typedef const char* iter_t;
 
     test_impl::CheckColumnCounting_Tab4(position_iterator<iter_t>(a, a+10, ""));
+    test_impl::CheckColumnCounting_Tab4(position_iterator2<iter_t>(a, a+10, ""));
     test_impl::CheckColumnCounting_Tab3(position_iterator<iter_t>(a, a+10, ""));
+    test_impl::CheckColumnCounting_Tab3(position_iterator2<iter_t>(a, a+10, ""));
 }
 
+void CheckLineExtraction(void)
+{
+    test_impl::CheckLineExtraction();
+}

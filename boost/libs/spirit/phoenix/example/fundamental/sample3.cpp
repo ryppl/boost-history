@@ -1,5 +1,5 @@
 /*=============================================================================
-    Phoenix V1.0
+    Phoenix v1.1
     Copyright (c) 2001-2003 Joel de Guzman
 
     Permission to copy, use, modify, sell and distribute this software is
@@ -10,8 +10,8 @@
 #include <vector>
 #include <algorithm>
 #include <iostream>
-#include "boost/spirit/phoenix/functions.hpp"
-#include "boost/spirit/phoenix/primitives.hpp"
+#include <boost/spirit/phoenix/functions.hpp>
+#include <boost/spirit/phoenix/primitives.hpp>
 
 using namespace std;
 using namespace phoenix;

@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.0
+    Spirit v1.7.0
     Copyright (c) 2001-2003 Daniel Nuffer
     http://spirit.sourceforge.net/
 
@@ -8,32 +8,17 @@
     software is provided "as is" without express or implied warranty, and
     with no claim as to its suitability for any purpose.
 =============================================================================*/
-#include "boost/config.hpp"
-#include "boost/spirit/iterator/multi_pass.hpp"
+#include <boost/spirit/iterator/multi_pass.hpp>
 #include <iterator>
 #include <string>
-#ifdef BOOST_NO_STRINGSTREAM
-#include <strstream>
-#define SSTREAM strstream
-std::string GETSTRING(std::strstream& ss)
-{
-    ss << ends;
-    std::string rval = ss.str();
-    ss.freeze(false);
-    return rval;
-}
-#else
-#include <sstream>
-#define GETSTRING(ss) ss.str()
-#define SSTREAM stringstream
-#endif
 #include <cassert>
 #include <memory> // for auto_ptr
+#include "impl/sstream.hpp"
 
 using namespace std;
 using namespace boost::spirit;
 
-SSTREAM res;
+sstream_t res;
 
 typedef multi_pass<istream_iterator<char> > default_multi_pass_t;
 
@@ -97,7 +82,7 @@ void test_default_multi_pass()
     auto_ptr<default_multi_pass_t> mpend(new default_multi_pass_t(end));
 
     {
-        SSTREAM ss;
+        sstream_t ss;
         ss << "test string";
 
         istream_iterator<char> a(ss);
@@ -112,7 +97,7 @@ void test_default_multi_pass()
     }
 
     {
-        SSTREAM ss;
+        sstream_t ss;
         ss << "test string";
         istream_iterator<char> b(ss);
         auto_ptr<default_multi_pass_t> mp2(new default_multi_pass_t(b));
@@ -137,7 +122,7 @@ void test_default_multi_pass()
     }
 
     {
-        SSTREAM ss;
+        sstream_t ss;
         ss << "test string";
         istream_iterator<char> a(ss);
         auto_ptr<default_multi_pass_t> mp1(new default_multi_pass_t(a));
@@ -165,7 +150,7 @@ void test_default_multi_pass()
     }
 
     {
-        SSTREAM ss;
+        sstream_t ss;
         ss << "test string";
         istream_iterator<char> b(ss);
         auto_ptr<default_multi_pass_t> mp2(new default_multi_pass_t(b));
@@ -191,7 +176,7 @@ void test_default_multi_pass()
     }
 
     {
-        SSTREAM ss;
+        sstream_t ss;
         ss << "test string";
         istream_iterator<char> a(ss);
         auto_ptr<default_multi_pass_t> mp1(new default_multi_pass_t(a));
@@ -244,7 +229,7 @@ void test_default_multi_pass()
     }
 
     {
-        SSTREAM ss;
+        sstream_t ss;
         ss << "test string";
         istream_iterator<char> a(ss);
         auto_ptr<default_multi_pass_t> mp1(new default_multi_pass_t(a));
@@ -256,7 +241,7 @@ void test_default_multi_pass()
     }
 
     {
-        SSTREAM ss;
+        sstream_t ss;
         ss << "test string";
         istream_iterator<char> b(ss);
         auto_ptr<default_multi_pass_t> mp2(new default_multi_pass_t(b));
@@ -298,7 +283,7 @@ void test_fixed_multi_pass()
     auto_ptr<fixed_multi_pass_t> mpend(new fixed_multi_pass_t(end));
 
     {
-        SSTREAM ss;
+        sstream_t ss;
         ss << "test string";
 
         istream_iterator<char> a(ss);
@@ -313,7 +298,7 @@ void test_fixed_multi_pass()
     }
 
     {
-        SSTREAM ss;
+        sstream_t ss;
         ss << "test string";
         istream_iterator<char> b(ss);
         auto_ptr<fixed_multi_pass_t> mp2(new fixed_multi_pass_t(b));
@@ -337,7 +322,7 @@ void test_fixed_multi_pass()
     }
 
     {
-        SSTREAM ss;
+        sstream_t ss;
         ss << "test string";
         istream_iterator<char> a(ss);
         auto_ptr<fixed_multi_pass_t> mp1(new fixed_multi_pass_t(a));
@@ -365,7 +350,7 @@ void test_fixed_multi_pass()
     }
 
     {
-        SSTREAM ss;
+        sstream_t ss;
         ss << "test string";
         istream_iterator<char> b(ss);
         auto_ptr<fixed_multi_pass_t> mp2(new fixed_multi_pass_t(b));
@@ -390,7 +375,7 @@ void test_fixed_multi_pass()
     }
 
     {
-        SSTREAM ss;
+        sstream_t ss;
         ss << "test string";
         istream_iterator<char> a(ss);
         auto_ptr<fixed_multi_pass_t> mp1(new fixed_multi_pass_t(a));
@@ -443,7 +428,7 @@ void test_fixed_multi_pass()
     }
 
     {
-        SSTREAM ss;
+        sstream_t ss;
         ss << "test string";
         istream_iterator<char> a(ss);
         auto_ptr<fixed_multi_pass_t> mp1(new fixed_multi_pass_t(a));
@@ -463,7 +448,7 @@ void test_first_owner_multi_pass()
     auto_ptr<first_owner_multi_pass_t> mpend(new first_owner_multi_pass_t(end));
 
     {
-        SSTREAM ss;
+        sstream_t ss;
         ss << "test string";
 
         istream_iterator<char> a(ss);
@@ -478,7 +463,7 @@ void test_first_owner_multi_pass()
     }
 
     {
-        SSTREAM ss;
+        sstream_t ss;
         ss << "test string";
         istream_iterator<char> b(ss);
         auto_ptr<first_owner_multi_pass_t> mp2(new first_owner_multi_pass_t(b));
@@ -502,7 +487,7 @@ void test_first_owner_multi_pass()
     }
 
     {
-        SSTREAM ss;
+        sstream_t ss;
         ss << "test string";
         istream_iterator<char> a(ss);
         auto_ptr<first_owner_multi_pass_t> mp1(new first_owner_multi_pass_t(a));
@@ -530,7 +515,7 @@ void test_first_owner_multi_pass()
     }
 
     {
-        SSTREAM ss;
+        sstream_t ss;
         ss << "test string";
         istream_iterator<char> b(ss);
         auto_ptr<first_owner_multi_pass_t> mp2(new first_owner_multi_pass_t(b));
@@ -555,7 +540,7 @@ void test_first_owner_multi_pass()
     }
 
     {
-        SSTREAM ss;
+        sstream_t ss;
         ss << "test string";
         istream_iterator<char> a(ss);
         auto_ptr<first_owner_multi_pass_t> mp1(new first_owner_multi_pass_t(a));
@@ -608,7 +593,7 @@ void test_first_owner_multi_pass()
     }
 
     {
-        SSTREAM ss;
+        sstream_t ss;
         ss << "test string";
         istream_iterator<char> a(ss);
         auto_ptr<first_owner_multi_pass_t> mp1(new first_owner_multi_pass_t(a));
@@ -620,7 +605,7 @@ void test_first_owner_multi_pass()
     }
 
     {
-        SSTREAM ss;
+        sstream_t ss;
         ss << "test string";
         istream_iterator<char> b(ss);
         auto_ptr<first_owner_multi_pass_t> mp2(new first_owner_multi_pass_t(b));
@@ -763,7 +748,7 @@ int main(int, char**)
     test_first_owner_multi_pass();
     test_functor_multi_pass();
 
-    assert(GETSTRING(res) == "-*= test_default_multi_pass =*-\n"
+    assert(getstring(res) == "-*= test_default_multi_pass =*-\n"
             "teststring\n"
             "teststring\n"
             "testteststringstring\n"

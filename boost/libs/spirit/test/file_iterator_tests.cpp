@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 2003 Giovanni Bajo
     http://spirit.sourceforge.net/
 
@@ -65,6 +65,11 @@ void RunTest(void)
     assert(c == a);
     assert(!(c != a));
 
+    // Check assignment operator
+    ITER d; d = a;
+    assert(d == a);
+    assert(!(d != a));
+
     // Check make_end()
     ITER b(a.make_end());
     assert(b);
@@ -124,9 +129,20 @@ void RunTest(void)
 }
 
 typedef unsigned char character_t;
-typedef file_iterator<character_t> iter;
+typedef file_iterator<character_t, 
+    fileiter_impl::std_file_iterator<character_t> > iter;
 BOOST_CLASS_REQUIRE(iter, boost, RandomAccessIteratorConcept);
 
+#ifdef BOOST_SPIRIT_FILEITERATOR_WINDOWS
+    typedef file_iterator<character_t, 
+        fileiter_impl::mmap_file_iterator<character_t> > iterwin;
+    BOOST_CLASS_REQUIRE(iterwin, boost, RandomAccessIteratorConcept);
+#endif
+#ifdef BOOST_SPIRIT_FILEITERATOR_POSIX
+    typedef file_iterator<character_t, 
+        fileiter_impl::mmap_file_iterator<character_t> > iterposix;
+    BOOST_CLASS_REQUIRE(iterposix, boost, RandomAccessIteratorConcept);
+#endif
 
 int main(void)
 {
@@ -136,7 +152,18 @@ int main(void)
         return 2;
     }
 
+    cerr << "Testing standard iterator" << endl;
     RunTest<iter>();
+
+#ifdef BOOST_SPIRIT_FILEITERATOR_WINDOWS
+    cerr << "Testing Windows iterator" << endl;
+    RunTest<iterwin>();
+#endif
+
+#ifdef BOOST_SPIRIT_FILEITERATOR_POSIX
+    cerr << "Testing POSIX iterator" << endl;
+    RunTest<iterposix>();
+#endif
 
     // Check if the file handles were closed correctly
     assert(remove(TMP_FILE) == 0);
@@ -144,3 +171,14 @@ int main(void)
     cerr << "Test completed successfully" << endl;
     return 0;
 }
+
+#ifdef BOOST_NO_EXCEPTIONS
+
+namespace boost {
+    void throw_exception(std::exception const& e)
+    {
+        assert(0);
+    }
+}
+
+#endif

@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.0
+    Spirit v1.7.0
     Copyright (c) 1998-2003 Joel de Guzman
     http://spirit.sourceforge.net/
 
@@ -19,8 +19,8 @@
 using namespace std;
 
 //#define BOOST_SPIRIT_DEBUG
-#include "boost/spirit/core.hpp"
-#include "boost/ref.hpp"
+#include <boost/spirit/core.hpp>
+#include <boost/ref.hpp>
 using namespace boost::spirit;
 
 ///////////////////////////////////////////////////////////////////////////////

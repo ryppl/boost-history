@@ -1,6 +1,6 @@
 /*=============================================================================
-    Spirit v1.6.1
-    Copyright (c) 2003 2003 Vaclav Vesely
+    Spirit v1.7.0
+    Copyright (c) 2003 Joel de Guzman
     http://spirit.sourceforge.net/
 
     Permission to copy, use, modify, sell and distribute this software is

@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.0
+    Spirit v1.7.0
     Copyright (c) 2002-2003 Martin Wille
     http://spirit.sourceforge.net/
 
@@ -204,12 +204,6 @@ main()
     else
         cout << error_count << " of " << test_count << " if_p-tests failed\n"
              << "Test failed\n";
-
-
-
-    //////////////////////////////////
-    // compile time check wether as_parser<> works for if_p
-    ::boost::spirit::if_p('"')['"'].else_p['"'];
 
     return error_count!=0;
 }

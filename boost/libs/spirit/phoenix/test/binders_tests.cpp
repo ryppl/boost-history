@@ -1,5 +1,5 @@
 /*=============================================================================
-    Phoenix V1.0
+    Phoenix v1.1
     Copyright (c) 2001-2003 Joel de Guzman
 
     Permission to copy, use, modify, sell and distribute this software is
@@ -12,9 +12,9 @@
 #include <cassert>
 
 #define PHOENIX_LIMIT 15
-#include "boost/spirit/phoenix/primitives.hpp"
-#include "boost/spirit/phoenix/composite.hpp"
-#include "boost/spirit/phoenix/binders.hpp"
+#include <boost/spirit/phoenix/primitives.hpp>
+#include <boost/spirit/phoenix/composite.hpp>
+#include <boost/spirit/phoenix/binders.hpp>
 
 using namespace phoenix;
 using namespace std;
@@ -27,7 +27,7 @@ using namespace std;
         void operator()(int n0)         { cout << "got 1 arg " << n0 << " \n"; }
         void operator()(int n0, int n1) { cout << "got 2 args " << n0 << ", " << n1 << " \n"; }
 
-        void foo0()                     { cout << "print_::foo0\n"; }
+        void foo0() const               { cout << "print_::foo0\n"; }
         void foo1(int n0)               { cout << "print_::foo1 " << n0 << " \n"; }
         void foo2(int n0, int n1)       { cout << "print_::foo2 " << n0 << ", " << n1 << " \n"; }
 
