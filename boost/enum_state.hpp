@@ -17,12 +17,12 @@ class smart_enum
     typedef enumT         enum_type;
     typedef incrementorT  incrementor_type;
 
-    smart_enum(const int i, const incrementor_type func = incrementor_type())
+    smart_enum(int i, incrementor_type func = incrementor_type())
             : incrementor(func)
         {
         val = incrementor(i, 0);
         }
-    smart_enum(const enum_type i, const incrementor_type func = incrementor_type())
+    smart_enum(enum_type i, incrementor_type func = incrementor_type())
             : incrementor(func), val(i)
         {
         }
@@ -46,9 +46,9 @@ class smart_enum
 //////////////////////////////////////////////////
 
 template<typename enumT, enumT minVal, enumT maxVal>
-struct SequentialIncrementor : public std::binary_function<const int, const int, enumT>
+struct SequentialIncrementor : public std::binary_function<int, int, enumT>
     {
-    enumT operator() (const int val, const int n) const
+    enumT operator() (int val, int n) const
         {
         if (val + n >= minVal && val + n <= maxVal)
             return enumT(val + n);
@@ -65,9 +65,9 @@ struct sequential_smart_enum : public smart_enum<enumT, SequentialIncrementor<en
     typedef typename smart_enum_type::incrementor_type  incrementor_type;
     enum { min = minVal, max = maxVal };
 
-    sequential_smart_enum(const int i) : smart_enum_type(i, incrementor_type())
+    sequential_smart_enum(int i) : smart_enum_type(i, incrementor_type())
         { }
-    sequential_smart_enum(const enum_type i) : smart_enum_type(i, incrementor_type())
+    sequential_smart_enum(enum_type i) : smart_enum_type(i, incrementor_type())
         { }
     };
 
@@ -77,9 +77,9 @@ struct sequential_smart_enum : public smart_enum<enumT, SequentialIncrementor<en
 //////////////////////////////////////////////////
 
 template<typename enumT, enumT minVal, enumT maxVal>
-struct WrappedIncrementor : public std::binary_function<const int, const int, enumT>
+struct WrappedIncrementor : public std::binary_function<int, int, enumT>
     {
-    enumT operator() (const int val, const int n) const
+    enumT operator() (int val, int n) const
         {
         return enumT(((val - minVal + n) % (maxVal - minVal + 1)) + minVal);
         }
@@ -93,9 +93,9 @@ struct wrapped_smart_enum : public smart_enum<enumT, WrappedIncrementor<enumT, m
     typedef typename smart_enum_type::incrementor_type  incrementor_type;
     enum { min = minVal, max = maxVal };
 
-    wrapped_smart_enum(const int i) : smart_enum_type(i, incrementor_type())
+    wrapped_smart_enum(int i) : smart_enum_type(i, incrementor_type())
         { }
-    wrapped_smart_enum(const enum_type i) : smart_enum_type(i, incrementor_type())
+    wrapped_smart_enum(enum_type i) : smart_enum_type(i, incrementor_type())
         { }
     };
 
@@ -104,9 +104,9 @@ struct wrapped_smart_enum : public smart_enum<enumT, WrappedIncrementor<enumT, m
 //////////////////////////////////////////////////
 
 template<typename enumT, enumT minVal, enumT maxVal>
-struct BoundedIncrementor : public std::binary_function<const int, const int, enumT>
+struct BoundedIncrementor : public std::binary_function<int, int, enumT>
     {
-    enumT operator() (const int val, const int n) const
+    enumT operator() (int val, int n) const
         {
         int res = val + n;
         if (res < minVal)
@@ -126,9 +126,9 @@ struct bounded_smart_enum : public smart_enum<enumT, BoundedIncrementor<enumT, m
     typedef typename smart_enum_type::incrementor_type  incrementor_type;
     enum { min = minVal, max = maxVal };
 
-    bounded_smart_enum(const int i) : smart_enum_type(i, incrementor_type())
+    bounded_smart_enum(int i) : smart_enum_type(i, incrementor_type())
         { }
-    bounded_smart_enum(const enum_type i) : smart_enum_type(i, incrementor_type())
+    bounded_smart_enum(enum_type i) : smart_enum_type(i, incrementor_type())
         { }
     };
 
