@@ -2,6 +2,7 @@
 #include <cassert>
 
 using namespace boost::langbinding::function;
+using namespace boost::langbinding::converter;
 
 int x = 6;
 float y = 3.14f;

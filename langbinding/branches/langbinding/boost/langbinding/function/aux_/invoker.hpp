@@ -20,6 +20,7 @@
 #include <boost/langbinding/function/argument_type.hpp>
 #include <boost/langbinding/function/aux_/arg_extractor.hpp>
 #include <boost/langbinding/function/aux_/invoke.hpp>
+#include <boost/langbinding/function/aux_/fusion_arg_iterator.hpp>
 #include <boost/langbinding/util/type_id.hpp>
 
 namespace boost { namespace langbinding { namespace function { namespace aux { 
@@ -96,7 +97,8 @@ inline arg_vector<Signature>::arg_vector()
 
 struct transform_extractor_op
 {
-    transform_extractor_op(arg_conversion*& args) : args(args) {}
+    transform_extractor_op(converter::arg_conversion*& args) 
+        : args(args) {}
 
     template<class T>
     struct apply
@@ -110,7 +112,7 @@ struct transform_extractor_op
         return typename apply<T>::type(*args++);
     }
 
-    mutable arg_conversion*& args;
+    mutable converter::arg_conversion*& args;
 };
 
 template<class R, class Arguments>
@@ -145,14 +147,21 @@ struct invoker : boost::langbinding::function::invoker
       , typename mpl::end<Signature>::type
     > argument_types;
 
-    typedef mpl::transform_view<argument_types, wrap<mpl::_> > argument_tuple;
-
     typedef typename mpl::front<Signature>::type return_type_;
 
-    void* invoke(arg_conversion* args, result_converter_base& rc_) const
+    void* invoke(converter::arg_conversion* args, result_converter_base& rc_) const
     {
         result_converter<return_type_>& rc = static_cast<
             result_converter<return_type_>&>(rc_);
+
+        aux::fusion_arg_iterator arg_iterator(args);
+
+        typename fusion::meta::generate<
+            mpl::transform_view<
+                argument_types
+              , arg_extractor<mpl::_>
+            >
+        >::type argument_converters(arg_iterator);
 
         return aux::invoke(
             aux::invoke_tag<
@@ -163,10 +172,8 @@ struct invoker : boost::langbinding::function::invoker
           , m_fn
           , make_converter_package(
                 rc
-              , fusion::generate(fusion::transform(
-                    argument_tuple()
-                  , transform_extractor_op(args))
-            ))
+              , argument_converters
+            )
         );
     }
 
