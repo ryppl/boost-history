@@ -16,22 +16,40 @@
 
 #include <boost/detail/workaround.hpp>
 
-#if BOOST_WORKAROUND(BOOST_MSVC, <= 1300) \
-    || BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x564))
-# define BOOST_NO_IMPLICIT_MOVE_ASSIGN_FOR_COPYABLE_TYPES
+#if  BOOST_WORKAROUND(BOOST_MSVC, <= 1300)
+#include <boost/ref.hpp>
+#include <boost/type_traits/is_class.hpp>
+// MSVC 6/7 decides the implicit move assignment operator is ambiguous.
+# define BOOST_COPY_SWAP_LVALUE_ASSIGN // Also binds rvalues to non-const refs in assignment
 #endif
 
-#if BOOST_WORKAROUND(BOOST_MSVC, >= 1310)                       \
-    || BOOST_WORKAROUND(__MWERKS__, BOOST_TESTED_AT(0x3003))    \
-    || BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x564))
-# define BOOST_NO_IMPLICIT_MOVE_CTOR_FOR_COPYABLE_TYPES
-#endif
+// Normal EDG like Comeau does enough (N)RVO that the only case where
+// turning on the move construction hacks help is when *explicitly*
+// direct-initializing an object.  These cases are important, but the
+// hacks break down in strict mode.
 
-#if !defined(__EDG__)                                               \
-    && BOOST_WORKAROUND(__GNUC__, BOOST_TESTED_AT(3))               \
-    && BOOST_WORKAROUND(__GNUC_MINOR__, BOOST_TESTED_AT(3))         \
-    && BOOST_WORKAROUND(__GNUC_PATCHLEVEL__, BOOST_TESTED_AT(1))
-# define BOOST_MOVE_GCC_WORKAROUND
+// Borland will always copy a temporary when used in a direct
+// initialization.  Enabling the move construction hacks just makes
+// the compiler ICE, so we'll skip 'em
+
+// Intel 8.x on win32 needs help on direct initialization because it
+// won't automatically elide copies.  Earlier versions don't seem to
+// respond to the move construction hacks, because they blithely bind
+// rvalues to non-const references.
+
+#if defined(BOOST_INTEL_CXX_VERSION) && defined(_MSC_VER)
+# if BOOST_INTEL_CXX_VERSION >= 800
+
+#  define BOOST_IMPLICIT_MOVE_CTOR_FOR_COPYABLE_TYPES
+
+# else
+
+// because of the way rvalues bind to non-const references, move
+// assignment is never called implicitly.  This at least avoids a copy
+// when the source is a genuine rvalue.
+#  define BOOST_MOVE_COPY_SWAP_ASSIGN
+
+# endif 
 #endif 
 
 namespace boost { 
@@ -56,12 +74,11 @@ struct move_from
 {
     explicit move_from(X* p)
       : p(p) {}
-    
-    // Convenience for move constructing/assigning base classes.
-    template <class Y>
-    operator move_from<Y>()
-    { return move_from<Y>(*p); }
 
+    // Some compilers need this; seems to do no harm in general.
+    explicit move_from(X& x)
+      : p(&x) {}
+    
     // It acts like a smart pointer, for syntactic convenience
     X& operator*() const { return *p; }
     X* operator->() const { return p; }
@@ -74,82 +91,97 @@ struct move_from
 };
 
 // Detect whether T is movable
-//
-// Checking wehther there's a conversion from move_from<T> to T is
-// ideal, because that'll detect the case where the user wants T to be
-// explicitly movable but not implicitly movable from an rvalue
-// (i.e. no conversion to move_from<T> supplied.  I'm not sure why
-// that would arise, but at least we have the option.  Of course GCC 3
-// doesn't seem to support the option, so we'll check for the implicit
-// rvalue conversion in that case.
 template <class T>
 struct is_movable
-#if !defined(__EDG__) && BOOST_WORKAROUND(__GNUC__, >= 3)   \
-  || BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x564))
   : boost::is_convertible<T,move_from<T> >
-#else 
-  : boost::is_convertible<move_from<T>,T>
-#endif
-{};
-
-#ifdef BOOST_MOVE_GCC_WORKAROUND
-
-// A strange bug lurks here.  We need to jump through some hoops to
-// get this working with noncopyable but movable types on GCC
-//template <class T>
-//struct move_impl
-namespace detail {
-  template <class T>
-  static inline T move(T& x, boost::mpl::true_)
-  {
-      return T(boost::move_from<T>(&x));
-  }
-
-  template <class T>
-  static inline T& move(T& x, boost::mpl::false_)
-  {
-      return x;
-  }
+{
 };
 
+#if defined(BOOST_MOVE_COPY_SWAP_ASSIGN) || defined(__BORLANDC__)
+namespace move_
+{
+# if BOOST_WORKAROUND(BOOST_MSVC, == 1200)
+  
+  template <class T>
+  struct move_result_
+    : mpl::if_<
+          is_movable<T>
+        , move_from<T>
+        , reference_wrapper<T>
+      >::type
+  {
+      typedef typename mpl::if_<
+          is_movable<T>
+        , move_from<T>
+        , reference_wrapper<T>
+      >::type base;
+
+      move_result_(T& x) : base(x) {}
+  };
+  
+  template <class T>
+  struct move_result
+  {
+      typedef move_result_<T> type;
+  };
+  
+# elif BOOST_WORKAROUND(BOOST_MSVC, == 1300)
+  
+  template <class T>
+  struct move_result
+    : mpl::if_<
+          is_class<T>,
+          typename mpl::if_<
+              is_movable<T>
+            , move_from<T>
+            , reference_wrapper<T>
+          >::type
+        , T&
+      >
+  {};
+  
+# else // default version
+  
+  template <class T>
+  struct move_result
+    : mpl::if_< is_movable<T>, move_from<T> , T& >
+  {};
+
+# endif 
+}
+
 template <class T>
+typename move_::move_result<T>::type
+move(T& x)
+{
+    typedef typename move_::move_result<T>::type r;
+    return r(x);
+}
+
+#else 
+
+template <class T>
+inline
 typename boost::mpl::if_<
     is_movable<T>
   , T
   , T&
 >::type
-inline
-move(T& x, int = 0)  // optional argument is for people using msvc6 compatibility mode
+move(T& x)
 {
-    return detail::move(x, is_movable<T>());
-}
+    typedef typename boost::mpl::if_<
+        is_movable<T>
+      , move_from<T>
+      , T&
+    >::type r1;
 
-#elif BOOST_WORKAROUND(BOOST_MSVC, == 1200)
-
-template <class T>
-T& move(T& x, ...)
-{
-    return x;
-}
-
-template <class T>
-move_from<T> move(move_from<T> x, int = 0)
-{
-    return x;
-}
-
-#else 
-
-template <class T>
-inline
-typename boost::mpl::if_<
+    typedef typename boost::mpl::if_<
     is_movable<T>
-  , move_from<T>
-  , T&
->::type
-move(T& x, int = 0)  // optional argument is for people using msvc6 compatibility mode
-{
-    return x;
+        , T
+        , T&
+    >::type r2;
+   
+    return r2(r1(x));
 }
 
 #endif 
@@ -179,7 +211,7 @@ struct movable
     {}
 #else
     ;
-#endif 
+#endif
     movable& operator=(movable&);
 };
 
@@ -191,9 +223,9 @@ namespace move_
   void
   swap(T& a, T& b)
   {
-      T tmp(boost::move(a, 0));
-      a = boost::move(b, 0);
-      b = boost::move(tmp, 0);
+      T tmp(boost::move(a));
+      a = boost::move(b);
+      b = boost::move(tmp);
   }
 }
 
@@ -280,7 +312,8 @@ move_backward(BidirectionalIterator1 first, BidirectionalIterator1 last,
 //
 //     BOOST_LVALUE_COPY_CTOR(class-name, (argument-name), ;)
 //
-#ifndef BOOST_NO_IMPLICIT_MOVE_CTOR_FOR_COPYABLE_TYPES
+#ifdef BOOST_IMPLICIT_MOVE_CTOR_FOR_COPYABLE_TYPES
+
 # define BOOST_LVALUE_COPY_CTOR(klass, arg_init, body)                          \
     klass(klass& BOOST_PP_SEQ_HEAD(arg_init))                                   \
         BOOST_MOVE_INITIALIZER_LIST(arg_init)                                   \
@@ -292,7 +325,7 @@ move_backward(BidirectionalIterator1 first, BidirectionalIterator1 last,
       , typename boost::enable_if_same<klass const,BoostMove_##klass>::type = 0 \
     )                                                                           \
         BOOST_MOVE_INITIALIZER_LIST(arg_init)                                   \
-        body
+    body
 
 #else
 
@@ -317,7 +350,21 @@ move_backward(BidirectionalIterator1 first, BidirectionalIterator1 last,
 //
 //     BOOST_LVALUE_ASSIGN(class-name, (argument-name), ;)
 //
-#ifndef BOOST_NO_IMPLICIT_MOVE_ASSIGN_FOR_COPYABLE_TYPES
+#ifdef BOOST_MOVE_COPY_SWAP_ASSIGN
+
+// Due to compiler deficiencies, the best default is to move from
+// rvalues and copy/swap lvalues.  This approach could be more
+// expensive than neccessary in some lvalue assignment cases.
+// Consider a vector that already has enough memory allocated for all
+// rhs elements.
+
+# define BOOST_LVALUE_ASSIGN(klass, rhs, body)                          \
+                                                                        \
+    klass&                                                              \
+    operator=(klass BOOST_PP_SEQ_HEAD(rhs))                             \
+    { return *this = boost::move_from<klass>(BOOST_PP_SEQ_HEAD(rhs)); }
+        
+#else
 
 # define BOOST_LVALUE_ASSIGN(klass, rhs, body)                                  \
                                                                                 \
@@ -329,16 +376,6 @@ move_backward(BidirectionalIterator1 first, BidirectionalIterator1 last,
     typename boost::enable_if_same<klass const,BoostMove_##klass,klass&>::type  \
     operator=(BoostMove_##klass& BOOST_PP_SEQ_HEAD(rhs))                        \
         body
-#else
-
-// Generate a "regular" assignment operator.  One might still chose to
-// use a by-value assignment operator for such types.
-# define BOOST_LVALUE_ASSIGN(klass, rhs, body)                                  \
-                                                                                \
-    klass&                                                                      \
-    operator=(klass const& BOOST_PP_SEQ_HEAD(rhs))                              \
-        body                                                                    \
-
 #endif 
 
 //

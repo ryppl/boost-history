@@ -23,7 +23,7 @@ class X : public boost::movable<X>
     BOOST_LVALUE_COPY_CTOR(
         X, (rhs)(: resource(++cnt)),
     {
-        SAY("copy #" << resource << " <- #" << rhs.resource);
+        copy(rhs);
     })
 
     ~X()
@@ -31,26 +31,14 @@ class X : public boost::movable<X>
         release();
     }
 
-# if defined(BOOST_NO_IMPLICIT_MOVE_ASSIGN_FOR_COPYABLE_TYPES)  \
-    && !BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x564))
-    
-    // We can do this as a fallback on compilers where it's supported;
-    // it amounts to a copy/swap for lvalues and a move for rvalues.
-    X& operator=(X rhs)
-    {
-        return *this = boost::move_from<X>(rhs);
-    }
-    
-# else
     BOOST_LVALUE_ASSIGN(
         X, (rhs), 
     {
         release();
-        resource = ++cnt;
-        SAY("copy #" << resource << " <- #" << rhs.resource);
+        this->resource = ++cnt;
+        copy(rhs);
         return *this;
     })
-# endif 
     
  public: // Move stuff
     // non-const rvalue - move ctor
@@ -58,20 +46,28 @@ class X : public boost::movable<X>
       : resource(rhs->resource)
     {
         SAY("MOVE #" << resource);
+        BOOST_ASSERT(move_expected);
         rhs->resource = 0;
         BOOST_ASSERT(resource);
     }
 
     // non-const rvalue - move assignment
-    X& operator=(boost::move_from<X> rhs)
+    X& operator=(boost::move_from<X> const& rhs)
     {
         release();
         resource = rhs->resource;
         SAY("MOVE #" << resource);
+        BOOST_ASSERT(move_expected);
         rhs->resource = 0;
         BOOST_ASSERT(resource);
         return *this;
     }
+    
+    static int copies;  // count the number of copies
+    static int suboptimal_copies; // count the number of copies that should've been avoidable
+    
+    static void expect_copy() { copy_expected = true; move_expected = false; }
+    static void expect_move() { copy_expected = false; move_expected = true; }
     
  private: // helper functions
     void release()
@@ -83,12 +79,33 @@ class X : public boost::movable<X>
         resource = 0;
     }
 
+    void copy(X const& rhs)
+    {
+        SAY("copy #" << this->resource << " <- #" << rhs.resource);
+        if (!copy_expected)
+        {
+            SAY("***** SUBOPTIMAL COPY ******");
+            ++suboptimal_copies;
+        }
+        else
+        {
+            move_expected = true; // OK to move now
+        }
+        ++copies;
+    }
+    
  private:   // Data members
     int resource;
     
     static int cnt;  // count the number of resources
+    static bool copy_expected;
+    static bool move_expected;
 };
 
 int X::cnt;
+int X::copies;
+int X::suboptimal_copies;
+bool X::copy_expected;
+bool X::move_expected;
 
 #endif // X_DWA2004410_HPP

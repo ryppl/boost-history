@@ -10,6 +10,7 @@ import testing ;
        : 
          [ compile has_swap.cpp ]
          [ run move.cpp ]
+         [ run move_only.cpp ]
          [ run move_test.cpp ]
          [ run move_swap_test.cpp ]
        ;
