@@ -266,7 +266,7 @@ if $(UNIX)
 {
     actions capture-run-output1 bind INPUT_FILES
     {
-        $(SHELL_SET)PATH=$(RUN_PATH);%PATH%
+        $(SHELL_SET)PATH=$(RUN_PATH):$PATH
     	$(SHELL_EXPORT)PATH
     	$(SHELL_SET)LD_LIBRARY_PATH=$(RUN_LD_LIBRARY_PATH):$LD_LIBRARY_PATH
     	$(SHELL_EXPORT)LD_LIBRARY_PATH
@@ -279,7 +279,7 @@ else
 {
     actions capture-run-output1 bind INPUT_FILES
     {
-        $(SHELL_SET)PATH=$(RUN_PATH):$PATH
+        $(SHELL_SET)PATH=$(RUN_PATH);%PATH%
         $(SHELL_EXPORT)PATH
         $(>) $(ARGS) $(INPUT_FILES) > $(<[2]) 2>&1 && $(CP) $(<[2]) $(<[1])
     }
