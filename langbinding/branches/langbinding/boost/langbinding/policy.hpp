@@ -85,7 +85,7 @@ namespace boost { namespace langbinding {
    template<class H, class T, class H2>
    cons<H2, cons<H, T> > operator+(
          const cons<H, T>& lhs
-       , const cons<H2, nil_type) const
+       , const cons<H2, nil_type>& rhs) 
    {
       return cons<H2, cons<H, T> >();
    }
