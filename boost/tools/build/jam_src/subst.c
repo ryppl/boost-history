@@ -1,170 +1,90 @@
+#include <stddef.h>
 #include "regexp.h"
+#include "hash.h"
 
-#define  MAX_SUBST_STRING  4095
+#include "newstr.h"
+#include "lists.h"
+#include "parse.h"
 
-typedef struct subst_string
+struct regex_entry
 {
-  char    s[MAX_SUBST_STRING+1];
-  int     len;
-  
-} subst_string;
+    const char* pattern;
+    regexp* regex;
+};
+typedef struct regex_entry regex_entry;
 
+static struct hash* regex_hash;
 
-static void
-subst_string_init( subst_string*  string,
-                   const char*    source )
+static regexp* regex_compile( const char* pattern )
 {
-  int  len = 0;
-  
-  if (source)
-  {
-    len = strlen(source);
-    if (len > MAX_SUBST_STRING)
-      len = MAX_SUBST_STRING;
-
-    if (len > 0)
-      memcpy( string->s, source, len );
-  }
-  string->s[len] = 0;
-  string->len    = len;
-}                   
-
-
-static void
-subst_string_add( subst_string*  string,
-                  const char*    source,
-                  int            src_len )
-{
-  int  delta;
-
-  delta = string->len + src_len - MAX_SUBST_STRING;
-  if (delta > 0)
-    src_len -= delta;  
-
-  if ( src_len > 0 )  
-  {
-    memcpy( string->s + string->len, source, src_len );
-    string->len += src_len;
-    string->s[ string->len ] = 0;
-  }
-}
-
-
-static void
-subst_string_add_char( subst_string*  string,
-                       const char     c )
-{
-  int  len = string->len;
-  if ( len < MAX_SUBST_STRING )
-  {
-    string->s[len++] = c;
-    string->s[len]   = 0;
-    string->len = len;
-  }
-}                       
-
-
-static void
-subst_string_setsub( subst_string*  string,
-                     int            offset,
-                     int            len,
-                     const char*    replacement )
-{
-  subst_string  temp;
-  int           end;
-  
-  subst_string_init( &temp, 0 );
-  
-  subst_string_add( &temp, string->s, offset );
-  
-  if (replacement)
-    subst_string_add( &temp, replacement, strlen(replacement) );
-
-  offset += len;    
-  subst_string_add( &temp, string->s + offset, string->len - offset );
-  
-  *string = temp;
-}
-
-
-
-void substitute( const char*  source,
-                 const char*  pattern,
-                 const char*  replacement,
-                 char*        target )
-{
-  regexp*  repat;
-
-  target[0] = '\0';
-  
-  repat = regcomp( (char*)pattern );
-  if (repat)
-  {
-    if ( regexec( repat, (char*)source ) )
-    {
-      subst_string  targ;
-      
-      /* a match was found */
-      if ( !strchr( replacement, '$' ) )
-      {
-        /* fast, simple replacement */
-        subst_string_init( &targ, source );
-        subst_string_setsub( &targ, repat->startp[0] - source,
-                             repat->endp[0] - repat->startp[0],
-                             replacement );
-      }
-      else
-      {
-        /* perform sub-expression replacement */
-        subst_string  temp;
-        const char*   src = replacement;
-        char          c;
+    regex_entry entry, *e = &entry;
+    entry.pattern = pattern;
+    
+    if ( !regex_hash )
+        regex_hash = hashinit(sizeof(regex_entry), "regex");
         
-        subst_string_init( &targ, 0 );
-        subst_string_init( &temp, 0 );
+    if ( hashenter( regex_hash, (HASHDATA **)&e ) )
+        e->regex = regcomp( (char*)pattern );
+    
+    return e->regex;
+}
 
-        for (;;)
-        {
-          c = *src++;
-          if (!c) break;
+LIST*
+builtin_subst(
+    PARSE    *parse,
+    LOL      *args )
+{        
+  LIST* result = L0;
+  LIST* arg1 = lol_get( args, 0 );
+
+  if ( arg1 && list_next(arg1) && list_next(list_next(arg1)) )
+  {    
+  
+      const char* source = arg1->string;
+      const char* pattern = list_next(arg1)->string;
+      regexp* repat = regex_compile( pattern );
+
+      if ( regexec( repat, (char*)source) )
+      {
+          LIST* subst = list_next(arg1);
           
-          if ( c == '$' )
+          while ((subst = list_next(subst)) != L0)
           {
-            if ( *src == '&' || (*src - '0') <= 9 )
-            {
-              int  n = (*src++ - '0');
-              
-              if ( (unsigned int)n > 9)
-                n = 0;
+# define BUFLEN 4096
+              char buf[BUFLEN + 1];
+              const char* in = subst->string;
+              char* out = buf;
 
-              subst_string_add( &temp, repat->startp[n],
-                                repat->endp[n] - repat->startp[n] );
+              for ( in = subst->string; *in && out < buf + BUFLEN; ++in )
+              {
+                  if ( *in == '\\' || *in == '$' )
+                  {
+                      ++in;
+                      if ( *in == 0 )
+                      {
+                          break;
+                      }
+                      else if ( *in >= '0' && *in <= '9' )
+                      {
+                          unsigned n = *in - '0';
+                          const size_t srclen = repat->endp[n] - repat->startp[n];
+                          const size_t remaining = buf + BUFLEN - out;
+                          const size_t len = srclen < remaining ? srclen : remaining;
+                          memcpy( out, repat->startp[n], len );
+                          out += len;
+                          continue;
+                      }
+                      /* fall through and copy the next character */
+                  }
+                  *out++ = *in;
+              }
+              *out = 0;
 
-              continue;
-            }
+              result = list_new( result, newstr( buf ) );
+#undef BUFLEN
           }
-          
-          /* ordinary character */
-          if ( c == '\\' && ( *src == '\\' || *src == '$' ) )
-            c = *src++;
-            
-          subst_string_add_char( &temp, c );
-        }
-        
-        subst_string_setsub( &targ, repat->startp[0] - source,
-                             repat->endp[0] - repat->startp[0],
-                             temp.s );
       }
-      
-      /* now copy the content of "targ" to the target */
-      strcpy( target, targ.s );
-    }
-    else
-    {
-      /* no match, simply copy source into target */
-      strcpy( target, source );
-    }
-    free( repat );
   }
+  
+  return result;
 }
-

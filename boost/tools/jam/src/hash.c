@@ -176,6 +176,24 @@ static void hashrehash( register struct hash *hp )
 	}
 }
 
+void hashenumerate( struct hash *hp, void (*f)(void*) )
+{
+    int i;
+    for( i = 0; i <= hp->items.list; i++ )
+    {
+        char *next = hp->items.lists[i].base;
+        int nel = hp->items.lists[i].nel;
+        if ( i == hp->items.list )
+            nel -= hp->items.more;
+
+        for( ; nel--; next += hp->items.size )
+        {
+            register ITEM *i = (ITEM *)next;
+            f(&i->data);
+        }
+    }
+}
+
 /* --- */
 
 # define ALIGNED(x) ( ( x + sizeof( ITEM ) - 1 ) & ~( sizeof( ITEM ) - 1 ) )

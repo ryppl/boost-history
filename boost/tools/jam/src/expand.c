@@ -37,6 +37,8 @@ typedef struct {
 static void var_edit( char *in, char *mods, char *out );
 static void var_mods( char *mods, FILENAME *f, VAR_ACTS *acts );
 
+static int adjust_index( int index, int length );
+
 # define MAGIC_COLON	'\001'
 # define MAGIC_LEFT	'\002'
 # define MAGIC_RIGHT	'\003'
@@ -199,9 +201,9 @@ var_expand(
 
 		if( bracket = strchr( varname, MAGIC_LEFT ) )
 		{
-		    char *dash;
+		    char *dash = 0;
 
-		    if( dash = strchr( bracket + 1, '-' ) )
+		    if( bracket[1] && ( dash = strchr( bracket + 2, '-' ) ) )
 		    {
 			*dash = '\0';
 			sub1 = atoi( bracket + 1 );
@@ -246,8 +248,15 @@ var_expand(
 		    continue;
 		}
 
-		/* For each variable value */
+                /* Adjust negative indices */
+                if ( sub1 < 0 || sub2 < 0 )
+                {
+                    int length = list_length( value );
+                    sub1 = adjust_index( sub1, length );
+                    sub2 = adjust_index( sub2, length );
+                }
 
+		/* For each variable value */
 		for( i = 1; value; i++, value = list_next( value ) )
 		{
 		    LIST *rem;
@@ -502,4 +511,13 @@ var_mods(
 		}
 	    }
 	}
+}
+
+static int adjust_index( int index, int length )
+{
+    if ( index < 0 )
+        index = length + 1 + index;
+    if ( index < 0 )
+        index = 0;
+    return index;
 }

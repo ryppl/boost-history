@@ -37,11 +37,12 @@
 #define	SWITCH	290
 #define	TOGETHER	291
 #define	UPDATED	292
-#define	_LBRACE	293
-#define	_BARBAR	294
-#define	_RBRACE	295
-#define	ARG	296
-#define	STRING	297
+#define	WHILE	293
+#define	_LBRACE	294
+#define	_BARBAR	295
+#define	_RBRACE	296
+#define	ARG	297
+#define	STRING	298
 
 
 extern YYSTYPE yylval;

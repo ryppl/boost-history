@@ -34,6 +34,7 @@
 %token SWITCH
 %token TOGETHER
 %token UPDATED
+%token WHILE
 %token _LBRACE
 %token _BARBAR
 %token _RBRACE
@@ -94,8 +95,9 @@
 # define S0 (char *)0
 
 # define pappend( l,r )    	parse_make( compile_append,l,r,P0,S0,S0,0 )
-# define pfor( s,l,r )    	parse_make( compile_foreach,l,r,P0,s,S0,0 )
+# define pfor( s,l,r,x )    	parse_make( compile_foreach,l,r,P0,s,S0,x )
 # define pif( l,r,t )	  	parse_make( compile_if,l,r,t,S0,S0,0 )
+# define pwhile( l,r )	  	parse_make( compile_while,l,r,P0,S0,S0,0 )
 # define pincl( l )       	parse_make( compile_include,l,P0,P0,S0,S0,0 )
 # define plist( s )	  	parse_make( compile_list,P0,P0,P0,s,S0,0 )
 # define plocal( l,r,t )  	parse_make( compile_local,l,r,t,S0,S0,0 )
@@ -159,11 +161,15 @@ rule	: _LBRACE block _RBRACE
 	| RETURN list _SEMIC
 		{ $$.parse = $2.parse; }
 	| FOR ARG IN list _LBRACE block _RBRACE
-		{ $$.parse = pfor( $2.string, $4.parse, $6.parse ); }
+		{ $$.parse = pfor( $2.string, $4.parse, $6.parse, 0 ); }
+	| FOR LOCAL ARG IN list _LBRACE block _RBRACE
+		{ $$.parse = pfor( $3.string, $5.parse, $7.parse, 1 ); }
 	| SWITCH list _LBRACE cases _RBRACE
 		{ $$.parse = pswitch( $2.parse, $4.parse ); }
 	| IF cond _LBRACE block _RBRACE 
 		{ $$.parse = pif( $2.parse, $4.parse, pnull() ); }
+	| WHILE cond _LBRACE block _RBRACE 
+		{ $$.parse = pwhile( $2.parse, $4.parse ); }
 	| IF cond _LBRACE block _RBRACE ELSE rule
 		{ $$.parse = pif( $2.parse, $4.parse, $7.parse ); }
         | RULE ARG _LPAREN lol _RPAREN rule
@@ -262,7 +268,7 @@ list	: listp
 listp	: /* empty */
 		{ $$.parse = pnull(); yymode( SCAN_PUNCT ); }
 	| listp arg
-		{ $$.parse = pappend( $1.parse, $2.parse ); }
+	{ $$.parse = pappend( $1.parse, $2.parse ); }
 	;
 
 arg	: ARG 

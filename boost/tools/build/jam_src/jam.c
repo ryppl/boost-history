@@ -247,7 +247,7 @@ int  main( int argc, char **argv, char **arg_environ )
 	    else while( i )
 		globs.debug[i--] = 1;
 	}
-        if ( globs.debug[10] )
+        if ( DEBUG_PARSE )
             yydebug = 1;
 
 	/* Set JAMDATE first */
@@ -346,6 +346,9 @@ int  main( int argc, char **argv, char **arg_environ )
 	    status |= make( 1, &all, anyhow );
 	else
 	    status |= make( argc, argv, anyhow );
+
+        if ( DEBUG_PROFILE )
+            profile_dump();
 
 	/* Widely scattered cleanup */
 

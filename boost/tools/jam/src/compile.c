@@ -16,7 +16,9 @@
 # include "make.h"
 # include "search.h"
 # include "hdrmacro.h"
+# include "hash.h"
 
+# include <time.h>
 /*
  * compile.c - compile parsed jam statements
  *
@@ -25,6 +27,7 @@
  *	compile_append() - append list results of two statements
  *	compile_foreach() - compile the "for x in y" statement
  *	compile_if() - compile 'if' rule
+ *	compile_while() - compile 'while' rule
  *	compile_include() - support for 'include' - call include() on file
  *	compile_list() - expand and return a list 
  *	compile_local() - declare (and set) local variables
@@ -78,7 +81,7 @@ static LIST *builtin_echo( PARSE *parse, LOL *args );
 static LIST *builtin_exit( PARSE *parse, LOL *args );
 static LIST *builtin_flags( PARSE *parse, LOL *args );
 static LIST *builtin_hdrmacro( PARSE *parse, LOL *args );
-static LIST *builtin_subst( PARSE  *parse, LOL  *args );
+LIST *builtin_subst( PARSE  *parse, LOL  *args );
 
 int glob( char *s, char *c );
 
@@ -91,53 +94,74 @@ int glob( char *s, char *c );
 # define P0 (PARSE *)0
 # define C0 (char *)0
 
+static void lol_build( LOL* lol, char** elements )
+{
+    LIST* l = L0;
+    lol_init( lol );
+    
+    while ( elements && *elements )
+    {
+        if ( !strcmp( *elements, ":" ) )
+        {
+            lol_add( lol, l );
+            l = L0 ;
+        }
+        else
+        {
+            l = list_new( l, newstr( *elements ) );
+        }
+        ++elements;
+    }
+    
+    if ( l != L0 )
+        lol_add( lol, l );
+}
+
+static RULE* bind_builtin( char* name, LIST*(*f)(PARSE*, LOL*), int num, char** args )
+{
+    RULE* r = bindrule( name );
+    r->procedure = parse_make( f, P0, P0, P0, C0, C0, num );
+    if ( args )
+    {
+        lol_free( &r->arguments );
+        lol_build( &r->arguments, args );
+    }
+    return r;
+}
+
+static RULE* duplicate_rule( char* name, RULE* other )
+{
+    int i;
+    
+    RULE* r = bindrule( name );
+    r->procedure = other->procedure;
+    parse_refer( r->procedure );
+    
+    for (i = 0; i < other->arguments.count; ++i)
+    {
+        lol_add( &r->arguments,
+                 list_copy( L0, other->arguments.list[i] ) );
+    }
+    return r;
+}
+
 void
 compile_builtins()
 {
-    bindrule( "Always" )->procedure = 
-    bindrule( "ALWAYS" )->procedure = 
-	parse_make( builtin_flags, P0, P0, P0, C0, C0, T_FLAG_TOUCHED );
+    duplicate_rule( "Always", bind_builtin( "ALWAYS", builtin_flags, T_FLAG_TOUCHED, 0 ) );
+    duplicate_rule( "Depends", bind_builtin( "DEPENDS", builtin_depends, T_DEPS_DEPENDS, 0 ) );
+    duplicate_rule( "Echo", bind_builtin( "ECHO", builtin_echo, 0, 0 ) );
+    duplicate_rule( "Exit", bind_builtin( "EXIT", builtin_exit, 0, 0 ) );
+    duplicate_rule( "Includes", bind_builtin( "INCLUDES", builtin_depends, T_DEPS_INCLUDES, 0 ) );
+    duplicate_rule( "HdrMacro", bind_builtin( "HDRMACRO", builtin_hdrmacro, 0, 0 ) );
+    duplicate_rule( "Leaves", bind_builtin( "LEAVES", builtin_flags, T_FLAG_LEAVES, 0 ) );
+    duplicate_rule( "NoCare", bind_builtin( "NOCARE", builtin_flags, T_FLAG_NOCARE, 0 ) );
+    duplicate_rule( "NOTIME",
+        duplicate_rule( "NotFile",
+            bind_builtin( "NOTFILE", builtin_flags, T_FLAG_NOTFILE, 0 ) ) );
 
-    bindrule( "Depends" )->procedure = 
-    bindrule( "DEPENDS" )->procedure = 
-	parse_make( builtin_depends, P0, P0, P0, C0, C0, T_DEPS_DEPENDS );
-
-    bindrule( "Echo" )->procedure = 
-    bindrule( "ECHO" )->procedure = 
-	parse_make( builtin_echo, P0, P0, P0, C0, C0, 0 );
-
-    bindrule( "Exit" )->procedure = 
-    bindrule( "EXIT" )->procedure = 
-	parse_make( builtin_exit, P0, P0, P0, C0, C0, 0 );
-
-    bindrule( "Includes" )->procedure = 
-    bindrule( "INCLUDES" )->procedure = 
-	parse_make( builtin_depends, P0, P0, P0, C0, C0, T_DEPS_INCLUDES );
-
-    bindrule( "HdrMacro" )->procedure = 
-    bindrule( "HDRMACRO" )->procedure = 
-	parse_make( builtin_hdrmacro, P0, P0, P0, C0, C0, 0 );
-
-    bindrule( "Leaves" )->procedure = 
-    bindrule( "LEAVES" )->procedure = 
-	parse_make( builtin_flags, P0, P0, P0, C0, C0, T_FLAG_LEAVES );
-
-    bindrule( "NoCare" )->procedure = 
-    bindrule( "NOCARE" )->procedure = 
-	parse_make( builtin_flags, P0, P0, P0, C0, C0, T_FLAG_NOCARE );
-
-    bindrule( "NOTIME" )->procedure = 
-    bindrule( "NotFile" )->procedure = 
-    bindrule( "NOTFILE" )->procedure = 
-	parse_make( builtin_flags, P0, P0, P0, C0, C0, T_FLAG_NOTFILE );
-
-    bindrule( "NoUpdate" )->procedure = 
-    bindrule( "NOUPDATE" )->procedure = 
-	parse_make( builtin_flags, P0, P0, P0, C0, C0, T_FLAG_NOUPDATE );
-
-    bindrule( "Temporary" )->procedure = 
-    bindrule( "TEMPORARY" )->procedure = 
-	parse_make( builtin_flags, P0, P0, P0, C0, C0, T_FLAG_TEMP );
+    duplicate_rule( "NoUpdate", bind_builtin( "NOUPDATE", builtin_flags, T_FLAG_NOUPDATE, 0 ) );
+    duplicate_rule( "Temporary", bind_builtin( "TEMPORARY", builtin_flags, T_FLAG_TEMP, 0 ) );
 
   /* FAIL_EXPECTED is an experimental built-in that is used to indicate        */
   /* that the result of a target build action should be inverted (ok <=> fail) */
@@ -145,13 +169,12 @@ compile_builtins()
   /*                                                                           */
   /* Beware that this rule might disappear or be renamed in the future..       */
   /* contact david.turner@freetype.org for more details..                      */
-    bindrule( "FAIL_EXPECTED" )->procedure = 
-	parse_make( builtin_flags, P0, P0, P0, C0, C0, T_FLAG_FAIL_EXPECTED );
+    bind_builtin( "FAIL_EXPECTED", builtin_flags, T_FLAG_FAIL_EXPECTED, 0 );
 
-
-    bindrule( "subst" )->procedure =
-    bindrule( "SUBST" )->procedure =
-        parse_make( builtin_subst, P0, P0, P0, C0, C0, 0 );
+    {
+        char* args[] = { "string", "pattern", "replacements", "+", 0 };
+        duplicate_rule( "subst", bind_builtin( "SUBST", builtin_subst, 0, args ) );
+    }
 }
 
 /*
@@ -191,6 +214,13 @@ compile_foreach(
 {
 	LIST	*nv = (*parse->left->func)( parse->left, args );
 	LIST	*l;
+	SETTINGS *s = 0;
+        
+        if ( parse->num )
+        {
+            s = addsettings( s, 0, parse->string, L0 );
+            pushsettings( s );
+        }
 
 	/* Call var_set to reset $(parse->string) for each val. */
 
@@ -202,6 +232,9 @@ compile_foreach(
 
 	    list_free( (*parse->right->func)( parse->right, args ) );
 	}
+
+        if ( parse->num )
+            popsettings( s );
 
 	list_free( nv );
 
@@ -229,6 +262,18 @@ compile_if(
 	{
 	    return (*p->third->func)( p->third, args );
 	}
+}
+
+LIST *
+compile_while(
+	PARSE	*p,
+	LOL	*args )
+{
+    while ( evaluate_if( p->left, args ) )
+    {
+        list_free( (*p->right->func)( p->right, args ) );
+    }
+    return L0;
 }
 
 /*
@@ -578,6 +623,85 @@ collect_arguments( RULE* rule, LOL* all_actual )
     }
     return locals;
 }
+
+struct profile_info
+{
+    char* name;                 /* name of rule being called */
+    clock_t cumulative;         /* cumulative time spent in rule */
+    clock_t subrules;           /* time spent in subrules */
+    unsigned long num_entries;  /* number of time rule was entered */
+};
+typedef struct profile_info profile_info;
+
+struct profile_frame
+{
+    profile_info* info;               /* permanent storage where data accumulates */
+    clock_t overhead;                 /* overhead for profiling in this call */
+    clock_t entry_time;               /* time of last entry to rule */
+    struct profile_frame* caller;     /* stack frame of caller */
+};
+typedef struct profile_frame profile_frame;
+
+static profile_frame* profile_stack = 0;
+static struct hash* profile_hash = 0;
+
+static void profile_enter(char* rulename, profile_frame* frame)
+{
+    clock_t start = clock();
+    profile_info info, *p = &info;
+    
+    if ( !profile_hash )
+        profile_hash = hashinit(sizeof(profile_info), "profile");
+
+    info.name = rulename;
+    
+    if ( hashenter( profile_hash, (HASHDATA **)&p ) )
+        p->cumulative = p->subrules = p->num_entries = 0;
+    
+    ++(p->num_entries);
+    
+    frame->info = p;
+    
+    frame->caller = profile_stack;
+    profile_stack = frame;
+
+    frame->entry_time = clock();
+    frame->overhead = 0;
+
+    /* caller pays for the time it takes to play with the hash table */
+    if ( frame->caller )
+        frame->caller->overhead += frame->entry_time - start;
+}
+    
+static void profile_exit(profile_frame* frame)
+{
+    /* cumulative time for this call */
+    clock_t t = clock() - frame->entry_time - frame->overhead;
+    frame->info->cumulative += t;
+    
+    if (frame->caller)
+    {
+        /* caller's cumulative time must account for this overhead */
+        frame->caller->overhead += frame->overhead;
+        frame->caller->info->subrules += t;
+    }
+    /* pop this stack frame */
+    profile_stack = frame->caller;
+}
+
+static void dump_profile_entry(void* p_)
+{
+    profile_info* p = p_;
+    clock_t total = p->cumulative;
+    printf("%10d %10d %10d %s\n", total, total - p->subrules, p->num_entries, p->name);
+}
+
+void profile_dump()
+{
+    if ( profile_hash )
+        hashenumerate( profile_hash, dump_profile_entry );
+}
+
 /*
  * evaluate_rule() - execute a rule invocation
  */
@@ -587,8 +711,9 @@ evaluate_rule(
 	char	*rulename,
 	LOL	*args )
 {
-	LIST	*result = L0;
-	RULE	*rule;
+    LIST	  *result = L0;
+    RULE          *rule;
+    profile_frame frame;
 
     /* special case, if the rulename begins with "$(", we try */
     /* to expand it.. this is needed by Boost..               */
@@ -596,78 +721,92 @@ evaluate_rule(
     {
         LIST*  l;
         
-        l    = var_expand( L0, rulename, rulename+strlen(rulename), args, 0 );
+        l = var_expand( L0, rulename, rulename+strlen(rulename), args, 0 );
+
+        if ( !l )
+        {
+            printf( "warning: unknown rule %s\n", rulename );
+            return result;
+        }
+            
         if ( DEBUG_COMPILE )
         {
-          debug_compile( 1, l->string );
-          lol_print( args );
-          printf( "\n" );
+            debug_compile( 1, l->string );
+            lol_print( args );
+            printf( "\n" );
         }
+        rulename = l->string;
         rule = bindrule( l->string );
         
         list_free( l );
     }
     else
     {
-      rule = bindrule( rulename );
+        rule = bindrule( rulename );
 
-	  if( DEBUG_COMPILE )
-	  {
+        if( DEBUG_COMPILE )
+        {
 	    debug_compile( 1, rulename );
 	    lol_print( args );
 	    printf( "\n" );
-	  }
-	}
+        }
+    }
     
     
-	/* Check traditional targets $(<) and sources $(>) */
+    if ( DEBUG_PROFILE )
+        profile_enter( rulename, &frame );
 
-	if( !rule->actions && !rule->procedure )
-	    printf( "warning: unknown rule %s\n", rule->name );
+    /* Check traditional targets $(<) and sources $(>) */
 
-	/* If this rule will be executed for updating the targets */
-	/* then construct the action for make(). */
+    if( !rule->actions && !rule->procedure )
+        printf( "warning: unknown rule %s\n", rule->name );
 
-	if( rule->actions )
-	{
-	    TARGETS	*t;
-	    ACTION	*action;
+    /* If this rule will be executed for updating the targets */
+    /* then construct the action for make(). */
 
-	    /* The action is associated with this instance of this rule */
+    if( rule->actions )
+    {
+        TARGETS	*t;
+        ACTION	*action;
 
-	    action = (ACTION *)malloc( sizeof( ACTION ) );
-	    memset( (char *)action, '\0', sizeof( *action ) );
+        /* The action is associated with this instance of this rule */
 
-	    action->rule = rule;
-	    action->targets = targetlist( (TARGETS *)0, lol_get( args, 0 ) );
-	    action->sources = targetlist( (TARGETS *)0, lol_get( args, 1 ) );
+        action = (ACTION *)malloc( sizeof( ACTION ) );
+        memset( (char *)action, '\0', sizeof( *action ) );
 
-	    /* Append this action to the actions of each target */
+        action->rule = rule;
+        action->targets = targetlist( (TARGETS *)0, lol_get( args, 0 ) );
+        action->sources = targetlist( (TARGETS *)0, lol_get( args, 1 ) );
 
-	    for( t = action->targets; t; t = t->next )
-		t->target->actions = actionlist( t->target->actions, action );
-	}
+        /* Append this action to the actions of each target */
 
-	/* Now recursively compile any parse tree associated with this rule */
-	/* refer/free to ensure rule not freed during use */
+        for( t = action->targets; t; t = t->next )
+            t->target->actions = actionlist( t->target->actions, action );
+    }
 
-	if( rule->procedure )
-	{
+    /* Now recursively compile any parse tree associated with this rule */
+    /* refer/free to ensure rule not freed during use */
+
+    if( rule->procedure )
+    {
         SETTINGS *local_args = collect_arguments( rule, args );
-	    PARSE *parse = rule->procedure;
-	    parse_refer( parse );
+        PARSE *parse = rule->procedure;
+        parse_refer( parse );
         
         pushsettings( local_args );
-	    result = (*parse->func)( parse, args );
+        result = (*parse->func)( parse, args );
         popsettings( local_args );
         
-	    parse_free( parse );
-	}
+        parse_free( parse );
+    }
 
-	if( DEBUG_COMPILE )
-	    debug_compile( -1, 0 );
+    if ( DEBUG_PROFILE )
+        profile_exit( &frame );
 
-	return result;
+    if( DEBUG_COMPILE )
+        debug_compile( -1, 0 );
+
+    return result;
 }
 
 /*
@@ -1019,44 +1158,6 @@ builtin_hdrmacro(
   
   return L0;
 }
-
-
-extern void substitute( const char* src, const char* pat, const char* rep,
-                        char* target );
-
-static LIST*
-builtin_subst(
-    PARSE    *parse,
-    LOL      *args )
-{
-  LIST*         result;
-  const char*   source;
-  const char*   pattern;
-  const char*   replacement;
-  char          target[ 4096 ];
-  LIST*         l;
-
-  result = L0;
-  
-  l = lol_get( args, 0 );
-  if (!l) goto Exit;
-  source = l->string;
-  
-  l = list_next( l );
-  if (!l) goto Exit;
-  pattern = l->string;
-  
-  l = list_next( l );
-  if (!l) goto Exit;
-  replacement = l->string;
-
-  substitute( source, pattern, replacement, target );
-  result = list_append( result, list_new( L0, newstr( target ) ) );
-
-Exit:  
-  return result;
-}
-
 
 /*
  * debug_compile() - printf with indent to show rule expansion.

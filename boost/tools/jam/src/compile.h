@@ -13,6 +13,7 @@ void compile_builtins();
 LIST *compile_append( PARSE *parse, LOL *args );
 LIST *compile_foreach( PARSE *parse, LOL *args );
 LIST *compile_if( PARSE *parse, LOL *args );
+LIST *compile_while( PARSE *parse, LOL *args );
 LIST *compile_include( PARSE *parse, LOL *args );
 LIST *compile_list( PARSE *parse, LOL *args );
 LIST *compile_local( PARSE *parse, LOL *args );
@@ -26,6 +27,8 @@ LIST *compile_settings( PARSE *parse, LOL *args );
 LIST *compile_switch( PARSE *parse, LOL *args );
 
 LIST *evaluate_rule( char *rulename, LOL *args );
+
+void profile_dump();
 
 /* Flags for compile_set(), etc */
 

@@ -34,6 +34,7 @@
 	{ "switch", SWITCH },
 	{ "together", TOGETHER },
 	{ "updated", UPDATED },
+	{ "while", WHILE },
 	{ "{", _LBRACE },
 	{ "||", _BARBAR },
 	{ "}", _RBRACE },
