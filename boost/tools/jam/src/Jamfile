@@ -95,7 +95,7 @@ Main		mkjambase : mkjambase.c ;
 
 Main 		jam : jam.c jambase.c ;
 LinkLibraries 	jam : libjam.a ;
-GenFile 	jambase.c : mkjambase Jambase ;
+GenFile 	jambase.c : mkjambase$(SUFEXE) Jambase ;
 
 Library         libjam.a : 
 		    command.c compile.c $(code) expand.c glob.c

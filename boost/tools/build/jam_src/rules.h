@@ -6,6 +6,9 @@
 
 #ifndef RULES_DWA_20011020_H
 # define RULES_DWA_20011020_H
+
+# include "modules.h"
+
 /*
  * rules.h -  targets, rules, and related information
  *
@@ -184,8 +187,6 @@ struct _target {
 	TARGETS	*parents;		/* used by make1() for completion */
 	char	*cmds;			/* type-punned command list */
 } ;
-
-typedef struct module module; /* MSVC debugger gets confused unless this is provided */
 
 RULE 	*bindrule( char *rulename, module* );
 

@@ -4,6 +4,9 @@
  * Caveat:  this is V8 regexp(3) [actually, a reimplementation thereof],
  * not the System V one.
  */
+#ifndef REGEXP_DWA20011023_H
+# define REGEXP_DWA20011023_H
+
 #define NSUBEXP  10
 typedef struct regexp {
 	char *startp[NSUBEXP];
@@ -24,3 +27,5 @@ void regerror( char *s );
  * number; the start node begins in the second byte.
  */
 #define	MAGIC	0234
+
+#endif // REGEXP_DWA20011023_H

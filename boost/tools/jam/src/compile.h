@@ -9,6 +9,7 @@
 
 # include "frames.h"
 # include "parse.h"
+# include "regexp.h"
 
 /*
  * compile.h - compile parsed jam statements
@@ -36,7 +37,6 @@ LIST *compile_while( PARSE *parse, FRAME *frame );
 
 LIST *evaluate_rule( char *rulename, FRAME *frame );
 
-typedef struct regexp regexp;
 regexp* regex_compile( const char* pattern );
 
 void profile_dump();

@@ -2,8 +2,8 @@
 # define FRAMES_DWA20011021_H
 
 # include "lists.h"
+# include "modules.h"
 
-typedef struct module module;
 typedef struct frame FRAME;
 
 struct frame

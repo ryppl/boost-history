@@ -6,6 +6,9 @@
 
 #ifndef PARSE_DWA20011020_H
 # define PARSE_DWA20011020_H
+# include "frames.h"
+# include "modules.h"
+
 /*
  * parse.h - make and destroy parse trees as driven by the parser
  */
@@ -15,8 +18,6 @@
  */
 
 typedef struct _PARSE PARSE;
-typedef struct module module;
-typedef struct frame FRAME;
 
 struct _PARSE {
     LIST    *(*func)( PARSE *p, FRAME *frame );
