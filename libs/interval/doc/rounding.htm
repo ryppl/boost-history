@@ -506,13 +506,15 @@ I horner(const I&amp; x, const I p[], int n) {
   // restore the rounding mode with the destruction of rnd
 }</pre>
 
-<p>Please note that a rounding object is especially created in order to
-compensate for the protection loss. Each interval of type I is converted in
-an interval of type R before any operations. If this conversion is not done,
-the result is still correct, but the interest of this whole optimization has
-disappeared. Whenever possible, it is good to convert to const R&amp; instead
-of R: a smart compiler will be able to see that the old and the new object
-are the same and avoid the creation of a temporary object.</p>
+<p>Please note that a rounding object is especially created in order
+to compensate for the protection loss. Each interval of type I is
+converted in an interval of type R before any operations. If this
+conversion is not done, the result is still correct, but the interest
+of this whole optimization has disappeared. Whenever possible, it is
+good to convert to <code>const R&amp;</code> instead of
+<code>R</code>: indeed, the function could already be called inside an
+unprotection block so the types <code>R</code> and <code>I</code>
+would be the same interval, no need for a conversion.</p>
 
 <h4>Uninteresting remark</h4>
 
