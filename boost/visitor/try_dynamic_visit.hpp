@@ -33,7 +33,7 @@ namespace boost {
 //
 
 template <typename T>
-bool try_dynamic_visit(dynamic_visitor_base& visitor, T& operand)
+inline bool try_dynamic_visit(dynamic_visitor_base& visitor, T& operand)
 {
     typedef dynamic_visitor_interface<T>
         visitor_interface;

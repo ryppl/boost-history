@@ -63,7 +63,7 @@ private: // private typedefs
 
 public: // structors
 
-    explicit visitor_ptr_t(visitor_t& visitor)
+    explicit visitor_ptr_t(visitor_t visitor)
       : visitor_(visitor)
     {
     }
@@ -109,7 +109,7 @@ private: // dynamic visitor interfaces
 };
 
 template <typename R, typename T>
-visitor_ptr_t<T,R> visitor_ptr(R (*visitor)(T))
+inline visitor_ptr_t<T,R> visitor_ptr(R (*visitor)(T))
 {
     return visitor_ptr_t<T,R>(visitor);
 }
