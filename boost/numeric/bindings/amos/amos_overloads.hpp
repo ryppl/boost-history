@@ -39,7 +39,7 @@ namespace boost { namespace numeric { namespace bindings { namespace amos { name
   
   inline
   void besj(const double& z, const double& fnu, const int& kode, const int& n, double* cy, int& nz, int& error) 
-  { AMOS_DBESJ( &z, &fnu, &kode, &n, cy, &nz ) ; }
+  { AMOS_DBESJ( &z, &fnu, &n, cy, &nz ) ; }
 
   inline
   void besj(const complex_f& z, const float&  fnu, const int& kode, const int& n, complex_f* cy, int & nz, int & error) 
@@ -53,7 +53,7 @@ namespace boost { namespace numeric { namespace bindings { namespace amos { name
   
   inline
   void besy(const double& z, const double& fnu, const int& kode, const int& n, double* cy, int& nz, double* wrk, int& error) 
-  { AMOS_DBESY( &z, &fnu, &kode, &n, cy ) ; }
+  { AMOS_DBESY( &z, &fnu, &n, cy ) ; }
 
 }}}}}
 

@@ -15,28 +15,22 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
 
   // C <- alpha * op (A) * op (B) + beta * C 
   // op (X) == X || X^T || X^H
-  template < 
-    typename matrix_type_a, typename matrix_type_b, typename matrix_type_c 
-    >
+  template < typename value_type, typename matrix_type_a, typename matrix_type_b, typename matrix_type_c >
+  // ! CAUTION this function assumes that all matrices involved are column-major matrices
   void gemm(const char TRANSA, const char TRANSB, 
-	    const typename traits::matrix_traits<matrix_type_a>::value_type& alpha,
+	    const value_type& alpha,
 	    const matrix_type_a &a,
 	    const matrix_type_b &b,
-	    const typename traits::matrix_traits<matrix_type_c>::value_type &beta,
+	    const value_type &beta,
 	    matrix_type_c &c
 	    )
   {
-    typedef traits::matrix_traits< const matrix_type_a > matraits ; 
-    typedef traits::matrix_traits< const matrix_type_b > mbtraits ; 
-    typedef traits::matrix_traits< matrix_type_c > mctraits ; 
-    typedef typename matraits::value_type value_type ;
-
-    const int m = TRANSA == traits::NO_TRANSPOSE ? matraits::size1( a ) : matraits::size2( a ) ;
-    const int n = TRANSB == traits::NO_TRANSPOSE ? mbtraits::size2( b ) : mbtraits::size1( b );
-    const int k = TRANSA == traits::NO_TRANSPOSE ? matraits::size2( a ) : matraits::size1( a ) ;
-    assert( k ==  ( TRANSB == traits::NO_TRANSPOSE ? mbtraits::size1( b ) : mbtraits::size2( b ) ) ) ;
-    assert( m == mctraits::size1( c ) ); 
-    assert( n == mctraits::size2( c ) ); 
+    const int m = TRANSA == traits::NO_TRANSPOSE ? traits::matrix_size1( a ) : traits::matrix_size2( a ) ;
+    const int n = TRANSB == traits::NO_TRANSPOSE ? traits::matrix_size2( b ) : traits::matrix_size1( b );
+    const int k = TRANSA == traits::NO_TRANSPOSE ? traits::matrix_size2( a ) : traits::matrix_size1( a ) ;
+    assert( k ==  ( TRANSB == traits::NO_TRANSPOSE ? traits::matrix_size1( b ) : traits::matrix_size2( b ) ) ) ;
+    assert( m == traits::matrix_size1( c ) ); 
+    assert( n == traits::matrix_size2( c ) ); 
     const int lda = traits::leading_dimension( a );
     const int ldb = traits::leading_dimension( b );
     const int ldc = traits::leading_dimension( c );
@@ -50,13 +44,11 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
 
 
   // C <- alpha * A * B + beta * C 
-  template < 
-    typename matrix_type_a, typename matrix_type_b, typename matrix_type_c 
-    >
-  void gemm(const typename traits::matrix_traits<matrix_type_a>::value_type& alpha,
+  template < typename value_type, typename matrix_type_a, typename matrix_type_b, typename matrix_type_c >
+  void gemm(const value_type& alpha,
 	    const matrix_type_a &a,
 	    const matrix_type_b &b,
-	    const typename traits::matrix_traits<matrix_type_c>::value_type &beta,
+	    const value_type &beta,
 	    matrix_type_c &c
 	    )
   {
@@ -65,6 +57,7 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
 
 
   // C <- A * B 
+  // ! CAUTION this function assumes that all matrices involved are column-major matrices
   template < 
     typename matrix_type_a, typename matrix_type_b, typename matrix_type_c 
     >

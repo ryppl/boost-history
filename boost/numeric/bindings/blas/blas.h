@@ -41,6 +41,8 @@ extern "C"
 
   float   BLAS_SNRM2(const int *n, const float  *x, const int *incx);
   double  BLAS_DNRM2(const int *n, const double *x, const int *incx);
+  float   BLAS_SCNRM2(const int *n, const fcomplex_t  *x, const int *incx);
+  double  BLAS_DZNRM2(const int *n, const dcomplex_t *x, const int *incx);
 
   float   BLAS_SASUM(const int *n, const float  *x, const int *incx);
   double  BLAS_DASUM(const int *n, const double *x, const int *incx);

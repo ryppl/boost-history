@@ -9,7 +9,9 @@
 
 #include <boost/numeric/bindings/amos/amos_overloads.hpp>
 #include <boost/numeric/bindings/traits/type_traits.hpp>
+#include <boost/numeric/bindings/traits/vector_traits.hpp>
 #include <boost/static_assert.hpp>
+#include <boost/type_traits.hpp>
 
 namespace boost { namespace numeric { namespace bindings { namespace amos {
 
@@ -69,7 +71,7 @@ namespace boost { namespace numeric { namespace bindings { namespace amos {
 #endif
 
     int n = traits::vector_size( cy ) ;
-    const value_type * cy_ptr = traits::vector_storage( cy ) ;
+    value_type * cy_ptr = traits::vector_storage( cy ) ;
 
     int error = 0 ;
     value_type * cwrk = new value_type[n];

@@ -33,6 +33,8 @@
 
 #define BLAS_SNRM2 FORTRAN_ID( snrm2 )
 #define BLAS_DNRM2 FORTRAN_ID( dnrm2 )
+#define BLAS_SCNRM2 FORTRAN_ID( scnrm2 )
+#define BLAS_DZNRM2 FORTRAN_ID( dznrm2 )
 
 #define BLAS_SASUM FORTRAN_ID( sasum )
 #define BLAS_DASUM FORTRAN_ID( dasum )
