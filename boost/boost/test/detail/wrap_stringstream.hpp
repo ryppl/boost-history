@@ -170,8 +170,8 @@ typedef basic_wrap_stringstream<wchar_t>    wrap_wstringstream;
 //  Revision History :
 //  
 //  $Log$
-//  Revision 1.14.6.1  2004/12/06 03:37:22  djowel
-//  bring back boost.test for 1.6
+//  Revision 1.14.6.2  2004/12/06 04:53:13  djowel
+//  1.6 specific tweaks
 //
 //  Revision 1.14  2004/09/19 09:22:12  rogeeff
 //  ios fix for classic iostreams

@@ -219,8 +219,8 @@ private:
 //  Revision History :
 //  
 //  $Log$
-//  Revision 1.24.8.1  2004/12/06 03:37:22  djowel
-//  bring back boost.test for 1.6
+//  Revision 1.24.8.2  2004/12/06 04:53:12  djowel
+//  1.6 specific tweaks
 //
 //  Revision 1.24  2004/07/19 12:15:45  rogeeff
 //  guard rename

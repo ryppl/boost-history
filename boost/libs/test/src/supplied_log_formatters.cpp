@@ -315,6 +315,9 @@ xml_log_formatter::print_indent( std::ostream& output )
 //  Revision History :
 //
 //  $Log$
+//  Revision 1.12.6.1  2004/12/06 04:53:34  djowel
+//  1.6 specific tweaks
+//
 //  Revision 1.12  2004/07/20 17:03:55  dgregor
 //  Documentation update from Jon T. Pedant
 //

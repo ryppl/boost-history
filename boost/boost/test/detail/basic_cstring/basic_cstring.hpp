@@ -714,8 +714,8 @@ last_char( basic_cstring<CharT> source )
 //  Revision History :
 //  
 //  $Log$
-//  Revision 1.11.6.1  2004/12/06 03:37:23  djowel
-//  bring back boost.test for 1.6
+//  Revision 1.11.6.2  2004/12/06 04:53:13  djowel
+//  1.6 specific tweaks
 //
 //  Revision 1.11  2004/10/05 02:17:47  rogeeff
 //  workaround guard rewritten

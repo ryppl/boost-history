@@ -210,8 +210,8 @@ execution_monitor::register_exception_translator( ExceptionTranslator const& tr,
 //  Revision History :
 //  
 //  $Log$
-//  Revision 1.18.8.1  2004/12/06 03:37:21  djowel
-//  bring back boost.test for 1.6
+//  Revision 1.18.8.2  2004/12/06 04:53:12  djowel
+//  1.6 specific tweaks
 //
 //  Revision 1.18  2004/07/19 12:13:25  rogeeff
 //  guard rename

@@ -463,6 +463,9 @@ output_test_stream::sync()
 //  Revision History :
 //  
 //  $Log$
+//  Revision 1.41.6.1  2004/12/06 04:53:34  djowel
+//  1.6 specific tweaks
+//
 //  Revision 1.41  2004/09/19 09:21:58  rogeeff
 //  ios fix for classic iostreams
 //

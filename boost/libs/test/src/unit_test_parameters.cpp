@@ -86,6 +86,9 @@ retrieve_framework_parameter( const_string parameter_name, int* argc, char** arg
 //  Revision History :
 //  
 //  $Log$
+//  Revision 1.15.6.1  2004/12/06 04:53:34  djowel
+//  1.6 specific tweaks
+//
 //  Revision 1.15  2004/05/21 06:26:10  rogeeff
 //  licence update
 //

@@ -600,6 +600,9 @@ unit_test_result::has_passed() const
 //  Revision History :
 //  
 //  $Log$
+//  Revision 1.31.6.1  2004/12/06 04:53:34  djowel
+//  1.6 specific tweaks
+//
 //  Revision 1.31  2004/09/17 12:34:13  rogeeff
 //  XML typo
 //

@@ -591,6 +591,9 @@ static void report_error( execution_exception::error_code ec, const_string msg1,
 //  Revision History :
 //
 //  $Log$
+//  Revision 1.35.6.1  2004/12/06 04:53:34  djowel
+//  1.6 specific tweaks
+//
 //  Revision 1.35  2004/08/19 00:02:21  rogeeff
 //  another tru64cxx65 workaround
 //

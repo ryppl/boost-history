@@ -417,6 +417,9 @@ unit_test_log::checkpoint_data() const
 //  Revision History :
 //
 //  $Log$
+//  Revision 1.24.6.1  2004/12/06 04:53:34  djowel
+//  1.6 specific tweaks
+//
 //  Revision 1.24  2004/06/07 07:34:22  rogeeff
 //  detail namespace renamed
 //

@@ -95,6 +95,9 @@ unit_test_monitor::function()
 //  Revision History :
 //  
 //  $Log$
+//  Revision 1.15.6.1  2004/12/06 04:53:34  djowel
+//  1.6 specific tweaks
+//
 //  Revision 1.15  2004/06/07 07:34:23  rogeeff
 //  detail namespace renamed
 //

@@ -99,6 +99,9 @@ int main( int argc, char* argv[] )
 //  Revision History :
 //  
 //  $Log$
+//  Revision 1.15.6.1  2004/12/06 04:53:33  djowel
+//  1.6 specific tweaks
+//
 //  Revision 1.15  2004/05/21 06:26:09  rogeeff
 //  licence update
 //

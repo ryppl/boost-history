@@ -278,6 +278,9 @@ normalize_test_case_name( std::string& name_ )
 //  Revision History :
 //  
 //  $Log$
+//  Revision 1.16.6.1  2004/12/06 04:53:34  djowel
+//  1.6 specific tweaks
+//
 //  Revision 1.16  2004/06/07 07:34:23  rogeeff
 //  detail namespace renamed
 //

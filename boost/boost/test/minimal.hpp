@@ -148,8 +148,8 @@ int main( int argc, char* argv[] )
 //  Revision History :
 //  
 //  $Log$
-//  Revision 1.14.8.1  2004/12/06 03:37:21  djowel
-//  bring back boost.test for 1.6
+//  Revision 1.14.8.2  2004/12/06 04:53:12  djowel
+//  1.6 specific tweaks
 //
 //  Revision 1.14  2004/07/19 12:14:34  rogeeff
 //  guard rename
