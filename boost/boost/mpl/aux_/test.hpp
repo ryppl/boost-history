@@ -18,6 +18,8 @@
 #include <boost/mpl/aux_/test/data.hpp>
 #include <boost/mpl/aux_/test/assert.hpp>
 
+#include <boost/type_traits/is_same.hpp>
+
 int main()
 {
     return 0;
@@ -26,5 +28,6 @@ int main()
 //namespace mpl = boost::mpl;
 using namespace boost;
 using namespace mpl;
+
 
 #endif // BOOST_MPL_AUX_TEST_HPP_INCLUDED

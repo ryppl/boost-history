@@ -1,9 +1,9 @@
 
 # Copyright (c) Aleksey Gurtovoy 2001-2004
 #
-# Use, modification and distribution are subject to the Boost Software 
-# License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
-# at http://www.boost.org/LICENSE_1_0.txt)
+# Distributed under the Boost Software License, Version 1.0. 
+# (See accompanying file LICENSE_1_0.txt or copy at 
+# http://www.boost.org/LICENSE_1_0.txt)
 #
 # See http://www.boost.org/libs/mpl for documentation.
 
@@ -29,7 +29,8 @@ def block_format(limits,text,first_sep='  ',sep=',',need_last_ident=1):
           string.join(string.split(text),' ')
         , if_else(sep != ',' or string.find(text,'<') == -1,sep,' %s '%sep)
         )
-    s = reduce(lambda t,x: '%s '%t, range(0,limits[0]), '')
+
+    s = ' ' * limits[0]
     max_len = limits[1]
     return '%s\n%s' \
         % (
@@ -134,12 +135,12 @@ class pretty:
         self.re_header_name_comment = re.compile(r"^\s*//\s+\$Source$$")
         self.header_was_written = 0
 
-        self.re_junk = re.compile(r"^\s*(#|//[^:]).*$")
-        self.re_c_comment_start = re.compile(r"^\s*/\*.*")
-        self.re_c_comment_end = re.compile(r"^.*\*/\s*$")
+        self.re_junk = re.compile(r'^\s*(#|//[^:]).*$')
+        self.re_c_comment_start = re.compile(r'^\s*/\*.*')
+        self.re_c_comment_end = re.compile(r'^.*\*/\s*$')
         self.inside_c_comment = 0
 
-        self.re_empty_line = re.compile(r"^\s*$")        
+        self.re_empty_line = re.compile(r'^\s*$')
         self.re_comma = re.compile(r'(\w+)\s*,\s*')
         self.re_assign = re.compile(r'\s*(=+)\s*')
         self.re_marked_comment = re.compile(r'^(\s*//):(.*)$')
@@ -156,6 +157,7 @@ class pretty:
         self.re_simple_list = re.compile(r'(\w+)\s*<((\w|,| |-|>|<)+)>')
         self.re_static_const = re.compile(r'(\s*)((static\s+.*?|enum\s*{\s*)value\s*=)(.*?)(}?;)$')
         self.re_typedefs = re.compile(r'(\s*)((\s*typedef\s*.*?;)+)\s*$')
+        self.re_fix_angle_brackets = re.compile(r'>>\s*(,|$)')
         self.re_closing_curly_brace = re.compile(r'^(}|struct\s+\w+);\s*$')
         self.re_namespace_scope_templ = re.compile(r'^template\s*<\s*$')
         self.re_namespace = re.compile(r'^\n?namespace\s+\w+\s*{\s*\n?$')
@@ -210,6 +212,7 @@ class pretty:
         line = self.re_simple_list.sub(handle_simple_list, line)
         line = self.re_static_const.sub(handle_static, line)
         line = self.re_typedefs.sub(handle_typedefs, line)
+        line = self.re_fix_angle_brackets.sub(r'> >\1', line)
         
         # write the output
         self.output.write(line)

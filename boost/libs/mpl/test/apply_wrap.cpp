@@ -11,7 +11,7 @@
 // $Date$
 // $Revision$
 
-#include <boost/mpl/aux_/apply_wrap.hpp>
+#include <boost/mpl/apply_wrap.hpp>
 #include <boost/mpl/limits/arity.hpp>
 #include <boost/mpl/aux_/preprocessor/params.hpp>
 #include <boost/mpl/aux_/preprocessor/enum.hpp>
@@ -65,11 +65,17 @@
 /**/
 
 namespace { namespace test {
+#if !BOOST_WORKAROUND(__DMC__, BOOST_TESTED_AT(0x840))
 BOOST_PP_REPEAT(
       BOOST_MPL_LIMIT_METAFUNCTION_ARITY
     , APPLY_FUNC_DEF
     , unused
     )
+#else
+APPLY_FUNC_DEF(0, 0, unused)
+APPLY_FUNC_DEF(0, 1, unused)
+APPLY_FUNC_DEF(0, 5, unused)
+#endif
 }}
 
 #define APPLY_0_TEST(i, apply_) \
@@ -83,15 +89,15 @@ BOOST_PP_REPEAT(
         , char \
         BOOST_PP_COMMA_IF(BOOST_PP_DEC(i)) \
         BOOST_MPL_PP_ENUM(BOOST_PP_DEC(i), int) \
-        >::type t1; \
+        >::type t1##i; \
     \
     typedef apply_< \
           test::last##i \
         , BOOST_MPL_PP_ENUM(BOOST_PP_DEC(i), int) \
         BOOST_PP_COMMA_IF(BOOST_PP_DEC(i)) char \
-        >::type t2; \
-    { MPL_ASSERT(( boost::is_same<t1, char> )); } \
-    { MPL_ASSERT(( boost::is_same<t2, char> )); } \
+        >::type t2##i; \
+    { MPL_ASSERT(( boost::is_same<t1##i, char> )); } \
+    { MPL_ASSERT(( boost::is_same<t2##i, char> )); } \
 /**/
 
 #define APPLY_TEST(z, i, APPLY_NAME) \
@@ -105,10 +111,16 @@ BOOST_PP_REPEAT(
 
 MPL_TEST_CASE()
 {
-#   define MAKE_APPLY_N_NAME(i) mpl::aux::apply_wrap##i
+#if !BOOST_WORKAROUND(__DMC__, BOOST_TESTED_AT(0x840))
+#   define MAKE_APPLY_N_NAME(i) apply_wrap##i
     BOOST_PP_REPEAT(
           BOOST_MPL_LIMIT_METAFUNCTION_ARITY
         , APPLY_TEST
         , MAKE_APPLY_N_NAME
         )
+#else
+    APPLY_0_TEST(0, apply_wrap0)
+    APPLY_N_TEST(1, apply_wrap1)
+    APPLY_N_TEST(5, apply_wrap5)
+#endif
 }

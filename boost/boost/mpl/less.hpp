@@ -2,11 +2,11 @@
 #ifndef BOOST_MPL_LESS_HPP_INCLUDED
 #define BOOST_MPL_LESS_HPP_INCLUDED
 
-// Copyright (c) 2000-03 Aleksey Gurtovoy
+// Copyright (c) Aleksey Gurtovoy 2000-2004
 //
-// Use, modification and distribution are subject to the Boost Software 
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
-// at http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
@@ -19,10 +19,37 @@
 #include <boost/mpl/aux_/value_wknd.hpp>
 #include <boost/mpl/aux_/na_spec.hpp>
 #include <boost/mpl/aux_/lambda_support.hpp>
-#include <boost/config.hpp>
 
 namespace boost {
 namespace mpl {
+
+namespace aux {
+
+template<
+      typename BOOST_MPL_AUX_NA_PARAM(T1)
+    , typename BOOST_MPL_AUX_NA_PARAM(T2)
+    >
+struct less_c
+{
+    enum
+    { 
+        msvc71_wknd_ = ( BOOST_MPL_AUX_VALUE_WKND(T1)::value 
+                        < BOOST_MPL_AUX_VALUE_WKND(T2)::value )
+    };
+
+    BOOST_STATIC_CONSTANT(bool, value = msvc71_wknd_);
+
+#if !defined(__BORLANDC__)
+    typedef bool_<value> type;
+#else
+    typedef bool_<(
+          (BOOST_MPL_AUX_VALUE_WKND(T1)::value)
+            < (BOOST_MPL_AUX_VALUE_WKND(T2)::value)
+        )> type;
+#endif
+};
+
+}
 
 template<
       typename BOOST_MPL_AUX_NA_PARAM(T1)

@@ -15,7 +15,7 @@
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
-// no include guards, the header is intended for multiple inclusion!
+// NO INCLUDE GUARDS, THE HEADER IS INTENDED FOR MULTIPLE INCLUSION!
 
 #if !defined(BOOST_MPL_PREPROCESSING_MODE)
 #   include <boost/mpl/bool.hpp>

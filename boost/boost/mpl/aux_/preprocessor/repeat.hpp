@@ -46,4 +46,6 @@
 
 #endif 
 
+#define BOOST_MPL_PP_REPEAT_IDENTITY_FUNC(unused1, unused2, x) x
+
 #endif // BOOST_MPL_AUX_PREPROCESSOR_REPEAT_HPP_INCLUDED

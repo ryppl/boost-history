@@ -13,6 +13,7 @@
 
 // NO INCLUDE GUARDS, THE HEADER IS INTENDED FOR MULTIPLE INCLUSION!
 
+#include <boost/mpl/aux_/integral_c_tag.hpp>
 #include <boost/mpl/aux_/static_cast.hpp>
 #include <boost/mpl/aux_/config/nttp.hpp>
 #include <boost/mpl/aux_/config/static_constant.hpp>
@@ -50,6 +51,7 @@ struct AUX_WRAPPER_NAME
     typedef AUX_WRAPPER_NAME type;
 #endif
     typedef AUX_WRAPPER_VALUE_TYPE value_type;
+    typedef integral_c_tag tag;
 
 // have to #ifdef here: some compilers don't like the 'N + 1' form (MSVC),
 // while some other don't like 'value + 1' (Borland), and some don't like
