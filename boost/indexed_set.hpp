@@ -1,6 +1,6 @@
-/* Multiply indexed set container.
+/* Multiply indexed container.
  *
- * Copyright Joaquín M López Muñoz 2003. Use, modification, and distribution
+ * Copyright Joaquín M López Muñoz 2003-2004. Use, modification, and distribution
  * are subject to the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
@@ -31,6 +31,7 @@
 #include <boost/indexed_set/base_type.hpp>
 #include <boost/indexed_set/prevent_eti.hpp>
 #include <boost/indexed_set/scope_guard.hpp>
+#include <boost/indexed_set/try_catch.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/utility/base_from_member.hpp>
@@ -43,13 +44,6 @@
   BOOST_JOIN(check_invariant_,__LINE__).touch();
 #else
 #define BOOST_INDEXED_SET_CHECK_INVARIANT
-#endif
-
-#if defined(BOOST_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS)||\
-    defined(__GNUC__)&&(__GNUC__==3&&__GNUC_MINOR__>=1&&__GNUC_MINOR__<=2)
-/* see http://gcc.gnu.org/bugzilla/show_bug.cgi?id=7676 */
-
-#define BOOST_INDEXED_SET_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS
 #endif
 
 namespace boost{
@@ -70,9 +64,9 @@ class indexed_set:
 {
 private:
 #if !defined(BOOST_NO_MEMBER_TEMPLATE_FRIENDS)
-  template<typename,typename,typename,typename> friend class detail::index_base;
-  template<typename,typename>                   friend class detail::header_holder;
-  template<typename,typename>                   friend class detail::converter;
+  template <typename,typename,typename,typename> friend class  detail::index_base;
+  template <typename,typename>                   friend class  detail::header_holder;
+  template <typename,typename>                   friend class  detail::converter;
 #endif
 
   typedef typename detail::indexed_set_base_type<
@@ -103,8 +97,13 @@ public:
   typedef typename super::iterator_type_list       iterator_type_list;
   typedef typename super::const_iterator_type_list const_iterator_type_list;
   typedef typename super::value_type               value_type;
-  typedef typename super::allocator_type           allocator_type;
+  typedef typename super::final_allocator_type     allocator_type;
   typedef typename super::iterator                 iterator;
+  typedef typename super::const_iterator           const_iterator;
+
+  /* global project() needs to see this publicly */
+
+  typedef typename super::node_type     node_type;
 
   /* construct/copy/destroy */
 
@@ -129,10 +128,14 @@ public:
     node_count(0)
   {
     BOOST_INDEXED_SET_CHECK_INVARIANT;
-    detail::scope_guard undo=detail::make_obj_guard(*this,&indexed_set::clean_up);
-    iterator hint=end();
-    for(;first!=last;++first)hint=insert(hint,*first);
-    undo.dismiss();
+    BOOST_INDEXED_SET_TRY{
+      iterator hint=end();
+      for(;first!=last;++first)hint=insert(hint,*first);
+    }
+    BOOST_INDEXED_SET_CATCH(...){
+      clean_up();
+      BOOST_INDEXED_SET_RETHROW;
+    }
   }
 #endif
 
@@ -142,10 +145,11 @@ public:
     node_count(0)
   {
     BOOST_INDEXED_SET_CHECK_INVARIANT;
-    detail::scope_guard undo=detail::make_obj_guard(*this,&indexed_set::clean_up);
-    iterator hint=end();
-    for(typename super::const_iterator it=x.begin();it!=x.end();++it)hint=insert(hint,*it);
-    undo.dismiss();
+    copy_map_type map(bfm_allocator::member,x.size(),x.header(),header());
+    for(const_iterator it=x.begin();it!=x.end();++it)map.clone(it.get_node());
+    super::copy_(x,map);
+    map.release();
+    node_count=x.size();
   }
 
   ~indexed_set()
@@ -179,22 +183,14 @@ public:
   };
 
   template<int N>
-  typename nth_index_type<N>::type& get(
-#if defined(BOOST_INDEXED_SET_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS)
-    mpl::int_<N>* =0
-#endif
-  )
+  typename nth_index_type<N>::type& get(BOOST_EXPLICIT_TEMPLATE_NON_TYPE(int,N))
   {
     BOOST_STATIC_ASSERT(N>=0&&N<mpl::size<index_type_list>::type::value);
     return *this;
   }
 
   template<int N>
-  const typename nth_index_type<N>::type& get(
-#if defined(BOOST_INDEXED_SET_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS)
-    mpl::int_<N>* =0
-#endif
-  )const
+  const typename nth_index_type<N>::type& get(BOOST_EXPLICIT_TEMPLATE_NON_TYPE(int,N))const
   {
     BOOST_STATIC_ASSERT(N>=0&&N<mpl::size<index_type_list>::type::value);
     return *this;
@@ -219,13 +215,13 @@ public:
   };
 
   template<typename Tag>
-  typename index_type<Tag>::type& get()
+  typename index_type<Tag>::type& get(BOOST_EXPLICIT_TEMPLATE_TYPE(Tag))
   {
     return *this;
   }
 
   template<typename Tag>
-  const typename index_type<Tag>::type& get()const
+  const typename index_type<Tag>::type& get(BOOST_EXPLICIT_TEMPLATE_TYPE(Tag))const
   {
     return *this;
   }
@@ -249,27 +245,26 @@ public:
   template<int N,typename IteratorType>
   typename nth_iterator_type<N>::type project(
     IteratorType it
-  #if defined(BOOST_INDEXED_SET_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS)
-    ,mpl::int_<N>* =0
-  #endif
-  )
+    BOOST_APPEND_EXPLICIT_TEMPLATE_NON_TYPE(int,N))
   {
+    typedef typename nth_index_type<N>::type index_type;
+
     BOOST_STATIC_ASSERT((mpl::contains<iterator_type_list,IteratorType>::value));
 
     BOOST_INDEXED_SET_CHECK_VALID_ITERATOR(it);
     BOOST_INDEXED_SET_CHECK_IS_OWNER(
       it,static_cast<typename IteratorType::container_type&>(*this));
-    return get<N>().make_iterator(static_cast<node_type*>(it.get_node()));
+
+    return index_type::make_iterator(static_cast<node_type*>(it.get_node()));
   }
 
   template<int N,typename IteratorType>
   typename nth_const_iterator_type<N>::type project(
     IteratorType it
-  #if defined(BOOST_INDEXED_SET_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS)
-    ,mpl::int_<N>* =0
-  #endif
-  )const
+    BOOST_APPEND_EXPLICIT_TEMPLATE_NON_TYPE(int,N))const
   {
+    typedef typename nth_index_type<N>::type index_type;
+
     BOOST_STATIC_ASSERT((
       mpl::contains<iterator_type_list,IteratorType>::value||
       mpl::contains<const_iterator_type_list,IteratorType>::value));
@@ -277,7 +272,7 @@ public:
     BOOST_INDEXED_SET_CHECK_VALID_ITERATOR(it);
     BOOST_INDEXED_SET_CHECK_IS_OWNER(
       it,static_cast<const typename IteratorType::container_type&>(*this));
-    return get<N>().make_iterator(static_cast<node_type*>(it.get_node()));
+    return index_type::make_iterator(static_cast<node_type*>(it.get_node()));
   }
 #endif
 
@@ -297,19 +292,27 @@ public:
   };
 
   template<typename Tag,typename IteratorType>
-  typename iterator_type<Tag>::type project(IteratorType it)
+  typename iterator_type<Tag>::type project(
+    IteratorType it
+    BOOST_APPEND_EXPLICIT_TEMPLATE_TYPE(Tag))
   {
+    typedef typename index_type<Tag>::type index_type;
+
     BOOST_STATIC_ASSERT((mpl::contains<iterator_type_list,IteratorType>::value));
 
     BOOST_INDEXED_SET_CHECK_VALID_ITERATOR(it);
     BOOST_INDEXED_SET_CHECK_IS_OWNER(
       it,static_cast<typename IteratorType::container_type&>(*this));
-    return get<Tag>().make_iterator(static_cast<node_type*>(it.get_node()));
+    return index_type::make_iterator(static_cast<node_type*>(it.get_node()));
   }
 
   template<typename Tag,typename IteratorType>
-  typename const_iterator_type<Tag>::type project(IteratorType it)const
+  typename const_iterator_type<Tag>::type project(
+    IteratorType it
+    BOOST_APPEND_EXPLICIT_TEMPLATE_TYPE(Tag))const
   {
+    typedef typename index_type<Tag>::type index_type;
+
     BOOST_STATIC_ASSERT((
       mpl::contains<iterator_type_list,IteratorType>::value||
       mpl::contains<const_iterator_type_list,IteratorType>::value));
@@ -317,12 +320,12 @@ public:
     BOOST_INDEXED_SET_CHECK_VALID_ITERATOR(it);
     BOOST_INDEXED_SET_CHECK_IS_OWNER(
       it,static_cast<const typename IteratorType::container_type&>(*this));
-    return get<Tag>().make_iterator(static_cast<node_type*>(it.get_node()));
+    return index_type::make_iterator(static_cast<node_type*>(it.get_node()));
   }
 #endif
 
 BOOST_INDEXED_SET_PROTECTED_IF_MEMBER_TEMPLATE_FRIENDS:
-  typedef typename super::node_type node_type;
+  typedef typename super::copy_map_type copy_map_type;
 
   node_type* header()const
   {
@@ -354,30 +357,44 @@ BOOST_INDEXED_SET_PROTECTED_IF_MEMBER_TEMPLATE_FRIENDS:
     return static_cast<std::size_t >(-1);
   }
 
-  std::pair<node_type*,bool> insert_(const Value& x)
+  std::pair<node_type*,bool> insert_(const Value& v)
   {
-    node_type* px=allocate_node();
-    detail::scope_guard undo=detail::make_obj_guard(*this,&indexed_set::deallocate_node,px);
-
-    std::pair<node_type*,bool> p=super::insert_(x,px);
-    if(!p.second)return p;
-    ++node_count;
-
-    undo.dismiss();
-    return p;
+    node_type* x=allocate_node();
+    BOOST_INDEXED_SET_TRY{
+      node_type* res=super::insert_(v,x);
+      if(res==x){
+        ++node_count;
+        return std::pair<node_type*,bool>(res,true);
+      }
+      else{
+        deallocate_node(x);
+        return std::pair<node_type*,bool>(res,false);
+      }
+    }
+    BOOST_INDEXED_SET_CATCH(...){
+      deallocate_node(x);
+      BOOST_INDEXED_SET_RETHROW;
+    }
   }
 
-  std::pair<node_type*,bool> insert_(const Value& x,node_type* position)
+  std::pair<node_type*,bool> insert_(const Value& v,node_type* position)
   {
-    node_type* px=allocate_node();
-    detail::scope_guard undo=detail::make_obj_guard(*this,&indexed_set::deallocate_node,px);
-
-    std::pair<node_type*,bool> p=super::insert_(x,position,px);
-    if(!p.second)return p;
-    ++node_count;
-
-    undo.dismiss();
-    return p;
+    node_type* x=allocate_node();
+    BOOST_INDEXED_SET_TRY{
+      node_type* res=super::insert_(v,position,x);
+      if(res==x){
+        ++node_count;
+        return std::pair<node_type*,bool>(res,true);
+      }
+      else{
+        deallocate_node(x);
+        return std::pair<node_type*,bool>(res,false);
+      }
+    }
+    BOOST_INDEXED_SET_CATCH(...){
+      deallocate_node(x);
+      BOOST_INDEXED_SET_RETHROW;
+    }
   }
 
   void erase_(node_type* x)
@@ -405,13 +422,19 @@ BOOST_INDEXED_SET_PROTECTED_IF_MEMBER_TEMPLATE_FRIENDS:
   {
     mod(const_cast<value_type&>(x->value));
 
-    detail::scope_guard local_eraser=detail::make_obj_guard(
-      *this,&indexed_set::deallocate_and_decrease_count,x);
-    if(super::modify_(x)){
-      local_eraser.dismiss();
-      return true;
+    BOOST_INDEXED_SET_TRY{
+      if(!super::modify_(x)){
+        deallocate_node(x);
+        --node_count;
+        return false;
+      }
+      else return true;
     }
-    return false;
+    BOOST_INDEXED_SET_CATCH(...){
+      deallocate_node(x);
+      --node_count;
+      BOOST_INDEXED_SET_RETHROW;
+    }
   }
 #endif
 
@@ -425,7 +448,7 @@ BOOST_INDEXED_SET_PROTECTED_IF_MEMBER_TEMPLATE_FRIENDS:
 
   void check_invariant_()const
   {
-    BOOST_INDEXED_SET_INVARIANT_ASSERT(super::invariant_());
+    BOOST_INDEXED_SET_INVARIANT_ASSERT(invariant_());
   }
 #endif
 
@@ -434,14 +457,6 @@ private:
   {
     erase(begin(),end());
   }
-
-#if !defined(BOOST_NO_MEMBER_TEMPLATES)||defined(BOOST_MSVC6_MEMBER_TEMPLATES)
-  void deallocate_and_decrease_count(node_type* x)
-  {
-    deallocate_node(x);
-    --node_count;
-  }
-#endif
 
   std::size_t node_count;
 };
@@ -461,19 +476,18 @@ void swap(
 template<typename IndexedSet,int N>
 struct nth_index_type
 {
-  BOOST_STATIC_CONSTANT(int,M=mpl::size<typename IndexedSet::index_type_list>::type::value);
+  BOOST_STATIC_CONSTANT(
+    int,M=mpl::size<typename IndexedSet::index_type_list>::type::value);
   BOOST_STATIC_ASSERT(N>=0&&N<M);
-  typedef typename mpl::at_c<typename IndexedSet::index_type_list,N>::type type;
+  typedef typename mpl::at_c<
+    typename IndexedSet::index_type_list,N>::type type;
 };
 
 template<int N,typename Value,typename IndexSpecifierList,typename Allocator>
 typename nth_index_type<indexed_set<Value,IndexSpecifierList,Allocator>,N>::type&
 get(
   indexed_set<Value,IndexSpecifierList,Allocator>& m
-#if defined(BOOST_INDEXED_SET_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS)
-  ,mpl::int_<N>* =0
-#endif
-)
+  BOOST_APPEND_EXPLICIT_TEMPLATE_NON_TYPE(int,N))
 {
   typedef indexed_set<
     Value,IndexSpecifierList,Allocator>    indexed_set_type;
@@ -486,17 +500,14 @@ get(
   BOOST_STATIC_ASSERT(N>=0&&
     N<mpl::size<BOOST_DEDUCED_TYPENAME indexed_set_type::index_type_list>::type::value);
 
-  return detail::converter<indexed_set_type,index_type>()(m);
+  return detail::converter<indexed_set_type,index_type>::index(m);
 }
 
 template<int N,typename Value,typename IndexSpecifierList,typename Allocator>
 const typename nth_index_type<indexed_set<Value,IndexSpecifierList,Allocator>,N>::type&
 get(
   const indexed_set<Value,IndexSpecifierList,Allocator>& m
-#if defined(BOOST_INDEXED_SET_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS)
-  ,mpl::int_<N>* =0
-#endif
-)
+  BOOST_APPEND_EXPLICIT_TEMPLATE_NON_TYPE(int,N))
 {
   typedef indexed_set<
     Value,IndexSpecifierList,Allocator>    indexed_set_type;
@@ -509,7 +520,7 @@ get(
   BOOST_STATIC_ASSERT(N>=0&&
     N<mpl::size<BOOST_DEDUCED_TYPENAME indexed_set_type::index_type_list>::type::value);
 
-  return detail::converter<indexed_set_type,index_type>()(m);
+  return detail::converter<indexed_set_type,index_type>::index(m);
 }
 
 /* retrieval of indices by tag */
@@ -534,10 +545,7 @@ template<typename Tag,typename Value,typename IndexSpecifierList,typename Alloca
 typename index_type<indexed_set<Value,IndexSpecifierList,Allocator>,Tag>::type&
 get(
   indexed_set<Value,IndexSpecifierList,Allocator>& m
-#if defined(BOOST_INDEXED_SET_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS)
-  ,Tag* =0
-#endif
-)
+  BOOST_APPEND_EXPLICIT_TEMPLATE_TYPE(Tag))
 {
   typedef indexed_set<
     Value,IndexSpecifierList,Allocator>    indexed_set_type;
@@ -547,17 +555,14 @@ get(
     Tag
   >::type                                  index_type;
 
-  return detail::converter<indexed_set_type,index_type>()(m);
+  return detail::converter<indexed_set_type,index_type>::index(m);
 }
 
 template<typename Tag,typename Value,typename IndexSpecifierList,typename Allocator>
 const typename index_type<indexed_set<Value,IndexSpecifierList,Allocator>,Tag>::type&
 get(
   const indexed_set<Value,IndexSpecifierList,Allocator>& m
-#if defined(BOOST_INDEXED_SET_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS)
-  ,Tag* =0
-#endif
-)
+  BOOST_APPEND_EXPLICIT_TEMPLATE_TYPE(Tag))
 {
   typedef indexed_set<
     Value,IndexSpecifierList,Allocator>    indexed_set_type;
@@ -567,7 +572,7 @@ get(
     Tag
   >::type                                  index_type;
 
-  return detail::converter<indexed_set_type,index_type>()(m);
+  return detail::converter<indexed_set_type,index_type>::index(m);
 }
 
 /* projection of iterators by number */
@@ -595,17 +600,17 @@ typename nth_iterator_type<indexed_set<Value,IndexSpecifierList,Allocator>,N>::t
 project(
   indexed_set<Value,IndexSpecifierList,Allocator>& m,
   IteratorType it
-#if defined(BOOST_INDEXED_SET_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS)
-  ,mpl::int_<N>* =0
-#endif
-)
+  BOOST_APPEND_EXPLICIT_TEMPLATE_NON_TYPE(int,N))
 {
-  typedef indexed_set<Value,IndexSpecifierList,Allocator> indexed_set_type;
+  typedef indexed_set<Value,IndexSpecifierList,Allocator>   indexed_set_type;
+  typedef typename nth_index_type<indexed_set_type,N>::type index_type;
 
+#if !defined(BOOST_MSVC)||!(BOOST_MSVC<1300) /* this ain't work in MSVC++ 6.0 */
   BOOST_STATIC_ASSERT((
     mpl::contains<
       BOOST_DEDUCED_TYPENAME indexed_set_type::iterator_type_list,
       IteratorType>::value));
+#endif
 
   BOOST_INDEXED_SET_CHECK_VALID_ITERATOR(it);
 
@@ -613,11 +618,11 @@ project(
   typedef detail::converter<
     indexed_set_type,
     BOOST_DEDUCED_TYPENAME IteratorType::container_type> converter;
-  BOOST_INDEXED_SET_CHECK_IS_OWNER(it,converter()(m));
+  BOOST_INDEXED_SET_CHECK_IS_OWNER(it,converter::index(m));
 #endif
 
-  return get<N>(m).make_iterator(
-    static_cast<typename indexed_set_type::node_type*>(it.get_node()));
+  return detail::converter<indexed_set_type,index_type>::iterator(
+    m,static_cast<typename indexed_set_type::node_type*>(it.get_node()));
 }
 
 template<
@@ -627,13 +632,12 @@ typename nth_const_iterator_type<indexed_set<Value,IndexSpecifierList,Allocator>
 project(
   const indexed_set<Value,IndexSpecifierList,Allocator>& m,
   IteratorType it
-#if defined(BOOST_INDEXED_SET_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS)
-  ,mpl::int_<N>* =0
-#endif
-)
+  BOOST_APPEND_EXPLICIT_TEMPLATE_NON_TYPE(int,N))
 {
-  typedef indexed_set<Value,IndexSpecifierList,Allocator> indexed_set_type;
+  typedef indexed_set<Value,IndexSpecifierList,Allocator>   indexed_set_type;
+  typedef typename nth_index_type<indexed_set_type,N>::type index_type;
 
+#if !defined(BOOST_MSVC)||!(BOOST_MSVC<1300) /* this ain't work in MSVC++ 6.0 */
   BOOST_STATIC_ASSERT((
     mpl::contains<
       BOOST_DEDUCED_TYPENAME indexed_set_type::iterator_type_list,
@@ -641,6 +645,7 @@ project(
     mpl::contains<
       BOOST_DEDUCED_TYPENAME indexed_set_type::const_iterator_type_list,
       IteratorType>::value));
+#endif
 
   BOOST_INDEXED_SET_CHECK_VALID_ITERATOR(it);
 
@@ -648,11 +653,11 @@ project(
   typedef detail::converter<
     indexed_set_type,
     BOOST_DEDUCED_TYPENAME IteratorType::container_type> converter;
-  BOOST_INDEXED_SET_CHECK_IS_OWNER(it,converter()(m));
+  BOOST_INDEXED_SET_CHECK_IS_OWNER(it,converter::index(m));
 #endif
 
-  return get<N>(m).make_iterator(
-    static_cast<typename indexed_set_type::node_type*>(it.get_node()));
+  return detail::converter<indexed_set_type,index_type>::const_iterator(
+    m,static_cast<typename indexed_set_type::node_type*>(it.get_node()));
 }
 
 /* projection of iterators by tag */
@@ -676,17 +681,17 @@ typename iterator_type<indexed_set<Value,IndexSpecifierList,Allocator>,Tag>::typ
 project(
   indexed_set<Value,IndexSpecifierList,Allocator>& m,
   IteratorType it
-#if defined(BOOST_INDEXED_SET_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS)
-  ,Tag* =0
-#endif
-)
+  BOOST_APPEND_EXPLICIT_TEMPLATE_TYPE(Tag))
 {
   typedef indexed_set<Value,IndexSpecifierList,Allocator> indexed_set_type;
+  typedef typename index_type<indexed_set_type,Tag>::type index_type;
 
+#if !defined(BOOST_MSVC)||!(BOOST_MSVC<1300) /* this ain't work in MSVC++ 6.0 */
   BOOST_STATIC_ASSERT((
     mpl::contains<
       BOOST_DEDUCED_TYPENAME indexed_set_type::iterator_type_list,
       IteratorType>::value));
+#endif
 
   BOOST_INDEXED_SET_CHECK_VALID_ITERATOR(it);
 
@@ -694,11 +699,11 @@ project(
   typedef detail::converter<
     indexed_set_type,
     BOOST_DEDUCED_TYPENAME IteratorType::container_type> converter;
-  BOOST_INDEXED_SET_CHECK_IS_OWNER(it,converter()(m));
+  BOOST_INDEXED_SET_CHECK_IS_OWNER(it,converter::index(m));
 #endif
 
-  return get<Tag>(m).make_iterator(
-    static_cast<typename indexed_set_type::node_type*>(it.get_node()));
+  return detail::converter<indexed_set_type,index_type>::iterator(
+    m,static_cast<typename indexed_set_type::node_type*>(it.get_node()));
 }
 
 template<
@@ -708,13 +713,12 @@ typename const_iterator_type<indexed_set<Value,IndexSpecifierList,Allocator>,Tag
 project(
   const indexed_set<Value,IndexSpecifierList,Allocator>& m,
   IteratorType it
-#if defined(BOOST_INDEXED_SET_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS)
-  ,Tag* =0
-#endif
-)
+  BOOST_APPEND_EXPLICIT_TEMPLATE_TYPE(Tag))
 {
   typedef indexed_set<Value,IndexSpecifierList,Allocator> indexed_set_type;
+  typedef typename index_type<indexed_set_type,Tag>::type index_type;
 
+#if !defined(BOOST_MSVC)||!(BOOST_MSVC<1300) /* this ain't work in MSVC++ 6.0 */
   BOOST_STATIC_ASSERT((
     mpl::contains<
       BOOST_DEDUCED_TYPENAME indexed_set_type::iterator_type_list,
@@ -722,6 +726,7 @@ project(
     mpl::contains<
       BOOST_DEDUCED_TYPENAME indexed_set_type::const_iterator_type_list,
       IteratorType>::value));
+#endif
 
   BOOST_INDEXED_SET_CHECK_VALID_ITERATOR(it);
 
@@ -729,11 +734,11 @@ project(
   typedef detail::converter<
     indexed_set_type,
     BOOST_DEDUCED_TYPENAME IteratorType::container_type> converter;
-  BOOST_INDEXED_SET_CHECK_IS_OWNER(it,converter()(m));
+  BOOST_INDEXED_SET_CHECK_IS_OWNER(it,converter::index(m));
 #endif
 
-  return get<Tag>(m).make_iterator(
-    static_cast<typename indexed_set_type::node_type*>(it.get_node()));
+  return detail::converter<indexed_set_type,index_type>::const_iterator(
+    m,static_cast<typename indexed_set_type::node_type*>(it.get_node()));
 }
 
 /* Comparison. Simple forward to first index. */
@@ -796,10 +801,6 @@ using indexed_sets::get;
 using indexed_sets::project;
 
 } /* namespace boost */
-
-#ifdef BOOST_INDEXED_SET_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS
-#undef BOOST_INDEXED_SET_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS
-#endif
 
 #undef BOOST_INDEXED_SET_CHECK_INVARIANT
 

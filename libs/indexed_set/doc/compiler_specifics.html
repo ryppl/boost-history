@@ -17,11 +17,11 @@ various degrees of success. We list the limitations encountered,
 along with suitable workarounds when available.
 </p>
 
-<h2>Contents</a></h2>
+<h2>Contents</h2>
 
 <ul>
   <li><a href="#bcb_64">Borland C++ Builder 6.4</a></li>
-  <li><a href="#gcc_32">GNU GCC 3.2 20020927 (prerelease)</a></li>
+  <li><a href="#gcc_32">GNU GCC 3.3.1 (cygming special)</a></li>
   <li><a href="#intel_7">Intel C++ Compiler for Windows 32-bit 7.0/7.1</a></li>
   <li><a href="#intel_8">Intel C++ Compiler for Windows 32-bit 8.0</a></li>
   <li><a href="#msvc_60">Microsoft Visual C++ 6.0 Service Pack 5</a></li>
@@ -38,12 +38,12 @@ future versions of the library can be made to work under
 this compiler.
 </p>
 
-<h2><a name="gcc_32">GNU GCC 3.2 20020927 (prerelease)</a></h2>
+<h2><a name="gcc_33">GNU GCC 3.3.1 (cygming special)</a></h2>
 
 <p>
 No problems have been detected with this compiler. The tests were
-performed under Cygwin 1.3.22. Most likely Boost.IndexedSet will work seamlessly
-for GNU GCC 3.2 or later under any platform.
+performed under Cygwin 1.5.7. Most likely Boost.IndexedSet will work seamlessly
+for GNU GCC 3.3 or later under any platform.
 </p>
 
 <h2><a name="intel_7">Intel C++ Compiler for Windows 32-bit 7.0/7.1</a></h2>
@@ -61,7 +61,7 @@ for GNU GCC 3.2 or later under any platform.
     Altough Koenig lookup seems to be officially supported by this compiler,
     some issues have arisen seemingly due to bugs related to this facility.
     In these cases you might need to explicitly qualify global names with
-    <code>::boost::indexed_set</code>.
+    <code>::boost::indexed_sets</code>.
   </li>
 </ul>
 </p>
@@ -69,6 +69,7 @@ for GNU GCC 3.2 or later under any platform.
 <h2><a name="intel_8">Intel C++ Compiler for Windows 32-bit 8.0</a></h2>
 
 <p>
+INFO OUTDATED, RERUN TESTS<br>
 No problems have been detected with this compiler.
 </p>
 
@@ -115,7 +116,7 @@ No problems have been detected with this compiler.
     </ul>
     You can use instead their global equivalents. Also, this compiler does not
     implement Koenig lookup, so you might need to explicitly qualify these
-    global names with <code>::boost::indexed_set</code>.
+    global names with <code>::boost::indexed_sets</code>.
   </li>
   <li>
     MSVC++ 6.0 presents serious limitations for the maximum length of
@@ -141,6 +142,7 @@ No problems have been detected with this compiler.
 </h2>
 
 <p>
+INFO OUTDATED, RERUN TESTS<br>
 Boost.IndexedSet works for this configuration. The same limitations apply as
 in MSVC++ 6.0 with its original Dinkumware standard library.
 </p>
@@ -148,12 +150,13 @@ in MSVC++ 6.0 with its original Dinkumware standard library.
 <h2><a name="msvc_71">Microsoft Visual C++ 7.1</a></h2>
 
 <p>
+INFO OUTDATED, RERUN TESTS<br>
 No problems have been detected with this compiler.
 </p>
 
 <hr>
 
-<p>Revised January 12th 2004</p>
+<p>Revised February 12th 2004</p>
 
 <p>Copyright &copy; 2003-2004 Joaqu&iacute;n M L&oacute;pez Mu&ntilde;oz.
 Use, modification, and distribution are subject to the Boost Software 

@@ -1,4 +1,4 @@
-/* Copyright Joaquín M López Muñoz 2003. Use, modification, and distribution
+/* Copyright Joaquín M López Muñoz 2003-2004. Use, modification, and distribution
  * are subject to the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
@@ -237,6 +237,29 @@ inline bool check_valid_range(const Iterator& it0,const Iterator& it1)
   return false;
 }
 
+template<typename Iterator>
+inline bool check_outside_range(const Iterator& it,const Iterator& it0,const Iterator& it1)
+{
+  if(!it0.valid()||!it1.valid()||it0.owner()!=it1.owner())return false;
+
+  Iterator last=it0.owner()->end();
+  bool found=false;
+
+  Iterator first=it0;
+  for(;first!=last;++first){
+    if(first==it1)break;
+    if(first==it)found=true; /* crucial that this check goes after previous break */
+  }
+  if(first!=it1)return false;
+  return !found;
+}
+
+template<typename Container>
+inline bool check_different_container(const Container& cont0,const Container& cont1)
+{
+  return &cont0!=&cont1;
+}
+
 } /* namespace indexed_sets::safe_mode */
 
 } /* namespace indexed_sets */
@@ -291,5 +314,15 @@ inline bool check_valid_range(const Iterator& it0,const Iterator& it1)
   BOOST_INDEXED_SET_SAFE_MODE_ASSERT(\
     safe_mode::check_valid_range(it0,it1),\
     safe_mode::invalid_range);
+
+#define BOOST_INDEXED_SET_CHECK_OUTSIDE_RANGE(it,it0,it1) \
+  BOOST_INDEXED_SET_SAFE_MODE_ASSERT(\
+    safe_mode::check_outside_range(it,it0,it1),\
+    safe_mode::inside_range);
+
+#define BOOST_INDEXED_SET_CHECK_DIFFERENT_CONTAINER(cont0,cont1) \
+  BOOST_INDEXED_SET_SAFE_MODE_ASSERT(\
+    safe_mode::check_different_container(cont0,cont1),\
+    safe_mode::same_container);
 
 #endif

@@ -1,6 +1,6 @@
 /* Boost.IndexedSet basic test.
  *
- * Copyright Joaquín M López Muñoz 2003. Use, modification, and distribution
+ * Copyright Joaquín M López Muñoz 2003-2004. Use, modification, and distribution
  * are subject to the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
@@ -12,6 +12,7 @@
 #include <boost/config.hpp> /* keep it first to prevent some nasty warnings in MSVC */
 #include <algorithm>
 #include <vector>
+#include "pre_indexed_set.hpp"
 #include "employee.hpp"
 #include <boost/test/test_tools.hpp>
 
@@ -39,11 +40,12 @@ void test_basic()
 #endif
 
   const employee_set_by_age& i2=get<2>(es);
+  employee_set_as_inserted& i3=get<3>(es);
 
   es.insert(employee(0,"Joe",31));
   i1.insert(employee(1,"Robert",27));
   es.insert(employee(2,"John",40));
-  i1.insert(employee(3,"Albert",20));
+  i3.push_back(employee(3,"Albert",20));
   es.insert(employee(4,"John",57));
 
   v.push_back(employee(0,"Joe",31));
@@ -51,6 +53,12 @@ void test_basic()
   v.push_back(employee(2,"John",40));
   v.push_back(employee(3,"Albert",20));
   v.push_back(employee(4,"John",57));
+
+  {
+    /* by insertion order */
+
+    BOOST_CHECK(std::equal(i3.begin(),i3.end(),v.begin()));
+  }
 
   {
     /* by id */

@@ -1,6 +1,6 @@
 /* Boost.IndexedSet test for capacity memfuns.
  *
- * Copyright Joaquín M López Muñoz 2003. Use, modification, and distribution
+ * Copyright Joaquín M López Muñoz 2003-2004. Use, modification, and distribution
  * are subject to the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
@@ -10,6 +10,7 @@
 #include "test_capacity.hpp"
 
 #include <boost/config.hpp> /* keep it first to prevent some nasty warnings in MSVC */
+#include "pre_indexed_set.hpp"
 #include "employee.hpp"
 #include <boost/test/test_tools.hpp>
 
@@ -30,4 +31,8 @@ void test_capacity()
 
   es.erase(es.begin());
   BOOST_CHECK(get<name>(es).size()==4);
+
+  es.erase(es.begin());
+  BOOST_CHECK(!get<as_inserted>(es).empty());
+  BOOST_CHECK(get<as_inserted>(es).size()==3);
 }

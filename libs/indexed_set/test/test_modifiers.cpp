@@ -1,6 +1,6 @@
 /* Boost.IndexedSet test for modifier memfuns.
  *
- * Copyright Joaquín M López Muñoz 2003. Use, modification, and distribution
+ * Copyright Joaquín M López Muñoz 2003-2004. Use, modification, and distribution
  * are subject to the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
@@ -11,6 +11,7 @@
 
 #include <boost/config.hpp> /* keep it first to prevent some nasty warnings in MSVC */
 #include <vector>
+#include "pre_indexed_set.hpp"
 #include "employee.hpp"
 #include <boost/test/test_tools.hpp>
 
@@ -18,27 +19,50 @@ using namespace boost::indexed_sets;
 
 void test_modifiers()
 {
-  employee_set es;
-  employee_set_by_age& i2=get<age>(es);
+  employee_set              es;
+  employee_set_by_age&      i2=get<age>(es);
+  employee_set_as_inserted& i3=get<as_inserted>(es);
 
   es.insert(employee(0,"Joe",31));
   BOOST_CHECK(es.insert(employee(0,"Joe",31)).second==false);
-  BOOST_CHECK(i2.insert(employee(0,"Joe Jr.",15)).second==false);
+  BOOST_CHECK(i2.insert(employee(0,"Joe Jr.",5)).second==false);
+  BOOST_CHECK(i3.insert(i3.begin(),employee(0,"Joe Jr.",5)).second==false);
+  BOOST_CHECK(i3.push_front(employee(0,"Joe Jr.",5)).second==false);
+  BOOST_CHECK(i3.push_back(employee(0,"Joe Jr.",5)).second==false);
 
   employee_set_by_age::iterator it=i2.find(31);
-  i2.insert(it,employee(1,"Joe Jr.",15));
+  i2.insert(it,employee(1,"Joe Jr.",5));
   BOOST_CHECK(es.size()==2);
 
-  es.erase(employee(1,"Joe Jr.",15));
-  BOOST_CHECK(i2.size()==1);
+  employee_set_as_inserted::iterator it2=i3.begin();
+  i3.insert(it2,employee(2,"Grandda Joe",64));
+  BOOST_CHECK(es.size()==3);
+
+  es.erase(employee(1,"Joe Jr.",5));
+  BOOST_CHECK(i2.size()==2&&i3.size()==2);
 
   i2.erase(it);
-  BOOST_CHECK(es.size()==0);
+  BOOST_CHECK(es.size()==1&&i3.size()==1);
+
+  i3.pop_front();
+  BOOST_CHECK(es.size()==0&&i2.size()==0);
 
   es.insert(employee(0,"Joe",31));
   es.insert(employee(1,"Jack",31));
   i2.erase(31);
   BOOST_CHECK(i2.size()==0);
+
+  i3.push_front(employee(1,"Jack",31));
+  i3.push_back(employee(0,"Joe",31));
+  BOOST_CHECK(i3.front()==employee(1,"Jack",31));
+  BOOST_CHECK(i3.back()==employee(0,"Joe",31));
+
+  i3.pop_back();
+  BOOST_CHECK(i3.back()==employee(1,"Jack",31));
+  BOOST_CHECK(es.size()==1);
+
+  i3.pop_front();
+  BOOST_CHECK(es.size()==0);
 
 #if !defined(BOOST_NO_MEMBER_TEMPLATES)||defined(BOOST_MSVC6_MEMBER_TEMPLATES)
   std::vector<employee> ve;
@@ -47,6 +71,12 @@ void test_modifiers()
   ve.push_back(employee(2,"Agatha",40));
 
   i2.insert(ve.begin(),ve.end());
+  BOOST_CHECK(i3.size()==3);
+
+  i3.erase(i3.begin(),i3.end());
+  BOOST_CHECK(es.size()==0);
+
+  i3.insert(ve.begin(),ve.end());
   BOOST_CHECK(es.size()==3);
 
   es.erase(es.begin(),es.end());
@@ -71,6 +101,9 @@ void test_modifiers()
   i2.swap(get<2>(es2));
   BOOST_CHECK(es==es2_backup&&es2==es_backup);
 
+  i3.swap(get<3>(es2));
+  BOOST_CHECK(es==es_backup&&es2==es2_backup);
+
 #if defined(BOOST_NO_ARGUMENT_DEPENDENT_LOOKUP)||defined(BOOST_INTEL_CXX_VERSION)
   ::boost::indexed_sets::detail::swap(i2,get<2>(es2));
 #else
@@ -78,7 +111,19 @@ void test_modifiers()
   swap(i2,get<2>(es2));
 #endif
 
+  BOOST_CHECK(es==es2_backup&&es2==es_backup);
+
+#if defined(BOOST_NO_ARGUMENT_DEPENDENT_LOOKUP)||defined(BOOST_INTEL_CXX_VERSION)
+  ::boost::indexed_sets::detail::swap(i3,get<3>(es2));
+#else
+  using std::swap;
+  swap(i3,get<3>(es2));
+#endif
+
   BOOST_CHECK(es==es_backup&&es2==es2_backup);
+
+  i3.clear();
+  BOOST_CHECK(i3.size()==0);
 
   es2.clear();
   BOOST_CHECK(es2.size()==0);

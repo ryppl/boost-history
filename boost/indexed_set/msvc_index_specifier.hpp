@@ -1,4 +1,4 @@
-/* Copyright Joaquín M López Muñoz 2003. Use, modification, and distribution
+/* Copyright Joaquín M López Muñoz 2003-2004. Use, modification, and distribution
  * are subject to the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
@@ -34,7 +34,7 @@ struct msvc_index_specifier
     template<typename Super>
     struct node_type{};
 
-    template<typename Allocator,typename Super>
+    template<typename Super>
     struct index_class_type{};
   };
 
@@ -45,10 +45,10 @@ struct msvc_index_specifier
   {
   };
 
-  template<typename Allocator,typename Super>
+  template<typename Super>
   struct result_index_type:
     fake_index_type<mpl::aux::msvc_never_true<IndexSpecifier>::value>::
-      template index_class_type<Allocator,Super>
+      template index_class_type<Super>
   {
   };
 };

@@ -1,6 +1,6 @@
 /* Boost.IndexedSet test for iterators.
  *
- * Copyright Joaquín M López Muñoz 2003. Use, modification, and distribution
+ * Copyright Joaquín M López Muñoz 2003-2004. Use, modification, and distribution
  * are subject to the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
@@ -10,6 +10,7 @@
 #include "test_iterators.hpp"
 
 #include <boost/config.hpp> /* keep it first to prevent some nasty warnings in MSVC */
+#include "pre_indexed_set.hpp"
 #include "employee.hpp"
 #include <boost/test/test_tools.hpp>
 
@@ -48,6 +49,13 @@ void test_iterators()
     for(employee_set_by_age::const_reverse_iterator rit=i2.rbegin();rit!=i2.rend();++rit){
       m+=rit->id;
     }
-    BOOST_CHECK(n==0+1+2+3+4&&n==m);
+    int p=0;
+    const employee_set_as_inserted& i3=get<3>(es);
+    for(
+      employee_set_as_inserted::const_reverse_iterator rit2=i3.rbegin();
+      rit2!=i3.rend();++rit2){
+      p+=rit2->id;
+    }
+    BOOST_CHECK(n==0+1+2+3+4&&n==m&&n==p);
   }
 }

@@ -1,6 +1,6 @@
 /* Boost.IndexedSet test for projection capabilities.
  *
- * Copyright Joaquín M López Muñoz 2003. Use, modification, and distribution
+ * Copyright Joaquín M López Muñoz 2003-2004. Use, modification, and distribution
  * are subject to the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
@@ -10,6 +10,7 @@
 #include "test_projection.hpp"
 
 #include <boost/config.hpp> /* keep it first to prevent some nasty warnings in MSVC */
+#include "pre_indexed_set.hpp"
 #include "employee.hpp"
 #include <boost/test/test_tools.hpp>
 
@@ -24,9 +25,10 @@ void test_projection()
   es.insert(employee(3,"Albert",20));
   es.insert(employee(4,"John",57));
 
-  employee_set::iterator         it,itbis;
-  employee_set_by_name::iterator it1;
-  employee_set_by_age::iterator  it2;
+  employee_set::iterator             it,itbis;
+  employee_set_by_name::iterator     it1;
+  employee_set_by_age::iterator      it2;
+  employee_set_as_inserted::iterator it3;
 
   BOOST_STATIC_ASSERT((boost::is_same<
     employee_set::iterator,
@@ -43,23 +45,28 @@ void test_projection()
     employee_set_by_age::iterator,
     employee_set::iterator_type<age>::type >::value));
 #endif
+  BOOST_STATIC_ASSERT((boost::is_same<
+    employee_set_as_inserted::iterator,
+    nth_iterator_type<employee_set,3>::type >::value));
 
   it=   es.find(employee(1,"Robert",27));
   it1=  project<name>(es,it);
   it2=  project<age>(es,it1);
+  it3=  project<as_inserted>(es,it2);
 #if defined(BOOST_NO_MEMBER_TEMPLATES)
-  itbis=project<0>(es,it2);
+  itbis=project<0>(es,it3);
 #else
-  itbis=es.project<0>(it2);
+  itbis=es.project<0>(it3);
 #endif
 
-  BOOST_CHECK(*it==*it1&&*it1==*it2&&itbis==it);
+  BOOST_CHECK(*it==*it1&&*it1==*it2&&*it2==*it3&&itbis==it);
 
   const employee_set& ces=es;
 
-  employee_set::const_iterator         cit,citbis;
-  employee_set_by_name::const_iterator cit1;
-  employee_set_by_age::const_iterator  cit2;
+  employee_set::const_iterator             cit,citbis;
+  employee_set_by_name::const_iterator     cit1;
+  employee_set_by_age::const_iterator      cit2;
+  employee_set_as_inserted::const_iterator cit3;
 
   BOOST_STATIC_ASSERT((boost::is_same<
     employee_set::const_iterator,
@@ -76,8 +83,12 @@ void test_projection()
     employee_set_by_age::const_iterator,
     employee_set::const_iterator_type<age>::type >::value));
 #endif
+  BOOST_STATIC_ASSERT((boost::is_same<
+    employee_set_as_inserted::const_iterator,
+    nth_const_iterator_type<employee_set,3>::type >::value));
 
   BOOST_CHECK(project<age>(es,es.end())==get<age>(es).end());
+  BOOST_CHECK(project<as_inserted>(es,es.end())==get<as_inserted>(es).end());
 
   cit=   ces.find(employee(4,"John",57));
 #if defined(BOOST_NO_MEMBER_TEMPLATES)
@@ -86,7 +97,12 @@ void test_projection()
   cit1=  ces.project<by_name>(cit);
 #endif
   cit2=  project<age>(ces,cit1);
-  citbis=project<0>(ces,cit2);
+#if defined(BOOST_NO_MEMBER_TEMPLATES)
+  cit3=  project<as_inserted>(ces,cit2);
+#else
+  cit3=  ces.project<as_inserted>(cit2);
+#endif
+  citbis=project<0>(ces,cit3);
 
-  BOOST_CHECK(*cit==*cit1&&*cit1==*cit2&&citbis==cit);
+  BOOST_CHECK(*cit==*cit1&&*cit1==*cit2&&*cit2==*cit3&&citbis==cit);
 }

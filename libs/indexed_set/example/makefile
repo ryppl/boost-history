@@ -11,6 +11,7 @@ SOURCES = \
   composite_compares\
   memfun_key.cpp\
   non_default_ctor.cpp\
+  sequenced.cpp\
 
 OBJECTS         = ${SOURCES:.cpp=.o}
 

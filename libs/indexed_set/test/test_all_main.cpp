@@ -1,6 +1,6 @@
 /* Boost.IndexedSet test suite.
  *
- * Copyright Joaquín M López Muñoz 2003. Use, modification, and distribution
+ * Copyright Joaquín M López Muñoz 2003-2004. Use, modification, and distribution
  * are subject to the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
@@ -15,6 +15,7 @@
 #include "test_copy_assignment.hpp"
 #include "test_iterators.hpp"
 #include "test_key_extractors.hpp"
+#include "test_list_ops.hpp"
 #include "test_modifiers.hpp"
 #include "test_projection.hpp"
 #include "test_range.hpp"
@@ -32,6 +33,7 @@ int test_main(int,char *[])
   test_copy_assignment();
   test_iterators();
   test_key_extractors();
+  test_list_ops();
   test_modifiers();
   test_projection();
   test_range();

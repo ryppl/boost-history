@@ -11,7 +11,7 @@
 <h1><img src="../../../c++boost.gif" alt="c++boost.gif (8819 bytes)" align=
 "middle" width="277" height="86">Boost.IndexedSet Advanced topics</h1>
 
-<h2>Contents</a></h2>
+<h2>Contents</h2>
 
 <ul>
   <li><a href="#advanced_key_extractors">Advanced features of Boost.IndexedSet key
@@ -301,7 +301,7 @@ specified as <code>member&lt;const T,int,&T::i></code>, but rather as
 <p>
 For practical demonstrations of use of these key extractors, refer to
 <a href="examples.html#example2">example 2</a> and
-<a href="examples.html#example5">example 5</a> in the examples section.
+<a href="examples.html#example6">example 6</a> in the examples section.
 </p>
 
 <h3><a name="member_offset">Use of <code>member_offset</code></a></h3>
@@ -669,7 +669,9 @@ is one value of the <code>safe_mode::error_code</code> enumeration:
   <span class=identifier>not_decrementable_iterator</span><span class=special>,</span>   <span class=comment>// the iterator points to the beginning of its sequence</span> 
   <span class=identifier>not_owner</span><span class=special>,</span>                    <span class=comment>// the iterator does not belong to the container</span>
   <span class=identifier>not_same_owner</span><span class=special>,</span>               <span class=comment>// iterators belong to different containers</span>
-  <span class=identifier>invalid_range</span>                 <span class=comment>// range not valid (last is not reachable from first)</span>
+  <span class=identifier>invalid_range</span><span class=special>,</span>                <span class=comment>// range not valid (last is not reachable from first)</span>
+  <span class=identifier>inside_range</span><span class=special>,</span>                 <span class=comment>// the iterator lies within a range (and it should not)</span>
+  <span class=identifier>same_container</span><span class=special>,</span>               <span class=comment>// containers ought to be different</span>
 <span class=special>};</span>
 
 <span class=special>}</span> <span class=comment>// namespace indexed_sets::safe_mode</span>
@@ -751,6 +753,10 @@ set off invariant-checking for release compilations.
 
 <h2><a name="simulate_std_containers">Simulating standard containers with
   <code>indexed_set</code></a></h2>
+
+<p>
+WRITE A PARAGRAPH ON SIMULATING STD::LIST
+</p>
 
 <p>
 Academic movitations aside, there is a practical interest in simulating standard
@@ -861,14 +867,15 @@ simulated with appropriate use of <code>find</code> and <code>insert</code>.
 
 <p>
 These simulations of standard associative containers with <code>indexed_set</code>
-are as efficient in terms of space and complexity as the original constructs.
+are comparable to the original constructs in terms of space and time efficiency.
+See the <a href="performance.html">performance section</a> for further details.
 </p>
 
 <hr>
 
-<p>Revised December 15th 2003</p>
+<p>Revised February 12th 2004</p>
 
-<p>Copyright &copy; 2003 Joaqu&iacute;n M L&oacute;pez Mu&ntilde;oz.
+<p>Copyright &copy; 2003-2004 Joaqu&iacute;n M L&oacute;pez Mu&ntilde;oz.
 Use, modification, and distribution are subject to the Boost Software 
 License, Version 1.0. (See accompanying file <a href="../../../LICENSE_1_0.txt">
 LICENSE_1_0.txt</a> or copy at <a href="http://www.boost.org/LICENSE_1_0.txt">

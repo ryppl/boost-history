@@ -1,4 +1,4 @@
-/* Copyright Joaquín M López Muñoz 2003. Use, modification, and distribution
+/* Copyright Joaquín M López Muñoz 2003-2004. Use, modification, and distribution
  * are subject to the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
@@ -28,7 +28,9 @@ enum error_code
   not_decrementable_iterator,
   not_owner,
   not_same_owner,
-  invalid_range
+  invalid_range,
+  inside_range,
+  same_container,
 };
 
 } /* namespace indexed_sets::safe_mode */

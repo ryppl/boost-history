@@ -1,6 +1,6 @@
 /* Boost.IndexedSet test for interconvertibilty between const and non-const iterators.
  *
- * Copyright Joaquín M López Muñoz 2003. Use, modification, and distribution
+ * Copyright Joaquín M López Muñoz 2003-2004. Use, modification, and distribution
  * are subject to the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
@@ -10,6 +10,7 @@
 #include "test_conv_iterators.hpp"
 
 #include <boost/config.hpp> /* keep it first to prevent some nasty warnings in MSVC */
+#include "pre_indexed_set.hpp"
 #include "employee.hpp"
 #include <boost/test/test_tools.hpp>
 
@@ -35,6 +36,16 @@ void test_conv_iterators()
     employee_set_by_name::iterator        it=i1.find("John");
     employee_set_by_name::const_iterator it1=i1.find("John");
     employee_set_by_name::const_iterator it2=ci1.find("John");
+
+    BOOST_CHECK(it==it1&&it1==it2&&it2==it);
+    BOOST_CHECK(*it==*it1&&*it1==*it2&&*it2==*it);
+  }
+  {
+    employee_set_as_inserted&        i3=get<3>(es);
+    const employee_set_as_inserted& ci3=get<3>(es);
+    employee_set_as_inserted::iterator        it=i3.begin();
+    employee_set_as_inserted::const_iterator it1=i3.begin();
+    employee_set_as_inserted::const_iterator it2=ci3.begin();
 
     BOOST_CHECK(it==it1&&it1==it2&&it2==it);
     BOOST_CHECK(*it==*it1&&*it1==*it2&&*it2==*it);

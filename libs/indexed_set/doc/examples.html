@@ -11,7 +11,7 @@
 <h1><img src="../../../c++boost.gif" alt="c++boost.gif (8819 bytes)" align=
 "middle" width="277" height="86">Boost.IndexedSet Examples</h1>
 
-<h2>Contents</a></h2>
+<h2>Contents</h2>
 
 <ul>
   <li><a href="#example1">Example 1: basic usage</a></li>
@@ -19,8 +19,9 @@
   <li><a href="#example3">Example 3: constructing <code>indexed_set</code>s
     with <code>ctor_args_list</code></a></li>
   <li><a href="#example4">Example 4: bidirectional map</a></li>
-  <li><a href="#example5">Example 5: complex searches and foreign keys</a></li>
-  <li><a href="#example6">Example 6: composite comparison predicates</a></li>
+  <li><a href="#example5">Example 5: sequenced indices</a></li>
+  <li><a href="#example6">Example 6: complex searches and foreign keys</a></li>
+  <li><a href="#example7">Example 7: composite comparison predicates</a></li>
 </ul>
 
 <h2><a name="example1">Example 1: basic usage</a></h2>
@@ -90,7 +91,20 @@ for both keys. The program features a tiny Spanish-English
 dictionary with online query of words in both languages.
 </p>
 
-<h2><a name="example5">Example 5: complex searches and foreign keys</a></h2>
+<h2><a name="example5">Example 5: sequenced indices</a></h2>
+
+<p>
+See <a href="../example/sequenced.cpp">source code</a>.
+</p>
+
+<p>
+The combination of a sequenced unique with an index of type <code>non_unique</code>
+yields a <code>list</code>-like structure with fast lookup capabilities. The
+example performs some operations on a given text, like word counting and
+selective deletion of some words.
+</p>
+
+<h2><a name="example6">Example 6: complex searches and foreign keys</a></h2>
 
 <p>
 See <a href="../example/complex_structs.cpp">source code</a>.
@@ -215,7 +229,7 @@ These views have to be supplemented with appropriate
 dereferencing key extractors.
 </p>
 
-<h2><a name="example6">Example 6: composite comparison predicates</a></h2>
+<h2><a name="example7">Example 7: composite comparison predicates</a></h2>
 
 <p>
 See <a href="../example/composite_compares.cpp">source code</a>.
@@ -286,9 +300,9 @@ absolute paths.)
 </p>
 <hr>
 
-<p>Revised December 15th 2003</p>
+<p>Revised February 12th 2004</p>
 
-<p>Copyright &copy; 2003 Joaqu&iacute;n M L&oacute;pez Mu&ntilde;oz.
+<p>Copyright &copy; 2003-2004 Joaqu&iacute;n M L&oacute;pez Mu&ntilde;oz.
 Use, modification, and distribution are subject to the Boost Software 
 License, Version 1.0. (See accompanying file <a href="../../../LICENSE_1_0.txt">
 LICENSE_1_0.txt</a> or copy at <a href="http://www.boost.org/LICENSE_1_0.txt">

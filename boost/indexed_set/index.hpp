@@ -1,4 +1,4 @@
-/* Copyright Joaquín M López Muñoz 2003. Use, modification, and distribution
+/* Copyright Joaquín M López Muñoz 2003-2004. Use, modification, and distribution
  * are subject to the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
@@ -16,16 +16,19 @@
 #include <boost/indexed_set/index_fwd.hpp>
 #include <boost/indexed_set/index_iterator.hpp>
 #include <boost/indexed_set/index_node.hpp>
+#include <boost/indexed_set/index_ops.hpp>
 #include <boost/indexed_set/modify_key_adaptor.hpp>
 #include <boost/indexed_set/prevent_eti.hpp>
 #include <boost/indexed_set/safe_mode.hpp>
 #include <boost/indexed_set/scope_guard.hpp>
+#include <boost/indexed_set/try_catch.hpp>
 #include <boost/indexed_set/unbounded.hpp>
 #include <boost/indexed_set/value_compare.hpp>
-#include <boost/iterator_adaptors.hpp>
+#include <boost/iterator/reverse_iterator.hpp>
 #include <boost/mpl/push_front.hpp>
 #include <boost/ref.hpp>
 #include <boost/tuple/tuple.hpp>
+#include <utility>
 
 #if defined(BOOST_INDEXED_SET_ENABLE_INVARIANT_CHECKING)
 #define BOOST_INDEXED_SET_INDEX_CHECK_INVARIANT \
@@ -53,7 +56,7 @@ struct unique_index_tag{};
 struct non_unique_index_tag{};
 
 template<
-  typename KeyFromValue,typename Compare,typename Allocator,
+  typename KeyFromValue,typename Compare,
   typename Super,typename TagList,typename Category
 >
 
@@ -65,7 +68,7 @@ class index:
 #else
 class index:
   BOOST_INDEXED_SET_PROTECTED_IF_MEMBER_TEMPLATE_FRIENDS Super,
-  public safe_container<index<KeyFromValue,Compare,Allocator,Super,TagList,Category> >
+  public safe_container<index<KeyFromValue,Compare,Super,TagList,Category> >
 #endif
 #else
 class index:BOOST_INDEXED_SET_PROTECTED_IF_MEMBER_TEMPLATE_FRIENDS Super
@@ -85,9 +88,9 @@ public:
   typedef value_comparison<
     value_type,KeyFromValue,Compare>                 value_compare;
   typedef tuple<key_from_value,key_compare>          ctor_args;
-  typedef Allocator                                  allocator_type;
-  typedef typename Allocator::reference              reference;
-  typedef typename Allocator::const_reference        const_reference;
+  typedef typename Super::final_allocator_type       allocator_type;
+  typedef typename allocator_type::reference         reference;
+  typedef typename allocator_type::const_reference   const_reference;
 
 #if defined(BOOST_INDEXED_SET_ENABLE_SAFE_MODE)
 #if BOOST_WORKAROUND(BOOST_MSVC,<1300)
@@ -104,12 +107,12 @@ public:
 
   typedef std::size_t                                size_type;      
   typedef std::ptrdiff_t                             difference_type;
-  typedef typename Allocator::pointer                pointer;
-  typedef typename Allocator::const_pointer          const_pointer;
+  typedef typename allocator_type::pointer           pointer;
+  typedef typename allocator_type::const_pointer     const_pointer;
   typedef typename
-    reverse_iterator_generator<iterator>::type       reverse_iterator;
+    boost::reverse_iterator<iterator>                reverse_iterator;
   typedef typename
-    reverse_iterator_generator<const_iterator>::type const_reverse_iterator;
+    boost::reverse_iterator<const_iterator>          const_reverse_iterator;
   typedef typename TagList::type                     tag_list;
 
 protected:
@@ -124,6 +127,7 @@ protected:
   typedef typename mpl::push_front<
     typename Super::const_iterator_type_list,
     const_iterator>::type                               const_iterator_type_list;
+  typedef typename Super::copy_map_type                 copy_map_type;
 
 private:
 #if defined(BOOST_INDEXED_SET_ENABLE_SAFE_MODE)
@@ -144,8 +148,8 @@ public:
    * not supposed to be created on their own. No range ctor either.
    */
 
-  index<KeyFromValue,Compare,Allocator,Super,TagList,Category>& operator=(
-    const index<KeyFromValue,Compare,Allocator,Super,TagList,Category>& x)
+  index<KeyFromValue,Compare,Super,TagList,Category>& operator=(
+    const index<KeyFromValue,Compare,Super,TagList,Category>& x)
   {
     BOOST_INDEXED_SET_INDEX_CHECK_INVARIANT;
     final()=x.final();
@@ -288,7 +292,7 @@ public:
   }
 #endif
 
-  void swap(index<KeyFromValue,Compare,Allocator,Super,TagList,Category>& x)
+  void swap(index<KeyFromValue,Compare,Super,TagList,Category>& x)
   {
     BOOST_INDEXED_SET_INDEX_CHECK_INVARIANT;
     final_swap_(x.final());
@@ -313,27 +317,15 @@ public:
   /* no need to provide non-const versions as index::iterator==index::const_iterator */
 
   template<typename CompatibleKey>
-    const_iterator find(const CompatibleKey& x)const
+  const_iterator find(const CompatibleKey& x)const
   {
-    return find(x,comp);
+    return make_iterator(index_find(header(),key,x,comp));
   }
 
   template<typename CompatibleKey,typename CompatibleCompare>
   const_iterator find(const CompatibleKey& x,const CompatibleCompare& comp)const
   {
-    node_type* y=header();
-    node_type* z=root();
-      
-    while (z){
-      if(!comp(key(z->value),x)){
-        y=z;
-        z=node_type::from_impl(z->left());
-      }
-      else z=node_type::from_impl(z->right());
-    }
-      
-    const_iterator j=make_iterator(y);   
-    return (j==end()||comp(x,key(*j)))?end():j;
+    return make_iterator(index_find(header(),key,x,comp));
   }
 
   template<typename CompatibleKey>
@@ -353,47 +345,25 @@ public:
   template<typename CompatibleKey>
   const_iterator lower_bound(const CompatibleKey& x)const
   {
-    return lower_bound(x,comp);
+    return make_iterator(index_lower_bound(header(),key,x,comp));
   }
 
   template<typename CompatibleKey,typename CompatibleCompare>
   const_iterator lower_bound(const CompatibleKey& x,const CompatibleCompare& comp)const
   {
-    node_type* y=header();
-    node_type* z=root();
-
-    while(z){
-      if(!comp(key(z->value),x)){
-        y=z;
-        z=node_type::from_impl(z->left());
-      }
-      else z=node_type::from_impl(z->right());
-    }
-
-    return make_iterator(y);
+    return make_iterator(index_lower_bound(header(),key,x,comp));
   }
 
   template<typename CompatibleKey>
   const_iterator upper_bound(const CompatibleKey& x)const
   {
-    return upper_bound(x,comp);
+    return make_iterator(index_upper_bound(header(),key,x,comp));
   }
 
   template<typename CompatibleKey,typename CompatibleCompare>
   const_iterator upper_bound(const CompatibleKey& x,const CompatibleCompare& comp)const
   {
-    node_type* y=header();
-    node_type* z=root();
-
-    while(z){
-      if(comp(x,key(z->value))){
-        y=z;
-        z=node_type::from_impl(z->left());
-      }
-      else z=node_type::from_impl(z->right());
-    }
-
-    return make_iterator(y);
+    return make_iterator(index_upper_bound(header(),key,x,comp));
   }
 
   template<typename CompatibleKey>
@@ -417,19 +387,7 @@ public:
 
   const_iterator find(key_param_type x)const
   {
-    node_type* y=header();
-    node_type* z=root();
-      
-    while (z){
-      if(!comp(key(z->value),x)){
-        y=z;
-        z=node_type::from_impl(z->left());
-      }
-      else z=node_type::from_impl(z->right());
-    }
-      
-    const_iterator j=make_iterator(y);   
-    return (j==end()||comp(x,key(*j)))?end():j;
+    return make_iterator(index_find(header(),key,x,comp));
   }
 
   size_type count(key_param_type x)const
@@ -441,34 +399,12 @@ public:
 
   const_iterator lower_bound(key_param_type x)const
   {
-    node_type* y=header();
-    node_type* z=root();
-
-    while(z){
-      if(!comp(key(z->value),x)){
-        y=z;
-        z=node_type::from_impl(z->left());
-      }
-      else z=node_type::from_impl(z->right());
-    }
-
-    return make_iterator(y);
+    return make_iterator(index_lower_bound(header(),key,x,comp));
   }
 
   const_iterator upper_bound(key_param_type x)const
   {
-    node_type* y=header();
-    node_type* z=root();
-
-    while(z){
-      if(comp(x,key(z->value))){
-        y=z;
-        z=node_type::from_impl(z->left());
-      }
-      else z=node_type::from_impl(z->right());
-    }
-
-    return make_iterator(y);
+    return make_iterator(index_upper_bound(header(),key,x,comp));
   }
 
   std::pair<const_iterator,const_iterator> equal_range(key_param_type x)const
@@ -493,22 +429,8 @@ public:
   }
 #endif
 
-  /* Create an iterator given a node pointer. This should be protected,
-   * but it is not simple to do so in a reasonable manner as it gets called
-   * by global project().
-   */
-
-#if defined(BOOST_INDEXED_SET_ENABLE_SAFE_MODE)
-  iterator       make_iterator(node_type* node){return iterator(node,this);}
-  const_iterator make_iterator(node_type* node)const
-    {return const_iterator(node,const_cast<index*>(this));}
-#else
-  iterator       make_iterator(node_type* node){return iterator(node);}
-  const_iterator make_iterator(node_type* node)const{return const_iterator(node);}
-#endif
-
-protected:
-  index(const ctor_args_list& args_list,const Allocator& al):
+BOOST_INDEXED_SET_PROTECTED_IF_MEMBER_TEMPLATE_FRIENDS:
+  index(const ctor_args_list& args_list,const allocator_type& al):
     Super(args_list.get_tail(),al),
 
 #if defined(BOOST_INDEXED_SET_ENABLE_SAFE_MODE)&&BOOST_WORKAROUND(BOOST_MSVC,<1300)
@@ -521,7 +443,7 @@ protected:
     empty_initialize();
   }
 
-  index(const index<KeyFromValue,Compare,Allocator,Super,TagList,Category>& x):
+  index(const index<KeyFromValue,Compare,Super,TagList,Category>& x):
     Super(x),
 
 #if defined(BOOST_INDEXED_SET_ENABLE_SAFE_MODE)&&BOOST_WORKAROUND(BOOST_MSVC,<1300)
@@ -531,48 +453,107 @@ protected:
     key(x.key),
     comp(x.comp)
   {
-    /* Copy ctor just takes the compare objects from x. The rest is done by
-     * the indexed_set class ctor.
+    /* Copy ctor just takes the compare objects from x. The rest is done in
+     * subsequent call to copy_().
      */
-    empty_initialize();
   }
 
-  std::pair<node_type*,bool> insert_(value_param_type v,node_type* x)
+#if defined(BOOST_INDEXED_SET_ENABLE_SAFE_MODE)
+  iterator       make_iterator(node_type* node){return iterator(node,this);}
+  const_iterator make_iterator(node_type* node)const
+    {return const_iterator(node,const_cast<index*>(this));}
+#else
+  iterator       make_iterator(node_type* node){return iterator(node);}
+  const_iterator make_iterator(node_type* node)const{return const_iterator(node);}
+#endif
+
+  void copy_(
+    const index<KeyFromValue,Compare,Super,TagList,Category>& x,const copy_map_type& map)
   {
-    std::pair<node_type*,bool> p=link2(key(v),x,Category());
-    if(!p.second)return p;
-
-    scope_guard undo=make_guard(
-      &index_node_impl::rebalance_for_erase,
-      x->impl(),ref(header()->parent()),ref(header()->left()),ref(header()->right()));
-
-    typedef typename Super::node_type super_node_type;
-    std::pair<super_node_type*,bool> p2=Super::insert_(v,x);
-    if(!p2.second){
-      return std::pair<node_type*,bool>(static_cast<node_type*>(p2.first),false);
+    if(!x.root()){
+      empty_initialize();
     }
+    else{
+      header()->color()=x.header()->color();
 
-    undo.dismiss();
-    return p;
+      node_type* root_cpy=map.find(static_cast<final_node_type*>(x.root()));
+      header()->parent()=root_cpy->impl();
+
+      node_type* leftmost_cpy=map.find(static_cast<final_node_type*>(x.leftmost()));
+      header()->left()=leftmost_cpy->impl();
+
+      node_type* rightmost_cpy=map.find(static_cast<final_node_type*>(x.rightmost()));
+      header()->right()=rightmost_cpy->impl();
+
+      typedef typename copy_map_type::const_iterator copy_map_iterator;
+      for(copy_map_iterator it=map.begin();it!=map.end();++it){
+        node_type* org=it->first;
+        node_type* cpy=it->second;
+
+        cpy->color()=org->color();
+
+        index_node_impl* parent_org=org->parent();
+        if(!parent_org)cpy->parent()=0;
+        else{
+          node_type* parent_cpy=map.find(
+            static_cast<final_node_type*>(node_type::from_impl(parent_org)));
+          cpy->parent()=parent_cpy->impl();
+          if(parent_org->left()==org->impl()){
+            parent_cpy->left()=cpy->impl();
+          }
+          else if(parent_org->right()==org->impl()){ /* header() does not satisfy this nor */
+            parent_cpy->right()=cpy->impl();         /* the previous check                 */
+          }
+        }
+
+        if(!org->left())cpy->left()=0;
+        if(!org->right())cpy->right()=0;
+      }
+    }
+    
+    Super::copy_(x,map);
   }
 
-  std::pair<node_type*,bool> insert_(value_param_type v,node_type* position,node_type* x)
+  node_type* insert_(value_param_type v,node_type* x)
   {
-    std::pair<node_type*,bool> p=link3(key(v),position,x,Category());
-    if(!p.second)return p;
-
-    scope_guard undo=make_guard(
-      &index_node_impl::rebalance_for_erase,
-      x->impl(),ref(header()->parent()),ref(header()->left()),ref(header()->right()));
-
-    typedef typename Super::node_type super_node_type;
-    std::pair<super_node_type*,bool> p2=Super::insert_(v,position,x);
-    if(!p2.second){
-      return std::pair<node_type*,bool>(static_cast<node_type*>(p2.first),false);
+    node_type* res=link2(key(v),x,Category());
+    if(res!=x)return res;
+    else{
+      BOOST_INDEXED_SET_TRY{
+        res=static_cast<node_type*>(Super::insert_(v,x));
+        if(res!=x){
+          index_node_impl::rebalance_for_erase(
+            x->impl(),header()->parent(),header()->left(),header()->right());
+        }
+        return res;
+      }
+      BOOST_INDEXED_SET_CATCH(...){
+        index_node_impl::rebalance_for_erase(
+          x->impl(),header()->parent(),header()->left(),header()->right());
+        BOOST_INDEXED_SET_RETHROW;
+      }
     }
+  }
 
-    undo.dismiss();
-    return p;
+  node_type* insert_(value_param_type v,node_type* position,node_type* x)
+  {
+    node_type* res=link2(key(v),x,Category());
+    if(res!=x)return res;
+    else{
+      BOOST_INDEXED_SET_TRY{
+        res=static_cast<node_type*>(Super::insert_(v,position,x));
+        if(res!=x){
+          index_node_impl::rebalance_for_erase(
+            x->impl(),header()->parent(),header()->left(),header()->right());
+        }
+        return res;
+      }
+      BOOST_INDEXED_SET_CATCH(...){
+        index_node_impl::rebalance_for_erase(
+          x->impl(),header()->parent(),header()->left(),header()->right());
+        BOOST_INDEXED_SET_RETHROW;
+      }
+    }
   }
 
   void erase_(node_type* x)
@@ -586,7 +567,7 @@ protected:
 #endif
   }
 
-  void swap_(index<KeyFromValue,Compare,Allocator,Super,TagList,Category>& x)
+  void swap_(index<KeyFromValue,Compare,Super,TagList,Category>& x)
   {
     std::swap(key,x.key);
     std::swap(comp,x.comp);
@@ -612,53 +593,92 @@ protected:
 
     index_node_impl::rebalance_for_erase(
       x->impl(),header()->parent(),header()->left(),header()->right());
-    scope_guard undo_rebalance=make_guard(
-      &index_node_impl::restore,
-      x->impl(),prior->impl(),next->impl(),header()->impl());
 
-    if(!link2(key(v),x,Category()).second)return false;
-    scope_guard undo_link=make_guard(
-      &index_node_impl::rebalance_for_erase,
-      x->impl(),ref(header()->parent()),ref(header()->left()),ref(header()->right()));
+    BOOST_INDEXED_SET_TRY{
+      if(link2(key(v),x,Category())!=x){
+        index_node_impl::restore(x->impl(),prior->impl(),next->impl(),header()->impl());
+        return false;
+      }
 
-    if(!Super::update_(v,x))return false;
-
-    undo_link.dismiss();
-    undo_rebalance.dismiss();
-    return true;
+      BOOST_INDEXED_SET_TRY{
+        if(!Super::update_(v,x)){
+          index_node_impl::rebalance_for_erase(
+            x->impl(),header()->parent(),header()->left(),header()->right());
+          index_node_impl::restore(x->impl(),prior->impl(),next->impl(),header()->impl());
+          return false;
+        }
+        else return true;
+      }
+      BOOST_INDEXED_SET_CATCH(...){
+        index_node_impl::rebalance_for_erase(
+          x->impl(),header()->parent(),header()->left(),header()->right());
+        BOOST_INDEXED_SET_RETHROW;
+      }
+    }
+    BOOST_INDEXED_SET_CATCH(...){
+      index_node_impl::restore(x->impl(),prior->impl(),next->impl(),header()->impl());
+      BOOST_INDEXED_SET_RETHROW;
+    }
   }
 
 #if !defined(BOOST_NO_MEMBER_TEMPLATES)||defined(BOOST_MSVC6_MEMBER_TEMPLATES)
   bool modify_(node_type* x)
   {
-    scope_guard eraser=make_obj_guard(*this,&index::erase_,x);
-    bool b=in_place(x,Category());
-    eraser.dismiss();
-
-#if defined(BOOST_INDEXED_SET_ENABLE_SAFE_MODE)
-    scope_guard detacher=make_obj_guard(*this,&index::detach_iterators,x);
-#endif
-
+    bool b;
+    BOOST_INDEXED_SET_TRY{
+      b=in_place(x,Category());
+    }
+    BOOST_INDEXED_SET_CATCH(...){
+      erase_(x);
+      BOOST_INDEXED_SET_RETHROW;
+    }
     if(!b){
       index_node_impl::rebalance_for_erase(
         x->impl(),header()->parent(),header()->left(),header()->right());
-
-      scope_guard super_eraser=make_obj_guard(static_cast<Super&>(*this),&Super::erase_,x);
-      if(!link2(key(x->value),x,Category()).second)return false;
-      super_eraser.dismiss();
-    }
-
-    scope_guard local_eraser=make_guard(
-      &index_node_impl::rebalance_for_erase,
-      x->impl(),ref(header()->parent()),ref(header()->left()),ref(header()->right()));
-    if(!Super::modify_(x))return false;
-    local_eraser.dismiss();
+      BOOST_INDEXED_SET_TRY{
+        if(link2(key(x->value),x,Category())!=x){
+          Super::erase_(x);
 
 #if defined(BOOST_INDEXED_SET_ENABLE_SAFE_MODE)
-    detacher.dismiss();
+          detach_iterators(x);
+#endif
+          return false;
+        }
+      }
+      BOOST_INDEXED_SET_CATCH(...){
+        Super::erase_(x);
+
+#if defined(BOOST_INDEXED_SET_ENABLE_SAFE_MODE)
+        detach_iterators(x);
 #endif
 
-    return true;
+        BOOST_INDEXED_SET_RETHROW;
+      }
+    }
+
+    BOOST_INDEXED_SET_TRY{
+      if(!Super::modify_(x)){
+        index_node_impl::rebalance_for_erase(
+          x->impl(),header()->parent(),header()->left(),header()->right());
+
+#if defined(BOOST_INDEXED_SET_ENABLE_SAFE_MODE)
+        detach_iterators(x);
+#endif
+
+        return false;
+      }
+      else return true;
+    }
+    BOOST_INDEXED_SET_CATCH(...){
+      index_node_impl::rebalance_for_erase(
+        x->impl(),header()->parent(),header()->left(),header()->right());
+
+#if defined(BOOST_INDEXED_SET_ENABLE_SAFE_MODE)
+      detach_iterators(x);
+#endif
+
+      BOOST_INDEXED_SET_RETHROW;
+    }
   }
 #endif
 
@@ -744,7 +764,7 @@ private:
     return z;
   }
 
-  std::pair<node_type*,bool> link2(key_param_type k,node_type* z,unique_index_tag)
+  node_type* link2(key_param_type k,node_type* z,unique_index_tag)
   {
     node_type* y=header();
     node_type* x=root();
@@ -756,15 +776,15 @@ private:
     }
     iterator j=make_iterator(y);   
     if(c){
-      if(j==begin())return std::pair<node_type*,bool>(link4(k,x,y,z),true);
+      if(j==begin())return link4(k,x,y,z);
       else --j;
     }
 
-    if(comp(key(*j),k))return std::pair<node_type*,bool>(link4(k,x,y,z),true);
-    else return std::pair<node_type*,bool>(j.get_node(),false);
+    if(comp(key(*j),k))return link4(k,x,y,z);
+    else return j.get_node();
   }
 
-  std::pair<node_type*,bool> link2(key_param_type k,node_type* z,non_unique_index_tag)
+  node_type* link2(key_param_type k,node_type* z,non_unique_index_tag)
   {
     node_type* y=header();
     node_type* x=root();
@@ -772,21 +792,20 @@ private:
      y=x;
      x=node_type::from_impl(comp(k,key(x->value))?x->left():x->right());
     }
-    return std::pair<node_type*,bool>(link4(k,x,y,z),true);
+    return link4(k,x,y,z);
   }
 
-  std::pair<node_type*,bool> link3(
-    key_param_type k,node_type* position,node_type* z,unique_index_tag)
+  node_type* link3(key_param_type k,node_type* position,node_type* z,unique_index_tag)
   {
     if(position->impl()==header()->left()){ 
       if(size()>0&&comp(k,key(position->value))){
-        return std::pair<node_type*,bool>(link4(k,position,position,z),true);
+        return link4(k,position,position,z);
       }
       else return link2(k,z,unique_index_tag());
     } 
     else if(position==header()){ 
       if(comp(key(rightmost()->value),k)){
-        return std::pair<node_type*,bool>(link4(k,0,rightmost(),z),true);
+        return link4(k,0,rightmost(),z);
       }
       else return link2(k,z,unique_index_tag());
     } 
@@ -794,25 +813,24 @@ private:
       node_type* before=position;
       node_type::decrement(before);
       if(comp(key(before->value),k)&&comp(k,key(position->value))){
-        if(before->right()==0)return std::pair<node_type*,bool>(link4(k,0,before,z),true); 
-        else return std::pair<node_type*,bool>(link4(k,position,position,z),true);
+        if(before->right()==0)return link4(k,0,before,z); 
+        else return link4(k,position,position,z);
       } 
       else return link2(k,z,unique_index_tag());
     }
   }
 
-  std::pair<node_type*,bool> link3(
-    key_param_type k,node_type* position,node_type* z,non_unique_index_tag)
+  node_type* link3(key_param_type k,node_type* position,node_type* z,non_unique_index_tag)
   {
     if(position->impl()==header()->left()){ 
       if(size()>0&&!comp(key(position->value),k)){
-        return std::pair<node_type*,bool>(link4(k,position,position,z),true);
+        return link4(k,position,position,z);
       }
       else return link2(k,z,non_unique_index_tag());
     } 
     else if(position==header()){
       if(!comp(k,key(rightmost()->value))){
-        return std::pair<node_type*,bool>(link4(k,0,rightmost(),z),true);
+        return link4(k,0,rightmost(),z);
       }
       else return link2(k,z,non_unique_index_tag());
     } 
@@ -820,8 +838,8 @@ private:
       node_type* before=position;
       node_type::decrement(before);
       if (!comp(k,key(before->value))&&!comp(key(position->value),k)){
-        if(before->right()==0)return std::pair<node_type*,bool>(link4(k,0,before,z),true); 
-        else return std::pair<node_type*,bool>(link4(k,position,position,z),true);
+        if(before->right()==0)return link4(k,0,before,z); 
+        else return link4(k,position,position,z);
       } 
       else return link2(k,z,non_unique_index_tag());
     }
@@ -911,67 +929,67 @@ private:
 /* comparison */
 
 template<
-  typename KeyFromValue,typename Compare,typename Allocator,
+  typename KeyFromValue,typename Compare,
   typename Super,typename TagList,typename Category
 >
 bool operator==(
-  const index<KeyFromValue,Compare,Allocator,Super,TagList,Category>& x,
-  const index<KeyFromValue,Compare,Allocator,Super,TagList,Category>& y)
+  const index<KeyFromValue,Compare,Super,TagList,Category>& x,
+  const index<KeyFromValue,Compare,Super,TagList,Category>& y)
 {
   return x.size()==y.size()&&std::equal(x.begin(),x.end(),y.begin());
 }
 
 template<
-  typename KeyFromValue,typename Compare,typename Allocator,
+  typename KeyFromValue,typename Compare,
   typename Super,typename TagList,typename Category
 >
 bool operator<(
-  const index<KeyFromValue,Compare,Allocator,Super,TagList,Category>& x,
-  const index<KeyFromValue,Compare,Allocator,Super,TagList,Category>& y)
+  const index<KeyFromValue,Compare,Super,TagList,Category>& x,
+  const index<KeyFromValue,Compare,Super,TagList,Category>& y)
 {
   return std::lexicographical_compare(x.begin(),x.end(),y.begin(),y.end());
 }
 
 template<
-  typename KeyFromValue,typename Compare,typename Allocator,
+  typename KeyFromValue,typename Compare,
   typename Super,typename TagList,typename Category
 >
 bool operator!=(
-  const index<KeyFromValue,Compare,Allocator,Super,TagList,Category>& x,
-  const index<KeyFromValue,Compare,Allocator,Super,TagList,Category>& y)
+  const index<KeyFromValue,Compare,Super,TagList,Category>& x,
+  const index<KeyFromValue,Compare,Super,TagList,Category>& y)
 {
   return !(x==y);
 }
 
 template<
-  typename KeyFromValue,typename Compare,typename Allocator,
+  typename KeyFromValue,typename Compare,
   typename Super,typename TagList,typename Category
 >
 bool operator>(
-  const index<KeyFromValue,Compare,Allocator,Super,TagList,Category>& x,
-  const index<KeyFromValue,Compare,Allocator,Super,TagList,Category>& y)
+  const index<KeyFromValue,Compare,Super,TagList,Category>& x,
+  const index<KeyFromValue,Compare,Super,TagList,Category>& y)
 {
   return y<x;
 }
 
 template<
-  typename KeyFromValue,typename Compare,typename Allocator,
+  typename KeyFromValue,typename Compare,
   typename Super,typename TagList,typename Category
 >
 bool operator>=(
-  const index<KeyFromValue,Compare,Allocator,Super,TagList,Category>& x,
-  const index<KeyFromValue,Compare,Allocator,Super,TagList,Category>& y)
+  const index<KeyFromValue,Compare,Super,TagList,Category>& x,
+  const index<KeyFromValue,Compare,Super,TagList,Category>& y)
 {
   return !(x<y);
 }
 
 template<
-  typename KeyFromValue,typename Compare,typename Allocator,
+  typename KeyFromValue,typename Compare,
   typename Super,typename TagList,typename Category
 >
 bool operator<=(
-  const index<KeyFromValue,Compare,Allocator,Super,TagList,Category>& x,
-  const index<KeyFromValue,Compare,Allocator,Super,TagList,Category>& y)
+  const index<KeyFromValue,Compare,Super,TagList,Category>& x,
+  const index<KeyFromValue,Compare,Super,TagList,Category>& y)
 {
   return !(x>y);
 }
@@ -979,12 +997,12 @@ bool operator<=(
 /*  specialized algorithms */
 
 template<
-  typename KeyFromValue,typename Compare,typename Allocator,
+  typename KeyFromValue,typename Compare,
   typename Super,typename TagList,typename Category
 >
 void swap(
-  index<KeyFromValue,Compare,Allocator,Super,TagList,Category>& x,
-  index<KeyFromValue,Compare,Allocator,Super,TagList,Category>& y)
+  index<KeyFromValue,Compare,Super,TagList,Category>& x,
+  index<KeyFromValue,Compare,Super,TagList,Category>& y)
 {
   x.swap(y);
 }
@@ -1007,11 +1025,11 @@ struct unique
     typedef detail::index_node<Super> type;
   };
 
-  template<typename Allocator,typename Super>
+  template<typename Super>
   struct index_class_type
   {
     typedef detail::index<
-      key_from_value_type,compare_type,Allocator,
+      key_from_value_type,compare_type,
       Super,tag_list_type,detail::unique_index_tag> type;
   };
 };
@@ -1030,11 +1048,11 @@ struct non_unique
     typedef detail::index_node<Super> type;
   };
 
-  template<typename Allocator,typename Super>
+  template<typename Super>
   struct index_class_type
   {
     typedef detail::index<
-      key_from_value_type,compare_type,Allocator,
+      key_from_value_type,compare_type,
       Super,tag_list_type,detail::non_unique_index_tag> type;
   };
 };

@@ -11,7 +11,7 @@
 <h1><img src="../../../c++boost.gif" alt="c++boost.gif (8819 bytes)" align=
 "middle" width="277" height="86">Boost.IndexedSet Tutorial</h1>
 
-<h2><a name="contents">Contents</a></h2>
+<h2>Contents</h2>
 
 <ul>
   <li><a href="#rationale">Rationale</a></li>
@@ -424,7 +424,7 @@ most common situations in the design of an <code>indexed_set</code>. However, th
 user is free to provide her own key extractors in more exotic situations, as long as
 these conform to the <a href="reference.html#key_extractors"><code>Key
 Extractor</code></a> concept. For instance,
-<a href="examples.html#example5">example 5</a> implements several key
+<a href="examples.html#example6">example 6</a> implements several key
 extraction techniques called for when elements and/or keys are accessed via
 pointers.
 </p>
@@ -456,7 +456,7 @@ they can be specified as an additional parameter in the index declaration:
 <span class=special>&gt;</span> <span class=identifier>employee_set</span><span class=special>;</span>
 </pre></blockquote>
 
-<p>See also <a href="examples.html#example6">example 6</a> in the examples section
+<p>See also <a href="examples.html#example7">example 7</a> in the examples section
 for another application of user-defined comparison predicates.
 </p>
 
@@ -788,7 +788,9 @@ Appropriate instantiations of <code>indexed_set</code> can in fact simulate
 <code>std::set</code> and <code>std::multiset</code>, as shown in the
 <a href="advanced_topics.html#simulate_std_containers">advanced topics</a>
 section. These simulations are as efficient as the original STL containers; please
-consult the reference for further information on complexity guarantees.
+consult the <a href="reference.html">reference</a> for further information on
+complexity guarantees and the <a href="performance.html">performance section</a>
+for practical measurements of efficiency.
 </p>
 
 <!--
@@ -817,9 +819,9 @@ forms:
 
 <hr>
 
-<p>Revised December 15th 2003</p>
+<p>Revised February 12th 2004</p>
 
-<p>Copyright &copy; 2003 Joaqu&iacute;n M L&oacute;pez Mu&ntilde;oz.
+<p>Copyright &copy; 2003-2004 Joaqu&iacute;n M L&oacute;pez Mu&ntilde;oz.
 Use, modification, and distribution are subject to the Boost Software 
 License, Version 1.0. (See accompanying file <a href="../../../LICENSE_1_0.txt">
 LICENSE_1_0.txt</a> or copy at <a href="http://www.boost.org/LICENSE_1_0.txt">

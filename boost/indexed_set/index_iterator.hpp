@@ -1,4 +1,4 @@
-/* Copyright Joaquín M López Muñoz 2003. Use, modification, and distribution
+/* Copyright Joaquín M López Muñoz 2003-2004. Use, modification, and distribution
  * are subject to the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
@@ -53,7 +53,7 @@ class index_iterator:
 
 {
 #if defined(BOOST_INDEXED_SET_ENABLE_SAFE_MODE)
-private:
+public:
 
 #if BOOST_WORKAROUND(BOOST_MSVC,<1300)
   typedef index_proxy<Node> container_type;
@@ -61,6 +61,7 @@ private:
   typedef Container         container_type;
 #endif
 
+private:
   typedef safe_iterator<container_type> safe_super;
 
 public:

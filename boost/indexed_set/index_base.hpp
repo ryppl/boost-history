@@ -1,4 +1,4 @@
-/* Copyright Joaquín M López Muñoz 2003. Use, modification, and distribution
+/* Copyright Joaquín M López Muñoz 2003-2004. Use, modification, and distribution
  * are subject to the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
@@ -11,6 +11,7 @@
 #include <boost/config.hpp> /* keep it first to prevent some nasty warnings in MSVC */
 #include <boost/call_traits.hpp>
 #include <boost/detail/workaround.hpp>
+#include <boost/indexed_set/copy_map.hpp>
 #include <boost/indexed_set/node_type.hpp>
 #include <boost/indexed_set_fwd.hpp>
 #include <boost/mpl/vector.hpp>
@@ -40,9 +41,11 @@ protected:
     Value,IndexSpecifierList,Allocator>::type             final_node_type;
   typedef indexed_set<Value,IndexSpecifierList,Allocator> final_type;
   typedef tuples::null_type                               ctor_args_list;
+  typedef Allocator                                       final_allocator_type;
   typedef mpl::vector0<>                                  index_type_list;
   typedef mpl::vector0<>                                  iterator_type_list;
   typedef mpl::vector0<>                                  const_iterator_type_list;
+  typedef copy_map<final_node_type,Allocator>             copy_map_type;
 
 private:
   typedef typename call_traits<Value>::param_type value_param_type;
@@ -50,16 +53,18 @@ private:
 protected:
   explicit index_base(const ctor_args_list&,const Allocator&){}
 
-  std::pair<node_type*,bool> insert_(value_param_type v,node_type* x)
+  void copy_(const index_base<Value,IndexSpecifierList,Allocator>&,const copy_map_type&){}
+
+  node_type* insert_(value_param_type v,node_type* x)
   {
     detail::allocator::construct(&x->value,v);
-    return std::pair<node_type*,bool>(x,true);
+    return x;
   }
 
-  std::pair<node_type*,bool> insert_(value_param_type v,node_type* position,node_type* x)
+  node_type* insert_(value_param_type v,node_type* position,node_type* x)
   {
     detail::allocator::construct(&x->value,v);
-    return std::pair<node_type*,bool>(x,true);
+    return x;
   }
 
   void erase_(node_type* x)

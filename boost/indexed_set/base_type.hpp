@@ -1,4 +1,4 @@
-/* Copyright Joaquín M López Muñoz 2003. Use, modification, and distribution
+/* Copyright Joaquín M López Muñoz 2003-2004. Use, modification, and distribution
  * are subject to the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
@@ -31,23 +31,21 @@ namespace detail{
  */
 
 #if BOOST_WORKAROUND(BOOST_MSVC,<1300)
-template<typename Allocator>
 struct index_applier
 {
   template<typename IndexSpecifierIterator,typename Super>
   struct apply:
     msvc_index_specifier<IndexSpecifierIterator::type>::
-      template result_index_type<Allocator,Super>
+      template result_index_type<Super>
   {
   }; 
 };
 #else
-template<typename Allocator>
 struct index_applier
 {
   template<typename IndexSpecifierIterator,typename Super>
   struct apply:IndexSpecifierIterator::type::
-    BOOST_NESTED_TEMPLATE index_class_type<Allocator,Super>
+    BOOST_NESTED_TEMPLATE index_class_type<Super>
   {
   }; 
 };
@@ -64,7 +62,7 @@ struct indexed_set_base_type
       typename IndexSpecifierList::type,
       index_base<Value,IndexSpecifierList,Allocator>,
       mpl::bind2<
-        index_applier<Allocator>,
+        index_applier,
         mpl::_2,
         mpl::_1
       >

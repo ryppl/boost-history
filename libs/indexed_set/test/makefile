@@ -12,6 +12,7 @@ SOURCES = \
   test_copy_assignment.cpp\
   test_iterators.cpp\
   test_key_extractors.cpp\
+  test_list_ops.cpp\
   test_modifiers.cpp\
   test_projection.cpp\
   test_range.cpp\
