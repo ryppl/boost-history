@@ -6,6 +6,8 @@
 #     pragma once
 #  endif
 
+#  include <boost/config.hpp> // Make sure size_t is in 'std'
+#  include <cstddef>
 #  include <boost/outfmt/detail/type_traits.hpp>
 #  include <boost/outfmt/detail/select.hpp>    
 
@@ -33,7 +35,7 @@
             typedef array_tag category;
             static const T* t;
             typedef typename remove_bounds<T>::type base_type;
-            BOOST_STATIC_CONSTANT(size_t, length = sizeof(T) / sizeof(*t[0]));
+            BOOST_STATIC_CONSTANT(std::size_t, length = sizeof(T) / sizeof(*t[0]));
         };
 
         //--------------container_deducer-------------------------------------//
