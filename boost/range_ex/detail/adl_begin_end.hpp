@@ -4,9 +4,9 @@
 //
 /////////////////////////////////////////////////////////////////////////////
 
-#if _MSC_VER> 1000
+#if defined(_MSC_VER) && _MSC_VER >= 1000
 #pragma once
-#endif // _MSC_VER> 1000
+#endif
 
 #ifndef ADL_BEGIN_END_EN_14_12_2004
 #define ADL_BEGIN_END_EN_14_12_2004
@@ -17,21 +17,21 @@
 
 namespace boost
 {
-    namespace detail
+    namespace range_ex_detail
     {
         template<typename Rng>
-        inline BOOST_DEDUCED_TYPENAME ::boost::range_result_iterator<Rng>::type
+        inline BOOST_DEDUCED_TYPENAME boost::range_result_iterator<Rng>::type
         adl_begin(Rng & rng)
         {
-            using ::boost::begin;
+            using boost::begin;
             return begin(rng);
         }
 
         template<typename Rng>
-        inline BOOST_DEDUCED_TYPENAME ::boost::range_result_iterator<Rng>::type
+        inline BOOST_DEDUCED_TYPENAME boost::range_result_iterator<Rng>::type
         adl_end(Rng & rng)
         {
-            using ::boost::end;
+            using boost::end;
             return end(rng);
         }
     }

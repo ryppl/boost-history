@@ -4,9 +4,9 @@
 //
 /////////////////////////////////////////////////////////////////////////////
 
-#if _MSC_VER > 1000
+#if defined(_MSC_VER) && _MSC_VER >= 1000
 #pragma once
-#endif // _MSC_VER > 1000
+#endif
 
 #ifndef HAS_UNIQUE_EN_14_12_2004
 #define HAS_UNIQUE_EN_14_12_2004

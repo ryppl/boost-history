@@ -16,7 +16,7 @@ namespace boost
 ///////////////////////////////////////////////////////////////////////////////
 // range_adaptor
 //
-template<typename Base, typename Args = ::boost::tuple<> >
+template<typename Base, typename Args = boost::tuple<> >
 struct range_adaptor
     : Base
 {
@@ -44,15 +44,15 @@ struct range_adaptor
     }
 
     template<typename Arg1>
-    range_adaptor<Base,::boost::tuple<Arg1> > operator ()(Arg1 const & arg1) const
+    range_adaptor<Base,boost::tuple<Arg1> > operator ()(Arg1 const & arg1) const
     {
-        return range_adaptor<Base,::boost::tuple<Arg1> >(*this,::boost::make_tuple(arg1));
+        return range_adaptor<Base,boost::tuple<Arg1> >(*this,boost::make_tuple(arg1));
     }
 
     template<typename Arg1,typename Arg2>
-    range_adaptor<Base,::boost::tuple<Arg1,Arg2> > operator ()(Arg1 const & arg1,Arg2 const & arg2) const
+    range_adaptor<Base,boost::tuple<Arg1,Arg2> > operator ()(Arg1 const & arg1,Arg2 const & arg2) const
     {
-        return range_adaptor<Base,::boost::tuple<Arg1,Arg2> >(*this,::boost::make_tuple(arg1,arg2));
+        return range_adaptor<Base,boost::tuple<Arg1,Arg2> >(*this,boost::make_tuple(arg1,arg2));
     }
 
     Args args;
@@ -62,12 +62,12 @@ struct range_adaptor
 // operator |
 //
 template<typename Rng,typename Base,typename Args>
-inline ::boost::iterator_range<
+inline boost::iterator_range<
     BOOST_DEDUCED_TYPENAME Base::BOOST_NESTED_TEMPLATE apply<Rng, Args>::type
 >
 operator |(Rng & rng, range_adaptor<Base,Args> const & that)
 {
-    return ::boost::make_iterator_range(
+    return boost::make_iterator_range(
         that.begin(rng,that.args)
       , that.end(rng,that.args)
     );
@@ -77,12 +77,12 @@ operator |(Rng & rng, range_adaptor<Base,Args> const & that)
 // operator |
 //
 template<typename Rng,typename Base,typename Args>
-inline ::boost::iterator_range<
+inline boost::iterator_range<
     BOOST_DEDUCED_TYPENAME Base::BOOST_NESTED_TEMPLATE apply<Rng const, Args>::type
 >
 operator |(Rng const & rng, range_adaptor<Base,Args> const & that)
 {
-    return ::boost::make_iterator_range(
+    return boost::make_iterator_range(
         that.begin(rng,that.args)
       , that.end(rng,that.args)
     );

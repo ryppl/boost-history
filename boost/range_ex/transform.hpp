@@ -6,6 +6,7 @@
 #ifndef RANGE_TRANSFORM_EN_12_09_2004_HPP
 #define RANGE_TRANSFORM_EN_12_09_2004_HPP
 
+#include <boost/static_assert.hpp>
 #include <boost/iterator/transform_iterator.hpp>
 #include <boost/range/result_iterator.hpp>
 #include "./iterator_cast.hpp"
@@ -21,32 +22,32 @@ namespace boost
 ///
 template<typename FwdRng,typename UnaryFunc>
 boost::iterator_range<
-    ::boost::transform_iterator<
+    boost::transform_iterator<
         UnaryFunc
-      , BOOST_DEDUCED_TYPENAME ::boost::range_iterator<FwdRng>::type
+      , BOOST_DEDUCED_TYPENAME boost::range_iterator<FwdRng>::type
     >
 >
 make_transform_range(FwdRng& rng, UnaryFunc fun)
 {
-    return ::boost::make_iterator_range(
-        ::boost::make_transform_iterator(detail::adl_begin(rng), fun)
-      , ::boost::make_transform_iterator(detail::adl_end(rng), fun)
+    return boost::make_iterator_range(
+        boost::make_transform_iterator(range_ex_detail::adl_begin(rng), fun)
+      , boost::make_transform_iterator(range_ex_detail::adl_end(rng), fun)
     );
 }
 
 /// \overload
 template<typename FwdRng,typename UnaryFunc>
 boost::iterator_range<
-    ::boost::transform_iterator<
+    boost::transform_iterator<
         UnaryFunc
-      , BOOST_DEDUCED_TYPENAME ::boost::range_const_iterator<FwdRng>::type
+      , BOOST_DEDUCED_TYPENAME boost::range_const_iterator<FwdRng>::type
     >
 >
 make_transform_range(FwdRng const& rng, UnaryFunc fun)
 {
-    return ::boost::make_iterator_range(
-        ::boost::make_transform_iterator(detail::adl_begin(rng), fun)
-      , ::boost::make_transform_iterator(detail::adl_end(rng), fun)
+    return boost::make_iterator_range(
+        boost::make_transform_iterator(range_ex_detail::adl_begin(rng), fun)
+      , boost::make_transform_iterator(range_ex_detail::adl_end(rng), fun)
     );
 }
 
@@ -57,10 +58,10 @@ struct transform_range_adaptor
     template<typename Rng,typename Args>
     struct apply
     {
-        BOOST_STATIC_ASSERT((::boost::tuples::length<Args>::value==1));
-        typedef BOOST_DEDUCED_TYPENAME ::boost::range_result_iterator<Rng>::type iterator;
-        typedef ::boost::transform_iterator<
-            BOOST_DEDUCED_TYPENAME ::boost::tuples::element<0,Args>::type
+        BOOST_STATIC_ASSERT((boost::tuples::length<Args>::value==1));
+        typedef BOOST_DEDUCED_TYPENAME boost::range_result_iterator<Rng>::type iterator;
+        typedef boost::transform_iterator<
+            BOOST_DEDUCED_TYPENAME boost::tuples::element<0,Args>::type
           , iterator
         >
         type;
@@ -70,9 +71,9 @@ struct transform_range_adaptor
     static BOOST_DEDUCED_TYPENAME apply<Rng,Args>::type
     begin(Rng & rng, Args const & args)
     {
-        return ::boost::make_transform_iterator(
-            detail::adl_begin(rng)
-          , ::boost::tuples::get<0>(args)
+        return boost::make_transform_iterator(
+            range_ex_detail::adl_begin(rng)
+          , boost::tuples::get<0>(args)
         );
     }
 
@@ -80,9 +81,9 @@ struct transform_range_adaptor
     static BOOST_DEDUCED_TYPENAME apply<Rng,Args>::type
     end(Rng & rng, Args const & args)
     {
-        return ::boost::make_transform_iterator(
-            detail::adl_end(rng)
-          , ::boost::tuples::get<0>(args)
+        return boost::make_transform_iterator(
+            range_ex_detail::adl_end(rng)
+          , boost::tuples::get<0>(args)
         );
     }
 };

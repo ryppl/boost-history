@@ -4,9 +4,9 @@
 //
 /////////////////////////////////////////////////////////////////////////////
 
-#if _MSC_VER > 1000
+#if defined(_MSC_VER) && _MSC_VER >= 1000
 #pragma once
-#endif // _MSC_VER > 1000
+#endif
 
 #ifndef HAS_FIND_EN_14_12_2004
 #define HAS_FIND_EN_14_12_2004
@@ -22,14 +22,14 @@ namespace boost
     // Specialize this for user-defined types
     template<typename T>
     struct has_find
-        : ::boost::mpl::or_<
-            ::boost::mpl::or_<
+        : boost::mpl::or_<
+            boost::mpl::or_<
                 is_std_map<T>
               , is_std_multimap<T>
               , is_std_set<T>
               , is_std_multiset<T>
             >
-          , ::boost::mpl::or_<
+          , boost::mpl::or_<
                 is_std_hash_map<T>
               , is_std_hash_multimap<T>
               , is_std_hash_set<T>

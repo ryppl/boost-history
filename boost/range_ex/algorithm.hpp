@@ -27,9 +27,9 @@
 // Problem: should member functions be called automatically? Or should the user
 // know that it is better to call map::find() than find( map )?
 
-#if _MSC_VER> 1000
+#if defined(_MSC_VER) && _MSC_VER >= 1000
 #pragma once
-#endif // _MSC_VER> 1000
+#endif
 
 #ifndef ALGORITHM_EN_14_12_2004
 #define ALGORITHM_EN_14_12_2004
@@ -50,12 +50,12 @@
 
 namespace boost
 {
-    namespace detail
+    namespace range_ex_detail
     {
         template<typename Rng>
         struct iter_pair
         {
-            typedef BOOST_DEDUCED_TYPENAME ::boost::range_result_iterator<
+            typedef BOOST_DEDUCED_TYPENAME boost::range_result_iterator<
                 Rng
             >::type iterator;
 
@@ -74,22 +74,22 @@ namespace boost
     template<typename Rng,typename Fun>
     inline Fun for_each(Rng & rng,Fun fun)
     {
-        return std::for_each(detail::adl_begin(rng),detail::adl_end(rng),fun);
+        return std::for_each(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),fun);
     }
 
     /// \overload
     template<typename Rng,typename Fun>
     inline Fun for_each(Rng const & rng,Fun fun)
     {
-        return std::for_each(detail::adl_begin(rng),detail::adl_end(rng),fun);
+        return std::for_each(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),fun);
     }
 
-    namespace detail
+    namespace range_ex_detail
     {
         template<typename Rng,typename Val>
-        inline BOOST_DEDUCED_TYPENAME ::boost::lazy_enable_if<
+        inline BOOST_DEDUCED_TYPENAME boost::lazy_enable_if<
             has_find<Rng>
-          , ::boost::range_result_iterator<Rng>
+          , boost::range_result_iterator<Rng>
         >::type
         find_impl(Rng & rng,Val const & val)
         {
@@ -97,13 +97,13 @@ namespace boost
         }
 
         template<typename Rng,typename Val>
-        inline BOOST_DEDUCED_TYPENAME ::boost::lazy_disable_if<
+        inline BOOST_DEDUCED_TYPENAME boost::lazy_disable_if<
             has_find<Rng>
-          , ::boost::range_result_iterator<Rng>
+          , boost::range_result_iterator<Rng>
         >::type
         find_impl(Rng & rng,Val const & val)
         {
-            return std::find(detail::adl_begin(rng),detail::adl_end(rng),val);
+            return std::find(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),val);
         }
     }
 
@@ -112,18 +112,18 @@ namespace boost
     /// range-based version of the find std algorithm
     ///
     template<typename Rng,typename Val>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_iterator<Rng>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng>::type
     find(Rng & rng,Val const & val)
     {
-        return detail::find_impl(rng,val);
+        return range_ex_detail::find_impl(rng,val);
     }
 
     /// \overload
     template<typename Rng,typename Val>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_const_iterator<Rng>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_const_iterator<Rng>::type
     find(Rng const & rng,Val const & val)
     {
-        return detail::find_impl(rng,val);
+        return range_ex_detail::find_impl(rng,val);
     }
 
     /// \brief template function find_if
@@ -131,18 +131,18 @@ namespace boost
     /// range-based version of the find_if std algorithm
     ///
     template<typename Rng,typename Pred>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_iterator<Rng>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng>::type
     find_if(Rng & rng,Pred pred)
     {
-        return std::find_if(detail::adl_begin(rng),detail::adl_end(rng),pred);
+        return std::find_if(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),pred);
     }
 
     /// \overload
     template<typename Rng,typename Pred>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_const_iterator<Rng>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_const_iterator<Rng>::type
     find_if(Rng const & rng,Pred pred)
     {
-        return std::find_if(detail::adl_begin(rng),detail::adl_end(rng),pred);
+        return std::find_if(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),pred);
     }
 
     /// \brief template function find_end
@@ -150,38 +150,38 @@ namespace boost
     /// range-based version of the find_end std algorithm
     ///
     template<typename Rng1,typename Rng2>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_iterator<Rng1>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng1>::type
     find_end(Rng1 & rng1,Rng2 const & rng2)
     {
-        return std::find_end(detail::adl_begin(rng1),detail::adl_end(rng1),
-                             detail::adl_begin(rng2),detail::adl_end(rng2));
+        return std::find_end(range_ex_detail::adl_begin(rng1),range_ex_detail::adl_end(rng1),
+                             range_ex_detail::adl_begin(rng2),range_ex_detail::adl_end(rng2));
     }
 
     /// \overload
     template<typename Rng1,typename Rng2>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_const_iterator<Rng1>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_const_iterator<Rng1>::type
     find_end(Rng1 const & rng1,Rng2 const & rng2)
     {
-        return std::find_end(detail::adl_begin(rng1),detail::adl_end(rng1),
-                             detail::adl_begin(rng2),detail::adl_end(rng2));
+        return std::find_end(range_ex_detail::adl_begin(rng1),range_ex_detail::adl_end(rng1),
+                             range_ex_detail::adl_begin(rng2),range_ex_detail::adl_end(rng2));
     }
 
     /// \overload
     template<typename Rng1,typename Rng2,typename BinPred>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_iterator<Rng1>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng1>::type
     find_end(Rng1 & rng1,Rng2 const & rng2,BinPred pred)
     {
-        return std::find_end(detail::adl_begin(rng1),detail::adl_end(rng1),
-                             detail::adl_begin(rng2),detail::adl_end(rng2),pred);
+        return std::find_end(range_ex_detail::adl_begin(rng1),range_ex_detail::adl_end(rng1),
+                             range_ex_detail::adl_begin(rng2),range_ex_detail::adl_end(rng2),pred);
     }
 
     /// \overload
     template<typename Rng1,typename Rng2,typename BinPred>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_const_iterator<Rng1>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_const_iterator<Rng1>::type
     find_end(Rng1 const & rng1,Rng2 const & rng2,BinPred pred)
     {
-        return std::find_end(detail::adl_begin(rng1),detail::adl_end(rng1),
-                             detail::adl_begin(rng2),detail::adl_end(rng2),pred);
+        return std::find_end(range_ex_detail::adl_begin(rng1),range_ex_detail::adl_end(rng1),
+                             range_ex_detail::adl_begin(rng2),range_ex_detail::adl_end(rng2),pred);
     }
 
     /// \brief template function find_first_of
@@ -189,38 +189,38 @@ namespace boost
     /// range-based version of the find_first_of std algorithm
     ///
     template<typename Rng1,typename Rng2>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_iterator<Rng1>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng1>::type
     find_first_of(Rng1 & rng1,Rng2 const & rng2)
     {
-        return std::find_first_of(detail::adl_begin(rng1),detail::adl_end(rng1),
-                                  detail::adl_begin(rng2),detail::adl_end(rng2));
+        return std::find_first_of(range_ex_detail::adl_begin(rng1),range_ex_detail::adl_end(rng1),
+                                  range_ex_detail::adl_begin(rng2),range_ex_detail::adl_end(rng2));
     }
 
     /// \overload
     template<typename Rng1,typename Rng2>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_const_iterator<Rng1>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_const_iterator<Rng1>::type
     find_first_of(Rng1 const & rng1,Rng2 const & rng2)
     {
-        return std::find_first_of(detail::adl_begin(rng1),detail::adl_end(rng1),
-                                  detail::adl_begin(rng2),detail::adl_end(rng2));
+        return std::find_first_of(range_ex_detail::adl_begin(rng1),range_ex_detail::adl_end(rng1),
+                                  range_ex_detail::adl_begin(rng2),range_ex_detail::adl_end(rng2));
     }
 
     /// \overload
     template<typename Rng1,typename Rng2,typename BinPred>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_iterator<Rng1>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng1>::type
     find_first_of(Rng1 & rng1,Rng2 const & rng2,BinPred pred)
     {
-        return std::find_first_of(detail::adl_begin(rng1),detail::adl_end(rng1),
-                                  detail::adl_begin(rng2),detail::adl_end(rng2),pred);
+        return std::find_first_of(range_ex_detail::adl_begin(rng1),range_ex_detail::adl_end(rng1),
+                                  range_ex_detail::adl_begin(rng2),range_ex_detail::adl_end(rng2),pred);
     }
 
     /// \overload
     template<typename Rng1,typename Rng2,typename BinPred>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_const_iterator<Rng1>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_const_iterator<Rng1>::type
     find_first_of(Rng1 const & rng1,Rng2 const & rng2,BinPred pred)
     {
-        return std::find_first_of(detail::adl_begin(rng1),detail::adl_end(rng1),
-                                  detail::adl_begin(rng2),detail::adl_end(rng2),pred);
+        return std::find_first_of(range_ex_detail::adl_begin(rng1),range_ex_detail::adl_end(rng1),
+                                  range_ex_detail::adl_begin(rng2),range_ex_detail::adl_end(rng2),pred);
     }
 
     /// \brief template function adjacent_find
@@ -228,34 +228,34 @@ namespace boost
     /// range-based version of the adjacent_find std algorithm
     ///
     template<typename Rng>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_iterator<Rng>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng>::type
     adjacent_find(Rng & rng)
     {
-        return std::adjacent_find(detail::adl_begin(rng),detail::adl_end(rng));
+        return std::adjacent_find(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng));
     }
 
     /// \overload
     template<typename Rng>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_const_iterator<Rng>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_const_iterator<Rng>::type
     adjacent_find(Rng const & rng)
     {
-        return std::adjacent_find(detail::adl_begin(rng),detail::adl_end(rng));
+        return std::adjacent_find(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng));
     }
 
     /// \overload
     template<typename Rng,typename BinPred>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_iterator<Rng>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng>::type
     adjacent_find(Rng & rng,BinPred pred)
     {
-        return std::adjacent_find(detail::adl_begin(rng),detail::adl_end(rng),pred);
+        return std::adjacent_find(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),pred);
     }
 
     /// \overload
     template<typename Rng,typename BinPred>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_const_iterator<Rng>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_const_iterator<Rng>::type
     adjacent_find(Rng const & rng,BinPred pred)
     {
-        return std::adjacent_find(detail::adl_begin(rng),detail::adl_end(rng),pred);
+        return std::adjacent_find(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),pred);
     }
 
     /// \brief template function count
@@ -263,18 +263,18 @@ namespace boost
     /// range-based version of the count std algorithm
     ///
     template<typename Rng,typename Val>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_iterator<Rng>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng>::type
     count(Rng & rng,Val const & val)
     {
-        return detail::count_impl_(rng,val);
+        return std::count(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),val);
     }
 
     /// \overload
     template<typename Rng,typename Val>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_const_iterator<Rng>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_const_iterator<Rng>::type
     count(Rng const & rng,Val const & val)
     {
-        return detail::count_impl_(rng,val);
+        return std::count(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),val);
     }
 
     /// \brief template function count_if
@@ -282,18 +282,18 @@ namespace boost
     /// range-based version of the count_if std algorithm
     ///
     template<typename Rng,typename Pred>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_iterator<Rng>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng>::type
     count_if(Rng & rng,Pred pred)
     {
-        return std::count_if(detail::adl_begin(rng),detail::adl_end(rng),pred);
+        return std::count_if(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),pred);
     }
 
     /// \overload
     template<typename Rng,typename Pred>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_const_iterator<Rng>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_const_iterator<Rng>::type
     count_if(Rng const & rng,Pred pred)
     {
-        return std::count_if(detail::adl_begin(rng),detail::adl_end(rng),pred);
+        return std::count_if(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),pred);
     }
 
     /// \brief template function mismatch
@@ -301,34 +301,34 @@ namespace boost
     /// range-based version of the mismatch std algorithm
     ///
     template<typename Rng,typename InIter>
-    inline std::pair<BOOST_DEDUCED_TYPENAME ::boost::range_iterator<Rng>::type,InIter>
+    inline std::pair<BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng>::type,InIter>
     mismatch(Rng & rng,InIter first)
     {
-        return std::mismatch(detail::adl_begin(rng),detail::adl_end(rng),first);
+        return std::mismatch(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),first);
     }
 
     /// \overload
     template<typename Rng,typename InIter>
-    inline std::pair<BOOST_DEDUCED_TYPENAME ::boost::range_const_iterator<Rng>::type,InIter>
+    inline std::pair<BOOST_DEDUCED_TYPENAME boost::range_const_iterator<Rng>::type,InIter>
     mismatch(Rng const & rng,InIter first)
     {
-        return std::mismatch(detail::adl_begin(rng),detail::adl_end(rng),first);
+        return std::mismatch(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),first);
     }
 
     /// \overload
     template<typename Rng,typename InIter,typename BinPred>
-    inline std::pair<BOOST_DEDUCED_TYPENAME ::boost::range_iterator<Rng>::type,InIter>
+    inline std::pair<BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng>::type,InIter>
     mismatch(Rng & rng,InIter first,BinPred pred)
     {
-        return std::mismatch(detail::adl_begin(rng),detail::adl_end(rng),first,pred);
+        return std::mismatch(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),first,pred);
     }
 
     /// \overload
     template<typename Rng,typename InIter,typename BinPred>
-    inline std::pair<BOOST_DEDUCED_TYPENAME ::boost::range_const_iterator<Rng>::type,InIter>
+    inline std::pair<BOOST_DEDUCED_TYPENAME boost::range_const_iterator<Rng>::type,InIter>
     mismatch(Rng const & rng,InIter first,BinPred pred)
     {
-        return std::mismatch(detail::adl_begin(rng),detail::adl_end(rng),first,pred);
+        return std::mismatch(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),first,pred);
     }
 
     /// \brief template function equal
@@ -338,28 +338,28 @@ namespace boost
     template<typename Rng,typename InIter>
     inline bool equal(Rng & rng,InIter first)
     {
-        return std::equal(detail::adl_begin(rng),detail::adl_end(rng),first);
+        return std::equal(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),first);
     }
 
     /// \overload
     template<typename Rng,typename InIter>
     inline bool equal(Rng const & rng,InIter first)
     {
-        return std::equal(detail::adl_begin(rng),detail::adl_end(rng),first);
+        return std::equal(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),first);
     }
 
     /// \overload
     template<typename Rng,typename InIter,typename BinPred>
     inline bool equal(Rng & rng,InIter first,BinPred pred)
     {
-        return std::equal(detail::adl_begin(rng),detail::adl_end(rng),first,pred);
+        return std::equal(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),first,pred);
     }
 
     /// \overload
     template<typename Rng,typename InIter,typename BinPred>
     inline bool equal(Rng const & rng,InIter first,BinPred pred)
     {
-        return std::equal(detail::adl_begin(rng),detail::adl_end(rng),first,pred);
+        return std::equal(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),first,pred);
     }
 
     /// \brief template function search
@@ -367,38 +367,38 @@ namespace boost
     /// range-based version of the search std algorithm
     ///
     template<typename Rng1,typename Rng2>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_iterator<Rng1>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng1>::type
     search(Rng1 & rng1,Rng2 const & rng2)
     {
-        return std::search(detail::adl_begin(rng1),detail::adl_end(rng1),
-                           detail::adl_begin(rng2),detail::adl_end(rng2));
+        return std::search(range_ex_detail::adl_begin(rng1),range_ex_detail::adl_end(rng1),
+                           range_ex_detail::adl_begin(rng2),range_ex_detail::adl_end(rng2));
     }
 
     /// \overload
     template<typename Rng1,typename Rng2>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_const_iterator<Rng1>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_const_iterator<Rng1>::type
     search(Rng1 const & rng1,Rng2 const & rng2)
     {
-        return std::search(detail::adl_begin(rng1),detail::adl_end(rng1),
-                           detail::adl_begin(rng2),detail::adl_end(rng2));
+        return std::search(range_ex_detail::adl_begin(rng1),range_ex_detail::adl_end(rng1),
+                           range_ex_detail::adl_begin(rng2),range_ex_detail::adl_end(rng2));
     }
 
     /// \overload
     template<typename Rng1,typename Rng2,typename BinPred>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_iterator<Rng1>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng1>::type
     search(Rng1 & rng1,Rng2 const & rng2,BinPred pred)
     {
-        return std::search(detail::adl_begin(rng1),detail::adl_end(rng1),
-                           detail::adl_begin(rng2),detail::adl_end(rng2),pred);
+        return std::search(range_ex_detail::adl_begin(rng1),range_ex_detail::adl_end(rng1),
+                           range_ex_detail::adl_begin(rng2),range_ex_detail::adl_end(rng2),pred);
     }
 
     /// \overload
     template<typename Rng1,typename Rng2,typename BinPred>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_const_iterator<Rng1>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_const_iterator<Rng1>::type
     search(Rng1 const & rng1,Rng2 const & rng2,BinPred pred)
     {
-        return std::search(detail::adl_begin(rng1),detail::adl_end(rng1),
-                           detail::adl_begin(rng2),detail::adl_end(rng2),pred);
+        return std::search(range_ex_detail::adl_begin(rng1),range_ex_detail::adl_end(rng1),
+                           range_ex_detail::adl_begin(rng2),range_ex_detail::adl_end(rng2),pred);
     }
 
     /////////////////////////////////////////////////////////////////////////
@@ -412,7 +412,7 @@ namespace boost
     template<typename Rng,typename OutIter>
     inline OutIter copy(Rng const & rng,OutIter out)
     {
-        return std::copy(detail::adl_begin(rng),detail::adl_end(rng),out);
+        return std::copy(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),out);
     }
 
     /// \brief template function copy_backwards
@@ -422,7 +422,7 @@ namespace boost
     template<typename Rng,typename BidiIter>
     inline BidiIter copy_backward(Rng const & rng,BidiIter out)
     {
-        return std::copy_backward(detail::adl_begin(rng),detail::adl_end(rng),out);
+        return std::copy_backward(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),out);
     }
 
     /// \brief template function transform
@@ -432,14 +432,14 @@ namespace boost
     template<typename Rng,typename OutIter,typename UnaryOp>
     inline OutIter transform(Rng const & rng,OutIter out,UnaryOp fun)
     {
-        return std::transform(detail::adl_begin(rng),detail::adl_end(rng),out,fun);
+        return std::transform(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),out,fun);
     }
 
     /// \overload
     template<typename Rng,typename InIter,typename OutIter,typename BinOp>
     inline OutIter transform(Rng const & rng,InIter first2,OutIter out,BinOp fun)
     {
-        return std::transform(detail::adl_begin(rng),detail::adl_end(rng),first2,out,fun);
+        return std::transform(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),first2,out,fun);
     }
 
     /// \brief template function replace
@@ -449,14 +449,14 @@ namespace boost
     template<typename Rng,typename Val>
     inline void replace(Rng & rng,Val const & what,Val const & with_what)
     {
-        return std::replace(detail::adl_begin(rng),detail::adl_end(rng),what,with_what);
+        return std::replace(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),what,with_what);
     }
 
     /// \overload
     template<typename Rng,typename Val>
     inline void replace(Rng const & rng,Val const & what,Val const & with_what)
     {
-        return std::replace(detail::adl_begin(rng),detail::adl_end(rng),what,with_what);
+        return std::replace(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),what,with_what);
     }
 
     /// \brief template function replace_if
@@ -466,14 +466,14 @@ namespace boost
     template<typename Rng,typename Pred,typename Val>
     inline void replace_if(Rng & rng,Pred pred,Val const & val)
     {
-        return std::replace_if(detail::adl_begin(rng),detail::adl_end(rng),pred,val);
+        return std::replace_if(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),pred,val);
     }
 
     /// \overload
     template<typename Rng,typename Pred,typename Val>
     inline void replace_if(Rng const & rng,Pred pred,Val const & val)
     {
-        return std::replace_if(detail::adl_begin(rng),detail::adl_end(rng),pred,val);
+        return std::replace_if(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),pred,val);
     }
 
     /// \brief template function replace_copy
@@ -483,7 +483,7 @@ namespace boost
     template<typename Rng,typename OutIter,typename Val>
     inline OutIter replace_copy(Rng const & rng,OutIter out,Val const & what,Val const & with_what)
     {
-        return std::replace_copy(detail::adl_begin(rng),detail::adl_end(rng),out,what,with_what);
+        return std::replace_copy(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),out,what,with_what);
     }
 
     /// \brief template function replace_copy_if
@@ -493,7 +493,7 @@ namespace boost
     template<typename Rng,typename OutIter,typename Pred,typename Val>
     inline OutIter replace_copy_if(Rng const & rng,OutIter out,Pred pred,Val const & val)
     {
-        return std::replace_copy_if(detail::adl_begin(rng),detail::adl_end(rng),out,pred,val);
+        return std::replace_copy_if(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),out,pred,val);
     }
 
     /// \brief template function fill
@@ -503,14 +503,14 @@ namespace boost
     template<typename Rng,typename Val>
     inline void fill(Rng & rng,Val const & val)
     {
-        std::fill(detail::adl_begin(rng),detail::adl_end(rng),val);
+        std::fill(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),val);
     }
 
     /// \overload
     template<typename Rng,typename Val>
     inline void fill(Rng const & rng,Val const & val)
     {
-        std::fill(detail::adl_begin(rng),detail::adl_end(rng),val);
+        std::fill(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),val);
     }
 
     /// \brief template function fill_n
@@ -520,14 +520,14 @@ namespace boost
     template<typename Rng,typename Int,typename Val>
     inline void fill_n(Rng & rng,Int size,Val const & val)
     {
-        std::fill_n(detail::adl_begin(rng),size,val);
+        std::fill_n(range_ex_detail::adl_begin(rng),size,val);
     }
 
     /// \overload
     template<typename Rng,typename Int,typename Val>
     inline void fill_n(Rng const & rng,Int size,Val const & val)
     {
-        std::fill_n(detail::adl_begin(rng),size,val);
+        std::fill_n(range_ex_detail::adl_begin(rng),size,val);
     }
 
     /// \brief template function generate
@@ -537,14 +537,14 @@ namespace boost
     template<typename Rng,typename Generator>
     inline void generate(Rng & rng,Generator gen)
     {
-        std::generate(detail::adl_begin(rng),detail::adl_end(rng),gen);
+        std::generate(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),gen);
     }
 
     /// \overload
     template<typename Rng,typename Generator>
     inline void generate(Rng const & rng,Generator gen)
     {
-        std::generate(detail::adl_begin(rng),detail::adl_end(rng),gen);
+        std::generate(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),gen);
     }
 
     /// \brief template function generate_n
@@ -554,37 +554,37 @@ namespace boost
     template<typename Rng,typename Int,typename Generator>
     void generate_n(Rng & rng,Int size,Generator gen)
     {
-        std::generate_n(detail::adl_begin(rng),size,gen);
+        std::generate_n(range_ex_detail::adl_begin(rng),size,gen);
     }
 
     /// \overload
     template<typename Rng,typename Int,typename Generator>
     void generate_n(Rng const & rng,Int size,Generator gen)
     {
-        std::generate_n(detail::adl_begin(rng),size,gen);
+        std::generate_n(range_ex_detail::adl_begin(rng),size,gen);
     }
 
-    namespace detail
+    namespace range_ex_detail
     {
         template<typename Rng,typename Val>
-        inline BOOST_DEDUCED_TYPENAME ::boost::lazy_enable_if<
+        inline BOOST_DEDUCED_TYPENAME boost::lazy_enable_if<
             has_remove<Rng>
-          , ::boost::range_result_iterator<Rng>
+          , boost::range_result_iterator<Rng>
         >::type
         remove_impl(Rng & rng,Val const & val)
         {
             rng.remove(val);
-            return detail::adl_end(rng);
+            return range_ex_detail::adl_end(rng);
         }
 
         template<typename Rng,typename Val>
-        inline BOOST_DEDUCED_TYPENAME ::boost::lazy_disable_if<
+        inline BOOST_DEDUCED_TYPENAME boost::lazy_disable_if<
             has_remove<Rng>
-          , ::boost::range_result_iterator<Rng>
+          , boost::range_result_iterator<Rng>
         >::type
         remove_impl(Rng & rng,Val const & val)
         {
-            return std::remove(detail::adl_begin(rng),detail::adl_end(rng),val);
+            return std::remove(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),val);
         }
     }
 
@@ -593,41 +593,41 @@ namespace boost
     /// range-based version of the remove std algorithm
     ///
     template<typename Rng,typename Val>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_iterator<Rng>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng>::type
     remove(Rng & rng,Val const & val)
     {
-        return detail::remove_impl(rng,val);
+        return range_ex_detail::remove_impl(rng,val);
     }
 
     /// \overload
     template<typename Rng,typename Val>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_const_iterator<Rng>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_const_iterator<Rng>::type
     remove(Rng const & rng,Val const & val)
     {
-        return detail::remove_impl(rng,val);
+        return range_ex_detail::remove_impl(rng,val);
     }
 
-    namespace detail
+    namespace range_ex_detail
     {
         template<typename Rng,typename Pred>
-        inline BOOST_DEDUCED_TYPENAME ::boost::lazy_enable_if<
+        inline BOOST_DEDUCED_TYPENAME boost::lazy_enable_if<
             has_remove_if<Rng>
-          , ::boost::range_result_iterator<Rng>
+          , boost::range_result_iterator<Rng>
         >::type
         remove_if_impl(Rng & rng,Pred pred)
         {
             rng.remove_if(pred);
-            return detail::adl_end(rng);
+            return range_ex_detail::adl_end(rng);
         }
 
         template<typename Rng,typename Pred>
-        inline BOOST_DEDUCED_TYPENAME ::boost::lazy_disable_if<
+        inline BOOST_DEDUCED_TYPENAME boost::lazy_disable_if<
             has_remove_if<Rng>
-          , ::boost::range_result_iterator<Rng>
+          , boost::range_result_iterator<Rng>
         >::type
         remove_if_impl(Rng & rng,Pred pred)
         {
-            return std::remove_if(detail::adl_begin(rng),detail::adl_end(rng),pred);
+            return std::remove_if(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),pred);
         }
     }
 
@@ -636,18 +636,18 @@ namespace boost
     /// range-based version of the remove_if std algorithm
     ///
     template<typename Rng,typename Pred>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_iterator<Rng>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng>::type
     remove_if(Rng & rng,Pred pred)
     {
-        return detail::remove_if_impl(rng,pred);
+        return range_ex_detail::remove_if_impl(rng,pred);
     }
 
     /// \overload
     template<typename Rng,typename Pred>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_const_iterator<Rng>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_const_iterator<Rng>::type
     remove_if(Rng const & rng,Pred pred)
     {
-        return detail::remove_if_impl(rng,pred);
+        return range_ex_detail::remove_if_impl(rng,pred);
     }
 
     /// \brief template function remove_copy
@@ -657,7 +657,7 @@ namespace boost
     template<typename Rng,typename OutIter,typename Val>
     inline OutIter remove_copy(Rng const & rng,OutIter out,Val const & val)
     {
-        return std::remove_copy(detail::adl_begin(rng),detail::adl_end(rng),out,val);
+        return std::remove_copy(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),out,val);
     }
 
     /// \brief template function remove_copy_if
@@ -667,30 +667,30 @@ namespace boost
     template<typename Rng,typename OutIter,typename Pred>
     inline OutIter remove_copy_if(Rng const & rng,OutIter out,Pred pred)
     {
-        return std::remove_copy_if(detail::adl_begin(rng),detail::adl_end(rng),out,pred);
+        return std::remove_copy_if(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),out,pred);
     }
 
-    namespace detail
+    namespace range_ex_detail
     {
         template<typename Rng,typename Val>
-        inline BOOST_DEDUCED_TYPENAME ::boost::lazy_enable_if<
+        inline BOOST_DEDUCED_TYPENAME boost::lazy_enable_if<
             has_unique<Rng>
-          , ::boost::range_result_iterator<Rng>
+          , boost::range_result_iterator<Rng>
         >::type
         unique_impl(Rng & rng)
         {
             rng.unique();
-            return detail::adl_end(rng);
+            return range_ex_detail::adl_end(rng);
         }
 
         template<typename Rng,typename Val>
-        inline BOOST_DEDUCED_TYPENAME ::boost::lazy_disable_if<
+        inline BOOST_DEDUCED_TYPENAME boost::lazy_disable_if<
             has_unique<Rng>
-          , ::boost::range_result_iterator<Rng>
+          , boost::range_result_iterator<Rng>
         >::type
         unique_impl(Rng & rng)
         {
-            return std::unique(detail::adl_begin(rng),detail::adl_end(rng));
+            return std::unique(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng));
         }
     }
 
@@ -699,58 +699,58 @@ namespace boost
     /// range-based version of the unique std algorithm
     ///
     template<typename Rng>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_iterator<Rng>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng>::type
     unique(Rng & rng)
     {
-        return detail::unique_impl(rng);
+        return range_ex_detail::unique_impl(rng);
     }
 
     /// \overload
     template<typename Rng>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_const_iterator<Rng>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_const_iterator<Rng>::type
     unique(Rng const & rng)
     {
-        return detail::unique_impl(rng);
+        return range_ex_detail::unique_impl(rng);
     }
 
-    namespace detail
+    namespace range_ex_detail
     {
         template<typename Rng,typename Pred>
-        inline BOOST_DEDUCED_TYPENAME ::boost::lazy_enable_if<
+        inline BOOST_DEDUCED_TYPENAME boost::lazy_enable_if<
             has_unique<Rng>
-          , ::boost::range_result_iterator<Rng>
+          , boost::range_result_iterator<Rng>
         >::type
         unique_impl(Rng & rng,Pred pred)
         {
             rng.unique(pred);
-            return detail::adl_end(rng);
+            return range_ex_detail::adl_end(rng);
         }
 
         template<typename Rng,typename Pred>
-        inline BOOST_DEDUCED_TYPENAME ::boost::lazy_disable_if<
+        inline BOOST_DEDUCED_TYPENAME boost::lazy_disable_if<
             has_unique<Rng>
-          , ::boost::range_result_iterator<Rng>
+          , boost::range_result_iterator<Rng>
         >::type
         unique_impl(Rng & rng,Pred pred)
         {
-            return std::unique(detail::adl_begin(rng),detail::adl_end(rng),pred);
+            return std::unique(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),pred);
         }
     }
 
     /// \overload
     template<typename Rng,typename Pred>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_iterator<Rng>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng>::type
     unique(Rng & rng,Pred pred)
     {
-        return detail::unique_impl(rng,pred);
+        return range_ex_detail::unique_impl(rng,pred);
     }
 
     /// \overload
     template<typename Rng,typename Pred>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_const_iterator<Rng>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_const_iterator<Rng>::type
     unique(Rng const & rng,Pred pred)
     {
-        return detail::unique_impl(rng,pred);
+        return range_ex_detail::unique_impl(rng,pred);
     }
 
     /// \brief template function unique_copy
@@ -760,20 +760,20 @@ namespace boost
     template<typename Rng,typename OutIter>
     inline OutIter unique_copy(Rng const & rng,OutIter out)
     {
-        return std::unique_copy(detail::adl_begin(rng),detail::adl_end(rng),out);
+        return std::unique_copy(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),out);
     }
 
     /// \overload
     template<typename Rng,typename OutIter,typename Pred>
     inline OutIter unique_copy(Rng const & rng,OutIter out,Pred pred)
     {
-        return std::unique_copy(detail::adl_begin(rng),detail::adl_end(rng),out,pred);
+        return std::unique_copy(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),out,pred);
     }
 
-    namespace detail
+    namespace range_ex_detail
     {
         template<typename Rng,typename Val>
-        inline BOOST_DEDUCED_TYPENAME ::boost::enable_if<
+        inline BOOST_DEDUCED_TYPENAME boost::enable_if<
             has_reverse<Rng>
         >::type
         reverse_impl(Rng & rng)
@@ -782,12 +782,12 @@ namespace boost
         }
 
         template<typename Rng,typename Val>
-        inline BOOST_DEDUCED_TYPENAME ::boost::disable_if<
+        inline BOOST_DEDUCED_TYPENAME boost::disable_if<
             has_reverse<Rng>
         >::type
         reverse_impl(Rng & rng)
         {
-            std::reverse(detail::adl_begin(rng),detail::adl_end(rng));
+            std::reverse(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng));
         }
     }
 
@@ -798,14 +798,14 @@ namespace boost
     template<typename Rng>
     inline void reverse(Rng & rng)
     {
-        detail::reverse_impl(rng);
+        range_ex_detail::reverse_impl(rng);
     }
 
     /// \overload
     template<typename Rng>
     inline void reverse(Rng const & rng)
     {
-        detail::reverse_impl(rng);
+        range_ex_detail::reverse_impl(rng);
     }
 
     /// \brief template function reverse_copy
@@ -815,7 +815,7 @@ namespace boost
     template<typename Rng,typename OutIter>
     inline OutIter reverse_copy(Rng const & rng,OutIter out)
     {
-        return std::reverse_copy(detail::adl_begin(rng),detail::adl_end(rng),out);
+        return std::reverse_copy(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),out);
     }
 
     /// \brief template function rotate
@@ -824,17 +824,17 @@ namespace boost
     ///
     template<typename Rng>
     inline void rotate(Rng & rng,
-        BOOST_DEDUCED_TYPENAME ::boost::range_iterator<Rng>::type middle)
+        BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng>::type middle)
     {
-        std::rotate(detail::adl_begin(rng),middle,detail::adl_end(rng));
+        std::rotate(range_ex_detail::adl_begin(rng),middle,range_ex_detail::adl_end(rng));
     }
 
     /// \overload
     template<typename Rng>
     inline void rotate(Rng const & rng,
-        BOOST_DEDUCED_TYPENAME ::boost::range_const_iterator<Rng>::type middle)
+        BOOST_DEDUCED_TYPENAME boost::range_const_iterator<Rng>::type middle)
     {
-        std::rotate(detail::adl_begin(rng),middle,detail::adl_end(rng));
+        std::rotate(range_ex_detail::adl_begin(rng),middle,range_ex_detail::adl_end(rng));
     }
 
     /// \brief template function rotate_copy
@@ -843,19 +843,19 @@ namespace boost
     ///
     template<typename Rng,typename OutIter>
     inline OutIter rotate_copy(Rng & rng,
-        BOOST_DEDUCED_TYPENAME ::boost::range_iterator<Rng>::type middle,
+        BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng>::type middle,
         OutIter out)
     {
-        return std::rotate_copy(detail::adl_begin(rng),middle,detail::adl_end(rng),out);
+        return std::rotate_copy(range_ex_detail::adl_begin(rng),middle,range_ex_detail::adl_end(rng),out);
     }
 
     /// \overload
     template<typename Rng,typename OutIter>
     inline OutIter rotate_copy(Rng const & rng,
-        BOOST_DEDUCED_TYPENAME ::boost::range_const_iterator<Rng>::type middle,
+        BOOST_DEDUCED_TYPENAME boost::range_const_iterator<Rng>::type middle,
         OutIter out)
     {
-        return std::rotate_copy(detail::adl_begin(rng),middle,detail::adl_end(rng),out);
+        return std::rotate_copy(range_ex_detail::adl_begin(rng),middle,range_ex_detail::adl_end(rng),out);
     }
 
     /// \brief template function random_shuffle
@@ -865,28 +865,28 @@ namespace boost
     template<typename Rng>
     inline void random_shuffle(Rng & rng)
     {
-        std::random_shuffle(detail::adl_begin(rng),detail::adl_end(rng));
+        std::random_shuffle(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng));
     }
 
     /// \overload
     template<typename Rng>
     inline void random_shuffle(Rng const & rng)
     {
-        std::random_shuffle(detail::adl_begin(rng),detail::adl_end(rng));
+        std::random_shuffle(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng));
     }
 
     /// \overload
     template<typename Rng,typename Generator>
     inline void random_shuffle(Rng & rng,Generator gen)
     {
-        std::random_shuffle(detail::adl_begin(rng),detail::adl_end(rng),gen);
+        std::random_shuffle(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),gen);
     }
 
     /// \overload
     template<typename Rng,typename Generator>
     inline void random_shuffle(Rng const & rng,Generator gen)
     {
-        std::random_shuffle(detail::adl_begin(rng),detail::adl_end(rng),gen);
+        std::random_shuffle(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),gen);
     }
 
     /// \brief template function partition
@@ -894,18 +894,18 @@ namespace boost
     /// range-based version of the partition std algorithm
     ///
     template<typename Rng,typename Pred>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_iterator<Rng>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng>::type
     partition(Rng & rng,Pred pred)
     {
-        return std::partition(detail::adl_begin(rng),detail::adl_end(rng),pred);
+        return std::partition(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),pred);
     }
 
     /// \overload
     template<typename Rng,typename Pred>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_const_iterator<Rng>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_const_iterator<Rng>::type
     partition(Rng const & rng,Pred pred)
     {
-        return std::partition(detail::adl_begin(rng),detail::adl_end(rng),pred);
+        return std::partition(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),pred);
     }
 
     /// \brief template function stable_partition
@@ -913,24 +913,24 @@ namespace boost
     /// range-based version of the stable_partition std algorithm
     ///
     template<typename Rng,typename Pred>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_iterator<Rng>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng>::type
     stable_partition(Rng & rng,Pred pred)
     {
-        return std::stable_partition(detail::adl_begin(rng),detail::adl_end(rng),pred);
+        return std::stable_partition(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),pred);
     }
 
     /// \overload
     template<typename Rng,typename Pred>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_const_iterator<Rng>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_const_iterator<Rng>::type
     stable_partition(Rng const & rng,Pred pred)
     {
-        return std::stable_partition(detail::adl_begin(rng),detail::adl_end(rng),pred);
+        return std::stable_partition(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),pred);
     }
 
-    namespace detail
+    namespace range_ex_detail
     {
         template<typename Rng,typename Val>
-        inline BOOST_DEDUCED_TYPENAME ::boost::enable_if<
+        inline BOOST_DEDUCED_TYPENAME boost::enable_if<
             has_sort<Rng>
         >::type
         sort_impl(Rng & rng)
@@ -939,12 +939,12 @@ namespace boost
         }
 
         template<typename Rng,typename Val>
-        inline BOOST_DEDUCED_TYPENAME ::boost::disable_if<
+        inline BOOST_DEDUCED_TYPENAME boost::disable_if<
             has_sort<Rng>
         >::type
         sort_impl(Rng & rng)
         {
-            std::sort(detail::adl_begin(rng),detail::adl_end(rng));
+            std::sort(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng));
         }
     }
 
@@ -955,20 +955,20 @@ namespace boost
     template<typename Rng>
     inline void sort(Rng & rng)
     {
-        detail::sort_impl(rng);
+        range_ex_detail::sort_impl(rng);
     }
 
     /// \overload
     template<typename Rng>
     inline void sort(Rng const & rng)
     {
-        detail::sort_impl(rng);
+        range_ex_detail::sort_impl(rng);
     }
 
-    namespace detail
+    namespace range_ex_detail
     {
         template<typename Rng,typename Cmp>
-        inline BOOST_DEDUCED_TYPENAME ::boost::enable_if<
+        inline BOOST_DEDUCED_TYPENAME boost::enable_if<
             has_sort<Rng>
         >::type
         sort_impl(Rng & rng,Cmp cmp)
@@ -977,12 +977,12 @@ namespace boost
         }
 
         template<typename Rng,typename Cmp>
-        inline BOOST_DEDUCED_TYPENAME ::boost::disable_if<
+        inline BOOST_DEDUCED_TYPENAME boost::disable_if<
             has_sort<Rng>
         >::type
         sort_impl(Rng & rng,Cmp cmp)
         {
-            std::sort(detail::adl_begin(rng),detail::adl_end(rng),cmp);
+            std::sort(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),cmp);
         }
     }
 
@@ -990,14 +990,14 @@ namespace boost
     template<typename Rng,typename Cmp>
     inline void sort(Rng & rng,Cmp cmp)
     {
-        detail::sort_impl(rng,cmp);
+        range_ex_detail::sort_impl(rng,cmp);
     }
 
     /// \overload
     template<typename Rng,typename Cmp>
     inline void sort(Rng const & rng,Cmp cmp)
     {
-        detail::sort_impl(rng,cmp);
+        range_ex_detail::sort_impl(rng,cmp);
     }
 
     /// \brief template function stable_sort
@@ -1007,28 +1007,28 @@ namespace boost
     template<typename Rng>
     inline void stable_sort(Rng & rng)
     {
-        std::stable_sort(detail::adl_begin(rng),detail::adl_end(rng));
+        std::stable_sort(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng));
     }
 
     /// \overload
     template<typename Rng>
     inline void stable_sort(Rng const & rng)
     {
-        std::stable_sort(detail::adl_begin(rng),detail::adl_end(rng));
+        std::stable_sort(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng));
     }
 
     /// \overload
     template<typename Rng,typename Cmp>
     inline void stable_sort(Rng & rng,Cmp cmp)
     {
-        std::stable_sort(detail::adl_begin(rng),detail::adl_end(rng),cmp);
+        std::stable_sort(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),cmp);
     }
 
     /// \overload
     template<typename Rng,typename Cmp>
     inline void stable_sort(Rng const & rng,Cmp cmp)
     {
-        std::stable_sort(detail::adl_begin(rng),detail::adl_end(rng),cmp);
+        std::stable_sort(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),cmp);
     }
 
     /// \brief template function partial_sort
@@ -1037,35 +1037,35 @@ namespace boost
     ///
     template<typename Rng>
     inline void partial_sort(Rng & rng,
-        BOOST_DEDUCED_TYPENAME ::boost::range_iterator<Rng>::type middle)
+        BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng>::type middle)
     {
-        std::partial_sort(detail::adl_begin(rng),middle,detail::adl_end(rng));
+        std::partial_sort(range_ex_detail::adl_begin(rng),middle,range_ex_detail::adl_end(rng));
     }
 
     /// \overload
     template<typename Rng>
     inline void partial_sort(Rng const & rng,
-        BOOST_DEDUCED_TYPENAME ::boost::range_const_iterator<Rng>::type middle)
+        BOOST_DEDUCED_TYPENAME boost::range_const_iterator<Rng>::type middle)
     {
-        std::partial_sort(detail::adl_begin(rng),middle,detail::adl_end(rng));
+        std::partial_sort(range_ex_detail::adl_begin(rng),middle,range_ex_detail::adl_end(rng));
     }
 
     /// \overload
     template<typename Rng,typename Cmp>
     inline void partial_sort(Rng & rng,
-        BOOST_DEDUCED_TYPENAME ::boost::range_iterator<Rng>::type middle,
+        BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng>::type middle,
         Cmp cmp)
     {
-        std::partial_sort(detail::adl_begin(rng),middle,detail::adl_end(rng),cmp);
+        std::partial_sort(range_ex_detail::adl_begin(rng),middle,range_ex_detail::adl_end(rng),cmp);
     }
 
     /// \overload
     template<typename Rng,typename Cmp>
     inline void partial_sort(Rng const & rng,
-        BOOST_DEDUCED_TYPENAME ::boost::range_const_iterator<Rng>::type middle,
+        BOOST_DEDUCED_TYPENAME boost::range_const_iterator<Rng>::type middle,
         Cmp cmp)
     {
-        std::partial_sort(detail::adl_begin(rng),middle,detail::adl_end(rng),cmp);
+        std::partial_sort(range_ex_detail::adl_begin(rng),middle,range_ex_detail::adl_end(rng),cmp);
     }
 
     /// \brief template function partial_sort_copy
@@ -1073,38 +1073,38 @@ namespace boost
     /// range-based version of the partial_sort_copy std algorithm
     ///
     template<typename Rng1,typename Rng2>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_iterator<Rng2>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng2>::type
     partial_sort_copy(Rng1 const & rng1,Rng2 & rng2)
     {
-        return std::partial_sort_copy(detail::adl_begin(rng1),detail::adl_end(rng1),
-                                      detail::adl_begin(rng2),detail::adl_end(rng2));
+        return std::partial_sort_copy(range_ex_detail::adl_begin(rng1),range_ex_detail::adl_end(rng1),
+                                      range_ex_detail::adl_begin(rng2),range_ex_detail::adl_end(rng2));
     }
 
     /// \overload
     template<typename Rng1,typename Rng2>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_const_iterator<Rng2>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_const_iterator<Rng2>::type
     partial_sort_copy(Rng1 const & rng1,Rng2 const & rng2)
     {
-        return std::partial_sort_copy(detail::adl_begin(rng1),detail::adl_end(rng1),
-                                      detail::adl_begin(rng2),detail::adl_end(rng2));
+        return std::partial_sort_copy(range_ex_detail::adl_begin(rng1),range_ex_detail::adl_end(rng1),
+                                      range_ex_detail::adl_begin(rng2),range_ex_detail::adl_end(rng2));
     }
 
     /// \overload
     template<typename Rng1,typename Rng2,typename Cmp>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_iterator<Rng2>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng2>::type
     partial_sort_copy(Rng1 const & rng1,Rng2 & rng2,Cmp cmp)
     {
-        return std::partial_sort_copy(detail::adl_begin(rng1),detail::adl_end(rng1),
-                                      detail::adl_begin(rng2),detail::adl_end(rng2),cmp);
+        return std::partial_sort_copy(range_ex_detail::adl_begin(rng1),range_ex_detail::adl_end(rng1),
+                                      range_ex_detail::adl_begin(rng2),range_ex_detail::adl_end(rng2),cmp);
     }
 
     /// \overload
     template<typename Rng1,typename Rng2,typename Cmp>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_const_iterator<Rng2>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_const_iterator<Rng2>::type
     partial_sort_copy(Rng1 const & rng1,Rng2 const & rng2,Cmp cmp)
     {
-        return std::partial_sort_copy(detail::adl_begin(rng1),detail::adl_end(rng1),
-                                      detail::adl_begin(rng2),detail::adl_end(rng2),cmp);
+        return std::partial_sort_copy(range_ex_detail::adl_begin(rng1),range_ex_detail::adl_end(rng1),
+                                      range_ex_detail::adl_begin(rng2),range_ex_detail::adl_end(rng2),cmp);
     }
 
     /// \brief template function nth_element
@@ -1113,44 +1113,44 @@ namespace boost
     ///
     template<typename Rng>
     inline void nth_element(Rng & rng,
-        BOOST_DEDUCED_TYPENAME ::boost::range_iterator<Rng>::type nth)
+        BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng>::type nth)
     {
-        std::nth_element(detail::adl_begin(rng),nth,detail::adl_end(rng));
+        std::nth_element(range_ex_detail::adl_begin(rng),nth,range_ex_detail::adl_end(rng));
     }
 
     /// \overload
     template<typename Rng>
     inline void nth_element(Rng const & rng,
-        BOOST_DEDUCED_TYPENAME ::boost::range_const_iterator<Rng>::type nth)
+        BOOST_DEDUCED_TYPENAME boost::range_const_iterator<Rng>::type nth)
     {
-        std::nth_element(detail::adl_begin(rng),nth,detail::adl_end(rng));
+        std::nth_element(range_ex_detail::adl_begin(rng),nth,range_ex_detail::adl_end(rng));
     }
 
     /// \overload
     template<typename Rng,typename Cmp>
     inline void nth_element(Rng & rng,
-        BOOST_DEDUCED_TYPENAME ::boost::range_iterator<Rng>::type nth,
+        BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng>::type nth,
         Cmp cmp)
     {
-        std::nth_element(detail::adl_begin(rng),nth,detail::adl_end(rng),cmp);
+        std::nth_element(range_ex_detail::adl_begin(rng),nth,range_ex_detail::adl_end(rng),cmp);
     }
 
     /// \overload
     template<typename Rng,typename Cmp>
     inline void nth_element(Rng const & rng,
-        BOOST_DEDUCED_TYPENAME ::boost::range_const_iterator<Rng>::type nth,
+        BOOST_DEDUCED_TYPENAME boost::range_const_iterator<Rng>::type nth,
         Cmp cmp)
     {
-        std::nth_element(detail::adl_begin(rng),nth,detail::adl_end(rng),cmp);
+        std::nth_element(range_ex_detail::adl_begin(rng),nth,range_ex_detail::adl_end(rng),cmp);
     }
 
 
-    namespace detail
+    namespace range_ex_detail
     {
         template<typename Rng,typename Val>
-        inline BOOST_DEDUCED_TYPENAME ::boost::lazy_enable_if<
+        inline BOOST_DEDUCED_TYPENAME boost::lazy_enable_if<
             has_lower_bound<Rng>
-          , ::boost::range_result_iterator<Rng>
+          , boost::range_result_iterator<Rng>
         >::type
         lower_bound_impl(Rng & rng,Val const & val)
         {
@@ -1158,13 +1158,13 @@ namespace boost
         }
 
         template<typename Rng,typename Val>
-        inline BOOST_DEDUCED_TYPENAME ::boost::lazy_disable_if<
+        inline BOOST_DEDUCED_TYPENAME boost::lazy_disable_if<
             has_lower_bound<Rng>
-          , ::boost::range_result_iterator<Rng>
+          , boost::range_result_iterator<Rng>
         >::type
         lower_bound_impl(Rng & rng,Val const & val)
         {
-            return std::lower_bound(detail::adl_begin(rng),detail::adl_end(rng),val);
+            return std::lower_bound(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),val);
         }
     }
 
@@ -1173,42 +1173,42 @@ namespace boost
     /// range-based version of the lower_bound std algorithm
     ///
     template<typename Rng,typename Val>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_iterator<Rng>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng>::type
     lower_bound(Rng & rng,Val const & val)
     {
-        return detail::lower_bound_impl(rng,val);
+        return range_ex_detail::lower_bound_impl(rng,val);
     }
 
     /// \overload
     template<typename Rng,typename Val>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_const_iterator<Rng>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_const_iterator<Rng>::type
     lower_bound(Rng const & rng,Val const & val)
     {
-        return detail::lower_bound_impl(rng,val);
+        return range_ex_detail::lower_bound_impl(rng,val);
     }
 
     /// \overload
     template<typename Rng,typename Val,typename Cmp>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_iterator<Rng>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng>::type
     lower_bound(Rng & rng,Val const & val,Cmp cmp)
     {
-        return std::lower_bound(detail::adl_begin(rng),detail::adl_end(rng),val,cmp);
+        return std::lower_bound(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),val,cmp);
     }
 
     /// \overload
     template<typename Rng,typename Val,typename Cmp>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_const_iterator<Rng>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_const_iterator<Rng>::type
     lower_bound(Rng const & rng,Val const & val,Cmp cmp)
     {
-        return std::lower_bound(detail::adl_begin(rng),detail::adl_end(rng),val,cmp);
+        return std::lower_bound(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),val,cmp);
     }
 
-    namespace detail
+    namespace range_ex_detail
     {
         template<typename Rng,typename Val>
-        inline BOOST_DEDUCED_TYPENAME ::boost::lazy_enable_if<
+        inline BOOST_DEDUCED_TYPENAME boost::lazy_enable_if<
             has_upper_bound<Rng>
-          , ::boost::range_result_iterator<Rng>
+          , boost::range_result_iterator<Rng>
         >::type
         upper_bound_impl(Rng & rng,Val const & val)
         {
@@ -1216,13 +1216,13 @@ namespace boost
         }
 
         template<typename Rng,typename Val>
-        inline BOOST_DEDUCED_TYPENAME ::boost::lazy_disable_if<
+        inline BOOST_DEDUCED_TYPENAME boost::lazy_disable_if<
             has_upper_bound<Rng>
-          , ::boost::range_result_iterator<Rng>
+          , boost::range_result_iterator<Rng>
         >::type
         upper_bound_impl(Rng & rng,Val const & val)
         {
-            return std::upper_bound(detail::adl_begin(rng),detail::adl_end(rng),val);
+            return std::upper_bound(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),val);
         }
     }
 
@@ -1231,40 +1231,40 @@ namespace boost
     /// range-based version of the upper_bound std algorithm
     ///
     template<typename Rng,typename Val>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_iterator<Rng>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng>::type
     upper_bound(Rng & rng,Val const & val)
     {
-        return detail::upper_bound_impl(rng,val);
+        return range_ex_detail::upper_bound_impl(rng,val);
     }
 
     /// \overload
     template<typename Rng,typename Val>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_const_iterator<Rng>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_const_iterator<Rng>::type
     upper_bound(Rng const & rng,Val const & val)
     {
-        return detail::upper_bound_impl(rng,val);
+        return range_ex_detail::upper_bound_impl(rng,val);
     }
 
     /// \overload
     template<typename Rng,typename Val,typename Cmp>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_iterator<Rng>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng>::type
     upper_bound(Rng & rng,Val const & val,Cmp cmp)
     {
-        return std::upper_bound(detail::adl_begin(rng),detail::adl_end(rng),val,cmp);
+        return std::upper_bound(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),val,cmp);
     }
 
     /// \overload
     template<typename Rng,typename Val,typename Cmp>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_const_iterator<Rng>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_const_iterator<Rng>::type
     upper_bound(Rng const & rng,Val const & val,Cmp cmp)
     {
-        return std::upper_bound(detail::adl_begin(rng),detail::adl_end(rng),val,cmp);
+        return std::upper_bound(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),val,cmp);
     }
 
-    namespace detail
+    namespace range_ex_detail
     {
         template<typename Rng,typename Val>
-        inline BOOST_DEDUCED_TYPENAME ::boost::lazy_enable_if<
+        inline BOOST_DEDUCED_TYPENAME boost::lazy_enable_if<
             has_equal_range<Rng>
           , iter_pair<Rng>
         >::type
@@ -1274,13 +1274,13 @@ namespace boost
         }
 
         template<typename Rng,typename Val>
-        inline BOOST_DEDUCED_TYPENAME ::boost::lazy_disable_if<
+        inline BOOST_DEDUCED_TYPENAME boost::lazy_disable_if<
             has_equal_range<Rng>
           , iter_pair<Rng>
         >::type
         equal_range_impl(Rng & rng,Val const & val)
         {
-            return std::equal_range(detail::adl_begin(rng),detail::adl_end(rng),val);
+            return std::equal_range(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),val);
         }
     }
 
@@ -1289,34 +1289,34 @@ namespace boost
     /// range-based version of the equal_range std algorithm
     ///
     template<typename Rng,typename Val>
-    inline BOOST_DEDUCED_TYPENAME detail::iter_pair<Rng>::type
+    inline BOOST_DEDUCED_TYPENAME range_ex_detail::iter_pair<Rng>::type
     equal_range(Rng & rng,Val const & val)
     {
-        return detail::equal_range_impl(rng,val);
+        return range_ex_detail::equal_range_impl(rng,val);
     }
 
     /// \overload
     template<typename Rng,typename Val>
-    inline BOOST_DEDUCED_TYPENAME detail::iter_pair<Rng const>::type
+    inline BOOST_DEDUCED_TYPENAME range_ex_detail::iter_pair<Rng const>::type
     equal_range(Rng const & rng,Val const & val)
     {
-        return detail::equal_range_impl(rng,val);
+        return range_ex_detail::equal_range_impl(rng,val);
     }
 
     /// \overload
     template<typename Rng,typename Val,typename Cmp>
-    inline BOOST_DEDUCED_TYPENAME detail::iter_pair<Rng>::type
+    inline BOOST_DEDUCED_TYPENAME range_ex_detail::iter_pair<Rng>::type
     equal_range(Rng & rng,Val const & val,Cmp cmp)
     {
-        return std::equal_range(detail::adl_begin(rng),detail::adl_end(rng),val,cmp);
+        return std::equal_range(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),val,cmp);
     }
 
     /// \overload
     template<typename Rng,typename Val,typename Cmp>
-    inline BOOST_DEDUCED_TYPENAME detail::iter_pair<Rng const>::type
+    inline BOOST_DEDUCED_TYPENAME range_ex_detail::iter_pair<Rng const>::type
     equal_range(Rng const & rng,Val const & val,Cmp cmp)
     {
-        return std::equal_range(detail::adl_begin(rng),detail::adl_end(rng),val,cmp);
+        return std::equal_range(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),val,cmp);
     }
 
     /// \brief template function binary_search
@@ -1326,14 +1326,14 @@ namespace boost
     template<typename Rng,typename Val>
     inline bool binary_search(Rng const & rng,Val const & val)
     {
-        return std::binary_search(detail::adl_begin(rng),detail::adl_end(rng),val);
+        return std::binary_search(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),val);
     }
 
     /// \overload
     template<typename Rng,typename Val,typename Cmp>
     inline bool binary_search(Rng const & rng,Val const & val,Cmp cmp)
     {
-        return std::binary_search(detail::adl_begin(rng),detail::adl_end(rng),val,cmp);
+        return std::binary_search(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),val,cmp);
     }
 
     /// \brief template function merge
@@ -1343,16 +1343,16 @@ namespace boost
     template<typename Rng1,typename Rng2,typename OutIter>
     inline OutIter merge(Rng1 const & rng1,Rng2 const & rng2,OutIter out)
     {
-        return std::merge(detail::adl_begin(rng1),detail::adl_end(rng1),
-                          detail::adl_begin(rng2),detail::adl_end(rng2),out);
+        return std::merge(range_ex_detail::adl_begin(rng1),range_ex_detail::adl_end(rng1),
+                          range_ex_detail::adl_begin(rng2),range_ex_detail::adl_end(rng2),out);
     }
 
     /// \overload
     template<typename Rng1,typename Rng2,typename OutIter,typename Cmp>
     inline OutIter merge(Rng1 const & rng1,Rng2 const & rng2,OutIter out,Cmp cmp)
     {
-        return std::merge(detail::adl_begin(rng1),detail::adl_end(rng1),
-                          detail::adl_begin(rng2),detail::adl_end(rng2),out,cmp);
+        return std::merge(range_ex_detail::adl_begin(rng1),range_ex_detail::adl_end(rng1),
+                          range_ex_detail::adl_begin(rng2),range_ex_detail::adl_end(rng2),out,cmp);
     }
 
     /// \brief template function inplace_merge
@@ -1361,35 +1361,35 @@ namespace boost
     ///
     template<typename Rng>
     inline void inplace_merge(Rng & rng,
-        BOOST_DEDUCED_TYPENAME ::boost::range_iterator<Rng>::type middle)
+        BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng>::type middle)
     {
-        std::inplace_merge(detail::adl_begin(rng),middle,detail::adl_end(rng));
+        std::inplace_merge(range_ex_detail::adl_begin(rng),middle,range_ex_detail::adl_end(rng));
     }
 
     /// \overload
     template<typename Rng>
     inline void inplace_merge(Rng const & rng,
-        BOOST_DEDUCED_TYPENAME ::boost::range_const_iterator<Rng>::type middle)
+        BOOST_DEDUCED_TYPENAME boost::range_const_iterator<Rng>::type middle)
     {
-        std::inplace_merge(detail::adl_begin(rng),middle,detail::adl_end(rng));
+        std::inplace_merge(range_ex_detail::adl_begin(rng),middle,range_ex_detail::adl_end(rng));
     }
 
     /// \overload
     template<typename Rng,typename Cmp>
     inline void inplace_merge(Rng & rng,
-        BOOST_DEDUCED_TYPENAME ::boost::range_iterator<Rng>::type middle,
+        BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng>::type middle,
         Cmp cmp)
     {
-        std::inplace_merge(detail::adl_begin(rng),middle,detail::adl_end(rng),cmp);
+        std::inplace_merge(range_ex_detail::adl_begin(rng),middle,range_ex_detail::adl_end(rng),cmp);
     }
 
     /// \overload
     template<typename Rng,typename Cmp>
     inline void inplace_merge(Rng const & rng,
-        BOOST_DEDUCED_TYPENAME ::boost::range_const_iterator<Rng>::type middle,
+        BOOST_DEDUCED_TYPENAME boost::range_const_iterator<Rng>::type middle,
         Cmp cmp)
     {
-        std::inplace_merge(detail::adl_begin(rng),middle,detail::adl_end(rng),cmp);
+        std::inplace_merge(range_ex_detail::adl_begin(rng),middle,range_ex_detail::adl_end(rng),cmp);
     }
 
     /////////////////////////////////////////////////////////////////////////
@@ -1403,16 +1403,16 @@ namespace boost
     template<typename Rng1,typename Rng2>
     inline bool includes(Rng1 const & rng1,Rng2 const & rng2)
     {
-        return std::includes(detail::adl_begin(rng1),detail::adl_end(rng1),
-                             detail::adl_begin(rng2),detail::adl_end(rng2));
+        return std::includes(range_ex_detail::adl_begin(rng1),range_ex_detail::adl_end(rng1),
+                             range_ex_detail::adl_begin(rng2),range_ex_detail::adl_end(rng2));
     }
 
     /// \overload
     template<typename Rng1,typename Rng2,typename Cmp>
     inline bool includes(Rng1 const & rng1,Rng2 const & rng2,Cmp cmp)
     {
-        return std::includes(detail::adl_begin(rng1),detail::adl_end(rng1),
-                            detail::adl_begin(rng2),detail::adl_end(rng2),cmp);
+        return std::includes(range_ex_detail::adl_begin(rng1),range_ex_detail::adl_end(rng1),
+                            range_ex_detail::adl_begin(rng2),range_ex_detail::adl_end(rng2),cmp);
     }
 
     /// \brief template function set_union
@@ -1422,16 +1422,16 @@ namespace boost
     template<typename Rng1,typename Rng2,typename OutIter>
     inline OutIter set_union(Rng1 const & rng1,Rng2 const & rng2,OutIter out)
     {
-        return std::set_union(detail::adl_begin(rng1),detail::adl_end(rng1),
-                              detail::adl_begin(rng2),detail::adl_end(rng2),out);
+        return std::set_union(range_ex_detail::adl_begin(rng1),range_ex_detail::adl_end(rng1),
+                              range_ex_detail::adl_begin(rng2),range_ex_detail::adl_end(rng2),out);
     }
 
     /// \overload
     template<typename Rng1,typename Rng2,typename OutIter,typename Cmp>
     inline OutIter set_union(Rng1 const & rng1,Rng2 const & rng2,OutIter out,Cmp cmp)
     {
-        return std::set_union(detail::adl_begin(rng1),detail::adl_end(rng1),
-                              detail::adl_begin(rng2),detail::adl_end(rng2),out,cmp);
+        return std::set_union(range_ex_detail::adl_begin(rng1),range_ex_detail::adl_end(rng1),
+                              range_ex_detail::adl_begin(rng2),range_ex_detail::adl_end(rng2),out,cmp);
     }
 
     /// \brief template function set_intersection
@@ -1441,16 +1441,16 @@ namespace boost
     template<typename Rng1,typename Rng2,typename OutIter>
     inline OutIter set_intersection(Rng1 const & rng1,Rng2 const & rng2,OutIter out)
     {
-        return std::set_intersection(detail::adl_begin(rng1),detail::adl_end(rng1),
-                                     detail::adl_begin(rng1),detail::adl_end(rng1),out);
+        return std::set_intersection(range_ex_detail::adl_begin(rng1),range_ex_detail::adl_end(rng1),
+                                     range_ex_detail::adl_begin(rng1),range_ex_detail::adl_end(rng1),out);
     }
 
     /// \overload
     template<typename Rng1,typename Rng2,typename OutIter,typename Cmp>
     inline OutIter set_intersection(Rng1 const & rng1,Rng2 const & rng2,OutIter out,Cmp cmp)
     {
-        return std::set_intersection(detail::adl_begin(rng1),detail::adl_end(rng1),
-                                     detail::adl_begin(rng1),detail::adl_end(rng1),out,cmp);
+        return std::set_intersection(range_ex_detail::adl_begin(rng1),range_ex_detail::adl_end(rng1),
+                                     range_ex_detail::adl_begin(rng1),range_ex_detail::adl_end(rng1),out,cmp);
     }
 
     /// \brief template function set_difference
@@ -1460,16 +1460,16 @@ namespace boost
     template<typename Rng1,typename Rng2,typename OutIter>
     inline OutIter set_difference(Rng1 const & rng1,Rng2 const & rng2,OutIter out)
     {
-        return std::set_difference(detail::adl_begin(rng1),detail::adl_end(rng1),
-                                   detail::adl_begin(rng2),detail::adl_end(rng2),out);
+        return std::set_difference(range_ex_detail::adl_begin(rng1),range_ex_detail::adl_end(rng1),
+                                   range_ex_detail::adl_begin(rng2),range_ex_detail::adl_end(rng2),out);
     }
 
     /// \overload
     template<typename Rng1,typename Rng2,typename OutIter,typename Cmp>
     inline OutIter set_difference(Rng1 const & rng1,Rng2 const & rng2,OutIter out,Cmp cmp)
     {
-        return std::set_difference(detail::adl_begin(rng1),detail::adl_end(rng1),
-                                   detail::adl_begin(rng2),detail::adl_end(rng2),out,cmp);
+        return std::set_difference(range_ex_detail::adl_begin(rng1),range_ex_detail::adl_end(rng1),
+                                   range_ex_detail::adl_begin(rng2),range_ex_detail::adl_end(rng2),out,cmp);
     }
 
     /// \brief template function set_symmetric_difference
@@ -1479,16 +1479,16 @@ namespace boost
     template<typename Rng1,typename Rng2,typename OutIter>
     inline OutIter set_symmetric_difference(Rng1 const & rng1,Rng2 const & rng2,OutIter out)
     {
-        return std::set_symmetric_difference(detail::adl_begin(rng1),detail::adl_end(rng1),
-                                             detail::adl_begin(rng2),detail::adl_end(rng2),out);
+        return std::set_symmetric_difference(range_ex_detail::adl_begin(rng1),range_ex_detail::adl_end(rng1),
+                                             range_ex_detail::adl_begin(rng2),range_ex_detail::adl_end(rng2),out);
     }
 
     /// \overload
     template<typename Rng1,typename Rng2,typename OutIter,typename Cmp>
     inline OutIter set_symmetric_difference(Rng1 const & rng1,Rng2 const & rng2,OutIter out,Cmp cmp)
     {
-        return std::set_symmetric_difference(detail::adl_begin(rng1),detail::adl_end(rng1),
-                                             detail::adl_begin(rng2),detail::adl_end(rng2),out,cmp);
+        return std::set_symmetric_difference(range_ex_detail::adl_begin(rng1),range_ex_detail::adl_end(rng1),
+                                             range_ex_detail::adl_begin(rng2),range_ex_detail::adl_end(rng2),out,cmp);
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -1502,28 +1502,28 @@ namespace boost
     template<typename Rng>
     inline void push_heap(Rng & rng)
     {
-        std::push_heap(detail::adl_begin(rng),detail::adl_end(rng));
+        std::push_heap(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng));
     }
 
     /// \overload
     template<typename Rng>
     inline void push_heap(Rng const & rng)
     {
-        std::push_heap(detail::adl_begin(rng),detail::adl_end(rng));
+        std::push_heap(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng));
     }
 
     /// \overload
     template<typename Rng,typename Cmp>
     inline void push_heap(Rng & rng,Cmp cmp)
     {
-        std::push_heap(detail::adl_begin(rng),detail::adl_end(rng),cmp);
+        std::push_heap(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),cmp);
     }
 
     /// \overload
     template<typename Rng,typename Cmp>
     inline void push_heap(Rng const & rng,Cmp cmp)
     {
-        std::push_heap(detail::adl_begin(rng),detail::adl_end(rng),cmp);
+        std::push_heap(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),cmp);
     }
 
     /// \brief template function pop_heap
@@ -1533,28 +1533,28 @@ namespace boost
     template<typename Rng>
     inline void pop_heap(Rng & rng)
     {
-        std::pop_heap(detail::adl_begin(rng),detail::adl_end(rng));
+        std::pop_heap(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng));
     }
 
     /// \overload
     template<typename Rng>
     inline void pop_heap(Rng const & rng)
     {
-        std::pop_heap(detail::adl_begin(rng),detail::adl_end(rng));
+        std::pop_heap(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng));
     }
 
     /// \overload
     template<typename Rng,typename Cmp>
     inline void pop_heap(Rng & rng,Cmp cmp)
     {
-        std::pop_heap(detail::adl_begin(rng),detail::adl_end(rng),cmp);
+        std::pop_heap(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),cmp);
     }
 
     /// \overload
     template<typename Rng,typename Cmp>
     inline void pop_heap(Rng const & rng,Cmp cmp)
     {
-        std::pop_heap(detail::adl_begin(rng),detail::adl_end(rng),cmp);
+        std::pop_heap(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),cmp);
     }
 
     /// \brief template function make_heap
@@ -1564,28 +1564,28 @@ namespace boost
     template<typename Rng>
     inline void make_heap(Rng & rng)
     {
-        std::make_heap(detail::adl_begin(rng),detail::adl_end(rng));
+        std::make_heap(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng));
     }
 
     /// \overload
     template<typename Rng>
     inline void make_heap(Rng const & rng)
     {
-        std::make_heap(detail::adl_begin(rng),detail::adl_end(rng));
+        std::make_heap(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng));
     }
 
     /// \overload
     template<typename Rng,typename Cmp>
     inline void make_heap(Rng & rng,Cmp cmp)
     {
-        std::make_heap(detail::adl_begin(rng),detail::adl_end(rng),cmp);
+        std::make_heap(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),cmp);
     }
 
     /// \overload
     template<typename Rng,typename Cmp>
     inline void make_heap(Rng const & rng,Cmp cmp)
     {
-        std::make_heap(detail::adl_begin(rng),detail::adl_end(rng),cmp);
+        std::make_heap(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),cmp);
     }
 
     /// \brief template function sort_heap
@@ -1595,28 +1595,28 @@ namespace boost
     template<typename Rng>
     inline void sort_heap(Rng & rng)
     {
-        std::sort_heap(detail::adl_begin(rng),detail::adl_end(rng));
+        std::sort_heap(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng));
     }
 
     /// \overload
     template<typename Rng>
     inline void sort_heap(Rng const & rng)
     {
-        std::sort_heap(detail::adl_begin(rng),detail::adl_end(rng));
+        std::sort_heap(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng));
     }
 
     /// \overload
     template<typename Rng,typename Cmp>
     inline void sort_heap(Rng & rng,Cmp cmp)
     {
-        std::sort_heap(detail::adl_begin(rng),detail::adl_end(rng),cmp);
+        std::sort_heap(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),cmp);
     }
 
     /// \overload
     template<typename Rng,typename Cmp>
     inline void sort_heap(Rng const & rng,Cmp cmp)
     {
-        std::sort_heap(detail::adl_begin(rng),detail::adl_end(rng),cmp);
+        std::sort_heap(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),cmp);
     }
 
     /////////////////////////////////////////////////////////////////////////
@@ -1628,34 +1628,34 @@ namespace boost
     /// range-based version of the min_element std algorithm
     ///
     template<typename Rng>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_iterator<Rng>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng>::type
     min_element(Rng & rng)
     {
-        return std::min_element(detail::adl_begin(rng),detail::adl_end(rng));
+        return std::min_element(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng));
     }
 
     /// \overload
     template<typename Rng>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_const_iterator<Rng>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_const_iterator<Rng>::type
     min_element(Rng const & rng)
     {
-        return std::min_element(detail::adl_begin(rng),detail::adl_end(rng));
+        return std::min_element(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng));
     }
 
     /// \overload
     template<typename Rng,typename BinPred>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_iterator<Rng>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng>::type
     min_element(Rng & rng,BinPred pred)
     {
-        return std::min_element(detail::adl_begin(rng),detail::adl_end(rng),pred);
+        return std::min_element(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),pred);
     }
 
     /// \overload
     template<typename Rng,typename BinPred>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_const_iterator<Rng>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_const_iterator<Rng>::type
     min_element(Rng const & rng,BinPred pred)
     {
-        return std::min_element(detail::adl_begin(rng),detail::adl_end(rng),pred);
+        return std::min_element(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),pred);
     }
 
     /// \brief template function max_element
@@ -1663,34 +1663,34 @@ namespace boost
     /// range-based version of the max_element std algorithm
     ///
     template<typename Rng>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_iterator<Rng>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng>::type
     max_element(Rng & rng)
     {
-        return std::max_element(detail::adl_begin(rng),detail::adl_end(rng));
+        return std::max_element(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng));
     }
 
     /// \overload
     template<typename Rng>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_const_iterator<Rng>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_const_iterator<Rng>::type
     max_element(Rng const & rng)
     {
-        return std::max_element(detail::adl_begin(rng),detail::adl_end(rng));
+        return std::max_element(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng));
     }
 
     /// \overload
     template<typename Rng,typename BinPred>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_iterator<Rng>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng>::type
     max_element(Rng & rng,BinPred pred)
     {
-        return std::max_element(detail::adl_begin(rng),detail::adl_end(rng),pred);
+        return std::max_element(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),pred);
     }
 
     /// \overload
     template<typename Rng,typename BinPred>
-    inline BOOST_DEDUCED_TYPENAME ::boost::range_const_iterator<Rng>::type
+    inline BOOST_DEDUCED_TYPENAME boost::range_const_iterator<Rng>::type
     max_element(Rng const & rng,BinPred pred)
     {
-        return std::max_element(detail::adl_begin(rng),detail::adl_end(rng),pred);
+        return std::max_element(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),pred);
     }
 
     /// \brief template function lexicographic_compare
@@ -1700,16 +1700,16 @@ namespace boost
     template<typename Rng1,typename Rng2>
     inline bool lexicographical_compare(Rng1 const & rng1,Rng2 const & rng2)
     {
-        return std::lexicographical_compare(detail::adl_begin(rng1),detail::adl_end(rng1),
-                                            detail::adl_begin(rng2),detail::adl_end(rng2));
+        return std::lexicographical_compare(range_ex_detail::adl_begin(rng1),range_ex_detail::adl_end(rng1),
+                                            range_ex_detail::adl_begin(rng2),range_ex_detail::adl_end(rng2));
     }
 
     /// \overload
     template<typename Rng1,typename Rng2,typename BinPred>
     inline bool lexicographical_compare(Rng1 const & rng1,Rng2 const & rng2,BinPred pred)
     {
-        return std::lexicographical_compare(detail::adl_begin(rng1),detail::adl_end(rng1),
-                                            detail::adl_begin(rng2),detail::adl_end(rng2),pred);
+        return std::lexicographical_compare(range_ex_detail::adl_begin(rng1),range_ex_detail::adl_end(rng1),
+                                            range_ex_detail::adl_begin(rng2),range_ex_detail::adl_end(rng2),pred);
     }
 
     /////////////////////////////////////////////////////////////////////////
@@ -1723,28 +1723,28 @@ namespace boost
     template<typename Rng>
     inline bool next_permutation(Rng & rng)
     {
-        return std::next_permutation(detail::adl_begin(rng),detail::adl_end(rng));
+        return std::next_permutation(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng));
     }
 
     /// \overload
     template<typename Rng>
     inline bool next_permutation(Rng const & rng)
     {
-        return std::next_permutation(detail::adl_begin(rng),detail::adl_end(rng));
+        return std::next_permutation(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng));
     }
 
     /// \overload
     template<typename Rng,typename Cmp>
     inline bool next_permutation(Rng & rng,Cmp cmp)
     {
-        return std::next_permutation(detail::adl_begin(rng),detail::adl_end(rng),cmp);
+        return std::next_permutation(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),cmp);
     }
 
     /// \overload
     template<typename Rng,typename Cmp>
     inline bool next_permutation(Rng const & rng,Cmp cmp)
     {
-        return std::next_permutation(detail::adl_begin(rng),detail::adl_end(rng),cmp);
+        return std::next_permutation(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),cmp);
     }
 
     /// \brief template function prev_permutation
@@ -1754,28 +1754,28 @@ namespace boost
     template<typename Rng>
     inline bool prev_permutation(Rng & rng)
     {
-        return std::prev_permutation(detail::adl_begin(rng),detail::adl_end(rng));
+        return std::prev_permutation(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng));
     }
 
     /// \overload
     template<typename Rng>
     inline bool prev_permutation(Rng const & rng)
     {
-        return std::prev_permutation(detail::adl_begin(rng),detail::adl_end(rng));
+        return std::prev_permutation(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng));
     }
 
     /// \overload
     template<typename Rng,typename Cmp>
     inline bool prev_permutation(Rng & rng,Cmp cmp)
     {
-        return std::prev_permutation(detail::adl_begin(rng),detail::adl_end(rng),cmp);
+        return std::prev_permutation(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),cmp);
     }
 
     /// \overload
     template<typename Rng,typename Cmp>
     inline bool prev_permutation(Rng const & rng,Cmp cmp)
     {
-        return std::prev_permutation(detail::adl_begin(rng),detail::adl_end(rng),cmp);
+        return std::prev_permutation(range_ex_detail::adl_begin(rng),range_ex_detail::adl_end(rng),cmp);
     }
 
 }

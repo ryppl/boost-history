@@ -24,8 +24,8 @@ inline Iter iterator_cast(Iter iter)
 
 /// \overload
 template<typename Base,typename Iter>
-inline BOOST_DEDUCED_TYPENAME ::boost::disable_if<
-    ::boost::is_same<Base,Iter>
+inline BOOST_DEDUCED_TYPENAME boost::disable_if<
+    boost::is_same<Base,Iter>
   , Base
 >::type
 iterator_cast(Iter iter)
