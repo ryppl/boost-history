@@ -16,7 +16,7 @@
 // 
 // optimally_inherit<> helps avoid EBO pessimization with multiple inheritance
 // by only inheriting from non-empty base classes.  See 
-// libs/smart_ptr/optimally_inherit.html
+// libs/optimally_inherit/doc/index.html
 //----------------------------------------------------------------------------
 #ifndef BOOST_OPTIMALLY_INHERIT_20020703_HPP
 #define BOOST_OPTIMALLY_INHERIT_20020703_HPP
@@ -29,7 +29,11 @@ namespace boost
     namespace detail
     {
         //--------------------------------------------------------------------
-        // Initialization tags
+        // Initialization tags - bad hack
+        //   These tags allow c'tors which pass an argument to just selected
+        // derived classes.  Clearly, this is not an optimal solution, but
+        // is a necessary evil until a better one is found.
+        //--------------------------------------------------------------------
         class init_first_tag { };
         class init_first_first_tag { };
         //--------------------------------------------------------------------
@@ -155,7 +159,7 @@ namespace boost
         //--------------------------------------------------------------------
     }   // namespace detail
     //------------------------------------------------------------------------
-    // class optimally_inherit
+    // type generator optimally_inherit
     //------------------------------------------------------------------------
     template <class T1, class T2>
     class optimally_inherit
