@@ -138,7 +138,9 @@ class dynamic_bitset
 {
 public:
     typedef Block <a href="#block_type">block_type</a>;
+    typedef Allocator <a href="#allocator_type">allocator_type</a>;
     typedef <i>implementation-defined</i> <a href="#size_type">size_type</a>;
+        
     static const int <a href=
        "#bits_per_block">bits_per_block</a> = <i>implementation-defined</i>;
     static const size_type <a href=
@@ -674,14 +676,21 @@ The type <tt>bool</tt>.
 <a name="size_type">dynamic_bitset::size_type</a>
 </pre>
 
-The unsigned integer for representing the size of the bit set.
+The unsigned integer type for representing the size of the bit set.
 
 <hr>
 <pre>
 <a name="block_type">dynamic_bitset::block_type</a>
 </pre>
 
-The same type as the <tt>Block</tt> template parameter.
+The same type as <tt>Block</tt>.
+
+<hr>
+<pre>
+<a name="allocator_type">dynamic_bitset::allocator_type;</a>
+</pre>
+
+The same type as <tt>Allocator</tt>.
 
 <hr>
 <h3><a name="public-data-members">Public data members</a></h3>
