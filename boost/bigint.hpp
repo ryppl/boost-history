@@ -166,12 +166,13 @@ class bigint : boost::operators<bigint> {
   }
 
 
-  // integral ops:
-  //  any integer x can be represented as: x = qy + r. Then:
+  // Any integer x can be represented as: x = qy + r, 0 <= |r| < |d|. 
+  // Then:
   //   - integral_div(x,y) = q
-  //   - integral_mod(x,y) = r
-  //  where r has the same sign as y.
-
+  //   - integral_mod(x,y) = r.
+  // Specifically, this is "floor" division:
+  // the quotient q is equal to the "x/y" rounded towards negative infinity
+  // (the floor function). The remainder r always has the same sign as y.
   int integral_div(int lhs, int rhs) {
     return (lhs - integral_mod(lhs,rhs)) / rhs;
   }
