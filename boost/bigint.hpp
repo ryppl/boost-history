@@ -64,6 +64,13 @@ class bigint : boost::operators<bigint> {
         os << '+';
       }
 
+      if (flags & std::ios_base::showbase) {
+        if (flags & std::ios_base::hex) 
+          os << ((flags & std::ios_base::uppercase) ? "0X" : "0x");
+        else if (flags & std::ios_base::oct)
+          os << '0';
+      }
+
       static char const decimals[] = {'0','1','2','3','4','5','6','7','8','9'};
       static char const lowerhex[] = {'0','1','2','3','4','5','6','7','8',
                                           '9','a','b','c','d','e','f'};

@@ -262,4 +262,16 @@ int main() {
 
   }
 
+  // test out showbase
+  {
+    bigint x(2147483647);
+    std::ostringstream h1, h2, o1;
+    h1 << std::hex << std::showbase << x;
+    assert(h1.str() == "0x7fffffff");
+    h2 << std::hex << std::showbase << std::uppercase << x;
+    assert(h2.str() == "0X7FFFFFFF");
+    o1 << std::oct << std::showbase << x;
+    assert(o1.str() == "017777777777");
+  }
+
 }
