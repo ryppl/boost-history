@@ -14,14 +14,14 @@
   This program solves the following puzzle that appeared in the "Ask Marilyn"
   column in Parade magazine, May 5, 2002. 
 
-	"Dear Marilyn,
-	Can you combine these 12 three-letter words to form three 12-letter words
-	instead? (Example: car + tog + rap + her = cartographer.)
+    "Dear Marilyn,
+    Can you combine these 12 three-letter words to form three 12-letter words
+    instead? (Example: car + tog + rap + her = cartographer.)
 
-		ate con fir his ion man
-		mat new per sop spa tic
+        ate con fir his ion man
+        mat new per sop spa tic
 
-	--Misty Covington, Sparks, MD."
+    --Misty Covington, Sparks, MD."
 */
 
 #ifndef NDEBUG
@@ -39,26 +39,26 @@
 #include <cassert>
 using namespace std;
 
-#include "rcombo.hpp"		// next_r_permutation()
+#include "rcombo.hpp"        // next_r_permutation()
 
-#define DIM(a)	(sizeof(a)/sizeof(a)[0])
+#define DIM(a)    (sizeof(a)/sizeof(a)[0])
 
 const char filename[] = "lexicon.txt";
 vector<string> theDictionary;
 
 const char tri[12][4] = {
-	"ate",
-	"con",
-	"fir",
-	"his",
-	"ion",
-	"man",
-	"mat",
-	"new",
-	"per",
-	"sop",
-	"spa",
-	"tic"
+    "ate",
+    "con",
+    "fir",
+    "his",
+    "ion",
+    "man",
+    "mat",
+    "new",
+    "per",
+    "sop",
+    "spa",
+    "tic"
 };
 #if !defined _MSC_VER
 vector<string> theSegs(tri, &tri[12]);
@@ -79,27 +79,27 @@ vector<string> theSegs;
 void WordSearch()
 {
     // sort to start the permutation series
-	sort(theSegs.begin(), theSegs.end());
+    sort(theSegs.begin(), theSegs.end());
 
     // display the initial set of 3-letter word segments
     copy(theSegs.begin(), theSegs.end(), ostream_iterator<string>(cout, "\t"));
     cout << '\n';
     
-	do {
-		string trial_word = theSegs[0] + theSegs[1] + theSegs[2] + theSegs[3];
-		if (binary_search(theDictionary.begin(), theDictionary.end(), trial_word))
-		{
-			cout << trial_word << '\n';
-			break;
-		}	// if
-	} while(boost::next_r_permutation(theSegs.begin(), theSegs.begin() + 4,
+    do {
+        string trial_word = theSegs[0] + theSegs[1] + theSegs[2] + theSegs[3];
+        if (binary_search(theDictionary.begin(), theDictionary.end(), trial_word))
+        {
+            cout << trial_word << '\n';
+            break;
+        }    // if
+    } while(boost::next_r_permutation(theSegs.begin(), theSegs.begin() + 4,
         theSegs.end()));
 
     // Delete the segments for the found word.
     theSegs.erase(theSegs.begin(), theSegs.begin() + 4);
 
-}	// WordSearch()
-	
+}    // WordSearch()
+    
 // main -----------------------------------------------------------------//
 
 // Solves the "Ask Marilyn" puzzle in two ways. The first is simple
@@ -125,7 +125,7 @@ int main()
 {
     cout << "From \"Ask Marilyn\", Parade magazine 5/5/02\n\n";
 
-    cout <<	"Dear Marilyn,\n\
+    cout <<    "Dear Marilyn,\n\
   Can you combine these 12 three-letter words to form three 12-letter words\n\
   instead? (Example: car + tog + rap + her = cartographer.)\n\
 \
@@ -144,12 +144,12 @@ int main()
     ifstream ifs(filename);
     if (!ifs)
     {
-    	cerr << "Couldn't open " << filename << endl;
-    	return EXIT_FAILURE;
+        cerr << "Couldn't open " << filename << endl;
+        return EXIT_FAILURE;
     }
 
     // Copy words from dictionary file to a vector:
-	typedef istream_iterator<string> string_input;
+    typedef istream_iterator<string> string_input;
 
     cout << "\nReading the dictionary file " << filename << " ..." << flush;
 
@@ -167,13 +167,13 @@ int main()
 
     //  No need for an initial sort; theSegs is already sorted.
     int count = 0;
-	do {
-		string trial_word = theSegs[0] + theSegs[1] + theSegs[2] + theSegs[3];
-		if (binary_search(theDictionary.begin(), theDictionary.end(), trial_word))
-		{
-			cout << ++count << ". " << trial_word << '\n';
-		}
-	} while(count < 3 &&
+    do {
+        string trial_word = theSegs[0] + theSegs[1] + theSegs[2] + theSegs[3];
+        if (binary_search(theDictionary.begin(), theDictionary.end(), trial_word))
+        {
+            cout << ++count << ". " << trial_word << '\n';
+        }
+    } while(count < 3 &&
         boost::next_r_permutation(theSegs.begin(), theSegs.begin() + 4,
             theSegs.end()));
 
@@ -182,11 +182,11 @@ int main()
     // each word is found to reduce the number of permutations to search,.
 
     cout << "\n\n--- More efficient way to solve the same problem ---\n\n";
- 	WordSearch();   // find first word
-	WordSearch();   // find second word
-	WordSearch();   // find third and last word
-	    
-	cout << "\n\nAll done!" << endl;
-	return EXIT_SUCCESS;
+     WordSearch();   // find first word
+    WordSearch();   // find second word
+    WordSearch();   // find third and last word
+        
+    cout << "\n\nAll done!" << endl;
+    return EXIT_SUCCESS;
 
-}	// main
+}    // main
