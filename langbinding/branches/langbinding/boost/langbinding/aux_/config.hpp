@@ -17,8 +17,8 @@
 #  endif
 #endif
 
-#ifndef BOOST_PYTHON_DECL
-#  define BOOST_PYTHON_DECL
+#ifndef BOOST_LANGBINDING_DECL
+#  define BOOST_LANGBINDING_DECL
 #endif
 
 #endif // CONFIG_DWA2004918_HPP

@@ -14,7 +14,7 @@
 # include <boost/detail/workaround.hpp>
 
 namespace boost { namespace langbinding { namespace classes {
-
+   
 typedef util::type_info class_id;
 using util::type_id;
 
@@ -27,6 +27,12 @@ BOOST_LANGBINDING_DECL void register_dynamic_id_aux(
 
 BOOST_LANGBINDING_DECL void add_cast(
     class_id src_t, class_id dst_t, void* (*cast)(void*), bool is_downcast);
+
+BOOST_LANGBINDING_DECL void* find_static_type(
+    void* p, class_id src, class_id dst);
+
+BOOST_LANGBINDING_DECL void* find_dynamic_type(
+    void* p, class_id src, class_id dst);
 
 //
 // a generator with an execute() function which, given a source type
