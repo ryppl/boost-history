@@ -34,6 +34,8 @@
 
 #elif defined(__KCC)
 
+#elif defined(__sgi)
+
 #else
 #error bindings do not recognise compiler
 #endif
