@@ -3,7 +3,7 @@
 // See http://www.boost.org for updates, documentation, and revision history.
 //-----------------------------------------------------------------------------
 //
-// Copyright (c) 2002
+// Copyright (c) 2002-2003
 // Eric Friedman
 //
 // Permission to use, copy, modify, distribute and sell this software
@@ -30,6 +30,7 @@ namespace boost {
 //
 template <typename Deriving> struct moveable;
 template <typename T>        struct move_source;
+template <typename T>        struct move_return;
 
 //////////////////////////////////////////////////////////////////////////
 // function template move
@@ -40,14 +41,21 @@ template <typename T>        struct move_source;
 
 namespace detail {
 
+// (detail) class template move
+//
+// Metafunction that, given moveable T, provides move_source<T>, else T&.
+//
 template <typename T>
 struct move_type
 {
+public: // metafunction result
+
     typedef typename mpl::if_<
           is_base_and_derived<moveable<T>, T>
         , move_source<T>
         , T&
         >::type type;
+
 };
 
 } // namespace detail
@@ -62,6 +70,24 @@ move(T& source)
 
     return move_t(source);
 }
+
+//////////////////////////////////////////////////////////////////////////
+// class template return_t
+//
+// Metafunction that, given moveable T, provides move_return<T>, else T.
+//
+template <typename T>
+struct return_t
+{
+public: // metafunction result
+
+    typedef typename mpl::if_<
+          is_base_and_derived<moveable<T>, T>
+        , move_return<T>
+        , T
+        >::type type;
+
+};
 
 //////////////////////////////////////////////////////////////////////////
 // function template move_swap
