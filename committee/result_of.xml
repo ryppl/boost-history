@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
-  "http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+  "http://www.cs.rpi.edu/~gregod/boost/tools/boostbook/dtd/boostbook.dtd">
 <section>
-  <title>A uniform method for computing function object return types (revision 1)</title>
+  <title>A uniform method for computing function object return types</title>
 
   <variablelist>
-    <varlistentry><term>Document number</term><listitem><simpara>N1454=03-0037</simpara></listitem></varlistentry>
-    <varlistentry><term>Revises document number</term><listitem><simpara>N1437=03-0019</simpara></listitem></varlistentry>
+    <varlistentry><term>Document number</term><listitem><simpara>N1437=03-0019</simpara></listitem></varlistentry>
     <varlistentry><term>Date</term><listitem><simpara>27 February 2003</simpara></listitem></varlistentry>
     <varlistentry><term>Project</term><listitem><simpara>Programming Language C++, Library Working Group</simpara></listitem></varlistentry>
-    <varlistentry><term>Reply-to</term><listitem><simpara>Doug Gregor <email>gregod@cs.rpi.edu</email></simpara></listitem></varlistentry>
+    <varlistentry><term>Reply-to</term><listitem><simpara>Douglas Gregor <email>gregod@cs.rpi.edu</email></simpara></listitem></varlistentry>
   </variablelist>
 
   <section>
@@ -44,7 +43,8 @@
     transformation: how to forward the arguments to the underlying
     function object and how to return the result returned by the
     underlying function object. The former is discussed extensively in
-    [Dimov02]; the latter is the subject of this proposal.</para>
+    [<link linkend="ref.dimov02">Dimov02</link>]; the latter is the
+    subject of this proposal.</para>
   </section>
 
   <section>
@@ -55,17 +55,17 @@
     the type returned from <code>operator()</code>. While this method
     works well for simple function objects (and has been adopted by
     even very flexible composition and binding libraries, such as
-    Boost.Bind [cite]), it is incompatible with function objects with
-    an overloaded or templated <code>operator()</code>. These function
-    objects may not have values of the same type returned from every
-    instance of <code>operator()</code>, and the result type may not
-    even be known until a complete set of argument types is
-    given. Thus it is impossible to define a single
-    <code>result_type</code> member type. Such function objects do not
-    fit the function object model of the standard library, and
-    therefore modern binding and composition libraries have defined
-    new (somewhat incompatible) methods for deducing return
-    types.</para>
+    Boost.Bind [<link linkend="ref.boost01">Boost01</link>]), it is
+    incompatible with function objects with an overloaded or templated
+    <code>operator()</code>. These function objects may not have
+    values of the same type returned from every instance of
+    <code>operator()</code>, and the result type may not even be known
+    until a complete set of argument types is given. Thus it is
+    impossible to define a single <code>result_type</code> member
+    type. Such function objects do not fit the function object model
+    of the standard library, and therefore modern binding and
+    composition libraries have defined new (somewhat incompatible)
+    methods for deducing return types.</para>
 
     <para>The basic method employed by most libraries that require
     return type deduction beyond what <code>result_type</code> can
@@ -78,11 +78,13 @@
     together in a typelist of some form; the return type deduction is
     sometimes performed by a namespace-level class template that
     forwards to a member template (e.g., <code>actor_result</code> in
-    Phoenix [cite]); and the names of these entities differ among
-    implementations (e.g., <code>result</code> in Phoenix [cite] and
-    <code>sig</code> in Lambda). The following example defines a
-    simple function object whose return type depends on its argument
-    type:</para>
+    Phoenix [<link linkend="ref.guzman02">Guzman02</link>]); and the
+    names of these entities differ among implementations (e.g.,
+    <code>result</code> in Phoenix [<link
+    linkend="ref.guzman02">Guzman02</link>] and <code>sig</code> in
+    Lambda [<link linkend="ref.boost02">Boost02</link>]). The
+    following example defines a simple function object whose return
+    type depends on its argument type:</para>
 
 <programlisting>struct square_ {
   template&lt;typename T&gt; struct result {
@@ -161,7 +163,7 @@
     <para>The problem of determining the return type of a function
     object call is a subset of the more general problem of determining
     the result type of an expression. If this larger problem is solved
-    (e.g., by a form of <code>typeof</code>[cite]) in future revisions
+    (e.g., by a form of <code>typeof</code>[<link linkend="ref.stroustrup02">Stroustrup02</link>]) in future revisions
     of C++, that solution may be used directly with the proposed
     <code>result_of</code>, as may vendor-specific extensions with
     similar functionality. It is the intention of this proposal that
@@ -222,25 +224,23 @@ public:
 
           <purpose>Determines the result type of function object call expressions.</purpose>
 
-          <description>
-            <para>Given an lvalue <code>f</code> of type
-            <code>F</code> and lvalues <code>t1</code>,
-            <code>t2</code>, ..., <code>tN</code> of types
-            <code>T1</code>, <code>T2</code>, ..., <code>TN</code>,
-            respectively, the <code>type</code> member type defines
-            the result type of the expression <code>f(t1, t2, ...,
-            tN)</code>.</para>
+          <para>Given an lvalue <code>f</code> of type <code>F</code>
+          and lvalues <code>t1</code>, <code>t2</code>, ...,
+          <code>tN</code> of types <code>T1</code>, <code>T2</code>,
+          ..., <code>TN</code>, respectively, the <code>type</code>
+          member type defines the result type of the expression
+          <code>f(t1, t2, ..., tN)</code>.</para>
  
-            <para>The implementation may determine the member type
-            <code>type</code> via any means that produces the exact
-            type of the expression <code>f(t1, t2, ..., tN)</code> for
-            the given types.</para>
+          <para>The implementation may determine the member type
+          <code>type</code> via any means that produces the exact type
+          of the expression <code>f(t1, t2, ..., tN)</code> for the
+          given types.</para>
 
-            <para>If the implementation cannot determine the type of
-            the expression <code>f(t1, t2, ..., tN)</code>, or if the
-            expression is ill-formed, the implementation shall use the
-            following process to determine the member type
-            <code>type</code>:
+          <para>If the implementation cannot determine the type of the
+          expression <code>f(t1, t2, ..., tN)</code>, or if the
+          expression is ill-formed, the implementation shall use the
+          following process to determine the member type
+          <code>type</code>:
             <orderedlist spacing="compact">
               <listitem><para>If <code>F</code> is a function type, <code>type</code> is the return type of the function type <code>F</code>.</para></listitem>
               <listitem><para>If <code>F</code> is a member function type, <code>type</code> is the return type of the member function type <code>F</code>.</para></listitem>
@@ -253,8 +253,7 @@ public:
                 </orderedlist></para></listitem>
               <listitem><para>Otherwise, the program is ill-formed.</para></listitem>
             </orderedlist>
-            </para>           
-          </description>
+          </para>           
         </class>
       </namespace>
     </header>
@@ -277,7 +276,7 @@ public:
         <listitem><para>The function type includes in a natural way the type of the function object (even when forwarding to the <code>result</code> member class template), allowing for differentiation between invocations of a function object with differing cv-qualifiers.</para></listitem>
         <listitem><para>Limitations on the number of argument types are not introduced by the <code>result_of</code> class template.</para></listitem>
         <listitem><para>Auxiliary typelist types are not introduced.</para></listitem>
-        <listitem><para>With the acceptance of the function object wrappers proposal [cite], there is precedent for the user of function types to encode function argument lists.</para></listitem>
+        <listitem><para>With the acceptance of the function object wrappers proposal [<link linkend="ref.gregor02">Gregor02</link>], there is precedent for the user of function types to encode function argument lists.</para></listitem>
       </itemizedlist>
       </listitem>
 
@@ -304,8 +303,57 @@ public:
   </section>
 
   <section>
-    <title>Acknowledgements</title> <para>Jaakko J&auml;rvi, Peter
-    Dimov, Joel de Guzman, and Gary Powell were all instrumental in
-    bounding the definition of <code>result_of</code>.</para>
+    <title>Acknowledgements</title> 
+
+    <para>Jaakko J&auml;rvi, Peter Dimov, Joel de Guzman, and Gary
+    Powell were all instrumental in the specification of
+    <code>result_of</code>.</para>
+  </section>
+
+  <section>
+    <title>References</title>
+     
+    <para id="ref.boost01">[Boost01] Boost.Bind library, September
+    2001. Available online at <ulink
+    url="http://www.boost.org/libs/bind/"/>.</para>
+
+    <para id="ref.boost02">[Boost02] Boost.Lambda library, April
+    2002. Available online at <ulink
+    url="http://www.boost.org/libs/lambda/"/>.</para>
+
+    <para id="ref.dimov02">[Dimov02] Peter Dimov, Howard E. Hinnant,
+    Dave Abrahams, <emphasis>The Forwarding Problem:
+    Arguments</emphasis>, C++ committee document N1385=02-0043,
+    September 2002. Available online at <ulink
+    url="http://std.dkuug.dk/jtc1/sc22/wg21/docs/papers/2002/n1385.htm"/></para>
+
+    <para id="ref.dimov03">[Dimov03] Peter Dimov, Douglas Gregor,
+    Jaakko J&auml;rvi, and Gary Powell, <emphasis>A Proposal to Add an
+    Enhanced Binder to the Library Technical Report</emphasis>, C++
+    committee document N1438=03-0020, February 2003. Available online
+    at <ulink
+    url="http://anubis.dkuug.dk/jtc1/sc22/wg21/docs/papers/2003/n1438.html"/>.</para>
+
+    <para id="ref.gregor02">[Gregor02] Douglas Gregor, <emphasis>A
+    Proposal to add a Polymorphic Function Object Wrapper to the
+    Standard Library</emphasis>, C++ committee document N1402=02-0060,
+    October 2002. Available online at <ulink
+    url="http://std.dkuug.dk/jtc1/sc22/wg21/docs/papers/2002/n1402.htm"/>.</para>
+
+    <para id="ref.guzman02">[Guzman02] Joel de Guzman,
+    <emphasis>Phoenix library documentation</emphasis>, October
+    2002. Available online at <ulink
+    url="http://spirit.sourceforge.net/index.php?doc=docs/phoenix v1
+    0/index.html"/>.</para>
+
+    <para id="ref.hinnant02">[Hinnant02] Howard E. Hinnant, Peter
+    Dimov, and Dave Abrahams, <emphasis>A Proposal to Add Move
+    Semantics Support to the C++ Language</emphasis>, C++ committee
+    document N1377=02-0035, September 2002. Available online at <ulink
+    url="http://anubis.dkuug.dk/jtc1/sc22/wg21/docs/papers/2002/n1377.htm"/>.</para>
+   
+    <para id="ref.stroustrup02">[Stroustrup02] Bjarne Stroustrup,
+    auto/typeof, C++ reflector message c++std-ext-5364, October
+    2002.</para>
   </section>
 </section>
