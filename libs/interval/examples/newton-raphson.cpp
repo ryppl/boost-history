@@ -6,20 +6,25 @@
 #include <iostream>
 #include <iomanip>
 
+template <class I> I f(const I& x)
+{ return x * (x - 1.) * (x - 2.) * (x - 3.) * (x - 4.); }
+template <class I> I f_diff(const I& x)
+{ return (((5. * x - 40.) * x + 105.) * x - 100.) * x + 24.; }
+
+static const double max_width = 1e-10;
+static const double alpha = 0.75;
+
 using namespace boost;
 using namespace interval_lib;
 
-typedef interval<double> I_aux;
-typedef unprotect<I_aux>::type I;
+// First method: no empty intervals
 
-I f(const I& x)
-{ return x * (x - 1.) * (x - 2.) * (x - 3.) * (x - 4.); }
-I f_diff(const I& x)
-{ return (((5. * x - 40.) * x + 105.) * x - 100.) * x + 24.; }
+typedef interval<double> I1_aux;
+typedef unprotect<I1_aux>::type I1;
 
-std::vector<I> newton_raphson(const I& xs) {
-  std::vector<I> l, res;
-  I vf, vd, x, x1, x2;
+std::vector<I1> newton_raphson(const I1& xs) {
+  std::vector<I1> l, res;
+  I1 vf, vd, x, x1, x2;
   l.push_back(xs);
   while (!l.empty()) {
     x = l.back();
@@ -40,25 +45,75 @@ std::vector<I> newton_raphson(const I& xs) {
     if (!in_zero(f(x1)))
       if (x2_used) { x1 = x2; x2_used = false; }
       else continue;
-    if (width(x1) < 1e-10) res.push_back(x1);
-    else if (width(x1) > 0.75 * width(x)) {
-      std::pair<I, I> p = bisect(x);
+    if (width(x1) < max_width) res.push_back(x1);
+    else if (width(x1) > alpha * width(x)) {
+      std::pair<I1, I1> p = bisect(x);
       if (in_zero(f(p.first))) l.push_back(p.first);
       x2 = p.second;
       x2_used = true;
     } else l.push_back(x1);
     if (x2_used && in_zero(f(x2)))
-      if (width(x2) < 1e-10) res.push_back(x1);
+      if (width(x2) < max_width) res.push_back(x1);
+      else l.push_back(x2);
+  }
+  return res;
+}
+
+// Second method: with empty intervals
+
+typedef
+  interval<double,
+	   interval_policies<save_state<rounded_arith_opp<double> >,
+			     checking_no_nan<double,
+					     checking_base<double> > > >
+  I2_aux;
+typedef unprotect<I2_aux>::type I2;
+
+std::vector<I2> newton_raphson(const I2& xs) {
+  std::vector<I2> l, res;
+  I2 vf, vd, x, x1, x2;
+  l.push_back(xs);
+  while (!l.empty()) {
+    x = l.back();
+    l.pop_back();
+    bool x2_used;
+    double xx = median(x);
+    vf = f(xx);
+    vd = f_diff(x);
+    x1 = intersect(x, xx - division_part1(vf, vd, x2_used));
+    x2 = x2_used ? intersect(x, xx - division_part2(vf, vd)) : I2::empty();
+    if (width(x2) > width(x1)) std::swap(x1, x2);
+    if (empty(x1) || !in_zero(f(x1)))
+      if (!empty(x2)) { x1 = x2; x2 = I2::empty(); }
+      else continue;
+    if (width(x1) < max_width) res.push_back(x1);
+    else if (width(x1) > alpha * width(x)) {
+      std::pair<I2, I2> p = bisect(x);
+      if (in_zero(f(p.first))) l.push_back(p.first);
+      x2 = p.second;
+    } else l.push_back(x1);
+    if (!empty(x2) && in_zero(f(x2)))
+      if (width(x2) < max_width) res.push_back(x1);
       else l.push_back(x2);
   }
   return res;
 }
 
 int main() {
-  I_aux::traits_type::rounding rnd;
-  std::vector<I> res = newton_raphson(I(-1, 5.1));
+  {
+  I1_aux::traits_type::rounding rnd;
+  std::vector<I1> res = newton_raphson(I1(-1, 5.1));
   std::cout << "Results: " << std::endl << std::setprecision(12);
-  for(std::vector<I>::const_iterator i = res.begin(); i != res.end(); ++i)
+  for(std::vector<I1>::const_iterator i = res.begin(); i != res.end(); ++i)
     std::cout << "  " << *i << std::endl;
   std::cout << std::endl;
+  }
+  {
+  I2_aux::traits_type::rounding rnd;
+  std::vector<I2> res = newton_raphson(I2(-1, 5.1));
+  std::cout << "Results: " << std::endl << std::setprecision(12);
+  for(std::vector<I2>::const_iterator i = res.begin(); i != res.end(); ++i)
+    std::cout << "  " << *i << std::endl;
+  std::cout << std::endl;
+  }
 }

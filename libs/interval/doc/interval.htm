@@ -28,7 +28,6 @@ align="middle">
         <a href="#interval_lib">Interval support library</a><br>
         <a href="#compil">Compilation notes</a><br>
         <a href="#dangers">Common pitfalls and dangers</a><br>
-        <a href="#test">Test and example programs</a><br>
         <a href="#rationale">Rationale</a><br>
         <a href="#acks">History and Acknowledgments</a></p>
       </td>
@@ -38,6 +37,7 @@ align="middle">
         <a href="comparisons.htm">Comparisons</a><br>
         <a href="numbers.htm">Base number type requirements</a><br>
         <a href="guide.htm">Choosing your own interval type</a><br>
+        <a href="examples.htm">Test and example programs</a><br>
         <a href="includes.htm">Headers inclusion</a></td>
     </tr>
   </tbody>
@@ -786,51 +786,6 @@ blocks will probably have an undefined behavior (but only for the current
 thread). And do not forget to create a rounding object as explained in the <a
 href="rounding.htm#perfexp">example</a>.</p>
 
-<h2 id="test">Test and Example Programs</h2>
-
-<p>Some examples are supplied with the library. They illustrate a few uses of
-intervals. For a general description and considerations on using this
-library, and some potential domains of application, please read this <a
-href="guide.htm">mini-guide</a>.</p>
-
-<p>Some test programs are also distributed with the library. Their intent is
-to ensure that the code is in accordance with this documentation, and to help
-you find the right compilation options for your platforms. See the above
-section <a href="#compil">Compilation options</a> for some starting points.
-They are a good place to try and use the library first.</p>
-
-<p>The test programs are as follows. Please note that they require the use of
-the Boost.test library (except for interval_test.cpp).</p>
-
-<p><b>add.cpp</b> tests if the additive and substractive operators and the
-respective _std and _opp rounding functions are correctly implemented. It is
-done by using symbolic expressions as a base type.</p>
-
-<p><b>cmp.cpp</b> tests if the operators <code>&lt;</code> <code>&gt;</code>
-<code>&lt;=</code> <code>&gt;=</code> <code>==</code> <code>!=</code> (for
-the three pre-defined comparisons) and the functions cer.. and pos.. behave
-correctly with some simple intervals ([1,2] and [3,4], [1,3] and [2,4], [1,2]
-and [2,3], etc).</p>
-
-<p><b>det.cpp</b> tests if the <code>_std</code> and <code>_opp</code>
-versions in protected and unprotected mode produce the same result when Gauss
-scheme is used on an unstable matrix (in order to exercise rounding). The
-tests are done for <code>interval&lt;float&gt;</code> and
-<code>interval&lt;double&gt;</code>.</p>
-
-<p><b>fmod.cpp</b> defines a minimalistic version of
-<code>interval&lt;int&gt;</code> and uses it in order to test
-<code>fmod</code> on some specific interval values.</p>
-
-<p><b>pi.cpp</b> tests if the interval value of &#x3c0; (for
-<code>int</code>, <code>float</code> and <code>double</code> base types)
-contains the number &#x3c0; (defined with 21 decimal digits) and if it is a
-subset of [&#x3c0;±1ulp] (in order to ensure some precision).</p>
-
-<p><b>interval_test.cpp</b> tests if the interval library respects the
-inclusion property of interval arithmetic by computing some functions and
-operations for both <code>double</code> and <cod>interval&lt;double&gt;.</p>
-
 <h2 id="rationale">Rationale</h2>
 
 <p>The purpose of this library is to provide an efficient and generalized way
@@ -940,7 +895,7 @@ order for this library to be written. Hervé reorganized and wrote chapters of
 the documentation based on Guillaume's great starting point.</p>
 <hr>
 
-<p>Revised: 2002-10-13<br>
+<p>Revised: 2002-12-15<br>
 Copyright (c) Guillaume Melquiond, Sylvain Pion, Hervé Brönnimann, 2002.<br>
 Polytechnic University, 2002.</p>
 </body>
