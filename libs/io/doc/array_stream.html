@@ -163,10 +163,11 @@ for the get and put areas are set to the beginning of the internal array.</p>
 
 	<dt><code>basic_array_streambuf( basic_array_streambuf const &amp;c );</code>
 	<dd>
-		<strong>Effects:</strong> besides base-class copy construction
-			and the bounds setting, copies the element values in
-                        <var>c</var>'s internal array to the new object's
-                        internal array
+		<strong>Effects:</strong> default-constructs the base class
+			subobject; copies the locale information from <var>c</var>;
+                        copies the element values in <var>c</var>'s internal
+                        array to the new object's internal array and sets the
+                        bounds
 	<dt><code>basic_array_streambuf( char_type const *b, char_type const *e );</code>
 	<dd>
 		<strong>Effects:</strong> besides the bounds setting,
@@ -310,7 +311,7 @@ public:
 
 <hr>
 
-<p>Revised: 7 June 2003</p>
+<p>Revised: 8 June 2003</p>
 
 <p>Copyright &copy; Daryle Walker 2003.  Permission to copy, use,
 modify, sell and distribute this document is granted provided this

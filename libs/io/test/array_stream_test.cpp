@@ -6,7 +6,7 @@
 //  warranty, and with no claim as to its suitability for any purpose. 
 
 //  Revision History
-//   07 Jun 2003  Initial version (Daryle Walker)
+//   08 Jun 2003  Initial version (Daryle Walker)
 
 #include <boost/bind.hpp>             // for boost::bind, _1
 #include <boost/io/array_stream.hpp>  // for boost::io::basic_array_istream, etc.
@@ -96,12 +96,10 @@ astreambuf_constructor_unit_test
     BOOST_CHECK( equal(asb_i.array_begin(), asb_i.array_end(), alphabet,
      traits_type::eq) );
 
-#if !defined(__GNUC__) || (__GNUC__ < 3) || ((__GNUC__ == 3) && (__GNUC_MINOR__ < 1))
     // Copy construction
     astreambuf  asb_c( asb_i );
     BOOST_CHECK( equal(asb_c.array_begin(), asb_c.array_end(), alphabet,
      traits_type::eq) );
-#endif
 }
 
 // Unit test for read and write counts
