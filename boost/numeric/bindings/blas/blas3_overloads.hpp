@@ -24,6 +24,82 @@ namespace boost { namespace numeric { namespace bindings { namespace blas { name
   inline
   void gemm( char TRANSA, char TRANSB, const int& m, const int& n, const int& k, const complex_d& alpha, const complex_d* a_ptr, const int& lda, const complex_d* b_ptr, const int& ldb, const complex_d& beta, complex_d* c_ptr, const int& ldc ) { BLAS_ZGEMM( &TRANSA, &TRANSB, &m, &n, &k, complex_ptr( &alpha ), complex_ptr( a_ptr ), &lda, complex_ptr( b_ptr ), &ldb, complex_ptr( &beta ), complex_ptr( c_ptr ), &ldc ) ; }
 
+
+  //
+  // SYRK
+  //
+  inline
+  void syrk( char uplo, char trans, const int& n, const int& k, const float& alpha,
+             const float* a_ptr, const int lda, const float& beta, float* c_ptr,
+             const int& ldc)
+  {
+     BLAS_SSYRK( &uplo, &trans, &n, &k, &alpha, a_ptr, &lda, &beta, c_ptr, &ldc);
+  }
+
+  inline
+  void syrk( char uplo, char trans, const int& n, const int& k, const double& alpha,
+             const double* a_ptr, const int lda, const double& beta, double* c_ptr,
+             const int& ldc)
+  {
+     BLAS_DSYRK( &uplo, &trans, &n, &k, &alpha, a_ptr, &lda, &beta, c_ptr, &ldc);
+  }
+
+  inline
+  void syrk( char uplo, char trans, const int& n, const int& k, const complex_f& alpha,
+             const complex_f* a_ptr, const int lda, const complex_f& beta, complex_f* c_ptr,
+             const int& ldc)
+  {
+     BLAS_CSYRK( &uplo, &trans, &n, &k, complex_ptr( &alpha ), complex_ptr( a_ptr ),
+                 &lda, complex_ptr( &beta ), complex_ptr( c_ptr ), &ldc);
+  }
+
+  inline
+  void syrk( char uplo, char trans, const int& n, const int& k, const complex_d& alpha,
+             const complex_d* a_ptr, const int lda, const complex_d& beta, complex_d* c_ptr,
+             const int& ldc)
+  {
+     BLAS_ZSYRK( &uplo, &trans, &n, &k, complex_ptr( &alpha ), complex_ptr( a_ptr ),
+                 &lda, complex_ptr( &beta ), complex_ptr( c_ptr ), &ldc);
+  }
+
+  //
+  // HERK
+  //
+  inline
+  void herk( char uplo, char trans, const int& n, const int& k, const float& alpha,
+             const float* a_ptr, const int lda, const float& beta, float* c_ptr,
+             const int& ldc)
+  {
+     BLAS_SSYRK( &uplo, &trans, &n, &k, &alpha, a_ptr, &lda, &beta, c_ptr, &ldc);
+  }
+
+  inline
+  void herk( char uplo, char trans, const int& n, const int& k, const double& alpha,
+             const double* a_ptr, const int lda, const double& beta, double* c_ptr,
+             const int& ldc)
+  {
+     BLAS_DSYRK( &uplo, &trans, &n, &k, &alpha, a_ptr, &lda, &beta, c_ptr, &ldc);
+  }
+
+
+  inline
+  void herk( char uplo, char trans, const int& n, const int& k, const float& alpha,
+             const complex_f* a_ptr, const int lda, const float& beta, complex_f* c_ptr,
+             const int& ldc)
+  {
+     BLAS_CHERK( &uplo, &trans, &n, &k, &alpha, complex_ptr( a_ptr ),
+                 &lda, &beta, complex_ptr( c_ptr ), &ldc);
+  }
+
+  inline
+  void herk( char uplo, char trans, const int& n, const int& k, const double& alpha,
+             const complex_d* a_ptr, const int lda, const double& beta, complex_d* c_ptr,
+             const int& ldc)
+  {
+     BLAS_ZHERK( &uplo, &trans, &n, &k, &alpha, complex_ptr( a_ptr ),
+                 &lda, &beta, complex_ptr( c_ptr ), &ldc);
+  }
+
 }}}}}
 
 #endif // BOOST_NUMERIC_BINDINGS_BLAS_BLAS3_OVERLOADS_HPP

@@ -67,6 +67,46 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
     gemm( traits::NO_TRANSPOSE, traits::NO_TRANSPOSE, (val_t) 1, a, b, (val_t) 0, c ) ;
   }
 
+
+  // C <- alpha * A * A^T + beta * C
+  // C <- alpha * A^T * A + beta * C
+  template < typename value_type, typename matrix_type_a, typename matrix_type_c >
+  void syrk( char uplo, char trans, const value_type& alpha, const matrix_type_a& a,
+             const value_type& beta, matrix_type_c& c) {
+     const int n = traits::matrix_size1( c );
+     assert( n == traits::matrix_size2( c ) );
+     const int k = trans == traits::NO_TRANSPOSE ? traits::matrix_size2( a ) : traits::matrix_size1( a ) ;
+     assert( n == traits::NO_TRANSPOSE ? traits::matrix_size1( a ) : traits::matrix_size2( a ) );
+     const int lda = traits::leading_dimension( a );
+     const int ldc = traits::leading_dimension( c );
+
+     const value_type *a_ptr = traits::matrix_storage( a ) ;
+     value_type *c_ptr = traits::matrix_storage( c ) ;
+
+     detail::syrk( uplo, trans, n, k, alpha, a_ptr, lda, beta, c_ptr, ldc );
+  } // syrk()
+
+
+  // C <- alpha * A * A^H + beta * C
+  // C <- alpha * A^H * A + beta * C
+  template < typename real_type, typename matrix_type_a, typename matrix_type_c >
+  void herk( char uplo, char trans, const real_type& alpha, const matrix_type_a& a,
+             const real_type& beta, matrix_type_c& c) {
+     typedef typename matrix_type_c::value_type value_type ;
+
+     const int n = traits::matrix_size1( c );
+     assert( n == traits::matrix_size2( c ) );
+     const int k = trans == traits::NO_TRANSPOSE ? traits::matrix_size2( a ) : traits::matrix_size1( a ) ;
+     assert( n == traits::NO_TRANSPOSE ? traits::matrix_size1( a ) : traits::matrix_size2( a ) );
+     const int lda = traits::leading_dimension( a );
+     const int ldc = traits::leading_dimension( c );
+
+     const value_type *a_ptr = traits::matrix_storage( a ) ;
+     value_type *c_ptr = traits::matrix_storage( c ) ;
+
+     detail::herk( uplo, trans, n, k, alpha, a_ptr, lda, beta, c_ptr, ldc );
+  } // herk()
+
 }}}}
 
 #endif // BOOST_BINDINGS_BLAS_BLAS3_HPP

@@ -75,6 +75,20 @@ extern "C"
   void   BLAS_DGEMM(const char *transa, const char *transb, const int *m, const int *n, const int *k, const double     *alpha, const double     *a, const int *lda, const double     *b, const int *ldb, const double     *beta, double     *c, const int *ldc);
   void   BLAS_CGEMM(const char *transa, const char *transb, const int *m, const int *n, const int *k, const fcomplex_t *alpha, const fcomplex_t *a, const int *lda, const fcomplex_t *b, const int *ldb, const fcomplex_t *beta, fcomplex_t *c, const int *ldc);
   void   BLAS_ZGEMM(const char *transa, const char *transb, const int *m, const int *n, const int *k, const dcomplex_t *alpha, const dcomplex_t *a, const int *lda, const dcomplex_t *b, const int *ldb, const dcomplex_t *beta, dcomplex_t *c, const int *ldc);
+
+  void   BLAS_SSYRK ( const char* uplo, const char* trans, const int* n, const int* k, const float* alpha,
+                      const float* a, const int* lda, const float* beta, float* c, const int* ldc );
+  void   BLAS_DSYRK ( const char* uplo, const char* trans, const int* n, const int* k, const double* alpha,
+                      const double* a, const int* lda, const double* beta, double* c, const int* ldc );
+  void   BLAS_CSYRK ( const char* uplo, const char* trans, const int* n, const int* k, const fcomplex_t* alpha,
+                      const fcomplex_t* a, const int* lda, const fcomplex_t* beta, fcomplex_t* c, const int* ldc );
+  void   BLAS_ZSYRK ( const char* uplo, const char* trans, const int* n, const int* k, const dcomplex_t* alpha,
+                      const dcomplex_t* a, const int* lda, const dcomplex_t* beta, dcomplex_t* c, const int* ldc );
+  void   BLAS_CHERK ( const char* uplo, const char* trans, const int* n, const int* k, const float* alpha,
+                      const fcomplex_t* a, const int* lda, const float* beta, fcomplex_t* c, const int* ldc );
+  void   BLAS_ZHERK ( const char* uplo, const char* trans, const int* n, const int* k, const double* alpha,
+                      const dcomplex_t* a, const int* lda, const double* beta, dcomplex_t* c, const int* ldc );
+
 }
 
 #endif // BOOST_NUMERIC_BINDINGS_BLAS_BLAS_H
