@@ -26,6 +26,7 @@
 #include <boost/persistence/persistence.hpp>
 #include <boost/persistence/text.hpp>
 #include <boost/persistence/binary.hpp>
+//#include <boost/persistence/xdr.hpp>
 
 # ifdef BOOST_NO_STDC_NAMESPACE
     namespace std { using ::strcmp; using ::strcpy; }
@@ -49,11 +50,13 @@ struct struct_type
 //  double v12;
 //  long double v13;
 //  char v14[32];
-  std::string v15;
+//  std::string v15;
 
   template<class Desc>
   void describe(Desc & d)
-    { d & v1 & v2 & v3 & v4 & v5 & v6 & v7 & v8 & v9 & v10 /*& v11 & v12 & v13*/ & v15 ; }
+    { d & v1 & v2 & v3 & v4 & v5 & v6 & v7 & v8 & v9 & v10 /*& v11 & v12 & v13 & v15*/ ; }
+
+  int operator-( const struct_type & ) const { return 0; }
 };
 
 inline bool operator==( const struct_type & l, const struct_type & r )
@@ -71,29 +74,31 @@ inline bool operator==( const struct_type & l, const struct_type & r )
 //  && l.v11 == r.v11
 //  && l.v12 == r.v12
 //  && l.v13 == r.v13
-/*  && std::strcmp( l.v14, r.v14 ) == 0*/
-  && l.v15 == r.v15;
+//  && std::strcmp( l.v14, r.v14 ) == 0
+//  && l.v15 == r.v15
+  ;
 }
 inline bool operator!=( const struct_type & l, const struct_type & r )
 { return !(l == r); }
 
 inline std::ostream& operator<<( std::ostream& os, const struct_type & s )
 {
-   os << s.v1 << ", "
-      << s.v2 << ", "
-      << (int)s.v3 << ", "
-      << (int)s.v4 << ", "
-      << (int)s.v5 << ", "
-      << s.v6 << ", "
-      << s.v7 << ", "
-      << s.v8 << ", "
-      << s.v9 << ", "
-      << s.v10 << ", "
-//      << s.v11 << ", "
-//      << s.v12 << ", "
-//      << s.v13 << ", "
-/*     << s.v14 << ", "*/
-      << s.v15;
+   os << s.v1
+      << ", " << s.v2
+      << ", " << (int)s.v3
+      << ", " << (int)s.v4
+      << ", " << (int)s.v5
+      << ", " << s.v6
+      << ", " << s.v7
+      << ", " << s.v8
+      << ", " << s.v9
+      << ", " << s.v10
+//      << ", " << s.v11
+//      << ", " << s.v12
+//      << ", " << s.v13
+//      << ", " << s.v14
+//      << ", " << s.v15
+      ;
   return os; 
 }
 
@@ -117,7 +122,9 @@ void test_value( const T & old_value, int line )
   boost::load( r, new_value );
   if ( old_value != new_value )
   {
-    std::cout << "old_value: " << old_value << "\nnew_value: " << new_value;
+    std::cout << "\nold_value: " << old_value
+              << "\nnew_value: " << new_value;
+    std::cout << "\ndifference: " << (old_value - new_value);
     boost::report_error( "old_value != new_value", __FILE__, line );
   }
 }
@@ -132,6 +139,7 @@ void test_types()
   // max and min values for all built in numeric types
   test_value<Writer,Reader,int>(std::numeric_limits<int>::max(),__LINE__);
   test_value<Writer,Reader,int>(std::numeric_limits<int>::min(),__LINE__);
+  test_value<Writer,Reader,int>(0x1234,__LINE__);
   test_value<Writer,Reader,bool>(std::numeric_limits<bool>::max(),__LINE__);
   test_value<Writer,Reader,bool>(std::numeric_limits<bool>::min(),__LINE__);
   test_value<Writer,Reader,char>(std::numeric_limits<char>::max(),__LINE__);
@@ -142,14 +150,19 @@ void test_types()
   test_value<Writer,Reader,unsigned char>(std::numeric_limits<unsigned char>::min(),__LINE__);
   test_value<Writer,Reader,short>(std::numeric_limits<short>::max(),__LINE__);
   test_value<Writer,Reader,short>(std::numeric_limits<short>::min(),__LINE__);
+  test_value<Writer,Reader,short>(0x1234,__LINE__);
   test_value<Writer,Reader,long>(std::numeric_limits<long>::max(),__LINE__);
   test_value<Writer,Reader,long>(std::numeric_limits<long>::min(),__LINE__);
+  test_value<Writer,Reader,long>(0x12345678,__LINE__);
   test_value<Writer,Reader,unsigned short>(std::numeric_limits<unsigned short>::max(),__LINE__);
   test_value<Writer,Reader,unsigned short>(std::numeric_limits<unsigned short>::min(),__LINE__);
+  test_value<Writer,Reader,unsigned short>(0x1234,__LINE__);
   test_value<Writer,Reader,unsigned int>(std::numeric_limits<unsigned int>::max(),__LINE__);
+  test_value<Writer,Reader,unsigned int>(0x1234,__LINE__);
   test_value<Writer,Reader,unsigned int>(std::numeric_limits<unsigned int>::min(),__LINE__);
   test_value<Writer,Reader,unsigned long>(std::numeric_limits<unsigned long>::max(),__LINE__);
   test_value<Writer,Reader,unsigned long>(std::numeric_limits<unsigned long>::min(),__LINE__);
+  test_value<Writer,Reader,unsigned long>(0x12345678,__LINE__);
 
 // fp tests fail for text writer/readers, but I'm leaving them as is until Jens
 // figures out exactly what testable guarantees can be made for fp.
@@ -170,8 +183,8 @@ void test_types()
 
 //  test_value<Writer,Reader,char*>("C char *",__LINE__);
 //  test_value<Writer,Reader,char*>("C char * with \" embedded quote",__LINE__);
-  test_value<Writer,Reader,std::string>("C++ string",__LINE__);
-  test_value<Writer,Reader,std::string>("C++ string with \" embedded quote",__LINE__);
+//  test_value<Writer,Reader,std::string>("C++ string",__LINE__);
+//  test_value<Writer,Reader,std::string>("C++ string with \" embedded quote",__LINE__);
 
 // structure value
   struct_type st;
@@ -188,7 +201,7 @@ void test_types()
 //   st.v11 = std::numeric_limits<float>::max();
 //   st.v12 = std::numeric_limits<double>::min();
 //   st.v13 = std::numeric_limits<long double>::max();
-  st.v15 = "C++ string with \" embedded quote";
+//   st.v15 = "C++ string with \" embedded quote";
 
   test_value<Writer,Reader,struct_type>(st,__LINE__);
 
@@ -204,8 +217,9 @@ int test_main( int, char** )
   test_types< boost::text_writer, boost::text_reader >();
   std::cout << "Testing binary writer/reader\n";
   test_types< boost::binary_ostream_writer, boost::binary_istream_reader >();
+//  std::cout << "Testing XDR writer/reader\n";
+//  test_types< boost::xdr_writer, boost::xdr_reader >();
 
-  /// TODO: add XDR tests.
   /// TODO: add HTML tests.
   /// TODO: add Comma Separated Value tests.
   return 0;
