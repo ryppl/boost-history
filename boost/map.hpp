@@ -29,7 +29,7 @@
 #include <memory>                       // std::allocator<>
 #include <functional>                   // std::less<>, std::binary_function<>
 #include <algorithm>                    // std::lexicographical_compare()
-#include "tree.hpp"                     // boost::rb_tree<>
+#include <boost/detail/tree.hpp>        // boost::rb_tree<>
 //----------------------------------------------------------------------------
 namespace boost
 {
@@ -46,12 +46,13 @@ namespace boost
         {
             return value.first;
         }
-        mapped_type&    value(value_type& value)
+        mapped_type&    value(value_type& value) const
         {
             return value.second;
         }
     public:             // Structors
-        value_type      make_value(key_type const& key, mapped_type const& value)
+        value_type      make_value(key_type const& key,
+                            mapped_type const& value) const
         {
             return value_type(key, value);
         }
@@ -65,12 +66,13 @@ namespace boost
         typedef Value                               mapped_type;
         typedef Value                               value_type;
     public:             // Accessors
-        mapped_type&    value(value_type& value)
+        mapped_type&    value(value_type& value) const
         {
             return value;
         }
     public:             // Structors
-        value_type      make_value(key_type const& key, mapped_type const& value)
+        value_type      make_value(key_type const& key,
+                            mapped_type const& value) const
         {
             return value;
         }
@@ -180,6 +182,8 @@ namespace boost
         }
 
         bool            valid(void) const           { return map_.valid(); }
+        template <class OStream>
+        void            dump(OStream& stream) const { map_.dump(stream); }
     public:             // Insert/Erase
         std::pair<iterator, bool>
                         insert(value_type const& value)

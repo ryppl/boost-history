@@ -79,13 +79,13 @@ namespace boost
         public:             // Structors
                             // We set color to red to distinguish header
                             // from root in decrement()
-                            node_base(node_base* root)
-                                : color_(red), parent_(0), left_(root)
-                                , right_(root)          { }
+                            node_base(node_base* header)
+                                : color_(red), parent_(0), left_(header),
+                                right_(header)          { }
 
                             node_base(color_type color, node_base* parent)
-                                : color_(color), parent_(parent), left_(0)
-                                , right_(0)             { }
+                                : color_(color), parent_(parent), left_(0),
+                                right_(0)               { }
 
             virtual        ~node_base(void)             { }
         public:             // Accessors
@@ -118,12 +118,6 @@ namespace boost
             void            rebalance(node_base* header);
             node_base*      rebalance_for_erase(node_base* header);
 
-            template <class>
-            node_base*      insert(node_base* x, node_base* y, bool w);
-            
-            template <class NodeAlloc>
-            static void     erase(node_base* node, NodeAlloc node_alloc);
-
             virtual void    update_insert(node_base*)   { }
             virtual void    update_erase(node_base*)    { }
         public:             // Implementation
@@ -132,21 +126,6 @@ namespace boost
             node_base*      left_;
             node_base*      right_;
         };
-        //--------------------------------------------------------------------
-        // This has to stay out-of-line: it's recursive
-        // erase without rebalancing
-        template <class NodeAlloc>
-        void node_base::erase(node_base* node, NodeAlloc node_alloc)
-        {
-            while (node != 0)
-            {
-                erase(node->right_, node_alloc);
-                node_base* child = node->left_;
-                node_alloc().destroy(node);
-                node_alloc().deallocate(node, 1);
-                node = child;
-            }
-        }
         //--------------------------------------------------------------------
     }   // namespace detail
     //------------------------------------------------------------------------
@@ -164,8 +143,8 @@ namespace boost
                             impl(base_type* root)
                                 : base_type(root)       { }
 
-                            impl(color_type color, base_type* parent
-                                , value_type const& value)
+                            impl(color_type color, base_type* parent,
+                                value_type const& value)
                                 : base_type(color, parent), value_(value)
                                                         { }
         public:
@@ -188,10 +167,10 @@ namespace boost
                                 : base_type(root), index_(0)
                                                         { }
 
-                            impl(color_type color, base_type* parent
-                                , value_type const& value)
-                                : base_type(color, parent), value_(value)
-                                , index_(0)             { }
+                            impl(color_type color, base_type* parent,
+                                value_type const& value)
+                                : base_type(color, parent), value_(value),
+                                index_(0)               { }
 
         public:             // Methods
             virtual void    rotate_left(base_type* header)
@@ -745,7 +724,7 @@ namespace boost
                header_alloc().construct(header_, node_base(header_));
                if (that.root() != 0)
                {
-                   header_->parent_ = copy(that.root(), header_);
+                   header_->parent_ = copy(that.root(), static_cast<node_type*>(header_));
                    header_->left_ = root()->minimum();
                    header_->right_ = root()->maximum();
                }
@@ -787,6 +766,8 @@ namespace boost
             key_compare     key_comp(void) const        { return key_compare_; }
 
             bool            valid(void) const;
+            template <class OStream>
+            void            dump(OStream& stream) const;
         public:             // Insert/Erase
             std::pair<iterator, bool>
                             insert(value_type const& value)
@@ -935,7 +916,7 @@ namespace boost
                 return create_node(parent, node->value_, node->color_);
             }
             static
-            node_type*      copy(node_type* n, node_type* p);
+            node_type*      copy(node_type* node, node_type* parent);
             void            clear(void)
             {
                 if (node_count_ > 0)
@@ -947,6 +928,8 @@ namespace boost
                     node_count_ = 0;
                 }
             }
+            static
+            void            erase(node_type* node);
         private:            // Accessors
             node_type*      root(void) const            { return static_cast<node_type*>(header_->parent_); }
             node_type*      leftmost(void) const        { return static_cast<node_type*>(header_->left_); }
@@ -1010,6 +993,60 @@ namespace boost
         }
         //--------------------------------------------------------------------
         TEMPLATE_PARAMETERS
+        template <class OStream>
+        void RB_TREE::dump(OStream& stream) const
+        {
+            stream
+                << "size: " << node_count_ << "\n"
+                << "header: " << (header_->color_ == node_type::red ? "red" : "black") << "\n"
+                << "  root: ";
+            if (header_->parent_ == 0)
+                stream << "[null]\n";
+            else
+                stream << key_of_value_(
+                    static_cast<node_type*>(header_->parent_)->value_) << "\n";
+            stream << "  left: ";
+            if (header_->left_ == header_)
+                stream << "[null]\n";
+            else
+                stream << key_of_value_(
+                    static_cast<node_type*>(header_->left_)->value_) << "\n";
+            stream << "  right: ";
+            if (header_->right_ == header_)
+                stream << "[null]\n";
+            else
+                stream << key_of_value_(
+                    static_cast<node_type*>(header_->right_)->value_) << "\n";
+            for (node_type* node(static_cast<node_type*>(header_->left_));
+                 node != header_;
+                 node = static_cast<node_type*>(node->increment())
+                )
+            {
+                stream
+                    << "node [" << key_of_value_(node->value_) << "]: "
+                        << (node->color_ == node_type::red ? "red" : "black") << "\n";
+                stream << "  parent: ";
+                if (node->parent_ == header_)
+                    stream << "[header]\n";
+                else
+                    stream << key_of_value_(
+                        static_cast<node_type*>(node->parent_)->value_) << "\n";
+                stream << "  left: ";
+                if (node->left_ == 0)
+                    stream << "[null]\n";
+                else
+                    stream << key_of_value_(
+                        static_cast<node_type*>(node->left_)->value_) << "\n";
+                stream << "  right: ";
+                if (node->right_ == 0)
+                    stream << "[null]\n";
+                else
+                    stream << key_of_value_(
+                        static_cast<node_type*>(node->right_)->value_) << "\n";
+            }
+        }
+        //--------------------------------------------------------------------
+        TEMPLATE_PARAMETERS
         typename RB_TREE::size_type RB_TREE::pos(key_type const& key) const
         {
             node_type* node(root());
@@ -1040,29 +1077,29 @@ namespace boost
             throw std::domain_error("Key not found");
         }
         //--------------------------------------------------------------------
+        // Deep copy.  node and parent must be non-null.
         TEMPLATE_PARAMETERS
         typename RB_TREE::node_type* RB_TREE::copy(
-            RB_TREE::node_type* n, RB_TREE::node_type* p
+            RB_TREE::node_type* node, RB_TREE::node_type* parent
         )
         {
-            // Structural copy.  n and p must be non-null.
-            node_type* top(clone_node(n, p));
+            node_type* top(clone_node(node, parent));
             try
             {
-                if (n->right_)
+                if (node->right_)
                 {
-                    top->right_ = copy(n->right_, top);
+                    top->right_ = copy(static_cast<node_type*>(node->right_), top);
                 }
-                p = top;
-                n = n->left_;
-                while (n != 0)
+                parent = top;
+                node = static_cast<node_type*>(node->left_);
+                while (node != 0)
                 {
-                    node_type* c(clone_node(n, p));
-                    p->left_ = c;
-                    if (n->right_)
-                        c->right_ = copy(n->right_, c);
-                    p = c;
-                    n = n->left_;
+                    node_type* clone(clone_node(node, parent));
+                    parent->left_ = clone;
+                    if (node->right_)
+                        clone->right_ = copy(static_cast<node_type*>(node->right_), clone);
+                    parent = clone;
+                    node = static_cast<node_type*>(node->left_);
                 }
             }
             catch (...)
@@ -1110,12 +1147,26 @@ namespace boost
             return node;
         }
         //--------------------------------------------------------------------
+        // This has to stay out-of-line: it's recursive
+        // erase without rebalancing
+        TEMPLATE_PARAMETERS
+        void RB_TREE::erase(node_type* node)
+        {
+            while (node != 0)
+            {
+                erase(static_cast<node_type*>(node->right_));
+                node_type* child(static_cast<node_type*>(node->left_));
+                node_alloc().destroy(node);
+                node_alloc().deallocate(node, 1);
+                node = child;
+            }
+        }
+        //--------------------------------------------------------------------
         TEMPLATE_PARAMETERS
         typename RB_TREE::node_type* RB_TREE::find_(key_type const& key)
         {
             node_type* node(root());
-            node_type* header_node(static_cast<node_type*>(header_));
-            node_type* parent(header_node);
+            node_type* parent(static_cast<node_type*>(header_));
             while (node != 0)
             {
                 if (!key_compare_(key_of_value_(node->value_), key))
@@ -1128,10 +1179,10 @@ namespace boost
                     node = static_cast<node_type*>(node->right_);
                 }
             }
-            if (parent != header_node &&
+            if (parent != header_ &&
                 key_compare_(key, key_of_value_(parent->value_)))
             {
-                parent = header_node;
+                parent = static_cast<node_type*>(header_);
             }
             // Allow RVO
             return parent;

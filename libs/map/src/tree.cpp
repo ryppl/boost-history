@@ -30,7 +30,7 @@
 // should now be standard-conforming for complexity on insert point immediately
 // after hint (amortized constant time).
 //----------------------------------------------------------------------------
-#include "tree.hpp"
+#include <boost/detail/tree.hpp>
 //----------------------------------------------------------------------------
 namespace boost
 {
@@ -146,14 +146,14 @@ namespace boost
         //--------------------------------------------------------------------
         void node_base::rebalance(node_base* header)
         {
-            node_base* root(header->parent_);
+            node_base*& root(header->parent_);
             node_base* node(this);
 
             node->color_ = red;
             while (node != root && node->parent_->color_ == red)
             {
-                node_base* parent(node->parent_);
-                node_base* grandparent(parent->parent_);
+                node_base*& parent(node->parent_);
+                node_base*& grandparent(parent->parent_);
                 if (parent == grandparent->left_)
                 {
                     node_base* uncle(grandparent->right_);
@@ -171,9 +171,11 @@ namespace boost
                             node = parent;
                             node->rotate_left(header);
                         }
-                        parent->color_ = black;
-                        grandparent->color_ = red;
-                        grandparent->rotate_right(header);
+                        // Because node may have changed, we can no longer use
+                        // the parent and grandparent aliases above
+                        node->parent_->color_ = black;
+                        node->parent_->parent_->color_ = red;
+                        node->parent_->parent_->rotate_right(header);
                     }
                 }
                 else
@@ -193,9 +195,10 @@ namespace boost
                             node = parent;
                             node->rotate_right(header);
                         }
-                        parent->color_ = black;
-                        grandparent->color_ = red;
-                        grandparent->rotate_left(header);
+                        // Same rationale as above
+                        node->parent_->color_ = black;
+                        node->parent_->parent_->color_ = red;
+                        node->parent_->parent_->rotate_left(header);
                     }
                 }
             }
