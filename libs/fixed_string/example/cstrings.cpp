@@ -5,10 +5,6 @@
 // This example demonstrates how fixed_string can integrate seamlessly with C-based code
 // providing guards against buffer overflow.
 
-#if defined(__BORLANDC__)
-#  error C-string functions does not work properly with the Borland compiler
-#endif
-
 #include <boost/fixed_string/fsstring.hpp> // for strcpy; strcat
 #include <boost/fixed_string/fsstdio.hpp>  // for sprintf
 
