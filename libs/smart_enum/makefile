@@ -4,12 +4,12 @@
 
 CXX		= g++
 CPPFLAGS        = -I/home/simons/projects/boost-current -I../..
-CXXFLAGS        = -Wall -ansi -pedantic -Wno-long-long
+CXXFLAGS        = -O3 -Wall -ansi -pedantic -Wno-long-long
 LDFLAGS	        =
 LIBS		=
 
-TESTS		=  test_bounded_enum.exe test_lambda_enum.exe \
-		   test_sequential_enum.exe test_wrapped_enum.exe
+TESTS		= test_sequential_enum.exe test_wrapped_enum.exe \
+		  test_bounded_enum.exe test_lambda_enum.exe
 
 .SUFFIXES:
 .SUFFIXES:	.cpp .exe
