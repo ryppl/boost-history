@@ -1,0 +1,8 @@
+subproject libs/numeric/bindings/blas ;
+subinclude libs/numeric/bindings/blas/test ;
+
+lib bindings_blas 
+        : blaspp.cpp 
+        :  <include>$(BOOST_ROOT)
+	   <include>$(B_ROOT)
+        ;
