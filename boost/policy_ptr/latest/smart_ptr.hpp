@@ -600,7 +600,7 @@ namespace boost
         { checking_policy::on_init(get_impl(*this)); }
 
     public:     // Ownership modifiers
-        operator detail::by_ref<smart_ptr>()
+        operator detail::by_ref< smart_ptr<T, P1, P2, P3, P4> >()
         {
             return detail::by_ref<smart_ptr>(*this);
         } // Borland won't accept 'by_ref<smart_ptr>' here.
@@ -1835,7 +1835,7 @@ namespace boost
     };
     
 #if defined(__BORLANDC__) && (__BORLANDC__ < 0x600)
-    namespace mpl { BOOST_MPL_AUX_VOID_SPEC(1, reject_null_static) }
+    namespace mpl { BOOST_MPL_AUX_VOID_SPEC(1, reject_null) }
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -61,7 +61,7 @@ namespace boost { namespace detail { struct disambiguator_tag { }; } }
 // to the end of the argument lists of invocations of such constructors.
 #if defined(__INTEL_COMPILER) && (__INTEL_COMPILER < 800) || \
     defined(__COMO__) ||                                     \
-    defined(__BORLANDC__) && (__BORLANDC__ < 0x600)          \
+    defined(__BORLANDC__) && (__BORLANDC__ < 0x600) ||       \
     defined(BOOST_MSVC) && (BOOST_MSVC < 1310)               \
     /**/
 # define BOOST_SMART_PTR_DISAMBIGUATOR_TAG , detail::disambiguator_tag const&
