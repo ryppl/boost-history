@@ -1,0 +1,185 @@
+// (C) Copyright 2004: Reece H. Dunn
+
+#ifndef BOOST_IOFM_STL_HashMap_HPP
+#define BOOST_IOFM_STL_HashMap_HPP
+#  include <boost/outfmt/formatob.hpp>
+#  if defined(BOOST_HAS_PRAGMA_ONCE)
+#     pragma once
+#  endif
+
+#  if !defined(BOOST_IOFM_HASH_CONTAINERS)
+#     error STL implementation does not support the <hash_map> extension.
+#  endif
+
+#  if defined(BOOST_IO_NO_DEPRECATED_MODIFIER) && defined(BOOST_DINKUMWARE_STDLIB)
+#     define _DEPRECATED_TEMP _DEPRECATED
+#     define _DEPRECATED
+#  endif
+#     include <hash_map>
+#  if defined(BOOST_IO_NO_DEPRECATED_MODIFIER) && defined(BOOST_DINKUMWARE_STDLIB)
+#     define _DEPRECATED _DEPRECATED_TEMP
+#  endif
+
+   // type deduction:
+
+   namespace boost { namespace io { namespace detail
+   {
+#     if defined(BOOST_IOFM_HASH_CONTAINERS)
+#        if defined(BOOST_DINKUMWARE_STDLIB)
+            BOOST_IO_CLASSIFY_TYPE_4( BOOST_IOFM_STDEXT::hash_map,      boost::io::assoc_container_type );
+            BOOST_IO_CLASSIFY_TYPE_4( BOOST_IOFM_STDEXT::hash_multimap, boost::io::assoc_container_type );
+#        else // SGI containers
+            BOOST_IO_CLASSIFY_TYPE_5( BOOST_IOFM_STDEXT::hash_map,      boost::io::assoc_container_type );
+            BOOST_IO_CLASSIFY_TYPE_5( BOOST_IOFM_STDEXT::hash_multimap, boost::io::assoc_container_type );
+#        endif
+#     endif
+   }}}
+
+   // I/O support:
+
+#  if !defined(BOOST_IOFM_NO_BASIC_STREAM)
+      // stdext::hash_map
+
+      template< typename CharT, class TraitsT, BOOST_IOFM_HASH_MAP_T >
+      inline std::basic_ostream< CharT, TraitsT > & operator<<
+      (
+         std::basic_ostream< CharT, TraitsT > & os,
+         const BOOST_IOFM_STDEXT::hash_map< BOOST_IOFM_HASH_MAP_ARG > & m
+      )
+      {
+         return
+         (
+            os << boost::io::formatob
+            (
+               m,
+               boost::io::containerfmt( boost::io::pairfmt())
+            )
+         );
+      }
+
+      template< typename CharT, class TraitsT, BOOST_IOFM_HASH_MAP_T >
+      inline std::basic_istream< CharT, TraitsT > & operator>>
+      (
+         std::basic_istream< CharT, TraitsT > & is,
+         BOOST_IOFM_STDEXT::hash_map< BOOST_IOFM_HASH_MAP_ARG > & m
+      )
+      {
+         return
+         (
+            is >> boost::io::formatob
+            (
+               m,
+               boost::io::containerfmt( boost::io::pairfmt())
+            )
+         );
+      }
+
+      // stdext::hash_multimap
+
+      template< typename CharT, class TraitsT, BOOST_IOFM_HASH_MAP_T >
+      inline std::basic_ostream< CharT, TraitsT > & operator<<
+      (
+         std::basic_ostream< CharT, TraitsT > & os,
+         const BOOST_IOFM_STDEXT::hash_multimap< BOOST_IOFM_HASH_MAP_ARG > & mm
+      )
+      {
+         return
+         (
+            os << boost::io::formatob
+            (
+               mm,
+               boost::io::containerfmt( boost::io::pairfmt())
+            )
+         );
+      }
+
+      template< typename CharT, class TraitsT, BOOST_IOFM_HASH_MAP_T >
+      inline std::basic_istream< CharT, TraitsT > & operator>>
+      (
+         std::basic_istream< CharT, TraitsT > & is,
+         BOOST_IOFM_STDEXT::hash_multimap< BOOST_IOFM_HASH_MAP_ARG > & mm
+      )
+      {
+         return
+         (
+            is >> boost::io::formatob
+            (
+               mm,
+               boost::io::containerfmt( boost::io::pairfmt())
+            )
+         );
+      }
+#  else
+      // stdext::hash_map
+
+      template< BOOST_IOFM_HASH_MAP_T >
+      inline std::ostream & operator<<
+      (
+         std::ostream & os,
+         const BOOST_IOFM_STDEXT::hash_map< BOOST_IOFM_HASH_MAP_ARG > & m
+      )
+      {
+         return
+         (
+            os << boost::io::formatob
+            (
+               m,
+               boost::io::containerfmt( boost::io::pairfmt())
+            )
+         );
+      }
+
+      template< BOOST_IOFM_HASH_MAP_T >
+      inline std::istream & operator>>
+      (
+         std::istream & is,
+         BOOST_IOFM_STDEXT::hash_map< BOOST_IOFM_HASH_MAP_ARG > & m
+      )
+      {
+         return
+         (
+            is >> boost::io::formatob
+            (
+               m,
+               boost::io::containerfmt( boost::io::pairfmt())
+            )
+         );
+      }
+
+      // stdext::hash_multimap 
+
+      template< BOOST_IOFM_HASH_MAP_T >
+      inline std::ostream & operator<<
+      (
+         std::ostream & os,
+         const BOOST_IOFM_STDEXT::hash_multimap< BOOST_IOFM_HASH_MAP_ARG > & mm
+      )
+      {
+         return
+         (
+            os << boost::io::formatob
+            (
+               mm,
+               boost::io::containerfmt( boost::io::pairfmt())
+            )
+         );
+      }
+
+      template< BOOST_IOFM_HASH_MAP_T >
+      inline std::istream & operator>>
+      (
+         std::istream & is,
+         BOOST_IOFM_STDEXT::hash_multimap< BOOST_IOFM_HASH_MAP_ARG > & mm
+      )
+      {
+         return
+         (
+            is >> boost::io::formatob
+            (
+               mm,
+               boost::io::containerfmt( boost::io::pairfmt())
+            )
+         );
+      }
+#  endif
+#endif
