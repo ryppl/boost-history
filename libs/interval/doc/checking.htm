@@ -2,8 +2,8 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <link rel="stylesheet" type="text/css" href="boost.css">
   <title>Checking policies</title>
-  <link href="../../../boost.css" rel="stylesheet" type="text/css">
 </head>
 
 <body lang="en">
@@ -138,7 +138,7 @@ used for <code>nan</code>, <code>empty_lower</code>,
 <code>nan</code>, <code>inf</code> returns
 <code>numeric_limits::infinity()</code> if possible, or is an
 <code>assert(false</code>) otherwise. Finally, <code>is_empty(T l,T u)</code>
-is always defined by <code>!(l&lt;=u)</code>.</p>
+is always defined by <code>u&lt;l</code>.</p>
 
 <p>Next comes <code>checking_no_empty</code>. Using it means that each time
 an empty interval should be produced (by <code>empty_lower</code> and
