@@ -1,3 +1,13 @@
+// Boost.Range library
+//
+//  Copyright Thorsten Ottosen 2003-2004. Use, modification and
+//  distribution is subject to the Boost Software License, Version
+//  1.0. (See accompanying file LICENSE_1_0.txt or copy at
+//  http://www.boost.org/LICENSE_1_0.txt)
+//
+// For more information, see http://www.boost.org/libs/range/
+//
+
 #include <boost/collection_traits.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/type_traits.hpp>
@@ -16,8 +26,6 @@ void check_array()
     const array_t ca           = { 1,2,3,4,5,6,7,8,10 };
 
 #ifndef BOOST_CT_NO_STATIC_ASSERT 
-    BOOST_STATIC_CONSTANT( std::size_t, the_size = sizeof( sizer( my_array ) ) );
-    BOOST_STATIC_ASSERT(( the_size == sz ));
     BOOST_STATIC_ASSERT(( is_same< value_type_of<array_t>::type, int >::value ));
     BOOST_STATIC_ASSERT(( is_same< iterator_of<array_t>::type, int* >::value ));
     BOOST_STATIC_ASSERT(( is_same< const_iterator_of<array_t>::type, const int* >::value ));
@@ -50,7 +58,6 @@ void check_array()
 }
 
 #include <boost/test/included/unit_test_framework.hpp> 
-#include <iostream>
 
 using boost::unit_test_framework::test_suite;
 

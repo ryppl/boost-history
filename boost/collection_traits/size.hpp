@@ -1,8 +1,12 @@
-// (C) Copyright Thorsten Ottosen 2003. Permission to copy, use, modify,
-// sell and distribute this software is granted provided this
-// copyright notice appears in all copies. This software is provided
-// "as is" without express or implied warranty, and with no claim as
-// to its suitability for any purpose.
+// Boost.Range library
+//
+//  Copyright Thorsten Ottosen 2003-2004. Use, modification and
+//  distribution is subject to the Boost Software License, Version
+//  1.0. (See accompanying file LICENSE_1_0.txt or copy at
+//  http://www.boost.org/LICENSE_1_0.txt)
+//
+// For more information, see http://www.boost.org/libs/range/
+//
 
 #ifndef BOOST_CONTAINER_TRAITS_SIZE_HPP
 #define BOOST_CONTAINER_TRAITS_SIZE_HPP
@@ -54,13 +58,13 @@ namespace collection_traits
         template< typename T, std::size_t sz >
         inline std::size_t size( const T (&array)[sz] )
         {
-            return boost::collection_traits_detail::array_size( array );
+            return collection_traits_detail::array_size( array ); 
         }
         
         template< typename T, std::size_t sz >
         inline std::size_t size( T (&array)[sz] )
         {
-            return boost::collection_traits_detail::array_size( array );
+            return collection_traits_detail::array_size( array );
         }
         
         //////////////////////////////////////////////////////////////////////
@@ -77,22 +81,6 @@ namespace collection_traits
             return boost::collection_traits_detail::str_size( s );
         }
         
-        //////////////////////////////////////////////////////////////////////
-        // iterator
-        //////////////////////////////////////////////////////////////////////
-
-#ifdef BOOST_MSVC_STD_ITERATOR	
-
-        template< typename C, typename T, typename D >
-        inline std::size_t size( const std::istream_iterator<C,T,D>& );
-
-#else // BOOST_MSVC_STD_ITERATOR
-
-		template< typename C, typename T, typename D, typename P >
-        inline std::size_t size( const std::istream_iterator<C,T,D,P>& );
-
-#endif
-
 } // namespace 'collection_traits'
 
 using collection_traits::size;

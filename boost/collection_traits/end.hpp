@@ -1,8 +1,12 @@
-// (C) Copyright Thorsten Ottosen 2003. Permission to copy, use, modify,
-// sell and distribute this software is granted provided this
-// copyright notice appears in all copies. This software is provided
-// "as is" without express or implied warranty, and with no claim as
-// to its suitability for any purpose.
+// Boost.Range library
+//
+//  Copyright Thorsten Ottosen 2003-2004. Use, modification and
+//  distribution is subject to the Boost Software License, Version
+//  1.0. (See accompanying file LICENSE_1_0.txt or copy at
+//  http://www.boost.org/LICENSE_1_0.txt)
+//
+// For more information, see http://www.boost.org/libs/range/
+//
 
 #ifndef BOOST_CONTAINER_TRAITS_END_HPP
 #define BOOST_CONTAINER_TRAITS_END_HPP
@@ -20,11 +24,9 @@
 #include <boost/collection_traits/detail/implementation_help.hpp>
 #include <boost/collection_traits/iterator.hpp>
 #include <boost/collection_traits/const_iterator.hpp>
-#include <cstddef>
-#include <iterator>
-#include <utility>
 
-namespace boost { 
+namespace boost 
+{ 
 namespace collection_traits
 {
 
@@ -69,13 +71,13 @@ namespace collection_traits
         template< typename T, std::size_t sz >
         inline const T* end( const T (&array)[sz] )
         {
-            return boost::collection_traits_detail::array_end( array );
+            return array + sz; 
         }
         
         template< typename T, std::size_t sz >
         inline T* end( T (&array)[sz] )
         {
-            return boost::collection_traits_detail::array_end( array );
+            return array + sz; 
         }
 
         //////////////////////////////////////////////////////////////////////
@@ -102,39 +104,6 @@ namespace collection_traits
             return boost::collection_traits_detail::str_end( s );
         }
         
-#undef BOOST_END_IMPL
-
-        //////////////////////////////////////////////////////////////////////
-        // iterator
-        //////////////////////////////////////////////////////////////////////
-
-        template< typename C, typename T, typename D, typename P >
-        inline std::istream_iterator<C,T,D,P>
-        end( const std::istream_iterator<C,T,D,P>& i )
-        {
-            return std::istream_iterator<C,T,D,P>();
-        }
-	
-#ifdef BOOST_MSVC_STD_ITERATOR
-
-        template< typename C, typename T, typename D >
-        inline std::istream_iterator<C,T,D>
-        end( std::istream_iterator<C,T,D>& i )
-        {
-            return std::istream_iterator<C,T,D>();
-        }
-
-#else // BOOST_MSVC_STD_ITERATOR
-
-        template< typename C, typename T, typename D, typename P >
-        inline std::istream_iterator<C,T,D,P>
-        end( std::istream_iterator<C,T,D,P>& i )
-        {
-            return std::istream_iterator<C,T,D,P>();
-        }
-
-#endif // BOOST_MSVC_STD_ITERATOR	
-
 } // namespace 'collection_traits'
 
 using collection_traits::end;

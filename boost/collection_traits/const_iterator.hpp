@@ -1,8 +1,12 @@
-// (C) Copyright Thorsten Ottosen 2003. Permission to copy, use, modify,
-// sell and distribute this software is granted provided this
-// copyright notice appears in all copies. This software is provided
-// "as is" without express or implied warranty, and with no claim as
-// to its suitability for any purpose.
+// Boost.Range library
+//
+//  Copyright Thorsten Ottosen 2003-2004. Use, modification and
+//  distribution is subject to the Boost Software License, Version
+//  1.0. (See accompanying file LICENSE_1_0.txt or copy at
+//  http://www.boost.org/LICENSE_1_0.txt)
+//
+// For more information, see http://www.boost.org/libs/range/
+//
 
 #ifndef BOOST_CONTAINER_TRAITS_CONST_ITERATOR_HPP
 #define BOOST_CONTAINER_TRAITS_CONST_ITERATOR_HPP
@@ -17,7 +21,6 @@
 #include <boost/collection_traits/detail/const_iterator.hpp>
 #else
 
-#include <iterator>
 #include <cstddef>
 #include <utility>
 
@@ -91,22 +94,6 @@ namespace boost
     struct const_iterator_of< const wchar_t* >
     {
         typedef const wchar_t* type;
-    };
-
-    //////////////////////////////////////////////////////////////////////////
-    // iterator
-    //////////////////////////////////////////////////////////////////////////
-
-    template< typename C, typename T, typename D, typename P >
-    struct const_iterator_of< std::istream_iterator<C,T,D,P> >
-    {
-        typedef std::istream_iterator<C,T,D,P> type;
-    };
-
-    template< typename C, typename T, typename D, typename P >
-    struct const_iterator_of< const std::istream_iterator<C,T,D,P> >
-    {
-        typedef std::istream_iterator<C,T,D,P> type;
     };
 
 } // namespace boost

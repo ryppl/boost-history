@@ -1,14 +1,26 @@
-#include <boost/collection_traits/detail/iterator.hpp>
-#include <boost/collection_traits/detail/const_iterator.hpp>
-#include <boost/collection_traits/detail/result_iterator.hpp>
-#include <boost/collection_traits/detail/size_type.hpp>
-#include <boost/collection_traits/detail/value_type.hpp>
-#include <boost/collection_traits/detail/difference_type.hpp>
+// Boost.Range library
+//
+//  Copyright Thorsten Ottosen 2003-2004. Use, modification and
+//  distribution is subject to the Boost Software License, Version
+//  1.0. (See accompanying file LICENSE_1_0.txt or copy at
+//  http://www.boost.org/LICENSE_1_0.txt)
+//
+// For more information, see http://www.boost.org/libs/range/
+//
 
-#include <boost/collection_traits/detail/begin.hpp>
-#include <boost/collection_traits/detail/end.hpp>
-#include <boost/collection_traits/detail/size.hpp>
-#include <boost/collection_traits/detail/empty.hpp>
+#define BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION 1
+     
+#include <boost/collection_traits/iterator.hpp>
+#include <boost/collection_traits/const_iterator.hpp>
+#include <boost/collection_traits/size_type.hpp>
+#include <boost/collection_traits/value_type.hpp>
+#include <boost/collection_traits/difference_type.hpp>
+#include <boost/collection_traits/result_iterator.hpp>
+
+#include <boost/collection_traits/begin.hpp>
+#include <boost/collection_traits/end.hpp>
+#include <boost/collection_traits/size.hpp>
+#include <boost/collection_traits/empty.hpp>
 #include <boost/collection_traits/detail/sfinae.hpp>
 
 #include <boost/static_assert.hpp>
@@ -70,7 +82,6 @@ void check_partial_workaround()
 		                  ::boost::collection_traits_detail::collection< vector<int> >::type >::value ));
 
 /* 
-        typedef mpl::int_<10>::type   iterator_;
         typedef mpl::int_<11>::type   string_;
   */    
 
@@ -80,7 +91,6 @@ void check_partial_workaround()
 
 
 #include <boost/test/included/unit_test_framework.hpp> 
-#include <iostream>
 
 using boost::unit_test_framework::test_suite;
 

@@ -1,8 +1,12 @@
-// (C) Copyright Thorsten Ottosen 2003. Permission to copy, use, modify,
-// sell and distribute this software is granted provided this
-// copyright notice appears in all copies. This software is provided
-// "as is" without express or implied warranty, and with no claim as
-// to its suitability for any purpose.
+// Boost.Range library
+//
+//  Copyright Thorsten Ottosen 2003-2004. Use, modification and
+//  distribution is subject to the Boost Software License, Version
+//  1.0. (See accompanying file LICENSE_1_0.txt or copy at
+//  http://www.boost.org/LICENSE_1_0.txt)
+//
+// For more information, see http://www.boost.org/libs/range/
+//
 
 #ifndef BOOST_CONTAINER_TRAITS_DIFFERENCE_TYPE_HPP
 #define BOOST_CONTAINER_TRAITS_DIFFERENCE_TYPE_HPP
@@ -17,8 +21,7 @@
 #include <boost/collection_traits/detail/difference_type.hpp>
 #else
 
-#include <boost/detail/iterator.hpp>
-#include <iterator>
+#include <boost/iterator/iterator_traits.hpp>
 #include <cstddef>
 #include <utility>
 
@@ -41,13 +44,15 @@ namespace boost
     template< typename Iterator >
     struct difference_type_of< std::pair<Iterator,Iterator> >
     {
-        typedef BOOST_DEDUCED_TYPENAME detail::iterator_traits<Iterator>::difference_type type;
+        typedef BOOST_DEDUCED_TYPENAME 
+            iterator_difference<Iterator>::type type;
     };
     
     template< typename Iterator >
     struct difference_type_of< const std::pair<Iterator,Iterator> >
     {
-        typedef BOOST_DEDUCED_TYPENAME detail::iterator_traits<Iterator>::difference_type type;
+        typedef BOOST_DEDUCED_TYPENAME 
+            iterator_difference<Iterator>::type type;
     };
 
 
@@ -93,22 +98,6 @@ namespace boost
     struct difference_type_of< const wchar_t* >
     {
         typedef std::ptrdiff_t type;
-    };
-
-    //////////////////////////////////////////////////////////////////////////
-    // iterator
-    //////////////////////////////////////////////////////////////////////////
-
-    template< typename C, typename T, typename D, typename P >
-    struct difference_type_of< std::istream_iterator<C,T,D,P> >
-    {
-        typedef BOOST_DEDUCED_TYPENAME detail::iterator_traits< std::istream_iterator<C,T,D,P> >::difference_type type;
-    };
-    
-    template< typename C, typename T, typename D, typename P >
-    struct difference_type_of< const std::istream_iterator<C,T,D,P> >
-    {
-        typedef BOOST_DEDUCED_TYPENAME detail::iterator_traits< std::istream_iterator<C,T,D,P> >::difference_type type;
     };
 
 } // namespace boost

@@ -2,34 +2,51 @@ subproject libs/collection_traits/test ;
 
 SEARCH on testing.jam = $(BOOST_BUILD_PATH) ;
 include testing.jam ;
+DEPENDS all : test ;
 
-test-suite "collection_traits"
+{
+test-suite collection_traits
     : [ run
             array.cpp
-	    : collection_array_test
+	    : :
+	    :
+	    : array_test
        ]         
-    : [ run
-            iterator.cpp
-	    : collection_iterator_test
-       ]         
-    : [ run
+     [ run
             iterator_pair.cpp
-	    : collection_iterator_pair_test
+    	    : :
+	    :
+	    : iterator_pair_test
        ]         
-    : [ run
+     [ run
             std_container.cpp
-	    : collection_std_container_test
+    	    : :
+	    :
+	    : std_container_test
        ]         
-    : [ run
-            string.cpp
-	    : collection_string_test
+     [ run            
+	    string.cpp
+    	    : :
+	    :
+	    : string_test
        ]         
-    : [ run
-            partial_workaround.cpp
-	    : collection_workaround_test
+     [ run
+            partial_workaround.cpp	
+    	    : :
+	    :
+	    : workaround_test
        ]
-    : [ run
-      	    algorithm_example.cpp
-	    : algorithm_example_test
-       ] ;
-
+     [ run
+     	    algorithm_example.cpp	
+    	    : :
+	    :
+	    : example_test
+       ]
+       
+     [ run
+     	    reversible_range.cpp	
+    	    : :
+	    :
+	    : reversible_range_test
+       ]  ;
+}
