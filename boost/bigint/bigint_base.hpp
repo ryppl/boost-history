@@ -18,9 +18,6 @@ namespace boost {
 namespace detail {
 namespace bigint {
 
-inline bool isoctal(char c) {
-  return std::isdigit(c) && (c) != '8' && (c) != '9';
-}
 
 template <typename Derived>
 class bigint_base {
@@ -71,7 +68,7 @@ protected:
         // Read the number into a string, then initialize from that.
         //
         std::string str;
-        char c;
+        char c = 0; // in case of immediate eof, c != '-' && c != '0'.
 
         is.get(c);
 
@@ -91,7 +88,7 @@ protected:
           }
         }
 
-        // Check for valid digits
+        // check(c) checks for valid digits depending on base.
         struct {
           base_type base_;
           bool operator()(char c) {
@@ -101,12 +98,11 @@ protected:
             case hexadecimal:
               return std::isxdigit(c);
             case octal:
-              return isoctal(c);
+              return std::isdigit(c) && c != '8' && c != '9';
             }
           }
         } check = { base };
 
-        // RG - do better than isxdigit! switch on base type!
         if(!check(c)) {
           is.putback(c);
           // signal error
@@ -117,15 +113,17 @@ protected:
           // Don't let failbit exceptions propogate for the following loop
           ios_base::iostate user_exceptions = is.exceptions();
           is.exceptions(user_exceptions & (~ios_base::failbit));
-          // read in ASCII (hexadecimal) digits till it stops.
+          // read in valid digits till it stops.
           while(is.get(c) && check(c))
             str.push_back(c);
+
           if(is.fail())
             // clear error state
             is.clear(is.rdstate() & ~ios_base::failbit);
           else
             // put back the last character retrieved
             is.putback(c);
+
           // restore user exceptions
           is.exceptions(user_exceptions);
           this->derived() = Derived(str,base);
