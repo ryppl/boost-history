@@ -17,4 +17,368 @@
 </table>
 <hr>
 
-Please have a look at the documentation for the BLAS bindings, all concepts are identical.
+<br>
+Back to <a href="../../doc/index.html">Bindings Library Synopsis</a>
+
+<h2>Contents</h2>
+<ol>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#using_lapack">Using the LAPACK bindings</a></li>
+<ol>
+<li><a href="#lineqs">Linear Equations</a></li>
+<ol>
+<li>General System
+<li>Positive Definite System
+<li>Symmetric (Real and Complex) Indefinite System
+<li>Hermitian Indefinite System
+</ol>
+</ol>
+</ol>
+
+<hr>
+
+
+<h2><a name="introduction">1. Introduction</a></h2>
+
+To introduce <a href="http://www.netlib.org/lapack/">LAPACK</a>, let us 
+quote from the <a href="http://www.netlib.org/lapack/lug/index.html">LAPACK Users' Guide</a>:
+
+<p>
+``LAPACK is a library of Fortran 77 subroutines for solving the most
+commonly occurring problems in numerical linear algebra. It has been
+designed to be efficient on a wide range of modern high-performance
+computers. The name LAPACK is an acronym for Linear Algebra PACKage.  
+
+<p>
+LAPACK can solve systems of linear equations, linear least squares
+problems, eigenvalue problems and singular value problems. LAPACK can
+also handle many associated computations such as matrix factorizations
+or estimating condition numbers.  
+
+<p>
+LAPACK contains <b>driver routines</b> for solving standard types of
+problems, <b>computational routines</b> to perform a distinct computational
+task, and <b>auxiliary routines</b> to perform a certain subtask or common
+low-level computation. Each driver routine typically calls a sequence
+of computational routines. Taken as a whole, the computational
+routines can perform a wider range of tasks than are covered by the
+driver routines. [...]
+
+<p>
+Dense and band matrices are provided for, but not general sparse
+matrices. In all areas, similar functionality is provided for real and
+complex matrices.'' 
+
+<p>
+For a complete overview of the LAPACK routines see chapter 
+<a href="http://www.netlib.org/lapack/lug/node19.html">Contents of LAPACK</a> 
+in the <a href="http://www.netlib.org/lapack/lug/index.html">LAPACK Users' Guide</a>. 
+
+<p>
+There is also the C version of LAPACK, called <a href="http://www.netlib.org/clapack/">CLAPACK</a>. 
+``The CLAPACK library was built using a Fortran to C conversion utility
+called f2c.  The entire Fortran 77 LAPACK library is run through f2c to
+obtain C code, and then modified to improve readability.  CLAPACK's goal
+is to provide LAPACK for someone who does not have access to a Fortran
+compiler.'' [quote from <a href="http://www.netlib.org/clapack/readme">CLAPACK readme</a>]
+
+<p>
+LAPACK Bindings Library provides generic, higher level interface to LAPACK
+or CLAPACK routines. By `generic' we mean that bindings are based on
+<a href="../../traits/doc/index.html">traits</a> and therefore can be used with various
+matrix and vector classes, and by `higher level' that some
+complexities of the Fortran or C interfaces and calling conventions are hidden from the user. 
+But, as LAPACK was written in Fortran (and CLAPACK is a direct conversion to C), matrices must have column major storage order. 
+
+
+<h2><a name="using_lapack">2. Using the LAPACK bindings</a></h2>
+
+<p>
+[<b>Note:</b> LAPACK bindings can be used with either LAPACK or CLAPACK
+libraries. If used with CLAPACK, you should edit the file
+<code>lapack/clapack_inc.h</code> to provide the path to the CLAPACK's
+header <code>clapack.h</code> on your machine.] 
+
+<h3><a name="using_lapack">2.1 Linear Equations</a></h3>
+
+We will write a system of simultaneous linear equations with several right-hand sides as
+<p>
+<div align=center>
+<code>A X = B</code>,
+</div>
+<p>
+where <code>A</code> is the coefficient matrix, the columns of
+<code>B</code> are the individual right hand sides and the columns of
+<code>X</code> are corresponding unknown vectors. 
+
+<p>
+To find the solution (i.e. determine <code>X</code>, given
+<code>A</code> and <code>B</code>), <code>A</code> is first factorised
+as a product of triangular matrices (and in some cases also a diagonal
+matrix or permutation matrix), and then a backward or forward
+substitution is carried out. 
+The form of the factorisation depends on the structure and properties
+of the matrix <code>A</code>: 
+<ul>
+<li> general matrices -- <i>LU</i> factorisation with partial pivoting:
+<code>A = PLU</code>,
+where <code>P</code> is a permutation matrix, <code>L</code> is lower
+triangular (with unit diagonal elements) and <code>U</code> is upper
+triangular; 
+<li>symmetric and Hermitian positive definite matrices --
+Cholesky factorisation: 
+<code>A = U<sup>T</sup>U</code> or <code>A = LL<sup>T</sup></code> 
+(<code>A</code> symmetric) and <code>A = U<sup>H</sup>U</code> or <code>A =
+LL<sup>H</sup></code> (<code>A</code> Hermitian),
+where <code>U</code> and <code>L</code> are upper and lower
+triangular, respectively;
+<li>symmetric and Hermitian indefinite matrices -- Bunch-Kaufman factorisation: 
+<code>A = UDU<sup>T</sup></code> or <code>A = LDL<sup>T</sup></code> 
+or <code>A = UDU<sup>H</sup></code> or <code>A = LDL<sup>H</sup></code>,
+where <code>U</code> (or <code>L</code>) is a product of permutation and unit upper (lower) triangular matrices, and <code>D</code> is symmetric and block diagonal with diagonal blocks of order 1 or 2.
+</ul>
+
+<p>
+LAPACK bindings follow LAPACK's naming scheme, except for the first
+letter which denotes the type of the matrix elements as it is not
+needed (because of function overloading and templates). So, all function names
+have the form <i>xxyyy</i> (or <i>xxyy</i>), where <i>xx</i> denotes
+the structure/properties of the matrix, and <i>yyy</i> indicates the
+computation to be done:
+<ul>
+<li> matrix structure/properties (<i>xx</i>):
+<ul>
+<li><code>ge</code> -- general,
+<li><code>po</code> -- symmetric/Hermitian positive definite (not packed),
+<li><code>sy</code> -- symmetric (real and complex) indefinite (not packed),
+<li><code>he</code> -- Hermitian indefinite (not packed);
+</ul>
+<li> computation (<i>yyy</i>):
+<ul>
+<li><code>sv</code> -- solve the system (driver routine),
+<li><code>trf</code> -- factor (computational routine),
+<li><code>trs</code> -- solve from factorisation, i.e. backward (or 
+forward) substitution (computational routine).
+</ul>
+</ul>
+
+<h4>2.1.1 General System</h4>
+
+Defined in <code>lapack/gesv.hpp</code>. 
+
+<p>
+In the following table <code>A</code>, <code>B</code>, <code>L</code>, <code>U</code> are matrices,
+<code>ipiv</code> is a vector of pivot indices representing
+premutation matrix <code>P</code> (for more details see description of
+the <i>LU</i> factorisation above), 
+<code>Trans</code> can be <code>'N'</code>,
+<code>'T'</code> or <code>'C'</code>, denoting
+<code>A</code>, <code>A<sup>T</sup></code> or <code>A<sup>H</sup></code>, 
+respectively, and <code>ierr</code> is `diagnostic argument'
+<code>INFO</code> (as described in  
+<a href="http://www.netlib.org/lapack/lug/node119.html">LAPACK Users' Guide</a>). 
+
+<p>
+<table border=1>
+<tr><th>Expression<th>Semantics
+<tr><td><code>gesv(A,ipiv,B)</code><td>using <code>AP=LU</code>, 
+<code>B <- A<sup>-1</sup>B</code>, <code>A <- LU</code>,
+<code>ipiv <- P</code>; &nbsp; returns <code>ierr</code> 
+<tr><td><code>gesv(A,B)</code><td>as above, with <code>ipiv</code>
+allocated and deallocated internally
+<tr><td><code>getrf(A,ipiv)</code><td>using <code>AP=LU</code>, 
+<code>A <- LU</code>, <code>ipiv <- P</code>; &nbsp; returns <code>ierr</code>
+<tr><td><code>getrs(Trans,A,ipiv,B)</code><td>
+<code>B <- op(A)<sup>-1</sup>B</code> assuming  
+<code>A <- LU</code> and <code>ipiv <- P</code>, 
+&nbsp; <code>op (A) == A || A<sup>T</sup> || A<sup>H</sup></code>; 
+&nbsp; returns <code>ierr</code> 
+<tr><td><code>getrs(A,ipiv,B)</code><td><code>B <- A<sup>-1</sup>B</code> assuming <code>A <- LU</code> and <code>ipiv <- P</code>;
+&nbsp; returns <code>ierr</code> 
+</table>
+
+<h4>2.1.2 Positive Definite System</h4>
+
+Defined in <code>lapack/posv.hpp</code>. 
+
+<p>
+In the following table <code>A</code>, <code>B</code>, <code>L</code>,
+<code>U</code> are matrices (for more details see description of
+the Cholesky factorisation above), <code>Uplo</code> can be <code>'U'</code>
+or <code>'L'</code>, denoting that leading 
+upper or lower triangular part of <code>A</code> contains 
+the upper or lower triangular part, respectively, of the symmetric/Hermitian matrix
+(and that the lower or upper triangular part, respectively, is not referenced) 
+and <code>ierr</code> is LAPACK's `diagnostic argument'
+<code>INFO</code>. 
+
+<p>
+<table border=1>
+<tr><th>Expression<th>Semantics
+<tr><td><code>posv(Uplo,A,B)</code><td>
+<code>B <- A<sup>-1</sup>B</code>, using 
+<code>A = U<sup>T</sup>U</code> or <code>A = LL<sup>T</sup></code> 
+or <code>A = U<sup>H</sup>U</code> or <code>A = LL<sup>H</sup></code>; 
+&nbsp; returns <code>ierr</code> 
+<tr><td><code>posv(A,B)</code><td>
+<code>B <- A<sup>-1</sup>B</code>, using 
+<code>A = U<sup>T</sup>U</code> or <code>A = LL<sup>T</sup></code> 
+or <code>A = U<sup>H</sup>U</code> or <code>A = LL<sup>H</sup></code>; 
+&nbsp; returns <code>ierr</code> &nbsp;&nbsp; [1]
+<tr><td><code>potrf(Uplo,A)</code><td>
+<code>A = U<sup>T</sup>U</code> or <code>A = LL<sup>T</sup></code> 
+or <code>A = U<sup>H</sup>U</code> or <code>A = LL<sup>H</sup></code>; 
+&nbsp; returns <code>ierr</code>
+<tr><td><code>potrf(A)</code><td>
+<code>A = U<sup>T</sup>U</code> or <code>A = LL<sup>T</sup></code> 
+or <code>A = U<sup>H</sup>U</code> or <code>A = LL<sup>H</sup></code>; 
+&nbsp; returns <code>ierr</code>  &nbsp;&nbsp; [1]
+<tr><td><code>potrs(Uplo,A,B)</code><td>
+<code>B <- A<sup>-1</sup>B</code> assuming  
+<code>A = U<sup>T</sup>U</code> or <code>A = LL<sup>T</sup></code> 
+or <code>A = U<sup>H</sup>U</code> or <code>A = LL<sup>H</sup></code>; 
+&nbsp; returns <code>ierr</code> 
+<tr><td><code>potrs(A,B)</code><td>
+<code>B <- A<sup>-1</sup>B</code> assuming  
+<code>A = U<sup>T</sup>U</code> or <code>A = LL<sup>T</sup></code> 
+or <code>A = U<sup>H</sup>U</code> or <code>A = LL<sup>H</sup></code>; 
+&nbsp; returns <code>ierr</code>  &nbsp;&nbsp; [1]
+</table>
+
+<p>
+[1] It is assumed that matrix traits class can determine whether upper
+of lower triangular part of <code>A</code> contains the corresponding
+part of the symmetric/Hermitian matrix (e.g. traits for 
+<a href="http://www.boost.org/libs/numeric/ublas/doc/symmetric.htm#symmetric_adaptor"><code>ublas::symmetric_adaptor&lt;&gt;</code></a>
+and <a href="http://www.boost.org/libs/numeric/ublas/doc/hermitian.htm#hermitian_adaptor"><code>ublas::hermitian_adaptor&lt;&gt;</code></a>).
+
+<h4>2.1.3 Symmetric (Real and Complex) Indefinite System</h4>
+
+Defined in <code>lapack/sysv.hpp</code>.
+
+<p>
+In the following table <code>A</code>, <code>B</code>, <code>L</code>,
+<code>U</code>, <code>D</code> are matrices, <code>ipiv</code> is a
+vector of pivot indices (for more details see description of 
+the Bunch-Kaufman factorisation above), 
+<code>w</code> is a `work' vector, 
+<code>Uplo</code> can be <code>'U'</code> 
+or <code>'L'</code>, denoting that leading upper or lower triangular part of <code>A</code> contains 
+the upper or lower triangular part, respectively, of the symmetric matrix
+(and that the lower or upper triangular part, respectively, is not referenced) 
+and <code>ierr</code> is LAPACK's `diagnostic argument'
+<code>INFO</code>. 
+
+<p>
+<table border=1>
+<tr><th>Expression<th>Semantics
+<tr><td><code>sysv(Uplo,A,ipiv,B,w)</code><td>
+<code>B <- A<sup>-1</sup>B</code>, using 
+<code>A = UDU<sup>T</sup></code> or <code>A = LDL<sup>T</sup></code>;
+&nbsp; returns <code>ierr</code> 
+<tr><td><code>sysv(Uplo,A,B)</code><td>
+as above, with <code>ipiv</code> and <code>w</code> allocated and deallocated internally
+<tr><td><code>sysv(A,ipiv,B,w)</code><td>
+<code>B <- A<sup>-1</sup>B</code>, using 
+<code>A = UDU<sup>T</sup></code> or <code>A = LDL<sup>T</sup></code>;
+&nbsp; returns <code>ierr</code> 
+&nbsp;&nbsp; [1]
+<tr><td><code>sysv(A,B)</code><td>
+as above, with <code>ipiv</code> and <code>w</code> allocated and deallocated internally
+&nbsp;&nbsp; [1]
+<tr><td><code>sytrf(Uplo,A,ipiv,w)</code><td>
+<code>A = UDU<sup>T</sup></code> or <code>A = LDL<sup>T</sup></code>;
+&nbsp; returns <code>ierr</code>
+<tr><td><code>sytrf(Uplo,A,ipiv)</code><td>
+as above, with <code>w</code> allocated and deallocated internally
+<tr><td><code>sytrf(A,ipiv,w)</code><td>
+<code>A = UDU<sup>T</sup></code> or <code>A = LDL<sup>T</sup></code>;
+&nbsp; returns <code>ierr</code> &nbsp;&nbsp; [1]
+<tr><td><code>sytrf(A,ipiv)</code><td>
+as above, with <code>w</code> allocated and deallocated internally  &nbsp;&nbsp; [1]
+<tr><td><code>sytrf_querry(Uplo,A)</code><td>
+returns optimal size of <code>w</code>
+<tr><td><code>sytrf_querry(A)</code><td>
+returns optimal size of <code>w</code> &nbsp;&nbsp; [1]
+<tr><td><code>sytrs(Uplo,A,ipiv,B)</code><td>
+<code>B <- A<sup>-1</sup>B</code> assuming  
+<code>A = UDU<sup>T</sup></code> or <code>A = LDL<sup>T</sup></code>;
+&nbsp; returns <code>ierr</code> 
+<tr><td><code>sytrs(A,ipiv,B)</code><td>
+<code>B <- A<sup>-1</sup>B</code> assuming  
+<code>A = UDU<sup>T</sup></code> or <code>A = LDL<sup>T</sup></code>;
+&nbsp; returns <code>ierr</code>  &nbsp;&nbsp; [1]
+</table>
+
+<p>
+[1] It is assumed that matrix traits class can determine whether upper
+of lower triangular part of <code>A</code> contains the corresponding
+part of the symmetric matrix (e.g. traits for 
+<a href="http://www.boost.org/libs/numeric/ublas/doc/symmetric.htm#symmetric_adaptor"><code>ublas::symmetric_adaptor&lt;&gt;</code></a>).
+
+<h4>2.1.4 Hermitian Indefinite System</h4>
+
+Defined in <code>lapack/hesv.hpp</code>.
+
+<p>
+In the following table <code>A</code>, <code>B</code>, <code>L</code>,
+<code>U</code>, <code>D</code> are matrices<code>, ipiv</code> is a
+vector of pivot indices (for more details see description of
+the Bunch-Kaufman factorisation above), <code>w</code> is a `work' vector, <code>Uplo</code> can be <code>'U'</code>
+or <code>'L'</code>, denoting that leading upper or lower triangular part of <code>A</code> contains 
+the upper or lower triangular part, respectively, of the Hermitian matrix
+(and that the lower or upper triangular part, respectively, is not referenced) 
+and <code>ierr</code> is LAPACK's `diagnostic argument'
+<code>INFO</code>. 
+
+<p>
+<table border=1>
+<tr><th>Expression<th>Semantics
+<tr><td><code>hesv(Uplo,A,ipiv,B,w)</code><td>
+<code>B <- A<sup>-1</sup>B</code>, using 
+<code>A = UDU<sup>H</sup></code> or <code>A = LDL<sup>H</sup></code>;
+&nbsp; returns <code>ierr</code> 
+<tr><td><code>hesv(Uplo,A,B)</code><td>
+as above, with <code>ipiv</code> and <code>w</code> allocated and deallocated internally
+<tr><td><code>hesv(A,ipiv,B,w)</code><td>
+<code>B <- A<sup>-1</sup>B</code>, using 
+<code>A = UDU<sup>H</sup></code> or <code>A = LDL<sup>H</sup></code>;
+&nbsp; returns <code>ierr</code> 
+&nbsp;&nbsp; [1]
+<tr><td><code>hesv(A,B)</code><td>
+as above, with <code>ipiv</code> and <code>w</code> allocated and deallocated internally
+&nbsp;&nbsp; [1]
+<tr><td><code>hetrf(Uplo,A,ipiv,w)</code><td>
+<code>A = UDU<sup>H</sup></code> or <code>A = LDL<sup>H</sup></code>;
+&nbsp; returns <code>ierr</code>
+<tr><td><code>hetrf(Uplo,A,ipiv)</code><td>
+as above, with <code>w</code> allocated and deallocated internally
+<tr><td><code>hetrf(A,ipiv,w)</code><td>
+<code>A = UDU<sup>H</sup></code> or <code>A = LDL<sup>H</sup></code>;
+&nbsp; returns <code>ierr</code> &nbsp;&nbsp; [1]
+<tr><td><code>hetrf(A,ipiv)</code><td>
+as above, with <code>w</code> allocated and deallocated internally  &nbsp;&nbsp; [1]
+<tr><td><code>hetrf_querry(Uplo,A)</code><td>
+returns optimal size of <code>w</code>
+<tr><td><code>hetrf_querry(A)</code><td>
+returns optimal size of <code>w</code> &nbsp;&nbsp; [1]
+<tr><td><code>hetrs(Uplo,A,ipiv,B)</code><td>
+<code>B <- A<sup>-1</sup>B</code> assuming  
+<code>A = UDU<sup>H</sup></code> or <code>A = LDL<sup>H</sup></code>;
+&nbsp; returns <code>ierr</code> 
+<tr><td><code>hetrs(A,ipiv,B)</code><td>
+<code>B <- A<sup>-1</sup>B</code> assuming  
+<code>A = UDU<sup>H</sup></code> or <code>A = LDL<sup>H</sup></code>;
+&nbsp; returns <code>ierr</code>  &nbsp;&nbsp; [1]
+</table>
+
+<p>
+[1] It is assumed that matrix traits class can determine whether upper
+of lower triangular part of <code>A</code> contains the corresponding
+part of the Hermitian matrix (e.g. traits for 
+<a href="http://www.boost.org/libs/numeric/ublas/doc/hermitian.htm#hermitian_adaptor"><code>ublas::hermitian_adaptor&lt;&gt;</code></a>).
+
+
+<br><p><br>
+</body>
+</html>
