@@ -43,6 +43,7 @@ The goals for this project include:
 * Efficient wrapper code generation. 
 * Language-specific pluggable back ends. 
 * No preprocessing stage; everything done inside C++. 
+* A higher degree of code sharing between language binding projects.
  
 To accomplish these goals the library uses template metaprogramming
 to allow for simple declararative syntax while maintaining
@@ -57,16 +58,20 @@ plugins.
  User Interface
 =========================
 
-Here we describe the interface authors that are adding a language binding to 
-their library or application use. This includes support for modules, 
-namespaces, classes, member functions, free functions and operators.
+Here we describe the interface used by authors that are adding a
+language binding to their library or application. This includes
+support for modules, namespaces, classes, member functions, free
+functions and operators.
 
-Where example code for a target language is neccessary, code for both Python
-and Lua is given.
+Where example code for a target language is neccessary, code for
+both Python and Lua is given.
 
-Every entity is derived from ``module_description``, which is the abstract
+.. This would be an implementation detail if we were going to do
+   it, but I think it's a bad idea anyway.
+
+Every entity is derived from ``element``, the abstract
 representation that is passed to the target language for binding.
-``module_description`` and it's derivatives are handle classes with deep copy
+``element`` and its derivatives are handle classes with deep copy
 value semantics.
 
 ------------------------------
@@ -80,13 +85,13 @@ added to the module using ``operator[]``.
 
  .. parsed-literal::
 
-    class **module** : public module_description
+    class **module** : public element
     {
     public:
         module()
         module(char const* name)
         ...
-        module& operator[](module_description const&);
+        module& operator[](element const&);
     };
 
 A module may be unnamed, in which case it represents the global module.
@@ -101,7 +106,7 @@ Functions are exposing using ``def``.
 
  .. parsed-literal::
 
-    class **def** : public module_description
+    class **def** : public element
     {
     public:
         template<class Fn>
@@ -137,8 +142,9 @@ that function object. ::
     def("f", &f1)
     def("f", &f2)
 
-Will register two overloads with the name ``f``. When this function is called
-from a target language the library will try to select the best matching overload.
+Will register two overloads with the name ``f``. When this function
+is called from a target language the library will try to select the
+best matching overload.
 
 .. note:: Signatures
     
@@ -151,9 +157,9 @@ from a target language the library will try to select the best matching overload
 
         R(X&, A0, ..., AN)
 
-    Because of this, member functions can be used as free functions with an
-    additional first argument, and free functions can be exposed as class member
-    functions.    
+    Because of this, member functions can be used as free functions
+    with an additional first argument, and free functions can be
+    exposed as class member functions.
 
 .. parsed-literal::
 
@@ -169,12 +175,12 @@ Will register a unary function that expects an ``X&`` as it's parameter.
 Parameters
 ==========
 
-Parameters of all primitive types are automatically handled. Class types need to
-be registered. 
+Parameters of all primitive types are automatically handled. Class
+types need to be registered.
 
-For class types, ``derived->base`` conversions are handled. In the case of a
-polymorphic type, ``base->derived`` conversions are also considered, based on
-the dynamic type of the parameter.
+For class types, ``derived->base`` conversions are handled. In the
+case of a polymorphic type, ``base->derived`` conversions are also
+considered, based on the dynamic type of the parameter.
 
 Return Values
 =============
@@ -230,7 +236,7 @@ Classes are exposed using ``class_``.
  .. parsed-literal::
 
     template<class TAndBases, class HolderType = */\* implementation defined \*/*>
-    class **class_** : public module_description
+    class **class_** : public element
     {
     public:
         class\_(char const* name);
@@ -244,7 +250,7 @@ Classes are exposed using ``class_``.
         template<class Fn, class CallPolicies, class SignatureTransformation>
         class\_& def(char const* name, Fn fn, CallPolicies, SignatureTransformation);
 
-        class\_& scope(module_description const&);
+        class\_& scope(element const&);
     };
 
  TAndBases
@@ -270,10 +276,11 @@ Constructors
         ...
     };
 
- The template parameters ``A0`` .. ``AN`` indicate the positional constructor arguments.
+ The template parameters ``A0`` .. ``AN`` indicate positional
+ constructor arguments.
 
-Exposing constructors is done by calling ``def()``, passing an instance of ``init<>``
-with the desired constructor signature:
+Exposing constructors is done by calling ``def()``, passing an
+instance of ``init<>`` with the desired constructor signature:
 
 .. parsed-literal::
 
@@ -281,16 +288,15 @@ with the desired constructor signature:
         .def(**init<>()**)
         .def(**init<int, int>()**)
 
-Creates a wrapper for the class type ``X``, with a default constructor and a
-constructor taking two ``int`` parameters.
-
+Creates a wrapper for the class type ``X``, with a default
+constructor and a constructor taking two ``int`` parameters.
 
 Member Functions
 ================
 
-Member functions are exposed using one of the ``class_<>::def()`` overloads.
-The parameters are exactly the same as with the global ``def()`` described
-in the previous section.
+Member functions are exposed using one of the ``class_<>::def()``
+overloads.  The parameters are exactly the same as with the global
+``def()`` described in the previous section.
 
 For example::
 
@@ -303,37 +309,44 @@ Will expose the class ``X`` with a single member function ``f``.
 Holder Types
 ============
 
-Sometimes an interface passes instances of a class managed by smart pointers.
-In these cases it is important to be able to pass instances created in the
-target language environment to functions expecting a smart pointer. ::
+Sometimes an interface passes instances of a class managed by smart
+pointers.  In these cases it is important to be able to pass
+instances created in the target language environment to functions
+expecting a smart pointer. ::
 
-    void f(boost::shared_ptr<X> const&);
+    void f(std::auto_ptr<X> const&);
 
-To handle this we specify that our class instances is to be held with 
-``boost::shared_ptr<X>``::
+To handle this we specify that our class instances are to be held with 
+``std::auto_ptr<X>``::
 
-    class_<X, boost::shared_ptr<X> >("X")
+    class_<X, std::auto_ptr<X> >("X")
 
-Now instances of ``X`` created in the target language can be safely passed to functions
-that expects a ``boost::shared_ptr``.
-
+Now instances of ``X`` created in the target language can be safely
+passed to wrapped functions that expect a
+``std::auto_ptr<X>``.  Note that ``boost::shared_ptr`` is a
+special case: even without specifying a holder type, any instance
+of ``X`` in the target language can be passed to wrapped functions
+accepting a boost::shared_ptr<X> by value or ``const`` reference.
+The ``shared_ptr`` is constructed with a special deleter that
+manages the target language object.
 
 Inheritance
 ===========
 
-To indicate inheritance relationships the function type syntax is used. This
-was choosen to emulate the Python class declaration syntax. Indicating an
-inheritance relationship will register the relationship in a cast-graph, with
-``derived->base``, and possibly ``base->derived`` (if the registered class is
-polymorphic) conversions . The derived class will also automatically inherit
-any registered member functions from it's base.
+To indicate inheritance relationships the function type syntax is
+used. This was choosen to emulate the Python class declaration
+syntax. Indicating an inheritance relationship will register the
+relationship in a cast-graph, with ``derived->base``, and possibly
+``base->derived`` (if the registered class is polymorphic)
+conversions . The derived class will also automatically inherit any
+registered member functions from it's base.
 
 For example::
 
     class_<Derived(Base)>("Derived")
 
-Multiple inheritance is exposed by simply adding more argument types to
-the function type::
+Multiple inheritance is exposed by simply adding more argument
+types to the function type::
 
     class_<Derived(Base1, Base2)>("Derived")
 
@@ -350,10 +363,11 @@ the function type::
 Overridable Virtual Functions
 =============================
 
-To be able to expose overridable virtual functions for a class ``T`` without
-being intrusive on the exposed class, we need to define a wrapper-class. This
-class must derive from ``polymorphic<T>`` and implement virtual dispatch
-overrides, as well as default implementation functions for every virtual
+To be able to expose overridable virtual functions for a class
+``T`` without being intrusive on the exposed class, we need to
+define a wrapper-class. This class must derive from
+``polymorphic<T>`` and implement virtual dispatch overrides, as
+well as default implementation functions for every virtual
 function.
 
 A typical wrapper-class for a class ``Base`` will look something like this:
@@ -381,25 +395,26 @@ A typical wrapper-class for a class ``Base`` will look something like this:
         }
     };
 
-The virtual dispatch override looks if there is an override with the given
-function name in the target language representation of the instance. If
-there is one it is called using ``operator()``. If there is no overload,
-the default implementation in Base is called instead.
+The virtual dispatch override looks if there is an override with
+the given function name in the target language representation of
+the instance. If there is one it is called using ``operator()``. If
+there is no overload, the default implementation in Base is called
+instead.
 
-``default_f`` is needed for when there is actually an override defined in
-the target language, but we want to call the base class function statically
-anyway. This happens when virtual overrides wants to call their base
-implementation::
+``default_f`` is needed for when there is actually an override
+defined in the target language, but we want to call the base class
+function statically anyway. This happens when virtual overrides
+wants to call their base implementation::
 
     class Derived(Base):
         def f():
             return Base.f(self) + 10
 
-If not for ``default_f``, this would call the virtual function ending up in
-an infinite loop.
+If not for ``default_f``, this would call the virtual function
+ending up in an infinite loop.
 
-To expose the class above and it's virtual function ``f``, we use ``class_`` 
-like this::
+To expose the class above and its virtual function ``f``, we use
+``class_`` like this::
 
     class_<BaseWrap>("Base")
         .def("f", &Base::f, &BaseWrap::default_f)
@@ -675,67 +690,60 @@ can be accessed via::
   c.id()
 
 The backend will typically want to create an appropriately-named
-class object in the target module.  The integer id will be 
-It should store a reference to
-this class in an object of type ``B::class_weak_reference``. ::
+class object in the target module.  The integer id can be used as
+an index into a table of class objects.
 
-  typedef B::class_reference C;
+In a target language with multiple interpreter states, there would
+be a separate table for each state.
 
-Instances of this type should maintain the lifetime of the created
-class object, or if that's not possible, should be automatically
-notified when the created class object is destroyed so that the
-backend code can throw an appropriate exception if an attempt is
-made to use the destroyed class.  If target language interpreters
-can be destroyed and reconstituted (e.g. with ``PyFinalize``), it
-may be neccessary for all ``C`` instances associated with a given
-interpreter to explicitly release their reference to the created
-class
+If target language interpreters can be destroyed and reconstituted
+(e.g. with ``PyFinalize``), it may be neccessary to delete the
+references in table so the target language can release the class objects.
 
-can be destroyed ``C`` exhibit typical "weak
-reference behavior;" that is, 
+.. Incomplete
 
-Responsibilities of the backend:
+   Responsibilities of the backend:
 
-* Build objects that represent classes and functions in the dynamic
-  language and that can hold the library's representations of
-  classes and functions, to which the dynamic language's
-  operations are dispatched.
+   * Build objects that represent classes and functions in the dynamic
+     language and that can hold the library's representations of
+     classes and functions, to which the dynamic language's
+     operations are dispatched.
 
-* Provide a type that represents an argument package.  For Python
-  this might be a pair of PyObject*s representing positional and
-  keyword arguments.
+   * Provide a type that represents an argument package.  For Python
+     this might be a pair of PyObject*s representing positional and
+     keyword arguments.
 
-* Provide a function that, given an argument package, can
-  determine whether a given argument is 
+   * Provide a function that, given an argument package, can
+     determine whether a given argument is 
 
-* Provide types that manage language resources such as classes,
-  instances, and function overrides.
+   * Provide types that manage language resources such as classes,
+     instances, and function overrides.
 
-* define wrappers for C++ classes and functions 
-* given an argument package and an arg index, find out if that argument is a 
-* provide a type representing an argument package
-* define a visitor that translates the registrations to the target language 
-* register built-in converters 
-* create some function that can create instances of wrapped classes using the holder_installers and class_*.. I guess that's part of (1)
-* provide a type that represents a virtual function override in the target language
-* provide a type that represents a function call result in the target language
+   * define wrappers for C++ classes and functions 
+   * given an argument package and an arg index, find out if that argument is a 
+   * provide a type representing an argument package
+   * define a visitor that translates the registrations to the target language 
+   * register built-in converters 
+   * create some function that can create instances of wrapped classes using the holder_installers and class_*.. I guess that's part of (1)
+   * provide a type that represents a virtual function override in the target language
+   * provide a type that represents a function call result in the target language
 
 
------------------
- Backend Plugins
------------------
+   -----------------
+    Backend Plugins
+   -----------------
 
-A backend plugin is a class that 
+   A backend plugin is a class that 
 
-derived from a CRTP base class allows the library access to nested type information that
-encapsulates language-specific resources.
+   derived from a CRTP base class allows the library access to nested type information that
+   encapsulates language-specific resources.
 
--------------------------
- Registering Conversions
--------------------------
+   -------------------------
+    Registering Conversions
+   -------------------------
 
-===========================
- Implementation Techniques
-===========================
+   ===========================
+    Implementation Techniques
+   ===========================
 
 
