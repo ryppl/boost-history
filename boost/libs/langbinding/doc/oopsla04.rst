@@ -116,8 +116,7 @@ Functions are exposing using ``def``.
  * ``CallPolicies`` and ``SignatureTransformation`` may be given in any
    order.
 
-If a function named ``name`` has already been exposed, an overload is added to
-that function object.
+For example:
 
 .. parsed-literal::
 
@@ -126,6 +125,18 @@ that function object.
     ..
 
     def("timestwo", &timestwo)
+
+If a function named ``name`` has already been exposed, an overload is added to
+that function object. ::
+
+    void f1();
+    void f2(int);
+
+    def("f", &f1)
+    def("f", &f2)
+
+Will register two overloads with the name ``f``. When this function is called
+from a target language the library will try to select the best matching overload.
 
 .. note:: Signatures
     
