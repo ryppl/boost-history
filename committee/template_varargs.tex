@@ -595,26 +595,16 @@ struct is_tuple
   { static const bool value = is_base_of<tuple_base, T>::value; };
 
 // A tuple of arbitrary length N
-template<typename T1, ... Elements>
+template<... Elements>
 class tuple : public tuple_base 
 {
-  typedef typename add_reference<typename add_const<T1>::type>::type
-    head_param_type;
-
 public:
-  typedef T1 head_type;
-  typedef tuple<Elements...> tail_type;
-
-  static const size_t size = 1 + tail_type::size;
+  static const size_t size = count_args<Elements...>::value;
 
   tuple() {}
 
   // enable_if condition ensures that we only match if N arguments are given
-  template<... Tail> 
-  explicit tuple(typename enable_if<(count_args<Args...>::value == size - 1),
-                                    head_param_type>::type head,
-                 Tail... tail)
-    : head(head), tail(tail...) {}
+  explicit tuple(const Elements&... elements) : elements(elements) {}
 
   // enable_if condition only allows us to attempt implicit conversions
   // from tuples of the appropriate length
@@ -622,53 +612,34 @@ public:
   tuple(const Tuple& other,
         typename enable_if<(is_tuple<Tuple>::value && size == Tuple::size), 
                            void>::type* = 0)
-    : head(other.head), tail(other.tail) {}
+    : elements(other.elements...) {}
 
   // enable_if condition only allows us to attempt assignment from tuples of
   // the appropriate length
   template<typename Tuple>
   typename enable_if<(is_tuple<Tuple>::value && size == Tuple::size),
                      tuple&>::type
-  operator=(const Tuple& tuple)
+  operator=(const Tuple& other)
   {
-    head = other.head;
-    tail = other.tail;
+    *this = tuple(other.elements...);
     return *this;
   }
 
-  head_type head;
-  tail_type tail;
+  Elements elements;
 };
 
-// Base case: a nullary tuple
-template<> class tuple<> : public tuple_base 
-{
-public:
-  static const size_t size = 0;
-};
+// tuple_element
+template<int I, typename Head, typename Tail>
+  struct tuple_element<I, tuple<Head, Tail...> >
+    : tuple_element<I-1, tuple<Tail...> > { };
 
-// Performs an arbitrary transform on each of the types in a
-// tuple. This is a utility function, used by make_tuple.
-template<typename MetaFun, typename Tuple, ... Rest>
-  class transform_tuple_type
+template<typename Head, typename Tail>
+  struct tuple_element<0, tuple<Head, Tail...> >
   {
-    typedef typename Tuple::head_type old_head_type;
-    typedef typename MetaFun::template apply<old_head_type>::type
-      new_head_type;
-    typedef typename Tuple::tail_type old_tail_type;
-    typedef transform_tuple_type<MetaFun, old_tail_type, Rest, new_head_type>
-      gen;
-  public:
-    typedef typename gen::type type;
+    typedef Head type;
   };
 
-template<typename MetaFun, ... Rest>
-  class transform_tuple_type<MetaFun, tuple<>, Rest>
-  {
-  public:
-    typedef tuple<Rest> type;
-  };
-
+// make_tuple implementation
 template<typename T>
   struct make_tuple_element_type
   {
@@ -695,59 +666,6 @@ template<... Elements>
   { return tuple<Elements&...>(elements...); }
 \end{verbatim}
 \normalsize
-
-\subsection{Tuple algorithms implementation}
-In this section we implement three ``core'' tuple algorithms.
-Although there is not yet any proposal for these algorithms, they are
-useful in practice and will be used in implementations within this
-proposal.
-
-The first tuple algorithm creates a tuple that is the reverse of the
-input tuple.
-\begin{verbatim}
-template<... Args>
-  tuple<Args> reverse(tuple<>, Args&... args)
-  { return tuple<Args...>(args...); }
-
-template<typename Tuple, ... Args>
-  auto reverse(const Tuple& t, Args&... args)
-  { 
-    typedef typename Tuple::head_type head_type;
-    typedef typename Tuple::tail_type tail_type;
-    return reverse<tail_type, head_type>(t.tail, t.head, args...);
-  }
-\end{verbatim}
-
-The second tuple algorithm illustrates the ability to convert a tuple into
-a (value) parameter pack, so that the function call arguments can be passed
-to a function object as a function call parameter. This allows us to store
-the parameter pack as a tuple and manipulate it with the tuple algorithms
-before using it
-\begin{verbatim}
-template<typename F, ... Args>
-  auto apply(F f, tuple<>, Args&... args)
-  { return f(args...); }
-
-template<typename F, typename Tuple, ... Args>
-  auto apply(F f, const Tuple& t, Args&... args)
-  { return apply(f, t.tail, args..., t.head); }
-
-template<typename F, typename Tuple, ... Args>
-  auto apply(F f, Tuple& t, Args&... args)
-  { return apply(f, t.tail, args..., t.head); }
-\end{verbatim}
-
-The final tuple algorithm represents a transformation on tuples,
-similar to the {\tt transform} algorithm in the standard library.
-\begin{verbatim}
-template<typename F, ... Args>
-  auto transform(tuple<>, F, Args&... args)
-  { return make_tuple(args...); }
-
-template<typename Tuple, typename F, ... Args>
-  auto transform(const Tuple& t, F f, Args&... args)
-  { return transform(t.tail, f, args..., f(t.head)); }
-\end{verbatim}
 
 \subsection{Function implementation}
 \label{functionimpl}
@@ -1002,7 +920,7 @@ multiple parameter packs for, e.g., a function call:
 struct PivotType {};
 
 template<... Head, ... Tail>
-void split(Head h, PivotType p, Tail t);
+void split(Head... h, PivotType p, Tail... t);
 \end{verbatim}
 
 Another example of this would be a ``pop\_back'' operation on a
@@ -1010,8 +928,8 @@ parameter pack (here we place the result in a tuple):
 
 \begin{verbatim}
 template<... Elements, typename T>
-  tuple<Elements> pop_back(Elements elements, const T&)
-  { return tuple<Elements>(elements); }
+  tuple<Elements> pop_back(Elements... elements, const T&)
+  { return tuple<Elements...>(elements); }
 \end{verbatim}
 
 While we acknowledge that there may be some benefit to introducing
@@ -1028,7 +946,7 @@ heterogeneous data structure such as a tuple.
   \item Variadic templates no longer solve the forwarding problem for
     arguments. 
   \item Parameter packs are no longer tuples; instead, they are a
-    typeless entity that may only be declared and unpacked.
+    compiler-specific first-class entities.
   \item Introduced the ability to deduce a template parameter pack
     from a type (or list of template parameters).
   \item Eliminated the \texttt{apply}, \texttt{integral\_constant},
