@@ -180,6 +180,7 @@ if $(NT)
     SUFDLL          ?= .dll .lib ;
     gLINKABLE_PRODUCT_INDEX(DLL) = 2 ; # (the .lib is the ones to link)
     NOARSCAN        ?= true ;
+    SHELL_EXPORT    ?= "set " ;
     
     # dwa 6/4/01 - removed compiler determination for boost
     # added some yacc/lex stuff, assuming cygwin for now.
@@ -393,6 +394,7 @@ else if $(UNIX)
     YACC            ?= yacc ;
     YACCFILES       ?= y.tab ;
     YACCFLAGS       ?= -d ;
+    SHELL_EXPORT    ?= "export " ;
 }
     
 #
@@ -429,6 +431,7 @@ RSH             ?= rsh ;
 SED             ?= sed ;
 SHELLHEADER     ?= "#!/bin/sh" ;
 SHELLMODE       ?= 755 ;
+SHELL_EXPORT    ?= "" ;
 SLASH           ?= / ;
 SPLITPATH       ?= ":" ; # dwa -- added missing SPLITPATH
 STDHDRS         ?= /usr/include ;
@@ -818,7 +821,7 @@ rule LibraryFromObjects
 }
 
 # dwa 6/4/01 - modified for boost to dispatch through Link-action and to pass
-# the target-type through.
+# the target-type through. *** NOW UNUSED BY BOOST ***
 #
 # Link executable-target : object-target...
 rule Link
