@@ -287,6 +287,7 @@ public:
     size_type size() const;
     size_type num_blocks() const;
     size_type max_size() const;
+    bool empty() const;
 #if 0 // gps
     void reserve(size_type n);
     size_type capacity() const;
@@ -1130,6 +1131,12 @@ dynamic_bitset<Block, Allocator>::max_size() const
     return m <= (size_type(-1)/bits_per_block) ?
         m * bits_per_block :
         size_type(-1);
+}
+
+template <typename Block, typename Allocator>
+inline bool dynamic_bitset<Block, Allocator>::empty() const
+{
+  return size() == 0;
 }
 
 #if 0 // gps

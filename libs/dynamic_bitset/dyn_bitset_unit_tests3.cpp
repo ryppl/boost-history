@@ -27,6 +27,21 @@ void run_test_cases( BOOST_EXPLICIT_TEMPLATE_TYPE(Block) )
   std::size_t ul_width = std::numeric_limits<unsigned long>::digits;
 
   //=====================================================================
+  // Test b.empty()
+  {
+    bitset_type b;
+    Tests::empty(b); // gps
+  }
+  {
+    bitset_type b(1, 1ul);
+    Tests::empty(b);
+  }
+  {
+    bitset_type b(bitset_type::bits_per_block
+                  + bitset_type::bits_per_block/2, 15ul);
+    Tests::empty(b);
+  }
+  //=====================================================================
   // Test b.to_long()
   {
     boost::dynamic_bitset<Block> b;
@@ -619,7 +634,6 @@ void run_test_cases( BOOST_EXPLICIT_TEMPLATE_TYPE(Block) )
     boost::dynamic_bitset<Block> lhs(long_string.size(), 1), rhs(long_string);
     Tests::operator_sub(lhs, rhs);
   }
-
 }
 
 int

@@ -603,6 +603,12 @@ struct bitset_test {
     }
   }
 
+  // empty
+  static void empty(const Bitset& b)
+  {
+    BOOST_CHECK(b.empty() == (b.size() == 0));
+  }
+
   // to_ulong()
   static void to_ulong(const Bitset& lhs)
   {
