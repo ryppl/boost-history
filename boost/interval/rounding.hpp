@@ -23,12 +23,6 @@ namespace boost {
     void          upward   ()                       {}
     void          downward ()                       {}
     void          tonearest()                       {}
-    static T      pi_down()                         { return T(3); }
-    static T      pi_up()                           { return T(4); }
-    static T      pi_2_1_down()                     { return T(6); }
-    static T      pi_2_1_up()                       { return T(7); }
-    static T      pi_1_2_down()                     { return T(1); }
-    static T      pi_1_2_up()                       { return T(2); }
     T             to_int(const T& x)                { return x; }
     T             force_rounding(const T& x)        { return x; }
   };
