@@ -32,7 +32,7 @@
             problems.
          </paragraph><paragraph>
             The motivation behind using manipulators is that they are already designed into the C++ I/O
-            library and require little overhead in the output process. They also give the user maximum
+            library and require little overhead in the input and output mechanism. They also give the user maximum
             choice in <i>how</i> the data being outputted is formatted.
          </paragraph>
       </d:section><d:section title = "Definitions" id = "intro.def">
@@ -67,11 +67,11 @@
                      <td valign = "top"><code>typename Container::iterator Container::end()</code></td>
                      <td valign = "top">returns "one-past-the-end" for the container type</td>
                   </tr><tr>
-                     <td valign = "top">input</td>
+                     <td valign = "top">sequential container input</td>
                      <td valign = "top"><code>void Container::clear()</code></td>
                      <td valign = "top">remove all data in the container</td>
                   </tr><tr>
-                     <td valign = "top">input</td>
+                     <td valign = "top">sequential container input</td>
                      <td valign = "top"><code>void Container::push_back( const T &amp; value )</code></td>
                      <td valign = "top">adds value to the end of the container</td>
                   </tr>
@@ -593,15 +593,15 @@
       </d:section>
    </d:section><d:section title = "Format Objects" id = "fo.fo">
       <d:section title = "Requirements" id = "fo.requirements">
-         <d:section title = "Output Facilities" id = "fo.functor">
+         <d:section title = "Output Facilities" id = "fo.output">
             <paragraph>
-               A format object is required to have function object semantics if
-               it supports output of a type to a stream by defining:
+               A format object that is intending to provide output of a type to a stream
+               must define a <code>write</code> function that accepts that type by defining:
             </paragraph>
 
             <c:code indent = "true">
                <c:line>template&lt; typename T, class OutputStream &gt;</c:line>
-               <c:line>inline OutputStream &amp; operator()( OutputStream &amp; os, const T &amp; value ) const</c:line>
+               <c:line>inline OutputStream &amp; write( OutputStream &amp; os, const T &amp; value ) const</c:line>
                <c:block open = "(" close = ");">
                   <c:comment>...</c:comment>
                   <c:line>return( os );</c:line>
@@ -621,12 +621,32 @@
                simplify the implementation of the operator (it is easier to type!).
                If you want to use <code>std::basic_ostream&lt; CharT, Traits &gt;</code>
                instead, you can, but this is not advised for compatibility with
-               older libraries that do not support <code>std::basic_string</code>.
+               older libraries that do not support <code>std::basic_ostream</code>.
             </paragraph><paragraph>
                The operator is const because the format object is not modified. For
                state-based formatting that requires modification of the data,
                like position information, there is a special format object. See
-               <code>libs/outfmt/examples/john-torjo.cpp</code> for an example of this.
+               <link href = "../examples/john-torjo.cpp">libs/outfmt/examples/john-torjo.cpp</link>
+               for an example of this.
+            </paragraph>
+         </d:section><d:section title = "Input Facilities" id = "fo.input">
+            <paragraph>
+               A format object that is intending to provide input of a type to a stream
+               must define a <code>read</code> function that accepts that type by defining:
+            </paragraph>
+
+            <c:code indent = "true">
+               <c:line>template&lt; typename T, class InputStream &gt;</c:line>
+               <c:line>inline bool read( InputStream &amp; is, T &amp; value ) const</c:line>
+               <c:block open = "(" close = ");">
+                  <c:comment>...</c:comment>
+                  <c:line>return( true );</c:line>
+               </c:block>
+            </c:code>
+
+            <paragraph>
+               Where <code>true</code> indicates a successful read operation and
+               <code>false</code> indicates there was a problem.
             </paragraph>
          </d:section><d:section title = "Formatting" id = "fo.formatting">
             <paragraph>
@@ -643,21 +663,21 @@
             </paragraph>
          </d:section>
       </d:section><d:section title = "Simple Types" id = "fo.simple">
-         <d:section title = "boost::io::basic_output" id = "fo.basic">
+         <d:section title = "boost::io::basic_object" id = "fo.basic">
             <paragraph>
-               <code>boost::io::basic_output</code> is used as a generic format object,
+               <code>boost::io::basic_object</code> is used as a generic format object,
                providing no specific formatting.
             </paragraph>
-         </d:section><d:section title = "boost::io::wrapped_output" id = "fo.wrapped">
+         </d:section><d:section title = "boost::io::wrapped_object" id = "fo.wrapped">
             <paragraph>
-               <code>boost::io::wrapped_output</code> inherits its formatting from
+               <code>boost::io::wrapped_object</code> inherits its formatting from
                <code>boost::io::openclose_formatter_t</code>, allowing specific
                formatting to be added around a type. This would be useful for things
-               like outputting a complex type as XML data.
+               like formatting a complex type as XML data.
             </paragraph>
          </d:section>
       </d:section><d:section title = "N-ary Types" id = "fo.nary">
-         <d:section title = "boost::io::pair_output" id = "fo.pair">
+         <d:section title = "boost::io::pair_object" id = "fo.pair">
             <paragraph><table cellpadding = "0">
                <tr>
                   <td rowspan = "2" valign = "top">examples: </td>
@@ -668,13 +688,13 @@
             </table></paragraph>
 
             <paragraph>
-               <code>boost::io::pair_output</code> inherits its formatting from
-               <code>boost::io::formatter_t</code>, providing output of
+               <code>boost::io::pair_object</code> inherits its formatting from
+               <code>boost::io::formatter_t</code>, providing input and output of
                <code>std::pair</code>, <code>std::complex</code>,
                <code>boost::numeric::interval</code>, <code>boost::rational</code>
                and <code>boost::compressed_pair</code> types.
             </paragraph>
-         </d:section><d:section title = "boost::io::static_nary_output" id = "fo.static_nary">
+         </d:section><d:section title = "boost::io::static_nary_object" id = "fo.static_nary">
             <paragraph><table cellpadding = "0">
                <tr>
                   <td>examples: </td>
@@ -683,20 +703,24 @@
             </table></paragraph>
 
             <paragraph>
-               <code>boost::io::static_nary_output</code> inherits its formatting
-               from <code>boost::io::formatter_t</code>, providing output of
+               <code>boost::io::static_nary_object</code> inherits its formatting
+               from <code>boost::io::formatter_t</code>, providing input and output of
                <code>boost::math::quaternion</code> and
                <code>boost::math::octonion</code> types.
             </paragraph>
+         </d:section><d:section title = "Adding Support For An N-Ary Type" id = "fo.nary-getput">
+            <paragraph>
+               [todo]
+            </paragraph>
          </d:section>
       </d:section><d:section title = "Sequences" id = "fo.sequence">
-         <d:section title = "boost::io::detail::list_output" id = "fo.list_output">
+         <d:section title = "boost::io::detail::list_object" id = "fo.list">
             <paragraph>
-               <code>boost::io::detail::list_output</code> is a helper class,
+               <code>boost::io::detail::list_object</code> is a helper class,
                inheriting its formatting from <code>boost::io::formatter_t</code>.
                It is used to output sequential lists of the form [first, last).
             </paragraph><paragraph>
-               <code>boost::io::detail::list_output</code> is not technically a format
+               <code>boost::io::detail::list_object</code> is not technically a format
                object, since it has the function operator:
             </paragraph>
 
@@ -711,10 +735,10 @@
             </c:code>
             <paragraph>
                The class is used to help the implementations of
-               <code>boost::io::array_output</code>, <code>boost::io::container_output</code>
-               and <code>boost::io::formatlist_t</code>.
+               <code>boost::io::array_object</code>, <code>boost::io::container_object</code>
+               and <code>boost::io::range_object</code>.
             </paragraph>
-         </d:section><d:section title = "boost::io::array_output" id = "fo.array">
+         </d:section><d:section title = "boost::io::array_object" id = "fo.array">
             <paragraph><table cellpadding = "0">
                <tr>
                   <td rowspan = "2" valign = "top">examples: </td>
@@ -725,8 +749,8 @@
             </table></paragraph>
 
             <paragraph>
-               <code>boost::io::array_output</code> inherits its functionality from
-               <code>boost::io::detail::list_output</code>, supporting the output of
+               <code>boost::io::array_object</code> inherits its functionality from
+               <code>boost::io::detail::list_object</code>, supporting the output of
                C-style arrays of the form <code>const T *</code>.
             </paragraph><paragraph>
                To facilitate the output of arrays, it defines two special function operators:
@@ -741,7 +765,7 @@
             <paragraph>
                Specify the range [off, off + len) to be outputted.
             </paragraph>
-         </d:section><d:section title = "boost::io::container_output" id = "fo.container">
+         </d:section><d:section title = "boost::io::container_object" id = "fo.container">
             <paragraph><table cellpadding = "0">
                <tr>
                   <td rowspan = "2" valign = "top">examples: </td>
@@ -750,36 +774,38 @@
             </table></paragraph>
 
             <paragraph>
-               <code>boost::io::container_output</code> inherits its functionality
-               from <code>boost::io::detail::list_output</code>, supporting the
+               <code>boost::io::container_object</code> inherits its functionality
+               from <code>boost::io::detail::list_object</code>, supporting the
                output of containers as defined in section <d:ref section = "def.container"/>.
             </paragraph>
-         </d:section><d:section title = "boost::io::range_output" id = "fo.range">
+         </d:section><d:section title = "boost::io::range_object" id = "fo.range">
             <paragraph>
-               <code>boost::io::range_output</code> inherits its functionality
-               from <code>boost::io::detail::list_output</code>, supporting the
+               <code>boost::io::range_object</code> inherits its functionality
+               from <code>boost::io::detail::list_object</code>, supporting the
                output of an iterator range. The iterator range is a pair of
                iterators are defined in section <d:ref section = "def.fwditer"/>.
+            </paragraph><paragraph>
+               This formatter allows ranges to be constructed from a container,
+               a <code>std::pair</code>, a set of values and a C-style array
+               through the use of the <code>boost::io::range</code> function.
             </paragraph><note>
-               This is different from <code>boost::io::pair_output</code>, that outputs
-               the elements in the pair as the first and last elements in a list.
+               This is different from <code>boost::io::pair_object</code>, that
+               formats the elements in the pair as the first and last elements
+               in a list.
             </note>
          </d:section>
       </d:section><d:section title = "Input/Output Manipulators" id = "fo.iomanip">
-         <d:section title = "boost::io::formatlist_t" id = "fo.fmtlist">
-            <paragraph>
-               <code>boost::io::formatlist_t</code> is the class that is used to implement
-               the <code>boost::io::formatlist</code> manipulators. It is a hybrid between
-               a format object and a manipulator. See section <d:ref section = "iomanip.formatlist"/>
-               for more details.
-            </paragraph>
-         </d:section><d:section title = "boost::io::formatob_t" id = "fo.fmtob">
+         <d:section title = "boost::io::formatob_t" id = "fo.fmtob">
             <paragraph>
                <code>boost::io::formatob_t</code> is the class that is used to implement
                the <code>boost::io::formatob</code> manipulators. It is a hybrid between
                a format object and a manipulator, that inherits it's output capabilities
                from another format object. See section <d:ref section = "iomanip.formatob"/>
                for more details.
+            </paragraph><paragraph>
+               This is used to construct the <d:ref section = "iomanip.seqfmt">Sequence
+               Formatters</d:ref>: they are really helper functions that represent a
+               more complex format object.
             </paragraph>
          </d:section>
       </d:section><d:section title = "State Information" id = "fo.stateio">
@@ -790,10 +816,12 @@
             </tr>
          </table></paragraph>
 
-         <d:section title = "boost::io::state_output" id = "fo.state">
+         <d:section title = "boost::io::state_object" id = "fo.state">
             <paragraph>
-               <code>boost::io::state_output</code> does not inherit from a formatter class,
-               and as such is not a standard format object.
+               <code>boost::io::state_object</code> does not inherit from a formatter class,
+               and as such is not a standard format object. It is a helper that will bind
+               a state object and a format object without the need for casts in the user
+               code (see the example for a demonstration of this).
             </paragraph>
             <d:section title = "State Objects" id = "state.ob">
                <paragraph>
@@ -856,13 +884,13 @@
       </d:section><d:section title = "Simple Types" id = "fogen.simple">
          <d:section title = "boost::io::basicfmt" id = "fogen.basic">
             <paragraph>
-               This generator function creates a <code>boost::io::basic_output</code>
+               This generator function creates a <code>boost::io::basic_object</code>
                object. It does not meets the requirements specified in section
                <d:ref section = "fogen.requirements"/>: it does not have any variants.
             </paragraph>
          </d:section><d:section title = "boost::io::wrappedfmt" id = "fogen.wrapped">
             <paragraph>
-               This generator function creates a <code>boost::io::wrapped_output</code>
+               This generator function creates a <code>boost::io::wrapped_o</code>
                object. It meets the requirements specified in section
                <d:ref section = "fogen.requirements"/>.
             </paragraph>
@@ -879,7 +907,7 @@
             </table></paragraph>
 
             <paragraph>
-               This generator function creates a <code>boost::io::pair_output</code>
+               This generator function creates a <code>boost::io::pair_object</code>
                object. It meets the requirements specified in section
                <d:ref section = "fogen.requirements"/>.
             </paragraph>
@@ -915,7 +943,7 @@
             </table></paragraph>
 
             <paragraph>
-               This generator function creates a <code>boost::io::static_nary_output</code>
+               This generator function creates a <code>boost::io::static_nary_object</code>
                object. It meets the requirements specified in section
                <d:ref section = "fogen.requirements"/>.
             </paragraph>
@@ -932,7 +960,7 @@
             </table></paragraph>
 
             <paragraph>
-               This generator function creates a <code>boost::io::array_output</code>
+               This generator function creates a <code>boost::io::array_object</code>
                object. It meets the requirements specified in section
                <d:ref section = "fogen.requirements"/>. Each form has three sub-variants:
             </paragraph>
@@ -965,13 +993,13 @@
             </table></paragraph>
 
             <paragraph>
-               This generator function creates a <code>boost::io::container_output</code>
+               This generator function creates a <code>boost::io::container_object</code>
                object. It meets the requirements specified in section
                <d:ref section = "fogen.requirements"/>.
             </paragraph>
          </d:section><d:section title = "boost::io::rangefmt" id = "fogen.range">
             <paragraph>
-               This generator function creates a <code>boost::io::range_output</code>
+               This generator function creates a <code>boost::io::range_object</code>
                object. It meets the requirements specified in section
                <d:ref section = "fogen.requirements"/>.
             </paragraph>
@@ -986,7 +1014,7 @@
 
          <d:section title = "boost::io::statefmt" id = "fogen.state">
             <paragraph>
-               This generator function creates a <code>boost::io::state_output</code>
+               This generator function creates a <code>boost::io::state_object</code>
                object. It meets the requirements specified in section
                <d:ref section = "fo.generator"/>, but has slightly different semantics.
             </paragraph>
@@ -998,7 +1026,7 @@
                This version takes a state object and specifies whether the state object
                is outputted before (<code>pre = true</code>) or after
                (<code>pre = false</code>) the format object hosted by
-               <code>boost::io::state_output</code>.
+               <code>boost::io::state_object</code>.
             </paragraph>
 
             <c:code indent = "true">
@@ -1035,11 +1063,11 @@
             outputted and the current position within that sub-list. Other information may
             be added at a future date.
          </paragraph><paragraph>
-            How would this interact with <code>boost::io::state_output</code>?
+            How would this interact with <code>boost::io::state_object</code>?
          </paragraph>
       </d:section><d:section title = "Additional Format Objects" id = "future.fo">
          <paragraph>
-            first_output: output p.first <i>only</i>; second_output: output p.second <i>only</i>.
+            first_object: format p.first <i>only</i>; second_object: format p.second <i>only</i>.
          </paragraph>
       </d:section><d:section title = "Advanced Data Types" id = "future.advtype">
          <paragraph>
