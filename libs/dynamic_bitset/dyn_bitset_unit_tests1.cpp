@@ -12,6 +12,34 @@
 #include "boost/limits.hpp"
 #include "boost/config.hpp"
 
+template <typename Tests, typename String>
+void run_string_tests(const String& s
+                      BOOST_APPEND_EXPLICIT_TEMPLATE_TYPE(Tests)
+                     )
+{
+
+  const std::size_t len = s.length();
+  const std::size_t step = len/4 ? len/4 : 1;
+
+  // bitset length determined by the string-related arguments
+  std::size_t i;
+  for (i = 0; i <= len/2 ; /*++i*/ i += step) {
+    Tests::from_string(s, i, len/2);     // len/2 - i bits
+    Tests::from_string(s, i, len);       // len - i   bits
+    Tests::from_string(s, i, 1 + len*2); // len - i   bits
+  }
+
+  // bitset length explicitly specified
+  for (i = 0; i <= len/2; i += step) {
+    for (std::size_t sz = 0; sz <= len*4; sz+= step*2) {
+      Tests::from_string(s, i, len/2, sz);
+      Tests::from_string(s, i, len,   sz);
+      Tests::from_string(s, i, 1 + len*2, sz);
+
+      }
+  }
+
+}
 
 template <typename Block>
 void run_test_cases( BOOST_EXPLICIT_TEMPLATE_TYPE(Block) )
@@ -59,19 +87,28 @@ void run_test_cases( BOOST_EXPLICIT_TEMPLATE_TYPE(Block) )
   //=====================================================================
   // Test construction from a string
   {
-    // case pos > str.size()
-    Tests::from_string(std::string(""), 1, 1);
 
-    // invalid arguments
-    Tests::from_string(std::string("x11"), 0, 3);
-    Tests::from_string(std::string("0y1"), 0, 3);
-    Tests::from_string(std::string("10z"), 0, 3);
+      run_string_tests<Tests>(std::string("")); // empty string
+      run_string_tests<Tests>(std::string("1"));
 
-    // valid arguments
-    Tests::from_string(std::string(""), 0, 0);
-    Tests::from_string(std::string("0"), 0, 1);
-    Tests::from_string(std::string("1"), 0, 1);
-    Tests::from_string(long_string, 0, long_string.size());
+      run_string_tests<Tests>(get_long_string());
+
+# if !defined BOOST_NO_STD_WSTRING
+      // I need to decide what to do for non "C" locale here. On
+      // one hand I should have better tests. On the other one
+      // I don't want tests for dynamic_bitset to cope with locales,
+      // ctype::widen, etc. (but that's what you deserve when you
+      // don't separate concerns at the library level)
+      //
+      run_string_tests<Tests>(
+          std::wstring(L"11111000000111111111010101010101010101010111111"));
+# endif
+
+      // Note that this are _valid_ arguments
+      Tests::from_string(std::string("x11y"), 1, 2);
+      Tests::from_string(std::string("x11"), 1, 10);
+      Tests::from_string(std::string("x11"), 1, 10, 10);
+
   }
   //=====================================================================
   // Test construction from a block range

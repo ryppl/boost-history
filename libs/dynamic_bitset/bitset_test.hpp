@@ -69,42 +69,45 @@ struct bitset_test {
       BOOST_CHECK(b[I] == 0);
   }
 
-  //   from string
-  static void from_string(const std::string& str, std::size_t pos,
-                          std::size_t n)
+  // from string
+  //
+  // Note: The corresponding function in dynamic_bitset (constructor
+  // from a string) has several default arguments. Actually we don't
+  // test the correct working of those defaults here (except for the
+  // default of num_bits). I'm not sure what to do in this regard.
+  //
+  template <typename Ch, typename Tr, typename Al>
+  static void from_string(const std::basic_string<Ch, Tr, Al>& str,
+                          std::size_t pos,
+                          std::size_t max_char,
+                          std::size_t num_bits = -1)
   {
-    if (pos > str.size()) {
-      // Not in range, doesn't satisfy precondition.
-    } else {
-      std::size_t rlen = std::min(n, str.size() - pos);
 
-      // Check whether any of the rlen characters in str
-      // beginning at position pos is other than 0 or 1.
-      bool any_non_zero_or_one = false;
-      for (std::size_t i = pos; i < pos + rlen; ++i)
-        if (! (str[i] == '0' || str[i] == '1'))
-          any_non_zero_or_one = true;
-      if (any_non_zero_or_one) {
-        // Input does not satisfy precondition.
-      } else {
-        // Construct an object, initializing the first M bit position to
-        // values determined from the corresponding characters in the
-        // str. M is the smaller of N and rlen.  Character position pos
-        // + M - 1 corresponds to bit position zero.  Subsequent
-        // decreasing character position correspond to increasing bit
-        // positions.
+      std::size_t rlen = std::min(max_char, str.size() - pos); // [gps]
 
-        Bitset b(str, pos, n);
-        std::size_t N = b.size();
-        std::size_t M = std::min(N, rlen);
-        std::size_t j;
-        for (j = 0; j < M; ++j)
-          BOOST_CHECK(b[j] == (str[pos + M - 1 - j] == '1'));
-        // If M < N, remaining bit positions are initialize to zero
-        for (; j < N; ++j)
+      // The resulting size N of the bitset is num_bits, if
+      // that is different from the default arg, rlen otherwise.
+      // Put M = the smaller of N and rlen, then character
+      // position pos + M - 1 corresponds to bit position zero.
+      // Subsequent decreasing character positions correspond to
+      // increasing bit positions.
+
+      const bool size_upon_string = num_bits == (std::size_t)(-1);
+      Bitset b = size_upon_string ?
+                    Bitset(str, pos, max_char)
+                  : Bitset(str, pos, max_char, num_bits);
+
+      const std::size_t actual_size = size_upon_string? rlen : num_bits;
+      BOOST_CHECK(b.size() == actual_size);
+      std::size_t m = std::min(num_bits, rlen);
+      std::size_t j;
+      for (j = 0; j < m; ++j)
+          BOOST_CHECK(b[j] == (str[pos + m - 1 - j] == '1')); // [gps]
+      // If M < N, remaining bit positions are zero
+      for (; j < actual_size; ++j)
           BOOST_CHECK(b[j] == 0);
-      }
-    }
+
+
   }
 
   typedef typename Bitset::block_type Block;
