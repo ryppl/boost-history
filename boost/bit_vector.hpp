@@ -10,18 +10,19 @@
 #ifndef BOOST_BIT_VECTOR_HPP
 #define BOOST_BIT_VECTOR_HPP
 
+#include <boost/bit_reference.hpp>  // for boost::bit_reference, etc.
 #include <boost/config.hpp>         // for BOOST_STATIC_CONSTANT, etc.
-#include <boost/static_assert.hpp>  // for BOOST_STATIC_ASSERT
+#include <boost/cstdint.hpp>        // for boost::uintmax_t
+#include <boost/limits.hpp>         // for std::numeric_limits
+#include <boost/operators.hpp>      // for boost::orable, etc.
 
-#include <bitset>    // for std::bitset
-#include <cstddef>   // for std::size_t
-#include <iterator>  // for std::reverse_iterator, etc.
-#include <memory>    // for std::allocator
-#include <utility>   // for std::pair
-#include <vector>    // for std::vector
-
-#include <boost/cstdint.hpp>  // for boost::uintmax_t
-#include <boost/limits.hpp>   // for std::numeric_limits
+#include <algorithm>  // for std::swap
+#include <bitset>     // for std::bitset
+#include <cstddef>    // for std::size_t
+#include <iterator>   // for std::reverse_iterator, etc.
+#include <memory>     // for std::allocator
+#include <utility>    // for std::pair
+#include <vector>     // for std::vector
 
 
 namespace boost
@@ -30,21 +31,19 @@ namespace boost
 
 //  Forward declarations  ----------------------------------------------------//
 
-template < typename BlockType >
-    class const_bit_reference;
-
-template < typename BlockType >
-    class bit_reference;
-
 template < typename BlockType = uintmax_t, class Allocator
  = std::allocator<BlockType> >
     class bit_vector;
 
 typedef bit_vector<>  std_bit_vector;
 
+template < typename BlockType, class Allocator >
+    void  swap( bit_vector<BlockType, Allocator> &a, bit_vector<BlockType,
+     Allocator> &b );
+
 
 //  Forward declarations for implementation detail stuff  --------------------//
-//  (Just for the stuff that will be needed for the next 3 sections)
+//  (Just for the stuff that will be needed for the next section)
 
 namespace detail
 {
@@ -58,83 +57,15 @@ template < typename BlockType, class Allocator >
 }  // namespace detail
 
 
-//  Constant bit reference class declaration  --------------------------------//
-
-template < typename BlockType >
-class const_bit_reference
-{
-    typedef std::numeric_limits<BlockType>  limits_type;
-
-    BOOST_STATIC_ASSERT( limits_type::is_specialized && !limits_type::is_signed
-     && limits_type::is_integer && (limits_type::radix == 2) );
-
-    friend class bit_reference<BlockType>;
-
-    BlockType const &  ref_;
-    BlockType const    mask_;
-
-    const_bit_reference( BlockType const &ref, BlockType const &mask )
-        : ref_( ref ), mask_( mask )
-        {}
-
-public:
-    typedef BlockType  block_type;
-
-    const_bit_reference( block_type const &ref, std::size_t bit_pos )
-        : ref_( ref ), mask_( static_cast<block_type>(1u) << bit_pos )
-        {}
-
-    operator bool() const
-        { return ref_ & mask_; }
-
-    bool  operator !() const
-        { return !this->operator bool(); }
-
-};  // boost::const_bit_reference
-
-
-//  Bit reference class declaration  -----------------------------------------//
-
-template < typename BlockType >
-class bit_reference
-{
-    BlockType &      ref_;
-    BlockType const  mask_;
-
-public:
-    typedef BlockType  block_type;
-
-    typedef const_bit_reference<BlockType>  const_reference_type;
-
-    bit_reference( block_type &ref, std::size_t bit_pos )
-        : ref_( ref ), mask_( static_cast<BlockType>(1u) << bit_pos )
-        {}
-
-    operator bool() const
-        { return ref_ & mask_; }
-    operator const_reference_type() const
-        { return const_reference_type( ref_, mask_ ); }
-
-    bool  operator !() const
-        { return !this->operator bool(); }
-
-    bit_reference &  operator =( const_reference_type const &ref )
-        { if ( !ref != !(*this) ) this->flip(); return *this; }
-    bit_reference &  operator =( bit_reference const &ref )
-        { if ( !ref != !(*this) ) this->flip(); return *this; }
-    bit_reference &  operator =( bool val )
-        { if ( !val != !(*this) ) this->flip(); return *this; }
-
-    void  flip()
-        { ref_ ^= mask_; }
-
-};  // boost::bit_reference
-
-
 //  Bit-vector (and set) class declaration  ----------------------------------//
 
 template < typename BlockType, class Allocator >
 class bit_vector
+    : public ordered_euclidian_ring_operators1< bit_vector<BlockType, Allocator>
+    , bitwise1< bit_vector<BlockType, Allocator>
+    , unit_steppable< bit_vector<BlockType, Allocator>
+    , shiftable2< bit_vector<BlockType, Allocator>, typename Allocator::size_type
+    > > > >
 {
     friend class detail::const_bit_vector_iterator<BlockType, Allocator>;
     friend class detail::bit_vector_iterator<BlockType, Allocator>;
@@ -169,74 +100,78 @@ public:
     typedef self_type & (self_type::*)()  bool_type;
 
     // Class-static functions
-    std::pair<self_type, self_type>  div( self_type const &dividend,
-     self_type const &divisor );
+    static  std::pair<self_type, self_type>  div( self_type const &dividend,
+     self_type const &divisor );//not implemented
+
+    static  self_type  from_ulong( unsigned long val );//not implemented
 
     // Structors (use automatic copy ctr. and dtr.)
-    explicit  bit_vector( allocator_type const &a = Allocator() );
+    explicit  bit_vector( allocator_type const &a = Allocator() );//not implemented
     explicit  bit_vector( size_type n, bool value = false,
-     allocator_type const &a = allocator_type() );
+     allocator_type const &a = allocator_type() );//not implemented
 
     #ifndef BOOST_NO_TEMPLATED_ITERATOR_CONSTRUCTORS
     template < typename InputIterator >
     bit_vector( InputIterator beg, InputIterator end,
-     allocator_type const &a = allocator_type() );
+     allocator_type const &a = allocator_type() );//not implemented
     #endif
 
     #ifndef BOOST_NO_MEMBER_TEMPLATES
     template < class Allocator2 >
-    explicit  bit_vector( std::vector<bool, Allocator2> const &v );
+    explicit  bit_vector( std::vector<bool, Allocator2> const &v,
+     allocator_type const &a = allocator_type() );//not implemented
 
     template < std::size_t N >
-    explicit  bit_vector( std::bitset<N> const &b );
+    explicit  bit_vector( std::bitset<N> const &b,
+     allocator_type const &a = allocator_type() );//not implemented
     #endif
 
     // Size operations
-    size_type  size() const;
-    bool       empty() const;
+    size_type  size() const;//not implemented
+    bool       empty() const;//not implemented
     size_type  max_size() const;
 
     // Capacity operations
     size_type  capacity() const;
-    void       reserve( size_type n );
+    void       reserve( size_type n );//not implemented
 
     // Comparison operations (use operators.hpp for help)
-    bool  operator ==( self_type const &x ) const;
-    bool  operator <( self_type const &x ) const;
+    bool  operator ==( self_type const &x ) const;//not implemented
+    bool  operator <( self_type const &x ) const;//not implemented
 
     // Condition checking
-    size_type  count() const;
-    bool       any() const;
-    bool       none() const;
+    size_type  count() const;//not implemented
+    bool       any() const;//not implemented
+    bool       none() const;//not implemented
 
     // Assignments (use automatic regular-assignment operator)
-    void  assign( size_type n, bool value );
+    void  assign( size_type n, bool value );//not implemented
 
     #ifndef BOOST_NO_MEMBER_TEMPLATES
     template < typename InputIterator >
-    void  assign( InputIterator beg, InputIterator end );
+    void  assign( InputIterator beg, InputIterator end );//not implemented
     #endif
 
     void  swap( self_type &c );
 
-    self_type &  operator ^=( self_type const &c );
-    self_type &  operator |=( self_type const &c );
-    self_type &  operator &=( self_type const &c );
-    self_type &  operator <<=( self_type const &c );
-    self_type &  operator >>=( self_type const &c );
+    self_type &  operator ^=( self_type const &c );//not implemented
+    self_type &  operator |=( self_type const &c );//not implemented
+    self_type &  operator &=( self_type const &c );//not implemented
+    self_type &  operator <<=( size_type s );//not implemented
+    self_type &  operator >>=( size_type s );//not implemented
 
-    self_type &  operator +=( self_type const &c );
-    self_type &  operator -=( self_type const &c );
-    self_type &  operator *=( self_type const &c );
-    self_type &  operator /=( self_type const &c );
-    self_type &  operator %=( self_type const &c );
+    self_type &  operator +=( self_type const &c );//not implemented
+    self_type &  operator -=( self_type const &c );//not implemented
+    self_type &  operator *=( self_type const &c );//not implemented
+    self_type &  operator /=( self_type const &c );//not implemented
+    self_type &  operator %=( self_type const &c );//not implemented
 
     // Direct element access
-    reference        at( size_type i );
-    const_reference  at( size_type i ) const;
+    reference        at( size_type i );//not implemented
+    const_reference  at( size_type i ) const;//not implemented
 
-    reference        operator []( size_type i );
-    const_reference  operator []( size_type i ) const;
+    reference        operator []( size_type i );//not implemented
+    const_reference  operator []( size_type i ) const;//not implemented
 
     reference        front();
     const_reference  front() const;
@@ -253,55 +188,60 @@ public:
     self_type &  reset();
     self_type &  reset( size_type i );
 
-    self_type &  flip();
+    self_type &  flip();//not implemented
     self_type &  flip( size_type i );
 
     // Iterator generation
-    iterator        begin();
-    const_iterator  begin() const;
+    iterator        begin();//not implemented
+    const_iterator  begin() const;//not implemented
 
-    iterator        end();
-    const_iterator  end() const;
+    iterator        end();//not implemented
+    const_iterator  end() const;//not implemented
 
-    reverse_iterator        rbegin();
-    const_reverse_iterator  rbegin() const;
+    reverse_iterator        rbegin();//not implemented
+    const_reverse_iterator  rbegin() const;//not implemented
 
-    reverse_iterator        rend();
-    const_reverse_iterator  rend() const;
+    reverse_iterator        rend();//not implemented
+    const_reverse_iterator  rend() const;//not implemented
 
     // Element insertion and removal
-    iterator  insert( iterator p, bool value );
-    void      insert( iterator p, size_type n, bool value );
+    iterator  insert( iterator p, bool value );//not implemented
+    void      insert( iterator p, size_type n, bool value );//not implemented
 
     #ifndef BOOST_NO_MEMBER_TEMPLATES
     template < typename InputIterator >
-    void  insert( iterator p, InputIterator beg, InputIterator end );
+    void  insert( iterator p, InputIterator beg, InputIterator end );//not implemented
     #endif
 
-    void  push_back( bool value );
-    void  pop_back();
+    void  push_back( bool value );//not implemented
+    void  pop_back();//not implemented
 
-    iterator  erase( iterator p );
-    iterator  erase( iterator beg, iterator end );
+    iterator  erase( iterator p );//not implemented
+    iterator  erase( iterator beg, iterator end );//not implemented
 
-    void  resize( size_type n, bool value = false );
-    void  clear();
+    void  resize( size_type n, bool value = false );//not implemented
+    void  clear();//not implemented
 
     // More operations
     bool       operator !() const;
-    self_type  operator ~() const;
-    self_type  operator -() const;
+    self_type  operator ~() const;//not implemented
+    self_type  operator -() const;//not implemented
     self_type  operator +() const;
     
-    self_type &  operator --() const;
-    self_type &  operator ++() const;
+    self_type &  operator --() const;//not implemented
+    self_type &  operator ++() const;//not implemented
     
     operator bool_type() const;
 
-    uintmax_t  to_uintmax_t() const;
+    uintmax_t  to_uintmax_t() const;//not implemented
 
     // Allocator support
     allocator_type  get_allocator() const;
+
+private:
+    // Data members
+    vector_type  v_;
+    int          last_pos_;
 
 };  // boost::bit_vector
 
@@ -313,6 +253,13 @@ namespace detail
 
 template < typename BlockType, class Allocator >
 class const_bit_vector_iterator
+    : public bidirectional_iterator_helper< const_bit_vector_iterator<BlockType
+    , Allocator>
+    , bool
+    , typename Allocator::difference_type,
+    , typename Allocator::pointer
+    , const_bit_reference<BlockType>
+    >
 {
     friend class bit_vector_iterator<BlockType, Allocator>
     friend class bit_vector<BlockType, Allocator>
@@ -332,13 +279,7 @@ class const_bit_vector_iterator
         {}
 
 public:
-    // Types
-    typedef typename container_type::difference_type  difference_type;
-    typedef typename container_type::value_type       value_type;
-    typedef typename const_iterator::pointer          pointer;
-    typedef const_bit_reference<BlockType>            reference;
-    typedef std::bidirectional_iterator_tag           iterator_category;
-
+    // Operations
     reference  operator *() const
         { return reference( &*vi_, pos_ ); }
 
@@ -355,6 +296,13 @@ public:
 
 template < typename BlockType, class Allocator >
 class bit_vector_iterator
+    : public bidirectional_iterator_helper< bit_vector_iterator<BlockType
+    , Allocator>
+    , bool
+    , typename Allocator::difference_type,
+    , typename Allocator::pointer
+    , bit_reference<BlockType>
+    >
 {
     friend class bit_vector<BlockType, Allocator>
 
@@ -376,13 +324,6 @@ class bit_vector_iterator
         {}
 
 public:
-    // Types
-    typedef typename container_type::difference_type  difference_type;
-    typedef typename container_type::value_type       value_type;
-    typedef typename iterator::pointer                pointer;
-    typedef bit_reference<BlockType>                  reference;
-    typedef std::bidirectional_iterator_tag           iterator_category;
-
     // Operations
     operator const_iterator_type() const
         { return const_iterator_type( vi_, pos_ ); }
@@ -406,7 +347,200 @@ public:
 
 //  Bit-vector (and set) class function definitions  -------------------------//
 
-// put something here...
+template < typename BlockType, class Allocator >
+inline
+typename bit_vector<BlockType, Allocator>::size_type
+bit_vector<BlockType, Allocator>::max_size
+(
+) const
+{
+    return this->v_.max_size() * self_type::block_size;
+}
+
+template < typename BlockType, class Allocator >
+inline
+typename bit_vector<BlockType, Allocator>::size_type
+bit_vector<BlockType, Allocator>::capacity
+(
+) const
+{
+    return this->v_.capacity() * self_type::block_size;
+}
+
+template < typename BlockType, class Allocator >
+inline
+void
+bit_vector<BlockType, Allocator>::swap
+(
+    self_type &  c
+)
+{
+    this->v_.swap( c.v_ );
+    std::swap( this->last_pos_, c.last_pos_ );
+}
+
+template < typename BlockType, class Allocator >
+inline
+typename bit_vector<BlockType, Allocator>::reference
+bit_vector<BlockType, Allocator>::front
+(
+)
+{
+    return *this->begin();
+}
+
+template < typename BlockType, class Allocator >
+inline
+typename bit_vector<BlockType, Allocator>::const_reference
+bit_vector<BlockType, Allocator>::front
+(
+) const
+{
+    return *this->begin();
+}
+
+template < typename BlockType, class Allocator >
+inline
+typename bit_vector<BlockType, Allocator>::reference
+bit_vector<BlockType, Allocator>::back
+(
+)
+{
+    return *this->rbegin();
+}
+
+template < typename BlockType, class Allocator >
+inline
+typename bit_vector<BlockType, Allocator>::const_reference
+bit_vector<BlockType, Allocator>::back
+(
+) const
+{
+    return *this->rbegin();
+}
+
+template < typename BlockType, class Allocator >
+inline
+bool
+bit_vector<BlockType, Allocator>::test
+(
+    size_type  i
+) const
+{
+    return this->at( i );
+}
+
+template < typename BlockType, class Allocator >
+inline
+bit_vector<BlockType, Allocator> &
+bit_vector<BlockType, Allocator>::set
+(
+)
+{
+    this->assign( this->size(), true );
+    return *this;
+}
+
+template < typename BlockType, class Allocator >
+inline
+bit_vector<BlockType, Allocator> &
+bit_vector<BlockType, Allocator>::set
+(
+    size_type  i,
+    bool       value  // = true
+)
+{
+    this->at( i ) = value;
+    return *this;
+}
+
+template < typename BlockType, class Allocator >
+inline
+bit_vector<BlockType, Allocator> &
+bit_vector<BlockType, Allocator>::reset
+(
+)
+{
+    this->assign( this->size(), false );
+    return *this;
+}
+
+template < typename BlockType, class Allocator >
+inline
+bit_vector<BlockType, Allocator> &
+bit_vector<BlockType, Allocator>::reset
+(
+    size_type  i
+)
+{
+    return this->set( i, false );
+}
+
+template < typename BlockType, class Allocator >
+inline
+bit_vector<BlockType, Allocator> &
+bit_vector<BlockType, Allocator>::flip
+(
+    size_type  i
+)
+{
+    ( this->at(i) ).flip();
+    return *this;
+}
+
+template < typename BlockType, class Allocator >
+inline
+bool
+bit_vector<BlockType, Allocator>::operator !
+(
+) const
+{
+    return this->none();
+}
+
+template < typename BlockType, class Allocator >
+inline
+bit_vector<BlockType, Allocator>
+bit_vector<BlockType, Allocator>::operator +
+(
+) const
+{
+    return *this;
+}
+
+template < typename BlockType, class Allocator >
+inline
+bit_vector<BlockType, Allocator>::operator bool_type
+(
+) const
+{
+    return this->any() ? &self_type::set : 0;
+}
+
+template < typename BlockType, class Allocator >
+inline
+typename bit_vector<BlockType, Allocator>::allocator_type
+bit_vector<BlockType, Allocator>::get_allocator
+(
+) const
+{
+    return this->v_.get_allocator();
+}
+
+
+//  Bit-vector/set support function definitions  -----------------------------//
+
+template < typename BlockType, class Allocator >
+inline
+void
+swap
+(
+    bit_vector<BlockType, Allocator> &  a,
+    bit_vector<BlockType, Allocator> &  b
+)
+{
+    a.swap( b );
+}
 
 
 #endif  // BOOST_BIT_VECTOR_HPP
