@@ -284,36 +284,38 @@ struct my_divides : std::binary_function<A1,A2,R>
   R operator()(A1 x, A2 y) { return x/y; }
 };
 
+struct my_div: std::binary_function<T,T,T>
+{
+  T operator()(T x, T y)
+  { return (y != 0) ? (x/y) : std::numeric_limits<T>::quiet_NaN(); }
+};
+
 void runtest_binary_functions()
 {
   // interval * interval
   check_binary(std::plus<R>(), std::plus<T>(), "+");
   check_binary(std::minus<R>(), std::minus<T>(), "-");
   check_binary(std::multiplies<R>(), std::multiplies<T>(), "*");
-  check_binary(std::divides<R>(), std::divides<T>(), "/");
+  check_binary(std::divides<R>(), my_div(), "/");
 
   // interval * scalar
   check_binary_scalar(my_plus<R, T, R>(), std::plus<T>(), "+");
   check_binary_scalar(my_minus<R, T, R>(), std::minus<T>(), "-");
   check_binary_scalar(my_multiplies<R, T, R>(),
 		      std::multiplies<T>(), "*");
-  check_binary_scalar(my_divides<R, T, R>(), std::divides<T>(), "/");
+  check_binary_scalar(my_divides<R, T, R>(), my_div(), "/");
 
   // scalar * interval
   check_scalar_binary(my_plus<T, R, R>(), std::plus<T>(), "+");
   check_scalar_binary(my_minus<T, R, R>(), std::minus<T>(), "-");
   check_scalar_binary(my_multiplies<T, R, R>(),
 		      std::multiplies<T>(), "*");
-  check_scalar_binary(my_divides<T, R, R>(), std::divides<T>(), "/");
+  check_scalar_binary(my_divides<T, R, R>(), my_div(), "/");
 
 #if 0
   // misc.
   check_binary(std::ptr_fun( (R (*)(const R&, const R&)) boost::pow),
-	       std::ptr_fun( (T(*)(T,T))std::pow), "pow");
-  check_binary_int(std::ptr_fun( (R (*)(R, long)) boost::pow),
-		   std::ptr_fun( (T(*)(T,T))std::pow), "pow_int");
-  check_binary(std::ptr_fun( (R (*)(const R&, const R&)) boost::atan2),
-		  std::ptr_fun((T(*)(T,T))std::atan2), "atan2");
+	       std::ptr_fun( (T (*)(T,T))std::pow), "pow");
 #endif
   // Note: fmod is not here, because it does not fulfill the operator
   // definition, neither are the relational operators
@@ -357,48 +359,44 @@ void runtest_unary_functions()
 {
   check_unary(std::negate<R>(), std::negate<T>(), "-");
   check_unary(std::ptr_fun( (R (*)(const R &)) boost::abs),
-	      std::ptr_fun( (T(*)(T)) std::fabs), "abs");
+	      std::ptr_fun( (T (*)(T)) std::fabs), "abs");
   check_unary(std::ptr_fun( (R (*)(const R &)) boost::square),
 	      std::ptr_fun( (T (*)(T)) my_square), "square");
   check_unary(std::ptr_fun( (R (*)(const R &)) boost::sqrt),
-	      std::ptr_fun( (T(*)(T)) std::sqrt), "sqrt", -1, 10);
+	      std::ptr_fun( (T (*)(T)) std::sqrt), "sqrt", 0, 10);
   check_unary(std::ptr_fun( (R (*)(const R &)) boost::exp),
-	      std::ptr_fun( (T(*)(T)) std::exp), "exp");
+	      std::ptr_fun( (T (*)(T)) std::exp), "exp");
   check_unary(std::ptr_fun( (R (*)(const R &)) boost::log),
-	      std::ptr_fun( (T(*)(T)) std::log), "log", -1, 10);
-#if 0
-  check_unary(std::ptr_fun( (R (*)(const R &)) boost::log10),
-	      std::ptr_fun( (T(*)(T)) std::log10), "log10", -1, 10);
-#endif
+	      std::ptr_fun( (T (*)(T)) std::log), "log", 1e-10, 10);
 
   // trigonometric functions
   check_unary(std::ptr_fun( (R (*)(const R &)) boost::sin),
-	      std::ptr_fun( (T(*)(T)) std::sin), "sin");
+	      std::ptr_fun( (T (*)(T)) std::sin), "sin");
   check_unary(std::ptr_fun( (R (*)(const R &)) boost::cos),
-	      std::ptr_fun( (T(*)(T)) std::cos), "cos");
+	      std::ptr_fun( (T (*)(T)) std::cos), "cos");
   check_unary(std::ptr_fun( (R (*)(const R &)) boost::tan),
-	      std::ptr_fun( (T(*)(T)) std::tan), "tan");
+	      std::ptr_fun( (T (*)(T)) std::tan), "tan");
   check_unary(std::ptr_fun( (R (*)(const R &)) boost::asin),
-	      std::ptr_fun( (T(*)(T)) std::asin), "asin");
+	      std::ptr_fun( (T (*)(T)) std::asin), "asin");
   check_unary(std::ptr_fun( (R (*)(const R &)) boost::acos),
-	      std::ptr_fun( (T(*)(T)) std::acos), "acos");
+	      std::ptr_fun( (T (*)(T)) std::acos), "acos");
   check_unary(std::ptr_fun( (R (*)(const R &)) boost::atan),
-	      std::ptr_fun( (T(*)(T)) std::atan), "atan");
+	      std::ptr_fun( (T (*)(T)) std::atan), "atan");
 
   // hyperbolic functions
   check_unary(std::ptr_fun( (R (*)(const R &)) boost::sinh),
-	      std::ptr_fun((T(*)(T))std::sinh), "sinh", -3, 3, 0.17);
+	      std::ptr_fun( (T (*)(T))std::sinh), "sinh");
   check_unary(std::ptr_fun( (R (*)(const R &)) boost::cosh),
-	      std::ptr_fun((T(*)(T))std::cosh), "cosh", -3, 3, 0.17);
+	      std::ptr_fun( (T (*)(T))std::cosh), "cosh");
   check_unary(std::ptr_fun( (R (*)(const R &)) boost::tanh),
-	      std::ptr_fun((T(*)(T))std::tanh), "tanh", -3, 3, 0.17);
+	      std::ptr_fun( (T (*)(T))std::tanh), "tanh");
 #ifdef BOOST_HAVE_INV_HYPERBOLIC
   check_unary(std::ptr_fun( (R (*)(const R &)) boost::asinh),
-	      std::ptr_fun((T(*)(T))std::asinh), "asinh", -3, 3, 0.17);
+	      std::ptr_fun( (T (*)(T))std::asinh), "asinh");
   check_unary(std::ptr_fun( (R (*)(const R &)) boost::acosh),
-	      std::ptr_fun((T(*)(T))std::acosh), "acosh", -3, 3, 0.17);
+	      std::ptr_fun( (T (*)(T))std::acosh), "acosh", 1, 5);
   check_unary(std::ptr_fun( (R (*)(const R &)) boost::atanh),
-	      std::ptr_fun((T(*)(T))std::atanh), "atanh", -3, 3, 0.17);
+	      std::ptr_fun( (T (*)(T))std::atanh), "atanh", -1, 1);
 #else
   std::cout << "Skipping inverse hyperbolic functions\n";
 #endif // BOOST_HAVE_INV_HYPERBOLIC
@@ -495,23 +493,6 @@ void test_overlap(const R& r1, const R& r2)
   std::cerr << "No overlap found for " << r1 << " and " << r2 << std::endl;
 }
 
-#if 0
-void test_combine(const R& r1, const R& r2)
-{
-  if (!overlap(r1, r2))
-    return;
-  R comb = combine(r1, r2);
-  for(T f = std::min(r1.lower(), r2.lower());
-      f <= std::max(r1.upper(), r2.upper());
-      f += std::min(width(r1), width(r2))/100.0) {
-    if (!in(f, comb))
-      std::cerr << "combine(" << r1 << ", " << r2 << ") = " 
-		<< comb << " does not contain "
-		<< f << std::endl;
-  }
-}
-#endif
-
 void test_intersect(const R& r1, const R& r2)
 {
   if (!overlap(r1, r2))
@@ -555,18 +536,11 @@ void test_scale(const R& r, T factor)
 
 int main()
 {
-  // check for proper NaN and infinity values to avoid excess output
-  T inf = std::numeric_limits<T>::infinity();
-  std::cout << "Infinity: " << inf << "\n";
-  T nan = std::numeric_limits<T>::quiet_NaN();
-  std::cout << "NaN: " << nan << "\n";
-  R whole = R::whole();
-  std::cout << "[-inf, inf]: " << whole << "\n";
-  if(inf < 10 || nan <= 10 || nan >= 10 || whole.lower() != -inf
-     || whole.upper() != inf) {
-    std::cerr << "(terminated)\n";
-    exit(1);
-  }
+  // some informations...
+  std::cout << "Infinity: " << std::numeric_limits<T>::infinity() << "\n";
+  std::cout << "NaN: " << std::numeric_limits<T>::quiet_NaN() << "\n";
+  std::cout << "[-inf, inf]: " << R::whole() << "\n";
+  std::cout << "empty: " << R::empty() << "\n";
 
   // verify that image intervals are correctly computed for all functions
   // i.e. for all x in I: f(x) in f(I)
@@ -575,15 +549,8 @@ int main()
   runtest_compare();
   iterate_one_interval(test_bisect_median, "bisect & median");
   iterate_two_intervals(test_overlap, "overlap");
-  // iterate_two_intervals(test_combine, "combine");
   iterate_two_intervals(test_intersect, "intersect");
   iterate_two_intervals(test_hull, "hull");
-#if 0
-  iterate_one_interval_one_scalar<T>(test_scale,
-		  // Borland C++ requires this explicit conversion
-					  std::string("scale"),
-					  -5, 5, 0.17, -5, 5, 0.17);
-#endif
 
   return 0;
 }
