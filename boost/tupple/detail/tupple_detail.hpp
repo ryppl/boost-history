@@ -20,8 +20,8 @@
 // For more information, see http://www.boost.org or http://lambda.cs.utu.fi 
 
 
-#ifndef TUPPLE_DETAIL_HPP
-#define TUPPLE_DETAIL_HPP
+#ifndef BOOST_TUPPLE_DETAIL_TUPPLE_DETAIL_HPP
+#define BOOST_TUPPLE_DETAIL_TUPPLE_DETAIL_HPP
 
 #include <boost/type_traits/transform_traits.hpp>
 #include <boost/type_traits/cv_traits.hpp>
@@ -87,7 +87,7 @@ template <class T> struct access_traits {
   typedef const T& const_type;
   typedef T& non_const_type;
 
-  typedef const typename boost::remove_cv<T>::type& arg_type;
+  typedef const typename ::boost::remove_cv<T>::type& arg_type;
 // used as the tuple constructors parameter types
 // Rationale: non-reference tuple element types can be cv-qualified.
 // It should be possible to initialize such types with temporaries,
@@ -133,7 +133,7 @@ struct make_tuple_traits {
 
   // commented away, see below  (JJ)
   //  typedef typename IF<
-  //  boost::is_function<T>::value,
+  //  ::boost::is_function<T>::value,
   //  T&,
   //  T>::RET type;
 
@@ -177,11 +177,11 @@ template<class T, int n> struct make_tuple_traits<const volatile T[n]> {
   typedef const volatile T (&type)[n];
 };
 
-template<class T> struct make_tuple_traits< boost::reference_wrapper<T> > {
+template<class T> struct make_tuple_traits< ::boost::reference_wrapper<T> > {
   typedef T& type;
 };
 
-template<class T> struct make_tuple_traits< const boost::reference_wrapper<T> > {
+template<class T> struct make_tuple_traits< const ::boost::reference_wrapper<T> > {
   typedef T& type;
 };
 #endif // BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION

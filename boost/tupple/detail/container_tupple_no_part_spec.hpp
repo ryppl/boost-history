@@ -3,8 +3,8 @@
 // is granted provided this copyright notice appears in all copies.
 // This software is provided "as is" without express or implied
 // warranty, and with no claim as to its suitability for any purpose.
-#ifndef CONTAINER_TUPPLE_NO_PART_SPEC_HPP
-#define CONTAINER_TUPPLE_NO_PART_SPEC_HPP
+#ifndef BOOST_TUPPLE_DETAIL_CONTAINER_TUPPLE_NO_PART_SPEC_HPP
+#define BOOST_TUPPLE_DETAIL_CONTAINER_TUPPLE_NO_PART_SPEC_HPP
 #include "boost/tupple/tupple.hpp"
 #include "boost/tupple/detail/container_tupple_traits_detail.hpp"
 
