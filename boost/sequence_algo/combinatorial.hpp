@@ -137,7 +137,7 @@ namespace boost {
                     --i;
             else
             {
-                std::swap(*i,* k);
+                std::swap(*i, *k);
                 std::partial_sort(i + 1, r, last);    // O(n lg n), heapsort
                 return true;
             }    // else
@@ -305,7 +305,7 @@ namespace boost {
         RandomAccessIterator i = r - 1;
         while(true)
         {
-            // find smallest element greater than *i after r.
+            // find smallest element greater than *i after r - 1.
             RandomAccessIterator j =
                 min_element_if(r, last, bind1st(less<T>(), *i));
             if (j == last)
@@ -321,7 +321,7 @@ namespace boost {
                 std::swap(*i,* j);
                 for(++i; i < r; i++)
                 {
-                    // find smallest element greater than *(i - 1) after r.
+                    // find smallest element greater than *(i - 1) after r - 1.
                     j = min_element_if(r, last, bind1st(less<T>(), *(i - 1)));
                     if (j != last)
                         std::swap(*i,* j);
@@ -353,7 +353,7 @@ namespace boost {
         RandomAccessIterator i = r - 1;
         while(true)
         {
-            // find smallest element greater than *i after r.
+            // find smallest element greater than *i after r - 1.
             RandomAccessIterator j =
                 min_element_if(r, last, comp, bind2nd(reverse_args(comp), *i));
             if (j == last)
@@ -369,8 +369,9 @@ namespace boost {
                 std::swap(*i, *j);
                 for(++i; i < r; ++i)
                 {
-                    // find smallest element greater than *(i - 1) after r.
-                    j = min_element_if(r, last, comp, bind2nd(reverse_args(comp), *(i - 1)));
+                    // find smallest element greater than *(i - 1) after r - 1.
+                    j = min_element_if(r, last, comp,
+                        bind2nd(reverse_args(comp), *(i - 1)));
                     if (j != last)
                         std::swap(*i, *j);
                 }    // for
