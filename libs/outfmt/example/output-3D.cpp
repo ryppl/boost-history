@@ -2,6 +2,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
+// #define arrayfmtout arrayfmt
+
 #include <iostream>  // std::cout
 
 #include <boost/outfmt/formatob.hpp>
@@ -29,10 +31,10 @@ int main()
 
    // formatter configurations
 
-   boost::io::array_object< const char * >  arrayfmt;
+   boost::io::arrayfmt_t< const char * > arrayfmt;
    arrayfmt.format( "( ", " )" );
 
-   boost::io::array_object< const char *, boost::io::array_object< const char * > >
+   boost::io::arrayfmt_t< const char *, boost::io::arrayfmt_t< const char * > >
                                        array3Dfmt( arrayfmt( 3 ));
    array3Dfmt.format( "{ ", " }", " | " );
 

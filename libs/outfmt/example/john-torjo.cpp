@@ -11,11 +11,11 @@
 #include <boost/outfmt/formatob.hpp>
 #include <boost/outfmt/stl/list.hpp>
 
-template< class FormatType >
-class position_output // Create a Format Object that maintains position information
+template< class DelimeterType >
+class positionfmt_t // Create a Format Object that maintains position information
 {
    public: // needed for deduction of the nested format type:
-      typedef FormatType                                   format_type;
+      typedef DelimeterType                                          format_type;
    private:
       long pos;
    public:
@@ -24,10 +24,10 @@ class position_output // Create a Format Object that maintains position informat
       {
          // Uses a const_cast      -- makes code harder to read
          // Direct output of value -- cannot hook to a specialist formatter
-         return( os << '[' << const_cast< position_output & >( *this ).pos++ << "] " << value );
+         return( os << '[' << const_cast< positionfmt_t & >( *this ).pos++ << "] " << value );
       }
    public:
-      position_output(): pos( 0 ){}
+      positionfmt_t(): pos( 0 ){}
 };
 
 class position_state // Create a position state object
@@ -91,7 +91,7 @@ int main()
                    boost::io::containerfmt( boost::io::wrappedfmt
                    (
                       // create an instance of a position Format Object:
-                      position_output< const char * >()
+                      positionfmt_t< const char * >()
                    ).format( "{", "}" ))
                 )
                 .format( "", "" )
@@ -118,7 +118,7 @@ int main()
              << boost::io::formatob
                 (
                    names,
-                   boost::io::containerfmt( position_output< const char * >())
+                   boost::io::containerfmt( positionfmt_t< const char * >())
                 )
                 .format( "", "" )
              << '\n' << '\n';
@@ -153,7 +153,7 @@ int main()
              << boost::io::formatob
                 (
                    names,
-                   boost::io::containerfmt( position_output< const char * >())
+                   boost::io::containerfmt( positionfmt_t< const char * >())
                 )
                 .format( "\n", "", "\n" )
              << '\n' << '\n';
@@ -169,7 +169,7 @@ int main()
              << boost::io::formatob
                 (
                    names,
-                   boost::io::containerfmt( position_output< const char * >())
+                   boost::io::containerfmt( positionfmt_t< const char * >())
                 )
                 .format( "\n'", "'", "'\n'" )
              << '\n' << '\n';

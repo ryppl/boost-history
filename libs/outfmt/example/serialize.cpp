@@ -6,6 +6,7 @@
 
 #include <iostream>                         // std::cout
 #include <fstream>                          // std::fstream
+#include <string>                           // std::readline
 #include <boost/outfmt/stl/complex.hpp>     // std::complex, operator<<
 #include <boost/outfmt/stl/list.hpp>        // std::list, operator<<
 #include <boost/outfmt/stl/map.hpp>         // std::map, operator<<
@@ -25,7 +26,7 @@ int main()
 
    // create the output object used for serialization
 
-   boost::io::pair_object< const char * >    textio; // default formatting
+   boost::io::pairfmt_t< const char * > textio; // default formatting
 
    // create the data to be serialized
    std::pair< char, int >              p1 = std::pair< char, int >( 'a', 5 );
@@ -57,7 +58,7 @@ int main()
 
    // [2]: XML -- [note]: XML is a text-based system, and can thus be serialized to
 
-   boost::io::pair_object< const char * >    xmlio;
+   boost::io::pairfmt_t< const char * > xmlio;
    xmlio.format( "<pairob><item>", "</item></pairob>", "</item><item>" );
 
    // writing to an XML-based serialization stream
@@ -82,11 +83,11 @@ int main()
 
    // [3]: XML -- [note]: use wrapped output to simplify output specification
 
-   boost::io::pair_object
+   boost::io::pairfmt_t
    <
       const char *,
-      boost::io::wrapped_object< const char * >,
-      boost::io::wrapped_object< const char * >
+      boost::io::wrappedfmt_t< const char * >,
+      boost::io::wrappedfmt_t< const char * >
    >                                   xmlio2 =
       boost::io::pairfmt
       (
@@ -103,18 +104,24 @@ int main()
 
    // reading data back from a plain text-based serialization stream
    {
-      // [todo]
-      // in >> boost::io::readobject( p1, xmlio2 ); ?
+      std::ifstream                    is( "doc2.xml" );
+      std::pair< char, int >           p2;
+
+      std::cout << "pair before reading: " << boost::io::formatob( p2, textio ) << '\n';
+      std::string                      s;
+      std::getline( is, s ); // skip XML signature
+      is >> boost::io::formatob( p2, xmlio );
+      std::cout << "pair after reading:  "  << boost::io::formatob( p2, textio ) << '\n';
    }
 
    // [4]: plain text -- more advanced types
 
    // create the output object used for serialization
 
-   boost::io::pair_object
+   boost::io::pairfmt_t
    <
       const char *,
-      boost::io::pair_object< const char * >
+      boost::io::pairfmt_t< const char * >
    >                                   textio2;
 
    // create the data to be serialized
@@ -166,7 +173,7 @@ int main()
 
       // create the output object used for serialization
 
-      boost::io::static_nary_object< const char * >
+      boost::io::naryfmt_t< const char * >
                                        naryio;
       naryio.format( "[ ", " ]" ); // container-compatible formatting
 
@@ -206,7 +213,7 @@ int main()
                quaternion = ( 0, 0, 0, 0 )
                octonion   = ( 0, 0, 0, 0, 0, 0, 0, 0 )
             after reading:
-               quaternion = ( 0.12, 2.75, 3.3345, 70.2 )
+               quaternion = ( 0.12, 2.75, -3.3345, 70.2 )
                octonion   = ( 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8 )
          */
       }
@@ -233,26 +240,17 @@ int main()
 #  endif
 
    // [6]: plain text -- string data
-   // [note]: Borland has a problem with outputting strings in basic_output, so use
-   //    the wrapped forms instead
 
-   boost::io::wrapped_object< const char * > stringio = boost::io::wrappedfmt().format( "\"", "\"" );
+   boost::io::containerfmt_t< const char * >
+                                       stlio = boost::io::containerfmt();
 
-   boost::io::container_object< const char *, boost::io::wrapped_object< const char * > >
-                                       stlio = boost::io::containerfmt( stringio );
-
-   boost::io::container_object
+   boost::io::containerfmt_t
    <
       const char *,
-      boost::io::pair_object
-      <
-         const char *,
-         boost::io::wrapped_object< const char * >,
-         boost::io::wrapped_object< const char * >
-      >
+      boost::io::pairfmt_t< const char * >
    >                                   mapio = boost::io::containerfmt
                                        (
-                                          boost::io::pairfmt( stringio, stringio )
+                                          boost::io::pairfmt()
                                        );
 
    std::list< std::string >            l;
@@ -267,18 +265,17 @@ int main()
 
    // writing to a plain text-based serialization stream
    {
-      std::ofstream                 out( "doc4.txt" );
+      std::ofstream                    out( "doc4.txt" );
       out << boost::io::formatob( l, stlio ) << '\n'
           << boost::io::formatob( m, mapio ) << '\n';
    }
 
    // reading data back from a plain text-based serialization stream
    {
-      std::ifstream                 in( "doc4.txt" );
-      std::vector< std::string >    v;
-      std::map< std::string, std::string > // [todo]: this does not work
-//      std::list< std::pair< std::string, std::string > >
-                                    m;
+      std::ifstream                    in( "doc4.txt" );
+      std::vector< std::string >       v;
+      std::map< std::string, std::string >
+                                       m;
 
       std::cout << "before reading:\n"
                 << "   vector: " << v << '\n'
@@ -296,7 +293,7 @@ int main()
             vector: [  ]
             map:    [  ]
          after reading:
-            vector: [ 1234, abcdef, To be or not to be: that is the question! ]
+            vector: [ "1234", "abcdef", "To be or not to be: that is the question!" ]
             map:    [ ( "Boa Noite.", "Portuguese" ), ( "Como esta Usted?", "Spanish" ), ( "Hallo Welt!", "German" ) ]
       */
    }

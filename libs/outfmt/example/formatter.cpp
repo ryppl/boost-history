@@ -36,9 +36,9 @@ int main()
    // formatter configurations
 
    boost::io::openclose_formatter< const char * >
-                                       ocf(  "| ", " |" );
-   boost::io::formatter< const char * >      fmt(  "( ", " )", ", " );
-   boost::io::formatter< const char * >      fmt2( " -- " );
+                                        ocf(  "| ", " |" );
+   boost::io::formatter< const char * > fmt(  "( ", " )", ", " );
+   boost::io::formatter< const char * > fmt2( " -- " );
 
    // examples
 

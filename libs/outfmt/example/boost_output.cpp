@@ -33,7 +33,7 @@ int main()
 
    // formatter configurations
 
-   boost::io::pair_object< char >  pairfmt1; // [format]: (a,b)
+   boost::io::pairfmt_t< char >        pairfmt1; // [format]: (a,b)
 
    // output boost types
 
