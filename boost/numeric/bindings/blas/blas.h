@@ -54,7 +54,7 @@ extern "C"
   void   BLAS_CGEMV(const char *trans, const int *m, const int *n, const fcomplex *alpha, const fcomplex *a, const int *lda, const fcomplex *x, const int *incx, const fcomplex *beta, fcomplex *y, const int *incy) ;
   void   BLAS_ZGEMV(const char *trans, const int *m, const int *n, const dcomplex *alpha, const dcomplex *a, const int *lda, const dcomplex *x, const int *incx, const dcomplex *beta, dcomplex *y, const int *incy) ;
 
-  void   BLAS_SGER (const int *m, const int *n, const float *alpha, const float *x, const int *incx, const float *y, const int *incy, float *a, const int *lda);
+  void   BLAS_SGER (const int *m, const int *n, const float * alpha, const float * x, const int *incx, const float * y, const int *incy, float *a,  const int *lda);
   void   BLAS_DGER (const int *m, const int *n, const double *alpha, const double *x, const int *incx, const double *y, const int *incy, double *a, const int *lda);
 
   void   BLAS_CGERU(const int *m, const int *n, const fcomplex *alpha, const fcomplex *x, const int *incx, const fcomplex *y, const int *incy, fcomplex *a, const int *lda);
