@@ -38,8 +38,8 @@ class basic_wrapping_ios
 {
     typedef ::boost::base_from_member< StreamBuf >  pbase_type;
 
-    typedef ::std::basic_ios< typename StreamBuf::char_type, typename StreamBuf::traits_type >
-      base_type;
+    typedef ::std::basic_ios< typename StreamBuf::char_type,
+     typename StreamBuf::traits_type >  base_type;
 
 public:
     // Types
@@ -106,12 +106,13 @@ protected:
 template < class StreamBuf >
 class basic_wrapping_istream
     : public detail::basic_wrapping_ios< StreamBuf >
-    , public ::std::basic_istream< typename StreamBuf::char_type, typename StreamBuf::traits_type >
+    , public ::std::basic_istream< typename StreamBuf::char_type,
+       typename StreamBuf::traits_type >
 {
     typedef detail::basic_wrapping_ios< StreamBuf >  base1_type;
 
-    typedef ::std::basic_istream< typename StreamBuf::char_type, typename StreamBuf::traits_type >
-      base2_type;
+    typedef ::std::basic_istream< typename StreamBuf::char_type,
+     typename StreamBuf::traits_type >  base2_type;
 
 public:
     // Types
@@ -152,12 +153,13 @@ protected:
 template < class StreamBuf >
 class basic_wrapping_ostream
     : public detail::basic_wrapping_ios< StreamBuf >
-    , public ::std::basic_ostream< typename StreamBuf::char_type, typename StreamBuf::traits_type >
+    , public ::std::basic_ostream< typename StreamBuf::char_type,
+       typename StreamBuf::traits_type >
 {
     typedef detail::basic_wrapping_ios< StreamBuf >  base1_type;
 
-    typedef ::std::basic_ostream< typename StreamBuf::char_type, typename StreamBuf::traits_type >
-      base2_type;
+    typedef ::std::basic_ostream< typename StreamBuf::char_type,
+     typename StreamBuf::traits_type >  base2_type;
 
 public:
     // Types
@@ -198,12 +200,13 @@ protected:
 template < class StreamBuf >
 class basic_wrapping_iostream
     : public detail::basic_wrapping_ios< StreamBuf >
-    , public ::std::basic_iostream< typename StreamBuf::char_type, typename StreamBuf::traits_type >
+    , public ::std::basic_iostream< typename StreamBuf::char_type,
+       typename StreamBuf::traits_type >
 {
     typedef detail::basic_wrapping_ios< StreamBuf >  base1_type;
 
-    typedef ::std::basic_iostream< typename StreamBuf::char_type, typename StreamBuf::traits_type >
-      base2_type;
+    typedef ::std::basic_iostream< typename StreamBuf::char_type,
+     typename StreamBuf::traits_type >  base2_type;
 
 public:
     // Types
