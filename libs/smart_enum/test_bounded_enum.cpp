@@ -12,7 +12,7 @@ enum myEnum { state1 = 5, state2, state3, state4 };
 
 int test_main(int, char*[])
     {
-    typedef bounded_smart_enum<myEnum, state1, state4> my_enum_t;
+    typedef boost::bounded_smart_enum<myEnum, state1, state4> my_enum_t;
     my_enum_t e(state1);
 
     // Test the boundaries

@@ -25,7 +25,7 @@ using namespace boost::lambda;
 
 int test_main(int, char*[])
     {
-    typedef smart_enum<myEnum, boost::function<myEnum, int, int> > my_enum_t;
+    typedef boost::smart_enum<myEnum, boost::function<myEnum, int, int> > my_enum_t;
     my_enum_t e(north, (
         // Verify that _1 is a valid myEnum.
 
