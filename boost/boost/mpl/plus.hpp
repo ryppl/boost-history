@@ -15,6 +15,7 @@
 // $Revision$
 
 #define AUX778076_OP_NAME plus
-#include <boost/mpl/aux_/numeric_op.hpp>
+#define AUX778076_OP_TOKEN +
+#include <boost/mpl/aux_/arithmetic_op.hpp>
 
 #endif // BOOST_MPL_PLUS_HPP_INCLUDED

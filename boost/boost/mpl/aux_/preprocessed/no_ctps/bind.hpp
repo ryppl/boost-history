@@ -53,7 +53,7 @@ struct replace_unnamed_arg_impl
 };
 
 template<>
-struct replace_unnamed_arg_impl< arg<-1> >
+struct replace_unnamed_arg_impl< arg<-1>
 {
     template< typename Arg > struct result_
     {

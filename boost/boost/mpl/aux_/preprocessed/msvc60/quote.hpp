@@ -1,5 +1,4 @@
-namespace boost {
-namespace mpl {
+namespace boost { namespace mpl {
 template< bool > struct quote_impl
 {
     template< typename T > struct result_
@@ -18,46 +17,46 @@ template<> struct quote_impl<false>
 
 template<
       template< typename P1 > class F
-    , typename Tag = void_
+    , typename Tag = na
     >
 struct quote1
 {
     template< typename U1 > struct apply
         : quote_impl< aux::has_type< F<U1> >::value >
-            ::template result_< F<U1> >
+            ::template result_< F<U1>
     {
     };
 };
 
 template<
       template< typename P1, typename P2 > class F
-    , typename Tag = void_
+    , typename Tag = na
     >
 struct quote2
 {
     template< typename U1, typename U2 > struct apply
         : quote_impl< aux::has_type< F<U1,U2> >::value >
-            ::template result_< F<U1,U2> >
+            ::template result_< F<U1,U2>
     {
     };
 };
 
 template<
       template< typename P1, typename P2, typename P3 > class F
-    , typename Tag = void_
+    , typename Tag = na
     >
 struct quote3
 {
     template< typename U1, typename U2, typename U3 > struct apply
         : quote_impl< aux::has_type< F<U1,U2,U3> >::value >
-            ::template result_< F<U1,U2,U3> >
+            ::template result_< F<U1,U2,U3>
     {
     };
 };
 
 template<
       template< typename P1, typename P2, typename P3, typename P4 > class F
-    , typename Tag = void_
+    , typename Tag = na
     >
 struct quote4
 {
@@ -66,7 +65,7 @@ struct quote4
         >
     struct apply
         : quote_impl< aux::has_type< F<U1,U2,U3,U4> >::value >
-            ::template result_< F<U1,U2,U3,U4> >
+            ::template result_< F<U1,U2,U3,U4>
     {
     };
 };
@@ -77,7 +76,7 @@ template<
         , typename P5
         >
       class F
-    , typename Tag = void_
+    , typename Tag = na
     >
 struct quote5
 {
@@ -87,10 +86,9 @@ struct quote5
         >
     struct apply
         : quote_impl< aux::has_type< F<U1,U2,U3,U4,U5> >::value >
-            ::template result_< F<U1,U2,U3,U4,U5> >
+            ::template result_< F<U1,U2,U3,U4,U5>
     {
     };
 };
 
-} // namespace mpl
-} // namespace boost
+}}

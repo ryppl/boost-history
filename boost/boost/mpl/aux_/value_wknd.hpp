@@ -14,14 +14,14 @@
 // $Date$
 // $Revision$
 
-#include <boost/mpl/aux_/adl_barrier.hpp>
+#include <boost/mpl/aux_/config/bcc_integral_constants.hpp>
 #include <boost/mpl/aux_/config/eti.hpp>
-#include <boost/mpl/aux_/config/workaround.hpp>
 
-#if BOOST_WORKAROUND(__BORLANDC__, < 0x600) \
+#if defined(BOOST_MPL_CFG_BCC_INTEGRAL_CONSTANTS) \
     || defined(BOOST_MPL_CFG_MSVC_60_ETI_BUG)
- 
+
 #   include <boost/mpl/int.hpp>
+#   include <boost/mpl/aux_/adl_barrier.hpp> 
 
 BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_OPEN
 namespace aux {
@@ -39,6 +39,7 @@ template<> struct value_wknd<int>
 } // namespace aux
 BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_CLOSE
 
+
 #if !defined(BOOST_MPL_CFG_MSVC_60_ETI_BUG)
 #   define BOOST_MPL_AUX_VALUE_WKND(C) \
     ::BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE::aux::value_wknd< C > \
@@ -51,7 +52,7 @@ BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_CLOSE
 /**/
 #endif
 
-#else // !__BORLANDC__
+#else // BOOST_MPL_CFG_BCC_INTEGRAL_CONSTANTS
 
 #   define BOOST_MPL_AUX_VALUE_WKND(C) C
 #   define BOOST_MPL_AUX_MSVC_VALUE_WKND(C) C

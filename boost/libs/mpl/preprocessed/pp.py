@@ -126,6 +126,10 @@ def handle_typedefs(match):
             match.group(1)
           , string.join(map(string.strip, string.split(match.group(2), ';')), join_sep)
           )
+
+def fix_angle_brackets( match ):
+    return ' '.join( ''.join( match.group(1).split( ' ' ) ) ) + match.group(3)
+    
     
 class pretty:
     def __init__(self, name):
@@ -142,7 +146,7 @@ class pretty:
 
         self.re_empty_line = re.compile(r'^\s*$')
         self.re_comma = re.compile(r'(\w+)\s*,\s*')
-        self.re_assign = re.compile(r'\s*(=+)\s*')
+        self.re_assign = re.compile(r'([^<|^!|^>])\s*(=+)\s*')
         self.re_marked_comment = re.compile(r'^(\s*//):(.*)$')
         self.re_marked_empty_comment = re.compile(r'^\s*//\s*$')
         self.re_typedef = re.compile(r'^\s+typedef\s+.*?;$')
@@ -155,9 +159,9 @@ class pretty:
             )
 
         self.re_simple_list = re.compile(r'(\w+)\s*<((\w|,| |-|>|<)+)>')
-        self.re_static_const = re.compile(r'(\s*)((static\s+.*?|enum\s*{\s*)value\s*=)(.*?)(}?;)$')
+        self.re_static_const = re.compile(r'(\s*)((static\s+.*?|enum\s*\w*\s*{\s*)value\s*=)(.*?)(}?;)$')
         self.re_typedefs = re.compile(r'(\s*)((\s*typedef\s*.*?;)+)\s*$')
-        self.re_fix_angle_brackets = re.compile(r'>>\s*(,|$)')
+        self.re_fix_angle_brackets = re.compile( r'>((\s*>)+)(,|\n$)' )
         self.re_closing_curly_brace = re.compile(r'^(}|struct\s+\w+);\s*$')
         self.re_namespace_scope_templ = re.compile(r'^template\s*<\s*$')
         self.re_namespace = re.compile(r'^\n?namespace\s+\w+\s*{\s*\n?$')
@@ -202,17 +206,17 @@ class pretty:
                 return
 
         # formatting
-        line = self.re_comma.sub(r'\1, ', line)
-        line = self.re_assign.sub(r' \1 ', line)
-        line = self.re_marked_comment.sub(r'\1\2', line)
-        line = self.re_marked_empty_comment.sub(r'\n', line)
-        line = self.re_type_const.sub(r'\2 \1', line)
-        line = self.re_templ_args.sub(handle_args, line)
-        line = self.re_inline_templ_args.sub(handle_inline_args, line)
-        line = self.re_simple_list.sub(handle_simple_list, line)
-        line = self.re_static_const.sub(handle_static, line)
-        line = self.re_typedefs.sub(handle_typedefs, line)
-        line = self.re_fix_angle_brackets.sub(r'> >\1', line)
+        line = self.re_comma.sub( r'\1, ', line )
+        line = self.re_assign.sub( r'\1 \2 ', line )
+        line = self.re_marked_comment.sub( r'\1\2', line )
+        line = self.re_marked_empty_comment.sub( r'\n', line )
+        line = self.re_type_const.sub( r'\2 \1', line )
+        line = self.re_templ_args.sub( handle_args, line )
+        line = self.re_inline_templ_args.sub( handle_inline_args, line )
+        line = self.re_simple_list.sub( handle_simple_list, line)
+        line = self.re_static_const.sub( handle_static, line )
+        line = self.re_typedefs.sub( handle_typedefs, line )        
+        line = self.re_fix_angle_brackets.sub( fix_angle_brackets, line )
         
         # write the output
         self.output.write(line)

@@ -19,7 +19,7 @@
 #include <boost/mpl/aux_/config/static_constant.hpp>
 
 BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_OPEN
-struct integral_c_tag { BOOST_STATIC_CONSTANT(int, value = 10); };
+struct integral_c_tag { BOOST_STATIC_CONSTANT(int, value = 0); };
 BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_CLOSE
 
 #endif // BOOST_MPL_AUX_INTEGRAL_C_TAG_HPP_INCLUDED

@@ -31,7 +31,7 @@ struct lambda_or< false,false,false,false,false >
 
 } // namespace aux
 template< int N, typename Tag >
-struct lambda< arg<N>,Tag,int_<-1> >
+struct lambda< arg<N>,Tag,int_<-1>
 {
     typedef true_ is_le;
     typedef mpl::arg<N> result_; // qualified for the sake of MIPSpro 7.41
@@ -437,7 +437,7 @@ struct lambda<
 
 // special case for 'protect'
 template< typename T, typename Tag >
-struct lambda< protect<T>,Tag,int_<1> >
+struct lambda< protect<T>,Tag,int_<1>
 {
     typedef false_ is_le;
     typedef protect<T> result_;

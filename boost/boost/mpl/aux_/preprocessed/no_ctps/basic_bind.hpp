@@ -23,7 +23,7 @@ struct resolve_arg_impl<true>
         >
     struct result_
     {
-        typedef typename aux::apply_wrap5<
+        typedef typename apply_wrap5<
               T
             , U1, U2, U3, U4, U5
             >::type type;
@@ -97,7 +97,7 @@ struct bind0
         typedef typename aux::resolve_bind_arg< F,U1,U2,U3,U4,U5 >::type f_;
 
      public:
-        typedef typename aux::apply_wrap0<
+        typedef typename apply_wrap0<
               f_
             >::type type;
     };
@@ -145,7 +145,7 @@ struct bind1
         typedef typename aux::resolve_bind_arg< T1,U1,U2,U3,U4,U5 >::type t1;
 
      public:
-        typedef typename aux::apply_wrap1<
+        typedef typename apply_wrap1<
               f_
             , t1
             >::type type;
@@ -195,7 +195,7 @@ struct bind2
         typedef typename aux::resolve_bind_arg< T2,U1,U2,U3,U4,U5 >::type t2;
 
      public:
-        typedef typename aux::apply_wrap2<
+        typedef typename apply_wrap2<
               f_
             , t1, t2
             >::type type;
@@ -246,7 +246,7 @@ struct bind3
         typedef typename aux::resolve_bind_arg< T3,U1,U2,U3,U4,U5 >::type t3;
 
      public:
-        typedef typename aux::apply_wrap3<
+        typedef typename apply_wrap3<
               f_
             , t1, t2, t3
             >::type type;
@@ -298,7 +298,7 @@ struct bind4
         typedef typename aux::resolve_bind_arg< T4,U1,U2,U3,U4,U5 >::type t4;
 
      public:
-        typedef typename aux::apply_wrap4<
+        typedef typename apply_wrap4<
               f_
             , t1, t2, t3, t4
             >::type type;
@@ -352,7 +352,7 @@ struct bind5
         typedef typename aux::resolve_bind_arg< T5,U1,U2,U3,U4,U5 >::type t5;
 
      public:
-        typedef typename aux::apply_wrap5<
+        typedef typename apply_wrap5<
               f_
             , t1, t2, t3, t4, t5
             >::type type;

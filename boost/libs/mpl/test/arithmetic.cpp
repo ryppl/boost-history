@@ -24,24 +24,27 @@ MPL_TEST_CASE()
 
     MPL_ASSERT_RELATION( (plus<_0,_10>::value), ==, 10 );
     MPL_ASSERT_RELATION( (plus<_10,_0>::value), ==, 10 );
-#if 0
-    MPL_ASSERT_RELATION(3,(minus<_0,_10>::value, -10));
-    MPL_ASSERT_RELATION(3,(minus<_10,_0>::value, 10));
 
-    MPL_ASSERT_RELATION(3,(multiplies<_1,_10>::value, 10));
-    MPL_ASSERT_RELATION(3,(multiplies<_10,_1>::value, 10));
+    MPL_ASSERT_RELATION( (minus<_0,_10>::value), ==, -10 );
+    MPL_ASSERT_RELATION( (minus<_10,_0>::value), ==, 10 );
 
-    MPL_ASSERT_RELATION(3,(divides<_10,_1>::value, 10));
-    MPL_ASSERT_RELATION(3,(divides<_10,_1>::value, 10));
+    MPL_ASSERT_RELATION( (times<_1,_10>::value), ==, 10 );
+    MPL_ASSERT_RELATION( (times<_10,_1>::value), ==, 10 );
+    MPL_ASSERT_RELATION( (multiplies<_1,_10>::value), ==, 10 );
+    MPL_ASSERT_RELATION( (multiplies<_10,_1>::value), ==, 10 );
 
-    MPL_ASSERT_RELATION(3,(modulus<_10,_1>::value, 0));
-    MPL_ASSERT_RELATION(3,(modulus<_10,_3>::value, 1));
+    MPL_ASSERT_RELATION( (divides<_10,_1>::value), ==, 10 );
+    MPL_ASSERT_RELATION( (divides<_10,_1>::value), ==, 10 );
 
-    MPL_ASSERT_RELATION(4,(minus<_10,_1,_10>::value, -1));
-    MPL_ASSERT_RELATION(4,(plus<_10,_1,_10>::value, 21));
-    MPL_ASSERT_RELATION(4,(divides<_10,_1,_10>::value, 1));
-    MPL_ASSERT_RELATION(4,(divides<_10,_1,_10>::value, 1));
-    
-    MPL_ASSERT_RELATION(2,(negate<_10>::value, -10));
+    MPL_ASSERT_RELATION( (modulus<_10,_1>::value), ==, 0 );
+    MPL_ASSERT_RELATION( (modulus<_10,_3>::value), ==, 1 );
+
+#if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
+    MPL_ASSERT_RELATION( (minus<_10,_1,_10>::value), ==, -1 );
+    MPL_ASSERT_RELATION( (plus<_10,_1,_10>::value), ==, 21 );
+    MPL_ASSERT_RELATION( (divides<_10,_1,_10>::value), ==, 1 );
+    MPL_ASSERT_RELATION( (divides<_10,_1,_10>::value), ==, 1 );
 #endif
+    
+    MPL_ASSERT_RELATION( negate<_10>::value, ==, -10 );
 }
