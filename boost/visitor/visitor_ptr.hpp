@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-// boost visitor_ptr.hpp header file
+// boost visitor/visitor_ptr.hpp header file
 // See http://www.boost.org for updates, documentation, and revision history.
 //-----------------------------------------------------------------------------
 //
@@ -14,14 +14,19 @@
 // suitability of this software for any purpose. It is provided "as is" 
 // without express or implied warranty.
 
-#ifndef BOOST_VISITOR_PTR_HPP
-#define BOOST_VISITOR_PTR_HPP
+#ifndef BOOST_VISITOR_VISITOR_PTR_HPP
+#define BOOST_VISITOR_VISITOR_PTR_HPP
 
+#include "boost/visitor/bad_visit.hpp"
 #include "boost/visitor/static_visitor.hpp"
 #include "boost/visitor/dynamic_visitor_base.hpp"
+#include "boost/visitor/dynamic_visitor_return_base.hpp"
 #include "boost/visitor/dynamic_visitor_interface.hpp"
 
+#include "boost/mpl/bool.hpp"
+#include "boost/mpl/if.hpp"
 #include "boost/type_traits/add_reference.hpp"
+#include "boost/type_traits/is_void.hpp"
 
 namespace boost {
 
@@ -29,13 +34,16 @@ namespace boost {
 // function template visitor_ptr
 //
 // Adapts a function pointer for use as visitor capable of handling
-// values of a single type.
+// values of a single type. Throws bad_visit if inappropriately applied.
 //
-
 template <typename T, typename R>
 class visitor_ptr_t
-    : public static_visitor<>
-    , public dynamic_visitor_base
+    : public static_visitor<R>
+    , public mpl::if_<
+          is_void<R>
+        , dynamic_visitor_base
+        , dynamic_visitor_return_base<R>
+        >::type
     , public dynamic_visitor_interface<T>
 {
 private: // representation
@@ -46,7 +54,7 @@ private: // representation
 
 public: // typedefs
 
-    typedef void result_type;
+    typedef R result_type;
 
 private: // private typedefs
 
@@ -55,28 +63,47 @@ private: // private typedefs
 
 public: // structors
 
-    visitor_ptr_t(visitor_t& visitor)
+    explicit visitor_ptr_t(visitor_t& visitor)
       : visitor_(visitor)
     {
     }
 
 public: // static visitor interfaces
 
-    void operator()(argument_fwd_type operand) const
+    result_type operator()(argument_fwd_type operand) const
     {
-        visitor_(operand);
+        return visitor_(operand);
     }
 
     template <typename U>
-    void operator()(const U& operand) const
+    result_type operator()(const U& operand) const
     {
+        throw bad_visit();
+    }
+
+private: // helpers, for dynamic visitor interfaces (below)
+
+    void visit_impl(
+          argument_fwd_type operand
+        , mpl::true_// is_void_return
+        )
+    {
+        (*this)(operand);
+    }
+
+    void visit_impl(
+          argument_fwd_type operand
+        , mpl::false_// is_void_return
+        )
+    {
+        result_value.reset( (*this)(operand) );
     }
 
 private: // dynamic visitor interfaces
 
     virtual void visit(argument_fwd_type operand)
     {
-        (*this)(operand);
+        visit_impl(operand, typename is_void<result_type>::type());
     }
 
 };
@@ -89,4 +116,4 @@ visitor_ptr_t<T,R> visitor_ptr(R (*visitor)(T))
 
 } // namespace boost
 
-#endif// BOOST_VISITOR_PTR_HPP
+#endif// BOOST_VISITOR_VISITOR_PTR_HPP
