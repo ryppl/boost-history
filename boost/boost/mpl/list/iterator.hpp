@@ -47,7 +47,7 @@ struct list_end_iterator
     typedef forward_list_end_iterator type;
 };
 
-#if defined(BOOST_MSVC)
+#if defined(BOOST_MSVC) && BOOST_MSVC <= 1300
 // yet other workaround of MSVC early template instantiation bug
 template<>
 struct list_iterator<int>
