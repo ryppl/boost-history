@@ -1743,24 +1743,33 @@ today, and just as the STL algorithms can operate on sequences which
 don't come from STL containers, so the MPL algorithms are designed to
 work with foreign type sequences.
 
-More importantly (which may be an eye-opening fact for some), type
-lists are not the only useful compile-time sequence. Again, the need
-for a variety of compile-time containers arises for the same reasons
-that we have lists, vectors, deques, and sets in the /Cpp/ standard
-library - different containers have different functional and
-performance characteristics which determine not only applicability and
-efficiency of particular algorithms, but also the expressiveness or
-verbosity of the code that uses them.
+It may be an eye-opening fact for some that type lists are not the
+only useful compile-time sequence. Again, the need for a variety of
+compile-time containers arises for the same reasons that we have
+lists, vectors, deques, and sets in the /Cpp/ standard library -
+different containers have different functional and performance
+characteristics which determine not only applicability and efficiency
+of particular algorithms, but also the expressiveness or verbosity of
+the code that uses them. While runtime performance is not an issue for
+\Cpp\ metaprograms, compilation speed is often a significant
+bottleneck to advanced \Cpp\ software development[Abr01].
 
-%% list
-%% vector
-%% range_c
-%% If you can extract something from this:
-%% http://groups.yahoo.com/group/boost/message/20770, and this:
-%% http://groups.yahoo.com/group/boost/message/20916. Otherwise, may be a
-%% paragraph that I just added to the end of tiny_list example will be
-%% sufficient.
-
+The \Mpl\ provides four built-in sequences: \code{type\_\-list},
+\code{value\_\-list} (really just a \code{type\_\-list} of value
+wrappers), \code{type\_\-vector}, a randomly-accessible sequence of
+fixed maximum size, and \code{range\_c}, a randomly-accessible
+sequence of consecutive integral values. More important, however, is
+its ability to adapt to arbitrary sequence types. The only core
+operations that a sequence is required to provide in order to be used
+with the library algorithms are \code{begin<>} and \code{end<>} \mfns\
+which ``return'' iterators into to the sequence. As in the STL it is
+the iterators which are used to implement most of the general purpose
+sequence algorithms the library provides. Also as in STL, algorithm
+specialization is used to take advantage of implementation knowledge
+about particular sequences: many of the ``basic'' sequence operations
+such as \code{back<>}, \code{front<>} \code{size<>} and \code{at<>}
+are specialized on sequence type to provide a more efficient
+implementation than the fully generic version.
 
 
   \subsubsection{loop unrolling}
