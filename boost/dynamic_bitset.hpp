@@ -158,91 +158,49 @@ public:
     BOOST_STATIC_CONSTANT(int, bits_per_block = (base::bits_per_block) ); // [gps]
     BOOST_STATIC_CONSTANT(size_type, npos = -1);
 
-    // reference to a bit
+
+    // A proxy class to simulate lvalues of bit type.
+    // Shouldn't it be private? [gps]
+    //
     class reference
     {
         friend class dynamic_bitset<Block, Allocator>;
-        dynamic_bitset* bs;
-        size_type bit;
-        reference(); // intentionally not implemented
-        reference(dynamic_bitset& bs_, size_type bit_) : bs(&bs_), bit(bit_){ }
+
+
+        // the one and only non-copy ctor
+        reference(block_type & b, int pos)
+            :m_block(b), m_mask(block_type(1) << pos)
+        {}
+
+        void operator&(); // not defined
+
     public:
-        reference& operator=(bool value)          // for b[i] = x
-        {
-            if (value)
-                bs->set(bit);
-            else
-                bs->reset(bit);
-            return *this;
-        }
-        reference& operator|=(bool value)         // for b[i] |= x
-        {
-            if (value)
-                bs->set(bit);
-            return *this;
-        }
-        reference& operator&=(bool value)         // for b[i] &= x
-        {
-            if (! (value && bs->test(bit)))
-                bs->reset(bit);
-            return *this;
-        }
-        reference& operator^=(bool value)         // for b[i] ^= x
-        {
-            bs->set(bit, bs->test(bit) ^ value);
-            return *this;
-        }
-        reference& operator-=(bool value)         // for b[i] -= x
-        {
-            if (!value)
-                bs->reset(bit);
-            return *this;
-        }
-        reference& operator=(const reference& j)  // for b[i] = b[j]
-        {
-            if (j.bs->test(j.bit))
-                bs->set(bit);
-            else
-                bs->reset(bit);
-            return *this;
-        }
-        reference& operator|=(const reference& j) // for b[i] |= b[j]
-        {
-            if (j.bs->test(j.bit))
-                bs->set(bit);
-            return *this;
-        }
-        reference& operator&=(const reference& j) // for b[i] &= b[j]
-        {
-            if (! (j.bs->test(j.bit) && bs->test(bit)))
-                bs->reset(bit);
-            return *this;
-        }
-        reference& operator^=(const reference& j) // for b[i] ^= b[j]
-        {
-            bs->set(bit, bs->test(bit) ^ j.bs->test(j.bit));
-            return *this;
-        }
-        reference& operator-=(const reference& j) // for b[i] -= b[j]
-        {
-            if (!j.bs->test(j.bit))
-                bs->reset(bit);
-            return *this;
-        }
-        bool operator~() const                    // flips the bit
-        {
-            return ! bs->test(bit);
-        }
-        operator bool() const                     // for x = b[i]
-        {
-            return bs->test(bit);
-        }
-        reference& flip()                         // for b[i].flip();
-        {
-            bs->flip(bit);
-            return *this;
-        }
+
+        // copy constructor: compiler generated
+
+        operator bool() const { return (m_block & m_mask) != 0; }
+        bool operator~() const { return (m_block & m_mask) == 0; }
+
+        reference& flip() { do_flip(); return *this; }
+
+        reference& operator=(bool x)               { do_assign(x);   return *this; } // for b[i] = x
+        reference& operator=(const reference& rhs) { do_assign(rhs); return *this; } // for b[i] = b[j]
+
+        reference& operator|=(bool x) { if  (x) do_set();   return *this; }
+        reference& operator&=(bool x) { if (!x) do_reset(); return *this; }
+        reference& operator^=(bool x) { if  (x) do_flip();  return *this; }
+        reference& operator-=(bool x) { if  (x) do_reset(); return *this; }
+
+     private:
+        block_type & m_block;
+        const block_type m_mask;
+
+        void do_set() { m_block |= m_mask; }
+        void do_reset() { m_block &= ~m_mask; }
+        void do_flip() { m_block ^= m_mask; }
+        void do_assign(bool x) { x? do_set() : do_reset(); }
     };
+
     typedef bool const_reference;
 
     // constructors, etc.
@@ -365,7 +323,10 @@ public:
     size_type count() const;
 
     // subscript
-    reference operator[](size_type pos) { return reference(*this, pos); }
+    reference operator[](size_type pos) {
+        return reference(this->m_bits[this->block_index(pos)], this->bit_index(pos));
+        //return reference(*this, pos); // G.P.S.
+    }
     bool operator[](size_type pos) const { return test(pos); }
 
     unsigned long to_ulong() const;

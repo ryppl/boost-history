@@ -78,7 +78,7 @@ public:
       size_type m_num_blocks;
 
       static size_type block_index(size_type pos) { return pos / bits_per_block; }
-      static size_type bit_index(size_type pos) { return pos % bits_per_block; }
+      static /*size_type*/int bit_index(size_type pos) { return pos % bits_per_block; }
       static Block bit_mask(size_type pos) { return Block(1) << bit_index(pos); }
       static size_type calc_num_blocks(size_type num_bits)
         { return (num_bits + (bits_per_block - 1)) / bits_per_block; }
