@@ -5,41 +5,36 @@
 #include <boost/langbinding/converter/converter.hpp>
 #include <boost/langbinding/converter/registry.hpp>
 #include <boost/lexical_cast.hpp>
+#include <cassert>
 
 using boost::langbinding::util::type_id;
 using namespace boost::langbinding::converter;
 
-void* construct_int(void* src, void* storage)
+struct int_ : converter<int_, std::string, int>
 {
-    std::string& str(*static_cast<std::string*>(src));
-    int* result = new (storage) int(boost::lexical_cast<int>(str));
-    return result;
-}
-
-arg_conversion int_(void* src)
-{
-    arg_conversion result;
-    result.source = src;
-
-    try
+    static void construct(std::string const& src, void* storage)
     {
-        boost::lexical_cast<int>(*static_cast<std::string*>(src));
-    }
-    catch (boost::bad_lexical_cast&)
-    {
-        result.convertible = 0;
-        result.construct = 0;
-        return result;
+        new (storage) int(boost::lexical_cast<int>(src));
     }
 
-    result.convertible = src;
-    result.construct = &construct_int;
-    return result;   
-}
+    static void* convertible(std::string const& src)
+    {
+        try
+        {
+            boost::lexical_cast<int>(src);
+        }
+        catch (boost::bad_lexical_cast&)
+        {
+            return 0;
+        }
+
+        return yes;
+    }
+};
 
 int main()
 {
-    registry::insert(true, type_id<int>(), &int_);
+    int_ register_int;
 
     std::string arg("42");
     arg_conversion result = registry::convert(

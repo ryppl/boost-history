@@ -6,11 +6,11 @@
 #define REGISTRY_040922_HPP
 
 #include <boost/langbinding/function/config.hpp>
-#include <boost/langbinding/converter/converter.hpp>
+#include <boost/langbinding/converter/converter_function.hpp>
 #include <boost/langbinding/util/type_id.hpp>
 
 namespace boost { namespace langbinding { namespace converter { namespace registry {
-  
+
 struct converter_chain
 {
     converter_chain(converter_function);

@@ -21,7 +21,8 @@ struct extractor_base
 template<class T>
 struct ptr_extractor : extractor_base
 {
-    ptr_extractor(arg_conversion const& x) : extractor_base(x.convertible) {}
+    ptr_extractor(converter::arg_conversion const& x) 
+        : extractor_base(x.convertible) {}
 
     T operator()() const
     {
@@ -32,7 +33,8 @@ struct ptr_extractor : extractor_base
 template<class T>
 struct ref_extractor : extractor_base
 {
-    ref_extractor(arg_conversion const& x) : extractor_base(x.convertible) {}
+    ref_extractor(converter::arg_conversion const& x) 
+        : extractor_base(x.convertible) {}
 
     T operator()() const
     {
@@ -51,7 +53,7 @@ struct rvalue_extractor
 {
     typedef typename add_reference<T>::type result_type;
 
-    rvalue_extractor(arg_conversion const& x)
+    rvalue_extractor(converter::arg_conversion const& x)
     {
         if (x.construct)
         {
