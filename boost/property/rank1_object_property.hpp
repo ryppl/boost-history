@@ -22,11 +22,11 @@ class rank1_object_property: public property_type< T, Object *, T &, I >
 {
    Object * object;
    public:
-      T get( I ) const /**< get the value of the property. */
+      T get( I i ) const /**< get the value of the property. */
       {
          return ( object ->* getter )( i );
       }
-      void set( I, const T & v ) /**< set the value of the property. */
+      void set( I i, const T & v ) /**< set the value of the property. */
       {
          ( object ->* setter )( i, v );
       }
