@@ -130,77 +130,77 @@ namespace detail
     
     /////////////////////////////////////////////////////////////////////////
     // set algorithms
-#define BOOST_PTR_SET_ALGORITHMS( T )                                            \
+#define BOOST_PTR_SET_ALGORITHMS( Key )                                          \
                                                                                  \
-    iterator find( const T& x ) const                                            \
-    {   /* rvalue-lvalue conversion problem */                                   \
-        return iterator( this->c__().find( const_cast<T*>( &x ) ) );             \
+    iterator find( const Key& x )                                                \
+    {   /* rvalue-lvalue conversion problem + broken vc7 lib */                  \
+        return iterator( this->c__().find( const_cast<Key*>( &x ) ) );           \
     }                                                                            \
                                                                                  \
-    size_type count( const T& x ) const                                          \
+    size_type count( const Key& x ) const                                        \
     {                                                                            \
         return this->c__().count( &x );                                          \
     }                                                                            \
                                                                                  \
-    iterator lower_bound( const T& x ) const                                     \
+    iterator lower_bound( const Key& x ) const                                   \
     {                                                                            \
         return iterator( this->c__().lower_bound( &x ) );                        \
     }                                                                            \
                                                                                  \
-    iterator upper_bound( const T& x ) const                                     \
+    iterator upper_bound( const Key& x ) const                                   \
     {                                                                            \
         return iterator( this->c__().upper_bound( &x ) );                        \
     }                                                                            \
                                                                                  \
-    std::pair<iterator,iterator> equal_range( const T& x ) const                 \
+    std::pair<iterator,iterator> equal_range( const Key& x ) const               \
     {                                                                            \
         std::pair<ptr_iterator,ptr_iterator> p = this->c__().equal_range( &x );  \
         return std::make_pair( iterator( p.first ), iterator( p.second ) );      \
     }
 
-#define BOOST_PTR_MAP_ALGORITHMS( T )                                            \
-    iterator find( const T& x )                                                  \
+#define BOOST_PTR_MAP_ALGORITHMS( Key, T )                                       \
+    iterator find( const Key& x )                                                \
     {                                                                            \
         return iterator( this->c__().find( x ) );                                \
     }                                                                            \
                                                                                  \
-    const_iterator find( const T& x ) const                                      \
+    const_iterator find( const Key& x ) const                                    \
     {                                                                            \
         return const_iterator( this->c__().find( x ) );                          \
     }                                                                            \
                                                                                  \
-    size_type count( const T& x ) const                                          \
+    size_type count( const Key& x ) const                                        \
     {                                                                            \
         return this->c__().count( x );                                           \
     }                                                                            \
                                                                                  \
-    iterator lower_bound( const T& x )                                           \
+    iterator lower_bound( const Key& x )                                         \
     {                                                                            \
         return iterator( this->c__().lower_bound( x ) );                         \
     }                                                                            \
                                                                                  \
-    const_iterator lower_bound( const T& x ) const                               \
+    const_iterator lower_bound( const Key& x ) const                             \
     {                                                                            \
         return const_iterator( this->c__().lower_bound( x ) );                   \
     }                                                                            \
                                                                                  \
-    iterator upper_bound( const T& x )                                           \
+    iterator upper_bound( const Key& x )                                         \
     {                                                                            \
         return iterator( this->c__().upper_bound( x ) );                         \
     }                                                                            \
                                                                                  \
-    const_iterator upper_bound( const T& x ) const                               \
+    const_iterator upper_bound( const Key& x ) const                             \
     {                                                                            \
         return const_iterator( this->c__().upper_bound( x ) );                   \
     }                                                                            \
                                                                                  \
-    std::pair<iterator, iterator> equal_range( const T& x )                      \
+    std::pair<iterator, iterator> equal_range( const Key& x )                    \
     {                                                                            \
         std::pair<ptr_iterator,ptr_iterator> p = this->c__().equal_range( x );   \
         return std::make_pair( iterator( p.first ), iterator( p.second ) );      \
     }                                                                            \
                                                                                  \
-    std::pair<const_iterator, const_iterator> equal_range( const T& x ) const    \
+    std::pair<const_iterator, const_iterator> equal_range( const Key& x ) const  \
     {                                                                            \
         std::pair<ptr_const_iterator,ptr_const_iterator> p = this->c__().equal_range( x ); \
         return std::make_pair( const_iterator( p.first ), const_iterator( p.second ) );    \

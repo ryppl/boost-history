@@ -101,7 +101,7 @@ namespace boost
             return insert( key, make_clone( x ) );
         }
 
-        BOOST_PTR_MAP_ALGORITHMS( Key );
+        BOOST_PTR_MAP_ALGORITHMS( Key, T );
     };
     
 
@@ -177,7 +177,7 @@ namespace boost
             return insert( key, make_clone( x ) );
         }
         
-        BOOST_PTR_MAP_ALGORITHMS( Key );
+        BOOST_PTR_MAP_ALGORITHMS( Key, T );
     };
 
     //////////////////////////////////////////////////////////////////////////////

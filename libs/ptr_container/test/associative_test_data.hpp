@@ -100,3 +100,4 @@ void associative_container_test()
 
     BOOST_MESSAGE( "finished algorithms interface test" );         
 }
+
