@@ -250,10 +250,12 @@ public: // operators
         return *p_;
     }
 
+#ifdef BOOST_MSVC
     operator T&() const
     {
         return (*this)();
     }
+#endif
 
 };
 
