@@ -7,11 +7,11 @@
     <style type="text/css">
         body      { margin-left:1em; margin-right:2em;    }
         dt        { margin-top:2ex;                       }
+        dl        { margin-left:3em;                      }
         dd        { margin-top:0.5ex; text-align:justify; }
         li        { margin-top:0.5ex;                     }
         p,ol      { text-align:justify;                   }
         *.center  { text-align:center;                    }
-        dl        { margin-left:3em;                      }
     </style>
   </head>
   <body>
@@ -27,6 +27,10 @@ allowing for checked maniplation of <code>enum</code> instances. In particular, 
 classes can verify arithmetic and assignment expressions at compile-time and run-time with
 neglectable overhead. All functionality is provided in the header file; there is no need to
 link any binary object files to your application in order to use this library.</p>
+
+      <p>Please note that &mdash; despite the look and feel of the library and its
+documentation &mdash; <code>smart_enum</code> is <em>not</em> officially part of the Boost
+library effort, even though I (obviously) plan to submit it eventually.</p>
     </blockquote>
 
     <hr>
@@ -39,10 +43,12 @@ link any binary object files to your application in order to use this library.</
       <li><a href="#bounded">Template <code>bounded_smart_enum</code></a></li>
       <li><a href="#smartenum">Using template <code>smart_enum</code> directly</a></li>
       <li><a href="#madness">Sheer madness with <code>boost::lambda</code></a></li>
+      <li><a href="#download">Downloading the library</a></li>
       <li><a href="#license">License</a></li>
     </ul>
-    <hr>
 
+
+    <hr>
     <h2 id="motivation">Motivation for <code>smart_enum</code></h2>
 
     <p>Program writers frequently have to store <em>state</em> information in their classes,
@@ -61,12 +67,10 @@ default constructor, because <code>enum</code> is a fundamental datatype.</li>
 required member functions to the derived class.</li>
 
       <li>If you want to use an <code>enum</code> in an arithmetic expression, such as
-<blockquote>
-          <p><code>++state</code><br>
-          <code>state = BASE_STATE + 2</code><br>
-          <code>state = state + 5</code><br>
-          <code>state = 16</code></p>
-        </blockquote>
+<pre>++state
+state = BASE_STATE + 2
+state = state + 5
+state = 16</pre>
 you would have to define a whole bunch operators to get things checked at run-time. And if you
 don't want to do that, you'll have to use some sort of cast to get the expressions to compile
 at all because the compiler will implicitely convert the <code>enum</code> to <code>int</code>
@@ -77,27 +81,267 @@ expression back to <code>enum</code>.</li>
     <p>Solving this dilemma is not a hard problem, but it is an <em>annoying</em> problem. You
 should rather concentrate on your application than to worry about missing operators.</p>
 
+
+
+    <hr>
     <h2 id="overview">Overview of the components provided by the library</h2>
 
-     <fieldset class="center"><legend>What makes a <code>smart_enum</code></legend><img src="architecture.gif" alt="UML diagram of smart_enum's
-        components"></fieldset>
+    <p><code>smart_enum</code> aims to make your life easier by providing a generic framework,
+which turns an <code>enum</code> into a simple class that can be incremented, decremented, used
+in complex arithmetic expressions, and be assigned with <q>arbitrary</q> values. Yet, the class
+enforces that the result of these expressions will always a valid value of the underlying
+<code>enum</code> type.</p>
+
+    <p>This objective is achieved by splitting the functionality into two components: An so
+called <q>Incrementor</q> and a generic <code>smart_enum</code> template, which uses a given
+Incrementor to manipulate its value. This relationship is illustrated in the following
+diagram:</p>
+
+     <fieldset class="center"><legend>What makes a <code>smart_enum</code></legend><img
+        src="architecture.gif" alt="UML diagram of smart_enum's components"></fieldset>
+
+    <p>To understand how this construct works, let us take a look at the Incrementor first. An
+Incrementor is any function object, that provides the member function:</p>
+
+    <pre>enumT operator() (int val, int n)</pre>
+
+    <p>This function accepts an arbitrary value <var>val</var>, which is supposed to be a valid
+value of <code>enumT</code>, and the integer value <var>n</var>, by which <var>val</var> should
+be incremented. If this expression yields a valid <code>enumT</code> value, the Incrementor
+will return it. Otherwise, the Incrementor may throw an exception, fail with an assertion, or
+simply return a default value instead.</p>
+
+    <p>One of the standard Incrementors provided by the library is
+<code>SequentialIncrementor</code>, which asserts that the resulting value is in the range
+[<var>minVal</var>, <var>maxVal</var>]. It is defined as follows:</p>
+
+      <pre>template&lt;typename enumT, enumT minVal, enumT maxVal&gt;
+struct SequentialIncrementor
+        : public std::binary_function&lt;int, int, enumT&gt;
+    {
+    enumT operator() (int val, int n) const
+        {
+        if (val + n &gt;= minVal &amp;&amp; val + n &lt;= maxVal)
+            return enumT(val + n);
+        else
+            throw std::out_of_range("invalid enum");
+        }
+    };</pre>
+
+    <p>Using this Incrementor combined with the <code>smart_enum</code> template, you can
+turn an <code>enum</code> into a range-checked <code>smart_enum</code> as follows:</p>
+
+      <pre>enum myEnum { state1, state2, state3, state4 };
+typedef smart_enum&lt;
+                  myEnum,
+                  SequentialIncrementor&lt;myEnum, state1, state4&gt;
+                  &gt; my_enum_t;
+my_enum_t e(state1);</pre>
+
+    <p>Of course nobody wants to write code like this, so to make your life a bit easier,
+specialized versions of <code>smart_enum</code> are included in the library, which provide a
+nicer interface. The example code shown above, could also be written as:</p>
+
+    <pre>typedef sequential_smart_enum&lt;myEnum, state1, state4&gt; my_enum_t;</pre>
+
+    <p>This is achieved by providing a short helper-class, which is hard-coded to use
+<code>SequentialIncrementor</code>. The architecture of this class is illustrated in the
+following diagram:</p>
 
     <fieldset class="center"><legend>Combining <code>smart_enum</code> with a specific
 <code>Incrementor</code></legend><img src="architecture-concrete.gif" alt="UML diagram of
         sequential_smart_enum"></fieldset>
 
+    <p>The library provides three standard Incrementors plus appropriate helper classes to
+simlify the interface. These Incrementors are discussed in the following sections. Those, who
+wish to write Incrementors of their own, should read section <a href="#smartenum"><q>Using
+template <code>smart_enum</code> directly</q></a> instead.</p>
+
+
+
+    <hr>
     <h2 id="sequential">Template <code>sequential_smart_enum</code></h2>
 
+    <p>The template <code>sequential_smart_enum</code> ties a generic <code>smart_enum</code>
+to a <code>SequentialIncrementor</code> instance, which is instantiated with the appropriate
+boundaries. The class must be instantiated with the following template parameters:</p>
+
+    <pre>sequential_smart_enum&lt;typename enumT, enumT minVal, enumT maxVal&gt;</pre>
+
+    <p><var>enumT</var> is &mdash; obviously &mdash; the type of the <code>enum</code> you'd like to wrap
+into a <code>smart_enum</code> class, and <var>minVal</var> and <var>maxVal</var> specify the
+range of valid values for this type of <code>enum</code>. Here is a concrete example:</p>
+
+      <pre>enum foo { state1, state2, state3 };
+sequential_smart_enum&lt;foo, state1, state3&gt; mystate(state1);</pre>
+
+    <p>The resulting <var>mystate</var> instance behaves like the underlying <code>enum</code>
+does, but you can use it as part of an arithmetic expression, increment, decrement, or assign
+it. Every time you do, <code>sequential_smart_enum</code> will make sure its value is in the
+range of [<var>minVal</var>,&nbsp;<var>maxVal</var>]. If an operation on the instance would
+result in an invalid value, a <code>std::out_of_range</code> exception will be thrown:</p>
+
+      <pre>my_foo_state = 0;      // state1
+++my_foo_state;        // state2
+my_foo_state++;        // state3
+my_foo_state -= 2;     // state1
+
+my_foo_state = -5;     // throws std::out_of_range
+(my_foo_state = 0)--;  // throws std::out_of_range</pre>
+
+    <p>The only significant difference between <code>sequential_smart_enum</code> and a plain
+<code>enum</code> is that you cannot instantiate an uninitialized
+<code>sequential_smart_enum</code>; the template does not provide a default constructor.</p>
+
+    <p>Please note that <code>sequential_smart_enum</code> cannot validate <code>enum</code>s
+that have gaps in their values, such as:</p>
+
+    <pre>enum not_sequential { first = 1, second = 3 };</pre>
+
+    <p>If you need to represent such an <code>enum</code>, you'll have to write an appropriate
+Incrementor of your own. More on this topic can be found in section <a
+href="#smartenum"><q>Using template <code>smart_enum</code> directly</q></a>.</p>
+
+
+
+    <hr>
     <h2 id="wrapped">Template <code>wrapped_smart_enum</code></h2>
 
+    <p>The template <code>wrapped_smart_enum</code> is to be used exactly like a <a
+href="#sequential"><code>sequential_smart_enum</code></a> and has the same properties &mdash;
+with one exception: The class is circular. If the value leaves the range
+[<var>minVal</var>,&nbsp;<var>maxVal</var>] at one end, it will be set to the other end. The
+class must be instantiated with the following template parameters:</p>
+
+    <pre>wrapped_smart_enum&lt;typename enumT, enumT minVal, enumT maxVal&gt;</pre>
+
+    <p><var>enumT</var> is &mdash; obviously &mdash; the type of the <code>enum</code> you'd like to wrap
+into a <code>smart_enum</code> class, and <var>minVal</var> and <var>maxVal</var> specify the
+range of valid values for this type of <code>enum</code>. Here is a concrete example:</p>
+
+      <pre>enum foo { state1, state2, state3 };
+wrapped_smart_enum&lt;foo, state1, state3&gt; mystate(state1);
+
+++my_foo_state;        // state2
+++my_foo_state;        // state3
+++my_foo_state;        // state1 (!)</pre>
+
+    <p>Because of its semantics, <code>wrapped_smart_enum</code> won't fail nor throw any
+exceptions. Like <code>sequential_smart_enum</code>, though, it cannot validate
+<code>enum</code>s that have gaps in their values!</p>
+
+
+    <hr>
     <h2 id="bounded">Template <code>bounded_smart_enum</code></h2>
 
+    <p>The template <code>bounded_smart_enum</code> is to be used exactly like a <a
+href="#sequential"><code>sequential_smart_enum</code></a> and has the same properties &mdash;
+with one exception: The class won't let its value leave the range
+[<var>minVal</var>,&nbsp;<var>maxVal</var>] by substituting <var>minVal</var> for any value for
+any value that is smaller than <var>minVal</var> and <var>maxVal</var> for any value that is
+larger than <var>maxVal</var>. It must be instantiated with the following template
+parameters:</p>
+
+    <pre>bounded_smart_enum&lt;typename enumT, enumT minVal, enumT maxVal&gt;</pre>
+
+    <p><var>enumT</var> is &mdash; obviously &mdash; the type of the <code>enum</code> you'd like to wrap
+into a <code>smart_enum</code> class, and <var>minVal</var> and <var>maxVal</var> specify the
+range of valid values for this type of <code>enum</code>. Here is a concrete example:</p>
+
+      <pre>enum foo { state1, state2, state3 };
+bounded_smart_enum&lt;foo, state1, state3&gt; mystate(state1);
+
+my_foo_state = -50;    // state1 (minVal)
+my_foo_state = 50;     // state3 (maxVal)
+++my_foo_state;        // still state3
+my_foo_state += 100;   // and still state3</pre>
+
+    <p>This property is achived by using the modulus operator; hence it is possible to assign
+arbitrary value to the instance and still get a (hopefully) meaningful result:</p>
+
+<pre>
+my_foo_state = 50;     // 50 % 3 = 2 --&gt; state3</pre>
+
+    <p>Consequently, <code>bounded_smart_enum</code> won't fail nor throw any exceptions. Like
+<code>sequential_smart_enum</code>, though, it cannot validate <code>enum</code>s
+that have gaps in their values.</p>
+
+
+    <hr>
     <h2 id="smartenum">Using template <code>smart_enum</code> directly</h2>
 
+    <p>[to be written once the class is really stable]</p>
+
+    <hr>
     <h2 id="madness">Sheer madness with <code>boost::lambda</code></h2>
 
-    <p><a href="http://www.boost.org/libs/lambda/doc/">lambda</a></p>
+    <p>If you are really adventureous, don't fear discovering esotheric compiler bugs, and
+always wanted to use template meta-programming, you can combine the <a
+href="http://www.boost.org/libs/lambda/doc/">boost::lambda</a> library with
+<code>smart_enum</code>. Just set the Incrementor to be used when instantiating the
+<code>smart_enum</code> class, then you can use a lambda function to write the code
+on-the-fly:</p>
 
+    <fieldset><legend>Really weird stuff&nbsp&hellip;</legend>
+<pre>using namespace boost::lambda;    // Be afraid, be very afraid!
+
+enum myEnum { north = 17, east = 4, south = 92, west = -5 };
+
+typedef smart_enum&lt;
+                  myEnum,
+                  boost::function&lt;myEnum, int, int&gt;
+                  &gt; my_enum_t;
+my_enum_t e(north, (
+    // Verify that _1 is a valid myEnum.
+
+    if_then(_1 != north &amp;&amp; _1 != east &amp;&amp; _1 != south &amp;&amp; _1 != west,
+            throw_exception(std::out_of_range("invalid myEnum!"))),
+
+    // Our enum is wrapped, what allows for two nice short-cuts.
+
+    _2 = _2 % 4,
+    if_then(_2 &lt; 0, _2 = 4 + _2),
+
+    // Now increment appropriately.
+
+    while_loop(--_2 &gt;= 0, switch_statement(
+                   _1,
+                   case_statement&lt;north&gt;(_1 = east),
+                   case_statement&lt;east&gt; (_1 = south),
+                   case_statement&lt;south&gt;(_1 = west),
+                   case_statement&lt;west&gt; (_1 = north))),
+
+    // Return result.
+
+    ll_static_cast&lt;myEnum&gt;(_1)));
+
+assert(e == north);
+assert(++e == east);
+assert(++e == south);
+assert(++e == west);
+assert(++e == north);
+assert(++e == east);</pre></fieldset>
+
+    <p>This example almost exactly duplicates the functionality of a <a
+href="#wrapped"><code>wrapped_smart_enum</code></a>, but unlike its simpler (and more generic)
+counterpart, this version can cope with an <code>enum</code> that is not sequential. Take a
+look at the <a href="test_lambda_enum.cpp"><tt>test_lambda_enum.cpp</tt> regression test</a>
+included in this library, if you want to see a full example program for this technique.</p>
+
+
+    <hr>
+    <h2 id="download">Downloading the library</h2>
+
+    <p>The current version of the <code>smart_enum</code>library is available by checking-out
+the <a href="http://sourceforge.net/projects/boost-sandbox/">Boost Sandbox</a> project via CVS,
+or by downloading the archive <a
+href="smart-enum-src.tar.gz"><tt>smart-enum-src.tar.gz</tt></a> directly.</p>
+
+    <p>Since this component is really just being developed, I would really, really appreciate
+any kind of feedback, ideas for improvement, bug reports, or just general thoughts!</p>
+
+
+    <hr>
     <h2 id="license">License</h2>
 
     <p>Copyright &copy; 2002 by <a href="mailto:simons@computer.org">Peter Simons
