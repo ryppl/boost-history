@@ -56,7 +56,7 @@ struct iter_fold_next<LastIterator, LastIterator, ForwardOp, State>
 };
 
 template <class Iterator, class LastIterator, class State, class BackwardOp>
-struct iter_fold_prev : apply2<BackwardOp,Iterator,State>
+struct iter_fold_prev : apply2<BackwardOp,State,Iterator>
 {
 };
 
@@ -85,7 +85,7 @@ template <class Iterator, class LastIterator, class State, class BackwardOp>
 struct iter_fold_prev
     : select_type<is_same<Iterator,LastIterator>::value
                   , iter_fold_done<Iterator,State>
-                  , apply2<BackwardOp,Iterator,State>
+                  , apply2<BackwardOp,State,Iterator>
       >::type
 {};
 #endif
@@ -160,7 +160,7 @@ struct iter_fold_impl
 struct select2nd
 {
     template <class T, class U>
-    struct apply : iter_fold_done<T,U>
+    struct apply : iter_fold_done<U,T>
     {
     };
 };

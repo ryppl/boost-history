@@ -50,7 +50,7 @@ struct choose1
 
 struct choose2
 {
-    template <class XIter, class Y>
+    template <class Y, class XIter>
     struct apply
     {
         typedef typename XIter::type X;
