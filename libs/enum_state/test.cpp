@@ -4,41 +4,9 @@
 #include <stdexcept>
 #include <functional>
 
-template<typename enumT, enumT minVal, enumT maxVal>
-struct SequentialIncrementor : public std::binary_function<const int, const int, enumT>
-    {
-    enumT operator() (const int val, const int n) const
-        {
-        if (val + n >= minVal && val + n <= maxVal)
-            return enumT(val + n);
-        else
-            throw std::out_of_range("incrementation would yield invalid enum");
-        }
-    };
-
-template<typename enumT, enumT minVal, enumT maxVal>
-struct WrappingIncrementor : public std::binary_function<const int, const int, enumT>
-    {
-    enumT operator() (const int val, const int n) const
-        {
-        return enumT(((val - minVal + n) % (maxVal - minVal + 1)) + minVal);
-        }
-    };
-
-template<typename enumT, enumT minVal, enumT maxVal>
-struct BoundedIncrementor : public std::binary_function<const int, const int, enumT>
-    {
-    enumT operator() (const int val, const int n) const
-        {
-        int res = val + n;
-        if (res < minVal)
-            return minVal;
-        else if (res > maxVal)
-            return maxVal;
-        else
-            return enumT(res);
-        }
-    };
+//////////////////////////////////////////////////
+// Generic smart_enum<> class template.         //
+//////////////////////////////////////////////////
 
 template<typename enumT, class incrementorT>
 class smart_enum
@@ -72,6 +40,97 @@ class smart_enum
     };
 
 //////////////////////////////////////////////////
+// sequential_smart_enum<> specialization.      //
+//////////////////////////////////////////////////
+
+template<typename enumT, enumT minVal, enumT maxVal>
+struct SequentialIncrementor : public std::binary_function<const int, const int, enumT>
+    {
+    enumT operator() (const int val, const int n) const
+        {
+        if (val + n >= minVal && val + n <= maxVal)
+            return enumT(val + n);
+        else
+            throw std::out_of_range("incrementation would yield invalid enum");
+        }
+    };
+
+template<typename enumT, enumT minVal, enumT maxVal>
+struct sequential_smart_enum : public smart_enum<enumT, SequentialIncrementor<enumT, minVal, maxVal> >
+    {
+    typedef smart_enum<enumT, SequentialIncrementor<enumT, minVal, maxVal> > smart_enum_type;
+    typedef typename smart_enum_type::enum_type         enum_type;
+    typedef typename smart_enum_type::incrementor_type  incrementor_type;
+    enum { min = minVal, max = maxVal };
+
+    sequential_smart_enum(const int i) : smart_enum_type(i, incrementor_type())
+        { }
+    sequential_smart_enum(const enum_type i) : smart_enum_type(i, incrementor_type())
+        { }
+    };
+
+
+//////////////////////////////////////////////////
+// wrapped_smart_enum<> specialization.         //
+//////////////////////////////////////////////////
+
+template<typename enumT, enumT minVal, enumT maxVal>
+struct WrappedIncrementor : public std::binary_function<const int, const int, enumT>
+    {
+    enumT operator() (const int val, const int n) const
+        {
+        return enumT(((val - minVal + n) % (maxVal - minVal + 1)) + minVal);
+        }
+    };
+
+template<typename enumT, enumT minVal, enumT maxVal>
+struct wrapped_smart_enum : public smart_enum<enumT, WrappedIncrementor<enumT, minVal, maxVal> >
+    {
+    typedef smart_enum<enumT, WrappedIncrementor<enumT, minVal, maxVal> > smart_enum_type;
+    typedef typename smart_enum_type::enum_type         enum_type;
+    typedef typename smart_enum_type::incrementor_type  incrementor_type;
+    enum { min = minVal, max = maxVal };
+
+    wrapped_smart_enum(const int i) : smart_enum_type(i, incrementor_type())
+        { }
+    wrapped_smart_enum(const enum_type i) : smart_enum_type(i, incrementor_type())
+        { }
+    };
+
+//////////////////////////////////////////////////
+// bounded_smart_enum<> specialization.         //
+//////////////////////////////////////////////////
+
+template<typename enumT, enumT minVal, enumT maxVal>
+struct BoundedIncrementor : public std::binary_function<const int, const int, enumT>
+    {
+    enumT operator() (const int val, const int n) const
+        {
+        int res = val + n;
+        if (res < minVal)
+            return minVal;
+        else if (res > maxVal)
+            return maxVal;
+        else
+            return enumT(res);
+        }
+    };
+
+template<typename enumT, enumT minVal, enumT maxVal>
+struct bounded_smart_enum : public smart_enum<enumT, BoundedIncrementor<enumT, minVal, maxVal> >
+    {
+    typedef smart_enum<enumT, BoundedIncrementor<enumT, minVal, maxVal> > smart_enum_type;
+    typedef typename smart_enum_type::enum_type         enum_type;
+    typedef typename smart_enum_type::incrementor_type  incrementor_type;
+    enum { min = minVal, max = maxVal };
+
+    bounded_smart_enum(const int i) : smart_enum_type(i, incrementor_type())
+        { }
+    bounded_smart_enum(const enum_type i) : smart_enum_type(i, incrementor_type())
+        { }
+    };
+
+//////////////////////////////////////////////////
 // Test program.                                //
 //////////////////////////////////////////////////
 
@@ -91,7 +150,12 @@ class sequential_enum_test
   public:
     sequential_enum_test()
         {
-        smart_enum<myEnum, SequentialIncrementor<myEnum, state1, state4> > e(state1);
+        typedef sequential_smart_enum<myEnum, state1, state4> my_enum_t;
+        my_enum_t e(state1);
+
+        // Test the boundaries
+        BOOST_STATIC_ASSERT((myEnum(my_enum_t::min) == state1));
+        BOOST_STATIC_ASSERT((myEnum(my_enum_t::max) == state4));
 
         // Test operator++
         BOOST_CRITICAL_TEST(e == state1);
@@ -145,7 +209,12 @@ class wrapped_enum_test
   public:
     wrapped_enum_test()
         {
-        smart_enum<myEnum, WrappingIncrementor<myEnum, state1, state4> > e(state1);
+        typedef wrapped_smart_enum<myEnum, state1, state4> my_enum_t;
+        my_enum_t e(state1);
+
+        // Test the boundaries
+        BOOST_STATIC_ASSERT((myEnum(my_enum_t::min) == state1));
+        BOOST_STATIC_ASSERT((myEnum(my_enum_t::max) == state4));
 
         // Verify wrapping properties
         BOOST_CRITICAL_TEST(e == state1);
@@ -166,7 +235,12 @@ class bounded_enum_test
   public:
     bounded_enum_test()
         {
-        smart_enum<myEnum, BoundedIncrementor<myEnum, state1, state4> > e(state1);
+        typedef bounded_smart_enum<myEnum, state1, state4> my_enum_t;
+        my_enum_t e(state1);
+
+        // Test the boundaries
+        BOOST_STATIC_ASSERT((myEnum(my_enum_t::min) == state1));
+        BOOST_STATIC_ASSERT((myEnum(my_enum_t::max) == state4));
 
         // Verify upper bound
         BOOST_CRITICAL_TEST(e == state1);
