@@ -1493,12 +1493,12 @@ namespace numerics {
             // Indices
             NUMERICS_INLINE
             size_type index1 () const {
-                const matrix &m = (*this) ();
+                matrix &m = (*this) ();
                 return functor_type::index1 (it_ - m.begin1 ().it_, m.size1 (), m.size2 ());
             }
             NUMERICS_INLINE
             size_type index2 () const {
-                const matrix &m = (*this) ();
+                matrix &m = (*this) ();
                 return functor_type::index2 (it_ - m.begin1 ().it_, m.size1 (), m.size2 ());
             }
 
@@ -1734,12 +1734,12 @@ namespace numerics {
             // Indices
             NUMERICS_INLINE
             size_type index1 () const {
-                const matrix &m = (*this) ();
+                matrix &m = (*this) ();
                 return functor_type::index1 (it_ - m.begin2 ().it_, m.size1 (), m.size2 ());
             }
             NUMERICS_INLINE
             size_type index2 () const {
-                const matrix &m = (*this) ();
+                matrix &m = (*this) ();
                 return functor_type::index2 (it_ - m.begin2 ().it_, m.size1 (), m.size2 ());
             }
 
@@ -4016,6 +4016,7 @@ namespace numerics {
 }
 
 #endif 
+
 
 
 
