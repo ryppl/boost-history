@@ -1,7 +1,7 @@
 #include <boost/collection_traits.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/type_traits.hpp>
-#include <boost/test/included/test_exec_monitor.hpp>
+#include <boost/test/unit_test.hpp>
 #include <boost/test/test_tools.hpp>
 #include <iostream>
 
@@ -37,25 +37,33 @@ void check_array()
     //typedef container<const array_t>::result_iterator iter;
     //cout << typeid( iter() ).name() << endl;
     
-    BOOST_CHECK( begin( my_array ) == my_array );
-    BOOST_CHECK( end( my_array )   == my_array + size( my_array ) );
-    BOOST_CHECK( empty( my_array ) == false );
+    BOOST_CHECK_EQUAL( begin( my_array ), my_array );
+    BOOST_CHECK_EQUAL( end( my_array ), my_array + size( my_array ) );
+    BOOST_CHECK_EQUAL( empty( my_array ), false );
     //BOOST_CHECK( size( my_array ) == sizeof( sizer( my_array ) ) );
 
-    BOOST_CHECK( begin( ca ) == ca );
-    BOOST_CHECK( end( ca )   == ca + size( ca ) );
-    BOOST_CHECK( empty( ca ) == false );
+    BOOST_CHECK_EQUAL( begin( ca ), ca );
+    BOOST_CHECK_EQUAL( end( ca ), ca + size( ca ) );
+    BOOST_CHECK_EQUAL( empty( ca ),false );
     //BOOST_CHECK( size( ca ) == sizeof( sizer( ca ) ) );
 
 }
 
+#include <boost/test/included/unit_test_framework.hpp> 
+#include <iostream>
 
+using boost::unit_test_framework::test_suite;
 
-int test_main( int, char*[] )
+test_suite* init_unit_test_suite( int argc, char* argv[] )
 {
-    check_array();
+    test_suite* test = BOOST_TEST_SUITE( "Collection Traits Test Suite" );
 
-    return 0;
+    test->add( BOOST_TEST_CASE( &check_array ) );
+
+    return test;
 }
+
+
+
 
 

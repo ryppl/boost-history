@@ -1,7 +1,7 @@
 #include <boost/collection_traits.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/type_traits.hpp>
-#include <boost/test/included/test_exec_monitor.hpp>
+#include <boost/test/unit_test.hpp>
 #include <boost/test/test_tools.hpp>
 #include <boost/config.hpp>
 #include <vector>
@@ -58,14 +58,30 @@ void check_iterator()
     BOOST_CHECK( empty( vec ) );
     copy( iter, ::std::back_inserter( vec ) );
     BOOST_CHECK( !empty( vec ) );
+    while( ++iter != end( iter ) )
+        ;
     BOOST_CHECK( empty( iter ) );   
 }
 
 
 
-int test_main( int, char*[] )
-{
-    check_iterator();
+#include <boost/test/included/unit_test_framework.hpp> 
+#include <iostream>
 
-    return 0;
+using boost::unit_test_framework::test_suite;
+
+test_suite* init_unit_test_suite( int argc, char* argv[] )
+{
+    test_suite* test = BOOST_TEST_SUITE( "Collection Traits Test Suite" );
+
+    test->add( BOOST_TEST_CASE( &check_iterator ) );
+
+    return test;
 }
+
+
+
+
+
+
+
