@@ -47,7 +47,10 @@ namespace boost { namespace numeric { namespace ublas {
     template<class T, class F1, class F2, class A>
     class symmetric_matrix: 
         public matrix_expression<symmetric_matrix<T, F1, F2, A> > {
-    public:      
+    public:
+#ifdef BOOST_UBLAS_ENABLE_PROXY_SHORTCUTS
+        BOOST_UBLAS_USING matrix_expression<symmetric_matrix<T, F1, F2, A> >::operator ();
+#endif
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
         typedef T value_type;
@@ -297,15 +300,15 @@ namespace boost { namespace numeric { namespace ublas {
         typedef matrix_row_const_iterator<self_type, packed_random_access_iterator_tag> const_iterator1;
         typedef matrix_column_const_iterator<self_type, packed_random_access_iterator_tag> const_iterator2;
 #ifdef BOOST_MSVC_STD_ITERATOR
-        typedef reverse_iterator<const_iterator1, typename matrix_row<self_type>, typename matrix_row<const_self_type> > const_reverse_iterator1;
-        typedef reverse_iterator<iterator1, typename matrix_row<self_type>, typename matrix_row<self_type> > reverse_iterator1;
-        typedef reverse_iterator<const_iterator2, typename matrix_column<self_type>, typename matrix_column<const_self_type> > const_reverse_iterator2;
-        typedef reverse_iterator<iterator2, typename matrix_column<self_type>, typename matrix_column<self_type> > reverse_iterator2;
+        typedef reverse_iterator_base<const_iterator1, typename matrix_row<self_type>, typename matrix_row<const_self_type> > const_reverse_iterator1;
+        typedef reverse_iterator_base<iterator1, typename matrix_row<self_type>, typename matrix_row<self_type> > reverse_iterator1;
+        typedef reverse_iterator_base<const_iterator2, typename matrix_column<self_type>, typename matrix_column<const_self_type> > const_reverse_iterator2;
+        typedef reverse_iterator_base<iterator2, typename matrix_column<self_type>, typename matrix_column<self_type> > reverse_iterator2;
 #else
-        typedef reverse_iterator<const_iterator1> const_reverse_iterator1;
-        typedef reverse_iterator<iterator1> reverse_iterator1;
-        typedef reverse_iterator<const_iterator2> const_reverse_iterator2;
-        typedef reverse_iterator<iterator2> reverse_iterator2;
+        typedef reverse_iterator_base<const_iterator1> const_reverse_iterator1;
+        typedef reverse_iterator_base<iterator1> reverse_iterator1;
+        typedef reverse_iterator_base<const_iterator2> const_reverse_iterator2;
+        typedef reverse_iterator_base<iterator2> reverse_iterator2;
 #endif
 #else
 #ifdef BOOST_UBLAS_USE_INDEXED_ITERATOR
@@ -320,15 +323,15 @@ namespace boost { namespace numeric { namespace ublas {
         class iterator2;
 #endif
 #ifdef BOOST_MSVC_STD_ITERATOR
-        typedef reverse_iterator1<const_iterator1, value_type, const_reference> const_reverse_iterator1;
-        typedef reverse_iterator1<iterator1, value_type, reference> reverse_iterator1;
-        typedef reverse_iterator2<const_iterator2, value_type, const_reference> const_reverse_iterator2;
-        typedef reverse_iterator2<iterator2, value_type, reference> reverse_iterator2;
+        typedef reverse_iterator_base1<const_iterator1, value_type, const_reference> const_reverse_iterator1;
+        typedef reverse_iterator_base1<iterator1, value_type, reference> reverse_iterator1;
+        typedef reverse_iterator_base2<const_iterator2, value_type, const_reference> const_reverse_iterator2;
+        typedef reverse_iterator_base2<iterator2, value_type, reference> reverse_iterator2;
 #else
-        typedef reverse_iterator1<const_iterator1> const_reverse_iterator1;
-        typedef reverse_iterator1<iterator1> reverse_iterator1;
-        typedef reverse_iterator2<const_iterator2> const_reverse_iterator2;
-        typedef reverse_iterator2<iterator2> reverse_iterator2;
+        typedef reverse_iterator_base1<const_iterator1> const_reverse_iterator1;
+        typedef reverse_iterator_base1<iterator1> reverse_iterator1;
+        typedef reverse_iterator_base2<const_iterator2> const_reverse_iterator2;
+        typedef reverse_iterator_base2<iterator2> reverse_iterator2;
 #endif
 #endif
 
@@ -946,6 +949,9 @@ namespace boost { namespace numeric { namespace ublas {
     class symmetric_adaptor:
         public matrix_expression<symmetric_adaptor<M, F> > {
     public:
+#ifdef BOOST_UBLAS_ENABLE_PROXY_SHORTCUTS
+        BOOST_UBLAS_USING matrix_expression<symmetric_adaptor<M, F> >::operator ();
+#endif
         typedef const M const_matrix_type;
         typedef M matrix_type;
         typedef F functor_type;
@@ -1113,15 +1119,15 @@ namespace boost { namespace numeric { namespace ublas {
         typedef matrix_row_const_iterator<self_type, packed_random_access_iterator_tag> const_iterator1;
         typedef matrix_column_const_iterator<self_type, packed_random_access_iterator_tag> const_iterator2;
 #ifdef BOOST_MSVC_STD_ITERATOR
-        typedef reverse_iterator<const_iterator1, typename matrix_row<self_type>, typename matrix_row<const_self_type> > const_reverse_iterator1;
-        typedef reverse_iterator<iterator1, typename matrix_row<self_type>, typename matrix_row<self_type> > reverse_iterator1;
-        typedef reverse_iterator<const_iterator2, typename matrix_column<self_type>, typename matrix_column<const_self_type> > const_reverse_iterator2;
-        typedef reverse_iterator<iterator2, typename matrix_column<self_type>, typename matrix_column<self_type> > reverse_iterator2;
+        typedef reverse_iterator_base<const_iterator1, typename matrix_row<self_type>, typename matrix_row<const_self_type> > const_reverse_iterator1;
+        typedef reverse_iterator_base<iterator1, typename matrix_row<self_type>, typename matrix_row<self_type> > reverse_iterator1;
+        typedef reverse_iterator_base<const_iterator2, typename matrix_column<self_type>, typename matrix_column<const_self_type> > const_reverse_iterator2;
+        typedef reverse_iterator_base<iterator2, typename matrix_column<self_type>, typename matrix_column<self_type> > reverse_iterator2;
 #else
-        typedef reverse_iterator<const_iterator1> const_reverse_iterator1;
-        typedef reverse_iterator<iterator1> reverse_iterator1;
-        typedef reverse_iterator<const_iterator2> const_reverse_iterator2;
-        typedef reverse_iterator<iterator2> reverse_iterator2;
+        typedef reverse_iterator_base<const_iterator1> const_reverse_iterator1;
+        typedef reverse_iterator_base<iterator1> reverse_iterator1;
+        typedef reverse_iterator_base<const_iterator2> const_reverse_iterator2;
+        typedef reverse_iterator_base<iterator2> reverse_iterator2;
 #endif
 #else
 #ifdef BOOST_UBLAS_USE_INDEXED_ITERATOR
@@ -1136,15 +1142,15 @@ namespace boost { namespace numeric { namespace ublas {
         class iterator2;
 #endif
 #ifdef BOOST_MSVC_STD_ITERATOR
-        typedef reverse_iterator1<const_iterator1, value_type, const_reference> const_reverse_iterator1;
-        typedef reverse_iterator1<iterator1, value_type, reference> reverse_iterator1;
-        typedef reverse_iterator2<const_iterator2, value_type, const_reference> const_reverse_iterator2;
-        typedef reverse_iterator2<iterator2, value_type, reference> reverse_iterator2;
+        typedef reverse_iterator_base1<const_iterator1, value_type, const_reference> const_reverse_iterator1;
+        typedef reverse_iterator_base1<iterator1, value_type, reference> reverse_iterator1;
+        typedef reverse_iterator_base2<const_iterator2, value_type, const_reference> const_reverse_iterator2;
+        typedef reverse_iterator_base2<iterator2, value_type, reference> reverse_iterator2;
 #else
-        typedef reverse_iterator1<const_iterator1> const_reverse_iterator1;
-        typedef reverse_iterator1<iterator1> reverse_iterator1;
-        typedef reverse_iterator2<const_iterator2> const_reverse_iterator2;
-        typedef reverse_iterator2<iterator2> reverse_iterator2;
+        typedef reverse_iterator_base1<const_iterator1> const_reverse_iterator1;
+        typedef reverse_iterator_base1<iterator1> reverse_iterator1;
+        typedef reverse_iterator_base2<const_iterator2> const_reverse_iterator2;
+        typedef reverse_iterator_base2<iterator2> reverse_iterator2;
 #endif
 #endif
 

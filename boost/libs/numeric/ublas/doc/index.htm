@@ -9,8 +9,8 @@ content="text/html; charset=iso-8859-1">
 
 <body bgcolor="#FFFFFF">
 
-<h1><img src="c++boost.gif" alt="c++boost.gif" align="center"> 
-Basic Linear Algebra</h1>
+<h1><img src="c++boost.gif" alt="c++boost.gif" align="center"
+width="277" height="86"> Basic Linear Algebra</h1>
 
 <p>uBLAS is a C++ template class library that provides <a
 href="http://www.netlib.org/blas">BLAS</a> level 1, 2, 3
@@ -34,7 +34,7 @@ containers, views and expression templated operations is a mostly
 <a href="http://www.sgi.com/tech/stl">STL</a> conforming iterator
 interface.</p>
 
-<p>Dense, packed and sparse matrix classes are tested with the <a
+<p>Dense, packed and sparse matrix classes are being tested with the <a
 href="http://www.netlib.org/clapack">CLAPACK</a> test suite.</p>
 
 <p>Known limitations:</p>
@@ -205,7 +205,7 @@ href="http://www.netlib.org/clapack">CLAPACK</a> test suite.</p>
 
 <h2>Supported Platforms</h2>
 
-<p>The main development platform for uBLAS was MSVC 6.0 with
+<p>As main development platform for uBLAS we used MSVC 6.0 with
 Dinkumware STL. Other compilers known to accept the library are</p>
 
 <ul>
@@ -220,9 +220,10 @@ Dinkumware STL. Other compilers known to accept the library are</p>
 <h2>Download</h2>
 
 <p>You can download the current stable release of the source code
-from <a href="http://www.genesys-e.org/ublas/downloads/ublas.zip">here</a>. 
-Prerequisite is the latest stable release of the <a href="http://www.boost.org">Boost</a>
-libraries Configuration, Timer and optionally SmartPointer.</p>
+from <a href="http://www.genesys-e.org/ublas/downloads/ublas.zip">here</a>.
+Prerequisite is the latest stable release of the <a
+href="http://www.boost.org">Boost</a> libraries Configuration,
+Timer and optionally SmartPointer.</p>
 
 <h2>CVS Access</h2>
 
@@ -254,14 +255,47 @@ mailing lists of <a href="http://www.boost.org">Boost</a>.</p>
 
 <h2>Authors and Credits</h2>
 
-<p>
+<p>uBLAS initially was written by Joerg Walter and Mathias Koch.
+We would like to thank all, which supported the development of
+this library: David Abrahams, Ed Brey, Fernando Cacciola, Beman Dawes,
+Bob Fletcher, Kresimir Fresl, Joachim Kessel, Toon Knapen,
+Jens Maurer, Gary Powell, Joachim Pyras, Peter Schmitteckert, Jeremy
+Siek, Markus Steffl, Michael Stevens, Benedikt Weber, Martin Weiser,
+Marc Zimmermann and the members of <a
+href="http://www.boost.org">Boost</a></p>
 
-<p>uBLAS initially was written by Joerg Walter and Mathias Koch. 
-We would like to thank all, which supported the development of this library: 
-David Abrahams, Fernando Cacciola, Beman Dawes, Kresimir Fresl, Joachim Kessel, 
-Toon Knapen, Jens Maurer, Gary Powell, Joachim Pyras, Peter Schmitteckert, 
-Jeremy Siek, Markus Steffl, Michael Stevens, Benedikt Weber, Martin Weiser, 
-Marc Zimmermann and the members of <a href="http://www.boost.org">Boost</a></p>
+<h2>Frequently Asked Questions</h2>
+
+<p>Q: I'm running the uBLAS dense vector and matrix benchmarks.
+Why do I see a significant performance difference between the
+native C and library implementations?<br>
+A: uBLAS distinguishes debug mode (size and type conformance
+checks enabled, expression templates disabled) and release mode
+(size and type conformance checks disabled, expression templates
+enabled). Please check, if the preprocessor symbol <code>NDEBUG</code>
+of <code>cassert</code> is defined. <code>NDEBUG</code> enables
+release mode, which in turn uses expression templates.</p>
+
+<p>Q: I've written some uBLAS tests, which try to incorrectly
+assign different matrix types or overrun vector and matrix
+dimensions. Why don't I get a compile time or runtime diagnostic?<br>
+A: uBLAS distinguishes debug mode (size and type conformance
+checks enabled, expression templates disabled) and release mode
+(size and type conformance checks disabled, expression templates
+enabled). Please check, if the preprocessor symbol <code>NDEBUG</code>
+of <code>cassert</code> is defined. <code>NDEBUG</code> disables
+debug mode, which is needed to get size and type conformance
+checks.</p>
+
+<p>Q: I've written some uBLAS benchmarks to measure the
+performance of matrix chain multiplications like <code>prod (A,
+prod (B, C))</code> and see a significant performance penalty due
+to the use of expression templates. How can I disable expression
+templates?<br>
+A: You do not need to disable expression templates. Please try
+reintroducing temporaries using either <code>prod (A, </code><code><em>matrix_type</em></code><code>
+(prod (B, C)))</code> or <code>prod (A, prod&lt;</code><code><em>matrix_type</em></code><code>&gt;
+(B, C))</code>.</p>
 
 <h2>Contact Information</h2>
 
@@ -270,13 +304,13 @@ href="mailto:ublas@genesys-e.org">note</a>. </p>
 
 <hr>
 
-<p>Copyright (©) 2000-2002 Joerg Walter, Mathias Koch <br> 
-Permission to copy, use, modify, sell and distribute this document is granted 
-provided this copyright notice appears in all copies. This document is provided 
-``as is'' without express or implied warranty, and with no claim as to its suitability 
-for any purpose.</p>
+<p>Copyright (©) 2000-2002 Joerg Walter, Mathias Koch <br>
+Permission to copy, use, modify, sell and distribute this
+document is granted provided this copyright notice appears in all
+copies. This document is provided ``as is'' without express or
+implied warranty, and with no claim as to its suitability for any
+purpose.</p>
 
 <p>Last revised: 8/3/2002</p>
-
 </body>
 </html>

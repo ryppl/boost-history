@@ -9,7 +9,8 @@ content="text/html; charset=iso-8859-1">
 
 <body bgcolor="#FFFFFF">
 
-<h1><img src="c++boost.gif" alt="c++boost.gif" align="center">Matrix Expressions</h1>
+<h1><img src="c++boost.gif" alt="c++boost.gif" align="center"
+width="277" height="86">Matrix Expressions</h1>
 
 <h2><a name="matrix_expression"></a>Matrix Expression</h2>
 
@@ -149,8 +150,8 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         <td>Returns the number of columns. </td>
     </tr>
     <tr>
-        <td><code>const_reference operator () (size_type i, size_type
-        j) const</code></td>
+        <td><code>const_reference operator () (size_type i,
+        size_type j) const</code></td>
         <td>Returns the value of the <code>j</code>-th element in
         the<code> i</code>-th row. </td>
     </tr>
@@ -248,12 +249,12 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
 
         // Reverse iterators
 
-        typedef reverse_iterator1&lt;const_iterator1&gt; const_reverse_iterator1;
+        typedef reverse_iterator_base1&lt;const_iterator1&gt; const_reverse_iterator1;
 
         const_reverse_iterator1 rbegin1 () const;
         const_reverse_iterator1 rend1 () const;
 
-        typedef reverse_iterator2&lt;const_iterator2&gt; const_reverse_iterator2;
+        typedef reverse_iterator_base2&lt;const_iterator2&gt; const_reverse_iterator2;
 
         const_reverse_iterator2 rbegin2 () const;
         const_reverse_iterator2 rend2 () const;
@@ -325,8 +326,8 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         <td>Returns the number of columns. </td>
     </tr>
     <tr>
-        <td><code>const_reference operator () (size_type i, size_type
-        j) const</code></td>
+        <td><code>const_reference operator () (size_type i,
+        size_type j) const</code></td>
         <td>Returns the value of the <code>j</code>-th element in
         the<code> i</code>-th row. </td>
     </tr>
@@ -487,22 +488,22 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
 
         // Reverse iterators
 
-        typedef reverse_iterator1&lt;const_iterator1&gt; const_reverse_iterator1;
+        typedef reverse_iterator_base1&lt;const_iterator1&gt; const_reverse_iterator1;
 
         const_reverse_iterator1 rbegin1 () const;
         const_reverse_iterator1 rend1 () const;
 
-        typedef reverse_iterator1&lt;iterator1&gt; reverse_iterator1;
+        typedef reverse_iterator_base1&lt;iterator1&gt; reverse_iterator1;
 
         reverse_iterator1 rbegin1 ();
         reverse_iterator1 rend1 ();
 
-        typedef reverse_iterator2&lt;const_iterator2&gt; const_reverse_iterator2;
+        typedef reverse_iterator_base2&lt;const_iterator2&gt; const_reverse_iterator2;
 
         const_reverse_iterator2 rbegin2 () const;
         const_reverse_iterator2 rend2 () const;
 
-        typedef reverse_iterator2&lt;iterator2&gt; reverse_iterator2;
+        typedef reverse_iterator_base2&lt;iterator2&gt; reverse_iterator2;
 
         reverse_iterator2 rbegin2 ();
         reverse_iterator2 rend2 ();
@@ -582,8 +583,8 @@ matrix_expression&lt;matrix_unary2&lt;E, F&gt; &gt; </code>resp.</p>
         <td>Returns the number of columns. </td>
     </tr>
     <tr>
-        <td><code>const_reference operator () (size_type i, size_type
-        j) const</code></td>
+        <td><code>const_reference operator () (size_type i,
+        size_type j) const</code></td>
         <td>Returns the value of the <code>j</code>-th element in
         the<code> i</code>-th row. </td>
     </tr>
@@ -666,8 +667,8 @@ matrix_expression&lt;matrix_unary2&lt;E, F&gt; &gt; </code>resp.</p>
         typedef const_iterator1 iterator1;
         class const_iterator2;
         typedef const_iterator2 iterator2;
-        typedef reverse_iterator1&lt;const_iterator1&gt; const_reverse_iterator1;
-        typedef reverse_iterator2&lt;const_iterator2&gt; const_reverse_iterator2;
+        typedef reverse_iterator_base1&lt;const_iterator1&gt; const_reverse_iterator1;
+        typedef reverse_iterator_base2&lt;const_iterator2&gt; const_reverse_iterator2;
 
         // Element lookup
         const_iterator1 find_first1 (int rank, size_type i, size_type j) const;
@@ -814,8 +815,8 @@ matrix_expression&lt;matrix_unary2&lt;E, F&gt; &gt; </code>resp.</p>
         typedef const_iterator1 iterator1;
         class const_iterator2;
         typedef const_iterator2 iterator2;
-        typedef reverse_iterator1&lt;const_iterator1&gt; const_reverse_iterator1;
-        typedef reverse_iterator2&lt;const_iterator2&gt; const_reverse_iterator2;
+        typedef reverse_iterator_base1&lt;const_iterator1&gt; const_reverse_iterator1;
+        typedef reverse_iterator_base2&lt;const_iterator2&gt; const_reverse_iterator2;
 
         // Element lookup
         const_iterator1 find_first1 (int rank, size_type i, size_type j) const;
@@ -1090,8 +1091,8 @@ href="expression.htm#matrix_expression">Matrix Expression</a>. </p>
         <td>Returns the number of columns. </td>
     </tr>
     <tr>
-        <td><code>const_reference operator () (size_type i, size_type
-        j) const</code></td>
+        <td><code>const_reference operator () (size_type i,
+        size_type j) const</code></td>
         <td>Returns the value of the <code>j</code>-th element in
         the<code> i</code>-th row. </td>
     </tr>
@@ -1178,8 +1179,8 @@ href="expression.htm#matrix_expression">Matrix Expression</a>. </p>
         typedef const_iterator1 iterator1;
         class const_iterator2;
         typedef const_iterator2 iterator2;
-        typedef reverse_iterator1&lt;const_iterator1&gt; const_reverse_iterator1;
-        typedef reverse_iterator2&lt;const_iterator2&gt; const_reverse_iterator2;
+        typedef reverse_iterator_base1&lt;const_iterator1&gt; const_reverse_iterator1;
+        typedef reverse_iterator_base2&lt;const_iterator2&gt; const_reverse_iterator2;
 
         // Element lookup
         const_iterator1 find_first1 (int rank, size_type i, size_type j) const;
@@ -1476,8 +1477,8 @@ matrix_expression&lt;matrix_binary_scalar2&lt;E1, E2, F&gt; &gt; </code>resp.</p
         <td>Returns the number of columns. </td>
     </tr>
     <tr>
-        <td><code>const_reference operator () (size_type i, size_type
-        j) const</code></td>
+        <td><code>const_reference operator () (size_type i,
+        size_type j) const</code></td>
         <td>Returns the value of the <code>j</code>-th element in
         the<code> i</code>-th row. </td>
     </tr>
@@ -1563,8 +1564,8 @@ matrix_expression&lt;matrix_binary_scalar2&lt;E1, E2, F&gt; &gt; </code>resp.</p
         typedef const_iterator1 iterator1;
         class const_iterator2;
         typedef const_iterator2 iterator2;
-        typedef reverse_iterator1&lt;const_iterator1&gt; const_reverse_iterator1;
-        typedef reverse_iterator2&lt;const_iterator2&gt; const_reverse_iterator2;
+        typedef reverse_iterator_base1&lt;const_iterator1&gt; const_reverse_iterator1;
+        typedef reverse_iterator_base2&lt;const_iterator2&gt; const_reverse_iterator2;
 
         // Element lookup
         const_iterator1 find_first1 (int rank, size_type i, size_type j) const;
@@ -1714,8 +1715,8 @@ matrix_expression&lt;matrix_binary_scalar2&lt;E1, E2, F&gt; &gt; </code>resp.</p
         typedef const_iterator1 iterator1;
         class const_iterator2;
         typedef const_iterator2 iterator2;
-        typedef reverse_iterator1&lt;const_iterator1&gt; const_reverse_iterator1;
-        typedef reverse_iterator2&lt;const_iterator2&gt; const_reverse_iterator2;
+        typedef reverse_iterator_base1&lt;const_iterator1&gt; const_reverse_iterator1;
+        typedef reverse_iterator_base2&lt;const_iterator2&gt; const_reverse_iterator2;
 
         // Element lookup
         const_iterator1 find_first1 (int rank, size_type i, size_type j) const;
@@ -2154,7 +2155,7 @@ E2, F&gt; &gt;</code> resp.</p>
 
         // Reverse iterator
 
-        typedef reverse_iterator&lt;const_iterator&gt; const_reverse_iterator;
+        typedef reverse_iterator_base&lt;const_iterator&gt; const_reverse_iterator;
 
         const_reverse_iterator rbegin () const;
         const_reverse_iterator rend () const;
@@ -2250,7 +2251,7 @@ E2, F&gt; &gt;</code> resp.</p>
 
         // Reverse iterator
 
-        typedef reverse_iterator&lt;const_iterator&gt; const_reverse_iterator;
+        typedef reverse_iterator_base&lt;const_iterator&gt; const_reverse_iterator;
 
         const_reverse_iterator rbegin () const;
         const_reverse_iterator rend () const;
@@ -2298,6 +2299,16 @@ E2, F&gt; &gt;</code> resp.</p>
     prec_prod (const matrix_expression&lt;E1&gt; &amp;e1, 
                const vector_expression&lt;E2&gt; &amp;e2);
 
+    template&lt;class V, class E1, class E2&gt;
+    V
+    prod (const matrix_expression&lt;E1&gt; &amp;e1,
+          const vector_expression&lt;E2&gt; &amp;e2);
+
+    template&lt;class V, class E1, class E2&gt;
+    V
+    prec_prod (const matrix_expression&lt;E1&gt; &amp;e1,
+               const vector_expression&lt;E2&gt; &amp;e2);
+
     template&lt;class T1, class E1, class T2, class E2&gt;
     struct matrix_vector_binary2_traits {
         typedef column_major_tag dispatch_category;
@@ -2334,6 +2345,16 @@ E2, F&gt; &gt;</code> resp.</p>
     typename matrix_vector_binary2_traits&lt;typename type_traits&lt;typename E1::value_type&gt;::precision_type, E1, 
                                           typename type_traits&lt;typename E2::value_type&gt;::precision_type, E2&gt;::result_type
     prec_prod (const vector_expression&lt;E1&gt; &amp;e1, 
+               const matrix_expression&lt;E2&gt; &amp;e2);
+
+    template&lt;class V, class E1, class E2&gt;
+    V
+    prod (const vector_expression&lt;E1&gt; &amp;e1,
+          const matrix_expression&lt;E2&gt; &amp;e2);
+
+    template&lt;class V, class E1, class E2&gt;
+    V
+    prec_prod (const vector_expression&lt;E1&gt; &amp;e1,
                const matrix_expression&lt;E2&gt; &amp;e2);</code></pre>
 
 <h4>Description</h4>
@@ -2574,8 +2595,8 @@ F&gt; &gt;</code>.</p>
         <td>Returns the number of columns. </td>
     </tr>
     <tr>
-        <td><code>const_reference operator () (size_type i, size_type
-        j) const</code></td>
+        <td><code>const_reference operator () (size_type i,
+        size_type j) const</code></td>
         <td>Returns the value of the <code>j</code>-th element in
         the<code> i</code>-th row. </td>
     </tr>
@@ -2662,8 +2683,8 @@ F&gt; &gt;</code>.</p>
         typedef const_iterator1 iterator1;
         class const_iterator2;
         typedef const_iterator2 iterator2;
-        typedef reverse_iterator1&lt;const_iterator1&gt; const_reverse_iterator1;
-        typedef reverse_iterator2&lt;const_iterator2&gt; const_reverse_iterator2;
+        typedef reverse_iterator_base1&lt;const_iterator1&gt; const_reverse_iterator1;
+        typedef reverse_iterator_base2&lt;const_iterator2&gt; const_reverse_iterator2;
 
         // Element lookup
         const_iterator1 find_first1 (int rank, size_type i, size_type j) const;
@@ -2834,6 +2855,16 @@ F&gt; &gt;</code>.</p>
     typename matrix_matrix_binary_traits&lt;typename type_traits&lt;typename E1::value_type&gt;::precision_type, E1, 
                                          typename type_traits&lt;typename E2::value_type&gt;::precision_type, E2&gt;::result_type
     prec_prod (const matrix_expression&lt;E1&gt; &amp;e1, 
+               const matrix_expression&lt;E2&gt; &amp;e2);
+
+    template&lt;class M, class E1, class E2&gt;
+    M
+    prod (const matrix_expression&lt;E1&gt; &amp;e1,
+          const matrix_expression&lt;E2&gt; &amp;e2);
+
+    template&lt;class M, class E1, class E2&gt;
+    M
+    prec_prod (const matrix_expression&lt;E1&gt; &amp;e1,
                const matrix_expression&lt;E2&gt; &amp;e2);</code></pre>
 
 <h4>Description</h4>
@@ -2959,13 +2990,13 @@ product of the matrix expressions.</p>
 
 <hr>
 
-<p>Copyright (©) 2000-2002 Joerg Walter, Mathias Koch <br> 
-Permission to copy, use, modify, sell and distribute this document is granted 
-provided this copyright notice appears in all copies. This document is provided 
-``as is'' without express or implied warranty, and with no claim as to its suitability 
-for any purpose.</p>
+<p>Copyright (©) 2000-2002 Joerg Walter, Mathias Koch <br>
+Permission to copy, use, modify, sell and distribute this
+document is granted provided this copyright notice appears in all
+copies. This document is provided ``as is'' without express or
+implied warranty, and with no claim as to its suitability for any
+purpose.</p>
 
 <p>Last revised: 8/3/2002</p>
-
 </body>
 </html>

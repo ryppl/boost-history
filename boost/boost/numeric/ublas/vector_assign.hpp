@@ -288,7 +288,7 @@ namespace boost { namespace numeric { namespace ublas {
         DD (size, 2, r, (functor_type () (*it, *ite), ++ it, ++ ite));
 #endif
     }
-    // Indexing scase
+    // Indexing case
     template<class F, class V, class E>
     // This function seems to be big. So we do not let the compiler inline it.
     // BOOST_UBLAS_INLINE
@@ -330,8 +330,8 @@ namespace boost { namespace numeric { namespace ublas {
         typedef typename V::value_type value_type;
 #ifdef BOOST_UBLAS_TYPE_CHECK
         vector<value_type> cv (v.size ());
-        evaluate_vector_assign (scalar_assign<value_type, value_type> (), cv, v, sparse_proxy_tag ());
-        evaluate_vector_assign (functor_type (), cv, e, sparse_proxy_tag ());
+        indexing_vector_assign (scalar_assign<value_type, value_type> (), cv, v);
+        indexing_vector_assign (functor_type (), cv, e);
 #endif
         typename V::iterator it (v.begin ());
         typename V::iterator it_end (v.end ());
@@ -375,6 +375,11 @@ namespace boost { namespace numeric { namespace ublas {
         BOOST_UBLAS_CHECK (v.size () == e ().size (), bad_size ());
         typedef F functor_type;
         typedef typename V::value_type value_type;
+#ifdef BOOST_UBLAS_TYPE_CHECK
+        vector<value_type> cv (v.size ());
+        indexing_vector_assign (scalar_assign<value_type, value_type> (), cv, v);
+        indexing_vector_assign (functor_type (), cv, e);
+#endif
         typename V::iterator it (v.begin ());
         typename V::iterator it_end (v.end ());
         typename E::const_iterator ite (e ().begin ());
@@ -388,11 +393,6 @@ namespace boost { namespace numeric { namespace ublas {
                 functor_type () (*it, value_type ());
                 ++ it;
             } else if (compare > 0) {
-#ifdef BOOST_UBLAS_BOUNDS_CHECK
-                // Need the const member dispatched.
-                const V &cv = v;
-                BOOST_UBLAS_CHECK (functor_type::check (cv (ite.index ()), *ite), external_logic ());
-#endif
                 ++ ite;
             }
         }
@@ -400,13 +400,8 @@ namespace boost { namespace numeric { namespace ublas {
             functor_type () (*it, value_type ());
             ++ it;
         }
-#ifdef BOOST_UBLAS_BOUNDS_CHECK
-        while (ite != ite_end) {
-            // Need the const member dispatched.
-            const V &cv = v;
-            BOOST_UBLAS_CHECK (functor_type::check (cv (ite.index ()), *ite), external_logic ());
-            ++ ite;
-        }
+#ifdef BOOST_UBLAS_TYPE_CHECK
+        BOOST_UBLAS_CHECK (equals (v, cv), external_logic ());
 #endif
     }
 #endif
@@ -436,7 +431,7 @@ namespace boost { namespace numeric { namespace ublas {
             DD (size, 2, r, (functor_type () (*it, *ite), ++ it, ++ ite));
 #endif
         }
-        // Indexing scase
+        // Indexing case
         template<class V, class E>
         // This function seems to be big. So we do not let the compiler inline it.
         // BOOST_UBLAS_INLINE
@@ -475,8 +470,8 @@ namespace boost { namespace numeric { namespace ublas {
             typedef typename V::value_type value_type;
 #ifdef BOOST_UBLAS_TYPE_CHECK
             vector<value_type> cv (v.size ());
-            vector_assign<scalar_assign<value_type, value_type> > () (cv, v, sparse_proxy_tag ());
-            vector_assign<functor_type> () (cv, e, sparse_proxy_tag ());
+            vector_assign<scalar_assign<value_type, value_type> > ().indexing_assign (cv, v);
+            vector_assign<functor_type> ().indexing_assign  (cv, e);
 #endif
             typename V::iterator it (v.begin ());
             typename V::iterator it_end (v.end ());
@@ -519,6 +514,11 @@ namespace boost { namespace numeric { namespace ublas {
         void operator () (V &v, const vector_expression<E> &e, sparse_proxy_tag) {
             BOOST_UBLAS_CHECK (v.size () == e ().size (), bad_size ());
             typedef typename V::value_type value_type;
+#ifdef BOOST_UBLAS_TYPE_CHECK
+            vector<value_type> cv (v.size ());
+            vector_assign<scalar_assign<value_type, value_type> > ().indexing_assign (cv, v);
+            vector_assign<functor_type> ().indexing_assign  (cv, e);
+#endif
             typename V::iterator it (v.begin ());
             typename V::iterator it_end (v.end ());
             typename E::const_iterator ite (e ().begin ());
@@ -532,11 +532,6 @@ namespace boost { namespace numeric { namespace ublas {
                     functor_type () (*it, value_type ());
                     ++ it;
                 } else if (compare > 0) {
-#ifdef BOOST_UBLAS_BOUNDS_CHECK
-                    // Need the const member dispatched.
-                    const V &cv = v;
-                    BOOST_UBLAS_CHECK (functor_type::check (cv (ite.index ()), *ite), external_logic ());
-#endif
                     ++ ite;
                 }
             }
@@ -544,13 +539,8 @@ namespace boost { namespace numeric { namespace ublas {
                 functor_type () (*it, value_type ());
                 ++ it;
             }
-#ifdef BOOST_UBLAS_BOUNDS_CHECK
-            while (ite != ite_end) {
-                // Need the const member dispatched.
-                const V &cv = v;
-                BOOST_UBLAS_CHECK (functor_type::check (cv (ite.index ()), *ite), external_logic ());
-                ++ ite;
-            }
+#ifdef BOOST_UBLAS_TYPE_CHECK
+            BOOST_UBLAS_CHECK (equals (v, cv), external_logic ());
 #endif
         }
 #endif

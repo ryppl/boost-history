@@ -30,6 +30,9 @@ namespace boost { namespace numeric { namespace ublas {
     class sparse_matrix:
         public matrix_expression<sparse_matrix<T, F, A> > {
     public:
+#ifdef BOOST_UBLAS_ENABLE_PROXY_SHORTCUTS
+        BOOST_UBLAS_USING matrix_expression<sparse_matrix<T, F, A> >::operator ();
+#endif
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
         typedef T value_type;
@@ -265,15 +268,15 @@ namespace boost { namespace numeric { namespace ublas {
         class iterator2;
 #endif
 #ifdef BOOST_MSVC_STD_ITERATOR
-        typedef reverse_iterator1<const_iterator1, value_type, const_reference> const_reverse_iterator1;
-        typedef reverse_iterator1<iterator1, value_type, reference> reverse_iterator1;
-        typedef reverse_iterator2<const_iterator2, value_type, const_reference> const_reverse_iterator2;
-        typedef reverse_iterator2<iterator2, value_type, reference> reverse_iterator2;
+        typedef reverse_iterator_base1<const_iterator1, value_type, const_reference> const_reverse_iterator1;
+        typedef reverse_iterator_base1<iterator1, value_type, reference> reverse_iterator1;
+        typedef reverse_iterator_base2<const_iterator2, value_type, const_reference> const_reverse_iterator2;
+        typedef reverse_iterator_base2<iterator2, value_type, reference> reverse_iterator2;
 #else
-        typedef reverse_iterator1<const_iterator1> const_reverse_iterator1;
-        typedef reverse_iterator1<iterator1> reverse_iterator1;
-        typedef reverse_iterator2<const_iterator2> const_reverse_iterator2;
-        typedef reverse_iterator2<iterator2> reverse_iterator2;
+        typedef reverse_iterator_base1<const_iterator1> const_reverse_iterator1;
+        typedef reverse_iterator_base1<iterator1> reverse_iterator1;
+        typedef reverse_iterator_base2<const_iterator2> const_reverse_iterator2;
+        typedef reverse_iterator_base2<iterator2> reverse_iterator2;
 #endif
 
         // Element lookup
@@ -1058,6 +1061,9 @@ namespace boost { namespace numeric { namespace ublas {
     class sparse_vector_of_sparse_vector:
         public matrix_expression<sparse_vector_of_sparse_vector<T, F, A> > {
     public:
+#ifdef BOOST_UBLAS_ENABLE_PROXY_SHORTCUTS
+        BOOST_UBLAS_USING matrix_expression<sparse_vector_of_sparse_vector<T, F, A> >::operator ();
+#endif
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
         typedef T value_type;
@@ -1312,15 +1318,15 @@ namespace boost { namespace numeric { namespace ublas {
         class iterator2;
 #endif
 #ifdef BOOST_MSVC_STD_ITERATOR
-        typedef reverse_iterator1<const_iterator1, value_type, const_reference> const_reverse_iterator1;
-        typedef reverse_iterator1<iterator1, value_type, reference> reverse_iterator1;
-        typedef reverse_iterator2<const_iterator2, value_type, const_reference> const_reverse_iterator2;
-        typedef reverse_iterator2<iterator2, value_type, reference> reverse_iterator2;
+        typedef reverse_iterator_base1<const_iterator1, value_type, const_reference> const_reverse_iterator1;
+        typedef reverse_iterator_base1<iterator1, value_type, reference> reverse_iterator1;
+        typedef reverse_iterator_base2<const_iterator2, value_type, const_reference> const_reverse_iterator2;
+        typedef reverse_iterator_base2<iterator2, value_type, reference> reverse_iterator2;
 #else
-        typedef reverse_iterator1<const_iterator1> const_reverse_iterator1;
-        typedef reverse_iterator1<iterator1> reverse_iterator1;
-        typedef reverse_iterator2<const_iterator2> const_reverse_iterator2;
-        typedef reverse_iterator2<iterator2> reverse_iterator2;
+        typedef reverse_iterator_base1<const_iterator1> const_reverse_iterator1;
+        typedef reverse_iterator_base1<iterator1> reverse_iterator1;
+        typedef reverse_iterator_base2<const_iterator2> const_reverse_iterator2;
+        typedef reverse_iterator_base2<iterator2> reverse_iterator2;
 #endif
 
         // Element lookup
@@ -2202,7 +2208,10 @@ namespace boost { namespace numeric { namespace ublas {
     template<class T, class F, class IA, class TA>
     class compressed_matrix:
         public matrix_expression<compressed_matrix<T, F, IA, TA> > {
-    public:      
+    public:
+#ifdef BOOST_UBLAS_ENABLE_PROXY_SHORTCUTS
+        BOOST_UBLAS_USING matrix_expression<compressed_matrix<T, F, IA, TA> >::operator ();
+#endif
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
         typedef T value_type;
@@ -2525,15 +2534,15 @@ namespace boost { namespace numeric { namespace ublas {
         class iterator2;
 #endif
 #ifdef BOOST_MSVC_STD_ITERATOR
-        typedef reverse_iterator1<const_iterator1, value_type, const_reference> const_reverse_iterator1;
-        typedef reverse_iterator1<iterator1, value_type, reference> reverse_iterator1;
-        typedef reverse_iterator2<const_iterator2, value_type, const_reference> const_reverse_iterator2;
-        typedef reverse_iterator2<iterator2, value_type, reference> reverse_iterator2;
+        typedef reverse_iterator_base1<const_iterator1, value_type, const_reference> const_reverse_iterator1;
+        typedef reverse_iterator_base1<iterator1, value_type, reference> reverse_iterator1;
+        typedef reverse_iterator_base2<const_iterator2, value_type, const_reference> const_reverse_iterator2;
+        typedef reverse_iterator_base2<iterator2, value_type, reference> reverse_iterator2;
 #else
-        typedef reverse_iterator1<const_iterator1> const_reverse_iterator1;
-        typedef reverse_iterator1<iterator1> reverse_iterator1;
-        typedef reverse_iterator2<const_iterator2> const_reverse_iterator2;
-        typedef reverse_iterator2<iterator2> reverse_iterator2;
+        typedef reverse_iterator_base1<const_iterator1> const_reverse_iterator1;
+        typedef reverse_iterator_base1<iterator1> reverse_iterator1;
+        typedef reverse_iterator_base2<const_iterator2> const_reverse_iterator2;
+        typedef reverse_iterator_base2<iterator2> reverse_iterator2;
 #endif
 
         // Element lookup

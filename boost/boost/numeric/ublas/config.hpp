@@ -35,8 +35,11 @@
 #ifdef BOOST_MSVC
 // MSVC doesn't always accept the 'typename' keyword.
 #define BOOST_UBLAS_TYPENAME
+// MSVC doesn't accept the 'using' keyword (at least for importing base members).
+#define BOOST_UBLAS_USING
 #else
 #define BOOST_UBLAS_TYPENAME typename
+#define BOOST_UBLAS_USING using
 #endif
 // This could be eliminated.
 #define BOOST_UBLAS_EXPLICIT explicit
@@ -159,6 +162,8 @@
 #define BOOST_MSVC_STD_ITERATOR
 #endif
 
+#define BOOST_UBLAS_ENABLE_SPECIALIZED_ASSIGN
+
 #define BOOST_UBLAS_ENABLE_PROXY_SHORTCUTS
 
 #endif
@@ -182,8 +187,6 @@
 #define BOOST_UBLAS_USE_LONG_DOUBLE
 
 #define BOOST_UBLAS_ENABLE_SPECIALIZED_ASSIGN
-
-#define BOOST_UBLAS_ENABLE_PROXY_SHORTCUTS
 
 #endif
 
@@ -252,8 +255,19 @@ namespace boost { namespace numeric { namespace ublas {
     template<class T>
     class unbounded_array;
 
+#ifdef BOOST_UBLAS_ENABLE_INDEX_SET_ALL
+    template<class S = std::size_t, class D = std::ptrdiff_t>
+    class range;
+    template<class S = std::size_t, class D = std::ptrdiff_t>
+    class slice;
+    template<class A = unbounded_array<std::size_t>, class S = std::size_t, class D = std::ptrdiff_t>
+    class indirect_array;
+#else
+    class range;
+    class slice;
     template<class A = unbounded_array<std::size_t> >
     class indirect_array;
+#endif
 
     template<class I, class T>
     class map_array;

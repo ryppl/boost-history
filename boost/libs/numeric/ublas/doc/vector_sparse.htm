@@ -9,14 +9,18 @@ content="text/html; charset=iso-8859-1">
 
 <body bgcolor="#FFFFFF">
 
-<h1><img src="c++boost.gif" alt="c++boost.gif" align="center">Sparse Vector</h1>
+<h1><img src="c++boost.gif" alt="c++boost.gif" align="center"
+width="277" height="86">Sparse Vector</h1>
 
 <h2><a name="sparse_vector"></a>Sparse Vector</h2>
 
 <h4>Description</h4>
 
 <p>The templated class <code>sparse_vector&lt;T, A&gt; </code>is
-the base container adaptor for sparse vectors.</p>
+the base container adaptor for sparse vectors. For a <em>n</em>-dimensional
+sparse vector and <em>0 &lt;= i &lt; n </em>every non-zero
+element <em>v</em><sub><em>i</em></sub> is mapped to the <em>i-</em>th
+element of the container.</p>
 
 <h4>Example</h4>
 
@@ -419,12 +423,12 @@ href="container.htm#vector">Vector</a>.</p>
 
         // Reverse iterator
 
-        typedef reverse_iterator&lt;const_iterator&gt; const_reverse_iterator;
+        typedef reverse_iterator_base&lt;const_iterator&gt; const_reverse_iterator;
 
         const_reverse_iterator rbegin () const;
         const_reverse_iterator rend () const;
 
-        typedef reverse_iterator&lt;iterator&gt; reverse_iterator;
+        typedef reverse_iterator_base&lt;iterator&gt; reverse_iterator;
 
         reverse_iterator rbegin ();
         reverse_iterator rend ();
@@ -432,13 +436,13 @@ href="container.htm#vector">Vector</a>.</p>
 
 <hr>
 
-<p>Copyright (©) 2000-2002 Joerg Walter, Mathias Koch <br> 
-Permission to copy, use, modify, sell and distribute this document is granted 
-provided this copyright notice appears in all copies. This document is provided 
-``as is'' without express or implied warranty, and with no claim as to its suitability 
-for any purpose.</p>
+<p>Copyright (©) 2000-2002 Joerg Walter, Mathias Koch <br>
+Permission to copy, use, modify, sell and distribute this
+document is granted provided this copyright notice appears in all
+copies. This document is provided ``as is'' without express or
+implied warranty, and with no claim as to its suitability for any
+purpose.</p>
 
 <p>Last revised: 8/3/2002</p>
-
 </body>
 </html>

@@ -160,8 +160,6 @@ namespace boost { namespace numeric { namespace ublas {
     struct scalar_binary_assign_functor {
         typedef typename type_traits<T1>::reference argument1_type;
         typedef typename type_traits<T2>::const_reference argument2_type;
-        typedef typename type_traits<T1>::value_type check_argument1_type;
-        typedef typename type_traits<T2>::value_type check_argument2_type;
     };
 
     struct assign_tag {};
@@ -172,19 +170,11 @@ namespace boost { namespace numeric { namespace ublas {
         public scalar_binary_assign_functor<T1, T2> {
         typedef typename scalar_binary_assign_functor<T1, T2>::argument1_type argument1_type;
         typedef typename scalar_binary_assign_functor<T1, T2>::argument2_type argument2_type;
-        typedef typename scalar_binary_assign_functor<T1, T2>::check_argument1_type check_argument1_type;
-        typedef typename scalar_binary_assign_functor<T1, T2>::check_argument2_type check_argument2_type;
         typedef assign_tag assign_category;
 
         BOOST_UBLAS_INLINE
         void operator () (argument1_type t1, argument2_type t2) const {
             t1 = t2;
-        }
-        static
-        BOOST_UBLAS_INLINE
-        bool check (check_argument1_type t1, check_argument2_type t2) {
-            return type_traits<check_argument1_type>::equals (t1, check_argument1_type (0)) &&
-                   type_traits<check_argument2_type>::equals (t2, check_argument2_type (0));
         }
     };
     template<class T1, class T2>
@@ -192,18 +182,11 @@ namespace boost { namespace numeric { namespace ublas {
         public scalar_binary_assign_functor<T1, T2> {
         typedef typename scalar_binary_assign_functor<T1, T2>::argument1_type argument1_type;
         typedef typename scalar_binary_assign_functor<T1, T2>::argument2_type argument2_type;
-        typedef typename scalar_binary_assign_functor<T1, T2>::check_argument1_type check_argument1_type;
-        typedef typename scalar_binary_assign_functor<T1, T2>::check_argument2_type check_argument2_type;
         typedef computed_assign_tag assign_category;
 
         BOOST_UBLAS_INLINE
         void operator () (argument1_type t1, argument2_type t2) const {
             t1 += t2;
-        }
-        static
-        BOOST_UBLAS_INLINE
-        bool check (check_argument1_type t1, check_argument2_type t2) {
-            return type_traits<check_argument2_type>::equals (t2, check_argument2_type (0));
         }
     };
     template<class T1, class T2>
@@ -211,18 +194,11 @@ namespace boost { namespace numeric { namespace ublas {
         public scalar_binary_assign_functor<T1, T2> {
         typedef typename scalar_binary_assign_functor<T1, T2>::argument1_type argument1_type;
         typedef typename scalar_binary_assign_functor<T1, T2>::argument2_type argument2_type;
-        typedef typename scalar_binary_assign_functor<T1, T2>::check_argument1_type check_argument1_type;
-        typedef typename scalar_binary_assign_functor<T1, T2>::check_argument2_type check_argument2_type;
         typedef computed_assign_tag assign_category;
 
         BOOST_UBLAS_INLINE
         void operator () (argument1_type t1, argument2_type t2) const {
             t1 -= t2;
-        }
-        static
-        BOOST_UBLAS_INLINE
-        bool check (check_argument1_type t1, check_argument2_type t2) {
-            return type_traits<check_argument2_type>::equals (t2, check_argument2_type (0));
         }
     };
     template<class T1, class T2>
@@ -230,18 +206,11 @@ namespace boost { namespace numeric { namespace ublas {
         public scalar_binary_assign_functor<T1, T2> {
         typedef typename scalar_binary_assign_functor<T1, T2>::argument1_type argument1_type;
         typedef typename scalar_binary_assign_functor<T1, T2>::argument2_type argument2_type;
-        typedef typename scalar_binary_assign_functor<T1, T2>::check_argument1_type check_argument1_type;
-        typedef typename scalar_binary_assign_functor<T1, T2>::check_argument2_type check_argument2_type;
         typedef computed_assign_tag assign_category;
 
         BOOST_UBLAS_INLINE
         void operator () (argument1_type t1, argument2_type t2) const {
             t1 *= t2;
-        }
-        static
-        BOOST_UBLAS_INLINE
-        bool check (check_argument1_type t1, check_argument2_type t2) {
-            return type_traits<check_argument2_type>::equals (t2, check_argument2_type (1));
         }
     };
     template<class T1, class T2>
@@ -249,18 +218,11 @@ namespace boost { namespace numeric { namespace ublas {
         public scalar_binary_assign_functor<T1, T2> {
         typedef typename scalar_binary_assign_functor<T1, T2>::argument1_type argument1_type;
         typedef typename scalar_binary_assign_functor<T1, T2>::argument2_type argument2_type;
-        typedef typename scalar_binary_assign_functor<T1, T2>::check_argument1_type check_argument1_type;
-        typedef typename scalar_binary_assign_functor<T1, T2>::check_argument2_type check_argument2_type;
         typedef computed_assign_tag assign_category;
 
         BOOST_UBLAS_INLINE
         void operator () (argument1_type t1, argument2_type t2) const {
             t1 /= t2;
-        }
-        static
-        BOOST_UBLAS_INLINE
-        bool check (check_argument1_type t1, check_argument2_type t2) {
-            return type_traits<check_argument2_type>::equals (t2, check_argument2_type (1));
         }
     };
 
@@ -269,8 +231,6 @@ namespace boost { namespace numeric { namespace ublas {
         typedef typename type_traits<T1>::reference argument1_type;
         typedef typename type_traits<T2>::reference argument2_type;
         typedef typename promote_traits<T1, T2>::promote_type result_type;
-        typedef typename type_traits<T1>::value_type check_argument1_type;
-        typedef typename type_traits<T2>::value_type check_argument2_type;
     };
 
     template<class T1, class T2>
@@ -279,17 +239,10 @@ namespace boost { namespace numeric { namespace ublas {
         typedef typename scalar_binary_swap_functor<T1, T2>::argument1_type argument1_type;
         typedef typename scalar_binary_swap_functor<T1, T2>::argument2_type argument2_type;
         typedef typename scalar_binary_swap_functor<T1, T2>::result_type result_type;
-        typedef typename scalar_binary_swap_functor<T1, T2>::check_argument1_type check_argument1_type;
-        typedef typename scalar_binary_swap_functor<T1, T2>::check_argument2_type check_argument2_type;
 
         BOOST_UBLAS_INLINE
         void operator () (argument1_type t1, argument2_type t2) const {
             std::swap (t1, t2);
-        }
-        static
-        BOOST_UBLAS_INLINE
-        bool check (check_argument1_type t1, check_argument2_type t2) {
-            return type_traits<result_type>::equals (t1, t2);
         }
     };
 

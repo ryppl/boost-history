@@ -52,11 +52,19 @@ struct bench_my_outer_prod {
 
     void operator () (int runs, safe_tag) const {
         try {
+#ifdef BOOST_UBLAS_ENABLE_INDEX_SET_ALL
+            static M m (N, N);
+            ublas::matrix_range<M> mr (m, ublas::range<> (0, N), ublas::range<> (0, N));
+            static V v1 (N), v2 (N);
+            ublas::vector_range<V> vr1 (v1, ublas::range<> (0, N)),
+                                   vr2 (v2, ublas::range<> (0, N));
+#else
             static M m (N, N);
             ublas::matrix_range<M> mr (m, ublas::range (0, N), ublas::range (0, N));
             static V v1 (N), v2 (N);
             ublas::vector_range<V> vr1 (v1, ublas::range (0, N)),
-                                      vr2 (v2, ublas::range (0, N));
+                                   vr2 (v2, ublas::range (0, N));
+#endif
             initialize_vector (vr1);
             initialize_vector (vr2);
             boost::timer t;
@@ -75,11 +83,19 @@ struct bench_my_outer_prod {
     }
     void operator () (int runs, fast_tag) const {
         try {
+#ifdef BOOST_UBLAS_ENABLE_INDEX_SET_ALL
+            static M m (N, N);
+            ublas::matrix_range<M> mr (m, ublas::range<> (0, N), ublas::range<> (0, N));
+            static V v1 (N), v2 (N);
+            ublas::vector_range<V> vr1 (v1, ublas::range<> (0, N)),
+                                   vr2 (v2, ublas::range<> (0, N));
+#else
             static M m (N, N);
             ublas::matrix_range<M> mr (m, ublas::range (0, N), ublas::range (0, N));
             static V v1 (N), v2 (N);
             ublas::vector_range<V> vr1 (v1, ublas::range (0, N)),
-                                      vr2 (v2, ublas::range (0, N));
+                                   vr2 (v2, ublas::range (0, N));
+#endif
             initialize_vector (vr1);
             initialize_vector (vr2);
             boost::timer t;
@@ -163,11 +179,19 @@ struct bench_my_matrix_vector_prod {
 
     void operator () (int runs, safe_tag) const {
         try {
+#ifdef BOOST_UBLAS_ENABLE_INDEX_SET_ALL
+            static M m (N, N);
+            ublas::matrix_range<M> mr (m, ublas::range<> (0, N), ublas::range<> (0, N));
+            static V v1 (N), v2 (N);
+            ublas::vector_range<V> vr1 (v1, ublas::range<> (0, N)),
+                                   vr2 (v2, ublas::range<> (0, N));
+#else
             static M m (N, N);
             ublas::matrix_range<M> mr (m, ublas::range (0, N), ublas::range (0, N));
             static V v1 (N), v2 (N);
             ublas::vector_range<V> vr1 (v1, ublas::range (0, N)),
-                                      vr2 (v2, ublas::range (0, N));
+                                   vr2 (v2, ublas::range (0, N));
+#endif
             initialize_matrix (mr);
             initialize_vector (vr1);
             boost::timer t;
@@ -186,11 +210,19 @@ struct bench_my_matrix_vector_prod {
     }
     void operator () (int runs, fast_tag) const {
         try {
+#ifdef BOOST_UBLAS_ENABLE_INDEX_SET_ALL
+            static M m (N, N);
+            ublas::matrix_range<M> mr (m, ublas::range<> (0, N), ublas::range<> (0, N));
+            static V v1 (N), v2 (N);
+            ublas::vector_range<V> vr1 (v1, ublas::range<> (0, N)),
+                                   vr2 (v2, ublas::range<> (0, N));
+#else
             static M m (N, N);
             ublas::matrix_range<M> mr (m, ublas::range (0, N), ublas::range (0, N));
             static V v1 (N), v2 (N);
-            ublas::vector_range<V> vr1 (v1, ublas::range (0, N)), 
-                                      vr2 (v2, ublas::range (0, N));
+            ublas::vector_range<V> vr1 (v1, ublas::range (0, N)),
+                                   vr2 (v2, ublas::range (0, N));
+#endif
             initialize_matrix (mr);
             initialize_vector (vr1);
             boost::timer t;

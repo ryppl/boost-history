@@ -353,8 +353,11 @@ namespace boost { namespace numeric { namespace ublas {
 
 #ifdef BOOST_MSVC_STD_ITERATOR
 
+    // Renamed this class from reverse_iterator to get
+    // typedef reverse_iterator<...> reverse_iterator
+    // working. Thanks to Gabriel Dos Reis for explaining this.
     template <class I, class T, class R>
-    class reverse_iterator:
+    class reverse_iterator_base:
         public std::reverse_bidirectional_iterator<I, T, R> {
     public:
         typedef std::size_t size_type;
@@ -366,20 +369,20 @@ namespace boost { namespace numeric { namespace ublas {
 
         // Construction and destruction
         BOOST_UBLAS_INLINE
-        reverse_iterator ():
+        reverse_iterator_base ():
             std::reverse_bidirectional_iterator<iterator_type, value_type, reference> () {}
         BOOST_UBLAS_INLINE
-        reverse_iterator (const iterator_type &it):
+        reverse_iterator_base (const iterator_type &it):
             std::reverse_bidirectional_iterator<iterator_type, value_type, reference> (it) {}
 
         // Arithmetic
         BOOST_UBLAS_INLINE
-        reverse_iterator &operator += (difference_type n) {
+        reverse_iterator_base &operator += (difference_type n) {
             // Comeau recommends...
             return *this = this->base () - n;
         }
         BOOST_UBLAS_INLINE
-        reverse_iterator &operator -= (difference_type n) {
+        reverse_iterator_base &operator -= (difference_type n) {
             // Comeau recommends...
             return *this = this->base () + n;
         }
@@ -399,43 +402,46 @@ namespace boost { namespace numeric { namespace ublas {
 
         // Comparison
         BOOST_UBLAS_INLINE
-        bool operator < (const reverse_iterator &it) const {
+        bool operator < (const reverse_iterator_base &it) const {
             return ! (this->base () < it.base ());
         }
         BOOST_UBLAS_INLINE
-        bool operator <= (const reverse_iterator &it) const {
+        bool operator <= (const reverse_iterator_base &it) const {
             return ! (this->base () <= it.base ());
         }
         BOOST_UBLAS_INLINE
-        bool operator >= (const reverse_iterator &it) const {
+        bool operator >= (const reverse_iterator_base &it) const {
             return ! (this->base () >= it.base ());
         }
         BOOST_UBLAS_INLINE
-        bool operator > (const reverse_iterator &it) const {
+        bool operator > (const reverse_iterator_base &it) const {
             return ! (this->base () > it.base ());
         }
     };
 
     template<class I, class T, class R>
     BOOST_UBLAS_INLINE
-    reverse_iterator<I, T, R> operator + (const reverse_iterator<I, T, R> &it, std::ptrdiff_t n) {
-        reverse_iterator<I, T, R> tmp (it);
+    reverse_iterator_base<I, T, R> operator + (const reverse_iterator_base<I, T, R> &it, std::ptrdiff_t n) {
+        reverse_iterator_base<I, T, R> tmp (it);
         return tmp += n;
     }
     template<class I, class T, class R>
     BOOST_UBLAS_INLINE
-    reverse_iterator<I, T, R> operator - (const reverse_iterator<I, T, R> &it, std::ptrdiff_t n) {
-        reverse_iterator<I, T, R> tmp (it);
+    reverse_iterator_base<I, T, R> operator - (const reverse_iterator_base<I, T, R> &it, std::ptrdiff_t n) {
+        reverse_iterator_base<I, T, R> tmp (it);
         return tmp -= n;
     }
     template<class I, class T, class R>
     BOOST_UBLAS_INLINE
-    std::ptrdiff_t operator - (const reverse_iterator<I, T, R> &it1, const reverse_iterator<I, T, R> &it2) {
+    std::ptrdiff_t operator - (const reverse_iterator_base<I, T, R> &it1, const reverse_iterator_base<I, T, R> &it2) {
         return it2.base () - it1.base ();
     }
 
+    // Renamed this class from reverse_iterator1 to get
+    // typedef reverse_iterator1<...> reverse_iterator1
+    // working. Thanks to Gabriel Dos Reis for explaining this.
     template <class I, class T, class R>
-    class reverse_iterator1:
+    class reverse_iterator_base1:
         public std::reverse_bidirectional_iterator<I, T, R> {
     public:
         typedef std::size_t size_type;
@@ -451,20 +457,20 @@ namespace boost { namespace numeric { namespace ublas {
 
         // Construction and destruction
         BOOST_UBLAS_INLINE
-        reverse_iterator1 ():
+        reverse_iterator_base1 ():
             std::reverse_bidirectional_iterator<iterator_type, value_type, reference> () {}
         BOOST_UBLAS_INLINE
-        reverse_iterator1 (const iterator_type &it):
+        reverse_iterator_base1 (const iterator_type &it):
             std::reverse_bidirectional_iterator<iterator_type, value_type, reference> (it) {}
 
         // Arithmetic
         BOOST_UBLAS_INLINE
-        reverse_iterator1 &operator += (difference_type n) {
+        reverse_iterator_base1 &operator += (difference_type n) {
             // Comeau recommends...
             return *this = this->base () - n;
         }
         BOOST_UBLAS_INLINE
-        reverse_iterator1 &operator -= (difference_type n) {
+        reverse_iterator_base1 &operator -= (difference_type n) {
             // Comeau recommends...
             return *this = this->base () + n;
         }
@@ -511,43 +517,46 @@ namespace boost { namespace numeric { namespace ublas {
 
         // Comparison
         BOOST_UBLAS_INLINE
-        bool operator < (const reverse_iterator1 &it) const {
+        bool operator < (const reverse_iterator_base1 &it) const {
             return ! (this->base () < it.base ());
         }
         BOOST_UBLAS_INLINE
-        bool operator <= (const reverse_iterator1 &it) const {
+        bool operator <= (const reverse_iterator_base1 &it) const {
             return ! (this->base () <= it.base ());
         }
         BOOST_UBLAS_INLINE
-        bool operator >= (const reverse_iterator1 &it) const {
+        bool operator >= (const reverse_iterator_base1 &it) const {
             return ! (this->base () >= it.base ());
         }
         BOOST_UBLAS_INLINE
-        bool operator > (const reverse_iterator1 &it) const {
+        bool operator > (const reverse_iterator_base1 &it) const {
             return ! (this->base () > it.base ());
         }
     };
 
     template<class I, class T, class R>
     BOOST_UBLAS_INLINE
-    reverse_iterator1<I, T, R> operator + (const reverse_iterator1<I, T, R> &it, std::ptrdiff_t n) {
-        reverse_iterator1<I, T, R> tmp (it);
+    reverse_iterator_base1<I, T, R> operator + (const reverse_iterator_base1<I, T, R> &it, std::ptrdiff_t n) {
+        reverse_iterator_base1<I, T, R> tmp (it);
         return tmp += n;
     }
     template<class I, class T, class R>
     BOOST_UBLAS_INLINE
-    reverse_iterator1<I, T, R> operator - (const reverse_iterator1<I, T, R> &it, std::ptrdiff_t n) {
-        reverse_iterator1<I, T, R> tmp (it);
+    reverse_iterator_base1<I, T, R> operator - (const reverse_iterator_base1<I, T, R> &it, std::ptrdiff_t n) {
+        reverse_iterator_base1<I, T, R> tmp (it);
         return tmp -= n;
     }
     template<class I, class T, class R>
     BOOST_UBLAS_INLINE
-    std::ptrdiff_t operator - (const reverse_iterator1<I, T, R> &it1, const reverse_iterator1<I, T, R> &it2) {
+    std::ptrdiff_t operator - (const reverse_iterator_base1<I, T, R> &it1, const reverse_iterator_base1<I, T, R> &it2) {
         return it2.base () - it1.base ();
     }
 
+    // Renamed this class from reverse_iterator2 to get
+    // typedef reverse_iterator2<...> reverse_iterator2
+    // working. Thanks to Gabriel Dos Reis for explaining this.
     template <class I, class T, class R>
-    class reverse_iterator2:
+    class reverse_iterator_base2:
         public std::reverse_bidirectional_iterator<I, T, R> {
     public:
         typedef std::size_t size_type;
@@ -563,20 +572,20 @@ namespace boost { namespace numeric { namespace ublas {
 
         // Construction and destruction
         BOOST_UBLAS_INLINE
-        reverse_iterator2 ():
+        reverse_iterator_base2 ():
             std::reverse_bidirectional_iterator<iterator_type, value_type, reference> () {}
         BOOST_UBLAS_INLINE
-        reverse_iterator2 (const iterator_type &it):
+        reverse_iterator_base2 (const iterator_type &it):
             std::reverse_bidirectional_iterator<iterator_type, value_type, reference> (it) {}
 
         // Arithmetic
         BOOST_UBLAS_INLINE
-        reverse_iterator2 &operator += (difference_type n) {
+        reverse_iterator_base2 &operator += (difference_type n) {
             // Comeau recommends...
             return *this = this->base () - n;
         }
         BOOST_UBLAS_INLINE
-        reverse_iterator2 &operator -= (difference_type n) {
+        reverse_iterator_base2 &operator -= (difference_type n) {
             // Comeau recommends...
             return *this = this->base () + n;
         }
@@ -623,45 +632,48 @@ namespace boost { namespace numeric { namespace ublas {
 
         // Comparison
         BOOST_UBLAS_INLINE
-        bool operator < (const reverse_iterator2 &it) const {
+        bool operator < (const reverse_iterator_base2 &it) const {
             return ! (this->base () < it.base ());
         }
         BOOST_UBLAS_INLINE
-        bool operator <= (const reverse_iterator2 &it) const {
+        bool operator <= (const reverse_iterator_base2 &it) const {
             return ! (this->base () <= it.base ());
         }
         BOOST_UBLAS_INLINE
-        bool operator >= (const reverse_iterator2 &it) const {
+        bool operator >= (const reverse_iterator_base2 &it) const {
             return ! (this->base () >= it.base ());
         }
         BOOST_UBLAS_INLINE
-        bool operator > (const reverse_iterator2 &it) const {
+        bool operator > (const reverse_iterator_base2 &it) const {
             return ! (this->base () > it.base ());
         }
     };
 
     template<class I, class T, class R>
     BOOST_UBLAS_INLINE
-    reverse_iterator2<I, T, R> operator + (const reverse_iterator2<I, T, R> &it, std::ptrdiff_t n) {
-        reverse_iterator2<I, T, R> tmp (it);
+    reverse_iterator_base2<I, T, R> operator + (const reverse_iterator_base2<I, T, R> &it, std::ptrdiff_t n) {
+        reverse_iterator_base2<I, T, R> tmp (it);
         return tmp += n;
     }
     template<class I, class T, class R>
     BOOST_UBLAS_INLINE
-    reverse_iterator2<I, T, R> operator - (const reverse_iterator2<I, T, R> &it, std::ptrdiff_t n) {
-        reverse_iterator2<I, T, R> tmp (it);
+    reverse_iterator_base2<I, T, R> operator - (const reverse_iterator_base2<I, T, R> &it, std::ptrdiff_t n) {
+        reverse_iterator_base2<I, T, R> tmp (it);
         return tmp -= n;
     }
     template<class I, class T, class R>
     BOOST_UBLAS_INLINE
-    std::ptrdiff_t operator - (const reverse_iterator2<I, T, R> &it1, const reverse_iterator2<I, T, R> &it2) {
+    std::ptrdiff_t operator - (const reverse_iterator_base2<I, T, R> &it1, const reverse_iterator_base2<I, T, R> &it2) {
         return it2.base () - it1.base ();
     }
 
 #else
 
+    // Renamed this class from reverse_iterator to get
+    // typedef reverse_iterator<...> reverse_iterator
+    // working. Thanks to Gabriel Dos Reis for explaining this.
     template <class I>
-    class reverse_iterator:
+    class reverse_iterator_base:
         public std::reverse_iterator<I> {
     public:
         typedef std::size_t size_type;
@@ -671,45 +683,45 @@ namespace boost { namespace numeric { namespace ublas {
 
         // Construction and destruction
         BOOST_UBLAS_INLINE
-        reverse_iterator ():
+        reverse_iterator_base ():
             std::reverse_iterator<iterator_type> () {}
         BOOST_UBLAS_INLINE
-        reverse_iterator (const iterator_type &it):
+        reverse_iterator_base (const iterator_type &it):
             std::reverse_iterator<iterator_type> (it) {}
 
 #ifdef BOOST_UBLAS_REVERSE_ITERATOR_OVERLOADS
         // Arithmetic
         BOOST_UBLAS_INLINE
-        reverse_iterator &operator ++ () {
+        reverse_iterator_base &operator ++ () {
             // Comeau recommends...
             return *this = -- this->base ();
         }
         BOOST_UBLAS_INLINE
-        reverse_iterator operator ++ (int) {
+        reverse_iterator_base operator ++ (int) {
             // Comeau recommends...
-            reverse_iterator tmp (*this);
+            reverse_iterator_base tmp (*this);
             *this = -- this->base ();
             return tmp;
         }
         BOOST_UBLAS_INLINE
-        reverse_iterator &operator -- () {
+        reverse_iterator_base &operator -- () {
             // Comeau recommends...
             return *this = ++ this->base ();
         }
         BOOST_UBLAS_INLINE
-        reverse_iterator operator -- (int) {
+        reverse_iterator_base operator -- (int) {
             // Comeau recommends...
-            reverse_iterator tmp (*this);
+            reverse_iterator_base tmp (*this);
             *this = ++ this->base ();
             return tmp;
         }
         BOOST_UBLAS_INLINE
-        reverse_iterator &operator += (difference_type n) {
+        reverse_iterator_base &operator += (difference_type n) {
             // Comeau recommends...
             return *this = this->base () - n;
         }
         BOOST_UBLAS_INLINE
-        reverse_iterator &operator -= (difference_type n) {
+        reverse_iterator_base &operator -= (difference_type n) {
             // Comeau recommends...
             return *this = this->base () + n;
         }
@@ -717,17 +729,17 @@ namespace boost { namespace numeric { namespace ublas {
 
 #ifdef BOOST_UBLAS_FRIEND_FUNCTION
         BOOST_UBLAS_INLINE
-        friend reverse_iterator operator + (const reverse_iterator &it, difference_type n) {
-            reverse_iterator tmp (it);
+        friend reverse_iterator_base operator + (const reverse_iterator_base &it, difference_type n) {
+            reverse_iterator_base tmp (it);
             return tmp += n;
         }
         BOOST_UBLAS_INLINE
-        friend reverse_iterator operator - (const reverse_iterator &it, difference_type n) {
-            reverse_iterator tmp (it);
+        friend reverse_iterator_base operator - (const reverse_iterator_base &it, difference_type n) {
+            reverse_iterator_base tmp (it);
             return tmp -= n;
         }
         BOOST_UBLAS_INLINE
-        friend difference_type operator - (const reverse_iterator &it1, const reverse_iterator &it2) {
+        friend difference_type operator - (const reverse_iterator_base &it1, const reverse_iterator_base &it2) {
             return it2.base () - it1.base ();
         }
 #endif
@@ -749,25 +761,28 @@ namespace boost { namespace numeric { namespace ublas {
 #ifndef BOOST_UBLAS_FRIEND_FUNCTION
     template<class I>
     BOOST_UBLAS_INLINE
-    reverse_iterator<I> operator + (const reverse_iterator<I> &it, std::ptrdiff_t n) {
-        reverse_iterator<I> tmp (it);
+    reverse_iterator_base<I> operator + (const reverse_iterator_base<I> &it, std::ptrdiff_t n) {
+        reverse_iterator_base<I> tmp (it);
         return tmp += n;
     }
     template<class I>
     BOOST_UBLAS_INLINE
-    reverse_iterator<I> operator - (const reverse_iterator<I> &it, std::ptrdiff_t n) {
-        reverse_iterator<I> tmp (it);
+    reverse_iterator_base<I> operator - (const reverse_iterator_base<I> &it, std::ptrdiff_t n) {
+        reverse_iterator_base<I> tmp (it);
         return tmp -= n;
     }
     template<class I>
     BOOST_UBLAS_INLINE
-    std::ptrdiff_t operator - (const reverse_iterator<I> &it1, const reverse_iterator<I> &it2) {
+    std::ptrdiff_t operator - (const reverse_iterator_base<I> &it1, const reverse_iterator_base<I> &it2) {
         return it2.base () - it1.base ();
     }
 #endif
 
+    // Renamed this class from reverse_iterator1 to get
+    // typedef reverse_iterator1<...> reverse_iterator1
+    // working. Thanks to Gabriel Dos Reis for explaining this.
     template <class I>
-    class reverse_iterator1:
+    class reverse_iterator_base1:
         public std::reverse_iterator<I> {
     public:
         typedef std::size_t size_type;
@@ -781,45 +796,45 @@ namespace boost { namespace numeric { namespace ublas {
 
         // Construction and destruction
         BOOST_UBLAS_INLINE
-        reverse_iterator1 ():
+        reverse_iterator_base1 ():
             std::reverse_iterator<iterator_type> () {}
         BOOST_UBLAS_INLINE
-        reverse_iterator1 (const iterator_type &it):
+        reverse_iterator_base1 (const iterator_type &it):
             std::reverse_iterator<iterator_type> (it) {}
 
 #ifdef BOOST_UBLAS_REVERSE_ITERATOR_OVERLOADS
         // Arithmetic
         BOOST_UBLAS_INLINE
-        reverse_iterator1 &operator ++ () {
+        reverse_iterator_base1 &operator ++ () {
             // Comeau recommends...
             return *this = -- this->base ();
         }
         BOOST_UBLAS_INLINE
-        reverse_iterator1 operator ++ (int) {
+        reverse_iterator_base1 operator ++ (int) {
             // Comeau recommends...
-            reverse_iterator1 tmp (*this);
+            reverse_iterator_base1 tmp (*this);
             *this = -- this->base ();
             return tmp;
         }
         BOOST_UBLAS_INLINE
-        reverse_iterator1 &operator -- () {
+        reverse_iterator_base1 &operator -- () {
             // Comeau recommends...
             return *this = ++ this->base ();
         }
         BOOST_UBLAS_INLINE
-        reverse_iterator1 operator -- (int) {
+        reverse_iterator_base1 operator -- (int) {
             // Comeau recommends...
-            reverse_iterator1 tmp (*this);
+            reverse_iterator_base1 tmp (*this);
             *this = ++ this->base ();
             return tmp;
         }
         BOOST_UBLAS_INLINE
-        reverse_iterator1 &operator += (difference_type n) {
+        reverse_iterator_base1 &operator += (difference_type n) {
             // Comeau recommends...
             return *this = this->base () - n;
         }
         BOOST_UBLAS_INLINE
-        reverse_iterator1 &operator -= (difference_type n) {
+        reverse_iterator_base1 &operator -= (difference_type n) {
             // Comeau recommends...
             return *this = this->base () + n;
         }
@@ -827,17 +842,17 @@ namespace boost { namespace numeric { namespace ublas {
 
 #ifdef BOOST_UBLAS_FRIEND_FUNCTION
         BOOST_UBLAS_INLINE
-        friend reverse_iterator1 operator + (const reverse_iterator1 &it, difference_type n) {
-            reverse_iterator1 tmp (it);
+        friend reverse_iterator_base1 operator + (const reverse_iterator_base1 &it, difference_type n) {
+            reverse_iterator_base1 tmp (it);
             return tmp += n;
         }
         BOOST_UBLAS_INLINE
-        friend reverse_iterator1 operator - (const reverse_iterator1 &it, difference_type n) {
-            reverse_iterator1 tmp (it);
+        friend reverse_iterator_base1 operator - (const reverse_iterator_base1 &it, difference_type n) {
+            reverse_iterator_base1 tmp (it);
             return tmp -= n;
         }
         BOOST_UBLAS_INLINE
-        friend difference_type operator - (const reverse_iterator1 &it1, const reverse_iterator1 &it2) {
+        friend difference_type operator - (const reverse_iterator_base1 &it1, const reverse_iterator_base1 &it2) {
             return it2.base () - it1.base ();
         }
 #endif
@@ -886,25 +901,28 @@ namespace boost { namespace numeric { namespace ublas {
 #ifndef BOOST_UBLAS_FRIEND_FUNCTION
     template<class I>
     BOOST_UBLAS_INLINE
-    reverse_iterator1<I> operator + (const reverse_iterator1<I> &it, std::ptrdiff_t n) {
-        reverse_iterator1<I> tmp (it);
+    reverse_iterator_base1<I> operator + (const reverse_iterator_base1<I> &it, std::ptrdiff_t n) {
+        reverse_iterator_base1<I> tmp (it);
         return tmp += n;
     }
     template<class I>
     BOOST_UBLAS_INLINE
-    reverse_iterator1<I> operator - (const reverse_iterator1<I> &it, std::ptrdiff_t n) {
-        reverse_iterator1<I> tmp (it);
+    reverse_iterator_base1<I> operator - (const reverse_iterator_base1<I> &it, std::ptrdiff_t n) {
+        reverse_iterator_base1<I> tmp (it);
         return tmp -= n;
     }
     template<class I>
     BOOST_UBLAS_INLINE
-    std::ptrdiff_t operator - (const reverse_iterator1<I> &it1, const reverse_iterator1<I> &it2) {
+    std::ptrdiff_t operator - (const reverse_iterator_base1<I> &it1, const reverse_iterator_base1<I> &it2) {
         return it2.base () - it1.base ();
     }
 #endif
 
+    // Renamed this class from reverse_iterator2 to get
+    // typedef reverse_iterator2<...> reverse_iterator2
+    // working. Thanks to Gabriel Dos Reis for explaining this.
     template <class I>
-    class reverse_iterator2:
+    class reverse_iterator_base2:
         public std::reverse_iterator<I> {
     public:
         typedef std::size_t size_type;
@@ -918,45 +936,45 @@ namespace boost { namespace numeric { namespace ublas {
 
         // Construction and destruction
         BOOST_UBLAS_INLINE
-        reverse_iterator2 ():
+        reverse_iterator_base2 ():
             std::reverse_iterator<iterator_type> () {}
         BOOST_UBLAS_INLINE
-        reverse_iterator2 (const iterator_type &it):
+        reverse_iterator_base2 (const iterator_type &it):
             std::reverse_iterator<iterator_type> (it) {}
 
 #ifdef BOOST_UBLAS_REVERSE_ITERATOR_OVERLOADS
         // Arithmetic
         BOOST_UBLAS_INLINE
-        reverse_iterator2 &operator ++ () {
+        reverse_iterator_base2 &operator ++ () {
             // Comeau recommends...
             return *this = -- this->base ();
         }
         BOOST_UBLAS_INLINE
-        reverse_iterator2 operator ++ (int) {
+        reverse_iterator_base2 operator ++ (int) {
             // Comeau recommends...
-            reverse_iterator2 tmp (*this);
+            reverse_iterator_base2 tmp (*this);
             *this = -- this->base ();
             return tmp;
         }
         BOOST_UBLAS_INLINE
-        reverse_iterator2 &operator -- () {
+        reverse_iterator_base2 &operator -- () {
             // Comeau recommends...
             return *this = ++ this->base ();
         }
         BOOST_UBLAS_INLINE
-        reverse_iterator2 operator -- (int) {
+        reverse_iterator_base2 operator -- (int) {
             // Comeau recommends...
-            reverse_iterator2 tmp (*this);
+            reverse_iterator_base2 tmp (*this);
             *this = ++ this->base ();
             return tmp;
         }
         BOOST_UBLAS_INLINE
-        reverse_iterator2 &operator += (difference_type n) {
+        reverse_iterator_base2 &operator += (difference_type n) {
             // Comeau recommends...
             return *this = this->base () - n;
         }
         BOOST_UBLAS_INLINE
-        reverse_iterator2 &operator -= (difference_type n) {
+        reverse_iterator_base2 &operator -= (difference_type n) {
             // Comeau recommends...
             return *this = this->base () + n;
         }
@@ -964,17 +982,17 @@ namespace boost { namespace numeric { namespace ublas {
 
 #ifdef BOOST_UBLAS_FRIEND_FUNCTION
         BOOST_UBLAS_INLINE
-        friend reverse_iterator2 operator + (const reverse_iterator2 &it, difference_type n) {
-            reverse_iterator2 tmp (it);
+        friend reverse_iterator_base2 operator + (const reverse_iterator_base2 &it, difference_type n) {
+            reverse_iterator_base2 tmp (it);
             return tmp += n;
         }
         BOOST_UBLAS_INLINE
-        friend reverse_iterator2 operator - (const reverse_iterator2 &it, difference_type n) {
-            reverse_iterator2 tmp (it);
+        friend reverse_iterator_base2 operator - (const reverse_iterator_base2 &it, difference_type n) {
+            reverse_iterator_base2 tmp (it);
             return tmp -= n;
         }
         BOOST_UBLAS_INLINE
-        friend difference_type operator - (const reverse_iterator2 &it1, const reverse_iterator2 &it2) {
+        friend difference_type operator - (const reverse_iterator_base2 &it1, const reverse_iterator_base2 &it2) {
             return it2.base () - it1.base ();
         }
 #endif
@@ -1023,19 +1041,19 @@ namespace boost { namespace numeric { namespace ublas {
 #ifndef BOOST_UBLAS_FRIEND_FUNCTION
     template<class I>
     BOOST_UBLAS_INLINE
-    reverse_iterator2<I> operator + (const reverse_iterator2<I> &it, std::ptrdiff_t n) {
-        reverse_iterator2<I> tmp (it);
+    reverse_iterator_base2<I> operator + (const reverse_iterator_base2<I> &it, std::ptrdiff_t n) {
+        reverse_iterator_base2<I> tmp (it);
         return tmp += n;
     }
     template<class I>
     BOOST_UBLAS_INLINE
-    reverse_iterator2<I> operator - (const reverse_iterator2<I> &it, std::ptrdiff_t n) {
-        reverse_iterator2<I> tmp (it);
+    reverse_iterator_base2<I> operator - (const reverse_iterator_base2<I> &it, std::ptrdiff_t n) {
+        reverse_iterator_base2<I> tmp (it);
         return tmp -= n;
     }
     template<class I>
     BOOST_UBLAS_INLINE
-    std::ptrdiff_t operator - (const reverse_iterator2<I> &it1, const reverse_iterator2<I> &it2) {
+    std::ptrdiff_t operator - (const reverse_iterator_base2<I> &it1, const reverse_iterator_base2<I> &it2) {
         return it2.base () - it1.base ();
     }
 #endif
@@ -1299,9 +1317,9 @@ namespace boost { namespace numeric { namespace ublas {
         typedef typename container_type::reference reference;
         typedef indexed_iterator2<container_type, iterator_category> dual_iterator_type;
 #ifdef BOOST_MSVC_STD_ITERATOR
-        typedef reverse_iterator2<dual_iterator_type, value_type, reference> dual_reverse_iterator_type;
+        typedef reverse_iterator_base2<dual_iterator_type, value_type, reference> dual_reverse_iterator_type;
 #else
-        typedef reverse_iterator2<dual_iterator_type> dual_reverse_iterator_type;
+        typedef reverse_iterator_base2<dual_iterator_type> dual_reverse_iterator_type;
 #endif
 
         // Construction and destruction
@@ -1447,9 +1465,9 @@ namespace boost { namespace numeric { namespace ublas {
         typedef indexed_iterator1<container_type, iterator_category> iterator_type;
         typedef indexed_const_iterator2<container_type, iterator_category> dual_iterator_type;
 #ifdef BOOST_MSVC_STD_ITERATOR
-        typedef reverse_iterator2<dual_iterator_type, value_type, const_reference> dual_reverse_iterator_type;
+        typedef reverse_iterator_base2<dual_iterator_type, value_type, const_reference> dual_reverse_iterator_type;
 #else
-        typedef reverse_iterator2<dual_iterator_type> dual_reverse_iterator_type;
+        typedef reverse_iterator_base2<dual_iterator_type> dual_reverse_iterator_type;
 #endif
 
         // Construction and destruction
@@ -1596,9 +1614,9 @@ namespace boost { namespace numeric { namespace ublas {
         typedef typename container_type::reference reference;
         typedef indexed_iterator1<container_type, iterator_category> dual_iterator_type;
 #ifdef BOOST_MSVC_STD_ITERATOR
-        typedef reverse_iterator1<dual_iterator_type, value_type, reference> dual_reverse_iterator_type;
+        typedef reverse_iterator_base1<dual_iterator_type, value_type, reference> dual_reverse_iterator_type;
 #else
-        typedef reverse_iterator1<dual_iterator_type> dual_reverse_iterator_type;
+        typedef reverse_iterator_base1<dual_iterator_type> dual_reverse_iterator_type;
 #endif
 
         // Construction and destruction
@@ -1741,9 +1759,9 @@ namespace boost { namespace numeric { namespace ublas {
         typedef indexed_iterator2<container_type, iterator_category> iterator_type;
         typedef indexed_const_iterator1<container_type, iterator_category> dual_iterator_type;
 #ifdef BOOST_MSVC_STD_ITERATOR
-        typedef reverse_iterator1<dual_iterator_type, value_type, const_reference> dual_reverse_iterator_type;
+        typedef reverse_iterator_base1<dual_iterator_type, value_type, const_reference> dual_reverse_iterator_type;
 #else
-        typedef reverse_iterator1<dual_iterator_type> dual_reverse_iterator_type;
+        typedef reverse_iterator_base1<dual_iterator_type> dual_reverse_iterator_type;
 #endif
 
         // Construction and destruction

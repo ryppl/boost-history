@@ -17,5 +17,4 @@ Bench2 measures the performance of sparse matrix and vector operations.
 Bench3 measures the performance of vector and matrix proxy's operations.
 
 If you have any problems installing or using the library, please feel free to contact
-Joerg Walter, mailto:walter@genesys-e.de or
-Mathias Koch, mailto:mathias.koch@home.ins.de
+us at mailto:ublas@genesys-e.org

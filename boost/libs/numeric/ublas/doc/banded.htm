@@ -9,14 +9,20 @@ content="text/html; charset=iso-8859-1">
 
 <body bgcolor="#FFFFFF">
 
-<h1><img src="c++boost.gif" alt="c++boost.gif" align="center">Banded Matrix</h1>
+<h1><img src="c++boost.gif" alt="c++boost.gif" align="center"
+width="277" height="86">Banded Matrix</h1>
 
 <h2><a name="banded_matrix"></a>Banded Matrix</h2>
 
 <h4>Description</h4>
 
 <p>The templated class <code>banded_matrix&lt;T, F, A&gt; </code>is
-the base container adaptor for banded matrices.</p>
+the base container adaptor for banded matrices. For a <em>(m x n</em>)-dimensional
+banded matrix with <em>l</em> lower and <em>u</em> upper
+diagonals and <em>0 &lt;= i &lt; m</em>,<em> 0 &lt;= j &lt; n</em>
+holds <em>b</em><sub><em>i, j</em></sub><em> = 0</em>, if <em>i
+&gt; j + l</em> or <em>i &lt; j - u</em>. The storage of banded
+matrices is packed.</p>
 
 <h4>Example</h4>
 
@@ -43,17 +49,17 @@ the base container adaptor for banded matrices.</p>
     </tr>
     <tr>
         <td><code>T</code> </td>
-        <td>The type of object stored in the matrix. </td>
+        <td>The type of object stored in the matrix.</td>
         <td>&nbsp;</td>
     </tr>
     <tr>
         <td><code>F</code></td>
-        <td>Functor describing the storage organization.</td>
+        <td>Functor describing the storage organization. <a href="#banded_matrix_1">[1]</a></td>
         <td><code>row_major</code></td>
     </tr>
     <tr>
         <td><code>A</code></td>
-        <td>The type of the adapted array.</td>
+        <td>The type of the adapted array. <a href="#banded_matrix_2">[2]</a></td>
         <td><code>unbounded_array&lt;T&gt;</code></td>
     </tr>
 </table>
@@ -313,6 +319,15 @@ href="container.htm#matrix">Matrix</a>.</p>
     </tr>
 </table>
 
+<h4>Notes</h4>
+
+<p><a name="#banded_matrix_1">[1]</a> Supported parameters for the
+storage organization are <code>row_major</code> and <code>column_major</code>.</p>
+
+<p><a name="#banded_matrix_2">[2]</a> Supported parameters for the
+adapted array are <code>unbounded_array&lt;T&gt;</code>, <code>bounded_array&lt;T&gt;</code>
+and <code>std::vector&lt;T&gt;</code>. </p>
+
 <h4>Interface</h4>
 
 <pre><code>    // Array based banded matrix class 
@@ -394,10 +409,10 @@ href="container.htm#matrix">Matrix</a>.</p>
         class iterator1;
         class const_iterator2;
         class iterator2;
-        typedef reverse_iterator1&lt;const_iterator1&gt; const_reverse_iterator1;
-        typedef reverse_iterator1&lt;iterator1&gt; reverse_iterator1;
-        typedef reverse_iterator2&lt;const_iterator2&gt; const_reverse_iterator2;
-        typedef reverse_iterator2&lt;iterator2&gt; reverse_iterator2;
+        typedef reverse_iterator_base1&lt;const_iterator1&gt; const_reverse_iterator1;
+        typedef reverse_iterator_base1&lt;iterator1&gt; reverse_iterator1;
+        typedef reverse_iterator_base2&lt;const_iterator2&gt; const_reverse_iterator2;
+        typedef reverse_iterator_base2&lt;iterator2&gt; reverse_iterator2;
 
         // Element lookup
         const_iterator1 find1 (int rank, size_type i, size_type j) const;
@@ -955,10 +970,10 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         class iterator1;
         class const_iterator2;
         class iterator2;
-        typedef reverse_iterator1&lt;const_iterator1&gt; const_reverse_iterator1;
-        typedef reverse_iterator1&lt;iterator1&gt; reverse_iterator1;
-        typedef reverse_iterator2&lt;const_iterator2&gt; const_reverse_iterator2;
-        typedef reverse_iterator2&lt;iterator2&gt; reverse_iterator2;
+        typedef reverse_iterator_base1&lt;const_iterator1&gt; const_reverse_iterator1;
+        typedef reverse_iterator_base1&lt;iterator1&gt; reverse_iterator1;
+        typedef reverse_iterator_base2&lt;const_iterator2&gt; const_reverse_iterator2;
+        typedef reverse_iterator_base2&lt;iterator2&gt; reverse_iterator2;
 
         // Element lookup
         const_iterator1 find1 (int rank, size_type i, size_type j) const;
@@ -1179,13 +1194,13 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
 
 <hr>
 
-<p>Copyright (©) 2000-2002 Joerg Walter, Mathias Koch <br> 
-Permission to copy, use, modify, sell and distribute this document is granted 
-provided this copyright notice appears in all copies. This document is provided 
-``as is'' without express or implied warranty, and with no claim as to its suitability 
-for any purpose.</p>
+<p>Copyright (©) 2000-2002 Joerg Walter, Mathias Koch <br>
+Permission to copy, use, modify, sell and distribute this
+document is granted provided this copyright notice appears in all
+copies. This document is provided ``as is'' without express or
+implied warranty, and with no claim as to its suitability for any
+purpose.</p>
 
 <p>Last revised: 8/3/2002</p>
-
 </body>
 </html>

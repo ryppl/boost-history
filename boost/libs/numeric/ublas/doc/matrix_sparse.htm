@@ -9,14 +9,20 @@ content="text/html; charset=iso-8859-1">
 
 <body bgcolor="#FFFFFF">
 
-<h1><img src="c++boost.gif" alt="c++boost.gif" align="center">Sparse Matrix</h1>
+<h1><img src="c++boost.gif" alt="c++boost.gif" align="center"
+width="277" height="86">Sparse Matrix</h1>
 
 <h2><a name="sparse_matrix"></a>Sparse Matrix</h2>
 
 <h4>Description</h4>
 
 <p>The templated class <code>sparse_matrix&lt;T, F, A&gt; </code>is
-the base container adaptor for sparse matrices.</p>
+the base container adaptor for sparse matrices. For a <em>(m x n</em>)-dimensional
+sparse matrix and <em>0 &lt;= i &lt; m</em>,<em> 0 &lt;= j &lt; n</em>
+every non-zero element <em>m</em><sub><em>i, j</em></sub> is
+mapped to the <em>(i x n + j)-</em>th element of the container
+for row major orientation or the <em>(i + j x m)-</em>th element
+of the container for column major orientation.</p>
 
 <h4>Example</h4>
 
@@ -48,12 +54,12 @@ the base container adaptor for sparse matrices.</p>
     </tr>
     <tr>
         <td><code>F</code></td>
-        <td>Functor describing the storage organization.</td>
+        <td>Functor describing the storage organization. <a href="#sparse_matrix_1">[1]</a></td>
         <td><code>row_major</code></td>
     </tr>
     <tr>
         <td><code>A</code></td>
-        <td>The type of the adapted array.</td>
+        <td>The type of the adapted array. <a href="#sparse_matrix_2">[2]</a></td>
         <td><code>map_array&lt;std::size_t, T&gt;</code></td>
     </tr>
 </table>
@@ -117,8 +123,8 @@ href="container.htm#matrix">Matrix</a>.</p>
         <td>Returns the number of columns. </td>
     </tr>
     <tr>
-        <td><code>const_reference operator () (size_type i, size_type
-        j) const</code></td>
+        <td><code>const_reference operator () (size_type i,
+        size_type j) const</code></td>
         <td>Returns the value of the <code>j</code>-th element in
         the<code> i</code>-th row. </td>
     </tr>
@@ -301,6 +307,15 @@ href="container.htm#matrix">Matrix</a>.</p>
     </tr>
 </table>
 
+<h4>Notes</h4>
+
+<p><a name="#sparse_matrix_1">[1]</a> Supported parameters for the storage organization are
+<code>row_major</code> and <code>column_major</code>.</p>
+
+<p><a name="#sparse_matrix_2">[2]</a> Supported parameters for the adapted array are
+<code>map_array&lt;std::size_t, T&gt</code> and <code>std::map&lt;std::size_t, T&gt</code>.
+</p>
+
 <h4>Interface</h4>
 
 <pre><code>    // Array based sparse matrix class 
@@ -383,10 +398,10 @@ href="container.htm#matrix">Matrix</a>.</p>
         class iterator1;
         class const_iterator2;
         class iterator2;
-        typedef reverse_iterator1&lt;const_iterator1&gt; const_reverse_iterator1;
-        typedef reverse_iterator1&lt;iterator1&gt; reverse_iterator1;
-        typedef reverse_iterator2&lt;const_iterator2&gt; const_reverse_iterator2;
-        typedef reverse_iterator2&lt;iterator2&gt; reverse_iterator2;
+        typedef reverse_iterator_base1&lt;const_iterator1&gt; const_reverse_iterator1;
+        typedef reverse_iterator_base1&lt;iterator1&gt; reverse_iterator1;
+        typedef reverse_iterator_base2&lt;const_iterator2&gt; const_reverse_iterator2;
+        typedef reverse_iterator_base2&lt;iterator2&gt; reverse_iterator2;
 
         // Element lookup
         const_iterator1 find1 (int rank, size_type i, size_type j) const;
@@ -595,13 +610,13 @@ href="container.htm#matrix">Matrix</a>.</p>
 
 <hr>
 
-<p>Copyright (©) 2000-2002 Joerg Walter, Mathias Koch <br> 
-Permission to copy, use, modify, sell and distribute this document is granted 
-provided this copyright notice appears in all copies. This document is provided 
-``as is'' without express or implied warranty, and with no claim as to its suitability 
-for any purpose.</p>
+<p>Copyright (©) 2000-2002 Joerg Walter, Mathias Koch <br>
+Permission to copy, use, modify, sell and distribute this
+document is granted provided this copyright notice appears in all
+copies. This document is provided ``as is'' without express or
+implied warranty, and with no claim as to its suitability for any
+purpose.</p>
 
 <p>Last revised: 8/3/2002</p>
-
 </body>
 </html>

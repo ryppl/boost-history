@@ -9,14 +9,17 @@ content="text/html; charset=iso-8859-1">
 
 <body bgcolor="#FFFFFF">
 
-<h1><img src="c++boost.gif" alt="c++boost.gif" align="center">Vector</h1>
+<h1><img src="c++boost.gif" alt="c++boost.gif" align="center"
+width="277" height="86">Vector</h1>
 
 <h2><a name="vector"></a>Vector</h2>
 
 <h4>Description</h4>
 
 <p>The templated class <code>vector&lt;T, A&gt; </code>is the
-base container adaptor for dense vectors.</p>
+base container adaptor for dense vectors. For a <em>n</em>-dimensional
+vector and <em>0 &lt;= i &lt; n </em>every element <em>v</em><sub><em>i</em></sub>
+is mapped to the <em>i-</em>th element of the container.</p>
 
 <h4>Example</h4>
 
@@ -413,12 +416,12 @@ href="container.htm#vector">Vector</a>.</p>
 
         // Reverse iterator
 
-        typedef reverse_iterator&lt;const_iterator&gt; const_reverse_iterator;
+        typedef reverse_iterator_base&lt;const_iterator&gt; const_reverse_iterator;
 
         const_reverse_iterator rbegin () const;
         const_reverse_iterator rend () const;
 
-        typedef reverse_iterator&lt;iterator&gt; reverse_iterator;
+        typedef reverse_iterator_base&lt;iterator&gt; reverse_iterator;
 
         reverse_iterator rbegin ();
         reverse_iterator rend ();
@@ -429,7 +432,10 @@ href="container.htm#vector">Vector</a>.</p>
 <h4>Description</h4>
 
 <p>The templated class <code>unit_vector&lt;T&gt; </code>represents
-canonical unit vectors.</p>
+canonical unit vectors. For the <em>k</em>-th <em>n</em>-dimensional
+canonical unit vector and <em>0 &lt;= i &lt; n </em>holds <em>u</em><sup><em>k</em></sup><sub><em>i</em></sub><em>
+= 0</em>, if <em>i &lt;&gt; k</em>, and <em>u</em><sup><em>k</em></sup><sub><em>i</em></sub><em>
+= 1</em>. </p>
 
 <h4>Example</h4>
 
@@ -649,7 +655,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
 
         // Reverse iterator
 
-        typedef reverse_iterator&lt;const_iterator&gt; const_reverse_iterator;
+        typedef reverse_iterator_base&lt;const_iterator&gt; const_reverse_iterator;
 
         const_reverse_iterator rbegin () const;
         const_reverse_iterator rend () const;
@@ -660,7 +666,9 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
 <h4>Description</h4>
 
 <p>The templated class <code>zero_vector&lt;T&gt; </code>represents
-zero vectors.</p>
+zero vectors. For a <em>n</em>-dimensional zero vector and <em>0
+&lt;= i &lt; n </em>holds <em>z</em><sub><em>i</em></sub><em> = 0</em>.
+</p>
 
 <h4>Example</h4>
 
@@ -712,13 +720,13 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
     </tr>
     <tr>
         <td><code>zero_vector ()</code> </td>
-        <td>Constructs a <code>zero_vector</code> that holds
-        zero elements.</td>
+        <td>Constructs a <code>zero_vector</code> that holds zero
+        elements.</td>
     </tr>
     <tr>
         <td><code>zero_vector (size_type size)</code></td>
-        <td>Constructs a <code>zero_vector</code>
-        that holds <code>size</code> elements.</td>
+        <td>Constructs a <code>zero_vector</code> that holds <code>size</code>
+        elements.</td>
     </tr>
     <tr>
         <td><code>zero_vector (const zero_vector &amp;v)</code></td>
@@ -870,7 +878,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
 
         // Reverse iterator
 
-        typedef reverse_iterator&lt;const_iterator&gt; const_reverse_iterator;
+        typedef reverse_iterator_base&lt;const_iterator&gt; const_reverse_iterator;
 
         const_reverse_iterator rbegin () const;
         const_reverse_iterator rend () const;
@@ -878,13 +886,13 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
 
 <hr>
 
-<p>Copyright (©) 2000-2002 Joerg Walter, Mathias Koch <br> 
-Permission to copy, use, modify, sell and distribute this document is granted 
-provided this copyright notice appears in all copies. This document is provided 
-``as is'' without express or implied warranty, and with no claim as to its suitability 
-for any purpose.</p>
+<p>Copyright (©) 2000-2002 Joerg Walter, Mathias Koch <br>
+Permission to copy, use, modify, sell and distribute this
+document is granted provided this copyright notice appears in all
+copies. This document is provided ``as is'' without express or
+implied warranty, and with no claim as to its suitability for any
+purpose.</p>
 
 <p>Last revised: 8/3/2002</p>
-
 </body>
 </html>

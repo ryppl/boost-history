@@ -9,14 +9,15 @@ content="text/html; charset=iso-8859-1">
 
 <body bgcolor="#FFFFFF">
 
-<h1><img src="c++boost.gif" alt="c++boost.gif" align="center">Vector Proxies</h1>
+<h1><img src="c++boost.gif" alt="c++boost.gif" align="center"
+width="277" height="86">Vector Proxies</h1>
 
 <h2><a name="vector_range"></a>Vector Range</h2>
 
 <h4>Description</h4>
 
 <p>The templated class <code>vector_range&lt;V&gt; </code>allows
-to address a range of a vector.</p>
+addressing a range of a vector.</p>
 
 <h4>Example</h4>
 
@@ -370,23 +371,70 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
 
         // Reverse iterator
 
-        typedef reverse_iterator&lt;const_iterator&gt; const_reverse_iterator;
+        typedef reverse_iterator_base&lt;const_iterator&gt; const_reverse_iterator;
 
         const_reverse_iterator rbegin () const;
         const_reverse_iterator rend () const;
 
-        typedef reverse_iterator&lt;iterator&gt; reverse_iterator;
+        typedef reverse_iterator_base&lt;iterator&gt; reverse_iterator;
 
         reverse_iterator rbegin ();
         reverse_iterator rend ();
     };</code></pre>
+
+<h3>Projections</h3>
+
+<h4>Prototypes</h4>
+
+<pre><code>    template&lt;class V&gt;
+    vector_range&lt;V&gt; project (V &amp;data, const range &amp;r);
+    template&lt;class V&gt;
+    const vector_range&lt;const V&gt; project (const V &amp;data, const range &amp;r);
+    template&lt;class V&gt;
+    vector_range&lt;V&gt; project (const vector_range&lt;V&gt; &amp;data, const range &amp;r);</code></pre>
+
+<h4>Description</h4>
+
+<p>The free <code>project</code> functions support the
+construction of vector ranges.</p>
+
+<h4>Definition</h4>
+
+<p>Defined in the header vector_proxy.hpp.</p>
+
+<h4>Type requirements</h4>
+
+<dir>
+    <li><code>V</code> is a model of <a
+        href="expression.htm#vector_expression">Vector Expression</a>.</li>
+</dir>
+
+<h4>Preconditions</h4>
+
+<dir>
+    <li><code>r.start () + r.size () &lt;= data.size ()</code></li>
+</dir>
+
+<h4>Complexity</h4>
+
+<p>Linear depending from the size of the range.</p>
+
+<h4>Examples</h4>
+
+<pre>int main () {
+    using namespace boost::numeric::ublas;
+    vector&lt;double&gt; v (3);
+    for (int i = 0; i &lt; 3; ++ i)
+        project (v, range (0, 3)) (i) = i;
+    std::cout &lt;&lt; project (v, range (0, 3)) &lt;&lt; std::endl;
+}</pre>
 
 <h2><a name="vector_slice"></a>Vector Slice</h2>
 
 <h4>Description</h4>
 
 <p>The templated class <code>vector_slice&lt;V&gt; </code>allows
-to address a slice of a vector.</p>
+addressing a slice of a vector.</p>
 
 <h4>Example</h4>
 
@@ -738,26 +786,76 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
 
         // Reverse iterator
 
-        typedef reverse_iterator&lt;const_iterator&gt; const_reverse_iterator;
+        typedef reverse_iterator_base&lt;const_iterator&gt; const_reverse_iterator;
 
         const_reverse_iterator rbegin () const;
         const_reverse_iterator rend () const;
 
-        typedef reverse_iterator&lt;iterator&gt; reverse_iterator;
+        typedef reverse_iterator_base&lt;iterator&gt; reverse_iterator;
 
         reverse_iterator rbegin ();
         reverse_iterator rend ();
     };</code></pre>
 
+<h3>Projections</h3>
+
+<h4>Prototypes</h4>
+
+<pre><code>    template&lt;class V&gt;
+    vector_slice&lt;V&gt; project (const vector_slice&lt;V&gt; &amp;data, const range &amp;r);
+    template&lt;class V&gt;
+    vector_slice&lt;V&gt; project (V &amp;data, const slice &amp;s);
+    template&lt;class V&gt;
+    const vector_slice&lt;const V&gt; project (const V &amp;data, const slice &amp;s);
+    template&lt;class V&gt;
+    vector_slice&lt;V&gt; project (const vector_slice&lt;V&gt; &amp;data, const slice &amp;s);</code></pre>
+
+<h4>Description</h4>
+
+<p>The free <code>project</code> functions support the
+construction of vector slices.</p>
+
+<h4>Definition</h4>
+
+<p>Defined in the header vector_proxy.hpp.</p>
+
+<h4>Type requirements</h4>
+
+<dir>
+    <li><code>V</code> is a model of <a
+        href="expression.htm#vector_expression">Vector Expression</a>.</li>
+</dir>
+
+<h4>Preconditions</h4>
+
+<ul type="disc">
+    <li><code>s.start () + s.stride () * s.size () &lt;=
+        data.size ()</code></li>
+</ul>
+
+<h4>Complexity</h4>
+
+<p>Linear depending from the size of the slice.</p>
+
+<h4>Examples</h4>
+
+<pre>int main () {
+    using namespace boost::numeric::ublas;
+    vector&lt;double&gt; v (3);
+    for (int i = 0; i &lt; 3; ++ i)
+        project (v, slice (0, 1, 3)) (i) = i;
+    std::cout &lt;&lt; project (v, slice (0, 1, 3)) &lt;&lt; std::endl;
+}</pre>
+
 <hr>
 
-<p>Copyright (©) 2000-2002 Joerg Walter, Mathias Koch <br> 
-Permission to copy, use, modify, sell and distribute this document is granted 
-provided this copyright notice appears in all copies. This document is provided 
-``as is'' without express or implied warranty, and with no claim as to its suitability 
-for any purpose.</p>
+<p>Copyright (©) 2000-2002 Joerg Walter, Mathias Koch <br>
+Permission to copy, use, modify, sell and distribute this
+document is granted provided this copyright notice appears in all
+copies. This document is provided ``as is'' without express or
+implied warranty, and with no claim as to its suitability for any
+purpose.</p>
 
 <p>Last revised: 8/3/2002</p>
-
 </body>
 </html>

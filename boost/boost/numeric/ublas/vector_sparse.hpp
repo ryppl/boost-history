@@ -30,6 +30,9 @@ namespace boost { namespace numeric { namespace ublas {
     class sparse_vector:
         public vector_expression<sparse_vector<T, A> > {
     public:
+#ifdef BOOST_UBLAS_ENABLE_PROXY_SHORTCUTS
+        BOOST_UBLAS_USING vector_expression<sparse_vector<T, A> >::operator ();
+#endif
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
         typedef T value_type;
@@ -451,9 +454,9 @@ namespace boost { namespace numeric { namespace ublas {
         // Reverse iterator
 
 #ifdef BOOST_MSVC_STD_ITERATOR
-        typedef reverse_iterator<const_iterator, value_type, const_reference> const_reverse_iterator;
+        typedef reverse_iterator_base<const_iterator, value_type, const_reference> const_reverse_iterator;
 #else
-        typedef reverse_iterator<const_iterator> const_reverse_iterator;
+        typedef reverse_iterator_base<const_iterator> const_reverse_iterator;
 #endif
 
         BOOST_UBLAS_INLINE
@@ -466,9 +469,9 @@ namespace boost { namespace numeric { namespace ublas {
         }
 
 #ifdef BOOST_MSVC_STD_ITERATOR
-        typedef reverse_iterator<iterator, value_type, reference> reverse_iterator;
+        typedef reverse_iterator_base<iterator, value_type, reference> reverse_iterator;
 #else
-        typedef reverse_iterator<iterator> reverse_iterator;
+        typedef reverse_iterator_base<iterator> reverse_iterator;
 #endif
 
         BOOST_UBLAS_INLINE
@@ -495,6 +498,9 @@ namespace boost { namespace numeric { namespace ublas {
     class compressed_vector:
         public vector_expression<compressed_vector<T, IA, TA> > {
     public:
+#ifdef BOOST_UBLAS_ENABLE_PROXY_SHORTCUTS
+        BOOST_UBLAS_USING vector_expression<compressed_vector<T, IA, TA> >::operator ();
+#endif
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
         typedef T value_type;
@@ -929,9 +935,9 @@ namespace boost { namespace numeric { namespace ublas {
         // Reverse iterator
 
 #ifdef BOOST_MSVC_STD_ITERATOR
-        typedef reverse_iterator<const_iterator, value_type, const_reference> const_reverse_iterator;
+        typedef reverse_iterator_base<const_iterator, value_type, const_reference> const_reverse_iterator;
 #else
-        typedef reverse_iterator<const_iterator> const_reverse_iterator;
+        typedef reverse_iterator_base<const_iterator> const_reverse_iterator;
 #endif
 
         BOOST_UBLAS_INLINE
@@ -944,9 +950,9 @@ namespace boost { namespace numeric { namespace ublas {
         }
 
 #ifdef BOOST_MSVC_STD_ITERATOR
-        typedef reverse_iterator<iterator, value_type, reference> reverse_iterator;
+        typedef reverse_iterator_base<iterator, value_type, reference> reverse_iterator;
 #else
-        typedef reverse_iterator<iterator> reverse_iterator;
+        typedef reverse_iterator_base<iterator> reverse_iterator;
 #endif
 
         BOOST_UBLAS_INLINE

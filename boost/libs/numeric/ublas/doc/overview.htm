@@ -9,8 +9,8 @@ content="text/html; charset=iso-8859-1">
 
 <body bgcolor="#FFFFFF">
 
-<h1><img src="c++boost.gif" alt="c++boost.gif" align="center"> 
-uBLAS Overview</h1>
+<h1><img src="c++boost.gif" alt="c++boost.gif" align="center"
+width="277" height="86"> uBLAS Overview</h1>
 
 <h2>Rationale</h2>
 
@@ -115,49 +115,49 @@ primitives:</p>
     </tr>
     <tr>
         <td>Indexing of vectors and matrices</td>
-        <td><code>vector::operator(size_t i)<br>
-        matrix::operator(size_t i, size_t j)</code></td>
+        <td><code>vector::operator(size_t i);<br>
+        matrix::operator(size_t i, size_t j);</code></td>
     </tr>
     <tr>
         <td>Assignment of vectors and matrices</td>
         <td><code>vector::operator = (const vector_expression
-        &amp;)<br>
-        vector::operator += (const vector_expression &amp;)<br>
-        vector::operator -= (const vector_expression &amp;)<br>
-        vector::operator *= (const scalar_expression &amp;)<br>
-        matrix::operator = (const matrix_expression &amp;)<br>
-        matrix::operator += (const matrix_expression &amp;)<br>
-        matrix::operator -= (const matrix_expression &amp;)<br>
-        matrix::operator *= (const scalar_expression &amp;)</code></td>
+        &amp;);<br>
+        vector::operator += (const vector_expression &amp;);<br>
+        vector::operator -= (const vector_expression &amp;);<br>
+        vector::operator *= (const scalar_expression &amp;);<br>
+        matrix::operator = (const matrix_expression &amp;);<br>
+        matrix::operator += (const matrix_expression &amp;);<br>
+        matrix::operator -= (const matrix_expression &amp;);<br>
+        matrix::operator *= (const scalar_expression &amp;);</code></td>
     </tr>
     <tr>
         <td>Unary operations on vectors and matrices</td>
         <td><code>vector_expression operator - (const
-        vector_expression &amp;)<br>
+        vector_expression &amp;);<br>
         matrix_expression operator - (const matrix_expression
-        &amp;)</code></td>
+        &amp;);</code></td>
     </tr>
     <tr>
         <td>Binary operations on vectors and matrices</td>
         <td><code>vector_expression operator + (const
-        vector_expression &amp;, const vector_expression &amp;)<br>
+        vector_expression &amp;, const vector_expression &amp;);<br>
         vector_expression operator - (const vector_expression
-        &amp;, const vector_expression &amp;)<br>
+        &amp;, const vector_expression &amp;);<br>
         matrix_expression operator + (const matrix_expression
-        &amp;, const matrix_expression &amp;)<br>
+        &amp;, const matrix_expression &amp;);<br>
         matrix_expression operator - (const matrix_expression
-        &amp;, const matrix_expression &amp;)</code></td>
+        &amp;, const matrix_expression &amp;);</code></td>
     </tr>
     <tr>
         <td>Multiplication of vectors and matrices with a scalar</td>
         <td><code>vector_expression operator * (const
-        scalar_expression &amp;, const vector_expression &amp;)<br>
+        scalar_expression &amp;, const vector_expression &amp;);<br>
         vector_expression operator * (const vector_expression
-        &amp;, const scalar_expression &amp;)<br>
+        &amp;, const scalar_expression &amp;);<br>
         matrix_expression operator * (const scalar_expression
-        &amp;, const matrix_expression &amp;)<br>
+        &amp;, const matrix_expression &amp;);<br>
         matrix_expression operator * (const matrix_expression
-        &amp;, const scalar_expression &amp;)</code></td>
+        &amp;, const scalar_expression &amp;);</code></td>
     </tr>
 </table>
 
@@ -171,33 +171,43 @@ other primitives:</p>
     </tr>
     <tr>
         <td>Left multiplication of vectors with a matrix</td>
-        <td><code>vector_expression prod (const matrix_expression
-        &amp;, const vector_expression &amp;)</code></td>
+        <td><code>vector_expression prod&lt;</code><code><em>vector_type</em></code><code>&gt;
+        (const matrix_expression &amp;, const vector_expression
+        &amp;);<br>
+        vector_expression prod (const matrix_expression &amp;,
+        const vector_expression &amp;);</code></td>
     </tr>
     <tr>
         <td>Right multiplication of vectors with a matrix</td>
-        <td><code>vector_expression prod (const vector_expression
-        &amp;, const matrix_expression &amp;)</code></td>
+        <td><code>vector_expression prod&lt;</code><code><em>vector_type</em></code><code>&gt;
+        (const vector_expression &amp;, const matrix_expression
+        &amp;);<br>
+        vector_expression prod (const vector_expression &amp;,
+        const matrix_expression &amp;);<br>
+        </code></td>
     </tr>
     <tr>
         <td>Multiplication of matrices</td>
-        <td><code>matrix_expression prod (const matrix_expression
-        &amp;, const matrix_expression &amp;)</code></td>
+        <td><code>matrix_expression prod&lt;</code><code><em>matrix_type</em></code><code>&gt;
+        (const matrix_expression &amp;, const matrix_expression
+        &amp;);<br>
+        matrix_expression prod (const matrix_expression &amp;,
+        const matrix_expression &amp;);</code></td>
     </tr>
     <tr>
         <td>Inner product of vectors</td>
         <td><code>scalar_expression inner_prod (const
-        vector_expression &amp;, const vector_expression &amp;)</code></td>
+        vector_expression &amp;, const vector_expression &amp;);</code></td>
     </tr>
     <tr>
         <td>Outer product of vectors</td>
         <td><code>matrix_expression outer_prod (const
-        vector_expression &amp;, const vector_expression &amp;)</code></td>
+        vector_expression &amp;, const vector_expression &amp;);</code></td>
     </tr>
     <tr>
         <td>Transpose of a matrix</td>
         <td><code>matrix_expression trans (const
-        matrix_expression &amp;)</code></td>
+        matrix_expression &amp;);</code></td>
     </tr>
 </table>
 
@@ -215,20 +225,21 @@ times.</p>
 couple of unary and binary operations. The conventional way of
 evaluating such a formula is first to evaluate every leaf
 operation of a composition into a temporary and next to evaluate
-the composite resulting in another temporary. This method is 
-expensive in terms of time especially for small and space especially for large 
-vectors and matrices. The approach to solve this problem is to use 
-lazy evaluation as known from modern functional programming languages. 
-The principle of this approach is to evaluate a complex expression 
-element wise and to assign it directly to the target.</p>
+the composite resulting in another temporary. This method is
+expensive in terms of time especially for small and space
+especially for large vectors and matrices. The approach to solve
+this problem is to use lazy evaluation as known from modern
+functional programming languages. The principle of this approach
+is to evaluate a complex expression element wise and to assign it
+directly to the target.</p>
 
-<p>Two interesting and dangerous facts result.</p> 
+<p>Two interesting and dangerous facts result.</p>
 
-<p>First one may get serious side effects using element wise evaluation on vectors
-or matrices. Consider the matrix vector product <em>x = A x</em>.
-Evaluation of <em>A</em><sub><em>1</em></sub><em>x</em> and
-assignment to <em>x</em><sub><em>1</em></sub> changes the right
-hand side, so that the evaluation of <em>A</em><sub><em>2</em></sub><em>x
+<p>First one may get serious side effects using element wise
+evaluation on vectors or matrices. Consider the matrix vector
+product <em>x = A x</em>. Evaluation of <em>A</em><sub><em>1</em></sub><em>x</em>
+and assignment to <em>x</em><sub><em>1</em></sub> changes the
+right hand side, so that the evaluation of <em>A</em><sub><em>2</em></sub><em>x
 </em>returns a wrong result. Our solution for this problem is to
 evaluate the right hand side of an assignment into a temporary
 and then to assign this temporary to the left hand side. To allow
@@ -238,21 +249,23 @@ programmer can confirm, that the left and right hand sides of an
 assignment are independent, so that element wise evaluation and
 direct assignment to the target is safe.</p>
 
-<p>Next one can get worse computational complexity under certain cirumstances. 
-Consider the chained matrix vector product <em>A (B x)</em>. 
-Conventional evaluation of <em>A (B x)</em> is quadratic. Deferred 
-evaluation of <em>B x</em><sub><em>i</em></sub> is linear. 
-As every element <em>B x</em><sub><em>i</em></sub> is needed linearly depending of the size, a completely 
-deferred evaluation of the chained matrix vector product <em>A (B x)</em> is cubic. 
-In such cases one needs to reintroduce temporaries in the expression.</p>
+<p>Next one can get worse computational complexity under certain
+cirumstances. Consider the chained matrix vector product <em>A (B
+x)</em>. Conventional evaluation of <em>A (B x)</em> is
+quadratic. Deferred evaluation of <em>B x</em><sub><em>i</em></sub>
+is linear. As every element <em>B x</em><sub><em>i</em></sub> is
+needed linearly depending of the size, a completely deferred
+evaluation of the chained matrix vector product <em>A (B x)</em>
+is cubic. In such cases one needs to reintroduce temporaries in
+the expression.</p>
 
 <h4>Eliminating Virtual Function Calls</h4>
 
 <p>Lazy expression evaluation normally leads to the definition of
 a class hierarchy of terms. This results in the usage of dynamic
 polymorphism to access single elements of vectors and matrices,
-which is also known to be expensive in terms of time. A
-solution was found a couple of years ago independently by David
+which is also known to be expensive in terms of time. A solution
+was found a couple of years ago independently by David
 Vandervoorde and Todd Veldhuizen and is commonly called
 expression templates. Expression templates contain lazy
 evaluation and replace dynamic polymorphism with static, i.e.
@@ -269,11 +282,11 @@ challenge currently available compilers. We were able to
 significantly reduce the amount of needed expression templates
 using the Barton-Nackman trick consequently.</p>
 
-<p>We also decided to support a dual conventional implementation 
-(i.e. not using expression templates) with extensive bounds and type checking 
-of vector and matrix operations to support the development cycle. 
-Switching from debug mode to release mode is controlled by the 
-<code>NDEBUG</code> preprocessor symbol of <code>&lt;cassert&gt;</code>.</p>
+<p>We also decided to support a dual conventional implementation
+(i.e. not using expression templates) with extensive bounds and
+type checking of vector and matrix operations to support the
+development cycle. Switching from debug mode to release mode is
+controlled by the <code>NDEBUG</code> preprocessor symbol of <code>&lt;cassert&gt;</code>.</p>
 
 <h3>Functionality</h3>
 
@@ -563,9 +576,9 @@ how BLAS calls may be mapped onto our classes. </p>
 
 <h4>Storage Layouts</h4>
 
-<p>The library supports conventional dense, packed and basic sparse
-vector and matrix storage layouts. The description of the most
-common constructions of vectors and matrices comes next.</p>
+<p>The library supports conventional dense, packed and basic
+sparse vector and matrix storage layouts. The description of the
+most common constructions of vectors and matrices comes next.</p>
 
 <table border="1">
     <tr>
@@ -624,20 +637,23 @@ common constructions of vectors and matrices comes next.</p>
     <tr>
         <td><code>vector_range&lt;V&gt; <br>
         &nbsp;&nbsp;vr (v, range)</code></td>
-        <td>Constructs a sub vector of a dense, packed or sparse vector.</td>
+        <td>Constructs a sub vector of a dense, packed or sparse
+        vector.</td>
     </tr>
     <tr>
         <td><code>vector_slice&lt;V&gt; <br>
         &nbsp;&nbsp;vs (v, slice)</code></td>
-        <td>Constructs a sub vector of a dense, packed or sparse vector.<br>
-        This class usually can be used to emulate BLAS vector slices.</td>
+        <td>Constructs a sub vector of a dense, packed or sparse
+        vector.<br>
+        This class usually can be used to emulate BLAS vector
+        slices.</td>
     </tr>
     <tr>
         <td><code>matrix&lt;T,<br>
         &nbsp;row_major,<br>
         &nbsp;std::vector&lt;T&gt; &gt; <br>
         &nbsp;&nbsp;m (size1, size2)</code></td>
-        <td>Constructs a dense matrix, orientation is row major, 
+        <td>Constructs a dense matrix, orientation is row major,
         storage is provided by a standard vector.</td>
     </tr>
     <tr>
@@ -645,8 +661,8 @@ common constructions of vectors and matrices comes next.</p>
         &nbsp;column_major,<br>
         &nbsp;std::vector&lt;T&gt; &gt;<br>
         &nbsp;&nbsp;m (size1, size2)</code></td>
-        <td>Constructs a dense matrix, orientation is column major, 
-        storage is provided by a standard vector.<br>
+        <td>Constructs a dense matrix, orientation is column
+        major, storage is provided by a standard vector.<br>
         The storage layout usually is BLAS compliant.</td>
     </tr>
     <tr>
@@ -662,8 +678,8 @@ common constructions of vectors and matrices comes next.</p>
         &nbsp;column_major,<br>
         &nbsp;unbounded_array&lt;T&gt; &gt;<br>
         &nbsp;&nbsp;m (size1, size2)</code></td>
-        <td>Constructs a dense matrix, orientation is column major, 
-        storage is provided by a heap-based array.<br>
+        <td>Constructs a dense matrix, orientation is column
+        major, storage is provided by a heap-based array.<br>
         The storage layout usually is BLAS compliant.</td>
     </tr>
     <tr>
@@ -671,7 +687,7 @@ common constructions of vectors and matrices comes next.</p>
         &nbsp;row_major,<br>
         &nbsp;bounded_array&lt;T, N1 * N2&gt; &gt;<br>
         &nbsp;&nbsp;m (size1, size2)</code></td>
-        <td>Constructs a dense matrix, orientation is row major, 
+        <td>Constructs a dense matrix, orientation is row major,
         storage is provided by a stack-based array.</td>
     </tr>
     <tr>
@@ -679,8 +695,8 @@ common constructions of vectors and matrices comes next.</p>
         &nbsp;column_major,<br>
         &nbsp;bounded_array&lt;T, N1 * N2&gt; &gt;<br>
         &nbsp;&nbsp;m (size1, size2)</code></td>
-        <td>Constructs a dense matrix, orientation is column major, 
-        storage is provided by a stack-based array.<br>
+        <td>Constructs a dense matrix, orientation is column
+        major, storage is provided by a stack-based array.<br>
         The storage layout usually is BLAS compliant.</td>
     </tr>
     <tr>
@@ -697,52 +713,60 @@ common constructions of vectors and matrices comes next.</p>
         <td><code>triangular_matrix&lt;T,<br>
         &nbsp;row_major, F, A&gt;<br>
         &nbsp;&nbsp;m (size)</code></td>
-        <td>Constructs a packed triangular matrix, orientation is row major.</td>
+        <td>Constructs a packed triangular matrix, orientation is
+        row major.</td>
     </tr>
     <tr>
         <td><code>triangular_matrix&lt;T,<br>
         &nbsp;column_major, F, A&gt;<br>
         &nbsp;&nbsp;m (size)</code></td>
-        <td>Constructs a packed triangular matrix, orientation is column major.<br>
+        <td>Constructs a packed triangular matrix, orientation is
+        column major.<br>
         The storage layout usually is BLAS compliant.</td>
     </tr>
     <tr>
         <td><code>banded_matrix&lt;T,<br>
         &nbsp;row_major, A&gt;<br>
         &nbsp;&nbsp;m (size1, size2, lower, upper)</code></td>
-        <td>Constructs a packed banded matrix, orientation is row major.</td>
+        <td>Constructs a packed banded matrix, orientation is row
+        major.</td>
     </tr>
     <tr>
         <td><code>banded_matrix&lt;T,<br>
         &nbsp;column_major, A&gt;<br>
         &nbsp;&nbsp;m (size1, size2, lower, upper)</code></td>
-        <td>Constructs a packed banded matrix, orientation is column major.<br>
+        <td>Constructs a packed banded matrix, orientation is
+        column major.<br>
         The storage layout usually is BLAS compliant.</td>
     </tr>
     <tr>
         <td><code>symmetric_matrix&lt;T,<br>
         &nbsp;row_major, F, A&gt;<br>
         &nbsp;&nbsp;m (size)</code></td>
-        <td>Constructs a packed symmetric matrix, orientation is row major.</td>
+        <td>Constructs a packed symmetric matrix, orientation is
+        row major.</td>
     </tr>
     <tr>
         <td><code>symmetric_matrix&lt;T,<br>
         &nbsp;column_major, F, A&gt;<br>
         &nbsp;&nbsp;m (size)</code></td>
-        <td>Constructs a packed symmetric matrix, orientation is column major.<br>
+        <td>Constructs a packed symmetric matrix, orientation is
+        column major.<br>
         The storage layout usually is BLAS compliant.</td>
     </tr>
     <tr>
         <td><code>hermitian_matrix&lt;T,<br>
         &nbsp;row_major, F, A&gt;<br>
         &nbsp;&nbsp;m (size)</code></td>
-        <td>Constructs a packed hermitian matrix, orientation is row major.</td>
+        <td>Constructs a packed hermitian matrix, orientation is
+        row major.</td>
     </tr>
     <tr>
         <td><code>hermitian_matrix&lt;T,<br>
         &nbsp;column_major, F, A&gt;<br>
         &nbsp;&nbsp;m (size)</code></td>
-        <td>Constructs a packed hermitian matrix, orientation is column major.<br>
+        <td>Constructs a packed hermitian matrix, orientation is
+        column major.<br>
         The storage layout usually is BLAS compliant.</td>
     </tr>
     <tr>
@@ -750,7 +774,7 @@ common constructions of vectors and matrices comes next.</p>
         &nbsp;row_major,<br>
         &nbsp;std::map&lt;std::size_t, T&gt; &gt;<br>
         &nbsp;&nbsp;m (size1, size2, non_zeros)</code></td>
-        <td>Constructs a sparse matrix, orientation is row major, 
+        <td>Constructs a sparse matrix, orientation is row major,
         storage is provided by a standard map.</td>
     </tr>
     <tr>
@@ -758,15 +782,15 @@ common constructions of vectors and matrices comes next.</p>
         &nbsp;column_major,<br>
         &nbsp;std::map&lt;std::size_t, T&gt; &gt;<br>
         &nbsp;&nbsp;m (size1, size2, non_zeros)</code></td>
-        <td>Constructs a sparse matrix, orientation is column major, 
-        storage is provided by a standard map.</td>
+        <td>Constructs a sparse matrix, orientation is column
+        major, storage is provided by a standard map.</td>
     </tr>
     <tr>
         <td><code>sparse_matrix&lt;T, <br>
         &nbsp;row_major,<br>
         &nbsp;map_array&lt;std::size_t, T&gt; &gt; <br>
         &nbsp;&nbsp;m (size1, size2, non_zeros)</code></td>
-        <td>Constructs a sparse matrix, orientation is row major, 
+        <td>Constructs a sparse matrix, orientation is row major,
         storage is provided by a map array.</td>
     </tr>
     <tr>
@@ -774,55 +798,66 @@ common constructions of vectors and matrices comes next.</p>
         &nbsp;column_major,<br>
         &nbsp;map_array&lt;std::size_t, T&gt; &gt; <br>
         &nbsp;&nbsp;m (size1, size2, non_zeros)</code></td>
-        <td>Constructs a sparse matrix, orientation is column major, 
-        storage is provided by a map array.</td>
+        <td>Constructs a sparse matrix, orientation is column
+        major, storage is provided by a map array.</td>
     </tr>
     <tr>
         <td><code>matrix_row&lt;M&gt; <br>
         &nbsp;&nbsp;mr (m, i)</code></td>
-        <td>Constructs a sub vector of a dense, packed or sparse matrix,
-        containing the i-th row.</td>
+        <td>Constructs a sub vector of a dense, packed or sparse
+        matrix, containing the i-th row.</td>
     </tr>
     <tr>
         <td><code>matrix_column&lt;M&gt; <br>
         &nbsp;&nbsp;mc (m, j)</code></td>
-        <td>Constructs a sub vector of a dense, packed or sparse matrix,
-        containing the j-th column.</td>
+        <td>Constructs a sub vector of a dense, packed or sparse
+        matrix, containing the j-th column.</td>
     </tr>
     <tr>
         <td><code>matrix_range&lt;M&gt; <br>
         &nbsp;&nbsp;mr (m, range1, range2)</code></td>
-        <td>Constructs a sub matrix of a dense, packed or sparse matrix.<br>
-        This class usually can be used to emulate BLAS leading dimensions.</td>
+        <td>Constructs a sub matrix of a dense, packed or sparse
+        matrix.<br>
+        This class usually can be used to emulate BLAS leading
+        dimensions.</td>
     </tr>
     <tr>
         <td><code>matrix_slice&lt;M&gt; <br>
         &nbsp;&nbsp;ms (m, slice1, slice2)</code></td>
-        <td>Constructs a sub matrix of a dense, packed or sparse matrix.</td>
+        <td>Constructs a sub matrix of a dense, packed or sparse
+        matrix.</td>
     </tr>
     <tr>
         <td><code>triangular_adaptor&lt;M, F&gt;<br>
         &nbsp;&nbsp;ta (m)</code></td>
-        <td>Constructs a triangular view of a dense, packed or sparse matrix.<br>
-        This class usually can be used to generate corresponding BLAS matrix types.</td>
+        <td>Constructs a triangular view of a dense, packed or
+        sparse matrix.<br>
+        This class usually can be used to generate corresponding
+        BLAS matrix types.</td>
     </tr>
     <tr>
         <td><code>banded_adaptor&lt;M&gt;<br>
         &nbsp;&nbsp;ba (m, lower, upper)</code></td>
-        <td>Constructs a banded view of a dense, packed or sparse matrix.<br>
-        This class usually can be used to generate corresponding BLAS matrix types.</td>
+        <td>Constructs a banded view of a dense, packed or sparse
+        matrix.<br>
+        This class usually can be used to generate corresponding
+        BLAS matrix types.</td>
     </tr>
     <tr>
         <td><code>symmetric_adaptor&lt;M&gt;<br>
         &nbsp;&nbsp;sa (m)</code></td>
-        <td>Constructs a symmetric view of a dense, packed or sparse matrix.<br>
-        This class usually can be used to generate corresponding BLAS matrix types.</td>
+        <td>Constructs a symmetric view of a dense, packed or
+        sparse matrix.<br>
+        This class usually can be used to generate corresponding
+        BLAS matrix types.</td>
     </tr>
     <tr>
         <td><code>hermitian_adaptor&lt;M&gt;<br>
         &nbsp;&nbsp;ha (m)</code></td>
-        <td>Constructs a hermitian view of a dense, packed or sparse matrix.<br>
-        This class usually can be used to generate corresponding BLAS matrix types.</td>
+        <td>Constructs a hermitian view of a dense, packed or
+        sparse matrix.<br>
+        This class usually can be used to generate corresponding
+        BLAS matrix types.</td>
     </tr>
 </table>
 
@@ -833,21 +868,19 @@ vectors and matrices, although this could be expensive for
 matrices due to the needed temporary proxy objects.</p>
 
 <p>To support the most widely used C++ compilers our design and
-implementation do not depend on partial template
-specialization essentially.</p>
+implementation do not depend on partial template specialization
+essentially.</p>
 
 <p>The library presumes standard compliant allocation through <code>operator
 new </code>and <code>operator delete</code>. So programs which
 are intended to run under MSVC 6.0 should set a correct new
-handler throwing a <code>std::bad_alloc</code> exception 
-via <code>_set_new_handler</code> to detect out of
-memory conditions.</p>
+handler throwing a <code>std::bad_alloc</code> exception via <code>_set_new_handler</code>
+to detect out of memory conditions.</p>
 
 <p>To get the most performance out of the box with MSVC 6.0, you
 should change the preprocessor definition of <code>BOOST_UBLAS_INLINE
-</code>from <code>inline </code>to <code>__forceinline </code>in
-the header file config.hpp<code>.</code> But we suspect this
-optimization to be fragile.</p>
+</code>to <code>__forceinline </code>in the header file
+config.hpp. But we suspect this optimization to be fragile.</p>
 
 <h2>Reference</h2>
 
@@ -1009,10 +1042,19 @@ optimization to be fragile.</p>
 
 <h2>Benchmark Results</h2>
 
-<p>The following tables contain results of our benchmark,
-compiled with MSVC 6.0 and run on an Intel Pentium II with 333
-Mhz. First we comment the results for double vectors and matrices
-of dimension 3 and 3 x 3, respectively.</p>
+<p>The following tables contain results of one of our benchmarks.
+This benchmark compares a native C implementation ('C array') and
+some library based implementations. The safe variants based on
+the library assume aliasing, the fast variants do not use
+temporaries and are functionally equivalent to the native C
+implementation. Besides the generic vector and matrix classes the
+benchmark utilizes special classes <code>c_vector</code> and <code>c_matrix</code>,
+which are intended to avoid every overhead through genericity.</p>
+
+<p>The benchmark program was compiled with MSVC 6.0 and run on an
+Intel Pentium II with 333 Mhz. First we comment the results for
+double vectors and matrices of dimension 3 and 3 x 3,
+respectively.</p>
 
 <table border="1">
     <tr>
@@ -1024,7 +1066,7 @@ of dimension 3 and 3 x 3, respectively.</p>
     </tr>
     <tr>
         <td rowspan="4">inner_prod</td>
-        <td>C Array</td>
+        <td>C array</td>
         <td align="right">0.1 </td>
         <td align="right">47.6837 </td>
         <td rowspan="4">No significant abstraction penalty</td>
@@ -1239,6 +1281,12 @@ of dimension 3 and 3 x 3, respectively.</p>
     </tr>
 </table>
 
+<p>We notice a twofold performance loss for small vectors and
+matrices: first the general abstraction penalty for using
+classes, and then a small loss when using the generic vector and
+matrix classes. The difference w.r.t. alias assumptions is also
+significant.</p>
+
 <p>Next we comment the results for double vectors and matrices of
 dimension 100 and 100 x 100, respectively.</p>
 
@@ -1252,7 +1300,7 @@ dimension 100 and 100 x 100, respectively.</p>
     </tr>
     <tr>
         <td rowspan="4">inner_prod</td>
-        <td>C Array</td>
+        <td>C array</td>
         <td align="right">0.05 </td>
         <td align="right">113.869 </td>
         <td rowspan="4">No significant abstraction penalty</td>
@@ -1467,15 +1515,20 @@ dimension 100 and 100 x 100, respectively.</p>
     </tr>
 </table>
 
+<p>For larger vectors and matrices the general abstraction
+penalty for using classes seems to decrease, the small loss when
+using generic vector and matrix classes seems to remain. The
+difference w.r.t. alias assumptions remains visible, too.</p>
+
 <hr>
 
-<p>Copyright (©) 2000-2002 Joerg Walter, Mathias Koch <br> 
-Permission to copy, use, modify, sell and distribute this document is granted 
-provided this copyright notice appears in all copies. This document is provided 
-``as is'' without express or implied warranty, and with no claim as to its suitability 
-for any purpose.</p>
+<p>Copyright (©) 2000-2002 Joerg Walter, Mathias Koch <br>
+Permission to copy, use, modify, sell and distribute this
+document is granted provided this copyright notice appears in all
+copies. This document is provided ``as is'' without express or
+implied warranty, and with no claim as to its suitability for any
+purpose.</p>
 
 <p>Last revised: 8/3/2002</p>
-
 </body>
 </html>

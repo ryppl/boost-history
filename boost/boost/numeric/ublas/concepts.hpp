@@ -1138,11 +1138,19 @@ namespace boost { namespace numeric { namespace ublas {
         RandomAccessIteratorConcept<array_adaptor<double>::const_iterator, std::ptrdiff_t, double>::constraints ();
         MutableRandomAccessIteratorConcept<array_adaptor<double>::iterator, std::ptrdiff_t, double>::constraints ();
 
+#ifdef BOOST_UBLAS_ENABLE_INDEX_SET_ALL
+        IndexSetConcept<range<> >::constraints ();
+        RandomAccessIteratorConcept<range<>::const_iterator, std::ptrdiff_t, std::size_t>::constraints ();
+
+        IndexSetConcept<slice<> >::constraints ();
+        RandomAccessIteratorConcept<slice<>::const_iterator, std::ptrdiff_t, std::size_t>::constraints ();
+#else
         IndexSetConcept<range>::constraints ();
         RandomAccessIteratorConcept<range::const_iterator, std::ptrdiff_t, std::size_t>::constraints ();
 
         IndexSetConcept<slice>::constraints ();
         RandomAccessIteratorConcept<slice::const_iterator, std::ptrdiff_t, std::size_t>::constraints ();
+#endif
 
         IndexSetConcept<indirect_array<> >::constraints ();
         RandomAccessIteratorConcept<indirect_array<>::const_iterator, std::ptrdiff_t, std::size_t>::constraints ();

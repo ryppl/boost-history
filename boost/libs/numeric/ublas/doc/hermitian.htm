@@ -9,14 +9,19 @@ content="text/html; charset=iso-8859-1">
 
 <body bgcolor="#FFFFFF">
 
-<h1><img src="c++boost.gif" alt="c++boost.gif" align="center">Hermitian Matrix</h1>
+<h1><img src="c++boost.gif" alt="c++boost.gif" align="center"
+width="277" height="86">Hermitian Matrix</h1>
 
 <h2><a name="hermitian_matrix"></a>Hermitian Matrix</h2>
 
 <h4>Description</h4>
 
 <p>The templated class <code>hermitian_matrix&lt;T, F1, F2, A&gt;
-</code>is the base container adaptor for hermitian matrices.</p>
+</code>is the base container adaptor for hermitian matrices. For
+a <em>(n x n</em>)-dimensional hermitian matrix and <em>0 &lt;= i
+&lt; n</em>,<em> 0 &lt;= j &lt; n</em> holds <em>h</em><sub><em>i,
+j</em></sub><em> = h</em><sub><em>j, i</em></sub><sup><em>-</em></sup>.
+The storage of hermitian matrices is packed.</p>
 
 <h4>Example</h4>
 
@@ -29,7 +34,7 @@ content="text/html; charset=iso-8859-1">
     std::cout &lt;&lt; ml &lt;&lt; std::endl;
     hermitian_matrix&lt;std::complex&lt;double&gt;, upper&gt; mu (3, 3);
     for (int i = 0; i &lt; m.size1 (); ++ i) 
-        for (int j = i; j &lt;= m.size2 (); ++ j)
+        for (int j = i; j &lt; m.size2 (); ++ j)
             mu (i, j) = std::complex&lt;double&gt; (3 * i + j, 3 * i + j);
     std::cout &lt;&lt; mu &lt;&lt; std::endl;
 }</pre>
@@ -53,17 +58,20 @@ content="text/html; charset=iso-8859-1">
     </tr>
     <tr>
         <td><code>F1</code></td>
-        <td>Functor describing the type of the hermitian matrix.</td>
+        <td>Functor describing the type of the hermitian matrix. <a
+        href="#hermitian_matrix_1">[1]</a></td>
         <td><code>lower</code></td>
     </tr>
     <tr>
         <td><code>F2</code></td>
-        <td>Functor describing the storage organization.</td>
+        <td>Functor describing the storage organization. <a
+        href="#hermitian_matrix_2">[2]</a></td>
         <td><code>row_major</code></td>
     </tr>
     <tr>
         <td><code>A</code></td>
-        <td>The type of the adapted array.</td>
+        <td>The type of the adapted array. <a
+        href="#hermitian_matrix_3">[3]</a></td>
         <td><code>unbounded_array&lt;T&gt;</code></td>
     </tr>
 </table>
@@ -310,6 +318,18 @@ A&gt; &gt;</code> </p>
     </tr>
 </table>
 
+<h4>Notes</h4>
+
+<p><a name="#hermitian_matrix_1">[1]</a> Supported parameters for
+the type of the hermitian matrix are <code>lower</code> and <code>upper</code>.</p>
+
+<p><a name="#hermitian_matrix_2">[2]</a> Supported parameters for
+the storage organization are <code>row_major</code> and <code>column_major</code>.</p>
+
+<p><a name="#hermitian_matrix_3">[3]</a> Supported parameters for
+the adapted array are <code>unbounded_array&lt;T&gt;</code>, <code>bounded_array&lt;T&gt;</code>
+and <code>std::vector&lt;T&gt;</code>. </p>
+
 <h4>Interface</h4>
 
 <pre><code>    // Array based hermitian matrix class 
@@ -393,10 +413,10 @@ A&gt; &gt;</code> </p>
         class iterator1;
         class const_iterator2;
         class iterator2;
-        typedef reverse_iterator1&lt;const_iterator1&gt; const_reverse_iterator1;
-        typedef reverse_iterator1&lt;iterator1&gt; reverse_iterator1;
-        typedef reverse_iterator2&lt;const_iterator2&gt; const_reverse_iterator2;
-        typedef reverse_iterator2&lt;iterator2&gt; reverse_iterator2;
+        typedef reverse_iterator_base1&lt;const_iterator1&gt; const_reverse_iterator1;
+        typedef reverse_iterator_base1&lt;iterator1&gt; reverse_iterator1;
+        typedef reverse_iterator_base2&lt;const_iterator2&gt; const_reverse_iterator2;
+        typedef reverse_iterator_base2&lt;iterator2&gt; reverse_iterator2;
 
         // Element lookup
         const_iterator1 find_first1 (int rank, size_type i, size_type j) const;
@@ -630,7 +650,7 @@ a hermitian matrix adaptor for other matrices.</p>
     std::cout &lt;&lt; hal &lt;&lt; std::endl;
     hermitian_adaptor&lt;matrix&lt;std::complex&lt;double&gt; &gt;, upper&gt; hau (m);
     for (int i = 0; i &lt; hau.size1 (); ++ i) 
-        for (int j = i; j &lt;= hau.size2 (); ++ j)
+        for (int j = i; j &lt; hau.size2 (); ++ j)
             hau (i, j) = std::complex&lt;double&gt; (3 * i + j, 3 * i + j);
     std::cout &lt;&lt; sau &lt;&lt; std::endl;
 }</pre>
@@ -654,7 +674,8 @@ a hermitian matrix adaptor for other matrices.</p>
     </tr>
     <tr>
         <td><code>F</code></td>
-        <td>Functor describing the type of the hermitian adaptor.</td>
+        <td>Functor describing the type of the hermitian adaptor.
+        <a href="#hermitian_adaptor_1">[1]</a></td>
         <td><code>lower</code></td>
     </tr>
 </table>
@@ -881,6 +902,11 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
     </tr>
 </table>
 
+<h4>Notes</h4>
+
+<p><a name="#hermitian_adaptor_1">[1]</a> Supported parameters
+for the type of the hermitian adaptor are <code>lower</code> and <code>upper</code>.</p>
+
 <h4>Interface</h4>
 
 <pre><code>    // Hermitian matrix adaptor class 
@@ -950,10 +976,10 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         class iterator1;
         class const_iterator2;
         class iterator2;
-        typedef reverse_iterator1&lt;const_iterator1&gt; const_reverse_iterator1;
-        typedef reverse_iterator1&lt;iterator1&gt; reverse_iterator1;
-        typedef reverse_iterator2&lt;const_iterator2&gt; const_reverse_iterator2;
-        typedef reverse_iterator2&lt;iterator2&gt; reverse_iterator2;
+        typedef reverse_iterator_base1&lt;const_iterator1&gt; const_reverse_iterator1;
+        typedef reverse_iterator_base1&lt;iterator1&gt; reverse_iterator1;
+        typedef reverse_iterator_base2&lt;const_iterator2&gt; const_reverse_iterator2;
+        typedef reverse_iterator_base2&lt;iterator2&gt; reverse_iterator2;
 
         // Element lookup
         const_iterator1 find_first1 (int rank, size_type i, size_type j) const;
@@ -1170,13 +1196,13 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
 
 <hr>
 
-<p>Copyright (©) 2000-2002 Joerg Walter, Mathias Koch <br> 
-Permission to copy, use, modify, sell and distribute this document is granted 
-provided this copyright notice appears in all copies. This document is provided 
-``as is'' without express or implied warranty, and with no claim as to its suitability 
-for any purpose.</p>
+<p>Copyright (©) 2000-2002 Joerg Walter, Mathias Koch <br>
+Permission to copy, use, modify, sell and distribute this
+document is granted provided this copyright notice appears in all
+copies. This document is provided ``as is'' without express or
+implied warranty, and with no claim as to its suitability for any
+purpose.</p>
 
 <p>Last revised: 8/3/2002</p>
-
 </body>
 </html>

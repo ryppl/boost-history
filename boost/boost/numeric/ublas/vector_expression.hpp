@@ -86,14 +86,12 @@ namespace boost { namespace numeric { namespace ublas {
     struct vector_expression {
         typedef E expression_type;
         typedef vector_tag type_category;
-#ifdef BOOST_UBLAS_ENABLE_PROXY_SHORTCUTS
         typedef const vector_range<const E> const_vector_range_type;
         typedef vector_range<E> vector_range_type;
         typedef const vector_slice<const E> const_vector_slice_type;
         typedef vector_slice<E> vector_slice_type;
         typedef const vector_indirect<const E> const_vector_indirect_type;
         typedef vector_indirect<E> vector_indirect_type;
-#endif
 
         // This class could define an common interface for all
         // statically derived expression type classes.
@@ -110,6 +108,90 @@ namespace boost { namespace numeric { namespace ublas {
         }
 
 #ifdef BOOST_UBLAS_ENABLE_PROXY_SHORTCUTS
+#ifdef BOOST_UBLAS_ENABLE_INDEX_SET_ALL
+        BOOST_UBLAS_INLINE
+        const_vector_range_type operator () (const range<> &r) const {
+            return const_vector_range_type (operator () (), r);
+        }
+        BOOST_UBLAS_INLINE
+        vector_range_type operator () (const range<> &r) {
+            return vector_range_type (operator () (), r);
+        }
+        BOOST_UBLAS_INLINE
+        const_vector_slice_type operator () (const slice<> &s) const {
+            return const_vector_slice_type (operator () (), s);
+        }
+        BOOST_UBLAS_INLINE
+        vector_slice_type operator () (const slice<> &s) {
+            return vector_slice_type (operator () (), s);
+        }
+        template<class A>
+        BOOST_UBLAS_INLINE
+        const_vector_indirect_type operator () (const indirect_array<A> &ia) const {
+            return const_vector_indirect_type (operator () (), ia);
+        }
+        template<class A>
+        BOOST_UBLAS_INLINE
+        vector_indirect_type operator () (const indirect_array<A> &ia) {
+            return vector_indirect_type (operator () (), ia);
+        }
+#else
+        BOOST_UBLAS_INLINE
+        const_vector_range_type operator () (const range &r) const {
+            return const_vector_range_type (operator () (), r);
+        }
+        BOOST_UBLAS_INLINE
+        vector_range_type operator () (const range &r) {
+            return vector_range_type (operator () (), r);
+        }
+        BOOST_UBLAS_INLINE
+        const_vector_slice_type operator () (const slice &s) const {
+            return const_vector_slice_type (operator () (), s);
+        }
+        BOOST_UBLAS_INLINE
+        vector_slice_type operator () (const slice &s) {
+            return vector_slice_type (operator () (), s);
+        }
+        template<class A>
+        BOOST_UBLAS_INLINE
+        const_vector_indirect_type operator () (const indirect_array<A> &ia) const {
+            return const_vector_indirect_type (operator () (), ia);
+        }
+        template<class A>
+        BOOST_UBLAS_INLINE
+        vector_indirect_type operator () (const indirect_array<A> &ia) {
+            return vector_indirect_type (operator () (), ia);
+        }
+#endif
+#else
+#ifdef BOOST_UBLAS_ENABLE_INDEX_SET_ALL
+        BOOST_UBLAS_INLINE
+        const_vector_range_type project (const range<> &r) const {
+            return const_vector_range_type (operator () (), r);
+        }
+        BOOST_UBLAS_INLINE
+        vector_range_type project (const range<> &r) {
+            return vector_range_type (operator () (), r);
+        }
+        BOOST_UBLAS_INLINE
+        const_vector_slice_type project (const slice<> &s) const {
+            return const_vector_slice_type (operator () (), s);
+        }
+        BOOST_UBLAS_INLINE
+        vector_slice_type project (const slice<> &s) {
+            return vector_slice_type (operator () (), s);
+        }
+        template<class A>
+        BOOST_UBLAS_INLINE
+        const_vector_indirect_type project (const indirect_array<A> &ia) const {
+            return const_vector_indirect_type (operator () (), ia);
+        }
+        template<class A>
+        BOOST_UBLAS_INLINE
+        vector_indirect_type project (const indirect_array<A> &ia) {
+            return vector_indirect_type (operator () (), ia);
+        }
+#else
         BOOST_UBLAS_INLINE
         const_vector_range_type project (const range &r) const {
             return const_vector_range_type (operator () (), r);
@@ -137,12 +219,16 @@ namespace boost { namespace numeric { namespace ublas {
             return vector_indirect_type (operator () (), ia);
         }
 #endif
+#endif
     };
 
     template<class E>
     class vector_const_reference:
         public vector_expression<vector_const_reference<E> > {
     public:
+#ifdef BOOST_UBLAS_ENABLE_PROXY_SHORTCUTS
+        BOOST_UBLAS_USING vector_expression<vector_const_reference<E> >::operator ();
+#endif
         typedef E expression_type;
         typedef typename E::size_type size_type;
         typedef typename E::difference_type difference_type;
@@ -210,9 +296,9 @@ namespace boost { namespace numeric { namespace ublas {
         // Reverse iterator
 
 #ifdef BOOST_MSVC_STD_ITERATOR
-        typedef reverse_iterator<const_iterator, value_type, const_reference> const_reverse_iterator;
+        typedef reverse_iterator_base<const_iterator, value_type, const_reference> const_reverse_iterator;
 #else
-        typedef reverse_iterator<const_iterator> const_reverse_iterator;
+        typedef reverse_iterator_base<const_iterator> const_reverse_iterator;
 #endif
 
         BOOST_UBLAS_INLINE
@@ -233,9 +319,12 @@ namespace boost { namespace numeric { namespace ublas {
     typename vector_const_reference<E>::expression_type vector_const_reference<E>::nil_;
 
     template<class E>
-    class vector_reference: 
+    class vector_reference:
         public vector_expression<vector_reference<E> > {
     public:
+#ifdef BOOST_UBLAS_ENABLE_PROXY_SHORTCUTS
+        BOOST_UBLAS_USING vector_expression<vector_reference<E> >::operator ();
+#endif
         typedef E expression_type;
         typedef typename E::size_type size_type;
         typedef typename E::difference_type difference_type;
@@ -339,9 +428,9 @@ namespace boost { namespace numeric { namespace ublas {
         // Reverse iterator
 
 #ifdef BOOST_MSVC_STD_ITERATOR
-        typedef reverse_iterator<const_iterator, value_type, const_reference> const_reverse_iterator;
+        typedef reverse_iterator_base<const_iterator, value_type, const_reference> const_reverse_iterator;
 #else
-        typedef reverse_iterator<const_iterator> const_reverse_iterator;
+        typedef reverse_iterator_base<const_iterator> const_reverse_iterator;
 #endif
 
         BOOST_UBLAS_INLINE
@@ -354,9 +443,9 @@ namespace boost { namespace numeric { namespace ublas {
         }
 
 #ifdef BOOST_MSVC_STD_ITERATOR
-        typedef reverse_iterator<iterator, value_type, reference> reverse_iterator;
+        typedef reverse_iterator_base<iterator, value_type, reference> reverse_iterator;
 #else
-        typedef reverse_iterator<iterator> reverse_iterator;
+        typedef reverse_iterator_base<iterator> reverse_iterator;
 #endif
 
         BOOST_UBLAS_INLINE
@@ -380,6 +469,9 @@ namespace boost { namespace numeric { namespace ublas {
     class vector_unary:
         public vector_expression<vector_unary<E, F> > {
     public:
+#ifdef BOOST_UBLAS_ENABLE_PROXY_SHORTCUTS
+        BOOST_UBLAS_USING vector_expression<vector_unary<E, F> >::operator ();
+#endif
         typedef E expression_type;
         typedef F functor_type;
         typedef typename E::size_type size_type;
@@ -557,9 +649,9 @@ namespace boost { namespace numeric { namespace ublas {
         // Reverse iterator
 
 #ifdef BOOST_MSVC_STD_ITERATOR
-        typedef reverse_iterator<const_iterator, value_type, const_reference> const_reverse_iterator;
+        typedef reverse_iterator_base<const_iterator, value_type, const_reference> const_reverse_iterator;
 #else
-        typedef reverse_iterator<const_iterator> const_reverse_iterator;
+        typedef reverse_iterator_base<const_iterator> const_reverse_iterator;
 #endif
 
         BOOST_UBLAS_INLINE
@@ -648,6 +740,9 @@ namespace boost { namespace numeric { namespace ublas {
     class vector_binary:
         public vector_expression<vector_binary<E1, E2, F> > {
     public:
+#ifdef BOOST_UBLAS_ENABLE_PROXY_SHORTCUTS
+        BOOST_UBLAS_USING vector_expression<vector_binary<E1, E2, F> >::operator ();
+#endif
         typedef E1 expression1_type;
         typedef E2 expression2_type;
         typedef F functor_type;
@@ -949,9 +1044,9 @@ namespace boost { namespace numeric { namespace ublas {
         // Reverse iterator
 
 #ifdef BOOST_MSVC_STD_ITERATOR
-        typedef reverse_iterator<const_iterator, value_type, const_reference> const_reverse_iterator;
+        typedef reverse_iterator_base<const_iterator, value_type, const_reference> const_reverse_iterator;
 #else
-        typedef reverse_iterator<const_iterator> const_reverse_iterator;
+        typedef reverse_iterator_base<const_iterator> const_reverse_iterator;
 #endif
 
         BOOST_UBLAS_INLINE
@@ -1013,6 +1108,9 @@ namespace boost { namespace numeric { namespace ublas {
     class vector_binary_scalar1:
         public vector_expression<vector_binary_scalar1<E1, E2, F> > {
     public:
+#ifdef BOOST_UBLAS_ENABLE_PROXY_SHORTCUTS
+        BOOST_UBLAS_USING vector_expression<vector_binary_scalar1<E1, E2, F> >::operator ();
+#endif
         typedef E1 expression1_type;
         typedef E2 expression2_type;
         typedef F functor_type;
@@ -1202,9 +1300,9 @@ namespace boost { namespace numeric { namespace ublas {
         // Reverse iterator
 
 #ifdef BOOST_MSVC_STD_ITERATOR
-        typedef reverse_iterator<const_iterator, value_type, const_reference> const_reverse_iterator;
+        typedef reverse_iterator_base<const_iterator, value_type, const_reference> const_reverse_iterator;
 #else
-        typedef reverse_iterator<const_iterator> const_reverse_iterator;
+        typedef reverse_iterator_base<const_iterator> const_reverse_iterator;
 #endif
 
         BOOST_UBLAS_INLINE
@@ -1252,6 +1350,9 @@ namespace boost { namespace numeric { namespace ublas {
     class vector_binary_scalar2:
         public vector_expression<vector_binary_scalar2<E1, E2, F> > {
     public:
+#ifdef BOOST_UBLAS_ENABLE_PROXY_SHORTCUTS
+        BOOST_UBLAS_USING vector_expression<vector_binary_scalar2<E1, E2, F> >::operator ();
+#endif
         typedef E1 expression1_type;
         typedef E2 expression2_type;
         typedef F functor_type;
@@ -1441,9 +1542,9 @@ namespace boost { namespace numeric { namespace ublas {
         // Reverse iterator
 
 #ifdef BOOST_MSVC_STD_ITERATOR
-        typedef reverse_iterator<const_iterator, value_type, const_reference> const_reverse_iterator;
+        typedef reverse_iterator_base<const_iterator, value_type, const_reference> const_reverse_iterator;
 #else
-        typedef reverse_iterator<const_iterator> const_reverse_iterator;
+        typedef reverse_iterator_base<const_iterator> const_reverse_iterator;
 #endif
 
         BOOST_UBLAS_INLINE

@@ -162,7 +162,8 @@ namespace boost { namespace numeric { namespace ublas {
             // Too unusual semantic.
             // BOOST_UBLAS_CHECK (this != &a, external_logic ());
             if (this != &a) {
-                BOOST_UBLAS_CHECK (size_ == a.size_, bad_size ());
+                // Precondition for container relaxed as requested during review.
+                // BOOST_UBLAS_CHECK (size_ == a.size_, bad_size ());
                 std::swap (size_, a.size_);
                 std::swap (data_, a.data_);
             }
@@ -363,8 +364,10 @@ namespace boost { namespace numeric { namespace ublas {
             // Too unusual semantic.
             // BOOST_UBLAS_CHECK (this != &a, external_logic ());
             if (this != &a) {
-                BOOST_UBLAS_CHECK (size_ == a.size_, bad_size ());
-                std::swap_ranges (data_, data_ + size_, a.data_);
+                // Precondition for container relaxed as requested during review.
+                // BOOST_UBLAS_CHECK (size_ == a.size_, bad_size ());
+                std::swap (size_, a.size_);
+                std::swap_ranges (data_, data_ + std::max (size_, a.size_), a.data_);
             }
         }
 #ifdef BOOST_UBLAS_FRIEND_FUNCTION
@@ -607,7 +610,8 @@ namespace boost { namespace numeric { namespace ublas {
             // Too unusual semantic.
             // BOOST_UBLAS_CHECK (this != &a, external_logic ());
             if (this != &a) {
-                BOOST_UBLAS_CHECK (size_ == a.size_, bad_size ());
+                // Precondition for container relaxed as requested during review.
+                // BOOST_UBLAS_CHECK (size_ == a.size_, bad_size ());
                 std::swap (size_, a.size_);
                 std::swap (own_, a.own_);
                 std::swap (data_, a.data_);
@@ -841,7 +845,8 @@ namespace boost { namespace numeric { namespace ublas {
             // Too unusual semantic.
             // BOOST_UBLAS_CHECK (this != &a, external_logic ());
             if (this != &a) {
-                BOOST_UBLAS_CHECK (size_ == a.size_, bad_size ());
+                // Precondition for container relaxed as requested during review.
+                // BOOST_UBLAS_CHECK (size_ == a.size_, bad_size ());
                 std::swap (size_, a.size_);
                 std::swap (own_, a.own_);
                 std::swap (data_, a.data_);
@@ -978,10 +983,18 @@ namespace boost { namespace numeric { namespace ublas {
     }
 
     // Range class
+#ifdef BOOST_UBLAS_ENABLE_INDEX_SET_ALL
+    template<class S, class D>
+#endif
     class range {
     public:
+#ifdef BOOST_UBLAS_ENABLE_INDEX_SET_ALL
+        typedef S size_type;
+        typedef D difference_type;
+#else
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
+#endif
         typedef difference_type value_type;
         typedef value_type const_reference;
         typedef const_reference reference;
@@ -991,7 +1004,7 @@ namespace boost { namespace numeric { namespace ublas {
 
         // Construction and destruction
         BOOST_UBLAS_INLINE
-        range (): 
+        range ():
             start_ (), size_ () {}
         BOOST_UBLAS_INLINE
         range (size_type start, size_type stop):
@@ -1000,19 +1013,19 @@ namespace boost { namespace numeric { namespace ublas {
         }
 
         BOOST_UBLAS_INLINE
-        size_type start () const { 
-            return start_; 
+        size_type start () const {
+            return start_;
         }
         BOOST_UBLAS_INLINE
-        size_type size () const { 
-            return size_; 
+        size_type size () const {
+            return size_;
         }
 
         // Element access
         BOOST_UBLAS_INLINE
-        const_reference operator () (size_type i) const { 
+        const_reference operator () (size_type i) const {
             BOOST_UBLAS_CHECK (i < size_, bad_index ());
-            return start_ + i; 
+            return start_ + i;
         }
 
         // Composition
@@ -1151,16 +1164,45 @@ namespace boost { namespace numeric { namespace ublas {
             return const_reverse_iterator (begin ());
         }
 
+#ifdef BOOST_UBLAS_ENABLE_INDEX_SET_ALL
+        BOOST_UBLAS_INLINE
+        range preprocess (size_type size) const {
+            if (this != &all_)
+                return *this;
+            return range (0, size);
+        }
+        BOOST_UBLAS_INLINE
+        const range &all () {
+            return all_;
+        }
+#endif
+
     private:
         size_type start_;
         size_type size_;
+#ifdef BOOST_UBLAS_ENABLE_INDEX_SET_ALL
+        static range all_;
+#endif
     };
 
+#ifdef BOOST_UBLAS_ENABLE_INDEX_SET_ALL
+    template<class S, class D>
+    range<S, D> range<S, D>::all_;
+#endif
+
     // Slice class
+#ifdef BOOST_UBLAS_ENABLE_INDEX_SET_ALL
+    template<class S, class D>
+#endif
     class slice {
     public:
+#ifdef BOOST_UBLAS_ENABLE_INDEX_SET_ALL
+        typedef S size_type;
+        typedef D difference_type;
+#else
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
+#endif
         typedef difference_type value_type;
         typedef value_type const_reference;
         typedef const_reference reference;
@@ -1198,7 +1240,11 @@ namespace boost { namespace numeric { namespace ublas {
 
         // Composition
         BOOST_UBLAS_INLINE
+#ifdef BOOST_UBLAS_ENABLE_INDEX_SET_ALL
+        slice compose (const range<> &r) const {
+#else
         slice compose (const range &r) const {
+#endif
             BOOST_UBLAS_CHECK (r.start () + r.size () <= size_, bad_size ());
             return slice (start_ + stride_ * r.start (), stride_, r.size ());
         }
@@ -1338,20 +1384,50 @@ namespace boost { namespace numeric { namespace ublas {
             return const_reverse_iterator (begin ());
         }
 
+#ifdef BOOST_UBLAS_ENABLE_INDEX_SET_ALL
+        BOOST_UBLAS_INLINE
+        slice preprocess (size_type size) const {
+            if (this != &all_)
+                return *this;
+            return slice (0, 1, size);
+        }
+        BOOST_UBLAS_INLINE
+        const slice &all () {
+            return all_;
+        }
+#endif
+
     private:
         size_type start_;
         difference_type stride_;
         size_type size_;
+#ifdef BOOST_UBLAS_ENABLE_INDEX_SET_ALL
+        static slice all_;
+#endif
     };
 
+#ifdef BOOST_UBLAS_ENABLE_INDEX_SET_ALL
+    template<class S, class D>
+    slice<S, D> slice<S, D>::all_;
+#endif
+
     // Indirect array class
+#ifdef BOOST_UBLAS_ENABLE_INDEX_SET_ALL
+    template<class A, class S, class D>
+#else
     template<class A>
+#endif
     class indirect_array {
     public:
         typedef A array_type;
         typedef const A const_array_type;
+#ifdef BOOST_UBLAS_ENABLE_INDEX_SET_ALL
+        typedef S size_type;
+        typedef D difference_type;
+#else
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
+#endif
         typedef typename A::value_type value_type;
         typedef typename A::const_reference const_reference;
         typedef typename A::reference reference;
@@ -1363,7 +1439,7 @@ namespace boost { namespace numeric { namespace ublas {
         BOOST_UBLAS_INLINE
         indirect_array ():
             size_ (), data_ () {}
-        BOOST_UBLAS_INLINE
+        BOOST_UBLAS_EXPLICIT BOOST_UBLAS_INLINE
         indirect_array (size_type size):
             size_ (size), data_ (size) {}
         BOOST_UBLAS_INLINE
@@ -1411,7 +1487,11 @@ namespace boost { namespace numeric { namespace ublas {
 
         // Composition
         BOOST_UBLAS_INLINE
+#ifdef BOOST_UBLAS_ENABLE_INDEX_SET_ALL
+        indirect_array compose (const range<> &r) const {
+#else
         indirect_array compose (const range &r) const {
+#endif
             BOOST_UBLAS_CHECK (r.start () + r.size () <= size_, bad_size ());
             array_type data (r.size ());
             for (size_type i = 0; i < r.size (); ++ i)
@@ -1419,7 +1499,11 @@ namespace boost { namespace numeric { namespace ublas {
             return indirect_array (r.size (), data);
         }
         BOOST_UBLAS_INLINE
+#ifdef BOOST_UBLAS_ENABLE_INDEX_SET_ALL
+        indirect_array compose (const slice<> &s) const {
+#else
         indirect_array compose (const slice &s) const {
+#endif
             BOOST_UBLAS_CHECK (s.start () + s.stride () * s.size () <= size (), bad_size ());
             array_type data (s.size ());
             for (size_type i = 0; i < s.size (); ++ i)
@@ -1570,10 +1654,34 @@ namespace boost { namespace numeric { namespace ublas {
             return const_reverse_iterator (begin ());
         }
 
+#ifdef BOOST_UBLAS_ENABLE_INDEX_SET_ALL
+        BOOST_UBLAS_INLINE
+        indirect_array preprocess (size_type size) const {
+            if (this != &all_)
+                return *this;
+            indirect_array ia (size);
+            for (size_type i = 0; i < size; ++ i)
+               ia (i) = i;
+            return ia;
+        }
+        BOOST_UBLAS_INLINE
+        const indirect_array &all () {
+            return all_;
+        }
+#endif
+
     private:
         size_type size_;
         array_type data_;
+#ifdef BOOST_UBLAS_ENABLE_INDEX_SET_ALL
+        static indirect_array all_;
+#endif
     };
+
+#ifdef BOOST_UBLAS_ENABLE_INDEX_SET_ALL
+    template<class A, class S, class D>
+    indirect_array<A, S, D> indirect_array<A, S, D>::all_;
+#endif
 
 }}}
 

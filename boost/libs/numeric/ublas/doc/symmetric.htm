@@ -9,14 +9,19 @@ content="text/html; charset=iso-8859-1">
 
 <body bgcolor="#FFFFFF">
 
-<h1><img src="c++boost.gif" alt="c++boost.gif" align="center">Symmetric Matrix</h1>
+<h1><img src="c++boost.gif" alt="c++boost.gif" align="center"
+width="277" height="86">Symmetric Matrix</h1>
 
 <h2><a name="symmetric_matrix"></a>Symmetric Matrix</h2>
 
 <h4>Description</h4>
 
 <p>The templated class <code>symmetric_matrix&lt;T, F1, F2, A&gt;
-</code>is the base container adaptor for symmetric matrices.</p>
+</code>is the base container adaptor for symmetric matrices. For
+a <em>(n x n</em>)-dimensional symmetric matrix and <em>0 &lt;= i
+&lt; n</em>,<em> 0 &lt;= j &lt; n</em> holds <em>s</em><sub><em>i,
+j</em></sub><em> = s</em><sub><em>j, i</em></sub>. The storage of
+symmetric matrices is packed.</p>
 
 <h4>Example</h4>
 
@@ -29,7 +34,7 @@ content="text/html; charset=iso-8859-1">
     std::cout &lt;&lt; ml &lt;&lt; std::endl;
     symmetric_matrix&lt;double, upper&gt; mu (3, 3);
     for (int i = 0; i &lt; m.size1 (); ++ i) 
-        for (int j = i; j &lt;= m.size2 (); ++ j)
+        for (int j = i; j &lt; m.size2 (); ++ j)
             mu (i, j) = 3 * i + j;
     std::cout &lt;&lt; mu &lt;&lt; std::endl;
 }</pre>
@@ -53,17 +58,20 @@ content="text/html; charset=iso-8859-1">
     </tr>
     <tr>
         <td><code>F1</code></td>
-        <td>Functor describing the type of the symmetric matrix.</td>
+        <td>Functor describing the type of the symmetric matrix. <a
+        name="#symmetric_matrix_1">[1]</a></td>
         <td><code>lower</code></td>
     </tr>
     <tr>
         <td><code>F2</code></td>
-        <td>Functor describing the storage organization.</td>
+        <td>Functor describing the storage organization. <a
+        name="#symmetric_matrix_2">[2]</a></td>
         <td><code>row_major</code></td>
     </tr>
     <tr>
         <td><code>A</code></td>
-        <td>The type of the adapted array.</td>
+        <td>The type of the adapted array. <a
+        name="#symmetric_matrix_3">[3]</a></td>
         <td><code>unbounded_array&lt;T&gt;</code></td>
     </tr>
 </table>
@@ -200,8 +208,8 @@ A&gt; &gt;</code> </p>
     <tr>
         <td><code>template&lt;class AT&gt;<br>
         symmetric_matrix &amp;operator /= (const AT &amp;at)</code></td>
-        <td>A computed assignment operator. Divides the
-        symmetric matrix through a scalar.</td>
+        <td>A computed assignment operator. Divides the symmetric
+        matrix through a scalar.</td>
     </tr>
     <tr>
         <td><code>void swap (symmetric_matrix &amp;m)</code></td>
@@ -310,6 +318,18 @@ A&gt; &gt;</code> </p>
     </tr>
 </table>
 
+<h4>Notes</h4>
+
+<p><a name="#symmetric_matrix_1">[1]</a> Supported parameters for
+the type of the symmetric matrix are <code>lower</code> and <code>upper</code>.</p>
+
+<p><a name="#symmetric_matrix_2">[2]</a> Supported parameters for
+the storage organization are <code>row_major</code> and <code>column_major</code>.</p>
+
+<p><a name="#symmetric_matrix_3">[3]</a> Supported parameters for
+the adapted array are <code>unbounded_array&lt;T&gt;</code>, <code>bounded_array&lt;T&gt;</code>
+and <code>std::vector&lt;T&gt;</code>. </p>
+
 <h4>Interface</h4>
 
 <pre><code>    // Array based symmetric matrix class 
@@ -393,10 +413,10 @@ A&gt; &gt;</code> </p>
         class iterator1;
         class const_iterator2;
         class iterator2;
-        typedef reverse_iterator1&lt;const_iterator1&gt; const_reverse_iterator1;
-        typedef reverse_iterator1&lt;iterator1&gt; reverse_iterator1;
-        typedef reverse_iterator2&lt;const_iterator2&gt; const_reverse_iterator2;
-        typedef reverse_iterator2&lt;iterator2&gt; reverse_iterator2;
+        typedef reverse_iterator_base1&lt;const_iterator1&gt; const_reverse_iterator1;
+        typedef reverse_iterator_base1&lt;iterator1&gt; reverse_iterator1;
+        typedef reverse_iterator_base2&lt;const_iterator2&gt; const_reverse_iterator2;
+        typedef reverse_iterator_base2&lt;iterator2&gt; reverse_iterator2;
 
         // Element lookup
         const_iterator1 find_first1 (int rank, size_type i, size_type j) const;
@@ -630,7 +650,7 @@ a symmetric matrix adaptor for other matrices.</p>
     std::cout &lt;&lt; sal &lt;&lt; std::endl;
     symmetric_adaptor&lt;matrix&lt;double&gt;, upper&gt; sau (m);
     for (int i = 0; i &lt; sau.size1 (); ++ i) 
-        for (int j = i; j &lt;= sau.size2 (); ++ j)
+        for (int j = i; j &lt; sau.size2 (); ++ j)
             sau (i, j) = 3 * i + j;
     std::cout &lt;&lt; sau &lt;&lt; std::endl;
 }</pre>
@@ -654,7 +674,8 @@ a symmetric matrix adaptor for other matrices.</p>
     </tr>
     <tr>
         <td><code>F</code></td>
-        <td>Functor describing the type of the symmetric adaptor.</td>
+        <td>Functor describing the type of the symmetric adaptor.
+        <a href="#symmetric_adaptor_1">[1]</a></td>
         <td><code>lower</code></td>
     </tr>
 </table>
@@ -786,8 +807,8 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
     <tr>
         <td><code>template&lt;class AT&gt;<br>
         symmetric_adaptor &amp;operator /= (const AT &amp;at)</code></td>
-        <td>A computed assignment operator. Divides the
-        symmetric adaptor through a scalar.</td>
+        <td>A computed assignment operator. Divides the symmetric
+        adaptor through a scalar.</td>
     </tr>
     <tr>
         <td><code>void swap (symmetric_adaptor &amp;m)</code></td>
@@ -881,6 +902,11 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
     </tr>
 </table>
 
+<h4>Notes</h4>
+
+<p><a name="#symmetric_adaptor_1">[1]</a> Supported parameters
+for the type of the symmetric adaptor are <code>lower</code> and <code>upper</code>.</p>
+
 <h4>Interface</h4>
 
 <pre><code>    // Symmetric matrix adaptor class 
@@ -951,10 +977,10 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         class iterator1;
         class const_iterator2;
         class iterator2;
-        typedef reverse_iterator1&lt;const_iterator1&gt; const_reverse_iterator1;
-        typedef reverse_iterator1&lt;iterator1&gt; reverse_iterator1;
-        typedef reverse_iterator2&lt;const_iterator2&gt; const_reverse_iterator2;
-        typedef reverse_iterator2&lt;iterator2&gt; reverse_iterator2;
+        typedef reverse_iterator_base1&lt;const_iterator1&gt; const_reverse_iterator1;
+        typedef reverse_iterator_base1&lt;iterator1&gt; reverse_iterator1;
+        typedef reverse_iterator_base2&lt;const_iterator2&gt; const_reverse_iterator2;
+        typedef reverse_iterator_base2&lt;iterator2&gt; reverse_iterator2;
 
         // Element lookup
         const_iterator1 find_first1 (int rank, size_type i, size_type j) const;
@@ -1171,13 +1197,13 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
 
 <hr>
 
-<p>Copyright (©) 2000-2002 Joerg Walter, Mathias Koch <br> 
-Permission to copy, use, modify, sell and distribute this document is granted 
-provided this copyright notice appears in all copies. This document is provided 
-``as is'' without express or implied warranty, and with no claim as to its suitability 
-for any purpose.</p>
+<p>Copyright (©) 2000-2002 Joerg Walter, Mathias Koch <br>
+Permission to copy, use, modify, sell and distribute this
+document is granted provided this copyright notice appears in all
+copies. This document is provided ``as is'' without express or
+implied warranty, and with no claim as to its suitability for any
+purpose.</p>
 
 <p>Last revised: 8/3/2002</p>
-
 </body>
 </html>

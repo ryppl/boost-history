@@ -9,14 +9,20 @@ content="text/html; charset=iso-8859-1">
 
 <body bgcolor="#FFFFFF">
 
-<h1><img src="c++boost.gif" alt="c++boost.gif" align="center">Matrix</h1>
+<h1><img src="c++boost.gif" alt="c++boost.gif" align="center"
+width="277" height="86">Matrix</h1>
 
 <h2><a name="matrix"></a>Matrix</h2>
 
 <h4>Description</h4>
 
 <p>The templated class <code>matrix&lt;T, F, A&gt; </code>is the
-base container adaptor for dense matrices.</p>
+base container adaptor for dense matrices. For a <em>(m x n</em>)-dimensional
+matrix and <em>0 &lt;= i &lt; m</em>,<em> 0 &lt;= j &lt; n</em>
+every element <em>m</em><sub><em>i, j</em></sub> is mapped to the
+<em>(i x n + j)-</em>th element of the container for row major
+orientation or the <em>(i + j x m)-</em>th element of the
+container for column major orientation.</p>
 
 <h4>Example</h4>
 
@@ -48,12 +54,13 @@ base container adaptor for dense matrices.</p>
     </tr>
     <tr>
         <td><code>F</code></td>
-        <td>Functor describing the storage organization.</td>
+        <td>Functor describing the storage organization. <a
+        href="#matrix_1">[1]</a></td>
         <td><code>row_major</code></td>
     </tr>
     <tr>
         <td><code>A</code></td>
-        <td>The type of the adapted array.</td>
+        <td>The type of the adapted array. <a href="#matrix_2">[2]</a></td>
         <td><code>unbounded_array&lt;T&gt;</code></td>
     </tr>
 </table>
@@ -289,6 +296,15 @@ href="container.htm#matrix">Matrix</a>.</p>
     </tr>
 </table>
 
+<h4>Notes</h4>
+
+<p><a name="#matrix_1">[1]</a> Supported parameters for the
+storage organization are <code>row_major</code> and <code>column_major</code>.</p>
+
+<p><a name="#matrix_2">[2]</a> Supported parameters for the
+adapted array are <code>unbounded_array&lt;T&gt;</code>, <code>bounded_array&lt;T&gt;</code>
+and <code>std::vector&lt;T&gt;</code>. </p>
+
 <h4>Interface</h4>
 
 <pre><code>    // Array based matrix class
@@ -370,10 +386,10 @@ href="container.htm#matrix">Matrix</a>.</p>
         class iterator1;
         class const_iterator2;
         class iterator2;
-        typedef reverse_iterator1&lt;const_iterator1&gt; const_reverse_iterator1;
-        typedef reverse_iterator1&lt;iterator1&gt; reverse_iterator1;
-        typedef reverse_iterator2&lt;const_iterator2&gt; const_reverse_iterator2;
-        typedef reverse_iterator2&lt;iterator2&gt; reverse_iterator2;
+        typedef reverse_iterator_base1&lt;const_iterator1&gt; const_reverse_iterator1;
+        typedef reverse_iterator_base1&lt;iterator1&gt; reverse_iterator1;
+        typedef reverse_iterator_base2&lt;const_iterator2&gt; const_reverse_iterator2;
+        typedef reverse_iterator_base2&lt;iterator2&gt; reverse_iterator2;
 
         // Element lookup
         const_iterator1 find1 (int rank, size_type i, size_type j) const;
@@ -597,7 +613,10 @@ href="container.htm#matrix">Matrix</a>.</p>
 <h4>Description</h4>
 
 <p>The templated class <code>identity_matrix&lt;T&gt; </code>represents
-identity matrices.</p>
+identity matrices. For a <em>(m x n</em>)-dimensional identity
+matrix and <em>0 &lt;= i &lt; m</em>,<em> 0 &lt;= j &lt; n</em>
+holds <em>id</em><sub><em>i, j</em></sub><em> = 0</em>, if <em>i
+&lt;&gt; j</em>, and <em>id</em><sub><em>i, i</em></sub><em>= 1</em>.</p>
 
 <h4>Example</h4>
 
@@ -676,8 +695,8 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         <td>Returns the number of columns. </td>
     </tr>
     <tr>
-        <td><code>const_reference operator () (size_type i, size_type
-        j) const</code></td>
+        <td><code>const_reference operator () (size_type i,
+        size_type j) const</code></td>
         <td>Returns the value of the <code>j</code>-th element in
         the <code>i</code>-th row. </td>
     </tr>
@@ -789,8 +808,8 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
 
         class const_iterator1;
         class const_iterator2;
-        typedef reverse_iterator1&lt;const_iterator1&gt; const_reverse_iterator1;
-        typedef reverse_iterator2&lt;const_iterator2&gt; const_reverse_iterator2;
+        typedef reverse_iterator_base1&lt;const_iterator1&gt; const_reverse_iterator1;
+        typedef reverse_iterator_base2&lt;const_iterator2&gt; const_reverse_iterator2;
 
         // Element lookup
         const_iterator1 find_first1 (int rank, size_type i, size_type j) const;
@@ -910,7 +929,9 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
 <h4>Description</h4>
 
 <p>The templated class <code>zero_matrix&lt;T&gt; </code>represents
-zero matrices.</p>
+zero matrices. For a <em>(m x n</em>)-dimensional zero matrix and
+<em>0 &lt;= i &lt; m</em>,<em> 0 &lt;= j &lt; n</em> holds <em>z</em><sub><em>i,
+j</em></sub><em> = 0</em>.</p>
 
 <h4>Example</h4>
 
@@ -951,8 +972,7 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
 
 <h4>Public base classes</h4>
 
-<p><code>matrix_expression&lt;zero_matrix&lt;T&gt; &gt;</code>
-</p>
+<p><code>matrix_expression&lt;zero_matrix&lt;T&gt; &gt;</code> </p>
 
 <h4>Members</h4>
 
@@ -963,13 +983,13 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
     </tr>
     <tr>
         <td><code>zero_matrix ()</code> </td>
-        <td>Constructs a <code>zero_matrix </code>that holds
-        zero rows of zero elements.</td>
+        <td>Constructs a <code>zero_matrix </code>that holds zero
+        rows of zero elements.</td>
     </tr>
     <tr>
         <td><code>zero_matrix (size_type size1, size_type size2)</code></td>
-        <td>Constructs a <code>zero_matrix </code>that holds
-        <code>size1</code> rows of <code>size2</code> elements.</td>
+        <td>Constructs a <code>zero_matrix </code>that holds <code>size1</code>
+        rows of <code>size2</code> elements.</td>
     </tr>
     <tr>
         <td><code>zero_matrix (const zero_matrix &amp;m)</code></td>
@@ -989,19 +1009,19 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         <td>Returns the number of columns. </td>
     </tr>
     <tr>
-        <td><code>const_reference operator () (size_type i, size_type
-        j) const</code></td>
+        <td><code>const_reference operator () (size_type i,
+        size_type j) const</code></td>
         <td>Returns the value of the <code>j</code>-th element in
         the <code>i</code>-th row. </td>
     </tr>
     <tr>
-        <td><code>zero_matrix &amp;operator = (const
-        zero_matrix &amp;m)</code></td>
+        <td><code>zero_matrix &amp;operator = (const zero_matrix
+        &amp;m)</code></td>
         <td>The assignment operator.</td>
     </tr>
     <tr>
-        <td><code>zero_matrix &amp;assign_temporary
-        (zero_matrix &amp;m)</code></td>
+        <td><code>zero_matrix &amp;assign_temporary (zero_matrix
+        &amp;m)</code></td>
         <td>Assigns a temporary. May change the zero matrix <code>m</code>.</td>
     </tr>
     <tr>
@@ -1100,8 +1120,8 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
 
         class const_iterator1;
         class const_iterator2;
-        typedef reverse_iterator1&lt;const_iterator1&gt; const_reverse_iterator1;
-        typedef reverse_iterator2&lt;const_iterator2&gt; const_reverse_iterator2;
+        typedef reverse_iterator_base1&lt;const_iterator1&gt; const_reverse_iterator1;
+        typedef reverse_iterator_base2&lt;const_iterator2&gt; const_reverse_iterator2;
 
         // Element lookup
         const_iterator1 find_first1 (int rank, size_type i, size_type j) const;
@@ -1208,16 +1228,15 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         const_reverse_iterator2 rend2 () const;
     };</code></pre>
 
-
 <hr>
 
-<p>Copyright (©) 2000-2002 Joerg Walter, Mathias Koch <br> 
-Permission to copy, use, modify, sell and distribute this document is granted 
-provided this copyright notice appears in all copies. This document is provided 
-``as is'' without express or implied warranty, and with no claim as to its suitability 
-for any purpose.</p>
+<p>Copyright (©) 2000-2002 Joerg Walter, Mathias Koch <br>
+Permission to copy, use, modify, sell and distribute this
+document is granted provided this copyright notice appears in all
+copies. This document is provided ``as is'' without express or
+implied warranty, and with no claim as to its suitability for any
+purpose.</p>
 
 <p>Last revised: 8/3/2002</p>
-
 </body>
 </html>
