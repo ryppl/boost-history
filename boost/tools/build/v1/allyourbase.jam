@@ -1631,7 +1631,9 @@ rule SubInclude
 
     # protect variables from being permanently set by SubDir invocations
     # in included files.
+    local project = $(PROJECT) ;
     local [ protect-subdir ] ;
+    PROJECT = $(project) ;
     local jamfile-path
         = [ tokens-to-simple-path
             [ split-path $(JAMFILE:D=$(_s):R=$($(<[1]))) ] ] ;

@@ -2142,11 +2142,11 @@ rule grist-targets ( targets + : subdir-tokens * )
     }
     if ! $(SOURCE_GRIST)
     {
-        return $(targets:G=!$(subdir-grist)) ;
+        return $(targets:G=$(subdir-grist)) ;
     }
     else
     {
-        return $(targets:G=!$(SOURCE_GRIST)$(subdir-grist)) ;
+        return $(targets:G=$(SOURCE_GRIST)$(subdir-grist)) ;
     }
 }
 
@@ -2277,7 +2277,7 @@ rule stage ( name : sources + : requirements * : local-build * )
     #
     local destination-files = ;
     local locate-target = $(locate) ;
-    locate-target ?= [ split-path $(LOCATE_TARGET) ] ;
+    locate-target ?= [ split-path $(SUBDIR) ] ;
     for local file in $(files)
     {
         local destination-file ;
@@ -2314,7 +2314,7 @@ rule stage ( name : sources + : requirements * : local-build * )
     #
     if ! $(fake-target)
     {
-        declare-fake-targets $(stage-id) : $(destination-files) ;
+        declare-fake-targets $(stage-id:G=) : $(destination-files) ;
     }
     else
     {
