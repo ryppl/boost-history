@@ -162,7 +162,7 @@ namespace tupple {
 #  define ITERTRAITS_CONSTREFERENCE(z,k,arg) const typename arg##k::reference
 #else
 #  define ITERTRAITS_REFERENCE(z,k,arg)  detail::reference_wrapper< ITERTRAITS_VALUE(z,k,arg) >
-#  define ITERTRAITS_CONSTREFERENCE(z,k,arg) detail::reference_wrapper< ITERTRAITS_VALUE(z,k,arg) const> 
+#  define ITERTRAITS_CONSTREFERENCE(z,k,arg) detail::reference_wrapper< ITERTRAITS_VALUE(z,k,arg) const>
 #endif
 
 #define ITERTRAITS_POINTER(z,k,arg)    typename arg##k::pointer
@@ -350,7 +350,7 @@ template<class t> struct n_fold_iterator_tuple<t,k> {               \
   typedef ITERTUPLE(k)<BOOST_PP_ENUM(k,NTIMES,t)> type;             \
                                                                     \
   static type make( const t& arg )                                  \
-  { return type(BOOST_PP_ENUM(k,NTIMES,arg)); }                     \  
+  { return type(BOOST_PP_ENUM(k,NTIMES,arg)); }                     \
 };
 
 BOOST_PP_REPEAT( 10, N_FOLD_ITERTUPLE, T )
@@ -380,8 +380,8 @@ namespace detail
 template<class T, int N> struct n_fold_iterator_tuple
 {
   typedef detail::n_fold_iterator_helper<T>::iter_select<N>::type type;
-  
-  static type make( const T& arg ) 
+
+  static type make( const T& arg )
   { return detail::n_fold_iterator_helper<T>::iter_select<N>::make( arg ); }
 };
 
@@ -445,6 +445,13 @@ template<class T, int N> struct n_fold_iterator_tuple
     iterator_tuple()
       : self_type()
     {}
+
+    typedef typename base_type::iterator_category iterator_category;
+    typedef typename base_type::value_type        value_type;
+    typedef typename base_type::reference         reference;
+    typedef typename base_type::const_reference   const_reference;
+    typedef typename base_type::pointer           pointer;
+    typedef typename base_type::difference_type   difference_type;
 
     REFLECT_CTOR(1)
     REFLECT_CTOR(2)
