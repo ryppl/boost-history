@@ -173,9 +173,6 @@
   template&lt;class T&gt;
     void swap</A>(weak_ptr&lt;T&gt; &amp; a, weak_ptr&lt;T&gt; &amp; b);
 
-  template&lt;class T&gt;
-    shared_ptr&lt;T&gt; get_shared_ptr(weak_ptr&lt;T&gt; const &amp; r);
-
   template&lt;class T&gt; class enable_shared_from_this;
 </pre>
 		<h3>B. Class <code>bad_weak_ptr</code></h3>
@@ -553,6 +550,7 @@
         <em>// observers</em>
         long use_count() const;
         bool expired() const;
+        shared_ptr&lt;T&gt; lock() const;
       };
 
       <em>// comparison</em>
@@ -562,10 +560,6 @@
       <em>// specialized algorithms</em>
       template&lt;class T&gt;
         void swap(weak_ptr&lt;T&gt; &amp; a, weak_ptr&lt;T&gt; &amp; b);
-
-      <em>// get_shared_ptr</em>
-      template&lt;class T&gt;
-        shared_ptr&lt;T&gt; get_shared_ptr(weak_ptr&lt;T&gt; const &amp; r);
     }
 </pre>
 		<p><code>weak_ptr</code> is <code>CopyConstructible</code>, <code>Assignable</code>, 
@@ -631,6 +625,11 @@
 			<p><b>Returns:</b> <code>use_count() == 0</code>.</p>
 			<p><b>Throws:</b> nothing.</p>
 			<P><B>Notes:</B> <code>expired()</code> may be faster than <code>use_count()</code>.</P>
+<pre>
+    shared_ptr&lt;T&gt; lock() const;
+</pre>
+			<P><B>Returns:</B> <code>expired()? shared_ptr&lt;T&gt;(): shared_ptr&lt;T&gt;(*this)</code>.</P>
+			<P><B>Throws:</B> nothing.</P>
 		<h4><code>weak_ptr</code> comparison</h4>
 <pre>
     template&lt;class T, class U&gt;
@@ -653,13 +652,6 @@
       void swap(weak_ptr&lt;T&gt; &amp; a, weak_ptr&lt;T&gt; &amp; b)
 </pre>
 			<P><B>Effects:</B> Equivalent to <code>a.swap(b)</code>.</P>
-			<P><B>Throws:</B> nothing.</P>
-		<h4>get_shared_ptr</h4>
-<pre>
-    template&lt;class T&gt;
-      shared_ptr&lt;T&gt; get_shared_ptr(weak_ptr&lt;T&gt; &amp; const r)
-</pre>
-			<P><B>Returns:</B> <code>r.expired()? shared_ptr&lt;T&gt;(): shared_ptr&lt;T&gt;(r)</code>.</P>
 			<P><B>Throws:</B> nothing.</P>
 		<h3>E. Class template <code>enable_shared_from_this</code></h3>
 		<pre>
