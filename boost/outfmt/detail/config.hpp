@@ -2,10 +2,15 @@
 
 #ifndef BOOST_IOFM_DETAIL_CONFIG_HPP
 #define BOOST_IOFM_DETAIL_CONFIG_HPP
-#  include <boost/config.hpp>
+#  if(( defined(_MSC_VER) && (_MSC_VER >= 1020 )) || defined(__WAVE__))
+#     define BOOST_HAS_PRAGMA_ONCE
+#  endif
+
 #  if defined(BOOST_HAS_PRAGMA_ONCE)
 #     pragma once
 #  endif
+
+#  include <boost/config.hpp>
 
    // custom configuration to identify supported boost libraries and
    // I/O formatting technologies available
