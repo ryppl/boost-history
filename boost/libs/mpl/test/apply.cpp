@@ -26,12 +26,6 @@ template< typename T > struct std_vector
 #endif
 };
 
-#if BOOST_WORKAROUND(__BORLANDC__, < 0x600)
-namespace boost { namespace mpl {
-BOOST_MPL_AUX_NA_SPEC_TEMPLATE_ARITY(1, 1, std_vector)
-}}
-#endif
-
 
 MPL_TEST_CASE()
 {

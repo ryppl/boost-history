@@ -35,7 +35,7 @@ struct zip_iterator
         >::type type;
 
     typedef zip_iterator<
-          typename transform<
+          typename transform1<
                 IteratorSeq
               , next<_1>
             >::type
@@ -47,7 +47,7 @@ template<
     >
 struct zip_view
 {
- private:    
+ private:
     typedef typename transform1< Sequences, begin<_1> >::type first_ones_;
     typedef typename transform1< Sequences, end<_1> >::type last_ones_;
     

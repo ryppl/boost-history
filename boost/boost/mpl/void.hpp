@@ -14,10 +14,9 @@
 // $Date$
 // $Revision$
 
-#include <boost/mpl/aux_/adl_barrier.hpp>
-
-// should be the last include
-#include <boost/type_traits/detail/bool_trait_def.hpp>
+#include <boost/mpl/void_fwd.hpp>
+#include <boost/mpl/bool.hpp>
+#include <boost/mpl/aux_/na_spec.hpp>
 
 BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_OPEN
 
@@ -27,15 +26,49 @@ BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_OPEN
 //  a zero arity functor evaluation call.
 struct void_ { typedef void_ type; };
 
-BOOST_TT_AUX_BOOL_TRAIT_DEF1( is_void_, T, false )
-BOOST_TT_AUX_BOOL_TRAIT_SPEC1( is_void_, void_, true )
-
-BOOST_TT_AUX_BOOL_TRAIT_DEF1( is_not_void_, T, true )
-BOOST_TT_AUX_BOOL_TRAIT_SPEC1( is_not_void_, void_, false )
-
 BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_CLOSE
-BOOST_MPL_AUX_ADL_BARRIER_DECL(void_)
 
-#include <boost/type_traits/detail/bool_trait_undef.hpp>
+namespace boost { namespace mpl {
+
+template< typename T >
+struct is_void_
+    : false_
+{
+#if BOOST_WORKAROUND(BOOST_MSVC, < 1300)
+    using false_::value;
+#endif
+};
+
+template<>
+struct is_void_<void_>
+    : true_
+{
+#if BOOST_WORKAROUND(BOOST_MSVC, < 1300)
+    using true_::value;
+#endif
+};
+
+template< typename T >
+struct is_not_void_
+    : true_
+{
+#if BOOST_WORKAROUND(BOOST_MSVC, < 1300)
+    using true_::value;
+#endif
+};
+
+template<>
+struct is_not_void_<void_>
+    : false_
+{
+#if BOOST_WORKAROUND(BOOST_MSVC, < 1300)
+    using false_::value;
+#endif
+};
+
+BOOST_MPL_AUX_NA_SPEC(1, is_void_)
+BOOST_MPL_AUX_NA_SPEC(1, is_not_void_)
+
+}}
 
 #endif // BOOST_MPL_VOID_HPP_INCLUDED

@@ -81,10 +81,13 @@ template<
 struct unpack_args
 {
     template< typename Args > struct apply
-
-        : aux::unpack_args_impl< size<Args>::value,F, Args >
-
     {
+        typedef typename aux::unpack_args_impl<
+              size<Args>::value
+            , F
+            , Args
+            >::type type;
+
     };
 };
 

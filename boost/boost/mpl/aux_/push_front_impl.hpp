@@ -17,6 +17,8 @@
 #include <boost/mpl/push_front_fwd.hpp>
 #include <boost/mpl/aux_/has_type.hpp>
 #include <boost/mpl/aux_/traits_lambda_spec.hpp>
+#include <boost/mpl/aux_/config/forwarding.hpp>
+#include <boost/mpl/aux_/config/static_constant.hpp>
 
 namespace boost { namespace mpl {
 
@@ -33,8 +35,16 @@ template< typename Tag >
 struct has_push_front_impl
 {
     template< typename Seq > struct apply
+#if !defined(BOOST_MPL_CFG_NO_NESTED_FORWARDING)
         : aux::has_type< push_front<Seq,int> >
     {
+#else
+    {
+        typedef aux::has_type< push_front<Seq,int> > type;
+        BOOST_STATIC_CONSTANT(bool, value = 
+              (aux::has_type< push_front<Seq,int> >::value)
+            );
+#endif
     };
 };
 

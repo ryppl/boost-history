@@ -14,7 +14,7 @@
 // $Date$
 // $Revision$
 
-#include <boost/mpl/void.hpp>
+#include <boost/mpl/void_fwd.hpp>
 #include <boost/mpl/aux_/na.hpp>
 #include <boost/mpl/aux_/config/lambda.hpp>
 

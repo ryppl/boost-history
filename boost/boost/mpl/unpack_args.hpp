@@ -39,6 +39,7 @@
 #   include <boost/mpl/limits/arity.hpp>
 #   include <boost/mpl/aux_/preprocessor/repeat.hpp>
 #   include <boost/mpl/aux_/config/ctps.hpp>
+#   include <boost/mpl/aux_/config/forwarding.hpp>
 #   include <boost/preprocessor/iterate.hpp>
 #   include <boost/preprocessor/cat.hpp>
 
@@ -79,13 +80,22 @@ template<
 struct unpack_args
 {
     template< typename Args > struct apply
-#if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
+#if !defined(BOOST_MPL_CFG_NO_NESTED_FORWARDING)
+#   if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
         : aux::unpack_args_impl< size<Args>::value,F,Args >
-#else
+#   else
         : aux::unpack_args_impl< size<Args>::value >
             ::template apply< F,Args >
-#endif
+#   endif
     {
+#else // BOOST_MPL_CFG_NO_NESTED_FORWARDING
+    {
+        typedef typename aux::unpack_args_impl< 
+              size<Args>::value
+            , F
+            , Args
+            >::type type;
+#endif
     };
 };
 

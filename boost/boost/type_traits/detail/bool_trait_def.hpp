@@ -11,10 +11,10 @@
 
 // NO INCLUDE GUARDS, THE HEADER IS INTENDED FOR MULTIPLE INCLUSION!
 
-#include "boost/type_traits/detail/template_arity_spec.hpp"
-#include "boost/mpl/bool.hpp"
-#include "boost/mpl/aux_/lambda_support.hpp"
-#include "boost/config.hpp"
+#include <boost/type_traits/detail/template_arity_spec.hpp>
+#include <boost/mpl/bool.hpp>
+#include <boost/mpl/aux_/lambda_support.hpp>
+#include <boost/config.hpp>
 
 #if defined(__SUNPRO_CC)
 #   define BOOST_TT_AUX_BOOL_TRAIT_VALUE_DECL(C) \

@@ -4,9 +4,9 @@
 
 // Copyright Aleksey Gurtovoy 2000-2004
 //
-// Use, modification and distribution are subject to the Boost Software 
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
-// at http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
@@ -18,7 +18,8 @@
 #   include <boost/mpl/next_prior.hpp>
 #   include <boost/mpl/apply.hpp>
 #   include <boost/mpl/aux_/config/ctps.hpp>
-#   if defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
+#   if defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION) \
+    || defined(BOOST_MPL_CFG_NO_NONTYPE_TEMPLATE_PARTIAL_SPEC)
 #       include <boost/mpl/if.hpp>
 #       include <boost/type_traits/is_same.hpp>
 #   endif

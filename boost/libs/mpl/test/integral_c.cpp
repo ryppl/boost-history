@@ -12,28 +12,16 @@
 // $Revision$
 
 #include <boost/mpl/integral_c.hpp>
-#include <boost/mpl/aux_/test.hpp>
 #include <boost/preprocessor/repeat.hpp>
 
-#include <cassert>
+#include "integral_wrapper_test.hpp"
 
-#define INTEGRAL_C_TEST(z, i, T) \
-    { \
-        typedef integral_c<T,i> c##i; \
-        typedef integral_c<T,i+1> next_c##i; \
-        typedef integral_c<T,i-1> prior_c##i; \
-        { MPL_ASSERT(( is_same< c##i::value_type, T > )); } \
-        { MPL_ASSERT(( is_same< c##i::type, c##i > )); } \
-        { MPL_ASSERT(( is_same< c##i::next, next_c##i > )); } \
-        { MPL_ASSERT(( is_same< c##i::prior, prior_c##i > )); } \
-        { MPL_ASSERT_RELATION( c##i::value, ==, i ); } \
-        assert(c##i() == i); \
-    } \
-/**/
 
 MPL_TEST_CASE()
 {
-    BOOST_PP_REPEAT(10, INTEGRAL_C_TEST, char)
-    BOOST_PP_REPEAT(10, INTEGRAL_C_TEST, short)
-    BOOST_PP_REPEAT(10, INTEGRAL_C_TEST, int)
+#   define WRAPPER(T, i) integral_c<T,i>
+    BOOST_PP_REPEAT(10, INTEGRAL_WRAPPER_TEST, char)
+    BOOST_PP_REPEAT(10, INTEGRAL_WRAPPER_TEST, short)
+    BOOST_PP_REPEAT(10, INTEGRAL_WRAPPER_TEST, int)
+    BOOST_PP_REPEAT(10, INTEGRAL_WRAPPER_TEST, long)
 }

@@ -22,6 +22,11 @@
 #   include <boost/mpl/if.hpp>
 #   include <boost/mpl/bool.hpp>
 #   include <boost/mpl/aux_/msvc_is_class.hpp>
+#elif BOOST_WORKAROUND(__BORLANDC__, < 0x600)
+#   include <boost/mpl/if.hpp>
+#   include <boost/mpl/bool.hpp>
+#   include <boost/mpl/aux_/config/static_constant.hpp>
+#   include <boost/type_traits/is_class.hpp>
 #else
 #   include <boost/mpl/aux_/type_wrapper.hpp>
 #   include <boost/mpl/aux_/config/static_constant.hpp>
@@ -48,6 +53,7 @@ struct has_rebind
 template< typename T > struct has_rebind_tag {};
 yes_tag operator|(has_rebind_tag<int>, void const volatile*);
 
+#   if !BOOST_WORKAROUND(__BORLANDC__, < 0x600)
 template< typename T >
 struct has_rebind
 {
@@ -56,6 +62,26 @@ struct has_rebind
           sizeof(has_rebind_tag<int>() | get()) == sizeof(char)
         );
 };
+#   else
+template< typename T >
+struct has_rebind_impl
+{
+    static T* get();
+    BOOST_STATIC_CONSTANT(bool, value = 
+          sizeof(has_rebind_tag<int>() | get()) == sizeof(char)
+        );
+};
+
+template< typename T >
+struct has_rebind
+    : if_< 
+          is_class<T>
+        , has_rebind_impl<T>
+        , bool_<false>
+        >::type
+{
+};
+#   endif
 
 #endif // BOOST_MSVC
 

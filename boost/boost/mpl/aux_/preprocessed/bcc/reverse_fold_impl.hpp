@@ -241,8 +241,8 @@ struct reverse_fold_chunk< -1 >
         >
     struct result_
     {
-        typedef typename if_<
-              typename is_same< First,Last >::type
+        typedef typename if_c<
+              ::boost::is_same< First,Last >::value
             , reverse_fold_null_step< Last,State >
             , reverse_fold_step< First,Last,State,BackwardOp,ForwardOp >
             >::type res_;

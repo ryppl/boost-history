@@ -41,3 +41,30 @@ MPL_TEST_CASE()
     MPL_ASSERT_RELATION( front<range10>::type::value, ==, 0 );
     MPL_ASSERT_RELATION( back<range10>::type::value, ==, 9 );
 }
+
+MPL_TEST_CASE()
+{
+    typedef range_c<int,0,10> range10;
+    typedef begin<range10>::type i0;
+    typedef next<i0>::type i1;
+    typedef next<i1>::type i2;
+    typedef next<i2>::type i3;
+    typedef next<i3>::type i4;
+    typedef next<i4>::type i5;
+    typedef next<i5>::type i6;
+    typedef next<i6>::type i7;
+    typedef next<i7>::type i8;
+    typedef next<i8>::type i9;
+    typedef next<i9>::type i10;
+
+    MPL_ASSERT_RELATION( deref<i0>::type::value, ==, 0 );
+    MPL_ASSERT_RELATION( deref<i1>::type::value, ==, 1 );
+    MPL_ASSERT_RELATION( deref<i2>::type::value, ==, 2 );
+    MPL_ASSERT_RELATION( deref<i3>::type::value, ==, 3 );
+    MPL_ASSERT_RELATION( deref<i4>::type::value, ==, 4 );
+    MPL_ASSERT_RELATION( deref<i5>::type::value, ==, 5 );
+    MPL_ASSERT_RELATION( deref<i6>::type::value, ==, 6 );
+    MPL_ASSERT_RELATION( deref<i7>::type::value, ==, 7 );
+    MPL_ASSERT_RELATION( deref<i8>::type::value, ==, 8 );
+    MPL_ASSERT_RELATION( deref<i9>::type::value, ==, 9 );
+}

@@ -96,6 +96,7 @@ template<> struct arg<i_>
     BOOST_STATIC_CONSTANT(int, value = i_);
     typedef arg<BOOST_PP_INC(i_)> next;
     BOOST_MPL_AUX_ARG_TYPEDEF(na, tag)
+    BOOST_MPL_AUX_ARG_TYPEDEF(na, type)
 
     template<
           AUX778076_ARG_N_DEFAULT_PARAMS(typename U, na)
@@ -113,6 +114,7 @@ template<> struct arg<-1>
 {
     BOOST_STATIC_CONSTANT(int, value = -1);
     BOOST_MPL_AUX_ARG_TYPEDEF(na, tag)
+    BOOST_MPL_AUX_ARG_TYPEDEF(na, type)
 
     template<
           AUX778076_ARG_N_DEFAULT_PARAMS(typename U, na)

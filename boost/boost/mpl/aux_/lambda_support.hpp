@@ -106,7 +106,15 @@ template< typename T > struct has_rebind_tag;
     typedef BOOST_PP_CAT(name,_rebind) rebind; \
 /**/
 
-#if !BOOST_WORKAROUND(BOOST_MSVC, <= 1200)
+#if BOOST_WORKAROUND(__BORLANDC__, < 0x600)
+#   define BOOST_MPL_AUX_LAMBDA_SUPPORT_HAS_REBIND(i, name, params) \
+template< BOOST_MPL_PP_PARAMS(i,typename T) > \
+char operator|( \
+      ::boost::mpl::aux::has_rebind_tag<int> \
+    , name<BOOST_MPL_PP_PARAMS(i,T)>* \
+    ); \
+/**/
+#elif !BOOST_WORKAROUND(BOOST_MSVC, <= 1200)
 #   define BOOST_MPL_AUX_LAMBDA_SUPPORT_HAS_REBIND(i, name, params) \
 template< BOOST_MPL_PP_PARAMS(i,typename T) > \
 char operator|( \

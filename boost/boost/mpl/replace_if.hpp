@@ -21,6 +21,7 @@
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/aux_/common_name_wknd.hpp>
 #include <boost/mpl/aux_/na_spec.hpp>
+#include <boost/mpl/aux_/config/forwarding.hpp>
 
 namespace boost { namespace mpl {
 
@@ -32,12 +33,21 @@ template< typename Predicate, typename T >
 struct replace_if_op
 {
     template< typename U > struct apply
+#if !defined(BOOST_MPL_CFG_NO_NESTED_FORWARDING)
         : if_<
               typename apply1<Predicate,U>::type
             , T
             , U
             >
     {
+#else
+    {
+        typedef typename if_<
+              typename apply1<Predicate,U>::type
+            , T
+            , U
+            >::type type;
+#endif
     };
 };
 

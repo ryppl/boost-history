@@ -44,7 +44,7 @@ MPL_TEST_CASE()
     typedef transform2< evens, primes, plus<> >::type result;
     MPL_ASSERT(( equal< result,sums,equal_to<_1,_2> > ));
 
-#if !BOOST_WORKAROUND(BOOST_MPL_CFG_GCC, <= 0x0295)
+#if !defined(BOOST_MPL_CFG_NO_HAS_XXX)
     typedef transform< evens, primes, plus<> >::type result2;
     MPL_ASSERT(( is_same<result2,result> ));
 #endif
