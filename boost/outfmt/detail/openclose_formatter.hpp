@@ -42,10 +42,10 @@
                fmt_close = c;
                return( *static_cast< ReferenceType * >( this ));
             }
-            template< typename RT2, class FormatTraits2 >
+            template< typename RefT2, class FormatTraits2 >
             inline ReferenceType &               format
                                                  (
-                                                    const openclose_formatter_t< FormatType, RT2, FormatTraits2 > & fmt
+                                                    const openclose_formatter_t< FormatType, RefT2, FormatTraits2 > & fmt
                                                  )
             {
                return( format( fmt.open(), fmt.close()));
@@ -61,8 +61,8 @@
                fmt_close( c )
             {
             }
-            template< typename RT2, class FormatTraits2 >
-            inline           openclose_formatter_t( const openclose_formatter_t< FormatType, RT2, FormatTraits2 > & fmt ):
+            template< typename RefT2, class FormatTraits2 >
+            inline           openclose_formatter_t( const openclose_formatter_t< FormatType, RefT2, FormatTraits2 > & fmt ):
                fmt_open(  fmt.open()),
                fmt_close( fmt.close())
             {
@@ -95,8 +95,8 @@
                openclose_formatter_t< FormatType, openclose_formatter, FormatTraits >( o, c )
             {
             }
-            template< typename RT2, class FormatTraits2 >
-            inline           openclose_formatter( const openclose_formatter_t< FormatType, RT2, FormatTraits2 > & fmt ):
+            template< typename RefT2, class FormatTraits2 >
+            inline           openclose_formatter( const openclose_formatter_t< FormatType, RefT2, FormatTraits2 > & fmt ):
                openclose_formatter_t< FormatType, openclose_formatter, FormatTraits >( fmt )
             {
             }

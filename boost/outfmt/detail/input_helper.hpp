@@ -61,11 +61,19 @@
 #              endif
             }
          public:
-            inline iosbase_type::iostate         rdstate() const
+            inline bool                          failed() const
             {
-               return( is.rdstate());
+               return( is.fail());
             }
-            inline void                          clear( iosbase_type::iostate s = 0 )
+            inline void                          clear
+                                                 (
+                                                    iosbase_type::iostate s =
+#                                                   if defined(BOOST_MSVC)
+                                                       0 // MS VC has problems with iosbase_type::goodbit
+#                                                   else
+                                                       iosbase_type::goodbit
+#                                                   endif
+                                                 )
             {
                is.clear( s );
             }
@@ -158,7 +166,7 @@
                while(( first != last ) && match( *first ))
                   ++first;
 
-               if( restore && ( rdstate() & iosbase_type::failbit ))
+               if( restore && failed())
                {
                   while( --last != rlast ) // [review]: check logic
                      is.putback( *last );
