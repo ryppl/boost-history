@@ -1,24 +1,24 @@
-# Microsoft Developer Studio Project File - Name="test_rcombo" - Package Owner=<4>
+# Microsoft Developer Studio Project File - Name="test_combinatorial" - Package Owner=<4>
 # Microsoft Developer Studio Generated Build File, Format Version 6.00
 # ** DO NOT EDIT **
 
 # TARGTYPE "Win32 (x86) Console Application" 0x0103
 
-CFG=test_rcombo - Win32 Debug
+CFG=test_combinatorial - Win32 Debug
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE 
-!MESSAGE NMAKE /f "test_rcombo.mak".
+!MESSAGE NMAKE /f "test_combinatorial.mak".
 !MESSAGE 
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "test_rcombo.mak" CFG="test_rcombo - Win32 Debug"
+!MESSAGE NMAKE /f "test_combinatorial.mak" CFG="test_combinatorial - Win32 Debug"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
-!MESSAGE "test_rcombo - Win32 Release" (based on "Win32 (x86) Console Application")
-!MESSAGE "test_rcombo - Win32 Debug" (based on "Win32 (x86) Console Application")
+!MESSAGE "test_combinatorial - Win32 Release" (based on "Win32 (x86) Console Application")
+!MESSAGE "test_combinatorial - Win32 Debug" (based on "Win32 (x86) Console Application")
 !MESSAGE 
 
 # Begin Project
@@ -28,7 +28,7 @@ CFG=test_rcombo - Win32 Debug
 CPP=cl.exe
 RSC=rc.exe
 
-!IF  "$(CFG)" == "test_rcombo - Win32 Release"
+!IF  "$(CFG)" == "test_combinatorial - Win32 Release"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
@@ -52,7 +52,7 @@ LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /machine:I386
 # ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /machine:I386
 
-!ELSEIF  "$(CFG)" == "test_rcombo - Win32 Debug"
+!ELSEIF  "$(CFG)" == "test_combinatorial - Win32 Debug"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 1
@@ -80,8 +80,8 @@ LINK32=link.exe
 
 # Begin Target
 
-# Name "test_rcombo - Win32 Release"
-# Name "test_rcombo - Win32 Debug"
+# Name "test_combinatorial - Win32 Release"
+# Name "test_combinatorial - Win32 Debug"
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
@@ -95,7 +95,7 @@ SOURCE=..\..\..\..\boost_1_27_0\boost\test\test_main.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\test_rcombo.cpp
+SOURCE=.\test_combinatorial.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"

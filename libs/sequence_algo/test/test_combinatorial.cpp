@@ -1,4 +1,4 @@
-// test_rcombo.cpp ------------------------------------------------------//
+// test_combinatorial.cpp ------------------------------------------------------//
 //   Test program for r-permutation and r-combination generic functions
 //   in rcombo.h.
 
