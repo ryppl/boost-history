@@ -1,11 +1,12 @@
 subproject libs/numeric/blasbindings/tst ;
 
-BLAS_LIB = blas blasextra g2c ;
+BLAS_LIB = blas ;
+
 exe blas1
         : blas1.cpp 
 	  <lib>../blasbindings
         :  <include>$(BOOST_ROOT)
 	   <include>$(B_ROOT)
-	   <library-path>/home/tk/cvstop/blaslapack/lib
+	   <library-path>/usr/lib
 	   <find-library>$(BLAS_LIB)
         ;
