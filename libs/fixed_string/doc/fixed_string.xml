@@ -378,6 +378,44 @@
             <code>wcscpy</code>; <code>wcscat</code>; <code>wcscmp</code>; <code>wcslen</code>
             <code>swprintf</code>; and <code>vswprintf</code>.
          </para>
+      </section><section id = "fixedstr.formatter"><title>boost::formatter</title>
+         <para>
+            header: <code>&lt;boost/fixed_string/formatter.hpp&gt;</code>
+         </para>
+<synopsis>
+   namespace boost
+   {
+      template&lt; size_t n, typename CharT = char, class CharStringPolicy = std::char_traits&lt; CharT &gt; &gt;
+      class formatterex;
+      typedef formatterex&lt; 512 &gt; formatter;
+   }
+</synopsis>
+         <para>
+            It is quite often useful to have a string buffer to format variable messages (e.g. error
+            messages from parsing a file with line number, file and error description) or queries
+            such as XPath expressions or SQL queries. This can be done using <code>std::stringstream</code>
+            like:
+         </para>
+<programlisting>
+   std::stringstream xpath;
+   xpath &lt;&lt; "coll/items[name = '" &lt;&lt; name &lt;&lt; "']";
+   xmlnode n = xpath_query( xml, xpath.c_str());
+</programlisting>
+         <para>
+            You may in these situations decide to use a C-string buffer for performance reasons, e.g.:
+         </para>
+<programlisting>
+   char xpath[ 256 ];
+   sprintf( xpath, "coll/items[name = '%s']", name );
+   xmlnode n = xpath_query( xml, xpath );
+</programlisting>
+         <para>
+            The fixed_string library provides a utility class called <code>boost::formatter</code> to
+            simplify this style of programming, making it usable as a single line expression:
+         </para>
+<programlisting>
+   xmlnode n = xpath_query( xml, boost::formatter( "coll/items[name = '%s']", name ));
+</programlisting>
       </section>
    </section>
 </library>
