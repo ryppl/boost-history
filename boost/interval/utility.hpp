@@ -398,17 +398,17 @@ I pi()
 }
 
 template<class I> inline
-I pi_1_2()
+I pi_half()
 {
   typedef typename I::base_type T;
-  return I(constants::pi_1_2_lower<T>(), constants::pi_1_2_upper<T>(), true);
+  return I(constants::pi_half_lower<T>(), constants::pi_half_upper<T>(), true);
 }
 
 template<class I> inline
-I pi_2_1()
+I pi_twice()
 {
   typedef typename I::base_type T;
-  return I(constants::pi_2_1_lower<T>(), constants::pi_2_1_upper<T>(), true);
+  return I(constants::pi_twice_lower<T>(), constants::pi_twice_upper<T>(), true);
 }
 
   } // namespace interval_lib

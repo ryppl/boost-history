@@ -144,7 +144,7 @@ interval<T, Traits> cos(const interval<T, Traits>& x)
   typedef typename interval_lib::unprotect<interval<T, Traits> >::type I;
 
   // get lower bound within [0, pi]
-  const I pi2 = interval_lib::pi_2_1<I>();
+  const I pi2 = interval_lib::pi_twice<I>();
   I tmp = fmod((const I&)x, pi2);
   if (width(tmp) >= pi2.lower())
     return interval<T, Traits>(-1, 1, true);     // we are covering a full period
@@ -172,7 +172,7 @@ interval<T, Traits> sin(const interval<T, Traits>& x)
     return interval<T, Traits>::empty();
   typename Traits::rounding rnd;
   typedef typename interval_lib::unprotect<interval<T, Traits> >::type I;
-  interval<T, Traits> r = cos((const I&)x - interval_lib::pi_1_2<I>());
+  interval<T, Traits> r = cos((const I&)x - interval_lib::pi_half<I>());
   (void)&rnd;
   return r;
 }
@@ -188,10 +188,10 @@ interval<T, Traits> tan(const interval<T, Traits>& x)
   // get lower bound within [-pi/2, pi/2]
   const I pi = interval_lib::pi<I>();
   I tmp = fmod((const I&)x, pi);
-  const T pi_1_2_d = interval_lib::constants::pi_1_2_lower<T>();
-  if (tmp.lower() >= pi_1_2_d)
+  const T pi_half_d = interval_lib::constants::pi_half_lower<T>();
+  if (tmp.lower() >= pi_half_d)
     tmp -= pi;
-  if (tmp.lower() <= -pi_1_2_d || tmp.upper() >= pi_1_2_d)
+  if (tmp.lower() <= -pi_half_d || tmp.upper() >= pi_half_d)
     return interval<T, Traits>::whole();
   return interval<T, Traits>(rnd.tan_down(tmp.lower()),
 			     rnd.tan_up  (tmp.upper()), true);
@@ -200,22 +200,32 @@ interval<T, Traits> tan(const interval<T, Traits>& x)
 template<class T, class Traits> inline
 interval<T, Traits> asin(const interval<T, Traits>& x)
 {
-  if (interval_lib::detail::test_input(x) || x.upper() < T(-1) || x.lower() > T(1))
+  if (interval_lib::detail::test_input(x)
+     || x.upper() < T(-1) || x.lower() > T(1))
     return interval<T, Traits>::empty();
   typename Traits::rounding rnd;
-  T l = (x.lower() <= T(-1)) ? -interval_lib::constants::pi_1_2_upper<T>() : rnd.asin_down(x.lower());
-  T u = (x.upper() >= T(1) ) ?  interval_lib::constants::pi_1_2_upper<T>() : rnd.asin_up  (x.upper());
+  T l = (x.lower() <= T(-1))
+	     ? -interval_lib::constants::pi_half_upper<T>()
+	     : rnd.asin_down(x.lower());
+  T u = (x.upper() >= T(1) )
+	     ?  interval_lib::constants::pi_half_upper<T>()
+	     : rnd.asin_up  (x.upper());
   return interval<T, Traits>(l, u, true);
 }
 
 template<class T, class Traits> inline
 interval<T, Traits> acos(const interval<T, Traits>& x)
 {
-  if (interval_lib::detail::test_input(x) || x.upper() < T(-1) || x.lower() > T(1))
+  if (interval_lib::detail::test_input(x)
+     || x.upper() < T(-1) || x.lower() > T(1))
     return interval<T, Traits>::empty();
   typename Traits::rounding rnd;
-  T l = (x.upper() >= T(1) ) ? 0                                      : rnd.acos_down(x.upper());
-  T u = (x.lower() <= T(-1)) ? interval_lib::constants::pi_upper<T>() : rnd.acos_up  (x.lower());
+  T l = (x.upper() >= T(1) )
+	  ? 0
+	  : rnd.acos_down(x.upper());
+  T u = (x.lower() <= T(-1))
+	  ? interval_lib::constants::pi_upper<T>()
+	  : rnd.acos_up  (x.lower());
   return interval<T, Traits>(l, u, true);
 }
 
@@ -251,7 +261,9 @@ interval<T, Traits> cosh(const interval<T, Traits>& x)
   else if (!detail::sign(x.lower()))
     return I(rnd.cosh_down(x.lower()), rnd.cosh_up(x.upper()), true);
   else
-    return I(0, rnd.cosh_up(-x.lower() > x.upper() ? x.lower() : x.upper()), true);
+    return I(0,
+             rnd.cosh_up(-x.lower() > x.upper() ? x.lower() : x.upper()),
+	     true);
 }
 
 template<class T, class Traits> inline
@@ -288,7 +300,8 @@ interval<T, Traits> acosh(const interval<T, Traits>& x)
 template<class T, class Traits> inline
 interval<T, Traits> atanh(const interval<T, Traits>& x)
 {
-  if (interval_lib::detail::test_input(x) || x.upper() < T(-1) || x.lower() > T(1))
+  if (interval_lib::detail::test_input(x)
+     || x.upper() < T(-1) || x.lower() > T(1))
     return interval<T, Traits>::empty();
   typename Traits::rounding rnd;
   typedef typename Traits::checking checking;

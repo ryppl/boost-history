@@ -23,12 +23,12 @@ namespace boost {
     T cos_up    (const T& x) { return 1; }
     T tan_down  (const T& x) { return -std::numeric_limits<T>::infinity(); }
     T tan_up    (const T& x) { return std::numeric_limits<T>::infinity(); }
-    T asin_down (const T& x) { return -pi_1_2_up(); }
-    T asin_up   (const T& x) { return pi_1_2_up(); }
+    T asin_down (const T& x) { return -pi_half_up(); }
+    T asin_up   (const T& x) { return pi_half_up(); }
     T acos_down (const T& x) { return 0; }
     T acos_up   (const T& x) { return pi_up(); }
-    T atan_down (const T& x) { return -pi_1_2_up(); }
-    T atan_up   (const T& x) { return pi_1_2_up(); }
+    T atan_down (const T& x) { return -pi_half_up(); }
+    T atan_up   (const T& x) { return pi_half_up(); }
     T sinh_down (const T& x) { return -std::numeric_limits<T>::infinity(); }
     T sinh_up   (const T& x) { return std::numeric_limits<T>::infinity(); }
     T cosh_down (const T& x) { return 1; }
