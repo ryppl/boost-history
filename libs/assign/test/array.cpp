@@ -13,7 +13,7 @@
  */
 
 #include <boost/multi_array.hpp>
-#include <boost/assign/array.hpp>
+#include <boost/assign/fixed_size_assigner.hpp>
 #include <iostream>
 #include <algorithm>
 #include <iterator>

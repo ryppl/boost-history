@@ -15,8 +15,6 @@
 #ifndef BOOST_ASSIGN_HPP
 #define BOOST_ASSIGN_HPP
 
-#include "assign/array.hpp"
-#include "assign/graph.hpp"
 #include "assign/stl.hpp"
 #include "assign/ublas.hpp"
 
