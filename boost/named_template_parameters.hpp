@@ -24,14 +24,6 @@ namespace boost {
 
     class unspecified {};
 
-#define BOOST_NAMED_TEMPLATE_PARAMETER(name, member_name, default_class) \
-  template <class T> class name : \
-//     virtual public default_class, \
-     virtual public boost::named_parameter_tag { \
-  public: \
-    typedef T member_name; \
-  }
-
     namespace detail {
         
       // anything that derives from named_parameter_tag is considered
