@@ -25,8 +25,7 @@ using namespace test;
 static char const test_banner_name[]="bug_000008 (closure MT) test";
 static char const test_suite_name[]="spirit::bug_000008";
 
-#if !defined(SPIRIT_HAVE_BOOST_THREAD) || \
-defined(DONT_HAVE_BOOST) || \
+#if defined(DONT_HAVE_BOOST) || \
 !defined(BOOST_HAS_THREADS) \
 || defined(BOOST_DISABLE_THREADS)
 // we end here if we can't do multithreading

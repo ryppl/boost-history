@@ -12,8 +12,7 @@
 #include <iostream>
 #include <boost/config.hpp>
 
-#if !defined(SPIRIT_HAVE_BOOST_THREAD) || \
-!defined(BOOST_HAS_THREADS) || \
+#if !defined(BOOST_HAS_THREADS) || \
 defined(DONT_HAVE_BOOST) || \
 defined(BOOST_DISABLE_THREADS)
 int
