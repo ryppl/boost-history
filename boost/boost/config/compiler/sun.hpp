@@ -1,6 +1,9 @@
 // Sun C++ compiler setup:
 
-#    if __SUNPRO_CC <= 0x520
+#    if __SUNPRO_CC >= 0x510
+       //
+       // Sunpro 5.1 and later:
+       //
        // although sunpro 5.1 supports the syntax for
        // inline initialization it often gets the value
        // wrong, especially where the value is computed

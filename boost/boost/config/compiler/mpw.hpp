@@ -8,7 +8,9 @@
 #     error "Using MPW compiler configuration by mistake.  Please update."
 #   endif
 
-#if defined(MPW_CPLUS) && (MPW_CPLUS <= 0x890)
+//
+// MPW 8.90 and later:
+//
 #define BOOST_NO_CV_SPECIALIZATIONS
 #define BOOST_NO_DEPENDENT_NESTED_DERIVATIONS
 #define BOOST_NO_DEPENDENT_TYPES_IN_TEMPLATE_VALUE_PARAMETERS
@@ -21,5 +23,4 @@
 #define BOOST_NO_LIMITS_COMPILE_TIME_CONSTANTS
 
 #define BOOST_NO_STD_ALLOCATOR /* actually a bug with const reference overloading */
-#endif // 0x890
 

@@ -20,9 +20,7 @@
 //  Edison Design Group front-ends,
 //  this is here since it is common to many compilers:
 # if defined(__EDG_VERSION__)
-#   if (__EDG_VERSION__ <= 241) && !defined(BOOST_NO_ARGUMENT_DEPENDENT_LOOKUP)
-#     define BOOST_NO_ARGUMENT_DEPENDENT_LOOKUP
-#   endif
+#    include "boost/config/compiler/common_edg.hpp"
 # endif
 
 
@@ -138,7 +136,7 @@
       // however some platforms define _POSIX_THREADS without
       // a value, hence the (_POSIX_THREADS+0 >= 0) check.
       // Strictly speeking this may catch platforms with a
-      // non-functioning stub <pthreads.h>, but such occurances should
+      // non-functioning stub <pthreads.h>, but such occurrences should
       // occur very rarely if at all...
 #     if defined(_POSIX_THREADS) && (_POSIX_THREADS+0 >= 0)
 #        define BOOST_HAS_PTHREADS
@@ -159,11 +157,6 @@
 #if defined(BOOST_DISABLE_THREADS) && defined(BOOST_HAS_THREADS)
 #  undef BOOST_HAS_THREADS
 #endif
-//
-// define BOOST_DISABLE_THREADS if there are no threads and it's not already defined:
-#if !defined(BOOST_DISABLE_THREADS) && !defined(BOOST_HAS_THREADS)
-#define BOOST_DISABLE_THREADS
-#endif
 
 //
 // If the compiler claims to be C99 conformant, then it had better
@@ -172,14 +165,6 @@
 #  if defined(__STDC_VERSION__) && (__STDC_VERSION__ >= 199901)
 #     define BOOST_HAS_STDINT_H
 #  endif
-
-//
-// If there isn't good enough wide character support then there will
-// be no wide character regular expressions:
-//
-#if defined(BOOST_NO_CWCHAR) || defined(BOOST_NO_CWCTYPE) || defined(BOOST_NO_STD_WSTRING)
-#  define BOOST_NO_WREGEX
-#endif
 
 // Define BOOST_NO_SLIST and BOOST_NO_HASH if required.
 // Note that this is for backwards compatiblity only.
@@ -213,6 +198,18 @@
 # endif
 
 #  ifdef BOOST_NO_STD_MIN_MAX
+//
+// disable man/max macros if defined:
+//
+#ifdef min
+#  undef min
+#endif
+#ifdef max
+#  undef max
+#endif
+// disable man/max macro defines on vc6:
+//
+#define _NO_MINMAX
 namespace std {
   template <class _Tp>
   inline const _Tp& min(const _Tp& __a, const _Tp& __b) {

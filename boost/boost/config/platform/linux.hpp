@@ -1,7 +1,13 @@
 // linux specific config options:
 #define BOOST_PLATFORM "linux"
 
+//
+// stdint.h added to glibc 2.1.1
+// We can only test for 2.1 though:
+//
+#if defined(__GLIBC__) && ((__GLIBC__ > 2) || ((__GLIBC__ == 2) && (__GLIBC_MINOR__ >= 1)))
 #define BOOST_HAS_STDINT_H
+#endif
 #define BOOST_NO_SWPRINTF
 
 #ifndef __GNUC__
@@ -31,4 +37,5 @@
 #endif
 
  
+
 

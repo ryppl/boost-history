@@ -16,7 +16,12 @@
 //
 // No std::stringstream with gcc < 3
 //
-#if (defined(__GNUC__) && (__GNUC__ < 3)) && !defined(__STL_USE_NEW_IOSTREAMS)
+#if (defined(__GNUC__) && (__GNUC__ < 3) && (__GNUC_MINOR__ < 95) && !defined(__STL_USE_NEW_IOSTREAMS)
+   // Note that we only set this for gnu C++ prior to 2.95 since the
+   // latest patches for that release do contain a minimal <sstream>
+   // If you are running a 2.95 release prior to 2.95.3 then this will need
+   // setting, but there is no way to detect that automatically (other
+   // than by running the configure script).
 #  define BOOST_NO_STRINGSTREAM
 #endif
 
