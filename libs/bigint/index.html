@@ -304,11 +304,12 @@ The current implementation is based somewhat on material found in:
 <h3><a name="performance">Performance</a></h3>
 The author is aware of several high-performance
 implementations of other integer libraries more focused upon
-performance.  In the future, this library may allow for
-swapping the underlying implementation and thus using the
-<tt>bigint</tt> interface with a faster (and possibly less
-portable) underlying implementation. Contributions that improve the
-current implementation are welcome.
+performance. The header file
+<a href="../../boost/bigint_gmp.hpp">boost/bigint_gmp.hpp</a>
+implements the <tt>bigint</tt> class in terms of the Gnu Multiple Precision
+Arithmetic Library (<a href="http://www.swox.com/gmp/">Gnu MP</a>).
+Wrappers over other such libraries and contributions that 
+improve the performance of the reference implementation are welcomed.
 
 
 <br>
