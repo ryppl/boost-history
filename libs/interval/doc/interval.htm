@@ -22,10 +22,8 @@ href="../../../boost/interval.hpp">boost/interval.hpp</a>&gt;</h1>
       <td align=TOP><b>Contents of this page:</b><br>
         <a href="#intro">Introduction</a><br>
         <a href="#synopsis">Synopsis</a><br>
-        <a href="#interval_traits">Template class
-        <tt>interval_traits</tt></a><br>
-        <a href="#interval">Template class <tt>interval</tt></a<br></a><a
-        href="#specs"><tt>interval</tt> partial specializations</a><br>
+        <a href="#interval_traits">Template class <tt>interval_traits</tt></a><br>
+        <a href="#interval">Template class <tt>interval</tt></a><br>
         <a href="#opers">Operations and functions</a><br>
         <a href="#interval_lib">Interval support library</a><br>
         <a href="#perfs">Performance notes</a><br>
@@ -63,9 +61,8 @@ to represent all the numbers between <i>a</i> and <i>b</i>. <i>a</i> and
 <i>b</i> can be infinite (but they can not be the same infinite) and <i>a</i>
 &#8804; <i>b</i>.
 
-<p>The fundamental property of interval arithmetic is the <b>inclusion
-property</b>:</p>
-
+<p>The fundamental property of interval arithmetic is the <b><em>inclusion
+property</em></b>:</p>
 <dl>
     <dd>``if <i>f</i> is a function on a set of numbers, <i>f</i> can be
       extended to a new function defined on intervals. This new function
@@ -75,18 +72,19 @@ property</b>:</p>
     <dd> </dd>
 </dl>
 
-<p>Such a property is not limited to functions with only one argument. Whenever
-possible, the interval result should be the smallest one able to satisfy the
-property (it is not really useful if the new functions always answer
-[-&#8734;,+&#8734;]).</p>
+<p>Such a property is not limited to functions with only one argument.
+Whenever possible, the interval result should be the smallest one able to
+satisfy the property (it is not really useful if the new functions always
+answer [-&#8734;,+&#8734;]).</p>
 
-<p>There are two reasons a user would like to use this library. The obvious
-one is when the user has to compute with intervals. One example is when input
-data have some  builtin imprecision: instead of a number, an input variable
-can be passed as an interval. Another canonical use is to solve equations, by
-bisecting an interval until the interval width is small enough. A third
-application is in computer graphics, where computations with boxes, segments
-or rays can be reduced to computations with points via intervals.</p>
+<p>There are at least two reasons a user would like to use this library. The
+obvious one is when the user has to compute with intervals. One example is
+when input data have some  builtin imprecision: instead of a number, an input
+variable can be passed as an interval. Another example application  is to
+solve equations, by bisecting an interval until the interval width is small
+enough. A third example application is in computer graphics, where
+computations with boxes, segments or rays can be reduced to computations with
+points via intervals.</p>
 
 <p>Another common reason to use interval arithmetic is when the computer
 doesn't produce exact results: by using intervals, it is possible to quantify
@@ -99,22 +97,31 @@ interval for such a little result, but the precision is now known, without
 having to compute error propagation.</p>
 
 <h3>Numbers, rounding, and exceptional behavior</h3>
-In order to successfully use interval arithmetic, the bounds of the interval
-must present some characteristics. Firstly, due to the definition of an
-interval, the numbers have to be strongly ordered (so for instance,
-<tt>complex&lt;T&gt;</tt> is not usable as base number type for intervals).
-The mathematical functions for this type should also have the <i>same
-monotonicity properties than for the real numbers</i> <b>WHAT DOES THIS MEAN?
--H</b> (so modulo types are not usable either). Secondly, the computations
-must be exact or provide some rounding methods (toward minus or plus
-infinity) in order to always guarantee the inclusion property. <b>NOT
-NECESSARILY, NO ROUNDING IS FINE FOR SOME APPLICATIONS, OR IS IT? -H</b> 
-Finally, because heavy loss of precision is always possible, some numbers
+The<strong> </strong><em><strong>base number type</strong></em> is the type
+that holds the bounds of the interval. In order to successfully use interval
+arithmetic, the base number type must present some characteristics. Firstly,
+due to the definition of an interval, the base numbers have to be totally
+ordered so, for instance, <tt>complex&lt;T&gt;</tt> is not usable as base
+number type for intervals. The mathematical functions for the base number
+type should also be compatible with the total order (for instance if x&gt;y
+and z&gt;t, then it should also hold that x+y &gt; y+t), so modulo types are
+not usable either. 
+
+<p>Secondly, the computations must be exact or provide some rounding methods
+(for instance, toward minus or plus infinity) if we want to  guarantee the
+inclusion property. Note that we also may explicitely  specify no rounding,
+for instance if the base number type is exact, i.e. the result of a
+mathematic operation is always computed and represented without loss of
+precision. If the number type is not exact, we may still explicitely specify
+no rounding, with the obvious consequence that the  inclusion property is no
+longuer guaranteed. </p>
+
+<p>Finally, because heavy loss of precision is always possible, some numbers
 have to represent infinities or an exceptional behavior must be defined. The
-same situation also occurs for NaN (<i>Not a Number</i>).
+same situation also occurs for NaN (<i>Not a Number</i>).</p>
 
 <p>Given all this, one may want to limit the template argument T of the class
-template i<tt>nterval</tt> to the floating point types <tt>float</tt>,
+template <tt>interval</tt> to the floating point types <tt>float</tt>,
 <tt>double</tt>, and <tt>long double</tt>, as defined by the IEEE-754
 Standard. Indeed, if the interval arithmetic is intended to replace the
 arithmetic provided by the floating point unit of a processor, these types
@@ -134,30 +141,27 @@ functions are similarly defined (see their definitions below).
 
 <h3>Comparisons</h3>
 It is also possible to define some comparison operators. Given two intervals,
-the result is a subset of {<i>false</i>,<i>true</i>}. The answers
-{<i>false</i>} and {<i>true</i>} are easy to manipulate since they can
-directly be mapped on <i>true</i> and <i>false</i>. But it is not the case
-for the answer {<i>false</i>,<i>true</i>} since comparison operators are
-supposed to be boolean functions. So, what to do in order to obtain boolean
-answers? Naturally, {<i>false</i>} is transformed in <i>false</i> and
-{<i>true</i>} in <i>true</i>. And {<i>false</i>,<i>true</i>}?
+the result is a tri-state boolean type
+{<i>false</i>,<i>true,indeterminate</i>}. The answers <i>false</i> and
+<i>true</i> are easy to manipulate since they can directly be mapped on the
+boolean  <i>true</i> and <i>false</i>. But it is not the case for the answer
+<em>indeterminate</em> since comparison operators are supposed to be boolean
+functions. So, what to do in order to obtain boolean answers?
 
 <p>One solution consists of deciding to adopt an exceptional behavior, such
 as a failed assertion or raising an exception. In this case, the exceptional
-behavior will be triggered when the two compared intervals overlap on more
-than a single point. <b>WHAT IF THE OVERLAP IS A SINGLE POINT? I THOUGHT
-EXCEPTION CAN HAPPEN THERE TOO FOR STRICT COMPARISONS -- H</b></p>
+behavior will be triggered when the result is indeterminate.</p>
 
-<p>Another solution is to always map {<i>false</i>,<i>true</i>} into either
-<i>false,</i> or into <i>true</i>. If <i>false</i> is chosen, the comparison
-will be called "<i>certain</i>". Indeed, the result of [<i>a</i>,<i>b</i>]
-&lt; [<i>c</i>,<i>d</i>] will be <i>true</i> if and only if: &#8704; <i>x</i>
-&#8712; [<i>a</i>,<i>b</i>] &#8704; <i>y</i> &#8712; [<i>c</i>,<i>d</i>],
-<i>x</i> &lt; <i>y</i>. If <i>true</i> is chosen, the comparison will be
-called "<i>possible</i>". Indeed, the result of [<i>a</i>,<i>b</i>] &lt;
-[<i>c</i>,<i>d</i>] will be <i>true</i> if and only if: &#8707; <i>x</i>
-&#8712; [<i>a</i>,<i>b</i>] &#8707; <i>y</i> &#8712; [<i>c</i>,<i>d</i>],
-<i>x</i> &lt; <i>y</i>.</p>
+<p>Another solution is to  map <em>indeterminate</em> always to 
+<i>false,</i> or always to <i>true</i>. If <i>false</i> is chosen, the
+comparison will be called "<i>certain</i>;" indeed, the result of
+[<i>a</i>,<i>b</i>] &lt; [<i>c</i>,<i>d</i>] will be <i>true</i> if and only
+if: &#8704; <i>x</i> &#8712; [<i>a</i>,<i>b</i>] &#8704; <i>y</i> &#8712;
+[<i>c</i>,<i>d</i>],  <i>x</i> &lt; <i>y</i>. If <i>true</i> is chosen, the
+comparison will be called "<i>possible</i>;" indeed, the result of
+[<i>a</i>,<i>b</i>] &lt; [<i>c</i>,<i>d</i>] will be <i>true</i> if and only
+if: &#8707; <i>x</i> &#8712; [<i>a</i>,<i>b</i>] &#8707; <i>y</i> &#8712;
+[<i>c</i>,<i>d</i>], <i>x</i> &lt; <i>y</i>.</p>
 
 <p>Since any of these solution has a clearly defined semantics, it is not
 clear that we should enforce either of them. For this reason, the traits
@@ -167,37 +171,38 @@ href="comparisons.htm">comparison policies</a> pages for further details.</p>
 
 <h3>Overview of the library, and usage</h3>
 This library provides two quite distinct levels of usage. One is to use the
-basic class template interval&lt;T&gt; without specifying the policy. This
-only requires to know and understand the concepts developed above and the
-content of the namespace boost. In addition to the class interval&lt;T&gt;,
-this level of usage provides arithmetic operators (+, -, *, /), algebraic and
-piecewise-algebraic functions (abs, square, sqrt), transcendental and
-trigonometric functions (exp, log, sin, cos, tan, asin, acos, atan, sinh,
-cosh, tanh, asinh, acosh, atanh), and the standard comparison operators
-(&lt;, &lt;=, &gt;, &gt;=, ==, !=), as well as several interval-specific
-functions (min, max, which have a different meaning than std::min and
-std::max; lower, upper, width, median, empty, singleton, equal, in, in_zero,
-subset, proper_subset, overlap,  intersection, hull, bisect).
+basic class template <code>interval&lt;T&gt;</code> without specifying the
+policy. This only requires to know and understand the concepts developed
+above and the content of the namespace boost. In addition to the class
+<code>interval&lt;T&gt;</code>, this level of usage provides arithmetic
+operators (+, -, *, /), algebraic and piecewise-algebraic functions (abs,
+square, sqrt), transcendental and trigonometric functions (exp, log, sin,
+cos, tan, asin, acos, atan, sinh, cosh, tanh, asinh, acosh, atanh), and the
+standard comparison operators (&lt;, &lt;=, &gt;, &gt;=, ==, !=), as well as
+several interval-specific functions (min, max, which have a different meaning
+than <code>std::min</code> and <code>std::max</code>; lower, upper, width,
+median, empty, singleton, equal, in, in_zero, subset, proper_subset, overlap,
+ intersection, hull, bisect).
 
-<p>For some functions which take several parameters of type
-interval&lt;T&gt;, all combinations of argument types T and interval&lt;T&gt;
-which contain at least on interval&lt;T&gt;, are considered in order to avoid
-a conversion from the arguments of type T to a singleton of type
-interval&lt;T&gt;. This is done for efficiency reasons when the fact that an
-argument is a singleton forbids some cases and helps write more efficient
-code.</p>
+<p>For some functions which take several parameters of type<code>
+interval&lt;T&gt;</code>, all combinations of argument types <code>T</code>
+and <code>interval&lt;T&gt;</code> which contain at least one
+<code>interval&lt;T&gt;</code>, are considered in order to avoid a conversion
+from the arguments of type <code>T</code> to a singleton of type
+<code>interval&lt;T&gt;</code>. This is done for efficiency reasons (the fact
+that an argument is a singleton sometimes renders some tests unnecessary).</p>
 
 <p>A somewhat more advanced usage of this library is to hand-pick the
 policies <tt>Rounding</tt>, <tt>Compare</tt>, and <tt>Checking</tt> and pass
 them to <tt>interval&lt;T,Traits&gt;</tt> through the use of <tt>Traits :=
 boost::interval_traits&lt;T,Compare,Rounding,Checking&gt;</tt>. Appropriate
 policies can be fabricated by using the various classes provided in the
-namespace <tt>boost::interval_lib</tt> as detailed in the sections XXX.</p>
+namespace <tt>boost::interval_lib</tt> as detailed in section<a
+href="#interval_lib"> Interval Support Library</a>.</p>
 
 <h2><a name="synopsis"></a>Synopsis</h2>
 
-<blockquote>
-  <pre>namespace boost {
+<pre>namespace boost {
 
   namespace interval_lib {
 
@@ -377,20 +382,18 @@ namespace <tt>boost::interval_lib</tt> as detailed in the sections XXX.</p>
   template &lt;class T, class Traits&gt;  bool posne(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
 
 } // namespace boost</pre>
-</blockquote>
 
 <h2><a name="interval_traits"></a>Template class <tt>interval_traits</tt></h2>
 The <tt>interval</tt> class requires two template parameters, the first one
 is the type of the bounds. And the second one is a class defining three
 policies. This second parameter should look like:
 
-<blockquote>
-  <pre>  struct traits {
+<pre>  struct traits {
     typedef ... compare;
     typedef ... rounding;
     typedef ... checking;
   };</pre>
-  The requirements of these three types are detailed in their respective
+The requirements of these three types are detailed in their respective
   pages: <a href="#compare">comparison policies</a>, <a
   href="#rounding">rounding policies</a>, and <a href="#checking">checking
   policies</a>. In order to allow an easier definition of this parameter, the
@@ -410,14 +413,12 @@ policies. This second parameter should look like:
   };
 
 } // namespace boost</pre>
-</blockquote>
 
 <h2><a name="interval"></a>Template class <tt>interval</tt></h2>
 The public interface of the template class interval itself is kept at a
 simplest minimum:
 
-<blockquote>
-  <pre>template &lt;class T, class Traits = interval_traits&lt;T&gt; &gt;
+<pre>template &lt;class T, class Traits = interval_traits&lt;T&gt; &gt;
 class interval
 {
   public:
@@ -447,12 +448,11 @@ class interval
     interval&amp; operator/= (const T&amp; r);
     interval&amp; operator/= (const interval&amp; r);
  };</pre>
-</blockquote>
 The two main constructors accept one and two arguments of type T. The first
 one produces a singleton interval [v,v]; and the second one an interval
-[l,u]. The second one will use the checking policy if u&lt;l (by default,
-<b>FIXME -H</b>). If you are not sure whether the bounds are inverted or not,
-it is better to use the hull function.
+[l,u]. The second one will use the checking policy if u&lt;l. If you are not
+sure whether the bounds are inverted or not, it is better to use the 
+function call <code>hull(l,u)</code>.
 
 <p>There is also a template constructor in order to change the traits
 parameter of an interval. But there is no constructor that changes the base
@@ -472,13 +472,6 @@ the type T.</p>
 intervals. Please be aware that the default implementation uses NaN numbers
 for the empty interval and infinite numbers for the entire interval. (Those
 are provided by the checking policy  <b>FIXME -H</b>).</p>
-
-<h2><a name="specs"></a><tt>interval</tt> partial specializations</h2>
-
-<blockquote>
-  <b>SOME DECISION IS NEEDED: DO WE PROVIDE SPECIALIZATIONS FOR FLOAT,
-  DOUBLE, AND LONG DOUBLE WITH THE CONVERSION CONSTRUCTORS?
--H</b></blockquote>
 
 <h2><a name="opers"></a>Operations and Functions</h2>
 <b>THIS SECTION NEEDS TO BE REDONE -H.</b>
@@ -619,8 +612,7 @@ document.</div>
 
 <h4>Synopsis</h4>
 
-<blockquote>
-  <pre>namespace boost {
+<pre>namespace boost {
   namespace interval_lib {
 
 <font color="#ff0000">    /* built-in comparison policies */
@@ -655,7 +647,6 @@ document.</div>
 
   } // namespace interval_lib
 } // namespace boost</pre>
-</blockquote>
 
 <h4 id="compare"><a href="comparisons.htm">Comparisons</a></h4>
 
@@ -710,8 +701,7 @@ bottleneck when many operations are nested. Indeed, the generated code for
 [<i>a</i>,<i>b</i>] + [<i>c</i>,<i>d</i>] + [<i>e</i>,<i>f</i>] will probably
 look like:</p>
 
-<blockquote>
-  <pre>up();
+<pre>up();
 t1 = -(-a - c);
 t2 = b + d;
 restore();
@@ -719,16 +709,13 @@ up();
 x = -(-t1 - e);
 y = t2 + f;
 restore();</pre>
-</blockquote>
 If you think it is possible to do much better, you are right. For example,
 this is better (and probably optimal):
 
-<blockquote>
-  <pre>up();
+<pre>up();
 x = -(-a - c - e);
 y = b + d + f;
 restore();</pre>
-</blockquote>
 Such a code will be generated by a compiler if the computations are made
 without initialization and restoration of the rounding mode. However, it
 would be far too easy if there was no drawback: because the rounding mode is
@@ -743,8 +730,7 @@ USING THE LIBRARY. -H</b>
 <p>Here is an example of the Horner scheme to compute the value of a polynom.
 The rounding mode switches are disabled for the whole computation.</p>
 
-<blockquote>
-  <pre>// I is an interval class, the polynom is a simple array
+<pre>// I is an interval class, the polynom is a simple array
 template&lt;class I&gt;
 I horner(const I&amp; x, const I p[], int n) {
 
@@ -763,8 +749,6 @@ I horner(const I&amp; x, const I p[], int n) {
 
   // restore the rounding mode with the destruction of rnd
 }</pre>
-</blockquote>
-
 Please note that a rounding object is especially created in order to
 compensate for the protection loss. Each interval of type I is converted in
 an interval of type R before any operations. If this conversion is not done,
@@ -933,6 +917,7 @@ comments in order for this library to be written. Hervé Brönnimann
 reorganized and wrote chapters of the documentation based on Guillaume's
 great starting point.</p>
 <hr>
+
 <p>Revised: 2002-08-21<br>
 Guillaume Melquiond, Sylvain Pion, Hervé Brönnimann.<br>
 Polytechnic University.</p>
