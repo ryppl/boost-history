@@ -1,0 +1,9 @@
+project
+  : requirements 
+      <library>../../../../libs/test/build//boost_unit_test_framework
+  : default-build debug
+  ;
+
+run product.cpp
+    ../../../../libs/test/build//boost_unit_test_framework
+  ;
