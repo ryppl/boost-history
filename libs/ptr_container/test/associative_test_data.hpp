@@ -1,4 +1,17 @@
-
+/**
+ * Pointer-Container Library
+ * (C) Thorsten Ottosen 2003-2004
+ * 
+ * Permission to copy, use, modify,
+ * sell and distribute this software is granted provided this
+ * copyright notice appears in all copies. This software is provided
+ * "as is" without express or implied warranty, and with no claim as
+ * to its suitability for any purpose.
+ *
+ * See http://www.boost.org/libs/ptr_container for documentation.
+ *
+ */
+ 
 #include <libs/ptr_container/test/test_data.hpp>
 
 template< typename C, typename B, typename T >

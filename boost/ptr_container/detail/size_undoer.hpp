@@ -1,6 +1,6 @@
 /**
  * Pointer-Container Library
- * (C) Thorsten Ottosen 2003
+ * (C) Thorsten Ottosen 2003-2004
  * 
  * Permission to copy, use, modify,
  * sell and distribute this software is granted provided this
@@ -15,7 +15,7 @@
 #ifndef BOOST_PTR_CONTAINER_DETAIL_SIZE_UNDOER_HPP
 #define BOOST_PTR_CONTAINER_DETAIL_SIZE_UNDOER_HPP
 
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#if defined(_MSC_VER) && (_MSC_VER >= 1200)
     #pragma once
 #endif
 
