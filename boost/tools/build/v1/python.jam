@@ -246,6 +246,12 @@ rule Link-PYD
     {
         RUN_LD_LIBRARY_PATH on $(<) = [ join $(gRUN_LD_LIBRARY_PATH($(<))) : $(SPLITPATH) ] ;
         gRUN_LD_LIBRARY_PATH($(<)) += $(gLOCATE($(<[1]))) ;
+        
+        if $(OS) = AIX
+        {
+            LINKFLAGS on $(<) += -e init$(<[1]:B) ;
+            Aix-Implib-Action $(<) : $(>) ;
+        }
     }
     Link-action $(<) : $(>) : PYD ;
 }

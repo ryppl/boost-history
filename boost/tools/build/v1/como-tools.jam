@@ -78,14 +78,14 @@ rule Link-action
 }
 
 # for como, we repeat all libraries so that dependencies are always resolved
-actions como-Link-action bind NEEDLIBS
+actions como-Link-action bind NEEDLIBS NEEDDLLS
 {
     $(COMO_BACKEND_SETUP)
     $(COMO_BACKEND_INCLUDE_SETUP)
     $(COMO_BACKEND_LIB_SETUP)
     $(COMO_PATH_SETUP)
     $(COMO_BASE_SETUP)
-    $(COMO_BIN_DIRECTORY)como $(LINKFLAGS) -o "$(<[1])" "$(>)" "$(NEEDLIBS)" "$(FINDLIBS:S=.lib)" "$(STDLIB_PATH)libcomo.lib"
+    $(COMO_BIN_DIRECTORY)como $(LINKFLAGS) -o "$(<[1])" "$(>)" "$(NEEDLIBS)" "$(NEEDDLLS)" "$(FINDLIBS:S=.lib)" "$(STDLIB_PATH)libcomo.lib"
 }
 
 

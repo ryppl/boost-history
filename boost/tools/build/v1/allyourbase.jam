@@ -178,7 +178,6 @@ if $(NT)
     SUFOBJ          ?= .obj ;
     SUFEXE          ?= .exe ;
     SUFDLL          ?= .dll .lib ;
-    gLINKABLE_PRODUCT_INDEX(DLL) = 2 ; # (the .lib is the ones to link)
     PREDLL          ?= "" ;
     NOARSCAN        ?= true ;
     SHELL_EXPORT    ?= ;
@@ -316,9 +315,9 @@ else if $(UNIX)
     {
     case AIX :
         DLL_AS_LIB      ?= true ;
+        IMPLIB_FLAGS    ?= -bI: ;
         SUFDLL          ?= .so .imp ;
-        gLINKABLE_PRODUCT_INDEX(DLL) = 1 ; # (the .so is the one to link)
-
+        
     case AMIGA :
         YACC            ?= bison ;
 
@@ -426,6 +425,7 @@ FILEMODE        ?= 644 ;
 FORTRAN         ?= f77 ;
 FORTRANFLAGS    ?= ;
 HDRS            ?= ;
+IMPLIB_FLAGS    ?= "" ;
 JAMFILE         ?= Jamfile ;
 JAMRULES        ?= Jamrules ;
 LEX             ?= ;

@@ -31,9 +31,9 @@ rule Link-action
 }
 
 # for mingw, we repeat all libraries so that dependencies are always resolved
-actions mingw-Link-action bind NEEDLIBS
+actions mingw-Link-action bind NEEDLIBS NEEDDLLS
 {
-    $(MINGW_BIN_DIRECTORY)g++ $(IMPLIB_COMMAND)$(<[2]) $(LINKFLAGS) -o "$(<[1])" -L$(LIBPATH) -L$(STDLIBPATH) "$(>)" "$(NEEDLIBS)" "$(NEEDLIBS)" -l$(FINDLIBS) -Wl,-rpath-link,.
+    $(MINGW_BIN_DIRECTORY)g++ $(IMPLIB_COMMAND)$(<[2]) $(LINKFLAGS) -o "$(<[1])" -L$(LIBPATH) -L$(STDLIBPATH) "$(>)" "$(NEEDLIBS)" "$(IMPLIB_FLAGS)$(NEEDDLLS)" "$(NEEDLIBS)" "$(IMPLIB_FLAGS)$(NEEDDLLS)" -l$(FINDLIBS) -Wl,-rpath-link,.
 }
 
 #### Cc #####

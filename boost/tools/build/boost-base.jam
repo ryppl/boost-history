@@ -160,7 +160,7 @@ rule template-modifier ( target : source )
 # generate instructions to build the given "main" target from the given object
 # files given in the 2nd parameter. The 3rd parameter should be EXE for an
 # executable, or DLL for a shared library.
-rule main-from-objects
+rule main-from-objects ( targets * : objects * : type )
 {
     # make compiled sources a dependency of target
 
@@ -168,8 +168,8 @@ rule main-from-objects
 
     Clean clean : $(<) ;
 
-    MODE on $(<) = $($(3)MODE) ;
-    local link-function = Link-$(3) ;
+    MODE on $(<) = $($(type)MODE) ;
+    local link-function = Link-$(type) ;
     local ignored = [ $(link-function) $(<) : $(>) : $(3) ] ;
     Chmod $(<[1]) ;
     DEPENDS $(<) : $(>) ;
@@ -193,18 +193,19 @@ rule Link-DLL
     {
         RUN_LD_LIBRARY_PATH on $(<) = [ join $(gRUN_LD_LIBRARY_PATH($(<))) $(RUN_LD_LIBRARY_PATH) : $(SPLITPATH) ] ;
         gRUN_LD_LIBRARY_PATH($(<)) += $(gLOCATE($(<[1]))) ;
+
+        if $(OS) = AIX
+        {
+            Aix-Implib-Action $(<) : $(>) ;
+        }
     }
     
-    if $(OS) = AIX
-    {
-        Aix-Implib-Action $(<) : $(>) ;
-    }
     Link-action $(<) : $(>) : DLL ;
 }
 
 actions Aix-Implib-Action bind import-generator-script
 {
-    "$(BOOST_ROOT)/tools/build/gen_aix_import_file.py" $(<[1]:BD=) $(>:D=) "-directory=$(<[1]:D)" -verbose=1
+    "$(BOOST_ROOT)/tools/build/gen_aix_import_file.py" $(<[1]:BD=) $(>:D=) "-optldflags=$(LINKFLAGS)" "-directory=$(<[1]:D)" -verbose=1
 }
 
 # store the shell's PATH again, just in case someone uses PATH.
@@ -665,7 +666,7 @@ rule include-tools
 
     # clear any lingering target variables that may have been declared
     $(gTARGET_VARIABLES) = ;
-    gTARGET_VARIABLES = NEEDLIBS ; # start over from the beginning
+    gTARGET_VARIABLES = NEEDLIBS NEEDDLLS ; # start over from the beginning
     
     gRELEVANT_FEATURES($(<)) = ; # clear relevant feature set
     gDEPENDENCY_VARIABLES($(<)) = ;
@@ -1449,10 +1450,7 @@ rule link-libraries
         = [ subvariant-target $(lib-target) : $(lib-subvariant) : $(>) ] ;
 
     # Add the name of the linkable product to the result.
-    local type = $(gTARGET_TYPE($(lib-target))) ;
-    local index = $(gLINKABLE_PRODUCT_INDEX($(type))) ;
-    index ?= 1 ;
-    result += $(lib-files[$(index)]) ;
+    result += $(lib-files[-1]) ;
   }
   return $(result) ;
 }
@@ -1537,8 +1535,8 @@ rule depend-on-dlls
 {
     if $(DLL_AS_LIB)
     {
-        NEEDLIBS += $(>) ;
-        NEEDLIBS on $(<) += $(>) ;
+        NEEDDLLS += $(>) ;
+        NEEDDLLS on $(<) += $(>) ;
     }
     LIBPATH on $(<) += $(gLOCATE($(>))) ;
     FINDLIBS on $(<) += $(gTARGET_NAME($(gTARGET_SUBVARIANT($(>))))) ; # $(gTARGET_SUBVARIANT($(>)):G=) ;
