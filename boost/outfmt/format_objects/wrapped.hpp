@@ -31,7 +31,7 @@
                get_typeid< T >::value; // BCB workaround
                return( readex( is, v, seq_type< get_typeid< T >::value >()));
             }
-         public:
+         private:
             template< typename T, class InputStream >
             inline bool                          readex
                                                  (
