@@ -33,63 +33,63 @@ namespace sa = ::boost::string_algo;
 
 void Print( char C )
 {
-	cout << C;
+    cout << C;
 }
 
 template< typename T >
 void argument_test_cv( const T& C )
 {
-	std::for_each( sa::begin(C), sa::end(C), Print );
-	cout << endl;
+    std::for_each( sa::begin(C), sa::end(C), Print );
+    cout << endl;
 }
 
 template< typename T >
 void argument_test( T& C )
 {
-	std::for_each( sa::begin(C), sa::end(C), Print );
-	cout << endl;
+    std::for_each( sa::begin(C), sa::end(C), Print );
+    cout << endl;
 }
 
 void container_test()
 {
-	string str1("abc");
-	argument_test( str1 );
-	std::pair<string::const_iterator,string::const_iterator> Pair=
-		make_pair( str1.begin(), str1.end() );
-	argument_test( Pair );
+    string str1("abc");
+    argument_test( str1 );
+    std::pair<string::const_iterator,string::const_iterator> Pair=
+        make_pair( str1.begin(), str1.end() );
+    argument_test( Pair );
 
-	argument_test_cv( str1 );
-	argument_test_cv( make_pair( str1.begin(), str1.end() ) );
+    argument_test_cv( str1 );
+    argument_test_cv( make_pair( str1.begin(), str1.end() ) );
 
-	argument_test("123");
-//	argument_test(L"123");
+    argument_test("123");
+//  argument_test(L"123");
 
-	argument_test_cv("123");
-//	argument_test_cv(L"123");
+    argument_test_cv("123");
+//  argument_test_cv(L"123");
 
-	char* pch="456";
-	const char* pcch="567";
+    char* pch="456";
+    const char* pcch="567";
 
-	argument_test(pch);
-	argument_test_cv(pch);
+    argument_test(pch);
+    argument_test_cv(pch);
 
-	argument_test(pcch);
-	argument_test_cv(pcch);
+    argument_test(pcch);
+    argument_test_cv(pcch);
 
-	string str2;
-	char ach[]="";
+    string str2;
+    char ach[]="";
 
-	BOOST_CHECK( sa::empty(str2) );
-	BOOST_CHECK( sa::empty("") );
-	BOOST_CHECK( sa::empty(ach) );
-	BOOST_CHECK( sa::empty((char*)0) );
+    BOOST_CHECK( sa::empty(str2) );
+    BOOST_CHECK( sa::empty("") );
+    BOOST_CHECK( sa::empty(ach) );
+    BOOST_CHECK( sa::empty((char*)0) );
 };
 
 
 // test main 
 int test_main( int, char*[] )
 {
-	container_test();
+    container_test();
 
     return 0;
 }

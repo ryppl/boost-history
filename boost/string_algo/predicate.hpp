@@ -26,14 +26,14 @@ namespace boost {
         const SeqT2& Substr )
     {
         typedef BOOST_STRING_TYPENAME 
-			string_algo::container_traits<SeqT1>::const_iterator Iterator1T;
-		typedef BOOST_STRING_TYPENAME 
-			string_algo::container_traits<SeqT2>::const_iterator Iterator2T;
-			
-		Iterator1T InputEnd=string_algo::end(Input);
-		Iterator2T SubstrEnd=string_algo::end(Substr);
+            string_algo::container_traits<SeqT1>::const_iterator Iterator1T;
+        typedef BOOST_STRING_TYPENAME 
+            string_algo::container_traits<SeqT2>::const_iterator Iterator2T;
+            
+        Iterator1T InputEnd=string_algo::end(Input);
+        Iterator2T SubstrEnd=string_algo::end(Substr);
 
-		Iterator1T it=string_algo::begin(Input);
+        Iterator1T it=string_algo::begin(Input);
         Iterator2T pit=string_algo::begin(Substr);
         for(;
             it!=InputEnd && pit!=SubstrEnd;
@@ -55,17 +55,17 @@ namespace boost {
         const SeqT2& Substr )
     {
         typedef BOOST_STRING_TYPENAME 
-			string_algo::container_traits<SeqT1>::const_iterator Iterator1T;
-		typedef BOOST_STRING_TYPENAME boost::detail::
+            string_algo::container_traits<SeqT1>::const_iterator Iterator1T;
+        typedef BOOST_STRING_TYPENAME boost::detail::
             iterator_traits<Iterator1T>::iterator_category category;
 
         return string_algo::detail::
             ends_with_iter_select( 
                 string_algo::begin(Input), 
-				string_algo::end(Input), 
-				string_algo::begin(Substr), 
-				string_algo::end(Substr), 
-				category() );
+                string_algo::end(Input), 
+                string_algo::begin(Substr), 
+                string_algo::end(Substr), 
+                category() );
     }
 
 //  contains predicate  -----------------------------------------------//
@@ -85,9 +85,9 @@ namespace boost {
         }
         
         return (
-			!find_first( 
-				make_range(Begin, End), 
-				make_range(SubBegin, SubEnd) ).empty() );
+            !find_first( 
+                make_range(Begin, End), 
+                make_range(SubBegin, SubEnd) ).empty() );
     }
 
     // contains sequence version
@@ -96,14 +96,14 @@ namespace boost {
         const SeqT1& Input, 
         const SeqT2& Substr )
     {
-		if ( string_algo::empty(Substr) )
+        if ( string_algo::empty(Substr) )
         {
             // Empty range is contained always
             return true;
         }
         
         return (
-			!find_first( Input,	Substr ).empty() );
+            !find_first( Input, Substr ).empty() );
     }
 
 
@@ -116,14 +116,14 @@ namespace boost {
         const SeqT2& Substr )
     {
         typedef BOOST_STRING_TYPENAME 
-			string_algo::container_traits<SeqT1>::const_iterator Iterator1T;
-		typedef BOOST_STRING_TYPENAME 
-			string_algo::container_traits<SeqT2>::const_iterator Iterator2T;
-			
-		Iterator1T InputEnd=string_algo::end(Input);
-		Iterator2T SubstrEnd=string_algo::end(Substr);
+            string_algo::container_traits<SeqT1>::const_iterator Iterator1T;
+        typedef BOOST_STRING_TYPENAME 
+            string_algo::container_traits<SeqT2>::const_iterator Iterator2T;
+            
+        Iterator1T InputEnd=string_algo::end(Input);
+        Iterator2T SubstrEnd=string_algo::end(Substr);
 
-		Iterator1T it=string_algo::begin(Input);
+        Iterator1T it=string_algo::begin(Input);
         Iterator2T pit=string_algo::begin(Substr);
         for(;
             it!=InputEnd && pit!=SubstrEnd;
@@ -145,10 +145,10 @@ namespace boost {
         PredicateT Predicate )
     {
         typedef BOOST_STRING_TYPENAME 
-			string_algo::container_traits<SeqT1>::const_iterator Iterator1T;
+            string_algo::container_traits<SeqT1>::const_iterator Iterator1T;
 
-		Iterator1T InputEnd=string_algo::end(Input);
-		for( Iterator1T It=string_algo::begin(Input); It!=InputEnd; It++ )
+        Iterator1T InputEnd=string_algo::end(Input);
+        for( Iterator1T It=string_algo::begin(Input); It!=InputEnd; It++ )
         {
             if ( !Predicate(*It) )
                 return false;

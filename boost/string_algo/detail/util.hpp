@@ -58,12 +58,12 @@ namespace boost {
             {
                 typedef empty_container<CharT> type;        
                 typedef CharT value_type;
-				typedef std::size_t size_type;
-				typedef std::ptrdiff_t difference_type;
-				typedef const value_type& reference;
+                typedef std::size_t size_type;
+                typedef std::ptrdiff_t difference_type;
+                typedef const value_type& reference;
                 typedef const value_type& const_reference;
-				typedef const value_type* iterator;
-				typedef const value_type* const_iterator;
+                typedef const value_type* iterator;
+                typedef const value_type* const_iterator;
 
                 
                 // Operations

@@ -113,54 +113,54 @@ namespace boost {
 
 //  iterator range utilities -----------------------------------------//
 
-	// iterator_range contructor ( iterator version )
+    // iterator_range contructor ( iterator version )
     template< typename IteratorT >
     inline iterator_range< IteratorT > make_range( IteratorT Begin, IteratorT End ) 
     {   
         return iterator_range<IteratorT>( Begin, End );
     }
   
-	// iterator_range contructor ( iterator version )
+    // iterator_range contructor ( iterator version )
     template< typename IteratorT >
-	inline iterator_range< IteratorT > make_range( const std::pair<IteratorT,IteratorT>& Pair ) 
+    inline iterator_range< IteratorT > make_range( const std::pair<IteratorT,IteratorT>& Pair ) 
     {   
         return iterator_range<IteratorT>( Pair.first, Pair.second );
     }
 
-	// copy a range into a sequence
-	template< typename SeqT, typename IteratorT >
-	inline SeqT copy_range( const iterator_range<IteratorT>& Range )
-	{
-		return SeqT( Range.begin(), Range.end() );
-	}
+    // copy a range into a sequence
+    template< typename SeqT, typename IteratorT >
+    inline SeqT copy_range( const iterator_range<IteratorT>& Range )
+    {
+        return SeqT( Range.begin(), Range.end() );
+    }
 
-	// transform a range into a sequence
-	template< typename SeqT, typename IteratorT, typename FuncT >
-	inline SeqT transform_range( const iterator_range<IteratorT>& Range, FuncT Func )
-	{
-		SeqT Seq;
-		std::transform( Range.begin(), Range.end(), std::back_inserter(Seq), Func );
-		return Seq;
-	}
+    // transform a range into a sequence
+    template< typename SeqT, typename IteratorT, typename FuncT >
+    inline SeqT transform_range( const iterator_range<IteratorT>& Range, FuncT Func )
+    {
+        SeqT Seq;
+        std::transform( Range.begin(), Range.end(), std::back_inserter(Seq), Func );
+        return Seq;
+    }
 
 //  iterator range utilities (internal) ------------------------------//
 
-	namespace string_algo {
-		
-		// copy range functor
-		template< 
-			typename SeqT, 
-			typename IteratorT=BOOST_STRING_TYPENAME SeqT::const_iterator >
-		struct copy_rangeF : 
-			public std::unary_function< iterator_range<IteratorT>, SeqT >
-		{
-			SeqT operator()( const iterator_range<IteratorT>& Range ) const
-			{
-				return copy_range<SeqT>(Range);
-			}
-		};
+    namespace string_algo {
+        
+        // copy range functor
+        template< 
+            typename SeqT, 
+            typename IteratorT=BOOST_STRING_TYPENAME SeqT::const_iterator >
+        struct copy_rangeF : 
+            public std::unary_function< iterator_range<IteratorT>, SeqT >
+        {
+            SeqT operator()( const iterator_range<IteratorT>& Range ) const
+            {
+                return copy_range<SeqT>(Range);
+            }
+        };
 
-	} // namespace string_algo
+    } // namespace string_algo
 } // namespace boost
 
 

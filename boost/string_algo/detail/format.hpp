@@ -26,9 +26,9 @@ namespace boost {
             template< typename FormatT >
             struct identity_formatF
             {
-				typedef BOOST_STRING_TYPENAME
-					container_traits<FormatT>::const_iterator format_iterator;
-				typedef iterator_range<format_iterator> result_type;
+                typedef BOOST_STRING_TYPENAME
+                    container_traits<FormatT>::const_iterator format_iterator;
+                typedef iterator_range<format_iterator> result_type;
 
                 // Construction
                 identity_formatF( const FormatT& Format ) :
@@ -38,7 +38,7 @@ namespace boost {
                 template< typename ReplaceT >
                 const result_type& operator()( const ReplaceT& ) const
                 {
-					return m_Format;
+                    return m_Format;
                 }
 
             private:

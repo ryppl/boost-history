@@ -19,7 +19,7 @@ namespace boost {
 //  classification functor generator -------------------------------------//
 
     // Construct an is_classified functor
-	template< typename CharT >
+    template< typename CharT >
     inline string_algo::detail::is_classifiedF<CharT>
     is_classified( std::ctype_base::mask Type, const std::locale& Loc=std::locale() )
     {
@@ -27,7 +27,7 @@ namespace boost {
     }
 
     // Construct an is_space functor
-	template< typename CharT >
+    template< typename CharT >
     inline string_algo::detail::is_classifiedF<CharT> 
     is_space( const std::locale& Loc=std::locale() )
     {
@@ -35,7 +35,7 @@ namespace boost {
     }
 
     // Construct an is_alnum functor
-	template< typename CharT >
+    template< typename CharT >
     inline string_algo::detail::is_classifiedF<CharT> 
     is_alnum( const std::locale& Loc=std::locale() )
     {
@@ -43,7 +43,7 @@ namespace boost {
     }
 
     // Construct an is_alpha functor
-	template< typename CharT >
+    template< typename CharT >
     inline string_algo::detail::is_classifiedF<CharT> 
     is_alpha( const std::locale& Loc=std::locale() )
     {
@@ -51,7 +51,7 @@ namespace boost {
     }
 
     // Construct an is_cntrl functor
-	template< typename CharT >
+    template< typename CharT >
     inline string_algo::detail::is_classifiedF<CharT> 
     is_cntrl( const std::locale& Loc=std::locale() )
     {
@@ -59,7 +59,7 @@ namespace boost {
     }
 
     // Construct an is_digit functor
-	template< typename CharT >
+    template< typename CharT >
     inline string_algo::detail::is_classifiedF<CharT> 
     is_digit( const std::locale& Loc=std::locale() )
     {
@@ -67,7 +67,7 @@ namespace boost {
     }
 
     // Construct an is_graph functor
-	template< typename CharT >
+    template< typename CharT >
     inline string_algo::detail::is_classifiedF<CharT> 
     is_graph( const std::locale& Loc=std::locale() )
     {
@@ -75,7 +75,7 @@ namespace boost {
     }
 
     // Construct an is_lower functor
-	template< typename CharT >
+    template< typename CharT >
     inline string_algo::detail::is_classifiedF<CharT> 
     is_lower( const std::locale& Loc=std::locale() )
     {
@@ -83,7 +83,7 @@ namespace boost {
     }
 
     // Construct an is_print functor
-	template< typename CharT >
+    template< typename CharT >
     inline string_algo::detail::is_classifiedF<CharT> 
     is_print( const std::locale& Loc=std::locale() )
     {
@@ -91,7 +91,7 @@ namespace boost {
     }
 
     // Construct an is_punct functor
-	template< typename CharT >
+    template< typename CharT >
     inline string_algo::detail::is_classifiedF<CharT> 
     is_punct( const std::locale& Loc=std::locale() )
     {
@@ -99,7 +99,7 @@ namespace boost {
     }
 
     // Construct an is_upper functor
-	template< typename CharT >
+    template< typename CharT >
     inline string_algo::detail::is_classifiedF<CharT> 
     is_upper( const std::locale& Loc=std::locale() )
     {
@@ -107,7 +107,7 @@ namespace boost {
     }
 
     // Construct an is_xdigit functor
-	template< typename CharT >
+    template< typename CharT >
     inline string_algo::detail::is_classifiedF<CharT> 
     is_xdigit( const std::locale& Loc=std::locale() )
     {
@@ -115,10 +115,10 @@ namespace boost {
     }
 
     // Construct an is_of functor 
-	template< typename CharT, typename SeqT >
+    template< typename CharT, typename SeqT >
     inline string_algo::detail::is_ofF<CharT> is_of( const SeqT& Seq )
     {
-		return string_algo::detail::is_ofF<CharT>(Seq); 
+        return string_algo::detail::is_ofF<CharT>(Seq); 
     }
 
 } // namespace boost

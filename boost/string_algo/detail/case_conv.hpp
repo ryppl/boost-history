@@ -29,7 +29,7 @@ namespace boost {
 
                 // Operation
                 template<typename CharT>
-				CharT operator ()( CharT Ch ) const
+                CharT operator ()( CharT Ch ) const
                 {
                     return std::tolower( Ch, m_Loc );
                 }
@@ -44,7 +44,7 @@ namespace boost {
                 to_upperF( const std::locale& Loc ) : m_Loc( Loc ) {}
 
                 // Operation
-				template<typename CharT>
+                template<typename CharT>
                 CharT operator ()( CharT Ch ) const
                 {
                     return std::toupper( Ch, m_Loc );

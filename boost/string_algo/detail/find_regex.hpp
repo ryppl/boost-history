@@ -28,8 +28,8 @@ namespace boost {
             {
                 typedef regex_search_result<IteratorT> type;
                 typedef iterator_range<IteratorT> base_type;
-				typedef BOOST_STRING_TYPENAME base_type::value_type value_type;
-				typedef BOOST_STRING_TYPENAME base_type::reference reference;
+                typedef BOOST_STRING_TYPENAME base_type::value_type value_type;
+                typedef BOOST_STRING_TYPENAME base_type::reference reference;
                 typedef BOOST_STRING_TYPENAME base_type::difference_type difference_type;
                 typedef BOOST_STRING_TYPENAME base_type::const_iterator const_iterator;
                 typedef BOOST_STRING_TYPENAME base_type::iterator iterator;
@@ -84,16 +84,16 @@ namespace boost {
                     m_Rx(Rx), m_MatchFlags(MatchFlags) {}   
 
                 // Operation
-				template< typename ForwardIteratorT >
+                template< typename ForwardIteratorT >
                 regex_search_result<ForwardIteratorT>
-				operator()( 
-					ForwardIteratorT Begin, 
+                operator()( 
+                    ForwardIteratorT Begin, 
                     ForwardIteratorT End ) const
                 {
                     typedef ForwardIteratorT input_iterator_type;
-					typedef regex_search_result<ForwardIteratorT> result_type;
+                    typedef regex_search_result<ForwardIteratorT> result_type;
 
-					// instantiate match result
+                    // instantiate match result
                     match_results<input_iterator_type> result;
                     // search for a match
                     if ( regex_search( Begin, End, result, m_Rx, m_MatchFlags ) )
@@ -108,13 +108,13 @@ namespace boost {
                     }
                 }
 
-				template<typename InputT>
-				regex_search_result< 
-					BOOST_STRING_TYPENAME container_traits<InputT>::result_iterator >
-				operator()( InputT& Input ) const
-				{
-					return operator()( begin(Input), end(Input) );
-				}
+                template<typename InputT>
+                regex_search_result< 
+                    BOOST_STRING_TYPENAME container_traits<InputT>::result_iterator >
+                operator()( InputT& Input ) const
+                {
+                    return operator()( begin(Input), end(Input) );
+                }
 
             private:
                 regex_reference_type m_Rx; // Regexp

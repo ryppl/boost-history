@@ -40,7 +40,7 @@ void predicate_test()
     BOOST_CHECK( contains( str1, string("xxx") ) );
     BOOST_CHECK( !contains( str1, string("yyy") ) );
 
-	BOOST_CHECK( equals( str2, string("abc") ) );
+    BOOST_CHECK( equals( str2, string("abc") ) );
     BOOST_CHECK( !equals( str1, string("yyy") ) );
 
     // multi-type comparison test
@@ -67,7 +67,7 @@ void predicate_test()
     BOOST_CHECK( contains( str2, string("") ) );
     BOOST_CHECK( equals( str3, string("") ) );
 
-	//! Container compatibility test
+    //! Container compatibility test
     BOOST_CHECK( starts_with( "123xxx321", "123" ) );
     BOOST_CHECK( ends_with( "123xxx321", "321" ) );
     BOOST_CHECK( contains( "123xxx321", "xxx" ) );
@@ -76,27 +76,27 @@ void predicate_test()
 
 #define TEST_CLASS( Pred, YesInput, NoInput )\
 {\
-	BOOST_CHECK( all( string(YesInput), Pred ) );\
-	BOOST_CHECK( !all( string(NoInput), Pred ) );\
+    BOOST_CHECK( all( string(YesInput), Pred ) );\
+    BOOST_CHECK( !all( string(NoInput), Pred ) );\
 }
 
 void classification_test()
 {
-	TEST_CLASS( is_space<char>(), "\n\r\t ", "..." );
-	TEST_CLASS( is_alnum<char>(), "ab129ABc", "_ab129ABc" );
-	TEST_CLASS( is_alpha<char>(), "abc", "abc1" );
-	TEST_CLASS( is_cntrl<char>(), "\n\t\r", "..." );
-	TEST_CLASS( is_digit<char>(), "1234567890", "abc" );
-	TEST_CLASS( is_graph<char>(), "123abc.,", "  \t" );
-	TEST_CLASS( is_lower<char>(), "abc", "Aasdf" );
-	TEST_CLASS( is_print<char>(), "abs", "\nasdf" );
-	TEST_CLASS( is_punct<char>(), ".,;\"", "abc" );
-	TEST_CLASS( is_upper<char>(), "ABC", "aBc" );
-	TEST_CLASS( is_xdigit<char>(), "ABC123", "XFD" );
-	TEST_CLASS( is_of<char>( string("abc") ), "aaabbcc", "aaxb" );
-	TEST_CLASS( is_of<char>( "abc" ), "aaabbcc", "aaxb" );
+    TEST_CLASS( is_space<char>(), "\n\r\t ", "..." );
+    TEST_CLASS( is_alnum<char>(), "ab129ABc", "_ab129ABc" );
+    TEST_CLASS( is_alpha<char>(), "abc", "abc1" );
+    TEST_CLASS( is_cntrl<char>(), "\n\t\r", "..." );
+    TEST_CLASS( is_digit<char>(), "1234567890", "abc" );
+    TEST_CLASS( is_graph<char>(), "123abc.,", "  \t" );
+    TEST_CLASS( is_lower<char>(), "abc", "Aasdf" );
+    TEST_CLASS( is_print<char>(), "abs", "\nasdf" );
+    TEST_CLASS( is_punct<char>(), ".,;\"", "abc" );
+    TEST_CLASS( is_upper<char>(), "ABC", "aBc" );
+    TEST_CLASS( is_xdigit<char>(), "ABC123", "XFD" );
+    TEST_CLASS( is_of<char>( string("abc") ), "aaabbcc", "aaxb" );
+    TEST_CLASS( is_of<char>( "abc" ), "aaabbcc", "aaxb" );
 
-	TEST_CLASS( std::not1(is_classified<char>(std::ctype_base::space)), "...", "..\n\r\t " );
+    TEST_CLASS( std::not1(is_classified<char>(std::ctype_base::space)), "...", "..\n\r\t " );
 }
 
 #undef TEST_CLASS

@@ -22,7 +22,7 @@ namespace boost {
 //  find_regex  -----------------------------------------------//
 
     // find the first match a subsequnce in the sequence
-	template< 
+    template< 
         typename InputT, 
         typename CharT, 
         typename RegexTraitsT, typename RegexAllocatorT>
@@ -33,11 +33,11 @@ namespace boost {
         const reg_expression<CharT, RegexTraitsT, RegexAllocatorT>& Rx,
         unsigned int MatchFlags=match_default )
     {
-		return string_algo::regex_finder(Rx,MatchFlags)( Input );
+        return string_algo::regex_finder(Rx,MatchFlags)( Input );
     }
 
     // find the first match a subsequnce in the sequence ( copy version )
-	template< 
+    template< 
         typename InputT, 
         typename CharT, 
         typename RegexTraitsT, typename RegexAllocatorT>
@@ -46,8 +46,8 @@ namespace boost {
         const reg_expression<CharT, RegexTraitsT, RegexAllocatorT>& Rx,
         unsigned int MatchFlags=match_default )
     {
-		return copy_range<InputT>(string_algo::regex_finder(Rx,MatchFlags)(Input) );
-	}
+        return copy_range<InputT>(string_algo::regex_finder(Rx,MatchFlags)(Input) );
+    }
 
 //  replace_regex --------------------------------------------------------------------//
 

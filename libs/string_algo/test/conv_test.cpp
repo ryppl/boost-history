@@ -23,8 +23,8 @@ void conv_test()
     string str1("AbCdEfG 123 xxxYYYzZzZ");
     string str2("AbCdEfG 123 xxxYYYzZzZ");
     string str3("");
-	char* pch1=strdup("AbCdEfG 123 xxxYYYzZzZ");
-	char* pch2=strdup("AbCdEfG 123 xxxYYYzZzZ");
+    char* pch1=strdup("AbCdEfG 123 xxxYYYzZzZ");
+    char* pch2=strdup("AbCdEfG 123 xxxYYYzZzZ");
 
     // *** iterator tests *** //
 
@@ -35,21 +35,21 @@ void conv_test()
     to_upper_copy( back_inserter(strout), str1 );
     BOOST_CHECK( strout=="ABCDEFG 123 XXXYYYZZZZ" );
 
-	strout.clear();
+    strout.clear();
     to_lower_copy( back_inserter(strout), "AbCdEfG 123 xxxYYYzZzZ" );
     BOOST_CHECK( strout=="abcdefg 123 xxxyyyzzzz" );
     strout.clear();
     to_upper_copy( back_inserter(strout), "AbCdEfG 123 xxxYYYzZzZ" );
     BOOST_CHECK( strout=="ABCDEFG 123 XXXYYYZZZZ" );
 
-	strout.clear();
+    strout.clear();
     to_lower_copy( back_inserter(strout), pch1 );
     BOOST_CHECK( strout=="abcdefg 123 xxxyyyzzzz" );
     strout.clear();
     to_upper_copy( back_inserter(strout), pch1 );
     BOOST_CHECK( strout=="ABCDEFG 123 XXXYYYZZZZ" );
 
-	// *** value passing tests *** //
+    // *** value passing tests *** //
 
     BOOST_CHECK( to_lower_copy( str1 )=="abcdefg 123 xxxyyyzzzz" );
     BOOST_CHECK( to_upper_copy( str1 )=="ABCDEFG 123 XXXYYYZZZZ" );
@@ -64,8 +64,8 @@ void conv_test()
     to_upper( str2 );
     BOOST_CHECK( str2=="ABCDEFG 123 XXXYYYZZZZ" );
 
-	// c-string modification
-	to_lower( pch1 );
+    // c-string modification
+    to_lower( pch1 );
     BOOST_CHECK( string(pch1)=="abcdefg 123 xxxyyyzzzz" );
     to_upper( pch2 );
     BOOST_CHECK( string(pch2)=="ABCDEFG 123 XXXYYYZZZZ" );
@@ -75,8 +75,8 @@ void conv_test()
     to_upper( str3 );
     BOOST_CHECK( str3=="" );
 
-	free(pch1);
-	free(pch2);
+    free(pch1);
+    free(pch2);
 }
 
 // test main 

@@ -20,43 +20,43 @@
 
 namespace boost {
     namespace string_algo {
-		namespace detail {
+        namespace detail {
 
 //  temporary format and find reusul storage --------------------------------//
 
-			template< 
-				typename ForwardIteratorT,
-				typename FormatT >
-			class find_format_store : 
-				public iterator_range<ForwardIteratorT>
-			{
-				typedef BOOST_STRING_TYPENAME
-					FormatT::result_type format_result_type;
-			public:
-				// Construction
-				find_format_store( const FormatT& Format ) :
-					m_Format( Format ) {}
+            template< 
+                typename ForwardIteratorT,
+                typename FormatT >
+            class find_format_store : 
+                public iterator_range<ForwardIteratorT>
+            {
+                typedef BOOST_STRING_TYPENAME
+                    FormatT::result_type format_result_type;
+            public:
+                // Construction
+                find_format_store( const FormatT& Format ) :
+                    m_Format( Format ) {}
 
-				// Assignment
-				template< typename FindResultT >
-				find_format_store& operator=( FindResultT FindResult )
-				{
-					iterator_range<ForwardIteratorT>::operator=(FindResult);
-					m_FormatResult=m_Format(FindResult);
-					
-					return *this;
-				}
+                // Assignment
+                template< typename FindResultT >
+                find_format_store& operator=( FindResultT FindResult )
+                {
+                    iterator_range<ForwardIteratorT>::operator=(FindResult);
+                    m_FormatResult=m_Format(FindResult);
+                    
+                    return *this;
+                }
 
-				// Retrive format result
-				const format_result_type& format_result()
-				{	
-					return m_FormatResult;
-				}
+                // Retrive format result
+                const format_result_type& format_result()
+                {   
+                    return m_FormatResult;
+                }
 
-			private:
-				const FormatT& m_Format;
-				format_result_type m_FormatResult;
-			};
+            private:
+                const FormatT& m_Format;
+                format_result_type m_FormatResult;
+            };
 
 //  storage handling routines -----------------------------------------------//
             

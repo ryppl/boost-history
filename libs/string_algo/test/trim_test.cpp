@@ -54,25 +54,25 @@ void trim_test()
     trim_copy_if( std::back_inserter(str), str1, is_space<char>() );
     BOOST_CHECK( str=="1x x x x1" );
 
-	str.clear();
+    str.clear();
     trim_left_copy_if( 
-		std::back_inserter(str), 
-		"     1x x x x1     ", 
-		is_space<char>() );
+        std::back_inserter(str), 
+        "     1x x x x1     ", 
+        is_space<char>() );
     BOOST_CHECK( str=="1x x x x1     " );
 
     str.clear();
     trim_right_copy_if( 
-		std::back_inserter(str), 
-		"     1x x x x1     ", 
-		is_space<char>() );
+        std::back_inserter(str), 
+        "     1x x x x1     ", 
+        is_space<char>() );
     BOOST_CHECK( str=="     1x x x x1" );
 
     str.clear();
     trim_copy_if( 
-		std::back_inserter(str), 
-		"     1x x x x1     ", 
-		is_space<char>() );
+        std::back_inserter(str), 
+        "     1x x x x1     ", 
+        is_space<char>() );
     BOOST_CHECK( str=="1x x x x1" );
     // *** inplace tests *** //
 

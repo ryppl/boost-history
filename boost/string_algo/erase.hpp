@@ -27,8 +27,8 @@ namespace boost {
         OutputIteratorT Output,
         const InputT& Input,
         const iterator_range<
-			BOOST_STRING_TYPENAME 
-				string_algo::container_traits<InputT>::const_iterator>& SearchRange )
+            BOOST_STRING_TYPENAME 
+                string_algo::container_traits<InputT>::const_iterator>& SearchRange )
     {
         return string_algo::replace_copy(
             Output,
@@ -42,8 +42,8 @@ namespace boost {
     inline InputT erase_range_copy( 
         const InputT& Input,
         const iterator_range<
-			BOOST_STRING_TYPENAME 
-				string_algo::container_traits<InputT>::const_iterator>& SearchRange )
+            BOOST_STRING_TYPENAME 
+                string_algo::container_traits<InputT>::const_iterator>& SearchRange )
     {
         return string_algo::replace_copy( 
             Input,
@@ -56,8 +56,8 @@ namespace boost {
     inline InputT& erase_range( 
         InputT& Input,
         const iterator_range<
-			BOOST_STRING_TYPENAME 
-				string_algo::container_traits<InputT>::iterator>& SearchRange )
+            BOOST_STRING_TYPENAME 
+                string_algo::container_traits<InputT>::iterator>& SearchRange )
     {
         return string_algo::replace( 
             Input, 

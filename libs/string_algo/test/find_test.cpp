@@ -27,7 +27,7 @@ void find_test()
     string str1("123abcxxxabcXXXabc321");
     string str2("abc");
     string str3("");
-	char* pch1="123abcxxxabcXXXabc321";
+    char* pch1="123abcxxxabcXXXabc321";
     vector<int> vec1( str1.begin(), str1.end() );
 
     // find results ------------------------------------------------------------//
@@ -37,7 +37,7 @@ void find_test()
     iterator_range<vector<int>::iterator> nc_vresult;
     iterator_range<vector<int>::const_iterator> cv_vresult;
 
-	iterator_range<const char*> ch_result;
+    iterator_range<const char*> ch_result;
 
     // basic tests ------------------------------------------------------------//
 
@@ -52,8 +52,8 @@ void find_test()
         (distance<string::const_iterator>( str1.begin(),cv_result.begin()) == 3) &&
         (distance<string::const_iterator>( str1.begin(),cv_result.end()) == 6) );
 
-	ch_result=find_first( pch1, "abc" );
-	BOOST_CHECK(( (ch_result.begin() - pch1 ) == 3) && ( (ch_result.end() - pch1 ) == 6 ) );
+    ch_result=find_first( pch1, "abc" );
+    BOOST_CHECK(( (ch_result.begin() - pch1 ) == 3) && ( (ch_result.end() - pch1 ) == 6 ) );
 
     // find_last
     nc_result=find_last( str1, string("abc") );
@@ -66,10 +66,10 @@ void find_test()
         (distance<string::const_iterator>( str1.begin(),cv_result.begin()) == 15) &&
         (distance<string::const_iterator>( str1.begin(),cv_result.end()) == 18) );
 
-	ch_result=find_last( pch1, "abc" );
-	BOOST_CHECK(( (ch_result.begin() - pch1 ) == 15) && ( (ch_result.end() - pch1 ) == 18 ) );
+    ch_result=find_last( pch1, "abc" );
+    BOOST_CHECK(( (ch_result.begin() - pch1 ) == 15) && ( (ch_result.end() - pch1 ) == 18 ) );
 
-	// find_nth
+    // find_nth
     nc_result=find_nth( str1, string("abc"), 1 );
     BOOST_CHECK( 
         (distance<string::const_iterator>( str1.begin(),nc_result.begin()) == 9) &&
@@ -80,10 +80,10 @@ void find_test()
         (distance<string::const_iterator>( str1.begin(),cv_result.begin()) == 9) &&
         (distance<string::const_iterator>( str1.begin(),cv_result.end()) == 12) );
         
-   	ch_result=find_nth( pch1, "abc", 1 );
-	BOOST_CHECK(( (ch_result.begin() - pch1 ) == 9) && ( (ch_result.end() - pch1 ) == 12 ) );
+    ch_result=find_nth( pch1, "abc", 1 );
+    BOOST_CHECK(( (ch_result.begin() - pch1 ) == 9) && ( (ch_result.end() - pch1 ) == 12 ) );
 
-	// find_head
+    // find_head
     nc_result=find_head( str1, 6 );
     BOOST_CHECK( 
         (distance<string::const_iterator>( str1.begin(),nc_result.begin()) == 0) &&
@@ -94,8 +94,8 @@ void find_test()
         (distance<string::const_iterator>( str1.begin(),cv_result.begin()) == 0) &&
         (distance<string::const_iterator>( str1.begin(),cv_result.end()) == 6) );
 
-	ch_result=find_head( pch1, 6 );
-	BOOST_CHECK( ( (ch_result.begin() - pch1 ) == 0 ) && ( (ch_result.end() - pch1 ) == 6 ) );
+    ch_result=find_head( pch1, 6 );
+    BOOST_CHECK( ( (ch_result.begin() - pch1 ) == 0 ) && ( (ch_result.end() - pch1 ) == 6 ) );
 
     BOOST_CHECK( find_head_copy( string("123456"), 3 )==string("123") );
     BOOST_CHECK( find_head_copy( string("123"), 5 )==string("123") );
@@ -111,13 +111,13 @@ void find_test()
         (distance<string::const_iterator>( str1.begin(),cv_result.begin()) == 15) &&
         (distance<string::const_iterator>( str1.begin(),cv_result.end()) == 21) );
 
-	ch_result=find_tail( pch1, 6 );
-	BOOST_CHECK( ( (ch_result.begin() - pch1 ) == 15 ) && ( (ch_result.end() - pch1 ) == 21 ) );
+    ch_result=find_tail( pch1, 6 );
+    BOOST_CHECK( ( (ch_result.begin() - pch1 ) == 15 ) && ( (ch_result.end() - pch1 ) == 21 ) );
 
-	BOOST_CHECK( find_tail_copy( string("123456"), 3 )==string("456") );
+    BOOST_CHECK( find_tail_copy( string("123456"), 3 )==string("456") );
     BOOST_CHECK( find_tail_copy( string("123"), 5 )==string("123") );
 
-	// find_token
+    // find_token
     nc_result=find_token( str1, is_of<char>("abc") );
     BOOST_CHECK( 
         (distance<string::const_iterator>( str1.begin(),nc_result.begin()) == 3) &&
@@ -136,10 +136,10 @@ void find_test()
     cv_result=find_token( const_cast<const string&>(str1), is_of<char>("abc"), false );
     BOOST_CHECK( 
         (distance<string::const_iterator>( str1.begin(),cv_result.begin()) == 3) &&
-		(distance<string::const_iterator>( str1.begin(),cv_result.end()) == 4) );
+        (distance<string::const_iterator>( str1.begin(),cv_result.end()) == 4) );
 
-	ch_result=find_token( pch1, is_of<char>("abc"),false );
-	BOOST_CHECK( ( (ch_result.begin() - pch1 ) == 3 ) && ( (ch_result.end() - pch1 ) == 4 ) );
+    ch_result=find_token( pch1, is_of<char>("abc"),false );
+    BOOST_CHECK( ( (ch_result.begin() - pch1 ) == 3 ) && ( (ch_result.end() - pch1 ) == 4 ) );
 
     // multi-type comparison test --------------------------------------------------//
     nc_vresult=find_first( vec1, string("abc") );
@@ -147,7 +147,7 @@ void find_test()
         (distance<vector<int>::const_iterator>( vec1.begin(),nc_vresult.begin()) == 3) &&
         (distance<vector<int>::const_iterator>( vec1.begin(),nc_vresult.end()) == 6) );
 
-	cv_vresult=find_first( const_cast<const vector<int>&>(vec1), str2 );
+    cv_vresult=find_first( const_cast<const vector<int>&>(vec1), str2 );
     BOOST_CHECK( 
         (distance<vector<int>::const_iterator>( vec1.begin(),cv_vresult.begin()) == 3) &&
         (distance<vector<int>::const_iterator>( vec1.begin(),cv_vresult.end()) == 6) );
@@ -174,8 +174,8 @@ void find_test()
     cv_result=find_first( const_cast<const string&>(str1), string("") );
     BOOST_CHECK( cv_result.begin()==cv_result.end() ); 
 
-	// copy_range test
-	BOOST_CHECK( copy_range<std::string>( find_first( vec1, string("xxx") ) )==string("xxx") );
+    // copy_range test
+    BOOST_CHECK( copy_range<std::string>( find_first( vec1, string("xxx") ) )==string("xxx") );
 }
 
 // test main 

@@ -34,7 +34,7 @@ static void find_test()
     iterator_range<vector<int>::iterator> nc_vresult;
     iterator_range<vector<int>::const_iterator> cv_vresult;
 
-	iterator_range<const char*> ch_result;
+    iterator_range<const char*> ch_result;
 
     // basic tests
     nc_result=find_regex( str1, rx );
@@ -47,10 +47,10 @@ static void find_test()
         (distance<string::const_iterator>( str1.begin(),cv_result.begin()) == 3) &&
         (distance<string::const_iterator>( str1.begin(),cv_result.end()) == 6) );
 
-	ch_result=find_regex( pch1, rx );
-	BOOST_CHECK(( (ch_result.begin() - pch1 ) == 3) && ( (ch_result.end() - pch1 ) == 6 ) );
+    ch_result=find_regex( pch1, rx );
+    BOOST_CHECK(( (ch_result.begin() - pch1 ) == 3) && ( (ch_result.end() - pch1 ) == 6 ) );
 
-	// multi-type comparison test
+    // multi-type comparison test
     nc_vresult=find_regex( vec1, rx );
     BOOST_CHECK( 
         (distance<vector<int>::const_iterator>( vec1.begin(),nc_vresult.begin()) == 3) &&

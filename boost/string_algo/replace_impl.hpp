@@ -23,47 +23,47 @@ namespace boost {
 
 // generic formaters  ---------------------------------------------------------------//
 
-		// identity formater
-		template< typename ForwardIteratorT >
-		inline detail::identity_formatF<
-			iterator_range<ForwardIteratorT> >
-		identity_formater( 
-			ForwardIteratorT FormatBegin,
-			ForwardIteratorT FormatEnd )
-		{
-			return detail::identity_formatF<
-				iterator_range<ForwardIteratorT> >( make_range( FormatBegin, FormatEnd ) );
-		}
+        // identity formater
+        template< typename ForwardIteratorT >
+        inline detail::identity_formatF<
+            iterator_range<ForwardIteratorT> >
+        identity_formater( 
+            ForwardIteratorT FormatBegin,
+            ForwardIteratorT FormatEnd )
+        {
+            return detail::identity_formatF<
+                iterator_range<ForwardIteratorT> >( make_range( FormatBegin, FormatEnd ) );
+        }
 
-		// identity formater
-		template< typename ContainerT >
-		inline detail::identity_formatF<ContainerT>
-		identity_formater( const ContainerT& Format )
-		{
-			return detail::identity_formatF<ContainerT>( Format );
-		}
+        // identity formater
+        template< typename ContainerT >
+        inline detail::identity_formatF<ContainerT>
+        identity_formater( const ContainerT& Format )
+        {
+            return detail::identity_formatF<ContainerT>( Format );
+        }
 
-		// empty formater
-		template< typename IteratorT >
-		inline detail::empty_formatF<
-			BOOST_STRING_TYPENAME boost::detail::iterator_traits<IteratorT>::value_type >
-		empty_formater( 
-			IteratorT Begin,
-			IteratorT End )
-		{
-			return detail::empty_formatF<
-				BOOST_STRING_TYPENAME 
-					boost::detail::iterator_traits<IteratorT>::value_type >();
-		}
+        // empty formater
+        template< typename IteratorT >
+        inline detail::empty_formatF<
+            BOOST_STRING_TYPENAME boost::detail::iterator_traits<IteratorT>::value_type >
+        empty_formater( 
+            IteratorT Begin,
+            IteratorT End )
+        {
+            return detail::empty_formatF<
+                BOOST_STRING_TYPENAME 
+                    boost::detail::iterator_traits<IteratorT>::value_type >();
+        }
 
-		template< typename ContainerT >
-		inline detail::empty_formatF< 
-			BOOST_STRING_TYPENAME container_traits<ContainerT>::value_type >
-		empty_formater( const ContainerT& Input )
-		{
-			return detail::empty_formatF<
-				BOOST_STRING_TYPENAME container_traits<ContainerT>::value_type >();
-		}
+        template< typename ContainerT >
+        inline detail::empty_formatF< 
+            BOOST_STRING_TYPENAME container_traits<ContainerT>::value_type >
+        empty_formater( const ContainerT& Input )
+        {
+            return detail::empty_formatF<
+                BOOST_STRING_TYPENAME container_traits<ContainerT>::value_type >();
+        }
 
 // generic replace  -----------------------------------------------------------------//
 
@@ -85,12 +85,12 @@ namespace boost {
             FindFT FindF,
             FormatFT FormatF )
         {
-			typedef detail::find_format_store<
-				BOOST_STRING_TYPENAME 
-					container_traits<InputT>::const_iterator, FormatFT> store_type;
+            typedef detail::find_format_store<
+                BOOST_STRING_TYPENAME 
+                    container_traits<InputT>::const_iterator, FormatFT> store_type;
 
-			// Create store for the find result
-			store_type M( FormatF );
+            // Create store for the find result
+            store_type M( FormatF );
 
             // Find first match
             M=FindF( begin(Input), end(Input) );
@@ -123,14 +123,14 @@ namespace boost {
             FindFT FindF,
             FormatFT FormatF )
         {
-			typedef detail::find_format_store<
-				BOOST_STRING_TYPENAME 
-					container_traits<InputT>::const_iterator, FormatFT> store_type;
+            typedef detail::find_format_store<
+                BOOST_STRING_TYPENAME 
+                    container_traits<InputT>::const_iterator, FormatFT> store_type;
 
-			// Create store for the find result
-			store_type M( FormatF );
+            // Create store for the find result
+            store_type M( FormatF );
 
-			// Find first match
+            // Find first match
             M=FindF( begin(Input), end(Input) );
 
             if ( M.empty() )
@@ -160,12 +160,12 @@ namespace boost {
             FindFT FindF,
             FormatFT FormatF )
         {
-			typedef detail::find_format_store<
-				BOOST_STRING_TYPENAME 
-					container_traits<InputT>::iterator, FormatFT> store_type;
+            typedef detail::find_format_store<
+                BOOST_STRING_TYPENAME 
+                    container_traits<InputT>::iterator, FormatFT> store_type;
 
-			// Create store for the find result
-			store_type M( FormatF );
+            // Create store for the find result
+            store_type M( FormatF );
             
             // Find range for the match
             M=FindF( begin(Input), end(Input) );
@@ -203,15 +203,15 @@ namespace boost {
         {
             typedef BOOST_STRING_TYPENAME 
                 container_traits<InputT>::const_iterator input_iterator_type; 
-			typedef detail::find_format_store<
-				input_iterator_type, FormatFT> store_type;
+            typedef detail::find_format_store<
+                input_iterator_type, FormatFT> store_type;
         
-			// Create store for the find result
-			store_type M( FormatF );
+            // Create store for the find result
+            store_type M( FormatF );
 
-			input_iterator_type LastMatch=begin(Input);
+            input_iterator_type LastMatch=begin(Input);
 
-			// Find first match
+            // Find first match
             M=FindF( begin(Input), end(Input) );
 
             // Iterate throug all matches
@@ -245,11 +245,11 @@ namespace boost {
         {
             typedef BOOST_STRING_TYPENAME 
                 container_traits<InputT>::const_iterator input_iterator_type; 
-			typedef detail::find_format_store<
-				input_iterator_type, FormatFT> store_type;
+            typedef detail::find_format_store<
+                input_iterator_type, FormatFT> store_type;
         
-			// Create store for the find result
-			store_type M( FormatF );
+            // Create store for the find result
+            store_type M( FormatF );
 
             // Initialize last match
             input_iterator_type LastMatch=begin(Input);
@@ -290,11 +290,11 @@ namespace boost {
         {
             typedef BOOST_STRING_TYPENAME 
                 container_traits<InputT>::iterator input_iterator_type; 
-			typedef detail::find_format_store<
-				input_iterator_type, FormatFT> store_type;
+            typedef detail::find_format_store<
+                input_iterator_type, FormatFT> store_type;
         
-			// Create store for the find result
-			store_type M( FormatF );
+            // Create store for the find result
+            store_type M( FormatF );
             
             // Instantiate replacement storage
             std::deque<BOOST_STRING_TYPENAME InputT::value_type> Storage;

@@ -37,14 +37,14 @@ namespace boost {
                     const regex_search_result<InputIteratorT>& Replace ) const
                 {
                     if ( Replace.empty() )
-					{
-						return result_type();
-					}
-					else
-					{
-						return regex_format( 
-							Replace.match_results(), m_Fmt, m_Flags );                      
-					}
+                    {
+                        return result_type();
+                    }
+                    else
+                    {
+                        return regex_format( 
+                            Replace.match_results(), m_Fmt, m_Flags );                      
+                    }
                 }
             private:
                 const StringT& m_Fmt;

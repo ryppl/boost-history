@@ -24,11 +24,11 @@ namespace boost {
         namespace detail {
 
 //  classification functors -----------------------------------------------//
-			
+            
             // is_classified functor
-			template< typename CharT >
-			struct is_classifiedF :
-				public std::unary_function< CharT, bool >
+            template< typename CharT >
+            struct is_classifiedF :
+                public std::unary_function< CharT, bool >
             {
                 // Constructor from a locale 
                 is_classifiedF(std::ctype_base::mask Type, std::locale const & Loc = std::locale()) :
@@ -45,16 +45,16 @@ namespace boost {
                 const std::locale m_Locale;
             };
 
-			// an is_of functor 
+            // an is_of functor 
             /* 
                 returns true if the value is from the specitied range
             */
             template< typename CharT >
-			struct is_ofF :
-				std::unary_function< CharT, bool >
+            struct is_ofF :
+                std::unary_function< CharT, bool >
             {
                 // Constructor 
-				template< typename SeqT >
+                template< typename SeqT >
                 is_ofF( const SeqT& Seq ) : m_Set( begin(Seq), end(Seq) ) {}
                 
                 // Operation
