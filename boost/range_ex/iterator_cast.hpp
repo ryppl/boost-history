@@ -12,46 +12,65 @@
 namespace boost
 {
 
-/// \brief casts the specified iterator adaptor to the desired base iterator type
-///
-/// casts the specified iterator adaptor to the desired base iterator type
-///
+namespace range_ex_detail
+{
+
+    /// iterator_cast_result
+    template<typename Base,typename Iter>
+    struct iterator_cast_result
+        : boost::disable_if<boost::is_same<Base,Iter>, Base>
+    {
+    };
+
+} // namespace range_ex_detail
+
+// work-around for Doxygen bug
+#ifndef BOOST_RANGE_EX_DOXYGEN_INVOKED
+/// iterator_cast
 template<typename Iter>
 inline Iter iterator_cast(Iter iter)
 {
     return iter;
 }
 
-/// \overload
+/// iterator_cast
 template<typename Base,typename Iter>
-inline BOOST_DEDUCED_TYPENAME boost::disable_if<
-    boost::is_same<Base,Iter>
-  , Base
->::type
+inline BOOST_DEDUCED_TYPENAME range_ex_detail::iterator_cast_result<Base, Iter>::type
 iterator_cast(Iter iter)
 {
     return iterator_cast<Base>(iter.base());
 }
+#else
+/// \brief casts the specified iterator adaptor to the desired base iterator type
+///
+/// casts the specified iterator adaptor to the desired base iterator type
+///
+template<typename Base,typename Iter> Base iterator_cast(Iter iter);
+#endif
 
-/// auto_base_t
-///   INTERNAL ONLY
-template<typename Iter>
-struct auto_base_t
+namespace range_ex_detail
 {
-    explicit auto_base_t(Iter it)
-        : iter(it)
-    {
-    }
 
-    template<typename T>
-    operator T() const
+    /// auto_base_t
+    template<typename Iter>
+    struct auto_base_t
     {
-        return iterator_cast<T>(iter);
-    }
+        explicit auto_base_t(Iter it)
+            : iter(it)
+        {
+        }
 
-private:
-    Iter iter;
-};
+        template<typename T>
+        operator T() const
+        {
+            return iterator_cast<T>(iter);
+        }
+
+    private:
+        Iter iter;
+    };
+
+} // namespace range_ex_detail
 
 /// \brief provides an implicit conversion from an iterator adaptor
 /// to a base iterator type
@@ -60,9 +79,9 @@ private:
 /// to a base iterator type
 ///
 template<typename Iter>
-inline auto_base_t<Iter> auto_base(Iter iter)
+inline range_ex_detail::auto_base_t<Iter> auto_base(Iter iter)
 {
-    return auto_base_t<Iter>(iter);
+    return range_ex_detail::auto_base_t<Iter>(iter);
 }
 
 } // namespace boost
