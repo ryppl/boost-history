@@ -620,7 +620,7 @@ namespace numerics {
             size_type size = common (e1 ().size (), e2 ().size1 ());
             result_type t (0);
             for (size_type j = 0; j < size; ++ j)
-                t += e1 () (i) * e2 () (i, j);
+                t += e1 () (j) * e2 () (j, i);
             return t; 
         }
         // Dense random access iterator
@@ -823,6 +823,7 @@ namespace numerics {
 }
 
 #endif 
+
 
 
 
