@@ -14,11 +14,14 @@
 //       pod_fill( Pod * b, Pod * e, T c )                 --> traits_type::assign( b, ( e - b ), c )
 // *  added exception handling for resize and reserve
 // *  uses an MPL-based approach to check InputIterator on replace( iterator i1, iterator i2, InputIterator j1, InputIterator j2 )
-// *  uses basic_string as the substring type (currently via a typedef: will make this a template policy at some point)
+// *  uses a substring_type typedef for the result of substr to allow substring implementation supression and/or alternative
+//    implementations
 // *  uses optimized versions of find and rfind for searching for single characters
 // *  uses boost::reverse_iterator< Iterator >: there are various problems when using std::reverse_iterator< Iterator >
 //    on non-conformant compilers/standard libraries
 // *  proper implementation of reverse< InputIterator >( ... ) for non-integral types
+// *  implementations of swap and getline are in the std namespace to allow std qualified calls to work
+// *  operator+ is not implemented to allow for non-constructable policy types (e.g. my flex_string implementation)
 
 #ifndef BOOST_BASIC_STRING_IMPL_HPP
 #define BOOST_BASIC_STRING_IMPL_HPP
@@ -708,29 +711,24 @@
                return(( res != 0 || n2 == npos ) ? res : int( n1 - n2 ));
             }
          public: // construction
-            inline           basic_string_impl()
+            inline           basic_string_impl(): Base()
             {
             }
-            inline           basic_string_impl( const string_type & s, size_type p = 0, size_type l = npos )
+            inline           basic_string_impl( const string_type & s, size_type p = 0, size_type l = npos ): Base( s, p, l )
             {
-               assign( s.c_str(), p, l );
             }
-            inline           basic_string_impl( const value_type * s, size_type l )
+            inline           basic_string_impl( const value_type * s, size_type l ): Base( s, l )
             {
-               assign( s, l );
             }
-            inline           basic_string_impl( const value_type * s )
+            inline           basic_string_impl( const value_type * s ): Base( s )
             {
-               assign( s );
             }
-            inline           basic_string_impl( size_type l, value_type c )
+            inline           basic_string_impl( size_type l, value_type c ): Base( l, c )
             {
-               assign( l, c );
             }
             template< typename InputIterator >
-            inline           basic_string_impl( InputIterator first, InputIterator last )
+            inline           basic_string_impl( InputIterator first, InputIterator last ): Base( first, last )
             {
-               assign( first, last );
             }
       };
 
