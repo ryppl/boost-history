@@ -33,6 +33,7 @@
 #include "boost/mpl/apply_if.hpp"
 #include "boost/mpl/identity.hpp"
 #include "boost/mpl/logical/not.hpp"
+#include "boost/mpl/logical/and.hpp"
 
 #include "boost/detail/boost_swap.hpp"
 #include "boost/mpl/aux_/lambda_support.hpp" // used by is_moveable
@@ -131,22 +132,22 @@ struct move_traits
               has_nothrow_copy<T>
             , mpl::identity< detail::nothrow_copy_move_traits<T> >
 
-              // [...else if nothrow default-constructible *and* nothrow swappable...]
+              // [...else if nothrow default-constructible *and* nothrow assignable...]
             , mpl::apply_if<
                   mpl::logical_and<
                       has_nothrow_constructor<T>
-                    , has_nothrow_swap<T>
+                    , has_nothrow_assign<T>
                     >
-                , mpl::identity< detail::nothrow_swap_move_traits<T> >
+                , mpl::identity< detail::nothrow_assign_move_traits<T> >
 
-                  // [...else if nothrow default-constructible *and* nothrow assignable...]
+                  // [...else if nothrow default-constructible *and* nothrow swappable...]
                 , mpl::apply_if<
                       mpl::logical_and<
                           has_nothrow_constructor<T>
-                        , has_nothrow_assign<T>
+                        , has_nothrow_swap<T>
                         >
-                    , mpl::identity< detail::nothrow_assign_move_traits<T> >
-                
+                    , mpl::identity< detail::nothrow_swap_move_traits<T> >
+
                       // [...else T not moveable (without specialization):]
                     , mpl::identity<detail::not_moveable_tag>
                     >
@@ -184,10 +185,55 @@ struct is_moveable
 // object in a consistent, yet unpredictable, state.
 //
 template <typename T>
-T* move(void* dest, T& src)
+T& move(void* dest, T& src)
 {
     move_traits<T>::move(dest, src);
-    return static_cast<T*>(dest);
+    return *static_cast<T*>(dest);
+}
+
+//////////////////////////////////////////////////////////////////////////
+// function template move_or_copy
+//
+// Moves the source to the given storage if its type is moveable;
+// otherwise, copies the source to the given storage using placement-new.
+//
+
+namespace detail {
+
+template <typename T>
+T& move_or_copy_impl(
+      void* dest
+    , T& src
+    , mpl::true_c// is_moveable
+    )
+{
+    return move(dest, src);
+}
+
+template <typename T>
+T& move_or_copy_impl(
+      void* dest
+    , const T& src
+    , mpl::false_c// is_moveable
+    )
+{
+    // Attempt copy...
+	T* p = new(dest) T(src);
+
+	// ...and return result upon success:
+	return *p;
+}
+
+} // namespace detail
+
+template <typename T>
+T& move_or_copy(void* dest, T& src)
+{
+    return detail::move_or_copy_impl(
+          dest
+        , src
+        , mpl::bool_c< is_moveable<T>::value >()
+        );
 }
 
 } // namespace boost
