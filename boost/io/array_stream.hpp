@@ -62,65 +62,31 @@ private:
 
 //  Array-using stream class template declarations  --------------------------//
 
-template < std::size_t N, typename Ch, class Tr >
-class basic_array_istream
-    : public basic_wrapping_istream< basic_array_streambuf<N, Ch, Tr> >
-{
-public:
-    // Template arguments
-    BOOST_STATIC_CONSTANT( std::size_t, array_size = N );
+// Macro to template the templates!
+#define BOOST_PRIVATE_WRAPPER( SuffixF, SuffixB ) \
+    template < std::size_t N, typename Ch, class Tr > \
+    class basic_array_##SuffixF \
+        : public basic_wrapping_##SuffixB< basic_array_streambuf<N, Ch, Tr> > \
+    { \
+    public: \
+        BOOST_STATIC_CONSTANT( std::size_t, array_size = N ); \
+        typedef Ch  char_type; \
+        typedef Tr  traits_type; \
+        char_type *  array_begin() \
+            { return this->rdbuf()->array_begin(); } \
+        char_type *  array_end() \
+            { return this->rdbuf()->array_end(); } \
+        char_type const *  array_begin() const \
+            { return this->rdbuf()->array_begin(); } \
+        char_type const *  array_end() const \
+            { return this->rdbuf()->array_end(); } \
+    }
 
-    typedef Ch  char_type;
-    typedef Tr  traits_type;
+BOOST_PRIVATE_WRAPPER( istream, istream );
+BOOST_PRIVATE_WRAPPER( ostream, ostream );
+BOOST_PRIVATE_WRAPPER( stream, iostream );
 
-    // Accessors
-    char_type *  array_begin();
-    char_type *  array_end();
-
-    char_type const *  array_begin() const;
-    char_type const *  array_end() const;
-
-};  // boost::io::basic_array_istream
-
-template < std::size_t N, typename Ch, class Tr >
-class basic_array_ostream
-    : public basic_wrapping_ostream< basic_array_streambuf<N, Ch, Tr> >
-{
-public:
-    // Template arguments
-    BOOST_STATIC_CONSTANT( std::size_t, array_size = N );
-
-    typedef Ch  char_type;
-    typedef Tr  traits_type;
-
-    // Accessors
-    char_type *  array_begin();
-    char_type *  array_end();
-
-    char_type const *  array_begin() const;
-    char_type const *  array_end() const;
-
-};  // boost::io::basic_array_ostream
-
-template < std::size_t N, typename Ch, class Tr >
-class basic_array_stream
-    : public basic_wrapping_iostream< basic_array_streambuf<N, Ch, Tr> >
-{
-public:
-    // Template arguments
-    BOOST_STATIC_CONSTANT( std::size_t, array_size = N );
-
-    typedef Ch  char_type;
-    typedef Tr  traits_type;
-
-    // Accessors
-    char_type *  array_begin();
-    char_type *  array_end();
-
-    char_type const *  array_begin() const;
-    char_type const *  array_end() const;
-
-};  // boost::io::basic_array_stream
+#undef BOOST_PRIVATE_WRAPPER
 
 
 //  Array-using streambuf class template member function definitions  --------//
@@ -142,6 +108,7 @@ basic_array_streambuf<N, Ch, Tr>::basic_array_streambuf
 (
     basic_array_streambuf<N, Ch, Tr> const &  c
 )
+    : base_type( c )
 {
     traits_type::copy( this->array_, c.array_, self_type::array_size );
 
@@ -188,129 +155,6 @@ basic_array_streambuf<N, Ch, Tr>::array_end
 ) const
 {
     return this->array_ + self_type::array_size;
-}
-
-
-//  Array-using stream class template member function definitions  -----------//
-
-template < std::size_t N, typename Ch, class Tr >
-inline
-typename basic_array_istream<N, Ch, Tr>::char_type *
-basic_array_istream<N, Ch, Tr>::array_begin
-(
-)
-{
-    return this->rdbuf()->array_begin();
-}
-
-template < std::size_t N, typename Ch, class Tr >
-inline
-typename basic_array_istream<N, Ch, Tr>::char_type *
-basic_array_istream<N, Ch, Tr>::array_end
-(
-)
-{
-    return this->rdbuf()->array_end();
-}
-
-template < std::size_t N, typename Ch, class Tr >
-inline
-typename basic_array_istream<N, Ch, Tr>::char_type const *
-basic_array_istream<N, Ch, Tr>::array_begin
-(
-) const
-{
-    return this->rdbuf()->array_begin();
-}
-
-template < std::size_t N, typename Ch, class Tr >
-inline
-typename basic_array_istream<N, Ch, Tr>::char_type const *
-basic_array_istream<N, Ch, Tr>::array_end
-(
-) const
-{
-    return this->rdbuf()->array_end();
-}
-
-template < std::size_t N, typename Ch, class Tr >
-inline
-typename basic_array_ostream<N, Ch, Tr>::char_type *
-basic_array_ostream<N, Ch, Tr>::array_begin
-(
-)
-{
-    return this->rdbuf()->array_begin();
-}
-
-template < std::size_t N, typename Ch, class Tr >
-inline
-typename basic_array_ostream<N, Ch, Tr>::char_type *
-basic_array_ostream<N, Ch, Tr>::array_end
-(
-)
-{
-    return this->rdbuf()->array_end();
-}
-
-template < std::size_t N, typename Ch, class Tr >
-inline
-typename basic_array_ostream<N, Ch, Tr>::char_type const *
-basic_array_ostream<N, Ch, Tr>::array_begin
-(
-) const
-{
-    return this->rdbuf()->array_begin();
-}
-
-template < std::size_t N, typename Ch, class Tr >
-inline
-typename basic_array_ostream<N, Ch, Tr>::char_type const *
-basic_array_ostream<N, Ch, Tr>::array_end
-(
-) const
-{
-    return this->rdbuf()->array_end();
-}
-
-template < std::size_t N, typename Ch, class Tr >
-inline
-typename basic_array_stream<N, Ch, Tr>::char_type *
-basic_array_stream<N, Ch, Tr>::array_begin
-(
-)
-{
-    return this->rdbuf()->array_begin();
-}
-
-template < std::size_t N, typename Ch, class Tr >
-inline
-typename basic_array_stream<N, Ch, Tr>::char_type *
-basic_array_stream<N, Ch, Tr>::array_end
-(
-)
-{
-    return this->rdbuf()->array_end();
-}
-
-template < std::size_t N, typename Ch, class Tr >
-inline
-typename basic_array_stream<N, Ch, Tr>::char_type const *
-basic_array_stream<N, Ch, Tr>::array_begin
-(
-) const
-{
-    return this->rdbuf()->array_begin();
-}
-
-template < std::size_t N, typename Ch, class Tr >
-inline
-typename basic_array_stream<N, Ch, Tr>::char_type const *
-basic_array_stream<N, Ch, Tr>::array_end
-(
-) const
-{
-    return this->rdbuf()->array_end();
 }
 
 

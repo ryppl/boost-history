@@ -25,290 +25,58 @@ namespace io
 {
 
 
-//  Implementation detail stuff  ---------------------------------------------//
-
-namespace detail
-{
-
-template < class StreamBuf >
-class basic_wrapping_ios
-    : private ::boost::base_from_member< StreamBuf >
-    , virtual public ::std::basic_ios< typename StreamBuf::char_type,
-       typename StreamBuf::traits_type >
-{
-    typedef ::boost::base_from_member< StreamBuf >  pbase_type;
-
-    typedef ::std::basic_ios< typename StreamBuf::char_type,
-     typename StreamBuf::traits_type >  base_type;
-
-public:
-    // Types
-    typedef StreamBuf  streambuf_type;
-
-    typedef typename StreamBuf::char_type    char_type;
-    typedef typename StreamBuf::traits_type  traits_type;
-
-    // Accessors
-    streambuf_type *
-    rdbuf()
-    {
-        return &this->pbase_type::member;
-    }
-
-    streambuf_type const *
-    rdbuf() const
-    {
-        return &this->pbase_type::member;
-    }
-
-    bool
-    is_using_internal_streambuf() const
-    {
-        return this->rdbuf() == this->base_type::rdbuf();
-    }
-
-protected:
-    // Constructors
-    explicit  basic_wrapping_ios( streambuf_type const &s )
-        : pbase_type( s )
-    {
-    }
-
-    basic_wrapping_ios()
-        : pbase_type()
-    {
-    }
-
-    template< typename T1 >
-    explicit  basic_wrapping_ios( T1 x1 )
-        : pbase_type( x1 )
-    {
-    }
-
-    template< typename T1, typename T2 >
-    basic_wrapping_ios( T1 x1, T2 x2 )
-        : pbase_type( x1, x2 )
-    {
-    }
-
-    template< typename T1, typename T2, typename T3 >
-    basic_wrapping_ios( T1 x1, T2 x2, T3 x3 )
-        : pbase_type( x1, x2, x3 )
-    {
-    }
-
-};  // boost::io::detail::basic_wrapping_ios
-
-}  // namespace detail
-
 //  Streambuf-wrapping stream class template declarations  -------------------//
 
-template < class StreamBuf >
-class basic_wrapping_istream
-    : public detail::basic_wrapping_ios< StreamBuf >
-    , public ::std::basic_istream< typename StreamBuf::char_type,
-       typename StreamBuf::traits_type >
-{
-    typedef detail::basic_wrapping_ios< StreamBuf >  base1_type;
-
-    typedef ::std::basic_istream< typename StreamBuf::char_type,
-     typename StreamBuf::traits_type >  base2_type;
-
-public:
-    // Types
-    typedef StreamBuf  streambuf_type;
-
-    typedef typename StreamBuf::char_type    char_type;
-    typedef typename StreamBuf::traits_type  traits_type;
-
-protected:
-    // Constructors
-    explicit  basic_wrapping_istream( streambuf_type const &s );
-
-    basic_wrapping_istream();
-
-    template< typename T1 >
-    explicit  basic_wrapping_istream( T1 x1 )
-        : base1_type( x1 )
-        , base2_type( this->base1_type::rdbuf() )
-    {
+// Use a macro to template the templates!
+#define BOOST_PRIVATE_WRAPPER( Stream ) \
+    template < class StreamBuf > \
+    class basic_wrapping_##Stream \
+        : private boost::base_from_member< StreamBuf > \
+        , public std::basic_##Stream < typename StreamBuf::char_type, \
+            typename StreamBuf::traits_type > \
+    { \
+        typedef ::boost::base_from_member< StreamBuf >  pbase_type; \
+        typedef ::std::basic_##Stream< typename StreamBuf::char_type, \
+          typename StreamBuf::traits_type >  base_type; \
+    public: \
+        typedef StreamBuf                        streambuf_type; \
+        typedef typename StreamBuf::char_type    char_type; \
+        typedef typename StreamBuf::traits_type  traits_type; \
+        streambuf_type *  rdbuf() \
+        { return &this->pbase_type::member; } \
+        streambuf_type const *  rdbuf() const \
+        { return &this->pbase_type::member; } \
+        bool  is_using_internal_streambuf() const \
+        { return this->rdbuf() == this->base_type::rdbuf(); } \
+    protected: \
+        explicit  basic_wrapping_##Stream ( streambuf_type const &s ) \
+            : pbase_type( s ), base_type( &this->pbase_type::member ) \
+            {} \
+        basic_wrapping_##Stream () \
+            : pbase_type(), base_type( &this->pbase_type::member ) \
+            {} \
+        template < typename T1 > \
+        explicit  basic_wrapping_##Stream ( T1 x1 ) \
+            : pbase_type( x1 ), base_type( &this->pbase_type::member ) \
+            {} \
+        template < typename T1, typename T2 > \
+        basic_wrapping_##Stream ( T1 x1, T2 x2 ) \
+            : pbase_type( x1, x2 ), base_type( &this->pbase_type::member ) \
+            {} \
+        template < typename T1, typename T2, typename T3 > \
+        basic_wrapping_##Stream ( T1 x1, T2 x2, T3 x3 ) \
+            : pbase_type( x1, x2, x3 ), base_type( &this->pbase_type::member ) \
+            {} \
     }
 
-    template< typename T1, typename T2 >
-    basic_wrapping_istream( T1 x1, T2 x2 )
-        : base1_type( x1, x2 )
-        , base2_type( this->base1_type::rdbuf() )
-    {
-    }
 
-    template< typename T1, typename T2, typename T3 >
-    basic_wrapping_istream( T1 x1, T2 x2, T3 x3 )
-        : base1_type( x1, x2, x3 )
-        , base2_type( this->base1_type::rdbuf() )
-    {
-    }
-
-};  // boost::io::basic_wrapping_istream
-
-template < class StreamBuf >
-class basic_wrapping_ostream
-    : public detail::basic_wrapping_ios< StreamBuf >
-    , public ::std::basic_ostream< typename StreamBuf::char_type,
-       typename StreamBuf::traits_type >
-{
-    typedef detail::basic_wrapping_ios< StreamBuf >  base1_type;
-
-    typedef ::std::basic_ostream< typename StreamBuf::char_type,
-     typename StreamBuf::traits_type >  base2_type;
-
-public:
-    // Types
-    typedef StreamBuf  streambuf_type;
-
-    typedef typename StreamBuf::char_type    char_type;
-    typedef typename StreamBuf::traits_type  traits_type;
-
-protected:
-    // Constructors
-    explicit  basic_wrapping_ostream( streambuf_type const &s );
-
-    basic_wrapping_ostream();
-
-    template< typename T1 >
-    explicit  basic_wrapping_ostream( T1 x1 )
-        : base1_type( x1 )
-        , base2_type( this->base1_type::rdbuf() )
-    {
-    }
-
-    template< typename T1, typename T2 >
-    basic_wrapping_ostream( T1 x1, T2 x2 )
-        : base1_type( x1, x2 )
-        , base2_type( this->base1_type::rdbuf() )
-    {
-    }
-
-    template< typename T1, typename T2, typename T3 >
-    basic_wrapping_ostream( T1 x1, T2 x2, T3 x3 )
-        : base1_type( x1, x2, x3 )
-        , base2_type( this->base1_type::rdbuf() )
-    {
-    }
-
-};  // boost::io::basic_wrapping_ostream
-
-template < class StreamBuf >
-class basic_wrapping_iostream
-    : public detail::basic_wrapping_ios< StreamBuf >
-    , public ::std::basic_iostream< typename StreamBuf::char_type,
-       typename StreamBuf::traits_type >
-{
-    typedef detail::basic_wrapping_ios< StreamBuf >  base1_type;
-
-    typedef ::std::basic_iostream< typename StreamBuf::char_type,
-     typename StreamBuf::traits_type >  base2_type;
-
-public:
-    // Types
-    typedef StreamBuf  streambuf_type;
-
-    typedef typename StreamBuf::char_type    char_type;
-    typedef typename StreamBuf::traits_type  traits_type;
-
-protected:
-    // Constructors
-    explicit  basic_wrapping_iostream( streambuf_type const &s );
-
-    basic_wrapping_iostream();
-
-    template< typename T1 >
-    explicit  basic_wrapping_iostream( T1 x1 )
-        : base1_type( x1 )
-        , base2_type( this->base1_type::rdbuf() )
-    {
-    }
-
-    template< typename T1, typename T2 >
-    basic_wrapping_iostream( T1 x1, T2 x2 )
-        : base1_type( x1, x2 )
-        , base2_type( this->base1_type::rdbuf() )
-    {
-    }
-
-    template< typename T1, typename T2, typename T3 >
-    basic_wrapping_iostream( T1 x1, T2 x2, T3 x3 )
-        : base1_type( x1, x2, x3 )
-        , base2_type( this->base1_type::rdbuf() )
-    {
-    }
-
-};  // boost::io::basic_wrapping_iostream
+BOOST_PRIVATE_WRAPPER( istream );
+BOOST_PRIVATE_WRAPPER( ostream );
+BOOST_PRIVATE_WRAPPER( iostream );
 
 
-//  Streambuf-wrapping stream class template member function definitions  ----//
-
-template < class StreamBuf >
-inline
-basic_wrapping_istream<StreamBuf>::basic_wrapping_istream
-(
-    streambuf_type const &  s
-)
-    : base1_type( s )
-    , base2_type( this->base1_type::rdbuf() )
-{
-}
-
-template < class StreamBuf >
-inline
-basic_wrapping_istream<StreamBuf>::basic_wrapping_istream
-(
-)
-    : base1_type()
-    , base2_type( this->base1_type::rdbuf() )
-{
-}
-
-template < class StreamBuf >
-inline
-basic_wrapping_ostream<StreamBuf>::basic_wrapping_ostream
-(
-    streambuf_type const &  s
-)
-    : base1_type( s )
-    , base2_type( this->base1_type::rdbuf() )
-{
-}
-
-template < class StreamBuf >
-inline
-basic_wrapping_ostream<StreamBuf>::basic_wrapping_ostream
-(
-)
-    : base1_type()
-    , base2_type( this->base1_type::rdbuf() )
-{
-}
-
-template < class StreamBuf >
-inline
-basic_wrapping_iostream<StreamBuf>::basic_wrapping_iostream
-(
-    streambuf_type const &  s
-)
-    : base1_type( s )
-    , base2_type( this->base1_type::rdbuf() )
-{
-}
-
-template < class StreamBuf >
-inline
-basic_wrapping_iostream<StreamBuf>::basic_wrapping_iostream
-(
-)
-    : base1_type()
-    , base2_type( this->base1_type::rdbuf() )
-{
-}
+// Undo any private macros
+#undef BOOST_PRIVATE_WRAPPER
 
 
 }  // namespace io
