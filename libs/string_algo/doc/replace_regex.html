@@ -1,0 +1,308 @@
+<!doctype html public "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+
+  <head>
+    <meta http-equiv="Content-Language" content="en-gb">
+    <meta name="author" content="Pavol Droba, mailto:droba@topmail.sk">
+    <meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+    <meta name="ProgId" content="FrontPage.Editor.Document">
+    <title>String Algorithm Library</title>
+  </head>
+
+  <body text="#000000" bgcolor="#ffffff">
+
+    <div align="left">
+      <table border="0" width="799" height="134">
+        <tr>
+          <td width="288" height="134"><img id="IMG1" src="cboost.gif" align="middle" border="0" width="277" height="86"></td>
+          <td width="1152" height="134">
+            <h1 align="center">&nbsp;String Algorithm Library&nbsp;</h1>
+            <h2 align="center"><code>replace_regex/erase_regex<br>
+            replace_all_regex/erase_all_regex</code></h2>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <ul>
+      <li><a href="#description">Description</a></li>
+      <li><a href="#synopsis">Synopsis</a>&nbsp;&nbsp;&nbsp;&nbsp;</li>
+      <li><a href="#examples">Examples</a></li>
+    </ul>
+    <hr>
+    <h2><a name="description">Description</a></h2>
+    <p align="left">
+      Regex variants of replace algorithms are included in <a href="../../../boost/string_algo/replace.hpp">&lt;boost/string_algo/regex.hpp&gt;</a>
+      header ( in <code>boost</code> namespace ).
+    <p align="left">
+      Algorithms find [all] substring[s] matching given regular expression.
+      Every such an occurrence is formatted using give format (<code>replace</code>
+      algorithms) or erased (<code>erase</code> algorithms).
+    </p>
+    <h2><a name="synopsis">Synopsis</a></h2>
+    <p>
+      Every algorithm is provided in 4 sub variants. Three variants with copy
+      semantics ( all have suffix <code>_copy</code> ) and one in-place variant.
+    </p>
+    <p>
+      Copy variant with iterator based input. Result is copied into an output
+      iterator.
+    </p>
+    <pre>    <b>template</b>&lt; 
+        <b>typename</b> InputIteratorT,
+        <b>typename</b> CharT, 
+        <b>typename</b> RegexTraitsT, <b>typename</b> RegexAllocatorT,
+        <b>typename</b> FormatStringTraitsT, <b>typename</b> FormatStringAllocatorT,
+        <b>typename</b> OutputIteratorT &gt;
+    <b>inline</b> OutputIteratorT replace_regex_copy(
+        OutputIteratorT Output,
+        InputIteratorT Begin,
+        InputIteratorT End,
+        <b>const</b> reg_expression&lt;CharT, RegexTraitsT, RegexAllocatorT&gt;&amp; Rx,
+        <b>const</b> std::basic_string&lt;CharT, FormatStringTraitsT, FormatStringAllocatorT&gt;&amp; Format,
+        <b>unsigned</b> <b>int</b> MatchFlags=match_default,
+        <b>unsigned</b> <b>int</b> FormatFlags=0 );</pre>
+    <pre>    <b>template</b>&lt; 
+        <b>typename</b> InputIteratorT,
+        <b>typename</b> CharT, 
+        <b>typename</b> RegexTraitsT, <b>typename</b> RegexAllocatorT,
+        <b>typename</b> FormatStringTraitsT, <b>typename</b> FormatStringAllocatorT,
+        <b>typename</b> OutputIteratorT &gt;
+    <b>inline</b> OutputIteratorT replace_all_regex_copy(
+        OutputIteratorT Output,
+        InputIteratorT Begin,
+        InputIteratorT End,
+        <b>const</b> reg_expression&lt;CharT, RegexTraitsT, RegexAllocatorT&gt;&amp; Rx,
+        <b>const</b> std::basic_string&lt;CharT, FormatStringTraitsT, FormatStringAllocatorT&gt;&amp; Format,
+        <b>unsigned</b> <b>int</b> MatchFlags=match_default,
+        <b>unsigned</b> <b>int</b> FormatFlags=0 );</pre>
+    <pre>    <b>template</b>&lt; 
+        <b>typename</b> InputIteratorT,
+        <b>typename</b> CharT, 
+        <b>typename</b> RegexTraitsT, <b>typename</b> RegexAllocatorT,
+        <b>typename</b> OutputIteratorT &gt;
+    <b>inline</b> OutputIteratorT erase_regex_copy(
+        OutputIteratorT Output,
+        InputIteratorT Begin,
+        InputIteratorT End,
+        <b>const</b> reg_expression&lt;CharT, RegexTraitsT, RegexAllocatorT&gt;&amp; Rx,
+        <b>unsigned</b> <b>int</b> MatchFlags=match_default );</pre>
+    <pre>    <b>template</b>&lt; 
+        <b>typename</b> InputIteratorT,
+        <b>typename</b> CharT, 
+        <b>typename</b> RegexTraitsT, <b>typename</b> RegexAllocatorT,
+        <b>typename</b> OutputIteratorT &gt;
+    <b>inline</b> OutputIteratorT erase_all_regex_copy(
+        OutputIteratorT Output,
+        InputIteratorT Begin,
+        InputIteratorT End,
+        <b>const</b> reg_expression&lt;CharT, RegexTraitsT, RegexAllocatorT&gt;&amp; Rx,
+        <b>unsigned</b> <b>int</b> MatchFlags=match_default );</pre>
+    <p>
+      Copy variants with a sequence based input. Result is copied into an output
+      iterator.
+    </p>
+    <pre>    <b>template</b>&lt; 
+        <b>typename</b> InputT, 
+        <b>typename</b> CharT, 
+        <b>typename</b> RegexTraitsT, <b>typename</b> RegexAllocatorT,
+        <b>typename</b> FormatStringTraitsT, <b>typename</b> FormatStringAllocatorT,
+        <b>typename</b> OutputIteratorT &gt;
+    <b>inline</b> OutputIteratorT replace_regex_copy(
+        OutputIteratorT Output,
+        <b>const</b> InputT&amp; Input,
+        <b>const</b> reg_expression&lt;CharT, RegexTraitsT, RegexAllocatorT&gt;&amp; Rx,
+        <b>const</b> std::basic_string&lt;CharT, FormatStringTraitsT, FormatStringAllocatorT&gt;&amp; Format,
+        <b>unsigned</b> <b>int</b> MatchFlags=match_default,
+        <b>unsigned</b> <b>int</b> FormatFlags=0 );</pre>
+    <pre>    <b>template</b>&lt; 
+        <b>typename</b> InputT, 
+        <b>typename</b> CharT, 
+        <b>typename</b> RegexTraitsT, <b>typename</b> RegexAllocatorT,
+        <b>typename</b> FormatStringTraitsT, <b>typename</b> FormatStringAllocatorT,
+        <b>typename</b> OutputIteratorT &gt;
+    <b>inline</b> OutputIteratorT replace_all_regex_copy(
+        OutputIteratorT Output,
+        <b>const</b> InputT&amp; Input,
+        <b>const</b> reg_expression&lt;CharT, RegexTraitsT, RegexAllocatorT&gt;&amp; Rx,
+        <b>const</b> std::basic_string&lt;CharT, FormatStringTraitsT, FormatStringAllocatorT&gt;&amp; Format,
+        <b>unsigned</b> <b>int</b> MatchFlags=match_default,
+        <b>unsigned</b> <b>int</b> FormatFlags=0 );</pre>
+    <pre>    <b>template</b>&lt; 
+        <b>typename</b> InputT, 
+        <b>typename</b> CharT, 
+        <b>typename</b> RegexTraitsT, <b>typename</b> RegexAllocatorT,
+        <b>typename</b> OutputIteratorT &gt;
+    <b>inline</b> OutputIteratorT erase_regex_copy(
+        OutputIteratorT Output,
+        <b>const</b> InputT&amp; Input,
+        <b>const</b> reg_expression&lt;CharT, RegexTraitsT, RegexAllocatorT&gt;&amp; Rx,
+        <b>unsigned</b> <b>int</b> MatchFlags=match_default );</pre>
+    <pre>    <b>template</b>&lt; 
+        <b>typename</b> InputT, 
+        <b>typename</b> CharT, 
+        <b>typename</b> RegexTraitsT, <b>typename</b> RegexAllocatorT,
+        <b>typename</b> OutputIteratorT &gt;
+    <b>inline</b> OutputIteratorT erase_all_regex_copy(
+        OutputIteratorT Output,
+        <b>const</b> InputT&amp; Input,
+        <b>const</b> reg_expression&lt;CharT, RegexTraitsT, RegexAllocatorT&gt;&amp; Rx,
+        <b>unsigned</b> <b>int</b> MatchFlags=match_default );</pre>
+    <p>
+      Copy variants with a sequence based input. Result is a new sequence.
+    </p>
+    <pre>    <b>template</b>&lt; 
+        <b>typename</b> InputT, 
+        <b>typename</b> CharT, 
+        <b>typename</b> RegexTraitsT, <b>typename</b> RegexAllocatorT,
+        <b>typename</b> FormatStringTraitsT, <b>typename</b> FormatStringAllocatorT &gt;
+    <b>inline</b> InputT replace_regex_copy( 
+        <b>const</b> InputT&amp; Input,
+        <b>const</b> reg_expression&lt;CharT, RegexTraitsT, RegexAllocatorT&gt;&amp; Rx,
+        <b>const</b> std::basic_string&lt;CharT, FormatStringTraitsT, FormatStringAllocatorT&gt;&amp; Format,
+        <b>unsigned</b> <b>int</b> MatchFlags=match_default,
+        <b>unsigned</b> <b>int</b> FormatFlags=0 );</pre>
+    <pre>    <b>template</b>&lt; 
+        <b>typename</b> InputT, 
+        <b>typename</b> CharT, 
+        <b>typename</b> RegexTraitsT, <b>typename</b> RegexAllocatorT,
+        <b>typename</b> FormatStringTraitsT, <b>typename</b> FormatStringAllocatorT &gt;
+    <b>inline</b> InputT replace_all_regex_copy( 
+        <b>const</b> InputT&amp; Input,
+        <b>const</b> reg_expression&lt;CharT, RegexTraitsT, RegexAllocatorT&gt;&amp; Rx,
+        <b>const</b> std::basic_string&lt;CharT, FormatStringTraitsT, FormatStringAllocatorT&gt;&amp; Format,
+        <b>unsigned</b> <b>int</b> MatchFlags=match_default,
+        <b>unsigned</b> <b>int</b> FormatFlags=0 );</pre>
+    <pre>    <b>template</b>&lt; 
+        <b>typename</b> InputT, 
+        <b>typename</b> CharT, 
+        <b>typename</b> RegexTraitsT, <b>typename</b> RegexAllocatorT,
+    <b>inline</b> InputT erase_regex_copy( 
+        <b>const</b> InputT&amp; Input,
+        <b>const</b> reg_expression&lt;CharT, RegexTraitsT, RegexAllocatorT&gt;&amp; Rx,
+        <b>unsigned</b> <b>int</b> MatchFlags=match_default );</pre>
+    <pre>    <b>template</b>&lt; 
+        <b>typename</b> InputT, 
+        <b>typename</b> CharT, 
+        <b>typename</b> RegexTraitsT, <b>typename</b> RegexAllocatorT,
+    <b>inline</b> InputT erase_all_regex_copy( 
+        <b>const</b> InputT&amp; Input,
+        <b>const</b> reg_expression&lt;CharT, RegexTraitsT, RegexAllocatorT&gt;&amp; Rx,
+        <b>unsigned</b> <b>int</b> MatchFlags=match_default );</pre>
+    <p>
+      In-place variant. Returns the reference to the modified input.
+    </p>
+    <pre>    <b>template</b>&lt; 
+        <b>typename</b> InputT, 
+        <b>typename</b> CharT, 
+        <b>typename</b> RegexTraitsT, typename RegexAllocatorT,
+        <b>typename</b> FormatStringTraitsT, typename FormatStringAllocatorT &gt;
+    <b>inline</b> InputT&amp; replace_regex( 
+        InputT&amp; Input,
+        <b>const</b> reg_expression&lt;CharT, RegexTraitsT, RegexAllocatorT&gt;&amp; Rx,
+        <b>const</b> std::basic_string&lt;CharT, FormatStringTraitsT, FormatStringAllocatorT&gt;&amp; Format,
+        <b>unsigned</b> <b>int</b> MatchFlags=match_default,
+        <b>unsigned</b> <b>int</b> FormatFlags=0 )</pre>
+    <p>
+      <br>
+      Parameters:
+    </p>
+    <table border="1" width="574" height="1">
+      <tr>
+        <td width="418" height="31" valign="top"><code><b>typename</b>
+          OutputIteratorT</code></td>
+        <td width="728" height="31" valign="top">An output iterator type</td>
+      </tr>
+      <tr>
+        <td width="443" height="31" valign="top"><code><b>typename</b>
+          InputIteratorT</code></td>
+        <td width="703" height="31" valign="top">Forward iterator delimiting an
+          input</td>
+      </tr>
+      <tr>
+        <td width="443" height="31" valign="top"><code><b>typename</b> InputT</code></td>
+        <td width="703" height="31" valign="top">Input sequence type</td>
+      </tr>
+      <tr>
+        <td width="418" height="31" valign="top"><code>OutputIteratorT Output</code></td>
+        <td width="728" height="31" valign="top">An output iterator for the
+          result</td>
+      </tr>
+      <tr>
+        <td width="443" height="31" valign="top"><code>InputIteratorT Begin</code></td>
+        <td width="703" height="31" valign="top">Begin of an input sequence</td>
+      </tr>
+      <tr>
+        <td width="443" height="31" valign="top"><code>InputIteratorT End</code></td>
+        <td width="703" height="31" valign="top">End of an input sequence</td>
+      </tr>
+      <tr>
+        <td width="443" height="31" valign="top"><code>[<b>const</b>]
+          InputT&amp; Input</code></td>
+        <td width="703" height="31" valign="top">An input sequence [const]</td>
+      </tr>
+      <tr>
+        <td width="443" height="31" valign="top"><code><b>const</b>
+          reg_expression&lt;CharT, RegexTraitsT, RegexAllocatorT&gt;&amp; Rx</code></td>
+        <td width="703" height="31" valign="top">Regular expression used for
+          searching. See Regex++ documentation for deails.</td>
+      </tr>
+      <tr>
+        <td width="443" height="31" valign="top"><code><b>const</b>
+          std::basic_string&lt;CharT, FormatStringTraitsT,
+          FormatStringAllocatorT&gt;&amp; Format</code></td>
+        <td width="703" height="31" valign="top">Format specification. See
+          Regex++ documenation for deatail.</td>
+      </tr>
+      <tr>
+        <td width="443" height="31" valign="top"><code><b>unsigned</b> <b>int</b>
+          MatchFlags=match_default</code></td>
+        <td width="703" height="31" valign="top">Match flags defining some
+          properties of search algorithm. See Regex++ documentation for deails.</td>
+      </tr>
+      <tr>
+        <td width="443" height="31" valign="top"><b>unsigned</b> <b>int</b>
+          FormatFlags=0</td>
+        <td width="703" height="31" valign="top">Format flags. See Regex++
+          documentation for deails.</td>
+      </tr>
+    </table>
+    <h2><a name="examples">Examples</a></h2>
+    <p>
+      Following example shows basic usage of <code>replace_range</code>
+      algorithms. More examples can be found in the library tests in <a href="../test/replace_test.cpp">&lt;libs/string_algo/test/regex_test.cpp&gt;</a>.
+    </p>
+    <pre>#include &lt;string&gt;
+#include &lt;iostream&gt;
+#include &lt;iterator&gt;
+#include &lt;boost/regex.hpp&gt;
+#include &lt;boost/string_algo/regex.hpp&gt;</pre>
+    <pre>using namespace std;
+using namespace boost;</pre>
+    <pre>void regex_example()
+{  
+    cout &lt;&lt; &quot;* Regex Example *&quot; &lt;&lt; endl &lt;&lt; endl;</pre>
+    <pre>    string str1(&quot;abc__(456)__123__(123)__cde&quot;);</pre>
+    <pre>    cout &lt;&lt; 
+        &quot;replace all (digit+) in str1 with #digit+# :&quot; &lt;&lt;
+        replace_all_regex_copy( str1, regex(&quot;\\(([0-9]+)\\)&quot;), string(&quot;#$1#&quot;) ) &lt;&lt; endl;
+    </pre>
+    <pre>    cout &lt;&lt; 
+        &quot;remove all sequences of letters from str1 :&quot; &lt;&lt;
+        erase_all_regex_copy( str1, regex(&quot;[[:alpha:]]+&quot;) ) &lt;&lt; endl;</pre>
+    <pre>    // in-place transformation
+    replace_all_regex( str1, regex(&quot;_(\\([^\\)]*\\))_&quot;), string(&quot;-$1-&quot;) );
+    cout &lt;&lt; &quot;transformad str1: &quot; &lt;&lt; str1 &lt;&lt; endl;</pre>
+    <pre>    cout &lt;&lt; endl;
+}</pre>
+    <hr>
+    <p>
+      (C) Copyright Pavol Droba 2003. Permission to copy, use, modify, sell and
+      distribute this software is granted provided this copyright notice appears
+      in all copies. This software is provided &quot;as is&quot; without express
+      or implied warranty, and with no claim as to its suitability for any
+      purpose.
+    </p>
+
+  </body>
+
+</html>
