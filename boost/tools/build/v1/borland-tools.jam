@@ -80,7 +80,7 @@ rule Link-action
     # Make sure that the borland runtime dlls are in the runtime path
     gRUN_PATH($(<)) += $(BCC_TOOL_PATH) ; 
     
-    with-command-file borland-Link-action $(<) : $(>) $(NEEDLIBS) $(NEEDDLLS) ;
+    with-command-file borland-Link-action $(<) : $(>) $(NEEDLIBS) ;
     
     if $(3) in $(SHARED_TYPES)
     {

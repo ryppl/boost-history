@@ -58,14 +58,14 @@ rule Link-action ( target : sources + : target-type )
 }
 
 # for tru64cxx, we repeat all libraries so that dependencies are always resolved
-actions tru64cxx-Link-action bind NEEDLIBS NEEDDLLS
+actions tru64cxx-Link-action bind NEEDLIBS
 {
-   cxx $(LINKFLAGS) -o "$(<)" -L$(LIBPATH) -L$(STDLIBPATH) "$(>)" "$(NEEDLIBS)" "$(IMPLIB_FLAGS)$(NEEDDLLS)""$(NEEDLIBS)" "$(IMPLIB_FLAGS)$(NEEDDLLS)" -l$(FINDLIBS) -lrt
+   cxx $(LINKFLAGS) -o "$(<)" -L$(LIBPATH) -L$(STDLIBPATH) "$(>)" "$(NEEDLIBS)" "$(NEEDLIBS)" -l$(FINDLIBS) -lrt
 }
 
-actions tru64cxx-Link-shared bind NEEDLIBS NEEDDLLS
+actions tru64cxx-Link-shared bind NEEDLIBS
 {
-    cxx -qrtti $(LINKFLAGS) -o "$(<[1])" -L$(LIBPATH) -L$(STDLIBPATH) "$(>)" "$(NEEDLIBS)" "$(IMPLIB_FLAGS)$(NEEDDLLS)""$(NEEDLIBS)" "$(IMPLIB_FLAGS)$(NEEDDLLS)" -l$(FINDLIBS)
+    cxx -qrtti $(LINKFLAGS) -o "$(<[1])" -L$(LIBPATH) -L$(STDLIBPATH) "$(>)" "$(NEEDLIBS)" "$(NEEDLIBS)" -l$(FINDLIBS)
 }
 
 #### Cc #####

@@ -101,7 +101,7 @@ rule vc-set-pdb-file ( targets + : name )
 
 rule Link-action ( target implib ? : sources + : target-type ? )
 {
-    with-command-file vc-Link $(<) : $(sources) $(NEEDLIBS) $(NEEDDLLS) ;
+    with-command-file vc-Link $(<) : $(sources) $(NEEDLIBS) ;
 
     gRUN_PATH($(<)) += $(VC_STDLIB_PATH) ;
     if $(implib)

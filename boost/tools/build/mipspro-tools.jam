@@ -58,9 +58,9 @@ rule Link-action
 }
 
 # for mipspro, we repeat all libraries so that dependencies are always resolved
-actions mipspro-Link-action bind NEEDLIBS NEEDDLLS
+actions mipspro-Link-action bind NEEDLIBS
 {
-    "$(MIPSPRO_BIN_DIRECTORY)/CC" "$(LINKFLAGS)" -o "$(<[1])" "-L$(LIBPATH)" "-L$(STDLIBPATH)" "$(>)" "$(NEEDLIBS)"  "$(IMPLIB_FLAGS)$(NEEDDLLS)" "$(NEEDLIBS)"  "$(IMPLIB_FLAGS)$(NEEDDLLS)" "-l$(FINDLIBS)"
+    "$(MIPSPRO_BIN_DIRECTORY)/CC" "$(LINKFLAGS)" -o "$(<[1])" "-L$(LIBPATH)" "-L$(STDLIBPATH)" "$(>)" "$(NEEDLIBS)" "$(NEEDLIBS)" "-l$(FINDLIBS)"
 }
 
 #### Cc #####

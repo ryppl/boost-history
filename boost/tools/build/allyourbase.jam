@@ -178,6 +178,8 @@ if $(NT)
     SUFOBJ          ?= .obj ;
     SUFEXE          ?= .exe ;
     SUFDLL          ?= .dll .lib ;
+    gLINK_VARIABLE(.dll) = ;             # dlls are NOT linked to directly
+    gLINK_VARIABLE(.lib) = NEEDLIBS ;    # instead, users link to import libs
     PREDLL          ?= "" ;
     NOARSCAN        ?= true ;
     SHELL_EXPORT    ?= ;
@@ -190,8 +192,6 @@ if $(NT)
     YACCFILES       ?= y.tab ;
     YACC_OUTPUT     ?= --output= ;
     LEX_OUTPUT      ?= -o ;
-    
-    DLL_AS_LIB ?= true ;
 }
 else if $(OS2)
 {
@@ -314,9 +314,10 @@ else if $(UNIX)
     switch $(OS)
     {
     case AIX :
-        DLL_AS_LIB      ?= true ;
         IMPLIB_FLAGS    ?= -bI: ;
         SUFDLL          ?= .so .imp ;
+        gLINK_VARIABLE(.so) = NEEDLIBS ;  # shared libs should be added to the list of libs needed
+        gLINK_VARIABLE(.imp) = NEEDIMPS ; # import libs are handled separately.
         
     case AMIGA :
         YACC            ?= bison ;
@@ -391,7 +392,7 @@ else if $(UNIX)
         RELOCATE        ?= true ;
 
     case OSF :
-        DLL_AS_LIB      ?= true ;
+        gLINK_VARIABLE(.so) = NEEDLIBS ; # shared objects should be added to the list of libs needed
     }
 
     # UNIX defaults
@@ -425,7 +426,6 @@ FILEMODE        ?= 644 ;
 FORTRAN         ?= f77 ;
 FORTRANFLAGS    ?= ;
 HDRS            ?= ;
-IMPLIB_FLAGS    ?= "" ;
 JAMFILE         ?= Jamfile ;
 JAMRULES        ?= Jamrules ;
 LEX             ?= ;
@@ -456,7 +456,6 @@ UNDEFFLAG       ?= "-u _" ;
 YACC            ?= ;
 YACCFILES       ?= ;
 YACCFLAGS       ?= ;
-DLL_AS_LIB      ?= ;
 
 HDRPATTERN = 
         "^[     ]*#[    ]*include[      ]*([<\"][^\">]*[\">]).*$" ;

@@ -89,7 +89,7 @@ rule Link-action
     
     IMPLIB_COMMAND on $(<) = "-implib " ; # will be "multiplied away" if not
                                         # needed.
-    with-command-file metrowerks-Link-action $(<) : $(>) $(NEEDLIBS) $(NEEDDLLS)
+    with-command-file metrowerks-Link-action $(<) : $(>) $(NEEDLIBS)
       ;
 }
 

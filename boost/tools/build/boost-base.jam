@@ -671,7 +671,7 @@ rule include-tools
 
     # clear any lingering target variables that may have been declared
     $(gTARGET_VARIABLES) = ;
-    gTARGET_VARIABLES = NEEDLIBS NEEDDLLS ; # start over from the beginning
+    gTARGET_VARIABLES = NEEDLIBS NEEDIMPS ; # start over from the beginning
     
     gRELEVANT_FEATURES($(<)) = ; # clear relevant feature set
     gDEPENDENCY_VARIABLES($(<)) = ;
@@ -1433,7 +1433,7 @@ rule find-compatible-subvariant ( main-target : toolset variant : dependent-simp
 #
 # For each target specified in libs, generate build instructions
 # for a subvariant that can be linked with a dependent target with
-# dependent-properties, returning a list of the linkable targets.
+# dependent-properties, returning a list of all generated targets.
 rule link-libraries
 {
   local lib-path result ;
@@ -1451,11 +1451,7 @@ rule link-libraries
     local lib-subvariant = [ find-compatible-subvariant $(lib-target) : $(>) : $(3) ] ;
 
     # Generate build instructions for the library target
-    local lib-files
-        = [ subvariant-target $(lib-target) : $(lib-subvariant) : $(>) ] ;
-
-    # Add the name of the linkable product to the result.
-    result += $(lib-files[-1]) ;
+    result += [ subvariant-target $(lib-target) : $(lib-subvariant) : $(>) ] ;
   }
   return $(result) ;
 }
@@ -1536,15 +1532,24 @@ rule depend-on-libraries
     gRUN_LD_LIBRARY_PATH($(<)) = [ unique $(gRUN_LD_LIBRARY_PATH($(<))) $(gRUN_LD_LIBRARY_PATH($(>))) ] ;
 }
 
-rule depend-on-dlls
+rule depend-on-dlls ( targets + : dlls-and-import-libs * )
 {
-    if $(DLL_AS_LIB)
+    local linkable ;
+    
+    # collect the linkable elements of the source libs into the appropriate variables
+    for local f in $(dlls-and-import-libs)
     {
-        NEEDDLLS += $(>) ;
-        NEEDDLLS on $(<) += $(>) ;
+        local v = $(gLINK_VARIABLE($(f:S))) ;
+        $(v) += $(f) ;
+        $(v) on $(targets) += $(f) ;
+        if $(v)
+        {
+            linkable += $(f) ;
+        }
     }
-    LIBPATH on $(<) += $(gLOCATE($(>))) ;
-    FINDLIBS on $(<) += $(gTARGET_NAME($(gTARGET_SUBVARIANT($(>))))) ; # $(gTARGET_SUBVARIANT($(>)):G=) ;
+
+    LIBPATH on $(<) += [ unique $(gLOCATE($(>))) ] ;
+    FINDLIBS on $(<) += [ unique $(gTARGET_NAME($(gTARGET_SUBVARIANT($(>))))) ] ;
     DEPENDS $(<) : $(>) ;
     # To run these targets, we need everything needed to run the libraries
     gRUN_PATH($(<)) = [ unique $(gRUN_PATH($(<))) $(gRUN_PATH($(>))) ] ;

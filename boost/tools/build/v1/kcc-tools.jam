@@ -46,9 +46,9 @@ rule Link-action
     kcc-Link-action $(<) : $(>) ;
 }
 
-actions kcc-Link-action bind NEEDLIBS NEEDDLLS
+actions kcc-Link-action bind NEEDLIBS NEEDIMPS
 {
-    $(kcc.bin-directory)KCC $(LINKFLAGS) -o "$(<[1])" -L$(STDLIBPATH) "$(>)" "$(NEEDLIBS)" "$(IMPLIB_FLAGS)$(NEEDDLLS)" -lm
+    $(kcc.bin-directory)KCC $(LINKFLAGS) -o "$(<[1])" -L$(STDLIBPATH) "$(>)" "$(NEEDLIBS)" "$(IMPLIB_FLAGS)$(NEEDIMPS)" -lm
 }
 
 #### Cc #####
