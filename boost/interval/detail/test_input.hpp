@@ -19,11 +19,12 @@ bool test_input(const interval<T, Traits>& x) {
   return checking::is_empty(x.lower(), x.upper());
 }
 
-template<class T, class Traits> inline
-bool test_input(const interval<T, Traits>& x, const interval<T, Traits>& y) {
-  typedef typename Traits::checking checking;
-  return checking::is_empty(x.lower(), x.upper()) ||
-	 checking::is_empty(y.lower(), y.upper());
+template<class T, class Traits1, class Traits2> inline
+bool test_input(const interval<T, Traits1>& x, const interval<T, Traits2>& y) {
+  typedef typename Traits1::checking checking1;
+  typedef typename Traits2::checking checking2;
+  return checking1::is_empty(x.lower(), x.upper()) ||
+	 checking2::is_empty(y.lower(), y.upper());
 }
 
 template<class T, class Traits> inline

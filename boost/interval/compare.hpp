@@ -22,5 +22,6 @@
 #define BOOST_INTERVAL_COMPARE_HPP
 
 #include <boost/interval/compare/explicit.hpp>
+#include <boost/interval/compare/lexicographic.hpp>
 
 #endif // BOOST_INTERVAL_COMPARE_HPP

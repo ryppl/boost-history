@@ -7,6 +7,7 @@ namespace boost {
 
     template<class T> struct rounded_math;
     template<class T> struct checking_strict;
+    class comparison_error;
 
   } // namespace interval_lib
 

@@ -23,6 +23,7 @@
 
 #include <boost/interval/detail/interval_prototype.hpp>
 #include <boost/interval/detail/test_input.hpp>
+#include <boost/interval/detail/bugs.hpp>
 
 /*
  * Implementation of simple functions
@@ -167,8 +168,8 @@ template<class T, class Traits> inline
 interval<T, Traits> intersect(const interval<T, Traits>& x,
 			      const interval<T, Traits>& y)
 {
-  using std::min;
-  using std::max;
+  BOOST_INTERVAL_using_max(min);
+  BOOST_INTERVAL_using_max(max);
   if (interval_lib::detail::test_input(x, y))
     return interval<T, Traits>::empty();
   const T& l = max(x.lower(), y.lower());
@@ -181,8 +182,8 @@ template<class T, class Traits> inline
 interval<T, Traits> hull(const interval<T, Traits>& x,
 			 const interval<T, Traits>& y)
 {
-  using std::min;
-  using std::max;
+  BOOST_INTERVAL_using_max(min);
+  BOOST_INTERVAL_using_max(max);
   bool bad_x = interval_lib::detail::test_input(x);
   bool bad_y = interval_lib::detail::test_input(y);
   if (bad_x)
@@ -197,8 +198,8 @@ interval<T, Traits> hull(const interval<T, Traits>& x,
 template<class T, class Traits> inline
 interval<T, Traits> hull(const interval<T, Traits>& x, const T& y)
 {
-  using std::min;
-  using std::max;
+  BOOST_INTERVAL_using_max(min);
+  BOOST_INTERVAL_using_max(max);
   bool bad_x = interval_lib::detail::test_input(x);
   bool bad_y = interval_lib::detail::test_input<T, Traits>(y);
   if (bad_y)
@@ -213,8 +214,8 @@ interval<T, Traits> hull(const interval<T, Traits>& x, const T& y)
 template<class T, class Traits> inline
 interval<T, Traits> hull(const T& x, const interval<T, Traits>& y)
 {
-  using std::min;
-  using std::max;
+  BOOST_INTERVAL_using_max(min);
+  BOOST_INTERVAL_using_max(max);
   bool bad_x = interval_lib::detail::test_input<T, Traits>(x);
   bool bad_y = interval_lib::detail::test_input(y);
   if (bad_x)
@@ -250,7 +251,7 @@ bisect(const interval<T, Traits>& x)
 template<class T, class Traits> inline
 interval<T, Traits> abs(const interval<T, Traits>& x)
 {
-  using std::max;
+  BOOST_INTERVAL_using_max(max);
   if (interval_lib::detail::test_input(x))
     return interval<T, Traits>::empty();
   if (!detail::is_neg(x.lower())) return x;
@@ -262,7 +263,7 @@ template<class T, class Traits> inline
 interval<T, Traits> max(const interval<T, Traits>& x,
 			const interval<T, Traits>& y)
 {
-  using std::max;
+  BOOST_INTERVAL_using_max(max);
   if (interval_lib::detail::test_input(x, y))
     return interval<T, Traits>::empty();
   return interval<T, Traits>(max(x.lower(), y.lower()),
@@ -272,7 +273,7 @@ interval<T, Traits> max(const interval<T, Traits>& x,
 template<class T, class Traits> inline
 interval<T, Traits> max(const interval<T, Traits>& x, const T& y)
 {
-  using std::max;
+  BOOST_INTERVAL_using_max(max);
   if (interval_lib::detail::test_input(x, y))
     return interval<T, Traits>::empty();
   return interval<T, Traits>(max(x.lower(), y),
@@ -282,7 +283,7 @@ interval<T, Traits> max(const interval<T, Traits>& x, const T& y)
 template<class T, class Traits> inline
 interval<T, Traits> max(const T& x, const interval<T, Traits>& y)
 {
-  using std::max;
+  BOOST_INTERVAL_using_max(max);
   if (interval_lib::detail::test_input(x, y))
     return interval<T, Traits>::empty();
   return interval<T, Traits>(max(x, y.lower()),
@@ -293,7 +294,7 @@ template<class T, class Traits> inline
 interval<T, Traits> min(const interval<T, Traits>& x,
 			const interval<T, Traits>& y)
 {
-  using std::min;
+  BOOST_INTERVAL_using_max(min);
   if (interval_lib::detail::test_input(x, y))
     return interval<T, Traits>::empty();
   return interval<T, Traits>(min(x.lower(), y.lower()),
@@ -303,7 +304,7 @@ interval<T, Traits> min(const interval<T, Traits>& x,
 template<class T, class Traits> inline
 interval<T, Traits> min(const interval<T, Traits>& x, const T& y)
 {
-  using std::min;
+  BOOST_INTERVAL_using_max(min);
   if (interval_lib::detail::test_input(x, y))
     return interval<T, Traits>::empty();
   return interval<T, Traits>(min(x.lower(), y),
@@ -313,7 +314,7 @@ interval<T, Traits> min(const interval<T, Traits>& x, const T& y)
 template<class T, class Traits> inline
 interval<T, Traits> min(const T& x, const interval<T, Traits>& y)
 {
-  using std::min;
+  BOOST_INTERVAL_using_max(min);
   if (interval_lib::detail::test_input(x, y))
     return interval<T, Traits>::empty();
   return interval<T, Traits>(min(x, y.lower()),

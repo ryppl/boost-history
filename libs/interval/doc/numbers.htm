@@ -58,14 +58,14 @@ specialization of the numeric limits for your base type.</p>
 operators should also respect some properties depending on the order. Here
 they are:</p>
 <ul>
-  <li>0 &le; <i>x</x> &rArr; -<i>x</i> &le; 0</i></li>
-  <li><i>x</i> &le; <i>y</i> &rArr; -<i>y</i> &le; -<i>x</i></li>
-  <li><i>x</i> &le; <i>y</i> &rArr; <i>x</i>+<i>z</i> &le;
-  <i>y</i>+<i>z</i></li>
-  <li><i>x</i> &le; <i>y</i> and <i>z</i> &ge; 0 &rArr; <i>x</i>×<i>z</i>
-    &le; <i>y</i>×<i>z</i></li>
-  <li>0 &lt; <i>x</i> &le; <i>y</i> &rArr; 0 &lt; 1/<i>y</i> &le;
-  1/<i>x</i></li>
+  <li>0 &#x2264; <i>x</x>&#x21d2; -<i>x</i> &#x2264; 0</i></li>
+  <li><i>x</i> &#x2264; <i>y</i> &#x21d2; -<i>y</i> &#x2264; -<i>x</i></li>
+  <li><i>x</i> &#x2264; <i>y</i> &#x21d2; <i>x</i>+<i>z</i> &#x2264;
+    <i>y</i>+<i>z</i></li>
+  <li><i>x</i> &#x2264; <i>y</i> and <i>z</i> &#x2265; 0 &#x21d2;
+    <i>x</i>×<i>z</i> &#x2264; <i>y</i>×<i>z</i></li>
+  <li>0 &lt; <i>x</i> &#x2264; <i>y</i> &#x21d2; 0 &lt; 1/<i>y</i> &#x2264;
+    1/<i>x</i></li>
 </ul>
 
 <p>The previous properties are also used (and enough) for <code>abs</code>,
@@ -75,10 +75,10 @@ functions should have the same properties than the corresponding real
 functions. For example, the expected properties for <code>cos</code> are:</p>
 <ul>
   <li><code>cos</code> is defined for all the valid numbers;</li>
-  <li>it is 2&pi;-periodic;</li>
-  <li><code>cos</code>(2&pi;-<i>x</i>) is equal to
-  <code>cos</code>(<i>x</i>);</li>
-  <li><code>cos</code> is a decreasing function on [0,2&pi;].</li>
+  <li>it is 2&#x3c0;-periodic;</li>
+  <li><code>cos</code>(2&#x3c0;-<i>x</i>) is equal to
+    <code>cos</code>(<i>x</i>);</li>
+  <li><code>cos</code> is a decreasing function on [0,2&#x3c0;].</li>
 </ul>
 
 <h3>Rounding</h3>
@@ -100,11 +100,12 @@ easy.</p>
 <h3>Constants</h3>
 
 <p>In order for the trigonometric functions to correctly work, the library
-need to know the value of the &pi; constant (and also &pi;/2 and 2&pi;).
-Since these constants may not be representable in the base type, the library
-does not have to know the exact value: a lower bound and an upper bound are
-enough. If these values are not provided by the user, the default values will
-be used: they are integer values (so &pi; is bounded by 3 and 4).</p>
+need to know the value of the &#x3c0; constant (and also &#x3c0;/2 and
+2&#x3c0;). Since these constants may not be representable in the base type,
+the library does not have to know the exact value: a lower bound and an upper
+bound are enough. If these values are not provided by the user, the default
+values will be used: they are integer values (so &#x3c0; is bounded by 3 and
+4).</p>
 
 <h3>Operators and conversions</h3>
 
@@ -119,11 +120,10 @@ policy does not provide some negation functions.</p>
 <p>The conversion from <code>int</code> to the base type need to be defined.
 The conversion the other way around is provided by the rounding policy; and
 no other conversion is needed.</p>
-
 <hr>
 
 <p>Revised: 2002-08-30<br>
 Copyright (c) Guillaume Melquiond, Sylvain Pion, Hervé Brönnimann, 2002.<br>
-olytechnic University.</p>
+Polytechnic University.</p>
 </body>
 </html>
