@@ -25,9 +25,57 @@
 #include "boost/mpl/compose/f_gxy.hpp"
 #include "boost/mpl/utility/next.hpp"
 #include "boost/mpl/int_t.hpp"
+#include "boost/config.hpp"
 
 namespace boost {
 namespace mpl {
+
+#if defined(BOOST_MSVC) && (BOOST_MSVC > 1200) 
+namespace aux {
+// VC7.0 requires special implementation
+template< long N >
+struct at_impl
+{
+    template< typename Iterator > struct result_
+    {
+		typedef typename Iterator::next next_;
+        typedef typename at_impl<N-1>
+            ::template result_<next_>::type type;
+    };
+    
+};
+
+template<>
+struct at_impl<0>
+{
+    template< typename Iterator > struct result_
+    {
+        typedef typename Iterator::type type;
+    };
+};
+
+} // namespace aux 
+
+template<typename SequenceTag>
+struct at_algorithm_traits
+{
+    template<long N, typename Sequence> struct algorithm
+    {
+        typedef typename begin<Sequence>::iterator first_;
+        typedef typename aux::at_impl<N>
+            ::template result_<first_>::type type;
+    };
+};
+
+template<long N, typename Sequence>
+struct at
+{
+    typedef typename at_algorithm_traits< 
+          typename mpl::sequence_traits<Sequence>::sequence_category
+          >::template algorithm<N, Sequence>::type type;
+};
+
+#else
 
 template<typename SequenceTag>
 struct at_algorithm_traits
@@ -59,6 +107,8 @@ struct at
           >::template algorithm<N, Sequence>::type
 {
 };
+
+#endif // #if defined(BOOST_MSVC) && (BOOST_MSVC > 1200) 
 
 } // namespace mpl
 } // namespace boost 
