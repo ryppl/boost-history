@@ -1679,7 +1679,10 @@ namespace numerics {
         }
         NUMERICS_INLINE
         void clear () {
-            data_.clear ();
+            // clear won't work for std::vector.
+            // Thanks to Kresimir Fresl for spotting this.
+            // data_.clear ();
+            std::fill (data_.begin (), data_.end (), value_type ());
         }
 
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
