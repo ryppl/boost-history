@@ -56,6 +56,12 @@ function templates and function-acting [template] classes).</p>
 			<li><a href="#mnewl">Repeated-line-break Output Manipulator</a></li>
 			<li><a href="#newl">Non-flushing Line-break Output Manipulator</a></li>
 		</ul></li>
+	<li><a href="#e_header">Expected-input Manipulator Header</a>
+		<ul>
+			<li><a href="#eh_synopsis">Synopsis</a></li>
+			<li><a href="#expect">Expected Character Sequence Input Manipulator</a></li>
+			<li><a href="#expect_example">Example</a></li>
+		</ul></li>
 	<li><a href="#refer">References</a></li>
 	<li><a href="#credits">Credits</a>
 		<ul>
@@ -77,6 +83,7 @@ supplies some of them.</p>
 <h3><a name="gh_synopsis">Synopsis</a></h3>
 
 <blockquote><pre>
+#include &lt;boost/io/iomanip_expect.hpp&gt;
 #include &lt;boost/io/iomanip_form.hpp&gt;
 #include &lt;boost/io/iomanip_general.hpp&gt;
 #include &lt;boost/io/iomanip_in.hpp&gt;
@@ -704,6 +711,92 @@ of <code>std::endl</code>, or the background formatting adjustments of
 using <code>'\n'</code> (or <code>&quot;\n&quot;</code>) directly with
 <code>operator &lt;&lt;</code></p>
 
+<h2><a name="e_header">Expected-input Manipulator Header</a></h2>
+
+<p>The header <cite><a href="../../../boost/io/iomanip_expect.hpp">boost/io/iomanip_expect.hpp</a></cite> contains advanced manipulators for reading exact character patterns from input-oriented streams.</p>
+
+<h3><a name="eh_synopsis">Synopsis</a></h3>
+
+<blockquote><pre>
+#include &lt;ios&gt;     <i>// for std::streamsize</i>
+#include &lt;string&gt;  <i>// for std::basic_string</i>
+
+namespace boost
+{
+namespace io
+{
+
+template &lt; typename Ch &gt;
+    <em>smanip1</em>  expect( Ch const *s );
+
+template &lt; typename Ch &gt;
+    <em>smanip2</em>  expect( Ch c, std::streamsize count = 1 );
+
+template &lt; typename Ch, class Tr, class Al &gt;
+    <em>smanip3</em>  expect( std::basic_string&lt;Ch, Tr, Al&gt; const &amp;s );
+
+}
+}
+</pre></blockquote>
+
+<h3><a name="expect">Expected Character Sequence Input Manipulator</a></h3>
+
+<blockquote><pre>
+template &lt; typename Ch &gt;
+<em>smanip1</em>
+boost::io::expect( Ch const *s );
+
+template &lt; typename Ch &gt;
+<em>smanip2</em>
+boost::io::expect( Ch c, std::streamsize count = 1 );
+
+template &lt; typename Ch, class Tr, class Al &gt;
+<em>smanip3</em>
+boost::io::expect( std::basic_string&lt;Ch, Tr, Al&gt; const &amp;s );
+</pre></blockquote>
+
+<p><strong>Returns:</strong> an object <code>x</code> such that <code>is &gt;&gt; x</code>, when <code>is</code> is a <code>std::basic_istream&lt;&gt;</code>, extracts (unformatted) either <var>count</var> consecutive occurrences of the character <var>c</var> or a copy of the C-string or C<sup>++</sup>-string <var>s</var>.  Extraction will end early if the stream reaches its end-of-file or if the next character cannot match within the given pattern.  A non-matching character is not extracted.  Early terminations of extraction will set the stream's failure state, which may throw an exception.</p>
+
+<p><strong>Note:</strong> there are restrictions on what kinds of input stream each type of <code>expect</code> expression will interoperate.  The stream must have the same character type as the given string or character.  For C<sup>++</sup>-strings, the character-traits type must also match with the stream's.  (The allocator type is never used for determinating interoperablity.)  There is a special case for single (repeated) characters and C-strings based on the <code>char</code> type, those <code>expect</code> expressions may work with any stream; the characters in the expression will be expanded with the stream's <code>widen</code> member function before matching.</p>
+
+<p><strong>Rationale:</strong> exact-character matching is one of the few capabilities of the <code>std::scanf</code> function that hasn't yet been duplicated in C<sup>++</sup>-style I/O.</p>
+
+<h3><a name="expect_example">Example</a></h3>
+
+<blockquote><pre>
+#include &lt;boost/io/iomanip.hpp&gt;  <i>// for boost::io::expect</i>
+#include &lt;cassert&gt;               <i>// for assert</i>
+#include &lt;sstream&gt;               <i>// for std::istringstream and std::wistringstream</i>
+#include &lt;string&gt;                <i>// for std::string and std::wstring</i>
+
+int  main()
+{
+    using namespace std;
+    using boost::io::expect;
+
+    istringstream   ss1( &quot;abcdefg&quot; );
+
+    assert( ss1 &gt;&gt; expect('a') );
+    assert( ss1 &gt;&gt; expect(&quot;bc&quot;) );
+    assert( ss1 &gt;&gt; expect(string( &quot;defg&quot; )) );
+
+    wistringstream  ss2( L&quot;aabcdefg&quot; );
+
+    assert( ss1 &gt;&gt; expect(L'a', 2) );
+    assert( ss1 &gt;&gt; expect(L&quot;bc&quot;) );
+    assert( ss1 &gt;&gt; expect(wstring( L&quot;defg&quot; )) );
+
+    wistringstream  ss3( L&quot;hijjjjkl&quot; );
+
+    assert( ss3 &gt;&gt; expect('h') );
+    assert( ss3 &gt;&gt; expect(&quot;ij&quot;) );
+    assert( ss3 &gt;&gt; expect('j', 3) );
+
+    // Can't use <u>std::string</u> here.
+    assert( ss3 &gt;&gt; expect(wstring( L&quot;kl&quot; )) );
+}
+</pre></blockquote>
+
 <h2><a name="refer">References</a></h2>
 
 <ul>
@@ -719,6 +812,8 @@ using <code>'\n'</code> (or <code>&quot;\n&quot;</code>) directly with
 		href="../../../boost/io/iomanip_in.hpp">boost/io/iomanip_in.hpp</a></cite></li>
 	<li>The header for output-oriented manipulators: <cite><a
 		href="../../../boost/io/iomanip_out.hpp">boost/io/iomanip_out.hpp</a></cite></li>
+	<li>The header for expected-input manipulators: <cite><a
+		href="../../../boost/io/iomanip_expect.hpp">boost/io/iomanip_expect.hpp</a></cite></li>
 	<li>Some test/example code: <cite><a
 		href="../test/iomanip_test.cpp">iomanip_test.cpp</a></cite></li>
 </ul>
@@ -738,6 +833,9 @@ using <code>'\n'</code> (or <code>&quot;\n&quot;</code>) directly with
 	<dd><a href="news:94atsm$27u$6@news.BelWue.DE">Posted the idea</a>
 		that led to <a href="#newl"><code>newl</code></a> on
 		<a href="news:comp.lang.c++.moderated">comp.lang.c++.moderated</a>.
+	<dd><a href="news:cgfmg8$sb6@odak26.prod.google.com">Posted the idea</a>
+		that led to <a href="#expect"><code>expect</code></a> on
+		<a href="news:comp.lang.c++">comp.lang.c++</a>.
 
 	<dt><a href="http://www.langer.camelot.de/Welcome.html">Angelika Langer</a>
 		and Klaus Kreft
@@ -762,8 +860,9 @@ using <code>'\n'</code> (or <code>&quot;\n&quot;</code>) directly with
 		href="#repeatch"><code>repeat_ch</code></a>, <a
 		href="#repeatchar"><code>repeat_char</code></a>, <a
 		href="#mnewl"><code>new_lines</code></a>, <a
-		href="#mskipl"><code>skip_lines</code></a>, and <a
-		href="#ios_form"><code>basic_ios_form</code></a>.  Contributed
+		href="#mskipl"><code>skip_lines</code></a>, <a
+		href="#ios_form"><code>basic_ios_form</code></a>, and <a
+		href="#expect"><code>expect</code></a>.  Contributed
 		<cite><a href="../test/iomanip_test.cpp">iomanip_test.cpp</a></cite>.
 </dl>
 
@@ -776,7 +875,7 @@ using <code>'\n'</code> (or <code>&quot;\n&quot;</code>) directly with
 
 <hr>
 
-<p>Revised: 29 August 2004</p>
+<p>Revised: 4 December 2004</p>
 
 <p>Copyright 2003-2004 Daryle Walker.  Use, modification, and distribution
 are subject to the Boost Software License, Version 1.0.  (See accompanying

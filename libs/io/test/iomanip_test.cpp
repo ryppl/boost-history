@@ -7,16 +7,17 @@
 //  See <http://www.boost.org/libs/io/> for the library's home page.
 
 //  Revision History
-//   29 Aug 2004  Initial version (Daryle Walker)
+//   03 Dec 2004  Initial version (Daryle Walker)
 
 #include <boost/io/iomanip.hpp>      // for boost::io::newl, etc.
 #include <boost/test/unit_test.hpp>  // for main, BOOST_CHECK_EQUAL, etc.
 
+#include <cwchar>   // for std::wint_t
 #include <iomanip>  // for std::setbase, etc.
 #include <ios>      // for std::ios_base, std::noskipws
 #include <ostream>  // for std::ostream, std::endl
 #include <sstream>  // for std::stringbuf, std::istringstream, etc.
-#include <string>   // for std::string
+#include <string>   // for std::string, std::char_traits
 
 
 // A stream-buffer that counts its syncs (i.e. flushes)
@@ -258,7 +259,8 @@ ios_form_unit_test
     BOOST_CHECK( f1.override_showpos() );
     BOOST_CHECK_EQUAL( '*', f1.fill() );
     BOOST_CHECK_EQUAL( std::ios_base::showpos, f1.overridden_flags() );
-    BOOST_CHECK_EQUAL( std::ios_base::showpos, f1.flags() & f1.overridden_flags() );
+    BOOST_CHECK_EQUAL( std::ios_base::showpos, f1.flags()
+     & f1.overridden_flags() );
     oss << f1( v1 );
     BOOST_CHECK_EQUAL( "**+5", oss.str() );
     oss.str( "" );
@@ -270,13 +272,259 @@ ios_form_unit_test
     BOOST_CHECK( f1.override_flags() );
     BOOST_CHECK( f1.override_showpos() );
     BOOST_CHECK( f1.override_adjustfield() );
-    BOOST_CHECK_EQUAL( std::ios_base::showpos | std::ios_base::adjustfield, f1.overridden_flags() );
-    BOOST_CHECK_EQUAL( std::ios_base::showpos | std::ios_base::internal, f1.flags() & f1.overridden_flags() );
+    BOOST_CHECK_EQUAL( std::ios_base::showpos | std::ios_base::adjustfield,
+     f1.overridden_flags() );
+    BOOST_CHECK_EQUAL( std::ios_base::showpos | std::ios_base::internal,
+     f1.flags() & f1.overridden_flags() );
     oss << f1( v1 );
     BOOST_CHECK_EQUAL( "+**5", oss.str() );
     oss.str( "" );
 }
 
+// Unit test for expect
+void
+expect_unit_test
+(
+)
+{
+    using boost::io::expect;
+    using std::char_traits;
+    using std::ios_base;
+    using std::string;
+    using std::wint_t;
+
+    typedef char_traits<char>     c_traits;
+    typedef char_traits<wchar_t>  w_traits;
+
+    // C++ string tests
+    char const          test_str[] = "abcdefghij";
+    std::istringstream  iss( test_str );
+
+    char const  seg1_str[] = "abc";
+    iss >> expect( string(seg1_str) );
+    BOOST_CHECK( iss );
+    BOOST_CHECK_EQUAL( iss.peek(), (int)'d' );
+
+    iss >> expect( string(seg1_str) );
+    BOOST_CHECK( !iss );
+    iss.clear();
+    BOOST_CHECK_EQUAL( iss.peek(), (int)'d' );
+
+    char const  seg2_str[] = "def";
+    iss >> expect( string(seg2_str) );
+    BOOST_CHECK( iss );
+    BOOST_CHECK_EQUAL( iss.peek(), (int)'g' );
+
+    iss >> expect( string() );
+    BOOST_CHECK( iss );
+    BOOST_CHECK_EQUAL( iss.peek(), (int)'g' );
+
+    char const  bad1_str[] = "ghK";
+    iss >> expect( string(bad1_str) );
+    BOOST_CHECK( !iss );
+    iss.clear();
+    BOOST_CHECK_EQUAL( iss.peek(), (int)'i' );
+
+    char const  bad2_str[] = "ijk";
+    iss >> expect( string(bad2_str) );
+    BOOST_CHECK( c_traits::eq_int_type(c_traits::eof(), iss.peek()) );
+
+    // C string tests, "char" specific
+    iss.clear();
+    iss.seekg( 0, ios_base::beg );
+
+    iss >> expect( seg1_str );
+    BOOST_CHECK( iss );
+    BOOST_CHECK_EQUAL( iss.peek(), (int)'d' );
+
+    iss >> expect( seg1_str );
+    BOOST_CHECK( !iss );
+    iss.clear();
+    BOOST_CHECK_EQUAL( iss.peek(), (int)'d' );
+
+    iss >> expect( seg2_str );
+    BOOST_CHECK( iss );
+    BOOST_CHECK_EQUAL( iss.peek(), (int)'g' );
+
+    char const  nul = '\0';
+    iss >> expect( &nul );
+    BOOST_CHECK( iss );
+    BOOST_CHECK_EQUAL( iss.peek(), (int)'g' );
+
+    iss >> expect( (char const *)0 );
+    BOOST_CHECK( iss );
+    BOOST_CHECK_EQUAL( iss.peek(), (int)'g' );
+
+    iss >> expect( bad1_str );
+    BOOST_CHECK( !iss );
+    iss.clear();
+    BOOST_CHECK_EQUAL( iss.peek(), (int)'i' );
+
+    iss >> expect( bad2_str );
+    BOOST_CHECK( c_traits::eq_int_type(c_traits::eof(), iss.peek()) );
+
+    // C string tests, non-"char"
+    wchar_t const        test_wstr[] = L"abcdefghij";
+    std::wistringstream  wiss( test_wstr );
+
+    wchar_t const  seg1_wstr[] = L"abc";
+    wiss >> expect( seg1_wstr );
+    BOOST_CHECK( wiss );
+    BOOST_CHECK_EQUAL( wiss.peek(), (wint_t)L'd' );
+
+    wiss >> expect( seg1_wstr );
+    BOOST_CHECK( !wiss );
+    wiss.clear();
+    BOOST_CHECK_EQUAL( wiss.peek(), (wint_t)L'd' );
+
+    wchar_t const  seg2_wstr[] = L"def";
+    wiss >> expect( seg2_wstr );
+    BOOST_CHECK( wiss );
+    BOOST_CHECK_EQUAL( wiss.peek(), (wint_t)L'g' );
+
+    wchar_t const  wnul = L'\0';
+    wiss >> expect( &wnul );
+    BOOST_CHECK( wiss );
+    BOOST_CHECK_EQUAL( wiss.peek(), (wint_t)L'g' );
+
+    wiss >> expect( (wchar_t const *)0 );
+    BOOST_CHECK( wiss );
+    BOOST_CHECK_EQUAL( wiss.peek(), (wint_t)L'g' );
+
+    wchar_t const  bad1_wstr[] = L"ghK";
+    wiss >> expect( bad1_wstr );
+    BOOST_CHECK( !wiss );
+    wiss.clear();
+    BOOST_CHECK_EQUAL( wiss.peek(), (wint_t)L'i' );
+
+    wchar_t const  bad2_wstr[] = L"ijk";
+    wiss >> expect( bad2_wstr );
+    BOOST_CHECK( w_traits::eq_int_type(w_traits::eof(), wiss.peek()) );
+
+    // C string tests, "char" values on non-"char" streams
+    wiss.clear();
+    wiss.seekg( 0, ios_base::beg );
+
+    wiss >> expect( seg1_str );
+    BOOST_CHECK( wiss );
+    BOOST_CHECK_EQUAL( wiss.peek(), (wint_t)L'd' );
+
+    wiss >> expect( seg1_str );
+    BOOST_CHECK( !wiss );
+    wiss.clear();
+    BOOST_CHECK_EQUAL( wiss.peek(), (wint_t)L'd' );
+
+    wiss >> expect( seg2_str );
+    BOOST_CHECK( wiss );
+    BOOST_CHECK_EQUAL( wiss.peek(), (wint_t)L'g' );
+
+    wiss >> expect( &nul );
+    BOOST_CHECK( wiss );
+    BOOST_CHECK_EQUAL( wiss.peek(), (wint_t)L'g' );
+
+    wiss >> expect( (char const *)0 );
+    BOOST_CHECK( wiss );
+    BOOST_CHECK_EQUAL( wiss.peek(), (wint_t)L'g' );
+
+    wiss >> expect( bad1_str );
+    BOOST_CHECK( !wiss );
+    wiss.clear();
+    BOOST_CHECK_EQUAL( wiss.peek(), (wint_t)L'i' );
+
+    wiss >> expect( bad2_str );
+    BOOST_CHECK( w_traits::eq_int_type(w_traits::eof(), wiss.peek()) );
+
+    // Same character tests, "char" on "char"
+    char const  stest_str[] = "abbccee";
+    iss.clear();
+    iss.seekg( 0, ios_base::beg );
+    iss.str( stest_str );
+
+    iss >> expect( 'a' );
+    BOOST_CHECK( iss );
+    BOOST_CHECK_EQUAL( iss.peek(), (int)'b' );
+
+    iss >> expect( 'b' );
+    BOOST_CHECK( iss );
+    BOOST_CHECK_EQUAL( iss.peek(), (int)'b' );
+
+    iss >> expect( 'b', 2 );
+    BOOST_CHECK( !iss );
+    iss.clear();
+    BOOST_CHECK_EQUAL( iss.peek(), (int)'c' );
+
+    iss >> expect( 'c', 2 );
+    BOOST_CHECK( iss );
+    BOOST_CHECK_EQUAL( iss.peek(), (int)'e' );
+
+    iss >> expect( 'd' );
+    BOOST_CHECK( !iss );
+    iss.clear();
+    BOOST_CHECK_EQUAL( iss.peek(), (int)'e' );
+
+    iss >> expect( 'e', 3 );
+    BOOST_CHECK( c_traits::eq_int_type(c_traits::eof(), iss.peek()) );
+
+    // Same character tests, "wchar_t" on "wchar_t"
+    wchar_t const  stest_wstr[] = L"abbccee";
+    wiss.clear();
+    wiss.seekg( 0, ios_base::beg );
+    wiss.str( stest_wstr );
+
+    wiss >> expect( L'a' );
+    BOOST_CHECK( wiss );
+    BOOST_CHECK_EQUAL( wiss.peek(), (wint_t)L'b' );
+
+    wiss >> expect( L'b' );
+    BOOST_CHECK( wiss );
+    BOOST_CHECK_EQUAL( wiss.peek(), (wint_t)L'b' );
+
+    wiss >> expect( L'b', 2 );
+    BOOST_CHECK( !wiss );
+    wiss.clear();
+    BOOST_CHECK_EQUAL( wiss.peek(), (wint_t)L'c' );
+
+    wiss >> expect( L'c', 2 );
+    BOOST_CHECK( wiss );
+    BOOST_CHECK_EQUAL( wiss.peek(), (wint_t)L'e' );
+
+    wiss >> expect( L'd' );
+    BOOST_CHECK( !wiss );
+    wiss.clear();
+    BOOST_CHECK_EQUAL( wiss.peek(), (wint_t)L'e' );
+
+    wiss >> expect( L'e', 3 );
+    BOOST_CHECK( w_traits::eq_int_type(w_traits::eof(), wiss.peek()) );
+
+    // Same character tests, "char" values on "wchar_t" streams
+    wiss.clear();
+    wiss.seekg( 0, ios_base::beg );
+
+    wiss >> expect( 'a' );
+    BOOST_CHECK( wiss );
+    BOOST_CHECK_EQUAL( wiss.peek(), (wint_t)L'b' );
+
+    wiss >> expect( 'b' );
+    BOOST_CHECK( wiss );
+    BOOST_CHECK_EQUAL( wiss.peek(), (wint_t)L'b' );
+
+    wiss >> expect( 'b', 2 );
+    BOOST_CHECK( !wiss );
+    wiss.clear();
+    BOOST_CHECK_EQUAL( wiss.peek(), (wint_t)L'c' );
+
+    wiss >> expect( 'c', 2 );
+    BOOST_CHECK( wiss );
+    BOOST_CHECK_EQUAL( wiss.peek(), (wint_t)L'e' );
+
+    wiss >> expect( 'd' );
+    BOOST_CHECK( !wiss );
+    wiss.clear();
+    BOOST_CHECK_EQUAL( wiss.peek(), (wint_t)L'e' );
+
+    wiss >> expect( 'e', 3 );
+    BOOST_CHECK( w_traits::eq_int_type(w_traits::eof(), wiss.peek()) );
+}
 
 // Unit test program
 boost::unit_test_framework::test_suite *
@@ -295,6 +543,7 @@ init_unit_test_suite
     test->add( BOOST_TEST_CASE(new_lines_unit_test) );
     test->add( BOOST_TEST_CASE(skip_lines_unit_test) );
     test->add( BOOST_TEST_CASE(ios_form_unit_test) );
+    test->add( BOOST_TEST_CASE(expect_unit_test) );
 
     return test;
 }

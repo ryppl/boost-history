@@ -6,6 +6,7 @@
 
 //  See <http://www.boost.org/libs/io/> for the library's home page.
 
+#include <boost/io/iomanip_expect.hpp>
 #include <boost/io/iomanip_form.hpp>
 #include <boost/io/iomanip_general.hpp>
 #include <boost/io/iomanip_in.hpp>
