@@ -26,7 +26,6 @@
 
 #include <boost/langbinding/registry.hpp>
 #include <boost/langbinding/registration.hpp>
-#include <boost/langbinding/central_registry.hpp>
 
 #include <boost/langbinding/rvalue_data.hpp>
 
@@ -97,8 +96,6 @@ namespace boost { namespace langbinding {
       chain->convert = convert;
       chain->next = r.lvalue_converters;
       r.lvalue_converters = chain;
-
-      central_registry<T>::insert_converter(this, x, convert);
    }
 
    template<class T>
@@ -118,8 +115,6 @@ namespace boost { namespace langbinding {
       chain->convert = convert;
       chain->next = r.rvalue_converters;
       r.rvalue_converters = chain;
-
-      central_registry<T>::insert_converter(this, x, convertible, convert);
    }
 
    template<class T>
