@@ -19,8 +19,6 @@
 #ifndef BOOST_MOVE_MOVEABLE_HPP
 #define BOOST_MOVE_MOVEABLE_HPP
 
-#include "boost/move_fwd.hpp"
-
 namespace boost {
 
 namespace detail {
