@@ -7,7 +7,7 @@
 #ifndef BOOST_BINDINGS_BLAS_BLAS3_HPP
 #define BOOST_BINDINGS_BLAS_BLAS3_HPP
 
-#include <boost/numeric/bindings/blas/blaspp.hpp>
+#include <boost/numeric/bindings/blas/blas3_overloads.hpp>
 #include <boost/numeric/bindings/traits/traits.hpp>
 #include <boost/numeric/bindings/traits/transpose.hpp>
 
@@ -29,38 +29,23 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
     typedef traits::matrix_traits< const matrix_type_a > matraits ; 
     typedef traits::matrix_traits< const matrix_type_b > mbtraits ; 
     typedef traits::matrix_traits< matrix_type_c > mctraits ; 
+    typedef typename matraits::value_type value_type ;
 
-    typedef typename mctraits::value_type  value_type ;
-    typedef typename traits::value_traits< value_type >::value_type bind_type ;
-
-    const int m = TRANSA == traits::NO_TRANSPOSE 
-      ? matraits::size1( a )
-      : matraits::size2( a ) ;
-    const int n = TRANSB == traits::NO_TRANSPOSE 
-      ? mbtraits::size2( b )
-      : mbtraits::size1( b );
-    const int k = TRANSA == traits::NO_TRANSPOSE 
-      ? matraits::size2( a )
-      : matraits::size1( a ) ;
+    const int m = TRANSA == traits::NO_TRANSPOSE ? matraits::size1( a ) : matraits::size2( a ) ;
+    const int n = TRANSB == traits::NO_TRANSPOSE ? mbtraits::size2( b ) : mbtraits::size1( b );
+    const int k = TRANSA == traits::NO_TRANSPOSE ? matraits::size2( a ) : matraits::size1( a ) ;
     assert( k ==  ( TRANSB == traits::NO_TRANSPOSE ? mbtraits::size1( b ) : mbtraits::size2( b ) ) ) ;
     assert( m == mctraits::size1( c ) ); 
     assert( n == mctraits::size2( c ) ); 
-    const int lda = matraits::leading_dimension( a );
-    const int ldb = mbtraits::leading_dimension( b );
-    const int ldc = mctraits::leading_dimension( c );
+    const int lda = traits::leading_dimension( a );
+    const int ldb = traits::leading_dimension( b );
+    const int ldc = traits::leading_dimension( c );
 
-    const value_type *a_ptr = matraits::storage( a ) ;
-    const value_type *b_ptr = mbtraits::storage( b ) ;
-    value_type *c_ptr = mctraits::storage( c ) ;
+    const value_type *a_ptr = traits::matrix_storage( a ) ;
+    const value_type *b_ptr = traits::matrix_storage( b ) ;
+    value_type *c_ptr = traits::matrix_storage( c ) ;
 
-    blas< value_type >::gemm( &TRANSA, &TRANSB, 
-			      &m, &n, &k, 
-			      (const bind_type*)&alpha, 
-			      (const bind_type*)a_ptr, &lda, 
-			      (const bind_type*)b_ptr, &ldb, 
-			      (const bind_type*)&beta, 
-			      (bind_type*)c_ptr, &ldc 
-			      ) ;
+    detail::gemm( TRANSA, TRANSB, m, n, k, alpha, a_ptr, lda, b_ptr, ldb, beta, c_ptr, ldc ) ;
   }
 
 
