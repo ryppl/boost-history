@@ -948,6 +948,16 @@
          <paragraph>
             Support for non-sequential types, e.g. trees and graphs.
          </paragraph>
+      </d:section><d:section title = "Input/Serialization">
+         <paragraph>
+            Add support for serialization and reading in from an input stream.
+            <note>
+               Add an input stream function to the outputters (name change?) to support reading
+               in the type. Create a composite structure, like with output (type deduction?!)
+               and support input (listreader; objectreader)? Use formatter to specify formatting
+               configuration. Helpers: read_formatting(open())?
+            </note>
+         </paragraph>
       </d:section>
    </d:section><d:section title = "Acknowledgements">
       <paragraph>
