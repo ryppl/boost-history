@@ -1,0 +1,36 @@
+# simple examples
+
+exe basic-facilities : basic-facilities.cpp
+    ;
+
+exe format-options : format-options.cpp
+    ;
+
+exe formatter : formatter.cpp
+    ;
+
+# demonstrations of outputting various types
+
+exe stl_io : stl_io.cpp
+    ;
+
+exe pair_output : pair_output.cpp
+    ;
+
+exe boost_output : boost_output.cpp
+    ;
+
+exe output-2D : output-2D.cpp
+    ;
+
+exe output-3D : output-3D.cpp
+    ;
+
+# more complex examples
+
+exe john-torjo : john-torjo.cpp
+    ;
+
+exe serialize : serialize.cpp
+    ;
+
