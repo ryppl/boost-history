@@ -50,16 +50,10 @@ struct x86_rounding_control
   typedef unsigned short rounding_mode;
 
   static void set_rounding_mode(const rounding_mode& mode)
-  {
-    __asm__ __volatile__ ("fldcw %0" : : "m"(mode));
-  }
+  { __asm__ __volatile__ ("fldcw %0" : : "m"(mode)); }
 
-  static rounding_mode get_rounding_mode()
-  {
-    rounding_mode tmp;
-    __asm__ __volatile__ ("fnstcw %0" : "=m"(tmp));
-    return tmp;
-  }
+  static void get_rounding_mode(rounding_mode& mode)
+  { __asm__ __volatile__ ("fnstcw %0" : "=m"(mode)); }
 
   static void downward()   { set_rounding_mode(rnd_mode.downward);   }
   static void upward()     { set_rounding_mode(rnd_mode.upward);     }

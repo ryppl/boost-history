@@ -90,23 +90,26 @@ namespace boost {
 
 template<>
 struct rounding_control<pexpr> {
-  typedef bool rounding_mode;
-  bool mode;
-  bool get_rounding_mode() { return mode; }
-  void set_rounding_mode(bool m) { mode = m; }
-  void upward()   { mode = true; }
-  void downward() { mode = false; }
-  pexpr force_rounding(pexpr a) { return (mode ? &up : &down)(a); }
+  typedef enum { RND_U, RND_M, RND_D } rounding_mode;
+  static rounding_mode mode;
+  rounding_control() { mode = RND_M; }
+  void get_rounding_mode(rounding_mode& m) { m = mode; }
+  void set_rounding_mode(rounding_mode m)  { mode = m; }
+  void upward()   { mode = RND_U; }
+  void downward() { mode = RND_D; }
+  pexpr force_rounding(pexpr a) {
+    switch (mode) {
+    case RND_U: return up(a);
+    case RND_D: return down(a);
+    default: throw "Unset rounding mode";
+    }
+  }
 };
+
+rounding_control<pexpr>::rounding_mode rounding_control<pexpr>::mode = RND_M;
 
   };
 };
-
-using namespace boost;
-using namespace interval_lib;
-
-typedef interval_traits<pexpr, compare_certainly<pexpr>, save_state<rounded_arith_std<pexpr> > > traits1;
-typedef interval_traits<pexpr, compare_certainly<pexpr>, save_state<rounded_arith_opp<pexpr> > > traits2;
 
 template<class I>
 bool test_neg() {
@@ -121,9 +124,33 @@ bool test_add() {
 }
 
 template<class I>
+bool test_add1() {
+  I a(var(0), var(1));
+  return equal(a + var(2), I(down(var(0) + var(2)), up(var(1) + var(2))));
+}
+
+template<class I>
+bool test_add2() {
+  I a(var(0), var(1));
+  return equal(var(2) + a, I(down(var(0) + var(2)), up(var(1) + var(2))));
+}
+
+template<class I>
 bool test_sub() {
   I a(var(0), var(1)), b(var(2), var(3));
   return equal(a - b, I(down(var(0) - var(3)), up(var(1) - var(2))));
+}
+
+template<class I>
+bool test_sub1() {
+  I a(var(0), var(1));
+  return equal(a - var(2), I(down(var(0) - var(2)), up(var(1) - var(2))));
+}
+
+template<class I>
+bool test_sub2() {
+  I a(var(0), var(1));
+  return equal(var(2) - a, I(down(var(2) - var(1)), up(var(2) - var(0))));
 }
 
 template<class I>
@@ -133,21 +160,50 @@ bool test_addeq() {
 }
 
 template<class I>
+bool test_addeq1() {
+  I a(var(0), var(1));
+  return equal(a += var(2), I(down(var(0) + var(2)), up(var(1) + var(2))));
+}
+
+template<class I>
 bool test_subeq() {
   I a(var(0), var(1)), b(var(2), var(3));
   return equal(a -= b, I(down(var(0) - var(3)), up(var(1) - var(2))));
 }
 
+template<class I>
+bool test_subeq1() {
+  I a(var(0), var(1));
+  return equal(a -= var(2), I(down(var(0) - var(2)), up(var(1) - var(2))));
+}
+
+using namespace boost;
+using namespace interval_lib;
+
 int test_main(int, char *[]) {
-  BOOST_TEST((test_neg<interval<pexpr, traits1> >()));
-  BOOST_TEST((test_neg<interval<pexpr, traits2> >()));
-  BOOST_TEST((test_add<interval<pexpr, traits1> >()));
-  BOOST_TEST((test_add<interval<pexpr, traits2> >()));
-  BOOST_TEST((test_sub<interval<pexpr, traits1> >()));
-  BOOST_TEST((test_sub<interval<pexpr, traits2> >()));
-  BOOST_TEST((test_addeq<interval<pexpr, traits1> >()));
-  BOOST_TEST((test_addeq<interval<pexpr, traits2> >()));
-  BOOST_TEST((test_subeq<interval<pexpr, traits1> >()));
-  BOOST_TEST((test_subeq<interval<pexpr, traits2> >()));
+  typedef interval<pexpr, interval_traits<pexpr, compare_certainly<pexpr>, save_state<rounded_arith_std<pexpr> > > > I1;
+  typedef interval<pexpr, interval_traits<pexpr, compare_certainly<pexpr>, save_state<rounded_arith_opp<pexpr> > > > I2;
+  BOOST_TEST((test_neg<I1>()));
+  BOOST_TEST((test_neg<I2>()));
+  BOOST_TEST((test_add<I1>()));
+  BOOST_TEST((test_add<I2>()));
+  BOOST_TEST((test_add1<I1>()));
+  BOOST_TEST((test_add1<I2>()));
+  BOOST_TEST((test_add2<I1>()));
+  BOOST_TEST((test_add2<I2>()));
+  BOOST_TEST((test_sub<I1>()));
+  BOOST_TEST((test_sub<I2>()));
+  BOOST_TEST((test_sub1<I1>()));
+  BOOST_TEST((test_sub1<I2>()));
+  BOOST_TEST((test_sub2<I1>()));
+  BOOST_TEST((test_sub2<I2>()));
+  BOOST_TEST((test_addeq<I1>()));
+  BOOST_TEST((test_addeq<I2>()));
+  BOOST_TEST((test_addeq1<I1>()));
+  BOOST_TEST((test_addeq1<I2>()));
+  BOOST_TEST((test_subeq<I1>()));
+  BOOST_TEST((test_subeq<I2>()));
+  BOOST_TEST((test_subeq1<I1>()));
+  BOOST_TEST((test_subeq1<I2>()));
   return 0;
 }

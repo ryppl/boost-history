@@ -901,7 +901,7 @@ struct rounding_control
 {
   typedef ... rounding_mode;
   void set_rounding_mode(rounding_mode);
-  rounding_mode get_rounding_mode();
+  void get_rounding_mode(rounding_mode&amp;);
   void downward ();
   void upward   ();
   void tonearest();
@@ -1481,11 +1481,10 @@ in the example.</p>
 
 <h2>Test Programs</h2>
 
-<p><code>pi.cpp</code> tests if the interval value of &pi; (for
-<code>int</code>, <code>float</code> and <code>double</code> base
-types) contains the number &pi; (defined with 21 decimal digits) and
-if it is a subset of [&pi;&plusmn;1ulp] (in order to ensure some
-precision).</p>
+<p><code>add.cpp</code> tests if the additive and substractive
+operators and the respective <code>_std</code> and <code>_opp</code>
+rounding functions are correctly implemented. It is done by using
+symbolic expressions as a base type.</p>
 
 <p><code>cmp.cpp</code> tests if the operators <code>&lt; &gt; &lt;=
 &gt;= == !=</code> (for the three pre-defined comparisons) and the
@@ -1502,7 +1501,13 @@ order to exercise rounding). The tests are done for
 
 <p><code>fmod.cpp</code> defines a minimalistic version of
 <code>interval&lt;int&gt;</code> and uses it in order to test
-<code>fmod</code> on some interval values.</p>
+<code>fmod</code> on some specific interval values.</p>
+
+<p><code>pi.cpp</code> tests if the interval value of &pi; (for
+<code>int</code>, <code>float</code> and <code>double</code> base
+types) contains the number &pi; (defined with 21 decimal digits) and
+if it is a subset of [&pi;&plusmn;1ulp] (in order to ensure some
+precision).</p>
 
 <p><code>interval_test.cpp</code> tests if the interval library
 respects the basic property of interval arithmetic by computing some
@@ -1521,7 +1526,7 @@ href="http://www.rhein-main.de/people/jmaurer/interval.tar.gz">here</a>.</p>
 useful comments in order for this library to be written.</p>
 
 <hr>
-Guillaume Melquiond, 2002-08-02
+Guillaume Melquiond, 2002-08-16
 
 </body>
 </html>

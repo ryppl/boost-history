@@ -54,7 +54,7 @@ private:
   static const unsigned int rc_chop = 0x0c00;
 public:
   typedef unsigned int rounding_mode;
-  static rounding_mode get_rounding_mode() { return _controlfp(0,0); }
+  static void get_rounding_mode(rounding_mode& mode) { mode = _controlfp(0,0); }
   static void set_rounding_mode(const rounding_mode mode)
   { _controlfp(mode, mask_rc); } 
   static void downward()   { _control87(rc_down, mask_rc); }

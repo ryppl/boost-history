@@ -313,7 +313,7 @@ interval<T, Traits> abs(const interval<T, Traits>& x)
   else if (detail::sign(x.upper()))
     return -x;
   else {
-    return interval<T, Traits>(T(0), std::max(-x.lower(), x.upper()), true);
+    return interval<T, Traits>(0, std::max(-x.lower(), x.upper()), true);
   }
 }
 
@@ -366,22 +366,22 @@ interval<T, Traits> min(const T& x, const interval<T, Traits>& y)
 template<class I> inline
 I pi()
 {
-    typedef typename I::traits_type::rounding rounding;
-    return I(rounding::pi_down(), rounding::pi_up(), true);
+  typedef typename I::traits_type::rounding rounding;
+  return I(rounding::pi_down(), rounding::pi_up(), true);
 }
 
 template<class I> inline
 I pi_1_2()
 {
-    typedef typename I::traits_type::rounding rounding;
-    return I(rounding::pi_1_2_down(), rounding::pi_1_2_up(), true);
+  typedef typename I::traits_type::rounding rounding;
+  return I(rounding::pi_1_2_down(), rounding::pi_1_2_up(), true);
 }
 
 template<class I> inline
 I pi_2_1()
 {
-    typedef typename I::traits_type::rounding rounding;
-    return I(rounding::pi_2_1_down(), rounding::pi_2_1_up(), true);
+  typedef typename I::traits_type::rounding rounding;
+  return I(rounding::pi_2_1_down(), rounding::pi_2_1_up(), true);
 }
 
   } // namespace interval_lib

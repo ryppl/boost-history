@@ -32,16 +32,10 @@ struct ppc_rounding_control
   typedef double rounding_mode;
 
   static void set_rounding_mode(const rounding_mode mode)
-  {
-    __asm__ __volatile__ ("mtfsf 255,%0" : : "f"(mode));
-  }
+  { __asm__ __volatile__ ("mtfsf 255,%0" : : "f"(mode)); }
 
-  static rounding_mode get_rounding_mode()
-  {
-    rounding_mode tmp;
-    __asm__ __volatile__ ("mffs %0" : "=f"(tmp));
-    return tmp;
-  }
+  static void get_rounding_mode(rounding_mode& mode)
+  { __asm__ __volatile__ ("mffs %0" : "=f"(mode)); }
 
   static void downward()   { set_rounding_mode(mode_downward.dmode);   }
   static void upward()     { set_rounding_mode(mode_upward.dmode);     }

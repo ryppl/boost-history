@@ -36,7 +36,7 @@ extern "C" { double rint(double); }
 struct x86_rounding_control
 {
   typedef unsigned int rounding_mode;
-  static rounding_mode get_rounding_mode() { return _controlfp(0,0); }
+  static void get_rounding_mode(rounding_mode& mode) { mode = _controlfp(0,0); }
   static void set_rounding_mode(const rounding_mode mode)
   { _controlfp(mode, _MCW_RC); } 
   static void downward()       { _controlfp(_RC_DOWN, _MCW_RC); }

@@ -66,7 +66,7 @@ struct save_state: Rounding
 {
   typename Rounding::rounding_mode mode;
   save_state() {
-    mode = get_rounding_mode();
+    get_rounding_mode(mode);
     init();
   }
   ~save_state() { set_rounding_mode(mode); }

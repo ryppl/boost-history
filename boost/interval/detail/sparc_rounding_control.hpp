@@ -49,9 +49,8 @@ struct sparc_rounding_control
 #   endif
   }
 
-  static rounding_mode get_rounding_mode()
+  static void get_rounding_mode(rounding_mode& mode)
   {
-    rounding_mode mode;
 #   if defined(__GNUC__)
     __asm__ __volatile__("st %%fsr, %0" : "=m"(mode));
 #   elif defined(__KCC)
