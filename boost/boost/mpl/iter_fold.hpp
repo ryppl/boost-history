@@ -70,29 +70,57 @@ template<
     >
 struct iter_fold_impl_more
 {
-    typedef typename apply2<
+ private:
+    typedef apply2<ForwardOp,State,Iterator> forward;
+    
+    typedef iter_fold_impl<
+        typename Iterator::next
+        , LastIterator
+        , typename forward::type
+        , ForwardOp
+        , BackwardOp
+        > recursion;
+
+    typedef typename recursion::type inner_t;
+    
+    typedef apply2<
           BackwardOp
         , Iterator
-        , typename iter_fold_impl<
-              typename Iterator::next
-            , LastIterator
-            , typename apply2<ForwardOp,State,Iterator>::type
-            , ForwardOp
-            , BackwardOp
-            >::type
-        >::type type;
+        , inner_t
+        > backward;
 
-    void execute()
+ public:
+    typedef typename backward::type type;
+
+    static void execute()
     {
-        
-        typedef typename iter_fold_impl<
-              typename Iterator::next
-            , LastIterator
-            , typename apply2<ForwardOp,State,Iterator>::type
-            , ForwardOp
-            , BackwardOp
-            >::type type;
+        ForwardOp::template apply<State,Iterator>::execute();
+        recursion::execute();
+        BackwardOp::template apply<Iterator,inner_t>::execute();
     }
+
+    template <class T>
+    static void execute(T x)
+    {
+        ForwardOp::template apply<State,Iterator>::execute(x);
+        recursion::execute(x);
+        BackwardOp::template apply<Iterator,inner_t>::execute(x);
+    }
+
+    // We're not ready for this yet, are we?
+#if 0
+    template <class T>
+    typename backward::template result_type<
+        typename recursion::template result_type<
+            typename forward::template result_type<T>::type
+        >::type
+    >::type execute2(T x)
+    {
+        return backward::execute(
+            recursion::execute(
+                forward::execute(x)));
+    }
+#endif 
 };
 
 template<
@@ -105,6 +133,15 @@ template<
 struct iter_fold_impl_done
 {
     typedef State type;
+
+    static void execute()
+    {
+    }
+
+    template <class T>
+    static void execute(T)
+    {
+    }
 };
 
 struct select2nd
@@ -113,6 +150,7 @@ struct select2nd
     struct apply
     {
         typedef U type;
+        
         static void execute() {}
         
         template <class V>
@@ -126,17 +164,17 @@ template<
       typename Sequence
     , typename State
     , typename ForwardOp
-    , typename BackwardOp = project2nd<_1,_2>
+    , typename BackwardOp = aux::select2nd
     >
 struct iter_fold
-{
-    typedef typename aux::iter_fold_impl<
+    : aux::iter_fold_impl<
           typename begin<Sequence>::iterator
         , typename end<Sequence>::iterator
         , State
         , ForwardOp
         , BackwardOp
-        >::type type;
+        >
+{
 };
 
 } // namespace mpl
