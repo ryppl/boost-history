@@ -24,6 +24,7 @@
 #include "boost/socket/socketstream.hpp"
 #include "boost/socket/any_protocol.hpp"
 #include "boost/socket/any_address.hpp"
+#include "boost/socket/socket_exception.hpp"
 
 #include <iostream>
 
@@ -54,25 +55,33 @@ int main(int argc, char** argv)
   boost::socket::connector<> connector;
   boost::socket::connector<>::data_connection_t connection;
 
-  connector.connect(connection, i->protocol(), i->address());
-
-  boost::socket::basic_socket_stream<char> s(connection);
-
-  s << "GET /" << argv[2] << " HTTP/1.0\r\n\r\n";
-  s.flush();
-
-  std::string result;
-
-
-  s >> result;
-  while (!s.eof())
+  try
   {
-    std::cout << result << " ";
-    s >> result;
-  }
+    connector.connect(connection, i->protocol(), i->address());
 
-  if (connection.is_valid())
-    std::cerr << "\n\nData connection was not closed properly" << std::endl;
+    boost::socket::basic_socket_stream<char> s(connection);
+
+    s << "GET /" << argv[2] << " HTTP/1.0\r\n\r\n";
+    s.flush();
+
+    std::string result;
+
+
+    s >> result;
+    while (!s.eof())
+    {
+      std::cout << result << " ";
+      s >> result;
+    }
+
+    if (connection.is_valid())
+      std::cerr << "\n\nData connection was not closed properly" << std::endl;
+
+  }
+  catch (boost::socket::socket_exception& e)
+  {
+    std::cerr << e.message() << std::endl;
+  }
 
   return 0;
 }
