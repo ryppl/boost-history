@@ -323,42 +323,43 @@ test_BOOST_CHECK_CLOSE( FPT dummy = 0. ) {
     BOOST_MESSAGE( "testing BOOST_CHECK_CLOSE for " << typeid(FPT).name() );
 
 
-#define BOOST_CHECK_CLOSE_SHOULD_PASS( first, second, e ) \
-    fp1     = static_cast<FPT>(first); \
-    fp2     = static_cast<FPT>(second); \
-    epsilon = static_cast<FPT>(e); \
-\
-    CHECK_TOOL_USAGE( \
-        BOOST_CHECK_CLOSE( fp1, fp2, epsilon ), \
-        output.is_empty() \
-    )
-#define BOOST_CHECK_CLOSE_SHOULD_PASS_N( first, second, num ) \
-    fp1     = static_cast<FPT>(first); \
-    fp2     = static_cast<FPT>(second); \
-\
-    CHECK_TOOL_USAGE( \
-        BOOST_CHECK_CLOSE( fp1, fp2, (num) ), \
-        output.is_empty() \
+#define BOOST_CHECK_CLOSE_SHOULD_PASS( first, second, e )       \
+    fp1     = static_cast<FPT>(first);                          \
+    fp2     = static_cast<FPT>(second);                         \
+    epsilon = static_cast<FPT>(e);                              \
+                                                                \
+    CHECK_TOOL_USAGE(                                           \
+        BOOST_CHECK_CLOSE( fp1, fp2, epsilon ),                 \
+        output.is_empty()                                       \
     )
 
-#define BOOST_CHECK_CLOSE_SHOULD_FAIL( first, second, e ) \
-    fp1     = static_cast<FPT>(first); \
-    fp2     = static_cast<FPT>(second); \
-    epsilon = static_cast<FPT>(e); \
-\
-    CHECK_TOOL_USAGE( \
-        BOOST_CHECK_CLOSE( fp1, fp2, epsilon ), \
+#define BOOST_CHECK_CLOSE_SHOULD_PASS_N( first, second, num )   \
+    fp1     = static_cast<FPT>(first);                          \
+    fp2     = static_cast<FPT>(second);                         \
+                                                                \
+    CHECK_TOOL_USAGE(                                           \
+        BOOST_CHECK_CLOSE( fp1, fp2, (num) ),                   \
+        output.is_empty()                                       \
+    )
+
+#define BOOST_CHECK_CLOSE_SHOULD_FAIL( first, second, e )       \
+    fp1     = static_cast<FPT>(first);                          \
+    fp2     = static_cast<FPT>(second);                         \
+    epsilon = static_cast<FPT>(e);                              \
+                                                                \
+    CHECK_TOOL_USAGE(                                           \
+        BOOST_CHECK_CLOSE( fp1, fp2, epsilon ),                 \
         output.is_equal( CHECK_PATTERN( "error in " TEST_CASE_NAME ": test fp1 (==) fp2 failed [" \
                                         << fp1 << " (!=) " << fp2 << " (" << epsilon << ")]\n" ) ) \
     )
 
-#define BOOST_CHECK_CLOSE_SHOULD_FAIL_N( first, second, num ) \
-    fp1     = static_cast<FPT>(first); \
-    fp2     = static_cast<FPT>(second); \
-    epsilon = num * std::numeric_limits<FPT>::epsilon()/2; \
-\
-    CHECK_TOOL_USAGE( \
-        BOOST_CHECK_CLOSE( fp1, fp2, num ), \
+#define BOOST_CHECK_CLOSE_SHOULD_FAIL_N( first, second, num )   \
+    fp1     = static_cast<FPT>(first);                          \
+    fp2     = static_cast<FPT>(second);                         \
+    epsilon = num * std::numeric_limits<FPT>::epsilon()/2;      \
+                                                                \
+    CHECK_TOOL_USAGE(                                           \
+        BOOST_CHECK_CLOSE( fp1, fp2, num ),                     \
         output.is_equal( CHECK_PATTERN( "error in " TEST_CASE_NAME ": test fp1 (==) fp2 failed [" \
                                         << fp1 << " (!=) " << fp2 << " (" << epsilon << ")]\n" ) ) \
     )

@@ -1,4 +1,4 @@
-//  Boost unit_test_test1.cpp  -----------------------------------------------//
+//  Boost errors_handling_test.cpp  ------------------------------------------//
 
 //  (C) Copyright Gennadiy Rozental & Beman Dawes 2001.
 //  Permission to copy, use, modify, sell and distribute this software is
