@@ -55,7 +55,7 @@ namespace string_util_impl {
 //  tolower  -----------------------------------------------//
 
     // const version of tolower
-    template< class Seq >
+    template< typename Seq >
     inline Seq tolower( const Seq& Input, const std::locale& Loc=std::locale() )
     {
         Seq Output;
@@ -69,7 +69,7 @@ namespace string_util_impl {
     }
 
     // in-place version of tolower
-    template< class Seq >
+    template< typename Seq >
     inline Seq& tolower_in( Seq& Input, const std::locale& Loc=std::locale() )
     {
         std::transform( 
@@ -84,7 +84,7 @@ namespace string_util_impl {
 //  toupper  -----------------------------------------------//
 
     // const version of toupper
-    template< class Seq >
+    template< typename Seq >
     inline Seq toupper( const Seq& Input, const std::locale& Loc=std::locale() )
     {
         Seq Output;
@@ -98,7 +98,7 @@ namespace string_util_impl {
     }
 
     // in-place version of toupper
-    template< class Seq >
+    template< typename Seq >
     inline Seq& toupper_in( Seq& Input, const std::locale& Loc=std::locale() )
     {
         std::transform( 

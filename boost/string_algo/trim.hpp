@@ -36,9 +36,9 @@ namespace string_util_impl {
     template< typename CharT >
         struct isspaceF : public std::binary_function< CharT, std::locale, bool > 
     {
-        typedef typename std::binary_function< CharT, std::locale, CharT >::result_type result_type;
-        typedef typename std::binary_function< CharT, std::locale, CharT >::first_argument_type first_argument_type;
-        typedef typename std::binary_function< CharT, std::locale, CharT >::second_argument_type second_argument_type;
+        typedef typename std::binary_function< CharT, std::locale, bool >::result_type result_type;
+        typedef typename std::binary_function< CharT, std::locale, bool >::first_argument_type first_argument_type;
+        typedef typename std::binary_function< CharT, std::locale, bool >::second_argument_type second_argument_type;
 
         result_type operator ()( first_argument_type Ch, const second_argument_type& Loc ) const
         {
@@ -51,8 +51,8 @@ namespace string_util_impl {
 //  trim iterators  -----------------------------------------------//
 
     // Search for first non space character from the beginning of the sequence
-    template< class Iterator >
-    inline Iterator trim_begin( const Iterator& InBegin, const Iterator& InEnd, const std::locale& Loc=std::locale() )
+    template< typename Iterator >
+    inline Iterator trim_begin( Iterator InBegin, Iterator InEnd, const std::locale& Loc=std::locale() )
     {
         return std::find_if( 
             InBegin, 
@@ -63,7 +63,7 @@ namespace string_util_impl {
 //  left trim  -----------------------------------------------//
 
     // const version of left trim
-    template< class Seq >
+    template< typename Seq >
     inline Seq ltrim( const Seq& Input, const std::locale& Loc=std::locale() )
     {
         return Seq( 
@@ -72,7 +72,7 @@ namespace string_util_impl {
     }
 
     // in-place version of left trim
-    template< class Seq >
+    template< typename Seq >
     inline Seq& ltrim_in( Seq& Input, const std::locale& Loc=std::locale() )
     {
         Input.erase( 
@@ -85,7 +85,7 @@ namespace string_util_impl {
 //  right trim  -----------------------------------------------//
 
     // const version of right trim
-    template< class Seq >
+    template< typename Seq >
     inline Seq rtrim( const Seq& Input, const std::locale& Loc=std::locale() )
     {
         return Seq( 
@@ -95,7 +95,7 @@ namespace string_util_impl {
     }
     
     // in-place version of right trim
-    template< class Seq >
+    template< typename Seq >
     inline Seq& rtrim_in( Seq& Input, const std::locale& Loc=std::locale() )
     {
         Input.erase(
@@ -109,7 +109,7 @@ namespace string_util_impl {
 //  both side trim  -----------------------------------------------//
 
     // const version of trim
-    template< class Seq >
+    template< typename Seq >
     inline Seq trim( const Seq& Input, const std::locale& Loc=std::locale() )
     {
         typename Seq::const_iterator TrimEnd=trim_begin( Input.rbegin(), Input.rend(), Loc).base();
@@ -121,7 +121,7 @@ namespace string_util_impl {
     }
     
     // in-place version of trim
-    template< class Seq >
+    template< typename Seq >
     inline Seq& trim_in( Seq& Input, const std::locale& Loc=std::locale() )
     {
         return ltrim_in( rtrim_in( Input, Loc ), Loc );

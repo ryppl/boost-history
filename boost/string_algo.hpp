@@ -12,5 +12,6 @@
 
 #include "string_algo/trim.hpp"
 #include "string_algo/case_conv.hpp"
+#include "string_algo/string_predicate.hpp"
 
 #endif  // BOOST_STRING_ALGO_HPP
