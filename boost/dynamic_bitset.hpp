@@ -657,8 +657,7 @@ append(Block value) // strong guarantee
         m_bits.push_back(value);
     }
     else {
-        const typename buffer_type::iterator it = m_bits.end() - 1;
-        *it |= (value << excess_bits);
+        m_highest_block() |= (value << excess_bits);
         m_bits.push_back(value >> (bits_per_block - excess_bits));
     }
 
@@ -1464,9 +1463,7 @@ operator>>(std::basic_istream<Ch, Tr>& is, dynamic_bitset<Block, Alloc>& b)
             b.clear();
             
             basic_streambuf <Ch, Tr> * buf = is.rdbuf();
-            //typename vector<Block, Alloc>::iterator it;
             Block * current = 0;
-
             const Block max_mask
                = Block(1) << (dynamic_bitset<Block, Alloc>::bits_per_block - 1);
             Block mask = 0;
@@ -1488,7 +1485,7 @@ operator>>(std::basic_istream<Ch, Tr>& is, dynamic_bitset<Block, Alloc>& b)
                     //
                     if (mask == 0) {
                         b.append(0);
-                        current = &b.m_highest_block(); //it = b.m_bits.end() - 1; // G.P.S. last_block()?
+                        current = &b.m_highest_block();
                         mask = max_mask;
                     }
                     
@@ -1605,10 +1602,10 @@ inline void dynamic_bitset<Block, Allocator>::m_zero_unused_bits()
     assert (this->num_blocks() == this->calc_num_blocks(this->m_num_bits));
 
     // if != 0 this is the number of bits used in the last block
-    size_type const used_bits = this->m_num_bits % bits_per_block;
+    size_type const extra_bits = size() % bits_per_block;
 
-    if (used_bits != 0)
-        this->m_bits[this->num_blocks() - 1] &= ~(~static_cast<Block>(0) << used_bits);
+    if (extra_bits != 0)
+        m_highest_block() &= ~(~static_cast<Block>(0) << extra_bits);
 
 }
 
