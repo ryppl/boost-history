@@ -76,13 +76,13 @@ public:
     operator bool() const;
     operator const_reference_type() const;
 
-    bool  operator !() const
+    bool  operator !() const;
 
     self_type &  operator =( const_reference_type const &ref );
-    self_type &  operator =( self_type const &ref )
-    self_type &  operator =( bool val )
+    self_type &  operator =( self_type const &ref );
+    self_type &  operator =( bool val );
 
-    void  flip()
+    void  flip();
 
 private:
     block_type &      ref_;
@@ -212,6 +212,9 @@ bit_reference<BitBucket>::flip
 {
     ref_ ^= mask_;
 }
+
+
+}  // namespace boost
 
 
 #endif  // BOOST_BIT_REFERENCE_HPP
