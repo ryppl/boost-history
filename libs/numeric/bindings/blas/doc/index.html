@@ -1,0 +1,84 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="boost.css">
+<title>Boost.Numeric.Bindings.Blas</title>
+</head>
+
+<body link="#0000ff" vlink="#800080">
+<table border="0" cellpadding="7" cellspacing="0" width="100%" summary="header">
+<tr>
+<td valign="top" width="300">
+<h3><a href="../../../index.htm"><img height="86" width="277" alt="C++ Boost" src="../../../c++boost.gif" border="0"></a></h3>
+</td>
+<td valign="top">
+<h1 align="center">Boost.Numeric.Bindings.Blas</h1>
+</td>
+</tr>
+</table>
+<hr>
+<h2>Content</h2>
+<ol>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#mapping">Mapping</a></li>
+<ol>
+<li>C signatures</li>
+<li>Calling conventions</li>
+</ol>
+<li><a href="#high_level_api">High level API</a></li>
+</ol>
+
+<h2><a name="introduction">1. Introduction</a></h2>
+<p>The BLAS bindings library provides:
+<ul>
+<li>C-to-Fortran mapping i.e. definitions in C for all standard (fortran) BLAS functions</li>
+<li>high-level BLAS API that accepts vectors and matrices defined in many different libraries </li>
+</ul>
+<p>For example: one wants to perform <code> y += a * x </code> where <code>y</code> 
+and <code>x</code> are double vectors and <code>a</code> a scalar. So now we want to call
+BLAS's DAXPY. Therefore the BLAS bindings will provide on the first level 
+the signature in C for calling DAXPY which looks like 
+<code>void daxpy(int* n, double* alpha, double* x, int* incx, double* y, int* incy);</code>
+(Remark that the int's are passed by reference because of the C to fortran calling conventions).
+Although daxpy if very flexible to use (allowing different increments for both vectors), information
+about the length of the vectors and the increments is generally known by all vector classes. 
+Therefor it would be mush easier and less error prone that the vector class itself passes
+this kind of information on to the library instead of the user. Therefore the bindings library
+provides a higher level API for daxpy. When x and y are now std::vector's for instance, it suffices
+to call <code>daxpy( alpha, x, y )</code> to perform the same operation.
+
+<h2><a name="#mapping">2. Mapping</a></h2>
+<h3>2.1. C signatures</h3>
+<p>On the first level, a direct mapping of C signatures to the standard Fortran
+functions is performed. These functions are defined in 
+<code>boost/numeric/bindings/blas/blas.h</code>.
+These mappings can thus be used by both C and C++.
+<p>These signatures are also const-correct. Although the Fortran standard does
+not mention const-ness, is would be hard to use the C definitions in ANSI C without
+the const-correctness and would ask for frequent const cast away's.
+<p>The mapping of the types of the argumenst is as follows:
+<table border=1>
+<tr><td>Fortran type<td>Mapped to C type
+<tr><td>REAL<td>float
+<tr><td>DOUBLE<td>double
+<tr><td>COMPLEX<td>fcomplex
+<tr><td>COMPLEX*16<td>dcomplex
+</table>
+<p>fcomplex and dcomplex are defined in <code>traits/type.h</code> due to a lack of
+complex types in C89. fcomplex and dcomplex are therefor just typedef's to 
+existing real types. However a Fortran COMPLEX corresponds to 2 consecutive float's.
+It is however up to the user to guarantee that the real and imaginary part are
+consecutive in memory. Note also that pointer arithmetic using the fcomplex and
+dcomplex type will probably result in errornous calculations as the sizeof is only
+half of what's expected.
+
+
+<h3>2.2. Calling conventions</h3>
+<p>But before specifying the signatures in C, the calling conventions of Fortran
+need to be matched. Therefore <code>boost/numeric/bindings/blas/blas_names.h</code> will
+provide the name of all functions using the correct calling convention. (Currently this
+file is generated manually with the aid of traits/fortran.h but could be generated
+automatically in the future (using the preprocessor library for instance)).
+
+<h2><a name="#high_level_api">High level API</a></h2>
+
+</body>
