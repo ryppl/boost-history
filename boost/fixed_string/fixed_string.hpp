@@ -5,7 +5,8 @@
 #ifndef BOOST_FIXED_STRING_HPP
 #define BOOST_FIXED_STRING_HPP
 #  include <boost/fixed_string/detail/basic_string_impl.hpp>
-#  include <boost/mpl/or.hpp>
+//#  include <boost/mpl/or.hpp>
+#  include <boost/mpl/and.hpp>
 #  include <boost/mpl/equal_to.hpp>
 #  include <boost/mpl/int.hpp>
 #  include <boost/type_traits/is_same.hpp>
@@ -109,13 +110,27 @@
       class fixed_string: public fixed_string_base< CharT, CharStringPolicy >
       {
          private:
-            CharT                      str[ n + 1 ];
+            BOOST_STATIC_CONSTANT( size_t, storage_c  = n + 1 ); // needs_null ? n + 1 : n
+            BOOST_STATIC_CONSTANT( size_t, capacity_c = n );     // needs_null ? n     : n - 1
+         public:
+            typedef fixed_string_base< CharT, CharStringPolicy >     base_type;
+            typedef fixed_string< n, CharT, CharStringPolicy >       this_type;
+         private:
+            CharT                      str[ storage_c ];
             size_t                     len;
          public: // validation checks
             struct ok{ typedef char value; };
-            // zero-buffer check: n != 0
+            // zero-buffer check: n != 0 iff n == storage
             struct zero_buffer_error{};
-            typedef typename mpl::if_< mpl::equal_to< mpl::int_< n >, mpl::int_< 0 > >, 
+            typedef typename mpl::if_< mpl::and_
+                                       <
+                                          mpl::equal_to< mpl::int_< n >, mpl::int_< 0 > >,
+#                                         if defined(__BORLANDC__) // Borland workaround
+                                             mpl::bool_< ( this_type::storage_c == 0 ) >
+#                                         else
+                                             mpl::equal_to< mpl::int_< storage_c >, mpl::int_< 0 > >
+#                                         endif
+                                       >,
                                        zero_buffer_error, ok
                                      >::type::value                  zero_buffer_check;
             // string policy check: StringPolicy::char_type == CharT
@@ -124,7 +139,6 @@
                                        ok, char_string_policy_error
                                      >::type::value                  char_string_policy_check;
          public:
-            typedef fixed_string_base< CharT, CharStringPolicy >     base_type;
             typedef typename base_type::size_type                    size_type;
             typedef typename base_type::iterator                     iterator;
             typedef typename base_type::const_iterator               const_iterator;
@@ -175,17 +189,18 @@
             }
             inline size_type                     capacity_() const
             {
-               return( n );
+               return( capacity_c );
             }
             inline size_type                     max_size_() const
             {
-               return( capacity());
+               return( capacity_());
             }
             inline void                          resize_( size_t sz, CharT c )
             {
                if( sz > len )
                {
-                  if( sz >= n )        sz = n;
+                  if( sz >= capacity_c )
+                     sz = capacity_c;
                   CharStringPolicy::assign( str + len, sz - len, c );
                }
                len = sz;
@@ -203,28 +218,28 @@
             inline void                          assign_( const CharT * s, size_type l )
             {
                if( l == npos )         l = CharStringPolicy::length( s );
-               len = ( l >= n ) ? n : l;
+               len = ( l >= capacity_c ) ? capacity_c : l;
                CharStringPolicy::copy( str, s, len );
                str[ len ] = CharT();
             }
             inline void                          append_( const CharT * s, size_type l = npos )
             {
                if( l == npos )         l = CharStringPolicy::length( s );
-               l = (( l + len ) >= n ) ? ( n - len ) : l;
+               l = (( l + len ) >= capacity_c ) ? ( capacity_c - len ) : l;
                CharStringPolicy::copy( str + len, s, l );
                len += l;
                str[ len ] = CharT();
             }
             inline int                           format_( const CharT * fmt, va_list args )
             {
-               int                     ret = detail::format_policy< CharT >::format( str, n, fmt, args );
-               len = ( ret == -1 ) ? n : ret;
+               int                     ret = detail::format_policy< CharT >::format( str, capacity_c, fmt, args );
+               len = ( ret == -1 ) ? capacity_c : ret;
                str[ len ] = CharT();
                return( ret );
             }
             inline void                          push_back_( CharT c )
             {
-               if( len < n )
+               if( len < capacity_c )
                {
                   str[   len ] = c;
                   str[ ++len ] = CharT();
