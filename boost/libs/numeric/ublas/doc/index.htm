@@ -1,0 +1,2303 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>Basic Linear Algebra Classes With Expression Templates</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<h1>Basic Linear Algebra C++ Classes With Expression Templates </h1>
+
+<p>by J. Walter and M. Koch</p>
+
+<h2>Rationale</h2>
+
+<p><cite>It would be nice if every kind of numeric software could
+be written in C++ without loss of efficiency, but unless
+something can be found that achieves this without compromising
+the C++ type system it may be preferable to rely on Fortran,
+assembler or architecture-specific extensions (Bjarne
+Stroustrup).</cite></p>
+
+<p>This C++ library is geared towards scientific computing on the
+level of basic linear algebra constructions with matrices and
+vectors and their corresponding abstract operations. The primary
+design goals are:</p>
+
+<ul type="disc">
+    <li>Mathematical notation</li>
+    <li>Efficiency</li>
+    <li>Functionality</li>
+    <li>Compatibility</li>
+</ul>
+
+<p>Another aim is to rate, whether the abstraction penalty
+resulting from the use of such matrix and vector classes can be
+accepted.</p>
+
+<h2>Resources</h2>
+
+<p>The development of this library was guided by a couple of
+similar efforts. We mention here the following:</p>
+
+<ul type="disc">
+    <li>BLAS by J. Dongarra et al.</li>
+    <li>Blitz++ by T. Veldhuizen</li>
+    <li>POOMA by S. Haney et al.</li>
+    <li>MTL by J. Siek et al.</li>
+</ul>
+
+<p>We should describe some differences to and influences from
+these other approches.</p>
+
+<p>BLAS seems to be the most widely used library for basic linear
+algebra constructions, so that it could be called a de-facto
+standard. Its interface is procedural, the individual functions
+are somewhat abstracted from simple linar algebra operations. Due
+to being implemented in Fortran and its optimizations, it also
+seems to be one of the fastest available libraries. As we decided
+to design and implement our library in an object oriented way,
+the technical approaches are distinct. Nevertheless one should be
+able to express BLAS abstractions in terms of our library
+operators and to compare the efficiency of the implementations.</p>
+
+<p>Blitz++ is an impressive project implemented in C++. Its main
+design seems to be oriented towards multidimensional arrays and
+their associated operators including tensors. The author of
+Blitz++ states, that the library achieves performance on par or
+better than corresponding Fortran code due to his implementation
+technique using expression templates and template metaprograms.
+We see nevertheless two reasons, to develop a own design and
+implementation approach. First, we do not know whether anybody
+tries to implement classical linear algebra and other numerical
+algorithms using Blitz++, which one should be able with a linear
+algebra library like ours. Second, we suspect that Blitz++ needs
+the most advanced C++ compiler due to its implementation idioms
+even today. On the other hand, Blitz++ convinced us, that the use
+of expression templates is a must to reduce the abstraction
+penalty to an acceptable measure.</p>
+
+<p>POOMA's design goals seem parallel to Blitz++'s in many parts
+. It extends Blitz++'s concepts with classes from the domains of
+partial differential equations and theoretical physics. The
+implementation supports even parallel architectures..</p>
+
+<p>MTL is another approach supporting basic linear algebra
+operations in C++. Its design mainly seems to be influenced from
+BLAS and the C++ Standard Template Library. We share the insight,
+that a linear algebra library has to leverage functionality
+comparable to BLAS. On the other hand we think, that the concepts
+of the C++ standard library yet not have been proven to support
+numerical computations as needed. As another difference MTL
+currently seems not to use expression templates, which may result
+in one of two possibilities: some loss of expressiveness or some
+loss of performance.</p>
+
+<h2>Concepts</h2>
+
+<h3>Mathematical Notation</h3>
+
+<p>The usage of mathematical notation may ease the development of
+complex scientific algorithms. So a C++ library implementing
+basic linear algebra concepts carefully should overload selected
+C++ operators on matrix and vector classes.</p>
+
+<p>The important operators are the following:</p>
+
+<table border="1">
+    <tr>
+        <th align="left">Description</th>
+        <th align="left">Operator</th>
+    </tr>
+    <tr>
+        <td>Indexing of vectors and matrices</td>
+        <td><code>vector::operator(size_t i)<br>
+        matrix::operator(size_t i, size_t j)</code></td>
+    </tr>
+    <tr>
+        <td>Assignment of vectors and matrices</td>
+        <td><code>vector::operator(const vector_expression &amp;)<br>
+        matrix::operator(const matrix_expression &amp;)</code></td>
+    </tr>
+    <tr>
+        <td>Unary operations on vectors and matrices</td>
+        <td><code>vector_expression operator - (const
+        vector_expression &amp;)<br>
+        matrix_expression operator - (const matrix_expression
+        &amp;)</code></td>
+    </tr>
+    <tr>
+        <td>Binary operations on vectors and matrices</td>
+        <td><code>vector_expression operator + (const
+        vector_expression &amp;, const vector_expression &amp;)<br>
+        vector_expression operator - (const vector_expression
+        &amp;, const vector_expression &amp;)<br>
+        matrix_expression operator + (const matrix_expression
+        &amp;, const matrix_expression &amp;)<br>
+        matrix_expression operator - (const matrix_expression
+        &amp;, const matrix_expression &amp;)</code></td>
+    </tr>
+    <tr>
+        <td>Left multiplication of vectors and matrices with a
+        scalar</td>
+        <td><code>vector_expression operator * (const
+        scalar_expression &amp;, const vector_expression &amp;)<br>
+        matrix_expression operator * (const scalar_expression
+        &amp;, const matrix_expression &amp;)</code></td>
+    </tr>
+</table>
+
+<p>The following other important primitives should not be
+implemented via operators.</p>
+
+<table border="1">
+    <tr>
+        <th align="left">Description</th>
+        <th align="left">Function</th>
+    </tr>
+    <tr>
+        <td>Left multiplication of vectors with a matrix</td>
+        <td><code>vector_expression prod (const matrix_expression
+        &amp;, const vector_expression &amp;)</code></td>
+    </tr>
+    <tr>
+        <td>Multiplication of matrices</td>
+        <td><code>matrix_expression prod (const matrix_expression
+        &amp;, const matrix_expression &amp;)</code></td>
+    </tr>
+    <tr>
+        <td>Inner product of vectors</td>
+        <td><code>scalar_expression inner_prod (const
+        vector_expression &amp;, const vector_expression &amp;)</code></td>
+    </tr>
+    <tr>
+        <td>Outer product of vectors</td>
+        <td><code>matrix_expression outer_prod (const
+        vector_expression &amp;, const vector_expression &amp;)</code></td>
+    </tr>
+    <tr>
+        <td>Transpose of a matrix</td>
+        <td><code>matrix_expression trans (const
+        matrix_expression &amp;)</code></td>
+    </tr>
+</table>
+
+<h3>Efficiency</h3>
+
+<p>To achieve the goal of efficiency for numerical computing in
+C++, one has to overcome two problem zones in formulating
+abstractions, namely temporaries and virtual function calls.
+Expression Templates solve these problems, but tend to slow down
+compilation times.</p>
+
+<h4>Eliminating Temporaries</h4>
+
+<p>Abstract formulas on vectors and matrices normally compose a
+couple of unary and binary operations. The conventional way of
+evaluating such a formula is first to evaluate every leaf
+operation of a composition into a temporary and then to evaluate
+the composite resulting in a new temporary. This method is very
+costly in terms of time and space. The approach to overcome this
+problem is to use lazy evaluation as known from modern functional
+programming languages. The principle behind this approach is to
+evaluate a complex expression elementwise and to assign it
+directly to the target.</p>
+
+<p>An interesting and somewhat dangerous fact, which is seemingly
+to trivial to be mentioned elsewhere, results. One may get
+serious side effects using elementwise evaluation on vectors.
+Consider the matrix vector product <em>x = A x</em>. Evaluation
+of <em>A</em><sub><em>1</em></sub><em>x</em> and assignment to <em>x</em><sub><em>1</em></sub>
+changes the right hand side so that the evaluation of <em>A</em><sub><em>2</em></sub><em>x
+</em>gives a wrong result. Our solution to this problem is, first
+to evaluate the right hand side of an assignment into a temporary
+and then to assign the left hand side from this temporary. To
+allow for further optimization, we invented a special form of
+assignment implement in C++ using the xor assignment operator.
+Using this operator a programmer may confirm, that the left and
+right hand sides of an assignment are independent, so that
+elementwise evaluation and direct assignment to the target is
+safe.</p>
+
+<h4>Eliminating Virtual Function Calls</h4>
+
+<p>Lazy expression evaluation normally lead one to define a class
+hierarchy of terms. This results in the usage of dynamic
+polymorphism to access single elements of vectors and matrices,
+which is also known to be to costly in terms of time. A solution
+was found a couple of years before independently by David
+Vandervorde and Todd Veldhuizen and is called Expression
+Templates. Expression Templates contain lazy evaluation and
+replace dynamic polymorphism with static, i.e. compile time
+polymorphism through the famous Barton-Nackman trick. This trick
+was also coined 'curiously defined recursive templates' by J.
+Coplien.</p>
+
+<p>Expression Templates form the base of our implementation.</p>
+
+<h4>Compilation times</h4>
+
+<p>It is also well known, that expression templates are a
+challenge for currently available compilers. We were able to
+significantly reduce the amount of needed expression templates
+using the Barton-Nackman trick more consequently than other
+available approaches.</p>
+
+<p>We also decided to support a dual conventional implementation
+of vector and matrix classes to support the development cycle.</p>
+
+<h3>Functionality</h3>
+
+<p>Every C++ library supporting linear algebra will be measured
+against the long standing Fortran package BLAS. We now describe
+how BLAS calls can be mapped onto our classes. </p>
+
+<h4>Blas Level 1</h4>
+
+<table border="1">
+    <tr>
+        <th align="left">BLAS Call</th>
+        <th align="left">Mapped Library Expression</th>
+        <th align="left">Mathematical Description</th>
+        <th align="left">Comment</th>
+    </tr>
+    <tr>
+        <td><code>_asum</code></td>
+        <td><code>norm_1 (x)</code> </td>
+        <td><em>sum |x</em><sub><em>i</em></sub><em>|</em></td>
+        <td>Computes the sum norm of a vector.</td>
+    </tr>
+    <tr>
+        <td><code>_nrm2</code></td>
+        <td><code>norm_2 (x)</code></td>
+        <td><em>sqrt (sum |x</em><sub><em>i</em></sub>|<sup><em>2</em></sup><em>)</em></td>
+        <td>Computes the euclidean norm of a vector.</td>
+    </tr>
+    <tr>
+        <td><code>i_amax</code></td>
+        <td><code>norm_inf (x)</code> </td>
+        <td><em>max |x</em><sub><em>i</em></sub><em>|</em></td>
+        <td>Computes the maximum norm of a vector.<br>
+        BLAS computes the index of the first element having this
+        value.</td>
+    </tr>
+    <tr>
+        <td><code>_dot<br>
+        _dotu<br>
+        _dotc</code></td>
+        <td><code>inner_prod (x, y)</code>or<code><br>
+        inner_prod (conj (x), y)</code></td>
+        <td><em>x</em><sup><em>T</em></sup><em> y</em> or<br>
+        <em>x</em><sup><em>H</em></sup><em> y</em></td>
+        <td>Computes the inner product of two vectors. <br>
+        BLAS implements certain loop unrollment.</td>
+    </tr>
+    <tr>
+        <td><code>dsdot<br>
+        sdsdot</code></td>
+        <td><code>a + prec_inner_prod (x, y)</code></td>
+        <td><em>a + x</em><sup><em>T</em></sup><em> y</em></td>
+        <td>Computes the inner product in double precision. </td>
+    </tr>
+    <tr>
+        <td><code>_copy</code></td>
+        <td><code>x = y <br>
+        x ^= y</code></td>
+        <td><em>x &lt;- y</em></td>
+        <td>Copies one vector to another. <br>
+        BLAS implements certain loop unrollment.</td>
+    </tr>
+    <tr>
+        <td><code>_swap</code></td>
+        <td><code>swap (x, y)</code></td>
+        <td><em>x &lt;-&gt; y</em></td>
+        <td>Swaps two vectors. <br>
+        BLAS implements certain loop unrollment.</td>
+    </tr>
+    <tr>
+        <td><code>_scal<br>
+        csscal<br>
+        zdscal</code></td>
+        <td><code>x *= a</code></td>
+        <td><em>x &lt;- a x</em></td>
+        <td>Scales a vector. <br>
+        BLAS implements certain loop unrollment.</td>
+    </tr>
+    <tr>
+        <td><code>_axpy</code></td>
+        <td><code>y += a * x</code></td>
+        <td><em>y &lt;- a x + y</em></td>
+        <td>Adds a scaled vector. <br>
+        BLAS implements certain loop unrollment.</td>
+    </tr>
+    <tr>
+        <td><code>_rot<br>
+        _rotm<br>
+        csrot<br>
+        zdrot</code></td>
+        <td><code>t ^= a * x + b * y, <br>
+        y ^= - b * x + a * y,<br>
+        x ^= t</code></td>
+        <td><em>(x, y) &lt;- (a x + b y, -b x + a y)</em></td>
+        <td>Applies a plane rotation.</td>
+    </tr>
+    <tr>
+        <td><code>_rotg<br>
+        _rotmg</code></td>
+        <td>&nbsp;</td>
+        <td><em>(a, b) &lt;- <br>
+        &nbsp; (± a / sqrt (a</em><sup><em>2</em></sup> + <em>b</em><sup><em>2</em></sup><em>),
+        <br>
+        &nbsp; &nbsp; ± b / sqrt (a</em><sup><em>2</em></sup> + <em>b</em><sup><em>2</em></sup><em>))
+        </em>or<em><br>
+        (1, 0) &lt;- (0, 0)</em></td>
+        <td>Constructs a plane rotation.</td>
+    </tr>
+</table>
+
+<h4>Blas Level 2</h4>
+
+<table border="1">
+    <tr>
+        <th align="left">BLAS Call</th>
+        <th align="left">Mapped Library Expression</th>
+        <th align="left">Mathematical Description</th>
+        <th align="left">Comment</th>
+    </tr>
+    <tr>
+        <td><code>_t_mv</code></td>
+        <td><code>x = prod (A, x)</code> or<code><br>
+        x = prod (trans (A), x)</code> or<code><br>
+        x = prod (herm (A), x)</code></td>
+        <td><em>x &lt;- A x </em>or<em><br>
+        x &lt;- A</em><sup><em>T</em></sup><em> x </em>or<em><br>
+        x &lt;- A</em><sup><em>H</em></sup><em> x</em></td>
+        <td>Computes the product of a matrix with a vector.</td>
+    </tr>
+    <tr>
+        <td><code>_t_sv</code></td>
+        <td><code>solve (A, x, x) </code>or<br>
+        <code>solve (trans (A), x, x) </code>or<code><br>
+        solve (herm (A), x, x)</code></td>
+        <td><em>x &lt;- A</em><sup><em>-1</em></sup><em> x </em>or<em><br>
+        x &lt;- A</em><sup><em>T</em></sup><sup><sup><em>-1</em></sup></sup><em>
+        x </em>or<em><br>
+        x &lt;- A</em><sup><em>H</em></sup><sup><sup><em>-1</em></sup></sup><em>
+        x</em></td>
+        <td>Solves a linear equation for a triangular matrix.</td>
+    </tr>
+    <tr>
+        <td><code>_g_mv<br>
+        _s_mv<br>
+        _h_mv</code></td>
+        <td><code>y = a * prod (A, x) + b * y </code>or<code><br>
+        y = a * prod (trans (A), x) + b * y </code>or<code><br>
+        y = a * prod (herm (A), x) + b * y</code></td>
+        <td><em>y &lt;- A x + b y </em>or<em><br>
+        y &lt;- A</em><sup><em>T</em></sup><em> x + b y<br>
+        y &lt;- A</em><sup><em>H</em></sup><em> x + b y</em></td>
+        <td>Adds the scaled product of a matrix with a vector.</td>
+    </tr>
+    <tr>
+        <td><code>_g_r<br>
+        _g_ru<br>
+        _g_rc</code></td>
+        <td><code>A += a * outer_prod (x, y)</code> or<code><br>
+        A += a * outer_prod (x, conj (y))</code></td>
+        <td><em>A &lt;- a x y</em><sup><em>T</em></sup><em> + A </em>or<em><br>
+        A &lt;- a x y</em><sup><em>H</em></sup><em> + A</em></td>
+        <td>Performs a rank <em>1</em> update.</td>
+    </tr>
+    <tr>
+        <td><code>_s_r<br>
+        _h_r</code></td>
+        <td><code>A += a * outer_prod (x, x)</code> or<code><br>
+        A += a * outer_prod (x, conj (x))</code></td>
+        <td><em>A &lt;- a x x</em><sup><em>T</em></sup><em> + A</em>
+        or<em><br>
+        A &lt;- a x x</em><sup><em>H</em></sup><em> + A</em></td>
+        <td>Performs a symmetric or hermitean rank <em>1</em>
+        update.</td>
+    </tr>
+    <tr>
+        <td><code>_s_r2<br>
+        _h_r2</code></td>
+        <td><code>A += a * outer_prod (x, y) +<br>
+        &nbsp;a * outer_prod (y, x)) </code>or<code><br>
+        A += a * outer_prod (x, conj (y)) +<br>
+        &nbsp;conj (a) * outer_prod (y, conj (x)))</code></td>
+        <td><em>A &lt;- a x y</em><sup><em>T</em></sup><em> + a y
+        x</em><sup><em>T</em></sup><em> + A</em> or<em><br>
+        A &lt;- a x y</em><sup><em>H</em></sup><em> + a</em><sup><em>-</em></sup><em>
+        y x</em><sup><em>H</em></sup><em> + A</em> </td>
+        <td>Performs a symmetric or hermitean rank <em>2</em>
+        update.</td>
+    </tr>
+</table>
+
+<h4>Blas Level 3</h4>
+
+<table border="1">
+    <tr>
+        <th align="left">BLAS Call</th>
+        <th align="left">Mapped Library Expression</th>
+        <th align="left">Mathematical Description</th>
+        <th align="left">Comment</th>
+    </tr>
+    <tr>
+        <td><code>_t_mm</code></td>
+        <td><code>B = a * prod (A, B) </code>or<br>
+        <code>B = a * prod (trans (A), B) </code>or<br>
+        <code>B = a * prod (A, trans (B)) </code>or<br>
+        <code>B = a * prod (trans (A), trans (B)) </code>or<br>
+        <code>B = a * prod (herm (A), B) </code>or<br>
+        <code>B = a * prod (A, herm (B)) </code>or<br>
+        <code>B = a * prod (herm (A), trans (B)) </code>or<br>
+        <code>B = a * prod (trans (A), herm (B)) </code>or<br>
+        <code>B = a * prod (herm (A), herm (B))</code></td>
+        <td><em>B &lt;- a op (A) op (B) </em>with<br>
+        &nbsp; <em>op (X) = X </em>or<br>
+        &nbsp; <em>op (X) = X</em><sup><em>T</em></sup><em> </em>or<br>
+        &nbsp; <em>op (X) = X</em><sup><em>H</em></sup></td>
+        <td>Computes the scaled product of two matrices.</td>
+    </tr>
+    <tr>
+        <td><code>_t_sm</code></td>
+        <td><code>solve (A, B, B) </code>or<br>
+        <code>solve (trans (A), B, B) </code>or<code><br>
+        solve (herm (A), B, B)</code></td>
+        <td><em>B &lt;- A</em><sup><em>-1</em></sup><em> B </em>or<em><br>
+        B &lt;- A</em><sup><em>T</em></sup><sup><sup><em>-1</em></sup></sup><em>
+        B </em>or<em><br>
+        B &lt;- A</em><sup><em>H</em></sup><sup><sup><em>-1</em></sup></sup><em>
+        B</em></td>
+        <td>Solves a linear equation for a triangular matrix.</td>
+    </tr>
+    <tr>
+        <td><code>_g_mm<br>
+        _s_mm<br>
+        _h_mm</code></td>
+        <td><code>C = a * prod (A, B) + b * C </code>or<br>
+        <code>C = a * prod (trans (A), B) + b * C </code>or<br>
+        <code>C = a * prod (A, trans (B)) + b * C </code>or<br>
+        <code>C = a * prod (trans (A), trans (B)) + b * C </code>or<br>
+        <code>C = a * prod (herm (A), B) + b * C </code>or<br>
+        <code>C = a * prod (A, herm (B)) + b * C </code>or<br>
+        <code>C = a * prod (herm (A), trans (B)) + b * C </code>or<br>
+        <code>C = a * prod (trans (A), herm (B)) + b * C </code>or<br>
+        <code>C = a * prod (herm (A), herm (B)) + b * C</code></td>
+        <td><em>C &lt;- a op (A) op (B) + b C </em>with<br>
+        &nbsp; <em>op (X) = X </em>or<br>
+        &nbsp; <em>op (X) = X</em><sup><em>T</em></sup><em> </em>or<br>
+        &nbsp; <em>op (X) = X</em><sup><em>H</em></sup></td>
+        <td>Adds the scaled product of two matrices.</td>
+    </tr>
+    <tr>
+        <td><code>_s_rk<br>
+        _h_rk</code></td>
+        <td><code>B = a * prod (A, trans (A)) + b * B </code>or<font
+        face="Courier New"><code><br>
+        </code></font><code>B = a * prod (trans (A), A) + b * B </code>or<code><br>
+        B = a * prod (A, herm (A)) + b * B </code>or<font
+        face="Courier New"><code><br>
+        </code></font><code>B = a * prod (herm (A), A) + b * B</code></td>
+        <td><em>B &lt;- a A A</em><sup><em>T</em></sup><em> + b B
+        </em>or<em><br>
+        B &lt;- a A</em><sup><em>T</em></sup><em> A + b B </em>or<br>
+        <em>B &lt;- a A A</em><sup><em>H</em></sup><em> + b B </em>or<em><br>
+        B &lt;- a A</em><sup><em>H</em></sup><em> A + b B </em></td>
+        <td>Performs a symmetric or hermitean rank <em>k</em>
+        update.</td>
+    </tr>
+    <tr>
+        <td><code>_s_r2k<br>
+        _h_r2k</code></td>
+        <td><code>C = a * prod (A, trans (B)) +<br>
+        &nbsp;a * prod (B, trans (A)) + b * C </code>or<font
+        face="Courier New"><code><br>
+        </code></font><code>C = a * prod (trans (A), B) +<br>
+        &nbsp;a * prod (trans (B), A) + b * C </code>or<font
+        face="Courier New"><code><br>
+        </code></font><code>C = a * prod (A, herm (B)) +<br>
+        &nbsp;conj (a) * prod (B, herm (A)) + b * C </code>or<font
+        face="Courier New"><code><br>
+        </code></font><code>C = a * prod (herm (A), B) +<br>
+        &nbsp;conj (a) * prod (herm (B), A) + b * C</code></td>
+        <td><em>C &lt;- a A B</em><sup><em>T</em></sup><em> + a B
+        A</em><sup><em>T</em></sup><em> + b C </em>or<em><br>
+        C &lt;- a A</em><sup><em>T</em></sup><em> B + a B</em><sup><em>T</em></sup><em>A
+        + b C </em>or<em><br>
+        C &lt;- a A B</em><sup><em>H</em></sup><em> + a</em><sup><em>-</em></sup><em>
+        B A</em><sup><em>H</em></sup><em> + b C</em> or<em><br>
+        C &lt;- a A</em><sup><em>H</em></sup><em> B + a</em><sup><em>-</em></sup><em>
+        B</em><sup><em>H</em></sup><em> A + b C</em></td>
+        <td>Performs a symmetric or hermitean rank <em>2 k</em>
+        update.</td>
+    </tr>
+</table>
+
+<h2>Reference</h2>
+
+<h3>Storage Related</h3>
+
+<h4>Unbounded array</h4>
+
+<p>The templated class <code>unbounded_array</code> implements a
+simple C-like array using allocation via <code>new/delete</code>.</p>
+
+<pre><code>    template&lt;class T&gt;
+    class unbounded_array {
+    public:      
+        typedef unsigned size_type;
+        typedef T value_type;
+        typedef T &amp;reference_type;
+        typedef T *pointer_type;
+        typedef T *&amp;pointer_reference_type;
+
+        unbounded_array ();
+        unbounded_array (size_type size);
+        unbounded_array (const unbounded_array &amp;a);
+        ~unbounded_array ();
+
+        void resize (size_type size);
+
+        pointer_type data () const;
+        pointer_reference_type data ();
+        size_type size () const;
+
+        value_type operator [] (size_type i) const;
+        reference_type operator [] (size_type i);
+
+        class const_iterator {
+        public:
+            const_iterator (pointer_type p);
+
+            const_iterator operator ++ ();
+            const_iterator operator -- ();
+            value_type operator * () const;
+
+            friend bool operator == (const const_iterator &amp;it1, const const_iterator &amp;it2);
+            friend bool operator != (const const_iterator &amp;it1, const const_iterator &amp;it2);
+        };
+
+        const_iterator begin () const;
+        const_iterator end () const;
+
+        class iterator: 
+            public const_iterator {
+        public:
+            iterator (pointer_type p);
+
+            reference_type operator * ();
+        };
+
+        iterator begin ();
+        iterator end ();
+    };
+
+    template&lt;class T&gt;
+    unbounded_array&lt;T&gt; &amp;safe_copy (unbounded_array&lt;T&gt; &amp;a1, const unbounded_array&lt;T&gt; &amp;a2);
+    template&lt;class T&gt;
+    unbounded_array&lt;T&gt; &amp;fast_copy (unbounded_array&lt;T&gt; &amp;a1, unbounded_array&lt;T&gt; &amp;a2);
+    template&lt;class T&gt;
+    void safe_swap (unbounded_array&lt;T&gt; &amp;a1, unbounded_array&lt;T&gt; &amp;a2);
+    template&lt;class T&gt;
+    void fast_swap (unbounded_array&lt;T&gt; &amp;a1, unbounded_array&lt;T&gt; &amp;a2);</code></pre>
+
+<h4>Bounded array</h4>
+
+<p>The templated class <code>bounded_array</code> implements a
+simple C-like array.</p>
+
+<pre><code>    // Bounded array 
+    template&lt;class T, size_type N&gt;
+    class bounded_array {
+    public:      
+        typedef unsigned size_type;
+        typedef T value_type;
+        typedef T &amp;reference_type;
+        typedef T *pointer_type;
+
+        bounded_array ();
+        bounded_array (size_type size);
+        bounded_array (const bounded_array &amp;a);
+        ~bounded_array ();
+
+        void resize (size_type size);
+
+        pointer_type data () const;
+        size_type size () const;
+
+        value_type operator [] (size_type i) const;
+        reference_type operator [] (size_type i);
+
+        class const_iterator {
+        public:
+            const_iterator (pointer_type p);
+
+            const_iterator operator ++ ();
+            const_iterator operator -- ();
+            value_type operator * () const;
+
+            friend bool operator == (const const_iterator &amp;it1, const const_iterator &amp;it2);
+            friend bool operator != (const const_iterator &amp;it1, const const_iterator &amp;it2);
+        };
+
+        const_iterator begin () const;
+        const_iterator end () const;
+
+        class iterator:
+            public const_iterator {
+        public:
+            iterator (pointer_type p);
+
+            reference_type operator * ();
+        };
+
+        iterator begin ();
+        iterator end ();
+    };
+
+    template&lt;class T, size_type N&gt;
+    bounded_array&lt;T, N&gt; &amp;safe_copy (bounded_array&lt;T, N&gt; &amp;a1, const bounded_array&lt;T, N&gt; &amp;a2);
+    template&lt;class T, size_type N&gt;
+    bounded_array&lt;T, N&gt;  &amp;fast_copy (bounded_array&lt;T, N&gt;  &amp;a1, bounded_array&lt;T, N&gt;  &amp;a2);
+    template&lt;class T, size_type N&gt;
+    void safe_swap (bounded_array&lt;T, N&gt;  &amp;a1, bounded_array&lt;T, N&gt;  &amp;a2);
+    template&lt;class T, size_type N&gt;
+    void fast_swap (bounded_array&lt;T, N&gt;  &amp;a1, bounded_array&lt;T, N&gt;  &amp;a2);</code></pre>
+
+<h4>Slice</h4>
+
+<p>Class slice implements base functionality later used for the
+slicing of vectors and matrices.</p>
+
+<pre><code>    // Slice class
+    class slice {
+    public:
+        typedef unsigned size_type;
+
+        slice (size_type start, size_type stride, size_type size);
+        virtual ~slice ();
+
+        size_type start () const;
+        size_type stride () const;
+        size_type size () const;
+
+        size_type operator () (size_type i) const;
+
+        friend bool operator == (const slice &amp;s1, const slice &amp;s2);
+        friend bool operator != (const slice &amp;s1, const slice &amp;s2);
+
+        class const_iterator {
+        public:
+            const_iterator (const slice &amp;s, size_type i);
+
+            const_iterator &amp;operator ++ ();
+            const_iterator &amp;operator -- ();
+            size_type operator * () const;
+
+            friend bool operator == (const const_iterator &amp;it1, const const_iterator &amp;it2);
+            friend bool operator != (const const_iterator &amp;it1, const const_iterator &amp;it2);
+        };
+
+        const_iterator begin () const;
+        const_iterator end () const;
+    };</code></pre>
+
+<h3>Vector Related</h3>
+
+<h4>Vector</h4>
+
+<p>The templated class <code>vector </code>obviously forms one of
+the two major data types of this library.</p>
+
+<pre><code>    // Array based vector class 
+    template&lt;class T, class A, class F&gt;
+    class vector: 
+        public vector_expression&lt;T, vector&lt;T, A, F&gt; &gt; {
+    public:      
+        typedef unsigned size_type;
+        typedef T value_type;
+        typedef T &amp;reference_type;
+        typedef T *pointer_type;
+        typedef A array_type;
+        typedef F functor_type;
+
+        vector ();
+        vector (size_type size);
+        vector (const vector &amp;v);
+        template&lt;class AT, class AE&gt;
+        vector (const vector_expression&lt;AT, AE&gt; &amp;ae);
+        virtual ~vector ();
+
+        void resize (size_type size);
+
+        array_type &amp;data ();
+        size_type size () const;
+
+        value_type operator () (size_type i) const;
+        reference_type operator () (size_type i);
+
+        value_type operator [] (size_type i) const; 
+        reference_type operator [] (size_type i);
+
+        vector &amp;operator = (const vector &amp;v);
+        template&lt;class AT, class AE&gt;
+        vector &amp;operator ^= (const vector_expression&lt;AT, AE&gt; &amp;ae);
+        template&lt;class AT, class AE&gt;
+        vector &amp;operator = (const vector_expression&lt;AT, AE&gt; &amp;ae);
+        template&lt;class AT, class AE&gt;
+        vector &amp;operator += (const vector_expression&lt;AT, AE&gt; &amp;ae);
+        template&lt;class AT, class AE&gt;
+        vector &amp;operator -= (const vector_expression&lt;AT, AE&gt; &amp;ae);
+        template&lt;class AT&gt;
+        vector &amp;operator *= (const AT &amp;at);
+
+        class const_iterator {
+        public:
+            const_iterator (const vector &amp;v, pointer_type it);
+
+            const_iterator &amp;operator ++ ();
+            const_iterator &amp;operator -- ();
+            value_type operator * () const;
+
+            friend bool operator == (const const_iterator &amp;it1, const const_iterator &amp;it2);
+            friend bool operator != (const const_iterator &amp;it1, const const_iterator &amp;it2);
+        };
+
+        const_iterator begin () const;
+        const_iterator end () const;
+
+        class iterator: 
+            public const_iterator {
+        public:
+            iterator (const vector &amp;v, pointer_type it);
+
+            reference_type operator * ();
+        };
+
+        iterator begin ();
+        iterator end ();
+    };
+
+    template&lt;class T, class A, class F&gt;
+    vector&lt;T, A, F&gt; &amp;safe_copy (vector&lt;T, A, F&gt; &amp;v1, vector&lt;T, A, F&gt; &amp;v2);
+    template&lt;class T, class A, class F&gt;
+    vector&lt;T, A, F&gt; &amp;fast_copy (vector&lt;T, A, F&gt; &amp;v1, vector&lt;T, A, F&gt; &amp;v2);
+    template&lt;class T, class A, class F&gt;
+    void safe_swap (vector&lt;T, A, F&gt; &amp;v1, vector&lt;T, A, F&gt; &amp;v2);
+    template&lt;class T, class A, class F&gt;
+    void fast_swap (vector&lt;T, A, F&gt; &amp;v1, vector&lt;T, A, F&gt; &amp;v2);</code></pre>
+
+<h4>Vector Slice</h4>
+
+<p>The templated class <code>vector_slice </code>allows for the
+slicing of a vector resulting in a vector.</p>
+
+<pre><code>    // Vector based slice class
+    template&lt;class V&gt;
+    class vector_slice:
+	public vector_expression&lt;typename V::value_type, vector_slice&lt;V&gt; &gt; {
+    public:      
+        typedef V vector_type;
+        typedef typename V::size_type size_type;
+        typedef typename V::value_type value_type;
+        typedef typename V::reference_type reference_type;
+        typedef slice::const_iterator const_iterator_type;
+
+        vector_slice (vector_type &amp;data, const slice &amp;s);
+        virtual ~vector_slice ();
+
+        size_type size () const;
+
+        value_type operator () (size_type i) const;
+        reference_type operator () (size_type i);
+
+        value_type operator [] (size_type i) const;
+        reference_type operator [] (size_type i);
+
+        vector_slice &amp;operator ^= (const vector_slice &amp;vs);
+        vector_slice &amp;operator = (const vector_slice &amp;vs);
+        template&lt;class AT, class AE&gt;
+        vector_slice &amp;operator ^= (const vector_expression&lt;AT, AE&gt; &amp;ae);
+        template&lt;class AT, class AE&gt;
+        vector_slice &amp;operator = (const vector_expression&lt;AT, AE&gt; &amp;ae);
+        template&lt;class AT, class AE&gt;
+        vector_slice &amp;operator += (const vector_expression&lt;AT, AE&gt; &amp;ae);
+        template&lt;class AT, class AE&gt;
+        vector_slice &amp;operator -= (const vector_expression&lt;AT, AE&gt; &amp;ae);
+        template&lt;class AT&gt;
+        vector_slice &amp;operator *= (const AT &amp;at);
+
+        class const_iterator {
+        public:
+            const_iterator (vector_type &amp;v, const const_iterator_type &amp;it);
+
+            const_iterator &amp;operator ++ ();
+            const_iterator &amp;operator -- ();
+            value_type operator * () const;
+
+            friend bool operator == (const const_iterator &amp;it1, const const_iterator &amp;it2);
+            friend bool operator != (const const_iterator &amp;it1, const const_iterator &amp;it2);
+        };
+
+        const_iterator begin () const;
+        const_iterator end () const;
+
+        class iterator: 
+            public const_iterator {
+        public:
+            iterator (vector_type &amp;v, const slice::const_iterator &amp;it);
+
+            reference_type operator * ();
+        };
+
+        iterator begin ();
+        iterator end ();
+    };</code></pre>
+
+<h3>Scalar Expression Related</h3>
+
+<h4>Scalar Expression</h4>
+
+<p>The templated class <code>scalar_expression </code>forms the
+base for all static derived scalar expression classes.</p>
+
+<pre><code>    template&lt;class T&gt;
+    struct scalar_expression {
+        typedef T value_type;
+
+        virtual ~scalar_expression ();
+    };</code></pre>
+
+<h4>Scalar References</h4>
+
+<p>The templated class <code>scalar_const_reference </code>may
+contain a constant reference to a scalar expression.</p>
+
+<pre><code>    template&lt;class T&gt;
+    class scalar_const_reference:
+        public scalar_expression&lt;T&gt; {
+    public:
+        typedef T value_type;
+        
+        scalar_const_reference (const value_type &amp;t);
+
+        operator value_type () const;
+    };</code></pre>
+
+<h3>Vector Expression Related</h3>
+
+<h4>Vector Expressions</h4>
+
+<p>The templated class <code>vector_expression </code>forms the
+base for all static derived vector expression classes including
+class <code>vector</code> itself.</p>
+
+<pre><code>    template&lt;class T, class E&gt;
+    struct vector_expression {
+        typedef unsigned size_type;
+        typedef T value_type;
+        typedef T &amp;reference_type;
+        typedef E expression_type;
+
+        virtual ~vector_expression ();
+
+        void resize (size_type size);
+
+        size_type size () const;
+
+        value_type operator () (size_type i) const;
+        reference_type operator () (size_type i);
+
+        const expression_type &amp;expression () const;
+        expression_type &amp;expression ();
+    };</code></pre>
+
+<h4>Vector References</h4>
+
+<p>The templated class <code>vector_const_reference </code>may
+contain a constant reference to a vector expression.</p>
+
+<pre><code>    template&lt;class E&gt;
+    class vector_const_reference:
+        public vector_expression&lt;typename E::value_type, vector_const_reference&lt;E&gt; &gt; {
+    public:
+        typedef E expression_type;
+        typedef typename E::size_type size_type;
+        typedef typename E::value_type value_type;
+        typedef typename E::expression_type::const_iterator const_iterator_type;
+
+        vector_const_reference (const expression_type &amp;e);
+
+        size_type size () const;
+
+        value_type operator () (size_type i) const;
+
+        class const_iterator {
+        public:
+            const_iterator (const const_iterator_type &amp;it);
+
+            const_iterator &amp;operator ++ ();
+            const_iterator &amp;operator -- ();
+            value_type operator * () const;
+
+            friend bool operator == (const const_iterator &amp;it1, const const_iterator &amp;it2);
+            friend bool operator != (const const_iterator &amp;it1, const const_iterator &amp;it2);
+        };
+
+        const_iterator begin () const;
+        const_iterator end () const;
+    };</code></pre>
+
+<p>The templated class <code>vector_reference </code>may contain
+a reference to a vector expression .</p>
+
+<pre><code>    template&lt;class E&gt;
+    class vector_reference: 
+        public vector_expression&lt;typename E::value_type, vector_reference&lt;E&gt; &gt; {
+    public:
+        typedef E expression_type;
+        typedef typename E::size_type size_type;
+        typedef typename E::value_type value_type;
+        typedef typename E::reference_type reference_type;
+        typedef typename E::expression_type::const_iterator const_iterator_type;
+        typedef typename E::expression_type::iterator iterator_type;
+
+        vector_reference (expression_type &amp;e);
+
+        void resize (size_type size);
+
+        size_type size () const;
+
+        value_type operator () (size_type i) const;
+        reference_type operator () (size_type i);
+
+        class const_iterator {
+        public:
+            const_iterator (const const_iterator_type &amp;it);
+
+            const_iterator &amp;operator ++ ();
+            const_iterator &amp;operator -- ();
+            value_type operator * () const;
+
+            friend bool operator == (const const_iterator &amp;it1, const const_iterator &amp;it2);
+            friend bool operator != (const const_iterator &amp;it1, const const_iterator &amp;it2);
+        };
+
+        const_iterator begin () const;
+        const_iterator end () const;
+
+        class iterator:
+            public const_iterator {
+        public:
+            iterator (const iterator_type &amp;it);
+
+            reference_type operator * ();
+        };
+
+        iterator begin ();
+        iterator end ();
+    };</code></pre>
+
+<h4>Vector Operations</h4>
+
+<p>The templated class <code>vector_unary </code>describes a
+unary vector operation.</p>
+
+<pre><code>    template&lt;class E, class F&gt;
+    class vector_unary: 
+        public vector_expression&lt;typename F::value_type, vector_unary&lt;E, F&gt; &gt; {
+    public:
+        typedef E expression_type;
+        typedef F functor_type;
+        typedef typename E::size_type size_type;
+        typedef typename F::value_type value_type;
+        typedef typename E::const_iterator const_iterator_type;
+
+        vector_unary (const expression_type &amp;e);
+        size_type size () const;
+
+        value_type operator () (size_type i) const;
+
+        class const_iterator {
+        public:
+            const_iterator (const const_iterator_type &amp;it);
+
+            const_iterator &amp;operator ++ ();
+            const_iterator &amp;operator -- ();
+            value_type operator * () const;
+
+            friend bool operator == (const const_iterator &amp;it1, const const_iterator &amp;it2);
+            friend bool operator != (const const_iterator &amp;it1, const const_iterator &amp;it2);
+        };
+
+        const_iterator begin () const;
+        const_iterator end () const;
+    };</code></pre>
+
+<p>The supported unary operations are:</p>
+
+<pre><code>    template&lt;class T, class E&gt; 
+    vector_unary&lt;vector_const_reference&lt;vector_expression&lt;T, E&gt; &gt;, 
+                 scalar_negate&lt;T&gt; &gt; 
+    operator - (const vector_expression&lt;T, E&gt; &amp;e);
+
+    template&lt;class T, class E&gt; 
+    vector_unary&lt;vector_const_reference&lt;vector_expression&lt;T, E&gt; &gt;, 
+                 scalar_conj&lt;T&gt; &gt; 
+    conj (const vector_expression&lt;T, E&gt; &amp;e);</code></pre>
+
+<p>The templated class <code>vector_binary </code>describes a
+binary vector operation.</p>
+
+<pre><code>    template&lt;class E1, class E2, class F&gt;
+    class vector_binary:
+        public vector_expression&lt;typename F::value_type, vector_binary&lt;E1, E2, F&gt; &gt; {
+    public:
+        typedef E1 expression1_type;
+        typedef E2 expression2_type;
+        typedef F functor_type;
+        typedef promote_traits&lt;typename E1::size_type, typename E2::size_type&gt;::promote_type size_type;
+        typedef typename F::value_type value_type;
+        typedef typename E1::const_iterator const_iterator1_type;
+        typedef typename E2::const_iterator const_iterator2_type;
+
+        vector_binary (const expression1_type &amp;e1, const expression2_type &amp;e2);
+
+        size_type size () const;
+
+        value_type operator () (size_type i) const;
+
+        class const_iterator {
+        public:
+            const_iterator (const const_iterator1_type &amp;it1, const const_iterator2_type &amp;it2);
+
+            const_iterator &amp;operator ++ ();
+            const_iterator &amp;operator -- ();
+            value_type operator * () const;
+
+            friend bool operator == (const const_iterator &amp;it1, const const_iterator &amp;it2);
+            friend bool operator != (const const_iterator &amp;it1, const const_iterator &amp;it2);
+        };
+
+        const_iterator begin () const;
+        const_iterator end () const;
+    };</code></pre>
+
+<p>The supported binary operations are:</p>
+
+<pre><code>    template&lt;class T1, class E1, class T2, class E2&gt;
+    vector_binary&lt;vector_const_reference&lt;vector_expression&lt;T1, E1&gt; &gt;, 
+                  vector_const_reference&lt;vector_expression&lt;T2, E2&gt; &gt;, 
+                  scalar_plus&lt;T1, T2&gt; &gt; 
+    operator + (const vector_expression&lt;T1, E1&gt; &amp;e1, 
+                const vector_expression&lt;T2, E2&gt; &amp;e2);
+
+    template&lt;class T1, class E1, class T2, class E2&gt;
+    vector_binary&lt;vector_const_reference&lt;vector_expression&lt;T1, E1&gt; &gt;, 
+                  vector_const_reference&lt;vector_expression&lt;T2, E2&gt; &gt;, 
+                  scalar_minus&lt;T1, T2&gt; &gt; 
+    operator - (const vector_expression&lt;T1, E1&gt; &amp;e1, 
+                const vector_expression&lt;T2, E2&gt; &amp;e2);</code></pre>
+
+<p>The templated class <code>vector_binary_scalar </code>describes
+a binary operation between a scalar and a vector.</p>
+
+<pre><code>    template&lt;class E1, class E2, class F&gt;
+    class vector_binary_scalar:
+        public vector_expression&lt;typename F::value_type, vector_binary_scalar&lt;E1, E2, F&gt; &gt; {
+    public:
+        typedef E1 expression1_type;
+        typedef E2 expression2_type;
+        typedef F functor_type;
+        typedef typename E2::size_type size_type;
+        typedef typename F::value_type value_type;
+        typedef typename E1::value_type const_iterator1_type;
+        typedef typename E2::const_iterator const_iterator2_type;
+
+        vector_binary_scalar (const expression1_type &amp;e1, const expression2_type &amp;e2);
+
+        size_type size () const;
+
+        value_type operator () (size_type i) const;
+
+        class const_iterator {
+        public:
+            const_iterator (const const_iterator1_type &amp;it1, const const_iterator2_type &amp;it2);
+
+            const_iterator &amp;operator ++ ();
+            const_iterator &amp;operator -- ();
+            value_type operator * () const;
+
+            friend bool operator == (const const_iterator &amp;it1, const const_iterator &amp;it2);
+            friend bool operator != (const const_iterator &amp;it1, const const_iterator &amp;it2);
+        };
+
+        const_iterator begin () const;
+        const_iterator end () const;
+    };</code></pre>
+
+<p>The supported binary operations between a scalar and a vector
+are:</p>
+
+<pre><code>    template&lt;class T1, class T2, class E2&gt;
+    vector_binary_scalar&lt;scalar_const_reference&lt;T1&gt;, 
+                         vector_const_reference&lt;vector_expression&lt;T2, E2&gt; &gt;, 
+                         scalar_multiplies&lt;T1, T2&gt; &gt; 
+    operator * (const T1 &amp;e1, 
+                const vector_expression&lt;T2, E2&gt; &amp;e2);</code></pre>
+
+<h4>Vector Reductions</h4>
+
+<p>The templated class <code>vector_scalar_unary </code>describes
+a unary vector reducing operation.</p>
+
+<pre><code>    template&lt;class E, class F&gt;
+    class vector_scalar_unary:
+        public scalar_expression&lt;typename F::value_type&gt; {
+    public:
+        typedef E expression_type;
+        typedef F functor_type;
+        typedef typename F::value_type value_type;
+
+        vector_scalar_unary (const expression_type &amp;e);
+
+        operator value_type () const;
+    };</code></pre>
+
+<p>The supported unary vector reducing operations are:</p>
+
+<pre><code>    template&lt;class T, class E&gt;
+    vector_scalar_unary&lt;vector_const_reference&lt;vector_expression&lt;T, E&gt; &gt;, 
+                        vector_sum&lt;T&gt; &gt; 
+    sum (const vector_expression&lt;T, E&gt; &amp;e);
+
+    template&lt;class T, class E&gt;
+    vector_scalar_unary&lt;vector_const_reference&lt;vector_expression&lt;T, E&gt; &gt;, 
+                        vector_norm_1&lt;T&gt; &gt; 
+    norm_1 (const vector_expression&lt;T, E&gt; &amp;e);
+
+    template&lt;class T, class E&gt;
+    vector_scalar_unary&lt;vector_const_reference&lt;vector_expression&lt;T, E&gt; &gt;, 
+                        vector_norm_2&lt;T&gt; &gt; 
+    norm_2 (const vector_expression&lt;T, E&gt; &amp;e);
+
+    template&lt;class T, class E&gt;
+    vector_scalar_unary&lt;vector_const_reference&lt;vector_expression&lt;T, E&gt; &gt;, 
+                        vector_norm_inf&lt;T&gt; &gt; 
+    norm_inf (const vector_expression&lt;T, E&gt; &amp;e);</code></pre>
+
+<p>The templated class <code>vector_scalar_binary </code>describes
+a binary vector reducing operation.</p>
+
+<pre><code>    template&lt;class E1, class E2, class F&gt;
+    class vector_scalar_binary:
+        public scalar_expression&lt;typename F::value_type&gt; {
+    public:
+        typedef E1 expression1_type;
+        typedef E2 expression2_type;
+        typedef F functor_type;
+        typedef typename F::value_type value_type;
+
+        vector_scalar_binary (const expression1_type &amp;e1, const expression2_type  &amp;e2);
+
+        operator value_type () const;
+    };</code></pre>
+
+<p>The supported binary vector reducing operations are:</p>
+
+<pre><code>    template&lt;class T1, class E1, class T2, class E2&gt;
+    vector_scalar_binary&lt;vector_const_reference&lt;vector_expression&lt;T1, E1&gt; &gt;, 
+                         vector_const_reference&lt;vector_expression&lt;T2, E2&gt; &gt;, 
+                         vector_inner_prod&lt;T1, T2&gt; &gt; 
+    inner_prod (const vector_expression&lt;T1, E1&gt; &amp;e1, 
+                const vector_expression&lt;T2, E2&gt; &amp;e2);
+    template&lt;class T1, class E1, class T2, class E2&gt;
+    vector_scalar_binary&lt;vector_const_reference&lt;vector_expression&lt;T1, E1&gt; &gt;, 
+                         vector_const_reference&lt;vector_expression&lt;T2, E2&gt; &gt;, 
+                         vector_prec_inner_prod&lt;T1, T2&gt; &gt; 
+    prec_inner_prod (const vector_expression&lt;T1, E1&gt; &amp;e1, 
+                     const vector_expression&lt;T2, E2&gt; &amp;e2);</code></pre>
+
+<h3>Matrix Related</h3>
+
+<h4>Matrix</h4>
+
+<p>The templated class <code>matrix </code>obviously forms one of
+the two major data types of this library.</p>
+
+<pre><code>    // Array based matrix class 
+    template&lt;class T, class A, class F&gt;
+    class matrix: 
+        public matrix_expression&lt;T, matrix&lt;T, A, F&gt; &gt; {
+    public:      
+        typedef unsigned size_type;
+        typedef T value_type;
+        typedef T &amp;reference_type;
+        typedef T *pointer_type;
+        typedef const A const_array_type;
+        typedef A array_type;
+        typedef F functor_type;
+        typedef typename F::functor1_type functor1_type;
+        typedef typename F::functor2_type functor2_type;
+
+        matrix ();
+        matrix (size_type size1, size_type size2);
+        matrix (const matrix &amp;m);
+        template&lt;class AT, class AE&gt;
+        matrix (const matrix_expression&lt;AT, AE&gt; &amp;ae);
+        virtual ~matrix ();
+
+        void resize (size_type size1, size_type size2);
+
+        const_array_type &amp;data () const;
+        array_type &amp;data ();
+        size_type size1 () const;
+        size_type size2 () const;
+
+        value_type operator () (size_type i, size_type j) const;
+        reference_type operator () (size_type i, size_type j);
+
+        matrix_vector_slice&lt;matrix&gt; operator [] (size_type i);
+        matrix_vector_slice&lt;matrix&gt; row (size_type i);
+        matrix_vector_slice&lt;matrix&gt; column (size_type j);
+
+        matrix &amp;operator = (const matrix &amp;m);
+        template&lt;class AT, class AE&gt;
+        matrix &amp;operator ^= (const matrix_expression&lt;AT, AE&gt; &amp;ae);
+        template&lt;class AT, class AE&gt;
+        matrix &amp;operator = (const matrix_expression&lt;AT, AE&gt; &amp;ae);
+        template&lt;class AT, class AE&gt;
+        matrix&amp; operator += (const matrix_expression&lt;AT, AE&gt; &amp;ae);
+        template&lt;class AT, class AE&gt;
+        matrix&amp; operator -= (const matrix_expression&lt;AT, AE&gt; &amp;ae);
+        template&lt;class AT&gt;
+        matrix&amp; operator *= (const AT &amp;at);
+
+        class const_iterator2;
+
+        class const_iterator1 {
+        public:
+            const_iterator1 (const matrix &amp;m, pointer_type it);
+
+            const_iterator1 &amp;operator ++ ();
+            const_iterator1 &amp;operator -- ();
+            value_type operator * () const;
+
+            const_iterator2 begin ();
+            const_iterator2 end ();
+
+            friend bool operator == (const const_iterator1 &amp;it1, const const_iterator1 &amp;it2);
+            friend bool operator != (const const_iterator1 &amp;it1, const const_iterator1 &amp;it2);
+        };
+
+        const_iterator1 begin1 () const;
+        const_iterator1 end1 () const;
+
+        class iterator2;
+
+        class iterator1:
+            public const_iterator1 {
+        public:
+            iterator1 (const matrix &amp;m, pointer_type it);
+
+            reference_type operator * ();
+
+            iterator2 begin ();
+            iterator2 end ();
+        };
+
+        iterator1 begin1 ();
+        iterator1 end1 ();
+
+        class const_iterator2 {
+        public:
+            const_iterator2 (const matrix &amp;m, pointer_type it);
+
+            const_iterator2 &amp;operator ++ ();
+            const_iterator2 &amp;operator -- ();
+            value_type operator * () const;
+
+            const_iterator1 begin ();
+            const_iterator1 end ();
+
+            friend bool operator == (const const_iterator2 &amp;it1, const const_iterator2 &amp;it2);
+            friend bool operator != (const const_iterator2 &amp;it1, const const_iterator2 &amp;it2);
+        };
+
+        const_iterator2 begin2 () const;
+        const_iterator2 end2 () const;
+
+        class iterator2: 
+            public const_iterator2 {
+        public:
+            iterator2 (const matrix &amp;m, pointer_type it);
+
+            reference_type operator * ();
+
+            iterator1 begin ();
+            iterator1 end ();
+        };
+
+        iterator2 begin2 ();
+        iterator2 end2 ();
+    };
+
+    template&lt;class T, class A, class F&gt;
+    void safe_copy (matrix&lt;T, A, F&gt; &amp;m1, matrix&lt;T, A, F&gt; &amp;m2);
+    template&lt;class T, class A, class F&gt;
+    void fast_copy (matrix&lt;T, A, F&gt; &amp;m1, matrix&lt;T, A, F&gt; &amp;m2);
+    template&lt;class T, class A, class F&gt;
+    void safe_swap (matrix&lt;T, A, F&gt; &amp;m1, matrix&lt;T, A, F&gt; &amp;m2);
+    template&lt;class T, class A, class F&gt;
+    void fast_swap (matrix&lt;T, A, F&gt; &amp;m1, matrix&lt;T, A, F&gt; &amp;m2);</code></pre>
+
+<h4>Vector Slice</h4>
+
+<p>The templated class <code>matrix_vector_slice </code>allows
+for the slicing of a matrix resulting in a vector.</p>
+
+<pre><code>    // Matrix based vector slice class
+    template&lt;class M&gt;
+    class matrix_vector_slice:
+	public vector_expression&lt;typename M::value_type, matrix_vector_slice&lt;M&gt; &gt; {
+    public:      
+        typedef M matrix_type;
+        typedef typename M::size_type size_type;
+        typedef typename M::value_type value_type;
+        typedef typename M::reference_type reference_type;
+        typedef slice::const_iterator const_iterator_type;
+
+        matrix_vector_slice (matrix_type &amp;data, const slice &amp;s1, const slice &amp;s2);
+        virtual ~matrix_vector_slice ();
+
+        size_type size () const;
+
+        value_type operator () (size_type i) const;
+        reference_type operator () (size_type i);
+
+        value_type operator [] (size_type i) const;
+        reference_type operator [] (size_type i);
+
+        matrix_vector_slice &amp;operator ^= (const matrix_vector_slice &amp;mvs);
+        matrix_vector_slice &amp;operator = (const matrix_vector_slice &amp;mvs);
+        template&lt;class AT, class AE&gt;
+        matrix_vector_slice &amp;operator ^= (const vector_expression&lt;AT, AE&gt; &amp;ae);
+        template&lt;class AT, class AE&gt;
+        matrix_vector_slice &amp;operator = (const vector_expression&lt;AT, AE&gt; &amp;ae);
+        template&lt;class AT, class AE&gt;
+        matrix_vector_slice &amp;operator += (const vector_expression&lt;AT, AE&gt; &amp;ae);
+        template&lt;class AT, class AE&gt;
+        matrix_vector_slice &amp;operator -= (const vector_expression&lt;AT, AE&gt; &amp;ae);
+        template&lt;class AT&gt;
+        matrix_vector_slice &amp;operator *= (const AT &amp;at);
+
+        class const_iterator {
+        public:
+            const_iterator (matrix_type &amp;m, const const_iterator_type &amp;it1, const const_iterator_type &amp;it2);
+
+            const_iterator &amp;operator ++ ();
+            const_iterator &amp;operator -- ();
+            value_type operator * () const;
+
+            friend bool operator == (const const_iterator &amp;it1, const const_iterator &amp;it2);
+            friend bool operator != (const const_iterator &amp;it1, const const_iterator &amp;it2);
+        };
+
+        const_iterator begin () const;
+        const_iterator end () const;
+
+        class iterator:
+            public const_iterator {
+        public:
+            iterator (matrix_type &amp;m, const const_iterator_type &amp;it1, const const_iterator_type &amp;it2);
+
+            reference_type operator * ();
+        };
+
+        iterator begin ();
+        iterator end ();
+    };</code></pre>
+
+<h4>Matrix Slice</h4>
+
+<p>The templated class <code>matrix_slice </code>allows for the
+slicing of a matrix resulting in a submatrix.</p>
+
+<pre><code>    // Matrix based slice class
+    template&lt;class M&gt;
+    class matrix_slice:
+	public matrix_expression&lt;typename M::value_type, matrix_slice&lt;M&gt; &gt; {
+    public:      
+        typedef M matrix_type;
+        typedef typename M::size_type size_type;
+        typedef typename M::value_type value_type;
+        typedef typename M::reference_type reference_type;
+        typedef slice::const_iterator const_iterator_type;
+
+        matrix_slice (matrix_type &amp;data, const slice &amp;s1, const slice &amp;s2);
+        virtual ~matrix_slice ();
+
+        size_type size1 () const;
+        size_type size2 () const;
+
+        value_type operator () (size_type i, size_type j) const;
+        reference_type operator () (size_type i, size_type j);
+
+        matrix_vector_slice&lt;matrix_type&gt; operator [] (size_type i);
+        matrix_vector_slice&lt;matrix_type&gt; row (size_type i);
+        matrix_vector_slice&lt;matrix_type&gt; column (size_type j);
+
+        matrix_slice &amp;operator ^= (const matrix_slice &amp;ms);
+        matrix_slice &amp;operator = (const matrix_slice &amp;ms);
+        template&lt;class AT, class AE&gt;
+        matrix_slice &amp;operator ^= (const matrix_expression&lt;AT, AE&gt; &amp;ae);
+        template&lt;class AT, class AE&gt;
+        matrix_slice &amp;operator = (const matrix_expression&lt;AT, AE&gt; &amp;ae) { 
+        template&lt;class AT, class AE&gt;
+        matrix_slice&amp; operator += (const matrix_expression&lt;AT, AE&gt; &amp;ae);
+        template&lt;class AT, class AE&gt;
+        matrix_slice&amp; operator -= (const matrix_expression&lt;AT, AE&gt; &amp;ae);
+        template&lt;class AT&gt;
+        matrix_slice&amp; operator *= (const AT &amp;at);
+
+        class const_iterator2;
+
+        class const_iterator1 {
+        public:
+            const_iterator1 (matrix_type &amp;m, const const_iterator_type &amp;it1, const const_iterator_type &amp;it2);
+
+            const_iterator1 &amp;operator ++ ();
+            const_iterator1 &amp;operator -- ();
+            value_type operator * () const;
+
+            const_iterator2 begin () const;
+            const_iterator2 end () const;
+
+            friend bool operator == (const const_iterator1 &amp;it1, const const_iterator1 &amp;it2);
+            friend bool operator != (const const_iterator1 &amp;it1, const const_iterator1 &amp;it2);
+        };
+
+        const_iterator1 begin1 () const;
+        const_iterator1 end1 () const;
+
+        class iterator2;
+
+        class iterator1:
+            public const_iterator1 {
+        public:
+            iterator1 (matrix_type &amp;m, const const_iterator_type &amp;it1, const const_iterator_type &amp;it2);
+
+            reference_type operator * ();
+
+            iterator2 begin ();
+            iterator2 end ();
+        };
+
+        iterator1 begin1 ();
+        iterator1 end1 ();
+
+        class const_iterator2 {
+        public:
+            const_iterator2 (matrix_type &amp;m, const const_iterator_type &amp;it1, const const_iterator_type &amp;it2);
+
+            const_iterator2 &amp;operator ++ ();
+            const_iterator2 &amp;operator -- ();
+            value_type operator * () const;
+
+            const_iterator1 begin () const;
+            const_iterator1 end () const;
+
+            friend bool operator == (const const_iterator2 &amp;it1, const const_iterator2 &amp;it2);
+            friend bool operator != (const const_iterator2 &amp;it1, const const_iterator2 &amp;it2);
+        };
+
+        const_iterator2 begin2 () const;
+        const_iterator2 end2 () const;
+
+        class iterator2:
+            public const_iterator2 {
+        public:
+            iterator2 (matrix_type &amp;m, const const_iterator_type &amp;it1, const const_iterator_type &amp;it2);
+
+            reference_type operator * ();
+
+            iterator1 begin ();
+            iterator1 end ();
+        };
+
+        iterator2 begin2 ();
+        iterator2 end2 ();
+    };</code></pre>
+
+<h3>Matrix Expression Related</h3>
+
+<h4>Matrix Expressions</h4>
+
+<p>The templated class <code>matrix_expression </code>forms the
+base for all static derived matrix expression classes including
+class <code>matrix</code> itself.</p>
+
+<pre><code>    template&lt;class T, class E&gt;
+    struct matrix_expression {
+        typedef unsigned size_type;
+        typedef T value_type;
+        typedef T &amp;reference_type;
+        typedef E expression_type;
+
+        virtual ~matrix_expression ();
+
+        void resize (size_type size1, size_type size2);
+
+        size_type size1 () const;
+        size_type size2 () const;
+
+        value_type operator () (size_type i, size_type j) const;
+        reference_type operator () (size_type i, size_type j);
+
+        const expression_type &amp;expression () const;
+        expression_type &amp;expression ();
+    };</code></pre>
+
+<h4>Matrix References</h4>
+
+<p>The templated class <code>matrix_const_reference </code>may
+contain a constant reference to a matrix expression.</p>
+
+<pre><code>    template&lt;class E&gt;
+    class matrix_const_reference:
+        public matrix_expression&lt;typename E::value_type, matrix_const_reference&lt;E&gt; &gt; {
+    public:
+        typedef E expression_type;
+        typedef typename E::value_type value_type;
+        typedef typename E::expression_type::const_iterator1 const_iterator1_type;
+        typedef typename E::expression_type::const_iterator2 const_iterator2_type;
+
+        matrix_const_reference (const expression_type &amp;e);
+
+        size_type size1 () const;
+        size_type size2 () const;
+
+        value_type operator () (size_type i, size_type j) const;
+
+        class const_iterator2;
+
+        class const_iterator1 {
+        public:
+            const_iterator1 (const const_iterator1_type &amp;it);
+
+            const_iterator1 &amp;operator ++ ();
+            const_iterator1 &amp;operator -- ();
+            value_type operator * () const;
+
+            const_iterator2 begin () const;
+            const_iterator2 end () const;
+
+            friend bool operator == (const const_iterator1 &amp;it1, const const_iterator1 &amp;it2);
+            friend bool operator != (const const_iterator1 &amp;it1, const const_iterator1 &amp;it2);
+        };
+
+        const_iterator1 begin1 () const;
+        const_iterator1 end1 () const;
+
+        class const_iterator2 {
+        public:
+            const_iterator2 (const const_iterator2_type &amp;it);
+
+            const_iterator2 &amp;operator ++ ();
+            const_iterator2 &amp;operator -- ();
+            value_type operator * () const;
+
+            const_iterator1 begin () const;
+            const_iterator1 end () const;
+
+            friend bool operator == (const const_iterator2 &amp;it1, const const_iterator2 &amp;it2);
+            friend bool operator != (const const_iterator2 &amp;it1, const const_iterator2 &amp;it2);
+        };
+
+        const_iterator2 begin2 () const;
+        const_iterator2 end2 () const;
+    };</code></pre>
+
+<p>The templated class <code>matrix_reference </code>may contain
+a reference to a matrix expression .</p>
+
+<pre><code>    template&lt;class E&gt;
+    class matrix_reference:
+        public matrix_expression&lt;typename E::value_type, matrix_reference&lt;E&gt; &gt; {
+    public:
+        typedef E expression_type;
+        typedef typename E::size_type size_type;
+        typedef typename E::value_type value_type;
+        typedef typename E::reference_type reference_type;
+        typedef typename E::expression_type::const_iterator1 const_iterator1_type;
+        typedef typename E::expression_type::iterator1 iterator1_type;
+        typedef typename E::expression_type::const_iterator2 const_iterator2_type;
+        typedef typename E::expression_type::iterator2 iterator2_type;
+
+        matrix_reference (expression_type &amp;e);
+
+        void resize (size_type size1, size_type size2);
+
+        size_type size1 () const;
+        size_type size2 () const;
+
+        value_type operator () (size_type i, size_type j) const;
+        reference_type operator () (size_type i, size_type j);
+
+        class const_iterator2;
+
+        class const_iterator1 {
+        public:
+            const_iterator1 (const const_iterator1_type &amp;it);
+
+            const_iterator1 &amp;operator ++ ();
+            const_iterator1 &amp;operator -- ();
+            value_type operator * () const;
+
+            const_iterator2 begin () const;
+            const_iterator2 end () const;
+
+            friend bool operator == (const const_iterator1 &amp;it1, const const_iterator1 &amp;it2);
+            friend bool operator != (const const_iterator1 &amp;it1, const const_iterator1 &amp;it2);
+        };
+
+        const_iterator1 begin1 () const;
+        const_iterator1 end1 () const;
+
+        class iterator2;
+
+        class iterator1 {
+        public:
+            iterator1 (const iterator1_type &amp;it);
+
+            reference_type operator * ();
+
+            iterator2 begin ();
+            iterator2 end ();
+        };
+
+        iterator1 begin1 ();
+        iterator1 end1 ();
+
+        class const_iterator2 {
+        public:
+            const_iterator2 (const const_iterator2_type &amp;it);
+
+            const_iterator2 &amp;operator ++ ();
+            const_iterator2 &amp;operator -- ();
+            value_type operator * () const;
+
+            const_iterator1 begin () const;
+            const_iterator1 end () const;
+
+            friend bool operator == (const const_iterator2 &amp;it1, const const_iterator2 &amp;it2);
+            friend bool operator != (const const_iterator2 &amp;it1, const const_iterator2 &amp;it2);
+        };
+
+        const_iterator2 begin2 () const;
+        const_iterator2 end2 () const;
+
+        class iterator2 {
+        public:
+            iterator2 (const iterator2_type &amp;it);
+
+            reference_type operator * ();
+
+            iterator1 begin ();
+            iterator1 end ();
+        };
+
+        iterator2 begin2 ();
+        iterator2 end2 ();
+    };</code></pre>
+
+<h4>Matrix Operations</h4>
+
+<p>The templated classes <code>matrix_unary1 </code>and <code>matrix_unary2
+</code>describe unary matrix operations.</p>
+
+<pre><code>    template&lt;class E, class F&gt;
+    class matrix_unary1:
+        public matrix_expression&lt;typename F::value_type, matrix_unary1&lt;E, F&gt; &gt; {
+    public:
+        typedef E expression_type;
+        typedef F functor_type;
+        typedef typename E::size_type size_type;
+        typedef typename F::value_type value_type;
+        typedef typename E::const_iterator1 const_iterator1_type;
+        typedef typename E::const_iterator2 const_iterator2_type;
+
+        matrix_unary1 (const expression_type &amp;e);
+
+        size_type size1 () const;
+        size_type size2 () const;
+
+        value_type operator () (size_type i, size_type j) const;
+
+        class const_iterator2;
+
+        class const_iterator1 {
+        public:
+            const_iterator1 (const const_iterator1_type &amp;it);
+
+            const_iterator1 &amp;operator ++ ();
+            const_iterator1 &amp;operator -- ();
+            value_type operator * () const;
+
+            const_iterator2 begin () const;
+            const_iterator2 end () const;
+
+            friend bool operator == (const const_iterator1 &amp;it1, const const_iterator1 &amp;it2);
+            friend bool operator != (const const_iterator1 &amp;it1, const const_iterator1 &amp;it2);
+        };
+
+        const_iterator1 begin1 () const;
+        const_iterator1 end1 () const;
+
+        class const_iterator2 {
+        public:
+            const_iterator2 (const const_iterator2_type &amp;it);
+
+            const_iterator2 &amp;operator ++ ();
+            const_iterator2 &amp;operator -- ();
+            value_type operator * () const;
+
+            const_iterator1 begin () const;
+            const_iterator1 end () const;
+
+            friend bool operator == (const const_iterator2 &amp;it1, const const_iterator2 &amp;it2);
+            friend bool operator != (const const_iterator2 &amp;it1, const const_iterator2 &amp;it2);
+        };
+
+        const_iterator2 begin2 () const;
+        const_iterator2 end2 () const;
+    };
+
+    template&lt;class E, class F&gt;
+    class matrix_unary2:
+        public matrix_expression&lt;typename F::value_type, matrix_unary2&lt;E, F&gt; &gt; {
+    public:
+        typedef E expression_type;
+        typedef F functor_type;
+        typedef typename E::size_type size_type;
+        typedef typename F::value_type value_type;
+        typedef typename E::const_iterator1 const_iterator2_type;
+        typedef typename E::const_iterator2 const_iterator1_type;
+
+        matrix_unary2 (const expression_type &amp;e);
+
+        size_type size1 () const;
+        size_type size2 () const;
+
+        value_type operator () (size_type i, size_type j) const;
+
+        class const_iterator2;
+
+        class const_iterator1 {
+        public:
+            const_iterator1 (const const_iterator1_type &amp;it);
+
+            const_iterator1 &amp;operator ++ ();
+            const_iterator1 &amp;operator -- ();
+            value_type operator * () const;
+
+            const_iterator2 begin () const;
+            const_iterator2 end () const;
+
+            friend bool operator == (const const_iterator1 &amp;it1, const const_iterator1 &amp;it2);
+            friend bool operator != (const const_iterator1 &amp;it1, const const_iterator1 &amp;it2);
+        };
+
+        const_iterator1 begin1 () const;
+        const_iterator1 end1 () const;
+
+        class const_iterator2 {
+        public:
+            const_iterator2 (const const_iterator2_type &amp;it);
+
+            const_iterator2 &amp;operator ++ ();
+            const_iterator2 &amp;operator -- ();
+            value_type operator * () const;
+
+            const_iterator1 begin () const;
+            const_iterator1 end () const;
+
+            friend bool operator == (const const_iterator2 &amp;it1, const const_iterator2 &amp;it2);
+            friend bool operator != (const const_iterator2 &amp;it1, const const_iterator2 &amp;it2);
+        };
+
+        const_iterator2 begin2 () const;
+        const_iterator2 end2 () const;
+    };</code></pre>
+
+<p>The supported unary operations are:</p>
+
+<pre><code>    template&lt;class T, class E&gt; 
+    matrix_unary1&lt;matrix_const_reference&lt;matrix_expression&lt;T, E&gt; &gt;, 
+                  scalar_negate&lt;T&gt; &gt; 
+    operator - (const matrix_expression&lt;T, E&gt; &amp;e);
+
+    template&lt;class T, class E&gt; 
+    matrix_unary1&lt;matrix_const_reference&lt;matrix_expression&lt;T, E&gt; &gt;, 
+                  scalar_conj&lt;T&gt; &gt; 
+    conj (const matrix_expression&lt;T, E&gt; &amp;e);
+
+    template&lt;class T, class E&gt; 
+    matrix_unary2&lt;matrix_const_reference&lt;matrix_expression&lt;T, E&gt; &gt;, 
+                  matrix_trans&lt;T&gt; &gt; 
+    trans (const matrix_expression&lt;T, E&gt; &amp;e);
+
+    template&lt;class T, class E&gt; 
+    matrix_unary2&lt;matrix_const_reference&lt;matrix_expression&lt;T, E&gt; &gt;, 
+                  matrix_herm&lt;T&gt; &gt; 
+    herm (const matrix_expression&lt;T, E&gt; &amp;e);</code></pre>
+
+<p>The templated class <code>matrix_binary </code>describes a
+binary matrix operation.</p>
+
+<pre><code>    template&lt;class E1, class E2, class F&gt;
+    class matrix_binary:
+        public matrix_expression&lt;typename F::value_type, matrix_binary&lt;E1, E2, F&gt; &gt; {
+    public:
+        typedef E1 expression1_type;
+        typedef E2 expression2_type;
+        typedef F functor_type;
+        typedef promote_traits&lt;typename E1::size_type, typename E2::size_type&gt;::promote_type size_type;
+        typedef typename F::value_type value_type;
+        typedef typename E1::const_iterator1 const_iterator11_type;
+        typedef typename E1::const_iterator2 const_iterator12_type;
+        typedef typename E2::const_iterator1 const_iterator21_type;
+        typedef typename E2::const_iterator2 const_iterator22_type;
+
+        matrix_binary (const E1 &amp;e1, const E2 &amp;e2);
+
+        size_type size1 () const;
+        size_type size2 () const;
+
+        value_type operator () (size_type i, size_type j) const;
+
+        class const_iterator2;
+
+        class const_iterator1 {
+        public:
+            const_iterator1 (const const_iterator11_type &amp;it1, const const_iterator21_type &amp;it2);
+
+            const_iterator1 &amp;operator ++ ();
+            const_iterator1 &amp;operator -- ();
+            value_type operator * () const;
+
+            const_iterator2 begin () const;
+            const_iterator2 end () const;
+
+            friend bool operator == (const const_iterator1 &amp;it1, const const_iterator1 &amp;it2);
+            friend bool operator != (const const_iterator1 &amp;it1, const const_iterator1 &amp;it2);
+        };
+
+        const_iterator1 begin1 () const;
+        const_iterator1 end1 () const;
+
+        class const_iterator2 {
+        public:
+            const_iterator2 (const const_iterator12_type &amp;it1, const const_iterator22_type &amp;it2);
+
+            const_iterator2 &amp;operator ++ ();
+            const_iterator2 &amp;operator -- ();
+            value_type operator * () const;
+
+            const_iterator1 begin () const;
+            const_iterator1 end () const;
+
+            friend bool operator == (const const_iterator2 &amp;it1, const const_iterator2 &amp;it2);
+            friend bool operator != (const const_iterator2 &amp;it1, const const_iterator2 &amp;it2);
+        };
+
+        const_iterator2 begin2 () const;
+        const_iterator2 end2 () const;
+    };</code></pre>
+
+<p>The supported binary operations are:</p>
+
+<pre><code>    template&lt;class T1, class E1, class T2, class E2&gt;
+    matrix_binary&lt;matrix_const_reference&lt;matrix_expression&lt;T1, E1&gt; &gt;, 
+                  matrix_const_reference&lt;matrix_expression&lt;T2, E2&gt; &gt;, 
+                  scalar_plus&lt;T1, T2&gt; &gt; 
+    operator + (const matrix_expression&lt;T1, E1&gt; &amp;e1, 
+                const matrix_expression&lt;T2, E2&gt; &amp;e2);
+
+    template&lt;class T1, class E1, class T2, class E2&gt;
+    matrix_binary&lt;matrix_const_reference&lt;matrix_expression&lt;T1, E1&gt; &gt;, 
+                  matrix_const_reference&lt;matrix_expression&lt;T2, E2&gt; &gt;, 
+                  scalar_minus&lt;T1, T2&gt; &gt; 
+    operator - (const matrix_expression&lt;T1, E1&gt; &amp;e1, 
+                const matrix_expression&lt;T2, E2&gt; &amp;e2);</code></pre>
+
+<p>The templated class <code>matrix_binary_scalar </code>describes
+a binary operation between a scalar and a matrix.</p>
+
+<pre><code>    template&lt;class E1, class E2, class F&gt;
+    class matrix_binary_scalar:
+        public matrix_expression&lt;typename F::value_type, matrix_binary_scalar&lt;E1, E2, F&gt; &gt; {
+    public:
+        typedef E1 expression1_type;
+        typedef E2 expression2_type;
+        typedef F functor_type;
+        typedef typename E2::size_type size_type;
+        typedef typename F::value_type value_type;
+        typedef typename E1::value_type const_iterator1_type;
+        typedef typename E2::const_iterator1 const_iterator21_type;
+        typedef typename E2::const_iterator2 const_iterator22_type;
+
+        matrix_binary_scalar (const expression1_type &amp;e1, const expression2_type &amp;e2);
+
+        size_type size1 () const;
+        size_type size2 () const;
+
+        value_type operator () (size_type i, size_type j) const;
+
+        class const_iterator2;
+
+        class const_iterator1 {
+        public:
+            const_iterator1 (const const_iterator1_type &amp;it1, const const_iterator21_type &amp;it2);
+
+            const_iterator1 &amp;operator ++ ();
+            const_iterator1 &amp;operator -- ();
+            value_type operator * () const;
+
+            const_iterator2 begin () const;
+            const_iterator2 end () const;
+
+            friend bool operator == (const const_iterator1 &amp;it1, const const_iterator1 &amp;it2);
+            friend bool operator != (const const_iterator1 &amp;it1, const const_iterator1 &amp;it2);
+        };
+
+        const_iterator1 begin1 () const;
+        const_iterator1 end1 () const;
+
+        class const_iterator2 {
+        public:
+            const_iterator2 (const const_iterator1_type &amp;it1, const const_iterator22_type &amp;it2);
+
+            const_iterator2 &amp;operator ++ ();
+            const_iterator2 &amp;operator -- ();
+            value_type operator * () const;
+
+            const_iterator1 begin () const;
+            const_iterator1 end () const;
+
+            friend bool operator == (const const_iterator2 &amp;it1, const const_iterator2 &amp;it2);
+            friend bool operator != (const const_iterator2 &amp;it1, const const_iterator2 &amp;it2);
+        };
+
+        const_iterator2 begin2 () const;
+        const_iterator2 end2 () const;
+    };</code></pre>
+
+<p>The supported binary operations between a scalar and a vector
+are:</p>
+
+<pre><code>    template&lt;class T1, class T2, class E2&gt;
+    matrix_binary_scalar&lt;scalar_const_reference&lt;T1&gt;, 
+                         matrix_const_reference&lt;matrix_expression&lt;T2, E2&gt; &gt;, 
+                         scalar_multiplies&lt;T1, T2&gt; &gt; 
+    operator * (const T1 &amp;e1, 
+                const matrix_expression&lt;T2, E2&gt; &amp;e2);</code></pre>
+
+<h4>Matrix Reductions</h4>
+
+<p>The templated class <code>matrix_vector_unary </code>describes
+a unary matrix reducing operation.</p>
+
+<pre><code>    template&lt;class E&gt;
+    class matrix_vector_unary:
+        public vector_expression&lt;typename E::value_type, matrix_vector_unary&lt;E&gt; &gt; {
+    public:
+        typedef E expression_type;
+        typedef typename E::size_type size_type;
+        typedef typename E::value_type value_type;
+        typedef typename slice::const_iterator const_iterator_type;
+
+        matrix_vector_unary (const expression_type &amp;e, const slice &amp;s1, const slice &amp;s2);
+
+        size_type size () const;
+
+        value_type operator () (size_type i) const;
+
+        class const_iterator {
+        public:
+            const_iterator (const expression_type &amp;e, const const_iterator_type &amp;it1, const const_iterator_type &amp;it2);
+
+            const_iterator &amp;operator ++ ();
+            const_iterator &amp;operator -- ();
+            value_type operator * () const;
+
+            friend bool operator == (const const_iterator &amp;it1, const const_iterator &amp;it2);
+            friend bool operator != (const const_iterator &amp;it1, const const_iterator &amp;it2);
+        };
+
+        const_iterator begin () const;
+        const_iterator end () const;
+    };</code></pre>
+
+<p>The supported unary matrix reducing operations are:</p>
+
+<pre><code>    template&lt;class T, class E&gt;
+    matrix_vector_unary&lt;matrix_const_reference&lt;matrix_expression&lt;T, E&gt; &gt; &gt; 
+    row (const matrix_expression&lt;T, E&gt; &amp;e, 
+         size_type i);
+
+    template&lt;class T, class E&gt;
+    matrix_vector_unary&lt;matrix_const_reference&lt;matrix_expression&lt;T, E&gt; &gt; &gt; 
+    column (const matrix_expression&lt;T, E&gt; &amp;e, 
+            size_type j);</code></pre>
+
+<h4>Matrix Vector Operations</h4>
+
+<p>The templated class <code>matrix_vector_binary </code>describes
+a binary matrix reducing operation.</p>
+
+<pre><code>    template&lt;class E1, class E2, class F&gt;
+    class matrix_vector_binary:
+        public vector_expression&lt;typename F::value_type, matrix_vector_binary&lt;E1, E2, F&gt; &gt; {
+    public:
+        typedef E1 expression1_type;
+        typedef E2 expression2_type;
+        typedef F functor_type;
+        typedef promote_traits&lt;typename E1::size_type, typename E2::size_type&gt;::promote_type size_type;
+        typedef typename F::value_type value_type;
+        typedef typename E1::const_iterator1 const_iterator1_type;
+        typedef typename E2::const_iterator const_iterator2_type;
+
+        matrix_vector_binary (const expression1_type &amp;e1, const expression2_type &amp;e2);
+
+        size_type size () const;
+
+        value_type operator () (size_type i) const;
+
+        class const_iterator {
+        public:
+            const_iterator (size_type size, const const_iterator1_type &amp;it1, const const_iterator2_type &amp;it2);
+
+            const_iterator &amp;operator ++ ();
+            const_iterator &amp;operator -- ();
+            value_type operator * () const;
+
+            friend bool operator == (const const_iterator &amp;it1, const const_iterator &amp;it2);
+            friend bool operator != (const const_iterator &amp;it1, const const_iterator &amp;it2);
+        };
+
+        const_iterator begin () const;
+        const_iterator end () const;
+    };</code></pre>
+
+<p>The supported binary matrix reducing operations are:</p>
+
+<pre><code>    template&lt;class T1, class E1, class T2, class E2&gt;
+    matrix_vector_binary&lt;matrix_const_reference&lt;matrix_expression&lt;T1, E1&gt; &gt;, 
+                         vector_const_reference&lt;vector_expression&lt;T2, E2&gt; &gt;, 
+                         matrix_vector_prod&lt;T1, T2&gt; &gt; 
+    prod (const matrix_expression&lt;T1, E1&gt; &amp;e1, 
+          const vector_expression&lt;T2, E2&gt; &amp;e2);</code></pre>
+
+<p>The templated class <code>matrix_vector_ternary </code>describes
+a ternary matrix reducing operation.</p>
+
+<pre><code>    template&lt;class E1, class E2, class E3, class F&gt;
+    class matrix_vector_ternary:
+        public vector_expression&lt;typename F::value_type, matrix_vector_ternary&lt;E1, E2, E3, F&gt; &gt; {
+    public:
+        typedef E1 expression1_type;
+        typedef E2 expression2_type;
+        typedef E3 expression3_type;
+        typedef F functor_type;
+        typedef typename E2::size_type size_type;
+        typedef typename F::value_type value_type;
+
+        matrix_vector_ternary (const expression1_type &amp;e1, const expression2_type &amp;e2, const expression3_type &amp;e3, int hint); 
+
+        size_type size () const;
+
+        value_type operator () (size_type i) const;
+
+        class const_iterator {
+        public:
+            const_iterator (const matrix_vector_ternary &amp;mvt, size_type it);
+
+            const_iterator &amp;operator ++ ();
+            const_iterator &amp;operator -- ();
+            value_type operator * () const;
+
+            friend bool operator == (const const_iterator &amp;it1, const const_iterator &amp;it2);
+            friend bool operator != (const const_iterator &amp;it1, const const_iterator &amp;it2);
+        };
+
+        const_iterator begin () const;
+        const_iterator end () const;
+    };</code></pre>
+
+<p>The supported ternary matrix reducing operations are:</p>
+
+<pre><code>    template&lt;class T1, class E1, class T2, class A2, class F2, class T3, class E3&gt;
+    NUMERICS_INLINE
+    matrix_vector_ternary&lt;matrix_const_reference&lt;matrix_expression&lt;T1, E1&gt; &gt;, 
+                          vector_reference&lt;vector&lt;T2, A2, F2&gt; &gt;, 
+                          vector_const_reference&lt;vector_expression&lt;T3, E3&gt; &gt;, 
+                          matrix_vector_solve&lt;T1, T2, T3&gt; &gt; 
+    solve (const matrix_expression&lt;T1, E1&gt; &amp;e1, 
+           vector&lt;T2, A2, F2&gt; &amp;e2,
+           const vector_expression&lt;T3, E3&gt; &amp;e3,
+           int hint);</code></pre>
+
+<h4>Matrix Matrix Operations</h4>
+
+<p>The templated class <code>matrix_matrix_binary </code>describes
+a binary matrix operation.</p>
+
+<pre><code>    template&lt;class E1, class E2, class F&gt;
+    class matrix_matrix_binary:
+        public matrix_expression&lt;typename F::value_type, matrix_matrix_binary&lt;E1, E2, F&gt; &gt; {
+    public:
+        typedef E1 expression1_type;
+        typedef E2 expression2_type;
+        typedef F functor_type;
+        typedef promote_traits&lt;typename E1::size_type, typename E2::size_type&gt;::promote_type size_type;
+        typedef typename F::value_type value_type;
+        typedef typename E1::const_iterator1 const_iterator11_type;
+        typedef typename E1::const_iterator2 const_iterator12_type;
+        typedef typename E2::const_iterator1 const_iterator21_type;
+        typedef typename E2::const_iterator2 const_iterator22_type;
+
+        matrix_matrix_binary (const expression1_type &amp;e1, const expression2_type &amp;e2);
+
+        size_type size1 () const;
+        size_type size2 () const;
+
+        value_type operator () (size_type i, size_type j) const;
+
+        class const_iterator2;
+
+        class const_iterator1 {
+        public:
+            const_iterator1 (size_type size, const const_iterator11_type &amp;it1, const const_iterator22_type &amp;it2);
+
+            const_iterator1 &amp;operator ++ ();
+            const_iterator1 &amp;operator -- ();
+            value_type operator * () const;
+
+            const_iterator2 begin () const;
+            const_iterator2 end () const;
+
+            friend bool operator == (const const_iterator1 &amp;it1, const const_iterator1 &amp;it2);
+            friend bool operator != (const const_iterator1 &amp;it1, const const_iterator1 &amp;it2);
+        };
+
+        const_iterator1 begin1 () const;
+        const_iterator1 end1 () const;
+
+        class const_iterator2 {
+        public:
+            const_iterator2 (size_type size, const const_iterator12_type &amp;it1, const const_iterator21_type &amp;it2);
+
+            const_iterator2 &amp;operator ++ ();
+            const_iterator2 &amp;operator -- ();
+            value_type operator * () const;
+
+            const_iterator1 begin () const;
+            const_iterator1 end () const;
+
+            friend bool operator == (const const_iterator2 &amp;it1, const const_iterator2 &amp;it2);
+            friend bool operator != (const const_iterator2 &amp;it1, const const_iterator2 &amp;it2);
+        };
+
+        const_iterator2 begin2 () const;
+        const_iterator2 end2 () const;
+    };</code></pre>
+
+<p>The supported binary matrix operations are:</p>
+
+<pre><code>    template&lt;class T1, class E1, class T2, class E2&gt;
+    matrix_matrix_binary&lt;matrix_const_reference&lt;matrix_expression&lt;T1, E1&gt; &gt;, 
+                         matrix_const_reference&lt;matrix_expression&lt;T2, E2&gt; &gt;, 
+                         matrix_matrix_prod&lt;T1, T2&gt; &gt; 
+    prod (const matrix_expression&lt;T1, E1&gt; &amp;e1, 
+          const matrix_expression&lt;T2, E2&gt; &amp;e2);</code></pre>
+
+<p>The templated class <code>matrix_matrix_ternary </code>describes
+a ternary matrix operation.</p>
+
+<pre><code>    template&lt;class E1, class E2, class E3, class F&gt;
+    class matrix_matrix_ternary:
+        public matrix_expression&lt;typename F::value_type, matrix_matrix_ternary&lt;E1, E2, E3, F&gt; &gt; {
+    public:
+        typedef E1 expression1_type;
+        typedef E2 expression2_type;
+        typedef E3 expression3_type;
+        typedef F functor_type;
+        typedef typename E2::size_type size_type;
+        typedef typename F::value_type value_type;
+
+        matrix_matrix_ternary (const expression1_type &amp;e1, const expression2_type &amp;e2, const expression3_type &amp;e3, int hint);
+
+        size_type size1 () const;
+        size_type size2 () const;
+
+        value_type operator () (size_type i, size_type j) const;
+
+        class const_iterator2;
+
+        class const_iterator1 {
+        public:
+            const_iterator1 (const matrix_matrix_ternary &amp;mmt, size_type it1, size_type it2);
+
+            const_iterator1 &amp;operator ++ ();
+            const_iterator1 &amp;operator -- ();
+            value_type operator * () const;
+
+            const_iterator2 begin () const;
+            const_iterator2 end () const;
+
+            friend bool operator == (const const_iterator1 &amp;it1, const const_iterator1 &amp;it2);
+            friend bool operator != (const const_iterator1 &amp;it1, const const_iterator1 &amp;it2);
+        };
+
+        const_iterator1 begin1 () const;
+        const_iterator1 end1 () const;
+
+        class const_iterator2 {
+        public:
+            const_iterator2 (const matrix_matrix_ternary &amp;mmt, size_type it1, size_type it2);
+
+            const_iterator2 &amp;operator ++ ();
+            const_iterator2 &amp;operator -- ();
+            value_type operator * () const;
+
+            const_iterator1 begin () const;
+            const_iterator1 end () const;
+
+            friend bool operator == (const const_iterator2 &amp;it1, const const_iterator2 &amp;it2);
+            friend bool operator != (const const_iterator2 &amp;it1, const const_iterator2 &amp;it2);
+        };
+
+        const_iterator2 begin2 () const;
+        const_iterator2 end2 () const;
+    };</code></pre>
+
+<p>The supported ternary matrix operations are:</p>
+
+<pre><code>    template&lt;class T1, class E1, class T2, class A2, class F2, class T3, class E3&gt;
+    matrix_matrix_ternary&lt;matrix_const_reference&lt;matrix_expression&lt;T1, E1&gt; &gt;, 
+                          matrix_reference&lt;matrix&lt;T2, A2, F2&gt; &gt;, 
+                          matrix_const_reference&lt;matrix_expression&lt;T3, E3&gt; &gt;, 
+                          matrix_matrix_solve&lt;T1, T2, T3&gt; &gt; 
+    solve (const matrix_expression&lt;T1, E1&gt; &amp;e1, 
+           matrix&lt;T2, A2, F2&gt; &amp;e2,
+           const matrix_expression&lt;T3, E3&gt; &amp;e3,
+           int hint);</code></pre>
+</body>
+</html>
