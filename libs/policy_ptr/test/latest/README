@@ -1,0 +1,20 @@
+Policy-based Smart Pointer Tests
+
+To build these tests, you must first configure your path to the Boost 1.30
+sources.  Edit the makefile and specify the appropriate SDIR.  The provided
+makefile assumes that your compiler can already find the Boost headers in
+the system include directory.  These tests have only been certified to pass 
+with gcc-3.3 on Linux.  They almost compile on VC7.1, but the lack of ADL has 
+slowed porting to that compiler.
+
+The three tests smart_ptr_test, no_check, and assert_check should all compile.
+smart_ptr_test should pass all tests.  Use --log_level=all for verbose output.
+no_check should crash with a segfault or other memory error, since it attempts
+to dereference a null pointer.  You can verify this in your debugger.
+assert_check should finish executing, but should fail every test with an
+exception or assertion.
+
+The reject_null_* tests should fail to compile, as they attempt to violate
+the compile-time interface of the reject_null_* policies.
+
+Dave
