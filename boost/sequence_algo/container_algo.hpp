@@ -24,14 +24,13 @@
 //                into separate file for <algorithm> extensions [Herve]
 
 
-#ifndef BOOST_CONTAINER_ALGORITHM_HPP
-#define BOOST_CONTAINER_ALGORITHM_HPP
+#ifndef BOOST_SEQUENCE_ALGO_CONTAINER_ALGORITHM_HPP
+#define BOOST_SEQUENCE_ALGO_CONTAINER_ALGORITHM_HPP
 
 //#include <boost/sequence_algo/algorithm.hpp>
 #include "container_traits.hpp"
 #include <boost/concept_check.hpp>
 #include <algorithm>
-#include <cstddef>
 #include <numeric>
 
 namespace boost 
@@ -414,11 +413,33 @@ namespace boost
 	>                                       
 	const_pair;
 
+	typedef typename std::pair
+	<
+	    typename container_traits<C1>::result_iterator,
+	    typename container_traits<C2>::result_iterator
+	>
+	result_pair;
+
     }; // 'pair_return'
 
     /////////////////////////////////////////////////////////////////////////
     // Nonmodifying Sequence Operations
     /////////////////////////////////////////////////////////////////////////
+
+    //
+    // @note: for compilers without ordering of template functions
+    //        we need to use a different approach which will remove
+    //        the possibility to pass r-values as arguments.
+    //
+
+#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
+
+    template< typename Container, typename Unary_function >
+    inline Unary_function 
+    for_each( Container& c, Unary_function fun )
+    {
+        return std::for_each( begin( c ), end( c ), fun );
+    }
 
     template< typename Container, typename Unary_function >
     inline Unary_function 
@@ -429,16 +450,12 @@ namespace boost
 
 
 
-#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
-
     template< typename Container, typename T >
     inline typename container_traits<Container>::iterator 
     find( Container& c, const T& value )
     {
         return std::find( begin( c ), end( c ), value );
     }
-
-#endif // BOOST_NO_FUNCTION_TEMPLATE_ORDERING
 
     template< typename Container, typename T >
     inline typename container_traits<Container>::const_iterator 
@@ -449,16 +466,12 @@ namespace boost
 
 
 
-#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
-
     template< typename Container, typename Predicate >
     inline typename container_traits<Container>::iterator 
     find_if( Container& c, Predicate pred )
     {
         return std::find_if( begin( c ), end( c ), pred );
     }
-
-#endif // BOOST_NO_FUNCTION_TEMPLATE_ORDERING
 
     template< typename Container, typename Predicate >
     inline typename container_traits<Container>::const_iterator
@@ -471,8 +484,6 @@ namespace boost
     namespace ext
     {
 
-#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
-
 	template< typename Container >
 	inline typename container_traits<Container>::iterator
 	adjacent_find( Container& c )
@@ -480,8 +491,6 @@ namespace boost
 	    return std::adjacent_find( begin( c ), end( c ) );
 	}
 
-#endif // BOOST_NO_FUNCTION_TEMPLATE_ORDERING
-	
 	template< typename Container >
 	inline typename container_traits<Container>::const_iterator
 	adjacent_find( const Container& c )
@@ -489,8 +498,6 @@ namespace boost
 	    return std::adjacent_find( begin( c ), end( c ) );
 	}
 
-#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
-	
 	template< typename Container, typename Binary_predicate >
 	inline typename container_traits<Container>::iterator 
 	adjacent_find( Container& c, Binary_predicate pred )
@@ -498,8 +505,6 @@ namespace boost
 	    return std::adjacent_find( begin( c ), end( c ), pred );
 	}
 
-#endif // BOOST_NO_FUNCTION_TEMPLATE_ORDERING
-	
 	template< typename Container, typename Binary_predicate >
 	inline typename container_traits<Container>::const_iterator 
 	adjacent_find( const Container& c, Binary_predicate pred )
@@ -511,7 +516,6 @@ namespace boost
 
 
 
-#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
 
     template< typename Container1, typename Container2 >
     inline typename container_traits<Container1>::iterator 
@@ -521,8 +525,6 @@ namespace boost
 				   begin( c2 ), end( c2 ) );
     }
 
-#endif // BOOST_NO_FUNCTION_TEMPLATE_ORDERING
-
     template< typename Container1, typename Container2 >
     inline typename container_traits<Container1>::const_iterator 
     find_first_of( const Container1& c1, const Container2& c2 )
@@ -530,8 +532,6 @@ namespace boost
         return std::find_first_of( begin( c1 ), end( c1 ), 
 				   begin( c2 ), end( c2 ) );
     }
-
-#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
 
     template< typename Container1, typename Container2, 
     typename Binary_predicate >
@@ -542,8 +542,6 @@ namespace boost
         return std::find_first_of( begin( c1 ), end( c1 ), 
 				   begin( c2 ), end( c2 ), pred );
     }
-
-#endif // BOOST_NO_FUNCTION_TEMPLATE_ORDERING
 
     template< typename Container1, typename Container2, 
     typename Binary_predicate >
@@ -564,7 +562,7 @@ namespace boost
         return std::count( begin( c ), end( c ), value );
     }
 
-
+    
 
     template< typename Container, typename Predicate >
     inline typename container_traits<Container>::difference_type
@@ -731,7 +729,7 @@ namespace boost
 
 
     template< typename Container1, typename Container2 >
-    typename container_traits<Container1>::iterator 
+    inline typename container_traits<Container1>::iterator 
     find_end( Container1& c1, const Container2& c2 )
     {
         return std::find_end( begin( c1 ), end( c1 ),
@@ -739,7 +737,7 @@ namespace boost
     }
 
     template< typename Container1, typename Container2 >
-    typename container_traits<Container1>::const_iterator 
+    inline typename container_traits<Container1>::const_iterator 
     find_end( const Container1& c1, const Container2& c2 )
     {
         return std::find_end( begin( c1 ), end( c1 ),
@@ -748,7 +746,7 @@ namespace boost
 
     template< typename Container1, typename Container2,
     typename Binary_predicate >
-    typename container_traits<Container1>::iterator 
+    inline typename container_traits<Container1>::iterator 
     find_end( Container1& c1, const Container2& c2, Binary_predicate pred )
     {
         return std::find_end( begin( c1 ), end( c1 ), 
@@ -757,13 +755,200 @@ namespace boost
 
     template< typename Container1, typename Container2,
     typename Binary_predicate >
-    typename container_traits<Container1>::const_iterator 
+    inline typename container_traits<Container1>::const_iterator 
     find_end( const Container1& c1, const Container2& c2, 
               Binary_predicate pred )
     {
         return std::find_end( begin( c1 ), end( c1 ), 
 			      begin( c2 ), end( c2 ), pred );
     }
+
+#else // BOOST_NO_FUNCTION_TEMPLATE_ORDERING
+
+    template< typename Container, typename Unary_function >
+    inline Unary_function 
+    for_each( Container& c, Unary_function fun )
+    {
+        return std::for_each( begin( c ), end( c ), fun );
+    }
+
+
+
+    template< typename Container, typename T >
+    inline typename container_traits<Container>::iterator 
+    find( Container& c, const T& value )
+    {
+        return std::find( begin( c ), end( c ), value );
+    }
+
+
+
+    template< typename Container, typename Predicate >
+    inline typename container_traits<Container>::iterator 
+    find_if( Container& c, Predicate pred )
+    {
+        return std::find_if( begin( c ), end( c ), pred );
+    }
+
+
+
+    namespace ext
+    {
+
+	template< typename Container >
+	inline typename container_traits<Container>::iterator
+	adjacent_find( Container& c )
+	{
+	    return std::adjacent_find( begin( c ), end( c ) );
+	}
+
+
+
+	template< typename Container, typename Binary_predicate >
+	inline typename container_traits<Container>::iterator 
+	adjacent_find( Container& c, Binary_predicate pred )
+	{
+	    return std::adjacent_find( begin( c ), end( c ), pred );
+	}
+
+    } // namespace 'ext'
+
+
+
+    template< typename Container1, typename Container2 >
+    inline typename container_traits<Container1>::iterator 
+    find_first_of( Container1& c1, const Container2& c2 )
+    {
+        return std::find_first_of( begin( c1 ), end( c1 ), 
+				   begin( c2 ), end( c2 ) );
+    }
+
+    template< typename Container1, typename Container2, 
+    typename Binary_predicate >
+    inline typename container_traits<Container1>::iterator 
+    find_first_of( Container1& c1, const Container2& c2, 
+                   Binary_predicate pred )
+    {
+        return std::find_first_of( begin( c1 ), end( c1 ), 
+				   begin( c2 ), end( c2 ), pred );
+    }
+
+
+
+    template< typename Container, typename T >
+    inline typename container_traits<Container>::difference_type
+    count( const Container& c, const T& value )
+    {
+        return std::count( begin( c ), end( c ), value );
+    }
+
+    
+
+    template< typename Container, typename Predicate >
+    inline typename container_traits<Container>::difference_type
+    count_if( const Container& c, Predicate pred )
+    {
+        return std::count_if( begin( c ), end( c ), pred );
+    }
+
+
+    namespace ext
+    {
+	template< typename Container1, typename Container2 >
+	inline typename pair_return<Container1,Container2>::result_pair
+	mismatch( Container1& c1, Container2& c2 )
+	{
+	    return std::mismatch( begin( c1 ), end( c1 ), begin( c2 ) );
+	}
+		
+	template< typename Container1, typename Container2, 
+		  typename Binary_predicate >
+	inline typename pair_return<Container1, Container2>::result_pair
+	mismatch( Container1& c1, Container2& c2, Binary_predicate pred )
+	{
+	    return std::mismatch( begin( c1 ), end( c1 ), begin( c2 ), pred );
+	}
+
+
+
+	template< typename Container1, typename Container2 >
+	inline bool 
+	equal( const Container1& c1, const Container2& c2 )
+	{
+	    return std::equal( begin( c1 ), end( c1 ), begin( c2 ) );
+	}
+	
+	template< typename Container1, typename Container2, 
+		  typename Binary_predicate > 
+	inline bool 
+	equal( const Container1& c1, const Container2& c2, 
+	       Binary_predicate pred )
+	{
+	    return std::equal( begin( c1 ), end( c1 ), begin( c2 ), pred );
+	}
+	
+    } // namespace 'ext'
+
+
+    template< typename Container1, typename Container2 >
+    inline typename container_traits<Container1>::iterator 
+    search( Container1& c1, const Container2& c2 )
+    {
+        return std::search( begin( c1 ), end( c1 ), begin( c2 ), end( c2 ) );
+    }
+
+    template< typename Container1, typename Container2,
+    typename Binary_predicate >
+    inline typename container_traits<Container1>::iterator
+    search( Container1& c1, const Container2& c2, Binary_predicate pred )
+    {
+        return std::search( begin( c1 ), end( c1 ), 
+			    begin( c2 ), end( c2 ), pred );
+    }
+
+
+
+    namespace ext
+    {
+
+	template< typename Container, typename Integer, typename T >
+	inline typename container_traits<Container>::iterator 
+	search_n( Container& c, Integer count, const T& value )
+	{
+	    return std::search_n( begin( c ), end( c ), count, value );
+	}
+
+	template< typename Container, typename Integer, 
+		  typename T, typename Binary_predicate >
+	inline typename container_traits<Container>::iterator
+	search_n( Container& c, Integer count, const T& value,
+		   Binary_predicate pred )
+	{
+	    return std::search_n( begin( c ), end( c ), count, value, pred );
+	}
+
+    } // namespace 'ext'
+
+
+    template< typename Container1, typename Container2 >
+    inline typename container_traits<Container1>::iterator 
+    find_end( Container1& c1, const Container2& c2 )
+    {
+        return std::find_end( begin( c1 ), end( c1 ),
+			      begin( c2 ), end( c2 ) ); 
+    }
+
+    template< typename Container1, typename Container2,
+    typename Binary_predicate >
+    inline typename container_traits<Container1>::iterator 
+    find_end( Container1& c1, const Container2& c2, Binary_predicate pred )
+    {
+        return std::find_end( begin( c1 ), end( c1 ), 
+			      begin( c2 ), end( c2 ), pred );
+    }
+
+#endif // BOOST_NO_FUNCTION_TEMPLATE_ORDERING
+
 
     /////////////////////////////////////////////////////////////////////////
     // Modifying Sequance Operations
@@ -787,6 +972,7 @@ namespace boost
     }
 
 
+#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
 
     template< typename Container1, typename Container2 >
     inline typename container_traits<Container2>::iterator 
@@ -795,7 +981,17 @@ namespace boost
         return std::swap_ranges( begin( c1 ), end( c1 ), begin( c2 ) );
     }
 
+#else
 
+
+    template< typename Container1, typename Container2 >
+    inline typename container_traits<Container2>::iterator 
+    swap_ranges( Container1& c1, Container2& c2 ) //ForwardIterator out);
+    {
+        return std::swap_ranges( begin( c1 ), end( c1 ), begin( c2 ) );
+    }
+
+#endif
 
     template< typename Container1, typename Container2, 
     typename Unary_function > 
@@ -869,10 +1065,10 @@ namespace boost
 
 
     template< typename Container, typename Integer, typename T >
-    inline typename container_traits<Container>::iterator
+    inline void
     fill_n_( Container& c, Integer size, const T& value )
     {
-        return std::fill_n( begin( c ), size, value );
+        std::fill_n( begin( c ), size, value );
     }
 
 
@@ -890,10 +1086,10 @@ namespace boost
     {
 
 	template< typename Container, typename Integer, typename Generator >
-	inline typename container_traits<Container>::iterator
+	void
 	generate_n( Container& c, Integer size, Generator gen )
 	{
-	    return std::generate_n( begin( c ), size, gen );
+	    std::generate_n( begin( c ), size, gen );
 	}
 	
     } // namespace 'ext'
@@ -989,10 +1185,11 @@ namespace boost
 
 
     template< typename Container > 
-    inline typename container_traits<Container>::iterator
-    rotate( Container& c, typename container_traits<Container>::iterator middle )
+    inline void
+    rotate( Container& c, 
+	    typename container_traits<Container>::iterator middle )
     {
-        return std::rotate( begin( c ), middle, end( c ) );
+        std::rotate( begin( c ), middle, end( c ) );
     }
 
 
@@ -1035,36 +1232,39 @@ namespace boost
     // Sorted Sequences
     /////////////////////////////////////////////////////////////////////////
 
-    template< typename Container >
-    inline void
-    sort( Container& c )
+    namespace ext
     {
-        std::sort( begin( c ), end( c ) );
-    }
+	template< typename Container >
+	inline void
+	sort( Container& c )
+	{
+	    std::sort( begin( c ), end( c ) );
+	}
+	
+	template< typename Container, typename Compare >
+	inline void
+	sort( Container& c, Compare comp )
+	{
+	    std::sort( begin( c ), end( c ), comp );
+	}
+	
+	
+	
+	template< typename Container >
+	inline void
+	stable_sort( Container& c )
+	{
+	    std::stable_sort( begin( c ), end( c) );
+	}
+	
+	template< typename Container, typename Compare >
+	inline void
+	stable_sort( Container& c, Compare comp )
+	{
+	    std::stable_sort( begin( c ), end( c ), comp );
+	}
 
-    template< typename Container, typename Compare >
-    inline void
-    sort( Container& c, Compare comp )
-    {
-        std::sort( begin( c ), end( c ), comp );
-    }
-
-
-
-    template< typename Container >
-    inline void
-    stable_sort( Container& c )
-    {
-        std::stable_sort( begin( c ), end( c) );
-    }
-
-    template< typename Container, typename Compare >
-    inline void
-    stable_sort( Container& c, Compare comp )
-    {
-        std::stable_sort( begin( c ), end( c ), comp );
-    }
-
+    } // namespace 'ext'
 
 
     template< typename Container >
@@ -1122,6 +1322,8 @@ namespace boost
     }
 
 
+
+#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
 
     template< typename Container, typename T >
     inline typename container_traits<Container>::iterator
@@ -1210,6 +1412,57 @@ namespace boost
     {
         return std::equal_range( begin( c ), end( c ), value, comp );
     }
+
+#else // BOOST_NO_FUNCTION_TEMPLATE_ORDERING
+
+
+    template< typename Container, typename T >
+    inline typename container_traits<Container>::iterator
+    lower_bound( Container& c, const T& value )
+    {
+        return std::lower_bound( begin( c ), end( c ), value );
+    }
+
+    template< typename Container, typename T, typename Compare >
+    inline typename container_traits<Container>::iterator
+    lower_bound_( Container& c, const T& value, Compare comp )
+    {
+        return std::lower_bound( begin( c ), end( c ), value, comp );
+    }
+
+
+
+    template< typename Container, typename T >
+    inline typename container_traits<Container>::iterator
+    upper_bound( Container& c, const T& value )
+    {
+        return std::upper_bound( begin( c ), end( c ), value );
+    }
+
+    template< typename Container, typename T, typename Compare >
+    inline typename container_traits<Container>::iterator
+    upper_bound_( Container& c, const T& value, Compare comp )
+    {
+        return std::upper_bound( begin( c ), end( c ), value, comp );
+    }
+
+
+
+    template< typename Container, typename T >
+    inline typename pair_return<Container,Container>::result_pair 
+    equal_range( Container& c, const T& value )
+    {
+        return std::equal_range( begin( c ), end( c ), value );
+    }
+
+    template< typename Container, typename T, typename Compare >
+    inline typename pair_return<Container,Container>::result_pair
+    equal_range_( Container& c, const T& value, Compare comp )
+    {
+        return std::equal_range( begin( c ), end( c ), value, comp );
+    }
+
+#endif // BOOST_NO_FUNCTION_TEMPLATE_ORDERING
 
 
 
@@ -1400,67 +1653,73 @@ namespace boost
     // Heap Operations
     ///////////////////////////////////////////////////////////////////////////
 
-    template< typename Container >
-    inline void 
-    push_heap( Container& c )
+#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
+
+    namespace ext
     {
-        std::push_heap( begin( c ), end( c ) );
-    }
+	template< typename Container >
+	inline void 
+	push_heap( Container& c )
+	{
+	    std::push_heap( begin( c ), end( c ) );
+	}
+	
+	template< typename Container, typename Compare >
+	inline void
+	push_heap( Container& c, Compare comp )
+	{
+	    std::push_heap( begin( c ), end( c ), comp );
+	}
+	
 
-    template< typename Container, typename Compare >
-    inline void
-    push_heap( Container& c, Compare comp )
-    {
-        std::push_heap( begin( c ), end( c ), comp );
-    }
-
-
-
-    template< typename Container >
-    inline void 
-    pop_heap( Container& c )
-    {
-        std::pop_heap( begin( c ), end( c ) );
-    }
-
-    template< typename Container, typename Compare >
-    inline void
-    pop_heap( Container& c, Compare comp )
-    {
-        std::pop_heap( begin( c ), end( c ), comp );
-    }
-
-
-
-    template< typename Container >
-    inline void 
-    make_heap( Container& c )
-    {
-        std::make_heap( begin( c ), end( c ) );
-    }
-
-    template< typename Container, typename Compare >
-    inline void
-    make_heap( Container& c, Compare comp )
-    {
-        std::make_heap( begin( c ), end( c ), comp );
-    }
+	
+	template< typename Container >
+	inline void 
+	pop_heap( Container& c )
+	{
+	    std::pop_heap( begin( c ), end( c ) );
+	}
+	
+	template< typename Container, typename Compare >
+	inline void
+	pop_heap( Container& c, Compare comp )
+	{
+	    std::pop_heap( begin( c ), end( c ), comp );
+	}
+	
 
 
+	template< typename Container >
+	inline void 
+	make_heap( Container& c )
+	{
+	    std::make_heap( begin( c ), end( c ) );
+	}
+	
+	template< typename Container, typename Compare >
+	inline void
+	make_heap( Container& c, Compare comp )
+	{
+	    std::make_heap( begin( c ), end( c ), comp );
+	}
 
-    template< typename Container >
-    inline void 
-    sort_heap( Container& c )
-    {
-        std::sort_heap( begin( c ), end( c ) );
-    }
 
-    template< typename Container, typename Compare >
-    inline void
-    sort_heap( Container& c, Compare comp )
-    {
+
+	template< typename Container >
+	inline void 
+	sort_heap( Container& c )
+	{
+	    std::sort_heap( begin( c ), end( c ) );
+	}
+	
+	template< typename Container, typename Compare >
+	inline void
+	sort_heap( Container& c, Compare comp )
+	{
         std::sort_heap( begin( c ), end( c ), comp );
-    }
+	}
+
+    } // namespace 'ext'
 
     /////////////////////////////////////////////////////////////////////////
     // Minimum and Maximum
@@ -1524,6 +1783,109 @@ namespace boost
         return std::max_element( begin( c ), end( c ), pred );
     }
 
+#else // BOOST_NO_FUNCTION_TEMPLATE_ORDERING
+
+    namespace ext
+    {
+	template< typename Container >
+	inline void 
+	push_heap( Container& c )
+	{
+	    std::push_heap( begin( c ), end( c ) );
+	}
+	
+	template< typename Container, typename Compare >
+	inline void
+	push_heap( Container& c, Compare comp )
+	{
+	    std::push_heap( begin( c ), end( c ), comp );
+	}
+	
+	
+	
+	template< typename Container >
+	inline void 
+	pop_heap( Container& c )
+	{
+	    std::pop_heap( begin( c ), end( c ) );
+	}
+	
+	template< typename Container, typename Compare >
+	inline void
+	pop_heap( Container& c, Compare comp )
+	{
+	    std::pop_heap( begin( c ), end( c ), comp );
+	}
+	
+
+	template< typename Container >
+	inline void 
+	make_heap( Container& c )
+	{
+	    std::make_heap( begin( c ), end( c ) );
+	}
+	
+	template< typename Container, typename Compare >
+	inline void
+	make_heap( Container& c, Compare comp )
+	{
+	    std::make_heap( begin( c ), end( c ), comp );
+	}
+
+
+
+	template< typename Container >
+	inline void 
+	sort_heap( Container& c )
+	{
+	    std::sort_heap( begin( c ), end( c ) );
+	}
+	
+	template< typename Container, typename Compare >
+	inline void
+	sort_heap( Container& c, Compare comp )
+	{
+	    std::sort_heap( begin( c ), end( c ), comp );
+	}
+
+    } // namespace 'ext'
+
+    /////////////////////////////////////////////////////////////////////////
+    // Minimum and Maximum
+    /////////////////////////////////////////////////////////////////////////
+
+    template< typename Container >
+    inline typename container_traits<Container>::iterator
+    min_element( Container& c )
+    {
+        return std::min_element( begin( c ), end( c ) );
+    }
+
+    template< typename Container, typename Binary_predicate >
+    inline typename container_traits<Container>::iterator
+    min_element_( Container& c, Binary_predicate pred )
+    {
+        return std::min_element( begin( c ), end( c ), pred );
+    }
+
+
+
+    template< typename Container >
+    inline typename container_traits<Container>::iterator
+    max_element( Container& c )
+    {
+        return std::max_element( begin( c ), end( c ) );
+    }
+
+    template< typename Container, typename Binary_predicate >
+    inline typename container_traits<Container>::iterator
+    max_element_( Container& c, Binary_predicate pred )
+    {
+        return std::max_element( begin( c ), end( c ), pred );
+    }
+
+#endif // BOOST_NO_FUNCTION_TEMPLATE_ORDERING
+
 
 
     template< typename Container1, typename Container2 >
@@ -1548,35 +1910,39 @@ namespace boost
     // Permutations
     /////////////////////////////////////////////////////////////////////////
 
-    template< typename Container >
-    inline bool
-    next_permutation( Container& c )
+    namespace ext
     {
-        return std::next_permutation( begin( c ), end( c ) );
-    }
+	template< typename Container >
+	inline bool
+	next_permutation( Container& c )
+	{
+	    return std::next_permutation( begin( c ), end( c ) );
+	}
+	
+	template< typename Container, typename Compare >
+	inline bool
+	next_permutation( Container& c, Compare comp )
+	{
+	    return std::next_permutation( begin( c ), end( c ), comp );
+	}
+	
+	
+	
+	template< typename Container >
+	inline bool
+	prev_permutation( Container& c )
+	{
+	    return std::prev_permutation( begin( c ), end( c ) );
+	}
+	
+	template< typename Container, typename Compare >
+	inline bool
+	prev_permutation( Container& c, Compare comp )
+	{
+	    return std::prev_permutation( begin( c ), end( c ), comp );
+	}
 
-    template< typename Container, typename Compare >
-    inline bool
-    next_permutation( Container& c, Compare comp )
-    {
-        return std::next_permutation( begin( c ), end( c ), comp );
-    }
-
-
-
-    template< typename Container >
-    inline bool
-    prev_permutation( Container& c )
-    {
-        return std::prev_permutation( begin( c ), end( c ) );
-    }
-
-    template< typename Container, typename Compare >
-    inline bool
-    prev_permutation( Container& c, Compare comp )
-    {
-        return std::prev_permutation( begin( c ), end( c ), comp );
-    }
+    } // namespace 'ext'
 
     /////////////////////////////////////////////////////////////////////////
     // Generalized Numeric Algorithms

@@ -241,7 +241,8 @@ namespace
         const int*                           caiter;                         \
         typedef vector<int>::iterator        iterator;                       \
         typedef vector<int>::const_iterator  const_iterator;                 \
-        iterator iter; const_iterator citer; 
+        iterator iter; const_iterator citer;                                 \
+        ostream_iterator<int> out( std::cout ); 
 
 #else
 
@@ -259,7 +260,9 @@ namespace
         const vector<int>   ca( v );                                         \
         typedef vector<int>::iterator        iterator;                       \
         typedef vector<int>::const_iterator  const_iterator;                 \
-        iterator iter, aiter; const_iterator citer, caiter; 
+        iterator iter, aiter; const_iterator citer, caiter;                  \
+        ostream_iterator<int> out( std::cout ); 
+
 
 #endif //  BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
 
@@ -277,9 +280,14 @@ namespace
 
     struct unary_fun : public unary_function<int,int>
     {
+	int n_;
+
+	unary_fun( int n = 100000 ) : n_( n ) 
+	{ }
+
         int operator()( int i )
         {
-            return ++i;
+            return ++i % n_;
         }
     };
 
@@ -326,6 +334,7 @@ namespace
     template< typename Container1, typename Container2> 
     void print2( const Container1& c1, const Container2& c2 )
     {
+        cout << endl;
         for_each( c1, print() );
         cout << endl;
         for_each( c2, print() );
@@ -335,6 +344,7 @@ namespace
     /////////////////////////////////////////////////////////////////////////
     // Nonmodifying Sequence Operations
     /////////////////////////////////////////////////////////////////////////
+
 
     void test_for_each()
     {
@@ -351,8 +361,6 @@ namespace
 
     void test_find()
     {
-#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
-
         TEST_DATA;
         const int i = 5;
         aiter  = find( p, i ),  assert( aiter == find( ALL( p ), i ) );
@@ -361,15 +369,12 @@ namespace
         caiter = find( ca, i ), assert( caiter == find( ALL( ca ), i ) );
         iter   = find( v, i ),  assert( iter == find( ALL( v ), i ) );
         citer  = find( cv, i ), assert( citer == find( ALL( cv ), i ) );
-#endif
     }
 
 
 
     void test_find_if()
     {
-#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
-
         TEST_DATA;
         aiter  = find_if( p, predicate() );
         assert( aiter == find_if( ALL( p ), predicate() ) );
@@ -383,15 +388,12 @@ namespace
         assert( iter == find_if( ALL( v ), predicate() ) );
         citer  = find_if( cv, predicate() );
         assert( citer == find_if( ALL( cv ), predicate() ) );
-#endif
     }
 
 
 
     void test_adjacent_find()
     {
-#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
-
         TEST_DATA;
         aiter  = ext::adjacent_find( p );
         assert( aiter == adjacent_find( ALL( p ) ) );
@@ -413,22 +415,20 @@ namespace
         aiter  = ext::adjacent_find( a, bin_predicate() );
         assert( aiter == adjacent_find( ALL( a ), bin_predicate() ) );
         caiter = ext::adjacent_find( ca, bin_predicate() );
-        assert( caiter == adjacent_find( ALL( ca ), bin_predicate() ) );        
+        assert( caiter == adjacent_find( ALL( ca ), bin_predicate() ) );       
         iter   = ext::adjacent_find( v, bin_predicate() );
         assert( iter == adjacent_find( ALL( v ), bin_predicate() ) );
         citer  = ext::adjacent_find( cv, bin_predicate() );
         assert( citer == adjacent_find( ALL( cv ), bin_predicate() ) );      
-#endif
     }
 
 
 
     void test_find_first_of()
     {
-#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
-
         TEST_DATA;
-        int seeking[] = { 6, 5};
+        vector<int> seeking( 2 );
+	seeking.push_back( 6 ); seeking.push_back( 5 );
 
         aiter  = find_first_of( p, seeking );
         caiter = find_first_of( cp, seeking );
@@ -436,8 +436,8 @@ namespace
         caiter = find_first_of( ca, seeking );
         iter   = find_first_of( v, seeking  );
         citer  = find_first_of( cv, seeking );
-        assert( citer == find_first_of( cv.begin(), cv.end(), seeking, 
-                                        seeking + 2 ) );
+        assert( citer == find_first_of( cv.begin(), cv.end(), 
+					seeking.begin(), seeking.end() ) );
 
         aiter  = find_first_of( p, seeking, bin_predicate() );
         caiter = find_first_of( cp, seeking, bin_predicate() );
@@ -445,9 +445,8 @@ namespace
         caiter = find_first_of( ca, seeking, bin_predicate() );
         iter   = find_first_of( v, seeking, bin_predicate() );
         citer  = find_first_of( cv, seeking, bin_predicate() );
-        assert( citer == find_first_of( cv.begin(), cv.end(), seeking, 
-                                        seeking + 2, bin_predicate() ) );      
-#endif
+        assert( citer == find_first_of( cv.begin(), cv.end(), seeking.begin(), 
+                                        seeking.end(), bin_predicate() ) );    
     }
 
 
@@ -487,6 +486,7 @@ namespace
 
     void test_mismatch()
     {
+#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
         TEST_DATA;
         int seeking[] = { 1, 2, 3};
         pair<int*, int*>            pp  = ext::mismatch( p, seeking );
@@ -505,6 +505,7 @@ namespace
         pcv = ext::mismatch( cv, seeking, bin_predicate() );
         assert( pcv == mismatch( cv.begin(), cv.end(), 
                                  seeking, bin_predicate() ) );
+#endif
     }
 
 
@@ -538,7 +539,8 @@ namespace
     void test_search()
     {
         TEST_DATA;
-        int seeking[] = { 3,6};
+        vector<int> seeking( 2 );
+	seeking.push_back( 3 ); seeking.push_back( 6 );
 
         aiter  = search( p, seeking );
         caiter = search( cp, seeking );
@@ -546,7 +548,8 @@ namespace
         caiter = search( ca, seeking );
         iter   = search( v, seeking );
         citer  = search( cv, seeking );
-        assert( citer == search( cv.begin(), cv.end(), seeking, seeking + 2 ) );
+        assert( citer == search( cv.begin(), cv.end(), 
+				 seeking.begin(), seeking.end() ) );
 
         aiter  = search( p, seeking, bin_predicate() );
         caiter = search( cp, seeking, bin_predicate() );
@@ -554,7 +557,8 @@ namespace
         caiter = search( ca, seeking, bin_predicate() );
         iter   = search( v, seeking, bin_predicate() );
         citer  = search( cv, seeking, bin_predicate() );
-        assert( citer == search( cv.begin(), cv.end(), seeking, seeking + 2, 
+        assert( citer == search( cv.begin(), cv.end(), 
+				 seeking.begin(), seeking.end(), 
                                  bin_predicate() ) );
     }
 
@@ -588,7 +592,8 @@ namespace
     void test_find_end()
     {
         TEST_DATA;
-        int seeking[] = { 3, 5};
+        vector<int> seeking( 2 );
+	seeking.push_back( 3 ); seeking.push_back( 5 );
 
         aiter  = find_end( p, seeking );
         caiter = find_end( cp, seeking );
@@ -597,7 +602,7 @@ namespace
         iter   = find_end( v, seeking );
         citer  = find_end( cv, seeking );
         assert( citer == find_end( cv.begin(), cv.end(), 
-                                   seeking, seeking + 2 ) );
+                                   seeking.begin(), seeking.end() ) );
 
         aiter  = find_end( p, seeking, bin_predicate() );
         caiter = find_end( cp, seeking, bin_predicate() );
@@ -606,7 +611,7 @@ namespace
         iter   = find_end( v, seeking, bin_predicate() );
         citer  = find_end( cv, seeking, bin_predicate() );
         assert( citer == find_end( cv.begin(), cv.end(), 
-                                   seeking, seeking + 2,
+                                   seeking.begin(), seeking.end(),
                                    bin_predicate() ) );
     }
 
@@ -617,11 +622,13 @@ namespace
     void test_copy()
     {
         TEST_DATA;
-        int copy1[a_size], copy2[a_size];
+        vector<int> copy1( a_size ), copy2( a_size );
 
         copy( a, copy1 );
         copy( begin( a ), end( a ), begin( copy2 ) );
         assert( ext::equal( copy1, copy2 ) );
+
+	copy( a, out );
     }
 
 
@@ -629,7 +636,7 @@ namespace
     void test_copy_backward()
     {
         TEST_DATA;
-        int copy1[a_size], copy2[a_size];
+        vector<int> copy1( a_size ), copy2( a_size );
 
         copy_backward( a, copy1 );
         copy_backward( begin( a ), end( a ), end( copy2 ) );
@@ -641,13 +648,13 @@ namespace
     void test_swap_ranges()
     {
         TEST_DATA;
-        int copy1[a_size], copy2[a_size], a2[a_size];
+        vector<int> copy1( a_size ), copy2( a_size ), a2( a_size );
         copy( a, a2 );
-        int* aiter2;
+        vector<int>::iterator iter2;
 
-        aiter  = swap_ranges( a, copy1 );
+        iter  = swap_ranges( a, copy1 );
         swap_ranges( copy1, a );
-        aiter2 = swap_ranges( begin( a ), end( a ), begin( copy2 ) );
+        iter2 = swap_ranges( begin( a ), end( a ), begin( copy2 ) );
         assert( ext::equal( a2, copy2 ) );
     }
 
@@ -656,14 +663,14 @@ namespace
     void test_transform()
     {
         TEST_DATA;
-        int  a2[a_size], a3[a_size], a4[a_size], a5[a_size];
+        vector<int>  a2( a_size ), a3( a_size ), a4( a_size ), a5( a_size );
 
-        aiter = transform( a, a2, unary_fun() );
-        aiter = transform( begin( a ), end( a ), a3, unary_fun() );
+        iter = transform( a, a2, unary_fun() );
+        iter = transform( begin( a ), end( a ), begin( a3 ), unary_fun() );
         assert( ext::equal( a2, a3 ) );
 
-        aiter = transform_( a, a2, a4, binary_fun() );
-        aiter = transform( begin( a ), end( a ), begin( a2 ), 
+        iter = transform_( a, a2, a4, binary_fun() );
+        iter = transform( begin( a ), end( a ), begin( a2 ), 
                            begin( a5 ), binary_fun() );
         assert( ext::equal( a4, a5 ) );
     }
@@ -725,7 +732,7 @@ namespace
     {
         const int size = 10;
         const int with = 1;
-        int a[10], a2[10];
+        vector<int> a( size ), a2( size );
         fill( a, with );
         fill( begin( a2 ), end( a2 ), with );
         assert( ext::equal( a, a2 ) );
@@ -735,12 +742,11 @@ namespace
 
     void test_fill_n()
     {
-        int* aiter;
         const int size = 10, n = 5;
         const int with = 1;
-        int a[10], a2[10];
-        aiter = fill_n_( a, n, with );
-        aiter = fill_n( begin( a2 ), n, with );
+        vector<int> a( size ), a2( size );
+        fill_n_( a, n, with );
+        fill_n( begin( a2 ), n, with );
         assert( ext::equal( a, a2 ) );        
     }
 
@@ -749,7 +755,7 @@ namespace
     void test_generate()
     {
         const int size = 10;
-        int a[10], a2[10];
+        vector<int> a( size ), a2( size );
         generate( a, generator() );
         generate( begin( a2 ), end( a2 ), generator() );
         assert( ext::equal( a, a2 ) );        
@@ -759,11 +765,10 @@ namespace
 
     void test_generate_n()
     {
-        int* aiter;
         const int n = 5;
-        int a[n], a2[n];
-        aiter = ext::generate_n( a, n, generator() );
-        aiter = generate_n( a2, n, generator() );
+        vector<int> a( n ), a2( n );
+        ext::generate_n( a, n, generator() );
+        generate_n( begin( a2 ), n, generator() );
         assert( ext::equal( a, a2 ) );        
     }
 
@@ -772,12 +777,12 @@ namespace
     void test_remove()
     {
         TEST_DATA;
-        int a2[a_size];
+        vector<int> a2( a_size );
         const int what = 3;
         copy( a, a2 ); 
 
         aiter = remove( a, what );
-        aiter = remove( begin( a2 ), end( a2 ), what );
+        iter = remove( begin( a2 ), end( a2 ), what );
         assert( ext::equal( a, a2 ) ); // ?
     }
 
@@ -786,12 +791,12 @@ namespace
     void test_remove_if()
     {
         TEST_DATA;
-        int a2[a_size];
+        vector<int> a2( a_size );
         const int what = 3;
         copy( a, a2 ); 
 
         aiter = remove_if( a, predicate() );
-        aiter = remove_if( begin( a2 ), end( a2 ), predicate() );
+        iter  = remove_if( begin( a2 ), end( a2 ), predicate() );
         assert( ext::equal( a, a2 ) );
     }
 
@@ -800,13 +805,13 @@ namespace
     void test_remove_copy()
     {
         TEST_DATA;
-        int* aiter2;
+        vector<int>::iterator iter2;
 	const int new_size = a_size - 3;
-        int  a2[new_size], a3[new_size];
+        vector<int>  a2( new_size ), a3( new_size );
         const int what = 3;
 
-        aiter  = remove_copy( a, a2, what );
-        aiter2 = remove_copy( begin( a ), end( a ), begin( a3 ), what );
+        iter  = remove_copy( a, a2, what );
+        iter2 = remove_copy( begin( a ), end( a ), begin( a3 ), what );
 
         assert( ext::equal( a2, a3 ) );    
     }
@@ -816,12 +821,12 @@ namespace
     void test_remove_copy_if()
     {
         TEST_DATA;
-        int* aiter2;
+        vector<int>::iterator iter2;
 	const int new_size = a_size - 2;
-        int  a2[new_size], a3[new_size];
+        vector<int>  a2( new_size ), a3( new_size );
 
-        aiter  = remove_copy_if( a, a2, predicate() );
-        aiter2 = remove_copy_if( begin( a ), end( a ), 
+        iter  = remove_copy_if( a, a2, predicate() );
+        iter2 = remove_copy_if( begin( a ), end( a ), 
                                  begin( a3 ), predicate() ); 
         assert( ext::equal( a2, a3 ) );
     }
@@ -831,16 +836,17 @@ namespace
     void test_unique()
     {
         TEST_DATA;
-        int  a2[a_size], a3[a_size];
+        vector<int>  a2( a_size ), a3( a_size );
         copy( a, a2 ); copy( a, a3 );
 
-        aiter = unique( a2 );
-        aiter = unique( begin( a3 ), end( a3 ) );
+        iter = unique( a2 );
+        iter = unique( begin( a3 ), end( a3 ) );
         assert( ext::equal( a2, a3 ) );
 
-        aiter = unique_( a2, bin_predicate() );
-        aiter = unique( begin( a3 ), end( a3 ), bin_predicate() );
+        iter = unique_( a2, bin_predicate() );
+        iter = unique( begin( a3 ), end( a3 ), bin_predicate() );
         assert( ext::equal( a2, a3 ) );
+	print2( a3, a2 );
     }
 
 
@@ -848,17 +854,18 @@ namespace
     void test_unique_copy()
     {
         TEST_DATA;
-        int  a2[a_size], a3[a_size];
+        vector<int>  a2( a_size ), a3( a_size );
         fill( a2, 0 ); fill( a3, 0 );
 
-        aiter = unique_copy( a, a2 );
-        aiter = unique_copy( begin( a ), end( a ), begin( a3 ) );
+        iter = unique_copy( a, a2 );
+        iter = unique_copy( begin( a ), end( a ), begin( a3 ) );
         assert( ext::equal( a2, a3 ) );
 
-        aiter = unique_copy_( a, a2, bin_predicate() );
-        aiter = unique_copy( begin( a ), end( a ), 
-                             begin( a3 ), bin_predicate() );
+        iter = unique_copy_( a, a2, bin_predicate() );
+        iter = unique_copy( begin( a ), end( a ), 
+			    begin( a3 ), bin_predicate() );
         assert( ext::equal( a2, a3 ) );
+	print2( a3, a2 );
     }
 
 
@@ -888,14 +895,14 @@ namespace
     void test_rotate()
     {
         TEST_DATA;
-        int a1[a_size];
-        copy( a, a1 );
+        vector<int> v1( v );
 
-        int* middle1 = &a[a_size/2];
-        int* middle2 = &a1[a_size/2];
-        aiter = rotate( a, middle1 );
-        aiter = rotate( begin( a1 ), middle2, end( a1 ) );
-        assert( ext::equal( a, a1 ) ); 
+        vector<int>::iterator middle1 = v.begin() + v.size() / 2;
+	vector<int>::iterator middle2 = v1.begin() + v.size() / 2;
+        rotate( v, middle1 );
+        rotate( begin( v1 ), middle2, end( v1 ) );
+        assert( ext::equal( v, v1 ) ); 
+	print2( v, v1 );
     }
 
 
@@ -903,12 +910,13 @@ namespace
     void test_rotate_copy()
     {
         TEST_DATA;
-        int a1[a_size], a2[a_size];
+        vector<int> v1( v.size() ), v2( v.size() );
 
-        int* middle = &a[a_size/2];
-        aiter = rotate_copy( a, middle, a1 );
-        aiter = rotate_copy( a, middle, a + a_size, a2  );
-        assert( ext::equal( a1, a2 ) ); 
+        vector<int>::iterator middle = v.begin() + v.size() / 2;
+        iter = rotate_copy( v, middle, v1 );
+        iter = rotate_copy( v.begin(), middle, v.end(), v2.begin()  );
+        assert( ext::equal( v1, v2 ) ); 
+	print2( v1, v2 );
     }
 
 
@@ -916,12 +924,11 @@ namespace
     void test_random_shuffle()
     {
         TEST_DATA;
-        random_shuffle( a, unary_fun() );
-        random_shuffle( v );
-        //
-        // @todo: find out why this won't work on gcc + STLport
-        //
-        // random_shuffle( v, unary_fun() );
+	random_shuffle( a );
+	random_shuffle( a, unary_fun( a_size ) );
+	random_shuffle( v );
+        random_shuffle( v, unary_fun( v.size() ) );
+	random_shuffle( p, unary_fun( v.size() ) );
         random_shuffle( p );
     } 
 
@@ -933,11 +940,11 @@ namespace
     {
         TEST_DATA;
         vector<int> v2( v );
-        sort( v );
+        ext::sort( v );
         sort( v2.begin(), v2.end() );
         assert( v == v2 );
 
-        sort( v, bin_predicate() );
+        ext::sort( v, bin_predicate() );
         sort( v2.begin(), v2.end(), bin_predicate() );
         assert( v == v2 );
     }
@@ -948,11 +955,11 @@ namespace
     {
         TEST_DATA;
         vector<int> v2( v );
-        stable_sort( v );
+        ext::stable_sort( v );
         stable_sort( v2.begin(), v2.end() );
         assert( v == v2 );
 
-        stable_sort( v, bin_predicate() );
+        ext::stable_sort( v, bin_predicate() );
         stable_sort( v2.begin(), v2.end(), bin_predicate() );
         assert( v == v2 );
     }
@@ -1007,6 +1014,8 @@ namespace
         nth_element_( v, nth1, bin_predicate() );
         nth_element( v2.begin(), nth2, v2.end(), bin_predicate() );
         assert( v == v2 );
+	print2( v, v2 );
+
     }
 
 
@@ -1015,7 +1024,7 @@ namespace
     {
         TEST_DATA;
         vector<int> v2( v );
-        sort( v ); sort( v2 );
+        ext::sort( v ); ext::sort( v2 );
         const int bound = 5;
         iterator iter2;
 
@@ -1035,7 +1044,7 @@ namespace
     {
         TEST_DATA;
         vector<int> v2( v );
-        sort( v ); sort( v2 );
+        ext::sort( v ); ext::sort( v2 );
         const int bound = 5;
         iterator iter2;
 
@@ -1056,7 +1065,7 @@ namespace
     {
         TEST_DATA;
         vector<int> v2( v );
-        sort( v ); sort( v2 );
+        ext::sort( v ); ext::sort( v2 );
         const int bound = 5;
         pair<const_iterator, const_iterator> pci;
         pair<iterator, iterator>             pi1, pi2;
@@ -1077,7 +1086,7 @@ namespace
     {
         TEST_DATA;
         vector<int> v2( v );
-        sort( v ); sort( v2 );
+        ext::sort( v ); ext::sort( v2 );
         const int bound = 5;
         bool b1 = binary_search( v, bound );
         bool b2 = binary_search( v2.begin(), v2.end(), bound );
@@ -1094,7 +1103,7 @@ namespace
     {
         TEST_DATA;
         vector<int> v2( v ), v3( 2 * v.size() ), v4( 2 * v.size() );
-        sort( v ); sort( v2 );
+        ext::sort( v ); ext::sort( v2 );
 
         iter = merge( v, v2, v3 );
         iter = merge( v.begin(), v.end(), v2.begin(), v2.end(), v4.begin() );
@@ -1154,15 +1163,16 @@ namespace
     void test_includes()
     {
         TEST_DATA;
-        int seeking[] = { 1, 2};
+        vector<int> seeking( 2 ); 
+	seeking.push_back( 1 ); seeking.push_back( 2 );
 
         bool b1 = includes( v, seeking );
-        bool b2 = includes( v.begin(), v.end(), seeking, seeking + 2 );
+        bool b2 = includes( v.begin(), v.end(),seeking.begin(),seeking.end() );
         assert( b1 == b2 );
 
         b1 = includes( v, seeking, bin_predicate() );
         b2 = includes( v.begin(), v.end(), 
-                       seeking, seeking + 2, bin_predicate() );
+                       seeking.begin(), seeking.end(), bin_predicate() );
         assert( b1 == b2 );
     }
 
@@ -1252,14 +1262,15 @@ namespace
     {
         TEST_DATA;
         vector<int> v1( v ), v2( v ), v3( v );
-        make_heap( v ); make_heap( v1 );
+        ext::make_heap( v ); ext::make_heap( v1 );
 
-        push_heap( v );
+        ext::push_heap( v );
         push_heap( v1.begin(), v1.end() );
         assert( v == v1 );
 
-        make_heap( v2, bin_predicate() ); make_heap( v3, bin_predicate() );
-        push_heap( v2, bin_predicate() );
+        ext::make_heap( v2, bin_predicate() );
+	ext::make_heap( v3, bin_predicate() );
+        ext::push_heap( v2, bin_predicate() );
         push_heap( v3.begin(), v3.end(), bin_predicate() );
         assert( v2 == v3 );  
     }
@@ -1270,14 +1281,15 @@ namespace
     {
         TEST_DATA;
         vector<int> v1( v );
-        make_heap( v ); make_heap( v1 );
+        ext::make_heap( v ); ext::make_heap( v1 );
 
-        pop_heap( v );
+        ext::pop_heap( v );
         pop_heap( v1.begin(), v1.end() );
         assert( v == v1 );
 
-        make_heap( v, bin_predicate() ); make_heap( v1, bin_predicate() );
-        pop_heap( v, bin_predicate() );
+        ext::make_heap( v, bin_predicate() ); 
+	ext::make_heap( v1, bin_predicate() );
+        ext::pop_heap( v, bin_predicate() );
         pop_heap( v1.begin(), v1.end(), bin_predicate() );
         assert( v == v1 );  
     }
@@ -1289,11 +1301,11 @@ namespace
         TEST_DATA;
         vector<int> v1( v );
 
-        make_heap( v );
+        ext::make_heap( v );
         make_heap( v1.begin(), v1.end() );
         assert( v == v1 );
 
-        make_heap( v, bin_predicate() );
+        ext::make_heap( v, bin_predicate() );
         make_heap( v1.begin(), v1.end(), bin_predicate() );
         assert( v == v1 );  
     }
@@ -1304,14 +1316,15 @@ namespace
     {
         TEST_DATA;
         vector<int> v1( v );
-        make_heap( v ); make_heap( v1 );
+        ext::make_heap( v ); ext::make_heap( v1 );
 
-        sort_heap( v );
+        ext::sort_heap( v );
         sort_heap( v1.begin(), v1.end() );
         assert( v == v1 );
 
-        make_heap( v, bin_predicate() ); make_heap( v1, bin_predicate() );
-        sort_heap( v, bin_predicate() );
+        ext::make_heap( v, bin_predicate() ); 
+	ext::make_heap( v1, bin_predicate() );
+        ext::sort_heap( v, bin_predicate() );
         sort_heap( v1.begin(), v1.end(), bin_predicate() );
         assert( v == v1 );  
     }
@@ -1378,11 +1391,11 @@ namespace
         TEST_DATA;
         vector<int> v1( v );
 
-        next_permutation( v );
+        ext::next_permutation( v );
         next_permutation( v1.begin(), v1.end() );
         assert( v == v1 );
 
-        next_permutation( v, bin_predicate() );
+        ext::next_permutation( v, bin_predicate() );
         next_permutation( v1.begin(), v1.end(), bin_predicate() );
         assert( v == v1 );
     }
@@ -1394,11 +1407,11 @@ namespace
         TEST_DATA;
         vector<int> v1( v );
 
-        prev_permutation( v );
+        ext::prev_permutation( v );
         prev_permutation( v1.begin(), v1.end() );
         assert( v == v1 );
 
-        prev_permutation( v, bin_predicate() );
+        ext::prev_permutation( v, bin_predicate() );
         prev_permutation( v1.begin(), v1.end(), bin_predicate() );
         assert( v == v1 );
     }
@@ -1458,7 +1471,8 @@ namespace
         assert( v1 == v2 );
 
         iter = adjacent_difference_( v, v1, binary_fun() );
-        iter = adjacent_difference( v.begin(), v.end(), v2.begin(), binary_fun() );
+        iter = adjacent_difference( v.begin(), v.end(), 
+				    v2.begin(), binary_fun() );
     }
 
     /////////////////////////////////////////////////////////////////////////
