@@ -35,7 +35,13 @@
 #include "boost/concept_check.hpp"
 #include "boost/sequence_algo/detail/non_modifying.hpp"
 
-namespace boost {
+/*  Placing this in namespace boost causes a lot of problem.
+    The C++ std lib implementation sometimes uses unqualified
+    calls to 'find'. Therefore, if it calls find with functional
+    object from boost:: namespace, the 'find' below will be found
+    in addition to std::find, and the call will be ambiguous. 
+*/
+namespace boost { namespace algorith { namespace non_modifying {
   
   template <typename Iterator, typename Function>
   Function for_each(Iterator first, Iterator last, Function f)
@@ -190,7 +196,7 @@ namespace boost {
     detail::search(first1, last1, first2, last2, predicate);
   }  
   
-} // namespace boost
+}}} // namespace boost::algorithm::non_modifying
 
 
 #endif // BOOST_SEQUENCE_ALGO_NON_MODIFYING_HPP
