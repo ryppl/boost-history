@@ -14,7 +14,7 @@ template base :
 exe  array : <template>base array.cpp ;
 exe  ublas : <template>base ublas.cpp ;
 exe  stl   : <template>base stl.cpp ;
-#exe  tuple : <template>base tuple_and_pair.cpp ;
+exe  graph : <template>base graph.cpp ;
 #exe  tuple : <template>base stl.cpp ;
 #exe  tuple : <template>base stl.cpp ;
 

@@ -15,22 +15,53 @@
 #ifndef BOOST_ASSIGN_GRAPH_ADJACENCY_MATRIX_HPP
 #define BOOST_ASSIGN_GRAPH_ADJACENCY_MATRIX_HPP
 
-#include "../add_edge_assigner.hpp"
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+# pragma once
+#endif
+
 #include <boost/graph/adjacency_matrix.hpp>
+#include <boost/assign/graph/detail/tuple_inserter.hpp>
 
 namespace boost
 {
-    namespace assignment
+namespace assignment
+{
+    template< typename D, typename VP, typename EP,
+              typename GP, typename A, typename Tuple >
+    inline void make_insertion( adjacency_matrix<D,VP,EP,GP,A>& g, const Tuple& t )
+    { 
+        detail::make_insertion_impl< tuples::length<Tuple>::value >()( g, t ); 
+    }   
+}
+}   
+
+#include <boost/assign/tuple_insert_assigner.hpp>        
+
+namespace boost
+{
+
+namespace assignment
+{
+    template< typename D, typename VP, typename EP,
+              typename GP, typename A >
+    inline tuple_insert_assigner< adjacency_matrix<D,VP,EP,GP,A> >
+    insert( adjacency_matrix<D,VP,EP,GP,A>& graph )
     {
-        template< typename D, typename VP, 
-                  typename EP, typename GP, typename A >
-        inline detail::add_edge_assigner< adjacency_matrix<D,VP,EP,GP,A> >
-        assign( adjacency_matrix<D,VP,EP,GP,A>& graph )
-        {
-            return 
-                detail::add_edge_assigner< adjacency_matrix<D,VP,EP,GP,A> >( graph );
-        }
+        return tuple_insert_assigner< adjacency_matrix<D,VP,EP,GP,A> >( graph );
     }
+
+
+    
+    template< typename D, typename VP, typename EP,
+              typename GP, typename A >
+    inline tuple_insert_assigner< adjacency_matrix<D,VP,EP,GP,A> >
+    assign( adjacency_matrix<D,VP,EP,GP,A>& graph )
+    {
+        graph.clear();
+        return tuple_insert_assigner< adjacency_matrix<D,VP,EP,GP,A> >( graph );
+    }
+}
+
 }
 
 #endif

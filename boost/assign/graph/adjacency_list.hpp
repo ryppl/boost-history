@@ -15,22 +15,52 @@
 #ifndef BOOST_ASSIGN_GRAPH_ADJACENCY_LIST_HPP
 #define BOOST_ASSIGN_GRAPH_ADJACENCY_LIST_HPP
 
-#include "../add_edge_assigner.hpp"
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+# pragma once
+#endif
+
 #include <boost/graph/adjacency_list.hpp>
+#include <boost/assign/graph/detail/tuple_inserter.hpp>
 
 namespace boost
 {
     namespace assignment
     {
         template< typename EL, typename VL, typename D, 
+                  typename VP, typename EP, typename GP, typename Tuple >
+            inline void make_insertion( adjacency_list<EL,VL,D,VP,EP,GP>& g, const Tuple& t ) 
+        { 
+            detail::make_insertion_impl< tuples::length<Tuple>::value >()( g, t ); 
+        }   
+    }
+}   
+
+#include <boost/assign/tuple_insert_assigner.hpp>        
+
+namespace boost
+{
+    namespace assignment
+    {
+        
+        template< typename EL, typename VL, typename D,
                   typename VP, typename EP, typename GP >
-        inline detail::add_edge_assigner< adjacency_list<EL,VL,D,VP,EP,GP> >
+        inline tuple_insert_assigner< adjacency_list<EL,VL,D,VP,EP,GP> >
+        insert( adjacency_list<EL,VL,D,VP,EP,GP>& graph )
+        {
+            return tuple_insert_assigner< adjacency_list<EL,VL,D,VP,EP,GP> >( graph );
+        }
+        
+        
+        template< typename EL, typename VL, typename D,
+                  typename VP, typename EP, typename GP >
+        inline tuple_insert_assigner< adjacency_list<EL,VL,D,VP,EP,GP> >
         assign( adjacency_list<EL,VL,D,VP,EP,GP>& graph )
         {
-            return 
-                detail::add_edge_assigner< adjacency_list<EL,VL,D,VP,EP,GP> >( graph ); 
+            graph.clear();
+            return tuple_insert_assigner< adjacency_list<EL,VL,D,VP,EP,GP> >( graph );
         }
-    }
-}
+        
+    } // namespave 'assignment'
+} // namespace 'boost'
 
 #endif

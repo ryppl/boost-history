@@ -19,6 +19,9 @@
 # pragma once
 #endif
 
+#include <boost/assign/make_insertion.hpp>
+#include <boost/call_traits.hpp>
+
 namespace boost
 {
 namespace assignment
@@ -57,7 +60,15 @@ namespace assignment
         }
 
         
-        
+/*        
+        template< typename T, typename T2 >
+        insert_assigner& operator()( typename boost::call_traits<T>::param_type t,
+                                     typename boost::call_traits<T2>::param_type t2 )
+        {
+            insert_( value_type( t, t2 ) );
+            return *this;
+        }
+  */      
         template< typename T, typename T2 >
         insert_assigner& operator()( const T& t, const T2& t2 )
         {
