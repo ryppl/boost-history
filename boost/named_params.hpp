@@ -798,6 +798,8 @@ struct keywords
     BOOST_PP_REPEAT_FROM_TO(lo, BOOST_PP_INC(hi), BOOST_NAMED_PARAMS_FUN_DECL, (ret, name, keywords)) \
     template<class Params> \
     ret BOOST_PP_CAT(name, _with_named_params)(const Params& p)
+
+#include <boost/iterator/detail/config_undef.hpp>
  
 #endif // BOOST_NAMED_PARAMS_031014_HPP
 
