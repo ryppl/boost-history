@@ -34,10 +34,12 @@ namespace detail {
 
     InputIterator i=begin;
 
-    if(i!=end)
+    if(i!=end) {
       stream << format.start_element << *i << format.end_element;
+      ++i;
+    }
 
-    while(++i, i!=end)
+    for(; i != end; ++i)
       stream << format.delimiter << format.start_element << *i << format.end_element;
 
     return stream << format.end;
