@@ -25,10 +25,16 @@
 <li>Free functions</li>
 <li>vector_traits</li>
 <ol>
+<li>Definition</li>
 <li>Associated types</li>
 <li>Expression semantics</li>
 </ol>
 <li>matrix_traits</li>
+<ol>
+<li>Definition</li>
+<li>Associated types</li>
+<li>Expression semantics</li>
+</ol>
 </ol>
 <li><a href="#calling_conventions">Calling conventions</a></li>
 </ol>
@@ -49,7 +55,15 @@ and thus adds no run-time overhead. Another advantage is the extensibility
 since this traits class can be specialised for many different vector or matrix libraries. 
 <h3>1.2 Using the traits</h3>
 Since the traits rely on specialisations for every different vector or matrix class, 
-you need to include the proper specialisation before using the traits.
+you need to include the proper specialisation before using the traits. Currently
+specialisations for following libraries are available:
+<ul>
+<li>c array: in c_array.hpp
+<li>std::valarray: in std_valarray.hpp
+<li>std::vector: in std_vector.hpp
+<li>TNT: in tnt.hpp
+<li>uBLAS: in ublas_vector.hpp and ublas_matrix.hpp
+</ul>
 <h3>1.3 Free functions</h3>
 <p>There are also free functions available to obtain storage layout information
 about a vector- or matrix-object. The syntax of these is slightly simpler than that
@@ -58,12 +72,14 @@ on the traits class, they can also implement an alternative strategy
 on compilers that are unable to handle the traits idiom.
 
 <h3>1.4 vector_traits</h3>
-<h4>1.4.1 Associated types</h4>
+<h4>1.4.1.Definition</h4>
+Defined in <boost/numeric/bindings/traits/vector_traits.hpp>
+<h4>1.4.2 Associated types</h4>
 <table border=1>
 <tr><td>Value type<td>V::value_type<td>The type of the objects contained in the vector
 <tr><td>Pointer type<td>V::pointer_type<td>Data type used to point to any entry of the vector in memory
 </table>
-<h4>1.4.2 Expression semantics</h4>
+<h4>1.4.3 Expression semantics</h4>
 <table border=1>
 <tr><th>Name<th>Expression<th>Precondition<th>Semantics<th>Postcondition
 <tr><td>begin of storage<td>storage(v)<td><td>returns a pointer to the begin of the storage of the vector<td>
@@ -72,14 +88,16 @@ on compilers that are unable to handle the traits idiom.
 </table>
 
 <h3>1.5 matrix_traits</h3>
-<h4>1.5.1 Associated types</h4>
+<h4>1.5.1 Definition</h4>
+Defined in <boost/numeric/bindings/traits/matrix_traits.hpp>
+<h4>1.5.2 Associated types</h4>
 <table border=1>
 <tr><td>Value type<td>M::value_type<td>The type of the objects contained in the vector
 <tr><td>Pointer type<td>M::pointer_type<td>Data type used to point to any entry of the vector in memory
 <tr><td>Matrix structure<td>M::matrix_structure<td>Indicates the structure of the storage layout
 <tr><td>Ordering type<td>M::ordering_type<td>row or column major<td>
 </table>
-<h4>1.5.2 Expression semantics</h4>
+<h4>1.5.3 Expression semantics</h4>
 <table border=1>
 <tr><th>Name<th>Expression<th>Precondition<th>Semantics<th>Postcondition
 <tr><td>begin of storage<td>storage(m)<td><td>returns a pointer to the begin of the storage of the vector<td>
@@ -93,12 +111,16 @@ on compilers that are unable to handle the traits idiom.
 <h2>Calling conventions</h2>
 <p>To facilitate generic bindings for libraries of which the API
 is defined in Fortran, the numeric.traits library provides
-a multi-platform mapping between C and Fortran calling conventions.
-
-<hr>
-
-<h3>Linking with fortran libraries</h3>
-<a href="http://www.aei.mpg.de/~jthorn/c2f.html">Here's more information</a> on how to call Fortran routines from C and C++,
+a multi-platform mapping between C and Fortran calling conventions:
+some fortran compilers add a trailing underscore to all defined 
+symbols, some generate symbols in uppercase only. 
+<p>When including the <fortran.h> header, one of following
+symbols will be defined:
+<ul>
+<li>BIND_FORTRAN_LOWERCASE_UNDERSCORE
+<li>BIND_FORTRAN_LOWERCASE
+</ul>
+<p><a href="http://www.aei.mpg.de/~jthorn/c2f.html">Here's more information</a> on how to call Fortran routines from C and C++,
 
 </body>
 </html>
