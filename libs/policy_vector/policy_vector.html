@@ -3,7 +3,7 @@
 <head>
    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
    <meta name="Keywords" content="array, block, carray, c_array, array wrapper, adapter, adaptor, STL, C++ Standard Library, array.hpppolicy_vector, policies, policy classes">
-   <meta name="GENERATOR" content="Mozilla/4.77 [en] (X11; U; Linux 2.2.20 i686) [Netscape]">
+   <meta name="GENERATOR" content="Mozilla/4.77 [en] (X11; U; Linux 2.2.19 i686) [Netscape]">
    <meta name="Author" content="Herve Bronnimann">
    <title>An STL-compliant policy vector</title>
 </head>
@@ -342,7 +342,7 @@ let me know and we'll work it out.</font></font></font></blockquote>
 requirements for allocators are those of the C++ Standard Template Library.
 In addition, there is an empty class no_allocator_policy for use as a template
 parameter of policy vectors which do not need to be allocated (fixed aggregate
-array, for instance).</font></font></font><font face="Arial,Helvetica"><font color="#000000"><font size=-1></font></font></font>
+array, for instance).</font></font></font>
 <p><a NAME="storage policies"></a><b><font face="Arial,Helvetica"><font color="#FF0000">Storage
 policies</font></font></b>
 <br><font color="#000000"><font size=-1><font face="Arial,Helvetica">In
@@ -361,7 +361,7 @@ and therefore has no requirements. However, the partial specialization
 </font><font face="Courier New,Courier">policy_vector_storage&lt;T,Alloc,storage_policy></font><font face="Arial,Helvetica">
 must provide the required members detailed below:</font></font></font>
 <br>&nbsp;
-<center><table BORDER=2 WIDTH="80%" NOSAVE >
+<center><table BORDER=2 NOSAVE >
 <tr ALIGN=CENTER VALIGN=CENTER NOSAVE>
 <th NOSAVE><font face="Arial,Helvetica"><font size=-1>Member requirement</font></font></th>
 
@@ -379,28 +379,131 @@ that can represent any nonnegative value of the container's distance type.</font
 <td><font face="Courier New,Courier"><font size=-1>std::size_t</font></font></td>
 </tr>
 
+<tr>
+<td><font face="Courier New,Courier"><font size=-1>PVS::static_size</font></font></td>
+
+<td><font face="Arial,Helvetica"><font size=-1>An unsigned integral constant
+that holds the size of the array if it is fixed and known at compile time.</font></font>
+<br><font face="Arial,Helvetica"><font size=-1><b>Note:</b> only for static
+size vectors. <a href="#Note1">[1]</a></font></font></td>
+
+<td>&nbsp;</td>
+</tr>
+
 <tr NOSAVE>
-<td NOSAVE><font face="Courier New,Courier"><font size=-1>PVS::iterator</font></font></td>
+<td NOSAVE><font face="Courier New,Courier"><font size=-1>PVS(a,sp);</font></font></td>
 
-<td></td>
+<td><font face="Arial,Helvetica"><font size=-1>Assigns allocator and storage
+policy. <a href="#Note2">[2]</a></font></font></td>
 
-<td></td>
+<td>&nbsp;</td>
+</tr>
+
+<tr NOSAVE>
+<td NOSAVE><font face="Courier New,Courier"><font size=-1>PVS(n,x,a,sp);</font></font></td>
+
+<td>Creates a vector with n copies of x. Also assigns allocator and storage
+policy. <a href="#Note3">[3]</a></td>
+
+<td>&nbsp;</td>
+</tr>
+
+<tr NOSAVE>
+<td NOSAVE><font face="Courier New,Courier"><font size=-1>PVS(n,a,sp);</font></font></td>
+
+<td><font face="Arial,Helvetica"><font size=-1>Creates a vector with n
+copies of a default constructed element of type T. Also assigns allocator
+and storage policy. <a href="#Note4">[4]</a></font></font></td>
+
+<td>&nbsp;</td>
+</tr>
+
+<tr NOSAVE>
+<td NOSAVE><font face="Courier New,Courier"><font size=-1>PVS(pvs2);</font></font></td>
+
+<td><font face="Arial,Helvetica"><font size=-1>Copies storage, allocator,
+and storage policy from pvs2. <a href="#Note5">[5]</a></font></font></td>
+
+<td>&nbsp;</td>
+</tr>
+
+<tr NOSAVE>
+<td NOSAVE><font face="Courier New,Courier"><font size=-1>template &lt;class
+T2></font></font>
+<br><font face="Courier New,Courier"><font size=-1>PVS(T2(&amp;)[static_size],a,sp);</font></font></td>
+
+<td><font face="Arial,Helvetica"><font size=-1>Copies pvs directly from
+first argument, converting each element of type T2 to type T.</font></font>
+<br><font face="Arial,Helvetica"><font size=-1><b>Note:</b> only for static
+size vectors. <a href="#Note1">[1]</a></font></font></td>
+
+<td>&nbsp;</td>
+</tr>
+
+<tr NOSAVE>
+<td NOSAVE><font face="Courier New,Courier"><font size=-1>template &lt;class
+RandomAccessIt></font></font>
+<br><font face="Courier New,Courier"><font size=-1>PVS(first,last,a,sp);</font></font></td>
+
+<td><font face="Arial,Helvetica"><font size=-1>Creates a vector with elements
+copied from the range [first,last). <a href="#Note6">[6]</a></font></font></td>
+
+<td>&nbsp;</td>
 </tr>
 
 <tr>
-<td><font face="Courier New,Courier"><font size=-1>PVS::const_iterator</font></font></td>
+<td><font face="Courier New,Courier"><font size=-1>pvs1 = pvs2;</font></font></td>
 
-<td></td>
+<td><font face="Arial,Helvetica"><font size=-1>Copies storage, allocator,
+and storage policy from pvs2. <a href="#Note5">[5]</a></font></font></td>
 
-<td></td>
+<td>&nbsp;</td>
+</tr>
+
+<tr NOSAVE>
+<td NOSAVE><font face="Courier New,Courier"><font size=-1>~PVS();</font></font></td>
+
+<td><font face="Arial,Helvetica"><font size=-1>Destructor. <a href="#Note2">[2]</a></font></font></td>
+
+<td>&nbsp;</td>
+</tr>
+
+<tr NOSAVE>
+<td NOSAVE><font face="Courier New,Courier"><font size=-1>pvs.assign(x);</font></font></td>
+
+<td><font face="Arial,Helvetica"><font size=-1>Assigns a single value x
+to all the elements of the container. This does not modify the size of
+the container.</font></font></td>
+
+<td>&nbsp;</td>
 </tr>
 
 <tr>
-<td></td>
+<td><font face="Courier New,Courier"><font size=-1>pvs.assign(n,x);</font></font></td>
 
-<td></td>
+<td><font face="Arial,Helvetica"><font size=-1>Assigns n copies of x to
+the vector. <a href="#Note3">[3]</a></font></font></td>
 
-<td></td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td><font face="Courier New,Courier"><font size=-1>template &lt;class RandomAccessIt></font></font>
+<br><font face="Courier New,Courier"><font size=-1>pvs.assign(first,last);</font></font></td>
+
+<td><font face="Arial,Helvetica"><font size=-1>Assigns a copy of the range
+[first,last) to the vector. <a href="#Note6">[6]</a></font></font></td>
+
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td><font face="Courier New,Courier"><font size=-1>pvs.swap(pvs2);</font></font></td>
+
+<td><font face="Arial,Helvetica"><font size=-1>Swaps the contents of pvs
+and pvs2. <a href="#Note7">[7]</a></font></font></td>
+
+<td>&nbsp;</td>
 </tr>
 
 <caption ALIGN=BOTTOM><b><font face="Arial,Helvetica"><font size=-1>Requirements
@@ -410,11 +513,58 @@ for partial specialization of policy_vector_storage&lt;T,Alloc,StoragePolicy>.</
 <br><font size=-1><font face="Courier New,Courier">pvs, pvs1, pvs2</font><font face="Arial,Helvetica">
 : objects of type </font><font face="Courier New,Courier">PVS</font><font face="Arial,Helvetica">;
 </font><font face="Courier New,Courier">x</font><font face="Arial,Helvetica">
-: object of type </font><font face="Courier New,Courier">T</font><font face="Arial,Helvetica">;
-</font><font face="Courier New,Courier">a</font><font face="Arial,Helvetica">
-: object of type </font><font face="Courier New,Courier">Alloc</font><font face="Arial,Helvetica">.</font></font></caption>
+: object of type </font><font face="Courier New,Courier">T</font><font face="Arial,Helvetica">;</font></font>
+<br><font size=-1><font face="Courier New,Courier">a</font><font face="Arial,Helvetica">
+: object of type </font><font face="Courier New,Courier">Alloc</font><font face="Arial,Helvetica">;
+</font><font face="Courier New,Courier">sp</font><font face="Arial,Helvetica">
+: object of type </font><font face="Courier New,Courier">StoragePolicy</font><font face="Arial,Helvetica">.</font></font></caption>
 </table></center>
-<a NAME="resizing policies"></a><b><font face="Arial,Helvetica"><font color="#FF0000">Resizing
+<a NAME="Note1"></a><font face="Arial,Helvetica"><font size=-1><b><font color="#3366FF">[1]</font></b>
+The static_size member is not defined for variable size or external range
+storage policies, since the size cannot be know at the time of instantiation
+of the class template. The associated constructor should not be defined
+for those policy_vector_storage specializations. The class policy_vector,
+which inherits from the appropriate policy_vector_storage specialization,
+still defines this constructor, but since it should not be instantiated
+for variable size or external range storage policies, otherwise there is
+a compilation error. Here we rely on a feature of C++ that says that the
+members of a class template which are not called, are not instantiated
+either.</font></font>
+<br><a NAME="Note2"></a><font face="Arial,Helvetica"><font size=-1><b><font color="#3366FF">[2]</font></b>
+In this and all constructors below, the allocator and storage policies
+are passed by const&amp;. If no allocator is used, or these types have
+no storage, the arguments may safely be ignored. Yet they should not have
+a default value, as the default value is already part of the constructors
+of policy_vector, which in turn call the constructors for policy_vector_storage.
+Similarly, the destructor only has an effect if the allocator or storage
+policies have storage, or if</font></font>
+<br><a NAME="Note3"></a><font face="Arial,Helvetica"><font size=-1><b><font color="#3366FF">[3]</font></b>
+This is the exact description for variable size vectors. For arrays of
+fixed size N, the description applies to the first min(n,N) elements; the
+other elements, if any, are default constructed.</font></font>
+<br><a NAME="Note4"></a><font face="Arial,Helvetica"><font size=-1><b><font color="#3366FF">[4]</font></b>
+Note that the default constructor is called only once in any case, then
+the default-constructed element copied to each element. This is the exact
+description for variable size vectors. For arrays of fixed size N, all
+N elements are the copy of a single default constructed element, regardless
+of n.</font></font>
+<br><a NAME="Note5"></a><font face="Arial,Helvetica"><font size=-1><b><font color="#3366FF">[5]</font></b>
+This operation is linear time, since pvs must make a copy of the storage
+of pvs2. A notable exception occurs for the external array and range storage
+policies, which leads to all the potential problems of raw pointers (as
+opposed to smart pointers). In the future, it might be smart to introduce
+semantics on external policies, making them in effect <i>smart external
+policies</i>.</font></font>
+<br><a NAME="Note6"></a><font face="Arial,Helvetica"><font size=-1><b><font color="#3366FF">[6]</font></b>
+This is the exact description for variable size vectors. For arrays of
+fixed size N, if the range contains n elements, the description applies
+to the first min(n,N) elements.</font></font>
+<br><a NAME="Note7"></a><font face="Arial,Helvetica"><font size=-1><b><font color="#3333FF">[7]</font></b>
+This operation should work in constant time for most storage policies.
+For non-allocated policies, though, it takes linear time since the locations
+of the storage cannot be swapped, so the elements have to be swapped one
+by one.</font></font>
+<p><a NAME="resizing policies"></a><b><font face="Arial,Helvetica"><font color="#FF0000">Resizing
 policies</font></font></b>
 <br><font color="#000000"><font size=-1><font face="Arial,Helvetica">The
 resizing policies are just small classes that compute new sizes as used
@@ -712,13 +862,6 @@ provides the following interface:</font></font></blockquote>
 </tr>
 
 <tr>
-<td><font face="Courier New, Courier, mono"><font size=-1>allocator_type</font></font></td>
-
-<td><font size=-1><font face="Arial, Helvetica, sans-serif">type of the
-allocator (</font><font face="Courier New,Courier">typedef Alloc</font><font face="Arial, Helvetica, sans-serif">)</font></font></td>
-</tr>
-
-<tr>
 <td><font face="Courier New, Courier, mono"><font size=-1>value_type</font></font></td>
 
 <td><font size=-1><font face="Arial, Helvetica, sans-serif">type of the
@@ -792,6 +935,25 @@ typename iterator_policy::size_type</font><font face="Arial, Helvetica, sans-ser
 difference values</font></font>
 <br><font size=-1><font face="Arial, Helvetica, sans-serif">(</font><font face="Courier New,Courier">typedef
 typename iterator_policy::difference_type</font><font face="Arial, Helvetica, sans-serif">)</font></font></td>
+</tr>
+
+<tr>
+<td><b><font face="Arial,Helvetica"><font size=-1>For storage policies
+which use an allocator:</font></font></b></td>
+
+<td></td>
+</tr>
+
+<tr>
+<td><font face="Courier New,Courier"><font size=-1>allocator_type</font></font></td>
+
+<td>type of the allocator object</td>
+</tr>
+
+<tr>
+<td><font face="Courier New,Courier"><font size=-1>get_allocator()</font></font></td>
+
+<td>returns a constant reference to the allocator</td>
 </tr>
 
 <tr>
