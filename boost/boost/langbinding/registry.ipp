@@ -26,8 +26,8 @@
 
 #include <boost/langbinding/registry.hpp>
 #include <boost/langbinding/registration.hpp>
-
 #include <boost/langbinding/rvalue_data.hpp>
+#include <boost/tuple/tuple.hpp>
 
 #include <memory>
 #include <map>
@@ -35,6 +35,13 @@
 
 namespace boost { namespace langbinding {
 
+   namespace {
+
+      using tuples::tie;
+      tuples::detail::swallow_assign _; // ignore is too verbose
+     
+   }
+   
    namespace detail {
    
       template<class T>
@@ -60,17 +67,22 @@ namespace boost { namespace langbinding {
    {}
    
    template<class T>
-   const detail::registration<T>*
+   const registration<T>*
    registry_base<T>::lookup(const type_info_& x)
    {
       std::cout << "lookup for \"" << x << "\"\n";
 
-      const detail::registration<T>& c = m_pimpl->entries[x];
-      return &c;
+      typename detail::registry_impl<T>::registry_t::iterator iter;
+
+      tie(iter, _) = m_pimpl->entries.insert(
+            typename detail::registry_impl<T>::registry_t::value_type(
+               x, registration<T>(x)));
+
+      return &iter->second;
    }
 
    template<class T>
-   const detail::registration<T>* 
+   const registration<T>* 
       registry_base<T>::query(const type_info_& x)
    {
       std::cout << "query for \"" << x << "\"\n";
@@ -87,10 +99,10 @@ namespace boost { namespace langbinding {
    {
       std::cout << "lvalue insert for \"" << x << "\"\n";
 
-      detail::registration<T>& r 
-         = const_cast<detail::registration<T>&>(*lookup(x));
+      registration<T>& r 
+         = const_cast<registration<T>&>(*lookup(x));
 
-      typedef detail::lvalue_chain<T> chain_t;
+      typedef lvalue_chain<T> chain_t;
 
       chain_t* chain = new chain_t;
       chain->convert = convert;
@@ -105,10 +117,10 @@ namespace boost { namespace langbinding {
    {
       std::cout << "rvalue insert for \"" << x << "\"\n";
 
-      detail::registration<T>& r 
-         = const_cast<detail::registration<T>&>(*lookup(x));
+      registration<T>& r 
+         = const_cast<registration<T>&>(*lookup(x));
 
-      typedef detail::rvalue_chain<T> chain_t;
+      typedef rvalue_chain<T> chain_t;
 
       chain_t* chain = new chain_t;
       chain->convertible = convertible;
@@ -127,13 +139,13 @@ namespace boost { namespace langbinding {
       {
          const type_info_& type = iter->first;
 
-         for (detail::lvalue_chain<T>* c = iter->second.lvalue_converters; 
+         for (lvalue_chain<T>* c = iter->second.lvalue_converters; 
                c != 0; c = c->next)
          {
             to.insert(type, c->convert);
          }
 
-         for (detail::rvalue_chain<T>* c2 = iter->second.rvalue_converters; 
+         for (rvalue_chain<T>* c2 = iter->second.rvalue_converters; 
                c2 != 0; c2 = c2->next)
          {
             to.insert(type, c2->convertible, c2->convert);
@@ -144,16 +156,16 @@ namespace boost { namespace langbinding {
    template<class T>
    void registry_base<T>::export_converters(const type_info_& x, registry_base& to)
    {
-      const detail::registration<T>* r = query(x);
+      const registration<T>* r = query(x);
       if (!r) return;
 
-      for (detail::lvalue_chain<T>* c = r->lvalue_converters; 
+      for (lvalue_chain<T>* c = r->lvalue_converters; 
             c != 0; c = c->next)
       {
          to.insert(x, c->convert);
       }
 
-      for (detail::rvalue_chain<T>* c2 = r->rvalue_converters;
+      for (rvalue_chain<T>* c2 = r->rvalue_converters;
             c2 != 0; c2 = c2->next)
       {
          to.insert(x, c2->convertible, c2->convert);
