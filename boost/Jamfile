@@ -1,11 +1,13 @@
-project-root ;
-
 if --help in $(ARGV)
 {
     ECHO "
-Usage: bjam [options]
+Usage:
+    bjam [options] [install]
+
 Options:
     --help                  This message.
+
+Locations:
     --prefix=PREFIX         Install architecture independent files here.
                             Default; C:\\Boost on Win32
                             Default; /usr/local on Unix. Linux, etc.
@@ -15,14 +17,23 @@ Options:
                             Default; EPREFIX/lib
     --includedir=DIR        Install source headers here.
                             Default; PREFIX/include
+    --builddir=DIR          Build in this location instead of building
+                            within the distribution tree. Recomended!
+
+Features:
+    --with-python[=PYTHON_ROOT]
+                            Build Boost.Python libraries with the Python
+                            devel packages located at PYTHON_ROOT. The
+                            Boost.Python libraries are built if possible
+                            by default.
+                            Default PYTHON_ROOT; C:\\tools\\python on Win32.
+                            Default PYTHON_ROOT; /usr/local on Unix, Linux, etc.
+                            Default PYTHON_ROOT; /usr on Cygwin.
+    --with-pydebug          Build Boost.Python libraries using the
+                            Python debug runtime.
 " ;
     EXIT "" ;
 }
-
-local version-tag = [ MATCH "^([^.]+).([^.]+)" : $(BOOST_VERSION) ] ;
-if $(NT) { version-tag = $(version-tag:J=) ; }
-else { version-tag = $(version-tag:J=".") ; }
-version-tag = $(version-tag:J=) ;
 
 # architecture independent files
 local boost-locate = [ MATCH "^--prefix=(.*)" : $(ARGV) ] ;
@@ -37,18 +48,50 @@ exec-locate ?= $(boost-locate) ;
 local lib-locate = [ MATCH "^--libdir=(.*)" : $(ARGV) ] ;
 lib-locate ?= $(exec-locate)/lib ;
 
+# where to build
+local all-locate = [ MATCH "^--builddir=(.*)" : $(ARGV) ] ;
+ALL_LOCATE_TARGET ?= $(all-locate) ;
+
 # source header files
 local include-locate = [ MATCH "^--includedir=(.*)" : $(ARGV) ] ;
 include-locate ?= $(boost-locate)/include ;
+
+# location of python
+local python-root = [ MATCH "^--with-python=(.*)" : $(ARGV) ] ;
+PYTHON_ROOT ?= $(python-root) ;
+
+# variant for pydebug build
+local with-debug-python ;
+if --with-pydebug in $(ARGV)
+{
+    with-debug-python = debug-python ;
+}
+
+# build only, or build+install
+local with-install = ;
+if install in $(ARGV)
+{
+    with-install = install ;
+}
+
+#
+project-root ;
 
 # bring in the rules for python
 SEARCH on <module@>python.jam = $(BOOST_BUILD_PATH) ;
 include <module@>python.jam ;
 
+#
+local version-tag = [ MATCH "^([^.]+).([^.]+)" : $(BOOST_VERSION) ] ;
+if $(NT) { version-tag = $(version-tag:J=) ; }
+else { version-tag = $(version-tag:J=".") ; }
+version-tag = $(version-tag:J=) ;
+
 stage $(lib-locate:D=)
     :
+        $(install-set)
         # please order by name to ease maintenance
-        #~ <dll>libs/date_time/build/boost_date_time
+        <dll>libs/date_time/build/boost_date_time
         <lib>libs/date_time/build/boost_date_time
         <lib>libs/filesystem/build/boost_filesystem
         [ cond [ check-python-config ] :
@@ -56,7 +99,7 @@ stage $(lib-locate:D=)
             <lib>libs/python/build/boost_python ]
         <dll>libs/regex/build/boost_regex
         <lib>libs/regex/build/boost_regex
-        #~ <dll>libs/signals/build/boost_signals
+        <dll>libs/signals/build/boost_signals
         <lib>libs/signals/build/boost_signals
         [ unless $(NT) :
             <dll>libs/test/build/boost_prg_exec_monitor
@@ -71,9 +114,12 @@ stage $(lib-locate:D=)
         <architecture-subdirs>yes
         common-stage-tag
         <tag><postfix>-$(version-tag)
+        [ cond $(with-install) : <target>install : <target>all ]
     :
         debug
         release
+        [ cond $(with-debug-python) : debug-python ]
+        [ unless $(with-install) : <suppress>true ]
     ;
 
 stage $(include-locate:D=)/boost-$(version-tag)
@@ -83,5 +129,7 @@ stage $(include-locate:D=)/boost-$(version-tag)
     :
         <locate>$(include-locate:D)
         <tree-subdirs>$(BOOST_ROOT)
+        [ cond $(with-install) : <target>install : <target>all ]
     :
+        [ unless $(with-install) : <suppress>true ]
     ;
