@@ -46,16 +46,16 @@ struct reverse_range
 /// produces a range that is the reverse of the original
 ///
 template<typename BidiRng>
-boost::reverse_range<BidiRng> make_reverse_range(BidiRng &rng)
+reverse_range<BidiRng> make_reverse_range(BidiRng &rng)
 {
-    return boost::reverse_range<BidiRng>(rng);
+    return reverse_range<BidiRng>(rng);
 }
 
 /// \overload
 template<typename BidiRng>
-boost::reverse_range<BidiRng const> make_reverse_range(BidiRng const &rng)
+reverse_range<BidiRng const> make_reverse_range(BidiRng const &rng)
 {
-    return boost::reverse_range<BidiRng>(rng);
+    return reverse_range<BidiRng const>(rng);
 }
 
 /// reverse_range_adaptor
