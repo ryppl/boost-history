@@ -16,23 +16,27 @@
 using namespace std;
 using namespace boost;
 
-void regex_example()
+int main()
 {  
     cout << "* Regex Example *" << endl << endl;
 
     string str1("abc__(456)__123__(123)__cde");
 
+	// Replace all substrings matching (digit+) 
     cout << 
         "replace all (digit+) in str1 with #digit+# :" <<
         replace_all_regex_copy( str1, regex("\\(([0-9]+)\\)"), string("#$1#") ) << endl;
     
-    cout << 
+    // Erase all substrings matching (digit+) 
+	cout << 
         "remove all sequences of letters from str1 :" <<
         erase_all_regex_copy( str1, regex("[[:alpha:]]+") ) << endl;
 
-    // in-place transformation
+    // in-place regex transformation
     replace_all_regex( str1, regex("_(\\([^\\)]*\\))_"), string("-$1-") );
     cout << "transformad str1: " << str1 << endl;
 
     cout << endl;
+
+	return 0;
 }

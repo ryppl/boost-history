@@ -16,21 +16,26 @@
 using namespace std;
 using namespace boost;
 
-void conv_example()
+int main()
 {  
     cout << "* Case Conversion Example *" << endl << endl;
 
     string str1("AbCdEfG");
     vector<char> vec1( str1.begin(), str1.end() );
-
+	
+	// Convert vector of chars to lower case
     cout << "lower-cased copy of vec1: ";
-    tolower_copy( ostream_iterator<char>(cout), vec1.begin(), vec1.end() );
+    to_lower_copy( ostream_iterator<char>(cout), vec1 );
     cout << endl;
 
-    cout << "upper-cased copy of str1: " << toupper_copy( str1 ) << endl;
+	// Conver string str1 to upper case ( copy the input )
+    cout << "upper-cased copy of str1: " << to_upper_copy( str1 ) << endl;
 
-    tolower( str1 );
+	// Inplace conversion
+    to_lower( str1 );
     cout << "lower-cased str1: " << str1 << endl;
 
     cout << endl;
+
+	return 0;
 }

@@ -17,11 +17,15 @@
 #include <iostream>
 #include <limits>
 #include <boost/detail/iterator.hpp>
-#include <boost/string_algo/replace_impl.hpp>
+#include <boost/string_algo/replace2.hpp>
+#include <boost/string_algo/find2.hpp>
+
+using namespace std;
+using namespace boost;
+namespace sa=boost::string_algo;
 
 // replace mark specification, specialize for a specific element type
 template< typename T > T repeat_mark() { return std::numeric_limits<T>::max(); };
-
 
 // Compression  -----------------------------------------------------------------------
 
@@ -36,7 +40,7 @@ struct find_compressF
 {
     typedef InputIteratorT input_iterator_type;
     typedef typename boost::detail::iterator_traits<input_iterator_type>::value_type value_type;
-    typedef boost::iterator_range<input_iterator_type> result_type;
+    typedef iterator_range<input_iterator_type> result_type;
 
     // Construction
     find_compressF() {}
@@ -130,7 +134,7 @@ struct find_decompressF
 {
     typedef InputIteratorT input_iterator_type;
     typedef typename boost::detail::iterator_traits<input_iterator_type>::value_type value_type;
-    typedef boost::iterator_range<input_iterator_type> result_type;
+    typedef iterator_range<input_iterator_type> result_type;
 
     // Construction
     find_decompressF() {}
@@ -191,46 +195,51 @@ struct format_decompressF
     }
 };
 
-using namespace std;
-using namespace boost;
 
-void rle_example()
+int main()
 {
     cout << "* RLE Compression Example *" << endl << endl;
 
     string original("123_AA_*ZZZZZZZZZZZZZZ*34");
 
-    // copy compression
 
-    string compress=string_algo::replace_all_copy( 
+	// note that we have to use finder_adaptor on out compress finder.
+	// finder_adaptor add complete interface needed by finder, so
+	// we don't have to define it.
+
+    // copy compression
+    string compress=sa::replace_all_copy( 
         original, 
-        find_compressF<string::const_iterator>(), 
+		sa::make_finder_adaptor(find_compressF<string::const_iterator>()), 
         format_compressF<string>() );
 
     cout << "Compressed string: " << compress << endl;
 
-    string decompress=string_algo::replace_all_copy( 
+	// Copy decompression
+    string decompress=sa::replace_all_copy( 
         compress, 
-        find_decompressF<string::const_iterator>(), 
+		sa::make_finder_adaptor(find_decompressF<string::const_iterator>()), 
         format_decompressF<string>() );
 
     cout << "Decompressed string: " << decompress << endl;
 
     // in-place compression
-
-    string_algo::replace_all( 
+    sa::replace_all( 
         original, 
-        find_compressF<string::iterator>(), 
+        sa::make_finder_adaptor(find_compressF<string::iterator>()), 
         format_compressF<string>() );
     
     cout << "Compressed string: " << original << endl;
 
-    string_algo::replace_all( 
+	// in-place decompression
+    sa::replace_all( 
         original, 
-        find_decompressF<string::iterator>(), 
+        sa::make_finder_adaptor(find_decompressF<string::iterator>()), 
         format_decompressF<string>() );
 
     cout << "Decompressed string: " << original << endl;
 
     cout << endl;
+
+	return 0;
 }

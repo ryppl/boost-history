@@ -10,11 +10,14 @@
 #include <string>
 #include <iostream>
 #include <boost/string_algo/trim.hpp>
+#include <boost/string_algo/trim2.hpp>
+#include <boost/string_algo/classification.hpp>
 
 using namespace std;
 using namespace boost;
+namespace sa=boost::string_algo;
 
-void trim_example()
+int main()
 {
     cout << "* Trim Example *" << endl << endl;
 
@@ -22,18 +25,25 @@ void trim_example()
     string str2("<>trim<>");
     string str3("123abs343");
 
+	// Simple left trim
     cout << "trim_left copy of str1: " << "\"" << trim_left_copy( str1 ) << "\"" << endl;
 
+	// Inplace right trim
     trim_right( str1 );
     cout << "trim_right on str1: " << "\"" << str1 << "\"" << endl;
 
+	// Paramteric trim. 'Space' is defined using is_of predicate
     cout 
         << "trimmed copy of str4 ( space='<>' ): " 
-        << "\""<< trim_copy_if( str2, is_from( string("<>") ) ) << "\"" << endl;
+		<< "\""<< sa::trim_copy( str2, is_of<char>("<>") ) << "\"" << endl;
     
+
+	// Paramteric trim. 'Space' is defined using is_digit predicate
     cout 
         << "trimmed copy of str5 ( space=digit ): " 
-        << "\"" << trim_copy_if( str3, is_classified<char>(ctype_base::digit) ) << "\"" << endl;
+		<< "\"" << sa::trim_copy( str3, is_digit<char>() ) << "\"" << endl;
 
     cout << endl;
+
+	return 0;
 }
