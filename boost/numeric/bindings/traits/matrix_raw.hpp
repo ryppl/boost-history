@@ -65,7 +65,7 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
   typename M::pointer matrix_storage (M &m) {
     return &m.data().begin()[0];
   }
-#endif 
+#endif // 0
 
 #ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
   template <typename M>
@@ -232,6 +232,12 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     return matrix_size2 (m.expression());
   }
 
+  template <typename T, typename F, typename A>
+  inline
+  typename ublas::matrix<T,F,A>::size_type
+  matrix_storage_size(const ublas::matrix<T,F,A>& m) {
+    return matrix_size1( m ) * matrix_size2( m ) ;
+  }
 
   template <typename M>
   BOOST_UBLAS_INLINE
