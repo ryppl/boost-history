@@ -1,0 +1,12 @@
+// HP aCC C++ compiler setup:
+
+#    define BOOST_NO_DEPENDENT_TYPES_IN_TEMPLATE_VALUE_PARAMETERS
+#    define BOOST_NO_OPERATORS_IN_NAMESPACE
+#if !defined(_NAMESPACE_STD)
+#   define BOOST_NO_STD_LOCALE
+#   define BOOST_NO_STRINGSTREAM
+#endif
+
+
+#define BOOST_COMPILER "HP aCC version " BOOST_STRINGIZE(__HP_aCC)
+
