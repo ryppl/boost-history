@@ -6,6 +6,7 @@ to its suitability for any purpose.
 
 Boost Build system TODO
 ===== ===== ====== ====
+Items preceded by ** are complete.
 
 Implement linking with prebuilt libraries. Should be trivial, except for
     choosing different libraries for different variants. This might require
@@ -19,7 +20,7 @@ Implement <sysinclude> feature for separately searching #include <...> paths?
     search algorithm.
 
 Clean up documentation
-    TOC hyperlinks
+    ** TOC hyperlinks
     describe gristing
     revise free/path feature definition
     
@@ -55,7 +56,10 @@ Additional toolset descriptions
     Comeau
     ...
 
-A way to factor toolset commonality, e.g. for STLPort versions of a toolset
+Better support for single-valued free features. GCC needs a default
+    ftemplate-depth-NN setting which can be overridden.
+
+** A way to factor toolset commonality, e.g. for STLPort versions of a toolset
 
 === for test system ===
 

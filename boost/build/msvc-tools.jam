@@ -21,6 +21,8 @@ flags msvc CFLAGS <optimization>space : /O1 ;
 flags msvc CFLAGS <inlining>off : /Ob0 ;
 flags msvc CFLAGS <inlining>on : /Ob1 ;
 flags msvc CFLAGS <inline>full : /Ob2 ;
+flags msvc CFLAGS <exception-handling>on : /GX ;
+flags msvc CFLAGS <rtti>on : /GR ;
 
 flags msvc CFLAGS <runtime-build>release/<runtime-link>dynamic/<threading>multi : /MD ;
 flags msvc CFLAGS <runtime-build>debug/<runtime-link>dynamic/<threading>multi : /MDd ;
@@ -32,14 +34,13 @@ flags msvc CFLAGS <runtime-build>debug/<runtime-link>static/<threading>multi : /
 flags msvc DEFINES <define> ;
 flags msvc UNDEFS <undef> ;
 flags msvc HDRS <include> ;
-flags msvc HDRS <sysinclude> ;
 
 flags msvc STDHDRS : $(MSVCDir)$(SLASH)include ;
 flags msvc STDLIBPATH : $(MSVCDir)$(SLASH)lib ;
-
+flags msvc LIBPATH <library-search> ;
+flags msvc NEEDLIBS <library-file> ;
+flags msvc NEEDLIBS <find-library> ;
 flags msvc LINKFLAGS <target-type>DLL : /DLL ;
-
-detect-build-tools msvc : cl ;
 
 #### Link ####
 
@@ -50,7 +51,7 @@ rule Link-action
 
 actions msvc-Link-action bind NEEDLIBS 
 {
-    $(MSVC_TOOL_PATH)link /nologo $(LINKFLAGS) /PDB:"$(<[1]:S=.pdb)" /out:"$(<[1])" $(UNDEFS) /LIBPATH:$(STDLIBPATH) $(NEEDLIBS) "$(>)"
+    $(MSVC_TOOL_PATH)link /nologo $(LINKFLAGS) /PDB:"$(<[1]:S=.pdb)" /out:"$(<[1])" $(UNDEFS) /LIBPATH:$(LIBPATH) /LIBPATH:$(STDLIBPATH) $(NEEDLIBS) "$(>)"
 }
 
 #### Cc #####
@@ -62,7 +63,7 @@ rule Cc-action
 
 actions msvc-Cc-action
 {
-    $(MSVC_TOOL_PATH)cl -nologo -c -U$(UNDEFS) -D$(DEFINES) $(CFLAGS) -I"$(HDRS)" -I"$(STDHDRS)" -Fo"$(<)" "$(>)"
+    $(MSVC_TOOL_PATH)cl /Zm200 -nologo -c -U$(UNDEFS) -D$(DEFINES) $(CFLAGS) -I"$(HDRS)" -I"$(STDHDRS)" -Fo"$(<)" "$(>)"
 }
 
 #### C++ ####
@@ -73,7 +74,7 @@ rule C++-action
 
 actions msvc-C++-action
 {
-    $(MSVC_TOOL_PATH)cl -nologo -GX -c -U$(UNDEFS) -D$(DEFINES) $(CFLAGS) $(C++FLAGS) -I"$(HDRS)" -I"$(STDHDRS)" -Fo"$(<)" -Tp"$(>)"
+    $(MSVC_TOOL_PATH)cl /Zm200 -nologo -GX -c -U$(UNDEFS) -D$(DEFINES) $(CFLAGS) $(C++FLAGS) -I"$(HDRS)" -I"$(STDHDRS)" -Fo"$(<)" -Tp"$(>)"
 }
 
 #### Archive ####

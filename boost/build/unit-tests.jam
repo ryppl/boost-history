@@ -203,7 +203,12 @@ assert_equal
 assert_equal
  [ split-path-at-grist b$(SLASH)c$(SLASH)<d>e$(SLASH)<f>g$(SLASH)h$(SLASH)i ]
  : b$(SLASH)c <d>e <f>g$(SLASH)h$(SLASH)i ;
-
+if $(NT)
+{
+    assert_equal
+        [ split-path-at-grist b\\c\\<include>e:\\f\\g\\<h>i ]
+        : b\\c <include>e:\\f\\g <h>i ;
+}
 # directory-of
 assert_equal [ directory-of a$(SLASH)b c d$(SLASH)e$(SLASH)f ] : a . d$(SLASH)e ;
 
@@ -237,3 +242,4 @@ assert_equal [ directory-of a$(SLASH)b c d$(SLASH)e$(SLASH)f ] : a . d$(SLASH)e 
     BUILD = <f>g ;
     assert_equal [ get-BUILD c <d>e ] : <f>g a ;
 }
+
