@@ -36,14 +36,16 @@ if ! $(COMO_PATH_SETUP) # do this once
     COMO_BACKEND_SETUP = $(COMO_BACKEND_SETUP) ;
     newline = "
 " ;
-    COMO_BACKEND = $(VC7_ROOT) ;
-    COMO_BACKEND_INCLUDE_SETUP ?= "set \"COMO_MS_INCLUDE="$(VC7_ROOT)"/include\"" ;
-    COMO_BACKEND_LIB_SETUP ?= "set \"LIB="$(COMO_STDLIB_PATH)";%LIB%\"" ;
-    COMO_PATH_SETUP ?= "set \"PATH="$(COMO_BIN_DIRECTORY)";%PATH%\"" ;
-    COMO_BACKEND_SETUP ?= "call "\"$(VSCOMNTOOLS)vsvars32"\"" ;
-    COMO_BACKEND_SETUP ?= REM set VC7_ROOT or COMO_BACKEND_SETUP to set up the back end ;
-    COMO_BASE_SETUP ?= "set \"COMO_BASE=$(COMO_BASE)\"" ;
-    COMO_PATH_SETUP ?= REM set COMO_PATH to set up the path for Comeau ;
+    if $(NT)
+    {
+        COMO_BACKEND_INCLUDE_SETUP ?= "set \"COMO_MS_INCLUDE="$(VISUALC)"/include\"" ;
+        COMO_BACKEND_LIB_SETUP ?= "set \"LIB="$(COMO_STDLIB_PATH)";%LIB%\"" ;
+        COMO_PATH_SETUP ?= "set \"PATH="$(COMO_BIN_DIRECTORY)";%PATH%\"" ;
+        COMO_BACKEND_SETUP ?= "call "\"$(VISUALC)$(SLASH)bin$(SLASH)vcvars32"\"" ;
+        COMO_BACKEND_SETUP ?= REM set VISUALC or COMO_BACKEND_SETUP to set up the back end ;
+        COMO_BASE_SETUP ?= "set \"COMO_BASE=$(COMO_BASE)\"" ;
+        COMO_PATH_SETUP ?= REM set COMO_PATH to set up the path for Comeau ;
+    }
     COMO_PATH_SETUP ?= "" ;
 }
 
@@ -84,7 +86,7 @@ actions como-Link-action bind NEEDLIBS
     $(COMO_BACKEND_LIB_SETUP)
     $(COMO_PATH_SETUP)
     $(COMO_BASE_SETUP)
-    $(COMO_BIN_DIRECTORY)como --no_version --no_prelink_verbose $(LINKFLAGS) -o "$(<[1]:S=)" "$(>)" "$(NEEDLIBS)" "$(FINDLIBS:S=.lib)"
+    $(COMO_BIN_DIRECTORY)como $(LINKFLAGS) -o "$(<[1])" "$(>)" "$(NEEDLIBS)" "$(FINDLIBS:S=.lib)" "$(STDLIB_PATH)libcomo.lib"
 }
 
 
@@ -102,7 +104,8 @@ actions como-Cc-action
     $(COMO_BACKEND_LIB_SETUP)
     $(COMO_PATH_SETUP)
     $(COMO_BASE_SETUP)
-    $(COMO_BIN_DIRECTORY)como -c -e5 --no_version --display_error_number --diag_suppress=9,21,161,748,940,962 -U$(UNDEFS) -D$(DEFINES) $(CFLAGS) -I"$(HDRS)" -I"$(STDHDRS)" -o "$(<:D=)" "$(>)"
+    $(COMO_BIN_DIRECTORY)como --43 -c -e10 --wchar_t -D__cdecl=  --no_microsoft_bugs -D_WCHAR_T_DEFINED -m -c -U$(UNDEFS) -D$(DEFINES) $(CFLAGS) -I"$(HDRS)" -I"$(STDHDRS)" -o "$(<:D=)" "$(>)"
+    $(MV) $(<:D=) $(<)
 }
 
 #### C++ ####
@@ -118,7 +121,8 @@ actions como-C++-action
     $(COMO_BACKEND_LIB_SETUP)
     $(COMO_PATH_SETUP)
     $(COMO_BASE_SETUP)
-    $(COMO_BIN_DIRECTORY)como -c -e5 --no_version --no_prelink_verbose --display_error_number --long_long --wchar_t --no_anachronisms --new_for_init --diag_suppress=9,21,161,748,940,962 -D__STL_LONG_LONG -D_WCHAR_T_DEFINED -U$(UNDEFS) -D$(DEFINES) $(CFLAGS) $(C++FLAGS) -I"$(HDRS)" -I"$(STDHDRS)" -o "$(<)" "$(>)"
+    $(COMO_BIN_DIRECTORY)como --43 -c -e10 --wchar_t -D__cdecl= --no_microsoft_bugs --no_anachronisms -D__cdecl= --new_for_init -D_WCHAR_T_DEFINED -U$(UNDEFS) -D$(DEFINES) $(CFLAGS) $(C++FLAGS) -I"$(HDRS)" -I"$(STDHDRS)"  -o "$(<:D=)" "$(>)"
+    $(MV) $(<:D=) $(<)
 }
 
 #### Archive ####
@@ -135,7 +139,8 @@ actions updated together piecemeal como-Archive-action
     $(COMO_BACKEND_LIB_SETUP)
     $(COMO_PATH_SETUP)
     $(COMO_BASE_SETUP)
-    $(COMO_BIN_DIRECTORY)como --no_version --no_prelink_verbose --prelink_object $(>)
-    lib $(ARFLAGS) /nologo /out:"$(<:S=.lib)" $(>)
+    $(COMO_BIN_DIRECTORY)como $(ARFLAGS) -o "$(<:S=)" $(>)
+    REM if exist "$(<)" set _$(<:B)_="$(<)"
+    REM $(MSVC_TOOL_PATH)link /lib /out:"$(<)" %_$(<:B)_% "$(>)"
 }
 
