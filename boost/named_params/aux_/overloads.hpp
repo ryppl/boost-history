@@ -3,36 +3,9 @@
 // (See accompanying file LICENSE_1_0.txt or copy at 
 // http://www.boost.org/LICENSE_1_0.txt)
 
-// This file generates overloads in this format:
-//
-//     template<class A0, class A1>
-//     detail::arg_list<
-//         BOOST_DEDUCED_TYPENAME aux::as_tagged_argument<PS0, A0>::type
-//       , detail::arg_list<
-//             BOOST_DEDUCED_TYPENAME aux::as_tagged_argument<PS1, A1>::type
-//         >
-//     >
-//     operator()(const A0& a0, const A1& a1) const
-//     {
-//         typedef arg_list<
-//             BOOST_DEDUCED_TYPENAME aux::as_tagged_argument<PS0, A0>::type
-//           , arg_list<
-//                 BOOST_DEDUCED_TYPENAME aux::as_tagged_argument<PS1, A1>::type
-//                 ...
-//             >
-//         > arg_tuple;
-//
-//         typename aux::as_tagged_argument<PS0, A0>::type tagged0(a0);
-//         typename aux::as_tagged_argument<PS1, A1>::type tagged1(a1);
-// 
-//         return arg_tuple(
-//             tagged0
-//           , tagged1
-//           , aux::void_()
-//             ...
-//         );
-//     }
-//
+// Generates overloaded function call operators for
+// boost::named_params::parameters.  See
+// boost/named_params/named_params.hpp for examples of the pattern
 
 #if !defined(BOOST_PP_IS_ITERATING)
 # error Boost.NamedParams - do not include this file!
