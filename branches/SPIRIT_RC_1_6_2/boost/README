@@ -1,0 +1,15 @@
+This directory contains the minimum subset of boost
+just enough to make Spirit work. Packaging instructions:
+
+1. Rename the "boost" directory to "miniboost"
+2. Add a new "boost" directory.
+3. Move "spirit.hpp" and the "spirit" directory from the
+   miniboost directory to the new "boost" directory.
+4. Move the contents of "mini-boost-dir" directory into 
+   the "miniboost" directory.
+5. Move the contents of "top-level-dir" directory into 
+   the top level directory.
+6. Delete this readme, "top-level-dir" and "mini-boost-dir".
+7. Remove all CVS artifacts
+8. Compress and release.
+
