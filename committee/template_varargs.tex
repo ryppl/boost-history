@@ -435,8 +435,10 @@ The following code implements the interesting portions of the Tuple
 proposal~\cite{Jarvi02} using template varargs as proposed here. Note
 that there is a mutual dependency: template varargs depend on tuples
 and tuples are specified as a class template accepting a
-variable-length template argument list. However,
-this mutual dependency is not problematic, because we split a tuple of length $N$ into a head element and a tail tuple of length $N-1$, with the base case (length $0$) as an explicit specialization.
+variable-length template argument list. However, this mutual
+dependency is not problematic, because we split a tuple of length $N$
+into a head element and a tail tuple of length $N-1$, with the base
+case (length $0$) as an explicit specialization.
 
 \small
 \begin{verbatim}
@@ -453,7 +455,7 @@ template<typename T1, ... Elements>
 class tuple : public tuple_base 
 {
   typedef T1 head_type;
-  typedef typename add_cv<head_type>::type head_param_type;
+  typedef typename add_reference<typename add_const<head_type>::type>::type head_param_type;
   typedef Elements tail_type;
   typedef tuple self_type;
 
