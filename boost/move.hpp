@@ -17,8 +17,15 @@
 #ifndef BOOST_MOVE_HPP
 #define BOOST_MOVE_HPP
 
-#include "boost/move_fwd.hpp"
+// Header Rationale:
+//
+// Because move and moveable are not interdependent, they are provided
+// separately in respective headers.
+//
+// In user and library code alike, however, they are often used
+// together, so this header includes both.
+
+#include "boost/move/move.hpp"
 #include "boost/move/moveable.hpp"
-#include "boost/move/algorithm.hpp"
 
 #endif // BOOST_MOVE_HPP

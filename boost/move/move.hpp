@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-// boost move/algorithm.hpp header file
+// boost move/move.hpp header file
 // See http://www.boost.org for updates, documentation, and revision history.
 //-----------------------------------------------------------------------------
 //
@@ -14,13 +14,53 @@
 // suitability of this software for any purpose. It is provided "as is" 
 // without express or implied warranty.
 
-#ifndef BOOST_MOVE_ALGORITHM_HPP
-#define BOOST_MOVE_ALGORITHM_HPP
+#ifndef BOOST_MOVE_MOVE_HPP
+#define BOOST_MOVE_MOVE_HPP
 
-#include "boost/move_fwd.hpp"
 #include <iterator> // for iterator_traits
 
+#include "boost/mpl/if.hpp"
+#include "boost/type_traits/is_base_and_derived.hpp"
+
 namespace boost {
+
+//////////////////////////////////////////////////////////////////////////
+// forward declares
+//
+template <typename Deriving> struct moveable;
+template <typename T>        struct move_source;
+
+//////////////////////////////////////////////////////////////////////////
+// function template move
+//
+// Takes a T& and returns, if T derives moveable<T>, a move_source<T> for
+// the object; else, returns the T&.
+//
+
+namespace detail {
+
+template <typename T>
+struct move_type
+{
+    typedef typename mpl::if_<
+          is_base_and_derived<moveable<T>, T>
+        , move_source<T>
+        , T&
+        >::type type;
+};
+
+} // namespace detail
+
+template <typename T>
+inline
+    typename detail::move_type<T>::type
+move(T& source)
+{
+    typedef typename detail::move_type<T>::type
+        move_t;
+
+    return move_t(source);
+}
 
 //////////////////////////////////////////////////////////////////////////
 // function template move_swap
@@ -109,4 +149,4 @@ uninitialized_move(
 
 } // namespace boost
 
-#endif // BOOST_MOVE_ALGORITHM_HPP
+#endif // BOOST_MOVE_MOVE_HPP
