@@ -171,7 +171,7 @@ bool valid_next_r_permutation(ForwardIterator first,
 	typedef typename iterator_traits<ForwardIterator>::value_type T;
 	static vector<T> prev;
 	bool retval = true;
-	if (!fresh_start && first != middle)	// test to ensure curr sequence is greater than previous
+	if (!fresh_start && first != middle)	// test to ensure this sequence is greater than previous
 		retval = lexicographical_compare(prev.begin(), prev.end(), first, middle);
 	
 	prev = vector<T>(first, middle);
@@ -190,7 +190,7 @@ bool valid_next_r_permutation(ForwardIterator first,
 	typedef typename iterator_traits<ForwardIterator>::value_type T;
 	static vector<T> prev;
 	bool retval = true;
-	if (!fresh_start && first != middle)	// test to ensure curr sequence is greater than previous
+	if (!fresh_start && first != middle)	// test to ensure this sequence is greater than previous
 		retval = lexicographical_compare(prev.begin(), prev.end(), first, middle, comp);
 	
 	prev = vector<T>(first, middle);
@@ -208,7 +208,7 @@ bool valid_prev_r_permutation(ForwardIterator first,
 	typedef typename iterator_traits<ForwardIterator>::value_type T;
 	static vector<T> prev;
 	bool retval = true;
-	if (!fresh_start && first != middle)	// test to ensure curr sequence is greater than previous
+	if (!fresh_start && first != middle)	// test to ensure this sequence is greater than previous
 		retval = lexicographical_compare(first, middle, prev.begin(), prev.end());
 	
 	prev = vector<T>(first, middle);
@@ -227,7 +227,7 @@ bool valid_prev_r_permutation(ForwardIterator first,
 	typedef typename iterator_traits<ForwardIterator>::value_type T;
 	static vector<T> prev;
 	bool retval = true;
-	if (!fresh_start && first != middle)	// test to ensure curr sequence is greater than previous
+	if (!fresh_start && first != middle)	// test to ensure this sequence is greater than previous
 		retval = lexicographical_compare(first, middle, prev.begin(), prev.end(), comp);
 	
 	prev = vector<T>(first, middle);
@@ -249,7 +249,7 @@ bool valid_next_r_combination(ForwardIterator first,
  	typedef typename iterator_traits<ForwardIterator>::value_type T;
 	static vector<T> prev;
 	bool retval = true;
-	if (!fresh_start && first != middle)	// test to ensure curr sequence is greater than last
+	if (!fresh_start && first != middle)	// test to ensure this sequence is greater than last
 		retval = lexicographical_compare(prev.begin(), prev.end(), first, middle);
 	
 	prev = vector<T>(first, middle);
@@ -272,7 +272,7 @@ bool valid_prev_r_combination(ForwardIterator first,
  	typedef typename iterator_traits<ForwardIterator>::value_type T;
 	static vector<T> prev;
 	bool retval = true;
-	if (!fresh_start && first != middle)	// test to ensure curr sequence is less than last
+	if (!fresh_start && first != middle)	// test to ensure this sequence is less than last
 		retval = lexicographical_compare(first, middle, prev.begin(), prev.end());
 	
 	prev = vector<T>(first, middle);
@@ -295,7 +295,7 @@ bool valid_next_r_combination(ForwardIterator first,
 	typedef typename iterator_traits<ForwardIterator>::value_type T;
 	static vector<T> prev;
 	bool retval = true;
-	if (!fresh_start && first != middle)	// test to ensure curr sequence is greater than last
+	if (!fresh_start && first != middle)	// test to ensure this sequence is greater than last
 		retval = lexicographical_compare(prev.begin(), prev.end(), first, middle, comp);
 	
 	prev = vector<T>(first, middle);
@@ -317,7 +317,7 @@ bool valid_prev_r_combination(ForwardIterator first,
 	typedef typename iterator_traits<ForwardIterator>::value_type T;
 	static vector<T> prev;
 	bool retval = true;
-	if (!fresh_start && first != middle)	// test to ensure curr sequence is less than last
+	if (!fresh_start && first != middle)	// test to ensure this sequence is less than last
 		retval = lexicographical_compare(first, middle, prev.begin(), prev.end(), comp);
 	
 	prev = vector<T>(first, middle);
@@ -369,7 +369,7 @@ void test_is_sorted(T& seq)
 
 // test_smallest_greater ------------------------------------------------//
 
-void test_smallest_greater(vector<char>& nums)
+void test_smallest_greater(const vector<char>& nums)
 {
     BOOST_CRITICAL_TEST(smallest_greater(nums.begin(), nums.end(), '3')
     	== find(nums.begin(), nums.end(), '4'));
@@ -386,7 +386,7 @@ void test_smallest_greater(vector<char>& nums)
 
 // test_largest_less ----------------------------------------------------//
 
-void test_largest_less(vector<char>& nums)
+void test_largest_less(const vector<char>& nums)
 {
     BOOST_CRITICAL_TEST(largest_less(nums.begin(), nums.end(), '4')
     	== find(nums.begin(), nums.end(), '3'));
