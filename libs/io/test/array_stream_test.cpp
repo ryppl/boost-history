@@ -6,13 +6,11 @@
 //  warranty, and with no claim as to its suitability for any purpose. 
 
 //  Revision History
-//   28 Jul 2002  Initial version (Daryle Walker)
-
-#define  BOOST_INCLUDE_MAIN
-#include <boost/test/test_tools.hpp>  // main, BOOST_TEST, etc.
+//   09 Nov 2002  Initial version (Daryle Walker)
 
 #include <boost/cstdlib.hpp>          // for boost::exit_success
 #include <boost/io/array_stream.hpp>  // for boost::io::basic_array_istream, etc.
+#include <boost/test/minimal.hpp>     // for main, BOOST_TEST
 
 #include <algorithm>  // for std::equal
 #include <cstddef>    // for std::size_t
@@ -47,9 +45,11 @@ test_main
     // Read test
     aistream      is1;
     astreambuf &  isb1 = *is1.get_internal_streambuf();
+    BOOST_TEST( is1.rdbuf() == &isb1 );
     BOOST_TEST( is1.is_using_internal_streambuf() );
 
     is1.rdbuf( &osb1 );
+    BOOST_TEST( is1.rdbuf() != &isb1 );
     BOOST_TEST( !is1.is_using_internal_streambuf() );
 
     char  a, b;
