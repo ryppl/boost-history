@@ -17,11 +17,11 @@
 /*! \file
     Classification predicates are included in the library to give 
     some more convinience when using algorithms like \c trim() and \c all(). 
-    In general they wrap funcionality of STL classification functions (e.g. \c std::isspace() )
+    They wrap funcionality of STL classification functions ( e.g. \c std::isspace() )
     into generic functors. 
     
-    All predicates support unary_function concept interface, so they can be used together 
-    with stl logical predicates.
+    All predicates support AdaptableUnaryFunction concept interface, so they can be used 
+    together with stl logical predicates.
 */
 
 namespace boost {
@@ -30,14 +30,14 @@ namespace boost {
 
     //! is_classified predicate
     /*!
-        Construct is_classified predicate. This predicate holds, if an input is
-        of specified ctype category.
-        The predicate is compatible with AdaptableUnaryFunction. CharT has to
+        Construct the \c is_classified predicate. This predicate holds, if an input is
+        of specified \c std::ctype category.
+        The predicate is satisfies AdaptableUnaryFunction concept. CharT has to
         be explititly specified.
 
-        \param Type ctype category
+        \param Type A \c std::ctype category
         \param Loc A locale used for classification
-        \return An instance of is_classified predicated 
+        \return An instance of the \c is_classified predicate 
     */
     template< typename CharT >
     inline string_algo::detail::is_classifiedF<CharT>
@@ -48,10 +48,12 @@ namespace boost {
 
     //! is_space predicate
     /*!
-        Construct is_classified predicate for ctype_base::space category.   
+        Construct the \c is_classified predicate for \c ctype_base::space category.   
+        The predicate is satisfies AdaptableUnaryFunction concept. CharT has to
+        be explititly specified.
 
         \param Loc A locale used for classification
-        \return An instance of is_classified predicated 
+        \return An instance of the \c is_classified predicate
     */
     template< typename CharT >
     inline string_algo::detail::is_classifiedF<CharT> 
@@ -62,10 +64,12 @@ namespace boost {
 
     //! is_alnum predicate
     /*!
-        Construct is_classified predicate for ctype_base::alnum category.   
+        Construct the \c is_classified predicate for the \c ctype_base::alnum category.   
+        The predicate is satisfies AdaptableUnaryFunction concept. CharT has to
+        be explititly specified.
 
         \param Loc A locale used for classification
-        \return An instance of is_classified predicated 
+        \return An instance of the \c is_classified predicate 
     */
     template< typename CharT >
     inline string_algo::detail::is_classifiedF<CharT> 
@@ -76,10 +80,12 @@ namespace boost {
 
     //! is_alpha predicate
     /*!
-        Construct is_classified predicate for ctype_base::alpha category.   
+        Construct the \c is_classified predicate for the \c ctype_base::alpha category.   
+        The predicate is satisfies AdaptableUnaryFunction concept. CharT has to
+        be explititly specified.
 
         \param Loc A locale used for classification
-        \return An instance of is_classified predicated 
+        \return An instance of the \c is_classified predicate 
     */
     template< typename CharT >
     inline string_algo::detail::is_classifiedF<CharT> 
@@ -90,10 +96,12 @@ namespace boost {
 
     //! is_cntrl predicate
     /*!
-        Construct is_classified predicate for ctype_base::cntrl category.   
+        Construct the \c is_classified predicate for the \c ctype_base::cntrl category.   
+        The predicate is satisfies AdaptableUnaryFunction concept. CharT has to
+        be explititly specified.
 
         \param Loc A locale used for classification
-        \return An instance of is_classified predicated 
+        \return An instance of the \c is_classified predicate 
     */
     template< typename CharT >
     inline string_algo::detail::is_classifiedF<CharT> 
@@ -104,10 +112,12 @@ namespace boost {
 
     //! is_digit predicate
     /*!
-        Construct is_classified predicate for ctype_base::digit category.   
+        Construct the \c is_classified predicate for the \c ctype_base::digit category.   
+        The predicate is satisfies AdaptableUnaryFunction concept. CharT has to
+        be explititly specified.
 
         \param Loc A locale used for classification
-        \return An instance of is_classified predicated 
+        \return An instance of the \c is_classified predicate 
     */
     template< typename CharT >
     inline string_algo::detail::is_classifiedF<CharT> 
@@ -118,10 +128,12 @@ namespace boost {
 
     //! is_graph predicate
     /*!
-        Construct is_classified predicate for ctype_base::graph category.   
+        Construct the \c is_classified predicate for the \c ctype_base::graph category.   
+        The predicate is satisfies AdaptableUnaryFunction concept. CharT has to
+        be explititly specified.
 
         \param Loc A locale used for classification
-        \return An instance of is_classified predicated 
+        \return An instance of the \c is_classified predicate 
     */
     template< typename CharT >
     inline string_algo::detail::is_classifiedF<CharT> 
@@ -132,10 +144,12 @@ namespace boost {
 
     //! is_lower predicate
     /*!
-        Construct is_classified predicate for ctype_base::lower category.   
+        Construct the \c is_classified predicate for the \c ctype_base::lower category.   
+        The predicate is satisfies AdaptableUnaryFunction concept. CharT has to
+        be explititly specified.
 
         \param Loc A locale used for classification
-        \return An instance of is_classified predicated 
+        \return An instance of \c is_classified predicate 
     */
     template< typename CharT >
     inline string_algo::detail::is_classifiedF<CharT> 
@@ -146,10 +160,12 @@ namespace boost {
 
     //! is_print predicate
     /*!
-        Construct is_classified predicate for ctype_base::print category.   
+        Construct the \c is_classified predicate for the \c ctype_base::print category.   
+        The predicate is satisfies AdaptableUnaryFunction concept. CharT has to
+        be explititly specified.
 
         \param Loc A locale used for classification
-        \return An instance of is_classified predicated 
+        \return An instance of the \c is_classified predicate 
     */
     template< typename CharT >
     inline string_algo::detail::is_classifiedF<CharT> 
@@ -160,10 +176,12 @@ namespace boost {
 
     //! is_punct predicate
     /*!
-        Construct is_classified predicate for ctype_base::punct category.   
+        Construct the \c is_classified predicate for the \c ctype_base::punct category.   
+        The predicate is satisfies AdaptableUnaryFunction concept. CharT has to
+        be explititly specified.
 
         \param Loc A locale used for classification
-        \return An instance of is_classified predicated 
+        \return An instance of the \c is_classified predicate 
     */
     template< typename CharT >
     inline string_algo::detail::is_classifiedF<CharT> 
@@ -174,10 +192,12 @@ namespace boost {
 
     //! is_upper predicate
     /*!
-        Construct is_classified predicate for ctype_base::upper category.   
+        Construct the \c is_classified predicate for the \c ctype_base::upper category.   
+        The predicate is satisfies AdaptableUnaryFunction concept. CharT has to
+        be explititly specified.
 
         \param Loc A locale used for classification
-        \return An instance of is_classified predicated 
+        \return An instance of the \c is_classified predicate 
     */
     template< typename CharT >
     inline string_algo::detail::is_classifiedF<CharT> 
@@ -188,10 +208,12 @@ namespace boost {
 
     //! is_xdigit predicate
     /*!
-        Construct is_classified predicate for ctype_base::xdigit category.  
+        Construct the \c is_classified predicate for the \c ctype_base::xdigit category.  
+        The predicate is satisfies AdaptableUnaryFunction concept. CharT has to
+        be explititly specified.
 
         \param Loc A locale used for classification
-        \return An instance of is_classified predicated 
+        \return An instance of the \c is_classified predicate 
     */
     template< typename CharT >
     inline string_algo::detail::is_classifiedF<CharT> 
@@ -202,13 +224,13 @@ namespace boost {
 
     //! is_any_of predicate
     /*!
-        Construct is_any_of predicate. The predicate holds, if an input
+        Construct the \c is_any_of predicate. The predicate holds, if an input
         is included in the specified set of characters.
-        The predicate is compatible with AdaptableUnaryFunction. CharT has to
+        The predicate is satisfies AdaptableUnaryFunction concept. CharT has to
         be explititly specified.
 
         \param Set A set of characters to be recognized
-        \return An instance of is_any_of predicated 
+        \return An instance of the \c is_any_of predicate 
     */
     template< typename CharT, typename ContainerT >
     inline string_algo::detail::is_any_ofF<CharT> is_any_of( const ContainerT& Set )

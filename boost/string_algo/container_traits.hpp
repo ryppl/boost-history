@@ -34,8 +34,8 @@
 
 /*! \file
     Defines container_traits class and related free-standing fuctions.
-    This facility is used to unify the access to different type of containers.
-    It allows the algoritms in the library to work with std containers, c-style
+    This facility is used to unify the access to different types of containers.
+    It allows the algoritms in the library to work with STL containers, c-style
     array, null-terminated c-strings (and more) using the same interface.
 */
 
@@ -52,22 +52,22 @@ namespace boost {
 
             Currently following container types are supported:
                 - containers with stl compatible container interface ( see ContainerConcept )
-                    ( i.e. std::vector<>, std::list<>, std::string<> ... )
+                    ( i.e. \c std::vector<>, \c std::list<>, \c std::string<> ... )
                 - c-style array 
-                   ( char[10], int[15] ... )
+                   ( \c char[10], \c int[15] ... )
                 - null-terminated c-strings
-                    ( char*, wchar_T* )
+                    ( \c char*, \c wchar_T* )
                 - std::pair of iterators 
-                    ( i.e std::pair< vector<int>::iterator,vector<int>::iterator > )
+                    ( i.e \c std::pair<vector<int>::iterator,vector<int>::iterator> )
 
             Container traits provide a supset of container interface operations.
             All are accessible using free-standing functions.
 
             Following operations are supported:
-                - size()
-                - empty()
-                - begin()
-                - end()
+                - \c size()
+                - \c empty()
+                - \c begin()
+                - \c end()
 
             Container traits have somewhat limited functionality on compilers not
             supporting partial template specialization and partial template ordering.
@@ -127,7 +127,7 @@ namespace boost {
         
         //! Container difference trait
         /*!
-            Extract container's difference type
+            Extract the container's difference type
         */
         template< typename C >
         struct container_difference_type
@@ -137,7 +137,7 @@ namespace boost {
 
         //! Container iterator trait
         /*!
-            Extract container's iterator type
+            Extract the container's iterator type
         */
         template< typename C >
         struct container_iterator
@@ -147,7 +147,7 @@ namespace boost {
 
         //! Container const_iterator trait
         /*!
-            Extract container's const_iterator type
+            Extract the container's const_iterator type
         */
         template< typename C >
         struct container_const_iterator
@@ -158,8 +158,8 @@ namespace boost {
 
         //! Container result_iterator
         /*!
-            Extract container's result_iterator type. This type maps to C::iterator
-            for mutable container and C::const_iterator for const containers.
+            Extract the container's result_iterator type. This type maps to \c C::iterator
+            for mutable container and \c C::const_iterator for const containers.
         */
         template< typename C >
         struct container_result_iterator
@@ -240,9 +240,7 @@ namespace boost {
 
         //! Free-standing begin() function
         /*!
-            Get the begin iterator of the container. Uses container_traits.
-            This variant is provided for compilers without function 
-            template ordering.
+            \overload
         */
         template< typename C >
         inline BOOST_STRING_TYPENAME container_traits<C>::result_iterator
@@ -253,9 +251,7 @@ namespace boost {
 
         //! Free-standing end() function
         /*!
-            Get the begin iterator of the container. Uses container_traits.
-            This variant is provided for compilers without function 
-            template ordering.
+            \overload
         */
         template< typename C >
         inline BOOST_STRING_TYPENAME container_traits<C>::result_iterator

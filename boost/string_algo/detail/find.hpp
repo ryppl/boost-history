@@ -484,10 +484,10 @@ namespace boost {
                 This functor actually does not perform any find operation.
                 It always returns given iterator range as a result.
             */
-            template<typename ForwardIteratorT>
+            template<typename ForwardIterator1T>
             struct range_finderF
             {
-                typedef ForwardIteratorT input_iterator_type;
+                typedef ForwardIterator1T input_iterator_type;
                 typedef iterator_range<input_iterator_type> result_type;
 
                 // Construction
@@ -499,11 +499,11 @@ namespace boost {
                     m_Range(Range) {}
 
                 // Operation
-                template< typename ForwardIteratorT >
-                iterator_range<ForwardIteratorT> 
+                template< typename ForwardIterator2T >
+                iterator_range<ForwardIterator2T> 
                 operator()( 
-                    ForwardIteratorT, 
-                    ForwardIteratorT ) const
+                    ForwardIterator2T, 
+                    ForwardIterator2T ) const
                 {
                     return m_Range;
                 }

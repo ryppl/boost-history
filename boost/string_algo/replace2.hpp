@@ -19,8 +19,8 @@
 #include <boost/string_algo/detail/replace_all.hpp>
 
 /*! \file
-    This header defines generic replace algorithms. Each algorithm replaces
-    a part(s) of the input. The part to be replaced is found using a Finder object.
+    Defines generic replace algorithms. Each algorithm replaces
+    a part(s) of the input. The part to be replaced is looked up using a Finder object.
     Result of finding is then used by a Formatter object to generate the replacement.
 */
 
@@ -31,11 +31,10 @@ namespace boost {
 
         //! Generic replace algorithm
         /*!
-            Create new sequence into output interator as a copy of input sequence,
-            but with the match replaced with the formated substitute range. 
-            The match is searched using find functor and substitute is formated using
-            format functor.
-
+            Use the Finder to search for a substring. Use the Formatter to format
+            this substring and replace it in the input.
+            The resulting sequence is copied to the given output iterator.
+    
             \param Output A output iterarot to which the result will be copied
             \param Input An input sequence
             \param Finder A Finder object used to search for a match to be replaced
@@ -72,15 +71,14 @@ namespace boost {
 
         //! Generic replace algorithm
         /*!
-            Create new sequence as a copy the input sequence,
-            but with the match replaced with the formated substitute range. 
-            The match is searched using find functor and substitute is formated using
-            format functor.
+            Use the Finder to search for a substring. Use the Formatter to format
+            this substring and replace it in the input.
+            The result is the modified copy of the input.
 
             \param Input An input sequence
             \param Finder A Finder object used to search for a match to be replaced
             \param Formatter A Formatter object used to format a match
-            \return An output iterator pointing just after last inserted character
+            \return A modified copy of the input 
         */
         template< 
             typename InputT, 
@@ -109,14 +107,13 @@ namespace boost {
 
         //! Generic replace algorithm
         /*!
-            Replace a match in the input sequence with the formated substitute.
-            The match is searched using find functor and substitute is formated using
-            format functor.
+            Use the Finder to search for a substring. Use the Formatter to format
+            this substring and replace it in the input. The input is modified in-place.
 
             \param Input An input sequence
             \param Finder A Finder object used to search for a match to be replaced
             \param Formatter A Formatter object used to format a match
-            \return An output iterator pointing just after last inserted character
+            \return A reference to the modified input.
         */
         template<
             typename InputT,
@@ -148,10 +145,10 @@ namespace boost {
 
         //! Generic replace all algorithm
         /*!
-            Create new sequence into output interator as a copy of input sequence,
-            but with the each match replaced with the formated substitute range. 
-            The match is searched using find functor and substitute is formated using
-            format functor.
+            Use the Finder to search for a substring. Use the Formatter to format
+            this substring and replace it in the input. Repeat this for all mathing
+            substrings.
+            The resulting sequence is copied to the given output iterator.
 
             \param Output A output iterarot to which the result will be copied
             \param Input An input sequence
@@ -189,15 +186,15 @@ namespace boost {
 
         //! Generic replace all algorithm
         /*!
-            Create new sequence as a copy the input sequence,
-            but with the each match replaced with the formated substitute range. 
-            The match is searched using find functor and substitute is formated using
-            format functor.
+            Use the Finder to search for a substring. Use the Formatter to format
+            this substring and replace it in the input. Repeat this for all mathing
+            substrings.
+            The result is the modified copy of the input.
 
             \param Input An input sequence
             \param Finder A Finder object used to search for a match to be replaced
             \param Formatter A Formatter object used to format a match
-            \return An output iterator pointing just after last inserted character
+            \return A modified copy of the input 
         */
         template< 
             typename InputT, 
@@ -226,14 +223,14 @@ namespace boost {
 
         //! Generic replace all algorithm
         /*!
-            Replace each match in the input sequence with the formated substitute.
-            The match is searched using find functor and substitute is formated using
-            format functor.
+            Use the Finder to search for a substring. Use the Formatter to format
+            this substring and replace it in the input. Repeat this for all mathing
+            substrings.The input is modified in-place.
 
             \param Input An input sequence
             \param Finder A Finder object used to search for a match to be replaced
             \param Formatter A Formatter object used to format a match
-            \return An output iterator pointing just after last inserted character
+            \return A reference to the modified input.
         */
         template<
             typename InputT,

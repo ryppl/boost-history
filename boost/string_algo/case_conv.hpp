@@ -17,7 +17,7 @@
 #include <boost/string_algo/detail/case_conv.hpp>
 
 /*! \file
-    Sequence case conversion algorithms are located in this header file.
+    Defines sequence case-conversion algorithms.
     Algorithms convert each element in the input sequence to the
     desired case using provided locales.
 */
@@ -29,7 +29,7 @@ namespace boost {
     //! Convert to lower case
     /*!
         Each element of the input sequence is converted to lower
-        case. Result is copied to the given output iterator.
+        case. The result is copied to the given output iterator.
 
         \param Output A output iterarot to which the result will be copied
         \param Input An input container
@@ -53,11 +53,11 @@ namespace boost {
     //! Convert to lower case
     /*!
         Each element of the input sequence is converted to lower
-        case. Result is a copy of the input converted to lower case.
+        case. The result is a copy of the input converted to lower case.
 
         \param Input An input container
         \param Loc a locale used for conversion
-        \return A copy if the input converted to lower case
+        \return A copy of the input converted to lower case
     */
     template< typename ContainerT >
     inline ContainerT to_lower_copy( 
@@ -77,7 +77,7 @@ namespace boost {
     //! Convert to lower case
     /*!
         Each element of the input sequence is converted to lower
-        case. Input sequence is modified in-place.
+        case. The input sequence is modified in-place.
 
         \param Input An input container
         \param Loc a locale used for conversion
@@ -102,7 +102,7 @@ namespace boost {
     //! Convert to upper case
     /*!
         Each element of the input sequence is converted to upper
-        case. Result is copied to the given output iterator.
+        case. The result is copied to the given output iterator.
 
         \param Output A output iterarot to which the result will be copied
         \param Input An input container
@@ -126,11 +126,11 @@ namespace boost {
     //! Convert to upper case
     /*!
         Each element of the input sequence is converted to upper
-        case. Result is a copy if the input converted to upper case.
+        case. The result is a copy if the input converted to upper case.
 
         \param Input An input container
         \param Loc a locale used for conversion
-        \return A copy if the input converted to upper case
+        \return A copy of the input converted to upper case
     */
     template< typename ContainerT >
     inline ContainerT to_upper_copy( 
@@ -150,7 +150,7 @@ namespace boost {
     //! Convert to upper case
     /*!
         Each element of the input sequence is converted to upper
-        case. Input sequence is modified in-place.
+        case. The input sequence is modified in-place.
 
         \param Input An input container
         \param Loc a locale used for conversion

@@ -17,8 +17,8 @@
 #include <boost/detail/iterator.hpp>
 
 /*! \file
-    Defines the iterator_class and related functions. 
-    iterator_range is a simple wrapper of iterator pair idiom. It provides
+    Defines the \c iterator_class and related functions. 
+    \c iterator_range is a simple wrapper of iterator pair idiom. It provides
     a rich subset of Container interface.
 */
 
@@ -28,17 +28,17 @@ namespace boost {
 
     //! iterator_range class
     /*!
-        An iterator_range specifies a range in a sequence by beginning and ending iterators. 
+        An \c iterator_range delimits a range in a sequence by beginning and ending iterators. 
         An iterator_range can be passed to an algorithm which requires a sequence as an input. 
-        For example, the toupper() function may be used most frequently on strings, 
+        For example, the \c toupper() function may be used most frequently on strings, 
         but can also be used on iterator_ranges: 
         
         \code
-                boost::tolower( find( s, "UPPERCASE STRING" ) );
+            boost::tolower( find( s, "UPPERCASE STRING" ) );
         \endcode
 
         Many algorithms working with sequences take a pair of iterators, 
-        delimiting a working range, as an arguments. iterator_range class is an 
+        delimiting a working range, as an arguments. The \c iterator_range class is an 
         encapsulation of a range identified by a pair of iterators. 
         It provides a subset of container ( see ContainerConcept )  interface, 
         so it is possible to pass an instance to an algorithm requiring a sequence as an input. 
@@ -86,10 +86,10 @@ namespace boost {
         iterator_range( const iterator_range& Other ) :
             m_Begin(Other.begin()), m_End(Other.end()) {}
 
-        //! Templated copy constutor
+        //! Templated copy constructor
         /*!
             This constructor is provided to allow conversion between
-            const and mutable iterator instantiations of this class template
+            const and mutable iterator instances of this class template
         */
         template< typename OtherItT >
         iterator_range( const iterator_range<OtherItT>& Other ) :
@@ -195,7 +195,7 @@ namespace boost {
 
     //! iterator_range contruct helper 
     /*!
-        Construct an iterator_range from a pair of iterators
+        Construct an \c iterator_range from a pair of iterators
 
         \param Begin A begin iterator
         \param End An end iterator
@@ -209,11 +209,11 @@ namespace boost {
   
     //! iterator_range contruct helper
     /*!
-        Construct an iterator_range from a std::pair containing a begin
+        Construct an \c iterator_range from a \c std::pair<> containing the begin
         and end iterators.
 
-        \param Pair A std::pair with begin and end iterators
-        \return iterator_range object
+        \param Pair A \c std::pair<> with begin and end iterators
+        \return \c iterator_range object
     */
     template< typename IteratorT >
     inline iterator_range< IteratorT > make_range( const std::pair<IteratorT,IteratorT>& Pair ) 
@@ -224,10 +224,10 @@ namespace boost {
     //! convert iterator_adaptor based range into base iterators
     /*!
         This function if primary targeted for iterator adaptors, 
-        like std::reverse iterator. For a range of adapted iterators,
+        like \c std::reverse iterator. For a range of adapted iterators,
         it constucts a range of related base iterators.
 
-        \param Range An iterator_range
+        \param Range An \c iterator_range
         \return base range
     */
     template< typename IteratorT >

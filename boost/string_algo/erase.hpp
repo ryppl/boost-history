@@ -18,7 +18,7 @@
 #include <boost/string_algo/format2.hpp>
 
 /*! \file
-    This header defines various erase algorithms. Each algorithm removes
+    Defines various erase algorithms. Each algorithm removes
     a part(s) of the input according to a searching criterium.
 */
 
@@ -29,7 +29,7 @@ namespace boost {
     //! Erase range algorithm
     /*!
         Remove the given range from the input sequence.
-        Result is copied to the given output iterator.
+        The result is copied to the given output iterator.
 
         \param Output A output iterarot to which the result will be copied
         \param Input An input sequence
@@ -54,7 +54,7 @@ namespace boost {
     //! Erase range algorithm
     /*!
         Remove the given range from the input sequence.
-        Result is a modified copy of the input.
+        The result is a modified copy of the input.
 
         \param Input An input sequence
         \param SearchRange A range in the input to be substituted
@@ -76,7 +76,7 @@ namespace boost {
     //! Erase range algorithm
     /*!
         Remove the given range from the input sequence.
-        Input sequence is modified in-place.
+        The input sequence is modified in-place.
 
         \param Input An input sequence
         \param SearchRange A range in the input to be substituted
@@ -100,7 +100,7 @@ namespace boost {
     //! Erase first algorithm
     /*!
         Remove the first match of the search sequence from the input.
-        Result is copied to the given output iterator.
+        The result is copied to the given output iterator.
 
         \param Output A output iterarot to which the result will be copied
         \param Input An input sequence
@@ -126,7 +126,7 @@ namespace boost {
     //! Erase first algorithm
     /*!
         Remove the first match of the search sequence from the input. 
-        Result is a modified copy of the input.
+        The result is a modified copy of the input.
 
         \param Input An input sequence
         \param Search A string to be searched for. 
@@ -146,7 +146,7 @@ namespace boost {
     //! Erase first algorithm
     /*!
         Remove the first match of the search sequence from the input. 
-        Input sequence is modified in-place.
+        The input sequence is modified in-place.
 
         \param Input An input sequence
         \param Search A string to be searched for. 
@@ -168,7 +168,7 @@ namespace boost {
     //! Erase first algorithm ( case insensitive )
     /*!
         Remove the first match of the search sequence from the input. 
-        Result is copied to the given output iterator. Searching is case insensitive.
+        The result is copied to the given output iterator. Searching is case insensitive.
 
         \param Output A output iterarot to which the result will be copied
         \param Input An input sequence
@@ -196,7 +196,7 @@ namespace boost {
     //! Erase first algorithm ( case insensitive )
     /*!
         Remove the first match of the search sequence from the input. 
-        Result is a modified copy of the input. Searching is case insensitive.
+        The result is a modified copy of the input. Searching is case insensitive.
 
         \param Input An input sequence
         \param Search A string to be searched for.
@@ -218,7 +218,7 @@ namespace boost {
     //! Erase first algorithm ( case insensitive )
     /*!
         Remove the first match of the search sequence from the input. 
-        Input sequence is modified in-place. Searching is case insensitive.
+        The input sequence is modified in-place. Searching is case insensitive.
 
         \param Input An input sequence
         \param Search A string to be searched for.
@@ -242,7 +242,7 @@ namespace boost {
     //! Erase last algorithm
     /*!
         Remove the last match of the search sequence from the input. 
-        Result is copied to the given output iterator.
+        The result is copied to the given output iterator.
 
         \param Output A output iterarot to which the result will be copied
         \param Input An input sequence
@@ -268,7 +268,7 @@ namespace boost {
     //! Erase last algorithm
     /*!
         Remove the last match of the search sequence from the input. 
-        Result is a modified copy of the input.
+        The result is a modified copy of the input.
 
         \param Input An input sequence
         \param Search A string to be searched for. 
@@ -288,7 +288,7 @@ namespace boost {
     //! Erase last algorithm
     /*!
         Remove the last match of the search sequence from the input. 
-        Input sequence is modified in-place.
+        The input sequence is modified in-place.
 
         \param Input An input sequence
         \param Search A string to be searched for. 
@@ -310,7 +310,7 @@ namespace boost {
     //! Erase last algorithm ( case insensitive )
     /*!
         Remove the last match of the search sequence from the input. 
-        Result is copied to the given output iterator. Searching is case insensitive.
+        The result is copied to the given output iterator. Searching is case insensitive.
 
         \param Output A output iterarot to which the result will be copied
         \param Input An input sequence
@@ -338,7 +338,7 @@ namespace boost {
     //! Erase last algorithm ( case insensitive )
     /*!
         Remove the last match of the search sequence from the input. 
-        Result is a modified copy of the input. Searching is case insensitive.
+        The result is a modified copy of the input. Searching is case insensitive.
 
         \param Input An input sequence
         \param Search A string to be searched for.
@@ -360,7 +360,7 @@ namespace boost {
     //! Erase last algorithm ( case insensitive )
     /*!
         Remove the last match of the search sequence from the input. 
-        Input sequence is modified in-place. Searching is case insensitive.
+        The input sequence is modified in-place. Searching is case insensitive.
 
         \param Input An input sequence
         \param Search A string to be searched for.
@@ -384,7 +384,7 @@ namespace boost {
     //! Erase nth algorithm
     /*!
         Remove the Nth match of the search sequence in the input.
-        Result is copied to the given output iterator.
+        The result is copied to the given output iterator.
 
         \param Output A output iterarot to which the result will be copied
         \param Input An input sequence
@@ -412,7 +412,7 @@ namespace boost {
     //! Erase nth algorithm
     /*!
         Remove the Nth match of the search sequence in the input.
-        Result is a modified copy of the input.
+        The result is a modified copy of the input.
 
         \param Input An input sequence
         \param Search A string to be searched for. 
@@ -434,7 +434,7 @@ namespace boost {
     //! Erase nth algorithm
     /*!
         Remove the Nth match of the search sequence in the input.
-        Input sequence is modified in-place.
+        The input sequence is modified in-place.
 
         \param Input An input sequence
         \param Search A string to be searched for. 
@@ -458,7 +458,7 @@ namespace boost {
     //! Erase nth algorithm ( case insensitive )
     /*!
         Remove the Nth match of the search sequence in the input.
-        Result is copied to the given output iterator. Searching is case insensitive.
+        The result is copied to the given output iterator. Searching is case insensitive.
 
         \param Output A output iterarot to which the result will be copied
         \param Input An input sequence
@@ -488,7 +488,7 @@ namespace boost {
     //! Erase nth algorithm
     /*!
         Remove the Nth match of the search sequence in the input.
-        Result is a modified copy of the input. Searching is case insensitive.
+        The result is a modified copy of the input. Searching is case insensitive.
 
         \param Input An input sequence
         \param Search A string to be searched for. 
@@ -512,7 +512,7 @@ namespace boost {
     //! Erase nth algorithm
     /*!
         Remove the Nth match of the search sequence in the input.
-        Input sequence is modified in-place. Searching is case insensitive.
+        The input sequence is modified in-place. Searching is case insensitive.
 
         \param Input An input sequence
         \param Search A string to be searched for. 
@@ -539,7 +539,7 @@ namespace boost {
     //! Erase all algorithm
     /*!
         Remove all the occurences of the search sequence from the input. 
-        Result is copied to the given output iterator.
+        The result is copied to the given output iterator.
 
         \param Output A output iterarot to which the result will be copied
         \param Input An input sequence
@@ -565,7 +565,7 @@ namespace boost {
     //! Erase all algorithm
     /*!
         Remove all the occurences of the search sequence from the input. 
-        Result is a modified copy of the input.
+        The result is a modified copy of the input.
 
         \param Input An input sequence
         \param Search A string to be searched for. 
@@ -585,7 +585,7 @@ namespace boost {
     //! Erase all algorithm
     /*!
         Remove all the occurences of the search sequence from the input. 
-        Input sequence is modified in-place.
+        The input sequence is modified in-place.
 
         \param Input An input sequence
         \param Search A string to be searched for. 
@@ -607,7 +607,7 @@ namespace boost {
     //! Erase all algorithm ( case insensitive )
     /*!
         Remove all the occurences of the search sequence from the input. 
-        Result is copied to the given output iterator. Searching is case insensitive.
+        The result is copied to the given output iterator. Searching is case insensitive.
 
         \param Output A output iterarot to which the result will be copied
         \param Input An input sequence
@@ -635,7 +635,7 @@ namespace boost {
     //! Erase all algorithm ( case insensitive )
     /*!
         Remove all the occurences of the search sequence from the input. 
-        Result is a modified copy of the input. Searching is case insensitive.
+        The result is a modified copy of the input. Searching is case insensitive.
 
         \param Input An input sequence
         \param Search A string to be searched for. 
@@ -657,7 +657,7 @@ namespace boost {
     //! Erase all algorithm ( case insensitive )
     /*!
         Remove all the occurences of the search sequence from the input. 
-        Input sequence is modified in-place. Searching is case insensitive.
+        The input sequence is modified in-place. Searching is case insensitive.
 
         \param Input An input sequence
         \param Search A string to be searched for. 
@@ -682,7 +682,7 @@ namespace boost {
     /*!
         Remove the head from the input. Head is a prefix of a seqence of given size. 
         If the sequence is shorter then required, whole sequence if 
-        considered to be the head. Result is copied to the given output iterator.
+        considered to be the head. The result is copied to the given output iterator.
 
         \param Output A output iterarot to which the result will be copied
         \param Input An input sequence
@@ -708,7 +708,7 @@ namespace boost {
     /*!
         Remove the head from the input. Head is a prefix of a seqence of given size. 
         If the sequence is shorter then required, whole sequence if 
-        considered to be the head. Result is a modified copy of the input.
+        considered to be the head. The result is a modified copy of the input.
 
         \param Input An input sequence
         \param N A length of the head
@@ -729,7 +729,7 @@ namespace boost {
     /*!
         Remove the head from the input. Head is a prefix of a seqence of given size. 
         If the sequence is shorter then required, whole sequence if 
-        considered to be the head. Input sequence is modified in-place.
+        considered to be the head. The input sequence is modified in-place.
 
         \param Input An input sequence
         \param N A length of the head
@@ -752,7 +752,7 @@ namespace boost {
     /*!
         Remove the tail from the input. Tail is a suffix of a seqence of given size. 
         If the sequence is shorter then required, whole sequence if 
-        considered to be the tail. Result is copied to the given output iterator.
+        considered to be the tail. The result is copied to the given output iterator.
 
         \param Output A output iterarot to which the result will be copied
         \param Input An input sequence
@@ -777,8 +777,8 @@ namespace boost {
     //! Erase tail algorithm
     /*!
         Remove the tail from the input. Tail is a suffix of a seqence of given size. 
-        If the sequence is shorter then required, whole sequence if 
-        considered to be the tail. Result is a modified copy of the input.
+        If the sequence is shorter then required, whole sequence is 
+        considered to be the tail. The result is a modified copy of the input.
 
         \param Input An input sequence
         \param N A length of the head
@@ -798,8 +798,8 @@ namespace boost {
     //! Erase tail algorithm
     /*!
         Remove the tail from the input. Tail is a suffix of a seqence of given size. 
-        If the sequence is shorter then required, whole sequence if 
-        considered to be the tail. Input sequence is modified in-place.
+        If the sequence is shorter then required, whole sequence is
+        considered to be the tail. The input sequence is modified in-place.
 
         \param Input An input sequence
         \param N A length of the head

@@ -34,9 +34,9 @@ namespace boost {
         \param Input A container which will be searched.
         \param Search A string to be searched for.
         \return 
-            An iterator_range containing iterators delimiting the match. 
-            Returned iterator is either InputContainerT::iterator or 
-            InputContainerT::const_iterator, depending on the constness of 
+            An \c iterator_range delimiting the match. 
+            Returned iterator is either \c InputContainerT::iterator or 
+            \c InputContainerT::const_iterator, depending on the constness of 
             the input parameter.
     */
     template< typename InputContainerT, typename SearchContainerT >
@@ -59,9 +59,10 @@ namespace boost {
         \param Search A string to be searched for.
         \param Loc a locale used for case insensitive comparison
         \return 
-            An iterator_range containing iterators delimiting the match. 
-            Returned iterator is either InputContainerT::iterator or 
-            InputContainerT::const_iterator, depending on the constness of the input parameter.
+            An \c iterator_range delimiting the match. 
+            Returned iterator is either \c InputContainerT::iterator or 
+            \c InputContainerT::const_iterator, depending on the constness of 
+            the input parameter.
     */
     template< typename InputContainerT, typename SearchContainerT >
     inline iterator_range< 
@@ -85,9 +86,10 @@ namespace boost {
         \param Input A container which will be searched.
         \param Search A string to be searched for.
         \return 
-            An iterator_range containing iterators delimiting the match. 
-            Returned iterator is either InputContainerT::iterator or 
-            InputContainerT::const_iterator, depending on the constness of the input parameter.
+            An \c iterator_range delimiting the match. 
+            Returned iterator is either \c InputContainerT::iterator or 
+            \c InputContainerT::const_iterator, depending on the constness of 
+            the input parameter.
     */
     template< typename InputContainerT, typename SearchContainerT >
     inline iterator_range< 
@@ -109,10 +111,10 @@ namespace boost {
         \param Search A string to be searched for.
         \param Loc a locale used for case insensitive comparison
         \return 
-            An iterator_range containing iterators delimiting the match. 
-            Returned iterator is either InputContainerT::iterator or 
-            InputContainerT::const_iterator, depending on the constness of the 
-            input parameter.
+            An \c iterator_range delimiting the match. 
+            Returned iterator is either \c InputContainerT::iterator or 
+            \c InputContainerT::const_iterator, depending on the constness of 
+            the input parameter.
     */
     template< typename InputContainerT, typename SearchContainerT >
     inline iterator_range< 
@@ -137,9 +139,9 @@ namespace boost {
         \param Search A string to be searched for.
         \param Nth An index of the match to be found.
         \return 
-            An iterator_range containing iterators delimiting the match. 
-            Returned iterator is either InputContainerT::iterator or 
-            InputContainerT::const_iterator, depending on the constness of 
+            An \c iterator_range delimiting the match. 
+            Returned iterator is either \c InputContainerT::iterator or 
+            \c InputContainerT::const_iterator, depending on the constness of 
             the input parameter.
     */
     template< typename InputContainerT, typename SearchContainerT >
@@ -164,10 +166,10 @@ namespace boost {
         \param Nth An index of the match to be found.
         \param Loc a locale used for case insensitive comparison
         \return 
-            An iterator_range containing iterators delimiting the match. 
-            Returned iterator is either InputContainerT::iterator or 
-            InputContainerT::const_iterator, depending on the constness 
-            of the input parameter.
+            An \c iterator_range delimiting the match. 
+            Returned iterator is either \c InputContainerT::iterator or 
+            \c InputContainerT::const_iterator, depending on the constness of 
+            the input parameter.
     */
     template< typename InputContainerT, typename SearchContainerT >
     inline iterator_range< 
@@ -193,10 +195,10 @@ namespace boost {
         \param Input A container which will be searched.
         \param N A length of the head
         \return 
-            An iterator_range containing iterators delimiting the match. 
-            Returned iterator is either InputContainerT::iterator or 
-            InputContainerT::const_iterator, depending on the constness 
-            of the input parameter.
+            An \c iterator_range delimiting the match. 
+            Returned iterator is either \c InputContainerT::iterator or 
+            \c InputContainerT::const_iterator, depending on the constness of 
+            the input parameter.
     */
     template< typename InputContainerT >
     inline iterator_range< 
@@ -220,10 +222,10 @@ namespace boost {
         \param Input A container which will be searched.
         \param N A length of the tail
         \return 
-            An iterator_range containing iterators delimiting the match. 
-            Returned iterator is either InputContainerT::iterator or 
-            InputContainerT::const_iterator, depending on the constness 
-            of the input parameter.
+            An \c iterator_range delimiting the match. 
+            Returned iterator is either \c InputContainerT::iterator or 
+            \c InputContainerT::const_iterator, depending on the constness of 
+            the input parameter.
     */
     template< typename InputContainerT >
     inline iterator_range< 
@@ -247,10 +249,10 @@ namespace boost {
         \param Pred An unary predicate to identify a tiken
         \param bCompress Enable/Disable compressing of adjancent tokens
         \return 
-            An iterator_range containing iterators delimiting the match. 
-            Returned iterator is either InputContainerT::iterator 
-            or InputContainerT::const_iterator, depending on the constness 
-            of the input parameter.
+            An \c iterator_range delimiting the match. 
+            Returned iterator is either \c InputContainerT::iterator or 
+            \c InputContainerT::const_iterator, depending on the constness of 
+            the input parameter.
     */
     template< typename InputContainerT, typename PredicateT >
     inline iterator_range< 

@@ -20,11 +20,7 @@
 #include <boost/string_algo/split2.hpp>
 
 /*! \file
-    This header defines regex variant of the algorithms. They mostly only
-    wrap regex++ functionality to provide uniform interface with
-    other algorithms in this library.
-    Another reason to include them here is have a proof of concept for
-    the library extensibility and customization.
+    Defines regex variant of the algorithms. 
 */
 
 namespace boost {
@@ -39,9 +35,9 @@ namespace boost {
         \param Rx A regular expression
         \param MatchFlags Regex search options
         \return 
-            An iterator_range containing iterators delimiting the match. 
-            Returned iterator is either InputContainerT::iterator or 
-            InputContainerT::const_iterator, depending on the constness of 
+            An \c iterator_range delimiting the match. 
+            Returned iterator is either \c InputContainerT::iterator or 
+            \c InputContainerT::const_iterator, depending on the constness of 
             the input parameter.
     */
 
@@ -65,7 +61,7 @@ namespace boost {
     //! Replace regex algorithm
     /*!
         Search for a subsequence mathing given regex and format it with 
-        the specified format. Result is copied to the given output iterator.
+        the specified format. The result is copied to the given output iterator.
 
         \param Output A output iterarot to which the result will be copied
         \param Input An input sequence
@@ -99,7 +95,7 @@ namespace boost {
     //! Replace regex algorithm
     /*!
         Search for a subsequence mathing given regex and format it with 
-        the specified format. Result is a modified copy of the input.
+        the specified format. The result is a modified copy of the input.
 
         \param Input An input sequence
         \param Rx A regular expression
@@ -129,7 +125,7 @@ namespace boost {
     //! Replace regex algorithm
     /*!
         Search for a subsequence mathing given regex and format it with 
-        the specified format. Input sequence is modified in-place.
+        the specified format. The input sequence is modified in-place.
 
         \param Input An input sequence
         \param Rx A regular expression
@@ -161,7 +157,7 @@ namespace boost {
     //! Replace all regex algorithm
     /*!
         Format all subsequences, mathing given regex, with the specified format. 
-        Result is copied to the given output iterator.
+        The result is copied to the given output iterator.
 
         \param Output A output iterarot to which the result will be copied
         \param Input An input sequence
@@ -195,7 +191,7 @@ namespace boost {
     //! Replace all regex algorithm
     /*!
         Format all subsequences, mathing given regex, with the specified format. 
-        Result is a modified copy of the input.
+        The result is a modified copy of the input.
 
         \param Input An input sequence
         \param Rx A regular expression
@@ -225,7 +221,7 @@ namespace boost {
     //! Replace all regex algorithm
     /*!
         Format all subsequences, mathing given regex, with the specified format. 
-        Input sequence is modified in-place.
+        The input sequence is modified in-place.
 
         \param Input An input sequence
         \param Rx A regular expression
@@ -257,7 +253,7 @@ namespace boost {
     //! Erase regex algorithm
     /*!
         Remove a subsequence mathing given regex from the input.
-        Result is copied to the given output iterator.
+        The result is copied to the given output iterator.
 
         \param Output A output iterarot to which the result will be copied
         \param Input An input sequence
@@ -286,7 +282,7 @@ namespace boost {
     //! Erase regex algorithm
     /*!
         Remove a subsequence mathing given regex from the input.
-        Result is a modified copy of the input.
+        The result is a modified copy of the input.
 
         \param Input An input sequence
         \param Rx A regular expression
@@ -311,7 +307,7 @@ namespace boost {
     //! Erase regex algorithm
     /*!
         Remove a subsequence mathing given regex from the input.
-        Input sequence is modified in-place.
+        The input sequence is modified in-place.
 
         \param Input An input sequence
         \param Rx A regular expression
@@ -338,7 +334,7 @@ namespace boost {
     //! Erase all regex algorithm
     /*!
         Erase all subsequences, mathing given regex, from the input.
-        Result is copied to the given output iterator.
+        The result is copied to the given output iterator.
 
         \param Output A output iterarot to which the result will be copied
         \param Input An input sequence
@@ -367,7 +363,7 @@ namespace boost {
     //! Erase all regex algorithm
     /*!
         Erase all subsequences, mathing given regex, from the input.
-        Result is a modified copy of the input.
+        The result is a modified copy of the input.
 
         \param Input An input sequence
         \param Rx A regular expression
@@ -392,7 +388,7 @@ namespace boost {
     //! Erase all regex algorithm
     /*!
         Erase all subsequences, mathing given regex, from the input.
-        Input sequence is modified in-place.
+        The input sequence is modified in-place.
 
         \param Input An input sequence
         \param Rx A regular expression
@@ -418,8 +414,8 @@ namespace boost {
 
     //! Find all regex algorithm
     /*!
-        This algorithm finds all subsequenced matching the give regex
-        in the input. A result is given as a 'container of containers'.
+        This algorithm finds all substrings matching the give regex
+        in the input. The result is given as a 'container of containers'.
         Each match of the search sequence is represented by one
         element in the result.
 
@@ -427,13 +423,13 @@ namespace boost {
             Both outher and inner container must have constructor taking a pair
             of iterators as an argument.
             Typical type of the result is 
-                std::vector< boost::iterator_range<iterator> >.
-            ( each element of such a vector will container a range delimiting 
-            a match )
+                \c std::vector<boost::iterator_range<iterator>>.
+            (each element of such a vector will container a range delimiting 
+            a match).
         \param Input A container which will be searched.
         \param Rx A regular expression
         \param MatchFlags Regex search options
-        \return A reference the result
+        \return A reference to the result
 
         \note Prior content of the result will be overriden.
     */
@@ -459,21 +455,20 @@ namespace boost {
     //! Split regex algorithm
     /*! 
         Tokenize expression. This function is equivalent of C strtok. Input
-        sequence is split into tokens, separated  by seperators. Separators 
-        is every match of the given regex.
+        sequence is split into tokens, separated  by seperators. Separator
+        is an every match of the given regex.
 
         \param Result A 'container container' to container the result of search.
             Both outher and inner container must have constructor taking a pair
             of iterators as an argument.
             Typical type of the result is 
-                std::vector< boost::iterator_range<iterator> >.
-            ( each element of such a vector will container a range delimiting 
-            a match )
-
+                'c std::vector<boost::iterator_range<iterator>>.
+            (each element of such a vector will container a range delimiting 
+            a match).
         \param Input A container which will be searched.
         \param Rx A regular expression
         \param MatchFlags Regex search options
-        \return A reference the result
+        \return A reference to the result
 
         \note Prior content of the result will be overriden.
     */

@@ -16,8 +16,8 @@
 #include <boost/string_algo/detail/format_regex.hpp>
 
 /*! \file
-    Defines refex_finder and regex_formatter generators. These two functors
-    are designed to work together. regex_formatter uses addtional information
+    Defines the \c refex_finder and \c regex_formatter generators. These two functors
+    are designed to work together. \c regex_formatter uses addtional information
     about a match contained in the reger_finder search result.
 */
 
@@ -28,15 +28,15 @@ namespace boost {
 
         //! "Regex" finder 
         /*!
-            Construct first_finder. Finder uses regex engine to search
+            Construct the \c regex_finder. Finder uses regex engine to search
             for a match.
-            Result is given in regex_search_result. This is an extension
+            Result is given in \c regex_search_result. This is an extension
             of the iterator_range. In addtion it containes match results 
-            from regex_search algoritm.
+            from the \c regex_search algoritm.
 
             \param Rx A regular expression
             \param MatchFlags Regex search options
-            \return regex_finder functor
+            \return An instance of the \c regex_finder object
         */
         template< 
             typename CharT, 
@@ -55,13 +55,13 @@ namespace boost {
 
         //! Regex formatter
         /*!
-            Construct a regex formatter. Regex formater uses regex_format
-            function to format a match found by regex_finder. 
-            This formatted it designed to closely cooperate with regex_finder.
+            Construct the \c regex_formatter. Regex formatter uses regex engine to
+            format a match found by the \c regex_finder. 
+            This formatted it designed to closely cooperate with \c regex_finder.
 
             \param Format Regex format definition
             \param Flags Format flags
-            \return A regex formatter functor
+            \return An instance of the \c regex_formatter functor
         */
        template< 
             typename CharT, 

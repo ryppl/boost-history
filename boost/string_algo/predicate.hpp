@@ -15,9 +15,12 @@
 #include <boost/string_algo/predicate2.hpp>
 
 /*! \file boost/string_algo/predicate.hpp
-    The algorithms are resolving if a substring is contained in 
-    the input string under various conditions. These conditions are 
-    suffix and prefix check, equality check and containment check. 
+    Defines string-related predicates. 
+    The predicates are resolving if a substring is contained in the input string 
+    under various conditions. If a string starts with the substring, ends with the 
+    substring, simply contains the substring or if both strings are equal.
+    In addition the algorithm \c all() checks all elements of a container to satisfy a 
+    condition.
 */
 
 namespace boost {
@@ -27,7 +30,7 @@ namespace boost {
     //! 'Starts with' predicate
     /*!
         This predicate holds when the test container is a prefix of the Input.
-        In other word, if the input starts with the test.
+        In other words, if the input starts with the test.
 
         \param Input An input container
         \param Test A test container
@@ -148,7 +151,7 @@ namespace boost {
         \param Test A test container
         \return A result of the test
 
-        \note This is two-way version of std::equal algorithm
+        \note This is two-way version of \c std::equal algorithm
     */
     template< typename InputContainerT, typename TestContainerT >
     inline bool equals( 
@@ -169,7 +172,7 @@ namespace boost {
         \param Loc a locale used for case insensitive comparison
         \return A result of the test
 
-        \note This is two-way version of std::equal algorithm
+        \note This is two-way version of \c std::equal algorithm
     */
     template< typename InputContainerT, typename TestContainerT >
     inline bool iequals( 

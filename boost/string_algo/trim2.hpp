@@ -17,9 +17,11 @@
 #include <locale>
 
 /*! \file
+    Defines generic trim algorithms.
     Trim algorithms are used to remove trailing and leading spaces from a 
-    sequence (string). This header container parametric versions of
-    trim algoritms. Space characters are selected using a predicate (functor). 
+    sequence (string). 
+    
+    Space characters are selected using a predicate (functor). 
     Functions take a selection predicate as a parameter, which is used to determine 
     if a charater is a space. Common predicates are provided in classification.hpp header.
 */
@@ -33,7 +35,7 @@ namespace boost {
         /*!
             Remove all leading spaces from the input. Suplied predicate
             is used to detemine which character is a space.
-            Result is copied to the given output iterator.
+            The result is copied to the given output iterator.
 
             \param Output A output iterarot to which the result will be copied
             \param Input An input container
@@ -61,7 +63,7 @@ namespace boost {
         /*!
             Remove all leading spaces from the input. Suplied predicate
             is used to detemine which character is a space.
-            Result is a trimmed copy if the input
+            The result is a trimmed copy if the input
 
             \param Input An input container
             \param IsSpace An unary predicate identifying spaces
@@ -82,7 +84,7 @@ namespace boost {
         /*!
             Remove all leading spaces from the input. Suplied predicate
             is used to detemine which character is a space.
-            Input sequence is modified in-place.
+            The input sequence is modified in-place.
 
             \param Input An input container
             \param IsSpace An unary predicate identifying spaces
@@ -107,7 +109,7 @@ namespace boost {
         /*!
             Remove all trailing spaces from the input. Suplied predicate
             is used to detemine which character is a space.
-            Result is copied to the given output iterator.
+            The result is copied to the given output iterator.
 
             \param Output A output iterarot to which the result will be copied
             \param Input An input container
@@ -135,7 +137,7 @@ namespace boost {
         /*!
             Remove all trailing spaces from the input. Suplied predicate
             is used to detemine which character is a space.
-            Result is a trimmed copy if the input
+            The result is a trimmed copy if the input
 
             \param Input An input container
             \param IsSpace An unary predicate identifying spaces
@@ -157,7 +159,7 @@ namespace boost {
         /*!
             Remove all trailing spaces from the input. Suplied predicate
             is used to detemine which character is a space.
-            Input sequence is modified in-place.
+            The input sequence is modified in-place.
 
             \param Input An input container
             \param IsSpace An unary predicate identifying spaces
@@ -183,7 +185,7 @@ namespace boost {
         /*!
             Remove all trailing and leading spaces from the input. 
             Suplied predicate is used to detemine which character is a space.
-            Result is copied to the given output iterator.
+            The result is copied to the given output iterator.
 
             \param Output A output iterarot to which the result will be copied
             \param Input An input container
@@ -217,7 +219,7 @@ namespace boost {
         /*!
             Remove all leading and trailing spaces from the input. 
             Suplied predicate is used to detemine which character is a space.
-            Result is a trimmed copy if the input
+            The result is a trimmed copy if the input
 
             \param Input An input container
             \param IsSpace An unary predicate identifying spaces
@@ -246,7 +248,7 @@ namespace boost {
         /*!
             Remove all leading and trailing spaces from the input. 
             Suplied predicate is used to detemine which character is a space.
-            Input sequence is modified in-place.
+            The input sequence is modified in-place.
 
             \param Input An input container
             \param IsSpace An unary predicate identifying spaces

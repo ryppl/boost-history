@@ -16,12 +16,13 @@
 #include <boost/string_algo/detail/predicate.hpp>
 
 /*! \file boost/string_algo/predicate2.hpp
-    The algorithms are resolving if a substring is contained in 
-    the input string under various conditions. These conditions are 
-    suffix and prefix check, equality check and containment check. 
+    Defines string-related predicates. 
+    The predicates are resolving if a substring is contained in the input string 
+    under various conditions. If a string starts with the substring, ends with the 
+    substring, simply contains the substring or if both strings are equal.
 
-    In addtion to header predicate.hpp, algorithms defined here have
-    an additional parameter specifying element comparison predicate.
+    In addtion to header predicate.hpp, algorithms defined here allows
+    to use custom element comparison policy.
 */
 
 namespace boost {

@@ -18,9 +18,9 @@
 #include <boost/string_algo/compare.hpp>
 
 /*! \file
-    This file contains a set of basic split algorithms. 
+    Defines basic split algorithms. 
     Split algorithms can be used to divide a sequence
-    into several part accorfing to a given criterium.
+    into several parts accorfing to a given criterium.
     Result is given as a 'container of containers' where
     elements are copies or references to extracted parts.
     This file contains some common specializations of generic
@@ -42,9 +42,9 @@ namespace boost {
             Both outher and inner container must have constructor taking a pair
             of iterators as an argument.
             Typical type of the result is 
-                std::vector< boost::iterator_range<iterator> >.
-            ( each element of such a vector will container a range delimiting 
-            a match )
+                \c std::vector<boost::iterator_range<iterator>).
+            (each element of such a vector will container a range delimiting 
+            a match).
         \param Input A container which will be searched.
         \param Search A string to be searched for.
         \return A reference the result
@@ -74,9 +74,9 @@ namespace boost {
             Both outher and inner container must have constructor taking a pair
             of iterators as an argument.
             Typical type of the result is 
-                std::vector< boost::iterator_range<iterator> >.
-            ( each element of such a vector will container a range delimiting 
-            a match )
+                \c std::vector<boost::iterator_range<iterator>>.
+            (each element of such a vector will container a range delimiting 
+            a match).
         \param Input A container which will be searched.
         \param Search A string to be searched for.
         \param Loc a locale used for case insensitive comparison
@@ -110,9 +110,9 @@ namespace boost {
             Both outher and inner container must have constructor taking a pair
             of iterators as an argument.
             Typical type of the result is 
-                std::vector< boost::iterator_range<iterator> >.
-            ( each element of such a vector will container a range delimiting 
-            a match )
+                \c std::vector<boost::iterator_range<iterator>>.
+            (each element of such a vector will container a range delimiting 
+            a match).
 
         \param Input A container which will be searched.
         \param Pred A predicate to indentify separators. This predicate is 

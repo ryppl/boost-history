@@ -23,12 +23,12 @@
 /*! \file
     Defines generic split algorithms. Split algorithms can be 
     used to divide a sequence into several part accorfing 
-    to a given criteria. Result is given as a 'container 
+    to a given criterium. Result is given as a 'container 
     of containers' where elements are copies or references 
     to extracted parts.
 
-    There are two algorithms provided. One iterated through matching
-    substring, the other one through gasps between theese matches.
+    There are two algorithms provided. One iterates over matching
+    substrings, the other one over the gasps between theese matches.
 */
 
 namespace boost {
@@ -48,9 +48,9 @@ namespace boost {
                 Both outher and inner container must have constructor taking a pair
                 of iterators as an argument.
                 Typical type of the result is 
-                    std::vector< boost::iterator_range<iterator> >.
-                ( each element of such a vector will container a range delimiting 
-                a match )
+                    \c std::vector<boost::iterator_range<iterator>>
+                (each element of such a vector will container a range delimiting 
+                a match).
             \param Input A container which will be searched.
             \param Finder A Finder object used for searching
             \return A reference the result
@@ -110,9 +110,9 @@ namespace boost {
                 Both outher and inner container must have constructor taking a pair
                 of iterators as an argument.
                 Typical type of the result is 
-                    std::vector< boost::iterator_range<iterator> >.
-                ( each element of such a vector will container a range delimiting 
-                a match )
+                    \c std::vector<boost::iterator_range<iterator>>
+                (each element of such a vector will container a range delimiting 
+                a match).
             \param Input A container which will be searched.
             \param Finder A finder object used for searching
             \return A reference the result

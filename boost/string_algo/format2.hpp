@@ -17,13 +17,13 @@
 
 /*! \file
     Defines formatter generators. Formatter is a functor which formats
-    a string according to give paramters. Formatter should can work
-    in conjuntion with finders. A finder can provide addtional information
-    for a specific formatter. An example of such a cooperation is reger_finder
+    a string according to give paramters. A Formatter works
+    in conjuntion with a Finder. A Finder can provide addtional information
+    for a specific Formatter. An example of such a cooperation is reger_finder
     and regex_formatter.
 
-    Formatter are used by as a plugable components for replace facilities. 
-    This header contains generator functions for formatters provided in this library.
+    Formatters are used by as a plugable components for replace facilities. 
+    This header contains generator functions for the Formatters provided in this library.
 */
 
 namespace boost {
@@ -33,11 +33,11 @@ namespace boost {
 
         //! Constant formatter
         /*!
-            Construct a const formatter. Const formatter always returns
+            Construct the \c const_formatter. Const formatter always returns
             the same value, regardless of the paramter.
 
             \param Format A predefined value used as a result for formating
-            \return A const formatter functor
+            \return An instance of the \c const_formatter object.
         */
         template< typename ContainerT >
         inline detail::const_formatF<ContainerT>
@@ -48,10 +48,10 @@ namespace boost {
 
         //! Identity formatter
         /*!
-            Construct an identity formatter. Identity formatter always returns
+            Construct the \c identity_formatter. Identity formatter always returns
             the parameter.
 
-            \return An identity formatter functor
+            \return An instance of the \c identity_formatter object.
         */
         template< typename ContainerT >
         inline detail::identity_formatF<ContainerT>
@@ -62,12 +62,12 @@ namespace boost {
 
         //! Empty formatter
         /*!
-            Construct an empty formatter. Empty formater always returns an empty
+            Construct the \c empty_formatter. Empty formater always returns an empty
             sequence. 
 
             \param Input container used to select a correct value_type for the
-                         resulting empty_container<>
-            \return An empty formatter functor
+                         resulting empty_container<>.
+            \return An instance of the \c empty_formatter object.
         */
         template< typename ContainerT >
         inline detail::empty_formatF< 

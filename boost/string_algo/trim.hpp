@@ -17,13 +17,9 @@
 #include <locale>
 
 /*! \file
+    Defines trim algorithms.
     Trim algorithms are used to remove trailing and leading spaces from a 
     sequence (string). Space is recognized using given locales.
-    
-    
-    Space characters are selected using a predicate (functor). 
-    Functions take a selection predicate as a parameter, which is used to determine 
-    if a charater is a space. Common predicates are provided in classification.hpp header
 */
 
 namespace boost {
@@ -31,7 +27,7 @@ namespace boost {
     //! Left trim
     /*!
         Remove all leading spaces from the input. 
-        Result is a trimmed copy if the input
+        The result is a trimmed copy if the input
 
         \param Input An input container
         \param Loc a locale used for 'space' classification
@@ -49,7 +45,7 @@ namespace boost {
     //! Left trim
     /*!
         Remove all leading spaces from the input.
-        Input sequence is modified in-place.
+        The Input sequence is modified in-place.
 
         \param Input An input container
         \param Loc A locale used for 'space' classification
@@ -67,7 +63,7 @@ namespace boost {
     //! Right trim
     /*!
         Remove all trailing spaces from the input. 
-        Result is a trimmed copy if the input
+        The result is a trimmed copy if the input
 
         \param Input An input container
         \param Loc A locale used for 'space' classification
@@ -85,7 +81,7 @@ namespace boost {
     //! Right trim
     /*!
         Remove all trailing spaces from the input. 
-        Input sequence is modified in-place.
+        The input sequence is modified in-place.
 
         \param Input An input container
         \param Loc A locale used for 'space' classification
@@ -103,7 +99,7 @@ namespace boost {
     //! Trim
     /*!
         Remove all leading and trailing spaces from the input. 
-        Result is a trimmed copy if the input
+        The result is a trimmed copy if the input
 
         \param Input An input container
         \param Loc A locale used for 'space' classification
@@ -121,7 +117,7 @@ namespace boost {
     //! Trim
     /*!
         Remove all leading and trailing spaces from the input. 
-        Input sequence is modified in-place.
+        The input sequence is modified in-place.
 
         \param Input An input container
         \param Loc A locale used for 'space' classification

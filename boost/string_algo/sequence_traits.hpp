@@ -48,7 +48,7 @@ namespace boost {
 
         //! Native replace trait
         /*!
-            This trait specifies that the sequence has std::string like replace method
+            This trait specifies that the sequence has \c std::string like replace method
         */
         template< typename T >
         class sequence_has_native_replace
@@ -98,8 +98,8 @@ namespace boost {
         no_type sequence_has_const_time_insert_tester(...);                        
 
         //! Const time insert trait
-        /*
-            This trait specifies that the sequence's insert method is has 
+        /*!
+            This trait specifies that the sequence's insert method has 
             constant time complexity.
         */
         template< typename T >
@@ -123,8 +123,8 @@ namespace boost {
         no_type sequence_has_const_time_erase_tester(...);                        
 
         //! Const time erase trait
-        /*
-            This trait specifies that the sequence's erase method is has 
+        /*!
+            This trait specifies that the sequence's erase method has 
             constant time complexity.
         */
         template< typename T >
