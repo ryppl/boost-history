@@ -88,7 +88,7 @@ namespace boost {
 
 
         template<typename ItS, typename ItP, typename Array>
-        ItS boyer_moore_search(ItS            begin_search,
+        ItS boyer_moore_search(ItS            begin_sequence,
                                std::ptrdiff_t len_search,
                                ItP            begin_pattern,
                                std::ptrdiff_t len_pattern,
@@ -98,7 +98,7 @@ namespace boost {
             while (loop < len_search)
             {
                 // start at the end of the search sequence
-                ItS it_search = begin_search;
+                ItS it_search = begin_sequence;
                 std::advance<>(it_search, loop);
 
                 // start at the end of the pattern
@@ -128,7 +128,7 @@ namespace boost {
                 loop += array[current];
             }
 
-            ItS it_search = begin_search;
+            ItS it_search = begin_sequence;
             std::advance<>(it_search, len_search);
             return it_search;
         }
@@ -141,7 +141,7 @@ namespace boost {
              typename ItP,
              typename Alloc = std::allocator<std::ptrdiff_t>
             >
-    class boyer_moore_pattern_search : Alloc
+    struct boyer_moore_pattern_search : Alloc
     {
       private:
         typedef
@@ -168,18 +168,18 @@ namespace boost {
             deallocate(array_, traits::alphabet_size+1);
         }
         
-        ItS search(ItS begin_search, ItS end_search)
+        ItS search(ItS begin_sequence, ItS end_sequence)
         {
             // calculate the length of the pattern and the search sequence
-            std::ptrdiff_t len_search = std::distance<>(begin_search, end_search);
+            std::ptrdiff_t len_search = std::distance<>(begin_sequence, end_sequence);
 
             // if the pattern is longer than the search sequence, then we're not
             // going to find the pattern, so return immediately
             if (len_pattern_ > len_search)
-                return end_search;
+                return end_sequence;
 
             // create and initialise the pattern alphabet
-            return detail::boyer_moore_search<ItS, ItP>(begin_search,
+            return detail::boyer_moore_search<ItS, ItP>(begin_sequence,
                                                         len_search,
                                                         begin_pattern_,
                                                         len_pattern_,
@@ -189,19 +189,19 @@ namespace boost {
 
 
     template<typename ItS, typename ItP>
-    ItS boyer_moore_search(ItS begin_search,
-                           ItS end_search,
+    ItS boyer_moore_search(ItS begin_sequence,
+                           ItS end_sequence,
                            ItP begin_pattern,
                            ItP end_pattern)
     {
         // calculate the length of the pattern and the search sequence
         const std::ptrdiff_t len_pattern = std::distance<>(begin_pattern, end_pattern);
-        const std::ptrdiff_t len_search  = std::distance<>(begin_search, end_search);
+        const std::ptrdiff_t len_search  = std::distance<>(begin_sequence, end_sequence);
 
         // if the pattern is longer than the search sequence, then we're not
         // going to find the pattern, so return immediately
         if (len_pattern > len_search)
-            return end_search;
+            return end_sequence;
 
         // create and initialise the pattern alphabet
         typedef
@@ -210,7 +210,7 @@ namespace boost {
 
         std::ptrdiff_t array[traits::alphabet_size+1] = { 0 };
         detail::init_pattern<traits::alphabet_size>(array, begin_pattern, len_pattern);
-        return detail::boyer_moore_search<ItS, ItP>(begin_search,
+        return detail::boyer_moore_search<ItS, ItP>(begin_sequence,
                                                     len_search,
                                                     begin_pattern,
                                                     len_pattern,
@@ -218,22 +218,19 @@ namespace boost {
     }
 
 
-    template<typename T>
+    template<typename T1, typename T2>
     inline
-    typename T::const_iterator
-    boyer_moore_search(const T &sequence,
-                       const T &pattern)
+    BOOST_DEDUCED_TYPENAME T1::const_iterator
+    boyer_moore_search(const T1 &sequence,
+                       const T2 &pattern)
     {
-        typename T::const_iterator it = sequence.end();
         return boyer_moore_search<
-                   typename T::const_iterator,
-                   typename T::const_iterator>(
+                   BOOST_DEDUCED_TYPENAME T1::const_iterator,
+                   BOOST_DEDUCED_TYPENAME T2::const_iterator>(
                        sequence.begin(),
                        sequence.end(),
                        pattern.begin(),
                        pattern.end());
-
-        return it;
     }
 
 }       // namespace boost

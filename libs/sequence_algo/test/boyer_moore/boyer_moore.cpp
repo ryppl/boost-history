@@ -20,6 +20,7 @@ int main(int, char *[])
     std::string text("this is an example foo bar");
     std::string pattern("example");
 
+    std::cout << "\nTesting four iterator searching...";
     std::string::const_iterator it  = text.begin();
     std::string::const_iterator ite = text.end();
     it = boost::boyer_moore_search<>(
@@ -28,11 +29,12 @@ int main(int, char *[])
              pattern.end());
     assert(it != text.end());
 
+    std::cout << "\nTesting two container searching...";
     it = boost::boyer_moore_search(text, pattern);     assert(it != text.end());
-    it = boost::boyer_moore_search<std::string>(text, "this");      assert(it != text.end());
-    it = boost::boyer_moore_search<std::string>(text, "is an ex");  assert(it != text.end());
-    it = boost::boyer_moore_search<std::string>(text, "find this"); assert(it == text.end());
-    it = boost::boyer_moore_search<std::string>(text, "fo");        assert(it != text.end());
+    it = boost::boyer_moore_search<std::string, std::string>(text, "this");      assert(it != text.end());
+    it = boost::boyer_moore_search<std::string, std::string>(text, "is an ex");  assert(it != text.end());
+    it = boost::boyer_moore_search<std::string, std::string>(text, "find this"); assert(it == text.end());
+    it = boost::boyer_moore_search<std::string, std::string>(text, "fo");        assert(it != text.end());
 
     std::string is("is");
     it  = text.begin();
@@ -47,8 +49,8 @@ int main(int, char *[])
            "And all the men and women merely players,"
            "They each have their exits and their entrances,"
            "And in his time, one man plays many parts.";
-    it = boost::boyer_moore_search<std::string>(text, "plays many"); assert(it != text.end());
-    it = boost::boyer_moore_search<std::string>(text, "Plays many"); assert(it == text.end());
+    it = boost::boyer_moore_search<std::string, std::string>(text, "plays many"); assert(it != text.end());
+    it = boost::boyer_moore_search<std::string, std::string>(text, "Plays many"); assert(it == text.end());
     assert(text.find("plays") != std::string::npos);
 
 
@@ -64,16 +66,17 @@ int main(int, char *[])
               wpattern.begin(),
               wpattern.end());
 
+    std::cout << "\nTesting wide string searching...";
     wit = boost::boyer_moore_search(wtext, wpattern);      assert(wit != wtext.end());
-    wit = boost::boyer_moore_search<std::wstring>(wtext, L"this");       assert(wit != wtext.end());
-    wit = boost::boyer_moore_search<std::wstring>(wtext, L"is an ex");   assert(wit != wtext.end());
-    wit = boost::boyer_moore_search<std::wstring>(wtext, L"find this");  assert(wit == wtext.end());
-    wit = boost::boyer_moore_search<std::wstring>(wtext, L"fo");         assert(wit != wtext.end());
-    wit = boost::boyer_moore_search<std::wstring>(wtext, L"is");         assert(wit != wtext.end());
+    wit = boost::boyer_moore_search<std::wstring, std::wstring>(wtext, L"this");       assert(wit != wtext.end());
+    wit = boost::boyer_moore_search<std::wstring, std::wstring>(wtext, L"is an ex");   assert(wit != wtext.end());
+    wit = boost::boyer_moore_search<std::wstring, std::wstring>(wtext, L"find this");  assert(wit == wtext.end());
+    wit = boost::boyer_moore_search<std::wstring, std::wstring>(wtext, L"fo");         assert(wit != wtext.end());
+    wit = boost::boyer_moore_search<std::wstring, std::wstring>(wtext, L"is");         assert(wit != wtext.end());
 }
 #endif
 
-
+    std::cout << "\nTesting multiple sequence searching...";
     pattern= "time";
     boost::boyer_moore_pattern_search<
         std::string::const_iterator,
@@ -95,11 +98,7 @@ int main(int, char *[])
     it = srch.search(text.begin(), text.end());
     assert(it != text.end());
 
-    std::cout << std::endl
-              << "Boyer Moore Search Test"
-              << std::endl
-              << "Finished."
-              << std::endl;
+    std::cout << "\n\nBoyer Moore Search tests completed without errors.\n";
 
     return 0;
 }
