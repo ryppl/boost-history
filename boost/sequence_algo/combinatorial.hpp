@@ -31,7 +31,7 @@
 //              two error objects combinatorial_range_error and
 //              combinatorial_sequence_disorder. [Phil Garofalo]
  
-// Jul 02 2002  Added reverser adapter, removed references to greater<T>() because
+// Jul 02 2002  Added reverse_args adapter, removed references to greater<T>() because
 //              requirements stipulate that only < need be supported by the
 //              containter elements. Replaced calls to min_element_greater_than
 //              and max_element_less_than with min_element_if and max_element_if
@@ -70,7 +70,7 @@ namespace boost {
 
     template <class Predicate>
         inline binary_reverse<Predicate>
-        reverser(const Predicate& pred)
+        reverse_args(const Predicate& pred)
     {
         return binary_reverse<Predicate>(pred);
     }
@@ -166,7 +166,7 @@ namespace boost {
         {
             // find smallest element greater than *i after index i.
             RandomAccessIterator k =
-                min_element_if(i + 1, last, comp, bind2nd(reverser(comp), *i));
+                min_element_if(i + 1, last, comp, bind2nd(reverse_args(comp), *i));
 
             if (k == last)            // Didn't find it.
                 if (i == first)
@@ -220,7 +220,7 @@ namespace boost {
             if (k == last)            // Didn't find it.
                 if (i == first)
                 {
-                    std::partial_sort(first, r, last, reverser(less<T>()));
+                    std::partial_sort(first, r, last, reverse_args(less<T>()));
                     return false;    // we're done--end of permutations
                 }
                 else
@@ -228,7 +228,7 @@ namespace boost {
             else
             {
                 std::swap(*i,* k);
-                std::partial_sort(i+1, r, last, reverser(less<T>()));    // O(n lg n), heapsort
+                std::partial_sort(i+1, r, last, reverse_args(less<T>()));    // O(n lg n), heapsort
                 return true;
             }    // else
         }    // while
@@ -261,7 +261,7 @@ namespace boost {
             if (k == last)            // Didn't find it.
                 if (i == first)
                 {
-                    std::partial_sort(first, r, last, reverser(comp));
+                    std::partial_sort(first, r, last, reverse_args(comp));
                     return false;    // we're done--end of permutations
                 }
                 else
@@ -269,7 +269,7 @@ namespace boost {
             else
             {
                 std::swap(*i,* k);
-                std::partial_sort(i + 1, r, last, reverser(comp));    // O(n lg n), heapsort 
+                std::partial_sort(i + 1, r, last, reverse_args(comp));    // O(n lg n), heapsort 
                 return true;
             }    // else
         }    // while
@@ -355,7 +355,7 @@ namespace boost {
         {
             // find smallest element greater than *i after r.
             RandomAccessIterator j =
-                min_element_if(r, last, comp, bind2nd(reverser(comp), *i));
+                min_element_if(r, last, comp, bind2nd(reverse_args(comp), *i));
             if (j == last)
                 if (i == first)
                 {
@@ -370,7 +370,7 @@ namespace boost {
                 for(++i; i < r; ++i)
                 {
                     // find smallest element greater than *(i - 1) after r.
-                    j = min_element_if(r, last, comp, bind2nd(reverser(comp), *(i - 1)));
+                    j = min_element_if(r, last, comp, bind2nd(reverse_args(comp), *(i - 1)));
                     if (j != last)
                         std::swap(*i, *j);
                 }    // for
