@@ -33,7 +33,8 @@ class button: public gui::component
          gui::component( TEXT( "BUTTON" ), title, p, WS_VISIBLE, a )
       {
          hook_events();
-         set_handler( gui::event_id( WM_COMMAND, BN_CLICKED ), &button::pressed );
+         handler_for( gui::event_id( WM_COMMAND, BN_CLICKED ))
+            .connect( gui::make_handler( this, &button::pressed ));
       }
 };
 

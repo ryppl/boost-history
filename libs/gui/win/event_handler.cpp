@@ -8,11 +8,8 @@
 
 bool boost::gui::event_handler::process_filter_chain( event_id et, event * ev )
 {
-   handler_chain & handlers = events[ et ];
-   handler_chain::iterator i = handlers.begin();
-   for( ; i != handlers.end() && !ev -> handled; ++i )
-      ( this ->* ( *i ))( ev );
-
+   signal_type * h = events[ et ];
+   if( h ) ( *h )( ev );
    return ev -> handled;
 }
 
@@ -68,6 +65,16 @@ void boost::gui::event_handler::onevent( event * ev )
    if( !ev -> handled ) default_event( ev );
 }
 
+boost::gui::event_handler::signal_type &
+boost::gui::event_handler::handler_for( event_id id )
+{
+   signal_type * handler = events[ id ];
+   if( handler == 0 ) events[ id ] = handler = new signal_type();
+   return( *handler );
+}
+
 boost::gui::event_handler::~event_handler()
 {
+   for( event_map::iterator i = events.begin(); i != events.end(); ++i )
+      delete ( *i ).second;
 }

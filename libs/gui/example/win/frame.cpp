@@ -22,6 +22,8 @@ guix::frame::frame( gui::string name ):
    gui::component( wt, name, 0, WS_OVERLAPPEDWINDOW ),
    pane( 0 )
 {
-   set_handler( WM_DESTROY,          &frame::EvDestroy );
-   set_handler( WM_WINDOWPOSCHANGED, &frame::EvPosChanged );
+   handler_for( WM_DESTROY )
+      .connect( gui::make_handler( this, &frame::EvDestroy ));
+   handler_for( WM_WINDOWPOSCHANGED )
+      .connect( gui::make_handler( this, &frame::EvPosChanged ));
 }

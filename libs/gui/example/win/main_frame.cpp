@@ -8,6 +8,12 @@
 
 namespace gui = boost::gui;
 
+void ondestroy( gui::event * ev )
+{
+   ::PostQuitMessage( 0 );
+   ev -> handled = true;
+}
+
 // register the window class with windows
 
 gui::win::window_type main_frame_class( TEXT( "MyFrame" ), COLOR_BTNFACE );
@@ -17,20 +23,13 @@ gui::win::window_type main_frame_class( TEXT( "MyFrame" ), COLOR_BTNFACE );
 class main_frame: public gui::component
 {
    public:
-      virtual void EvDestroy( gui::event * );
-   public:
       inline main_frame( gui::string );
 };
-
-void main_frame::EvDestroy( gui::event * )
-{
-   ::PostQuitMessage( 0 ); // terminate event loop
-}
 
 main_frame::main_frame( gui::string name ):
    gui::component( main_frame_class, name, 0, WS_OVERLAPPEDWINDOW )
 {
-   set_handler( WM_DESTROY, &main_frame::EvDestroy );
+   handler_for( WM_DESTROY ).connect( &ondestroy );
 }
 
 // entry point
