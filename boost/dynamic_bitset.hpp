@@ -1041,10 +1041,10 @@ template <typename Block, typename Allocator>
 typename dynamic_bitset<Block, Allocator>::size_type
 dynamic_bitset<Block, Allocator>::count() const
 {
-    using detail::byte_t;
+    using detail::byte_type;
 
-    const byte_t * p = detail::object_representation(this->m_bits);
-    const byte_t * past_end = p + this->m_num_blocks * sizeof(Block);
+    const byte_type * p = detail::object_representation(this->m_bits);
+    const byte_type * past_end = p + this->m_num_blocks * sizeof(Block);
 
     size_type num = 0;
     unsigned int const max_bit = detail::count<>::max_bit;
@@ -1060,7 +1060,7 @@ dynamic_bitset<Block, Allocator>::count() const
             // this inner loop 'extracts' max_bit bits at a time
             // from the byte at address p, and thus allows to use
             // our (small) table for any (high) CHAR_BIT value
-            byte_t value = *p;
+            byte_type value = *p;
             do {
                 num += detail::count<>::table[value & ((1<<max_bit)-1)];
             } while (value >>= max_bit);
@@ -1361,12 +1361,12 @@ operator<<(std::basic_ostream<CharT, Traits>& os,
         try {
             
 
-            typedef typename dynamic_bitset<Block, Allocator>::size_type bitsetsize_t;
-            typedef basic_streambuf<CharT, Traits> buffer_t; // forse typedef è inutile G.P.S.
+            typedef typename dynamic_bitset<Block, Allocator>::size_type bitsetsize_type;
+            typedef basic_streambuf<CharT, Traits> buffer_type; // G.P.S.
             
-            buffer_t * buf = os.rdbuf();
+            buffer_type * buf = os.rdbuf();
             size_t npad = os.width() <= 0  // careful: os.width() is signed (and can be < 0)
-                || (bitsetsize_t) os.width() <= b.size()? 0 : os.width() - b.size(); //- G.P.S.
+                || (bitsetsize_type) os.width() <= b.size()? 0 : os.width() - b.size(); //- G.P.S.
 
             // eventually fill at left; pad is decresed along the way
             bool const pad_left = (os.flags() & ios_base::adjustfield) == ios_base::left;
@@ -1378,8 +1378,8 @@ operator<<(std::basic_ostream<CharT, Traits>& os,
             }
 
             // output the bitset
-            for (bitsetsize_t i = b.size(); i>0; --i) {// G.P.S.
-                typename buffer_t::int_type ret = buf->sputc(b.test(i-1)? one : zero);
+            for (bitsetsize_type i = b.size(); i>0; --i) {// G.P.S.
+                typename buffer_type::int_type ret = buf->sputc(b.test(i-1)? one : zero);
                 if (Traits::eq_int_type(Traits::eof(), ret) ) { // - G.P.S.
                     err |= ios_base::failbit;
                     break;
