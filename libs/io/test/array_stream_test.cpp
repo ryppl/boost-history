@@ -102,44 +102,6 @@ astreambuf_constructor_unit_test
      traits_type::eq) );
 }
 
-// Unit test for read and write counts
-void
-astreambuf_read_write_count_unit_test
-(
-)
-{
-    using std::string;
-
-    aostream           aos;
-    char const         my_string[] = "cde";
-    std::size_t const  my_string_length = sizeof(my_string) / sizeof(my_string[0]) - 1;
-
-    aos << 'a';
-    aos.put( 'b' );
-    aos.write( my_string, my_string_length );
-    BOOST_CHECK_EQUAL( 2 + my_string_length, aos.rdbuf()->characters_written() );
-    BOOST_CHECK_EQUAL( 0, aos.rdbuf()->characters_read() );
-    BOOST_CHECK( string(aos.array_begin()) == "abcde" );
-
-    aistream  ais( alphabet, alphabet + alphabet_length );
-    char      temp1 = '\0', temp2 = '\0';
-    char      temp3[ my_string_length + 1 ] = { '\0' };
-
-    ais >> temp1;
-    ais.get( temp2 );
-    ais.read( temp3, my_string_length );
-    BOOST_CHECK_EQUAL( 2 + my_string_length, ais.rdbuf()->characters_read() );
-    BOOST_CHECK_EQUAL( 0, ais.rdbuf()->characters_written() );
-    BOOST_CHECK( (temp1 == 'a') && (temp2 == 'b') && (string( temp3 ) == "cde") );
-
-    ais.unget();
-    BOOST_CHECK_EQUAL( 2 + my_string_length - 1, ais.rdbuf()->characters_read() );
-
-    aiostream  aios;
-    BOOST_CHECK_EQUAL( 0, aios.rdbuf()->characters_written() );
-    BOOST_CHECK_EQUAL( 0, aios.rdbuf()->characters_read() );
-}
-
 // Unit test for array output stream
 void
 aostream_unit_test
@@ -186,6 +148,159 @@ aiostream_unit_test
     BOOST_CHECK_EQUAL( scratch, alphabet );
 }
 
+// Unit test for read and write counts
+void
+read_write_count_unit_test
+(
+)
+{
+    using std::string;
+
+    aostream           aos;
+    char const         my_string[] = "cde";
+    std::size_t const  my_string_length = sizeof(my_string) / sizeof(my_string[0]) - 1;
+
+    aos << 'a';
+    aos.put( 'b' );
+    aos.write( my_string, my_string_length );
+    BOOST_CHECK_EQUAL( 2 + my_string_length, aos.rdbuf()->characters_written() );
+    BOOST_CHECK_EQUAL( 0, aos.rdbuf()->characters_read() );
+    BOOST_CHECK( string(aos.array_begin()) == "abcde" );
+
+    aistream  ais( alphabet, alphabet + alphabet_length );
+    char      temp1 = '\0', temp2 = '\0';
+    char      temp3[ my_string_length + 1 ] = { '\0' };
+
+    ais >> temp1;
+    ais.get( temp2 );
+    ais.read( temp3, my_string_length );
+    BOOST_CHECK_EQUAL( 2 + my_string_length, ais.rdbuf()->characters_read() );
+    BOOST_CHECK_EQUAL( 0, ais.rdbuf()->characters_written() );
+    BOOST_CHECK( (temp1 == 'a') && (temp2 == 'b') && (string( temp3 ) == "cde") );
+
+    ais.unget();
+    BOOST_CHECK_EQUAL( 2 + my_string_length - 1, ais.rdbuf()->characters_read() );
+
+    aiostream  aios;
+    BOOST_CHECK_EQUAL( 0, aios.rdbuf()->characters_written() );
+    BOOST_CHECK_EQUAL( 0, aios.rdbuf()->characters_read() );
+}
+
+// Unit test for using and checking the opening mode
+void
+openmode_unit_test
+(
+)
+{
+    using std::ios_base;
+
+    ios_base::openmode const  m_in = ios_base::in;
+    ios_base::openmode const  m_out = ios_base::out;
+    ios_base::openmode const  m_io = m_in | m_out;
+    ios_base::openmode const  m_0( 0 );
+    std::list<char> const     l( alphabet, alphabet + alphabet_length );
+
+    {
+        astreambuf  asb1;
+        BOOST_CHECK_EQUAL( m_io, asb1.open_mode() );
+    }
+
+    {
+        astreambuf  asb2( m_in );
+        BOOST_CHECK_EQUAL( m_in, asb2.open_mode() );
+    }
+
+    {
+        astreambuf  asb3( m_out );
+        BOOST_CHECK_EQUAL( m_out, asb3.open_mode() );
+    }
+
+    {
+        astreambuf  asb4( m_io );
+        BOOST_CHECK_EQUAL( m_io, asb4.open_mode() );
+    }
+
+    {
+        astreambuf  asb5( m_0 );
+        BOOST_CHECK_EQUAL( m_0, asb5.open_mode() );
+    }
+
+    {
+        aistream  ais1;
+        BOOST_CHECK_EQUAL( m_in, ais1.rdbuf()->open_mode() );
+    }
+
+    {
+        aistream  ais2( m_in );
+        BOOST_CHECK_EQUAL( m_in, ais2.rdbuf()->open_mode() );
+    }
+
+    {
+        aistream  ais3( alphabet, alphabet + alphabet_length, m_out );
+        BOOST_CHECK_EQUAL( m_io, ais3.rdbuf()->open_mode() );
+    }
+
+    {
+        aistream  ais4( l.begin(), l.end(), m_io );
+        BOOST_CHECK_EQUAL( m_io, ais4.rdbuf()->open_mode() );
+    }
+
+    {
+        aistream  ais5( m_0 );
+        BOOST_CHECK_EQUAL( m_in, ais5.rdbuf()->open_mode() );
+    }
+
+    {
+        aostream  aos1;
+        BOOST_CHECK_EQUAL( m_out, aos1.rdbuf()->open_mode() );
+    }
+
+    {
+        aostream  aos2( l.begin(), l.end(), m_in );
+        BOOST_CHECK_EQUAL( m_io, aos2.rdbuf()->open_mode() );
+    }
+
+    {
+        aostream  aos3( m_out );
+        BOOST_CHECK_EQUAL( m_out, aos3.rdbuf()->open_mode() );
+    }
+
+    {
+        aostream  aos4( alphabet, alphabet + alphabet_length, m_io );
+        BOOST_CHECK_EQUAL( m_io, aos4.rdbuf()->open_mode() );
+    }
+
+    {
+        aostream  aos5( m_0 );
+        BOOST_CHECK_EQUAL( m_out, aos5.rdbuf()->open_mode() );
+    }
+
+    {
+        aiostream  as1;
+        BOOST_CHECK_EQUAL( m_io, as1.rdbuf()->open_mode() );
+    }
+
+    {
+        aiostream  as2( alphabet, alphabet + alphabet_length, m_in );
+        BOOST_CHECK_EQUAL( m_in, as2.rdbuf()->open_mode() );
+    }
+
+    {
+        aiostream  as3( l.begin(), l.end(), m_out );
+        BOOST_CHECK_EQUAL( m_out, as3.rdbuf()->open_mode() );
+    }
+
+    {
+        aiostream  as4( m_io );
+        BOOST_CHECK_EQUAL( m_io, as4.rdbuf()->open_mode() );
+    }
+
+    {
+        aiostream  as5( m_0 );
+        BOOST_CHECK_EQUAL( m_0, as5.rdbuf()->open_mode() );
+    }
+}
+
 
 // Unit test program
 boost::unit_test_framework::test_suite *
@@ -200,10 +315,11 @@ init_unit_test_suite
 
     test->add( BOOST_TEST_CASE(streambuf_wrapping_unit_test) );
     test->add( BOOST_TEST_CASE(astreambuf_constructor_unit_test) );
-    test->add( BOOST_TEST_CASE(astreambuf_read_write_count_unit_test) );
     test->add( BOOST_TEST_CASE(aostream_unit_test) );
     test->add( BOOST_TEST_CASE(aistream_unit_test) );
     test->add( BOOST_TEST_CASE(aiostream_unit_test) );
+    test->add( BOOST_TEST_CASE(read_write_count_unit_test) );
+    test->add( BOOST_TEST_CASE(openmode_unit_test) );
 
     return test;
 }

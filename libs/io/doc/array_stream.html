@@ -81,7 +81,7 @@ stream buffer.</p>
 
 <blockquote><pre>
 #include &lt;cstddef&gt;    <i>// for std::size_t</i>
-#include &lt;ios&gt;        <i>// for std::streamsize</i>
+#include &lt;ios&gt;        <i>// for std::streamsize, std::ios_base</i>
 #include &lt;streambuf&gt;  <i>// for std::basic_streambuf</i>
 
 template &lt; std::size_t N, typename Ch, class Tr &gt;
@@ -101,12 +101,17 @@ public:
     typedef typename Tr::off_type  off_type;
 
     // Constructors
-    basic_array_streambuf();
-    basic_array_streambuf( basic_array_streambuf const &amp;c );
-    basic_array_streambuf( char_type const *b, char_type const *e );
+    explicit  basic_array_streambuf( std::ios_base::openmode which
+     = std::ios_base::in | std::ios_base::out );
 
-    template &lt; typename InIter &gt;
-        basic_array_streambuf( InIter b, InIter e );
+    basic_array_streambuf( basic_array_streambuf const &amp;c );
+
+    basic_array_streambuf( char_type const *b, char_type const *e,
+     std::ios_base::openmode which = std::ios_base::in | std::ios_base::out );
+
+    template &lt; typename InputIterator &gt;
+        basic_array_streambuf( InputIterator b, InputIterator e,
+         std::ios_base::openmode which = std::ios_base::in | std::ios_base::out );
 
     // Accessors
     char_type *  array_begin();
@@ -117,6 +122,8 @@ public:
 
     std::streamsize  characters_written() const;
     std::streamsize  characters_read() const;
+
+    std::ios_base::openmode  open_mode() const;
 
 };
 </pre></blockquote>
@@ -150,16 +157,27 @@ character type is the array's element type.</p>
 
 <p><strong>Note 1:</strong> the automatically-defined destructor is used.</p>
 
-<p><strong>Note 2:</strong> all the constructors set the bounds of the get
-and put areas to the bounds of the internal array.  The place-marking pointers
-for the get and put areas are set to the beginning of the internal array.</p>
+<p><strong>Note 2:</strong> the standard assignment operator is disabled.</p>
+
+<p><strong>Note 3:</strong> all the constructors set the bounds of the
+get and put areas based on the given opening mode.  If the opening mode
+allows input, <i>i.e.</i> <code>(which &amp; std::ios_base::in) != 0</code>,
+then the bounds of the get area are set.  If the opening mode allows output,
+<i>i.e.</i> <code>(which &amp; std::ios_base::out) != 0</code>, then the
+bounds of the put area are set.  For an area that will become active, the
+beginning and current marking pointers are set to the beginning of the internal
+array, and the end marking pointer is set to one-past-the-end of the internal
+array.  For an inactive area, the three marking pointers remain NULL.</p>
+
+<p><strong>Note 4:</strong> if the opening mode given by the <var>which</var>
+constructor parameter is omitted, it defaults to allowing input and output.
 
 <dl>
-	<dt><code>basic_array_streambuf();</code>
+	<dt><code>basic_array_streambuf( std::ios_base::openmode which );</code>
 	<dd>
-		<strong>Effects:</strong> besides the bounds setting,
-			all elements of the internal array are set to
-                        the default value of the elements' type
+		<strong>Effects:</strong> sets the bounds based on
+			<var>which</var>; sets all elements of the internal
+                        array to the default value of the elements' type
 
 	<dt><code>basic_array_streambuf( basic_array_streambuf const &amp;c );</code>
 	<dd>
@@ -167,16 +185,18 @@ for the get and put areas are set to the beginning of the internal array.</p>
 			subobject; copies the locale information from <var>c</var>;
                         copies the element values in <var>c</var>'s internal
                         array to the new object's internal array and sets the
-                        bounds
-	<dt><code>basic_array_streambuf( char_type const *b, char_type const *e );</code>
+                        bounds as a copy of <var>c</var>'s opening mode
+	<dt><code>basic_array_streambuf( char_type const *b, char_type const *e,
+		std::ios_base::openmode which );</code>
 	<dd>
-		<strong>Effects:</strong> besides the bounds setting,
+		<strong>Effects:</strong> sets the bounds based on <var>which</var>;
 			copies the values of the array-segment between <var>b</var>
-			and <var>e</var> to the internal array
-	<dt><code>template &lt; typename InIter &gt;
-        	basic_array_streambuf( InIter b, InIter e );</code>
+                        and <var>e</var> to the internal array
+	<dt><code>template &lt; typename InputIterator &gt;
+		basic_array_streambuf( InputIterator b, InputIterator e,
+		 std::ios_base::openmode which );</code>
 	<dd>
-		<strong>Effects:</strong> besides the bounds setting,
+		<strong>Effects:</strong> sets the bounds based on <var>which</var>;
 			copies the values of the input-iterator sequence between
 			<var>b</var> and <var>e</var> to the internal array
 </dl>
@@ -225,6 +245,16 @@ for the get and put areas are set to the beginning of the internal array.</p>
 			valid in the get area<br>
 		<strong>Rationale:</strong> required to analyze just the
 			read-from portion of the internal array
+
+    <dt><code>std::ios_base::openmode  open_mode() const;</code>
+	<dd>
+		<strong>Returns:</strong> a value [called <var>v</var> here]
+			such that <code>(v &amp; std::ios_base::in) != 0</code>
+                        if the get area is active and <code>(v &amp;
+                        std::ios_base::out) != 0</code> if the put area is
+                        active<br>
+		<strong>Rationale:</strong> in case the opening mode needs
+			to be confirmed
 </dl>
 
 <h3><a name="m_obj">Member Objects</a></h3>
@@ -265,11 +295,15 @@ public:
     typedef typename Tr::off_type  off_type;
 
     // Constructors (forwarded to the internal streambuf)
-    basic_array_<var>stream</var>();
-    basic_array_<var>stream</var>( char_type const *b, char_type const *e );
+    explicit  basic_array_<var>stream</var>( std::ios_base::openmode which
+     = <var>MODE</var> );
 
-    template &lt; typename InIter &gt;
-        basic_array_<var>stream</var>( InIter b, InIter e );
+    basic_array_<var>stream</var>( char_type const *b, char_type const *e,
+        std::ios_base::openmode which = <var>MODE</var> );
+
+    template &lt; typename InputIterator &gt;
+        basic_array_<var>stream</var>( InputIterator b, InputIterator e,
+         std::ios_base::openmode which = <var>MODE</var> );
 
     // Accessors (forwarded to the internal streambuf)
     char_type *  array_begin();
@@ -280,6 +314,17 @@ public:
 
 };
 </pre></blockquote>
+
+<p>For input streams, the opening mode (called <var>MODE</var> here)
+defaults to <code>std::ios_base::in</code>.  The mode defaults to
+<code>std::ios_base::out</code> for output streams and <code>(std::ios_base::in
+| std::ios_base::out)</code> for combined streams.</p>
+
+<p>The mode passed to the stream buffer is modified by input and output streams.
+Input streams combine <code>std::ios_base::in</code> with the given mode before
+passing the mode to the internal stream buffer.  Output streams attach the
+<code>std::ios_base::out</code> value instead.  Combined streams don't do any
+modifications to the opening mode.</p>
 
 <h2><a name="refer">References</a></h2>
 
