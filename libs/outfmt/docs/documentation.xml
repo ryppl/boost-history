@@ -131,10 +131,11 @@
                   </note>
                </li>
                <li>Intel 7.1</li>
+               <li>Como 4.3.3</li>
             </list>
          </paragraph><paragraph>
             Most of the code will now work on MSVC 6.0: thanks to Jonathan Turkanis for his
-            help porting the code.
+            help porting the code and adding support for the Intel and Como compilers.
          </paragraph>
       </d:section>
    </d:section><d:section title = "Standard Container Input/Output" id = "io.stdcontainer">
