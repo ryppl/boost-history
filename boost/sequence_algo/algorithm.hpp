@@ -40,7 +40,7 @@
 #ifndef BOOST_ALGORITHM_HPP
 # define BOOST_ALGORITHM_HPP
 
-#include <algorithm>
+#include <boost/sequence_algo/non_modifying.hpp>
 
 # include <boost/detail/iterator.hpp>
 # include <boost/concept_check.hpp>
@@ -87,7 +87,7 @@ namespace boost {
   bool contains(InputIterator first, InputIterator last, T value)
   {
     function_requires< InputIteratorConcept<InputIterator> >();
-    return std::find(first, last, value) != last;
+    return boost::find(first, last, value) != last;
   }
 
   template <typename InputIterator, typename Predicate>
@@ -112,7 +112,7 @@ namespace boost {
     function_requires< UnaryPredicateConcept<Predicate,
       typename std::iterator_traits<InputIterator>::value_type > >();
 #endif
-    return std::find_if(first, last, p) == last;
+    return boost::find_if(first, last, p) == last;
   }
 
   template <typename InputIterator, typename Predicate>
@@ -123,7 +123,7 @@ namespace boost {
     function_requires< UnaryPredicateConcept<Predicate,
       typename std::iterator_traits<InputIterator>::value_type > >();
 #endif
-    return std::find_if(first, last, p) != last;
+    return boost::find_if(first, last, p) != last;
   }
 
   template<class ForwardIterator>
