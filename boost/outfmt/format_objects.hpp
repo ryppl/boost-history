@@ -13,4 +13,5 @@
 
 #  include <boost/outfmt/format_objects/array_output.hpp>
 #  include <boost/outfmt/format_objects/container_output.hpp>
+#  include <boost/outfmt/format_objects/range_output.hpp>
 #endif

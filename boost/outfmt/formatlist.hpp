@@ -91,13 +91,23 @@
       }
 
       template< class Container >
-      inline formatlist_t< typename Container::const_iterator >
+      inline formatlist_t< typename Container::iterator >
                                                  formatlist
                                                  (
-                                                    const Container & c
+                                                    Container & c
                                                  )
       {
-         return( formatlist_t< BOOST_DEDUCED_TYPENAME Container::const_iterator >( c.begin(), c.end()));
+         return( formatlist_t< BOOST_DEDUCED_TYPENAME Container::iterator >( c.begin(), c.end()));
+      }
+
+      template< typename ForwardIterator >
+      inline formatlist_t< ForwardIterator >
+                                                 formatlist
+                                                 (
+                                                    std::pair< ForwardIterator, ForwardIterator > & ip
+                                                 )
+      {
+         return( formatlist_t< ForwardIterator >( ip.first, ip.second ));
       }
 
       // extended format manipulator:
@@ -121,6 +131,16 @@
                                                  )
       {
          return( formatlist_t< BOOST_DEDUCED_TYPENAME Container::iterator, FormatType >( c.begin(), c.end()));
+      }
+
+      template< typename FormatType, typename ForwardIterator >
+      inline formatlist_t< ForwardIterator, FormatType >
+                                                 formatlistex
+                                                 (
+                                                    std::pair< ForwardIterator, ForwardIterator > & ip
+                                                 )
+      {
+         return( formatlist_t< ForwardIterator, FormatType >( ip.first, ip.second ));
       }
 
       // format manipulator -- output functor versions:
@@ -154,6 +174,22 @@
          (
             c.begin(),
             c.end(),
+            out
+         ));
+      }
+
+      template< typename ForwardIterator, class Outputter >
+      inline formatlist_t< ForwardIterator, typename Outputter::format_type, Outputter >
+                                                 formatlistout
+                                                 (
+                                                    std::pair< ForwardIterator, ForwardIterator > & ip,
+                                                    Outputter out
+                                                 )
+      {
+         return( formatlist_t< ForwardIterator, BOOST_DEDUCED_TYPENAME Outputter::format_type, Outputter >
+         (
+            ip.first,
+            ip.second,
             out
          ));
       }

@@ -25,5 +25,8 @@
 
       template< typename FormatType, class Outputter = boost::io::basic_output >
       class                            container_output;
+
+      template< typename FormatType, class Outputter = boost::io::basic_output >
+      class                            range_output;
    }}
 #endif

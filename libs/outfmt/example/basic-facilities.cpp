@@ -30,6 +30,7 @@ int main()
    std::string                         s    = "Warum bist du nicht da?";
 
    int                                 i[ 4 ] = { 3, 6, 9, 12 };
+   std::pair< int *, int * >           ip = std::pair< int *, int * >( i, i + 2 );
 
    // STL container examples
 
@@ -66,6 +67,14 @@ int main()
              << '\n';
 
    // [results]: std::string = [ W, a, r, u, m,  , b, i, s, t,  , d, u,  , n, i, c, h, t,  , d, a, ? ]
+
+   // Iterator ranges in a std::pair
+
+   std::cout << "std::pair< int *, int * > = "
+             << boost::io::formatlist( ip )
+             << '\n';
+
+   // [results]: int[ 4 ] = [ 3, 6, 9, 12 ]
 
    return( 0 );
 }

@@ -198,6 +198,30 @@
                The manipulator conforms to the format object generator guidelines
                in section <d:ref section = "fo-gen"/>.
             </paragraph>
+         </d:section><d:section title = "Iterator Range Output">
+            <c:code indent = "true">
+               <c:line>boost::io::formatlist</c:line>
+               <c:block open = "(" close = ");">
+                  <c:line>std::pair&lt; ForwardIterator, ForwardIterator &gt; &amp; ip</c:line>
+               </c:block>
+            </c:code><paragraph>
+               This is a variant of the boost::io::formatlist manipulator that
+               takes an iterator range as its argument in the form of a pair of
+               iterators. It outputs the range [ip.first, ip.second), and requires
+               that the elements in the sequence have output facilities.
+            </paragraph><example>
+               <c:code indent = "true">
+                  <c:line>int i[ 4 ] = { 1, 2, 3, 4 };</c:line>
+                  <c:comment>construct an iterator range in a std::pair object</c:comment>
+                  <c:line>std::pair&lt; int *, int * &gt; ip = std::make_pair( i, i + 2 );</c:line>
+                  <c:line>std::cout &lt;&lt; boost::io::formatlist( ip );
+                     <c:comment>output: [ 1, 2 ]</c:comment>
+                  </c:line>
+               </c:code>
+            </example><paragraph>
+               The manipulator conforms to the format object generator guidelines
+               in section <d:ref section = "fo-gen"/>.
+            </paragraph>
          </d:section>
       </d:section><d:section title = "boost::io::formatob" id = "formatob">
          <paragraph><table cellpadding = "0">
@@ -797,6 +821,23 @@
                <paragraph>
                   This generator function creates a <code>boost::io::container_output</code>
                   object. It meets the requirements specified in section <d:ref section = "fo-gen"/>.
+               </paragraph>
+            </d:section>
+         </d:section><d:section title = "boost::io::range_output">
+            <paragraph>
+               <code>boost::io::range_output</code> inherits its functionality
+               from <code>boost::io::detail::list_output</code>, supporting the
+               output of an iterator range. The iterator range is a pair of
+               iterators are defined in section <d:ref section = "def-fwditer"/>.
+            </paragraph><note>
+               This is different from <code>boost::io::pair_output</code>, that outputs
+               the elements in the pair as the first and last elements in a list.
+            </note>
+            <d:section title = "boost::io::rangefmt">
+               <paragraph>
+                  This generator function creates a <code>boost::io::range_output</code>
+                  object. It meets the requirements specified in section
+                  <d:ref section = "fo-gen"/>.
                </paragraph>
             </d:section>
          </d:section>
