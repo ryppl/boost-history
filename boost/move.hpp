@@ -31,17 +31,15 @@
 #include "boost/mpl/identity.hpp"
 #include "boost/mpl/logical/not.hpp"
 
+#include "boost/mpl/aux_/lambda_support.hpp" // used by is_moveable
+
 namespace boost {
 namespace detail {
 
 //////////////////////////////////////////////////////////////////////////
 // class not_moveable_tag
 //
-struct not_moveable_tag
-{
-protected:
-    ~not_moveable_tag() { }
-};
+struct not_moveable_tag { };
 
 //////////////////////////////////////////////////////////////////////////
 // class memcpy_move_traits
@@ -53,7 +51,7 @@ struct memcpy_move_traits
 {
     static void move(void* dest, T& src)
     {
-        std::memcpy(dest, boost::addressof(src));
+        std::memcpy(dest, boost::addressof(src), sizeof(T));
     }
 };
 
@@ -99,13 +97,15 @@ struct move_traits
 };
 
 //////////////////////////////////////////////////////////////////////////
-// class template is_moveable
+// metafunction is_moveable
 //
-// Traits template indicates whether specified type is moveable.
+// Value metafunction indicates whether specified type is moveable.
 // 
 // NOTE: This template never needs to be specialized!
 //
-template <typename T>
+template <
+    typename T
+>
 struct is_moveable
 {
     typedef typename mpl::logical_not<
@@ -113,6 +113,8 @@ struct is_moveable
         >::type type;
 
     BOOST_STATIC_CONSTANT(bool, value = type::value);
+
+    BOOST_MPL_AUX_LAMBDA_SUPPORT(1,is_moveable,(T))
 };
 
 //////////////////////////////////////////////////////////////////////////
