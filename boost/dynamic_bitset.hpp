@@ -11,76 +11,7 @@
 
 //  See http://www.boost.org/libs/dynamic_bitset for documentation.
 
-// -------------------------------------
-// CHANGE LOG:
-//
-//  The changes up to the marking "---" line below are referred
-//  to:
-//       v. 1.25   of    boost/dynamic_bitset.hpp
-//       v. 1.10   of    boost/detail/dynamic_bitset.hpp
-//       v. 1.3    of    boost/dynamic_bitset_fwd.hpp    [no change]
-//
-// into the main CVS repository.
 
-// - Major implementation change:
-//
-//    Everything rewritten in terms of std::vector<>:
-//     note that the code is now much shorter and that the exception
-//     safety guarantees of the size-changing operations (resize,
-//     clear, push_back, append(Block), append(Iter, Iter)) are
-//     easily identifiable in terms of the guarantees provided by
-//     vector<Block>'s operations (with Block having a no-throw
-//     copy constructor)
-//
-//     Note that dynamic_bitset::reference has been changed too:
-//     a reference is now basically a reference into a Block,
-//     and it remains valid if an exception is thrown by
-//     a strong-guarantee operation.
-
-//
-// - [... see CVS logs ...]
-
-// - several comment fixes and additions (others are needed though)
-// - changed operator>() implementation
-// - included istream and ostream instead of iosfwd
-//     (we use sentry, setstate, rdbuf, etc. so iosfwd isn't enough)
-//
-// - boost/config.hpp now included after most std headers.
-// - several workarounds updated and BOOST_WORKAROUND() macro used
-// - small changes to count()
-// - object_representation() added to boost::detail
-// - inserter and extractor for iostreams rewritten
-// - manipulator to extract "infinite" bits added
-// - added again #include<vector>, for now.
-// - Changes related to initial_num_blocks:
-//      - all overloads made inline
-//      - added overload for random access iterators
-//      - removed superfluous declarations (fwd refs)
-//
-//  - to_string and dump_to_string reimplemented
-//
-//  - from_string reimplemented
-
-//  Minor:
-//
-//  - added local workaround for boost/config/stdlib/stlport.hpp bug
-//    I hope this is a temporary one.
-//  - set_(size_type bit, bool val) made void
-//  - added parens in calc_num_blocks()
-//
-// -------------------------------------------------------------
-
-// - corrected workaround for Dinkum lib's allocate() [GP]
-// - changed macro test for old iostreams [GP]
-// - removed #include <vector> for now. [JGS]
-// - Added __GNUC__ to compilers that cannot handle the constructor from basic_string. [JGS]
-// - corrected to_block_range [GP]
-// - corrected from_block_range [GP]
-// - Removed __GNUC__ from compilers that cannot handle the constructor
-//     from basic_string and added the workaround suggested by GP. [JGS]
-// - Removed __BORLANDC__ from the #if around the basic_string
-//     constructor. Luckily the fix by GP for g++ also fixes Borland. [JGS]
-//
 
 #ifndef BOOST_DYNAMIC_BITSET_HPP
 #define BOOST_DYNAMIC_BITSET_HPP
@@ -97,11 +28,8 @@
 # include <locale> // G.P.S
 #endif
 
-// Support for pre-3.0 versions of libstdc++ (the test here
-// exploits the presence of an old SGI macro) [Thanks to Phil
-// Edwards for his useful info about the libstdc++ history]
-//
 #if defined (__STL_CONFIG_H) && !defined (__STL_USE_NEW_IOSTREAMS)
+   // support for pre 3.0 libstdc++ - thanks Phil Edwards
 #  define BOOST_OLD_IOSTREAMS
 #  include <iostream.h>
 #  include <ctype.h> // for isspace
@@ -112,7 +40,7 @@
 
 #include "boost/dynamic_bitset_fwd.hpp"
 #include "boost/detail/dynamic_bitset.hpp"
-#include "boost/detail/iterator.hpp" // to implement append(Iter, Iter)
+#include "boost/detail/iterator.hpp" // used to implement append(Iter, Iter)
 #include "boost/limits.hpp"
 #include "boost/lowest_bit.hpp" // used by find_first/next
 
@@ -145,7 +73,7 @@ class dynamic_bitset
 {
   // Portability note: member function templates are defined inside
   // this class definition to avoid problems with VC++. Similarly,
-  // with the member functions of the nested class.
+  // with the member functions of nested classes.
 
   BOOST_STATIC_ASSERT(detail::dynamic_bitset_allowed_block_type<Block>::value);
 
@@ -213,22 +141,13 @@ public:
 
 
     // The presence of this constructor is a concession to ease of
-    // use, especially for the novice user. Strictly speaking, it
-    // remains a design error: a conversion from string is, for
-    // most types, formatting, and should be done by the standard
+    // use, especially for the novice user. A conversion from string
+    // is, in most cases, formatting, and should be done by the standard
     // formatting convention: operator>>.
     //
-    // That way you have a neat separation of concerns between the class
-    // that stores the data (dynamic_bitset in this case) and the one that
-    // stores their textual representation (basic_string), a generic name,
-    // operator>>, for the free function that connects them (which is
-    // important for template programming) and none of the two classes
-    // encumbered with knowledge of the other. Also, you can easily deal
-    // with locale-related issues.
-    //
     // NOTE:
-    // The parentheses around std::basic_string<CharT, Traits, Alloc>::npos
-    // in the code below are to avoid a g++ 3.2 bug and a Borland bug. -JGS
+    // Leave the parentheses around std::basic_string<CharT, Traits, Alloc>::npos.
+    // g++ 3.2 requires them and probably the standard will - see core issue 325
     template <typename CharT, typename Traits, typename Alloc>
     explicit
     dynamic_bitset(const std::basic_string<CharT, Traits, Alloc>& s,
@@ -569,31 +488,6 @@ from_block_range(BlockIterator first, BlockIterator last,
 //=============================================================================
 // dynamic_bitset implementation
 
-// -----------------------------------------------------------
-#if 0
-// NOTE: The template parameters Block and Allocator
-//       are non deducible. Why do we have these functions??? - gps
-
-#ifdef BOOST_OLD_IOSTREAMS
-template <typename Block, typename Allocator>
-inline std::ostream&
-operator<<(std::ostream& os,
-           const typename dynamic_bitset<Block, Allocator>::reference& br)
-{
-    return os << (bool)br;
-}
-#else
-template <typename CharT, typename Traits, typename Block, typename Allocator>
-inline std::basic_ostream<CharT, Traits>&
-operator<<(std::basic_ostream<CharT, Traits>& os,
-           const typename dynamic_bitset<Block, Allocator>::reference& br)
-{
-    return os << (bool)br;
-}
-#endif
-
-#endif // #if 0
-//-----------------------------------------------------------
 
 //-----------------------------------------------------------------------------
 // constructors, etc.
@@ -810,6 +704,12 @@ dynamic_bitset<Block, Allocator>::operator-=(const dynamic_bitset& rhs)
     return *this;
 }
 
+//
+// NOTE:
+//  Note that the 'if (r != 0)' is crucial to avoid undefined
+//  behavior when the left hand operand of >> isn't promoted to a
+//  wider type (because rs would be too large).
+//
 template <typename Block, typename Allocator>
 dynamic_bitset<Block, Allocator>&
 dynamic_bitset<Block, Allocator>::operator<<=(size_type n)
@@ -859,16 +759,7 @@ dynamic_bitset<Block, Allocator>::operator<<=(size_type n)
 
 //
 // NOTE:
-//
-//      this function (as well as operator <<=) assumes that
-//      within each block bits are arranged 'from right to left'.
-//
-//             static int bit_index(size_type pos)
-//             { return pos % bits_per_block; }
-//
-//  Note also that the 'if (r != 0)' is crucial to avoid undefined
-//  behavior when the left hand operand of << isn't promoted to a
-//  wider type.
+//  see the comments to operator <<=
 //
 template <typename B, typename A>
 dynamic_bitset<B, A> & dynamic_bitset<B, A>::operator>>=(size_type n) {
@@ -911,11 +802,6 @@ dynamic_bitset<B, A> & dynamic_bitset<B, A>::operator>>=(size_type n) {
 
     return *this;
 }
-
-
-
-
-
 
 
 template <typename Block, typename Allocator>
@@ -1308,15 +1194,12 @@ dynamic_bitset<Block, Allocator>::m_do_find_from(size_type first_block) const
 }
 
 
-
 template <typename Block, typename Allocator>
 typename dynamic_bitset<Block, Allocator>::size_type
 dynamic_bitset<Block, Allocator>::find_first() const
 {
     return m_do_find_from(0);
-
 }
-
 
 
 template <typename Block, typename Allocator>
@@ -1425,13 +1308,6 @@ operator<<(std::ostream& os, const dynamic_bitset<Block, Allocator>& b)
 }
 #else
 
-// Two words on the implementation: we use the stream buffer directly here
-// so we have to deal with some details that are normally handled by the
-// stream. In particular, with the standard format parameters (27.4.2.1.2, table 83).
-// Fortunately, only a few of them have or may have a meaning for dynamic_bitset
-// Also, exception handling needs a bit of care because setting state flags is
-// itself an operation that may throw exceptions.
-//
 template <typename Ch, typename Tr, typename Block, typename Alloc>
 std::basic_ostream<Ch, Tr>&
 operator<<(std::basic_ostream<Ch, Tr>& os,
@@ -1682,13 +1558,6 @@ operator-(const dynamic_bitset<Block, Allocator>& x,
 // private (on conforming compilers) member functions
 
 
-// Note: [gps]
-// this implementation is equivalent to the classical
-//   return (num_bits + (bits_per_block - 1)) / bits_per_block
-// except that in practice it can't "overflow" (chances that the
-// above fails are small too, but if that happens the resulting bugs
-// are then more difficult to diagnose).
-//
 template <typename Block, typename Allocator>
 inline typename dynamic_bitset<Block, Allocator>::size_type
 dynamic_bitset<Block, Allocator>::calc_num_blocks(size_type num_bits)
