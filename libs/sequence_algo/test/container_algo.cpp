@@ -636,7 +636,7 @@ namespace
         TEST_DATA;
         vector<int> copy1( a_size ), copy2( a_size );
 
-        copy_backward( a, begin( copy1 ) );
+        copy_backward( a, end( copy1 ) );
         copy_backward( begin( a ), end( a ), end( copy2 ) );
         assert( ext::equal( copy1, begin( copy2 ) ) );
     }
