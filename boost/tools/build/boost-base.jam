@@ -2211,7 +2211,7 @@ rule stage ( name : sources + : requirements * : local-build * )
 
             local target = $(source:D=:G=) ;
             local target-id = [ target-id-of $(source) ] ;
-            local target-subdir = [ simplify-path-tokens [ top-relative-tokens [ directory-of $(source) ] ] ] ;
+            local target-subdir = [ directory-of [ target-path-of $(source) ] ] ;
 
             dependent-include $(source:G=) ;
             local gIMPOSED_REQUIREMENTS($(target-id)) = $(requirements) ;
@@ -2242,8 +2242,8 @@ rule stage ( name : sources + : requirements * : local-build * )
 
                     local target-subvariant = ;
                     {
-                        local [ protect-subdir ] ;
-                        SubDir TOP $(target-subdir) ;
+                        local [ protect-subproject ] ;
+                        enter-subproject $(target-subdir) ;
                         target-subvariant =
                             [ subvariant-target $(s-target) : $(s-properties) : $(s-toolset) $(s-variant) ] ;
                     }

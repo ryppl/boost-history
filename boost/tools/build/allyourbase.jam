@@ -1198,7 +1198,15 @@ rule subproject
 # Declares this directory to be the project root.
 rule project-root ( )
 {
-    local project-location = [ root-paths $($(gTOP)) : [ PWD ] ] ;
+    local project-location ;
+    if $(gTOP)
+    {
+        project-location = [ root-paths $($(gTOP)) : [ PWD ] ] ;
+    }
+    else
+    {
+        project-location = [ PWD ] ;
+    }
     local name = $(project-location:B) ;
     PROJECT = $(name) ;
     gPROJECT($(name)) = $(project-location) ;
