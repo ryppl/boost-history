@@ -213,7 +213,7 @@ namespace boost {
         RandomAccessIterator i = r - 1;
         while(true)
         {
-            // find smallest element greater than *i after index i.
+            // find the largest element less than *i after index i.
             RandomAccessIterator k =
                 max_element_if(i + 1, last, bind2nd(less<T>(), *i));
             
@@ -254,7 +254,7 @@ namespace boost {
         RandomAccessIterator i = r - 1;
         while(true)
         {
-            // find smallest element greater than *i after index i.
+            // find the largest element less than *i after index i.
             RandomAccessIterator k =
                 max_element_if(i + 1, last, comp, bind2nd(comp, *i));
             
