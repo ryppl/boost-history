@@ -134,6 +134,19 @@ namespace detail
           const lazy_named_default<K, Default>& x) const
       {
           return x.default_();
+      }     
+
+      template<class K, class Default>
+      Default& operator[](const named_default<K, Default>& x) const
+      {
+          return x.default_;
+      }
+
+      template<class K, class Default>
+      typename Default::result_type operator[](
+          const lazy_named_default<K, Default>& x) const
+      {
+          return x.default_();
       }
 #else
       template<class K, class Default>
@@ -157,7 +170,7 @@ namespace detail
           return x.default_();
       }
 # endif
-      
+
 #endif
       // No keyword was found if we get here, so we should only return
       // mpl::true_ if it's OK to have a default for the argument.
