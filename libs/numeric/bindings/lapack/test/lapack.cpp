@@ -12,8 +12,8 @@ void test_getrf_getrs(matrix_type& lu, matrix_type& x)
   numerics::matrix< value_type > b( x ) ;  // tmp to verify result
   std::vector< int > ipiv( x.size1() ) ;
 
-  boost::numeric::bindings::lapack::getrf( lu, ipiv.begin(), ipiv.end() ) ;
-  boost::numeric::bindings::lapack::getrs( 'N', lu, ipiv.begin(), ipiv.end(), x ) ;
+  boost::numeric::bindings::lapack::getrf( lu, ipiv ) ;
+  boost::numeric::bindings::lapack::getrs( 'N', lu, ipiv, x ) ;
 
   std::cout << prod(a,x) - b << std::endl ; 
 }
