@@ -50,7 +50,7 @@ void run_test_cases( BOOST_EXPLICIT_TEMPLATE_TYPE(Block) )
   typedef bitset_test< bitset_type > Tests;
   const int bits_per_block = bitset_type::bits_per_block;
 
-  std::string long_string = get_long_string();
+  const std::string long_string = get_long_string();
 
   std::size_t   n,
                 ul_width    = std::numeric_limits<unsigned long>::digits,
@@ -98,7 +98,7 @@ void run_test_cases( BOOST_EXPLICIT_TEMPLATE_TYPE(Block) )
       run_string_tests<Tests>(std::string("")); // empty string
       run_string_tests<Tests>(std::string("1"));
 
-      run_string_tests<Tests>(get_long_string());
+      run_string_tests<Tests>(long_string);
 
 # if !defined BOOST_NO_STD_WSTRING
       // I need to decide what to do for non "C" locales here. On
