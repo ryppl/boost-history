@@ -135,8 +135,10 @@ namespace tupple {
 #define ARGTYPEDEF(z,k,p) typedef typename access_traits<p##k>::arg_type ARGTYPE(k);
 
 #define GETTYPE(k) get_type##k
+#define DELAY_GETTYPE(k) GETTYPE(k)
 #define GETTYPEDEF(z,k,arg) typedef typename access_traits<arg##k>::non_const_type GETTYPE(k);
 #define CONSTGETTYPE(k) const_get_type##k
+#define DELAY_CONSTGETTYPE(k) CONSTGETTYPE(k)
 #define CONSTGETTYPEDEF(z,k,arg) typedef typename access_traits<arg##k>::const_type CONSTGETTYPE(k);
 
 
@@ -157,15 +159,16 @@ namespace tupple {
 
 
 #define INITCTOR(z,k,_)   ELEM(k,_)(THEELEM(k,_))
-#define COPYCTOR(z,k,arg) ELEM(k,A)( arg.ELEM(k,A) )
-#define COPYTAIL(z,k,arg) DELAY_ELEM(BOOST_PP_INC(k),A)( arg.ELEM(k,A) )
+#define COPYCTOR(z,k,arg) ELEM(k,_)( arg.ELEM(k,_) )
+#define COPYTAIL(z,k,arg) DELAY_ELEM(BOOST_PP_INC(k),_)( arg.ELEM(k,_) )
 
-#define ASSIGN(z,k,arg)   ELEM(k,A) = arg.ELEM(k,A);
-#define SWAP(z,k,arg) std::swap( ELEM(k,A), arg.ELEM(k,A) );
+#define ASSIGN(z,k,arg)   ELEM(k,_) = arg.ELEM(k,_);
+#define SWAP(z,k,arg) std::swap( ELEM(k,_), arg.ELEM(k,_) );
 
 #define TAILELEM(z,k,A) DELAY_ELEM(BOOST_PP_INC(k),A)
 
-#define DELAY_ELEM(k,_)  _DELAY_(ELEM,(k,_))
+#define DELAY_ELEM(k,_)  _DELAY_ELEM(k,_)
+#define _DELAY_ELEM(k,_) ELEM(k,_)
 
 #define GET(k) get##k
 
@@ -233,9 +236,9 @@ TEMPLATE(k,T) struct TUPLE(k) TEMPLATESPEC(k,BOOST_PP_SUB(MAX_N,k),T)     \
                                                                           \
   GETTYPE(0)      front()       { return ELEM(0,_); }                     \
   CONSTGETTYPE(0) front() const { return ELEM(0,_); }                     \
-  _DELAY_( GETTYPE, (BOOST_PP_DEC(k)) )       back()                      \
+  DELAY_GETTYPE(BOOST_PP_DEC(k))      back()                              \
     { return DELAY_ELEM(BOOST_PP_DEC(k),_); }                             \
-  _DELAY_( CONSTGETTYPE, (BOOST_PP_DEC(k)) )  back() const                \
+  DELAY_CONSTGETTYPE(BOOST_PP_DEC(k))  back() const                       \
     { return DELAY_ELEM(BOOST_PP_DEC(k),_); }                             \
                                                                           \
   BOOST_PP_REPEAT(k,GETCONSTMBR,_)                                        \
@@ -363,8 +366,8 @@ namespace detail
 template<class T, int N> struct n_fold_tuple
 {
   typedef detail::n_fold_helper<T>::select<N>::type type;
-  
-  static type make( const T& arg ) 
+
+  static type make( const T& arg )
   { return detail::n_fold_helper<T>::select<N>::make( arg ); }
 };
 
@@ -467,13 +470,12 @@ FUNCTIONS(9)
 //
 #endif
 
-#define AND(z,k,op) OP_IF(k,&&) lhs.ELEM(k,A) ## op ## rhs.ELEM(k,A)
-#define OR(z,k,op)  OP_IF(k,||) lhs.ELEM(k,A) ## op ## rhs.ELEM(k,A)
+#define AND_EQUAL(z,k,_) OP_IF(k,&&) lhs.ELEM(k,_) == rhs.ELEM(k,_)
 
 #define EQUAL(k) \
 template<BOOST_PP_ENUM_PARAMS(k,class T),BOOST_PP_ENUM_PARAMS(k,class S)> \
 bool operator==( const TYPE(TUPLE(k),k,T)& lhs, const TYPE(TUPLE(k),k,S)& rhs ) \
-{ return( BOOST_PP_REPEAT(k,AND,==) ); }
+{ return( BOOST_PP_REPEAT(k,AND_EQUAL,_) ); }
 
 inline bool operator==( const TUPLE(0)<NULLTYPE>& lhs, const TUPLE(0)<NULLTYPE>& rhs ) { return true; }
 
