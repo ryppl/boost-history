@@ -23,6 +23,7 @@ using namespace boost;
 static void find_test()
 {
     string str1("123a1cxxxa23cXXXa456c321");
+    char* pch1="123a1cxxxa23cXXXa456c321";
     regex rx("a[0-9]+c");
     vector<int> vec1( str1.begin(), str1.end() );
 
@@ -33,17 +34,9 @@ static void find_test()
     iterator_range<vector<int>::iterator> nc_vresult;
     iterator_range<vector<int>::const_iterator> cv_vresult;
 
+	iterator_range<const char*> ch_result;
+
     // basic tests
-    nc_result=find_regex( str1.begin(), str1.end(), rx );
-    BOOST_CHECK( 
-        (distance<string::const_iterator>( str1.begin(),nc_result.begin()) == 3) &&
-        (distance<string::const_iterator>( str1.begin(),nc_result.end()) == 6) );
-
-    cv_result=find_regex( str1.begin(), str1.end(), rx );
-    BOOST_CHECK( 
-        (distance<string::const_iterator>( str1.begin(),cv_result.begin()) == 3) &&
-        (distance<string::const_iterator>( str1.begin(),cv_result.end()) == 6) );
-
     nc_result=find_regex( str1, rx );
     BOOST_CHECK( 
         (distance<string::const_iterator>( str1.begin(),nc_result.begin()) == 3) &&
@@ -54,7 +47,10 @@ static void find_test()
         (distance<string::const_iterator>( str1.begin(),cv_result.begin()) == 3) &&
         (distance<string::const_iterator>( str1.begin(),cv_result.end()) == 6) );
 
-    // multi-type comparison test
+	ch_result=find_regex( pch1, rx );
+	BOOST_CHECK(( (ch_result.begin() - pch1 ) == 3) && ( (ch_result.end() - pch1 ) == 6 ) );
+
+	// multi-type comparison test
     nc_vresult=find_regex( vec1, rx );
     BOOST_CHECK( 
         (distance<vector<int>::const_iterator>( vec1.begin(),nc_vresult.begin()) == 3) &&

@@ -1,4 +1,4 @@
-//  Boost string_algo library tri_test.cpp file  ---------------------------//
+//  Boost string_algo library trim_test.cpp file  ---------------------------//
 
 //  (C) Copyright Pavol Droba 2002. Permission to copy, use, modify, sell and
 //  distribute this software is granted provided this copyright notice appears
@@ -43,17 +43,37 @@ void trim_test()
 
     // iterator tests
     string str;
-    trim_left_copy_if( std::back_inserter(str), str1.begin(), str1.end(), is_space<char>() );
+    trim_left_copy_if( std::back_inserter(str), str1, is_space<char>() );
     BOOST_CHECK( str=="1x x x x1     " );
 
     str.clear();
-    trim_right_copy_if( std::back_inserter(str), str1.begin(), str1.end(), is_space<char>() );
+    trim_right_copy_if( std::back_inserter(str), str1, is_space<char>() );
     BOOST_CHECK( str=="     1x x x x1" );
 
     str.clear();
-    trim_copy_if( std::back_inserter(str), str1.begin(), str1.end(), is_space<char>() );
+    trim_copy_if( std::back_inserter(str), str1, is_space<char>() );
     BOOST_CHECK( str=="1x x x x1" );
 
+	str.clear();
+    trim_left_copy_if( 
+		std::back_inserter(str), 
+		"     1x x x x1     ", 
+		is_space<char>() );
+    BOOST_CHECK( str=="1x x x x1     " );
+
+    str.clear();
+    trim_right_copy_if( 
+		std::back_inserter(str), 
+		"     1x x x x1     ", 
+		is_space<char>() );
+    BOOST_CHECK( str=="     1x x x x1" );
+
+    str.clear();
+    trim_copy_if( 
+		std::back_inserter(str), 
+		"     1x x x x1     ", 
+		is_space<char>() );
+    BOOST_CHECK( str=="1x x x x1" );
     // *** inplace tests *** //
 
     // general string test
@@ -85,7 +105,7 @@ void trim_test()
         trim_copy_if( 
             string("123abc456"), 
             is_classified<char>(std::ctype_base::digit) )=="abc" );
-    BOOST_CHECK( trim_copy_if( string("<>abc<>"), is_from<char>( string("<<>>") ) )=="abc" );
+    BOOST_CHECK( trim_copy_if( string("<>abc<>"), is_of<char>( "<<>>" ) )=="abc" );
 }
 
 // test main 

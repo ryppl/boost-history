@@ -14,6 +14,12 @@ SEARCH on testing.jam = $(BOOST_BUILD_PATH) ;
 include testing.jam ;
 
 test-suite "string_algo"
+		: [ run
+						container_test.cpp
+					: :
+						:
+						: container
+				]
     : [ run 
             trim_test.cpp
           : :
@@ -37,6 +43,12 @@ test-suite "string_algo"
           : :
             :
             : find
+        ]
+	  : [ run
+            iterator_test.cpp
+          : :
+            :
+            : iterator
         ]
     : [ run 
             replace_test.cpp

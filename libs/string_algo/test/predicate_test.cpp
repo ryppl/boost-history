@@ -34,34 +34,14 @@ void predicate_test()
     BOOST_CHECK( starts_with( str1, string("123") ) );
     BOOST_CHECK( !starts_with( str1, string("1234") ) );
 
-    BOOST_CHECK( 
-        starts_with( 
-            str1.begin(), 
-            str1.end(), 
-            str1_prefix.begin(), 
-            str1_prefix.end() ) );
-
     BOOST_CHECK( ends_with( str1, string("321") ) );
     BOOST_CHECK( !ends_with( str1, string("123") ) );
 
     BOOST_CHECK( contains( str1, string("xxx") ) );
     BOOST_CHECK( !contains( str1, string("yyy") ) );
-    BOOST_CHECK( 
-        contains( 
-            str1.begin(), 
-            str1.end(), 
-            str1_prefix.begin(), 
-            str1_prefix.end() ) );
 
-    BOOST_CHECK( equals( str2, string("abc") ) );
+	BOOST_CHECK( equals( str2, string("abc") ) );
     BOOST_CHECK( !equals( str1, string("yyy") ) );
-    BOOST_CHECK( 
-        equals( 
-            str2.begin(), 
-            str2.end(), 
-            str4.begin(), 
-            str4.end() ) );
-
 
     // multi-type comparison test
     BOOST_CHECK( starts_with( vec1, string("123") ) );
@@ -86,6 +66,12 @@ void predicate_test()
     BOOST_CHECK( ends_with( str2, string("") ) );
     BOOST_CHECK( contains( str2, string("") ) );
     BOOST_CHECK( equals( str3, string("") ) );
+
+	//! Container compatibility test
+    BOOST_CHECK( starts_with( "123xxx321", "123" ) );
+    BOOST_CHECK( ends_with( "123xxx321", "321" ) );
+    BOOST_CHECK( contains( "123xxx321", "xxx" ) );
+    BOOST_CHECK( equals( "123xxx321", "123xxx321" ) );
 }
 
 #define TEST_CLASS( Pred, YesInput, NoInput )\
@@ -104,10 +90,11 @@ void classification_test()
 	TEST_CLASS( is_graph<char>(), "123abc.,", "  \t" );
 	TEST_CLASS( is_lower<char>(), "abc", "Aasdf" );
 	TEST_CLASS( is_print<char>(), "abs", "\nasdf" );
-	TEST_CLASS( is_punct<char>(), ".,;", "abc" );
+	TEST_CLASS( is_punct<char>(), ".,;\"", "abc" );
 	TEST_CLASS( is_upper<char>(), "ABC", "aBc" );
 	TEST_CLASS( is_xdigit<char>(), "ABC123", "XFD" );
-	TEST_CLASS( is_from<char>( string("abc") ), "aaabbcc", "aaxb" );
+	TEST_CLASS( is_of<char>( string("abc") ), "aaabbcc", "aaxb" );
+	TEST_CLASS( is_of<char>( "abc" ), "aaabbcc", "aaxb" );
 
 	TEST_CLASS( std::not1(is_classified<char>(std::ctype_base::space)), "...", "..\n\r\t " );
 }

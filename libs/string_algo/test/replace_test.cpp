@@ -17,7 +17,6 @@
 
 #include <boost/string_algo/replace.hpp>
 #include <boost/string_algo/erase.hpp>
-#include <boost/string_algo/find.hpp>
 #include <boost/string_algo/std/list_traits.hpp>
 #include <boost/string_algo/std/string_traits.hpp>
 
@@ -90,8 +89,10 @@ void replace_test()
     TEST_ALGO( replace_first, "1abc3abc2", (string("abc"))(string("Z")), string("1Z3abc2") );
     TEST_ALGO( replace_first, "1abc3abc2", (string("abc"))(string("XXXX")), string("1XXXX3abc2") );
     TEST_ALGO( replace_first, "1abc3abc2", (string(""))(string("XXXX")), string("1abc3abc2") );
+    TEST_ALGO( replace_first, "1abc3abc2", ("")("XXXX"), string("1abc3abc2") );
     TEST_ALGO( replace_first, "", (string(""))(string("XXXX")), string("") );
     TEST_ALGO( erase_first, "1abc3abc2", (string("abc")), string("13abc2") );
+    TEST_ALGO( erase_first, "1abc3abc2", ("abc"), "13abc2" );
     TEST_ALGO( erase_first, "1abc3abc2", (string("")), string("1abc3abc2") );
     TEST_ALGO( erase_first, "", (string("abc")), string("") );
 
@@ -99,6 +100,7 @@ void replace_test()
     TEST_ALGO( replace_last, "1abc3abc2", (string("abc"))(string("YYY")), string("1abc3YYY2") );
     TEST_ALGO( replace_last, "1abc3abc2", (string("abc"))(string("Z")), string("1abc3Z2") );
     TEST_ALGO( replace_last, "1abc3abc2", (string("abc"))(string("XXXX")), string("1abc3XXXX2") );
+	TEST_ALGO( replace_last, "1abc3abc2", ("abc")("XXXX"), string("1abc3XXXX2") );
     TEST_ALGO( replace_last, "", (string(""))(string("XXXX")), string("") );
     TEST_ALGO( erase_last, "1abc3abc2", (string("abc")), string("1abc32") );
     TEST_ALGO( erase_last, "1abc3abc2", (string("")), string("1abc3abc2") );
@@ -108,8 +110,10 @@ void replace_test()
     TEST_ALGO( replace_all, "1abc3abc2", (string("abc"))(string("YYY")), string("1YYY3YYY2") );
     TEST_ALGO( replace_all, "1abc3abc2", (string("abc"))(string("Z")), string("1Z3Z2") );
     TEST_ALGO( replace_all, "1abc3abc2", (string("abc"))(string("XXXX")), string("1XXXX3XXXX2") );
+	TEST_ALGO( replace_all, "1abc3abc2", ("abc")("XXXX"), string("1XXXX3XXXX2") );
     TEST_ALGO( replace_all, "", (string(""))(string("XXXX")), string("") );
     TEST_ALGO( erase_all, "1abc3abc2", (string("abc")), string("132") );
+	TEST_ALGO( erase_all, "1abc3abc2", ("abc"), string("132") );
     TEST_ALGO( erase_all, "1abc3abc2", (string("")), string("1abc3abc2") );
     TEST_ALGO( erase_all, "", (string("abc")), string("") );
 
@@ -117,6 +121,7 @@ void replace_test()
     TEST_ALGO( replace_nth, "1abc3abc2", (string("abc"))(0)(string("YYY")), string("1YYY3abc2") );
     TEST_ALGO( replace_nth, "1abc3abc2", (string("abc"))(0)(string("Z")), string("1Z3abc2") );
     TEST_ALGO( replace_nth, "1abc3abc2", (string("abc"))(0)(string("XXXX")), string("1XXXX3abc2") );
+	TEST_ALGO( replace_nth, "1abc3abc2", ("abc")(0)("XXXX"), string("1XXXX3abc2") );
     TEST_ALGO( replace_nth, "1abc3abc2", (string(""))(0)(string("XXXX")), string("1abc3abc2") );
     TEST_ALGO( replace_nth, "", (string(""))(0)(string("XXXX")), string("") );
     TEST_ALGO( erase_nth, "1abc3abc2", (string("abc"))(0), string("13abc2") );
@@ -127,6 +132,7 @@ void replace_test()
 
     // replace head
     TEST_ALGO( replace_head, "abc3abc2", (3)(string("YYY")), string("YYY3abc2") );
+	TEST_ALGO( replace_head, "abc3abc2", (3)("YYY"), string("YYY3abc2") );
     TEST_ALGO( replace_head, "abc", (3)(string("Z")), string("Z") );
     TEST_ALGO( replace_head, "abc", (6)(string("XXXX")), string("XXXX") );
     TEST_ALGO( replace_head, "abc3abc2", (0)(string("XXXX")), string("abc3abc2") );
@@ -137,6 +143,7 @@ void replace_test()
 
     // replace tail
     TEST_ALGO( replace_tail, "abc3abc", (3)(string("YYY")), string("abc3YYY") );
+	TEST_ALGO( replace_tail, "abc3abc", (3)("YYY"), string("abc3YYY") );
     TEST_ALGO( replace_tail, "abc", (3)(string("Z")), string("Z") );
     TEST_ALGO( replace_tail, "abc", (6)(string("XXXX")), string("XXXX") );
     TEST_ALGO( replace_tail, "abc3abc", (0)(string("XXXX")), string("abc3abc") );
@@ -153,24 +160,21 @@ void replace_test()
         BOOST_CHECK( 
             replace_range_copy( 
                 str1, 
-                str1.begin()+1, 
-                str1.begin()+4, 
+                make_range(str1.begin()+1, str1.begin()+4),
                 string("XXX") )==string("1XXX3abc2") );
 
         string strout;
         replace_range_copy( 
                 back_inserter( strout ),
                 str1, 
-                str1.begin()+1, 
-                str1.begin()+4, 
-                string("XXX") );
+                make_range(str1.begin()+1, str1.begin()+4),
+				string("XXX") );
         BOOST_CHECK( strout==string("1XXX3abc2") );
 
         replace_range( 
                 str1, 
-                str1.begin()+1, 
-                str1.begin()+4, 
-                string("XXX") );
+                make_range(str1.begin()+1, str1.begin()+4),
+				string("XXX") );
         BOOST_CHECK( str1==string("1XXX3abc2") );
     }
     // erase_range
@@ -181,23 +185,52 @@ void replace_test()
         BOOST_CHECK( 
         erase_range_copy( 
                 str1, 
-                str1.begin()+1, 
-                str1.begin()+4 )==string("13abc2") );
+                make_range(str1.begin()+1, str1.begin()+4))==string("13abc2") );
 
         string strout;
         erase_range_copy( 
                 back_inserter( strout ),
                 str1, 
-                str1.begin()+1, 
-                str1.begin()+4);
+                make_range(str1.begin()+1, str1.begin()+4));
         BOOST_CHECK( strout==string("13abc2") );
 
         erase_range( 
                 str1, 
-                str1.begin()+1, 
-                str1.begin()+4);
+                make_range(str1.begin()+1, str1.begin()+4));
         BOOST_CHECK( str1==string("13abc2") );
     }
+
+	// container traits complatibility tests
+	{
+		string strout;
+		replace_first_copy( back_inserter(strout), "1abc3abc2", "abc", "YYY" );
+		BOOST_CHECK( strout==string("1YYY3abc2") ); 
+	}
+	{
+		string strout;
+		replace_last_copy( back_inserter(strout), "1abc3abc2", "abc", "YYY" );
+		BOOST_CHECK( strout==string("1abc3YYY2") ); 
+	}	
+	{
+		string strout;
+		replace_all_copy( back_inserter(strout), "1abc3abc2", "abc", "YYY" );
+		BOOST_CHECK( strout==string("1YYY3YYY2") ); 
+	}	
+	{
+		string strout;
+		replace_nth_copy( back_inserter(strout), "1abc3abc2", "abc", 1, "YYY" );
+		BOOST_CHECK( strout==string("1abc3YYY2") ); 
+	}	
+	{
+		string strout;
+		replace_head_copy( back_inserter(strout), "abc3abc2", 3 , "YYY" );
+		BOOST_CHECK( strout==string("YYY3abc2") ); 
+	}	
+	{
+		string strout;
+		replace_tail_copy( back_inserter(strout), "abc3abc", 3 , "YYY" );
+		BOOST_CHECK( strout==string("abc3YYY") ); 
+	}	
 }
 
 // test main 

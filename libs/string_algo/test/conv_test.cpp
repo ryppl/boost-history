@@ -23,35 +23,60 @@ void conv_test()
     string str1("AbCdEfG 123 xxxYYYzZzZ");
     string str2("AbCdEfG 123 xxxYYYzZzZ");
     string str3("");
+	char* pch1=strdup("AbCdEfG 123 xxxYYYzZzZ");
+	char* pch2=strdup("AbCdEfG 123 xxxYYYzZzZ");
 
     // *** iterator tests *** //
 
     string strout;
-    tolower_copy( back_inserter(strout), str1.begin(), str1.end() );
+    to_lower_copy( back_inserter(strout), str1 );
     BOOST_CHECK( strout=="abcdefg 123 xxxyyyzzzz" );
     strout.clear();
-    toupper_copy( back_inserter(strout), str1.begin(), str1.end() );
+    to_upper_copy( back_inserter(strout), str1 );
     BOOST_CHECK( strout=="ABCDEFG 123 XXXYYYZZZZ" );
 
-    // *** value passing tests *** //
+	strout.clear();
+    to_lower_copy( back_inserter(strout), "AbCdEfG 123 xxxYYYzZzZ" );
+    BOOST_CHECK( strout=="abcdefg 123 xxxyyyzzzz" );
+    strout.clear();
+    to_upper_copy( back_inserter(strout), "AbCdEfG 123 xxxYYYzZzZ" );
+    BOOST_CHECK( strout=="ABCDEFG 123 XXXYYYZZZZ" );
 
-    BOOST_CHECK( tolower_copy( str1 )=="abcdefg 123 xxxyyyzzzz" );
-    BOOST_CHECK( toupper_copy( str1 )=="ABCDEFG 123 XXXYYYZZZZ" );
+	strout.clear();
+    to_lower_copy( back_inserter(strout), pch1 );
+    BOOST_CHECK( strout=="abcdefg 123 xxxyyyzzzz" );
+    strout.clear();
+    to_upper_copy( back_inserter(strout), pch1 );
+    BOOST_CHECK( strout=="ABCDEFG 123 XXXYYYZZZZ" );
 
-    BOOST_CHECK( tolower_copy( str3 )=="" );
-    BOOST_CHECK( toupper_copy( str3 )=="" );
+	// *** value passing tests *** //
+
+    BOOST_CHECK( to_lower_copy( str1 )=="abcdefg 123 xxxyyyzzzz" );
+    BOOST_CHECK( to_upper_copy( str1 )=="ABCDEFG 123 XXXYYYZZZZ" );
+
+    BOOST_CHECK( to_lower_copy( str3 )=="" );
+    BOOST_CHECK( to_upper_copy( str3 )=="" );
 
     // *** inplace tests *** //
 
-    tolower( str1 );
+    to_lower( str1 );
     BOOST_CHECK( str1=="abcdefg 123 xxxyyyzzzz" );
-    toupper( str2 );
+    to_upper( str2 );
     BOOST_CHECK( str2=="ABCDEFG 123 XXXYYYZZZZ" );
 
-    tolower( str3 );
+	// c-string modification
+	to_lower( pch1 );
+    BOOST_CHECK( string(pch1)=="abcdefg 123 xxxyyyzzzz" );
+    to_upper( pch2 );
+    BOOST_CHECK( string(pch2)=="ABCDEFG 123 XXXYYYZZZZ" );
+
+    to_lower( str3 );
     BOOST_CHECK( str3=="" );
-    toupper( str3 );
+    to_upper( str3 );
     BOOST_CHECK( str3=="" );
+
+	free(pch1);
+	free(pch2);
 }
 
 // test main 
