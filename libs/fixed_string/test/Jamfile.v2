@@ -8,4 +8,7 @@ import testing ;
 test-suite "fixed_string"
     : [ run fsstring.cpp ]
       [ run fswchar.cpp ]
+      [ run cons_copy.cpp ] # 21.3.1 - construct/copy
+      [ run iterators.cpp ] # 21.3.2 - iterators
+      [ run capacity.cpp ]  # 21.3.3 - capacity
     ;
