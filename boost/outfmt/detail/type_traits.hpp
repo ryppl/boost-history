@@ -15,9 +15,7 @@
 #  include <boost/mpl/apply_if.hpp>
 #  include <boost/mpl/equal_to.hpp>
 #  include <boost/mpl/identity.hpp>
-#  ifndef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
-#     include <boost/mpl/int.hpp>          // used by CLASSIFY_TYPE.
-#  endif
+#  include <boost/mpl/int.hpp>          // used by CLASSIFY_TYPE and the is_type template.
 #  include <boost/preprocessor/enum_params.hpp>
 
    namespace boost { namespace io
