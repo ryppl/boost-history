@@ -60,6 +60,8 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     //   pointer storage()
     //   int size1()
     //   int size2()
+    //   int lower_bandwidth()  // only banded matrix types 
+    //   int upper_bandwidth()  // only banded matrix types 
     //   int storage_size()  // not all matrix types
     //   int leading_dimension()  // not all matrix types 
   }; 
@@ -70,7 +72,8 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
   struct symmetric_packed_t {}; 
   struct hermitian_t {}; 
   struct hermitian_packed_t {}; 
-  // TO DO: add triangular, banded etc. 
+  struct banded_t {}; 
+  // TO DO: add triangular, etc. 
   struct unknown_structure_t {}; 
 
   // storage ordering tags: 
@@ -109,10 +112,18 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
   template <typename M>
   inline
   int matrix_stride1 (M& m) { return matrix_traits<M>::stride1 (m); }
-  
+
   template <typename M>
   inline
   int matrix_stride2 (M& m) { return matrix_traits<M>::stride2 (m); }
+
+  template <typename M>
+  inline
+  int matrix_upper_bandwidth (M& m) { return matrix_traits<M>::upper_bandwidth (m); }
+
+  template <typename M>
+  inline
+  int matrix_lower_bandwidth (M& m) { return matrix_traits<M>::lower_bandwidth (m); }
   
   template <typename M>
   inline

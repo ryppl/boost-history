@@ -125,6 +125,13 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     static int stride2 (matrix_type& mr) { 
       return matrix_traits<m_type>::stride2 (mr.expression()); 
     }
+    // Only for banded matrices
+    static int upper_bandwidth(matrix_type& mr) {
+      return matrix_traits<m_type>::upper_bandwidth(mr.expression());
+    }
+    static int lower_bandwidth(matrix_type& mr) {
+      return matrix_traits<m_type>::lower_bandwidth(mr.expression());
+    }
   }; 
 
 
@@ -167,6 +174,13 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     } 
     static int stride2 (matrix_type& mr) { 
       return matrix_traits<m_type>::stride2 (mr.data()); 
+    }
+    // For band matrices only
+    static int upper_bandwidth (matrix_type& mr) {
+       return matrix_traits<m_type>::upper_bandwidth(mr.data());
+    }
+    static int lower_bandwidth (matrix_type& mr) {
+       return matrix_traits<m_type>::lower_bandwidth(mr.data());
     }
   }; 
 

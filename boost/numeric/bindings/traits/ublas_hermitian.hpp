@@ -70,6 +70,21 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
   }; 
 
 
+  namespace detail {
+     template <typename M>
+     int matrix_bandwidth( M const& m, upper_t ) {
+        return matrix_traits<M const>::upper_bandwidth( m ) ;
+     }
+
+     template <typename M>
+     int matrix_bandwidth( M const& m, lower_t ) {
+        // When the lower triangular band matrix is stored the
+	// upper bandwidth must be zero
+	assert( 0 == matrix_traits<M const>::upper_bandwidth( m ) ) ;
+        return matrix_traits<M const>::lower_bandwidth( m ) ;
+     }
+  } // namespace detail
+
   // ublas::hermitian_adaptor<>
   template <typename M, typename F1, typename MA>
   struct matrix_detail_traits<boost::numeric::ublas::hermitian_adaptor<M, F1>, MA>
@@ -103,6 +118,13 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     }
     static int leading_dimension (matrix_type& hm) {
       return matrix_traits<m_type>::leading_dimension (hm.data()); 
+    }
+    // For banded M
+    static int upper_bandwidth(matrix_type& hm) {
+       return detail::matrix_bandwidth( hm.data(), uplo_type() );
+    }
+    static int lower_bandwidth(matrix_type& hm) {
+       return detail::matrix_bandwidth( hm.data(), uplo_type() );
     }
   }; 
 
