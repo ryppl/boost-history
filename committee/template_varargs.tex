@@ -1,6 +1,8 @@
 \documentclass{article}
 \usepackage{hyperref}
-\usepackage{fullpage}
+\usepackage{vmargin}
+\setpapersize{USletter}
+\setmarginsrb{1in}{1in}{1in}{1in}{0.25in}{0.25in}{0in}{0in}
 
 \newcommand{\comment}[2]{[{\Large\sc #1:} \textsf{#2}]}
 
@@ -10,7 +12,7 @@
 
 \begin{document}
 
-\markboth{Doc. no: DRAFT}{Doc. no: DRAFT}
+\markboth{Doc. no: N1603=04-0043}{Doc. no: N1603=04-0043}
 \pagestyle{myheadings}
 
 \title{Variadic Templates}
@@ -18,23 +20,22 @@
 \date{}
 \maketitle
 
-\par\noindent Document number: DRAFT
+\par\noindent Document number: N1603=04-0043
 \par\noindent Date: \today
 \par\noindent Project: Programming Language C++, Evolution Working Group
 \par\noindent Reply-to: Douglas Gregor $<${\tt gregod@cs.rpi.edu}$>$
 
 \section{Introduction}
-This proposal addresses three problems under a unified framework:
+This proposal directly addresses two problems:
 \begin{itemize}
 \item The inability to instantiate class and function templates with an arbitrarily-long list of template parameters.
 \item The inability to pass an arbitrary number of arguments to a function in a type-safe manner.
-\item The argument forwarding problem for an arbitrary number of argumnets.
 \end{itemize}
 
 The proposed resolution is to introduce a syntax and semantics for
 variable-length template argument lists (usable with function templates
 via explicit template argument specification and with class templates)
-along with a method of argument building using the same mechanism to
+along with a method of argument ``bundling'' using the same mechanism to
 pass an arbitrary number of function call arguments to a function in a
 typesafe manner.
 
@@ -69,75 +70,19 @@ be:
 template<...> class list;
 \end{verbatim}
 
-This language feature is primarily designed for library developers,
-and is drawn from experience in library development where these
-techniques have been simulated in one way or
-another~\cite{Gurtovoy02,Lambda02,Tuples01,Function01,Bind01}. Novice
-users aren't likely to use this feature, as generically manipulating
-heterogeneous type container (tuples, in this case) requires some
-degree of metaprogramming.
-
 \subsection{Typesafe Variable-length Function Parameter Lists}
 Variable-length function parameter lists allow more arguments to be
 passed to a function than are declared by the function. This feature
 is rarely used in C++ code (except for compatibility with C
-libraries), because passing non-POD types through {\tt ...} invokes
-undefined behavior. However, a typesafe form of such a feature would
-be useful in many contexts, e.g., for implementing a typesafe C++ {\tt
-  printf} that works for non-POD types. The lack of such a facility
-has resulted in odd syntax for formatting in the Boost.Format
-library~\cite{Krempp02}:
+libraries), because passing non-POD types through an ellipsis ({\tt
+  ...}) invokes undefined behavior. However, a typesafe form of such a
+feature would be useful in many contexts, e.g., for implementing a
+typesafe C++ {\tt printf} that works for non-POD types. The lack of
+such a facility has resulted in odd syntax for formatting in the
+Boost.Format library~\cite{Krempp02}:
 \begin{verbatim}
 format("writing %1%, x=%2%: %3%-th try") % "toto" % 40.23 % 50
 \end{verbatim}
-
-\subsection{Argument forwarding}
-The forwarding problem, as described in~\cite{Dimov02}, is:
-
-\begin{quote}
-  For a given expression $E(a_1, a_2, ..., a_n)$ that depends on the
-  (generic) parameters $a_1, a_2, ..., a_n$, it is not possible to
-  write a function (object) $f$ such that $f(a_1, a_2, ..., a_n)$ is
-  equivalent to $E(a_1, a_2, ..., a_n)$.
-\end{quote}
-
-The primary issue with the argument forwarding problem is to deduce
-the types of $a_1, a_2, ..., a_n$ such that they can be forwarded to
-the underlying function $E$ without changing the semantics of the
-expression. The common implementation idiom is to accept a (non-const)
-reference for each parameter, and to provide overloads for some number
-of arguments to forward, e.g.:
-\begin{verbatim}
-template<typename E, typename T1>
-void f(E e, T1& a1) { e(a1); }
-
-template<typename E, typename T1, typename T2>
-void f(E e, T1& a1, T2& a2) { e(a1, a2); }
-
-template<typename E, typename T1, typename T2, typename T3>
-void f(E e, T1& a1, T2& a2, T3& a3) { e(a1, a2, a3); }
-
-// repeat up to N arguments
-\end{verbatim}
-
-However, this idiom fails to accept literal values and also requires
-repetition for an arbitrary number of arguments (often done via
-preprocessor metaprogramming in the Boost
-libraries~\cite{Preprocessor01}). This proposal solves both issues:
-arguments are passed via the ``Const + Non-const reference'' option
-\#3 enumerated in~\cite{Dimov02}, which results in ``perfect''
-forwarding of arguments, but does not require $2^N$ overloads to
-support $N$ arguments: instead, a single overload suffices for any
-number of arguments. Our solution matches all three criteria (C1-C3)
-of the argument forwarding paper~\cite{Dimov02} by bundling the
-arguments into a single argument and providing an unbundling method to
-pass the arguments on to another function. Note that our solution
-directly supports only functions which accept an unbounded number of
-arguments. With this proposal and additional library tools, it is
-possible to define perfect forwarding functions that only match to
-invocations with a fixed number of arguments (or even with the number
-of arguments in a fixed range). This is explained in
-Section~\ref{building_blocks}.
 
 \section{Syntax and Semantics}
 \subsection{Variadic templates}
@@ -150,22 +95,21 @@ parameters may precede the ``...''. Thus we can define, for instance,
 a class {\tt Foo} accepting a template type parameter followed by an
 arbitrary number of template arguments as:
 \begin{verbatim}
-template<typename T, ... Elements> class Foo;
+template<typename T, ... Args> class Foo;
 \end{verbatim}
 
 \noindent
 Here, {\tt T} is the name of the template type parameter and {\tt
-  Args} is the name of a ``template parameter pack'' containing
-the (possibly empty) set of template arguments given to {\tt
-  Foo}. Template parameter packs may contain template type, non-type, and
+  Args} is the name of a ``template parameter pack'' containing the
+(possibly empty) set of template arguments given to {\tt Foo}.
+Template parameter packs may contain template type, non-type, and
 template template arguments but themselves have no representation in
 the C++ type system (i.e., they are not first-class entities in the
 type system as are integral constants, types, and templates).
 
-Function templates may also be declared to accept variable-length
-template parameter lists in the same manner as class templates. 
-Arguments can be specified explicitly when calling the function
-template, e.g:
+Function templates may also be variadic templates in the same manner
+as class templates.  Arguments can be specified explicitly when
+calling the function template, e.g:
 
 \begin{verbatim}
 template<... Args> void f();
@@ -178,36 +122,47 @@ of the call.
 
 \subsection{Typesafe variadic functions}
 When a function template header contains a template parameter pack,
-that template parameter pack may be used as the ``type'' of the final
+that template parameter pack may be used in the ``type'' of the final
 function parameter, allowing the function to accept a variable number
 of function parameters in a ``value parameter pack'' (or just
 ``parameter pack''). For instance, a typesafe C++ {\tt printf} may
 be declared as:
 \begin{verbatim}
 template<... Args>
-  void printf(const char* format, Args args);
+  void printf(const char* format, const Args&... args);
 \end{verbatim}
 
-\noindent
-{\tt Args} is deduced as a template parameter pack containing the types of
-the arguments, and {\tt args} is a value parameter pack containing
-the function call arguments passed after the {\tt format}
-argument.\footnote{Note that, unlike C, we do not require but
-  do allow arguments prior to the argument bundle.} Like template
-parameter packs, value parameter packs are not first-class entities:
-their type is that of the associated template parameter pack, which is
-itself not a user-accessible type of the C++ type system. 
-Hence, both template and value
-parameter packs may be thought of as naming a set of arguments, not as
-having any intrinsic type or value themselves.
+\noindent The ellipsis indicates that the function ``parameter'' args
+actually represents the ``unpacked'' arguments, so for a call to
+\texttt{printf} with $N+1$ arguments, the signature is equivalent to
+the pseudocode:
+
+\begin{verbatim}
+template<typename T1, typename T2, ..., typename TN>
+  void printf(const char* format, const T1& a1, const T2& a2, ..., const TN& aN);
+\end{verbatim}
+
+\noindent 
+Note that \texttt{Args} is used as a placeholder in the type of the
+\texttt{args} ``parameter'', and \texttt{Args} is replaced by each
+implicitly-named template parameter while \texttt{args} is replaced by
+each implicitly-named function parameter. Thus both forms of parameter
+packs are primarily syntactic entities.
+
+Deduction of template parameter packs from function call arguments
+proceeds as it would if the arguments were explicitly passed. For
+instance, calling \texttt{printf("\%e \%i", 3.14159, 17)} would deduce
+\texttt{Args = <double,int>}, with the parameter types \texttt{const
+  double\&} and \texttt{const int\&}.
 
 \subsection{Unpacking template and value parameter packs}
-When template and value parameter packs are used in any manner, they
-are implicitly ``unpacked'' into a list of template arguments or
-values, respectively. For instance, given a template parameter pack
+The ellipsis operator unpacks all of the values (or template
+arguments) within a value (or template) parameter pack into a list of
+arguments for use in function call argument lists, template argument
+lists, and function types. For instance, given a template parameter pack
 {\tt Elements}, we can create a {\tt tuple} storing elements of those
-types via {\tt tuple<Elements>}. Should we wish to append an {\tt int}
-to the end of the tuple, we may write {\tt tuple<Elements, int>}.
+types via {\tt tuple<Elements...>}. Should we wish to append an {\tt int}
+to the end of the tuple, we may write {\tt tuple<Elements..., int>}.
 
 Value parameter packs are similarly expanded within a function call,
 so that, for instance, a {\tt printf}-like function may pass the
@@ -219,7 +174,7 @@ template<typename T, ... Args>
     // print characters in s until we hit a formatting command
     // format ``next'' by converting it as appropriate
     // move s after the formatting command
-    printf(s, args); 
+    printf(s, args...); 
   }
 
   void printf(const char* s)
@@ -234,32 +189,6 @@ arguments (in the function call or template argument list). Thus, the
 recursion terminates for \texttt{printf} when {\tt args} is empty,
 calling the second overload of \texttt{printf}.
 
-\subsection{Deducing parameter packs from a function call}
-Template and value parameter packs can be deduced from a function call
-by first deducing the argument type (to be included in the template
-parameter pack) and then including the argument in the value parameter
-pack. The type of each element in the template parameter pack is
-deduced to achieve perfect argument forwarding. For an argument {\tt
-  xi}, the type {\tt Ti} of the corresponding parameter pack element
-is the parameter type of the {\tt forward} function determined by
-overload resolution using the following two candidates\footnote{This
-  formulation is expected to change if some variant of the move
-  proposal~\cite{Hinnant02} is accepted}:
-\begin{verbatim}
-template<typename T> void forward(T&);
-template<typename T> void forward(const T &);
-\end{verbatim}
-
-Example:
-\begin{verbatim}
-template<... Args> void f(Args args);
-
-int x;
-float y;
-
-f(x, y, 3.14159); // Args is <int&, float&, const double&>
-\end{verbatim}
-
 \subsection{Deducing template parameter packs from types}
 Template parameter packs can be deduced from template argument lists
 and function parameter lists, by packing the list of integral constant
@@ -273,10 +202,10 @@ template<...> class tuple;
 template<...> struct function_traits;
 
 template<typename R, ... Args> 
-  struct function_traits<R(Args)>
+  struct function_traits<R(Args...)>
   { 
     typedef R result_type; 
-    typedef tuple<Args> argument_types;
+    typedef tuple<Args...> argument_types;
   };
 \end{verbatim}
 
@@ -286,17 +215,19 @@ number of elements in it:
 template<...> class tuple;
 
 template<... Elements>
-  void eat_tuple(tuple<Elements>);
+  void eat_tuple(tuple<Elements...>);
 \end{verbatim}
 
 Example: We can also split a template class into its template name and
-template arguments, a task that could drastically reduce the amount of code required to implement the meta-lambda facility of the Boost Metaprogramming Library~\cite{Gurtovoy02}. For instance:
+template arguments, a task that could drastically reduce the amount of
+code required to implement the meta-lambda facility of the Boost
+Metaprogramming Library~\cite{Gurtovoy02}. For instance:
 
 \begin{verbatim}
 template<typename T> struct split_template_class;
 
 template<template<... Args> class T> 
-  struct split_template_class<T<Args> >;
+  struct split_template_class<T<Args...> >;
 \end{verbatim}
 
 \subsection{Explicit template argument specification}
@@ -320,9 +251,10 @@ f();              // error: Args cannot be deduced
 \subsection{Partial ordering of variadic class template partial specializations}
 The class template partial specialization partial ordering rules will
 need to be augmented to include partial ordering with variadic
-templates. Intuitively, a binding to a parameter that falls into a
-template's variable-length argument list is weaker than a binding to a
-specified template parameter. For instance, given:
+templates. This is the only deviation from the purely syntactic nature
+of variadic templates. Intuitively, a binding to a parameter that
+falls into a template's variable-length argument list is weaker than a
+binding to a specified template parameter. For instance, given:
 
 \begin{verbatim}
 template<...> struct foo;
@@ -381,7 +313,7 @@ in place. Revisiting the {\tt printf} definition
 
 \begin{verbatim}
 template<typename T, ... Args>
-  void printf(const char*, const T&, Args args);
+  void printf(const char*, const T&, const Args& args);
 \end{verbatim}
 
 and given a call {\tt printf(``\%i:\%f'', 5, 3.14f)}, the type of this
@@ -417,7 +349,7 @@ implementations use several class templates (metafunctions) from the
 type traits proposal~\cite{Maddock03}. Additionally, we use the
 keyword {\tt auto} to make the examples cleaner and easier by omitting
 the messy---but expressible--return types; however, this proposal does
-not depend on the {\tt decltype} proposal~\cite{Jarvi03}.
+not strictly depend on the {\tt decltype} proposal~\cite{Jarvi03}.
 
 \subsection{Building Blocks}
 \label{building_blocks}
@@ -446,19 +378,8 @@ template<...> struct count_args;
 
 template<> struct count_args<> : integral_constant<int, 0> {};
 
-template<typename T1, ... Args> struct count_args<T1, Args>
-  : integral_constant<int, (1 + count_args<Args>::value)> {};
-\end{verbatim}
-\normalsize
-
-Using \texttt{enable\_if} and \texttt{count\_args}, we can achieve
-perfect forwarding for a fixed number of arguments \texttt{N}:
-\small
-\begin{verbatim}
-template<typename Functor, ... Args>
-  typename enable_if<count_args<Args>::value == N, void>::type
-  forwardN(Functor functor, Args args)
-  { return functor(args); }
+template<typename T1, ... Args> struct count_args<T1, Args...>
+  : integral_constant<int, (1 + count_args<Args...>::value)> {};
 \end{verbatim}
 \normalsize
 
@@ -478,22 +399,22 @@ struct mem_fn_adaptor
   mem_fn_adaptor(FunctionType Class::*pmf) : pmf(pmf) {}
   
   template<... Args>
-  result_type operator()(Class& object, Args args) const
-    { return (object.*pmf)(args); }
+  result_type operator()(Class& object, Args... args) const
+    { return (object.*pmf)(args...); }
 
   template<... Args>
-  result_type operator()(const Class& object, Args args) const
-    { return (object.*pmf)(args); }
+  result_type operator()(const Class& object, Args... args) const
+    { return (object.*pmf)(args...); }
 
   template<typename T, ... Args>
   typename enable_if<(!is_base_of<Class, T>::value), result_type>::type
-  operator()(T& ptr, Args args) const
-    { return ((*ptr).*pmf)(args); }
+  operator()(T& ptr, Args... args) const
+    { return ((*ptr).*pmf)(args...); }
 
   template<typename T, ... Args>
   typename enable_if<(!is_base_of<Class, T>::value), result_type>::type
-  operator()(const T& ptr, Args args) const
-    { return ((*ptr).*pmf)(args); }
+  operator()(const T& ptr, Args... args) const
+    { return ((*ptr).*pmf)(args...); }
 
 private:
   FunctionType Class::*pmf;
@@ -560,7 +481,7 @@ class tuple : public tuple_base
 
 public:
   typedef T1 head_type;
-  typedef tuple<Elements> tail_type;
+  typedef tuple<Elements...> tail_type;
 
   static const size_t size = 1 + tail_type::size;
 
@@ -568,10 +489,10 @@ public:
 
   // enable_if condition ensures that we only match if N arguments are given
   template<... Tail> 
-  explicit tuple(typename enable_if<(count_args<Args>::value == size - 1),
+  explicit tuple(typename enable_if<(count_args<Args...>::value == size - 1),
                                     head_param_type>::type head,
-                 Tail tail)
-    : head(head), tail(tail) {}
+                 Tail... tail)
+    : head(head), tail(tail...) {}
 
   // enable_if condition only allows us to attempt implicit conversions
   // from tuples of the appropriate length
@@ -626,46 +547,30 @@ template<typename MetaFun, ... Rest>
     typedef tuple<Rest> type;
   };
 
-// make_tuple implementation
-struct make_tuple_element_type
-{
-  template<typename T> 
-    struct apply
-    {
-      typedef T type;
-    };
+template<typename T>
+  struct make_tuple_element_type
+  {
+    typedef T type;
+  };
 
-  template<typename T>
-    struct apply<T&>
-    {
-      typedef typename remove_cv<T>::type type;
-    };
-
-  template<typename T>
-    struct apply<reference_wrapper<T>&>
-    {
-      typedef T& type;
-    };
-
-  template<typename T>
-    struct apply<const reference_wrapper<T>&>
-    {
-      typedef T& type;
-    };
-};
+template<typename T>
+  struct make_tuple_element_type<reference_wrapper<T> >
+  {
+    typedef T& type;
+  };
 
 template<... Elements> 
-  auto make_tuple(Elements elements)
+  auto make_tuple(const Elements&... elements)
   {
-    typedef typename transform_tuple_type<make_tuple_element_type,
-                                          tuple<Elements> >::type result_type; 
-    return result_type(elements);
+    typedef tuple<typename make_tuple_element_type<Elements>::type...>
+      result_type;
+    return result_type(elements...);
   }
 
 // tie implementation
 template<... Elements>
-  tuple<Elements> tie(Elements elements)
-  { return tuple<Elements>(elements); }
+  tuple<Elements> tie(Elements&... elements)
+  { return tuple<Elements&...>(elements...); }
 \end{verbatim}
 \normalsize
 
@@ -745,8 +650,8 @@ template<typename Function> // Function type R(T1, T2, ..., TN)
     typedef typename function_traits<Function>::argument_types argument_types;
 
     template<typename Functor, ... Args>
-      auto functor_invoker(Args args) const
-      { return (*static_cast<Functor*>(functor))(args); }
+      auto functor_invoker(Args... args) const
+      { return (*static_cast<Functor*>(functor))(args...); }
     
     template<typename Functor> 
       static void* functor_manager(void* ptr, bool clone)
@@ -831,10 +736,10 @@ template<typename Function> // Function type R(T1, T2, ..., TN)
 
     operator bool() const { return invoker; }
 
-    template<... Args> result_type operator()(Args args) const
+    template<... Args> result_type operator()(Args... args) const
     {
       if (!invoker) throw bad_function_call;
-      return (this->*invoker)(args);
+      return (this->*invoker)(args...);
     }
     
     void swap(function& other)
@@ -923,11 +828,11 @@ struct binder
   binder(const F& f, const BoundArgs& bound_args)
     : f(f), bound_args(bound_args) {}
 
-  template<... Args> auto operator()(Args args)
-    { return apply(lambda(f), transform(tie(args), apply_mu(bound_args))); }
+  template<... Args> auto operator()(Args&... args)
+    { return apply(lambda(f), transform(tie(args...), apply_mu(bound_args))); }
 
-  template<... Args> auto operator()(Args args) const
-    { return apply(lambda(f), transform(tie(args), apply_mu(bound_args))); }
+  template<... Args> auto operator()(Args&... args) const
+    { return apply(lambda(f), transform(tie(args...), apply_mu(bound_args))); }
 
 private:
   F f;
@@ -947,17 +852,21 @@ struct is_bind_expression<binder<F, BoundArgs> > : integral_constant<bool, true>
 
 // Bind overload for function objects and function pointers
 template<typename F, ... BoundArgs>
-  auto bind(F f, BoundArgs bound_args)
-  { return make_binder(f, make_tuple(bound_args)); }
+  auto bind(F f, const BoundArgs&... bound_args)
+  { return make_binder(f, make_tuple(bound_args...)); }
 
 // Bind overload for member pointers (both function and data)
 template<typename Class, typename T, ... BoundArgs>
-  auto bind(T Class::*pm, BoundArgs bound_args)
-  { return make_binder(mem_fn(f), make_tuple(bound_args)); }
+  auto bind(T Class::*pm, const BoundArgs&... bound_args)
+  { return make_binder(mem_fn(f), make_tuple(bound_args...)); }
 \end{verbatim}
 \normalsize
 
-\section{Potential extension: More parameter pack deduction}
+\section{Extensions}
+\subsection{First-class parameter packs}
+...
+
+\subsection{More parameter pack deduction}
 One potential extension to this proposal we have considered is to
 allow parameter packs to occur before the end of the template header
 (so that multiple template parameter packs may be declared in a single
@@ -991,6 +900,8 @@ heterogeneous data structure such as a tuple.
 \begin{itemize}
 \item \textbf{Since N1483=03-0066:} 
   \begin{itemize}
+  \item Variadic templates no longer solve the forwarding problem for
+    arguments. 
   \item Parameter packs are no longer tuples; instead, they are a
     typeless entity that may only be declared and unpacked.
   \item Introduced the ability to deduce a template parameter pack
@@ -1001,16 +912,12 @@ heterogeneous data structure such as a tuple.
 \end{itemize}
 
 \section{Acknowledgements}
-Discussions among Daveed Vandevoorde, Dave Abrahams, Mat Marcus, John
-Spicer, and Jaakko J\"arvi resulted in an interesting new syntax for
-unpacking arguments using ``...'', that would unpack parameter packs
-into separate arguments within a function call (or template
-instantiation), e.g., \texttt{f(args...)}. While we have chosen not to
-use this syntax (because unpacking is implicit in this proposal), our
-experiments with this syntax lead us to the realization that
-first-class parameter packs were unnecessary (and, in fact, are
-detrimental).
-
+Discussions among Daveed Vandevoorde, David Abrahams, Mat Marcus, John
+Spicer, and Jaakko J\"arvi resulted in the new syntax for
+unpacking arguments using ``...''. This proposal has been greatly
+improvement with their feedback. David Abrahams noticed that ``...''
+could be used for metaprogramming if it could be applied to constructs
+other than parameter packs. 
 
 \bibliographystyle{abbrv}
 \bibliography{template_varargs}
