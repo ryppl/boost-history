@@ -19,31 +19,34 @@ namespace boost
   namespace tupple
   {
     template < class T0 = null_type, class T1 = null_type, class T2 =
-      null_type, class T3 = null_type, class T4 = null_type, class T5 =
-      null_type, class T6 = null_type, class T7 = null_type, class T8 =
-      null_type, class T9 = null_type > struct tuple
+    null_type, class T3 = null_type, class T4 = null_type, class T5 =
+    null_type, class T6 = null_type, class T7 = null_type, class T8 =
+    null_type, class T9 = null_type >
+    struct tuple
+      {}
+    ;
+    template < class T0 = null_type, class T1 = null_type, class T2 =
+    null_type, class T3 = null_type, class T4 = null_type, class T5 =
+    null_type, class T6 = null_type, class T7 = null_type, class T8 =
+    null_type, class T9 = null_type >
+    struct make_tuple_function
+      {}
+    ;
+
+
+
+
+    struct tuple < null_type, null_type, null_type, null_type, null_type,
+          null_type, null_type, null_type, null_type, null_type >
     {
-    };
-      template < class T0 = null_type, class T1 = null_type, class T2 =
-      null_type, class T3 = null_type, class T4 = null_type, class T5 =
-      null_type, class T6 = null_type, class T7 = null_type, class T8 =
-      null_type, class T9 = null_type > struct make_tuple_function
-    {
-    };
-
-
-
-
-    struct tuple <null_type, null_type, null_type, null_type, null_type,
-      null_type, null_type, null_type, null_type, null_type >
-    {
-      int size(  ) const
+      int size( ) const
       {
         return 0;
       }
     };
-      template < class T0 > struct tuple <T0, null_type, null_type, null_type,
-      null_type, null_type, null_type, null_type, null_type, null_type >
+    template < class T0 >
+    struct tuple < T0, null_type, null_type, null_type,
+          null_type, null_type, null_type, null_type, null_type, null_type >
     {
       typedef T0 type0;
       typedef typename access_traits < T0 >::arg_type arg_type0;
@@ -51,27 +54,25 @@ namespace boost
       typedef typename access_traits < T0 >::const_type const_get_type0;
       typedef tuple < T0 > self_type;
       typedef tuple < null_type > tail_type;
-        tuple(  )
+      tuple( )
+      {}
+      tuple( arg_type0 theM0 ) : m0( theM0 )
+      {}
+      template < class S0 >
+      tuple( const tuple < S0 > &rhs ) : m0( rhs.m0 )
+      {}
+      tuple( arg_type0 theM0, const tail_type & tail ) : m0( theM0 )
+      {}
+      template < class S0 >
+      self_type & operator=( const tuple < S0 > &rhs )
       {
-      }
-      tuple( arg_type0 theM0 ):m0( theM0 )
-      {
-      }
-      template < class S0 > tuple( const tuple < S0 > &rhs ):m0( rhs.m0 )
-      {
-      }
-      tuple( arg_type0 theM0, const tail_type & tail ):m0( theM0 )
-      {
-      }
-      template < class S0 > self_type & operator=( const tuple < S0 > &rhs )
-      {
-        if( this != ( self_type * ) ( &rhs ) )
+        if ( this != ( self_type * ) ( &rhs ) )
         {
           m0 = rhs.m0;
         }
         return *this;
       }
-      int size(  ) const
+      int size( ) const
       {
         return 1;
       }
@@ -79,47 +80,48 @@ namespace boost
       {
         std::swap( m0, rhs.m0 );
       }
-      get_type0 head(  )
+      get_type0 head( )
       {
         return m0;
       }
-      const_get_type0 head(  ) const
+      const_get_type0 head( ) const
       {
         return m0;
       }
-      tail_type tail(  ) const
+      tail_type tail( ) const
       {
-        return tail_type(  );
+        return tail_type( );
       }
-      get_type0 front(  )
-      {
-        return m0;
-      }
-      const_get_type0 front(  ) const
+      get_type0 front( )
       {
         return m0;
       }
-      get_type0 back(  )
+      const_get_type0 front( ) const
       {
         return m0;
       }
-      const_get_type0 back(  ) const
+      get_type0 back( )
       {
         return m0;
       }
-      const_get_type0 get0(  ) const
+      const_get_type0 back( ) const
       {
         return m0;
       }
-      get_type0 get0(  )
+      const_get_type0 get0( ) const
+      {
+        return m0;
+      }
+      get_type0 get0( )
       {
         return m0;
       }
       T0 m0;
     };
-    template < class T0, class T1 > struct tuple <T0, T1, null_type,
-      null_type, null_type, null_type, null_type, null_type, null_type,
-      null_type >
+    template < class T0, class T1 >
+    struct tuple < T0, T1, null_type,
+          null_type, null_type, null_type, null_type, null_type, null_type,
+          null_type >
     {
       typedef T0 type0;
       typedef T1 type1;
@@ -131,25 +133,23 @@ namespace boost
       typedef typename access_traits < T1 >::const_type const_get_type1;
       typedef tuple < T0, T1 > self_type;
       typedef tuple < T1 > tail_type;
-        tuple(  )
+      tuple( )
+      {}
+      tuple( arg_type0 theM0, arg_type1 theM1 ) : m0( theM0 ), m1( theM1 )
+      {}
+      template < class S0, class S1 >
+      tuple( const tuple < S0,
+             S1 > &rhs ) : m0( rhs.m0 ),
+          m1( rhs.m1 )
+      {}
+      tuple( arg_type0 theM0, const tail_type & tail ) : m0( theM0 ),
+          m1( tail.m0 )
+      {}
+      template < class S0,
+      class S1 >
+      self_type & operator=( const tuple < S0, S1 > &rhs )
       {
-      }
-      tuple( arg_type0 theM0, arg_type1 theM1 ):m0( theM0 ), m1( theM1 )
-      {
-      }
-      template < class S0, class S1 > tuple( const tuple < S0,
-                                             S1 > &rhs ):m0( rhs.m0 ),
-        m1( rhs.m1 )
-      {
-      }
-      tuple( arg_type0 theM0, const tail_type & tail ):m0( theM0 ),
-        m1( tail.m0 )
-      {
-      }
-      template < class S0, class S1 > self_type & operator=( const tuple < S0,
-                                                             S1 > &rhs )
-      {
-        if( this != ( self_type * ) ( &rhs ) )
+        if ( this != ( self_type * ) ( &rhs ) )
         {
           m0 = rhs.m0;
           m1 = rhs.m1;
@@ -157,13 +157,14 @@ namespace boost
         return *this;
       }
       template < class U1,
-        class U2 > self_type & operator=( const std::pair < U1, U2 > &p )
+      class U2 >
+      self_type & operator=( const std::pair < U1, U2 > &p )
       {
         m0 = p.first;
         m1 = p.second;
         return *this;
       }
-      int size(  ) const
+      int size( ) const
       {
         return 2;
       }
@@ -172,56 +173,57 @@ namespace boost
         std::swap( m0, rhs.m0 );
         std::swap( m1, rhs.m1 );
       }
-      get_type0 head(  )
+      get_type0 head( )
       {
         return m0;
       }
-      const_get_type0 head(  ) const
+      const_get_type0 head( ) const
       {
         return m0;
       }
-      tail_type tail(  ) const
+      tail_type tail( ) const
       {
         return tail_type( m1 );
       }
-      get_type0 front(  )
+      get_type0 front( )
       {
         return m0;
       }
-      const_get_type0 front(  ) const
+      const_get_type0 front( ) const
       {
         return m0;
       }
-      get_type1 back(  )
+      get_type1 back( )
       {
         return m1;
       }
-      const_get_type1 back(  ) const
+      const_get_type1 back( ) const
       {
         return m1;
       }
-      const_get_type0 get0(  ) const
+      const_get_type0 get0( ) const
       {
         return m0;
       }
-      const_get_type1 get1(  ) const
+      const_get_type1 get1( ) const
       {
         return m1;
       }
-      get_type0 get0(  )
+      get_type0 get0( )
       {
         return m0;
       }
-      get_type1 get1(  )
+      get_type1 get1( )
       {
         return m1;
       }
       T0 m0;
       T1 m1;
     };
-    template < class T0, class T1, class T2 > struct tuple <T0, T1, T2,
-      null_type, null_type, null_type, null_type, null_type, null_type,
-      null_type >
+    template < class T0, class T1, class T2 >
+    struct tuple < T0, T1, T2,
+          null_type, null_type, null_type, null_type, null_type, null_type,
+          null_type >
     {
       typedef T0 type0;
       typedef T1 type1;
@@ -237,27 +239,25 @@ namespace boost
       typedef typename access_traits < T2 >::const_type const_get_type2;
       typedef tuple < T0, T1, T2 > self_type;
       typedef tuple < T1, T2 > tail_type;
-        tuple(  )
-      {
-      }
-      tuple( arg_type0 theM0, arg_type1 theM1, arg_type2 theM2 ):m0( theM0 ),
-        m1( theM1 ), m2( theM2 )
-      {
-      }
-      template < class S0, class S1, class S2 > tuple( const tuple < S0, S1,
-                                                       S2 >
-                                                       &rhs ):m0( rhs.m0 ),
-        m1( rhs.m1 ), m2( rhs.m2 )
-      {
-      }
-      tuple( arg_type0 theM0, const tail_type & tail ):m0( theM0 ),
-        m1( tail.m0 ), m2( tail.m1 )
-      {
-      }
+      tuple( )
+      {}
+      tuple( arg_type0 theM0, arg_type1 theM1,
+             arg_type2 theM2 ) : m0( theM0 ), m1( theM1 ), m2( theM2 )
+      {}
+      template < class S0, class S1, class S2 >
+      tuple( const tuple < S0, S1,
+             S2 >
+             &rhs ) : m0( rhs.m0 ),
+          m1( rhs.m1 ), m2( rhs.m2 )
+      {}
+      tuple( arg_type0 theM0, const tail_type & tail ) : m0( theM0 ),
+          m1( tail.m0 ), m2( tail.m1 )
+      {}
       template < class S0, class S1,
-        class S2 > self_type & operator=( const tuple < S0, S1, S2 > &rhs )
+      class S2 >
+      self_type & operator=( const tuple < S0, S1, S2 > &rhs )
       {
-        if( this != ( self_type * ) ( &rhs ) )
+        if ( this != ( self_type * ) ( &rhs ) )
         {
           m0 = rhs.m0;
           m1 = rhs.m1;
@@ -265,7 +265,7 @@ namespace boost
         }
         return *this;
       }
-      int size(  ) const
+      int size( ) const
       {
         return 3;
       }
@@ -275,55 +275,55 @@ namespace boost
         std::swap( m1, rhs.m1 );
         std::swap( m2, rhs.m2 );
       }
-      get_type0 head(  )
+      get_type0 head( )
       {
         return m0;
       }
-      const_get_type0 head(  ) const
+      const_get_type0 head( ) const
       {
         return m0;
       }
-      tail_type tail(  ) const
+      tail_type tail( ) const
       {
         return tail_type( m1, m2 );
       }
-      get_type0 front(  )
+      get_type0 front( )
       {
         return m0;
       }
-      const_get_type0 front(  ) const
+      const_get_type0 front( ) const
       {
         return m0;
       }
-      get_type2 back(  )
+      get_type2 back( )
       {
         return m2;
       }
-      const_get_type2 back(  ) const
+      const_get_type2 back( ) const
       {
         return m2;
       }
-      const_get_type0 get0(  ) const
+      const_get_type0 get0( ) const
       {
         return m0;
       }
-      const_get_type1 get1(  ) const
+      const_get_type1 get1( ) const
       {
         return m1;
       }
-      const_get_type2 get2(  ) const
+      const_get_type2 get2( ) const
       {
         return m2;
       }
-      get_type0 get0(  )
+      get_type0 get0( )
       {
         return m0;
       }
-      get_type1 get1(  )
+      get_type1 get1( )
       {
         return m1;
       }
-      get_type2 get2(  )
+      get_type2 get2( )
       {
         return m2;
       }
@@ -331,9 +331,10 @@ namespace boost
       T1 m1;
       T2 m2;
     };
-    template < class T0, class T1, class T2, class T3 > struct tuple <T0, T1,
-      T2, T3, null_type, null_type, null_type, null_type, null_type,
-      null_type >
+    template < class T0, class T1, class T2, class T3 >
+    struct tuple < T0, T1,
+          T2, T3, null_type, null_type, null_type, null_type, null_type,
+          null_type >
     {
       typedef T0 type0;
       typedef T1 type1;
@@ -353,28 +354,26 @@ namespace boost
       typedef typename access_traits < T3 >::const_type const_get_type3;
       typedef tuple < T0, T1, T2, T3 > self_type;
       typedef tuple < T1, T2, T3 > tail_type;
-        tuple(  )
-      {
-      }
+      tuple( )
+      {}
       tuple( arg_type0 theM0, arg_type1 theM1, arg_type2 theM2,
-             arg_type3 theM3 ):m0( theM0 ), m1( theM1 ), m2( theM2 ),
-        m3( theM3 )
-      {
-      }
+             arg_type3 theM3 ) : m0( theM0 ), m1( theM1 ), m2( theM2 ),
+          m3( theM3 )
+      {}
       template < class S0, class S1, class S2,
-        class S3 > tuple( const tuple < S0, S1, S2, S3 > &rhs ):m0( rhs.m0 ),
-        m1( rhs.m1 ), m2( rhs.m2 ), m3( rhs.m3 )
-      {
-      }
-      tuple( arg_type0 theM0, const tail_type & tail ):m0( theM0 ),
-        m1( tail.m0 ), m2( tail.m1 ), m3( tail.m2 )
-      {
-      }
+      class S3 >
+      tuple( const tuple < S0, S1, S2, S3 > &rhs ) : m0( rhs.m0 ),
+          m1( rhs.m1 ), m2( rhs.m2 ), m3( rhs.m3 )
+      {}
+      tuple( arg_type0 theM0, const tail_type & tail ) : m0( theM0 ),
+          m1( tail.m0 ), m2( tail.m1 ), m3( tail.m2 )
+      {}
       template < class S0, class S1, class S2,
-        class S3 > self_type & operator=( const tuple < S0, S1, S2,
-                                          S3 > &rhs )
+      class S3 >
+      self_type & operator=( const tuple < S0, S1, S2,
+                             S3 > &rhs )
       {
-        if( this != ( self_type * ) ( &rhs ) )
+        if ( this != ( self_type * ) ( &rhs ) )
         {
           m0 = rhs.m0;
           m1 = rhs.m1;
@@ -383,7 +382,7 @@ namespace boost
         }
         return *this;
       }
-      int size(  ) const
+      int size( ) const
       {
         return 4;
       }
@@ -394,63 +393,63 @@ namespace boost
         std::swap( m2, rhs.m2 );
         std::swap( m3, rhs.m3 );
       }
-      get_type0 head(  )
+      get_type0 head( )
       {
         return m0;
       }
-      const_get_type0 head(  ) const
+      const_get_type0 head( ) const
       {
         return m0;
       }
-      tail_type tail(  ) const
+      tail_type tail( ) const
       {
         return tail_type( m1, m2, m3 );
       }
-      get_type0 front(  )
+      get_type0 front( )
       {
         return m0;
       }
-      const_get_type0 front(  ) const
+      const_get_type0 front( ) const
       {
         return m0;
       }
-      get_type3 back(  )
+      get_type3 back( )
       {
         return m3;
       }
-      const_get_type3 back(  ) const
+      const_get_type3 back( ) const
       {
         return m3;
       }
-      const_get_type0 get0(  ) const
+      const_get_type0 get0( ) const
       {
         return m0;
       }
-      const_get_type1 get1(  ) const
+      const_get_type1 get1( ) const
       {
         return m1;
       }
-      const_get_type2 get2(  ) const
+      const_get_type2 get2( ) const
       {
         return m2;
       }
-      const_get_type3 get3(  ) const
+      const_get_type3 get3( ) const
       {
         return m3;
       }
-      get_type0 get0(  )
+      get_type0 get0( )
       {
         return m0;
       }
-      get_type1 get1(  )
+      get_type1 get1( )
       {
         return m1;
       }
-      get_type2 get2(  )
+      get_type2 get2( )
       {
         return m2;
       }
-      get_type3 get3(  )
+      get_type3 get3( )
       {
         return m3;
       }
@@ -460,8 +459,9 @@ namespace boost
       T3 m3;
     };
     template < class T0, class T1, class T2, class T3,
-      class T4 > struct tuple <T0, T1, T2, T3, T4, null_type, null_type,
-      null_type, null_type, null_type >
+    class T4 >
+    struct tuple < T0, T1, T2, T3, T4, null_type, null_type,
+          null_type, null_type, null_type >
     {
       typedef T0 type0;
       typedef T1 type1;
@@ -485,29 +485,27 @@ namespace boost
       typedef typename access_traits < T4 >::const_type const_get_type4;
       typedef tuple < T0, T1, T2, T3, T4 > self_type;
       typedef tuple < T1, T2, T3, T4 > tail_type;
-        tuple(  )
-      {
-      }
+      tuple( )
+      {}
       tuple( arg_type0 theM0, arg_type1 theM1, arg_type2 theM2,
-             arg_type3 theM3, arg_type4 theM4 ):m0( theM0 ), m1( theM1 ),
-        m2( theM2 ), m3( theM3 ), m4( theM4 )
-      {
-      }
+             arg_type3 theM3, arg_type4 theM4 ) : m0( theM0 ), m1( theM1 ),
+          m2( theM2 ), m3( theM3 ), m4( theM4 )
+      {}
       template < class S0, class S1, class S2, class S3,
-        class S4 > tuple( const tuple < S0, S1, S2, S3,
-                          S4 > &rhs ):m0( rhs.m0 ), m1( rhs.m1 ),
-        m2( rhs.m2 ), m3( rhs.m3 ), m4( rhs.m4 )
-      {
-      }
-      tuple( arg_type0 theM0, const tail_type & tail ):m0( theM0 ),
-        m1( tail.m0 ), m2( tail.m1 ), m3( tail.m2 ), m4( tail.m3 )
-      {
-      }
+      class S4 >
+      tuple( const tuple < S0, S1, S2, S3,
+             S4 > &rhs ) : m0( rhs.m0 ), m1( rhs.m1 ),
+          m2( rhs.m2 ), m3( rhs.m3 ), m4( rhs.m4 )
+      {}
+      tuple( arg_type0 theM0, const tail_type & tail ) : m0( theM0 ),
+          m1( tail.m0 ), m2( tail.m1 ), m3( tail.m2 ), m4( tail.m3 )
+      {}
       template < class S0, class S1, class S2, class S3,
-        class S4 > self_type & operator=( const tuple < S0, S1, S2, S3,
-                                          S4 > &rhs )
+      class S4 >
+      self_type & operator=( const tuple < S0, S1, S2, S3,
+                             S4 > &rhs )
       {
-        if( this != ( self_type * ) ( &rhs ) )
+        if ( this != ( self_type * ) ( &rhs ) )
         {
           m0 = rhs.m0;
           m1 = rhs.m1;
@@ -517,7 +515,7 @@ namespace boost
         }
         return *this;
       }
-      int size(  ) const
+      int size( ) const
       {
         return 5;
       }
@@ -529,71 +527,71 @@ namespace boost
         std::swap( m3, rhs.m3 );
         std::swap( m4, rhs.m4 );
       }
-      get_type0 head(  )
+      get_type0 head( )
       {
         return m0;
       }
-      const_get_type0 head(  ) const
+      const_get_type0 head( ) const
       {
         return m0;
       }
-      tail_type tail(  ) const
+      tail_type tail( ) const
       {
         return tail_type( m1, m2, m3, m4 );
       }
-      get_type0 front(  )
+      get_type0 front( )
       {
         return m0;
       }
-      const_get_type0 front(  ) const
+      const_get_type0 front( ) const
       {
         return m0;
       }
-      get_type4 back(  )
+      get_type4 back( )
       {
         return m4;
       }
-      const_get_type4 back(  ) const
+      const_get_type4 back( ) const
       {
         return m4;
       }
-      const_get_type0 get0(  ) const
+      const_get_type0 get0( ) const
       {
         return m0;
       }
-      const_get_type1 get1(  ) const
+      const_get_type1 get1( ) const
       {
         return m1;
       }
-      const_get_type2 get2(  ) const
+      const_get_type2 get2( ) const
       {
         return m2;
       }
-      const_get_type3 get3(  ) const
+      const_get_type3 get3( ) const
       {
         return m3;
       }
-      const_get_type4 get4(  ) const
+      const_get_type4 get4( ) const
       {
         return m4;
       }
-      get_type0 get0(  )
+      get_type0 get0( )
       {
         return m0;
       }
-      get_type1 get1(  )
+      get_type1 get1( )
       {
         return m1;
       }
-      get_type2 get2(  )
+      get_type2 get2( )
       {
         return m2;
       }
-      get_type3 get3(  )
+      get_type3 get3( )
       {
         return m3;
       }
-      get_type4 get4(  )
+      get_type4 get4( )
       {
         return m4;
       }
@@ -604,8 +602,9 @@ namespace boost
       T4 m4;
     };
     template < class T0, class T1, class T2, class T3, class T4,
-      class T5 > struct tuple <T0, T1, T2, T3, T4, T5, null_type, null_type,
-      null_type, null_type >
+    class T5 >
+    struct tuple < T0, T1, T2, T3, T4, T5, null_type, null_type,
+          null_type, null_type >
     {
       typedef T0 type0;
       typedef T1 type1;
@@ -633,30 +632,29 @@ namespace boost
       typedef typename access_traits < T5 >::const_type const_get_type5;
       typedef tuple < T0, T1, T2, T3, T4, T5 > self_type;
       typedef tuple < T1, T2, T3, T4, T5 > tail_type;
-        tuple(  )
-      {
-      }
+      tuple( )
+      {}
       tuple( arg_type0 theM0, arg_type1 theM1, arg_type2 theM2,
-             arg_type3 theM3, arg_type4 theM4, arg_type5 theM5 ):m0( theM0 ),
-        m1( theM1 ), m2( theM2 ), m3( theM3 ), m4( theM4 ), m5( theM5 )
-      {
-      }
+             arg_type3 theM3, arg_type4 theM4,
+             arg_type5 theM5 ) : m0( theM0 ), m1( theM1 ), m2( theM2 ),
+          m3( theM3 ), m4( theM4 ), m5( theM5 )
+      {}
       template < class S0, class S1, class S2, class S3, class S4,
-        class S5 > tuple( const tuple < S0, S1, S2, S3, S4,
-                          S5 > &rhs ):m0( rhs.m0 ), m1( rhs.m1 ),
-        m2( rhs.m2 ), m3( rhs.m3 ), m4( rhs.m4 ), m5( rhs.m5 )
-      {
-      }
-      tuple( arg_type0 theM0, const tail_type & tail ):m0( theM0 ),
-        m1( tail.m0 ), m2( tail.m1 ), m3( tail.m2 ), m4( tail.m3 ),
-        m5( tail.m4 )
-      {
-      }
+      class S5 >
+      tuple( const tuple < S0, S1, S2, S3, S4,
+             S5 > &rhs ) : m0( rhs.m0 ), m1( rhs.m1 ),
+          m2( rhs.m2 ), m3( rhs.m3 ), m4( rhs.m4 ), m5( rhs.m5 )
+      {}
+      tuple( arg_type0 theM0, const tail_type & tail ) : m0( theM0 ),
+          m1( tail.m0 ), m2( tail.m1 ), m3( tail.m2 ), m4( tail.m3 ),
+          m5( tail.m4 )
+      {}
       template < class S0, class S1, class S2, class S3, class S4,
-        class S5 > self_type & operator=( const tuple < S0, S1, S2, S3, S4,
-                                          S5 > &rhs )
+      class S5 >
+      self_type & operator=( const tuple < S0, S1, S2, S3, S4,
+                             S5 > &rhs )
       {
-        if( this != ( self_type * ) ( &rhs ) )
+        if ( this != ( self_type * ) ( &rhs ) )
         {
           m0 = rhs.m0;
           m1 = rhs.m1;
@@ -667,7 +665,7 @@ namespace boost
         }
         return *this;
       }
-      int size(  ) const
+      int size( ) const
       {
         return 6;
       }
@@ -680,79 +678,79 @@ namespace boost
         std::swap( m4, rhs.m4 );
         std::swap( m5, rhs.m5 );
       }
-      get_type0 head(  )
+      get_type0 head( )
       {
         return m0;
       }
-      const_get_type0 head(  ) const
+      const_get_type0 head( ) const
       {
         return m0;
       }
-      tail_type tail(  ) const
+      tail_type tail( ) const
       {
         return tail_type( m1, m2, m3, m4, m5 );
       }
-      get_type0 front(  )
+      get_type0 front( )
       {
         return m0;
       }
-      const_get_type0 front(  ) const
+      const_get_type0 front( ) const
       {
         return m0;
       }
-      get_type5 back(  )
+      get_type5 back( )
       {
         return m5;
       }
-      const_get_type5 back(  ) const
+      const_get_type5 back( ) const
       {
         return m5;
       }
-      const_get_type0 get0(  ) const
+      const_get_type0 get0( ) const
       {
         return m0;
       }
-      const_get_type1 get1(  ) const
+      const_get_type1 get1( ) const
       {
         return m1;
       }
-      const_get_type2 get2(  ) const
+      const_get_type2 get2( ) const
       {
         return m2;
       }
-      const_get_type3 get3(  ) const
+      const_get_type3 get3( ) const
       {
         return m3;
       }
-      const_get_type4 get4(  ) const
+      const_get_type4 get4( ) const
       {
         return m4;
       }
-      const_get_type5 get5(  ) const
+      const_get_type5 get5( ) const
       {
         return m5;
       }
-      get_type0 get0(  )
+      get_type0 get0( )
       {
         return m0;
       }
-      get_type1 get1(  )
+      get_type1 get1( )
       {
         return m1;
       }
-      get_type2 get2(  )
+      get_type2 get2( )
       {
         return m2;
       }
-      get_type3 get3(  )
+      get_type3 get3( )
       {
         return m3;
       }
-      get_type4 get4(  )
+      get_type4 get4( )
       {
         return m4;
       }
-      get_type5 get5(  )
+      get_type5 get5( )
       {
         return m5;
       }
@@ -764,8 +762,9 @@ namespace boost
       T5 m5;
     };
     template < class T0, class T1, class T2, class T3, class T4, class T5,
-      class T6 > struct tuple <T0, T1, T2, T3, T4, T5, T6, null_type,
-      null_type, null_type >
+    class T6 >
+    struct tuple < T0, T1, T2, T3, T4, T5, T6, null_type,
+          null_type, null_type >
     {
       typedef T0 type0;
       typedef T1 type1;
@@ -797,31 +796,29 @@ namespace boost
       typedef typename access_traits < T6 >::const_type const_get_type6;
       typedef tuple < T0, T1, T2, T3, T4, T5, T6 > self_type;
       typedef tuple < T1, T2, T3, T4, T5, T6 > tail_type;
-        tuple(  )
-      {
-      }
+      tuple( )
+      {}
       tuple( arg_type0 theM0, arg_type1 theM1, arg_type2 theM2,
              arg_type3 theM3, arg_type4 theM4, arg_type5 theM5,
-             arg_type6 theM6 ):m0( theM0 ), m1( theM1 ), m2( theM2 ),
-        m3( theM3 ), m4( theM4 ), m5( theM5 ), m6( theM6 )
-      {
-      }
+             arg_type6 theM6 ) : m0( theM0 ), m1( theM1 ), m2( theM2 ),
+          m3( theM3 ), m4( theM4 ), m5( theM5 ), m6( theM6 )
+      {}
       template < class S0, class S1, class S2, class S3, class S4, class S5,
-        class S6 > tuple( const tuple < S0, S1, S2, S3, S4, S5,
-                          S6 > &rhs ):m0( rhs.m0 ), m1( rhs.m1 ),
-        m2( rhs.m2 ), m3( rhs.m3 ), m4( rhs.m4 ), m5( rhs.m5 ), m6( rhs.m6 )
-      {
-      }
-      tuple( arg_type0 theM0, const tail_type & tail ):m0( theM0 ),
-        m1( tail.m0 ), m2( tail.m1 ), m3( tail.m2 ), m4( tail.m3 ),
-        m5( tail.m4 ), m6( tail.m5 )
-      {
-      }
+      class S6 >
+      tuple( const tuple < S0, S1, S2, S3, S4, S5,
+             S6 > &rhs ) : m0( rhs.m0 ), m1( rhs.m1 ),
+          m2( rhs.m2 ), m3( rhs.m3 ), m4( rhs.m4 ), m5( rhs.m5 ), m6( rhs.m6 )
+      {}
+      tuple( arg_type0 theM0, const tail_type & tail ) : m0( theM0 ),
+          m1( tail.m0 ), m2( tail.m1 ), m3( tail.m2 ), m4( tail.m3 ),
+          m5( tail.m4 ), m6( tail.m5 )
+      {}
       template < class S0, class S1, class S2, class S3, class S4, class S5,
-        class S6 > self_type & operator=( const tuple < S0, S1, S2, S3, S4,
-                                          S5, S6 > &rhs )
+      class S6 >
+      self_type & operator=( const tuple < S0, S1, S2, S3, S4,
+                             S5, S6 > &rhs )
       {
-        if( this != ( self_type * ) ( &rhs ) )
+        if ( this != ( self_type * ) ( &rhs ) )
         {
           m0 = rhs.m0;
           m1 = rhs.m1;
@@ -833,7 +830,7 @@ namespace boost
         }
         return *this;
       }
-      int size(  ) const
+      int size( ) const
       {
         return 7;
       }
@@ -847,87 +844,87 @@ namespace boost
         std::swap( m5, rhs.m5 );
         std::swap( m6, rhs.m6 );
       }
-      get_type0 head(  )
+      get_type0 head( )
       {
         return m0;
       }
-      const_get_type0 head(  ) const
+      const_get_type0 head( ) const
       {
         return m0;
       }
-      tail_type tail(  ) const
+      tail_type tail( ) const
       {
         return tail_type( m1, m2, m3, m4, m5, m6 );
       }
-      get_type0 front(  )
+      get_type0 front( )
       {
         return m0;
       }
-      const_get_type0 front(  ) const
+      const_get_type0 front( ) const
       {
         return m0;
       }
-      get_type6 back(  )
+      get_type6 back( )
       {
         return m6;
       }
-      const_get_type6 back(  ) const
+      const_get_type6 back( ) const
       {
         return m6;
       }
-      const_get_type0 get0(  ) const
+      const_get_type0 get0( ) const
       {
         return m0;
       }
-      const_get_type1 get1(  ) const
+      const_get_type1 get1( ) const
       {
         return m1;
       }
-      const_get_type2 get2(  ) const
+      const_get_type2 get2( ) const
       {
         return m2;
       }
-      const_get_type3 get3(  ) const
+      const_get_type3 get3( ) const
       {
         return m3;
       }
-      const_get_type4 get4(  ) const
+      const_get_type4 get4( ) const
       {
         return m4;
       }
-      const_get_type5 get5(  ) const
+      const_get_type5 get5( ) const
       {
         return m5;
       }
-      const_get_type6 get6(  ) const
+      const_get_type6 get6( ) const
       {
         return m6;
       }
-      get_type0 get0(  )
+      get_type0 get0( )
       {
         return m0;
       }
-      get_type1 get1(  )
+      get_type1 get1( )
       {
         return m1;
       }
-      get_type2 get2(  )
+      get_type2 get2( )
       {
         return m2;
       }
-      get_type3 get3(  )
+      get_type3 get3( )
       {
         return m3;
       }
-      get_type4 get4(  )
+      get_type4 get4( )
       {
         return m4;
       }
-      get_type5 get5(  )
+      get_type5 get5( )
       {
         return m5;
       }
-      get_type6 get6(  )
+      get_type6 get6( )
       {
         return m6;
       }
@@ -940,8 +937,9 @@ namespace boost
       T6 m6;
     };
     template < class T0, class T1, class T2, class T3, class T4, class T5,
-      class T6, class T7 > struct tuple <T0, T1, T2, T3, T4, T5, T6, T7,
-      null_type, null_type >
+    class T6, class T7 >
+    struct tuple < T0, T1, T2, T3, T4, T5, T6, T7,
+          null_type, null_type >
     {
       typedef T0 type0;
       typedef T1 type1;
@@ -977,34 +975,32 @@ namespace boost
       typedef typename access_traits < T7 >::const_type const_get_type7;
       typedef tuple < T0, T1, T2, T3, T4, T5, T6, T7 > self_type;
       typedef tuple < T1, T2, T3, T4, T5, T6, T7 > tail_type;
-        tuple(  )
-      {
-      }
+      tuple( )
+      {}
       tuple( arg_type0 theM0, arg_type1 theM1, arg_type2 theM2,
              arg_type3 theM3, arg_type4 theM4, arg_type5 theM5,
-             arg_type6 theM6, arg_type7 theM7 ):m0( theM0 ), m1( theM1 ),
-        m2( theM2 ), m3( theM3 ), m4( theM4 ), m5( theM5 ), m6( theM6 ),
-        m7( theM7 )
-      {
-      }
+             arg_type6 theM6, arg_type7 theM7 ) : m0( theM0 ), m1( theM1 ),
+          m2( theM2 ), m3( theM3 ), m4( theM4 ), m5( theM5 ), m6( theM6 ),
+          m7( theM7 )
+      {}
       template < class S0, class S1, class S2, class S3, class S4, class S5,
-        class S6, class S7 > tuple( const tuple < S0, S1, S2, S3, S4, S5, S6,
-                                    S7 > &rhs ):m0( rhs.m0 ), m1( rhs.m1 ),
-        m2( rhs.m2 ), m3( rhs.m3 ), m4( rhs.m4 ), m5( rhs.m5 ), m6( rhs.m6 ),
-        m7( rhs.m7 )
-      {
-      }
-      tuple( arg_type0 theM0, const tail_type & tail ):m0( theM0 ),
-        m1( tail.m0 ), m2( tail.m1 ), m3( tail.m2 ), m4( tail.m3 ),
-        m5( tail.m4 ), m6( tail.m5 ), m7( tail.m6 )
-      {
-      }
+      class S6, class S7 >
+      tuple( const tuple < S0, S1, S2, S3, S4, S5, S6,
+             S7 > &rhs ) : m0( rhs.m0 ), m1( rhs.m1 ),
+          m2( rhs.m2 ), m3( rhs.m3 ), m4( rhs.m4 ), m5( rhs.m5 ), m6( rhs.m6 ),
+          m7( rhs.m7 )
+      {}
+      tuple( arg_type0 theM0, const tail_type & tail ) : m0( theM0 ),
+          m1( tail.m0 ), m2( tail.m1 ), m3( tail.m2 ), m4( tail.m3 ),
+          m5( tail.m4 ), m6( tail.m5 ), m7( tail.m6 )
+      {}
       template < class S0, class S1, class S2, class S3, class S4, class S5,
-        class S6, class S7 > self_type & operator=( const tuple < S0, S1, S2,
-                                                    S3, S4, S5, S6,
-                                                    S7 > &rhs )
+      class S6, class S7 >
+      self_type & operator=( const tuple < S0, S1, S2,
+                             S3, S4, S5, S6,
+                             S7 > &rhs )
       {
-        if( this != ( self_type * ) ( &rhs ) )
+        if ( this != ( self_type * ) ( &rhs ) )
         {
           m0 = rhs.m0;
           m1 = rhs.m1;
@@ -1017,7 +1013,7 @@ namespace boost
         }
         return *this;
       }
-      int size(  ) const
+      int size( ) const
       {
         return 8;
       }
@@ -1032,95 +1028,95 @@ namespace boost
         std::swap( m6, rhs.m6 );
         std::swap( m7, rhs.m7 );
       }
-      get_type0 head(  )
+      get_type0 head( )
       {
         return m0;
       }
-      const_get_type0 head(  ) const
+      const_get_type0 head( ) const
       {
         return m0;
       }
-      tail_type tail(  ) const
+      tail_type tail( ) const
       {
         return tail_type( m1, m2, m3, m4, m5, m6, m7 );
       }
-      get_type0 front(  )
+      get_type0 front( )
       {
         return m0;
       }
-      const_get_type0 front(  ) const
+      const_get_type0 front( ) const
       {
         return m0;
       }
-      get_type7 back(  )
+      get_type7 back( )
       {
         return m7;
       }
-      const_get_type7 back(  ) const
+      const_get_type7 back( ) const
       {
         return m7;
       }
-      const_get_type0 get0(  ) const
+      const_get_type0 get0( ) const
       {
         return m0;
       }
-      const_get_type1 get1(  ) const
+      const_get_type1 get1( ) const
       {
         return m1;
       }
-      const_get_type2 get2(  ) const
+      const_get_type2 get2( ) const
       {
         return m2;
       }
-      const_get_type3 get3(  ) const
+      const_get_type3 get3( ) const
       {
         return m3;
       }
-      const_get_type4 get4(  ) const
+      const_get_type4 get4( ) const
       {
         return m4;
       }
-      const_get_type5 get5(  ) const
+      const_get_type5 get5( ) const
       {
         return m5;
       }
-      const_get_type6 get6(  ) const
+      const_get_type6 get6( ) const
       {
         return m6;
       }
-      const_get_type7 get7(  ) const
+      const_get_type7 get7( ) const
       {
         return m7;
       }
-      get_type0 get0(  )
+      get_type0 get0( )
       {
         return m0;
       }
-      get_type1 get1(  )
+      get_type1 get1( )
       {
         return m1;
       }
-      get_type2 get2(  )
+      get_type2 get2( )
       {
         return m2;
       }
-      get_type3 get3(  )
+      get_type3 get3( )
       {
         return m3;
       }
-      get_type4 get4(  )
+      get_type4 get4( )
       {
         return m4;
       }
-      get_type5 get5(  )
+      get_type5 get5( )
       {
         return m5;
       }
-      get_type6 get6(  )
+      get_type6 get6( )
       {
         return m6;
       }
-      get_type7 get7(  )
+      get_type7 get7( )
       {
         return m7;
       }
@@ -1134,8 +1130,9 @@ namespace boost
       T7 m7;
     };
     template < class T0, class T1, class T2, class T3, class T4, class T5,
-      class T6, class T7, class T8 > struct tuple <T0, T1, T2, T3, T4, T5, T6,
-      T7, T8, null_type >
+    class T6, class T7, class T8 >
+    struct tuple < T0, T1, T2, T3, T4, T5, T6,
+          T7, T8, null_type >
     {
       typedef T0 type0;
       typedef T1 type1;
@@ -1175,35 +1172,34 @@ namespace boost
       typedef typename access_traits < T8 >::const_type const_get_type8;
       typedef tuple < T0, T1, T2, T3, T4, T5, T6, T7, T8 > self_type;
       typedef tuple < T1, T2, T3, T4, T5, T6, T7, T8 > tail_type;
-        tuple(  )
-      {
-      }
+      tuple( )
+      {}
       tuple( arg_type0 theM0, arg_type1 theM1, arg_type2 theM2,
              arg_type3 theM3, arg_type4 theM4, arg_type5 theM5,
-             arg_type6 theM6, arg_type7 theM7, arg_type8 theM8 ):m0( theM0 ),
-        m1( theM1 ), m2( theM2 ), m3( theM3 ), m4( theM4 ), m5( theM5 ),
-        m6( theM6 ), m7( theM7 ), m8( theM8 )
-      {
-      }
+             arg_type6 theM6, arg_type7 theM7,
+             arg_type8 theM8 ) : m0( theM0 ), m1( theM1 ), m2( theM2 ),
+          m3( theM3 ), m4( theM4 ), m5( theM5 ), m6( theM6 ), m7( theM7 ),
+          m8( theM8 )
+      {}
       template < class S0, class S1, class S2, class S3, class S4, class S5,
-        class S6, class S7, class S8 > tuple( const tuple < S0, S1, S2, S3,
-                                              S4, S5, S6, S7,
-                                              S8 > &rhs ):m0( rhs.m0 ),
-        m1( rhs.m1 ), m2( rhs.m2 ), m3( rhs.m3 ), m4( rhs.m4 ), m5( rhs.m5 ),
-        m6( rhs.m6 ), m7( rhs.m7 ), m8( rhs.m8 )
-      {
-      }
-      tuple( arg_type0 theM0, const tail_type & tail ):m0( theM0 ),
-        m1( tail.m0 ), m2( tail.m1 ), m3( tail.m2 ), m4( tail.m3 ),
-        m5( tail.m4 ), m6( tail.m5 ), m7( tail.m6 ), m8( tail.m7 )
-      {
-      }
+      class S6, class S7, class S8 >
+      tuple( const tuple < S0, S1, S2, S3,
+             S4, S5, S6, S7,
+             S8 > &rhs ) : m0( rhs.m0 ),
+          m1( rhs.m1 ), m2( rhs.m2 ), m3( rhs.m3 ), m4( rhs.m4 ), m5( rhs.m5 ),
+          m6( rhs.m6 ), m7( rhs.m7 ), m8( rhs.m8 )
+      {}
+      tuple( arg_type0 theM0, const tail_type & tail ) : m0( theM0 ),
+          m1( tail.m0 ), m2( tail.m1 ), m3( tail.m2 ), m4( tail.m3 ),
+          m5( tail.m4 ), m6( tail.m5 ), m7( tail.m6 ), m8( tail.m7 )
+      {}
       template < class S0, class S1, class S2, class S3, class S4, class S5,
-        class S6, class S7,
-        class S8 > self_type & operator=( const tuple < S0, S1, S2, S3, S4,
-                                          S5, S6, S7, S8 > &rhs )
+      class S6, class S7,
+      class S8 >
+      self_type & operator=( const tuple < S0, S1, S2, S3, S4,
+                             S5, S6, S7, S8 > &rhs )
       {
-        if( this != ( self_type * ) ( &rhs ) )
+        if ( this != ( self_type * ) ( &rhs ) )
         {
           m0 = rhs.m0;
           m1 = rhs.m1;
@@ -1217,7 +1213,7 @@ namespace boost
         }
         return *this;
       }
-      int size(  ) const
+      int size( ) const
       {
         return 9;
       }
@@ -1233,103 +1229,103 @@ namespace boost
         std::swap( m7, rhs.m7 );
         std::swap( m8, rhs.m8 );
       }
-      get_type0 head(  )
+      get_type0 head( )
       {
         return m0;
       }
-      const_get_type0 head(  ) const
+      const_get_type0 head( ) const
       {
         return m0;
       }
-      tail_type tail(  ) const
+      tail_type tail( ) const
       {
         return tail_type( m1, m2, m3, m4, m5, m6, m7, m8 );
       }
-      get_type0 front(  )
+      get_type0 front( )
       {
         return m0;
       }
-      const_get_type0 front(  ) const
+      const_get_type0 front( ) const
       {
         return m0;
       }
-      get_type8 back(  )
+      get_type8 back( )
       {
         return m8;
       }
-      const_get_type8 back(  ) const
+      const_get_type8 back( ) const
       {
         return m8;
       }
-      const_get_type0 get0(  ) const
+      const_get_type0 get0( ) const
       {
         return m0;
       }
-      const_get_type1 get1(  ) const
+      const_get_type1 get1( ) const
       {
         return m1;
       }
-      const_get_type2 get2(  ) const
+      const_get_type2 get2( ) const
       {
         return m2;
       }
-      const_get_type3 get3(  ) const
+      const_get_type3 get3( ) const
       {
         return m3;
       }
-      const_get_type4 get4(  ) const
+      const_get_type4 get4( ) const
       {
         return m4;
       }
-      const_get_type5 get5(  ) const
+      const_get_type5 get5( ) const
       {
         return m5;
       }
-      const_get_type6 get6(  ) const
+      const_get_type6 get6( ) const
       {
         return m6;
       }
-      const_get_type7 get7(  ) const
+      const_get_type7 get7( ) const
       {
         return m7;
       }
-      const_get_type8 get8(  ) const
+      const_get_type8 get8( ) const
       {
         return m8;
       }
-      get_type0 get0(  )
+      get_type0 get0( )
       {
         return m0;
       }
-      get_type1 get1(  )
+      get_type1 get1( )
       {
         return m1;
       }
-      get_type2 get2(  )
+      get_type2 get2( )
       {
         return m2;
       }
-      get_type3 get3(  )
+      get_type3 get3( )
       {
         return m3;
       }
-      get_type4 get4(  )
+      get_type4 get4( )
       {
         return m4;
       }
-      get_type5 get5(  )
+      get_type5 get5( )
       {
         return m5;
       }
-      get_type6 get6(  )
+      get_type6 get6( )
       {
         return m6;
       }
-      get_type7 get7(  )
+      get_type7 get7( )
       {
         return m7;
       }
-      get_type8 get8(  )
+      get_type8 get8( )
       {
         return m8;
       }
@@ -1347,18 +1343,21 @@ namespace boost
 
 
 
-    template < class T, int N > struct n_fold_tuple
-    {
-    };
-    template < class T > struct n_fold_tuple <T, 0 >
+    template < class T, int N >
+    struct n_fold_tuple
+      {}
+    ;
+    template < class T >
+    struct n_fold_tuple <T, 0 >
     {
       typedef tuple <> type;
       static type make( const T & arg )
       {
-        return type(  );
+        return type( );
       }
     };
-    template < class T > struct n_fold_tuple <T, 1 >
+    template < class T >
+    struct n_fold_tuple <T, 1 >
     {
       typedef tuple < T > type;
       static type make( const T & arg )
@@ -1366,7 +1365,8 @@ namespace boost
         return type( arg );
       }
     };
-    template < class T > struct n_fold_tuple <T, 2 >
+    template < class T >
+    struct n_fold_tuple <T, 2 >
     {
       typedef tuple < T, T > type;
       static type make( const T & arg )
@@ -1374,7 +1374,8 @@ namespace boost
         return type( arg, arg );
       }
     };
-    template < class T > struct n_fold_tuple <T, 3 >
+    template < class T >
+    struct n_fold_tuple <T, 3 >
     {
       typedef tuple < T, T, T > type;
       static type make( const T & arg )
@@ -1382,7 +1383,8 @@ namespace boost
         return type( arg, arg, arg );
       }
     };
-    template < class T > struct n_fold_tuple <T, 4 >
+    template < class T >
+    struct n_fold_tuple <T, 4 >
     {
       typedef tuple < T, T, T, T > type;
       static type make( const T & arg )
@@ -1390,7 +1392,8 @@ namespace boost
         return type( arg, arg, arg, arg );
       }
     };
-    template < class T > struct n_fold_tuple <T, 5 >
+    template < class T >
+    struct n_fold_tuple <T, 5 >
     {
       typedef tuple < T, T, T, T, T > type;
       static type make( const T & arg )
@@ -1398,7 +1401,8 @@ namespace boost
         return type( arg, arg, arg, arg, arg );
       }
     };
-    template < class T > struct n_fold_tuple <T, 6 >
+    template < class T >
+    struct n_fold_tuple <T, 6 >
     {
       typedef tuple < T, T, T, T, T, T > type;
       static type make( const T & arg )
@@ -1406,7 +1410,8 @@ namespace boost
         return type( arg, arg, arg, arg, arg, arg );
       }
     };
-    template < class T > struct n_fold_tuple <T, 7 >
+    template < class T >
+    struct n_fold_tuple <T, 7 >
     {
       typedef tuple < T, T, T, T, T, T, T > type;
       static type make( const T & arg )
@@ -1414,7 +1419,8 @@ namespace boost
         return type( arg, arg, arg, arg, arg, arg, arg );
       }
     };
-    template < class T > struct n_fold_tuple <T, 8 >
+    template < class T >
+    struct n_fold_tuple <T, 8 >
     {
       typedef tuple < T, T, T, T, T, T, T, T > type;
       static type make( const T & arg )
@@ -1422,7 +1428,8 @@ namespace boost
         return type( arg, arg, arg, arg, arg, arg, arg, arg );
       }
     };
-    template < class T > struct n_fold_tuple <T, 9 >
+    template < class T >
+    struct n_fold_tuple <T, 9 >
     {
       typedef tuple < T, T, T, T, T, T, T, T, T > type;
       static type make( const T & arg )
@@ -1430,407 +1437,476 @@ namespace boost
         return type( arg, arg, arg, arg, arg, arg, arg, arg, arg );
       }
     };
-    template < class TupleT > typename TupleT::get_type0 get0( TupleT & t )
+    template < class TupleT >
+    typename TupleT::get_type0 get0( TupleT & t )
     {
       return t.m0;
     }
     template < class TupleT >
-      typename TupleT::const_get_type0 get0( const TupleT & t )
+    typename TupleT::const_get_type0 get0( const TupleT & t )
     {
       return t.m0;
     }
-    template < class T0 > tuple < typename make_tuple_traits < T0 >::type >
-      make_tuple( const T0 & theM0 )
+    template < class T0 >
+    tuple < typename make_tuple_traits < T0 >::type >
+    make_tuple( const T0 & theM0 )
     {
       return tuple < typename make_tuple_traits < T0 >::type > ( theM0 );
     }
-    template < class T0 > struct make_tuple_function <T0, null_type,
-      null_type, null_type, null_type, null_type, null_type, null_type,
-      null_type, null_type >
+    template < class T0 >
+    struct make_tuple_function < T0, null_type,
+          null_type, null_type, null_type, null_type, null_type, null_type,
+          null_type, null_type >
     {
       typedef tuple < typename make_tuple_traits < T0 >::type > result_type;
-      result_type operator(  ) ( const T0 & theM0 ) const
+      result_type operator( ) ( const T0 & theM0 ) const
       {
         return result_type( theM0 );
       }
     };
-    template < class T0 > tuple < T0 & >tie( T0 & theM0 )
+    template < class T0 >
+    tuple < T0 & >tie( T0 & theM0 )
     {
       return tuple < T0 & >( theM0 );
     }
-    template < class TupleT > typename TupleT::get_type1 get1( TupleT & t )
+    template < class TupleT >
+    typename TupleT::get_type1 get1( TupleT & t )
     {
       return t.m1;
     }
     template < class TupleT >
-      typename TupleT::const_get_type1 get1( const TupleT & t )
+    typename TupleT::const_get_type1 get1( const TupleT & t )
     {
       return t.m1;
     }
     template < class T0,
-      class T1 > tuple < typename make_tuple_traits < T0 >::type,
-      typename make_tuple_traits < T1 >::type > make_tuple( const T0 & theM0,
-                                                            const T1 & theM1 )
+    class T1 >
+    tuple < typename make_tuple_traits < T0 >::type,
+    typename make_tuple_traits < T1 >::type > make_tuple( const T0 & theM0,
+        const T1 & theM1 )
     {
       return tuple < typename make_tuple_traits < T0 >::type,
-        typename make_tuple_traits < T1 >::type > ( theM0, theM1 );
+             typename make_tuple_traits < T1 >::type > ( theM0, theM1 );
     }
-    template < class T0, class T1 > struct make_tuple_function <T0, T1,
-      null_type, null_type, null_type, null_type, null_type, null_type,
-      null_type, null_type >
+    template < class T0, class T1 >
+    struct make_tuple_function < T0, T1,
+          null_type, null_type, null_type, null_type, null_type, null_type,
+          null_type, null_type >
     {
       typedef tuple < typename make_tuple_traits < T0 >::type,
-        typename make_tuple_traits < T1 >::type > result_type;
-      result_type operator(  ) ( const T0 & theM0, const T1 & theM1 ) const
+      typename make_tuple_traits < T1 >::type > result_type;
+      result_type operator( ) ( const T0 & theM0, const T1 & theM1 ) const
       {
         return result_type( theM0, theM1 );
       }
     };
-    template < class T0, class T1 > tuple < T0 &, T1 & >tie( T0 & theM0,
-                                                             T1 & theM1 )
+    template < class T0, class T1 >
+    tuple < T0 &, T1 & >tie( T0 & theM0,
+                             T1 & theM1 )
     {
       return tuple < T0 &, T1 & >( theM0, theM1 );
     }
-    template < class TupleT > typename TupleT::get_type2 get2( TupleT & t )
+    template < class TupleT >
+    typename TupleT::get_type2 get2( TupleT & t )
     {
       return t.m2;
     }
     template < class TupleT >
-      typename TupleT::const_get_type2 get2( const TupleT & t )
+    typename TupleT::const_get_type2 get2( const TupleT & t )
     {
       return t.m2;
     }
     template < class T0, class T1,
-      class T2 > tuple < typename make_tuple_traits < T0 >::type,
-      typename make_tuple_traits < T1 >::type,
-      typename make_tuple_traits < T2 >::type > make_tuple( const T0 & theM0,
-                                                            const T1 & theM1,
-                                                            const T2 & theM2 )
+    class T2 >
+    tuple < typename make_tuple_traits < T0 >::type,
+    typename make_tuple_traits < T1 >::type,
+    typename make_tuple_traits < T2 >::type > make_tuple( const T0 & theM0,
+        const T1 & theM1,
+        const T2 & theM2 )
     {
       return tuple < typename make_tuple_traits < T0 >::type,
-        typename make_tuple_traits < T1 >::type,
-        typename make_tuple_traits < T2 >::type > ( theM0, theM1, theM2 );
+             typename make_tuple_traits < T1 >::type,
+             typename make_tuple_traits < T2 >::type > ( theM0, theM1, theM2 );
     }
-    template < class T0, class T1, class T2 > struct make_tuple_function <T0,
-      T1, T2, null_type, null_type, null_type, null_type, null_type,
-      null_type, null_type >
+    template < class T0, class T1, class T2 >
+    struct make_tuple_function < T0,
+          T1, T2, null_type, null_type, null_type, null_type, null_type,
+          null_type, null_type >
     {
       typedef tuple < typename make_tuple_traits < T0 >::type,
-        typename make_tuple_traits < T1 >::type,
-        typename make_tuple_traits < T2 >::type > result_type;
-      result_type operator(  ) ( const T0 & theM0, const T1 & theM1,
-                                 const T2 & theM2 ) const
+      typename make_tuple_traits < T1 >::type,
+      typename make_tuple_traits < T2 >::type > result_type;
+      result_type operator( ) ( const T0 & theM0, const T1 & theM1,
+                                const T2 & theM2 ) const
       {
         return result_type( theM0, theM1, theM2 );
       }
     };
-    template < class T0, class T1, class T2 > tuple < T0 &, T1 &,
-      T2 & >tie( T0 & theM0, T1 & theM1, T2 & theM2 )
+    template < class T0, class T1, class T2 >
+    tuple < T0 &, T1 &,
+    T2 & > tie( T0 & theM0, T1 & theM1, T2 & theM2 )
     {
       return tuple < T0 &, T1 &, T2 & >( theM0, theM1, theM2 );
     }
-    template < class TupleT > typename TupleT::get_type3 get3( TupleT & t )
+    template < class TupleT >
+    typename TupleT::get_type3 get3( TupleT & t )
     {
       return t.m3;
     }
     template < class TupleT >
-      typename TupleT::const_get_type3 get3( const TupleT & t )
+    typename TupleT::const_get_type3 get3( const TupleT & t )
     {
       return t.m3;
     }
     template < class T0, class T1, class T2,
-      class T3 > tuple < typename make_tuple_traits < T0 >::type,
-      typename make_tuple_traits < T1 >::type,
-      typename make_tuple_traits < T2 >::type,
-      typename make_tuple_traits < T3 >::type > make_tuple( const T0 & theM0,
-                                                            const T1 & theM1,
-                                                            const T2 & theM2,
-                                                            const T3 & theM3 )
+    class T3 >
+    tuple < typename make_tuple_traits < T0 >::type,
+    typename make_tuple_traits < T1 >::type,
+    typename make_tuple_traits < T2 >::type,
+    typename make_tuple_traits < T3 >::type > make_tuple( const T0 & theM0,
+        const T1 & theM1,
+        const T2 & theM2,
+        const T3 & theM3 )
     {
       return tuple < typename make_tuple_traits < T0 >::type,
-        typename make_tuple_traits < T1 >::type,
-        typename make_tuple_traits < T2 >::type,
-        typename make_tuple_traits < T3 >::type > ( theM0, theM1, theM2,
-                                                    theM3 );
+             typename make_tuple_traits < T1 >::type,
+             typename make_tuple_traits < T2 >::type,
+             typename make_tuple_traits < T3 >::type > ( theM0, theM1, theM2,
+                 theM3 );
     }
     template < class T0, class T1, class T2,
-      class T3 > struct make_tuple_function <T0, T1, T2, T3, null_type,
-      null_type, null_type, null_type, null_type, null_type >
+    class T3 >
+    struct make_tuple_function < T0, T1, T2, T3, null_type,
+          null_type, null_type, null_type, null_type, null_type >
     {
       typedef tuple < typename make_tuple_traits < T0 >::type,
-        typename make_tuple_traits < T1 >::type,
-        typename make_tuple_traits < T2 >::type,
-        typename make_tuple_traits < T3 >::type > result_type;
-      result_type operator(  ) ( const T0 & theM0, const T1 & theM1,
-                                 const T2 & theM2, const T3 & theM3 ) const
+      typename make_tuple_traits < T1 >::type,
+      typename make_tuple_traits < T2 >::type,
+      typename make_tuple_traits < T3 >::type > result_type;
+      result_type operator( ) ( const T0 & theM0, const T1 & theM1,
+                                const T2 & theM2, const T3 & theM3 ) const
       {
         return result_type( theM0, theM1, theM2, theM3 );
       }
     };
-    template < class T0, class T1, class T2, class T3 > tuple < T0 &, T1 &,
-      T2 &, T3 & >tie( T0 & theM0, T1 & theM1, T2 & theM2, T3 & theM3 )
+    template < class T0, class T1, class T2, class T3 >
+    tuple < T0 &, T1 &,
+    T2 &, T3 & > tie( T0 & theM0, T1 & theM1, T2 & theM2, T3 & theM3 )
     {
       return tuple < T0 &, T1 &, T2 &, T3 & >( theM0, theM1, theM2, theM3 );
     }
-    template < class TupleT > typename TupleT::get_type4 get4( TupleT & t )
+    template < class TupleT >
+    typename TupleT::get_type4 get4( TupleT & t )
     {
       return t.m4;
     }
     template < class TupleT >
-      typename TupleT::const_get_type4 get4( const TupleT & t )
+    typename TupleT::const_get_type4 get4( const TupleT & t )
     {
       return t.m4;
     }
     template < class T0, class T1, class T2, class T3,
-      class T4 > tuple < typename make_tuple_traits < T0 >::type,
+    class T4 >
+    tuple < typename make_tuple_traits < T0 >::type,
+    typename make_tuple_traits < T1 >::type,
+    typename make_tuple_traits < T2 >::type,
+    typename make_tuple_traits < T3 >::type,
+    typename make_tuple_traits < T4 >::type > make_tuple( const T0 & theM0,
+        const T1 & theM1,
+        const T2 & theM2,
+        const T3 & theM3,
+        const T4 & theM4 )
+    {
+      return tuple < typename make_tuple_traits < T0 >::type,
+             typename make_tuple_traits < T1 >::type,
+             typename make_tuple_traits < T2 >::type,
+             typename make_tuple_traits < T3 >::type,
+             typename make_tuple_traits < T4 >::type > ( theM0, theM1, theM2,
+                 theM3, theM4 );
+    }
+    template < class T0, class T1, class T2, class T3,
+    class T4 >
+    struct make_tuple_function < T0, T1, T2, T3, T4, null_type,
+          null_type, null_type, null_type, null_type >
+    {
+      typedef tuple < typename make_tuple_traits < T0 >::type,
       typename make_tuple_traits < T1 >::type,
       typename make_tuple_traits < T2 >::type,
       typename make_tuple_traits < T3 >::type,
-      typename make_tuple_traits < T4 >::type > make_tuple( const T0 & theM0,
-                                                            const T1 & theM1,
-                                                            const T2 & theM2,
-                                                            const T3 & theM3,
-                                                            const T4 & theM4 )
-    {
-      return tuple < typename make_tuple_traits < T0 >::type,
-        typename make_tuple_traits < T1 >::type,
-        typename make_tuple_traits < T2 >::type,
-        typename make_tuple_traits < T3 >::type,
-        typename make_tuple_traits < T4 >::type > ( theM0, theM1, theM2,
-                                                    theM3, theM4 );
-    }
-    template < class T0, class T1, class T2, class T3,
-      class T4 > struct make_tuple_function <T0, T1, T2, T3, T4, null_type,
-      null_type, null_type, null_type, null_type >
-    {
-      typedef tuple < typename make_tuple_traits < T0 >::type,
-        typename make_tuple_traits < T1 >::type,
-        typename make_tuple_traits < T2 >::type,
-        typename make_tuple_traits < T3 >::type,
-        typename make_tuple_traits < T4 >::type > result_type;
-      result_type operator(  ) ( const T0 & theM0, const T1 & theM1,
-                                 const T2 & theM2, const T3 & theM3,
-                                 const T4 & theM4 ) const
+      typename make_tuple_traits < T4 >::type > result_type;
+      result_type operator( ) ( const T0 & theM0, const T1 & theM1,
+                                const T2 & theM2, const T3 & theM3,
+                                const T4 & theM4 ) const
       {
         return result_type( theM0, theM1, theM2, theM3, theM4 );
       }
     };
     template < class T0, class T1, class T2, class T3,
-      class T4 > tuple < T0 &, T1 &, T2 &, T3 &, T4 & >tie( T0 & theM0,
-                                                            T1 & theM1,
-                                                            T2 & theM2,
-                                                            T3 & theM3,
-                                                            T4 & theM4 )
+    class T4 >
+    tuple < T0 &, T1 &, T2 &, T3 &, T4 & >tie( T0 & theM0,
+        T1 & theM1,
+        T2 & theM2,
+        T3 & theM3,
+        T4 & theM4 )
     {
       return tuple < T0 &, T1 &, T2 &, T3 &, T4 & >( theM0, theM1, theM2,
-                                                     theM3, theM4 );
+             theM3, theM4 );
     }
-    template < class TupleT > typename TupleT::get_type5 get5( TupleT & t )
+    template < class TupleT >
+    typename TupleT::get_type5 get5( TupleT & t )
     {
       return t.m5;
     }
     template < class TupleT >
-      typename TupleT::const_get_type5 get5( const TupleT & t )
+    typename TupleT::const_get_type5 get5( const TupleT & t )
     {
       return t.m5;
     }
     template < class T0, class T1, class T2, class T3, class T4,
-      class T5 > tuple < typename make_tuple_traits < T0 >::type,
+    class T5 >
+    tuple < typename make_tuple_traits < T0 >::type,
+    typename make_tuple_traits < T1 >::type,
+    typename make_tuple_traits < T2 >::type,
+    typename make_tuple_traits < T3 >::type,
+    typename make_tuple_traits < T4 >::type,
+    typename make_tuple_traits < T5 >::type > make_tuple( const T0 & theM0,
+        const T1 & theM1,
+        const T2 & theM2,
+        const T3 & theM3,
+        const T4 & theM4,
+        const T5 & theM5 )
+    {
+      return tuple < typename make_tuple_traits < T0 >::type,
+             typename make_tuple_traits < T1 >::type,
+             typename make_tuple_traits < T2 >::type,
+             typename make_tuple_traits < T3 >::type,
+             typename make_tuple_traits < T4 >::type,
+             typename make_tuple_traits < T5 >::type > ( theM0, theM1, theM2,
+                 theM3, theM4, theM5 );
+    }
+    template < class T0, class T1, class T2, class T3, class T4,
+    class T5 >
+    struct make_tuple_function < T0, T1, T2, T3, T4, T5,
+          null_type, null_type, null_type, null_type >
+    {
+      typedef tuple < typename make_tuple_traits < T0 >::type,
       typename make_tuple_traits < T1 >::type,
       typename make_tuple_traits < T2 >::type,
       typename make_tuple_traits < T3 >::type,
       typename make_tuple_traits < T4 >::type,
-      typename make_tuple_traits < T5 >::type > make_tuple( const T0 & theM0,
-                                                            const T1 & theM1,
-                                                            const T2 & theM2,
-                                                            const T3 & theM3,
-                                                            const T4 & theM4,
-                                                            const T5 & theM5 )
-    {
-      return tuple < typename make_tuple_traits < T0 >::type,
-        typename make_tuple_traits < T1 >::type,
-        typename make_tuple_traits < T2 >::type,
-        typename make_tuple_traits < T3 >::type,
-        typename make_tuple_traits < T4 >::type,
-        typename make_tuple_traits < T5 >::type > ( theM0, theM1, theM2,
-                                                    theM3, theM4, theM5 );
-    }
-    template < class T0, class T1, class T2, class T3, class T4,
-      class T5 > struct make_tuple_function <T0, T1, T2, T3, T4, T5,
-      null_type, null_type, null_type, null_type >
-    {
-      typedef tuple < typename make_tuple_traits < T0 >::type,
-        typename make_tuple_traits < T1 >::type,
-        typename make_tuple_traits < T2 >::type,
-        typename make_tuple_traits < T3 >::type,
-        typename make_tuple_traits < T4 >::type,
-        typename make_tuple_traits < T5 >::type > result_type;
-      result_type operator(  ) ( const T0 & theM0, const T1 & theM1,
-                                 const T2 & theM2, const T3 & theM3,
-                                 const T4 & theM4, const T5 & theM5 ) const
+      typename make_tuple_traits < T5 >::type > result_type;
+      result_type operator( ) ( const T0 & theM0, const T1 & theM1,
+                                const T2 & theM2, const T3 & theM3,
+                                const T4 & theM4, const T5 & theM5 ) const
       {
         return result_type( theM0, theM1, theM2, theM3, theM4, theM5 );
       }
     };
     template < class T0, class T1, class T2, class T3, class T4,
-      class T5 > tuple < T0 &, T1 &, T2 &, T3 &, T4 &, T5 & >tie( T0 & theM0,
-                                                                  T1 & theM1,
-                                                                  T2 & theM2,
-                                                                  T3 & theM3,
-                                                                  T4 & theM4,
-                                                                  T5 & theM5 )
+    class T5 >
+    tuple < T0 &, T1 &, T2 &, T3 &, T4 &, T5 & >tie( T0 & theM0,
+        T1 & theM1,
+        T2 & theM2,
+        T3 & theM3,
+        T4 & theM4,
+        T5 & theM5 )
     {
       return tuple < T0 &, T1 &, T2 &, T3 &, T4 &, T5 & >( theM0, theM1,
-                                                           theM2, theM3,
-                                                           theM4, theM5 );
+             theM2, theM3,
+             theM4, theM5 );
     }
-    template < class TupleT > typename TupleT::get_type6 get6( TupleT & t )
+    template < class TupleT >
+    typename TupleT::get_type6 get6( TupleT & t )
     {
       return t.m6;
     }
     template < class TupleT >
-      typename TupleT::const_get_type6 get6( const TupleT & t )
+    typename TupleT::const_get_type6 get6( const TupleT & t )
     {
       return t.m6;
     }
     template < class T0, class T1, class T2, class T3, class T4, class T5,
-      class T6 > tuple < typename make_tuple_traits < T0 >::type,
+    class T6 >
+    tuple < typename make_tuple_traits < T0 >::type,
+    typename make_tuple_traits < T1 >::type,
+    typename make_tuple_traits < T2 >::type,
+    typename make_tuple_traits < T3 >::type,
+    typename make_tuple_traits < T4 >::type,
+    typename make_tuple_traits < T5 >::type,
+    typename make_tuple_traits < T6 >::type > make_tuple( const T0 & theM0,
+        const T1 & theM1,
+        const T2 & theM2,
+        const T3 & theM3,
+        const T4 & theM4,
+        const T5 & theM5,
+        const T6 & theM6 )
+    {
+      return tuple < typename make_tuple_traits < T0 >::type,
+             typename make_tuple_traits < T1 >::type,
+             typename make_tuple_traits < T2 >::type,
+             typename make_tuple_traits < T3 >::type,
+             typename make_tuple_traits < T4 >::type,
+             typename make_tuple_traits < T5 >::type,
+             typename make_tuple_traits < T6 >::type > ( theM0, theM1, theM2,
+                 theM3, theM4, theM5,
+                 theM6 );
+    }
+    template < class T0, class T1, class T2, class T3, class T4, class T5,
+    class T6 >
+    struct make_tuple_function < T0, T1, T2, T3, T4, T5, T6,
+          null_type, null_type, null_type >
+    {
+      typedef tuple < typename make_tuple_traits < T0 >::type,
       typename make_tuple_traits < T1 >::type,
       typename make_tuple_traits < T2 >::type,
       typename make_tuple_traits < T3 >::type,
       typename make_tuple_traits < T4 >::type,
       typename make_tuple_traits < T5 >::type,
-      typename make_tuple_traits < T6 >::type > make_tuple( const T0 & theM0,
-                                                            const T1 & theM1,
-                                                            const T2 & theM2,
-                                                            const T3 & theM3,
-                                                            const T4 & theM4,
-                                                            const T5 & theM5,
-                                                            const T6 & theM6 )
-    {
-      return tuple < typename make_tuple_traits < T0 >::type,
-        typename make_tuple_traits < T1 >::type,
-        typename make_tuple_traits < T2 >::type,
-        typename make_tuple_traits < T3 >::type,
-        typename make_tuple_traits < T4 >::type,
-        typename make_tuple_traits < T5 >::type,
-        typename make_tuple_traits < T6 >::type > ( theM0, theM1, theM2,
-                                                    theM3, theM4, theM5,
-                                                    theM6 );
-    }
-    template < class T0, class T1, class T2, class T3, class T4, class T5,
-      class T6 > struct make_tuple_function <T0, T1, T2, T3, T4, T5, T6,
-      null_type, null_type, null_type >
-    {
-      typedef tuple < typename make_tuple_traits < T0 >::type,
-        typename make_tuple_traits < T1 >::type,
-        typename make_tuple_traits < T2 >::type,
-        typename make_tuple_traits < T3 >::type,
-        typename make_tuple_traits < T4 >::type,
-        typename make_tuple_traits < T5 >::type,
-        typename make_tuple_traits < T6 >::type > result_type;
-      result_type operator(  ) ( const T0 & theM0, const T1 & theM1,
-                                 const T2 & theM2, const T3 & theM3,
-                                 const T4 & theM4, const T5 & theM5,
-                                 const T6 & theM6 ) const
+      typename make_tuple_traits < T6 >::type > result_type;
+      result_type operator( ) ( const T0 & theM0, const T1 & theM1,
+                                const T2 & theM2, const T3 & theM3,
+                                const T4 & theM4, const T5 & theM5,
+                                const T6 & theM6 ) const
       {
         return result_type( theM0, theM1, theM2, theM3, theM4, theM5, theM6 );
       }
     };
     template < class T0, class T1, class T2, class T3, class T4, class T5,
-      class T6 > tuple < T0 &, T1 &, T2 &, T3 &, T4 &, T5 &,
-      T6 & >tie( T0 & theM0, T1 & theM1, T2 & theM2, T3 & theM3, T4 & theM4,
-                 T5 & theM5, T6 & theM6 )
+    class T6 >
+    tuple < T0 &, T1 &, T2 &, T3 &, T4 &, T5 &,
+    T6 & > tie( T0 & theM0, T1 & theM1, T2 & theM2, T3 & theM3, T4 & theM4,
+                T5 & theM5, T6 & theM6 )
     {
       return tuple < T0 &, T1 &, T2 &, T3 &, T4 &, T5 &, T6 & >( theM0, theM1,
-                                                                 theM2, theM3,
-                                                                 theM4, theM5,
-                                                                 theM6 );
+             theM2, theM3,
+             theM4, theM5,
+             theM6 );
     }
-    template < class TupleT > typename TupleT::get_type7 get7( TupleT & t )
+    template < class TupleT >
+    typename TupleT::get_type7 get7( TupleT & t )
     {
       return t.m7;
     }
     template < class TupleT >
-      typename TupleT::const_get_type7 get7( const TupleT & t )
+    typename TupleT::const_get_type7 get7( const TupleT & t )
     {
       return t.m7;
     }
     template < class T0, class T1, class T2, class T3, class T4, class T5,
-      class T6, class T7 > tuple < typename make_tuple_traits < T0 >::type,
+    class T6, class T7 >
+    tuple < typename make_tuple_traits < T0 >::type,
+    typename make_tuple_traits < T1 >::type,
+    typename make_tuple_traits < T2 >::type,
+    typename make_tuple_traits < T3 >::type,
+    typename make_tuple_traits < T4 >::type,
+    typename make_tuple_traits < T5 >::type,
+    typename make_tuple_traits < T6 >::type,
+    typename make_tuple_traits < T7 >::type > make_tuple( const T0 & theM0,
+        const T1 & theM1,
+        const T2 & theM2,
+        const T3 & theM3,
+        const T4 & theM4,
+        const T5 & theM5,
+        const T6 & theM6,
+        const T7 & theM7 )
+    {
+      return tuple < typename make_tuple_traits < T0 >::type,
+             typename make_tuple_traits < T1 >::type,
+             typename make_tuple_traits < T2 >::type,
+             typename make_tuple_traits < T3 >::type,
+             typename make_tuple_traits < T4 >::type,
+             typename make_tuple_traits < T5 >::type,
+             typename make_tuple_traits < T6 >::type,
+             typename make_tuple_traits < T7 >::type > ( theM0, theM1, theM2,
+                 theM3, theM4, theM5,
+                 theM6, theM7 );
+    }
+    template < class T0, class T1, class T2, class T3, class T4, class T5,
+    class T6, class T7 >
+    struct make_tuple_function < T0, T1, T2, T3, T4, T5,
+          T6, T7, null_type, null_type >
+    {
+      typedef tuple < typename make_tuple_traits < T0 >::type,
       typename make_tuple_traits < T1 >::type,
       typename make_tuple_traits < T2 >::type,
       typename make_tuple_traits < T3 >::type,
       typename make_tuple_traits < T4 >::type,
       typename make_tuple_traits < T5 >::type,
       typename make_tuple_traits < T6 >::type,
-      typename make_tuple_traits < T7 >::type > make_tuple( const T0 & theM0,
-                                                            const T1 & theM1,
-                                                            const T2 & theM2,
-                                                            const T3 & theM3,
-                                                            const T4 & theM4,
-                                                            const T5 & theM5,
-                                                            const T6 & theM6,
-                                                            const T7 & theM7 )
-    {
-      return tuple < typename make_tuple_traits < T0 >::type,
-        typename make_tuple_traits < T1 >::type,
-        typename make_tuple_traits < T2 >::type,
-        typename make_tuple_traits < T3 >::type,
-        typename make_tuple_traits < T4 >::type,
-        typename make_tuple_traits < T5 >::type,
-        typename make_tuple_traits < T6 >::type,
-        typename make_tuple_traits < T7 >::type > ( theM0, theM1, theM2,
-                                                    theM3, theM4, theM5,
-                                                    theM6, theM7 );
-    }
-    template < class T0, class T1, class T2, class T3, class T4, class T5,
-      class T6, class T7 > struct make_tuple_function <T0, T1, T2, T3, T4, T5,
-      T6, T7, null_type, null_type >
-    {
-      typedef tuple < typename make_tuple_traits < T0 >::type,
-        typename make_tuple_traits < T1 >::type,
-        typename make_tuple_traits < T2 >::type,
-        typename make_tuple_traits < T3 >::type,
-        typename make_tuple_traits < T4 >::type,
-        typename make_tuple_traits < T5 >::type,
-        typename make_tuple_traits < T6 >::type,
-        typename make_tuple_traits < T7 >::type > result_type;
-      result_type operator(  ) ( const T0 & theM0, const T1 & theM1,
-                                 const T2 & theM2, const T3 & theM3,
-                                 const T4 & theM4, const T5 & theM5,
-                                 const T6 & theM6, const T7 & theM7 ) const
+      typename make_tuple_traits < T7 >::type > result_type;
+      result_type operator( ) ( const T0 & theM0, const T1 & theM1,
+                                const T2 & theM2, const T3 & theM3,
+                                const T4 & theM4, const T5 & theM5,
+                                const T6 & theM6, const T7 & theM7 ) const
       {
         return result_type( theM0, theM1, theM2, theM3, theM4, theM5, theM6,
                             theM7 );
       }
     };
     template < class T0, class T1, class T2, class T3, class T4, class T5,
-      class T6, class T7 > tuple < T0 &, T1 &, T2 &, T3 &, T4 &, T5 &, T6 &,
-      T7 & >tie( T0 & theM0, T1 & theM1, T2 & theM2, T3 & theM3, T4 & theM4,
-                 T5 & theM5, T6 & theM6, T7 & theM7 )
+    class T6, class T7 >
+    tuple < T0 &, T1 &, T2 &, T3 &, T4 &, T5 &, T6 &,
+    T7 & > tie( T0 & theM0, T1 & theM1, T2 & theM2, T3 & theM3, T4 & theM4,
+                T5 & theM5, T6 & theM6, T7 & theM7 )
     {
       return tuple < T0 &, T1 &, T2 &, T3 &, T4 &, T5 &, T6 &, T7 & >( theM0,
-                                                                       theM1,
-                                                                       theM2,
-                                                                       theM3,
-                                                                       theM4,
-                                                                       theM5,
-                                                                       theM6,
-                                                                       theM7 );
+             theM1,
+             theM2,
+             theM3,
+             theM4,
+             theM5,
+             theM6,
+             theM7 );
     }
-    template < class TupleT > typename TupleT::get_type8 get8( TupleT & t )
+    template < class TupleT >
+    typename TupleT::get_type8 get8( TupleT & t )
     {
       return t.m8;
     }
     template < class TupleT >
-      typename TupleT::const_get_type8 get8( const TupleT & t )
+    typename TupleT::const_get_type8 get8( const TupleT & t )
     {
       return t.m8;
     }
     template < class T0, class T1, class T2, class T3, class T4, class T5,
-      class T6, class T7,
-      class T8 > tuple < typename make_tuple_traits < T0 >::type,
+    class T6, class T7,
+    class T8 >
+    tuple < typename make_tuple_traits < T0 >::type,
+    typename make_tuple_traits < T1 >::type,
+    typename make_tuple_traits < T2 >::type,
+    typename make_tuple_traits < T3 >::type,
+    typename make_tuple_traits < T4 >::type,
+    typename make_tuple_traits < T5 >::type,
+    typename make_tuple_traits < T6 >::type,
+    typename make_tuple_traits < T7 >::type,
+    typename make_tuple_traits < T8 >::type > make_tuple( const T0 & theM0,
+        const T1 & theM1,
+        const T2 & theM2,
+        const T3 & theM3,
+        const T4 & theM4,
+        const T5 & theM5,
+        const T6 & theM6,
+        const T7 & theM7,
+        const T8 & theM8 )
+    {
+      return tuple < typename make_tuple_traits < T0 >::type,
+             typename make_tuple_traits < T1 >::type,
+             typename make_tuple_traits < T2 >::type,
+             typename make_tuple_traits < T3 >::type,
+             typename make_tuple_traits < T4 >::type,
+             typename make_tuple_traits < T5 >::type,
+             typename make_tuple_traits < T6 >::type,
+             typename make_tuple_traits < T7 >::type,
+             typename make_tuple_traits < T8 >::type > ( theM0, theM1, theM2,
+                 theM3, theM4, theM5,
+                 theM6, theM7, theM8 );
+    }
+    template < class T0, class T1, class T2, class T3, class T4, class T5,
+    class T6, class T7, class T8 >
+    struct make_tuple_function < T0, T1, T2,
+          T3, T4, T5, T6, T7, T8, null_type >
+    {
+      typedef tuple < typename make_tuple_traits < T0 >::type,
       typename make_tuple_traits < T1 >::type,
       typename make_tuple_traits < T2 >::type,
       typename make_tuple_traits < T3 >::type,
@@ -1838,466 +1914,445 @@ namespace boost
       typename make_tuple_traits < T5 >::type,
       typename make_tuple_traits < T6 >::type,
       typename make_tuple_traits < T7 >::type,
-      typename make_tuple_traits < T8 >::type > make_tuple( const T0 & theM0,
-                                                            const T1 & theM1,
-                                                            const T2 & theM2,
-                                                            const T3 & theM3,
-                                                            const T4 & theM4,
-                                                            const T5 & theM5,
-                                                            const T6 & theM6,
-                                                            const T7 & theM7,
-                                                            const T8 & theM8 )
-    {
-      return tuple < typename make_tuple_traits < T0 >::type,
-        typename make_tuple_traits < T1 >::type,
-        typename make_tuple_traits < T2 >::type,
-        typename make_tuple_traits < T3 >::type,
-        typename make_tuple_traits < T4 >::type,
-        typename make_tuple_traits < T5 >::type,
-        typename make_tuple_traits < T6 >::type,
-        typename make_tuple_traits < T7 >::type,
-        typename make_tuple_traits < T8 >::type > ( theM0, theM1, theM2,
-                                                    theM3, theM4, theM5,
-                                                    theM6, theM7, theM8 );
-    }
-    template < class T0, class T1, class T2, class T3, class T4, class T5,
-      class T6, class T7, class T8 > struct make_tuple_function <T0, T1, T2,
-      T3, T4, T5, T6, T7, T8, null_type >
-    {
-      typedef tuple < typename make_tuple_traits < T0 >::type,
-        typename make_tuple_traits < T1 >::type,
-        typename make_tuple_traits < T2 >::type,
-        typename make_tuple_traits < T3 >::type,
-        typename make_tuple_traits < T4 >::type,
-        typename make_tuple_traits < T5 >::type,
-        typename make_tuple_traits < T6 >::type,
-        typename make_tuple_traits < T7 >::type,
-        typename make_tuple_traits < T8 >::type > result_type;
-      result_type operator(  ) ( const T0 & theM0, const T1 & theM1,
-                                 const T2 & theM2, const T3 & theM3,
-                                 const T4 & theM4, const T5 & theM5,
-                                 const T6 & theM6, const T7 & theM7,
-                                 const T8 & theM8 ) const
+      typename make_tuple_traits < T8 >::type > result_type;
+      result_type operator( ) ( const T0 & theM0, const T1 & theM1,
+                                const T2 & theM2, const T3 & theM3,
+                                const T4 & theM4, const T5 & theM5,
+                                const T6 & theM6, const T7 & theM7,
+                                const T8 & theM8 ) const
       {
         return result_type( theM0, theM1, theM2, theM3, theM4, theM5, theM6,
                             theM7, theM8 );
       }
     };
     template < class T0, class T1, class T2, class T3, class T4, class T5,
-      class T6, class T7, class T8 > tuple < T0 &, T1 &, T2 &, T3 &, T4 &,
-      T5 &, T6 &, T7 &, T8 & >tie( T0 & theM0, T1 & theM1, T2 & theM2,
-                                   T3 & theM3, T4 & theM4, T5 & theM5,
-                                   T6 & theM6, T7 & theM7, T8 & theM8 )
+    class T6, class T7, class T8 >
+    tuple < T0 &, T1 &, T2 &, T3 &, T4 &,
+    T5 &, T6 &, T7 &, T8 & > tie( T0 & theM0, T1 & theM1, T2 & theM2,
+                                  T3 & theM3, T4 & theM4, T5 & theM5,
+                                  T6 & theM6, T7 & theM7, T8 & theM8 )
     {
       return tuple < T0 &, T1 &, T2 &, T3 &, T4 &, T5 &, T6 &, T7 &,
-        T8 & >( theM0, theM1, theM2, theM3, theM4, theM5, theM6, theM7,
-                theM8 );
+             T8 & > ( theM0, theM1, theM2, theM3, theM4, theM5, theM6, theM7,
+                      theM8 );
     }
     template < class T0 = null_type, class T1 = null_type, class T2 =
-      null_type, class T3 = null_type, class T4 = null_type, class T5 =
-      null_type, class T6 = null_type, class T7 = null_type, class T8 =
-      null_type, class T9 = null_type, class T10 =
-      null_type > struct pointer_to_function
-    {
-    };
+    null_type, class T3 = null_type, class T4 = null_type, class T5 =
+    null_type, class T6 = null_type, class T7 = null_type, class T8 =
+    null_type, class T9 = null_type, class T10 =
+    null_type >
+    struct pointer_to_function
+      {}
+    ;
     template < class T0 = null_type, class T1 = null_type, class T2 =
-      null_type, class T3 = null_type, class T4 = null_type, class T5 =
-      null_type, class T6 = null_type, class T7 = null_type, class T8 =
-      null_type, class T9 = null_type, class T10 = null_type, class T11 =
-      null_type > struct function_object
-    {
-    };
+    null_type, class T3 = null_type, class T4 = null_type, class T5 =
+    null_type, class T6 = null_type, class T7 = null_type, class T8 =
+    null_type, class T9 = null_type, class T10 = null_type, class T11 =
+    null_type >
+    struct function_object
+      {}
+    ;
 
 
-    template < class F, class R, class T0 > struct function_object <F, R, T0,
-      null_type, null_type, null_type, null_type, null_type, null_type,
-      null_type, null_type, null_type >
+    template < class F, class R, class T0 >
+    struct function_object < F, R, T0,
+          null_type, null_type, null_type, null_type, null_type, null_type,
+          null_type, null_type, null_type >
     {
       typedef tuple < T0 > argument_type;
       typedef R result_type;
-        function_object(  )
-      {
-      }
-      function_object( const F & theF ):f( theF )
-      {
-      }
-      R operator(  ) ( const tuple < T0 > &arg )
+      function_object( )
+      {}
+      function_object( const F & theF ) : f( theF )
+      {}
+      R operator( ) ( const tuple < T0 > &arg )
       {
         return f( arg.m0 );
       }
-    protected:F f;
+protected:
+      F f;
     };
-    template < class R, class T0 > struct pointer_to_function <R, T0,
-      null_type, null_type, null_type, null_type, null_type, null_type,
-      null_type, null_type, null_type >
+    template < class R, class T0 >
+    struct pointer_to_function < R, T0,
+          null_type, null_type, null_type, null_type, null_type, null_type,
+          null_type, null_type, null_type >
     {
       typedef tuple < T0 > argument_type;
       typedef R result_type;
-        pointer_to_function(  )
-      {
-      }
-      pointer_to_function( R( *theF ) ( T0 ) ):f( theF )
-      {
-      }
-      R operator(  ) ( const tuple < T0 > &arg )
+      pointer_to_function( )
+      {}
+      pointer_to_function( R( *theF ) ( T0 ) ) : f( theF )
+      {}
+      R operator( ) ( const tuple < T0 > &arg )
       {
         return f( arg.m0 );
       }
-    protected:R( *f ) ( T0 );
+protected:
+      R( *f ) ( T0 );
     };
-    template < class R, class T0 > inline pointer_to_function < R,
-      T0 > ptr_fct( R( *theF ) ( T0 ) )
+    template < class R, class T0 >
+    inline pointer_to_function < R,
+    T0 > ptr_fct( R( *theF ) ( T0 ) )
     {
       return pointer_to_function < R, T0 > ( theF );
     }
     template < class F, class R, class T0,
-      class T1 > struct function_object <F, R, T0, T1, null_type, null_type,
-      null_type, null_type, null_type, null_type, null_type, null_type >
+    class T1 >
+    struct function_object < F, R, T0, T1, null_type, null_type,
+          null_type, null_type, null_type, null_type, null_type, null_type >
     {
       typedef tuple < T0, T1 > argument_type;
       typedef R result_type;
-        function_object(  )
-      {
-      }
-      function_object( const F & theF ):f( theF )
-      {
-      }
-      R operator(  ) ( const tuple < T0, T1 > &arg )
+      function_object( )
+      {}
+      function_object( const F & theF ) : f( theF )
+      {}
+      R operator( ) ( const tuple < T0, T1 > &arg )
       {
         return f( arg.m0, arg.m1 );
       }
-    protected:F f;
+protected:
+      F f;
     };
-    template < class R, class T0, class T1 > struct pointer_to_function <R,
-      T0, T1, null_type, null_type, null_type, null_type, null_type,
-      null_type, null_type, null_type >
+    template < class R, class T0, class T1 >
+    struct pointer_to_function < R,
+          T0, T1, null_type, null_type, null_type, null_type, null_type,
+          null_type, null_type, null_type >
     {
       typedef tuple < T0, T1 > argument_type;
       typedef R result_type;
-        pointer_to_function(  )
-      {
-      }
-      pointer_to_function( R( *theF ) ( T0, T1 ) ):f( theF )
-      {
-      }
-      R operator(  ) ( const tuple < T0, T1 > &arg )
+      pointer_to_function( )
+      {}
+      pointer_to_function( R( *theF ) ( T0, T1 ) ) : f( theF )
+      {}
+      R operator( ) ( const tuple < T0, T1 > &arg )
       {
         return f( arg.m0, arg.m1 );
       }
-    protected:R( *f ) ( T0, T1 );
+protected:
+      R( *f ) ( T0, T1 );
     };
-    template < class R, class T0, class T1 > inline pointer_to_function < R,
-      T0, T1 > ptr_fct( R( *theF ) ( T0, T1 ) )
+    template < class R, class T0, class T1 >
+    inline pointer_to_function < R,
+    T0, T1 > ptr_fct( R( *theF ) ( T0, T1 ) )
     {
       return pointer_to_function < R, T0, T1 > ( theF );
     }
     template < class F, class R, class T0, class T1,
-      class T2 > struct function_object <F, R, T0, T1, T2, null_type,
-      null_type, null_type, null_type, null_type, null_type, null_type >
+    class T2 >
+    struct function_object < F, R, T0, T1, T2, null_type,
+          null_type, null_type, null_type, null_type, null_type, null_type >
     {
       typedef tuple < T0, T1, T2 > argument_type;
       typedef R result_type;
-        function_object(  )
-      {
-      }
-      function_object( const F & theF ):f( theF )
-      {
-      }
-      R operator(  ) ( const tuple < T0, T1, T2 > &arg )
+      function_object( )
+      {}
+      function_object( const F & theF ) : f( theF )
+      {}
+      R operator( ) ( const tuple < T0, T1, T2 > &arg )
       {
         return f( arg.m0, arg.m1, arg.m2 );
       }
-    protected:F f;
+protected:
+      F f;
     };
     template < class R, class T0, class T1,
-      class T2 > struct pointer_to_function <R, T0, T1, T2, null_type,
-      null_type, null_type, null_type, null_type, null_type, null_type >
+    class T2 >
+    struct pointer_to_function < R, T0, T1, T2, null_type,
+          null_type, null_type, null_type, null_type, null_type, null_type >
     {
       typedef tuple < T0, T1, T2 > argument_type;
       typedef R result_type;
-        pointer_to_function(  )
-      {
-      }
-      pointer_to_function( R( *theF ) ( T0, T1, T2 ) ):f( theF )
-      {
-      }
-      R operator(  ) ( const tuple < T0, T1, T2 > &arg )
+      pointer_to_function( )
+      {}
+      pointer_to_function( R( *theF ) ( T0, T1, T2 ) ) : f( theF )
+      {}
+      R operator( ) ( const tuple < T0, T1, T2 > &arg )
       {
         return f( arg.m0, arg.m1, arg.m2 );
       }
-    protected:R( *f ) ( T0, T1, T2 );
+protected:
+      R( *f ) ( T0, T1, T2 );
     };
     template < class R, class T0, class T1,
-      class T2 > inline pointer_to_function < R, T0, T1,
-      T2 > ptr_fct( R( *theF ) ( T0, T1, T2 ) )
+    class T2 >
+    inline pointer_to_function < R, T0, T1,
+    T2 > ptr_fct( R( *theF ) ( T0, T1, T2 ) )
     {
       return pointer_to_function < R, T0, T1, T2 > ( theF );
     }
     template < class F, class R, class T0, class T1, class T2,
-      class T3 > struct function_object <F, R, T0, T1, T2, T3, null_type,
-      null_type, null_type, null_type, null_type, null_type >
+    class T3 >
+    struct function_object < F, R, T0, T1, T2, T3, null_type,
+          null_type, null_type, null_type, null_type, null_type >
     {
       typedef tuple < T0, T1, T2, T3 > argument_type;
       typedef R result_type;
-        function_object(  )
-      {
-      }
-      function_object( const F & theF ):f( theF )
-      {
-      }
-      R operator(  ) ( const tuple < T0, T1, T2, T3 > &arg )
+      function_object( )
+      {}
+      function_object( const F & theF ) : f( theF )
+      {}
+      R operator( ) ( const tuple < T0, T1, T2, T3 > &arg )
       {
         return f( arg.m0, arg.m1, arg.m2, arg.m3 );
       }
-    protected:F f;
+protected:
+      F f;
     };
     template < class R, class T0, class T1, class T2,
-      class T3 > struct pointer_to_function <R, T0, T1, T2, T3, null_type,
-      null_type, null_type, null_type, null_type, null_type >
+    class T3 >
+    struct pointer_to_function < R, T0, T1, T2, T3, null_type,
+          null_type, null_type, null_type, null_type, null_type >
     {
       typedef tuple < T0, T1, T2, T3 > argument_type;
       typedef R result_type;
-        pointer_to_function(  )
-      {
-      }
-      pointer_to_function( R( *theF ) ( T0, T1, T2, T3 ) ):f( theF )
-      {
-      }
-      R operator(  ) ( const tuple < T0, T1, T2, T3 > &arg )
+      pointer_to_function( )
+      {}
+      pointer_to_function( R( *theF ) ( T0, T1, T2, T3 ) ) : f( theF )
+      {}
+      R operator( ) ( const tuple < T0, T1, T2, T3 > &arg )
       {
         return f( arg.m0, arg.m1, arg.m2, arg.m3 );
       }
-    protected:R( *f ) ( T0, T1, T2, T3 );
+protected:
+      R( *f ) ( T0, T1, T2, T3 );
     };
     template < class R, class T0, class T1, class T2,
-      class T3 > inline pointer_to_function < R, T0, T1, T2,
-      T3 > ptr_fct( R( *theF ) ( T0, T1, T2, T3 ) )
+    class T3 >
+    inline pointer_to_function < R, T0, T1, T2,
+    T3 > ptr_fct( R( *theF ) ( T0, T1, T2, T3 ) )
     {
       return pointer_to_function < R, T0, T1, T2, T3 > ( theF );
     }
     template < class F, class R, class T0, class T1, class T2, class T3,
-      class T4 > struct function_object <F, R, T0, T1, T2, T3, T4, null_type,
-      null_type, null_type, null_type, null_type >
+    class T4 >
+    struct function_object < F, R, T0, T1, T2, T3, T4, null_type,
+          null_type, null_type, null_type, null_type >
     {
       typedef tuple < T0, T1, T2, T3, T4 > argument_type;
       typedef R result_type;
-        function_object(  )
-      {
-      }
-      function_object( const F & theF ):f( theF )
-      {
-      }
-      R operator(  ) ( const tuple < T0, T1, T2, T3, T4 > &arg )
+      function_object( )
+      {}
+      function_object( const F & theF ) : f( theF )
+      {}
+      R operator( ) ( const tuple < T0, T1, T2, T3, T4 > &arg )
       {
         return f( arg.m0, arg.m1, arg.m2, arg.m3, arg.m4 );
       }
-    protected:F f;
+protected:
+      F f;
     };
     template < class R, class T0, class T1, class T2, class T3,
-      class T4 > struct pointer_to_function <R, T0, T1, T2, T3, T4, null_type,
-      null_type, null_type, null_type, null_type >
+    class T4 >
+    struct pointer_to_function < R, T0, T1, T2, T3, T4, null_type,
+          null_type, null_type, null_type, null_type >
     {
       typedef tuple < T0, T1, T2, T3, T4 > argument_type;
       typedef R result_type;
-        pointer_to_function(  )
-      {
-      }
-      pointer_to_function( R( *theF ) ( T0, T1, T2, T3, T4 ) ):f( theF )
-      {
-      }
-      R operator(  ) ( const tuple < T0, T1, T2, T3, T4 > &arg )
+      pointer_to_function( )
+      {}
+      pointer_to_function( R( *theF ) ( T0, T1, T2, T3, T4 ) ) : f( theF )
+      {}
+      R operator( ) ( const tuple < T0, T1, T2, T3, T4 > &arg )
       {
         return f( arg.m0, arg.m1, arg.m2, arg.m3, arg.m4 );
       }
-    protected:R( *f ) ( T0, T1, T2, T3, T4 );
+protected:
+      R( *f ) ( T0, T1, T2, T3, T4 );
     };
     template < class R, class T0, class T1, class T2, class T3,
-      class T4 > inline pointer_to_function < R, T0, T1, T2, T3,
-      T4 > ptr_fct( R( *theF ) ( T0, T1, T2, T3, T4 ) )
+    class T4 >
+    inline pointer_to_function < R, T0, T1, T2, T3,
+    T4 > ptr_fct( R( *theF ) ( T0, T1, T2, T3, T4 ) )
     {
       return pointer_to_function < R, T0, T1, T2, T3, T4 > ( theF );
     }
     template < class F, class R, class T0, class T1, class T2, class T3,
-      class T4, class T5 > struct function_object <F, R, T0, T1, T2, T3, T4,
-      T5, null_type, null_type, null_type, null_type >
+    class T4, class T5 >
+    struct function_object < F, R, T0, T1, T2, T3, T4,
+          T5, null_type, null_type, null_type, null_type >
     {
       typedef tuple < T0, T1, T2, T3, T4, T5 > argument_type;
       typedef R result_type;
-        function_object(  )
-      {
-      }
-      function_object( const F & theF ):f( theF )
-      {
-      }
-      R operator(  ) ( const tuple < T0, T1, T2, T3, T4, T5 > &arg )
+      function_object( )
+      {}
+      function_object( const F & theF ) : f( theF )
+      {}
+      R operator( ) ( const tuple < T0, T1, T2, T3, T4, T5 > &arg )
       {
         return f( arg.m0, arg.m1, arg.m2, arg.m3, arg.m4, arg.m5 );
       }
-    protected:F f;
+protected:
+      F f;
     };
     template < class R, class T0, class T1, class T2, class T3, class T4,
-      class T5 > struct pointer_to_function <R, T0, T1, T2, T3, T4, T5,
-      null_type, null_type, null_type, null_type >
+    class T5 >
+    struct pointer_to_function < R, T0, T1, T2, T3, T4, T5,
+          null_type, null_type, null_type, null_type >
     {
       typedef tuple < T0, T1, T2, T3, T4, T5 > argument_type;
       typedef R result_type;
-        pointer_to_function(  )
-      {
-      }
-      pointer_to_function( R( *theF ) ( T0, T1, T2, T3, T4, T5 ) ):f( theF )
-      {
-      }
-      R operator(  ) ( const tuple < T0, T1, T2, T3, T4, T5 > &arg )
+      pointer_to_function( )
+      {}
+      pointer_to_function( R( *theF ) ( T0, T1, T2, T3, T4, T5 ) ) : f( theF )
+      {}
+      R operator( ) ( const tuple < T0, T1, T2, T3, T4, T5 > &arg )
       {
         return f( arg.m0, arg.m1, arg.m2, arg.m3, arg.m4, arg.m5 );
       }
-    protected:R( *f ) ( T0, T1, T2, T3, T4, T5 );
+protected:
+      R( *f ) ( T0, T1, T2, T3, T4, T5 );
     };
     template < class R, class T0, class T1, class T2, class T3, class T4,
-      class T5 > inline pointer_to_function < R, T0, T1, T2, T3, T4,
-      T5 > ptr_fct( R( *theF ) ( T0, T1, T2, T3, T4, T5 ) )
+    class T5 >
+    inline pointer_to_function < R, T0, T1, T2, T3, T4,
+    T5 > ptr_fct( R( *theF ) ( T0, T1, T2, T3, T4, T5 ) )
     {
       return pointer_to_function < R, T0, T1, T2, T3, T4, T5 > ( theF );
     }
     template < class F, class R, class T0, class T1, class T2, class T3,
-      class T4, class T5, class T6 > struct function_object <F, R, T0, T1, T2,
-      T3, T4, T5, T6, null_type, null_type, null_type >
+    class T4, class T5, class T6 >
+    struct function_object < F, R, T0, T1, T2,
+          T3, T4, T5, T6, null_type, null_type, null_type >
     {
       typedef tuple < T0, T1, T2, T3, T4, T5, T6 > argument_type;
       typedef R result_type;
-        function_object(  )
-      {
-      }
-      function_object( const F & theF ):f( theF )
-      {
-      }
-      R operator(  ) ( const tuple < T0, T1, T2, T3, T4, T5, T6 > &arg )
+      function_object( )
+      {}
+      function_object( const F & theF ) : f( theF )
+      {}
+      R operator( ) ( const tuple < T0, T1, T2, T3, T4, T5, T6 > &arg )
       {
         return f( arg.m0, arg.m1, arg.m2, arg.m3, arg.m4, arg.m5, arg.m6 );
       }
-    protected:F f;
+protected:
+      F f;
     };
     template < class R, class T0, class T1, class T2, class T3, class T4,
-      class T5, class T6 > struct pointer_to_function <R, T0, T1, T2, T3, T4,
-      T5, T6, null_type, null_type, null_type >
+    class T5, class T6 >
+    struct pointer_to_function < R, T0, T1, T2, T3, T4,
+          T5, T6, null_type, null_type, null_type >
     {
       typedef tuple < T0, T1, T2, T3, T4, T5, T6 > argument_type;
       typedef R result_type;
-        pointer_to_function(  )
-      {
-      }
-      pointer_to_function( R( *theF ) ( T0, T1, T2, T3, T4, T5, T6 ) ):f
-        ( theF )
-      {
-      }
-      R operator(  ) ( const tuple < T0, T1, T2, T3, T4, T5, T6 > &arg )
+      pointer_to_function( )
+      {}
+      pointer_to_function( R( *theF ) ( T0, T1, T2, T3, T4, T5, T6 ) ) : f
+          ( theF )
+      {}
+      R operator( ) ( const tuple < T0, T1, T2, T3, T4, T5, T6 > &arg )
       {
         return f( arg.m0, arg.m1, arg.m2, arg.m3, arg.m4, arg.m5, arg.m6 );
       }
-    protected:R( *f ) ( T0, T1, T2, T3, T4, T5, T6 );
+protected:
+      R( *f ) ( T0, T1, T2, T3, T4, T5, T6 );
     };
     template < class R, class T0, class T1, class T2, class T3, class T4,
-      class T5, class T6 > inline pointer_to_function < R, T0, T1, T2, T3, T4,
-      T5, T6 > ptr_fct( R( *theF ) ( T0, T1, T2, T3, T4, T5, T6 ) )
+    class T5, class T6 >
+    inline pointer_to_function < R, T0, T1, T2, T3, T4,
+    T5, T6 > ptr_fct( R( *theF ) ( T0, T1, T2, T3, T4, T5, T6 ) )
     {
       return pointer_to_function < R, T0, T1, T2, T3, T4, T5, T6 > ( theF );
     }
     template < class F, class R, class T0, class T1, class T2, class T3,
-      class T4, class T5, class T6, class T7 > struct function_object <F, R,
-      T0, T1, T2, T3, T4, T5, T6, T7, null_type, null_type >
+    class T4, class T5, class T6, class T7 >
+    struct function_object < F, R,
+          T0, T1, T2, T3, T4, T5, T6, T7, null_type, null_type >
     {
       typedef tuple < T0, T1, T2, T3, T4, T5, T6, T7 > argument_type;
       typedef R result_type;
-        function_object(  )
-      {
-      }
-      function_object( const F & theF ):f( theF )
-      {
-      }
-      R operator(  ) ( const tuple < T0, T1, T2, T3, T4, T5, T6, T7 > &arg )
+      function_object( )
+      {}
+      function_object( const F & theF ) : f( theF )
+      {}
+      R operator( ) ( const tuple < T0, T1, T2, T3, T4, T5, T6, T7 > &arg )
       {
         return f( arg.m0, arg.m1, arg.m2, arg.m3, arg.m4, arg.m5, arg.m6,
                   arg.m7 );
       }
-    protected:F f;
+protected:
+      F f;
     };
     template < class R, class T0, class T1, class T2, class T3, class T4,
-      class T5, class T6, class T7 > struct pointer_to_function <R, T0, T1,
-      T2, T3, T4, T5, T6, T7, null_type, null_type >
+    class T5, class T6, class T7 >
+    struct pointer_to_function < R, T0, T1,
+          T2, T3, T4, T5, T6, T7, null_type, null_type >
     {
       typedef tuple < T0, T1, T2, T3, T4, T5, T6, T7 > argument_type;
       typedef R result_type;
-        pointer_to_function(  )
-      {
-      }
-      pointer_to_function( R( *theF ) ( T0, T1, T2, T3, T4, T5, T6, T7 ) ):f
-        ( theF )
-      {
-      }
-      R operator(  ) ( const tuple < T0, T1, T2, T3, T4, T5, T6, T7 > &arg )
+      pointer_to_function( )
+      {}
+      pointer_to_function( R( *theF ) ( T0, T1, T2, T3, T4, T5, T6, T7 ) ) : f
+          ( theF )
+      {}
+      R operator( ) ( const tuple < T0, T1, T2, T3, T4, T5, T6, T7 > &arg )
       {
         return f( arg.m0, arg.m1, arg.m2, arg.m3, arg.m4, arg.m5, arg.m6,
                   arg.m7 );
       }
-    protected:R( *f ) ( T0, T1, T2, T3, T4, T5, T6, T7 );
+protected:
+      R( *f ) ( T0, T1, T2, T3, T4, T5, T6, T7 );
     };
     template < class R, class T0, class T1, class T2, class T3, class T4,
-      class T5, class T6, class T7 > inline pointer_to_function < R, T0, T1,
-      T2, T3, T4, T5, T6,
-      T7 > ptr_fct( R( *theF ) ( T0, T1, T2, T3, T4, T5, T6, T7 ) )
+    class T5, class T6, class T7 >
+    inline pointer_to_function < R, T0, T1,
+    T2, T3, T4, T5, T6,
+    T7 > ptr_fct( R( *theF ) ( T0, T1, T2, T3, T4, T5, T6, T7 ) )
     {
       return pointer_to_function < R, T0, T1, T2, T3, T4, T5, T6,
-        T7 > ( theF );
+             T7 > ( theF );
     }
     template < class F, class R, class T0, class T1, class T2, class T3,
-      class T4, class T5, class T6, class T7,
-      class T8 > struct function_object <F, R, T0, T1, T2, T3, T4, T5, T6, T7,
-      T8, null_type >
+    class T4, class T5, class T6, class T7,
+    class T8 >
+    struct function_object < F, R, T0, T1, T2, T3, T4, T5, T6, T7,
+          T8, null_type >
     {
       typedef tuple < T0, T1, T2, T3, T4, T5, T6, T7, T8 > argument_type;
       typedef R result_type;
-        function_object(  )
-      {
-      }
-      function_object( const F & theF ):f( theF )
-      {
-      }
-      R operator(  ) ( const tuple < T0, T1, T2, T3, T4, T5, T6, T7,
-                       T8 > &arg )
+      function_object( )
+      {}
+      function_object( const F & theF ) : f( theF )
+      {}
+      R operator( ) ( const tuple < T0, T1, T2, T3, T4, T5, T6, T7,
+                      T8 > &arg )
       {
         return f( arg.m0, arg.m1, arg.m2, arg.m3, arg.m4, arg.m5, arg.m6,
                   arg.m7, arg.m8 );
       }
-    protected:F f;
+protected:
+      F f;
     };
     template < class R, class T0, class T1, class T2, class T3, class T4,
-      class T5, class T6, class T7, class T8 > struct pointer_to_function <R,
-      T0, T1, T2, T3, T4, T5, T6, T7, T8, null_type >
+    class T5, class T6, class T7, class T8 >
+    struct pointer_to_function < R,
+          T0, T1, T2, T3, T4, T5, T6, T7, T8, null_type >
     {
       typedef tuple < T0, T1, T2, T3, T4, T5, T6, T7, T8 > argument_type;
       typedef R result_type;
-        pointer_to_function(  )
-      {
-      }
+      pointer_to_function( )
+      {}
       pointer_to_function( R( *theF )
-                           ( T0, T1, T2, T3, T4, T5, T6, T7, T8 ) ):f( theF )
-      {
-      }
-      R operator(  ) ( const tuple < T0, T1, T2, T3, T4, T5, T6, T7,
-                       T8 > &arg )
+                           ( T0, T1, T2, T3, T4, T5, T6, T7,
+                             T8 ) ) : f( theF )
+      {}
+      R operator( ) ( const tuple < T0, T1, T2, T3, T4, T5, T6, T7,
+                      T8 > &arg )
       {
         return f( arg.m0, arg.m1, arg.m2, arg.m3, arg.m4, arg.m5, arg.m6,
                   arg.m7, arg.m8 );
       }
-    protected:R( *f ) ( T0, T1, T2, T3, T4, T5, T6, T7, T8 );
+protected:
+      R( *f ) ( T0, T1, T2, T3, T4, T5, T6, T7, T8 );
     };
     template < class R, class T0, class T1, class T2, class T3, class T4,
-      class T5, class T6, class T7, class T8 > inline pointer_to_function < R,
-      T0, T1, T2, T3, T4, T5, T6, T7,
-      T8 > ptr_fct( R( *theF ) ( T0, T1, T2, T3, T4, T5, T6, T7, T8 ) )
+    class T5, class T6, class T7, class T8 >
+    inline pointer_to_function < R,
+    T0, T1, T2, T3, T4, T5, T6, T7,
+    T8 > ptr_fct( R( *theF ) ( T0, T1, T2, T3, T4, T5, T6, T7, T8 ) )
     {
       return pointer_to_function < R, T0, T1, T2, T3, T4, T5, T6, T7,
-        T8 > ( theF );
+             T8 > ( theF );
     }
     inline bool operator==( const tuple < null_type > &lhs,
                             const tuple < null_type > &rhs )
@@ -2309,514 +2364,586 @@ namespace boost
     {
       return false;
     }
-    template < class T0, class S0 > bool operator==( const tuple < T0 > &lhs,
-                                                     const tuple < S0 > &rhs )
+    template < class T0, class S0 >
+    bool operator==( const tuple < T0 > &lhs,
+                     const tuple < S0 > &rhs )
     {
       return ( lhs.m0 == rhs.m0 );
     }
-    template < class T0, class S0 > bool operator<( const tuple < T0 > &lhs,
-                                                    const tuple < S0 > &rhs )
+    template < class T0, class S0 >
+    bool operator<( const tuple < T0 > &lhs,
+                    const tuple < S0 > &rhs )
     {
-      return ( lhs.head(  ) < rhs.head(  )
-               || ( !( rhs.head(  ) < lhs.head(  ) )
-                    && lhs.tail(  ) < rhs.tail(  ) ) );
+      return ( lhs.head( ) < rhs.head( )
+               || ( !( rhs.head( ) < lhs.head( ) )
+                    && lhs.tail( ) < rhs.tail( ) ) );
     }
-    template < class T0, class S0 > bool operator<=( const tuple < T0 > &lhs,
-                                                     const tuple < S0 > &rhs )
+    template < class T0, class S0 >
+    bool operator<=( const tuple < T0 > &lhs,
+                     const tuple < S0 > &rhs )
     {
       return !( rhs < lhs );
     }
-    template < class T0, class S0 > bool operator>( const tuple < T0 > &lhs,
-                                                    const tuple < S0 > &rhs )
+    template < class T0, class S0 >
+    bool operator>( const tuple < T0 > &lhs,
+                    const tuple < S0 > &rhs )
     {
       return ( rhs < lhs );
     }
-    template < class T0, class S0 > bool operator>=( const tuple < T0 > &lhs,
-                                                     const tuple < S0 > &rhs )
+    template < class T0, class S0 >
+    bool operator>=( const tuple < T0 > &lhs,
+                     const tuple < S0 > &rhs )
     {
       return !( lhs < rhs );
     }
     template < class T0, class T1, class S0,
-      class S1 > bool operator==( const tuple < T0, T1 > &lhs,
-                                  const tuple < S0, S1 > &rhs )
+    class S1 >
+    bool operator==( const tuple < T0, T1 > &lhs,
+                     const tuple < S0, S1 > &rhs )
     {
       return ( lhs.m0 == rhs.m0 && lhs.m1 == rhs.m1 );
     }
     template < class T0, class T1, class S0,
-      class S1 > bool operator<( const tuple < T0, T1 > &lhs,
-                                 const tuple < S0, S1 > &rhs )
+    class S1 >
+    bool operator<( const tuple < T0, T1 > &lhs,
+                    const tuple < S0, S1 > &rhs )
     {
-      return ( lhs.head(  ) < rhs.head(  )
-               || ( !( rhs.head(  ) < lhs.head(  ) )
-                    && lhs.tail(  ) < rhs.tail(  ) ) );
+      return ( lhs.head( ) < rhs.head( )
+               || ( !( rhs.head( ) < lhs.head( ) )
+                    && lhs.tail( ) < rhs.tail( ) ) );
     }
     template < class T0, class T1, class S0,
-      class S1 > bool operator<=( const tuple < T0, T1 > &lhs,
-                                  const tuple < S0, S1 > &rhs )
+    class S1 >
+    bool operator<=( const tuple < T0, T1 > &lhs,
+                     const tuple < S0, S1 > &rhs )
     {
       return !( rhs < lhs );
     }
     template < class T0, class T1, class S0,
-      class S1 > bool operator>( const tuple < T0, T1 > &lhs,
-                                 const tuple < S0, S1 > &rhs )
+    class S1 >
+    bool operator>( const tuple < T0, T1 > &lhs,
+                    const tuple < S0, S1 > &rhs )
     {
       return ( rhs < lhs );
     }
     template < class T0, class T1, class S0,
-      class S1 > bool operator>=( const tuple < T0, T1 > &lhs,
-                                  const tuple < S0, S1 > &rhs )
+    class S1 >
+    bool operator>=( const tuple < T0, T1 > &lhs,
+                     const tuple < S0, S1 > &rhs )
     {
       return !( lhs < rhs );
     }
     template < class T0, class T1, class T2, class S0, class S1,
-      class S2 > bool operator==( const tuple < T0, T1, T2 > &lhs,
-                                  const tuple < S0, S1, S2 > &rhs )
+    class S2 >
+    bool operator==( const tuple < T0, T1, T2 > &lhs,
+                     const tuple < S0, S1, S2 > &rhs )
     {
       return ( lhs.m0 == rhs.m0 && lhs.m1 == rhs.m1 && lhs.m2 == rhs.m2 );
     }
     template < class T0, class T1, class T2, class S0, class S1,
-      class S2 > bool operator<( const tuple < T0, T1, T2 > &lhs,
-                                 const tuple < S0, S1, S2 > &rhs )
+    class S2 >
+    bool operator<( const tuple < T0, T1, T2 > &lhs,
+                    const tuple < S0, S1, S2 > &rhs )
     {
-      return ( lhs.head(  ) < rhs.head(  )
-               || ( !( rhs.head(  ) < lhs.head(  ) )
-                    && lhs.tail(  ) < rhs.tail(  ) ) );
+      return ( lhs.head( ) < rhs.head( )
+               || ( !( rhs.head( ) < lhs.head( ) )
+                    && lhs.tail( ) < rhs.tail( ) ) );
     }
     template < class T0, class T1, class T2, class S0, class S1,
-      class S2 > bool operator<=( const tuple < T0, T1, T2 > &lhs,
-                                  const tuple < S0, S1, S2 > &rhs )
+    class S2 >
+    bool operator<=( const tuple < T0, T1, T2 > &lhs,
+                     const tuple < S0, S1, S2 > &rhs )
     {
       return !( rhs < lhs );
     }
     template < class T0, class T1, class T2, class S0, class S1,
-      class S2 > bool operator>( const tuple < T0, T1, T2 > &lhs,
-                                 const tuple < S0, S1, S2 > &rhs )
+    class S2 >
+    bool operator>( const tuple < T0, T1, T2 > &lhs,
+                    const tuple < S0, S1, S2 > &rhs )
     {
       return ( rhs < lhs );
     }
     template < class T0, class T1, class T2, class S0, class S1,
-      class S2 > bool operator>=( const tuple < T0, T1, T2 > &lhs,
-                                  const tuple < S0, S1, S2 > &rhs )
+    class S2 >
+    bool operator>=( const tuple < T0, T1, T2 > &lhs,
+                     const tuple < S0, S1, S2 > &rhs )
     {
       return !( lhs < rhs );
     }
     template < class T0, class T1, class T2, class T3, class S0, class S1,
-      class S2, class S3 > bool operator==( const tuple < T0, T1, T2,
-                                            T3 > &lhs, const tuple < S0, S1,
-                                            S2, S3 > &rhs )
+    class S2, class S3 >
+    bool operator==( const tuple < T0, T1, T2,
+                     T3 > &lhs, const tuple < S0, S1,
+                     S2, S3 > &rhs )
     {
       return ( lhs.m0 == rhs.m0 && lhs.m1 == rhs.m1 && lhs.m2 == rhs.m2
                && lhs.m3 == rhs.m3 );
     }
     template < class T0, class T1, class T2, class T3, class S0, class S1,
-      class S2, class S3 > bool operator<( const tuple < T0, T1, T2,
-                                           T3 > &lhs, const tuple < S0, S1,
-                                           S2, S3 > &rhs )
+    class S2, class S3 >
+    bool operator<( const tuple < T0, T1, T2,
+                    T3 > &lhs, const tuple < S0, S1,
+                    S2, S3 > &rhs )
     {
-      return ( lhs.head(  ) < rhs.head(  )
-               || ( !( rhs.head(  ) < lhs.head(  ) )
-                    && lhs.tail(  ) < rhs.tail(  ) ) );
+      return ( lhs.head( ) < rhs.head( )
+               || ( !( rhs.head( ) < lhs.head( ) )
+                    && lhs.tail( ) < rhs.tail( ) ) );
     }
     template < class T0, class T1, class T2, class T3, class S0, class S1,
-      class S2, class S3 > bool operator<=( const tuple < T0, T1, T2,
-                                            T3 > &lhs, const tuple < S0, S1,
-                                            S2, S3 > &rhs )
+    class S2, class S3 >
+    bool operator<=( const tuple < T0, T1, T2,
+                     T3 > &lhs, const tuple < S0, S1,
+                     S2, S3 > &rhs )
     {
       return !( rhs < lhs );
     }
     template < class T0, class T1, class T2, class T3, class S0, class S1,
-      class S2, class S3 > bool operator>( const tuple < T0, T1, T2,
-                                           T3 > &lhs, const tuple < S0, S1,
-                                           S2, S3 > &rhs )
+    class S2, class S3 >
+    bool operator>( const tuple < T0, T1, T2,
+                    T3 > &lhs, const tuple < S0, S1,
+                    S2, S3 > &rhs )
     {
       return ( rhs < lhs );
     }
     template < class T0, class T1, class T2, class T3, class S0, class S1,
-      class S2, class S3 > bool operator>=( const tuple < T0, T1, T2,
-                                            T3 > &lhs, const tuple < S0, S1,
-                                            S2, S3 > &rhs )
+    class S2, class S3 >
+    bool operator>=( const tuple < T0, T1, T2,
+                     T3 > &lhs, const tuple < S0, S1,
+                     S2, S3 > &rhs )
     {
       return !( lhs < rhs );
     }
     template < class T0, class T1, class T2, class T3, class T4, class S0,
-      class S1, class S2, class S3,
-      class S4 > bool operator==( const tuple < T0, T1, T2, T3, T4 > &lhs,
-                                  const tuple < S0, S1, S2, S3, S4 > &rhs )
+    class S1, class S2, class S3,
+    class S4 >
+    bool operator==( const tuple < T0, T1, T2, T3, T4 > &lhs,
+                     const tuple < S0, S1, S2, S3, S4 > &rhs )
     {
       return ( lhs.m0 == rhs.m0 && lhs.m1 == rhs.m1 && lhs.m2 == rhs.m2
                && lhs.m3 == rhs.m3 && lhs.m4 == rhs.m4 );
     }
     template < class T0, class T1, class T2, class T3, class T4, class S0,
-      class S1, class S2, class S3,
-      class S4 > bool operator<( const tuple < T0, T1, T2, T3, T4 > &lhs,
-                                 const tuple < S0, S1, S2, S3, S4 > &rhs )
+    class S1, class S2, class S3,
+    class S4 >
+    bool operator<( const tuple < T0, T1, T2, T3, T4 > &lhs,
+                    const tuple < S0, S1, S2, S3, S4 > &rhs )
     {
-      return ( lhs.head(  ) < rhs.head(  )
-               || ( !( rhs.head(  ) < lhs.head(  ) )
-                    && lhs.tail(  ) < rhs.tail(  ) ) );
+      return ( lhs.head( ) < rhs.head( )
+               || ( !( rhs.head( ) < lhs.head( ) )
+                    && lhs.tail( ) < rhs.tail( ) ) );
     }
     template < class T0, class T1, class T2, class T3, class T4, class S0,
-      class S1, class S2, class S3,
-      class S4 > bool operator<=( const tuple < T0, T1, T2, T3, T4 > &lhs,
-                                  const tuple < S0, S1, S2, S3, S4 > &rhs )
+    class S1, class S2, class S3,
+    class S4 >
+    bool operator<=( const tuple < T0, T1, T2, T3, T4 > &lhs,
+                     const tuple < S0, S1, S2, S3, S4 > &rhs )
     {
       return !( rhs < lhs );
     }
     template < class T0, class T1, class T2, class T3, class T4, class S0,
-      class S1, class S2, class S3,
-      class S4 > bool operator>( const tuple < T0, T1, T2, T3, T4 > &lhs,
-                                 const tuple < S0, S1, S2, S3, S4 > &rhs )
+    class S1, class S2, class S3,
+    class S4 >
+    bool operator>( const tuple < T0, T1, T2, T3, T4 > &lhs,
+                    const tuple < S0, S1, S2, S3, S4 > &rhs )
     {
       return ( rhs < lhs );
     }
     template < class T0, class T1, class T2, class T3, class T4, class S0,
-      class S1, class S2, class S3,
-      class S4 > bool operator>=( const tuple < T0, T1, T2, T3, T4 > &lhs,
-                                  const tuple < S0, S1, S2, S3, S4 > &rhs )
+    class S1, class S2, class S3,
+    class S4 >
+    bool operator>=( const tuple < T0, T1, T2, T3, T4 > &lhs,
+                     const tuple < S0, S1, S2, S3, S4 > &rhs )
     {
       return !( lhs < rhs );
     }
     template < class T0, class T1, class T2, class T3, class T4, class T5,
-      class S0, class S1, class S2, class S3, class S4,
-      class S5 > bool operator==( const tuple < T0, T1, T2, T3, T4, T5 > &lhs,
-                                  const tuple < S0, S1, S2, S3, S4,
-                                  S5 > &rhs )
+    class S0, class S1, class S2, class S3, class S4,
+    class S5 >
+    bool operator==( const tuple < T0, T1, T2, T3, T4, T5 > &lhs,
+                     const tuple < S0, S1, S2, S3, S4,
+                     S5 > &rhs )
     {
       return ( lhs.m0 == rhs.m0 && lhs.m1 == rhs.m1 && lhs.m2 == rhs.m2
                && lhs.m3 == rhs.m3 && lhs.m4 == rhs.m4 && lhs.m5 == rhs.m5 );
     }
     template < class T0, class T1, class T2, class T3, class T4, class T5,
-      class S0, class S1, class S2, class S3, class S4,
-      class S5 > bool operator<( const tuple < T0, T1, T2, T3, T4, T5 > &lhs,
-                                 const tuple < S0, S1, S2, S3, S4, S5 > &rhs )
+    class S0, class S1, class S2, class S3, class S4,
+    class S5 >
+    bool operator<( const tuple < T0, T1, T2, T3, T4, T5 > &lhs,
+                    const tuple < S0, S1, S2, S3, S4, S5 > &rhs )
     {
-      return ( lhs.head(  ) < rhs.head(  )
-               || ( !( rhs.head(  ) < lhs.head(  ) )
-                    && lhs.tail(  ) < rhs.tail(  ) ) );
+      return ( lhs.head( ) < rhs.head( )
+               || ( !( rhs.head( ) < lhs.head( ) )
+                    && lhs.tail( ) < rhs.tail( ) ) );
     }
     template < class T0, class T1, class T2, class T3, class T4, class T5,
-      class S0, class S1, class S2, class S3, class S4,
-      class S5 > bool operator<=( const tuple < T0, T1, T2, T3, T4, T5 > &lhs,
-                                  const tuple < S0, S1, S2, S3, S4,
-                                  S5 > &rhs )
+    class S0, class S1, class S2, class S3, class S4,
+    class S5 >
+    bool operator<=( const tuple < T0, T1, T2, T3, T4, T5 > &lhs,
+                     const tuple < S0, S1, S2, S3, S4,
+                     S5 > &rhs )
     {
       return !( rhs < lhs );
     }
     template < class T0, class T1, class T2, class T3, class T4, class T5,
-      class S0, class S1, class S2, class S3, class S4,
-      class S5 > bool operator>( const tuple < T0, T1, T2, T3, T4, T5 > &lhs,
-                                 const tuple < S0, S1, S2, S3, S4, S5 > &rhs )
+    class S0, class S1, class S2, class S3, class S4,
+    class S5 >
+    bool operator>( const tuple < T0, T1, T2, T3, T4, T5 > &lhs,
+                    const tuple < S0, S1, S2, S3, S4, S5 > &rhs )
     {
       return ( rhs < lhs );
     }
     template < class T0, class T1, class T2, class T3, class T4, class T5,
-      class S0, class S1, class S2, class S3, class S4,
-      class S5 > bool operator>=( const tuple < T0, T1, T2, T3, T4, T5 > &lhs,
-                                  const tuple < S0, S1, S2, S3, S4,
-                                  S5 > &rhs )
+    class S0, class S1, class S2, class S3, class S4,
+    class S5 >
+    bool operator>=( const tuple < T0, T1, T2, T3, T4, T5 > &lhs,
+                     const tuple < S0, S1, S2, S3, S4,
+                     S5 > &rhs )
     {
       return !( lhs < rhs );
     }
     template < class T0, class T1, class T2, class T3, class T4, class T5,
-      class T6, class S0, class S1, class S2, class S3, class S4, class S5,
-      class S6 > bool operator==( const tuple < T0, T1, T2, T3, T4, T5,
-                                  T6 > &lhs, const tuple < S0, S1, S2, S3, S4,
-                                  S5, S6 > &rhs )
+    class T6, class S0, class S1, class S2, class S3, class S4, class S5,
+    class S6 >
+    bool operator==( const tuple < T0, T1, T2, T3, T4, T5,
+                     T6 > &lhs, const tuple < S0, S1, S2, S3, S4,
+                     S5, S6 > &rhs )
     {
       return ( lhs.m0 == rhs.m0 && lhs.m1 == rhs.m1 && lhs.m2 == rhs.m2
                && lhs.m3 == rhs.m3 && lhs.m4 == rhs.m4 && lhs.m5 == rhs.m5
                && lhs.m6 == rhs.m6 );
     }
     template < class T0, class T1, class T2, class T3, class T4, class T5,
-      class T6, class S0, class S1, class S2, class S3, class S4, class S5,
-      class S6 > bool operator<( const tuple < T0, T1, T2, T3, T4, T5,
-                                 T6 > &lhs, const tuple < S0, S1, S2, S3, S4,
-                                 S5, S6 > &rhs )
+    class T6, class S0, class S1, class S2, class S3, class S4, class S5,
+    class S6 >
+    bool operator<( const tuple < T0, T1, T2, T3, T4, T5,
+                    T6 > &lhs, const tuple < S0, S1, S2, S3, S4,
+                    S5, S6 > &rhs )
     {
-      return ( lhs.head(  ) < rhs.head(  )
-               || ( !( rhs.head(  ) < lhs.head(  ) )
-                    && lhs.tail(  ) < rhs.tail(  ) ) );
+      return ( lhs.head( ) < rhs.head( )
+               || ( !( rhs.head( ) < lhs.head( ) )
+                    && lhs.tail( ) < rhs.tail( ) ) );
     }
     template < class T0, class T1, class T2, class T3, class T4, class T5,
-      class T6, class S0, class S1, class S2, class S3, class S4, class S5,
-      class S6 > bool operator<=( const tuple < T0, T1, T2, T3, T4, T5,
-                                  T6 > &lhs, const tuple < S0, S1, S2, S3, S4,
-                                  S5, S6 > &rhs )
+    class T6, class S0, class S1, class S2, class S3, class S4, class S5,
+    class S6 >
+    bool operator<=( const tuple < T0, T1, T2, T3, T4, T5,
+                     T6 > &lhs, const tuple < S0, S1, S2, S3, S4,
+                     S5, S6 > &rhs )
     {
       return !( rhs < lhs );
     }
     template < class T0, class T1, class T2, class T3, class T4, class T5,
-      class T6, class S0, class S1, class S2, class S3, class S4, class S5,
-      class S6 > bool operator>( const tuple < T0, T1, T2, T3, T4, T5,
-                                 T6 > &lhs, const tuple < S0, S1, S2, S3, S4,
-                                 S5, S6 > &rhs )
+    class T6, class S0, class S1, class S2, class S3, class S4, class S5,
+    class S6 >
+    bool operator>( const tuple < T0, T1, T2, T3, T4, T5,
+                    T6 > &lhs, const tuple < S0, S1, S2, S3, S4,
+                    S5, S6 > &rhs )
     {
       return ( rhs < lhs );
     }
     template < class T0, class T1, class T2, class T3, class T4, class T5,
-      class T6, class S0, class S1, class S2, class S3, class S4, class S5,
-      class S6 > bool operator>=( const tuple < T0, T1, T2, T3, T4, T5,
-                                  T6 > &lhs, const tuple < S0, S1, S2, S3, S4,
-                                  S5, S6 > &rhs )
+    class T6, class S0, class S1, class S2, class S3, class S4, class S5,
+    class S6 >
+    bool operator>=( const tuple < T0, T1, T2, T3, T4, T5,
+                     T6 > &lhs, const tuple < S0, S1, S2, S3, S4,
+                     S5, S6 > &rhs )
     {
       return !( lhs < rhs );
     }
     template < class T0, class T1, class T2, class T3, class T4, class T5,
-      class T6, class T7, class S0, class S1, class S2, class S3, class S4,
-      class S5, class S6, class S7 > bool operator==( const tuple < T0, T1,
-                                                      T2, T3, T4, T5, T6,
-                                                      T7 > &lhs,
-                                                      const tuple < S0, S1,
-                                                      S2, S3, S4, S5, S6,
-                                                      S7 > &rhs )
+    class T6, class T7, class S0, class S1, class S2, class S3, class S4,
+    class S5, class S6, class S7 >
+    bool operator==( const tuple < T0, T1,
+                     T2, T3, T4, T5, T6,
+                     T7 > &lhs,
+                     const tuple < S0, S1,
+                     S2, S3, S4, S5, S6,
+                     S7 > &rhs )
     {
       return ( lhs.m0 == rhs.m0 && lhs.m1 == rhs.m1 && lhs.m2 == rhs.m2
                && lhs.m3 == rhs.m3 && lhs.m4 == rhs.m4 && lhs.m5 == rhs.m5
                && lhs.m6 == rhs.m6 && lhs.m7 == rhs.m7 );
     }
     template < class T0, class T1, class T2, class T3, class T4, class T5,
-      class T6, class T7, class S0, class S1, class S2, class S3, class S4,
-      class S5, class S6, class S7 > bool operator<( const tuple < T0, T1, T2,
-                                                     T3, T4, T5, T6,
-                                                     T7 > &lhs,
-                                                     const tuple < S0, S1, S2,
-                                                     S3, S4, S5, S6,
-                                                     S7 > &rhs )
+    class T6, class T7, class S0, class S1, class S2, class S3, class S4,
+    class S5, class S6, class S7 >
+    bool operator<( const tuple < T0, T1, T2,
+                    T3, T4, T5, T6,
+                    T7 > &lhs,
+                    const tuple < S0, S1, S2,
+                    S3, S4, S5, S6,
+                    S7 > &rhs )
     {
-      return ( lhs.head(  ) < rhs.head(  )
-               || ( !( rhs.head(  ) < lhs.head(  ) )
-                    && lhs.tail(  ) < rhs.tail(  ) ) );
+      return ( lhs.head( ) < rhs.head( )
+               || ( !( rhs.head( ) < lhs.head( ) )
+                    && lhs.tail( ) < rhs.tail( ) ) );
     }
     template < class T0, class T1, class T2, class T3, class T4, class T5,
-      class T6, class T7, class S0, class S1, class S2, class S3, class S4,
-      class S5, class S6, class S7 > bool operator<=( const tuple < T0, T1,
-                                                      T2, T3, T4, T5, T6,
-                                                      T7 > &lhs,
-                                                      const tuple < S0, S1,
-                                                      S2, S3, S4, S5, S6,
-                                                      S7 > &rhs )
+    class T6, class T7, class S0, class S1, class S2, class S3, class S4,
+    class S5, class S6, class S7 >
+    bool operator<=( const tuple < T0, T1,
+                     T2, T3, T4, T5, T6,
+                     T7 > &lhs,
+                     const tuple < S0, S1,
+                     S2, S3, S4, S5, S6,
+                     S7 > &rhs )
     {
       return !( rhs < lhs );
     }
     template < class T0, class T1, class T2, class T3, class T4, class T5,
-      class T6, class T7, class S0, class S1, class S2, class S3, class S4,
-      class S5, class S6, class S7 > bool operator>( const tuple < T0, T1, T2,
-                                                     T3, T4, T5, T6,
-                                                     T7 > &lhs,
-                                                     const tuple < S0, S1, S2,
-                                                     S3, S4, S5, S6,
-                                                     S7 > &rhs )
+    class T6, class T7, class S0, class S1, class S2, class S3, class S4,
+    class S5, class S6, class S7 >
+    bool operator>( const tuple < T0, T1, T2,
+                    T3, T4, T5, T6,
+                    T7 > &lhs,
+                    const tuple < S0, S1, S2,
+                    S3, S4, S5, S6,
+                    S7 > &rhs )
     {
       return ( rhs < lhs );
     }
     template < class T0, class T1, class T2, class T3, class T4, class T5,
-      class T6, class T7, class S0, class S1, class S2, class S3, class S4,
-      class S5, class S6, class S7 > bool operator>=( const tuple < T0, T1,
-                                                      T2, T3, T4, T5, T6,
-                                                      T7 > &lhs,
-                                                      const tuple < S0, S1,
-                                                      S2, S3, S4, S5, S6,
-                                                      S7 > &rhs )
+    class T6, class T7, class S0, class S1, class S2, class S3, class S4,
+    class S5, class S6, class S7 >
+    bool operator>=( const tuple < T0, T1,
+                     T2, T3, T4, T5, T6,
+                     T7 > &lhs,
+                     const tuple < S0, S1,
+                     S2, S3, S4, S5, S6,
+                     S7 > &rhs )
     {
       return !( lhs < rhs );
     }
     template < class T0, class T1, class T2, class T3, class T4, class T5,
-      class T6, class T7, class T8, class S0, class S1, class S2, class S3,
-      class S4, class S5, class S6, class S7,
-      class S8 > bool operator==( const tuple < T0, T1, T2, T3, T4, T5, T6,
-                                  T7, T8 > &lhs, const tuple < S0, S1, S2, S3,
-                                  S4, S5, S6, S7, S8 > &rhs )
+    class T6, class T7, class T8, class S0, class S1, class S2, class S3,
+    class S4, class S5, class S6, class S7,
+    class S8 >
+    bool operator==( const tuple < T0, T1, T2, T3, T4, T5, T6,
+                     T7, T8 > &lhs, const tuple < S0, S1, S2, S3,
+                     S4, S5, S6, S7, S8 > &rhs )
     {
       return ( lhs.m0 == rhs.m0 && lhs.m1 == rhs.m1 && lhs.m2 == rhs.m2
                && lhs.m3 == rhs.m3 && lhs.m4 == rhs.m4 && lhs.m5 == rhs.m5
                && lhs.m6 == rhs.m6 && lhs.m7 == rhs.m7 && lhs.m8 == rhs.m8 );
     }
     template < class T0, class T1, class T2, class T3, class T4, class T5,
-      class T6, class T7, class T8, class S0, class S1, class S2, class S3,
-      class S4, class S5, class S6, class S7,
-      class S8 > bool operator<( const tuple < T0, T1, T2, T3, T4, T5, T6, T7,
-                                 T8 > &lhs, const tuple < S0, S1, S2, S3, S4,
-                                 S5, S6, S7, S8 > &rhs )
+    class T6, class T7, class T8, class S0, class S1, class S2, class S3,
+    class S4, class S5, class S6, class S7,
+    class S8 >
+    bool operator<( const tuple < T0, T1, T2, T3, T4, T5, T6, T7,
+                    T8 > &lhs, const tuple < S0, S1, S2, S3, S4,
+                    S5, S6, S7, S8 > &rhs )
     {
-      return ( lhs.head(  ) < rhs.head(  )
-               || ( !( rhs.head(  ) < lhs.head(  ) )
-                    && lhs.tail(  ) < rhs.tail(  ) ) );
+      return ( lhs.head( ) < rhs.head( )
+               || ( !( rhs.head( ) < lhs.head( ) )
+                    && lhs.tail( ) < rhs.tail( ) ) );
     }
     template < class T0, class T1, class T2, class T3, class T4, class T5,
-      class T6, class T7, class T8, class S0, class S1, class S2, class S3,
-      class S4, class S5, class S6, class S7,
-      class S8 > bool operator<=( const tuple < T0, T1, T2, T3, T4, T5, T6,
-                                  T7, T8 > &lhs, const tuple < S0, S1, S2, S3,
-                                  S4, S5, S6, S7, S8 > &rhs )
+    class T6, class T7, class T8, class S0, class S1, class S2, class S3,
+    class S4, class S5, class S6, class S7,
+    class S8 >
+    bool operator<=( const tuple < T0, T1, T2, T3, T4, T5, T6,
+                     T7, T8 > &lhs, const tuple < S0, S1, S2, S3,
+                     S4, S5, S6, S7, S8 > &rhs )
     {
       return !( rhs < lhs );
     }
     template < class T0, class T1, class T2, class T3, class T4, class T5,
-      class T6, class T7, class T8, class S0, class S1, class S2, class S3,
-      class S4, class S5, class S6, class S7,
-      class S8 > bool operator>( const tuple < T0, T1, T2, T3, T4, T5, T6, T7,
-                                 T8 > &lhs, const tuple < S0, S1, S2, S3, S4,
-                                 S5, S6, S7, S8 > &rhs )
+    class T6, class T7, class T8, class S0, class S1, class S2, class S3,
+    class S4, class S5, class S6, class S7,
+    class S8 >
+    bool operator>( const tuple < T0, T1, T2, T3, T4, T5, T6, T7,
+                    T8 > &lhs, const tuple < S0, S1, S2, S3, S4,
+                    S5, S6, S7, S8 > &rhs )
     {
       return ( rhs < lhs );
     }
     template < class T0, class T1, class T2, class T3, class T4, class T5,
-      class T6, class T7, class T8, class S0, class S1, class S2, class S3,
-      class S4, class S5, class S6, class S7,
-      class S8 > bool operator>=( const tuple < T0, T1, T2, T3, T4, T5, T6,
-                                  T7, T8 > &lhs, const tuple < S0, S1, S2, S3,
-                                  S4, S5, S6, S7, S8 > &rhs )
+    class T6, class T7, class T8, class S0, class S1, class S2, class S3,
+    class S4, class S5, class S6, class S7,
+    class S8 >
+    bool operator>=( const tuple < T0, T1, T2, T3, T4, T5, T6,
+                     T7, T8 > &lhs, const tuple < S0, S1, S2, S3,
+                     S4, S5, S6, S7, S8 > &rhs )
     {
       return !( lhs < rhs );
     }
 
-// operator!= seems to be defined within STL, sometimes,
-// for instance in file stl_relops.h of SGI's STL
+    // operator!= seems to be defined within STL, sometimes,
+    // for instance in file stl_relops.h of SGI's STL
 #ifndef TUPPLE_SKIP_UNEQUAL
-    template < class T0, class S0 > bool operator!=( const tuple < T0 > &lhs,
-                                                     const tuple < S0 > &rhs )
+    template < class T0, class S0 >
+    bool operator!=( const tuple < T0 > &lhs,
+                     const tuple < S0 > &rhs )
     {
       return !( lhs == rhs );
     }
     template < class T0, class T1, class S0,
-      class S1 > bool operator!=( const tuple < T0, T1 > &lhs,
-                                  const tuple < S0, S1 > &rhs )
+    class S1 >
+    bool operator!=( const tuple < T0, T1 > &lhs,
+                     const tuple < S0, S1 > &rhs )
     {
       return !( lhs == rhs );
     }
     template < class T0, class T1, class T2, class S0, class S1,
-      class S2 > bool operator!=( const tuple < T0, T1, T2 > &lhs,
-                                  const tuple < S0, S1, S2 > &rhs )
+    class S2 >
+    bool operator!=( const tuple < T0, T1, T2 > &lhs,
+                     const tuple < S0, S1, S2 > &rhs )
     {
       return !( lhs == rhs );
     }
     template < class T0, class T1, class T2, class T3, class S0, class S1,
-      class S2, class S3 > bool operator!=( const tuple < T0, T1, T2,
-                                            T3 > &lhs, const tuple < S0, S1,
-                                            S2, S3 > &rhs )
+    class S2, class S3 >
+    bool operator!=( const tuple < T0, T1, T2,
+                     T3 > &lhs, const tuple < S0, S1,
+                     S2, S3 > &rhs )
     {
       return !( lhs == rhs );
     }
     template < class T0, class T1, class T2, class T3, class T4, class S0,
-      class S1, class S2, class S3,
-      class S4 > bool operator!=( const tuple < T0, T1, T2, T3, T4 > &lhs,
-                                  const tuple < S0, S1, S2, S3, S4 > &rhs )
+    class S1, class S2, class S3,
+    class S4 >
+    bool operator!=( const tuple < T0, T1, T2, T3, T4 > &lhs,
+                     const tuple < S0, S1, S2, S3, S4 > &rhs )
     {
       return !( lhs == rhs );
     }
     template < class T0, class T1, class T2, class T3, class T4, class T5,
-      class S0, class S1, class S2, class S3, class S4,
-      class S5 > bool operator!=( const tuple < T0, T1, T2, T3, T4, T5 > &lhs,
-                                  const tuple < S0, S1, S2, S3, S4,
-                                  S5 > &rhs )
+    class S0, class S1, class S2, class S3, class S4,
+    class S5 >
+    bool operator!=( const tuple < T0, T1, T2, T3, T4, T5 > &lhs,
+                     const tuple < S0, S1, S2, S3, S4,
+                     S5 > &rhs )
     {
       return !( lhs == rhs );
     }
     template < class T0, class T1, class T2, class T3, class T4, class T5,
-      class T6, class S0, class S1, class S2, class S3, class S4, class S5,
-      class S6 > bool operator!=( const tuple < T0, T1, T2, T3, T4, T5,
-                                  T6 > &lhs, const tuple < S0, S1, S2, S3, S4,
-                                  S5, S6 > &rhs )
+    class T6, class S0, class S1, class S2, class S3, class S4, class S5,
+    class S6 >
+    bool operator!=( const tuple < T0, T1, T2, T3, T4, T5,
+                     T6 > &lhs, const tuple < S0, S1, S2, S3, S4,
+                     S5, S6 > &rhs )
     {
       return !( lhs == rhs );
     }
     template < class T0, class T1, class T2, class T3, class T4, class T5,
-      class T6, class T7, class S0, class S1, class S2, class S3, class S4,
-      class S5, class S6, class S7 > bool operator!=( const tuple < T0, T1,
-                                                      T2, T3, T4, T5, T6,
-                                                      T7 > &lhs,
-                                                      const tuple < S0, S1,
-                                                      S2, S3, S4, S5, S6,
-                                                      S7 > &rhs )
+    class T6, class T7, class S0, class S1, class S2, class S3, class S4,
+    class S5, class S6, class S7 >
+    bool operator!=( const tuple < T0, T1,
+                     T2, T3, T4, T5, T6,
+                     T7 > &lhs,
+                     const tuple < S0, S1,
+                     S2, S3, S4, S5, S6,
+                     S7 > &rhs )
     {
       return !( lhs == rhs );
     }
     template < class T0, class T1, class T2, class T3, class T4, class T5,
-      class T6, class T7, class T8, class S0, class S1, class S2, class S3,
-      class S4, class S5, class S6, class S7,
-      class S8 > bool operator!=( const tuple < T0, T1, T2, T3, T4, T5, T6,
-                                  T7, T8 > &lhs, const tuple < S0, S1, S2, S3,
-                                  S4, S5, S6, S7, S8 > &rhs )
+    class T6, class T7, class T8, class S0, class S1, class S2, class S3,
+    class S4, class S5, class S6, class S7,
+    class S8 >
+    bool operator!=( const tuple < T0, T1, T2, T3, T4, T5, T6,
+                     T7, T8 > &lhs, const tuple < S0, S1, S2, S3,
+                     S4, S5, S6, S7, S8 > &rhs )
     {
       return !( lhs == rhs );
     }
 #endif
-    template < class T > T minimal( const tuple < T > &t )
+    template < class T >
+    T minimal( const tuple < T > &t )
     {
-      return t.head(  );
+      return t.head( );
     }
-    template < class T > T maximal( const tuple < T > &t )
+    template < class T >
+    T maximal( const tuple < T > &t )
     {
-      return t.head(  );
+      return t.head( );
     }
 
-    template < class T > T minimal( const tuple < T, T > &t )
+    template < class T >
+    T minimal( const tuple < T, T > &t )
     {
-      return std::min( t.head(  ), minimal( t.tail(  ) ) );
+      return std::min( t.head( ), minimal( t.tail( ) ) );
     }
-    template < class T > T maximal( const tuple < T, T > &t )
+    template < class T >
+    T maximal( const tuple < T, T > &t )
     {
-      return std::max( t.head(  ), maximal( t.tail(  ) ) );
+      return std::max( t.head( ), maximal( t.tail( ) ) );
     }
-    template < class T > T minimal( const tuple < T, T, T > &t )
+    template < class T >
+    T minimal( const tuple < T, T, T > &t )
     {
-      return std::min( t.head(  ), minimal( t.tail(  ) ) );
+      return std::min( t.head( ), minimal( t.tail( ) ) );
     }
-    template < class T > T maximal( const tuple < T, T, T > &t )
+    template < class T >
+    T maximal( const tuple < T, T, T > &t )
     {
-      return std::max( t.head(  ), maximal( t.tail(  ) ) );
+      return std::max( t.head( ), maximal( t.tail( ) ) );
     }
-    template < class T > T minimal( const tuple < T, T, T, T > &t )
+    template < class T >
+    T minimal( const tuple < T, T, T, T > &t )
     {
-      return std::min( t.head(  ), minimal( t.tail(  ) ) );
+      return std::min( t.head( ), minimal( t.tail( ) ) );
     }
-    template < class T > T maximal( const tuple < T, T, T, T > &t )
+    template < class T >
+    T maximal( const tuple < T, T, T, T > &t )
     {
-      return std::max( t.head(  ), maximal( t.tail(  ) ) );
+      return std::max( t.head( ), maximal( t.tail( ) ) );
     }
-    template < class T > T minimal( const tuple < T, T, T, T, T > &t )
+    template < class T >
+    T minimal( const tuple < T, T, T, T, T > &t )
     {
-      return std::min( t.head(  ), minimal( t.tail(  ) ) );
+      return std::min( t.head( ), minimal( t.tail( ) ) );
     }
-    template < class T > T maximal( const tuple < T, T, T, T, T > &t )
+    template < class T >
+    T maximal( const tuple < T, T, T, T, T > &t )
     {
-      return std::max( t.head(  ), maximal( t.tail(  ) ) );
+      return std::max( t.head( ), maximal( t.tail( ) ) );
     }
-    template < class T > T minimal( const tuple < T, T, T, T, T, T > &t )
+    template < class T >
+    T minimal( const tuple < T, T, T, T, T, T > &t )
     {
-      return std::min( t.head(  ), minimal( t.tail(  ) ) );
+      return std::min( t.head( ), minimal( t.tail( ) ) );
     }
-    template < class T > T maximal( const tuple < T, T, T, T, T, T > &t )
+    template < class T >
+    T maximal( const tuple < T, T, T, T, T, T > &t )
     {
-      return std::max( t.head(  ), maximal( t.tail(  ) ) );
+      return std::max( t.head( ), maximal( t.tail( ) ) );
     }
-    template < class T > T minimal( const tuple < T, T, T, T, T, T, T > &t )
+    template < class T >
+    T minimal( const tuple < T, T, T, T, T, T, T > &t )
     {
-      return std::min( t.head(  ), minimal( t.tail(  ) ) );
+      return std::min( t.head( ), minimal( t.tail( ) ) );
     }
-    template < class T > T maximal( const tuple < T, T, T, T, T, T, T > &t )
+    template < class T >
+    T maximal( const tuple < T, T, T, T, T, T, T > &t )
     {
-      return std::max( t.head(  ), maximal( t.tail(  ) ) );
+      return std::max( t.head( ), maximal( t.tail( ) ) );
     }
-    template < class T > T minimal( const tuple < T, T, T, T, T, T, T,
-                                    T > &t )
+    template < class T >
+    T minimal( const tuple < T, T, T, T, T, T, T,
+               T > &t )
     {
-      return std::min( t.head(  ), minimal( t.tail(  ) ) );
+      return std::min( t.head( ), minimal( t.tail( ) ) );
     }
-    template < class T > T maximal( const tuple < T, T, T, T, T, T, T,
-                                    T > &t )
+    template < class T >
+    T maximal( const tuple < T, T, T, T, T, T, T,
+               T > &t )
     {
-      return std::max( t.head(  ), maximal( t.tail(  ) ) );
+      return std::max( t.head( ), maximal( t.tail( ) ) );
     }
-    template < class T > T minimal( const tuple < T, T, T, T, T, T, T, T,
-                                    T > &t )
+    template < class T >
+    T minimal( const tuple < T, T, T, T, T, T, T, T,
+               T > &t )
     {
-      return std::min( t.head(  ), minimal( t.tail(  ) ) );
+      return std::min( t.head( ), minimal( t.tail( ) ) );
     }
-    template < class T > T maximal( const tuple < T, T, T, T, T, T, T, T,
-                                    T > &t )
+    template < class T >
+    T maximal( const tuple < T, T, T, T, T, T, T, T,
+               T > &t )
     {
-      return std::max( t.head(  ), maximal( t.tail(  ) ) );
+      return std::max( t.head( ), maximal( t.tail( ) ) );
     }
   }                             // namespace tupple
 }                               // namespace boost
