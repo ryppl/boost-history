@@ -53,19 +53,35 @@
 
       // macro helpers:
 
-#     define BOOST_IO_NARY_PARAM1( otype, ctype )\
-         template< typename T >                  \
-         ctype narytype( const otype< T > & )    \
-         {                                       \
-            return( ctype());                    \
-         }
-
-#     define BOOST_IO_NARY_PARAM2( otype, ctype )\
-         template< typename T, typename U >      \
-         ctype narytype( const otype< T, U > & ) \
-         {                                       \
-            return( ctype());                    \
-         }
+#     if defined(__GNUC__)
+#        define BOOST_IO_NARY_PARAM1( otype, ctype )\
+            template< typename T >                  \
+            ctype narytype( const otype< T > & )    \
+            {                                       \
+               ctype ret;                           \
+               return( ret );                       \
+            }
+#        define BOOST_IO_NARY_PARAM2( otype, ctype )\
+            template< typename T, typename U >      \
+            ctype narytype( const otype< T, U > & ) \
+            {                                       \
+               ctype ret;                           \
+               return( ret );                       \
+            }
+#     else
+#        define BOOST_IO_NARY_PARAM1( otype, ctype )\
+            template< typename T >                  \
+            ctype narytype( const otype< T > & )    \
+            {                                       \
+               return( ctype());                    \
+            }
+#        define BOOST_IO_NARY_PARAM2( otype, ctype )\
+            template< typename T, typename U >      \
+            ctype narytype( const otype< T, U > & ) \
+            {                                       \
+               return( ctype());                    \
+            }
+#     endif
 
       // std::pair   
 
