@@ -334,56 +334,7 @@ href="#interval_lib"> Interval Support Library</a>.</p>
   template&lt;class T, class Traits&gt;  bool operator!=(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
   template&lt;class T, class Traits&gt;  bool operator!=(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
 
-  /* interval comparison functions <b>WHY NOT IN INTERVAL_LIB? -H</b> */
-  template &lt;class T, class Traits&gt;  bool cerlt(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
-  template &lt;class T, class Traits&gt;  bool cerlt(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
-  template &lt;class T, class Traits&gt;  bool cerlt(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
-
-  template &lt;class T, class Traits&gt;  bool cerle(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
-  template &lt;class T, class Traits&gt;  bool cerle(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
-  template &lt;class T, class Traits&gt;  bool cerle(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
-
-  template &lt;class T, class Traits&gt;  bool cergt(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
-  template &lt;class T, class Traits&gt;  bool cergt(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
-  template &lt;class T, class Traits&gt;  bool cergt(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
-
-  template &lt;class T, class Traits&gt;  bool cerge(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
-  template &lt;class T, class Traits&gt;  bool cerge(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
-  template &lt;class T, class Traits&gt;  bool cerge(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
-
-  template &lt;class T, class Traits&gt;  bool cereq(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
-  template &lt;class T, class Traits&gt;  bool cereq(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
-  template &lt;class T, class Traits&gt;  bool cereq(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
-
-  template &lt;class T, class Traits&gt;  bool cerne(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
-  template &lt;class T, class Traits&gt;  bool cerne(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
-  template &lt;class T, class Traits&gt;  bool cerne(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
-
-  template &lt;class T, class Traits&gt;  bool poslt(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
-  template &lt;class T, class Traits&gt;  bool poslt(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
-  template &lt;class T, class Traits&gt;  bool poslt(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
-
-  template &lt;class T, class Traits&gt;  bool posle(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
-  template &lt;class T, class Traits&gt;  bool posle(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
-  template &lt;class T, class Traits&gt;  bool posle(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
-
-  template &lt;class T, class Traits&gt;  bool posgt(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
-  template &lt;class T, class Traits&gt;  bool posgt(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
-  template &lt;class T, class Traits&gt;  bool posgt(const T&amp; x, const interval&lt;T, Traits&gt; &amp; y);
-
-  template &lt;class T, class Traits&gt;  bool posge(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
-  template &lt;class T, class Traits&gt;  bool posge(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
-  template &lt;class T, class Traits&gt;  bool posge(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
-
-  template &lt;class T, class Traits&gt;  bool poseq(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
-  template &lt;class T, class Traits&gt;  bool poseq(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
-  template &lt;class T, class Traits&gt;  bool poseq(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
-
-  template &lt;class T, class Traits&gt;  bool posne(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
-  template &lt;class T, class Traits&gt;  bool posne(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
-  template &lt;class T, class Traits&gt;  bool posne(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
-
-} // namespace boost</pre>
+ } // namespace boost</pre>
 
 <h2><a name="interval_traits"></a>Template class <tt>interval_traits</tt></h2>
 The <tt>interval</tt> class requires two template parameters, the first one
@@ -439,6 +390,10 @@ class interval
     const T&amp; lower() const { return low; }
     const T&amp; upper() const { return up;  }
 
+    static interval empty();
+    static interval whole();
+    static interval hull(const T&amp; x, const T&amp; y);
+
     interval&amp; operator+= (const T&amp; r);
     interval&amp; operator+= (const interval&amp; r);
     interval&amp; operator-= (const T&amp; r);
@@ -452,26 +407,26 @@ The two main constructors accept one and two arguments of type T. The first
 one produces a singleton interval [v,v]; and the second one an interval
 [l,u]. The second one will use the checking policy if u&lt;l. If you are not
 sure whether the bounds are inverted or not, it is better to use the function
-call <code>hull(l,u)</code>.
+call <code>hull(l,u)</code>. This will not create a problem if u&lt;l.
 
-<p>There is also a template constructor in order to change the traits
-parameter of an interval. But there is no constructor that changes the base
-type of an interval (it could lead to violating the inclusion property if the
-old base type is not contained in the new one).</p>
+<p>There is a template constructor in order to change the traits parameter of
+an interval. But there is no constructor that changes the base type of an
+interval (it could lead to violating the inclusion property if the old base
+type is not contained in the new one).</p>
 
-<p>There is also an assign function in order to directly change the bounds of
-an interval. It will behave like the second constructor if the bounds are
-inverted. There is no assign function that directly takes an interval or only
-one number as a parameter; just use the assignment operator in that case.</p>
+<p>There is an assign function in order to directly change the bounds of an
+interval. It behaves like the second constructor if the bounds are inverted.
+There is no assign function that directly takes an interval or only one
+number as a parameter; just use the assignment operator in that case.</p>
 
 <p>Assignment operator, copy constructor and destructor are the ones the
 compiler automatically generates. There is also an assignment operator for
 the type T.</p>
 
-<p>The static functions empty and entire produces the corresponding
-intervals. Please be aware that the default implementation uses NaN numbers
-for the empty interval and infinite numbers for the entire interval. (Those
-are provided by the checking policy  <b>FIXME -H</b>).</p>
+<p>The static functions <code>empty</code> and <code>whole</code> produces
+the corresponding intervals. They are static member functions rather than
+global functions because they cannot guess their return types. Likewise for
+<code>hull</code>.</p>
 
 <h2><a name="opers"></a>Operations and Functions</h2>
 <b>THIS SECTION NEEDS TO BE REDONE -H.</b>
@@ -534,20 +489,22 @@ accuracy.</p>
 
 <h4>intersect hull overlap in in_zero subset proper_subset empty singleton
 equal</h4>
-There are also some set functions. intersect does what you think it does.
-hull computes the smallest interval which contains the two parameters; those
-parameters can be numbers or intervals.
+There functions. <code>intersect</code> computes the set intersection of two
+closed sets,  <code>hull</code> computes the smallest interval which contains
+the two parameters; those parameters can be numbers or intervals.
 
 <p>There is no union function since the union of two intervals is not an
-interval if they do not overlap. If they overlap, the hull function computes
-the union.</p>
+interval if they do not overlap. If they overlap, the <code>hull</code>
+function computes the union.</p>
 
-<p>overlap tests if two intervals have some common subset. in tests if a
-number is in an interval; in_zero is a variant which tests if zero is in an
-interval. subset tests if the first interval is a subset of the second; and
-proper_subset tests if it is a proper subset. empty and singleton test if an
-interval is empty or is a singleton. Finally, equal tests if two intervals
-are equal.</p>
+<p>The function <code>overlap</code> tests if two intervals have some common
+subset. <code>in</code> tests if a number is in an interval;
+<code>in_zero</code> is a variant which tests if zero is in an interval.
+<code>subset</code> tests if the first interval is a subset of the second;
+and <code>proper_subset</code> tests if it is a proper subset.
+<code>empty</code> and <code>singleton</code> test if an interval is empty or
+is a singleton. Finally, <code>equal</code> tests if two intervals are
+equal.</p>
 
 <h4>sqrt log exp sin cos tan asin acos atan sinh cosh tanh asinh acosh atanh
 fmod</h4>
@@ -570,17 +527,11 @@ when the purpose is to restrict an interval in order to compute a periodic
 function. It is the reason why fmod will answer [5,10].</p>
 
 <h3>Constants</h3>
-Some constants are hidden in the boost::interval_lib namespace:
-<pre>namespace boost {
-  namespace interval_lib {
-
-template&lt;class I&gt; I pi();
-template&lt;class I&gt; I pi_half();
-template&lt;class I&gt; I pi_twice();
-
-  } // namespce interval_lib
-} // namespace boost</pre>
-Their respective values are &#960;, &#960;/2 and 2&#960;.
+Some constants are hidden in the boost::interval_lib namespace. They need to
+be explicitely templated by the interval type. The functions are
+pi&lt;I&gt;(), pi_half&lt;I&gt;() and pi_twice&lt;I&gt;(), and they return an
+object of interval type I. Their respective values are &#960;, &#960;/2 and
+2&#960;.
 
 <h3>Exception throwing</h3>
 The interval class and all the functions defined around this class never
@@ -651,16 +602,76 @@ document.</div>
     template &lt;class Traits&gt; struct unprotect_traits;
     template &lt;class I&gt; struct unprotect;
 
+    <span style="color: #FF0000">/* constants, need to be explicitly templated */
+</span>    template&lt;class I&gt; I pi();
+    template&lt;class I&gt; I pi_half();
+    template&lt;class I&gt; I pi_twice();
+
+    <span style="color: #FF0000">/* interval explicit comparison functions</span><span style="color: #FF0000">:
+     * the mode can be cer=certainly or pos=possibly,
+     * the function lt=less_than, gt=greater_than, le=less_than_or_equal_to, ge=greater_than_or_equal_to
+     *   eq=equal_to, ne= not_equal_to
+     */</span>
+    template &lt;class T, class Traits&gt;  bool cerlt(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+    template &lt;class T, class Traits&gt;  bool cerlt(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
+    template &lt;class T, class Traits&gt;  bool cerlt(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+
+    template &lt;class T, class Traits&gt;  bool cerle(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+    template &lt;class T, class Traits&gt;  bool cerle(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
+    template &lt;class T, class Traits&gt;  bool cerle(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+
+    template &lt;class T, class Traits&gt;  bool cergt(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+    template &lt;class T, class Traits&gt;  bool cergt(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
+    template &lt;class T, class Traits&gt;  bool cergt(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+
+    template &lt;class T, class Traits&gt;  bool cerge(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+    template &lt;class T, class Traits&gt;  bool cerge(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
+    template &lt;class T, class Traits&gt;  bool cerge(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+
+    template &lt;class T, class Traits&gt;  bool cereq(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+    template &lt;class T, class Traits&gt;  bool cereq(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
+    template &lt;class T, class Traits&gt;  bool cereq(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+
+    template &lt;class T, class Traits&gt;  bool cerne(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+    template &lt;class T, class Traits&gt;  bool cerne(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
+    template &lt;class T, class Traits&gt;  bool cerne(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+
+    template &lt;class T, class Traits&gt;  bool poslt(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+    template &lt;class T, class Traits&gt;  bool poslt(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
+    template &lt;class T, class Traits&gt;  bool poslt(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+
+    template &lt;class T, class Traits&gt;  bool posle(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+    template &lt;class T, class Traits&gt;  bool posle(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
+    template &lt;class T, class Traits&gt;  bool posle(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+
+    template &lt;class T, class Traits&gt;  bool posgt(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+    template &lt;class T, class Traits&gt;  bool posgt(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
+    template &lt;class T, class Traits&gt;  bool posgt(const T&amp; x, const interval&lt;T, Traits&gt; &amp; y);
+
+    template &lt;class T, class Traits&gt;  bool posge(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+    template &lt;class T, class Traits&gt;  bool posge(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
+    template &lt;class T, class Traits&gt;  bool posge(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+
+    template &lt;class T, class Traits&gt;  bool poseq(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+    template &lt;class T, class Traits&gt;  bool poseq(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
+    template &lt;class T, class Traits&gt;  bool poseq(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+
+    template &lt;class T, class Traits&gt;  bool posne(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+    template &lt;class T, class Traits&gt;  bool posne(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
+    template &lt;class T, class Traits&gt;  bool posne(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+
   } // namespace interval_lib
 } // namespace boost</pre>
 
 <p>Each component of the interval support library is detailed in its own
 page.</p>
-
 <ul>
-<li><h4><a href="comparisons.htm">Comparisons</a></h4></li>
-<li><h4><a href="rounding.htm">Rounding</a></h4></li>
-<li><h4><a href="checking.htm">Checking</a></h4></li>
+  <li><h4><a href="comparisons.htm">Comparisons</a></h4>
+  </li>
+  <li><h4><a href="rounding.htm">Rounding</a></h4>
+  </li>
+  <li><h4><a href="checking.htm">Checking</a></h4>
+  </li>
 </ul>
 
 <h2><a name="perfs">Compilation And Performance Notes</a></h2>
@@ -694,11 +705,11 @@ This is suitable for indexing intervals in a std::map, for instance.</p>
 <h4>Empty intervals</h4>
 The whole implementation of the library (except for the function
 <code>boost::empty()</code>) expects input intervals not to be empty.
-Moreover, if one of the input intervals of a function is empty, it is
-not guaranteed that the result will be empty. So empty intervals should
-not be considered the same as quiet NaNs but the same as signaling NaNs.
-It is the reason why the default checking policy will throw an exception
-whenever the result is an empty interval.
+Moreover, if one of the input intervals of a function is empty, it is not
+guaranteed that the result will be empty. So empty intervals should not be
+considered the same as quiet NaNs but the same as signaling NaNs. It is the
+reason why the default checking policy will throw an exception whenever the
+result is an empty interval.
 
 <p>This must not be considered as a weakness of the library, however. Indeed,
 quiet NaNs exist in order not to throw exceptions when an operand is outside
