@@ -1,24 +1,35 @@
-CXX = g++
-# CXX = g++3
+###############################################################################
+# Project makefile: dt
+###############################################################################
 
-CXXFLAGS = -W -Wall -O3 -I../../../../boost -I../../../ -DBOOST_INCLUDE_MAIN
+IS_DEBUG = true
+#
+#  Specify project root
+#
 
-test: minmax
-	- ./minmax 0
-	- ./minmax 1
-	- ./minmax 2
-	- ./minmax 3
-	- ./minmax 100
-	- ./minmax 101
+P_ROOT := ./
 
-SIZE = 100000
-REPEATS = 100
+#
+#  Specify include dirs
+#
 
-timer: minmax_timer
-	./minmax_timer $(SIZE) $(REPEATS)
+P_INC := $(P_ROOT)
 
-minmax: minmax.cpp ../../../boost/sequence_algo/minmax.hpp
-minmax_timer: minmax_timer.cpp ../../../boost/sequence_algo/minmax.hpp
+#
+# Project files
+#
 
-clean:
-	- rm minmax minmax_timer
+SRC := \
+
+
+#
+# Include rules etc. 
+#
+include $(MAKE_ROOT)Makefile.common
+
+
+###############################################################################
+# local programs
+###############################################################################
+
+# note: the library must be specified AFTER object files
