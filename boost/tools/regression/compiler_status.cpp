@@ -353,10 +353,11 @@ const string & attribute_value( const xml::element_ptr & element,
       if ( failed_lib_target_dirs.find( lib ) == failed_lib_target_dirs.end() )
       {
         failed_lib_target_dirs.insert( lib );
-        fs::ifstream file( boost_root_dir / lib / "test_log.xml" );
+        fs::path pth( boost_root_dir / lib / "test_log.xml" );
+        fs::ifstream file( pth );
         if ( file )
         {
-          xml::element_ptr db = xml::parse( file );
+          xml::element_ptr db = xml::parse( file, pth.string() );
           generate_report( db, lib_test_name, toolset, false );
         }
         else
@@ -395,7 +396,8 @@ const string & attribute_value( const xml::element_ptr & element,
 
     if ( !no_links )
     {
-      fs::ifstream file( target_dir / "test_log.xml" );
+      fs::path pth( target_dir / "test_log.xml" );
+      fs::ifstream file( pth );
       if ( !file ) // missing jam_log.xml
       {
         std::cerr << "Missing jam_log.xml in target \""
@@ -405,7 +407,7 @@ const string & attribute_value( const xml::element_ptr & element,
         target += "</td>";
         return pass;
       }
-      xml::element_ptr db = xml::parse( file );
+      xml::element_ptr db = xml::parse( file, pth.string() );
 
       // generate bookmarked report of results, and link to it
       anything_generated
@@ -446,7 +448,7 @@ const string & attribute_value( const xml::element_ptr & element,
       fs::ifstream file( xml_file_path );
       if ( file )
       {
-        xml::element_ptr db = xml::parse( file );
+        xml::element_ptr db = xml::parse( file, xml_file_path.string() );
         test_path = attribute_value( db, "test-program" );
         lib_name = attribute_value( db, "library" );
       }

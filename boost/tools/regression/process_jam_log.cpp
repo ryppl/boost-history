@@ -154,8 +154,13 @@ namespace
         if ( itr != test2prog.end() )
         {
           test_program = itr->second;
-          library_name = test_program.substr( 5,
-            test_program.find( '/', 5 )-5 );
+          string::size_type start_pos( test_program.find( "libs/" ) );
+          if ( start_pos != string::npos )
+          {
+            start_pos += 5;
+            library_name = test_program.substr( start_pos,
+              test_program.find( '/', start_pos )-start_pos );
+          }
         }
         m_root.reset( new xml::element( "test-log" ) );
         m_root->attributes.push_back(
@@ -171,9 +176,8 @@ namespace
       }
       else // existing file
       {
-        m_root = xml::parse( file );
+        m_root = xml::parse( file, pth.string() );
       }
-//std::cout <<     m_root->elements.size() << std::endl;
     }
 
     ~test_log()
@@ -304,7 +308,8 @@ int cpp_main( int argc, char ** argv )
 
   while ( std::getline( std::cin, line ) )
   {
-//std::cout << line << "\n";
+//    if ( line.find( "jgrep") != string::npos )
+//      std::cout << line << "\n";
 
     if ( line.find( "(boost-test " ) == 0 )
     {
@@ -313,9 +318,11 @@ int cpp_main( int argc, char ** argv )
       if ( colon != string::npos )
       {
         test_name = line.substr( 13, colon-15 );
-        test_file_path = line.substr( colon+3, line.find( ")" )-colon-5 );
+        test_file_path = line.substr( colon+3,
+          line.find( "\"", colon+3 )-colon-3 );
         convert_path_separators( test_file_path );
         test2prog.insert( std::make_pair( test_name, test_file_path ) );
+        std::cout << test_name << ", " << test_file_path << "\n";
         continue;
       }
     }
