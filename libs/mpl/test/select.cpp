@@ -384,181 +384,181 @@ int main()
 
     typedef mpl::lazy_select_c<
                 true, lazy_char, false, lazy_long, false, lazy_long, false, lazy_long
-            >::type s1;
+            >::type w1;
     typedef mpl::lazy_select_c<
                 false, lazy_long, true, lazy_char, false, lazy_long, false, lazy_long
-            >::type s2;
+            >::type w2;
     typedef mpl::lazy_select_c<
                 false, lazy_long, false, lazy_long, true, lazy_char, false, lazy_long
-            >::type s3;
+            >::type w3;
     typedef mpl::lazy_select_c<
                 false, lazy_long, false, lazy_long, false, lazy_long, true, lazy_char
-            >::type s4;
+            >::type w4;
     typedef mpl::lazy_select_c<
                 false, lazy_long, false, lazy_long, false, lazy_long, false, lazy_long,
                 true, lazy_char, false, lazy_long, false, lazy_long, false, lazy_long
-            >::type s5;
+            >::type w5;
     typedef mpl::lazy_select_c<
                 false, lazy_long, false, lazy_long, false, lazy_long, false, lazy_long,
                 false, lazy_long, true, lazy_char, false, lazy_long, false, lazy_long
-            >::type s6;
+            >::type w6;
     typedef mpl::lazy_select_c<
                 false, lazy_long, false, lazy_long, false, lazy_long, false, lazy_long,
                 false, lazy_long, false, lazy_long, true, lazy_char, false, lazy_long
-            >::type s7;
+            >::type w7;
     typedef mpl::lazy_select_c<
                 false, lazy_long, false, lazy_long, false, lazy_long, false, lazy_long,
                 false, lazy_long, false, lazy_long, false, lazy_long, true, lazy_char
-            >::type s8;
-    typedef mpl::lazy_select_c<
-                false, lazy_long, false, lazy_long, false, lazy_long, false, lazy_long,
-                false, lazy_long, false, lazy_long, false, lazy_long, false, lazy_long,
-                true, lazy_char, false, lazy_long, false, lazy_long, false, lazy_long
-            >::type s9;
-    typedef mpl::lazy_select_c<
-                false, lazy_long, false, lazy_long, false, lazy_long, false, lazy_long,
-                false, lazy_long, false, lazy_long, false, lazy_long, false, lazy_long,
-                false, lazy_long, true, lazy_char, false, lazy_long, false, lazy_long
-            >::type s10;
-    typedef mpl::lazy_select_c<
-                false, lazy_long, false, lazy_long, false, lazy_long, false, lazy_long,
-                false, lazy_long, false, lazy_long, false, lazy_long, false, lazy_long,
-                false, lazy_long, false, lazy_long, true, lazy_char, false, lazy_long
-            >::type s11;
-    typedef mpl::lazy_select_c<
-                false, lazy_long, false, lazy_long, false, lazy_long, false, lazy_long,
-                false, lazy_long, false, lazy_long, false, lazy_long, false, lazy_long,
-                false, lazy_long, false, lazy_long, false, lazy_long, true, lazy_char
-            >::type s12;
+            >::type w8;
     typedef mpl::lazy_select_c<
                 false, lazy_long, false, lazy_long, false, lazy_long, false, lazy_long,
                 false, lazy_long, false, lazy_long, false, lazy_long, false, lazy_long,
                 true, lazy_char, false, lazy_long, false, lazy_long, false, lazy_long
-            >::type s13;
+            >::type w9;
+    typedef mpl::lazy_select_c<
+                false, lazy_long, false, lazy_long, false, lazy_long, false, lazy_long,
+                false, lazy_long, false, lazy_long, false, lazy_long, false, lazy_long,
+                false, lazy_long, true, lazy_char, false, lazy_long, false, lazy_long
+            >::type w10;
+    typedef mpl::lazy_select_c<
+                false, lazy_long, false, lazy_long, false, lazy_long, false, lazy_long,
+                false, lazy_long, false, lazy_long, false, lazy_long, false, lazy_long,
+                false, lazy_long, false, lazy_long, true, lazy_char, false, lazy_long
+            >::type w11;
+    typedef mpl::lazy_select_c<
+                false, lazy_long, false, lazy_long, false, lazy_long, false, lazy_long,
+                false, lazy_long, false, lazy_long, false, lazy_long, false, lazy_long,
+                false, lazy_long, false, lazy_long, false, lazy_long, true, lazy_char
+            >::type w12;
+    typedef mpl::lazy_select_c<
+                false, lazy_long, false, lazy_long, false, lazy_long, false, lazy_long,
+                false, lazy_long, false, lazy_long, false, lazy_long, false, lazy_long,
+                true, lazy_char, false, lazy_long, false, lazy_long, false, lazy_long
+            >::type w13;
     typedef mpl::lazy_select_c<
                 false, lazy_long, false, lazy_long, false, lazy_long, false, lazy_long,
                 false, lazy_long, false, lazy_long, false, lazy_long, false, lazy_long,
                 false, lazy_long, false, lazy_long, false, lazy_long, false, lazy_long,
                 false, lazy_long, true, lazy_char, false, lazy_long, false, lazy_long
-            >::type s14;
+            >::type w14;
     typedef mpl::lazy_select_c<
                 false, lazy_long, false, lazy_long, false, lazy_long, false, lazy_long,
                 false, lazy_long, false, lazy_long, false, lazy_long, false, lazy_long,
                 false, lazy_long, false, lazy_long, false, lazy_long, false, lazy_long,
                 false, lazy_long, false, lazy_long, true, lazy_char, false, lazy_long
-            >::type s15;
+            >::type w15;
     typedef mpl::lazy_select_c<
                 false, lazy_long, false, lazy_long, false, lazy_long, false, lazy_long,
                 false, lazy_long, false, lazy_long, false, lazy_long, false, lazy_long,
                 false, lazy_long, false, lazy_long, false, lazy_long, false, lazy_long,
                 false, lazy_long, false, lazy_long, false, lazy_long, true, lazy_char
-            >::type s16;
-    BOOST_MPL_ASSERT_IS_SAME(s1, char);
-    BOOST_MPL_ASSERT_IS_SAME(s2, char);
-    BOOST_MPL_ASSERT_IS_SAME(s3, char);
-    BOOST_MPL_ASSERT_IS_SAME(s4, char);
-    BOOST_MPL_ASSERT_IS_SAME(s5, char);
-    BOOST_MPL_ASSERT_IS_SAME(s6, char);
-    BOOST_MPL_ASSERT_IS_SAME(s7, char);
-    BOOST_MPL_ASSERT_IS_SAME(s8, char);
-    BOOST_MPL_ASSERT_IS_SAME(s9, char);
-    BOOST_MPL_ASSERT_IS_SAME(s10, char);
-    BOOST_MPL_ASSERT_IS_SAME(s11, char);
-    BOOST_MPL_ASSERT_IS_SAME(s12, char);
-    BOOST_MPL_ASSERT_IS_SAME(s13, char);
-    BOOST_MPL_ASSERT_IS_SAME(s14, char);
-    BOOST_MPL_ASSERT_IS_SAME(s15, char);
-    BOOST_MPL_ASSERT_IS_SAME(s16, char);
+            >::type w16;
+    BOOST_MPL_ASSERT_IS_SAME(w1, char);
+    BOOST_MPL_ASSERT_IS_SAME(w2, char);
+    BOOST_MPL_ASSERT_IS_SAME(w3, char);
+    BOOST_MPL_ASSERT_IS_SAME(w4, char);
+    BOOST_MPL_ASSERT_IS_SAME(w5, char);
+    BOOST_MPL_ASSERT_IS_SAME(w6, char);
+    BOOST_MPL_ASSERT_IS_SAME(w7, char);
+    BOOST_MPL_ASSERT_IS_SAME(w8, char);
+    BOOST_MPL_ASSERT_IS_SAME(w9, char);
+    BOOST_MPL_ASSERT_IS_SAME(w10, char);
+    BOOST_MPL_ASSERT_IS_SAME(w11, char);
+    BOOST_MPL_ASSERT_IS_SAME(w12, char);
+    BOOST_MPL_ASSERT_IS_SAME(w13, char);
+    BOOST_MPL_ASSERT_IS_SAME(w14, char);
+    BOOST_MPL_ASSERT_IS_SAME(w15, char);
+    BOOST_MPL_ASSERT_IS_SAME(w16, char);
 
     //----------Test lazy_select----------------------------------------------//
 
     typedef mpl::lazy_select<
                 true_, lazy_char, false_, lazy_long, false_, lazy_long, false_, lazy_long
-            >::type t1;
+            >::type x1;
     typedef mpl::lazy_select<
                 false_, lazy_long, true_, lazy_char, false_, lazy_long, false_, lazy_long
-            >::type t2;
+            >::type x2;
     typedef mpl::lazy_select<
                 false_, lazy_long, false_, lazy_long, true_, lazy_char, false_, lazy_long
-            >::type t3;
+            >::type x3;
     typedef mpl::lazy_select<
                 false_, lazy_long, false_, lazy_long, false_, lazy_long, true_, lazy_char
-            >::type t4;
+            >::type x4;
     typedef mpl::lazy_select<
                 false_, lazy_long, false_, lazy_long, false_, lazy_long, false_, lazy_long,
                 true_, lazy_char, false_, lazy_long, false_, lazy_long, false_, lazy_long
-            >::type t5;
+            >::type x5;
     typedef mpl::lazy_select<
                 false_, lazy_long, false_, lazy_long, false_, lazy_long, false_, lazy_long,
                 false_, lazy_long, true_, lazy_char, false_, lazy_long, false_, lazy_long
-            >::type t6;
+            >::type x6;
     typedef mpl::lazy_select<
                 false_, lazy_long, false_, lazy_long, false_, lazy_long, false_, lazy_long,
                 false_, lazy_long, false_, lazy_long, true_, lazy_char, false_, lazy_long
-            >::type t7;
+            >::type x7;
     typedef mpl::lazy_select<
                 false_, lazy_long, false_, lazy_long, false_, lazy_long, false_, lazy_long,
                 false_, lazy_long, false_, lazy_long, false_, lazy_long, true_, lazy_char
-            >::type t8;
-    typedef mpl::lazy_select<
-                false_, lazy_long, false_, lazy_long, false_, lazy_long, false_, lazy_long,
-                false_, lazy_long, false_, lazy_long, false_, lazy_long, false_, lazy_long,
-                true_, lazy_char, false_, lazy_long, false_, lazy_long, false_, lazy_long
-            >::type t9;
-    typedef mpl::lazy_select<
-                false_, lazy_long, false_, lazy_long, false_, lazy_long, false_, lazy_long,
-                false_, lazy_long, false_, lazy_long, false_, lazy_long, false_, lazy_long,
-                false_, lazy_long, true_, lazy_char, false_, lazy_long, false_, lazy_long
-            >::type t10;
-    typedef mpl::lazy_select<
-                false_, lazy_long, false_, lazy_long, false_, lazy_long, false_, lazy_long,
-                false_, lazy_long, false_, lazy_long, false_, lazy_long, false_, lazy_long,
-                false_, lazy_long, false_, lazy_long, true_, lazy_char, false_, lazy_long
-            >::type t11;
-    typedef mpl::lazy_select<
-                false_, lazy_long, false_, lazy_long, false_, lazy_long, false_, lazy_long,
-                false_, lazy_long, false_, lazy_long, false_, lazy_long, false_, lazy_long,
-                false_, lazy_long, false_, lazy_long, false_, lazy_long, true_, lazy_char
-            >::type t12;
+            >::type x8;
     typedef mpl::lazy_select<
                 false_, lazy_long, false_, lazy_long, false_, lazy_long, false_, lazy_long,
                 false_, lazy_long, false_, lazy_long, false_, lazy_long, false_, lazy_long,
                 true_, lazy_char, false_, lazy_long, false_, lazy_long, false_, lazy_long
-            >::type t13;
+            >::type x9;
+    typedef mpl::lazy_select<
+                false_, lazy_long, false_, lazy_long, false_, lazy_long, false_, lazy_long,
+                false_, lazy_long, false_, lazy_long, false_, lazy_long, false_, lazy_long,
+                false_, lazy_long, true_, lazy_char, false_, lazy_long, false_, lazy_long
+            >::type x10;
+    typedef mpl::lazy_select<
+                false_, lazy_long, false_, lazy_long, false_, lazy_long, false_, lazy_long,
+                false_, lazy_long, false_, lazy_long, false_, lazy_long, false_, lazy_long,
+                false_, lazy_long, false_, lazy_long, true_, lazy_char, false_, lazy_long
+            >::type x11;
+    typedef mpl::lazy_select<
+                false_, lazy_long, false_, lazy_long, false_, lazy_long, false_, lazy_long,
+                false_, lazy_long, false_, lazy_long, false_, lazy_long, false_, lazy_long,
+                false_, lazy_long, false_, lazy_long, false_, lazy_long, true_, lazy_char
+            >::type x12;
+    typedef mpl::lazy_select<
+                false_, lazy_long, false_, lazy_long, false_, lazy_long, false_, lazy_long,
+                false_, lazy_long, false_, lazy_long, false_, lazy_long, false_, lazy_long,
+                true_, lazy_char, false_, lazy_long, false_, lazy_long, false_, lazy_long
+            >::type x13;
     typedef mpl::lazy_select<
                 false_, lazy_long, false_, lazy_long, false_, lazy_long, false_, lazy_long,
                 false_, lazy_long, false_, lazy_long, false_, lazy_long, false_, lazy_long,
                 false_, lazy_long, false_, lazy_long, false_, lazy_long, false_, lazy_long,
                 false_, lazy_long, true_, lazy_char, false_, lazy_long, false_, lazy_long
-            >::type t14;
+            >::type x14;
     typedef mpl::lazy_select<
                 false_, lazy_long, false_, lazy_long, false_, lazy_long, false_, lazy_long,
                 false_, lazy_long, false_, lazy_long, false_, lazy_long, false_, lazy_long,
                 false_, lazy_long, false_, lazy_long, false_, lazy_long, false_, lazy_long,
                 false_, lazy_long, false_, lazy_long, true_, lazy_char, false_, lazy_long
-            >::type t15;
+            >::type x15;
     typedef mpl::lazy_select<
                 false_, lazy_long, false_, lazy_long, false_, lazy_long, false_, lazy_long,
                 false_, lazy_long, false_, lazy_long, false_, lazy_long, false_, lazy_long,
                 false_, lazy_long, false_, lazy_long, false_, lazy_long, false_, lazy_long,
                 false_, lazy_long, false_, lazy_long, false_, lazy_long, true_, lazy_char
-            >::type t16;
-    BOOST_MPL_ASSERT_IS_SAME(t1, char);
-    BOOST_MPL_ASSERT_IS_SAME(t2, char);
-    BOOST_MPL_ASSERT_IS_SAME(t3, char);
-    BOOST_MPL_ASSERT_IS_SAME(t4, char);
-    BOOST_MPL_ASSERT_IS_SAME(t5, char);
-    BOOST_MPL_ASSERT_IS_SAME(t6, char);
-    BOOST_MPL_ASSERT_IS_SAME(t7, char);
-    BOOST_MPL_ASSERT_IS_SAME(t8, char);
-    BOOST_MPL_ASSERT_IS_SAME(t9, char);
-    BOOST_MPL_ASSERT_IS_SAME(t10, char);
-    BOOST_MPL_ASSERT_IS_SAME(t11, char);
-    BOOST_MPL_ASSERT_IS_SAME(t12, char);
-    BOOST_MPL_ASSERT_IS_SAME(t13, char);
-    BOOST_MPL_ASSERT_IS_SAME(t14, char);
-    BOOST_MPL_ASSERT_IS_SAME(t15, char);
-    BOOST_MPL_ASSERT_IS_SAME(t16, char);
+            >::type x16;
+    BOOST_MPL_ASSERT_IS_SAME(x1, char);
+    BOOST_MPL_ASSERT_IS_SAME(x2, char);
+    BOOST_MPL_ASSERT_IS_SAME(x3, char);
+    BOOST_MPL_ASSERT_IS_SAME(x4, char);
+    BOOST_MPL_ASSERT_IS_SAME(x5, char);
+    BOOST_MPL_ASSERT_IS_SAME(x6, char);
+    BOOST_MPL_ASSERT_IS_SAME(x7, char);
+    BOOST_MPL_ASSERT_IS_SAME(x8, char);
+    BOOST_MPL_ASSERT_IS_SAME(x9, char);
+    BOOST_MPL_ASSERT_IS_SAME(x10, char);
+    BOOST_MPL_ASSERT_IS_SAME(x11, char);
+    BOOST_MPL_ASSERT_IS_SAME(x12, char);
+    BOOST_MPL_ASSERT_IS_SAME(x13, char);
+    BOOST_MPL_ASSERT_IS_SAME(x14, char);
+    BOOST_MPL_ASSERT_IS_SAME(x15, char);
+    BOOST_MPL_ASSERT_IS_SAME(x16, char);
 
     return 0;
 }
