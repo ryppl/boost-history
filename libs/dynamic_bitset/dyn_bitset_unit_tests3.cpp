@@ -6,17 +6,17 @@
 // purpose.
 
 
-#include <cmath> // for pow
+
+#include "bitset_test.hpp"
+#include "boost/dynamic_bitset.hpp"
 
 #include "boost/limits.hpp"
-#include "boost/dynamic_bitset.hpp"
-#include "bitset_test.hpp"
 #include "boost/config.hpp"
 
 
 // The usual workaround for VC6 bug related
 // to template parameters that don't appear
-// in the function's argument list.
+// in the function's parameter list.
 // We should have this available somewhere,
 // to avoid repeating it in every place. [gps]
 //
@@ -31,9 +31,7 @@ void run_test_cases(BOOST_DUMMY_DEFAULT_ARGUMENT(Block))
   typedef typename bitset_type::size_type size_type;
   typedef bitset_test< boost::dynamic_bitset<Block> > Tests;
 
-  std::string long_string(101, '0');
-  for (std::size_t i = 0; i < long_string.size(); ++i)
-    long_string[i] = '0' + (i % 2);
+  std::string long_string = get_long_string();
 
   std::size_t ul_width = std::numeric_limits<unsigned long>::digits;
 
