@@ -1,5 +1,6 @@
 # declare the location of this subproject relative to the root
 subproject libs/langbinding/test ;
 
-# bring in rules for testing
-subinclude function ;
+subinclude libs/langbinding/test/classes ;
+subinclude libs/langbinding/test/converter ;
+subinclude libs/langbinding/test/function ;
