@@ -146,7 +146,7 @@ namespace boost {
             {
                 return 
                     process_segment_helper< 
-                        container_traits<InputT>::stable_iterators >()(
+                        typename container_traits<InputT>::stable_iterators >()(
                     Storage, Input, InsertIt, SegmentBegin, SegmentEnd );
             }
             

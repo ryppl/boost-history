@@ -128,9 +128,9 @@ namespace boost {
                     InsertIteratorT End ) 
                 {
                     replace_const_time_helper< 
-                        boost::mpl::logical_and<
-                            container_traits<InputT>::const_time_insert,
-                            container_traits<InputT>::const_time_erase >::type >()(
+                        typename boost::mpl::logical_and<
+                            typename container_traits<InputT>::const_time_insert,
+                            typename container_traits<InputT>::const_time_erase >::type >()(
                         Input, From, To, Begin, End );
                 }
             };
@@ -172,7 +172,7 @@ namespace boost {
                 InsertIteratorT End )
             {
                 replace_native_helper< 
-                    container_traits<InputT>::native_replace >()(
+                    typename container_traits<InputT>::native_replace >()(
                     Input, From, To, Begin, End );
             };
 

@@ -243,7 +243,7 @@ namespace boost {
 					is_selected<T> >::type iter;
                 
                 typedef typename iter::type selector;
-                typedef selector::template selector<T> selector_type;
+                typedef typename selector::template selector<T> selector_type;
 
 			public:
                 typedef typename selector_type::traits type;
