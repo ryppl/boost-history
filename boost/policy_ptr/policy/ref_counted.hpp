@@ -111,7 +111,7 @@ namespace boost
             }
         }
 
-        stored_param    clone(stored_param p)
+        stored_param    clone(stored_param p) const
         {
             ++*count_;
             return p;
@@ -149,7 +149,7 @@ namespace boost
 
     private:            // Implementation
         ref_counted_&   operator=(ref_counted_ const&);
-        BOOST_SP_DECLARE_TEMPLATE_FRIEND(U, ref_counted_)
+        BOOST_SP_DECLARE_TEMPLATE_FRIEND(U, ref_counted_, 1)
 
         counter_type*   count_;
     };

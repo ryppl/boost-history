@@ -199,7 +199,7 @@ namespace boost
 
     private:            // Implementation
         ref_linked_&    operator=(ref_linked_ const&);
-        BOOST_SP_DECLARE_TEMPLATE_FRIEND(U, ref_linked_)
+        BOOST_SP_DECLARE_TEMPLATE_FRIEND(U, ref_linked_, 1)
 
         ref_node        node_;
     };
