@@ -66,13 +66,13 @@ int main()
     typedef mpl::range_c<int,0,10> numbers;
     std::vector<int> v;
 
-#if !defined(__BORLANDC__) && (__BORLANDC__ >= 0x561 && !defined(BOOST_STRICT_CONFIG))
-    mpl::for_each<numbers,mpl::_>(
+#if BOOST_WORKAROUND(__BORLANDC__, >= 0x561)
+    mpl::for_each<numbers>(
           boost::bind(&std::vector<int>::push_back, &v, _1)
         );    
 #else
     void (std::vector<int>::* push_back)(int const&) = &std::vector<int>::push_back;
-    mpl::for_each<numbers,mpl::_>(
+    mpl::for_each<numbers>(
           boost::bind(push_back, &v, _1)
         );
 #endif

@@ -1,10 +1,32 @@
 namespace boost { namespace mpl { namespace aux {
-template< typename F >
-struct apply_wrap0 : F
+template< typename F>
+struct msvc_apply0
 {
+    template< bool > struct f_ : F {};
+    template<> struct f_<true>
+    {
+        template< typename P = int > struct apply
+        {
+            typedef int type;
+        };
+    };
+    template< typename T = int > struct result_
+        : f_< aux::msvc_never_true<F>::value >
+            ::template apply<>
+    {
+    };
 };
 
-// workaround for the ETI bug
+template<
+      typename F
+    >
+struct apply_wrap0
+{
+    typedef typename msvc_apply0<F>::template result_<
+        >::type type;
+};
+
+// workaround for ETI bug
 template<>
 struct apply_wrap0<int>
 {
@@ -19,6 +41,7 @@ struct msvc_apply1
     {
         template< typename P1 > struct apply
         {
+            typedef int type;
         };
     };
     template< typename T1 > struct result_
@@ -53,6 +76,7 @@ struct msvc_apply2
     {
         template< typename P1, typename P2 > struct apply
         {
+            typedef int type;
         };
     };
     template< typename T1, typename T2 > struct result_
@@ -87,6 +111,7 @@ struct msvc_apply3
     {
         template< typename P1, typename P2, typename P3 > struct apply
         {
+            typedef int type;
         };
     };
     template< typename T1, typename T2, typename T3 > struct result_
@@ -124,6 +149,7 @@ struct msvc_apply4
             >
         struct apply
         {
+            typedef int type;
         };
     };
     template<
@@ -165,6 +191,7 @@ struct msvc_apply5
             >
         struct apply
         {
+            typedef int type;
         };
     };
     template<

@@ -23,9 +23,19 @@
 #   include <boost/mpl/aux_/nested_type_wknd.hpp>
 #   include <boost/mpl/aux_/na_spec.hpp>
 #   include <boost/mpl/aux_/lambda_support.hpp>
+#   include <boost/mpl/aux_/config/msvc.hpp>
+
+#if defined(BOOST_MSVC)
+#   pragma push_macro("or")
+#   undef or
+#endif
 
 #   define BOOST_MPL_PREPROCESSED_HEADER or.hpp
 #   include <boost/mpl/aux_/include_preprocessed.hpp>
+
+#if defined(BOOST_MSVC)
+#   pragma pop_macro("or")
+#endif
 
 #else
 

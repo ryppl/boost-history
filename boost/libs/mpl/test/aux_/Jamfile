@@ -3,6 +3,7 @@ subproject libs/mpl/test/aux_ ;
 # bring in rules for testing
 import testing ;
 
+compile apply_wrap.cpp ;
 compile debug_print.cpp ;
 compile has_rebind.cpp ;
 compile has_distance.cpp ;

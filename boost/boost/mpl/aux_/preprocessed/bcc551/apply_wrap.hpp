@@ -1,6 +1,98 @@
 namespace boost { namespace mpl { namespace aux {
-template< typename F >
-struct apply_wrap0 : F
+
+template<
+      int N, typename F
+    >
+struct apply_wrap_impl0;
+
+template<
+      typename F
+    >
+struct apply_wrap_impl0<
+          0
+        , F
+        >
+{
+    typedef typename F::template apply<
+// since the defaults are "lost", we have to pass *something* even for nullary
+// metafunction classes
+        na
+        > type;
+};
+
+template<
+      typename F
+    >
+struct apply_wrap_impl0<
+          1
+        , F
+        >
+{
+    typedef typename F::template apply<
+        na
+        > type;
+};
+
+template<
+      typename F
+    >
+struct apply_wrap_impl0<
+          2
+        , F
+        >
+{
+    typedef typename F::template apply<
+        na, na
+        > type;
+};
+
+template<
+      typename F
+    >
+struct apply_wrap_impl0<
+          3
+        , F
+        >
+{
+    typedef typename F::template apply<
+        na, na, na
+        > type;
+};
+
+template<
+      typename F
+    >
+struct apply_wrap_impl0<
+          4
+        , F
+        >
+{
+    typedef typename F::template apply<
+        na, na, na, na
+        > type;
+};
+
+template<
+      typename F
+    >
+struct apply_wrap_impl0<
+          5
+        , F
+        >
+{
+    typedef typename F::template apply<
+        na, na, na, na, na
+        > type;
+};
+
+template<
+      typename F
+    >
+struct apply_wrap0
+    : apply_wrap_impl0<
+          ::boost::mpl::aux::arity< F,0 >::value
+        , F
+        >::type
 {
 };
 

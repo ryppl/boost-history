@@ -1,10 +1,15 @@
 namespace boost { namespace mpl { namespace aux {
-template< typename F >
-struct apply_wrap0 : F
+
+template<
+      typename F
+    >
+struct apply_wrap0
 {
+    typedef typename F::template apply<
+        >::type type;
 };
 
-// workaround for the ETI bug
+// workaround for ETI bug
 template<>
 struct apply_wrap0<int>
 {
