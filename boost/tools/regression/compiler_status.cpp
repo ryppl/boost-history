@@ -60,6 +60,9 @@ namespace
   // test, and that they match the column header.  So save the names at the
   // time column headings are generated.
   std::vector<string> toolsets;
+  std::vector<string> toolsets_desc;
+  std::vector<string> toolsets_vers;
+  std::vector<string> toolsets_attr;
 
   fs::ifstream jamfile;
   fs::ofstream report;
@@ -563,14 +566,12 @@ const string & attribute_value( const xml::element & element,
 
     // for each compiler, generate <td>...</td> html
     bool anything_to_report = false;
-    bool color_cell = true;
-    for ( std::vector<string>::const_iterator itr=toolsets.begin();
-      itr != toolsets.end(); ++itr )
+    for ( std::size_t c = 0; c < toolsets.size(); ++c )
     {
-      if (color_cell) cell_bgcolor = " bgcolor=\"#EEEEFF\"";
-      else cell_bgcolor = "";
-      color_cell = !color_cell;
-      anything_to_report |= do_cell( lib_name, test_dir, test_name, *itr, target,
+      if (c&1) cell_bgcolor = "";
+      else cell_bgcolor = " bgcolor=\"#EEEEFF\"";
+      cell_bgcolor += toolsets_attr[c];
+      anything_to_report |= do_cell( lib_name, test_dir, test_name, toolsets[c], target,
         always_show_run_output );
     }
 
@@ -634,6 +635,7 @@ const string & attribute_value( const xml::element & element,
 
     std::sort( results.begin(), results.end() );
 
+    report << "<tbody>\n";
     string previous_library_v;
     for ( std::vector<string>::iterator v(results.begin());
       v != results.end(); ++v )
@@ -646,12 +648,13 @@ const string & attribute_value( const xml::element & element,
         previous_library_v = library_v;
         report << "<tr><td colspan=3>" << library_v << "</td>";
         for (std::size_t c = 0; c < toolsets.size(); ++c)
-          if (c&1) report << "<td>";
-          else report << "<td bgcolor=\"#EEEEFF\">";
+          if (c&1) report << "<td" << toolsets_attr[c] << ">";
+          else report << "<td bgcolor=\"#EEEEFF\"" << toolsets_attr[c] << ">";
         report << "</tr>";
       }
       report << "<tr><td>&nbsp;</td>" << v->substr(library_i1+5) << "\n";
     }
+    report << "</tbody>\n";
   }
 
 //  do_table  ----------------------------------------------------------------//
@@ -671,6 +674,7 @@ const string & attribute_value( const xml::element & element,
     // generate the column headings
 
     report <<
+      "<thead>\n"
       "<tr>\n"
       "<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>\n"
       "<td>&nbsp;</td>\n"
@@ -693,6 +697,16 @@ const string & attribute_value( const xml::element & element,
           if ( specific_compiler.size() != 0
             && specific_compiler != compiler_itr->leaf() ) continue;
           toolsets.push_back( compiler_itr->leaf() );
+          toolsets_desc.push_back( compiler_desc( compiler_itr->leaf() ) );
+          toolsets_vers.push_back( version_desc( compiler_itr->leaf() ) );
+          toolsets_attr.push_back( toolsets_desc.back() + " " + toolsets_vers.back() );
+          for ( string::size_type tag_i = toolsets_attr.back().find('<'); tag_i != string::npos;
+            tag_i = toolsets_attr.back().find('<') )
+          {
+            toolsets_attr.back().replace( tag_i, toolsets_attr.back().find( '>', tag_i ) - tag_i + 1, " " );
+          }
+          toolsets_attr.back() = " title=\""+toolsets_attr.back()+
+            "\" onMouseOver=\"window.status='"+toolsets_attr.back()+"'\"";
           report << "<td>&nbsp;</td>\n";
         }
       }
@@ -713,11 +727,9 @@ const string & attribute_value( const xml::element & element,
       }
       if (c&1) report << "<td colspan=" << (toolsets.size()-c+1) << ">";
       else report << "<td bgcolor=\"#EEEEFF\" colspan=" << (toolsets.size()-c+1) << ">";
-      string desc( compiler_desc( toolsets[c] ) );
-      string vers( version_desc( toolsets[c] ) );
       report
-         << (desc.size() ? desc : toolsets[c])
-         << (vers.size() ? (string( "<br>" ) + vers ) : string( "" ))
+         << (toolsets_desc[c].size() ? toolsets_desc[c] : toolsets[c])
+         << (toolsets_vers[c].size() ? (string( "<br>" ) + toolsets_vers[c] ) : string( "" ))
          << "</td></tr>\n";
     }
 
@@ -727,11 +739,9 @@ const string & attribute_value( const xml::element & element,
     report << "<!--\n";
     for (std::size_t c = 0; c < toolsets.size(); ++c)
     {
-      string desc( compiler_desc( toolsets[c] ) );
-      string vers( version_desc( toolsets[c] ) );
       report << "<td>"
-           << (desc.size() ? desc : toolsets[c])
-           << (vers.size() ? (string( "<br>" ) + vers ) : string( "" ))
+           << (toolsets_desc[c].size() ? toolsets_desc[c] : toolsets[c])
+           << (toolsets_vers[c].size() ? (string( "<br>" ) + toolsets_vers[c] ) : string( "" ))
            << "</td>\n";
     }
     report << "</tr> -->\n";
@@ -741,7 +751,9 @@ const string & attribute_value( const xml::element & element,
       if (c&1) report << "<td>&nbsp;</td>\n";
       else report << "<td bgcolor=\"#EEEEFF\">&nbsp;</td>\n";
     }
-    report << "<td>&nbsp;</td></tr>\n";
+    report <<
+      "<td>&nbsp;</td></tr>\n"
+      "</thead>\n";
 
     // now the rest of the table body
 
