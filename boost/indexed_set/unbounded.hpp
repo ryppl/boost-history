@@ -22,7 +22,8 @@ struct unbounded_type{};
 
 namespace{
 
-const detail::unbounded_type& unbounded=detail::unbounded_type();
+detail::unbounded_type  unbounded_obj=detail::unbounded_type();
+detail::unbounded_type& unbounded=unbounded_obj;
 
 } /* unnamed */
 

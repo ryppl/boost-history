@@ -206,7 +206,9 @@ public:
     BOOST_INDEXED_SET_CHECK_VALID_ITERATOR(position);
     BOOST_INDEXED_SET_CHECK_IS_OWNER(position,*this);
     BOOST_INDEXED_SET_SEQ_INDEX_CHECK_INVARIANT;
-    std::pair<final_node_type*,bool> p=final_insert_(x);
+    std::pair<final_node_type*,bool> p=this->final_insert_(x);
+    /* "this->" not required by std, but CW9.2 seems to need it */
+
     if(p.second)relink(position.get_node(),p.first);
     return std::pair<iterator,bool>(make_iterator(p.first),p.second);
   }

@@ -183,7 +183,9 @@ public:
   std::pair<iterator,bool> insert(value_param_type x)
   {
     BOOST_INDEXED_SET_INDEX_CHECK_INVARIANT;
-    std::pair<final_node_type*,bool> p=final_insert_(x);
+    std::pair<final_node_type*,bool> p=this->final_insert_(x);
+    /* "this->" not required by std, but CW9.2 seems to need it */
+
     return std::pair<iterator,bool>(make_iterator(p.first),p.second);
   }
 
