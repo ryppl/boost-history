@@ -145,7 +145,7 @@ private:
 };
 
 /* list_wrapper and multiset_wrapper adapt std::lists and std::multisets
- * to make them conform to a set-like insert interface which previous
+ * to make them conform to a set-like insert interface which test
  * routines do assume.
  */
 
