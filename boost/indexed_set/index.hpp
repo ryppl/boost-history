@@ -26,7 +26,6 @@
 #include <boost/mpl/push_front.hpp>
 #include <boost/ref.hpp>
 #include <boost/tuple/tuple.hpp>
-#include <functional>
 
 #if defined(BOOST_INDEXED_SET_ENABLE_INVARIANT_CHECKING)
 #define BOOST_INDEXED_SET_INDEX_CHECK_INVARIANT \
