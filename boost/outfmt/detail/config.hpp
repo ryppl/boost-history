@@ -51,6 +51,7 @@
       // on hashed containers. Apparently, the interval library is not configured
       // for intel.
 
+#     define BOOST_IO_NO_DEPRECATED_MODIFIER
 #     define BOOST_IOFM_NO_LIB_QUATERNION
 #     define BOOST_IOFM_NO_LIB_OCTONION
 #     define BOOST_IOFM_NO_LIB_INTERVAL

@@ -17,21 +17,31 @@
 #  include <map>         // std::map, std::multimap
 #  include <utility>     // std::pair
 
+#  if defined(BOOST_IO_NO_DEPRECATED_MODIFIER) && defined(BOOST_DINKUMWARE_STDLIB)
+#     define _DEPRECATED_TEMP _DEPRECATED
+#     define _DEPRECATED
+#  endif
+
 #  if defined(BOOST_IOFM_HASH_CONTAINERS)
 #     include <hash_set> // std::hash_set, std::hash_multiset
 #     include <hash_map> // std::hash_map, std::hash_multimap
 #  endif
+#  if !defined(BOOST_IOFM_NO_LIB_QUATERNION)
+#     include <boost/math/quaternion.hpp>
+#  endif
+
+#  if defined(BOOST_IO_NO_DEPRECATED_MODIFIER) && defined(BOOST_DINKUMWARE_STDLIB)
+#     define _DEPRECATED _DEPRECATED_TEMP
+#  endif
+
 #  if defined(BOOST_HAS_SLIST)
 #     include <slist>    // std::slist
 #  endif
 
-#  include <boost/compressed_pair.hpp>           
+#  include <boost/compressed_pair.hpp>
 #  include <boost/rational.hpp>
 #  if !defined(BOOST_IOFM_NO_LIB_INTERVAL)
 #     include <boost/numeric/interval/interval.hpp>
-#  endif
-#  if !defined(BOOST_IOFM_NO_LIB_QUATERNION)
-#     include <boost/math/quaternion.hpp>           
 #  endif
 #  if !defined(BOOST_IOFM_NO_LIB_OCTONION)
 #     include <boost/math/octonion.hpp>             
