@@ -26,12 +26,6 @@
 
 namespace boost {
 
-  namespace detail {
-
-    template <class T> inline bool sign(const T& x) { return x < 0; }
-
-  } // namespace detail
-
   namespace interval_lib {
 
   /*

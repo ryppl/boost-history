@@ -21,10 +21,6 @@
 #ifndef BOOST_INTERVAL_DETAIL_PPC_ROUNDING_CONTROL_HPP
 #define BOOST_INTERVAL_DETAIL_PPC_ROUNDING_CONTROL_HPP
 
-#ifndef BOOST_INTERVAL_HPP
-#error Internal header file: This header must be included by <boost/interval.hpp> only.
-#endif
-
 #ifndef __GNUC__
 #error This header only works with GNU CC.
 #endif

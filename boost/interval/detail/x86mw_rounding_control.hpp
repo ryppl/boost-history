@@ -21,10 +21,6 @@
 #ifndef BOOST_INTERVAL_DETAIL_X86MW_ROUNDING_CONTROL_HPP
 #define BOOST_INTERVAL_DETAIL_X86MW_ROUNDING_CONTROL_HPP
 
-#ifndef BOOST_INTERVAL_HPP
-#error Internal header file: This header must be included by <boost/interval.hpp> only.
-#endif
-
 #include <cassert>
 #include <fenv.h>      // ISO C 99 rounding mode control
 

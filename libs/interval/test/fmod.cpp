@@ -1,4 +1,9 @@
-#include <boost/interval.hpp>
+#include <boost/interval/interval.hpp>
+#include <boost/interval/arith.hpp>
+#include <boost/interval/transc.hpp>
+#include <boost/interval/utility.hpp>
+#include <boost/interval/checking.hpp>
+#include <boost/interval/rounding.hpp>
 #include <boost/test/test_tools.hpp>
 
 struct my_rounded_arith {

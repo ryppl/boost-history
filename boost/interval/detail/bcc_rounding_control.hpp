@@ -21,10 +21,6 @@
 #ifndef BOOST_INTERVAL_DETAIL_BCC_ROUNDING_CONTROL_HPP
 #define BOOST_INTERVAL_DETAIL_BCC_ROUNDING_CONTROL_HPP
 
-#ifndef BOOST_INTERVAL_HPP
-#  error Internal header file: This header must be included by <boost/interval.hpp> only.
-#endif
-
 #ifndef __BORLANDC__
 #  error This header is only intended for Borland C++.
 #endif

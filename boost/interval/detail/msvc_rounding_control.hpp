@@ -21,10 +21,6 @@
 #ifndef BOOST_INTERVAL_DETAIL_MSVC_ROUNDING_CONTROL_HPP
 #define BOOST_INTERVAL_DETAIL_MSVC_ROUNDING_CONTROL_HPP
 
-#ifndef BOOST_INTERVAL_HPP
-#  error Internal header file: This header must be included by <boost/interval.hpp> only.
-#endif
-
 #ifndef _MSC_VER
 #  error This header is only intended for MSVC, but might work for Borland as well
 #endif

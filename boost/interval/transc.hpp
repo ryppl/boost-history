@@ -22,6 +22,8 @@
 #define BOOST_INTERVAL_TRANSC_HPP
 
 #include <cmath>
+#include <boost/interval/rounding.hpp>
+#include <boost/interval/constants.hpp>
 
 namespace boost {
 

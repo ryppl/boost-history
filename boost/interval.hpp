@@ -22,33 +22,6 @@
 #include <cmath>
 #include <algorithm>
 #include <boost/interval/detail/bugs.hpp>
-
-/*
-namespace boost {
-
-  namespace interval_lib {
-
-    template<class T> struct rounded_math;
-    template<class T> struct checking_strict;
-
-  } // namespace interval_lib
-
-  template<class T,
-           class Rounding = interval_lib::rounded_math<T>,
-           class Checking = interval_lib::checking_strict<T> >
-  struct interval_traits
-  {
-    typedef T base_type;
-    typedef Rounding rounding;
-    typedef Checking checking;
-  };
-
-  template<class T, class Traits = interval_traits<T> >
-  class interval;  
-
-} // namespace boost
-*/
-
 #include <boost/interval/interval.hpp>
 
 namespace boost {

@@ -21,10 +21,6 @@
 #ifndef BOOST_INTERVAL_DETAIL_X86_ROUNDING_CONTROL_HPP
 #define BOOST_INTERVAL_DETAIL_X86_ROUNDING_CONTROL_HPP
 
-#ifndef BOOST_INTERVAL_HPP
-#  error Internal header file: This header must be included by <boost/interval.hpp> only.
-#endif
-
 #ifdef __GNUC__
 #  include <boost/interval/detail/x86gcc_rounding_control.hpp>
 #elif defined(__BORLANDC__)

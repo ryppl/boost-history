@@ -30,7 +30,7 @@ int main() {
   a += z;
   z *= q;
   a -= p;
-  // a /= q;
+  a /= q;
   std::cout << z << std::endl;
   std::cout << a << std::endl;
 }

@@ -28,16 +28,14 @@
 namespace boost {
   namespace interval_lib {
 
-template<class T>
 struct exception_create_empty
 {
-  T operator()()
+  void operator()()
   {
     throw std::runtime_error("boost::interval: empty interval created");
   }
 };
 
-template<class T>
 struct exception_invalid_number
 {
   void operator()()
@@ -80,7 +78,7 @@ struct checking_base
 };
 
 template<class T, class Checking = checking_base<T>,
-	 class Exception = exception_create_empty<T> >
+	 class Exception = exception_create_empty>
 struct checking_no_empty: Checking
 {
   static T nan()
@@ -114,7 +112,7 @@ struct checking_no_nan: Checking
 };
 
 template<class T, class Checking,
-	 class Exception = exception_invalid_number<T> >
+	 class Exception = exception_invalid_number>
 struct checking_catch_nan: Checking
 {
   static bool is_nan(const T& x)

@@ -216,50 +216,61 @@ const T& interval<T, Traits>::upper() const
 template<class T, class Policies> inline
 bool interval<T, Policies>::operator< (const interval_holder& r) const
 {
-  if (checking::is_empty(low, up))
-  if (up < r.low) return true;
-  else if (low >= r.up) return false;
-  else throw interval_lib::comparison_error();
+  if (!checking::is_empty(low, up)) {
+    if (up < r.low) return true;
+    else if (low >= r.up) return false;
+  }
+  throw interval_lib::comparison_error();
 }
 
 template<class T, class Policies> inline
 bool interval<T, Policies>::operator> (const interval_holder& r) const
 {
-  if (up > r.low) return true;
-  else if (low <= r.up) return false;
-  else throw interval_lib::comparison_error();
+  if (!checking::is_empty(low, up)) {
+    if (low > r.up) return true;
+    else if (up <= r.low) return false;
+  }
+  throw interval_lib::comparison_error();
 }
 
 template<class T, class Policies> inline
 bool interval<T, Policies>::operator<= (const interval_holder& r) const
 {
-  if (up <= r.low) return true;
-  else if (low > r.up) return false;
-  else throw interval_lib::comparison_error();
+  if (!checking::is_empty(low, up)) {
+    if (up <= r.low) return true;
+    else if (low > r.up) return false;
+  }
+  throw interval_lib::comparison_error();
 }
 
 template<class T, class Policies> inline
 bool interval<T, Policies>::operator>= (const interval_holder& r) const
 {
-  if (up >= r.low) return true;
-  else if (low < r.up) return false;
-  else throw interval_lib::comparison_error();
+  if (!checking::is_empty(low, up)) {
+    if (low >= r.up) return true;
+    else if (up < r.low) return false;
+  }
+  throw interval_lib::comparison_error();
 }
 
 template<class T, class Policies> inline
 bool interval<T, Policies>::operator== (const interval_holder& r) const
 {
-  if (up == r.low && low == r.up) return true;
-  else if (up < r.low || low > r.up) return false;
-  else throw interval_lib::comparison_error();
+  if (!checking::is_empty(low, up)) {
+    if (up == r.low && low == r.up) return true;
+    else if (up < r.low || low > r.up) return false;
+  }
+  throw interval_lib::comparison_error();
 }
 
 template<class T, class Policies> inline
 bool interval<T, Policies>::operator!= (const interval_holder& r) const
 {
-  if (up < r.low || low > r.up) return true;
-  else if (up == r.low && low == r.up) return false;
-  else throw interval_lib::comparison_error();
+  if (!checking::is_empty(low, up)) {
+    if (up < r.low || low > r.up) return true;
+    else if (up == r.low && low == r.up) return false;
+  }
+  throw interval_lib::comparison_error();
 }
 
 /*
@@ -269,49 +280,61 @@ bool interval<T, Policies>::operator!= (const interval_holder& r) const
 template<class T, class Policies> inline
 bool interval<T, Policies>::operator< (const number_holder& r) const
 {
-  if (up < r.val) return true;
-  else if (low >= r.val) return false;
-  else throw interval_lib::comparison_error();
+  if (!checking::is_empty(low, up)) {
+    if (up < r.val) return true;
+    else if (low >= r.val) return false;
+  }
+  throw interval_lib::comparison_error();
 }
 
 template<class T, class Policies> inline
 bool interval<T, Policies>::operator> (const number_holder& r) const
 {
-  if (up > r.val) return true;
-  else if (low <= r.val) return false;
-  else throw interval_lib::comparison_error();
+  if (!checking::is_empty(low, up)) {
+    if (low > r.val) return true;
+    else if (up <= r.val) return false;
+  }
+  throw interval_lib::comparison_error();
 }
 
 template<class T, class Policies> inline
 bool interval<T, Policies>::operator<= (const number_holder& r) const
 {
-  if (up <= r.val) return true;
-  else if (low > r.val) return false;
-  else throw interval_lib::comparison_error();
+  if (!checking::is_empty(low, up)) {
+    if (up <= r.val) return true;
+    else if (low > r.val) return false;
+  }
+  throw interval_lib::comparison_error();
 }
 
 template<class T, class Policies> inline
 bool interval<T, Policies>::operator>= (const number_holder& r) const
 {
-  if (up >= r.val) return true;
-  else if (low < r.val) return false;
-  else throw interval_lib::comparison_error();
+  if (!checking::is_empty(low, up)) {
+    if (low >= r.val) return true;
+    else if (up < r.val) return false;
+  }
+  throw interval_lib::comparison_error();
 }
 
 template<class T, class Policies> inline
 bool interval<T, Policies>::operator== (const number_holder& r) const
 {
-  if (up == r.val && low == r.val) return true;
-  else if (up < r.val || low > r.val) return false;
-  else throw interval_lib::comparison_error();
+  if (!checking::is_empty(low, up)) {
+    if (up == r.val && low == r.val) return true;
+    else if (up < r.val || low > r.val) return false;
+  }
+  throw interval_lib::comparison_error();
 }
 
 template<class T, class Policies> inline
 bool interval<T, Policies>::operator!= (const number_holder& r) const
 {
-  if (up < r.val || low > r.val) return true;
-  else if (up == r.val && low == r.val) return false;
-  else throw interval_lib::comparison_error();
+  if (!checking::is_empty(low, up)) {
+    if (up < r.val || low > r.val) return true;
+    else if (up == r.val && low == r.val) return false;
+  }
+  throw interval_lib::comparison_error();
 }
 
 } // namespace boost
