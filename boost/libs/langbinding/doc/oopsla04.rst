@@ -343,7 +343,7 @@ A typical wrapper-class will look something like this:
         }
     };
 
-To expose this class and it's virtual function ``f``, we use class_ like
+To expose this class and it's virtual function ``f``, we use ``class_`` like
 this::
 
     class_<BaseWrap>("Base")
@@ -450,8 +450,8 @@ inheritance hierarchy.
 
    __ `Function Creation`_
 
-.. |ModuleBuilder| subst:: :concept:`Module Builder`
-.. |ModuleBuilders| subst:: :concept:`Module Builders`
+.. |ModuleBuilder| replace:: :concept:`Module Builder`
+.. |ModuleBuilders| replace:: :concept:`Module Builders`
 
 |ModuleBuilders| use a visitation interface to explore
 the ``module_description`` passed to them.  The visited items
@@ -490,7 +490,7 @@ This interface is used both for functions bound at module scope and
 for member functions bound within classes.  Functions visited while
 a class is being visited should be treated as member functions.
 
-Typically, upon visiting a function the |Module Builder|
+Typically, upon visiting a function the |ModuleBuilder|
 will want to create a new callable object (in its target language)
 that, when called, invokes ``f`` ::
 
