@@ -5,12 +5,12 @@
 #include <iostream>  // std::cout
 #include <string>    // std::string
 #include <algorithm> // std::generate
-#include <vector>    // std::vector
-#include <list>      // std::list
 #include <stdlib.h>  // rand
 #include <string.h>  // strlen
 
-#include <boost/outfmt/formatlist.hpp>
+#include <boost/outfmt/formatob.hpp>
+#include <boost/outfmt/stl/vector.hpp>
+#include <boost/outfmt/stl/list.hpp>
 
 int main()
 {
@@ -43,31 +43,32 @@ int main()
    // examples
 
    std::cout << "int[ 4 ] = "
-             << boost::io::formatlist( i, i + 4 ).format( ocf )
+             << boost::io::formatob( boost::io::range( i, i + 4 )).format( ocf )
              << '\n';
 
    // [results]: int[ 4 ] = | 3, 6, 9, 12 |
 
    std::cout << "int[ 4 ] = "
-             << boost::io::formatlist( i, i + 4 ).format( fmt )
+             << boost::io::formatob( boost::io::range( i, i + 4 )).format( fmt )
              << '\n';
 
    // [results]: int[ 4 ] = ( 3, 6, 9, 12 )
 
    std::cout << "char * = "
-             << boost::io::formatlist( str, str + ::strlen( str )).format( fmt )
+             << boost::io::formatob( boost::io::range( str, str + ::strlen( str )))
+                .format( fmt )
              << '\n';
 
    // [results]: char * = ( J, e, a, n, e, t, t, e,  , B, i, e, d, e, r, m, a, n, n )
 
    std::cout << "list< char > = "
-             << boost::io::format( l ).format( fmt )
+             << boost::io::formatob( l ).format( fmt )
              << '\n';
 
    // [results]: int[ 4 ] = ( A, B, C )
 
    std::cout << "list< char > = "
-             << boost::io::format( l ).format( fmt2 )
+             << boost::io::formatob( l ).format( fmt2 )
              << '\n';
 
    // [results]: int[ 4 ] = ( A -- B -- C )

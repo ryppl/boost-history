@@ -33,7 +33,7 @@ int main()
 
    // formatter configurations
 
-   boost::io::pair_object< char >   pairfmt1; // [format]: (a,b)
+   boost::io::pair_object< char >  pairfmt1; // [format]: (a,b)
 
    // output boost types
 
@@ -60,7 +60,7 @@ int main()
    // [results]: compressed_pair< char, int > = (A,10)
 
 #  if !defined(BOOST_IOFM_NO_LIB_QUATERNION)
-      boost::math::quaternion< float >    h( 0.1f, 0.2f, 0.3f, 0.4f );
+      boost::math::quaternion< float > h( 0.1f, 0.2f, 0.3f, 0.4f );
 
       std::cout << "quaternion< float > = "
                 << boost::io::formatob( h, boost::io::naryfmt())
@@ -70,7 +70,7 @@ int main()
 #  endif
 
 #  if !defined(BOOST_IOFM_NO_LIB_OCTONION)
-      boost::math::octonion<   float >    o( 0.1f, 0.2f, 0.3f, 0.4f, 1.1f, 1.2f, 1.3f, 1.4f );
+      boost::math::octonion< float >   o( 0.1f, 0.2f, 0.3f, 0.4f, 1.1f, 1.2f, 1.3f, 1.4f );
 
       std::cout << "octonion< float > = "
                 << boost::io::formatob( o, boost::io::naryfmt())

@@ -5,12 +5,12 @@
 #include <iostream>  // std::cout
 #include <string>    // std::string
 #include <algorithm> // std::generate
-#include <vector>    // std::vector
-#include <list>      // std::list
 #include <stdlib.h>  // rand
 #include <string.h>  // strlen
 
-#include <boost/outfmt/formatlist.hpp>
+#include <boost/outfmt/formatob.hpp>
+#include <boost/outfmt/stl/vector.hpp>
+#include <boost/outfmt/stl/list.hpp>
 
 int main()
 {
@@ -36,33 +36,52 @@ int main()
    // examples
 
    std::cout << "vector< int > = "
-             << boost::io::format( v ).format( "( ", " )" )
+             << boost::io::formatob( v ).format( "( ", " )" )
              << '\n';
 
    // [results]: vector< int > = ( 41, 18467, 6334, 26500, 19169, 15724, 11478, 29358, 26962, 24464 )
 
    std::cout << "vector< int > = "
-             << boost::io::format( v ).format( " | " )
+             << boost::io::formatob( v ).format( " | " )
              << '\n';
 
    // [results]: vector< int > = [ 41 | 18467 | 6334 | 26500 | 19169 | 15724 | 11478 | 29358 | 26962 | 24464 ]
 
    std::cout << "int[ 4 ] = "
-//           << boost::io::formatlist( i, i + 1 ) // [review]
-             << boost::io::formatob( boost::io::range( i, i + 4 ), boost::io::rangefmt().format( " ; " ))
+             << boost::io::formatob
+                (
+                   boost::io::range( i, i + 4 ),
+                   boost::io::rangefmt().format( " ; " )
+                )
+             << '\n';
+
+   // [results]: int[ 4 ] = [ 3 ; 6 ; 9 ; 12 ]
+
+   std::cout << "int[ 4 ] = "
+             << boost::io::formatob
+                (
+                   boost::io::range( i, i + 4 ),
+                   boost::io::rangefmt()
+                ).format( " ; " )
+             << '\n';
+
+   // [results]: int[ 4 ] = [ 3 ; 6 ; 9 ; 12 ]
+
+   std::cout << "int[ 4 ] = "
+             << boost::io::formatob( boost::io::range( i, i + 4 )).format( " ; " )
              << '\n';
 
    // [results]: int[ 4 ] = [ 3 ; 6 ; 9 ; 12 ]
 
    std::cout << "char * = "
-             << boost::io::formatlist( str, str + ::strlen( str ))
+             << boost::io::formatob( boost::io::range( str, str + ::strlen( str )))
                 .format( "[", "]", "; " )
              << '\n';
 
    // [results]: char * = [J; e; a; n; e; t; t; e;  ; B; i; e; d; e; r; m; a; n; n]
 
    std::cout << "std::string = "
-             << boost::io::format( s ).format( "", "", "|" )
+             << boost::io::formatob( s, boost::io::containerfmt()).format( "", "", "|" )
              << '\n';
 
    // [results]: std::string = W|a|r|u|m| |b|i|s|t| |d|u| |n|i|c|h|t| |d|a|?
@@ -70,7 +89,10 @@ int main()
    std::cout << '\n' << "sub-list:" << '\n' << '\n';
 
    std::cout << "std::string = "
-             << boost::io::formatlistex< char >( s.begin() + 6, s.end())
+             << boost::io::formatobex< char >
+                (
+                   boost::io::range( s.begin() + 6, s.end())
+                )
                 .format( '"', '"', '-' )
              << '\n';
 
@@ -79,29 +101,32 @@ int main()
    std::cout << '\n' << "advanced formatting:" << '\n' << '\n';
 
    std::cout << "std::string = "
-             << boost::io::format( s ).format( "<: ", " :>", " " )
+             << boost::io::formatob( s, boost::io::containerfmt()).format( "<: ", " :>", " " )
              << '\n';
 
    // [results]: std::string = <: W a r u m   b i s t   d u   n i c h t   d a ? :>
 
    std::cout << "std::string = "
-             << boost::io::formatout // [review]: out signature
+             << boost::io::formatob
                 (
                    s,
-                   boost::io::wrappedfmt().format( "'", "'" ) // :-)
+                   boost::io::containerfmt
+                   (
+                      boost::io::wrappedfmt().format( "'", "'" ) // :-)
+                   )
                 ).format( "{ ", " }" )
              << '\n';
 
    // [results]: std::string = { 'W', 'a', 'r', 'u', 'm', ' ', 'b', 'i', 's', 't', ' ', 'd', 'u', ' ', 'n', 'i', 'c', 'h', 't', ' ', 'd', 'a', '?' }
 
    std::cout << "int[ 4 ] = "
-             << boost::io::formatlist( i, i + 4 ).format( " -:- " )
+             << boost::io::formatob( boost::io::range( i, i + 4 )).format( " -:- " )
              << '\n';
 
    // [results]: int[ 4 ] = [ 3 -:- 6 -:- 9 -:- 12 ]
 
    std::cout << "int[ 4 ] = "
-             << boost::io::formatlist( i, i + 4 )
+             << boost::io::formatob( boost::io::range( i, i + 4 ))
                 .format( " -\n- " ).format( "\n- ", " -" )
              << '\n';
 

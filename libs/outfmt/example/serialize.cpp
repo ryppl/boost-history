@@ -17,8 +17,6 @@
 #  include <boost/outfmt/boost/octonion.hpp>
 #endif
 
-
-
 #include <boost/outfmt/formatob.hpp>
 
 int main()

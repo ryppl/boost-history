@@ -4,12 +4,11 @@
 
 #include <iostream>                       // std::cout
 #include <string>                         // std::string
-#include <boost/outfmt/stl/complex.hpp>       // std::map
+
+#include <boost/outfmt/formatob.hpp>
+#include <boost/outfmt/stl/complex.hpp>   // std::complex
 #include <boost/outfmt/stl/list.hpp>      // std::list
 #include <boost/outfmt/stl/map.hpp>       // std::map
-
-#include <boost/outfmt/formatlist.hpp>
-#include <boost/outfmt/formatob.hpp>
 
 int main()
 {
@@ -36,12 +35,12 @@ int main()
 
    // formatter configurations
 
-   boost::io::pair_object< const char * >    pairfmt1; // [format]: ( a, b )
+   boost::io::pair_object< const char * >   pairfmt1; // [format]: ( a, b )
 
-   boost::io::pair_object< const char * >    pairfmt2; // [format]: ( a | b )
+   boost::io::pair_object< const char * >   pairfmt2; // [format]: ( a | b )
    pairfmt2.format( " | " );
 
-   boost::io::pair_object< const char * >    pairfmt3; // [format]: a ==> b
+   boost::io::pair_object< const char * >   pairfmt3; // [format]: a ==> b
    pairfmt3.format( "", "", " ==> " );
 
    // std::pair output examples
@@ -50,7 +49,7 @@ int main()
              << boost::io::formatob( p, pairfmt3 )
              << '\n';
 
-   // [results]: pair< string, int > = Hello ==> 10
+   // [results]: pair< string, int > = "Hello" ==> 10
 
    std::cout << "pair< string, int > = "
              << boost::io::formatob
@@ -60,93 +59,95 @@ int main()
                 )
              << '\n' << '\n';
 
-   // [results]: pair< string, int > = ( Hello; 10 )
+   // [results]: pair< string, int > = ( "Hello"; 10 )
 
    // std::map output examples
 
    std::cout << "map< string, string > = "
-             << boost::io::formatout( m, pairfmt1 ) // [review]: out signature
+             << boost::io::formatob( m, boost::io::containerfmt( pairfmt1 ))
              << '\n' << '\n';
 
-   // [results]: map< string, string > = [ ( Abscheid Nehmen, Farewell ), ( Engel, Angel ), ( Mas Alla, Beyond ), ( Wenn Das Liebe Ist, If This Is Love ) ]
+   // [results]: map< string, string > = [ ( "Abscheid Nehmen", "Farewell" ), ( "Engel", "Angel" ), ( "Mas Alla", "Beyond" ), ( "Wenn Das Liebe Ist", "If This Is Love" ) ]
 
    std::cout << "map< string, string > = "
-             << boost::io::formatout( m, pairfmt1 ) // [note]: pairfmt1 is reused // [review]: out signature
+             << boost::io::formatob( m, boost::io::containerfmt( pairfmt1 )) // [note]: pairfmt1 is reused
                 .format( "\n", "", "\n" )
              << '\n' << '\n';
 
    /* [results]:
 
       map< string, string > =
-      ( Abscheid Nehmen, Farewell )
-      ( Engel, Angel )
-      ( Mas Alla, Beyond )
-      ( Wenn Das Liebe Ist, If This Is Love )
+      ( "Abscheid Nehmen", "Farewell" )
+      ( "Engel", "Angel" )
+      ( "Mas Alla", "Beyond" )
+      ( "Wenn Das Liebe Ist", "If This Is Love" )
    */
 
    std::cout << "map< string, string > = "
-             << boost::io::formatout // [review]: out signature
+             << boost::io::formatob
                 (
                    m,
-                   boost::io::pairfmt() // inlined equivalent to pairfmt1
+                   boost::io::containerfmt( boost::io::pairfmt()) // inlined equivalent to pairfmt1
                 ).format( "\n", "", "\n" )
              << '\n' << '\n';
 
    /* [results]:
 
       map< string, string > =
-      ( Abscheid Nehmen, Farewell )
-      ( Engel, Angel )
-      ( Mas Alla, Beyond )
-      ( Wenn Das Liebe Ist, If This Is Love )
+      ( "Abscheid Nehmen", "Farewell" )
+      ( "Engel", "Angel" )
+      ( "Mas Alla", "Beyond" )
+      ( "Wenn Das Liebe Ist", "If This Is Love" )
    */
 
    // changing the way std::pair is outputted
 
    std::cout << "map< string, string > = "
-             << boost::io::formatout( m, pairfmt2 ) // [review]: out signature
+             << boost::io::formatob( m, boost::io::containerfmt( pairfmt2 ))
                 .format( "\n==> ", "", "\n==> " )
              << '\n' << '\n';
 
    /* [results]:
 
       map< string, string > =
-      ==> ( Abscheid Nehmen | Farewell )
-      ==> ( Engel | Angel )
-      ==> ( Mas Alla | Beyond )
-      ==> ( Wenn Das Liebe Ist | If This Is Love )
+      ==> ( "Abscheid Nehmen" | "Farewell" )
+      ==> ( "Engel" | "Angel" )
+      ==> ( "Mas Alla" | "Beyond" )
+      ==> ( "Wenn Das Liebe Ist" | "If This Is Love" )
    */
 
    std::cout << "map< string, string > = "
-             << boost::io::formatout( m, pairfmt3 ) // [review]: out signature
+             << boost::io::formatob( m, boost::io::containerfmt( pairfmt3 ))
                 .format( "\n   ", "", "\n   " )
              << '\n' << '\n';
 
    /* [results]:
 
       map< string, string > =
-         Abscheid Nehmen ==> Farewell
-         Engel ==> Angel
-         Mas Alla ==> Beyond
-         Wenn Das Liebe Ist ==> If This Is Love
+         "Abscheid Nehmen" ==> "Farewell"
+         "Engel" ==> "Angel"
+         "Mas Alla" ==> "Beyond"
+         "Wenn Das Liebe Ist" ==> "If This Is Love"
    */
 
    // std::complex output examples
 
    std::cout << "list< complex< double > > = "
-             << boost::io::format( dl ) // use the build in complex number formatting
-             << '\n';
-
-   // [results]: list< complex< double > > = [ (3.5,9.7), (7.9,0), (1,2.5) ]
-
-   std::cout << "list< complex< double > > = "
-             << boost::io::formatout( dl, pairfmt1 ) // custom format - more control on spacing // [review]: out signature
+             << boost::io::formatob( dl ) // use the default (deduced) formatting
              << '\n';
 
    // [results]: list< complex< double > > = [ ( 3.5, 9.7 ), ( 7.9, 0 ), ( 1, 2.5 ) ]
 
    std::cout << "list< complex< double > > = "
-             << boost::io::formatout( dl, pairfmt2 ) // custom fomat - a more radical change! // [review]: out signature
+             << boost::io::formatob( dl, boost::io::containerfmt( pairfmt1 ))
+                // custom format - control spacing on complex type
+             << '\n';
+
+   // [results]: list< complex< double > > = [ ( 3.5, 9.7 ), ( 7.9, 0 ), ( 1, 2.5 ) ]
+
+   std::cout << "list< complex< double > > = "
+             << boost::io::formatob( dl, boost::io::containerfmt( pairfmt2 ))
+                // custom fomat - a more radical change!
              << '\n' << '\n';
 
    // [results]: list< complex< double > > = [ ( 3.5 | 9.7 ), ( 7.9 | 0 ), ( 1 | 2.5 ) ]

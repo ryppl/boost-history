@@ -5,7 +5,6 @@
 #include <iostream>  // std::cout
 #include <list>      // std::list
 
-#include <boost/outfmt/formatlist.hpp>
 #include <boost/outfmt/formatob.hpp>
 #include <boost/outfmt/stl/list.hpp>
 
@@ -39,7 +38,7 @@ int main()
 
    // formatter configurations
 
-   boost::io::array_object< const char * >   arrayfmt;
+   boost::io::array_object< const char * >  arrayfmt;
    arrayfmt.format( "( ", " )" );
 
    boost::io::container_object< const char * > containerfmt;
@@ -48,23 +47,31 @@ int main()
    // examples
 
    std::cout << "int[ 3 ][ 3 ] = "
-             << boost::io::formatlistout( a2D, a2D + 3, arrayfmt( 3 )) // [review]: out signature
+             << boost::io::formatob
+                (
+                   boost::io::range( a2D, a2D + 3 ),
+                   boost::io::rangefmt( arrayfmt( 3 ))
+                )
              << '\n';
 
    // [results:] int[ 3 ][ 3 ] = [ ( 1, 0, 0 ), ( 0, 1, 0 ), ( 0, 0, 1 ) ]
 
    std::cout << "int[ 3 ][ 3 ] = "
-             << boost::io::formatlistout // [review]: out signature
+             << boost::io::formatob
                 (
-                   a2D, a2D + 3,
-                   boost::io::arrayfmt( 3 ).format( "( ", " )" ) // inlined form
+                   boost::io::range( a2D, a2D + 3 ),
+                   boost::io::rangefmt( boost::io::arrayfmt( 3 ).format( "( ", " )" )) // inlined form
                 )
              << '\n' << '\n';
 
    // [results]: int[ 3 ][ 3 ] = [ ( 1, 0, 0 ), ( 0, 1, 0 ), ( 0, 0, 1 ) ]
 
    std::cout << "int[ 3 ][ 3 ] = "
-             << boost::io::formatlistout( a2D, a2D + 3, arrayfmt( 3 )) // [review]: out signature
+             << boost::io::formatob
+                (
+                   boost::io::range( a2D, a2D + 3 ),
+                   boost::io::rangefmt( arrayfmt( 3 ))
+                )
                 .format( "\n", "", "\n" )
              << '\n' << '\n';
 
@@ -77,7 +84,11 @@ int main()
    */
 
    std::cout << "int[ 3 ][ 3 ] = "
-             << boost::io::formatlistout( a2D, a2D + 3, arrayfmt( 1, 2 )) // [review]: out signature
+             << boost::io::formatob
+                (
+                   boost::io::range( a2D, a2D + 3 ),
+                   boost::io::rangefmt( arrayfmt( 1, 2 ))
+                )
                .format( "\n", "\0", "\n" )
              << '\n' << '\n';
 
@@ -90,7 +101,7 @@ int main()
    */
 
    std::cout << "std::list< std::list< char > > tictactoe = "
-             << boost::io::formatout( tictactoe, containerfmt ) // [review]: out signature
+             << boost::io::formatob( tictactoe, boost::io::containerfmt( containerfmt ))
                 .format( "\n", "", "\n" )
              << '\n' << '\n';
 
@@ -103,10 +114,10 @@ int main()
    */
 
    std::cout << "std::list< std::list< char > > tictactoe = "
-             << boost::io::formatout // [review]: out signature
+             << boost::io::formatob
                 (
                    tictactoe,
-                   boost::io::containerfmt() // inlined form
+                   boost::io::containerfmt( boost::io::containerfmt()) // inlined form
                    .format( " | " )
                 )
                 .format( "\n", "", "\n" )
@@ -119,16 +130,14 @@ int main()
       [ O | X | O ]
    */
 
-#  if !defined(BOOST_IOFM_NO_OUTPUT_DEDUCTION)
-      std::cout << "deduced output: " << boost::io::formatob( tictactoe ) << '\n';
+   std::cout << "deduced output: " << boost::io::formatob( tictactoe ) << '\n';
 
-      // [results:] deduced output: [ [ O, X, O ], [ X, O, X ], [ O, X, O ] ]
+   // [results:] deduced output: [ [ O, X, O ], [ X, O, X ], [ O, X, O ] ]
 
-#     if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
-         std::cout << "deduced output: " << boost::io::formatob( a2D ) << '\n';
+#  if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
+      std::cout << "deduced output: " << boost::io::formatob( a2D ) << '\n';
 
-         // [results:] deduced output: [ [ 1, 0, 0 ], [ 0, 1, 0 ], [ 0, 0, 1 ] ]
-#     endif
+      // [results:] deduced output: [ [ 1, 0, 0 ], [ 0, 1, 0 ], [ 0, 0, 1 ] ]
 #  endif
 
    return( 0 );

@@ -8,7 +8,8 @@
 #include <iostream>  // std::cout
 #include <list>      // std::list
 
-#include <boost/outfmt/formatlist.hpp>
+#include <boost/outfmt/formatob.hpp>
+#include <boost/outfmt/stl/list.hpp>
 
 template< class FormatType >
 class position_output // Create a Format Object that maintains position information
@@ -57,51 +58,56 @@ int main()
    names.push_back( "James" );
    names.push_back( "Corina" );
 
-   // [1]: John, James, Corina
+   // [1]: "John", "James", "Corina"
 
    std::cout << "[1]: "
-             << boost::io::format( names ).format( "", "" )
+             << boost::io::formatob( names ).format( "", "" )
              << '\n';
 
-   // [2]: {John}, {James}, {Corina}
+   // [2]: {"John"}, {"James"}, {"Corina"}
 
    std::cout << "[2]: "
-             << boost::io::formatout // [review]: out signature
+             << boost::io::formatob
                 (
                    names,
                    // use wrapped output to simplify construction:
-                   boost::io::wrappedfmt().format( "{", "}" )
+                   boost::io::containerfmt
+                   (
+                      boost::io::wrappedfmt().format( "{", "}" )
+                   )
                 ).format( "", "" )
              << '\n';
 
    std::cout << "[2]: "
-             << boost::io::format( names ).format( "{", "}", "}, {" )
+             << boost::io::formatob( names ).format( "{", "}", "}, {" )
              << '\n';
 
    // [3]: {[0] John}, {[1] James}, {[2] Corina}
 
    std::cout << "[3]: "
-             << boost::io::formatout // [review]: out signature
+             << boost::io::formatob
                 (
                    names,
-                   boost::io::wrappedfmt
+                   boost::io::containerfmt( boost::io::wrappedfmt
                    (
                       // create an instance of a position Format Object:
                       position_output< const char * >()
-                   ).format( "{", "}" )
+                   ).format( "{", "}" ))
                 )
                 .format( "", "" )
              << '\n';
 
+   // [3]: {[0] "John"}, {[1] "James"}, {[2] "Corina"}
+
    std::cout << "[3]: "
-             << boost::io::formatout // [review]: out signature
+             << boost::io::formatob
                 (
                    names,
-                   boost::io::wrappedfmt
+                   boost::io::containerfmt( boost::io::wrappedfmt
                    (
                       // state based version of the above
                       boost::io::statefmt< position_state, true >()
-                   ).format( "{", "}" )
+                   ).format( "{", "}" ))
                 )
                 .format( "", "" )
              << '\n';
@@ -109,19 +115,30 @@ int main()
    // [4]: [0] John, [1] James, [2] Corina
 
    std::cout << "[4]: "
-             << boost::io::formatout( names, position_output< const char * >()) // [review]: out signature
+             << boost::io::formatob
+                (
+                   names,
+                   boost::io::containerfmt( position_output< const char * >())
+                )
                 .format( "", "" )
              << '\n' << '\n';
 
    /*
       [5]:
-      [John]
-      [James]
-      [Corina]
+      ["John"]
+      ["James"]
+      ["Corina"]
    */
 
    std::cout << "[5]:"
-             << boost::io::formatout( names, boost::io::wrappedfmt().format( "[", "]" )) // [review]: out signature
+             << boost::io::formatob
+                (
+                   names,
+                   boost::io::containerfmt
+                   (
+                      boost::io::wrappedfmt().format( "[", "]" )
+                   )
+                )
                 .format( "\n", "", "\n" )
              << '\n';
 
@@ -133,7 +150,11 @@ int main()
    */
 
    std::cout << "[6]:"
-             << boost::io::formatout( names, position_output< const char * >()) // [review]: out signature
+             << boost::io::formatob
+                (
+                   names,
+                   boost::io::containerfmt( position_output< const char * >())
+                )
                 .format( "\n", "", "\n" )
              << '\n' << '\n';
 
@@ -145,7 +166,11 @@ int main()
    */
 
    std::cout << "[7]:"
-             << boost::io::formatout( names, position_output< const char * >()) // [review]: out signature
+             << boost::io::formatob
+                (
+                   names,
+                   boost::io::containerfmt( position_output< const char * >())
+                )
                 .format( "\n'", "'", "'\n'" )
              << '\n' << '\n';
 

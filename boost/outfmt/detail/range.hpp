@@ -10,14 +10,17 @@
 
 #  include <cstddef>
 #  include <utility>
+#  include <boost/detail/iterator.hpp>
 
    namespace boost { namespace io
    {
       template< typename RangeT >
       class range_t: public std::pair< RangeT, RangeT >
       {
-         private:
+         public:
             typedef std::pair< RangeT, RangeT >                      base_type;
+            typedef typename boost::detail::iterator_traits< RangeT >::value_type
+                                                                     elem_type;
          public:
             inline RangeT                        begin() const
             {
@@ -49,12 +52,20 @@
       template< typename ForwardIterator >
       range_t< ForwardIterator >                 range( ForwardIterator f, ForwardIterator l )
       {
-         // boost::precondition<>::test( f <= l, "invalid range" );
+         // precondition : f <= l
          return( range_t< ForwardIterator >( f, l ));
       }
 
+      template< typename ForwardIterator >
+      range_t< ForwardIterator >                 range( const std::pair< ForwardIterator, ForwardIterator > pi )
+      {
+         // precondition : pi.first <= pi.last
+         return( range_t< ForwardIterator >( pi ));
+      }
+
       template< class Container >
-      range_t< typename Container::iterator >    range( Container & c )
+      range_t< typename Container::const_iterator >
+                                                 range( const Container & c )
       {
          return( range( c.begin(), c.end()));
       }
@@ -68,15 +79,16 @@
       template< typename T, std::size_t n >
       range_t< const T * >                       range( const T a[ n ], std::size_t off )
       {
-         // boost::precondition<>::test( boost::between( off, 0, n ), "range: invalid offset" );
+         // precondition : 0 <= off < n
          return( range( a + off, a + n ));
       }
 
       template< typename T, std::size_t n >
       range_t< const T * >                       range( const T a[ n ], std::size_t off, std::size_t len )
       {
-         // boost::precondition<>::test( boost::between( off,       0, n ), "range: invalid offset" );
-         // boost::precondition<>::test( boost::between( off + len, 0, n ), "range: invalid offset/length" );
+         // precondition : 0 <= off       < n
+         // precondition : 0 <= off + len < n
+         // precondition : off <= off + len
          return( range( a + off, a + off + len ));
       }
    }}

@@ -112,7 +112,7 @@ int main()
 
    std::cout << "map< string, int > = " << m << '\n';
 
-   // [results]: map< string, int > = [ ( STL rules!, 11 ), ( hello, 5 ), ( world, 5 ) ]
+   // [results]: map< string, int > = [ ( "STL rules!", 11 ), ( "hello", 5 ), ( "world", 5 ) ]
 
    std::cout << "multimap< string, int > = " << mm
              << '\n' << '\n';
@@ -120,15 +120,15 @@ int main()
    // [note]: Edited for clarity:
 
    // [results]: multimap< string, int > =
-   //    [ ( Portishead, Dummy ), ( Portishead, Roseland NYC ),
-   //      ( Portishead, Portishead ), ( Tina Arena, Don't Ask ), ( Tina Arena, In Deep ),
-   //      ( Tina Arena, Just Me ), ( Wonderwall, Witchcraft ) ]
+   //    [ ( "Portishead", "Dummy" ), ( "Portishead", "Roseland NYC" ),
+   //      ( "Portishead", "Portishead" ), ( "Tina Arena", "Don't Ask" ), ( "Tina Arena", "In Deep" ),
+   //      ( "Tina Arena", "Just Me" ), ( "Wonderwall", "Witchcraft" ) ]
 
    std::cout << "set< string > = " << s << '\n';
 
    // [results]: set< string > =
-   //    [ Beth Orton, GlasHaus, Marc Anthony, Melissa Etheridge, Portishead, Tricky,
-   //    Xavier Naidoo ]
+   //    [ "Beth Orton", "GlasHaus", "Marc Anthony", "Melissa Etheridge", "Portishead", "Tricky",
+   //    "Xavier Naidoo" ]
 
    std::cout << "multiset< string > = " << ms
              << '\n' << '\n';

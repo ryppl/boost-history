@@ -4,7 +4,6 @@
 
 #include <iostream>  // std::cout
 
-#include <boost/outfmt/formatlist.hpp>
 #include <boost/outfmt/formatob.hpp>
 
 int main()
@@ -30,7 +29,7 @@ int main()
 
    // formatter configurations
 
-   boost::io::array_object< const char * >   arrayfmt;
+   boost::io::array_object< const char * >  arrayfmt;
    arrayfmt.format( "( ", " )" );
 
    boost::io::array_object< const char *, boost::io::array_object< const char * > >
@@ -40,7 +39,11 @@ int main()
    // example using formatter objects
 
    std::cout << "char[ 3 ][ 3 ][ 3 ] = "
-             << boost::io::formatlistout( a3D, a3D + 3, array3Dfmt( 3 )) // [review]: out signature
+             << boost::io::formatob
+                (
+                   boost::io::range( a3D, a3D + 3 ),
+                   boost::io::rangefmt( array3Dfmt( 3 ))
+                )
                 .format( "\n", "", "\n" )
              << '\n' << '\n';
 
@@ -55,11 +58,14 @@ int main()
    // partially inlined form
 
    std::cout << "char[ 3 ][ 3 ][ 3 ] = "
-             << boost::io::formatlistout // [review]: out signature
+             << boost::io::formatob
                 (
-                   a3D, a3D + 3,
-                   boost::io::arrayfmtout( arrayfmt( 3 ), 3 ) // inlined form // [review]: out signature
-                   .format( "< ", " >", " : " )
+                   boost::io::range( a3D, a3D + 3 ),
+                   boost::io::rangefmt
+                   (
+                      boost::io::arrayfmtout( arrayfmt( 3 ), 3 )
+                      .format( "< ", " >", " : " )
+                   ) // inlined form
                 )
                 .format( "\n", "", "\n" )
              << '\n' << '\n';
@@ -77,15 +83,15 @@ int main()
    // as they will deduce the object types for you!
 
    std::cout << "char[ 3 ][ 3 ][ 3 ] = "
-             << boost::io::formatlistout // [review]: out signature
+             << boost::io::formatob
                 (
-                   a3D, a3D + 3, // outermost index
-                   boost::io::arrayfmtout // [review]: out signature
+                   boost::io::range( a3D, a3D + 3 ), // outermost index
+                   boost::io::rangefmt( boost::io::arrayfmtout
                    (
                       boost::io::arrayfmt( 3 ), // innermost index
                       3 // middle index
                    )
-                   .format( "< ", " >", " : " )
+                   .format( "< ", " >", " : " ))
                 )
                 .format( "\n", "", "\n" )
             << '\n' << '\n';
@@ -103,16 +109,16 @@ int main()
    // as they will deduce the object types for you!
 
    std::cout << "char[ 3 ][ 3 ][ 3 ] = "
-             << boost::io::formatlistout // [review]: out signature
+             << boost::io::formatob
                 (
-                   a3D, a3D + 3, // outermost index
-                   boost::io::arrayfmtout // [review]: out signature
+                   boost::io::range( a3D, a3D + 3 ), // outermost index
+                   boost::io::rangefmt( boost::io::arrayfmtout
                    (
                       boost::io::arrayfmtex< const char * >( 3 ) // innermost index
                       .format( "( ", " )" ), // [note]: cannot use characters here; must be const char *.
                       3 // middle index
                    )
-                   .format( "{\n   ", "\n}", "\n   " )
+                   .format( "{\n   ", "\n}", "\n   " ))
                 )
                 .format( "\n", "" )
              << '\n' << '\n';
@@ -135,7 +141,7 @@ int main()
       }
    */
 
-#  if !defined(BOOST_IOFM_NO_OUTPUT_DEDUCTION) && !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
+#  if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
       std::cout << "deduced output: " << boost::io::formatob( a3D ) << '\n';
 
       // [results:] deduced output: [ [ [ A, 0, 0 ], [ 0, A, 0 ], [ 0, 0, A ] ],

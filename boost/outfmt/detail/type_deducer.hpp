@@ -24,6 +24,7 @@
           struct container_tag { };
           struct array_tag { };
           struct nary_tag { };
+          struct range_tag { };
 
         //--------------array_deducer-----------------------------------------//
 
@@ -89,6 +90,14 @@
             typedef typename T::value_type base_type;
         };
 
+        //--------------range_deducer-------------------------------------//
+
+        template<typename T>
+        struct range_deducer {
+            typedef range_tag category;
+            typedef typename T::elem_type base_type;
+        };
+
       }             // End namespace detail.
 
       template< typename T,
@@ -99,6 +108,7 @@
                         is_container<T>, detail::container_deducer<T>,
                         is_pair<T>, detail::pair_deducer<T>,
                         is_nary<T>, detail::nary_deducer<T>,
+                        is_range<T>, detail::range_deducer<T>,
                         mpl::true_, detail::basic_deducer<T>
                     >::type >
       struct type_deducer : public Base { typedef T object_type; };

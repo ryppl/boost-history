@@ -92,6 +92,14 @@
                         > type;
             };
 
+            template<typename Base>
+            struct get_range_out { 
+                typedef range_object<  
+                            FormatType, 
+                            typename Base::type::outputter
+                        > type;
+            };
+
                 // Base types.
 
             typedef typename
@@ -124,7 +132,9 @@
                         is_same<category, pair_tag>, 
                             eval< get_pair_out<base1, base2> >,
                         is_same<category, nary_tag>, 
-                            eval< get_nary_out<base1> > 
+                            eval< get_nary_out<base1> > ,
+                        is_same<category, range_tag>, 
+                            eval< get_range_out<base1> > 
                     >::type                                         outputter;        
             
                 // Generate function.
@@ -152,6 +162,11 @@
                                       composite2::generate() );
                 } 
             static outputter generate(nary_tag)
+                {
+                    typedef typename base1::type composite;
+                    return outputter(composite::generate());
+                }
+            static outputter generate(range_tag)
                 {
                     typedef typename base1::type composite;
                     return outputter(composite::generate());

@@ -111,8 +111,6 @@
          return( arrayfmtex< const char * >( 0, len ));
       }
 
-      // temporary hack until sequences are in place
-
       template< class FmtObject >
       inline array_object< typename FmtObject::format_type, FmtObject >
                                                  arrayfmtout
