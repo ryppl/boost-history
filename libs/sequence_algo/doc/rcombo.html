@@ -28,14 +28,15 @@
   <A name="Introduction">Introduction</A>
 </H3>
 <P>
-A common problem in discrete mathematics is the need to generate combinations
-of a subset of objects from a larger set of objects. The STL's permutation
-algorithms, next_permutation and prev_permutation, will work on entire sets,
-but not on subsets. For this reason, I've written a suite of generic
-combinatorial algorithms to complement the existing functions. Specifically,
-they are algorithms to implement ordered and unordered selection without
-replacement (referred to as r-permutations and r-combinations, respectively,
-in many texts <A href="#Johnsonbaugh">[1]</A>).
+A common problem in discrete mathematics is the need to generate all the
+permutations or combinations of a subset of objects from a larger set of
+objects. The STL's permutation algorithms, next_permutation and prev_permutation,
+will work on entire sets, but not on subsets and obviously, will only return
+permutations. For this reason, I've written a suite of generic combinatorial
+algorithms to complement the existing functions. Specifically, they are
+algorithms to implement ordered and unordered selection without replacement,
+referred to as r-permutations and r-combinations, respectively, in many texts.
+For instance, see <A href="#Johnsonbaugh">[1]</A>.
 <P>
 The programs have been compiled and tested on MacOS 9 using Metrowerks
 Codewarrior version 5 and on Windows 98 using Microsoft Visual C++ version
@@ -61,17 +62,18 @@ format and semantics commonly found among functions in the STL. They are
 </UL>
 <P>
 They're defined in the header file <STRONG>rcombo.hpp</STRONG> in the directory
-libs/sequence_algo. They are members of the boost namespace. The file itself
+boost/sequence_algo. They are members of the boost namespace. The file itself
 uses a function from the boost library, so make sure that the Boost directory
 is in your header include path. See the example programs listed in the section
 below.
 <P>
 Items in input sequences must either work with the built-in less than (&lt;)
 operator, have a less than operator defined, or have a user-defined binary
-comparison operation provided at the call.
+comparison operation provided at the point of call.
 <P>
-Like the STL's permutation algorithms, input to these functions should be
-in lexicographical order (based on the less than operator) on the first call.
+Like the STL's permutation algorithms, objects in the input sequence to these
+functions should be in lexicographical order (based on the less than operator,
+unless a binary comparison function is supplied) on the first call.
 <P>
 The input must define a strict weak ordering <A href="#Musser">[3]</A>.
 <P>
@@ -213,30 +215,45 @@ average. (To be verified.)
   <A name="Examples">Examples and Test Programs</A>
 </H3>
 <P>
-Both of the following test programs include rcombo.hpp, headers from the
-C++ standard library, and Boost. Make sure these files are in your include
-paths. Then just compile and link the single source file.
+The following programs include boost/sequence_algo/rcombo.hpp, headers from
+the C++ standard library, and Boost. Make sure these files are in your compiler
+include paths.
+<P>
 <DL>
   <DT>
     <STRONG>rcombo.cpp</STRONG>
   <DD>
-    This is a console I/O program presents a menu that lets you exercise each
-    of the functions. It is in the sequence_algo/test subdirectory.
+    This is interactive console I/O program presents a menu that lets you run
+    each function individually. It is in the libs/sequence_algo/example subdirectory.
   <DT>
     <STRONG>rcomboex.cpp</STRONG>
   <DD>
     This console I/O program solves a puzzle from a recent "Ask Marilyn" column
-    in Parade magazine using next_r_permutation. It reads in the dictionary file
-    lexicon.txt. You'll find these two files in the sequence_algo/example
+    in <CITE>Parade</CITE> magazine using next_r_permutation. It reads in the
+    dictionary file lexicon.txt. You'll the files in the libs/sequence_algo/example
     subdirectory.
+  <DT>
+    <STRONG>test_rcombo.cpp</STRONG>
+  <DD>
+    This program uses the Boost Unit Test framework for error reporting and is
+    compatible with the Boost regression test program. It is a modification and
+    elaboration of rcombo.cpp. The interactive functionality has been removed
+    so that the program may be run in the "batch" mode required by
+    regression.cpp.Individual tests have been added for each of the subordinate
+    functions in rcombo.h. Data and test cases were chosen to implement basis
+    path, boundary, and condition testing. Test_rcombo.cpp sits in the
+    libs/sequence_algo/test subdirectory. To build this program, it is necessary
+    to link to cpp_main.cpp and test_main.cpp in boost/test.
+  <DT>
 </DL>
 <H3>
   <A name="References">References</A>
 </H3>
+<P>
 <OL>
   <LI>
-    <A name="Johnsonbaugh">Johnsonbaugh</A>, Richard. <CITE>Discrete Math</CITE>.
-    2nd ed. New York: Macmillan, 1990.
+    <A name="Johnsonbaugh">Johnsonbaugh</A>, Richard. <CITE>Discrete
+    Mathematics</CITE>. 2nd ed. New York: Macmillan, 1990.
   <LI>
     Lippman, Stanley B. and Jos&eacute;e Lajoie. <CITE>C++ Primer</CITE>. 3rd
     ed. Reading, MA: Addison-Wesley-AT&amp;T, 1998.
@@ -264,5 +281,5 @@ provided this copyright notice appears in all copies. This software is provided
 "as is" without express or implied warranty, and with no claim as to its
 suitability for any purpose.
 <P>
-Updated on June 10, 2002
+Updated on June 20, 2002
 </BODY></HTML>
