@@ -29,8 +29,11 @@ argument; so the operators are unfortunately not fully symmetric. The return
 type is not always <code>bool</code>, since some interesting results can be
 achieved by using a tri-state return type. So here is the common signatures
 of the operators:</p>
-<pre>template&lt;class T, class Policies&gt; return_type operator== (const interval&lt;T, Policies&gt;&amp;, const interval&lt;T, Policies&gt;&amp;);
-template&lt;class T, class Policies&gt; return_type operator== (const interval&lt;T, Policies&gt;&amp;, const T&amp;);</pre>
+<pre>template&lt;class T, class Policies1, class Policies2&gt;
+return_type operator== (const interval&lt;T, Policies1&gt;&amp;, const interval&lt;T, Policies2&gt;&amp;);
+
+template&lt;class T, class Policies&gt;
+return_type operator== (const interval&lt;T, Policies&gt;&amp;, const T&amp;);</pre>
 
 <h2>Provided comparisons</h2>
 
@@ -135,18 +138,18 @@ comparison is false, the result is false) followed by <code>lt</code>,
 <code>&lt;boost/interval/compare/explicit.hpp&gt;</code>. Each of these
 functions takes two parameters and returns a boolean; the parameters are
 expected to be valid, undefined behavior may result otherwise. For example,
-to use the "certainly less than" comparison :</p>
+the definition of the "certainly less than" comparison is:</p>
 <pre>namespace boost {
   namespace interval_lib {
 
-template&lt;class T, class Traits&gt;
-bool cerlt(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+template&lt;class T, class Policies1, class Policies2&gt;
+bool cerlt(const interval&lt;T, Policies1&gt;&amp; x, const interval&lt;T, Policies2&gt;&amp; y);
 
-template&lt;class T, class Traits&gt;
-bool cerlt(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
+template&lt;class T, class Policies&gt;
+bool cerlt(const interval&lt;T, Policies&gt;&amp; x, const T&amp; y);
 
-template&lt;class T, class Traits&gt;
-bool cerlt(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+template&lt;class T, class Policies&gt;
+bool cerlt(const T&amp; x, const interval&lt;T, Policies&gt;&amp; y);
 
   } // namespace interval_lib
 } // namespace boost</pre>
