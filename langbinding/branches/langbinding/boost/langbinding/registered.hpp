@@ -1,4 +1,5 @@
 // Copyright (c) 2003 Daniel Wallin
+// Copyright (c) 2002 David Abrahams
 
 // Permission is hereby granted, free of charge, to any person or organization 
 // obtaining a copy of the software covered by this license (the "Software") 
@@ -21,42 +22,52 @@
 // ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 // DEALINGS IN THE SOFTWARE.
 
-#include <boost/langbinding/registry.hpp>
+#ifndef BOOST_LANGBINDING_REGISTERED_HPP
+#define BOOST_LANGBINDING_REGISTERED_HPP
 
-#ifndef BOOST_LANGBINDING_REGISTRATION_IMPLEMENTATION
-#define BOOST_LANGBINDING_REGISTRATION_IMPLEMENTATION
+#include <boost/langbinding/type_id.hpp>
+#include <boost/langbinding/registry.hpp>
+#include <boost/type_traits/add_reference.hpp>
+#include <boost/type_traits/add_cv.hpp>
 
 namespace boost { namespace langbinding {
 
    template<class T>
-   struct registration
+   struct registration;
+   
+   namespace detail
    {
-      explicit registration(type_info t)
-         : type(t)
-         , lvalue_converters(0)
-         , rvalue_converters(0)
-      {}
+     template <class T, class U>
+     struct registered_base
+     {
+         static const registration<T>* const converters;
+     };
+   }
+   
+   template<class T, class U>
+   struct registered
+    : detail::registered_base<T,
+        typename add_reference<
+           typename add_cv<U>::type
+        >::type>
+   {};
 
-      typename registry<T>::type_info_ type;
-      lvalue_chain<T>* lvalue_converters;
-      rvalue_chain<T>* rvalue_converters;
-   };
+   # ifndef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
+   // collapses a few more types to the same static instance
+   template<class T, class U>
+   struct registered<T, U&> : registered<T, U> {};
+   # endif
 
-   template<class T>
-   struct lvalue_chain
+   //
+   // implementations
+   //
+   namespace detail
    {
-      typename registry<T>::lvalue_from_function convert;
-      lvalue_chain* next;
-   };
-
-   template<class T>
-   struct rvalue_chain
-   {
-      typename registry<T>::rvalue_from_stage1 convertible;
-      typename registry<T>::rvalue_from_stage2 convert;
-      rvalue_chain* next;
-   };
-
+     template<class T, class U>
+     const registration<T>* const registered_base<T,U>::converters
+        = registry<T>::instance().lookup(static_type_id<U>());
+   }
+   
 }}
 
 #endif

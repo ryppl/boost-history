@@ -26,6 +26,7 @@
 #include <typeinfo>
 #include <cstring>
 #include <ostream>
+#include <boost/type.hpp>
 
 namespace boost { namespace langbinding {
 
@@ -76,7 +77,7 @@ namespace boost { namespace langbinding {
    struct type_id_traits<default_type_info>
    {
       template<class T>
-      static default_type_info static_type_id(T*)
+      static default_type_info static_type_id(type<T>* = 0)
       {
          return default_type_info(&typeid(T));
       }
@@ -89,13 +90,13 @@ namespace boost { namespace langbinding {
    };
 
    template<class T>
-   type_info static_type_id(const volatile T* = 0)
+   type_info static_type_id(type<T>* = 0)
    {
-      return type_id_traits<type_info>::static_type_id((T*)0);
+      return type_id_traits<type_info>::static_type_id<T>();
    }
 
    template<class T>
-   type_info dynamic_type_id(const volatile T* p)
+   type_info dynamic_type_id(T* p)
    {
       return type_id_traits<type_info>::dynamic_type_id(p);
    }

@@ -26,6 +26,7 @@
 
 #include <memory>
 #include <boost/langbinding/config.hpp>
+#include <boost/langbinding/type_id.hpp>
 #include <boost/enable_shared_from_this.hpp>
 
 // language descriptor concept
@@ -43,16 +44,17 @@ namespace boost { namespace langbinding {
       template<class T>
       struct registry_impl;
 
-      template<class T>
-      struct lvalue_chain;
-
-      template<class T>
-      struct rvalue_chain;
-
-      template<class T>
-      struct registration;
    }
-  
+
+   template<class T>
+   struct lvalue_chain;
+
+   template<class T>
+   struct rvalue_chain;
+
+   template<class T>
+   struct registration;
+   
    template<class T> 
    struct rvalue_data_base;
 
@@ -60,16 +62,16 @@ namespace boost { namespace langbinding {
    class BOOST_LANGBINDING_DECL registry_base
    {
    public:
-      typedef typename T::type_info type_info_;
+      typedef type_info type_info_;
       typedef typename T::param_type param_type;
 
       typedef void*(*lvalue_from_function)(const param_type&, int&);
       typedef void*(*rvalue_from_stage1)(const param_type&, int&);
       typedef void(*rvalue_from_stage2)(const param_type&, rvalue_data_base<T>*);
 
-      const detail::registration<T>* lookup(const type_info_&);
+      const registration<T>* lookup(const type_info_&);
 
-      const detail::registration<T>* query(const type_info_&);
+      const registration<T>* query(const type_info_&);
 
       void insert(const type_info_&, lvalue_from_function);
 
