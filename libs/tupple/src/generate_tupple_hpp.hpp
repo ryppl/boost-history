@@ -1,5 +1,5 @@
 
-// Copyright (C) 2001,2002 Roland Richter <roland@flll.jku.at>
+// Copyright (C) 2001-2003 Roland Richter <roland@flll.jku.at>
 // Permission to copy, use, modify, sell and distribute this software
 // is granted provided this copyright notice appears in all copies.
 // This software is provided "as is" without express or implied
@@ -16,25 +16,32 @@
 #define PREPROCESS_LATER(arg) arg
 
 #ifdef TUPPLE_PARTIAL_SPEC
-PREPROCESS_LATER(#ifndef TUPPLE_PART_SPEC_HPP)
-PREPROCESS_LATER(#define TUPPLE_PART_SPEC_HPP)
+  PREPROCESS_LATER(#ifndef TUPPLE_PART_SPEC_HPP)
+  PREPROCESS_LATER(#define TUPPLE_PART_SPEC_HPP)
 #else
-PREPROCESS_LATER(#ifndef TUPPLE_NO_PART_SPEC_HPP)
-PREPROCESS_LATER(#define TUPPLE_NO_PART_SPEC_HPP)
+  PREPROCESS_LATER(#ifndef TUPPLE_NO_PART_SPEC_HPP)
+  PREPROCESS_LATER(#define TUPPLE_NO_PART_SPEC_HPP)
 #endif
 
-
+#include <boost/preprocessor/arithmetic/sub.hpp>
+#include <boost/preprocessor/comparison/equal.hpp>
 #include <boost/preprocessor/control/if.hpp>
+#include <boost/preprocessor/facilities/empty.hpp>
 #include <boost/preprocessor/repetition/enum.hpp>
-#include <boost/preprocessor/repetition/enum_trailing.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/preprocessor/repetition/enum_params_with_a_default.hpp>
 #include <boost/preprocessor/repetition/enum_shifted_params.hpp>
+#include <boost/preprocessor/repetition/enum_trailing.hpp>
 #include <boost/preprocessor/repetition/repeat.hpp>
-#include <boost/preprocessor/arithmetic/sub.hpp>
+#include <boost/preprocessor/repetition/repeat_from_to.hpp>
 
 PREPROCESS_LATER(#include "boost/tupple/detail/tupple_detail.hpp")
 
+#ifndef TUPPLE_PARTIAL_SPEC
+  PREPROCESS_LATER(#include <boost/type_traits.hpp>)
+  PREPROCESS_LATER(#include <boost/mpl/if.hpp>)
+  PREPROCESS_LATER(#include <boost/static_assert.hpp>)
+#endif
 
 namespace boost {
 namespace tupple {
@@ -78,11 +85,9 @@ namespace tupple {
 #ifdef TUPPLE_PARTIAL_SPEC
 #  define TUPLE(k) tuple
 #  define MAKE_TUPLE_FUNC(k) make_tuple_function
-#  define N_FOLD_TUPLE(a,k) n_fold_tuple<a,k>
 #else
 #  define TUPLE(k) tuple##k
 #  define MAKE_TUPLE_FUNC(k) make_tuple_function##k
-#  define N_FOLD_TUPLE(a,k) n_fold_tuple##k
 #endif
 
 #define NULLTYPE null_type
@@ -160,9 +165,21 @@ namespace tupple {
 
 #define GET(k) get##k
 
-#define GETCONSTMBR(z,k,A) CONSTGETTYPE(k) GET(k)() const { return ELEM(k,A); }
+#define GETCONSTMBR(z,k,_) CONSTGETTYPE(k) GET(k)() const { return ELEM(k,A); }
 #define GETMBR(z,k,_)      GETTYPE(k)      GET(k)()       { return ELEM(k,A); }
+
 #define MEMBER(z,k,_) T##k ELEM(k,_);
+
+#define PAIRASGM()                                                       \
+template <class U1, class U2>                                            \
+  self_type& operator=( const std::pair<U1, U2>& p )                     \
+  {                                                                      \
+    ELEM(0,_) = p.first;                                                 \
+    ELEM(1,_) = p.second;                                                \
+    return *this;                                                        \
+  }
+
+#define ASSIGN_PAIR(b) BOOST_PP_IF( b, PAIRASGM, BOOST_PP_EMPTY )()
 
 
 #define STRUCT_TUPLE(k)                                                   \
@@ -196,20 +213,23 @@ TEMPLATE(k,T) struct TUPLE(k) TEMPLATESPEC(k,BOOST_PP_SUB(MAX_N,k))       \
     return *this;                                                         \
   }                                                                       \
                                                                           \
+  ASSIGN_PAIR( BOOST_PP_EQUAL(k,2) )                                      \
+                                                                          \
   int size() const { return k; }                                          \
                                                                           \
   void swap( self_type& rhs )                                             \
   { BOOST_PP_REPEAT(k,SWAP,rhs) }                                         \
                                                                           \
-  get_type0       head()       { return ELEM(0,A); }                      \
-  const_get_type0 head() const { return ELEM(0,A); }                      \
+  get_type0       head()       { return ELEM(0,_); }                      \
+  const_get_type0 head() const { return ELEM(0,_); }                      \
   tail_type tail() const                                                  \
   { return tail_type(                                                     \
-     BOOST_PP_ENUM(BOOST_PP_DEC(k),TAILELEM,A) );                         \
+     BOOST_PP_ENUM(BOOST_PP_DEC(k),TAILELEM,_) );                         \
   }                                                                       \
                                                                           \
-  BOOST_PP_REPEAT(k,GETCONSTMBR,A)                                        \
+  BOOST_PP_REPEAT(k,GETCONSTMBR,_)                                        \
   BOOST_PP_REPEAT(k,GETMBR,_)                                             \
+                                                                          \
   BOOST_PP_REPEAT(k,MEMBER,_)                                             \
 };
 
@@ -239,8 +259,9 @@ TEMPLATE(k,T) struct TUPLE(k) TEMPLATESPEC(k,BOOST_PP_SUB(MAX_N,k))       \
 #define TIEARG(z,k,arg) arg##k& THEELEM(k,A)
 
 
+
+
 #define GET_MAKE_TIE(k)                                                   \
-                                                                          \
 template<class TupleT>                                                    \
 GETFCTTYPE(BOOST_PP_DEC(k),TupleT)                                        \
 GETFCT(BOOST_PP_DEC(k),TupleT)                                            \
@@ -261,15 +282,10 @@ TEMPLATE(k,T) struct MAKE_TUPLE_FUNC(k) TEMPLATESPEC(k,BOOST_PP_SUB(MAX_N,k)) \
 };                                                                        \
                                                                           \
 TEMPLATE(k,T) TIETYPE(k,T) tie(BOOST_PP_ENUM(k,TIEARG,T))                 \
-{ return MAKETIE(k,T)( BOOST_PP_ENUM(k,THETIEELEMS,T) ); }                \
-                                                                          \
-template<class T> struct N_FOLD_TUPLE(T,k) {                              \
-  typedef TUPLE(k)<BOOST_PP_ENUM(k,NTIMES,T)> type;                       \
-};
+{ return MAKETIE(k,T)( BOOST_PP_ENUM(k,THETIEELEMS,T) ); }
 
 #ifdef TUPPLE_PARTIAL_SPEC
 TEMPLATENULL(10) struct TUPLE(10) { };
-template<class T, int N> struct n_fold_tuple { };
 TEMPLATENULL(10) struct make_tuple_function { };
 #endif
 
@@ -280,7 +296,11 @@ struct TUPLE(0) TEMPLATESPEC(0,10)
   int size() const { return 0; }
 };
 #else
-template<class T> struct TUPLE(0) { int size() const { return 0; } };
+template<class T> struct TUPLE(0)
+{
+  typedef TUPLE(0)<T> self_type;
+  int size() const { return 0; }
+};
 #endif
 
 STRUCT_TUPLE(1)
@@ -292,6 +312,40 @@ STRUCT_TUPLE(6)
 STRUCT_TUPLE(7)
 STRUCT_TUPLE(8)
 STRUCT_TUPLE(9)
+
+
+#ifdef TUPPLE_PARTIAL_SPEC
+
+template<class T, int N> struct n_fold_tuple { };
+
+#define N_FOLD_TUPLE(z,k,a)                                               \
+template<class T> struct n_fold_tuple<a,k> {                              \
+  typedef TUPLE(k)<BOOST_PP_ENUM(k,NTIMES,a)> type;                       \
+};
+
+BOOST_PP_REPEAT( 10, N_FOLD_TUPLE, T )
+
+#else
+
+#define N_FOLD_SELECT(z,k,arg) template<> struct select<k> \
+            { typedef TUPLE(k)<BOOST_PP_ENUM(k,NTIMES,arg)> type; };
+
+namespace detail
+{
+  template<class T> struct n_fold_helper
+  {
+    template<int N> struct select {};
+    template<> struct select<0> { typedef TUPLE(0)<null_type> type; };
+    BOOST_PP_REPEAT_FROM_TO( 1, 10, N_FOLD_SELECT, T )
+  };
+} // namespace detail
+
+template<class T, int N> struct n_fold_tuple
+{
+  typedef detail::n_fold_helper<T>::select<N>::type type;
+};
+
+#endif
 
 
 GET_MAKE_TIE(1)
@@ -346,6 +400,9 @@ GET_MAKE_TIE(9)
 
 #undef MEMBER
 
+#undef ASSIGN_PAIR
+#undef PAIRASGM
+
 #undef GETFCTTYPE
 #undef GETFCT
 #undef CONSTGETFCTTYPE
@@ -363,6 +420,9 @@ GET_MAKE_TIE(9)
 
 #undef STRUCT_TUPLE
 #undef GET_MAKE_TIE
+
+#undef N_FOLD_TUPLE
+#undef N_FOLD_SELECT
 
 #if 0
 //
@@ -510,7 +570,7 @@ RELATIONAL(9)
 
 // operator!= seems to be defined within STL, sometimes,
 // for instance in file stl_relops.h of SGI's STL
-PREPROCESS_LATER(#ifndef TUPPLE_SKIP_NOT_EQUAL)
+PREPROCESS_LATER(#ifndef TUPPLE_SKIP_UNEQUAL)
 NOTEQ(1)
 NOTEQ(2)
 NOTEQ(3)
@@ -533,6 +593,110 @@ PREPROCESS_LATER(#endif)
 #undef GREATEREQ
 
 #undef RELATIONAL
+
+#if 0
+// In case of no partial specialization, a workaround is required to use
+// the name 'tuple' (instead of 'tuple2', 'tuple3' etc.) for various
+// numbers of template arguments.
+#endif
+
+#ifndef TUPPLE_PARTIAL_SPEC
+
+namespace detail {
+
+#define BASE_TYPE_SELECTOR(k) DELAY_BASE_TYPE_SELECTOR(k)
+#define DELAY_BASE_TYPE_SELECTOR(k) base_type_selector##k
+
+#define TEE(k) DELAY_TEE(k)
+#define DELAY_TEE(k) T##k
+
+#define BASE_TYPE_SELECT(k)                                               \
+TEMPLATE(k,T) struct BASE_TYPE_SELECTOR(k)                                \
+{                                                                         \
+  typedef boost::mpl::if_c<                                               \
+    boost::is_same< TEE(BOOST_PP_DEC(k)), null_type >::value,             \
+      BASE_TYPE_SELECTOR(BOOST_PP_DEC(k))                                 \
+       < BOOST_PP_ENUM_PARAMS( BOOST_PP_DEC(k), T ) > ::type,             \
+      TUPLE(k)< BOOST_PP_ENUM_PARAMS( k, T ) >                            \
+  >::type type;                                                           \
+};
+
+// The initial case.
+template< class T0 >
+struct base_type_selector1
+{
+  typedef boost::mpl::if_c<
+    boost::is_same< T0, null_type >::value,
+      tuple0< null_type >,
+      tuple1< T0 >
+  >::type type;
+};
+
+BASE_TYPE_SELECT(2)
+BASE_TYPE_SELECT(3)
+BASE_TYPE_SELECT(4)
+BASE_TYPE_SELECT(5)
+BASE_TYPE_SELECT(6)
+BASE_TYPE_SELECT(7)
+BASE_TYPE_SELECT(8)
+BASE_TYPE_SELECT(9)
+
+
+
+
+
+#undef BASE_TYPE_SELECTOR
+#undef DELAY_BASE_TYPE_SELECTOR
+#undef TEE
+#undef DELAY_TEE
+
+#undef BASE_TYPE_SELECT
+
+} // namespace detail
+
+
+#define VEEVEE(z,k,_) V##k v##k
+#define VEE(z,k,_) v##k
+
+#define REFLECT_CTOR(k)                                               \
+  TEMPLATE(k,V) tuple( BOOST_PP_ENUM( k, VEEVEE, _ ) ):               \
+    self_type( BOOST_PP_ENUM( k, VEE, _ )  )                          \
+  {}
+
+TEMPLATENULL(9) struct tuple:
+  public detail::base_type_selector9< BOOST_PP_ENUM_PARAMS( 9, T ) >::type
+{
+  typedef detail::base_type_selector9< BOOST_PP_ENUM_PARAMS( 9, T ) >::type base_type;
+
+  tuple()
+    : self_type()
+  {}
+
+  REFLECT_CTOR(1)
+  REFLECT_CTOR(2)
+  REFLECT_CTOR(3)
+  REFLECT_CTOR(4)
+  REFLECT_CTOR(5)
+  REFLECT_CTOR(6)
+  REFLECT_CTOR(7)
+  REFLECT_CTOR(8)
+  REFLECT_CTOR(9)
+
+  TEMPLATE(9,S) base_type&
+    operator=( const tuple< BOOST_PP_ENUM_PARAMS( 9, S ) >& rhs )
+  {
+    //BOOST_STATIC_ASSERT(  );
+    return( base_type::operator=( rhs ) );
+  }
+
+};
+
+#undef VEEVEE
+#undef VEE
+
+#undef REFLECT_CTOR
+
+#endif
 
 #if 0
 // === undef globals ===
