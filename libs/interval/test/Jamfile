@@ -12,6 +12,18 @@ unit-test cmp
     : <include>$(BOOST_ROOT)
     ;
 
+unit-test cmp_exp
+    : cmp_exp.cpp
+      <lib>../../test/build/test_exec_monitor
+    : <include>$(BOOST_ROOT)
+    ;
+
+unit-test cmp_lex
+    : cmp_lex.cpp
+      <lib>../../test/build/test_exec_monitor
+    : <include>$(BOOST_ROOT)
+    ;
+
 unit-test det
     : det.cpp
       <lib>../../test/build/test_exec_monitor
