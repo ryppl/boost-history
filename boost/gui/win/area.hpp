@@ -52,6 +52,7 @@ class area: public RECT
       inline area & operator=( const area & a );
       inline area & operator=( const native_type & a );
    public:
+      inline area( const area & a );
       inline area( const native_type & a );
       inline area
       (
@@ -108,6 +109,15 @@ area & area::operator=( const native_type & a )
    right  = a.right;
    bottom = a.bottom;
    return *this;
+}
+
+area::area( const area & a ):
+   xpos( left ), ypos( top ), width( this ), height( this )
+{
+   left   = a.left;
+   top    = a.top;
+   right  = a.right;
+   bottom = a.bottom;
 }
 
 area::area( const native_type & a ):

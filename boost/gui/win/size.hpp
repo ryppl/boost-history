@@ -30,6 +30,7 @@ class size: public SIZE
       inline size & operator=( const size & sz );
       inline size & operator=( const native_type & sz );
    public:
+      inline size( const size & sz );
       inline size( const native_type & sz );
       inline size( const value_type & _w, const value_type & _h );
 };
@@ -46,6 +47,13 @@ size & size::operator=( const native_type & sz )
    cx = sz.cx;
    cy = sz.cy;
    return *this;
+}
+
+size::size( const size & sz ):
+   dx( cx ), dy( cy )
+{
+   cx = sz.cx;
+   cy = sz.cy;
 }
 
 size::size( const native_type & sz ):

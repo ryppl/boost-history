@@ -30,6 +30,7 @@ class position: public POINT
       inline position & operator=( const position & p );
       inline position & operator=( const native_type & p );
    public:
+      inline position( const position & p );
       inline position( const native_type & p );
       inline position( const value_type & _x, const value_type & _y );
 };
@@ -46,6 +47,13 @@ position & position::operator=( const native_type & p )
    x = p.x;
    y = p.y;
    return *this;
+}
+
+position::position( const position & p ):
+   xpos( x ), ypos( y )
+{
+   x = p.x;
+   y = p.y;
 }
 
 position::position( const native_type & p ):

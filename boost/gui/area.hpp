@@ -69,6 +69,7 @@ class area: public platf::area
    public:
       inline area();
       /** construct an area using the platform-native representation. */
+      inline area( const area & a );
       inline area( const native_type & a );
       /** construct an area by specifying its position and size. */
       inline area( const position & p, const gui::size & sz );
@@ -143,6 +144,12 @@ area & area::operator=( const native_type & a )
 
 area::area():
    platf::area( 0, 0, 0, 0 ),
+   size( this ), center( this )
+{
+}
+
+area::area( const area & a ):
+   platf::area( a ),
    size( this ), center( this )
 {
 }
