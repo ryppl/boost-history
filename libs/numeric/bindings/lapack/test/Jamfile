@@ -34,4 +34,14 @@ exe ublas_geqrf
 	   <find-library>$(BLAS_LIB)
         ;
 
+exe ublas_hbev
+        : ublas_hbev.cpp 
+        :  <include>$(BOOST_ROOT)
+	   <include>$(B_ROOT)
+	   <library-path>$(LAPACK_PATH)
+	   <library-path>$(BLAS_PATH)
+	   <find-library>$(LAPACK_LIB)
+	   <find-library>$(BLAS_LIB)
+        ;
+
 
