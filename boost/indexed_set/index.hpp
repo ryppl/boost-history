@@ -304,7 +304,7 @@ public:
 
   key_from_value key_extractor()const{return key;}
   key_compare    key_comp()const{return comp;}
-  value_compare  value_comp()const{return value_compare(comp);}
+  value_compare  value_comp()const{return value_compare(key,comp);}
 
 #if !defined(BOOST_NO_MEMBER_TEMPLATES)||defined(BOOST_MSVC6_MEMBER_TEMPLATES)
 

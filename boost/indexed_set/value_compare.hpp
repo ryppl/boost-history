@@ -21,18 +21,21 @@ namespace detail{
 template<typename Value,typename KeyFromValue,typename Compare>
 struct value_comparison:std::binary_function<Value,Value,bool>
 {
-  value_comparison(Compare comp_=Compare()):comp(comp_){}
+  value_comparison(KeyFromValue key_=KeyFromValue(),Compare comp_=Compare()):
+    key(key_),comp(comp_)
+  {
+  }
 
   bool operator()(
     typename call_traits<Value>::param_type x,
     typename call_traits<Value>::param_type y)
   {
-    return comp(key_fom_value(x),key_fom_value(y));
+    return comp(key(x),key(y));
   }
 
 private:
+  KeyFromValue key;
   Compare      comp;
-  KeyFromValue key_fom_value;
 };
 
 } /* namespace indexed_sets::detail */
