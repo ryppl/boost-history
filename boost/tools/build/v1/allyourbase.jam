@@ -318,6 +318,7 @@ else if $(UNIX)
         SUFDLL          ?= .so .imp ;
         gLINK_VARIABLE(.so) = NEEDLIBS ;  # shared libs should be added to the list of libs needed
         gLINK_VARIABLE(.imp) = NEEDIMPS ; # import libs are handled separately.
+        gSHELL_LIBPATH = LIBPATH ;
         
     case AMIGA :
         YACC            ?= bison ;
@@ -405,6 +406,7 @@ else if $(UNIX)
     YACCFLAGS       ?= -d ;
     SHELL_EXPORT    ?= "export " ;
     SHELL_SET       ?= "" ;
+    gSHELL_LIBPATH  ?= LD_LIBRARY_PATH ;
 }
     
 #
