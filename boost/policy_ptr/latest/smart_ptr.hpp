@@ -1299,6 +1299,10 @@ namespace boost
     template <typename P>
     class ref_linked : public detail::ref_linked_base
     {
+#ifdef BOOST_MSVC // Apparent code generation bug in VC6 and VC7.1
+    BOOST_STATIC_CONSTANT(bool, ref_linked_not_supported = false);
+    BOOST_STATIC_ASSERT(ref_linked_not_supported);
+#endif
     public:
         typedef ref_linked type;
         typedef ownership_policy_tag policy_category;
