@@ -50,7 +50,7 @@
 
 #if (defined(BOOST_MSVC) && BOOST_MSVC <= 1300) || ( defined(__GNUC__) && __GNUC__ < 3 )
 #
-#    define BOOST_NO_USING_DECLARATION_OVERLOADS
+#    define BOOST_NO_USING_DECLARATION_OVERLOADS_FROM_TYPENAME_BASE
 #
 #endif
 
