@@ -1,14 +1,16 @@
-// (C) Copyright Jeremy Siek 2001.
-// Permission to copy, use, modify, sell and distribute this software
-// is granted provided this copyright notice appears in all
-// copies. This software is provided "as is" without express or
-// implied warranty, and with no claim as to its suitability for any
-// purpose.
+// --------------------------------------------------------
+//        (C) Copyright Jeremy Siek   2001.
+//        (C) Copyright Gennaro Prota 2003 - 2004.
+//
+// Distributed under the Boost Software License, Version 1.0.
+//    (See accompanying file LICENSE_1_0.txt or copy at
+//          http://www.boost.org/LICENSE_1_0.txt)
+//
+// -----------------------------------------------------------
 
 
 #include "bitset_test.hpp"
 #include "boost/dynamic_bitset.hpp"
-
 #include "boost/limits.hpp"
 #include "boost/config.hpp"
 
@@ -19,10 +21,9 @@ void run_test_cases( BOOST_EXPLICIT_TEMPLATE_TYPE(Block) )
   // a bunch of typedefs to have handy later on
   typedef boost::dynamic_bitset<Block> bitset_type;
   typedef typename bitset_type::size_type size_type;
-  typedef bitset_test< boost::dynamic_bitset<Block> > Tests;
+  typedef bitset_test<bitset_type> Tests;
 
   std::string long_string = get_long_string();
-
   std::size_t ul_width = std::numeric_limits<unsigned long>::digits;
 
   //=====================================================================
@@ -622,23 +623,8 @@ void run_test_cases( BOOST_EXPLICIT_TEMPLATE_TYPE(Block) )
     boost::dynamic_bitset<Block> lhs(long_string.size(), 1), rhs(long_string);
     Tests::operator_sub(lhs, rhs);
   }
-  //=====================================================================
-  // Test stream operator<< and operator>>
-  {
-    boost::dynamic_bitset<Block> b;
-    boost::dynamic_bitset<Block> x(b.size());
-    Tests::stream_read_write(b, x);
-  }
-  {
-    boost::dynamic_bitset<Block> b(std::string("0"));
-    boost::dynamic_bitset<Block> x(b.size());
-    Tests::stream_read_write(b, x);
-  }
-  {
-    boost::dynamic_bitset<Block> b(long_string);
-    boost::dynamic_bitset<Block> x(b.size());
-    Tests::stream_read_write(b, x);
-  }
+
+
 }
 
 int
@@ -652,5 +638,5 @@ test_main(int, char*[])
   run_test_cases<unsigned long long>();
 # endif
 
-  return EXIT_SUCCESS;
+  return 0;
 }
