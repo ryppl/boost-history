@@ -1,3 +1,6 @@
+
+#include "../algo_traits.hpp"
+
 namespace boost
 { 
 
@@ -11,6 +14,8 @@ namespace boost
     namespace detail 
     {
 
+        
+        
         // tag classes for dispatch 
         class container_algo_pair_tag
         {
@@ -52,8 +57,10 @@ namespace boost
         struct container_algo_make_tag< T[sz] >
         {
             typedef container_algo_array_tag                  tag;
-            typedef typename array_traits<T[sz]>::size_type   size_type;
-            typedef typename array_traits<T[sz]>::iterator    result_type;
+//            typedef typename array_traits<T[sz]>::size_type   size_type;
+//            typedef typename array_traits<T[sz]>::iterator    result_type;
+            typedef typename algo_traits<T[sz]>::size_type   size_type; 
+            typedef typename algo_traits<T[sz]>::iterator     result_type;
             typedef const result_type                         const_result_type; 
         };
 
@@ -174,7 +181,8 @@ namespace boost
     detail::container_algo_make_tag<T>::result_type
     begin(T& t)
     {
-        return detail::begin(t, typename detail::container_algo_make_tag<T>::tag()); 
+        return detail::begin(t, typename 
+                             detail::container_algo_make_tag<T>::tag()); 
     }
 
     template <typename T>

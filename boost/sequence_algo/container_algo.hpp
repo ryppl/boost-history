@@ -32,6 +32,7 @@
 
 #include <cstddef>
 #include <boost/config.hpp>
+#include "algo_traits.hpp"
 
 // -------------------------------------------------------------------------- 
 
@@ -618,7 +619,7 @@ namespace boost
     inline typename mutable_return<Container>::iterator 
     find( Container& c, const T& value )
     {
-        std::find( begin( c ), end( c ), value );
+        return std::find( begin( c ), end( c ), value );
     }
 
     template< typename Container, typename T >
@@ -718,7 +719,7 @@ namespace boost
     inline typename mutable_return<Container>::diff_type
     count( const Container& c, const T& value )
     {
-        return std::count( begin( c1 ), end( c1 ), value );
+        return std::count( begin( c ), end( c ), value );
     }
 
 
@@ -727,7 +728,7 @@ namespace boost
     inline typename mutable_return<Container>::diff_type
     count_if( const Container& c, Predicate pred )
     {
-        return std::count_if( begin( c1 ), end( c1 ), pred );
+        return std::count_if( begin( c ), end( c ), pred );
     }
 
 
@@ -794,24 +795,25 @@ namespace boost
 	    return std::mismatch( begin( c1 ), end( c1 ), begin( c2 ), pred );
 	}
 
+
+
+	template< typename Container1, typename Container2 >
+	inline bool 
+	equal( const Container1& c1, const Container2& c2 )
+	{
+	    return std::equal( begin( c1 ), end( c1 ), begin( c2 ) );
+	}
+	
+	template< typename Container1, typename Container2, 
+		  typename Binary_predicate > 
+	inline bool 
+	equal( const Container1& c1, const Container2& c2, 
+	       Binary_predicate pred )
+	{
+	    return std::equal( begin( c1 ), end( c1 ), begin( c2 ), pred );
+	}
+	
     } // namespace 'ext'
-
-
-    template< typename Container1, typename Container2 >
-    inline bool 
-    equal( const Container1& c1, const Container2& c2 )
-    {
-        return std::equal( begin( c1 ), end( c1 ), begin( c2 ) );
-    }
-
-    template< typename Container1, typename Container2, 
-    typename Binary_predicate > 
-    inline bool 
-    equal_( const Container1& c1, const Container2& c2, Binary_predicate pred )
-    {
-        return std::equal( begin( c1 ), end( c1 ), begin( c2 ), pred );
-    }
-
 
 
     template< typename Container1, typename Container2 >
@@ -848,38 +850,42 @@ namespace boost
 
 
 
-    template< typename Container, typename Integer, typename T >
-    inline typename mutable_return<Container>::iterator 
-    search_n( Container& c, Integer count, const T& value )
+    namespace ext
     {
-        return std::search_n( begin( c1 ), end( c1 ), count, value );
-    }
 
-    template< typename Container, typename Integer, typename T >
-    inline typename const_return<Container>::iterator 
-    search_n( const Container& c, Integer count, const T& value )
-    {
-        return std::search_n( begin( c1 ), end( c1 ), count, value );
-    }
+	template< typename Container, typename Integer, typename T >
+	inline typename mutable_return<Container>::iterator 
+	search_n( Container& c, Integer count, const T& value )
+	{
+	    return std::search_n( begin( c ), end( c ), count, value );
+	}
 
-    template< typename Container, typename Integer, 
-    typename T, typename Binary_predicate >
-    inline typename mutable_return<Container>::iterator
-    search_n_( Container& c, Integer count, const T& value,
-               Binary_predicate pred )
-    {
-        return std::search_n( begin( c1 ), end( c1 ), count, value, pred );
-    }
+	template< typename Container, typename Integer, typename T >
+	inline typename const_return<Container>::iterator 
+	search_n( const Container& c, Integer count, const T& value )
+	{
+	    return std::search_n( begin( c ), end( c ), count, value );
+	}
 
-    template< typename Container, typename Integer, 
-    typename T, typename Binary_predicate >
-    inline typename const_return<Container>::iterator
-    search_n_( const Container& c, Integer count, const T& value,
-               Binary_predicate pred )
-    {
-        return std::search_n( ( begin( c1 ), end( c1 ), count,  value, pred );
-    }
+	template< typename Container, typename Integer, 
+		  typename T, typename Binary_predicate >
+	inline typename mutable_return<Container>::iterator
+	search_n( Container& c, Integer count, const T& value,
+		   Binary_predicate pred )
+	{
+	    return std::search_n( begin( c ), end( c ), count, value, pred );
+	}
 
+	template< typename Container, typename Integer, 
+		  typename T, typename Binary_predicate >
+	inline typename const_return<Container>::iterator
+	search_n( const Container& c, Integer count, const T& value,
+		   Binary_predicate pred )
+	{
+	    return std::search_n( begin( c ), end( c ), count, value, pred );
+	}
+
+    } // namespace 'ext'
 
 
     template< typename Container1, typename Container2 >
@@ -1038,12 +1044,17 @@ namespace boost
 
 
 
-    template< typename Container, typename Integer, typename Generator >
-    inline typename mutable_return<Container>::iterator
-    generate_n_( Container& c, Integer size, Generator gen )
+    namespace ext
     {
-        return std::generate_n( begin( c ), size, gen );
-    }
+
+	template< typename Container, typename Integer, typename Generator >
+	inline typename mutable_return<Container>::iterator
+	generate_n( Container& c, Integer size, Generator gen )
+	{
+	    return std::generate_n( begin( c ), size, gen );
+	}
+	
+    } // namespace 'ext'
 
 
 
@@ -1078,7 +1089,7 @@ namespace boost
     inline typename mutable_return<Container2>::iterator
     remove_copy_if( const Container1& c1, Container2& c2, Predicate pred )
     {
-        return std::remove_copy_if( begin( c1 ), begin( c1 ), 
+        return std::remove_copy_if( begin( c1 ), end( c1 ), 
                                     begin( c2 ), pred );
     }
 

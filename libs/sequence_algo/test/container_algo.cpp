@@ -215,9 +215,9 @@ int main()
 namespace 
 {
 
-    //////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
     // Implementation
-    //////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 
     // enable ambiguity conflicts
     using namespace std;
@@ -453,20 +453,20 @@ namespace
     {
         TEST_DATA;
         int seeking[] = { 1, 2, 3};
-        pair<int*, int*>            pp  = mismatch( p, seeking );
-        pair<const int*, int*>      pcp = mismatch( cp, seeking );
-        pair<int*, int*>            pa  = mismatch( a, seeking );
-        pair<const int*, int*>      pca = mismatch( ca, seeking );
-        pair<iterator, int*>        pv  = mismatch( v, seeking );
-        pair<const_iterator, int*>  pcv = mismatch( cv, seeking );
+        pair<int*, int*>            pp  = ext::mismatch( p, seeking );
+        pair<const int*, int*>      pcp = ext::mismatch( cp, seeking );
+        pair<int*, int*>            pa  = ext::mismatch( a, seeking );
+        pair<const int*, int*>      pca = ext::mismatch( ca, seeking );
+        pair<iterator, int*>        pv  = ext::mismatch( v, seeking );
+        pair<const_iterator, int*>  pcv = ext::mismatch( cv, seeking );
         assert( pcv == mismatch( cv.begin(), cv.end(), seeking ) );
 
-        pp  = mismatch_( p, seeking, bin_predicate() ); 
-        pcp = mismatch_( cp, seeking, bin_predicate() );
-        pa  = mismatch_( a, seeking, bin_predicate() ); 
-        pca = mismatch_( ca, seeking, bin_predicate() );
-        pv  = mismatch_( v, seeking, bin_predicate() );
-        pcv = mismatch_( cv, seeking, bin_predicate() );
+        pp  = ext::mismatch( p, seeking, bin_predicate() ); 
+        pcp = ext::mismatch( cp, seeking, bin_predicate() );
+        pa  = ext::mismatch( a, seeking, bin_predicate() ); 
+        pca = ext::mismatch( ca, seeking, bin_predicate() );
+        pv  = ext::mismatch( v, seeking, bin_predicate() );
+        pcv = ext::mismatch( cv, seeking, bin_predicate() );
         assert( pcv == mismatch( cv.begin(), cv.end(), 
                                  seeking, bin_predicate() ) );
     }
@@ -476,23 +476,23 @@ namespace
     void test_equal()
     {
         TEST_DATA;
-        equal( a, a );
-        equal( ca, ca );
-        equal( p, p );
-        equal( cp, cp );
-        equal( v, v );
-        assert( equal( cv, cv ) == 
+        ext::equal( a, a );
+        ext::equal( ca, ca );
+        ext::equal( p, p );
+        ext::equal( cp, cp );
+        ext::equal( v, v );
+        assert( ext::equal( cv, cv ) == 
                 equal( cv.begin(), cv.end(), cv.begin() ) );
 
         //
         // @note: clash with std::equal
         //
-        equal_( p, p, bin_predicate() );
-        equal_( cp, cp, bin_predicate() );
-        equal_( a, a, bin_predicate() );
-        equal_( ca, ca, bin_predicate() );
-        equal_( v, v, bin_predicate() );
-        assert( equal_( cv, cv, bin_predicate() ) ==
+        ext::equal( p, p, bin_predicate() );
+        ext::equal( cp, cp, bin_predicate() );
+        ext::equal( a, a, bin_predicate() );
+        ext::equal( ca, ca, bin_predicate() );
+        ext::equal( v, v, bin_predicate() );
+        assert( ext::equal( cv, cv, bin_predicate() ) ==
                 equal( cv.begin(), cv.end(), cv.begin(), bin_predicate() ) );
 
     }
@@ -529,20 +529,20 @@ namespace
         TEST_DATA;
         const int val = 6;
         const int cnt = 1;
-        aiter  = search_n( p, cnt, val ); 
-        caiter = search_n( cp, cnt, val );
-        aiter  = search_n( a, cnt, val ); 
-        caiter = search_n( ca, cnt, val );
-        iter   = search_n( v, cnt, val );
-        citer  = search_n( cv, cnt, val );
+        aiter  = ext::search_n( p, cnt, val ); 
+        caiter = ext::search_n( cp, cnt, val );
+        aiter  = ext::search_n( a, cnt, val ); 
+        caiter = ext::search_n( ca, cnt, val );
+        iter   = ext::search_n( v, cnt, val );
+        citer  = ext::search_n( cv, cnt, val );
         assert( citer == search_n( cv.begin(), cv.end(), cnt, val ) );
 
-        aiter  = search_n_( p, cnt, val, bin_predicate() ); 
-        caiter = search_n_( cp, cnt, val, bin_predicate()  );
-        aiter  = search_n_( a, cnt, val, bin_predicate() ); 
-        caiter = search_n_( ca, cnt, val, bin_predicate()  );
-        iter   = search_n_( v, cnt, val, bin_predicate()  );
-        citer  = search_n_( cv, cnt, val, bin_predicate()  );
+        aiter  = ext::search_n( p, cnt, val, bin_predicate() ); 
+        caiter = ext::search_n( cp, cnt, val, bin_predicate()  );
+        aiter  = ext::search_n( a, cnt, val, bin_predicate() ); 
+        caiter = ext::search_n( ca, cnt, val, bin_predicate()  );
+        iter   = ext::search_n( v, cnt, val, bin_predicate()  );
+        citer  = ext::search_n( cv, cnt, val, bin_predicate()  );
         assert( citer == search_n( cv.begin(), cv.end(), cnt, val, 
                                    bin_predicate() ) ); 
     }
@@ -585,7 +585,7 @@ namespace
 
         copy( a, copy1 );
         copy( begin( a ), end( a ), begin( copy2 ) );
-        assert( equal( copy1, copy2 ) );
+        assert( ext::equal( copy1, copy2 ) );
     }
 
 
@@ -597,7 +597,7 @@ namespace
 
         copy_backward( a, copy1 );
         copy_backward( begin( a ), end( a ), end( copy2 ) );
-        assert( equal( copy1, copy2 ) );
+        assert( ext::equal( copy1, copy2 ) );
     }
 
 
@@ -612,7 +612,7 @@ namespace
         aiter  = swap_ranges( a, copy1 );
         swap_ranges( copy1, a );
         aiter2 = swap_ranges( begin( a ), end( a ), begin( copy2 ) );
-        assert( equal( a2, copy2 ) );
+        assert( ext::equal( a2, copy2 ) );
     }
 
 
@@ -624,12 +624,12 @@ namespace
 
         aiter = transform( a, a2, unary_fun() );
         aiter = transform( begin( a ), end( a ), a3, unary_fun() );
-        assert( equal( a2, a3 ) );
+        assert( ext::equal( a2, a3 ) );
 
         aiter = transform_( a, a2, a4, binary_fun() );
         aiter = transform( begin( a ), end( a ), begin( a2 ), 
                            begin( a5 ), binary_fun() );
-        assert( equal( a4, a5 ) );
+        assert( ext::equal( a4, a5 ) );
     }
 
 
@@ -641,7 +641,7 @@ namespace
         vector<int> copy = v;
         replace( v, what, with_what );
         replace( copy.begin(), copy.end(), what, with_what );
-        assert( equal( v, copy ) );
+        assert( ext::equal( v, copy ) );
     }
 
 
@@ -653,7 +653,7 @@ namespace
         vector<int> copy = v;
         replace_if( v, predicate(), with_what );
         replace_if( copy.begin(), copy.end(), predicate(), with_what );
-        assert( equal( v, copy ) );
+        assert( ext::equal( v, copy ) );
 
     }
 
@@ -680,7 +680,7 @@ namespace
         iter = replace_copy_if( v, copy1, predicate(), with_what );
         iter = replace_copy_if( v.begin(), v.end(), copy2.begin(), 
                                 predicate(), with_what );
-        assert( equal( copy1, copy2 ) );
+        assert( ext::equal( copy1, copy2 ) );
     }
 
 
@@ -692,7 +692,7 @@ namespace
         int a[10], a2[10];
         fill( a, with );
         fill( begin( a2 ), end( a2 ), with );
-        assert( equal( a, a2 ) );
+        assert( ext::equal( a, a2 ) );
     }
 
 
@@ -705,7 +705,7 @@ namespace
         int a[10], a2[10];
         aiter = fill_n_( a, n, with );
         aiter = fill_n( begin( a2 ), n, with );
-        assert( equal( a, a2 ) );        
+        assert( ext::equal( a, a2 ) );        
     }
 
 
@@ -716,7 +716,7 @@ namespace
         int a[10], a2[10];
         generate( a, generator() );
         generate( begin( a2 ), end( a2 ), generator() );
-        assert( equal( a, a2 ) );        
+        assert( ext::equal( a, a2 ) );        
     }
 
 
@@ -724,11 +724,11 @@ namespace
     void test_generate_n()
     {
         int* aiter;
-        const int size = 10, n = 5;
-        int a[10], a2[10];
-        aiter = generate_n_( a, n, generator() );
+        const int n = 5;
+        int a[n], a2[n];
+        aiter = ext::generate_n( a, n, generator() );
         aiter = generate_n( a2, n, generator() );
-        assert( equal( a, a2 ) );        
+        assert( ext::equal( a, a2 ) );        
     }
 
 
@@ -742,7 +742,7 @@ namespace
 
         aiter = remove( a, what );
         aiter = remove( begin( a2 ), end( a2 ), what );
-        assert( equal( a, a2 ) );
+        assert( ext::equal( a, a2 ) ); // ?
     }
 
 
@@ -756,7 +756,7 @@ namespace
 
         aiter = remove_if( a, predicate() );
         aiter = remove_if( begin( a2 ), end( a2 ), predicate() );
-        assert( equal( a, a2 ) );
+        assert( ext::equal( a, a2 ) );
     }
 
 
@@ -765,13 +765,14 @@ namespace
     {
         TEST_DATA;
         int* aiter2;
-        int  a2[a_size], a3[a_size];
+	const int new_size = a_size - 3;
+        int  a2[new_size], a3[new_size];
         const int what = 3;
 
         aiter  = remove_copy( a, a2, what );
         aiter2 = remove_copy( begin( a ), end( a ), begin( a3 ), what );
 
-        assert( equal( a2, aiter, a3 ) );    
+        assert( ext::equal( a2, a3 ) );    
     }
 
 
@@ -780,13 +781,16 @@ namespace
     {
         TEST_DATA;
         int* aiter2;
-        int  a2[a_size], a3[a_size];
-        copy( a, a2 ); 
+	const int new_size = a_size - 2;
+        int  a2[new_size], a3[new_size];
 
+	print2( a2, a3 );
         aiter  = remove_copy_if( a, a2, predicate() );
         aiter2 = remove_copy_if( begin( a ), end( a ), 
                                  begin( a3 ), predicate() ); 
-        assert( equal( a2, aiter, a3 ) );
+	print2( a, a2 );
+	print2( a2, a3 );
+        assert( ext::equal( a2, a3 ) );
     }
 
 
@@ -799,11 +803,11 @@ namespace
 
         aiter = unique( a2 );
         aiter = unique( begin( a3 ), end( a3 ) );
-        assert( equal( a2, a3 ) );
+        assert( ext::equal( a2, a3 ) );
 
         aiter = unique_( a2, bin_predicate() );
         aiter = unique( begin( a3 ), end( a3 ), bin_predicate() );
-        assert( equal( a2, a3 ) );
+        assert( ext::equal( a2, a3 ) );
     }
 
 
@@ -816,12 +820,12 @@ namespace
 
         aiter = unique_copy( a, a2 );
         aiter = unique_copy( begin( a ), end( a ), begin( a3 ) );
-        assert( equal( a2, a3 ) );
+        assert( ext::equal( a2, a3 ) );
 
         aiter = unique_copy_( a, a2, bin_predicate() );
         aiter = unique_copy( begin( a ), end( a ), 
                              begin( a3 ), bin_predicate() );
-        assert( equal( a2, a3 ) );
+        assert( ext::equal( a2, a3 ) );
     }
 
 
@@ -858,7 +862,7 @@ namespace
         int* middle2 = &a1[a_size/2];
         aiter = rotate( a, middle1 );
         aiter = rotate( begin( a1 ), middle2, end( a1 ) );
-        assert( equal( a, a1 ) ); 
+        assert( ext::equal( a, a1 ) ); 
     }
 
 
@@ -871,7 +875,7 @@ namespace
         int* middle = &a[a_size/2];
         aiter = rotate_copy( a, middle, a1 );
         aiter = rotate_copy( a, middle, a + a_size, a2  );
-        assert( equal( a1, a2 ) ); 
+        assert( ext::equal( a1, a2 ) ); 
     }
 
 
