@@ -8,58 +8,22 @@
 #ifndef BOOST_TUPPLE_DETAIL_ITERATOR_TUPPLE_TRAITS_DETAIL_HPP
 #define BOOST_TUPPLE_DETAIL_ITERATOR_TUPPLE_TRAITS_DETAIL_HPP
 
-#include <boost/config.hpp>
-#include <boost/detail/iterator.hpp>
-#include <boost/type_traits.hpp>
-#include <boost/mpl/if.hpp>
+#include <boost/iterator/iterator_traits.hpp>
+
 
 namespace boost {
   namespace tupple {
     namespace detail {
 
-// If one tries to compile something like
-//   boost::detail::iterator_traits<int*> x
-// MSVC returns with
-//   error C2079: 'x' uses undefined struct 'boost::detail::must_manually_specialize_boost_detail_iterator_traits<Ptr>'
-//
-// Ok, lets do that (compare boost/iterator/iterator_traits.hpp, currently in the Sandbox):
-
-template<class IteratorT> struct iterator_value
-{
-  typedef typename ::boost::mpl::if_<
-            ::boost::is_pointer<IteratorT>,
-              ::boost::remove_pointer<IteratorT>::type,
-              ::boost::detail::iterator_traits<IteratorT>::value_type
-          >::type type;
-};
-
-
-template<class IteratorT> struct iterator_reference
-{
-  typedef typename ::boost::mpl::if_<
-            ::boost::is_pointer<IteratorT>,
-              ::boost::add_reference< typename ::boost::remove_pointer<IteratorT>::type >::type,
-              ::boost::detail::iterator_traits<IteratorT>::reference
-          >::type type;
-};
-
-
-template<class IteratorT> struct iterator_pointer
-{
-  typedef typename ::boost::detail::iterator_traits<IteratorT>::pointer type;
-};
-
-
-
 /**
  * @brief Generates types in much the same way as iterator_adaptor does.
  */
 template<class IteratorT,
-         class ValueT       = iterator_value<IteratorT>::type,
-         class ReferenceT   = iterator_reference<IteratorT>::type,
-         class PointerT     = iterator_pointer<IteratorT>::type,
-         class CategoryT    = ::boost::detail::iterator_traits<IteratorT>::iterator_category,
-         class DifferenceT  = ::boost::detail::iterator_traits<IteratorT>::difference_type>
+         class ValueT       = typename ::boost::iterator_value<      IteratorT >::type,
+         class ReferenceT   = typename ::boost::iterator_reference<  IteratorT >::type,
+         class PointerT     = typename ::boost::iterator_pointer<    IteratorT >::type,
+         class CategoryT    = typename ::boost::iterator_category<   IteratorT >::type,
+         class DifferenceT  = typename ::boost::iterator_difference< IteratorT >::type >
 struct iterator_traits {
 
   /// The value type of the iterator.
