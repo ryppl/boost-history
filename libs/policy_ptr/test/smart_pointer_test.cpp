@@ -1,4 +1,4 @@
-#include "boost\smart_ptr\smart_ptr.hpp"
+#include "../../../boost/policy_ptr/smart_ptr.hpp"
 
 int main(void)
 {
