@@ -99,24 +99,24 @@ public:
 	{
 	}
 
-    void* raw_pointer()
+    void* address()
     {
         return &data[0];
     }
 
-    const void* raw_pointer() const
+    const void* address() const
     {
         return &data[0];
     }
 
     void memcpy_in(const void* src)
     {
-        std::memcpy(raw_pointer(), src, size);
+        std::memcpy(address(), src, size);
     }
 
     void memcpy_out(void* dest) const
     {
-        std::memcpy(dest, raw_pointer(), size);
+        std::memcpy(dest, address(), size);
     }
 
 public:
