@@ -6,30 +6,60 @@
 </h3>
 <p>
 <pre>
-template&lt;typename InputSequence, typename T&gt;
+template&lt;
+      typename Sequence
+    , typename T
+    &gt;
 struct find
 {
-    typedef /* implementation defined */ type;
+    typedef <em>implementation-defined</em> type;
 };
 </pre>
 <p>
 <h3>Description
 </h3>
 <p>
-<code>find</code> algorithm returns the first iterator <code>i</code> in the range <code>[Sequence::begin, Sequence::end)</code> such that <code>typeof(i::element_type) == typeof(T)</code>. If no such iterator exists then <code>typeof(iterator)==typeof(Sequence::end)</code>. 
+Finds the first entrance of type <code>T</code> in a <code>Sequence</code>. 
+<p>
+<h3>Definition
+</h3>
+<p>
+<pre>
+#include "<a href="\boost/mpl/find.hpp">boost/mpl/find.hpp</a>"
+</pre>
+<p>
+<h3>Parameters
+</h3>
+<table border="1">
+<tr><th>&nbsp;Parameter&nbsp;</th><th>&nbsp;Requirement &nbsp;</th></tr>
+<tr><td><code>Sequence</code></td><td>A model of <a href="./ForwardSequence.html">ForwardSequence</a> </td></tr>
+<tr><td><code>T</code></td><td>A type </td></tr>
+</table>
+<p>
+<h3>Members
+</h3>
+<table border="1">
+<tr><th>&nbsp;Member&nbsp;</th><th>&nbsp;Requirement &nbsp;</th></tr>
+<tr><td><code>type</code></td><td>The first <a href="./Iterators.html">iterator</a> <code>i</code> in the range <code>[begin<a href="./action=edit&id=begin.html">?</a>&lt;Sequence&gt;::type, end<a href="./action=edit&id=end.html">?</a>&lt;Sequence&gt;::type)</code> such that <code>i::type</code> is <a href="./Definitions.html">identical</a> to <code>T</code>. Identical to <code>end<a href="./action=edit&id=end.html">?</a>&lt;Sequence&gt;::type</code> if no such iterator exists. </td></tr>
+</table>
+<p>
+<h3>Complexity
+</h3>
+<p>
+Linear: at most <code>size<a href="./action=edit&id=size.html">?</a>&lt;Sequence&gt;::value</code> comparisons for identity. 
 <p>
 <h3>Example
 </h3>
 <p>
 <pre>
-typedef mpl::type_list<a href="./action=edit&id=type_list.html">?</a>&lt;char, int, unsigned, long, unsigned_long&gt; list;
-BOOST_STATIC_ASSERT(<a href="./find.html">mpl::find</a>&lt;list, unsigned&gt;::iterator::position == 2);
+typedef vector<a href="./action=edit&id=vector.html">?</a>&lt;char,int,unsigned,long,unsigned_long&gt; types;
+typedef find&lt;types,unsigned&gt;::type iter;
+BOOST_STATIC_ASSERT(iter::position == 2);
 </pre>
 <p>
 <h3>See also
 </h3>
 <p>
-<code>find_if<a href="./action=edit&id=find_if.html">?</a></code>, <code>search<a href="./action=edit&id=search.html">?</a></code>.
-<p>
+<a href="./Algorithms.html">Algorithms</a>, <code><a href="./find_if.html">find if</a></code>
 <p><hr>
-<a href="./Table_of_Content.html">Table of Content</a><br>Last edited December 23, 2001 2:04 pm</body></html>
+<a href="./Table_of_Content.html">Table of Content</a><br>Last edited February 18, 2002 12:11 pm</body></html>
