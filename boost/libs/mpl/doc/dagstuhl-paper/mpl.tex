@@ -58,7 +58,7 @@ learned about C++ template \mping{}.
 
 Metaprogramming is usually defined as the creation of programs which
 generate other programs. Parser generators such as YACC are examples
-of one kind of program-generating program. The ipnput language to YACC
+of one kind of program-generating program. The input language to YACC
 is a context-free grammar in EBNF, and its output is a program which
 parses that grammar. Note that in this case the \mpgm{} (YACC) is
 written in a language (`C') which does not directly support the
@@ -136,7 +136,7 @@ unsigned factorial(unsigned N)
 }
 
 While it is easy to see the analogy between the two recursive
-defintions, recursion is in general more important to \Cpp{}
+definitions, recursion is in general more important to \Cpp{}
 metaprograms than it is to runtime \Cpp. In contrast to languages such
 as Lisp where recursion is idiomatic, \Cpp\ programmers will typically
 avoid recursion when possible. This is done not only for efficiency
@@ -221,7 +221,7 @@ out what the names of the members are, and even if we assume that
 they're named according to some convention as above, there's no way to
 now how many members there are. The key to solving this problem is to
 increase the uniformity of the representation. If we have a consistent
-wayt to get the first type of any sequence and the rest of the
+way to get the first type of any sequence and the rest of the
 sequence, we can easily access all members:
 
 {\footnotesize
@@ -286,7 +286,7 @@ struct largest<cons<First,nil> >
 
 int main()
 {
-   // print ht ename of the largest of my_types
+   // print the name of the largest of my_types
    std::cout << typeid(largest<my_types>::type).name()
              << std::endl;
 }
@@ -309,7 +309,7 @@ There are several things worth noticing about this code:
   device which allows the programmer to avoid writing \code{typedef
   typename}...\code{::type type} in the template body.
 
-\item Even this simple metaprogram uses three separate partial
+\item Even this simple \mpgm\ uses three separate partial
   specializations. The \code{largest} \mfn\ uses \emph{two}
   specializations. One might expect that this indicates there are two
   termination conditions, but there are not: one specialization is
@@ -450,7 +450,7 @@ One might just as well ask why we need any generic library:
 \item Re-use. More important even than the re-use of code which all
   libraries provide, a well-designed generic library establishes a
   \emph{framework of concepts and idioms} which establish a reusable
-  mental model for approaching problems. Just ast the \Cpp\ Standard
+  mental model for approaching problems. Just as the \Cpp\ Standard
   Template Library gave us iterator concepts and a function object
   protocol, the \Mpl\ provides type-iterators and meta-function class
   protocol. A well-considered framework of idioms saves the \mpgmer{}
@@ -492,7 +492,7 @@ inevitable. For example, the current implementation of the
 support for template partial specialization or for template template
 parameters.\footnote{We believe that a workaround is possible, but
 that it would impose some additional restrictions on the way users
-must represent metafunctions. The fact remains that without both
+must represent \mfn{}s. The fact remains that without both
 features, \mping\ expressivity is somewhat reduced.} Another
 concession which may not be apparent at first is the need for the
 \code{apply1}...\code{applyN} templates. On most compilers,
@@ -580,7 +580,7 @@ BOOST_MPL_ASSERT_IS_SAME(pointed_type< boost::scoped_ptr<my> >::type, my);
 }
 
 An obvious way to implement \code{pointed\_type} would be to 
-use partial specialization to distingiush between plain 
+use partial specialization to distinguish between plain 
 pointers and everything else:
 
 {\footnotesize
@@ -603,7 +603,7 @@ struct pointed_type<T*>
 
 but if partial specialization is unavailable, then 
 \code{select\_if} seems to be the right tool. Unfortunately,
-the straighforward approach does not work:
+the straightforward approach does not work:
 
 {\footnotesize
 \begin{verbatim}
@@ -625,7 +625,7 @@ typedef pointed_type<char*>::type result;
 
 Clearly, \code{typename T::element\_type} expression is not 
 valid in case of \code{T == char*}, and that's what the 
-compiler is complaning about. Implementing the selection code 
+compiler is complaining about. Implementing the selection code 
 manually solves the problem: 
 
 {\footnotesize
@@ -689,14 +689,14 @@ struct pointed_type
 \end{verbatim}
 }
 
-but this does't work either - the access to the 
+but this doesn't work either - the access to the 
 \code{element\_type<T>}'s nested \code{type} member still 
 forces the compiler to instantiate \code{element\_type<T>}
 with \code{T == char*}, and that instantiation is of course 
 invalid. Also, although in our case this does not lead to a 
 compile error, the \code{boost::remove\_pointer<T>} template 
 gets always instantiated as well, and for the same reason 
-(because we are accessing it's nested \code{type} memeber). 
+(because we are accessing it's nested \code{type} member). 
 Such unnecessary instantiation that is not fatal from 
 compiler's point of view may or may be not a problem, 
 depending on the "weight" of the template (how much the 
@@ -738,7 +738,7 @@ guaranteed not to do so), so we are guaranteed to get away with
 selected as \code{func\_}.
 
 The above technique is so common in template metaprograms, that it
-even make sense to facilate the selection of nested \code{type} member
+even make sense to facilitate the selection of nested \code{type} member
 by introducing a high level equivalent to \code{select\_if} - the one
 that will do \code{func\_::type} operation (that is called [nullary]
 function class application) as a part of its invocation.  The \Mpl
@@ -928,7 +928,7 @@ in software which can't be solved by adding yet another level of
 indirection'' applies here. To elevate \mfns\ to the status of
 first-class objects, the MPL introduces the concept of a ``\mfn\
 class'':\footnote{This form should look familiar to anyone acquainted
-with function objects in STL, with the nexted \code{apply} template
+with function objects in STL, with the nested \code{apply} template
 taking the same role as the runtime function-call operator}
 
 {\footnotesize
@@ -1069,14 +1069,14 @@ BOOST_STATIC_ASSERT((boost::is_convertible<result,expected_result>::value));
 This may or may be not a problem, depending on how you 
 want to use the result of a type computation algorithm 
 that applies higher-order metafunctions internally. 
-Unfortunately, within the current language inheritence 
+Unfortunately, within the current language inheritance 
 is the only way to "return" a class template.
 
 %%% A marginal issue. We don't have true closures either but it
 %%% doesn't seem to cause problems... or maybe it does (we can't declare
 %%% a variable to hold the result of bind)
 
-%%\emph{MORE IMPORTANLY - why representing metafunctions as plain class
+%%\emph{MORE IMPORTANTLY - why representing metafunctions as plain class
 %% templates (ct-metafunctions) is not a option.}
 
 
@@ -1085,7 +1085,7 @@ Definitions:
   \item  A \emph{higher-order function} is a function 
   that can take other functions as arguments, and/or 
   return functions as results. Higher-order functions 
-  is one of the distinguishing fetaures of the modern 
+  is one of the distinguishing features of the modern 
   functional languages [Hud89]. 
 
   \item A function is \emph{polymorphic} if it can 
@@ -1099,12 +1099,12 @@ are not polymorphic regarding ct-metafunctions (class
 template template parameters). In particular, the language 
 rules dictate the compiler to enforce \emph{strict arity} of 
 the class templates being passed as template template 
-parameters. Moreever, polymorphism \emph{between} types and 
+parameters. Moreover, polymorphism \emph{between} types and 
 ct-metafunctions is not supported, and the syntax of 
 "returning" ct-metafunctions is different from syntax of 
 returning a type. All this seriously limits the 
 applicability of higher-order functions, leads to 
-unnecessary code duplication, and has an overall negitave 
+unnecessary code duplication, and has an overall negative 
 effect on the both conceptual and implementation clarity, 
 simplicity and size of the library.
 
@@ -1121,7 +1121,7 @@ function's execution as the argument to another function:
 %%% FWIW, when you start using template template parameters, using
 %%% ``typename'' (instead of ``class'') for type template parameters
 %%% really hurts readability IMO. We have 3 keywords that look quite
-%%% similar: template typedef typename. I undestand the theoretical
+%%% similar: template typedef typename. I understand the theoretical
 %%% reasons for doing it this way.
 
 {\footnotesize
@@ -1189,7 +1189,7 @@ template would lead to duplication of almost every library
 facility. "function class" metafunction form solves all these 
 problems. On the other hand, it seems that accepting function 
 classes as \emph{the} form of representation of compile-time 
-function entites imposes code duplication danger in as well: 
+function entities imposes code duplication danger in as well: 
 if the library's own primitives, algorithms, etc. are 
 represented as class templates, that means that you either 
 cannot reuse these algorithms in context of higher-order 
@@ -1247,10 +1247,10 @@ passing algorithms as arguments to another
 algorithms/functions. 
 
 The library's answer to this dilemma is lambda expressions. 
-Lambda is the mechanism that enables curring of 
+Lambda is the mechanism that enables currying of 
 ct-metafunctions and converting them into function classes, 
 so when you want to pass \code{find} algorithm as an argument 
-to a higher-oder function, you just write:
+to a higher-order function, you just write:
 
 {\footnotesize
 \begin{verbatim}
@@ -1268,7 +1268,7 @@ typedef mpl::find<list,long>::type iter;
 }
 
 
-[to be continiued]
+[to be continued]
 
 %%% Should say ``metafunction classes'' below?
 
@@ -1287,7 +1287,7 @@ such designs are the direct target for some metaprogramming.
 Templates in their original usage were intended to be used to 
 solve this exact problem, (std::vector), but without predefined 
 abstractions/constructs for manipulating/iterating 
-\emph{sequences} of types instead of stanalone types, and 
+\emph{sequences} of types instead of standalone types, and 
 without developed (known) techniques for emulating this 
 constructs using the current language facilities, they effect 
 on helping high-level metaprogramming happen has been limited. 
@@ -1300,12 +1300,12 @@ template composition has been around for a while (for example,
 most of the expression template libraries build such trees as 
 a part of their expression "parsing" process [Vel95b]). 
 [Ale00] used list of types and some algorithms on them to 
-implement several design patterns; the accompanishing code 
+implement several design patterns; the accompanying code 
 is known as the Loki library []. 
 
 %%%\emph{OLD introduction:}
 
-%%%A possibility to represent and manipulate theoreticaly 
+%%%A possibility to represent and manipulate theoretically 
 %%%unbound sequences of types and values at compile time opens an 
 %%%exciting opportunities for creating highly reusable, 
 %%%configurable, and amazingly easy-to-use generic components and 
@@ -1434,7 +1434,7 @@ typedef mpl::transform<
 
 Note that \code{tiny\_list} is a model of 
 BidirectionalSequence (it would be RandomAccess if 
-we added \code{advance} memeber to \code{tiny\_\-list\_\-iterator}:
+we added \code{advance} member to \code{tiny\_\-list\_\-iterator}:
 
 {\footnotesize
 \begin{verbatim}
@@ -1508,7 +1508,7 @@ it's all templates - something that you cannot say about the
 original version.
 
 \subsubsection{iter\_fold/iter\_find as two main iteration 
-algortihms}
+algorithms}
 
 For the purpose of examination a little bit more of the 
 library's internal structure, let's look at how the 
@@ -1628,18 +1628,18 @@ itself implemented using \code{iter\_fold}. The key difference
 is that \code{find\_if} \emph{terminates} the iteration as 
 soon as its predicate satisfied, while \code{iter\_fold} 
 always iterates the whole sequence (backward and forward). 
-An obviuos generalization here would be to add yet another 
+An obvious generalization here would be to add yet another 
 parameter to \code{iter\_fold} so it become possible to 
 implement everything in terms of the single iteration 
 metafunction, but we decided that this would be an 
-overgeneralization. For one, it would mean that the 
-termination codition would be always calculated even 
+over-generalization. For one, it would mean that the 
+termination condition would be always calculated even 
 although for most uses of \code{iter\_fold} it's not needed. 
 An overhead like this just goes against the library's strike 
 for maximum compile-time performance.
 
 
-\subsubsection{Sequences of Types, but there are Shorcuts for Numbers}
+\subsubsection{Sequences of Types, but there are Shortcuts for Numbers}
 
 What we've seen so far were sequences (and algorithms on 
 sequences) of types. It's very much possible and easy to 
@@ -1649,7 +1649,7 @@ parameters is one more example of non-polymorphic behavior. %%% (??).
 That means, that if you declared a metafunction to take a 
 non-type template parameter - let's say \emph{long} - 
 it's not possible to pass anything besides compile-time 
-intergal constants to it:
+integral constants to it:
 
 {\footnotesize
 \begin{verbatim}
@@ -1674,13 +1674,13 @@ typedef mpl::list<1,2,3,4,5> numbers; // error!
 
 While this may be an obvious limitation, it imposes yet 
 another dilemma on the library design - on one hand, we don't 
-want to restrict users to type namipulations only, and on another 
-hand, full support for intergal manipulations would require at 
+want to restrict users to type manipulations only, and on another 
+hand, full support for integral manipulations would require at 
 least duplication of most of the library facilities (ideally, 
-if going this route, all the templates should be reimplemented 
+if going this route, all the templates should be re-implemented 
 for every integral type - \code{char}, \code{int}, \code{short},
 \code{long}, etc.) - the same situation as we would have if we 
-choosed to represent metafunctions as ordinary class templates.
+had chosen to represent metafunctions as ordinary class templates.
 The solution for this issue is the same as well - we represent 
 integral values by wrapping them in types, so, for example, to 
 create a list of numbers you write:
@@ -1700,7 +1700,7 @@ typedef mpl::list<
 Wrapping integral constants into types to make them 
 first-class citizens is important well inside metaprograms, 
 where you often don't know (and don't care) if the 
-metafunctions you are using operate on types, intergal 
+metafunctions you are using operate on types, integral 
 values, other metafunctions, or something else, like 
 fixed-point or rational numbers (\code{mpl::fixed\_c} 
 and \code{mpl::rational\_c}).
@@ -1709,7 +1709,7 @@ But from user's perspective, the above example is much more
 verbose than the shorter one, the one that was incorrect. So, 
 for the convenience purposes, the library does provide users 
 with a template that takes non-type template parameters, but 
-allows a more compact notaion:
+allows a more compact notation:
 
 {\footnotesize
 \begin{verbatim}
@@ -1828,7 +1828,7 @@ is much more time-consuming to implement even a basic set of the
 sequence algorithms provided by equivalent run-time libraries (STL in
 particular), but if we have learned anything from the STL it is that
 tying those algorithms' implementations to a specific sequence
-implementation is a misgiuded effort!
+implementation is a misguided effort!
 
 The truth is that there is no single ``best'' type sequence
 implementation for the same reasons that there will never be a single
@@ -2007,8 +2007,8 @@ unrolling is used.
 
 There are cases, especially in domain of numeric computations, then 
 you want make some part of calculations at compile-time, and then 
-pass the results to a run-time part of the program for furhter 
-processing. For example, suppose you've impelemented a complex 
+pass the results to a run-time part of the program for further 
+processing. For example, suppose you've implemented a complex 
 compile-time algorithm that works with fixed-point arithmetics:
 
 {\footnotesize
@@ -2063,7 +2063,7 @@ double my_algorithm()
 \code{for\_each<...>::\-execute} call there is what actually 
 transfers the compile-time \code{result\_\-data} into run-time 
 \code{std::vector<double> results}. The \code{for\_each} algorithm 
-is one of the explicit facilites the library provides for run-time 
+is one of the explicit facilities the library provides for run-time 
 code generation:
 
 {\footnotesize
@@ -2176,7 +2176,7 @@ goes into the \code{playing} state".
 %%% can we kill the ``_event'' suffix here?
 
 The transition table provides us with complete formal 
-definition of the target FSM, and there are sereval ways to 
+definition of the target FSM, and there are several ways to 
 transform that definition into code. For example, if we define
 states as members of enumeration type, and events as classes 
 derived from some base \code{event}
@@ -2319,7 +2319,7 @@ player::process_event(event const& e)
 }
 
 %%% Not sure the part below is too relevant
-Note that despite seemed obviousity of optimization of making 
+Note that despite seemed obviousness of optimization of making 
 a transition function to return the next state in not such a 
 good idea. While it will reduce the amount of lines required 
 to describe a single transition, it also would take the 
@@ -2329,13 +2329,13 @@ longer be able to say in what state the machine is going to
 move after it handles a specific event - you'll have to look 
 into transition function itself. [...] 
 
-Although there is nothing particulary wrong with implementing 
+Although there is nothing particularly wrong with implementing 
 a FSM's structure using nested \code{if} (or \code{switch-case})
 statements, the obvious thing about this approach is that it 
 doesn't scale - even for our simple FSM the 
 \code{process\_\-event} function is already more than 50 lines
-long. One way to reduce the maintainance problems would be to 
-factor body's of top-level \code{if} statements in separate 
+long. One way to reduce the maintenance problems would be to 
+factor bodies of top-level \code{if} statements in separate 
 event processing functions, one for each state:
 
 %%% I think a simple example of a switch statement from a naive lexer
@@ -2409,11 +2409,11 @@ until the runtime.
 
 [...]
 
-Note that all the implementions we've looked on has this common 
+Note that all the implementations we've looked on has this common 
 trait - the transition table of our FSM is just a 5-lines table, 
-and ideally, we would like the skeleton implemention of the 
+and ideally, we would like the skeleton implementation of the 
 automata's controlling logic to be equally small (or, at least, 
-to look equally small, e.g. to be incapsulated in some form so 
+to look equally small, e.g. to be encapsulated in some form so 
 we never see/worry about it). 
 
 Implementing it
