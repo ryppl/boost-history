@@ -64,15 +64,9 @@ rule boost-build ( dir ? )
     #
     if ! $(bootstrap-file)
     {
-        local path ;
-        if $(BOOST_BUILD_PATH[3])
-        { path = $(BOOST_BUILD_PATH[1])"," $(BOOST_BUILD_PATH[2--2])"," $(BOOST_BUILD_PATH[-1])"." ; }
-        else {
-            if $(BOOST_BUILD_PATH[2]) { path = $(BOOST_BUILD_PATH[1])"," $(BOOST_BUILD_PATH[2])"." ; }
-            else { path = $(BOOST_BUILD_PATH[1])"." ; } }
         EXIT
             "Unable to load Boost.Build, could not find build system files."
-            "Attempted search in these directories from BOOST_BUILD_PATH: "$(path[1]) $(path[2-])
+            "Attempted search in these directories from BOOST_BUILD_PATH: "$(BOOST_BUILD_PATH:J=", ")"."
             "Please consult the documentation at 'http://www.boost.org'." ;
     }
     
@@ -104,16 +98,10 @@ if [ MATCH .*(bjam).* : $(ARGV[1]:B:L) ]
     #
     if ! $(boost-build-file)
     {
-        local path ;
-        if $(BOOST_BUILD_PATH[3])
-        { path = $(BOOST_BUILD_PATH[1])"," $(BOOST_BUILD_PATH[2--2])"," $(BOOST_BUILD_PATH[-1])"." ; }
-        else {
-            if $(BOOST_BUILD_PATH[2]) { path = $(BOOST_BUILD_PATH[1])"," $(BOOST_BUILD_PATH[2])"." ; }
-            else { path = $(BOOST_BUILD_PATH[1])"." ; } }
         EXIT
             "Unable to load Boost.Build, could not find 'boost-build.jam'."
             "Attempted search from" [ PWD ] "up to the root."
-            "And in these directories from BOOST_BUILD_PATH: "$(path[1]) $(path[2-])
+            "And in these directories from BOOST_BUILD_PATH: "$(BOOST_BUILD_PATH:J=", ")"."
             "Please consult the documentation at 'http://www.boost.org'." ;
     }
     
