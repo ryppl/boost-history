@@ -77,10 +77,9 @@ public:
       size_type m_num_bits;
       size_type m_num_blocks;
 
-      static size_type word(size_type bit)  { return bit / bits_per_block; }
-      static size_type offset(size_type bit){ return bit % bits_per_block; }
-      static Block mask1(size_type bit) { return Block(1) << offset(bit); }
-      static Block mask0(size_type bit) { return ~(Block(1) << offset(bit)); }
+      static size_type block_index(size_type pos) { return pos / bits_per_block; }
+      static size_type bit_index(size_type pos) { return pos % bits_per_block; }
+      static Block bit_mask(size_type pos) { return Block(1) << bit_index(pos); }
       static size_type calc_num_blocks(size_type num_bits)
         { return (num_bits + (bits_per_block - 1)) / bits_per_block; }
     };

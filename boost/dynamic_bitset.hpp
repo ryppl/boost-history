@@ -366,7 +366,7 @@ public:
 
     // subscript
     reference operator[](size_type pos) { return reference(*this, pos); }
-    bool operator[](size_type pos) const { return test_(pos); } //[gps]
+    bool operator[](size_type pos) const { return test(pos); }
 
     unsigned long to_ulong() const;
 
@@ -418,10 +418,6 @@ public:
 
 private:
     void m_zero_unused_bits();
-    void set_(size_type bit);
-    void set_(size_type bit, bool val);
-    void reset_(size_type bit);
-    bool test_(size_type bit) const;
     void set_block_(size_type blocknum, Block b);
     size_type m_do_find_from(size_type first_block) const;
 
@@ -451,7 +447,7 @@ public:
         typename String::const_iterator iter = s.begin() + pos + tot - 1;
         for (size_type i = 0; i < tot; ++i) {
             if (Tr::eq(*iter, one))
-                set_(i);
+                set(i);
             //else
               //  assert(Tr::eq(*iter, std::locale().widen('0')) );
             --iter;
@@ -540,13 +536,8 @@ inline void
 from_block_range(BlockIterator first, BlockIterator last,
                  dynamic_bitset<B, A>& result)
 {
-#if 0 // G.P.S.
-        // PRE: distance(first, last) == size() / bits_per_block
-        for (size_type i = 0; first != last; ++first, ++i)
-            this->m_bits[i] = *first;
-#endif
-        // PRE: distance(first, last) == numblocks()
-        std::copy (first, last, result.m_bits);
+    // PRE: distance(first, last) == numblocks()
+    std::copy (first, last, result.m_bits);
 }
 
 //=============================================================================
@@ -585,7 +576,7 @@ dynamic_bitset(size_type num_bits, unsigned long value, const Allocator& alloc)
   const size_type M = std::min(sizeof(unsigned long) * CHAR_BIT, num_bits);
   for(size_type i = 0; i < M; ++i, value >>= 1) // [G.P.S.] to be optimized
     if ( value & 0x1 )
-      set_(i);
+      set(i);
 }
 
 // copy constructor
@@ -639,9 +630,31 @@ resize(size_type num_bits, bool value)
     Block val = value? ~static_cast<Block>(0) : static_cast<Block>(0);
     std::fill(d + this->m_num_blocks, d + new_nblocks, val);
     std::swap(d, this->m_bits);
+
+#if 0  // [gps] temporary fix
+       //     - this code used to call set_ with 'out of range' indexes.
+       //       Once removed that function, we have nothing to replace it
+       //       here, as set() would assert. This issue will disapper
+       //       altogether with the new implemenation of resize()
+       //       (to come)
+
     for (std::size_t i = this->m_num_bits;
          i < this->m_num_blocks * bits_per_block; ++i)
-      set_(i, value);
+      set(i, value);
+#else
+
+    size_type const old_excess_bits = this->m_num_bits % bits_per_block;
+    if (old_excess_bits != 0) {
+          assert(m_num_blocks >= 1);
+          if (value) {
+              // put those bits to 1
+              m_bits[m_num_blocks-1] |= (val << old_excess_bits);
+          }
+    }
+
+#endif
+
+
     if (d != 0)
       this->m_alloc.deallocate(d, this->m_num_blocks);
   }
@@ -668,7 +681,7 @@ void dynamic_bitset<Block, Allocator>::
 push_back(bool bit)
 {
   this->resize(this->size() + 1);
-  set_(this->size() - 1, bit);
+  set(this->size() - 1, bit);
 }
 
 template <typename Block, typename Allocator>
@@ -682,7 +695,7 @@ append(Block value)
   else {
       // G.P.S. to be optimized
     for (std::size_t i = old_size; i < size(); ++i, value >>= 1)
-      set_(i, value & 1);
+      set(i, value & 1);
   }
 }
 
@@ -732,27 +745,6 @@ dynamic_bitset<Block, Allocator>::operator-=(const dynamic_bitset& rhs)
     return *this;
 }
 
-/* [gps] - snipped
-template <typename Block, typename Allocator>
-dynamic_bitset<Block, Allocator>&
-dynamic_bitset<Block, Allocator>::operator<<=(size_type n)
-{
-    if (n >= this->m_num_bits)
-        reset();
-    else
-    {
-        size_type i;
-        for (i = this->m_num_bits - 1; i > n; --i)
-            set_(i,test_(i-n));
-        if (i == n) // careful, unsigned can't go negative!
-            set_(i,test_(i-n));
-        for (i = 0; i < n; ++i)
-            reset_(i);
-    }
-    return *this;
-}*/
-
-
 template <typename Block, typename Allocator>
 dynamic_bitset<Block, Allocator>&
 dynamic_bitset<Block, Allocator>::operator<<=(size_type n)
@@ -799,37 +791,14 @@ dynamic_bitset<Block, Allocator>::operator<<=(size_type n)
 }
 
 
-
-
-/* [gps] - snipped
-template <typename Block, typename Allocator>
-dynamic_bitset<Block, Allocator>&
-dynamic_bitset<Block, Allocator>::operator>>=(size_type n)
-{
-    if (n >= this->m_num_bits)
-        reset();
-    else
-    {
-        size_type i;
-        for (i = 0; i < this->m_num_bits - n; ++i)
-            set_(i,test_(i+n));
-
-        for (i = this->m_num_bits - n; i < this->m_num_bits; ++i)
-            reset_(i);
-    }
-    return *this;
-}*/
-
-
-
 //
 // NOTE:
 //
 //      this function (as well as operator <<=) assumes that
 //      within each block bits are arranged 'from right to left'.
 //
-//             static size_type offset(size_type bit)
-//             { return bit % bits_per_block; }
+//             static size_type bit_index(size_type pos)
+//             { return pos % bits_per_block; }
 //
 //  Note also the 'if (r != 0)' in the implementation below:
 //  besides being an optimization, it avoids the undefined behavior that
@@ -912,8 +881,20 @@ template <typename Block, typename Allocator>
 dynamic_bitset<Block, Allocator>&
 dynamic_bitset<Block, Allocator>::set(size_type pos, bool val)
 {
+    // [gps]
+    //
+    // Below we have no set(size_type) function to call when
+    // value == true; instead of using a helper, I think
+    // overloading set (rather than giving it a default bool
+    // argument) would be more elegant.
+
     assert(pos < this->m_num_bits);
-    set_(pos, val);
+
+    if (val)
+        this->m_bits[this->block_index(pos)] |= this->bit_mask(pos);
+    else
+        reset(pos);
+
     return *this;
 }
 
@@ -934,7 +915,7 @@ dynamic_bitset<Block, Allocator>&
 dynamic_bitset<Block, Allocator>::reset(size_type pos)
 {
     assert(pos < this->m_num_bits);
-    reset_(pos);
+    this->m_bits[this->block_index(pos)] &= ~this->bit_mask(pos);
     return *this;
 }
 
@@ -954,7 +935,7 @@ dynamic_bitset<Block, Allocator>&
 dynamic_bitset<Block, Allocator>::flip(size_type pos)
 {
     assert(pos < this->m_num_bits);
-    this->m_bits[this->word(pos)] ^= this->mask1(pos);
+    this->m_bits[this->block_index(pos)] ^= this->bit_mask(pos);
     return *this;
 }
 
@@ -972,7 +953,7 @@ template <typename Block, typename Allocator>
 bool dynamic_bitset<Block, Allocator>::test(size_type pos) const
 {
     assert(pos < this->m_num_bits);
-    return test_(pos);
+    return (this->m_bits[this->block_index(pos)] & this->bit_mask(pos)) != 0;
 }
 
 template <typename Block, typename Allocator>
@@ -1011,7 +992,7 @@ dynamic_bitset<Block, Allocator>::count() const
 {
     size_type sum = 0;
     for (size_type i = 0; i != this->m_num_bits; ++i)
-        if (test_(i))
+        if (test(i))
             ++sum;
     return sum;
 }
@@ -1248,8 +1229,8 @@ dynamic_bitset<Block, Allocator>::find_next(size_type pos) const
     if (pos >= this->size())
         return npos;
 
-    const size_type blk = this->word(pos);
-    const size_type ind = this->offset(pos);
+    const size_type blk = this->block_index(pos);
+    const size_type ind = this->bit_index(pos);
 
     // mask out bits before pos
     const Block fore = this->m_bits[blk] & ( ~Block(0) << ind );
@@ -1320,29 +1301,6 @@ template <typename Block, typename Allocator>
 inline bool operator>(const dynamic_bitset<Block, Allocator>& a,
                       const dynamic_bitset<Block, Allocator>& b)
 {
-#if 0 // [gps]
-    assert(a.size() == b.size());
-    typedef typename dynamic_bitset<Block, Allocator>::size_type size_type;
-
-    if (a.size() == 0)
-      return false;
-
-    // Since we are storing the most significant bit
-    // at pos == size() - 1, we need to do the comparisons in reverse.
-
-    // Compare a block at a time
-    for (size_type i = a.m_num_blocks - 1; i > 0; --i)
-      if (a.m_bits[i] < b.m_bits[i])
-        return false;
-      else if (a.m_bits[i] > b.m_bits[i])
-        return true;
-
-    if (a.m_bits[0] > b.m_bits[0])
-      return true;
-    else
-      return false;
-#endif
-
     return b < a;
 }
 
@@ -1490,7 +1448,7 @@ public:
     explicit bs_limit(bsinf_type) : type_(inf) {}
 
     template <typename Stream>
-        friend Stream& operator>>(Stream&, const bs_limit&); // G.P.S. vedi v. 6.1
+        friend Stream& operator>>(Stream&, const bs_limit&); // G.P.S.
 
 //private: // made public for simplicity
     type type_;
@@ -1763,47 +1721,12 @@ operator-(const dynamic_bitset<Block, Allocator>& x,
 //-----------------------------------------------------------------------------
 // private member functions
 
-template <typename Block, typename Allocator>
-inline void dynamic_bitset<Block, Allocator>::
-set_(size_type bit)
-{
-    this->m_bits[this->word(bit)] |= this->mask1(bit);
-}
 
 template <typename Block, typename Allocator>
 inline void dynamic_bitset<Block, Allocator>::
 set_block_(size_type blocknum, Block value)
 {
-  /*for (std::size_t i = 0; i < bits_per_block; ++i, value >>= 1)
-    if (value & 0x1) {
-      size_type bit = blocknum * bits_per_block + i;
-      set_(bit);
-    }*/
-    // [gps]
     this->m_bits[blocknum] = value;
-}
-
-template <typename Block, typename Allocator>
-inline void dynamic_bitset<Block, Allocator>::
-reset_(size_type b)
-{
-    this->m_bits[this->word(b)] &= this->mask0(b);
-}
-
-template <typename Block, typename Allocator>
-inline bool dynamic_bitset<Block, Allocator>::test_(size_type b) const
-{
-    return (this->m_bits[this->word(b)] & this->mask1(b)) != static_cast<Block>(0);
-}
-
-template <typename Block, typename Allocator>
-void dynamic_bitset<Block, Allocator>::set_(size_type n, bool value)
-{
-    if (value)
-        set_(n);
-    else
-        reset_(n);
-    //return value != static_cast<Block>(0); [gps]
 }
 
 
