@@ -549,8 +549,8 @@ taking what might be considered the more obvious approach.
 \subsection{Conditional type selection}
 
 Conditional type selection is the simplest basic construct of \Cpp\
-template \mping{}. Veldhuizen [Vel95] was the first to show 
-how to implement it, and Czarnecki and Eisenecker [CE00] first 
+template \mping{}. Veldhuizen \cite{Vel95} was the first to show 
+how to implement it, and Czarnecki and Eisenecker \cite{CE00} first 
 presented it as a standalone library primitive. The \Mpl\ defines the 
 corresponding facility as follows:
 
@@ -827,7 +827,7 @@ struct remove_pointer_if
 Now the above works from the first time, but it suffers from the 
 problem we mentioned early - \code{boost::remove\_pointer<T>} gets 
 instantiated even if its result is never used. In metaprogramming 
-world compilation time is an important resource [Abr01], and it's 
+world compilation time is an important resource \cite{Abr01}, and it's 
 one of the things that gets wasted by unnecessary template 
 instantiations. We've just seen how to deal with the problem in 
 case when both arguments to \code{select\_if} template are the 
@@ -910,8 +910,8 @@ struct derive<void,void>
 \end{codesamp}
 }
 
-Veldhuizen [Vel95] was first to talk about class templates of this
-form as ``compile-time functions'', and [CE00] have introduced
+Veldhuizen \cite{Vel95} was first to talk about class templates of this
+form as ``compile-time functions'', and \cite{CE00} have introduced
 ``template \mfn'' as an equivalent term (they also use the simpler
 term ``\mfn'' as do we). 
 
@@ -1066,7 +1066,7 @@ struct add
 %%
 %% two forms exist because of some idiosyncrasy in 
 %% how templates are defined in C++, - in particular, because 
-%% of the lack of so called template typedefs [Sut01]. 
+%% of the lack of so called template typedefs \cite{Sut01}. 
 
 \subsubsection{One Size Fits All?}
 
@@ -1152,7 +1152,7 @@ typedef mpl::apply< my\_f, \underline{mpl::find<\_1,\_2>} >::type result;
 
 Where \code{\_1} and \code{\_2} are placeholders for the first and
 second arguments to the resulting \mfn\ class. This preserves the
-untuitive syntax below for when the user wants to use \code{find}
+intuitive syntax below for when the user wants to use \code{find}
 directly in her code:
 
 {\small
@@ -1184,16 +1184,16 @@ without developed (known) techniques for emulating this
 constructs using the current language facilities, they effect 
 on helping high-level metaprogramming happen has been limited. 
 
-Czarnecki and Eisenecker [CE00] were the first to introduce 
+Czarnecki and Eisenecker \cite{CE00} were the first to introduce 
 the compile-time sequences of types and some simple algorithms 
 on them, although the idea of representation common data 
 structures like trees, lists, etc. at compile time using class 
 template composition has been around for a while (for example, 
 most of the expression template libraries build such trees as 
-a part of their expression ``parsing'' process [Vel95b]). 
-[Ale00] used list of types and some algorithms on them to 
+a part of their expression ``parsing'' process \cite{Vel95b}). 
+\cite{Ale00} used list of types and some algorithms on them to 
 implement several design patterns; the accompanying code 
-is known as the Loki library []. 
+is known as the Loki library \cite{}. 
 
 %%%\emph{OLD introduction:}
 
@@ -1201,7 +1201,7 @@ is known as the Loki library [].
 %%%unbound sequences of types and values at compile time opens an 
 %%%exciting opportunities for creating highly reusable, 
 %%%configurable, and amazingly easy-to-use generic components and 
-%%%classes [CE00, Ale01]. Compile-time-operable collections of 
+%%%classes \cite{CE00, Ale01}. Compile-time-operable collections of 
 %%%types (and, to a slightly less extent, values) are at least as 
 %%%important in generic and template metaprogramming as their 
 %%%run-time equivalents in traditional programming. 
@@ -1366,7 +1366,7 @@ sequence using \code{lower\_bound} can be up to N
 on forward-access only \code{list}). External code generation 
 is one option here, but there is also a solution within the 
 language, although it's not a template metaprogramming, 
-but preprocessor metaprogramming [PRE]. In fact, 
+but preprocessor metaprogramming \cite{PRE}. In fact, 
 \code{mpl::vector} - a fixed-size type sequence that 
 provides random-access iterators - is implemented very like 
 the above \code{tiny\_list}. 
@@ -1757,7 +1757,7 @@ characteristics which determine not only applicability and efficiency
 of particular algorithms, but also the expressiveness or verbosity of
 the code that uses them. While runtime performance is not an issue for
 \Cpp\ metaprograms, compilation speed is often a significant
-bottleneck to advanced \Cpp\ software development [Abr01].
+bottleneck to advanced \Cpp\ software development \cite{Abr01}.
 
 The \Mpl\ provides four built-in sequences: \code{type\_\-list},
 \code{value\_\-list} (really just a \code{type\_list} of value
@@ -2054,7 +2054,7 @@ but they are much less expressive.
 
 Finite state machines (FSM) are an important tool of 
 describing and implementing controlling program behavior 
-[HU79], [Mar98]. They also are a good example of the domain 
+\cite{HU79}, \cite{Mar98}. They also are a good example of the domain 
 where some \mping{} can be applied to reduce the amount of 
 repetitive and boilerplate operations one have to perform 
 in order to implement these simple mathematical models in 
@@ -2395,10 +2395,10 @@ Related work
 
 A notable prior work in the field of automation of general-purpose 
 state machine implementation in \Cpp\ is the Robert Martin's State 
-Machine Compiler [SMC]. The SMC takes an ASCII description of the 
+Machine Compiler \cite{SMC}. The SMC takes an ASCII description of the 
 machine's state transition table and produces a \Cpp\ code that 
-implements the FSM using a variation of State design pattern [Hun91],
-[GHJ+95]. [Laf00] presents another approach, where no external tools 
+implements the FSM using a variation of State design pattern \cite{Hun91},
+\cite{GHJ+95}. \cite{Laf00} presents another approach, where no external tools 
 are used, and the FSMs are table driven. 
 
 
@@ -2412,7 +2412,7 @@ are used, and the FSMs are table driven.
   \term{Higher-Order Function} is a function that can take other
   functions as arguments, and/or return functions as
   results. Higher-order functions are a distinguishing features of the
-  modern functional languages [Hud89].
+  modern functional languages \cite{Hud79}.
 
   \term{polymorphic} A function is \emph{polymorphic} if it can take
   arguments of an arbitrary type (a \Cpp\ term from run-time world
@@ -2423,7 +2423,55 @@ are used, and the FSMs are table driven.
 \section{Acknowledgements}
 \section{References}
 
-\bibliographystyle{abbrv} \bibliography{refs}
+\begin{chapthebibliography}{1}
+\bibitem{Ale01}
+Andrei Alexandrescu, Modern C++ Design, Generic Programming and
+Design Patterns Applied, Addison-Wesley 2001, ISBN 0-201-70431-5  
+
+\bibitem{CE00}
+Krzysztof Czarnecki, Ulrich Eisenecker, Generative Programming:
+Methods, Tools, and Applications, Addison-Wesley 2000, ISBN
+0-201-30977-7 
+
+\bibitem{ISO98}
+ISO/IEC 14882:1998(E), Programming Language C++, http://www.ansi.org
+
+\bibitem{Mar98}
+Robert C. Martin, UML Tutorial: Finite State Machines, Engineering
+Notebook Column, C++ Report, June 98,
+http://www.objectmentor.com/resources/articles/umlfsm.pdf  
+
+\bibitem{SMC}
+SMC - Finite State Machine Compiler (C++),
+http://www.objectmentor.com/resources/downloads/index  
+
+\bibitem{GHJ+95}
+Erich Gamma, Richard Helm, Ralph Johnson, and John Vlissides,
+Design Patterns, Elements of Reusable Object-Oriented Software,
+Addison-Wesley 1995, ISBN 0-201-63361-2  
+
+\bibitem{HU79}
+Hopcroft and Ullman, Introduction to automata theory, languages and
+computations, Addison-Wesley 1979, ISBN 0-201-02988-X  
+
+\bibitem{Vel95a}
+T. Veldhuizen, Using C++ template metaprograms, C++ Report Vol. 7
+No. 4 (May 1995), pp. 36--43. Reprinted in C++ Gems, ed. Stanley Lippman,
+ISBN 1-884842-37-2. Available online at
+http://extreme.indiana.edu/~tveldhui/papers/Template-Metaprograms/meta-art.h
+tml. 
+
+\bibitem{Vel95b}
+T. Veldhuizen, Expression Templates, C++ Report, Vol. 7 No. 5 June
+1995, pp. 26-31. Reprinted in C++ Gems, ed. Stanley Lippman, ISBN
+1-884842-37-2. Available online at
+http://osl.iu.edu/~tveldhui/papers/Expression-Templates/exprtmpl.html.  
+
+\bibitem{Hud89}
+Paul Hudak, Conception, Evolution, and Application of Functional
+Programming Languages, ACM Computing Surveys, Vol. 21, No. 3,
+September 1989
+\end{chapthebibliography}
 
 \end{document}
 % LocalWords:  Aleksey David Gurtovoy Abrahams MPL STL Boost boost
