@@ -4,27 +4,26 @@
 #ifndef ARGUMENT_TYPE_DWA2004917_HPP
 # define ARGUMENT_TYPE_DWA2004917_HPP
 
-#include <typeinfo>
+#include <boost/langbinding/util/type_id.hpp>
 
 namespace boost { namespace langbinding { namespace function { 
 
 struct argument_type
 {
     argument_type();
-    argument_type(std::type_info const& type, bool lvalue);
+    argument_type(util::type_info const& type, bool lvalue);
 
-    std::type_info const* type;
+    util::type_info type;
     bool lvalue;
 };
 
 inline argument_type::argument_type()
-    : type(&typeid(void))
-    , lvalue(false)
+    : lvalue(false)
 {
 }
 
-inline argument_type::argument_type(std::type_info const& type, bool lvalue)
-    : type(&type)
+inline argument_type::argument_type(util::type_info const& type, bool lvalue)
+    : type(type)
     , lvalue(lvalue)
 {
 }

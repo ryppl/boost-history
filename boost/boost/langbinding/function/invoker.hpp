@@ -2,6 +2,7 @@
 #define INVOKER_040916_HPP
 
 #include <boost/langbinding/function/argument_type.hpp>
+#include <boost/langbinding/converter/converter.hpp>
 #include <typeinfo>
 
 #include <boost/mpl/or.hpp>
@@ -42,19 +43,15 @@ public:
     virtual void* operator()() = 0;
 };
 
-struct arg_conversion
-{
-    void* source;
-    void* convertible;
-    void*(*construct)(void*, void*);
-};
-
 class invoker
 {
 public:
     virtual ~invoker() {}
     virtual int arity() const = 0;
-    virtual void* invoke(arg_conversion* args, result_converter_base& rc) const = 0;
+
+    virtual void* invoke(
+        converter::arg_conversion* args, result_converter_base& rc) const = 0;
+
     virtual argument_type const* arguments() const = 0;
     virtual argument_type const& return_type() const = 0;
 };

@@ -135,10 +135,12 @@ inline bool type_info::operator<(type_info const& rhs) const
 {
 #  ifdef BOOST_LANGBINDING_UTIL_TYPE_ID_NAME
     return m_module < rhs.m_module
-        && std::strcmp(m_base_type, rhs.m_base_type) < 0;
+        || (m_module == rhs.m_module
+          && std::strcmp(m_base_type, rhs.m_base_type) < 0);
 #  else
     return m_module < rhs.m_module 
-        && m_base_type->before(*rhs.m_base_type);
+        || (m_module == rhs.m_module
+          && m_base_type->before(*rhs.m_base_type));
 #  endif 
 }
 

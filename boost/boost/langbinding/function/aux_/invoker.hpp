@@ -20,6 +20,7 @@
 #include <boost/langbinding/function/argument_type.hpp>
 #include <boost/langbinding/function/aux_/arg_extractor.hpp>
 #include <boost/langbinding/function/aux_/invoke.hpp>
+#include <boost/langbinding/util/type_id.hpp>
 
 namespace boost { namespace langbinding { namespace function { namespace aux { 
 
@@ -37,40 +38,40 @@ struct fill_argument_types
     template<class T>
     void operator()(wrap<T>)
     {
-        arg->type = &strip((T(*)())0);
+        arg->type = strip((T(*)())0);
         arg->lvalue = is_pointer<T>() 
             || boost::detail::is_reference_to_non_const<T>();
         ++arg;
     }
 
     template<class T>
-    static std::type_info const& strip(T(*)())
+    static util::type_info const& strip(T(*)())
     {
-        return typeid(T);
+        return util::type_id<T>();
     }
 
     template<class T>
-    static std::type_info const& strip(T&(*)())
+    static util::type_info const& strip(T&(*)())
     {
-        return typeid(T);
+        return util::type_id<T>();
     }
 
     template<class T>
-    static std::type_info const& strip(T const&(*)())
+    static util::type_info const& strip(T const&(*)())
     {
-        return typeid(T);
+        return util::type_id<T>();
     }
 
     template<class T>
-    static std::type_info const& strip(T*(*)())
+    static util::type_info const& strip(T*(*)())
     {
-        return typeid(T);
+        return util::type_id<T>();
     }
 
     template<class T>
-    static std::type_info const& strip(T const*(*)())
+    static util::type_info const& strip(T const*(*)())
     {
-        return typeid(T);
+        return util::type_id<T>();
     }
 
     argument_type* arg;
@@ -201,3 +202,4 @@ inline invoker<F, Signature>::invoker(F fn)
 }}}} // namespace boost::langbinding::function::aux
 
 #endif // INVOKER_DWA2004917_HPP
+
