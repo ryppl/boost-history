@@ -262,6 +262,29 @@
             {
                return( format_( fmt, args ));
             }
+         public:
+            class length_proxy
+            {
+               int                     len_;
+               fixed_string_base &     str_;
+               public:
+                  length_proxy( fixes_string_base & source ):
+                     str_( source ), len_( source.capacity())
+                  {
+                  }
+                 ~length_proxy()
+                  {
+                     str_.setlength( len_ );
+                  }
+                  operator int *()
+                  {
+                     return &len_;
+                  }
+            };
+            length_proxy                         newlength()
+            {
+               return length_proxy( *this );
+            }
          public: // assignment
             inline this_type &    operator=( const this_type & s )
             {
@@ -309,7 +332,9 @@
          public:
             typedef fixed_string_base< CharT, CharStringPolicy, FmtPolicy >    base_type;
             typedef fixed_string< n,   CharT, CharStringPolicy, FmtPolicy >    this_type;
-            BOOST_STATIC_CONSTANT( size_t, npos = base_type::npos );
+            BOOST_STATIC_CONSTANT( size_t, npos      = base_type::npos );
+            BOOST_STATIC_CONSTANT( size_t, ncapacity = n );
+            BOOST_STATIC_CONSTANT( size_t, nstorage  = n + 1 );
          public:
             typedef typename base_type::traits_type                  traits_type;
             typedef typename base_type::value_type                   value_type;
@@ -328,10 +353,7 @@
             typedef typename base_type::substring_type               substring_type;
             typedef typename base_type::string_type                  string_type;
          private:
-            BOOST_STATIC_CONSTANT( size_t, storage_c  = n + 1 );
-            BOOST_STATIC_CONSTANT( size_t, capacity_c = n );
-         private:
-            CharT                      buf[ storage_c ];
+            CharT                      buf[ nstorage ];
          public:
             inline this_type                     substr( size_type pos, size_type _n ) const
             {
@@ -359,32 +381,32 @@
                return( *this );
             }
          public: // construction
-            inline           fixed_string(): base_type( buf, capacity_c )
+            inline           fixed_string(): base_type( buf, ncapacity )
             {
                buf[ 0 ] = CharT();
             }
-            inline           fixed_string( const this_type & s ): base_type( buf, capacity_c )
+            inline           fixed_string( const this_type & s ): base_type( buf, ncapacity )
             {
                assign( s );
             }
-            inline           fixed_string( const string_type & s, size_type p = 0, size_type l = npos ): base_type( buf, capacity_c )
+            inline           fixed_string( const string_type & s, size_type p = 0, size_type l = npos ): base_type( buf, ncapacity )
             {
                assign( s, p, l );
             }
-            inline           fixed_string( const CharT * s, size_type l ): base_type( buf, capacity_c )
+            inline           fixed_string( const CharT * s, size_type l ): base_type( buf, ncapacity )
             {
                assign( s, l );
             }
-            inline           fixed_string( const CharT * s ): base_type( buf, capacity_c )
+            inline           fixed_string( const CharT * s ): base_type( buf, ncapacity )
             {
                assign( s, traits_type::length( s ));
             }
-            inline           fixed_string( size_type l, CharT c ): base_type( buf, capacity_c )
+            inline           fixed_string( size_type l, CharT c ): base_type( buf, ncapacity )
             {
                assign( l, c );
             }
             template< typename InputIterator >
-            inline           fixed_string( InputIterator first, InputIterator last ): base_type( buf, capacity_c )
+            inline           fixed_string( InputIterator first, InputIterator last ): base_type( buf, ncapacity )
             {
                assign( first, last );
             }
