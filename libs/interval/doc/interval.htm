@@ -455,12 +455,13 @@ assignment).</p>
 <p>The operators <tt>/</tt> and <tt>/=</tt> use the <a
 href="#checking">checking</a> policy if necessary.</p>
 
-<h4><tt>lower upper median pred succ</tt></h4>
+<h4><tt>lower upper median <!-- pred succ --></tt></h4>
 <tt>lower</tt>, <tt>upper</tt>, <tt>median</tt> respectively compute the
 lower bound, the upper bound, and the median number of an interval
 (<tt>(lower+upper)/2</tt> rounded to nearest). <tt>width</tt> computes the
 width of an interval (<tt>upper-lower</tt> rounded toward plus infinity).
 
+<!--
 <p><tt>pred</tt> and <tt>succ</tt> respectively compute the widest interval
 strictly smaller and the smallest interval strictly wider. Let's suppose the
 functions <tt>p</tt> and <tt>s</tt> are able to compute a number respectively
@@ -469,14 +470,14 @@ they return their argument unmodified). Then <tt>succ(x) == [p(x),s(x)]</tt>
 and pred(x) == [s(x),p(x)] (or pred(x) == x if s(x)&gt;p(x)). Consequently,
 you can not always expect lower(succ(x)) to be stricly smaller than lower(x)
 (for example if lower(x) is minus infinity) and some other similar
-properties, but it is often true.</p>
+properties, but it is often true.</p>  -->
 
 <h4>min max abs square</h4>
 The functions min, max, abs are also defined. Please do not mistake them for
 the functions defined in the standard library (aka a&lt;b?a:b, a&gt;b?a:b,
 a&lt;0?-a:a). These functions are compatible with the elementary property of
 interval arithmetic. For example, max([<i>a</i>,<i>b</i>],
-[<i>c</i>,<i>d</i>]) = {max(<i>x</i>,<i>y</i>) | <i>x</i> in
+[<i>c</i>,<i>d</i>]) = {max(<i>x</i>,<i>y</i>) such that <i>x</i> in
 [<i>a</i>,<i>b</i>] and <i>y</i> in [<i>c</i>,<i>d</i>]}. They are not
 defined in the std namespace but in the boost namespace in order to avoid
 conflict with the other definitions.
