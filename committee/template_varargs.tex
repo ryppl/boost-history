@@ -892,7 +892,10 @@ private:
 template<typename F, typename BoundArgs>
 binder<F, BoundArgs> make_binder(F f, const BoundArgs& bound_args)
   { return binder<F, BoundArgs>(f, make_tuple(bound_args...)); }
-
+\end{verbatim}
+\jaakko{Something wrong here. bound\_args... does not make sense, if
+BoundArgs is  a tuple type}
+\begin{verbatim}
 // Determine if a type T is a binder type
 template<typename T> struct is_bind_expression : integral_constant<bool, false> {};
 
