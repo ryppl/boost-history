@@ -4,13 +4,10 @@
 // Test program.                                //
 //////////////////////////////////////////////////
 
-// ISO C++ headers.
-#include <iostream>
-
 // Boost library headers.
-#include <boost/function.hpp>
-#include <boost/lambda/lambda.hpp>
-#include <boost/lambda/bind.hpp>
+// #include <boost/function.hpp>
+// #include <boost/lambda/lambda.hpp>
+// #include <boost/lambda/bind.hpp>
 #include <boost/static_assert.hpp>
 #define BOOST_INCLUDE_MAIN
 #include <boost/test/test_tools.hpp>
@@ -136,11 +133,21 @@ class bounded_enum_test
     enum myEnum { state1 = 5, state2, state3, state4 };
     };
 
+class lambda_enum_test
+    {
+  public:
+    lambda_enum_test()
+        {
+        }
+  private:
+    enum myEnum { north = 17, east = 4, south = 92, west = -5 };
+    };
 
 int test_main(int, char*[])
     {
     sequential_enum_test();
     wrapped_enum_test();
     bounded_enum_test();
+    lambda_enum_test();
     return 0;
     }
