@@ -10,6 +10,8 @@ just enough to make Spirit work. Packaging instructions:
    new boost directory.
 7. Create a libs directory in the miniboost directory.
 8. Move the libs/test directory to miniboost/libs
-9. Delete "mini-boost-dir".
+9. Delete "mini-boost-dir" and "readme_standalone.html"
 10. Compress and release.
+
+Note: These instructions are for the packaging of the miniboost versions only.
 
