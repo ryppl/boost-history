@@ -17,20 +17,22 @@ class smart_enum
     typedef enumT         enum_type;
     typedef incrementorT  incrementor_type;
 
-    smart_enum(int i, incrementor_type func = incrementor_type())
-            : incrementor(func)
-        {
-        val = incrementor(i, 0);
-        }
-    smart_enum(enum_type i, incrementor_type func = incrementor_type())
+    explicit smart_enum(enum_type i, incrementor_type func = incrementor_type())
             : incrementor(func), val(i)
         {
         }
+    explicit smart_enum(int i, incrementor_type func = incrementor_type())
+            : incrementor(func), val(incrementor(i, 0))
+        {
+        }
+
+    smart_enum& operator= (enum_type rhs) { val = rhs; return *this; }
+    smart_enum& operator= (int rhs)       { val = incrementor(rhs, 0); return *this; }
 
     smart_enum&      operator++ ()      { return (*this = incrementor(val, 1)); }
     smart_enum&      operator-- ()      { return (*this = incrementor(val, -1)); }
-    const smart_enum operator++ (int)   { enum_type tmp(val); ++(*this); return tmp; }
-    const smart_enum operator-- (int)   { enum_type tmp(val); --(*this); return tmp; }
+    const smart_enum operator++ (int)   { smart_enum tmp(*this); ++(*this); return tmp; }
+    const smart_enum operator-- (int)   { smart_enum tmp(*this); --(*this); return tmp; }
     smart_enum&      operator+= (int n) { return (*this = incrementor(val, n)); }
     smart_enum&      operator-= (int n) { return (*this = incrementor(val, -n)); }
 
