@@ -1598,8 +1598,35 @@ typedef mpl::find_if< sequences,size_pred >::type itor;
   \subsubsection{why iterators}
   \subsubsection{sequences of types, but there are shorcuts for numbers}
 
-  \subsubsection{different kind of sequences - different 
-    performance/functional characteristics}
+  \subsubsection{A Variety of Sequences}
+
+Previous efforts to provide generalized /mping/ facilities for C++
+have always concentrated on \code{cons}-style type lists and a few
+core algorithms like 'size' and 'at' which are tied to the specific
+sequence implementation. Such systems have an elegant simplicity
+reminiscent of the analogous functionality in pure functional Lisp. It
+is much more time-consuming to implement even a basic set of the
+sequence algorithms provided by equivalent run-time libraries (STL in
+particular), but if we have learned anything from the STL it is that
+tying those algorithms' implementations to a specific sequence
+implementation is a misgiuded effort!
+
+The truth is that there is no single ``best'' type sequence
+implementation for the same reasons that there will never be a single
+``best'' runtime sequence implementation. Furthermore, there are
+\emph{already} quite a number of type list implementations in use
+today, and just as the STL algorithms can operate on sequences which
+don't come from STL containers, so the MPL algorithms are designed to
+work with foreign type sequences.
+
+More importantly (which may be an eye-opening fact for some), type
+lists are not the only useful compile-time sequence. Again, the need
+for a variety of compile-time containers arises for the same reasons
+that we have lists, vectors, deques, and sets in the /Cpp/ standard
+library - different containers have different functional and
+performance characteristics which determine not only applicability and
+efficiency of particular algorithms, but also the expressiveness or
+verbosity of the code that uses them.
 
 %% list
 %% vector
