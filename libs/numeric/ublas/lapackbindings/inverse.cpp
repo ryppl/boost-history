@@ -15,74 +15,66 @@
 #include <boost/numeric/ublas/blas.hpp>
 #include <boost/numeric/ublas/lapack.hpp>
 #include <boost/numeric/ublas/io.h>
+#include <boost/random/linear_congruential.hpp>
+#include <boost/random/uniform_real.hpp>
 
 #include <boost/timer.hpp>
 
 bool is_equal(const double& d1, const double& d2, double tolerance = 1e-8)
 { return fabs( d1 - d2 ) < tolerance ; }
 
-template < typename matrix_type_1, typename matrix_type_2 >
-bool is_equal(const matrix_type_1& m1, const matrix_type_2& m2, double tolerance = 1e-8)
-{
-  size_t num_rows = m1.size1();
-  size_t num_cols = m1.size2();
-  double norm = 0 ;
-  for(size_t i = 0; i < num_rows ; ++i )
-    for(size_t j = 0; j < num_cols; ++j )
-      norm += fabs( m1(i,j) - m2(i,j) );
-  return norm < tolerance ;
-}
+bool is_equal(const std::complex< double >& d1, const std::complex< double >& d2, double tolerance = 1e-8)
+{ return std::norm( d1 - d2 ) < tolerance ; }
 
 template < typename matrix_type >
 void initialize(matrix_type& m)
 {
-  for(size_t i = 0 ; i < m.size1() ; ++i )
-    for(size_t j = 0 ; j < m.size2() ; ++j )
-      m(i,j) = ( ( i + 2 ) * ( j + 1 ) * (i*j + 22 ) ) ;
+  boost::minstd_rand generator(42u);
+  boost::uniform_real< boost::minstd_rand > distribution(generator,0.0, 1000.0);
+
+  typename matrix_type::iterator1 it1 = m.begin1();
+  typename matrix_type::iterator1 end1 = m.end1();
+  for( ; it1 != end1 ; ++it1 ) {
+    typename matrix_type::iterator2 it2 = it1.begin();
+    typename matrix_type::iterator2 end2 = it1.end();
+    for( ; it2 != end2 ; ++it2 ) {
+      *it2 = distribution();
+    }
+  }
+}
+
+template < typename T >
+void tst_inverse()
+{
+  for(size_t size_i = 10; size_i < 100 ; size_i += 10 ) {
+    int* ipiv = new int[size_i];
+    numerics::matrix< double, numerics::column_major > a(size_i,size_i), lu( size_i, size_i ), c(size_i,size_i);
+    numerics::matrix< double, numerics::column_major > b( size_i, size_i );
+    b = numerics::identity_matrix< double >( size_i );
+    initialize( a );
+    lu = a;
+
+    int info;
+    info = getrf( lu, ipiv, ipiv + size_i);
+    assert( ! info );
+    
+    info = getrs( 'N', lu, ipiv, ipiv + size_i, b );
+    assert( ! info );
+
+    a = prod( a, b );
+    for(size_t i = 0; i < size_i ; ++i ) 
+      for(size_t j = 0; j < size_i ; ++j ) {
+        T ref = 0.0 ;
+        if ( i == j ) ref = 1.0;
+        assert( is_equal( ref, a(i,j) ) );
+      }
+  }
 }
 
 int main()
 {
-  int* ipiv = new int[3];
-  numerics::matrix< double, numerics::column_major > a(3,3), lu( 3, 3 ), c(3,3);
-  numerics::matrix< double, numerics::column_major > b( 3, 3 );
-  b = numerics::identity_matrix< double >( 3 );
-  lu.clear();
-  lu(0,0) = 2;
-  lu(0,1) = 3;
-  lu(0,2) = 4.2;
-  lu(1,0) = 2.2;
-  lu(1,1) = 3.3;
-  lu(1,2) = 1.1;
-  lu(2,0) = 2.56;
-  lu(2,1) = 10;
-  lu(2,2) = 31;
-  a = lu;
-
-  int info;
-  std::cout << "a : " << a << std::endl;
-  std::cout << "b : " << b << std::endl;
-  info = getrf( lu, ipiv, ipiv + 3);
-  assert( ! info );
-  std::cout << "ipiv : " << ipiv[0] << "," << ipiv[1] << "," << ipiv[2] << std::endl;
-
-  info = getrs( 'N', lu, ipiv, ipiv + 3, b );
-  assert( ! info );
-  std::cout << "lu : " << lu << std::endl;
-  std::cout << "b : " << b << std::endl;
-  a = prod( a, b );
-  std::cout << "should be identity : " << prod( a, b ) << std::endl;
-
-  assert( is_equal( 1.0 , a(0,0) ) );
-  assert( is_equal( 1.0 , a(1,1) ) );
-  assert( is_equal( 1.0 , a(2,2) ) );
-  assert( is_equal( 0.0 , a(0,1) ) );
-  assert( is_equal( 0.0 , a(0,2) ) );
-  assert( is_equal( 0.0 , a(1,0) ) );
-  assert( is_equal( 0.0 , a(1,2) ) );
-  assert( is_equal( 0.0 , a(2,0) ) );
-  assert( is_equal( 0.0 , a(2,1) ) );
-
+  tst_inverse< double >();
+  tst_inverse< std::complex< double > >();
   std::cerr << "REGRESSION TEST SUCCEEDED !" << std::endl;
   return 0;
 }
