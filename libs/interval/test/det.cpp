@@ -92,5 +92,6 @@ bool test() {
 int test_main(int, char *[]) {
   BOOST_TEST(test<float>());
   BOOST_TEST(test<double>());
+  BOOST_TEST(test<long double>());
   return 0;
 }

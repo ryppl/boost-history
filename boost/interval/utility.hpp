@@ -98,6 +98,23 @@ interval<T, Traits> interval<T, Traits>::whole()
   return interval<T, Traits>(-inf, inf, true);
 }
 
+template<class T, class Traits> inline
+const T& interval<T, Traits>::lower() const
+{
+  /*typedef typename Traits::checking checking;
+  if (checking::is_empty(low, up))
+  return checking::nan();*/
+  return low;
+}
+
+template<class T, class Traits> inline
+const T& interval<T, Traits>::upper() const
+{
+  /*typedef typename Traits::checking checking;
+  if (checking::is_empty(low, up))
+  return checking::nan();*/
+  return up;
+}
 
 /*
  * Utility Functions

@@ -22,5 +22,6 @@ void test() {
 int test_main(int, char *[]) {
   test<boost::interval<float> >();
   test<boost::interval<double> >();
+  test<boost::interval<long double> >();
   return 0;
 }

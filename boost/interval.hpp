@@ -75,8 +75,8 @@ namespace boost {
     static interval whole();
     static interval hull(const T& x, const T& y);
 
-    const T& lower() const { return low; }
-    const T& upper() const { return up;  }
+    const T& lower() const;
+    const T& upper() const;
 
     interval& operator+= (const T& r);
     interval& operator+= (const interval& r);
@@ -464,7 +464,7 @@ namespace boost {
   namespace interval_lib {
 
   /*
-   * Two specializations of rounded_math<T>
+   * Three specializations of rounded_math<T>
    */
 
   template<>
@@ -475,6 +475,11 @@ namespace boost {
   template<>
   struct rounded_math<double>
     : save_state<rounded_transc_dummy<double, rounded_arith_opp<double> > >
+  {};
+
+  template<>
+  struct rounded_math<long double>
+    : save_state<rounded_transc_dummy<long double, rounded_arith_opp<long double> > >
   {};
 
   } // namespace interval_lib
