@@ -19,7 +19,9 @@ namespace boost
     //  of the smart_ptr. IOW, all instances of smart_ptr are
     //  constructed either from the bais_type, or other smart_ptr's.
     //  It's somewhat like the basis step in of proof by induction.
-    ;
+    {
+        typedef void basis_source_type;
+    };
     
     template
       < typename Referent
@@ -49,7 +51,7 @@ namespace boost
         rebind
         {
                 typedef
-              basis_specializer<Other,void>
+              basis_specializer<Other,nesting_type>
             other
             ;
         };

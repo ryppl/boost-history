@@ -122,10 +122,6 @@ prox_children
     //.<  prox_chilren<> nested class.
   {
    public:
-          typedef 
-        ProxVisitor 
-      prox_visitor
-      ;
           virtual
       ~prox_iterator_acceptor_abs(void)
       {}
@@ -1032,7 +1028,7 @@ prox_children
                 detail_iterators::prox_member_iterator<container_type>
               prox_iterator_con
               ;
-                prox_iterator_acceptor_abs*
+                typename prox_children<visitor_type>::prox_iterator_acceptor_abs*
               make_proxiter_subj
                 ( typename prox_children<visitor_type>::prox_subj_type* a_subj
                 , typename maker_proxiter_abs::prox_offsets_type const& a_prox_offsets

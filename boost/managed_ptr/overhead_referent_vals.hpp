@@ -6,11 +6,11 @@
 namespace boost{namespace managed_ptr{
 
 template
-  < typename Overhead
+  < template<typename>class Overhead
   , typename Referent
   >
 class overhead_referent_vals
-: public Overhead
+: public Overhead<Referent>
 , public Referent
 //Purpose:
 //  Enable "intrusive allocation" of gc'ed objects.
@@ -19,7 +19,7 @@ class overhead_referent_vals
 //  superclass) is part of the gc'ed object (i.e. the Referent
 //  object).
 {
-    typedef Overhead overhead_type;
+    typedef Overhead<Referent> overhead_type;
  public:
     ~overhead_referent_vals(void)
     {}

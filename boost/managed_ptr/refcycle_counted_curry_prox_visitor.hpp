@@ -1,14 +1,14 @@
 //subclass of ref_counted which is able to collect cycles
-#ifndef BOOST_MANAGED_PTR_CURRY_PROX_VISITOR_REFCYCLE_COUNTED_HPP_LJE20031009
-#define BOOST_MANAGED_PTR_CURRY_PROX_VISITOR_REFCYCLE_COUNTED_HPP_LJE20031009
+#ifndef BOOST_MANAGED_PTR_REFCYCLE_COUNTED_CURRY_PROX_VISITOR_HPP_LJE20031009
+#define BOOST_MANAGED_PTR_REFCYCLE_COUNTED_CURRY_PROX_VISITOR_HPP_LJE20031009
 //  (C) Copyright Larry Evans 2003.
 //
 //  Permission to copy, use, modify, sell and distribute this software
 //  is granted provided this copyright notice appears in all copies.
 //  This software is provided "as is" without express or implied
 //  warranty, and with no claim as to its suitability for any purpose.
-#include "boost/managed_ptr/basis_specializer4curry_prox_visitor_refcycle_counted.hpp"
-#include "boost/managed_ptr/ref_counted_detached_base.hpp"
+#include "boost/managed_ptr/basis_specializer4refcycle_counted_curry_prox_visitor.hpp"
+#include "boost/managed_ptr/refcnt_ovhd_prox_referent.hpp"
 #include "boost/managed_ptr/refcycle_overhead_abs.hpp"
 #include "boost/managed_ptr/prox_children.hpp"
 #include "boost/managed_ptr/smart_ptr.hpp"
@@ -20,7 +20,7 @@ namespace managed_ptr
 
 template
   < typename Referent
-  , typename Overhead
+  , template<typename>class Overhead
   >
     template
       < template<typename>class StoragePolicy
@@ -49,13 +49,13 @@ auto_overhead
     
 template<typename ProxVisitor>
       class 
-curry_prox_visitor_refcycle_counted<ProxVisitor>::
+refcycle_counted_curry_prox_visitor<ProxVisitor>::
     owner_void
-        : public ref_counted_detached_base<void*>
+        : public refcnt_ovhd_prox_referent<void*>
     {
      public:
                 typedef 
-            ref_counted_detached_base<void*>
+            refcnt_ovhd_prox_referent<void*>
         super_type
         ;
                 typedef 
@@ -87,7 +87,7 @@ curry_prox_visitor_refcycle_counted<ProxVisitor>::
             ( void
             )
         {
-            #ifdef TRACE_SCOP_HPP
+            #ifdef TRACE_SCOPE_HPP
             utility::trace_scope ts("~owner_void(void)");
             #endif
             if(super_type::does_count_exist() && risky_use_count(*this) == 0)
@@ -106,23 +106,29 @@ curry_prox_visitor_refcycle_counted<ProxVisitor>::
             )
         {
             overhead_type*l_ovhd=this->get_overhead();
+          #ifdef DO_TRACE_SCOPE
             mout()<<"+owner::CTOR(void):overhead="<<l_ovhd<<std::endl;
+          #endif
         }
     
         owner_void(this_type const& rhs)
             : super_type(rhs)
         {
+          #ifdef DO_TRACE_SCOPE
             overhead_type*l_ovhd=this->get_overhead();
             mout()<<"+owner::CTOR(this_type const&):overhead="<<l_ovhd<<std::endl;
+          #endif
         }
         
         owner_void(this_type& rhs)
             : super_type(rhs)
         {
             refcycle_overhead_abs*l_ovhd=this->get_overhead();
+          #ifdef DO_TRACE_SCOPE
             mout()<<"+owner::CTOR(this_type&):overhead=";
             marg_ostream_insert_refcycle_overhead_abs_ptr(mout(),l_ovhd);
             mout()<<std::endl;
+          #endif
         }
         
      public:
@@ -146,7 +152,7 @@ curry_prox_visitor_refcycle_counted<ProxVisitor>::
         }
         
             typedef
-          curry_prox_visitor_refcycle_counted<ProxVisitor>
+          refcycle_counted_curry_prox_visitor<ProxVisitor>
         nesting_type
         ;
         
@@ -175,29 +181,38 @@ curry_prox_visitor_refcycle_counted<ProxVisitor>::
         //  3) to prevent deletion by ~super_type
         //     since it's deleted here, if needed.
         {
-        
+          #ifdef TRACE_SCOPE_HPP
             utility::trace_scope ts("owner::release(ReferentPtr const&)");
+          #endif
             overhead_type*l_ovhd=get_overhead();
+          #ifdef TRACE_SCOPE_HPP
             mout()<<":entry l_ovhd=";
             marg_ostream_insert_refcycle_overhead_abs_ptr(mout(),l_ovhd);
             mout()<<std::endl;
+          #endif
             if(l_ovhd == 0) return false;
             l_ovhd->decrement();
             bool keep=l_ovhd->as_count()>0;
+          #ifdef TRACE_SCOPE_HPP
             mout()<<":b4 no_cycle_garbage:keep="<<keep<<":l_ovhd=";
             marg_ostream_insert_refcycle_overhead_abs_ptr(mout(),l_ovhd);
             mout()<<"\n";
+          #endif
             if(keep)
             {
                 keep = no_cycle_garbage();
             }
+          #ifdef TRACE_SCOPE_HPP
             mout()<<":af keep="<<keep<<":l_ovhd=";
             marg_ostream_insert_refcycle_overhead_abs_ptr(mout(),l_ovhd);
             mout()<<"\n";
+          #endif
             prevent_dtor_delete();//prevent deletion by ~super_type().
             if(!keep)
             {
+              #ifdef TRACE_SCOPE_HPP
                 mout()<<"delete overhead="<<static_cast<refcycle_overhead_abs*>(l_ovhd)<<std::endl;
+              #endif
                 delete l_ovhd;
             }
             return false;
@@ -214,12 +229,17 @@ curry_prox_visitor_refcycle_counted<ProxVisitor>::
         //  that this count is part of a cycle, and the cycle is to be 
         //  broken at this point.
         {
+          #ifdef TRACE_SCOPE_HPP
+            utility::trace_scope ts("break_cycle");
+          #endif
             overhead_type*l_ovhd=get_overhead();
             typename overhead_type::count_type result=l_ovhd->as_count();
             prevent_dtor_delete();
+          #ifdef TRACE_SCOPE_HPP
             mout()<<"break_cycle():overhead=";
             marg_ostream_insert_refcycle_overhead_abs_ptr(mout(),l_ovhd);
             mout()<<"\n";
+          #endif
             return result;
         }
         
@@ -278,19 +298,25 @@ curry_prox_visitor_refcycle_counted<ProxVisitor>::
             //  cannot be accessed even indirectly from any root
             //  pointers; hence, they're dead.
             {
+              #ifdef TRACE_SCOPE_HPP
                 utility::trace_scope ts("remove_internal::visit_children");
+              #endif
                 overhead_type* l_ovhd = a_void_owner.get_overhead();
+              #ifdef TRACE_SCOPE_HPP
                 mout()<<"remove_internal:l_ovhd=";
                 marg_ostream_insert_refcycle_overhead_abs_ptr(mout(),l_ovhd);
                 mout()<<"\n";
+              #endif
                 if(l_ovhd->status_get() != refcycle_status::rm_internal)
                 {
-                      l_ovhd->decrement();
-                      l_ovhd->status_put(refcycle_status::rm_internal);
-                      mout()<<"remove_internal:status change=";
-                      marg_ostream_insert_refcycle_overhead_abs_ptr(mout(),l_ovhd);
-                      mout()<<"\n";
-                      accept_each(a_iter);
+                    l_ovhd->decrement();
+                    l_ovhd->status_put(refcycle_status::rm_internal);
+                  #ifdef TRACE_SCOPE_HPP
+                    mout()<<"remove_internal:status change=";
+                    marg_ostream_insert_refcycle_overhead_abs_ptr(mout(),l_ovhd);
+                    mout()<<"\n";
+                  #endif
+                    accept_each(a_iter);
                 }
             }
 
@@ -311,18 +337,24 @@ curry_prox_visitor_refcycle_counted<ProxVisitor>::
             //  Mark a_void_owner as live and restore reference counts 
             //  and mark all objects accessible from a_void_owner as live. 
             {
+              #ifdef TRACE_SCOPE_HPP
                 utility::trace_scope ts("restore_internal");
+              #endif
                 overhead_type* l_ovhd = a_void_owner.get_overhead();
+              #ifdef TRACE_SCOPE_HPP
                 mout()<<"restore_internal:l_ovhd=";
                 marg_ostream_insert_refcycle_overhead_abs_ptr(mout(),l_ovhd);
                 mout()<<"\n";
+              #endif
                 if(l_ovhd->status_get() != refcycle_status::is_done)
                 {
                     l_ovhd->status_put(refcycle_status::is_done);
                     l_ovhd->increment();
+                  #ifdef TRACE_SCOPE_HPP
                     mout()<<"restore_internal:status change=";
                     marg_ostream_insert_refcycle_overhead_abs_ptr(mout(),l_ovhd);
                     mout()<<"\n";
+                  #endif
                     accept_each(l_iter);
                 }
             }
@@ -343,26 +375,32 @@ curry_prox_visitor_refcycle_counted<ProxVisitor>::
             //Purpose:
             //  Filter live from dead store_owner's.
             {
+              #ifdef TRACE_SCOPE_HPP
                 utility::trace_scope ts("filter_live");
+              #endif
                 overhead_type* l_ovhd = a_void_owner.get_overhead();
+              #ifdef TRACE_SCOPE_HPP
                 mout()<<"filter_live:l_ovhd=";
                 marg_ostream_insert_refcycle_overhead_abs_ptr(mout(),l_ovhd);
                 mout()<<"\n";
+              #endif
                 if(l_ovhd->status_get() == refcycle_status::rm_internal)
                 {
-                      if(l_ovhd->as_count() > 0)
-                      {
-                          restore_internal l_visitor;
-                          l_visitor.visit_children(a_void_owner,l_iter);
-                      }
-                      else
-                      {
-                          l_ovhd->status_put(refcycle_status::is_dead);
-                          mout()<<"filter_live:status change=";
-                          marg_ostream_insert_refcycle_overhead_abs_ptr(mout(),l_ovhd);
-                          mout()<<"\n";
-                          accept_each(l_iter);
-                      }
+                    if(l_ovhd->as_count() > 0)
+                    {
+                        restore_internal l_visitor;
+                        l_visitor.visit_children(a_void_owner,l_iter);
+                    }
+                    else
+                    {
+                        l_ovhd->status_put(refcycle_status::is_dead);
+                      #ifdef TRACE_SCOPE_HPP
+                        mout()<<"filter_live:status change=";
+                        marg_ostream_insert_refcycle_overhead_abs_ptr(mout(),l_ovhd);
+                        mout()<<"\n";
+                      #endif
+                        accept_each(l_iter);
+                    }
                 }
             }
             
@@ -384,30 +422,40 @@ curry_prox_visitor_refcycle_counted<ProxVisitor>::
             //  are found.  In that case, the cycle is broken and
             //  the count is not incremented.
             {
+              #ifdef TRACE_SCOPE_HPP
                 utility::trace_scope ts("break_cycles");
+              #endif
                 overhead_type* l_ovhd = a_void_owner.get_overhead();
+              #ifdef TRACE_SCOPE_HPP
                 mout()<<"break_cycles:l_ovhd=";
                 marg_ostream_insert_refcycle_overhead_abs_ptr(mout(),l_ovhd);
                 mout()<<"\n";
+              #endif
                 if(l_ovhd->status_get() == refcycle_status::is_dead)
                 {
                     l_ovhd->status_put(refcycle_status::brk_cycles);
                     l_ovhd->increment();
+                  #ifdef TRACE_SCOPE_HPP
                     mout()<<"break_cycles:increment status change=";
                     marg_ostream_insert_refcycle_overhead_abs_ptr(mout(),l_ovhd);
                     mout()<<"\n";
+                  #endif
                     accept_each(l_iter);
                 }
                 else if(l_ovhd->status_get() == refcycle_status::brk_cycles)
                 {
                     l_ovhd->decrement();
+                  #ifdef TRACE_SCOPE_HPP
                     mout()<<"break_cycles:decrement status change=";
                     marg_ostream_insert_refcycle_overhead_abs_ptr(mout(),l_ovhd);
                     mout()<<"\n";
+                  #endif
                     a_void_owner.break_cycle(); //break refcount cycle
+                  #ifdef TRACE_SCOPE_HPP
                     mout()<<"break_cycles:broken cycle=";
                     marg_ostream_insert_refcycle_overhead_abs_ptr(mout(),l_ovhd);
                     mout()<<"\n";
+                  #endif
                 }
             }
             
@@ -425,11 +473,15 @@ curry_prox_visitor_refcycle_counted<ProxVisitor>::
         {
         
             this_type& l_me=*this;
+          #ifdef TRACE_SCOPE_HPP
             utility::trace_scope ts("owner_void::no_cycle_garbage()");
+          #endif
             overhead_type* l_ovhd = get_overhead();
+          #ifdef TRACE_SCOPE_HPP
             mout()<<"l_ovhd=";
             marg_ostream_insert_refcycle_overhead_abs_ptr(mout(),l_ovhd);
             mout()<<"\n";
+          #endif
             bool keep = l_ovhd->status_get() != refcycle_status::is_done;
             if(!keep)
             {
@@ -454,7 +506,7 @@ curry_prox_visitor_refcycle_counted<ProxVisitor>::
         }//end no_cycle_garbage
         
     
-    };//end curry_prox_visitor_refcycle_counted<ProxVisitor>::owner_void class
+    };//end refcycle_counted_curry_prox_visitor<ProxVisitor>::owner_void class
     
 template
   < typename Referent
@@ -467,7 +519,7 @@ cycle_basis_mgr_nester
   < Referent
   , StoragePolicy
   , OwnershipPolicy
-  , curry_prox_visitor_refcycle_counted<ProxVisitor>
+  , refcycle_counted_curry_prox_visitor<ProxVisitor>
   >
 : private prox_children<ProxVisitor>::builder_materials::make_recorder
 {
@@ -488,7 +540,7 @@ cycle_basis_mgr_nester
     referent_type
     ;
         typedef
-      curry_prox_visitor_refcycle_counted<ProxVisitor>
+      refcycle_counted_curry_prox_visitor<ProxVisitor>
     nesting_type
     ;
         typedef
@@ -521,10 +573,15 @@ cycle_basis_mgr_nester
       , basis_sink_type& target
       )
     {
-        utility::trace_scope ts("curry_prox_visitor...::release_to_basis");
+      #ifdef TRACE_SCOPE_HPP
+        utility::trace_scope ts("cycle_basis_manager_nester<...,refcycle_counted_curry_prox_visitor<ProxVisitor> >::release_to_basis");
+      #endif
         typename OwnershipPolicy::overhead_type* l_ovhd = source.get_overhead();
+      #ifdef TRACE_SCOPE_HPP
         mout()<<"l_ovhd="<<std::endl;
         marg_ostream_insert_refcycle_overhead_abs_ptr(mout(),l_ovhd);
+        mout()<<"\n";
+      #endif
         OwnershipPolicy::on_release(source);
         basis_sink_type l_sink(source);
         target = l_sink;
@@ -535,7 +592,7 @@ cycle_basis_mgr_nester
 template<typename ProxVisitor>
     template <typename ReferentPtr>
       class 
-curry_prox_visitor_refcycle_counted<ProxVisitor>::
+refcycle_counted_curry_prox_visitor<ProxVisitor>::
     owner
     : public owner_void
     {
@@ -556,7 +613,7 @@ curry_prox_visitor_refcycle_counted<ProxVisitor>::
             typedef
           basis_specializer
             < referent_type
-            , curry_prox_visitor_refcycle_counted<ProxVisitor>
+            , refcycle_counted_curry_prox_visitor<ProxVisitor>
             >
         basis_spec_type
         ;
@@ -591,24 +648,40 @@ curry_prox_visitor_refcycle_counted<ProxVisitor>::
         
         owner(void)
         {}
-#if 1                
-        owner(this_source_type const& a_basis_src)
+
+        owner
+          ( this_source_type const& 
+              a_basis_src
+          )
         : super_type(a_basis_src.release_overhead())
         {
         }
-#endif        
+
         template<typename SubRef>
         owner
+//#define DEMO_PROB_CXX_STD_14_8_2_4_P4
+#ifdef DEMO_PROB_CXX_STD_14_8_2_4_P4
+    //Purpose:
+    //  Show a problem imposed by inability to deduce template arguments
+    //  when they're used to name nested classes.  This problem is
+    //  revealed by compilation of /libs/managed_ptr/test/sub_cpy_ctor.cpp
+    //  with the above #define uncommented.
+    //Reference:
+    //  c++ standard 14.8.2.4 "Deducing template arguments from a type"
+    //  paragraph 4.
           ( typename basis_spec_type::rebind<SubRef>::other::basis_source_type const&
-            a_basis_src
+#else
+          ( auto_refwrap
+            < SubRef
+            , refcycle_overhead_described_curry_prox_visitor<ProxVisitor>
+              ::template overhead_concrete
+            > const&
+#endif          
+              a_basis_src
           )
-      #if 1
-        ;
-      #else
         : super_type(a_basis_src.release_overhead())
         {
         }
-      #endif
         
         template <typename U>
         owner(owner<U> const& rhs)
@@ -618,9 +691,12 @@ curry_prox_visitor_refcycle_counted<ProxVisitor>::
         : super_type(reinterpret_cast<this_type const&>(rhs))
     # endif // BOOST_NO_MEMBER_TEMPLATE_FRIENDS
         {
-            mout()<<"+owner::CTOR(owner<U>const&):overhead=";
+          #ifdef TRACE_SCOPE_HPP
+            utility::trace_scope ts("owner::CTOR(owner<U>const&)");
+            mout()<<":overhead=";
             marg_ostream_insert_refcycle_overhead_abs_ptr( mout(), this->get_overhead());
             mout()<<"\n";
+          #endif
         }
         
             ReferentPtr 
@@ -682,11 +758,12 @@ curry_prox_visitor_refcycle_counted<ProxVisitor>::
         {
             overhead_type*l_ovhd=get_overhead();
             this->prevent_dtor_delete();
+            l_ovhd->decrement();
             return l_ovhd;
         }
         
     }
-    //end curry_prox_visitor_refcycle_counted<ProxVisitor>::owner<ReferentPtr> 
+    //end refcycle_counted_curry_prox_visitor<ProxVisitor>::owner<ReferentPtr> 
     ;
     
 }//exit managed_ptr namespace
@@ -709,5 +786,10 @@ curry_prox_visitor_refcycle_counted<ProxVisitor>::
 //   2004-03-08: Larry Evans
 //     made changes to accommodate merging of cycl_mgr and release_mgr template
 //     classes into cycle_basis_mgr template class.
+//   2004-06-20: Larry Evans
+//     WHAT:
+//       renamed from curry_prox_visitor_refcycle_counted
+//     WHY:
+//       See ChangeLog: on this date in the *.fpp file.
 //////////////////////////////////////////////////////////////////////////////
 #endif

@@ -39,7 +39,109 @@ default_ctor_tag
 
 template
   < typename Referent
-  , typename Overhead
+  , template<typename>class Overhead
+  >
+  class
+auto_overhead
+;
+
+template
+  < typename Referent
+  , template<typename>class Overhead
+  >
+  class 
+auto_refwrap
+: public reference_wrapper<auto_overhead<Referent,Overhead> >
+//Purpose:
+//  Allow use of auto_new::as_auto_refwrap()
+{
+ public:
+        typedef
+      Referent
+    referent_type
+    ;
+        typedef
+      auto_overhead<referent_type,Overhead>
+    auto_ovhd_type
+    ;    
+        typedef 
+      Overhead<referent_type>
+    overhead_type
+    ;
+    
+        typedef 
+      reference_wrapper<auto_ovhd_type> 
+    super_type
+    ;
+    
+    auto_refwrap(auto_refwrap const& a_wrap)
+    : super_type(a_wrap)
+    {}
+    
+    auto_refwrap(auto_ovhd_type& a_new)
+    : super_type(a_new)
+    {
+    }
+    
+    template
+      < typename SubRef
+      >
+    auto_refwrap
+      ( typename auto_overhead
+        < SubRef
+        , Overhead
+        >::auto_refwrap& a_new
+      )
+    : super_type(a_new)
+    {
+    }
+    
+    template
+      < typename Other
+      >
+      struct
+    rebind
+    {
+            typedef
+          typename auto_overhead
+            < Other
+            , Overhead
+            >::auto_refwrap
+        other
+        ;
+    };
+    
+    template
+      < typename SuperRef
+      >
+        typename 
+      rebind<SuperRef>::other
+    as_super(void)
+    ;
+    
+      referent_type* 
+    referent()const
+    //Purpose:
+    //  alias for `operator referent_type*()` method
+    ;
+
+      overhead_type* 
+    release_overhead()const
+    ;
+
+    operator bool()const
+    ;
+
+    operator referent_type*()const
+    {
+        return this->referent();
+    }
+    
+};//end auto_refwrap class
+    
+template
+  < typename Referent
+  , template<typename>class Overhead
     //REQUIRES:
     //  Overhead is a template class like:
     //
@@ -84,7 +186,7 @@ auto_overhead
     referent_type
     ;
         typedef
-      Overhead
+      Overhead<referent_type>
     overhead_type
     ;
         typedef
@@ -97,71 +199,21 @@ auto_overhead
     ;
     
         typedef
-      overhead_referent_vals<overhead_type,referent_type>
+      overhead_referent_vals<Overhead,referent_type>
     basis_type
     ;
+        typedef
+      auto_refwrap<referent_type,Overhead>
+    refwrap_type
+    ;
     
-    class refwrap
-    : public reference_wrapper<auto_overhead<Referent,Overhead> >
-    //Purpose:
-    //  Allow use of auto_new::as_refwrap()
+    ~auto_overhead(void)
     {
-     public:
-            typedef
-          auto_overhead<Referent,Overhead>
-        auto_ovhd_type
-        ;    
-            typedef 
-          reference_wrapper<auto_ovhd_type> 
-        super_type
-        ;
-        
-        refwrap(refwrap const& a_wrap)
-        : super_type(a_wrap)
-        {}
-        
-        refwrap(auto_ovhd_type& a_new)
-        : super_type(a_new)
-        {
-        }
-        
-        template<typename SubRef>
-        refwrap
-          ( typename auto_overhead
-            < SubRef
-            , typename Overhead::rebind<SubRef>::other
-            >::refwrap& a_new
-          )
-        : super_type(a_new)
-        {
-        }
-        
-        referent_type* referent()const
-        //Purpose:
-        //  alias for `operator referent_type*()` method
-        {
-            utility::trace_scope ts("refwrap::referent()");
-            return super_type::get().referent();
-        }
+      #ifdef TRACE_SCOPE_HPP
+        utility::trace_scope ts("~auto_overhead(void)");
+      #endif
+    }
 
-        overhead_type* release_overhead()const
-        {
-            utility::trace_scope ts("refwrap::release_overhead()");
-            return super_type::get().release_overhead();
-        }
-
-        operator referent_type*()const
-        {
-            return this->referent();
-        }
-        
-        operator bool()const
-        {
-            return super_type::get().is_valid();
-        }
-    
-    };//end refwrap class
-    
     auto_overhead(void)
     {}
 
@@ -175,15 +227,18 @@ auto_overhead
     ;
 
     template
-      < typename R
+      < typename SubRef //subtype of referent_type
       >
-    auto_overhead(auto_overhead<R,typename Overhead::rebind<R>::other>& a_aoh)
-    : super_type(a_aoh)
+    auto_overhead(auto_overhead<SubRef,Overhead>& a_aoh)
+    : super_type
+      ( a_aoh.referent()
+      , a_aoh.release_overhead()
+      )
     {
     }
 
-    auto_overhead(refwrap const& a_rw)
-    : super_type(a_rw.get())
+    auto_overhead(refwrap_type const& a_rw)
+    : super_type(a_rw.get().referent(), a_rw.get().release_overhead())
     {
     }
 
@@ -191,16 +246,40 @@ auto_overhead
       < typename R
       >
     auto_overhead
-      ( typename auto_overhead<R,typename Overhead::rebind<R>::other>::refwrap const& a_aoh
+      ( typename auto_overhead<R,Overhead>::refwrap const& a_aoh
       )
     : super_type(a_aoh.get().referent(), a_aoh.get().release_overhead())
     {
     }
 
     template
+      < typename Other
+      >
+      struct
+    rebind
+    {
+            typedef
+          auto_overhead
+            < Other
+            , Overhead
+            >
+        other
+        ;
+    };
+        
+    template
+      < typename SuperRef
+      >
+      typename rebind<SuperRef>::other
+    as_super(void)
+    {
+        return typename rebind<SuperRef>::other(*this);
+    }
+        
+    template
       < typename R
       >
-    void operator=(auto_overhead<R,typename Overhead::rebind<R>::other>& a_anm)
+    void operator=(auto_overhead<R,Overhead>& a_anm)
     {
         super_ref_type::reset(a_anm.referent());
         super_ovhd_type::operator=(a_anm);
@@ -209,7 +288,7 @@ auto_overhead
     template
       < typename R
       >
-    void reset(overhead_referent_vals<typename Overhead::rebind<R>::other,R>* a_basis)
+    void reset(overhead_referent_vals<Overhead,R>* a_basis)
     //REQUIRES:
     //  a_basis points to heap
     {
@@ -229,12 +308,16 @@ auto_overhead
 
     overhead_type* release_overhead()
     {
+      #ifdef TRACE_SCOPE_HPP
         utility::trace_scope ts("auto_overhead::release_overhead()");
+      #endif
         overhead_type* oh=this->overhead();
         super_ovhd_type::release();
         super_ref_type::reset();
+      #ifdef TRACE_SCOPE_HPP
         mout()<<"overhead()="<<overhead()<<"\n";
         mout()<<"referent()="<<referent()<<"\n";
+      #endif
         return oh;
     }
 
@@ -248,17 +331,17 @@ auto_overhead
         return is_valid();
     }
 
-    refwrap as_refwrap()
+    refwrap_type as_refwrap()
     //Purpose:
     //  Allow auto_new().as_refwrap() to be used as arg to
     //  template<typename U> smart_ptr(U const&).
     //  (can't use auto_new() because OwnerPolicy modifieds
     //  auto_new via auto_ptr::release).
     {
-        return refwrap(*this);
+        return refwrap_type(*this);
     }
 
-    operator refwrap()
+    operator refwrap_type()
     {
         return this->as_refwrap();
     }
@@ -267,10 +350,92 @@ auto_overhead
     auto_overhead(basis_type* a_basis)
     : super_type(&(a_basis->overhead_mut()),&(a_basis->referent_mut()))
     {}
+    
+ private:
+    auto_overhead
+      ( referent_type* a_ref
+      , overhead_type* a_ovhd
+      )
+    : super_type(a_ovhd, a_ref)
+    {}
 };//end auto_overhead
+
+template
+  < typename Referent
+  , template<typename>class Overhead
+  >
+    template
+      < typename SuperRef
+      >
+        typename 
+auto_refwrap< Referent, Overhead>::      
+      rebind<SuperRef>::other
+auto_refwrap< Referent, Overhead>::      
+    as_super(void)
+    {
+        typename auto_ovhd_type::rebind<SuperRef>::other l_super_ovhd
+        ( this->get().as_super<SuperRef>() );
+        typename rebind<SuperRef>::other l_super_wrap(l_super_ovhd);
+        return l_super_wrap;
+    }
+    
+template
+  < typename Referent
+  , template<typename>class Overhead
+  >
+  typename
+auto_refwrap< Referent, Overhead>::      
+      referent_type* 
+auto_refwrap< Referent, Overhead>::      
+    referent()const
+    //Purpose:
+    //  alias for `operator referent_type*()` method
+    {
+      #ifdef TRACE_SCOPE_HPP
+        utility::trace_scope ts("auto_refwrap::referent()");
+      #endif
+        return super_type::get().referent();
+    }
+
+template
+  < typename Referent
+  , template<typename>class Overhead
+  >
+  typename
+auto_refwrap< Referent, Overhead>::      
+      overhead_type* 
+auto_refwrap< Referent, Overhead>::      
+    release_overhead()const
+    {
+      #ifdef TRACE_SCOPE_HPP
+        utility::trace_scope ts("auto_refwrap::release_overhead()");
+      #endif
+        return super_type::get().release_overhead();
+    }
+
+template
+  < typename Referent
+  , template<typename>class Overhead
+  >
+auto_refwrap< Referent, Overhead>::      
+    operator bool()const
+    {
+        return super_type::get().is_valid();
+    }
+
 }}//exit boost::managed_ptr namespace
 //////////////////////////////////////////////////////////////////////////////
 // ChangeLog:
+//   2004-06-22: Larry Evans
+//     WHAT:
+//       1)Mv'ed refwrap outside auto_overhead and added auto_overhead
+//         template params to refwrap class to create essentially an
+//         equivalent non-nested class.
+//     WHY:
+//       1)Allow refcycle_counted_curry_prox_visitor<ProxVisitor>::
+//         owner templated CTOR to be used without non-deduced
+//         context ( see c++ standard 14.8.2.4 
+//         "Deducing template arguments from a type" paragraph 4 ).
 //   2004-04-09: Larry Evans
 //     WHAT:
 //       1)Rm'ed auto_new and supplied forwarding functions with revised
@@ -279,7 +444,6 @@ auto_overhead
 //     WHY:
 //       1)Eliminate extra class since no longer needed.
 //       2)Obvious
-// ChangeLog:
 //   2003-12-05: Larry Evans
 //     WHAT:
 //       added conversion operator to return referent_type* const&.

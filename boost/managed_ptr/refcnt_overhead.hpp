@@ -5,9 +5,9 @@ namespace boost{namespace managed_ptr{
 
 class refcnt_overhead
 {
+    typedef refcnt_overhead this_type;
  public:
     typedef unsigned count_type;
-    typedef refcnt_overhead this_type;
     
     ~refcnt_overhead()
     {
@@ -31,7 +31,7 @@ class refcnt_overhead
     this_type const& increment()
     {
         ++my_count;
-        #ifdef BOOST_IO_FILTERS_MOUT_HPP
+        #ifdef BOOST_MANAGED_PTR_TRACE_MODE
         mout()<<"refcnt_overhead::increment:after="<<my_count<<"\n";
         #endif
         return *this;
@@ -40,7 +40,7 @@ class refcnt_overhead
     this_type const& decrement()
     { 
         --my_count;
-        #ifdef BOOST_IO_FILTERS_MOUT_HPP
+        #ifdef BOOST_MANAGED_PTR_TRACE_MODE
         mout()<<"refcnt_overhead::decrement:after="<<my_count<<"\n";
         #endif
         return *this;

@@ -7,22 +7,26 @@ namespace boost{namespace managed_ptr{
 template
   < typename Referent
   , template<typename>class RefrProxy
-  , typename Overhead
+  , template<typename>class Overhead
   , template<typename>class OvhdProxy
   >
 class referent_overhead_ptrs
 : protected RefrProxy<Referent>
-, protected OvhdProxy<Overhead>
+, protected OvhdProxy<Overhead<Referent> >
 //Purpose:
 //  Contains detached smart_ptr overhead and
 //  referent pointers.
 {
  public:
     typedef Referent referent_type;
-    typedef Overhead overhead_type;
+    typedef Overhead<Referent> overhead_type;
     
     ~referent_overhead_ptrs()
-    {}
+    {
+      #ifdef TRACE_SCOPE_HPP
+        utility::trace_scope ts("~referent_overhead_ptrs()");
+      #endif
+    }
         
     referent_overhead_ptrs()
     {}
@@ -35,7 +39,20 @@ class referent_overhead_ptrs
     , OvhdProxy<overhead_type>(ovhd)
     {}
        
-    referent_overhead_ptrs(overhead_referent_vals<overhead_type,referent_type>* vals_ptr)
+    template
+      < typename SubRef //subtype of referent_type
+      >
+    referent_overhead_ptrs
+    ( SubRef* ref
+    , Overhead<SubRef>* ovhd
+    )
+    : RefrProxy<referent_type>(ref)
+    , OvhdProxy<overhead_type>(&(ovhd->as_super<referent_type>()))
+    {}
+       
+    referent_overhead_ptrs
+      ( overhead_referent_vals<Overhead,referent_type>* vals_ptr
+      )
     : RefrProxy<referent_type>(vals_ptr)
     , OvhdProxy<overhead_type>(vals_ptr)
     {}
@@ -49,6 +66,30 @@ class referent_overhead_ptrs
     {
         return RefrProxy<referent_type>::get();
     }
+    
+    template
+      < typename Other
+      >
+      struct
+    rebind
+    {
+            typedef
+          referent_overhead_ptrs
+            < Other
+            , RefrProxy
+            , Overhead
+            , OvhdProxy
+            >
+        other
+        ;
+    };
+    
+    template
+      < typename SuperRef
+      >
+      typename rebind<SuperRef>::other&
+    as_super(void)
+    ;
         
 };
 

@@ -22,8 +22,7 @@
 //   http://cvs.sourceforge.net/viewcvs.py/boost-sandbox/boost-sandbox/
 //     boost/policy_ptr/latest/smart_ptr.hpp
 //////////////////////////////////////////////////////////////////////////////
-#include "boost/managed_ptr/ref_counted_detached_base.hpp"
-#include <boost/type_traits/remove_pointer.hpp>
+#include "boost/managed_ptr/refcnt_ovhd_prox_referent.hpp"
 namespace boost{
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -38,10 +37,7 @@ namespace boost{
 
 template <typename ReferentPtr>
 class ref_counted
-;
-template <typename ReferentPtr>
-class ref_counted
-: public managed_ptr::ref_counted_detached_base<ReferentPtr>
+: public managed_ptr::refcnt_ovhd_prox_referent<ReferentPtr>
 {
 public:
         typedef 
@@ -49,11 +45,7 @@ public:
     type
     ;
         typedef 
-      typename remove_pointer<ReferentPtr>::type
-    referent_type
-    ;
-        typedef 
-      managed_ptr::ref_counted_detached_base<referent_type*> 
+      managed_ptr::refcnt_ovhd_prox_referent<ReferentPtr> 
     super_type
     ;
         typedef
@@ -62,7 +54,9 @@ public:
     ;
     ~ref_counted(void)
     {
+      #ifdef TRACE_SCOPE_HPP
         utility::trace_scope ts("~ref_counted(void)");
+      #endif
     }
     
     ref_counted(void)
@@ -70,16 +64,28 @@ public:
 
     template <typename U>
     ref_counted(ref_counted<U> const& rhs)
+# ifndef BOOST_NO_MEMBER_TEMPLATE_FRIENDS
     : super_type(rhs)
-    {}
+# else // BOOST_NO_MEMBER_TEMPLATE_FRIENDS
+    : super_type(reinterpret_cast<ref_counted const&>(rhs))
+# endif // BOOST_NO_MEMBER_TEMPLATE_FRIENDS
+    {
+    }
 
-    ref_counted(referent_type*)
+    ref_counted(ReferentPtr)
     : super_type(new overhead_type(0))
     //***DIFF_POLICY_PTR : instead of overhead_type(1) because increment occurs later.
     {
-        utility::trace_scope ts("ref_counted(referent_type*)");
+      #ifdef TRACE_SCOPE_HPP
+        utility::trace_scope ts("ref_counted(ReferentPtr)");
+      #endif
     }
     
+    private:
+    
+#ifndef BOOST_NO_MEMBER_TEMPLATE_FRIENDS
+        template <typename U> friend class ref_counted;
+#endif // BOOST_NO_MEMBER_TEMPLATE_FRIENDS
 };
 
 }//exit boost namespace

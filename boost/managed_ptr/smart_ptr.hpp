@@ -27,7 +27,6 @@
 #include <boost/static_assert.hpp>
 #include <boost/utility.hpp>
 #include <boost/checked_delete.hpp>
-#include <boost/throw_exception.hpp>
 #include <boost/type_traits/same_traits.hpp>
 #include <boost/type_traits/add_reference.hpp>
 #include <boost/mpl/if.hpp>
@@ -64,7 +63,6 @@
 // Use boost::pool?
 //#include "SmallObj.h"
 
-#include <stdexcept>                    // std::runtime_error
 #include <typeinfo>                     // std::bad_cast
 #include <algorithm>                    // std::less<>, std::swap()
 #include <functional>                   // std::binary_function<>
@@ -329,7 +327,7 @@ namespace boost
                 if (!ownership_policy::release(get_impl(*this)))
                 {
                 #if defined(TRACE_SCOPE_HPP)
-                    utility::trace_scope ts("~resource_manager::release()");
+                    utility::trace_scope ts("~resource_manager:storage_policy::release()");
                 #endif
                     storage_policy::release();
                 }
@@ -448,7 +446,9 @@ class smart_ptr
     smart_ptr(copy_arg rhs)
         : base_type(static_cast<copy_base>(rhs))
     { 
+      #ifdef TRACE_SCOPE_HPP
         utility::trace_scope ts("smart_ptr::CTOR(copy_arg)");
+      #endif
         element_type* et = get_impl(rhs);
         get_impl_ref(*this) = ownership_policy::clone(et); 
     }
@@ -459,7 +459,9 @@ class smart_ptr
         typename smart_ptr<U, BOOST_CONVERSION_POLICIES>::base_type const&
     >(rhs))
     { 
+      #ifdef TRACE_SCOPE_HPP
         utility::trace_scope ts("smart_ptr::CTOR(smart_ptr<U> const&)");
+      #endif
         get_impl_ref(*this) = ownership_policy::clone(get_impl(rhs)); 
     }
 
@@ -469,7 +471,9 @@ class smart_ptr
         typename smart_ptr<U, BOOST_CONVERSION_POLICIES>::base_type const&
     >(rhs))
     { 
+      #ifdef TRACE_SCOPE_HPP
         utility::trace_scope ts("smart_ptr::CTOR(smart_ptr<U>&)");
+      #endif
         get_impl_ref(*this) = ownership_policy::clone(get_impl(rhs)); 
     }
 
@@ -480,12 +484,18 @@ class smart_ptr
         typename smart_ptr<U, BOOST_CONVERSION_POLICIES>::base_type const&
     >(rhs))
     {
+      #ifdef TRACE_SCOPE_HPP
         utility::trace_scope ts("smart_ptr::CTOR(smart_ptr<U>&, static_cast_tag)");
+      #endif
         pointer_type l_ptr = static_cast<pointer_type>(get_impl(rhs));
+      #ifdef TRACE_SCOPE_HPP
         mout()<<"l_ptr ="<<l_ptr<<std::endl;
         mout()<<"before ownership_policy::clone:use_count="<<use_count(*this)<<std::endl;
+      #endif
         get_impl_ref(*this) = ownership_policy::clone(l_ptr);
+      #ifdef TRACE_SCOPE_HPP
         mout()<<"after ownership_policy::clone:use_count="<<use_count(*this)<<std::endl;
+      #endif
     }
 
     template <typename U, BOOST_CONVERSION_PARAMETERS>
@@ -532,7 +542,9 @@ class smart_ptr
     //  the smart_ptr(U const&) one.
     : base_type(p, detail::init_first_tag())
     { 
+      #ifdef TRACE_SCOPE_HPP
         utility::trace_scope ts("smart_ptr(basis_source_type const&)");
+      #endif
         checking_policy::on_init(get_impl(*this)); 
     }
 
@@ -547,7 +559,9 @@ class smart_ptr
     //  the smart_ptr(U const&) one.
     : base_type(p, detail::init_first_tag())
     { 
+      #ifdef TRACE_SCOPE_HPP
         utility::trace_scope ts("smart_ptr(basis_spec_type::rebind<SubRef>... const&)");
+      #endif
         checking_policy::on_init(get_impl(*this)); 
     }
 
@@ -555,7 +569,9 @@ class smart_ptr
     smart_ptr(U const& p)
     : base_type(p, detail::init_first_tag())
     { 
+      #ifdef TRACE_SCOPE_HPP
         utility::trace_scope ts("template<typename U>smart_ptr(U const&)");
+      #endif
         checking_policy::on_init(get_impl(*this)); 
     }
     
@@ -584,7 +600,9 @@ class smart_ptr
     template <typename U>
     smart_ptr& operator=(U const& u)
     {
+      #ifdef TRACE_SCOPE_HPP
         utility::trace_scope ts("template<U> smart_ptr::operator=(U const&)");
+      #endif
         smart_ptr sp(u);
         swap(sp);
         return *this;
@@ -592,11 +610,16 @@ class smart_ptr
 
     void swap(this_type& rhs)
     {
+      #ifdef TRACE_SCOPE_HPP
         utility::trace_scope ts("swap(this_type&)");
+      #endif
         base_type::swap(rhs);
     }
 
     friend inline void release(this_type& sp, basis_sink_type& p)
+    //***DIFF_POLICY_PTR : 
+    // Moved most of code to super class in order to specialize
+    // the code for ownership policy for collecting cycles.
     {
         checking_policy::on_release(get_impl(sp));
         resource_mgr_type& rmt=sp;
@@ -605,37 +628,31 @@ class smart_ptr
     
     friend inline void reset(this_type& sp, basis_source_type p)
     {
+      #ifdef TRACE_SCOPE_HPP
+        utility::trace_scope ts("reset(this_type&, basis_source_type)");
+      #endif
         this_type(p).swap(sp);
     }
 
     template
       < typename SubRef
       >
-    void test_sub_reset
-      ( typename basis_spec_type::rebind<SubRef>::other::basis_source_type const&p
-      )
-  #if 0
-    {
-        this_type(p).swap(*this);
-    }
-  #else
-    ;
-  #endif
-      
-    template
-      < typename SubRef
-      >
-    friend void sub_reset
+    friend void reset
       ( this_type& sp
       , typename basis_spec_type::rebind<SubRef>::other::basis_source_type const&p
+      //***DIFF_POLICY_PTR : 
+      //   Since basis_souce_type depends on ownership policy, the above rebind
+      //   is needed.  Unfortunated, this puts SubRef in a non-deduced context
+      //   (see c++ standard 14.8.2.4 "Deducing template arguments from a type"
+      //   paragraph 4) which, in turn, requires reset to be called with
+      //   explicit template argument [e.g. reset<T>(sp,p) ].
       )
-  #if 0
     {
+      #ifdef TRACE_SCOPE_HPP
+        utility::trace_scope ts("reset(this_type&, basis_spec_type::rebind...source_type)");
+      #endif
         this_type(p).swap(sp);
     }
-  #else
-    ;
-  #endif
 
  public:     // Dereference
     pointer_type operator->() const
@@ -719,12 +736,6 @@ class smart_ptr
     struct null_pointer_error : public std::runtime_error
     {
         null_pointer_error() : std::runtime_error("Null Pointer Exception")
-        { }
-    };
-
-    struct bad_release : public std::runtime_error
-    {
-        bad_release() : std::runtime_error("Bad Release: Too many references")
         { }
     };
 
@@ -1476,7 +1487,9 @@ class smart_ptr
     inline smart_ptr<T, BOOST_SMART_POINTER_POLICIES>
         static_pointer_cast(smart_ptr<U, BOOST_SMART_POINTER_POLICIES> const& p)
     {
+      #ifdef TRACE_SCOPE_HPP
         utility::trace_scope ts("static_pointer_cast");
+      #endif
         return smart_ptr<T, BOOST_SMART_POINTER_POLICIES>(
             p, detail::static_cast_tag()
         );

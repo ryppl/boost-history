@@ -107,7 +107,9 @@ namespace boost
 
             void    swap(optimal_parents& rhs)
             {
-                utility::trace_scope ts("optimially_inherit<both>::swap(...)");
+              #ifdef TRACE_SCOPE_HPP
+                utility::trace_scope ts("optimally_inherit<both>::swap(...)");
+              #endif
                 T1::swap(static_cast<T1&>(rhs));
                 T2::swap(static_cast<T2&>(rhs));
             }

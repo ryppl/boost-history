@@ -53,10 +53,10 @@ refcycle_overhead_abs
     
         virtual //to allow deletion of this to call referent_type DTOR
                 //where referent_type is defined in
-                //curry_prox_visitor_refcycle_counted<ProxVisitor>::owner<ReferentPtr>.
-                //This is because each refcyle_overhead_abs is partof the
-                //init_type::element_type where init_type is also defined in
-                //curry_prox_visitor_refcycle_counted<ProxVisitor>::owner<ReferentPtr>.
+                //refcycle_counted_curry_prox_visitor<ProxVisitor>::owner<ReferentPtr>.
+                //This is because each refcyle_overhead_abs is part of the
+                //overhead_type which is typedef'ed in
+                //refcycle_counted_curry_prox_visitor<ProxVisitor>::owner<ReferentPtr>.
     ~refcycle_overhead_abs()
     {
     }

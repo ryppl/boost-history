@@ -1,11 +1,11 @@
-//curry_prox_visitor_refcycle_counted fwd decl w/cycle_mgr specialization fwd decl
-#ifndef BOOST_MANAGED_PTR_CURRY_PROX_VISITOR_REFCYCLE_COUNTED_FPP_LJE20031009
-#define BOOST_MANAGED_PTR_CURRY_PROX_VISITOR_REFCYCLE_COUNTED_FPP_LJE20031009
+//refcycle_counted_curry_prox_visitor fwd decl
+#ifndef BOOST_MANAGED_PTR_REFCYCLE_COUNTED_CURRY_PROX_VISITOR_FPP_LJE20031009
+#define BOOST_MANAGED_PTR_REFCYCLE_COUNTED_CURRY_PROX_VISITOR_FPP_LJE20031009
 
 namespace boost{namespace managed_ptr{
 
 template<typename ProxVisitor>
-class curry_prox_visitor_refcycle_counted
+class refcycle_counted_curry_prox_visitor
 //PURPOSE:
 //  Forward declare nested template owner to enable it
 //  to take a single template argument; yet, depend on
@@ -38,5 +38,12 @@ class curry_prox_visitor_refcycle_counted
 //       Added owner_void.
 //     WHY:
 //       Reduce code bloat due to template<...> class owner.
+//   2004-06-20: Larry Evans
+//     WHAT:
+//       renamed from curry_prox_visitor_refcycle_counted
+//     WHY:
+//       so name prefix is same as other related files
+//       (e.g. refcycle_overhead_described_* ), thus suggesting
+//       to someone scanning the directory listing.
 //////////////////////////////////////////////////////////////////////////////
 #endif

@@ -23,12 +23,18 @@ refcycle_overhead_described_abs
         virtual
     ~refcycle_overhead_described_abs(void)
     {
-        //mout()<<"~refcycle_overhead_described_abs:this="<<this<<std::endl;
+      #ifdef TRACE_SCOPE_HPP
+        utility::trace_scope ts("~refcycle_overhead_described_abs");
+        mout()<<":this="<<this<<std::endl;
+      #endif
     }
 
     refcycle_overhead_described_abs(void)
     {
-        //mout()<<"+refcycle_overhead_described_abs:this="<<this<<std::endl;
+      #ifdef TRACE_SCOPE_HPP
+        utility::trace_scope ts("+refcycle_overhead_described_abs");
+        mout()<<":this="<<this<<std::endl;
+      #endif
     }
 
         virtual
