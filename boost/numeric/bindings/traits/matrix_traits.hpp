@@ -103,6 +103,20 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     return matrix_traits<M>::leading_dimension (m); 
   }
   
+  namespace detail {
+
+    inline char m_uplo_tag (upper_t const&) { return 'U'; } 
+    inline char m_uplo_tag (lower_t const&) { return 'L'; } 
+
+  }
+
+  template <typename SymmM> 
+  inline 
+  char matrix_uplo_tag (SymmM&) {
+      typedef typename matrix_traits<SymmM>::uplo_type uplo_t; 
+      return detail::m_uplo_tag (uplo_t());
+  }
+  
 }}}}  
 
 #endif // BOOST_NUMERIC_BINDINGS_TRAITS_MATRIX_TRAITS_HPP
