@@ -1,4 +1,4 @@
-// (C) Copyright Jeremy Siek 2001. 
+// (C) Copyright Jeremy Siek 2001.
 // Permission to copy, use, modify, sell and distribute this software
 // is granted provided this copyright notice appears in all
 // copies. This software is provided "as is" without express or
@@ -8,19 +8,19 @@
 #include <vector>
 #include <algorithm> // for std::min
 #include <fstream>
-#include <boost/test/test_tools.hpp>
+#include "boost/test/test_tools.hpp"
 
 // Extract the bit at position n from num.
 template <typename Block>
 inline bool nth_bit(Block num, std::size_t n)
 {
   // Move the nth bit to position 0 and then clear all other bits.
-  return (num >> n) & 1;           
+  return (num >> n) & 1;
 }
 inline unsigned long max_num(std::size_t num_bits)
 {
   using namespace std; // for std::pow, VC++ workaround -JGS
-  return (unsigned long)(pow((double)2, (double)num_bits)); 
+  return (unsigned long)(pow((double)2, (double)num_bits));
 }
 
 
@@ -136,7 +136,7 @@ struct bitset_test {
     Bitset b(lhs);
     b = rhs;
     BOOST_CHECK(b == rhs);
-    
+
     // Changes to the copy do not affect the original
     if (b.size() > 0) {
       std::size_t pos = b.size() / 2;
@@ -183,7 +183,7 @@ struct bitset_test {
     BOOST_CHECK(b[b.size() - 1] == true);
     for (std::size_t i = 0; i < lhs.size(); ++i)
       BOOST_CHECK(b[i] == lhs[i]);
-    
+
     b.push_back(false);
     BOOST_CHECK(b.size() == lhs.size() + 2);
     BOOST_CHECK(b[b.size() - 1] == false);
@@ -201,7 +201,7 @@ struct bitset_test {
     for (std::size_t i = 0; i < Bitset::bits_per_block; ++i)
       BOOST_CHECK(b[lhs.size() + i] == bool((value >> i) & 1));
   }
-  
+
   static void append_block_range(const Bitset& lhs, std::vector<Block> blocks)
   {
     Bitset b(lhs), c(lhs);
@@ -293,7 +293,7 @@ struct bitset_test {
     Bitset lhs(b);
     Bitset prev(lhs);
     lhs |= rhs;
-    // Sets each bit in lhs for which the corresponding bit in rhs is set, and 
+    // Sets each bit in lhs for which the corresponding bit in rhs is set, and
     // leaves all other bits unchanged.
     for (std::size_t I = 0; I < lhs.size(); ++I)
       if (rhs[I] == 1)
@@ -305,7 +305,7 @@ struct bitset_test {
   // PRE: b.size() == rhs.size()
   static void xor_assignment(const Bitset& b, const Bitset& rhs)
   {
-    Bitset lhs(b);    
+    Bitset lhs(b);
     Bitset prev(lhs);
     lhs ^= rhs;
     // Flips each bit in lhs for which the corresponding bit in rhs is set,
@@ -320,7 +320,7 @@ struct bitset_test {
   // PRE: b.size() == rhs.size()
   static void sub_assignment(const Bitset& b, const Bitset& rhs)
   {
-    Bitset lhs(b);    
+    Bitset lhs(b);
     Bitset prev(lhs);
     lhs -= rhs;
     // Resets each bit in lhs for which the corresponding bit in rhs is set,
@@ -334,12 +334,12 @@ struct bitset_test {
 
   static void shift_left_assignment(const Bitset& b, std::size_t pos)
   {
-    Bitset lhs(b);    
+    Bitset lhs(b);
     Bitset prev(lhs);
     lhs <<= pos;
     // Replaces each bit at position I in lhs with the following value:
     // - If I < pos, the new value is zero
-    // - If I >= pos, the new value is the previous value of the bit at 
+    // - If I >= pos, the new value is the previous value of the bit at
     //   position I - pos
     for (std::size_t I = 0; I < lhs.size(); ++I)
       if (I < pos)
@@ -355,7 +355,7 @@ struct bitset_test {
     lhs >>= pos;
     // Replaces each bit at position I in lhs with the following value:
     // - If pos >= N - I, the new value is zero
-    // - If pos < N - I, the new value is the previous value of the bit at 
+    // - If pos < N - I, the new value is the previous value of the bit at
     //    position I + pos
     std::size_t N = lhs.size();
     for (std::size_t I = 0; I < N; ++I)
@@ -434,7 +434,7 @@ struct bitset_test {
     std::size_t N = lhs.size();
     Bitset prev(lhs);
     lhs.flip();
-    // Toggles all the bits in lhs 
+    // Toggles all the bits in lhs
     for (std::size_t I = 0; I < N; ++I)
       BOOST_CHECK(lhs[I] == !prev[I]);
   }
@@ -562,6 +562,27 @@ struct bitset_test {
     }
   }
 
+  static void find_first(const Bitset& b)
+  {
+      // find first non-null bit, if any
+      typename Bitset::size_type i = 0;
+      while (i < b.size() && b[i] == 0)
+          ++i;
+
+      if (i == b.size())
+        BOOST_CHECK(b.find_first() == Bitset::npos); // not found;
+      else {
+        BOOST_CHECK(b.find_first() == i);
+        BOOST_CHECK(b.test(i) == true);
+      }
+
+  }
+
+  static void find_next(const Bitset& b, typename Bitset::size_type prev)
+  {
+    BOOST_CHECK(next_bit_on(b, prev) == b.find_next(prev));
+  }
+
   static void operator_equal(const Bitset& a, const Bitset& b)
   {
     if (a == b) {
@@ -618,7 +639,28 @@ struct bitset_test {
     else
       return false;
   }
-  
+
+  static typename Bitset::size_type next_bit_on(const Bitset& b, typename Bitset::size_type prev)
+  {
+      // helper function for find_next()
+      //
+
+      if (b.none() == true || prev == Bitset::npos)
+          return Bitset::npos;
+
+      ++prev;
+
+      if (prev >= b.size())
+          return Bitset::npos;
+
+      typename Bitset::size_type i = prev;
+      while (i < b.size() && b[i] == 0)
+          ++i;
+
+      return i==b.size() ? Bitset::npos : i;
+
+  }
+
   static void operator_less_than(const Bitset& a, const Bitset& b)
   {
     if (less_than(a, b))
