@@ -2,12 +2,12 @@
 #ifndef BOOST_MPL_PAIR_VIEW_HPP_INCLUDED
 #define BOOST_MPL_PAIR_VIEW_HPP_INCLUDED
 
-// Copyright (c) David Abrahams 2003-2004
-// Copyright (c) Aleksey Gurtovoy 2004
+// Copyright David Abrahams 2003-2004
+// Copyright Aleksey Gurtovoy 2004
 //
-// Use, modification and distribution are subject to the Boost Software 
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
-// at http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
@@ -125,8 +125,6 @@ struct prior< pair_iter<I1,I2,C> >
     typedef pair_iter<i1_,i2_,C> type;
 };
 
-BOOST_MPL_AUX_AGLORITHM_NAMESPACE_BEGIN
-
 template< typename I1, typename I2, typename C, typename Distance >
 struct advance< pair_iter<I1,I2,C>,Distance>
 {
@@ -140,8 +138,6 @@ struct distance< pair_iter<I1,I2,C>, pair_iter<K1,K2,C> >
     : distance<K1,I1>
 {
 };
-
-BOOST_MPL_AUX_AGLORITHM_NAMESPACE_END
 
 #endif // BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
 

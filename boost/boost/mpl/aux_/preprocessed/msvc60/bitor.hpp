@@ -1,13 +1,13 @@
 
-// Copyright (c) Aleksey Gurtovoy 2000-2004
-// Copyright (c) Jaap Suter 2003
+// Copyright Aleksey Gurtovoy 2000-2004
+// Copyright Jaap Suter 2003
 //
 // Distributed under the Boost Software License, Version 1.0. 
 // (See accompanying file LICENSE_1_0.txt or copy at 
 // http://www.boost.org/LICENSE_1_0.txt)
 //
 
-// Preprocessed version of "boost/mpl/bitand.hpp" header
+// Preprocessed version of "boost/mpl/bitor.hpp" header
 // -- DO NOT modify by hand!
 
 namespace boost { namespace mpl {
@@ -60,6 +60,8 @@ struct bitor_
         >::type >::type
 
 {
+    BOOST_MPL_AUX_LAMBDA_SUPPORT(2, bitor_, (N1, N2))
+
 };
 
 BOOST_MPL_AUX_NA_SPEC2(2, 2, bitor_)

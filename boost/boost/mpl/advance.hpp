@@ -2,7 +2,7 @@
 #ifndef BOOST_MPL_ADVANCE_HPP_INCLUDED
 #define BOOST_MPL_ADVANCE_HPP_INCLUDED
 
-// Copyright (c) Aleksey Gurtovoy 2000-2004
+// Copyright Aleksey Gurtovoy 2000-2004
 //
 // Distributed under the Boost Software License, Version 1.0. 
 // (See accompanying file LICENSE_1_0.txt or copy at 
@@ -48,7 +48,6 @@ struct advance_impl
     };
 };
 
-BOOST_MPL_AUX_AGLORITHM_NAMESPACE_BEGIN
 
 template<
       typename BOOST_MPL_AUX_NA_PARAM(Iterator)
@@ -70,9 +69,7 @@ struct advance_c
 {
 };
 
-BOOST_MPL_AUX_AGLORITHM_NAMESPACE_END
-
-BOOST_MPL_AUX_NA_ALGORITHM_SPEC(2, advance)
+BOOST_MPL_AUX_NA_SPEC(2, advance)
 //BOOST_MPL_METAFUNCTION(2, advance)
 
 }}

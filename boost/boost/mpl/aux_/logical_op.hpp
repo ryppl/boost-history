@@ -2,7 +2,7 @@
 // + file: boost/mpl/aux_/logical_op.hpp
 // + last modified: 25/feb/03
 
-// Copyright (c) 2000-03
+// Copyright 2000-03
 // Aleksey Gurtovoy
 //
 // Permission to use, copy, modify, distribute and sell this software

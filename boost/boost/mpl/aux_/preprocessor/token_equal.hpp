@@ -2,8 +2,8 @@
 #ifndef BOOST_MPL_AUX_PREPROCESSOR_TOKEN_EQUAL_HPP_INCLUDED
 #define BOOST_MPL_AUX_PREPROCESSOR_TOKEN_EQUAL_HPP_INCLUDED
 
-// Copyright (c) Paul Mensonides
-// Copyright (c) Aleksey Gurtovoy 2003-2004
+// Copyright Paul Mensonides
+// Copyright Aleksey Gurtovoy 2003-2004
 //
 // Use, modification and distribution are subject to the Boost Software 
 // License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 

@@ -5,7 +5,7 @@
 // + file: boost/mpl/aux_/type_wrapper.hpp
 // + last modified: 09/may/03
 
-// Copyright (c) 2000-03
+// Copyright 2000-03
 // Peter Dimov, Aleksey Gurtovoy
 //
 // Permission to use, copy, modify, distribute and sell this software

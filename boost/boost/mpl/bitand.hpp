@@ -2,8 +2,8 @@
 #ifndef BOOST_MPL_BITAND_HPP_INCLUDED
 #define BOOST_MPL_BITAND_HPP_INCLUDED
 
-// Copyright (c) Aleksey Gurtovoy 2000-2004
-// Copyright (c) Jaap Suter 2003
+// Copyright Aleksey Gurtovoy 2000-2004
+// Copyright Jaap Suter 2003
 //
 // Distributed under the Boost Software License, Version 1.0. 
 // (See accompanying file LICENSE_1_0.txt or copy at 

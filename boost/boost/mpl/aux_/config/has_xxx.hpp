@@ -2,8 +2,8 @@
 #ifndef BOOST_MPL_AUX_CONFIG_HAS_XXX_HPP_INCLUDED
 #define BOOST_MPL_AUX_CONFIG_HAS_XXX_HPP_INCLUDED
 
-// Copyright (C) Aleksey Gurtovoy 2002-2004
-// Copyright (C) David Abrahams 2002-2003
+// Copyright Aleksey Gurtovoy 2002-2004
+// Copyright David Abrahams 2002-2003
 //
 // Distributed under the Boost Software License, Version 1.0. 
 // (See accompanying file LICENSE_1_0.txt or copy at 

@@ -2,7 +2,7 @@
 #ifndef BOOST_MPL_AUX_NA_SPEC_HPP_INCLUDED
 #define BOOST_MPL_AUX_NA_SPEC_HPP_INCLUDED
 
-// Copyright (c) Aleksey Gurtovoy 2001-2004
+// Copyright Aleksey Gurtovoy 2001-2004
 //
 // Distributed under the Boost Software License, Version 1.0. 
 // (See accompanying file LICENSE_1_0.txt or copy at 
@@ -26,7 +26,6 @@
 #include <boost/mpl/aux_/preprocessor/enum.hpp>
 #include <boost/mpl/aux_/preprocessor/def_params_tail.hpp>
 #include <boost/mpl/aux_/lambda_arity_param.hpp>
-#include <boost/mpl/aux_/algorithm_namespace.hpp>
 #include <boost/mpl/aux_/config/dtp.hpp>
 #include <boost/mpl/aux_/config/eti.hpp>
 #include <boost/mpl/aux_/config/nttp.hpp>
@@ -78,7 +77,7 @@ template<> \
 struct lambda< \
       name< BOOST_MPL_AUX_NA_PARAMS(i) > \
     , na \
-    , true \
+    , true_ \
     > \
 { \
     typedef name< BOOST_MPL_AUX_NA_PARAMS(i) > type; \
@@ -156,16 +155,6 @@ BOOST_MPL_AUX_NA_SPEC_ETI(i, name) \
 BOOST_MPL_AUX_NA_SPEC_LAMBDA(i, name) \
 BOOST_MPL_AUX_NA_SPEC_ARITY(i, name) \
 BOOST_MPL_AUX_NA_SPEC_TEMPLATE_ARITY(i, j, name) \
-/**/
-
-#define BOOST_MPL_AUX_NA_ALGORITHM_SPEC(i, name) \
-BOOST_MPL_AUX_AGLORITHM_NAMESPACE_BEGIN \
-BOOST_MPL_AUX_NA_SPEC_MAIN(i, name) \
-BOOST_MPL_AUX_NA_SPEC_ETI(i, name) \
-BOOST_MPL_AUX_AGLORITHM_NAMESPACE_END \
-BOOST_MPL_AUX_NA_SPEC_LAMBDA(i, BOOST_MPL_AUX_AGLORITHM_NAMESPACE_PREFIX name) \
-BOOST_MPL_AUX_NA_SPEC_ARITY(i, BOOST_MPL_AUX_AGLORITHM_NAMESPACE_PREFIX name) \
-BOOST_MPL_AUX_NA_SPEC_TEMPLATE_ARITY(i, i, BOOST_MPL_AUX_AGLORITHM_NAMESPACE_PREFIX name) \
 /**/
 
 #endif // BOOST_MPL_AUX_NA_SPEC_HPP_INCLUDED

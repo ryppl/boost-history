@@ -2,7 +2,7 @@
 #ifndef BOOST_MPL_AUX_CONFIG_DMC_AMBIGUOUS_CTPS_HPP_INCLUDED
 #define BOOST_MPL_AUX_CONFIG_DMC_AMBIGUOUS_CTPS_HPP_INCLUDED
 
-// Copyright (c) Aleksey Gurtovoy 2004
+// Copyright Aleksey Gurtovoy 2004
 //
 // Distributed under the Boost Software License, Version 1.0. 
 // (See accompanying file LICENSE_1_0.txt or copy at 

@@ -2,7 +2,7 @@
 // + file: libs/mpl/test/aux_/token_eqaul.cpp
 // + last modified: 03/may/03
 
-// Copyright (c) 2003
+// Copyright 2003
 // Aleksey Gurtovoy
 //
 // Permission to use, copy, modify, distribute and sell this software

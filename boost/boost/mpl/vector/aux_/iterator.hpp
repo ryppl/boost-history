@@ -2,7 +2,7 @@
 #ifndef BOOST_MPL_AUX_VECTOR_ITERATOR_HPP_INCLUDED
 #define BOOST_MPL_AUX_VECTOR_ITERATOR_HPP_INCLUDED
 
-// Copyright (c) 2000-04 Aleksey Gurtovoy
+// Copyright 2000-04 Aleksey Gurtovoy
 //
 // Distributed under the Boost Software License, Version 1.0. 
 // (See accompanying file LICENSE_1_0.txt or copy at 
@@ -28,8 +28,7 @@
 #include <boost/mpl/aux_/config/ctps.hpp>
 #include <boost/mpl/aux_/config/workaround.hpp>
 
-namespace boost {
-namespace mpl {
+namespace boost { namespace mpl {
 
 template<
       typename Vector
@@ -80,8 +79,6 @@ struct prior< v_iter<Vector,n_> >
     typedef v_iter<Vector,prior_> type;
 };
 
-BOOST_MPL_AUX_AGLORITHM_NAMESPACE_BEGIN
-
 template<
       typename Vector
     , BOOST_MPL_AUX_NTTP_DECL(long, n_)
@@ -105,8 +102,6 @@ struct distance< v_iter<Vector,n_>, v_iter<Vector,m_> >
 {
 };
 
-BOOST_MPL_AUX_AGLORITHM_NAMESPACE_END
-
 #else // BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
 
 template<> struct advance_impl<aux::v_iter_tag>
@@ -124,7 +119,6 @@ template<> struct advance_impl<aux::v_iter_tag>
 
 #endif
 
-} // namespace mpl
-} // namespace boost
+}}
 
 #endif // BOOST_MPL_AUX_VECTOR_ITERATOR_HPP_INCLUDED

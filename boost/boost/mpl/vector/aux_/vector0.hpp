@@ -2,7 +2,7 @@
 #ifndef BOOST_MPL_VECTOR_AUX_VECTOR0_HPP_INCLUDED
 #define BOOST_MPL_VECTOR_AUX_VECTOR0_HPP_INCLUDED
 
-// Copyright (c) 2000-04 Aleksey Gurtovoy
+// Copyright 2000-04 Aleksey Gurtovoy
 //
 // Distributed under the Boost Software License, Version 1.0. 
 // (See accompanying file LICENSE_1_0.txt or copy at 

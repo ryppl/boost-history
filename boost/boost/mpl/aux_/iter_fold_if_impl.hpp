@@ -2,8 +2,8 @@
 #ifndef BOOST_MPL_AUX_ITER_FOLD_IF_IMPL_HPP_INCLUDED
 #define BOOST_MPL_AUX_ITER_FOLD_IF_IMPL_HPP_INCLUDED
 
-// Copyright (c) 2001-2004 Aleksey Gurtovoy
-// Copyright (c) 2001-2002 David Abrahams
+// Copyright 2001-2004 Aleksey Gurtovoy
+// Copyright 2001-2002 David Abrahams
 //
 // Distributed under the Boost Software License, Version 1.0. 
 // (See accompanying file LICENSE_1_0.txt or copy at 

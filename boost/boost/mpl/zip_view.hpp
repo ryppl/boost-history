@@ -2,8 +2,8 @@
 #ifndef BOOST_MPL_ZIP_VIEW_HPP_INCLUDED
 #define BOOST_MPL_ZIP_VIEW_HPP_INCLUDED
 
-// Copyright (c) Aleksey Gurtovoy 2000-2002
-// Copyright (c) David Abrahams 2000-2002
+// Copyright Aleksey Gurtovoy 2000-2002
+// Copyright David Abrahams 2000-2002
 //
 // Use, modification and distribution are subject to the Boost Software 
 // License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 

@@ -1,5 +1,5 @@
 
-// Copyright (c) Aleksey Gurtovoy 2000-2004
+// Copyright Aleksey Gurtovoy 2000-2004
 //
 // Distributed under the Boost Software License, Version 1.0. 
 // (See accompanying file LICENSE_1_0.txt or copy at 
@@ -51,6 +51,8 @@ struct not_equal_to
         , typename not_equal_to_tag<N2>::type
         >::template apply< N1,N2 >::type
 {
+    BOOST_MPL_AUX_LAMBDA_SUPPORT(2, not_equal_to, (N1, N2))
+
 };
 
 BOOST_MPL_AUX_NA_SPEC2(2, 2, not_equal_to)

@@ -2,7 +2,7 @@
 #ifndef BOOST_MPL_ADVANCE_FWD_HPP_INCLUDED
 #define BOOST_MPL_ADVANCE_FWD_HPP_INCLUDED
 
-// Copyright (c) Aleksey Gurtovoy 2000-2004
+// Copyright Aleksey Gurtovoy 2000-2004
 //
 // Distributed under the Boost Software License, Version 1.0. 
 // (See accompanying file LICENSE_1_0.txt or copy at 
@@ -21,12 +21,7 @@ namespace boost { namespace mpl {
 BOOST_MPL_AUX_COMMON_NAME_WKND(advance)
 
 template< typename Tag > struct advance_impl;
-
-BOOST_MPL_AUX_AGLORITHM_NAMESPACE_BEGIN
-
 template< typename Iterator, typename N > struct advance;
-
-BOOST_MPL_AUX_AGLORITHM_NAMESPACE_END
 
 }}
 

@@ -2,7 +2,7 @@
 #ifndef BOOST_MPL_EQUAL_HPP_INCLUDED
 #define BOOST_MPL_EQUAL_HPP_INCLUDED
 
-// Copyright (c) Aleksey Gurtovoy 2000-2004
+// Copyright Aleksey Gurtovoy 2000-2004
 //
 // Use, modification and distribution are subject to the Boost Software 
 // License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
@@ -32,8 +32,7 @@
 
 #include <boost/type_traits/is_same.hpp>
 
-namespace boost {
-namespace mpl {
+namespace boost { namespace mpl {
 
 namespace aux {
 
@@ -93,7 +92,6 @@ struct equal_impl
 
 } // namespace aux
 
-BOOST_MPL_AUX_AGLORITHM_NAMESPACE_BEGIN
 
 template<
       typename BOOST_MPL_AUX_NA_PARAM(Sequence1)
@@ -108,11 +106,8 @@ struct equal
     BOOST_MPL_AUX_LAMBDA_SUPPORT(2,equal,(Sequence1,Sequence2))
 };
 
-BOOST_MPL_AUX_AGLORITHM_NAMESPACE_END
+BOOST_MPL_AUX_NA_SPEC(2, equal)
 
-BOOST_MPL_AUX_NA_ALGORITHM_SPEC(2, equal)
-
-} // namespace mpl
-} // namespace boost
+}}
 
 #endif // BOOST_MPL_EQUAL_HPP_INCLUDED

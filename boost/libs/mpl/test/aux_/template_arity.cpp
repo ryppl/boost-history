@@ -2,7 +2,7 @@
 // + file: libs/mpl/test/aux_/template_arity.cpp
 // + last modified: 10/jul/03
 
-// Copyright (c) 2000-03
+// Copyright 2000-03
 // Aleksey Gurtovoy
 //
 // Permission to use, copy, modify, distribute and sell this software

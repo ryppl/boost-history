@@ -5,7 +5,7 @@
 // + file: boost/mpl/aux_/test/data.hpp
 // + last modified: 04/may/03
 
-// Copyright (c) 2002-03
+// Copyright 2002-03
 // Aleksey Gurtovoy
 //
 // Permission to use, copy, modify, distribute and sell this software

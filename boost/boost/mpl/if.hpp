@@ -2,7 +2,7 @@
 #ifndef BOOST_MPL_IF_HPP_INCLUDED
 #define BOOST_MPL_IF_HPP_INCLUDED
 
-// Copyright (c) Aleksey Gurtovoy 2000-2004
+// Copyright Aleksey Gurtovoy 2000-2004
 //
 // Distributed under the Boost Software License, Version 1.0. 
 // (See accompanying file LICENSE_1_0.txt or copy at 
@@ -30,12 +30,9 @@
 #   include <boost/mpl/aux_/preprocessor/default_params.hpp>
 #endif
 
-namespace boost {
-namespace mpl {
+namespace boost { namespace mpl {
 
 #if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
-
-BOOST_MPL_AUX_AGLORITHM_NAMESPACE_BEGIN
 
 template<
       bool C
@@ -127,9 +124,9 @@ template<
     >
 struct if_
 {
-    enum { msvc70_wknd_ = BOOST_MPL_AUX_MSVC_VALUE_WKND(C_)::value };
+    enum { msvc_wknd_ = BOOST_MPL_AUX_MSVC_VALUE_WKND(C_)::value };
 
-    typedef typename aux::if_impl< BOOST_MPL_AUX_STATIC_CAST(bool, msvc70_wknd_) >
+    typedef typename aux::if_impl< BOOST_MPL_AUX_STATIC_CAST(bool, msvc_wknd_) >
         ::template result_<T1,T2>::type type;
 
     BOOST_MPL_AUX_LAMBDA_SUPPORT(3,if_,(C_,T1,T2))
@@ -137,46 +134,12 @@ struct if_
 
 #endif // BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
 
-BOOST_MPL_AUX_AGLORITHM_NAMESPACE_END
-
-BOOST_MPL_AUX_NA_ALGORITHM_SPEC(3, if_)
+BOOST_MPL_AUX_NA_SPEC(3, if_)
 
 
 #if !defined(BOOST_MPL_CFG_NO_FULL_LAMBDA_SUPPORT)
 
-// Aleksey, check it out: lazy if_ evaluation in lambdas!
-// I think this doesn't handle the case of
-//
-//    _1<foo<_2>, bar<_2>, baz<_2> >
-//
-// (or however it is that you express that... when the ordinary bind3
-// computes the function based on the actual arguments). That leads me
-// to think that some kind of true currying might be a better
-// approach, e.g.:
-//
-//
-//  boost::mpl::bind3<
-//         boost::mpl::quote3<boost::mpl::if_>
-//       , boost::mpl::bind1<boost::mpl::quote1<boost::is_reference>, boost::mpl::arg<1> >
-//       , boost::mpl::arg<1>
-//       , boost::mpl::bind1<boost::mpl::quote1<add_ptr>, boost::mpl::arg<1> > 
-//  >::apply<...>
-//
-// becomes:
-//
-//  boost::mpl::bind<
-//         boost::mpl::quote3<boost::mpl::if_>
-//  >::bind<
-//       , boost::mpl::bind1<boost::mpl::quote1<boost::is_reference>,
-//         boost::mpl::arg<1> >
-//  >::bind<
-//         boost::mpl::arg<1>
-//  >::bind<
-//       boost::mpl::bind1<boost::mpl::quote1<add_ptr>, boost::mpl::arg<1> > 
-//  >::apply<...>
-//
-// so that after the 2nd bind we have a different function depending
-// on the result of is_reference.
+// lazy if_ evaluation in lambdas
 
 #   define AUX_BIND_PARAMS(param) \
     BOOST_MPL_PP_PARAMS( \
@@ -250,7 +213,6 @@ struct bind3<quote3<if_, void_>, T1, T2, T3>
 
 #endif // BOOST_MPL_NO_FULL_LAMBDA_SUPPORT
 
-} // namespace mpl
-} // namespace boost
+}}
 
 #endif // BOOST_MPL_IF_HPP_INCLUDED

@@ -5,7 +5,7 @@
 // + file: boost/mpl/aux_/has_key_impl.hpp
 // + last modified: 02/may/03
 
-// Copyright (c) 2002-03
+// Copyright 2002-03
 // David Abrahams, Aleksey Gurtovoy
 //
 // Permission to use, copy, modify, distribute and sell this software

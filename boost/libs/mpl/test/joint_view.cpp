@@ -2,7 +2,7 @@
 // + file: libs/mpl/test/joint_view.cpp
 // + last modified: 25/may/03
 
-// Copyright (c) 2001-03
+// Copyright 2001-03
 // Aleksey Gurtovoy
 //
 // Permission to use, copy, modify, distribute and sell this software

@@ -2,11 +2,11 @@
 #ifndef BOOST_MPL_STABLE_PARTITION_HPP_INCLUDED
 #define BOOST_MPL_STABLE_PARTITION_HPP_INCLUDED
 
-// Copyright (c) Eric Friedman 2002-2003
+// Copyright Eric Friedman 2002-2003
 //
-// Use, modification and distribution are subject to the Boost Software 
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
-// at http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
@@ -17,16 +17,11 @@
 #include <boost/mpl/aux_/partition_op.hpp>
 #include <boost/mpl/clear.hpp>
 #include <boost/mpl/reverse_iter_fold.hpp>
-#include <boost/mpl/lambda.hpp>
 #include <boost/mpl/pair.hpp>
-#include <boost/mpl/protect.hpp>
 #include <boost/mpl/aux_/na_spec.hpp>
 #include <boost/mpl/aux_/lambda_support.hpp>
 
-namespace boost {
-namespace mpl {
-
-BOOST_MPL_AUX_AGLORITHM_NAMESPACE_BEGIN
+namespace boost { namespace mpl {
 
 template <
       typename BOOST_MPL_AUX_NA_PARAM(Sequence)
@@ -34,25 +29,18 @@ template <
     >
 struct stable_partition
 {
-private:
-    typedef typename lambda<Predicate>::type pred_;
     typedef typename clear<Sequence>::type cleared_;
-
-public:
     typedef typename reverse_iter_fold<
           Sequence
         , pair< cleared_,cleared_ >
-        , protect< aux::partition_op<pred_> >
+        , aux::partition_op<Predicate>
         >::type type;
 
     BOOST_MPL_AUX_LAMBDA_SUPPORT(2,stable_partition,(Sequence,Predicate))
 };
 
-BOOST_MPL_AUX_AGLORITHM_NAMESPACE_END
+BOOST_MPL_AUX_NA_SPEC(2, stable_partition)
 
-BOOST_MPL_AUX_NA_ALGORITHM_SPEC(2, stable_partition)
-
-} // namespace mpl
-} // namespace boost
+}}
 
 #endif // BOOST_MPL_STABLE_PARTITION_HPP_INCLUDED

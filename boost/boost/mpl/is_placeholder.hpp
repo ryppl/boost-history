@@ -2,11 +2,11 @@
 #ifndef BOOST_MPL_IS_PLACEHOLDER_HPP_INCLUDED
 #define BOOST_MPL_IS_PLACEHOLDER_HPP_INCLUDED
 
-// Copyright (c) Aleksey Gurtovoy 2001-2002
+// Copyright Aleksey Gurtovoy 2001-2004
 //
-// Use, modification and distribution are subject to the Boost Software 
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
-// at http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
@@ -51,12 +51,14 @@ template< typename T >
 struct is_placeholder
 {
     BOOST_STATIC_CONSTANT(bool, value = 
-        sizeof(aux::is_placeholder_helper(static_cast<T*>(0))) == sizeof(aux::yes_tag)
-    );
+          sizeof(aux::is_placeholder_helper(static_cast<T*>(0))) == sizeof(aux::yes_tag)
+        );
+    
+    typedef bool_<value> type;
 };
 
 #endif // BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
 
-}} // namespace boost::mpl
+}}
 
 #endif // BOOST_MPL_IS_PLACEHOLDER_HPP_INCLUDED

@@ -6,7 +6,7 @@
 #ifndef BOOST_MPL_QUOTE_HPP_INCLUDED
 #define BOOST_MPL_QUOTE_HPP_INCLUDED
 
-// Copyright (c) Aleksey Gurtovoy 2000-2004
+// Copyright Aleksey Gurtovoy 2000-2004
 //
 // Distributed under the Boost Software License, Version 1.0. 
 // (See accompanying file LICENSE_1_0.txt or copy at 
@@ -29,7 +29,8 @@
 #   define BOOST_MPL_CFG_NO_QUOTE_TEMPLATE
 #endif
 
-#if defined(BOOST_MPL_NO_AUX_HAS_XXX)
+#if !defined(BOOST_MPL_CFG_NO_IMPLICIT_METAFUNCTIONS) \
+    && defined(BOOST_MPL_NO_AUX_HAS_XXX)
 #   define BOOST_MPL_CFG_NO_IMPLICIT_METAFUNCTIONS
 #endif
 

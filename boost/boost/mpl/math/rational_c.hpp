@@ -3,7 +3,7 @@
 // See http://www.boost.org for updates, documentation, and revision history.
 //-----------------------------------------------------------------------------
 //
-// Copyright (c) 2000-02
+// Copyright 2000-02
 // Aleksey Gurtovoy
 //
 // Permission to use, copy, modify, distribute and sell this software

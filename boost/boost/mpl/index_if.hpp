@@ -2,11 +2,11 @@
 #ifndef BOOST_MPL_INDEX_IF_HPP_INCLUDED
 #define BOOST_MPL_INDEX_IF_HPP_INCLUDED
 
-// Copyright (c) Eric Friedman 2003
+// Copyright Eric Friedman 2003
 //
-// Use, modification and distribution are subject to the Boost Software 
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
-// at http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
@@ -19,18 +19,13 @@
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/iter_fold_if.hpp>
-#include <boost/mpl/lambda.hpp>
 #include <boost/mpl/next.hpp>
-#include <boost/mpl/protect.hpp>
 #include <boost/mpl/void.hpp>
 #include <boost/mpl/aux_/na_spec.hpp>
 #include <boost/mpl/aux_/lambda_support.hpp>
 #include <boost/type_traits/is_same.hpp>
 
-namespace boost {
-namespace mpl {
-
-BOOST_MPL_AUX_AGLORITHM_NAMESPACE_BEGIN
+namespace boost { namespace mpl {
 
 template<
       typename BOOST_MPL_AUX_NA_PARAM(Sequence)
@@ -38,22 +33,16 @@ template<
     >
 struct index_if
 {
-private:
-
-    typedef typename lambda<Predicate>::type pred_;
-
     typedef typename iter_fold_if<
           Sequence
         , int_<0>
-        , protect< next<> >
-        , protect< aux::find_if_pred<pred_> >
+        , next<>
+        , aux::find_if_pred<Predicate>
         >::type result_;
 
     typedef typename end<Sequence>::type not_found_;
-    typedef typename result_::first result_index_;
-    typedef typename result_::second result_iterator_;
-
-public:
+    typedef typename first<result_>::type result_index_;
+    typedef typename second<result_>::type result_iterator_;
 
     typedef typename if_<
           is_same< result_iterator_,not_found_ >
@@ -62,14 +51,10 @@ public:
         >::type type;
 
     BOOST_MPL_AUX_LAMBDA_SUPPORT(2,index_if,(Sequence,Predicate))
-
 };
 
-BOOST_MPL_AUX_AGLORITHM_NAMESPACE_END
+BOOST_MPL_AUX_NA_SPEC(2, index_if)
 
-BOOST_MPL_AUX_NA_ALGORITHM_SPEC(2, index_if)
-
-} // namespace mpl
-} // namespace boost
+}}
 
 #endif // BOOST_MPL_INDEX_IF_HPP_INCLUDED

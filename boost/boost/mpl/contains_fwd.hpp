@@ -2,8 +2,8 @@
 #ifndef BOOST_MPL_CONTAINS_FWD_HPP_INCLUDED
 #define BOOST_MPL_CONTAINS_FWD_HPP_INCLUDED
 
-// Copyright (c) Eric Friedman 2002
-// Copyright (c) Aleksey Gurtovoy 2004
+// Copyright Eric Friedman 2002
+// Copyright Aleksey Gurtovoy 2004
 //
 // Use, modification and distribution are subject to the Boost Software 
 // License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 

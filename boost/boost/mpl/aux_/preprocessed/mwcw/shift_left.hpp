@@ -1,8 +1,8 @@
 
-// Copyright (c) Aleksey Gurtovoy 2000-2004
-// Copyright (c) Jaap Suter 2003
+// Copyright Aleksey Gurtovoy 2000-2004
+// Copyright Jaap Suter 2003
 //
-// Distributed under the Boost Software License,Version 1.0. 
+// Distributed under the Boost Software License, Version 1.0. 
 // (See accompanying file LICENSE_1_0.txt or copy at 
 // http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -52,6 +52,8 @@ struct shift_left
         , typename shift_left_tag<N2>::type
         >::template apply< N1,N2 >::type
 {
+    BOOST_MPL_AUX_LAMBDA_SUPPORT(2, shift_left, (N1, N2))
+
 };
 
 BOOST_MPL_AUX_NA_SPEC2(2, 2, shift_left)

@@ -2,7 +2,7 @@
 #ifndef BOOST_MPL_LAMBDA_FWD_HPP_INCLUDED
 #define BOOST_MPL_LAMBDA_FWD_HPP_INCLUDED
 
-// Copyright (c) Aleksey Gurtovoy 2001-2004
+// Copyright Aleksey Gurtovoy 2001-2004
 //
 // Distributed under the Boost Software License, Version 1.0. 
 // (See accompanying file LICENSE_1_0.txt or copy at 
@@ -44,7 +44,7 @@ namespace boost { namespace mpl {
 template< 
       typename T
     , typename Tag
-    , bool Protect
+    , typename Protect
     > 
 struct lambda;
 

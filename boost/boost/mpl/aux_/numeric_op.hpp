@@ -5,7 +5,7 @@
 
 // NO INCLUDE GUARDS, THE HEADER IS INTENDED FOR MULTIPLE INCLUSION!
 
-// Copyright (c) Aleksey Gurtovoy 2000-2004
+// Copyright Aleksey Gurtovoy 2000-2004
 //
 // Distributed under the Boost Software License, Version 1.0. 
 // (See accompanying file LICENSE_1_0.txt or copy at 
@@ -23,6 +23,7 @@
 #   include <boost/mpl/if.hpp>
 #   include <boost/mpl/aux_/na.hpp>
 #   include <boost/mpl/aux_/na_spec.hpp>
+#   include <boost/mpl/aux_/lambda_support.hpp>
 #   include <boost/mpl/aux_/msvc_eti_base.hpp>
 #   include <boost/mpl/aux_/config/eti.hpp>
 #endif
@@ -130,6 +131,11 @@ template<
 struct AUX778076_OP_NAME
     : AUX778076_OP_N_CALLS(AUX778076_OP_ARITY, N)
 {
+    BOOST_MPL_AUX_LAMBDA_SUPPORT(
+          AUX778076_OP_ARITY
+        , AUX778076_OP_NAME
+        , ( BOOST_MPL_PP_PARAMS(AUX778076_OP_ARITY, N) )
+        )
 };
 
 #define BOOST_PP_ITERATION_PARAMS_1 \
@@ -157,6 +163,15 @@ struct AUX778076_OP_NAME
         >::type >::type
 #endif
 {
+#if AUX778076_OP_ARITY == 2
+    BOOST_MPL_AUX_LAMBDA_SUPPORT(2, AUX778076_OP_NAME, (N1, N2))
+#else
+    BOOST_MPL_AUX_LAMBDA_SUPPORT_SPEC(
+          AUX778076_OP_ARITY
+        , AUX778076_OP_NAME
+        , ( BOOST_MPL_PP_PARTIAL_SPEC_PARAMS(2, N, na) )
+        )
+#endif
 };
 
 BOOST_MPL_AUX_NA_SPEC2(2, AUX778076_OP_ARITY, AUX778076_OP_NAME)
@@ -178,6 +193,11 @@ struct AUX778076_OP_NAME<BOOST_MPL_PP_PARTIAL_SPEC_PARAMS(i_, N, na)>
 #if i_ != 2
     : AUX778076_OP_N_CALLS(i_, N)
 {
+    BOOST_MPL_AUX_LAMBDA_SUPPORT_SPEC(
+          AUX778076_OP_ARITY
+        , AUX778076_OP_NAME
+        , ( BOOST_MPL_PP_PARTIAL_SPEC_PARAMS(i_, N, na) )
+        )
 };
 #endif
 

@@ -1,6 +1,6 @@
 
-// Copyright (c) Aleksey Gurtovoy 2001-2003
-// Copyright (c) Peter Dimov 2001-2003
+// Copyright Aleksey Gurtovoy 2001-2003
+// Copyright Peter Dimov 2001-2003
 //
 // Distributed under the Boost Software License, Version 1.0. 
 // (See accompanying file LICENSE_1_0.txt or copy at 

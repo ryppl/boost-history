@@ -6,7 +6,7 @@
 #ifndef BOOST_MPL_AUX_FULL_LAMBDA_HPP_INCLUDED
 #define BOOST_MPL_AUX_FULL_LAMBDA_HPP_INCLUDED
 
-// Copyright (c) Aleksey Gurtovoy 2001-2004
+// Copyright Aleksey Gurtovoy 2001-2004
 //
 // Distributed under the Boost Software License, Version 1.0. 
 // (See accompanying file LICENSE_1_0.txt or copy at 
@@ -274,17 +274,17 @@ struct BOOST_PP_CAT(le_result,i_)< true_,Tag,F,AUX778076_LAMBDA_PARAMS(i_, L) >
 #   define AUX778076_LAMBDA_TYPEDEF(unused, i_, T) \
     typedef lambda< BOOST_PP_CAT(T, BOOST_PP_INC(i_)), Tag > \
         BOOST_PP_CAT(l,BOOST_PP_INC(i_)); \
-    /**/
+/**/
 
 #   define AUX778076_IS_LE_TYPEDEF(unused, i_, unused2) \
     typedef typename BOOST_PP_CAT(l,BOOST_PP_INC(i_))::is_le \
         BOOST_PP_CAT(is_le,BOOST_PP_INC(i_)); \
-    /**/
+/**/
 
 #   define AUX778076_IS_LAMBDA_EXPR(unused, i_, unused2) \
     BOOST_PP_COMMA_IF(i_) \
     BOOST_PP_CAT(is_le,BOOST_PP_INC(i_))::value \
-    /**/
+/**/
 
 template<
       template< AUX778076_LAMBDA_PARAMS(i_, typename P) > class F
@@ -298,11 +298,11 @@ struct lambda<
         >
 {
     BOOST_MPL_PP_REPEAT(i_, AUX778076_LAMBDA_TYPEDEF, T)
-    BOOST_MPL_PP_REPEAT(i_, AUX778076_IS_LE_TYPEDEF, T)
+    BOOST_MPL_PP_REPEAT(i_, AUX778076_IS_LE_TYPEDEF, unused)
 
-    typedef typename aux::lambda_or<
+    typedef aux::lambda_or<
           BOOST_MPL_PP_REPEAT(i_, AUX778076_IS_LAMBDA_EXPR, unused)
-        >::type is_le;
+        > is_le;
 
     typedef aux::BOOST_PP_CAT(le_result,i_)<
           is_le, Tag, F, AUX778076_LAMBDA_PARAMS(i_, l)

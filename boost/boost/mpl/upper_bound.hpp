@@ -2,11 +2,11 @@
 #ifndef BOOST_MPL_UPPER_BOUND_HPP_INCLUDED
 #define BOOST_MPL_UPPER_BOUND_HPP_INCLUDED
 
-// Copyright (c) Aleksey Gurtovoy 2001-2002
+// Copyright Aleksey Gurtovoy 2001-2004
 //
-// Use, modification and distribution are subject to the Boost Software 
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
-// at http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
@@ -41,12 +41,9 @@
 
 #include <boost/config.hpp>
 
-namespace boost {
-namespace mpl {
+namespace boost { namespace mpl {
 
 #if defined(BOOST_MPL_CFG_STRIPPED_DOWN_UPPER_BOUND_IMPL)
-
-BOOST_MPL_AUX_AGLORITHM_NAMESPACE_BEGIN
 
 // agurt 23/oct/02: has a wrong complexity etc., but at least it works;
 // feel free to contribute a better implementation!
@@ -60,8 +57,6 @@ struct upper_bound
     : find_if< Sequence, bind2<pred_,T,_> >
 {
 };
-
-BOOST_MPL_AUX_AGLORITHM_NAMESPACE_END
 
 #else
 
@@ -119,8 +114,6 @@ struct upper_bound_step_impl
 
 } // namespace aux
 
-BOOST_MPL_AUX_AGLORITHM_NAMESPACE_BEGIN
-
 template<
       typename BOOST_MPL_AUX_NA_PARAM(Sequence)
     , typename BOOST_MPL_AUX_NA_PARAM(T)
@@ -138,13 +131,10 @@ struct upper_bound
         >::type type;
 };
 
-BOOST_MPL_AUX_AGLORITHM_NAMESPACE_END
-
 #endif // BOOST_MPL_CFG_STRIPPED_DOWN_UPPER_BOUND_IMPL
 
-BOOST_MPL_AUX_NA_ALGORITHM_SPEC(2, upper_bound)
+BOOST_MPL_AUX_NA_SPEC(2, upper_bound)
 
-} // namespace mpl
-} // namespace boost
+}}
 
 #endif // BOOST_MPL_UPPER_BOUND_HPP_INCLUDED

@@ -2,8 +2,8 @@
 #ifndef BOOST_MPL_TRANSFORM_HPP_INCLUDED
 #define BOOST_MPL_TRANSFORM_HPP_INCLUDED
 
-// Copyright (c) Aleksey Gurtovoy 2000-2004
-// Copyright (c) David Abrahams 2003-2004
+// Copyright Aleksey Gurtovoy 2000-2004
+// Copyright David Abrahams 2003-2004
 //
 // Distributed under the Boost Software License, Version 1.0. 
 // (See accompanying file LICENSE_1_0.txt or copy at 
@@ -112,8 +112,6 @@ struct reverse_transform2_impl
 BOOST_MPL_AUX_INSERTER_ALGORITHM_DEF(3, transform1)
 BOOST_MPL_AUX_INSERTER_ALGORITHM_DEF(4, transform2)
 
-BOOST_MPL_AUX_AGLORITHM_NAMESPACE_BEGIN
-
 template<
       typename BOOST_MPL_AUX_NA_PARAM(Seq1)
     , typename BOOST_MPL_AUX_NA_PARAM(Seq2OrOperation)
@@ -132,9 +130,7 @@ struct transform
 {
 };
 
-BOOST_MPL_AUX_AGLORITHM_NAMESPACE_END
-
-BOOST_MPL_AUX_NA_ALGORITHM_SPEC(4, transform)
+BOOST_MPL_AUX_NA_SPEC(4, transform)
 
 }}
 

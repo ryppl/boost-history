@@ -1,5 +1,5 @@
 
-// Copyright (c) Aleksey Gurtovoy 2000-2004
+// Copyright Aleksey Gurtovoy 2000-2004
 //
 // Distributed under the Boost Software License, Version 1.0. 
 // (See accompanying file LICENSE_1_0.txt or copy at 
@@ -59,6 +59,8 @@ struct greater
         >::type >::type
 
 {
+    BOOST_MPL_AUX_LAMBDA_SUPPORT(2, greater, (N1, N2))
+
 };
 
 BOOST_MPL_AUX_NA_SPEC2(2, 2, greater)

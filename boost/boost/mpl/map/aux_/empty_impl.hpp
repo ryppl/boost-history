@@ -2,7 +2,7 @@
 #ifndef BOOST_MPL_MAP_AUX_EMPTY_IMPL_HPP_INCLUDED
 #define BOOST_MPL_MAP_AUX_EMPTY_IMPL_HPP_INCLUDED
 
-// Copyright (c) 2003-04 Aleksey Gurtovoy
+// Copyright 2003-04 Aleksey Gurtovoy
 //
 // Use, modification and distribution are subject to the Boost Software 
 // License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 

@@ -1,5 +1,5 @@
 
-// Copyright (c) Aleksey Gurtovoy 2000-2004
+// Copyright Aleksey Gurtovoy 2000-2004
 //
 // Distributed under the Boost Software License, Version 1.0. 
 // (See accompanying file LICENSE_1_0.txt or copy at 
@@ -25,7 +25,7 @@ template< int pos > struct iter
 
 #if BOOST_WORKAROUND(__MWERKS__, BOOST_TESTED_AT(0x3003))
 namespace boost { namespace mpl {
-template< int pos > struct tag< iter<pos> >: void_ {};
+template< int pos > struct tag< iter<pos> > : void_ {};
 }}
 #endif
 

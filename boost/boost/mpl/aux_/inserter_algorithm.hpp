@@ -2,8 +2,8 @@
 #ifndef BOOST_MPL_AUX_INSERTER_ALGORITHM_HPP_INCLUDED
 #define BOOST_MPL_AUX_INSERTER_ALGORITHM_HPP_INCLUDED
 
-// Copyright (c) Aleksey Gurtovoy 2003-2004
-// Copyright (c) David Abrahams 2003-2004
+// Copyright Aleksey Gurtovoy 2003-2004
+// Copyright David Abrahams 2003-2004
 //
 // Use, modification and distribution are subject to the Boost Software 
 // License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
@@ -27,7 +27,6 @@
 #include <boost/mpl/aux_/preprocessor/params.hpp>
 #include <boost/mpl/aux_/preprocessor/default_params.hpp>
 #include <boost/mpl/aux_/common_name_wknd.hpp>
-#include <boost/mpl/aux_/algorithm_namespace.hpp>
 #include <boost/mpl/aux_/na_spec.hpp>
 #include <boost/mpl/aux_/config/ctps.hpp>
 
@@ -37,7 +36,6 @@
 
 #   define BOOST_MPL_AUX_INSERTER_ALGORITHM_DEF(arity, name) \
 BOOST_MPL_AUX_COMMON_NAME_WKND(name) \
-BOOST_MPL_AUX_AGLORITHM_NAMESPACE_BEGIN \
 template< \
       BOOST_MPL_PP_DEFAULT_PARAMS(arity, typename P, na) \
     > \
@@ -87,9 +85,8 @@ struct reverse_##name< BOOST_MPL_PP_PARAMS(BOOST_PP_DEC(arity), P),na > \
         >::type \
 { \
 }; \
-BOOST_MPL_AUX_AGLORITHM_NAMESPACE_END \
-BOOST_MPL_AUX_NA_ALGORITHM_SPEC(arity, name) \
-BOOST_MPL_AUX_NA_ALGORITHM_SPEC(arity, reverse_##name) \
+BOOST_MPL_AUX_NA_SPEC(arity, name) \
+BOOST_MPL_AUX_NA_SPEC(arity, reverse_##name) \
 /**/
 
 #else
@@ -154,8 +151,8 @@ struct reverse_##name \
 { \
 }; \
 BOOST_MPL_AUX_AGLORITHM_NAMESPACE_END \
-BOOST_MPL_AUX_NA_ALGORITHM_SPEC(arity, name) \
-BOOST_MPL_AUX_NA_ALGORITHM_SPEC(arity, reverse_##name) \
+BOOST_MPL_AUX_NA_SPEC(arity, name) \
+BOOST_MPL_AUX_NA_SPEC(arity, reverse_##name) \
 /**/
 
 #endif // BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION

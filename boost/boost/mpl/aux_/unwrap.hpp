@@ -3,8 +3,8 @@
 // See http://www.boost.org for updates, documentation, and revision history.
 //-----------------------------------------------------------------------------
 //
-//  Copyright (c) 2001, 2002 Peter Dimov and Multi Media Ltd.
-//  Copyright (c) 2001 David Abrahams
+//  Copyright 2001, 2002 Peter Dimov and Multi Media Ltd.
+//  Copyright 2001 David Abrahams
 //
 //  Permission to copy, use, modify, sell and distribute this software
 //  is granted provided this copyright notice appears in all copies.

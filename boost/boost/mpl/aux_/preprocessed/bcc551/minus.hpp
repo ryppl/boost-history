@@ -1,5 +1,5 @@
 
-// Copyright (c) Aleksey Gurtovoy 2000-2004
+// Copyright Aleksey Gurtovoy 2000-2004
 //
 // Distributed under the Boost Software License, Version 1.0. 
 // (See accompanying file LICENSE_1_0.txt or copy at 
@@ -49,6 +49,11 @@ template<
 struct minus
     : minus< minus< minus< minus< N1,N2 >, N3>, N4>, N5>
 {
+    BOOST_MPL_AUX_LAMBDA_SUPPORT(
+          5
+        , minus
+        , ( N1, N2, N3, N4, N5 )
+        )
 };
 
 template<
@@ -58,6 +63,11 @@ struct minus< N1,N2,N3,N4,na >
 
     : minus< minus< minus< N1,N2 >, N3>, N4>
 {
+    BOOST_MPL_AUX_LAMBDA_SUPPORT_SPEC(
+          5
+        , minus
+        , ( N1, N2, N3, N4, na )
+        )
 };
 
 template<
@@ -67,6 +77,11 @@ struct minus< N1,N2,N3,na,na >
 
     : minus< minus< N1,N2 >, N3>
 {
+    BOOST_MPL_AUX_LAMBDA_SUPPORT_SPEC(
+          5
+        , minus
+        , ( N1, N2, N3, na, na )
+        )
 };
 
 template<
@@ -78,6 +93,12 @@ struct minus< N1,N2,na,na,na >
         , typename minus_tag<N2>::type
         >::template apply< N1,N2 >::type
 {
+    BOOST_MPL_AUX_LAMBDA_SUPPORT_SPEC(
+          5
+        , minus
+        , ( N1, N2, na, na, na )
+        )
+
 };
 
 BOOST_MPL_AUX_NA_SPEC2(2, 5, minus)

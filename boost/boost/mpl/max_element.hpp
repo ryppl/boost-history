@@ -2,7 +2,7 @@
 #ifndef BOOST_MPL_MAX_ELEMENT_HPP_INCLUDED
 #define BOOST_MPL_MAX_ELEMENT_HPP_INCLUDED
 
-// Copyright (c) Aleksey Gurtovoy 2000-2002
+// Copyright Aleksey Gurtovoy 2000-2004
 //
 // Use, modification and distribution are subject to the Boost Software 
 // License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
@@ -19,18 +19,16 @@
 #include <boost/mpl/begin_end.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/apply.hpp>
-#include <boost/mpl/lambda.hpp>
 #include <boost/mpl/aux_/common_name_wknd.hpp>
 #include <boost/mpl/aux_/na_spec.hpp>
 
-namespace boost {
-namespace mpl {
+namespace boost { namespace mpl {
 
 BOOST_MPL_AUX_COMMON_NAME_WKND(max_element)
 
 namespace aux {
 
-template< typename Predicate >
+template< typename Predicate, int not_le_ = 0 >
 struct select_max
 {
     template< typename OldIterator, typename Iterator >
@@ -53,30 +51,21 @@ struct select_max
 } // namespace aux 
 
 
-BOOST_MPL_AUX_AGLORITHM_NAMESPACE_BEGIN
-
 template<
       typename BOOST_MPL_AUX_NA_PARAM(Sequence)
     , typename Predicate = less<_,_>
     >
 struct max_element
-{
- private:
-    typedef typename lambda<Predicate>::type pred_;
-
- public:
-    typedef typename iter_fold<
+    : iter_fold<
           Sequence
         , typename begin<Sequence>::type
-        , protect< aux::select_max<pred_> >
-        >::type type;
+        , aux::select_max<Predicate>
+        >
+{
 };
 
-BOOST_MPL_AUX_AGLORITHM_NAMESPACE_END
+BOOST_MPL_AUX_NA_SPEC(1, max_element)
 
-BOOST_MPL_AUX_NA_ALGORITHM_SPEC(1, max_element)
-
-} // namespace mpl
-} // namespace boost
+}}
 
 #endif // BOOST_MPL_MAX_ELEMENT_HPP_INCLUDED
