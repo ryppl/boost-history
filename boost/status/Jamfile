@@ -116,7 +116,6 @@ ECHO ****************************************************** )" ;
         ) ELSE (
           if EXIST "$(<:S=.failure)". del /f/q "$(<:S=.failure)".
           echo succeeded > "$(<:S=.success)"
-          rem echo succeeded > $(>)
         )
     }
 
@@ -129,7 +128,6 @@ ECHO ****************************************************** )" ;
         ) ELSE (
           if EXIST "$(<:S=.success)". del /f/q "$(<:S=.success)".
           echo failed > "$(<:S=.failure)"
-          rem echo failed > $(>)
             
           echo *
           echo ***************** failed above test: $(<:B:S=) ********************
@@ -141,7 +139,51 @@ ECHO ****************************************************** )" ;
 else
 {
     CATENATE = "cat " ;
-# need UNIX actions    
+    CATENATE1 = "if [ -a \"" ;
+    CATENATE2 = "\" ] ; then
+      cat \"" ;
+    CATENATE3 = "\" ; echo ******************************************************
+      fi" ;
+    
+    actions failed-test-file bind output-file source-files
+    {
+        echo "$(source-files)" > $(<:S=.test)
+        if [ -a "$(>)" ] ; then
+          if [ -a "$(<:S=.success)" ] ; then
+                $(RM) "$(<:S=.success)"
+          fi
+          echo "failed" > $(<:S=.failure)
+          echo "*"
+          echo "***************** failed above test: $(<:B:S=) ********************"
+          $(CATENATE1)$(output-file)$(CATENATE2)$(output-file)$(CATENATE3)
+          echo "*"
+        else
+          if [ -a "$(<:S=.failure)" ] ; then
+                $(RM) "$(<:S=.failure)"
+          fi
+          echo "succeeded" > "$(<:S=.success)" 
+        fi
+    }
+
+    actions succeeded-test-file bind output-file source-files
+    {
+        echo "$(source-files)" > "$(<:S=.test)"
+        if [ -a "$(>)" ] ; then
+          if [ -a "$(<:S=.failure)" ] ; then
+                $(RM) "$(<:S=.failure)"
+          fi
+          echo "succeeded" > "$(<:S=.success)"
+        else
+          if [ -a "$(<:S=.success)" ] ; then
+                $(RM) "$(<:S=.success)" 
+          fi
+          echo "failed" > "$(<:S=.failure)"
+          echo "*"
+          echo "***************** failed above test: $(<:B:S=) ********************"
+          $(CATENATE1)$(output-file)$(CATENATE2)$(output-file)$(CATENATE3)
+          echo "*"
+        fi
+    }
 }
 
 rule declare-build-succeed-test ( test-type : dependency-type )
