@@ -26,34 +26,24 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
 
   namespace detail {
 
-    // select symmetric or hermitian traits 
-
-    struct meta_symm_adaptor {
-      template <typename M> 
-      struct traits { typedef symmetric_adaptor_traits<M> type; }; 
-    };
-    struct meta_herm_adaptor {
-      template <typename M> 
-      struct traits { typedef hermitian_adaptor_traits<M> type; }; 
-    };
-
-    template <typename ScalarT, typename M> 
-    struct symm_herm_adaptor_traits {}; 
-    template <typename M>
-    struct symm_herm_adaptor_traits<float, M> {
-      typedef typename meta_symm_adaptor::template traits<M>::type type; 
+    // select symmetric or hermitian matrix structure 
+    template <typename T> 
+    struct symm_herm_t {}; 
+    template<>
+    struct symm_herm_t<float> {
+      typedef symmetric_t type;
     }; 
-    template <typename M>
-    struct symm_herm_adaptor_traits<double, M> {
-      typedef typename meta_symm_adaptor::template traits<M>::type type; 
+    template<>
+    struct symm_herm_t<double> {
+      typedef symmetric_t type;
     }; 
-    template <typename M>
-    struct symm_herm_adaptor_traits<std::complex<float>, M> {
-      typedef typename meta_herm_adaptor::template traits<M>::type type; 
+    template<>
+    struct symm_herm_t<std::complex<float> > {
+      typedef hermitian_t type;
     }; 
-    template <typename M>
-    struct symm_herm_adaptor_traits<std::complex<double>, M> {
-      typedef typename meta_herm_adaptor::template traits<M>::type type; 
+    template<>
+    struct symm_herm_t<std::complex<double> > {
+      typedef hermitian_t type;
     }; 
 
   }
