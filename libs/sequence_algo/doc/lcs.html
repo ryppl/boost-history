@@ -108,26 +108,44 @@ for each element in the first sequence from the first to the last
 			of the Subsequence. Each algorithm has two overloaded implementations, one that takes an
 			allocator object for memory management and the other that provides a default.</p>
 <pre>
-template&lt;typename size_type, typename ItIn1, typename ItIn2, typename ItSubSeq&gt;
-size_type longest_common_subsequence(ItIn1 begin_first, ItIn1 end_first,
-                                     ItIn2 begin_second, ItIn2 end_second,
-                                     ItSubSeq subsequence);
-</pre>
-<pre>
-template&lt;typename size_type, typename Alloc, typename ItIn1, typename ItIn2, typename ItSubSeq&gt;
-size_type longest_common_subsequence(ItIn1 begin_first, ItIn1 end_first,
-                                     ItIn2 begin_second, ItIn2 end_second,
-                                     ItSubSeq subsequence, Alloc &alloc);
-</pre>
-<pre>
-size_type longest_common_subsequence_length(ItIn1 begin_first, ItIn1 end_first,
-                                            ItIn2 begin_second, ItIn2 end_second);
-</pre>
-<pre>
+template&lt;typename size_type,
+         typename ItIn1,
+         typename ItIn2,
+         typename ItSubSeq&gt;
+inline
+size_type
+longest_common_subsequence(ItIn1    begin_first,
+                           ItIn1    end_first,
+                           ItIn2    begin_second,
+                           ItIn2    end_second,
+                           ItSubSeq subsequence)
+
+
+template&lt;typename size_type,
+         typename Alloc,
+         typename ItIn1,
+         typename ItIn2,
+         typename ItSubSeq&gt;
+size_type
+longest_common_subsequence(ItIn1     begin_first,
+                           ItIn1     end_first,
+                           ItIn2     begin_second,
+                           ItIn2     end_second,
+                           ItSubSeq  subsequence,
+                           Alloc    &alloc)
+
+template&lt;typename size_type, typename ItIn1, typename ItIn2&gt;
+inline
+size_type
+longest_common_subsequence_length(ItIn1 begin_first, ItIn1 end_first,
+                                  ItIn2 begin_second, ItIn2 end_second)
+
+
 template&lt;typename size_type, typename Alloc, typename ItIn1, typename ItIn2&gt;
-size_type longest_common_subsequence_length(ItIn1 begin_first, ItIn1 end_first,
-                                            ItIn2 begin_second, ItIn2 end_second,
-                                            Alloc &alloc);
+size_type
+longest_common_subsequence_length(ItIn1 begin_first, ItIn1 end_first,
+                                  ItIn2 begin_second, ItIn2 end_second,
+                                  Alloc &alloc)
 </pre>
 			<h2>Example</h2>
 <pre>
@@ -138,17 +156,20 @@ test_character_seq(const char *str1, const char *str2)
 
     std::string subsequence;
     signed short llcs;
-    llcs = boost::longest_common_subsequence&lt;signed short&gt;(str1, str1+strlen(str1),
-                                                           str2, str2+strlen(str2),
-                                                           std::back_inserter&lt;&gt;(subsequence));
+    llcs = boost::longest_common_subsequence&lt;
+               signed short&gt;(
+                   str1, str1+strlen(str1),
+                   str2, str2+strlen(str2),
+                   std::back_inserter&lt;&gt;(subsequence));
 
     std::cout &lt;&lt; "Longest Common Subsequence: \"" &lt;&lt; subsequence
               &lt;&lt; "\"" &lt;&lt; std::endl
               &lt;&lt; "Length is " &lt;&lt; llcs &lt;&lt; std::endl;
               
     BOOST_ASSERT(llcs == static_cast&lt;signed short&gt;(subsequence.size()));
-    BOOST_ASSERT(llcs == boost::longest_common_subsequence_length&lt;signed short&gt;(str1, str1+strlen(str1),
-                                                                                str2, str2+strlen(str2)));
+    BOOST_ASSERT(llcs == boost::longest_common_subsequence_length&lt;
+                             signed short&gt;(str1, str1+strlen(str1),
+                                           str2, str2+strlen(str2)));
 }
 </pre>
 			<h2>Test Program</h2>
