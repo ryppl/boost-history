@@ -1414,6 +1414,133 @@ it's \emph{obvious} that's the above code does - even although
 it's all templates - something that you cannot say about the 
 original version.
 
+\subsubsection{iter\_fold/iter\_find as two main iteration 
+algortihms}
+
+For the purpose of examination a little bit more of the 
+library's internal structure, let's look at how the 
+\code{max\_element} algorithm from the above example is 
+implemented. One might expect that \emph{now} we will again 
+see all these awkward partial specializations, esoteric 
+patterns matching, etc. Well, let's see:
+
+{\footnotesize
+\begin{verbatim}
+namespace aux {
+template< typename Predicate >
+struct select_max
+{
+    template< typename OldIterator, typename Iterator >
+    struct apply
+    {
+        typedef typename mpl::apply<
+              Predicate
+            , typename OldIterator::type
+            , typename Iterator::type
+            >::type condition_;
+
+        typedef typename mpl::select_if<
+              condition_
+            , Iterator
+            , OldIterator
+            >::type type;
+    };
+};
+} // namespace aux 
+
+template<
+      typename Sequence
+    , typename Predicate
+    >
+struct max_element
+{
+    typedef typename mpl::iter_fold<    
+          Sequence
+        , typename mpl::begin<Sequence>::type
+        , aux::select_max<Predicate>
+        >::type type;
+};
+\end{verbatim}
+}
+
+First thing to notice here is that this algorithm is in fact 
+implemented in terms of another one - \code{iter\_fold}. 
+In fact, this is probably the most important point of the 
+example, because all other generic sequence algorithms in 
+the library are implemented either in terms of \code{iter\_fold}
+(or it's counterpart \code{find\_if}) as well. In particular, 
+that means that if you would ever need to implement your own 
+sequence algorithm, there is a huge chance that you'll be able 
+to do it using either \code{iter\_fold} or \code{find\_if} - 
+in other words, that means that you won't have to resort to 
+implementing hand-crafted iteration and everything that is 
+associated with it (patterns matching/special cases for 
+termination condition, workarounds for lack of partial 
+specialization, etc.) yourself. Also, that means that if the 
+library took special care for making such iteration as much 
+effective as it's possible (for example, using such techniques 
+as recursion unrolling), your brand-new algorithm will 
+automatically benefit from these optimizations as well. And of 
+course it means that your algorithm will work with any 
+sequence that is a model of \code{boost::mpl}'s 
+ForwardSequence, because it's the only requirement of 
+\code{iter\_fold}/\code{find\_if} pair.
+
+\code{iter\_fold} is basically a compile-time equivalent of 
+\code{fold}/\code{reduce} functions that are one of the basic 
+and well-known primitives in many functional programming 
+languages. A more familiar to a \Cpp\ programmer analogy would 
+be \code{std::accumulate} algorithm from the \Cpp\ standard 
+library. \code{iter\_fold} is defined in \code{boost::mpl} 
+as follows:
+
+{\footnotesize
+\begin{verbatim}
+template<
+      typename Sequence
+    , typename InitialState
+    , typename ForwardOp
+    , typename BackwardOp = identity<_1>
+    >
+struct iter_fold
+{
+    typedef implementation-defined type;
+};
+\end{verbatim}
+}
+
+The algorithm returns the result of two-way successive 
+applications of binary \code{ForwardOp} and \code{BackwardOp}
+operations to iterators in range 
+[\code{begin<Sequence>::type}, \code{end<Sequence>::type}) 
+and previous result of an operation; 
+the \code{InitialState} is logically placed before the 
+sequence and included in the forward traversal. The result 
+\code{type} is identical to the \code{InitialState} if the 
+sequence is empty. 
+The library also provides a little bit more high-level 
+\code{fold} and \code{fold\_reverse} algorithms that wrap 
+\code{iter\_fold} to accommodate it's most common usage 
+patterns.
+
+You may wonder why \code{find\_if} - which seems to be much 
+more high-level - is placed on the same line with the 
+\code{iter\_fold}. Well, one thing about it is that 
+\code{find\_if} is the only sequence algorithm that is not 
+itself implemented using \code{iter\_fold}. The key difference 
+is that \code{find\_if} \emph{terminates} the iteration as 
+soon as its predicate satisfied, while \code{iter\_fold} 
+always iterates the whole sequence (backward and forward). 
+An obviuos generalization here would be to add yet another 
+parameter to \code{iter\_fold} so it become possible to 
+implement everything in terms of the single iteration 
+metafunction, but we decided that this would be an 
+overgeneralization. For one, it would mean that the 
+termination codition would be always calculated even 
+although for most uses of \code{iter\_fold} it's not needed. 
+An overhead like this just goes against the library's strike 
+for maximum compile-time performance.
+
 
 \subsubsection{Sequences of Types, but there are Shorcuts for Numbers}
 
@@ -1593,9 +1720,6 @@ typedef mpl::find_if< sequences,size_pred >::type itor;
 \end{enumerate}
 
  
-  \subsubsection{\code{iter\_fold}/\code{iter\_find} as two main 
-    iteration algortihms}
-  \subsubsection{why iterators}
   \subsubsection{sequences of types, but there are shorcuts for numbers}
 
   \subsubsection{A Variety of Sequences}
