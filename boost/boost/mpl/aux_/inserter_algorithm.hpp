@@ -73,14 +73,14 @@ template< \
       BOOST_MPL_PP_PARAMS(BOOST_PP_DEC(arity), typename P) \
     > \
 struct reverse_##name< BOOST_MPL_PP_PARAMS(BOOST_PP_DEC(arity), P),na > \
-    : if_< has_push_front<P1> \
-        , aux::name##_impl< \
-              BOOST_MPL_PP_PARAMS(BOOST_PP_DEC(arity), P) \
-            , front_inserter< typename clear<P1>::type > \
-            > \
+    : if_< has_push_back<P1> \
         , aux::reverse_##name##_impl< \
               BOOST_MPL_PP_PARAMS(BOOST_PP_DEC(arity), P) \
             , back_inserter< typename clear<P1>::type > \
+            > \
+        , aux::name##_impl< \
+              BOOST_MPL_PP_PARAMS(BOOST_PP_DEC(arity), P) \
+            , front_inserter< typename clear<P1>::type > \
             > \
         >::type \
 { \
@@ -126,14 +126,14 @@ template< \
       BOOST_MPL_PP_PARAMS(BOOST_PP_DEC(arity), typename P) \
     > \
 struct def_reverse_##name##_impl \
-    : if_< has_push_front<P1> \
-        , aux::name##_impl< \
-              BOOST_MPL_PP_PARAMS(BOOST_PP_DEC(arity), P) \
-            , front_inserter< typename clear<P1>::type > \
-            > \
+    : if_< has_push_back<P1> \
         , aux::reverse_##name##_impl< \
               BOOST_MPL_PP_PARAMS(BOOST_PP_DEC(arity), P) \
             , back_inserter< typename clear<P1>::type > \
+            > \
+        , aux::name##_impl< \
+              BOOST_MPL_PP_PARAMS(BOOST_PP_DEC(arity), P) \
+            , front_inserter< typename clear<P1>::type > \
             > \
         >::type \
 { \

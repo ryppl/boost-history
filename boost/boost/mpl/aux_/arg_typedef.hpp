@@ -10,6 +10,10 @@
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
+// $Source$
+// $Date$
+// $Revision$
+
 #include <boost/mpl/aux_/config/lambda.hpp>
 #include <boost/mpl/aux_/config/workaround.hpp>
 
