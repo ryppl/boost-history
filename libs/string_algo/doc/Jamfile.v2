@@ -1,13 +1,7 @@
 project string_algo ;
-import boostbook : boostbook ; 
-import doxygen : doxygen ;
-import toolset : using ;
 
-using boostbook : /cygdrive/d/docbook/xsl/
-				: /cygdrive/d/docbook/dtd/
-				;
-
-doxygen string_algo.doxygen : 	
+doxygen reference 
+	: 	
 	../../../boost/string_algo.hpp
 	../../../boost/string_algo_regex.hpp
 	../../../boost/string_algo/classification.hpp
@@ -30,8 +24,21 @@ doxygen string_algo.doxygen :
 	../../../boost/string_algo/compare.hpp
 	../../../boost/string_algo/regex.hpp
 	../../../boost/string_algo/regex2.hpp
-							;
+	:
+	<doxygen:param>HIDE_UNDOC_MEMBERS=YES
+	<doxygen:param>EXTRACT_PRIVATE=NO
+	<doxygen:param>ENABLE_PREPROCESSING=YES
+	<doxygen:param>MACRO_EXPANSION=YES
+	<doxygen:param>EXPAND_ONLY_PREDEF=YES
+	<doxygen:param>SEARCH_INCLUDES=YES
+	<doxygen:param>PREDEFINED="BOOST_STRING_TYPENAME=typename BOOST_STATIC_CONSTANT="
+	<prefix>boost
+	;
 		
-boostbook string_algo : string_algo.doxygen ;
+boostbook string_algo 
+	: 
+	string_algo.xml 
+	;
+
 
 

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE library PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<section id="string_algo.usage" last-revision="$Date$">
+	<title>Usage</title>
+
+	<using-namespace name="boost"/>
+	<using-namespace name="boost::string_algo"/>
+
+
+	<section>
+		<title>Basis Usage</title>
+		<para>
+			Using the algorithms is pretty straithforward. Let have a look at the first example:
+			<para>
+				<programlisting>
+	#include &lt;boost/string_algo.hpp&gt;
+	using namespace std;
+	using namespace boost;
+
+	// ...
+
+	string str1(" hello world! ");
+	trim( to_lower(str1) );  // str1 = "HELLO WORLD!"
+
+	string str2=ireplace_first_copy(str1,"hello","goodbye"); // str2 = "goodbye WORLD!"
+				</programlisting>
+			</para>
+			<para>
+				This example converts the str1 to upper case and trims spaces from the start and the end
+				of the string. str2 is then create as a copy of str1 with 'hello' replace with 'goodbye'.
+				This example demonstrates several important concepts used in the library.
+			</para>
+			<itemizedlist>
+				<listitem>
+					<para><emphasis role="bold">Container paramters:</emphasis>
+						Unlike the STL algorithms, container parameters are not specified in form
+						of iterators. STL convetion allows great flexibility with a little overhead,
+						but it has several limitation. It is not possible to stack algorithms together, 
+						because a container is passed in two parameters, so it is not possible to use 
+						a return value from other algorithm. Also it is clumsy to use. It is easier to write
+						<code>to_lower(str1)</code>, then <code>to_lower(str1.begin(), str1.end())</code>.
+					</para>
+					<para>
+						The magic of <link linkend="string_algo.container_traits">container_traits</link> 
+						provides a uniform way of handling different containers. 
+						If there is a need to pass a pair of iterators, <classname>iterator_range</classname>
+						can be used to packege iterators into a structure with the container iterface.
+					</para>
+				</listitem>
+				<listitem>
+					<para><emphasis role="bold">Copy vs. Mutable:</emphasis>
+						Many algorithms in the library are performing a transformation of the input. 
+						Transformation can be done in-place, mutating the input sequence, or a copy 
+						of the transformed input can be created, leaving the input intact. None of 
+						these possibilities is superior to the other one and both have different 
+						advantages and disadvantages. For this reason, both are provided with the library. 
+					</para>
+				</listitem>
+				<listitem>
+					<para><emphasis role="bold">Algorithm stacking:</emphasis>
+						Copy versions return a transformed input as a result. Mutable variants return 
+						a reference to the input. Thus both versions allow a simple chaining of
+						transformations within one expression (i.e. one can write 
+						<code>trim_copy(toupper_copy(s))</code> as well as <code>trim(to_upper(s))</code>). 
+					</para>
+				</listitem>
+				<listitem>
+					<para><emphasis role="bold">Naming:</emphasis>
+						Naming follows the conventions from the Standard C++ Library. If there is a 
+						copy and mutable version of the same algorithm, the mutable version has no suffix 
+						and the copy version has suffix '_copy'. 
+						Some Algorithms have prefix 'i' (e.g. <functionname>ifind_first</functionname>).
+						This prefix identifies that the algorithm work in case-insensitive manner.
+					</para>
+				</listitem>
+			</itemizedlist>
+		</para>		
+	</section>
+	<section>
+		<title>Find algorithms</title>
+		<para>
+			The library contains a set of find algorithms. Here is an example:
+			<programlisting>
+	#include &lt;boost/string_algo.hpp&gt;
+	#include &lt;algorithm&gt;
+	#include &lt;functional&gt;
+
+	using namespace std;
+	using namespace boost;
+
+	// ...
+
+	char text[]="hello dolly!";
+	iterator_range&lt;char*&gt; result=find_last(text,"ll");
+
+	transform( result.begin(), result.end(), result.begin(), bind2nd( plus:&lt;char&gt;(), 1 );
+	// text = "hello dommy!"			
+
+	to_upper( result ); // text = "hello doMMy!"
+			</programlisting>
+		</para>
+		<para>
+			We use <functionname>find_last</functionname> to search the <code>text</code> for "ll".
+			The result it given in the <classname>iterator_range</classname>. This range delimits the
+			part of the input which matches find criteria. In our example it is the last occurence of "ll".
+			
+			s we can see, input of the <functionname>find_last</functionname> algorithm can be also 
+			char[] because it is supported by <link linkend="string_algo.container_traits">container_traits</link>.
+
+			Following lines transform the result. Notice, that <classname>iterator_range</classname> have familiar 
+			<code>begin()</code> and <code>end()</code> methods do it can be used like any STL container.
+		</para>
+	</section>
+</section>
