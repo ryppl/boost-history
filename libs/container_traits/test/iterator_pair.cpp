@@ -20,11 +20,11 @@ void check_iterator_pair()
     const_pair_t             const_pair = std::make_pair( begin( vec ), end( vec ) );
     
     BOOST_STATIC_ASSERT(( is_same< container_traits<pair_t>::value_type, 
-                          std::iterator_traits<pair_t::first_type>::value_type>::value ));
+                          detail::iterator_traits<pair_t::first_type>::value_type>::value ));
     BOOST_STATIC_ASSERT(( is_same< container_traits<pair_t>::iterator, pair_t::first_type >::value ));
     BOOST_STATIC_ASSERT(( is_same< container_traits<pair_t>::const_iterator, pair_t::first_type >::value ));
     BOOST_STATIC_ASSERT(( is_same< container_traits<pair_t>::difference_type,                           
-                          std::iterator_traits<pair_t::first_type>::difference_type >::value ));
+                          detail::iterator_traits<pair_t::first_type>::difference_type >::value ));
     BOOST_STATIC_ASSERT(( is_same< container_traits<pair_t>::size_type, std::size_t >::value ));
     BOOST_STATIC_ASSERT(( is_same< container_traits<pair_t>::result_iterator, pair_t::first_type >::value ));
     BOOST_STATIC_ASSERT(( is_same< container_traits<const_pair_t>::result_iterator, const_pair_t::first_type >::value ));
