@@ -4,6 +4,8 @@
 
 // Examples for text-based serialization
 
+// note: the std::pair and std::string serialization examples are currently broken
+
 #include <iostream>                         // std::cout
 #include <fstream>                          // std::fstream
 #include <string>                           // std::readline

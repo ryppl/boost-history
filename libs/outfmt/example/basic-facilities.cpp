@@ -68,7 +68,7 @@ int main()
              << boost::io::formatob( s )
              << '\n';
 
-   // [results]: std::string = [ W, a, r, u, m,  , b, i, s, t,  , d, u,  , n, i, c, h, t,  , d, a, ? ]
+   // [results]: std::string = Warum bist du nicht da?
 
    // Iterator ranges in a std::pair
 
@@ -76,7 +76,7 @@ int main()
              << boost::io::formatob( boost::io::range( ip ))
              << '\n';
 
-   // [results]: int[ 4 ] = [ 3, 6, 9, 12 ]
+   // [results]: int[ 4 ] = [ 3, 6 ]
 
    return( 0 );
 }

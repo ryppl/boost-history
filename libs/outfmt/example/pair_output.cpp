@@ -49,7 +49,7 @@ int main()
              << boost::io::formatob( p, pairfmt3 )
              << '\n';
 
-   // [results]: pair< string, int > = "Hello" ==> 10
+   // [results]: pair< string, int > = Hello ==> 10
 
    std::cout << "pair< string, int > = "
              << boost::io::formatob
@@ -59,7 +59,7 @@ int main()
                 )
              << '\n' << '\n';
 
-   // [results]: pair< string, int > = ( "Hello"; 10 )
+   // [results]: pair< string, int > = ( Hello; 10 )
 
    // std::map output examples
 
@@ -67,7 +67,7 @@ int main()
              << boost::io::formatob( m, boost::io::containerfmt( pairfmt1 ))
              << '\n' << '\n';
 
-   // [results]: map< string, string > = [ ( "Abscheid Nehmen", "Farewell" ), ( "Engel", "Angel" ), ( "Mas Alla", "Beyond" ), ( "Wenn Das Liebe Ist", "If This Is Love" ) ]
+   // [results]: map< string, string > = [ ( Abscheid Nehmen, Farewell ), ( Engel, Angel ), ( Mas Alla, Beyond ), ( Wenn Das Liebe Ist, If This Is Love ) ]
 
    std::cout << "map< string, string > = "
              << boost::io::formatob( m, boost::io::containerfmt( pairfmt1 )) // [note]: pairfmt1 is reused
@@ -77,10 +77,10 @@ int main()
    /* [results]:
 
       map< string, string > =
-      ( "Abscheid Nehmen", "Farewell" )
-      ( "Engel", "Angel" )
-      ( "Mas Alla", "Beyond" )
-      ( "Wenn Das Liebe Ist", "If This Is Love" )
+      ( Abscheid Nehmen, Farewell )
+      ( Engel, Angel )
+      ( Mas Alla, Beyond )
+      ( Wenn Das Liebe Ist, If This Is Love )
    */
 
    std::cout << "map< string, string > = "
@@ -94,10 +94,10 @@ int main()
    /* [results]:
 
       map< string, string > =
-      ( "Abscheid Nehmen", "Farewell" )
-      ( "Engel", "Angel" )
-      ( "Mas Alla", "Beyond" )
-      ( "Wenn Das Liebe Ist", "If This Is Love" )
+      ( Abscheid Nehmen, Farewell )
+      ( Engel, Angel )
+      ( Mas Alla, Beyond )
+      ( Wenn Das Liebe Ist, If This Is Love )
    */
 
    // changing the way std::pair is outputted
@@ -110,10 +110,10 @@ int main()
    /* [results]:
 
       map< string, string > =
-      ==> ( "Abscheid Nehmen" | "Farewell" )
-      ==> ( "Engel" | "Angel" )
-      ==> ( "Mas Alla" | "Beyond" )
-      ==> ( "Wenn Das Liebe Ist" | "If This Is Love" )
+      ==> ( Abscheid Nehmen | Farewell )
+      ==> ( Engel | Angel )
+      ==> ( Mas Alla | Beyond )
+      ==> ( Wenn Das Liebe Ist | If This Is Love )
    */
 
    std::cout << "map< string, string > = "
@@ -124,10 +124,10 @@ int main()
    /* [results]:
 
       map< string, string > =
-         "Abscheid Nehmen" ==> "Farewell"
-         "Engel" ==> "Angel"
-         "Mas Alla" ==> "Beyond"
-         "Wenn Das Liebe Ist" ==> "If This Is Love"
+         Abscheid Nehmen ==> Farewell
+         Engel ==> Angel
+         Mas Alla ==> Beyond
+         Wenn Das Liebe Ist ==> If This Is Love
    */
 
    // std::complex output examples

@@ -58,13 +58,13 @@ int main()
    names.push_back( "James" );
    names.push_back( "Corina" );
 
-   // [1]: "John", "James", "Corina"
+   // [1]: John, James, Corina
 
    std::cout << "[1]: "
              << boost::io::formatob( names ).format( "", "" )
              << '\n';
 
-   // [2]: {"John"}, {"James"}, {"Corina"}
+   // [2]: {John}, {James}, {Corina}
 
    std::cout << "[2]: "
              << boost::io::formatob
@@ -97,8 +97,6 @@ int main()
                 .format( "", "" )
              << '\n';
 
-   // [3]: {[0] "John"}, {[1] "James"}, {[2] "Corina"}
-
    std::cout << "[3]: "
              << boost::io::formatob
                 (
@@ -125,9 +123,9 @@ int main()
 
    /*
       [5]:
-      ["John"]
-      ["James"]
-      ["Corina"]
+      [John]
+      [James]
+      [Corina]
    */
 
    std::cout << "[5]:"
