@@ -53,7 +53,8 @@ void run_test_cases( BOOST_EXPLICIT_TEMPLATE_TYPE(Block) )
   std::size_t   n,
                 ul_width    = std::numeric_limits<unsigned long>::digits,
                 block_width = std::numeric_limits<Block>::digits;
-  unsigned long numbers[]   = { 0, 40247,
+  unsigned long numbers[]   = { 0, 1, 40247,
+                                std::numeric_limits<unsigned long>::max() >> 1,
                                 std::numeric_limits<unsigned long>::max() };
 
   //=====================================================================
@@ -78,7 +79,7 @@ void run_test_cases( BOOST_EXPLICIT_TEMPLATE_TYPE(Block) )
     n = std::size_t(0.7 * double(block_width));
     Tests::from_unsigned_long(n, number);
 
-    n = block_width;
+    n = 1 * block_width;
     Tests::from_unsigned_long(n, number);
 
     n = std::size_t(1.3 * double(block_width));
