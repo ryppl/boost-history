@@ -1256,6 +1256,10 @@ rule subvariant-target
 
     if $(gTARGET_LIBS($(<)))
     {
+        # protect target variables against modification while
+        # lib dependencies are built.
+        local $(gTARGET_VARIABLES) ;
+        
         # extract the simple properties from dependent-properties
         local simple-properties = $(gBUILD_PROPERTIES) ;
         segregate-free-properties simple-properties ;

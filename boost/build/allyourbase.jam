@@ -1062,6 +1062,11 @@ rule Objects
         }
         _r += $(_n) ;
     }
+    
+    # be sure that variables set up due to build tools
+    # are transferred to intermediate targets.
+    set-target-variables $(_r) ;
+    
     return $(_r) ;
 }
 
