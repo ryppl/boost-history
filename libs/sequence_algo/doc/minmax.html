@@ -12,115 +12,78 @@
 <center>
 <h1>
 Minmax_element</h1></center>
-The minmax library is composed of a single header <tt><a href="minmax.hpp">&lt;boost/minmax.hpp></a></tt>.
-I always thought it a waste to have to call two functions to compute the
+
+<p>The minmax library is composed of a single header <tt><a href="minmax.hpp">&lt;boost/minmax.hpp></a></tt>.
+I always thought it is a waste to have to call two functions to compute the
 extent of a range, performing two passes over the input, when one should
 be enough. The first part implements the function templates
 <tt>minmax</tt>
-and <tt>minmax_element</tt> as a straightforward extension of the C++ standard.
-The second part proposes variants which can usually not be computed by
-the minmax algorithm. If you are interested about
+and <tt>minmax_element</tt> as straightforward extensions of the C++
+standard. (Please note: the intent is not to fix the known defaults of
+<tt>std::min</tt>
+and <tt>std::max</tt>, but to add one more algorithms that combines both; see the
+<a href="#no-fix">rationale</a>.)</p>
+
+<p>The second part proposes variants that can usually not be computed by
+the minmax algorithm, and which are more flexible in case some elements are equal.
+Those variants could have been also provided with policy-based design,
+but I ruled against that (see <a href="#no-policy">rationale</a>).
+</p>
+
+<p>If you are interested about
 <a href="#Performance">performance</a>,
 you will see that <tt>minmax_element</tt> is just slightly less efficient
-than a single <tt>min_element</tt> or <tt>max_element</tt>. In particular,
+than a single <tt>min_element</tt> or <tt>max_element</tt>, and thus
+twice as efficient as two separate calls to <tt>min_element</tt> and
+<tt>max_element</tt>. From a
+theoretical standpoint,
 all the <tt>minmax_element</tt> functions perform at most
 <tt>3n/2+1</tt>
-comparisons and exactly n increments of the <tt>ForwardIterator</tt>.
+comparisons and exactly n increments of the
+<tt>ForwardIterator</tt>.</p>
+
 <h3>
 Synopsis</h3>
 
 <pre>namespace boost {
 
-&nbsp; // Proposed standard extensions, eventually in namespace std
+  // Minmax
 
-&nbsp; template &lt;class T>
-&nbsp; std::pair&lt;const T&amp;,const T&amp;>
-&nbsp; minmax(const T&amp; a, const T&amp; b);
+  template &lt;class T>
+  std::pair&lt;const T&amp;,const T&amp;>
+  minmax(const T&amp; a, const T&amp; b);
 
-&nbsp; template &lt;class T, class <a href="http://www.sgi.com/tech/stl/  BinaryPredicate.html">BinaryPredicate</a>>
-&nbsp; std::pair&lt;const T&amp;,const T&amp;>
-&nbsp; minmax(const T&amp; a, const T&amp; b, BinaryPredicate comp);
+  template &lt;class T, class <a href="http://www.sgi.com/tech/stl/  BinaryPredicate.html">BinaryPredicate</a>>
+  std::pair&lt;const T&amp;,const T&amp;>
+  minmax(const T&amp; a, const T&amp; b, BinaryPredicate comp);
 
-&nbsp; template &lt;class <a href="http://www.sgi.com/tech/stl/ForwardIterator.html">ForwardIterator</a>>
-&nbsp; std::pair&lt;ForwardIterator,ForwardIterator>
-&nbsp; minmax_element(ForwardIterator first, ForwardIterator last);
+  // Minmax_element
 
-&nbsp; template &lt;class <a href="http://www.sgi.com/tech/stl/ForwardIterator.html">ForwardIterator</a>, class <a href="http://www.sgi.com/tech/stl/BinaryPredicate.html">BinaryPredicate</a>>
-&nbsp; std::pair&lt;ForwardIterator,ForwardIterator>
-&nbsp; minmax_element(ForwardIterator first, ForwardIterator last,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; BinaryPredicate comp);
+  template &lt;class <a href="http://www.sgi.com/tech/stl/ForwardIterator.html">ForwardIterator</a>>
+  std::pair&lt;ForwardIterator,ForwardIterator>
+  minmax_element(ForwardIterator first, ForwardIterator last);
+
+  template &lt;class <a href="http://www.sgi.com/tech/stl/ForwardIterator.html">ForwardIterator</a>, class <a href="http://www.sgi.com/tech/stl/BinaryPredicate.html">BinaryPredicate</a>>
+  std::pair&lt;ForwardIterator,ForwardIterator>
+  minmax_element(ForwardIterator first, ForwardIterator last,
+                 BinaryPredicate comp);
 
 }
+</pre>
 
-namespace boost {
-
-&nbsp; // Proposed boost extensions
-
-&nbsp; template &lt;class <a href="http://www.sgi.com/tech/stl/ForwardIterator.html">ForwardIterator</a>>
-&nbsp; ForwardIterator first_min_element(ForwardIterator first, ForwardIterator last);
-
-&nbsp; template &lt;class <a href="http://www.sgi.com/tech/stl/ForwardIterator.html">ForwardIterator</a>, class <a href="http://www.sgi.com/tech/stl/BinaryPredicate.html">BinaryPredicate</a>>
-&nbsp; ForwardIterator first_min_element(ForwardIterator first, ForwardIterator last,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; BinaryPredicate comp);
-
-&nbsp; template &lt;class <a href="http://www.sgi.com/tech/stl/ForwardIterator.html">ForwardIterator</a>>
-&nbsp; ForwardIterator last_min_element(ForwardIterator first, ForwardIterator last);
-
-&nbsp; template &lt;class <a href="http://www.sgi.com/tech/stl/ForwardIterator.html">ForwardIterator</a>, class <a href="http://www.sgi.com/tech/stl/BinaryPredicate.html">BinaryPredicate</a>>
-&nbsp; ForwardIterator last_min_element(ForwardIterator first, ForwardIterator last,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; BinaryPredicate comp);
-
-&nbsp; template &lt;class <a href="http://www.sgi.com/tech/stl/ForwardIterator.html">ForwardIterator</a>>
-&nbsp; ForwardIterator first_max_element(ForwardIterator first, ForwardIterator last);
-
-&nbsp; template &lt;class <a href="http://www.sgi.com/tech/stl/ForwardIterator.html">ForwardIterator</a>, class <a href="http://www.sgi.com/tech/stl/BinaryPredicate.html">BinaryPredicate</a>>
-&nbsp; ForwardIterator first_max_element(ForwardIterator first, ForwardIterator last,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; BinaryPredicate comp);
-
-&nbsp; template &lt;class <a href="http://www.sgi.com/tech/stl/ForwardIterator.html">ForwardIterator</a>>
-&nbsp; ForwardIterator last_max_element(ForwardIterator first, ForwardIterator last);
-
-&nbsp; template &lt;class <a href="http://www.sgi.com/tech/stl/ForwardIterator.html">ForwardIterator</a>, class <a href="http://www.sgi.com/tech/stl/BinaryPredicate.html">BinaryPredicate</a>>
-&nbsp; ForwardIterator last_max_element(ForwardIterator first, ForwardIterator last,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; BinaryPredicate comp);
-
-&nbsp; template &lt;class <a href="http://www.sgi.com/tech/stl/ForwardIterator.html">ForwardIterator</a>>
-&nbsp; std::pair&lt;ForwardIterator,ForwardIterator>
-&nbsp; first_min_first_max_element(ForwardIterator first, ForwardIterator last);
-
-&nbsp; template &lt;class <a href="http://www.sgi.com/tech/stl/ForwardIterator.html">ForwardIterator</a>, class <a href="http://www.sgi.com/tech/stl/BinaryPredicate.html">BinaryPredicate</a>>
-&nbsp; std::pair&lt;ForwardIterator,ForwardIterator>
-&nbsp; first_min_first_max_element(ForwardIterator first, ForwardIterator last,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; BinaryPredicate comp);
-
-&nbsp; template &lt;class <a href="http://www.sgi.com/tech/stl/ForwardIterator.html">ForwardIterator</a>>
-&nbsp; std::pair&lt;ForwardIterator,ForwardIterator>
-&nbsp; first_min_last_max_element(ForwardIterator first, ForwardIterator last);
-
-&nbsp; template &lt;class <a href="http://www.sgi.com/tech/stl/ForwardIterator.html">ForwardIterator</a>, class <a href="http://www.sgi.com/tech/stl/BinaryPredicate.html">BinaryPredicate</a>>
-&nbsp; std::pair&lt;ForwardIterator,ForwardIterator>
-&nbsp; first_min_last_max_element(ForwardIterator first, ForwardIterator last,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; BinaryPredicate comp);
-
-&nbsp; template &lt;class <a href="http://www.sgi.com/tech/stl/ForwardIterator.html">ForwardIterator</a>>
-&nbsp; std::pair&lt;ForwardIterator,ForwardIterator>
-&nbsp; last_min_first_max_element(ForwardIterator first, ForwardIterator last);
-
-&nbsp; template &lt;class <a href="http://www.sgi.com/tech/stl/ForwardIterator.html">ForwardIterator</a>, class <a href="http://www.sgi.com/tech/stl/BinaryPredicate.html">BinaryPredicate</a>>
-&nbsp; std::pair&lt;ForwardIterator,ForwardIterator>
-&nbsp; last_min_first_max_element(ForwardIterator first, ForwardIterator last,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; BinaryPredicate comp);
-
-&nbsp; template &lt;class <a href="http://www.sgi.com/tech/stl/ForwardIterator.html">ForwardIterator</a>>
-&nbsp; std::pair&lt;ForwardIterator,ForwardIterator>
-&nbsp; last_min_last_max_element(ForwardIterator first, ForwardIterator last);
-
-&nbsp; template &lt;class <a href="http://www.sgi.com/tech/stl/ForwardIterator.html">ForwardIterator</a>, class <a href="http://www.sgi.com/tech/stl/BinaryPredicate.html">BinaryPredicate</a>>
-&nbsp; std::pair&lt;ForwardIterator,ForwardIterator>
-&nbsp; last_min_last_max_element(ForwardIterator first, ForwardIterator last,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; BinaryPredicate comp);
-
-}</pre>
+In addition, there are a bunch of extensions which specify
+which element(s) you want to pick in case of equal elements. They are:
+<ul>
+<li><tt>first_min_element</tt> and <tt>last_min_element</tt></li>
+<li><tt>first_max_element</tt> and <tt>last_max_element</tt></li>
+<li><tt>first_min_first_max_element</tt>,
+<tt>first_min_last_max_element</tt>,
+<tt>last_min_first_max_element</tt>, and
+<tt>last_min_last_max_element</tt></li>
+</ul>
+I won't bore you with the complete synopsis, they have exactly the same
+declaration as their corresponding <tt>_element</tt> function. Still,
+you can find the complete synopsis <a href="minmax_synopsis.html">here</a>.
 
 <h3>
 Function templates description</h3>
@@ -154,17 +117,17 @@ and the (first or last, according to <i><tt>what</tt></i>) largest element
 in the range
 <tt>[first, last)</tt>. The first version is semantically
 equivalent to:
-<pre><tt>&nbsp; std::make_pair(boost::<i>which</i>_min_element(first,last),
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; boost::<i>what</i>_max_element(first,last))</tt>,</pre>
+<pre><tt>  std::make_pair(boost::<i>which</i>_min_element(first,last),
+                 boost::<i>what</i>_max_element(first,last))</tt>,</pre>
 and the second version to:
-<pre><tt>&nbsp; std::make_pair(boost::<i>which</i>_min_element(first,last,comp),
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; boost::<i>what</i>_max_element(first,last,comp))</tt>.</pre>
+<pre><tt>  std::make_pair(boost::<i>which</i>_min_element(first,last,comp),
+                 boost::<i>what</i>_max_element(first,last,comp))</tt>.</pre>
 
 <p><br><b><i>Note</i></b>: the first_min_last_max_element can also be described
 as finding the first and last elements in the range if it were stably sorted.
 <h3>
 Definition</h3>
-Defined in <a href="minmax.hpp">minmax.hpp</a>.
+Defined in <a href="../../../boost/sequence_algo/minmax.hpp">minmax.hpp</a>.
 <h3>
 Requirements on types</h3>
 For minmax, <tt>T</tt> must be a model of <a href="http://www.sgi.com/tech/stl/LessThanComparable.html">LessThan
@@ -241,16 +204,16 @@ Example</h3>
 
 <pre>int main()
 {
-&nbsp; using namespace std;
-&nbsp; <a href="http://www.sgi.com/tech/stl/List.html">list</a>&lt;int> L;
-&nbsp; <a href="http://www.sgi.com/tech/stl/generate_n.html">generate_n</a>(<a href="http://www.sgi.com/tech/stl/front_insert_iterator.html">front_inserter</a>(L), 1000, rand);
+  using namespace std;
+  <a href="http://www.sgi.com/tech/stl/List.html">list</a>&lt;int> L;
+  <a href="http://www.sgi.com/tech/stl/generate_n.html">generate_n</a>(<a href="http://www.sgi.com/tech/stl/front_insert_iterator.html">front_inserter</a>(L), 1000, rand);
 
-&nbsp; typedef list&lt;int>::const_iterator iterator;
-&nbsp; pair&lt; iterator, iterator > result = boost::minmax_element(L.begin(), L.end());
-&nbsp; cout &lt;&lt; "The smallest element is " &lt;&lt; *(result.first) &lt;&lt; endl;
-&nbsp; cout &lt;&lt; "The largest element is&nbsp; " &lt;&lt; *(result.second) &lt;&lt; endl;
-&nbsp; assert( result.first&nbsp; == std::min_element(L.begin(), L.end());
-&nbsp; assert( result.second == std::max_element(L.begin(), L.end());
+  typedef list&lt;int>::const_iterator iterator;
+  pair&lt; iterator, iterator > result = boost::minmax_element(L.begin(), L.end());
+  cout &lt;&lt; "The smallest element is " &lt;&lt; *(result.first) &lt;&lt; endl;
+  cout &lt;&lt; "The largest element is  " &lt;&lt; *(result.second) &lt;&lt; endl;
+  assert( result.first  == std::min_element(L.begin(), L.end());
+  assert( result.second == std::max_element(L.begin(), L.end());
 }</pre>
 
 <h3>
@@ -263,7 +226,8 @@ performed if a and b are in order. It is better to stick to <tt>if (b&lt;a)
 swap(a,b)</tt> to achieve that effect.
 <p><a NAME="Note2"></a><a href="#Note2">[2]</a> These algorithms always
 perform at least <tt>3n/2-2</tt> comparisons, which is a lower bound on
-the number of comparisons in any case. The algorithms essentially compare
+the number of comparisons in any case (Cormen, Leiserson, Rivest: "Introduction
+to Algorithms", section 9.1, Exercise 9.1-). The algorithms essentially compare
 the elements in pairs, performing 1 comparison for the first two elements,
 then 3 comparisons for each remaining pair of elements (one to order the
 elements and one for updating each the minimum and and the maximum). When
@@ -284,9 +248,44 @@ We can avoid the latter comparison if the former is successful, hence the
 <i>at
 most</i> instead of <i>exactly</i> in the odd case.
 <h3>
-<a NAME="Discussion"></a><b>Rationale: Discussion: about std::max_element</b></h3>
+<a NAME="Discussion"></a><b>Rationale:</b></h3>
 
-<p><br>The C++ standard mandates that <tt>std::min_element</tt> and <tt>std::max_element</tt>
+<a NAME="no-fix">
+<h4><b>Your minmax suffers from the same problems as std::min and
+std::max.</b></h4>
+<p>I am aware of the problems with std::min and
+std::max, and all the debate that has been going on (please consult
+<a href="http://www.cuj.com/experts/1904/alexandr.htm?topic=experts&topic=experts">Alexandrescu's
+paper</a> and the links therein). But I don't see the purpose of this
+library as fixing something that is part of the C++ standard. I humbly
+think it's beyond the scope of this library. Rather, I am
+following the way of the standard in simply providing one more function
+of the same family. If someone else wants to fix std::min, their fix
+would probably apply to boost::minmax as well.</p>
+</a>
+
+<h4><b>Why no <tt>min/max_element_if</tt>?</b></h4>
+<p>In a first version of the library, I proposed <tt>_if</tt> versions of
+all the algorithms (well, not all, because that would be too much).
+However, there is simply no reason to do so, and all the versions I had
+were just as fast implemented using the excellent
+<tt>&lt;boost/iterator_adaptors.hpp></tt> library. Namely, a call to
+<tt>min_element_if(first, last, pred)</tt> would be just as well
+implemented by:
+<pre>
+     // equivalent to min_element_if(first, last, pred)
+     min_element(boost::make_filter_iterator(first, last, pred),
+                 boost::make_filter_iterator(last, last, pred));
+</pre>
+Arguably, the <tt>min_element_if</tt> version is somewhat shorter, but
+the overhead of iterator adaptors is not large, and they get rid of a
+lot of code (think of all the combinations between first/last and
+doubling them with _if variants!).</p>
+
+<h4><b>Discussion: about std::max_element</b></h4>
+<p>This rationale is somewhat historical, but explains why there are all
+these <tt>first/last_min/max_element</tt> functions.</p>
+<p>The C++ standard mandates that <tt>std::min_element</tt> and <tt>std::max_element</tt>
 return the first instance of the smallest and largest elements (as opposed
 to, say, the last). This arbitrary choice has some consistency: In the
 case of v of type vector&lt;int>, for instance, it is true that <tt>std::min_element(v.begin(),v.end(),std::less&lt;int>())
@@ -296,8 +295,11 @@ choice. Yet another way to specify min_element and max_element is to define
 them as the first and the last elements if the range was stably sorted.
 (The <i>stable</i> sort is necessary to disambiguate between iterators
 that have the same value.) In that case, min should return the first instance
-and max should return the last. Then, both functions are related by <tt>reverse_iterator(std::first_min_element(v.begin(),v.end(),std::less&lt;int>()))
-== std::last_max_element(v.rbegin(),v.rend(),std::greater&lt;int>())</tt>
+and max should return the last. Then, both functions are related by
+<tt>reverse_iterator(std::first_min_element(v.begin(),v.end(),std::less&lt;int>()))
+==
+std::last_max_element(v.rbegin(),v.rend(),std::greater&lt;int>())</tt>.
+This definition is subtly different from the previous one.</p>
 <p>The definition problem surfaces when one tries to design a minmax_element,
 using the procedure proposed in (Cormen, Leiserson, Rivest: "Introduction
 to Algorithms", section 9.1). It <i>should</i> be possible to derive an
@@ -306,12 +308,14 @@ algorithm using only <tt>3n/2</tt> comparisons if <tt>[first,last) </tt>has
 elements, but if one tries to write a function called <tt>first_min_first_max_element()</tt>
 which returns both <tt>std::min_element</tt> and <tt>std::max_element</tt>
 in a pair, the trivial implementation does not work. The problem, rather
-subtly, is about equivalent elements: there is no way to perform only three
-comparisons per pair and return the first min and first max elements. Any
-attempts at doing so will consume four comparisons per pair in the worst
-case (I have no proof of this but I seriously doubt this can be done).
-Still, there is a way out of this dilemma:
-<p>It is not possible (or even desirable) to change the meaning of <tt>max_element</tt>,
+subtly, is about equal elements: I had to think for a while to find a
+way to perform only three
+comparisons per pair and return the first min and first max elements.
+For a long time, it seemed any
+attempts at doing so would consume four comparisons per pair in the worst
+case. This implementation achieves that.</p>
+<p>It is not possible (or even desirable) to change the meaning of
+<tt>max_element</tt>,
 but it is still beneficial to provide a function called <tt>minmax_element</tt>,
 which returns a pair of <tt>min_element</tt> and <tt>max_element</tt>.
 Although it is easy enough to call <tt>min_element</tt> and <tt>max_element</tt>,
@@ -321,9 +325,10 @@ passes over the input. In contrast,
 <tt>minmax_element</tt> will perform
 the fewer comparisons and perform a <b>single</b> pass over the input.
 The savings can be significant when the iterator type is not a raw pointer,
-or even just an InputIterator (although the interface would have to be
-changed, as in that case the return type should not be an iterator, but
-a value).
+or even is just a model of the InputIterator concept (although in that
+case the interface would have to be
+changed, as the return type could not be copied, so one could e.g.
+return a value).</p>
 <p>In order to benefit from all the variants of the algorithm, I propose
 to introduce both <tt>first_min_element</tt> and <tt>last_min_element</tt>,
 and their counterparts <tt>first_max_element</tt> and <tt>last_max_element</tt>.
@@ -333,26 +338,56 @@ comparisons, and only a single pass on the input. In fact, it can be proven
 that computing minmax requires at least <tt>3(n/2)-2</tt> comparisons in
 any instance of the problem (Cormen, Leiserson, Rivest, 2nd edition, section
 9.1). The implementation I give does not perform unnecessary comparisons
-(whose result could have been computed by transitivity from previous comparisons).
+(whose result could have been computed by transitivity from previous
+comparisons).</p>
 <p>It appears that <tt>first_min_last_max_element</tt> may be just a tad
 slower than
 <tt>first_min_element</tt> alone, still much less than <tt>first_min_element</tt>
 and
-<tt>last_max_element</tt> called separately.&nbsp; <a href="#Performance">[2]</a>
-<p>The minmax algorithms are useful in computing the extent of a range,
-or in computer graphics a bounding box of a set of objects, for instance
-(although in that case the need for a single pass is even more stringent
-as all three directions must be done at once; food for thoughts: there
+<tt>last_max_element</tt> called separately.  <a href="#Performance">[2]</a>
+
+<h4><b>Why algorithms and not accumulators?</b></h4>
+<p>The minmax algorithms are useful in computing the extent of a range.
+In computer graphics, we need a bounding box of a set of objects.
+In that case the need for a single pass is even more stringent
+as all three directions must be done at once. Food for thoughts: there
 is matter for a nice generic programming library with stackable <tt>update_min</tt>
 and <tt>update_max</tt> function objects which store a reference to the
 <tt>min_result</tt>and
 <tt>max_result</tt> variables, in conjunction with the <tt>for_each</tt>
-algorithm).
+algorithm).</p>
+<p>I believe many standard sequential algorithms could be reformulated
+with accumulators (and many others, such as in statistics, expectation /
+variance / etc.). It seems that there is room for another library, but I
+do not see it competing with minmax, rather extending several algorithms
+(including minmax) to the accumulator framework. However, I felt it is
+beyond the scope of this library to provide such accumulators.</p>
+
+<a NAME="no-policy">
+<h4><b>This first/last is a perfect application for a policy-based
+design.</b></h4>
+<p>True, and I could have gone that way, with the default policy for
+<tt>min_element</tt> and <tt>max_element</tt> to pick the first
+occurence of the result. This would have thinned the number of
+combinations of the minmax_element variants. But it would also have
+meant to change the interface of <tt>boost::minmax_element</tt>.
+One of the goals of the <tt>minmax_element</tt> algorithm is its
+eventual addition to the C++ standard, in connection with
+<tt>std::min_element</tt> and <tt>std::max_element</tt>
+(and I feel that it would be quite natural
+given the shortness of the implementation, and the not quite trivial
+detail which is needed to get it right). So changing the interface by
+adding policies would have meant unfortunately to depart from the
+standard and created an obstacle towards that goal. Besides, the code
+remains rather readable and simple without policies. So I am quite happy
+to keep it like this.
+</p></a>
+
 <h3>
 <a NAME="Performance"></a><b>About performance</b></h3>
 Of course, there are many factors that affect the performance of an algorithm.
 The number of comparison is only one, but also branch prediction, pipelining,
-locality of reference (affects cache efficiency), etc.&nbsp; In practice,
+locality of reference (affects cache efficiency), etc.  In practice,
 we observe that when the iterator type is a pointer,
 <tt>boost::minmax_element</tt>
 is only a tad slower than
@@ -368,7 +403,7 @@ all the elements are identical, <i>2-valued</i> means that we replace the
 second half of the identical elements by a distinct element, <i>increasing</i>
 means that all the elements are distinct and in increasing order, <i>decrea</i>sing
 is the reverse, and <i>random</i> is produced by random_shuffle.
-<br>&nbsp;
+<br> 
 <center><table BORDER NOSAVE >
 <tr NOSAVE>
 <td NOSAVE><b>vector&lt;int>::iterator</b></td>
@@ -409,7 +444,7 @@ is the reverse, and <i>random</i> is produced by random_shuffle.
 
 <td>22.94M/s</td>
 
-<td>2.62M/s</td>
+<td>22.62M/s</td>
 </tr>
 
 <tr>

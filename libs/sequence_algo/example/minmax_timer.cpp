@@ -11,8 +11,8 @@
 #include <iomanip>
 
 #include <boost/timer.hpp>
-
-#include "minmax.hpp"
+#include <boost/iterator_adaptors.hpp>
+#include <boost/sequence_algo/minmax.hpp>
 
 template <class T1, class T2>
 void tie(std::pair<T1, T2> p, T1& min, T2& max)
@@ -94,6 +94,19 @@ void test_minmax_element(CIterator first, CIterator last, int n, char* name)
   TIMER( n, boost::last_min_last_max_element(first, last),
     "boost::last_min_last_max_element" << name << " ");
 
+  #define pred std::bind2nd( std::greater<vtype>(), vtype(10) )
+  TIMER( n, boost::min_element_if(first, last, pred),
+    "boost::min_element_if" << name << "");
+  TIMER( n, boost::max_element_if(first, last, pred),
+    "boost::max_element_if" << name << "");
+  TIMER( n, std::min_element(boost::make_filter_iterator(first, last, pred),
+	                     boost::make_filter_iterator(last, last, pred)),
+    "std::min_element_with_filter_iterator" << name << "");
+  TIMER( n, std::max_element(boost::make_filter_iterator(first, last, pred),
+	                     boost::make_filter_iterator(last, last, pred)),
+    "std::max_element_if_with_filter_iterator" << name << "");
+  #undef pred
+
   int counter = 0;
   less_count<vtype> lc(counter);
   std::cout << "  ON " << name << " WITH LESS<> AND COUNTING COMPARISONS\n";
@@ -167,6 +180,7 @@ void test(int n)
 
   // Populate test vector with increasing values
   std::cout << "INCREASING VALUES...  \n";
+  std::fill(first, last, Value(1));
   std::accumulate(first, last, Value(0));
   test_range(first, last, n);
 

@@ -1,11 +1,7 @@
 CXX = g++
-# CXX = g++-3.0
+# CXX = g++3
 
-FLAGS = -W -Wall -O3
-TIMER_FLAGS = -W -Wall -O3
-#TIMER_FLAGS = -W -Wall -DONLY_VECTOR -O3
-
-all: test
+CXXFLAGS = -W -Wall -O3 -I../../../../boost -I../../../ -DBOOST_INCLUDE_MAIN
 
 test: minmax
 	- ./minmax 0
@@ -21,11 +17,8 @@ REPEATS = 100
 timer: minmax_timer
 	./minmax_timer $(SIZE) $(REPEATS)
 
-minmax: minmax.cpp minmax.hpp
-	$(CXX) -o $@ $(FLAGS) minmax.cpp
-
-minmax_timer: minmax_timer.cpp minmax.hpp
-	$(CXX) -o $@ $(TIMER_FLAGS) minmax_timer.cpp
+minmax: minmax.cpp ../../../boost/sequence_algo/minmax.hpp
+minmax_timer: minmax_timer.cpp ../../../boost/sequence_algo/minmax.hpp
 
 clean:
 	- rm minmax minmax_timer
