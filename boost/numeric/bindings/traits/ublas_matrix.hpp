@@ -58,7 +58,6 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
   public: 
     typedef general_t matrix_structure; 
     typedef T value_type; 
-#ifndef BOOST_NO_CV_TEMPLATE_TEMPLATES
     typedef typename detail::generate_const<M,T>::type* pointer; 
     typedef boost::numeric::ublas::matrix<T, F, ArrT> identifier_type ;
     typedef M                                         matrix_type;
@@ -66,7 +65,6 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
       typedef typename detail::array_type_traits<M>::type array_type; 
       return vector_traits<array_type>::storage (m.data()); 
     }
-#endif
     static int size1 (matrix_type& m) { return m.size1(); } 
     static int size2 (matrix_type& m) { return m.size2(); }
     static int storage_size (matrix_type& m) { 
