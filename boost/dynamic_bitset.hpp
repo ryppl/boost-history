@@ -123,8 +123,7 @@
 #if BOOST_WORKAROUND(BOOST_MSVC, <= 1300)                   // 1300 == VC++ 7.0
   //  in certain situations VC++ requires a redefinition of
   //  default template arguments, in contrast with 14.1/12
-  //
-# define BOOST_WORKAROUND_REPEAT_DEFAULT_TEMPLATE_ARGUMENTS // macro 'local' to this file
+# define BOOST_WORKAROUND_REPEAT_DEFAULT_TEMPLATE_ARGUMENTS // local macro
 #endif
 
 
@@ -142,11 +141,13 @@
 
 namespace boost {
 
-#ifdef BOOST_WORKAROUND_REPEAT_DEFAULT_TEMPLATE_ARGUMENTS
- template <typename Block = unsigned long, typename Allocator = std::allocator<Block> >
-#else
- template <typename Block, typename Allocator>
-#endif
+template
+
+# ifdef BOOST_WORKAROUND_REPEAT_DEFAULT_TEMPLATE_ARGUMENTS
+   <typename Block = unsigned long, typename Allocator = std::allocator<Block> >
+# else
+   <typename Block, typename Allocator>
+# endif
 
 class dynamic_bitset
 {
