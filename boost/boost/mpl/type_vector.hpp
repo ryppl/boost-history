@@ -17,45 +17,49 @@
 #ifndef BOOST_MPL_TYPE_VECTOR_HPP
 #define BOOST_MPL_TYPE_VECTOR_HPP
 
-#include "boost/config.hpp"
-#include "boost/mpl/preprocessor/template_params.hpp"
+#include "boost/mpl/limits/vector.hpp"
 #include "boost/mpl/type_vector/type_vector_fwd.hpp"
 #include "boost/mpl/type_vector/vector_element.hpp"
 #include "boost/mpl/type_vector/algorithm.hpp"
 #include "boost/mpl/null.hpp"
-#include "boost/mpl/preprocessor/config.hpp"
-#include "boost/mpl/preprocessor/tokens.hpp"
+#include "boost/mpl/aux_/preprocessor.hpp"
+
 #include "boost/type_traits/same_traits.hpp"
 #include "boost/preprocessor/repeat.hpp"
 #include "boost/preprocessor/if.hpp"
 #include "boost/preprocessor/empty.hpp"
+#include "boost/config.hpp"
 
 namespace boost {
 namespace mpl {
 
 // local macros, undefined at the end of the header
-#define BOOST_MPL_TYPE_VECTOR_ELEMENT_TYPEDEF(i, T) \
+#define BOOST_MPL_AUX_VECTOR_PARAMETERS(param) \
+    BOOST_MPL_TEMPLATE_PARAMETERS(0, BOOST_MPL_VECTOR_MAX_SIZE, param) \
+/**/
+
+#define BOOST_MPL_AUX_VECTOR_ELEMENT_TYPEDEF(i, T) \
     typedef T##i value_type_##i; \
 /**/
 
-#define BOOST_MPL_IS_TYPE_VECTOR_ARGUMENT(i, T) \
+#define BOOST_MPL_AUX_IS_VECTOR_ARGUMENT(i, T) \
     BOOST_PREPROCESSOR_IF(i \
         , BOOST_MPL_PREPROCESSOR_PLUS_TOKEN \
         , BOOST_PREPROCESSOR_EMPTY)() \
     !::boost::is_same<T##i, mpl::null_argument>::value \
 /**/
 
-#define BOOST_MPL_TYPE_VECTOR_SIZE(T) \
+#define BOOST_MPL_AUX_VECTOR_SIZE(T) \
     BOOST_PREPROCESSOR_REPEAT( \
-        BOOST_MPL_PARAMETERS_NUMBER \
-      , BOOST_MPL_IS_TYPE_VECTOR_ARGUMENT \
+        BOOST_MPL_VECTOR_MAX_SIZE \
+      , BOOST_MPL_AUX_IS_VECTOR_ARGUMENT \
       , T \
       ) \
 /**/
 
 // type_vector itself
 
-template<BOOST_MPL_TEMPLATE_PARAMS(typename T)>
+template< BOOST_MPL_AUX_VECTOR_PARAMETERS(typename T) >
 struct type_vector
 {
  private:
@@ -69,12 +73,12 @@ struct type_vector
     //    ...
     //    typedef TN value_type_N;
     BOOST_PREPROCESSOR_REPEAT(
-          BOOST_MPL_PARAMETERS_NUMBER
-        , BOOST_MPL_TYPE_VECTOR_ELEMENT_TYPEDEF
+          BOOST_MPL_VECTOR_MAX_SIZE
+        , BOOST_MPL_AUX_VECTOR_ELEMENT_TYPEDEF
         , T
         )
 
-    BOOST_STATIC_CONSTANT(long, size = BOOST_MPL_TYPE_VECTOR_SIZE(T));
+    BOOST_STATIC_CONSTANT(long, size = BOOST_MPL_AUX_VECTOR_SIZE(T));
 
     typedef type_vector_sequence_tag sequence_category;
 
@@ -82,9 +86,9 @@ struct type_vector
     typedef typename mpl::detail::vector_element<self, size>::iterator end;
 };
 
-#undef BOOST_MPL_TYPE_VECTOR_SIZE
-#undef BOOST_MPL_IS_TYPE_VECTOR_ARGUMENT
-#undef BOOST_MPL_TYPE_VECTOR_ELEMENT_TYPEDEF
+#undef BOOST_MPL_AUX_VECTOR_SIZE
+#undef BOOST_MPL_AUX_IS_VECTOR_ARGUMENT
+#undef BOOST_MPL_AUX_VECTOR_ELEMENT_TYPEDEF
 
 } // namespace mpl
 } // namespace boost 

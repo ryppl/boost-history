@@ -17,12 +17,10 @@
 #ifndef BOOST_MPL_LIST_FACTORY_HPP
 #define BOOST_MPL_LIST_FACTORY_HPP
 
+#include "boost/mpl/list/preprocessor.hpp"
 #include "boost/mpl/list/traits.hpp"
-#include "boost/mpl/parameter/count.hpp"
-#include "boost/mpl/preprocessor/template_params.hpp"
-#include "boost/mpl/preprocessor/enumerate_n.hpp"
-#include "boost/mpl/preprocessor/repeat_n.hpp"
-#include "boost/mpl/preprocessor/config.hpp"
+#include "boost/mpl/aux_/count_if_not.hpp"
+#include "boost/mpl/aux_/preprocessor.hpp"
 #include "boost/preprocessor/repeat_2nd.hpp"
 #include "boost/preprocessor/inc.hpp"
 #include "boost/preprocessor/dec.hpp"
@@ -30,58 +28,65 @@
 namespace boost {
 namespace mpl {
 
+#define BOOST_MPL_AUX_REPEAT_BODY(n, expr) expr
+#define BOOST_MPL_AUX_REPEAT(n, expr) \
+    BOOST_PREPROCESSOR_REPEAT(n, BOOST_MPL_AUX_REPEAT_BODY, expr) \
+/**/
+
 namespace aux {
 
 template<long N>
 struct list_factory_part1
 {
-    template<typename Tag, BOOST_MPL_TEMPLATE_PARAMS(typename T)>
+    template< typename Tag, BOOST_MPL_LIST_PARAMETERS(typename T) >
     struct part2
     { 
         typedef typename mpl::list_traits<Tag>::null_node type;
     };
 };
 
-#define BOOST_MPL_LIST_FACTORY_SPECIALIZATION(N) \
+#define BOOST_MPL_AUX_LIST_FACTORY_SPECIALIZATION(N) \
 template<> \
 struct list_factory_part1<N> \
 { \
-    template<typename Tag, BOOST_MPL_TEMPLATE_PARAMS(typename T)> \
+    template< typename Tag, BOOST_MPL_LIST_PARAMETERS(typename T) > \
     struct part2 \
     { \
-        typedef BOOST_MPL_ENUMERATE_N(N  \
+        typedef BOOST_MPL_TEMPLATE_PARAMETERS(0, N \
             , typename mpl::list_traits<Tag>::template make_node<T) \
-            , typename mpl::list_traits<Tag>::null_node BOOST_MPL_REPEAT_N(N \
+            , typename mpl::list_traits<Tag>::null_node BOOST_MPL_AUX_REPEAT(N \
             , >::type) type; \
     }; \
 }; \
 /**/
 
-#define BOOST_MPL_LIST_FACTORY_SPEC(i, unused) \
-	  BOOST_MPL_LIST_FACTORY_SPECIALIZATION(BOOST_PREPROCESSOR_INC(i)) \
+#define BOOST_MPL_AUX_LIST_FACTORY_SPEC(i, unused) \
+	  BOOST_MPL_AUX_LIST_FACTORY_SPECIALIZATION(BOOST_PREPROCESSOR_INC(i)) \
 /**/
 
 BOOST_PREPROCESSOR_REPEAT_2ND(
-      BOOST_PREPROCESSOR_DEC(BOOST_MPL_PARAMETERS_NUMBER)
-    , BOOST_MPL_LIST_FACTORY_SPEC
+      BOOST_PREPROCESSOR_DEC(BOOST_MPL_LIST_PARAMETERS_NUMBER)
+    , BOOST_MPL_AUX_LIST_FACTORY_SPEC
     , unused
     )
 
 } // namespace aux
 
 
-template<typename Tag, BOOST_MPL_TEMPLATE_PARAMS(typename T)>
+template<typename Tag, BOOST_MPL_LIST_PARAMETERS(typename T)>
 struct list_factory
 {
-    typedef typename mpl::aux::list_factory_part1<
-        mpl::parameter::count_if_not<
+    typedef typename aux::list_factory_part1<
+        aux::count_if_not<
               typename mpl::list_traits<Tag>::null_argument
-            , BOOST_MPL_TEMPLATE_PARAMS(T)
+            , BOOST_MPL_LIST_PARAMETERS(T)
             >::value
-        >::template part2<Tag, BOOST_MPL_TEMPLATE_PARAMS(T)>::type type;
+        >::template part2<Tag, BOOST_MPL_LIST_PARAMETERS(T)>::type type;
 };
 
-#undef BOOST_MPL_LIST_FACTORY_SPEC
+#undef BOOST_MPL_AUX_LIST_FACTORY_SPEC
+#undef BOOST_MPL_AUX_REPEAT_BODY
+#undef BOOST_MPL_AUX_REPEAT
 
 } // namespace mpl
 } // namespace boost 

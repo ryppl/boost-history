@@ -18,15 +18,27 @@
 #define BOOST_MPL_TYPE_VECTOR_FWD_HPP
 
 #include "boost/mpl/null.hpp"
-#include "boost/mpl/preprocessor/default_template_params.hpp"
+#include "boost/mpl/limits/vector.hpp"
+#include "boost/mpl/aux_/preprocessor.hpp"
 
 namespace boost {
 namespace mpl {
 
+#define BOOST_MPL_AUX_VECTOR_DEFAULT_PARAMETERS(param, value) \
+    BOOST_MPL_DEFAULT_TEMPLATE_PARAMETERS( \
+          0 \
+        , BOOST_MPL_VECTOR_MAX_SIZE \
+        , param \
+        , value \
+        ) \
+/**/
+
 struct type_vector_sequence_tag;
 
-template<BOOST_MPL_DEFAULT_TEMPLATE_PARAMS(typename T, mpl::null_argument)>
+template< BOOST_MPL_AUX_VECTOR_DEFAULT_PARAMETERS(typename T, mpl::null_argument) >
 struct type_vector;
+
+#undef BOOST_MPL_AUX_VECTOR_DEFAULT_PARAMETERS
 
 } // namespace mpl
 } // namespace boost 

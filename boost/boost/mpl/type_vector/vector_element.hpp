@@ -17,10 +17,11 @@
 #ifndef BOOST_MPL_TYPE_VECTOR_VECTOR_ELEMENT_HPP
 #define BOOST_MPL_TYPE_VECTOR_VECTOR_ELEMENT_HPP
 
-#include "boost/config.hpp"
 #include "boost/mpl/null.hpp"
-#include "boost/mpl/preprocessor/config.hpp"
+#include "boost/mpl/limits/vector.hpp"
+
 #include "boost/preprocessor/repeat.hpp"
+#include "boost/config.hpp"
 
 namespace boost {
 namespace mpl {
@@ -68,7 +69,7 @@ struct vector_element
 //    template<typename Vector> struct vector_element<Vector, N> { ... };
 
 BOOST_PREPROCESSOR_REPEAT(
-      BOOST_MPL_PARAMETERS_NUMBER
+      BOOST_MPL_VECTOR_MAX_SIZE
     , BOOST_MPL_TYPE_VECTOR_ELEMENT
     , unused
     )

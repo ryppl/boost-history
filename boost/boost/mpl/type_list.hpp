@@ -17,11 +17,11 @@
 #ifndef BOOST_MPL_TYPE_LIST_HPP
 #define BOOST_MPL_TYPE_LIST_HPP
 
+#include "boost/mpl/list/preprocessor.hpp"
 #include "boost/mpl/list/traits.hpp"
 #include "boost/mpl/list/factory.hpp"
 #include "boost/mpl/list/algorithm.hpp"
 #include "boost/mpl/null.hpp"
-#include "boost/mpl/preprocessor/default_template_params.hpp"
 
 namespace boost {
 namespace mpl {
@@ -36,13 +36,13 @@ struct list_traits<type_list_tag>
 };
 
 
-template<BOOST_MPL_DEFAULT_TEMPLATE_PARAMS(typename T, mpl::null_argument)>
+template< BOOST_MPL_LIST_DEFAULT_PARAMETERS(typename T, mpl::null_argument) >
 struct type_list
-    : mpl::list_factory<type_list_tag, BOOST_MPL_TEMPLATE_PARAMS(T)>::type
+    : mpl::list_factory< type_list_tag, BOOST_MPL_LIST_PARAMETERS(T) >::type
 {
     typedef typename mpl::list_factory<
           type_list_tag
-        , BOOST_MPL_TEMPLATE_PARAMS(T)
+        , BOOST_MPL_LIST_PARAMETERS(T)
         >::type type;
 };
 
