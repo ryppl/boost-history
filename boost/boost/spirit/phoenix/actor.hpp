@@ -1,5 +1,5 @@
 /*=============================================================================
-    Phoenix V1.0
+    Phoenix v1.1
     Copyright (c) 2001-2002 Joel de Guzman
 
     Permission to copy, use, modify, sell and distribute this software
@@ -11,7 +11,7 @@
 #define PHOENIX_ACTOR_HPP
 
 ///////////////////////////////////////////////////////////////////////////////
-#include "boost/spirit/phoenix/tuples.hpp"
+#include <boost/spirit/phoenix/tuples.hpp>
 
 ///////////////////////////////////////////////////////////////////////////////
 namespace phoenix {

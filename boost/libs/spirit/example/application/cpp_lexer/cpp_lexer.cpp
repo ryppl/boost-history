@@ -98,7 +98,8 @@ namespace { // Private stuff.
     // Used to return values from grammars.
     template < typename ResultT >
     struct result_closure: closure<result_closure<ResultT>, ResultT> {
-        member1 result_;
+		typedef closure<result_closure<ResultT>, ResultT> base_t;
+		typename base_t::member1 result_;
     };
 
     template <>
@@ -161,7 +162,7 @@ namespace { // Private stuff.
                 );
             }
         };
-    } IDENTIFIER;
+    } IDENTIFIER_g;
 
     struct STRING_LITERAL:
         grammar<STRING_LITERAL, result_closure<std::string>::context_t>
@@ -196,7 +197,7 @@ namespace { // Private stuff.
                 );
             }
         };
-    } STRING_LITERAL;
+    } STRING_LITERAL_g;
 
     struct CHARACTER_LITERAL:
         grammar<CHARACTER_LITERAL, result_closure<std::string>::context_t>
@@ -226,7 +227,7 @@ namespace { // Private stuff.
                 );
             }
         };
-    } CHARACTER_LITERAL;
+    } CHARACTER_LITERAL_g;
 
     struct INT_CONSTANT:
         grammar<INT_CONSTANT, result_closure<std::string>::context_t>
@@ -275,13 +276,13 @@ namespace { // Private stuff.
                          >> suffix_part                     // suffix
                         ],
 
-                    char_int = CHARACTER_LITERAL,
+                    char_int = CHARACTER_LITERAL_g,
 
                     suffix_part = !as_lower_d[chlit<>('l') | chlit<>('u')]
                 );
             }
         };
-    } INT_CONSTANT;
+    } INT_CONSTANT_g;
 
     struct FLOAT_CONSTANT:
         grammar<FLOAT_CONSTANT, result_closure<std::string>::context_t>
@@ -321,7 +322,7 @@ namespace { // Private stuff.
                 );
             }
         };
-    } FLOAT_CONSTANT;
+    } FLOAT_CONSTANT_g;
 
 } // Private stuff.
 
@@ -368,7 +369,7 @@ namespace { // Private stuff.
 
             definition(token_lexer const& self);
         };
-    } token_lexer;
+    } token_lexer_g;
 
     template < typename ScannerT >
     token_lexer::definition<ScannerT>::definition(token_lexer const& self)
@@ -394,11 +395,11 @@ namespace { // Private stuff.
                                           [var(lookup.num) = 2]
                   | singleline_comment    [SetCommentToken   (lookup.token[0], filePos)]
                   | multiline_comment     [SetCommentToken   (lookup.token[0], filePos)]
-                  | CHARACTER_LITERAL     [SetStringToken    (lookup.token[0], filePos)]
-                  | STRING_LITERAL        [SetStringToken    (lookup.token[0], filePos)]
-                  | FLOAT_CONSTANT        [SetFloatingToken  (lookup.token[0], filePos)]
-                  | INT_CONSTANT          [SetIntegerToken   (lookup.token[0], filePos)]
-                  | IDENTIFIER            [SetIdentifierToken(lookup.token[0], filePos)]
+                  | CHARACTER_LITERAL_g   [SetStringToken    (lookup.token[0], filePos)]
+                  | STRING_LITERAL_g      [SetStringToken    (lookup.token[0], filePos)]
+                  | FLOAT_CONSTANT_g      [SetFloatingToken  (lookup.token[0], filePos)]
+                  | INT_CONSTANT_g        [SetIntegerToken   (lookup.token[0], filePos)]
+                  | IDENTIFIER_g          [SetIdentifierToken(lookup.token[0], filePos)]
                   | cpp_operator_p        [SetOperatorToken  (lookup.token[0], filePos)]
                 )
              >> epsilon_p [self.result_ = var(lookup)],
@@ -454,7 +455,7 @@ namespace { // Private stuff.
             if (lookupPos < lookup.num) {
                 return lookup.token[lookupPos++];
             }
-            if (token_lexer[assign(lookup)].parse(scan)) {
+            if (token_lexer_g[assign(lookup)].parse(scan)) {
                 lookupPos = 1;
                 return lookup.token[0];
             } else {

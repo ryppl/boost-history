@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 2001-2003 Joel de Guzman
     http://spirit.sourceforge.net/
 
@@ -51,7 +51,7 @@ namespace boost { namespace spirit { namespace impl {
                         return scan.no_match();
                     case error_status_t::accept:
                         return scan.create_match
-                            (hr.length, hr.value, save, scan.first);
+                            (std::size_t(hr.length), hr.value, save, scan.first);
                     case error_status_t::rethrow:
                          boost::throw_exception(error);
                     default:
@@ -74,7 +74,9 @@ namespace boost { namespace spirit { namespace impl {
     template <typename ParserT, typename ScannerT>
     typename parser_result<ParserT, ScannerT>::type
     fallback_parser_helper(ParserT const& p, ScannerT const& scan)
-    { return p.subject().parse(scan); }
+    { 
+        return p.subject().parse(scan); 
+    }
 
 #endif
 

@@ -1,5 +1,5 @@
 /*=============================================================================
-    Phoenix V1.0
+    Phoenix v1.1
     Copyright (c) 2001-2002 Joel de Guzman
 
     Permission to copy, use, modify, sell and distribute this software
@@ -54,9 +54,9 @@ namespace phoenix { namespace borland_only
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////
-#include "boost/static_assert.hpp"
-#include "boost/call_traits.hpp"
-#include "boost/type_traits.hpp"
+#include <boost/static_assert.hpp>
+#include <boost/call_traits.hpp>
+#include <boost/type_traits/remove_reference.hpp>
 
 ///////////////////////////////////////////////////////////////////////////////
 namespace phoenix {

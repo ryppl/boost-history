@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 2002-2003 Joel de Guzman
     Copyright (c) 2002-2003 Hartmut Kaiser
     Copyright (c) 2003 Martin Wille
@@ -13,11 +13,11 @@
 #if !defined(BOOST_SPIRIT_PARSER_TRAITS_HPP)
 #define BOOST_SPIRIT_PARSER_TRAITS_HPP
 
-#include "boost/type_traits.hpp"
-#include "boost/static_assert.hpp"
+#include <boost/type_traits/is_base_and_derived.hpp>
+#include <boost/static_assert.hpp>
 
-#include "boost/spirit/core/parser.hpp"
-#include "boost/spirit/core/meta/impl/parser_traits.ipp"
+#include <boost/spirit/core/parser.hpp>
+#include <boost/spirit/core/meta/impl/parser_traits.ipp>
 
 ///////////////////////////////////////////////////////////////////////////////
 namespace boost { namespace spirit {

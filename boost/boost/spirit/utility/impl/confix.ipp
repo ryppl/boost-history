@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 2002-2003 Hartmut Kaiser
     http://spirit.sourceforge.net/
 
@@ -12,8 +12,8 @@
 #define BOOST_SPIRIT_CONFIX_IPP
 
 ///////////////////////////////////////////////////////////////////////////////
-#include "boost/spirit/utility/refactoring.hpp"
-#include "boost/spirit/core/composite/impl/directives.ipp"
+#include <boost/spirit/utility/refactoring.hpp>
+#include <boost/spirit/core/composite/impl/directives.ipp>
 
 ///////////////////////////////////////////////////////////////////////////////
 namespace boost { namespace spirit {

@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 2001-2003 Joel de Guzman
     Copyright (c) 2002-2003 Hartmut Kaiser
     http://spirit.sourceforge.net/
@@ -13,16 +13,16 @@
 #define BOOST_SPIRIT_CLOSURE_HPP
 
 ///////////////////////////////////////////////////////////////////////////////
-#include "boost/spirit/core/parser.hpp"
-#include "boost/spirit/core/composite/composite.hpp"
-#include "boost/spirit/attribute/parametric.hpp"
-#include "boost/spirit/attribute/closure_context.hpp"
+#include <boost/spirit/core/parser.hpp>
+#include <boost/spirit/core/composite/composite.hpp>
+#include <boost/spirit/attribute/parametric.hpp>
+#include <boost/spirit/attribute/closure_context.hpp>
 
-#include "boost/spirit/phoenix/closures.hpp"
-#include "boost/spirit/phoenix/primitives.hpp"
-#include "boost/spirit/phoenix/casts.hpp"
-#include "boost/spirit/phoenix/operators.hpp"
-#include "boost/spirit/phoenix/tuple_helpers.hpp"
+#include <boost/spirit/phoenix/closures.hpp>
+#include <boost/spirit/phoenix/primitives.hpp>
+#include <boost/spirit/phoenix/casts.hpp>
+#include <boost/spirit/phoenix/operators.hpp>
+#include <boost/spirit/phoenix/tuple_helpers.hpp>
 
 #include <boost/static_assert.hpp>
 
@@ -59,7 +59,7 @@ namespace boost { namespace spirit {
     //
     ///////////////////////////////////////////////////////////////////////////
     template <typename ClosureT>
-    class closure_context
+    class closure_context : public parser_context_base
     {
     public:
 
@@ -79,7 +79,7 @@ namespace boost { namespace spirit {
 
         template <typename ResultT, typename ParserT, typename ScannerT>
         ResultT& post_parse(ResultT& hit, ParserT const&, ScannerT const&)
-        { hit.value() = frame[phoenix::tuple_index<0>()]; return hit; }
+        { hit.value(frame[phoenix::tuple_index<0>()]); return hit; }
 
     private:
 
@@ -102,7 +102,7 @@ namespace boost { namespace spirit {
     ///////////////////////////////////////////////////////////////////////////
 
     template <typename ClosureT>
-    class init_closure_context
+    class init_closure_context : public parser_context_base
     {
         typedef typename ClosureT::tuple_t      tuple_t;
         typedef typename ClosureT::closure_t    closure_t;
@@ -119,7 +119,7 @@ namespace boost { namespace spirit {
 
         template <typename ResultT, typename ParserT, typename ScannerT>
         ResultT& post_parse(ResultT& hit, ParserT const&, ScannerT const&)
-        { hit.value() = frame[phoenix::tuple_index<0>()]; return hit; }
+        { hit.value(frame[phoenix::tuple_index<0>()]); return hit; }
 
     private:
 

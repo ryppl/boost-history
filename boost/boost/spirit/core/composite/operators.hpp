@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 1998-2003 Joel de Guzman
     Copyright (c) 2001 Daniel Nuffer
     http://spirit.sourceforge.net/
@@ -15,10 +15,11 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include <algorithm>
 
-#include "boost/spirit/core/parser.hpp"
-#include "boost/spirit/core/primitives/primitives.hpp"
-#include "boost/spirit/core/composite/composite.hpp"
-#include "boost/spirit/core/meta/impl/parser_type.hpp"
+#include <boost/config.hpp>
+#include <boost/spirit/core/parser.hpp>
+#include <boost/spirit/core/primitives/primitives.hpp>
+#include <boost/spirit/core/composite/composite.hpp>
+#include <boost/spirit/core/meta/impl/parser_type.hpp>
 
 ///////////////////////////////////////////////////////////////////////////////
 namespace boost { namespace spirit {
@@ -47,8 +48,6 @@ struct sequence : public binary<A, B, parser<sequence<A, B> > >
     typedef sequence_parser_gen             parser_generator_t;
     typedef binary<A, B, parser<self_t> >   base_t;
 
-    sequence()
-    : base_t(A(), B()) {}
     sequence(A const& a, B const& b)
     : base_t(a, b) {}
 
@@ -82,8 +81,8 @@ struct sequence_parser_gen
     static sequence<typename as_parser<A>::type, typename as_parser<B>::type>
     generate(A const& a, B const& b)
     {
-        return sequence<BOOST_SPIRIT_TYPENAME as_parser<A>::type,
-            BOOST_SPIRIT_TYPENAME as_parser<B>::type>
+        return sequence<BOOST_DEDUCED_TYPENAME as_parser<A>::type,
+            BOOST_DEDUCED_TYPENAME as_parser<B>::type>
                 (as_parser<A>::convert(a), as_parser<B>::convert(b));
     }
 };
@@ -216,8 +215,6 @@ struct sequential_or : public binary<A, B, parser<sequential_or<A, B> > >
     typedef sequential_or_parser_gen        parser_generator_t;
     typedef binary<A, B, parser<self_t> >   base_t;
 
-    sequential_or()
-    : base_t(A(), B()) {}
     sequential_or(A const& a, B const& b)
     : base_t(a, b) {}
 
@@ -272,8 +269,8 @@ struct sequential_or_parser_gen
     >
     generate(A const& a, B const& b)
     {
-        return sequential_or<BOOST_SPIRIT_TYPENAME as_parser<A>::type,
-            BOOST_SPIRIT_TYPENAME as_parser<B>::type>
+        return sequential_or<BOOST_DEDUCED_TYPENAME as_parser<A>::type,
+            BOOST_DEDUCED_TYPENAME as_parser<B>::type>
                 (as_parser<A>::convert(a), as_parser<B>::convert(b));
     }
 };
@@ -350,8 +347,6 @@ struct alternative
     typedef alternative_parser_gen          parser_generator_t;
     typedef binary<A, B, parser<self_t> >   base_t;
 
-    alternative()
-    : base_t(A(), B()) {}
     alternative(A const& a, B const& b)
     : base_t(a, b) {}
 
@@ -390,8 +385,8 @@ struct alternative_parser_gen
     >
     generate(A const& a, B const& b)
     {
-        return alternative<BOOST_SPIRIT_TYPENAME as_parser<A>::type,
-            BOOST_SPIRIT_TYPENAME as_parser<B>::type>
+        return alternative<BOOST_DEDUCED_TYPENAME as_parser<A>::type,
+            BOOST_DEDUCED_TYPENAME as_parser<B>::type>
                 (as_parser<A>::convert(a), as_parser<B>::convert(b));
     }
 };
@@ -469,8 +464,6 @@ struct intersection
     typedef intersection_parser_gen         parser_generator_t;
     typedef binary<A, B, parser<self_t> >   base_t;
 
-    intersection()
-    : base_t(A(), B()) {}
     intersection(A const& a, B const& b)
     : base_t(a, b) {}
 
@@ -513,8 +506,8 @@ struct intersection_parser_gen
     >
     generate(A const& a, B const& b)
     {
-        return intersection<BOOST_SPIRIT_TYPENAME as_parser<A>::type,
-            BOOST_SPIRIT_TYPENAME as_parser<B>::type>
+        return intersection<BOOST_DEDUCED_TYPENAME as_parser<A>::type,
+            BOOST_DEDUCED_TYPENAME as_parser<B>::type>
                 (as_parser<A>::convert(a), as_parser<B>::convert(b));
     }
 };
@@ -589,8 +582,6 @@ struct difference
     typedef difference_parser_gen           parser_generator_t;
     typedef binary<A, B, parser<self_t> >   base_t;
 
-    difference()
-    : base_t(A(), B()) {}
     difference(A const& a, B const& b)
     : base_t(a, b) {}
 
@@ -635,8 +626,8 @@ struct difference_parser_gen
     >
     generate(A const& a, B const& b)
     {
-        return difference<BOOST_SPIRIT_TYPENAME as_parser<A>::type,
-            BOOST_SPIRIT_TYPENAME as_parser<B>::type>
+        return difference<BOOST_DEDUCED_TYPENAME as_parser<A>::type,
+            BOOST_DEDUCED_TYPENAME as_parser<B>::type>
                 (as_parser<A>::convert(a), as_parser<B>::convert(b));
     }
 };
@@ -711,8 +702,6 @@ struct exclusive_or
     typedef exclusive_or_parser_gen         parser_generator_t;
     typedef binary<A, B, parser<self_t> >   base_t;
 
-    exclusive_or()
-    : base_t(A(), B()) {}
     exclusive_or(A const& a, B const& b)
     : base_t(a, b) {}
 
@@ -758,8 +747,8 @@ struct exclusive_or_parser_gen
     >
     generate(A const& a, B const& b)
     {
-        return exclusive_or<BOOST_SPIRIT_TYPENAME as_parser<A>::type,
-            BOOST_SPIRIT_TYPENAME as_parser<B>::type>
+        return exclusive_or<BOOST_DEDUCED_TYPENAME as_parser<A>::type,
+            BOOST_DEDUCED_TYPENAME as_parser<B>::type>
                 (as_parser<A>::convert(a), as_parser<B>::convert(b));
     }
 };
@@ -832,8 +821,6 @@ struct optional
     typedef optional_parser_gen         parser_generator_t;
     typedef unary<S, parser<self_t> >   base_t;
 
-    optional()
-    : base_t(S()) {}
     optional(S const& a)
     : base_t(a) {}
 
@@ -901,8 +888,6 @@ struct kleene_star
     typedef kleene_star_parser_gen      parser_generator_t;
     typedef unary<S, parser<self_t> >   base_t;
 
-    kleene_star()
-    : base_t(S()) {}
     kleene_star(S const& a)
     : base_t(a) {}
 
@@ -975,8 +960,6 @@ struct positive
     typedef positive_parser_gen         parser_generator_t;
     typedef unary<S, parser<self_t> >   base_t;
 
-    positive()
-    : base_t(S()) {}
     positive(S const& a)
     : base_t(a) {}
 
@@ -1087,4 +1070,4 @@ operator%(wchar_t const* a, parser<B> const& b);
 
 #endif
 
-#include "boost/spirit/core/composite/impl/operators.ipp"
+#include <boost/spirit/core/composite/impl/operators.ipp>

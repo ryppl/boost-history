@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 2001-2003 Joel de Guzman
     http://spirit.sourceforge.net/
 
@@ -102,7 +102,7 @@ namespace boost { namespace spirit {
         struct search_info
         {
             T*          data;
-            unsigned    length;
+            std::size_t length;
         };
 
         tst()
@@ -193,7 +193,7 @@ namespace boost { namespace spirit {
             CharT       ch = *scan;
             iterator_t  save = scan.first;
             iterator_t  latest = scan.first;
-            unsigned    latest_len = 0;
+            std::size_t latest_len = 0;
 
             while (np)
             {

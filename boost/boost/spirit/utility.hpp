@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 1998-2003 Joel de Guzman
     Copyright (c) 2001-2003 Daniel Nuffer
     Copyright (c) 2001-2003 Hartmut Kaiser
@@ -23,12 +23,13 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include "boost/spirit/utility/chset.hpp"
-#include "boost/spirit/utility/chset_operators.hpp"
-#include "boost/spirit/utility/escape_char.hpp"
-#include "boost/spirit/utility/functor_parser.hpp"
-#include "boost/spirit/utility/loops.hpp"
-#include "boost/spirit/utility/confix.hpp"
-#include "boost/spirit/utility/lists.hpp"
+#include <boost/spirit/utility/chset.hpp>
+#include <boost/spirit/utility/chset_operators.hpp>
+#include <boost/spirit/utility/escape_char.hpp>
+#include <boost/spirit/utility/functor_parser.hpp>
+#include <boost/spirit/utility/loops.hpp>
+#include <boost/spirit/utility/confix.hpp>
+#include <boost/spirit/utility/lists.hpp>
+#include <boost/spirit/utility/distinct.hpp>
 
 #endif // !defined(BOOST_SPIRIT_UTILITY_MAIN_HPP)

@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 2001-2003 Joel de Guzman
     Copyright (c) 2001-2003 Daniel Nuffer
     http://spirit.sourceforge.net/
@@ -28,7 +28,7 @@ namespace boost { namespace spirit {
     {
     public:
                             basic_chset();
-                            basic_chset(basic_chset const& arg);
+                            basic_chset(basic_chset const& arg_);
 
         bool                test(CharT v) const;
         void                set(CharT from, CharT to);
@@ -60,7 +60,7 @@ namespace boost { namespace spirit {
 
     public:
                             basic_chset_8bit();
-                            basic_chset_8bit(basic_chset_8bit const& arg);
+                            basic_chset_8bit(basic_chset_8bit const& arg_);
 
         bool                test(CharT v) const;
         void                set(CharT from, CharT to);

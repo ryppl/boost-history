@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 2002-2003 Joel de Guzman
     Copyright (c) 2003-2003 Aleksey Gurtovoy
     Copyright (c) 2002 Raghavendra Satish
@@ -13,13 +13,14 @@
 #ifndef BOOST_SPIRIT_MSVC_HPP
 #define BOOST_SPIRIT_MSVC_HPP
 
+
 #if (defined(BOOST_MSVC) && (BOOST_MSVC <= 1300)) \
     || (defined(BOOST_INTEL_CXX_VERSION) && !defined(_STLPORT_VERSION))
 #include <iterator>
 
 namespace boost { namespace spirit { namespace impl {
 
- #if !defined(BOOST_INTEL_CXX_VERSION)
+#if !defined(BOOST_INTEL_CXX_VERSION)
 
 #if BOOST_MSVC <= 1200
 
@@ -327,7 +328,15 @@ struct is_msvc_70_ETI_arg<int>
 
 
 #endif
-        ///////////////////////////////////////////////////////////////////////
+
+}}} // namespace boost::spirit::impl
+
+#endif
+
+///////////////////////////////////////////////////////////////////////////////
+namespace boost { namespace spirit { namespace impl {
+
+#if defined(BOOST_NO_STD_ITERATOR_TRAITS)
         //
         //      Iterator traits require partial specialization. The VC++
         //      iterator_traits class in "utility" does not define pointer
@@ -341,10 +350,10 @@ struct is_msvc_70_ETI_arg<int>
         template<typename IterT>
         struct iterator_traits
         {
-           typedef typename IterT::difference_type difference_type;
+           typedef typename IterT::distance_type difference_type;
            typedef typename IterT::value_type value_type;
-           typedef typename IterT::pointer pointer;
-           typedef typename IterT::reference reference;
+           typedef typename IterT::value_type * pointer;
+           typedef typename IterT::value_type & reference;
            typedef typename IterT::iterator_category iterator_category;
         };
 
@@ -407,7 +416,8 @@ struct is_msvc_70_ETI_arg<int>
             typedef ptrdiff_t       difference_type;
         };
 
+#endif
+
 }}} // namespace boost::spirit::impl
 
-#endif
 #endif

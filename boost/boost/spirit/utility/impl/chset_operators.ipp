@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 2001-2003 Joel de Guzman
     http://spirit.sourceforge.net/
 
@@ -158,7 +158,7 @@ template <typename CharT>
 inline chset<CharT>
 operator|(chset<CharT> const& a, CharT b)
 {
-    return a | range<CharT>(b, b);
+    return a | chset<CharT>(b);
 }
 
 //////////////////////////////////
@@ -166,7 +166,7 @@ template <typename CharT>
 inline chset<CharT>
 operator&(chset<CharT> const& a, CharT b)
 {
-    return a & range<CharT>(b, b);
+    return a & chset<CharT>(b);
 }
 
 //////////////////////////////////
@@ -174,7 +174,7 @@ template <typename CharT>
 inline chset<CharT>
 operator-(chset<CharT> const& a, CharT b)
 {
-    return a - range<CharT>(b, b);
+    return a - chset<CharT>(b);
 }
 
 //////////////////////////////////
@@ -182,7 +182,7 @@ template <typename CharT>
 inline chset<CharT>
 operator^(chset<CharT> const& a, CharT b)
 {
-    return a ^ range<CharT>(b, b);
+    return a ^ chset<CharT>(b);
 }
 
 //////////////////////////////////
@@ -190,7 +190,7 @@ template <typename CharT>
 inline chset<CharT>
 operator|(CharT a, chset<CharT> const& b)
 {
-    return range<CharT>(a, a) | b;
+    return chset<CharT>(a) | b;
 }
 
 //////////////////////////////////
@@ -198,7 +198,7 @@ template <typename CharT>
 inline chset<CharT>
 operator&(CharT a, chset<CharT> const& b)
 {
-    return range<CharT>(a, a) & b;
+    return chset<CharT>(a) & b;
 }
 
 //////////////////////////////////
@@ -206,7 +206,7 @@ template <typename CharT>
 inline chset<CharT>
 operator-(CharT a, chset<CharT> const& b)
 {
-    return range<CharT>(a, a) - b;
+    return chset<CharT>(a) - b;
 }
 
 //////////////////////////////////
@@ -214,7 +214,7 @@ template <typename CharT>
 inline chset<CharT>
 operator^(CharT a, chset<CharT> const& b)
 {
-    return range<CharT>(a, a) ^ b;
+    return chset<CharT>(a) ^ b;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -226,7 +226,7 @@ template <typename CharT>
 inline chset<CharT>
 operator|(chset<CharT> const& a, chlit<CharT> const& b)
 {
-    return a | b.ch;
+    return a | chset<CharT>(b.ch);
 }
 
 //////////////////////////////////
@@ -234,7 +234,7 @@ template <typename CharT>
 inline chset<CharT>
 operator&(chset<CharT> const& a, chlit<CharT> const& b)
 {
-    return a & b.ch;
+    return a & chset<CharT>(b.ch);
 }
 
 //////////////////////////////////
@@ -242,7 +242,7 @@ template <typename CharT>
 inline chset<CharT>
 operator-(chset<CharT> const& a, chlit<CharT> const& b)
 {
-    return a - b.ch;
+    return a - chset<CharT>(b.ch);
 }
 
 //////////////////////////////////
@@ -250,7 +250,7 @@ template <typename CharT>
 inline chset<CharT>
 operator^(chset<CharT> const& a, chlit<CharT> const& b)
 {
-    return a ^ b.ch;
+    return a ^ chset<CharT>(b.ch);
 }
 
 //////////////////////////////////
@@ -258,7 +258,7 @@ template <typename CharT>
 inline chset<CharT>
 operator|(chlit<CharT> const& a, chset<CharT> const& b)
 {
-    return a.ch | b;
+    return chset<CharT>(a.ch) | b;
 }
 
 //////////////////////////////////
@@ -266,7 +266,7 @@ template <typename CharT>
 inline chset<CharT>
 operator&(chlit<CharT> const& a, chset<CharT> const& b)
 {
-    return a.ch & b;
+    return chset<CharT>(a.ch) & b;
 }
 
 //////////////////////////////////
@@ -274,7 +274,7 @@ template <typename CharT>
 inline chset<CharT>
 operator-(chlit<CharT> const& a, chset<CharT> const& b)
 {
-    return a.ch - b;
+    return chset<CharT>(a.ch) - b;
 }
 
 //////////////////////////////////
@@ -282,7 +282,7 @@ template <typename CharT>
 inline chset<CharT>
 operator^(chlit<CharT> const& a, chset<CharT> const& b)
 {
-    return a.ch ^ b;
+    return chset<CharT>(a.ch) ^ b;
 }
 
 #if BOOST_WORKAROUND(BOOST_MSVC, < 1300)

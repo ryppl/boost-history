@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 2002-2003 Joel de Guzman
     Copyright (c) 2002-2003 Hartmut Kaiser
     http://spirit.sourceforge.net/
@@ -12,20 +12,12 @@
 #if !defined(BOOST_SPIRIT_SUBRULE_HPP)
 #define BOOST_SPIRIT_SUBRULE_HPP
 
-#include "boost/type_traits.hpp"
-#include "boost/static_assert.hpp"
+#include <boost/config.hpp>
+#include <boost/static_assert.hpp>
 
-#if !defined(BOOST_SPIRIT_PARSER_HPP)
-#include "boost/spirit/core/parser.hpp"
-#endif
-
-#if !defined(BOOST_SPIRIT_PARSER_CONTEXT_HPP)
-#include "boost/spirit/core/non_terminal/parser_context.hpp"
-#endif
-
-#if !defined(BOOST_SPIRIT_SUBRULE_IPP)
-#include "boost/spirit/core/non_terminal/impl/subrule.ipp"
-#endif
+#include <boost/spirit/core/parser.hpp>
+#include <boost/spirit/core/non_terminal/parser_context.hpp>
+#include <boost/spirit/core/non_terminal/impl/subrule.ipp>
 
 namespace boost { namespace spirit {
 
@@ -59,7 +51,7 @@ namespace boost { namespace spirit {
         change_policies(PoliciesT const& policies) const
         {
             typedef subrules_scanner<
-                BOOST_SPIRIT_TYPENAME
+                BOOST_DEDUCED_TYPENAME
                     rebind_scanner_policies<ScannerT, PoliciesT>::type,
                 ListT>
             subrules_scanner_t;
@@ -84,7 +76,7 @@ namespace boost { namespace spirit {
         change_iterator(IteratorT const& first, IteratorT const &last) const
         {
             typedef subrules_scanner<
-                BOOST_SPIRIT_TYPENAME
+                BOOST_DEDUCED_TYPENAME
                     rebind_scanner_iterator<ScannerT, IteratorT>::type,
                 ListT>
             subrules_scanner_t;

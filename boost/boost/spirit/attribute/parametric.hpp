@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 2001-2003 Joel de Guzman
     http://spirit.sourceforge.net/
 
@@ -12,9 +12,9 @@
 #define BOOST_SPIRIT_PARAMETRIC_HPP
 
 ///////////////////////////////////////////////////////////////////////////////
-#include "boost/spirit/core/parser.hpp"
-#include "boost/spirit/core/composite/composite.hpp"
-#include "boost/spirit/core/primitives/primitives.hpp"
+#include <boost/spirit/core/parser.hpp>
+#include <boost/spirit/core/composite/composite.hpp>
+#include <boost/spirit/core/primitives/primitives.hpp>
 
 namespace boost { namespace spirit {
 

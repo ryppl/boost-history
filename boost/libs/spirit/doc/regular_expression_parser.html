@@ -40,10 +40,10 @@
   <tt>rxstrlit</tt> has two constructors. The first accepts a null-terminated 
   character pointer. This constructor may be used to build <tt>rxstrlit's</tt> 
   from quoted regular expression literals. The second constructor takes in a first/last 
-  iterator pair. The function generator version is <tt>rxstr_p</tt>. </p>
+  iterator pair. The function generator version is <tt>regex_p</tt>. </p>
 <p>Here are some examples:</p>
 <pre><code><span class=comment>    </span><span class=identifier>rxstrlit</span><span class=special>&lt;&gt;(</span><span class=string>"Hello[[:space:]]+[W|w]orld"</span><span class=special>)
-    rx</span><span class=identifier>str_p</span><span class=special>(</span><span class=string>"Hello[[:space:]]+[W|w]orld"</span><span class=special>)
+    </span><span class=identifier>regex_p</span><span class=special>(</span><span class=string>"Hello[[:space:]]+[W|w]orld"</span><span class=special>)
 
     </span><span class=identifier>std</span><span class=special>::</span><span class=identifier>string </span><span class=identifier>msg</span><span class=special>(</span><span class=string>"Hello[[:space:]]+[W|w]orld"</span><span class=special>);
     rx</span><span class=identifier>strlit</span><span class=special>&lt;&gt;(</span><span class=identifier>msg</span><span class=special>.</span><span class=identifier>begin</span><span class=special>(), </span><span class=identifier>msg</span><span class=special>.</span><span class=identifier>end</span><span class=special>());</span></code></pre>

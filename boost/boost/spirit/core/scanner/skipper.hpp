@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 1998-2003 Joel de Guzman
     http://spirit.sourceforge.net/
 
@@ -14,8 +14,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include <cctype>
 
-#include "boost/spirit/core/scanner/scanner.hpp"
-#include "boost/spirit/core/primitives/impl/primitives.ipp"
+#include <boost/spirit/core/scanner/scanner.hpp>
+#include <boost/spirit/core/primitives/impl/primitives.ipp>
 
 ///////////////////////////////////////////////////////////////////////////////
 namespace boost { namespace spirit {
@@ -153,19 +153,20 @@ parse(
 
 ///////////////////////////////////////////////////////////////////////////////
 //
-//  phrase_scanner_t
+//  phrase_scanner_t and wide_phrase_scanner_t
 //
-//      The most common scanner. Use this typedef when you need
+//      The most common scanners. Use these typedefs when you need
 //      a scanner that skips white spaces.
 //
 ///////////////////////////////////////////////////////////////////////////////
 typedef skipper_iteration_policy<>                  iter_policy_t;
 typedef scanner_policies<iter_policy_t>             scanner_policies_t;
 typedef scanner<char const*, scanner_policies_t>    phrase_scanner_t;
+typedef scanner<wchar_t const*, scanner_policies_t> wide_phrase_scanner_t;
 
 ///////////////////////////////////////////////////////////////////////////////
 }} // namespace boost::spirit
 
-#include "boost/spirit/core/scanner/impl/skipper.ipp"
+#include <boost/spirit/core/scanner/impl/skipper.ipp>
 #endif
 

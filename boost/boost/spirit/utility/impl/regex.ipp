@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 2002-2003 Hartmut Kaiser
     http://spirit.sourceforge.net/
 
@@ -12,7 +12,7 @@
 #define BOOST_SPIRIT_REGEX_IPP
 
 ///////////////////////////////////////////////////////////////////////////////
-#include "boost/spirit/core/primitives/impl/primitives.ipp"
+#include <boost/spirit/core/primitives/impl/primitives.ipp>
 
 ///////////////////////////////////////////////////////////////////////////////
 namespace boost { namespace spirit {

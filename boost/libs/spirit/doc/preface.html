@@ -47,20 +47,28 @@
   need to perform any form of I/O, even in binary, I try to approach the task 
   somewhat formally by writing a grammar using Pascal-like syntax diagrams and 
   then write a corresponding recursive-descent parser. This worked very well.</p>
-<p>The advent of the Internet and the World Wide Web magnified this a thousand-fold.
-  At one point I had to write an HTML parser for a Web browser project. 
-  I got a recursive-descent HTML parser working based on the W3C formal specifications 
+<p>The advent of the Internet and the World Wide Web magnified this a thousand-fold. 
+  At one point I had to write an HTML parser for a Web browser project. I got 
+  a recursive-descent HTML parser working based on the W3C formal specifications 
   quite easily. I was certainly glad that HTML had a formal grammar specification. 
   Because of the influence of the Internet, I then had to do more parsing. RFC 
   specifications were everywhere. SGML, HTML, XML, even email addresses and those 
   seemingly trivial URLs were all formally specified using small EBNF-style grammar 
   specifications. This made me wish for a tool similar to big-time parser generators 
-  such as YACC and <a href="http://www.antlr.org/">ANTLR</a>, where a parser is built 
-  automatically from a grammar specification.  
-  Yet, I want it to be extremely small. Small enough to fit in 
-  my pocket yet scalable. Scalability is a prime goal. It must be able to practically 
-  parse simple grammars such as email addresses to moderately-complex grammars 
-  such as XML and perhaps some small- to medium-sized scripting languages. </p>
+  such as YACC and <a href="http://www.antlr.org/">ANTLR</a>, where a parser is 
+  built automatically from a grammar specification. Yet, I want it to be extremely 
+  small. Small enough to fit in my pocket yet scalable. </p>
+<p>It must be able to practically parse simple grammars such as email addresses 
+  to moderately complex grammars such as XML and perhaps some small to medium-sized 
+  scripting languages. Scalability is a prime goal. You should be able to use 
+  it for small tasks such as parsing command lines without incurring a heavy payload 
+  as you do when you are using YACC or PCCTS. Even now that it has evolved and 
+  matured to become a multi-module library, true to it's original intent, Spirit 
+  can still be used for extreme micro-parsing tasks. You only pay for features 
+  that you need. The power of Spirit comes from it's modularity and extensibility. 
+  Instead of giving you a sledgehammer, it gives you the right ingredients to 
+  easily create a sledgehammer. For instance, it doesn't really have a lexer, 
+  but you have all the raw ingredients to write one, if you need one.</p>
 <p>The result was Spirit. Spirit was a personal project that was conceived when 
   I was doing R&amp;D in Japan. Inspired by the GoF's composite and interpreter 
   patterns, I realized that I can model a recursive-descent parser with hierarchical-object 
@@ -85,8 +93,7 @@ href="http://www.extreme.indiana.edu/%7Etveldhui/papers/Expression-Templates/exp
   time. Not bad for such a niche project such as a parser library. The &quot;static&quot; 
   portion of Spirit was forgotten and static-Spirit simply became Spirit. The 
   framework soon evolved to acquire more dynamic features.</p>
-<p><b>How to use this manual</b><br>
-</p>
+<p><b>How to use this manual</b></p>
 <p>The Spirit framework is organized in logical modules starting from the core. 
   This documentation provides a user's guide and reference for each module in 
   the framework. A simple and clear code example is worth a hundred lines of documentation; 

@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 2002-2003 Joel de Guzman
     Copyright (c) 2002 Juan Carlos Arevalo-Baeza
     Copyright (c) 2002-2003 Martin Wille
@@ -18,17 +18,10 @@
 //  Master header for Spirit.Dynamic
 //
 ///////////////////////////////////////////////////////////////////////////////
-#if !defined(BOOST_SPIRIT_IF_HPP)
-#include "boost/spirit/dynamic/if.hpp"
-#endif
-
-#if !defined(BOOST_SPIRIT_FOR_HPP)
-#include "boost/spirit/dynamic/for.hpp"
-#endif
-
-#if !defined(BOOST_SPIRIT_WHILE_HPP)
-#include "boost/spirit/dynamic/while.hpp"
-#endif
+#include <boost/spirit/dynamic/if.hpp>
+#include <boost/spirit/dynamic/for.hpp>
+#include <boost/spirit/dynamic/while.hpp>
+#include <boost/spirit/dynamic/lazy.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////
 #endif // BOOST_SPIRIT_DYNAMIC_HPP

@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 2002-2003 Joel de Guzman
     Copyright (c) 2002-2003 Hartmut Kaiser
     http://spirit.sourceforge.net/
@@ -17,7 +17,7 @@
 #if (!defined(BOOST_MSVC) || (BOOST_MSVC >= 1300))
 
 ///////////////////////////////////////////////////////////////////////////////
-#include "boost/spirit/core/meta/impl/traverse.ipp"
+#include <boost/spirit/core/meta/impl/traverse.ipp>
 
 namespace boost { namespace spirit {
 

@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 2002-2003 Joel de Guzman
     Copyright (c) 2002-2003 Martin Wille
     http://spirit.sourceforge.net/
@@ -25,7 +25,7 @@ namespace boost { namespace spirit {
     namespace impl {
 
         //////////////////////////////////
-        template <typename IdT = unsigned long>
+        template <typename IdT = std::size_t>
         struct object_with_id_base_supply
         {
             typedef IdT                     object_id;
@@ -44,7 +44,7 @@ namespace boost { namespace spirit {
         };
 
         //////////////////////////////////
-        template <typename TagT, typename IdT = unsigned long>
+        template <typename TagT, typename IdT = std::size_t>
         struct object_with_id_base
         {
             typedef TagT        tag_t;
@@ -61,7 +61,7 @@ namespace boost { namespace spirit {
         };
 
         //////////////////////////////////
-        template<class TagT, typename IdT = unsigned long>
+        template<class TagT, typename IdT = std::size_t>
         struct object_with_id : private object_with_id_base<TagT, IdT>
         {
             typedef object_with_id<TagT, IdT>       self_t;

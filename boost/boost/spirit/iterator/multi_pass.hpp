@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 2001, Daniel C. Nuffer
     http://spirit.sourceforge.net/
 
@@ -30,19 +30,13 @@
 #include <boost/iterator.hpp>
 
 #include "fixed_size_queue.hpp"
-#include "boost/spirit/core/assert.hpp" // for BOOST_SPIRIT_ASSERT
+#include <boost/spirit/core/assert.hpp> // for BOOST_SPIRIT_ASSERT
+#include <boost/spirit/core/impl/msvc.hpp>  
 
-#if BOOST_WORKAROUND(BOOST_MSVC, <= 1300)
-# include "boost/spirit/core/impl/msvc.hpp"  // for more compatible iterator_traits
+#if defined(BOOST_NO_STD_ITERATOR_TRAITS)
 #define BOOST_SPIRIT_IT_NS impl
 #else
 #define BOOST_SPIRIT_IT_NS std
-#endif
-
-#if (defined(BOOST_INTEL_CXX_VERSION) && !defined(_STLPORT_VERSION))
-# include "boost/spirit/core/impl/msvc.hpp"  // for more compatible iterator_traits
-#undef BOOST_SPIRIT_IT_NS
-#define BOOST_SPIRIT_IT_NS impl
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -67,7 +61,7 @@ class ref_counted
 {
     protected:
         ref_counted()
-            : count(new unsigned int(1))
+            : count(new std::size_t(1))
         {}
 
         ref_counted(ref_counted const& x)
@@ -109,7 +103,7 @@ class ref_counted
         }
 
     private:
-        unsigned int* count;
+        std::size_t* count;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

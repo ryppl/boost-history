@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 1998-2003 Joel de Guzman
     http://spirit.sourceforge.net/
 
@@ -14,12 +14,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include <algorithm>
 
-#include "boost/spirit/core/parser.hpp"
-#include "boost/spirit/core/composite/composite.hpp"
-
-#if BOOST_WORKAROUND(BOOST_MSVC, < 1300)
-#include <boost/bind.hpp>
-#endif
+#include <boost/spirit/core/parser.hpp>
+#include <boost/spirit/core/composite/composite.hpp>
 
 ///////////////////////////////////////////////////////////////////////////////
 namespace boost { namespace spirit {
@@ -98,10 +94,6 @@ namespace boost { namespace spirit {
         {
             typedef typename parser_result<ParserT, ScannerT>::type type;
         };
-
-        action()
-        : base_t(ParserT())
-        , actor(ActionT()) {}
 
         action(ParserT const& p, ActionT const& a)
         : base_t(p)
@@ -222,22 +214,9 @@ namespace boost { namespace spirit {
 
             template <typename IteratorT>
             void operator()(IteratorT const& f, IteratorT const& l) const
-            { 
-                // Here I tried several alternatives, but all the obvious ones
-                //  are not supported by MSVC6. For instance, std::string does
-                //  not have a push_back() member function, so we can't use
-                //  std::copy with back_inserter. This is the best solution I
-                //  could come up with.
-                std::for_each(f, l, 
-                    boost::bind(&assign_actor<std::string>::string_push_back, 
-                        this, _1)
-                );
-            }
+            { std::copy(f, l, std::back_inserter(ref)); }
 
     private:
-        void string_push_back(char ch)
-        { ref += ch; }
-
         std::string& ref;
     };
 #endif

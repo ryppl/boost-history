@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 1998-2003 Joel de Guzman
     http://spirit.sourceforge.net/
 
@@ -12,11 +12,11 @@
 #define BOOST_SPIRIT_PARSER_HPP
 
 ///////////////////////////////////////////////////////////////////////////////
-#include "boost/config.hpp"
-#include "boost/spirit/core/scanner/scanner.hpp"
+#include <boost/config.hpp>
+#include <boost/spirit/core/scanner/scanner.hpp>
 
 #if defined(BOOST_MSVC)
-#include "boost/spirit/core/impl/msvc.hpp"
+#include <boost/spirit/core/impl/msvc.hpp>
 #endif
 
 #if defined(BOOST_MSVC) && (BOOST_MSVC <= 1300)
@@ -185,8 +185,7 @@ namespace boost
     //
     //      length: The number of characters consumed by the parser.
     //              This is valid only if we have a successful hit
-    //              (either partial or full). A negative value means
-    //              that the hit is unsucessful.
+    //              (either partial or full).
     //
     ///////////////////////////////////////////////////////////////////////////
     template <typename IteratorT = char const*>
@@ -195,13 +194,13 @@ namespace boost
         IteratorT   stop;
         bool        hit;
         bool        full;
-        unsigned    length;
+        std::size_t length;
 
         parse_info(
             IteratorT const& stop_ = IteratorT(),
             bool hit_ = false,
             bool full_ = false,
-            unsigned length_ = 0)
+            std::size_t length_ = 0)
         : stop(stop_)
         , hit(hit_)
         , full(full_)
@@ -243,5 +242,5 @@ namespace boost
 
 #endif
 
-#include "boost/spirit/core/impl/parser.ipp"
+#include <boost/spirit/core/impl/parser.ipp>
 #undef BOOST_SPIRIT_PARSER_RESULT_ARGS

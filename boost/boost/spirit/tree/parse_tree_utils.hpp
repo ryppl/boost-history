@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 2001-2003 Daniel Nuffer
     Copyright (c) 2001-2003 Hartmut Kaiser
     http://spirit.sourceforge.net/
@@ -15,7 +15,7 @@
 
 #include <utility>                          // for std::pair
 
-#include "boost/spirit/tree/parse_tree.hpp" // needed for parse tree generation
+#include <boost/spirit/tree/parse_tree.hpp> // needed for parse tree generation
 
 ///////////////////////////////////////////////////////////////////////////////
 namespace boost {

@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 1998-2003 Joel de Guzman
     Copyright (c) 2001-2003 Hartmut Kaiser
     http://spirit.sourceforge.net/
@@ -26,7 +26,7 @@ namespace boost { namespace spirit {
 
     ///////////////////////////////////////////////////////////////////////////
     struct sign_parser;     // forward declaration only
-    
+
     namespace impl
     {
         ///////////////////////////////////////////////////////////////////////
@@ -36,7 +36,7 @@ namespace boost { namespace spirit {
         ///////////////////////////////////////////////////////////////////////
         template <typename ScannerT>
         bool
-        extract_sign(ScannerT const& scan, unsigned& count)
+        extract_sign(ScannerT const& scan, std::size_t& count)
         {
             //  Extract the sign
             count = 0;
@@ -225,9 +225,9 @@ namespace boost { namespace spirit {
 
                 template <typename ScannerT, typename T>
                 static bool
-                f(ScannerT& scan, T& n, unsigned& count)
+                f(ScannerT& scan, T& n, std::size_t& count)
                 {
-                    unsigned i = 0;
+                    std::size_t i = 0;
                     for (; (i < MaxDigits) && !scan.at_end()
                         && check::is_valid(*scan);
                         ++i, ++scan, ++count)
@@ -257,9 +257,9 @@ namespace boost { namespace spirit {
 
                 template <typename ScannerT, typename T>
                 static bool
-                f(ScannerT& scan, T& n, unsigned& count)
+                f(ScannerT& scan, T& n, std::size_t& count)
                 {
-                    unsigned i = 0;
+                    std::size_t i = 0;
                     for (; !scan.at_end() && check::is_valid(*scan);
                         ++i, ++scan, ++count)
                     {
@@ -280,7 +280,7 @@ namespace boost { namespace spirit {
         {
             template <typename ScannerT, typename T>
             static bool
-            f(ScannerT& scan, T& n, unsigned& count)
+            f(ScannerT& scan, T& n, std::size_t& count)
             {
                 return extract_int_<(MaxDigits >= 0)>::template
                     apply<Radix, MinDigits, MaxDigits, Accumulate>::
@@ -317,7 +317,7 @@ namespace boost { namespace spirit {
                 if (!scan.at_end())
                 {
                     T n = 0;
-                    unsigned count = 0;
+                    std::size_t count = 0;
                     typename ScannerT::iterator_t save = scan.first;
                     if (extract_int<Radix, MinDigits, MaxDigits>::
                         f(scan, n, count))
@@ -364,7 +364,7 @@ namespace boost { namespace spirit {
                 if (!scan.at_end())
                 {
                     T n = 0;
-                    unsigned count = 0;
+                    std::size_t count = 0;
                     typename ScannerT::iterator_t save = scan.first;
 
                     bool hit = impl::extract_sign(scan, count);
@@ -400,18 +400,20 @@ namespace boost { namespace spirit {
                 if (scan.at_end())
                     return scan.no_match();
                 typename ScannerT::iterator_t save = scan.first;
-                
-                typedef typename parser_result<sign_parser, ScannerT>::type 
-                    sign_match_t; 
+
+                typedef typename parser_result<sign_parser, ScannerT>::type
+                    sign_match_t;
                 typedef typename parser_result<chlit<>, ScannerT>::type
                     exp_match_t;
-                
+
                 sign_match_t    sign_match = RealPoliciesT::parse_sign(scan);
-                unsigned        count = sign_match ? sign_match.length() : 0;
-                bool            neg = sign_match.value();
+                std::size_t     count = sign_match ? sign_match.length() : 0;
+                bool            neg = sign_match.has_valid_attribute() ?
+                                    sign_match.value() : false;
 
                 RT              n_match = RealPoliciesT::parse_n(scan);
-                T               n = n_match.value();
+                T               n = n_match.has_valid_attribute() ?
+                                    n_match.value() : T(0);
                 bool            got_a_number = n_match;
                 exp_match_t     e_hit;
 
@@ -431,8 +433,8 @@ namespace boost { namespace spirit {
 
                     if (RT hit = RealPoliciesT::parse_frac_n(scan))
                     {
-                        hit.value() *=
-                            BOOST_SPIRIT_IMPL_STD_NS::pow(T(10), T(-hit.length()));
+                        hit.value(hit.value()
+                            * BOOST_SPIRIT_IMPL_STD_NS::pow(T(10), T(-hit.length())));
                         if (neg)
                             n -= hit.value();
                         else

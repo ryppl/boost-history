@@ -1,5 +1,5 @@
 /*=============================================================================
-    Phoenix V1.0
+    Phoenix v1.1
     Copyright (c) 2001-2003 Joel de Guzman
     Copyright (c) 2001-2003 Hartmut Kaiser
 
@@ -13,9 +13,9 @@
 #define PHOENIX_CASTS_HPP
 
 ///////////////////////////////////////////////////////////////////////////////
-#include "boost/spirit/phoenix/actor.hpp"
-#include "boost/spirit/phoenix/composite.hpp"
-#include "boost/static_assert.hpp"
+#include <boost/spirit/phoenix/actor.hpp>
+#include <boost/spirit/phoenix/composite.hpp>
+#include <boost/static_assert.hpp>
 
 ///////////////////////////////////////////////////////////////////////////////
 namespace phoenix {

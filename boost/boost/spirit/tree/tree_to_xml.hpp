@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 2001-2003 Daniel Nuffer
     Copyright (c) 2001-2003 Hartmut Kaiser
     http://spirit.sourceforge.net/
@@ -67,7 +67,7 @@ namespace boost { namespace spirit {
 
 }} // namespace boost::spirit
 
-#include "boost/spirit/tree/impl/tree_to_xml.ipp"
+#include <boost/spirit/tree/impl/tree_to_xml.ipp>
 
 #endif // !defined(TREE_TO_XML_HPP)
 

@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 2001-2003 Joel de Guzman
     Copyright (c) 2002-2003 Hartmut Kaiser
     http://spirit.sourceforge.net/
@@ -32,7 +32,7 @@
 #endif // !defined(PHOENIX_LIMIT)
 
 ///////////////////////////////////////////////////////////////////////////////
-#include "boost/spirit/attribute/parametric.hpp"
-#include "boost/spirit/attribute/closure.hpp"
+#include <boost/spirit/attribute/parametric.hpp>
+#include <boost/spirit/attribute/closure.hpp>
 
 #endif // !defined(BOOST_SPIRIT_ATTRIBUTE_MAIN_HPP)

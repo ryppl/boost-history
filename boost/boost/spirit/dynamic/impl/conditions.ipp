@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 2002-2003 Martin Wille
     http://spirit.sourceforge.net/
 
@@ -12,13 +12,8 @@
 #define BOOST_SPIRIT_CONDITIONS_IPP
 
 ///////////////////////////////////////////////////////////////////////////////
-#if !defined(BOOST_SPIRIT_PARSER_TRAITS_HPP)
-#include "boost/spirit/core/meta/parser_traits.hpp"
-#endif
-
-#if !defined(BOOST_SPIRIT_EPSILON_HPP)
-#include "boost/spirit/core/composite/epsilon.hpp"
-#endif
+#include <boost/spirit/core/meta/parser_traits.hpp>
+#include <boost/spirit/core/composite/epsilon.hpp>
 
 ///////////////////////////////////////////////////////////////////////////////
 namespace boost { namespace spirit {
@@ -66,23 +61,19 @@ namespace boost { namespace spirit {
     // condition_evaluator, uses a parser to check wether a condition is met
     // takes a parser or a functor that can be evaluated in boolean context
     // as template parameter.
+
+    // JDG 4-15-03 refactored
     template <typename ConditionT>
     struct condition_evaluator
-        : public subject_type
-        <
-            typename condition_parser_selector<ConditionT>::embed_t,
-            nil_t
-        >::type
     {
-        typedef condition_parser_selector<ConditionT>            selector_t;
-        typedef typename selector_t::type                        selected_t;
-        typedef typename selector_t::embed_t                     cond_embed_t;
-        typedef typename subject_type<cond_embed_t, nil_t>::type base_t;
-        typedef typename base_t::param_t                         param_t;
-        typedef typename base_t::return_t                        return_t;
+        typedef condition_parser_selector<ConditionT>       selector_t;
+        typedef typename selector_t::type                   selected_t;
+        typedef typename selector_t::embed_t                cond_embed_t;
 
-        condition_evaluator(param_t s) : base_t(s) {}
-        condition_evaluator() : base_t() {}
+        typedef typename boost::call_traits<cond_embed_t>::param_type
+            param_t;
+
+        condition_evaluator(param_t s) : cond(s) {}
 
         /////////////////////////////
         // evaluate, checks wether condition is met
@@ -94,19 +85,13 @@ namespace boost { namespace spirit {
             typedef typename ScannerT::iterator_t iterator_t;
             typedef typename parser_result<selected_t, ScannerT>::type cres_t;
             iterator_t save(scan.first);
-            cres_t result = condition().parse(scan);
+            cres_t result = cond.parse(scan);
             if (!result)            // reset the position if evaluation
                 scan.first = save;  // fails.
             return result.length();
         }
 
-        /////////////////////////////
-        // condition
-        // returns the parser used for the condition
-        inline return_t condition() const
-        {
-            return base_t::get();
-        }
+        cond_embed_t cond;
     };
 
 ///////////////////////////////////////////////////////////////////////////////

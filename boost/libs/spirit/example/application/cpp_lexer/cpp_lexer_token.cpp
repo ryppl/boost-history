@@ -346,7 +346,7 @@ namespace cpp {
 // Implementation of the simple actions that can be used in Spirit parsers.
 
 void PrintToken_class::operator()(Token const& token) const {
-    struct { // Local function.
+    struct OutText_ { // Local function.
         void operator()(char const* str, Token const& token) {
             std::cout << str << "'" << token.text << "'\n";
         }

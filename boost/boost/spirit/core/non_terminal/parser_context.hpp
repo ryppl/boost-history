@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 2002-2003 Joel de Guzman
     Copyright (c) 2002-2003 Hartmut Kaiser
     http://spirit.sourceforge.net/
@@ -28,6 +28,13 @@ namespace boost
         template <typename DerivedT>
         struct aux {};
     };
+    
+    ///////////////////////////////////////////////////////////////////////////
+    //
+    //  parser_context_base class { base class of all context classes }
+    //
+    ///////////////////////////////////////////////////////////////////////////
+    struct parser_context_base {};
 
     ///////////////////////////////////////////////////////////////////////////
     //
@@ -37,7 +44,7 @@ namespace boost
     struct nil_t;
     template<typename ContextT> struct parser_context_linker;
 
-    struct parser_context
+    struct parser_context : parser_context_base
     {
         typedef nil_t attr_t;
         typedef default_parser_context_base base_t;

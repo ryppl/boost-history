@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 2001-2003 Daniel Nuffer
     http://spirit.sourceforge.net/
 
@@ -11,8 +11,8 @@
 #ifndef BOOST_SPIRIT_TREE_AST_HPP
 #define BOOST_SPIRIT_TREE_AST_HPP
 
-#include "boost/spirit/tree/common.hpp"
-#include "boost/spirit/core/scanner/scanner.hpp"
+#include <boost/spirit/tree/common.hpp>
+#include <boost/spirit/core/scanner/scanner.hpp>
 
 ///////////////////////////////////////////////////////////////////////////////
 namespace boost { namespace spirit {
@@ -257,7 +257,7 @@ ast_parse(
     IteratorT const&        last_,
     parser<ParserT> const&  parser,
     SkipT const&            skip_,
-    AstFactoryT const &     dummy_ = AstFactoryT())
+    AstFactoryT const &     /*dummy_*/ = AstFactoryT())
 {
     typedef skip_parser_iteration_policy<SkipT> iter_policy_t;
     typedef ast_match_policy<IteratorT, AstFactoryT> ast_match_policy_t;

@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 2001-2003 Joel de Guzman
     http://spirit.sourceforge.net/
 
@@ -17,6 +17,6 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include "boost/spirit/error_handling/exceptions.hpp"
+#include <boost/spirit/error_handling/exceptions.hpp>
 
 #endif // !defined(BOOST_SPIRIT_ERROR_HANDLING_MAIN_HPP)

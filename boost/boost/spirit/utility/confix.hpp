@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 2002-2003 Hartmut Kaiser
     http://spirit.sourceforge.net/
 
@@ -12,9 +12,10 @@
 #define BOOST_SPIRIT_CONFIX_HPP
 
 ///////////////////////////////////////////////////////////////////////////////
-#include "boost/spirit/core/meta/impl/parser_type.hpp"
-#include "boost/spirit/core/composite/operators.hpp"
-#include "boost/spirit/utility/impl/confix.ipp"
+#include <boost/config.hpp>
+#include <boost/spirit/core/meta/impl/parser_type.hpp>
+#include <boost/spirit/core/composite/operators.hpp>
+#include <boost/spirit/utility/impl/confix.ipp>
 
 ///////////////////////////////////////////////////////////////////////////////
 namespace boost { namespace spirit {
@@ -359,7 +360,7 @@ private:
     {
         return
             impl::contiguous_parser_parse<
-                BOOST_SPIRIT_TYPENAME parser_result<ParserT, ScannerT>::type
+                BOOST_DEDUCED_TYPENAME parser_result<ParserT, ScannerT>::type
             >(p, scan, scan);
     }
 
@@ -383,8 +384,8 @@ comment_nest_parser<
 {
     return
         comment_nest_parser<
-            BOOST_SPIRIT_TYPENAME as_parser<OpenT>::type,
-            BOOST_SPIRIT_TYPENAME as_parser<CloseT>::type
+            BOOST_DEDUCED_TYPENAME as_parser<OpenT>::type,
+            BOOST_DEDUCED_TYPENAME as_parser<CloseT>::type
         >(
             as_parser<OpenT>::convert(open),
             as_parser<CloseT>::convert(close)

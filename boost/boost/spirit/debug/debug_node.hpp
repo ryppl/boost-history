@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 2001-2003 Joel de Guzman
     Copyright (c) 2002-2003 Hartmut Kaiser
     Copyright (c) 2003 Gustavo Guerra
@@ -151,13 +151,18 @@ namespace impl {
     inline ResultT &
     print_closure_info(ResultT &hit, int level, std::string const& name)
     {
-        if (!name.empty()) {
+        if (!name.empty()) 
+        {
             for (int i = 0; i < level-1; ++i)
                 BOOST_SPIRIT_DEBUG_OUT << "  ";
 
         // for now, print out the return value only
-            BOOST_SPIRIT_DEBUG_OUT
-                << "^" << name << ":\t" << hit.value() << "\n";
+            BOOST_SPIRIT_DEBUG_OUT << "^" << name << ":\t";
+            if (hit.has_valid_attribute())
+                BOOST_SPIRIT_DEBUG_OUT << hit.value();
+            else
+                BOOST_SPIRIT_DEBUG_OUT << "undefined attribute";
+            BOOST_SPIRIT_DEBUG_OUT << "\n";
         }
         return hit;
     }
@@ -216,7 +221,7 @@ namespace impl {
             --scan.get_level();
             if (trace_parser(p)) {
                 impl::print_node_info(
-                    hit,
+                    bool(hit),
                     scan.get_level(),
                     true,
                     parser_name(p),

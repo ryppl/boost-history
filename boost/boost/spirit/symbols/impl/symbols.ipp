@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 2001-2003 Joel de Guzman
     http://spirit.sourceforge.net/
 
@@ -12,7 +12,12 @@
 #define BOOST_SPIRIT_SYMBOLS_IPP
 
 ///////////////////////////////////////////////////////////////////////////////
-#include "boost/spirit/symbols/impl/tst.ipp"
+#include <boost/spirit/symbols/impl/tst.ipp>
+
+// MSVC: void warning about the use of 'this' pointer in constructors
+#if defined(BOOST_MSVC)
+#pragma warning(disable : 4355)
+#endif
 
 ///////////////////////////////////////////////////////////////////////////////
 namespace boost { namespace spirit {
@@ -94,5 +99,9 @@ add(symbols<T, CharT, SetT>& table, CharT const* sym, T const& data)
 
 ///////////////////////////////////////////////////////////////////////////////
 }} // namespace boost::spirit
+
+#if defined(BOOST_MSVC)
+#pragma warning(default : 4355)
+#endif
 
 #endif

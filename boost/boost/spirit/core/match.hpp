@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 1998-2003 Joel de Guzman
     http://spirit.sourceforge.net/
 
@@ -12,19 +12,12 @@
 #define BOOST_SPIRIT_MATCH_HPP
 
 ///////////////////////////////////////////////////////////////////////////////
-#include "boost/call_traits.hpp"
-
-#if !defined(BOOST_SPIRIT_BASICS_HPP)
-#include "boost/spirit/core/basics.hpp"
-#endif
-
-#if !defined(BOOST_SPIRIT_MATCH_IPP)
-#include "boost/spirit/core/impl/match.ipp"
-#endif
-
-#if !defined(BOOST_SPIRIT_ASSERT_HPP)
-#include "boost/spirit/core/assert.hpp"
-#endif
+#include <boost/spirit/core/basics.hpp>
+#include <boost/call_traits.hpp>
+#include <boost/optional.hpp>
+#include <boost/spirit/core/assert.hpp>
+#include <boost/spirit/core/safe_bool.hpp>
+#include <boost/spirit/core/impl/match_attr_traits.ipp>
 
 ///////////////////////////////////////////////////////////////////////////////
 namespace boost { namespace spirit {
@@ -42,50 +35,62 @@ namespace boost { namespace spirit {
     //
     //      Each parser may have an associated attribute. This attribute is
     //      also returned back to the client on a successful parse through
-    //      the match object. The match's value() member function returns a
-    //      reference to this value.
+    //      the match object. The match's value() member function returns the
+    //      match's value.
+    //
+    //      A match attribute is valid:
+    //
+    //          * on a successful match
+    //			* when its value is set through the value(val) member function
+    //          * if it is assigned or copied from a compatible match object
+    //            (e.g. match<double> from match<int>) with a valid attribute.
+    //
+    //      The match attribute is undefined:
+    //
+    //          * on an unsuccessful match
+    //          * when an attempt to copy or assign from another match object
+    //            with an incompatible attribute type (e.g. match<std::string>
+    //            from match<int>).
+    //
+    //      The member function has_valid_attribute() can be queried to know if
+    //      it is safe to get the match's attribute. The attribute may be set
+    //      through the member function value(v) where v is the new attribute
+    //      value.
     //
     ///////////////////////////////////////////////////////////////////////////
     template <typename T = nil_t>
     class match
     {
+        typedef typename boost::call_traits<T>::param_type      param_type;
+        typedef typename boost::call_traits<T>::const_reference const_reference;
+
     public:
 
         typedef T attr_t;
-        typedef typename boost::call_traits<T>::param_type      param_type;
-        typedef typename boost::call_traits<T>::reference       reference;
-        typedef typename boost::call_traits<T>::const_reference const_reference;
 
-        match()
-        : len(-1), val(impl::match_attr<T>::get_default()) {}
+                                match();
+        explicit                match(std::size_t length);
+                                match(std::size_t length, param_type val);
+                                operator safe_bool() const;
 
-        explicit
-        match(unsigned length)
-        : len(length), val((impl::match_attr<T>::get_default())) {}
-
-        match(unsigned length, param_type val_)
-        : len(length), val(val_) {}
-
-        operator impl::safe_bool() const
-        { return BOOST_SPIRIT_SAFE_BOOL(len >= 0); }
-
-        bool operator!() const
-        { return len < 0; }
-
-        int             length() const  { return len; }
-        const_reference value() const   { return val; }
-        reference       value()         { return val; }
+        bool                    operator!() const;
+        std::ptrdiff_t          length() const;
+        bool                    has_valid_attribute() const;
+        const_reference         value() const;
+        void                    value(param_type val);
+        void                    swap(match& other);
 
         template <typename T2>
         match(match<T2> const& other)
-        : len(other.length()), val(impl::match_attr<T>::get(other)) {}
+        : len(other.length()), val()
+        { impl::match_attr_traits<T>::copy(val, other); }
 
         template <typename T2>
         match&
         operator=(match<T2> const& other)
         {
             len = other.length();
-            val = impl::match_attr<T>::get(other);
+            impl::match_attr_traits<T>::assign(val, other);
             return *this;
         }
 
@@ -93,14 +98,14 @@ namespace boost { namespace spirit {
         void
         concat(MatchT const& other)
         {
-            BOOST_SPIRIT_ASSERT(*this && other);
+            BOOST_SPIRIT_ASSERT(bool(*this) && bool(other));
             len += other.length();
         }
 
     private:
 
-        int len;
-        T   val;
+        std::ptrdiff_t len;
+        boost::optional<T> val;
     };
 
     ///////////////////////////////////////////////////////////////////////////
@@ -111,29 +116,21 @@ namespace boost { namespace spirit {
     template <>
     class match<nil_t>
     {
-
     public:
 
         typedef nil_t attr_t;
 
-        match()
-        : len(-1) {}
+                                match();
+        explicit                match(std::size_t length);
+                                match(std::size_t length, nil_t);
+                                operator safe_bool() const;
 
-        explicit
-        match(unsigned length)
-        : len(length) {}
-
-        match(unsigned length, nil_t)
-        : len(length) {}
-
-        operator impl::safe_bool() const
-        { return BOOST_SPIRIT_SAFE_BOOL(len >= 0); }
-
-        bool operator!() const
-        { return len < 0; }
-
-        int     length() const  { return len; }
-        nil_t   value() const   { return nil_t(); }
+        bool                    operator!() const;
+        bool                    has_valid_attribute() const;
+        std::ptrdiff_t          length() const;
+        nil_t                   value() const;
+        void                    value(nil_t);
+        void                    swap(match& other);
 
         template <typename T>
         match(match<T> const& other)
@@ -151,16 +148,17 @@ namespace boost { namespace spirit {
         void
         concat(match<T> const& other)
         {
-            BOOST_SPIRIT_ASSERT(*this && other);
+            BOOST_SPIRIT_ASSERT(bool(*this) && bool(other));
             len += other.length();
         }
 
     private:
 
-        int len;
+        std::ptrdiff_t len;
     };
 
 }} // namespace boost::spirit
 
 #endif
+#include <boost/spirit/core/impl/match.ipp>
 

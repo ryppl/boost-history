@@ -96,12 +96,34 @@
 <p>The match holds the result of a parser. A match object evaluates to true when 
   a succesful match is found, otherwise false. The length of the match is the 
   number of characters (or tokens) that is successfully matched. This can be queried 
-  through its length() member function. A negative value means that the match 
-  is unsucessful. </p>
-<p>Each parser may have an associated attribute. This attribute is also returned 
-  back to the client on a successful parse through the match object. The match's 
-  value() member function returns a reference to this value.</p>
-<p>The match class:</p>
+  through its <tt>length()</tt> member function. A negative value means that the 
+  match is unsucessful. </p>
+<p> Each parser may have an associated attribute. This attribute is also returned 
+  back to the client on a successful parse through the match object. We can get 
+  this attribute via the match's <tt>value()</tt> member function. Be warned though 
+  that the match's attribute may be invalid, in which case, getting the attribute 
+  will result in an exception. The member function <tt>has_valid_attribute()</tt> 
+  can be queried to know if it is safe to get the match's attribute. The attribute 
+  may be set anytime through the member function <tt>value(v)</tt>where <tt>v</tt> 
+  is the new attribute value.<br>
+  <br>
+  A match attribute is valid:</p>
+<ul>
+  <li> on a successful match</li>
+  <li>when its value is set through the <tt>value(val)</tt> member function</li>
+  <li> if it is assigned or copied from a compatible match object (e.g. <tt>match&lt;double&gt;</tt> 
+    from <tt>match&lt;int&gt;</tt>) with a valid attribute. A match object <tt>A</tt> 
+    is compatible with another match object <tt>B</tt> if the attribute type of 
+    <tt>A</tt> can be assigned from the attribute type of <tt></tt> <tt>B</tt> 
+    (i.e. <tt>a = b;</tt> must compile).</li>
+</ul>
+<p>The match attribute is undefined:</p>
+<ul>
+  <li>on an unsuccessful match </li>
+  <li>when an attempt to copy or assign from another match object with an incompatible 
+    attribute type (e.g. <tt>match&lt;std::string&gt;</tt> from <tt>match&lt;int&gt;</tt>).</li>
+</ul>
+<h3>The match class:</h3>
 <pre><span class=keyword>    template </span><span class=special>&lt;</span><span class=keyword>typename </span><span class=identifier>T</span><span class=special>&gt;
 </span><span class=keyword>    class </span><span class=identifier>match
 </span><span class=keyword>    </span><span class=special>{
@@ -109,12 +131,13 @@
 
     </span><span class=keyword>    </span><span class=comment>/*...*/
 
-</span><span class=special>    </span><span class=keyword>    </span><span class="keyword">typedef</span><span class="identifier"> T attr_t</span><span class="special">;<br>
-             </span><span class=keyword>    </span><span class="special">   </span><span class=keyword>operator bool</span><span class=special>() </span><span class=keyword>const</span>;
-    <span class=keyword>    </span><span class=keyword>int         </span><span class=identifier>length</span><span class=special>() </span><span class=keyword>const</span>;
-   <span class=keyword>    </span> <span class=identifier>T</span><span class=special>&amp;          </span><span class=identifier>value</span><span class=special>() </span><span class=keyword>const;
-        </span><span class=special></span><span class=identifier>T </span><span class=keyword>const</span><span class=special>&amp;    </span><span class=identifier>value</span><span class=special>();
-</span><span class=special></span><span class=keyword>    </span><span class=special>};</span></pre>
+</span><span class=special>    </span><span class=keyword>    typedef</span><span class="identifier"> T attr_t</span><span class="special">;<br>
+             </span><span class=keyword>    </span><span class="special">   </span><span class=keyword>operator safe_bool</span><span class=special>() </span><span class=keyword>const</span>; <span class="comment">// convertible to a bool</span>
+    <span class=keyword>    int         </span><span class=identifier>length</span><span class=special>() </span><span class=keyword>const</span>;
+        <span class="keyword">bool</span>        has_valid_attribute<span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+   <span class=keyword>    </span> <span class=identifier>void</span><span class=special>        </span><span class=identifier>value</span><span class=special>(</span><span class="identifier">T </span><span class="keyword">const</span><span class=special>&amp;) </span><span class=keyword>const;
+        </span><span class=identifier>T </span><span class=keyword>const</span><span class=special>&amp;    </span><span class=identifier>value</span><span class=special>();
+</span><span class=keyword>    </span><span class=special>};</span></pre>
 <h2>match_result</h2>
 <p>It has been mentioned repeatedly that the parser returns a match object as 
   its result. This is a simplification. Actually, for the sake of genericity, 

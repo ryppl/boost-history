@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 2001-2003 Joel de Guzman
     Copyright (c) 2001-2003 Daniel Nuffer
     http://spirit.sourceforge.net/
@@ -52,22 +52,22 @@ class chset: public char_parser<chset<CharT> > {
 
 public:
                     chset();
-                    chset(chset const& arg);
-    explicit        chset(CharT arg);
-    explicit        chset(anychar_parser arg);
-    explicit        chset(nothing_parser arg);
-    explicit        chset(chlit<CharT> const& arg);
-    explicit        chset(range<CharT> const& arg);
+                    chset(chset const& arg_);
+    explicit        chset(CharT arg_);
+    explicit        chset(anychar_parser arg_);
+    explicit        chset(nothing_parser arg_);
+    explicit        chset(chlit<CharT> const& arg_);
+    explicit        chset(range<CharT> const& arg_);
 #if BOOST_WORKAROUND(BOOST_MSVC, < 1300)
                     template <typename ParserT>
-    explicit        chset(negated_char_parser<ParserT> const& arg)
+    explicit        chset(negated_char_parser<ParserT> const& arg_)
                     : ptr(new basic_chset<CharT>())
                     {
-                        set(arg);
+                        set(arg_);
                     }
 #else
-    explicit        chset(negated_char_parser<chlit<CharT> > const& arg);
-    explicit        chset(negated_char_parser<range<CharT> > const& arg);
+    explicit        chset(negated_char_parser<chlit<CharT> > const& arg_);
+    explicit        chset(negated_char_parser<range<CharT> > const& arg_);
 #endif
 
                     template <typename CharT2>
@@ -98,20 +98,20 @@ public:
     chset&          operator=(negated_char_parser<range<CharT> > const& rhs);
 #endif
 
-    void            set(range<CharT> const& arg);
+    void            set(range<CharT> const& arg_);
 #if BOOST_WORKAROUND(BOOST_MSVC, < 1300)
                     template <typename ParserT>
-    void            set(negated_char_parser<ParserT> const& arg)
+    void            set(negated_char_parser<ParserT> const& arg_)
                     {
                         utility::impl::detach(ptr);
-                        utility::impl::chset_negated_set(ptr, arg.positive, 0);
+                        utility::impl::chset_negated_set(ptr, arg_.positive, 0);
                     }
 #else
-    void            set(negated_char_parser<chlit<CharT> > const& arg);
-    void            set(negated_char_parser<range<CharT> > const& arg);
+    void            set(negated_char_parser<chlit<CharT> > const& arg_);
+    void            set(negated_char_parser<range<CharT> > const& arg_);
 #endif
-    void            clear(range<CharT> const& arg);
-    void            clear(negated_char_parser<range<CharT> > const& arg);
+    void            clear(range<CharT> const& arg_);
+    void            clear(negated_char_parser<range<CharT> > const& arg_);
     bool            test(CharT ch) const;
     chset&          inverse();
     void            swap(chset& x);
@@ -133,34 +133,34 @@ private:
 ///////////////////////////////////////////////////////////////////////////////
 template <typename CharT>
 inline chset<wchar_t>
-chset_p(chlit<CharT> const& arg)
-{ return chset<CharT>(arg); }
+chset_p(chlit<CharT> const& arg_)
+{ return chset<CharT>(arg_); }
 
 //////////////////////////////////
 template <typename CharT>
 inline chset<wchar_t>
-chset_p(range<CharT> const& arg)
-{ return chset<CharT>(arg); }
+chset_p(range<CharT> const& arg_)
+{ return chset<CharT>(arg_); }
 
 //////////////////////////////////
 #if BOOST_WORKAROUND(BOOST_MSVC, < 1300)
 
 template <typename ParserT>
 inline chset<wchar_t>
-chset_p(negated_char_parser<ParserT> const& arg)
-{ return chset<typename ParserT::char_t>(arg); }
+chset_p(negated_char_parser<ParserT> const& arg_)
+{ return chset<typename ParserT::char_t>(arg_); }
 
 #else // BOOST_WORKAROUND(BOOST_MSVC, < 1300)
 
 template <typename CharT>
 inline chset<wchar_t>
-chset_p(negated_char_parser<chlit<CharT> > const& arg)
-{ return chset<CharT>(arg); }
+chset_p(negated_char_parser<chlit<CharT> > const& arg_)
+{ return chset<CharT>(arg_); }
 
 template <typename CharT>
 inline chset<wchar_t>
-chset_p(negated_char_parser<range<CharT> > const& arg)
-{ return chset<CharT>(arg); }
+chset_p(negated_char_parser<range<CharT> > const& arg_)
+{ return chset<CharT>(arg_); }
 
 #endif // BOOST_WORKAROUND(BOOST_MSVC, < 1300)
 

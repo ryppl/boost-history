@@ -36,9 +36,9 @@
   One problem is that C++ offers no easy facility to deduce the type of an arbitrarily
   complex expression that yields a complex type. Thus, while it is easy to write:</p>
 <pre><code><font color="#000000"><span class=identifier>    </span><span class=keyword>int </span><span class=identifier>r </span><span class=special>= </span><span class=identifier>i </span><span class=special>| </span><span class=identifier>j </span><span class=special>&gt;&gt; </span><span class=identifier>k</span><span class=special>; </span><span class=comment>// where i, j, and k are ints</span></font></code></pre>
-<p>Forget rules for a second. Expression templates yield an endless supply of 
-  types. There is no easy way to do this in C++ if <tt>i</tt>, <tt>j</tt> and 
-  <tt>k</tt> are Spirit parsers:</p>
+<p>Expression templates yield an endless supply of types. Forget rules for a second, 
+  there is no easy way to do this in C++ if <tt>i</tt>, <tt>j</tt> and <tt>k</tt> 
+  are Spirit parsers:</p>
 <pre><code><font color="#000000"><span class=comment>    </span><span class=special>&lt;</span><span class=identifier>what_type</span><span class=special>&gt; </span><span class=identifier>r </span><span class=special>= </span><span class=identifier>i </span><span class=special>| </span><span class=identifier>j </span><span class=special>&gt;&gt; </span><span class=identifier>k</span><span class=special>; </span><span class=comment>// where i, j, and k are Spirit parsers</span></font></code></pre>
 <p>If <tt>i</tt>, <tt>j</tt> and <tt>k</tt> are all <tt>chlit&lt;&gt;</tt> objects,
   what we want is:</p>

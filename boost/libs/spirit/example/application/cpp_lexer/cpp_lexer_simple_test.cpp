@@ -20,6 +20,7 @@
 #include "cpp_lexer.hpp"
 
 #include <iostream>
+#include <stdio.h>  // needed by GCC 2.95
 
 ///////////////////////////////////////////////////////////////////////////////
 // main entrypoint

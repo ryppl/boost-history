@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 2001-2003 Joel de Guzman
     Copyright (c) 2002-2003 Hartmut Kaiser
     http://spirit.sourceforge.net/
@@ -18,7 +18,7 @@
 #include <iostream>
 #include <map>
 
-#include "boost/config.hpp"
+#include <boost/config.hpp>
 #ifdef BOOST_NO_STRINGSTREAM
 #include <strstream>
 #define BOOST_SPIRIT_SSTREAM std::strstream
@@ -500,6 +500,13 @@ namespace boost { namespace spirit {
     template <int ID, typename ContextT>
     bool
     trace_parser(subrule<ID, ContextT> const& p)
+    {
+        return impl::get_node_registry().trace_node(&p);
+    }
+
+    template <typename ParserT, typename ActorTupleT>
+    bool
+    trace_parser(init_closure_parser<ParserT, ActorTupleT> const& p)
     {
         return impl::get_node_registry().trace_node(&p);
     }

@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 1998-2003 Joel de Guzman
     Copyright (c) 2002 Raghavendra Satish
     Copyright (c) 2002 Jeff Westfahl
@@ -14,8 +14,8 @@
 #define BOOST_SPIRIT_LOOPS_HPP
 
 ///////////////////////////////////////////////////////////////////////////////
-#include "boost/spirit/core/parser.hpp"
-#include "boost/spirit/core/composite/composite.hpp"
+#include <boost/spirit/core/parser.hpp>
+#include <boost/spirit/core/composite/composite.hpp>
 
 ///////////////////////////////////////////////////////////////////////////////
 namespace boost { namespace spirit {
@@ -55,9 +55,9 @@ namespace boost { namespace spirit {
         parse (ScannerT const & scan) const
         {
             typename parser_result<self_t, ScannerT>::type hit(0);
-            unsigned n = m_exact;
+            std::size_t n = m_exact;
 
-            for (unsigned i = 0; i < n; ++i)
+            for (std::size_t i = 0; i < n; ++i)
             {
                 typename parser_result<self_t, ScannerT>::type next
                     = this->subject().parse(scan);
@@ -118,10 +118,10 @@ namespace boost { namespace spirit {
             BOOST_SPIRIT_ASSERT(m_min <= m_max);
             typename parser_result<self_t, ScannerT>::type hit(0);
 
-            unsigned n1 = m_min;
-            unsigned n2 = m_max;
+            std::size_t n1 = m_min;
+            std::size_t n2 = m_max;
 
-            for (unsigned i = 0; i < n2; ++i)
+            for (std::size_t i = 0; i < n2; ++i)
             {
                 typename ScannerT::iterator_t save = scan.first;
                 typename parser_result<self_t, ScannerT>::type next
@@ -203,9 +203,9 @@ namespace boost { namespace spirit {
         parse(ScannerT const & scan) const
         {
             typename parser_result<self_t, ScannerT>::type hit(0);
-            unsigned n = m_min;
+            std::size_t n = m_min;
 
-            for (unsigned i = 0; ; ++i)
+            for (std::size_t i = 0; ; ++i)
             {
                 typename ScannerT::iterator_t save = scan.first;
                 typename parser_result<self_t, ScannerT>::type next

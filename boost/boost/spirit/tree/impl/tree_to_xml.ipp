@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 2001-2003 Hartmut Kaiser
     Copyright (c) 2001-2003 Daniel Nuffer
     http://spirit.sourceforge.net/
@@ -18,7 +18,7 @@
 
 #include <map>
 #include <iostream>
-#include "boost/config.hpp"
+#include <boost/config.hpp>
 #ifdef BOOST_NO_STRINGSTREAM
 #include <strstream>
 #define BOOST_SPIRIT_OSSTREAM std::ostrstream
@@ -236,13 +236,14 @@ namespace impl {
     // look up the rule name from the given parser_id
     template <typename AssocContainerT>
     inline typename AssocContainerT::value_type::second_type
-    get_rulename (AssocContainerT const &id_to_name_map, 
+    get_rulename (AssocContainerT const &id_to_name_map,
         boost::spirit::parser_id const &id)
     {
         typename AssocContainerT::const_iterator it = id_to_name_map.find(id);
         if (it != id_to_name_map.end())
             return (*it).second;
-        return typename AssocContainerT::value_type::second_type();
+        typedef typename AssocContainerT::value_type::second_type second_t;
+        return second_t();
     }
 
     // dump a parse tree as xml

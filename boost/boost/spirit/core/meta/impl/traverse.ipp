@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 2002-2003 Joel de Guzman
     Copyright (c) 2002-2003 Hartmut Kaiser
     http://spirit.sourceforge.net/
@@ -13,7 +13,7 @@
 #define BOOST_SPIRIT_TRAVERSE_IPP
 
 ///////////////////////////////////////////////////////////////////////////////
-#include "boost/spirit/core/meta/fundamental.hpp"
+#include <boost/spirit/core/meta/fundamental.hpp>
 
 ///////////////////////////////////////////////////////////////////////////////
 namespace boost { namespace spirit {

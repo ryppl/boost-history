@@ -1,5 +1,5 @@
 /*=============================================================================
-    Phoenix V1.0
+    Phoenix v1.1
     Copyright (c) 2001-2002 Joel de Guzman
     MT code Copyright (c) 2002-2003 Martin Wille
 

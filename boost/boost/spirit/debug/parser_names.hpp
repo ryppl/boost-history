@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 2001-2003 Joel de Guzman
     Copyright (c) 2002-2003 Hartmut Kaiser
     http://spirit.sourceforge.net/
@@ -15,7 +15,7 @@
 #if defined(BOOST_SPIRIT_DEBUG)
 
 //////////////////////////////////
-#include "boost/spirit/core.hpp"
+#include <boost/spirit/core.hpp>
 
 namespace boost { namespace spirit {
 
@@ -230,13 +230,18 @@ namespace boost { namespace spirit {
     bool
     trace_parser(subrule<ID, ContextT> const& p);
 
+    template <typename ParserT, typename ActorTupleT>
+    struct init_closure_parser;
+
+    template <typename ParserT, typename ActorTupleT>
+    bool
+    trace_parser(init_closure_parser<ParserT, ActorTupleT> const& p);
+
 ///////////////////////////////////////////////////////////////////////////////
 }} // namespace boost::spirit
 
 //////////////////////////////////
-#if !defined(BOOST_SPIRIT_PARSER_NAMES_IPP)
-#include "boost/spirit/debug/impl/parser_names.ipp"
-#endif
+#include <boost/spirit/debug/impl/parser_names.ipp>
 
 #endif // defined(BOOST_SPIRIT_DEBUG)
 

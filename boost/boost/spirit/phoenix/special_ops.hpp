@@ -1,5 +1,5 @@
 /*=============================================================================
-    Phoenix V1.0
+    Phoenix v1.1
     Copyright (c) 2001-2002 Joel de Guzman
 
     Permission to copy, use, modify, sell and distribute this software
@@ -10,7 +10,7 @@
 #ifndef PHOENIX_SPECIAL_OPS_HPP
 #define PHOENIX_SPECIAL_OPS_HPP
 
-#include "boost/config.hpp"
+#include <boost/config.hpp>
 #ifdef BOOST_NO_STRINGSTREAM
 #include <strstream>
 #define PHOENIX_SSTREAM strstream
@@ -20,7 +20,7 @@
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////
-#include "boost/spirit/phoenix/operators.hpp"
+#include <boost/spirit/phoenix/operators.hpp>
 #include <iosfwd>
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 1998-2003 Joel de Guzman
     Copyright (c) 2001-2003 Hartmut Kaiser
     http://spirit.sourceforge.net/
@@ -13,11 +13,11 @@
 #define BOOST_SPIRIT_NUMERICS_HPP
 
 ///////////////////////////////////////////////////////////////////////////////
-#include "boost/config.hpp"
+#include <boost/config.hpp>
 
-#include "boost/spirit/core/parser.hpp"
-#include "boost/spirit/core/composite/directives.hpp"
-#include "boost/spirit/core/primitives/impl/numerics.ipp"
+#include <boost/spirit/core/parser.hpp>
+#include <boost/spirit/core/composite/directives.hpp>
+#include <boost/spirit/core/primitives/impl/numerics.ipp>
 
 //  VC++6 chokes and ICEs with parser_result on the real parser traits when
 //  the real parser is used inside a grammar. This workaround solves the
@@ -141,7 +141,7 @@ uint_parser<unsigned, 16, 1, -1> const
     {
         //  Utility to extract the prefix sign ('-' | '+')
         template <typename ScannerT>
-        bool extract_sign(ScannerT const& scan, unsigned& count);
+        bool extract_sign(ScannerT const& scan, std::size_t& count);
     }
 
 struct sign_parser : public parser<sign_parser>
@@ -161,7 +161,7 @@ struct sign_parser : public parser<sign_parser>
     {
         if (!scan.at_end())
         {
-            unsigned length;
+            std::size_t length;
             typename ScannerT::iterator_t save(scan.first);
             bool neg = impl::extract_sign(scan, length);
             if (length)

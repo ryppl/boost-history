@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 1998-2003 Joel de Guzman
     Copyright (c) 2001 Daniel Nuffer
     http://spirit.sourceforge.net/
@@ -15,21 +15,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include <algorithm>
 
-#if !defined(BOOST_SPIRIT_PARSER_HPP)
-#include "boost/spirit/core/parser.hpp"
-#endif
-
-#if !defined(BOOST_SPIRIT_PRIMITIVES_HPP)
-#include "boost/spirit/core/primitives/primitives.hpp"
-#endif
-
-#if !defined(BOOST_SPIRIT_COMPOSITE_HPP)
-#include "boost/spirit/core/composite/composite.hpp"
-#endif
-
-#if !defined(BOOST_SPIRIT_DIRECTIVES_IPP)
-#include "boost/spirit/core/composite/impl/directives.ipp"
-#endif
+#include <boost/spirit/core/parser.hpp>
+#include <boost/spirit/core/primitives/primitives.hpp>
+#include <boost/spirit/core/composite/composite.hpp>
+#include <boost/spirit/core/composite/impl/directives.ipp>
 
 namespace boost { namespace spirit {
 
@@ -76,9 +65,6 @@ namespace boost { namespace spirit {
         {
             typedef typename parser_result<ParserT, ScannerT>::type type;
         };
-
-        contiguous()
-        : base_t(ParserT()) {}
 
         contiguous(ParserT const& p)
         : base_t(p) {}
@@ -185,9 +171,6 @@ namespace boost { namespace spirit {
         {
             typedef typename parser_result<ParserT, ScannerT>::type type;
         };
-
-        inhibit_case()
-        : base_t(ParserT()) {}
 
         inhibit_case(ParserT const& p)
         : base_t(p) {}
@@ -305,9 +288,6 @@ namespace boost { namespace spirit {
         typedef longest_parser_gen              parser_generator_t;
         typedef binary<A, B, parser<self_t> >   base_t;
 
-        longest_alternative()
-        : base_t(A(), B()) {}
-
         longest_alternative(A const& a, B const& b)
         : base_t(a, b) {}
 
@@ -321,7 +301,7 @@ namespace boost { namespace spirit {
             std::swap(scan.first, save);
             result_t r = this->right().parse(scan);
 
-            if (l || r)
+            if (bool(l) || bool(r))
             {
                 if (l.length() > r.length())
                 {
@@ -381,9 +361,6 @@ namespace boost { namespace spirit {
         typedef shortest_parser_gen             parser_generator_t;
         typedef binary<A, B, parser<self_t> >   base_t;
 
-        shortest_alternative()
-        : base_t(A(), B()) {}
-
         shortest_alternative(A const& a, B const& b)
         : base_t(a, b) {}
 
@@ -397,7 +374,7 @@ namespace boost { namespace spirit {
             std::swap(scan.first, save);
             result_t r = this->right().parse(scan);
 
-            if (l || r)
+            if (bool(l) || bool(r))
             {
                 if (l.length() < r.length())
                 {
@@ -464,9 +441,6 @@ namespace boost { namespace spirit {
             typedef typename parser_result<ParserT, ScannerT>::type type;
         };
 
-        min_bounded()
-        : base_t(ParserT()) {}
-
         min_bounded(ParserT const& p, BoundsT const& min__)
         : base_t(p)
         , min_(min__) {}
@@ -526,9 +500,6 @@ namespace boost { namespace spirit {
         {
             typedef typename parser_result<ParserT, ScannerT>::type type;
         };
-
-        max_bounded()
-        : base_t(ParserT()) {}
 
         max_bounded(ParserT const& p, BoundsT const& max__)
         : base_t(p)
@@ -590,9 +561,6 @@ namespace boost { namespace spirit {
         {
             typedef typename parser_result<ParserT, ScannerT>::type type;
         };
-
-        bounded()
-        : base_t(ParserT()) {}
 
         bounded(ParserT const& p, BoundsT const& min__, BoundsT const& max__)
         : base_t(p)

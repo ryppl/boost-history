@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 2001-2003 Joel de Guzman
     Copyright (c) 2002-2003 Hartmut Kaiser
     http://spirit.sourceforge.net/
@@ -23,7 +23,7 @@
 
     #include <iostream>
     #if defined(__BORLANDC__) && (__BORLANDC__ <= 0x561)
-    #include "boost/spirit/core/impl/borland.hpp"
+    #include <boost/spirit/core/impl/borland.hpp>
     #endif
 
     ///////////////////////////////////////////////////////////////////////////
@@ -137,11 +137,11 @@
     #endif // !defined(BOOST_SPIRIT_DEBUG_TRACE_GRAMMAR_NAME)
 
     //////////////////////////////////
-    #include "boost/spirit/debug/debug_node.hpp"
+    #include <boost/spirit/debug/debug_node.hpp>
 
 #else
     //////////////////////////////////
-    #include "boost/spirit/debug/minimal.hpp"
+    #include <boost/spirit/debug/minimal.hpp>
 
 #endif // BOOST_SPIRIT_DEBUG
 

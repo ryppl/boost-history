@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 2001-2003 Daniel Nuffer
     http://spirit.sourceforge.net/
 
@@ -12,8 +12,8 @@
 #define BOOST_SPIRIT_FLUSH_MULTI_PASS_HPP
 
 ///////////////////////////////////////////////////////////////////////////////
-#include "boost/spirit/core.hpp"
-#include "boost/spirit/iterator/multi_pass.hpp"
+#include <boost/spirit/core.hpp>
+#include <boost/spirit/iterator/multi_pass.hpp>
 
 ///////////////////////////////////////////////////////////////////////////////
 namespace boost { namespace spirit {

@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 1998-2003 Joel de Guzman
     Copyright (c) 2003 Martin Wille
     http://spirit.sourceforge.net/
@@ -59,7 +59,7 @@ namespace boost { namespace spirit {
     {
         typedef typename ScannerT::iterator_t iterator_t;
         iterator_t saved = scan.first;
-        int slen = str_last - str_first;
+        std::size_t slen = str_last - str_first;
 
         while (str_first != str_last)
         {
@@ -95,11 +95,17 @@ namespace boost { namespace spirit {
         typedef int int_type;
         typedef char char_type;
 
-        static char_type to_char_type(int_type c)
-        { return static_cast<char_type>(c); }
+        static char_type 
+        to_char_type(int_type c)
+        { 
+            return static_cast<char_type>(c); 
+        }
 
-        static int to_int_type(char c)
-        { return static_cast<unsigned char>(c); }
+        static int 
+        to_int_type(char c)
+        { 
+            return static_cast<unsigned char>(c); 
+        }
     };
 
     template<>
@@ -108,11 +114,17 @@ namespace boost { namespace spirit {
         typedef int int_type;
         typedef unsigned char char_type;
 
-        static char_type to_char_type(int_type c)
-        { return static_cast<char_type>(c); }
+        static char_type 
+        to_char_type(int_type c)
+        { 
+            return static_cast<char_type>(c); 
+        }
 
-        static int to_int_type(unsigned char c)
-        { return c; }
+        static int 
+        to_int_type(unsigned char c)
+        { 
+            return c; 
+        }
     };
 
     #define BOOST_SPIRIT_CHAR_TRAITS_NAMESPACE impl
@@ -124,12 +136,18 @@ namespace boost { namespace spirit {
     {
         typedef wint_t int_type;
         typedef wchar_t char_type;
+        
+        static char_type 
+        to_char_type(int_type c)
+        { 
+            return static_cast<char_type>(c); 
+        }
 
-        static char_type to_char_type(int_type c)
-        { return static_cast<char_type>(c); }
-
-        static wint_t to_int_type(wchar_t c)
-        { return c; }
+        static wint_t 
+        to_int_type(wchar_t c)
+        { 
+            return c; 
+        }
     };
 
 #endif
@@ -160,97 +178,201 @@ namespace boost { namespace spirit {
     //
     ///////////////////////////////////////////////////////////////////////////
 
-    inline bool isalnum_(char c)
-        { using namespace std; return isalnum(to_int_type(c)); }
+    inline bool 
+    isalnum_(char c)
+    { 
+        using namespace std; 
+        return isalnum(to_int_type(c)); 
+    }
 
-    inline bool isalpha_(char c)
-        { using namespace std; return isalpha(to_int_type(c)); }
+    inline bool 
+    isalpha_(char c)
+    { 
+        using namespace std; 
+        return isalpha(to_int_type(c)); 
+    }
 
-    inline bool iscntrl_(char c)
-        { using namespace std; return iscntrl(to_int_type(c)); }
+    inline bool 
+    iscntrl_(char c)
+    { 
+        using namespace std; 
+        return iscntrl(to_int_type(c)); 
+    }
 
-    inline bool isdigit_(char c)
-        { using namespace std; return isdigit(to_int_type(c)); }
+    inline bool 
+    isdigit_(char c)
+    { 
+        using namespace std; 
+        return isdigit(to_int_type(c)); 
+    }
 
-    inline bool isgraph_(char c)
-        { using namespace std; return isgraph(to_int_type(c)); }
+    inline bool 
+    isgraph_(char c)
+    { 
+        using namespace std; 
+        return isgraph(to_int_type(c)); 
+    }
 
-    inline bool islower_(char c)
-        { using namespace std; return islower(to_int_type(c)); }
+    inline bool 
+    islower_(char c)
+    { 
+        using namespace std; 
+        return islower(to_int_type(c)); 
+    }
 
-    inline bool isprint_(char c)
-        { using namespace std; return isprint(to_int_type(c)); }
+    inline bool 
+    isprint_(char c)
+    { 
+        using namespace std; 
+        return isprint(to_int_type(c)); 
+    }
 
-    inline bool ispunct_(char c)
-        { using namespace std; return ispunct(to_int_type(c)); }
+    inline bool 
+    ispunct_(char c)
+    { 
+        using namespace std; 
+        return ispunct(to_int_type(c)); 
+    }
 
-    inline bool isspace_(char c)
-        { using namespace std; return isspace(to_int_type(c)); }
+    inline bool 
+    isspace_(char c)
+    { 
+        using namespace std; 
+        return isspace(to_int_type(c)); 
+    }
 
-    inline bool isupper_(char c)
-        { using namespace std; return isupper(to_int_type(c)); }
+    inline bool 
+    isupper_(char c)
+    { 
+        using namespace std; 
+        return isupper(to_int_type(c)); }
 
-    inline bool isxdigit_(char c)
-        { using namespace std; return isxdigit(to_int_type(c)); }
+    inline bool 
+    isxdigit_(char c)
+    { 
+        using namespace std; 
+        return isxdigit(to_int_type(c)); 
+    }
 
-    inline char tolower_(char c)
-        { 
-            using namespace std; 
-            return to_char_type<char>(tolower(to_int_type(c))); 
-        }
+    inline bool 
+    isblank_(char c)
+    { 
+        return (c == ' ' || c == '\t'); 
+    }
+    
+    inline char 
+    tolower_(char c)
+    { 
+        using namespace std; 
+        return to_char_type<char>(tolower(to_int_type(c))); 
+    }
 
-    inline char toupper_(char c)
-        { 
-            using namespace std; 
-            return to_char_type<char>(toupper(to_int_type(c))); 
-        }
+    inline char 
+    toupper_(char c)
+    { 
+        using namespace std; 
+        return to_char_type<char>(toupper(to_int_type(c))); 
+    }
 
 #if !defined(BOOST_NO_CWCTYPE)
 
-    inline bool isalnum_(wchar_t c)
-        { using namespace std; return iswalnum(to_int_type(c)); }
+    inline bool 
+    isalnum_(wchar_t c)
+    { 
+        using namespace std; 
+        return iswalnum(to_int_type(c)); 
+    }
 
-    inline bool isalpha_(wchar_t c)
-        { using namespace std; return iswalpha(to_int_type(c)); }
+    inline bool 
+    isalpha_(wchar_t c)
+    { 
+        using namespace std; 
+        return iswalpha(to_int_type(c)); 
+    }
 
-    inline bool iscntrl_(wchar_t c)
-        { using namespace std; return iswcntrl(to_int_type(c)); }
+    inline bool 
+    iscntrl_(wchar_t c)
+    { 
+        using namespace std; 
+        return iswcntrl(to_int_type(c)); 
+    }
 
-    inline bool isdigit_(wchar_t c)
-        { using namespace std; return iswdigit(to_int_type(c)); }
+    inline bool 
+    isdigit_(wchar_t c)
+    { 
+        using namespace std; 
+        return iswdigit(to_int_type(c)); 
+    }
 
-    inline bool isgraph_(wchar_t c)
-        { using namespace std; return iswgraph(to_int_type(c)); }
+    inline bool 
+    isgraph_(wchar_t c)
+    { 
+        using namespace std; 
+        return iswgraph(to_int_type(c)); 
+    }
 
-    inline bool islower_(wchar_t c)
-        { using namespace std; return iswlower(to_int_type(c)); }
+    inline bool 
+    islower_(wchar_t c)
+    { 
+        using namespace std; 
+        return iswlower(to_int_type(c)); 
+    }
 
-    inline bool isprint_(wchar_t c)
-        { using namespace std; return iswprint(to_int_type(c)); }
+    inline bool 
+    isprint_(wchar_t c)
+    { 
+        using namespace std; 
+        return iswprint(to_int_type(c)); 
+    }
 
-    inline bool ispunct_(wchar_t c)
-        { using namespace std; return iswpunct(to_int_type(c)); }
+    inline bool 
+    ispunct_(wchar_t c)
+    { 
+        using namespace std; 
+        return iswpunct(to_int_type(c)); 
+    }
 
-    inline bool isspace_(wchar_t c)
-        { using namespace std; return iswspace(to_int_type(c)); }
+    inline bool 
+    isspace_(wchar_t c)
+    { 
+        using namespace std; 
+        return iswspace(to_int_type(c)); 
+    }
 
-    inline bool isupper_(wchar_t c)
-        { using namespace std; return iswupper(to_int_type(c)); }
+    inline bool 
+    isupper_(wchar_t c)
+    { 
+        using namespace std; 
+        return iswupper(to_int_type(c)); 
+    }
 
-    inline bool isxdigit_(wchar_t c)
-        { using namespace std; return iswxdigit(to_int_type(c)); }
+    inline bool 
+    isxdigit_(wchar_t c)
+    { 
+        using namespace std; 
+        return iswxdigit(to_int_type(c)); 
+    }
 
-    inline wchar_t tolower_(wchar_t c)
-        { 
-            using namespace std; 
-            return to_char_type<wchar_t>(towlower(to_int_type(c))); 
-        }
+    inline bool 
+    isblank_(wchar_t c)
+    { 
+        return (c == L' ' || c == L'\t'); 
+    } 
 
-    inline wchar_t toupper_(wchar_t c)
-        { 
-            using namespace std; 
-            return to_char_type<wchar_t>(towupper(to_int_type(c))); 
-        }
+    inline wchar_t 
+    tolower_(wchar_t c)
+    { 
+        using namespace std; 
+        return to_char_type<wchar_t>(towlower(to_int_type(c))); 
+    }
+
+    inline wchar_t 
+    toupper_(wchar_t c)
+    { 
+        using namespace std; 
+        return to_char_type<wchar_t>(towupper(to_int_type(c))); 
+    }
+
 
 #endif // !defined(BOOST_NO_CWCTYPE)
 

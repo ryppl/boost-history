@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 2001-2003 Joel de Guzman
     Copyright (c) 2001-2003 Daniel Nuffer
     http://spirit.sourceforge.net/
@@ -29,8 +29,8 @@ inline basic_chset<CharT>::basic_chset() {}
 
 //////////////////////////////////
 template <typename CharT>
-inline basic_chset<CharT>::basic_chset(basic_chset const& arg)
-: rr(arg.rr) {}
+inline basic_chset<CharT>::basic_chset(basic_chset const& arg_)
+: rr(arg_.rr) {}
 
 //////////////////////////////////
 template <typename CharT>
@@ -143,8 +143,8 @@ inline basic_chset_8bit<CharT>::basic_chset_8bit() {}
 
 /////////////////////////////////
 template <typename CharT>
-inline basic_chset_8bit<CharT>::basic_chset_8bit(basic_chset_8bit const& arg)
-: bset(arg.bset) {}
+inline basic_chset_8bit<CharT>::basic_chset_8bit(basic_chset_8bit const& arg_)
+: bset(arg_.bset) {}
 
 /////////////////////////////////
 template <typename CharT>

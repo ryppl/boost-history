@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 2001-2003 Daniel Nuffer
     http://spirit.sourceforge.net/
 
@@ -17,7 +17,7 @@
 #include <cctype>
 #include <boost/limits.hpp>
 
-#include "boost/spirit/utility/impl/escape_char.ipp"
+#include <boost/spirit/utility/impl/escape_char.ipp>
 
 ///////////////////////////////////////////////////////////////////////////////
 namespace boost { namespace spirit {
@@ -61,8 +61,6 @@ struct escape_char_action
         typedef typename match_result<ScannerT, CharT>::type type;
     };
 
-    escape_char_action()
-    : base_t(ParserT()), actor(ActionT()) {}
     escape_char_action(ParserT const& p, ActionT const& a)
     : base_t(p), actor(a) {}
 

@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 2002-2003 Joel de Guzman
     Copyright (c) 2002-2003 Juan Carlos Arevalo-Baeza
     http://spirit.sourceforge.net/
@@ -13,7 +13,7 @@
 #define BOOST_SPIRIT_FUNCTOR_PARSER_HPP
 
 ///////////////////////////////////////////////////////////////////////////////
-#include "boost/spirit/core/parser.hpp"
+#include <boost/spirit/core/parser.hpp>
 
 ///////////////////////////////////////////////////////////////////////////////
 namespace boost { namespace spirit {
@@ -55,12 +55,12 @@ namespace boost { namespace spirit {
 
             iterator_t const s(scan.first);
             functor_result_t result;
-            int const len = functor(scan, result);
+            std::ptrdiff_t len = functor(scan, result);
 
             if (len < 0)
                 return scan.no_match();
             else
-                return scan.create_match(len, result, s, scan.first);
+                return scan.create_match(std::size_t(len), result, s, scan.first);
         }
     };
 

@@ -1,7 +1,8 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 2001-2003 Joel de Guzman
     Copyright (c) 2002-2003 Martin Wille
+    Copyright (c) 2003 Hartmut Kaiser
     http://spirit.sourceforge.net/
 
     Permission to copy, use, modify, sell and distribute this software is
@@ -17,9 +18,10 @@
 #undef BOOST_SPIRIT_SINGLE_GRAMMAR_INSTANCE
 #endif
 
-#include "boost/spirit/core/parser.hpp"
-#include "boost/spirit/core/non_terminal/parser_context.hpp"
-#include "boost/spirit/core/non_terminal/impl/grammar.ipp"
+#include <boost/spirit/core/parser.hpp>
+#include <boost/spirit/core/non_terminal/parser_context.hpp>
+#include <boost/spirit/core/non_terminal/grammar_def.hpp>
+#include <boost/spirit/core/non_terminal/impl/grammar.ipp>
 
 ///////////////////////////////////////////////////////////////////////////////
 namespace boost { namespace spirit {
@@ -53,7 +55,7 @@ struct grammar
     template <typename ScannerT>
     typename parser_result<self_t, ScannerT>::type
     parse_main(ScannerT const& scan) const
-    { return impl::grammar_parser_parse(this, scan); }
+    { return impl::grammar_parser_parse<0>(this, scan); }
 
     template <typename ScannerT>
     typename parser_result<self_t, ScannerT>::type
@@ -63,6 +65,11 @@ struct grammar
         typedef parser_scanner_linker<ScannerT> scanner_t;
         BOOST_SPIRIT_CONTEXT_PARSE(scan, *this, scanner_t, context_t, result_t)
     }
+
+    template <int N>
+    impl::entry_grammar<DerivedT, N, ContextT>
+    use_parser() const
+    { return impl::entry_grammar<DerivedT, N, ContextT>(derived()); }
 
     BOOST_SPIRIT_GRAMMAR_STATE
 };

@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 1998-2003 Joel de Guzman
     http://spirit.sourceforge.net/
 
@@ -29,12 +29,12 @@ namespace boost { namespace spirit {
         {
             typedef scanner_policies<
                 no_skipper_iteration_policy<
-                    BOOST_SPIRIT_TYPENAME ScannerT::iteration_policy_t>,
-                BOOST_SPIRIT_TYPENAME ScannerT::match_policy_t,
-                BOOST_SPIRIT_TYPENAME ScannerT::action_policy_t
+                    BOOST_DEDUCED_TYPENAME ScannerT::iteration_policy_t>,
+                BOOST_DEDUCED_TYPENAME ScannerT::match_policy_t,
+                BOOST_DEDUCED_TYPENAME ScannerT::action_policy_t
             > policies_t;
 
-            scanner<BOOST_SPIRIT_TYPENAME ScannerT::iterator_t, policies_t>
+            scanner<BOOST_DEDUCED_TYPENAME ScannerT::iterator_t, policies_t>
                 scan2(scan.first, scan.last, policies_t(scan));
             typedef typename ScannerT::iterator_t iterator_t;
 
@@ -109,7 +109,8 @@ namespace boost { namespace spirit {
                 match<nil_t> hit = p.parse(scan);
                 scan.skip(scan);
                 return parse_info<IteratorT>(
-                    first, hit, hit && (first == last), hit.length());
+                    first, bool(hit), bool(hit) && (first == last),
+                    hit.length());
             }
         };
 
@@ -133,7 +134,8 @@ namespace boost { namespace spirit {
                 match<nil_t> hit = p.parse(scan);
                 scan.skip(scan);
                 return parse_info<IteratorT>(
-                    first, hit, hit && (first == last), hit.length());
+                    first, bool(hit), bool(hit) && (first == last),
+                    hit.length());
             }
         };
     }

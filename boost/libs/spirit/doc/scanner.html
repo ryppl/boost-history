@@ -146,6 +146,19 @@
       or full). </td>
   </tr>
 </table>
+<h2><a name="phrase_scanner_t" id="phrase_scanner_t"></a><img src="theme/lens.gif" width="15" height="16"> 
+  The phrase_scanner_t and wide_phrase_scanner_t</h2>
+<p>For convenience, Spirit declares these typedefs:</p>
+<pre>
+    <span class="keyword">typedef</span> scanner<span class="special">&lt;</span><span class="keyword">char const</span><span class="special">*,</span> unspecified<span class="special">&gt;</span> phrase_scanner_t<span class="special">;</span>
+    <span class="keyword">typedef</span> scanner<span class="special">&lt;</span><span class="keyword">wchar_t const</span><span class="special">*,</span> <span class="identifier">unspecified</span><span class="special">&gt;</span> wide_phrase_scanner_t<span class="special">;</span>
+</pre>
+<p>These are the exact scanner types used by Spirit on calls to the parse function 
+  passing in a <tt>char const*</tt> (C string) or a <tt>wchar_t const*</tt> (wide 
+  string) as the first parameter and a <tt>space_p</tt> as skip-parser (the third 
+  parameter). For instance, we can use these typedefs to declare some rules. Example:</p>
+<pre>    rule<span class="special">&lt;</span>phrase_scanner_t<span class="special">&gt; </span><span class="identifier">my_rule</span><span class="special">;
+    </span><span class="identifier">parse</span><span class="special">(</span><span class="string">&quot;abrakadabra&quot;</span><span class="special">, </span><span class="identifier">my_rule</span><span class="special">,</span> <span class="identifier">space_p</span><span class="special">);</span></pre>
 <h2><img src="theme/lens.gif" width="15" height="16"> Direct parsing with Iterators</h2>
 <p>On some occassions, we may wish to go low-level and call the parser's parse 
   member function directly. Since we have the free parse functions to begin with, 

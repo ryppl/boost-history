@@ -1,7 +1,7 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 2001-2003 Daniel Nuffer
-    Copyright (c) 2002 Jeff Westfahl
+    Copyright (c) 2003 Giovanni Bajo
     http://spirit.sourceforge.net/
 
     Permission to copy, use, modify, sell and distribute this software is
@@ -18,13 +18,13 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include "boost/spirit/iterator/file_iterator.hpp"
-#include "boost/spirit/iterator/fixed_size_queue.hpp"
-#include "boost/spirit/iterator/position_iterator.hpp"
+#include <boost/spirit/iterator/file_iterator.hpp>
+#include <boost/spirit/iterator/fixed_size_queue.hpp>
+#include <boost/spirit/iterator/position_iterator.hpp>
 
-#include "boost/config.hpp"
-#if !defined(BOOST_MSVC) || (BOOST_MSVC > 1300)
-#include "boost/spirit/iterator/multi_pass.hpp"
+#include <boost/config.hpp>
+#if !defined(BOOST_MSVC) || (BOOST_MSVC >= 1300)
+#include <boost/spirit/iterator/multi_pass.hpp>
 #endif
 
 #endif // !defined(BOOST_SPIRIT_ITERATOR_MAIN_HPP)

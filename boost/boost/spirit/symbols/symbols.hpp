@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 2001-2003 Joel de Guzman
     http://spirit.sourceforge.net/
 
@@ -14,10 +14,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include <string>
 
-#include "boost/ref.hpp"
+#include <boost/ref.hpp>
 
-#include "boost/spirit/core/parser.hpp"
-#include "boost/spirit/core/composite/directives.hpp"
+#include <boost/spirit/core/parser.hpp>
+#include <boost/spirit/core/composite/directives.hpp>
 
 ///////////////////////////////////////////////////////////////////////////////
 namespace boost { namespace spirit {
@@ -235,5 +235,5 @@ private:
 ///////////////////////////////////////////////////////////////////////////////
 }} // namespace boost::spirit
 
-#include "boost/spirit/symbols/impl/symbols.ipp"
+#include <boost/spirit/symbols/impl/symbols.ipp>
 #endif

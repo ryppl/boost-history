@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 2002-2003 Joel de Guzman
     Copyright (c) 2002-2003 Hartmut Kaiser
     Copyright (c) 2003 Martin Wille
@@ -13,7 +13,7 @@
 #if !defined(BOOST_SPIRIT_PARSER_TRAITS_IPP)
 #define BOOST_SPIRIT_PARSER_TRAITS_IPP
 
-#include "boost/spirit/core/composite/operators.hpp"
+#include <boost/spirit/core/composite/operators.hpp>
 
 ///////////////////////////////////////////////////////////////////////////////
 namespace boost { namespace spirit {
