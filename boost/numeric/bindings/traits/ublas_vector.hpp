@@ -20,7 +20,7 @@
 #define BOOST_NUMERIC_BINDINGS_TRAITS_UBLAS_VECTOR_H
 
 #include <boost/numeric/ublas/vector.hpp>
-#include <boost/numeric/bindings/traits/traits.hpp>
+#include <boost/numeric/bindings/traits/vector_traits.hpp>
 #include <boost/numeric/bindings/traits/detail/ublas_vector_closure.hpp>
 
 namespace boost { namespace numeric { namespace bindings { namespace traits {
@@ -148,4 +148,4 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
 
 }}}}  
 
-#endif 
+#endif // BOOST_NUMERIC_BINDINGS_TRAITS_UBLAS_VECTOR_H
