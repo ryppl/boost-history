@@ -36,4 +36,4 @@ dist:
 	rm -f /tmp/smart-enum-src.tar.gz
 
 import:		dist
-	cvs import -m "Imported from boost-sandbox." homepage/smart-enum smart-enum smart-enum-publish
+	(cd /tmp/smart-enum && cvs import -m "Imported from boost-sandbox." homepage/smart-enum smart-enum smart-enum-publish)
