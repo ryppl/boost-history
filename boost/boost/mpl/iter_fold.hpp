@@ -19,7 +19,6 @@
 
 #include "boost/mpl/apply.hpp"
 #include "boost/mpl/begin_end.hpp"
-#include "boost/mpl/identity/project2nd.hpp"
 #include <boost/mpl/select_type.hpp>
 
 namespace boost {
@@ -37,11 +36,7 @@ template <
 struct iter_fold_impl_more;
 
 template <
-      typename Iterator
-    , typename LastIterator
-    , typename State
-    , typename ForwardOp
-    , typename BackwardOp
+    typename State
     >
 struct iter_fold_impl_done;
 
@@ -55,8 +50,8 @@ template <
 struct iter_fold_impl
     : select_type<
       is_same<Iterator,LastIterator>::value
-      , iter_fold_impl_done<Iterator, LastIterator, State, ForwardOp,  BackwardOp>
-      , iter_fold_impl_more<Iterator, LastIterator, State, ForwardOp,  BackwardOp>
+      , iter_fold_impl_done<State>
+      , iter_fold_impl_more<Iterator, LastIterator, State, ForwardOp, BackwardOp>
         >::type
 {
 };
@@ -124,11 +119,7 @@ struct iter_fold_impl_more
 };
 
 template<
-      typename Iterator
-    , typename LastIterator
-    , typename State
-    , typename ForwardOp
-    , typename BackwardOp
+    typename State
     >
 struct iter_fold_impl_done
 {
