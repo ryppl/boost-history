@@ -137,14 +137,14 @@ namespace boost {
    
    typedef std::vector<index_entry> type_index_t;
    
-   template <class Tuple>
-   struct select1st
+   template <int N, class Tuple>
+   struct select_nth
    {
-      typedef typename tuples::element<0, Tuple>::type result_type;
+      typedef typename tuples::element<N, Tuple>::type result_type;
       
       result_type const& operator()(Tuple const& x) const
       {
-          return tuples::get<0>(x);
+          return tuples::get<N>(x);
       }
    };
 
@@ -295,8 +295,8 @@ namespace boost { namespace langbinding {
            type_index.begin(), type_index.end()
               , boost::make_tuple(type, vertex_t(), dynamic_id_function(0))
               , boost::bind<bool>(std::less<class_id>()
-                 , boost::bind<class_id>(select1st<entry>(), _1)
-                 , boost::bind<class_id>(select1st<entry>(), _2)));
+                 , boost::bind<class_id>(select_nth<0, entry>(), _1)
+                 , boost::bind<class_id>(select_nth<0, entry>(), _2)));
       }
 
       inline index_entry* seek_type(class_id type)
@@ -447,6 +447,64 @@ namespace boost { namespace langbinding {
          void* p, type_info src_t, type_info dst_t) const
    {
       return m_pimpl->convert_type(p, src_t, dst_t, true);
+   }
+
+   void inheritance_graph_base::link_with(inheritance_graph_base& that)
+   {
+      if (m_pimpl == that.m_pimpl)
+         return;
+
+      // copy the type index
+      for (type_index_t::iterator i = m_pimpl->type_index.begin()
+            ; i != m_pimpl->type_index.end(); ++i)
+      {
+         type_index_t::iterator x = that.m_pimpl->demand_type(
+               tuples::get<ksrc_static_t>(*i));
+         tuples::get<kdynamic_id>(*x) = tuples::get<kdynamic_id>(*i);
+      }
+
+      typedef std::pair<cast_graph::edge_iterator
+         , cast_graph::edge_iterator> edges_t;
+
+      // only go throught the full graph, that holds ALL casts
+      cast_graph& g = m_pimpl->full_graph.topology();
+
+      typedef property_map<cast_graph,edge_cast_t>::type cast_map;
+      cast_map casts = get(edge_cast, g);
+
+      edges_t edges_ = edges(g);
+
+      for (cast_graph::edge_iterator e = edges_.first;
+           e != edges_.second; ++e)
+      {
+         cast_function cast = boost::get(casts, *e);
+
+         vertex_t src = source(*e, g);
+         vertex_t dst = target(*e, g);
+
+         type_index_t::iterator src_iter = std::find_if(
+                 m_pimpl->type_index.begin()
+               , m_pimpl->type_index.end()
+               , boost::bind<bool>(std::equal_to<vertex_t>()
+                     , boost::bind<vertex_t>(select_nth<kvertex, index_entry>(), _1)
+                     , src));
+
+         type_index_t::iterator dst_iter = std::find_if(
+                 m_pimpl->type_index.begin()
+               , m_pimpl->type_index.end()
+               , boost::bind<bool>(std::equal_to<vertex_t>()
+                     , boost::bind<vertex_t>(select_nth<kvertex, index_entry>(), _1)
+                     , dst));
+
+         bool polymorphic = tuples::get<kdynamic_id>(*src_iter) != 0;
+            
+         class_id src_t = tuples::get<ksrc_static_t>(*src_iter);
+         class_id dst_t = tuples::get<ksrc_static_t>(*dst_iter);
+
+         that.add_cast(src_t, dst_t, cast, polymorphic);
+      }
+
+      m_pimpl = that.m_pimpl;
    }
 
    inheritance_graph_base::inheritance_graph_base()

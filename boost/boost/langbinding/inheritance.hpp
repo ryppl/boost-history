@@ -40,13 +40,15 @@ namespace boost { namespace langbinding {
       void* find_static_type(void* p, type_info src, type_info dst) const;
       void* find_dynamic_type(void* p, type_info src, type_info dst) const;
 
+      void link_with(inheritance_graph_base& that);
+
    protected:
       inheritance_graph_base();
       virtual ~inheritance_graph_base();
 
    private:
       struct implementation;
-      std::auto_ptr<implementation> m_pimpl;
+      boost::shared_ptr<implementation> m_pimpl;
    };
 
    class inheritance_graph : public inheritance_graph_base
