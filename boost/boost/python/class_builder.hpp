@@ -98,10 +98,26 @@ class class_builder
     
     // declare the given class a base class of this one and register 
     // conversion functions
+    template <class S>
+    void declare_base(type<S> const & t)
+    {
+        m_class->declare_base(t);
+    }
+
+    // declare the given class a base class of this one and register 
+    // upcast conversion function
+    template <class S>
+    void declare_base(type<S> const & t, without_downcast_t)
+    {
+        m_class->declare_base(t, without_downcast);
+    }
+
+    // declare the given class a base class of this one and register 
+    // conversion functions
     template <class S, class V>
     void declare_base(class_builder<S, V> const & base)
     {
-        m_class->declare_base(base.get_extension_class());
+        declare_base(type<S>());
     }
 
     // declare the given class a base class of this one and register 
@@ -109,7 +125,7 @@ class class_builder
     template <class S, class V>
     void declare_base(class_builder<S, V> const & base, without_downcast_t)
     {
-        m_class->declare_base(base.get_extension_class(), without_downcast);
+        declare_base(type<S>(), without_downcast);
     }
 
     // get the embedded ExtensioClass object
@@ -144,27 +160,7 @@ class class_builder
     reference<detail::extension_class<T, U> > m_class;
 };
 
-namespace detail 
-{
-
-// helper function that does the actual work of creating a cursor for a n
-// STL conforming container. called by module_builder::def_cursor_for()
-template <class T, class U>
-void wrap_cursor_class(module_builder & module, 
-                       class_builder<T, U> & wrapped_container)
-{ 
-    std::string cursor_name(wrapped_container.get_extension_class()->tp_name);
-    cursor_name += "_cursor";
-    class_builder<cursor<T> > cursor_class(module, cursor_name.c_str());
-
-    cursor_class.def(&cursor<T>::get_item, "__getitem__");
-    cursor_class.def(&cursor<T>::set_item, "__setitem__");
-    cursor_class.def(&cursor<T>::len, "__len__");
-    wrapped_container.def(&extension_class_cursor_factory<T>::get, "cursor");
-}
-
-} // namespace detail
-
+// The bug mentioned at the top of this file is that on certain compilers static
 // global functions declared within the body of a class template will only be
 // generated when the class template is constructed, and when (for some reason)
 // the construction does not occur via a new-expression. Otherwise, we could
