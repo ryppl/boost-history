@@ -339,7 +339,7 @@ struct keywords
    struct restrict_base
    {
        // metafunction forwarding here would confuse vc6
-       typedef typename mpl::apply1<
+       typedef mpl::apply1<
            detail::restrict_keywords<
                typename mpl::and_<
                    detail::has_named_of<Seq, K0>
@@ -350,7 +350,7 @@ struct keywords
                >::type
            >
          , self_t
-       >::type type;
+       > type;
    };
 
 #if BOOST_WORKAROUND(BOOST_MSVC, == 1200)
@@ -375,14 +375,27 @@ struct keywords
       , class T4 = detail::nil
    >
    struct restrict
+      : restrict_base<
+           BOOST_DEDUCED_TYPENAME mpl::apply5<
+               detail::make_as_named_list<T0,T1,T2,T3,T4>
+             , K0, K1, K2, K3, K4
+           >::type
+        >::type
    {
-       // metafunction forwarding here would confuse vc6
+/*       // metafunction forwarding here would confuse vc6
+
+         // but: we have to use forwarding, the nested 'type'
+         // doesn't exist if the restriction fails.
+
+         // vc6/vc7 doesn't support SFINAE good enough
+         // to handle restrictions anyway
+
        typedef BOOST_DEDUCED_TYPENAME restrict_base<
            BOOST_DEDUCED_TYPENAME mpl::apply5<
                detail::make_as_named_list<T0,T1,T2,T3,T4>
              , K0, K1, K2, K3, K4
            >::type
-       >::type type;
+       >::type type;*/
    };
 
    template<class A0>
