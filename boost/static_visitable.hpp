@@ -28,8 +28,8 @@ namespace boost {
 //////////////////////////////////////////////////////////////////////////
 // class template static_visitable
 //
-// Class template meant to be derived by types visitable by static
-//   visitors, i.e., Deriving::apply_visitor(visitor) is defined.
+// Derived by types visitable by static visitors, i.e., a type Deriving
+// such that Deriving::apply_visitor(visitor) is defined.
 //
 
 namespace detail { namespace static_visitable {
@@ -99,7 +99,7 @@ struct static_visitable_traits
     {
         // Visit directly:
         static_visitable<Visitable>& v = visitable;
-        v.apply_visitor(visitor, detail::static_visitable::private_forward_tag());
+        return v.apply_visitor(visitor, detail::static_visitable::private_forward_tag());
     }
 
     template <typename Visitor>
@@ -109,7 +109,7 @@ struct static_visitable_traits
     {
         // Const-visit directly:
         const static_visitable<Visitable>& v = visitable;
-        v.apply_visitor(visitor, detail::static_visitable::private_forward_tag());
+        return v.apply_visitor(visitor, detail::static_visitable::private_forward_tag());
     }
 };
 
