@@ -352,7 +352,10 @@ template<...> struct function_traits;
 
 template<typename R, ... Args> 
   struct function_traits<R(Args)>
-  { typedef R result_type; };
+  { 
+    typedef R result_type; 
+    typedef tuple<Args...> argument_types;
+  };
 \end{verbatim}
 
 \subsection{Member pointer adaptor implementation}
@@ -493,7 +496,6 @@ public:
     return *this;
   }
 
-private:
   head_type head;
   tail_type tail;
 };
@@ -544,7 +546,6 @@ public:
     return *this;
   }
 
-private:
   head_type head;
   tail_type tail;
 };
@@ -569,6 +570,54 @@ template<typename T1, ... Rest>
 \end{verbatim}
 \normalsize
 
+\subsection{Tuple algorithms implementation}
+In this section we implement three ``core'' tuple algorithms.
+Although there is not yet any proposal for these algorithms, they are
+useful in practice and will be used in implementations within this
+proposal.
+
+The first tuple algorithm creates a tuple that is the reverse of the
+input tuple.
+\begin{verbatim}
+template<... Args>
+  auto reverse(tuple<>, Args args)
+  { return make_tuple(args..); }
+
+template<typename Tuple, ... Args>
+  auto reverse(const Tuple& t, Args args)
+  { return reverse(t.tail, t.head, args...); }
+\end{verbatim}
+
+The second tuple algorithm illustrates the ability to unpack a tuple
+into a (value) parameter pack, so that function call arguments can be
+stored in a tuple and later unpacked and passed to a function object
+as function call parameters.
+\begin{verbatim}
+template<typename F, ... Args>
+  auto apply(F f, tuple<>, Args args)
+  { return f(args...); }
+
+template<typename F, typename Tuple, ... Args>
+  auto apply(F f, const Tuple& t, Args args)
+  { return apply(f, t.tail, args..., t.head); }
+
+template<typename F, typename Tuple, ... Args>
+  auto apply(F f, Tuple& t, Args args)
+  { return apply(f, t.tail, args..., t.head); }
+\end{verbatim}
+
+The final tuple algorithm represents a transformation on tuples,
+similar to the {\tt transform} algorithm in the standard library.
+\begin{verbatim}
+template<typename F, ... Args>
+  auto transform(tuple<>, F f, Args args)
+  { return make_tuple(args..); }
+
+template<typename Tuple, typename F, ... Args>
+  auto transform(const Tuple& t, F f, Args args)
+  { return transform(t.tail, f, args..., f(t.head)); }
+\end{verbatim}
+
 \subsection{Function implementation}
 \label{functionimpl}
 This section implements the core interesting portions of class
@@ -576,112 +625,130 @@ template {\tt function} from the function object wrapper
 proposal~\cite{Gregor02}. The implementation of this library is much
 more subtle than that of the prior libraries, particularly the use of
 template parameter deduction and explicit specification of function
-template arguments to resolve the address of an overloaded function.
+template arguments to resolve the address of an overloaded function
+within the constructor. The implementation is complete with one
+exception: it does not properly support function pointers. The
+modifications to account for function pointers are simple but are
+outside the scope of this proposal.
 
 \small
 \begin{verbatim}
 struct bad_function_call : public std::exception {};
 
-template<typename R, typename Args>
-struct function_invoker_base
-{
-  virtual ~function_invoker_base() {}
-  virtual R invoke(Args& args) = 0;
-  virtual function_invoker_base* clone() = 0;
-};
-
-template<typename R, typename Args, typename F>
-struct function_invoker : public function_invoker_base<R, Args>
-{
-  function_invoker(F f) : f(f) {}
-  R invoke(Args& args) { return std::apply(f, args); }
-  function_invoker_base<R, Args>* clone() { return new function_invoker(f); }
-
-private:
-   F f;
-};
-
-template<typename Args, typename F>
-struct function_invoker<void, Args, F> 
-  : public function_invoker_base<void, Args>
-{
-  function_invoker(F f) : f(f) {}
-  void invoke(Args & args) { std::apply(f, args); }
-  function_invoker_base<void, Args>* clone() { return new function_invoker(f); }
-
-private:
-  F f;
-};
-
 template<typename Function> // Function type R(T1, T2, ..., TN)
-struct function
-{
-  typedef typename function_traits<Function>::result_type result_type;
-  typedef typename function_traits<Function>::argument_types argument_types;
-  
-private:
-  typedef function_invoker_base<result_type, argument_types> invoker_type;
-  
-public:
-  function() : invoker(0) {}
-  
-  function(const function& other) : invoker(0)
-    { if (other.invoker) invoker = other.invoker->clone(); }
-
-  template<typename F> function(F f) : invoker(0)
-    { invoker = new function_invoker<result_type, argument_types, F>(f); }
-
-  template<typename F> function(reference_wrapper<F> f) : invoker(0)
-  { 
-    invoker = new function_invoker<result_type, argument_types, F&>(f.get()); 
-  }
-  
-  template<typename T, typename C> function(T C::*pm) : invoker(0)
-    { *this = std::mem_fn(pm); }
-
-  function(int) : invoker(0) {}
-  
-  ~function() { if (invoker) { delete invoker; invoker = 0; } }
-
-  function& operator=(const function& other)
+  struct function
   {
-    function tmp(other);
-    tmp.swap(*this);
-    return *this;
-  }
-  
-  template<typename F> function& operator=(F f)
-  {
-    function tmp(f);
-    tmp.swap(*this);
-    return *this;
-  }
-  
-  operator bool() const { return invoker; }
+    typedef typename function_traits<Function>::result_type result_type;
+    typedef typename function_traits<Function>::argument_types argument_types;
 
-  template<... Args>
-  result_type operator()(Args args) const
-  {
-    if (!invoker) throw bad_function_call;
-    return invoker->invoke(args);
-  }
-  
-  void swap(function& other)
-  {
-    using std::swap;
-    swap(invoker, other.invoker);
-  }
-  
-private:
-  invoker_type* invoker;
-};
+    template<typename Functor, ... Args>
+      auto functor_invoker(Args args) const
+      { return (*static_cast<Functor*>(functor))(args...); }
+    
+    template<typename Functor> 
+      static void* functor_manager(void* ptr, bool clone)
+      { 
+        const Functor* functor = static_cast<Functor*>(ptr);
+        if (clone) return new Functor(*functor); 
+        else { delete functor; return 0; }
+      }
+
+    static void* trivial_manager(const void* ptr, bool)
+    { return const_cast<void*>(ptr); }
+
+    Function function::* invoker;
+    mutable void*        functor;
+    void* (*manager)(void*, bool /* clone or delete */);
+
+    struct clear_type;
+
+  public:
+    function() : invoker(0), functor(0), manager(0) {}
+    
+    function(const function& other) : invoker(0), functor(0), manager(0)
+      { 
+        if (other.invoker) {
+          invoker = other.invoker;
+          functor = other.manager(other.functor, true);
+          manager = other.manager;
+        }
+      }
+
+    template<typename F> 
+      function(F f, 
+               typename enable_if<(!is_integral<F>::value, void*>::type = 0) 
+        : invoker(0), functor(0), manager(0)
+      {
+        invoker = &function::functor_invoker<F>;
+        functor = new Functor(f);
+        manager = &functor_manager<F>;
+      }
+
+    template<typename F> 
+      function(reference_wrapper<F> f) : invoker(0), functor(0), manager(0)
+      { 
+        invoker = &function::functor_invoker<F>;
+        functor = &f.get();
+        manager = &trivial_manager;
+      }
+    
+    template<typename T, typename C> 
+      function(T C::*pm) : invoker(0), functor(0), manager(0)
+      { *this = std::mem_fn(pm); }
+
+    function(clear_type*) : invoker(0), functor(0), manager(0) {}
+    
+    ~function() { if (invoker) manager(functor, false); }
+
+    function& operator=(const function& other)
+    {
+      function tmp(other);
+      tmp.swap(*this);
+      return *this;
+    }
+    
+    template<typename F> 
+      typename enable_if<(!is_integral<F>::value, function&>::type
+      operator=(F f)
+      {
+        function tmp(f);
+        tmp.swap(*this);
+        return *this;
+      }
+    
+    function& operator=(clear_type*)
+    {
+      if (invoker) { 
+        manager(functor, false);
+        invoker = 0;
+        functor = 0;
+        manager = 0;
+      }
+    }
+
+    operator bool() const { return invoker; }
+
+    template<... Args> result_type operator()(Args args) const
+    {
+      if (!invoker) throw bad_function_call;
+      return (this->*invoker)(args...);
+    }
+    
+    void swap(function& other)
+    {
+      using std::swap;
+      swap(invoker, other.invoker);
+      swap(functor, functor);
+      swap(manager, manager);
+    }
+  };
 \end{verbatim}
 \normalsize
 
 \subsection{Bind implementation}
 \label{bindimpl}
 The following code implements the enhanced binder
-proposal~\cite{Dimov03b} using vararg templates, and building on the
+proposal~\cite{Dimov03b} using variadic templates, and building on the
 existing tuple and member pointer adaptor code. This implementation is
 complete, with two exceptions (both of which require uninteresting but
 nontrivial code, expressible in C++03):
@@ -690,7 +757,7 @@ nontrivial code, expressible in C++03):
   \item arity checking is not performed at bind time
 \end{itemize}
 
- \small
+\small
 \begin{verbatim}
 // Placeholders
 template<int N> struct placeholder {};
@@ -724,9 +791,10 @@ mu(X&, Args& args)
   { return std::get<is_placeholder<X>::value-1>(args); }
 
 template<typename X, typename Args>
-typename enable_if<(is_bind_expression<X>::value), the-return-type>::type
-mu(X& x, Args& args)
-  { return std::apply(x, args); }
+  auto 
+  mu(X& x, Args& args, 
+     typename enable_if<(is_bind_expression<X>::value), void*>::type = 0)
+  { return apply(x, args); }
 
 template<typename X, typename Args> X& mu(X& x, Args&)
   { return x; }
@@ -738,7 +806,7 @@ struct apply_mu_t
 {
   explicit apply_mu_t(BoundArgs& bound_args) : bound_args(bound_args) {}
 
-  template<typename X> the-return-type operator()(X& x) const
+  template<typename X> auto operator()(X& x) const
     { return mu(x, bound_args); }
 
 private:
@@ -752,11 +820,11 @@ struct binder
   binder(const F& f, const BoundArgs& bound_args)
     : f(f), bound_args(bound_args) {}
 
-  template<... Args> the-return-type operator()(Args args)
-    { return std::apply(lambda(f), transform(args, apply_mu(bound_args))); }
+  template<... Args> auto operator()(Args args)
+    { return apply(lambda(f), transform(tie(args...), apply_mu(bound_args))); }
 
-  template<... Args> the-return-type operator()(Args args) const
-    { return std::apply(lambda(f), transform(args, apply_mu(bound_args))); }
+  template<... Args> auto operator()(Args args) const
+    { return apply(lambda(f), transform(tie(args...), apply_mu(bound_args))); }
 
 private:
   F f;
@@ -766,7 +834,7 @@ private:
 // Helper to construct binder objects
 template<typename F, typename BoundArgs>
 binder<F, BoundArgs> make_binder(F f, const BoundArgs& bound_args)
-  { return binder<F, BoundArgs>(f, bound_args); }
+  { return binder<F, BoundArgs>(f, make_tuple(bound_args...)); }
 
 // Determine if a type T is a binder type
 template<typename T> struct is_bind_expression : integral_constant<bool, false> {};
@@ -774,18 +842,15 @@ template<typename T> struct is_bind_expression : integral_constant<bool, false> 
 template<typename F, typename BoundArgs>
 struct is_bind_expression<binder<F, BoundArgs> > : integral_constant<bool, true> {};
 
-// Remove the reference from a value
-struct remove_ref { template<typename T> T operator()(T& x) const { return x; } };
-
 // Bind overload for function objects and function pointers
 template<typename F, ... BoundArgs>
-the-return-type bind(F f, BoundArgs bound_args)
-  { return make_binder(f, transform(bound_args, remove_ref())); }
+  auto bind(F f, BoundArgs bound_args)
+  { return make_binder(f, make_tuple(bound_args...)); }
 
 // Bind overload for member pointers (both function and data)
 template<typename Class, typename T, ... BoundArgs>
-the-return-type bind(T Class::*pm, BoundArgs bound_args)
-  { return make_binder(mem_fn(f), transform(bound_args, remove_ref())); }
+  auto bind(T Class::*pm, BoundArgs bound_args)
+  { return make_binder(mem_fn(f), make_tuple(bound_args...)); }
 \end{verbatim}
 \normalsize
 
