@@ -95,7 +95,7 @@
                                 format_type c
                              ):
                openclose_formatter_t< FormatType, ReferenceType, FormatTraits >( o, c ),
-               fmt_separator( traits_type::separator_default )
+               fmt_separator( traits_type::separator_default())
             {
             }
             inline           formatter_t( format_type s ):
@@ -119,7 +119,7 @@
                                 const openclose_formatter_t< FormatType, RT2, FormatTraits2 > & fmt
                              ):
                openclose_formatter_t< FormatType, ReferenceType, FormatTraits >( fmt ),
-               fmt_separator( traits_type::separator_default )
+               fmt_separator( traits_type::separator_default())
             {
             }
             template< typename RT2, class FormatTraits2 >
