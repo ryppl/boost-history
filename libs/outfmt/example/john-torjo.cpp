@@ -17,7 +17,7 @@ class position_output // Create a Format Object that maintains position informat
       long pos;
    public:
       template< typename T, class OutputStream >
-      OutputStream &              operator()( OutputStream & os, const T & value ) const
+      OutputStream &              write( OutputStream & os, const T & value ) const
       {
          // Uses a const_cast      -- makes code harder to read
          // Direct output of value -- cannot hook to a specialist formatter

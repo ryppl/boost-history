@@ -22,7 +22,7 @@ int main()
    std::list< std::list< char > >      tictactoe;
 
    tictactoe.push_back( std::list< char >());
-      tictactoe.back().push_back( 'O' );
+      tictactoe.back().push_back( 'O' );                  
       tictactoe.back().push_back( 'X' );
       tictactoe.back().push_back( 'O' );
    tictactoe.push_back( std::list< char >());
@@ -36,10 +36,10 @@ int main()
 
    // formatter configurations
 
-   boost::io::array_output< char * >   arrayfmt;
+   boost::io::array_object< char * >   arrayfmt;
    arrayfmt.format( "( ", " )" );
 
-   boost::io::container_output< char * > containerfmt;
+   boost::io::container_object< char * > containerfmt;
    containerfmt.format( "| ", " |", " | " );
 
    // examples

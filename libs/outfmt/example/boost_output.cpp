@@ -21,7 +21,7 @@ int main()
 
    // formatter configurations
 
-   boost::io::pair_output< char >   pairfmt1; // [format]: (a,b)
+   boost::io::pair_object< char >   pairfmt1; // [format]: (a,b)
 
    // output boost types
 

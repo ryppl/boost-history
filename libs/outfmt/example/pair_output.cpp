@@ -33,12 +33,12 @@ int main()
 
    // formatter configurations
 
-   boost::io::pair_output< char * >    pairfmt1; // [format]: ( a, b )
-   
-   boost::io::pair_output< char * >    pairfmt2; // [format]: ( a | b )
+   boost::io::pair_object< char * >    pairfmt1; // [format]: ( a, b )
+
+   boost::io::pair_object< char * >    pairfmt2; // [format]: ( a | b )
    pairfmt2.format( " | " );
 
-   boost::io::pair_output< char * >    pairfmt3; // [format]: a ==> b
+   boost::io::pair_object< char * >    pairfmt3; // [format]: a ==> b
    pairfmt3.format( "", "", " ==> " );
 
    // std::pair output examples

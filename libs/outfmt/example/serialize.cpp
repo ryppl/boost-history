@@ -11,15 +11,11 @@
 
 int main()
 {
-   // [note]: the mechanism for reading data in is currently incomplete and experimental:
-   //    it is only currently supported for basic_output, pair_output and static_nary_output
-   //    formatter types.
-
    // [1]: plain text
 
    // create the output object used for serialization
 
-   boost::io::pair_output< char * >    textio; // default formatting
+   boost::io::pair_object< char * >    textio; // default formatting
 
    // create the data to be serialized
    std::pair< char, int >              p1 = std::pair< char, int >( 'a', 5 );
@@ -51,7 +47,7 @@ int main()
 
    // [2]: XML -- [note]: XML is a text-based system, and can thus be serialized to
 
-   boost::io::pair_output< char * >    xmlio;
+   boost::io::pair_object< char * >    xmlio;
    xmlio.format( "<pairob><item>", "</item></pairob>", "</item><item>" );
 
    // writing to an XML-based serialization stream
@@ -76,11 +72,11 @@ int main()
 
    // [3]: XML -- [note]: use wrapped output to simplify output specification
 
-   boost::io::pair_output
+   boost::io::pair_object
    <
       char *,
-      boost::io::wrapped_output< char * >,
-      boost::io::wrapped_output< char * >
+      boost::io::wrapped_object< char * >,
+      boost::io::wrapped_object< char * >
    >                                   xmlio2 =
       boost::io::pairfmt
       (
@@ -105,10 +101,10 @@ int main()
 
    // create the output object used for serialization
 
-   boost::io::pair_output
+   boost::io::pair_object
    <
       char *,
-      boost::io::pair_output< char * >
+      boost::io::pair_object< char * >
    >                                   textio2;
 
    // create the data to be serialized
@@ -160,7 +156,7 @@ int main()
 
       // create the output object used for serialization
 
-      boost::io::static_nary_output< char * >
+      boost::io::static_nary_object< char * >
                                        naryio;
       naryio.format( "[ ", " ]" ); // container-compatible formatting
 
@@ -228,19 +224,19 @@ int main()
 
    // [6]: plain text -- string data
 
-   boost::io::wrapped_output< char * > stringio = boost::io::wrappedfmt().format( "\"", "\"" );
+   boost::io::wrapped_object< char * > stringio = boost::io::wrappedfmt().format( "\"", "\"" );
 
-   boost::io::container_output< char *, boost::io::wrapped_output< char * > >
+   boost::io::container_object< char *, boost::io::wrapped_object< char * > >
                                        stlio = boost::io::containerfmt( stringio );
 
-   boost::io::container_output
+   boost::io::container_object
    <
       char *,
-      boost::io::pair_output
+      boost::io::pair_object
       <
          char *,
-         boost::io::wrapped_output< char * >,
-         boost::io::wrapped_output< char * >
+         boost::io::wrapped_object< char * >,
+         boost::io::wrapped_object< char * >
       >
    >                                   mapio = boost::io::containerfmt
                                        (

@@ -28,10 +28,10 @@ int main()
 
    // formatter configurations
 
-   boost::io::array_output< char * >   arrayfmt;
+   boost::io::array_object< char * >   arrayfmt;
    arrayfmt.format( "( ", " )" );
 
-   boost::io::array_output< char *, boost::io::array_output< char * > >
+   boost::io::array_object< char *, boost::io::array_object< char * > >
                                        array3Dfmt( arrayfmt( 3 ));
    array3Dfmt.format( "{ ", " }", " | " );
 
