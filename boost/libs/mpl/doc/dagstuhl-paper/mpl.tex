@@ -1157,7 +1157,7 @@ typedef boost::mpl::apply< my_f, boost::mpl::find<_1,_2> >::type result;
 \end{verbatim}
 }
 
-and then you want just use %%find%% directly in your code, 
+and then you want just use \code{find} directly in your code, 
 you still have the intuitive
 
 {\footnotesize
@@ -1218,10 +1218,147 @@ that can significantly simplify building of complex
 generic/generative components/systems. 
 
 Topics to cover:
+
+\emph{algorithms operate on sequences}
+  
+Most of algorithms in \Mpl\ operates on sequences. For example, 
+searching type in a list looks like this:
+
+{\footnotesize
+\begin{verbatim}
+typedef boost::mpl::list< char,short,int,long,float,double > types;
+typedef boost::mpl::find< types,long >::type iter;
+\end{verbatim}
+}
+
+Here, \code{find} accepts two parameters - a sequence where to 
+search in (\code{types}), the type to search for (\code{long}), 
+and returns an iterator \code{iter} pointing to the first 
+element of the sequence such as \code{iter::type} is identical 
+to \code{long}; if no such element exist, then \code{iter} is 
+identical to \code{end<types>::type}. Basically, this is how one 
+would search for a value in \code{std::list} or 
+\code{std::vector}, except that \code{boost::mpl::find} accepts 
+a sequence where to search as a whole, while \code{std::find} 
+takes two iterators. 
+Everything else is pretty much the same - the names are the same, 
+the semantics is very close, there are iterators, and you can 
+search not only by type, but using a predicate as well:
+
+{\footnotesize
+\begin{verbatim}
+typedef boost::mpl::find_if< types,boost::is_float >::type iter;
+\end{verbatim}
+}
+
+This conceptual/syntactical similarity with the STL is not 
+coincidental. Reusing the conceptual framework of STL in 
+compile-time world allows us to bring a familiarity and a whole 
+bunch of well-known and sound approaches of dealing with 
+sequential data structures there. The algorithms and idioms 
+which programmers already know from STL can be applied again at 
+compile-time. We consider this to be one of the main strong 
+points that distinguish the library from other, mostly ad-hoc 
+attempts of building a template metaprogramming library.
+  
+
+\emph{Sequence concepts}
+
+In the \code{find} example above we searched for type in the 
+sequence built using \code{boost::mpl::list} template, but 
+\code{list} is not the only sequence that the library provides 
+you with, nor the \code{boost::mpl::find} or any other 
+algorithm is hard-coded to work only on the single 
+\code{list} sequence. \code{list} is just one of the models of 
+MPL's ForwardSequence concept, and \code{find} works with 
+anything that satisfies this concept's requirements. The 
+hierarchy of sequence concepts in \Mpl is quite simple - a 
+Sequence is any compile-time entity to that you can apply 
+\code{begin}/\code{end} operations in order to get iterators 
+for accessing the range of its elements, a ForwardSequence 
+is a sequence that provides iterators what satisfy 
+ForwardIterator requirements, a BidirectionalSequence is a 
+ForwardSequence that provides iterators what satisfy 
+BidirectionalIterator requirements, and, finally, 
+RandomAccessSequence is a BidirectionalSequence that provides 
+iterators what satisfy RandomAccessIterator requirements. 
+
+Decoupling algorithms from particular sequence implementation 
+(through iterators) allows one to create her own sequence 
+types, and still be able to have the rest of the library at 
+her disposal. For example, you can define a \code{tiny\_\-list}
+for dealing with sequences of 3 types as follows:
+
+{\footnotesize
+\begin{verbatim}
+template< typename TinyList, long Pos >
+struct tiny_list_iterator
+{
+    typedef typename TinyList::template item<Pos>::type type;
+    typedef tiny_list_iterator<TinyList, Pos-1> prior;
+    typedef tiny_list_iterator<TinyList, Pos+1> next;
+    temtiny_list_iterator<TinyList, Pos+1> next;
+
+};
+
+template< typename T1, typename T2, typename T3 >
+struct tiny_list
+{
+    typedef tiny_list_iterator<tiny_list, 0> begin;
+    typedef tiny_list_iterator<tiny_list, 3> end;
+    template< long > struct item;
+};
+
+template< typename T1, typename T2, typename T3 >
+template<> tiny_list::item<1> { typedef T1 type; };
+
+template< typename T1, typename T2, typename T3 >
+template<> tiny_list::item<2> { typedef T2 type; };
+
+template< typename T1, typename T2, typename T3 >
+template<> tiny_list::item<3> { typedef T3 type; };
+\end{verbatim}
+}
+
+and then use it with any of the library algorithms as if it 
+was \code{boost::mpl::list}:
+
+{\footnotesize
+\begin{verbatim}
+typedef tiny_list< char,short,int > types;
+typedef boost::mpl::transform<
+      types
+    , boost::add_pointer
+    >::type pointers;
+\end{verbatim}
+}
+
+Note that \code{tiny\_list} is a model of 
+BidirectionalSequence (it would be RandomAccess if 
+we added \code{advance} memeber to \code{tiny\_\-list\_\-iterator}:
+
+{\footnotesize
+\begin{verbatim}
+template< typename TinyList, long Pos >
+struct tiny_list_iterator
+{
+    typedef typename TinyList::template item<Pos>::type type;
+    typedef tiny_list_iterator<TinyList, Pos-1> prior;
+    typedef tiny_list_iterator<TinyList, Pos+1> next;
+    template< typename N > struct advance
+    {
+        typedef tiny_list_iterator<
+              TinyList
+            , Pos + N::value
+            > type;
+    };
+};
+\end{verbatim}
+}
+
+).
+  
 \begin{itemize}
-  \item sequence concepts
-  \item algorithms operate on sequences
-  \item some algorithm return iterators
   \item why library-provided iteration is important
   \item \code{iter\_fold}/\code{iter\_find} as two main 
     iteration algortihms, there are iterators
@@ -1295,7 +1432,7 @@ The transition table provides us with complete formal
 definition of the target FSM, and there are sereval ways to 
 transform that definition into code. For example, if we define
 states as members of enumeration type, and events as classes 
-derived from some base %%event%%
+derived from some base \code{event}
 class (they need to be passed to action functions, and they may
 contain some event-specific information for an action), 
 
