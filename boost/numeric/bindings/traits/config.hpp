@@ -30,6 +30,7 @@
 #  define BOOST_NO_CV_TEMPLATE_TEMPLATES
 #elif defined(__ICC)
 #elif defined(__GNUC__)
+#elif defined(__COMO__)
 #else
 #error bindings do not recognise compiler
 #endif
