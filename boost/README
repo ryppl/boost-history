@@ -1,4 +1,4 @@
-This directory contains the minimum subset of boost 1.32.0
+This directory contains the minimum subset of boost
 just enough to make Spirit work. Packaging instructions:
 
 1. Rename the "boost" directory to "miniboost"
