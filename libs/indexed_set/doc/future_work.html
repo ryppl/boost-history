@@ -25,6 +25,7 @@ principle driving the current internal design of <code>indexed_set</code>.
   <li><a href="#sentries">Sentries</a></li>
   <li><a href="#user_defined_indices">User-defined indices</a></li>
   <li><a href="#indexed_maps">Indexed maps</a></li>
+  <li><a href="#serialization">Serialization support</a></li>
   <li><a href="#mojo">Mojoing <code>indexed_set</code></a></li>
 </ul>
 
@@ -103,6 +104,14 @@ providing the <code>string</code> key mapping to the same value
 as <code>m[1]</code>. This and similar problems have to be devoted
 a careful study when designing the interface of a potential
 indexed map.
+</p>
+
+<h2><a name="serialization">Serialization support</a></h2>
+
+<p>
+Once <a href="http://www.rrsd.com/boost/index.htm">Robert Ramey's
+serialization library</a> gets accepted into Boost, support for
+archiving/retrieving <code>indexed_set</code>s should be added.
 </p>
 
 <h2><a name="mojo">Mojoing <code>indexed_set</code></a></h2>
