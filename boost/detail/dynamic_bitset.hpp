@@ -1,12 +1,16 @@
-// (C) Copyright Chuck Allison and Jeremy Siek 2001, 2002.
+// --------------------------------------------------
 //
-// Permission to copy, use, modify, sell and distribute this software
-// is granted provided this copyright notice appears in all
-// copies. This software is provided "as is" without express or
-// implied warranty, and with no claim as to its suitability for any
-// purpose.
+// (C) Copyright Chuck Allison and Jeremy Siek 2001 - 2002.
+// (C) Copyright Gennaro Prota                 2003 - 2004.
+//
+// Distributed under the Boost Software License, Version 1.0.
+//    (See accompanying file LICENSE_1_0.txt or copy at
+//          http://www.boost.org/LICENSE_1_0.txt)
+//
+// -----------------------------------------------------------
 
-// With optimizations by Gennaro Prota.
+//  See http://www.boost.org/libs/dynamic_bitset for documentation.
+
 
 #ifndef BOOST_DETAIL_DYNAMIC_BITSET_HPP
 #define BOOST_DETAIL_DYNAMIC_BITSET_HPP
@@ -36,10 +40,9 @@ namespace boost {
 
   namespace detail {
 
-
-    // Gives access to the object representation
-    // of an object of type T (3.9p4).
-    // p must NOT point to a base sub-object
+    // Gives (read-)access to the object representation
+    // of an object of type T (3.9p4). CANNOT be used
+    // on a base sub-object
     //
     template <typename T>
     inline const unsigned char * object_representation (T* p)
@@ -178,10 +181,9 @@ namespace boost {
     };
 
 
-
   } // namespace detail
 
 } // namespace boost
 
-#endif // BOOST_DETAIL_DYNAMIC_BITSET_HPP
+#endif // include guard
 
