@@ -14,8 +14,13 @@ class plugin;
 struct class_instance
 {
     class_instance()
-      : class_(0)
+      : wrapper(0)
       , instance(0)
+    {}
+    
+    class_instance(class_* wrapper, void* instance)
+      : wrapper(wrapper)
+      , instance(instance)
     {}
     
     // The xxx class that corresponds directly to a

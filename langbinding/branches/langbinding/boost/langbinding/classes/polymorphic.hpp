@@ -4,7 +4,7 @@
 #ifndef POLYMORPHIC_DWA2004921_HPP
 # define POLYMORPHIC_DWA2004921_HPP
 
-# include <boost/langbinding/classes/override>
+# include <boost/langbinding/classes/override.hpp>
 
 namespace boost { namespace langbinding { namespace classes {
 
@@ -22,7 +22,7 @@ struct polymorphic
     }
     
  private:
-    template<class T> friend class instance_holder;
+    template<class> friend class instance_holder;
     backend::class_instance instance;
 };
 

@@ -4,11 +4,16 @@
 #ifndef CALL_XXX_DATA_DWA2004922_HPP
 # define CALL_XXX_DATA_DWA2004922_HPP
 
+# include <boost/langbinding/aux_/config.hpp>
+# include <boost/langbinding/util/type_id.hpp>
+# include <boost/shared_ptr.hpp>
+# include <vector>
+
 namespace boost { namespace langbinding { namespace backend { 
 
 struct BOOST_LANGBINDING_DECL call_xxx_data
 {
-    call_xxx_data(unsigned arity, util::type_info const* types)
+    call_xxx_data(unsigned arity, util::type_info const* types);
     ~call_xxx_data();
     
     unsigned const arity;

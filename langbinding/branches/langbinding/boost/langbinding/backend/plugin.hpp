@@ -15,24 +15,28 @@ namespace boost { namespace langbinding { namespace backend {
 class BOOST_LANGBINDING_DECL plugin
 {
  public:
+    plugin()
+      : id_(count++)
+    {}
+    
     virtual ~plugin();
     
     virtual void* call(
         void* function
       , call_xxx_data& signature_constants
       , void* result_storage
-      , void** arg_storage) = 0;
+      , void* const* arg_storage) const = 0;
 
     virtual override
-    find_override(char const* function_name, class_instance const&) = 0;
+    find_override(char const* function_name, class_instance const&) const = 0;
 
     langbinding::backend::id id()
     { return id_; }
 
- protected:
-    
  private:
     langbinding::backend::id id_;
+    
+    static unsigned int count;
 };
 
 }}} // namespace boost::langbinding::backend

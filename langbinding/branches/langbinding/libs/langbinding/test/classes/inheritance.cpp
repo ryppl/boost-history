@@ -13,7 +13,11 @@ struct X
     virtual ~X() {}
 };
 
-struct Y : X {};
+// This class helps to ensure that a Y object doesn't have the same
+// address as its X base object
+struct force_offset { int x; };
+
+struct Y : force_offset, X {};
 
 int main()
 {
