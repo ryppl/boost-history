@@ -19,8 +19,8 @@ namespace boost { namespace numeric { namespace bindings { namespace lapack {
     typedef typename matrix_type::value_type                                                  value_type ;
     typedef typename boost::numeric::bindings::traits::value_traits< value_type >::value_type bind_type ;
 
-    int m = boost::numeric::bindings::traits::size1( a ) ;
-    int n = boost::numeric::bindings::traits::size2( a ) ;
+    int m = boost::numeric::bindings::traits::matrix_size1( a ) ;
+    int n = boost::numeric::bindings::traits::matrix_matrix_size2( a ) ;
     value_type *a_ptr = boost::numeric::bindings::traits::matrix_storage( a ) ;
     const int lda = boost::numeric::bindings::traits::leading_dimension( a ) ;
     assert( std::distance( begin_ipiv, end_ipiv ) >= std::min( m,  n ) );
@@ -39,15 +39,15 @@ namespace boost { namespace numeric { namespace bindings { namespace lapack {
 
     BOOST_STATIC_ASSERT( (::boost::is_same< typename matrix_type::value_type, typename rhs_type::value_type >::value) );
     assert( trans == 'N' || trans == 'T' );
-    int n = boost::numeric::bindings::traits::size1( a );
-    int nrhs = boost::numeric::bindings::traits::size2( b );
+    int n = boost::numeric::bindings::traits::matrix_size1( a );
+    int nrhs = boost::numeric::bindings::traits::matrix_size2( b );
     value_type *b_ptr = boost::numeric::bindings::traits::matrix_storage( b ) ; 
     const int ldb = boost::numeric::bindings::traits::leading_dimension( b ) ;
     const value_type *a_ptr = matrix_traits<const matrix_type>::storage( a ) ;
     const int lda = boost::numeric::bindings::traits::leading_dimension< const matrix_type > ( a ) ;
     const int& ipiv = const_cast< const int& >( *begin_ipiv ) ;
     int info = 0;
-    assert( n == static_cast<int>(boost::numeric::bindings::traits::size2( a )) && n == static_cast<int>(boost::numeric::bindings::traits::size1 ( b ) ) );
+    assert( n == static_cast<int>(boost::numeric::bindings::traits::matrix_size2( a )) && n == static_cast<int>(boost::numeric::bindings::traits::matrix_size1 ( b ) ) );
     assert( std::distance( begin_ipiv, end_ipiv ) >= n );
     traits< value_type >::getrs( &trans, &n, &nrhs, (const bind_type*)a_ptr, &lda, &ipiv, (bind_type*)b_ptr, &ldb, &info );
     return info ;
@@ -61,8 +61,8 @@ namespace boost { namespace numeric { namespace bindings { namespace lapack {
     typedef typename matrix_type::value_type                                                  value_type ;
     typedef typename boost::numeric::bindings::traits::value_traits< value_type >::value_type bind_type ;
 
-    int n = bindings::traits::size1( a ) ;
-    assert( boost::numeric::bindings::traits::size1( a ) == boost::numeric::bindings::traits::size2( a ) );
+    int n = bindings::traits::matrix_size1( a ) ;
+    assert( boost::numeric::bindings::traits::matrix_size1( a ) == boost::numeric::bindings::traits::matrix_size2( a ) );
     value_type *a_ptr = boost::numeric::bindings::traits::matrix_storage( a ) ;
     const int lda = boost::numeric::bindings::traits::leading_dimension( a ) ;
     assert( std::distance( begin_ipiv, end_ipiv ) >= n );
@@ -85,15 +85,15 @@ namespace boost { namespace numeric { namespace bindings { namespace lapack {
 
     BOOST_STATIC_ASSERT( (::boost::is_same< typename matrix_type::value_type, typename rhs_type::value_type >::value) );
     assert( uplo == 'U' || uplo == 'L' );
-    int n = boost::numeric::bindings::traits::size1( a );
-    int nrhs = boost::numeric::bindings::traits::size2( b );
+    int n = boost::numeric::bindings::traits::matrix_size1( a );
+    int nrhs = boost::numeric::bindings::traits::matrix_size2( b );
     const value_type *a_ptr = matrix_traits<const matrix_type>::storage( a ) ;
     const int lda = boost::numeric::bindings::traits::leading_dimension< const matrix_type >( a ) ;
     value_type *b_ptr = boost::numeric::bindings::traits::matrix_storage( b ) ; 
     const int ldb = boost::numeric::bindings::traits::leading_dimension( b ) ;
     const int& ipiv = const_cast< const int& >( *begin_ipiv ) ;
     int info = 0;
-    assert( n == static_cast<int>(boost::numeric::bindings::traits::size2( a )) && n == static_cast<int>(boost::numeric::bindings::traits::size1 ( b ) ) );
+    assert( n == static_cast<int>(boost::numeric::bindings::traits::matrix_size2( a )) && n == static_cast<int>(boost::numeric::bindings::traits::matrix_size1 ( b ) ) );
     assert( std::distance( begin_ipiv, end_ipiv ) >= n );
     traits< value_type >::sytrs( &uplo, &n, &nrhs, (const bind_type*)a_ptr, &lda, &ipiv, (bind_type*)b_ptr, &ldb, &info );
     return info ;
@@ -108,8 +108,8 @@ namespace boost { namespace numeric { namespace bindings { namespace lapack {
 
     assert( uplo == 'U' || uplo == 'L' );
 
-    int n = bindings::traits::size1( a ) ;
-    assert( boost::numeric::bindings::traits::size1( a ) == boost::numeric::bindings::traits::size2( a ) );
+    int n = bindings::traits::matrix_size1( a ) ;
+    assert( boost::numeric::bindings::traits::matrix_size1( a ) == boost::numeric::bindings::traits::matrix_size2( a ) );
     value_type *a_ptr = boost::numeric::bindings::traits::matrix_storage( a ) ;
     const int lda = boost::numeric::bindings::traits::leading_dimension( a ) ;
     int info = 0;
@@ -127,14 +127,14 @@ namespace boost { namespace numeric { namespace bindings { namespace lapack {
 
     BOOST_STATIC_ASSERT( (::boost::is_same< typename matrix_type::value_type, typename rhs_type::value_type >::value) );
     assert( uplo == 'U' || uplo == 'L' );
-    int n = boost::numeric::bindings::traits::size1( a );
-    int nrhs = boost::numeric::bindings::traits::size2( b );
+    int n = boost::numeric::bindings::traits::matrix_size1( a );
+    int nrhs = boost::numeric::bindings::traits::matrix_size2( b );
     const value_type *a_ptr = matrix_traits<const matrix_type>::storage( a ) ;
     const int lda = boost::numeric::bindings::traits::leading_dimension( a ) ;
     value_type *b_ptr = boost::numeric::bindings::traits::matrix_storage( b ) ; 
     const int ldb = boost::numeric::bindings::traits::leading_dimension( b ) ;
     int info = 0;
-    assert( n == static_cast<int>(boost::numeric::bindings::traits::size2( a )) && n == static_cast<int>(boost::numeric::bindings::traits::size1 ( b ) ) );
+    assert( n == static_cast<int>(boost::numeric::bindings::traits::matrix_size2( a )) && n == static_cast<int>(boost::numeric::bindings::traits::matrix_size1 ( b ) ) );
     traits< value_type >::potrs( &uplo, &n, &nrhs, (const bind_type*)a_ptr, &lda, (bind_type*)b_ptr, &ldb, &info );
     return info ;
   }
