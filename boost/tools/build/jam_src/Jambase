@@ -19,23 +19,17 @@ if $(NT)
 }
 SLASH ?= / ;
 
-# A fix for the broken behavior of built-in glob
-rule glob ( dirs * : patterns * )
-{
-    return [ GLOB $(dirs:T) : $(dirs:T)\\$(SLASH)$(patterns) ] ;
-}
-
 # Glob for patterns in the directories starting from the given
 # start directory, up to and including the root of the file-system.
 # We stop globing as soon as we find at least one match.
 #
 rule find-to-root ( dir : patterns + )
 {
-    local globs = [ glob $(dir) : $(patterns) ] ;
+    local globs = [ GLOB $(dir) : $(patterns) ] ;
     while ! $(globs) && $(dir:P) != $(dir)
     {
         dir = $(dir:P) ;
-        globs = [ glob $(dir) : $(patterns) ] ;
+        globs = [ GLOB $(dir) : $(patterns) ] ;
     }
     return $(globs) ;
 }
@@ -58,7 +52,7 @@ rule boost-build ( dir ? )
     # Try to find the build system bootstrap file 'boost-build.jam'.
     #
     local bootstrap-file =
-        [ glob $(BOOST_BUILD_PATH) : boost-build.jam ] ;
+        [ GLOB $(BOOST_BUILD_PATH) : boost-build.jam ] ;
     
     # There is no boost-build.jam we can find, exit with an error, and information.
     #
@@ -96,7 +90,7 @@ if [ MATCH .*(bjam).* : $(ARGV[1]:B:L) ]
     #
     local boost-build-file =
         [ find-to-root [ PWD ] : boost-build.jam ]
-        [ glob $(BOOST_BUILD_PATH) : boost-build.jam ] ;
+        [ GLOB $(BOOST_BUILD_PATH) : boost-build.jam ] ;
     
     # There is no boost-build.jam we can find, exit with an error, and information.
     #
