@@ -1,11 +1,11 @@
 //  Boost io/iomanip.hpp header file  ----------------------------------------//
 
 //  (C) Copyright Daryle Walker 2003.  Permission to copy, use, modify, sell and
-//  distribute this software is granted provided this copyright notice appears 
-//  in all copies.  This software is provided "as is" without express or implied 
-//  warranty, and with no claim as to its suitability for any purpose. 
+//  distribute this software is granted provided this copyright notice appears
+//  in all copies.  This software is provided "as is" without express or implied
+//  warranty, and with no claim as to its suitability for any purpose.
 
-//  See http://www.boost.org for updates, documentation, and revision history. 
+//  See http://www.boost.org for updates, documentation, and revision history.
 
 #ifndef BOOST_IO_IOMANIP_HPP
 #define BOOST_IO_IOMANIP_HPP
@@ -14,6 +14,7 @@
 
 #include <boost/limits.hpp>  // for std::numeric_limits
 
+#include <ios>      // for std::basic_ios, std::ios_base
 #include <istream>  // for std::basic_istream
 #include <ostream>  // for std::basic_ostream
 
@@ -31,6 +32,9 @@ template < typename Ch, class Tr >
 
 template < typename Ch, class Tr >
     std::basic_istream<Ch, Tr> &  skipl( std::basic_istream<Ch, Tr> &is );
+
+template < typename Ch, class Tr >
+    std::basic_ios<Ch, Tr> &  general( std::basic_ios<Ch, Tr> &s );
 
 
 //  I/O-manipulator function template definitions  ---------------------------//
@@ -54,6 +58,21 @@ skipl
 {
     return is.ignore( std::numeric_limits<std::streamsize>::max(),
      Tr::to_int_type(is.widen( '\n' )) );
+}
+
+template < typename Ch, class Tr >
+std::basic_ios<Ch, Tr> &
+general
+(
+    std::basic_ios<Ch, Tr> &  s
+)
+{
+    s.fill( s.widen(' ') );
+    s.precision( 6 );
+    s.width( 0 );
+    s.flags( std::ios_base::skipws | std::ios_base::dec );
+
+    return s;
 }
 
 

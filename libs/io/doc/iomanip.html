@@ -9,8 +9,8 @@ align="middle" width="277" height="86">I/O Manipulator Library</h1>
 
 <p>The header <cite><a
 href="../../../boost/io/iomanip.hpp">boost/io/iomanip.hpp</a></cite>
-covers manipulating C++ IOStream objects with function (templates
-and/or objects).</p>
+covers C++ I/O stream-manipulating functions (possibly including
+function templates and function-acting [template] classes).</p>
 
 <h2><a name="contents">Contents</a></h2>
 
@@ -20,6 +20,7 @@ and/or objects).</p>
 	<li><a href="#header">Header Synopsis</a></li>
 	<li><a href="#newl">Non-flushing Line-break Output Manipulator</a></li>
 	<li><a href="#skipl">Line-skipping Input Manipulator</a></li>
+	<li><a href="#general">Stream Formatting State-reset Manipulator</a></li>
 	<li><a href="#refer">References</a></li>
 	<li><a href="#credits">Credits</a>
 		<ul>
@@ -37,7 +38,7 @@ supplies some of them.</p>
 <h2><a name="header">Header Synopsis</a></h2>
 
 <blockquote><pre>
-#include &lt;iosfwd&gt;   <i>// for std::basic_ostream and std::basic_istream (declarations)</i>
+#include &lt;iosfwd&gt;   <i>// for std::basic_ostream, std::basic_istream, and std::basic_ios (declarations)</i>
 
 namespace boost
 {
@@ -49,6 +50,9 @@ template &lt; typename Ch, class Tr &gt;
 
 template &lt; typename Ch, class Tr &gt;
     std::basic_istream&lt;Ch, Tr&gt; &amp;  skipl( std::basic_istream&lt;Ch, Tr&gt; &amp;is );
+
+template &lt; typename Ch, class Tr &gt;
+    std::basic_ios&lt;Ch, Tr&gt; &amp;  general( std::basic_ios&lt;Ch, Tr&gt; &amp;s );
 
 }
 }
@@ -91,6 +95,27 @@ is passed, or the stream's end is reached</p>
 <p><strong>Rationale:</strong> a counterpart to <a
 href="#newl"><code>newl</code></a></p>
 
+<h2><a name="general">Stream Formatting State-reset Manipulator</a></h2>
+
+<blockquote><pre>
+template &lt; typename Ch, class Tr &gt;
+std::basic_ios&lt;Ch, Tr&gt; &amp;
+boost:io::general( std::basic_ios&lt;Ch, Tr&gt; &amp;s );
+</pre></blockquote>
+
+<p><strong>Effects:</strong> resets the directly-contained formatting
+state of stream <var>s</var> to the conditions just after construction</p>
+
+<p><strong>Returns:</strong> <var>s</var></p>
+
+<p><strong>Postconditions:</strong> <code><var>s</var>.flags() == (
+std::ios_base::skipws | std::ios_base::dec ) &amp;&amp; <var>s</var>.width()
+== 0 &amp;&amp; <var>s</var>.precision() == 6 &amp;&amp; Tr::eq(
+<var>s</var>.fill(), <var>s</var>.widen(' ') )</code></p>
+
+<p><strong>Rationale:</strong> a quick method to reset all the formatting
+attributes of a stream, especially after many attribute changes</p>
+
 <h2><a name="refer">References</a></h2>
 
 <ul>
@@ -119,8 +144,9 @@ href="#newl"><code>newl</code></a></p>
 
 	<dt><a href="../../../people/daryle_walker.html">Daryle Walker</a>
 	<dd>Started the library.  Contributed the initial versions of <a
-		href="#skipl"><code>skipl</code></a> and <a
-		href="#newl"><code>newl</code></a>.  Contributed
+		href="#skipl"><code>skipl</code></a>, <a
+		href="#newl"><code>newl</code></a>, and <a
+                href="#general"><code>general</code></a>.  Contributed
 		<cite><a
 		href="../test/iomanip_test.cpp">iomanip_test.cpp</a></cite>.
 </dl>
@@ -134,7 +160,7 @@ href="#newl"><code>newl</code></a></p>
 
 <hr>
 
-<p>Revised: 25 May 2003</p>
+<p>Revised: 26 October 2003</p>
 
 <p>Copyright &copy; Daryle Walker 2003.  Permission to copy, use,
 modify, sell and distribute this document is granted provided this
