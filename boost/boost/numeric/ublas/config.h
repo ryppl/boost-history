@@ -56,7 +56,6 @@
 // #pragma auto_inline (off)
 // #define NUMERICS_INLINE inline
 #define NUMERICS_INLINE
-#define NUMERICS_USE_INSTANT
 
 // Use expression templates (otherwise we get many ICE's)
 #define NUMERICS_USE_ET
@@ -134,7 +133,6 @@ namespace std {
 
 // #define NUMERICS_INLINE inline
 #define NUMERICS_INLINE
-#define NUMERICS_USE_INSTANT
 
 // Bounds check
 #define NUMERICS_BOUNDS_CHECK
@@ -190,7 +188,6 @@ namespace std {
 
 // #define NUMERICS_INLINE inline
 #define NUMERICS_INLINE
-#define NUMERICS_USE_INSTANT
 
 // Bounds check
 #define NUMERICS_BOUNDS_CHECK
@@ -253,7 +250,6 @@ namespace std {
 // #pragma auto_inline (off)
 // #define NUMERICS_INLINE inline
 #define NUMERICS_INLINE
-#define NUMERICS_USE_INSTANT
 
 // Bounds check
 #define NUMERICS_BOUNDS_CHECK

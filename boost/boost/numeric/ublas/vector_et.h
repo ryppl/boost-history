@@ -1,4 +1,4 @@
-//  
+//
 //  Copyright (c) 2000-2002
 //  Joerg Walter, Mathias Koch
 //  
@@ -87,7 +87,7 @@ namespace numerics {
         typedef E expression_type;
         typedef vector_tag type_category;
 
-        // This class could define an common interface for all 
+        // This class could define an common interface for all
         // statically derived expression type classes.
         // Due to a compiler deficiency - one can not reference class typedefs of E 
         // on MSVC 6.0 (error C2027) - we only implement the casts.
@@ -333,7 +333,7 @@ namespace numerics {
     vector_reference<E>::expression_type vector_reference<E>::nil_;
 
     template<class E, class F>
-    class vector_unary: 
+    class vector_unary:
         public vector_expression<vector_unary<E, F> > {
     public:
         typedef E expression_type;
@@ -623,7 +623,7 @@ namespace numerics {
         // Element access
         NUMERICS_INLINE
         value_type operator () (size_type i) const { 
-            return functor_type () (e1_ (i), e2_ (i)); 
+            return functor_type () (e1_ (i), e2_ (i));
         }
 
         NUMERICS_INLINE
@@ -665,7 +665,7 @@ namespace numerics {
 #endif
         }
 
-        // Iterator merges the iterators of the referenced expressions and  
+        // Iterator merges the iterators of the referenced expressions and
         // enhances them with the binary functor.
 
 #ifndef NUMERICS_USE_INDEXED_ITERATOR
@@ -707,7 +707,7 @@ namespace numerics {
             // Packed specializations
             NUMERICS_INLINE
             void increment (packed_random_access_iterator_tag) {
-                if (it1_.index () <= i_) 
+                if (it1_.index () <= i_)
                     ++ it1_;
                 if (it2_.index () <= i_) 
                     ++ it2_;
@@ -1153,7 +1153,7 @@ namespace numerics {
         // Element access
         NUMERICS_INLINE
         value_type operator () (size_type i) const { 
-            return functor_type () (e1_ (i), e2_); 
+            return functor_type () (e1_ (i), e2_);
         }
 
         NUMERICS_INLINE
@@ -1194,7 +1194,7 @@ namespace numerics {
 
 #ifndef NUMERICS_USE_INDEXED_ITERATOR
         class const_iterator:
-            public container_const_reference<vector_binary_scalar2>, 
+            public container_const_reference<vector_binary_scalar2>,
             public random_access_iterator_base<const_iterator, value_type> {
         public:
             typedef typename E1::const_iterator::iterator_category iterator_category;
@@ -1317,7 +1317,7 @@ namespace numerics {
         typedef vector_binary_scalar2<typename E1::const_closure_type,        
                                       scalar_const_reference<T2>, F> expression_type;
 #ifdef NUMERICS_USE_ET
-        typedef expression_type result_type; 
+        typedef expression_type result_type;
 #else
         typedef vector<typename F::result_type> result_type;
 #endif
@@ -1418,7 +1418,8 @@ namespace numerics {
         return expression_type (e ());
     }
 
-    // norm_1 v = sum (abs (v [i]))
+    // real: norm_1 v = sum (abs (v [i]))
+    // complex: norm_1 v = sum (abs (real (v [i])) + abs (imag (v [i])))
     template<class E>
     NUMERICS_INLINE
     typename vector_scalar_unary_traits<E, vector_norm_1<typename E::value_type> >::result_type
@@ -1427,7 +1428,8 @@ namespace numerics {
         return expression_type (e ());
     }
 
-    // norm_2 v = sqrt (sum (v [i] * v [i]))
+    // real: norm_2 v = sqrt (sum (v [i] * v [i]))
+    // complex: norm_2 v = sqrt (sum (v [i] * conj (v [i])))
     template<class E>
     NUMERICS_INLINE
     typename vector_scalar_unary_traits<E, vector_norm_2<typename E::value_type> >::result_type
@@ -1436,7 +1438,8 @@ namespace numerics {
         return expression_type (e ());
     }
 
-    // norm_inf v = max (abs (v [i]))
+    // real: norm_inf v = max (abs (v [i]))
+    // complex: norm_inf v = max (max (abs (real (v [i])), abs (imag (v [i]))))
     template<class E>
     NUMERICS_INLINE
     typename vector_scalar_unary_traits<E, vector_norm_inf<typename E::value_type> >::result_type
@@ -1445,7 +1448,7 @@ namespace numerics {
         return expression_type (e ());
     }
 
-    // index_norm_inf v = min (i: abs (v [i]) == max (abs (v [i])))
+    // real: index_norm_inf v = min (i: abs (v [i]) == max (abs (v [i])))
     template<class E>
     NUMERICS_INLINE
     typename vector_scalar_unary_traits<E, vector_index_norm_inf<typename E::value_type> >::result_type
@@ -1481,7 +1484,7 @@ namespace numerics {
         value_type evaluate (dense_random_access_iterator_tag) const {
             difference_type size = common (e1_.size (), e2_.size ());
             if (size >= NUMERICS_ITERATOR_THRESHOLD)
-                return functor_type () (size, e1_.begin (), e2_.begin ()); 
+                return functor_type () (size, e1_.begin (), e2_.begin ());
             else 
                 return functor_type () (e1_, e2_); 
         }
@@ -1489,7 +1492,7 @@ namespace numerics {
         // Packed bidirectional specialization
         NUMERICS_INLINE
         value_type evaluate (packed_random_access_iterator_tag) const {
-            return functor_type () (e1_.begin (), e1_.end (), e2_.begin (), e2_.end ()); 
+            return functor_type () (e1_.begin (), e1_.end (), e2_.begin (), e2_.end ());
         }
 
         // Sparse bidirectional specialization
@@ -1530,7 +1533,7 @@ namespace numerics {
     NUMERICS_INLINE
     typename vector_scalar_binary_traits<E1, E2, vector_inner_prod<typename E1::value_type, 
                                                                    typename E2::value_type,
-                                                                   typename promote_traits<typename E1::value_type, 
+                                                                   typename promote_traits<typename E1::value_type,
                                                                                            typename E2::value_type>::promote_type> >::result_type 
     inner_prod (const vector_expression<E1> &e1, 
                 const vector_expression<E2> &e2) {

@@ -1,16 +1,16 @@
 //
 //  Copyright (c) 2000-2002
 //  Joerg Walter, Mathias Koch
-//  
+//
 //  Permission to use, copy, modify, distribute and sell this software
 //  and its documentation for any purpose is hereby granted without fee,
 //  provided that the above copyright notice appear in all copies and
 //  that both that copyright notice and this permission notice appear
 //  in supporting documentation.  The authors make no representations
-//  about the suitability of this software for any purpose.  
+//  about the suitability of this software for any purpose.
 //  It is provided "as is" without express or implied warranty.
-//  
-//  The authors gratefully acknowledge the support of 
+//
+//  The authors gratefully acknowledge the support of
 //  GeNeSys mbH & Co. KG in producing this work.
 //
 
@@ -23,7 +23,7 @@
 
 #ifdef USE_GCC
 // FIXME: couldn't we use BOOST_NO_STD_ITERATOR and <boost/iterator.h> here?
-#if __GNUC__ <= 2
+#if __GNUC__ <= 2 && __GNUC_MINOR__ <= 95
 
 namespace std {
 

@@ -203,7 +203,7 @@ void test_vector () {
 #endif
         std::copy (v1.begin (), v1.end (), out); 
         std::cout << std::endl;
-        std::copy (v2.begin (), v2.end (), out); 
+        std::copy (v2.begin (), v2.end (), out);
         std::cout << std::endl;
     }
     catch (std::exception &e) {
@@ -275,7 +275,7 @@ void test_matrix () {
 
         // Some matrix tests
         numerics::matrix<double> m1 (3, 3), m2 (3, 3);
-        for (i = 0; i < 3; ++ i) 
+        for (i = 0; i < 3; ++ i)
             for (j = 0; j < 3; ++ j) 
 #ifdef NUMERICS_DEPRECATED
                 m2 [i] [j] = i * j;
@@ -304,13 +304,13 @@ void test_matrix () {
         numerics::swap (m1, m2);
 #endif
         {
-#if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR) 
+#if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
             numerics::matrix<double>::const_iterator1 it11 (m1.begin1 ());
             while (it11 != m1.end1 ()) {
                 std::copy (it11.begin (), it11.end (), out);
                 std::cout << std::endl;
                 ++ it11;
-            } 
+            }
             numerics::matrix<double>::const_iterator2 it21 (m1.begin2 ());
             while (it21 != m1.end2 ()) {
                 std::copy (it21.begin (), it21.end (), out);
@@ -367,7 +367,7 @@ void test_sparse_matrix () {
         // Some matrix tests
         numerics::sparse_matrix<double> m1 (3, 3, 3 * 3), m2 (3, 3, 3 * 3);
         for (i = 0; i < 3; ++ i) 
-            for (j = 0; j < 3; ++ j) 
+            for (j = 0; j < 3; ++ j)
 #ifdef NUMERICS_DEPRECATED
                 m2 [i] [j] = i * j;
 #else
@@ -398,7 +398,7 @@ void test_sparse_matrix () {
                 std::copy (it11.begin (), it11.end (), out);
                 std::cout << std::endl;
                 ++ it11;
-            } 
+            }
             numerics::sparse_matrix<double>::const_iterator2 it21 (m1.begin2 ());
             while (it21 != m1.end2 ()) {
                 std::copy (it21.begin (), it21.end (), out);

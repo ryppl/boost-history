@@ -35,7 +35,7 @@ namespace numerics {
         typedef row_major_tag orientation_category;
 
         // Indexing
-        static 
+        static
         NUMERICS_INLINE
         size_type element (size_type i, size_type size1, size_type j, size_type size2) {
             check (i <= size1, bad_index ());
@@ -363,7 +363,7 @@ namespace numerics {
         void indexing_assign (M &m, const T &t) {
             typedef typename M::difference_type difference_type;
             difference_type size1 (m.size1 ());
-            difference_type size2 (m.size2 ()); 
+            difference_type size2 (m.size2 ());
             for (difference_type i = 0; i < size1; ++ i) {
 #ifndef NUMERICS_USE_DUFF_DEVICE
                 for (difference_type j = 0; j < size2; ++ j)
@@ -2533,8 +2533,11 @@ namespace numerics {
         }
         NUMERICS_INLINE
         void clear () {
-            for (size_type k = 0; k < functor_type::size1 (size1_, size2_); ++ k) 
-                data_ [k].clear ();
+            for (size_type k = 0; k < functor_type::size1 (size1_, size2_); ++ k)
+                // clear won't work for std::vector.
+                // Thanks to Kresimir Fresl for spotting this.
+                // data_ [k].clear ();
+                std::fill (data_ [k].begin (), data_ [k].end (), value_type ());
         }
 
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR

@@ -93,10 +93,6 @@ LINK32=link.exe
 
 SOURCE=.\concepts.cpp
 # End Source File
-# Begin Source File
-
-SOURCE=..\..\..\boost\numeric\ublas\instant.cpp
-# End Source File
 # End Group
 # Begin Group "Header Files"
 

@@ -1,4 +1,4 @@
-//  
+//
 //  Copyright (c) 2000-2002
 //  Joerg Walter, Mathias Koch
 //  
@@ -119,10 +119,10 @@ namespace numerics {
 #define check(expression, e)
 #define check_ex(expression, file, line, e)
 #endif
-    
+
 }
 
-#endif 
+#endif
 
 
 

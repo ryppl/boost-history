@@ -1,4 +1,4 @@
-//  
+//
 //  Copyright (c) 2000-2002
 //  Joerg Walter, Mathias Koch
 //  
@@ -21,7 +21,7 @@
 
 #include "config.h"
 
-// Promote traits borrowed from Todd Veldhuizen 
+// Promote traits borrowed from Todd Veldhuizen
 
 namespace numerics {
 
@@ -31,44 +31,201 @@ namespace numerics {
 #else
 // Static constant workaround from John Maddock
 #define NUMERICS_STATIC_CONSTANT(type, assignment) enum { assignment }
-#endif    
-    
+#endif
+
     template<class T>
     struct type_traits {
+        typedef T value_type;
         typedef T real_type;
         typedef T precision_type;
+
         NUMERICS_STATIC_CONSTANT (std::size_t, plus_complexity = 0);
         NUMERICS_STATIC_CONSTANT (std::size_t, multiplies_complexity = 0);
+
+        static
+        NUMERICS_INLINE
+        real_type real (const value_type &t);
+        static
+        NUMERICS_INLINE
+        real_type imag (const value_type &t);
+        static
+        NUMERICS_INLINE
+        value_type conj (const value_type &t);
+
+        static
+        NUMERICS_INLINE
+        real_type abs (const value_type &t);
+        static
+        NUMERICS_INLINE
+        value_type sqrt (const value_type &t);
     };
 
     template<>
     struct type_traits<float> {
+        typedef float value_type;
         typedef float real_type;
         typedef double precision_type;
+
         NUMERICS_STATIC_CONSTANT (std::size_t, plus_complexity = 1);
         NUMERICS_STATIC_CONSTANT (std::size_t, multiplies_complexity = 1);
+
+        static
+        NUMERICS_INLINE
+        real_type real (const value_type &t) {
+                return t;
+        }
+        static
+        NUMERICS_INLINE
+        real_type imag (const value_type &t) {
+                return 0;
+        }
+        static
+        NUMERICS_INLINE
+        value_type conj (const value_type &t) {
+                return t;
+        }
+
+        static
+        NUMERICS_INLINE
+        real_type abs (const value_type &t) {
+#ifdef USE_MSVC
+            return ::fabsf (t);
+#else
+            return std::fabs (t);
+#endif
+        }
+        static
+        NUMERICS_INLINE
+        value_type sqrt (const value_type &t) {
+#ifdef USE_MSVC
+            return ::sqrt (t);
+#else
+            return std::sqrt (t);
+#endif
+        }
     };
     template<>
     struct type_traits<double> {
+        typedef double value_type;
         typedef double real_type;
         typedef double precision_type;
+
         NUMERICS_STATIC_CONSTANT (std::size_t, plus_complexity = 1);
         NUMERICS_STATIC_CONSTANT (std::size_t, multiplies_complexity = 1);
+
+        static
+        NUMERICS_INLINE
+        real_type real (const value_type &t) {
+                return t;
+        }
+        static
+        NUMERICS_INLINE
+        real_type imag (const value_type &t) {
+                return 0;
+        }
+        static
+        NUMERICS_INLINE
+        value_type conj (const value_type &t) {
+                return t;
+        }
+
+        static
+        NUMERICS_INLINE
+        real_type abs (const value_type &t) {
+#ifdef USE_MSVC
+            return ::fabs (t);
+#else
+            return std::fabs (t);
+#endif
+        }
+        static
+        NUMERICS_INLINE
+        value_type sqrt (const value_type &t) {
+#ifdef USE_MSVC
+            return ::sqrt (t);
+#else
+            return std::sqrt (t);
+#endif
+        }
     };
 
     template<>
     struct type_traits<std::complex<float> > {
+        typedef std::complex<float> value_type;
         typedef float real_type;
         typedef std::complex<double> precision_type;
+
         NUMERICS_STATIC_CONSTANT (std::size_t, plus_complexity = 2);
         NUMERICS_STATIC_CONSTANT (std::size_t, multiplies_complexity = 6);
+
+        static
+        NUMERICS_INLINE
+        real_type real (const value_type &t) {
+                // return t.real ();
+                return std::real (t);
+        }
+        static
+        NUMERICS_INLINE
+        real_type imag (const value_type &t) {
+                // return t.imag ();
+                return std::imag (t);
+        }
+        static
+        NUMERICS_INLINE
+        value_type conj (const value_type &t) {
+                // return t.conj ();
+                return std::conj (t);
+        }
+
+        static
+        NUMERICS_INLINE
+        real_type abs (const value_type &t) {
+                return std::abs (t);
+        }
+        static
+        NUMERICS_INLINE
+        value_type sqrt (const value_type &t) {
+                return std::sqrt (t);
+        }
     };
     template<>
     struct type_traits<std::complex<double> > {
+        typedef std::complex<double> value_type;
         typedef double real_type;
         typedef std::complex<double> precision_type;
+
         NUMERICS_STATIC_CONSTANT (std::size_t, plus_complexity = 2);
         NUMERICS_STATIC_CONSTANT (std::size_t, multiplies_complexity = 6);
+
+        static
+        NUMERICS_INLINE
+        real_type real (const value_type &t) {
+                // return t.real ();
+                return std::real (t);
+        }
+        static
+        NUMERICS_INLINE
+        real_type imag (const value_type &t) {
+                // return t.imag ();
+                return std::imag (t);
+        }
+        static
+        NUMERICS_INLINE
+        value_type conj (const value_type &t) {
+                // return t.conj ();
+                return std::conj (t);
+        }
+
+        static
+        NUMERICS_INLINE
+        real_type abs (const value_type &t) {
+                return std::abs (t);
+        }
+        static
+        NUMERICS_INLINE
+        value_type sqrt (const value_type &t) {
+                return std::sqrt (t);
+        }
     };
 
     template<class T1, class T2>
