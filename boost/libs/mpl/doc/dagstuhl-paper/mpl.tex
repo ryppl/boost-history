@@ -769,8 +769,321 @@ struct remove_pointer_if
 
 Which gives us exactly what we wanted.
 
+
+\subsection{Metafunctions, function classes and lambda}
+
+A \emph{metafunction} is an entity of a certain structure 
+that represents a function invocable at compile-time. 
+In \Cpp\, the basic underlying language construct of any 
+model of metafunction concept is a \emph{class template}: 
+it can take types and/or non-type arguments as actual 
+template parameters and "return" types or non-type values 
+through its nested type/static const data members 
+declarations. Obviously, a bare class template is the 
+simplest possible model of the concept:
+
+{\footnotesize
+\begin{verbatim}
+// 'plus' metafunction
+template<long N1, long N2>
+struct plus
+{
+    static long const value = N1 + N2;
+};
+
+// metafunction "invocation"
+long const sum = plus<5, 10>::value;
+\end{verbatim}
+}
+
+Veldhuizen [Vel95] was first to talk about class templates 
+as "compile-time functions", and [CE00] have introduced 
+"template metafunction" as an equivalent term (they also 
+use "metafunction" as the short form). As the definition 
+above shows, we use the word "metafunction" as a slightly 
+broader term. There are at least two common forms of 
+compile-time invocable entities that are used in template 
+metaprograms (see Figure 1), and we say "metafunction" when 
+we broadly refer to any of those.
+
+
+{\footnotesize
+\begin{verbatim}
+// form 1: class template metafunction (ct-metafunction)
+template< typename T1, .., typename Tn >
+struct f
+{
+    typedef ... type;
+};
+
+// form 2: function class
+struct f
+{
+    template< typename T1, .., typename Tn >
+    struct apply
+    {
+        typedef ... type;
+    };
+};
+\end{verbatim}
+}
+
+Figure 1. Two common forms of metafunction concept.
+
+
+These two forms exist because of some idiosyncrasy in 
+how templates are defined in C++, - in particular, because 
+of the lack of so called template typedefs [Sut01]. The 
+latter makes it unnecessary awkward and tedious to define 
+and work with higher-order ct-metafunctions (i.e. class 
+template metafunctions that returns another class template 
+metafunctions):
+
+{\footnotesize
+\begin{verbatim}
+// a compile-time equivalent of std::bind1st
+template<
+      template< typename P1, typename P2 > class F
+    , typename T1
+    >
+struct bind1st
+{
+    // template< typename U > typedef F<T1, U> type;
+    template< typename U > struct type
+        : F<T1, U>
+    {
+    };
+};
+
+// a compile-time equivalent of boost::compose_f_gx
+template<
+      template< typename > class F
+    , template< typename > class G
+    >
+struct compose_f_gx
+{
+    // template< typename X > 
+    // typedef F< typename G<X>::type > type;
+    template< typename X > struct type
+        : F< typename G<X>::type >
+    {
+    };
+};
+
+template< typename T >
+struct some_type_computation
+{
+    // ...
+
+    // define composite predicate, clumsy!
+    template< typename U > struct is_T_or_const_T
+        : compose_f_gx<
+              bind1st< boost::is_same,T >::template type
+            , boost::remove_const
+            >::template type<U>
+    {
+    };
+
+    // do something with it
+    typedef find_if< types,is_T_or_const_T >::type itor;
+    // ...
+};
+\end{verbatim}
+}
+
+In this example, passing the body of 
+\code{is\_T\_or\_const\_T} predicate directly to 
+\code{find\_if} would make things a little bit prettier, 
+
+{\footnotesize
+\begin{verbatim}
+template< typename T >
+struct complex_type_computation
+{
+    // ...
+    // define composite predicate and do something with it
+    typedef find_if<
+          types
+        , compose_f_gx<
+              bind1st< boost::is_same,T >::template type
+            , boost::remove_const
+            >::template type
+        >::type itor;
+    // ...
+};
+\end{verbatim}
+}
+
+but in general this doesn't scale. 
+
+There are some problems with correctness of the above 
+approach as well - deriving the \code{type} members of 
+\code{bind1st} and \code{compose\_f\_gx} templates from 
+the ct-metafunctions they are composing (\code{F} and 
+\code{G}) \emph{changes the type of the result}. 
+For instance:
+
+{\footnotesize
+\begin{verbatim}
+template< typename T1, typename T2 >
+struct my
+{
+    // ...
+};
+
+typedef bind1st<my, int>::type<long> result;
+typedef my< int,long > expected_result;
+
+BOOST_MPL_ASSERT_IS_SAME(result, expected_result); // fails!
+BOOST_STATIC_ASSERT((boost::is_convertible<result,expected_result>::value));
+\end{verbatim}
+}
+
+This may or may be not a problem, depending on how you 
+want to use the result of a type computation algorithm 
+that applies higher-order metafunctions internally. 
+Unfortunately, within the current language inheritence 
+is the only way to "return" a class template.
+
+\emph{MORE IMPORTANLY - why representing metafunctions as plain class 
+templates (ct-metafunctions) is not a option.}
+
+Definitions: 
+\begin{itemize}
+  \item  A \emph{higher-order function} is a function 
+  that can take other functions as arguments, and/or 
+  return functions as results. Higher-order functions 
+  is one of the distinguishing fetaures of the modern 
+  functional languages [Hud89]. 
+
+  \item A function is \emph{polymorphic} if it can 
+  take arguments of an arbitrary type (a \Cpp\ term 
+  from run-time world would be "generic")
+\end{itemize}
+
+\Cpp\ templates are \emph{polymorphic} regarding the type 
+arguments (type template parameters) they take. However they 
+are not polymorphic regarding ct-metafunctions (class 
+template template parameters). In particular, the language 
+rules dictate the compiler to enforce \emph{strict arity} of 
+the class templates being passed as template template 
+parameters. Moreever, polymorphism \emph{between} types and 
+ct-metafunctions is not supported, and the syntax of 
+"returning" ct-metafunctions is different from syntax of 
+returning a type. All this seriously limits the 
+applicability of higher-order functions, leads to 
+unnecessary code duplication, and has an overall negitave 
+effect on the both conceptual and implementation clarity, 
+simplicity and size of the library.
+
+For example, that means that you cannot write a single 
+generic metafunction that passes the result of one 
+function's execution as the argument to another function:
+
+{\footnotesize
+\begin{verbatim}
+// won't work if either F or G (or both) a higher-level functions
+template<
+      template< typename > class F
+    , template< typename > class G
+    , typename X
+    >
+struct f_gx
+{
+    typedef typename F< typename G<X>::type >::type type;
+};
+
+// how we have to write it if G returns F takes an unary ct-metafunction
+template<
+      template< template< typename > class > class F
+    , template< typename > class G
+    , typename X
+    >
+struct f_gx2
+{
+    typedef typename F< G<X>::template type >::type type;
+};
+
+// and another one for a binary ct-metafunction, etc.
+template<
+      template< template< typename, typename > class > class F
+    , template< typename > class G
+    , typename X
+    >
+struct f_gx3
+{
+    typedef typename F< G<X>::template type >::type type;
+};
+\end{verbatim}
+}
+
+
+Metafunctions are important by encapsulating an operation into 
+compile-time invocable entity, they give you a possibility to 
+defer its execution. You can store the entity, pass it around, 
+and invoke the operation at any time you need.
+
 \subsection{Sequences, algorithms, and iterators}
-\subsection{Function classes, simple composition}
+
+Compile-time iteration over a sequence (of types) is one of 
+the basic concept of template metaprogramming. Difference in 
+types of objects being manipulated is the most common point 
+of variability of similar but not identical code/design, and 
+such designs are the direct target for some metaprogramming. 
+Templates in their original usage were intended to be used to 
+solve this exact problem, (std::vector), but without predefined 
+abstractions/constructs for manipulating/iterating 
+\emph{sequences} of types instead of stanalone types, and 
+without developed (known) techniques for emulating this 
+constructs using the current language facilities, they effect 
+on helping high-level metaprogramming happen has been limited. 
+
+Czarnecki and Eisenecker [CE00] were the first to introduce 
+the compile-time sequences of types and some simple algorithms 
+on them, although the idea of representation common data 
+structures like trees, lists, etc. at compile time using class 
+template composition has been around for a while (for example, 
+most of the expression template libraries build such trees as 
+a part of their expression "parsing" process [Vel95b]). 
+[Ale00] used list of types and some algorithms on them to 
+implement several design patterns; the accompanishing code 
+is known as the Loki library []. 
+
+\emph{OLD introduction:}
+
+A possibility to represent and manipulate theoreticaly 
+unbound sequences of types and values at compile time opens an 
+exciting opportunities for creating highly reusable, 
+configurable, and amazingly easy-to-use generic components and 
+classes [CE00, Ale01]. Compile-time-operable collections of 
+types (and, to a slightly less extent, values) are at least as 
+important in generic and template metaprogramming as their 
+run-time equivalents in traditional programming. 
+The \Mpl acknowledges this assertion by providing an 
+STL-like framework of sequence, algorithm and function classes 
+that can significantly simplify building of complex 
+generic/generative components/systems. 
+
+Topics to cover:
+\begin{itemize}
+  \item sequence concepts
+  \item algorithms operate on sequences
+  \item some algorithm return iterators
+  \item why library-provided iteration is important
+  \item \code{iter\_fold}/\code{iter\_find} as two main 
+    iteration algortihms, there are iterators
+  \item why iterators
+  \item why external functions for all algorithms
+  \item  sequences of types, but there are shorcuts for numbers
+  \item support for 3-rd party/user-defined sequences
+  \item  different kind of sequences - different 
+    performance/functional characteristics
+  \item loop unrolling
+  \item numbered forms of \code{list}
+  \item algorithm support lambda
+\end{itemize}
+
+
 \subsection{Lambda facility}
 
 \section{Design of boost::mpl}
