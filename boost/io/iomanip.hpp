@@ -70,7 +70,7 @@ class multi_skipl
 {
 public:
     // Lifetime management
-    explicit  multi_skipl( std::streamsize count );
+    explicit  multi_skipl( std::streamsize count, bool final_sync = false );
 
     // Operators
     template < typename Ch, class Tr >
@@ -79,6 +79,7 @@ public:
 private:
     // Member data
     std::streamsize  count_;
+    bool             sync_;
 
 };  // boost::io::multi_skipl
 
@@ -158,9 +159,10 @@ multi_newl::operator ()
 inline
 multi_skipl::multi_skipl
 (
-    std::streamsize  count
+    std::streamsize  count,
+    bool             final_sync  // = false
 )
-    : count_( count )
+    : count_( count ), sync_( final_sync )
 {
 }
 
@@ -181,6 +183,11 @@ multi_skipl::operator ()
     for ( streamsize i = this->count_ ; (i > 0) && is ; --i )
     {
         is.ignore( std::numeric_limits<streamsize>::max(), new_line_int );
+    }
+
+    if ( this->sync_ && is )
+    {
+        is.sync();
     }
 }
 

@@ -187,7 +187,7 @@ class boost::io::multi_skipl
 {
 public:
     // Lifetime management
-    explicit  multi_skipl( std::streamsize count );
+    explicit  multi_skipl( std::streamsize count, bool final_sync = false );
 
     // Operators
     template &lt; typename Ch, class Tr &gt;
@@ -196,15 +196,19 @@ public:
 };
 </pre></blockquote>
 
-<p>The argument of the constructor indicates the number, or <var>count</var>,
-of line breaks that the manipulator object will watch in a single call.</p>
+<p>The first (or only) argument of the constructor indicates the number,
+or <var>count</var>, of line breaks that the manipulator object will watch
+in a single call.  The optional second constructor argument,
+<var>final_sync</var>, determines whether or not a request to synchronize the
+input stream will be done after an extraction (defaults to no synchronization).</p>
 
 <p>The function-call operator takes an input stream as its only argument.
 While the stream <var>is</var> is in a good condition, characters will be
 extracted from the stream and ignored until an expanded new-line character
 (sequence) is encountered <var>count</var> (from the constructor) times.
 The new-line character (sequence) expansion shall be appropiate for the
-stream's character type, traits type, and locale.</p>
+stream's character type, traits type, and locale.  If mandated by the constructor's
+<var>final_sync</var> state, then the stream is synchronized (if it's still good).</p>
 
 <blockquote><pre>
 template &lt; typename Ch, class Tr &gt;
@@ -244,7 +248,7 @@ boost::io::operator &gt;&gt;( std::basic_istream&lt;Ch, Tr&gt; &amp;is, multi_sk
 		<a
 		href="news:comp.lang.c++.moderated">comp.lang.c++.moderated</a>.
 
-	<dt>Angelika Langer and Klaus Kreft</a>
+	<dt>Angelika Langer and Klaus Kreft
 	<dd>Section 3.2.2.1 of their <cite>Standard C++ IOStreams and Locales:
 		Advanced Programmer's Guide and Reference</cite> book is the
                 basis of <a href="#mnewl"><code>multi_newl</code></a> (called
@@ -270,7 +274,7 @@ boost::io::operator &gt;&gt;( std::basic_istream&lt;Ch, Tr&gt; &amp;is, multi_sk
 
 <hr>
 
-<p>Revised: 25 November 2003</p>
+<p>Revised: 5 December 2003</p>
 
 <p>Copyright 2003 Daryle Walker.  Use, modification, and distribution
 are subject to the Boost Software License, Version 1.0.  (See accompanying

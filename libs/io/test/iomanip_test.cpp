@@ -7,7 +7,7 @@
 //  See <http://www.boost.org/libs/io/> for the library's home page.
 
 //  Revision History
-//   25 Nov 2003  Initial version (Daryle Walker)
+//   05 Dec 2003  Initial version (Daryle Walker)
 
 #include <boost/io/iomanip.hpp>      // for boost::io::newl, etc.
 #include <boost/test/unit_test.hpp>  // for main, BOOST_CHECK_EQUAL, etc.
@@ -19,8 +19,8 @@
 #include <string>   // for std::string
 
 
-// A stream-buffer that counts its flushes
-class flush_count_stringbuf
+// A stream-buffer that counts its syncs (i.e. flushes)
+class sync_count_stringbuf
     : public std::stringbuf
 {
     typedef std::stringbuf  base_type;
@@ -39,7 +39,7 @@ public:
 
     // Lifetime management (use automatically-defined destructor)
     explicit
-    flush_count_stringbuf
+    sync_count_stringbuf
     (
         std::ios_base::openmode  which = std::ios_base::in | std::ios_base::out
     )
@@ -49,7 +49,7 @@ public:
     }
 
     explicit
-    flush_count_stringbuf
+    sync_count_stringbuf
     (
         std::string const &      str,
         std::ios_base::openmode  which = std::ios_base::in | std::ios_base::out
@@ -60,7 +60,7 @@ public:
     }
 
     // Accessors
-    unsigned long  flush_count() const  { return this->count_; }
+    unsigned long  sync_count() const  { return this->count_; }
 
 protected:
     // Overridden virtual functions
@@ -81,18 +81,18 @@ newl_unit_test
 {
     using boost::io::newl;
 
-    flush_count_stringbuf  fcsb;
-    std::ostream           os( &fcsb );
+    sync_count_stringbuf  scsb;
+    std::ostream          os( &scsb );
 
     // Do the test
     os << "Hello" << newl << "There";
-    BOOST_CHECK_EQUAL( fcsb.str(), "Hello\nThere" );
-    BOOST_CHECK_EQUAL( 0ul, fcsb.flush_count() );
+    BOOST_CHECK_EQUAL( scsb.str(), "Hello\nThere" );
+    BOOST_CHECK_EQUAL( 0ul, scsb.sync_count() );
 
     // Just to contrast....
     os << ',' << std::endl << "Boosters!" << newl;
-    BOOST_CHECK_EQUAL( fcsb.str(), "Hello\nThere,\nBoosters!\n" );
-    BOOST_CHECK_EQUAL( 1ul, fcsb.flush_count() );
+    BOOST_CHECK_EQUAL( scsb.str(), "Hello\nThere,\nBoosters!\n" );
+    BOOST_CHECK_EQUAL( 1ul, scsb.sync_count() );
 }
 
 // Unit test for skipl
@@ -164,23 +164,23 @@ multi_newl_unit_test
 {
     using boost::io::multi_newl;
 
-    flush_count_stringbuf  fcsb;
-    std::ostream           os( &fcsb );
+    sync_count_stringbuf  scsb;
+    std::ostream          os( &scsb );
 
     // Just like newl
     os << "Hello" << multi_newl( 1, false ) << "There";
-    BOOST_CHECK_EQUAL( fcsb.str(), "Hello\nThere" );
-    BOOST_CHECK_EQUAL( 0ul, fcsb.flush_count() );
+    BOOST_CHECK_EQUAL( scsb.str(), "Hello\nThere" );
+    BOOST_CHECK_EQUAL( 0ul, scsb.sync_count() );
 
     // Doing several
     os << ',' << multi_newl( 2 ) << "Boosters!";
-    BOOST_CHECK_EQUAL( fcsb.str(), "Hello\nThere,\n\nBoosters!" );
-    BOOST_CHECK_EQUAL( 0ul, fcsb.flush_count() );
+    BOOST_CHECK_EQUAL( scsb.str(), "Hello\nThere,\n\nBoosters!" );
+    BOOST_CHECK_EQUAL( 0ul, scsb.sync_count() );
 
     // Do a flush
     os << multi_newl( 3, true );
-    BOOST_CHECK_EQUAL( fcsb.str(), "Hello\nThere,\n\nBoosters!\n\n\n" );
-    BOOST_CHECK_EQUAL( 1ul, fcsb.flush_count() );
+    BOOST_CHECK_EQUAL( scsb.str(), "Hello\nThere,\n\nBoosters!\n\n\n" );
+    BOOST_CHECK_EQUAL( 1ul, scsb.sync_count() );
 }
 
 // Unit test for multi_skipl
@@ -191,12 +191,24 @@ multi_skipl_unit_test
 {
     using boost::io::multi_skipl;
 
-    std::istringstream  iss( "Hello\nThere\nBoosters!" );
-    std::string         scratch;
+    sync_count_stringbuf  scsb( "Hello\nThere\n\nBoosters!\nGood\n\nBye Now." );
+    std::istream          is( &scsb );
+    std::string           scratch;
+
+    // Just like skipl
+    is >> multi_skipl( 1, false ) >> scratch;
+    BOOST_CHECK_EQUAL( scratch, "There" );
+    BOOST_CHECK_EQUAL( 0ul, scsb.sync_count() );
 
     // Skip over two lines
-    iss >> multi_skipl( 2 ) >> scratch;
+    is >> multi_skipl( 2 ) >> scratch;
     BOOST_CHECK_EQUAL( scratch, "Boosters!" );
+    BOOST_CHECK_EQUAL( 0ul, scsb.sync_count() );
+
+    // Do a sync
+    is >> multi_skipl( 3, true ) >> scratch;
+    BOOST_CHECK_EQUAL( scratch, "Bye" );
+    BOOST_CHECK_EQUAL( 1ul, scsb.sync_count() );
 }
 
 
