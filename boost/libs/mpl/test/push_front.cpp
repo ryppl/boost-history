@@ -33,8 +33,8 @@ MPL_TEST_CASE()
     MPL_ASSERT_SAME(2,( front<res2>::type, int ));
     MPL_ASSERT_SAME(2,( front<res3>::type, char ));
     
-    MPL_ASSERT( has_push_front< list0<> >::value );
-    MPL_ASSERT( has_push_front< list1<long> >::value );
+    MPL_ASSERT(( has_push_front< list0<> > ));
+    MPL_ASSERT(( has_push_front< list1<long> > ));
 
-    MPL_ASSERT( !has_push_back< list0<> >::value );
+    MPL_ASSERT_NOT(( has_push_back< list0<> > ));
 }

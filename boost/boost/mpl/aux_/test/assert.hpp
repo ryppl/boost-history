@@ -141,7 +141,7 @@ template< assert_::relations r, long x, long y > struct assert_relation {};
 #endif 
 
 
-#if !BOOST_WORKAROUND(__MWERKS__, BOOST_TESTED_AT(0x3003)) \
+#if !BOOST_WORKAROUND(__MWERKS__, < 0x3202) \
     && !BOOST_WORKAROUND(__BORLANDC__, < 0x600)
 template< bool > struct assert_arg_pred_impl { typedef int type; };
 template<> struct assert_arg_pred_impl<true> { typedef void* type; };
@@ -254,7 +254,7 @@ enum { \
         ) \
 }\
 /**/
-#elif BOOST_WORKAROUND(__MWERKS__, BOOST_TESTED_AT(0x3003)) \
+#elif BOOST_WORKAROUND(__MWERKS__, < 0x3202) \
     || BOOST_WORKAROUND(__BORLANDC__, < 0x600)
 #   define MPL_ASSERT_RELATION(x, rel, y) \
 enum { \

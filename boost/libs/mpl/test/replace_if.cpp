@@ -28,5 +28,5 @@ MPL_TEST_CASE()
     typedef replace_if< numbers, greater<_1,int_<4> >, int_<0> >::type result;
 
     typedef list8_c<int,1,4,0,2,0,0,3,0>::type answer;
-    MPL_ASSERT(( equal< answer,result,equal_to<_1,_2> >::value ));
+    MPL_ASSERT(( equal< answer,result,equal_to<_1,_2> > ));
 }

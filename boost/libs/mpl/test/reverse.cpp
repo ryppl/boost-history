@@ -27,5 +27,5 @@ MPL_TEST_CASE()
 
     typedef range_c<int,0,10> answer;
     
-    MPL_ASSERT(( equal< result,answer,equal_to<_1,_2> >::value ));
+    MPL_ASSERT(( equal< result,answer,equal_to<_1,_2> > ));
 }

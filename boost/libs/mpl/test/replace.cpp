@@ -23,5 +23,5 @@ MPL_TEST_CASE()
     typedef list<int,float,char,float,float,double> types;
     typedef replace< types,float,double >::type result;
     typedef list<int,double,char,double,double,double> answer;
-    MPL_ASSERT(( equal< result,answer >::value ));
+    MPL_ASSERT(( equal< result,answer > ));
 }

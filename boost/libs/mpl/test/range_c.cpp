@@ -28,9 +28,9 @@ MPL_TEST_CASE()
     MPL_ASSERT_EQUAL(2,( size<range1>::value, 1 ));
     MPL_ASSERT_EQUAL(2,( size<range10>::value, 10 ));
 
-    MPL_ASSERT( empty<range0>::value );
-    MPL_ASSERT( !empty<range1>::value );
-    MPL_ASSERT( !empty<range10>::value );
+    MPL_ASSERT(( empty<range0> ));
+    MPL_ASSERT_NOT(( empty<range1> ));
+    MPL_ASSERT_NOT(( empty<range10> ));
 
     MPL_ASSERT_SAME(2,( begin<range0>::type, end<range0>::type ));
     MPL_ASSERT_NOT_SAME(2,( begin<range1>::type, end<range1>::type ));

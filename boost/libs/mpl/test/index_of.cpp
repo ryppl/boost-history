@@ -30,5 +30,5 @@ MPL_TEST_CASE()
     MPL_ASSERT_EQUAL(2,( index_of_double::value, 1 ));
     MPL_ASSERT_EQUAL(2,( index_of_float::value, 2 ));
 
-    MPL_ASSERT( is_void_< index_of_char >::value );
+    MPL_ASSERT(( is_void_< index_of_char > ));
 }

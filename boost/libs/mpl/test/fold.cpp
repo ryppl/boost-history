@@ -38,7 +38,7 @@ MPL_TEST_CASE()
         , if_< boost::is_float<_2>,next<_1>,_1 >
         >::type number_of_floats;
 
-    MPL_ASSERT_EQUAL(2,( number_of_floats::value, 4 ));
+    MPL_ASSERT_RELATION(number_of_floats::value, ==, 4);
 }
 
 MPL_TEST_CASE()
@@ -51,5 +51,5 @@ MPL_TEST_CASE()
         , if_< less< _2,int_<0> >, push_front<_1,_2>, _1 >
         >::type result;
 
-    MPL_ASSERT(( equal< result,negatives,equal_to<_1,_2> >::value ));
+    MPL_ASSERT(( equal< result,negatives,equal_to<_1,_2> > ));
 }

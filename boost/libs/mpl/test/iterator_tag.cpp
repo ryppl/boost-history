@@ -19,6 +19,6 @@
 
 MPL_TEST_CASE()
 {
-    MPL_ASSERT(( less<forward_iterator_tag,bidirectional_iterator_tag>::value ));
-    MPL_ASSERT(( less<bidirectional_iterator_tag,random_access_iterator_tag>::value ));
+    MPL_ASSERT(( less<forward_iterator_tag,bidirectional_iterator_tag> ));
+    MPL_ASSERT(( less<bidirectional_iterator_tag,random_access_iterator_tag> ));
 }

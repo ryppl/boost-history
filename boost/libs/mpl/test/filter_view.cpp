@@ -17,6 +17,7 @@
 #include <boost/mpl/list.hpp>
 #include <boost/mpl/sizeof.hpp>
 #include <boost/mpl/aux_/test.hpp>
+#include <boost/mpl/deref.hpp>
 
 #include <boost/type_traits/is_float.hpp>
 #include <boost/type_traits/is_same.hpp>
@@ -31,5 +32,5 @@ MPL_TEST_CASE()
             >
         >::type iter;
 
-    MPL_ASSERT_SAME(2,( iter::base::type, long double ));
+    MPL_ASSERT((is_same<mpl::deref<iter::base>::type, long double>));
 }

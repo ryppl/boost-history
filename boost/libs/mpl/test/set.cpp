@@ -32,14 +32,14 @@ MPL_TEST_CASE()
     typedef s_mask<char,s_item<int,s_item<char, set0<> > > > s;
 
     MPL_ASSERT_EQUAL(2,( size<s>::value, 1 ));
-    MPL_ASSERT(( !empty<s>::value ));
+    MPL_ASSERT_NOT(( empty<s> ));
     
     MPL_ASSERT_SAME(2,( clear<s>::type, set0<> ));
     MPL_ASSERT_SAME(3,( at<s,int>::type, int ));
     MPL_ASSERT_SAME(3,( at<s,char>::type, void_ ));
 
-    MPL_ASSERT(( !has_key<s,char>::value ));
-    MPL_ASSERT(( has_key<s,int>::value ));
+    MPL_ASSERT_NOT(( has_key<s,char> ));
+    MPL_ASSERT(( has_key<s,int> ));
     MPL_ASSERT_EQUAL(3,( order<s,int>::value, 2 ));
     MPL_ASSERT_SAME(3,( order<s,char>::type, void_ ));
     
@@ -52,13 +52,13 @@ MPL_TEST_CASE()
     typedef s_unmask<char,s> s2;
 
     MPL_ASSERT_EQUAL(2,( size<s2>::value, 2 ));
-    MPL_ASSERT(( !empty<s2>::value ));
+    MPL_ASSERT_NOT(( empty<s2> ));
     MPL_ASSERT_SAME(2,( clear<s2>::type, set0<> ));
     MPL_ASSERT_SAME(3,( at<s2,int>::type, int ));
     MPL_ASSERT_SAME(3,( at<s2,char>::type, char ));
 
-    MPL_ASSERT(( has_key<s2,char>::value ));
-    MPL_ASSERT(( !has_key<s2,long>::value ));
+    MPL_ASSERT(( has_key<s2,char> ));
+    MPL_ASSERT_NOT(( has_key<s2,long> ));
     MPL_ASSERT_EQUAL(3,( order<s2,int>::value, 2 ));
     MPL_ASSERT_EQUAL(3,( order<s2,char>::value, 1 ));
 
@@ -75,9 +75,9 @@ MPL_TEST_CASE()
 
     typedef insert<s2,long>::type s3;
     MPL_ASSERT_EQUAL(2,( size<s3>::value, 3 ));
-    MPL_ASSERT(( has_key<s3,long>::value ));
-    MPL_ASSERT(( has_key<s3,int>::value ));
-    MPL_ASSERT(( has_key<s3,char>::value ));
+    MPL_ASSERT(( has_key<s3,long> ));
+    MPL_ASSERT(( has_key<s3,int> ));
+    MPL_ASSERT(( has_key<s3,char> ));
 
     typedef insert<s,char>::type s1;
     MPL_ASSERT_EQUAL(2,( size<s1>::value, 2 ));
@@ -97,28 +97,28 @@ MPL_TEST_CASE()
 {
     typedef set0<> s;
     
-    MPL_ASSERT(( size<s>::value == 0 ));
-    MPL_ASSERT(( empty<s>::value ));
+    MPL_ASSERT_RELATION(( size<s>::value, ==, 0 ));
+    MPL_ASSERT(( empty<s> ));
     MPL_ASSERT_SAME(2,( clear<s>::type, set0<> ));
     MPL_ASSERT_SAME(3,( at<s,char>::type, void_ ));
 
-    MPL_ASSERT(( !has_key<s,char>::value ));
-    MPL_ASSERT(( !has_key<s,int>::value ));
-    MPL_ASSERT(( !has_key<s,UDT>::value ));
-    MPL_ASSERT(( !has_key<s,incomplete>::value ));
+    MPL_ASSERT_NOT(( has_key<s,char> ));
+    MPL_ASSERT_NOT(( has_key<s,int> ));
+    MPL_ASSERT_NOT(( has_key<s,UDT> ));
+    MPL_ASSERT_NOT(( has_key<s,incomplete> ));
 
-    MPL_ASSERT(( !has_key<s,char const>::value ));
-    MPL_ASSERT(( !has_key<s,int const>::value ));
-    MPL_ASSERT(( !has_key<s,UDT const>::value ));
-    MPL_ASSERT(( !has_key<s,incomplete const>::value ));
+    MPL_ASSERT_NOT(( has_key<s,char const> ));
+    MPL_ASSERT_NOT(( has_key<s,int const> ));
+    MPL_ASSERT_NOT(( has_key<s,UDT const> ));
+    MPL_ASSERT_NOT(( has_key<s,incomplete const> ));
 
-    MPL_ASSERT(( !has_key<s,int*>::value ));
-    MPL_ASSERT(( !has_key<s,UDT*>::value ));
-    MPL_ASSERT(( !has_key<s,incomplete*>::value ));
+    MPL_ASSERT_NOT(( has_key<s,int*> ));
+    MPL_ASSERT_NOT(( has_key<s,UDT*> ));
+    MPL_ASSERT_NOT(( has_key<s,incomplete*> ));
 
-    MPL_ASSERT(( !has_key<s,int&>::value ));
-    MPL_ASSERT(( !has_key<s,UDT&>::value ));
-    MPL_ASSERT(( !has_key<s,incomplete&>::value ));
+    MPL_ASSERT_NOT(( has_key<s,int&> ));
+    MPL_ASSERT_NOT(( has_key<s,UDT&> ));
+    MPL_ASSERT_NOT(( has_key<s,incomplete&> ));
 
     typedef insert<s,char>::type s1;
     MPL_ASSERT_EQUAL(2,( size<s1>::value, 1 ));
@@ -136,26 +136,26 @@ MPL_TEST_CASE()
         , incomplete volatile&,abstract const&
         > s;
     
-    MPL_ASSERT(( size<s>::value == 8 ));
-    MPL_ASSERT(( !empty<s>::value ));
+    MPL_ASSERT_RELATION(( size<s>::value, ==, 8 ));
+    MPL_ASSERT_NOT(( empty<s> ));
     MPL_ASSERT_SAME(2,( clear<s>::type, set0<> ));
     MPL_ASSERT_SAME(3,( at<s,bool>::type, void_ ));
 
-    MPL_ASSERT(( has_key<s,char>::value ));
-    MPL_ASSERT(( has_key<s,int const>::value ));
-    MPL_ASSERT(( has_key<s,long*>::value ));
-    MPL_ASSERT(( has_key<s,UDT* const>::value ));
-    MPL_ASSERT(( has_key<s,incomplete>::value ));
-    MPL_ASSERT(( has_key<s,abstract>::value ));
-    MPL_ASSERT(( has_key<s,incomplete volatile&>::value ));
-    MPL_ASSERT(( has_key<s,abstract const&>::value ));
+    MPL_ASSERT(( has_key<s,char> ));
+    MPL_ASSERT(( has_key<s,int const> ));
+    MPL_ASSERT(( has_key<s,long*> ));
+    MPL_ASSERT(( has_key<s,UDT* const> ));
+    MPL_ASSERT(( has_key<s,incomplete> ));
+    MPL_ASSERT(( has_key<s,abstract> ));
+    MPL_ASSERT(( has_key<s,incomplete volatile&> ));
+    MPL_ASSERT(( has_key<s,abstract const&> ));
 
-    MPL_ASSERT(( !has_key<s,char const>::value ));
-    MPL_ASSERT(( !has_key<s,int>::value ));
-    MPL_ASSERT(( !has_key<s,long* const>::value ));
-    MPL_ASSERT(( !has_key<s,UDT*>::value ));
-    MPL_ASSERT(( !has_key<s,incomplete const>::value ));
-    MPL_ASSERT(( !has_key<s,abstract volatile>::value ));
-    MPL_ASSERT(( !has_key<s,incomplete&>::value ));
-    MPL_ASSERT(( !has_key<s,abstract&>::value ));
+    MPL_ASSERT_NOT(( has_key<s,char const> ));
+    MPL_ASSERT_NOT(( has_key<s,int> ));
+    MPL_ASSERT_NOT(( has_key<s,long* const> ));
+    MPL_ASSERT_NOT(( has_key<s,UDT*> ));
+    MPL_ASSERT_NOT(( has_key<s,incomplete const> ));
+    MPL_ASSERT_NOT(( has_key<s,abstract volatile> ));
+    MPL_ASSERT_NOT(( has_key<s,incomplete&> ));
+    MPL_ASSERT_NOT(( has_key<s,abstract&> ));
 }
