@@ -1,5 +1,4 @@
 #include <boost/interval.hpp>
-#define BOOST_INCLUDE_MAIN
 #include <boost/test/test_tools.hpp>
 
 typedef enum { EXPR_VAR, EXPR_NEG, EXPR_UP, EXPR_DOWN, EXPR_ADD, EXPR_SUB } e_type;

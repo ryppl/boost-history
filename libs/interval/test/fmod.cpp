@@ -1,5 +1,4 @@
 #include <boost/interval.hpp>
-#define BOOST_INCLUDE_MAIN
 #include <boost/test/test_tools.hpp>
 
 struct my_rounded_arith {

@@ -41,7 +41,7 @@ struct rounding_control<long double>:
   detail::x86_rounding_control,
   detail::ieee_double_constants
 {
-  static long double force_rounding(const long double& r) { return r; }
+  static const long double& force_rounding(const long double& r) { return r; }
 };
 
   } // namespace interval_lib

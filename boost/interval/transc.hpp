@@ -84,6 +84,57 @@ interval<T, Traits> log(const interval<T, Traits>& x)
   return interval<T, Traits>(l, rnd.log_up(x.upper()), true);
 }
 
+  namespace interval_lib {
+    namespace detail {
+
+template<class T, class Rounding> inline
+T pow_aux(T x, int pwr, Rounding& rnd) // x and pwr are positive
+{
+  T y = 1;
+  while (pwr > 0) {
+    if (pwr & 1) y = rnd.mul_up(x, y);
+    pwr >>= 1;
+    if (pwr > 0) x = rnd.mul_up(x, x);
+  }
+  return y;
+}
+
+    } // namespace detail
+  } // namespace interval_lib
+
+template<class T, class Traits> inline
+interval<T, Traits> pow(const interval<T, Traits>& x, int pwr)
+{
+  if (pwr == 0) {
+    return interval<T, Traits>(T(1));
+  } else if (pwr < 0) {
+    return T(1) / pow(x, -pwr);
+  }
+
+  using interval_lib::detail::pow_aux;
+
+  typename Traits::rounding rnd;
+  bool sgnl = detail::sign(x.lower());
+  bool sgnu = detail::sign(x.upper());
+  bool odd_pwr = pwr & 1;
+  
+  if (sgnl && !sgnu && !odd_pwr) {
+    T y = pow_aux(std::max(-x.lower(), x.upper()), pwr, rnd);
+    return interval<T, Traits>(0, y, true);
+  } else if (sgnu) {
+    T yl = pow_aux(-x.upper(), pwr, rnd);
+    T yu = pow_aux(-x.lower(), pwr, rnd);
+    if (odd_pwr)
+      return interval<T, Traits>(-yu, -yl, true);
+    else
+      return interval<T, Traits>(yl, yu, true);
+  } else {
+    T y = sgnl ? -pow_aux(-x.lower(), pwr, rnd) // since odd_pwr
+               : pow_aux(x.lower(), pwr, rnd);
+    return interval<T, Traits>(y, pow_aux(x.upper(), pwr, rnd), true);
+  }
+}
+
 template<class T, class Traits> inline
 interval<T, Traits> cos(const interval<T, Traits>& x)
 {

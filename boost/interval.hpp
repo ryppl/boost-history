@@ -326,14 +326,10 @@ namespace boost {
   interval<T,Traits> log(const interval<T,Traits>& x);
 #if 0
   template<class T, class Traits>
-  interval<T,Traits>
-  log10(const interval<T,Traits>& x);
-  template<class T>
-  T pow(const T& x, long y);
-  template<class T, class Traits>
-  interval<T,Traits>
-  pow(const interval<T,Traits>& x, const interval<T,Traits>& y);
+  interval<T,Traits> log10(const interval<T,Traits>& x);
 #endif
+  template<class T, class Traits>
+  interval<T,Traits> pow(const interval<T,Traits>& x, int y);
 
   /*
    * Trigonometric functions: sin, cos, tan, asin, acos, atan, atan2
