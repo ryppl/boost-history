@@ -15,6 +15,7 @@
 
 #  include <iostream>
 #  include <boost/noncopyable.hpp>
+#  include <boost/call_traits.hpp>
 
    namespace boost { namespace io
    {
