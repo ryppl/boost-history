@@ -33,7 +33,7 @@
     BOOST_PP_COMMA_IF(i) \
     BOOST_PP_CAT( \
           BOOST_PP_TUPLE_ELEM(2, 1, op) \
-        , BOOST_PP_ADD(BOOST_PP_TUPLE_ELEM(2, 0, op), i) \
+        , BOOST_PP_ADD(i, BOOST_PP_TUPLE_ELEM(2, 0, op)) \
         ) \
 /**/
 
@@ -54,7 +54,7 @@
     BOOST_PP_COMMA_IF(i) \
     BOOST_PP_CAT( \
           BOOST_PP_TUPLE_ELEM(3, 1, opv) \
-        , BOOST_PP_ADD(BOOST_PP_TUPLE_ELEM(3, 0, opv), i) \
+        , BOOST_PP_ADD(i, BOOST_PP_TUPLE_ELEM(3, 0, opv)) \
         ) = BOOST_PP_TUPLE_ELEM(3, 2, opv) \
 /**/
 
