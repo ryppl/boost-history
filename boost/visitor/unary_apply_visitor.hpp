@@ -25,6 +25,7 @@
 #include "boost/visitor/detail/wrap_dynamic_visitor.hpp"
 #include "boost/visitor/detail/dynamic_return_error.hpp"
 
+#include "boost/preprocessor/define_forwarding_func.hpp"
 #include "boost/type_traits/is_base_and_derived.hpp"
 #include "boost/mpl/bool_c.hpp"
 
@@ -38,6 +39,11 @@ namespace boost {
 
 namespace detail { namespace visitor {
 
+//////////////////////////////////////////////////////////////////////////
+// implementations for dynamic visitables...
+
+// (detail) apply_visitor_impl(DynamicVisitor, DynamicVisitable)
+//
 void apply_visitor_impl(
       dynamic_visitor_base& visitor
     , dynamic_visitable_base& visitable
@@ -45,9 +51,12 @@ void apply_visitor_impl(
     , mpl::true_c// dynamic_visitable
     )
 {
+    // Visit:
     visitable.apply_visitor(visitor);
 }
 
+// (detail) apply_visitor_impl(ReturningDynamicVisitor, DynamicVisitable)
+//
 template <typename R>
 R apply_visitor_impl(
       dynamic_visitor_return_base<R>& visitor
@@ -56,44 +65,50 @@ R apply_visitor_impl(
     , mpl::true_c// dynamic_visitable
     )
 {
-    visitor.return_value.clear();
+    // Before visiting, clear the result value...
+    visitor.result_value.clear();
 
+    // ...visit...
     visitable.apply_visitor(visitor);
 
-    if (visitor.return_value.empty())
+    // ...but if the result value is still empty...
+    if (visitor.result_value.empty())
+        // ...then the visitor is not properly implemented, so throw:
         throw detail::dynamic_return_error();
 
-    return visitor.return_value.get();
+    // Otherwise (the normal case), return the visitor's result:
+    return visitor.result_value.get();
 }
 
-template <typename DynamicVisitor, typename StaticVisitable>
-    typename DynamicVisitor::result_type
-apply_visitor_impl(
-      DynamicVisitor& visitor
-    , StaticVisitable& visitable
-    , mpl::true_c// dynamic_visitor
-    , mpl::false_c// dynamic_visitable
+//////////////////////////////////////////////////////////////////////////
+// implementations for static visitables...
+//
+// NOTE: BOOST_NO_FUNCTION_TEMPLATE_ORDERING workaround does not prohibit
+// proper functioning on conforming compilers.
+//
+
+template <typename Visitor, typename Visitable>
+    typename Visitor::result_type
+apply_static_visitor_impl(
+      Visitor& visitor
+    , Visitable& visitable
+    , mpl::false_c// is_const_visitable
     )
 {
-    wrap_dynamic_visitor_t<DynamicVisitor> wrapped(visitor);
-
-    return static_visitable_traits<StaticVisitable>
-        ::apply_visitor(wrapped, visitable);
+    return static_visitable_traits<Visitable>
+        ::apply_visitor(visitor, visitable);
 }
 
-template <typename DynamicVisitor, typename StaticVisitable>
-    typename DynamicVisitor::result_type
-apply_visitor_impl(
-      DynamicVisitor& visitor
-    , const StaticVisitable& visitable
-    , mpl::true_c// dynamic_visitor
-    , mpl::false_c// dynamic_visitable
+template <typename Visitor, typename Visitable>
+    typename Visitor::result_type
+apply_static_visitor_impl(
+      Visitor& visitor
+    , const Visitable& visitable
+    , mpl::true_c// is_const_visitable
     )
 {
-    wrap_dynamic_visitor_t<DynamicVisitor> wrapped(visitor);
-
-    return static_visitable_traits<StaticVisitable>
-        ::apply_visitor(wrapped, visitable);
+    return static_visitable_traits<Visitable>
+        ::apply_visitor(visitor, visitable);
 }
 
 template <typename Visitor, typename Visitable>
@@ -105,85 +120,85 @@ apply_visitor_impl(
     , mpl::false_c// dynamic_visitable
     )
 {
-    return static_visitable_traits<Visitable>
-        ::apply_visitor(visitor, visitable);
-}
-
-template <typename Visitor, typename Visitable>
-    typename Visitor::result_type
-apply_visitor_impl(
-      Visitor& visitor
-    , const Visitable& visitable
-    , mpl::false_c// dynamic_visitor
-    , mpl::false_c// dynamic_visitable
-    )
-{
-    return static_visitable_traits<Visitable>
-        ::apply_visitor(visitor, visitable);
-}
-
-template <typename Visitor, typename Visitable>
-    typename Visitor::result_type
-apply_visitor_impl(Visitor& visitor, Visitable& visitable)
-{
     typedef mpl::bool_c<
-          is_base_and_derived<
-              dynamic_visitor_base
-            , Visitor
-            >::type::value
-        > is_dynamic_visitor;
+          is_const<Visitable>::value
+        > is_const_visitable;
 
-    typedef mpl::bool_c<
-          is_base_and_derived<
-              dynamic_visitable_base
-            , Visitable
-            >::type::value
-        > is_dynamic_visitable;
-
-    return detail::visitor::apply_visitor_impl(
+    return apply_static_visitor_impl(
           visitor
         , visitable
-        , is_dynamic_visitor()
-        , is_dynamic_visitable()
+        , is_const_visitable()
         );
 }
 
+// (detail) apply_visitor_impl(DynamicVisitor, StaticVisitable)
+//
+template <
+      typename DynamicVisitor
+    , typename StaticVisitable
+    >
+    typename DynamicVisitor::result_type
+apply_visitor_impl(
+      DynamicVisitor& visitor
+    , StaticVisitable& visitable
+    , mpl::true_c// dynamic_visitor
+    , mpl::false_c// dynamic_visitable
+    )
+{
+    typename wrap_dynamic_visitor<DynamicVisitor>::type
+        wrapped(visitor);
+
+    return apply_visitor_impl(
+          wrapped
+        , visitable
+        , mpl::false_c()// dynamic_visitor
+        , mpl::false_c()// dynamic_visitable
+        );
+}       
+
 }} // namespace detail::visitor
 
-
-// [These two instances may take dynamic visitors:]
-
-template <typename Visitor, typename Visitable>
-    typename Visitor::result_type
-apply_visitor(Visitor& visitor, Visitable& visitable)
-{
-    return detail::visitor::apply_visitor_impl(visitor, visitable);
-}
-
-template <typename Visitor, typename Visitable>
-    typename Visitor::result_type
-apply_visitor(Visitor& visitor, const Visitable& visitable)
-{
-    return detail::visitor::apply_visitor_impl(visitor, visitable);
-}
-
-// [These two take only static visitors, b/c dynamic are never const:]
-
-template <typename Visitor, typename Visitable>
-    typename Visitor::result_type
-apply_visitor(const Visitor& visitor, Visitable& visitable)
-{
-    return static_visitable_traits<Visitable>
-        ::apply_visitor(visitor, visitable);
-}
-
-template <typename Visitor, typename Visitable>
-    typename Visitor::result_type
-apply_visitor(const Visitor& visitor, const Visitable& visitable)
-{
-    return static_visitable_traits<Visitable>
-        ::apply_visitor(visitor, visitable);
-}
+#define BOOST_AUX_APPLY_VISITOR_FUNC(CV1__, CV2__)  \
+    template <                                      \
+          typename Visitor                          \
+        , typename Visitable                        \
+        >                                           \
+        typename Visitor::result_type               \
+    apply_visitor(                                  \
+          CV1__ Visitor& visitor                    \
+        , CV2__ Visitable& visitable                \
+        )                                           \
+    {                                               \
+        /* [Determine if visitor is dynamic:] */    \
+        typedef mpl::bool_c<                        \
+              is_dynamic_visitor<                   \
+                  CV1__ Visitor                     \
+                >::type::value                      \
+            > dynamic_visitor_flag;                 \
+                                                    \
+        /* [Determine if visitable is dynamic:] */  \
+        typedef mpl::bool_c<                        \
+              is_dynamic_visitable<                 \
+                  CV2__ Visitable                   \
+                >::type::value                      \
+            > dynamic_visitable_flag;               \
+                                                    \
+        /* Dispatch appropriate implementation: */  \
+        return detail::visitor::apply_visitor_impl( \
+              visitor                               \
+            , visitable                             \
+            , dynamic_visitor_flag()                \
+            , dynamic_visitable_flag()              \
+            );                                      \
+    }                                               \
+    /**/
+#
+BOOST_PP_DEFINE_FORWARDING_FUNC( 
+      BOOST_AUX_APPLY_VISITOR_FUNC
+    , 2
+    )
+#
+#undef BOOST_AUX_APPLY_VISITOR_FUNC
 
 } // namespace boost
 

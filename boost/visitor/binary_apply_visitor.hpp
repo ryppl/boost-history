@@ -30,7 +30,7 @@ namespace boost {
 // expression visitor(x, y).
 //
 
-namespace detail { namespace apply_visitor {
+namespace detail { namespace visitor {
 
 template <typename Visitor, typename Value1>
 class binary_delay0
@@ -101,7 +101,7 @@ public:
 #   undef BOOST_AUX_BINARY_VISITOR_DELAY1_FUNC_OPERATOR
 };
 
-}} // namespace detail::apply_visitor
+}} // namespace detail::visitor
 
 #define BOOST_AUX_BINARY_APPLY_VISITOR(CV1__, CV2__, CV3__)                 \
     template <typename Visitor, typename Visitable1, typename Visitable2>   \
@@ -112,7 +112,7 @@ public:
         , CV3__ Visitable2& visitable2                                      \
         )                                                                   \
     {                                                                       \
-        detail::apply_visitor::binary_delay1<                               \
+        detail::visitor::binary_delay1<                                     \
               CV1__ Visitor                                                 \
             , CV2__ Visitable1                                              \
             > delayer(visitor, visitable1);                                 \

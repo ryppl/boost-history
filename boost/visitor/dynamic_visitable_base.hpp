@@ -19,6 +19,8 @@
 
 #include "boost/visitor/dynamic_visitor_base.hpp"
 
+#include "boost/mpl/aux_/lambda_support.hpp" // used by is_dynamic_visitable
+
 namespace boost {
 
 //////////////////////////////////////////////////////////////////////////
@@ -26,7 +28,6 @@ namespace boost {
 //
 // Serves as an abstract base to all types supporting dynamic visitation.
 //
-
 struct dynamic_visitable_base
 {
     virtual void apply_visitor(dynamic_visitor_base&) = 0;
@@ -35,6 +36,28 @@ protected:
     ~dynamic_visitable_base()
     {
     }
+};
+
+
+//////////////////////////////////////////////////////////////////////////
+// metafunction is_dynamic_visitable
+//
+// Value metafunction indicates whether the specified type is visitable
+// by a dynamic visitor.
+// 
+// NOTE: This template never needs to be specialized!
+//
+template <typename T>
+struct is_dynamic_visitable
+{
+    typedef typename is_base_and_derived<
+          dynamic_visitable_base
+        , T
+        >::type type;
+
+    BOOST_STATIC_CONSTANT(bool, value = type::value);
+
+    BOOST_MPL_AUX_LAMBDA_SUPPORT(1,is_dynamic_visitable,(T))
 };
 
 } // namespace boost

@@ -17,6 +17,7 @@
 #ifndef BOOST_VISITOR_PTR_HPP
 #define BOOST_VISITOR_PTR_HPP
 
+#include "boost/static_visitor.hpp"
 #include "boost/type_traits/add_reference.hpp"
 
 namespace boost {
@@ -30,7 +31,8 @@ namespace boost {
 
 template <typename T, typename R>
 class visitor_ptr_t
-    : public dynamic_visitor_base
+    : public static_visitor<>
+    , public dynamic_visitor_base
     , public dynamic_visitor_interface<T>
 {
 private: // representation

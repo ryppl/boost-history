@@ -18,9 +18,7 @@
 #define BOOST_PREPROCESSOR_DEFINE_FORWARDING_FUNC_HPP
 
 #include "boost/preprocessor/debug/assert.hpp"
-#include "boost/preprocessor/facilities/expand.hpp"
 #include "boost/preprocessor/comparison/less_equal.hpp"
-#include <boost/preprocessor/facilities/empty.hpp>
 
 //////////////////////////////////////////////////////////////////////////
 // BOOST_PP_DEFINE_FORWARDING_FUNC
@@ -37,18 +35,20 @@
 // support macros
 #define BOOST_NOTHING /**/
 
+#if !defined(BOOST_NO_FUNCTION_TEMPLATE_ORDERING)
+
 #define BOOST_PP_AUX_DEFINE_FORWARDING_FUNC_1(macro)    \
     macro(BOOST_NOTHING)                                \
     macro(const)                                        \
     /**/
-#
+
 #define BOOST_PP_AUX_DEFINE_FORWARDING_FUNC_2(macro)    \
     macro(BOOST_NOTHING,BOOST_NOTHING)                  \
     macro(BOOST_NOTHING,const)                          \
     macro(const,BOOST_NOTHING)                          \
     macro(const,const)                                  \
     /**/
-#
+
 #define BOOST_PP_AUX_DEFINE_FORWARDING_FUNC_3(macro)    \
     macro(BOOST_NOTHING,BOOST_NOTHING,BOOST_NOTHING)    \
     macro(BOOST_NOTHING,BOOST_NOTHING,const)            \
@@ -59,7 +59,23 @@
     macro(const,const,BOOST_NOTHING)                    \
     macro(const,const,const)                            \
     /**/
-#
+
+#else // defined(BOOST_NO_FUNCTION_TEMPLATE_ORDERING)
+
+#define BOOST_PP_AUX_DEFINE_FORWARDING_FUNC_1(macro)    \
+    macro(BOOST_NOTHING)                                \
+    /**/
+
+#define BOOST_PP_AUX_DEFINE_FORWARDING_FUNC_2(macro)    \
+    macro(BOOST_NOTHING,BOOST_NOTHING)                  \
+    /**/
+
+#define BOOST_PP_AUX_DEFINE_FORWARDING_FUNC_3(macro)    \
+    macro(BOOST_NOTHING,BOOST_NOTHING,BOOST_NOTHING)    \
+    /**/
+
+#endif
+
 #define BOOST_PP_AUX_DEFINE_FORWARDING_FUNC_IMPL_MAX 3
 #define BOOST_PP_AUX_DEFINE_FORWARDING_FUNC_IMPL_MAX_MSG  \
     "current implementation of BOOST_DEFINE_FORWARDING_FUNC only supports 3 params"

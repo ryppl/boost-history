@@ -17,6 +17,11 @@
 #ifndef BOOST_STATIC_VISITOR_HPP
 #define BOOST_STATIC_VISITOR_HPP
 
+#include "boost/config.hpp"
+#include "boost/mpl/bool_c.hpp"
+
+#include "boost/mpl/aux_/lambda_support.hpp" // used by is_static_visitor
+
 namespace boost {
 
 //////////////////////////////////////////////////////////////////////////
@@ -26,13 +31,41 @@ namespace boost {
 // visitor. The class is analogous to std::unary_function in this role.
 //
 
+namespace detail {
+
+    struct is_static_visitor_tag { };
+
+} // namespace detail
+
 template <typename R = void>
 struct static_visitor
+    : public detail::is_static_visitor_tag
 {
     typedef R result_type;
 
 protected:
     ~static_visitor() { }
+};
+
+//////////////////////////////////////////////////////////////////////////
+// metafunction is_static_visitor
+//
+// Value metafunction indicates whether the specified type is a static
+// visitor of any types.
+// 
+// NOTE: This template never needs to be specialized!
+//
+template <typename T>
+struct is_static_visitor
+{
+    typedef typename is_base_and_derived<
+          detail::is_static_visitor_tag
+        , T
+        >::type type;
+
+    BOOST_STATIC_CONSTANT(bool, value = type::value);
+
+    BOOST_MPL_AUX_LAMBDA_SUPPORT(1,is_static_visitor,(T))
 };
 
 } // namespace boost

@@ -24,45 +24,84 @@ namespace boost {
 
 // TRAIT: has_nothrow_move
 
+namespace detail {
+
+template <typename T>
+struct has_nothrow_move_impl
+{
+    BOOST_STATIC_CONSTANT(
+        bool, value = (
+            mpl::logical_or<
+                has_trivial_move<T>
+              , mpl::logical_and<
+                  has_nothrow_copy<T>
+                , has_nothrow_assign<T>
+                >
+            >::type::value
+            )
+        );
+};
+
+} // namespace detail
+
 BOOST_TT_AUX_BOOL_TRAIT_DEF1(
       has_nothrow_move
     , T
-    , (::boost::mpl::logical_or<
-          has_trivial_move<T>
-        , mpl::logical_and<
-              has_nothrow_copy<T>
-            , has_nothrow_assign<T>
-            >
-        >::type::value
-      )
+    , (::boost::detail::has_nothrow_move_impl<T>::value)
     )
 
 
 // TRAIT: has_nothrow_move_constructor
 
+namespace detail {
+
+template <typename T>
+struct has_nothrow_move_constructor_impl
+{
+    BOOST_STATIC_CONSTANT(
+        bool, value = (
+            mpl::logical_or<
+              has_nothrow_move<T>
+            , has_trivial_move_constructor<T>
+            , has_nothrow_copy<T>
+            >::type::value
+            )
+        );
+};
+
+} // namespace detail
+
 BOOST_TT_AUX_BOOL_TRAIT_DEF1(
       has_nothrow_move_constructor
     , T
-    , (::boost::mpl::logical_or<
-          has_nothrow_move<T>
-        , has_trivial_move_constructor<T>
-        , has_nothrow_copy<T>
-        >::type::value
-      )
+    , (::boost::detail::has_nothrow_move_constructor_impl<T>::value)
     )
 
 
 // TRAIT: has_nothrow_move_assign
 
+namespace detail {
+
+template <typename T>
+struct has_nothrow_move_assign_impl
+{
+    BOOST_STATIC_CONSTANT(
+        bool, value = (
+            mpl::logical_or<
+              has_nothrow_move<T>
+            , has_trivial_move_assign<T>
+            , has_nothrow_assign<T>
+            >::type::value
+            )
+        );
+};
+
+} // namespace detail
+
 BOOST_TT_AUX_BOOL_TRAIT_DEF1(
       has_nothrow_move_assign
     , T
-    , (::boost::mpl::logical_or<
-          has_nothrow_move<T>
-        , has_trivial_move_assign<T>
-        , has_nothrow_assign<T>
-        >::type::value
-      )
+    , (::boost::detail::has_nothrow_move_assign_impl<T>::value)
     )
 
 } // namespace boost

@@ -352,13 +352,13 @@ struct switch_traits
     template <typename Cases>
     static void execute(T& operand, Cases cases)
     {
-        apply_visitor(cases, operand);
+        boost::apply_visitor(cases, operand);
     }
 
     template <typename Cases>
     static void execute(const T& operand, Cases cases)
     {
-        apply_visitor(cases, operand);
+        boost::apply_visitor(cases, operand);
     }
 };
 

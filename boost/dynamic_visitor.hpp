@@ -69,7 +69,7 @@ struct make_dynamic_visitor_impl
                 , mpl::false_c// void_return
                 )
             {
-                return_value = visit_invoke(operand);
+                result_value = visit_invoke(operand);
             }
 
             virtual void visit(T& operand)

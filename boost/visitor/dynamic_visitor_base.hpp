@@ -29,13 +29,34 @@ struct dynamic_visitor_base
 public: // typedefs
     typedef void result_type;
 
-public: // make class abstract via pure virtual destructor "trick"
+public: // make class abstract via pure-virtual destructor "trick"
     virtual ~dynamic_visitor_base() = 0;
 };
 
 dynamic_visitor_base::~dynamic_visitor_base()
 {
 }
+
+//////////////////////////////////////////////////////////////////////////
+// metafunction is_dynamic_visitor
+//
+// Value metafunction indicates whether the specified type is a dynamic
+// visitor of any types.
+// 
+// NOTE: This template never needs to be specialized!
+//
+template <typename T>
+struct is_dynamic_visitor
+{
+    typedef typename is_base_and_derived<
+          dynamic_visitor_base
+        , T
+        >::type type;
+
+    BOOST_STATIC_CONSTANT(bool, value = type::value);
+
+    BOOST_MPL_AUX_LAMBDA_SUPPORT(1,is_dynamic_visitor,(T))
+};
 
 } // namespace boost
 

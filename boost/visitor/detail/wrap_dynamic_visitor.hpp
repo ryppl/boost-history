@@ -17,103 +17,99 @@
 #ifndef BOOST_VISITOR_DETAIL_WRAP_DYNAMIC_VISITOR_HPP
 #define BOOST_VISITOR_DETAIL_WRAP_DYNAMIC_VISITOR_HPP
 
+#include "boost/static_visitor.hpp"
 #include "boost/visitor/bad_visit.hpp"
 #include "boost/visitor/dynamic_visitor_base.hpp"
 #include "boost/visitor/dynamic_visitor_interface.hpp"
 #include "boost/visitor/dynamic_visitor_return_base.hpp"
+#include "boost/visitor/try_dynamic_visit.hpp"
 #include "boost/visitor/detail/dynamic_return_error.hpp"
 
 #include "boost/type_traits/is_void.hpp"
+#include "boost/mpl/apply_if.hpp"
+#include "boost/mpl/identity.hpp"
 #include "boost/mpl/if.hpp"
+#include "boost/utility.hpp" // for noncopyable
 
 namespace boost {
 
 namespace detail { namespace visitor {
 
 class wrap_dynamic_visitor_base_t
+    : boost::noncopyable
+    , public static_visitor<>
 {
 private: // representation
+
     dynamic_visitor_base& visitor_;
 
-public: // typedefs
-    typedef void
-        result_type;
-
 public: // structors
+
     explicit wrap_dynamic_visitor_base_t(dynamic_visitor_base& visitor)
         : visitor_(visitor)
     {
     }
 
-public: // operators
+public: // visitor interfaces
+
     template <typename T>
     void operator()(T& operand)
     {
         if ( !try_dynamic_visit(visitor_, operand) )
             throw bad_visit();
     }
+
 };
 
 template <typename R>
 class wrap_dynamic_visitor_return_base_t
+    : boost::noncopyable
+    , public static_visitor<R>
 {
 private: // representation
+
     dynamic_visitor_return_base<R>& visitor_;
 
-public: // typedefs
-    typedef R
-        result_type;
-
 public: // structors
+
     explicit wrap_dynamic_visitor_return_base_t(dynamic_visitor_return_base<R>& visitor)
         : visitor_(visitor)
     {
     }
 
-public: // operators
+public: // visitor interfaces
+
     template <typename T>
-    result_type operator()(T& operand)
+    R operator()(T& operand)
     {
-        visitor_.return_value.clear();
+        visitor_.result_value.clear();
 
         if ( !try_dynamic_visit(visitor_, operand) )
             throw bad_visit();
 
-        if (target.return_value.empty())
+        if (target.result_value.empty())
             throw detail::dynamic_return_error();
 
-        return target.return_value.get();
+        return target.result_value.get();
     }
+
 };
 
 template <typename DynamicVisitor>
-class wrap_dynamic_visitor_t
+struct wrap_dynamic_visitor
 {
-public: // typedefs
-    typedef typename DynamicVisitor::result_type
-        result_type;
+public: // metafunction result
 
-private: // representation
-    typedef typename mpl::if_<
-          is_void< result_type >
-        , wrap_dynamic_visitor_base_t
-        , wrap_dynamic_visitor_return_base_t<result_type>
-        >::type wrapper_t;
+    typedef typename mpl::apply_if<
+          is_static_visitor<DynamicVisitor>   // in case visitor is both dynamic and static
+        , mpl::identity<DynamicVisitor>
+        , mpl::if_<
+              is_void< typename DynamicVisitor::result_type >
+            , wrap_dynamic_visitor_base_t
+            , wrap_dynamic_visitor_return_base_t< typename DynamicVisitor::result_type >
+            >
+        >::type type;
 
-    wrapper_t& wrapped_;
-
-public: // structors
-    explicit wrap_dynamic_visitor_t(DynamicVisitor& visitor)
-        : wrapped_(visitor)
-    {
-    }
-
-public: // operators
-    template <typename T>
-    result_type operator()(T& operand)
-    {
-        return wrapped_(operand);
-    }
 };
 
 }} // namespace detail::visitor

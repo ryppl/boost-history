@@ -37,7 +37,7 @@ public: // typedefs
     typedef R result_type;
 
 public: // fields
-    optional<result_type> return_value;
+    optional<result_type> result_value;
 
 protected:
     ~dynamic_visitor_return_base()

@@ -77,6 +77,8 @@ protected:
 // Class template meant to be specialized for types wishing to offer
 //   (indirect) visitability by a static visitor.
 //
+// NOTE: Default implementations assume direct visitability.
+//
 
 namespace detail { namespace static_visitable {
 
@@ -89,28 +91,29 @@ template <typename Visitable>
 struct static_visitable_traits
     : detail::static_visitable::default_traits_tag
 {
+public: // static functions
 
-    // [NOTE: Both "default" implementations assume direct visitability.]
+#define BOOST_AUX_STATIC_VISITABLE_TRAITS_APPLY_VISITOR(CV__)   \
+    template <typename Visitor>                                 \
+    static                                                      \
+        typename Visitor::result_type                           \
+    apply_visitor(Visitor& visitor, CV__ Visitable& visitable)  \
+    {                                                           \
+        CV__ static_visitable<Visitable>& v = visitable;        \
+        return v.apply_visitor(                                 \
+              visitor                                           \
+            , detail::static_visitable::private_forward_tag()   \
+            );                                                  \
+    }                                                           \
+    /**/
+#
+#define BOOST_NOTHING /**/
+#
+    BOOST_AUX_STATIC_VISITABLE_TRAITS_APPLY_VISITOR(BOOST_NOTHING)
+    BOOST_AUX_STATIC_VISITABLE_TRAITS_APPLY_VISITOR(const)
+#
+#undef BOOST_AUX_STATIC_VISITABLE_TRAITS_APPLY_VISITOR
 
-    template <typename Visitor>
-    static
-        typename Visitor::result_type
-    apply_visitor(Visitor& visitor, Visitable& visitable)
-    {
-        // Visit directly:
-        static_visitable<Visitable>& v = visitable;
-        return v.apply_visitor(visitor, detail::static_visitable::private_forward_tag());
-    }
-
-    template <typename Visitor>
-    static
-        typename Visitor::result_type
-    apply_visitor(Visitor& visitor, const Visitable& visitable)
-    {
-        // Const-visit directly:
-        const static_visitable<Visitable>& v = visitable;
-        return v.apply_visitor(visitor, detail::static_visitable::private_forward_tag());
-    }
 };
 
 //////////////////////////////////////////////////////////////////////////

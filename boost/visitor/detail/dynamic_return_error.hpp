@@ -27,7 +27,7 @@ namespace detail {
 // class dynamic_return_error
 //
 // Exception thrown when a value-returning dynamic visitor fails to set
-// its return_value field (see dynamic_visitor_return_base).
+// its result_value field (see dynamic_visitor_return_base).
 //
 struct dynamic_return_error
     : std::exception
@@ -36,7 +36,7 @@ public:
     virtual const char * what() const throw()
     {
         return "logic error: "
-               "dynamic_visitor_return_base<...> did not set return_value";
+               "dynamic_visitor_return_base<...> did not set its result value";
     }
 };
 
