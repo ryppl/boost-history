@@ -133,7 +133,7 @@ int main()
       }
    */
 
-#  if !defined(BOOST_IOFM__NO_OUTPUT_DEDUCTION) && !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
+#  if !defined(BOOST_IOFM_NO_OUTPUT_DEDUCTION) && !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
       std::cout << "deduced output: " << boost::io::formatob( a3D ) << '\n';
 
       // [results:] deduced output: [ [ [ A, 0, 0 ], [ 0, A, 0 ], [ 0, 0, A ] ],

@@ -3,7 +3,7 @@
 #include <iostream>  // std::cout
 
 #include <boost/outfmt/formatob.hpp>
-#if !defined(BOOST_IOFM__NO_LIB_INTERVAL)
+#if !defined(BOOST_IOFM_NO_LIB_INTERVAL)
 #  include <boost/numeric/interval.hpp>
 #endif
 
@@ -11,10 +11,10 @@ int main()
 {
    // boost examples
 
-#  if !defined(BOOST_IOFM__NO_LIB_INTERVAL)
+#  if !defined(BOOST_IOFM_NO_LIB_INTERVAL)
       boost::numeric::interval< int >  i(    10, 20 );
 #  endif
-#  if !defined(BOOST_IOFM__NO_LIB_RATIONAL)
+#  if !defined(BOOST_IOFM_NO_LIB_RATIONAL)
       boost::rational< int >           rat(   2,  3 );
 #  endif
    boost::compressed_pair< char, int > cp(  'A', 10 );
@@ -25,7 +25,7 @@ int main()
 
    // output boost types
 
-#  if !defined(BOOST_IOFM__NO_LIB_INTERVAL)
+#  if !defined(BOOST_IOFM_NO_LIB_INTERVAL)
       std::cout << "interval< int > = "
                 << boost::io::formatob( i, boost::io::pairfmt())
                 << '\n';
@@ -33,7 +33,7 @@ int main()
       // [results]: interval< int > = ( 10, 20 )
 #  endif
 
-#  if !defined(BOOST_IOFM__NO_LIB_RATIONAL)
+#  if !defined(BOOST_IOFM_NO_LIB_RATIONAL)
       std::cout << "rational< int > = "
                 << boost::io::formatob( rat, pairfmt1 )
                 << '\n';
@@ -47,7 +47,7 @@ int main()
 
    // [results]: compressed_pair< char, int > = (A,10)
 
-#  if !defined(BOOST_IOFM__NO_LIB_QUATERNION)
+#  if !defined(BOOST_IOFM_NO_LIB_QUATERNION)
       boost::math::quaternion< float >    h( 0.1f, 0.2f, 0.3f, 0.4f );
 
       std::cout << "quaternion< float > = "
@@ -57,7 +57,7 @@ int main()
       // [results]: quaternion< float > = ( 0.1, 0.2, 0.3, 0.4 )
 #  endif
 
-#  if !defined(BOOST_IOFM__NO_LIB_OCTONION)
+#  if !defined(BOOST_IOFM_NO_LIB_OCTONION)
       boost::math::octonion<   float >    o( 0.1f, 0.2f, 0.3f, 0.4f, 1.1f, 1.2f, 1.3f, 1.4f );
 
       std::cout << "octonion< float > = "

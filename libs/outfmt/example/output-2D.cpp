@@ -116,7 +116,7 @@ int main()
       [ O | X | O ]
    */
 
-#  if !defined(BOOST_IOFM__NO_OUTPUT_DEDUCTION)
+#  if !defined(BOOST_IOFM_NO_OUTPUT_DEDUCTION)
       std::cout << "deduced output: " << boost::io::formatob( tictactoe ) << '\n'; 
 
       // [results:] deduced output: [ [ O, X, O ], [ X, O, X ], [ O, X, O ] ]
