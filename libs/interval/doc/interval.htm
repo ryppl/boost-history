@@ -1,244 +1,209 @@
-<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-   <meta name="GENERATOR" content="Mozilla/4.77C-CCK-MCD {C-UDP; EBM-APPLE} (Macintosh; U; PPC) [Netscape]">
-   <title>Boost Interval Arithmetic Library</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>Boost Interval Arithmetic Library</title>
 </head>
+
 <body>
+<h1><img src="../../../c++boost.gif"
+alt="c++boost.gif (8819 bytes)" nosave="" align="middle">
+ Header &lt;<a
+href="../../../boost/interval.hpp">boost/interval.hpp</a>&gt;</h1>
+ 
 
-<h1>
-<img SRC="../../../c++boost.gif" ALT="c++boost.gif (8819 bytes)" NOSAVE height=40 width=40 align=CENTER>
-Header &lt;<a href="../../../boost/interval.hpp">boost/interval.hpp</a>></h1>
-&nbsp;
-<center><table COLS=2 WIDTH="80%" >
-<tr>
-<td><a href="#intro">Introduction</a></td>
+<center>
 
-<td><b>Other pages associated with this page:</b></td>
-</tr>
+<table cols="2" width="80%">
+  <tbody>
+    <tr align=TOP>
+      <td align=TOP><b>Contents of this page:</b><br>
+        <a href="#intro">Introduction</a><br>
+        <a href="#synopsis">Synopsis</a><br>
+        <a href="#interval_traits">Template class
+        <tt>interval_traits</tt></a><br>
+        <a href="#interval">Template class <tt>interval</tt></a<br></a><a
+        href="#specs"><tt>interval</tt> partial specializations</a><br>
+        <a href="#opers">Operations and functions</a><br>
+        <a href="#interval_lib">Interval support library</a><br>
+        <a href="#perfs">Performance notes</a><br>
+        <a href="#test">Test programs</a><br>
+        <a href="#rationale">Rationale</a><br>
+        <a href="#acks">History and Acknowledgments</a></td>
+      <td align=TOP><b>Other pages associated with this page:</b><br>
+        <a href="rounding.htm">Rounding policies</a><br>
+        <a href="checking.htm">Checking policies</a><br>
+        <a href="comparisons.htm">Comparison policies</a><br>
+        <a href="Interval-requirements.htm">Base number type requirements
+        (TODO)</a><br>
+        <a href="Interval-guide.htm">Crafting one's own interval type
+        (TODO)</a></td>
+    </tr>
+  </tbody>
+</table>
+</center>
 
-<tr>
-<td><a href="#synopsis">Synopsis</a></td>
+<h2><a name="intro"></a>Introduction and Overview</h2>
+As implied by its name, this library is intended to help manipulating
+mathematical intervals. It consists of a single header &lt;<a
+href="../../../boost/interval.hpp">boost/interval.hpp</a>&gt; and principally
+a type which can be used as <tt>interval&lt;T&gt;</tt>. In fact, this
+interval template is declared as <tt>interval&lt;T,Traits&gt;</tt> where
+<tt>Traits</tt> is a policy class that controls  the various behaviours of
+the interval class; <tt>interval&lt;T&gt;</tt> just happens to pick the
+default policies for the type <tt>T</tt>.
 
-<td><a href="rounding.htm">Rounding policies</a></td>
-</tr>
-
-<tr>
-<td><a href="#interval_traits">Template class <tt>interval_traits</tt></a>
-<br><a href="#interval">Template class <tt>interval</tt></a></td>
-
-<td><a href="checking.htm">Checking policies</a></td>
-</tr>
-
-<tr>
-<td><a href="#specs"><tt>interval</tt> partial specializations</a></td>
-
-<td><a href="comparisons.htm">Comparison policies</a></td>
-</tr>
-
-<tr>
-<td><a href="#opers">Operations and functions</a></td>
-
-<td><a href="Interval-requirements.htm">Base number type requirements (TODO)</a></td>
-</tr>
-
-<tr>
-<td><a href="#interval_lib">Interval support library</a></td>
-
-<td><a href="Interval-guide.htm">Crafting one's own interval type (TODO)</a></td>
-</tr>
-
-<tr>
-<td><a href="#perfs">Performance notes</a></td>
-
-<td></td>
-</tr>
-
-<tr>
-<td><a href="#test">Test programs</a></td>
-
-<td></td>
-</tr>
-
-<tr>
-<td><a href="#rationale">Rationale</a></td>
-
-<td></td>
-</tr>
-
-<tr>
-<td><tt><a href="#acks">History and Acknowledgments</a></tt></td>
-
-<td></td>
-</tr>
-</table></center>
-
-<h2>
-<a NAME="intro"></a>Introduction and Overview</h2>
-
-<blockquote>As implied by its name, this library is intended to help manipulating
-mathematical intervals. It consists of a single header &lt;<a href="../../../boost/interval.hpp">boost/interval.hpp</a>>
-and principally a type which can be used as <tt>interval&lt;T></tt>. In
-fact, this interval template is declared as <tt>interval&lt;T,Traits></tt>
-where <tt>Traits</tt> is a policy class that controls&nbsp; the various
-behaviours of the interval class; <tt>interval&lt;T></tt> just happens
-to pick the default policies for the type <tt>T</tt>.
-<h3>
-Interval Arithmetic</h3>
+<h3>Interval Arithmetic</h3>
 An interval is a pair of numbers which represents all the numbers between
 these two. The purpose of this library is to extend the usual arithmetic
 functions to intervals. These intervals will be written [<i>a</i>,<i>b</i>]
 to represent all the numbers between <i>a</i> and <i>b</i>. <i>a</i> and
-<i>b</i>
-can be infinite (but they can not be the same infinite) and
-<i>a</i> &le;
-<i>b</i>.
+<i>b</i> can be infinite (but they can not be the same infinite) and <i>a</i>
+&#8804; <i>b</i>.
+
 <p>The fundamental property of interval arithmetic is the <b>inclusion
-property</b>:
-<br> 
-<dd>
-``if <i>f</i> is a function on a set of numbers, <i>f</i> can be extended
-to a new function defined on intervals. This new function <i>f</i> takes
-one interval argument and returns an interval result such as: &forall;
-<i>x</i>
-&isin; [<i>a</i>,<i>b</i>], <i>f</i>(<i>x</i>) &isin;
-<i>f</i>([<i>a</i>,<i>b</i>]).''</dd>
+property</b>:</p>
 
-<dd>
-&nbsp;</dd>
+<dl>
+    <dd>``if <i>f</i> is a function on a set of numbers, <i>f</i> can be
+      extended to a new function defined on intervals. This new function
+      <i>f</i> takes one interval argument and returns an interval result
+      such as: &#8704; <i>x</i> &#8712; [<i>a</i>,<i>b</i>],
+      <i>f</i>(<i>x</i>) &#8712; <i>f</i>([<i>a</i>,<i>b</i>]).''</dd>
+    <dd> </dd>
+</dl>
 
-<br>Such a property is not limited to functions with only one argument.
-Whenever possible, the interval result should be the smallest one able
-to satisfy the property (it is not really useful if the new functions always
-answer [-&infin;,+&infin;]).
+<p>Such a property is not limited to functions with only one argument. Whenever
+possible, the interval result should be the smallest one able to satisfy the
+property (it is not really useful if the new functions always answer
+[-&#8734;,+&#8734;]).</p>
+
 <p>There are two reasons a user would like to use this library. The obvious
-one is when the user has to compute with intervals. One example is when
-input data have some  builtin imprecision: instead of a number, an
-input variable can be passed as an interval. Another canonical use is to
-solve equations, by bisecting an interval until the interval width is small
-enough. A third application is in computer graphics, where computations
-with boxes, segments or rays can be reduced to computations with points
-via intervals.
+one is when the user has to compute with intervals. One example is when input
+data have some  builtin imprecision: instead of a number, an input variable
+can be passed as an interval. Another canonical use is to solve equations, by
+bisecting an interval until the interval width is small enough. A third
+application is in computer graphics, where computations with boxes, segments
+or rays can be reduced to computations with points via intervals.</p>
+
 <p>Another common reason to use interval arithmetic is when the computer
 doesn't produce exact results: by using intervals, it is possible to quantify
 the propagation of rounding errors. This approach is used often in numerical
-computation. For example, let's assume the computer stores numbers with
-ten decimal significant digits. To the question 1 + 1E-100 - 1, the computer
-will answer 0 although the correct answer would be 1E-100. With the help
-of interval arithmetic, the computer will answer [0,1E-9]. This is quite
-a huge interval for such a little result, but the precision is now known,
-without having to compute error propagation.
-<h3>
-Numbers, rounding, and exceptional behavior</h3>
+computation. For example, let's assume the computer stores numbers with ten
+decimal significant digits. To the question 1 + 1E-100 - 1, the computer will
+answer 0 although the correct answer would be 1E-100. With the help of
+interval arithmetic, the computer will answer [0,1E-9]. This is quite a huge
+interval for such a little result, but the precision is now known, without
+having to compute error propagation.</p>
+
+<h3>Numbers, rounding, and exceptional behavior</h3>
 In order to successfully use interval arithmetic, the bounds of the interval
 must present some characteristics. Firstly, due to the definition of an
-interval, the numbers have to be strongly ordered (so for instance, <tt>complex&lt;T></tt>
-is not usable as base number type for intervals). The mathematical functions
-for this type should also have the <i>same monotonicity properties than
-for the real numbers</i> <b>WHAT DOES THIS MEAN? -H</b> (so modulo types
-are not usable either). Secondly, the computations must be exact or provide
-some rounding methods (toward minus or plus infinity) in order to always
-guarantee the inclusion property. <b>NOT NECESSARILY, NO ROUNDING IS FINE
-FOR SOME APPLICATIONS, OR IS IT? -H</b>  Finally, because heavy loss
-of precision is always possible, some numbers have to represent infinities
-or an exceptional behavior must be defined. The same situation also occurs
-for NaN (<i>Not a Number</i>).
-<p>Given all this, one may want to limit the template argument T of the
-class template i<tt>nterval</tt> to the floating point types <tt>float</tt>,
-<tt>double</tt>,
-and <tt>long double</tt>, as defined by the IEEE-754 Standard. Indeed,
-if the interval arithmetic is intended to replace the arithmetic provided
-by the floating point unit of a processor, these types are the best choice.
-Unlike <tt>std::complex</tt>, however, we don't want to limit
-<tt>T</tt>
-to these types. This is why we allow the rounding and exceptional behaviors
-to be given by the two policies (rounding and checking). We do nevertheless
-provide highly optimized rounding and checking class specializations for
-the above-mentioned floating point types.
-<h3>
-Operations and functions</h3>
+interval, the numbers have to be strongly ordered (so for instance,
+<tt>complex&lt;T&gt;</tt> is not usable as base number type for intervals).
+The mathematical functions for this type should also have the <i>same
+monotonicity properties than for the real numbers</i> <b>WHAT DOES THIS MEAN?
+-H</b> (so modulo types are not usable either). Secondly, the computations
+must be exact or provide some rounding methods (toward minus or plus
+infinity) in order to always guarantee the inclusion property. <b>NOT
+NECESSARILY, NO ROUNDING IS FINE FOR SOME APPLICATIONS, OR IS IT? -H</b> 
+Finally, because heavy loss of precision is always possible, some numbers
+have to represent infinities or an exceptional behavior must be defined. The
+same situation also occurs for NaN (<i>Not a Number</i>).
+
+<p>Given all this, one may want to limit the template argument T of the class
+template i<tt>nterval</tt> to the floating point types <tt>float</tt>,
+<tt>double</tt>, and <tt>long double</tt>, as defined by the IEEE-754
+Standard. Indeed, if the interval arithmetic is intended to replace the
+arithmetic provided by the floating point unit of a processor, these types
+are the best choice. Unlike <tt>std::complex</tt>, however, we don't want to
+limit <tt>T</tt> to these types. This is why we allow the rounding and
+exceptional behaviors to be given by the two policies (rounding and
+checking). We do nevertheless provide highly optimized rounding and checking
+class specializations for the above-mentioned floating point types.</p>
+
+<h3>Operations and functions</h3>
 It is straightforward to define the elementary arithmetic operations on
-intervals, being guided by the inclusion property. For instance, if [a,b]
-and [c,d] are intervals, [a,b]+[c,d] can be computed by taking the smallest
-interval that contains all the numbers x+y for x in [a,b] and y in [c,d];
-in this case, rounding a+b down and c+d up will suffice. Other operators
-and functions are similarly defined (see their definitions below).
-<h3>
-Comparisons</h3>
+intervals, being guided by the inclusion property. For instance, if [a,b] and
+[c,d] are intervals, [a,b]+[c,d] can be computed by taking the smallest
+interval that contains all the numbers x+y for x in [a,b] and y in [c,d]; in
+this case, rounding a+b down and c+d up will suffice. Other operators and
+functions are similarly defined (see their definitions below).
+
+<h3>Comparisons</h3>
 It is also possible to define some comparison operators. Given two intervals,
-the result is a subset of {<i>false</i>,<i>true</i>}. The answers {<i>false</i>}
-and {<i>true</i>} are easy to manipulate since they can directly be mapped
-on <i>true</i> and <i>false</i>. But it is not the case for the answer
-{<i>false</i>,<i>true</i>} since comparison operators are supposed to be
-boolean functions. So, what to do in order to obtain boolean answers? Naturally,
-{<i>false</i>} is transformed in <i>false</i> and {<i>true</i>} in <i>true</i>.
-And {<i>false</i>,<i>true</i>}?
-<p>One solution consists of deciding to adopt an exceptional behavior,
-such as a failed assertion or raising an exception. In this case, the exceptional
+the result is a subset of {<i>false</i>,<i>true</i>}. The answers
+{<i>false</i>} and {<i>true</i>} are easy to manipulate since they can
+directly be mapped on <i>true</i> and <i>false</i>. But it is not the case
+for the answer {<i>false</i>,<i>true</i>} since comparison operators are
+supposed to be boolean functions. So, what to do in order to obtain boolean
+answers? Naturally, {<i>false</i>} is transformed in <i>false</i> and
+{<i>true</i>} in <i>true</i>. And {<i>false</i>,<i>true</i>}?
+
+<p>One solution consists of deciding to adopt an exceptional behavior, such
+as a failed assertion or raising an exception. In this case, the exceptional
 behavior will be triggered when the two compared intervals overlap on more
 than a single point. <b>WHAT IF THE OVERLAP IS A SINGLE POINT? I THOUGHT
-EXCEPTION CAN HAPPEN THERE TOO FOR STRICT COMPARISONS -- H</b>
+EXCEPTION CAN HAPPEN THERE TOO FOR STRICT COMPARISONS -- H</b></p>
+
 <p>Another solution is to always map {<i>false</i>,<i>true</i>} into either
-<i>false,</i>
-or into <i>true</i>. If <i>false</i> is chosen, the comparison will be
-called "<i>certain</i>". Indeed, the result of [<i>a</i>,<i>b</i>] &lt;
-[<i>c</i>,<i>d</i>] will be <i>true</i> if and only if: &forall;
-<i>x</i>
-&isin; [<i>a</i>,<i>b</i>] &forall; <i>y</i> &isin; [<i>c</i>,<i>d</i>],
-<i>x</i>
-&lt; <i>y</i>. If <i>true</i> is chosen, the comparison will be called
-"<i>possible</i>". Indeed, the result of [<i>a</i>,<i>b</i>] &lt; [<i>c</i>,<i>d</i>]
-will be <i>true</i> if and only if: &exist;
-<i>x</i> &isin; [<i>a</i>,<i>b</i>]
-&exist; <i>y</i> &isin; [<i>c</i>,<i>d</i>],
-<i>x</i> &lt; <i>y</i>.
+<i>false,</i> or into <i>true</i>. If <i>false</i> is chosen, the comparison
+will be called "<i>certain</i>". Indeed, the result of [<i>a</i>,<i>b</i>]
+&lt; [<i>c</i>,<i>d</i>] will be <i>true</i> if and only if: &#8704; <i>x</i>
+&#8712; [<i>a</i>,<i>b</i>] &#8704; <i>y</i> &#8712; [<i>c</i>,<i>d</i>],
+<i>x</i> &lt; <i>y</i>. If <i>true</i> is chosen, the comparison will be
+called "<i>possible</i>". Indeed, the result of [<i>a</i>,<i>b</i>] &lt;
+[<i>c</i>,<i>d</i>] will be <i>true</i> if and only if: &#8707; <i>x</i>
+&#8712; [<i>a</i>,<i>b</i>] &#8707; <i>y</i> &#8712; [<i>c</i>,<i>d</i>],
+<i>x</i> &lt; <i>y</i>.</p>
+
 <p>Since any of these solution has a clearly defined semantics, it is not
 clear that we should enforce either of them. For this reason, the traits
-class defines which behavior will be followed, and different behavior can
-be followed by tailoring the traits class. See <a href="comparisons.htm">comparison
-policies</a> pages for further details.
-<h3>
-Overview of the library, and usage</h3>
-This library provides two quite distinct levels of usage. One is to use
-the basic class template interval&lt;T> without specifying the policy.
-This only requires to know and understand the concepts developed above
-and the content of the namespace boost. In addition to the class interval&lt;T>,
-this level of usage provides arithmetic operators (+, -, *, /), algebraic
-and piecewise-algebraic functions (abs, square, sqrt), transcendental and
+class defines which behavior will be followed, and different behavior can be
+followed by tailoring the traits class. See <a
+href="comparisons.htm">comparison policies</a> pages for further details.</p>
+
+<h3>Overview of the library, and usage</h3>
+This library provides two quite distinct levels of usage. One is to use the
+basic class template interval&lt;T&gt; without specifying the policy. This
+only requires to know and understand the concepts developed above and the
+content of the namespace boost. In addition to the class interval&lt;T&gt;,
+this level of usage provides arithmetic operators (+, -, *, /), algebraic and
+piecewise-algebraic functions (abs, square, sqrt), transcendental and
 trigonometric functions (exp, log, sin, cos, tan, asin, acos, atan, sinh,
 cosh, tanh, asinh, acosh, atanh), and the standard comparison operators
-(&lt;, &lt;=, >, >=, ==, !=), as well as several interval-specific functions
-(min, max, which have a different meaning than std::min and std::max; lower,
-upper, width, median, empty, singleton, equal, in, in_zero, subset, proper_subset,
-overlap,  intersection, hull, bisect).
-<p>For some functions which take several parameters of type interval&lt;T>,
-all combinations of argument types T and interval&lt;T> which contain at
-least on interval&lt;T>, are considered in order to avoid a conversion
-from the arguments of type T to a singleton of type interval&lt;T>. This
-is done for efficiency reasons when the fact that an argument is a singleton
-forbids some cases and helps write more efficient code.
-<p>A somewhat more advanced usage of this library is to hand-pick the policies
-<tt>Rounding</tt>,
-<tt>Compare</tt>,
-and <tt>Checking</tt> and pass them to <tt>interval&lt;T,Traits></tt> through
-the use of <tt>Traits := boost::interval_traits&lt;T,Compare,Rounding,Checking></tt>.
-Appropriate policies can be fabricated by using the various classes provided
-in the namespace <tt>boost::interval_lib</tt> as detailed in the sections
-XXX.</blockquote>
+(&lt;, &lt;=, &gt;, &gt;=, ==, !=), as well as several interval-specific
+functions (min, max, which have a different meaning than std::min and
+std::max; lower, upper, width, median, empty, singleton, equal, in, in_zero,
+subset, proper_subset, overlap,  intersection, hull, bisect).
 
-<h2>
-<a NAME="synopsis"></a>Synopsis</h2>
+<p>For some functions which take several parameters of type
+interval&lt;T&gt;, all combinations of argument types T and interval&lt;T&gt;
+which contain at least on interval&lt;T&gt;, are considered in order to avoid
+a conversion from the arguments of type T to a singleton of type
+interval&lt;T&gt;. This is done for efficiency reasons when the fact that an
+argument is a singleton forbids some cases and helps write more efficient
+code.</p>
+
+<p>A somewhat more advanced usage of this library is to hand-pick the
+policies <tt>Rounding</tt>, <tt>Compare</tt>, and <tt>Checking</tt> and pass
+them to <tt>interval&lt;T,Traits&gt;</tt> through the use of <tt>Traits :=
+boost::interval_traits&lt;T,Compare,Rounding,Checking&gt;</tt>. Appropriate
+policies can be fabricated by using the various classes provided in the
+namespace <tt>boost::interval_lib</tt> as detailed in the sections XXX.</p>
+
+<h2><a name="synopsis"></a>Synopsis</h2>
 
 <blockquote>
-<pre>namespace boost {
+  <pre>namespace boost {
 
   namespace interval_lib {
 
     /* these declarations necessary for the declaration of interval_traits */
-    template &lt;class T> struct compare_certainly;
-    template &lt;class T> struct rounded_math;
-    template &lt;class T> struct checking_strict;
+    template &lt;class T&gt; struct compare_certainly;
+    template &lt;class T&gt; struct rounded_math;
+    template &lt;class T&gt; struct checking_strict;
 
     /* ... ; the full synopsis of namespace interval_lib can be found <a href="#interval_lib">here</a> */
   
@@ -246,198 +211,195 @@ XXX.</blockquote>
 
   /* template interval_traits; class definition can be found <a href="#interval_traits">here</a> */
   template &lt;class T,
-            class Compare  = interval_lib::compare_certainly&lt;T>,
-            class Rounding = interval_lib::rounded_arithmetic&lt;T>,
-            class Checking = interval_lib::checking_strict&lt;T> >
+            class Compare  = interval_lib::compare_certainly&lt;T&gt;,
+            class Rounding = interval_lib::rounded_arithmetic&lt;T&gt;,
+            class Checking = interval_lib::checking_strict&lt;T&gt; &gt;
   class interval_traits;
 
   /* template class interval; class definition can be found <a href="#interval">here</a> */
-  template &lt;class T, class Traits = interval_traits&lt;T> >
+  template &lt;class T, class Traits = interval_traits&lt;T&gt; &gt;
   class interval;
 
   /* arithmetic operators involving intervals */
-  template &lt;class T, class Traits>  interval&lt;T, Traits> operator+(const interval&lt;T, Traits>&amp; x);
-  template &lt;class T, class Traits>  interval&lt;T, Traits> operator-(const interval&lt;T, Traits>&amp; x);
+  template &lt;class T, class Traits&gt;  interval&lt;T, Traits&gt; operator+(const interval&lt;T, Traits&gt;&amp; x);
+  template &lt;class T, class Traits&gt;  interval&lt;T, Traits&gt; operator-(const interval&lt;T, Traits&gt;&amp; x);
 
-  template &lt;class T, class Traits>  interval&lt;T, Traits> operator+(const interval&lt;T, Traits>&amp; x, const interval&lt;T, Traits>&amp; y);
-  template &lt;class T, class Traits>  interval&lt;T, Traits> operator+(const interval&lt;T, Traits>&amp; x, const T&amp; y);
-  template &lt;class T, class Traits>  interval&lt;T, Traits> operator+(const T&amp; x, const interval&lt;T, Traits>&amp; y);
+  template &lt;class T, class Traits&gt;  interval&lt;T, Traits&gt; operator+(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+  template &lt;class T, class Traits&gt;  interval&lt;T, Traits&gt; operator+(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
+  template &lt;class T, class Traits&gt;  interval&lt;T, Traits&gt; operator+(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
 
-  template &lt;class T, class Traits>  interval&lt;T, Traits> operator-(const interval&lt;T, Traits>&amp; x, const interval&lt;T, Traits>&amp; y);
-  template &lt;class T, class Traits>  interval&lt;T, Traits> operator-(const interval&lt;T, Traits>&amp; x, const T&amp; y);
-  template &lt;class T, class Traits>  interval&lt;T, Traits> operator-(const T&amp; x, const interval&lt;T, Traits>&amp; y);
+  template &lt;class T, class Traits&gt;  interval&lt;T, Traits&gt; operator-(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+  template &lt;class T, class Traits&gt;  interval&lt;T, Traits&gt; operator-(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
+  template &lt;class T, class Traits&gt;  interval&lt;T, Traits&gt; operator-(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
 
-  template &lt;class T, class Traits>  interval&lt;T, Traits> operator*(const interval&lt;T, Traits>&amp; x, const interval&lt;T, Traits>&amp; y);
-  template &lt;class T, class Traits>  interval&lt;T, Traits> operator*(const interval&lt;T, Traits>&amp; x, const T&amp; y);
-  template &lt;class T, class Traits>  interval&lt;T, Traits> operator*(const T&amp; x, const interval&lt;T, Traits>&amp; y);
+  template &lt;class T, class Traits&gt;  interval&lt;T, Traits&gt; operator*(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+  template &lt;class T, class Traits&gt;  interval&lt;T, Traits&gt; operator*(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
+  template &lt;class T, class Traits&gt;  interval&lt;T, Traits&gt; operator*(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
 
-  template &lt;class T, class Traits>  interval&lt;T, Traits> operator/(const interval&lt;T, Traits>&amp; x, const interval&lt;T, Traits>&amp; y);
-  template &lt;class T, class Traits>  interval&lt;T, Traits> operator/(const interval&lt;T, Traits>&amp; x, const T&amp; y);
-  template &lt;class T, class Traits>  interval&lt;T, Traits> operator/(const T&amp; r, const interval&lt;T, Traits>&amp; x);
+  template &lt;class T, class Traits&gt;  interval&lt;T, Traits&gt; operator/(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+  template &lt;class T, class Traits&gt;  interval&lt;T, Traits&gt; operator/(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
+  template &lt;class T, class Traits&gt;  interval&lt;T, Traits&gt; operator/(const T&amp; r, const interval&lt;T, Traits&gt;&amp; x);
 
   /* algebraic functions: sqrt, abs, square */
-  template &lt;class T, class Traits>  interval&lt;T, Traits> abs(const interval&lt;T, Traits>&amp; x);
-  template &lt;class T, class Traits>  interval&lt;T, Traits> sqrt(const interval&lt;T, Traits>&amp; x);
-  template &lt;class T, class Traits>  interval&lt;T, Traits> square(const interval&lt;T, Traits>&amp; x);
+  template &lt;class T, class Traits&gt;  interval&lt;T, Traits&gt; abs(const interval&lt;T, Traits&gt;&amp; x);
+  template &lt;class T, class Traits&gt;  interval&lt;T, Traits&gt; sqrt(const interval&lt;T, Traits&gt;&amp; x);
+  template &lt;class T, class Traits&gt;  interval&lt;T, Traits&gt; square(const interval&lt;T, Traits&gt;&amp; x);
 
   /* transcendental functions: exp, log */
-  template &lt;class T, class Traits>  interval&lt;T, Traits> exp(const interval&lt;T, Traits>&amp; x);
-  template &lt;class T, class Traits>  interval&lt;T, Traits> log(const interval&lt;T, Traits>&amp; x);
+  template &lt;class T, class Traits&gt;  interval&lt;T, Traits&gt; exp(const interval&lt;T, Traits&gt;&amp; x);
+  template &lt;class T, class Traits&gt;  interval&lt;T, Traits&gt; log(const interval&lt;T, Traits&gt;&amp; x);
 
   /* fmod, for trigonometric function argument reduction (see below) */
-  template &lt;class T, class Traits>  interval&lt;T, Traits> fmod(const interval&lt;T, Traits>&amp; x, const interval&lt;T, Traits>&amp; y);
-  template &lt;class T, class Traits>  interval&lt;T, Traits> fmod(const interval&lt;T, Traits>&amp; x, const T&amp; y);
-  template &lt;class T, class Traits>  interval&lt;T, Traits> fmod(const T&amp; x, const interval&lt;T, Traits>&amp; y);
+  template &lt;class T, class Traits&gt;  interval&lt;T, Traits&gt; fmod(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+  template &lt;class T, class Traits&gt;  interval&lt;T, Traits&gt; fmod(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
+  template &lt;class T, class Traits&gt;  interval&lt;T, Traits&gt; fmod(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
 
   /* trigonometric functions */
-  template &lt;class T, class Traits>  interval&lt;T, Traits> sin(const interval&lt;T, Traits>&amp; x);
-  template &lt;class T, class Traits>  interval&lt;T, Traits> cos(const interval&lt;T, Traits>&amp; x);
-  template &lt;class T, class Traits>  interval&lt;T, Traits> tan(const interval&lt;T, Traits>&amp; x);
-  template &lt;class T, class Traits>  interval&lt;T, Traits> asin(const interval&lt;T, Traits>&amp; x);
-  template &lt;class T, class Traits>  interval&lt;T, Traits> acos(const interval&lt;T, Traits>&amp; x);
-  template &lt;class T, class Traits>  interval&lt;T, Traits> atan(const interval&lt;T, Traits>&amp; x);
+  template &lt;class T, class Traits&gt;  interval&lt;T, Traits&gt; sin(const interval&lt;T, Traits&gt;&amp; x);
+  template &lt;class T, class Traits&gt;  interval&lt;T, Traits&gt; cos(const interval&lt;T, Traits&gt;&amp; x);
+  template &lt;class T, class Traits&gt;  interval&lt;T, Traits&gt; tan(const interval&lt;T, Traits&gt;&amp; x);
+  template &lt;class T, class Traits&gt;  interval&lt;T, Traits&gt; asin(const interval&lt;T, Traits&gt;&amp; x);
+  template &lt;class T, class Traits&gt;  interval&lt;T, Traits&gt; acos(const interval&lt;T, Traits&gt;&amp; x);
+  template &lt;class T, class Traits&gt;  interval&lt;T, Traits&gt; atan(const interval&lt;T, Traits&gt;&amp; x);
 
   /* hyperbolic trigonometric functions */
-  template &lt;class T, class Traits>  interval&lt;T, Traits> sinh(const interval&lt;T, Traits>&amp; x);
-  template &lt;class T, class Traits>  interval&lt;T, Traits> cosh(const interval&lt;T, Traits>&amp; x);
-  template &lt;class T, class Traits>  interval&lt;T, Traits> tanh(const interval&lt;T, Traits>&amp; x);
-  template &lt;class T, class Traits>  interval&lt;T, Traits> asinh(const interval&lt;T, Traits>&amp; x);
-  template &lt;class T, class Traits>  interval&lt;T, Traits> acosh(const interval&lt;T, Traits>&amp; x);
-  template &lt;class T, class Traits>  interval&lt;T, Traits> atanh(const interval&lt;T, Traits>&amp; x);
+  template &lt;class T, class Traits&gt;  interval&lt;T, Traits&gt; sinh(const interval&lt;T, Traits&gt;&amp; x);
+  template &lt;class T, class Traits&gt;  interval&lt;T, Traits&gt; cosh(const interval&lt;T, Traits&gt;&amp; x);
+  template &lt;class T, class Traits&gt;  interval&lt;T, Traits&gt; tanh(const interval&lt;T, Traits&gt;&amp; x);
+  template &lt;class T, class Traits&gt;  interval&lt;T, Traits&gt; asinh(const interval&lt;T, Traits&gt;&amp; x);
+  template &lt;class T, class Traits&gt;  interval&lt;T, Traits&gt; acosh(const interval&lt;T, Traits&gt;&amp; x);
+  template &lt;class T, class Traits&gt;  interval&lt;T, Traits&gt; atanh(const interval&lt;T, Traits&gt;&amp; x);
 
   /* min, max external functions (NOT std::min/max, see below) */
-  template &lt;class T, class Traits>  interval&lt;T, Traits> max(const interval&lt;T, Traits>&amp; x, const interval&lt;T, Traits>&amp; y);
-  template &lt;class T, class Traits>  interval&lt;T, Traits> max(const interval&lt;T, Traits>&amp; x, const T&amp; y);
-  template &lt;class T, class Traits>  interval&lt;T, Traits> max(const T&amp; x, const interval&lt;T, Traits>&amp; y);
-  template &lt;class T, class Traits>  interval&lt;T, Traits> min(const interval&lt;T, Traits>&amp; x, const interval&lt;T, Traits>&amp; y);
-  template &lt;class T, class Traits>  interval&lt;T, Traits> min(const interval&lt;T, Traits>&amp; x, const T&amp; y);
-  template &lt;class T, class Traits>  interval&lt;T, Traits> min(const T&amp; x, const interval&lt;T, Traits>&amp; y);
+  template &lt;class T, class Traits&gt;  interval&lt;T, Traits&gt; max(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+  template &lt;class T, class Traits&gt;  interval&lt;T, Traits&gt; max(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
+  template &lt;class T, class Traits&gt;  interval&lt;T, Traits&gt; max(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+  template &lt;class T, class Traits&gt;  interval&lt;T, Traits&gt; min(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+  template &lt;class T, class Traits&gt;  interval&lt;T, Traits&gt; min(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
+  template &lt;class T, class Traits&gt;  interval&lt;T, Traits&gt; min(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
 
   /* bounds-related interval functions */
-  template &lt;class T, class Traits>  T lower(const interval&lt;T, Traits>&amp; x);
-  template &lt;class T, class Traits>  T upper(const interval&lt;T, Traits>&amp; x);
-  template &lt;class T, class Traits>  T width(const interval&lt;T, Traits>&amp; x);
-  template &lt;class T, class Traits>  T median(const interval&lt;T, Traits>&amp; x);
+  template &lt;class T, class Traits&gt;  T lower(const interval&lt;T, Traits&gt;&amp; x);
+  template &lt;class T, class Traits&gt;  T upper(const interval&lt;T, Traits&gt;&amp; x);
+  template &lt;class T, class Traits&gt;  T width(const interval&lt;T, Traits&gt;&amp; x);
+  template &lt;class T, class Traits&gt;  T median(const interval&lt;T, Traits&gt;&amp; x);
 
   /* bounds-related interval functions */
-  template &lt;class T, class Traits>  bool empty(const interval&lt;T, Traits>&amp; b);
-  template &lt;class T, class Traits>  bool singleton(const interval&lt;T, Traits>&amp; x);
-  template &lt;class T, class Traits>  bool equal(const interval&lt;T, Traits>&amp; x, const interval&lt;T, Traits>&amp; y);
-  template &lt;class T, class Traits>  bool in(const T&amp; r, const interval&lt;T, Traits>&amp; b);
-  template &lt;class T, class Traits>  bool in_zero(const interval&lt;T, Traits>&amp; b);
-  template &lt;class T, class Traits>  bool subset(const interval&lt;T, Traits>&amp; a, const interval&lt;T, Traits>&amp; b);
-  template &lt;class T, class Traits>  bool proper_subset(const interval&lt;T, Traits>&amp; a, const interval&lt;T, Traits>&amp; b);
-  template &lt;class T, class Traits>  bool overlap(const interval&lt;T, Traits>&amp; x, const interval&lt;T, Traits>&amp; y);
+  template &lt;class T, class Traits&gt;  bool empty(const interval&lt;T, Traits&gt;&amp; b);
+  template &lt;class T, class Traits&gt;  bool singleton(const interval&lt;T, Traits&gt;&amp; x);
+  template &lt;class T, class Traits&gt;  bool equal(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+  template &lt;class T, class Traits&gt;  bool in(const T&amp; r, const interval&lt;T, Traits&gt;&amp; b);
+  template &lt;class T, class Traits&gt;  bool in_zero(const interval&lt;T, Traits&gt;&amp; b);
+  template &lt;class T, class Traits&gt;  bool subset(const interval&lt;T, Traits&gt;&amp; a, const interval&lt;T, Traits&gt;&amp; b);
+  template &lt;class T, class Traits&gt;  bool proper_subset(const interval&lt;T, Traits&gt;&amp; a, const interval&lt;T, Traits&gt;&amp; b);
+  template &lt;class T, class Traits&gt;  bool overlap(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
 
   /* set manipulation interval functions */
-  template &lt;class T, class Traits>  interval&lt;T, Traits> intersection(const interval&lt;T, Traits>&amp; x, const interval&lt;T, Traits>&amp; y);
-  template &lt;class T, class Traits>  interval&lt;T, Traits> hull(const interval&lt;T, Traits>&amp; x, const interval&lt;T, Traits>&amp; y);
-  template &lt;class T, class Traits>  interval&lt;T, Traits> hull(const interval&lt;T, Traits>&amp; x, const T&amp; y);
-  template &lt;class T, class Traits>  interval&lt;T, Traits> hull(const T&amp; x, const interval&lt;T, Traits>&amp; y);
-  template &lt;class T, class Traits>  interval&lt;T, Traits> hull(const T&amp; x, const T&amp; y);
-  template &lt;class T, class Traits>  std::pair&lt;interval&lt;T, Traits>, interval&lt;T, Traits> > bisect(const interval&lt;T, Traits>&amp; x);
+  template &lt;class T, class Traits&gt;  interval&lt;T, Traits&gt; intersection(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+  template &lt;class T, class Traits&gt;  interval&lt;T, Traits&gt; hull(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+  template &lt;class T, class Traits&gt;  interval&lt;T, Traits&gt; hull(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
+  template &lt;class T, class Traits&gt;  interval&lt;T, Traits&gt; hull(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+  template &lt;class T, class Traits&gt;  interval&lt;T, Traits&gt; hull(const T&amp; x, const T&amp; y);
+  template &lt;class T, class Traits&gt;  std::pair&lt;interval&lt;T, Traits&gt;, interval&lt;T, Traits&gt; &gt; bisect(const interval&lt;T, Traits&gt;&amp; x);
 
   /* interval comparison operators */
-  template&lt;class T, class Traits>  bool operator&lt;(const interval&lt;T, Traits>&amp; x, const interval&lt;T, Traits>&amp; y);
-  template&lt;class T, class Traits>  bool operator&lt;(const interval&lt;T, Traits>&amp; x, const T&amp; y);
-  template&lt;class T, class Traits>  bool operator&lt;(const T&amp; x, const interval&lt;T, Traits>&amp; y);
+  template&lt;class T, class Traits&gt;  bool operator&lt;(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+  template&lt;class T, class Traits&gt;  bool operator&lt;(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
+  template&lt;class T, class Traits&gt;  bool operator&lt;(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
 
-  template&lt;class T, class Traits>  bool operator&lt;=(const interval&lt;T, Traits>&amp; x, const interval&lt;T, Traits>&amp; y);
-  template&lt;class T, class Traits>  bool operator&lt;=(const interval&lt;T, Traits>&amp; x, const T&amp; y);
-  template&lt;class T, class Traits>  bool operator&lt;=(const T&amp; x, const interval&lt;T, Traits>&amp; y);
+  template&lt;class T, class Traits&gt;  bool operator&lt;=(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+  template&lt;class T, class Traits&gt;  bool operator&lt;=(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
+  template&lt;class T, class Traits&gt;  bool operator&lt;=(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
 
-  template&lt;class T, class Traits>  bool operator>(const interval&lt;T, Traits>&amp; x, const interval&lt;T, Traits>&amp; y);
-  template&lt;class T, class Traits>  bool operator>(const interval&lt;T, Traits>&amp; x, const T&amp; y);
-  template&lt;class T, class Traits>  bool operator>(const T&amp; x, const interval&lt;T, Traits>&amp; y);
+  template&lt;class T, class Traits&gt;  bool operator&gt;(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+  template&lt;class T, class Traits&gt;  bool operator&gt;(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
+  template&lt;class T, class Traits&gt;  bool operator&gt;(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
 
-  template&lt;class T, class Traits>  bool operator>=(const interval&lt;T, Traits>&amp; x, const interval&lt;T, Traits>&amp; y);
-  template&lt;class T, class Traits>  bool operator>=(const interval&lt;T, Traits>&amp; x, const T&amp; y);
-  template&lt;class T, class Traits>  bool operator>=(const T&amp; x, const interval&lt;T, Traits>&amp; y);</pre>
+  template&lt;class T, class Traits&gt;  bool operator&gt;=(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+  template&lt;class T, class Traits&gt;  bool operator&gt;=(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
+  template&lt;class T, class Traits&gt;  bool operator&gt;=(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);</pre>
+  <pre>  template&lt;class T, class Traits&gt;  bool operator==(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+  template&lt;class T, class Traits&gt;  bool operator==(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
+  template&lt;class T, class Traits&gt;  bool operator==(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
 
-<pre>  template&lt;class T, class Traits>  bool operator==(const interval&lt;T, Traits>&amp; x, const interval&lt;T, Traits>&amp; y);
-  template&lt;class T, class Traits>  bool operator==(const interval&lt;T, Traits>&amp; x, const T&amp; y);
-  template&lt;class T, class Traits>  bool operator==(const T&amp; x, const interval&lt;T, Traits>&amp; y);
-
-  template&lt;class T, class Traits>  bool operator!=(const interval&lt;T, Traits>&amp; x, const interval&lt;T, Traits>&amp; y);
-  template&lt;class T, class Traits>  bool operator!=(const interval&lt;T, Traits>&amp; x, const T&amp; y);
-  template&lt;class T, class Traits>  bool operator!=(const T&amp; x, const interval&lt;T, Traits>&amp; y);
+  template&lt;class T, class Traits&gt;  bool operator!=(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+  template&lt;class T, class Traits&gt;  bool operator!=(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
+  template&lt;class T, class Traits&gt;  bool operator!=(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
 
   /* interval comparison functions <b>WHY NOT IN INTERVAL_LIB? -H</b> */
-  template &lt;class T, class Traits>  bool cerlt(const interval&lt;T, Traits>&amp; x, const interval&lt;T, Traits>&amp; y);
-  template &lt;class T, class Traits>  bool cerlt(const interval&lt;T, Traits>&amp; x, const T&amp; y);
-  template &lt;class T, class Traits>  bool cerlt(const T&amp; x, const interval&lt;T, Traits>&amp; y);
+  template &lt;class T, class Traits&gt;  bool cerlt(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+  template &lt;class T, class Traits&gt;  bool cerlt(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
+  template &lt;class T, class Traits&gt;  bool cerlt(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
 
-  template &lt;class T, class Traits>  bool cerle(const interval&lt;T, Traits>&amp; x, const interval&lt;T, Traits>&amp; y);
-  template &lt;class T, class Traits>  bool cerle(const interval&lt;T, Traits>&amp; x, const T&amp; y);
-  template &lt;class T, class Traits>  bool cerle(const T&amp; x, const interval&lt;T, Traits>&amp; y);
+  template &lt;class T, class Traits&gt;  bool cerle(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+  template &lt;class T, class Traits&gt;  bool cerle(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
+  template &lt;class T, class Traits&gt;  bool cerle(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
 
-  template &lt;class T, class Traits>  bool cergt(const interval&lt;T, Traits>&amp; x, const interval&lt;T, Traits>&amp; y);
-  template &lt;class T, class Traits>  bool cergt(const interval&lt;T, Traits>&amp; x, const T&amp; y);
-  template &lt;class T, class Traits>  bool cergt(const T&amp; x, const interval&lt;T, Traits>&amp; y);
+  template &lt;class T, class Traits&gt;  bool cergt(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+  template &lt;class T, class Traits&gt;  bool cergt(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
+  template &lt;class T, class Traits&gt;  bool cergt(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
 
-  template &lt;class T, class Traits>  bool cerge(const interval&lt;T, Traits>&amp; x, const interval&lt;T, Traits>&amp; y);
-  template &lt;class T, class Traits>  bool cerge(const interval&lt;T, Traits>&amp; x, const T&amp; y);
-  template &lt;class T, class Traits>  bool cerge(const T&amp; x, const interval&lt;T, Traits>&amp; y);
+  template &lt;class T, class Traits&gt;  bool cerge(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+  template &lt;class T, class Traits&gt;  bool cerge(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
+  template &lt;class T, class Traits&gt;  bool cerge(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
 
-  template &lt;class T, class Traits>  bool cereq(const interval&lt;T, Traits>&amp; x, const interval&lt;T, Traits>&amp; y);
-  template &lt;class T, class Traits>  bool cereq(const interval&lt;T, Traits>&amp; x, const T&amp; y);
-  template &lt;class T, class Traits>  bool cereq(const T&amp; x, const interval&lt;T, Traits>&amp; y);
+  template &lt;class T, class Traits&gt;  bool cereq(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+  template &lt;class T, class Traits&gt;  bool cereq(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
+  template &lt;class T, class Traits&gt;  bool cereq(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
 
-  template &lt;class T, class Traits>  bool cerne(const interval&lt;T, Traits>&amp; x, const interval&lt;T, Traits>&amp; y);
-  template &lt;class T, class Traits>  bool cerne(const interval&lt;T, Traits>&amp; x, const T&amp; y);
-  template &lt;class T, class Traits>  bool cerne(const T&amp; x, const interval&lt;T, Traits>&amp; y);
+  template &lt;class T, class Traits&gt;  bool cerne(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+  template &lt;class T, class Traits&gt;  bool cerne(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
+  template &lt;class T, class Traits&gt;  bool cerne(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
 
-  template &lt;class T, class Traits>  bool poslt(const interval&lt;T, Traits>&amp; x, const interval&lt;T, Traits>&amp; y);
-  template &lt;class T, class Traits>  bool poslt(const interval&lt;T, Traits>&amp; x, const T&amp; y);
-  template &lt;class T, class Traits>  bool poslt(const T&amp; x, const interval&lt;T, Traits>&amp; y);
+  template &lt;class T, class Traits&gt;  bool poslt(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+  template &lt;class T, class Traits&gt;  bool poslt(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
+  template &lt;class T, class Traits&gt;  bool poslt(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
 
-  template &lt;class T, class Traits>  bool posle(const interval&lt;T, Traits>&amp; x, const interval&lt;T, Traits>&amp; y);
-  template &lt;class T, class Traits>  bool posle(const interval&lt;T, Traits>&amp; x, const T&amp; y);
-  template &lt;class T, class Traits>  bool posle(const T&amp; x, const interval&lt;T, Traits>&amp; y);
+  template &lt;class T, class Traits&gt;  bool posle(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+  template &lt;class T, class Traits&gt;  bool posle(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
+  template &lt;class T, class Traits&gt;  bool posle(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
 
-  template &lt;class T, class Traits>  bool posgt(const interval&lt;T, Traits>&amp; x, const interval&lt;T, Traits>&amp; y);
-  template &lt;class T, class Traits>  bool posgt(const interval&lt;T, Traits>&amp; x, const T&amp; y);
-  template &lt;class T, class Traits>  bool posgt(const T&amp; x, const interval&lt;T, Traits> &amp; y);
+  template &lt;class T, class Traits&gt;  bool posgt(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+  template &lt;class T, class Traits&gt;  bool posgt(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
+  template &lt;class T, class Traits&gt;  bool posgt(const T&amp; x, const interval&lt;T, Traits&gt; &amp; y);
 
-  template &lt;class T, class Traits>  bool posge(const interval&lt;T, Traits>&amp; x, const interval&lt;T, Traits>&amp; y);
-  template &lt;class T, class Traits>  bool posge(const interval&lt;T, Traits>&amp; x, const T&amp; y);
-  template &lt;class T, class Traits>  bool posge(const T&amp; x, const interval&lt;T, Traits>&amp; y);
+  template &lt;class T, class Traits&gt;  bool posge(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+  template &lt;class T, class Traits&gt;  bool posge(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
+  template &lt;class T, class Traits&gt;  bool posge(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
 
-  template &lt;class T, class Traits>  bool poseq(const interval&lt;T, Traits>&amp; x, const interval&lt;T, Traits>&amp; y);
-  template &lt;class T, class Traits>  bool poseq(const interval&lt;T, Traits>&amp; x, const T&amp; y);
-  template &lt;class T, class Traits>  bool poseq(const T&amp; x, const interval&lt;T, Traits>&amp; y);
+  template &lt;class T, class Traits&gt;  bool poseq(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+  template &lt;class T, class Traits&gt;  bool poseq(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
+  template &lt;class T, class Traits&gt;  bool poseq(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
 
-  template &lt;class T, class Traits>  bool posne(const interval&lt;T, Traits>&amp; x, const interval&lt;T, Traits>&amp; y);
-  template &lt;class T, class Traits>  bool posne(const interval&lt;T, Traits>&amp; x, const T&amp; y);
-  template &lt;class T, class Traits>  bool posne(const T&amp; x, const interval&lt;T, Traits>&amp; y);
+  template &lt;class T, class Traits&gt;  bool posne(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+  template &lt;class T, class Traits&gt;  bool posne(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
+  template &lt;class T, class Traits&gt;  bool posne(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
 
 } // namespace boost</pre>
 </blockquote>
 
-<h2>
-<a NAME="interval_traits"></a>Template class <tt>interval_traits</tt></h2>
+<h2><a name="interval_traits"></a>Template class <tt>interval_traits</tt></h2>
+The <tt>interval</tt> class requires two template parameters, the first one
+is the type of the bounds. And the second one is a class defining three
+policies. This second parameter should look like:
 
-<blockquote>The <tt>interval</tt> class requires two template parameters,
-the first one is the type of the bounds. And the second one is a class
-defining three policies. This second parameter should look like:
-<pre>  struct traits {
+<blockquote>
+  <pre>  struct traits {
     typedef ... compare;
     typedef ... rounding;
     typedef ... checking;
   };</pre>
-The requirements of these three types are detailed in their respective
-pages: <a href="#compare">comparison policies</a>, <a href="#rounding">rounding
-policies</a>, and
-<a href="#checking">checking policies</a>. In order to
-allow an easier definition of this parameter, the class
-<tt>interval_traits</tt>
-is defined as follows:
-<pre>namespace boost {
+  The requirements of these three types are detailed in their respective
+  pages: <a href="#compare">comparison policies</a>, <a
+  href="#rounding">rounding policies</a>, and <a href="#checking">checking
+  policies</a>. In order to allow an easier definition of this parameter, the
+  class <tt>interval_traits</tt> is defined as follows:
+  <pre>namespace boost {
 
   template &lt;class T,
-            class Compare = interval_lib::compare_certainly&lt;T>,
-            class Rounding = interval_lib::rounded_arithmetic&lt;T>,
-            class Checking = interval_lib::checking_strict&lt;T> >
+            class Compare = interval_lib::compare_certainly&lt;T&gt;,
+            class Rounding = interval_lib::rounded_arithmetic&lt;T&gt;,
+            class Checking = interval_lib::checking_strict&lt;T&gt; &gt;
   struct interval_traits
   {
     typedef T base_type;
@@ -449,12 +411,12 @@ is defined as follows:
 } // namespace boost</pre>
 </blockquote>
 
-<h2>
-<a NAME="interval"></a>Template class <tt>interval</tt></h2>
+<h2><a name="interval"></a>Template class <tt>interval</tt></h2>
+The public interface of the template class interval itself is kept at a
+simplest minimum:
 
-<blockquote>The public interface of the template class interval itself
-is kept at a simplest minimum:
-<pre>template &lt;class T, class Traits = interval_traits&lt;T> >
+<blockquote>
+  <pre>template &lt;class T, class Traits = interval_traits&lt;T&gt; &gt;
 class interval
 {
   public:
@@ -464,8 +426,8 @@ class interval
     interval(const T&amp; v = T()): low(v), up(v) {}
     interval(const T&amp; l, const T&amp; u);
 
-    template&lt;class Traits2>
-    interval(const interval&lt;T,Traits2>&amp; r): low(r.lower()), up(r.upper()) {}
+    template&lt;class Traits2&gt;
+    interval(const interval&lt;T,Traits2&gt;&amp; r): low(r.lower()), up(r.upper()) {}
 
     // compiler-generated copy constructor and assignment operator are fine
 
@@ -484,256 +446,271 @@ class interval
     interval&amp; operator/= (const T&amp; r);
     interval&amp; operator/= (const interval&amp; r);
  };</pre>
+</blockquote>
 The two main constructors accept one and two arguments of type T. The first
 one produces a singleton interval [v,v]; and the second one an interval
 [l,u]. The second one will use the checking policy if u&lt;l (by default,
-<b>FIXME -H</b>). If you are not sure whether the bounds are inverted or
-not, it is better to use the hull function.
-<p>There is also a template constructor in order to change the traits parameter
-of an interval. But there is no constructor that changes the base type
-of an interval (it could lead to violating the inclusion property if the
-old base type is not contained in the new one).
-<p>There is also an assign function in order to directly change the bounds
-of an interval. It will behave like the second constructor if the bounds
-are inverted. There is no assign function that directly takes an interval
-or only one number as a parameter; just use the assignment operator in
-that case.
+<b>FIXME -H</b>). If you are not sure whether the bounds are inverted or not,
+it is better to use the hull function.
+
+<p>There is also a template constructor in order to change the traits
+parameter of an interval. But there is no constructor that changes the base
+type of an interval (it could lead to violating the inclusion property if the
+old base type is not contained in the new one).</p>
+
+<p>There is also an assign function in order to directly change the bounds of
+an interval. It will behave like the second constructor if the bounds are
+inverted. There is no assign function that directly takes an interval or only
+one number as a parameter; just use the assignment operator in that case.</p>
+
 <p>Assignment operator, copy constructor and destructor are the ones the
-compiler automatically generates. There is also an assignment operator
-for the type T.
-<p>The static functions empty and entire produces the corresponding intervals.
-Please be aware that the default implementation uses NaN numbers for the
-empty interval and infinite numbers for the entire interval. (Those are
-provided by the checking policy  <b>FIXME -H</b>).</blockquote>
+compiler automatically generates. There is also an assignment operator for
+the type T.</p>
 
-<h2>
-<a NAME="specs"></a><tt>interval</tt> partial specializations</h2>
+<p>The static functions empty and entire produces the corresponding
+intervals. Please be aware that the default implementation uses NaN numbers
+for the empty interval and infinite numbers for the entire interval. (Those
+are provided by the checking policy  <b>FIXME -H</b>).</p>
 
-<blockquote><b>SOME DECISION IS NEEDED: DO WE PROVIDE SPECIALIZATIONS FOR
-FLOAT, DOUBLE, AND LONG DOUBLE WITH THE CONVERSION CONSTRUCTORS? -H</b></blockquote>
+<h2><a name="specs"></a><tt>interval</tt> partial specializations</h2>
 
-<h2>
-<a NAME="opers"></a>Operations and Functions</h2>
+<blockquote>
+  <b>SOME DECISION IS NEEDED: DO WE PROVIDE SPECIALIZATIONS FOR FLOAT,
+  DOUBLE, AND LONG DOUBLE WITH THE CONVERSION CONSTRUCTORS?
+-H</b></blockquote>
 
-<blockquote>Some of the following functions expect <tt>std::min</tt> and
-<tt>std::max</tt>
-to be defined for the base type. They also expect <tt>std::numeric_limits</tt>
-to be correctly specialized for the base type. Those are the only requirements
-for the
-<tt>interval</tt> class (but the policies can have other requirements).
-<h4>
-Operators <tt>+ - * / += -= *= /=</tt></h4>
-The basic operations are the unary minus and the binary <tt>+ - * /</tt>.
-The unary minus takes an interval and returns an interval. The binary operations
-take two intervals, or one interval and a number, and return an interval.
-If an argument is a number instead of an interval, you can expect the result
-to be the same as if the number was first converted to an interval. This
+<h2><a name="opers"></a>Operations and Functions</h2>
+<b>THIS SECTION NEEDS TO BE REDONE -H.</b>
+
+<p>Some of the following functions expect <tt>std::min</tt> and
+<tt>std::max</tt> to be defined for the base type. They also expect
+<tt>std::numeric_limits</tt> to be correctly specialized for the base type.
+Those are the only requirements for the <tt>interval</tt> class (but the
+policies can have other requirements).</p>
+
+<h4>Operators <tt>+ - * / += -= *= /=</tt></h4>
+The basic operations are the unary minus and the binary <tt>+ - * /</tt>. The
+unary minus takes an interval and returns an interval. The binary operations
+take two intervals, or one interval and a number, and return an interval. If
+an argument is a number instead of an interval, you can expect the result to
+be the same as if the number was first converted to an interval. This
 property will be true for all the following functions and operators.
-<p>There are also some assignment operators <tt>+= -= *= /=</tt>. There
-is not much to say: <tt>x op= y</tt> is equivalent to <tt>x = x op y</tt>.
-If an exception is thrown during the computations, the l-value is not modified
-(but it may be corrupt if an exception is thrown by the base type during
-an assignment).
-<p>The operators <tt>/</tt> and <tt>/=</tt> use the <a href="#checking">checking</a>
-policy if necessary.
-<h4>
-<tt>lower upper median pred succ</tt></h4>
+
+<p>There are also some assignment operators <tt>+= -= *= /=</tt>. There is
+not much to say: <tt>x op= y</tt> is equivalent to <tt>x = x op y</tt>. If an
+exception is thrown during the computations, the l-value is not modified (but
+it may be corrupt if an exception is thrown by the base type during an
+assignment).</p>
+
+<p>The operators <tt>/</tt> and <tt>/=</tt> use the <a
+href="#checking">checking</a> policy if necessary.</p>
+
+<h4><tt>lower upper median pred succ</tt></h4>
 <tt>lower</tt>, <tt>upper</tt>, <tt>median</tt> respectively compute the
-lower bound, the upper bound, and the median number of an interval (<tt>(lower+upper)/2</tt>
-rounded to nearest). <tt>width</tt> computes the width of an interval (<tt>upper-lower</tt>
-rounded toward plus infinity).
+lower bound, the upper bound, and the median number of an interval
+(<tt>(lower+upper)/2</tt> rounded to nearest). <tt>width</tt> computes the
+width of an interval (<tt>upper-lower</tt> rounded toward plus infinity).
+
 <p><tt>pred</tt> and <tt>succ</tt> respectively compute the widest interval
-strictly smaller and the smallest interval strictly wider. Let's suppose
-the functions <tt>p</tt> and <tt>s</tt> are able to compute a number respectively
+strictly smaller and the smallest interval strictly wider. Let's suppose the
+functions <tt>p</tt> and <tt>s</tt> are able to compute a number respectively
 strictly smaller and strictly bigger than their argument (if not possible,
 they return their argument unmodified). Then <tt>succ(x) == [p(x),s(x)]</tt>
-and pred(x) == [s(x),p(x)] (or pred(x) == x if s(x)>p(x)). Consequently,
+and pred(x) == [s(x),p(x)] (or pred(x) == x if s(x)&gt;p(x)). Consequently,
 you can not always expect lower(succ(x)) to be stricly smaller than lower(x)
-(for example if lower(x) is minus infinity) and some other similar properties,
-but it is often true.
-<h4>
-min max abs square</h4>
-The functions min, max, abs are also defined. Please do not mistake them
-for the functions defined in the standard library (aka a&lt;b?a:b, a>b?a:b,
-a&lt;0?-a:a). These functions are compatible with the elementary property
-of interval arithmetic. For example, max([<i>a</i>,<i>b</i>], [<i>c</i>,<i>d</i>])
-= {max(<i>x</i>,<i>y</i>) | <i>x</i> in [<i>a</i>,<i>b</i>] and <i>y</i>
-in [<i>c</i>,<i>d</i>]}. They are not defined in the std namespace but
-in the boost namespace in order to avoid conflict with the other definitions.
-<p>The square function is quite particular. As you can expect from its
-name, it computes the square of its argument. The reason this function
-is provided is: square(x) is not x*x but only a subset when x contains
-zero. For example, [-2,2]*[-2,2] = [-4,4] but [-2,2]? = [0,4]; the result
-is a smaller interval. Consequently, square(x) should be used instead of
-x*x because of its better accuracy.
-<h4>
-intersect hull overlap in in_zero subset proper_subset empty singleton
+(for example if lower(x) is minus infinity) and some other similar
+properties, but it is often true.</p>
+
+<h4>min max abs square</h4>
+The functions min, max, abs are also defined. Please do not mistake them for
+the functions defined in the standard library (aka a&lt;b?a:b, a&gt;b?a:b,
+a&lt;0?-a:a). These functions are compatible with the elementary property of
+interval arithmetic. For example, max([<i>a</i>,<i>b</i>],
+[<i>c</i>,<i>d</i>]) = {max(<i>x</i>,<i>y</i>) | <i>x</i> in
+[<i>a</i>,<i>b</i>] and <i>y</i> in [<i>c</i>,<i>d</i>]}. They are not
+defined in the std namespace but in the boost namespace in order to avoid
+conflict with the other definitions.
+
+<p>The square function is quite particular. As you can expect from its name,
+it computes the square of its argument. The reason this function is provided
+is: square(x) is not x*x but only a subset when x contains zero. For example,
+[-2,2]*[-2,2] = [-4,4] but [-2,2]? = [0,4]; the result is a smaller interval.
+Consequently, square(x) should be used instead of x*x because of its better
+accuracy.</p>
+
+<h4>intersect hull overlap in in_zero subset proper_subset empty singleton
 equal</h4>
 There are also some set functions. intersect does what you think it does.
-hull computes the smallest interval which contains the two parameters;
-those parameters can be numbers or intervals.
+hull computes the smallest interval which contains the two parameters; those
+parameters can be numbers or intervals.
+
 <p>There is no union function since the union of two intervals is not an
 interval if they do not overlap. If they overlap, the hull function computes
-the union.
-<p>overlap tests if two intervals have some common subset. in tests if
-a number is in an interval; in_zero is a variant which tests if zero is
-in an interval. subset tests if the first interval is a subset of the second;
-and proper_subset tests if it is a proper subset. empty and singleton test
-if an interval is empty or is a singleton. Finally, equal tests if two
-intervals are equal.
-<h4>
-sqrt log exp sin cos tan asin acos atan sinh cosh tanh asinh acosh atanh
+the union.</p>
+
+<p>overlap tests if two intervals have some common subset. in tests if a
+number is in an interval; in_zero is a variant which tests if zero is in an
+interval. subset tests if the first interval is a subset of the second; and
+proper_subset tests if it is a proper subset. empty and singleton test if an
+interval is empty or is a singleton. Finally, equal tests if two intervals
+are equal.</p>
+
+<h4>sqrt log exp sin cos tan asin acos atan sinh cosh tanh asinh acosh atanh
 fmod</h4>
 The functions sqrt log exp sin cos tan asin acos atan sinh cosh tanh asinh
 acosh atanh are also defined. There is not much to say; these functions
 extend the traditional functions to the intervals and respect the basic
-property of interval arithmetic. They use the <a href="#checking">checking</a>
-policy if needed.
-<p>The function fmod(interval x, interval y) expects the lower bound of
-y to be strictly positive and returns an interval z such as 0 &lt;= z.lower()
-&lt; y.upper() and such as z is a superset of x-n*y (with n being an integer).
-So, if the two arguments are positive singletons, this function fmod(interval,
-interval) will behave like the traditional function fmod(double, double).
+property of interval arithmetic. They use the <a
+href="#checking">checking</a> policy if needed.
+
+<p>The function fmod(interval x, interval y) expects the lower bound of y to
+be strictly positive and returns an interval z such as 0 &lt;= z.lower() &lt;
+y.upper() and such as z is a superset of x-n*y (with n being an integer). So,
+if the two arguments are positive singletons, this function fmod(interval,
+interval) will behave like the traditional function fmod(double, double).</p>
+
 <p>Please note that fmod does not respect the basic property of arithmetic
 interval. For example, the result of fmod([13,17],[7,8]) should be [0,8]
-(since it must contain [0,3] and [5,8]). But this answer is not really
-useful when the purpose is to restrict an interval in order to compute
-a periodic function. It is the reason why fmod will answer [5,10].
-<br> 
-<h3>
-Constants</h3>
+(since it must contain [0,3] and [5,8]). But this answer is not really useful
+when the purpose is to restrict an interval in order to compute a periodic
+function. It is the reason why fmod will answer [5,10].</p>
+
+<h3>Constants</h3>
 Some constants are hidden in the boost::interval_lib namespace:
 <pre>namespace boost {
   namespace interval_lib {
 
-template&lt;class I> I pi();
-template&lt;class I> I pi_1_2();
-template&lt;class I> I pi_2_1();
+template&lt;class I&gt; I pi();
+template&lt;class I&gt; I pi_1_2();
+template&lt;class I&gt; I pi_2_1();
 
   } // namespce interval_lib
 } // namespace boost</pre>
-Their respective values are &pi;, &pi;/2 and 2&pi;.
-<h3>
-Exception throwing</h3>
+Their respective values are &#960;, &#960;/2 and 2&#960;.
+
+<h3>Exception throwing</h3>
 The interval class and all the functions defined around this class never
-throw any exceptions by themselves. However, it does not mean that an operation
-will never throw an exception. For example, let's consider the copy constructor.
-As explained before, it is the default copy constructor generated by the
-compiler. So it will not throw an exception if the copy constructor of
-the base type does not throw an exception.
-<p>The same situation applies to all the functions: exceptions will only
-be thrown if the base type or one of the three policies throws an exception.</blockquote>
+throw any exceptions by themselves. However, it does not mean that an
+operation will never throw an exception. For example, let's consider the copy
+constructor. As explained before, it is the default copy constructor
+generated by the compiler. So it will not throw an exception if the copy
+constructor of the base type does not throw an exception.
 
-<h2 id="compare">
-<a NAME="interval_lib"></a>Interval Support Library</h2>
+<p>The same situation applies to all the functions: exceptions will only be
+thrown if the base type or one of the three policies throws an exception.</p>
+
+<h2 id="compare"><a name="interval_lib"></a>Interval Support Library</h2>
+
+<div id="compare">
+The interval support library consists of a collection of classes that can be
+used and combined to fabricate almost various commonly-needed interval
+traits, via the <tt>interval_traits</tt> class template. In contrast to the
+basic classes and functions which are used in conjunction with
+interval&lt;T&gt; (and the default traits as the implicit second template
+parameter in this type), which belong simply to the namespace boost,  these
+components belong to the namespace boost::interval_lib.</div>
+
+<div id="compare">
+We merely give the synopsis here and defer each section to a separate web
+page since it is only intended for the advanced user. This allows to expand
+on each topic with examples, without unduly stretching the limits of this
+document.</div>
+
+<h4>Synopsis</h4>
 
 <blockquote>
-<div id="compare">The interval support library consists of a collection
-of classes that can be used and combined to fabricate almost various commonly-needed
-interval traits, via the <tt>interval_traits</tt> class template. In contrast
-to the basic classes and functions which are used in conjunction with interval&lt;T>
-(and the default traits as the implicit second template parameter in this
-type), which belong simply to the namespace boost,  these components
-belong to the namespace boost::interval_lib.</div>
-
-<div id="compare">We merely give the synopsis here and defer each section
-to a separate web page since it is only intended for the advanced user.
-This allows to expand on each topic with examples, without unduly stretching
-the limits of this document.</div>
-
-<h4>
-Synopsis</h4>
-
-<blockquote>
-<pre>namespace boost {
+  <pre>namespace boost {
   namespace interval_lib {
 
-<font color="#FF0000">    /* built-in comparison policies */
-</font>    template &lt;class T>  struct compare_certainly;
-    template &lt;class T>  struct compare_possibly;
-    template &lt;class T>  struct compare_data;
-    template &lt;class T, class Function>  struct compare_full;
+<font color="#ff0000">    /* built-in comparison policies */
+</font>    template &lt;class T&gt;  struct compare_certainly;
+    template &lt;class T&gt;  struct compare_possibly;
+    template &lt;class T&gt;  struct compare_data;
+    template &lt;class T, class Function&gt;  struct compare_full;
 
-<font color="#FF0000">    /* built-in rounding construction blocks */
-</font>    template &lt;class T>  struct rounded_math;
-    template &lt;>         struct rounded_math&lt;float>;
-    template &lt;>         struct rounded_math&lt;double>;
+<font color="#ff0000">    /* built-in rounding construction blocks */
+</font>    template &lt;class T&gt;  struct rounded_math;
+    template &lt;&gt;         struct rounded_math&lt;float&gt;;
+    template &lt;&gt;         struct rounded_math&lt;double&gt;;
 
-    template &lt;class T>  struct rounding_control;
+    template &lt;class T&gt;  struct rounding_control;
 
-    template &lt;class T, class Rounding = rounding_control&lt;T> >  struct rounded_arith_exact;
-    template &lt;class T, class Rounding = rounding_control&lt;T> >  struct rounded_arith_std;
-    template &lt;class T, class Rounding = rounding_control&lt;T> >  struct rounded_arith_opp;
+    template &lt;class T, class Rounding = rounding_control&lt;T&gt; &gt;  struct rounded_arith_exact;
+    template &lt;class T, class Rounding = rounding_control&lt;T&gt; &gt;  struct rounded_arith_std;
+    template &lt;class T, class Rounding = rounding_control&lt;T&gt; &gt;  struct rounded_arith_opp;
 
-    template &lt;class T, class Rounding>  struct rounded_transc_dummy;
-    template &lt;class T, class Rounding = rounded_arith_exact&lt;T> >  struct rounded_transc_exact;
-    template &lt;class T, class Rounding = rounded_arith_std&lt;T> >  struct rounded_transc_std;
-    template &lt;class T, class Rounding = rounded_arith_opp&lt;T> >  struct rounded_transc_opp;
+    template &lt;class T, class Rounding&gt;  struct rounded_transc_dummy;
+    template &lt;class T, class Rounding = rounded_arith_exact&lt;T&gt; &gt;  struct rounded_transc_exact;
+    template &lt;class T, class Rounding = rounded_arith_std&lt;T&gt; &gt;  struct rounded_transc_std;
+    template &lt;class T, class Rounding = rounded_arith_opp&lt;T&gt; &gt;  struct rounded_transc_opp;
 
-    template &lt;class Rounding> struct save_state;
-    template &lt;class Rounding> struct save_state_nothing;
+    template &lt;class Rounding&gt; struct save_state;
+    template &lt;class Rounding&gt; struct save_state_nothing;
 
-<font color="#FF0000">    /* built-in checking policies */
-</font>    template &lt;class T> struct checking_nothing;
-    template &lt;class T> struct checking_lax;
-    template &lt;class T> struct checking_strict;
+<font color="#ff0000">    /* built-in checking policies */
+</font>    template &lt;class T&gt; struct checking_nothing;
+    template &lt;class T&gt; struct checking_lax;
+    template &lt;class T&gt; struct checking_strict;
 
   } // namespace interval_lib
 } // namespace boost</pre>
 </blockquote>
 
-<h4 id="compare">
-<a href="comparisons.htm">Comparisons</a></h4>
+<h4 id="compare"><a href="comparisons.htm">Comparisons</a></h4>
 
-<h4>
-<a href="rounding.htm">Rounding</a></h4>
+<h4><a href="rounding.htm">Rounding</a></h4>
 
-<h4 id="checking">
-<a href="checking.htm">Checking</a></h4>
-</blockquote>
+<h4 id="checking"><a href="checking.htm">Checking</a></h4>
 
-<h2 id="perf">
-<a NAME="perfs"></a>Performance Notes</h2>
+<h2 id="perf"><a name="perfs"></a>Performance Notes</h2>
+<b>THIS PARAGRAPH SHOULD BE MOVED TO THE ROUNDING POLICIES PAGE, SINCE IT
+DEALS MORE WITH THE INTERNAL DESIGN.  ANOTHER LESS DESIGN-ORIENTED AND MORE
+INFORMATIVE PARAGRAPH SUMMARIZING THE PERFORMANCE OF THE LIBRARY (WITH
+SEPARATE BENCHMARK PAGES) COULD BE WRITTEN IN ITS PLACE. -H</b>
 
-<blockquote>This paragraph deals mostly with the performance of the library
-with intervals using the floating-point unit (FPU) of the computer. Let's
-consider the sum of [<i>a</i>,<i>b</i>] and [<i>c</i>,<i>d</i>] as an example.
-The result is [down(<i>a</i>+<i>c</i>), up(<i>b</i>+<i>d</i>)]. down and
-up indicate the rounding mode needed.
-<h3>
-Rounding Mode Switch</h3>
-If the FPU is able to use a different rounding mode for each operation,
-there is no problem. For example, it's the case for the Alpha processor:
-each floating-point instruction can specify a different rounding mode.
-However, the IEEE-754 Standard does not require such a behavior. So most
-of the FPUs only provide some instructions to set the rounding mode for
-all subsequent operations. And generally, these instructions need to flush
-the pipeline of the FPU.
-<p>In this situation, the time needed to sum [<i>a</i>,<i>b</i>] and [<i>c</i>,<i>d</i>]
-is far worse than the time needed to calculate
-<i>a</i>+<i>b</i> and <i>c</i>+<i>d</i>
-since the two additions cannot be parallelized. Consequently, the objective
-is to diminish the number of rounding mode switches.
-<p>If this library is not used to provide exact computations, but only
-for pair arithmetic, the solution is quite simple: do not use rounding.
-In that case, doing the sum [<i>a</i>,<i>b</i>] and [<i>c</i>,<i>d</i>]
-will be as fast as computing <i>a</i>+<i>b</i> and
-<i>c</i>+<i>d</i>. Everything
-is perfect.
+<p>This paragraph deals mostly with the performance of the library with
+intervals using the floating-point unit (FPU) of the computer. Let's consider
+the sum of [<i>a</i>,<i>b</i>] and [<i>c</i>,<i>d</i>] as an example. The
+result is [down(<i>a</i>+<i>c</i>), up(<i>b</i>+<i>d</i>)]. down and up
+indicate the rounding mode needed.</p>
+
+<h3>Rounding Mode Switch</h3>
+If the FPU is able to use a different rounding mode for each operation, there
+is no problem. For example, it's the case for the Alpha processor: each
+floating-point instruction can specify a different rounding mode. However,
+the IEEE-754 Standard does not require such a behavior. So most of the FPUs
+only provide some instructions to set the rounding mode for all subsequent
+operations. And generally, these instructions need to flush the pipeline of
+the FPU.
+
+<p>In this situation, the time needed to sum [<i>a</i>,<i>b</i>] and
+[<i>c</i>,<i>d</i>] is far worse than the time needed to calculate
+<i>a</i>+<i>b</i> and <i>c</i>+<i>d</i> since the two additions cannot be
+parallelized. Consequently, the objective is to diminish the number of
+rounding mode switches.</p>
+
+<p>If this library is not used to provide exact computations, but only for
+pair arithmetic, the solution is quite simple: do not use rounding. In that
+case, doing the sum [<i>a</i>,<i>b</i>] and [<i>c</i>,<i>d</i>] will be as
+fast as computing <i>a</i>+<i>b</i> and <i>c</i>+<i>d</i>. Everything is
+perfect.</p>
+
 <p>However, if exact computations are required, such a solution is totally
 unthinkable. So, are we penniless? No, there is still a trick available.
-Indeed, down(<i>a</i>+<i>c</i>) = -up(-<i>a</i>-<i>c</i>) if the unary
-minus is an exact operation. It is now possible to calculate the whole
-sum with the same rounding mode. Generally, the cost of the mode switching
-is worse than the cost of the sign changes.
+Indeed, down(<i>a</i>+<i>c</i>) = -up(-<i>a</i>-<i>c</i>) if the unary minus
+is an exact operation. It is now possible to calculate the whole sum with the
+same rounding mode. Generally, the cost of the mode switching is worse than
+the cost of the sign changes.</p>
+
 <p>Let's recapitulate. Before, when doing an addition, there were three
 rounding mode switches (down, up and restore). Now, with this little trick,
 there are only two switches (up and restore). It is better, but still a
-bottleneck when many operations are nested. Indeed, the generated code
-for [<i>a</i>,<i>b</i>] + [<i>c</i>,<i>d</i>] + [<i>e</i>,<i>f</i>] will
-probably look like:
+bottleneck when many operations are nested. Indeed, the generated code for
+[<i>a</i>,<i>b</i>] + [<i>c</i>,<i>d</i>] + [<i>e</i>,<i>f</i>] will probably
+look like:</p>
+
 <blockquote>
-<pre>up();
+  <pre>up();
 t1 = -(-a - c);
 t2 = b + d;
 restore();
@@ -744,197 +721,219 @@ restore();</pre>
 </blockquote>
 If you think it is possible to do much better, you are right. For example,
 this is better (and probably optimal):
+
 <blockquote>
-<pre>up();
+  <pre>up();
 x = -(-a - c - e);
 y = b + d + f;
 restore();</pre>
 </blockquote>
 Such a code will be generated by a compiler if the computations are made
 without initialization and restoration of the rounding mode. However, it
-would be far too easy if there was no drawback: because the rounding mode
-is not restored in the meantime, operations on floating-point numbers must
-be prohibited. This method can only be used if all the operations are operations
+would be far too easy if there was no drawback: because the rounding mode is
+not restored in the meantime, operations on floating-point numbers must be
+prohibited. This method can only be used if all the operations are operations
 on interval.
-<h4>
-Example</h4>
-Here is an example of the Horner scheme to compute the value of a polynom.
-The rounding mode switches are disabled for the whole computation.
-<pre>// I is an interval class, the polynom is a simple array
-template&lt;class I>
+
+<h4>Example</h4>
+<b>WE SHOULD HAVE MORE EXAMPLES LIKE THIS AND REGROUP THEM IN A PAGE ABOUT
+USING THE LIBRARY. -H</b>
+
+<p>Here is an example of the Horner scheme to compute the value of a polynom.
+The rounding mode switches are disabled for the whole computation.</p>
+
+<blockquote>
+  <pre>// I is an interval class, the polynom is a simple array
+template&lt;class I&gt;
 I horner(const I&amp; x, const I p[], int n) {
 
   // save and initialize the rounding mode
   typename I::traits_type::rounding rnd;
 
   // define the unprotected version of the interval type
-  typedef typename boost::interval_lib::unprotect&lt;I>::type R;
+  typedef typename boost::interval_lib::unprotect&lt;I&gt;::type R;
   
   const R&amp; a = x;
   R y = p[n - 1];
-  for(int i = n - 2; i >= 0; i--) {
+  for(int i = n - 2; i &gt;= 0; i--) {
     y = y * a + (const R&amp;)(p[i]);
   }
   return y;
 
   // restore the rounding mode with the destruction of rnd
 }</pre>
-Please note that a rounding object is especially created in order to compensate
-for the protection loss. Each interval of type I is converted in an interval
-of type R before any operations. If this conversion is not done, the result
-is still correct, but the interest of this whole optimization has disappeared.
-Whenever possible, it is good to convert to const R&amp; instead of R:
-a smart compiler will be able to see that the old and the new object are
-the same and avoid the creation of a temporary object.
-<p>Just a last information about the types:
-<pre>interval&lt;T, interval_traits&lt;..., Rounding, ...> >::traits_type::rounding <b>is</b> Rounding
-unprotect&lt;interval&lt;T, interval_traits&lt;..., Rounding, ...> > >::type <b>is</b> interval&lt;T, interval_traits&lt;..., Rounding::unprotected, ...> ></pre>
+</blockquote>
 
-<h4>
-Uninteresting remark</h4>
+Please note that a rounding object is especially created in order to
+compensate for the protection loss. Each interval of type I is converted in
+an interval of type R before any operations. If this conversion is not done,
+the result is still correct, but the interest of this whole optimization has
+disappeared. Whenever possible, it is good to convert to const R&amp; instead
+of R: a smart compiler will be able to see that the old and the new object
+are the same and avoid the creation of a temporary object.
+
+<p>Just a last information about the types:</p>
+<pre>interval&lt;T, interval_traits&lt;..., Rounding, ...&gt; &gt;::traits_type::rounding <b>is</b> Rounding
+unprotect&lt;interval&lt;T, interval_traits&lt;..., Rounding, ...&gt; &gt; &gt;::type <b>is</b> interval&lt;T, interval_traits&lt;..., Rounding::unprotected, ...&gt; &gt;</pre>
+
+<h4>Uninteresting remark</h4>
 It was said at the beginning that the Alpha processors can use a specific
-rounding mode for each operation. However, due to the instruction format,
-the rounding toward plus infinity is not available. Only the rounding toward
+rounding mode for each operation. However, due to the instruction format, the
+rounding toward plus infinity is not available. Only the rounding toward
 minus infinity can be used. So the trick using the change of sign becomes
-essential, but there is no need to save and restore the rounding mode on
-both sides of an operation.
-<h3>
-Extended Registers</h3>
-There is another problem besides the cost of the rounding mode switch.
-Some FPUs use extended registers (for example, float computations will
-be done with double registers, or double computations with long double
-registers). Consequently, many problems can arise.
+essential, but there is no need to save and restore the rounding mode on both
+sides of an operation.
+
+<h3>Extended Registers</h3>
+There is another problem besides the cost of the rounding mode switch. Some
+FPUs use extended registers (for example, float computations will be done
+with double registers, or double computations with long double registers).
+Consequently, many problems can arise.
+
 <p>The first one is due to to the extended precision of the mantissa. The
-rounding is also done on this extended precision. And consequently, we
-still have down(<i>a</i>+<i>b</i>) = -up(-<i>a</i>-<i>b</i>) in the extended
-registers. But back to the standard precision, we now have down(<i>a</i>+<i>b</i>)
-&lt; -up(-<i>a</i>-<i>b</i>) instead of an equality. A solution could be
-not to use this method. But there still are other problems, with the comparisons
-between numbers for example.
+rounding is also done on this extended precision. And consequently, we still
+have down(<i>a</i>+<i>b</i>) = -up(-<i>a</i>-<i>b</i>) in the extended
+registers. But back to the standard precision, we now have
+down(<i>a</i>+<i>b</i>) &lt; -up(-<i>a</i>-<i>b</i>) instead of an equality.
+A solution could be not to use this method. But there still are other
+problems, with the comparisons between numbers for example.</p>
+
 <p>Naturally, there is also a problem with the extended precision of the
 exponent. To illustrate this problem, let <i>m</i> be the biggest number
 before +<i>inf</i>. If we calculate 2*[<i>m</i>,<i>m</i>], the answer should
 be [<i>m</i>,<i>inf</i>]. But due to the extended registers, the FPU will
-first store [<i>2m</i>,<i>2m</i>] and then convert it to [<i>inf</i>,<i>inf</i>]
-at the end of the calculus (when the rounding mode is toward +<i>inf</i>).
-So the answer is no more accurate.
+first store [<i>2m</i>,<i>2m</i>] and then convert it to
+[<i>inf</i>,<i>inf</i>] at the end of the calculus (when the rounding mode is
+toward +<i>inf</i>). So the answer is no more accurate.</p>
+
 <p>There is only one solution: to force the FPU to convert the extended
-values back to standard precision after each operation. Some FPUs provide
-an instruction able to do this conversion (for example the PowerPC processors).
+values back to standard precision after each operation. Some FPUs provide an
+instruction able to do this conversion (for example the PowerPC processors).
 But for the FPUs that do not provide it (the x86 processors), the only
-solution is to write the values to memory and read them back. Such an operation
-is obviously very expensive.</blockquote>
+solution is to write the values to memory and read them back. Such an
+operation is obviously very expensive.</p>
 
-<h2>
-<a NAME="rationale"></a>Rationale</h2>
+<h2><a name="rationale"></a>Rationale</h2>
+<b>NEEDS TO BE HEAVILY STRENGTHENED BY LOOKING AT MAILINGS AND GATHERING
+RATIONALE IN ALL THE DOCUMENTATION (REPLACING THE EXPLANATIONS THERE BY A
+LINK ``SEE RATIONALE''). -H</b>
 
-<blockquote><b>NEEDS TO BE HEAVILY STRENGTHENED BY LOOKING AT MAILINGS
-AND GATHERING RATIONALE IN ALL THE DOCUMENTATION (REPLACING THE EXPLANATIONS
-THERE BY A LINK ``SEE RATIONALE''). -H</b>
-<p>The purpose of this library is to provide an efficient and generalized
-way to deal with interval arithmetic through the use of a templatized class
+<p>The purpose of this library is to provide an efficient and generalized way
+to deal with interval arithmetic through the use of a templatized class
 boost::interval. The behavior of this class can be fixed by three policies.
 The first one specifies the way comparison operators are defined. The second
-one provides all the mathematical functions on the base type needed to
-define the functions on the interval type. The last one sets the way exceptional
-cases encoutered during computations are handled.
-<p>The library provides specialized implementations of the second policy
-for the primitive types float and double. In order for these implementations
-to be correct and fast, the library need to work a lot with rounding modes.
-Some processors are directly dealt with and some mecanisms are provided
-in order to speed up the computations. It seems to be heavy and hazardous
-optimizations for a gain of only a few computer cycles; but in reality,
-the speed-up factor can easily go past 2 or 3 depending on the computer.
+one provides all the mathematical functions on the base type needed to define
+the functions on the interval type. The last one sets the way exceptional
+cases encoutered during computations are handled.</p>
+
+<p>The library provides specialized implementations of the second policy for
+the primitive types float and double. In order for these implementations to
+be correct and fast, the library need to work a lot with rounding modes. Some
+processors are directly dealt with and some mecanisms are provided in order
+to speed up the computations. It seems to be heavy and hazardous
+optimizations for a gain of only a few computer cycles; but in reality, the
+speed-up factor can easily go past 2 or 3 depending on the computer.
 Moreover, these optimizations do not impact the interface in some ugly
-way.</blockquote>
+way.</p>
 
-<h2>
-Pitfalls: a word of caution</h2>
+<h2>Pitfalls: a word of caution</h2>
 
-<blockquote>
-<h4>
-Comparisons</h4>
+<h4>Comparisons</h4>
 One of the biggest problems is problably the correct use of the comparison
-functions and operators. First, functions and operators do not try to know
-if two intervals are the same mathematical object. So, if the comparison
-policy is compare_certainly, then x != x is always true unless x is a singleton
+functions and operators. First, functions and operators do not try to know if
+two intervals are the same mathematical object. So, if the comparison policy
+is compare_certainly, then x != x is always true unless x is a singleton
 interval; and the same problem arises with cereq and cerne.
-<p>Another misleading interpretation of the comparison is: (still with
-the example of compare_certainly) [a,b] &lt; [c,d] is true if and only
-if it is true for each pair of element in [a,b] and [c,d]. But [a,b] &lt;=
-[c,d] is true if and only if it is true for at least one pair.
+
+<p>Another misleading interpretation of the comparison is: (still with the
+example of compare_certainly) [a,b] &lt; [c,d] is true if and only if it is
+true for each pair of element in [a,b] and [c,d]. But [a,b] &lt;= [c,d] is
+true if and only if it is true for at least one pair.</p>
+
 <p>So the best way to handle comparisons is probably to never use operators
 and only call explicit functions like cerlt. And if you need to compare
-intervals, not as mathematical objects but as computer data, compare_data
-is a good candidate since it defines a physical equality and a strict ordering.
-This is suitable for indexing intervals in a std::map, for instance.
-<h4>
-Empty intervals</h4>
-The whole implementation of the library (except for the function boost::empty())
-expects input intervals not to be empty. Moreover, if one of the input
-intervals of a function is empty, it is not guaranteed that the result
-will be empty. So empty intervals should not be considered the same as
+intervals, not as mathematical objects but as computer data, compare_data is
+a good candidate since it defines a physical equality and a strict ordering.
+This is suitable for indexing intervals in a std::map, for instance.</p>
+
+<h4>Empty intervals</h4>
+The whole implementation of the library (except for the function
+boost::empty()) expects input intervals not to be empty. Moreover, if one of
+the input intervals of a function is empty, it is not guaranteed that the
+result will be empty. So empty intervals should not be considered the same as
 quiet NaNs but the same as signaling NaNs. It is the reason why the default
 checking policy will throw an exception whenever the result is an empty
 interval.
+
 <p>This must not be considered as a weakness of the library, however. Indeed,
 quiet NaNs exist in order not to throw exceptions when an operand is outside
 the expected domain because of a precision loss. But, interval arithmetic
-does not suffer from precision loss; and quiet NaNs are not needed anymore.
+does not suffer from precision loss; and quiet NaNs are not needed
+anymore.</p>
+
 <p>So empty intervals are analog to signaling NaNs. But there is an important
 property they do not share: exceptions are thrown when signaling NaNs are
 encountered at the beginning of a computation in one case, and when empty
 intervals are produced at the end of a computation in the other case. So
 functions should not be fed with empty intervals, unless you are fond of
-undefined behavior.
-<h4>
-Unprotected rounding</h4>
-As explained before, a good way to speed up computations when the base
-type is a basic floating-point type is to unprotect the intervals at the
-hot spots of the algorithm. This method is safe and really an improvement
-for interval computations. But please remember that any basic floating-point
-operation will probably have an undefined behavior. And do not forget to
-create a rounding object as explained in the example. <b>HOW DOES THIS
-INTERACT WITH THREADING? -H</b></blockquote>
+undefined behavior.</p>
 
-<h2>
-<a NAME="test"></a>Test Programs</h2>
+<h4>Unprotected rounding</h4>
+As explained before, a good way to speed up computations when the base type
+is a basic floating-point type is to unprotect the intervals at the hot spots
+of the algorithm. This method is safe and really an improvement for interval
+computations. But please remember that any basic floating-point operation
+will probably have an undefined behavior. And do not forget to create a
+rounding object as explained in the example. <b>HOW DOES THIS INTERACT WITH
+THREADING? -H</b>
 
-<blockquote><b>SOME OVERVIEW OF THE COMPILATION OPTIONS AND PERHAPS A SHORT
-EXPLANATION OF BJAM (OR A YET-MISSING MAKEFILE) WOULD BE GREAT. MANY USERS
-ARE STILL IGNORANT OF BJAM. -H</b>
-<p><b>add.cpp </b>tests if the additive and substractive operators and
-the respective _std and _opp rounding functions are correctly implemented.
-It is done by using symbolic expressions as a base type.
-<p><b>cmp.cpp</b> tests if the operators &lt; > &lt;= >= == != (for the
+<h2><a name="test"></a>Test Programs</h2>
+<b>SOME OVERVIEW OF THE COMPILATION OPTIONS AND PERHAPS A SHORT EXPLANATION
+OF BJAM (OR A YET-MISSING MAKEFILE) WOULD BE GREAT. MANY USERS ARE STILL
+IGNORANT OF BJAM.  ALSO, MORE EXAMPLES COULD BE PROVIDED HERE OF VARIOUS USES
+OF THE LIBRARY (ON A SEPARATE PAGE IF NEEDED). -H</b>
+
+<p><b>add.cpp </b>tests if the additive and substractive operators and the
+respective _std and _opp rounding functions are correctly implemented. It is
+done by using symbolic expressions as a base type.</p>
+
+<p><b>cmp.cpp</b> tests if the operators &lt; &gt; &lt;= &gt;= == != (for the
 three pre-defined comparisons) and the functions cer.. and pos.. behave
-correctly with some simple intervals ([1,2] and [3,4], [1,3] and [2,4],
-[1,2] and [2,3], etc).
+correctly with some simple intervals ([1,2] and [3,4], [1,3] and [2,4], [1,2]
+and [2,3], etc).</p>
+
 <p><b>det.cpp</b> tests if the _std and _opp versions in protected and
 unprotected mode produce the same result when Gauss scheme is used on an
 unstable matrix (in order to exercise rounding). The tests are done for
-interval&lt;float> and interval&lt;double>.
-<p><b>fmod.cpp</b> defines a minimalistic version of interval&lt;int> and
-uses it in order to test fmod on some specific interval values.
-<p><b>pi.cpp</b> tests if the interval value of &pi; (for int, float
-and double base types) contains the number &pi; (defined with 21 decimal
-digits) and if it is a subset of [&pi;&plusmn;1ulp] (in order to ensure
-some precision).
-<p><b>interval_test.cpp</b> tests if the interval library respects the
-basic property of interval arithmetic by computing some functions and operations
-for both double and interval&lt;double>.</blockquote>
+interval&lt;float&gt; and interval&lt;double&gt;.</p>
 
-<h2>
-<a NAME="acks"></a>History and Acknowledgments</h2>
+<p><b>fmod.cpp</b> defines a minimalistic version of interval&lt;int&gt; and
+uses it in order to test fmod on some specific interval values.</p>
 
-<blockquote>This library was mostly inspired by previous work from Jens
-Maurer. Some discussions about his work were reproduced <a href="http://www.mscs.mu.edu/~georgec/IFAQ/maurer1.html">here</a>
-and the work itself can be found <a href="http://www.rhein-main.de/people/jmaurer/interval.tar.gz">here</a>.
-<p>Herv&eacute; Br&ouml;nnimann and Sylvain Pion have provided some useful
-comments in order for this library to be written. Herv&eacute; Br&ouml;nnimann
-reorganized and wrote chapters of the documentation based on Guillaume
-great starting point.</blockquote>
+<p><b>pi.cpp</b> tests if the interval value of &#960; (for int, float and
+double base types) contains the number &#960; (defined with 21 decimal
+digits) and if it is a subset of [&#960;±1ulp] (in order to ensure some
+precision).</p>
 
-<hr>Guillaume Melquiond, 2002-08-21
+<p><b>interval_test.cpp</b> tests if the interval library respects the basic
+property of interval arithmetic by computing some functions and operations
+for both double and interval&lt;double&gt;.</p>
+
+<h2><a name="acks"></a>History and Acknowledgments</h2>
+This library was mostly inspired by previous work from Jens Maurer. Some
+discussions about his work were reproduced <a
+href="http://www.mscs.mu.edu/%7Egeorgec/IFAQ/maurer1.html">here</a> and the
+work itself can be found <a
+href="http://www.rhein-main.de/people/jmaurer/interval.tar.gz">here</a>.
+
+<p>Guillaume Melquiond started from the library left by Jens and added the
+policy design. Hervé Brönnimann and Sylvain Pion have provided some useful
+comments in order for this library to be written. Hervé Brönnimann
+reorganized and wrote chapters of the documentation based on Guillaume's
+great starting point.</p>
+<hr>
+<p>Revised: 2002-08-21<br>
+Guillaume Melquiond, Sylvain Pion, Hervé Brönnimann.<br>
+Polytechnic University.</p>
 </body>
 </html>
