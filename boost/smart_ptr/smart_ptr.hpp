@@ -20,10 +20,11 @@
 //////////////////////////////////////////////////////////////////////////////
 // Copyright (C) 2002, David Held.
 //
-// 02-19-2001: Last update by Andrei Alexandrescu
-// 04-18-2002: Boostified by David Held
+// 09-20-2002: Implemented optimally_inherit, as suggested by Andrei
 // 05-01-2002: Added VC6 support, array support,
 //                 and boost::smart_ptr emulation
+// 04-18-2002: Boostified by David Held
+// 02-19-2001: Last update by Andrei Alexandrescu
 //
 // Additional suggestions/ideas contributed by:
 //     Gennadiy Rozental
@@ -37,8 +38,8 @@
 //     And, of course, Andrei Alexandrescu
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef BOOST_SMART_PTR_20020501_HPP
-#define BOOST_SMART_PTR_20020501_HPP
+#ifndef BOOST_SMART_PTR_20020920_HPP
+#define BOOST_SMART_PTR_20020920_HPP
 
 //////////////////////////////////////////////////////////////////////////////
 // IMPORTANT NOTE
@@ -53,6 +54,7 @@
 #include <boost/static_assert.hpp>
 #include <boost/checked_delete.hpp>
 #include <boost/ct_if.hpp>
+#include "boost/optimally_inherit.hpp"
 
 //////////////////////////////////////////////////////////////////////////////
 // Configuration macros
@@ -64,10 +66,6 @@
 # define BOOST_BCC_NON_TYPE_TEMPLATE_PARAMETERS
 #endif // __BORLANDC__
 
-#ifdef BOOST_MSVC
-# define BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-#endif // BOOST_MSVC
-
 //////////////////////////////////////////////////////////////////////////////
 
 #ifdef BOOST_BCC_NON_TYPE_TEMPLATE_PARAMETERS
@@ -78,10 +76,6 @@
 # pragma warning(push)
 # pragma warning(disable:4181) // qualifier applied to reference type ignored
 #endif // BOOST_MSVC
-
-#ifdef BOOST_MSVC6_MEMBER_TEMPLATES
-# undef BOOST_NO_MEMBER_TEMPLATES
-#endif
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -119,9 +113,9 @@ namespace boost
         class by_ref
         {
         public:
-            by_ref(T& v) : value_(v) {}
+            by_ref(T& value) : value_(value) { }
             operator T&() { return value_; }
-            operator const T&() const { return value_; }
+            operator T const&() const { return value_; }
         private:
             T& value_;
         };
@@ -142,21 +136,23 @@ namespace boost
     <
         typename T,
 
-#ifndef BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
+#ifndef BOOST_NO_TEMPLATE_TEMPLATES
 
         template <typename> class OwnershipPolicy = ref_counted,
         template <typename> class ConversionPolicy = disallow_conversion,
         template <typename> class CheckingPolicy = assert_check,
         template <typename> class StoragePolicy = default_storage
 
-#else // BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
+#else // BOOST_NO_TEMPLATE_TEMPLATES
 
         class OwnershipPolicy = ref_counted<default_storage<T>::pointer_type>,
-        class ConversionPolicy = disallow_conversion<default_storage<T>::pointer_type>,
+        class ConversionPolicy = disallow_conversion<
+            default_storage<T>::pointer_type
+        >,
         class CheckingPolicy = assert_check<default_storage<T>::stored_type>,
         class StoragePolicy = default_storage<T>
 
-#endif // BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
+#endif // BOOST_NO_TEMPLATE_TEMPLATES
 
     >
     class smart_ptr;
@@ -165,101 +161,101 @@ namespace boost
 // Helper macros for compilers without template template support
 //////////////////////////////////////////////////////////////////////////////
 
-#ifdef BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
+#ifdef BOOST_NO_TEMPLATE_TEMPLATES
 
-// Usage:
-//   typedef BOOST_SMART_PTR1(int, boost::ref_linked) my_ptr;
-#define BOOST_SMART_PTR1(T, OwnershipPolicy)                                \
-    boost::smart_ptr<T,                                                     \
-        OwnershipPolicy<boost::default_storage<T>::pointer_type>,           \
-        boost::disallow_conversion<boost::default_storage<T>::pointer_type>,\
-        boost::assert_check<boost::default_storage<T>::stored_type>,        \
-        boost::default_storage<T>                                           \
+#define BOOST_SMART_PTR1(T, OwnershipPolicy)                                 \
+    boost::smart_ptr<T,                                                      \
+        OwnershipPolicy<boost::default_storage<T>::pointer_type>,            \
+        boost::disallow_conversion<boost::default_storage<T>::pointer_type>, \
+        boost::assert_check<boost::default_storage<T>::stored_type>,         \
+        boost::default_storage<T>                                            \
     >
 
-// Usage:
-//   typedef BOOST_SMART_PTR2(int, boost::ref_linked, boost::allow_conversion)
-//       my_ptr;
-#define BOOST_SMART_PTR2(T, OwnershipPolicy, ConversionPolicy)              \
-    boost::smart_ptr<T,                                                     \
-        OwnershipPolicy<boost::default_storage<T>::pointer_type>,           \
-        ConversionPolicy<boost::default_storage<T>::pointer_type>,          \
-        boost::assert_check<boost::default_storage<T>::stored_type>,        \
-        boost::default_storage<T>                                           \
+#define BOOST_SMART_PTR2(T, OwnershipPolicy, ConversionPolicy)               \
+    boost::smart_ptr<T,                                                      \
+        OwnershipPolicy<boost::default_storage<T>::pointer_type>,            \
+        ConversionPolicy<boost::default_storage<T>::pointer_type>,           \
+        boost::assert_check<boost::default_storage<T>::stored_type>,         \
+        boost::default_storage<T>                                            \
     >
 
-// Usage:
-//   typedef BOOST_SMART_PTR3(int, boost::ref_linked, boost::allow_conversion,
-//       boost::reject_null) my_ptr;
-#define BOOST_SMART_PTR3(T, OwnershipPolicy, ConversionPolicy,              \
-            CheckingPolicy)                                                 \
-    boost::smart_ptr<T,                                                     \
-        OwnershipPolicy<boost::default_storage<T>::pointer_type>,           \
-        ConversionPolicy<boost::default_storage<T>::pointer_type>,          \
-        CheckingPolicy<boost::default_storage<T>::stored_type>,             \
-        boost::default_storage<T>                                           \
+#define BOOST_SMART_PTR3(T, OwnershipPolicy, ConversionPolicy,               \
+            CheckingPolicy)                                                  \
+    boost::smart_ptr<T,                                                      \
+        OwnershipPolicy<boost::default_storage<T>::pointer_type>,            \
+        ConversionPolicy<boost::default_storage<T>::pointer_type>,           \
+        CheckingPolicy<boost::default_storage<T>::stored_type>,              \
+        boost::default_storage<T>                                            \
     >
 
-// Usage:
-//   typedef BOOST_SMART_PTR4(int, boost::ref_linked, boost::allow_conversion,
-//       boost::reject_null, boost::my_storage) my_ptr;
-#define BOOST_SMART_PTR4(T, OwnershipPolicy, ConversionPolicy,              \
-            CheckingPolicy, StoragePolicy)                                  \
-    boost::smart_ptr<T,                                                     \
-        OwnershipPolicy<StoragePolicy<T>::pointer_type>,                    \
-        ConversionPolicy<StoragePolicy<T>::pointer_type>,                   \
-        CheckingPolicy<StoragePolicy<T>::stored_type>,                      \
-        StoragePolicy<T>                                                    \
+#define BOOST_SMART_PTR4(T, OwnershipPolicy, ConversionPolicy,               \
+            CheckingPolicy, StoragePolicy)                                   \
+    boost::smart_ptr<T,                                                      \
+        OwnershipPolicy<StoragePolicy<T>::pointer_type>,                     \
+        ConversionPolicy<StoragePolicy<T>::pointer_type>,                    \
+        CheckingPolicy<StoragePolicy<T>::stored_type>,                       \
+        StoragePolicy<T>                                                     \
     >
 
-#endif // BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
+#endif // BOOST_NO_TEMPLATE_TEMPLATES
 
 //////////////////////////////////////////////////////////////////////////////
 // class template smart_ptr (definition)
 //////////////////////////////////////////////////////////////////////////////
 
-    template
-    <
-        typename T,
-
-#ifndef BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-        template <typename> class OwnershipPolicy,
-        template <typename> class ConversionPolicy,
-        template <typename> class CheckingPolicy,
-        template <typename> class StoragePolicy
-
-#else // BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-        class OwnershipPolicy,
-        class ConversionPolicy,
-        class CheckingPolicy,
-        class StoragePolicy
-
+#ifndef BOOST_NO_TEMPLATE_TEMPLATES
+# define BOOST_SMART_POINTER_PARAMETERS                                      \
+    template <typename> class OwnershipPolicy,                               \
+    template <typename> class ConversionPolicy,                              \
+    template <typename> class CheckingPolicy,                                \
+    template <typename> class StoragePolicy
+# define BOOST_CONVERSION_PARAMETERS                                         \
+    template <typename> class OwnershipPolicy1,                              \
+    template <typename> class ConversionPolicy1,                             \
+    template <typename> class CheckingPolicy1,                               \
+    template <typename> class StoragePolicy1
+#else
+# define BOOST_SMART_POINTER_PARAMETERS                                      \
+    class OwnershipPolicy,                                                   \
+    class ConversionPolicy,                                                  \
+    class CheckingPolicy,                                                    \
+    class StoragePolicy
+# define BOOST_CONVERSION_PARAMETERS                                         \
+    class OwnershipPolicy1,                                                  \
+    class ConversionPolicy1,                                                 \
+    class CheckingPolicy1,                                                   \
+    class StoragePolicy1
 #endif // BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
 
-    >
+#define BOOST_SMART_POINTER_POLICIES                                         \
+    OwnershipPolicy, ConversionPolicy, CheckingPolicy, StoragePolicy
+
+#define BOOST_CONVERSION_POLICIES                                            \
+    OwnershipPolicy1, ConversionPolicy1, CheckingPolicy1, StoragePolicy1
+
+
+    template <typename T, BOOST_SMART_POINTER_PARAMETERS>
     class smart_ptr
 
-#ifndef BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
+#ifndef BOOST_NO_TEMPLATE_TEMPLATES
 
         : public StoragePolicy<T>
         , public CheckingPolicy<typename StoragePolicy<T>::stored_type>
         , public OwnershipPolicy<typename StoragePolicy<T>::pointer_type>
         , public ConversionPolicy<typename StoragePolicy<T>::pointer_type>
 
-#else // BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
+#else // BOOST_NO_TEMPLATE_TEMPLATES
 
         : public StoragePolicy
         , public CheckingPolicy
         , public OwnershipPolicy
         , public ConversionPolicy
 
-#endif // BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
+#endif // BOOST_NO_TEMPLATE_TEMPLATES
 
     {
 
-#ifndef BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
+#ifndef BOOST_NO_TEMPLATE_TEMPLATES
 
         typedef StoragePolicy<T> storage_policy;
         typedef OwnershipPolicy<typename StoragePolicy<T>::pointer_type>
@@ -270,7 +266,7 @@ namespace boost
                                  conversion_policy;
         typedef smart_ptr this_type;
 
-#else // BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
+#else // BOOST_NO_TEMPLATE_TEMPLATES
 
         typedef StoragePolicy storage_policy;
         typedef OwnershipPolicy ownership_policy;
@@ -278,7 +274,7 @@ namespace boost
         typedef ConversionPolicy conversion_policy;
         typedef smart_ptr this_type;
 
-#endif // BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
+#endif // BOOST_NO_TEMPLATE_TEMPLATES
 
     public:
         typedef typename storage_policy::pointer_type   pointer_type;
@@ -310,72 +306,28 @@ namespace boost
             conversion_policy(rhs)
         { get_impl_ref(*this) = ownership_policy::clone(get_impl_ref(rhs)); }
 
-#ifndef BOOST_NO_MEMBER_TEMPLATES
+#ifdef BOOST_MSVC6_MEMBER_TEMPLATES
 
-        template
-        <
-            typename U,
-
-# ifndef BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-            template <typename> class OwnershipPolicy1,
-            template <typename> class ConversionPolicy1,
-            template <typename> class CheckingPolicy1,
-            template <typename> class StoragePolicy1
-
-# else // BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-            class OwnershipPolicy1,
-            class ConversionPolicy1,
-            class CheckingPolicy1,
-            class StoragePolicy1
-
-# endif // BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-        >
-        smart_ptr(const smart_ptr<U,
-            OwnershipPolicy1, ConversionPolicy1, CheckingPolicy1, StoragePolicy1
-        >& rhs)
+        template <typename U, BOOST_CONVERSION_PARAMETERS>
+        smart_ptr(smart_ptr<U, BOOST_CONVERSION_POLICIES> const& rhs)
         : storage_policy(rhs), ownership_policy(rhs), checking_policy(rhs),
             conversion_policy(rhs)
         { get_impl_ref(*this) = ownership_policy::clone(get_impl_ref(rhs)); }
 
-        template
-        <
-            typename U,
-
-# ifndef BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-            template <typename> class OwnershipPolicy1,
-            template <typename> class ConversionPolicy1,
-            template <typename> class CheckingPolicy1,
-            template <typename> class StoragePolicy1
-
-# else // BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-            class OwnershipPolicy1,
-            class ConversionPolicy1,
-            class CheckingPolicy1,
-            class StoragePolicy1
-
-# endif // BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-        >
-        smart_ptr(smart_ptr<U,
-            OwnershipPolicy1, ConversionPolicy1, CheckingPolicy1, StoragePolicy1
-        >& rhs)
+        template <typename U, BOOST_CONVERSION_PARAMETERS>
+        smart_ptr(smart_ptr<U, BOOST_CONVERSION_POLICIES>& rhs)
         : storage_policy(rhs), ownership_policy(rhs), checking_policy(rhs),
             conversion_policy(rhs)
         { get_impl_ref(*this) = ownership_policy::clone(get_impl_ref(rhs)); }
 
-#endif // BOOST_NO_MEMBER_TEMPLATES
+#endif // BOOST_MSVC6_MEMBER_TEMPLATES
 
         smart_ptr(detail::by_ref<smart_ptr> rhs)
         : storage_policy(rhs), ownership_policy(rhs), checking_policy(rhs),
             conversion_policy(rhs)
         { }
 
-#ifndef BOOST_NO_MEMBER_TEMPLATES
+#ifdef BOOST_MSVC6_MEMBER_TEMPLATES
 
         template <typename U>
         smart_ptr(U p) : storage_policy(p), ownership_policy(p)
@@ -385,12 +337,12 @@ namespace boost
         smart_ptr(U p, V v) : storage_policy(p, v), ownership_policy(p, v)
         { checking_policy::on_init(get_impl(*this)); }
 
-#else // BOOST_NO_MEMBER_TEMPLATES
+#else // BOOST_MSVC6_MEMBER_TEMPLATES
 
-        smart_ptr(const stored_type& p) : storage_policy(p)
+        smart_ptr(stored_type const& p) : storage_policy(p)
         { checking_policy::on_init(get_impl(*this)); }
 
-#endif // BOOST_NO_MEMBER_TEMPLATES
+#endif // BOOST_MSVC6_MEMBER_TEMPLATES
 
         ~smart_ptr()
         {
@@ -411,67 +363,23 @@ namespace boost
             return *this;
         }
 
-#ifndef BOOST_NO_MEMBER_TEMPLATES
+#ifdef BOOST_MSVC6_MEMBER_TEMPLATES
 
-        template
-        <
-            typename U,
-
-# ifndef BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-            template <typename> class OwnershipPolicy1,
-            template <typename> class ConversionPolicy1,
-            template <typename> class CheckingPolicy1,
-            template <typename> class StoragePolicy1
-
-# else // BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-            class OwnershipPolicy1,
-            class ConversionPolicy1,
-            class CheckingPolicy1,
-            class StoragePolicy1
-
-# endif // BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-        >
-        smart_ptr& operator=(const smart_ptr<U,
-            OwnershipPolicy1, ConversionPolicy1, CheckingPolicy1, StoragePolicy1
-        >& rhs)
+        template <typename U, BOOST_CONVERSION_PARAMETERS>
+        smart_ptr& operator=(smart_ptr<U, BOOST_CONVERSION_POLICIES> const& rhs)
         {
             smart_ptr(rhs).swap(*this);
             return *this;
         }
 
-        template
-        <
-            typename U,
-
-# ifndef BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-            template <typename> class OwnershipPolicy1,
-            template <typename> class ConversionPolicy1,
-            template <typename> class CheckingPolicy1,
-            template <typename> class StoragePolicy1
-
-# else // BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-            class OwnershipPolicy1,
-            class ConversionPolicy1,
-            class CheckingPolicy1,
-            class StoragePolicy1
-
-# endif // BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-        >
-        smart_ptr& operator=(smart_ptr<U,
-            OwnershipPolicy1, ConversionPolicy1, CheckingPolicy1, StoragePolicy1
-        >& rhs)
+        template <typename U, BOOST_CONVERSION_PARAMETERS>
+        smart_ptr& operator=(smart_ptr<U, BOOST_CONVERSION_POLICIES>& rhs)
         {
             smart_ptr(rhs).swap(*this);
             return *this;
         }
 
-#endif // BOOST_NO_MEMBER_TEMPLATES
+#endif // BOOST_MSVC6_MEMBER_TEMPLATES
 
         void swap(smart_ptr& rhs)
         {
@@ -538,104 +446,38 @@ namespace boost
             const smart_ptr& rhs)
         { return rhs != lhs; }
 
-#ifndef BOOST_NO_MEMBER_TEMPLATES
+#ifdef BOOST_MSVC6_MEMBER_TEMPLATES
 
         // Ambiguity buster
-        template
-        <
-            typename U,
-
-# ifndef BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-            template <typename> class OwnershipPolicy1,
-            template <typename> class ConversionPolicy1,
-            template <typename> class CheckingPolicy1,
-            template <typename> class StoragePolicy1
-
-# else // BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-            class OwnershipPolicy1,
-            class ConversionPolicy1,
-            class CheckingPolicy1,
-            class StoragePolicy1
-
-# endif // BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-        >
-        bool operator==(const smart_ptr<U,
-            OwnershipPolicy1, ConversionPolicy1, CheckingPolicy1, StoragePolicy1
-        >& rhs) const
+        template <typename U, BOOST_CONVERSION_PARAMETERS>
+        bool operator==(smart_ptr<U, BOOST_CONVERSION_POLICIES> const& rhs) const
         { return *this == get_impl(rhs); }
 
         // Ambiguity buster
-        template
-        <
-            typename U,
-
-# ifndef BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-            template <typename> class OwnershipPolicy1,
-            template <typename> class ConversionPolicy1,
-            template <typename> class CheckingPolicy1,
-            template <typename> class StoragePolicy1
-
-# else // BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-            class OwnershipPolicy1,
-            class ConversionPolicy1,
-            class CheckingPolicy1,
-            class StoragePolicy1
-
-# endif // BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-        >
-        bool operator!=(const smart_ptr<U,
-            OwnershipPolicy1, ConversionPolicy1, CheckingPolicy1, StoragePolicy1
-        >& rhs) const
+        template <typename U, BOOST_CONVERSION_PARAMETERS>
+        bool operator!=(smart_ptr<U, BOOST_CONVERSION_POLICIES> const& rhs) const
         { return !(*this == rhs); }
 
         // Ambiguity buster
-        template
-        <
-            typename U,
-
-# ifndef BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-            template <typename> class OwnershipPolicy1,
-            template <typename> class ConversionPolicy1,
-            template <typename> class CheckingPolicy1,
-            template <typename> class StoragePolicy1
-
-# else // BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-            class OwnershipPolicy1,
-            class ConversionPolicy1,
-            class CheckingPolicy1,
-            class StoragePolicy1
-
-# endif // BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-        >
-        bool operator<(const smart_ptr<U,
-            OwnershipPolicy1, ConversionPolicy1, CheckingPolicy1, StoragePolicy1
-        >& rhs) const
+        template <typename U, BOOST_CONVERSION_PARAMETERS>
+        bool operator<(smart_ptr<U, BOOST_CONVERSION_POLICIES> const& rhs) const
         { return *this < get_impl(rhs); }
 
-#else // BOOST_NO_MEMBER_TEMPLATES
+#else // BOOST_MSVC6_MEMBER_TEMPLATES
 
         // Ambiguity buster
-        bool operator==(const smart_ptr& rhs) const
+        bool operator==(smart_ptr const& rhs) const
         { return *this == get_impl(rhs); }
 
         // Ambiguity buster
-        bool operator!=(const smart_ptr& rhs) const
+        bool operator!=(smart_ptr const& rhs) const
         { return !(*this == rhs); }
 
         // Ambiguity buster
-        bool operator<(const smart_ptr& rhs) const
+        bool operator<(smart_ptr const& rhs) const
         { return *this < get_impl(rhs); }
 
-#endif // BOOST_NO_MEMBER_TEMPLATES
+#endif // BOOST_MSVC6_MEMBER_TEMPLATES
 
     private:
         // Helper for enabling 'if (sp)'
@@ -700,9 +542,12 @@ namespace boost
     class default_storage
     {
     protected:
-        typedef T* stored_type;         // the type of the pointee_ object
-        typedef T* pointer_type;        // type returned by operator->
-        typedef T& reference_type;      // type returned by operator*
+        typedef T*          stored_type;        // the type of the pointee_
+        typedef T const*    const_stored_type;  //   object
+        typedef T*          pointer_type;       // type returned by operator->
+        typedef T const*    const_pointer_type;
+        typedef T&          reference_type;     // type returned by operator*
+        typedef T const&    const_reference_type;
 
         default_storage() : pointee_(default_value())
         { }
@@ -771,9 +616,12 @@ namespace boost
     class array_storage
     {
     protected:
-        typedef T* stored_type;         // the type of the pointee_ object
-        typedef T* pointer_type;        // type returned by operator->
-        typedef T& reference_type;      // type returned by operator*
+        typedef T*          stored_type;        // the type of the pointee_
+        typedef T const*    const_stored_type;  //   object
+        typedef T*          pointer_type;       // type returned by operator->
+        typedef T const*    const_pointer_type;
+        typedef T&          reference_type;     // type returned by operator*
+        typedef T const&    const_reference_type;
 
         array_storage() : pointee_(default_value())
         { }
@@ -1129,11 +977,6 @@ namespace boost
 
         static void swap(com_ref_counted&)
         { }
-
-#if defined(__BORLANDC__) || defined(BOOST_MSVC)
-    private:
-        bool mi_ebo_hack_;
-#endif // __BORLANDC__ || BOOST_MSVC
     };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1300,11 +1143,6 @@ namespace boost
 #else // BOOST_BCC_NON_TYPE_TEMPLATE_PARAMETERS
         typedef true_type destructive_copy_tag;
 #endif // BOOST_BCC_NON_TYPE_TEMPLATE_PARAMETERS
-
-#if defined(__BORLANDC__) || defined(BOOST_MSVC)
-    private:
-        bool mi_ebo_hack_;
-#endif // __BORLANDC__ || BOOST_MSVC
     };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1356,11 +1194,6 @@ namespace boost
 #else // BOOST_BCC_NON_TYPE_TEMPLATE_PARAMETERS
         typedef false_type destructive_copy_tag;
 #endif // BOOST_BCC_NON_TYPE_TEMPLATE_PARAMETERS
-
-#if defined(__BORLANDC__) || defined(BOOST_MSVC)
-    private:
-        bool mi_ebo_hack_;
-#endif // __BORLANDC__ || BOOST_MSVC
     };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1414,11 +1247,6 @@ namespace boost
 #else // BOOST_BCC_NON_TYPE_TEMPLATE_PARAMETERS
         typedef false_type destructive_copy_tag;
 #endif // BOOST_BCC_NON_TYPE_TEMPLATE_PARAMETERS
-
-#if defined(__BORLANDC__) || defined(BOOST_MSVC)
-    private:
-        bool mi_ebo_hack_;
-#endif // __BORLANDC__ || BOOST_MSVC
     };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1802,425 +1630,88 @@ namespace boost
 // operator== for lhs = smart_ptr, rhs = raw pointer
 ////////////////////////////////////////////////////////////////////////////////
 
-    template
-    <
-        typename T,
-
-#ifndef BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-            template <typename> class OwnershipPolicy,
-            template <typename> class ConversionPolicy,
-            template <typename> class CheckingPolicy,
-            template <typename> class StoragePolicy,
-
-#else // BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-            class OwnershipPolicy,
-            class ConversionPolicy,
-            class CheckingPolicy,
-            class StoragePolicy,
-
-#endif // BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-        typename U
-    >
-    inline bool operator==(const smart_ptr<
-        T, OwnershipPolicy, ConversionPolicy, CheckingPolicy, StoragePolicy
-    >& lhs, const U* rhs)
-    { return get_impl(lhs) == rhs; }
+    template <typename T, BOOST_SMART_POINTER_PARAMETERS, typename U>
+    inline bool operator==(smart_ptr<T, BOOST_SMART_POINTER_POLICIES> const& lhs, U const* rhs)
+    {
+        return get_impl(lhs) == rhs;
+    }
 
 ////////////////////////////////////////////////////////////////////////////////
 // operator== for lhs = raw pointer, rhs = smart_ptr
 ////////////////////////////////////////////////////////////////////////////////
 
-    template
-    <
-        typename T,
-
-#ifndef BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-            template <typename> class OwnershipPolicy,
-            template <typename> class ConversionPolicy,
-            template <typename> class CheckingPolicy,
-            template <typename> class StoragePolicy,
-
-#else // BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-            class OwnershipPolicy,
-            class ConversionPolicy,
-            class CheckingPolicy,
-            class StoragePolicy,
-
-#endif // BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-        typename U
-    >
-    inline bool operator==(const U* lhs, const smart_ptr<
-        T, OwnershipPolicy, ConversionPolicy, CheckingPolicy, StoragePolicy
-    >& rhs)
-    { return rhs == lhs; }
+    template <typename T, BOOST_SMART_POINTER_PARAMETERS, typename U>
+    inline bool operator==(U const* lhs, smart_ptr<T, BOOST_SMART_POINTER_POLICIES> const& rhs)
+    {
+        return rhs == lhs;
+    }
 
 ////////////////////////////////////////////////////////////////////////////////
 // operator!= for lhs = smart_ptr, rhs = raw pointer
 ////////////////////////////////////////////////////////////////////////////////
 
-    template
-    <
-        typename T,
-
-#ifndef BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-            template <typename> class OwnershipPolicy,
-            template <typename> class ConversionPolicy,
-            template <typename> class CheckingPolicy,
-            template <typename> class StoragePolicy,
-
-#else // BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-            class OwnershipPolicy,
-            class ConversionPolicy,
-            class CheckingPolicy,
-            class StoragePolicy,
-
-#endif // BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-        typename U
-    >
-    inline bool operator!=(const smart_ptr<
-        T, OwnershipPolicy, ConversionPolicy, CheckingPolicy, StoragePolicy
-    >& lhs, const U* rhs)
-    { return !(lhs == rhs); }
+    template <typename T, BOOST_SMART_POINTER_PARAMETERS, typename U>
+    inline bool operator!=(smart_ptr<T, BOOST_SMART_POINTER_POLICIES> const& lhs, U const* rhs)
+    {
+        return !(lhs == rhs);
+    }
 
 ////////////////////////////////////////////////////////////////////////////////
 // operator!= for lhs = raw pointer, rhs = smart_ptr
 ////////////////////////////////////////////////////////////////////////////////
 
-    template
-    <
-        typename T,
+    template <typename T, BOOST_SMART_POINTER_PARAMETERS, typename U>
+    inline bool operator!=(U const* lhs, smart_ptr<T, BOOST_SMART_POINTER_POLICIES> const& rhs)
+    {
+        return rhs != lhs;
+    }
 
-#ifndef BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
+}   // namespace boost
 
-            template <typename> class OwnershipPolicy,
-            template <typename> class ConversionPolicy,
-            template <typename> class CheckingPolicy,
-            template <typename> class StoragePolicy,
-
-#else // BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-            class OwnershipPolicy,
-            class ConversionPolicy,
-            class CheckingPolicy,
-            class StoragePolicy,
-
-#endif // BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-        typename U
-    >
-    inline bool operator!=(const U* lhs, const smart_ptr<
-        T, OwnershipPolicy, ConversionPolicy, CheckingPolicy, StoragePolicy
-    >& rhs)
-    { return rhs != lhs; }
+#ifdef BOOST_SMART_POINTER_ORDERING_OPERATORS
+# include <boost/smart_ptr/ordering_operators.hpp>
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
-// operator< for lhs = smart_ptr, rhs = raw pointer -- NOT DEFINED
+// std::less and std::swap specializations for smart_ptr
+//
+// Strictly speaking, these partial specializations are not legal; but with any
+// luck, they will be by the next standard.  They are useful anyway, and so are
+// included here.
 ////////////////////////////////////////////////////////////////////////////////
 
-    template
-    <
-        typename T,
-
-#ifndef BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-            template <typename> class OwnershipPolicy,
-            template <typename> class ConversionPolicy,
-            template <typename> class CheckingPolicy,
-            template <typename> class StoragePolicy,
-
-#else // BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-            class OwnershipPolicy,
-            class ConversionPolicy,
-            class CheckingPolicy,
-            class StoragePolicy,
-
-#endif // BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-        typename U
-    >
-    inline bool operator<(const smart_ptr<
-        T, OwnershipPolicy, ConversionPolicy, CheckingPolicy, StoragePolicy
-    >& lhs, const U* rhs);
-
-////////////////////////////////////////////////////////////////////////////////
-// operator< for lhs = raw pointer, rhs = smart_ptr -- NOT DEFINED
-////////////////////////////////////////////////////////////////////////////////
-
-    template
-    <
-        typename T,
-
-#ifndef BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-            template <typename> class OwnershipPolicy,
-            template <typename> class ConversionPolicy,
-            template <typename> class CheckingPolicy,
-            template <typename> class StoragePolicy,
-
-#else // BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-            class OwnershipPolicy,
-            class ConversionPolicy,
-            class CheckingPolicy,
-            class StoragePolicy,
-
-#endif // BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-        typename U
-    >
-    inline bool operator<(const U* lhs, const smart_ptr<
-        T, OwnershipPolicy, ConversionPolicy, CheckingPolicy, StoragePolicy
-    >& rhs);
-
-////////////////////////////////////////////////////////////////////////////////
-// operator> for lhs = smart_ptr, rhs = raw pointer -- NOT DEFINED
-////////////////////////////////////////////////////////////////////////////////
-
-    template
-    <
-        typename T,
-
-#ifndef BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-            template <typename> class OwnershipPolicy,
-            template <typename> class ConversionPolicy,
-            template <typename> class CheckingPolicy,
-            template <typename> class StoragePolicy,
-
-#else // BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-            class OwnershipPolicy,
-            class ConversionPolicy,
-            class CheckingPolicy,
-            class StoragePolicy,
-
-#endif // BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-        typename U
-    >
-    inline bool operator>(const smart_ptr<
-        T, OwnershipPolicy, ConversionPolicy, CheckingPolicy, StoragePolicy
-    >& lhs, const U* rhs)
-    { return rhs < lhs; }
-
-////////////////////////////////////////////////////////////////////////////////
-// operator> for lhs = raw pointer, rhs = smart_ptr
-////////////////////////////////////////////////////////////////////////////////
-
-    template
-    <
-        typename T,
-
-#ifndef BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-            template <typename> class OwnershipPolicy,
-            template <typename> class ConversionPolicy,
-            template <typename> class CheckingPolicy,
-            template <typename> class StoragePolicy,
-
-#else // BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-            class OwnershipPolicy,
-            class ConversionPolicy,
-            class CheckingPolicy,
-            class StoragePolicy,
-
-#endif // BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-        typename U
-    >
-    inline bool operator>(const U* lhs, const smart_ptr<
-        T, OwnershipPolicy, ConversionPolicy, CheckingPolicy, StoragePolicy
-    >& rhs)
-    { return rhs < lhs; }
-
-////////////////////////////////////////////////////////////////////////////////
-// operator<= for lhs = smart_ptr, rhs = raw pointer
-////////////////////////////////////////////////////////////////////////////////
-
-    template
-    <
-        typename T,
-
-#ifndef BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-            template <typename> class OwnershipPolicy,
-            template <typename> class ConversionPolicy,
-            template <typename> class CheckingPolicy,
-            template <typename> class StoragePolicy,
-
-#else // BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-            class OwnershipPolicy,
-            class ConversionPolicy,
-            class CheckingPolicy,
-            class StoragePolicy,
-
-#endif // BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-        typename U
-    >
-    inline bool operator<=(const smart_ptr<
-        T, OwnershipPolicy, ConversionPolicy, CheckingPolicy, StoragePolicy
-    >& lhs, const U* rhs)
-    { return !(rhs < lhs); }
-
-////////////////////////////////////////////////////////////////////////////////
-// operator<= for lhs = raw pointer, rhs = smart_ptr
-////////////////////////////////////////////////////////////////////////////////
-
-    template
-    <
-        typename T,
-
-#ifndef BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-            template <typename> class OwnershipPolicy,
-            template <typename> class ConversionPolicy,
-            template <typename> class CheckingPolicy,
-            template <typename> class StoragePolicy,
-
-#else // BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-            class OwnershipPolicy,
-            class ConversionPolicy,
-            class CheckingPolicy,
-            class StoragePolicy,
-
-#endif // BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-        typename U
-    >
-    inline bool operator<=(const U* lhs, const smart_ptr<
-        T, OwnershipPolicy, ConversionPolicy, CheckingPolicy, StoragePolicy
-    >& rhs)
-    { return !(rhs < lhs); }
-
-////////////////////////////////////////////////////////////////////////////////
-// operator>= for lhs = smart_ptr, rhs = raw pointer
-////////////////////////////////////////////////////////////////////////////////
-
-    template
-    <
-        typename T,
-
-#ifndef BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-            template <typename> class OwnershipPolicy,
-            template <typename> class ConversionPolicy,
-            template <typename> class CheckingPolicy,
-            template <typename> class StoragePolicy,
-
-#else // BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-            class OwnershipPolicy,
-            class ConversionPolicy,
-            class CheckingPolicy,
-            class StoragePolicy,
-
-#endif // BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-        typename U
-    >
-    inline bool operator>=(const smart_ptr<
-        T, OwnershipPolicy, ConversionPolicy, CheckingPolicy, StoragePolicy
-    >& lhs, const U* rhs)
-    { return !(lhs < rhs); }
-
-////////////////////////////////////////////////////////////////////////////////
-// operator>= for lhs = raw pointer, rhs = smart_ptr
-////////////////////////////////////////////////////////////////////////////////
-
-    template
-    <
-        typename T,
-
-#ifndef BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-            template <typename> class OwnershipPolicy,
-            template <typename> class ConversionPolicy,
-            template <typename> class CheckingPolicy,
-            template <typename> class StoragePolicy,
-
-#else // BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-            class OwnershipPolicy,
-            class ConversionPolicy,
-            class CheckingPolicy,
-            class StoragePolicy,
-
-#endif // BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-        typename U
-    >
-    inline bool operator>=(const U* lhs, const smart_ptr<
-        T, OwnershipPolicy, ConversionPolicy, CheckingPolicy, StoragePolicy
-    >& rhs)
-    { return !(lhs < rhs); }
-
-} // namespace boost
-
-////////////////////////////////////////////////////////////////////////////////
-// specialization of std::less for smart_ptr
-////////////////////////////////////////////////////////////////////////////////
-
-// MSVC gives a strange error about std::less already begin defined as a
-// non-template class.
+// MSVC, of course, does not like partial specialization
 #ifndef BOOST_MSVC
 
 namespace std
 {
-    template
-    <
-        typename T,
-
-#ifndef BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-        template <typename> class OwnershipPolicy,
-        template <typename> class ConversionPolicy,
-        template <typename> class CheckingPolicy,
-        template <typename> class StoragePolicy
-
-#else // BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-        class OwnershipPolicy,
-        class ConversionPolicy,
-        class CheckingPolicy,
-        class StoragePolicy
-
-#endif // BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
-
-    >
-    struct less< boost::smart_ptr<
-        T, OwnershipPolicy, ConversionPolicy, CheckingPolicy, StoragePolicy
-    > > : public binary_function<boost::smart_ptr<
-        T, OwnershipPolicy, ConversionPolicy, CheckingPolicy, StoragePolicy
-    >, boost::smart_ptr<
-        T, OwnershipPolicy, ConversionPolicy, CheckingPolicy, StoragePolicy
-    >, bool>
+    template <typename T, BOOST_SMART_POINTER_PARAMETERS>
+    struct less<boost::smart_ptr<T, BOOST_SMART_POINTER_POLICIES> >
+        : public binary_function<
+            boost::smart_ptr<T, BOOST_SMART_POINTER_POLICIES>,
+            boost::smart_ptr<T, BOOST_SMART_POINTER_POLICIES>,
+            bool
+        >
     {
-        bool operator()(const boost::smart_ptr<
-            T, OwnershipPolicy, ConversionPolicy, CheckingPolicy, StoragePolicy
-        >& lhs, const boost::smart_ptr<
-            T, OwnershipPolicy, ConversionPolicy, CheckingPolicy, StoragePolicy
-        >& rhs) const
+        bool operator()(boost::smart_ptr<T, BOOST_SMART_POINTER_POLICIES> const& lhs,
+                        boost::smart_ptr<T, BOOST_SMART_POINTER_POLICIES> const& rhs) const
         {
             return less<T*>()(get_impl(lhs), get_impl(rhs));
         }
     };
+
+    template <typename T, BOOST_SMART_POINTER_PARAMETERS>
+    void swap(boost::smart_ptr<T, BOOST_SMART_POINTER_POLICIES>& lhs,
+              boost::smart_ptr<T, BOOST_SMART_POINTER_POLICIES>& rhs)
+    {
+        return lhs.swap(rhs);
+    }
 }
 
 #endif // BOOST_MSVC
+
+#undef BOOST_SMART_POINTER_POLICIES
+#undef BOOST_SMART_POINTER_PARAMETERS
 
 #if defined(__BORLANDC__) || defined(BOOST_MSVC)
 # include <poppack.h>
@@ -2230,4 +1721,4 @@ namespace std
 # pragma warning(pop)
 #endif // BOOST_MSVC
 
-#endif // BOOST_SMART_PTR_20020501_HPP
+#endif // BOOST_SMART_PTR_20020920_HPP
