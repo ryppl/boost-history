@@ -90,6 +90,9 @@ namespace boost
         std::pair<iterator,bool> insert( Key& key, T* x ) // strong
         {
             std::auto_ptr<T> ptr( x );                                                         // nothrow
+            if( x == 0 )
+                throw bad_pointer( "Null pointer in 'ptr_map::insert()'" );
+            
             std::pair<ptr_iterator,bool> res = this->c__().insert( std::make_pair( key, x ) ); // strong, commit      
             if( res.second )                                                                   // nothrow     
                 ptr.release();                                                                 // nothrow
@@ -167,6 +170,9 @@ namespace boost
         iterator insert( Key& key, T* x ) // strong
         {
             std::auto_ptr<T> ptr( x );                                         // nothrow
+            if( x == 0 )
+                throw bad_pointer( "Null pointer in 'ptr_multimap::insert()'" );
+
             ptr_iterator res = this->c__().insert( std::make_pair( key, x ) ); // strong, commit        
             ptr.release();                                                     // notrow
             return iterator( res );           
@@ -186,15 +192,13 @@ namespace boost
     template< typename K, typename T, typename C, typename A >
     ptr_map<K,T,C,A>* make_clone( const ptr_map<K,T,C,A>& r )
     {
-        std::auto_ptr<ptr_map<K,T,C,A> > p( r.clone() );
-        return p.release();
+        return r.clone().release();
     }
 
     template< typename K, typename T, typename C, typename A >
     ptr_multimap<K,T,C,A>* make_clone( const ptr_multimap<K,T,C,A>& r )
     {
-        std::auto_ptr<ptr_multimap<K,T,C,A> > p( r.clone() );
-        return p.release();
+        return r.clone().release();
     }
 
 }

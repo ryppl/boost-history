@@ -22,6 +22,7 @@
 #include <boost/ptr_container/detail/map_iterator.hpp>
 #include <boost/ptr_container/detail/scoped_deleter.hpp>
 #include <boost/ptr_container/detail/size_undoer.hpp>
+#include <boost/ptr_container/bad_index.hpp>
 #include <boost/ptr_container/bad_pointer.hpp>
 #include <boost/ptr_container/bad_ptr_container_operation.hpp>
 #include <boost/ptr_container/make_clone.hpp>
@@ -34,6 +35,7 @@
 #include <cassert>
 #include <algorithm>
 #include <exception>
+#include <functional>
 #include <memory>
 
 // TODO: use concept checks to check interface.
@@ -273,11 +275,6 @@ namespace detail
                                   const allocator_type& alloc = allocator_type() )
         : c_( comp, alloc ) {}
          
-    private:  
-        
-        reversible_ptr_container( const reversible_ptr_container& r );
-        reversible_ptr_container& operator=( const reversible_ptr_container& r );
-    
     public:        
         ~reversible_ptr_container()
         { 
@@ -313,6 +310,12 @@ namespace detail
             strong_resize_and_remove( n ); // strong
             copy_clones_and_release( sd ); // nothrow
         }
+        
+        /* not possible right now
+        allocater_type& get_allocator()
+        {
+            return c_.get_allocator();
+        }*/
         
         allocator_type get_allocator() const                   
         {
@@ -403,7 +406,7 @@ namespace detail
         void push_back( T* x )  // strong               
         {
             if( 0 == x )
-                throw bad_pointer();
+                throw bad_pointer( "Null pointer in 'push_back()'" );
             
             std::auto_ptr<T> ptr( x ); // notrow
             c_.push_back( x );         // strong, commit
@@ -424,7 +427,7 @@ namespace detail
         iterator insert( iterator before, T* x ) // strong
         { 
             if( 0 == x )
-                throw bad_pointer();
+                throw bad_pointer( "Null pointer in 'insert()'" );
             
             std::auto_ptr<T> ptr( x );                                // nothrow
             iterator res = iterator( c_.insert( before.base(), x ) ); // strong, commit
@@ -479,7 +482,7 @@ namespace detail
         void push_front( T* x )                
         {
             if( 0 == x )
-                throw bad_pointer();
+                throw bad_pointer( "Null pointer in 'push_front()'" );
             
             std::auto_ptr<T> ptr( x ); // nothrow
             c_.push_front( x );        // strong, commit
@@ -514,7 +517,7 @@ namespace detail
         reference at( size_type n )
         {
             if( n < size() )
-                throw bad_ptr_container_operation( "'at()' out of bounds" );
+                throw bad_index( "'at()' out of bounds" );
              
             return *c_[n];
         }
@@ -522,7 +525,7 @@ namespace detail
         const_reference at( size_type n ) const
         {
             if( n < size() )
-                throw bad_ptr_container_operation( "'at()' out of bounds" );
+                throw bad_index( "'at()' out of bounds" );
              
             return *c_[n]; 
         }
@@ -559,7 +562,7 @@ namespace detail
         void replace( iterator where, T* x ) // strong  
         { 
             if( 0 == x )
-                throw bad_pointer();
+                throw bad_pointer( "Null pointer in 'replace()'" );
             if( empty() )
                 throw bad_ptr_container_operation( "'replace()' on empty container" );
 
@@ -570,12 +573,12 @@ namespace detail
         void replace( size_type idx, T* x ) // strong
         {
             if( 0 == x )
-                throw bad_pointer();
+                throw bad_pointer( "Null pointer in 'replace()'" );
             
             std::auto_ptr<T> ptr( x ); 
             
             if( idx >= size() ) 
-                throw bad_ptr_container_operation( "'replace()' out of bounds" );
+                throw bad_index( "'replace()' out of bounds" );
             
             std::auto_ptr<T> old( c_[idx] ); // nothrow
             c_[idx] = ptr.get();              // nothrow, commit
@@ -661,7 +664,7 @@ namespace detail
         void remove_if( Predicate pred )
         {
             ptr_iterator last = std::partition( ptr_begin(), ptr_end(), 
-                                                not1< indirected1<Predicate,T> >( pred ) );
+                                                std::not1< indirected1<Predicate,T> >( pred ) );
             erase( iterator( last ), end() );
         }
             

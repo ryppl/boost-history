@@ -19,17 +19,18 @@
 # pragma once
 #endif
 
-#include <exception>
+#include <boost/ptr_container/bad_ptr_container_operation.hpp>
 
 namespace boost
 {
-    class bad_pointer : public std::exception
+    class bad_pointer : public bad_ptr_container_operation
     {
     public:
-        virtual const char* what() const throw()
-        {
-            return "Null pointer not allowed in a pointer container!";
-        }
+        bad_pointer() : bad_ptr_container_operation( "Null pointer not allowed in a pointer container!" )
+        { }
+        
+        bad_pointer( const char* text ) : bad_ptr_container_operation( text )
+        { }
     };
 }
 

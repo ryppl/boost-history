@@ -101,8 +101,7 @@ namespace boost
     template< typename T, typename A >
     ptr_list<T,A>* make_clone( const ptr_list<T,A>& r )
     {
-        std::auto_ptr<ptr_list<T,A> > p( r.clone() );
-        return p.release();
+        return r.clone().release();
     }
 
 }

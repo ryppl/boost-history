@@ -20,7 +20,7 @@
 #endif
 
 #include <boost/config.hpp>
-#include <utility>
+#include <functional>
 
 namespace boost
 {

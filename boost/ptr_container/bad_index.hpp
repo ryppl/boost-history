@@ -12,28 +12,22 @@
  *
  */
 
-#ifndef BOOST_PTR_CONTAINER_BAD_PTR_CONTAINER_OPERATION_HPP
-#define BOOST_PTR_CONTAINER_BAD_PTR_CONTAINER_OPERATION_HPP
+#ifndef BOOST_PTR_CONTAINER_BAD_INDEX_HPP
+#define BOOST_PTR_CONTAINER_BAD_INDEX_HPP
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1200)
 # pragma once
 #endif
 
-#include <exception>
+#include <boost/ptr_container/bad_ptr_container_operation.hpp>
 
 namespace boost
 {
-    class bad_ptr_container_operation : public std::exception
+    class bad_index : public bad_ptr_container_operation
     {
-        const char* what_;
     public:
-        bad_ptr_container_operation( const char* what ) : what_( what )
+        bad_index( const char* what ) : bad_ptr_container_operation( what )
         { }
-        
-        virtual const char* what() const throw()
-        {
-            return what_;
-        }
     };
 }
 

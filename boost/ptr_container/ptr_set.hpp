@@ -75,7 +75,7 @@ namespace boost
         std::pair<iterator,bool> insert( Key* x ) // strong                      
         {       
             if( x == 0 )
-                throw bad_pointer();
+                throw bad_pointer( "Null pointer in 'set::insert()'" );
             
             std::auto_ptr<Key> ptr( x );                                
             std::pair<ptr_iterator,bool> res = this->c__().insert( x );       
@@ -145,7 +145,7 @@ namespace boost
         iterator insert( Key* x ) // strong                                      
         {   
             if( x == 0 )
-                throw bad_pointer();
+                throw bad_pointer( "Null pointer in 'multiset::insert()'" );
 
             std::auto_ptr<Key> ptr( x );                                
             ptr_iterator res = this->c__().insert( x );                         
@@ -168,15 +168,13 @@ namespace boost
     template< typename K, typename C, typename A >
     ptr_set<K,C,A>* make_clone( const ptr_set<K,C,A>& r )
     {
-        std::auto_ptr<ptr_set<K,C,A> > p( r.clone() );
-        return p.release();
+        return r.clone().release();
     }
 
     template< typename K, typename C, typename A >
     ptr_multiset<K,C,A>* make_clone( const ptr_multiset<K,C,A>& r )
     {
-        std::auto_ptr<ptr_multiset<K,C,A> > p( r.clone() );
-        return p.release();
+        r.clone().release();
     }
 
 }

@@ -20,12 +20,8 @@
 #endif
 
 #include <boost/config.hpp>
-#include <boost/utility.hpp>
 #include <boost/operators.hpp>
-#include <boost/static_assert.hpp>
-#include <boost/type_traits/remove_pointer.hpp>
 #include <boost/detail/iterator.hpp>
-#include <iosfwd>
 #include <cassert>
 
 namespace boost
@@ -34,14 +30,14 @@ namespace boost
     {
         namespace detail
         {
-            template< typename I, typename V >
-            class map_iterator : bidirectional_iterator_helper< map_iterator<I,V>, typename iterator_traits<I>::value_type, 
-                                                                std::ptrdiff_t, typename iterator_traits<I>::value_type*, 
+            template< typename I, typename V > // I = original iterator, V = return value type of operator*()
+            class map_iterator : bidirectional_iterator_helper< map_iterator<I,V>, typename boost::detail::iterator_traits<I>::value_type, 
+                                                                std::ptrdiff_t, typename boost::detail::iterator_traits<I>::value_type*, 
                                                                 V& >     
             {
                 I iter_;
-                typedef typename iterator_traits<I>::value_type  pair_t;
-                typedef typename pair_t::first_type              key_type;
+                typedef typename boost::detail::iterator_traits<I>::value_type  pair_t;
+                typedef typename pair_t::first_type                             key_type;
                 
             public:
                 typedef std::ptrdiff_t difference_type;

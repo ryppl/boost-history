@@ -164,6 +164,8 @@ function introduction()
         pvec.sort();                                 // ascending is default sort order
         pvec.sort( std::less<Poly>() );              // same as default, no indirection on predicate
          
+        // svec's pointers deleted here
+        // pvec's pointers deleted here                              
    } " ) ); 
    
    return $res . $motivation . $examples ;
@@ -185,55 +187,62 @@ function reference()
                          li( i( "All default iterators apply an extra layer of indirection. " ) .
                              " This is done to make the containers easier and safer to use. It promotes
                                a kind of pointer-less programming and the user of a class needs not worry about
-                               pointers except when allocating them. Iterators that provide access to the naked pointers
+                               pointers except when allocating them (see " . aLocal( exampleLink(2) ) . ").
+                               Iterators that provide access to the naked pointers
                                are also provided since they might be useful in rare cases. Whenever eg. " . code( "begin()" ) .
                                " returns an " . code( "iterator, ptr_begin()" ) . " will return an iterator that allows 
                                one to iterate over the stored pointers." ) .  
                          li( i( "The containers are neither Copy-Constructible nor Assignable." )  .
                              " This is because cloning a lot of pointers can be a very expensive operation; instead functions are
                                provided to transfer ownership. If a 
-                              deep-copy is needed anyway, every container has " . code( "clone()" ) . " member function." ) . 
+                              deep-copy is needed anyway, every container has " . code( "clone()" ) . 
+                             " member function (see " . aLocal( exampleLink(3) ) . ")." ) . 
                          li( i( "Stored elements need not be CopyConstructible or Assignable, but 
-                                for a subset of the operations they are required to be Clonable." ) . 
+                                for a subset of the operations they are required to be Clonable (see " . aLocal( clonableLink() ) . ")." ) . 
                              " This is because most polymorphic objects cannot be copied directly, 
-                              but they can often be so by a use of a member function. Often it does not even make
+                              but they can often be so by a use of a member function (see " . aLocal( exampleLink(4) ) . ").
+                              Often it does not even make
                               sense to clone an object in which case a large subset of the operations are still workable." 
                               ) .
                          li( i( "Whenever objects are inserted into a container, they are cloned before insertion. 
                                  Whenever pointers are inserted into a container, ownership is transferred to the container." ) .
                              " All containers take ownership of the stored pointers and therefore a container needs to have its 
-                               own copies. " ) .
+                               own copies (see " . aLocal( exampleLink(5) ) . ")." ) .
                          li( i( "Ownership can be transferred from a container on a per pointer basis." ) .
                              " This can of course also be convenient. Whenever it happens, an " . code( "std::auto_ptr<>" ) .
-                               " is used to provide an exception-safe transfer. " ) .              
+                               " is used to provide an exception-safe transfer (see " . aLocal( exampleLink(6) ) . "). " ) .              
                          li( i( "Ownership can be transferred from a container to another container on a per iterator range basis." ) . 
                              " This makes it possible to exchange data safely between different pointer containers
-                               without cloning the objects again. " ) .
+                               without cloning the objects again (see " . aLocal( exampleLink(7) ) . "). " ) .
                          li( i( "A container can be cheaply returned from functions either by making a clone or by giving up ownership
                                  of the container." ) . " Two special member functions, " . code( "clone()" ) . " and " . 
                              code( "release()," ) . " both return an " . code( "auto_ptr<Container>" ) . " which can be assigned
                              to another container. This effectively reduces the cost of returning a container to one heap-allocation
-                             plus a call to " . code("swap()." ) ) .
-                         li( i( " Certain algorithms have been implemented as member functions, because they are tricky when dealing with
-                                  pointers. " ) . " This is done to avoid some nasty pitfalls. Some of the functions
+                             plus a call to " . code("swap()" ) . " (see " . aLocal( exampleLink(3) ) .")." ) .
+                         li( i( " Certain algorithms have been implemented as member functions, because they can overwrite 
+                                 pointers instead of swapping them. " ) . " This is done to avoid some nasty pitfalls with " .
+                                 code( "remove()" ) . " and " . code( "unique()" ) . 
+                                "(see " . aLocal( exampleLink(8) ) .", ". aLocal( refLink(1) ) 
+                                  . " and " . aLocal( refLink(10) ) . "). " . " Some of the functions
                                   take predicates and the user need not apply the indirection himself. This means that
                                   functors that work on objects can be passed to these algorithms which removes the programmer
-                                  from creating a functor that works on pointers. " ) 
+                                  from creating a functor that works on pointers."  )
                          
                          );
 
      $overview   .= p( "The documentation is divided into a common section and an explanation for each container. 
-                        The so-called \"pseudo class\" sections
+                        The so-called \"common interface\" sections
                         show the interface that some or all of the classes have in common and the individual parts shows the interface
                         that is only part of some of the individual classes. Before you proceed, 
-                        please make sure you understand the Clonable concept." ) .
+                        please make sure you understand the Clonable concept and have read the usage guidelines." ) .
                     ulist( item( clonableLink() ) .
-                           item( ptrContainerLink() ) .
-                           item( ptrSequenceLink() ) .
+                           item( usageLink() ) .
+                           item( ptrContainerLink(), " The interface that all the containers share." ) .
+                           item( ptrSequenceLink(), " The interface that all sequences share." ) .
                            item( dequeLink() ) .
                            item( listLink() ) .
                            item( vectorLink() ) .
-                           item( ptrAssociativeContainerLink() ) .
+                           item( ptrAssociativeContainerLink(), " The interface that associative containers share." )  .
                            item( setLink() ) .
                            item( multisetLink() ) .
                            item( mapLink() ) . 
@@ -241,22 +250,10 @@ function reference()
                            item( mapIteratorLink() ) .
                            item( exceptionLink() )
                            );
-     $usage = p( "The recommended usage pattern of the container classes are the 
-                same as the for normal standard containers." . code( "ptr_vector") .  ", " .  
-              code("ptr_list")  .  " and " .  code("ptr_deque") .  " offer the programmer 
-                different complexity tradeoffs and should be used accordingly. " . code( "ptr_vector" ) . 
-                " is the type of sequence that should be used by default. " . code("ptr_list") . " should be used when there 
-             are frequent insertions and deletions from the middle of the sequence " . i( "and" ) . " if the
-                 container is fairly large (eg. more than 100 elements). " . code("ptr_deque" ) ." is 
-              the data structure of choice when most insertions and deletions take place at 
-            the beginning or at the end of the sequence.  An associative container supports  
-            unique keys if it may contain at most one element for each key.  Otherwise, it 
-            supports equivalent keys. " .  code( "ptr_set" ) . " and " . code( "ptr_map" ) . " support unique keys. 
-                " . code( "ptr_multiset" ) . " and " . code( "ptr_multimap" ) . 
-                " support equivalent keys." );
 
-     $overview   .= $usage . vSpace( 1 ) . 
+     $overview   .= vSpace( 1 ) . 
                     hr() . clonableRef() .
+                    hr() . usageRef() .
                     hr() . ptrContainerRef() .
                     hr() . ptrSequenceRef() . 
                     hr() . dequeRef() .
@@ -280,21 +277,77 @@ function examples()
     $header = beginSection( examplesLink() );
     $exampleList = p( "Some examples are given here and in the accompanying test
                       files:" ) .
-                   ulist( 
+                   olist( 
                        
                        li( aTarget( exampleLink(1) ) . example( "null pointers cannot be stored in the containers", 
-                                                                "my_container.push_back( 0 ); // trows bad_ptr 
-my_container.replace( an_iterator, 0 ); // trows bad_ptr
-my_container.insert( an_iterator, 0 ); // trows bad_ptr                                                                 " ) ) . 
-                       li( aTarget( exampleLink(2) )  ) . 
-                       li( aTarget( exampleLink(3) )  ) . 
-                       li( aTarget( exampleLink(4) )  ) . 
+"my_container.push_back( 0 );            // throws bad_ptr 
+my_container.replace( an_iterator, 0 ); // throws bad_ptr
+my_container.insert( an_iterator, 0 );  // throws bad_ptr                                                                 " ) ) . 
+                       li( aTarget( exampleLink(2) )  ) . example( "iterators and other operations return indirected values", 
+                                                                   "ptr_vector<X> pvec; std::vector<X*> vec;
+*vec.begin()  = new X;   // fine, memory leak
+*pvec.begin() = new X;   // compile time error
+( *vec.begin() )->foo(); // call X::foo(), a bit clumsy
+pvec.begin()->foo();     // no indirection needed
+*vec.front()  = X();     // overwrite first element
+pvec.front()  = X();     // no indirection needed" ) .
+                                                                                                                                                                                                                                                                               
+                       li( aTarget( exampleLink(3) )  ) . example( "copy-semantics of pointer containers", 
+                                                                   "ptr_vector<T> vec1; 
+...
+ptr_vector<T> vec2( vec1.clone() ); // deep copy objects of 'vec1' and use them to construct 'vec2', could be very expensive
+vec2 = vec1.release();              // give up ownership of pointers in 'vec1' and pass the ownership to 'vec2', rather cheap
+vec2.release();                     // give up ownership; the objects will be deallocated if not assigned to another container
+vec1 = vec2;                        // compile time error: 'operator=()' not defined 
+ptr_vector<T> vec3( vec1 );         // compile time error: copy-constructor not defined "
+                                                                    ) . 
+                       li( aTarget( exampleLink(4) )  ) . example( "making a non-copyable type Clonable",
+                                                                   " // a class that has no normal copy semantics
+class X : boost::noncopyable { public: X* clone() const; ... };
+                                                                   
+// this will be found by the library by argument dependent lookup                                                                   
+X* make_clone( const X& x ) 
+{ return x.clone(); }
+                                                                   
+// we can now use the interface that requires clonability
+ptr_vector<X> vec1, vec2;
+...
+vec2 = vec1.clone();                                 // 'clone()' requires cloning <g> 
+vec2.insert( vec2.end(), vec1.begin(), vec1.end() ); // inserting always means inserting clones " ) .
+                        
                        li( aTarget( exampleLink(5) )  ) . 
+                       example( "objects are cloned before insertion, inserted pointers are owned by the container",
+                                "class X { ... }; // assume 'X' is Clonable 
+X x; // and 'X' can be stack-allocated 
+ptr_list<X> list; 
+list.push_back( x );             // clone 'x' and then insert the resulting pointer 
+list.push_back( make_clone( x ); // do it manually
+list.push_back( new X );         // always give the pointer directly to the container to avoid leaks
+list.push_back( &x );            // don't do this! " ) .                        
                        li( aTarget( exampleLink(6) )  ) . 
+                       example( "transferring ownership of a single element", "ptr_deque<T> deq; 
+// ... fill the container somehow
+std::auto_ptr<T> ptr  = deq.release_back();             // remove back element from container and give up ownership
+std::auto_ptr<T> ptr2 = deq.release( deq.begin() + 2 ); // use an iterator to determine the element to release
+ptr                   = deq.release_front();            // supported for 'ptr_list' and 'ptr_deque'
+                                " ) .  
                        li( aTarget( exampleLink(7) )  ) . 
-                       li( aTarget( exampleLink(8) )  ) . 
-                       li( aTarget( exampleLink(9) )  ) . 
-                       li( a( "../test/incomplete_type_test.cpp", code( "incomplete_type_test.cpp" ) ) .
+                       example( "transferring ownership of pointers between different pointer containers", 
+                                "ptr_list<X> list; ptr_vector<X> vec;
+...
+// note: no cloning happens in these examples                                
+list.transfer( list.begin(), vec.begin(), vec );           // make the first element of 'vec' the first element of 'list'
+vec.transfer( vec.end(), list.begin(), list.end(), list ); // put all the lists element into the vector                                 
+                                " ) .     
+                       li( aTarget( exampleLink(8) )  ) .
+                       example( "certain member functions are provided because they can be tricky to implement",
+                                "ptr_vector<T> vec; T to_remove = ... ;
+std::remove( vec.begin(), vec.end(), to_remove ); // ok, but only makes sense if T is copyable, can be very slow
+std::remove_if( vec.ptr_begin(), vec.ptr_end(), my_indirected_predicate() ); // predicate compares objects, not pointers
+                                                                             // but pointers will be overwritten = leak + disaster!
+vec.remove( to_remove ); // fast + pointers are correctly de-allocated"                                                                
+                                ) . 
+                       li( aTarget( exampleLink(9) ) . a( "../test/incomplete_type_test.cpp", code( "incomplete_type_test.cpp" ) ) .
                            " shows how to implement the Composite pattern." ) .
                        li( a( "../test/associative_test_data.hpp", code( "associative_test_data.hpp" ) ) .
                            " shows the common interface for all associative containers." ) .
@@ -388,24 +441,30 @@ function literature()
 {   
     $header       = beginSection( literatureLink() );
     $list = olist( 
-        li( aTarget( refLink(1) ) . 'Matt Austern: "The Standard Librarian: Containers of Pointers," 
-            C/C++ Users Journal Experts Forum, <www.cuj.com/experts/1910/austern.htm>.' ) .
-        li( aTarget( refLink(2) ) . 'Bjarne Stroustrup, "The C++ Programming Language", Appendix E: "Standard-Library Exception Safety", 
-            (http://www.research.att.com/~bs/3rd_safe.pdf).' ) .
+        li( aTarget( refLink(1) ) . 'Matt Austern: ' . a( "http://www.cuj.com/documents/s=7990/cujcexp1910austern/", 
+                                                          '"The Standard Librarian: Containers of Pointers"' ) 
+                                  . ', C/C++ Users Journal Experts Forum.' ) .
+        li( aTarget( refLink(2) ) . 'Bjarne Stroustrup, "The C++ Programming Language", ' . a( "http://www.research.att.com/~bs/3rd_safe.pdf",
+                                                                                               'Appendix E: "Standard-Library Exception Safety"' ) ) .
         li( aTarget( refLink(3) ) . 'Herb Sutter, "Exceptional C++".' ) .
         li( aTarget( refLink(4) ) . 'Herb Sutter, "More Exceptional C++".' ) .
-        li( aTarget( refLink(5) ) . 'Kevlin Henney, "From Mechanism to Method: The Safe Stacking of Cats", C++ Experts Forum, February 2002.' ) .
-        li( aTarget( refLink(6) ) . 'Some of the few earlier attempts of smart containers I have seen are the rather interesting 
-             NTL (http://www.ntllib.org/) and
-             the "pointainer" from http://ootips.org/yonat/4dev/pointainer.h. As of this writing both libraries
+        li( aTarget( refLink(5) ) . 'Kevlin Henney: ' . a( "http://www.cuj.com/documents/s=7986/cujcexp2002henney/henney.htm", 
+                                                           '"From Mechanism to Method: The Safe Stacking of Cats"' )
+                                  . ', C++ Experts Forum, February 2002.' ) .
+                                 
+        li( aTarget( refLink(6) ) . 'Some of the few earlier attempts of smart containers I have seen are the rather interesting ' 
+             . a( "http://www.ntllib.org/", "NTL" ) . ' and
+             the "pointainer" from ' . a( "http://ootips.org/yonat/4dev/pointainer.h", "http://ootips.org/yonat/4dev/pointainer.h" ) 
+            . '. As of this writing both libraries
              are not exceptions-safe and can leak.' ) .
-        li( aTarget( refLink(7) ) . 'INTERNATIONAL STANDARD, Programming languages --- C++, ISO/IEC 14882, 1998. See section 23.2.[1.3|2.3|4.3].' ) .
-        li( aTarget( refLink(8) ) . 'C++ Standard Library Closed Issues List (Revision 27), Item 218, 
-            "Algorithms do not use binary predicate objects for default comparisons", 
-            http://anubis.dkuug.dk/jtc1/sc22/wg21/docs/lwg-closed.html#218.' ) .
-        li( aTarget( refLink(9) ) . 'C++ Standard Library Active Issues List (Revision 27), Item 226, 
-            "User supplied specializations or overloads of namespace std function templates", 
-           http://gcc.gnu.org/onlinedocs/libstdc++/ext/lwg-active.html#226.' ) .
+        li( aTarget( refLink(7) ) . 'INTERNATIONAL STANDARD, Programming languages --- C++, ISO/IEC 14882, 1998. See section 23 in particular.' ) .
+        li( aTarget( refLink(8) ) . 'C++ Standard Library Closed Issues List (Revision 27), Item 218,' . 
+            a( "http://anubis.dkuug.dk/jtc1/sc22/wg21/docs/lwg-closed.html#218",
+                "Algorithms do not use binary predicate objects for default comparisons." ) ) .
+        li( aTarget( refLink(9) ) . 'C++ Standard Library Active Issues List (Revision 27), Item 226,' . 
+            a( "http://gcc.gnu.org/onlinedocs/libstdc++/ext/lwg-active.html#226", 
+               "User supplied specializations or overloads of namespace std function templates," ) ) . 
+         
         li( aTarget( refLink(10) ) . 'Harald Nowak, "A remove_if for vector<T*>", C/C++ Users Journal, July 2001.' ) .
         li( aTarget( refLink(11) ) . a( "http://www.boost.org/libs/smart_ptr/smarttests.htm", "Boost smart pointer timings" ) ) .
         li( aTarget( refLink(12) ) . a( "http://www.ntllib.org/asp.html", "NTL: Array vs std::vector and boost::shared_ptr" ) )  
@@ -473,16 +532,23 @@ function clonableLink()
 
 
 
+function usageLink()
+{
+    return "Usage guidelines";
+}
+
+
+
 function ptrContainerLink()
 {
-    return "Pseudo class " . code( "ptr_container<>" ); 
+    return "Common " . code( "ptr_container<>" ) . " interface"; 
 }
 
 
 
 function ptrSequenceLink()
 {
-    return "Pseudo class " . code( "ptr_sequence<>" );
+    return "Common " . code( "ptr_sequence<>" ) . " interface";
 }
 
 
@@ -510,7 +576,7 @@ function vectorLink()
 
 function ptrAssociativeContainerLink()
 {
-    return "Pseudo class " . code( "ptr_associative_container<>" );
+    return "Common " . code( "ptr_associative_container<>" ) . " interface";
 }
 
 
@@ -578,11 +644,34 @@ function clonableRef()
                to find the right version of " . code( "make_clone()." ) . "This means that one does not need to overload
                or specialize the function is the " . code( "boost" ) . " namespace, but it can be placed together with
                the rest of the interface of the class. If you are implementing a class inline in headers, remember 
-               to forward declare " . code( "make_clone()." ) );
+               to forward declare " . code( "make_clone()" ) . " (see the beginning of " . aLocal( exampleLink(9) ) . ")." );
         
   
     
     return $res;
+}
+
+
+
+function usageRef()
+{
+    $res = beginSection( usageLink() );
+    $usage = p( "The recommended usage pattern of the container classes are the 
+           same as the for normal standard containers." ) .
+            p( code( "ptr_vector") .  ", " .  
+         code("ptr_list")  .  " and " .  code("ptr_deque") .  " offer the programmer 
+           different complexity tradeoffs and should be used accordingly. " . code( "ptr_vector" ) . 
+           " is the type of sequence that should be used by default. " . code("ptr_list") . " should be used when there 
+        are frequent insertions and deletions from the middle of the sequence " . i( "and" ) . " if the
+            container is fairly large (eg. more than 100 elements). " . code("ptr_deque" ) ." is 
+         the data structure of choice when most insertions and deletions take place at 
+       the beginning or at the end of the sequence. " ) . 
+        p( "An associative container supports  
+       unique keys if it may contain at most one element for each key.  Otherwise, it 
+       supports equivalent keys. " .  code( "ptr_set" ) . " and " . code( "ptr_map" ) . " support unique keys. 
+           " . code( "ptr_multiset" ) . " and " . code( "ptr_multimap" ) . 
+           " support equivalent keys." );
+    return $res . $usage;
 }
 
 
@@ -1337,13 +1426,13 @@ namespace boost
         blockQuote( 
             requirements( code( "n < size()" ) ) .
             effects( "Returns a reference to the n'th element" ) .
-            throws( code("std::out_of_range") . " if " . code("n >=size()" ) ) 
+            throws( code("bad_index") . " if " . code("n >=size()" ) ) 
             ) .
         code( "const T& at( size_type n );" ) . 
         blockQuote( 
             requirements( code( "n < size()" ) ) .
             effects( "Returns a const reference to the n'th element" ) .
-            throws( code("std::out_of_range") . " if " . code("n >= size()" ) ) 
+            throws( code("bad_index") . " if " . code("n >= size()" ) ) 
             );
     
     return $res . $synopsis . $details; 
@@ -1856,7 +1945,42 @@ function exceptionRef()
 {
     $res = beginSection( exceptionLink() );
     
-    return $res . $bad_pointer . $bad_ptr_container;
+    $explanation = p( "There are three exceptions that are thrown by this library. The exception
+                      hierarchy looks as follows:" ) .
+        pre( "
+namespace boost 
+{            
+    //             
+    // library exception base class
+    //
+    class bad_ptr_container_operation : public std::exception
+    {
+    public:
+        bad_ptr_container_operation( const char* what );
+        
+        virtual const char* what() const throw();
+    };
+ 
+    //
+    // exception for signaling that a null pointer has been passes to a container     
+    //                                
+    class bad_pointer : public bad_ptr_container_operation
+    {
+    public:
+        bad_pointer( const char* what );
+    };
+
+    //
+    // exception for signaling out of bounds indexing
+    //                  
+    class bad_index : public bad_ptr_container_operation
+    {
+    public:
+        bad_index( const char* what );
+    };
+} " );
+
+    return $res . $explanation;
 }
 
 

@@ -67,8 +67,7 @@ namespace boost
     template< typename T, typename A >
     ptr_vector<T,A>* make_clone( const ptr_vector<T,A>& r )
     {
-        std::auto_ptr<ptr_vector<T,A> > p( r.clone() );
-        return p.release();
+        return r.clone().release();
     }
 
 //#undef BOOST_FORWARD_TYPEDEF

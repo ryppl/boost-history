@@ -55,8 +55,7 @@ namespace boost
     template< typename T, typename A >
     ptr_deque<T,A>* make_clone( const ptr_deque<T,A>& r )
     {
-        std::auto_ptr<ptr_deque<T,A> > p( r.clone() );
-        return p.release();
+        return r.clone().release();
     }
 
 }
