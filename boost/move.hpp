@@ -22,7 +22,10 @@
 #include <cstring> // for std::memcpy
 #include <new> // for placement new
 
+#include "boost/type_traits/has_nothrow_assign.hpp"
+#include "boost/type_traits/has_nothrow_constructor.hpp"
 #include "boost/type_traits/has_nothrow_copy.hpp"
+#include "boost/type_traits/has_nothrow_swap.hpp"
 #include "boost/type_traits/has_trivial_copy.hpp"
 #include "boost/type_traits/is_convertible.hpp"
 #include "boost/utility/addressof.hpp"
@@ -31,6 +34,7 @@
 #include "boost/mpl/identity.hpp"
 #include "boost/mpl/logical/not.hpp"
 
+#include "boost/detail/boost_swap.hpp"
 #include "boost/mpl/aux_/lambda_support.hpp" // used by is_moveable
 
 namespace boost {
@@ -69,6 +73,44 @@ struct nothrow_copy_move_traits
     }
 };
 
+//////////////////////////////////////////////////////////////////////////
+// class nothrow_swap_move_traits
+//
+// Implements move for objects of types with both nothrow
+// default-construct and nothrow swap.
+//
+template <typename T>
+struct nothrow_swap_move_traits
+{
+    static void move(void* dest, T& src)
+    {
+        // Default construct the type in the destination...
+        T* p = new(dest) T;
+
+        // ...and swap it with the source:
+        detail::boost_swap(*p, src);
+    }
+};
+
+//////////////////////////////////////////////////////////////////////////
+// class nothrow_assign_move_traits
+//
+// Implements move for objects of types with both nothrow
+// default-construct and nothrow assign.
+//
+template <typename T>
+struct nothrow_assign_move_traits
+{
+    static void move(void* dest, T& src)
+    {
+        // Default construct the type in the destination...
+        T* p = new(dest) T;
+
+        // ...and assign the source to it:
+        *p = src;
+    }
+};
+
 } // namespace detail
 
 //////////////////////////////////////////////////////////////////////////
@@ -89,8 +131,26 @@ struct move_traits
               has_nothrow_copy<T>
             , mpl::identity< detail::nothrow_copy_move_traits<T> >
 
-              // [...else T not moveable (without specialization):]
-            , mpl::identity<detail::not_moveable_tag>
+              // [...else if nothrow default-constructible *and* nothrow swappable...]
+            , mpl::apply_if<
+                  mpl::logical_and<
+                      has_nothrow_constructor<T>
+                    , has_nothrow_swap<T>
+                    >
+                , mpl::identity< detail::nothrow_swap_move_traits<T> >
+
+                  // [...else if nothrow default-constructible *and* nothrow assignable...]
+                , mpl::apply_if<
+                      mpl::logical_and<
+                          has_nothrow_constructor<T>
+                        , has_nothrow_assign<T>
+                        >
+                    , mpl::identity< detail::nothrow_assign_move_traits<T> >
+                
+                      // [...else T not moveable (without specialization):]
+                    , mpl::identity<detail::not_moveable_tag>
+                    >
+                >
             >
         >::type
 {
