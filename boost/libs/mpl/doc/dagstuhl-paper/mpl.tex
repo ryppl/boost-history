@@ -1219,7 +1219,7 @@ generic/generative components/systems.
 
 Topics to cover:
 
-\emph{algorithms operate on sequences}
+\subsubsection{Algorithms Operate on Sequences}
   
 Most of algorithms in \Mpl\ operates on sequences. For example, 
 searching type in a list looks like this:
@@ -1262,7 +1262,7 @@ points that distinguish the library from other, mostly ad-hoc
 attempts of building a template metaprogramming library.
   
 
-\emph{Sequence concepts}
+\subsubsection{Sequence Concepts}
 
 In the \code{find} example above we searched for type in the 
 sequence built using \code{boost::mpl::list} template, but 
@@ -1381,7 +1381,7 @@ but preprocessor metaprogramming [PRE]. In fact,
 provides random-access iterators - is implemented very like 
 the above \code{tiny\_list}. 
 
-\emph{why library-provided iteration is important}
+\subsubsection{Why Library-Provided Iteration is Important}
 
 So, the library provides you with almost complete compile-time 
 equivalent of STL framework. Does it help you to solve you 
@@ -1415,7 +1415,7 @@ it's all templates - something that you cannot say about the
 original version.
 
 
-\emph{sequences of types, but there are shorcuts for numbers}
+\subsubsection{Sequences of Types, but there are Shorcuts for Numbers}
 
 What we've seen so far were sequences (and algorithms on 
 sequences) of types. It's very much possible and easy to 
@@ -1502,7 +1502,7 @@ typedef mpl::vector_c<long,1,2,3,4,5> numbers;
 }
 
 
-\emph{why external functions for all algorithms}
+\subsubsection{Why External Functions for all Algorithms}
 
 \begin{enumerate}
  \item while the nested functions notation in some cases is 
@@ -1593,18 +1593,28 @@ typedef mpl::find_if< sequences,size_pred >::type itor;
 \end{enumerate}
 
  
-\begin{itemize}
-  \item \code{iter\_fold}/\code{iter\_find} as two main 
-    iteration algortihms, there are iterators
-  \item why iterators 
-  \item  sequences of types, but there are shorcuts for numbers
-  \item support for 3-rd party/user-defined sequences
-  \item  different kind of sequences - different 
-    performance/functional characteristics
-  \item loop unrolling
-  \item numbered forms of \code{list}
-  \item algorithm support lambda
-\end{itemize}
+  \subsubsection{\code{iter\_fold}/\code{iter\_find} as two main 
+    iteration algortihms}
+  \subsubsection{why iterators}
+  \subsubsection{sequences of types, but there are shorcuts for numbers}
+
+  \subsubsection{different kind of sequences - different 
+    performance/functional characteristics}
+
+%% list
+%% vector
+%% range_c
+%% If you can extract something from this:
+%% http://groups.yahoo.com/group/boost/message/20770, and this:
+%% http://groups.yahoo.com/group/boost/message/20916. Otherwise, may be a
+%% paragraph that I just added to the end of tiny_list example will be
+%% sufficient.
+
+
+
+  \subsubsection{loop unrolling}
+  \subsubsection{numbered forms of \code{list}}
+  \subsubsection{algorithm support lambda}
 
 
 \subsection{Lambda facility}
