@@ -18,6 +18,10 @@ namespace boost {
 namespace detail {
 namespace bigint {
 
+inline bool isoctal(char c) {
+  return std::isdigit(c) && (c) != '8' && (c) != '9';
+}
+
 template <typename Derived>
 class bigint_base {
 
@@ -87,8 +91,23 @@ protected:
           }
         }
 
+        // Check for valid digits
+        struct {
+          base_type base_;
+          bool operator()(char c) {
+            switch(base_) {
+            case decimal:
+              return std::isdigit(c);
+            case hexadecimal:
+              return std::isxdigit(c);
+            case octal:
+              return isoctal(c);
+            }
+          }
+        } check = { base };
+
         // RG - do better than isxdigit! switch on base type!
-        if(!std::isxdigit(c)) {
+        if(!check(c)) {
           is.putback(c);
           // signal error
           is.setstate(std::ios::failbit);
@@ -99,7 +118,7 @@ protected:
           ios_base::iostate user_exceptions = is.exceptions();
           is.exceptions(user_exceptions & (~ios_base::failbit));
           // read in ASCII (hexadecimal) digits till it stops.
-          while(is.get(c) && isxdigit(c))
+          while(is.get(c) && check(c))
             str.push_back(c);
           if(is.fail())
             // clear error state

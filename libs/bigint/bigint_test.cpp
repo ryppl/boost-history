@@ -368,4 +368,13 @@ int main() {
     assert(x == 16);
   }
 
+  {
+    // Don't read invalid digits!
+    bigint x;
+    std::istringstream is("0208");
+    is >> std::oct >> x;
+    assert(x == 16);
+    is >> std::dec >> x;
+    assert(x == 8);
+  }
 }
