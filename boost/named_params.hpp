@@ -18,9 +18,11 @@
 #include <boost/type_traits/is_convertible.hpp>
 #include <boost/iterator/detail/config_def.hpp>
 #include <boost/python/detail/is_xxx.hpp>
-#include <boost/ref.hpp>
 
 namespace boost {
+
+template<class T>
+class reference_wrapper;
 
 template<class T>
 struct keyword;
@@ -48,12 +50,15 @@ namespace detail
       named_default(Default& x)
         : default_(x)
       {}
-      
+
       Default& default_;
   };
 
   struct nil
   {
+      nil() {}
+      nil(nil,nil,nil,nil,nil) {}
+
 #if BOOST_WORKAROUND(BOOST_MSVC, <= 1300)
       // A metafunction class which, given a keyword, returns the base
       // sublist whose get() function can produce the value for that
@@ -66,7 +71,7 @@ namespace detail
               typedef nil type;
           };
       };
-          
+
       // A metafunction class which, given a keyword and a default
       // type, returns the appropriate result type for a keyword
       // lookup given that default
@@ -105,7 +110,7 @@ namespace detail
   {
       typedef typename T::key_value_type type;
   };
-  
+
   // A tuple of labeled argument holders
   // Restructured this so that head isn't inherited
   // We'll need a version without using declarations for vc6/7.0
@@ -152,7 +157,25 @@ namespace detail
       
       H head;
 
-      list(H h, T t) : T(t), head(h) {}
+      list() {}
+
+      template<
+          class A0
+        , class A1
+        , class A2
+        , class A3
+        , class A4
+      >
+      list(
+          const A0& a0
+        , const A1& a1
+        , const A2& a2
+        , const A3& a3
+        , const A4& a4
+      )
+         : T(a1, a2, a3, a4, nil())
+         , head(a0)
+      {}
 
 #if BOOST_WORKAROUND(BOOST_MSVC, <= 1300)
       template<class KW>
@@ -242,10 +265,10 @@ namespace detail
      static yes_t check(const reference_wrapper<U>*);
      static no_t check(...);
 
-     BOOST_STATIC_CONSTANT(bool,
-           value = (
-              sizeof(check((T*)0)) == sizeof(yes_t)
-           )
+     BOOST_STATIC_CONSTANT(
+         bool, value = (
+             sizeof(check((T*)0)) == sizeof(yes_t)
+         )
      );
 
      typedef mpl::bool_<value> type;
@@ -258,9 +281,9 @@ namespace detail
   struct unwrap_cv_reference
   {
       typedef typename mpl::apply_if<
-           is_const_reference_wrapper<T>
-         , T
-         , mpl::identity<T>
+          is_const_reference_wrapper<T>
+        , T
+        , mpl::identity<T>
       >::type type;
   };
 
@@ -274,7 +297,7 @@ struct keyword
    detail::named<Tag, typename detail::unwrap_cv_reference<const T>::type> 
    operator=(T const& x) const
    {
-      return detail::named<Tag, BOOST_DEDUCED_TYPENAME detail::unwrap_cv_reference<const T>::type>(x);
+       return detail::named<Tag, BOOST_DEDUCED_TYPENAME detail::unwrap_cv_reference<const T>::type>(x);
    }
 #endif
 
@@ -282,19 +305,19 @@ struct keyword
    detail::named<Tag, typename detail::unwrap_cv_reference<T>::type> 
    operator=(T& x) const
    {
-      return detail::named<Tag, BOOST_DEDUCED_TYPENAME detail::unwrap_cv_reference<T>::type>(x);
+       return detail::named<Tag, BOOST_DEDUCED_TYPENAME detail::unwrap_cv_reference<T>::type>(x);
    }
 
    template <class T>
    detail::named<Tag,T> operator()(T& x) const
    {
-      return detail::named<Tag,T>(x);
+       return detail::named<Tag,T>(x);
    }
 #if !BOOST_WORKAROUND(BOOST_MSVC, == 1200)  // partial ordering bug
    template <class T>
    detail::named<Tag,T const> operator()(T const& x) const
    {
-      return detail::named<Tag,T const>(x);
+       return detail::named<Tag,T const>(x);
    }
 #endif
 
@@ -302,7 +325,7 @@ struct keyword
    detail::named_default<Tag, Default>
    operator|(Default& default_) const
    {
-      return detail::named_default<Tag, Default>(default_);
+       return detail::named_default<Tag, Default>(default_);
    }
 
 #if !BOOST_WORKAROUND(BOOST_MSVC, == 1200)  // partial ordering bug
@@ -310,7 +333,7 @@ struct keyword
    detail::named_default<Tag, const Default>
    operator|(const Default& default_) const
    {
-      return detail::named_default<Tag, const Default>(default_);
+       return detail::named_default<Tag, const Default>(default_);
    }
 #endif 
 };
@@ -465,11 +488,11 @@ namespace detail
   //   Ui = Ti is named<...> ? Ti : named<Ki,Ti>
   //
   template<
-      class T0
-    , class T1
-    , class T2
-    , class T3
-    , class T4
+      class T0 = nil
+    , class T1 = nil
+    , class T2 = nil
+    , class T3 = nil
+    , class T4 = nil
   >
   struct make_named_list
   {
@@ -572,21 +595,27 @@ struct keywords
 #endif 
     };
 
+    detail::nil operator()() const
+    {
+       return detail::nil();
+    }
+
+
     template<class A0>
     detail::list<
         BOOST_DEDUCED_TYPENAME detail::as_named<K0, A0>::type
-      , detail::nil
     >
     operator()(const A0& a0) const
     {
+        using detail::nil;
+       
         // for cwpro8
         typedef typename detail::as_named<K0, A0>::type t0;
         
         t0 n0(a0);
 
-        typedef detail::list<t0> l0;
-        
-        return l0(n0, detail::nil());
+        typedef detail::list<t0> list_t;
+        return list_t(n0, nil(), nil(), nil(), nil());
     }
 
     template<class A0, class A1>
@@ -594,11 +623,13 @@ struct keywords
         BOOST_DEDUCED_TYPENAME detail::as_named<K0, A0>::type
       , detail::list<
             BOOST_DEDUCED_TYPENAME detail::as_named<K1, A1>::type
-          , detail::nil
         >
     >
     operator()(const A0& a0, const A1& a1) const
     {
+        using detail::list;
+        using detail::nil;
+       
         // for cwpro8
         typedef typename detail::as_named<K0, A0>::type t0;
         typedef typename detail::as_named<K1, A1>::type t1;
@@ -606,10 +637,8 @@ struct keywords
         t0 n0(a0);
         t1 n1(a1);
 
-        typedef detail::list<t1> l1;
-        typedef detail::list<t0,l1> l0;
-        
-        return l0(n0, l1(n1, detail::nil()));
+        typedef list<t0, list<t1> > list_t;
+        return list_t(n0, n1, nil(), nil(), nil());
     }
 
     template<class A0, class A1, class A2>
@@ -619,12 +648,14 @@ struct keywords
             BOOST_DEDUCED_TYPENAME detail::as_named<K1, A1>::type
           , detail::list<
                 BOOST_DEDUCED_TYPENAME detail::as_named<K2, A2>::type
-              , detail::nil
             >
         >
     >
     operator()(const A0& a0, const A1& a1, const A2& a2) const
     {
+        using detail::list;
+        using detail::nil;
+       
         // for cwpro8
         typedef typename detail::as_named<K0, A0>::type t0;
         typedef typename detail::as_named<K1, A1>::type t1;
@@ -634,45 +665,41 @@ struct keywords
         t1 n1(a1);
         t2 n2(a2);
 
-        typedef detail::list<t2> l2;
-        typedef detail::list<t1,l2> l1;
-        typedef detail::list<t0,l1> l0;
-        
-        return l0(n0, l1(n1, l2(n2, detail::nil())));
+        typedef list<t0, list<t1, list<t2> > > list_t;
+        return list_t(n0, n1, n2, nil(), nil());
     }
 
     template<class A0, class A1, class A2, class A3>
     detail::list<
-        typename detail::as_named<K0, A0>::type
+        BOOST_DEDUCED_TYPENAME detail::as_named<K0, A0>::type
       , detail::list<
-            typename detail::as_named<K1, A1>::type
+            BOOST_DEDUCED_TYPENAME detail::as_named<K1, A1>::type
           , detail::list<
-                typename detail::as_named<K2, A2>::type
+                BOOST_DEDUCED_TYPENAME detail::as_named<K2, A2>::type
               , detail::list<
-                    typename detail::as_named<K3, A3>::type
+                    BOOST_DEDUCED_TYPENAME detail::as_named<K3, A3>::type
                 >
             >
         >
     >
     operator()(const A0& a0, const A1& a1, const A2& a2, const A3& a3) const
     {
+        using detail::list;
+        using detail::nil;
+       
         // for cwpro8
         typedef typename detail::as_named<K0, A0>::type t0;
         typedef typename detail::as_named<K1, A1>::type t1;
         typedef typename detail::as_named<K2, A2>::type t2;
         typedef typename detail::as_named<K3, A3>::type t3;
-        
+
         t0 n0(a0);
         t1 n1(a1);
         t2 n2(a2);
         t3 n3(a3);
 
-        typedef detail::list<t3> l3;
-        typedef detail::list<t2,l3> l2;
-        typedef detail::list<t1,l2> l1;
-        typedef detail::list<t0,l1> l0;
-        
-        return l0(n0, l1(n1, l2(n2, l3(n3, detail::nil()))));
+        typedef list<t0, list<t1, list<t2, list<t3> > > > list_t;
+        return list_t(n0, n1, n2, n3, nil());
     }
 };
 
