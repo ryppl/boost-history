@@ -138,7 +138,7 @@ void check(Iterator0 begin0, Iterator0 end0, Iterator1 begin1)
     exit(1);
   }
 
-  if ( ! std::equal( begin0, end0, begin1, boost::numeric::bindings::is_equal< typename Iterator0::value_type >( std::abs< value_type >( *begin0 ) * 1e-5 ) ) ) {
+  if ( ! std::equal( begin0, end0, begin1, boost::numeric::bindings::is_equal< typename Iterator0::value_type >( std::abs( *begin0 ) * 1e-5 ) ) ) {
     std::cerr << "\n\nregression test failure : results are not identical" << std::endl;
     std::cerr << std::setprecision( 20 ) ;
     std::copy( begin0, end0, std::ostream_iterator< typename Iterator0::value_type >( std::cerr, " " ) ); std::cerr << std::endl;
