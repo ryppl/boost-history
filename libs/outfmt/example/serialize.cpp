@@ -223,6 +223,8 @@ int main()
 #  endif
 
    // [6]: plain text -- string data
+   // [note]: Borland has a problem with outputting strings in basic_output, so use
+   //    the wrapped forms instead
 
    boost::io::wrapped_object< char * > stringio = boost::io::wrappedfmt().format( "\"", "\"" );
 
@@ -264,8 +266,8 @@ int main()
    {
       std::ifstream                 in( "doc4.txt" );
       std::vector< std::string >    v;
-//    std::map< std::string, std::string > // [todo]: this does not work
-      std::list< std::pair< std::string, std::string > >
+      std::map< std::string, std::string > // [todo]: this does not work
+//      std::list< std::pair< std::string, std::string > >
                                     m;
 
       std::cout << "before reading:\n"
