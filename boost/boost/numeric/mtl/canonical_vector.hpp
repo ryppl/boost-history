@@ -71,7 +71,7 @@ namespace mtl {
       canonical_vector<T>, column, sparse> expr_type;
 
     typedef boost::iterator_adaptor<bool, Policy, 
-      Pair, Pair, Pair*, std::input_iterator, std::ptrdiff_t> iterator;
+      Pair, Pair, Pair*, std::input_iterator_tag, std::ptrdiff_t> iterator;
     typedef iterator const_iterator;
     typedef Pair value_type;
     typedef Pair reference;
