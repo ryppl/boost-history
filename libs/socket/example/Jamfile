@@ -1,0 +1,34 @@
+# declare the location of this subproject relative to the root
+
+subproject libs/sockets/example ;
+
+# bring in the rules for testing
+SEARCH on testing.jam = $(BOOST_BUILD_PATH) ;
+include testing.jam ;
+
+B_ROOT ?= c:/usr/boost ;
+
+rule socket-example ( example-name : sources + )
+{
+    exe $(example-name) :
+      $(sources)
+	:
+	<include>$(B_ROOT)
+	<include>$(BOOST_ROOT)
+	<library-path>$(B_ROOT)/libs/test/build/bin/libunit_test_framework.lib/$(TOOLS)/debug/runtime-link-static/threading-single
+	<gcc><*><find-library>unit_test_framework
+	<borland><*><find-library>libunit_test_framework
+	<bcc56><*><find-library>libunit_test_framework
+	<vc7><*><find-library>libunit_test_framework
+	<msvc><*><find-library>libunit_test_framework
+	  <runtime-link>static
+	  <threading>single
+	  <msvc><*><find-library>Ws2_32
+	  <vc7><*><find-library>Ws2_32
+	  <gcc><*><find-library>Ws2_32
+	  ;
+}
+
+
+socket-example simple_client : client_test.cpp ;
+socket-example simple_server : server_test.cpp ;
