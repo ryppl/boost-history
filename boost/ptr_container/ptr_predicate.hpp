@@ -84,8 +84,6 @@ namespace boost
     {
         Predicate pred_;
     public:
-//        BOOST_DEDUCED_TYPENAME Predicate::argument_type*  argument_type;
-//        BOOST_DEDUCED_TYPENAME Predicate::result_type     result_type;
         
         typedef A*   argument_type;
         typedef bool result_type;
@@ -108,7 +106,7 @@ namespace boost
     public:
         BOOST_DEDUCED_TYPENAME BinaryPredicate::first_argument_type*   first_argument_type;
         BOOST_DEDUCED_TYPENAME BinaryPredicate::second_argument_type*  second_argument_type;
-        BOOST_DEDUCED_TYPENAME BinaryPredicate::result_type            result_type;
+        typedef bool                                                   result_type;
         
     public:
         indirected2( BinaryPredicate pred ) : pred_( pred )

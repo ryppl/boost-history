@@ -153,6 +153,7 @@ namespace detail
         template< typename InputIterator >
         void clone_assign( InputIterator first, InputIterator last ) // strong 
         {
+            assert( first != last );
             scoped_deleter sd( std::distance( first, last ) ); // strong
             make_clones( sd, first, last );                    // strong 
             copy_clones_and_release( sd );                     // nothrow
@@ -160,6 +161,7 @@ namespace detail
         
         void clone_assign( size_type n, const_reference x ) // strong
         {
+            assert( n != 0 );
             scoped_deleter sd( n );         // strong     
             make_clones( sd, n, x );        // strong
             copy_clones_and_release( sd );  // nothrow
@@ -222,6 +224,8 @@ namespace detail
                                   const allocator_type& alloc = allocator_type() ) 
         : c_( n, 0, alloc ) 
         { 
+            if( n == 0 )
+                return;
             clone_assign( n, x ); 
         }
         
@@ -238,6 +242,8 @@ namespace detail
                                   const allocator_type& alloc = allocator_type() ) 
         : c_( std::distance( first, last ), pointer(), alloc ) 
         { 
+            if( first == last )
+                return;
             clone_assign( first, last );
         }
         
@@ -274,7 +280,8 @@ namespace detail
         template< typename InputIterator >
         void assign( InputIterator first, InputIterator last ) // strong 
         { 
-            // todo: if( first == last ) return;
+            if( first == last ) 
+                return;
             difference_type n = std::distance( first, last ); 
             scoped_deleter sd( n );         // strong
             make_clones( sd, first, last ); // strong
@@ -285,7 +292,8 @@ namespace detail
         // overhead: 1 heap allocation (very cheap compared to cloning)
         void assign( size_type n, const_reference x ) // strong         
         {
-            // todo: if( first == last ) return;
+            if( n == 0 )
+                return;
             scoped_deleter sd( n );        // strong
             make_clones( sd, n, x );       // strong
             strong_resize_and_remove( n ); // strong
@@ -317,7 +325,6 @@ namespace detail
 
         void swap( reversible_ptr_container& r ) // notrow
         { 
-            // todo: deleter object?
             c_.swap( r.c_ );
         }
           
@@ -332,6 +339,7 @@ namespace detail
             if( sz > old_size )
             {
                 size_type n = sz - old_size;
+                assert( n > 0 );
                 scoped_deleter sd( n );      // strong
                 make_clones( sd, n, x );     // strong
                 size_undoer su( c_ );        // strong
@@ -417,7 +425,8 @@ namespace detail
 
         void insert( iterator before, size_type n, const_reference x ) // strong 
         {
-            // todo: if( first == last ) return;
+            if( n == 0 )
+                return;
             scoped_deleter sd( n );                  // strong
             make_clones( sd, n, x );                 // strong 
             insert_clones_and_release( sd, before ); // strong, commit
@@ -426,7 +435,8 @@ namespace detail
         template< typename InputIterator >
         void insert( iterator before, InputIterator first, InputIterator last ) // strong 
         {
-            // todo: if( first == last ) return;
+            if( first == last ) 
+                return;
             scoped_deleter sd( std::distance( first, last ) ); // strong
             make_clones( sd, first, last );                    // strong
             insert_clones_and_release( sd, before );           // strong, commit 

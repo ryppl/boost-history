@@ -31,8 +31,6 @@ namespace boost
     {
         typedef detail::reversible_ptr_container< detail::default_config< std::list<T*,Allocator>, T > > Base;
         
-    //public: 
-    //    BOOST_FORWARD_TYPEDEF( Base );
     public:
         typedef BOOST_DEDUCED_TYPENAME Base::iterator        iterator;
         typedef BOOST_DEDUCED_TYPENAME Base::size_type       size_type;
@@ -68,24 +66,9 @@ namespace boost
             this->c__().splice( before.base(), x.c__(), first.base(), last.base() );
         }
         
-        void remove( const_reference value )                           
-        {
-            remove_if( ptr_container::detail::equal<T>( value ) ); 
-        } 
-        
-        template< typename Predicate > 
-        void remove_if( Predicate pred )                               
-        { 
-            iterator i = this->begin();
-            iterator e = this->end();
-            for(; i != e; ++i )
-                if( pred( *i ) != false )
-                    this->erase( i ); 
-        }
-        
         void merge( ptr_list& x )                                 
         {
-            merge( x, ptr_container::detail::less_than() );
+            merge( x, ptr_container::detail::less_than<T>() );
         }
     
         template< typename Compare > 
@@ -96,13 +79,13 @@ namespace boost
         
         void sort()                                                    
         { 
-            sort( ptr_less_than<T>() ); 
+            sort( std::less<T>() ); 
         };
         
         template< typename Compare > 
         void sort( Compare comp )                             
         {
-            this->c__().sort( comp );
+            this->c__().sort( indirected2<Compare>( comp ) );
         }
         
         void reverse()
