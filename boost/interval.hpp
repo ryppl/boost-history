@@ -64,8 +64,13 @@ namespace boost {
     interval(const T& v = T());
     interval(const T& l, const T& u);
 
+    // The following needs to be defined in the class body for VC++.
     template<class Traits2>
-      interval(const interval<T, Traits2>& r);
+      interval(const interval<T, Traits2>& r)
+        : low(r.lower()), up(r.upper())
+      {
+        if (boost::empty(r)) set_empty();
+      }
 
     // compiler-generated copy constructor and assignment operator are fine
 

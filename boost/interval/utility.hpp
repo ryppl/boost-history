@@ -12,14 +12,6 @@ This header must be included by <boost/interval.hpp> only.
 
 namespace boost {
 
-template<class T, class Traits>
-  template <class Traits2> inline
-  interval<T,Traits>::interval(const interval<T, Traits2>& r)
-    : low(r.lower()), up(r.upper())
-  {
-    if (boost::empty(r)) set_empty();
-  }
-
 template<class T, class Traits> inline
 void interval<T, Traits>::set_empty()
 {
