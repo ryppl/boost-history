@@ -185,6 +185,11 @@ void run_test_cases( BOOST_EXPLICIT_TEMPLATE_TYPE(Block) )
       Tests::find_first(b);
   }
   {
+      // bitset of size 1
+      bitset_type b(1, 1ul);
+      Tests::find_first(b);
+  }
+  {
       // all-0s bitset
       bitset_type b(4 * bitset_type::bits_per_block, 0ul);
       Tests::find_first(b);
@@ -206,6 +211,16 @@ void run_test_cases( BOOST_EXPLICIT_TEMPLATE_TYPE(Block) )
   {
       // empty bitset
       bitset_type b;
+
+      // check
+      Tests::find_next(b, 0);
+      Tests::find_next(b, 1);
+      Tests::find_next(b, 200);
+      Tests::find_next(b, b.npos);
+  }
+  {
+      // bitset of size 1 (find_next can never find)
+      bitset_type b(1, 1ul);
 
       // check
       Tests::find_next(b, 0);
