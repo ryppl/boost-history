@@ -21,7 +21,16 @@ void conv_test()
     string str2("AbCdEfG 123 xxxYYYzZzZ");
     string str3("");
 
-    // *** value passing tests *** //
+	// *** iterator tests *** //
+
+    string strout;
+    tolower_copy( back_inserter(strout), str1.begin(), str1.end() );
+    BOOST_CHECK( strout=="abcdefg 123 xxxyyyzzzz" );
+    strout.clear();
+    toupper_copy( back_inserter(strout), str1.begin(), str1.end() );
+    BOOST_CHECK( strout=="ABCDEFG 123 XXXYYYZZZZ" );
+
+	// *** value passing tests *** //
 
     BOOST_CHECK( tolower_copy( str1 )=="abcdefg 123 xxxyyyzzzz" );
     BOOST_CHECK( toupper_copy( str1 )=="ABCDEFG 123 XXXYYYZZZZ" );

@@ -12,12 +12,29 @@
 
 #include <algorithm>
 #include <locale>
-
+#include <boost/detail/iterator.hpp>
 #include <boost/string_algo/detail/case_conv.hpp>
 
 namespace boost {
 
 //  tolower  -----------------------------------------------//
+
+	// iterator version of tolower
+	template< typename InputIteratorT, typename OutputIteratorT >
+	inline OutputIteratorT 
+	tolower_copy(
+		OutputIteratorT Output,
+		InputIteratorT Begin,
+		InputIteratorT End,
+		const std::locale& Loc=std::locale() )
+	{
+        return std::transform( 
+            Begin, 
+            End, 
+            Output,
+            string_algo::detail::tolowerF<
+				typename detail::iterator_traits<InputIteratorT>::value_type>(Loc) );
+	}
 
     // const version of tolower
     template< typename SeqT >
@@ -48,7 +65,24 @@ namespace boost {
     
 //  toupper  -----------------------------------------------//
 
-    // const version of toupper
+	// iterator version of toupper
+	template< typename InputIteratorT, typename OutputIteratorT >
+	inline OutputIteratorT 
+	toupper_copy(
+		OutputIteratorT Output,
+		InputIteratorT Begin,
+		InputIteratorT End,
+		const std::locale& Loc=std::locale() )
+	{
+        return std::transform( 
+            Begin, 
+            End, 
+            Output,
+            string_algo::detail::toupperF<
+				typename detail::iterator_traits<InputIteratorT>::value_type>(Loc) );
+	}
+
+	// const version of toupper
     template< typename SeqT >
     inline SeqT toupper_copy( const SeqT& Input, const std::locale& Loc=std::locale() )
     {
