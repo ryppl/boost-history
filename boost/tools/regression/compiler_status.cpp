@@ -77,6 +77,8 @@ namespace
   string specific_compiler; // if running on one toolset only
 
   const string empty_string;
+  
+  string cell_bgcolor;
 
 //  build notes_bookmarks from notes HTML  -----------------------------------//
 
@@ -448,7 +450,7 @@ const string & attribute_value( const xml::element & element,
     if ( fs::exists( target_dir / (test_name + ".test") ) ) pass = true;
     else if ( !fs::exists( target_dir / "test_log.xml" ) )
     {
-      target += "<td>" + missing_residue_msg + "</td>";
+      target += "<td" + cell_bgcolor + ">" + missing_residue_msg + "</td>";
       return true;
     }
 
@@ -464,7 +466,7 @@ const string & attribute_value( const xml::element & element,
       {
         std::cerr << "Missing jam_log.xml in target:\n "
           << target_dir.string() << "\n";
-        target += "<td>";
+        target += "<td" + cell_bgcolor + ">";
         target += pass ? pass_msg : fail_msg;
         target += "</td>";
         return pass;
@@ -480,7 +482,7 @@ const string & attribute_value( const xml::element & element,
     }
 
     // generate the status table cell pass/warn/fail HTML
-    target += "<td>";
+    target += "<td" + cell_bgcolor + ">";
     if ( anything_generated != 0 )
     {
       target += "<a href=\"";
@@ -561,9 +563,13 @@ const string & attribute_value( const xml::element & element,
 
     // for each compiler, generate <td>...</td> html
     bool anything_to_report = false;
+    bool color_cell = true;
     for ( std::vector<string>::const_iterator itr=toolsets.begin();
       itr != toolsets.end(); ++itr )
     {
+      if (color_cell) cell_bgcolor = " bgcolor=\"#EEEEFF\"";
+      else cell_bgcolor = "";
+      color_cell = !color_cell;
       anything_to_report |= do_cell( lib_name, test_dir, test_name, *itr, target,
         always_show_run_output );
     }
@@ -628,9 +634,24 @@ const string & attribute_value( const xml::element & element,
 
     std::sort( results.begin(), results.end() );
 
+    string previous_library_v;
     for ( std::vector<string>::iterator v(results.begin());
       v != results.end(); ++v )
-      { report << *v << "\n"; }
+    {
+      std::size_t library_i0 = v->find("<a href");
+      std::size_t library_i1 = v->find("</a>",library_i0)+4;
+      string library_v = v->substr(library_i0,library_i1-library_i0);
+      if (previous_library_v != library_v)
+      {
+        previous_library_v = library_v;
+        report << "<tr><td colspan=3>" << library_v << "</td>";
+        for (std::size_t c = 0; c < toolsets.size(); ++c)
+          if (c&1) report << "<td>";
+          else report << "<td bgcolor=\"#EEEEFF\">";
+        report << "</tr>";
+      }
+      report << "<tr><td>&nbsp;</td>" << v->substr(library_i1+5) << "\n";
+    }
   }
 
 //  do_table  ----------------------------------------------------------------//
@@ -645,12 +666,15 @@ const string & attribute_value( const xml::element & element,
       bin_path = fs::path( locate_root / relative / "bin" );
     }
 
-    report << "<table border=\"1\" cellspacing=\"0\" cellpadding=\"5\">\n";
+    report << "<table border=\"0\" cellspacing=\"0\" cellpadding=\"5\">\n";
 
     // generate the column headings
 
-    report << "<tr><td>Library</td><td>Test Name</td>\n"
-      "<td><a href=\"compiler_status.html#test-type\">Test Type</a></td>\n";
+    report <<
+      "<tr>\n"
+      "<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>\n"
+      "<td>&nbsp;</td>\n"
+      "<td>&nbsp;</td>\n";
 
     fs::directory_iterator itr( bin_path );
     while ( itr != end_itr && !fs::is_directory( *itr )
@@ -669,17 +693,55 @@ const string & attribute_value( const xml::element & element,
           if ( specific_compiler.size() != 0
             && specific_compiler != compiler_itr->leaf() ) continue;
           toolsets.push_back( compiler_itr->leaf() );
-          string desc( compiler_desc( compiler_itr->leaf() ) );
-          string vers( version_desc( compiler_itr->leaf() ) );
-          report << "<td>"
-               << (desc.size() ? desc : compiler_itr->leaf())
-               << (vers.size() ? (string( "<br>" ) + vers ) : string( "" ))
-               << "</td>\n";
+          report << "<td>&nbsp;</td>\n";
         }
       }
     }
 
-    report << "</tr>\n";
+    report <<
+      "<td width=\"75%\">&nbsp;</td>\n"
+      "</tr>\n";
+
+    for (std::size_t c = 0; c < toolsets.size(); ++c)
+    {
+      report << "<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>\n";
+      for (std::size_t t = 0; t < c; ++t)
+      {
+        if (t&1) report << "<td>";
+        else report << "<td bgcolor=\"#EEEEFF\">";
+        report << "&nbsp;</td>";
+      }
+      if (c&1) report << "<td colspan=" << (toolsets.size()-c+1) << ">";
+      else report << "<td bgcolor=\"#EEEEFF\" colspan=" << (toolsets.size()-c+1) << ">";
+      string desc( compiler_desc( toolsets[c] ) );
+      string vers( version_desc( toolsets[c] ) );
+      report
+         << (desc.size() ? desc : toolsets[c])
+         << (vers.size() ? (string( "<br>" ) + vers ) : string( "" ))
+         << "</td></tr>\n";
+    }
+
+    report << "<tr><th colspan=2 align=\"left\" bgcolor=\"#DDDDDD\">Library, Test Name</th>\n"
+      "<th align=\"left\" bgcolor=\"#DDDDDD\"><a href=\"compiler_status.html#test-type\">Test Type</a></th>\n";
+    // some comments, to feed to the regressions-logs.pl for compatability
+    report << "<!--\n";
+    for (std::size_t c = 0; c < toolsets.size(); ++c)
+    {
+      string desc( compiler_desc( toolsets[c] ) );
+      string vers( version_desc( toolsets[c] ) );
+      report << "<td>"
+           << (desc.size() ? desc : toolsets[c])
+           << (vers.size() ? (string( "<br>" ) + vers ) : string( "" ))
+           << "</td>\n";
+    }
+    report << "</tr> -->\n";
+
+    for (std::size_t c = 0; c < toolsets.size(); ++c)
+    {
+      if (c&1) report << "<td>&nbsp;</td>\n";
+      else report << "<td bgcolor=\"#EEEEFF\">&nbsp;</td>\n";
+    }
+    report << "<td>&nbsp;</td></tr>\n";
 
     // now the rest of the table body
 
@@ -789,7 +851,7 @@ int cpp_main( int argc, char * argv[] ) // note name!
           "<body bgcolor=\"#ffffff\" text=\"#000000\">\n"
           "<table border=\"0\">\n"
           "<tr>\n"
-          "<td><img border=\"0\" src=\"../c++boost.gif\" width=\"277\" "
+          "<td valign=\"top\"><img border=\"0\" src=\"../c++boost.gif\" width=\"277\" "
           "height=\"86\"></td>\n"
           "<td>\n"
           "<h1>Compiler Status: " + platform_desc() + "</h1>\n"
@@ -822,7 +884,7 @@ int cpp_main( int argc, char * argv[] ) // note name!
          "<body bgcolor=\"#ffffff\" text=\"#000000\">\n"
          "<table border=\"0\">\n"
          "<tr>\n"
-         "<td><img border=\"0\" src=\"../c++boost.gif\" width=\"277\" "
+         "<td valign=\"top\"><img border=\"0\" src=\"../c++boost.gif\" width=\"277\" "
          "height=\"86\"></td>\n"
          "<td>\n"
          "<h1>Compiler Status: " + platform_desc() + "</h1>\n"
