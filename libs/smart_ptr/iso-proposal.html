@@ -41,7 +41,8 @@
 			Can be used in Standard Library containers, filling a major embarrassing gap in 
 			the current Standard Library.
 			<li>
-			Has been reinvented thousands of times [<a href="#Google03">Google03</a>] (often with gratuitous mistakes and misfeatures).
+				Has been reinvented thousands of times [<a href="#Google03">Google03</a>] 
+			(often with gratuitous mistakes and misfeatures).
 			<li>
 				Is very hard to specify and implement correctly, particularly as regards 
 				exception safety, thread safety, and weak pointers. See <a href="#Implementation-difficulty">
@@ -66,8 +67,7 @@
 			Delivers exceptional expressive power without additional template 
 			parameterization, easing use by novices and experts alike.
 			<li>
-			Supports encapsulation and implementation hiding via the ability to 
-            safely use 
+			Supports encapsulation and implementation hiding via the ability to safely use 
 			incomplete classes and protected nonvirtual base destructors, and the ability 
 			to hide allocation details.
 			<li>
@@ -136,7 +136,7 @@
 		<p>[...]</p>
 		<h2>IV. Proposed Text</h2>
 		<h3>A. Additions to header &lt;memory&gt; synopsis (20.4)</h3>
-<pre>
+		<pre>
   class bad_weak_ptr;
 
   template&lt;class T&gt; class shared_ptr;
@@ -179,7 +179,7 @@
   template&lt;class T&gt; class enable_shared_from_this;
 </pre>
 		<h3>B. Class <code>bad_weak_ptr</code></h3>
-<pre>
+		<pre>
     namespace std {
       class bad_weak_ptr: public exception
       {
@@ -188,51 +188,54 @@
       };
     }
 </pre>
-<p>An exception of type <code>bad_weak_ptr</code> is thrown by the <code>shared_ptr</code>
-constructor taking a <code>weak_ptr</code>.</p>
-<pre>
+		<p>An exception of type <code>bad_weak_ptr</code> is thrown by the <code>shared_ptr</code>
+			constructor taking a <code>weak_ptr</code>.</p>
+		<pre>
     bad_weak_ptr();
 </pre>
 		<p><b>Postconditions:</b> <code>what()</code> returns <code>"std::bad_weak_ptr"</code>.</p>
 		<p><b>Throws:</b> nothing.</p>
 		<h3>C. Class template <code>shared_ptr</code></h3>
 		<p>The class template <code>shared_ptr</code>...</p>
-<pre>
+		<pre>
     namespace std {
       template&lt;class T&gt; class shared_ptr {
       public:
         typedef T element_type;
 
+        <em>// constructors</em>
         shared_ptr();
         template&lt;class Y&gt; explicit shared_ptr(Y * p);
         template&lt;class Y, class D&gt; shared_ptr(Y * p, D d);
-        ~shared_ptr();
-
         shared_ptr(shared_ptr const &amp; r);
         template&lt;class Y&gt; shared_ptr(shared_ptr&lt;Y&gt; const &amp; r);
         template&lt;class Y&gt; explicit shared_ptr(weak_ptr&lt;Y&gt; const &amp; r);
         template&lt;class Y&gt; explicit shared_ptr(auto_ptr&lt;Y&gt; &amp; r);
 
+        <em>// destructor</em>
+        ~shared_ptr();
+
+        <em>// assignment</em>
         shared_ptr &amp; operator=(shared_ptr const &amp; r);
         template&lt;class Y&gt; shared_ptr &amp; operator=(shared_ptr&lt;Y&gt; const &amp; r);
         template&lt;class Y&gt; shared_ptr &amp; operator=(auto_ptr&lt;Y&gt; &amp; r);
 
+        <em>// modifiers</em>
+        void swap(shared_ptr &amp; r);
         void reset();
         template&lt;class Y&gt; void reset(Y * p);
         template&lt;class Y, class D&gt; void reset(Y * p, D d);
 
+        <em>// observers</em>
+        T * get() const;
         T &amp; operator*() const;
         T * operator-&gt;() const;
-        T * get() const;
-
-        bool unique() const;
         long use_count() const;
-
-        operator <i>unspecified-bool-type</i>() const;
-
-        void swap(shared_ptr &amp; b);
+        bool unique() const;
+        operator <em>unspecified-bool-type</em>() const;
       };
 
+      <em>// comparison</em>
       template&lt;class T, class U&gt;
         bool operator==(shared_ptr&lt;T&gt; const &amp; a, shared_ptr&lt;U&gt; const &amp; b);
 
@@ -242,210 +245,396 @@ constructor taking a <code>weak_ptr</code>.</p>
       template&lt;class T, class U&gt;
         bool operator&lt;(shared_ptr&lt;T&gt; const &amp; a, shared_ptr&lt;U&gt; const &amp; b);
 
+      <em>// other operators</em>
+      template&lt;class E, class T, class Y&gt;
+        basic_ostream&lt;E, T&gt; &amp; operator&lt;&lt; (basic_ostream&lt;E, T&gt; &amp; os, shared_ptr&lt;Y&gt; const &amp; p);
+
+      <em>// specialized algorithms</em>
       template&lt;class T&gt; void swap(shared_ptr&lt;T&gt; &amp; a, shared_ptr&lt;T&gt; &amp; b);
 
+      <em>// casts</em>
       template&lt;class T, class U&gt;
         shared_ptr&lt;T&gt; static_pointer_cast(shared_ptr&lt;U&gt; const &amp; r);
 
       template&lt;class T, class U&gt;
         shared_ptr&lt;T&gt; dynamic_pointer_cast</A>(shared_ptr&lt;U&gt; const &amp; r);
 
-      template&lt;class E, class T, class Y&gt;
-        basic_ostream&lt;E, T&gt; &amp; operator&lt;&lt; (basic_ostream&lt;E, T&gt; &amp; os, shared_ptr&lt;Y&gt; const &amp; p);
-
+      <em>// get_deleter</em>
       template&lt;class D, class T&gt;
         D * get_deleter(shared_ptr&lt;T&gt; const &amp; p);
     }
 </pre>
-<p><code>shared_ptr</code> is <code>CopyConstructible</code> and <code>Assignable</code>, allowing its use in standard containers,
-and convertible to <code>bool</code>, allowing its use in boolean expressions and declarations in
-conditions.</p>
-		<h3><a name="constructors">constructors</a></h3>
-<pre>
+		<p><code>shared_ptr</code> is <code>CopyConstructible</code> and <code>Assignable</code>, 
+			allowing its use in standard containers, and convertible to <code>bool</code>, 
+			allowing its use in boolean expressions and declarations in conditions.</p>
+		<h3><code>shared_ptr</code> constructors</h3>
+		<pre>
     shared_ptr();
 </pre>
-			<p><b>Effects:</b> Constructs an <EM>empty</EM> <code>shared_ptr</code>.</p>
-			<p><b>Postconditions:</b> <code>get() == 0</code>.</p>
-			<p><b>Throws:</b> nothing.</p>
-<pre>
+		<p><b>Effects:</b> Constructs an <EM>empty</EM> <code>shared_ptr</code>.</p>
+		<p><b>Postconditions:</b> <code>get() == 0</code>.</p>
+		<p><b>Throws:</b> nothing.</p>
+		<pre>
     template&lt;class Y&gt; explicit shared_ptr(Y * p);
 </pre>
-			<p><b>Requires:</b> <code>p</code> must be convertible to <code>T *</code>. <code>Y</code>
-				must be a complete type. The expression <code>delete p</code> must be 
-				well-formed, must not invoke undefined behavior, and must not throw exceptions.
-			</p>
-			<p><b>Effects:</b> Constructs a <code>shared_ptr</code> that <EM>owns</EM> the pointer <code>p</code>.</p>
-			<p><b>Postconditions:</b> <code>use_count() == 1 &amp;&amp; get() == p</code>.</p>
-			<p><b>Throws:</b> <code>bad_alloc</code> or an implementation-defined exception when 
-				a resource other than memory could not be obtained.</p>
-			<p><b>Exception safety:</b> If an exception is thrown, <code>delete p</code> is 
-				called.</p>
-<pre>
+		<p><b>Requires:</b> <code>p</code> must be convertible to <code>T *</code>. <code>Y</code>
+			must be a complete type. The expression <code>delete p</code> must be 
+			well-formed, must not invoke undefined behavior, and must not throw exceptions.
+		</p>
+		<p><b>Effects:</b> Constructs a <code>shared_ptr</code> that <EM>owns</EM> the 
+			pointer <code>p</code>.</p>
+		<p><b>Postconditions:</b> <code>use_count() == 1 &amp;&amp; get() == p</code>.</p>
+		<p><b>Throws:</b> <code>bad_alloc</code> or an implementation-defined exception 
+			when a resource other than memory could not be obtained.</p>
+		<p><b>Exception safety:</b> If an exception is thrown, <code>delete p</code> is 
+			called.</p>
+		<pre>
     template&lt;class Y, class D&gt; shared_ptr(Y * p, D d);
 </pre>
-			<p><b>Requires:</b> <code>p</code> must be convertible to <code>T *</code>. <code>D</code>
-				must be <code>CopyConstructible</code>. The copy constructor and destructor 
-				of <code>D</code> must not throw. The expression <code>d(p)</code> must be 
-				well-formed, must not invoke undefined behavior, and must not throw exceptions.
-			</p>
-			<p><b>Effects:</b> Constructs a <code>shared_ptr</code> that <EM>owns</EM> the pointer <code>
-					p</code> and the deleter <code>d</code>.</p>
-			<p><b>Postconditions:</b> <code>use_count() == 1 &amp;&amp; get() == p</code>.</p>
-			<p><b>Throws:</b> <code>bad_alloc</code> or an implementation-defined exception when 
-				a resource other than memory could not be obtained.</p>
-			<p><b>Exception safety:</b> If an exception is thrown, <code>d(p)</code> is called.</p>
-<pre>
+		<p><b>Requires:</b> <code>p</code> must be convertible to <code>T *</code>. <code>D</code>
+			must be <code>CopyConstructible</code>. The copy constructor and destructor of <code>
+				D</code> must not throw. The expression <code>d(p)</code> must be 
+			well-formed, must not invoke undefined behavior, and must not throw exceptions.
+		</p>
+		<p><b>Effects:</b> Constructs a <code>shared_ptr</code> that <EM>owns</EM> the 
+			pointer <code>p</code> and the deleter <code>d</code>.</p>
+		<p><b>Postconditions:</b> <code>use_count() == 1 &amp;&amp; get() == p</code>.</p>
+		<p><b>Throws:</b> <code>bad_alloc</code> or an implementation-defined exception 
+			when a resource other than memory could not be obtained.</p>
+		<p><b>Exception safety:</b> If an exception is thrown, <code>d(p)</code> is called.</p>
+		<pre>
     shared_ptr(shared_ptr const &amp; r);
     template&lt;class Y&gt; shared_ptr(shared_ptr&lt;Y&gt; const &amp; r);
 </pre>
-			<p><b>Effects:</b> If <code>r</code> is <EM>empty</EM>, constructs an <EM>empty</EM> <code>shared_ptr</code>; 
-				otherwise, constructs a <code>shared_ptr</code> that <EM>shares ownership</EM> with <code>r</code>.</p>
-			<p><b>Postconditions:</b> <code>get() == r.get() &amp;&amp; use_count() == 
-					r.use_count()</code>.</p>
-			<p><b>Throws:</b> nothing.</p>
-<pre>
+		<p><b>Effects:</b> If <code>r</code> is <EM>empty</EM>, constructs an <EM>empty</EM>
+			<code>shared_ptr</code>; otherwise, constructs a <code>shared_ptr</code> that <EM>shares 
+				ownership</EM> with <code>r</code>.</p>
+		<p><b>Postconditions:</b> <code>get() == r.get() &amp;&amp; use_count() == 
+				r.use_count()</code>.</p>
+		<p><b>Throws:</b> nothing.</p>
+		<pre>
     template&lt;class Y&gt; explicit shared_ptr(weak_ptr&lt;Y&gt; const &amp; r);
 </pre>
-			<p><b>Effects:</b> If <code>r</code> is <EM>empty</EM>, constructs an <EM>empty</EM> <code>shared_ptr</code>; 
-				otherwise, constructs a <code>shared_ptr</code> that <EM>shares ownership</EM> with <code>r</code>
-				and stores a copy of the pointer stored in <code>r</code>.</p>
-			<p><b>Postconditions:</b> <code>use_count() == r.use_count()</code>.</p>
-			<p><b>Throws:</b> <code>bad_weak_ptr</code> when <code>r.use_count() == 0</code>.</p>
-			<p><b>Exception safety:</b> If an exception is thrown, the constructor has no 
-				effect.</p>
-<pre>
+		<p><b>Effects:</b> If <code>r</code> is <EM>empty</EM>, constructs an <EM>empty</EM>
+			<code>shared_ptr</code>; otherwise, constructs a <code>shared_ptr</code> that <EM>shares 
+				ownership</EM> with <code>r</code> and stores a copy of the pointer stored 
+			in <code>r</code>.</p>
+		<p><b>Postconditions:</b> <code>use_count() == r.use_count()</code>.</p>
+		<p><b>Throws:</b> <code>bad_weak_ptr</code> when <code>r.use_count() == 0</code>.</p>
+		<p><b>Exception safety:</b> If an exception is thrown, the constructor has no 
+			effect.</p>
+		<pre>
     template&lt;class Y&gt; shared_ptr(auto_ptr&lt;Y&gt; &amp; r);
 </pre>
-			<p><b>Requires:</b> <code>r.release()</code> must be convertible to <code>T *</code>. <code>Y</code>
-				must be a complete type. The expression <code>delete r.release()</code> must be 
-				well-formed, must not invoke undefined behavior, and must not throw exceptions.
-			</p>
-			<P><B>Effects:</B> Constructs a <code>shared_ptr</code> that stores and <em>owns</em> <code>r.release()</code>.</P>
-			<p><b>Postconditions:</b> <code>use_count() == 1</code>.</p>
-			<p><b>Throws:</b> <code>bad_alloc</code> or an implementation-defined exception when 
-				a resource other than memory could not be obtained.</p>
-			<P><B>Exception safety:</B> If an exception is thrown, the constructor has no effect.</P>
-		<h3><a name="destructor">destructor</a></h3>
-<pre>
+		<p><b>Requires:</b> <code>r.release()</code> must be convertible to <code>T *</code>.
+			<code>Y</code> must be a complete type. The expression <code>delete r.release()</code>
+			must be well-formed, must not invoke undefined behavior, and must not throw 
+			exceptions.
+		</p>
+		<P><B>Effects:</B> Constructs a <code>shared_ptr</code> that stores and <em>owns</em>
+			<code>r.release()</code>.</P>
+		<p><b>Postconditions:</b> <code>use_count() == 1</code>.</p>
+		<p><b>Throws:</b> <code>bad_alloc</code> or an implementation-defined exception 
+			when a resource other than memory could not be obtained.</p>
+		<P><B>Exception safety:</B> If an exception is thrown, the constructor has no 
+			effect.</P>
+		<h3><code>shared_ptr</code> destructor</h3>
+		<pre>
     ~shared_ptr();
 </pre>
-			<P><B>Effects:</B></P>
-			<UL>
-				<LI>
-					If <code>*this</code> is <EM>empty</EM>, or <EM>shares ownership</EM> with 
-					another <code>shared_ptr</code> instance (<code>use_count() &gt; 1</code>), 
-				there are no side effects.
-				<LI>
-					Otherwise, if <code>*this</code> <EM>owns</EM> a pointer <code>p</code> 
-					and a deleter <code>d</code>, <code>d(p)</code>
-				is called.
-				<LI>
-					Otherwise, <code>*this</code> <EM>owns</EM> a pointer <code>p</code>, 
-					and <code>delete p</code> is called.</LI></UL>
-			<P><B>Throws:</B> nothing.</P>
-		<H3><a name="assignment">assignment</a></H3>
-<pre>
+		<P><B>Effects:</B></P>
+		<UL>
+			<LI>
+				If <code>*this</code> is <EM>empty</EM>, or <EM>shares ownership</EM> with 
+				another <code>shared_ptr</code> instance (<code>use_count() &gt; 1</code>), 
+			there are no side effects.
+			<LI>
+				Otherwise, if <code>*this</code> <EM>owns</EM> a pointer <code>p</code> and a 
+				deleter <code>d</code>, <code>d(p)</code>
+			is called.
+			<LI>
+				Otherwise, <code>*this</code> <EM>owns</EM> a pointer <code>p</code>, and <code>delete 
+					p</code> is called.</LI></UL>
+		<P><B>Throws:</B> nothing.</P>
+		<H3><code>shared_ptr</code> assignment</H3>
+		<pre>
     shared_ptr &amp; operator=(shared_ptr const &amp; r);
     template&lt;class Y&gt; shared_ptr &amp; operator=(shared_ptr&lt;Y&gt; const &amp; r);
     template&lt;class Y&gt; shared_ptr &amp; operator=(auto_ptr&lt;Y&gt; &amp; r);
 </pre>
-			<P><B>Effects:</B> Equivalent to <code>shared_ptr(r).swap(*this)</code>.</P>
-			<P><B>Returns:</B> <code>*this</code>.</P>
-			<P><B>Notes:</B> The use count updates caused by the temporary object construction 
-				and destruction are not considered observable side effects, and the 
-				implementation is free to meet the effects (and the implied guarantees) via 
-				different means, without creating a temporary. In particular, in the example:</P>
-<pre>
+		<P><B>Effects:</B> Equivalent to <code>shared_ptr(r).swap(*this)</code>.</P>
+		<P><B>Returns:</B> <code>*this</code>.</P>
+		<P><B>Notes:</B> The use count updates caused by the temporary object construction 
+			and destruction are not considered observable side effects, and the 
+			implementation is free to meet the effects (and the implied guarantees) via 
+			different means, without creating a temporary. In particular, in the example:</P>
+		<pre>
   shared_ptr&lt;int&gt; p(new int);
   shared_ptr&lt;void&gt; q(p);
   p = p;
   q = p;
 </pre>
-			<p>both assignments may be no-ops.</p>
-		<h3><a name="reset">reset</a></h3>
-<pre>
+		<p>both assignments may be no-ops.</p>
+		<h3><code>shared_ptr</code> modifiers</h3>
+		<pre>
+    void swap(shared_ptr &amp; r);
+</pre>
+		<p><b>Effects:</b> Exchanges the contents of <code>*this</code> and <code>r</code>.</p>
+		<p><b>Throws:</b> nothing.</p>
+		<pre>
     void reset();
 </pre>
-			<P><B>Effects:</B> Equivalent to <code>shared_ptr().swap(*this)</code>.</P>
-<pre>
+		<P><B>Effects:</B> Equivalent to <code>shared_ptr().swap(*this)</code>.</P>
+		<pre>
     template&lt;class Y&gt; void reset(Y * p);
 </pre>
-			<P><B>Effects:</B> Equivalent to <code>shared_ptr(p).swap(*this)</code>.</P>
-<pre>
+		<P><B>Effects:</B> Equivalent to <code>shared_ptr(p).swap(*this)</code>.</P>
+		<pre>
     template&lt;class Y, class D&gt; void reset(Y * p, D d);
 </pre>
-			<P><B>Effects:</B> Equivalent to <code>shared_ptr(p, d).swap(*this)</code>.</P>
-		<h3><a name="indirection">indirection</a></h3>
-<pre>
-    T &amp; operator*() const;
-</pre>
-			<p><b>Requires:</b> <code>get() != 0</code>.</p>
-			<p><b>Returns:</b> <code>*get()</code>.</p>
-			<p><b>Throws:</b> nothing.</p>
-<pre>
-    T * operator-&gt;() const;
-</pre>
-			<p><b>Requires:</b> <code>get() != 0</code>.</p>
-			<p><b>Returns:</b> <code>get()</code>.</p>
-			<p><b>Throws:</b> nothing.</p>
-		<h3><a name="get">get</a></h3>
-<pre>
+		<P><B>Effects:</B> Equivalent to <code>shared_ptr(p, d).swap(*this)</code>.</P>
+		<h3><code>shared_ptr</code> observers</h3>
+		<pre>
     T * get() const;
 </pre>
-			<p><b>Returns:</b> the stored pointer.</p>
-			<p><b>Throws:</b> nothing.</p>
-		<h3><a name="unique">unique</a></h3>
-<pre>
-    bool unique() const;
+		<p><b>Returns:</b> the stored pointer.</p>
+		<p><b>Throws:</b> nothing.</p>
+		<pre>
+    T &amp; operator*() const;
 </pre>
-			<p><b>Returns:</b> <code>use_count() == 1</code>.</p>
-			<p><b>Throws:</b> nothing.</p>
-			<P><B>Notes:</B> <code>unique()</code> may be faster than <code>use_count()</code>. 
-				If you are using <code>unique()</code> to implement copy on write, do not rely 
-				on a specific value when <code>get() == 0</code>.</P>
-		<h3><a name="use_count">use_count</a></h3>
-<pre>
+		<p><b>Requires:</b> <code>get() != 0</code>.</p>
+		<p><b>Returns:</b> <code>*get()</code>.</p>
+		<p><b>Throws:</b> nothing.</p>
+		<pre>
+    T * operator-&gt;() const;
+</pre>
+		<p><b>Requires:</b> <code>get() != 0</code>.</p>
+		<p><b>Returns:</b> <code>get()</code>.</p>
+		<p><b>Throws:</b> nothing.</p>
+		<pre>
     long use_count() const;
 </pre>
-			<p><b>Returns:</b> the number of <code>shared_ptr</code> objects, <code>*this</code> included, 
-				that <i>share ownership</i> with <code>*this</code>, or an unspecified nonnegative 
-				value when <code>*this</code> is <EM>empty</EM>.</p>
-			<p><b>Throws:</b> nothing.</p>
-			<P><B>Notes:</B> <code>use_count()</code> is not necessarily efficient. Use only 
-				for debugging and testing purposes, not for production code.</P>
-		<h3><a name="conversions">conversions</a></h3>
-<pre>
-    operator <i>unspecified-bool-type</i> () const;
+		<p><b>Returns:</b> the number of <code>shared_ptr</code> objects, <code>*this</code>
+			included, that <i>share ownership</i> with <code>*this</code>, or an 
+			unspecified nonnegative value when <code>*this</code> is <EM>empty</EM>.</p>
+		<p><b>Throws:</b> nothing.</p>
+		<P><B>Notes:</B> <code>use_count()</code> is not necessarily efficient. Use only 
+			for debugging and testing purposes, not for production code.</P>
+		<pre>
+    bool unique() const;
 </pre>
-			<p><b>Returns:</b> an unspecified value that, when used in boolean contexts, is 
-				equivalent to <code>get() != 0</code>.</p>
-			<p><b>Throws:</b> nothing.</p>
-			<P><B>Notes:</B> This conversion operator allows <b>shared_ptr</b> objects to be 
-				used in boolean contexts, like <code>if (p &amp;&amp; p-&gt;valid()) {}</code>. 
-				The actual target type is typically a pointer to a member function, avoiding 
-				many of the implicit conversion pitfalls.</P>
-		<h3><a name="swap">swap</a></h3>
-<pre>
-    void swap(shared_ptr &amp; b);
+		<p><b>Returns:</b> <code>use_count() == 1</code>.</p>
+		<p><b>Throws:</b> nothing.</p>
+		<P><B>Notes:</B> <code>unique()</code> may be faster than <code>use_count()</code>. 
+			If you are using <code>unique()</code> to implement copy on write, do not rely 
+			on a specific value when <code>get() == 0</code>.</P>
+		<pre>
+    operator <em>unspecified-bool-type</em> () const;
 </pre>
-			<p><b>Effects:</b> Exchanges the contents of <code>*this</code> and <code>b</code>.</p>
-			<p><b>Throws:</b> nothing.</p>
-		<h3><a name="comparison">comparison</a></h3>
-<pre>
+		<p><b>Returns:</b> an unspecified value that, when used in boolean contexts, is 
+			equivalent to <code>get() != 0</code>.</p>
+		<p><b>Throws:</b> nothing.</p>
+		<P><B>Notes:</B> This conversion operator allows <b>shared_ptr</b> objects to be 
+			used in boolean contexts, like <code>if (p &amp;&amp; p-&gt;valid()) {}</code>. 
+			The actual target type is typically a pointer to a member function, avoiding 
+			many of the implicit conversion pitfalls.</P>
+		<h3><code>shared_ptr</code> comparison</h3>
+		<pre>
     template&lt;class T, class U&gt;
       bool operator==(shared_ptr&lt;T&gt; const &amp; a, shared_ptr&lt;U&gt; const &amp; b);
 </pre>
-			<p><b>Returns:</b> <code>a.get() == b.get()</code>.</p>
-			<p><b>Throws:</b> nothing.</p>
-<pre>
+		<p><b>Returns:</b> <code>a.get() == b.get()</code>.</p>
+		<p><b>Throws:</b> nothing.</p>
+		<pre>
     template&lt;class T, class U&gt;
       bool operator!=(shared_ptr&lt;T&gt; const &amp; a, shared_ptr&lt;U&gt; const &amp; b);
 </pre>
-			<p><b>Returns:</b> <code>a.get() != b.get()</code>.</p>
-			<p><b>Throws:</b> nothing.</p>
-<pre>
+		<p><b>Returns:</b> <code>a.get() != b.get()</code>.</p>
+		<p><b>Throws:</b> nothing.</p>
+		<pre>
     template&lt;class T, class U&gt;
       bool operator&lt;(shared_ptr&lt;T&gt; const &amp; a, shared_ptr&lt;U&gt; const &amp; b);
+</pre>
+		<p><b>Returns:</b> an unspecified value such that</p>
+		<UL>
+			<LI>
+				<code>operator&lt;</code> is a strict weak ordering as described in section 
+				25.3 <code>[lib.alg.sorting]</code>;
+			<LI>
+				under the equivalence relation defined by <code>operator&lt;</code>, <code>!(a &lt; 
+					b) &amp;&amp; !(b &lt; a)</code>, two <code>shared_ptr</code> instances are 
+				equivalent if and only if they <EM>share ownership</EM>.</LI></UL>
+		<p><b>Throws:</b> nothing.</p>
+		<P><B>Notes:</B> Allows <code>shared_ptr</code> objects to be used as keys in 
+			associative containers.</P>
+		<h3><code>shared_ptr</code> operators</h3>
+		<pre>
+    template&lt;class E, class T, class Y&gt;
+      basic_ostream&lt;E, T&gt; &amp; operator&lt;&lt; (basic_ostream&lt;E, T&gt; &amp; os, shared_ptr&lt;Y&gt; const &amp; p);
+</pre>
+		<p><STRONG>Effects:</STRONG> <code>os &lt;&lt; p.get();</code>.</p>
+		<P><B>Returns:</B> <code>os</code>.</P>
+		<h3><code>shared_ptr</code> specialized algorithms</h3>
+		<pre>
+    template&lt;class T&gt;
+      void swap(shared_ptr&lt;T&gt; &amp; a, shared_ptr&lt;T&gt; &amp; b);
+</pre>
+		<P><B>Effects:</B> Equivalent to <code>a.swap(b)</code>.</P>
+		<P><B>Throws:</B> nothing.</P>
+		<h3><code>shared_ptr</code> casts</h3>
+		<pre>
+    template&lt;class T, class U&gt;
+      shared_ptr&lt;T&gt; static_pointer_cast(shared_ptr&lt;U&gt; const &amp; r);
+</pre>
+		<P><STRONG>Requires:</STRONG> The expression <code>static_cast&lt;T*&gt;(r.get())</code>
+			must be well-formed.</P>
+		<P><B>Returns:</B> If <code>r</code> is <em>empty</em>, an <em>empty</em> <code>shared_ptr&lt;T&gt;</code>; 
+			otherwise, a <code>shared_ptr&lt;T&gt;</code> object that stores <code>static_cast&lt;T*&gt;(r.get())</code>
+			and <em>shares ownership</em> with <code>r</code>.</P>
+		<P><B>Throws:</B> nothing.</P>
+		<P><B>Notes:</B> the seemingly equivalent expression</P>
+		<p><code>shared_ptr&lt;T&gt;(static_cast&lt;T*&gt;(r.get()))</code></p>
+		<p>will eventually result in undefined behavior, attempting to delete the same 
+			object twice.</p>
+		<pre>
+    template&lt;class T, class U&gt;
+      shared_ptr&lt;T&gt; dynamic_pointer_cast(shared_ptr&lt;U&gt; const &amp; r);
+</pre>
+		<P><STRONG>Requires:</STRONG> The expression <CODE>dynamic_cast&lt;T*&gt;(r.get())</CODE>
+			must be well-formed and its behavior defined.</P>
+		<P><B>Returns:</B></P>
+		<UL>
+			<LI>
+				When <CODE>dynamic_cast&lt;T*&gt;(r.get())</CODE> returns a nonzero value, a <code>shared_ptr&lt;T&gt;</code>
+				object that stores a copy of it and <em>shares ownership</em> with <code>r</code>;
+			<LI>
+				Otherwise, an <em>empty</em> <code>shared_ptr&lt;T&gt;</code> object.</LI></UL>
+		<P><B>Throws:</B> nothing.</P>
+		<P><B>Notes:</B> the seemingly equivalent expression</P>
+		<P><CODE>shared_ptr&lt;T&gt;(dynamic_cast&lt;T*&gt;(r.get()))</CODE></P>
+		<P>will eventually result in undefined behavior, attempting to delete the same 
+			object twice.</P>
+		<h3>get_deleter</h3>
+		<pre>
+    template&lt;class D, class T&gt;
+      D * get_deleter(shared_ptr&lt;T&gt; const &amp; p);
+</pre>
+		<P><B>Returns:</B> If <code>*this</code> <EM>owns</EM> a deleter <code>d</code> of 
+			type (cv-unqualified) <code>D</code>, returns <code>&amp;d</code>; otherwise 
+			returns 0.</P>
+		<P><B>Throws:</B> nothing.</P>
+		<h3>D. Class template <code>weak_ptr</code></h3>
+		<p>The class template <code>weak_ptr</code>...</p>
+<pre>
+    namespace std {
+      template&lt;class T&gt; class weak_ptr {
+
+      public:
+        typedef T element_type;
+
+        <em>// constructors</em>
+        weak_ptr();
+        template&lt;class Y&gt; weak_ptr(shared_ptr&lt;Y&gt; const &amp; r);
+        weak_ptr(weak_ptr const &amp; r);
+        template&lt;class Y&gt; weak_ptr(weak_ptr&lt;Y&gt; const &amp; r);
+
+        <em>// destructor</em>
+        ~weak_ptr();
+
+        <em>// assignment</em>
+        weak_ptr &amp; operator=(weak_ptr const &amp; r);
+        template&lt;class Y&gt; weak_ptr &amp; operator=(weak_ptr&lt;Y&gt; const &amp; r);
+        template&lt;class Y&gt; weak_ptr &amp; operator=(shared_ptr&lt;Y&gt; const &amp; r);
+
+        <em>// modifiers</em>
+        void swap(weak_ptr &amp; r);
+        void reset();
+
+        <em>// observers</em>
+        long use_count() const;
+        bool expired() const;
+      };
+
+      <em>// comparison</em>
+      template&lt;class T, class U&gt;
+        bool operator&lt;(weak_ptr&lt;T&gt; const &amp; a, weak_ptr&lt;U&gt; const &amp; b);
+
+      <em>// specialized algorithms</em>
+      template&lt;class T&gt;
+        void swap(weak_ptr&lt;T&gt; &amp; a, weak_ptr&lt;T&gt; &amp; b);
+
+      <em>// get_shared_ptr</em>
+      template&lt;class T&gt;
+        shared_ptr&lt;T&gt; get_shared_ptr(weak_ptr&lt;T&gt; const &amp; r);
+    }
+</pre>
+		<p><code>weak_ptr</code> is <code>CopyConstructible</code>, <code>Assignable</code>, 
+			and <code>LessThanComparable</code>, allowing its use in standard containers.</p>
+		<h3><code>weak_ptr</code> constructors</h3>
+<pre>
+    weak_ptr();
+</pre>
+			<p><b>Effects:</b> Constructs an <EM>empty</EM> <code>weak_ptr</code>.</p>
+			<p><b>Postconditions:</b> <code>use_count() == 0</code>.</p>
+			<p><b>Throws:</b> nothing.</p>
+<pre>
+    template&lt;class Y&gt; weak_ptr</A>(shared_ptr&lt;Y&gt; const &amp; r);
+    weak_ptr(weak_ptr const &amp; r);
+    template&lt;class Y&gt; weak_ptr(weak_ptr&lt;Y&gt; const &amp; r);
+</pre>
+			<p><b>Effects:</b> If <code>r</code> is <EM>empty</EM>, constructs an <EM>empty</EM>
+				<code>weak_ptr</code>; otherwise, constructs a <code>weak_ptr</code> that <EM>shares 
+					ownership</EM> with <code>r</code> and stores a copy of the 
+				pointer stored in <code>r</code>.</p>
+			<p><b>Postconditions:</b> <code>use_count() == r.use_count()</code>.</p>
+			<p><b>Throws:</b> nothing.</p>
+		<h3><code>weak_ptr</code> destructor</h3>
+<pre>
+    ~weak_ptr();
+</pre>
+			<P><B>Effects:</B> Destroys this <code>weak_ptr</code> but has no effect on the object 
+				its stored pointer points to.</P>
+			<P><B>Throws:</B> nothing.</P>
+		<h3><code>weak_ptr</code> assignment</h3>
+<pre>
+    weak_ptr &amp; operator=(weak_ptr const &amp; r);
+    template&lt;class Y&gt; weak_ptr &amp; operator=(weak_ptr&lt;Y&gt; const &amp; r);
+    template&lt;class Y&gt; weak_ptr &amp; operator=(shared_ptr&lt;Y&gt; const &amp; r);
+</pre>
+			<P><B>Effects:</B> Equivalent to <code>weak_ptr(r).swap(*this)</code>.</P>
+			<P><B>Throws:</B> nothing.</P>
+			<P><B>Notes:</B> The implementation is free to meet the effects (and the implied 
+				guarantees) via different means, without creating a temporary.</P>
+		<h3><code>weak_ptr</code> modifiers</h3>
+<pre>
+    void swap(weak_ptr &amp; r);
+</pre>
+			<p><b>Effects:</b> Exchanges the contents of <code>*this</code> and <code>r</code>.</p>
+			<p><b>Throws:</b> nothing.</p>
+<pre>
+    void reset();
+</pre>
+			<P><B>Effects:</B> Equivalent to <code>weak_ptr().swap(*this)</code>.</P>
+		<h3><code>weak_ptr</code> observers</h3>
+<pre>
+    long use_count() const;
+</pre>
+			<p><b>Returns:</b> if <code>*this</code> is <EM>empty</EM>, an unspecified 
+				nonnegative value; otherwise, the number of <code>shared_ptr</code> instances that <EM>share 
+					ownership</EM> with <code>*this</code>.</p>
+			<p><b>Throws:</b> nothing.</p>
+			<P><B>Notes:</B> <code>use_count()</code> is not necessarily efficient. Use only 
+				for debugging and testing purposes, not for production code.</P>
+<pre>
+    bool expired() const;
+</pre>
+			<p><b>Returns:</b> <code>use_count() == 0</code>.</p>
+			<p><b>Throws:</b> nothing.</p>
+			<P><B>Notes:</B> <code>expired()</code> may be faster than <code>use_count()</code>.</P>
+		<h3><code>weak_ptr</code> comparison</h3>
+<pre>
+    template&lt;class T, class U&gt;
+      bool operator&lt;(weak_ptr&lt;T&gt; const &amp; a, weak_ptr&lt;U&gt; const &amp; b);
 </pre>
 			<p><b>Returns:</b> an unspecified value such that</p>
 			<UL>
@@ -453,87 +642,40 @@ conditions.</p>
 					<code>operator&lt;</code> is a strict weak ordering as described in section 25.3 <code>[lib.alg.sorting]</code>;
 				<LI>
 					under the equivalence relation defined by <code>operator&lt;</code>, <code>!(a 
-						&lt; b) &amp;&amp; !(b &lt; a)</code>, two <code>shared_ptr</code> instances 
+						&lt; b) &amp;&amp; !(b &lt; a)</code>, two <code>weak_ptr</code> instances 
 					are equivalent if and only if they <EM>share ownership</EM>.</LI></UL>
 			<p><b>Throws:</b> nothing.</p>
-			<P><B>Notes:</B> Allows <code>shared_ptr</code> objects to be used as keys in 
+			<P><B>Notes:</B> Allows <code>weak_ptr</code> objects to be used as keys in 
 				associative containers.</P>
-		<h3><a name="free-swap">swap</a></h3>
+		<h3><code>weak_ptr</code> specialized algorithms</h3>
 <pre>
     template&lt;class T&gt;
-      void swap(shared_ptr&lt;T&gt; &amp; a, shared_ptr&lt;T&gt; &amp; b);
+      void swap(weak_ptr&lt;T&gt; &amp; a, weak_ptr&lt;T&gt; &amp; b)
 </pre>
 			<P><B>Effects:</B> Equivalent to <code>a.swap(b)</code>.</P>
 			<P><B>Throws:</B> nothing.</P>
-		<h3><a name="static_pointer_cast">static_pointer_cast</a></h3>
+		<h3>get_shared_ptr</h3>
 <pre>
-    template&lt;class T, class U&gt;
-      shared_ptr&lt;T&gt; static_pointer_cast(shared_ptr&lt;U&gt; const &amp; r);
+    template&lt;class T&gt;
+      shared_ptr&lt;T&gt; get_shared_ptr(weak_ptr&lt;T&gt; &amp; const r)
 </pre>
-			<P><STRONG>Requires:</STRONG> The expression <code>static_cast&lt;T*&gt;(r.get())</code>
-				must be well-formed.</P>
-			<P><B>Returns:</B> If <code>r</code> is <em>empty</em>, an <em>empty</em> <code>shared_ptr&lt;T&gt;</code>; 
-				otherwise, a <code>shared_ptr&lt;T&gt;</code> object that stores <code>
-					static_cast&lt;T*&gt;(r.get())</code> and <em>shares ownership</em> with <code>r</code>.</P>
+			<P><B>Returns:</B> <code>r.expired()? shared_ptr&lt;T&gt;(): shared_ptr&lt;T&gt;(r)</code>.</P>
 			<P><B>Throws:</B> nothing.</P>
-			<P><B>Notes:</B> the seemingly equivalent expression</P>
-			<p><code>shared_ptr&lt;T&gt;(static_cast&lt;T*&gt;(r.get()))</code></p>
-			<p>will eventually result in undefined behavior, attempting to delete the same 
-				object twice.</p>
-		<h3><a name="dynamic_pointer_cast">dynamic_pointer_cast</a></h3>
-<pre>
-    template&lt;class T, class U&gt;
-      shared_ptr&lt;T&gt; dynamic_pointer_cast(shared_ptr&lt;U&gt; const &amp; r);
-</pre>
-			<P><STRONG>Requires:</STRONG> The expression <CODE>dynamic_cast&lt;T*&gt;(r.get())</CODE>
-				must be well-formed and its behavior defined.</P>
-			<P><B>Returns:</B></P>
-			<UL>
-				<LI>
-					When <CODE>dynamic_cast&lt;T*&gt;(r.get())</CODE> returns a nonzero value, a <code>
-						shared_ptr&lt;T&gt;</code> object that stores a copy of it and <em>shares 
-						ownership</em> with <code>r</code>;
-				<LI>
-					Otherwise, an <em>empty</em> <code>shared_ptr&lt;T&gt;</code> object.</LI></UL>
-			<P><B>Throws:</B> nothing.</P>
-			<P><B>Notes:</B> the seemingly equivalent expression</P>
-			<P><CODE>shared_ptr&lt;T&gt;(dynamic_cast&lt;T*&gt;(r.get()))</CODE></P>
-			<P>will eventually result in undefined behavior, attempting to delete the same 
-				object twice.</P>
-		<h3><a name="insertion-operator">operator&lt;&lt;</a></h3>
-<pre>
-    template&lt;class E, class T, class Y&gt;
-      basic_ostream&lt;E, T&gt; &amp; operator&lt;&lt; (basic_ostream&lt;E, T&gt; &amp; os, shared_ptr&lt;Y&gt; const &amp; p);
-</pre>
-			<p><STRONG>Effects:</STRONG> <code>os &lt;&lt; p.get();</code>.</p>
-			<P><B>Returns:</B> <code>os</code>.</P>
-		<h3><a name="get_deleter">get_deleter</a></h3>
-<pre>
-    template&lt;class D, class T&gt;
-      D * get_deleter(shared_ptr&lt;T&gt; const &amp; p);
-</pre>
-			<P><B>Returns:</B> If <code>*this</code> <EM>owns</EM> a deleter <code>d</code>
-				of type (cv-unqualified) <code>D</code>, returns <code>&amp;d</code>; 
-				otherwise returns 0.</P>
-			<P><B>Throws:</B> nothing.</P>
-		<h3>D. Class template <code>weak_ptr</code></h3>
 		<h3>E. Class template <code>enable_shared_from_this</code></h3>
 		<h2>V. Code Examples</h2>
 		<h3><a name="Implementation-difficulty">Implementation difficulty</a></h3>
-		<p>The Boost developers found a shared-ownership smart pointer 
-        exceedingly difficult to implement correctly. Others have made the same 
-        observation. For example, Scott Meyers [<a href="#Meyers01">Meyers01</a>] 
-        says:</p>
+		<p>The Boost developers found a shared-ownership smart pointer exceedingly 
+			difficult to implement correctly. Others have made the same observation. For 
+			example, Scott Meyers [<a href="#Meyers01">Meyers01</a>] says:</p>
 		<blockquote>
-		<p>The STL itself contains no reference-counting smart pointer, and 
-        writing a good one - one that works correctly all the time - is tricky 
-        enough that you don't want to do it unless you have to. I published the 
-        code for a reference-counting smart pointer in More Effective C++ in 
-        1996, and despite basing it on established smart pointer implementations 
-        and submitting it to extensive pre-publication reviewing by experienced 
-        developers, a small parade of valid bug reports has trickled in for 
-        years. The number of subtle ways in which reference-counting smart 
-        pointers can fail is remarkable.</p>
+			<p>The STL itself contains no reference-counting smart pointer, and writing a good 
+				one - one that works correctly all the time - is tricky enough that you don't 
+				want to do it unless you have to. I published the code for a reference-counting 
+				smart pointer in More Effective C++ in 1996, and despite basing it on 
+				established smart pointer implementations and submitting it to extensive 
+				pre-publication reviewing by experienced developers, a small parade of valid 
+				bug reports has trickled in for years. The number of subtle ways in which 
+				reference-counting smart pointers can fail is remarkable.</p>
 		</blockquote>
 		<h4>Example 1</h4>
 		<blockquote>
@@ -569,19 +711,17 @@ void test()
 		<p>[<a name="Colvin94">Colvin94</a>] Gregory Colvin, <i>Exception Safe Smart Pointers</i>, 
 			C++ committee document 94-168/N0555, July, 1994. Available online at <a href="http://std.dkuug.dk/jtc1/sc22/wg21/docs/papers/1994/N0555.pdf">
 				http://std.dkuug.dk/jtc1/sc22/wg21/docs/papers/1994/N0555.pdf</a></p>
-		<p>[<a name="Ellis94">Ellis94</a>] John R. Ellis and David L. Detlefs, 
-        <i>Safe, 
-			Efficient Garbage Collection for C++</i>, Usenix Proceedings, February, 1994. This 
-			paper includes an extensive discussion of weak pointers and an extensive 
-			bibliography. Available online at <a href="http://www.usenix.org/publications/library/proceedings/c++94/full_papers/ellis.a">
+		<p>[<a name="Ellis94">Ellis94</a>] John R. Ellis and David L. Detlefs, <i>Safe, 
+				Efficient Garbage Collection for C++</i>, Usenix Proceedings, February, 
+			1994. This paper includes an extensive discussion of weak pointers and an 
+			extensive bibliography. Available online at <a href="http://www.usenix.org/publications/library/proceedings/c++94/full_papers/ellis.a">
 				http://www.usenix.org/publications/library/proceedings/c++94/full_papers/ellis.a</a></p>
-		<p>[<a name="Meyers01">Meyers01</a>] Scott Meyers, <i>
-        <a href="http://www.awl.com/cseng/titles/0-201-74962-9/">Effective STL</a></i>, 
-        page 39, Addison-Wesley, 2001, ISBN 0-201-74962-9.</p>
-	    <p>[<a name="Google03">Google03</a>] Searching
-        <a href="http://www.google.com">www.google.com</a> for &quot;reference 
-        counted smart pointer&quot; yields 2,400 entries. Anyone doubting that 
-        shared-ownership smart pointers have been reinvented a large number of 
-        times should read a random selection of these entries.</p>
+		<p>[<a name="Meyers01">Meyers01</a>] Scott Meyers, <i><a href="http://www.awl.com/cseng/titles/0-201-74962-9/">
+					Effective STL</a></i>, page 39, Addison-Wesley, 2001, ISBN 
+			0-201-74962-9.</p>
+		<p>[<a name="Google03">Google03</a>] Searching <a href="http://www.google.com">www.google.com</a>
+			for &quot;reference counted smart pointer&quot; yields 2,400 entries. Anyone 
+			doubting that shared-ownership smart pointers have been reinvented a large 
+			number of times should read a random selection of these entries.</p>
 	</body>
 </html>
