@@ -1364,6 +1364,23 @@ struct tiny_list_iterator
 
 ).
 
+While the \code{tiny\_list} itself might be not that 
+interesting - after all, it can hold only 3 elements, if 
+the technique above can be automated so we would be able to 
+define not so tiny sequence - with 5, 10, 20, etc. number 
+of elements, when it would be very valuable (random access 
+is almost as important at compile-time as it is at run-time 
+- for example searching something in a sorted random-access 
+sequence using \code{lower\_bound} can be up to N 
+[need to measure!] time faster than doing the same operation 
+on forward-access only \code{list}). External code generation 
+is one option here, but there is also a solution within the 
+language, although it's not a template metaprogramming, 
+but preprocessor metaprogramming [PRE]. In fact, 
+\code{mpl::vector} - a fixed-size type sequence that 
+provides random-access iterators - is implemented very like 
+the above \code{tiny\_list}. 
+
 \emph{why library-provided iteration is important}
 
 So, the library provides you with almost complete compile-time 
@@ -1397,12 +1414,138 @@ it's \emph{obvious} that's the above code does - even although
 it's all templates - something that you cannot say about the 
 original version.
 
-  
+
+\emph{sequences of types, but there are shorcuts for numbers}
+
+What we've seen so far were sequences (and algorithms on 
+sequences) of types. It's very much possible and easy to 
+manipulate values using the library as well. The only thing 
+to remember is that in \Cpp\ class template non-type template 
+parameters is one more example of non-polymorphic behavior (??).
+That means, that if you declared a metafunction to take a 
+non-type template parameter - let's say \emph{long} - 
+it's not possible to pass anything besides compile-time 
+intergal constants to it:
+
+{\footnotesize
+\begin{verbatim}
+template< long N1, long N2 >
+struct equal_to
+{
+    static bool const value = (N1 == N2);
+};
+
+equal_to<5,5>::value; // ok
+equal_to<int,int>::value; // error!
+\end{verbatim}
+}
+
+While this may be an obvious limitation, it imposes yet 
+another dilemma on the library design - on one hand, we don't 
+want to restrict users to type namipulations only, and on another 
+hand, full support for intergal manipulations would require at 
+least duplication of most of the library facilities (ideally, 
+if going this route, all the templates should be reimplemented 
+for every integral type - \emph{char}, \emph{int}, \emph{short},
+\emph{long}, etc.) - the same situation as we would have if we 
+choosed to represent metafunctions as ordinary class templates.
+
+
+\emph{why external functions for all algorithms}
+
+\begin{enumerate}
+ \item while the nested functions notation in some cases is 
+ less verbose, 
+
+{\footnotesize
+\begin{verbatim}
+typedef mpl::list<char,short,int,long> types;
+typedef mpl::select_if<
+      types::empty
+    , long
+    , types::back
+    >::type t;
+\end{verbatim}
+}
+
+it is also less generic/more intrusive; requiring a sequence 
+class to implement \code{size}, \code{empty}, \code{at}, etc. 
+algorithms as members is often unnecessary and over restrictive. 
+In many cases the default implementations provided by the library 
+are sufficient.
+Currently the only requirement that a "foreign" sequence should 
+conform to in order to be used with the library algorithms is to 
+implement external \code{begin}/\code{end} metafunctions; you 
+don't have to modify your sequence code; with the requirement to 
+provide these as nested functions that wouldn't be the case anymore. 
+
+\item if a nested function has at least one argument, and it's 
+invoked on a sequence that is a template parameter, or depends 
+on a template parameter, the notation actually becomes more 
+verbose, e.g. 
+
+{\footnotesize
+\begin{verbatim}
+struct my_func
+{
+    template< typename Sequence, typename N > struct apply
+    {
+        // invoking 'at' nested metafunction on a Sequence class
+        typedef typename Sequence::template at<N>::type type;
+    };
+};
+\end{verbatim}
+}
+
+comparing to the current 
+
+{\footnotesize
+\begin{verbatim}
+struct my_func
+{
+    template< typename Sequence, typename N > struct apply
+    {
+        typedef typename mpl::at< N,Sequence >::type type;
+    };
+};
+\end{verbatim}
+}
+
+\item placing functions inside of a sequence class makes 
+impossible to pass them around as predicates/function classes: 
+
+{\footnotesize
+\begin{verbatim}
+typedef mpl::list< seq1,seq2,seq3 > sequences; // list of sequences
+// find first non-empty sequence
+typedef mpl::find_if< sequences, mpl::size<_1> >::type itor;
+\end{verbatim}
+}
+
+instead, you have to write an explicit predicate for every such case, 
+
+{\footnotesize
+\begin{verbatim}
+struct size_pred
+{
+    template< typename Sequence > struct apply
+    {
+        typedef typename Sequence::size type;
+    };
+};
+
+// find first non-empty sequence
+typedef mpl::find_if< sequences,size_pred >::type itor;
+\end{verbatim}
+}
+
+\end{enumerate}
+
+ 
 \begin{itemize}
   \item \code{iter\_fold}/\code{iter\_find} as two main 
     iteration algortihms, there are iterators
-  \item why iterators
-  \item why external functions for all algorithms
+  \item why iterators 
   \item  sequences of types, but there are shorcuts for numbers
   \item support for 3-rd party/user-defined sequences
   \item  different kind of sequences - different 
