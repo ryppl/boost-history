@@ -91,6 +91,19 @@ template < std::size_t N, typename Ch, class Tr = ::std::char_traits<Ch> >
     class basic_array_stream;
 
 
+//  From <boost/io/null_stream.hpp>  -----------------------------------------//
+
+template < typename Ch, class Tr = ::std::char_traits<Ch> >
+    class basic_nullbuf;
+typedef basic_nullbuf<char>      nullbuf;
+typedef basic_nullbuf<wchar_t>  wnullbuf;
+
+template < typename Ch, class Tr = ::std::char_traits<Ch> >
+    class basic_onullstream;
+typedef basic_onullstream<char>      onullstream;
+typedef basic_onullstream<wchar_t>  wonullstream;
+
+
 //  From <boost/io/pointer_stream.hpp>  --------------------------------------//
 
 template < typename Ch, class Tr = ::std::char_traits<Ch> >

@@ -1,0 +1,209 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<title>Disconnected I/O Stream Library</title>
+</head>
+<body>
+<h1><img src="../../../c++boost.gif" alt="c++boost.gif (8819 bytes)" align="middle" width="277" height="86">Disconnected Streams</h1>
+
+<p>The header <cite><a href="../../../boost/io/null_stream.hpp">boost/io/null_stream.hpp</a></cite> covers streams and stream buffers that are connected to the void.</p>
+
+<h2><a name="contents">Contents</a></h2>
+
+<ol>
+	<li><a href="#contents">Contents</a></li>
+	<li><a href="#rationale">Rationale</a></li>
+	<li><a href="#header">Header Synopsis</a></li>
+	<li><a href="#null_sb">Disconnected Stream Buffer Class Template</a>
+		<ul>
+			<li><a href="#mns_types">Member Types</a></li>
+			<li><a href="#mns_ctr">Constructors</a></li>
+			<li><a href="#mns_observe">Observer Member Functions</a></li>
+			<li><a href="#mns_override">Overridden Virtual Functions</a></li>
+		</ul></li>
+	<li><a href="#null_s">Disconnected Stream Class Template</a></li>
+	<li><a href="#refer">References</a></li>
+	<li><a href="#credits">Credits</a>
+		<ul>
+			<li><a href="#contributors">Contributors</a></li>
+			<li><a href="#history">History</a></li>
+		</ul></li>
+</ol>
+
+<h2><a name="rationale">Rationale</a></h2>
+
+<p>Many <dfn>command-line interfaces</dfn> (CLI) support redirection of their terminal input and output(s).  Sometimes, an user doesn't want to provide an input source and/or an output destination to a command that requires one.  Some CLIs provide a special file name that is not connected to anything (<i>e.g.</i> &quot;/dev/null&quot; on UNIX-style systems, &quot;NUL&quot; on DOS and Windows systems) that can act as a void source/sink.  The void source acts as it is empty to read, so reading attempts immediately return an end-of-file indication.  However, the void sink acts as it is infinitely large to write, so all (valid) writing attempts succeed and never return an end-of-file indication.  The stream (buffer) class templates provide a platform-independent analog of a void redirect.</p>
+
+<h2><a name="header">Header Synopsis</a></h2>
+
+<blockquote><pre>
+#include &lt;iosfwd&gt;  <i>// for std::char_traits (declaration)</i>
+
+namespace boost
+{
+namespace io
+{
+
+template &lt; typename Ch, class Tr = ::std::char_traits&lt;Ch&gt; &gt;
+    class basic_nullbuf;
+typedef basic_nullbuf&lt;char&gt;      nullbuf;
+typedef basic_nullbuf&lt;wchar_t&gt;  wnullbuf;
+
+template &lt; typename Ch, class Tr = ::std::char_traits&lt;Ch&gt; &gt;
+    class basic_onullstream;
+typedef basic_onullstream&lt;char&gt;      onullstream;
+typedef basic_onullstream&lt;wchar_t&gt;  wonullstream;
+
+}
+}
+</pre></blockquote>
+
+<h2><a name="null_sb">Disconnected Stream Buffer Class Template</a></h2>
+
+<p>The <code>boost::io::basic_nullbuf</code> acts like a <code>std::basic_streambuf</code>, which has the semantics of a void source, but changes the semantics of the writing operations to add the semantics of a void sink.  (The default reading and writing operations return failures as if the end-of-file was reached.  This is fine for reading, but a void sink supports infinite writing without failure.)  Only output-oriented support is provided.</p>
+
+<blockquote><pre>
+#include &lt;ios&gt;        <i>// for std::streamsize</i>
+#include &lt;streambuf&gt;  <i>// for std::basic_streambuf</i>
+
+template &lt; typename Ch, class Tr &gt;
+class basic_nullbuf
+    : public std::basic_streambuf&lt;Ch, Tr&gt;
+{
+public:
+    // Template arguments
+    typedef Ch  char_type;
+    typedef Tr  traits_type;
+
+    // Other types
+    typedef typename Tr::int_type  int_type;
+    typedef typename Tr::pos_type  pos_type;
+    typedef typename Tr::off_type  off_type;
+
+    // Constructor (use automatically-defined destructor)
+    basic_nullbuf();
+
+    // Accessors
+    std::streamsize  pcount() const;
+
+protected:
+    // Overriden virtual functions
+    virtual  std::streamsize  xsputn( char_type const *s, std::streamsize n );
+    virtual  int_type         overflow( int_type c = traits_type::eof() );
+
+};
+</pre></blockquote>
+
+<p>The type-based template arguments <var>Ch</var> and <var>Tr</var> represent the character type and character-traits type used for the stream buffer, respectively.</p>
+
+<h3><a name="mns_types">Member Types</a></h3>
+
+<dl>
+	<dt><code>char_type</code>
+	<dd>a synonym for the stream buffer's character type
+
+	<dt><code>traits_type</code>
+	<dd>a synonym for the stream buffer's character-traits type
+
+	<dt><code>int_type</code>
+	<dd>a synonym for the stream buffer's character with end-of-file type
+
+	<dt><code>pos_type</code>
+	<dd>a synonym for the stream buffer's position type
+
+	<dt><code>off_type</code>
+	<dd>a synonym for the stream buffer's offset type
+</dl>
+
+<h3><a name="mns_ctr">Constructors</a></h3>
+
+<p><strong>Note:</strong> the automatically-defined destructor is used.</p>
+
+<dl>
+	<dt><code> basic_nullbuf();</code>
+	<dd>
+		<strong>Effects:</strong> zero-initializes the running count of characters (virtually) written
+</dl>
+
+<h3><a name="mns_observe">Observer Member Functions</a></h3>
+
+<dl>
+    <dt><code>std::streamsize  pcount() const;</code>
+	<dd>
+		<strong>Returns:</strong> the current number of characters so far processed by (output) writing operations<br>
+		<strong>Rationale:</strong> the only way to record the number of (virtually) successfull writes
+</dl>
+
+<h3><a name="mns_override">Overridden Virtual Functions</a></h3>
+
+<dl>
+    <dt><code>std::streamsize  xsputn( char_type const *s, std::streamsize n );</code>
+	<dd>
+		<strong>Preconditions:</strong> <code><var>s</var> != NULL &amp;&amp; <var>n</var> &gt;= 0</code> and the array segment defined by starting at <var>s</var> and ending just before <code>(s + n)</code> should be valid<br>
+		<strong>Effects:</strong> pretends to write out (in order) the first <var>n</var> characters in the array segment starting at <var>s</var>; actually just increments the running count of characters (virtually) written by <var>n</var><br>
+		<strong>Returns:</strong> <var>n</var>, or 0 if there is a (detectable) problem with the arguments<br>
+		<strong>Rationale:</strong> writing out a bunch of characters at once
+
+    <dt><code> int_type  overflow( int_type c = traits_type::eof() );</code>
+	<dd>
+		<strong>Effects:</strong> if <var>c</var> does not indicate an end-of-file, then pretends to write out the character represented by <var>c</var> and actually just increments the running count of characters (virtually) written by 1, else does nothing<br>
+		<strong>Returns:</strong> <var>c</var> if it is not an end-of-file indicator, otherwise some value that is not an end-of-file indicator (this member function should never fail, so an end-of-file indicator should never be returned)<br>
+		<strong>Rationale:</strong> writing out a single character, or pretending to flush the output sequence
+</dl>
+
+<h2><a name="null_s">Disconnected Stream Class Template</a></h2>
+
+<p>The <code>boost::io:: basic_onullstream</code> class template is a stream class that uses an internal <a href="#null_sb"><code>basic_nullbuf</code></a> object.  It is implemented with the <a href="streambuf_wrapping.html">stream-buffer-wrapping stream base library</a>.  (There is only an output-only stream provided, since the associated stream buffer class only overrides output operations.  The user has build an always-empty input-only stream his/herself.)
+
+<blockquote><pre>
+#include &lt;boost/io/streambuf_wrapping.hpp&gt;
+
+template &lt; typename Ch, class Tr &gt;
+class basic_onullstream
+    : public basic_wrapping_ostream&lt; basic_nullbuf&lt;Ch, Tr&gt; &gt;
+{
+public:
+    // Template arguments
+    typedef Ch  char_type;
+    typedef Tr  traits_type;
+
+    // Other types
+    typedef typename Tr::int_type  int_type;
+    typedef typename Tr::pos_type  pos_type;
+    typedef typename Tr::off_type  off_type;
+
+    // Use automatically-defined default-constructor and destructor
+
+};
+</pre></blockquote>
+
+<h2><a name="refer">References</a></h2>
+
+<ul>
+	<li>The null-stream library header itself: <cite><a href="../../../boost/io/null_stream.hpp">boost/io/null_stream.hpp</a></cite></li>
+	<li>Some test/example code: <cite><a href="../test/null_stream_test.cpp">null_stream_test.cpp</a></cite></li>
+</ul>
+
+<h2><a name="credits">Credits</a></h2>
+
+<h3><a name="contributors">Contributors</a></h3>
+
+<dl>
+	<dt><a href="../../../people/daryle_walker.html">Daryle Walker</a>
+	<dd>Started the library.  Contributed the initial versions of the null stream and stream-buffer class templates.
+</dl>
+
+<h3><a name="history">History</a></h3>
+
+<dl>
+	<dt>18 Nov 2003, Daryle Walker
+	<dd>Initial version
+</dl>
+
+<hr>
+
+<p>Revised: 18 November 2003</p>
+
+<p>Copyright 2003 Daryle Walker.  Use, modification, and distribution are subject to the Boost Software License, Version 1.0.  (See accompanying file <a href="../../../LICENSE_1_0.txt">LICENSE_1_0.txt</a> or a copy at &lt;<a href="http://www.boost.org/LICENSE_1_0.txt">http://www.boost.org/LICENSE_1_0.txt</a>&gt;.)</p>
+</body>
+</html>
