@@ -8,7 +8,7 @@
 #include <boost/fixed_string/fsstdio.hpp>
 #include <boost/test/minimal.hpp>
 
-int main()
+int test_main( int, char *[] )
 {
    const char *                        teststr = "C-style strings!";
    const int                           testlen = strlen( teststr );

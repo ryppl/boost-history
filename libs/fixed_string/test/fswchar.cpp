@@ -7,7 +7,7 @@
 #include <boost/fixed_string/fswchar.hpp>
 #include <boost/test/minimal.hpp>
 
-int main()
+int test_main( int, char *[] )
 {
    const wchar_t *                     teststr = L"C-style strings!";
    const int                           testlen = wcslen( teststr );
