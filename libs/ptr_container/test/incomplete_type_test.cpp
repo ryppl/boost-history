@@ -20,23 +20,38 @@ class Composite
     typedef composite_t::size_type        size_type; 
     composite_t                           elements_;
 
+    //
+    // only used internally for 'clone()'
+    //
     Composite( const Composite& r ) : elements_( r.elements_.clone() )
     { }
     
+    //
+    // this class is not Copyable nor Assignable 
+    //
     void operator=( const Composite& );
 
 public:
     Composite()
     { }
     
+    //
+    // of course detructor is virtual
+    //
     virtual ~Composite()
     { }
  
+    //
+    // one way of adding new elements
+    //
     void add( Composite* c )
     {
         elements_.push_back( c );
     }
     
+    //
+    // second way of adding new elements
+    //
     void add( Composite& c )
     {
         elements_.push_back( c );
@@ -47,12 +62,15 @@ public:
         elements_.erase( where );
     }
   
+    //
+    // recusively count the elements 
+    //
     size_type size() const
     {
-        size_type res = elements_.size();
+        size_type res = 0;
         for( const_iterator i = elements_.begin(); i != elements_.end(); ++i )
             res += i->size();
-        return res;
+        return 1 /* this */ + res;
     }
     
     void foo()
@@ -62,6 +80,9 @@ public:
             i->foo();
     }
     
+    //
+    // this class is clonable and this is the callback for 'make_clone()'
+    //
     virtual Composite* clone() const
     {
         return new Composite( *this );
@@ -74,7 +95,10 @@ private:
     }
 };
 
-
+//
+// make 'Composite' clonable; note that we do not need to overload
+// the function in the 'boost' namespace.
+//
 Composite* make_clone( const Composite& c )
 {
     return c.clone();
@@ -116,9 +140,9 @@ void test_incomplete()
     c.add( new ConcreteComposite1 );
     c.add( new ConcreteComposite2 ); 
     BOOST_CHECK( c.size() == 2 );
-    c.add( c ); // add c to itself
+    c.add( make_clone( c ) ); // add c to itself
     BOOST_CHECK( c.size() == 5 );
-    c.add( c ); // ditto
+    c.add( c );               // add c to itself
     BOOST_CHECK( c.size() == 11 );
     c.foo();     
 }
@@ -131,4 +155,11 @@ int test_main( int, char*[] )
     return 0;
 }
 
+//
+// todo: remake example with shared_ptr
+//
 
+//
+// rationale for & overloads: the novice programmer might see that he gets a compile errro when he
+// tries to add something: c.push_back( obj ); So he fixes it: c.push_back( &obj ); Now his program compiles.
+//
