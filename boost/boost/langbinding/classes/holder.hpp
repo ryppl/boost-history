@@ -17,12 +17,12 @@ struct instance_link
       : siblings(siblings)
     {}
     
-    virtual ~instance_link();
+    virtual ~instance_link() {};
     
     holder* sibling() const
     { return siblings; }
     
-    virtual void* find(std::type_info const&) const = 0;
+    virtual void* find(util::type_info const&) const = 0;
     
  private:
     instance_link(holder_base const&);    // noncopyable
@@ -40,7 +40,7 @@ struct instance_holder
       , ptr(ptr)
     {}
         
-    void* find(std::type_info const& sought) const
+    void* find(util::type_info const& sought) const
     {
         if (typeid(Pointer) == sought)
             return &this->ptr;
@@ -51,24 +51,29 @@ struct instance_holder
         if (p == 0)
             return 0;
 
-        if (void* wrapped = holds
-        if (sought == typeid(pointee))
-            return p;
-        
-        return this->find_wrapped(sought, p)
+        if (void* found = find_polymorphic(sought, (pointee*)0, p))
+            return found;
+            
+        util::type_info const held = python::type_id<pointee>();
+        return held == sought ? p : aux::find_dynamic_type(p, held, sought);
     }
 
  private:
-    void* find_wrapped(std::type_info const& sought, )
+    template <class T>
+    void* find_polymorphic(util::type_info const& sought, polymorphic<T>*, T* p)
     {
-        
+        return sought == util::type_id<T>() ? p : 0;
+    }
+    
+    template <class T>
+    void* find_polymorphic(util::type_info const&, ...)
+    {
+        return 0;
     }
     
  private:
     Pointer ptr;
 };
-
-
 
 }}} // namespace boost::langbinding::classes
 

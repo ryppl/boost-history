@@ -20,7 +20,7 @@ int main()
 
     Y y;
 
-    void* p = classes::find_dynamic_type(
+    void* p = classes::aux::find_dynamic_type(
         (X*)&y, util::type_id<X>(), util::type_id<Y>());
 
     assert(p == &y);
