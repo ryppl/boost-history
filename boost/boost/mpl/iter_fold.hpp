@@ -89,17 +89,17 @@ struct iter_fold_impl_more
 
     static void execute()
     {
-        ForwardOp::template apply<State,Iterator>::execute();
+        forward::execute();
         recursion::execute();
-        BackwardOp::template apply<Iterator,inner_t>::execute();
+        backward::execute();
     }
 
     template <class T>
     static void execute(T x)
     {
-        ForwardOp::template apply<State,Iterator>::execute(x);
+        forward::execute(x);
         recursion::execute(x);
-        BackwardOp::template apply<Iterator,inner_t>::execute(x);
+        backward::execute(x);
     }
 
     // We're not ready for this yet, are we?

@@ -12,8 +12,8 @@ namespace aux {
 template<int> struct apply_impl_chooser;
 }
 
-template<typename F> struct apply0 { 
-typedef typename F::type type; 
+template<typename F> struct apply0 : F
+{ 
 }; 
 
 namespace aux { 
@@ -24,8 +24,9 @@ template< typename F, typename T1, typename T2, typename T3, typename T4, typena
 }; 
 } 
 
-template< typename F, typename T1 > struct apply1 { 
-typedef typename F ::template apply< T1 >::type type; 
+template< typename F, typename T1 > struct apply1
+  : F ::template apply< T1 >
+{ 
 }; 
 
 namespace aux { 
@@ -36,8 +37,9 @@ template< typename F, typename T1, typename T2, typename T3, typename T4, typena
 }; 
 } 
 
-template< typename F, typename T1, typename T2 > struct apply2 { 
-typedef typename F ::template apply< T1, T2 >::type type; 
+template< typename F, typename T1, typename T2 > struct apply2
+  : F ::template apply< T1, T2 >
+{ 
 };
 
 namespace aux { 
@@ -48,8 +50,7 @@ template< typename F, typename T1, typename T2, typename T3, typename T4, typena
 }; 
 } 
 
-template< typename F, typename T1, typename T2, typename T3 > struct apply3 { 
-typedef typename F ::template apply< T1, T2, T3 >::type type; 
+template< typename F, typename T1, typename T2, typename T3 > struct apply3 : F ::template apply< T1, T2, T3 > {
 }; 
 
 namespace aux { 
@@ -60,8 +61,7 @@ template< typename F, typename T1, typename T2, typename T3, typename T4, typena
 }; 
 } 
 
-template< typename F, typename T1, typename T2, typename T3, typename T4 > struct apply4 { 
-typedef typename F ::template apply< T1, T2, T3, T4 >::type type; 
+template< typename F, typename T1, typename T2, typename T3, typename T4 > struct apply4 : F ::template apply< T1, T2, T3, T4 > {
 }; 
 
 namespace aux { 
@@ -72,8 +72,7 @@ template< typename F, typename T1, typename T2, typename T3, typename T4, typena
 }; 
 } 
 
-template< typename F, typename T1, typename T2, typename T3, typename T4, typename T5 > struct apply5 { 
-typedef typename F ::template apply< T1, T2, T3, T4, T5 >::type type; 
+template< typename F, typename T1, typename T2, typename T3, typename T4, typename T5 > struct apply5 : F ::template apply< T1, T2, T3, T4, T5 > {
 }; 
 
 namespace aux { 

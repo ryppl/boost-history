@@ -96,14 +96,17 @@ struct BOOST_PREPROCESSOR_CAT(apply, n) \
             , typename P \
             ) > struct apply; \
     }; \
- public: \
-    typedef typename F_wrapper< \
+    typedef F_wrapper< \
           aux::msvc_never_true<F>::value \
         >::template apply< BOOST_MPL_AUX_APPLY_VARIABLE_PARAMS( \
                 BOOST_PREPROCESSOR_EMPTY \
               , n \
               , T \
-              ) >::type type; \
+              ) > applied; \
+ public: \
+    typedef typename applied::type type; \
+    void execute() { return applied::execute(); } \
+    template <class X> void execute(X x) { return applied::execute(x); } \
 }; \
 /**/
 
