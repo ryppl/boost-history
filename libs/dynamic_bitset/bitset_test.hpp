@@ -78,7 +78,7 @@ struct bitset_test {
     } else {
       std::size_t rlen = std::min(n, str.size() - pos);
 
-      // Throws invalid_argument if any of the rlen characters in str
+      // Check whether any of the rlen characters in str
       // beginning at position pos is other than 0 or 1.
       bool any_non_zero_or_one = false;
       for (std::size_t i = pos; i < pos + rlen; ++i)
