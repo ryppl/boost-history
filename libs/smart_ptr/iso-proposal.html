@@ -212,21 +212,46 @@
 		<h4>2. Deleter Constructor</h4>
 		<p>...</p>
 		<h4>3. weak_ptr Constructor</h4>
-		<p>...</p>
+		<p><EM>shared_ptr</EM> provides a converting constructor from <EM>weak_ptr</EM>, 
+			with the postcondition that the newly constructed <EM>shared_ptr</EM> shares 
+			ownership with the <EM>weak_ptr</EM> argument (when non-<EM>empty</EM>.) In 
+			other words, it is possible to copy a <EM>shared_ptr</EM> using an intermediate <EM>
+				weak_ptr</EM>, and the copy and the original will share ownership. If this 
+			postcondition cannot be met, as will happen if all <EM>shared_ptr</EM> instances 
+			sharing ownership with the <EM>weak_ptr</EM> argument have been already 
+			destroyed, the constructor throws an exception of type <EM>bad_weak_ptr</EM>.</p>
+		<P>An alternative way of obtaining a <EM>shared_ptr</EM> from a <EM>weak_ptr</EM> is 
+			to use <EM>weak_ptr</EM>'s member function <code>lock</code>. It indicates 
+			failure by returning an <EM>empty</EM> <EM>shared_ptr</EM>.</P>
 		<h4>4. std::auto_ptr Constructor</h4>
-		<p>...</p>
-		<h4>5. Assignment</h4>
-		<p>...</p>
+		<p><EM>shared_ptr</EM> provides a converting constructor from <EM>std::auto_ptr</EM>. 
+			It is almost equivalent to calling <code>release()</code> on the source <EM>auto_ptr</EM>
+			and using the raw pointer constructor; the only difference is that this 
+			constructor provides the strong exception safety guarantee, and in case an 
+			exception is thrown, it will leave the source <EM>auto_ptr</EM> unchanged. To 
+			achieve this, the constructor takes the source by a non-const reference; pass 
+			by value would be equivalent to using <code>release()</code>.</p>
+		<P>
+			If the "rvalue reference" proposed in [<A href="#Hinnant02">Hinnant02</A> ] is 
+			accepted, the constructor can take advantage of it in order to be able to take 
+			an <EM>auto_ptr</EM> rvalue as an argument.</P>
+		<h4>5. Assignment and <code>reset</code></h4>
+		<p>Assignment and <code>reset</code> are specified in terms of construction and 
+			swap, but the intent is to not preclude more efficient implementations that 
+			have the same effects, hence the note.</p>
 		<h4>6. <code>operator-&gt;</code></h4>
-		<p>...</p>
+		<p><code>operator-&gt;</code> requires that <code>get() != 0</code> in order to 
+			allow conforming implementations to assert in debug mode.</p>
 		<h4>7. <code>use_count</code> and <code>unique</code></h4>
 		<p>...</p>
 		<h4>8. Conversion Operator</h4>
 		<p>...</p>
 		<h4>9. <code>operator&lt;</code></h4>
 		<p>...</p>
-		<h4>10. <code>operator&gt;&gt;</code></h4>
-		<p>...</p>
+		<h4>10. <code>operator&lt;&lt;</code></h4>
+		<p>A stream insertion operator is explicitly provided for <EM>shared_ptr</EM> since 
+			the conversion operator may cause <EM>shared_ptr</EM> to be treated in stream 
+			insertion contexts as if it were a <code>bool</code>.</p>
 		<h4>11. Casts</h4>
 		<p>...</p>
 		<h4>12. <code>get_deleter</code></h4>
@@ -488,6 +513,9 @@
 		<p><b>Requires:</b> <code>get() != 0</code>.</p>
 		<p><b>Returns:</b> <code>*get()</code>.</p>
 		<p><b>Throws:</b> nothing.</p>
+		<p><b>Notes:</b> When <code>T</code> is <code>void</code>, the return type of this 
+			member function is unspecified, and an attempt to instantiate it renders the 
+			program ill-formed.</p>
 		<pre>    T * operator-&gt;() const;
 </pre>
 		<p><b>Requires:</b> <code>get() != 0</code>.</p>
@@ -799,6 +827,10 @@ void test()
 			for "reference counted smart pointer" yields 2,400 entries. Anyone doubting 
 			that shared-ownership smart pointers have been reinvented a large number of 
 			times should read a random selection of these entries.</p>
+		<p>[<a name="Hinnant02">Hinnant02</a>] Howard E. Hinnant, Peter Dimov, and Dave 
+			Abrahams, <em>A Proposal to Add Move Semantics Support to the C++ Language</em>, 
+			C++ committee document N1377=02-0035, September, 2002. Available online at <a href="http://std.dkuug.dk/jtc1/sc22/wg21/docs/papers/2002/n1377.htm">
+				http://std.dkuug.dk/jtc1/sc22/wg21/docs/papers/2002/n1377.htm</a></p>
 		<p>[<a name="Meyers01">Meyers01</a>] Scott Meyers, <i><a href="http://www.awl.com/cseng/titles/0-201-74962-9/">
 					Effective STL</a></i>, page 39, Addison-Wesley, 2001, ISBN 
 			0-201-74962-9.</p>
