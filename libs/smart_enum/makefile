@@ -31,7 +31,6 @@ clean::
 dist::
 	@rm -rf /tmp/smart-enum-src
 	@mkdir -p /tmp/smart-enum-src/boost /tmp/smart-enum-src/libs/smart_enum
-	@install -c -m 444 ../../boost.css ../../c++boost.gif /tmp/smart-enum-src/
 	@install -c -m 444 ../../boost/smart_enum.hpp /tmp/smart-enum-src/boost/
 	@install -c -m 644 makefile *.htm *.cpp *.gif /tmp/smart-enum-src/libs/smart_enum/
 	@echo >/tmp/smart-enum-src/README "Example programs and documentation are in libs/smart_enum/."
