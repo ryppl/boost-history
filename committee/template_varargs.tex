@@ -596,10 +596,11 @@ template<typename Tuple, ... Args>
   }
 \end{verbatim}
 
-The second tuple algorithm illustrates the ability to unpack a tuple
-into a (value) parameter pack, so that function call arguments can be
-stored in a tuple and later unpacked and passed to a function object
-as function call parameters.
+The second tuple algorithm illustrates the ability to convert a tuple into
+a (value) parameter pack, so that the function call arguments can be passed
+to a function object as a function call parameter. This allows us to store
+the parameter pack as a tuple and manipulate it with the tuple algorithms
+before using it
 \begin{verbatim}
 template<typename F, ... Args>
   auto apply(F f, tuple<>, Args&... args)
