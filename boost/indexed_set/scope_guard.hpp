@@ -25,9 +25,9 @@ namespace detail{
  *   - Naming style changed to standard C++ library requirements.
  *   - safe_execute does not feature a try-catch protection, so we can
  *     use this even if BOOST_NO_EXCEPTIONS is defined.
- *   - Added scope_guard_impl4 (Boost.IndexedSet needs it). A better design
- *     would provide guards for many more arguments through the Boost
- *     Preprocessor Library.
+ *   - Added scope_guard_impl4 and obj_scope_guard_impl3, (Boost.IndexedSet needs
+ *     them). A better design would provide guards for many more arguments through
+ *     the Boost Preprocessor Library.
  *   - Added scope_guard_impl_base::touch (see below.)
  *   - Removed RefHolder and ByRef, whose functionality is provided
  *     already by Boost.Ref.
@@ -229,6 +229,31 @@ inline obj_scope_guard_impl2<Obj,MemFun,P1,P2>
 make_obj_guard(Obj& obj,MemFun mem_fun,P1 p1,P2 p2)
 {
   return obj_scope_guard_impl2<Obj,MemFun,P1,P2>(obj,mem_fun,p1,p2);
+}
+
+template<class Obj,typename MemFun,typename P1,typename P2,typename P3>
+class obj_scope_guard_impl3:public scope_guard_impl_base
+{
+public:
+  obj_scope_guard_impl3(Obj& obj,MemFun mem_fun,P1 p1,P2 p2,P3 p3):
+    obj_(obj),mem_fun_(mem_fun),p1_(p1),p2_(p2),p3_(p3)
+  {}
+  ~obj_scope_guard_impl3(){safe_execute(*this);}
+  void execute(){(obj_.*mem_fun_)(p1_,p2_,p3_);}
+
+protected:
+  Obj&     obj_;
+  MemFun   mem_fun_;
+  const P1 p1_;
+  const P2 p2_;
+  const P3 p3_;
+};
+
+template<class Obj,typename MemFun,typename P1,typename P2,typename P3>
+inline obj_scope_guard_impl3<Obj,MemFun,P1,P2,P3>
+make_obj_guard(Obj& obj,MemFun mem_fun,P1 p1,P2 p2,P3 p3)
+{
+  return obj_scope_guard_impl3<Obj,MemFun,P1,P2,P3>(obj,mem_fun,p1,p2,p3);
 }
 
 } /* namespace indexed_sets::detail */
