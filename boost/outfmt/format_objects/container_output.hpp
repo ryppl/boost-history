@@ -17,6 +17,9 @@
                                                                          Outputter
                                                                       >, Outputter >
       {
+         private:
+            typedef detail::list_output< FormatType, container_output< FormatType, Outputter >, Outputter >
+                                                                     base_type;
          public:
             template< typename Container, class OutputStream >
             inline OutputStream & operator()
@@ -25,11 +28,20 @@
                                      const Container & c
                                   ) const
             {
-               typedef detail::list_output< FormatType, container_output< FormatType, Outputter >, Outputter >
-                                                                     base_type;
-
                const base_type *       self = static_cast< const base_type * >( this );
                return(( *self )( os, c.begin(), c.end()));
+            }
+         public:
+            template< typename Container, class InputStream >
+            inline bool                          read( InputStream & is, Container & c ) const
+            {
+               c.clear();
+
+               const base_type *       self = static_cast< const base_type * >( this );
+               typename Container::value_type
+                                       value;
+
+               return(( *self ).read( is, std::back_inserter( c ), value ));
             }
          public:
             inline           container_output()

@@ -1,4 +1,4 @@
-// (C) Copyright 2003: Reece H. Dunn 
+// (C) Copyright 2003: Reece H. Dunn
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1200)
 #  pragma once
@@ -39,6 +39,33 @@
                }
 
                return( os << close());
+            }
+         public:
+            template< class InputStream, class OutputIterator, typename T >
+            inline bool                          read( InputStream & is, OutputIterator i, T & value ) const
+            {
+               if( !is.match( open()))           return( false );
+
+               typename InputStream::char_type
+                                       cch = is.firstch( close());
+               typename InputStream::char_type
+                                       ch  = '\0';
+
+               while( is.readfirstch( ch ) && !is.eq( ch, cch ))
+               {
+                  if( !outputter.read( is, value ))
+                     return( false );
+
+                  *i++ = value;
+
+                  if( is.readfirstch( ch ) && !is.eq( ch, cch ))
+                  {
+                     if( !is.match( separator()))
+                        return( false );
+                  }
+               }
+
+               return( is.match( close()));
             }
          public:
             inline           list_output()
