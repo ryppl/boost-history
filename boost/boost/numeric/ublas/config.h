@@ -25,8 +25,6 @@
 #pragma warning (disable: 4503)
 #pragma warning (disable: 4786)
 
-#define NUMERICS_ET_VALUE
-
 #define NUMERICS_TYPENAME
 
 #define NUMERICS_EXPLICIT explicit
@@ -38,6 +36,16 @@
 
 // Bounds check
 #define NUMERICS_BOUNDS_CHECK
+
+// Use iterators.
+#define NUMERICS_USE_ITERATOR
+
+// Use expression templates.
+// #define NUMERICS_USE_ET
+#define NUMERICS_ET_VALUE
+// #define NUMERICS_ET_REFERENCE
+// #define NUMERICS_ET_CLOSURE_VALUE
+#define NUMERICS_ET_CLOSURE_REFERENCE
 
 #else 
 
@@ -51,14 +59,20 @@
 // #define NUMERICS_INLINE __forceinline
 
 // Do not check sizes!
-#define NUMERICS_FAST_COMMON
+#define NUMERICS_USE_FAST_COMMON
 
 // Use expression templates.
 #define NUMERICS_USE_ET
+#define NUMERICS_ET_VALUE
+// #define NUMERICS_ET_REFERENCE
+// #define NUMERICS_ET_CLOSURE_VALUE
+#define NUMERICS_ET_CLOSURE_REFERENCE
 
 // Use iterators.
 #define NUMERICS_USE_ITERATOR
-// #define NUMERICS_USE_ITERATOR_INDEX
+
+// Use invariant hoisting.
+#define NUMERICS_USE_INVARIANT_HOISTING
 
 #endif 
 
@@ -86,8 +100,6 @@ namespace std {
 
 #ifdef USE_GCC
 
-#define NUMERICS_ET_VALUE
-
 #define NUMERICS_TYPENAME typename
 
 #define NUMERICS_EXPLICIT explicit
@@ -95,30 +107,46 @@ namespace std {
 #define NUMERICS_INLINE inline
 
 // Do not check sizes!
-#define NUMERICS_FAST_COMMON
+#define NUMERICS_USE_FAST_COMMON
 
 // Use expression templates.
 #define NUMERICS_USE_ET
+#define NUMERICS_ET_VALUE
+// #define NUMERICS_ET_REFERENCE
+// #define NUMERICS_ET_CLOSURE_VALUE
+#define NUMERICS_ET_CLOSURE_REFERENCE
 
 // Use iterators.
 #define NUMERICS_USE_ITERATOR
-// #define NUMERICS_USE_ITERATOR_INDEX
+
+// Use invariant hoisting.
+#define NUMERICS_USE_INVARIANT_HOISTING
 
 namespace numerics {
 
     namespace detail {
 
+        // FIXME: eliminate someday.
         template<class I1, class I2>
         NUMERICS_INLINE
         void copy (I1 it1, const I1 &it1_end, I2 it2) {
+#if __GNUC__ <= 2
             while (it1 != it1_end)
                 *it2 = *it1, ++ it2, ++ it1;
+#else
+            std::copy (it1, it1_end, it2);
+#endif
         }
+        // FIXME: eliminate someday.
         template<class I1, class I2>
         NUMERICS_INLINE
         void swap_ranges (I1 it1, const I1 &it1_end, I2 it2) {
+#if __GNUC__ <= 2
             while (it1 != it1_end)
                 std::swap (*it1, *it2), ++ it2, ++ it1;
+#else
+            std::swap_ranges (it1, it1_end, it2);
+#endif
         }
 
     }
@@ -131,8 +159,6 @@ namespace numerics {
 
 #ifdef USE_BCC
 
-#define NUMERICS_ET_REFERENCE
-
 #define NUMERICS_TYPENAME typename
 
 #define NUMERICS_EXPLICIT explicit
@@ -140,14 +166,20 @@ namespace numerics {
 #define NUMERICS_INLINE inline
 
 // Do not check sizes!
-#define NUMERICS_FAST_COMMON
+#define NUMERICS_USE_FAST_COMMON
 
 // Use expression templates.
 #define NUMERICS_USE_ET
+// #define NUMERICS_ET_VALUE
+#define NUMERICS_ET_REFERENCE
+// #define NUMERICS_ET_CLOSURE_VALUE
+#define NUMERICS_ET_CLOSURE_REFERENCE
 
 // Use iterators.
 #define NUMERICS_USE_ITERATOR
-// #define NUMERICS_USE_ITERATOR_INDEX
+
+// Use invariant hoisting.
+#define NUMERICS_USE_INVARIANT_HOISTING
 
 #endif 
 

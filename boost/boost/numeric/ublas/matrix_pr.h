@@ -18,7 +18,6 @@
 #define NUMERICS_MATRIX_PR_H
 
 #include "config.h"
-#include "storage.h"
 #include "vector_et.h"
 #include "matrix_et.h"
 
@@ -31,20 +30,31 @@ namespace numerics {
     class matrix_row:
 		public vector_expression<matrix_row<M> > {
     public:      
+        typedef const M const_matrix_type;
         typedef M matrix_type;
         typedef typename M::size_type size_type;
         typedef typename M::difference_type difference_type;
         typedef typename M::value_type value_type;
         typedef typename M::const_reference_type const_reference_type;
         typedef typename M::reference_type reference_type;
-        typedef vector_const_reference<matrix_row<M> > const_closure_type;
-        typedef vector_reference<matrix_row<M> > closure_type;
-        typedef vector_range<matrix_row<M> > vector_range_type;
+#ifdef NUMERICS_ET_CLOSURE_REFERENCE
+        typedef const vector_const_reference<const matrix_row<matrix_type> > const_closure_type;
+        typedef vector_reference<matrix_row<matrix_type> > closure_type;
+#endif
+#ifdef NUMERICS_ET_CLOSURE_VALUE
+        typedef const matrix_row<matrix_type> const_closure_type;
+        typedef matrix_row<matrix_type> closure_type;
+#endif
+        typedef const vector_range<const matrix_row<const_matrix_type> > const_vector_range_type;
+        typedef vector_range<matrix_row<matrix_type> > vector_range_type;
         typedef typename M::const_iterator2 const_iterator_type;
         typedef typename M::iterator2 iterator_type;
         typedef typename proxy_traits<typename M::storage_category>::storage_category storage_category;
 
         // Construction and destruction
+        NUMERICS_INLINE
+        matrix_row (): 
+            data_ (nil_), i_ () {}
         NUMERICS_INLINE
         matrix_row (matrix_type &data, size_type i): 
             data_ (data), i_ (i) {}
@@ -75,6 +85,14 @@ namespace numerics {
             return (*this) (j); 
         }
 
+        NUMERICS_INLINE
+        const_vector_range_type project (size_type start, size_type stop) const {
+            return const_vector_range_type (*this, start, stop);
+        }
+        NUMERICS_INLINE
+        const_vector_range_type project (const range &r) const {
+            return const_vector_range_type (*this, r);
+        }
         NUMERICS_INLINE
         vector_range_type project (size_type start, size_type stop) {
             return vector_range_type (*this, start, stop);
@@ -179,8 +197,15 @@ namespace numerics {
             public random_access_iterator_base<const_iterator, value_type> {
         public:
             typedef typename M::const_iterator2::iterator_category iterator_category;
+#ifdef USE_GCC
+            typedef typename M::const_iterator2::difference_type difference_type;
+            typedef typename M::const_iterator2::value_type value_type;
+#endif
 
             // Construction and destruction
+            NUMERICS_INLINE
+            const_iterator ():
+                container_const_reference<matrix_row> (), it_ () {}
             NUMERICS_INLINE
             const_iterator (const matrix_row &mr, const const_iterator_type &it):
                 container_const_reference<matrix_row> (mr), it_ (it) {}
@@ -252,8 +277,15 @@ namespace numerics {
             public random_access_iterator_base<iterator, value_type> {
         public:
             typedef typename M::iterator2::iterator_category iterator_category;
+#ifdef USE_GCC
+            typedef typename M::iterator2::difference_type difference_type;
+            typedef typename M::iterator2::value_type value_type;
+#endif
 
             // Construction and destruction
+            NUMERICS_INLINE
+            iterator ():
+                container_reference<matrix_row> (), it_ () {}
             NUMERICS_INLINE
             iterator (matrix_row &mr, const iterator_type &it):
                 container_reference<matrix_row> (mr), it_ (it) {}
@@ -322,27 +354,42 @@ namespace numerics {
     private:
         matrix_type &data_;
         size_type i_;
+        static matrix_type nil_;
     };
+
+    template<class M>
+    matrix_row<M>::matrix_type matrix_row<M>::nil_;
 
     // Matrix based column vector class
     template<class M>
     class matrix_column:
 		public vector_expression<matrix_column<M> > {
     public:      
+        typedef const M const_matrix_type;
         typedef M matrix_type;
         typedef typename M::size_type size_type;
         typedef typename M::difference_type difference_type;
         typedef typename M::value_type value_type;
         typedef typename M::const_reference_type const_reference_type;
         typedef typename M::reference_type reference_type;
-        typedef vector_const_reference<matrix_column<M> > const_closure_type;
-        typedef vector_reference<matrix_column<M> > closure_type;
-        typedef vector_range<matrix_column<M> > vector_range_type;
+#ifdef NUMERICS_ET_CLOSURE_REFERENCE
+        typedef const vector_const_reference<const matrix_column<matrix_type> > const_closure_type;
+        typedef vector_reference<matrix_column<matrix_type> > closure_type;
+#endif
+#ifdef NUMERICS_ET_CLOSURE_VALUE
+        typedef const matrix_column<matrix_type> const_closure_type;
+        typedef matrix_column<matrix_type> closure_type;
+#endif
+        typedef const vector_range<const matrix_column<const_matrix_type> > const_vector_range_type;
+        typedef vector_range<matrix_column<matrix_type> > vector_range_type;
         typedef typename M::const_iterator1 const_iterator_type;
         typedef typename M::iterator1 iterator_type;
         typedef typename proxy_traits<typename M::storage_category>::storage_category storage_category;
 
         // Construction and destruction
+        NUMERICS_INLINE
+        matrix_column (): 
+            data_ (nil_), j_ () {}
         NUMERICS_INLINE
         matrix_column (matrix_type &data, size_type j): 
             data_ (data), j_ (j) {}
@@ -373,6 +420,14 @@ namespace numerics {
             return (*this) (i); 
         }
 
+        NUMERICS_INLINE
+        const_vector_range_type project (size_type start, size_type stop) const {
+            return const_vector_range_type (*this, start, stop);
+        }
+        NUMERICS_INLINE
+        const_vector_range_type project (const range &r) const {
+            return const_vector_range_type (*this, r);
+        }
         NUMERICS_INLINE
         vector_range_type project (size_type start, size_type stop) {
             return vector_range_type (*this, start, stop);
@@ -477,8 +532,15 @@ namespace numerics {
             public random_access_iterator_base<const_iterator, value_type> {
         public:
             typedef typename M::const_iterator1::iterator_category iterator_category;
+#ifdef USE_GCC
+            typedef typename M::const_iterator1::difference_type difference_type;
+            typedef typename M::const_iterator1::value_type value_type;
+#endif
 
             // Construction and destruction
+            NUMERICS_INLINE
+            const_iterator ():
+                container_const_reference<matrix_column> (), it_ () {}
             NUMERICS_INLINE
             const_iterator (const matrix_column &mc, const const_iterator_type &it):
                 container_const_reference<matrix_column> (mc), it_ (it) {}
@@ -550,8 +612,15 @@ namespace numerics {
             public random_access_iterator_base<iterator, value_type> {
         public:
             typedef typename M::iterator1::iterator_category iterator_category;
+#ifdef USE_GCC
+            typedef typename M::iterator1::difference_type difference_type;
+            typedef typename M::iterator1::value_type value_type;
+#endif
 
             // Construction and destruction
+            NUMERICS_INLINE
+            iterator ():
+                container_reference<matrix_column> (), it_ () {}
             NUMERICS_INLINE
             iterator (matrix_column &mc, const iterator_type &it):
                 container_reference<matrix_column> (mc), it_ (it) {}
@@ -620,21 +689,32 @@ namespace numerics {
     private:
         matrix_type &data_;
         size_type j_;
+        static matrix_type nil_;
     };
+
+    template<class M>
+    matrix_column<M>::matrix_type matrix_column<M>::nil_;
 
     // Matrix based vector range class
     template<class M>
     class matrix_vector_range:
 		public vector_expression<matrix_vector_range<M> > {
     public:      
+        typedef const M const_matrix_type;
         typedef M matrix_type;
         typedef typename M::size_type size_type;
         typedef typename M::difference_type difference_type;
         typedef typename M::value_type value_type;
         typedef typename M::const_reference_type const_reference_type;
         typedef typename M::reference_type reference_type;
-        typedef vector_const_reference<matrix_vector_range<M> > const_closure_type;
-        typedef vector_reference<matrix_vector_range<M> > closure_type;
+#ifdef NUMERICS_ET_CLOSURE_REFERENCE
+        typedef const vector_const_reference<const matrix_vector_range<matrix_type> > const_closure_type;
+        typedef vector_reference<matrix_vector_range<matrix_type> > closure_type;
+#endif
+#ifdef NUMERICS_ET_CLOSURE_VALUE
+        typedef const matrix_vector_range<matrix_type> const_closure_type;
+        typedef matrix_vector_range<matrix_type> closure_type;
+#endif
         typedef range::const_iterator const_iterator1_type;
         typedef range::const_iterator iterator1_type;
         typedef range::const_iterator const_iterator2_type;
@@ -675,6 +755,14 @@ namespace numerics {
             return (*this) (i); 
         }
 
+        NUMERICS_INLINE
+        matrix_vector_range project (size_type start, size_type stop) const {
+            return matrix_vector_range (data_, r1_.composite (range (start, stop)), r2_.composite (range (start, stop)));
+        }
+        NUMERICS_INLINE
+        matrix_vector_range project (const range &r) const {
+            return matrix_vector_range_type (data_, r1_.composite (r), r2_.composite (r));
+        }
         NUMERICS_INLINE
         matrix_vector_range project (size_type start, size_type stop) {
             return matrix_vector_range (data_, r1_.composite (range (start, stop)), r2_.composite (range (start, stop)));
@@ -759,7 +847,7 @@ namespace numerics {
         }
 #endif
 
-        // Iterators simply are indexes.
+        // Iterators simply are indices.
 
         class iterator;
 
@@ -769,8 +857,15 @@ namespace numerics {
         public:
             typedef typename restrict_traits<typename M::const_iterator1::iterator_category,
                                              typename M::const_iterator2::iterator_category>::iterator_category iterator_category; 
+#ifdef USE_GCC
+            typedef typename matrix_type::difference_type difference_type;
+            typedef typename matrix_type::value_type value_type;
+#endif
 
             // Construction and destruction
+            NUMERICS_INLINE
+            const_iterator ():
+                container_const_reference<matrix_type> (), it1_ (), it2_ () {}
             NUMERICS_INLINE
             const_iterator (const matrix_type &m, const const_iterator1_type &it1, const const_iterator2_type &it2):
                 container_const_reference<matrix_type> (m), it1_ (it1), it2_ (it2) {}
@@ -847,8 +942,15 @@ namespace numerics {
         public:
             typedef typename restrict_traits<typename M::iterator1::iterator_category,
                                              typename M::iterator2::iterator_category>::iterator_category iterator_category; 
+#ifdef USE_GCC
+            typedef typename matrix_type::difference_type difference_type;
+            typedef typename matrix_type::value_type value_type;
+#endif
 
             // Construction and destruction
+            NUMERICS_INLINE
+            iterator ():
+                container_reference<matrix_type> (), it1_ (), it2_ () {}
             NUMERICS_INLINE
             iterator (matrix_type &m, const iterator1_type &it1, const iterator2_type &it2):
                 container_reference<matrix_type> (m), it1_ (it1), it2_ (it2) {}
@@ -929,14 +1031,21 @@ namespace numerics {
     class matrix_vector_slice:
 		public vector_expression<matrix_vector_slice<M> > {
     public:      
+        typedef const M const_matrix_type;
         typedef M matrix_type;
         typedef typename M::size_type size_type;
         typedef typename M::difference_type difference_type;
         typedef typename M::value_type value_type;
         typedef typename M::const_reference_type const_reference_type;
         typedef typename M::reference_type reference_type;
-        typedef vector_const_reference<matrix_vector_slice<M> > const_closure_type;
-        typedef vector_reference<matrix_vector_slice<M> > closure_type;
+#ifdef NUMERICS_ET_CLOSURE_REFERENCE
+        typedef const vector_const_reference<const matrix_vector_slice<matrix_type> > const_closure_type;
+        typedef vector_reference<matrix_vector_slice<matrix_type> > closure_type;
+#endif
+#ifdef NUMERICS_ET_CLOSURE_VALUE
+        typedef const matrix_vector_slice<matrix_type> const_closure_type;
+        typedef matrix_vector_slice<matrix_type> closure_type;
+#endif
         typedef slice::const_iterator const_iterator1_type;
         typedef slice::const_iterator iterator1_type;
         typedef slice::const_iterator const_iterator2_type;
@@ -977,6 +1086,14 @@ namespace numerics {
             return (*this) (i); 
         }
 
+        NUMERICS_INLINE
+        matrix_vector_slice project (const range &r) const {
+            return matrix_vector_slice (data_, s1_.composite (r), s2_.composite (r));
+        }
+        NUMERICS_INLINE
+        matrix_vector_slice project (const slice &s) const {
+            return matrix_vector_slice (data_, s1_.composite (s), s2_.composite (s));
+        }
         NUMERICS_INLINE
         matrix_vector_slice project (const range &r) {
             return matrix_vector_slice (data_, s1_.composite (r), s2_.composite (r));
@@ -1061,7 +1178,7 @@ namespace numerics {
         }
 #endif
 
-        // Iterators simply are indexes.
+        // Iterators simply are indices.
 
         class iterator;
 
@@ -1071,8 +1188,15 @@ namespace numerics {
         public:
             typedef typename restrict_traits<typename M::const_iterator1::iterator_category,
                                              typename M::const_iterator2::iterator_category>::iterator_category iterator_category; 
+#ifdef USE_GCC
+            typedef typename matrix_type::difference_type difference_type;
+            typedef typename matrix_type::value_type value_type;
+#endif
 
             // Construction and destruction
+            NUMERICS_INLINE
+            const_iterator ():
+                container_const_reference<matrix_type> (), it1_ (), it2_ () {}
             NUMERICS_INLINE
             const_iterator (const matrix_type &m, const const_iterator1_type &it1, const const_iterator2_type &it2):
                 container_const_reference<matrix_type> (m), it1_ (it1), it2_ (it2) {}
@@ -1149,8 +1273,15 @@ namespace numerics {
         public:
             typedef typename restrict_traits<typename M::iterator1::iterator_category,
                                              typename M::iterator2::iterator_category>::iterator_category iterator_category; 
+#ifdef USE_GCC
+            typedef typename matrix_type::difference_type difference_type;
+            typedef typename matrix_type::value_type value_type;
+#endif
 
             // Construction and destruction
+            NUMERICS_INLINE
+            iterator ():
+                container_reference<matrix_type> (), it1_ (), it2_ () {}
             NUMERICS_INLINE
             iterator (matrix_type &m, const iterator1_type &it1, const iterator2_type &it2):
                 container_reference<matrix_type> (m), it1_ (it1), it2_ (it2) {}
@@ -1231,16 +1362,25 @@ namespace numerics {
     class matrix_range:
 		public matrix_expression<matrix_range<M> > {
     public:      
+        typedef const M const_matrix_type;
         typedef M matrix_type;
         typedef typename M::size_type size_type;
         typedef typename M::difference_type difference_type;
         typedef typename M::value_type value_type;
         typedef typename M::const_reference_type const_reference_type;
         typedef typename M::reference_type reference_type;
-        typedef matrix_const_reference<matrix_range<M> > const_closure_type;
-        typedef matrix_reference<matrix_range<M> > closure_type;
-        typedef matrix_row<matrix_range<M> > matrix_row_type;
-        typedef matrix_column<matrix_range<M> > matrix_column_type;
+#ifdef NUMERICS_ET_CLOSURE_REFERENCE
+        typedef const matrix_const_reference<const matrix_range<matrix_type> > const_closure_type;
+        typedef matrix_reference<matrix_range<matrix_type> > closure_type;
+#endif
+#ifdef NUMERICS_ET_CLOSURE_VALUE
+        typedef const matrix_range<matrix_type> const_closure_type;
+        typedef matrix_range<matrix_type> closure_type;
+#endif
+        typedef const matrix_row<const matrix_range<const_matrix_type> > const_matrix_row_type;
+        typedef matrix_row<matrix_range<matrix_type> > matrix_row_type;
+        typedef const matrix_column<const matrix_range<const_matrix_type> > const_matrix_column_type;
+        typedef matrix_column<matrix_range<matrix_type> > matrix_column_type;
         typedef typename M::const_iterator1 const_iterator1_type;
         typedef typename M::iterator1 iterator1_type;
         typedef typename M::const_iterator2 const_iterator2_type;
@@ -1249,6 +1389,9 @@ namespace numerics {
         typedef typename M::orientation_category orientation_category;
 
         // Construction and destruction
+        NUMERICS_INLINE
+        matrix_range (): 
+            data_ (nil_), r1_ (), r2_ () {}
         NUMERICS_INLINE
         matrix_range (matrix_type &data, const range &r1, const range &r2): 
             data_ (data), r1_ (r1), r2_ (r2) {}
@@ -1286,18 +1429,38 @@ namespace numerics {
         }
 
         NUMERICS_INLINE
+        const_matrix_row_type operator [] (size_type i) const {
+            return const_matrix_row_type (*this, i);
+        }
+        NUMERICS_INLINE
         matrix_row_type operator [] (size_type i) {
             return matrix_row_type (*this, i);
+        }
+        NUMERICS_INLINE
+        const_matrix_row_type row (size_type i) const {
+            return const_matrix_row_type (*this, i);
         }
         NUMERICS_INLINE
         matrix_row_type row (size_type i) {
             return matrix_row_type (*this, i);
         }
         NUMERICS_INLINE
+        const_matrix_column_type column (size_type j) const {
+            return const_matrix_column_type (*this, j);
+        }
+        NUMERICS_INLINE
         matrix_column_type column (size_type j) {
             return matrix_column_type (*this, j);
         }
 
+        NUMERICS_INLINE
+        matrix_range project (size_type start1, size_type stop1, size_type start2, size_type stop2) const {
+            return matrix_range (data_, r1_.composite (range (start1, stop1)), r2_.composite (range (start2, stop2)));
+        }
+        NUMERICS_INLINE
+        matrix_range project (const range &r1, const range &r2) const {
+            return matrix_range (data_, r1_.composite (r1), r2_.composite (r2));
+        }
         NUMERICS_INLINE
         matrix_range project (size_type start1, size_type stop1, size_type start2, size_type stop2) {
             return matrix_range (data_, r1_.composite (range (start1, stop1)), r2_.composite (range (start2, stop2)));
@@ -1405,8 +1568,15 @@ namespace numerics {
             public random_access_iterator_base<const_iterator1, value_type> {
         public:
             typedef typename M::const_iterator1::iterator_category iterator_category;
+#ifdef USE_GCC
+            typedef typename M::const_iterator1::difference_type difference_type;
+            typedef typename M::const_iterator1::value_type value_type;
+#endif
 
             // Construction and destruction
+            NUMERICS_INLINE
+            const_iterator1 ():
+                container_const_reference<matrix_range> (), it_ () {}
             NUMERICS_INLINE
             const_iterator1 (const matrix_range &mr, const const_iterator1_type &it):
                 container_const_reference<matrix_range> (mr), it_ (it) {}
@@ -1492,8 +1662,15 @@ namespace numerics {
             public random_access_iterator_base<iterator1, value_type> {
         public:
             typedef typename M::iterator1::iterator_category iterator_category;
+#ifdef USE_GCC
+            typedef typename M::iterator1::difference_type difference_type;
+            typedef typename M::iterator1::value_type value_type;
+#endif
 
             // Construction and destruction
+            NUMERICS_INLINE
+            iterator1 ():
+                container_reference<matrix_range> (), it_ () {}
             NUMERICS_INLINE
             iterator1 (matrix_range &mr, const iterator1_type &it):
                 container_reference<matrix_range> (mr), it_ (it) {}
@@ -1578,8 +1755,15 @@ namespace numerics {
             public random_access_iterator_base<const_iterator2, value_type> {
         public:
             typedef typename M::const_iterator2::iterator_category iterator_category;
+#ifdef USE_GCC
+            typedef typename M::const_iterator2::difference_type difference_type;
+            typedef typename M::const_iterator2::value_type value_type;
+#endif
 
             // Construction and destruction
+            NUMERICS_INLINE
+            const_iterator2 ():
+                container_const_reference<matrix_range> (), it_ () {}
             NUMERICS_INLINE
             const_iterator2 (const matrix_range &mr, const const_iterator2_type &it):
                 container_const_reference<matrix_range> (mr), it_ (it) {}
@@ -1665,8 +1849,15 @@ namespace numerics {
             public random_access_iterator_base<iterator2, value_type> {
         public:
             typedef typename M::iterator2::iterator_category iterator_category;
+#ifdef USE_GCC
+            typedef typename M::iterator2::difference_type difference_type;
+            typedef typename M::iterator2::value_type value_type;
+#endif
 
             // Construction and destruction
+            NUMERICS_INLINE
+            iterator2 ():
+                container_reference<matrix_range> (), it_ () {}
             NUMERICS_INLINE
             iterator2 (matrix_range &mr, const iterator2_type &it):
                 container_reference<matrix_range> (mr), it_ (it) {}
@@ -1750,23 +1941,36 @@ namespace numerics {
         matrix_type &data_;
         range r1_;
         range r2_;
+        static matrix_type nil_;
     };
+
+    template<class M>
+    matrix_range<M>::matrix_type matrix_range<M>::nil_;
 
     // Matrix based slice class
     template<class M>
     class matrix_slice:
 		public matrix_expression<matrix_slice<M> > {
     public:      
+        typedef const M const_matrix_type;
         typedef M matrix_type;
         typedef typename M::size_type size_type;
         typedef typename M::difference_type difference_type;
         typedef typename M::value_type value_type;
         typedef typename M::const_reference_type const_reference_type;
         typedef typename M::reference_type reference_type;
-        typedef matrix_const_reference<matrix_slice<M> > const_closure_type;
-        typedef matrix_reference<matrix_slice<M> > closure_type;
-        typedef matrix_row<matrix_slice<M> > matrix_row_type;
-        typedef matrix_column<matrix_slice<M> > matrix_column_type;
+#ifdef NUMERICS_ET_CLOSURE_REFERENCE
+        typedef const matrix_const_reference<const matrix_slice<matrix_type> > const_closure_type;
+        typedef matrix_reference<matrix_slice<matrix_type> > closure_type;
+#endif
+#ifdef NUMERICS_ET_CLOSURE_VALUE
+        typedef const matrix_slice<matrix_type> const_closure_type;
+        typedef matrix_slice<matrix_type> closure_type;
+#endif
+        typedef const matrix_row<const matrix_slice<const_matrix_type> > const_matrix_row_type;
+        typedef matrix_row<matrix_slice<matrix_type> > matrix_row_type;
+        typedef const matrix_column<const matrix_slice<const_matrix_type> > const_matrix_column_type;
+        typedef matrix_column<matrix_slice<matrix_type> > matrix_column_type;
         typedef slice::const_iterator const_iterator1_type;
         typedef slice::const_iterator iterator1_type;
         typedef slice::const_iterator const_iterator2_type;
@@ -1804,18 +2008,38 @@ namespace numerics {
         }
 
         NUMERICS_INLINE
+        const_matrix_row_type operator [] (size_type i) const {
+            return const_matrix_row_type (*this, i);
+        }
+        NUMERICS_INLINE
         matrix_row_type operator [] (size_type i) {
             return matrix_row_type (*this, i);
+        }
+        NUMERICS_INLINE
+        const_matrix_row_type row (size_type i) const {
+            return const_matrix_row_type (*this, i);
         }
         NUMERICS_INLINE
         matrix_row_type row (size_type i) {
             return matrix_row_type (*this, i);
         }
         NUMERICS_INLINE
+        const_matrix_column_type column (size_type j) const {
+            return const_matrix_column_type (*this, j);
+        }
+        NUMERICS_INLINE
         matrix_column_type column (size_type j) {
             return matrix_column_type (*this, j);
         }
 
+        NUMERICS_INLINE
+        matrix_slice project (const range &r1, const range &r2) const {
+            return matrix_slice (data_, s1_.composite (r1), s2_.composite (r2));
+        }
+        NUMERICS_INLINE
+        matrix_slice project (const slice &s1, const slice &s2) const {
+            return matrix_slice (data_, s1_.composite (s1), s2_.composite (s2));
+        }
         NUMERICS_INLINE
         matrix_slice project (const range &r1, const range &r2) {
             return matrix_slice (data_, s1_.composite (r1), s2_.composite (r2));
@@ -1893,7 +2117,7 @@ namespace numerics {
         }
 #endif
 
-        // Iterators simply are indexes.
+        // Iterators simply are indices.
 
         class iterator1;
 
@@ -1904,8 +2128,15 @@ namespace numerics {
             public random_access_iterator_base<const_iterator1, value_type> {
         public:
             typedef typename M::const_iterator1::iterator_category iterator_category;
+#ifdef USE_GCC
+            typedef typename matrix_type::difference_type difference_type;
+            typedef typename matrix_type::value_type value_type;
+#endif
 
             // Construction and destruction
+            NUMERICS_INLINE
+            const_iterator1 ():
+                container_const_reference<matrix_type> (), it1_ (), it2_ () {}
             NUMERICS_INLINE
             const_iterator1 (const matrix_type &m, const const_iterator1_type &it1, const const_iterator2_type &it2):
                 container_const_reference<matrix_type> (m), it1_ (it1), it2_ (it2) {}
@@ -1992,8 +2223,15 @@ namespace numerics {
             public random_access_iterator_base<iterator1, value_type> {
         public:
             typedef typename M::iterator1::iterator_category iterator_category;
+#ifdef USE_GCC
+            typedef typename matrix_type::difference_type difference_type;
+            typedef typename matrix_type::value_type value_type;
+#endif
 
             // Construction and destruction
+            NUMERICS_INLINE
+            iterator1 ():
+                container_reference<matrix_type> (), it1_ (), it2_ () {}
             NUMERICS_INLINE
             iterator1 (matrix_type &m, const iterator1_type &it1, const iterator2_type &it2):
                 container_reference<matrix_type> (m), it1_ (it1), it2_ (it2) {}
@@ -2077,8 +2315,15 @@ namespace numerics {
             public random_access_iterator_base<const_iterator2, value_type> {
         public:
             typedef typename M::const_iterator2::iterator_category iterator_category;
+#ifdef USE_GCC
+            typedef typename matrix_type::difference_type difference_type;
+            typedef typename matrix_type::value_type value_type;
+#endif
 
             // Construction and destruction
+            NUMERICS_INLINE
+            const_iterator2 ():
+                container_const_reference<matrix_type> (), it1_ (), it2_ () {}
             NUMERICS_INLINE
             const_iterator2 (const matrix_type &m, const const_iterator1_type &it1, const const_iterator2_type &it2):
                 container_const_reference<matrix_type> (m), it1_ (it1), it2_ (it2) {}
@@ -2163,8 +2408,15 @@ namespace numerics {
             public random_access_iterator_base<iterator2, value_type> {
         public:
             typedef typename M::iterator2::iterator_category iterator_category;
+#ifdef USE_GCC
+            typedef typename matrix_type::difference_type difference_type;
+            typedef typename matrix_type::value_type value_type;
+#endif
 
             // Construction and destruction
+            NUMERICS_INLINE
+            iterator2 ():
+                container_reference<matrix_type> (), it1_ (), it2_ () {}
             NUMERICS_INLINE
             iterator2 (matrix_type &m, const iterator1_type &it1, const iterator2_type &it2):
                 container_reference<matrix_type> (m), it1_ (it1), it2_ (it2) {}

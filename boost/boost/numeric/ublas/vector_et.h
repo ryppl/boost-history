@@ -188,7 +188,7 @@ namespace numerics {
         typedef typename E::size_type size_type;
         typedef typename E::difference_type difference_type;
         typedef typename F::value_type value_type;
-        typedef vector_unary<E, F> const_closure_type;
+        typedef const vector_unary<E, F> const_closure_type;
         typedef typename E::const_iterator const_iterator_type;
 
         // Construction and destruction
@@ -342,7 +342,7 @@ namespace numerics {
         typedef typename promote_traits<typename E1::size_type, typename E2::size_type>::promote_type size_type;
         typedef typename promote_traits<typename E1::difference_type, typename E2::difference_type>::promote_type difference_type;
         typedef typename F::value_type value_type;
-        typedef vector_binary<E1, E2, F> const_closure_type;
+        typedef const vector_binary<E1, E2, F> const_closure_type;
         typedef typename E1::const_iterator const_iterator1_type;
         typedef typename E2::const_iterator const_iterator2_type;
 
@@ -410,12 +410,12 @@ namespace numerics {
             NUMERICS_INLINE
             value_type dereference (std::bidirectional_iterator_tag) const {
 #ifndef USE_MSVC
-                value_type t1 = i_ - it1_.index () ? value_type (0) : *it1_;
-                value_type t2 = i_ - it2_.index () ? value_type (0) : *it2_;
+                value_type t1 = i_ - it1_.index () ? value_type () : *it1_;
+                value_type t2 = i_ - it2_.index () ? value_type () : *it2_;
 #else
                 value_type t1, t2;
-                if (i_ - it1_.index ()) t1 = value_type (0); else *it1_;
-                if (i_ - it2_.index ()) t2 = value_type (0); else *it2_;
+                if (i_ - it1_.index ()) t1 = value_type (); else t1 = *it1_;
+                if (i_ - it2_.index ()) t2 = value_type (); else t2 = *it2_;
 #endif
                 return functor_type () (t1, t2);
             }
@@ -472,11 +472,19 @@ namespace numerics {
 
         NUMERICS_INLINE
         const_iterator begin () const {
-            return const_iterator (0, e1_.begin (), e2_.begin ()); 
+//            return const_iterator (0, e1_.begin (), e2_.begin ()); 
+            const_iterator1_type e1_begin (e1_.begin ());
+            const_iterator2_type e2_begin (e2_.begin ());
+            return const_iterator (std::min (e1_begin.index (), e2_begin.index ()), 
+                                   e1_begin, e2_begin);
         }
         NUMERICS_INLINE
         const_iterator end () const {
-            return const_iterator (size (), e1_.end (), e2_.end ()); 
+//            return const_iterator (size (), e1_.end (), e2_.end ()); 
+            const_iterator1_type e1_end (e1_.end ());
+            const_iterator2_type e2_end (e2_.end ());
+            return const_iterator (std::max (e1_end.index (), e2_end.index ()), 
+                                   e1_end, e2_end);
         }
 
     private:
@@ -536,7 +544,7 @@ namespace numerics {
         typedef typename E2::size_type size_type;
         typedef typename E2::difference_type difference_type;
         typedef typename F::value_type value_type;
-        typedef vector_binary_scalar<E1, E2, F> const_closure_type;
+        typedef const vector_binary_scalar<E1, E2, F> const_closure_type;
         typedef typename E1::value_type const_iterator1_type;
         typedef typename E2::const_iterator const_iterator2_type;
 
@@ -833,7 +841,7 @@ namespace numerics {
         typedef typename E::size_type size_type;
         typedef typename E::difference_type difference_type;
         typedef typename E::value_type value_type;
-        typedef vector_expression_range<E> const_closure_type;
+        typedef const vector_expression_range<E> const_closure_type;
         typedef range::const_iterator const_iterator_type;
 
         // Construction and destruction
@@ -974,7 +982,7 @@ namespace numerics {
         typedef typename E::size_type size_type;
         typedef typename E::difference_type difference_type;
         typedef typename E::value_type value_type;
-        typedef vector_expression_slice<E> const_closure_type;
+        typedef const vector_expression_slice<E> const_closure_type;
         typedef slice::const_iterator const_iterator_type;
 
         // Construction and destruction

@@ -27,16 +27,16 @@
 
 namespace numerics {
 
+#ifndef NUMERICS_USE_FAST_COMMON
     template<class T>
     NUMERICS_INLINE
     const T &common (const T &size1, const T &size2) {
-#ifndef NUMERICS_FAST_COMMON
         check<bad_size>::precondition (size1 == size2);
         return std::min (size1, size2);
-#else 
-        return size1;
-#endif 
     }
+#else 
+#define common(size1,size2) (size1)
+#endif 
 
     // Unbounded array 
     template<class T>
@@ -417,6 +417,9 @@ namespace numerics {
 
         // Construction and destruction
         NUMERICS_INLINE
+        range (): 
+            start_ (), size_ () {}
+        NUMERICS_INLINE
         range (size_type start, size_type stop): 
             start_ (start), size_ (stop - start) {
             check<bad_size>::precondition (start <= stop);
@@ -441,7 +444,7 @@ namespace numerics {
         // Composition
         NUMERICS_INLINE
         range composite (const range &r) const {
-            check<bad_size>::precondition (start_ + r.size_ <= size_);
+            check<bad_size>::precondition (r.start_ + r.size_ <= size_);
             return range (start_ + r.start_, start_ + r.start_ + r.size_);
         }
 
@@ -463,6 +466,9 @@ namespace numerics {
         public:
 
             // Construction and destruction
+            NUMERICS_INLINE
+            const_iterator (): 
+                container_const_reference<range> (), it_ () {}
             NUMERICS_INLINE
             const_iterator (const range &r, const const_iterator_type &it): 
                 container_const_reference<range> (r), it_ (it) {}
@@ -563,6 +569,9 @@ namespace numerics {
 
         // Construction and destruction
         NUMERICS_INLINE
+        slice (): 
+            start_ (), stride_ (), size_ () {}
+        NUMERICS_INLINE
         slice (size_type start, size_type stride, size_type size): 
             start_ (start), stride_ (stride), size_ (size) {}
 
@@ -616,6 +625,9 @@ namespace numerics {
         public:
 
             // Construction and destruction
+            NUMERICS_INLINE
+            const_iterator (): 
+                container_const_reference<slice> (), it_ () {}
             NUMERICS_INLINE
             const_iterator (const slice &s, const const_iterator_type &it): 
                 container_const_reference<slice> (s), it_ (it) {}

@@ -22,14 +22,23 @@
 #include "config.h"
 
 #ifdef USE_GCC
+// FIXME: could we use BOOST_NO_STD_ITERATOR and <boost/iterator.h> here?
+#if __GNUC__ <= 2
 
 namespace std {
 
-    template<class I, class T> 
-    struct iterator {};
+    template <class I, class T, class D = std::ptrdiff_t, class P = T *, class R = T &>
+    struct iterator {
+        typedef I derived_iterator_category;
+        typedef T derived_value_type;
+        typedef D derived_difference_type;
+        typedef P derived_pointer;
+        typedef R derived_reference;
+    };
 
 }
 
+#endif
 #endif
 
 namespace numerics {
@@ -39,6 +48,9 @@ namespace numerics {
     public:
         typedef C container_type;
 
+        NUMERICS_INLINE
+        container_const_reference ():
+            c_ (nil_) {}
         NUMERICS_INLINE
         container_const_reference (const container_type &c):
             c_ (c) {}
@@ -50,7 +62,15 @@ namespace numerics {
 
     private:
         const container_type &c_;
+        static container_type nil_;
+
+        container_const_reference operator = (container_const_reference &) {
+            return *this;
+        }
     };
+
+    template<class C>
+    container_const_reference<C>::container_type container_const_reference<C>::nil_;
 
     template<class C>
     class container_reference {
@@ -58,11 +78,14 @@ namespace numerics {
         typedef C container_type;
 
         NUMERICS_INLINE
+        container_reference ():
+            c_ (nil_) {}
+        NUMERICS_INLINE
         container_reference (container_type &c):
             c_ (c) {}
 
         NUMERICS_INLINE
-        const container_type &operator () () const {
+        container_type &operator () () const {
             return c_; 
         }
         NUMERICS_INLINE
@@ -72,7 +95,15 @@ namespace numerics {
 
     private:
         container_type &c_;
+        static container_type nil_;
+
+        container_reference operator = (container_reference &) {
+            return *this;
+        }
     };
+
+    template<class C>
+    container_reference<C>::container_type container_reference<C>::nil_;
 
     template<class I, class T>
     struct forward_iterator_base: 
@@ -163,11 +194,14 @@ namespace numerics {
         typedef const T &derived_const_reference_type;
         typedef T &derived_reference_type;
         typedef D derived_difference_type;
+#ifdef USE_MSVC
+        typedef D difference_type;
+#endif
 
         // Arithmetic
         NUMERICS_INLINE
         derived_iterator_type operator ++ (int) {
-            derived_iterator_type &d (*static_cast<const derived_iterator_type *> (this));
+            derived_iterator_type &d (*static_cast<derived_iterator_type *> (this));
             derived_iterator_type tmp (d);
             ++ d;
             return tmp;
@@ -182,7 +216,7 @@ namespace numerics {
 #endif
         NUMERICS_INLINE
         derived_iterator_type operator -- (int) {
-            derived_iterator_type &d (*static_cast<const derived_iterator_type *> (this));
+            derived_iterator_type &d (*static_cast<derived_iterator_type *> (this));
             derived_iterator_type tmp (d);
             -- d;
             return tmp;
@@ -220,17 +254,6 @@ namespace numerics {
         }
 #endif
 
-        NUMERICS_INLINE
-        derived_value_type operator [] (derived_difference_type n) const {
-            const derived_iterator_type *d = static_cast<const derived_iterator_type *> (this);
-            return *((*d) + n);
-        }
-        NUMERICS_INLINE
-        derived_reference_type operator [] (derived_difference_type n) {
-            const derived_iterator_type *d = static_cast<const derived_iterator_type *> (this);
-            return *((*d) + n);
-        }
-
         // Comparison
         NUMERICS_INLINE
         bool operator != (const derived_iterator_type &it) const {
@@ -238,6 +261,29 @@ namespace numerics {
             return ! (*d == it);
         }
     };
+
+#if defined (USE_GCC)
+    template<class I>
+    NUMERICS_INLINE
+    I operator ++ (I &d, int) {
+        I tmp (d);
+        ++ d;
+        return tmp;
+    }
+    template<class I>
+    NUMERICS_INLINE
+    I operator -- (I &d, int) {
+        I tmp (d);
+        -- d;
+        return tmp;
+    }
+    template<class I>
+    NUMERICS_INLINE
+    I operator - (const I &d, std::ptrdiff_t n) {
+        I tmp (d);
+        return tmp -= n;
+    }
+#endif
 
     template<class I1, class I2>
     struct restrict_traits {

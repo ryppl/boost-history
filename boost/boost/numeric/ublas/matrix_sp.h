@@ -18,10 +18,8 @@
 #define NUMERICS_MATRIX_SP_H
 
 #include "config.h"
-#include "storage.h"
 #include "storage_sp.h"
-#include "vector_et.h"
-#include "matrix_et.h"
+#include "matrix.h"
 
 // Iterators based on ideas of Jeremy Siek
 
@@ -40,11 +38,15 @@ namespace numerics {
         typedef T *pointer_type;
         typedef F functor_type;
         typedef A array_type;
+        typedef const sparse_matrix<T, F, A> const_self_type;
         typedef sparse_matrix<T, F, A> self_type;
-        typedef matrix_const_reference<self_type> const_closure_type;
+        typedef const matrix_const_reference<const_self_type> const_closure_type;
         typedef matrix_reference<self_type> closure_type;
+        typedef const matrix_row<const_self_type> const_matrix_row_type;
         typedef matrix_row<self_type> matrix_row_type;
+        typedef const matrix_column<const_self_type> const_matrix_column_type;
         typedef matrix_column<self_type> matrix_column_type;
+        typedef const matrix_range<const_self_type> const_matrix_range_type;
         typedef matrix_range<self_type> matrix_range_type;
         typedef typename A::const_iterator const_iterator_type;
         typedef typename A::iterator iterator_type;
@@ -90,7 +92,7 @@ namespace numerics {
         value_type operator () (size_type i, size_type j) const {
             const_iterator_type it (data_.find (functor_type::element (i, size1_, j, size2_)));
             if (it == data_.end () || (*it).first != functor_type::element (i, size1_, j, size2_))
-                return value_type (0);
+                return value_type ();
             return (*it).second;
         }
         NUMERICS_INLINE
@@ -99,18 +101,38 @@ namespace numerics {
         }
 
         NUMERICS_INLINE
+        const_matrix_row_type operator [] (size_type i) const {
+            return const_matrix_row_type (*this, i);
+        }
+        NUMERICS_INLINE
         matrix_row_type operator [] (size_type i) {
             return matrix_row_type (*this, i);
+        }
+        NUMERICS_INLINE
+        const_matrix_row_type row (size_type i) const {
+            return const_matrix_row_type (*this, i);
         }
         NUMERICS_INLINE
         matrix_row_type row (size_type i) {
             return matrix_row_type (*this, i);
         }
         NUMERICS_INLINE
+        const_matrix_column_type column (size_type j) const {
+            return const_matrix_column_type (*this, j);
+        }
+        NUMERICS_INLINE
         matrix_column_type column (size_type j) {
             return matrix_column_type (*this, j);
         }
 
+        NUMERICS_INLINE
+        const_matrix_range_type project (size_type start1, size_type stop1, size_type start2, size_type stop2) const {
+            return const_matrix_range_type (*this, start1, stop1, start2, stop2);
+        }
+        NUMERICS_INLINE
+        const_matrix_range_type project (const range &r1, const range &r2) const {
+            return const_matrix_range_type (*this, r1, r2);
+        }
         NUMERICS_INLINE
         matrix_range_type project (size_type start1, size_type stop1, size_type start2, size_type stop2) {
             return matrix_range_type (*this, start1, stop1, start2, stop2);
@@ -212,6 +234,10 @@ namespace numerics {
         }
         NUMERICS_INLINE
         void insert (size_type i, size_type j, const_reference_type t) {
+#ifndef NUMERICS_USE_ET
+            if (t == value_type ()) 
+                return;
+#endif
             data_.insert (data_.end (), std::pair<size_type, value_type> (functor_type::element (i, size1_, j, size2_), t));
         }
 
@@ -322,9 +348,15 @@ namespace numerics {
             public bidirectional_iterator_base<const_iterator1, value_type> {
         public:
             typedef std::bidirectional_iterator_tag iterator_category;
+#ifdef USE_GCC
+            typedef typename sparse_matrix::value_type value_type;
+#endif
             typedef typename functor_type::functor1_type functor1_type;
 
             // Construction and destruction
+            NUMERICS_INLINE
+            const_iterator1 ():
+                container_const_reference<sparse_matrix> (), i_ (), j_ (), it_ () {}
             NUMERICS_INLINE
             const_iterator1 (const sparse_matrix &m, size_type i, size_type j, const const_iterator_type &it):
                 container_const_reference<sparse_matrix> (m), i_ (i), j_ (j), it_ (it) {}
@@ -420,9 +452,15 @@ namespace numerics {
             public bidirectional_iterator_base<iterator1, value_type> {
         public:
             typedef std::bidirectional_iterator_tag iterator_category;
+#ifdef USE_GCC
+            typedef typename sparse_matrix::value_type value_type;
+#endif
             typedef typename functor_type::functor1_type functor1_type;
 
             // Construction and destruction
+            NUMERICS_INLINE
+            iterator1 ():
+                container_reference<sparse_matrix> (), i_ (), j_ (), it_ () {}
             NUMERICS_INLINE
             iterator1 (sparse_matrix &m, size_type i, size_type j, const iterator_type &it):
                 container_reference<sparse_matrix> (m), i_ (i), j_ (j), it_ (it) {}
@@ -517,9 +555,15 @@ namespace numerics {
             public bidirectional_iterator_base<const_iterator2, value_type> {
         public:
             typedef std::bidirectional_iterator_tag iterator_category;
+#ifdef USE_GCC
+            typedef typename sparse_matrix::value_type value_type;
+#endif
             typedef typename functor_type::functor2_type functor2_type;
 
             // Construction and destruction
+            NUMERICS_INLINE
+            const_iterator2 ():
+                container_const_reference<sparse_matrix> (), i_ (), j_ (), it_ () {}
             NUMERICS_INLINE
             const_iterator2 (const sparse_matrix &m, size_type i, size_type j, const const_iterator_type &it):
                 container_const_reference<sparse_matrix> (m), i_ (i), j_ (j), it_ (it) {}
@@ -615,9 +659,15 @@ namespace numerics {
             public bidirectional_iterator_base<iterator2, value_type> {
         public:
             typedef std::bidirectional_iterator_tag iterator_category;
+#ifdef USE_GCC
+            typedef typename sparse_matrix::value_type value_type;
+#endif
             typedef typename functor_type::functor2_type functor2_type;
 
             // Construction and destruction
+            NUMERICS_INLINE
+            iterator2 ():
+                container_reference<sparse_matrix> (), i_ (), j_ (), it_ () {}
             NUMERICS_INLINE
             iterator2 (sparse_matrix &m, size_type i, size_type j, const iterator_type &it):
                 container_reference<sparse_matrix> (m), i_ (i), j_ (j), it_ (it) {}
@@ -727,11 +777,15 @@ namespace numerics {
         typedef T *pointer_type;
         typedef A array_type;
         typedef F functor_type;
+        typedef const sparse_vector_of_sparse_vector<T, F, A> const_self_type;
         typedef sparse_vector_of_sparse_vector<T, F, A> self_type;
-        typedef matrix_const_reference<self_type> const_closure_type;
+        typedef const matrix_const_reference<const_self_type> const_closure_type;
         typedef matrix_reference<self_type> closure_type;
+        typedef const matrix_row<const_self_type> const_matrix_row_type;
         typedef matrix_row<self_type> matrix_row_type;
+        typedef const matrix_column<const_self_type> const_matrix_column_type;
         typedef matrix_column<self_type> matrix_column_type;
+        typedef const matrix_range<const_self_type> const_matrix_range_type;
         typedef matrix_range<self_type> matrix_range_type;
         typedef typename A::value_type::second_type vector_data_value_type;
         typedef typename A::const_iterator vector_const_iterator_type;
@@ -786,10 +840,10 @@ namespace numerics {
         value_type operator () (size_type i, size_type j) const {
             vector_const_iterator_type itv (data_.find (functor_type::element1 (i, size1_, j, size2_)));
             if (itv == data_.end () || (*itv).first != functor_type::element1 (i, size1_, j, size2_))
-                return value_type (0);
+                return value_type ();
             const_iterator_type it ((*itv).second.find (functor_type::element2 (i, size1_, j, size2_)));
             if (it == (*itv).second.end () || (*it).first != functor_type::element2 (i, size1_, j, size2_))
-                return value_type (0);
+                return value_type ();
             return (*it).second;
         }
         NUMERICS_INLINE
@@ -798,18 +852,38 @@ namespace numerics {
         }
 
         NUMERICS_INLINE
+        const_matrix_row_type operator [] (size_type i) const {
+            return const_matrix_row_type (*this, i);
+        }
+        NUMERICS_INLINE
         matrix_row_type operator [] (size_type i) {
             return matrix_row_type (*this, i);
+        }
+        NUMERICS_INLINE
+        const_matrix_row_type row (size_type i) const {
+            return const_matrix_row_type (*this, i);
         }
         NUMERICS_INLINE
         matrix_row_type row (size_type i) {
             return matrix_row_type (*this, i);
         }
         NUMERICS_INLINE
+        const_matrix_column_type column (size_type j) const {
+            return const_matrix_column_type (*this, j);
+        }
+        NUMERICS_INLINE
         matrix_column_type column (size_type j) {
             return matrix_column_type (*this, j);
         }
 
+        NUMERICS_INLINE
+        const_matrix_range_type project (size_type start1, size_type stop1, size_type start2, size_type stop2) const {
+            return const_matrix_range_type (*this, start1, stop1, start2, stop2);
+        }
+        NUMERICS_INLINE
+        const_matrix_range_type project (const range &r1, const range &r2) const {
+            return const_matrix_range_type (*this, r1, r2);
+        }
         NUMERICS_INLINE
         matrix_range_type project (size_type start1, size_type stop1, size_type start2, size_type stop2) {
             return matrix_range_type (*this, start1, stop1, start2, stop2);
@@ -911,6 +985,10 @@ namespace numerics {
         }
         NUMERICS_INLINE
         void insert (size_type i, size_type j, const_reference_type t) {
+#ifndef NUMERICS_USE_ET
+            if (t == value_type ()) 
+                return;
+#endif
             vector_iterator_type itv (data_.find (functor_type::element1 (i, size1_, j, size2_)));
             if (itv == data_.end () || (*itv).first != functor_type::element1 (i, size1_, j, size2_)) 
                 itv = data_.insert (data_.end (), std::pair<size_type, vector_data_value_type> (functor_type::element1 (i, size1_, j, size2_), vector_data_value_type ()));
@@ -1096,9 +1174,15 @@ namespace numerics {
             public bidirectional_iterator_base<const_iterator1, value_type> {
         public:
             typedef std::bidirectional_iterator_tag iterator_category;
+#ifdef USE_GCC
+            typedef typename sparse_vector_of_sparse_vector::value_type value_type;
+#endif
             typedef typename functor_type::functor1_type functor1_type;
 
             // Construction and destruction
+            NUMERICS_INLINE
+            const_iterator1 ():
+                container_const_reference<sparse_vector_of_sparse_vector> (), i_ (), j_ (), itv_ (), it_ () {}
             NUMERICS_INLINE
             const_iterator1 (const sparse_vector_of_sparse_vector &m, size_type i, size_type j, const vector_const_iterator_type &itv, const const_iterator_type &it):
                 container_const_reference<sparse_vector_of_sparse_vector> (m), i_ (i), j_ (j), itv_ (itv), it_ (it) {}
@@ -1199,9 +1283,15 @@ namespace numerics {
             public bidirectional_iterator_base<iterator1, value_type> {
         public:
             typedef std::bidirectional_iterator_tag iterator_category;
+#ifdef USE_GCC
+            typedef typename sparse_vector_of_sparse_vector::value_type value_type;
+#endif
             typedef typename functor_type::functor1_type functor1_type;
 
             // Construction and destruction
+            NUMERICS_INLINE
+            iterator1 ():
+                container_reference<sparse_vector_of_sparse_vector> (), i_ (), j_ (), itv_ (), it_ () {}
             NUMERICS_INLINE
             iterator1 (sparse_vector_of_sparse_vector &m, size_type i, size_type j, const vector_iterator_type &itv, const iterator_type &it):
                 container_reference<sparse_vector_of_sparse_vector> (m), i_ (i), j_ (j), itv_ (itv), it_ (it) {}
@@ -1233,7 +1323,7 @@ namespace numerics {
                     functor1_type::decrement (it_);
                     break;
                 default:
-                    iterator1 it_ (m.find1 (index1 () - 1, j_));
+                    iterator1 it (m.find1 (index1 () - 1, j_));
                     itv_ = it.itv_;
                     it_ = it.it_;
                 }
@@ -1301,9 +1391,15 @@ namespace numerics {
             public bidirectional_iterator_base<const_iterator2, value_type> {
         public:
             typedef std::bidirectional_iterator_tag iterator_category;
+#ifdef USE_GCC
+            typedef typename sparse_vector_of_sparse_vector::value_type value_type;
+#endif
             typedef typename functor_type::functor2_type functor2_type;
 
             // Construction and destruction
+            NUMERICS_INLINE
+            const_iterator2 ():
+                container_const_reference<sparse_vector_of_sparse_vector> (), i_ (), j_ (), itv_ (), it_ () {}
             NUMERICS_INLINE
             const_iterator2 (const sparse_vector_of_sparse_vector &m, size_type i, size_type j, const vector_const_iterator_type &itv, const const_iterator_type &it):
                 container_const_reference<sparse_vector_of_sparse_vector> (m), i_ (i), j_ (j), itv_ (itv), it_ (it) {}
@@ -1404,9 +1500,15 @@ namespace numerics {
             public bidirectional_iterator_base<iterator2, value_type> {
         public:
             typedef std::bidirectional_iterator_tag iterator_category;
+#ifdef USE_GCC
+            typedef typename sparse_vector_of_sparse_vector::value_type value_type;
+#endif
             typedef typename functor_type::functor2_type functor2_type;
 
             // Construction and destruction
+            NUMERICS_INLINE
+            iterator2 ():
+                container_reference<sparse_vector_of_sparse_vector> (), i_ (), j_ (), itv_ (), it_ () {}
             NUMERICS_INLINE
             iterator2 (sparse_vector_of_sparse_vector &m, size_type i, size_type j, const vector_iterator_type &itv, const iterator_type &it):
                 container_reference<sparse_vector_of_sparse_vector> (m), i_ (i), j_ (j), itv_ (itv), it_ (it) {}
@@ -1550,8 +1652,8 @@ namespace numerics {
             typename E2::const_iterator ite2_end (e2 ().end ());
             size_type i = std::min (it1e1.index1 (), ite2.index ());
             while (it1e1 != it1e1_end && ite2 != ite2_end) {
-                value_type t1 = i - it1e1.index1 () ? value_type (0) : *it1e1;
-                value_type t2 = i - ite2.index () ? value_type (0) : *ite2;
+                value_type t1 = i - it1e1.index1 () ? value_type () : *it1e1;
+                value_type t2 = i - ite2.index () ? value_type () : *ite2;
                 r (i) += t1 * t2;
                 if (it1e1.index1 () <= i) 
                     ++ it1e1;
@@ -1596,8 +1698,8 @@ namespace numerics {
             typename E2::const_iterator ite2_end (e2 ().end ());
             size_type i = std::min (it1e1.index1 (), ite2.index ());
             while (it1e1 != it1e1_end && ite2 != ite2_end) {
-                value_type t1 = i - it1e1.index1 () ? value_type (0) : *it1e1;
-                value_type t2 = i - ite2.index () ? value_type (0) : *ite2;
+                value_type t1 = i - it1e1.index1 () ? value_type () : *it1e1;
+                value_type t2 = i - ite2.index () ? value_type () : *ite2;
                 r (i) += t1 * t2;
                 if (it1e1.index1 () <= i) 
                     ++ it1e1;

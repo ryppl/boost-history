@@ -143,11 +143,7 @@ namespace numerics {
             typename V::iterator it (v.begin ());
             difference_type size (v.end () - it);
             while (-- size >= 0)
-#ifndef NUMERICS_USE_ITERATOR_INDEX
                 functor_type () (*it, t), ++ it;
-#else
-                functor_type () (it [size], t);
-#endif
         }
         // Sparse (proxy) case
         template<class V, class T>
@@ -228,17 +224,10 @@ namespace numerics {
             // FIXME: switch to indexing version, if possible.
             typedef typename V::difference_type difference_type;
             typename V::iterator it (v.begin ());
-#ifdef NUMERICS_USE_ITERATOR_INDEX
-            const 
-#endif
             typename E::const_iterator ite (e ().begin ());
             difference_type size (common (v.end () - it, e ().end () - ite));
             while (-- size >= 0) 
-#ifndef NUMERICS_USE_ITERATOR_INDEX
                 functor_type () (*it, *ite), ++ it, ++ ite;
-#else
-                functor_type () (it [size], ite [size]);
-#endif
         }
         // Sparse case
         template<class V, class E>
@@ -268,7 +257,7 @@ namespace numerics {
                 if (it != it_end && it.index () == ite.index ()) 
                     functor_type () (*it, *ite), ++ it;
                 else
-                    check<bad_index>::invariant (*ite == value_type (0));
+                    check<bad_index>::invariant (*ite == value_type ());
                 ++ ite;
             }
             check<bad_size>::postcondition (it == it_end);
@@ -304,9 +293,11 @@ namespace numerics {
         typedef T &reference_type;
         typedef F functor_type;
         typedef A array_type;
+        typedef const vector<T, F, A> const_self_type;
         typedef vector<T, F, A> self_type;
-        typedef vector_const_reference<self_type> const_closure_type;
+        typedef const vector_const_reference<const_self_type> const_closure_type;
         typedef vector_reference<self_type> closure_type;
+        typedef const vector_range<const_self_type> const_vector_range_type;
         typedef vector_range<self_type> vector_range_type;
         typedef typename A::const_iterator const_iterator_type;
         typedef typename A::iterator iterator_type;
@@ -360,6 +351,14 @@ namespace numerics {
             return (*this) (i); 
         }
 
+        NUMERICS_INLINE
+        const_vector_range_type project (size_type start, size_type stop) const {
+            return const_vector_range_type (*this, start, stop);
+        }
+        NUMERICS_INLINE
+        const_vector_range_type project (const range &r) const {
+            return const_vector_range_type (r);
+        }
         NUMERICS_INLINE
         vector_range_type project (size_type start, size_type stop) {
             return vector_range_type (*this, start, stop);
@@ -478,8 +477,15 @@ namespace numerics {
             public random_access_iterator_base<const_iterator, value_type> {
         public:
             typedef std::random_access_iterator_tag iterator_category;
+#ifdef USE_GCC
+            typedef typename vector::difference_type difference_type;
+            typedef typename vector::value_type value_type;
+#endif
 
             // Construction and destruction
+            NUMERICS_INLINE
+            const_iterator ():
+                container_const_reference<vector> (), it_ () {}
             NUMERICS_INLINE
             const_iterator (const vector &v, const const_iterator_type &it):
                 container_const_reference<vector> (v), it_ (it) {}
@@ -554,8 +560,15 @@ namespace numerics {
             public random_access_iterator_base<iterator, value_type> {
         public:
             typedef std::random_access_iterator_tag iterator_category;
+#ifdef USE_GCC
+            typedef typename vector::difference_type difference_type;
+            typedef typename vector::value_type value_type;
+#endif
 
             // Construction and destruction
+            NUMERICS_INLINE
+            iterator ():
+                container_reference<vector> (), it_ () {}
             NUMERICS_INLINE
             iterator (vector &v, const iterator_type &it):
                 container_reference<vector> (v), it_ (it) {}
@@ -673,9 +686,10 @@ namespace numerics {
         typedef T value_type;
         typedef const T &const_reference_type;
         typedef T &reference_type;
+        typedef const canonical_vector<T> const_self_type;
         typedef canonical_vector<T> self_type;
-        typedef vector_const_reference<self_type> const_closure_type;
-        typedef vector_range<self_type> vector_range_type;
+        typedef const vector_const_reference<const_self_type> const_closure_type;
+        typedef const vector_range<const_self_type> const_vector_range_type;
         typedef size_type const_iterator_type;
         typedef struct dense_tag storage_category;
 
@@ -717,12 +731,12 @@ namespace numerics {
         }
 
         NUMERICS_INLINE
-        vector_range_type project (size_type start, size_type stop) {
-            return vector_range_type (*this, start, stop);
+        const_vector_range_type project (size_type start, size_type stop) const {
+            return const_vector_range_type (*this, start, stop);
         }
         NUMERICS_INLINE
-        vector_range_type project (const range &r) {
-            return vector_range_type (r);
+        const_vector_range_type project (const range &r) const {
+            return const_vector_range_type (r);
         }
 
         // Assignment
@@ -768,8 +782,15 @@ namespace numerics {
             public random_access_iterator_base<const_iterator, value_type> {
         public:
             typedef std::random_access_iterator_tag iterator_category;
+#ifdef USE_GCC
+            typedef typename canonical_vector::difference_type difference_type;
+            typedef typename canonical_vector::value_type value_type;
+#endif
 
             // Construction and destruction
+            NUMERICS_INLINE
+            const_iterator ():
+                container_const_reference<canonical_vector> (), it_ () {}
             NUMERICS_INLINE
             const_iterator (const canonical_vector &v, const const_iterator_type &it):
                 container_const_reference<canonical_vector> (v), it_ (it) {}
@@ -869,9 +890,11 @@ namespace numerics {
         typedef T value_type;
         typedef const T &const_reference_type;
         typedef T &reference_type;
+        typedef const c_vector<T, N> const_self_type;
         typedef c_vector<T, N> self_type;
-        typedef vector_const_reference<self_type> const_closure_type;
+        typedef const vector_const_reference<const_self_type> const_closure_type;
         typedef vector_reference<self_type> closure_type;
+        typedef const vector_range<const_self_type> const_vector_range_type;
         typedef vector_range<self_type> vector_range_type;
         typedef const T *const_iterator_type;
         typedef T *iterator_type;
@@ -938,6 +961,14 @@ namespace numerics {
             return (*this) (i); 
         }
 
+        NUMERICS_INLINE
+        const_vector_range_type project (size_type start, size_type stop) const {
+            return const_vector_range_type (*this, start, stop);
+        }
+        NUMERICS_INLINE
+        const_vector_range_type project (const range &r) const {
+            return const_vector_range_type (r);
+        }
         NUMERICS_INLINE
         vector_range_type project (size_type start, size_type stop) {
             return vector_range_type (*this, start, stop);
@@ -1058,8 +1089,15 @@ namespace numerics {
             public random_access_iterator_base<const_iterator, value_type> {
         public:
             typedef std::random_access_iterator_tag iterator_category;
+#ifdef USE_GCC
+            typedef typename c_vector::difference_type difference_type;
+            typedef typename c_vector::value_type value_type;
+#endif
 
             // Construction and destruction
+            NUMERICS_INLINE
+            const_iterator ():
+                container_const_reference<c_vector> (), it_ () {}
             NUMERICS_INLINE
             const_iterator (const c_vector &v, const const_iterator_type &it):
                 container_const_reference<c_vector> (v), it_ (it) {}
@@ -1134,8 +1172,15 @@ namespace numerics {
             public random_access_iterator_base<iterator, value_type> {
         public:
             typedef std::random_access_iterator_tag iterator_category;
+#ifdef USE_GCC
+            typedef typename c_vector::difference_type difference_type;
+            typedef typename c_vector::value_type value_type;
+#endif
 
             // Construction and destruction
+            NUMERICS_INLINE
+            iterator ():
+                container_reference<c_vector> (), it_ () {}
             NUMERICS_INLINE
             iterator (c_vector &v, const iterator_type &it):
                 container_reference<c_vector> (v), it_ (it) {}
