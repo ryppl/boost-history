@@ -18,7 +18,6 @@
 #pragma hdrstop
 #endif
 
-#include "boost/socket.hpp"
 #include "boost/socket/ip4.hpp"
 #include "boost/socket/socketstream.hpp"
 #include "boost/socket/acceptor_socket.hpp"
