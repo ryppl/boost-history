@@ -4859,9 +4859,15 @@ namespace boost { namespace numeric { namespace ublas {
         BOOST_UBLAS_INLINE
         matrix_indirect (matrix_type &data, size_type size1, size_type size2):
             data_ (data), ia1_ (size1), ia2_ (size2) {}
+#ifdef BOOST_UBLAS_ENABLE_INDEX_SET_ALL
         BOOST_UBLAS_INLINE
         matrix_indirect (matrix_type &data, const indirect_array_type &ia1, const indirect_array_type &ia2):
             data_ (data), ia1_ (ia1.preprocess (data.size1 ())), ia2_ (ia2.preprocess (data.size2 ())) {}
+#else
+        BOOST_UBLAS_INLINE
+        matrix_indirect (matrix_type &data, const indirect_array_type &ia1, const indirect_array_type &ia2):
+            data_ (data), ia1_ (ia1), ia2_ (ia2) {}
+#endif
 
         // Accessors
         BOOST_UBLAS_INLINE
