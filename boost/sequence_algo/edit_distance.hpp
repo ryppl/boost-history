@@ -13,20 +13,10 @@
 // Thanks to Philippe Lalande for input and discussion on the algorithm
 
 // guarded header file to prevent multiple include compilation errors
-#ifndef __EDIT_DISTANCE_H
-#define __EDIT_DISTANCE_H
+#ifndef BOOST_EDIT_DISTANCE_H
+#define BOOST_EDIT_DISTANCE_H
 
 namespace boost {
-    template<typename ItIn1, typename ItIn2>
-    inline
-    std::size_t
-    edit_distance(ItIn1 begin_first, ItIn1 end_first,
-                  ItIn2 begin_second, ItIn2 end_second)
-    {
-        std::allocator<std::size_t> alloc;
-        return edit_distance<>(begin_first, end_first, begin_second, end_second, alloc);
-    }
-
 
     template<typename Alloc, typename ItIn1, typename ItIn2>
     std::size_t
@@ -46,20 +36,17 @@ namespace boost {
         for (col=1; col<=size_first; ++col)
             pA[col] = col;
 
-        register ItIn2 it2 = begin_second;
+        ItIn2 it2 = begin_second;
         for (std::ptrdiff_t row=1; row<=size_second+1; ++row, ++it2)
         {
-            register ItIn1 it1 = begin_first;
+            ItIn1 it1 = begin_first;
             for (col=1; col<=size_first; ++col, ++it1)
             {
-                register short cost;
-
-                pB[0] = row;
-                if (*it1 == *it2)
-                    cost = 0;
-                else
-                    cost = 1;
-                pB[col] = std::min(std::min(pB[col-1]+1, pA[col]+1), pA[col-1]+cost);
+                pB[0]   = row;
+                pB[col] = std::min<>(
+                              std::min<>(
+                                  pB[col-1]+1, pA[col]+1),
+                              pA[col-1] + ((*it1 == *it2)? 0 : 1));
             }
 
             std::swap(pA, pB);
@@ -70,6 +57,20 @@ namespace boost {
         return result;
     }
 
+    template<typename ItIn1, typename ItIn2>
+    inline
+    std::size_t
+    edit_distance(ItIn1 begin_first, ItIn1 end_first,
+                  ItIn2 begin_second, ItIn2 end_second)
+    {
+        return edit_distance<>(
+                   begin_first,
+                   end_first,
+                   begin_second,
+                   end_second,
+                   std::allocator<std::size_t>);
+    }
+
 }   // namespace boost
 
-#endif  // __EDIT_DISTANCE_H
+#endif  // BOOST_EDIT_DISTANCE_H
