@@ -370,7 +370,7 @@ namespace numerics {
 
         // Element access
         NUMERICS_INLINE
-        value_type operator () (size_type i) const { 
+        value_type operator () (size_type i) const {
             return functor_type () (e_ (i)); 
         }
 
@@ -412,15 +412,15 @@ namespace numerics {
 
 #ifndef NUMERICS_USE_INDEXED_ITERATOR
         class const_iterator:
-            public container_const_reference<vector_unary>, 
+            public container_const_reference<vector_unary>,
             public random_access_iterator_base<const_iterator, value_type> {
         public:
             typedef typename E::const_iterator::iterator_category iterator_category;
 #ifndef USE_MSVC
-            typedef typename E::const_iterator::difference_type difference_type;
-            typedef typename E::const_iterator::value_type value_type;
-            typedef typename E::const_iterator::value_type reference;
-            typedef typename E::const_iterator::pointer pointer;
+            typedef typename vector_unary::difference_type difference_type;
+            typedef typename vector_unary::value_type value_type;
+            typedef typename vector_unary::value_type reference;
+            typedef typename vector_unary::pointer pointer;
 #endif
 
             // Construction and destruction
@@ -520,7 +520,7 @@ namespace numerics {
         expression_type e_; 
 #endif
 #ifdef NUMERICS_ET_REFERENCE
-        const expression_type &e_; 
+        const expression_type &e_;
 #endif
     };
 
@@ -677,7 +677,7 @@ namespace numerics {
             public container_const_reference<vector_binary>, 
             public random_access_iterator_base<const_iterator, value_type> {
         public:
-            typedef typename restrict_traits<typename E1::const_iterator::iterator_category, 
+            typedef typename restrict_traits<typename E1::const_iterator::iterator_category,
                                              typename E2::const_iterator::iterator_category>::iterator_category iterator_category;
 #ifndef USE_MSVC
             typedef typename vector_binary::difference_type difference_type;
@@ -892,11 +892,11 @@ namespace numerics {
     // (v1 - v2) [i] = v1 [i] - v2 [i]
     template<class E1, class E2>
     NUMERICS_INLINE
-    typename vector_binary_traits<E1, E2, scalar_minus<typename E1::value_type, 
+    typename vector_binary_traits<E1, E2, scalar_minus<typename E1::value_type,
                                                        typename E2::value_type> >::result_type
-    operator - (const vector_expression<E1> &e1, 
+    operator - (const vector_expression<E1> &e1,
                 const vector_expression<E2> &e2) {
-        typedef NUMERICS_TYPENAME vector_binary_traits<E1, E2, scalar_minus<NUMERICS_TYPENAME E1::value_type, 
+        typedef NUMERICS_TYPENAME vector_binary_traits<E1, E2, scalar_minus<NUMERICS_TYPENAME E1::value_type,
                                                                             NUMERICS_TYPENAME E2::value_type> >::expression_type expression_type;
         return expression_type (e1 (), e2 ());
     }
@@ -981,15 +981,15 @@ namespace numerics {
 
 #ifndef NUMERICS_USE_INDEXED_ITERATOR
         class const_iterator:
-            public container_const_reference<vector_binary_scalar1>, 
+            public container_const_reference<vector_binary_scalar1>,
             public random_access_iterator_base<const_iterator, value_type> {
         public:
             typedef typename E2::const_iterator::iterator_category iterator_category;
 #ifndef USE_MSVC
-            typedef typename E2::const_iterator::difference_type difference_type;
-            typedef typename E2::const_iterator::value_type value_type;
-            typedef typename E2::const_iterator::value_type reference;
-            typedef typename E2::const_iterator::pointer pointer;
+            typedef typename vector_binary_scalar1::difference_type difference_type;
+            typedef typename vector_binary_scalar1::value_type value_type;
+            typedef typename vector_binary_scalar1::value_type reference;
+            typedef typename vector_binary_scalar1::pointer pointer;
 #endif
 
             // Construction and destruction
@@ -1205,10 +1205,10 @@ namespace numerics {
         public:
             typedef typename E1::const_iterator::iterator_category iterator_category;
 #ifndef USE_MSVC
-            typedef typename E1::const_iterator::difference_type difference_type;
-            typedef typename E1::const_iterator::value_type value_type;
-            typedef typename E1::const_iterator::value_type reference;
-            typedef typename E1::const_iterator::pointer pointer;
+            typedef typename vector_binary_scalar2::difference_type difference_type;
+            typedef typename vector_binary_scalar2::value_type value_type;
+            typedef typename vector_binary_scalar2::value_type reference;
+            typedef typename vector_binary_scalar2::pointer pointer;
 #endif
 
             // Construction and destruction

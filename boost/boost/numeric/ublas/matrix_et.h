@@ -1098,10 +1098,10 @@ namespace numerics {
         public:
             typedef typename E::const_iterator1::iterator_category iterator_category;
 #ifndef USE_MSVC
-            typedef typename E::const_iterator1::difference_type difference_type;
-            typedef typename E::const_iterator1::value_type value_type;
-            typedef typename E::const_iterator1::value_type reference;
-            typedef typename E::const_iterator1::pointer pointer;
+            typedef typename matrix_unary1::difference_type difference_type;
+            typedef typename matrix_unary1::value_type value_type;
+            typedef typename matrix_unary1::value_type reference;
+            typedef typename matrix_unary1::pointer pointer;
 #endif
             typedef const_iterator2 dual_iterator_type;
             typedef const_reverse_iterator2 dual_reverse_iterator_type;
@@ -1209,10 +1209,10 @@ namespace numerics {
         public:
             typedef typename E::const_iterator2::iterator_category iterator_category;
 #ifndef USE_MSVC
-            typedef typename E::const_iterator2::difference_type difference_type;
-            typedef typename E::const_iterator2::value_type value_type;
-            typedef typename E::const_iterator2::value_type reference;
-            typedef typename E::const_iterator2::pointer pointer;
+            typedef typename matrix_unary1::difference_type difference_type;
+            typedef typename matrix_unary1::value_type value_type;
+            typedef typename matrix_unary1::value_type reference;
+            typedef typename matrix_unary1::pointer pointer;
 #endif
             typedef const_iterator1 dual_iterator_type;
             typedef const_reverse_iterator1 dual_reverse_iterator_type;
@@ -1548,10 +1548,10 @@ namespace numerics {
         public:
             typedef typename E::const_iterator2::iterator_category iterator_category;
 #ifndef USE_MSVC
-            typedef typename E::const_iterator2::difference_type difference_type;
-            typedef typename E::const_iterator2::value_type value_type;
-            typedef typename E::const_iterator2::value_type reference;
-            typedef typename E::const_iterator2::pointer pointer;
+            typedef typename matrix_unary2::difference_type difference_type;
+            typedef typename matrix_unary2::value_type value_type;
+            typedef typename matrix_unary2::value_type reference;
+            typedef typename matrix_unary2::pointer pointer;
 #endif
             typedef const_iterator2 dual_iterator_type;
             typedef const_reverse_iterator2 dual_reverse_iterator_type;
@@ -1659,10 +1659,10 @@ namespace numerics {
         public:
             typedef typename E::const_iterator1::iterator_category iterator_category;
 #ifndef USE_MSVC
-            typedef typename E::const_iterator1::difference_type difference_type;
-            typedef typename E::const_iterator1::value_type value_type;
-            typedef typename E::const_iterator1::value_type reference;
-            typedef typename E::const_iterator1::pointer pointer;
+            typedef typename matrix_unary2::difference_type difference_type;
+            typedef typename matrix_unary2::value_type value_type;
+            typedef typename matrix_unary2::value_type reference;
+            typedef typename matrix_unary2::pointer pointer;
 #endif
             typedef const_iterator1 dual_iterator_type;
             typedef const_reverse_iterator1 dual_reverse_iterator_type;
@@ -2584,10 +2584,10 @@ expression_type;
         public:
             typedef typename E2::const_iterator1::iterator_category iterator_category;
 #ifndef USE_MSVC
-            typedef typename E2::const_iterator1::difference_type difference_type;
-            typedef typename E2::const_iterator1::value_type value_type;
-            typedef typename E2::const_iterator1::value_type reference;
-            typedef typename E2::const_iterator1::pointer pointer;
+            typedef typename matrix_binary_scalar1::difference_type difference_type;
+            typedef typename matrix_binary_scalar1::value_type value_type;
+            typedef typename matrix_binary_scalar1::value_type reference;
+            typedef typename matrix_binary_scalar1::pointer pointer;
 #endif
             typedef const_iterator2 dual_iterator_type;
             typedef const_reverse_iterator2 dual_reverse_iterator_type;
@@ -2699,10 +2699,10 @@ expression_type;
         public:
             typedef typename E2::const_iterator2::iterator_category iterator_category;
 #ifndef USE_MSVC
-            typedef typename E2::const_iterator2::difference_type difference_type;
-            typedef typename E2::const_iterator2::value_type value_type;
-            typedef typename E2::const_iterator2::value_type reference;
-            typedef typename E2::const_iterator2::pointer pointer;
+            typedef typename matrix_binary_scalar1::difference_type difference_type;
+            typedef typename matrix_binary_scalar1::value_type value_type;
+            typedef typename matrix_binary_scalar1::value_type reference;
+            typedef typename matrix_binary_scalar1::pointer pointer;
 #endif
             typedef const_iterator1 dual_iterator_type;
             typedef const_reverse_iterator1 dual_reverse_iterator_type;
@@ -3013,10 +3013,10 @@ expression_type;
         public:
             typedef typename E1::const_iterator1::iterator_category iterator_category;
 #ifndef USE_MSVC
-            typedef typename E1::const_iterator1::difference_type difference_type;
-            typedef typename E1::const_iterator1::value_type value_type;
-            typedef typename E1::const_iterator1::value_type reference;
-            typedef typename E1::const_iterator1::pointer pointer;
+            typedef typename matrix_binary_scalar2::difference_type difference_type;
+            typedef typename matrix_binary_scalar2::value_type value_type;
+            typedef typename matrix_binary_scalar2::value_type reference;
+            typedef typename matrix_binary_scalar2::pointer pointer;
 #endif
             typedef const_iterator2 dual_iterator_type;
             typedef const_reverse_iterator2 dual_reverse_iterator_type;
@@ -3128,10 +3128,10 @@ expression_type;
         public:
             typedef typename E1::const_iterator2::iterator_category iterator_category;
 #ifndef USE_MSVC
-            typedef typename E1::const_iterator2::difference_type difference_type;
-            typedef typename E1::const_iterator2::value_type value_type;
-            typedef typename E1::const_iterator2::value_type reference;
-            typedef typename E1::const_iterator2::pointer pointer;
+            typedef typename matrix_binary_scalar2::difference_type difference_type;
+            typedef typename matrix_binary_scalar2::value_type value_type;
+            typedef typename matrix_binary_scalar2::value_type reference;
+            typedef typename matrix_binary_scalar2::pointer pointer;
 #endif
             typedef const_iterator1 dual_iterator_type;
             typedef const_reverse_iterator1 dual_reverse_iterator_type;

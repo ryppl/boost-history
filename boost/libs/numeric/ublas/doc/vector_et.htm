@@ -522,14 +522,14 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         // with the unary functor.
 
         class const_iterator:
-            public container_const_reference&lt;vector_unary&gt;, 
+            public container_const_reference&lt;vector_unary&gt;,
             public random_access_iterator_base&lt;const_iterator, value_type&gt; {
         public:
             typedef typename E::const_iterator::iterator_category iterator_category;
-            typedef typename E::const_iterator::difference_type difference_type;
-            typedef typename E::const_iterator::value_type value_type;
-            typedef typename E::const_iterator::value_type reference;
-            typedef typename E::const_iterator::pointer pointer;
+            typedef typename vector_unary::difference_type difference_type;
+            typedef typename vector_unary::value_type value_type;
+            typedef typename vector_unary::value_type reference;
+            typedef typename vector_unary::pointer pointer;
 
             // Construction and destruction
             const_iterator ();
@@ -1373,14 +1373,14 @@ vector_expression&lt;vector_binary_scalar2&lt;E1, E2, F&gt; &gt; </code>resp.</p
         // with the binary functor.
 
         class const_iterator:
-            public container_const_reference&lt;vector_binary_scalar1&gt;, 
+            public container_const_reference&lt;vector_binary_scalar1&gt;,
             public random_access_iterator_base&lt;const_iterator, value_type&gt; {
         public:
             typedef typename E2::const_iterator::iterator_category iterator_category;
-            typedef typename E2::const_iterator::difference_type difference_type;
-            typedef typename E2::const_iterator::value_type value_type;
-            typedef typename E2::const_iterator::value_type reference;
-            typedef typename E2::const_iterator::pointer pointer;
+            typedef typename vector_binary_scalar1::difference_type difference_type;
+            typedef typename vector_binary_scalar1::value_type value_type;
+            typedef typename vector_binary_scalar1::value_type reference;
+            typedef typename vector_binary_scalar1::pointer pointer;
 
             // Construction and destruction
             const_iterator ();
@@ -1459,14 +1459,14 @@ vector_expression&lt;vector_binary_scalar2&lt;E1, E2, F&gt; &gt; </code>resp.</p
         // with the binary functor.
 
         class const_iterator:
-            public container_const_reference&lt;vector_binary_scalar2&gt;, 
+            public container_const_reference&lt;vector_binary_scalar2&gt;,
             public random_access_iterator_base&lt;const_iterator, value_type&gt; {
         public:
             typedef typename E1::const_iterator::iterator_category iterator_category;
-            typedef typename E1::const_iterator::difference_type difference_type;
-            typedef typename E1::const_iterator::value_type value_type;
-            typedef typename E1::const_iterator::value_type reference;
-            typedef typename E1::const_iterator::pointer pointer;
+            typedef typename vector_binary_scalar2::difference_type difference_type;
+            typedef typename vector_binary_scalar2::value_type value_type;
+            typedef typename vector_binary_scalar2::value_type reference;
+            typedef typename vector_binary_scalar2::pointer pointer;
 
             // Construction and destruction
             const_iterator ();

@@ -341,7 +341,7 @@ void test_identity_matrix () {
             std::copy (it1.begin (), it1.end (), out);
             std::cout << std::endl;
             ++ it1;
-        } 
+        }
         numerics::identity_matrix<double>::const_iterator2 it2 (im.begin2 ());
         while (it2 != im.end2 ()) {
             std::copy (it2.begin (), it2.end (), out);
@@ -404,7 +404,7 @@ void test_sparse_matrix () {
                 std::copy (it21.begin (), it21.end (), out);
                 std::cout << std::endl;
                 ++ it21;
-            } 
+            }
         }
     }
     catch (std::exception &e) {
@@ -446,14 +446,20 @@ void test_conversion () {
         fm = dm;
     }
     {
+        double r;
+        std::complex<double> c;
         numerics::vector<double> rv (1);
         numerics::vector<std::complex<double> > cv (1);
         cv = rv + cv;
         cv = rv - cv;
+        cv = r * cv;
+        cv = c * rv;
         numerics::matrix<double> rm (1, 1);
         numerics::matrix<std::complex<double> > cm (1, 1);
         cm = rm + cm;
         cm = rm - cm;
+        cm = r * cm;
+        cm = c * rm;
     }
 }
 
