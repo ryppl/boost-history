@@ -31,65 +31,65 @@ MPL_TEST_CASE()
 {
     typedef s_mask<char,s_item<int,s_item<char, set0<> > > > s;
 
-    MPL_ASSERT_EQUAL(2,( size<s>::value, 1 ));
+    MPL_ASSERT_RELATION( size<s>::value, ==, 1 );
     MPL_ASSERT_NOT(( empty<s> ));
     
-    MPL_ASSERT_SAME(2,( clear<s>::type, set0<> ));
-    MPL_ASSERT_SAME(3,( at<s,int>::type, int ));
-    MPL_ASSERT_SAME(3,( at<s,char>::type, void_ ));
+    MPL_ASSERT(( is_same< clear<s>::type, set0<> > ));
+    MPL_ASSERT(( is_same< at<s,int>::type, int > ));
+    MPL_ASSERT(( is_same< at<s,char>::type, void_ > ));
 
     MPL_ASSERT_NOT(( has_key<s,char> ));
     MPL_ASSERT(( has_key<s,int> ));
-    MPL_ASSERT_EQUAL(3,( order<s,int>::value, 2 ));
-    MPL_ASSERT_SAME(3,( order<s,char>::type, void_ ));
+    MPL_ASSERT_RELATION( (order<s,int>::value), ==, 2 );
+    MPL_ASSERT(( is_same< order<s,char>::type, void_ >  ));
     
     typedef begin<s>::type first;
     typedef end<s>::type last;
 
-    MPL_ASSERT_SAME(2,( first::type, int ));
-    MPL_ASSERT_SAME(2,( next<first>::type, last ));
+    MPL_ASSERT(( is_same< first::type, int > ));
+    MPL_ASSERT(( is_same< next<first>::type, last > ));
 
     typedef s_unmask<char,s> s2;
 
-    MPL_ASSERT_EQUAL(2,( size<s2>::value, 2 ));
+    MPL_ASSERT_RELATION( size<s2>::value, ==, 2 );
     MPL_ASSERT_NOT(( empty<s2> ));
-    MPL_ASSERT_SAME(2,( clear<s2>::type, set0<> ));
-    MPL_ASSERT_SAME(3,( at<s2,int>::type, int ));
-    MPL_ASSERT_SAME(3,( at<s2,char>::type, char ));
+    MPL_ASSERT(( is_same<clear<s2>::type, set0<> > ));
+    MPL_ASSERT(( is_same<at<s2,int>::type, int > ));
+    MPL_ASSERT(( is_same<at<s2,char>::type, char > ));
 
     MPL_ASSERT(( has_key<s2,char> ));
     MPL_ASSERT_NOT(( has_key<s2,long> ));
-    MPL_ASSERT_EQUAL(3,( order<s2,int>::value, 2 ));
-    MPL_ASSERT_EQUAL(3,( order<s2,char>::value, 1 ));
+    MPL_ASSERT_RELATION( (order<s2,int>::value), ==, 2 );
+    MPL_ASSERT_RELATION( (order<s2,char>::value), ==, 1 );
 
     typedef begin<s2>::type first2;
     typedef end<s2>::type last2;
 
-    MPL_ASSERT_SAME(2,( first2::type, int ));
+    MPL_ASSERT(( is_same< first2::type, int > ));
     typedef next<first2>::type iter;
-    MPL_ASSERT_SAME(2,( iter::type, char ));
-    MPL_ASSERT_SAME(2,( next<iter>::type, last2 ));
+    MPL_ASSERT(( is_same< iter::type, char > ));
+    MPL_ASSERT(( is_same< next<iter>::type, last2 > ));
 
     typedef insert<s2,int>::type s2_1;
-    MPL_ASSERT_SAME(2,( s2, s2_1 ));
+    MPL_ASSERT(( is_same<s2, s2_1> ));
 
     typedef insert<s2,long>::type s3;
-    MPL_ASSERT_EQUAL(2,( size<s3>::value, 3 ));
+    MPL_ASSERT_RELATION( size<s3>::value, ==, 3 );
     MPL_ASSERT(( has_key<s3,long> ));
     MPL_ASSERT(( has_key<s3,int> ));
     MPL_ASSERT(( has_key<s3,char> ));
 
     typedef insert<s,char>::type s1;
-    MPL_ASSERT_EQUAL(2,( size<s1>::value, 2 ));
-    MPL_ASSERT_SAME(3,( at<s1,int>::type, int ));
-    MPL_ASSERT_SAME(3,( at<s1,char>::type, char ));
-    MPL_ASSERT_NOT_SAME(2,( s1, s2 ));
+    MPL_ASSERT_RELATION( size<s1>::value, ==, 2 );
+    MPL_ASSERT(( is_same<at<s1,int>::type, int > ));
+    MPL_ASSERT(( is_same<at<s1,char>::type, char > ));
+    MPL_ASSERT_NOT(( is_same<s1, s2> ));
 
     typedef erase_key<s1,char>::type s_1;
-    MPL_ASSERT_SAME(2,( s, s_1 ));
-    MPL_ASSERT_EQUAL(2,( size<s_1>::value, 1 ));
-    MPL_ASSERT_SAME(3,( at<s_1,char>::type, void_ ));
-    MPL_ASSERT_SAME(3,( at<s_1,int>::type, int ));
+    MPL_ASSERT(( is_same<s, s_1> ));
+    MPL_ASSERT_RELATION( size<s_1>::value, ==, 1 );
+    MPL_ASSERT(( is_same< at<s_1,char>::type, void_ > ));
+    MPL_ASSERT(( is_same< at<s_1,int>::type, int > ));
     
 }
 
@@ -97,10 +97,10 @@ MPL_TEST_CASE()
 {
     typedef set0<> s;
     
-    MPL_ASSERT_RELATION(( size<s>::value, ==, 0 ));
+    MPL_ASSERT_RELATION( size<s>::value, ==, 0 );
     MPL_ASSERT(( empty<s> ));
-    MPL_ASSERT_SAME(2,( clear<s>::type, set0<> ));
-    MPL_ASSERT_SAME(3,( at<s,char>::type, void_ ));
+    MPL_ASSERT(( is_same< clear<s>::type, set0<> > ));
+    MPL_ASSERT(( is_same< at<s,char>::type, void_ > ));
 
     MPL_ASSERT_NOT(( has_key<s,char> ));
     MPL_ASSERT_NOT(( has_key<s,int> ));
@@ -121,12 +121,12 @@ MPL_TEST_CASE()
     MPL_ASSERT_NOT(( has_key<s,incomplete&> ));
 
     typedef insert<s,char>::type s1;
-    MPL_ASSERT_EQUAL(2,( size<s1>::value, 1 ));
-    MPL_ASSERT_SAME(3,( at<s1,char>::type, char ));
+    MPL_ASSERT_RELATION( size<s1>::value, ==, 1 );
+    MPL_ASSERT(( is_same< at<s1,char>::type, char > ));
 
     typedef erase_key<s,char>::type s0_1;
-    MPL_ASSERT_EQUAL(2,( size<s0_1>::value, 0 ));
-    MPL_ASSERT_SAME(3,( at<s0_1,char>::type, void_ ));
+    MPL_ASSERT_RELATION( size<s0_1>::value, ==, 0 );
+    MPL_ASSERT(( is_same< at<s0_1,char>::type, void_ > ));
 }
 
 MPL_TEST_CASE()
@@ -136,10 +136,10 @@ MPL_TEST_CASE()
         , incomplete volatile&,abstract const&
         > s;
     
-    MPL_ASSERT_RELATION(( size<s>::value, ==, 8 ));
+    MPL_ASSERT_RELATION( size<s>::value, ==, 8 );
     MPL_ASSERT_NOT(( empty<s> ));
-    MPL_ASSERT_SAME(2,( clear<s>::type, set0<> ));
-    MPL_ASSERT_SAME(3,( at<s,bool>::type, void_ ));
+    MPL_ASSERT(( is_same< clear<s>::type, set0<> > ));
+    MPL_ASSERT(( is_same< at<s,bool>::type, void_ >  ));
 
     MPL_ASSERT(( has_key<s,char> ));
     MPL_ASSERT(( has_key<s,int const> ));

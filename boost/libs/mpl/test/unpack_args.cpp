@@ -21,5 +21,5 @@
 
 MPL_TEST_CASE()
 {
-    MPL_ASSERT(( apply1< unpack_args< lambda< is_same<_1,_2> >::type >, vector2<int,int> >::type::value ));
+    MPL_ASSERT(( apply1< unpack_args< lambda< is_same<_1,_2> >::type >, vector2<int,int> > ));
 }

@@ -27,10 +27,10 @@ MPL_TEST_CASE()
     typedef pop_front<types2>::type result2;
     typedef pop_front<types3>::type result3;
     
-    MPL_ASSERT_EQUAL(2,( size<result1>::value, 0 ));
-    MPL_ASSERT_EQUAL(2,( size<result2>::value, 1 ));
-    MPL_ASSERT_EQUAL(2,( size<result3>::value, 2 ));
+    MPL_ASSERT_RELATION( size<result1>::value, ==, 0 );
+    MPL_ASSERT_RELATION( size<result2>::value, ==, 1 );
+    MPL_ASSERT_RELATION( size<result3>::value, ==, 2 );
     
-    MPL_ASSERT_SAME(2,( front<result2>::type, long ));
-    MPL_ASSERT_SAME(2,( front<result3>::type, int ));
+    MPL_ASSERT(( is_same< front<result2>::type, long > ));
+    MPL_ASSERT(( is_same< front<result3>::type, int > ));
 }

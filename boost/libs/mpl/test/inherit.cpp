@@ -19,22 +19,22 @@ struct my { typedef my myself; };
 
 MPL_TEST_CASE()
 {
-    MPL_ASSERT_SAME(2,(inherit<her>::type, her));
+    MPL_ASSERT(( is_same<inherit<her>::type, her> ));
 
     typedef inherit<her,my>::type her_my1;
-    MPL_ASSERT_SAME(2,(her_my1::herself, her));
-    MPL_ASSERT_SAME(2,(her_my1::myself, my));
+    MPL_ASSERT(( is_same<her_my1::herself, her> ));
+    MPL_ASSERT(( is_same<her_my1::myself, my> ));
     
     typedef inherit<empty_base,her>::type her1;
-    MPL_ASSERT_SAME(2,(her1, her));
+    MPL_ASSERT(( is_same<her1, her> ));
     
     typedef inherit<empty_base,her,empty_base,empty_base>::type her2;
-    MPL_ASSERT_SAME(2,(her2, her));
+    MPL_ASSERT(( is_same<her2, her> ));
 
     typedef inherit<her,empty_base,my>::type her_my2;
-    MPL_ASSERT_SAME(2,(her_my2::herself, her));
-    MPL_ASSERT_SAME(2,(her_my2::myself, my));
+    MPL_ASSERT(( is_same<her_my2::herself, her> ));
+    MPL_ASSERT(( is_same<her_my2::myself, my> ));
 
     typedef inherit<empty_base,empty_base>::type empty;
-    MPL_ASSERT_SAME(2,(empty, empty_base));
+    MPL_ASSERT(( is_same<empty, empty_base> ));
 }

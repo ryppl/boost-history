@@ -24,20 +24,20 @@ MPL_TEST_CASE()
     typedef range_c<int,0,1> range1;
     typedef range_c<int,0,10> range10;
 
-    MPL_ASSERT_EQUAL(2,( size<range0>::value, 0 ));
-    MPL_ASSERT_EQUAL(2,( size<range1>::value, 1 ));
-    MPL_ASSERT_EQUAL(2,( size<range10>::value, 10 ));
+    MPL_ASSERT_RELATION( size<range0>::value, ==, 0 );
+    MPL_ASSERT_RELATION( size<range1>::value, ==, 1 );
+    MPL_ASSERT_RELATION( size<range10>::value, ==, 10 );
 
     MPL_ASSERT(( empty<range0> ));
     MPL_ASSERT_NOT(( empty<range1> ));
     MPL_ASSERT_NOT(( empty<range10> ));
 
-    MPL_ASSERT_SAME(2,( begin<range0>::type, end<range0>::type ));
-    MPL_ASSERT_NOT_SAME(2,( begin<range1>::type, end<range1>::type ));
-    MPL_ASSERT_NOT_SAME(2,( begin<range10>::type, end<range10>::type ));
+    MPL_ASSERT(( is_same<begin<range0>::type, end<range0>::type > ));
+    MPL_ASSERT_NOT(( is_same<begin<range1>::type, end<range1>::type > ));
+    MPL_ASSERT_NOT(( is_same<begin<range10>::type, end<range10>::type > ));
 
-    MPL_ASSERT_EQUAL(2,( front<range1>::type::value, 0 ));
-    MPL_ASSERT_EQUAL(2,( back<range1>::type::value, 0 ));
-    MPL_ASSERT_EQUAL(2,( front<range10>::type::value, 0 ));
-    MPL_ASSERT_EQUAL(2,( back<range10>::type::value, 9 ));
+    MPL_ASSERT_RELATION( front<range1>::type::value, ==, 0 );
+    MPL_ASSERT_RELATION( back<range1>::type::value, ==, 0 );
+    MPL_ASSERT_RELATION( front<range10>::type::value, ==, 0 );
+    MPL_ASSERT_RELATION( back<range10>::type::value, ==, 9 );
 }

@@ -10,10 +10,10 @@
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
-#include <boost/mpl/aux_/has_xxx.hpp>
+#include <boost/mpl/has_xxx.hpp>
 
 namespace boost { namespace mpl { namespace aux {
-BOOST_MPL_HAS_XXX_TRAIT_NAMED_DEF(has_tag, tag, true)
+BOOST_MPL_HAS_XXX_TRAIT_NAMED_DEF(has_tag, tag, false)
 }}}
 
 #endif // BOOST_MPL_AUX_HAS_TAG_HPP_INCLUDED

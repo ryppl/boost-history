@@ -30,6 +30,7 @@ namespace aux {
 template<
       typename Operation
     , typename Predicate
+    , int not_le_ = 0
     >
 struct copy_if_op
 {
@@ -45,7 +46,6 @@ struct copy_if_op
 
 } // namespace aux
 
-BOOST_MPL_AUX_PASS_THROUGH_LAMBDA_SPEC(2,aux::copy_if_op)
 
 } // namespace mpl
 } // namespace boost

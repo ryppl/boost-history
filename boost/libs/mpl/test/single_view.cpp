@@ -22,9 +22,9 @@ MPL_TEST_CASE()
     typedef begin<view>::type first;
     typedef end<view>::type last;
 
-    MPL_ASSERT_SAME(2,( first::type,int ));
-    MPL_ASSERT_SAME(2,( first::next,last ));
-    MPL_ASSERT_SAME(2,( last::prior,first ));
+    MPL_ASSERT(( is_same<first::type,int> ));
+    MPL_ASSERT(( is_same<first::next,last> ));
+    MPL_ASSERT(( is_same<last::prior,first> ));
 
-    MPL_ASSERT_EQUAL(2,( size<view>::value, 1 ));
+    MPL_ASSERT_RELATION( size<view>::value, ==, 1 );
 }

@@ -18,11 +18,11 @@
 #include <cassert>
 
 #define INT_C_TEST(unused1, i, unused2) \
-    { MPL_ASSERT_SAME(2,(int_<i>::value_type, int)); } \
-    { MPL_ASSERT_SAME(2,(int_<i>::type, int_<i>)); } \
-    { MPL_ASSERT_SAME(2,(int_<i>::next, int_<i+1>)); } \
-    { MPL_ASSERT_SAME(2,(int_<i>::prior, int_<i-1>)); } \
-    { MPL_ASSERT_EQUAL(2,(int_<i>::value, i)); } \
+    { MPL_ASSERT(( is_same< int_<i>::value_type, int > )); } \
+    { MPL_ASSERT(( is_same< int_<i>::type, int_<i> > )); } \
+    { MPL_ASSERT(( is_same< int_<i>::next, int_<i+1> > )); } \
+    { MPL_ASSERT(( is_same< int_<i>::prior, int_<i-1> > )); } \
+    { MPL_ASSERT_RELATION( int_<i>::value, ==, i ); } \
     assert(int_<i>() == i); \
 /**/
 

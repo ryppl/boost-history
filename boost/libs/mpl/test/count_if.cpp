@@ -17,15 +17,16 @@
 #include <boost/mpl/count_if.hpp>
 #include <boost/mpl/list.hpp>
 #include <boost/mpl/list_c.hpp>
-#include <boost/mpl/less.hpp>
-#include <boost/mpl/equal_to.hpp>
+#include <boost/mpl/comparison.hpp>
+#include <boost/mpl/int.hpp>
+#include <boost/mpl/aux_/test.hpp>
+
 #include <boost/type_traits/is_float.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/static_assert.hpp>
 
-namespace mpl = boost::mpl;
 
-int main()
+MPL_TEST_CASE()
 {
     using namespace mpl::placeholders;
     typedef mpl::list<int,char&,long,short,char&,long,double,long> types;
@@ -35,9 +36,7 @@ int main()
     BOOST_STATIC_ASSERT((mpl::count_if< types, boost::is_same<_,char&> >::type::value == 2));
     BOOST_STATIC_ASSERT((mpl::count_if< types, boost::is_same<_,void*> >::type::value == 0));
 
-    BOOST_STATIC_ASSERT((mpl::count_if< values, mpl::lt<5> >::type::value == 4));
-    BOOST_STATIC_ASSERT((mpl::count_if< values, mpl::eq<0>  >::type::value == 2));
-    BOOST_STATIC_ASSERT((mpl::count_if< values, mpl::eq<-1> >::type::value == 0));
-    
-    return 0;
+    BOOST_STATIC_ASSERT((mpl::count_if< values, mpl::less<_,int_<5> > >::type::value == 4));
+    BOOST_STATIC_ASSERT((mpl::count_if< values, mpl::equal_to<int_<0>,_>  >::type::value == 2));
+    BOOST_STATIC_ASSERT((mpl::count_if< values, mpl::equal_to<int_<-1>,_> >::type::value == 0));
 }

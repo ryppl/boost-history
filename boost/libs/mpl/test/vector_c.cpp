@@ -23,8 +23,8 @@ MPL_TEST_CASE()
     typedef vector_c<bool,true>::type v1;
     typedef vector_c<bool,false>::type v2;
 
-    MPL_ASSERT( front<v1>::type::value == true );
-    MPL_ASSERT( front<v2>::type::value == false );
+    MPL_ASSERT_RELATION( front<v1>::type::value, ==, true );
+    MPL_ASSERT_RELATION( front<v2>::type::value, ==, false );
 }
 #endif
 
@@ -34,13 +34,13 @@ MPL_TEST_CASE()
     typedef vector_c<int,0,1> v2;
     typedef vector_c<int,1,2,3> v3;
 
-    MPL_ASSERT_EQUAL(2,( size<v1>::value, 1 ));
-    MPL_ASSERT_EQUAL(2,( size<v2>::value, 2 ));
-    MPL_ASSERT_EQUAL(2,( size<v3>::value, 3 ));
+    MPL_ASSERT_RELATION( size<v1>::value, ==, 1 );
+    MPL_ASSERT_RELATION( size<v2>::value, ==, 2 );
+    MPL_ASSERT_RELATION( size<v3>::value, ==, 3 );
 
-    MPL_ASSERT( front<v1>::type::value == -1 );
-    MPL_ASSERT( front<v2>::type::value == 0 );
-    MPL_ASSERT( front<v3>::type::value == 1 );
+    MPL_ASSERT_RELATION( front<v1>::type::value, ==, -1 );
+    MPL_ASSERT_RELATION( front<v2>::type::value, ==, 0 );
+    MPL_ASSERT_RELATION( front<v3>::type::value, ==, 1 );
 }
 
 MPL_TEST_CASE()
@@ -48,9 +48,9 @@ MPL_TEST_CASE()
     typedef vector_c<unsigned,0> v1;
     typedef vector_c<unsigned,1,2> v2;
 
-    MPL_ASSERT_EQUAL(2,( size<v1>::type::value,1 ));
-    MPL_ASSERT_EQUAL(2,( size<v2>::type::value,2 ));
+    MPL_ASSERT_RELATION( size<v1>::type::value, ==, 1 );
+    MPL_ASSERT_RELATION( size<v2>::type::value, ==, 2 );
 
-    MPL_ASSERT( front<v1>::type::value == 0 );
-    MPL_ASSERT( front<v2>::type::value == 1 );
+    MPL_ASSERT_RELATION( front<v1>::type::value, ==, 0 );
+    MPL_ASSERT_RELATION( front<v2>::type::value, ==, 1 );
 }

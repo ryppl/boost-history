@@ -31,8 +31,13 @@ struct b5 { typedef int xxx[10]; };
 struct b6 { typedef void (*xxx)(); };
 struct b7 { typedef void (xxx)(); };
 
-template <class T> struct outer;
-template <class T> struct inner { typedef typename T::type type; };
+template< typename T > struct outer;
+template< typename T > struct inner { typedef typename T::type type; };
+
+// agurt, 15/aug/04: make sure MWCW passes the test in presence of the following
+// template
+template< typename T > struct xxx;
+
 
 MPL_TEST_CASE()
 {

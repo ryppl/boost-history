@@ -21,7 +21,7 @@
 namespace boost {
 namespace mpl {
 
-template< typename T1, int not_le_ = 0 >
+template< typename T1 >
 struct same_as
 {
     template< typename T2 > struct apply
@@ -35,7 +35,7 @@ struct same_as
     };
 };
 
-template< typename T1, int not_le_ = 0 >
+template< typename T1 >
 struct not_same_as
 {
     template< typename T2 > struct apply
@@ -49,8 +49,6 @@ struct not_same_as
     };
 };
 
-BOOST_MPL_AUX_PASS_THROUGH_LAMBDA_SPEC(1,same_as)
-BOOST_MPL_AUX_PASS_THROUGH_LAMBDA_SPEC(1,not_same_as)
 
 } // namespace mpl
 } // namespace boost

@@ -18,5 +18,5 @@
 MPL_TEST_CASE()
 {
     typedef apply1< identity<>, char >::type t1;
-    MPL_ASSERT_SAME(2,( t1, char ));
+    MPL_ASSERT(( is_same< t1, char > ));
 }

@@ -17,7 +17,6 @@
 #include <boost/mpl/aux_/preprocessor/def_params_tail.hpp>
 #include <boost/mpl/aux_/na.hpp>
 #include <boost/mpl/aux_/arity_spec.hpp>
-#include <boost/mpl/aux_/lambda_spec.hpp>
 
 namespace boost { namespace mpl {
 
@@ -34,7 +33,6 @@ template< typename Value > struct always
 };
 
 BOOST_MPL_AUX_ARITY_SPEC(1, always)
-BOOST_MPL_AUX_PASS_THROUGH_LAMBDA_SPEC(1, always)
 
 }}
 

@@ -11,23 +11,41 @@
 // $Date$
 // $Revision$
 
-
-#include <boost/mpl/vector/vector10_c.hpp>
 #include <boost/mpl/advance.hpp>
-#include <boost/mpl/begin_end.hpp>
-
+#include <boost/mpl/iterator_tag.hpp>
 #include <boost/mpl/aux_/test.hpp>
 
+template< int pos > struct iter
+{
+    typedef mpl::bidirectional_iterator_tag category;
+    typedef iter<(pos + 1)> next;
+    typedef iter<(pos - 1)> prior;
+    typedef int_<pos> type;
+};
+
+#if BOOST_WORKAROUND(__MWERKS__, BOOST_TESTED_AT(0x3003))
+namespace boost { namespace mpl {
+template< int pos > struct tag< iter<pos> >: void_ {};
+}}
+#endif
+
+typedef iter<0> first;
+typedef iter<10> last;
 
 MPL_TEST_CASE()
 {
-    typedef vector10_c<int,0,1,2,3,4,5,6,7,8,9> numbers;
-    typedef begin<numbers>::type first;
-    typedef end<numbers>::type last;
+    typedef mpl::advance<first,int_<10> >::type iter1;
+    typedef advance_c<first,10>::type           iter2;
 
-    typedef advance_c<first,10>::type iter1;
-    typedef advance_c<last,-10>::type iter2;
+    MPL_ASSERT(( is_same<iter1, last> ));
+    MPL_ASSERT(( is_same<iter2, last> ));
+}
 
-    MPL_ASSERT(( boost::is_same<iter1, last> ));
-    MPL_ASSERT(( boost::is_same<iter2, first> ));
+MPL_TEST_CASE()
+{
+    typedef mpl::advance<last,int_<-10> >::type iter1;
+    typedef advance_c<last,-10>::type           iter2;
+
+    MPL_ASSERT(( is_same<iter1, first> ));
+    MPL_ASSERT(( is_same<iter2, first> ));
 }

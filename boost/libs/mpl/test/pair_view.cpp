@@ -27,8 +27,8 @@ MPL_TEST_CASE()
     
     typedef pair_view<l1,l2> view;
     
-    MPL_ASSERT_EQUAL(2,( front<view>::type::first::value,0 ));
-    MPL_ASSERT_EQUAL(2,( front<view>::type::second::value,9 ));
-//    MPL_ASSERT_EQUAL(2,( back<view>::type::first::value,9 ));
-//    MPL_ASSERT_EQUAL(2,( back<view>::type::second::value,0 ));
+    MPL_ASSERT_RELATION( front<view>::type::first::value, ==, 0 );
+    MPL_ASSERT_RELATION( front<view>::type::second::value, ==, 9 );
+//    MPL_ASSERT_RELATION( back<view>::type::first::value, ==, 9 );
+//    MPL_ASSERT_RELATION( back<view>::type::second::value, ==, 0 );
 }

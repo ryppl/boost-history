@@ -26,9 +26,9 @@ MPL_TEST_CASE()
     typedef index_of< types, float  >::type index_of_float;
     typedef index_of< types, char   >::type index_of_char;
 
-    MPL_ASSERT_EQUAL(2,( index_of_int::value, 0 ));
-    MPL_ASSERT_EQUAL(2,( index_of_double::value, 1 ));
-    MPL_ASSERT_EQUAL(2,( index_of_float::value, 2 ));
+    MPL_ASSERT_RELATION( index_of_int::value, ==, 0 );
+    MPL_ASSERT_RELATION( index_of_double::value, ==, 1 );
+    MPL_ASSERT_RELATION( index_of_float::value, ==, 2 );
 
     MPL_ASSERT(( is_void_< index_of_char > ));
 }

@@ -27,8 +27,8 @@ MPL_TEST_CASE()
 
     typedef erase<types,iter1,iter2>::type result;
     
-    MPL_ASSERT_EQUAL(2,( size<result>::value, 5 ));
+    MPL_ASSERT_RELATION( size<result>::value, ==, 5 );
 
     typedef find<result,unsigned>::type iter;
-    MPL_ASSERT_SAME(2,( iter, end<result>::type ));
+    MPL_ASSERT(( is_same< iter, end<result>::type > ));
 }

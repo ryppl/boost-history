@@ -23,11 +23,11 @@
         typedef integral_c<T,i> c##i; \
         typedef integral_c<T,i+1> next_c##i; \
         typedef integral_c<T,i-1> prior_c##i; \
-        { MPL_ASSERT_SAME(2,(c##i::value_type, T)); } \
-        { MPL_ASSERT_SAME(2,(c##i::type, c##i)); } \
-        { MPL_ASSERT_SAME(2,(c##i::next, next_c##i)); } \
-        { MPL_ASSERT_SAME(2,(c##i::prior, prior_c##i)); } \
-        { MPL_ASSERT_EQUAL(2,(c##i::value, i)); } \
+        { MPL_ASSERT(( is_same< c##i::value_type, T > )); } \
+        { MPL_ASSERT(( is_same< c##i::type, c##i > )); } \
+        { MPL_ASSERT(( is_same< c##i::next, next_c##i > )); } \
+        { MPL_ASSERT(( is_same< c##i::prior, prior_c##i > )); } \
+        { MPL_ASSERT_RELATION( c##i::value, ==, i ); } \
         assert(c##i() == i); \
     } \
 /**/

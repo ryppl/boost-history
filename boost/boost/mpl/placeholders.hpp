@@ -40,19 +40,19 @@
 #   include <boost/preprocessor/iterate.hpp>
 #   include <boost/preprocessor/cat.hpp>
 
-BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_OPEN
-
 // watch out for GNU gettext users, who #define _(x)
 #if !defined(_) || defined(BOOST_MPL_CFG_NO_UNNAMED_PLACEHOLDER_SUPPORT)
-typedef arg<-1> _;
+BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_OPEN
 
-namespace placeholders {
-using BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE::_;
-}
-#endif
+typedef arg<-1> _;
 
 BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_CLOSE
 BOOST_MPL_AUX_ADL_BARRIER_DECL(_)
+
+namespace boost { namespace mpl { namespace placeholders {
+using BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE::_;
+}}}
+#endif
 
 /// agurt, 17/mar/02: one more placeholder for the last 'apply#' 
 /// specialization

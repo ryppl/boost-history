@@ -29,7 +29,7 @@ MPL_TEST_CASE()
     typedef list<char*,short*,int*,long*,float*,double*> pointers;
     
     typedef transform1< types,add_pointer<_1> >::type result;
-    MPL_ASSERT(( equal<result,pointers>::value ));
+    MPL_ASSERT(( equal<result,pointers> ));
 }
 
 MPL_TEST_CASE()
@@ -39,8 +39,8 @@ MPL_TEST_CASE()
     typedef list_c<long,2,5,9,13,19,23> sums;
 
     typedef transform2< evens, primes, plus<> >::type result;
-    MPL_ASSERT(( equal< result,sums,equal_to<_1,_2> >::value ));
+    MPL_ASSERT(( equal< result,sums,equal_to<_1,_2> > ));
     
     typedef transform< evens, primes, plus<> >::type result2;
-    MPL_ASSERT_SAME(2,( result2,result ));
+    MPL_ASSERT(( is_same<result2,result> ));
 }

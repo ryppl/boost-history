@@ -25,8 +25,8 @@ MPL_TEST_CASE()
     typedef list_c<bool,true>::type list1;
     typedef list_c<bool,false>::type list2;
 
-    MPL_ASSERT_EQUAL(2,( front<list1>::type::value, true ));
-    MPL_ASSERT_EQUAL(2,( front<list2>::type::value, false ));
+    MPL_ASSERT_RELATION(  front<list1>::type::value, ==, true );
+    MPL_ASSERT_RELATION(  front<list2>::type::value, ==, false );
 }
 #endif
 
@@ -36,12 +36,12 @@ MPL_TEST_CASE()
     typedef list_c<int,0,1>::type list2;
     typedef list_c<int,1,2,3>::type list3;
 
-    MPL_ASSERT_EQUAL(2,( size<list1>::value, 1 ));
-    MPL_ASSERT_EQUAL(2,( size<list2>::value, 2 ));
-    MPL_ASSERT_EQUAL(2,( size<list3>::value, 3 ));
-    MPL_ASSERT_EQUAL(2,( front<list1>::type::value, -1 ));
-    MPL_ASSERT_EQUAL(2,( front<list2>::type::value, 0 ));
-    MPL_ASSERT_EQUAL(2,( front<list3>::type::value, 1 ));
+    MPL_ASSERT_RELATION( size<list1>::value, ==, 1 );
+    MPL_ASSERT_RELATION( size<list2>::value, ==, 2 );
+    MPL_ASSERT_RELATION( size<list3>::value, ==, 3 );
+    MPL_ASSERT_RELATION( front<list1>::type::value, ==, -1 );
+    MPL_ASSERT_RELATION( front<list2>::type::value, ==, 0 );
+    MPL_ASSERT_RELATION( front<list3>::type::value, ==, 1 );
 }
 
 MPL_TEST_CASE()
@@ -49,8 +49,8 @@ MPL_TEST_CASE()
     typedef list_c<unsigned,0>::type list1;
     typedef list_c<unsigned,1,2>::type list2;
 
-    MPL_ASSERT_EQUAL(2,( size<list1>::value, 1 ));
-    MPL_ASSERT_EQUAL(2,( size<list2>::value, 2 ));
-    MPL_ASSERT_EQUAL(2,( front<list1>::type::value, 0 ));
-    MPL_ASSERT_EQUAL(2,( front<list2>::type::value, 1 ));
+    MPL_ASSERT_RELATION( size<list1>::value, ==, 1 );
+    MPL_ASSERT_RELATION( size<list2>::value, ==, 2 );
+    MPL_ASSERT_RELATION( front<list1>::type::value, ==, 0 );
+    MPL_ASSERT_RELATION( front<list2>::type::value, ==, 1 );
 }

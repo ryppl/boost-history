@@ -45,10 +45,10 @@ MPL_TEST_CASE()
             >
         >::type f;
 
-    MPL_ASSERT_NOT(( mpl::aux::apply_wrap1<f,char> ));
-    MPL_ASSERT_NOT(( mpl::aux::apply_wrap1<f,double> ));
-    MPL_ASSERT(( mpl::aux::apply_wrap1<f,long> ));
-    MPL_ASSERT(( mpl::aux::apply_wrap1<f,my> ));
+    MPL_ASSERT_NOT(( apply_wrap1<f,char> ));
+    MPL_ASSERT_NOT(( apply_wrap1<f,double> ));
+    MPL_ASSERT(( apply_wrap1<f,long> ));
+    MPL_ASSERT(( apply_wrap1<f,my> ));
 }
 
 MPL_TEST_CASE()
@@ -62,12 +62,12 @@ MPL_TEST_CASE()
             >
         >::type f;
 
-    MPL_ASSERT_NOT(( mpl::aux::apply_wrap2<f,double,char> ));
-    MPL_ASSERT_NOT(( mpl::aux::apply_wrap2<f,my,int> ));
-    MPL_ASSERT_NOT(( mpl::aux::apply_wrap2<f,my,char[99]> ));
-    MPL_ASSERT(( mpl::aux::apply_wrap2<f,int,int> ));
-    MPL_ASSERT(( mpl::aux::apply_wrap2<f,my,my> ));
-    MPL_ASSERT(( mpl::aux::apply_wrap2<f,signed long, unsigned long> ));
+    MPL_ASSERT_NOT(( apply_wrap2<f,double,char> ));
+    MPL_ASSERT_NOT(( apply_wrap2<f,my,int> ));
+    MPL_ASSERT_NOT(( apply_wrap2<f,my,char[99]> ));
+    MPL_ASSERT(( apply_wrap2<f,int,int> ));
+    MPL_ASSERT(( apply_wrap2<f,my,my> ));
+    MPL_ASSERT(( apply_wrap2<f,signed long, unsigned long> ));
 }
 
 MPL_TEST_CASE()
@@ -76,5 +76,5 @@ MPL_TEST_CASE()
     typedef mpl::lambda< mpl::less<_1,_2> >::type pred;
     typedef mpl::bind2< pred, _1, mpl::int_<4> > f;
     
-    MPL_ASSERT(( mpl::aux::apply_wrap1< f,mpl::int_<3> > ));
+    MPL_ASSERT(( apply_wrap1< f,mpl::int_<3> > ));
 }

@@ -24,5 +24,5 @@ MPL_TEST_CASE()
     typedef vector6<int,float,char,float,float,double> types;
     typedef mpl::remove< types,float >::type result;
     typedef vector3<int,char,double> answer;
-    MPL_ASSERT(( equal< result,answer >::value ));
+    MPL_ASSERT(( equal< result,answer > ));
 }

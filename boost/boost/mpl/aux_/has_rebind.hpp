@@ -17,7 +17,7 @@
 #ifndef BOOST_MPL_AUX_HAS_REBIND_HPP_INCLUDED
 #define BOOST_MPL_AUX_HAS_REBIND_HPP_INCLUDED
 
-#include <boost/mpl/aux_/has_xxx.hpp>
+#include <boost/mpl/has_xxx.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/type_traits/is_class.hpp>

@@ -31,12 +31,12 @@ MPL_TEST_CASE()
     typedef erase<types, types_iter>::type result_types;
     typedef erase<values, values_iter>::type result_values;
 
-    MPL_ASSERT_EQUAL(2,( size<result_types>::value, 7 ));
-    MPL_ASSERT_EQUAL(2,( size<result_values>::value, 7 ));
+    MPL_ASSERT_RELATION( size<result_types>::value, ==, 7 );
+    MPL_ASSERT_RELATION( size<result_values>::value, ==, 7 );
 
     typedef find<result_types,short>::type result_types_iter;
     typedef find<result_values, integral_c<int,7> >::type result_values_iter;
 
-    MPL_ASSERT_SAME(2,( result_types_iter, end<result_types>::type ));
-    MPL_ASSERT_SAME(2,( result_values_iter, end<result_values>::type ));
+    MPL_ASSERT(( is_same< result_types_iter, end<result_types>::type > ));
+    MPL_ASSERT(( is_same< result_values_iter, end<result_values>::type > ));
 }

@@ -19,9 +19,9 @@
 
 MPL_TEST_CASE()
 {
-    MPL_ASSERT_SAME(3,( mpl::min< int_<5>,int_<7> >::type,int_<5> ));
-    MPL_ASSERT_SAME(3,( mpl::max< int_<5>,int_<7> >::type,int_<7> ));
+    MPL_ASSERT(( is_same< mpl::min< int_<5>,int_<7> >::type,int_<5> > ));
+    MPL_ASSERT(( is_same< mpl::max< int_<5>,int_<7> >::type,int_<7> > ));
 
-    MPL_ASSERT_SAME(3,( mpl::min< int_<-5>,int_<-7> >::type,int_<-7> ));
-    MPL_ASSERT_SAME(3,( mpl::max< int_<-5>,int_<-7> >::type,int_<-5> ));
+    MPL_ASSERT(( is_same< mpl::min< int_<-5>,int_<-7> >::type,int_<-7> > ));
+    MPL_ASSERT(( is_same< mpl::max< int_<-5>,int_<-7> >::type,int_<-5> > ));
 }

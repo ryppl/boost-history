@@ -31,5 +31,5 @@ MPL_TEST_CASE()
 
     typedef sort< numbers >::type result;
 
-    MPL_ASSERT((equal< result,manual_result,equal_to<_1,_2> >::value));
+    MPL_ASSERT((equal< result,manual_result,equal_to<_1,_2> > ));
 }

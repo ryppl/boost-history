@@ -27,6 +27,7 @@ namespace aux {
 // hand-written version is more efficient than bind/lambda expression
 template<
       typename Operation
+    , int not_le_ = 0
     >
 struct copy_op
 {
@@ -42,7 +43,6 @@ struct copy_op
 
 } // namespace aux
 
-BOOST_MPL_AUX_PASS_THROUGH_LAMBDA_SPEC(1,aux::copy_op)
 
 } // namespace mpl
 } // namespace boost

@@ -27,9 +27,9 @@ MPL_TEST_CASE()
     typedef find< numbers,integral_c<int,7> >::type pos;
     typedef insert_range< numbers,pos,range_c<int,2,7> >::type range;
 
-    MPL_ASSERT_EQUAL(2,( size<range>::value, 10 ));
+    MPL_ASSERT_RELATION( size<range>::value, ==, 10 );
     MPL_ASSERT(( equal< range,range_c<int,0,10> > ));
 
     typedef insert_range< list0<>,end< list0<> >::type,list1<int> >::type result2;
-    MPL_ASSERT_EQUAL(2,( size<result2>::value, 1 ));
+    MPL_ASSERT_RELATION( size<result2>::value, ==, 1 );
 }

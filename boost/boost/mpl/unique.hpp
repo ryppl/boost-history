@@ -29,7 +29,7 @@
 namespace boost { namespace mpl {
 
 namespace aux {
-template< typename Predicate, typename Operation >
+template< typename Predicate, typename Operation, int not_le_ = 0 >
 struct unique_op
 {
     template< typename Pair, typename T > struct apply
@@ -46,8 +46,6 @@ struct unique_op
     };
 };
 }
-
-BOOST_MPL_AUX_PASS_THROUGH_LAMBDA_SPEC(2, aux::unique_op)
 
 namespace aux {
 

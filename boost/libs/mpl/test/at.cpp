@@ -13,7 +13,7 @@
 
 #include <boost/mpl/at.hpp>
 #include <boost/mpl/vector/vector10_c.hpp>
-#include <boost/mpl/aux_/at_test.hpp>
+#include <boost/mpl/aux_/test.hpp>
 
 template< typename Seq, int n > struct at_test
 {
