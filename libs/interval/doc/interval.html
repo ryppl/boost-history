@@ -134,7 +134,43 @@ public:
 } // namespace boost
 </pre>
 
-<p>There is also a bunch of functions defined outside the class:</p>
+<p>The <code>interval</code> class requires two template parameters,
+the first one is the type of the bounds. And the second one is a class
+defining three policies. This second parameter should look like:</p>
+
+<pre>
+struct traits {
+  typedef ... compare;
+  typedef ... rounding;
+  typedef ... checking;
+};
+</pre>
+
+<p>The requirements of these three types are detailled below in their
+respective sections. In order to allow an easier definition of this
+parameter. The <code>interval_traits</code> class is defined by:</p>
+
+<pre>
+namespace boost {
+
+template&lt;class T,
+	 class Compare = interval_lib::compare_certainly&lt;T&gt;,
+	 class Rounding = interval_lib::rounded_arithmetic&lt;T&gt;,
+	 class Checking = interval_lib::checking_strict&lt;T&gt; &gt;
+struct interval_traits
+{
+  typedef T base_type;
+  typedef Compare compare;
+  typedef Rounding rounding;
+  typedef Checking checking;
+};
+
+} // namespace boost
+</pre>
+
+<p>There is also a bunch of operators and functions defined outside
+the <code>interval</code> class in the <code>boost</code>
+namespace:</p>
 
 <pre>
 namespace boost {
@@ -411,6 +447,10 @@ interval&lt;T, Traits&gt; min(const T&amp; x, const interval&lt;T, Traits&gt;&am
 } // namespace boost
 </pre>
 
+<p>Finally, there is also a specialization of
+<code>std::numeric_limits</code> for the <code>interval</code>
+class.</p>
+
 <h2>Operations and Functions</h2>
 
 <p>The basic operations are the unary minus and the binary <code>+ - *
@@ -430,18 +470,19 @@ interval (rounded toward plus infinity). <code>pred</code> and
 
 <p>The functions <code>min</code>, <code>max</code>, <code>abs</code>
 are also defined. Please do not mistake them for the functions defined
-in the standard library (<code>a&lt;b? a : b</code>, <code>a&gt;b? a :
-b</code>, <code>a&lt;0? -a : a</code>). These functions are compatible
-with the elementary property of interval arithmetic. For example,
-<code>max</code>([<i>a</i>,<i>b</i>], [<i>c</i>,<i>d</i>]) =
-{<code>max</code>(<i>x</i>,<i>y</i>) | <i>x</i> in [<i>a</i>,<i>b</i>]
-and <i>y</i> in [<i>c</i>,<i>d</i>]}. They are not defined in the
-<code>std</code> namespace but in the <code>boost</code> namespace to
-avoid conflict with the other definitions.</p>
+in the standard library (aka <code>a&lt;b?a:b</code>,
+<code>a&gt;b?a:b</code>, <code>a&lt;0?-a:a</code>). These functions
+are compatible with the elementary property of interval
+arithmetic. For example, <code>max</code>([<i>a</i>,<i>b</i>],
+[<i>c</i>,<i>d</i>]) = {<code>max</code>(<i>x</i>,<i>y</i>) | <i>x</i>
+in [<i>a</i>,<i>b</i>] and <i>y</i> in [<i>c</i>,<i>d</i>]}. They are
+not defined in the <code>std</code> namespace but in the
+<code>boost</code> namespace to avoid conflict with the other
+definitions.</p>
 
 <p>There are also some set functions. <code>intersect</code> does what
 you think it does. <code>overlap</code> tests if two intervals have
-some common numbers. <code>hull</code> computes the smallest interval
+some common subset. <code>hull</code> computes the smallest interval
 which contains the two parameters; those parameters can be numbers or
 interval. <code>in</code> tests if a number is in an interval;
 <code>in_zero</code> is a variant which tests if zero is in an
@@ -471,18 +512,18 @@ struct interval_compare {
 </pre>
 
 <p>The functions <code>lessthan</code> and <code>equalto</code>
-compares two intervals given their bounds. Thanks to this comparison
+compare two intervals given their bounds. Thanks to this comparison
 class, the class <code>interval</code> can now define the following
 operators: <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>,
 <code>&gt;=</code>, <code>==</code>, <code>!=</code>. All these
-functions are defined for two interval parameters, or for one interval
+operators are defined for two interval parameters, or for one interval
 and a number.</p>
 
 <p>However, these operators are not really handy. For example, if
 <code>lessthan</code> is a "certain" comparison, then
-<code>&lt;</code> and <code>&gt;</code> are also "certain" comparison,
+<code>&lt;</code> and <code>&gt;</code> are also "certain" comparisons,
 but <code>&lt;=</code> and <code>&gt;=</code> are only "possible"
-comparison. The reason of this discordance is: it is impossible to
+comparisons. The reason of this discordance is: it is impossible to
 have <code>&lt;</code> and <code>&lt;=</code> both "possible" or
 "certain", and to have <code>(x&lt;=y) == !(y&lt;x)</code>. However,
 if you do not consider overlapping intervals, these two types of
@@ -504,18 +545,53 @@ template&lt;class T, class Traits&gt;
 bool cerlt(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
 </pre>
 
-<h2>Rounded Arithmetic (FIXME)</h2>
-
-<p>Here comes the tricky part. In order to be as general as possible,
-the library uses a complex class hierarchy. The class
-<code>interval_traits</code> requires an argument describing a class
-able to compute rounded arithmetic. This class must be able to provide
-all the elementary operations on the base type. Two versions of each
-operation are needed: one rounded upward, and the other rounded
-downward. Here is an example of such a class :</p>
+<p>However, three classes are pre-defined for the comparison
+policy. <code>compare_certainly</code> implements the "certain"
+comparison (it is the comparison policy by default).
+<code>compare_possibly</code> implements the "possible" comparison.
+And <code>compare_full</code> allows the user to specify a behavior in
+case of not-boolean result (an exception for example).</p>
 
 <pre>
-struct rounded_arithmetic {
+namespace boost {
+  namespace interval_lib {
+
+template&lt;class T&gt; struct compare_certainly;
+template&lt;class T&gt; struct compare_possibly;
+template&lt;class T, class Function&gt; struct compare_full;
+
+  } // namespace interval_lib
+} // namespace boost
+</pre>
+
+<p>As you have probably guessed, the <code>Function</code> parameter
+of <code>compare_full</code> is the type of a function object called
+in case of not-boolean result. So it must have an operator <code>bool
+Function::operator()()</code>. Here is a little example of the
+behavior of the comparison operators when <code>compare_full</code> is
+the choosen policy:</p>
+
+<ul>
+
+<li>[1,2] &lt;= [2,3] will return <code>true</code>;
+
+<li>[1,2] &gt; [2,3] will return <code>false</code>;
+
+<li>[1,2] &lt; [2,3] will return the result of <code>Function()()</code>;
+
+<li>and [1,2] &gt;= [2,3] will return <code>!Function()()</code>.
+
+</ul>
+
+<h2>Rounded Arithmetic</h2>
+
+<p>Here comes the tricky part. In order to be as general as possible,
+the library uses a class to compute all the necessary functions
+rounded upward or downward. This class is the second parameter of
+<code>interval_traits</code>.</p>
+
+<pre>
+struct rounding {
   T add_down(const T&amp;, const T&amp;);
   T add_up(const T&amp;, const T&amp;);
   T sub_down(const T&amp;, const T&amp;);
@@ -526,13 +602,83 @@ struct rounded_arithmetic {
   T div_up(const T&amp;, const T&amp;);
   T sqrt_down(const T&amp;);
   T sqrt_up(const T&amp;);
+  T exp_down(const T&amp;);
+  T exp_up  (const T&amp;);
+  T log_down(const T&amp;);
+  T log_up  (const T&amp;);
+  T cos_down(const T&amp;);
+  T cos_up  (const T&amp;);
+  T tan_down(const T&amp;);
+  T tan_up  (const T&amp;);
+  T asin_down(const T&amp;);
+  T asin_up  (const T&amp;);
+  T acos_down(const T&amp;);
+  T acos_up  (const T&amp;);
+  T atan_down(const T&amp;);
+  T atan_up  (const T&amp;);
+  T sinh_down(const T&amp;);
+  T sinh_up  (const T&amp;);
+  T cosh_down(const T&amp;);
+  T cosh_up  (const T&amp;);
+  T tanh_down(const T&amp;);
+  T tanh_up  (const T&amp;);
+  T asinh_down(const T&amp;);
+  T asinh_up  (const T&amp;);
+  T acosh_down(const T&amp;);
+  T acosh_up  (const T&amp;);
+  T atanh_down(const T&amp;);
+  T atanh_up  (const T&amp;);
+  T int_down(const T&amp;);
+  T int_up  (const T&amp;);
+  T pi_down();
+  T pi_up();
+  T pi_1_2_down();
+  T pi_1_2_up();
+  T pi_2_1_down();
+  T pi_2_1_up();
 };
 </pre>
+
+<p>These functions do not have to worry about invalid
+arguments. Moreover, the argument of the <code>cos_</code> functions
+is between 0 and 2&pi;; and the argument of the <code>tan_</code>
+functions is between -&pi;/2 and &pi;/2.</p>
+
+<p>The functions <code>int_down</code> and <code>int_up</code>
+computes the nearest integer smaller or bigger than their
+argument. The <code>pi_</code> functions are supposed to return bounds
+of some constants. <code>pi</code> clearly stands for the mathematical
+constant &pi;. <code>pi_1_2</code> stands for &pi;/2 and
+<code>pi_2_1</code> stands for 2&pi;.</p>
+
+<p>The class <code>boost::interval_lib::detail::tonearest</code>
+should also be appropriately specialized for this class in order for
+the functions <code>median</code>, <code>bisect</code> and
+<code>dist</code> to work. The purpose of this class is: the basic
+operators <code>+ - * /</code> will be rounded toward the nearest
+integer while the object of type
+<code>boost::interval_lib::detail::tonearest&lt;rounding&gt;::type</code>
+is alive.</p>
+
+<p>A lot of classes are provided. When they exist in two versions
+<code>_standard</code> and <code>_opposite_trick</code>, the first one
+does switch the rounding mode each time, and the second one tries to
+keep it oriented toward plus infinity.</p>
+
+<p>First, there is <code>save_state</code>. This class is responsible
+to save the current rounding mode and call <code>init</code> in its
+constructor, and to restore the saved rounding mode in its
+destructor. If used, this class should be the one given to
+<code>interval_traits</code> in order for the unprotect mecanism to
+correctly work (if it is not, there will be no problem, just a loss of
+performance).</p>
+
+FIXME -------------------------------------- begin
 
 <p>In order to simplify the use of the library, two templates are
 provided: <code>rounded_arithmetic_standard</code> and
 <code>rounded_arithmetic_opposite_trick</code>. The first one changes
-the rounding mode for each operation. The second one use the trick
+the rounding mode for each operation. The second one uses the trick
 described in the paragraph "Note on performance" to avoid switching
 when possible.</p>
 
@@ -630,6 +776,9 @@ rounding_control&lt;T&gt; &gt;.</code>
 
 </ul>
 
+
+FIXME -------------------------------------- end
+
 <h2>Checking</h2>
 
 <p>The last customizable part of <code>interval_traits</code> deals
@@ -722,6 +871,30 @@ lack of precision, <code>tan</code> is unfortunatelly unable to
 trigger <code>trigonometric_nan</code> on an input like [&pi;/2,
 &pi;/2].</p>
 
+<p>Some checking policies are already defined.
+<code>checking_nothing</code> will not do anything; each function is
+empty. <code>checking_lax</code> will only throw an exception when
+<code>inverted_bound</code> is called. <code>checking_strict</code>
+will throw exceptions when <code>inverted_bound</code>,
+<code>divide_by_zero(0,0)</code> and each <code>_nan</code> functions
+are called. This last policy is the policy by default.</p>
+
+<pre>
+namespace boost {
+  namespace interval_lib {
+
+template&lt;class T&gt; struct checking_nothing;
+template&lt;class T&gt; struct checking_lax;
+template&lt;class T&gt; struct checking_strict;
+
+  } // namespace interval_lib
+} // namespace boost
+</pre>
+
+<p>The thrown exceptions are <code>std::invalid_argument</code> with
+an error message looking like <code>"boost::interval: &lt;something
+appropriate&gt;"</code>.</p>
+
 <h2>Performance Notes</h2>
 
 <p>This paragraph deals mostly with the performance of the library
@@ -808,12 +981,12 @@ example of the Horner scheme to compute the value of a polynom.</p>
 template&lt;class I&gt;
 I horner(const I&amp; x, const I p[], int n) {
 
-  // define the unprotected version of the interval type
-  typedef typename boost::interval_lib::unprotect&lt;I&gt;::type R;
-  
   // initialize and restore the rounding mode
   typename I::traits_type::rounding rnd;
 
+  // define the unprotected version of the interval type
+  typedef typename boost::interval_lib::unprotect&lt;I&gt;::type R;
+  
   R a = x;
   R y = p[n - 1];
   for(int i = n - 2; i >= 0; i--) {
