@@ -83,7 +83,13 @@ public:
   }
   
   explicit bigint(std::string const& str, base_type base = decimal) {
-    if(mpz_init_set_str(gmp_value_, str.c_str(),base) < 0) {
+    
+    // GMP only recognizes "0x" if you auto-detect bases.
+    char const* p = str.c_str();
+    if(base == hexadecimal && str.size() >= 2 &&
+       p[0] == '0' && tolower(p[1]) == 'x')
+      p += 2;
+    if(mpz_init_set_str(gmp_value_,p,base) < 0) {
       mpz_clear(gmp_value_);
       throw bigint::bad_value(str);
     }

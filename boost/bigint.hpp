@@ -248,7 +248,7 @@ private:
 
   void from_string(std::string const& str, base_type a_base) {
 
-    // Throw bad_value on an error
+    // check(bool) throws bad_value on a failed assertion.
     struct {
       std::string const& str_;
       void operator()(bool b) {
@@ -256,7 +256,6 @@ private:
       }
     } check = { str };
 
-    // RG: This may be better placed in a separate function.
     // Verify the goodness of the number
     char const* valid_octals = "01234567";
     char const* valid_decimals = "0123456789";
@@ -282,19 +281,30 @@ private:
       break;
     }
 
-    // Error checking
-    check(!str.empty());
-    check(str[0] != '-' || str.size() > 1);
-    if(str[0] != '-') 
-      check(str.find_first_not_of(valid) == std::string::npos);
-    else
-      check(str.find_first_not_of(valid,1) == std::string::npos);
+    //
+    // String Validation
+    //
+    std::string::size_type idx = 0;
 
-    std::string::const_iterator start = str.begin();
+    // Negative number?
+    bool negative = false;
+    if(!str.empty() && str[0] == '-') {
+      negative = true;
+      ++idx;
+    }
 
-    bool negative = str[0] == '-';
-    if(negative) 
-      ++start;
+    // Accept hexadecimal base markers.
+    if(a_base == hexadecimal && str.size() >= idx+2 &&
+       str[idx] == '0' && tolower(str[idx+1]) == 'x')
+      idx += 2;
+
+    // Error checking: Empty strings are invalid!
+    check(str.size()-idx > 0);
+    check(str.find_first_not_of(valid,idx) == std::string::npos);
+
+
+    // Heart of the algorithm.
+    std::string::const_iterator start = str.begin()+idx;
 
     buffer.clear();
     buffer.push_back(0);

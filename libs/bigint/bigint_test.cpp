@@ -339,4 +339,17 @@ int main() {
     assert(q.what() == std::string("Bad value: 555y"));
   }
 
+
+  {
+    // test out reading hex numbers with a base starter.
+    bigint x("0x20",bigint::hexadecimal);
+    assert(x == 32);
+  }
+
+  {
+    // test out reading oct numbers with a base starter.
+    bigint x("020",bigint::octal);
+    assert(x == 16);
+  }
+
 }
