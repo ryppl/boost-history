@@ -6,8 +6,7 @@
 
 int main()
 {
-   boost::fixed_string< 0 >      oops;  // 'value' not a member of 'zero_buffer_error'
-   boost::fixed_string< 1, int > oops2; // 'value' not a member of 'char_type_error'
+   boost::fixed_string< 1, int > oops; // 'value' not a member of 'char_type_error'
 
    return( 0 );
 }

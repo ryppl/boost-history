@@ -6,10 +6,11 @@
 // providing guards against buffer overflow.
 
 #if defined(__BORLANDC__)
-#  error fixed_string/safe_strings.hpp does not work properly with the Borland compiler
+#  error C-string functions does not work properly with the Borland compiler
 #endif
 
-#include <boost/fixed_string/safe_strings.hpp>
+#include <boost/fixed_string/fsstring.hpp> // for strcpy; strcat
+#include <boost/fixed_string/fsstdio.hpp>  // for sprintf
 
 int main()
 {
