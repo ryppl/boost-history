@@ -50,8 +50,9 @@ namespace aux
           mpl::min<mpl::size<Args>::value,mpl::int_<1> >::value
       ];
 
-      proxy(backend::plugin const& back_end, arg_array const& args)
+      proxy(backend::plugin const& back_end, void* impl, arg_array const& args)
         : back_end(back_end)
+        , impl(impl)
         , args(args)
       {}
 
@@ -60,13 +61,16 @@ namespace aux
       {
           boost::aligned_storage<sizeof(T), boost::alignment_of<T>::value> storage;
           return back_end.call(
-              call_xxx_data<T,Args>::instance, storage.address(), this->args)
+              impl
+            , call_xxx_data<T,Args>::instance
+            , storage.address()
+            , this->args)
       }
 
       template <class T>
       operator T*() 
       {
-          return &implicit_cast<T&>(*this);
+          return &implicit_cast<T&>(*this); // dispatch to the T& case below.
       }
 
       template <class T>
@@ -74,12 +78,16 @@ namespace aux
       {
           return *static_cast<T*>(
               back_end.call(
-                  call_xxx_data<typename remove_cv<T>::type,Args>::instance, 0, this->args)
+                  impl
+                , call_xxx_data<typename remove_cv<T>::type,Args>::instance
+                , 0     // No need to store the result
+                , this->args)
           )
       }
 
    private:
       backend::plugin const& back_end;
+      void* impl;
       arg_array args;
   };
 }
@@ -106,21 +114,21 @@ struct override
     aux::proxy<mpl::vector0<> > operator() const
     {
         void* const dummy;
-        return aux::proxy<mpl::vector0<> >(back_end, &dummy);
+        return aux::proxy<mpl::vector0<> >(back_end, impl, &dummy);
     }
 
     template <class T0>
     aux::proxy<mpl::vector1<T0> > operator(T0 const& a0) const
     {
         void* const addresses[] = { &a0 };
-        return aux::proxy<mpl::vector1<T0> >(back_end, addresses);
+        return aux::proxy<mpl::vector1<T0> >(back_end, impl, addresses);
     }
     
     template <class T0, class T1>
     aux::proxy<mpl::vector2<T0,T1> > operator(T0 const& a0, T1 const& a1) const
     {
         void* const addresses[] = { &a0, &a1 };
-        return aux::proxy<mpl::vector1<T0,T1> >(addresses);
+        return aux::proxy<mpl::vector1<T0,T1> >(back_end, impl, addresses);
     }
 
     // ...

@@ -15,11 +15,13 @@ class BOOST_LANGBINDING_DECL plugin
     virtual ~plugin();
     
     virtual void* call(
-        call_xxx_data& signature_constants
+        void* function
+      , call_xxx_data& signature_constants
       , void* result_storage
       , void** arg_storage) = 0;
 
-    langbinding::backend::id id();
+    langbinding::backend::id id()
+    { return id_; }
     
  private:
     langbinding::backend::id id_;
