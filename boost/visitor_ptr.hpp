@@ -17,6 +17,8 @@
 #ifndef BOOST_VISITOR_PTR_HPP
 #define BOOST_VISITOR_PTR_HPP
 
+#include "boost/type_traits/add_reference.hpp"
+
 namespace boost {
 
 //////////////////////////////////////////////////////////////////////////
@@ -27,38 +29,57 @@ namespace boost {
 //
 
 template <typename T, typename R>
-struct visitor_ptr_t
+class visitor_ptr_t
+    : public dynamic_visitor_base
+    , public dynamic_visitor_interface<T>
 {
 private: // representation
+
     typedef R (*visitor_t)(T);
 
     visitor_t visitor_;
 
 public: // typedefs
+
     typedef void result_type;
 
+private: // private typedefs
+
+    typedef typename add_reference<T>::type
+        argument_fwd_type;
+
 public: // structors
+
     visitor_ptr_t(visitor_t& visitor)
       : visitor_(visitor)
     {
     }
 
-public: // operators
-    result_type operator()(T operand) const
+public: // static visitor interfaces
+
+    void operator()(argument_fwd_type operand) const
     {
         visitor_(operand);
     }
 
     template <typename U>
-    result_type operator()(const U& operand) const
+    void operator()(const U& operand) const
     {
     }
+
+private: // dynamic visitor interfaces
+
+    virtual void visit(argument_fwd_type operand)
+    {
+        (*this)(operand);
+    }
+
 };
 
 template <typename R, typename T>
-visitor_ptr_t<T, R> visitor_ptr(R (*visitor)(T))
+visitor_ptr_t<T,R> visitor_ptr(R (*visitor)(T))
 {
-    return visitor_ptr_t<T, R>(visitor);
+    return visitor_ptr_t<T,R>(visitor);
 }
 
 } // namespace boost
