@@ -1,27 +1,10 @@
-from gen_function import *
-import string
-
-def gen_extclass(args):
-    held_instance = """%{
-    template <%(class A%n%:, %)>%}
-    HeldInstance(PyObject* p%(, const A%n%& a%n%)) : T(%(a%n%:, %)), m_self(p) {}"""
-
-    instance_value_holder = """%{
-    template <%(class A%n%:, %)>%}
-    InstanceValueHolder(ExtensionInstance* p%(, const A%n& a%n%)) :
-        m_held(p%(, a%n%)) {}"""
-    
-    return (
-"""//  (C) Copyright David Abrahams 2000. Permission to copy, use, modify, sell and
+//  (C) Copyright David Abrahams 2000. Permission to copy, use, modify, sell and
 //  distribute this software is granted provided this copyright notice appears
 //  in all copies. This software is provided "as is" without express or implied
 //  warranty, and with no claim as to its suitability for any purpose.
 //
 //  The author gratefully acknowleges the support of Dragon Systems, Inc., in
 //  producing this work.
-//
-//  This file automatically generated for %d-argument constructors by
-//  gen_extclass.py
 
 #ifndef EXTENSION_CLASS_DWA052000_H_
 # define EXTENSION_CLASS_DWA052000_H_
@@ -294,19 +277,17 @@ class ExtensionClass
     ~ExtensionClass();
 
     // define constructors
-""" % args
-        + gen_function(
-"""    template <%(class A%n%:, %)>
-    void def(Constructor<%(A%n%:, %)>)
-    // The following incantation builds a Signature1, Signature2,... object. It
-    // should _all_ get optimized away.
-    { add_constructor(
-        %(prepend(Type<A%n>::Id(),
-        %)        Signature0()%()%));
+    template <class A1, class A2, class A3, class A4, class A5>
+    void def(Constructor<A1, A2, A3, A4, A5>)
+    { add_constructor(             // the following incantation builds a Signature1,
+        prepend(Type<A1>::Id(),    // Signature2, ... constructor. It _should_ all
+        prepend(Type<A2>::Id(),    // get optimized away. Just another workaround
+        prepend(Type<A3>::Id(),    // for the lack of partial specialization in MSVC
+        prepend(Type<A4>::Id(),
+        prepend(Type<A5>::Id(),
+                Signature0()))))));
     }
-""", args)
-        +
-"""
+
     // define member functions. In fact this works for free functions, too -
     // they act like static member functions, or if they start with the
     // appropriate self argument (as a pointer), they can be used just like
@@ -369,47 +350,8 @@ class ExtensionClass
     }
 };
 
-// A simple wrapper over a T which allows us to use ExtensionClass<T> with a
-// single template parameter only. See ExtensionClass<T>, above.
-template <class T>
-class HeldInstance : public T
-{
-    // There are no member functions: we want to avoid inadvertently overriding
-    // any virtual functions in T.
-public:"""
-        + gen_functions(held_instance, args)
-        + """
-protected:
-    PyObject* m_self; // Not really needed; doesn't really hurt.
-};
+#include "extclass_pygen.h"
 
-class InstanceHolderBase
-{
-public:
-    virtual ~InstanceHolderBase() {}
-};
-
-template <class Held>
-class InstanceHolder : public InstanceHolderBase
-{
-public:
-    virtual Held *target() = 0;
-};
-    
-template <class Held, class Wrapper>
-class InstanceValueHolder : public InstanceHolder<Held>
-{
-public:
-    Held* target() { return &m_held; }
-    Wrapper* value_target() { return &m_held; }
-"""
-        + gen_functions(instance_value_holder, args)
-        + """
-private:
-    Wrapper m_held;
-};
-""" +
-"""
 template <class PtrType, class HeldType>
 class InstancePtrHolder : public InstanceHolder<HeldType>
 {
@@ -461,6 +403,20 @@ ExtensionClass<T, U>::~ExtensionClass()
     ClassRegistry<T>::unregister_class(this);
 }
 
+#ifdef PY_NO_INLINE_FRIENDS_IN_NAMESPACE // Back to the global namespace for this GCC bug
+}
+#endif
+
+//
+// Static data member declaration.
+//
+#ifdef PY_NO_INLINE_FRIENDS_IN_NAMESPACE // Back from the global namespace for this GCC bug
+namespace py {
+#endif
+
+template <class T>
+Class<py::ExtensionInstance>* ClassRegistry<T>::static_class_object;
+
 template <class T>
 inline void ClassRegistry<T>::register_class(Class<ExtensionInstance>* p)
 {
@@ -478,23 +434,6 @@ inline void ClassRegistry<T>::unregister_class(Class<ExtensionInstance>* p)
     static_class_object = 0;
 }
 
-//
-// Static data member declaration.
-//
-template <class T>
-Class<py::ExtensionInstance>* ClassRegistry<T>::static_class_object;
-
 } // namespace py
 
 #endif // EXTENSION_CLASS_DWA052000_H_
-""")
-
-if __name__ == '__main__':
-    import sys
-
-    if len(sys.argv) == 1:
-        args = 5
-    else:
-        args = int(sys.argv[1])
-
-    print gen_extclass(args)

@@ -15,11 +15,10 @@ a single long parameter.
       File "<stdin>", line 1, in ?
     TypeError: function requires exactly 1 argument; 0 given
 
-    >>> try: ext = Foo('foo')
-    ... except TypeError, err:
-    ...     assert re.match(
-    ... '(illegal argument type for built-in operation)|(an integer is required)', str(err))
-    ... else: print 'no exception'
+    >>> ext = Foo('foo')
+    Traceback (innermost last):
+      File "<stdin>", line 1, in ?
+    TypeError: illegal argument type for built-in operation
 
     >>> ext = Foo(1)
 
@@ -145,8 +144,6 @@ Functions expecting an std::auto_ptr<Baz> parameter will not accept a raw Baz
     ... except RuntimeError, err:
     ...     assert re.match("Object of extension class 'Baz' does not wrap <.*>.",
     ...                     str(err))
-    ... else:
-    ...     print 'no exception'
 
 We can pass std::auto_ptr<Baz> where it is expected
 
@@ -162,8 +159,6 @@ And if the auto_ptr has given up ownership?
     ...     try: baz_clone.clone()
     ...     except RuntimeError, err:
     ...         assert re.match('Converting from python, pointer or smart pointer to <.*> is NULL.', str(err))
-    ...     else:
-    ...         print 'no exeption'
     
 Polymorphism also works:
     
@@ -237,7 +232,6 @@ Overloading tests:
     ...     assert re.match(
     ... 'No overloaded functions match [(]Range, string[)]\. Candidates are:\n.*\n.*',
     ...  str(e))
-    ... else: print 'no exception'
     
 Sequence tests:
     >>> len(Range(3, 10))
@@ -374,7 +368,7 @@ some __str__ and __repr__ tests:
     >>> range = Range(5, 20)
     >>> str(range)
     '(5, 20)'
-    >>> assert re.match('<Range object at [0-9a-fA-F]+>', repr(range))
+    >>> assert re.match('<Range object at [0-9a-f]+>', repr(range))
 
 
 __hash__ and __cmp__ tests:
