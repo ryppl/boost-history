@@ -9,7 +9,6 @@
 #include <boost/numeric/bindings/lapack/sysv.hpp>
 #include <boost/numeric/bindings/traits/ublas_matrix.hpp>
 #include <boost/numeric/bindings/traits/ublas_symmetric.hpp>
-#include <boost/numeric/bindings/traits/ublas_hermitian.hpp>
 #include <boost/numeric/bindings/traits/std_vector.hpp>
 #include "utils.h"
 
@@ -21,10 +20,10 @@ using std::cin;
 using std::cout;
 using std::endl; 
 
-typedef double real; 
-typedef std::complex<real> cmplx_t; 
+typedef double real_t; 
+typedef std::complex<real_t> cmplx_t; 
 
-typedef ublas::matrix<real, ublas::column_major> m_t;
+typedef ublas::matrix<real_t, ublas::column_major> m_t;
 typedef ublas::matrix<cmplx_t, ublas::column_major> cm_t;
 
 typedef ublas::symmetric_adaptor<m_t, ublas::lower> symml_t; 
@@ -99,7 +98,7 @@ int main() {
   // part 2 
 
   std::vector<int> ipiv (n); 
-  std::vector<real> work (1); 
+  std::vector<real_t> work (1); 
 
   int err = lapack::sysv ('L', al1, ipiv, bl1, work);  
   print_m (al1, "al1 factored"); 
@@ -123,8 +122,8 @@ int main() {
   cout << "complex symmetric\n" << endl; 
 
   cm_t cal (n, n), cau (n, n);   // matrices (storage)
-  csymml_t scal (cal);   // hermitian adaptor 
-  csymmu_t scau (cau);   // hermitian adaptor 
+  csymml_t scal (cal);   // symmetric adaptor 
+  csymmu_t scau (cau);   // symmetric adaptor 
   cm_t cx (n, 1); 
   cm_t cbl (n, 1), cbu (n, 1);  // RHS
 

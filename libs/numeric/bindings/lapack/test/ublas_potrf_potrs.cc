@@ -6,27 +6,23 @@
 #include <cstddef>
 #include <iostream>
 #include <complex>
-#include <boost/numeric/bindings/atlas/cblas1.hpp>
-#include <boost/numeric/bindings/atlas/cblas2.hpp>
-#include <boost/numeric/bindings/atlas/cblas3.hpp>
-#include <boost/numeric/bindings/lapack/lapack.hpp>
+#include <boost/numeric/bindings/lapack/posv.hpp>
 #include <boost/numeric/bindings/traits/ublas_matrix.hpp>
 #include <boost/numeric/bindings/traits/ublas_symmetric.hpp>
 #include <boost/numeric/bindings/traits/ublas_hermitian.hpp>
 #include "utils.h"
 
 namespace ublas = boost::numeric::ublas;
-namespace atlas = boost::numeric::bindings::atlas;
 namespace lapack = boost::numeric::bindings::lapack;
 
 using std::size_t; 
 using std::cout;
 using std::endl; 
 
-typedef float real; 
-typedef std::complex<real> cmplx_t; 
+typedef float real_t; 
+typedef std::complex<real_t> cmplx_t; 
 
-typedef ublas::matrix<real, ublas::column_major> m_t;
+typedef ublas::matrix<real_t, ublas::column_major> m_t;
 typedef ublas::matrix<cmplx_t, ublas::column_major> cm_t;
 
 typedef ublas::symmetric_adaptor<m_t, ublas::lower> symml_t; 
@@ -64,13 +60,12 @@ int main() {
   print_m (au, "au"); 
   cout << endl; 
 
-
-  ublas::matrix_column<m_t> xc0 (x, 0), xc1 (x, 1); 
-  atlas::set (1., xc0);  
-  atlas::set (2., xc1);  
-
-  atlas::symm (sal, x, bl);
-  atlas::symm (sau, x, bu);
+  for (int i = 0; i < x.size1(); ++i) {
+    x (i, 0) = 1.;
+    x (i, 1) = 2.; 
+  }
+  bl = prod (sal, x); 
+  bu = prod (sau, x); 
 
   print_m (bl, "bl"); 
   cout << endl; 

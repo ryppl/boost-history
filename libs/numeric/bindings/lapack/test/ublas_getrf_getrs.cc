@@ -5,7 +5,7 @@
 #include <cstddef>
 #include <iostream>
 #include <complex>
-#include <boost/numeric/bindings/lapack/lapack.hpp>
+#include <boost/numeric/bindings/lapack/gesv.hpp>
 #include <boost/numeric/bindings/traits/ublas_matrix.hpp>
 #include <boost/numeric/bindings/traits/std_vector.hpp>
 #include "utils.h"
@@ -69,7 +69,7 @@ int main() {
   cout << endl; 
   print_m (b, "B"); 
   cout << endl; 
-  
+
   std::vector<int> ipiv (n);  // pivot vector
 
   lapack::getrf (a, ipiv);      // factor a
@@ -98,6 +98,5 @@ int main() {
   print_v (ipiv, "pivots"); 
 
   cout << endl; 
-
 }
 

@@ -9,7 +9,6 @@
 #include <boost/numeric/bindings/lapack/sysv.hpp>
 #include <boost/numeric/bindings/traits/ublas_matrix.hpp>
 #include <boost/numeric/bindings/traits/ublas_symmetric.hpp>
-#include <boost/numeric/bindings/traits/ublas_hermitian.hpp>
 #include <boost/numeric/bindings/traits/std_vector.hpp>
 #include "utils.h"
 
@@ -21,10 +20,10 @@ using std::cin;
 using std::cout;
 using std::endl; 
 
-typedef double real; 
-typedef std::complex<real> cmplx_t; 
+typedef double real_t; 
+typedef std::complex<real_t> cmplx_t; 
 
-typedef ublas::matrix<real, ublas::column_major> m_t;
+typedef ublas::matrix<real_t, ublas::column_major> m_t;
 typedef ublas::matrix<cmplx_t, ublas::column_major> cm_t;
 
 typedef ublas::symmetric_adaptor<m_t, ublas::lower> symml_t; 
@@ -108,9 +107,15 @@ int main() {
 
   // part 2 
 
-  int lw = lapack::sytrf_query ('L', al1); 
-  cout << "lw = " << lw << endl; 
-  std::vector<real> work (lw); 
+  cout << endl << "part 2" << endl << endl; 
+  
+  int lw = lapack::sytrf_query ('O', 'L', al1); 
+  cout << "nb = " << lw << endl;
+  lw *= n; 
+  cout << "lw = " << lw << endl;
+  std::vector<real_t> work (lw); 
+  int mb = lapack::sytrf_query ('M', 'L', al1); 
+  cout << "mb = " << mb << endl << endl;
 
   err = lapack::sytrf ('L', al1, ipiv, work);  
   if (err == 0) {
@@ -125,10 +130,14 @@ int main() {
     cout << "?" << endl; 
   cout << endl; 
 
-  lw = lapack::sytrf_query ('U', au1); 
+  lw = lapack::sytrf_query ('O', 'U', au1); 
+  cout << "nb = " << lw << endl;
+  lw *= n; 
   cout << "lw = " << lw << endl; 
   if (lw != work.size())
     work.resize (lw); 
+  mb = lapack::sytrf_query ('M', 'U', au1);
+  cout << "mb = " << mb << endl << endl;
 
   err = lapack::sytrf ('U', au1, ipiv, work);  
   if (err == 0) {
@@ -149,8 +158,8 @@ int main() {
   cout << "complex symmetric\n" << endl; 
 
   cm_t cal (n, n), cau (n, n);   // matrices (storage)
-  csymml_t scal (cal);   // hermitian adaptor 
-  csymmu_t scau (cau);   // hermitian adaptor 
+  csymml_t scal (cal);   // symmetric adaptor 
+  csymmu_t scau (cau);   // symmetric adaptor 
   cm_t cx (n, 1); 
   cm_t cbl (n, 1), cbu (n, 1);  // RHS
 
@@ -184,9 +193,13 @@ int main() {
     cout << "?" << endl;
   cout << endl; 
 
-  lw = lapack::sytrf_query (scau); 
+  lw = lapack::sytrf_query ('O', scau); 
+  cout << "nb = " << lw << endl;
+  lw *= n; 
   cout << "lw = " << lw << endl; 
   std::vector<cmplx_t> cwork (lw); 
+  mb = lapack::sytrf_query ('M', scau); 
+  cout << "mb = " << mb << endl << endl;
 
   ierr = lapack::sytrf (scau, ipiv, cwork); 
   if (ierr == 0) {

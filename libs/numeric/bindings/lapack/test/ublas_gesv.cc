@@ -17,10 +17,10 @@ using std::size_t;
 using std::cout;
 using std::endl; 
 
-typedef std::complex<double> cmpx; 
+typedef std::complex<double> cmpx_t; 
 
 typedef ublas::matrix<double, ublas::column_major> m_t;
-typedef ublas::matrix<cmpx, ublas::column_major> cm_t;
+typedef ublas::matrix<cmpx_t, ublas::column_major> cm_t;
 
 int main() {
 
@@ -70,20 +70,20 @@ int main() {
   cm_t ca (3, 3), cb (3, 1), cx (3, 1);
   std::vector<int> ipiv2 (3); 
 
-  ca (0, 0) = cmpx (3, 0);
-  ca (0, 1) = cmpx (4, 2);
-  ca (0, 2) = cmpx (-7, 5);
-  ca (1, 0) = cmpx (4, -2);
-  ca (1, 1) = cmpx (-5, 0);
-  ca (1, 2) = cmpx (0, -3);
-  ca (2, 0) = cmpx (-7, -5);
-  ca (2, 1) = cmpx (0, 3);
-  ca (2, 2) = cmpx (2, 0);
+  ca (0, 0) = cmpx_t (3, 0);
+  ca (0, 1) = cmpx_t (4, 2);
+  ca (0, 2) = cmpx_t (-7, 5);
+  ca (1, 0) = cmpx_t (4, -2);
+  ca (1, 1) = cmpx_t (-5, 0);
+  ca (1, 2) = cmpx_t (0, -3);
+  ca (2, 0) = cmpx_t (-7, -5);
+  ca (2, 1) = cmpx_t (0, 3);
+  ca (2, 2) = cmpx_t (2, 0);
   print_m (ca, "CA"); 
   cout << endl; 
 
   for (int i = 0; i < cx.size1(); ++i) 
-    cx (i, 0) = cmpx (1, -1); 
+    cx (i, 0) = cmpx_t (1, -1); 
   cb = prod (ca, cx); 
   print_m (cb, "CB"); 
   cout << endl; 

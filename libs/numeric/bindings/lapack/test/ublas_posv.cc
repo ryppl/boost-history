@@ -6,11 +6,7 @@
 #include <cstddef>
 #include <iostream>
 #include <complex>
-#ifdef INCLUDE_LAPACK
-#include <boost/numeric/bindings/lapack/lapack.hpp>
-#else
 #include <boost/numeric/bindings/lapack/posv.hpp>
-#endif 
 #include <boost/numeric/bindings/traits/ublas_matrix.hpp>
 #include <boost/numeric/bindings/traits/ublas_symmetric.hpp>
 #include <boost/numeric/bindings/traits/ublas_hermitian.hpp>
@@ -23,10 +19,10 @@ using std::size_t;
 using std::cout;
 using std::endl; 
 
-typedef float real; 
-typedef std::complex<real> cmplx_t; 
+typedef float real_t; 
+typedef std::complex<real_t> cmplx_t; 
 
-typedef ublas::matrix<real, ublas::column_major> m_t;
+typedef ublas::matrix<real_t, ublas::column_major> m_t;
 typedef ublas::matrix<cmplx_t, ublas::column_major> cm_t;
 
 typedef ublas::symmetric_adaptor<m_t, ublas::lower> symml_t; 

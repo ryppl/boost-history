@@ -3,8 +3,8 @@
 // A hermitian
 // hetrf() & hetrs()
 
-// #define BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
-// #define BOOST_NO_FUNCTION_TEMPLATE_ORDERING
+#define BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
+#define BOOST_NO_FUNCTION_TEMPLATE_ORDERING
 
 #include <cstddef>
 #include <iostream>
@@ -60,8 +60,8 @@ int main() {
     cx (i, 0) = cmplx_t (1, -1); 
   print_m (cx, "cx"); 
   cout << endl; 
-  cbl = prod (hcal, cx);
-  cbu = prod (hcau, cx);
+  cbl = ublas::prod (hcal, cx);
+  cbu = ublas::prod (hcau, cx);
   print_m (cbl, "cbl"); 
   cout << endl; 
   print_m (cbu, "cbu"); 
@@ -99,19 +99,19 @@ int main() {
 
   // part 2
 
-  swap (row (cal2, 0), row (cal2, 2));
-  swap (column (cal2, 0), column (cal2, 2));
+  ublas::swap (row (cal2, 0), row (cal2, 2));
+  ublas::swap (column (cal2, 0), column (cal2, 2));
 
-  swap (row (cau2, 1), row (cau2, 2));
-  swap (column (cau2, 1), column (cau2, 2));
+  ublas::swap (row (cau2, 1), row (cau2, 2));
+  ublas::swap (column (cau2, 1), column (cau2, 2));
 
   print_m (cal2, "cal2"); 
   cout << endl; 
   print_m (cau2, "cau2"); 
   cout << endl; 
 
-  cbl2 = prod (cal2, cx);
-  cbu2 = prod (cau2, cx);
+  cbl2 = ublas::prod (cal2, cx);
+  cbu2 = ublas::prod (cau2, cx);
   print_m (cbl2, "cbl2"); 
   cout << endl; 
   print_m (cbu2, "cbu2"); 

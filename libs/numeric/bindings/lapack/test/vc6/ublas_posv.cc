@@ -3,8 +3,8 @@
 // A symmetric/hermitian positive definite
 // driver function posv()
 
-// #define BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
-// #define BOOST_NO_FUNCTION_TEMPLATE_ORDERING
+#define BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
+#define BOOST_NO_FUNCTION_TEMPLATE_ORDERING
 
 #include <cstddef>
 #include <iostream>
@@ -37,6 +37,8 @@ typedef ublas::hermitian_adaptor<cm_t, ublas::lower> herml_t;
 
 typedef ublas::symmetric_adaptor<m_t, ublas::upper> symmu_t; 
 typedef ublas::hermitian_adaptor<cm_t, ublas::upper> hermu_t; 
+
+using ublas::prod; 
 
 int main() {
 

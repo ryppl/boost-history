@@ -2,8 +2,8 @@
 // solving A * X = B
 // using driver function gesv()
 
-// #define BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
-// #define BOOST_NO_FUNCTION_TEMPLATE_ORDERING
+#define BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
+#define BOOST_NO_FUNCTION_TEMPLATE_ORDERING
 
 #include <cstddef>
 #include <iostream>
@@ -51,7 +51,7 @@ int main() {
     x (i, 0) = 1.;
     x (i, 1) = 2.; 
   }
-  b = prod (a, x); 
+  b = ublas::prod (a, x); 
 
   print_m (a, "A"); 
   cout << endl; 
@@ -62,7 +62,7 @@ int main() {
   print_m (b, "X"); 
   cout << endl; 
 
-  x = prod (aa, b); 
+  x = ublas::prod (aa, b); 
   print_m (x, "B = A X"); 
   cout << endl; 
 
@@ -87,7 +87,7 @@ int main() {
 
   for (int i = 0; i < cx.size1(); ++i) 
     cx (i, 0) = cmpx (1, -1); 
-  cb = prod (ca, cx); 
+  cb = ublas::prod (ca, cx); 
   print_m (cb, "CB"); 
   cout << endl; 
   

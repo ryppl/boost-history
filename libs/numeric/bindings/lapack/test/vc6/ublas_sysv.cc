@@ -3,8 +3,8 @@
 // A symmetric
 // driver function sysv()
 
-// #define BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
-// #define BOOST_NO_FUNCTION_TEMPLATE_ORDERING
+#define BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
+#define BOOST_NO_FUNCTION_TEMPLATE_ORDERING
 
 #include <cstddef>
 #include <iostream>
@@ -62,15 +62,15 @@ int main() {
   m_t bl (n, nrhs), bu (n, nrhs);  // RHS matrices
 
   init_symm2 (al); 
-  swap (row (al, 1), row (al, 4)); 
-  swap (column (al, 1), column (al, 4)); 
+  ublas::swap (row (al, 1), row (al, 4)); 
+  ublas::swap (column (al, 1), column (al, 4)); 
 
   print_m (al, "al"); 
   cout << endl; 
 
   init_symm2 (au); 
-  swap (row (au, 2), row (au, 3)); 
-  swap (column (au, 2), column (au, 3)); 
+  ublas::swap (row (au, 2), row (au, 3)); 
+  ublas::swap (column (au, 2), column (au, 3)); 
 
   print_m (au, "au"); 
   cout << endl; 
@@ -79,8 +79,8 @@ int main() {
     x (i, 0) = 1.;
     x (i, 1) = 2.; 
   }
-  bl = prod (sal, x); 
-  bu = prod (sau, x); 
+  bl = ublas::prod (sal, x); 
+  bu = ublas::prod (sau, x); 
 
   print_m (bl, "bl"); 
   cout << endl; 
@@ -144,8 +144,8 @@ int main() {
     cx (i, 0) = cmplx_t (1, -1); 
   print_m (cx, "cx"); 
   cout << endl; 
-  cbl = prod (scal, cx);
-  cbu = prod (scau, cx);
+  cbl = ublas::prod (scal, cx);
+  cbu = ublas::prod (scau, cx);
   print_m (cbl, "cbl"); 
   cout << endl; 
   print_m (cbu, "cbu"); 

@@ -5,7 +5,7 @@
 #include <cstddef>
 #include <iostream>
 #include <vector>
-#include <boost/numeric/bindings/lapack/lapack.hpp>
+#include <boost/numeric/bindings/lapack/gesv.hpp>
 #include <boost/numeric/bindings/traits/ublas_matrix.hpp>
 #include <boost/numeric/bindings/traits/std_vector.hpp>
 #include "utils.h"
