@@ -402,10 +402,16 @@ information could be used for compile-time reflective metaprogramming,
 e.g., to perform automatic marshalling or to construct property
 inspectors. 
 
-\paragraph{User impact}: 
+\paragraph{User impact}: While we do not expect that many users would
+apply the ellipsis operator to classes, there are many secondary
+benefits to users when library developers are able to apply reflection
+to provide features that typically require preprocessing or user
+intervention. 
 
-\paragraph{Compiler impact}: Implementation of this feature requires a
-small amount of parsing 
+\paragraph{Compiler impact}: Implementation of this feature could
+require a moderate amount of work depending on the format used to
+describe the members of the class. We have not considered such a
+format in depth.
 
 \subsection{Overloading the expansion operator ...}
 This proposal introduces \texttt{...} as a full-fledged operator only
@@ -446,6 +452,16 @@ will be unpacked because either (or both) may have an overloaded
 ellipsis operator. Having an overloadable ellipsis operator with this
 syntax can make the ellipsis operator unusable in generic code.
 
+\paragraph{User impact}: By allowing user data types to overload the
+ellipsis operator, users may achieve more natural syntax for certain
+types of data. On the other hand, the ambiguities introduced by the
+ability to overload this operator may outweigh its advantages.
+
+\paragraph{Compiler impact}: Implementation of this feature is expected to
+require moderate effort, because it introduces another overloadable
+operator and ambiguities with the expansion of parameter packs and
+parameter pack-like types.
+
 \subsection{Length of parameter packs}
 \label{sec:pp-size}
 One can determine the number of elements in a template parameter pack
@@ -478,6 +494,12 @@ template<... Args>
   }
 \end{verbatim}
 
+\paragraph{User impact}: This feature gives users a simple, efficient
+way to determine the length of a parameter pack. The absence of this
+feature negatively affects both compile-time performance and usability.
+
+\paragraph{Compiler impact}: This feature should be trivial to implement.
+
 \subsection{Get Nth element for parameter pack}
 Parameter packs are only accessible linearly, by peeling off arguments
 at the front of the parameter pack. A general tuple, however, requires
@@ -501,6 +523,13 @@ type of the $N^{\text{th}}$ argument. If \texttt{decltype} is not
 accepted into C++0x, we would require additional syntax to extract the
 $N^{\text{th}}$ argument from a template parameter pack in ${\cal
   O}(1)$ instantiations.
+
+\paragraph{User impact}: This feature gives users a simple, efficient
+way to access a value in the parameter pack. The absence of this
+feature negatively affects both compile-time performance and usability.
+
+\paragraph{Compiler impact}: This feature should be trivial to
+implement.
 
 \subsection{Arbitrary expansion}
 With basic variadic templates, the ellipsis operator may only be
@@ -605,8 +634,14 @@ return f(mu(a1, v1, v2, /* up to */, vm),
          mu(an, v1, v2, /* up to */, vm));
 \end{verbatim}
 
-Prior versions of this proposal~\cite{GJP04a} contained more complete
-examples.
+\paragraph{User impact}: This feature follows solidly in the category
+``When you need it, you \textit{really} need it'', but will likely not
+see widespread use. The lack of this feature will result in a great deal
+of template metaprogramming require ${\cal O}(m \cdot n)$ instantiations.
+
+\paragraph{Compiler impact}: Implementation of this feature is
+expected to be relatively simple, requiring only that expansions be a
+recursive operation.
 
 \subsection{Pairwise expansion}
 Arbitrary expansion requires that only a single parameter pack occur
@@ -666,6 +701,17 @@ auto apply(F&& f, Args&& args...) -> decltype(f(static_cast<Args&&>(args)...))
 %\end{verbatim}
 %
 %Here, the 
+
+\paragraph{User impact}: This feature is extremely important in
+conjunction with the move semantics proposal~\cite{Hinnant02},
+providing perfect argument forwarding. 
+
+\paragraph{Compiler impact}: Implementation of this feature is
+expected to be easy, requiring only that the compiler
+be able to substitute for several parameter packs at once.
+
+\subsection{Arbitrary matching patterns}
+last...feature...here...
 
 \section{Revision history}
 \begin{itemize}
