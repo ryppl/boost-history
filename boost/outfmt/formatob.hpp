@@ -21,7 +21,16 @@
       class formatob_t: public FmtObject, public boost::noncopyable
       {
          public:
-            const T &                  ob;
+            typename mpl::if_
+            <
+               mpl::or_
+               <
+                  is_range< T >, is_formatter< FmtObject, range_type >,
+                  is_basic< T >, is_formatter< FmtObject, basic_type >
+               >,
+               typename boost::call_traits< T >::value_type,
+               typename boost::call_traits< T >::const_reference
+            >::type                    ob;
          public:
             typedef typename FmtObject::format_type        format_type;
             typedef typename FmtObject::traits_type        traits_type;
