@@ -30,7 +30,10 @@ namespace boost {
 
   } // namespace interval_lib
 
-  // default traits class
+  /*
+   * default traits class
+   */
+
   template<class T,
            class Compare = interval_lib::compare_certainly<T>,
            class Rounding = interval_lib::rounded_math<T>,
@@ -43,6 +46,10 @@ namespace boost {
     typedef Checking checking;
   };
 
+  /*
+   * interval class
+   */
+
   template<class T, class Traits = interval_traits<T> >
   class interval
   {
@@ -53,24 +60,24 @@ namespace boost {
 
     interval(const T& v = 0): low(v), up(v) {}
     interval(const T& l, const T& u);
-    
+
     template<class Traits2>
-    interval(const interval<T, Traits2>& r): low(r.lower()), up(r.upper()) {}
-    
+    interval(const interval<T,Traits2>& r): low(r.lower()), up(r.upper()) {}
+
     // compiler-generated copy constructor and assignment operator are fine
-    
+
     interval& operator=(const T& x);
     void assign(const T& l, const T& u);
     // why not: assign_lower(const T& l);
     // why not: assign_upper(const T& u);
-    
+
     static interval empty();
     static interval entire();
     static interval hull(const T& x, const T& y);
-    
+
     const T& lower() const { return low; }
     const T& upper() const { return up;  }
-    
+
     interval& operator+= (const T& r);
     interval& operator+= (const interval& r);
     interval& operator-= (const T& r);
@@ -79,367 +86,368 @@ namespace boost {
     interval& operator*= (const interval& r);
     interval& operator/= (const T& r);
     interval& operator/= (const interval& r);
-    
+
     // the following is for internal use only, it is not a published interface
     // nevertheless, it's public because friends don't always work correctly.
     interval(const T& l, const T& u, bool): low(l), up(u) {}
     void set_empty();
     void set_whole();
     void set(const T& l, const T& u);
-    
+
   private:
     T low;
     T up;
   };
-  
-  
-/*
- * Non-Member Function Declarations
- */
 
-template<class T, class Traits>
-interval<T, Traits> operator+(const interval<T, Traits>& x);
-template<class T, class Traits>
-interval<T, Traits> operator-(const interval<T, Traits>& x);
 
-template<class T, class Traits>
-interval<T, Traits> operator+(const interval<T, Traits>& x, const interval<T, Traits>& y);
-template<class T, class Traits>
-interval<T, Traits> operator+(const interval<T, Traits>& x, const T& y);
-template<class T, class Traits>
-interval<T, Traits> operator+(const T& x, const interval<T, Traits>& y);
+  /*
+   * Non-Member Function Declarations
+   */
 
-template<class T, class Traits>
-interval<T, Traits> operator-(const interval<T, Traits>& x, const interval<T, Traits>& y);
-template<class T, class Traits>
-interval<T, Traits> operator-(const interval<T, Traits>& x, const T& y);
-template<class T, class Traits>
-interval<T, Traits> operator-(const T& x, const interval<T, Traits>& y);
+  // Declares a unary operator:
+  //   interval<T,Tr> operator(interval<T,Tr> const&);
+  #define BOOST_INTERVAL_DEFINE_OPERATOR_1( name ) \
+    template<class T, class Traits> \
+      interval<T,Traits> \
+      name (const interval<T,Traits>& x);
 
-template<class T, class Traits>
-interval<T, Traits> operator*(const interval<T, Traits>& x, const interval<T, Traits>& y);
-template<class T, class Traits>
-interval<T, Traits> operator*(const interval<T, Traits>& x, const T& y);
-template<class T, class Traits>
-interval<T, Traits> operator*(const T& x, const interval<T, Traits>& y);
+  BOOST_INTERVAL_DEFINE_OPERATOR_1( operator+ )
+  BOOST_INTERVAL_DEFINE_OPERATOR_1( operator- )
 
-template<class T, class Traits>
-interval<T, Traits> operator/(const interval<T, Traits>& x, const interval<T, Traits>& y);
-template<class T, class Traits>
-interval<T, Traits> operator/(const interval<T, Traits>& x, const T& y);
-template<class T, class Traits>
-interval<T, Traits> operator/(const T& r, const interval<T, Traits>& x);
+  #undef BOOST_INTERVAL_DEFINE_OPERATOR_1
 
-template<class T, class Traits>
-bool cerlt(const interval<T, Traits>& x, const interval<T, Traits>& y);
-template<class T, class Traits>
-bool cerlt(const interval<T, Traits>& x, const T& y);
-template<class T, class Traits>
-bool cerlt(const T& x, const interval<T, Traits>& y);
+  // Declares all three binary operators:
+  //   interval<T,Tr> op (interval<T,Tr> const&, interval<T,Tr> const&);
+  //   interval<T,Tr> op (interval<T,Tr> const&, T const&);
+  //   interval<T,Tr> op (T const&, interval<T,Tr> const&);
+  #define BOOST_INTERVAL_DEFINE_OPERATOR_2( name ) \
+    template<class T, class Traits> \
+      interval<T,Traits> \
+      name (const interval<T,Traits>& x, const interval<T,Traits>& y); \
+    template<class T, class Traits> \
+      interval<T,Traits> \
+      name (const interval<T,Traits>& x, const T& y); \
+    template<class T, class Traits> \
+      interval<T,Traits> \
+      name (const T& x, const interval<T,Traits>& y);
 
-template<class T, class Traits>
-bool cerle(const interval<T, Traits>& x, const interval<T, Traits>& y);
-template<class T, class Traits>
-bool cerle(const interval<T, Traits>& x, const T& y);
-template<class T, class Traits>
-bool cerle(const T& x, const interval<T, Traits>& y);
+  BOOST_INTERVAL_DEFINE_OPERATOR_2( operator+ )
+  BOOST_INTERVAL_DEFINE_OPERATOR_2( operator- )
+  BOOST_INTERVAL_DEFINE_OPERATOR_2( operator* )
+  BOOST_INTERVAL_DEFINE_OPERATOR_2( operator/ )
 
-template<class T, class Traits>
-bool cergt(const interval<T, Traits>& x, const interval<T, Traits>& y);
-template<class T, class Traits>
-bool cergt(const interval<T, Traits>& x, const T& y);
-template<class T, class Traits>
-bool cergt(const T& x, const interval<T, Traits>& y);
+  #undef BOOST_INTERVAL_DEFINE_OPERATOR_2
 
-template<class T, class Traits>
-bool cerge(const interval<T, Traits>& x, const interval<T, Traits>& y);
-template<class T, class Traits>
-bool cerge(const interval<T, Traits>& x, const T& y);
-template<class T, class Traits>
-bool cerge(const T& x, const interval<T, Traits>& y);
+  // Declares all three comparison functions:
+  //   bool comp  (interval<T,Tr> const&, interval<T,Tr> const&);
+  //   bool comp  (interval<T,Tr> const&, T const&);
+  //   bool comp  (T const&, interval<T,Tr> const&);
+  #define BOOST_INTERVAL_DEFINE_COMPARISON( name ) \
+    template<class T, class Traits> \
+      bool name (const interval<T,Traits>& x, const interval<T,Traits>& y); \
+    template<class T, class Traits> \
+      bool name (const interval<T,Traits>& x, const T& y); \
+    template<class T, class Traits> \
+      bool name (const T& x, const interval<T,Traits>& y);
 
-template<class T, class Traits>
-bool cereq(const interval<T, Traits>& x, const interval<T, Traits>& y);
-template<class T, class Traits>
-bool cereq(const interval<T, Traits>& x, const T& y);
-template<class T, class Traits>
-bool cereq(const T& x, const interval<T, Traits>& y);
+  BOOST_INTERVAL_DEFINE_COMPARISON( cerlt )
+  BOOST_INTERVAL_DEFINE_COMPARISON( cerle )
+  BOOST_INTERVAL_DEFINE_COMPARISON( cergt )
+  BOOST_INTERVAL_DEFINE_COMPARISON( cerge )
+  BOOST_INTERVAL_DEFINE_COMPARISON( cereq )
+  BOOST_INTERVAL_DEFINE_COMPARISON( cerne )
 
-template<class T, class Traits>
-bool cerne(const interval<T, Traits>& x, const interval<T, Traits>& y);
-template<class T, class Traits>
-bool cerne(const interval<T, Traits>& x, const T& y);
-template<class T, class Traits>
-bool cerne(const T& x, const interval<T, Traits>& y);
+  BOOST_INTERVAL_DEFINE_COMPARISON( poslt )
+  BOOST_INTERVAL_DEFINE_COMPARISON( posle )
+  BOOST_INTERVAL_DEFINE_COMPARISON( posgt )
+  BOOST_INTERVAL_DEFINE_COMPARISON( posge )
+  BOOST_INTERVAL_DEFINE_COMPARISON( poseq )
+  BOOST_INTERVAL_DEFINE_COMPARISON( posne )
 
-template<class T, class Traits>
-bool poslt(const interval<T, Traits>& x, const interval<T, Traits>& y);
-template<class T, class Traits>
-bool poslt(const interval<T, Traits>& x, const T& y);
-template<class T, class Traits>
-bool poslt(const T& x, const interval<T, Traits>& y);
+  BOOST_INTERVAL_DEFINE_COMPARISON( operator<  )
+  BOOST_INTERVAL_DEFINE_COMPARISON( operator<= )
+  BOOST_INTERVAL_DEFINE_COMPARISON( operator>  )
+  BOOST_INTERVAL_DEFINE_COMPARISON( operator>= )
+  BOOST_INTERVAL_DEFINE_COMPARISON( operator== )
+  BOOST_INTERVAL_DEFINE_COMPARISON( operator!= )
 
-template<class T, class Traits>
-bool posle(const interval<T, Traits>& x, const interval<T, Traits>& y);
-template<class T, class Traits>
-bool posle(const interval<T, Traits>& x, const T& y);
-template<class T, class Traits>
-bool posle(const T& x, const interval<T, Traits>& y);
+  #undef BOOST_INTERVAL_DEFINE_COMPARISON
 
-template<class T, class Traits>
-bool posgt(const interval<T, Traits>& x, const interval<T, Traits>& y);
-template<class T, class Traits>
-bool posgt(const interval<T, Traits>& x, const T& y);
-template<class T, class Traits>
-bool posgt(const T& x, const interval<T, Traits> & y);
-
-template<class T, class Traits>
-bool posge(const interval<T, Traits>& x, const interval<T, Traits>& y);
-template<class T, class Traits>
-bool posge(const interval<T, Traits>& x, const T& y);
-template<class T, class Traits>
-bool posge(const T& x, const interval<T, Traits>& y);
-
-template<class T, class Traits>
-bool poseq(const interval<T, Traits>& x, const interval<T, Traits>& y);
-template<class T, class Traits>
-bool poseq(const interval<T, Traits>& x, const T& y);
-template<class T, class Traits>
-bool poseq(const T& x, const interval<T, Traits>& y);
-
-template<class T, class Traits>
-bool posne(const interval<T, Traits>& x, const interval<T, Traits>& y);
-template<class T, class Traits>
-bool posne(const interval<T, Traits>& x, const T& y);
-template<class T, class Traits>
-bool posne(const T& x, const interval<T, Traits>& y);
-
-template<class T, class Traits>
-bool operator<(const interval<T, Traits>& x, const interval<T, Traits>& y);
-template<class T, class Traits>
-bool operator<(const interval<T, Traits>& x, const T& y);
-template<class T, class Traits>
-bool operator<(const T& x, const interval<T, Traits>& y);
-
-template<class T, class Traits>
-bool operator<=(const interval<T, Traits>& x, const interval<T, Traits>& y);
-template<class T, class Traits>
-bool operator<=(const interval<T, Traits>& x, const T& y);
-template<class T, class Traits>
-bool operator<=(const T& x, const interval<T, Traits>& y);
-
-template<class T, class Traits>
-bool operator>(const interval<T, Traits>& x, const interval<T, Traits>& y);
-template<class T, class Traits>
-bool operator>(const interval<T, Traits>& x, const T& y);
-template<class T, class Traits>
-bool operator>(const T& x, const interval<T, Traits>& y);
-
-template<class T, class Traits>
-bool operator>=(const interval<T, Traits>& x, const interval<T, Traits>& y);
-template<class T, class Traits>
-bool operator>=(const interval<T, Traits>& x, const T& y);
-template<class T, class Traits>
-bool operator>=(const T& x, const interval<T, Traits>& y);
-
-template<class T, class Traits>
-bool operator==(const interval<T, Traits>& x, const interval<T, Traits>& y);
-template<class T, class Traits>
-bool operator==(const interval<T, Traits>& x, const T& y);
-template<class T, class Traits>
-bool operator==(const T& x, const interval<T, Traits>& y);
-
-template<class T, class Traits>
-bool operator!=(const interval<T, Traits>& x, const interval<T, Traits>& y);
-template<class T, class Traits>
-bool operator!=(const interval<T, Traits>& x, const T& y);
-template<class T, class Traits>
-bool operator!=(const T& x, const interval<T, Traits>& y);
+  /*
+   * I/O operators
+   */
 
 #if 0
-template<class Ch, class ChTr, class T, class Traits>
-std::basic_ostream<Ch, ChTr>&
-operator<<(std::basic_ostream<Ch, ChTr>& os, const interval<T, Traits>& r);
-template<class Ch, class ChTr, class T, class Traits>
-std::basic_istream<Ch, ChTr>&
-operator>>(std::basic_istream<Ch, ChTr>& is, const interval<T, Traits>& r);
+  template<class Ch, class ChTr, class T, class Traits>
+  std::basic_ostream<Ch, ChTr>&
+  operator<<(std::basic_ostream<Ch, ChTr>& os, const interval<T,Traits>& r);
+  template<class Ch, class ChTr, class T, class Traits>
+  std::basic_istream<Ch, ChTr>&
+  operator>>(std::basic_istream<Ch, ChTr>& is, const interval<T,Traits>& r);
 #endif
 
-template<class T, class Traits> const T& lower(const interval<T, Traits>& x);
-template<class T, class Traits> const T& upper(const interval<T, Traits>& x);
-template<class T, class Traits> T width(const interval<T, Traits>& x);
-template<class T, class Traits> T median(const interval<T, Traits>& x);
-template<class T, class Traits>
-interval<T, Traits> pred(const interval<T, Traits>& x);
-template<class T, class Traits>
-interval<T, Traits> succ(const interval<T, Traits>& x);
 
-template<class T, class Traits>
-bool empty(const interval<T, Traits>& b);
-template<class T, class Traits>
-bool in(const T& r, const interval<T, Traits>& b);
-template<class T, class Traits>
-bool in_zero(const interval<T, Traits>& b);
-template<class T, class Traits>
-bool subset(const interval<T, Traits>& a, const interval<T, Traits>& b);
-template<class T, class Traits>
-bool proper_subset(const interval<T, Traits>& a, const interval<T, Traits>& b);
-template<class T, class Traits>
-bool overlap(const interval<T, Traits>& x, const interval<T, Traits>& y);
-template<class T, class Traits>
-interval<T, Traits> intersect(const interval<T, Traits>& x, const interval<T, Traits>& y);
-template<class T, class Traits>
-interval<T, Traits> hull(const interval<T, Traits>& x, const interval<T, Traits>& y);
-template<class T, class Traits>
-interval<T, Traits> hull(const interval<T, Traits>& x, const T& y);
-template<class T, class Traits>
-interval<T, Traits> hull(const T& x, const interval<T, Traits>& y);
-template<class T>
-interval<T> hull(const T& x, const T& y);
-template<class T, class Traits>
-bool singleton(const interval<T, Traits>& x);
-template<class T, class Traits>
-bool equal(const interval<T, Traits>& x, const interval<T, Traits>& y);
+  /*
+   * Interval bounds-related functions
+   */
 
-template<class T, class Traits>
-std::pair<interval<T, Traits>, interval<T, Traits> > bisect(const interval<T, Traits>& x);
+  template<class T, class Traits>
+    const T& lower(const interval<T,Traits>& x);
+
+  template<class T, class Traits>
+    const T& upper(const interval<T,Traits>& x);
+
+  template<class T, class Traits>
+    T width(const interval<T,Traits>& x);
+
+  template<class T, class Traits>
+    T median(const interval<T,Traits>& x);
+
+  template<class T, class Traits>
+    interval<T,Traits> pred(const interval<T,Traits>& x);
+
+  template<class T, class Traits>
+    interval<T,Traits> succ(const interval<T,Traits>& x);
+
+
+  /*
+   * Interval Boolean predicates
+   */
+
+  template<class T, class Traits>
+    bool empty(const interval<T,Traits>& x);
+
+  template<class T, class Traits>
+    bool singleton(const interval<T,Traits>& x);
+
+  template<class T, class Traits>
+    bool equal(const interval<T,Traits>& x, const interval<T,Traits>& y);
+
+  template<class T, class Traits>
+    bool in(const interval<T,Traits>& x);
+
+  template<class T, class Traits>
+    bool in_zero(const interval<T,Traits>& x);
+
+  template<class T, class Traits>
+    bool subset(const interval<T,Traits>& a, const interval<T,Traits>& b);
+
+  template<class T, class Traits>
+    bool
+    proper_subset(const interval<T,Traits>& a, const interval<T,Traits>& b);
+
+  template<class T, class Traits>
+    bool overlap(const interval<T,Traits>& x, const interval<T,Traits>& y);
+
+
+  /*
+   * Interval set manipulations
+   */
+
+  template<class T, class Traits>
+    interval<T,Traits>
+    intersection(const interval<T,Traits>& x, const interval<T,Traits>& y);
+
+  template<class T, class Traits>
+    interval<T,Traits>
+    hull(const interval<T,Traits>& x, const interval<T,Traits>& y);
+
+  template<class T, class Traits>
+    interval<T,Traits>
+    hull(const interval<T,Traits>& x, const T& y);
+
+  template<class T, class Traits>
+    interval<T,Traits>
+    hull(const T& x, const interval<T,Traits>& y);
+
+  template<class T>
+    interval<T>
+    hull(const T& x, const T& y);
+
+  template<class T, class Traits>
+    std::pair<interval<T,Traits>, interval<T,Traits> >
+    bisect(const interval<T,Traits>& x);
+
+
+  /*
+   * Interval set manipulations
+   */
 
 #if 0
-template<class T, class Traits>
-T dist(const interval<T, Traits>& x, const interval<T, Traits>& y);
-template<class T, class Traits>
-T dist(const interval<T, Traits>& x, const T& y);
-template<class T, class Traits>
-T dist(const T& x, const interval<T, Traits>& y);
+  template<class T, class Traits>
+    T dist(const interval<T,Traits>& x, const interval<T,Traits>& y);
+  template<class T, class Traits>
+    T dist(const interval<T,Traits>& x, const T& y);
+  template<class T, class Traits>
+    T dist(const T& x, const interval<T,Traits>& y);
 
-template<class T, class Traits>
-interval<T, Traits> scale(const interval<T, Traits>& x, const T& mirror, const T& factor);
-template<class T, class Traits>
-interval<T, Traits> symmetric_scale(const interval<T, Traits>& x, const T& factor);
+  template<class T, class Traits>
+    interval<T,Traits>
+    scale(const interval<T,Traits>& x, const T& mirror, const T& factor);
+  template<class T, class Traits>
+    interval<T,Traits>
+    symmetric_scale(const interval<T,Traits>& x, const T& factor);
 #endif
 
-template<class T, class Traits>
-interval<T, Traits> square(const interval<T, Traits>& x);
+  /*
+   * Min, max, abs, square
+   */
 
-template<class T, class Traits>
-interval<T, Traits> fmod(const interval<T, Traits>& x, const interval<T, Traits>& y);
-template<class T, class Traits>
-interval<T, Traits> fmod(const interval<T, Traits>& x, const T& y);
-template<class T, class Traits>
-interval<T, Traits> fmod(const T& x, const interval<T, Traits>& y);
+  template<class T, class Traits>
+    interval<T,Traits>
+    min(const interval<T,Traits>& x, const interval<T,Traits>& y);
+  template<class T, class Traits>
+    interval<T,Traits>
+    min(const interval<T,Traits>& x, const T& y);
+  template<class T, class Traits>
+    interval<T,Traits>
+    min(const T& x, const interval<T,Traits>& y);
 
-template<class T, class Traits>
-interval<T, Traits> abs(const interval<T, Traits>& x);
-template<class T, class Traits>
-interval<T, Traits> sqrt(const interval<T, Traits>& x);
-template<class T, class Traits>
-interval<T, Traits> exp(const interval<T, Traits>& x);
-template<class T, class Traits>
-interval<T, Traits> log(const interval<T, Traits>& x);
+  template<class T, class Traits>
+    interval<T,Traits>
+    max(const interval<T,Traits>& x, const interval<T,Traits>& y);
+  template<class T, class Traits>
+    interval<T,Traits>
+    max(const interval<T,Traits>& x, const T& y);
+  template<class T, class Traits>
+    interval<T,Traits>
+    max(const T& x, const interval<T,Traits>& y);
 
+  template<class T, class Traits>
+    interval<T,Traits>
+    abs(const interval<T,Traits>& x);
+
+  template<class T, class Traits>
+    interval<T,Traits>
+    square(const interval<T,Traits>& x);
+
+  /*
+   * Fmod
+   */
+
+  template<class T, class Traits>
+  interval<T,Traits> fmod(const interval<T,Traits>& x, const interval<T,Traits>& y);
+  template<class T, class Traits>
+  interval<T,Traits> fmod(const interval<T,Traits>& x, const T& y);
+  template<class T, class Traits>
+  interval<T,Traits> fmod(const T& x, const interval<T,Traits>& y);
+
+  template<class T, class Traits>
+  interval<T,Traits> sqrt(const interval<T,Traits>& x);
+
+  /*
+   * Transcendental functions: exp, log
+   */
+
+  template<class T, class Traits>
+  interval<T,Traits> exp(const interval<T,Traits>& x);
+  template<class T, class Traits>
+  interval<T,Traits> log(const interval<T,Traits>& x);
 #if 0
-template<class T, class Traits>
-interval<T, Traits> log10(const interval<T, Traits>& x);
-template<class T> T pow(const T& x, long y);
-template<class T, class Traits>
-interval<T, Traits> pow(const interval<T, Traits>& x, const interval<T, Traits>& y);
+  template<class T, class Traits>
+  interval<T,Traits>
+  log10(const interval<T,Traits>& x);
+  template<class T>
+  T pow(const T& x, long y);
+  template<class T, class Traits>
+  interval<T,Traits>
+  pow(const interval<T,Traits>& x, const interval<T,Traits>& y);
 #endif
 
-template<class T, class Traits>
-interval<T, Traits> sin(const interval<T, Traits>& x);
-template<class T, class Traits>
-interval<T, Traits> cos(const interval<T, Traits>& x);
-template<class T, class Traits>
-interval<T, Traits> tan(const interval<T, Traits>& x);
-template<class T, class Traits>
-interval<T, Traits> asin(const interval<T, Traits>& x);
-template<class T, class Traits>
-interval<T, Traits> acos(const interval<T, Traits>& x);
-template<class T, class Traits>
-interval<T, Traits> atan(const interval<T, Traits>& x);
+  /*
+   * Trigonometric functions: sin, cos, tan, asin, acos, atan, atan2
+   */
 
+  template<class T, class Traits>
+  interval<T,Traits> sin(const interval<T,Traits>& x);
+  template<class T, class Traits>
+  interval<T,Traits> cos(const interval<T,Traits>& x);
+  template<class T, class Traits>
+  interval<T,Traits> tan(const interval<T,Traits>& x);
+  template<class T, class Traits>
+  interval<T,Traits> asin(const interval<T,Traits>& x);
+  template<class T, class Traits>
+  interval<T,Traits> acos(const interval<T,Traits>& x);
+  template<class T, class Traits>
+  interval<T,Traits> atan(const interval<T,Traits>& x);
 #if 0
-template<class T, class Traits>
-interval<T, Traits> atan2(const interval<T, Traits>& y, const interval<T, Traits>& x);
+  template<class T, class Traits>
+  interval<T,Traits>
+  atan2(const interval<T,Traits>& y, const interval<T,Traits>& x);
 #endif
 
-template<class T, class Traits>
-interval<T, Traits> sinh(const interval<T, Traits>& x);
-template<class T, class Traits>
-interval<T, Traits> cosh(const interval<T, Traits>& x);
-template<class T, class Traits>
-interval<T, Traits> tanh(const interval<T, Traits>& x);
-template<class T, class Traits>
-interval<T, Traits> asinh(const interval<T, Traits>& x);
-template<class T, class Traits>
-interval<T, Traits> acosh(const interval<T, Traits>& x);
-template<class T, class Traits>
-interval<T, Traits> atanh(const interval<T, Traits>& x);
+  /*
+   * Hyperbolic trigonometric functions: sinh, cosh, tanh, asinh, acosh, atanh
+   */
 
-template<class T, class Traits>
-interval<T, Traits> max(const interval<T, Traits>& x, const interval<T, Traits>& y);
-template<class T, class Traits>
-interval<T, Traits> max(const interval<T, Traits>& x, const T& y);
-template<class T, class Traits>
-interval<T, Traits> max(const T& x, const interval<T, Traits>& y);
+  template<class T, class Traits>
+  interval<T,Traits> sinh(const interval<T,Traits>& x);
+  template<class T, class Traits>
+  interval<T,Traits> cosh(const interval<T,Traits>& x);
+  template<class T, class Traits>
+  interval<T,Traits> tanh(const interval<T,Traits>& x);
+  template<class T, class Traits>
+  interval<T,Traits> asinh(const interval<T,Traits>& x);
+  template<class T, class Traits>
+  interval<T,Traits> acosh(const interval<T,Traits>& x);
+  template<class T, class Traits>
+  interval<T,Traits> atanh(const interval<T,Traits>& x);
 
-template<class T, class Traits>
-interval<T, Traits> min(const interval<T, Traits>& x, const interval<T, Traits>& y);
-template<class T, class Traits>
-interval<T, Traits> min(const interval<T, Traits>& x, const T& y);
-template<class T, class Traits>
-interval<T, Traits> min(const T& x, const interval<T, Traits>& y);
+  /*
+   * Interval trigonometric constants: pi, pi/2, 2*pi
+   */
 
   namespace interval_lib {
 
-template<class I> I pi();
-template<class I> I pi_1_2();
-template<class I> I pi_2_1();
+    template<class I> I pi();
+    template<class I> I pi_1_2();
+    template<class I> I pi_2_1();
 
-  } // namespce interval_lib
+  } // namespace interval_lib
+
 } // namespace boost
 
 
 #ifndef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
 namespace std {
-template<class T, class Traits>
-class numeric_limits<boost::interval<T, Traits> >
-  : public std::numeric_limits<T>
-{
-private:
-  typedef boost::interval<T, Traits> vt;
-  typedef numeric_limits<T> bl;
-public:
-  static vt min() throw() { return vt(bl::min(), bl::min()); }
-  static vt max() throw() { return vt(bl::max(), bl::max()); }
-  static vt epsilon() throw() { return vt(bl::epsilon(), bl::epsilon()); }
+  template<class T, class Traits>
+  class numeric_limits<boost::interval<T,Traits> >
+    : public std::numeric_limits<T>
+  {
+  private:
+    typedef boost::interval<T,Traits> vt;
+    typedef numeric_limits<T> bl;
+  public:
+    static vt min() throw() { return vt(bl::min(), bl::min()); }
+    static vt max() throw() { return vt(bl::max(), bl::max()); }
+    static vt epsilon() throw() { return vt(bl::epsilon(), bl::epsilon()); }
 
-  BOOST_STATIC_CONSTANT(float_round_style, round_style = round_indeterminate);
-  BOOST_STATIC_CONSTANT(bool, is_iec559 = false);
+    BOOST_STATIC_CONSTANT(float_round_style, round_style = round_indeterminate);
+    BOOST_STATIC_CONSTANT(bool, is_iec559 = false);
 
-  static vt infinity() throw() { return vt::entire(); }
-  static vt quiet_NaN() throw() { return vt::empty(); }
-  static vt signaling_NaN() throw()
-  { return vt(bl::signaling_NaN(), bl::signaling_Nan()); }
-  static vt denorm_min() throw()
-  { return vt(bl::denorm_min(), bl::denorm_min()); }
-private:
-  static vt round_error();    // hide this on purpose, not yet implemented
-};
+    static vt infinity() throw() { return vt::entire(); }
+    static vt quiet_NaN() throw() { return vt::empty(); }
+    static vt signaling_NaN() throw()
+      { return vt(bl::signaling_NaN(), bl::signaling_Nan()); }
+    static vt denorm_min() throw()
+      { return vt(bl::denorm_min(), bl::denorm_min()); }
+  private:
+    static vt round_error();    // hide this on purpose, not yet implemented
+  };
 
 #if 0
-// the order for std::less should not be totally different from operator<
-// total order, for std::map keys
-template<class T, class Traits>
-struct less<boost::interval<T, Traits> >
-{
-  bool operator()(const boost::interval<T, Traits> & x,
-                  const boost::interval<T, Traits> & y)
+  // the order for std::less should not be totally different from operator<
+  // total order, for std::map keys
+  template<class T, class Traits>
+  struct less<boost::interval<T,Traits> >
   {
-    return lower(x) < lower(y) ||
-      (lower(x) == lower(y) && upper(x) < upper(y));
-  }
-};
+    bool operator()(const boost::interval<T,Traits> & x,
+                    const boost::interval<T,Traits> & y)
+    {
+      return lower(x) < lower(y)
+          || (lower(x) == lower(y) && upper(x) < upper(y));
+    }
+  };
 #endif
 
 } // namespace std
@@ -458,12 +466,14 @@ struct less<boost::interval<T, Traits> >
 #include <boost/interval/transc.hpp>
 
 namespace boost {
+
   namespace interval_lib {
 
-template<> struct rounded_math<float>: detail::rm_aux<float> {};
-template<> struct rounded_math<double>: detail::rm_aux<double> {};
+  template<> struct rounded_math<float>: detail::rm_aux<float> {};
+  template<> struct rounded_math<double>: detail::rm_aux<double> {};
 
   } // namespace interval_lib
+
 } // namespace boost
 
 #endif // BOOST_INTERVAL_HPP
