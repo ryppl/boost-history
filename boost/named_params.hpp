@@ -10,6 +10,8 @@
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/always.hpp>
 #include <boost/mpl/and.hpp>
+#include <boost/mpl/if.hpp>
+#include <boost/type_traits/is_convertible.hpp>
 #include <boost/iterator/detail/config_def.hpp>
 
 namespace boost {
@@ -28,9 +30,9 @@ namespace detail
   struct no_t { char x[128]; };
   
   template<class KW, class Default>
-  struct get_keyword
+  struct keyword_default
   {
-      get_keyword(Default& x)
+      keyword_default(Default& x)
         : default_(x)
       {}
       
@@ -40,7 +42,7 @@ namespace detail
   struct nil
   {
       template<class K, class Default>
-      Default& operator[](const get_keyword<K, Default>& x) const
+      Default& operator[](const keyword_default<K, Default>& x) const
       {
           return x.default_;
       }
@@ -49,7 +51,7 @@ namespace detail
       static typename KW::has_default has_named_of(KW*);
 
       typedef mpl::true_ has_default;
-      typedef mpl::always<mpl::true_> predicate_type;
+      typedef mpl::always<mpl::true_> predicate;
   };
 
   // A tuple of labeled argument holders
@@ -67,7 +69,7 @@ namespace detail
       }
 
       template<class Default>
-      typename H::value_type& operator[](const get_keyword<typename H::key_type, Default>& x) const
+      typename H::value_type& operator[](const keyword_default<typename H::key_type, Default>& x) const
       {
           return head[x];
       }
@@ -76,7 +78,7 @@ namespace detail
        
 
       static typename mpl::apply1<
-          typename mpl::lambda<typename H::key_type::predicate_type>::type
+          typename mpl::lambda<typename H::key_type::predicate>::type
         , typename H::value_type
       >::type has_named_of(typename H::key_type*);
 
@@ -99,7 +101,7 @@ namespace detail
       }
 
       template<class Default>
-      T& operator[](const get_keyword<KW, Default>& x) const
+      T& operator[](const keyword_default<KW, Default>& x) const
       {
           return val;
       }
@@ -112,7 +114,7 @@ template <class Derived>
 struct keyword
 {
    typedef mpl::true_ has_default;
-   typedef mpl::always<mpl::true_> predicate_type;
+   typedef mpl::always<mpl::true_> predicate;
 
    template <class T>
    detail::named<Derived,T> operator=(T& x) const
@@ -140,61 +142,33 @@ struct keyword
 #endif
     
    template<class Default>
-   detail::get_keyword<Derived, Default>
+   detail::keyword_default<Derived, Default>
    operator|(Default& default_) const
    {
-      return detail::get_keyword<Derived, Default>(default_);
+      return detail::keyword_default<Derived, Default>(default_);
    }
    
 #if !BOOST_WORKAROUND(BOOST_MSVC, == 1200)  // partial ordering bug
    template<class Default>
-   detail::get_keyword<Derived, const Default>
+   detail::keyword_default<Derived, const Default>
    operator|(const Default& default_) const
    {
-      return detail::get_keyword<Derived, const Default>(default_);
+      return detail::keyword_default<Derived, const Default>(default_);
    }
 #endif 
 };
 
 namespace detail
 {
-   yes_t is_named(detail::named_base*);
-   no_t is_named(...);
-
-   template<bool Named /*= true */>
-   struct as_named_base
-   {
-       template<class KW, class T>
-       struct apply
-       {
-           typedef T type;
-       };
-   };
-
-  template<>
-  struct as_named_base<false>
-  {
-      template<class KW, class T>
-      struct apply
-      {
-          typedef detail::named<
-              KW
-            , const T
-          > type;
-      };
-  };
-
+  // labels T with keyword KW if it is not already named
   template<class KW, class T>
   struct as_named
   {
-      // metafunction forwarding would confuse vc6
-      BOOST_STATIC_CONSTANT(
-          bool, named
-          = sizeof(::boost::detail::is_named((T*)0)) == sizeof(yes_t)
-      );
-      
-      typedef typename as_named_base<named>
-      ::template apply<KW, T>::type type;
+      typedef typename mpl::if_<
+          is_convertible<T*,named_base*>
+        , T
+        , named<KW,T const>
+      >::type type;
   };
 
 #if BOOST_WORKAROUND(BOOST_MSVC, == 1200)
@@ -208,7 +182,7 @@ namespace detail
   template<class Seq, class KW>
   struct has_named_of
   {
-      typedef typename mpl::lambda<typename KW::predicate_type>::type
+      typedef typename mpl::lambda<typename KW::predicate>::type
       pred_expr;
 
       static yes_t to_yesno(mpl::true_);
@@ -220,9 +194,8 @@ namespace detail
 
       static typename KW::has_default check(void*);
 
-      BOOST_STATIC_CONSTANT(bool,
-                            value = (sizeof(to_yesno(
-                                                Seq::has_named_of((KW*)0))) == sizeof(yes_t)));
+      BOOST_STATIC_CONSTANT(
+          bool, value = (sizeof(to_yesno(Seq::has_named_of((KW*)0))) == sizeof(yes_t)));
 
       typedef mpl::bool_<value> type;
   };
