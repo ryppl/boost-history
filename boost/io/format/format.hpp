@@ -15,6 +15,7 @@
 #ifndef BOOST_IO_FORMAT_FORMAT_HPP
 #define BOOST_IO_FORMAT_FORMAT_HPP
 
+#include <ios>     // For ios_base::xalloc
 #include <string>
 #include <cstddef>
 
