@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>mutable_queue</title>
+  </head>
+  <body>
+    <h1><img src="../../../c++boost.gif" alt="C++ Boost" width="277" height="86" /><br />mutable_queue</h1>
+    <p>This container adaptor provides a special kind of <a href="http://www.sgi.com/tech/stl/priority_queue.html">priority queue</a> that has an update operation.  This allows the ordering of the items to change.  (Many computer science texts define the <tt>decreaseKey</tt> and <tt>increaseKey</tt> operations for the same purpose, because some implementations can provide one but not the other.  This implementation can do both, so we should keep things simple.)  After the ordering criteria (a.k.a. the <em>priority</em>) for item x changes, one must call the member function <tt>update(x)</tt>.</p>
+
+    <h3>Where Defined</h3>
+    <p><a href="../../../boost/pending/mutable_queue.hpp"><tt>boost/mutable_queue.hpp</tt></a></p>
+
+    <h3>Template Parameters</h3>
+    <table border="1">
+      <tr>
+        <th>Parameter</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+      <tr valign="top">
+        <td><tt>IndexedType</tt></td>
+        <td>The type of object stored in the <tt>mutable_queue</tt>.</td>
+        <td> </td>
+      </tr>
+      <tr valign="top">
+        <td><tt>RandomAccessContainer</tt></td>
+        <td>The type of the underlying container used to implement the <tt>mutable_queue</tt>.</td>
+        <td><tt><a href="http://www.sgi.com/tech/stl/Vector.html">std::vector</a>&lt;IndexedType&gt;</tt></td>
+      </tr>
+      <tr valign="top">
+        <td><tt>Compare</tt></td>
+        <td>The comparison function used to determine whether one <tt>IndexedType</tt> element is smaller than another.  If <tt>Compare(x,y)</tt> is true, then x is smaller than y.</td>
+        <td><tt><a href="http://www.sgi.com/tech/stl/less.html">std::less</a>&lt;typename RandomAccessContainer::value_type&gt;</tt></td>
+      </tr>
+      <tr valign="top">
+        <td><tt>IDMap</tt></td>
+        <td>In order to efficiently find <tt>x</tt> in the <tt>mutable_queue</tt>, a functor must be provided to map <tt>IndexedType</tt> to a unique ID, which the <tt>mutable_queue</tt> will then use to map to the location of the item in the underlying container.  The ID's generated must be between 0 and N, where N is the value passed to the constructor of <tt>mutable_queue</tt>.</td>
+        <td><tt><a href="../../property_map/identity_property_map.html">identity_property_map</a></tt></td>
+      </tr>
+    </table>
+
+    <h3>Models</h3>
+    <ul>
+      <li><a href="../../utility/Buffer.html">Buffer</a></li>
+      <li><a href="../../utility/UpdatableBuffer.html">UpdatableBuffer</a></li>
+    </ul>
+
+    <h3>Type Requirements</h3>
+    <ul>
+      <li><tt>IndexedType</tt> is a model of <a href="http://www.sgi.com/tech/stl/Assignable.html">Assignable</a>.</li>
+      <li><tt>RandomAccessContainer</tt> is a model of <a href="http://www.sgi.com/tech/stl/RandomAccessContainer.html">Random Access Container</a></li>
+      <li><tt>RandomAccessContainer::value_type</tt> is the same type as <tt>IndexedType</tt>.</li>
+      <li><tt>Compare</tt> is a model of <a href="http://www.sgi.com/tech/stl/BinaryPredicate.html">Binary Predicate</a>.</li>
+      <li><tt>Compare</tt> induces a strict weak ordering, as defined in the <a href="http://www.sgi.com/tech/stl/LessThanComparable.html">LessThan Comparable</a> requirements, on its argument type.</li>
+      <li><tt>IndexedType</tt> is convertible to <tt>Compare</tt>'s argument type.</li>
+    </ul>
+
+    <h3>Public Base Classes</h3>
+    <p>None.</p>
+
+    <h3>Members</h3>
+    <table border="1">
+      <tr>
+        <th>Member</th>
+        <th>Where Defined</th>
+        <th>Description</th>
+      </tr>
+      <tr valign="top">
+        <td><tt>value_type</tt></td>
+        <td><a href="../../utility/Buffer.html">Buffer</a></td>
+        <td>The type of object stored in the <tt>mutable_queue</tt>.  This is the same as <tt>IndexedType</tt> and <tt>RandomAccessContainer::value_type</tt>.</td>
+      </tr>
+      <tr valign="top">
+        <td><tt>size_type</tt></td>
+        <td><a href="../../utility/Buffer.html">Buffer</a></td>
+        <td>An unsigned integral type.  This is the same as <tt>RandomAccessContainer::size_type</tt>.</td>
+      </tr>
+      <tr valign="top">
+        <td><tt>value_compare</tt></td>
+        <td><tt>mutable_queue</tt></td>
+        <td>The comparison function used to determine whether one <tt>value_type</tt> element is smaller than another.  This is the same as <tt>Compare</tt>.</td>
+      </tr>
+      <tr valign="top">
+        <td><tt>id_generator</tt></td>
+        <td><tt>mutable_queue</tt></td>
+        <td>The functor that maps <tt>value_type</tt> to a unique ID.  This is the same as <tt>IDMap</tt>.</td>
+      </tr>
+      <tr valign="top">
+        <td>
+<pre>mutable_queue(size_type n,
+              const Compare&amp; x,
+              const IDMap&amp; _id)</pre>
+        </td>
+        <td><pre>mutable_queue</pre></td>
+        <td><p>The constructor.  Creates an empty <tt>mutable_queue</tt>, using <tt>x</tt> as the comparison function and <tt>_id</tt> as the ID generator.</p></td>
+      </tr>
+      <tr valign="top">
+        <td>
+<pre>template &amp;class InputIterator&amp;
+mutable_queue(InputIterator first,
+              InputIterator last,
+              const Compare&amp; x,
+              const IDMap&amp; _id)</pre>
+        </td>
+        <td><pre>mutable_queue</pre></td>
+        <td><p>The constructor.  Creates a <tt>mutable_queue</tt> initialized to contain the elements in the range <tt>[*first, *last)</tt>, using <tt>x</tt> as the comparison function and <tt>_id</tt> as the ID generator.</p></td>
+      </tr>
+      <tr valign="top">
+        <td><tt>bool empty() const</tt></td>
+        <td><a href="../../utility/Buffer.html">Buffer</a></td>
+        <td>Returns <tt>true</tt> if the <tt>mutable_queue</tt> contains no elements, and <tt>false</tt> otherwise.  <tt>empty()</tt> is equivalent to <tt>size() == 0</tt>.</td>
+      </tr>
+      <tr valign="top">
+        <td><tt>size_type size() const</tt></td>
+        <td><a href="../../utility/Buffer.html">Buffer</a></td>
+        <td>Returns the number of elements contained in the <tt>mutable_queue</tt>.</td>
+      </tr>
+      <tr valign="top">
+        <td><tt>value_type&amp; top()</tt></td>
+        <td><a href="../../utility/Buffer.html">Buffer</a></td>
+        <td>Returns a mutable reference to the smallest element in the <tt>mutable_queue</tt>, as determined by the comparison function <tt>Compare</tt>.  That is, for every other element <tt>x</tt> in the <tt>mutable_queue</tt>, <tt>Compare(top(), x)</tt> is <tt>true</tt>.<br />Precondition: <tt>empty()</tt> is <tt>false</tt>.</td>
+      </tr>
+      <tr valign="top">
+        <td><tt>value_type&amp; front()</tt></td>
+        <td><tt>mutable_queue</tt>, not <a href="http://www.sgi.com/tech/stl/priority_queue.html">std::priority_queue</a></td>
+        <td>Serves the same function as <tt>value_type&amp; top()</tt>.</td>
+      </tr>
+      <tr valign="top">
+        <td><tt>const value_type&amp; top() const</tt></td>
+        <td><a href="../../utility/Buffer.html">Buffer</a></td>
+        <td>Returns a const reference to the smallest element in the <tt>mutable_queue</tt>, as determined by the comparison function <tt>Compare</tt>.  That is, for every other element <tt>x</tt> in the <tt>mutable_queue</tt>, <tt>Compare(top(), x)</tt> is <tt>true</tt>.<br />Precondition: <tt>empty()</tt> is <tt>false</tt>.</td>
+      </tr>
+      <tr valign="top">
+        <td><tt>const value_type&amp; front() const</tt></td>
+        <td><tt>mutable_queue</tt>, not <a href="http://www.sgi.com/tech/stl/priority_queue.html">std::priority_queue</a></td>
+        <td>Serves the same function as <tt>const value_type&amp; top() const</tt>.</td>
+      </tr>
+      <tr valign="top">
+        <td><tt>void push(const value_type&amp; x)</tt></td>
+        <td><a href="../../utility/Buffer.html">Buffer</a></td>
+        <td>Inserts <tt>x</tt> into the <tt>mutable_queue</tt>.  Postcondition: <tt>size()</tt> will be incremented by 1.</td>
+      </tr>
+      <tr valign="top">
+        <td><tt>void pop()</tt></td>
+        <td><a href="../../utility/Buffer.html">Buffer</a></td>
+        <td>Removes the smallest element from the <tt>mutable_queue</tt>.  Postcondition: <tt>size()</tt> will be decremented by 1.</td>
+      </tr>
+      <tr valign="top">
+        <td><pre>void update(const value_type&amp; x)</pre></td>
+        <td><p><a href="../../utility/UpdatableBuffer.html">Updatable Buffer</a></p></td>
+        <td>
+          <p>Revalidates the <tt>mutable_queue</tt>.  A <tt>mutable_queue</tt> is <em>invalidated</em> if, for at least one element <tt>y</tt> in <tt>mutable_queue Q</tt> such that <tt>Compare(x, y)</tt> returns <tt>true</tt>, the instruction:</p>
+          <pre>    while (!Q.empty()) Q.pop();</pre>
+          <p>would remove <tt>y</tt> before <tt>x</tt>.  This could happen if and only if the ordering that <tt>Compare</tt> imposed on <tt>x</tt> and <tt>y</tt> has changed.</p>
+          <p>Precondition: <tt>x</tt> is in the <tt>mutable_queue</tt>.</p>
+        </td>
+      </tr>
+    </table>
+
+    <h3>Complexity</h3>
+    <ul>
+      <li>The time complexity of all three structure-modifying operations--<tt>push()</tt>, <tt>pop()</tt>, and <tt>update()</tt>--is <tt>O(log n)</tt>.</li>
+      <li>The time complexity of the constructor that takes in iterators as arguments is <tt>O(n log n)</tt>.</li>
+    </ul>
+
+    <h3>Example</h3>
+    <p>See <a href="../example/priority_queue.cpp"><tt>example/priority_queue.cpp</tt></a> for an example of using the <tt>mutable_queue</tt> class template.</p>
+
+    <hr />
+    <table border="0">
+      <tr valign="top">
+        <td>Copyright &copy; 2004</td>
+        <td><a href="../../../people/jeremy_siek.htm">Jeremy Siek</a>, Univ. of Notre Dame (<a href="mailto:jsiek@lsc.nd.edu">jsiek@lsc.nd.edu</a>)<br /><a href="http://www.lsc.nd.edu/~llee1">Lie-Quan Lee</a>, Univ. of Notre Dame (<a href="mailto:llee1@lsc.nd.edu">llee1@lsc.nd.edu</a>)<br /><a href="http://www.lsc.nd.edu/~lums">Andrew Lumsdaine</a>, Univ. of Notre Dame (<a href="mailto:lums@lsc.nd.edu">lums@lsc.nd.edu</a>)</td>
+      </tr>
+    </table>
+    <p>Use, modification, and distribution are subject to the Boost Software License, Version 1.0 at <a href="../../../LICENSE_1_0.txt">http://www.boost.org/LICENSE_1_0.txt</a></p>
+  </body>
+</html>
+
