@@ -79,7 +79,7 @@ struct optional
 
 namespace aux
 {
-  // Used to pass arguments to named_arg_list<>::keyword_passes_predicate.
+  // Used to pass arguments to arg_list<>::keyword_passes_predicate.
   template <class Tag, class Predicate, class HasDefault>
   struct sfinae_checker
   {
@@ -144,7 +144,7 @@ namespace aux
   template <class KW, class T>
   struct arg_holder;
 
-  // This type terminates a named_arg_list<>
+  // Terminates arg_list<> and represents an empty list.
   struct empty
   {
       empty() {}
@@ -651,13 +651,13 @@ namespace aux
   };
 
   // Given actual argument types T0...Tn, return a list of
-  // named<U0...Um> types where:
+  // arg_holder<U0...Um> types where:
   //
-  //   T0...Tm != empty_arg_list
+  //   T0...Tm != empty
   //
   // and
   //
-  //   Ui = Ti is named<...> ? Ti : named<Ki,Ti>
+  //   Ui = Ti is arg_holder<...> ? Ti : arg_holder<Ki,Ti>
   //
   template<
       BOOST_PP_ENUM_BINARY_PARAMS(
