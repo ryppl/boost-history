@@ -18,43 +18,21 @@
 # 
 #  will cause 'hello_world' to be relinked to the new location, and <dll-path>
 #  property will be added when relinking.
-#
-#  Two properties specifically control 'stage' rule.
-# 
-#  - <location> tells where to put targets. If not specified, directory
-#    with the same name as stage name will be used.
-#  
-#  - <name> tells the new name of the staged target. In this case, only
-#    one target can be specified in sources.
 
 import targets ;
-import "class" : new ;
+import class : class new ;
 import property ;
 import errors : error ;
 import type : type ;
-import type ;
 import regex ;
-import generators ;
 
-class stage-target-class : basic-target
+rule stage-target-class ( name-and-dir : project : sources * : requirements * : default-build * )
 {
-    import feature project type errors generators ;    
-    import "class" : new ;
+    basic-target.__init__ $(name-and-dir) : $(project) : $(sources) : $(requirements) 
+                          : $(default-build) ;
     
-    rule __init__ ( name-and-dir : project : sources * : requirements * : default-build * )
-    {
-        basic-target.__init__ $(name-and-dir) : $(project) : $(sources) : $(requirements) 
-          : $(default-build) ;
-    }
-        
     rule construct ( source-targets * : property-set )
     {
-        local name = [ $(property-set).get <name> ] ;
-        if $(name) && $(source-targets[2])
-        {
-            errors.error "<name> property cannot be specified when staging several targets" ;
-        }
-                        
         local location = [ feature.get-values <location> : 
             [ $(property-set).raw ] ] ;
         if ! $(location)
@@ -83,59 +61,40 @@ class stage-target-class : basic-target
             }
             else             
             {                
-                local n = [ $(i).name ] ;
-                if $(name)
-                {
-                    n = $(name) ;
-                }
-                
+              local n = [ $(i).name ] ;
                 i2 = [ new file-target $(n:D=) : [ $(i).type ] 
                   : $(self.project) ] ;
                 local a = [ new action $(i2) : $(i) : common.copy ] ;
-                $(i2).suffix [ $(i).suffix ] ;
                 $(i2).action $(a) ;
             }
             
             # FIXME: Since we can have <location> property, it might be better
             # to use it to distinguish staged copies with different locations.
             $(i2).set-path $(location) ;
-            result += [ virtual-target.register $(i2) ] ;
+            result += $(i2) ;
         }
         return $(result) ;
     }   
-    
-    # Don't do nothing.
-    rule check-for-unused-sources ( result * : sources * )
-    {        
-    }
-    
 }
+
+class stage-target-class : basic-target ;
 
 # Declare staged version of the EXE type. Generator for this type will
 # cause relinking to the new location.
 type.register STAGED_EXE : : EXE ;
 
-class stage-exe-generator : generator
+rule stage-exe-generator
 {
-    import type property-set modules ;    
-    
-    rule __init__ ( )
-    {
-        generator.__init__ stage-exe : EXE : STAGED_EXE ;
-    }
+    generator.__init__ stage-exe : EXE : STAGED_EXE ;
     
     rule run ( project name ? : property-set : source : multiple ? )
     {
         # FIXME: this must become some rule in virtual-target module
         # we're cloning the target and action.        
         local n = [ $(source).name ] ;
-        local cloned-target = [ class.new file-target $(n:D=) : [ $(source).type ] 
+        local cloned-target = [ new file-target $(n:D=) : [ $(source).type ] 
                   : $(project) ] ;
-        local d = [ $(source).dependencies ] ;
-        if $(d)
-        {            
-            $(cloned-target).depends $(d) ;
-        }                    
+        $(cloned-target).depends [ $(source).dependencies ] ;
         $(cloned-target).root [ $(source).root ] ;
         $(cloned-target).dg [ $(source).dg ] ;
         
@@ -147,7 +106,7 @@ class stage-exe-generator : generator
         # stage can affect the relinking details.
         local ps = [ $(action).properties-ps ] ;
         local new-ps = [ $(ps).add [ property-set.create [ $(property-set).free ] ] ] ;
-        local cloned-action = [ class.new $(action-class) $(cloned-target) : 
+        local cloned-action = [ new $(action-class) $(cloned-target) : 
           [ $(action).sources ] : [ $(action).action-name ] : $(new-ps) ] ;
         
         $(cloned-target).action $(cloned-action) ;
@@ -156,6 +115,7 @@ class stage-exe-generator : generator
     }    
 }
 
+class stage-exe-generator : generator ;
 generators.register [ new stage-exe-generator ] ;
 
 

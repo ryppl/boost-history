@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.0
+    Spirit V1.5.2
     Copyright (c) 2001-2003 Joel de Guzman
     http://spirit.sourceforge.net/
 
@@ -12,7 +12,16 @@
 #define BOOST_SPIRIT_BASICS_HPP
 
 #if defined(__BORLANDC__) && (__BORLANDC__ <= 0x561)
-#include "boost/spirit/core/impl/borland.hpp"
+namespace boost { namespace spirit { namespace borland_only {
+
+    //  Before including MPL, we define these dummy template
+    //  functions. Borland complains when a template class
+    //  has the same name as a template function, regardless if
+    //  they are in different namespaces.
+
+    template <typename T> void arg(T) {}
+
+}}} // namespace boost::spirit::impl
 #endif
 
 #include <boost/config.hpp>

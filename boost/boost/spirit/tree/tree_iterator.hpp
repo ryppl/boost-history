@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.0
+    Spirit V1.5.2
     Copyright (c) 2001-2003 Daniel Nuffer
     Copyright (c) 2001-2003 Hartmut Kaiser
     http://spirit.sourceforge.net/
@@ -11,12 +11,6 @@
 =============================================================================*/
 #ifndef BOOST_SPIRIT_TREE_TREE_ITERATOR_HPP
 #define BOOST_SPIRIT_TREE_TREE_ITERATOR_HPP
-
-#if defined(BOOST_NO_STD_ITERATOR_TRAITS)
-#define BOOST_SPIRIT_IT_NS impl
-#else
-#define BOOST_SPIRIT_IT_NS std
-#endif
 
 ///////////////////////////////////////////////////////////////////////////////
 namespace boost { namespace spirit {
@@ -41,8 +35,7 @@ public:
         const_tree_iterator_t;
 
     typedef typename parse_node_t::const_iterator_t const_iterator_t;
-    typedef BOOST_SPIRIT_IT_NS::iterator_traits<const_iterator_t> 
-        iterator_traits;
+    typedef std::iterator_traits<const_iterator_t> iterator_traits;
 
     typedef typename iterator_traits::value_type value_type;
     typedef typename iterator_traits::pointer pointer;
@@ -99,6 +92,4 @@ private:
 
 }} // namespace boost::spirit
 
-#undef BOOST_SPIRIT_IT_NS
-#endif // BOOST_SPIRIT_TREE_TREE_ITERATOR_HPP
 

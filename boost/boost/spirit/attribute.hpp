@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.0
+    Spirit V1.5.2
     Copyright (c) 2001-2003 Joel de Guzman
     Copyright (c) 2002-2003 Hartmut Kaiser
     http://spirit.sourceforge.net/
@@ -34,5 +34,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "boost/spirit/attribute/parametric.hpp"
 #include "boost/spirit/attribute/closure.hpp"
+#include "boost/spirit/attribute/grouping.hpp"
 
 #endif // !defined(BOOST_SPIRIT_ATTRIBUTE_MAIN_HPP)

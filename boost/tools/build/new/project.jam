@@ -5,204 +5,228 @@
 #  warranty, and with no claim as to its suitability for any purpose.
 
 #  Implements project representation and loading.
+#
 #   Each project is represented by 
 #   - a module where all the Jamfile content live. 
 #   - an instance of 'project-attributes' class.
-#     (given module name, can be obtained by 'attributes' rule)
 #   - an instance of 'project-target' class (from targets.jam)
-#     (given a module name, can be obtained by 'target' rule)
 #
-#  Typically, projects are created as result of loading Jamfile, which is
-#  do by rules 'load' and 'initialize', below. First, module for Jamfile
-#  is loaded and new project-attributes instance is created. Some rules
-#  necessary for project are added to the module (see 'project-rules' module)
-#  at the bottom of this file.
-#  Default project attributes are set (inheriting attributes of parent project, if
-#  it exists). After that, Jamfile is read. It can declare its own attributes,
-#  via 'project' rule, which will be combined with already set attributes.
-#
-#
-#  The 'project' rule can also declare project id, which will be associated with 
-#  the project module.
-#
-#  There can also be 'standalone' projects. They are created by calling 'initialize'
-#  on arbitrary module, and not specifying location. After the call, the module can
-#  call 'project' rule, declare main target and behave as regular projects. However,
-#  since it's not associated with any location, it's better declare only prebuilt 
-#  targets.
-#
-#  The list of all loaded Jamfile is stored in variable .project-locations. It's possible
-#  to obtain module name for a location using 'module-name' rule. The standalone projects
-#  are not recorded, the only way to use them is by project id.
-
 
 import modules : peek poke ;
 import numbers ;
 import path ;
 import sequence ;
+import targets ;
 import errors : error ;
-import project-roots ;
-
+import project-root ;
 import print ;
-import "class" : new ;
+import class : class new ;
 import errors ;
-import assert ;
-import property-set ;
 
 #
 #   Loads jamfile at the given location. After loading, project global
 #   file and jamfile needed by the loaded one will be loaded recursively.
-#   If the jamfile at that location is loaded already, does nothing.
-#   Returns the project module for the Jamfile.
 #
 rule load ( jamfile-location )
-{   
-    # Load project root, first. It might decide to act as Jamfile.
-    project-roots.load $(jamfile-location) ;
-        
-    local module-name = [ module-name $(jamfile-location) ] ;        
-    # If Jamfile is already loaded, don't try again.
-    if ! $(jamfile-location) in $(.project-locations)
-    {      
-        .project-locations += $(jamfile-location) ; 
-        
-        load-jamfile $(jamfile-location) ;
-                
+{
+    local loaded = ;
+    local module-name = [ load-jamfile $(jamfile-location) loaded ] ;
+
+    if $(loaded)
+    {
+        .projects += $(jamfile-location) ;
+
         for local p in [ attribute $(module-name) projects-to-build ]
         {
             load [ path.join $(jamfile-location) $(p) ] ;
         }
-    }                
-    return $(module-name) ;        
-}
-
-# Makes the specified 'module' act as if it were a regularly loaded Jamfile 
-# at 'location'. If Jamfile is already located for that location, it's an 
-# error. 
-rule act-as-jamfile ( module : location )
-{
-    if $(location) in $(.project-locations)
-    {
-        errors.error "Jamfile was already loaded for '$(location)'" ;
     }
-    # Set up non-default mapping from location to module.
-    .module.$(location) = $(module) ;    
-    
-    # Add the location to the list of project locations
-    # so that we don't try to load Jamfile in future
-    .project-locations += $(location) ;
-    
-    initialize $(module) : $(location) ;
+    return $(module-name) ;
 }
 
-
-#   Returns the project module, given its id.
-#   Projects can be referred using @project-id notation. 
-#   Where <project-id> is a path. When this path is not absolute, it's relative
-#   to the project in 'current-location'.
+#
+#   Returns the project location given its id.
+#   Projects can be referred using path@project-id notation. In it, 'path'
+#   selects jamfile location relatively to 'current-location' and 'project-id'
+#   names project relatively to the selected jamfile.
+#   Rooted 'project-id' is possible:
+#   "@/boost" will refer to the top-level project called "boost".
+#
 rule lookup ( id : current-location )
 {
-    local split = [ MATCH ^(@)(.*) : $(id)  ] ;
-    if ! $(split)
+    local split = [ MATCH (.*)@(.*) : $(id)  ] ;
+    local location = $(split[1]) ;
+    # A jam quirk: if there's no part before "@", 'location' will be empty
+    # string, and ?= won't change it.
+    if $(location)
     {
-        error "Project id '$(id)' is invalid" ;
+        location =
+            [ path.root $(location) $(current-location) ] ;
     }
-    
+    else
+    {
+        location = $(current-location) ;
+    }
+
     local project-id = $(split[2]) ;
-    
-    local location = $(current-location) ; 
 
     if [ path.is-rooted $(project-id) ]
     {
-        return $($(project-id).jamfile-module) ;
+        return $($(project-id).jamfile-location) ;
     }
-    else 
+    else
     {
-        # Find the project module for this location
-        assert.in $(location) : $(.project-locations) ;        
-        local module-name = [ module-name $(location) ] ;
-
-        if ! $(project-id)
+        if ! $(location)
         {
-            return $(module-name) ;
+            error Jamfile location must be specified for relative project-id $(id) ;
         }
-        else 
+
+        if $(location) in $(.projects) 
         {
-            local base-id = [ attribute $(module-name) id ] ;
-            
-            if ! $(base-id)
+            local module-name = [ module-name $(location) ] ;
+
+            if ! $(project-id)
             {
-                error "Project in $(location) has no project id" ;
+                return [ attribute $(module-name) location ] ;
             }
-            else
+            else 
             {
-                local rooted-id = $(base-id)/$(project-id) ;
-                return $($(rooted-id).jamfile-module) ;
-            }                 
-        }        
+                local base-id = [ attribute $(module-name) id ] ;
+
+                if ! $(base-id)
+                {
+                    error "Project in $(location) has no project id" ;
+                }
+                else
+                {
+                    local rooted-id = $(base-id)/$(project-id) ;
+                    return $($(rooted-id).jamfile-location) ;
+                }
+           }     
+        }
     }
 }
 
-# Given 'name' which can be project-id or plain directory name,
-# return project module corresponding to that id or directory.
-# Returns nothing of project is not found.
-rule find ( name : current-location )
+# Agressively tries to lookup target: if it's not found, loads
+# project at location specified by target-id and tries again
+rule lookup-with-load ( id : current-location )
 {
-    local project-module ;
-    if [ MATCH (@) : $(name) ]
-    {     
-        project-module = [ lookup $(name) : $(current-location) ] ;
-    }
-    else
-    {                
-        # Try interpreting name as project id which does not have '@'
-        # prefix.
-        if [ path.is-rooted $(name) ]
-        {            
-            project-module = [ find @$(name) : $(current-location) ] ;
-        }            
-                
-        if ! $(project-module)
-        {            
-            local location = [ path.root $(name) $(current-location) ] ;
-            # If no project is registered for the given location, try to
-            # load it. First see if we have Jamfile. If not we might have project
-            # root, willing to act as Jamfile. In that case, project-root
-            # must be placed in the directory referred by id.
-            
-            local root-location = 
-              [ project-roots.find-project-root $(location) ] ;
-            if $(root-location)
-            {
-                root-location = [ path.parent $(root-location) ] ;
-            }
-                        
-            if $(location) in $(.project-location) ||
-              [ find-jamfile $(location) ] && [ load $(location) ] ||
-               $(root-location) = $(location) && [ project-roots.load $(location) ]
-                  {
-                      # We've managed to find or load project. Returns the module
-                      # name
-                      project-module = [ module-name $(location) ] ;
-                  }
+    local location = [ lookup $(id) : $(current-location) ] ;
+    if ! $(location)
+    {
+        # Try to load the project at the specified location
+        location = [ MATCH (.*)@(.*) : $(id) ] ;
+        if ! $(location)
+        {
+            location = "." ;
+        }        
+        location = [ path.root $(location[1]) $(current-location) ] ;
+        if [ find-jamfile $(location) ]
+        {
+            load $(location) ;
+            # If there's project-id relative to the 'location' the
+            # jamfile at 'location' should made those available somehow.
+            location = [ lookup $(id) : $(current-location) ] ;
+        }                        
+        else
+        {
+            location = ;
         }
     }
-    
-    return $(project-module) ;
+    return $(location) ;
+}
+
+
+
+# Helper for 'find-target'
+local rule remove-trailing-slash ( string )
+{
+    local stripped = [ MATCH (.*)/$ : $(string) ] ;
+    stripped ?= $(string) ;
+    return $(stripped) ;
+}
+
+# Given an 'id' for a target, return an instance of 'abstract-target' that
+# corresponds to it. If there's no such target, returns empty string.
+# The project referred to by id is loaded if it is not already loaded.
+rule find-target ( id : current-location )
+{
+    # Find the project first          
+    local project-id ;
+    local target-id ;
+    local explicit ;
+    if [ MATCH (.*)@(.*) : $(id)  ] 
+    {
+        explicit = 1 ;
+        # Take the last "/" separated component after "@" as target id.
+        local split = [ MATCH (.*@(.*/)*)([^/]*) : $(id) ] ;
+        project-id = [ remove-trailing-slash $(split[1]) ] ;
+        target-id = $(split[3]) ;
+    }
+    else
+    {
+        # This is not @-id. Treat it as path -- the last "/" separated component
+        # is target id, everything else denote project location.
+        local split = [ MATCH ((.*/)*)([^/]*) : $(id) ] ;
+        if $(split[1]) 
+        {
+            project-id = [ remove-trailing-slash $(split[1]) ] ;
+            project-id = $(project-id)@ ;        
+        }
+        else
+        {
+                project-id = @ ;
+        }
+        target-id = $(split[3]) ;
+    }
+
+    # First check if there's a project with such id. In that case, we'll
+    # return project target for it.
+
+    local location ;
+    if [ MATCH (@) : $(id) ]
+    {
+        location = [ lookup-with-load $(id) 
+        : $(current-location) ] ;
+    }
+    else
+    {
+        # When id has no "@" and we're looking for a project, treat id
+        # as path.
+        location = [ lookup-with-load $(id)@ : $(current-location) ] ;
+    }
+
+    if $(location)
+    {
+        return [ project.target $(location) ] ;
+    }
+    else 
+    {
+        # Now treat 'id' as referring to a main target
+        location = [ lookup-with-load $(project-id) : $(current-location) ] ;
+
+        if $(location) {
+            local project-target = [ project.target $(location) ] ;
+            if [ $(project-target).has-main-target $(target-id) ] 
+            {
+                return [ $(project-target).main-target $(target-id) ] ;
+            }
+        } 
+        else if $(explicit)
+        {
+            errors.error
+              The target id \"$(id)\", specified by project at \"$(current-location)\"
+                is invalid (missing 'use-project'?) ;
+        }
+    }    
 }
 
 #
 # Returns the name of module corresponding to 'jamfile-location'.
-# If no module corresponds to location yet, associates default
-# module name with that location.
 #
 rule module-name ( jamfile-location )
 {
-    if ! $(.module.$(jamfile-location))
-    {
-        .module.$(jamfile-location) =  Jamfile<$(jamfile-location)> ;
-    }
-    return $(.module.$(jamfile-location)) ;
+    return Jamfile<$(jamfile-location)> ;
 }
 
 # Default patterns to search for the Jamfiles to use for build
@@ -237,12 +261,13 @@ local rule find-jamfile (
     return $(jamfile-glob) ;
 }
 
-# Load a Jamfile at the given directory. Returns nothing.
-# Will attempt to load the file as indicated by the JAMFILE patterns. 
-# Effect of calling this rule twice with the same 'dir' is underfined.
-
+# Load a Jamfile at the given directory. Will attempt to load
+# the file as indicated by the JAMFILE patterns. We return the
+# module for the Jamfile.
+#
 local rule load-jamfile (
     dir # The directory of the project Jamfile.
+    loaded-var ? # Name of variable to indicated we loaded the Jamfile.
     )
 {
     # See if the Jamfile is where it should be.
@@ -264,85 +289,86 @@ local rule load-jamfile (
     #
     local jamfile-module = [ module-name  [ path.parent $(jamfile-to-load[1]) ] ] ;
 
-    # Multiple Jamfiles found in the same place. Warn about this.
-    # And ensure we use only one of them.
+    # Don't even bother with the rest if we know the file is already loaded.
     #
-    if $(jamfile-to-load[2-])
+    if ! [ modules.binding $(jamfile-module) ]
     {
-        ECHO
-          "WARNING: Found multiple Jamfiles at this '"$(dir)"' location!"
-            "Loading the first one: '" [ path.basename $(jamfile-to-load[1]) ]  "'." ;
+        # Multiple Jamfiles found in the same place. Warn about this.
+        # And ensure we use only one of them.
+        #
+        if $(jamfile-to-load[2-])
+        {
+            ECHO
+                "WARNING: Found multiple Jamfiles at this '"$(dir)"' location!"
+                "Loading the first one: '" [ path.basename $(jamfile-to-load[1]) ]  "'." ;
+        }
+
+        jamfile-to-load = $(jamfile-to-load[1]) ;
+
+        # Initialize the jamfile module before loading.
+        #
+        initialize $(jamfile-module) : $(jamfile-to-load) ;
+
+        # Setup, by coordinating with project-root.
+        #
+        local project-root-module = [ attribute $(jamfile-module) project-root-module ] ;
+        $(project-root-module).project-root register-project $(jamfile-module) ;
+
+        # Now load the Jamfile in it's own context.
+        #
+        modules.load $(jamfile-module) :  [ path.native $(jamfile-to-load) ] : . ;
+
+        # Indicate we loaded the Jamfile.
+        #
+        if $(loaded-var)
+        {
+            $(loaded-var) = true ;
+        }
     }
-    
-    jamfile-to-load = $(jamfile-to-load[1]) ;
-    
-    # Initialize the jamfile module before loading.
+
+    # Return the Jamfile's filename/module.
     #
-    initialize $(jamfile-module) : [ path.parent $(jamfile-to-load) ] ;
-    
-    # Now load the Jamfile in it's own context.
-    #
-    modules.load $(jamfile-module) :  [ path.native $(jamfile-to-load) ] : . ;
+    return $(jamfile-module) ;
 }
 
-# Initialize the module for a project. 
+# Initialize the module for a Jamfile.
 #
-rule initialize (
-    module-name # The name of the project module.
-    : location ? # The location (directory) of the project to initialize.
-                 # If not specified, stanalone project will be initialized.               
+local rule initialize (
+    module-name # The name of the Jamfile module.
+    : jamfile # The location (binding) of the jamfile for the project to initialize.
     )
 {
-    # TODO: need to consider if standalone projects can do anything but defining
-    # prebuilt targets. If so, we need to give more sensible "location", so that
-    # source paths are correct.
-    location ?= "" ;
     # Create the module for the Jamfile first.    
     module $(module-name)
     {          
     }    
-    $(module-name).attributes = [ new project-attributes $(location) ] ;
+    $(module-name).attributes = [ new project-attributes [ path.parent $(jamfile) ] ] ;
     local attributes = $($(module-name).attributes) ;
-    
-    $(attributes).set source-location : $(location) : exact ;    
-    $(attributes).set requirements : [ property-set.empty ] : exact ;
-    $(attributes).set usage-requirements : [ property-set.empty ] : exact ;    
 
     # Import rules common to all project modules from project-rules module,
-    # defined at the end of this file.
+    # define at the end of this file.
     modules.clone-rules project-rules $(module-name) ;
+   
+    # Make sure we've loaded the project-root corresponding to this
+    # Jamfile.
+    #
+    local project-root-module = [ project-root.load [ path.parent $(jamfile) ] ] ;
+    local project-root = [ $(project-root-module).project-root get-location ] ;
 
-    # We search for parent/project-root only if jamfile was specified --- i.e
-    # if the project is not standalone.
-    if $(location)
-    {       
-        # Make sure we've loaded the project-root corresponding to this
-        # Jamfile.
-        #
-        local project-root-module = [ project-roots.load $(location) ] ;
-        local project-root = [ $(project-root-module).project-root get-location ] ;
+    local parent = [ find-jamfile [ path.parent $(jamfile) ] $(project-root) ] ;
+    local parent-module = ;
+    if $(parent)
+    {
+        parent-module = [ load [ path.parent $(parent[1]) ] ] ;
+    }
 
-        local parent = [ find-jamfile $(location) $(project-root) ] ;
-        local parent-module = ;
-        if $(parent)
-        {
-            parent-module = [ load [ path.parent $(parent[1]) ] ] ;
-        }
-        
-        inherit-attributes $(module-name) : $(project-root-module) : $(parent-module) ;
-    }    
-}
-
-# Make 'project-module' inherit attributes of project root and parent module.
-rule inherit-attributes ( project-module : project-root-module : parent-module ? )
-{
-    # Register with the project root. This will inject project-root
-    # constants and do some other initialization.
-    $(project-root-module).project-root register-project $(project-module) ;
+    $(attributes).set source-location : $(jamfile-location) : exact ;
+    # CONSIDER: seems to me we need either the first or the second of these.
+    $(attributes).set project-root : $(project-root) ;    
+    $(attributes).set project-root-module : $(project-root-module) ;    
 
     if $(parent-module)
     {
-        local attributes = $($(project-module).attributes) ;        
         local pattributes = [ attributes $(parent-module) ] ;
         $(attributes).set parent : [ path.parent $(parent) ] ;
         $(attributes).set default-build 
@@ -357,49 +383,42 @@ rule inherit-attributes ( project-module : project-root-module : parent-module ?
             # Have to compute relative path from parent dir to our dir
             # Convert both paths to absolute, since we cannot
             # find relative path from ".." to "."
-            
-            local location = [ attribute $(project-module) location ] ;
-            local parent-location = [ attribute $(parent-module) location ] ;
-            
             local pwd = [ path.pwd ] ;
-            local parent-dir = [ path.root $(parent-location) $(pwd) ] ;
-            local our-dir = [ path.root $(location) $(pwd) ] ;
+            local parent-dir = [ path.root [ path.parent $(parent) ] $(pwd) ] ;
+            local our-dir = [ path.root [ path.parent $(jamfile) ] $(pwd) ] ;
             $(attributes).set build-dir : [ path.join $(parent-build-dir) 
                   [ path.relative $(our-dir) $(parent-dir) ] ] : exact ;
         }        
-    }            
+    }
+    else
+    {
+        $(attributes).set requirements
+            : [ property-set.empty ] : exact ;
+        $(attributes).set usage-requirements
+            : [ property-set.empty ] : exact ;
+    }
+    
 }
 
-
-# Associate the given id with the given project module
-rule register-id ( id : module )
+# Associate the given id with the given location
+rule register-id ( id : location )
 {
-    $(id).jamfile-module = $(module) ;
+    $(id).jamfile-location = $(location) ;
 }
 
 # Class keeping all the attributes of a project.
 #
 # The standard attributes are "id", "location", "project-root", "parent"
 # "requirements", "default-build", "source-location" and "projects-to-build".
-class project-attributes 
+rule project-attributes ( location )
 {
-    import property ;
-    import property-set ;
-    import errors ;
-    import path ;
-    import print ;
-    import sequence ;
-        
-    rule __init__ ( location )
-    {       
-        self.location = $(location) ;
-    }
-            
+    self.location = $(location) ;
+
     # Set the named attribute from the specification given by the user.
     # The value actually set may be different.
     rule set ( attribute : specification * 
-        : exact ? # Sets value from 'specification' without any processing
-        ) 
+               : exact ? # Sets value from 'specification' without any processing
+               ) 
     {
         if $(exact)
         {
@@ -434,18 +453,10 @@ class project-attributes
         }
         else if $(attribute) = "usage-requirements"
         {
-            local unconditional ;
-            for local p in $(specification)
-            {
-                local split = [ property.split-conditional $(p) ] ;
-                split ?= nothing $(p) ;
-                unconditional += $(split[2]) ;
-            }
-            
-            local non-free = [ property.remove free : $(unconditional) ] ;
+            local non-free = [ property.remove free : $(specification) ] ;
             if $(non-free)
             {
-                errors.error "usage-requirements" $(specification) "have non-free properties" $(non-free) ;
+                errors.error "usage-requirements" $($(real-pos2)) "have non-free properties" $(non-free) ;
             }            
             local t = [ property.translate-paths $(specification)
                                       : $(self.location) ] ;
@@ -459,10 +470,6 @@ class project-attributes
                 self.usage-requirements = [ property-set.create $(t) ] ;
             }                        
         }        
-        else if $(attribute) = "default-build"
-        {
-            self.default-build = [ property.make $(specification) ] ;
-        }        
         else if $(attribute) = "source-location"
         { 
             self.source-location = [ path.root $(specification) $(self.location) ] ;
@@ -472,7 +479,7 @@ class project-attributes
             self.build-dir = [ path.root $(specification) $(self.location) ] ;
         }        
         else if ! $(attribute) in "id" "default-build" "location" "source-location"
-          "parent" "projects-to-build"
+           "project-root" "project-root-module" "parent" "projects-to-build" 
         {
             errors.error "Invalid project attribute '$(attribute)' specified "
                                "for project at '$(self.location)'" ;
@@ -492,10 +499,14 @@ class project-attributes
     # Prints the project attributes.
     rule print ( )
     {
+        import sequence ;
+        import print ;
+
         local id = $(self.id) ; id ?= (none) ;
         local parent = $(self.parent) ; parent ?= (none) ;
         print.section "'"$(id)"'" ;
         print.list-start ;
+        print.list-item "Project root:" $(self.project-root) ;
         print.list-item "Parent project:" $(parent) ;
         print.list-item "Requirements:" [ $(self.requirements).raw ] ;
         print.list-item "Default build:" $(self.default-build) ;
@@ -506,6 +517,8 @@ class project-attributes
     }
     
 }
+
+class project-attributes ;
 
 # Returns the project-attribute instance for the specified jamfile module.
 rule attributes ( project )
@@ -519,16 +532,18 @@ rule attribute ( project attribute )
     return [ $($(project).attributes).get $(attribute) ] ;        
 }
 
-# Returns the project target corresponding to the 'project-module'.
-rule target ( project-module )
+# Returns the project target corresponding to the project at 'location'.
+rule target ( location )
 {
-    if ! $(.target.$(project-module))
+    if ! $(.target.$(location))
     {
-        .target.$(project-module) = [ new project-target $(project-module) 
-          : $(project-module) 
-           : [ attribute $(project-module) requirements ] ] ;
+        #TODO: Need to have some checks that 'location' is correct.
+
+        local pmodule = [ module-name $(location) ] ;        
+        .target.$(location) = [ new project-target $(pmodule) : $(pmodule) 
+           : [ attribute $(pmodule) requirements ] ] ;
     }
-    return $(.target.$(project-module)) ;    
+    return $(.target.$(location)) ;    
 }
 
 # If 'path' is absolute, returns it.
@@ -558,19 +573,16 @@ rule use ( id : location )
 }
 
 # This module defines rules common to all projects
-module project-rules
-{
+module project-rules {
 
     rule project ( id ? : option1 * : option2 * : option3 * )
     {
         import project ;
-        import path ;
-                
         local attributes = [ project.attributes $(__name__) ] ;
         if $(id) 
         {
            id = [ path.root $(id) / ] ;
-           project.register-id $(id) : $(__name__) ;
+           project.register-id $(id) : [ $(attributes).get location ] ;
            $(attributes).set id : $(id) ;
         }
 
@@ -591,10 +603,8 @@ module project-rules
     rule use-project ( id : where )
     {
         import project ;
-        import path ;
         local attributes = [ project.attributes $(__name__) ] ;
-        project.use $(id) : [ path.root 
-            [ path.make $(where) ] [ $(attributes).get location ] ] ;
+        project.use $(id) : [ path.root $(where) [ $(attributes).get location ] ] ;
     }
 
     rule build-project ( dir )
@@ -605,16 +615,6 @@ module project-rules
         local now = [ $(attributes).get projects-to-build ] ;
         $(attributes).set projects-to-build : $(now) $(dir) ;
     }
-    
-    rule explicit ( target-names * )
-    {
-        import project ;
-        local t = [ project.target $(__name__) ] ;
-        for local n in $(target-names)
-        {            
-            $(t).mark-target-as-explicit $(n) ;
-        }        
-    }    
 }
 
 

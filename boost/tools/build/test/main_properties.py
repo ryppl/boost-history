@@ -14,22 +14,13 @@ lib b : b.cpp : <define>BAR ;
 exe a : a.cpp b ;
 """)
 t.write("a.cpp", """
-void
-#ifdef _WIN32
-__declspec(dllimport)
-#endif
-foo();
+void foo();
 int main() { foo(); }
 """)
-t.write("b.cpp",
-"""void
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-foo() {}\n""")
+t.write("b.cpp", "void foo() {}\n")
 
 t.run_build_system()
-t.expect_addition("bin/$toolset/debug/main-target-b/b.obj")
+t.expect_addition("bin/$toolset/debug/main-target-b/b.o")
 
 # This tests another bug: when source file was used by two main targets,
 # one without any requirements and another with free requirements, it 
@@ -45,7 +36,7 @@ int main() { return 0; }
 
 t.rm("bin")
 t.run_build_system()
-t.expect_addition(["bin/$toolset/debug/a.obj", "bin/$toolset/debug/main-target-b/a.obj"])
+t.expect_addition(["bin/$toolset/debug/a.o", "bin/$toolset/debug/main-target-b/a.o"])
 
 
 t.cleanup()

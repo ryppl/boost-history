@@ -8,11 +8,7 @@
 //  http://www.boost.org
 // 
 
-void
-# ifdef _WIN32
-__declspec(dllimport)
-# endif 
-foo();
+void foo();
 
 int main() 
 {

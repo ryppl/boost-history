@@ -9,13 +9,11 @@ import feature ;
 import numbers ;
 import errors : error ;
 import property ;
-import path ;
-import generators ;
 
 .flag-no = 1 ;
 
 # Initializes an additional toolset-like module.
-# First load 'toolset-module' and then calls its 'init'
+# First load 'toolset-module' and then calls it's 'init'
 # rule with trailing arguments
 rule using ( toolset-module : * )
 {
@@ -71,14 +69,11 @@ rule flags ( rule-or-module   # If contains dot, should be a rule name.
                               #
                               # - empty. 'values' will be added to the variable 
                               #   unconditionally
-             values * :
-             unchecked ?      # If value 'unchecked' is passed, will not test
-                              # that flags are set for the calling module.
-          )
+             values * )
 {
     local module_ = [ MATCH "([^.]*).*" : $(rule-or-module) ] ;
     local caller = [ CALLER_MODULE ] ;
-    if $(unchecked) != unchecked && $(module_) != $(caller)
+    if $(module_) != $(caller)
     {
         errors.error "Module $(caller) attempted to set flags for module $(module_)" ;
     }
@@ -158,7 +153,7 @@ local rule find-property-subset ( property-sets * : properties * )
     return $(result) ;
 }
 
-rule set-target-variables ( rule-or-module targets + : properties * )
+rule set-target-variables ( rule-or-module target : properties * )
 { 
     for local f in $(.$(rule-or-module).flags) 
     {
@@ -182,18 +177,13 @@ rule set-target-variables ( rule-or-module targets + : properties * )
             local matches = [ property.select $(condition) : $(properties) ] ;
             for local p in $(matches)
             {
-                local att = [ feature.attributes $(p:G) ] ;
-                if dependency in $(att)
+                if dependency in [ feature.attributes $(p:G) ]
                 {
                     # the value of a dependency feature is a target
                     # and must be actualized
                     result += [ $(p:G=).actualize ] ;
                 }
-                else if path in $(att)
-                {
-                    result += [ path.native $(p:G=) ] ;
-                }                
-                else 
+                else
                 {
                     result += $(p:G=) ;
                 }
@@ -206,30 +196,26 @@ rule set-target-variables ( rule-or-module targets + : properties * )
         # module globals intended to be used as defaults.
         if $(result)-is-nonempty
         {
-            $(variable) on $(targets) += $(result) ;
+            $(variable) on $(target) += $(result) ;
         }
     }
     
-    # strip away last dot separated part and recurse.
-    local next = [ MATCH ^(.+)\\.([^\\.])* : $(rule-or-module) ] ;
-    if $(next)
+    # recurse for any module-specific flags
+    local module_ = [ MATCH ^(.+)\\..* : $(rule-or-module) ] ;
+    if $(module_)
     {
-        set-target-variables $(next) $(targets) : $(properties) ;        
-    }
-    else
-    {
-        # If there's no next dot-separated element, we've got the module name.
+        set-target-variables $(module_) $(target) : $(properties) ;
+        
         # Allow a rule-based hook for more-sophisticated setting
         # of build options than flags allows.
         if prepare-target in [ RULENAMES $(module_) ]
         {
             module $(module_)
             {
-                prepare-target [ modules.peek toolset : targets ] : [ modules.peek toolset : properties ] ;
+                prepare-target [ modules.peek toolset : target ] : [ modules.peek toolset : properties ] ;
             }
         }
     }
-    
 }
 
 .toolsets += $(toolset) ;
@@ -264,22 +250,7 @@ rule inherit-generators ( toolset : base )
     for local g in $(base-generators)
     {
         local id = [ $(g).id ] ;
-
-        # Some generator names have multiple periods in their name, so
-        # $(id:B=$(toolset)) doesn't generate the right new-id name.
-        # e.g. if id = gcc.compile.c++, $(id:B=darwin) = darwin.c++,
-        # which is not what we want. Manually parse the base and suffix
-        # (if there's a better way to do this, I'd love to see it.)
-        # See also register in module generators.
-        local base = $(id) ;
-        local suffix = "" ;
-        while $(base:S)
-        {
-          suffix = $(base:S)$(suffix) ;
-          base = $(base:B) ;
-        }
-        local new-id = $(toolset)$(suffix) ;
-
+        local new-id = $(id:B=$(toolset)) ;
         generators.register [ $(g).clone $(new-id) : $(toolset) ] ;
     }    
 }

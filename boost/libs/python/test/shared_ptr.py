@@ -1,15 +1,6 @@
 '''
 >>> from shared_ptr_ext import *
 
-   Test that shared_ptr<Derived> can be converted to shared_ptr<Base>
- 
->>> Y.store(YYY(42))
-
->>> x = X(17)
->>> null_x = null(x)
->>> null_x # should be None
->>> identity(null_x) # should also be None
-
 >>> a = New(1)
 >>> A.call_f(a)
 1
@@ -40,15 +31,15 @@
 -1
 >>> store(p)
 >>> del p
->>> Z.get().v()
+>>> stored_v()
 -12
->>> Z.count()
+>>> z_count()
 1
->>> Z.look_store()
+>>> z_look_store()
 12
->>> Z.release()
+>>> z_release()
 bye
->>> Z.count()
+>>> z_count()
 0
 
 >>> z = Z(13)
@@ -59,19 +50,17 @@ bye
 >>> try: modify(z)
 ... except TypeError: pass
 ... else: 'print expected a TypeError'
-
->>> Z.get() # should be None
 >>> store(z)
->>> assert Z.get() is z  # show that deleter introspection works
+>>> assert stored_z() is z  # show that deleter introspection works
 >>> del z
->>> Z.get().value()
+>>> stored_v()
 13
->>> Z.count()
+>>> z_count()
 1
->>> Z.look_store()
+>>> z_look_store()
 13
->>> Z.release()
->>> Z.count()
+>>> z_release()
+>>> z_count()
 0
 
 >>> x = X(17)
@@ -86,12 +75,12 @@ bye
 -1
 >>> store(x)
 >>> del x
->>> X.count()
+>>> x_count()
 1
->>> X.look_store()
+>>> x_look_store()
 17
->>> X.release()
->>> X.count()
+>>> x_release()
+>>> x_count()
 0
 
 
@@ -102,12 +91,12 @@ bye
 >>> look(y)
 -1
 >>> store(Y(23))
->>> Y.count()
+>>> y_count()
 1
->>> Y.look_store()
+>>> y_look_store()
 23
->>> Y.release()
->>> Y.count()
+>>> y_release()
+>>> y_count()
 0
 '''
 

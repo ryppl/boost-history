@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.0
+    Spirit V1.5.2
     Copyright (c) 2003 Martin Wille
     http://spirit.sourceforge.net/
 
@@ -77,7 +77,7 @@ namespace boost { namespace spirit {
         scoped_lock_parser
         <
             MutexT,
-            typename as_parser<ParserT>::type
+            typename ::boost::spirit::as_parser<ParserT>::type
         >
         operator[](ParserT const &p) const
         {

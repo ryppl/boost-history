@@ -1990,8 +1990,6 @@ unsigned int BOOST_REGEX_CALL reg_expression<charT, traits, Allocator>::probe_re
    {
    case re_detail::syntax_element_startmark:
    case re_detail::syntax_element_endmark:
-      if(static_cast<const re_detail::re_brace*>(dat)->index == -2)
-         return regbase::restart_any;
       return probe_restart(dat->next.p);
    case re_detail::syntax_element_start_line:
       return regbase::restart_line;
@@ -2020,7 +2018,7 @@ unsigned int BOOST_REGEX_CALL reg_expression<charT, traits, Allocator>::fixup_le
          if((leading_lit) && (static_cast<re_detail::re_literal*>(dat)->length > 2))
          {
             // we can do a literal search for the leading literal string
-            // using Knuth-Morris-Pratt (or whatever), and only then check for
+            // using Knuth-Morris-Pratt (or whatever), and only then check for 
             // matches.  We need a decent length string though to make it
             // worth while.
             _leading_string = reinterpret_cast<charT*>(reinterpret_cast<char*>(dat) + sizeof(re_detail::re_literal));
@@ -2068,14 +2066,10 @@ unsigned int BOOST_REGEX_CALL reg_expression<charT, traits, Allocator>::fixup_le
       case re_detail::syntax_element_rep:
          if((len == 0) && (1 == fixup_leading_rep(dat->next.p, static_cast<re_detail::re_repeat*>(dat)->alt.p) ))
          {
-            static_cast<re_detail::re_repeat*>(dat)->leading = leading_lit;
+            static_cast<re_detail::re_repeat*>(dat)->leading = true;
             return len;
          }
          return len;
-      case re_detail::syntax_element_startmark:
-         if(static_cast<const re_detail::re_brace*>(dat)->index == -2)
-            return 0;
-         // fall through:
       default:
          break;
       }

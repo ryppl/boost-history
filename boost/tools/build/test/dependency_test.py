@@ -22,11 +22,7 @@ t.expect_touch("bin/$toolset/debug/a.exe")
 t.expect_touch("bin/$toolset/debug/a.obj")
 t.expect_touch("bin/$toolset/debug/b.exe")
 t.expect_touch("bin/$toolset/debug/b.obj")
-# Now, <dependency> does not add dependency.
-# It sound weird, but is intentional. Need
-# to rename <dependency> eventually.
-#t.expect_touch("bin/$toolset/debug/main-target-c/c.exe")
-t.ignore("*.tds")
+t.expect_touch("bin/$toolset/debug/main-target-c/c.exe")
 t.expect_nothing_more()
 
 # Only 'a' include <a.h> and should be updated
@@ -35,7 +31,7 @@ t.run_build_system()
 
 t.expect_touch("bin/$toolset/debug/a.exe")
 t.expect_touch("bin/$toolset/debug/a.obj")
-t.ignore("*.tds")
+t.expect_touch("bin/$toolset/debug/main-target-c/c.exe")
 t.expect_nothing_more()
 
 # "src/a.h" includes "b.h" (in the same dir)
@@ -43,7 +39,7 @@ t.touch("src1/b.h")
 t.run_build_system()
 t.expect_touch("bin/$toolset/debug/a.exe")
 t.expect_touch("bin/$toolset/debug/a.obj")
-t.ignore("*.tds")
+t.expect_touch("bin/$toolset/debug/main-target-c/c.exe")
 t.expect_nothing_more()
 
 # included by "src/b.h". We had a bug: file included via "",
@@ -61,11 +57,6 @@ t.expect_nothing_more()
 # if it is different for different subvariants. Lacking any toolset
 # support, this check will be implemented later.
 t.touch("x.foo")
-t.run_build_system()
-t.expect_touch("bin/$toolset/debug/a.obj")
-
-# Check that generated headers are scanned for dependencies as well
-t.touch("src1/z.h")
 t.run_build_system()
 t.expect_touch("bin/$toolset/debug/a.obj")
 

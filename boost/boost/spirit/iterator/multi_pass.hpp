@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.0
+    Spirit V1.5.2
     Copyright (c) 2001, Daniel C. Nuffer
     http://spirit.sourceforge.net/
 
@@ -12,7 +12,6 @@
 #define BOOST_SPIRIT_ITERATOR_MULTI_PASS_HPP
 
 #include "boost/config.hpp"
-#include "boost/throw_exception.hpp"
 
 #if defined(BOOST_MSVC) && (BOOST_MSVC <= 1300)
 // The multi_pass for VC++ is currently broken
@@ -29,13 +28,6 @@
 
 #include "fixed_size_queue.hpp"
 #include "boost/spirit/core/assert.hpp" // for BOOST_SPIRIT_ASSERT
-#include "boost/spirit/core/impl/msvc.hpp"  
-
-#if defined(BOOST_NO_STD_ITERATOR_TRAITS)
-#define BOOST_SPIRIT_IT_NS impl
-#else
-#define BOOST_SPIRIT_IT_NS std
-#endif
 
 ///////////////////////////////////////////////////////////////////////////////
 namespace boost { namespace spirit {
@@ -209,7 +201,7 @@ class buf_id_check
         {
             if (buf_id != *shared_buf_id)
             {
-                boost::throw_exception(illegal_backtracking());
+                throw illegal_backtracking();
             }
         }
 
@@ -508,18 +500,11 @@ template <typename InputT>
 class inner
 {
     public:
-        typedef 
-            typename BOOST_SPIRIT_IT_NS::iterator_traits<InputT>::value_type 
-            value_type;
-        typedef 
-            typename BOOST_SPIRIT_IT_NS::iterator_traits<InputT>::difference_type
+        typedef typename std::iterator_traits<InputT>::value_type value_type;
+        typedef typename std::iterator_traits<InputT>::difference_type
             difference_type;
-        typedef 
-            typename BOOST_SPIRIT_IT_NS::iterator_traits<InputT>::pointer 
-            pointer;
-        typedef 
-            typename BOOST_SPIRIT_IT_NS::iterator_traits<InputT>::reference 
-            reference;
+        typedef typename std::iterator_traits<InputT>::pointer pointer;
+        typedef typename std::iterator_traits<InputT>::reference reference;
 
     protected:
         inner()
@@ -550,9 +535,7 @@ class inner
             return input == x.input;
         }
 
-        typedef 
-            typename BOOST_SPIRIT_IT_NS::iterator_traits<InputT>::value_type 
-            value_t;
+        typedef typename std::iterator_traits<InputT>::value_type value_t;
         void swap(inner& x)
         {
             impl::mp_swap(input, x.input);
@@ -791,13 +774,6 @@ class multi_pass
         typedef typename IP::difference_type difference_type;
         typedef typename IP::pointer pointer;
         typedef typename IP::reference reference;
-#if defined(BOOST_NO_STD_ITERATOR_TRAITS)
-    // VC++6/Dinkumware STL has incorrect iterator_traits, which are to be
-    // taken from the boost::spirit::impl namespace instead 
-    // (see spirit/core/impl/msvc.hpp), but these rely on the distance_type
-    // instead of the difference_type
-        typedef typename IP::difference_type distance_type;
-#endif // defined(BOOST_NO_STD_ITERATOR_TRAITS
 
         typedef InputT iterator_type;
 
@@ -1243,7 +1219,6 @@ namespace impl {
 ///////////////////////////////////////////////////////////////////////////////
 }} // namespace boost::spirit
 
-#undef BOOST_SPIRIT_IT_NS
 #endif  // defined(BOOST_MSVC) && (BOOST_MSVC <= 1300)
 #endif  // BOOST_SPIRIT_ITERATOR_MULTI_PASS_HPP
 

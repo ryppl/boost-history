@@ -4,8 +4,7 @@ import property ;
 
 rule yfc-compile ( target : sources * : property-set * )
 {
-    PROPERTIES on $(target) = [ 
-      property.as-path [ property.remove incidental : $(property-set) ] ] ;      
+    PROPERTIES on $(target) = [ property.as-path $(property-set) ] ;
 }
 
 actions yfc-compile
@@ -16,8 +15,7 @@ actions yfc-compile
 
 rule yfc-link ( target : sources * : property-set * )
 {
-    PROPERTIES on $(target) = [ 
-      property.as-path [ property.remove incidental : $(property-set) ] ] ;
+    PROPERTIES on $(target) = [ property.as-path $(property-set) ] ;
 }
 
 actions yfc-link

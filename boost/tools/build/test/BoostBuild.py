@@ -83,41 +83,32 @@ class Tester(TestCmd.TestCmd):
         elif os.name == 'posix':
             if os.uname()[0].lower().startswith('cygwin'):
                 jam_build_dir = "bin.cygwinx86"
-                if 'TMP' in os.environ and os.environ['TMP'].find('~') != -1:
-                    print 'Setting $TMP to /tmp to get around problem with short path names'
-                    os.environ['TMP'] = '/tmp'
             else:
                 jam_build_dir = "bin.linuxx86"
         else:
             raise "Don't know directory where jam is build for this system"
 
         if boost_build_path is None:
-            boost_build_path = self.original_workdir
+            boost_build_path = os.path.join(self.original_workdir,
+                                            "..", "new")
+            if windows:
+                boost_build_path += ";" + self.original_workdir
+            else:
+                boost_build_path += ":" + self.original_workdir
             
 
-        verbosity = ['-d0', '--quiet']
+        verbosity = ' -d0 --quiet '
         if '--verbose' in sys.argv:
             keywords['verbose'] = 1
-            verbosity = ['-d+2']
-
-        program_list = []
-
-        # try for the debug version if it's lying around
-        if os.path.exists(
-            os.path.join('..', 'jam_src', jam_build_dir + '.debug')
-        ):
-            jam_build_dir += '.debug'
-            
-        program_list.append(os.path.join('..', 'jam_src', jam_build_dir, executable))
-        program_list.append('-sBOOST_BUILD_PATH=' + boost_build_path)
-        if verbosity:
-            program_list += verbosity
-        if arguments:
-            program_list += arguments.split(" ")
+            verbosity = ' -d+2 '
 
         TestCmd.TestCmd.__init__(
             self
-            , program=program_list
+            , program=os.path.join(
+                '..', 'jam_src', jam_build_dir, executable)
+              +  ' -sBOOST_BUILD_PATH=' + boost_build_path
+              + verbosity
+              + arguments
             , match=match
             , workdir=''
             , **keywords)
@@ -196,8 +187,8 @@ class Tester(TestCmd.TestCmd):
         if not type(names) == types.ListType:
             names = [names]
 
-        # Avoid attempts to remove current dir
-        os.chdir(self.original_workdir)
+	# Avoid attempts to remove current dir
+	os.chdir(self.original_workdir)
         for name in names:
             n = self.native_file_name(name)
             if os.path.isdir(n):
@@ -210,20 +201,7 @@ class Tester(TestCmd.TestCmd):
         if not os.path.exists(self.workdir):
             os.mkdir(self.workdir)
         os.chdir(self.workdir)
-
-    def expand_toolset(self, name):
-        """Expands $toolset in the given file to tested toolset"""
-        content = self.read(name)
-        content = string.replace(content, "$toolset", self.toolset)
-        self.write(name, content)
                                                         
-    def dump_stdio(self):
-        print "STDOUT ============"
-        print self.stdout()    
-        print "STDERR ============"
-        print self.stderr()
-        print "END ==============="
-                    
     #
     #   FIXME: Large portion copied from TestSCons.py, should be moved?
     #
@@ -235,21 +213,22 @@ class Tester(TestCmd.TestCmd):
 
         if match is None:
             match = self.match
-
-        if pass_toolset is None:
-            pass_toolset = self.pass_toolset        
+	    	    
+	if pass_toolset is None:
+	    pass_toolset = self.pass_toolset	    
 
         try:
-            kw['program'] = []
-            kw['program'] += self.program
-            if extra_args:
-                kw['program'] += extra_args.split(" ")            
             if pass_toolset:
-                kw['program'].append(self.toolset)
+                kw['program'] = self.program + ' ' + self.toolset + ' ' + extra_args                                
+            else:
+                kw['program'] = self.program + ' ' + extra_args                
             kw['chdir'] = subdir
             apply(TestCmd.TestCmd.run, [self], kw)
         except:
-            self.dump_stdio()
+            print "STDOUT ============"
+            print self.stdout()
+            print "STDERR ============"
+            print self.stderr()
             raise
 
         if status != None and _failed(self, status):
@@ -257,9 +236,13 @@ class Tester(TestCmd.TestCmd):
             if status != 0:
                 expect = " (expected %d)" % status
 
-            print '"%s" returned %d%s' % (
-                kw['program'], _status(self), expect)
+            print '"%s %s" returned %d%s' % (
+                self.program, extra_args, _status(self), expect)
 
+            print "STDOUT ============"
+            print self.stdout()
+            print "STDERR ============"
+            print self.stderr()
             self.fail_test(1)
 
         if not stdout is None and not match(self.stdout(), stdout):
@@ -272,7 +255,7 @@ class Tester(TestCmd.TestCmd):
                 print "STDERR ==================="
                 print stderr
             self.maybe_do_diff(self.stdout(), stdout)
-            self.fail_test(1, dump_stdio = 0)
+            self.fail_test(1)
 
         if not stderr is None and not match(self.stderr(), stderr):
             print "STDOUT ==================="
@@ -282,7 +265,7 @@ class Tester(TestCmd.TestCmd):
             print "Actual STDERR ============"
             print self.stderr()
             self.maybe_do_diff(self.stderr(), stderr)
-            self.fail_test(1, dump_stdio = 0)
+            self.fail_test(1)
 
         self.tree = build_tree(self.workdir)
         self.difference = trees_difference(self.previous_tree, self.tree)
@@ -302,26 +285,10 @@ class Tester(TestCmd.TestCmd):
         else:
             return result
     
-    def fail_test(self, condition, dump_stdio = 1, *args):
-        # If test failed, print the difference        
-        if condition and hasattr(self, 'difference'):            
-            print '-------- all changes caused by last build command ----------'
+    def fail_test(self, condition, *args):
+	# If test failed, print the difference
+        if condition and hasattr(self, 'difference'):
             self.difference.pprint()
-            
-        if condition and dump_stdio:
-            self.dump_stdio()
-
-        if '--preserve' in sys.argv:
-            print 
-            print "*** Copying the state of working dir into 'failed_test' ***"
-            print 
-            path = os.path.join(self.original_workdir, "failed_test")
-            if os.path.isdir(path):
-                shutil.rmtree(path, ignore_errors=0)
-            elif os.path.exists(path):
-                raise "The path " + path + " already exists and is not directory";
-            shutil.copytree(self.workdir, path)
-                        
         TestCmd.TestCmd.fail_test(self, condition, *args)
         
     # A number of methods below check expectations with actual difference
@@ -371,7 +338,7 @@ class Tester(TestCmd.TestCmd):
             # We need to check in both touched and modified files if
             # it's a Windows exe because they sometimes have slight
             # differences even with identical inputs
-            if windows:
+            if name.endswith('.exe'):
                 filesets = [d.modified_files, d.touched_files]
             else:
                 filesets = [d.touched_files]
@@ -414,21 +381,8 @@ class Tester(TestCmd.TestCmd):
                 self.fail_test(1)
 
     def expect_nothing_more(self):
-
-        # not totally sure about this change, but I don't see a good alternative
-        if windows:
-            self.ignore('*.ilk') # msvc incremental linking files
-            self.ignore('*.pdb') # msvc program database files
-            self.ignore('*.rsp') # response files
-            self.ignore('*.tds') # borland debug symbols
-
-        # debug builds of bjam built with gcc produce this profiling data
-        self.ignore('gmon.out')
-        self.ignore('*/gmon.out')
-            
         if not self.unexpected_difference.empty():
-           print 'FAILED'
-           print '------- The following changes were unexpected ------- '
+           print "Expected nothing more, but got the following:"
            self.unexpected_difference.pprint()
            self.fail_test(1)       
 

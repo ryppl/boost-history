@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.0
+    Spirit V1.5.2
     Copyright (c) 2001-2003 Joel de Guzman
     Copyright (c) 2002-2003 Hartmut Kaiser
     http://spirit.sourceforge.net/
@@ -22,9 +22,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 
     #include <iostream>
-    #if defined(__BORLANDC__) && (__BORLANDC__ <= 0x561)
-    #include "boost/spirit/core/impl/borland.hpp"
-    #endif
 
     ///////////////////////////////////////////////////////////////////////////
     //

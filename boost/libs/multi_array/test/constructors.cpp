@@ -10,12 +10,12 @@
 #include <algorithm>
 #include <list>
 
-void check_shape(const double&, std::size_t*, int*, unsigned int)
+void check_shape(const double&, size_t*, int*, unsigned int)
 {}
 
 template <class Array>
 void check_shape(const Array& A, 
-                 std::size_t* sizes, 
+                 size_t* sizes, 
                  int* strides,
                  unsigned int num_elements)
 {
@@ -51,11 +51,6 @@ test_main(int, char*[])
   boost::array<size_type,3> sizes = { { 3, 3, 3 } };
   int strides[] = { 9, 3, 1 };
   size_type num_elements = 27;
-
-  // Default multi_array constructor
-  {
-    boost::multi_array<double, 3> A;
-  }
 
   // Constructor 1, default storage order and allocator
   {

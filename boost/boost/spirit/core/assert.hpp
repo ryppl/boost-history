@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.0
+    Spirit V1.5.2
     Copyright (c) 2001-2003 Joel de Guzman
     Copyright (c) 2002-2003 Hartmut Kaiser
     http://spirit.sourceforge.net/
@@ -11,9 +11,6 @@
 =============================================================================*/
 #if !defined(BOOST_SPIRIT_ASSERT_HPP)
 #define BOOST_SPIRIT_ASSERT_HPP
-
-#include "boost/config.hpp"
-#include "boost/throw_exception.hpp"
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -28,7 +25,7 @@
     #define BOOST_SPIRIT_ASSERT(x)
 #elif defined (BOOST_SPIRIT_ASSERT_EXCEPTION)
     #define BOOST_SPIRIT_ASSERT_AUX(f, l, x) \
-    do{ if (!(x)) boost::throw_exception(BOOST_SPIRIT_ASSERT_EXCEPTION(f "(" #l "): " #x)); } while(0)
+    do{ if (!(x)) throw BOOST_SPIRIT_ASSERT_EXCEPTION(f "(" #l "): " #x); } while(0)
     #define BOOST_SPIRIT_ASSERT(x) SPIRIT_ASSERT_AUX(__FILE__, __LINE__, x)
 #else
     #include <cassert>

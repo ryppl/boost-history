@@ -88,29 +88,22 @@ rule print ( )
 
 # Class encapsulating settings for a single project root.
 #
-xclass project-root-object 
-{
-    import path ;
-    import set ;    
-    import sequence : insertion-sort ;
-    
-    rule __init__ (
-      location # The root location.
+rule project-root-object (
+    location # The root location.
     )
-    {        
-        # The module name of the project-root.
-        self.module = project-root<$(location)> ;
+{
+    # The module name of the project-root.
+    self.module = project-root<$(location)> ;
     
-        # The location of the project-root, as a path.
-        self.location = $(location) ;
+    # The location of the project-root, as a path.
+    self.location = $(location) ;
     
-        # The set of projects registered in this project-root.
-        self.projects = ;
+    # The set of projects registered in this project-root.
+    self.projects = ;
     
-        # The set of interned constants for this project-root.
-        self.constants = ;
-    }
-        
+    # The set of interned constants for this project-root.
+    self.constants = ;
+    
     # Accessor, the module of the project root.
     rule get-module ( )
     {
@@ -160,8 +153,6 @@ xclass project-root-object
         {
             case path :
                 value = [ path.root [ path.native $(value) ] $(self.location) ] ;
-                # Now make the value absolute path
-                value = [ path.root $(value) [ path.pwd ] ] ;
         }
         if ! $(name) in $(self.constants)
         {
@@ -208,24 +199,6 @@ xclass project-root-object
         }
     }
     
-    # Needed to get deterministic order of output, which makes testing simpler
-    rule compare-projects ( p1 p2 )
-    {
-        local id1 = [ project.attribute $(p1) id ] ;
-        local id2 = [ project.attribute $(p2) id ] ;
-        if $(id1) < $(id2)
-        {
-            return true ;
-        }
-        else
-        {
-            if $(id1) = $(id2) && $(p1) < $(p2)
-            {
-                return true ;
-            }
-        }
-    }
-        
     # Print out info about this project root. Calls print on the
     # individual projects in this project-root.
     #
@@ -235,6 +208,23 @@ xclass project-root-object
         import print ;
         import project ;
     
+        # Needed to get deterministic order of output, which makes testing simpler
+        local rule compare-projects ( p1 p2 )
+        {
+            local id1 = [ project.attribute $(p1) id ] ;
+            local id2 = [ project.attribute $(p2) id ] ;
+            if $(id1) < $(id2)
+            {
+                return true ;
+            }
+            else
+            {
+                if $(id1) = $(id2) && $(p1) < $(p2)
+                {
+                    return true ;
+                }
+            }
+        }
     
         print.section "'"$(self.location)"'" Module for project-root is "'"$(self.module)"'" ;
         if $(self.constants)
@@ -251,7 +241,7 @@ xclass project-root-object
         if $(self.projects)
         {
             print.section Projects ;
-            local projects = [ insertion-sort $(self.projects) : compare-projects ] ;
+            local projects = [ sequence.insertion-sort $(self.projects) : compare-projects ] ;
             for local p in $(projects)
             {
                 local attributes = [ project.attributes $(p) ] ;
@@ -260,15 +250,12 @@ xclass project-root-object
         }
     }
 }
+class.class project-root-object ;
 
 # Rules callable by the user in the context of the project-root.jam of a project.
 #
 module project-root-context
 {
-    # Make toolset.using accessible in project-root.
-    import toolset : using ;
-    EXPORT project-root-context : using ;
-    
     # Access to project root object and shortcut for it's methods. The
     # optional argument is a shortcut to execute the given method on the
     # object. This saves the hasle of creating local vars to call on the
@@ -323,8 +310,7 @@ module project-root-context
     {
         import project ;
         import path ;
-        project.use $(id) : [ path.root 
-            [ path.make $(location) ] [ project-root get-location ] ] ;
+        project.use $(id) : [ path.root $(location) [ project-root get-location ] ] ;
     }
 }
 

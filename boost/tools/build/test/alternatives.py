@@ -28,7 +28,7 @@ exe a : a_empty.cpp : <variant>release ;
 exe a : a.cpp : <variant>debug ;
 """)
 
-t.run_build_system()
+t.run_build_system(pass_toolset=0)
 t.expect_addition("bin/$toolset/debug/a.exe")
 
 
@@ -67,17 +67,6 @@ expected="""error: Ambiguous alternatives for main target ./a
 
 """
 t.run_build_system("--no-error-backtrace", status=1, stdout=expected)
-
-# Test that we can have alternative without sources
-t.write("Jamfile", """
-alias specific-sources ;
-import feature ;
-feature.extend os : MAGIC ;
-alias specific-sources : b.cpp : <os>MAGIC ;
-exe a : a.cpp specific-sources ;
-""")
-t.rm("bin")
-t.run_build_system()
 
 		   
 t.cleanup()		   

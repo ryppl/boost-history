@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.0
+    Spirit V1.5.2
     Copyright (c) 2002-2003 Martin Wille
     http://spirit.sourceforge.net/
 
@@ -48,7 +48,7 @@ typedef object_with_id<tag1> class1;
 
 struct test_task
 {
-    static unsigned int size() { return 200000; }
+    static unsigned int size() { return 1000000; }
 
     void operator ()()
     { // create lots of objects

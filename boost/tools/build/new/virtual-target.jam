@@ -8,8 +8,10 @@
 #  when searching for possible transormation sequences, when it's not known
 #  if particular target should be created at all.
 
-import "class" : new ;
-import path property-set utility sequence errors ;
+import class : class new ;
+import type ;
+import property-set ;
+import utility ;
 
 #                       +--------------------------+
 #                       | virtual-target           |
@@ -24,10 +26,10 @@ import path property-set utility sequence errors ;
 #                                       / \
 #                                      +-+-+
 #                                        |
-#    +---------------------+     +-------+--------------+
+#    +---------------------+     +---------+------------+
 #    | action              |     | abstract-file-target |
 #    +=====================|   * +======================+
-#    | action-name         |  +--+ action               |
+#    | action-name         |  +--| action               |
 #    | properties          |  |  +----------------------+
 #    +---------------------+--+  | actualize-action()   |
 #    | actualize()         |0..1 +-----------+----------+
@@ -38,7 +40,7 @@ import path property-set utility sequence errors ;
 #           |                               / \
 #           ^                              +-+-+
 #          / \                               |
-#         +-+-+                +-------------+-------------+
+#         +-+-+                +-------------|-------------+
 #           |                  |                           |
 #           |           +------+---------------+  +--------+-------------+
 #           |           | file-target          |  | searched-lib-target  |
@@ -46,9 +48,9 @@ import path property-set utility sequence errors ;
 #           |           | actualize-location() |  | actualize-location() |
 #           |           +----------------------+  +----------------------+
 #           |
-#         +-+------------------------------+
+#         +--------------------------------+
 #         |                                |
-#    +----+----------------+     +---------+-----------+
+#    +---------------------+     +---------------------+
 #    | compile-action      |     | link-action         |
 #    +=====================+     +=====================+
 #    | adjust-properties() |     | adjust-properties() |
@@ -63,19 +65,14 @@ import path property-set utility sequence errors ;
 # building, if needed. However, it can be also dropped, which allows
 # to search for different transformation and select only one.
 #
-class virtual-target 
-{
-    import virtual-target utility scanner ;    
-    
-    rule __init__ ( name  # Name of this target -- specifies the name of
-        : project # Project to which this target belongs
+rule virtual-target ( name  # Name of this target -- specifies the name of
+                  : project # Project to which this target belongs
     )
-    {    
-        self.name = $(name) ;
-        self.project = $(project) ;
-        self.dependencies = ;
-    }
-    
+{
+    self.name = $(name) ;
+    self.project = $(project) ;
+    self.dependencies = ;
+
     # Name of this target.
     rule name ( ) { return $(self.name) ; }
 
@@ -95,7 +92,7 @@ class virtual-target
         return $(self.dependencies) ;
     }
 
-    # Generates all the actual targets and sets up build actions for
+    # Generates all the actual targets and set ups build actions for
     # this target.
     #
     # If 'scanner' is specified, creates an additional target
@@ -137,7 +134,7 @@ class virtual-target
 
 # private: (overridables)
 
-    # Sets up build actions for 'target'. Should call appropriate rules
+    # Sets up build actions for 'target'. Should call appriate rules
     # and set target variables.
     rule actualize-action ( target )
     {
@@ -149,14 +146,7 @@ class virtual-target
     {
         errors.error "method should be defined in derived classes" ;
     }
-    
-    # Returns the path to this target, if it corresponds to a file,
-    # and empty list otherwise.
-    rule path ( )
-    {
-        errors.error "method should be defined in derived classes" ;        
-    }
-    
+
     # Return that actual target name that should be used
     # (for the case where no scanner is involved)
     rule actual-name ( )
@@ -172,8 +162,6 @@ class virtual-target
         # Do anything only on the first invocation
         if ! $(self.made.$(name)) {
             self.made.$(name) = true ;
-            
-            virtual-target.register-actual-name $(name) : $(__name__) ;            
 
             for local i in $(self.dependencies) {
                 DEPENDS $(name) : [ $(i).actualize ] ;
@@ -189,6 +177,8 @@ class virtual-target
 
 }
 
+class virtual-target ;
+
 
 # Target which correspond to a file. The exact mapping for file
 # is not yet specified in this class. (TODO: Actually, the class name
@@ -200,21 +190,16 @@ class virtual-target
 # The target's grist is concatenation of project's location,
 # properties of action (for derived files), and, optionally,
 # value identifying the main target.
-class abstract-file-target : virtual-target
-{
-    import project regex sequence path type ;
-    
-    rule __init__ ( name
-        : type ?  # Optional type for this target
+rule abstract-file-target ( name
+                  : type ?  # Optional type for this target
                   : project
     )
-    {
-        virtual-target.__init__ $(name) : $(project) ;
-            
-        self.type = $(type) ;
-        self.action = ;
-    }
-    
+{
+    virtual-target.__init__ $(name) : $(project) ;
+
+    self.type = $(type) ;
+    self.action = ;
+
     rule type ( ) { return $(self.type) ; }
     rule set-type ( type )
     {
@@ -236,7 +221,7 @@ class abstract-file-target : virtual-target
     # computation from properties.
     rule set-path ( path )
     {
-        self.path = [ path.native $(path) ] ;
+        self.path = $(path) ;
     }
 
     # If 'a' is supplied, sets action to 'a'.
@@ -261,6 +246,18 @@ class abstract-file-target : virtual-target
         return $(self.root) ;
     }
 
+    # Gets 'use' requirements.
+    rule usage-requirements ( )
+    {
+        return $(self.usage-requirements) ;
+    }
+
+    # Sets 'use' requirements
+    rule set-usage-requirements ( requirements * )
+    {
+        self.usage-requirements = $(requirements) ;
+    }
+
     # Sets the dependency graph this target is part of.
     # 'dg' is an instance of 'subvariant-dg' class.
     rule dg ( dg ? overwrite ? )
@@ -276,56 +273,48 @@ class abstract-file-target : virtual-target
     {
         if $(self.action)
         {
+            # ### Not sure what this was used for
+            #    if $(name:D)
+            #    {
+            #        errors.error
+            #             "name for constructed target includes directory" ;
+            #    }
+
             $(self.action).actualize ;
+            common.Clean clean : $(name) ;
         }
     }
     
-    # Returns the name of main target this virtual target is specific
-    # to.  
-    #
-    # Ordinarily, it's assumed that any grist on the actual Jam target
-    # and target path is determined by project, base properties,
-    # target name and type.  Derived classes may return a non-empty
-    # string to indicate that the target is specific to the given main
-    # target.
+    # Returns the name of main target this virtual target is specific too.
+    # Ordinary, it's assumed that grist of the actual Jam target and target path
+    # is determined by project, base properties, target name and type.
+    # Derived classes may return non-empty string to indicate that the target is
+    # specific to the given main target.
     rule specific-main-target ( )
     {
         return "" ;
     }
       
-    # Return a human-readable representation of this target
-    #
-    # If this target has an action, that's:
-    #
-    #    { <action-name>-<self.name>.<self.type> <action-sources>... }
-    #
-    # otherwise, it's:
-    #
-    #    { <self.name>.<self.type> }
-    #
     rule str ( )
     {
         local action = [ action ] ;
-        
-        local name-dot-type = [ sequence.join $(self.name) "."  $(self.type) ] ;
-        
+        local filename = [ sequence.join $(self.name) "."  $(self.type) ] ;
         if $(action)
         {
             local sources = [ $(action).sources ] ;
-            
-            local action-name =  [ $(action).action-name ] ;            
 
-            local ss ;            
+            local ss ;
             for local s in $(sources)
             {
                 ss += [ $(s).str ] ;
             }
-            
-            return "{" $(action-name)-$(name-dot-type) $(ss) "}" ;
+
+            local name =  [ $(action).action-name ] ;
+            return "{" $(name)-$(filename) $(ss) "}" ;
         }
         else
         {
-            return "{" $(name-dot-type) "}" ;
+            return "{" $(filename) "}" ;
         }
     }
 
@@ -379,29 +368,29 @@ class abstract-file-target : virtual-target
             {
                 grist = $(grist)/main-target-$(smt) ;                
             }
-
-            local name = [ path.native $(self.name) ] ;
+            
             if $(self.suffix)
             {
-                self.actual-name = [ sequence.join <$(grist)>$(name)
+                self.actual-name = [ sequence.join <$(grist)>$(self.name)
                 $(self.suffix) : "." ] ;
             }
             else if $(self.type)
             {
-                self.actual-name = [ sequence.join <$(grist)>$(name)
+                self.actual-name = [ sequence.join <$(grist)>$(self.name)
                   [ type.generated-target-suffix $(self.type) :
                     $(properties)
                   ] : "." ] ;
             }
             else
             {
-                self.actual-name = <$(grist)>$(name) ;
+                self.actual-name = <$(grist)>$(self.name) ;
             }
         }
         return $(self.actual-name) ;
     }
 
 }
+class abstract-file-target : virtual-target ;
 
 # File target with explicitly known location.
 #
@@ -417,19 +406,14 @@ class abstract-file-target : virtual-target
 #     - the value passed to the 'suffix' method, if any, or
 #     - the suffix which correspond to the target's type.
 #
-class file-target : abstract-file-target 
-{
-    import common ;    
-    
-    rule __init__ (
-      name
-        : type ?  # Optional type for this target
-        : project
+rule file-target (
+                    name
+                  : type ?  # Optional type for this target
+                  : project
     )
-    {
-        abstract-file-target.__init__ $(name) : $(type) : $(project) ;   
-    }
-        
+{
+    abstract-file-target.__init__ $(name) : $(type) : $(project) ;
+
     rule actualize-location ( target )
     {
         if $(self.path)
@@ -472,11 +456,11 @@ class file-target : abstract-file-target
             
             local main-target = [ $(self.dg).main-target ] ;
             local project = [ $(main-target).project ] ;
-            local ptarget = [ project.target $(project) ] ;
+            local plocation = [ project.attribute $(project) location ] ;
+            local ptarget = [ project.target $(plocation) ] ;
             local ref-ps = [ $(ptarget).reference-properties [ $(self.dg).properties-ps ] ] ;
 
-            if [ $(ps).free ] != [ $(ref-ps).free ] 
-              || [ $(ps).dependency ] != [ $(ref-ps).dependency ] 
+            if [ $(ps).free ] != [ $(ref-ps).free ]
             {
                 return [ $(main-target).name ] ;
             }            
@@ -511,20 +495,8 @@ class file-target : abstract-file-target
 
 }
 
-class notfile-target : abstract-file-target
-{
-    rule __init__ ( name : project )
-    {
-        abstract-file-target.__init__ $(name) : : $(project) ;
-    }
-    
-            
-    rule actualize-location ( target )
-    {
-        NOTFILE $(target) ;
-        ALWAYS $(target) ;
-    }    
-}    
+class file-target : abstract-file-target ;
+
 
 
 # Returns the binding for the given actual target.
@@ -539,9 +511,7 @@ rule remember-binding ( target : bound-path )
 {
     .binding.$(target) = $(bound-path) ;
 }
-# virtual-target.remember-binding must be available in the global
-# module in order to be invoked by the builtin binding process.
-IMPORT virtual-target : remember-binding : : virtual-target.remember-binding ;
+
 
 # Class which represents an action.
 # Both 'targets' and 'sources' should list instances of 'virtual-target'.
@@ -549,29 +519,23 @@ IMPORT virtual-target : remember-binding : : virtual-target.remember-binding ;
 #     rule action-name ( targets + : sources * : properties * )
 # Targets and sources are passed as actual jam targets. The rule may
 # not establish dependency relationship, but should do everything else.
-class action 
+rule action ( targets + : sources * : action-name + : property-set ? )
 {
-    import type toolset property-set indirect class ;
+    self.targets = $(targets) ;
+    self.sources = $(sources) ;
+    self.action-name = $(action-name) ;
     
-    rule __init__ ( targets + : sources * : action-name + : property-set ? )
+    if ! $(property-set) 
+    {
+        property-set = [ property-set.empty ] ;
+    }
+        
+    if ! [ class.is-instance $(property-set) ]
     {        
-        self.targets = $(targets) ;
-        self.sources = $(sources) ;
+        errors.error "Property set instance required" ;
+    }
     
-        self.action-name = [ indirect.make-qualified $(action-name) ] ;
-        
-        if ! $(property-set) 
-        {
-            property-set = [ property-set.empty ] ;
-        }
-        
-        if ! [ class.is-instance $(property-set) ]
-        {        
-            errors.error "Property set instance required" ;
-        }
-        
-        self.properties = $(property-set) ;
-    }        
+    self.properties = $(property-set) ;
     
     rule targets ( )
     {
@@ -616,17 +580,11 @@ class action
 
             # Action name can include additional argument to rule, which should not
             # be passed to 'set-target-variables'
-            toolset.set-target-variables
-              [ indirect.get-rule $(self.action-name[1]) ] $(actual-targets)
-                : $(properties) ;
-            
-            indirect.call $(self.action-name) 
-              $(actual-targets) : $(self.actual-sources) : $(properties)
-                ;
-            
-            # Since we set up creating action here, we also set up
-            # action for cleaning up
-            common.Clean clean : $(actual-targets) ;
+            toolset.set-target-variables $(self.action-name[1]) $(actual-targets[0]) :
+              $(properties) ;
+
+            $(self.action-name)
+              $(actual-targets) : $(self.actual-sources) : $(properties) ;
         }
     }
 
@@ -673,31 +631,32 @@ class action
         self.targets = $(targets) ;
     }
 }
+class action ;
 
 # Action class which does nothing --- it produces the targets with
 # specific properties out of nowhere. It's needed to distinguish virtual
 # targets with different properties that are known to exist, and have no 
 # actions which create them.
-class null-action : action 
+rule null-action ( targets + : property-set ? )
 {
-    rule __init__ ( targets + : property-set ? )
-    {
-        action.__init__ $(targets) : : .no-action : $(property-set) ;
-    }
-        
+    action.__init__ $(targets) : : no-action : $(property-set) ;
+    
     rule actualize ( )
     {
         if ! $(self.actualized)
         {
             self.actualized = true ;
 
+            local actual-targets ;
             for local i in [ targets ]
             {
-                $(i).actualize ;
+                actual-targets += [ $(i).actualize ] ;
             }
         }        
     }
 }
+
+class null-action : action ;
 
 
 # Creates a virtual target with approariate name and type from 'file'.
@@ -708,15 +667,13 @@ class null-action : action
 # TODO: passing project with all virtual targets starts to be annoying.
 rule from-file ( file : project )
 {
-    import type ; # had to do this here to break a circular dependency
-    
     if $(.files.$(file).$(project))
     {
         return $(.files.$(file).$(project)) ;
     }
     else
     {
-        local name = [ path.make $(file:S=) ] ;
+        local name = $(file:S=) ;
         local type = [ type.type $(file:S) ] ;
         local result ;
         if ! $(type)
@@ -748,28 +705,18 @@ rule register ( target )
     {
         local a1 = [ $(t).action ] ;
         local a2 = [ $(target).action ] ;
-        
+
         if ! $(result)
         {
             if ! $(a1) && ! $(a2)
             {
                 result = $(t) ;
             }
-            else 
+            else if $(a1) && $(a2) && [ $(a1).action-name ] = [ $(a2).action-name ]
+              && [ $(a1).properties-ps ] = [ $(a2).properties-ps ] && [ $(a1).sources ] = [ $(a2).sources ]
             {
-                if $(a1) && $(a2) && [ $(a1).action-name ] = [ $(a2).action-name ] && 
-                  [ $(a1).sources ] = [ $(a2).sources ]
-                {
-                    local ps1 = [ $(a1).properties-ps ] ;
-                    local ps2 = [ $(a2).properties-ps ] ;
-                    local p1 = [ $(ps1).base ] [ $(ps1).free ] [ $(ps1).dependency ] ;
-                    local p2 = [ $(ps2).base ] [ $(ps2).free ] [ $(ps2).dependency ] ;
-                    if $(p1) = $(p2) 
-                    {                        
-                        result = $(t) ;
-                    }                    
-                }
-            }                        
+                result = $(t) ;
+            }
         }
     }
     if ! $(result)
@@ -780,21 +727,6 @@ rule register ( target )
 
     return $(result) ;
 }
-
-rule register-actual-name ( actual-name : virtual-target )
-{
-    if $(.actual.$(actual-name))
-    {
-        errors.error "Duplicate name of actual target:" $(actual-name) 
-          : "previous virtual target" [ $(.actual.$(actual-name)).str ] 
-          : "another virtual target" [ $(virtual-target).str ] ;
-    }
-    else
-    {
-        .actual.$(actual-name) = $(virtual-target) ;
-    }        
-}
-
 
 # Traverses the dependency graph of 'target' and return all targets that will
 # be created before this one is created. If root of some dependency graph is
@@ -921,47 +853,36 @@ local rule clone-action-template ( action from cloned-from : new-source )
     return $(cloned) ;
 }
 
-class subvariant-dg 
+local rule subvariant-dg ( main-target # The instance of main-target class
+    : property-set                     # Properties requested for this target
+    : virtual-targets * )
 {
-    import sequence ;    
-    
-    rule __init__ ( main-target # The instance of main-target class
-        : property-set                     # Properties requested for this target
-        : actual-properties                # Actual used properties
-        : virtual-targets * )
-    {        
-        self.main-target = $(main-target) ;
-        self.properties = $(property-set) ;
-        self.actual-properties = $(actual-properties) ;
-        self.virtual-targets = $(virtual-targets) ;
+    self.main-target = $(main-target) ;
+    self.properties = $(property-set) ;
+    self.virtual-targets = $(virtual-targets) ;
 
-        # Pre-compose the list of other dependency graphs, on which this one
-        # depends
-        local deps = [ $(actual-properties).dependency ] ;
-        for local d in $(deps)
+    # Pre-compose the list of other dependency graphs, on which this one
+    # depends
+    for local t in $(virtual-targets)
+    {
+        for local d in [ $(t).dependencies ]
         {
-            self.other-dg += [ $(d:G=).dg ] ;
+            self.other-dg += [ $(d).dg ] ;
         }
-        
-        for local t in $(virtual-targets)
+        local a = [ $(t).action ] ;
+        if $(a)
         {
-            local a = [ $(t).action ] ;
-            if $(a)
+            for local s in [ $(a).sources ]
             {
-                for local s in [ $(a).sources ]
+                if [ $(s).root ]
                 {
-                    if [ $(s).root ]
-                    {
-                        self.other-dg += [ $(s).dg ] ;
-                    }
+                    self.other-dg += [ $(s).dg ] ;
                 }
             }
         }
-        
-        self.other-dg = [ sequence.unique $(self.other-dg) ] ;
     }
-    
-               
+    self.other-dg = [ sequence.unique $(self.other-dg) ] ;
+   
     rule main-target ( )
     {
         return $(self.main-target) ;
@@ -995,4 +916,6 @@ class subvariant-dg
         self.target-directories = $(result) ;
     }   
 }
+
+class subvariant-dg ;
 

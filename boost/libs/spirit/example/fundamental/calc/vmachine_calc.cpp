@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.0
+    Spirit V1.5.2
     Copyright (c) 1998-2003 Joel de Guzman
     http://spirit.sourceforge.net/
 
@@ -62,7 +62,6 @@ vmachine::execute(int code[])
 {
     int const*  pc = code;
     bool        running = true;
-    stackPtr = stack;
 
     while (running)
     {

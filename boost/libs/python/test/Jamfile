@@ -55,24 +55,16 @@ rule bpl-test ( name ? : files * : requirements * )
     boost-python-runtest $(name) : $(py) <pyd>$(modules) ;
 }
 
-run ../test/embedding.cpp <lib>../build/boost_python
+run ../test/embedding.cpp <dll>../build/boost_python
   : # program args
   : # input files
   : # requirements
   $(PYTHON_PROPERTIES)
-    <define>BOOST_PYTHON_STATIC_LIB
-    <define>BOOST_PYTHON_STATIC_MODULE
     <library-path>$(PYTHON_LIB_PATH)
       <$(gcc-compilers)><debug-python><library-path>$(CYGWIN_PYTHON_DEBUG_DLL_PATH)
         <$(gcc-compilers)><*><library-path>$(CYGWIN_PYTHON_DLL_PATH)
           <find-library>$(PYTHON_EMBEDDED_LIBRARY) ;
 
-bpl-test crossmod_exception
-  : crossmod_exception.py crossmod_exception_a.cpp crossmod_exception_b.cpp
-  ;
-
-bpl-test properties ;
-bpl-test return_arg ;
 bpl-test staticmethod ;
 bpl-test shared_ptr ;
 bpl-test polymorphism ;
@@ -84,8 +76,6 @@ bpl-test enum ;
 bpl-test exception_translator ;
 bpl-test pearu1 : test_cltree.py cltree.cpp ;
 bpl-test try : newtest.py m1.cpp m2.cpp ;
-
-bpl-test keywords : keywords.cpp keywords_test.py ;
 
 extension builtin_converters : test_builtin_converters.cpp <dll>../build/boost_python ;
 boost-python-runtest builtin_converters : test_builtin_converters.py <pyd>builtin_converters  ;
@@ -134,8 +124,6 @@ bpl-test iterator : iterator.py iterator.cpp input_iterator.cpp ;
 
 bpl-test extract ;
 
-bpl-test opaque ;
-
 bpl-test pickle1 ;
 bpl-test pickle2 ;
 bpl-test pickle3 ;
@@ -143,9 +131,6 @@ bpl-test pickle3 ;
 bpl-test nested ;
 
 bpl-test docstring ;
-
-bpl-test vector_indexing_suite ;
-bpl-test map_indexing_suite ;
 
 if $(TEST_BIENSTMAN_NON_BUGS)
 {
@@ -162,9 +147,9 @@ run indirect_traits_test.cpp ;
 run destroy_test.cpp ;
 run pointer_type_id_test.cpp  <lib>../../test/build/boost_test_exec_monitor : : : $(UNIT_TEST_PROPERTIES) ;
 run member_function_cast.cpp ;
-run bases.cpp : : : $(UNIT_TEST_PROPERTIES) ;
+run bases.cpp ;
 run if_else.cpp ;
-run pointee.cpp : : : $(UNIT_TEST_PROPERTIES) ;
+run pointee.cpp ;
 run result.cpp ;
 
 compile string_literal.cpp ;

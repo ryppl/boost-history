@@ -8,16 +8,6 @@
 //  http://www.boost.org
 // 
 
-// This file will declare 'foo' is 'MACROS' is defined.
-
 #ifdef MACROS
-void
-# ifdef _WIN32
-__declspec(dllexport)
-# endif 
-foo() {}
+void foo() {}
 #endif
-
-# ifdef _WIN32
-int __declspec(dllexport) force_implib_creation;
-# endif 

@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.0
+    Spirit V1.5.2
     Copyright (c) 2001-2003 Joel de Guzman
     http://spirit.sourceforge.net/
 
@@ -53,7 +53,7 @@ namespace boost { namespace spirit { namespace impl {
                         return scan.create_match
                             (hr.length, hr.value, save, scan.first);
                     case error_status_t::rethrow:
-                         boost::throw_exception(error);
+                        throw;
                     default:
                         continue;
                 }

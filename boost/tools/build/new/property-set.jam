@@ -3,9 +3,8 @@
 #  all copies. This software is provided "as is" without express or implied
 #  warranty, and with no claim as to its suitability for any purpose.
 
-import "class" : new ;
+import class : class new ;
 import feature ;
-import property ;
 import sequence ;
 
 # Class for storing a set of properties.
@@ -20,46 +19,38 @@ import sequence ;
 # - several operations, like and refine and as-path are provided. They all use
 #   caching whenever possible.
 #
-class property-set 
+local rule property-set ( raw-properties * )
 {
-    import feature ;
-    import property-set ;
-    import property ;
-            
-    rule __init__ ( raw-properties * )
-    {        
-        self.raw = $(raw-properties) ;
-        
-        for local p in $(raw-properties)
-        {
-            local att = [ feature.attributes $(p:G) ] ;        
-            if incidental in $(att)
-            {
-                self.incidental += $(p) ;
-            }
-            else if free in $(att)
-            {
-                if dependency in $(att)
-                {
-                    self.dependency += $(p) ;
-                }
-                else
-                {
-                    self.free += $(p) ;
-                }            
-            }
-            else 
-            {
-                self.base += $(p) ;
-            }
-            
-            if propagated in $(att)
-            {
-                self.propagated += $(p) ;
-            }                        
-        }
-    }
+    self.raw = $(raw-properties) ;
     
+    for local p in $(raw-properties)
+    {
+        local att = [ feature.attributes $(p:G) ] ;
+        if incidental in $(att)
+        {
+            self.incidental += $(p) ;
+        }
+        else if free in $(att)
+        {
+            if dependency in $(att)
+            {
+                self.dependency += $(p) ;
+            }
+            else
+            {
+                self.free += $(p) ;
+            }            
+        }
+        else 
+        {
+            self.base += $(p) ;
+        }
+        
+        if propagated in $(att)
+        {
+            self.propagated += $(p) ;
+        }                        
+    }
     
     # Returns Jam list of stored properties
     rule raw ( )
@@ -109,25 +100,14 @@ class property-set
         return $(self.refined.$(ps)) ;
     }
     
-    rule expand-composites ( )
+    rule evaluate-conditionals ( )
     {
-        if ! $(self.composites)
+        if ! $(self.evaluated)
         {
-            self.composites = [ property-set.create
-                [ feature.expand-composites $(self.raw) ] ] ;
+            self.evaluated = [ property-set.create 
+                [ property.evaluate-conditionals $(self.raw) ] ] ;
         }
-        return $(self.composites) ;
-    }
-                
-    rule evaluate-conditionals ( context ? )
-    {
-        context ?= $(__name__) ;
-        if ! $(self.evaluated.$(context))
-        {
-            self.evaluated.$(context) = [ property-set.create 
-                [ property.evaluate-conditionals-in-context $(self.raw) : [ $(context).raw ] ] ] ;
-        }
-        return $(self.evaluated.$(context)) ;        
+        return $(self.evaluated) ;        
     }
     
     rule propagated ( )
@@ -148,17 +128,6 @@ class property-set
         return $(self.run) ;
     }
     
-    rule add-defaults ( )
-    {
-        if ! $(self.defaults)
-        {
-            self.defaults = [ property-set.create 
-                [ feature.add-defaults $(self.raw) ] ] ;
-        }
-        return $(self.defaults) ;
-    }
-    
-    
     rule as-path ( )
     {
         if ! $(self.as-path)
@@ -176,27 +145,21 @@ class property-set
         }
         return $(self.added.$(ps)) ;
     }            
-    
-    rule add-raw ( properties * )
-    {
-        return [ add [ property-set.create $(properties) ] ] ;
-    }            
-
-    
-    # Returns all values of 'feature'.
-    rule get ( feature )
-    {
-        return [ feature.get-values $(feature) : $(self.raw) ] ;
-    }
-    
 }
+
+class property-set ;
 
 # Creates new 'property-set' instance for the given raw properties,
 # or returns an already existing ones.
 rule create ( raw-properties * )
 {
+# If we uncomment this one, we'll end up with paths like    
+#    bin/gcc/debug/toolset-version-3.2/hello
+#    raw-properties = [ sequence.unique 
+#        [ sequence.insertion-sort $(raw-properties) ] ] ;
+    
     raw-properties = [ sequence.unique 
-        [ sequence.insertion-sort $(raw-properties) ] ] ;
+        $(raw-properties) ] ;
          
     local key = $(raw-properties:J=-:E=) ;
     
@@ -207,24 +170,10 @@ rule create ( raw-properties * )
     return $(.ps.$(key)) ;    
 }
 
-# Creates new 'property-set' instances after checking
-# that all properties are valid and converting incidental
-# properties into gristed form.
-rule create-with-validation ( raw-properties * )
-{
-    property.validate $(raw-properties) ;
-    
-    return [ create [ property.make $(raw-properties) ] ] ;
-}
-
+.empty = [ create ] ;
 
 # Returns property-set with empty set of properties.
 rule empty ( )
 {
-    if ! $(.empty)
-    {
-      .empty = [ create ] ;
-    }
-    
     return $(.empty) ;
 }

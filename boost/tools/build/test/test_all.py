@@ -1,5 +1,7 @@
 #!/usr/bin/python
-import os, sys, string
+import os
+
+import string
 
 # clear environment for testing
 #
@@ -37,8 +39,6 @@ def run_tests(critical_tests, other_tests):
             f.close()
             raise
         print "PASSED"
-        sys.stdout.flush()  # makes testing under emacs more entertaining.
-        
     # Erase the file on success
     open('test_results.txt', 'w')
         
@@ -61,10 +61,6 @@ def reorder_tests(tests, first_test):
 
             
 critical_tests = ["unit_tests", "module_actions", "startup_v1", "startup_v2"]
-
-critical_tests += ["core_d12", "core_typecheck", "core_delete_module",
-                   "core_varnames", "core_import_module"]
-
 tests = [ "project_test1",
           "project_test3",
           "project_test4",
@@ -88,31 +84,9 @@ tests = [ "project_test1",
           "alias",
           "alternatives",
           "unused",
-          "default_features",
-          "print",
-          "ndebug",
-          "explicit",
-          "absolute_sources",
-          "dependency_property",
-          "custom_generator",
-          "bad_dirname",
-          "c_file",
-          "inline",
-          "conditionals2",
-          "property_expansion",
-          "loop",
-          "conditionals3",
-          "tag",
-          "suffix",
-          "inherit_toolset",
 	  ]
 
 if os.name == 'posix':
     tests.append("symlink")
-
-if os.environ.has_key('QTDIR'):
-    tests.append("railsys")
-else:
-    print 'skipping railsys test since QTDIR environment variable is unset'
 
 run_tests(critical_tests, tests)

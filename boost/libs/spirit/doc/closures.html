@@ -22,7 +22,7 @@
     <td width="10"></td>
     <td width="30"><a href="../index.html"><img src="theme/u_arr.gif" border="0"></a></td>
     <td width="30"><a href="functional.html"><img src="theme/l_arr.gif" border="0"></a></td>
-    <td width="20"><a href="dynamic_parsers.html"><img src="theme/r_arr.gif" border="0"></a></td>
+    <td width="20"><a href="grouping_parser.html"><img src="theme/r_arr.gif" border="0"></a></td>
    </tr>
 </table>
 <h2>Overview</h2>
@@ -36,19 +36,15 @@
   <tt>i</tt>. There's something you should be aware of though. In the viewpoint 
   of the grammar, the variable <tt>i</tt> is global. When the grammar gets more 
   complex, it's hard to keep track of the current state of <tt>i</tt>. And, with 
-  recursive rules, global variables simply won't be adequate. </p>
-<p>Closures are needed if you need your rules (or grammars) to be reentrant. For 
-  example, a rule (or grammar) might be called recursively indirectly or directly 
-  by itself. The calculator is a good example. The expression rule recursively 
-  calls itself indirectly when it invokes the factor rule. </p>
-<p>We need a machanism to attach local variables to our rules (and grammars). 
-  Closures provide an environment, a stack frame, for local variables to reside. 
+  recursive rules, global variables simply won't be adequate. We need a machanism 
+  to attach local variables to our rules.</p>
+<p>Closures provide an environment, a stack frame, for local variables to reside. 
   Most importantly, the closure variables are accessible from the EBNF grammar 
   specification and can be used to pass parser information upstream or downstream 
   from the topmost rule down to the terminals in a top-down recursive descent. 
-  For one, closures provide a parser with the ability to have <em>inherited</em> 
-  and <em>synthetic attributes</em>, more or less analogous to <em>return values</em> 
-  and <em>function arguments</em>. </p>
+  For one, closures provide a parser with the ability to have inherited and synthetic 
+  attributes, more or less analogous to return values and function arguments. 
+</p>
 <p>When a rule is given a closure, the closure's local variables are created prior 
   to entering the parse function and destructed after exiting the parse function. 
   These local variables are true local variables that exist on the hardware stack.</p>
@@ -56,7 +52,7 @@
   <tr> 
     <td class="note_box"><img src="theme/alert.gif" width="16" height="16"> <strong>Closures</strong> 
       <strong>and Phoenix</strong><br> <br>
-      Spirit v1.6.0 closure support requires <a href="../phoenix/index.html">Phoenix</a>. 
+      Spirit v1.5.2 closure support requires <a href="../phoenix/index.html">Phoenix</a>. 
       In the future, Spirit will fully support <a href="../../../libs/lambda/index.html">BLL</a>. 
       Currently, work is underway to merge the features of both libraries.</td>
   </tr>
@@ -287,7 +283,7 @@
     <td width="10"></td>
     <td width="30"><a href="../index.html"><img src="theme/u_arr.gif" border="0"></a></td>
     <td width="30"><a href="functional.html"><img src="theme/l_arr.gif" border="0"></a></td>
-    <td width="20"><a href="dynamic_parsers.html"><img src="theme/r_arr.gif" border="0"></a></td>
+    <td width="20"><a href="grouping_parser.html"><img src="theme/r_arr.gif" border="0"></a></td>
   </tr>
 </table>
 <br>

@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.0
+    Spirit V1.5.2
     Copyright (c) 2001-2003 Joel de Guzman
     http://spirit.sourceforge.net/
 
@@ -11,10 +11,14 @@
 #ifndef BOOST_SPIRIT_EXCEPTIONS_HPP
 #define BOOST_SPIRIT_EXCEPTIONS_HPP
 
-#include "boost/config.hpp"
-#include "boost/throw_exception.hpp"
+#if !defined(BOOST_SPIRIT_PARSER_HPP)
 #include "boost/spirit/core/parser.hpp"
+#endif
+
+#if !defined(BOOST_SPIRIT_COMPOSITE_HPP)
 #include "boost/spirit/core/composite/composite.hpp"
+#endif
+
 #include <exception>
 
 namespace boost { namespace spirit {
@@ -82,8 +86,7 @@ namespace boost { namespace spirit {
     inline void
     throw_(IteratorT where, ErrorDescrT descriptor)
     {
-         boost::throw_exception(
-            parser_error<ErrorDescrT, IteratorT>(where, descriptor));
+        throw parser_error<ErrorDescrT, IteratorT>(where, descriptor);
     }
 
     ///////////////////////////////////////////////////////////////////////////

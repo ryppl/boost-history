@@ -22,6 +22,7 @@ Projects:
 
 '/cool-library':
 
+* Project root: %(root-dir-prefix)sdir2
 * Parent project: (none)
 * Requirements: <include>/home/ghost/build/boost-cvs
 * Default build:
@@ -38,17 +39,19 @@ Projects:
 
 '/boost-build-test-project-1':
 
+* Project root: %(root-dir)s
 * Parent project: (none)
-* Requirements: <include>/home/ghost/local/include <threading>multi
+* Requirements: <threading>multi <include>/home/ghost/local/include
 * Default build:
 * Source location: %(root-dir)s
 * Projects to build: dir dir2
 
 '/boost-build-test-project-1/dir':
 
+* Project root: %(root-dir)s
 * Parent project: %(root-dir)s
-* Requirements: <include>/home/ghost/local/include <threading>multi
-* Default build: <variant>release
+* Requirements: <threading>multi <include>/home/ghost/local/include
+* Default build: release
 * Source location: %(root-dir-prefix)sdir/src
 * Projects to build:
 
