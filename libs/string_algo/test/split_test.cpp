@@ -40,38 +40,23 @@ void deep_compare( const T1& X, const T2& Y )
 void iterator_test()
 {
     string str1("xx-abc--xx-abb");
-    string str2("xx");
+    string str2("Xx-abc--xX-abb");
+    string str3("xx");
     char* pch1="xx-abc--xx-abb";
     vector<string> tokens;
     vector< vector<int> > vtokens;
 
     // find_all tests
-    tokens=transform_range< vector<string> >( 
-        find_all(str1,str2), 
-        sa::copy_rangeF<string>() );
-    
-    BOOST_REQUIRE( tokens.size()==2 );
-    BOOST_CHECK( tokens[0]==string("xx") );
-    BOOST_CHECK( tokens[1]==string("xx") );
-
-    tokens=transform_range< vector<string> >( 
-        find_all(pch1,"xx"), 
-        sa::copy_rangeF<string>() );
-    
-    BOOST_REQUIRE( tokens.size()==2 );
-    BOOST_CHECK( tokens[0]==string("xx") );
-    BOOST_CHECK( tokens[1]==string("xx") );
-
-    find_all_copy(
+    find_all(
         tokens,
         str1,
-        string("xx") );
+        "xx" );
 
     BOOST_REQUIRE( tokens.size()==2 );
     BOOST_CHECK( tokens[0]==string("xx") );
     BOOST_CHECK( tokens[1]==string("xx") );
 
-    find_all_copy(
+    ifind_all(
         tokens,
         pch1,
         "xx" );
@@ -80,36 +65,14 @@ void iterator_test()
     BOOST_CHECK( tokens[0]==string("xx") );
     BOOST_CHECK( tokens[1]==string("xx") );
 
-    find_all_copy(
+    find_all(
         vtokens,
         str1,
         string("xx") );
     deep_compare( tokens, vtokens );
 
     // split tests
-    tokens=transform_range< vector<string> >( 
-        split(
-            str1,
-            is_of<char>("x") ), 
-        sa::copy_rangeF<string>() );
-    
-    BOOST_REQUIRE( tokens.size()==3 );
-    BOOST_CHECK( tokens[0]==string("") );
-    BOOST_CHECK( tokens[1]==string("-abc--") );
-    BOOST_CHECK( tokens[2]==string("-abb") );
-
-    tokens=transform_range< vector<string> >( 
-        split(
-            pch1,
-            is_of<char>("x") ), 
-        sa::copy_rangeF<string>() );
-    
-    BOOST_REQUIRE( tokens.size()==3 );
-    BOOST_CHECK( tokens[0]==string("") );
-    BOOST_CHECK( tokens[1]==string("-abc--") );
-    BOOST_CHECK( tokens[2]==string("-abb") );
-
-    split_copy(
+    split(
         tokens,
         str1,
         is_of<char>("x") );
@@ -119,7 +82,7 @@ void iterator_test()
     BOOST_CHECK( tokens[1]==string("-abc--") );
     BOOST_CHECK( tokens[2]==string("-abb") );
 
-    split_copy(
+    split(
         tokens,
         pch1,
         is_of<char>("x") );
@@ -129,13 +92,13 @@ void iterator_test()
     BOOST_CHECK( tokens[1]==string("-abc--") );
     BOOST_CHECK( tokens[2]==string("-abb") );
 
-    split_copy(
+    split(
         vtokens,
         str1,
         is_of<char>("x") );
     deep_compare( tokens, vtokens );
 
-    split_copy(
+    split(
         tokens,
         str1,
         is_punct<char>(),

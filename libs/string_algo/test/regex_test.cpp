@@ -26,6 +26,7 @@ static void find_test()
     char* pch1="123a1cxxxa23cXXXa456c321";
     regex rx("a[0-9]+c");
     vector<int> vec1( str1.begin(), str1.end() );
+    vector<string> tokens;
 
     // find results
     iterator_range<string::iterator> nc_result;
@@ -62,6 +63,24 @@ static void find_test()
         (distance<vector<int>::const_iterator>( vec1.begin(),cv_vresult.end()) == 6) );
 
     BOOST_CHECK( find_regex_copy( str1, rx )==string("a1c") );
+
+    // find_all_regex test
+    find_all_regex( tokens, str1, rx );
+
+    BOOST_REQUIRE( tokens.size()==3 );
+    BOOST_CHECK( tokens[0]==string("a1c") );
+    BOOST_CHECK( tokens[1]==string("a23c") );
+    BOOST_CHECK( tokens[2]==string("a456c") );
+
+    // split_regex test
+    split_regex(    tokens, str1, rx );
+
+    BOOST_REQUIRE( tokens.size()==4 );
+    BOOST_CHECK( tokens[0]==string("123") );
+    BOOST_CHECK( tokens[1]==string("xxx") );
+    BOOST_CHECK( tokens[2]==string("XXX") );
+    BOOST_CHECK( tokens[3]==string("321") );
+
 }
 
 static void replace_test()

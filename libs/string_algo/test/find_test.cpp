@@ -18,13 +18,12 @@
 #include <boost/string_algo/classification.hpp>
 #include <boost/test/test_tools.hpp>
 
-
 using namespace std;
 using namespace boost;
 
 void find_test()
 {
-    string str1("123abcxxxabcXXXabc321");
+    string str1("123abcxXxabcXxXabc321");
     string str2("abc");
     string str3("");
     char* pch1="123abcxxxabcXXXabc321";
@@ -41,7 +40,10 @@ void find_test()
 
     // basic tests ------------------------------------------------------------//
 
+
     // find_first
+    BOOST_CHECKPOINT( "find_first" );
+
     nc_result=find_first( str1, string("abc") );
     BOOST_CHECK( 
         (distance<string::const_iterator>( str1.begin(),nc_result.begin()) == 3) &&
@@ -52,10 +54,17 @@ void find_test()
         (distance<string::const_iterator>( str1.begin(),cv_result.begin()) == 3) &&
         (distance<string::const_iterator>( str1.begin(),cv_result.end()) == 6) );
 
+    cv_result=ifind_first( const_cast<const string&>(str1), "xXX" );
+    BOOST_CHECK( 
+        (distance<string::const_iterator>( str1.begin(),cv_result.begin()) == 6) &&
+        (distance<string::const_iterator>( str1.begin(),cv_result.end()) == 9) );
+
     ch_result=find_first( pch1, "abc" );
     BOOST_CHECK(( (ch_result.begin() - pch1 ) == 3) && ( (ch_result.end() - pch1 ) == 6 ) );
 
     // find_last
+    BOOST_CHECKPOINT( "find_last" );
+    
     nc_result=find_last( str1, string("abc") );
     BOOST_CHECK( 
         (distance<string::const_iterator>( str1.begin(),nc_result.begin()) == 15) &&
@@ -66,10 +75,17 @@ void find_test()
         (distance<string::const_iterator>( str1.begin(),cv_result.begin()) == 15) &&
         (distance<string::const_iterator>( str1.begin(),cv_result.end()) == 18) );
 
+    cv_result=ifind_last( const_cast<const string&>(str1), "XXx" );
+    BOOST_CHECK( 
+        (distance<string::const_iterator>( str1.begin(),cv_result.begin()) == 12) &&
+        (distance<string::const_iterator>( str1.begin(),cv_result.end()) == 15) );
+
     ch_result=find_last( pch1, "abc" );
     BOOST_CHECK(( (ch_result.begin() - pch1 ) == 15) && ( (ch_result.end() - pch1 ) == 18 ) );
 
     // find_nth
+    BOOST_CHECKPOINT( "find_nth" );
+
     nc_result=find_nth( str1, string("abc"), 1 );
     BOOST_CHECK( 
         (distance<string::const_iterator>( str1.begin(),nc_result.begin()) == 9) &&
@@ -80,10 +96,17 @@ void find_test()
         (distance<string::const_iterator>( str1.begin(),cv_result.begin()) == 9) &&
         (distance<string::const_iterator>( str1.begin(),cv_result.end()) == 12) );
         
+    cv_result=ifind_nth( const_cast<const string&>(str1), "xxx", 1 );
+    BOOST_CHECK( 
+        (distance<string::const_iterator>( str1.begin(),cv_result.begin()) == 12) &&
+        (distance<string::const_iterator>( str1.begin(),cv_result.end()) == 15) );
+
     ch_result=find_nth( pch1, "abc", 1 );
     BOOST_CHECK(( (ch_result.begin() - pch1 ) == 9) && ( (ch_result.end() - pch1 ) == 12 ) );
 
     // find_head
+    BOOST_CHECKPOINT( "find_head" );
+
     nc_result=find_head( str1, 6 );
     BOOST_CHECK( 
         (distance<string::const_iterator>( str1.begin(),nc_result.begin()) == 0) &&
@@ -101,6 +124,8 @@ void find_test()
     BOOST_CHECK( find_head_copy( string("123"), 5 )==string("123") );
 
     // find_tail
+    BOOST_CHECKPOINT( "find_tail" );
+
     nc_result=find_tail( str1, 6 );
     BOOST_CHECK( 
         (distance<string::const_iterator>( str1.begin(),nc_result.begin()) == 15) &&
@@ -118,6 +143,8 @@ void find_test()
     BOOST_CHECK( find_tail_copy( string("123"), 5 )==string("123") );
 
     // find_token
+    BOOST_CHECKPOINT( "find_token" );
+
     nc_result=find_token( str1, is_of<char>("abc") );
     BOOST_CHECK( 
         (distance<string::const_iterator>( str1.begin(),nc_result.begin()) == 3) &&
@@ -141,7 +168,9 @@ void find_test()
     ch_result=find_token( pch1, is_of<char>("abc"),false );
     BOOST_CHECK( ( (ch_result.begin() - pch1 ) == 3 ) && ( (ch_result.end() - pch1 ) == 4 ) );
 
-    // multi-type comparison test --------------------------------------------------//
+    // multi-type comparison test 
+    BOOST_CHECKPOINT( "multi-type" );
+
     nc_vresult=find_first( vec1, string("abc") );
     BOOST_CHECK( 
         (distance<vector<int>::const_iterator>( vec1.begin(),nc_vresult.begin()) == 3) &&
@@ -153,6 +182,8 @@ void find_test()
         (distance<vector<int>::const_iterator>( vec1.begin(),cv_vresult.end()) == 6) );
 
     // overflow test
+    BOOST_CHECKPOINT( "overflow" );
+    
     nc_result=find_first( str2, string("abcd") );
     BOOST_CHECK( nc_result.begin()==nc_result.end() );
     cv_result=find_first( const_cast<const string&>(str2), string("abcd") );
@@ -164,6 +195,8 @@ void find_test()
     BOOST_CHECK( string( cv_result.begin(), cv_result.end() )== string("abc") );
 
     // Empty string test
+    BOOST_CHECKPOINT( "empty" );
+    
     nc_result=find_first( str3, string("abcd") );
     BOOST_CHECK( nc_result.begin()==nc_result.end() );
     nc_result=find_first( str1, string("") );
@@ -173,9 +206,6 @@ void find_test()
     BOOST_CHECK( cv_result.begin()==cv_result.end() );
     cv_result=find_first( const_cast<const string&>(str1), string("") );
     BOOST_CHECK( cv_result.begin()==cv_result.end() ); 
-
-    // copy_range test
-    BOOST_CHECK( copy_range<std::string>( find_first( vec1, string("xxx") ) )==string("xxx") );
 }
 
 // test main 

@@ -15,7 +15,6 @@
 - cleanup tests 
 - cleanup examples
 
-- add case-insensitive versions, allow parametric comparison
 - ?move find functors to string_algo namespace?
 - ?use preprocessor the generate replace and erase function?
 
@@ -27,6 +26,7 @@
 
 ----- DONE: ------
 
+- add case-insensitive versions, allow parametric comparison
 - find iterator
 - trim_end_if and find_last fix for ForwardIterator
 - in-place replace_all -> optimization

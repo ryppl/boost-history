@@ -34,14 +34,26 @@ void predicate_test()
     BOOST_CHECK( starts_with( str1, string("123") ) );
     BOOST_CHECK( !starts_with( str1, string("1234") ) );
 
+    BOOST_CHECK( istarts_with( "aBCxxx", "abc" ) );
+    BOOST_CHECK( !istarts_with( "aBCxxx", "abcd" ) );
+
     BOOST_CHECK( ends_with( str1, string("321") ) );
     BOOST_CHECK( !ends_with( str1, string("123") ) );
+
+    BOOST_CHECK( iends_with( "aBCxXx", "XXX" ) );
+    BOOST_CHECK( !iends_with( "aBCxxX", "xXXX" ) );
 
     BOOST_CHECK( contains( str1, string("xxx") ) );
     BOOST_CHECK( !contains( str1, string("yyy") ) );
 
+    BOOST_CHECK( icontains( "123XxX321", "xxx" ) );
+    BOOST_CHECK( !icontains( "123xXx321", "yyy" ) );
+
     BOOST_CHECK( equals( str2, string("abc") ) );
     BOOST_CHECK( !equals( str1, string("yyy") ) );
+
+    BOOST_CHECK( iequals( "AbC", "abc" ) );
+    BOOST_CHECK( !iequals( "aBc", "yyy" ) );
 
     // multi-type comparison test
     BOOST_CHECK( starts_with( vec1, string("123") ) );

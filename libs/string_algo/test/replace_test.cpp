@@ -86,45 +86,55 @@ void replace_test()
 {
     // replace first
     TEST_ALGO( replace_first, "1abc3abc2", (string("abc"))(string("YYY")), string("1YYY3abc2") );
+    TEST_ALGO( ireplace_first, "1AbC3abc2", ("aBc")("YYY"), string("1YYY3abc2") );
     TEST_ALGO( replace_first, "1abc3abc2", (string("abc"))(string("Z")), string("1Z3abc2") );
     TEST_ALGO( replace_first, "1abc3abc2", (string("abc"))(string("XXXX")), string("1XXXX3abc2") );
     TEST_ALGO( replace_first, "1abc3abc2", (string(""))(string("XXXX")), string("1abc3abc2") );
     TEST_ALGO( replace_first, "1abc3abc2", ("")("XXXX"), string("1abc3abc2") );
     TEST_ALGO( replace_first, "", (string(""))(string("XXXX")), string("") );
     TEST_ALGO( erase_first, "1abc3abc2", (string("abc")), string("13abc2") );
+    TEST_ALGO( ierase_first, "1aBc3abc2", ("abC"), "13abc2" );
     TEST_ALGO( erase_first, "1abc3abc2", ("abc"), "13abc2" );
     TEST_ALGO( erase_first, "1abc3abc2", (string("")), string("1abc3abc2") );
     TEST_ALGO( erase_first, "", (string("abc")), string("") );
 
     // replace last
     TEST_ALGO( replace_last, "1abc3abc2", (string("abc"))(string("YYY")), string("1abc3YYY2") );
+    TEST_ALGO( ireplace_last, "1abc3AbC2", ("aBc")("YYY"), string("1abc3YYY2") );
     TEST_ALGO( replace_last, "1abc3abc2", (string("abc"))(string("Z")), string("1abc3Z2") );
     TEST_ALGO( replace_last, "1abc3abc2", (string("abc"))(string("XXXX")), string("1abc3XXXX2") );
     TEST_ALGO( replace_last, "1abc3abc2", ("abc")("XXXX"), string("1abc3XXXX2") );
     TEST_ALGO( replace_last, "", (string(""))(string("XXXX")), string("") );
     TEST_ALGO( erase_last, "1abc3abc2", (string("abc")), string("1abc32") );
+    TEST_ALGO( ierase_last, "1aBc3aBc2", ("ABC"), string("1aBc32") );
+    TEST_ALGO( erase_last, "1abc3abc2", ("abc"), string("1abc32") );
     TEST_ALGO( erase_last, "1abc3abc2", (string("")), string("1abc3abc2") );
     TEST_ALGO( erase_last, "", (string("abc")), string("") );
 
     // replace all
     TEST_ALGO( replace_all, "1abc3abc2", (string("abc"))(string("YYY")), string("1YYY3YYY2") );
+    TEST_ALGO( ireplace_all, "1aBc3AbC2", ("abC")("YYY"), string("1YYY3YYY2") );
     TEST_ALGO( replace_all, "1abc3abc2", (string("abc"))(string("Z")), string("1Z3Z2") );
     TEST_ALGO( replace_all, "1abc3abc2", (string("abc"))(string("XXXX")), string("1XXXX3XXXX2") );
     TEST_ALGO( replace_all, "1abc3abc2", ("abc")("XXXX"), string("1XXXX3XXXX2") );
     TEST_ALGO( replace_all, "", (string(""))(string("XXXX")), string("") );
     TEST_ALGO( erase_all, "1abc3abc2", (string("abc")), string("132") );
+    TEST_ALGO( ierase_all, "1aBc3aBc2", ("aBC"), string("132") );
     TEST_ALGO( erase_all, "1abc3abc2", ("abc"), string("132") );
     TEST_ALGO( erase_all, "1abc3abc2", (string("")), string("1abc3abc2") );
     TEST_ALGO( erase_all, "", (string("abc")), string("") );
 
     // replace nth
     TEST_ALGO( replace_nth, "1abc3abc2", (string("abc"))(0)(string("YYY")), string("1YYY3abc2") );
+    TEST_ALGO( ireplace_nth, "1AbC3abc2", ("aBc")(0)("YYY"), string("1YYY3abc2") );
     TEST_ALGO( replace_nth, "1abc3abc2", (string("abc"))(0)(string("Z")), string("1Z3abc2") );
     TEST_ALGO( replace_nth, "1abc3abc2", (string("abc"))(0)(string("XXXX")), string("1XXXX3abc2") );
     TEST_ALGO( replace_nth, "1abc3abc2", ("abc")(0)("XXXX"), string("1XXXX3abc2") );
     TEST_ALGO( replace_nth, "1abc3abc2", (string(""))(0)(string("XXXX")), string("1abc3abc2") );
     TEST_ALGO( replace_nth, "", (string(""))(0)(string("XXXX")), string("") );
     TEST_ALGO( erase_nth, "1abc3abc2", (string("abc"))(0), string("13abc2") );
+    TEST_ALGO( ierase_nth, "1aBc3aBc2", ("ABC")(0), string("13aBc2") );
+    TEST_ALGO( erase_nth, "1abc3abc2", ("abc")(0), string("13abc2") );
     TEST_ALGO( erase_nth, "1abc3abc2", (string(""))(0), string("1abc3abc2") );
     TEST_ALGO( erase_nth, "", (string("abc"))(0), string("") );
     TEST_ALGO( replace_nth, "1abc3abc2", (string("abc"))(1)(string("YYY")), string("1abc3YYY2") );
