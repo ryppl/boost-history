@@ -24,6 +24,12 @@ unit-test fmod
     : <include>$(BOOST_ROOT)
     ;
 
+unit-test mul
+    : mul.cpp
+      <lib>../../test/build/test_exec_monitor
+    : <include>$(BOOST_ROOT)
+    ;
+
 unit-test overflow
     : overflow.cpp
       <lib>../../test/build/test_exec_monitor
