@@ -1,7 +1,15 @@
 \documentclass{netobjectdays}
 
-\newcommand{\Cpp}{C\kern-0.05em\texttt{+\kern-0.03em+}}
+\newcommand{\Cpp}{C\kern-0.05em\texttt{+\kern-0.03em+}%
+}
 \newcommand{\mpl}{\code{boost::mpl}}
+\newcommand{\mping}{meta\-program\-ming}
+\newcommand{\mpgm}{meta\-program}
+\newcommand{\mpgms}{meta\-programs}
+\newcommand{\mpgmer}{meta\-program\-mer}
+\newcommand{\mpgmers}{meta\-program\-mer}
+\newcommand{\mfn}{meta\-function}
+\newcommand{\mfns}{meta\-functions}
 
 \input{defs}
 
@@ -21,11 +29,11 @@ $^\ddag$ Boost Consulting \\
 \maketitle
 
 \begin{abstract} $\!$This paper describes the Boost \Cpp template
-metaprogramming library (\mpl), an extensible compile-time framework
+\mping{} library (\mpl), an extensible compile-time framework
 of algorithms, sequences and function classes. The library brings
 together important abstractions from the generic and functional
 programming worlds to build a powerful and easy-to-use
-metaprogramming toolset which makes template metaprogramming practical
+toolset which makes template \mping{}  practical
 enough for the real-world environments. The MPL is heavily influenced
 by its run-time equivalent - the Standard Template Library (STL), a
 part of the C++ standard library. Like the STL, it defines an open
@@ -33,13 +41,13 @@ conceptual and implementation framework which can serve as a
 foundation for future contributions in the domain. The library's
 fundamental concepts and idioms enable the user to focus on solutions 
 without navigating the universe of possible ad-hoc approaches to a 
-given metaprogramming problem, even if no actual MPL code is used. 
+given \mping{}  problem, even if no actual MPL code is used. 
 {\mpl} also provides a compile-time lambda expression facility enabling
 arbitrary currying and composition of class templates, a feature whose
 runtime counterpart is often cited as missing from the STL. This paper
-explains motivation, usage, design, and implementation of \mpl 
+explains motivation, usage, design, and implementation of \mpl{} 
 library, gives some advanced examples of its real-life applications, 
-and offers some lessons learned about C++ template metaprogramming.
+and offers some lessons learned about C++ template \mping{}.
 \end{abstract}
 
 
@@ -49,9 +57,9 @@ and offers some lessons learned about C++ template metaprogramming.
 
 Metaprogramming is usually defined as the creation of programs which
 generate other programs. Parser generators such as YACC are examples
-of one kind of program-generating program. The input language to YACC
+of one kind of program-generating program. The ipnput language to YACC
 is a context-free grammar in EBNF, and its output is a program which
-parses that grammar. Note that in this case the metaprogram (YACC) is
+parses that grammar. Note that in this case the \mpgm{} (YACC) is
 written in a language (`C') which does not directly support the
 description of generated programs. These specifications, which we'll
 call \emph{meta-data}, are not written in `C', but in a
@@ -64,23 +72,30 @@ user is always very conscious of the boundary between his meta-data
 and the rest of his program.
 % need bibliography reference for YACC
 
-A more interesting form of metaprogramming is available in languages
+A more interesting form of \mping{} is available in languages
 such as Scheme, where the generated program specification is given in
-the same language as the metaprogram itself. The metaprogrammer
+the same language as the \mpgm{} itself. The metaprogrammer
 defines his meta-language as a subset of the expressible forms of the
 underlying language, and program generation can take place in the same
 translation step used to process the rest of the user's program. This
 allows users to switch transparently between ordinary programming,
-generated program specification, and metaprogramming, often without
+generated program specification, and \mping{}, often without
 being aware of the transition.
 % bib reference for Scheme metaprogramming
 
-\subsection{Metaprogramming in \Cpp }
+\subsection{Metaprogramming in \Cpp{}}
 
 In \Cpp, it was discovered almost by accident that the template
-mechanism provides a rich facility for computation at
-compile-time. For example, the following tiny meta-function computes the
-factorial of its argument:
+mechanism provides a rich facility for computation at compile-time. In
+this section, we'll explore the basic mechanisms used for
+metaprogramming in C++.
+
+\subsubsection{Numeric Computations}
+
+The availability of \emph{non-type template parameters} makes it
+possible to perform integer computations at compile-time. For example,
+the following tiny meta-function computes the factorial of its
+argument:
 
 {\footnotesize
 \begin{verbatim}
@@ -100,10 +115,11 @@ struct factorial<0>
 
 Because of the hard line between the expression of compile-time and
 runtime computation in \Cpp, metaprograms look different from their
-runtime counterparts. Thus, only a subset of the language is available
-to the \Cpp metaprogrammer: those expressions which can be evaluated
-at compile-time. Compare the above with a straightforward runtime
-definition of the factorial function:
+runtime counterparts. Thus, although as in Scheme the \Cpp\ \mpgmer\
+writes her code in the same language as the ordinary program, only a
+subset of the language is available to her: those expressions which
+can be evaluated at compile-time. Compare the above with a
+straightforward runtime definition of the factorial function:
 
 {\footnotesize
 \begin{verbatim}
@@ -115,13 +131,13 @@ unsigned factorial(unsigned N)
 }
 
 While it is easy to see the analogy between the two recursive
-defintions, recursion is in general more important to \Cpp
+defintions, recursion is in general more important to \Cpp{}
 metaprograms than it is to runtime \Cpp. In contrast to languages such
-as Lisp where recursion is idiomatic, \Cpp programmers will typically
+as Lisp where recursion is idiomatic, \Cpp\ programmers will typically
 avoid it when possible. This is done not only for efficiency
 reasons, but also because of ``cultural momentum'': recursive programs
-are just harder (for \Cpp programmers) to think about. Like pure Lisp,
-though, the \Cpp template mechanism is a \emph{functional} programming
+are just harder (for \Cpp\ programmers) to think about. Like pure Lisp,
+though, the \Cpp\ template mechanism is a \emph{functional} programming
 language: as such it rules out the use of data mutation required to
 maintain loop variables.
 
@@ -135,37 +151,74 @@ the impact of the second definition is minimal, but in large
 metaprograms the cost of maintaining and understanding the terminating
 definitions can become significant.
 
-\subsection{Why Metaprogramming?}
+\subsubsection{Type Computations}
 
-It's worth asking why anyone would want to do this. Even a simple toy
-example like the factorial metafunction has its uses. It could be
-applied, for example, to compute the type of an array which can hold
-all permutations of another array:
+How could we apply our \code{factorial<>} \mfn{}? We might, for example,
+produce an array type of an appropriate size to hold all permutations
+of instances of another type:
 
 {\footnotesize
 \begin{verbatim}
-// Holder for an array of N elements of type T
-template <class T, unsigned N>
-struct array
+// permutation_holder<T>::type is an array type which can contain all
+// permutations of a given T.
+
+// unspecialized template for scalars
+template <class T> struct permutation_holder
 {
-   T elements[N];
+   typedef T type[1][1];
+};
+
+// specialization for array types
+template <class T, unsigned N> struct permutation_holder<T[N]>
+{
+   typedef T type[factorial<N>::value][N];
+};
+\end{verbatim}
+}
+
+Here we have introduced the notion of a \emph{type computation}.  Like
+\code{factorial<>} above, \code{permutation\_\-holder<>} is a
+\mfn{}. However, where \code{{factorial<>}} manipulates unsigned integer
+values, \code{permutation\_\-holder<>} accepts and ``returns'' a
+type (as the nested typedef ``\code{type}''). Because the \Cpp\ type
+system provides a much richer set of expressions than anything we can
+use as a nontype template argument (e.g. the integers), \Cpp\ \mpgms\
+tend to be composed mostly of type computations.
+
+\subsection{Why Metaprogramming?}
+
+It's worth asking why anyone would want to do this. After all, even a
+simple toy example like the factorial metafunction is somewhat
+esoteric. To show how the type computation can be put to work, let's
+examine a simple example. The following code produces an array
+containing all possible permutations of another array:
+{\footnotesize
+\begin{verbatim}
+// Can't return an array in C++, so we need this wrapper
+template <class T>
+struct wrapper
+{
+   T x;
 };
 
 // Return an array of the N! permutations of x
-template <class T, unsigned N>
-array<T[N], factorial<N>::value>
-all_permutations(const T (&x)[N])
+template <class T>
+wrapper<typename permutation_holder<T>::type>
+all_permutations(T const& in)
 {
-   array<T[N],factorial<N>::value> result;
-   std::copy(x, x+N, result.elements[0]);
+   wrapper<typename permutation_holder<T>::type> result;
 
-   for (unsigned i = 1; i < factorial<N>::value; ++i)
+   // Copy the unpermuted array to the first result element
+   unsigned const N = sizeof(*result.x)/sizeof(**result.x);
+   std::copy(&*in, &*in + N, result.x[0]);
+
+   // Enumerate the permutations
+   unsigned const result_size = sizeof(result.x)/sizeof(*result.x);
+   for (T* dst = result.x + 1; dst != result.x + result_size; ++dst)
    {
-       T (*src)[N] = result.elements + i - 1;
-       T (*dst)[N] = result.elements + i;
-       
-       std::copy(&(*src)[0], &(*dst)[0], &(*dst)[0]);
-       std::next_permutation(&(*dst)[0], &(*dst)[0] + N);
+       T* src = dst - 1;
+       std::copy(*src, *src + N, *dst);
+       std::next_permutation(*dst, *dst + N);
    }
    return result;
 }
@@ -173,9 +226,10 @@ all_permutations(const T (&x)[N])
 }
 
 The runtime definition of \code{factorial} would be useless in
-\code{all\_\-permutations} above, since in \Cpp the sizes of array
+\code{all\_\-permutations} above, since in \Cpp\ the sizes of array
 members must be computed at compile-time. However, there are
-alternative approaches:
+alternative approaches; how could we avoid \mping, and what would the
+consequences be?
 
 \begin{enumerate}
 
@@ -185,7 +239,7 @@ alternative approaches:
   factorial function. However, that would imply the use of dynamic
   allocation, which is often expensive.
 
-  To carry this further, YACC might could be rewritten to accept a
+  To carry this further, YACC might be rewritten to accept a
   pointer-to-function returning tokens from the stream to be parsed,
   and a string containing the grammar description. This approach,
   however, would impose unacceptable runtime costs for most
@@ -199,11 +253,11 @@ alternative approaches:
   analysis. After all, the size of arrays passed to
   \code{all\_\-permutations} are always known at compile-time, and
   thus can be known to its user. We could ask the user to supply the
-  result size: {\footnotesize
+  result type explicitly: {\footnotesize
   \begin{verbatim}
-template <unsigned ResultSize, unsigned N, class F>
-array<T,ResultSize>
-all_permutations(double (&input)[N], F f)
+template <typename Result, typename T>
+Result
+all_permutations(T const& input);
   \end{verbatim}
   }
   The costs to this approach are obvious: we give up expressivity (by
@@ -214,7 +268,7 @@ all_permutations(double (&input)[N], F f)
   YACC's existence.
 \end{enumerate}
 
-So, the motivation for Metaprogramming comes down to the combination
+So, the motivation for \mping{} comes down to the combination
 of three factors: efficiency, expressivity, and correctness.
 
 \subsection{Why a Metaprogramming Library?}
