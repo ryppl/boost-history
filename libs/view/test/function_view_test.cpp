@@ -12,21 +12,29 @@
 #include "intpair.h"
 
 
-struct generate_linear: public std::unary_function<int,int>
+struct linear: public std::unary_function<double,double>
 {
-  int operator()( int x ) const
-    { return 2*x; }
+  linear( double theK = 1., double theD = 0. )
+    : k( theK ), d( theD )
+  { }
+
+  double operator()( double x ) const
+    { return k*x + d; }
+
+  double k;
+  double d;
 };
+
 
 void linear_test()
 {
-  typedef boost::view::function_view< generate_linear > linear_view;
-  linear_view v( 0, 10 );
+  typedef boost::view::function_view< linear, int, double > linear_view;
+  linear_view v( 0, 10, linear( 2., -3. ) );
 
   BOOST_CHECK( v.size() == 10 );
 
   linear_view::const_iterator it = v.begin();
-  generate_linear g;
+  linear g( 2., -3. );
 
   for( int i = 0; it != v.end(); ++i, ++it )
   {

@@ -60,20 +60,20 @@ void front_back_test()
   BOOST_CHECK( t.size() == 3 );
 
   BOOST_CHECK( get0(t) == 12 );
-  t.front() = 4;
+  t.first() = 4;
   BOOST_CHECK( get0(t) == 4 );
-  ++t.front();
+  ++t.first();
   BOOST_CHECK( get0(t) == 5 );
   ++get0(t);
-  BOOST_CHECK( t.front() == 6 );
+  BOOST_CHECK( t.first() == 6 );
 
   BOOST_CHECK( get2(t) == 77 );
-  t.back() = 4;
+  t.last() = 4;
   BOOST_CHECK( get2(t) == 4 );
-  ++t.back();
+  ++t.last();
   BOOST_CHECK( get2(t) == 5 );
   ++get2(t);
-  BOOST_CHECK( t.back() == 6 );
+  BOOST_CHECK( t.last() == 6 );
 }
 
 

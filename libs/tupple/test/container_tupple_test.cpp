@@ -11,7 +11,6 @@
 #endif
 
 #include <boost/tupple/container_tupple.hpp>
-using namespace boost::tupple;
 
 #include <vector>
 #include <string>
@@ -30,6 +29,8 @@ bool operator==( const ::boost::tupple::detail::reference_wrapper<T>& lhs,
 
 void container_test()
 {
+  using namespace boost::tupple;
+
   std::vector<int>    a;
   std::vector<char>   b(3,'-');
   std::vector<double> c(7,3.14);
@@ -77,14 +78,18 @@ void container_test()
   BOOST_CHECK( get1( *it ) == 3.14 );
 
   //###### THIS DOES NOT COMPILE UNDER MSVC:
+#ifndef BOOST_MSVC
   BOOST_CHECK( (*it).get2() == std::string( "foo" ) );
   BOOST_CHECK( get2( *it ) == std::string( "foo" ) );
+#endif
 
   ++it;
 
   BOOST_CHECK( get0( *it ) == '+' );
   BOOST_CHECK( get1( *it ) == 2.78 );
+#ifndef BOOST_MSVC
   BOOST_CHECK( get2( *it ) == std::string( "yo" ) );
+#endif
 
   *it = tuple< char, double, std::string >( '*', 1.33, std::string("gasp") );
 
