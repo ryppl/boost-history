@@ -19,13 +19,13 @@
 
 #include <boost/numeric/bindings/traits/type_traits.hpp>
 #include <boost/numeric/bindings/traits/traits.hpp>
-#include <boost/numeric/bindings/lapack/lapack_impl.hpp>
+#include <boost/numeric/bindings/lapack/lapack.h>
+#include <boost/numeric/bindings/lapack/ilaenv.hpp>
 #include <boost/numeric/bindings/traits/detail/array.hpp>
-#include <boost/numeric/bindings/traits/detail/utils.hpp>
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK 
 #  include <boost/static_assert.hpp>
-#  include <boost/type_traits.hpp>
+#  include <boost/type_traits/is_same.hpp>
 #endif 
 
 
@@ -39,6 +39,77 @@ namespace boost { namespace numeric { namespace bindings {
     // with A Hermitian indefinite matrix
     //
     /////////////////////////////////////////////////////////////////////
+
+    namespace detail {
+
+      inline 
+      int hetrf_query (traits::complex_f, 
+                       int const ispec, char const ul, int const n) 
+      {
+        char ul2[2] = "x"; ul2[0] = ul; 
+        return ilaenv (ispec, "CHETRF", ul2, n); 
+      }
+      inline 
+      int hetrf_query (traits::complex_d, 
+                       int const ispec, char const ul, int const n) 
+      {
+        char ul2[2] = "x"; ul2[0] = ul; 
+        return ilaenv (ispec, "ZHETRF", ul2, n); 
+      }
+
+    }
+
+
+    template <typename HermA>
+    inline
+    int hetrf_query (char const q, char const ul, HermA const& a) {
+
+#ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
+      BOOST_STATIC_ASSERT((boost::is_same<
+        typename traits::matrix_traits<HermA>::matrix_structure, 
+        traits::general_t
+      >::value));
+#endif
+      assert (q == 'O' || q == 'M'); 
+      assert (ul == 'U' || ul == 'L'); 
+
+      int n = traits::matrix_size1 (a); 
+      assert (n == traits::matrix_size2 (a)); 
+
+#ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
+      typedef typename traits::matrix_traits<HermA>::value_type val_t; 
+#else 
+      typedef typename HermA::value_type val_t; 
+#endif 
+      int ispec = (q == 'O' ? 1 : 2); 
+      return detail::hetrf_query (val_t(), ispec, ul, n); 
+    }
+
+    template <typename HermA>
+    inline
+    int hetrf_query (char const q, HermA const& a) {
+
+#ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
+      BOOST_STATIC_ASSERT((boost::is_same<
+        typename traits::matrix_traits<HermA>::matrix_structure, 
+        traits::hermitian_t
+      >::value));
+#endif
+      assert (q == 'O' || q == 'M'); 
+
+      char ul = traits::matrix_uplo_tag (a);
+      int n = traits::matrix_size1 (a); 
+      assert (n == traits::matrix_size2 (a)); 
+
+#ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
+      typedef typename traits::matrix_traits<HermA>::value_type val_t; 
+#else 
+      typedef typename HermA::value_type val_t; 
+#endif 
+      int ispec = (q == 'O' ? 1 : 2); 
+      return detail::hetrf_query (val_t(), ispec, ul, n); 
+    }
+
 
     /*
      * hesv() computes the solution to a system of linear equations 
@@ -57,47 +128,48 @@ namespace boost { namespace numeric { namespace bindings {
     namespace detail {
 
       inline 
-      void hesv (char const uplo, int_t const n, int_t const nrhs,
-                 traits::complex_f* a, int_t const lda, int_t* ipiv,  
-                 traits::complex_f* b, int_t const ldb, 
-                 traits::complex_f* w, int_t const lw, int_t* info) 
+      void hesv (char const uplo, int const n, int const nrhs,
+                 traits::complex_f* a, int const lda, int* ipiv,  
+                 traits::complex_f* b, int const ldb, 
+                 traits::complex_f* w, int const lw, int* info) 
       {
-        LAPACK_CHESV (mrc (&uplo), mrc (&n), mrc (&nrhs), 
-                      traits::complex_ptr (a), mrc (&lda), ipiv, 
-                      traits::complex_ptr (b), mrc (&ldb), 
-                      traits::complex_ptr (w), mrc (&lw), info);
+        LAPACK_CHESV (&uplo, &n, &nrhs, 
+                      traits::complex_ptr (a), &lda, ipiv, 
+                      traits::complex_ptr (b), &ldb, 
+                      traits::complex_ptr (w), &lw, info);
       }
 
       inline 
-      void hesv (char const uplo, int_t const n, int_t const nrhs,
-                 traits::complex_d* a, int_t const lda, int_t* ipiv, 
-                 traits::complex_d* b, int_t const ldb, 
-                 traits::complex_d* w, int_t const lw, int_t* info) 
+      void hesv (char const uplo, int const n, int const nrhs,
+                 traits::complex_d* a, int const lda, int* ipiv, 
+                 traits::complex_d* b, int const ldb, 
+                 traits::complex_d* w, int const lw, int* info) 
       {
-        LAPACK_ZHESV (mrc (&uplo), mrc (&n), mrc (&nrhs), 
-                      traits::complex_ptr (a), mrc (&lda), ipiv, 
-                      traits::complex_ptr (b), mrc (&ldb), 
-                      traits::complex_ptr (w), mrc (&lw), info);
+        LAPACK_ZHESV (&uplo, &n, &nrhs, 
+                      traits::complex_ptr (a), &lda, ipiv, 
+                      traits::complex_ptr (b), &ldb, 
+                      traits::complex_ptr (w), &lw, info);
       }
 
       template <typename HermA, typename MatrB, typename IVec, typename Work>
       inline
-      int_t hesv (char const ul, HermA& a, IVec& i, 
-                  MatrB& b, Work& w, int const lw) {
+      int hesv (char const ul, HermA& a, IVec& i, MatrB& b, Work& w) {
 
         int const n = traits::matrix_size1 (a);
         assert (n == traits::matrix_size2 (a)); 
         assert (n == traits::matrix_size1 (b)); 
         assert (n == traits::vector_size (i)); 
 
-        int_t info; 
+        int info; 
         hesv (ul, n, traits::matrix_size2 (b), 
               traits::matrix_storage (a), 
               traits::leading_dimension (a),
               traits::vector_storage (i),  
               traits::matrix_storage (b),
               traits::leading_dimension (b),
-              traits::vector_storage (w), lw, &info);
+              traits::vector_storage (w), 
+              traits::vector_size (w), 
+              &info);
         return info; 
       }
 
@@ -105,7 +177,7 @@ namespace boost { namespace numeric { namespace bindings {
 
     template <typename HermA, typename MatrB, typename IVec, typename Work>
     inline
-    int_t hesv (char const ul, HermA& a, IVec& i, MatrB& b, Work& w) {
+    int hesv (char const ul, HermA& a, IVec& i, MatrB& b, Work& w) {
 
       assert (ul == 'U' || ul == 'L'); 
 
@@ -122,12 +194,12 @@ namespace boost { namespace numeric { namespace bindings {
 
       int const lw = traits::vector_size (w); 
       assert (lw >= 1); 
-      return detail::hesv (ul, a, i, b, w, lw); 
+      return detail::hesv (ul, a, i, b, w); 
     }
 
     template <typename HermA, typename MatrB, typename IVec, typename Work>
     inline
-    int_t hesv (HermA& a, IVec& i, MatrB& b, Work& w) {
+    int hesv (HermA& a, IVec& i, MatrB& b, Work& w) {
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
       BOOST_STATIC_ASSERT((boost::is_same<
@@ -143,13 +215,13 @@ namespace boost { namespace numeric { namespace bindings {
       int const lw = traits::vector_size (w); 
       assert (lw >= 1); 
       char uplo = traits::matrix_uplo_tag (a);
-      return detail::hesv (uplo, a, i, b, w, lw); 
+      return detail::hesv (uplo, a, i, b, w); 
     }
 
     template <typename HermA, typename MatrB>
     inline
-    int_t hesv (char const ul, HermA& a, MatrB& b) {
-      // with `internal' pivot and work vectors 
+    int hesv (char const ul, HermA& a, MatrB& b) {
+      // with 'internal' pivot and work vectors 
 
       assert (ul == 'U' || ul == 'L'); 
 
@@ -164,32 +236,31 @@ namespace boost { namespace numeric { namespace bindings {
       >::value));
 #endif
 
-      int_t info = -101; 
-      traits::detail::array<int_t> i (traits::matrix_size1 (a)); 
+      int const n = traits::matrix_size1 (a); 
+      int info = -101; 
+      traits::detail::array<int> i (n); 
 
       if (i.valid()) {
         info = -102; 
+        int lw = hetrf_query ('O', ul, a); 
+        lw *= n; 
+        assert (lw >= 1); // paranoia ? 
 #ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
         typedef typename traits::matrix_traits<HermA>::value_type val_t; 
 #else 
         typedef typename HermA::value_type val_t; 
 #endif 
-        traits::detail::array<val_t> w (1); 
-        // paranoia ?
-        int lw = -1; 
-        detail::hesv (ul, a, i, b, w, lw); 
-        lw = traits::detail::to_int (w[0]); 
-        w.resize (lw);
+        traits::detail::array<val_t> w (lw); 
         if (w.valid()) 
-          info = detail::hesv (ul, a, i, b, w, lw); 
+          info = detail::hesv (ul, a, i, b, w); 
       }
       return info; 
     }
 
     template <typename HermA, typename MatrB>
     inline
-    int_t hesv (HermA& a, MatrB& b) {
-      // with `internal' pivot and work vectors 
+    int hesv (HermA& a, MatrB& b) {
+      // with 'internal' pivot and work vectors 
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
       BOOST_STATIC_ASSERT((boost::is_same<
@@ -202,24 +273,25 @@ namespace boost { namespace numeric { namespace bindings {
       >::value));
 #endif
 
+      int const n = traits::matrix_size1 (a); 
       char uplo = traits::matrix_uplo_tag (a);
-      int_t info = -101; 
-      traits::detail::array<int_t> i (traits::matrix_size1 (a)); 
+      int info = -101; 
+      traits::detail::array<int> i (n); 
 
       if (i.valid()) {
         info = -102; 
+        int lw = hetrf_query ('O', a); 
+        lw *= n; 
+        assert (lw >= 1); // paranoia ? 
 #ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
         typedef typename traits::matrix_traits<HermA>::value_type val_t; 
 #else 
         typedef typename HermA::value_type val_t; 
 #endif 
-        traits::detail::array<val_t> w (1); 
-        int lw = -1; 
-        detail::hesv (uplo, a, i, b, w, lw); 
-        lw = traits::detail::to_int (w[0]); 
+        traits::detail::array<val_t> w (lw); 
         w.resize (lw); 
         if (w.valid()) 
-          info = detail::hesv (uplo, a, i, b, w, lw); 
+          info = detail::hesv (uplo, a, i, b, w); 
       }
       return info; 
     }
@@ -238,38 +310,40 @@ namespace boost { namespace numeric { namespace bindings {
     namespace detail {
 
       inline 
-      void hetrf (char const uplo, int_t const n, 
-                  traits::complex_f* a, int_t const lda, int_t* ipiv,  
-                  traits::complex_f* w, int_t const lw, int_t* info) 
+      void hetrf (char const uplo, int const n, 
+                  traits::complex_f* a, int const lda, int* ipiv,  
+                  traits::complex_f* w, int const lw, int* info) 
       {
-        LAPACK_CHETRF (mrc (&uplo), mrc (&n), 
-                       traits::complex_ptr (a), mrc (&lda), ipiv, 
-                       traits::complex_ptr (w), mrc (&lw), info);
+        LAPACK_CHETRF (&uplo, &n, 
+                       traits::complex_ptr (a), &lda, ipiv, 
+                       traits::complex_ptr (w), &lw, info);
       }
 
       inline 
-      void hetrf (char const uplo, int_t const n, 
-                  traits::complex_d* a, int_t const lda, int_t* ipiv, 
-                  traits::complex_d* w, int_t const lw, int_t* info) 
+      void hetrf (char const uplo, int const n, 
+                  traits::complex_d* a, int const lda, int* ipiv, 
+                  traits::complex_d* w, int const lw, int* info) 
       {
-        LAPACK_ZHETRF (mrc (&uplo), mrc (&n), 
-                       traits::complex_ptr (a), mrc (&lda), ipiv, 
-                       traits::complex_ptr (w), mrc (&lw), info);
+        LAPACK_ZHETRF (&uplo, &n, 
+                       traits::complex_ptr (a), &lda, ipiv, 
+                       traits::complex_ptr (w), &lw, info);
       }
 
       template <typename HermA, typename IVec, typename Work>
       inline
-      int_t hetrf (char const ul, HermA& a, IVec& i, Work& w, int const lw) {
+      int hetrf (char const ul, HermA& a, IVec& i, Work& w) {
 
         int const n = traits::matrix_size1 (a);
         assert (n == traits::matrix_size2 (a)); 
         assert (n == traits::vector_size (i)); 
 
-        int_t info; 
+        int info; 
         hetrf (ul, n, traits::matrix_storage (a), 
                traits::leading_dimension (a),
                traits::vector_storage (i),  
-               traits::vector_storage (w), lw, &info);
+               traits::vector_storage (w), 
+               traits::vector_size (w), 
+               &info);
         return info; 
       }
 
@@ -277,7 +351,7 @@ namespace boost { namespace numeric { namespace bindings {
 
     template <typename HermA, typename IVec, typename Work>
     inline
-    int_t hetrf (char const ul, HermA& a, IVec& i, Work& w) {
+    int hetrf (char const ul, HermA& a, IVec& i, Work& w) {
 
       assert (ul == 'U' || ul == 'L'); 
 
@@ -290,12 +364,12 @@ namespace boost { namespace numeric { namespace bindings {
 
       int const lw = traits::vector_size (w); 
       assert (lw >= 1); 
-      return detail::hetrf (ul, a, i, w, lw); 
+      return detail::hetrf (ul, a, i, w); 
     }
 
     template <typename HermA, typename IVec, typename Work>
     inline
-    int_t hetrf (HermA& a, IVec& i, Work& w) {
+    int hetrf (HermA& a, IVec& i, Work& w) {
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
       BOOST_STATIC_ASSERT((boost::is_same<
@@ -307,13 +381,13 @@ namespace boost { namespace numeric { namespace bindings {
       int const lw = traits::vector_size (w); 
       assert (lw >= 1); 
       char uplo = traits::matrix_uplo_tag (a);
-      return detail::hetrf (uplo, a, i, w, lw); 
+      return detail::hetrf (uplo, a, i, w); 
     }
 
     template <typename HermA, typename Ivec>
     inline
-    int_t hetrf (char const ul, HermA& a, Ivec& i) {
-      // with `internal' work vector
+    int hetrf (char const ul, HermA& a, Ivec& i) {
+      // with 'internal' work vector
 
       assert (ul == 'U' || ul == 'L'); 
 
@@ -324,26 +398,25 @@ namespace boost { namespace numeric { namespace bindings {
       >::value));
 #endif
 
-      int_t info = -101; 
+      int info = -101; 
+      int lw = hetrf_query ('O', ul, a); 
+      lw *= traits::matrix_size1 (a); 
+      assert (lw >= 1); // paranoia ? 
 #ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
       typedef typename traits::matrix_traits<HermA>::value_type val_t; 
 #else 
       typedef typename HermA::value_type val_t; 
 #endif 
-      traits::detail::array<val_t> w (1); 
-      int lw = -1; 
-      detail::hetrf (ul, a, i, w, lw); 
-      lw = traits::detail::to_int (w[0]); 
-      w.resize (lw); 
+      traits::detail::array<val_t> w (lw); 
       if (w.valid()) 
-        info = detail::hetrf (ul, a, i, w, lw); 
+        info = detail::hetrf (ul, a, i, w); 
       return info; 
     }
 
     template <typename HermA, typename Ivec>
     inline
-    int_t hetrf (HermA& a, Ivec& i) {
-      // with `internal' work vector 
+    int hetrf (HermA& a, Ivec& i) {
+      // with 'internal' work vector 
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
       BOOST_STATIC_ASSERT((boost::is_same<
@@ -353,68 +426,19 @@ namespace boost { namespace numeric { namespace bindings {
 #endif
 
       char uplo = traits::matrix_uplo_tag (a);
-
-      int_t info = -101; 
+      int info = -101; 
+      int lw = hetrf_query ('O', a); 
+      lw *= traits::matrix_size1 (a);  
+      assert (lw >= 1); // paranoia ? 
 #ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
       typedef typename traits::matrix_traits<HermA>::value_type val_t; 
 #else 
       typedef typename HermA::value_type val_t; 
 #endif 
-      traits::detail::array<val_t> w (1); 
-      int lw = -1; 
-      detail::hetrf (uplo, a, i, w, lw); 
-      lw = traits::detail::to_int (w[0]); 
-      w.resize (lw); 
+      traits::detail::array<val_t> w (lw); 
       if (w.valid()) 
-        info = detail::hetrf (uplo, a, i, w, lw); 
+        info = detail::hetrf (uplo, a, i, w); 
       return info; 
-    }
-
-    template <typename HermA>
-    inline
-    int hetrf_query (char const ul, HermA const& a) {
-
-      assert (ul == 'U' || ul == 'L'); 
-
-#ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
-      BOOST_STATIC_ASSERT((boost::is_same<
-        typename traits::matrix_traits<HermA>::matrix_structure, 
-        traits::general_t
-      >::value));
-#endif
-
-      traits::detail::array<int_t> i (1); 
-#ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
-      typedef typename traits::matrix_traits<HermA>::value_type val_t; 
-#else 
-      typedef typename HermA::value_type val_t; 
-#endif 
-      traits::detail::array<val_t> w (1); 
-      detail::hetrf (ul, const_cast<HermA&> (a), i, w, -1); 
-      return traits::detail::to_int (w[0]); 
-    }
-
-    template <typename HermA> 
-    inline
-    int hetrf_query (HermA const& a) {
-
-#ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
-      BOOST_STATIC_ASSERT((boost::is_same<
-        typename traits::matrix_traits<HermA>::matrix_structure, 
-        traits::hermitian_t
-      >::value));
-#endif
-
-      char uplo = traits::matrix_uplo_tag (a);
-      traits::detail::array<int_t> i (1); 
-#ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
-      typedef typename traits::matrix_traits<HermA>::value_type val_t; 
-#else 
-      typedef typename HermA::value_type val_t; 
-#endif 
-      traits::detail::array<val_t> w (1); 
-      detail::hetrf (uplo, const_cast<HermA&> (a), i, w, -1); 
-      return traits::detail::to_int (w[0]); 
     }
 
 
@@ -428,37 +452,37 @@ namespace boost { namespace numeric { namespace bindings {
     namespace detail {
 
       inline 
-      void hetrs (char const uplo, int_t const n, int_t const nrhs,
-                  traits::complex_f const* a, int_t const lda, 
-                  int_t const* ipiv,  
-                  traits::complex_f* b, int_t const ldb, int_t* info) 
+      void hetrs (char const uplo, int const n, int const nrhs,
+                  traits::complex_f const* a, int const lda, 
+                  int const* ipiv,  
+                  traits::complex_f* b, int const ldb, int* info) 
       {
-        LAPACK_CHETRS (mrc (&uplo), mrc (&n), mrc (&nrhs), 
-                       traits::complex_ptr (mrc (a)), mrc (&lda), mrc (ipiv), 
-                       traits::complex_ptr (b), mrc (&ldb), info);
+        LAPACK_CHETRS (&uplo, &n, &nrhs, 
+                       traits::complex_ptr (a), &lda, ipiv, 
+                       traits::complex_ptr (b), &ldb, info);
       }
 
       inline 
-      void hetrs (char const uplo, int_t const n, int_t const nrhs,
-                  traits::complex_d const* a, int_t const lda, 
-                  int_t const* ipiv, 
-                  traits::complex_d* b, int_t const ldb, int_t* info) 
+      void hetrs (char const uplo, int const n, int const nrhs,
+                  traits::complex_d const* a, int const lda, 
+                  int const* ipiv, 
+                  traits::complex_d* b, int const ldb, int* info) 
       {
-        LAPACK_ZHETRS (mrc (&uplo), mrc (&n), mrc (&nrhs), 
-                       traits::complex_ptr (mrc (a)), mrc (&lda), mrc (ipiv), 
-                       traits::complex_ptr (b), mrc (&ldb), info);
+        LAPACK_ZHETRS (&uplo, &n, &nrhs, 
+                       traits::complex_ptr (a), &lda, ipiv, 
+                       traits::complex_ptr (b), &ldb, info);
       }
 
       template <typename HermA, typename MatrB, typename IVec>
       inline
-      int_t hetrs (char const ul, HermA const& a, IVec const& i, MatrB& b) {
+      int hetrs (char const ul, HermA const& a, IVec const& i, MatrB& b) {
 
         int const n = traits::matrix_size1 (a);
         assert (n == traits::matrix_size2 (a)); 
         assert (n == traits::matrix_size1 (b)); 
         assert (n == traits::vector_size (i)); 
 
-        int_t info; 
+        int info; 
         hetrs (ul, n, traits::matrix_size2 (b), 
 #ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
                traits::matrix_storage (a), 
@@ -480,7 +504,7 @@ namespace boost { namespace numeric { namespace bindings {
 
     template <typename HermA, typename MatrB, typename IVec>
     inline
-    int_t hetrs (char const ul, HermA const& a, IVec const& i, MatrB& b) {
+    int hetrs (char const ul, HermA const& a, IVec const& i, MatrB& b) {
 
       assert (ul == 'U' || ul == 'L'); 
 
@@ -500,7 +524,7 @@ namespace boost { namespace numeric { namespace bindings {
 
     template <typename HermA, typename MatrB, typename IVec>
     inline
-    int_t hetrs (HermA const& a, IVec const& i, MatrB& b) {
+    int hetrs (HermA const& a, IVec const& i, MatrB& b) {
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
       BOOST_STATIC_ASSERT((boost::is_same<

@@ -17,10 +17,17 @@
 #ifndef BOOST_NUMERIC_BINDINGS_LAPACK_LAPACK_HPP
 #define BOOST_NUMERIC_BINDINGS_LAPACK_LAPACK_HPP
 
+// linear systems
+
 #include <boost/numeric/bindings/lapack/gesv.hpp>
 #include <boost/numeric/bindings/lapack/posv.hpp>
+#include <boost/numeric/bindings/lapack/ppsv.hpp>
 #include <boost/numeric/bindings/lapack/sysv.hpp>
+#include <boost/numeric/bindings/lapack/spsv.hpp>
 #include <boost/numeric/bindings/lapack/hesv.hpp>
+
+// eigenproblems 
+
 #include <boost/numeric/bindings/lapack/gees.hpp>
 #include <boost/numeric/bindings/lapack/trevc.hpp>
 #include <boost/numeric/bindings/lapack/trexc.hpp>

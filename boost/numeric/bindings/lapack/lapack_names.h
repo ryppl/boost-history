@@ -17,9 +17,15 @@
 #ifndef BOOST_NUMERIC_BINDINGS_LAPACK_LAPACK_NAMES_H
 #define BOOST_NUMERIC_BINDINGS_LAPACK_LAPACK_NAMES_H
 
-#include <boost/numeric/bindings/traits/fortran.h>
+#ifndef BOOST_NUMERIC_BINDINGS_USE_CLAPACK
+#  include <boost/numeric/bindings/traits/fortran.h>
+#else
+#  define FORTRAN_ID( id ) id##_
+#endif 
 
-// general
+/* linear systems */
+
+/* general */
 
 #define LAPACK_SGESV FORTRAN_ID( sgesv )
 #define LAPACK_DGESV FORTRAN_ID( dgesv )
@@ -42,7 +48,7 @@
 #define LAPACK_ZGETRI FORTRAN_ID( zgetri )
 
 
-// symmetric/Hermitian positive definite 
+/* symmetric/Hermitian positive definite */
 
 #define LAPACK_SPOSV FORTRAN_ID( sposv )
 #define LAPACK_DPOSV FORTRAN_ID( dposv )
@@ -65,8 +71,30 @@
 #define LAPACK_ZPOTRI FORTRAN_ID( zpotri )
 
 
-// symmetric/Hermitian indefinite 
-// and complex symmetric 
+/* symmetric/Hermitian positive definite in packed storage */
+
+#define LAPACK_SPPSV FORTRAN_ID( sppsv )
+#define LAPACK_DPPSV FORTRAN_ID( dppsv )
+#define LAPACK_CPPSV FORTRAN_ID( cppsv )
+#define LAPACK_ZPPSV FORTRAN_ID( zppsv )
+
+#define LAPACK_SPPTRF FORTRAN_ID( spptrf )
+#define LAPACK_DPPTRF FORTRAN_ID( dpptrf )
+#define LAPACK_CPPTRF FORTRAN_ID( cpptrf )
+#define LAPACK_ZPPTRF FORTRAN_ID( zpptrf )
+
+#define LAPACK_SPPTRS FORTRAN_ID( spptrs )
+#define LAPACK_DPPTRS FORTRAN_ID( dpptrs )
+#define LAPACK_CPPTRS FORTRAN_ID( cpptrs )
+#define LAPACK_ZPPTRS FORTRAN_ID( zpptrs )
+
+#define LAPACK_SPPTRI FORTRAN_ID( spptri )
+#define LAPACK_DPPTRI FORTRAN_ID( dpptri )
+#define LAPACK_CPPTRI FORTRAN_ID( cpptri )
+#define LAPACK_ZPPTRI FORTRAN_ID( zpptri )
+
+
+/* symmetric/Hermitian indefinite and complex symmetric */
 
 #define LAPACK_SSYSV FORTRAN_ID( ssysv )
 #define LAPACK_DSYSV FORTRAN_ID( dsysv )
@@ -90,14 +118,54 @@
 #define LAPACK_ZHETRS FORTRAN_ID( zhetrs )
 
 
+/* symmetric/Hermitian indefinite and complex symmetric in packed storage */
+
+#define LAPACK_SSPSV FORTRAN_ID( sspsv )
+#define LAPACK_DSPSV FORTRAN_ID( dspsv )
+#define LAPACK_CSPSV FORTRAN_ID( cspsv )
+#define LAPACK_ZSPSV FORTRAN_ID( zspsv )
+#define LAPACK_CHPSV FORTRAN_ID( chpsv )
+#define LAPACK_ZHPSV FORTRAN_ID( zhpsv )
+
+#define LAPACK_SSPTRF FORTRAN_ID( ssptrf )
+#define LAPACK_DSPTRF FORTRAN_ID( dsptrf )
+#define LAPACK_CSPTRF FORTRAN_ID( csptrf )
+#define LAPACK_ZSPTRF FORTRAN_ID( zsptrf )
+#define LAPACK_CHPTRF FORTRAN_ID( chptrf )
+#define LAPACK_ZHPTRF FORTRAN_ID( zhptrf )
+
+#define LAPACK_SSPTRS FORTRAN_ID( ssptrs )
+#define LAPACK_DSPTRS FORTRAN_ID( dsptrs )
+#define LAPACK_CSPTRS FORTRAN_ID( csptrs )
+#define LAPACK_ZSPTRS FORTRAN_ID( zsptrs )
+#define LAPACK_CHPTRS FORTRAN_ID( chptrs )
+#define LAPACK_ZHPTRS FORTRAN_ID( zhptrs )
+
 
 /********************************************/
+/* eigenproblems */ 
 
-#define LAPACK_DGEEV FORTRAN_ID( dgeev )
-#define LAPACK_ZGEEV FORTRAN_ID( zgeev )
-
+#define LAPACK_SGEES FORTRAN_ID( sgees )
 #define LAPACK_DGEES FORTRAN_ID( dgees )
+#define LAPACK_CGEES FORTRAN_ID( cgees )
 #define LAPACK_ZGEES FORTRAN_ID( zgees )
+
+
+#define LAPACK_STREVC FORTRAN_ID( strevc )
+#define LAPACK_DTREVC FORTRAN_ID( dtrevc )
+#define LAPACK_CTREVC FORTRAN_ID( ctrevc )
+#define LAPACK_ZTREVC FORTRAN_ID( ztrevc )
+
+#define LAPACK_STREXC FORTRAN_ID( strexc )
+#define LAPACK_DTREXC FORTRAN_ID( dtrexc )
+#define LAPACK_CTREXC FORTRAN_ID( ctrexc )
+#define LAPACK_ZTREXC FORTRAN_ID( ztrexc )
+
+
+/********************************************/
+/* auxiliary */ 
+
+#define LAPACK_ILAENV FORTRAN_ID( ilaenv )
 
 
 #endif 

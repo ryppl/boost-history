@@ -20,8 +20,17 @@
 #include <boost/numeric/bindings/traits/type.h>
 #include <boost/numeric/bindings/lapack/lapack_names.h>
 
+#ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK 
+#  define BOOST_NUMERIC_BINDINGS_FORTRAN
+#endif 
 
 extern "C" {
+
+  /********************************************************************/
+  /*                        linear systems                            */
+  /********************************************************************/
+
+  /* general */
 
   void LAPACK_SGESV (int const* n, int const* nrhs, 
                      float* a, int const* lda, int* ipiv, 
@@ -61,6 +70,8 @@ extern "C" {
                       dcomplex_t* b, int const* ldb, int* info);
 
 
+  /* symmetric/Hermitian positive definite */
+
   void LAPACK_SPOSV (char const* uplo, int const* n, int const* nrhs, 
                      float* a, int const* lda, 
                      float* b, int const* ldb, int* info);
@@ -96,6 +107,38 @@ extern "C" {
                       dcomplex_t const* a, int const* lda,
                       dcomplex_t* b, int const* ldb, int* info);
 
+
+  /* symmetric/Hermitian positive definite in packed storage */
+
+  void LAPACK_SPPSV (char const* uplo, int const* n, int const* nrhs, 
+                     float* ap, float* b, int const* ldb, int* info);
+  void LAPACK_DPPSV (char const* uplo, int const* n, int const* nrhs, 
+                     double* ap, double* b, int const* ldb, int* info);
+  void LAPACK_CPPSV (char const* uplo, int const* n, int const* nrhs,
+                     fcomplex_t* ap, fcomplex_t* b, int const* ldb, int* info);
+  void LAPACK_ZPPSV (char const* uplo, int const* n, int const* nrhs,
+                     dcomplex_t* ap, dcomplex_t* b, int const* ldb, int* info);
+
+  void LAPACK_SPPTRF (char const* uplo, int const* n, float* ap, int* info);
+  void LAPACK_DPPTRF (char const* uplo, int const* n, double* ap, int* info);
+  void LAPACK_CPPTRF (char const* uplo, int const* n, 
+                      fcomplex_t* ap, int* info);
+  void LAPACK_ZPPTRF (char const* uplo, int const* n, 
+                      dcomplex_t* ap, int* info);
+
+  void LAPACK_SPPTRS (char const* uplo, int const* n, int const* nrhs, 
+                      float const* ap, float* b, int const* ldb, int* info);
+  void LAPACK_DPPTRS (char const* uplo, int const* n, int const* nrhs, 
+                      double const* ap, double* b, int const* ldb, int* info);
+  void LAPACK_CPPTRS (char const* uplo, int const* n, int const* nrhs,
+                      fcomplex_t const* ap, 
+                      fcomplex_t* b, int const* ldb, int* info);
+  void LAPACK_ZPPTRS (char const* uplo, int const* n, int const* nrhs,
+                      dcomplex_t const* ap, 
+                      dcomplex_t* b, int const* ldb, int* info);
+
+
+  /* symmetric/Hermitian indefinite and complex symmetric */
 
   void LAPACK_SSYSV (char const* uplo, int const* n, int const* nrhs, 
                      float* a, int const* lda, int* ipiv, 
@@ -163,6 +206,68 @@ extern "C" {
                       dcomplex_t const* a, int const* lda, int const* ipiv, 
                       dcomplex_t* b, int const* ldb, int* info);
 
+
+  /* symmetric/Hermitian indefinite and complex symmetric in packed storage */
+
+  void LAPACK_SSPSV (char const* uplo, int const* n, int const* nrhs, 
+                     float* ap, int* ipiv, 
+                     float* b, int const* ldb, int* info);
+  void LAPACK_DSPSV (char const* uplo, int const* n, int const* nrhs, 
+                     double* ap, int* ipiv, 
+                     double* b, int const* ldb, int* info);
+  void LAPACK_CSPSV (char const* uplo, int const* n, int const* nrhs,
+                     fcomplex_t* ap, int* ipiv, 
+                     fcomplex_t* b, int const* ldb, int* info);
+  void LAPACK_ZSPSV (char const* uplo, int const* n, int const* nrhs,
+                     dcomplex_t* ap, int* ipiv, 
+                     dcomplex_t* b, int const* ldb, int* info);
+
+  void LAPACK_CHPSV (char const* uplo, int const* n, int const* nrhs,
+                     fcomplex_t* ap, int* ipiv, 
+                     fcomplex_t* b, int const* ldb, int* info);
+  void LAPACK_ZHPSV (char const* uplo, int const* n, int const* nrhs,
+                     dcomplex_t* ap, int* ipiv, 
+                     dcomplex_t* b, int const* ldb, int* info);
+
+  void LAPACK_SSPTRF (char const* uplo, int const* n, 
+                      float* ap, int* ipiv, int* info);
+  void LAPACK_DSPTRF (char const* uplo, int const* n, 
+                      double* ap, int* ipiv, int* info);
+  void LAPACK_CSPTRF (char const* uplo, int const* n, 
+                      fcomplex_t* ap, int* ipiv, int* info);
+  void LAPACK_ZSPTRF (char const* uplo, int const* n, 
+                      dcomplex_t* ap, int* ipiv, int* info);
+
+  void LAPACK_CHPTRF (char const* uplo, int const* n, 
+                      fcomplex_t* ap, int* ipiv, int* info);
+  void LAPACK_ZHPTRF (char const* uplo, int const* n, 
+                      dcomplex_t* ap, int* ipiv, int* info);
+
+  void LAPACK_SSPTRS (char const* uplo, int const* n, int const* nrhs, 
+                      float const* ap, int const* ipiv, 
+                      float* b, int const* ldb, int* info);
+  void LAPACK_DSPTRS (char const* uplo, int const* n, int const* nrhs, 
+                      double const* ap, int const* ipiv, 
+                      double* b, int const* ldb, int* info);
+  void LAPACK_CSPTRS (char const* uplo, int const* n, int const* nrhs,
+                      fcomplex_t const* ap, int const* ipiv, 
+                      fcomplex_t* b, int const* ldb, int* info);
+  void LAPACK_ZSPTRS (char const* uplo, int const* n, int const* nrhs,
+                      dcomplex_t const* ap, int const* ipiv, 
+                      dcomplex_t* b, int const* ldb, int* info);
+
+  void LAPACK_CHPTRS (char const* uplo, int const* n, int const* nrhs,
+                      fcomplex_t const* ap, int const* ipiv, 
+                      fcomplex_t* b, int const* ldb, int* info);
+  void LAPACK_ZHPTRS (char const* uplo, int const* n, int const* nrhs,
+                      dcomplex_t const* ap, int const* ipiv, 
+                      dcomplex_t* b, int const* ldb, int* info);
+
+
+  /**********************************************************************/
+  /* eigenproblems */
+  /**********************************************************************/
+
   void LAPACK_SGEES (const char* jobvs, const char* sort, logical_t* select, const int* n,
                      float* a, const int * lda, const int* sdim, float* wr, float* wi,
                      float* vs, const int * ldvs, float* work, const int * lwork,
@@ -220,6 +325,15 @@ extern "C" {
   void LAPACK_ZTREXC( const char* compq, const int *n,
                      dcomplex_t* t, const int * ldt, dcomplex_t* q, const int* ldq,
 		     int* ifst, const int * ilst, int* info );
+
+
+  /********************************************************************/
+  /*                          auxiliary                               */
+  /********************************************************************/
+
+  int LAPACK_ILAENV (int const* ispec, const char* name, const char* opt,
+                     int const* n1, int const* n2, int const* n3, 
+                     int const* n4, int, int); 
 
 }
 
