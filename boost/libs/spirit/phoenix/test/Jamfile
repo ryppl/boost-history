@@ -1,0 +1,109 @@
+#==============================================================================
+#   Copyright (c) 2002 Joel de Guzman
+#   http://spirit.sourceforge.net/
+#
+#   Use, modification and distribution is subject to the Boost Software
+#   License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+#   http://www.boost.org/LICENSE_1_0.txt)
+#==============================================================================
+#
+#  Phoenix examples boost-jam file
+#  Joel de Guzman [Sept 27, 2002]
+#
+
+subproject libs/spirit/phoenix/test ;
+
+SPIRIT_HEADER_INCLUDE ?= ../../../.. ;
+
+spirit-header-include = <sysinclude>$(SPIRIT_HEADER_INCLUDE) ;
+
+if $(SPIRIT_BOOST_HEADER_INCLUDE)
+{
+    spirit-header-include += <sysinclude>$(SPIRIT_BOOST_HEADER_INCLUDE) ;
+}
+
+unit-test binary_tests
+    : binary_tests.cpp
+    : $(spirit-header-include)
+    :
+    ;
+
+unit-test binders_tests
+    : binders_tests.cpp
+    : $(spirit-header-include)
+    :
+    ;
+
+unit-test functors_tests
+    : functors_tests.cpp
+    : $(spirit-header-include)
+    :
+    ;
+
+unit-test iostream_tests
+    : iostream_tests.cpp
+    : $(spirit-header-include)
+    :
+    ;
+
+
+unit-test mixed_binary_tests
+    : mixed_binary_tests.cpp
+    : $(spirit-header-include)
+    :
+    ;
+
+
+unit-test more_expressions_tests
+    : more_expressions_tests.cpp
+    : $(spirit-header-include)
+    :
+    ;
+
+
+unit-test primitives_tests
+    : primitives_tests.cpp
+    : $(spirit-header-include)
+    :
+    ;
+
+
+unit-test statements_tests
+    : statements_tests.cpp
+    : $(spirit-header-include)
+    :
+    ;
+
+
+unit-test stl_tests
+    : stl_tests.cpp
+    : $(spirit-header-include)
+    :
+    ;
+
+
+unit-test tuples_tests
+    : tuples_tests.cpp
+    : $(spirit-header-include)
+    :
+    ;
+
+
+unit-test unary_tests
+    : unary_tests.cpp
+    : $(spirit-header-include)
+    :
+    ;
+
+
+unit-test unary_tests
+    : new_test.cpp
+    : $(spirit-header-include)
+    :
+    ;
+
+
+
+
+
+
