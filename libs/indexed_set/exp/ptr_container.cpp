@@ -1,35 +1,69 @@
 #include <boost/indexed_set.hpp>
-#include <boost/shared_ptr.hpp>
+#include <boost/indexed_set/sequenced_index.hpp>
+#include <list>
+#include <set>
 #include <iostream>
-#include <iterator>
+#include <windows.h>
 
 using namespace boost::indexed_sets;
 
+typedef indexed_set<
+  int,
+  index_list<
+    sequenced<>,
+    unique<identity<int> >,
+    unique<identity<int>,std::greater<int> >
+  >
+> int_xset;
+
+struct greaterp
+{
+  bool operator()(const int* x,const int* y)const{return *x<*y;}
+};
+
+typedef std::list<int> int_list;
+typedef std::set<const int*> int_set;
+typedef std::set<const int*,greaterp> int_gset;
+
 int main()
 {
-  typedef indexed_set<
-    boost::shared_ptr<int>,
-    index_list<
-      unique<identity<int> >
-    >
-  > ptr_int_set;
+  __int64 t1=0,t2=0;
 
-  ptr_int_set pis;
+  for(int n=0;n<10000;++n){
+    __int64 start,finish;
 
-  pis.insert(boost::shared_ptr<int>(new int(0)));
-  pis.insert(boost::shared_ptr<int>(new int(5)));
-  pis.insert(boost::shared_ptr<int>(new int(7)));
-  pis.insert(boost::shared_ptr<int>(new int(3)));
-  pis.insert(boost::shared_ptr<int>(new int(4)));
-  pis.insert(boost::shared_ptr<int>(new int(8)));
-  pis.insert(boost::shared_ptr<int>(new int(1)));
-  pis.insert(boost::shared_ptr<int>(new int(9)));
-  pis.insert(boost::shared_ptr<int>(new int(2)));
-  pis.insert(boost::shared_ptr<int>(new int(6)));
+    QueryPerformanceCounter((LARGE_INTEGER*)&start);
+    {
+      int_xset is;
+      for(int i=0;i<1000;++i)is.insert(is.begin(),i);
+      for(int_xset::iterator it=is.begin();it!=is.end();)is.erase(it++);
+    }
+    QueryPerformanceCounter((LARGE_INTEGER*)&finish);
+    t1+=finish-start;
 
-  for(ptr_int_set::iterator it=pis.begin();it!=pis.end();++it){
-    std::cout<<**it;
+    QueryPerformanceCounter((LARGE_INTEGER*)&start);
+    {
+      int_list il;
+      int_set is;
+      int_gset igs;
+      for(int i=0;i<1000;++i){
+        int_list::iterator it=il.insert(il.begin(),i);
+        is.insert(&*it);
+        igs.insert(&*it);
+      }
+      for(int_list::iterator it=il.begin();it!=il.end();){
+        igs.erase(&*it);
+        is.erase(&*it);
+        il.erase(it++);
+      }
+    }
+    QueryPerformanceCounter((LARGE_INTEGER*)&finish);
+    t2+=finish-start;
   }
+
+  std::cout<<(unsigned)t1<<std::endl;
+  std::cout<<(unsigned)t2<<std::endl;
+  std::cout<<(unsigned)(10000.*(double)t1/(double)t2)<<std::endl;
 
   return 0;
 }

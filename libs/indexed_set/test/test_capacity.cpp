@@ -35,4 +35,15 @@ void test_capacity()
   es.erase(es.begin());
   BOOST_CHECK(!get<as_inserted>(es).empty());
   BOOST_CHECK(get<as_inserted>(es).size()==3);
+
+  indexed_set<int,index_list<sequenced<> > > ss;
+
+  ss.resize(10);
+  BOOST_CHECK(ss.size()==10);
+
+  ss.resize(20);
+  BOOST_CHECK(ss.size()==20);
+
+  ss.resize(5);
+  BOOST_CHECK(ss.size()==5);
 }

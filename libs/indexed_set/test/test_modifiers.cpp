@@ -35,7 +35,7 @@ void test_modifiers()
   BOOST_CHECK(es.size()==2);
 
   employee_set_as_inserted::iterator it2=i3.begin();
-  i3.insert(it2,employee(2,"Grandda Joe",64));
+  i3.insert(it2,100,employee(2,"Grandda Joe",64));
   BOOST_CHECK(es.size()==3);
 
   es.erase(employee(1,"Joe Jr.",5));
@@ -76,7 +76,7 @@ void test_modifiers()
   i3.erase(i3.begin(),i3.end());
   BOOST_CHECK(es.size()==0);
 
-  i3.insert(ve.begin(),ve.end());
+  i3.insert(i3.end(),ve.begin(),ve.end());
   BOOST_CHECK(es.size()==3);
 
   es.erase(es.begin(),es.end());
