@@ -41,8 +41,7 @@
 			Can be used in Standard Library containers, filling a major embarrassing gap in 
 			the current Standard Library.
 			<li>
-			Has been reinvented thousands of times (often with gratuitous mistakes and 
-			misfeatures).
+			Has been reinvented thousands of times [<a href="#Google03">Google03</a>] (often with gratuitous mistakes and misfeatures).
 			<li>
 				Is very hard to specify and implement correctly, particularly as regards 
 				exception safety, thread safety, and weak pointers. See <a href="#Implementation-difficulty">
@@ -67,7 +66,8 @@
 			Delivers exceptional expressive power without additional template 
 			parameterization, easing use by novices and experts alike.
 			<li>
-			Supports encapsulation and implementation hiding via the ability to use 
+			Supports encapsulation and implementation hiding via the ability to 
+            safely use 
 			incomplete classes and protected nonvirtual base destructors, and the ability 
 			to hide allocation details.
 			<li>
@@ -135,6 +135,21 @@
 		<h2>IV. Proposed Text</h2>
 		<h2>V. Code Examples</h2>
 		<h3><a name="Implementation-difficulty">Implementation difficulty</a></h3>
+		<p>The Boost developers found a shared-ownership smart pointer 
+        exceedingly difficult to implement correctly. Others have made the same 
+        observation. For example, Scott Meyers [<a href="#Meyers01">Meyers01</a>] 
+        says:</p>
+		<blockquote>
+		<p>The STL itself contains no reference-counting smart pointer, and 
+        writing a good one - one that works correctly all the time - is tricky 
+        enough that you don't want to do it unless you have to. I published the 
+        code for a reference-counting smart pointer in More Effective C++ in 
+        1996, and despite basing it on established smart pointer implementations 
+        and submitting it to extensive pre-publication reviewing by experienced 
+        developers, a small parade of valid bug reports has trickled in for 
+        years. The number of subtle ways in which reference-counting smart 
+        pointers can fail is remarkable.</p>
+		</blockquote>
 		<h4>Example 1</h4>
 		<blockquote>
 			<pre>p.reset(new X);</pre>
@@ -161,13 +176,22 @@ void test()
 		<p>Again, it is surprising how many experts get this wrong.</p>
 		<h2>VI. Acknowledgements</h2>
 		<h2>VII. References</h2>
-		<p>[<a name="Colvin94">Colvin94</a>] Gregory Colvin, Exception Safe Smart Pointers, 
+		<p>[<a name="Colvin94">Colvin94</a>] Gregory Colvin, <i>Exception Safe Smart Pointers</i>, 
 			C++ committee document 94-168/N0555, July, 1994. Available online at <a href="http://std.dkuug.dk/jtc1/sc22/wg21/docs/papers/1994/N0555.pdf">
 				http://std.dkuug.dk/jtc1/sc22/wg21/docs/papers/1994/N0555.pdf</a></p>
-		<p>[<a name="Ellis94">Ellis94</a>] John R. Ellis and David L. Detlefs, Safe, 
-			Efficient Garbage Collection for C++, Usenix Proceedings, February, 1994. This 
+		<p>[<a name="Ellis94">Ellis94</a>] John R. Ellis and David L. Detlefs, 
+        <i>Safe, 
+			Efficient Garbage Collection for C++</i>, Usenix Proceedings, February, 1994. This 
 			paper includes an extensive discussion of weak pointers and an extensive 
 			bibliography. Available online at <a href="http://www.usenix.org/publications/library/proceedings/c++94/full_papers/ellis.a">
 				http://www.usenix.org/publications/library/proceedings/c++94/full_papers/ellis.a</a></p>
+		<p>[<a name="Meyers01">Meyers01</a>] Scott Meyers, <i>
+        <a href="http://www.awl.com/cseng/titles/0-201-74962-9/">Effective STL</a></i>, 
+        page 39, Addison-Wesley, 2001, ISBN 0-201-74962-9.</p>
+	    <p>[<a name="Google03">Google03</a>] Searching
+        <a href="http://www.google.com">www.google.com</a> for &quot;reference 
+        counted smart pointer&quot; yields 2,400 entries. Anyone doubting that 
+        shared-ownership smart pointers have been reinvented a large number of 
+        times should read a random selection of these entries.</p>
 	</body>
 </html>
