@@ -21,34 +21,46 @@
 
 #include "config.h"
 
+// Promote traits borrowed from Todd Veldhuizen 
+
 namespace numerics {
 
     template<class T>
     struct type_traits {
         typedef T norm_type;
         typedef T precision_type;
+        static std::size_t plus_complexity;
+        static std::size_t multiplies_complexity;
     };
 
     template<>
     struct type_traits<float> {
         typedef float norm_type;
 	    typedef double precision_type;
+        static std::size_t plus_complexity;
+        static std::size_t multiplies_complexity;
     };
     template<>
     struct type_traits<double> {
         typedef double norm_type;
 	    typedef double precision_type;
+        static std::size_t plus_complexity;
+        static std::size_t multiplies_complexity;
     };
 
     template<>
     struct type_traits<std::complex<float> > {
         typedef float norm_type;
 	    typedef std::complex<double> precision_type;
+        static std::size_t plus_complexity;
+        static std::size_t multiplies_complexity;
     };
     template<>
     struct type_traits<std::complex<double> > {
         typedef double norm_type;
 	    typedef std::complex<double> precision_type;
+        static std::size_t plus_complexity;
+        static std::size_t multiplies_complexity;
     };
 
     template<class T1, class T2>
@@ -75,4 +87,6 @@ namespace numerics {
     };
 }
 
-#endif // NUMERICS_TRAITS_H
+#endif 
+
+

@@ -23,21 +23,21 @@ namespace numerics {
 
 #ifdef USE_MSVC
 
-    template<class E, class T, class VT, class VE> 
+    template<class E, class T, class VE> 
     // This function seems to be big. So we do not let the compiler inline it.
     // NUMERICS_INLINE
     std::basic_ostream<E, T> &operator << (std::basic_ostream<E, T> &os, 
-                                           const vector_expression<VT, VE> &v) {
-        size_type size = v.size ();
+                                           const vector_expression<VE> &v) {
+        std::size_t size = v ().size ();
         std::basic_ostringstream<E, T, std::allocator<E> > s;
 	    s.flags (os.flags ());
 	    s.imbue (os.getloc ());
 	    s.precision (os.precision ());
         s << '[' << size << "](";
         if (size > 0)
-            s << v (0);
-        for (size_type i = 1; i < size; ++ i) 
-            s << ',' << v (i);
+            s << v () (0);
+        for (std::size_t i = 1; i < size; ++ i) 
+            s << ',' << v () (i);
         s << ')';
 	    return os << s.str ().c_str (); 
     }
@@ -47,7 +47,7 @@ namespace numerics {
     // NUMERICS_INLINE
     std::basic_ostream<E, T> &operator << (std::basic_ostream<E, T> &os, 
                                            const vector<VT, VA, VF> &v) {
-        size_type size = v.size ();
+        std::size_t size = v.size ();
         std::basic_ostringstream<E, T, std::allocator<E> > s;
 	    s.flags (os.flags ());
 	    s.imbue (os.getloc ());
@@ -55,7 +55,7 @@ namespace numerics {
         s << '[' << size << "](";
         if (size > 0)
             s << v (0);
-        for (size_type i = 1; i < size; ++ i) 
+        for (std::size_t i = 1; i < size; ++ i) 
             s << ',' << v (i);
         s << ')';
 	    return os << s.str ().c_str (); 
@@ -67,7 +67,7 @@ namespace numerics {
     std::basic_istream<E, T> &operator >> (std::basic_istream<E, T> &is, 
 										   vector<VT, VA, VF> &v) {
 	    E ch;
-        size_type size;
+        std::size_t size;
         if (is >> ch && ch != '[') {
             is.putback (ch);
             is.setstate (std::ios_base::failbit);
@@ -80,7 +80,7 @@ namespace numerics {
                 is.putback (ch);
                 is.setstate (std::ios_base::failbit);
             } else {
-                for (size_type i = 0; i < size; i ++) {
+                for (std::size_t i = 0; i < size; i ++) {
                     if (is >> s (i) >> ch && ch != ',') {
                         is.putback (ch);
                         if (i < size - 1)
@@ -101,13 +101,13 @@ namespace numerics {
 	    return is; 
     }
 
-    template<class E, class T, class MT, class ME> 
+    template<class E, class T, class ME> 
     // This function seems to be big. So we do not let the compiler inline it.
     // NUMERICS_INLINE
     std::basic_ostream<E, T> &operator << (std::basic_ostream<E, T> &os, 
-                                           const matrix_expression<MT, ME> &m) {
-        size_type size1 = m.size1 ();
-        size_type size2 = m.size2 ();
+                                           const matrix_expression<ME> &m) {
+        std::size_t size1 = m ().size1 ();
+        std::size_t size2 = m ().size2 ();
         std::basic_ostringstream<E, T, std::allocator<E> > s;
 	    s.flags (os.flags ());
 	    s.imbue (os.getloc ());
@@ -116,17 +116,17 @@ namespace numerics {
         if (size1 > 0) {
             s << '(' ;
             if (size2 > 0) 
-                s << m (0, 0);
-            for (size_type j = 1; j < size2; ++ j) 
-                s << ',' << m (0, j);
+                s << m () (0, 0);
+            for (std::size_t j = 1; j < size2; ++ j) 
+                s << ',' << m () (0, j);
             s << ')';
         }
-        for (size_type i = 1; i < size1; ++ i) {
+        for (std::size_t i = 1; i < size1; ++ i) {
             s << ",(" ;
             if (size2 > 0) 
-                s << m (i, 0);
-            for (size_type j = 1; j < size2; ++ j) 
-                s << ',' << m (i, j);
+                s << m () (i, 0);
+            for (std::size_t j = 1; j < size2; ++ j) 
+                s << ',' << m () (i, j);
             s << ')';
         }
         s << ')';
@@ -138,8 +138,8 @@ namespace numerics {
     // NUMERICS_INLINE
     std::basic_ostream<E, T> &operator << (std::basic_ostream<E, T> &os, 
                                            const matrix<MT, MA, MF> &m) {
-        size_type size1 = m.size1 ();
-        size_type size2 = m.size2 ();
+        std::size_t size1 = m.size1 ();
+        std::size_t size2 = m.size2 ();
         std::basic_ostringstream<E, T, std::allocator<E> > s;
 	    s.flags (os.flags ());
 	    s.imbue (os.getloc ());
@@ -149,15 +149,15 @@ namespace numerics {
             s << '(' ;
             if (size2 > 0) 
                 s << m (0, 0);
-            for (size_type j = 1; j < size2; ++ j) 
+            for (std::size_t j = 1; j < size2; ++ j) 
                 s << ',' << m (0, j);
             s << ')';
         }
-        for (size_type i = 1; i < size1; ++ i) {
+        for (std::size_t i = 1; i < size1; ++ i) {
             s << ",(" ;
             if (size2 > 0) 
                 s << m (i, 0);
-            for (size_type j = 1; j < size2; ++ j) 
+            for (std::size_t j = 1; j < size2; ++ j) 
                 s << ',' << m (i, j);
             s << ')';
         }
@@ -171,7 +171,7 @@ namespace numerics {
     std::basic_istream<E, T> &operator >> (std::basic_istream<E, T> &is, 
                                            matrix<VT, VA, VF> &m) {
 	    E ch;
-        size_type size1, size2;
+        std::size_t size1, size2;
         if (is >> ch && ch != '[') {
             is.putback (ch);
             is.setstate (std::ios_base::failbit);
@@ -187,13 +187,13 @@ namespace numerics {
                 is.putback (ch);
                 is.setstate (std::ios_base::failbit);
             } else {
-                for (size_type i = 0; i < size1; i ++) {
+                for (std::size_t i = 0; i < size1; i ++) {
                     if (is >> ch && ch != '(') {
                         is.putback (ch);
                         is.setstate (std::ios_base::failbit);
                         break;
                     }
-                    for (size_type j = 0; j < size2; j ++) {
+                    for (std::size_t j = 0; j < size2; j ++) {
                         if (is >> s (i, j) >> ch && ch != ',') {
                             is.putback (ch);
                             if (j < size2 - 1) {
@@ -228,21 +228,21 @@ namespace numerics {
 	    return is; 
     }
 
-#endif // USE_MSVC
+#endif 
 
 #if defined (USE_GCC) || defined (USE_BCC)
 
-    template<class VT, class VE> 
+    template<class VE> 
     // This function seems to be big. So we do not let the compiler inline it.
     // NUMERICS_INLINE
     std::ostream &operator << (std::ostream &os, 
-                               const vector_expression<VT, VE> &v) {
-        size_type size = v.size ();
+                               const vector_expression<VE> &v) {
+        std::size_t size = v ().size ();
         os << '[' << size << "](";
         if (size > 0)
-            os << v (0);
-        for (size_type i = 1; i < size; ++ i) 
-            os << ',' << v (i);
+            os << v () (0);
+        for (std::size_t i = 1; i < size; ++ i) 
+            os << ',' << v () (i);
         os << ')';
 	    return os; 
     }
@@ -252,11 +252,11 @@ namespace numerics {
     // NUMERICS_INLINE
     std::ostream &operator << (std::ostream &os, 
                                const vector<VT, VA, VF> &v) {
-        size_type size = v.size ();
+        std::size_t size = v.size ();
         os << '[' << size << "](";
         if (size > 0)
             os << v (0);
-        for (size_type i = 1; i < size; ++ i) 
+        for (std::size_t i = 1; i < size; ++ i) 
             os << ',' << v (i);
         os << ')';
 	    return os; 
@@ -268,7 +268,7 @@ namespace numerics {
     std::istream &operator >> (std::istream &is, 
 							   vector<VT, VA, VF> &v) {
 	    char ch;
-        size_type size;
+        std::size_t size;
         if (is >> ch && ch != '[') {
             is.putback (ch);
             is.setstate (std::ios::failbit);
@@ -281,7 +281,7 @@ namespace numerics {
                 is.putback (ch);
                 is.setstate (std::ios::failbit);
             } else {
-                for (size_type i = 0; i < size; i ++) {
+                for (std::size_t i = 0; i < size; i ++) {
                     if (is >> s (i) >> ch && ch != ',') {
                         is.putback (ch);
                         if (i < size - 1)
@@ -302,28 +302,28 @@ namespace numerics {
 	    return is; 
     }
 
-    template<class MT, class ME> 
+    template<class ME> 
     // This function seems to be big. So we do not let the compiler inline it.
     // NUMERICS_INLINE
     std::ostream &operator << (std::ostream &os, 
-                               const matrix_expression<MT, ME> &m) {
-        size_type size1 = m.size1 ();
-        size_type size2 = m.size2 ();
+                               const matrix_expression<ME> &m) {
+        std::size_t size1 = m ().size1 ();
+        std::size_t size2 = m ().size2 ();
         os << '[' << size1 << ',' << size2 << "](";
         if (size1 > 0) {
             os << '(' ;
             if (size2 > 0) 
-                os << m (0, 0);
-            for (size_type j = 1; j < size2; ++ j) 
-                os << ',' << m (0, j);
+                os << m () (0, 0);
+            for (std::size_t j = 1; j < size2; ++ j) 
+                os << ',' << m () (0, j);
             os << ')';
         }
-        for (size_type i = 1; i < size1; ++ i) {
+        for (std::size_t i = 1; i < size1; ++ i) {
             os << ",(" ;
             if (size2 > 0) 
-                os << m (i, 0);
-            for (size_type j = 1; j < size2; ++ j) 
-                os << ',' << m (i, j);
+                os << m () (i, 0);
+            for (std::size_t j = 1; j < size2; ++ j) 
+                os << ',' << m () (i, j);
             os << ')';
         }
         os << ')';
@@ -335,22 +335,22 @@ namespace numerics {
     // NUMERICS_INLINE
     std::ostream &operator << (std::ostream &os, 
                                const matrix<MT, MA, MF> &m) {
-        size_type size1 = m.size1 ();
-        size_type size2 = m.size2 ();
+        std::size_t size1 = m.size1 ();
+        std::size_t size2 = m.size2 ();
         os << '[' << size1 << ',' << size2 << "](";
         if (size1 > 0) {
             os << '(' ;
             if (size2 > 0) 
                 os << m (0, 0);
-            for (size_type j = 1; j < size2; ++ j) 
+            for (std::size_t j = 1; j < size2; ++ j) 
                 os << ',' << m (0, j);
             os << ')';
         }
-        for (size_type i = 1; i < size1; ++ i) {
+        for (std::size_t i = 1; i < size1; ++ i) {
             os << ",(" ;
             if (size2 > 0) 
                 os << m (i, 0);
-            for (size_type j = 1; j < size2; ++ j) 
+            for (std::size_t j = 1; j < size2; ++ j) 
                 os << ',' << m (i, j);
             os << ')';
         }
@@ -364,7 +364,7 @@ namespace numerics {
     std::istream &operator >> (std::istream &is, 
                                matrix<VT, VA, VF> &m) {
 	    char ch;
-        size_type size1, size2;
+        std::size_t size1, size2;
         if (is >> ch && ch != '[') {
             is.putback (ch);
             is.setstate (std::ios::failbit);
@@ -380,13 +380,13 @@ namespace numerics {
                 is.putback (ch);
                 is.setstate (std::ios::failbit);
             } else {
-                for (size_type i = 0; i < size1; i ++) {
+                for (std::size_t i = 0; i < size1; i ++) {
                     if (is >> ch && ch != '(') {
                         is.putback (ch);
                         is.setstate (std::ios::failbit);
                         break;
                     }
-                    for (size_type j = 0; j < size2; j ++) {
+                    for (std::size_t j = 0; j < size2; j ++) {
                         if (is >> s (i, j) >> ch && ch != ',') {
                             is.putback (ch);
                             if (j < size2 - 1) {
@@ -421,8 +421,10 @@ namespace numerics {
 	    return is; 
     }
 
-#endif // defined (USE_GCC) || defined (USE_BCC)
+#endif 
 
 }
 
-#endif // NUMERICS_IO_H
+#endif 
+
+

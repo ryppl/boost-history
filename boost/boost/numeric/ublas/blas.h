@@ -22,46 +22,36 @@ namespace numerics {
     namespace blas_1 {
 
         template<class V>
-		type_traits<typename V::value_type>::norm_type 
+        typename type_traits<typename V::value_type>::norm_type 
 		asum (const V &v) {
-			return norm_1 (v);
+            return norm_1 (v);
         }
         template<class V>
-		type_traits<typename V::value_type>::norm_type 
+		typename type_traits<typename V::value_type>::norm_type 
 		nrm2 (const V &v) {
             return norm_2 (v);
         }
         template<class V>
-		type_traits<typename V::value_type>::norm_type 
+		typename type_traits<typename V::value_type>::norm_type 
 		amax (const V &v) {
             return norm_inf (v);
         }
 
         template<class V1, class V2>
-		promote_traits<typename V1::value_type, typename V2::value_type>::promote_type 
+		typename promote_traits<typename V1::value_type, typename V2::value_type>::promote_type 
 		dot (const V1 &v1, const V2 &v2) {
             return inner_prod (v1, v2);
         }
 
         template<class V1, class V2>
 		V1 & 
-		safe_copy (V1 &v1, const V2 &v2) {
-            return v1 = v2;
-        }
-        template<class V1, class V2>
-		V1 & 
-		fast_copy (V1 &v1, const V2 &v2) {
-            return v1 ^= v2;
+		copy (V1 &v1, const V2 &v2) {
+            return v1.assign (v2);
         }
 
         template<class V1, class V2>
-		void safe_swap (V1 &v1, V2 &v2) {
-            numerics::safe_swap (v1, v2);
-        }
-        template<class V1, class V2>
-		void 
-		fast_swap (V1 &v1, V2 &v2) {
-            numerics::fast_swap (v1, v2);
+		void swap (V1 &v1, V2 &v2) {
+            v1.swap (v2);
         }
 
         template<class V, class T>
@@ -73,20 +63,20 @@ namespace numerics {
         template<class V1, class T, class V2>
 		V1 &
 		axpy (V1 &v1, const T &t, const V2 &v2) {
-            return v1 ^= v1 + t * v2;
+            return v1.plus_assign (t * v2);
         }
 
         template<class T1, class V1, class T2, class V2>
 		void 
 		rot (const T1 &t1, V1 &v1, const T2 &t2, V2 &v2) {
-#ifdef USE_MSVC
-			typedef promote_traits<V1::value_type, V2::value_type>::promote_type promote_type;
-#else // USE_MSVC
-			typedef promote_traits<typename V1::value_type, typename V2::value_type>::promote_type promote_type;
-#endif // USE_MSVC
+			typedef typename promote_traits<NUMERICS_TYPENAME V1::value_type, NUMERICS_TYPENAME V2::value_type>::promote_type promote_type;
 			vector<promote_type> vt (t1 * v1 + t2 * v2);
-			v2 ^= - t2 * v1 + t1 * v2;
-			v1 ^= vt;
+#ifndef USE_GCC
+			v2.assign (- t2 * v1 + t1 * v2);
+#else
+            v2.assign (detail::negate (t2) * v1 + t1 * v2);
+#endif
+			v1.assign (vt);
         }
 
     }
@@ -99,10 +89,10 @@ namespace numerics {
 			return v = prod (m, v);
 		}
 
-		template<class V, class M>
+		template<class V, class M, class C>
 		V &
-		tsv (V &v, const M &m, int hint) {
-			return v = solve (m, v, v, hint);
+		tsv (V &v, const M &m, C) {
+			return v = solve (m, v, v, C ());
 		}
 
 		template<class V1, class T1, class T2, class M, class V2>
@@ -115,50 +105,48 @@ namespace numerics {
 		M &
 		gr (M &m, const T &t, const V1 &v1, const V2 &v2) {
 #ifdef NUMERICS_USE_ET
-			return m += t * numerics::outer_prod (v1, v2);
-#else // NUMERICS_USE_ET
-			return m = m + t * numerics::outer_prod (v1, v2);
-#endif // NUMERICS_USE_ET
+			return m += t * outer_prod (v1, v2);
+#else 
+			return m = m + t * outer_prod (v1, v2);
+#endif 
 		}
 
 		template<class M, class T, class V>
 		M &
 		sr (M &m, const T &t, const V &v) {
 #ifdef NUMERICS_USE_ET
-			return m += t * numerics::outer_prod (v, v);
-#else // NUMERICS_USE_ET
-			return m = m + t * numerics::outer_prod (v, v);
-#endif // NUMERICS_USE_ET
+			return m += t * outer_prod (v, v);
+#else 
+			return m = m + t * outer_prod (v, v);
+#endif 
 		}
 		template<class M, class T, class V>
 		M &
 		hr (M &m, const T &t, const V &v) {
 #ifdef NUMERICS_USE_ET
-			return m += t * numerics::outer_prod (v, numerics::conj (v));
-#else // NUMERICS_USE_ET
-			return m = m + t * numerics::outer_prod (v, numerics::conj (v));
-#endif // NUMERICS_USE_ET
+			return m += t * outer_prod (v, conj (v));
+#else 
+			return m = m + t * outer_prod (v, conj (v));
+#endif 
 		}
 
 		template<class M, class T, class V1, class V2>
 		M &
 		sr2 (M &m, const T &t, const V1 &v1, const V2 &v2) {
 #ifdef NUMERICS_USE_ET
-			return m += t * (numerics::outer_prod (v1, v2) + numerics::outer_prod (v2, v1));
-#else // NUMERICS_USE_ET
-			return m = m + t * (numerics::outer_prod (v1, v2) + numerics::outer_prod (v2, v1));
-#endif // NUMERICS_USE_ET
+			return m += t * (outer_prod (v1, v2) + outer_prod (v2, v1));
+#else 
+			return m = m + t * (outer_prod (v1, v2) + outer_prod (v2, v1));
+#endif 
 		}
 		template<class M, class T, class V1, class V2>
 		M &
 		hr2 (M &m, const T &t, const V1 &v1, const V2 &v2) {
 #ifdef NUMERICS_USE_ET
-			return m += t * numerics::outer_prod (v1, numerics::conj (v2)) + 
-						numerics::detail::conj (t) * numerics::outer_prod (v2, numerics::conj (v1));
-#else // NUMERICS_USE_ET
-			return m = m + t * numerics::outer_prod (v1, numerics::conj (v2)) + 
-						   numerics::detail::conj (t) * numerics::outer_prod (v2, numerics::conj (v1));
-#endif // NUMERICS_USE_ET
+			return m += t * outer_prod (v1, conj (v2)) + detail::conj (t) * outer_prod (v2, conj (v1));
+#else 
+			return m = m + t * outer_prod (v1, conj (v2)) + detail::conj (t) * outer_prod (v2, conj (v1));
+#endif 
 		}
 
 	}
@@ -171,10 +159,10 @@ namespace numerics {
 			return m1 = t * prod (m2, m3);
 		}
 
-		template<class M1, class T, class M2>
+		template<class M1, class T, class M2, class C>
 		M1 &
-		tsm (M1 &m1, const T &t, const M2 &m2, int hint) {
-			return m1 = solve (m2, m1, t * m1, hint);
+		tsm (M1 &m1, const T &t, const M2 &m2, C) {
+			return m1 = solve (m2, m1, t * m1, C ());
 		}
 
 		template<class M1, class T1, class T2, class M2, class M3>
@@ -202,12 +190,13 @@ namespace numerics {
 		template<class M1, class T1, class T2, class M2, class M3>
 		M1 &
 		hr2k (M1 &m1, const T1 &t1, const T2 &t2, const M2 &m2, const M3 &m3) {
-			return m1 = t1 * m1 + t2 * prod (m2, herm (m3)) + 
-								  numerics::detail::conj (t2) * prod (m3, herm (m2));
+			return m1 = t1 * m1 + t2 * prod (m2, herm (m3)) + detail::conj (t2) * prod (m3, herm (m2));
 		}
 
 	}
 
 }
 
-#endif // NUMERICS_BLAS_H
+#endif 
+
+

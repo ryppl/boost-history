@@ -1,22 +1,54 @@
+#ifdef USE_MSVC
+
+#pragma warning (disable: 4355)
+#pragma warning (disable: 4503)
+#pragma warning (disable: 4786)
+
+#endif
+
+#include <cstddef>
+
 #include "config.h"
 #include "vector.h"
 #include "matrix.h"
+
+namespace numerics {
+
+    std::size_t type_traits<float>::plus_complexity = 1;
+    std::size_t type_traits<float>::multiplies_complexity = 1;
+    std::size_t type_traits<double>::plus_complexity = 1;
+    std::size_t type_traits<double>::multiplies_complexity = 1;
+
+    std::size_t type_traits<std::complex<float> >::plus_complexity = 2;
+    std::size_t type_traits<std::complex<float> >::multiplies_complexity = 6;
+    std::size_t type_traits<std::complex<double> >::plus_complexity = 2;
+    std::size_t type_traits<std::complex<double> >::multiplies_complexity = 6;
+
+}
 
 #ifdef NUMERICS_USE_INSTANT 
 
 namespace numerics {
 
-    NUMERICS_INLINE
-    unsigned common (size_type size1, size_type size2) {
-#ifndef NUMERICS_FAST_COMMON
-        check<bad_size>::precondition (size1 == size2);
-        return std::min (size1, size2);
-#else // NUMERICS_FAST_COMMON
-        return size1;
-#endif // NUMERICS_FAST_COMMON
-    } 
-
     namespace detail {
+
+        NUMERICS_INLINE
+        float real (const float &t) {
+            return t;
+        }
+        NUMERICS_INLINE
+        double real (const double &t) {
+            return t;
+        }
+
+        NUMERICS_INLINE
+        float imag (const float &t) {
+            return 0;
+        }
+        NUMERICS_INLINE
+        double imag (const double &t) {
+            return 0;
+        }
 
         NUMERICS_INLINE
         float conj (const float &t) {
@@ -25,6 +57,23 @@ namespace numerics {
         NUMERICS_INLINE
         double conj (const double &t) {
             return t;
+        }
+
+        NUMERICS_INLINE
+        float sqrt (const float &t) {
+#ifdef USE_MSVC
+            return ::sqrt (t);
+#else 
+            return std::sqrt (t);
+#endif 
+        }
+        NUMERICS_INLINE
+        double sqrt (const double &t) {
+#ifdef USE_MSVC
+            return ::sqrt (t);
+#else 
+            return std::sqrt (t);
+#endif 
         }
 
         NUMERICS_INLINE

@@ -17,60 +17,58 @@
 #ifndef NUMERICS_STORAGE_H
 #define NUMERICS_STORAGE_H
 
+#include <algorithm>
 #include <valarray>
 #include <vector>
 
 #include "config.h"
 #include "exception.h"
+#include "iterator.h"
 
 namespace numerics {
 
-#ifndef NUMERICS_USE_INSTANT
+    template<class T>
     NUMERICS_INLINE
-    unsigned common (size_type size1, size_type size2) {
+    const T &common (const T &size1, const T &size2) {
 #ifndef NUMERICS_FAST_COMMON
         check<bad_size>::precondition (size1 == size2);
         return std::min (size1, size2);
-#else // NUMERICS_FAST_COMMON
+#else 
         return size1;
-#endif // NUMERICS_FAST_COMMON
+#endif 
     }
-#else // NUMERICS_USE_INSTANT
-    NUMERICS_INLINE
-    unsigned common (size_type size1, size_type size2);
-#endif // NUMERICS_USE_INSTANT
 
     // Unbounded array 
     template<class T>
     class unbounded_array {
     public:      
-        typedef unsigned size_type;
+        typedef std::size_t size_type;
+        typedef std::ptrdiff_t difference_type;
         typedef T value_type;
+        typedef const T &const_reference_type;
         typedef T &reference_type;
+        typedef const T *const_pointer_type;
         typedef T *pointer_type;
-        typedef T *&pointer_reference_type;
 
-        NUMERICS_EXPLICIT
+        // Construction and destruction
         NUMERICS_INLINE
         unbounded_array (): 
-            size_ (0), data_ (new value_type [size]) { 
+            size_ (0), data_ (new value_type [0]) { 
             if (! data_)
                 throw std::bad_alloc ();
         }
-        NUMERICS_EXPLICIT
-        NUMERICS_INLINE
+        NUMERICS_EXPLICIT NUMERICS_INLINE
         unbounded_array (size_type size): 
             size_ (size), data_ (new value_type [size]) { 
             if (! data_)
                 throw std::bad_alloc ();
         }
-        NUMERICS_EXPLICIT
         NUMERICS_INLINE
         unbounded_array (const unbounded_array &a): 
             size_ (a.size_), data_ (new value_type [a.size_]) { 
             if (! data_)
                 throw std::bad_alloc ();
-            safe_copy (*this, a);
+            *this = a;
         }
         NUMERICS_INLINE
         ~unbounded_array () { 
@@ -79,6 +77,7 @@ namespace numerics {
             delete [] data_; 
         }
 
+        // Resizing
         NUMERICS_INLINE
         void resize (size_type size) {
             if (size != size_) {
@@ -87,6 +86,7 @@ namespace numerics {
                     throw std::bad_alloc ();
                 if (! data_)
                     throw std::bad_alloc ();
+                // The content of the array is intentionally not copied.
                 delete data_;
                 size_ = size;
                 data_ = data;
@@ -94,18 +94,11 @@ namespace numerics {
         }
 
         NUMERICS_INLINE
-        pointer_type data () const {
-            return data_;
-        }
-        NUMERICS_INLINE
-        pointer_reference_type data () {
-            return data_;
-        }
-        NUMERICS_INLINE
         size_type size () const { 
             return size_; 
         }
 
+        // Element access
         NUMERICS_INLINE
         value_type operator [] (size_type i) const {
             check<bad_index>::precondition (i < size_);
@@ -117,38 +110,50 @@ namespace numerics {
             return data_ [i];
         }
 
-#ifdef NUMERICS_USE_ITERATOR
-        class const_iterator {
-        public:
-            NUMERICS_INLINE
-            const_iterator (pointer_type p):
-                p_ (p) {}
+        // Assignment
+        NUMERICS_INLINE
+        unbounded_array &operator = (const unbounded_array &a) { 
+            check<external_logic>::precondition (this != &a);
+            check<bad_size>::precondition (size_ == a.size_);
+            std::copy (a.data_, a.data_ + a.size_, data_);
+            return *this;
+        }
+        NUMERICS_INLINE
+        unbounded_array &assign_temporary (unbounded_array &a) { 
+            swap (a);
+            return *this;
+        }
 
-            NUMERICS_INLINE
-            const_iterator operator ++ () {
-                return ++ p_;
-            }
-            NUMERICS_INLINE
-            const_iterator operator -- () {
-                return -- p_;
-            }
-            NUMERICS_INLINE
-            value_type operator * () const {
-                return *p_;
-            }
+        // Swapping
+        NUMERICS_INLINE
+	    void swap (unbounded_array &a) {
+            check<external_logic>::precondition (this != &a);
+            check<bad_size>::precondition (size_ == a.size_);
+            std::swap (size_, a.size_);
+            std::swap (data_, a.data_);
+        }
+#ifndef USE_GCC
+        NUMERICS_INLINE
+	    friend void swap (unbounded_array &a1, unbounded_array &a2) {
+            a1.swap (a2);
+        }
+#endif
 
-            NUMERICS_INLINE
-            friend bool operator == (const const_iterator &it1, const const_iterator &it2) {
-                return it1.p_ == it2.p_;
-            }
-            NUMERICS_INLINE
-            friend bool operator != (const const_iterator &it1, const const_iterator &it2) {
-                return it1.p_ != it2.p_;
-            }
+        // Element insertion
+        NUMERICS_INLINE
+        void clear () {
+            std::fill (begin (), end (), T (0));
+        }
+        NUMERICS_INLINE
+        pointer_type insert (pointer_type it, const value_type &t) {
+            check<bad_index>::precondition (begin () <= it && it < end ());
+            *it = t;
+            return it;
+        }
 
-        protected:
-            pointer_type p_;
-        };
+        // Iterators simply are pointers.
+
+        typedef const_pointer_type const_iterator;
 
         NUMERICS_INLINE
         const_iterator begin () const {
@@ -159,18 +164,7 @@ namespace numerics {
             return data_ + size_;
         }
 
-        class iterator: 
-            public const_iterator {
-        public:
-            NUMERICS_INLINE
-            iterator (pointer_type p):
-                const_iterator (p) {}
-
-            NUMERICS_INLINE
-            reference_type operator * () {
-                return *p_;
-            }
-        };
+        typedef pointer_type iterator;
 
         NUMERICS_INLINE
         iterator begin () {
@@ -180,7 +174,42 @@ namespace numerics {
         iterator end () {
             return data_ + size_;
         }
-#endif // NUMERICS_USE_ITERATOR
+
+        // Reverse iterators
+
+#ifndef USE_GCC
+
+#ifdef USE_MSVC
+        typedef std::reverse_iterator<const_iterator, value_type, const_reference_type> const_reverse_iterator;
+#else
+        typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+#endif
+
+        NUMERICS_INLINE
+        const_reverse_iterator rbegin () const {
+            return const_reverse_iterator (end ());
+        }
+        NUMERICS_INLINE
+        const_reverse_iterator rend () const {
+            return const_reverse_iterator (begin ());
+        }
+
+#ifdef USE_MSVC
+        typedef std::reverse_iterator<iterator, value_type, reference_type> reverse_iterator;
+#else
+        typedef std::reverse_iterator<iterator> reverse_iterator;
+#endif
+
+        NUMERICS_INLINE
+        reverse_iterator rbegin () {
+            return reverse_iterator (end ());
+        }
+        NUMERICS_INLINE
+        reverse_iterator rend () {
+            return reverse_iterator (begin ());
+        }
+
+#endif
 
     private:
         size_type size_;
@@ -189,113 +218,55 @@ namespace numerics {
 
     template<class T>
     NUMERICS_INLINE
-    unbounded_array<T> &safe_copy (unbounded_array<T> &a1, const unbounded_array<T> &a2) {
-        if (&a1 == &a2) 
-            throw external_logic ();
-        size_type size (common (a1.size (), a2.size ()));
-#ifndef NUMERICS_USE_ITERATOR
-        T *data1 = a1.data ();
-        T *data2 = a2.data ();
-        for (size_type i = 0; i < size; ++ i) 
-            data1 [i] = data2 [i];
-#else // NUMERICS_USE_ITERATOR
-        unbounded_array<T>::iterator it1 (a1.begin ());
-        unbounded_array<T>::const_iterator it2 (a2.begin ());
-        for (size_type i = 0; i < size; ++ i) 
-            *it1 = *it2, ++ it1, ++ it2;
-#endif // NUMERICS_USE_ITERATOR
-        return a1;
-    }
-    template<class T>
-    NUMERICS_INLINE
-    unbounded_array<T> &fast_copy (unbounded_array<T> &a1, unbounded_array<T> &a2) {
-        if (&a1 == &a2) 
-            throw external_logic ();
-        check<bad_size>::precondition (a1.size () == a2.size ());
-        T *&data1 = a1.data ();
-        T *&data2 = a2.data ();
-        std::swap (data1, data2);
-        return a1;
-    }
-    template<class T>
-    NUMERICS_INLINE
-    void safe_swap (unbounded_array<T> &a1, unbounded_array<T> &a2) {
-        if (&a1 == &a2) 
-            throw external_logic ();
-        size_type size (common (a1.size (), a2.size ()));
-#ifndef NUMERICS_USE_ITERATOR
-        T *data1 = a1.data ();
-        T *data2 = a2.data ();
-        for (size_type i = 0; i < size; ++ i) 
-            std::swap (data1 [i], data2 [i]);
-#else // NUMERICS_USE_ITERATOR
-        unbounded_array<T>::iterator it1 (a1.begin ());
-        unbounded_array<T>::iterator it2 (a2.begin ());
-        for (size_type i = 0; i < size; ++ i) {
-            T t = *it1; 
-            *it1 = *it2; 
-            *it2 = t; 
-            ++ it1, ++ it2;
-        }
-#endif // NUMERICS_USE_ITERATOR
-    }       
-    template<class T>
-    NUMERICS_INLINE
-    void fast_swap (unbounded_array<T> &a1, unbounded_array<T> &a2) {
-        if (&a1 == &a2) 
-            throw external_logic ();
-        check<bad_size>::precondition (a1.size () == a2.size ());
-        T *&data1 = a1.data ();
-        T *&data2 = a2.data ();
-        std::swap (data1, data2);
+    unbounded_array<T> &assign_temporary (unbounded_array<T> &a1, unbounded_array<T> &a2) { 
+        return a1.assign_temporary (a2);
     }
 
     // Bounded array 
-    template<class T, size_type N>
+    template<class T, std::size_t N>
     class bounded_array {
     public:      
-        typedef unsigned size_type;
+        typedef std::size_t size_type;
+        typedef std::ptrdiff_t difference_type;
         typedef T value_type;
+        typedef const T &const_reference_type;
         typedef T &reference_type;
+        typedef const T *const_pointer_type;
         typedef T *pointer_type;
 
-        NUMERICS_EXPLICIT
+        // Construction and destruction
         NUMERICS_INLINE
         bounded_array (): 
-            size_ (N), data_ () {}
-        NUMERICS_EXPLICIT
-        NUMERICS_INLINE
+            size_ (N) /* , data_ () */ {}
+        NUMERICS_EXPLICIT NUMERICS_INLINE
         bounded_array (size_type size): 
-            size_ (size), data_ () {
+            size_ (size) /* , data_ () */ {
             if (size_ > N) 
                 throw std::bad_alloc ();
         }
-        NUMERICS_EXPLICIT
         NUMERICS_INLINE
         bounded_array (const bounded_array &a): 
-            size_ (a.size_), data_ () { 
+            size_ (a.size_) /* , data_ () */ { 
             if (size_ > N) 
                 throw std::bad_alloc ();
-            safe_copy (*this, a);
+            *this = a;
         }
-        ~bounded_array () {}
 
+        // Resizing
         NUMERICS_INLINE
         void resize (size_type size) {
-            size_ = size;
-            if (size_ > N) 
+            if (size > N) 
                 throw std::bad_alloc ();
+            // The content of the array is intentionally not copied.
+            size_ = size;
         }
 
-        NUMERICS_INLINE
-        pointer_type data () const {
-            return const_cast<pointer_type> (data_);
-        }
         NUMERICS_INLINE
         size_type size () const { 
             return size_; 
         }
 
+        // Element access
         NUMERICS_INLINE
         value_type operator [] (size_type i) const {
             check<bad_index>::precondition (i < size_);
@@ -307,60 +278,60 @@ namespace numerics {
             return data_ [i];
         }
 
-#ifdef NUMERICS_USE_ITERATOR
-        class const_iterator {
-        public:
-            NUMERICS_INLINE
-            const_iterator (pointer_type p):
-                p_ (p) {}
+        // Assignment
+        NUMERICS_INLINE
+        bounded_array &operator = (const bounded_array &a) { 
+            check<external_logic>::precondition (this != &a);
+            check<bad_size>::precondition (size_ == a.size_);
+            std::copy (a.data_, a.data_ + a.size_, data_);
+            return *this;
+        }
+        NUMERICS_INLINE
+        bounded_array &assign_temporary (bounded_array &a) { 
+            *this = a;
+            return *this;
+        }
 
-            NUMERICS_INLINE
-            const_iterator operator ++ () {
-                return ++ p_;
-            }
-            NUMERICS_INLINE
-            const_iterator operator -- () {
-                return -- p_;
-            }
-            NUMERICS_INLINE
-            value_type operator * () const {
-                return *p_;
-            }
+        // Swapping
+        NUMERICS_INLINE
+	    void swap (bounded_array &a) {
+            check<external_logic>::precondition (this != &a);
+            check<bad_size>::precondition (size_ == a.size_);
+            std::swap_ranges (data_, data_ + size_, a.data_);
+        }
+#ifndef USE_GCC
+        NUMERICS_INLINE
+	    friend void swap (bounded_array &a1, bounded_array &a2) {
+            a1.swap (a2);
+        }
+#endif
 
-            NUMERICS_INLINE
-            friend bool operator == (const const_iterator &it1, const const_iterator &it2) {
-                return it1.p_ == it2.p_;
-            }
-            NUMERICS_INLINE
-            friend bool operator != (const const_iterator &it1, const const_iterator &it2) {
-                return it1.p_ != it2.p_;
-            }
+        // Element insertion
+        NUMERICS_INLINE
+        void clear () {
+            std::fill (begin (), end (), T (0));
+        }
+        NUMERICS_INLINE
+        pointer_type insert (pointer_type it, const value_type &t) {
+            check<bad_index>::precondition (begin () <= it && it < end ());
+            *it = t;
+            return it;
+        }
 
-        protected:
-            pointer_type p_;
-        };
+        // Iterators simply are pointers.
+
+        typedef const_pointer_type const_iterator;
 
         NUMERICS_INLINE
         const_iterator begin () const {
-            return const_cast<pointer_type> (data_);
+            return data_;
         }
         NUMERICS_INLINE
         const_iterator end () const {
-            return const_cast<pointer_type> (data_) + size_;
+            return data_ + size_;
         }
 
-        class iterator:
-            public const_iterator {
-        public:
-            NUMERICS_INLINE
-            iterator (pointer_type p):
-                const_iterator (p) {}
-
-            NUMERICS_INLINE
-            reference_type operator * () {
-                return *p_;
-            }
-        };
+        typedef pointer_type iterator;
 
         NUMERICS_INLINE
         iterator begin () {
@@ -370,133 +341,228 @@ namespace numerics {
         iterator end () {
             return data_ + size_;
         }
-#endif // NUMERICS_USE_ITERATOR
+
+        // Reverse iterators
+
+#ifndef USE_GCC
+
+#ifdef USE_MSVC
+        typedef std::reverse_iterator<const_iterator, value_type, const_reference_type> const_reverse_iterator;
+#else
+        typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+#endif
+
+        NUMERICS_INLINE
+        const_reverse_iterator rbegin () const {
+            return const_reverse_iterator (end ());
+        }
+        NUMERICS_INLINE
+        const_reverse_iterator rend () const {
+            return const_reverse_iterator (begin ());
+        }
+
+#ifdef USE_MSVC
+        typedef std::reverse_iterator<iterator, value_type, reference_type> reverse_iterator;
+#else
+        typedef std::reverse_iterator<iterator> reverse_iterator;
+#endif
+
+        NUMERICS_INLINE
+        reverse_iterator rbegin () {
+            return reverse_iterator (end ());
+        }
+        NUMERICS_INLINE
+        reverse_iterator rend () {
+            return reverse_iterator (begin ());
+        }
+
+#endif
 
     private:
         size_type size_;
         value_type data_ [N];
     };
 
-    template<class T, size_type N>
+    template<class T, std::size_t N>
     NUMERICS_INLINE
-    bounded_array<T, N> &safe_copy (bounded_array<T, N> &a1, const bounded_array<T, N> &a2) {
-        if (&a1 == &a2) 
-            throw external_logic ();
-        size_type size (common (a1.size (), a2.size ()));
-#ifndef NUMERICS_USE_ITERATOR
-        T *data1 = a1.data ();
-        T *data2 = a2.data ();
-        for (size_type i = 0; i < size; ++ i) 
-            data1 [i] = data2 [i];
-#else // NUMERICS_USE_ITERATOR
-        bounded_array<T, N>::iterator it1 (a1.begin ());
-        bounded_array<T, N>::const_iterator it2 (a2.begin ());
-        for (size_type i = 0; i < size; ++ i) 
-            *it1 = *it2, ++ it1, ++ it2;
-#endif // NUMERICS_USE_ITERATOR
+    bounded_array<T, N> &assign_temporary (bounded_array<T, N> &a1, bounded_array<T, N> &a2) { 
+        return a1.assign_temporary (a2);
+    }
+
+    template<class T>
+    NUMERICS_INLINE
+    std::valarray<T> &assign_temporary (std::valarray<T> &a1, std::valarray<T> &a2) { 
+        check<external_logic>::precondition (&a1 != &a2);
+        check<bad_size>::precondition (a1.size () == a2.size ());
+        return a1 = a2;
+    }
+
+    template<class T>
+    NUMERICS_INLINE
+    std::vector<T> &assign_temporary (std::vector<T> &a1, std::vector<T> &a2) { 
+        check<external_logic>::precondition (&a1 != &a2);
+        check<bad_size>::precondition (a1.size () == a2.size ());
+        a1.swap (a2);
         return a1;
     }
-    template<class T, size_type N>
-    NUMERICS_INLINE
-    bounded_array<T, N>  &fast_copy (bounded_array<T, N>  &a1, bounded_array<T, N>  &a2) {
-        return safe_copy (a1, a2);
-    }
-    template<class T, size_type N>
-    NUMERICS_INLINE
-    void safe_swap (bounded_array<T, N>  &a1, bounded_array<T, N>  &a2) {
-        if (&a1 == &a2) 
-            throw external_logic ();
-        size_type size (common (a1.size (), a2.size ()));
-#ifndef NUMERICS_USE_ITERATOR
-        T *data1 = a1.data ();
-        T *data2 = a2.data ();
-        for (size_type i = 0; i < size; ++ i) 
-            std::swap (data1 [i], data2 [i]);
-#else // NUMERICS_USE_ITERATOR
-        bounded_array<T, N>::iterator it1 (a1.begin ());
-        bounded_array<T, N>::iterator it2 (a2.begin ());
-        for (size_type i = 0; i < size; ++ i) {
-            T t = *it1;
-            *it1 = *it2;
-            *it2 = t;
-            ++ it1, ++ it2;
+
+    // Range class
+    class range {
+    public:
+        typedef std::size_t size_type;
+        typedef std::ptrdiff_t difference_type;
+        typedef difference_type value_type;
+        typedef size_type const_iterator_type;
+
+        // Construction and destruction
+        NUMERICS_INLINE
+        range (size_type start, size_type stop): 
+            start_ (start), size_ (stop - start) {
+            check<bad_size>::precondition (start <= stop);
         }
-#endif // NUMERICS_USE_ITERATOR
-    }
-    template<class T, size_type N>
-    NUMERICS_INLINE
-    void fast_swap (bounded_array<T, N>  &a1, bounded_array<T, N>  &a2) {
-        safe_swap (a1, a2);
-    }
 
-    template<class T>
-    NUMERICS_INLINE
-    std::valarray<T> &safe_copy (std::valarray<T> &a1, const std::valarray<T> &a2) {
-        if (&a1 == &a2) 
-            throw external_logic ();
-        return a1 = a2;
-    }
-    template<class T>
-    NUMERICS_INLINE
-    std::valarray<T> &fast_copy (std::valarray<T> &a1, std::valarray<T> &a2) {
-        if (&a1 == &a2) 
-            throw external_logic ();
-        return a1 = a2;
-    }
-    template<class T>
-    NUMERICS_INLINE
-    void safe_swap (std::valarray<T> &a1, std::valarray<T> &a2) {
-        if (&a1 == &a2) 
-            throw external_logic ();
-        std::swap (a1, a2);
-    }
-    template<class T>
-    NUMERICS_INLINE
-    void fast_swap (std::valarray<T> &a1, std::valarray<T> &a2) {
-        if (&a1 == &a2) 
-            throw external_logic ();
-        std::swap (a1, a2);
-    }
+        NUMERICS_INLINE
+        size_type start () const { 
+            return start_; 
+        }
+        NUMERICS_INLINE
+        size_type size () const { 
+            return size_; 
+        }
 
-    template<class T>
-    NUMERICS_INLINE
-    std::vector<T> &safe_copy (std::vector<T> &a1, const std::vector<T> &a2) {
-        if (&a1 == &a2) 
-            throw external_logic ();
-        return a1 = a2;
-    }
-    template<class T>
-    NUMERICS_INLINE
-    std::vector<T> &fast_copy (std::vector<T> &a1, std::vector<T> &a2) {
-        if (&a1 == &a2) 
-            throw external_logic ();
-        return a1 = a2;
-    }
-    template<class T>
-    NUMERICS_INLINE
-    void safe_swap (std::vector<T> &a1, std::vector<T> &a2) {
-        if (&a1 == &a2) 
-            throw external_logic ();
-        std::swap (a1, a2);
-    }
-    template<class T>
-    NUMERICS_INLINE
-    void fast_swap (std::vector<T> &a1, std::vector<T> &a2) {
-        if (&a1 == &a2) 
-            throw external_logic ();
-        std::swap (a1, a2);
-    }
+        // Element access
+        NUMERICS_INLINE
+        value_type operator () (size_type i) const { 
+            check<bad_index>::precondition (i < size_);
+            return start_ + i; 
+        }
+
+        // Composition
+        NUMERICS_INLINE
+        range composite (const range &r) const {
+            return range (start_ + r.start_, start_ + r.start_ + r.size_);
+        }
+
+        // Comparison
+        NUMERICS_INLINE
+        bool operator == (const range &r) const {
+            return start_ == r.start_ && size_ == r.size_; 
+        }
+        NUMERICS_INLINE
+        bool operator != (const range &r) const {
+            return ! (*this == r); 
+        }
+
+        // Iterator simply is a index.
+
+        class const_iterator:
+            public container_const_reference<range>,
+            public random_access_iterator_base<const_iterator, value_type> {
+        public:
+
+            // Construction and destruction
+            NUMERICS_INLINE
+            const_iterator (const range &r, const const_iterator_type &it): 
+                container_const_reference<range> (r), it_ (it) {}
+
+            // Arithmetic
+            NUMERICS_INLINE
+            const_iterator &operator ++ () {
+                ++ it_;
+                return *this;
+            }
+            NUMERICS_INLINE
+            const_iterator &operator -- () {
+                -- it_;
+                return *this;
+            }
+            NUMERICS_INLINE
+            const_iterator &operator += (difference_type n) {
+                it_ += n;
+                return *this;
+            }
+            NUMERICS_INLINE
+            const_iterator &operator -= (difference_type n) {
+                it_ -= n;
+                return *this;
+            }
+            NUMERICS_INLINE
+            difference_type operator - (const const_iterator &it) const {
+                return it_ - it.it_;
+            }
+
+            // Dereference
+            NUMERICS_INLINE
+            value_type operator * () const {
+                check<bad_index>::precondition ((*this) ().start () <= it_);
+                check<bad_index>::precondition (it_ < (*this) ().start () + (*this) ().size ());
+                return it_; 
+            }
+
+            // Index
+            NUMERICS_INLINE
+            size_type index () const {
+                return it_ - (*this) ().start ();
+            }
+
+            // Comparison
+            NUMERICS_INLINE
+            bool operator == (const const_iterator &it) const {
+                check<external_logic>::precondition (&(*this) () == &it ());
+                return it_ == it.it_; 
+            }
+
+        private:
+            const_iterator_type it_;
+        };
+
+        NUMERICS_INLINE
+        const_iterator begin () const {
+            return const_iterator (*this, start_);
+        }
+        NUMERICS_INLINE
+        const_iterator end () const {
+            return const_iterator (*this, start_ + size_); 
+        }
+
+        // Reverse iterator
+
+#ifndef USE_GCC
+
+#ifdef USE_MSVC
+        typedef std::reverse_iterator<const_iterator, value_type, value_type> const_reverse_iterator;
+#else
+        typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+#endif
+
+        NUMERICS_INLINE
+        const_reverse_iterator rbegin () const {
+            return const_reverse_iterator (end ());
+        }
+        NUMERICS_INLINE
+        const_reverse_iterator rend () const {
+            return const_reverse_iterator (begin ());
+        }
+
+#endif
+
+    private:
+        size_type start_;
+        size_type size_;
+    };
 
     // Slice class
     class slice {
     public:
-        typedef unsigned size_type;
+        typedef std::size_t size_type;
+        typedef std::ptrdiff_t difference_type;
+        typedef difference_type value_type;
+        typedef size_type const_iterator_type;
 
+        // Construction and destruction
         NUMERICS_INLINE
         slice (size_type start, size_type stride, size_type size): 
             start_ (start), stride_ (stride), size_ (size) {}
-        NUMERICS_INLINE
-        virtual ~slice () {}
 
         NUMERICS_INLINE
         size_type start () const { 
@@ -511,57 +577,96 @@ namespace numerics {
             return size_; 
         }
 
+        // Element access
         NUMERICS_INLINE
-        size_type operator () (size_type i) const { 
+        value_type operator () (size_type i) const { 
             check<bad_index>::precondition (i < size_);
             return start_ + i * stride_; 
         }
 
+        // Composition
         NUMERICS_INLINE
-        friend bool operator == (const slice &s1, const slice &s2) {
-            return s1.start_ == s2.start_ && s1.stride_ == s2.stride_ && s1.size_ == s2.size_; 
+        slice composite (const range &r) const {
+            return slice (start_ + stride_ * r.start (), stride_, r.size ());
         }
         NUMERICS_INLINE
-        friend bool operator != (const slice &s1, const slice &s2) {
-            return s1.start_ != s2.start_ || s1.stride_ != s2.stride_ || s1.size_ != s2.size_; 
+        slice composite (const slice &s) const {
+            return slice (start_ + stride_ * s.start_, stride_ * s.stride_, s.size_);
         }
 
-#ifdef NUMERICS_USE_ITERATOR
-        class const_iterator {
+        // Comparison
+        NUMERICS_INLINE
+        bool operator == (const slice &s) const {
+            return start_ == s.start_ && stride_ == s.stride_ && size_ == s.size_; 
+        }
+        NUMERICS_INLINE
+        bool operator != (const slice &s) const {
+            return ! (*this == s); 
+        }
+
+        // Iterator simply is a index.
+
+        class const_iterator:
+            public container_const_reference<slice>,
+            public random_access_iterator_base<const_iterator, value_type> {
         public:
-            NUMERICS_INLINE
-            const_iterator (const slice &s, size_type i): 
-                s_ (s), i_ (i) {}
 
+            // Construction and destruction
+            NUMERICS_INLINE
+            const_iterator (const slice &s, const const_iterator_type &it): 
+                container_const_reference<slice> (s), it_ (it) {}
+
+            // Arithmetic
             NUMERICS_INLINE
             const_iterator &operator ++ () {
-                i_ += s_.stride ();
+                it_ += (*this) ().stride ();
                 return *this;
             }
             NUMERICS_INLINE
             const_iterator &operator -- () {
-                i_ -= s_.stride ();
+                it_ -= (*this) ().stride ();
                 return *this;
             }
             NUMERICS_INLINE
-            size_type operator * () const {
-                // Stride may be 0!
-                check<bad_index>::precondition (i_ <= s_.start () + (s_.size () - 1) * s_.stride ());
-                return i_; 
-            }
-
-            NUMERICS_INLINE
-            friend bool operator == (const const_iterator &it1, const const_iterator &it2) {
-                return it1.s_ == it2.s_ && it1.i_ == it2.i_; 
+            const_iterator &operator += (difference_type n) {
+                it_ += n * (*this) ().stride ();
+                return *this;
             }
             NUMERICS_INLINE
-            friend bool operator != (const const_iterator &it1, const const_iterator &it2) {
-                return it1.s_ != it2.s_ || it1.i_ != it2.i_; 
+            const_iterator &operator -= (difference_type n) {
+                it_ -= n * (*this) ().stride ();
+                return *this;
+            }
+            NUMERICS_INLINE
+            difference_type operator - (const const_iterator &it) const {
+                check<divide_by_zero>::precondition ((*this) ().stride () != 0);
+                return (it_ - it.it_) / (*this) ().stride ();
             }
 
-        protected:
-            const slice &s_;
-            size_type i_;
+            // Dereference
+            NUMERICS_INLINE
+            value_type operator * () const {
+                check<bad_index>::precondition ((*this) ().start () <= it_);
+                check<bad_index>::precondition (it_ < (*this) ().start () + (*this) ().stride () * (*this) ().size ());
+                return it_; 
+            }
+
+            // Index
+            NUMERICS_INLINE
+            size_type index () const {
+                check<divide_by_zero>::precondition ((*this) ().stride () != 0);
+                return (it_ - (*this) ().start ()) / (*this) ().stride ();
+            }
+
+            // Comparison
+            NUMERICS_INLINE
+            bool operator == (const const_iterator &it) const {
+                check<external_logic>::precondition (&(*this) () == &it ());
+                return it_ == it.it_; 
+            }
+
+        private:
+            const_iterator_type it_;
         };
 
         NUMERICS_INLINE
@@ -570,10 +675,29 @@ namespace numerics {
         }
         NUMERICS_INLINE
         const_iterator end () const {
-            // Stride may be 0!
-            return const_iterator (*this, start_ + (size_ - 1) * stride_ + 1); 
+            return const_iterator (*this, start_ + stride_ * size_); 
         }
-#endif // NUMERICS_USE_ITERATOR
+
+        // Reverse iterator
+
+#ifndef USE_GCC
+
+#ifdef USE_MSVC
+        typedef std::reverse_iterator<const_iterator, value_type, value_type> const_reverse_iterator;
+#else
+        typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+#endif
+
+        NUMERICS_INLINE
+        const_reverse_iterator rbegin () const {
+            return const_reverse_iterator (end ());
+        }
+        NUMERICS_INLINE
+        const_reverse_iterator rend () const {
+            return const_reverse_iterator (begin ());
+        }
+
+#endif
 
     private:
         size_type start_;
@@ -583,4 +707,6 @@ namespace numerics {
 
 }
 
-#endif // NUMERICS_STORAGE_H
+#endif 
+
+

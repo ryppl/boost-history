@@ -23,6 +23,12 @@
 
 namespace numerics {
 
+    struct divide_by_zero:
+        public std::exception {
+        virtual const char *what () const {
+            return "divide by zero";
+        }
+    };
     struct internal_logic:
         public std::exception {
         virtual const char *what () const {
@@ -70,38 +76,35 @@ namespace numerics {
     struct check {
         static 
         NUMERICS_INLINE
-        bool enabled () {
-#ifdef NUMERICS_BOUNDS_CHECK
-            return true;
-#else // NUMERICS_BOUNDS_CHECK
-            return false;
-#endif // NUMERICS_BOUNDS_CHECK
+        void precondition (bool expression) {
+            if (! expression)
+                throw E ();
         }
         static 
         NUMERICS_INLINE
-        void precondition (bool expr) {
-#ifdef NUMERICS_BOUNDS_CHECK
-            if (! expr)
+        void postcondition (bool expression) {
+            if (! expression)
                 throw E ();
-#endif // NUMERICS_BOUNDS_CHECK
         }
         static 
         NUMERICS_INLINE
-        void postcondition (bool expr) {
-#ifdef NUMERICS_BOUNDS_CHECK
-            if (! expr)
+        void invariant (bool expression) {
+            if (! expression)
                 throw E ();
-#endif // NUMERICS_BOUNDS_CHECK
         }
         static 
         NUMERICS_INLINE
-        void invariant (bool expr) {
-#ifdef NUMERICS_BOUNDS_CHECK
-            if (! expr)
-                throw E ();
-#endif // NUMERICS_BOUNDS_CHECK
-        }
+        void nop () {}
     };
+
+#ifndef NUMERICS_BOUNDS_CHECK
+#define precondition(expression) nop()
+#define postcondition(expression) nop()
+#define invariant(expression) nop()
+#endif
+    
 }
 
-#endif // NUMERICS_EXCEPTION_H
+#endif 
+
+
