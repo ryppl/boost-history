@@ -39,7 +39,7 @@
 #include "boost/type_traits/is_member_function_pointer.hpp"
 #include "boost/type_traits/is_member_pointer.hpp"
 #include "boost/type_traits/is_object.hpp"
-#include "boost/type_traits/is_POD.hpp"
+#include "boost/type_traits/is_pod.hpp"
 #include "boost/type_traits/is_pointer.hpp"
 #include "boost/type_traits/is_reference.hpp"
 #include "boost/type_traits/is_same.hpp"
