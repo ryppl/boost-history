@@ -661,11 +661,11 @@ const string & attribute_value( const xml::element & element,
 
   void do_table()
   {
-    fs::path bin_path( locate_root / "bin/boost/status" );
+    string relative( fs::initial_path().string() );
+    relative.erase( 0, boost_root.string().size()+1 );
+    fs::path bin_path( locate_root / "bin/boost" / relative );
     if (!fs::exists(bin_path))
     {
-      string relative( fs::initial_path().string() );
-      relative.erase( 0, boost_root.string().size()+1 );
       bin_path = fs::path( locate_root / relative / "bin" );
     }
 
