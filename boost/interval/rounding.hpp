@@ -16,7 +16,7 @@ namespace boost {
   template<class T>
   struct rounding_control
   {
-    typedef void rounding_mode;
+    typedef int rounding_mode;
     rounding_mode get_rounding_mode()               {}
     void          set_rounding_mode(rounding_mode)  {}
     void          upward   ()                       {}

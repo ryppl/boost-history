@@ -5,6 +5,8 @@
 #error Internal header file: This header must be included by <boost/interval.hpp> only.
 #endif
 
+#include <algorithm>
+
 /*
  * Implementation of simple functions
  */
