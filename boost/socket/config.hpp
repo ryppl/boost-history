@@ -30,7 +30,7 @@ namespace boost
   {
 
     typedef unsigned int size_t;
-    typedef short family_t;
+    typedef int family_t;
     typedef unsigned short port_t;
     typedef int protocol_type_t;
     typedef int protocol_t;

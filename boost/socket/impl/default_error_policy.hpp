@@ -193,11 +193,18 @@ namespace boost
           case unknown_protocol :
             boost::throw_exception(
               socket_exception("Unknown protocol",error));;
+          case system_specific_error :
+            boost::throw_exception(
+              socket_exception("System specific error",error));;
           default:
             boost::throw_exception(
               socket_exception("Unknown error",error));;
         }
+        // this is here as the compiler can not know if throw_exception
+        // will throw !
+        return system_specific_error;
       }
+
     };
 
   }// namespace
