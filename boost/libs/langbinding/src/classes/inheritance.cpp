@@ -152,7 +152,7 @@ namespace
   //
   // Our index of class types
   //
-  using boost::langbinding::classes::dynamic_id_function;
+  using boost::langbinding::classes::aux::dynamic_id_function;
   typedef tuples::tuple<
       class_id               // static type
       , vertex_t             // corresponding vertex 
@@ -401,7 +401,7 @@ namespace
     
       // Look up the dynamic_id function and call it to get the dynamic
       // info
-      boost::langbinding::classes::dynamic_id_t dynamic_id = polymorphic
+      boost::langbinding::classes::aux::dynamic_id_t dynamic_id = polymorphic
           ? tuples::get<kdynamic_id>(*src_p)(p)
           : std::make_pair(p, src_t);
     

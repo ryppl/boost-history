@@ -13,7 +13,7 @@
 # include <boost/type_traits/is_base_and_derived.hpp>
 # include <boost/detail/workaround.hpp>
 
-namespace boost { namespace langbinding { namespace classes {
+namespace boost { namespace langbinding { namespace classes { namespace aux {
    
 typedef util::type_info class_id;
 using util::type_id;
@@ -27,12 +27,6 @@ BOOST_LANGBINDING_DECL void register_dynamic_id_aux(
 
 BOOST_LANGBINDING_DECL void add_cast(
     class_id src_t, class_id dst_t, void* (*cast)(void*), bool is_downcast);
-
-BOOST_LANGBINDING_DECL void* find_static_type(
-    void* p, class_id src, class_id dst);
-
-BOOST_LANGBINDING_DECL void* find_dynamic_type(
-    void* p, class_id src, class_id dst);
 
 //
 // a generator with an execute() function which, given a source type
@@ -72,13 +66,15 @@ struct dynamic_id_generator
     >
 {};
 
+} // namespace aux
+
 // Register the dynamic id function for T with the type-conversion
 // system.
 template <class T>
 void register_dynamic_id(T* = 0)
 {
-    typedef typename dynamic_id_generator<T>::type generator;
-    register_dynamic_id_aux(
+    typedef typename aux::dynamic_id_generator<T>::type generator;
+    aux::register_dynamic_id_aux(
         util::type_id<T>(), &generator::execute);
 }
 
@@ -87,6 +83,8 @@ void register_dynamic_id(T* = 0)
 // pointing to an object of type Source will attempt to convert it to
 // an object of type Target.
 //
+
+namespace aux {
 
 template <class Source, class Target>
 struct dynamic_cast_generator
@@ -119,15 +117,17 @@ struct cast_generator
 {
 };
 
+} // namespace aux
+
 template <class Source, class Target>
 inline void register_conversion(
     bool is_downcast = ::boost::is_base_and_derived<Source,Target>::value
     // These parameters shouldn't be used; they're an MSVC bug workaround
     , Source* = 0, Target* = 0)
 {
-    typedef typename cast_generator<Source,Target>::type generator;
+    typedef typename aux::cast_generator<Source,Target>::type generator;
 
-    add_cast(
+    aux::add_cast(
         util::type_id<Source>()
       , util::type_id<Target>()
       , &generator::execute
