@@ -506,8 +506,7 @@ else
 			the <code>enable_shared_from_this</code> base class and performs the 
 			initialization automatically.</p>
 		<h3>E. Size and Performance</h3>
-		<h4>1. Memory Footprint
-		</h4>
+		<h4>1. Memory Footprint</h4>
 		<p>In the Boost implementation, the size of <EM>shared_ptr</EM> (and <EM>weak_ptr</EM>) 
 			is twice the size of a raw pointer. More precisely, <code>sizeof(shared_ptr&lt;T&gt;) 
 				== sizeof(weak_ptr&lt;T&gt;) == sizeof(T*) + sizeof(C*)</code>, where <code>C</code>
@@ -528,18 +527,18 @@ else
 			Original pointer passed to the constructor;
 			<LI>
 				Deleter.</LI></UL>
-		<P>On a typical implementation where a pointer and a long are both four bytes in 
-			size and no custom deleters are used, <code>sizeof(C)</code> is 20 in 
-			singlethreaded builds, 24 in multithreaded builds on Windows (the 
+		<P>On a typical implementation where a pointer and a <code>long</code> are both 
+			four bytes in size and no custom deleters are used, <code>sizeof(C)</code> is 
+			20 in singlethreaded builds, 24 in multithreaded builds on Windows (the 
 			implementation uses a custom spinlock-based mutex), and 44 on Linux using the 
 			platform's <code>pthread_mutex_t</code>.</P>
 		<P>It is possible to save four bytes when the deleter is an empty class (most 
 			deleters are) by taking advantage of the empty base optimization, for example 
 			by using a helper component such as <code><A href="http://www.boost.org/libs/utility/compressed_pair.htm">
-					boost::compressed_pair</A></code> [<A href="#Boost00">Boost00</A>]. 
-			The Boost implementation does not attempt to optimize out the deleter in order 
-			to minimize dependencies and maximize portability (<code>boost::shared_ptr</code>
-			is a critical dependency for many Boost libraries and it is important for it to 
+					boost::compressed_pair</A></code> [<A href="#Boost00">Boost00</A>]. The 
+			Boost implementation does not attempt to optimize out the deleter in order to 
+			minimize dependencies and maximize portability (<code>boost::shared_ptr</code> is 
+			a critical dependency for many Boost libraries and it is important for it to 
 			work reliably on all supported platforms.)</P>
 		<P>The mutex presents another target for platform-specific optimizations. On 
 			Windows, we have been able to use a simple one-word spinlock instead of a 6 
@@ -558,17 +557,36 @@ else
 				::operator new</code> and <code>::operator delete</code>. The weak count 
 			supports <EM>weak_ptr</EM>. The original pointer passed at construction time 
 			needs to be remembered for <code>shared_ptr&lt;X&gt;</code> to be able to 
-			correctly destroy the object when <code>X</code> is incomplete or 
-			</CODE>void</CODE>, <code>~X</code> is inaccessible, or <code>~X</code> is not 
-			virtual.</P>
+			correctly destroy the object when <code>X</code> is incomplete or <code>void</code>,
+			<code>~X</code> is inaccessible, or <code>~X</code> is not virtual.</P>
 		<P>An earlier, less featured, version of <code>boost::shared_ptr</code> used a 
-			single long as <code>C</code>. The transition to the new version having a much 
-			larger count structure went painlessly, and we registered no user complaints.</P>
+			single <code>long</code> as <code>C</code>. The transition to the new version 
+			having a much larger count structure went painlessly, and we registered no user 
+			complaints.</P>
+		<h4>2. Construction Performance</h4>
+		<p>The Boost implementation allocates a reference count structure whenever a <EM>shared_ptr</EM>
+			instance is constructed from a pointer, the typical case being:</p>
+		<pre>shared_ptr&lt;X&gt; px(new X);</pre>
+		<P>Note that in the common case there are two allocations being performed, an 
+			object allocation (<code>new X</code>) and a count allocation.</P>
+		<P>On a typical desktop machine (Athlon 1.4GHz running Windows XP), 1048576 (2<SUP>20</SUP>) 
+			such statements take about 1.75 seconds, a more than adequate performance 
+			considering that typical code rarely needs to repeatedly allocate so many 
+			objects.</P>
+		<P>We have also experimented with using a pool allocator for the count structure. 
+			The same test is executed for about 1.15 seconds under the same implementation. 
+			However, the additional step of reusing the same allocator for the object 
+			allocation as well gives a result of about 0.78 seconds, with the likely 
+			conclusion (also supported by [<A href="#Berger02">Berger02</A>]) that it would 
+			be better to optimize the global <code>::operator new</code> allocator instead 
+			of focusing on the internal allocations performed by <EM>shared_ptr</EM>.</P>
+		<h4>2. Copy Performance</h4>
+		<p>...</p>
 		<h3>F. Alternatives</h3>
 		<h4>1. Policy Based Smart Pointers</h4>
-		<p>[...]</p>
+		<p>...</p>
 		<h4>2. Garbage Collection</h4>
-		<p>[...]</p>
+		<p>...</p>
 		<h2>IV. Proposed Text</h2>
 		<h3>A. Additions to header &lt;memory&gt; synopsis (20.4)</h3>
 		<pre>  class bad_weak_ptr;
@@ -635,7 +653,7 @@ else
       public:
         typedef T element_type;
 
-        <em>// constructors</em>
+        <em>// constructors</EM>
         shared_ptr();
         template&lt;class Y&gt; explicit shared_ptr(Y * p);
         template&lt;class Y, class D&gt; shared_ptr(Y * p, D d);
@@ -644,30 +662,30 @@ else
         template&lt;class Y&gt; explicit shared_ptr(weak_ptr&lt;Y&gt; const &amp; r);
         template&lt;class Y&gt; explicit shared_ptr(auto_ptr&lt;Y&gt; &amp; r);
 
-        <em>// destructor</em>
+        <em>// destructor</EM>
         ~shared_ptr();
 
-        <em>// assignment</em>
+        <em>// assignment</EM>
         shared_ptr &amp; operator=(shared_ptr const &amp; r);
         template&lt;class Y&gt; shared_ptr &amp; operator=(shared_ptr&lt;Y&gt; const &amp; r);
         template&lt;class Y&gt; shared_ptr &amp; operator=(auto_ptr&lt;Y&gt; &amp; r);
 
-        <em>// modifiers</em>
+        <em>// modifiers</EM>
         void swap(shared_ptr &amp; r);
         void reset();
         template&lt;class Y&gt; void reset(Y * p);
         template&lt;class Y, class D&gt; void reset(Y * p, D d);
 
-        <em>// observers</em>
+        <em>// observers</EM>
         T * get() const;
         T &amp; operator*() const;
         T * operator-&gt;() const;
         long use_count() const;
         bool unique() const;
-        operator <em>unspecified-bool-type</em>() const;
+        operator <em>unspecified-bool-type</EM>() const;
       };
 
-      <em>// comparison</em>
+      <em>// comparison</EM>
       template&lt;class T, class U&gt;
         bool operator==(shared_ptr&lt;T&gt; const &amp; a, shared_ptr&lt;U&gt; const &amp; b);
 
@@ -677,21 +695,21 @@ else
       template&lt;class T, class U&gt;
         bool operator&lt;(shared_ptr&lt;T&gt; const &amp; a, shared_ptr&lt;U&gt; const &amp; b);
 
-      <em>// other operators</em>
+      <em>// other operators</EM>
       template&lt;class E, class T, class Y&gt;
         basic_ostream&lt;E, T&gt; &amp; operator&lt;&lt; (basic_ostream&lt;E, T&gt; &amp; os, shared_ptr&lt;Y&gt; const &amp; p);
 
-      <em>// specialized algorithms</em>
+      <em>// specialized algorithms</EM>
       template&lt;class T&gt; void swap(shared_ptr&lt;T&gt; &amp; a, shared_ptr&lt;T&gt; &amp; b);
 
-      <em>// casts</em>
+      <em>// casts</EM>
       template&lt;class T, class U&gt;
         shared_ptr&lt;T&gt; static_pointer_cast(shared_ptr&lt;U&gt; const &amp; r);
 
       template&lt;class T, class U&gt;
         shared_ptr&lt;T&gt; dynamic_pointer_cast</A>(shared_ptr&lt;U&gt; const &amp; r);
 
-      <em>// get_deleter</em>
+      <em>// get_deleter</EM>
       template&lt;class D, class T&gt;
         D * get_deleter(shared_ptr&lt;T&gt; const &amp; p);
     }
@@ -853,7 +871,7 @@ else
 		<P><B>Notes:</B> <code>unique()</code> may be faster than <code>use_count()</code>. 
 			If you are using <code>unique()</code> to implement copy on write, do not rely 
 			on a specific value when <code>get() == 0</code>.</P>
-		<pre>    operator <em>unspecified-bool-type</em> () const;
+		<pre>    operator <em>unspecified-bool-type</EM> () const;
 </pre>
 		<p><b>Returns:</b> an unspecified value that, when used in boolean contexts, is 
 			equivalent to <code>get() != 0</code>.</p>
@@ -949,35 +967,35 @@ else
       public:
         typedef T element_type;
 
-        <em>// constructors</em>
+        <em>// constructors</EM>
         weak_ptr();
         template&lt;class Y&gt; weak_ptr(shared_ptr&lt;Y&gt; const &amp; r);
         weak_ptr(weak_ptr const &amp; r);
         template&lt;class Y&gt; weak_ptr(weak_ptr&lt;Y&gt; const &amp; r);
 
-        <em>// destructor</em>
+        <em>// destructor</EM>
         ~weak_ptr();
 
-        <em>// assignment</em>
+        <em>// assignment</EM>
         weak_ptr &amp; operator=(weak_ptr const &amp; r);
         template&lt;class Y&gt; weak_ptr &amp; operator=(weak_ptr&lt;Y&gt; const &amp; r);
         template&lt;class Y&gt; weak_ptr &amp; operator=(shared_ptr&lt;Y&gt; const &amp; r);
 
-        <em>// modifiers</em>
+        <em>// modifiers</EM>
         void swap(weak_ptr &amp; r);
         void reset();
 
-        <em>// observers</em>
+        <em>// observers</EM>
         long use_count() const;
         bool expired() const;
         shared_ptr&lt;T&gt; lock() const;
       };
 
-      <em>// comparison</em>
+      <em>// comparison</EM>
       template&lt;class T, class U&gt;
         bool operator&lt;(weak_ptr&lt;T&gt; const &amp; a, weak_ptr&lt;U&gt; const &amp; b);
 
-      <em>// specialized algorithms</em>
+      <em>// specialized algorithms</EM>
       template&lt;class T&gt;
         void swap(weak_ptr&lt;T&gt; &amp; a, weak_ptr&lt;T&gt; &amp; b);
     }
@@ -1091,12 +1109,16 @@ else
 		<p><b>Postconditions:</b> <code>r.get() == this</code>.
 		</p>
 		<h2>V. References</h2>
+		<p>[<a name="Berger02">Berger02</a>] Emery D. Berger, Benjamin G. Zorn, Kathryn S. 
+			McKinley, <i>Reconsidering Custom Memory Allocation</i>, ACM SIGPLAN Notices, 
+			Vol. 37, Issue 11, November 2002. Available online at <A href="ftp://ftp.cs.utexas.edu/pub/emery/papers/reconsidering-custom.pdf">
+				ftp://ftp.cs.utexas.edu/pub/emery/papers/reconsidering-custom.pdf</A></p>
 		<p>[<a name="Boehm02">Boehm02</a>] Hans-J. Boehm, <i>Destructors, Finalizers, and 
 				Synchronization</i>, HP Labs Technical Report HPL-2002-335, December 2002. 
 			Available online at <a href="http://www.hpl.hp.com/techreports/2002/HPL-2002-335.html">
 				http://www.hpl.hp.com/techreports/2002/HPL-2002-335.html</a></p>
-		<p>[<a name="Boost00">Boost00</a>] Boost compressed_pair utility component documentation. 
-			Available online at <a href="http://www.boost.org/libs/utility/compressed_pair.htm">
+		<p>[<a name="Boost00">Boost00</a>] Boost compressed_pair utility component 
+			documentation. Available online at <a href="http://www.boost.org/libs/utility/compressed_pair.htm">
 				http://www.boost.org/libs/utility/compressed_pair.htm</a></p>
 		<p>[<a name="Boost03a">Boost03a</a>] Boost Smart Pointer Library, source file <em>sp_debug_hooks.cpp</em>. 
 			Available online at <a href="http://www.boost.org/libs/smart_ptr/src/sp_debug_hooks.cpp">
