@@ -5,42 +5,167 @@
 #include <boost/outfmt/formatlist.hpp>
 #include <boost/outfmt/stl/list.hpp>   // std::list support
 
-#include "test_engine.hpp"
+#include "test.hpp"
 
-int main()
+int test_main( int, char *[] )
 {
-   test_engine                         test( "boost/io/formatter" );
+   std::stringstream                   ss;
 
-   std::list< char >                   l;
-   l.push_back( 'A' );
-   l.push_back( 'B' );
-   l.push_back( 'C' );
+   std::list< char >                   lw;
+   lw.push_back( 'A' );
+   lw.push_back( 'B' );
+   lw.push_back( 'C' );
 
    boost::io::openclose_formatter< const char * >
-                                       ocfmt( "< ", " >" );
-   boost::io::formatter< const char * >      fmt(   "< ", " >", " | " );
+                                       ocfmt( "< ", " >" );        // < a, b, ... >
+   boost::io::formatter< const char * >  fmt( "< ", " >", " | " ); // < a | b | ... >
 
    // boost::io::formatter_t< ... >::format
 
-   test_formatter( test, boost::io::format( l ).format( " : " ),             "[ A : B : C ]", "format( sep )" );
-   test_formatter( test, boost::io::format( l ).format( "{ ", " }" ),        "{ A, B, C }",   "format( open, close )" );
-   test_formatter( test, boost::io::format( l ).format( "{ ", " }", " : " ), "{ A : B : C }", "format( open, close, sep )" );
+   {
+      const char *                     res = "[ A : B : C ]";
+      std::list< char >                lr;
+      IOFMT_READ(  boost::io::format( lr ).format( " : " ), lr, lw, res );
+      IOFMT_WRITE( boost::io::format( lw ).format( " : " ), res );
+   }
+   {
+      const char *                     res = "{ A, B, C }";
+      std::list< char >                lr;
+      IOFMT_READ(  boost::io::format( lr ).format( "{ ", " }" ), lr, lw, res );
+      IOFMT_WRITE( boost::io::format( lw ).format( "{ ", " }" ), res );
+   }
+   {
+      const char *                     res = "{ A : B : C }";
+      std::list< char >                lr;
+      IOFMT_READ(  boost::io::format( lr ).format( "{ ", " }", " : " ), lr, lw, res );
+      IOFMT_WRITE( boost::io::format( lw ).format( "{ ", " }", " : " ), res );
+   }
 
    // boost::io::openclose_formatter< ... >
 
-   test_formatter( test, boost::io::format( l ).format( boost::io::openclose_formatter< const char * >()),             "[ A, B, C ]", "format( openclose_formatter())" );
-   test_formatter( test, boost::io::format( l ).format( boost::io::openclose_formatter< const char * >( "{ ", " }" )), "{ A, B, C }", "format( openclose_formatter( open, close ))" );
-   test_formatter( test, boost::io::format( l ).format( boost::io::openclose_formatter< const char * >( ocfmt )),      "< A, B, C >", "format( openclose_formatter( openclose_formatter ))" );
+   {
+      const char *                     res = "[ A, B, C ]";
+      std::list< char >                lr;
+      IOFMT_READ(  boost::io::format( lr ).format
+                   (
+                      boost::io::openclose_formatter< const char * >()
+                   ), lr, lw, res );
+      IOFMT_WRITE( boost::io::format( lw ).format
+                   (
+                      boost::io::openclose_formatter< const char * >()
+                   ), res );
+   }
+   {
+      const char *                     res = "{ A, B, C }";
+      std::list< char >                lr;
+      IOFMT_READ(  boost::io::format( lr ).format
+                   (
+                      boost::io::openclose_formatter< const char * >( "{ ", " }" )
+                   ), lr, lw, res );
+      IOFMT_WRITE( boost::io::format( lw ).format
+                   (
+                      boost::io::openclose_formatter< const char * >( "{ ", " }" )
+                   ), res );
+   }
+   {
+      const char *                     res = "< A, B, C >";
+      std::list< char >                lr;
+      IOFMT_READ(  boost::io::format( lr ).format
+                   (
+                      boost::io::openclose_formatter< const char * >( ocfmt )
+                   ), lr, lw, res );
+      IOFMT_WRITE( boost::io::format( lw ).format
+                   (
+                      boost::io::openclose_formatter< const char * >( ocfmt )
+                   ), res );
+   }
 
    // boost::io::formatter< ... >
 
-   test_formatter( test, boost::io::format( l ).format( boost::io::formatter< const char * >()),                    "[ A, B, C ]",   "format( formatter())" );
-   test_formatter( test, boost::io::format( l ).format( boost::io::formatter< const char * >( " : " )),             "[ A : B : C ]", "format( formatter( sep ))" );
-   test_formatter( test, boost::io::format( l ).format( boost::io::formatter< const char * >( "{ ", " }" )),        "{ A, B, C }",   "format( formatter( open, close ))" );
-   test_formatter( test, boost::io::format( l ).format( boost::io::formatter< const char * >( "{ ", " }", " : " )), "{ A : B : C }", "format( formatter( open, close, sep ))" );
-   test_formatter( test, boost::io::format( l ).format( boost::io::formatter< const char * >( ocfmt )),             "< A, B, C >",   "format( formatter( openclose_formatter ))" );
-   test_formatter( test, boost::io::format( l ).format( boost::io::formatter< const char * >( ocfmt, " : " )),      "< A : B : C >", "format( formatter( openclose_formatter, sep ))" );
-   test_formatter( test, boost::io::format( l ).format( boost::io::formatter< const char * >( fmt )),               "< A | B | C >", "format( formatter( formatter ))" );
+   {
+      const char *                     res = "[ A, B, C ]";
+      std::list< char >                lr;
+      IOFMT_READ(  boost::io::format( lr ).format
+                   (
+                      boost::io::formatter< const char * >()
+                   ), lr, lw, res );
+      IOFMT_WRITE( boost::io::format( lw ).format
+                   (
+                      boost::io::formatter< const char * >()
+                   ), res );
+   }
+   {
+      const char *                     res = "[ A : B : C ]";
+      std::list< char >                lr;
+      IOFMT_READ(  boost::io::format( lr ).format
+                   (
+                      boost::io::formatter< const char * >( " : " )
+                   ), lr, lw, res );
+      IOFMT_WRITE( boost::io::format( lw ).format
+                   (
+                      boost::io::formatter< const char * >( " : " )
+                   ), res );
+   }
+   {
+      const char *                     res = "{ A, B, C }";
+      std::list< char >                lr;
+      IOFMT_READ(  boost::io::format( lr ).format
+                   (
+                      boost::io::formatter< const char * >( "{ ", " }" )
+                   ), lr, lw, res );
+      IOFMT_WRITE( boost::io::format( lw ).format
+                   (
+                      boost::io::formatter< const char * >( "{ ", " }" )
+                   ), res );
+   }
+   {
+      const char *                     res = "{ A : B : C }";
+      std::list< char >                lr;
+      IOFMT_READ(  boost::io::format( lr ).format
+                   (
+                      boost::io::formatter< const char * >( "{ ", " }", " : " )
+                   ), lr, lw, res );
+      IOFMT_WRITE( boost::io::format( lw ).format
+                   (
+                      boost::io::formatter< const char * >( "{ ", " }", " : " )
+                   ), res );
+   }
+   {
+      const char *                     res = "< A, B, C >";
+      std::list< char >                lr;
+      IOFMT_READ(  boost::io::format( lr ).format
+                   (
+                      boost::io::formatter< const char * >( ocfmt )
+                   ), lr, lw, res );
+      IOFMT_WRITE( boost::io::format( lw ).format
+                   (
+                      boost::io::formatter< const char * >( ocfmt )
+                   ), res );
+   }
+   {
+      const char *                     res = "< A : B : C >";
+      std::list< char >                lr;
+      IOFMT_READ(  boost::io::format( lr ).format
+                   (
+                      boost::io::formatter< const char * >( ocfmt, " : " )
+                   ), lr, lw, res );
+      IOFMT_WRITE( boost::io::format( lw ).format
+                   (
+                      boost::io::formatter< const char * >( ocfmt, " : " )
+                   ), res );
+   }
+   {
+      const char *                     res = "< A | B | C >";
+      std::list< char >                lr;
+      IOFMT_READ(  boost::io::format( lr ).format
+                   (
+                      boost::io::formatter< const char * >( fmt )
+                   ), lr, lw, res );
+      IOFMT_WRITE( boost::io::format( lw ).format
+                   (
+                      boost::io::formatter< const char * >( fmt )
+                   ), res );
+   }
 
    return( 0 );
 }

@@ -18,193 +18,241 @@
 #   include <boost/outfmt/stl/slist.hpp>   // stdext::slist
 #endif
 
-#include "test_engine.hpp"
+#include "test.hpp"
 
-int main()
+int test_main( int, char *[] )
 {
-   test_engine                         test( "boost/io/stl_io" );
+   std::stringstream                   ss;
 
    // std::vector
-   {
-      std::vector< int >               v( 3 );
-      v[ 0 ] = 3;
-      v[ 1 ] = 6;
-      v[ 2 ] = 9;
 
-      test_stlio( test, v, "[ 3, 6, 9 ]", "std::vector" );
+   {
+      const char *                     res = "[ 3, 6, 9 ]";
+      std::vector< int >               vr( 3 );
+      std::vector< int >               vw( 3 );
+      vw[ 0 ] = 3;
+      vw[ 1 ] = 6;
+      vw[ 2 ] = 9;
+
+      STLIO_READ(  vr, vw, res );
+      STLIO_WRITE( vw, res );
    }
 
    // std::list
-   {
-      std::list< char >                l;
-      l.push_back( 'A' );
-      l.push_back( 'B' );
-      l.push_back( 'C' );
 
-      test_stlio( test, l, "[ A, B, C ]", "std::list" );
+   {
+      const char *                     res = "[ A, B, C ]";
+      std::list< char >                lr;
+      std::list< char >                lw;
+      lw.push_back( 'A' );
+      lw.push_back( 'B' );
+      lw.push_back( 'C' );
+
+      STLIO_READ(  lr, lw, res );
+      STLIO_WRITE( lw, res );
    }
 
-   // std::deque
-   {
-      std::deque< char >               dq;
-      dq.push_back( 'A' );
-      dq.push_back( 'B' );
-      dq.push_back( 'C' );
 
-      test_stlio( test, dq, "[ A, B, C ]", "std::deque" );
+   // std::deque
+
+   {
+      const char *                     res = "[ A, B, C ]";
+      std::deque< char >               dqr;
+      std::deque< char >               dqw;
+      dqw.push_back( 'A' );
+      dqw.push_back( 'B' );
+      dqw.push_back( 'C' );
+
+      STLIO_READ(  dqr, dqw, res );
+      STLIO_WRITE( dqw, res );
    }
 
    // std::map
-   {
-      std::map< char, int >            m;
-      m[ 'A' ] =  3;
-      m[ 'L' ] =  7;
-      m[ 'S' ] = -5;
 
-      test_stlio( test, m, "[ ( A, 3 ), ( L, 7 ), ( S, -5 ) ]", "std::map" );
+   {
+      const char *                     res = "[ ( A, 3 ), ( L, 7 ), ( S, -5 ) ]";
+      std::map< char, int >            mr;
+      std::map< char, int >            mw;
+      mw[ 'A' ] =  3;
+      mw[ 'L' ] =  7;
+      mw[ 'S' ] = -5;
+
+      STLIO_READ(  mr, mw, res );
+      STLIO_WRITE( mw, res );
    }
 
-   // std::multimap
-   {
-      std::multimap< char, int >       mm;
-      mm.insert( std::pair< char, int >( 'A',  3 ));
-      mm.insert( std::pair< char, int >( 'L',  7 ));
-      mm.insert( std::pair< char, int >( 'S', -5 ));
 
-      test_stlio( test, mm, "[ ( A, 3 ), ( L, 7 ), ( S, -5 ) ]", "std::multimap" );
+   // std::multimap
+
+   {
+      const char *                     res = "[ ( A, 3 ), ( L, 7 ), ( S, -5 ) ]";
+      std::multimap< char, int >       mmr;
+      std::multimap< char, int >       mmw;
+      mmw.insert( std::pair< char, int >( 'A',  3 ));
+      mmw.insert( std::pair< char, int >( 'L',  7 ));
+      mmw.insert( std::pair< char, int >( 'S', -5 ));
+
+      STLIO_READ(  mmr, mmw, res );
+      STLIO_WRITE( mmw, res );
    }
 
    // std::set
-   {
-      std::set< char >                 s;
-      s.insert( 'A' );
-      s.insert( 'B' );
-      s.insert( 'C' );
-      s.insert( 'A' );
-      s.insert( 'D' );
-      s.insert( 'E' );
 
-      test_stlio( test, s, "[ A, B, C, D, E ]", "std::set" );
+   {
+      const char *                     res = "[ A, B, C, D, E ]";
+      std::set< char >                 sr;
+      std::set< char >                 sw;
+      sw.insert( 'A' );
+      sw.insert( 'B' );
+      sw.insert( 'C' );
+      sw.insert( 'A' );
+      sw.insert( 'D' );
+      sw.insert( 'E' );
+
+      STLIO_READ(  sr, sw, res );
+      STLIO_WRITE( sw, res );
    }
 
    // std::multiset
-   {
-      std::multiset< char >            ms;
-      ms.insert( 'A' );
-      ms.insert( 'B' );
-      ms.insert( 'C' );
-      ms.insert( 'A' );
-      ms.insert( 'D' );
-      ms.insert( 'E' );
 
-      test_stlio( test, ms, "[ A, A, B, C, D, E ]", "std::multiset" );
+   {
+      const char *                     res = "[ A, A, B, C, D, E ]";
+      std::multiset< char >            msr;
+      std::multiset< char >            msw;
+      msw.insert( 'A' );
+      msw.insert( 'B' );
+      msw.insert( 'C' );
+      msw.insert( 'A' );
+      msw.insert( 'D' );
+      msw.insert( 'E' );
+
+      STLIO_READ(  msr, msw, res );
+      STLIO_WRITE( msw, res );
    }
 
    // std::pair
+
    {
-      std::pair< char, float >         p( 'A', 2.759f );
-      test_stlio( test, p, "( A, 2.759 )", "std::pair" );
+      const char *                     res = "( A, 2.759 )";
+      std::pair< char, float >         pr( '\0', 0.0f );
+      std::pair< char, float >         pw( 'A',  2.759f );
+
+      PAIR_READ(   pr, pw, res );
+      STLIO_WRITE( pw, res );
    }
 
    // std::string
+
    {
-      std::pair< std::string, std::string >
-                                       p( "Abschied Nehmen", "Farewell" );
-      test_stlio( test, p, "( \"Abschied Nehmen\", \"Farewell\" )", "std::string" );
+      const char *                     res = "( \"Abschied Nehmen\", \"Farewell\" )";
+      std::pair< std::string, std::string > pr;
+      std::pair< std::string, std::string > pw( "Abschied Nehmen", "Farewell" );
+
+      PAIR_READ(   pr, pw, res );
+      STLIO_WRITE( pw, res );
    }
 
    // std::string (character escaping)
-   {
-      // [note]: results shown in escaped form
 
-      std::pair< std::string, std::string >
-                                       p( "message", "quote: \"Hello\\ World!\"" );
-      test_stlio( test, p, "( \"message\", \"quote: \\\"Hello\\\\ World!\\\"\" )", "std::string (character escaping)" );
+   {
+      const char *                     res = "( \"message\", \"quote: \\\"Hello\\\\ World!\\\"\" )";
+      std::pair< std::string, std::string > pr;
+      std::pair< std::string, std::string > pw( "message", "quote: \"Hello\\ World!\"" );
+
+      PAIR_READ(   pr, pw, res );
+      STLIO_WRITE( pw, res );
    }
 
 #  if defined(BOOST_IOFM_HASH_CONTAINERS)
       // hash_map
-      {
-         BOOST_IOFM_STDEXT::hash_map< char, int >
-                                       hm;
-         hm[ 'A' ] = 3;
-         hm[ 'L' ] = 7;
-         hm[ 'S' ] = -5;
 
-         test_stlio( test, hm, "[ ( A, 3 ), ( L, 7 ), ( S, -5 ) ]", "hash_map" );
+      {
+         const char *                  res = "[ ( A, 3 ), ( L, 7 ), ( S, -5 ) ]";
+         BOOST_IOFM_STDEXT::hash_map< char, int > hmr;
+         BOOST_IOFM_STDEXT::hash_map< char, int > hmw;
+         hmw[ 'A' ] = 3;
+         hmw[ 'L' ] = 7;
+         hmw[ 'S' ] = -5;
+
+         STLIO_READ(  hmr, hmw, res );
+         STLIO_WRITE( hmw, res );
       }
 
       // hash_multimap
-      {
-         BOOST_IOFM_STDEXT::hash_multimap< char, int >
-                                       hmm;
-         hmm.insert( std::pair< char, int >( 'A',  3 ));
-         hmm.insert( std::pair< char, int >( 'L',  7 ));
-         hmm.insert( std::pair< char, int >( 'S', -5 ));
 
-         test_stlio( test, hmm, "[ ( A, 3 ), ( L, 7 ), ( S, -5 ) ]", "hash_multimap" );
+      {
+         const char *                  res = "[ ( A, 3 ), ( L, 7 ), ( S, -5 ) ]";
+         BOOST_IOFM_STDEXT::hash_multimap< char, int > hmmr;
+         BOOST_IOFM_STDEXT::hash_multimap< char, int > hmmw;
+         hmmw.insert( std::pair< char, int >( 'A',  3 ));
+         hmmw.insert( std::pair< char, int >( 'L',  7 ));
+         hmmw.insert( std::pair< char, int >( 'S', -5 ));
+
+         STLIO_READ(  hmmr, hmmw, res );
+         STLIO_WRITE( hmmw, res );
       }
 
       // hash_set
-      {
-         BOOST_IOFM_STDEXT::hash_set< char >
-                                       hs;
-         hs.insert( 'A' );
-         hs.insert( 'B' );
-         hs.insert( 'C' );
-         hs.insert( 'A' );
-         hs.insert( 'D' );
-         hs.insert( 'E' );
 
-         // [hack]: is there a better way to test this?
-#        if defined(BOOST_DINKUMWARE_STDLIB) && (BOOST_DINKUMWARE_STDLIB == 313)
-            test_stlio( test, hs, "[ A, C, E, B, D ]", "hash_set" );
+      {
+         const char *                  res = // [hack]: is there a better way to test this?
+#        if defined(BOOST_DINKUMWARE_STDLIB) && (BOOST_DINKUMWARE_STDLIB >= 313)
+            "[ A, C, E, B, D ]";
 #        elif defined(BOOST_DINKUMWARE_STDLIB) && (BOOST_DINKUMWARE_STDLIB < 313)
-            test_stlio( test, hs, "[ B, D, A, C, E ]", "hash_set" );
+            "[ B, D, A, C, E ]";
 #        else
-            test_stlio( test, hs, "[ A, B, C, D, E ]", "hash_set" );
+            "[ A, B, C, D, E ]";
 #        endif
+         BOOST_IOFM_STDEXT::hash_set< char > hsr;
+         BOOST_IOFM_STDEXT::hash_set< char > hsw;
+         hsw.insert( 'A' );
+         hsw.insert( 'B' );
+         hsw.insert( 'C' );
+         hsw.insert( 'A' );
+         hsw.insert( 'D' );
+         hsw.insert( 'E' );
+
+         STLIO_READ(  hsr, hsw, res );
+         STLIO_WRITE( hsw, res );
       }
 
       // hash_multiset
-      {
-         BOOST_IOFM_STDEXT::hash_multiset< char >
-                                       hms;
-         hms.insert( 'A' );
-         hms.insert( 'B' );
-         hms.insert( 'C' );
-         hms.insert( 'A' );
-         hms.insert( 'D' );
-         hms.insert( 'E' );
 
-         // [hack]: is there a better way to test this?
-#        if defined(BOOST_DINKUMWARE_STDLIB) && (BOOST_DINKUMWARE_STDLIB == 313)
-            test_stlio( test, hms, "[ A, A, C, E, B, D ]", "hash_multiset" );
+      {
+         const char *                  res = // [hack]: is there a better way to test this?
+#        if defined(BOOST_DINKUMWARE_STDLIB) && (BOOST_DINKUMWARE_STDLIB >= 313)
+            "[ A, A, C, E, B, D ]";
 #        elif defined(BOOST_DINKUMWARE_STDLIB) && (BOOST_DINKUMWARE_STDLIB < 313)
-            test_stlio( test, hms, "[ B, D, A, A, C, E ]", "hash_multiset" );
+            "[ B, D, A, A, C, E ]";
 #        else
-            test_stlio( test, hms, "[ A, A, B, C, D, E ]", "hash_multiset" );
+            "[ A, A, B, C, D, E ]";
 #        endif
+         BOOST_IOFM_STDEXT::hash_multiset< char > hmsr;
+         BOOST_IOFM_STDEXT::hash_multiset< char > hmsw;
+         hmsw.insert( 'A' );
+         hmsw.insert( 'B' );
+         hmsw.insert( 'C' );
+         hmsw.insert( 'A' );
+         hmsw.insert( 'D' );
+         hmsw.insert( 'E' );
+
+         STLIO_READ(  hmsr, hmsw, res );
+         STLIO_WRITE( hmsw, res );
       }
-#  else
-      test.unsupported( "hash_map",      "library does not support 'hash_map' extension class" );
-      test.unsupported( "hash_multimap", "library does not support 'hash_multimap' extension class" );
-      test.unsupported( "hash_set",      "library does not support 'hash_set' extension class" );
-      test.unsupported( "hash_multiset", "library does not support 'hash_multiset' extension class" );
 #  endif
 
 #  if defined(BOOST_HAS_SLIST) // slist
    {
-      BOOST_IOFM_STDEXT::slist< char >
-                                       sl;
-      sl.push_front( 'C' );
-      sl.push_front( 'B' );
-      sl.push_front( 'A' );
+      const char *                     res = "[ 3, 6, 9 ]";
+      BOOST_IOFM_STDEXT::slist< char > slr;
+      BOOST_IOFM_STDEXT::slist< char > slw;
+      slw.push_front( 'C' );
+      slw.push_front( 'B' );
+      slw.push_front( 'A' );
 
-      test_stlio( test, sl, "[ A, B, C ]", "slist" );
+      STLIO_READ(  slr, slw, res );
+      STLIO_WRITE( slw, res );
    }
-#  else
-      test.unsupported( "slist", "library does not support 'slist' extension class" );
 #  endif
 
    return( 0 );
