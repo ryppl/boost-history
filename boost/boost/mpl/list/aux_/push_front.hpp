@@ -15,7 +15,7 @@
 // $Revision$
 
 #include <boost/mpl/push_front_fwd.hpp>
-#include <boost/mpl/aux_/next.hpp>
+#include <boost/mpl/next.hpp>
 #include <boost/mpl/list/aux_/node.hpp>
 #include <boost/mpl/list/aux_/tag.hpp>
 
@@ -27,7 +27,7 @@ struct push_front_impl< aux::list_tag >
     template< typename List, typename T > struct apply
     {
         typedef list_node<
-              typename BOOST_MPL_AUX_NEXT(List::size)
+              typename next<typename List::size>::type
             , T
             , typename List::type
             > type;
