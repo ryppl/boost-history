@@ -2011,13 +2011,13 @@ namespace boost
       return pointer_to_function9 < R, T0, T1, T2, T3, T4, T5, T6, T7,
         T8 > ( theF );
     }
-    bool operator==( const tuple0 < null_type > &lhs,
-                     const tuple0 < null_type > &rhs )
+    inline bool operator==( const tuple0 < null_type > &lhs,
+                            const tuple0 < null_type > &rhs )
     {
       return true;
     }
-    bool operator<( const tuple0 < null_type > &lhs,
-                    const tuple0 < null_type > &rhs )
+    inline bool operator<( const tuple0 < null_type > &lhs,
+                           const tuple0 < null_type > &rhs )
     {
       return false;
     }

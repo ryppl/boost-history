@@ -275,8 +275,8 @@ TEMPLATENULL(10) struct make_tuple_function { };
 
 
 #ifdef TUPPLE_PARTIAL_SPEC
-struct TUPLE(0) TEMPLATESPEC(0,10) 
-{ 
+struct TUPLE(0) TEMPLATESPEC(0,10)
+{
   int size() const { return 0; }
 };
 #else
@@ -461,7 +461,7 @@ template<BOOST_PP_ENUM_PARAMS(k,class T),BOOST_PP_ENUM_PARAMS(k,class S)> \
 bool operator==( const TYPE(TUPLE(k),k,T)& lhs, const TYPE(TUPLE(k),k,S)& rhs ) \
 { return( BOOST_PP_REPEAT(k,AND,==) ); }
 
-bool operator==( const TUPLE(0)<NULLTYPE>& lhs, const TUPLE(0)<NULLTYPE>& rhs ) { return true; }
+inline bool operator==( const TUPLE(0)<NULLTYPE>& lhs, const TUPLE(0)<NULLTYPE>& rhs ) { return true; }
 
 #define NOTEQ(k) \
 template<BOOST_PP_ENUM_PARAMS(k,class T),BOOST_PP_ENUM_PARAMS(k,class S)> \
@@ -479,7 +479,7 @@ template<BOOST_PP_ENUM_PARAMS(k,class T),BOOST_PP_ENUM_PARAMS(k,class S)> \
 bool operator<( const TYPE(TUPLE(k),k,T)& lhs, const TYPE(TUPLE(k),k,S)& rhs )  \
 { return( lhs.head() < rhs.head() || ( !(rhs.head() < lhs.head()) && lhs.tail() < rhs.tail() ) ); }
 
-bool operator<( const TUPLE(0)<NULLTYPE>& lhs, const TUPLE(0)<NULLTYPE>& rhs ) { return false; }
+inline bool operator<( const TUPLE(0)<NULLTYPE>& lhs, const TUPLE(0)<NULLTYPE>& rhs ) { return false; }
 
 #define LESSEQ(k) \
 template<BOOST_PP_ENUM_PARAMS(k,class T),BOOST_PP_ENUM_PARAMS(k,class S)> \
