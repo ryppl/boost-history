@@ -1,4 +1,4 @@
-// rcombo.h header file - r-permutation and r-combination algorithms ---//
+// combinatorial.h header file - r-permutation and r-combination algorithms ---//
 
 // Copyright © Philip F. Garofalo 2002. All rights reserved.
 // Permission to copy, use, modify, sell and distribute this software
@@ -18,8 +18,8 @@
 //              and the SGI STL :)                        [Herve Bronnimann]
 
 
-#ifndef BOOST_RCOMBO_HPP
-#define BOOST_RCOMBO_HPP
+#ifndef BOOST_COMBINATORIAL_HPP
+#define BOOST_COMBINATORIAL_HPP
 
 #include <algorithm>            // std::sort(), std::rotate(), etc.
 #include <functional>           // greater<>(), not2()
@@ -37,11 +37,11 @@ namespace boost {
     is_sorted(ForwardIterator first, ForwardIterator last)
     {
         if (first != last)
-	    for (ForwardIterator old = first; ++first != last; old = first)
-	        if (*first < *old)
-	            return false;
-
-        return true;
+            for (ForwardIterator old = first; ++first != last; old = first)
+                if (*first < *old)
+                    return false;
+                
+                return true;
     }
 
     // is_sorted -------------------------------------------------------//
@@ -54,14 +54,14 @@ namespace boost {
     is_sorted(ForwardIterator first, ForwardIterator last, Compare comp)
     {
         if (first != last)
-	    for (ForwardIterator old = first; ++first != last; old = first)
-	        if (comp(*first, *old))
-	            return false;
+            for (ForwardIterator old = first; ++first != last; old = first)
+                if (comp(*first, *old))
+                    return false;
 
         return true;
     }
 
-    // smallest_greater -------------------------------------------------//
+    // min_element_greater_than -------------------------------------------------//
 
     // Returns an iterator pointing to the smallest value in [first, last)
     // greater than x. last is returned if value is not found.
@@ -71,7 +71,7 @@ namespace boost {
 
     template<class ForwardIterator, class T>
     inline ForwardIterator
-    smallest_greater(ForwardIterator first, ForwardIterator last, const T& x)
+    min_element_greater_than(ForwardIterator first, ForwardIterator last, const T& x)
     {
         ForwardIterator hold = last;
         for (; first != last; first++)
@@ -82,9 +82,9 @@ namespace boost {
                     if (*first < *hold)
                         hold = first;
         return hold;
-    }    // smallest_greater
+    }    // min_element_greater_than
 
-    // smallest_greater -------------------------------------------------//
+    // min_element_greater_than -------------------------------------------------//
 
     // Returns an iterator pointing to the smallest value in [first, last) 
     // greater than x, based on a user-supplied binary comparison operator.
@@ -95,7 +95,7 @@ namespace boost {
 
     template<class ForwardIterator, class T, class Compare>
     inline ForwardIterator
-    smallest_greater(ForwardIterator first, ForwardIterator last,
+    min_element_greater_than(ForwardIterator first, ForwardIterator last,
         const T& x, Compare comp)
     {
         ForwardIterator hold = last;
@@ -107,17 +107,17 @@ namespace boost {
                     if (comp(*first, *hold))
                         hold = first;
         return hold;
-    }    // smallest_greater
+    }    // min_element_greater_than
 
 
-    // largest_less -----------------------------------------------------//
+    // max_element_less_than -----------------------------------------------------//
 
     // Returns an iterator pointing to the largest object in [first, last)
     // less than x. last is returned if no such value is present.
 
     template<class ForwardIterator, class T>
     inline ForwardIterator
-    largest_less(ForwardIterator first, ForwardIterator last, const T& x)
+    max_element_less_than(ForwardIterator first, ForwardIterator last, const T& x)
     {
         ForwardIterator hold = last;
         for(; first != last; first++)
@@ -128,9 +128,9 @@ namespace boost {
                     if (*hold < *first)
                         hold = first;
         return hold;
-    }    // largest_less
+    }    // max_element_less_than
 
-    // largest_less -------------------------------------------------------//
+    // max_element_less_than -------------------------------------------------------//
 
     // Returns an iterator pointing to the largest object in [first, last)
     // less than x, based on a user-supplied binary comparison operator.
@@ -138,7 +138,7 @@ namespace boost {
 
     template<class ForwardIterator, class T, class Compare>
     inline ForwardIterator
-    largest_less(ForwardIterator first, ForwardIterator last,
+    max_element_less_than(ForwardIterator first, ForwardIterator last,
         const T& x, Compare comp)
     {
         ForwardIterator hold = last;
@@ -150,7 +150,7 @@ namespace boost {
                     if (comp(*hold, *first))
                         hold = first;
         return hold;
-    }    // largest_less
+    }    // max_element_less_than
 
 
     // next_r_permutation -----------------------------------------------//
@@ -177,7 +177,7 @@ namespace boost {
         while(true)
         {
             // find smallest element greater than *i after index i.
-            RandomAccessIterator k = smallest_greater(i + 1, last, *i);
+            RandomAccessIterator k = min_element_greater_than(i + 1, last, *i);
             
             if (k == last)            // Didn't find it.
                 if (i == first)
@@ -213,7 +213,7 @@ namespace boost {
         while(true)
         {
             // find smallest element greater than *i after index i.
-            RandomAccessIterator k = smallest_greater(i + 1, last, *i, comp);
+            RandomAccessIterator k = min_element_greater_than(i + 1, last, *i, comp);
             
             if (k == last)            // Didn't find it.
                 if (i == first)
@@ -259,7 +259,7 @@ namespace boost {
         while(true)
         {
             // find smallest element greater than *i after index i.
-            RandomAccessIterator k = largest_less(i + 1, last, *i);
+            RandomAccessIterator k = max_element_less_than(i + 1, last, *i);
             
             if (k == last)            // Didn't find it.
                 if (i == first)
@@ -295,7 +295,7 @@ namespace boost {
         while(true)
         {
             // find smallest element greater than *i after index i.
-            RandomAccessIterator k = largest_less(i + 1, last, *i, comp);
+            RandomAccessIterator k = max_element_less_than(i + 1, last, *i, comp);
             
             if (k == last)            // Didn't find it.
                 if (i == first)
@@ -338,7 +338,7 @@ namespace boost {
         RandomAccessIterator i = r - 1;
         while(true)
         {
-            RandomAccessIterator j = smallest_greater(r, last, *i);
+            RandomAccessIterator j = min_element_greater_than(r, last, *i);
             if (j == last)
                 if (i == first)
                 {
@@ -352,7 +352,7 @@ namespace boost {
                 std::swap(*i,* j);
                 for(++i; i < r; i++)
                 {
-                    j = smallest_greater(r, last, *(i - 1));
+                    j = min_element_greater_than(r, last, *(i - 1));
                     if (j != last)
                         std::swap(*i,* j);
                 }    // for
@@ -377,7 +377,7 @@ namespace boost {
         RandomAccessIterator i = r - 1;
         while(true)
         {
-            RandomAccessIterator j = smallest_greater(r, last, *i, comp);
+            RandomAccessIterator j = min_element_greater_than(r, last, *i, comp);
             if (j == last)
                 if (i == first)
                 {
@@ -391,7 +391,7 @@ namespace boost {
                 std::swap(*i, *j);
                 for(++i; i < r; ++i)
                 {
-                    j = smallest_greater(r, last, *(i - 1), comp);
+                    j = min_element_greater_than(r, last, *(i - 1), comp);
                     if (j != last)
                         std::swap(*i, *j);
                 }    // for
@@ -420,19 +420,19 @@ namespace boost {
     {
         if (!(first < r && r <= last && is_sorted(first, r)))
             return false;
-
-	std::sort(r, last);
+        
+        std::sort(r, last);
         for (RandomAccessIterator i = last - 1; i >= r; --i)
             for (RandomAccessIterator j = first; j < r; ++j)
                 if (*i < *j)
                 {
-		    std::swap(*j, *i);
-		    std::sort(++j, last);    // O(n lg n)
-		    std::rotate(j, j + (last - r), last); // 2*[n/2]+[m/2]+[(n-m)/2] exchanges
+                    std::swap(*j, *i);
+                    std::sort(++j, last);    // O(n lg n)
+                    std::rotate(j, j + (last - r), last); // 2*[n/2]+[m/2]+[(n-m)/2] exchanges
                     return true;
                 }    // if
-	std::rotate(first, first + (last - r), last);
-        return false;
+                std::rotate(first, first + (last - r), last);
+                return false;
     }    // prev_r_combination
 
     // prev_r_combination -----------------------------------------------//
@@ -464,4 +464,4 @@ namespace boost {
 
 }    // namespace boost
 
-#endif    // BOOST_RCOMBO_HPP
+#endif    // BOOST_COMBINATORIAL_HPP
