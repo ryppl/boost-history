@@ -7,6 +7,7 @@
 #ifndef BOOST_IOFM_TypeTraits_HPP
 #define BOOST_IOFM_TypeTraits_HPP
 #  include <boost/outfmt/detail/config.hpp>
+#  include <boost/outfmt/detail/range.hpp>
 
 #  include <complex>     // std::complex
 #  include <string>      // std::basic_string
@@ -56,6 +57,9 @@
       static const int                 nary2int_type          =  8;
       static const int                 seq_container_type     =  9;
       static const int                 assoc_container_type   = 10;
+      static const int                 range_type             = 11;
+      static const int                 wrapped_type           = 12;
+      static const int                 state_type             = 13;
 
       template< int id >
       struct seq_type
@@ -94,6 +98,16 @@
          BOOST_STATIC_CONSTANT( bool, value = type::value  );
       };
 
+      template< class FmtObject, int id >
+      struct is_formatter
+      {
+         struct type
+         {
+            BOOST_STATIC_CONSTANT( bool, value = ( sizeof( typename FmtObject::formatter_type ) == id ));
+         };
+         BOOST_STATIC_CONSTANT( bool, value = type::value  );
+      };
+
       // helpers -- simple type classification
 
       template< typename T >
@@ -123,6 +137,11 @@
 
       template< typename T >
       struct is_assoc_container: public is_type< T, assoc_container_type >
+      {
+      };
+
+      template< typename T >
+      struct is_range: public is_type< T, range_type >
       {
       };
 
@@ -225,5 +244,7 @@
 #     if !defined(BOOST_IOFM_NO_LIB_OCTONION)
          BOOST_IO_CLASSIFY_TYPE_1( boost::math::octonion, boost::io::pair_type );
 #     endif
+
+      BOOST_IO_CLASSIFY_TYPE_1( boost::io::range_t, boost::io::range_type );
    }}}
 #endif
