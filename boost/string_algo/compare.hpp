@@ -20,13 +20,14 @@ namespace boost {
     
         //  is_equal functor  -----------------------------------------------//
 
-        // is_equal functor
-        /*
-        standard STL equal_to does handle only comparison between arguments
-        of the same type. This is less restrictive version which wraps == operator.
+        //! is_equal functor
+        /*!
+			Standard STL equal_to does handle only comparison between arguments
+			of the same type. This is less restrictive version which wraps == operator.
         */
         struct is_equal
         {
+			//! Function operator
             template< typename T1, typename T2 >
                 bool operator ()( const T1& Arg1, const T2& Arg2 ) const
             {
@@ -34,12 +35,21 @@ namespace boost {
             }
         };
 
-        // case insensitive version of is_equal
+        //! case insensitive version of is_equal
+		/*!
+			Case insensitive comparison predicate. Comparison is done using
+			specified locales.
+		*/
         struct is_iequal
         {
+			//! Constructor
+			/*!
+				\param Loc locales used for comparison
+			*/
             is_iequal( const std::locale& Loc=std::locale() ) : 
                 m_Loc( Loc ) {}
 
+			//! Function operator 
             template< typename T1, typename T2 >
                 bool operator ()( const T1& Arg1, const T2& Arg2 ) const
             {

@@ -14,16 +14,14 @@
 #include <boost/detail/iterator.hpp>
 
 namespace boost {
-
     namespace string_algo {
-
         namespace detail {
 
 //  trim iterator helper -----------------------------------------------//
 
             // Search for first non matching character from the beginning of the sequence
             template< typename ForwardIteratorT, typename PredicateT >
-            inline ForwardIteratorT trim_begin_if( 
+            inline ForwardIteratorT trim_begin( 
                 ForwardIteratorT InBegin, 
                 ForwardIteratorT InEnd, 
                 PredicateT IsSpace )
@@ -40,7 +38,7 @@ namespace boost {
 
             // Search for first non matching character from the end of the sequence
             template< typename ForwardIteratorT, typename PredicateT >
-            inline ForwardIteratorT trim_end_if( 
+            inline ForwardIteratorT trim_end( 
                 ForwardIteratorT InBegin, 
                 ForwardIteratorT InEnd, 
                 PredicateT IsSpace )
@@ -48,11 +46,11 @@ namespace boost {
                 typedef BOOST_STRING_TYPENAME boost::detail::
                     iterator_traits<ForwardIteratorT>::iterator_category category;
 
-                return trim_end_if_iter_select( InBegin, InEnd, IsSpace, category() );
+                return trim_end_iter_select( InBegin, InEnd, IsSpace, category() );
             }
 
             template< typename ForwardIteratorT, typename PredicateT >
-            inline ForwardIteratorT trim_end_if_iter_select( 
+            inline ForwardIteratorT trim_end_iter_select( 
                 ForwardIteratorT InBegin, 
                 ForwardIteratorT InEnd, 
                 PredicateT IsSpace,
@@ -73,7 +71,7 @@ namespace boost {
             }
 
             template< typename ForwardIteratorT, typename PredicateT >
-            inline ForwardIteratorT trim_end_if_iter_select( 
+            inline ForwardIteratorT trim_end_iter_select( 
                 ForwardIteratorT InBegin, 
                 ForwardIteratorT InEnd, 
                 PredicateT IsSpace,
@@ -89,9 +87,7 @@ namespace boost {
             }
 
         } // namespace detail
-
     } // namespace string_algo
-
 } // namespace boost
 
 

@@ -12,219 +12,121 @@
 
 #include <boost/string_algo/config.hpp>
 #include <boost/string_algo/container_traits.hpp>
-#include <boost/string_algo/detail/trim.hpp>
+#include <boost/string_algo/trim2.hpp>
 #include <boost/string_algo/classification.hpp>
 #include <locale>
 
-// some macros for simplify definition of trim functions
-#define BOOST_STRING_TRIM_SEQ_FWD( Alg, Seq, Pred ) Alg( Seq, Pred )
-
 namespace boost {
 
-//  left trim  -----------------------------------------------//
+	//! Left trim
+	/*!
+		Remove all leading spaces from the input. 
+		Result is a trimmed copy if the input
 
-    // iterator version of left trim
-    template< typename OutputIteratorT, typename SeqT, typename PredicateT >
-    inline OutputIteratorT trim_left_copy_if( 
-        OutputIteratorT Output,
-        const SeqT& Input,
-        PredicateT IsSpace )
+		\param Input An input container
+		\param Loc a locale used for 'space' classification
+		\return A trimmed copy if the input
+	*/
+    template< typename ContainerT >
+    inline ContainerT trim_left_copy( const ContainerT& Input, const std::locale& Loc=std::locale() )
     {
-        std::copy( 
-            string_algo::detail::trim_begin_if( 
-                string_algo::begin(Input), 
-                string_algo::end(Input), 
-                IsSpace ),
-            string_algo::end(Input),
-            Output );
-
-        return Output;
+        return            
+			string_algo::trim_left_copy(
+                Input, 
+                is_space<BOOST_STRING_TYPENAME ContainerT::value_type>( Loc ) );
     }
 
-    // const version of left trim
-    template< typename SeqT, typename PredicateT >
-    inline SeqT trim_left_copy_if( const SeqT& Input, PredicateT IsSpace )
-    {
-        return SeqT( 
-            string_algo::detail::trim_begin_if( 
-                string_algo::begin(Input), 
-                string_algo::end(Input), 
-                IsSpace ),
-            string_algo::end(Input) );
-    }
+	//! Left trim
+	/*!
+		Remove all leading spaces from the input.
+		Input sequence is modified in-place.
 
-    // in-place version of left trim
-    template< typename SeqT, typename PredicateT >
-    inline SeqT& trim_left_if( SeqT& Input, PredicateT IsSpace )
-    {
-        Input.erase( 
-            string_algo::begin(Input),
-            string_algo::detail::trim_begin_if( 
-                string_algo::begin(Input), 
-                string_algo::end(Input), 
-                IsSpace ));
-
-        return Input;
-    }
-
-//  right trim  -----------------------------------------------//
-
-    // iterator version of left trim
-    template< typename OutputIteratorT, typename SeqT, typename PredicateT >
-    inline OutputIteratorT trim_right_copy_if( 
-        OutputIteratorT Output,
-        const SeqT& Input,
-        PredicateT IsSpace )
-    {
-        std::copy( 
-            string_algo::begin(Input),
-            string_algo::detail::trim_end_if( 
-                string_algo::begin(Input), 
-                string_algo::end(Input), 
-                IsSpace ),
-            Output );
-
-        return Output;
-    }
-
-    // const version of right trim
-    template< typename SeqT, typename PredicateT >
-    inline SeqT trim_right_copy_if( const SeqT& Input, PredicateT IsSpace )
-    {
-        return SeqT( 
-            string_algo::begin(Input),
-            string_algo::detail::trim_end_if( 
-                string_algo::begin(Input), 
-                string_algo::end(Input), 
-                IsSpace )
-            );
-    }
-    
-    // in-place version of right trim
-    template< typename SeqT, typename PredicateT >
-    inline SeqT& trim_right_if( SeqT& Input, PredicateT IsSpace )
-    {
-        Input.erase(
-            string_algo::detail::trim_end_if( 
-                string_algo::begin(Input), 
-                string_algo::end(Input), 
-                IsSpace ),
-            string_algo::end(Input)
-            );
-
-        return Input;
-    }
-
-//  both side trim  -----------------------------------------------//
-
-    // iterator version of left trim
-    template< typename OutputIteratorT, typename SeqT, typename PredicateT >
-    inline OutputIteratorT trim_copy_if( 
-        OutputIteratorT Output,
-        const SeqT& Input,
-        PredicateT IsSpace )
-    {
-        BOOST_STRING_TYPENAME 
-            string_algo::container_traits<SeqT>::const_iterator TrimEnd=
-            string_algo::detail::trim_end_if( 
-                string_algo::begin(Input), 
-                string_algo::end(Input), 
-                IsSpace);
-
-        std::copy( 
-            string_algo::detail::trim_begin_if( 
-                string_algo::begin(Input), TrimEnd, IsSpace ),
-            TrimEnd,
-            Output
-            );
-
-        return Output;
-    }
-
-    // const version of trim
-    template< typename SeqT, typename PredicateT >
-    inline SeqT trim_copy_if( const SeqT& Input, PredicateT IsSpace )
-    {
-        BOOST_STRING_TYPENAME SeqT::const_iterator TrimEnd=
-            string_algo::detail::trim_end_if( string_algo::begin(Input), string_algo::end(Input), IsSpace);
-
-        return SeqT( 
-            string_algo::detail::trim_begin_if( 
-                string_algo::begin(Input), 
-                TrimEnd, 
-                IsSpace ),
-            TrimEnd
-            );
-    }
-    
-    // in-place version of trim
-    template< typename SeqT, typename PredicateT >
-    inline SeqT& trim_if( SeqT& Input, PredicateT IsSpace )
-    {
-        return trim_left_if( trim_right_if( Input, IsSpace ), IsSpace );
-    }
-    
-//  standard shortcuts  -----------------------------------------------//
-
-    template< typename SeqT >
-    inline SeqT trim_left_copy( const SeqT& Input, const std::locale& Loc=std::locale() )
+		\param Input An input container
+		\param Loc A locale used for 'space' classification
+		\return A reference to the modified input
+	*/
+    template< typename ContainerT >
+    inline ContainerT& trim_left( ContainerT& Input, const std::locale& Loc=std::locale() )
     {
         return 
-            BOOST_STRING_TRIM_SEQ_FWD( 
-                trim_left_copy_if, 
+			string_algo::trim_left( 
                 Input, 
-                is_space<BOOST_STRING_TYPENAME SeqT::value_type>( Loc ) );
+                is_space<BOOST_STRING_TYPENAME ContainerT::value_type>( Loc ) );
     }
-    template< typename SeqT >
-    inline SeqT& trim_left( SeqT& Input, const std::locale& Loc=std::locale() )
+
+	//! Right trim
+	/*!
+		Remove all trailing spaces from the input. 
+		Result is a trimmed copy if the input
+
+		\param Input An input container
+		\param Loc A locale used for 'space' classification
+		\return A trimmed copy if the input
+	*/  
+    template< typename ContainerT >
+    inline ContainerT trim_right_copy( const ContainerT& Input, const std::locale& Loc=std::locale() )
     {
         return 
-            BOOST_STRING_TRIM_SEQ_FWD( 
-                trim_left_if, 
+			string_algo::trim_right_copy( 
                 Input, 
-                is_space<BOOST_STRING_TYPENAME SeqT::value_type>( Loc ) );
+                is_space<BOOST_STRING_TYPENAME ContainerT::value_type>( Loc ) );
     }
-    template< typename SeqT >
-    inline SeqT trim_right_copy( const SeqT& Input, const std::locale& Loc=std::locale() )
+
+	//! Right trim
+	/*!
+		Remove all trailing spaces from the input. 
+		Input sequence is modified in-place.
+
+		\param Input An input container
+		\param Loc A locale used for 'space' classification
+		\return A reference to the modified input
+	*/
+	template< typename ContainerT >
+    inline ContainerT& trim_right( ContainerT& Input, const std::locale& Loc=std::locale() )
     {
         return 
-            BOOST_STRING_TRIM_SEQ_FWD( 
-                trim_right_copy_if, 
+			string_algo::trim_right(
                 Input, 
-                is_space<BOOST_STRING_TYPENAME SeqT::value_type>( Loc ) );
+                is_space<BOOST_STRING_TYPENAME ContainerT::value_type>( Loc ) );
     }
-    template< typename SeqT >
-    inline SeqT& trim_right( SeqT& Input, const std::locale& Loc=std::locale() )
-    {
-        return 
-            BOOST_STRING_TRIM_SEQ_FWD( 
-                trim_right_if, 
-                Input, 
-                is_space<BOOST_STRING_TYPENAME SeqT::value_type>( Loc ) );
-    }
-    template< typename SeqT >
-    inline SeqT trim_copy( const SeqT& Input, const std::locale& Loc=std::locale() )
+
+	//! Trim
+	/*!
+		Remove all leading and trailing spaces from the input. 
+		Result is a trimmed copy if the input
+
+		\param Input An input container
+		\param Loc A locale used for 'space' classification
+		\return A trimmed copy if the input
+	*/
+    template< typename ContainerT >
+    inline ContainerT trim_copy( const ContainerT& Input, const std::locale& Loc=std::locale() )
     {
         return
-            BOOST_STRING_TRIM_SEQ_FWD( 
-                trim_copy_if, 
+			string_algo::trim_copy(
                 Input, 
-                is_space<BOOST_STRING_TYPENAME SeqT::value_type>( Loc ) );
+                is_space<BOOST_STRING_TYPENAME ContainerT::value_type>( Loc ) );
     }
-    template< typename SeqT >
-    inline SeqT& trim( SeqT& Input, const std::locale& Loc=std::locale() )
+    
+	//! Trim
+	/*!
+		Remove all leading and trailing spaces from the input. 
+		Input sequence is modified in-place.
+
+		\param Input An input container
+		\param Loc A locale used for 'space' classification
+		\return A reference to the modified input
+	*/
+	template< typename ContainerT >
+    inline ContainerT& trim( ContainerT& Input, const std::locale& Loc=std::locale() )
     {
         return
-            BOOST_STRING_TRIM_SEQ_FWD( 
-                trim_if, 
+			string_algo::trim(
                 Input, 
-                is_space<BOOST_STRING_TYPENAME SeqT::value_type>( Loc ) );
+                is_space<BOOST_STRING_TYPENAME ContainerT::value_type>( Loc ) );
     }
 
 
 } // namespace boost
-
-// remove macro definitions
-#undef BOOST_STRING_TRIM_SEQ_FWD
 
 #endif  // BOOST_STRING_TRIM_HPP

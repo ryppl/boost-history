@@ -19,7 +19,7 @@
 
 //  Orignal idea of container traits was proposed by Jeremy Siek and
 //  Thorsten Ottosen. This implemnetation is lightweighted version
-//  of container_traits addapter fow usage with string_algo library
+//  of container_traits addapter for usage with string_algo library
 
 #ifndef BOOST_STRING_CONTAINER_TRAITS_HPP
 #define BOOST_STRING_CONTAINER_TRAITS_HPP
@@ -35,34 +35,36 @@
 namespace boost {
     namespace string_algo {
 
-        /////////////////////////////////////////////////////////////////////////
-        // Interface
-        /////////////////////////////////////////////////////////////////////////
+//  container_traits template class -----------------------------------------//
+		
+		//! container_traits class
+		/*!
+			Container traits provides uniform access to different types of 
+			containers. This functionality allows to write generic algorithms
+			which work with several different kinds of containers.
 
-        template< typename Container >
-        struct container_traits;
+			Currently following container types are supported:
+				- containers with stl compatible container interface ( see ContainerConcept )
+					( i.e. std::vector<>, std::list<>, std::string<> ... )
+				- c-style array 
+				   ( char[10], int[15] ... )
+				- null-terminated c-strings
+					( char*, wchar_T* )
+				- std::pair of iterators 
+					( i.e std::pair< vector<int>::iterator,vector<int>::iterator > )
 
-        //
-        // Valid types from the traits:
-        //------------------------------------------
-        // size_type
-        // iterator
-        // const_iterator
-        // result_iterator (will follow the constness of the argument)
-        // difference_type
-        //
-        // Valid free standing functions:
-        //------------------------------------------
-        // iterator         begin( Container& );
-        // conat_iterator   begin( const Container& );
-        // iterator         end( Container& );  
-        // const_iterator   end( const Container& );
-        // size_type        size( const Container& )
-        //
+			Container traits provide a supset of container interface operations.
+			All are accessible using free-standing functions.
 
-        ///////////////////////////////////////////////////////////////////////////
-        // container_traits
-        ///////////////////////////////////////////////////////////////////////////
+			Following operations are supported:
+				- size()
+				- empty()
+				- begin()
+				- end()
+
+			Container traits have somewhat limited functionality on compilers not
+			supporting partial template specialization and partial template ordering.
+		*/
         template< typename T >
         struct container_traits
         {
@@ -81,26 +83,35 @@ namespace boost {
                         > 
                 >::type container_helper_type;
         public:
-            typedef container_helper_type function_type;        
-            typedef BOOST_STRING_TYPENAME 
+			//! Function type		
+			typedef container_helper_type function_type;        
+            //! Value type
+			typedef BOOST_STRING_TYPENAME 
                 container_helper_type::value_type value_type;
+			//! Size type
             typedef BOOST_STRING_TYPENAME 
                 container_helper_type::size_type size_type;
+			//! Iterator type
             typedef BOOST_STRING_TYPENAME 
                 container_helper_type::iterator iterator;
+			//! Const iterator type
             typedef BOOST_STRING_TYPENAME 
                 container_helper_type::const_iterator const_iterator;
-            typedef BOOST_STRING_TYPENAME 
+			//! Result iterator type ( iterator of const_iterator, depending on the constness of the conainer )
+			typedef BOOST_STRING_TYPENAME 
                 container_helper_type::result_iterator result_iterator;
+			//! Difference type
             typedef BOOST_STRING_TYPENAME 
                 container_helper_type::difference_type difference_type;
 
         }; // 'container_traits'
 
-        ///////////////////////////////////////////////////////////////////////////
-        // empty()/size()/begin()/end() functions
-        ///////////////////////////////////////////////////////////////////////////
+//  container_traits related functions -----------------------------------------//
 
+		//! Free-standing size() function
+		/*!
+			Get the size of the container. Uses container_traits.
+		*/
         template< typename C >
         inline BOOST_STRING_TYPENAME container_traits<C>::size_type
         size( const C& c )
@@ -108,7 +119,11 @@ namespace boost {
             return container_traits<C>::function_type::size( c ); 
         }
 
-        template< typename C >
+		//! Free-standing empty() function
+		/*!
+			Check whenever the container is empty. Uses container traits.
+		*/
+	    template< typename C >
         inline bool empty( const C& c )
         {
             return container_traits<C>::function_type::empty( c );
@@ -116,6 +131,11 @@ namespace boost {
 
 #ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
 
+		//! Free-standing begin() function
+		/*!
+			Get the begin iterator of the container. Uses container_traits.
+			Variant for non-const input.
+		*/
         template< typename C >
         inline BOOST_STRING_TYPENAME container_traits<C>::iterator
         begin( C& c )
@@ -123,6 +143,11 @@ namespace boost {
             return container_traits<C>::function_type::begin( c ); 
         }
 
+		//! Free-standing begin() function
+		/*!
+			Get the begin iterator of the container. Uses container_traits.
+			Variant for const input.
+		*/
         template< typename C >
         inline BOOST_STRING_TYPENAME container_traits<C>::const_iterator
         begin( const C& c )
@@ -130,6 +155,11 @@ namespace boost {
             return container_traits<C>::function_type::begin( c ); 
         }
 
+		//! Free-standing end() function
+		/*!
+			Get the begin iterator of the container. Uses container_traits.
+			Variant for non-const input.
+		*/
         template< typename C >
         inline BOOST_STRING_TYPENAME container_traits<C>::iterator
         end( C& c )
@@ -137,6 +167,11 @@ namespace boost {
             return container_traits<C>::function_type::end( c );
         }
 
+		//! Free-standing end() function
+		/*!
+			Get the begin iterator of the container. Uses container_traits.
+			Variant for const input.
+		*/
         template< typename C >
         inline BOOST_STRING_TYPENAME container_traits<C>::const_iterator
         end( const C& c )
@@ -146,6 +181,12 @@ namespace boost {
 
 #else // BOOST_NO_FUNCTION_TEMPLATE_ORDERING
 
+		//! Free-standing begin() function
+		/*!
+			Get the begin iterator of the container. Uses container_traits.
+			This variant is provided for compilers without function 
+			template ordering.
+		*/
         template< typename C >
         inline BOOST_STRING_TYPENAME container_traits<C>::result_iterator
         begin( C& c )
@@ -153,6 +194,12 @@ namespace boost {
             return container_traits<C>::function_type::begin( c );
         }
 
+		//! Free-standing end() function
+		/*!
+			Get the begin iterator of the container. Uses container_traits.
+			This variant is provided for compilers without function 
+			template ordering.
+		*/
         template< typename C >
         inline BOOST_STRING_TYPENAME container_traits<C>::result_iterator
         end( C& c )

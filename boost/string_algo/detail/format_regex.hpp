@@ -29,7 +29,7 @@ namespace boost {
                 typedef BOOST_STRING_TYPENAME StringT::value_type char_type;
 
                 // Construction
-                regex_formatF( const StringT& Fmt, unsigned int Flags=0 ) :
+                regex_formatF( const StringT& Fmt, match_flag_type Flags=format_default ) :
                     m_Fmt(Fmt), m_Flags( Flags ) {}
 
                 template<typename InputIteratorT>
@@ -42,13 +42,12 @@ namespace boost {
                     }
                     else
                     {
-                        return regex_format( 
-                            Replace.match_results(), m_Fmt, m_Flags );                      
+                        return Replace.match_results().format( m_Fmt, m_Flags );                      
                     }
                 }
             private:
                 const StringT& m_Fmt;
-                unsigned int m_Flags;
+                match_flag_type m_Flags;
             };
 
         

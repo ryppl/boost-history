@@ -20,38 +20,38 @@ namespace boost {
 
 //  sequence traits  -----------------------------------------------//
 
-        // native replace tester (
+        // native replace tester
         /*
-            return yes_type if the container has basic_string like native replace
+            \return yes_type if the container has basic_string like native replace
             method.
         */
         no_type sequence_has_native_replace(...);
 
         // stable iterators tester
         /*
-            return yes_type if the container's insert/replace/erase methods do not invalidate
+            \return yes_type if the container's insert/replace/erase methods do not invalidate
             existing iterators.
         */
         no_type sequence_has_stable_iterators(...);                     
 
         // const time insert tester
         /*
-            return yes_type if the container's insert method is working in constant time
+            \return yes_type if the container's insert method is working in constant time
         */
         no_type sequence_has_const_time_insert(...);                        
 
         // const time erase tester
         /*
-            return yes_type if the container's erase method is working in constant time
+            \return yes_type if the container's erase method is working in constant time
         */
         no_type sequence_has_const_time_erase(...);                     
+	
 
-
-        // sequence_traits
-        /*
+        //! sequence_traits
+        /*!
             Traits from this class template are used by various algorithms to achieve
             better performance for specific containers.
-            This class template provides a default selection of sequence propoerties. 
+            This class template provides a default selection of sequence properties. 
             New containers can supported eihter by specializing the whole class,
             or by providing a specific overrides for tester functinons.
         */
@@ -59,7 +59,6 @@ namespace boost {
         struct sequence_traits
         {
         private:
-            // traits resolving
             static SequenceT* t;
             BOOST_STATIC_CONSTANT(bool, native_replace_=( 
                 sizeof(sequence_has_native_replace(t))==sizeof(yes_type) ) );
@@ -72,9 +71,14 @@ namespace boost {
 
         public:
             // Container features
-            typedef ::boost::mpl::bool_<native_replace_> native_replace;
+            
+			//! Does container have native replace member function?
+			typedef ::boost::mpl::bool_<native_replace_> native_replace;
+			//! Does container have stable iterators?
             typedef ::boost::mpl::bool_<stable_iterators_> stable_iterators;
+			//! Does container have constant time insert member function?
             typedef ::boost::mpl::bool_<const_time_insert_> const_time_insert;
+			//! Does container have constant time erase member function?
             typedef ::boost::mpl::bool_<const_time_erase_> const_time_erase;                
         };
 

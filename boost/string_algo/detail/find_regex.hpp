@@ -80,7 +80,7 @@ namespace boost {
                 typedef const RegExT& regex_reference_type;
                     
                 // Construction
-                find_regexF( regex_reference_type Rx, unsigned int MatchFlags = match_default ) : 
+                find_regexF( regex_reference_type Rx, match_flag_type MatchFlags = match_default ) : 
                     m_Rx(Rx), m_MatchFlags(MatchFlags) {}   
 
                 // Operation
@@ -118,7 +118,7 @@ namespace boost {
 
             private:
                 regex_reference_type m_Rx; // Regexp
-                unsigned m_MatchFlags;     // match flags
+                match_flag_type m_MatchFlags;     // match flags
             };
 
         } // namespace detail

@@ -20,17 +20,26 @@ namespace boost {
 
 //  starts_with predicate  -----------------------------------------------//
 
-        // start_with predicate
-        template< typename SeqT1, typename SeqT2, typename PredicateT >
+		//! 'Starts with' predicate
+		/*!
+			This predicate holds when the test container is a prefix of the Input.
+			In other word, if the input starts with the test.
+
+			\param Input An input container
+			\param Test A test container
+			\param Comp An element comparison predicate
+			\return A result of the test
+		*/
+        template< typename InputContainerT, typename TestContainerT, typename PredicateT >
         inline bool starts_with( 
-            const SeqT1& Input, 
-            const SeqT2& Test,
+            const InputContainerT& Input, 
+            const TestContainerT& Test,
             PredicateT Comp )
         {
             typedef BOOST_STRING_TYPENAME 
-                string_algo::container_traits<SeqT1>::const_iterator Iterator1T;
+                string_algo::container_traits<InputContainerT>::const_iterator Iterator1T;
             typedef BOOST_STRING_TYPENAME 
-                string_algo::container_traits<SeqT2>::const_iterator Iterator2T;
+                string_algo::container_traits<TestContainerT>::const_iterator Iterator2T;
                 
             Iterator1T InputEnd=string_algo::end(Input);
             Iterator2T TestEnd=string_algo::end(Test);
@@ -50,15 +59,24 @@ namespace boost {
 
 //  ends_with predicate  -----------------------------------------------//
 
-        // end_with predicate
-        template< typename SeqT1, typename SeqT2, typename PredicateT >
+		//! 'Ends with' predicate
+		/*!
+			This predicate holds when the test container is a suffix of the Input.
+			In other word, if the input ends with the test.
+
+			\param Input An input container
+			\param Test A test container
+			\param Comp An element comparison predicate
+			\return A result of the test
+		*/
+        template< typename InputContainerT, typename TestContainerT, typename PredicateT >
         inline bool ends_with( 
-            const SeqT1& Input, 
-            const SeqT2& Test,
+            const InputContainerT& Input, 
+            const TestContainerT& Test,
             PredicateT Comp )
         {
             typedef BOOST_STRING_TYPENAME 
-                string_algo::container_traits<SeqT1>::const_iterator Iterator1T;
+                string_algo::container_traits<InputContainerT>::const_iterator Iterator1T;
             typedef BOOST_STRING_TYPENAME boost::detail::
                 iterator_traits<Iterator1T>::iterator_category category;
 
@@ -74,11 +92,19 @@ namespace boost {
 
 //  contains predicate  -----------------------------------------------//
 
-        // contains sequence version
-        template< typename SeqT1, typename SeqT2, typename PredicateT >
+		//! 'Contains' predicate
+		/*!
+			This predicate holds when the test container is contained in the Input.
+			
+			\param Input An input container
+			\param Test A test container
+			\param Comp An element comparison predicate
+			\return A result of the test
+		*/
+		template< typename InputContainerT, typename TestContainerT, typename PredicateT >
         inline bool contains( 
-            const SeqT1& Input, 
-            const SeqT2& Test,
+            const InputContainerT& Input, 
+            const TestContainerT& Test,
             PredicateT Comp )
         {
             if ( string_algo::empty(Test) )
@@ -93,17 +119,26 @@ namespace boost {
 
 //  equal predicate  -----------------------------------------------//
 
-        // equals predicate
-        template< typename SeqT1, typename SeqT2, typename PredicateT >
+        //! 'Equals' predicate
+		/*!
+			This predicate holds when the test container is equal to the
+			input container i.e. all elements in both containers are same.
+			
+			\param Input An input container
+			\param Test A test container
+			\param Comp An element comparison predicate
+			\return A result of the test
+		*/
+		template< typename InputContainerT, typename TestContainerT, typename PredicateT >
         inline bool equals( 
-            const SeqT1& Input, 
-            const SeqT2& Test,
+            const InputContainerT& Input, 
+            const TestContainerT& Test,
             PredicateT Comp )
         {
             typedef BOOST_STRING_TYPENAME 
-                string_algo::container_traits<SeqT1>::const_iterator Iterator1T;
+                string_algo::container_traits<InputContainerT>::const_iterator Iterator1T;
             typedef BOOST_STRING_TYPENAME 
-                string_algo::container_traits<SeqT2>::const_iterator Iterator2T;
+                string_algo::container_traits<TestContainerT>::const_iterator Iterator2T;
                 
             Iterator1T InputEnd=string_algo::end(Input);
             Iterator2T TestEnd=string_algo::end(Test);

@@ -20,7 +20,14 @@ namespace boost {
 
 // generic formaters  ---------------------------------------------------------------//
 
-        // constant formatter
+        //! Constant formatter
+		/*!
+			Construct a const formatter. Const formatter always returns
+			the same value, regardless of the paramter.
+
+			\param Format A predefined value used as a result for formating
+			\return A const formatter functor
+		*/
         template< typename ContainerT >
         inline detail::const_formatF<ContainerT>
         const_formatter( const ContainerT& Format )
@@ -28,7 +35,13 @@ namespace boost {
             return detail::const_formatF<ContainerT>( Format );
         }
 
-        // identity formatter
+        //! Identity formatter
+		/*!
+			Construct an identity formatter. Identity formatter always returns
+			the parameter.
+
+			\return An identity formatter functor
+		*/
         template< typename ContainerT >
         inline detail::identity_formatF<ContainerT>
         identity_formatter()
@@ -36,7 +49,15 @@ namespace boost {
             return detail::identity_formatF<ContainerT>();
         }
 
-        // empty formatter
+        //! Empty formatter
+		/*!
+			Construct an empty formatter. Empty formater always returns an empty
+			sequence. 
+
+			\param Input container used to select a correct value_type for the
+					     resulting empty_container<>
+			\return An empty formatter functor
+		*/
         template< typename ContainerT >
         inline detail::empty_formatF< 
             BOOST_STRING_TYPENAME container_traits<ContainerT>::value_type >

@@ -22,12 +22,18 @@ namespace boost {
 
 // generic replace  -----------------------------------------------------------------//
 
-        // replace 
-        /*
+        //! Generic replace algorithm
+        /*!
             Create new sequence into output interator as a copy of input sequence,
             but with the match replaced with the formated substitute range. 
             The match is searched using find functor and substitute is formated using
-            format functor
+            format functor.
+
+			\param Output A output iterarot to which the result will be copied
+			\param Input An input sequence
+			\param FindF A find functor used to search for a match to be replaced
+			\param FormatF A format functor used to format a match
+			\return An output iterator pointing just after last inserted character
         */
         template< 
             typename OutputIteratorT,
@@ -68,7 +74,18 @@ namespace boost {
             return Output;
         }
 
-        // replace sequence version
+        //! Generic replace algorithm
+        /*!
+            Create new sequence as a copy the input sequence,
+            but with the match replaced with the formated substitute range. 
+            The match is searched using find functor and substitute is formated using
+            format functor.
+
+			\param Input An input sequence
+			\param FindF A find functor used to search for a match to be replaced
+			\param FormatF A format functor used to format a match
+			\return An output iterator pointing just after last inserted character
+        */
         template< 
             typename InputT, 
             typename FindFT,
@@ -105,7 +122,17 @@ namespace boost {
             return Output;
         }
 
-        // replace in-place sequence version
+        //! Generic replace algorithm
+        /*!
+            Replace a match in the input sequence with the formated substitute.
+            The match is searched using find functor and substitute is formated using
+            format functor.
+
+			\param Input An input sequence
+			\param FindF A find functor used to search for a match to be replaced
+			\param FormatF A format functor used to format a match
+			\return An output iterator pointing just after last inserted character
+        */
         template<
             typename InputT,
             typename FindFT,
@@ -140,10 +167,18 @@ namespace boost {
 
 //  replace_all generic ----------------------------------------------------------------//
 
-        // replace_all generic version
-        /*
+        //! Generic replace all algorithm
+        /*!
             Create new sequence into output interator as a copy of input sequence,
-            but with the all matches replaced with substitute range.
+            but with the each match replaced with the formated substitute range. 
+            The match is searched using find functor and substitute is formated using
+            format functor.
+
+			\param Output A output iterarot to which the result will be copied
+			\param Input An input sequence
+			\param FindF A find functor used to search for a match to be replaced
+			\param FormatF A format functor used to format a match
+			\return An output iterator pointing just after last inserted character
         */
         template< 
             typename OutputIteratorT,
@@ -188,7 +223,18 @@ namespace boost {
             return Output;
         }
 
-        // replace_all sequence version
+        //! Generic replace all algorithm
+        /*!
+            Create new sequence as a copy the input sequence,
+            but with the each match replaced with the formated substitute range. 
+            The match is searched using find functor and substitute is formated using
+            format functor.
+
+			\param Input An input sequence
+			\param FindF A find functor used to search for a match to be replaced
+			\param FormatF A format functor used to format a match
+			\return An output iterator pointing just after last inserted character
+        */
         template< 
             typename InputT, 
             typename FindFT,
@@ -233,7 +279,17 @@ namespace boost {
             return Output;
         }
 
-        // replace_all in-place sequence version
+        //! Generic replace all algorithm
+        /*!
+            Replace each match in the input sequence with the formated substitute.
+            The match is searched using find functor and substitute is formated using
+            format functor.
+
+			\param Input An input sequence
+			\param FindF A find functor used to search for a match to be replaced
+			\param FormatF A format functor used to format a match
+			\return An output iterator pointing just after last inserted character
+        */
         template<
             typename InputT,
             typename FindFT,

@@ -10,6 +10,10 @@
 #ifndef BOOST_STRING_ALGO_HPP
 #define BOOST_STRING_ALGO_HPP
 
+/*! \file boost/string_algo.hpp
+	Cummulative include for string_algo library
+*/
+
 #include <boost/string_algo/std_containers_traits.hpp>
 #include <boost/string_algo/iterator_range.hpp>
 #include <boost/string_algo/trim.hpp>

@@ -18,99 +18,177 @@ namespace boost {
 
 //  starts_with predicate  -----------------------------------------------//
 
-    // starts_with
-    template< typename SeqT1, typename SeqT2 >
+    //! 'Starts with' predicate
+	/*!
+		This predicate holds when the test container is a prefix of the Input.
+		In other word, if the input starts with the test.
+
+		\param Input An input container
+		\param Test A test container
+		\return A result of the test
+	*/
+    template< typename InputContainerT, typename TestContainerT >
     inline bool starts_with( 
-        const SeqT1& Input, 
-        const SeqT2& Test )
+        const InputContainerT& Input, 
+        const TestContainerT& Test )
     {
         return string_algo::starts_with( Input, Test, string_algo::is_equal() );
     }
 
-    // starts_with ( case insensitive )
-    template< typename SeqT1, typename SeqT2 >
+    //! 'Starts with' predicate ( case insensitive )
+	/*!
+		This predicate holds when the test container is a prefix of the Input.
+		In other word, if the input starts with the test.
+		Elements are compared case insensitively.
+
+		\param Input An input container
+		\param Test A test container
+		\return A result of the test
+	*/
+    template< typename InputContainerT, typename TestContainerT >
     inline bool istarts_with( 
-        const SeqT1& Input, 
-        const SeqT2& Test )
+        const InputContainerT& Input, 
+        const TestContainerT& Test )
     {
         return string_algo::starts_with( Input, Test, string_algo::is_iequal() );
     }
 
 //  ends_with predicate  -----------------------------------------------//
 
-    // ends_with
-    template< typename SeqT1, typename SeqT2 >
+    //! 'Ends with' predicate
+	/*!
+		This predicate holds when the test container is a suffix of the Input.
+		In other word, if the input ends with the test.
+
+		\param Input An input container
+		\param Test A test container
+		\return A result of the test
+	*/
+    template< typename InputContainerT, typename TestContainerT >
     inline bool ends_with( 
-        const SeqT1& Input, 
-        const SeqT2& Test )
+        const InputContainerT& Input, 
+        const TestContainerT& Test )
     {
         return string_algo::ends_with( Input, Test, string_algo::is_equal() );
     }
 
-    // ends_with ( case insensitive )
-    template< typename SeqT1, typename SeqT2 >
+    //! 'Ends with' predicate ( case insensitive )
+	/*!
+		This predicate holds when the test container is a suffix of the Input.
+		In other word, if the input ends with the test.
+		Elements are compared case insensitively.
+
+		\param Input An input container
+		\param Test A test container
+		\return A result of the test
+	*/
+    template< typename InputContainerT, typename TestContainerT >
     inline bool iends_with( 
-        const SeqT1& Input, 
-        const SeqT2& Test )
+        const InputContainerT& Input, 
+        const TestContainerT& Test )
     {
         return string_algo::ends_with( Input, Test, string_algo::is_iequal() );
     }
 
 //  contains predicate  -----------------------------------------------//
 
-    // contains
-    template< typename SeqT1, typename SeqT2 >
+    //! 'Contains' predicate
+	/*!
+		This predicate holds when the test container is contained in the Input.
+		
+		\param Input An input container
+		\param Test A test container
+		\return A result of the test
+	*/
+    template< typename InputContainerT, typename TestContainerT >
     inline bool contains( 
-        const SeqT1& Input, 
-        const SeqT2& Test )
+        const InputContainerT& Input, 
+        const TestContainerT& Test )
     {
         return string_algo::contains( Input, Test, string_algo::is_equal() );
     }
 
-    // contains ( case insensitive )
-    template< typename SeqT1, typename SeqT2 >
+    //! 'Contains' predicate ( case insensitive )
+	/*!
+		This predicate holds when the test container is contained in the Input.
+		Elements are compared case insensitively.
+
+		\param Input An input container
+		\param Test A test container
+		\return A result of the test
+	*/
+    template< typename InputContainerT, typename TestContainerT >
     inline bool icontains( 
-        const SeqT1& Input, 
-        const SeqT2& Test )
+        const InputContainerT& Input, 
+        const TestContainerT& Test )
     {
         return string_algo::contains( Input, Test, string_algo::is_iequal() );
     }
 
-//  equal predicate  -----------------------------------------------//
+//  equals predicate  -----------------------------------------------//
 
-    // equals 
-    template< typename SeqT1, typename SeqT2 >
+    //! 'Equals' predicate
+	/*!
+		This predicate holds when the test container is equal to the
+		input container i.e. all elements in both containers are same.
+		
+		\param Input An input container
+		\param Test A test container
+		\return A result of the test
+
+		\note This is two-way version of std::equal algorithm
+	*/
+    template< typename InputContainerT, typename TestContainerT >
     inline bool equals( 
-        const SeqT1& Input, 
-        const SeqT2& Test )
+        const InputContainerT& Input, 
+        const TestContainerT& Test )
     {
         return string_algo::equals( Input, Test, string_algo::is_equal() );
     }
 
-    // equals ( case insensitive )
-    template< typename SeqT1, typename SeqT2 >
+    //! 'Equals' predicate ( casa insensitive )
+	/*!
+		This predicate holds when the test container is equal to the
+		input container i.e. all elements in both containers are same.
+		Elements are compared case insensitively.
+
+		\param Input An input container
+		\param Test A test container
+		\return A result of the test
+
+		\note This is two-way version of std::equal algorithm
+	*/
+    template< typename InputContainerT, typename TestContainerT >
     inline bool iequals( 
-        const SeqT1& Input, 
-        const SeqT2& Test )
+        const InputContainerT& Input, 
+        const TestContainerT& Test )
     {
         return string_algo::equals( Input, Test, string_algo::is_iequal() );
     }
 
 //  all predicate  -----------------------------------------------//
 
-    // all predicate sequence version
-    template< typename SeqT1, typename PredicateT >
+    //! 'Equals' predicate
+	/*!
+		This predicate holds it all its elemets satisfy a given 
+		condition, represented by the predicate.
+		
+		\param Input An input container
+		\param Pred A predicate
+		\return A result of the test
+	*/
+    template< typename InputContainerT, typename PredicateT >
     inline bool all( 
-        const SeqT1& Input, 
-        PredicateT Predicate )
+        const InputContainerT& Input, 
+        PredicateT Pred )
     {
         typedef BOOST_STRING_TYPENAME 
-            string_algo::container_traits<SeqT1>::const_iterator Iterator1T;
+            string_algo::container_traits<InputContainerT>::const_iterator Iterator1T;
 
         Iterator1T InputEnd=string_algo::end(Input);
         for( Iterator1T It=string_algo::begin(Input); It!=InputEnd; It++ )
         {
-            if ( !Predicate(*It) )
+            if ( !Pred(*It) )
                 return false;
         }
         

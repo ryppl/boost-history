@@ -20,14 +20,25 @@ namespace boost {
 
 //  regex_finder  -----------------------------------------------//
 
-        // regex finder
+        //! "Regex" finder 
+        /*!
+            Construct first_finder. Finder uses regex engine to search
+			for a match.
+            Result is given in regex_search_result. This is an extension
+			of the iterator_range. In addtion it containes match results 
+			from regex_search algoritm.
+
+			\param Rx A regular expression
+			\param MatchFlags Regex search options
+			\return regex_finder functor
+        */
         template< 
             typename CharT, 
             typename RegexTraitsT, typename RegexAllocatorT>
         inline detail::find_regexF< reg_expression<CharT, RegexTraitsT, RegexAllocatorT> >
         regex_finder(
             const reg_expression<CharT, RegexTraitsT, RegexAllocatorT>& Rx,
-            unsigned int MatchFlags=match_default )
+            match_flag_type MatchFlags=match_default )
         {
             return detail::
                 find_regexF< 
@@ -36,14 +47,23 @@ namespace boost {
 
 //  regex_formater  ---------------------------------------------//
 
-        // regex formater
-        template< 
+        //! Regex formatter
+		/*!
+			Construct a regex formatter. Regex formater uses regex_format
+			function to format a match found by regex_finder. 
+			This formatted it designed to closely cooperate with regex_finder.
+
+			\param Format Regex format definition
+			\param Flags Format flags
+			\return A regex formatter functor
+		*/
+       template< 
             typename CharT, 
             typename TraitsT, typename AllocT >
         inline detail::regex_formatF< std::basic_string< CharT, TraitsT, AllocT > >
         regex_formatter( 
             const std::basic_string<CharT, TraitsT, AllocT>& Format,
-            unsigned int Flags=0 )
+            match_flag_type Flags=format_default )
         {
             return 
                 detail::regex_formatF< std::basic_string<CharT, TraitsT, AllocT> >(

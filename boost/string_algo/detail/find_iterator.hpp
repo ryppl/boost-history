@@ -166,9 +166,9 @@ namespace boost {
                 {
                     return m_Policy.match();
                 }
-                const match_type& operator->() const
+                const match_type* operator->() const
                 {
-                    return m_Policy.match();
+                    return &m_Policy.match();
                 }
                 find_iterator& operator++()
                 {

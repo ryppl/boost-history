@@ -81,6 +81,21 @@ namespace boost {
                 return OutputIt;
             }
 
+//  iterator range utilities -----------------------------------------//
+
+			// copy range functor
+			template< 
+				typename SeqT, 
+				typename IteratorT=BOOST_STRING_TYPENAME SeqT::const_iterator >
+			struct copy_rangeF : 
+				public std::unary_function< iterator_range<IteratorT>, SeqT >
+			{
+				SeqT operator()( const iterator_range<IteratorT>& Range ) const
+				{
+					return copy_range<SeqT>(Range);
+				}
+			};
+
         } // namespace detail
 
     } // namespace string_algo

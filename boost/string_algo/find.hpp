@@ -20,88 +20,145 @@ namespace boost {
 
 //  find_first  -----------------------------------------------//
 
-    // find first
-    /*
+    //! Find first algorithm
+    /*!
         Search for a first match of search sequence in the 
-        input sequence. Result is given as a pair of iterators,
-        delimiting the match.
-    */
-    template< typename InputT, typename SearchT >
+        input container. 
+		
+		\param Input A container which will be searched.
+		\param Search A string to be searched for.
+		\return 
+			An iterator_range containing iterators delimiting the match. 
+			Returned iterator is either InputContainerT::iterator or 
+			InputContainerT::const_iterator, depending on the constness of 
+			the input parameter.
+	*/
+    template< typename InputContainerT, typename SearchContainerT >
     inline iterator_range< 
-        BOOST_STRING_TYPENAME string_algo::container_traits<InputT>::result_iterator >
+        BOOST_STRING_TYPENAME string_algo::container_traits<InputContainerT>::result_iterator >
     find_first( 
-        InputT& Input, 
-        const SearchT& Search )
+        InputContainerT& Input, 
+        const SearchContainerT& Search )
     {
         return string_algo::first_finder(Search)(Input);
     }
 
-    // find first ( case insensitive version )
-    template< typename InputT, typename SearchT >
+    //! Find first algorithm ( case insensitive )
+    /*!
+        Search for a first match of search sequence in the 
+        input container. Searching is case insensitive.
+		
+		\param Input A container which will be searched.
+		\param Search A string to be searched for.
+		\return 
+			An iterator_range containing iterators delimiting the match. 
+			Returned iterator is either InputContainerT::iterator or 
+			InputContainerT::const_iterator, depending on the constness of the input parameter.
+    */
+    template< typename InputContainerT, typename SearchContainerT >
     inline iterator_range< 
-        BOOST_STRING_TYPENAME string_algo::container_traits<InputT>::result_iterator >
+        BOOST_STRING_TYPENAME string_algo::container_traits<InputContainerT>::result_iterator >
     ifind_first( 
-        InputT& Input, 
-        const SearchT& Search )
+        InputContainerT& Input, 
+        const SearchContainerT& Search )
     {
         return string_algo::first_finder(Search,string_algo::is_iequal())(Input);
     }
 
 //  find_last  -----------------------------------------------//
 
-    // find last
-    /*
+    //! Find last algorithm
+    /*!
         Search for a last match of search sequence in the 
-        input sequence. Result is given as a pair of iterators,
-        delimiting the match.
+        input container. 
+		
+		\param Input A container which will be searched.
+		\param Search A string to be searched for.
+		\return 
+			An iterator_range containing iterators delimiting the match. 
+			Returned iterator is either InputContainerT::iterator or 
+			InputContainerT::const_iterator, depending on the constness of the input parameter.
     */
-    template< typename InputT, typename SearchT >
+    template< typename InputContainerT, typename SearchContainerT >
     inline iterator_range< 
-        BOOST_STRING_TYPENAME string_algo::container_traits<InputT>::result_iterator >
+        BOOST_STRING_TYPENAME string_algo::container_traits<InputContainerT>::result_iterator >
     find_last( 
-        InputT& Input, 
-        const SearchT& Search )
+        InputContainerT& Input, 
+        const SearchContainerT& Search )
     {
         return string_algo::last_finder(Search)(Input);
     }
 
-    // find last ( case insensitive version ) 
-    template< typename InputT, typename SearchT >
+    //! Find last algorithm ( case insensitive )
+    /*!
+        Search for a last match of search sequence in the 
+        input container. Searching is case insensitive.
+		
+		\param Input A container which will be searched.
+		\param Search A string to be searched for.
+		\return 
+			An iterator_range containing iterators delimiting the match. 
+			Returned iterator is either InputContainerT::iterator or 
+			InputContainerT::const_iterator, depending on the constness of the 
+			input parameter.
+    */
+    template< typename InputContainerT, typename SearchContainerT >
     inline iterator_range< 
-        BOOST_STRING_TYPENAME string_algo::container_traits<InputT>::result_iterator >
+        BOOST_STRING_TYPENAME string_algo::container_traits<InputContainerT>::result_iterator >
     ifind_last( 
-        InputT& Input, 
-        const SearchT& Search )
+        InputContainerT& Input, 
+        const SearchContainerT& Search )
     {
         return string_algo::last_finder(Search, string_algo::is_iequal())(Input);
     }
 
 //  find_nth ----------------------------------------------------------------------//
 
-    // find n-th
-    /*
+    //! Find n-th algorithm 
+    /*!
         Search for an n-th match of search sequence in the 
-        input sequence. Result is given as a pair of iterators,
-        delimiting the match.
+        input sequence. 		
+		
+		\param Input A container which will be searched.
+		\param Search A string to be searched for.
+		\param Nth An index of the match to be found.
+		\return 
+			An iterator_range containing iterators delimiting the match. 
+			Returned iterator is either InputContainerT::iterator or 
+			InputContainerT::const_iterator, depending on the constness of 
+			the input parameter.
     */
-    template< typename InputT, typename SearchT >
+    template< typename InputContainerT, typename SearchContainerT >
     inline iterator_range< 
-        BOOST_STRING_TYPENAME string_algo::container_traits<InputT>::result_iterator >
+        BOOST_STRING_TYPENAME string_algo::container_traits<InputContainerT>::result_iterator >
     find_nth( 
-        InputT& Input, 
-        const SearchT& Search,
+        InputContainerT& Input, 
+        const SearchContainerT& Search,
         unsigned int Nth )
     {
         return string_algo::nth_finder(Search,Nth)(Input);
     }
 
-    // find n-th ( case insensitive version )
-    template< typename InputT, typename SearchT >
+    //! Find n-th algorithm ( case insensitive ).
+    /*!
+        Search for an n-th match of search sequence in the 
+        input sequence. Searching is case insensitive.
+		
+		\param Input A container which will be searched.
+		\param Search A string to be searched for.
+		\param Nth An index of the match to be found.
+		\return 
+			An iterator_range containing iterators delimiting the match. 
+			Returned iterator is either InputContainerT::iterator or 
+			InputContainerT::const_iterator, depending on the constness 
+			of the input parameter.
+    */
+    template< typename InputContainerT, typename SearchContainerT >
     inline iterator_range< 
-        BOOST_STRING_TYPENAME string_algo::container_traits<InputT>::result_iterator >
+        BOOST_STRING_TYPENAME string_algo::container_traits<InputContainerT>::result_iterator >
     ifind_nth( 
-        InputT& Input, 
-        const SearchT& Search,
+        InputContainerT& Input, 
+        const SearchContainerT& Search,
         unsigned int Nth )
     {
         return string_algo::nth_finder(Search,Nth,string_algo::is_iequal())(Input);
@@ -109,76 +166,77 @@ namespace boost {
 
 //  find_head ----------------------------------------------------------------------//
 
-    // find a head
-    /*
-        Get the head sequence of the input.
-        Result is given as a pair of iterators, delimiting the match.
+    //! Find head algorithm
+    /*!
+        Get the head of the input. Head is a prefix of 
+		a seqence of given size. If the sequence is shorter then required,
+		whole sequence if considered to be the head.
+
+		\param Input A container which will be searched.
+		\param N A length of the head
+		\return 
+			An iterator_range containing iterators delimiting the match. 
+			Returned iterator is either InputContainerT::iterator or 
+			InputContainerT::const_iterator, depending on the constness 
+			of the input parameter.
     */
-    template< typename InputT >
+    template< typename InputContainerT >
     inline iterator_range< 
-        BOOST_STRING_TYPENAME string_algo::container_traits<InputT>::result_iterator >
+        BOOST_STRING_TYPENAME string_algo::container_traits<InputContainerT>::result_iterator >
     find_head( 
-        InputT& Input, 
+        InputContainerT& Input, 
         unsigned int N )
     {
         return string_algo::head_finder( N )( Input );      
     }
 
-    // find a head
-    /*
-        Get the head sequence of the input.
-        Result is given as a copy the head sequence.
-    */
-    template< typename InputT >
-    inline InputT find_head_copy( 
-        const InputT& Input, 
-        unsigned int N )
-    {
-        return copy_range<InputT>( string_algo::head_finder(N)(Input) );
-    }
-
 //  find_tail ----------------------------------------------------------------------//
 
-    // find a tail
-    /*
-        Get the tail sequence of the input.
-        Result is given as a pair of iterators, delimiting the match.
+    //! Find tail algorithm
+    /*!
+        Get the tail of the input. Head is a suffix of 
+		a seqence of given size. If the sequence is shorter then required,
+		whole sequence if considered to be the tail.
+
+		\param Input A container which will be searched.
+		\param N A length of the tail
+		\return 
+			An iterator_range containing iterators delimiting the match. 
+			Returned iterator is either InputContainerT::iterator or 
+			InputContainerT::const_iterator, depending on the constness 
+			of the input parameter.
     */
-    template< typename InputT >
+    template< typename InputContainerT >
     inline iterator_range< 
-        BOOST_STRING_TYPENAME string_algo::container_traits<InputT>::result_iterator >
+        BOOST_STRING_TYPENAME string_algo::container_traits<InputContainerT>::result_iterator >
     find_tail( 
-        InputT& Input, 
+        InputContainerT& Input, 
         unsigned int N )
     {
         return string_algo::tail_finder( N )( Input );      
     }
 
-    // find a tail
-    /*
-        Get the tail sequence of the input.
-        Result is given as a copy the head sequence.
-    */
-    template< typename InputT >
-    inline InputT find_tail_copy( 
-        const InputT& Input, 
-        unsigned int N )
-    {
-        return copy_range<InputT>( string_algo::tail_finder(N)(Input) );
-    }
-
 //  find_token --------------------------------------------------------------------//
 
-    // find a token
-    /*
-        Get the token in the given sequence
-        Result is given as a pair of iterators, delimiting the match.
+    //! Find token algorithm
+    /*!
+        Look for a given token in the sequence. Token is specified by a predicate.
+		If bCompressed is given, adjancent tokens are considered to be one match.
+        
+		\param Input A container which will be searched.
+		\param Pred An unary predicate to identify a tiken
+		\param bCompress Enable/Disable compressing of adjancent tokens
+		\return 
+			An iterator_range containing iterators delimiting the match. 
+			Returned iterator is either InputContainerT::iterator 
+			or InputContainerT::const_iterator, depending on the constness 
+			of the input parameter.
     */
-    template< typename InputT, typename PredicateT >
+    template< typename InputContainerT, typename PredicateT >
     inline iterator_range< 
-        BOOST_STRING_TYPENAME string_algo::container_traits<InputT>::result_iterator >
+        BOOST_STRING_TYPENAME string_algo::container_traits<InputContainerT>::result_iterator >
     find_token( 
-        InputT& Input,
+        InputContainerT& Input,
         PredicateT Pred,
         bool bCompress=true )
     {

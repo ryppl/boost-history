@@ -21,8 +21,17 @@ namespace boost {
 
 //  erase_range -------------------------------------------------------//
 
-    // erase_range iterator-output version
-    template< typename OutputIteratorT, typename InputT >
+    //! Erase range algorithm
+	/*!
+		Remove the given range from the input sequence.
+		Result is copied to the given output iterator.
+
+		\param Output A output iterarot to which the result will be copied
+		\param Input An input sequence
+		\param SearchRange A range in the input to be substituted
+		\return An output iterator pointing just after last inserted character
+	*/
+	template< typename OutputIteratorT, typename InputT >
     inline OutputIteratorT erase_range_copy(
         OutputIteratorT Output,
         const InputT& Input,
@@ -37,7 +46,15 @@ namespace boost {
             string_algo::empty_formatter(Input) );
     }
 
-    // erase_range sequence version
+    //! Erase range algorithm
+	/*!
+		Remove the given range from the input sequence.
+		Result is a modified copy of the input.
+
+		\param Input An input sequence
+		\param SearchRange A range in the input to be substituted
+		\return A modified copy of the input
+	*/
     template< typename InputT >
     inline InputT erase_range_copy( 
         const InputT& Input,
@@ -51,7 +68,15 @@ namespace boost {
             string_algo::empty_formatter(Input) );
     }
 
-    // replace_first in-place sequence version
+    //! Erase range algorithm
+	/*!
+		Remove the given range from the input sequence.
+		Input sequence is modified in-place.
+
+		\param Input An input sequence
+		\param SearchRange A range in the input to be substituted
+		\return A reference to the modified input
+	*/
     template< typename InputT >
     inline InputT& erase_range( 
         InputT& Input,
@@ -67,7 +92,16 @@ namespace boost {
 
 //  erase_first  --------------------------------------------------------//
 
-    // erase_first iterator-output version
+    //! Erase first algorithm
+	/*!
+		Remove the first match of the search sequence from the input.
+		Result is copied to the given output iterator.
+
+		\param Output A output iterarot to which the result will be copied
+		\param Input An input sequence
+		\param Search A string to be searched for. 
+		\return An output iterator pointing just after last inserted character
+	*/
     template< 
         typename OutputIteratorT,
         typename InputT, 
@@ -84,7 +118,15 @@ namespace boost {
             string_algo::empty_formatter(Input) );
     }
 
-    // erase_first sequence version
+    //! Erase first algorithm
+	/*!
+		Remove the first match of the search sequence from the input. 
+		Result is a modified copy of the input.
+
+		\param Input An input sequence
+		\param Search A string to be searched for. 
+		\return A modified copy of the input
+	*/
     template< typename InputT, typename SearchT >
     inline InputT erase_first_copy( 
         const InputT& Input,
@@ -96,7 +138,15 @@ namespace boost {
             string_algo::empty_formatter(Input) );
     }
 
-    // erase_first in-place sequence version
+    //! Erase first algorithm
+	/*!
+		Remove the first match of the search sequence from the input. 
+		Input sequence is modified in-place.
+
+		\param Input An input sequence
+		\param Search A string to be searched for. 
+		\return A reference to the modified input
+	*/
     template< typename InputT, typename SearchT >
     inline InputT& erase_first( 
         InputT& Input,
@@ -110,8 +160,17 @@ namespace boost {
 
 //  erase_first ( case insensitive ) ------------------------------------//
 
-    // erase_first iterator-output version ( case insensitive )
-    template< 
+    //! Erase first algorithm ( case insensitive )
+	/*!
+		Remove the first match of the search sequence from the input. 
+		Result is copied to the given output iterator. Searching is case insensitive.
+
+		\param Output A output iterarot to which the result will be copied
+		\param Input An input sequence
+		\param Search A string to be searched for. 
+		\return An output iterator pointing just after last inserted character
+	*/
+	template< 
         typename OutputIteratorT,
         typename InputT, 
         typename SearchT >
@@ -127,7 +186,15 @@ namespace boost {
             string_algo::empty_formatter(Input) );
     }
 
-    // erase_first sequence version ( case insensitive )
+    //! Erase first algorithm ( case insensitive )
+	/*!
+		Remove the first match of the search sequence from the input. 
+		Result is a modified copy of the input.	Searching is case insensitive.
+
+		\param Input An input sequence
+		\param Search A string to be searched for. 
+		\return A modified copy of the input
+	*/
     template< typename InputT, typename SearchT >
     inline InputT ierase_first_copy( 
         const InputT& Input,
@@ -139,7 +206,15 @@ namespace boost {
             string_algo::empty_formatter(Input) );
     }
 
-    // erase_first in-place sequence version ( case insensitive )
+    //! Erase first algorithm ( case insensitive )
+	/*!
+		Remove the first match of the search sequence from the input. 
+		Input sequence is modified in-place. Searching is case insensitive.
+
+		\param Input An input sequence
+		\param Search A string to be searched for. 
+		\return A reference to the modified input
+	*/
     template< typename InputT, typename SearchT >
     inline InputT& ierase_first( 
         InputT& Input,
@@ -153,7 +228,16 @@ namespace boost {
 
 //  erase_last  --------------------------------------------------------//
 
-    // erase_last iterator-output version
+    //! Erase last algorithm
+	/*!
+		Remove the last match of the search sequence from the input. 
+		Result is copied to the given output iterator.
+
+		\param Output A output iterarot to which the result will be copied
+		\param Input An input sequence
+		\param Search A string to be searched for. 
+		\return An output iterator pointing just after last inserted character
+	*/
     template< 
         typename OutputIteratorT,
         typename InputT, 
@@ -170,7 +254,15 @@ namespace boost {
             string_algo::empty_formatter(Input) );
     }
 
-    // erase_last sequence version
+    //! Erase last algorithm
+	/*!
+		Remove the last match of the search sequence from the input. 
+		Result is a modified copy of the input.
+
+		\param Input An input sequence
+		\param Search A string to be searched for. 
+		\return A modified copy of the input
+	*/
     template< typename InputT, typename SearchT >
     inline InputT erase_last_copy( 
         const InputT& Input,
@@ -182,7 +274,15 @@ namespace boost {
             string_algo::empty_formatter(Input) );
     }
 
-    // erase_last in-place sequence version
+    //! Erase last algorithm
+	/*!
+		Remove the last match of the search sequence from the input. 
+		Input sequence is modified in-place.
+
+		\param Input An input sequence
+		\param Search A string to be searched for. 
+		\return A reference to the modified input
+	*/
     template< typename InputT, typename SearchT >
     inline InputT& erase_last( 
         InputT& Input,
@@ -196,7 +296,16 @@ namespace boost {
 
 //  erase_last ( case insensitive ) ------------------------------------//
 
-    // erase_last iterator-output version ( case insensitive )
+    //! Erase last algorithm ( case insensitive )
+	/*!
+		Remove the last match of the search sequence from the input. 
+		Result is copied to the given output iterator. Searching is case insensitive.
+
+		\param Output A output iterarot to which the result will be copied
+		\param Input An input sequence
+		\param Search A string to be searched for. 
+		\return An output iterator pointing just after last inserted character
+	*/
     template< 
         typename OutputIteratorT,
         typename InputT, 
@@ -213,7 +322,15 @@ namespace boost {
             string_algo::empty_formatter(Input) );
     }
 
-    // erase_last sequence version ( case insensitive )
+    //! Erase last algorithm ( case insensitive )
+	/*!
+		Remove the last match of the search sequence from the input. 
+		Result is a modified copy of the input. Searching is case insensitive.
+
+		\param Input An input sequence
+		\param Search A string to be searched for. 
+		\return A modified copy of the input
+	*/
     template< typename InputT, typename SearchT >
     inline InputT ierase_last_copy( 
         const InputT& Input,
@@ -225,7 +342,15 @@ namespace boost {
             string_algo::empty_formatter(Input) );
     }
 
-    // erase_last in-place sequence version ( case insensitive )
+    //! Erase last algorithm ( case insensitive )
+	/*!
+		Remove the last match of the search sequence from the input. 
+		Input sequence is modified in-place. Searching is case insensitive.
+
+		\param Input An input sequence
+		\param Search A string to be searched for. 
+		\return A reference to the modified input
+	*/
     template< typename InputT, typename SearchT >
     inline InputT& ierase_last( 
         InputT& Input,
@@ -239,7 +364,17 @@ namespace boost {
 
 //  erase_nth --------------------------------------------------------------------//
 
-    // erase_nth iterator-output version
+    //! Erase nth algorithm
+	/*!
+		Remove the Nth match of the search sequence in the input.
+		Result is copied to the given output iterator.
+
+		\param Output A output iterarot to which the result will be copied
+		\param Input An input sequence
+		\param Search A string to be searched for. 
+		\param Nth An index of the match to be replaced
+		\return An output iterator pointing just after last inserted character
+	*/
     template< 
         typename OutputIteratorT,
         typename InputT, 
@@ -257,7 +392,16 @@ namespace boost {
             string_algo::empty_formatter(Input) );
     }
 
-    // erase_nth sequence version
+    //! Erase nth algorithm
+	/*!
+		Remove the Nth match of the search sequence in the input.
+		Result is a modified copy of the input.
+
+		\param Input An input sequence
+		\param Search A string to be searched for. 
+		\param Nth An index of the match to be replaced
+		\return A modified copy of the input
+	*/
     template< typename InputT, typename SearchT >
     inline InputT erase_nth_copy( 
         const InputT& Input,
@@ -270,7 +414,16 @@ namespace boost {
             string_algo::empty_formatter(Input) );
     }
 
-    // erase_nth in-place sequence version
+    //! Erase nth algorithm
+	/*!
+		Remove the Nth match of the search sequence in the input.
+		Input sequence is modified in-place.
+
+		\param Input An input sequence
+		\param Search A string to be searched for. 
+		\param Nth An index of the match to be replaced
+		\return A reference to the modified input
+	*/
     template< typename InputT, typename SearchT >
     inline InputT& erase_nth( 
         InputT& Input,
@@ -285,7 +438,17 @@ namespace boost {
 
 //  erase_nth ( case insensitive ) ---------------------------------------------//
 
-    // erase_nth iterator-output version ( case insensitive )
+    //! Erase nth algorithm ( case insensitive )
+	/*!
+		Remove the Nth match of the search sequence in the input.
+		Result is copied to the given output iterator. Searching is case insensitive.
+
+		\param Output A output iterarot to which the result will be copied
+		\param Input An input sequence
+		\param Search A string to be searched for. 
+		\param Nth An index of the match to be replaced
+		\return An output iterator pointing just after last inserted character
+	*/
     template< 
         typename OutputIteratorT,
         typename InputT, 
@@ -303,7 +466,16 @@ namespace boost {
             string_algo::empty_formatter(Input) );
     }
 
-    // erase_nth sequence version ( case insensitive )
+    //! Erase nth algorithm
+	/*!
+		Remove the Nth match of the search sequence in the input.
+		Result is a modified copy of the input. Searching is case insensitive.
+
+		\param Input An input sequence
+		\param Search A string to be searched for. 
+		\param Nth An index of the match to be replaced
+		\return A modified copy of the input
+	*/
     template< typename InputT, typename SearchT >
     inline InputT ierase_nth_copy( 
         const InputT& Input,
@@ -316,7 +488,16 @@ namespace boost {
             string_algo::empty_formatter(Input) );
     }
 
-    // erase_nth in-place sequence version ( case insensitive )
+    //! Erase nth algorithm
+	/*!
+		Remove the Nth match of the search sequence in the input.
+		Input sequence is modified in-place. Searching is case insensitive.
+
+		\param Input An input sequence
+		\param Search A string to be searched for. 
+		\param Nth An index of the match to be replaced
+		\return A reference to the modified input
+	*/
     template< typename InputT, typename SearchT >
     inline InputT& ierase_nth( 
         InputT& Input,
@@ -332,7 +513,16 @@ namespace boost {
 
 //  erase_all  --------------------------------------------------------//
 
-    // erase_all iterator-output version
+    //! Erase all algorithm
+	/*!
+		Remove all the occurences of the search sequence from the input. 
+		Result is copied to the given output iterator.
+
+		\param Output A output iterarot to which the result will be copied
+		\param Input An input sequence
+		\param Search A string to be searched for. 
+		\return An output iterator pointing just after last inserted character
+	*/
     template< 
         typename OutputIteratorT,
         typename InputT, 
@@ -349,8 +539,16 @@ namespace boost {
             string_algo::empty_formatter(Input) );
     }
 
-    // erase_all sequence version
-    template< typename InputT, typename SearchT >
+    //! Erase all algorithm
+	/*!
+		Remove all the occurences of the search sequence from the input. 
+		Result is a modified copy of the input.
+
+		\param Input An input sequence
+		\param Search A string to be searched for. 
+		\return A modified copy of the input
+	*/  
+	template< typename InputT, typename SearchT >
     inline InputT erase_all_copy( 
         const InputT& Input,
         const SearchT& Search )
@@ -361,7 +559,15 @@ namespace boost {
             string_algo::empty_formatter(Input) );
     }
 
-    // erase_all in-place sequence version
+    //! Erase all algorithm
+	/*!
+		Remove all the occurences of the search sequence from the input. 
+		Input sequence is modified in-place.
+
+		\param Input An input sequence
+		\param Search A string to be searched for. 
+		\return A reference to the modified input
+	*/
     template< typename InputT, typename SearchT >
     inline InputT& erase_all( 
         InputT& Input,
@@ -375,7 +581,16 @@ namespace boost {
 
 //  erase_all ( case insensitive ) ------------------------------------//
 
-    // erase_all iterator-output version ( case insensitive )
+    //! Erase all algorithm ( case insensitive )
+	/*!
+		Remove all the occurences of the search sequence from the input. 
+		Result is copied to the given output iterator. Searching is case insensitive.
+
+		\param Output A output iterarot to which the result will be copied
+		\param Input An input sequence
+		\param Search A string to be searched for. 
+		\return An output iterator pointing just after last inserted character
+	*/
     template< 
         typename OutputIteratorT,
         typename InputT, 
@@ -392,7 +607,15 @@ namespace boost {
             string_algo::empty_formatter(Input) );
     }
 
-    // erase_all sequence version ( case insensitive ) 
+    //! Erase all algorithm ( case insensitive )
+	/*!
+		Remove all the occurences of the search sequence from the input. 
+		Result is a modified copy of the input. Searching is case insensitive.
+
+		\param Input An input sequence
+		\param Search A string to be searched for. 
+		\return A modified copy of the input
+	*/
     template< typename InputT, typename SearchT >
     inline InputT ierase_all_copy( 
         const InputT& Input,
@@ -404,7 +627,15 @@ namespace boost {
             string_algo::empty_formatter(Input) );
     }
 
-    // erase_all in-place sequence version ( case insensitive )
+    //! Erase all algorithm ( case insensitive )
+	/*!
+		Remove all the occurences of the search sequence from the input. 
+		Input sequence is modified in-place. Searching is case insensitive.
+
+		\param Input An input sequence
+		\param Search A string to be searched for. 
+		\return A reference to the modified input
+	*/
     template< typename InputT, typename SearchT >
     inline InputT& ierase_all( 
         InputT& Input,
@@ -418,7 +649,17 @@ namespace boost {
 
 //  erase_head --------------------------------------------------------------------//
 
-    // erase_head iterator-output version
+    //! Erase head algorithm
+	/*!
+		Remove the head from the input.	Head is a prefix of a seqence of given size. 
+		If the sequence is shorter then required, whole sequence if 
+		considered to be the head. Result is copied to the given output iterator.
+
+		\param Output A output iterarot to which the result will be copied
+		\param Input An input sequence
+		\param N A length of the head
+		\return An output iterator pointing just after last inserted character
+	*/
     template< 
         typename OutputIteratorT,
         typename InputT >
@@ -434,8 +675,17 @@ namespace boost {
             string_algo::empty_formatter( Input ) );
     }
 
-    // erase_head sequence version
-    template< typename InputT >
+    //! Erase head algorithm
+	/*!
+		Remove the head from the input.	Head is a prefix of a seqence of given size. 
+		If the sequence is shorter then required, whole sequence if 
+		considered to be the head. Result is a modified copy of the input.
+
+		\param Input An input sequence
+		\param N A length of the head
+		\return A modified copy of the input
+	*/
+	template< typename InputT >
     inline InputT erase_head_copy( 
         const InputT& Input,
         unsigned int N )
@@ -446,8 +696,17 @@ namespace boost {
             string_algo::empty_formatter( Input ) );
     }
 
-    // erase_head in-place sequence version
-    template< typename InputT >
+    //! Erase head algorithm
+	/*!
+		Remove the head from the input.	Head is a prefix of a seqence of given size. 
+		If the sequence is shorter then required, whole sequence if 
+		considered to be the head. Input sequence is modified in-place.
+
+		\param Input An input sequence
+		\param N A length of the head
+		\return A reference to the modified input
+	*/
+	template< typename InputT >
     inline InputT& erase_head( 
         InputT& Input,
         unsigned int N )
@@ -460,7 +719,17 @@ namespace boost {
 
 //  erase_tail --------------------------------------------------------------------//
 
-    // erase_tail iterator-output version
+    //! Erase tail algorithm
+	/*!
+		Remove the tail from the input.	Tail is a suffix of a seqence of given size. 
+		If the sequence is shorter then required, whole sequence if 
+		considered to be the tail. Result is copied to the given output iterator.
+
+		\param Output A output iterarot to which the result will be copied
+		\param Input An input sequence
+		\param N A length of the head
+		\return An output iterator pointing just after last inserted character
+	*/
     template< 
         typename OutputIteratorT,
         typename InputT >
@@ -476,8 +745,17 @@ namespace boost {
             string_algo::empty_formatter( Input ) );
     }
 
-    // erase_tail sequence version
-    template< typename InputT >
+    //! Erase tail algorithm
+	/*!
+		Remove the tail from the input.	Tail is a suffix of a seqence of given size. 
+		If the sequence is shorter then required, whole sequence if 
+		considered to be the tail. Result is a modified copy of the input.
+
+		\param Input An input sequence
+		\param N A length of the head
+		\return A modified copy of the input
+	*/
+	template< typename InputT >
     inline InputT erase_tail_copy( 
         const InputT& Input,
         unsigned int N )
@@ -488,8 +766,17 @@ namespace boost {
             string_algo::empty_formatter( Input ) );
     }
 
-    // erase_tail in-place sequence version
-    template< typename InputT >
+    //! Erase tail algorithm
+	/*!
+		Remove the tail from the input.	Tail is a suffix of a seqence of given size. 
+		If the sequence is shorter then required, whole sequence if 
+		considered to be the tail. Input sequence is modified in-place.
+
+		\param Input An input sequence
+		\param N A length of the head
+		\return A reference to the modified input
+	*/
+	template< typename InputT >
     inline InputT& erase_tail( 
         InputT& Input,
         unsigned int N )

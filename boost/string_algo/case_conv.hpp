@@ -16,21 +16,31 @@
 #include <boost/string_algo/container_traits.hpp>
 #include <boost/string_algo/detail/case_conv.hpp>
 
+/*! \file boost/string_algo/case_conv.hpp
+	Sequence case conversion algorithms are located in this header file.
+	Algorithm convert each element in the input sequence to the
+	desired case using provided locales.
+*/
+
 namespace boost {
 
 //  to_lower  -----------------------------------------------//
 
-    // convert to lower case
-    /*
+    //! Convert to lower case
+    /*!
         Each element of the input sequence is converted to lower
-        case.
-        Result is copied to the given output iterator.
+        case. Result is copied to the given output iterator.
+
+		\param Output A output iterarot to which the result will be copied
+		\param Input An input container
+		\param Loc A locale used for conversion
+		\return An output iterator pointing just after last inserted character
     */
-    template< typename OutputIteratorT, typename SeqT >
+    template< typename OutputIteratorT, typename ContainerT >
     inline OutputIteratorT 
     to_lower_copy(
         OutputIteratorT Output,
-        const SeqT& Input,
+        const ContainerT& Input,
         const std::locale& Loc=std::locale() )
     {
         return std::transform( 
@@ -40,34 +50,43 @@ namespace boost {
             string_algo::detail::to_lowerF(Loc) );
     }
 
-    // convert to lower case
-    /*
+    //! Convert to lower case
+    /*!
         Each element of the input sequence is converted to lower
-        case.
-        Result is given as a converted copy of the input sequence.
+        case. Result is a copy of the input converted to lower case.
+
+		\param Input An input container
+		\param Loc a locale used for conversion
+		\return A copy if the input converted to lower case
     */
-    template< typename SeqT >
-    inline SeqT to_lower_copy( const SeqT& Input, const std::locale& Loc=std::locale() )
+    template< typename ContainerT >
+    inline ContainerT to_lower_copy( 
+		const ContainerT& Input, 
+		const std::locale& Loc=std::locale() )
     {
-        SeqT Output;
+        ContainerT Output;
         std::transform( 
             string_algo::begin(Input), 
             string_algo::end(Input), 
-            std::back_inserter<SeqT>( Output ),
+            std::back_inserter<ContainerT>( Output ),
             string_algo::detail::to_lowerF(Loc) );
 
         return Output;
     }
 
-    // convert to lower case
-    /*
+    //! Convert to lower case
+    /*!
         Each element of the input sequence is converted to lower
-        case.
-        Input sequence is modified in-place and the reference to it is as
-        a result.
+        case. Input sequence is modified in-place.
+
+		\param Input An input container
+		\param Loc a locale used for conversion
+		\return A reference to the modified input
     */
-    template< typename SeqT >
-    inline SeqT& to_lower( SeqT& Input, const std::locale& Loc=std::locale() )
+    template< typename ContainerT >
+    inline ContainerT& to_lower( 
+		ContainerT& Input, 
+		const std::locale& Loc=std::locale() )
     {
         std::transform( 
             string_algo::begin(Input), 
@@ -80,17 +99,21 @@ namespace boost {
     
 //  to_upper  -----------------------------------------------//
 
-    // convert to upper case
-    /*
+    //! Convert to upper case
+    /*!
         Each element of the input sequence is converted to upper
-        case.
-        Result is copied to the given output iterator.
+        case. Result is copied to the given output iterator.
+
+		\param Output A output iterarot to which the result will be copied
+		\param Input An input container
+		\param Loc a locale used for conversion
+		\return An output iterator pointing just after last inserted character
     */
-    template< typename OutputIteratorT, typename SeqT >
+    template< typename OutputIteratorT, typename ContainerT >
     inline OutputIteratorT 
     to_upper_copy(
         OutputIteratorT Output,
-        const SeqT& Input,
+        const ContainerT& Input,
         const std::locale& Loc=std::locale() )
     {
         return std::transform( 
@@ -100,34 +123,43 @@ namespace boost {
             string_algo::detail::to_upperF(Loc) );
     }
 
-    // convert to upper case
-    /*
+    //! Convert to upper case
+    /*!
         Each element of the input sequence is converted to upper
-        case.
-        Result is given as a converted copy of the input sequence.
+        case. Result is a copy if the input converted to upper case.
+
+		\param Input An input container
+		\param Loc a locale used for conversion
+		\return A copy if the input converted to upper case
     */
-    template< typename SeqT >
-    inline SeqT to_upper_copy( const SeqT& Input, const std::locale& Loc=std::locale() )
+    template< typename ContainerT >
+    inline ContainerT to_upper_copy( 
+		const ContainerT& Input, 
+		const std::locale& Loc=std::locale() )
     {
-        SeqT Output;
+        ContainerT Output;
         std::transform( 
             string_algo::begin(Input), 
             string_algo::end(Input), 
-            std::back_inserter<SeqT>( Output ),
+            std::back_inserter<ContainerT>( Output ),
             string_algo::detail::to_upperF(Loc) );
 
         return Output;
     }
 
-    // convert to upper case
-    /*
+    //! Convert to upper case
+    /*!
         Each element of the input sequence is converted to upper
-        case.
-        Input sequence is modified in-place and the reference to it is as
-        a result.
+        case. Input sequence is modified in-place.
+
+		\param Input An input container
+		\param Loc a locale used for conversion
+		\return A reference to the modified input
     */
-    template< typename SeqT >
-    inline SeqT& to_upper( SeqT& Input, const std::locale& Loc=std::locale() )
+    template< typename ContainerT >
+    inline ContainerT& to_upper( 
+		ContainerT& Input, 
+		const std::locale& Loc=std::locale() )
     {
         std::transform( 
             string_algo::begin(Input), 

@@ -22,18 +22,28 @@ namespace boost {
 
 //  replace_range --------------------------------------------------------------------//
 
-    // replace_range output iterator version
+    //! Replace range algorithm
+	/*!
+		Substitute the given range in the input sequence with the
+		format seqeuence. Result is copied to the given output iterator.
+
+		\param Output A output iterarot to which the result will be copied
+		\param Input An input sequence
+		\param SearchRange A range in the input to be substituted
+		\param Format A substitute sequence
+		\return An output iterator pointing just after last inserted character
+	*/
     template< 
         typename OutputIteratorT,
-        typename InputT, 
-        typename FormatT >
+        typename InputSeqT, 
+        typename FormatSeqT >
     inline OutputIteratorT replace_range_copy(
         OutputIteratorT Output,
-        const InputT& Input,
+        const InputSeqT& Input,
         const iterator_range<
             BOOST_STRING_TYPENAME 
-                string_algo::container_traits<InputT>::const_iterator>& SearchRange,
-        const FormatT& Format )
+                string_algo::container_traits<InputSeqT>::const_iterator>& SearchRange,
+        const FormatSeqT& Format )
     {
         return string_algo::replace_copy(
             Output,
@@ -42,14 +52,23 @@ namespace boost {
             string_algo::const_formatter(Format) );
     }
 
-    // replace_range sequence version
-    template< typename InputT, typename FormatT >
-    inline InputT replace_range_copy( 
-        const InputT& Input,
+    //! Replace range algorithm
+	/*!
+		Substitute a given range in the input sequence with the
+		format seqeuence. Result is a modified copy of the input.
+
+		\param Input An input sequence
+		\param SearchRange A range in the input to be substituted
+		\param Format A substitute sequence
+		\return A modified copy of the input
+	*/
+    template< typename InputSeqT, typename FormatSeqT >
+    inline InputSeqT replace_range_copy( 
+        const InputSeqT& Input,
         const iterator_range<
             BOOST_STRING_TYPENAME 
-                string_algo::container_traits<InputT>::const_iterator>& SearchRange,
-        const FormatT& Format )
+                string_algo::container_traits<InputSeqT>::const_iterator>& SearchRange,
+        const FormatSeqT& Format )
     {
         return string_algo::replace_copy(
             Input,
@@ -57,14 +76,23 @@ namespace boost {
             string_algo::const_formatter(Format) );
     }
 
-    // replace_range in-place sequence version
-    template< typename InputT, typename FormatT >
-    inline InputT& replace_range( 
-        InputT& Input,
+    //! Replace range algorithm
+	/*!
+		Substitute a given range in the input sequence with the
+		format seqeuence. Input sequence is modified in-place.
+
+		\param Input An input sequence
+		\param SearchRange A range in the input to be substituted
+		\param Format A substitute sequence
+		\return A reference to the modified input
+	*/
+    template< typename InputSeqT, typename FormatSeqT >
+    inline InputSeqT& replace_range( 
+        InputSeqT& Input,
         const iterator_range<
             BOOST_STRING_TYPENAME 
-                string_algo::container_traits<InputT>::iterator>& SearchRange,
-        const FormatT& Format )
+                string_algo::container_traits<InputSeqT>::iterator>& SearchRange,
+        const FormatSeqT& Format )
     {
         return string_algo::replace(
             Input,
@@ -74,17 +102,27 @@ namespace boost {
 
 //  replace_first --------------------------------------------------------------------//
 
-    // replace_first output iterator version
+    //! Replace first algorithm
+	/*!
+		Substitute a first match of the search sequence in the input 
+		with the format seqeuence. Result is copied to the given output iterator.
+
+		\param Output A output iterarot to which the result will be copied
+		\param Input An input sequence
+		\param Search A string to be searched for. 
+		\param Format A substitute sequence
+		\return An output iterator pointing just after last inserted character
+	*/
     template< 
         typename OutputIteratorT,
-        typename InputT, 
-        typename SearchT,
-        typename FormatT >
+        typename InputSeqT, 
+        typename SearchSeqT,
+        typename FormatSeqT >
     inline OutputIteratorT replace_first_copy(
         OutputIteratorT Output,
-        const InputT& Input,
-        const SearchT& Search,
-        const FormatT& Format )
+        const InputSeqT& Input,
+        const SearchSeqT& Search,
+        const FormatSeqT& Format )
     {
         return string_algo::replace_copy(
             Output,
@@ -93,12 +131,21 @@ namespace boost {
             string_algo::const_formatter(Format) );
     }
 
-    // replace_first sequence version
-    template< typename InputT, typename SearchT, typename FormatT >
-    inline InputT replace_first_copy( 
-        const InputT& Input,
-        const SearchT& Search,
-        const FormatT& Format )
+    //! Replace first algorithm
+	/*!
+		Substitute a first match of the search sequence in the input 
+		with the format seqeuence. Result is a modified copy of the input.
+
+		\param Input An input sequence
+		\param Search A string to be searched for. 
+		\param Format A substitute sequence
+		\return A modified copy of the input
+	*/
+    template< typename InputSeqT, typename SearchSeqT, typename FormatSeqT >
+    inline InputSeqT replace_first_copy( 
+        const InputSeqT& Input,
+        const SearchSeqT& Search,
+        const FormatSeqT& Format )
     {
         return string_algo::replace_copy( 
             Input,
@@ -106,12 +153,21 @@ namespace boost {
             string_algo::const_formatter(Format) );
     }
 
-    // replace_first in-place sequence version
-    template< typename InputT, typename SearchT, typename FormatT >
-    inline InputT& replace_first( 
-        InputT& Input,
-        const SearchT& Search,
-        const FormatT& Format )
+    //! Replace first algorithm
+	/*!
+		Substitute a first match of the search sequence in the input 
+		with the format seqeuence. Input sequence is modified in-place.
+
+		\param Input An input sequence
+		\param Search A string to be searched for. 
+		\param Format A substitute sequence
+		\return A reference to the modified input
+	*/
+    template< typename InputSeqT, typename SearchSeqT, typename FormatSeqT >
+    inline InputSeqT& replace_first( 
+        InputSeqT& Input,
+        const SearchSeqT& Search,
+        const FormatSeqT& Format )
     {
         return string_algo::replace( 
             Input, 
@@ -121,12 +177,22 @@ namespace boost {
 
 //  replace_first ( case insensitive ) ---------------------------------------------//
 
-    // replace_first sequence version ( case insensitive )
-    template< typename InputT, typename SearchT, typename FormatT >
-    inline InputT ireplace_first_copy( 
-        const InputT& Input,
-        const SearchT& Search,
-        const FormatT& Format )
+    //! Replace first algorithm ( case insensitive )
+	/*!
+		Substitute a first match of the search sequence in the input 
+		with the format seqeuence. Result is copied to the given output iterator.
+		Searching is case insensitive.
+
+		\param Input An input sequence
+		\param Search A string to be searched for. 
+		\param Format A substitute sequence
+		\return An output iterator pointing just after last inserted character
+	*/
+    template< typename InputSeqT, typename SearchSeqT, typename FormatSeqT >
+    inline InputSeqT ireplace_first_copy( 
+        const InputSeqT& Input,
+        const SearchSeqT& Search,
+        const FormatSeqT& Format )
     {
         return string_algo::replace_copy( 
             Input,
@@ -134,17 +200,28 @@ namespace boost {
             string_algo::const_formatter(Format) );
     }
 
-    // replace_first output iterator version ( case insensitive )
+    //! Replace first algorithm ( case insensitive )
+	/*!
+		Substitute a first match of the search sequence in the input 
+		with the format seqeuence. Result is a modified copy of the input.
+		Searching is case insensitive.
+
+		\param Output A output iterarot to which the result will be copied
+		\param Input An input sequence
+		\param Search A string to be searched for. 
+		\param Format A substitute sequence
+		\return A modified copy of the input
+	*/
     template< 
         typename OutputIteratorT,
-        typename InputT, 
-        typename SearchT,
-        typename FormatT >
+        typename InputSeqT, 
+        typename SearchSeqT,
+        typename FormatSeqT >
     inline OutputIteratorT ireplace_first_copy(
         OutputIteratorT Output,
-        const InputT& Input,
-        const SearchT& Search,
-        const FormatT& Format )
+        const InputSeqT& Input,
+        const SearchSeqT& Search,
+        const FormatSeqT& Format )
     {
         return string_algo::replace_copy(
             Output,
@@ -153,12 +230,22 @@ namespace boost {
             string_algo::const_formatter(Format) );
     }
 
-    // replace_first in-place sequence version ( case insensitive )
-    template< typename InputT, typename SearchT, typename FormatT >
-    inline InputT& ireplace_first( 
-        InputT& Input,
-        const SearchT& Search,
-        const FormatT& Format )
+    //! Replace first algorithm ( case insensitive )
+	/*!
+		Substitute a first match of the search sequence in the input 
+		with the format seqeuence. Input sequence is modified in-place.
+		Searching is case insensitive.
+
+		\param Input An input sequence
+		\param Search A string to be searched for. 
+		\param Format A substitute sequence
+		\return A reference to the modified input
+	*/
+    template< typename InputSeqT, typename SearchSeqT, typename FormatSeqT >
+    inline InputSeqT& ireplace_first( 
+        InputSeqT& Input,
+        const SearchSeqT& Search,
+        const FormatSeqT& Format )
     {
         return string_algo::replace( 
             Input, 
@@ -168,17 +255,27 @@ namespace boost {
 
 //  replace_last --------------------------------------------------------------------//
 
-    // replace_last output iterator version
+    //! Replace last algorithm
+	/*!
+		Substitute a last match of the search sequence in the input 
+		with the format seqeuence. Result is copied to the given output iterator.
+
+		\param Output A output iterarot to which the result will be copied
+		\param Input An input sequence
+		\param Search A string to be searched for. 
+		\param Format A substitute sequence
+		\return An output iterator pointing just after last inserted character
+	*/
     template< 
         typename OutputIteratorT,
-        typename InputT, 
-        typename SearchT,
-        typename FormatT >
+        typename InputSeqT, 
+        typename SearchSeqT,
+        typename FormatSeqT >
     inline OutputIteratorT replace_last_copy(
         OutputIteratorT Output,
-        const InputT& Input,
-        const SearchT& Search,
-        const FormatT& Format )
+        const InputSeqT& Input,
+        const SearchSeqT& Search,
+        const FormatSeqT& Format )
     {
         return string_algo::replace_copy(
             Output,
@@ -187,12 +284,21 @@ namespace boost {
             string_algo::const_formatter(Format) );
     }
 
-    // replace_last sequence version
-    template< typename InputT, typename SearchT, typename FormatT >
-    inline InputT replace_last_copy( 
-        const InputT& Input,
-        const SearchT& Search,
-        const FormatT& Format )
+    //! Replace last algorithm
+	/*!
+		Substitute a last match of the search sequence in the input 
+		with the format seqeuence. Result is a modified copy of the input.
+
+		\param Input An input sequence
+		\param Search A string to be searched for. 
+		\param Format A substitute sequence
+		\return A modified copy of the input
+	*/
+    template< typename InputSeqT, typename SearchSeqT, typename FormatSeqT >
+    inline InputSeqT replace_last_copy( 
+        const InputSeqT& Input,
+        const SearchSeqT& Search,
+        const FormatSeqT& Format )
     {
         return string_algo::replace_copy( 
             Input,
@@ -200,12 +306,21 @@ namespace boost {
             string_algo::const_formatter(Format) );
     }
 
-    // replace_last in-place sequence version
-    template< typename InputT, typename SearchT, typename FormatT >
-    inline InputT& replace_last( 
-        InputT& Input,
-        const SearchT& Search,
-        const FormatT& Format )
+    //! Replace last algorithm
+	/*!
+		Substitute a last match of the search sequence in the input 
+		with the format seqeuence. Input sequence is modified in-place.
+
+		\param Input An input sequence
+		\param Search A string to be searched for. 
+		\param Format A substitute sequence
+		\return A reference to the modified input
+	*/
+    template< typename InputSeqT, typename SearchSeqT, typename FormatSeqT >
+    inline InputSeqT& replace_last( 
+        InputSeqT& Input,
+        const SearchSeqT& Search,
+        const FormatSeqT& Format )
     {
         return string_algo::replace( 
             Input, 
@@ -215,17 +330,28 @@ namespace boost {
 
 //  replace_last ( case insensitive ) -----------------------------------------------//
 
-    // replace_last output iterator version ( case insensitive )
+    //! Replace last algorithm ( case insensitive )
+	/*!
+		Substitute a last match of the search sequence in the input 
+		with the format seqeuence. Result is copied to the given output iterator.
+		Searching is case insensitive.
+
+		\param Output A output iterarot to which the result will be copied
+		\param Input An input sequence
+		\param Search A string to be searched for. 
+		\param Format A substitute sequence
+		\return An output iterator pointing just after last inserted character
+	*/
     template< 
         typename OutputIteratorT,
-        typename InputT, 
-        typename SearchT,
-        typename FormatT >
+        typename InputSeqT, 
+        typename SearchSeqT,
+        typename FormatSeqT >
     inline OutputIteratorT ireplace_last_copy(
         OutputIteratorT Output,
-        const InputT& Input,
-        const SearchT& Search,
-        const FormatT& Format )
+        const InputSeqT& Input,
+        const SearchSeqT& Search,
+        const FormatSeqT& Format )
     {
         return string_algo::replace_copy(
             Output,
@@ -234,12 +360,22 @@ namespace boost {
             string_algo::const_formatter(Format) );
     }
 
-    // replace_last sequence version ( case insensitive )
-    template< typename InputT, typename SearchT, typename FormatT >
-    inline InputT ireplace_last_copy( 
-        const InputT& Input,
-        const SearchT& Search,
-        const FormatT& Format )
+    //! Replace last algorithm ( case insensitive )
+	/*!
+		Substitute a last match of the search sequence in the input 
+		with the format seqeuence. Result is a modified copy of the input.
+		Searching is case insensitive.
+
+		\param Input An input sequence
+		\param Search A string to be searched for. 
+		\param Format A substitute sequence
+		\return A modified copy of the input
+	*/
+    template< typename InputSeqT, typename SearchSeqT, typename FormatSeqT >
+    inline InputSeqT ireplace_last_copy( 
+        const InputSeqT& Input,
+        const SearchSeqT& Search,
+        const FormatSeqT& Format )
     {
         return string_algo::replace_copy( 
             Input,
@@ -247,12 +383,22 @@ namespace boost {
             string_algo::const_formatter(Format) );
     }
 
-    // replace_last in-place sequence version ( case insensitive )
-    template< typename InputT, typename SearchT, typename FormatT >
-    inline InputT& ireplace_last( 
-        InputT& Input,
-        const SearchT& Search,
-        const FormatT& Format )
+    //! Replace last algorithm ( case insensitive )
+	/*!
+		Substitute a last match of the search sequence in the input 
+		with the format seqeuence. Input sequence is modified in-place.
+		Searching is case insensitive.
+
+		\param Input An input sequence
+		\param Search A string to be searched for. 
+		\param Format A substitute sequence
+		\return A reference to the modified input
+	*/
+    template< typename InputSeqT, typename SearchSeqT, typename FormatSeqT >
+    inline InputSeqT& ireplace_last( 
+        InputSeqT& Input,
+        const SearchSeqT& Search,
+        const FormatSeqT& Format )
     {
         return string_algo::replace( 
             Input, 
@@ -262,18 +408,29 @@ namespace boost {
 
 //  replace_nth --------------------------------------------------------------------//
 
-    // replace_nth output iterator version
+    //! Replace nth algorithm
+	/*!
+		Substitute an Nth match of the search sequence in the input 
+		with the format seqeuence. Result is copied to the given output iterator.
+
+		\param Output A output iterarot to which the result will be copied
+		\param Input An input sequence
+		\param Search A string to be searched for. 
+		\param Nth An index of the match to be replaced
+		\param Format A substitute sequence
+		\return An output iterator pointing just after last inserted character
+	*/
     template< 
         typename OutputIteratorT,
-        typename InputT, 
-        typename SearchT,
-        typename FormatT >
+        typename InputSeqT, 
+        typename SearchSeqT,
+        typename FormatSeqT >
     inline OutputIteratorT replace_nth_copy(
         OutputIteratorT Output,
-        const InputT& Input,
-        const SearchT& Search,
+        const InputSeqT& Input,
+        const SearchSeqT& Search,
         unsigned int Nth,
-        const FormatT& Format )
+        const FormatSeqT& Format )
     {
         return string_algo::replace_copy(
             Output,
@@ -282,13 +439,23 @@ namespace boost {
             string_algo::const_formatter(Format) );
     }
 
-    // replace_nth sequence version
-    template< typename InputT, typename SearchT, typename FormatT >
-    inline InputT replace_nth_copy( 
-        const InputT& Input,
-        const SearchT& Search,
+    //! Replace nth algorithm
+	/*!
+		Substitute an Nth match of the search sequence in the input 
+		with the format seqeuence. Result is a modified copy of the input.
+
+		\param Input An input sequence
+		\param Search A string to be searched for. 
+		\param Nth An index of the match to be replaced
+		\param Format A substitute sequence
+		\return A modified copy of the input
+	*/
+    template< typename InputSeqT, typename SearchSeqT, typename FormatSeqT >
+    inline InputSeqT replace_nth_copy( 
+        const InputSeqT& Input,
+        const SearchSeqT& Search,
         unsigned int Nth,
-        const FormatT& Format )
+        const FormatSeqT& Format )
     {
         return string_algo::replace_copy( 
             Input,
@@ -296,13 +463,23 @@ namespace boost {
             string_algo::const_formatter(Format) );
     }
 
-    // replace_nth in-place sequence version
-    template< typename InputT, typename SearchT, typename FormatT >
-    inline InputT& replace_nth( 
-        InputT& Input,
-        const SearchT& Search,
+    //! Replace nth algorithm
+	/*!
+		Substitute an Nth match of the search sequence in the input 
+		with the format seqeuence. Input sequence is modified in-place.
+
+		\param Input An input sequence
+		\param Search A string to be searched for. 
+		\param Nth An index of the match to be replaced
+		\param Format A substitute sequence
+		\return A reference to the modified input
+	*/
+    template< typename InputSeqT, typename SearchSeqT, typename FormatSeqT >
+    inline InputSeqT& replace_nth( 
+        InputSeqT& Input,
+        const SearchSeqT& Search,
         unsigned int Nth,
-        const FormatT& Format )
+        const FormatSeqT& Format )
     {
         return string_algo::replace( 
             Input, 
@@ -312,18 +489,30 @@ namespace boost {
 
 //  replace_nth ( case insensitive ) -----------------------------------------------//
     
-    // replace_nth output iterator version ( case insensitive )
+    //! Replace nth algorithm ( case insensitive )
+	/*!
+		Substitute an Nth match of the search sequence in the input 
+		with the format seqeuence. Result is copied to the given output iterator.
+		Searching is case insensitive.
+
+		\param Output A output iterarot to which the result will be copied
+		\param Input An input sequence
+		\param Search A string to be searched for. 
+		\param Nth An index of the match to be replaced
+		\param Format A substitute sequence
+		\return An output iterator pointing just after last inserted character
+	*/
     template< 
         typename OutputIteratorT,
-        typename InputT, 
-        typename SearchT,
-        typename FormatT >
+        typename InputSeqT, 
+        typename SearchSeqT,
+        typename FormatSeqT >
     inline OutputIteratorT ireplace_nth_copy(
         OutputIteratorT Output,
-        const InputT& Input,
-        const SearchT& Search,
+        const InputSeqT& Input,
+        const SearchSeqT& Search,
         unsigned int Nth,
-        const FormatT& Format )
+        const FormatSeqT& Format )
     {
         return string_algo::replace_copy(
             Output,
@@ -332,13 +521,24 @@ namespace boost {
             string_algo::const_formatter(Format) );
     }
 
-    // replace_nth sequence version ( case insensitive )
-    template< typename InputT, typename SearchT, typename FormatT >
-    inline InputT ireplace_nth_copy( 
-        const InputT& Input,
-        const SearchT& Search,
+    //! Replace nth algorithm ( case insensitive )
+	/*!
+		Substitute an Nth match of the search sequence in the input 
+		with the format seqeuence. Result is a modified copy of the input.
+		Searching is case insensitive.
+
+		\param Input An input sequence
+		\param Search A string to be searched for. 
+		\param Nth An index of the match to be replaced
+		\param Format A substitute sequence
+		\return A modified copy of the input
+	*/
+    template< typename InputSeqT, typename SearchSeqT, typename FormatSeqT >
+    inline InputSeqT ireplace_nth_copy( 
+        const InputSeqT& Input,
+        const SearchSeqT& Search,
         unsigned int Nth,
-        const FormatT& Format )
+        const FormatSeqT& Format )
     {
         return string_algo::replace_copy( 
             Input,
@@ -346,13 +546,24 @@ namespace boost {
             string_algo::const_formatter(Format) );
     }
 
-    // replace_nth in-place sequence version ( case insensitive )
-    template< typename InputT, typename SearchT, typename FormatT >
-    inline InputT& ireplace_nth( 
-        InputT& Input,
-        const SearchT& Search,
+    //! Replace nth algorithm ( case insensitive )
+	/*!
+		Substitute an Nth match of the search sequence in the input 
+		with the format seqeuence. Input sequence is modified in-place.
+		Searching is case insensitive.
+
+		\param Input An input sequence
+		\param Search A string to be searched for. 
+		\param Nth An index of the match to be replaced
+		\param Format A substitute sequence
+		\return A reference to the modified input
+	*/
+    template< typename InputSeqT, typename SearchSeqT, typename FormatSeqT >
+    inline InputSeqT& ireplace_nth( 
+        InputSeqT& Input,
+        const SearchSeqT& Search,
         unsigned int Nth,
-        const FormatT& Format )
+        const FormatSeqT& Format )
     {
         return string_algo::replace( 
             Input, 
@@ -362,17 +573,27 @@ namespace boost {
 
 //  replace_all --------------------------------------------------------------------//
 
-    // replace_all output iterator version
+    //! Replace all algorithm
+	/*!
+		Substitute all occurences of the search sequence in the input 
+		with the format seqeuence. Result is copied to the given output iterator.
+
+		\param Output A output iterarot to which the result will be copied
+		\param Input An input sequence
+		\param Search A string to be searched for. 
+		\param Format A substitute sequence
+		\return An output iterator pointing just after last inserted character
+	*/
     template< 
         typename OutputIteratorT,
-        typename InputT, 
-        typename SearchT,
-        typename FormatT >
+        typename InputSeqT, 
+        typename SearchSeqT,
+        typename FormatSeqT >
     inline OutputIteratorT replace_all_copy(
         OutputIteratorT Output,
-        const InputT& Input,
-        const SearchT& Search,
-        const FormatT& Format )
+        const InputSeqT& Input,
+        const SearchSeqT& Search,
+        const FormatSeqT& Format )
     {
         return string_algo::replace_all_copy(
             Output,
@@ -381,12 +602,21 @@ namespace boost {
             string_algo::const_formatter(Format) );
     }
 
-    // replace_all sequence version
-    template< typename InputT, typename SearchT, typename FormatT >
-    inline InputT replace_all_copy( 
-        const InputT& Input,
-        const SearchT& Search,
-        const FormatT& Format )
+    //! Replace all algorithm
+	/*!
+		Substitute all occurences of the search sequence in the input 
+		with the format seqeuence. Result is a modified copy of the input.
+
+		\param Input An input sequence
+		\param Search A string to be searched for. 
+		\param Format A substitute sequence
+		\return A modified copy of the input
+	*/
+    template< typename InputSeqT, typename SearchSeqT, typename FormatSeqT >
+    inline InputSeqT replace_all_copy( 
+        const InputSeqT& Input,
+        const SearchSeqT& Search,
+        const FormatSeqT& Format )
     {
         return string_algo::replace_all_copy( 
             Input,
@@ -394,12 +624,21 @@ namespace boost {
             string_algo::const_formatter(Format) );
     }
 
-    // replace_all in-place sequence version
-    template< typename InputT, typename SearchT, typename FormatT >
-    inline InputT& replace_all( 
-        InputT& Input,
-        const SearchT& Search,
-        const FormatT& Format )
+    //! Replace all algorithm
+	/*!
+		Substitute all occurences of the search sequence in the input 
+		with the format seqeuence. Input sequence is modified in-place.
+
+		\param Input An input sequence
+		\param Search A string to be searched for. 
+		\param Format A substitute sequence
+		\return A reference to the modified input
+	*/
+    template< typename InputSeqT, typename SearchSeqT, typename FormatSeqT >
+    inline InputSeqT& replace_all( 
+        InputSeqT& Input,
+        const SearchSeqT& Search,
+        const FormatSeqT& Format )
     {
         return string_algo::replace_all( 
             Input, 
@@ -409,17 +648,28 @@ namespace boost {
     
 //  replace_all ( case insensitive ) -----------------------------------------------//
 
-    // replace_all output iterator version ( case insensitive ) 
+    //! Replace all algorithm ( case insensitive )
+	/*!
+		Substitute all occurences of the search sequence in the input 
+		with the format seqeuence. Result is copied to the given output iterator.
+		Searching is case insensitive.
+
+		\param Output A output iterarot to which the result will be copied
+		\param Input An input sequence
+		\param Search A string to be searched for. 
+		\param Format A substitute sequence
+		\return An output iterator pointing just after last inserted character
+	*/
     template< 
         typename OutputIteratorT,
-        typename InputT, 
-        typename SearchT,
-        typename FormatT >
+        typename InputSeqT, 
+        typename SearchSeqT,
+        typename FormatSeqT >
     inline OutputIteratorT ireplace_all_copy(
         OutputIteratorT Output,
-        const InputT& Input,
-        const SearchT& Search,
-        const FormatT& Format )
+        const InputSeqT& Input,
+        const SearchSeqT& Search,
+        const FormatSeqT& Format )
     {
         return string_algo::replace_all_copy(
             Output,
@@ -428,12 +678,22 @@ namespace boost {
             string_algo::const_formatter(Format) );
     }
 
-    // replace_all sequence version ( case insensitive )
-    template< typename InputT, typename SearchT, typename FormatT >
-    inline InputT ireplace_all_copy( 
-        const InputT& Input,
-        const SearchT& Search,
-        const FormatT& Format )
+    //! Replace all algorithm ( case insensitive )
+	/*!
+		Substitute all occurences of the search sequence in the input 
+		with the format seqeuence. Result is a modified copy of the input.
+		Searching is case insensitive.
+
+		\param Input An input sequence
+		\param Search A string to be searched for. 
+		\param Format A substitute sequence
+		\return A modified copy of the input
+	*/
+    template< typename InputSeqT, typename SearchSeqT, typename FormatSeqT >
+    inline InputSeqT ireplace_all_copy( 
+        const InputSeqT& Input,
+        const SearchSeqT& Search,
+        const FormatSeqT& Format )
     {
         return string_algo::replace_all_copy( 
             Input,
@@ -441,12 +701,22 @@ namespace boost {
             string_algo::const_formatter(Format) );
     }
 
-    // replace_all in-place sequence version ( case insensitive )
-    template< typename InputT, typename SearchT, typename FormatT >
-    inline InputT& ireplace_all( 
-        InputT& Input,
-        const SearchT& Search,
-        const FormatT& Format )
+    //! Replace all algorithm ( case insensitive )
+	/*!
+		Substitute all occurences of the search sequence in the input 
+		with the format seqeuence. Input sequence is modified in-place.
+		Searching is case insensitive.
+
+		\param Input An input sequence
+		\param Search A string to be searched for. 
+		\param Format A substitute sequence
+		\return A reference to the modified input
+	*/
+    template< typename InputSeqT, typename SearchSeqT, typename FormatSeqT >
+    inline InputSeqT& ireplace_all( 
+        InputSeqT& Input,
+        const SearchSeqT& Search,
+        const FormatSeqT& Format )
     {
         return string_algo::replace_all( 
             Input, 
@@ -456,16 +726,28 @@ namespace boost {
     
 //  replace_head --------------------------------------------------------------------//
 
-    // replace_head output iterator version
+    //! Replace head algorithm
+	/*!
+		Replace the head of the input with the given format sequence. 
+		Head is a prefix of a seqence of given size. 
+		If the sequence is shorter then required, whole sequence if 
+		considered to be the head. Result is copied to the given output iterator.
+
+		\param Output A output iterarot to which the result will be copied
+		\param Input An input sequence
+		\param N A length of the head
+		\param Format A substitute sequence
+		\return An output iterator pointing just after last inserted character
+	*/
     template< 
         typename OutputIteratorT,
-        typename InputT, 
-        typename FormatT >
+        typename InputSeqT, 
+        typename FormatSeqT >
     inline OutputIteratorT replace_head_copy(
         OutputIteratorT Output,
-        const InputT& Input,
+        const InputSeqT& Input,
         unsigned int N,
-        const FormatT& Format )
+        const FormatSeqT& Format )
     {
         return string_algo::replace_copy(
             Output,
@@ -474,12 +756,23 @@ namespace boost {
             string_algo::const_formatter(Format) );
     }
 
-    // replace_head sequence version
-    template< typename InputT, typename FormatT >
-    inline InputT replace_head_copy( 
-        const InputT& Input,
+    //! Replace head algorithm
+	/*!
+		Replace the head of the input with the given format sequence. 
+		Head is a prefix of a seqence of given size. 
+		If the sequence is shorter then required, whole sequence if 
+		considered to be the head. Result is a modified copy of the input.
+
+		\param Input An input sequence
+		\param N A length of the head
+		\param Format A substitute sequence
+		\return A modified copy of the input
+	*/
+    template< typename InputSeqT, typename FormatSeqT >
+    inline InputSeqT replace_head_copy( 
+        const InputSeqT& Input,
         unsigned int N,
-        const FormatT& Format )
+        const FormatSeqT& Format )
     {
         return string_algo::replace_copy( 
             Input,
@@ -487,12 +780,23 @@ namespace boost {
             string_algo::const_formatter(Format) );
     }
 
-    // replace_head in-place sequence version
-    template< typename InputT, typename FormatT >
-    inline InputT& replace_head( 
-        InputT& Input,
+    //! Replace head algorithm
+	/*!
+		Replace the head of the input with the given format sequence. 
+		Head is a prefix of a seqence of given size. 
+		If the sequence is shorter then required, whole sequence if 
+		considered to be the head. Input sequence is modified in-place.
+
+		\param Input An input sequence
+		\param N A length of the head
+		\param Format A substitute sequence
+		\return A reference to the modified input
+	*/
+    template< typename InputSeqT, typename FormatSeqT >
+    inline InputSeqT& replace_head( 
+        InputSeqT& Input,
         unsigned int N,
-        const FormatT& Format )
+        const FormatSeqT& Format )
     {
         return string_algo::replace( 
             Input, 
@@ -502,16 +806,28 @@ namespace boost {
 
 //  replace_tail --------------------------------------------------------------------//
 
-    // replace_tail output iterator version
+    //! Replace tail algorithm
+	/*!
+		Replace the tail of the input with the given format sequence. 
+		Tail is a suffix of a seqence of given size. 
+		If the sequence is shorter then required, whole sequence if 
+		considered to be the tail. Result is copied to the given output iterator.
+
+		\param Output A output iterarot to which the result will be copied
+		\param Input An input sequence
+		\param N A length of the head
+		\param Format A substitute sequence
+		\return An output iterator pointing just after last inserted character
+	*/
     template< 
         typename OutputIteratorT,
-        typename InputT, 
-        typename FormatT >
+        typename InputSeqT, 
+        typename FormatSeqT >
     inline OutputIteratorT replace_tail_copy(
         OutputIteratorT Output,
-        const InputT& Input,
+        const InputSeqT& Input,
         unsigned int N,
-        const FormatT& Format )
+        const FormatSeqT& Format )
     {
         return string_algo::replace_copy(
             Output,
@@ -520,12 +836,23 @@ namespace boost {
             string_algo::const_formatter(Format) );
     }
 
-    // replace_tail sequence version
-    template< typename InputT, typename FormatT >
-    inline InputT replace_tail_copy( 
-        const InputT& Input,
+    //! Replace tail algorithm
+	/*!
+		Replace the tail of the input with the given format sequence. 
+		Tail is a suffix of a seqence of given size. 
+		If the sequence is shorter then required, whole sequence if 
+		considered to be the tail. Result is a modified copy of the input.
+
+		\param Input An input sequence
+		\param N A length of the head
+		\param Format A substitute sequence
+		\return A modified copy of the input
+	*/
+    template< typename InputSeqT, typename FormatSeqT >
+    inline InputSeqT replace_tail_copy( 
+        const InputSeqT& Input,
         unsigned int N,
-        const FormatT& Format )
+        const FormatSeqT& Format )
     {
         return string_algo::replace_copy( 
             Input,
@@ -533,12 +860,23 @@ namespace boost {
             string_algo::const_formatter(Format) );
     }
 
-    // replace_tail in-place sequence version
-    template< typename InputT, typename FormatT >
-    inline InputT& replace_tail( 
-        InputT& Input,
+    //! Replace tail algorithm
+	/*!
+		Replace the tail of the input with the given format sequence. 
+		Tail is a suffix of a seqence of given size. 
+		If the sequence is shorter then required, whole sequence if 
+		considered to be the tail. Input sequence is modified in-place.
+
+		\param Input An input sequence
+		\param N A length of the head
+		\param Format A substitute sequence
+		\return A reference to the modified input
+	*/
+    template< typename InputSeqT, typename FormatSeqT >
+    inline InputSeqT& replace_tail( 
+        InputSeqT& Input,
         unsigned int N,
-        const FormatT& Format )
+        const FormatSeqT& Format )
     {
         return string_algo::replace( 
             Input, 

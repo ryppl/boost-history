@@ -20,11 +20,14 @@ namespace boost {
 
 //  Finder generators ------------------------------------------//
         
-        // first_finder
-        /*
+        //! "First" finder 
+        /*!
             Construct first_finder. The finders searches for the first
             occurence of the search sequence in a given input.
             Result is given as a range of iterator delimiting the match.
+
+			\param Search A seqeunce to be searched for.
+			\return first_finder functor
         */
         template<typename ContainerT>
         inline detail::first_finderF<
@@ -38,13 +41,17 @@ namespace boost {
                 is_equal>( Search, is_equal() );
         }
 
-        // first_finder
-        /*
+        //! "First" finder
+        /*!
             Construct first_finder. The finders searches for the first
             occurence of the search sequence in a given input.
             Result is given as a range of iterator delimiting the match.
 
             Elements are compared using given predicate.
+
+			\param Search A seqeunce to be searched for.
+			\param Comp An element comparison predicate
+			\return first_finder functor
         */
         template<typename ContainerT,typename PredicateT>
         inline detail::first_finderF<
@@ -59,11 +66,14 @@ namespace boost {
                 PredicateT>( Search, Comp );
         }
 
-        // last_finder
-        /*
+        //! "Last" finder
+        /*!
             Construct last_finder. The finders searches for the last
             occurence of the search sequence in a given input.
             Result is given as a range of iterator delimiting the match.
+
+			\param Search A seqeunce to be searched for.
+			\return last_finder functor
         */
         template<typename ContainerT>
         inline detail::last_finderF<
@@ -76,13 +86,17 @@ namespace boost {
                     container_traits<ContainerT>::const_iterator,
                 is_equal>( Search, is_equal() );
         }
-        // last_finder
-        /*
+        //! "Last" finder
+        /*!
             Construct last_finder. The finders searches for the last
             occurence of the search sequence in a given input.
             Result is given as a range of iterator delimiting the match.
 
             Elements are compared using given predicate.
+
+			\param Search A seqeunce to be searched for.
+			\param Comp An element comparison predicate
+			\return last_finder functor
         */
         template<typename ContainerT, typename PredicateT>
         inline detail::last_finderF<
@@ -96,13 +110,15 @@ namespace boost {
                 PredicateT>( Search, Comp );
         }
 
-        // nth_finder
-        /*
+        //! "Nth" finder
+        /*!
             Construct nth_finder. The finders searches for the n-th
             occurence of the search sequence in a given input.
             Result is given as a range of iterator delimiting the match.
 
-            Elements are compared using given predicate.
+			\param Search A seqeunce to be searched for.
+			\param Nth An index of the match to be find
+			\return nth_finder functor
         */
         template<typename ContainerT>
         inline detail::nth_finderF<
@@ -117,13 +133,18 @@ namespace boost {
                     container_traits<ContainerT>::const_iterator,
                 is_equal>( Search, Nth, is_equal() );
         }
-        // nth_finder
-        /*
+        //! "Nth" finder
+        /*!
             Construct nth_finder. The finders searches for the n-th
             occurence of the search sequence in a given input.
             Result is given as a range of iterator delimiting the match.
 
             Elements are compared using given predicate.
+
+			\param Search A seqeunce to be searched for.
+			\param Nth An index of the match to be find
+			\param Comp An element comparison predicate
+			\return nth_finder functor
         */
         template<typename ContainerT, typename PredicateT>
         inline detail::nth_finderF<
@@ -140,12 +161,15 @@ namespace boost {
                 PredicateT>( Search, Nth, Comp );
         }
 
-        // head_finder
-        /*
+        //! "Head" finder
+        /*!
             Construct head_finder. The finder returns a head of a given
             input. Head is a prefix of a sequene up to n elemets in
             size. It an input has less then n elements, whole input is 
             considered a head.
+
+			\param N The size of the head
+			\return head_finder functor
         */
         inline detail::head_finderF 
         head_finder( unsigned int N )
@@ -153,12 +177,15 @@ namespace boost {
             return detail::head_finderF( N );
         }
         
-        // tail_finder
-        /*
+        //! "Tail" finder
+        /*!
             Construct tail_finder. The finder returns a tail of a given
             input. Tail is a suffix of the sequene up to n elemets in
             size. It an input has less then n elements, whole input is 
             considered a head.
+
+			\param N The size of the head
+			\return tail_finder functor
         */
         inline detail::tail_finderF 
         tail_finder( unsigned int N )
@@ -166,8 +193,8 @@ namespace boost {
             return detail::tail_finderF( N );
         }
 
-        // token finder
-        /*
+        //! "Token" finder
+        /*!
             Construct token_finder. The finder searches for a token 
             specified by a predicate. It is similar to std::find_if 
             algorith, with an exception that it return a range of
@@ -177,6 +204,10 @@ namespace boost {
             concatenated into one match. Thus the finder can be used to 
             search for continous segments of elements satisfying the 
             given predicate.
+
+			\param Pred An element selection predicate
+			\param bCompress Compress flag
+			\return token_finder functor
         */
         template< typename PredicateT >
         inline detail::token_finderF<PredicateT>
@@ -185,11 +216,15 @@ namespace boost {
             return detail::token_finderF<PredicateT>( Pred, bCompress );
         }
 
-        // range finder
-        /*
+        //! "Range" finder
+        /*!
             Construct range_finder. The finder does not perform 
             any operation. It simply returns the given range for 
             any input. 
+
+			\param Begin Beginning of the range
+			\param End End of the range
+			\return range_finger functor
         */
         template< typename ForwardIteratorT >
         inline detail::range_finderF<ForwardIteratorT>
@@ -200,11 +235,14 @@ namespace boost {
             return detail::range_finderF<ForwardIteratorT>( Begin, End );
         }
 
-        // range finder
-        /*
+        //! "Range" finder
+        /*!
             Construct range_finder. The finder does not perform 
             any operation. It simply returns the given range for 
             any input. 
+
+			\param Range The range.
+			\return range_finger functor
         */
         template< typename ForwardIteratorT >
         inline detail::range_finderF<ForwardIteratorT>
