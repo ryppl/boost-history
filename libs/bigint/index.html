@@ -48,7 +48,7 @@ be extracted from <tt>std::istream</tt> and inserted to
 integral types as well.
 
 
-<h2><a name="example">Example></a></h2>
+<h2><a name="example">Example</a></h2>
 The following is a simple example of the use of <tt>bigint</tt>
 (<a href="./bigint_example1.cpp">bigint_example1.cpp</a>):
 
@@ -226,6 +226,11 @@ if the number is negative. <tt>bigint</tt> in string form has no
 leading zeros. The extractor expects a <tt>bigint</tt> to be in the
 same form as accepted by the <tt>std::string</tt>-based
 constructor, which is the same syntax inserted by <tt>operator&lt;&lt;</tt>.
+<p>
+<tt>bigint</tt> implements support for the following manipulators:
+<tt>width, fill, showcase, showbases, showpos, unitbuf,
+skipwhitespace, good, bad, fail,</tt> and <tt>exceptions</tt>.
+
 
 <h3><a name="conversions">Conversions</a></h3>
 Though <tt>bigint</tt> supports implicit conversion from built-in integral
