@@ -6,12 +6,11 @@
 // purpose.
 
 
-#include <cmath> // for pow
-
-#include "boost/limits.hpp"
-#include "boost/dynamic_bitset.hpp"
 
 #include "bitset_test.hpp"
+#include "boost/dynamic_bitset.hpp"
+
+#include "boost/limits.hpp"
 #include "boost/config.hpp" // for BOOST_HAS_LONG_LONG
 
 
@@ -26,16 +25,17 @@ void test_from_ulong(std::size_t n, unsigned long number)
 template <typename Block>
 void run_test_cases()
 {
-  typedef bitset_test< boost::dynamic_bitset<Block> > Tests;
+  typedef boost::dynamic_bitset<Block> bitset_type;
+  typedef bitset_test< bitset_type > Tests;
+  const int bits_per_block = bitset_type::bits_per_block;
 
-  std::string long_string(101, '0');
-  for (std::size_t j = 0; j < long_string.size(); ++j)
-    long_string[j] = '0' + (j % 2);
+  std::string long_string = get_long_string();
 
-  std::size_t N, ul_width    = std::numeric_limits<unsigned long>::digits,
-                 block_width = std::numeric_limits<Block>::digits;
-  unsigned long numbers[] = { 0, 40247,
-                              std::numeric_limits<unsigned long>::max() };
+  std::size_t   N,
+                ul_width    = std::numeric_limits<unsigned long>::digits,
+                block_width = std::numeric_limits<Block>::digits;
+  unsigned long numbers[]   = { 0, 40247,
+                                std::numeric_limits<unsigned long>::max() };
 
   //=====================================================================
   // Test construction from unsigned long
@@ -173,6 +173,11 @@ void run_test_cases()
     Tests::append_bit(a);
   }
   {
+    const int size_to_fill_all_blocks = 4 * bits_per_block;
+    boost::dynamic_bitset<Block> a(size_to_fill_all_blocks, 255ul);
+    Tests::append_bit(a);
+  }
+  {
     boost::dynamic_bitset<Block> a(long_string);
     Tests::append_bit(a);
   }
@@ -188,6 +193,11 @@ void run_test_cases()
   }
   {
     boost::dynamic_bitset<Block> a(std::string("1"));
+    Tests::append_block(a);
+  }
+  {
+    const int size_to_fill_all_blocks = 4 * bits_per_block;
+    boost::dynamic_bitset<Block> a(size_to_fill_all_blocks, 15ul);
     Tests::append_block(a);
   }
   {
