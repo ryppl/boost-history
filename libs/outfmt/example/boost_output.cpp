@@ -3,8 +3,18 @@
 #include <iostream>  // std::cout
 
 #include <boost/outfmt/formatob.hpp>
+#include <boost/outfmt/boost/compressed_pair.hpp>
 #if !defined(BOOST_IOFM_NO_LIB_INTERVAL)
-#  include <boost/numeric/interval.hpp>
+#  include <boost/outfmt/boost/interval.hpp>
+#endif
+#if !defined(BOOST_IOFM_NO_LIB_QUATERNION)
+#  include <boost/outfmt/boost/quaternion.hpp>
+#endif
+#if !defined(BOOST_IOFM_NO_LIB_OCTONIAN)
+#  include <boost/outfmt/boost/octonion.hpp>
+#endif
+#if !defined(BOOST_IOFM_NO_LIB_RATIONAL)
+#  include <boost/outfmt/boost/rational.hpp>
 #endif
 
 int main()

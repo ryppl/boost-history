@@ -2,12 +2,22 @@
 
 // Examples for text-based serialization
 
-#include <iostream> // std::cout
-#include <fstream>  // std::fstream
-#include <list>     // std::list
+#include <iostream>                         // std::cout
+#include <fstream>                          // std::fstream
+#include <boost/outfmt/stl/complex.hpp>     // std::complex, operator<<
+#include <boost/outfmt/stl/list.hpp>        // std::list, operator<<
+#include <boost/outfmt/stl/map.hpp>         // std::map, operator<<
+#include <boost/outfmt/stl/vector.hpp>      // std::map, operator<<
+#if !defined(BOOST_IOFM_NO_LIB_QUATERNION)
+#  include <boost/outfmt/boost/quaternion.hpp>
+#endif
+#if !defined(BOOST_IOFM_NO_LIB_OCTONIAN)
+#  include <boost/outfmt/boost/octonion.hpp>
+#endif
+
+
 
 #include <boost/outfmt/formatob.hpp>
-#include <boost/outfmt/stl_io.hpp>
 
 int main()
 {

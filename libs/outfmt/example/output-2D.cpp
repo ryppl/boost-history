@@ -5,6 +5,7 @@
 
 #include <boost/outfmt/formatlist.hpp>
 #include <boost/outfmt/formatob.hpp>
+#include <boost/outfmt/stl/list.hpp>
 
 int main()
 {
@@ -22,7 +23,7 @@ int main()
    std::list< std::list< char > >      tictactoe;
 
    tictactoe.push_back( std::list< char >());
-      tictactoe.back().push_back( 'O' );                  
+      tictactoe.back().push_back( 'O' );
       tictactoe.back().push_back( 'X' );
       tictactoe.back().push_back( 'O' );
    tictactoe.push_back( std::list< char >());
@@ -117,7 +118,7 @@ int main()
    */
 
 #  if !defined(BOOST_IOFM_NO_OUTPUT_DEDUCTION)
-      std::cout << "deduced output: " << boost::io::formatob( tictactoe ) << '\n'; 
+      std::cout << "deduced output: " << boost::io::formatob( tictactoe ) << '\n';
 
       // [results:] deduced output: [ [ O, X, O ], [ X, O, X ], [ O, X, O ] ]
 

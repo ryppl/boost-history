@@ -1,9 +1,10 @@
 // (C) Copyright 2003-2004: Reece H. Dunn
 
-#include <iostream>  // std::cout
-#include <string>    // std::string
-#include <list>      // std::list
-#include <map>       // std::map
+#include <iostream>                       // std::cout
+#include <string>                         // std::string
+#include <boost/outfmt/stl/complex.hpp>       // std::map
+#include <boost/outfmt/stl/list.hpp>      // std::list
+#include <boost/outfmt/stl/map.hpp>       // std::map
 
 #include <boost/outfmt/formatlist.hpp>
 #include <boost/outfmt/formatob.hpp>
@@ -120,7 +121,7 @@ int main()
              << '\n' << '\n';
 
    /* [results]:
-   
+
       map< string, string > =
          Abscheid Nehmen ==> Farewell
          Engel ==> Angel

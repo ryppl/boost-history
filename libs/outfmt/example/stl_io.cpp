@@ -2,7 +2,7 @@
 
 #include <iostream> // std::cout
 #include <string>   // std::string
-#include <boost/outfmt/stl_io.hpp> // output for STL containers
+#include <boost/outfmt/stl.hpp> // output for STL containers
 
 int main()
 {
@@ -127,12 +127,12 @@ int main()
    // [results]: set< string > =
    //    [ Beth Orton, GlasHaus, Marc Anthony, Melissa Etheridge, Portishead, Tricky,
    //    Xavier Naidoo ]
-   
+
    std::cout << "multiset< string > = " << ms
              << '\n' << '\n';
 
    // [results]: multiset< string > = [ A, A, B, C, D, E ]
-   
+
    std::cout << "pair< int, char > = " << p << '\n';
 
    // [results]: pair< int, char > = ( 5, b )
