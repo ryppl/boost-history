@@ -226,13 +226,6 @@ rule run-test # target : sources : requirements
     executable-file $(executable) : $(>) : $(3) ;
     set-target-variables $(executable) ;
     
-    # Ugly hack to get the pathes transferred. See the link rule in boost-base.jam.
-    RUN_PATH on $(<) = [ join $(gRUN_PATH($(executable))) $(RUN_PATH) : $(SPLITPATH) ] ;
-    if $(UNIX) 
-    {
-    	RUN_LD_LIBRARY_PATH on $(<) = [ join $(gRUN_LD_LIBRARY_PATH($(executable))) $(RUN_LD_LIBRARY_PATH) : $(SPLITPATH) ] ;
-    }
-
     # The .test file goes with the other subvariant targets
     # normalization is a hack to get the slashes going the right way on Windoze
     local LOCATE_TARGET = [ FDirName [ split-path $(LOCATE_TARGET) ] ] ;
@@ -258,13 +251,24 @@ rule capture-run-output ( target : executable + )
     capture-run-output1 $(<) $(<:S=.output) : $(executable) ;
 }
 
+rule capture-run-output1 ( targets + : executable )
+{
+    RUN_PATH on $(targets) = [ join $(gRUN_PATH($(executable))) : $(SPLITPATH) ] ;
+    if $(UNIX) 
+    {
+    	RUN_LD_LIBRARY_PATH on $(targets) = [ join $(gRUN_LD_LIBRARY_PATH($(executable))) : $(SPLITPATH) ] ;
+    }
+}
+
+
+
 if $(UNIX)  
 {
     actions capture-run-output1 bind INPUT_FILES
     {
-        $(SHELL_SET)PATH=$(RUN_PATH) 
+        $(SHELL_SET)PATH=$(RUN_PATH);%PATH%
     	$(SHELL_EXPORT)PATH
-    	$(SHELL_SET)LD_LIBRARY_PATH=$(RUN_LD_LIBRARY_PATH)
+    	$(SHELL_SET)LD_LIBRARY_PATH=$(RUN_LD_LIBRARY_PATH):$LD_LIBRARY_PATH
     	$(SHELL_EXPORT)LD_LIBRARY_PATH
         $(>) $(ARGS) $(INPUT_FILES) > $(<:S=.error)
         $(CP) $(<:S=.error) $(<)
@@ -275,7 +279,7 @@ else
 {
     actions capture-run-output1 bind INPUT_FILES
     {
-        $(SHELL_SET)PATH=$(RUN_PATH) 
+        $(SHELL_SET)PATH=$(RUN_PATH):$PATH
         $(SHELL_EXPORT)PATH
         $(>) $(ARGS) $(INPUT_FILES) > $(<[2]) 2>&1 && $(CP) $(<[2]) $(<[1])
     }
