@@ -3,7 +3,7 @@
 // See http://www.boost.org for updates, documentation, and revision history.
 //-----------------------------------------------------------------------------
 //
-// Copyright (c) 2002
+// Copyright (c) 2002-2003
 // Eric Friedman
 //
 // Permission to use, copy, modify, distribute and sell this software
@@ -17,12 +17,6 @@
 #ifndef BOOST_EXTRACTABLE_HPP
 #define BOOST_EXTRACTABLE_HPP
 
-#include "boost/type_traits/is_base_and_derived.hpp"
-#include "boost/mpl/logical/not.hpp"
-#include "boost/mpl/logical/or.hpp"
-
-#include "boost/mpl/aux_/lambda_support.hpp" // used by is_extractable
-
 namespace boost {
 
 //////////////////////////////////////////////////////////////////////////
@@ -34,17 +28,26 @@ namespace boost {
 
 namespace detail { namespace extractable {
 
-struct directly_extractable_tag { }; // indicates type is directly extractable
-struct private_forward_tag { }; // used to disambiguate between forwarding func and target
+// (detail) struct directly_extractable_tag
+//
+// Indicates deriving type is directly extractable.
+//
+struct directly_extractable_tag { };
+
+// (detail) struct private_forward_tag
+//
+// Disambiguates between forwarding function and target.
+//
+struct private_forward_tag { };
 
 }} // namespace detail::extractable
-
 
 template <typename Deriving>
 class extractable
     : public detail::extractable::directly_extractable_tag
 {
-public:
+public: // forwarding functions
+
     template <typename T>
     T* extract(detail::extractable::private_forward_tag)
     {
@@ -52,7 +55,7 @@ public:
         //   If following line fails to compile, Deriving::extract
         //   is not implemented. Check to make sure you desire this.
 
-        return static_cast<Deriving*>(this)->extract<T>();
+        return static_cast<Deriving*>(this)->template extract<T>();
     }
 
     template <typename T>
@@ -62,11 +65,13 @@ public:
         //   If following line fails to compile, Deriving::extract const
         //   is not implemented. Check to make sure you desire this.
 
-        return static_cast<const Deriving*>(this)->extract<T>();
+        return static_cast<const Deriving*>(this)->template extract<T>();
     }
 
-protected:
+protected: // noninstantiable
+
     ~extractable() { }
+
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -86,6 +91,7 @@ template <typename Extractable>
 struct extractable_traits
     : detail::extractable::default_traits_tag
 {
+public: // static functions
 
     // [NOTE: Both "default" implementations assume direct extractability.]
 
@@ -94,7 +100,7 @@ struct extractable_traits
     {
         // Extract directly:
         extractable<Extractable>& x = operand;
-        return x.extract<T>(detail::extractable::private_forward_tag());
+        return x.template extract<T>(detail::extractable::private_forward_tag());
     }
 
     template <typename T>
@@ -102,37 +108,9 @@ struct extractable_traits
     {
         // Const-extract directly:
         const extractable<Extractable>& x = operand;
-        return x.extract<T>(detail::extractable::private_forward_tag());
+        return x.template extract<T>(detail::extractable::private_forward_tag());
     }
-};
 
-//////////////////////////////////////////////////////////////////////////
-// metafunction is_extractable
-//
-// Value metafunction indicates whether the specified type supports
-// extraction of a specified type T.
-// 
-// NOTE: This template never needs to be specialized!
-//
-template <typename T>
-struct is_extractable
-{
-    typedef typename mpl::logical_or< // directly-extractable || NOT default-traits
-          is_base_and_derived<
-              detail::extractable::directly_extractable_tag
-            , T
-            >
-        , mpl::logical_not<
-              is_base_and_derived<
-                  detail::extractable::default_traits_tag
-                , extractable_traits<T>
-                >
-            >
-        >::type type;
-
-    BOOST_STATIC_CONSTANT(bool, value = type::value);
-
-    BOOST_MPL_AUX_LAMBDA_SUPPORT(1,is_extractable,(T))
 };
 
 } // namespace boost
