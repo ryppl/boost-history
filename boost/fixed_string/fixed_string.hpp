@@ -81,6 +81,8 @@
             virtual void                         append_( const CharT *, size_type ) = 0;
             virtual int                          format_( const CharT *, va_list )   = 0;
             virtual void                         push_back_( CharT ) = 0;
+
+            virtual void                         swap_( fixed_string_iface< CharT, Policy > & ) = 0;
          };
       }
 
@@ -242,6 +244,12 @@
                   str[   len ] = c;
                   str[ ++len ] = CharT();
                }
+            }
+            inline void                          swap_( boost::detail::fixed_string_iface< CharT, CharStringPolicy > & b )
+            {
+               this_type               a( b.data_(), b.length_());
+               b.assign_( data(), length());
+               *this = a;
             }
          public:
             inline this_type &    operator=( const this_type & s )

@@ -19,37 +19,14 @@
 // *  uses boost::reverse_iterator< Iterator >: there are various problems when using std::reverse_iterator< Iterator >
 //    on non-conformant compilers/standard libraries
 
-/*
-   struct StringPolicy // interface of a StringPolicy class
-   {
-      const value_type * c_str_() const;
-      const value_type * data_()  const;
-      value_type &       at_( size_type i );
-      iterator           begin_()
-      const_iterator     begin_() const
-      iterator           end_()
-      const_iterator     end_() const
-      size_type          length_()   const;
-      size_type          capacity_() const;
-      size_type          max_size_() const;
-      void               resize_(  size_type, value_type );
-      void               reserve_( size_type );
-      void               assign_(  const value_type * s, size_type l );
-      void               append_(  const value_type * s, size_type l );
-      void               push_back_( value_type );
-      void               swap_( StringPolicy & );
-   };
-*/
-
 #ifndef BOOST_BASIC_STRING_IMPL_HPP
 #define BOOST_BASIC_STRING_IMPL_HPP
 #  include <boost/config.hpp>
 #  include <boost/mpl/if.hpp>
-#  include <boost/mpl/bool.hpp>
 #  include <boost/iterator/reverse_iterator.hpp>
 #  include <algorithm>
 #  include <iostream>
-#  include <typeinfo>
+#  include <locale>
 
    namespace boost{ namespace detail
    {
@@ -487,7 +464,7 @@
                s[ n ] = char_type( '\0' );
                return( n );
             }
-            inline void                          swap( string_type & s )
+            inline void                          swap( Base & s )
             {
                swap_( s );
             }
@@ -854,18 +831,6 @@
          return( !( lhs < rhs ));
       }
 
-      // swap
-
-      template< class Base, class EP >
-      inline void                                swap
-                                                 (
-                                                    basic_string_impl< Base, EP > & lhs,
-                                                    basic_string_impl< Base, EP > & rhs
-                                                 )
-      {
-         lhs.swap( rhs );
-      }
-
       // stream operations
 
       // VC6 bug: VC6 has problems matching std::basic_*stream< typename basic_string_impl< S, C, SP, EP >::value_type, ... >
@@ -880,16 +845,16 @@
                                      basic_string_impl< Base, EP > & str
                                   )
       {
-         typedef typename typename basic_string_impl< Base, EP >::traits_type  traits_type;
+         typedef typename basic_string_impl< Base, EP >::traits_type traits_type;
 
+         str.erase();
          typename basic_string_impl< Base, EP >::value_type
                                        ch;
-         while( is >> ch && !std::isspace( ch ))
+         while( is.get( ch ) && !std::isspace( ch, is.getloc()))
          {
             str.push_back( ch );
          }
          return( is );
-//         return( getline( is, str, typename basic_string_impl< Base, EP >::value_type( ' ' )));
       }
 
       template< class Base, class EP, typename CharT, class Traits >
@@ -912,11 +877,12 @@
                                                     typename basic_string_impl< Base, EP >::value_type delim
                                                  )
       {
-         typedef typename typename basic_string_impl< Base, EP >::traits_type  traits_type;
+         typedef typename basic_string_impl< Base, EP >::traits_type traits_type;
 
+         str.erase();
          typename basic_string_impl< Base, EP >::value_type
                                        ch;
-         while( is >> ch && !traits_type::eq( ch, delim ))
+         while( is.get( ch ) && !traits_type::eq( ch, delim ))
          {
             str.push_back( ch );
          }
@@ -934,4 +900,19 @@
          return( getline( is, str, typename basic_string_impl< Base, EP >::value_type( '\n' )));
       }
    }}
+
+   // swap
+
+   namespace std
+   {
+      template< class Base, class EP >
+      inline void                                swap
+                                                 (
+                                                    boost::detail::basic_string_impl< Base, EP > & lhs,
+                                                    boost::detail::basic_string_impl< Base, EP > & rhs
+                                                 )
+      {
+         lhs.swap( rhs );
+      }
+   }
 #endif
