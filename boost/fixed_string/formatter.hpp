@@ -10,7 +10,7 @@
    namespace boost
    {
       template< size_t n, typename CharT = char, class StringTraits = string_traits< CharT > >
-      class formatterex: public char_string< n, CharT, StringTraits >
+      class formatterex: public fixed_string< n, CharT, StringTraits >
       {
          public:
             inline const char *   operator()( const char * fs ... ) throw()

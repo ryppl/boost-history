@@ -8,6 +8,7 @@
 #  include <boost/mpl/if.hpp>
 #  include <boost/mpl/equal_to.hpp>
 #  include <boost/mpl/int.hpp>
+#  include <boost/type_traits/is_same.hpp>
 #  include <iostream>
 #  include <string.h>
 #  include <stdio.h>
@@ -50,8 +51,32 @@
          };
       }
 
+      // char and wchar_t string interfaces
+
+      struct char_string
+      {
+         virtual const char *                    c_str()  const = 0;
+         virtual size_t                          length() const = 0;
+         virtual char *                          assign(  const char * s, size_t l = size_t( -1 )) = 0;
+         virtual char *                          append(  const char * s, size_t l = size_t( -1 )) = 0;
+         virtual int                             compare( const char * s, size_t l = size_t( -1 )) = 0;
+         virtual int                             format(  const char * fmt, va_list args ) = 0;
+      };
+      
+      struct wchar_string
+      {
+         virtual const wchar_t *                 c_str() const = 0;
+         virtual size_t                          length() const = 0;
+         virtual wchar_t *                       assign(  const wchar_t * s, size_t l = size_t( -1 )) = 0;
+         virtual wchar_t *                       append(  const wchar_t * s, size_t l = size_t( -1 )) = 0;
+         virtual int                             compare( const wchar_t * s, size_t l = size_t( -1 )) = 0;
+         virtual int                             format(  const wchar_t * fmt, va_list args ) = 0;
+      };
+      
+      // fixed capacity string implementation (std::basic_string-style interface)
+
       template< size_t n, typename CharT = char, class StringPolicy = std::char_traits< CharT > >
-      class char_string
+      class fixed_string: public mpl::if_< is_same< CharT, char >, char_string, wchar_string >::type
       {
          private:
             CharT                      str[ n ];
@@ -125,16 +150,29 @@
             {
                return( str );
             }
+            inline const CharT *                 data() const
+            {
+               return( str );
+            }
+         public:
+            inline const_reference               at( size_type i ) const
+            {
+               if( i < 0 || i >= n )   throw( std::out_of_range( "boost::char_string" ));
+               return( str[ i ]);
+            }
+            inline reference                     at( size_type i )
+            {
+               if( i < 0 || i >= n )   throw( std::out_of_range( "boost::char_string" ));
+               return( str[ i ]);
+            }
          public:
             inline const_reference operator[]( size_type i ) const
             {
-               if( i < 0 || i >= n )             throw( std::out_of_range( "boost::char_string" ));
-               return( str[ i ]);
+               return( at( i ));
             }
             inline reference operator[]( size_type i )
             {
-               if( i < 0 || i >= n )             throw( std::out_of_range( "boost::char_string" ));
-               return( str[ i ]);
+               return( at( i ));
             }
          public: // size and capacity
             inline size_type                     size() const
@@ -158,7 +196,7 @@
                return( capacity());
             }
          public: // copy
-            inline CharT *                       copy( const CharT * s, size_type l = size_type( -1 ))
+            inline CharT *                       assign( const CharT * s, size_type l = size_type( -1 ))
             {
                if( l == size_type( -1 )) l = StringPolicy::length( s ) + 1;
                len = ( l > n ) ? ( n - 1 ) : l;
@@ -166,37 +204,79 @@
                str[ len ] = '\0';
                return( ret );
             }
-            inline CharT *                       copy( const CharT * s, size_type off, size_type l )
+            inline CharT *                       assign( const CharT * s, size_type off, size_type l )
             {
                if( l == size_type( -1 )) l = StringPolicy::length( s ) + 1;
-               return( copy( s + off, l - off ));
+               return( assign( s + off, l - off ));
             }
             template< size_t m >
-            inline CharT *                       copy( const char_string< m > & s, size_type off = 0, size_type l = size_type( -1 ))
+            inline CharT *                       assign( const fixed_string< m > & s, size_type off = 0, size_type l = size_type( -1 ))
             {
-               return( copy( s.c_str(), off, ( l >= m ) ? m : l ));
+               return( assign( s.c_str(), off, ( l >= m ) ? m : l ));
+            }
+            //                                   assign( size_type n, CharT ch );
+            //                                   assign< Iterator >( Iterator first, Iterator last );
+         public:
+            template< size_t m >
+            inline fixed_string & operator=( const fixed_string< m > & s )
+            {
+               assign( s );
+               return( *this );
+            }
+            inline fixed_string & operator=( const CharT * s )
+            {
+               assign( s );
+               return( *this );
+            }
+            inline fixed_string & operator=( CharT ch )
+            {
+               len = ( n > 1 ) ? 1 : 0;
+               if( n > 1 )             str[ 0 ] = ch;
+               str[ len ] = '\0';
+               return( *this );
+            }
+         public: // concatenation
+            inline CharT *                       append( const CharT * s, size_type l = size_type( -1 ))
+            {
+               if( l == size_type( -1 )) l = StringPolicy::length( s ) + 1;
+               l = (( l + len ) > n ) ? ( n - len ) : l;
+               CharT *                 ret = StringPolicy::copy( str + len - 1, s, l );
+               len += l;
+               str[ len ] = '\0';
+               return( ret );
+            }
+            inline CharT *                       append( const CharT * s, size_type off, size_type l )
+            {
+               if( l == size_type( -1 )) l = StringPolicy::length( s ) + 1;
+               return( append( s + off, l - off ));
+            }
+            template< size_t m >
+            inline CharT *                       append( const fixed_string< m > & s, size_type off = 0, size_type l = size_type( -1 ))
+            {
+               return( append( s.c_str(), off, ( l >= m ) ? m : l ));
             }
          public:
             template< size_t m >
-            inline char_string &  operator=( const char_string< m > & s )
+            inline fixed_string & operator+=( const fixed_string< m > & s )
             {
-               copy( s );
+               append( s );
                return( *this );
             }
-            inline char_string &  operator=( const CharT * s )
+            inline fixed_string & operator+=( const CharT * s )
             {
-               copy( s );
+               append( s );
                return( *this );
             }
          public: // comparison
-            inline int                           comp( const CharT * s, size_type l = size_type( -1 )) const
+            inline int                           compare( const CharT * s, size_type l = size_type( -1 )) const
             {
                if( l == size_type( -1 )) l = StringPolicy::length( s ) + 1;
                return( StringPolicy::compare( str, s, ( l > n ) ? n : l ));
             }
-            inline int                           comp( const char_string< n > & s ) const
+            template< size_t m >
+            inline int                           compare( const fixed_string< m > & s ) const
             {
-               return( StringPolicy::compare( str, s, n ));
+               return( StringPolicy::compare( str, s, ( n > m ) ? m : n ));
             }
          public: // formatting
             inline int                           format( const CharT * fmt, va_list args )
@@ -207,14 +287,18 @@
                return( ret );
             }
          public: // construction
-            inline           char_string(): len( 0 )
+            inline           fixed_string(): len( 0 )
             {
                str[ 0 ] = '\0';
             }
             template< size_t m >
-            inline           char_string( const char_string< m > & s, size_type p, size_type l = size_type( -1 )): len( 0 )
+            inline           fixed_string( const fixed_string< m > & s, size_type p, size_type l = size_type( -1 )): len( 0 )
             {
-               copy( s.c_str(), p, l );
+               assign( s.c_str(), p, l );
+            }
+            inline           fixed_string( const CharT * s, size_type l = size_type( -1 ))
+            {
+               assign( s, l );
             }
       };
 
@@ -222,17 +306,29 @@
       inline std::basic_ostream< CharT, StringPolicy > & 
                                   operator<<
                                   (
-                                     std::basic_ostream< CharT, StringPolicy >   & os,
-                                     const char_string< n, CharT, StringPolicy > & str
+                                     std::basic_ostream< CharT, StringPolicy >    & os,
+                                     const fixed_string< n, CharT, StringPolicy > & str
                                   )
       {
          return( os << str.c_str());
       }
 
       template< size_t n, typename CharT, class StringPolicy >
-      bool operator==( const char_string< n, CharT, StringPolicy > & a, const char_string< n, CharT, StringPolicy > & b )
+      bool operator==( const fixed_string< n, CharT, StringPolicy > & a, const fixed_string< n, CharT, StringPolicy > & b )
       {
-         return( a.comp( b ) == 0 );
+         return( a.compare( b ) == 0 );
+      }
+
+      template< size_t n, typename CharT, class StringPolicy >
+      bool operator==( const fixed_string< n, CharT, StringPolicy > & a, const CharT * b )
+      {
+         return( a.compare( b ) == 0 );
+      }
+
+      template< size_t n, typename CharT, class StringPolicy >
+      bool operator==( const CharT * b, const fixed_string< n, CharT, StringPolicy > & a )
+      {
+         return( a.compare( b ) == 0 );
       }
    }
 #endif

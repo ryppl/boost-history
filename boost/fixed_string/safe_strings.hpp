@@ -9,26 +9,37 @@
 
    // C-string functions
 
-   template< size_t n, class StringTraits >
-   inline char *                                 strcpy( boost::char_string< n, char, StringTraits > & d, const char * s )
+   inline char *                                 strcpy( boost::char_string & d, const char * s )
    {
-      return( d.copy( s ));
+      return( d.assign( s ));
    }
 
-   template< size_t n, class StringTraits >
-   inline size_t                                 strlen( boost::char_string< n, char, StringTraits > & s )
+   inline char *                                 strcat( boost::char_string & d, const char * s )
+   {
+      return( d.append( s ));
+   }
+
+   inline int                                    strcmp( boost::char_string & d, const char * s )
+   {
+      return( d.compare( s ));
+   }
+
+   inline int                                    strcmp( const char * s, boost::char_string & d )
+   {
+      return( -d.compare( s ));
+   }
+
+   inline size_t                                 strlen( boost::char_string & s )
    {
       return( s.length());
    }
 
-   template< size_t n, class StringTraits >
-   inline int                                    vsprintf( boost::char_string< n, char, StringTraits > & s, const char * fmt, va_list args )
+   inline int                                    vsprintf( boost::char_string & s, const char * fmt, va_list args )
    {
       return( s.format( fmt, args ));
    }
 
-   template< size_t n, class StringTraits >
-   inline int                                    sprintf( boost::char_string< n, char, StringTraits > & s, const char * fmt ... )
+   inline int                                    sprintf( boost::char_string & s, const char * fmt ... )
    {
       va_list                          args;
       va_start( args, fmt );
