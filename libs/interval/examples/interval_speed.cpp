@@ -338,6 +338,27 @@ private:
 };
 #endif
 
+// SunPRO has problems with the direct solution (is it right ?).
+
+#ifdef __SUNPRO_CC
+namespace {
+interval_type  abs(const interval_type &t) { return boost::abs(t); }
+interval_type  exp(const interval_type &t) { return boost::exp(t); }
+interval_type  log(const interval_type &t) { return boost::log(t); }
+interval_type  sin(const interval_type &t) { return boost::sin(t); }
+interval_type  cos(const interval_type &t) { return boost::cos(t); }
+interval_type  tan(const interval_type &t) { return boost::tan(t); }
+interval_type sqrt(const interval_type &t) { return boost::sqrt(t); }
+interval_type asin(const interval_type &t) { return boost::asin(t); }
+interval_type acos(const interval_type &t) { return boost::acos(t); }
+interval_type atan(const interval_type &t) { return boost::atan(t); }
+interval_type sinh(const interval_type &t) { return boost::sinh(t); }
+interval_type cosh(const interval_type &t) { return boost::cosh(t); }
+interval_type tanh(const interval_type &t) { return boost::tanh(t); }
+interval_type fmod(const interval_type &t1,
+		   const interval_type &t2) { return boost::fmod(t1, t2); }
+}
+#endif
 
 /*
  * Miscellaneous arithmetic functions.
