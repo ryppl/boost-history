@@ -4,8 +4,11 @@
 #include <stdlib.h>
 #include <iomanip>
 
-#include <math/test/blas.hpp>
-#include <math/blas2.hpp>
+#include "blas.hpp"
+#include <boost/numeric/blasbindings/blas_traits/ublas_vector.hpp>
+#include <boost/numeric/blasbindings/blas_traits/ublas_matrix.hpp>
+#include <boost/numeric/blasbindings/blas2.hpp>
+#include <boost/numeric/blasbindings/transpose.hpp>
 #include <boost/numeric/ublas/io.hpp>
 
 template < typename ValueType, typename MatrixType, typename VectorType >
@@ -19,15 +22,15 @@ void test_gemv(std::ostream& os, int runs, int runs_i, int size, int size_i, cha
   std::cout << y_toblas << std::endl;
 
   boost::timer t ;
-  if ( c == numerics::NO_TRANSPOSE )    for(int i = 0 ; i < runs_i ; ++i ) y_native += alpha * numerics::prod( a, x) ;
-  else if ( c == numerics::TRANSPOSE )  for(int i = 0 ; i < runs_i ; ++i ) y_native += alpha * numerics::prod( trans(a), x) ;
-  else if ( c == numerics::CONJUGATE )  for(int i = 0 ; i < runs_i ; ++i ) y_native += alpha * numerics::prod( herm(a), x) ;
+  if ( c == boost::numeric::blasbindings::NO_TRANSPOSE )    for(int i = 0 ; i < runs_i ; ++i ) y_native += alpha * numerics::prod( a, x) ;
+  else if ( c == boost::numeric::blasbindings::TRANSPOSE )  for(int i = 0 ; i < runs_i ; ++i ) y_native += alpha * numerics::prod( trans(a), x) ;
+  else if ( c == boost::numeric::blasbindings::CONJUGATE )  for(int i = 0 ; i < runs_i ; ++i ) y_native += alpha * numerics::prod( herm(a), x) ;
   else assert( 0 ) ;
   
   report< value_type >( os, runs, runs_i, size_i, t.elapsed() );
   
   t.restart() ;
-  for(int i = 0 ; i < runs_i ; ++i ) numerics::gemv( c, alpha, a, x, beta, y_toblas ) ;
+  for(int i = 0 ; i < runs_i ; ++i ) boost::numeric::blasbindings::gemv( c, alpha, a, x, beta, y_toblas ) ;
   
   report< value_type >( os, runs, runs_i, size_i, t.elapsed() );
   
@@ -50,7 +53,7 @@ struct gemv_matrix_vector_vector
     numerics::vector< T > y_native( x ) ;
     numerics::vector< T > y_toblas( x ) ;
       
-    test_gemv( os, runs, runs_i, size, size_i, numerics::NO_TRANSPOSE, alpha, beta, a, x, y_native, y_toblas );
+    test_gemv( os, runs, runs_i, size, size_i, boost::numeric::blasbindings::NO_TRANSPOSE, alpha, beta, a, x, y_native, y_toblas );
   }
 };
 
@@ -70,7 +73,7 @@ struct gemv_trans_matrix_vector_vector
     numerics::vector< T > y_native( x ) ;
     numerics::vector< T > y_toblas( x ) ;
       
-    test_gemv( os, runs, runs_i, size, size_i, numerics::TRANSPOSE, alpha, beta, a, x, y_native, y_toblas );
+    test_gemv( os, runs, runs_i, size, size_i, boost::numeric::blasbindings::TRANSPOSE, alpha, beta, a, x, y_native, y_toblas );
   }
 };
 
@@ -90,7 +93,30 @@ struct gemv_conj_matrix_vector_vector
     numerics::vector< T > y_native( x ) ;
     numerics::vector< T > y_toblas( x ) ;
       
-    test_gemv( os, runs, runs_i, size, size_i, numerics::CONJUGATE, alpha, beta, a, x, y_native, y_toblas );
+    test_gemv( os, runs, runs_i, size, size_i, boost::numeric::blasbindings::CONJUGATE, alpha, beta, a, x, y_native, y_toblas );
+  }
+};
+
+struct gemv_matrix_range_vector_vector
+{
+  template < typename T >
+  void operator()(std::ostream& os, int size, int size_i, int runs, int runs_i)
+  {
+    runs_i = std::max( 1, runs_i / size_i ) ;
+
+    T alpha = 1 / ( size_i * 10 ), beta = 1.0 ;
+    random_initialise( alpha );
+    numerics::matrix< T, numerics::column_major > a(size_i * 2,size_i * 2) ;
+    random_initialise_matrix( a ) ;
+    int start = size_i / 2 ;
+    int stop = start + size_i ;
+    numerics::matrix_range< numerics::matrix< T, numerics::column_major > > mr( a, numerics::range( start, stop ), numerics::range( start, stop ) ) ;
+    numerics::vector< T > x( size_i ); 
+    random_initialise_vector( x) ;
+    numerics::vector< T > y_native( x ) ;
+    numerics::vector< T > y_toblas( x ) ;
+      
+    test_gemv( os, runs, runs_i, size, size_i, boost::numeric::blasbindings::NO_TRANSPOSE, alpha, beta, mr, x, y_native, y_toblas );
   }
 };
 
@@ -147,6 +173,18 @@ int main (int argc, char *argv [])
       std::cerr <<         "gemv_conj_matrix_vector_vector_double_complex" << std::endl ;
       std::ofstream stream("gemv_conj_matrix_vector_vector_double_complex");
       loop< std::complex<double>, gemv_conj_matrix_vector_vector >( stream, start, step, stop, runs, gemv_conj_matrix_vector_vector() ) ;
+    }
+
+    {
+      std::cerr <<         "gemv_matrix_range_vector_vector_double" << std::endl ;
+      std::ofstream stream("gemv_matrix_range_vector_vector_double");
+      loop< double, gemv_matrix_range_vector_vector >( stream, start, step, stop, runs, gemv_matrix_range_vector_vector() ) ;
+    } 
+    
+    {
+      std::cerr <<         "gemv_matrix_range_vector_vector_double_complex" << std::endl ;
+      std::ofstream stream("gemv_matrix_range_vector_vector_double_complex");
+      loop< std::complex<double>, gemv_matrix_range_vector_vector >( stream, start, step, stop, runs, gemv_matrix_range_vector_vector() ) ;
     }
   }
 

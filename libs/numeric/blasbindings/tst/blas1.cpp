@@ -447,7 +447,7 @@ struct dotc_vector_slice
 
 int main (int argc, char *argv []) 
 {
-  int runs = 10 ; // 10000000 ;
+  int runs = 1 ; // 10000000 ;
   int start = 1 ;
   int step  = 50 ;
   int stop  = 10 ; // 10000 ;

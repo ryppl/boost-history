@@ -4,8 +4,11 @@
 #include <stdlib.h>
 #include <iomanip>
 
-#include <math/test/blas.hpp>
-#include <math/blas3.hpp>
+#include "blas.hpp"
+#include <boost/numeric/blasbindings/transpose.hpp>
+#include <boost/numeric/blasbindings/blas_traits/ublas_vector.hpp>
+#include <boost/numeric/blasbindings/blas_traits/ublas_matrix.hpp>
+#include <boost/numeric/blasbindings/blas3.hpp>
 
 template < typename ValueType, typename MatrixTypeA, typename MatrixTypeB, typename MatrixTypeC >
 void test_gemm(std::ostream& os, int runs, int runs_i, int size, int size_i, ValueType alpha, ValueType beta, MatrixTypeA &a, MatrixTypeB& b, MatrixTypeC &c_native, MatrixTypeC &c_toblas)
@@ -18,7 +21,7 @@ void test_gemm(std::ostream& os, int runs, int runs_i, int size, int size_i, Val
   report< value_type >( os, runs, runs_i, size_i, t.elapsed() );
   
   t.restart() ;
-  for(int i = 0 ; i < runs_i ; ++i ) numerics::gemm( alpha, a, b, beta, c_toblas );
+  for(int i = 0 ; i < runs_i ; ++i ) boost::numeric::blasbindings::gemm( alpha, a, b, beta, c_toblas );
   
   report< value_type >( os, runs, runs_i, size_i, t.elapsed() );
   
