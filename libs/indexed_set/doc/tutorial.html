@@ -257,7 +257,7 @@ which is reasonably enough to be treated as unique, the following captures this 
 
 <p>
 In order to retrieve (a reference to) an index of a given <code>indexed_set</code>,
-the programmer must provide its order number, which is cumbersome and little
+the programmer must provide its order number, which is cumbersome and not very
 self-descriptive. Optionally, indices can be assigned <i>tags</i> (C++ types) that
 act as more convenient mnemonics. The following is a revised version of
 <code>employee_set</code> with inclusion of tags:
@@ -593,21 +593,23 @@ and error prone task.
 
 <p>
 The <a href="reference.html#index_range_operations"><code>range</code></a> member
-function, oftenly in combination with
+function, often in combination with
 <a href="../../../libs/lambda/doc/index.html">Boost.Lambda</a> expressions, can
 greatly help alleviate this situation:
 </p>
 
 <blockquote><pre>
+<span class=keyword>using</span> <span class=keyword>namespace</span> <span class=identifier>boost</span><span class=special>::</span><span class=identifier>lambda</span><span class=special>;</span>
+
 <span class=keyword>typedef</span> <span class=identifier>indexed_set</span><span class=special>&lt;</span><span class=keyword>double</span><span class=special>&gt;</span> <span class=identifier>double_set</span><span class=special>;</span>
 <span class=keyword>typedef</span> <span class=identifier>double_set</span> <span class=identifier>s</span><span class=special>;</span>
 <span class=special>...</span>
 <span class=identifier>std</span><span class=special>::</span><span class=identifier>pair</span><span class=special>&lt;</span><span class=identifier>double_set</span><span class=special>::</span><span class=identifier>iterator</span><span class=special>,</span><span class=identifier>double_set</span><span class=special>::</span><span class=identifier>iterator</span><span class=special>&gt;</span> <span class=identifier>p</span><span class=special>=</span>
-  <span class=identifier>s</span><span class=special>.</span><span class=identifier>range</span><span class=special>(</span><span class=number>100.0</span><span class=special>&lt;=</span><span class=identifier>lambda</span><span class=special>::</span><span class=identifier>_1</span><span class=special>,</span><span class=identifier>lambda</span><span class=special>::</span><span class=identifier>_1</span><span class=special>&lt;=</span><span class=number>200</span><span class=special>);</span> <span class=comment>// 100&lt;= x &lt;=200</span>
+  <span class=identifier>s</span><span class=special>.</span><span class=identifier>range</span><span class=special>(</span><span class=number>100.0</span><span class=special>&lt;=</span><span class=identifier>_1</span><span class=special>,</span><span class=identifier>_1</span><span class=special>&lt;=</span><span class=number>200</span><span class=special>);</span> <span class=comment>// 100&lt;= x &lt;=200</span>
 <span class=special>...</span>
-<span class=identifier>p</span><span class=special>=</span><span class=identifier>s</span><span class=special>.</span><span class=identifier>range</span><span class=special>(</span><span class=number>100.0</span><span class=special>&lt;</span><span class=identifier>lambda</span><span class=special>::</span><span class=identifier>_1</span><span class=special>,</span><span class=identifier>lambda</span><span class=special>::</span><span class=identifier>_1</span><span class=special>&lt;</span><span class=number>200</span><span class=special>);</span>   <span class=comment>// 100&lt;  x &lt; 200</span>
+<span class=identifier>p</span><span class=special>=</span><span class=identifier>s</span><span class=special>.</span><span class=identifier>range</span><span class=special>(</span><span class=number>100.0</span><span class=special>&lt;</span><span class=identifier>_1</span><span class=special>,</span><span class=identifier>_1</span><span class=special>&lt;</span><span class=number>200</span><span class=special>);</span>   <span class=comment>// 100&lt;  x &lt; 200</span>
 <span class=special>...</span>
-<span class=identifier>p</span><span class=special>=</span><span class=identifier>s</span><span class=special>.</span><span class=identifier>range</span><span class=special>(</span><span class=number>100.0</span><span class=special>&lt;=</span><span class=identifier>lambda</span><span class=special>::</span><span class=identifier>_1</span><span class=special>,</span><span class=identifier>lambda</span><span class=special>::</span><span class=identifier>_1</span><span class=special>&lt;</span><span class=number>200</span><span class=special>);</span>  <span class=comment>// 100&lt;= x &lt; 200</span>
+<span class=identifier>p</span><span class=special>=</span><span class=identifier>s</span><span class=special>.</span><span class=identifier>range</span><span class=special>(</span><span class=number>100.0</span><span class=special>&lt;=</span><span class=identifier>_1</span><span class=special>,</span><span class=identifier>_1</span><span class=special>&lt;</span><span class=number>200</span><span class=special>);</span>  <span class=comment>// 100&lt;= x &lt; 200</span>
 </pre></blockquote>
 
 <p>
@@ -620,9 +622,9 @@ One or both bounds can be omitted with the special <code>unbounded</code> marker
 </p>
 
 <blockquote><pre>
-<span class=identifier>p</span><span class=special>=</span><span class=identifier>s</span><span class=special>.</span><span class=identifier>range</span><span class=special>(</span><span class=number>100.0</span><span class=special>&lt;=</span><span class=identifier>lambda</span><span class=special>::</span><span class=identifier>_1</span><span class=special>,</span><span class=identifier>unbounded</span><span class=special>);</span> <span class=comment>// 100 &lt;= x</span>
-<span class=identifier>p</span><span class=special>=</span><span class=identifier>s</span><span class=special>.</span><span class=identifier>range</span><span class=special>(</span><span class=identifier>unbounded</span><span class=special>,</span><span class=identifier>lambda</span><span class=special>::</span><span class=identifier>_1</span><span class=special>&lt;</span><span class=number>200.0</span><span class=special>);</span>  <span class=comment>//   x &lt;  200</span>
-<span class=identifier>p</span><span class=special>=</span><span class=identifier>s</span><span class=special>.</span><span class=identifier>range</span><span class=special>(</span><span class=identifier>unbounded</span><span class=special>,</span><span class=identifier>unbounded</span><span class=special>);</span>         <span class=comment>// equivalent to std::make_pair(s.begin(),s.end())</span>
+<span class=identifier>p</span><span class=special>=</span><span class=identifier>s</span><span class=special>.</span><span class=identifier>range</span><span class=special>(</span><span class=number>100.0</span><span class=special>&lt;=</span><span class=identifier>_1</span><span class=special>,</span><span class=identifier>unbounded</span><span class=special>);</span> <span class=comment>// 100 &lt;= x</span>
+<span class=identifier>p</span><span class=special>=</span><span class=identifier>s</span><span class=special>.</span><span class=identifier>range</span><span class=special>(</span><span class=identifier>unbounded</span><span class=special>,</span><span class=identifier>_1</span><span class=special>&lt;</span><span class=number>200.0</span><span class=special>);</span>  <span class=comment>//   x &lt;  200</span>
+<span class=identifier>p</span><span class=special>=</span><span class=identifier>s</span><span class=special>.</span><span class=identifier>range</span><span class=special>(</span><span class=identifier>unbounded</span><span class=special>,</span><span class=identifier>unbounded</span><span class=special>);</span> <span class=comment>// equivalent to std::make_pair(s.begin(),s.end())</span>
 </pre></blockquote>
 
 <h2><a name="updating">Updating</a></h2>
@@ -741,11 +743,13 @@ for defining the modifying functors:
 </p>
 
 <blockquote><pre>
+<span class=keyword>using</span> <span class=keyword>namespace</span> <span class=identifier>boost</span><span class=special>::</span><span class=identifier>lambda</span><span class=special>;</span>
+
 <span class=keyword>typedef</span> <span class=identifier>employee_set</span><span class=special>::</span><span class=identifier>index_type</span><span class=special>&lt;</span><span class=identifier>name</span><span class=special>&gt;::</span><span class=identifier>type</span> <span class=identifier>employee_set_by_name</span><span class=special>;</span>
 <span class=identifier>employee_set_by_name</span><span class=special>&amp;</span> <span class=identifier>name_index</span><span class=special>=</span><span class=identifier>es</span><span class=special>.</span><span class=identifier>get</span><span class=special>&lt;</span><span class=identifier>name</span><span class=special>&gt;();</span>
 
 <span class=identifier>employee_set_by_name</span><span class=special>::</span><span class=identifier>iterator</span> <span class=identifier>it</span><span class=special>=</span><span class=identifier>name_index</span><span class=special>.</span><span class=identifier>find</span><span class=special>(</span><span class=string>&quot;Anna Jones&quot;</span><span class=special>);</span>
-<span class=identifier>name_index</span><span class=special>.</span><span class=identifier>modify_key</span><span class=special>(</span><span class=identifier>it</span><span class=special>,</span><span class=identifier>lambda</span><span class=special>::</span><span class=identifier>_1</span><span class=special>=</span><span class=string>&quot;Anna Smith&quot;</span><span class=special>);</span>
+<span class=identifier>name_index</span><span class=special>.</span><span class=identifier>modify_key</span><span class=special>(</span><span class=identifier>it</span><span class=special>,</span><span class=identifier>_1</span><span class=special>=</span><span class=string>&quot;Anna Smith&quot;</span><span class=special>);</span>
 </pre></blockquote>
 
 <h2><a name="projection">Projection of iterators</a></h2>
@@ -763,7 +767,7 @@ elaborate searches:
 <span class=keyword>typedef</span> <span class=identifier>employee_set</span><span class=special>::</span><span class=identifier>index_type</span><span class=special>&lt;</span><span class=identifier>name</span><span class=special>&gt;::</span><span class=identifier>type</span> <span class=identifier>employee_set_by_name</span><span class=special>;</span>
 <span class=identifier>employee_set_by_name</span><span class=special>&amp;</span> <span class=identifier>name_index</span><span class=special>=</span><span class=identifier>es</span><span class=special>.</span><span class=identifier>get</span><span class=special>&lt;</span><span class=identifier>name</span><span class=special>&gt;();</span>
 
-<span class=comment>// list employees by ID starting from Robert Brown</span>
+<span class=comment>// list employees by ID starting from Robert Brown's ID</span>
 <span class=identifier>employee_set_by_name</span><span class=special>::</span><span class=identifier>iterator</span> <span class=identifier>it1</span><span class=special>=</span><span class=identifier>name_index</span><span class=special>.</span><span class=identifier>find</span><span class=special>(</span><span class=string>&quot;Robert Brown&quot;</span><span class=special>);</span>
 <span class=identifier>employee_set</span><span class=special>::</span><span class=identifier>iterator</span> <span class=identifier>it2</span><span class=special>=</span><span class=identifier>es</span><span class=special>.</span><span class=identifier>project</span><span class=special>&lt;</span><span class=number>0</span><span class=special>&gt;(</span><span class=identifier>it1</span><span class=special>);</span>
 <span class=identifier>std</span><span class=special>::</span><span class=identifier>copy</span><span class=special>(</span><span class=identifier>it2</span><span class=special>,</span><span class=identifier>es</span><span class=special>.</span><span class=identifier>end</span><span class=special>(),</span><span class=identifier>std</span><span class=special>::</span><span class=identifier>ostream_iterator</span><span class=special>&lt;</span><span class=identifier>employee</span><span class=special>&gt;(</span><span class=identifier>std</span><span class=special>::</span><span class=identifier>cout</span><span class=special>));</span>
