@@ -163,6 +163,64 @@ extern "C" {
                       dcomplex_t const* a, int const* lda, int const* ipiv, 
                       dcomplex_t* b, int const* ldb, int* info);
 
+  void LAPACK_SGEES (const char* jobvs, const char* sort, logical_t* select, const int* n,
+                     float* a, const int * lda, const int* sdim, float* wr, float* wi,
+                     float* vs, const int * ldvs, float* work, const int * lwork,
+                     bool* bwork, int* info);
+
+  void LAPACK_DGEES (const char* jobvs, const char* sort, logical_t* select, const int* n,
+                     double* a, const int * lda, const int* sdim, double* wr, double* wi,
+                     double* vs, const int * ldvs, double* work, const int * lwork,
+                     bool* bwork, int* info);
+
+  void LAPACK_CGEES( const char* jobvs, const char* sort, logical_t* select, const int *n,
+                     fcomplex_t* a, const int * lda, int * sdim, fcomplex_t* w, fcomplex_t* vs,
+                     const int * ldvs, fcomplex_t* work, const int * lwork, float* rwork,
+                     bool* bwork, int* info );
+
+  void LAPACK_ZGEES( const char* jobvs, const char* sort, const logical_t* select, const int *n,
+                     dcomplex_t* a, const int * lda, int * sdim, dcomplex_t* w, dcomplex_t* vs,
+                     const int * ldvs, dcomplex_t* work, const int * lwork, double* rwork,
+                     bool* bwork, int* info );
+
+
+  void LAPACK_CTREVC( const char* side, const char* howmny, const logical_t* select, const int *n,
+                     fcomplex_t* t, const int * ldt, fcomplex_t* vl, const int* ldvl,
+		     fcomplex_t* vr, const int * ldvr, const int * nm, int* m, fcomplex_t* work,
+                     float* rwork, int* info );
+
+  void LAPACK_ZTREVC( const char* side, const char* howmny, const logical_t* select, const int *n,
+                     dcomplex_t* t, const int * ldt, dcomplex_t* vl, const int* ldvl,
+		     dcomplex_t* vr, const int * ldvr, const int * nm, int* m, dcomplex_t* work,
+                     double* rwork, int* info );
+
+  void LAPACK_STREVC( const char* side, const char* howmny, const logical_t* select, const int *n,
+                     float* t, const int * ldt, float* vl, const int* ldvl,
+		     float* vr, const int * ldvr, const int * nm, int* m, float* work,
+                     int* info );
+
+  void LAPACK_DTREVC( const char* side, const char* howmny, const logical_t* select, const int *n,
+                     double* t, const int * ldt, double* vl, const int* ldvl,
+		     double* vr, const int * ldvr, const int * nm, int* m, double* work,
+                     int* info );
+
+
+  void LAPACK_STREXC( const char* compq, const int *n,
+                     float* t, const int * ldt, float* q, const int* ldq,
+		     int* ifst, const int * ilst, float* work, int* info );
+
+  void LAPACK_DTREXC( const char* compq, const int *n,
+                     double* t, const int * ldt, double* q, const int* ldq,
+		     int* ifst, const int * ilst, double* work, int* info );
+
+  void LAPACK_CTREXC( const char* compq, const int *n,
+                     fcomplex_t* t, const int * ldt, fcomplex_t* q, const int* ldq,
+		     int* ifst, const int * ilst, int* info );
+
+  void LAPACK_ZTREXC( const char* compq, const int *n,
+                     dcomplex_t* t, const int * ldt, dcomplex_t* q, const int* ldq,
+		     int* ifst, const int * ilst, int* info );
+
 }
 
 #endif 

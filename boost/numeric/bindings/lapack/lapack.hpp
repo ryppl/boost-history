@@ -21,6 +21,9 @@
 #include <boost/numeric/bindings/lapack/posv.hpp>
 #include <boost/numeric/bindings/lapack/sysv.hpp>
 #include <boost/numeric/bindings/lapack/hesv.hpp>
+#include <boost/numeric/bindings/lapack/gees.hpp>
+#include <boost/numeric/bindings/lapack/trevc.hpp>
+#include <boost/numeric/bindings/lapack/trexc.hpp>
 
 #endif // BOOST_NUMERIC_BINDINGS_LAPACK_LAPACK_HPP
 
