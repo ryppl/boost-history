@@ -35,9 +35,11 @@ int main()
 
    // reading data back from a plain text-based serialization stream
    {
+      // open up the file to read in the serialized data
       std::ifstream                    is( "doc.txt" );
       std::pair< char, int >           p2;
 
+      // retrieve the data from the stream
       std::cout << "pair before reading: " << boost::io::formatob( p2, textio ) << '\n';
       is >> boost::io::formatob( p2, textio );
       std::cout << "pair after reading:  "  << boost::io::formatob( p2, textio ) << '\n';
@@ -54,11 +56,7 @@ int main()
 
    // writing to an XML-based serialization stream
    {
-      // open the file to serialize the pair to
       std::ofstream                    out( "doc1.xml" );
-      // out << "<?xml version = \"1.0\" encoding = \"UTF-8\"?>\n\n"; // XML signature
-
-      // serialize to the stream
       out << boost::io::formatob( p1, xmlio ) << '\n';
    }
 
@@ -92,11 +90,8 @@ int main()
 
    // writing to an XML-based serialization stream
    {
-      // open the file to serialize the pair to
       std::ofstream                    out( "doc2.xml" );
       out << "<?xml version = \"1.0\" encoding = \"UTF-8\"?>\n\n"; // XML signature
-
-      // serialize to the stream
       out << boost::io::formatob( p1, xmlio2 ) << '\n';
    }
 
@@ -126,21 +121,18 @@ int main()
 
    // writing to a plain text-based serialization stream
    {
-      // open the file to serialize the pair to
       std::ofstream                    out( "doc2.txt" );
-
-      // serialize to the stream
       out << boost::io::formatob( pc1, textio2 ) << '\n';
    }
 
    // reading data back from a plain text-based serialization stream
    {
-      std::ifstream                    is( "doc2.txt" );
+      std::ifstream                    in( "doc2.txt" );
       std::pair< std::complex< double >, int >
                                        pc2;
 
       std::cout << "pair before reading: " << boost::io::formatob( pc2, textio2 ) << '\n';
-      is >> boost::io::formatob( pc2, textio2 );
+      in >> boost::io::formatob( pc2, textio2 );
       std::cout << "pair after reading:  "  << boost::io::formatob( pc2, textio2 ) << '\n';
 
       // [output]:
@@ -179,17 +171,14 @@ int main()
 
       // writing to a plain text-based serialization stream
       {
-         // open the file to serialize the pair to
          std::ofstream                 out( "doc3.txt" );
-
-         // serialize to the stream
          out << boost::io::formatob( q, naryio ) << '\n';
          out << boost::io::formatob( o, naryio ) << '\n';
       }
 
       // reading data back from a plain text-based serialization stream
       {
-         std::ifstream                 is( "doc3.txt" );
+         std::ifstream                 in( "doc3.txt" );
          boost::math::quaternion< float >
                                        q2;
          boost::math::octonion< double >
@@ -199,7 +188,7 @@ int main()
                    << "   quaternion = " << boost::io::formatob( q2, naryio ) << '\n'
                    << "   octonion   = " << boost::io::formatob( o2, naryio ) << '\n';
 
-         is >> boost::io::formatob( q2, naryio )
+         in >> boost::io::formatob( q2, naryio )
             >> boost::io::formatob( o2, naryio );
 
          std::cout << "after reading:\n"
@@ -218,15 +207,15 @@ int main()
 
       // read data into a standard container
       {
-         std::ifstream                 is( "doc3.txt" );
+         std::ifstream                 in( "doc3.txt" );
          std::list< double >           l;
 
          std::cout << "before:      " << l << '\n';
 
-         is >> l;
+         in >> l;
          std::cout << "first read:  " << l << '\n';
 
-         is >> l;
+         in >> l;
          std::cout << "second read: " << l << '\n';
 
          /* [output]:
@@ -236,6 +225,73 @@ int main()
          */
       }
 #  endif
+
+   // [6]: plain text -- string data
+
+   boost::io::wrapped_output< char * > stringio = boost::io::wrappedfmt().format( "\"", "\"" );
+
+   boost::io::container_output< char *, boost::io::wrapped_output< char * > >
+                                       stlio = boost::io::containerfmt( stringio );
+
+   boost::io::container_output
+   <
+      char *,
+      boost::io::pair_output
+      <
+         char *,
+         boost::io::wrapped_output< char * >,
+         boost::io::wrapped_output< char * >
+      >
+   >                                   mapio = boost::io::containerfmt
+                                       (
+                                          boost::io::pairfmt( stringio, stringio )
+                                       );
+
+   std::list< std::string >            l;
+   l.push_back( "1234" );
+   l.push_back( "abcdef" );
+   l.push_back( "To be or not to be: that is the question!" );
+
+   std::map< std::string, std::string > m;
+   m[ "Hallo Welt!"      ] = "German";
+   m[ "Boa Noite."       ] = "Portuguese";
+   m[ "Como esta Usted?" ] = "Spanish";
+
+   // writing to a plain text-based serialization stream
+   {
+      std::ofstream                 out( "doc4.txt" );
+      out << boost::io::formatob( l, stlio ) << '\n'
+          << boost::io::formatob( m, mapio ) << '\n';
+   }
+
+   // reading data back from a plain text-based serialization stream
+   {
+      std::ifstream                 in( "doc4.txt" );
+      std::vector< std::string >    v;
+//    std::map< std::string, std::string > // [todo]: this does not work
+      std::list< std::pair< std::string, std::string > >
+                                    m;
+
+      std::cout << "before reading:\n"
+                << "   vector: " << v << '\n'
+                << "   map:    " << boost::io::formatob( m, mapio ) << '\n';
+
+      in >> boost::io::formatob( v, stlio )
+         >> boost::io::formatob( m, mapio );
+
+      std::cout << "after reading:\n"
+                << "   vector: " << v << '\n'
+                << "   map:    " << boost::io::formatob( m, mapio ) << '\n';
+
+      /* [output]:
+         before reading:
+            vector: [  ]
+            map:    [  ]
+         after reading:
+            vector: [ 1234, abcdef, To be or not to be: that is the question! ]
+            map:    [ ( "Boa Noite.", "Portuguese" ), ( "Como esta Usted?", "Spanish" ), ( "Hallo Welt!", "German" ) ]
+      */
+   }
 
    return( 0 );
 }
