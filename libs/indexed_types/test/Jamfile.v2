@@ -4,7 +4,7 @@ project
   : default-build debug
   ;
 
-run product.cpp
+run composite_product_test.cpp
     ../../../../libs/test/build//boost_unit_test_framework
   ;
 
@@ -13,6 +13,26 @@ run sum.cpp
   ;
 
 run enum_size.cpp
+    ../../../../libs/test/build//boost_unit_test_framework
+  ;
+
+run enum_virtual.cpp
+    ../../../../libs/test/build//boost_unit_test_framework
+  ;
+
+run composite_recur_test.cpp
+    ../../../../libs/test/build//boost_unit_test_framework
+  ;
+
+run composite_recur_placeholdered_test.cpp
+    ../../../../libs/test/build//boost_unit_test_framework
+  ;
+
+run placeholders_test.cpp
+    ../../../../libs/test/build//boost_unit_test_framework
+  ;
+
+run enum_curried.cpp
     ../../../../libs/test/build//boost_unit_test_framework
   ;
 
