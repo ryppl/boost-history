@@ -3,7 +3,7 @@
 //
 //    
 
-// (C) Copyright Thorsten Ottosen 2002. Permission to copy, use, modify,
+// (C) Copyright Thorsten Ottosen 2002-2003. Permission to copy, use, modify,
 // sell and distribute this software is granted provided this
 // copyright notice appears in all copies. This software is provided
 // "as is" without express or implied warranty, and with no claim as
@@ -219,11 +219,15 @@ namespace
     // Implementation
     ///////////////////////////////////////////////////////////////////////////
 
+    //
     // enable ambiguity conflicts
+    //
     using namespace std;
     using namespace boost;
 
-    #define TEST_DATA                                                        \
+#ifndef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
+
+#define TEST_DATA                                                            \
         int                 a[] = { 1, 2, 4, 2, 6, 7, 9, 3, 2, 5, 5, 3, 3 }; \
         const int           ca[] = { 1, 2, 3, 5, 7, 9, 11 };                 \
         const int           a_size = sizeof( a ) / sizeof( a[0] );           \
@@ -239,7 +243,27 @@ namespace
         typedef vector<int>::const_iterator  const_iterator;                 \
         iterator iter; const_iterator citer; 
 
-#define ALL( C ) begin( C ), end( C)
+#else
+
+#define TEST_DATA                                                             \
+        int                 a_[] = { 1, 2, 4, 2, 6, 7, 9, 3, 2, 5, 5, 3, 3 }; \
+        const int           ca_[] = { 1, 2, 3, 5, 7, 9, 11 };                 \
+        const int           a_size = sizeof( a_ ) / sizeof( a_[0] );          \
+        const int           ca_size = sizeof( ca_ ) / sizeof( ca_[0] );       \
+        pair<int*, int*>    p( a_, a_ + a_size );                             \
+        const pair<const int*, const int*>                                    \
+                            cp( ca_, ca_ + ca_size );                        \
+        vector<int>         v( a_, a_ + a_size );                            \
+        const vector<int>   cv( v );                                         \
+        vector<int>         a( v );                                          \
+        const vector<int>   ca( v );                                         \
+        typedef vector<int>::iterator        iterator;                       \
+        typedef vector<int>::const_iterator  const_iterator;                 \
+        iterator iter, aiter; const_iterator citer, caiter; 
+
+#endif //  BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
+
+#define ALL( C ) begin( (C) ), end( (C) )
 
 
     struct unary_fun;
@@ -315,7 +339,7 @@ namespace
     void test_for_each()
     {
         TEST_DATA;
-        for_each( p, unary_fun() );  
+	for_each( p, unary_fun() );  
         for_each( cp, unary_fun() );  
         for_each( a, unary_fun() );
         for_each( ca, unary_fun() );
@@ -327,6 +351,8 @@ namespace
 
     void test_find()
     {
+#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
+
         TEST_DATA;
         const int i = 5;
         aiter  = find( p, i ),  assert( aiter == find( ALL( p ), i ) );
@@ -335,12 +361,15 @@ namespace
         caiter = find( ca, i ), assert( caiter == find( ALL( ca ), i ) );
         iter   = find( v, i ),  assert( iter == find( ALL( v ), i ) );
         citer  = find( cv, i ), assert( citer == find( ALL( cv ), i ) );
+#endif
     }
 
 
 
     void test_find_if()
     {
+#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
+
         TEST_DATA;
         aiter  = find_if( p, predicate() );
         assert( aiter == find_if( ALL( p ), predicate() ) );
@@ -354,44 +383,50 @@ namespace
         assert( iter == find_if( ALL( v ), predicate() ) );
         citer  = find_if( cv, predicate() );
         assert( citer == find_if( ALL( cv ), predicate() ) );
+#endif
     }
 
 
 
     void test_adjacent_find()
     {
+#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
+
         TEST_DATA;
-        aiter  = adjacent_find( p );
+        aiter  = ext::adjacent_find( p );
         assert( aiter == adjacent_find( ALL( p ) ) );
-        caiter = adjacent_find( cp );
+        caiter = ext::adjacent_find( cp );
         assert( caiter == adjacent_find( ALL( cp ) ) );
-        aiter  = adjacent_find( a );
+        aiter  = ext::adjacent_find( a );
         assert( aiter == adjacent_find( ALL( a ) ) );
-        caiter = adjacent_find( ca );
+        caiter = ext::adjacent_find( ca );
         assert( caiter == adjacent_find( ALL( ca ) ) );
-        iter   = adjacent_find( v );
+        iter   = ext::adjacent_find( v );
         assert( iter == adjacent_find( ALL( v ) ) );
-        citer  = adjacent_find( cv );
+        citer  = ext::adjacent_find( cv );
         assert( citer == adjacent_find( ALL( cv ) ) );
 
-        aiter  = adjacent_find_( p, bin_predicate() );
+        aiter  = ext::adjacent_find( p, bin_predicate() );
         assert( aiter == adjacent_find( ALL( p ), bin_predicate() ) );
-        caiter = adjacent_find_( cp, bin_predicate() );
+        caiter = ext::adjacent_find( cp, bin_predicate() );
         assert( caiter == adjacent_find( ALL( cp ), bin_predicate() ) );
-        aiter  = adjacent_find_( a, bin_predicate() );
+        aiter  = ext::adjacent_find( a, bin_predicate() );
         assert( aiter == adjacent_find( ALL( a ), bin_predicate() ) );
-        caiter = adjacent_find_( ca, bin_predicate() );
+        caiter = ext::adjacent_find( ca, bin_predicate() );
         assert( caiter == adjacent_find( ALL( ca ), bin_predicate() ) );        
-        iter   = adjacent_find_( v, bin_predicate() );
+        iter   = ext::adjacent_find( v, bin_predicate() );
         assert( iter == adjacent_find( ALL( v ), bin_predicate() ) );
-        citer  = adjacent_find_( cv, bin_predicate() );
+        citer  = ext::adjacent_find( cv, bin_predicate() );
         assert( citer == adjacent_find( ALL( cv ), bin_predicate() ) );      
+#endif
     }
 
 
 
     void test_find_first_of()
     {
+#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
+
         TEST_DATA;
         int seeking[] = { 6, 5};
 
@@ -412,6 +447,7 @@ namespace
         citer  = find_first_of( cv, seeking, bin_predicate() );
         assert( citer == find_first_of( cv.begin(), cv.end(), seeking, 
                                         seeking + 2, bin_predicate() ) );      
+#endif
     }
 
 
@@ -584,6 +620,7 @@ namespace
         int copy1[a_size], copy2[a_size];
 
         copy( a, copy1 );
+	copy( a, v.begin() );
         copy( begin( a ), end( a ), begin( copy2 ) );
         assert( ext::equal( copy1, copy2 ) );
     }
@@ -784,12 +821,9 @@ namespace
 	const int new_size = a_size - 2;
         int  a2[new_size], a3[new_size];
 
-	print2( a2, a3 );
         aiter  = remove_copy_if( a, a2, predicate() );
         aiter2 = remove_copy_if( begin( a ), end( a ), 
                                  begin( a3 ), predicate() ); 
-	print2( a, a2 );
-	print2( a2, a3 );
         assert( ext::equal( a2, a3 ) );
     }
 

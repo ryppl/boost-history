@@ -28,158 +28,10 @@
 #define BOOST_CONTAINER_ALGORITHM_HPP
 
 //#include <boost/sequence_algo/algorithm.hpp>
-
-
-#include <cstddef>
-#include <boost/config.hpp>
-#include "algo_traits.hpp"
-
-// -------------------------------------------------------------------------- 
-
-namespace boost
-{
-  
-  // --- a general version of container traits ------------------------------ 
-
-  template <typename Cont>
-    struct array_traits
-    {
-      typedef typename Cont::iterator  iterator;
-      typedef iterator iter_type; // just for backward compatibility
-      typedef typename Cont::size_type size_type;
-      typedef typename Cont::value_type value_type;
-      typedef typename Cont::reference reference;
-      typedef typename Cont::pointer pointer;
-      static iterator begin(Cont &cont) { return cont.begin(); }
-      static iterator end(Cont &cont) { return cont.end(); }
-      static size_type size(Cont &cont) { return cont.size(); }
-    };
-
-  // --- a version of container traits for constant constainer --------------
-/*
-  template <typename Cont>
-    struct array_traits<const Cont>
-    {
-      typedef typename Cont::const_iterator iterator;
-      typedef iterator iter_type; // just for backward compatibility
-      typedef typename Cont::size_type size_type;
-      typedef typename Cont::value_type value_type;
-      typedef typename Cont::const_reference reference;
-      typedef typename Cont::const_pointer pointer;
-      static iterator begin(Cont const &cont) { return cont.begin(); }
-      static iterator end(Cont const &cont) { return cont.end(); }
-      static size_type size(Cont const &cont) { return cont.size(); }
-    };
-*/
-  // --- a special version for non-const built-in arrays -------------------- 
-
-  template <typename T, std::size_t sz>
-    struct array_traits<T[sz]>
-    {
-      typedef T* iterator;
-      typedef iterator iter_type; // just for backward compatibility
-      typedef T value_type;
-      typedef value_type& reference;
-      typedef std::size_t size_type;
-      static iterator begin(T (&array)[sz]) { return array; }
-      static iterator end(T (&array)[sz]) { return array + sz; }
-      static size_type size(T (&)[sz]) { return sz; }
-    };
-
-  // --- a special version for const built-in arrays ------------------------ 
-
-  template <typename T, std::size_t sz>
-    struct array_traits<T const[sz]>
-    {
-      typedef T const* iterator;
-      typedef iterator iter_type; // just for backward compatibility
-      typedef std::size_t size_type;
-      typedef T const value_type;
-      typedef value_type& reference;
-      typedef value_type* pointer;
-      static iterator begin(T const (&array)[sz]) { return array; }
-      static iterator end(T const (&array)[sz]) { return array + sz; }
-      static size_type size(T const (&)[sz]) { return sz; }
-    };
-
-  template <typename T, int sz>
-  inline char (&sizer(T (&)[sz]))[sz];
-  
-  // --- general version of the global accessor functions --------------------- 
-#define BOOST_NEW_ALGO_CLASH // remove ambiguit from array traits
-#ifndef BOOST_NEW_ALGO_CLASH
-
-  template <typename Cont>
-    inline typename array_traits<Cont>::iterator
-    begin(Cont &cont) { return array_traits<Cont>::begin(cont); }
-
-  template <typename Cont>
-    inline typename array_traits<Cont>::iterator
-    end(Cont &cont) { return array_traits<Cont>::end(cont); }
-
-  template <typename Cont>
-    inline typename array_traits<Cont>::size_type
-    size(Cont &cont) { return array_traits<Cont>::size(cont); }
-
-#endif
-
-  // --- Actually the above should be sufficient but compilers seem -----------
-  // --- to welcome some help. So here we go:
-
-  template <typename T, std::size_t sz>
-    inline typename array_traits<T[sz]>::iterator
-    begin(T (&a)[sz]) { return array_traits<T[sz]>::begin(a); }
-  
-  template <typename T, std::size_t sz>
-    inline typename array_traits<T[sz]>::iterator
-    end(T (&a)[sz]) { return array_traits<T[sz]>::end(a); }
-  
-  template <typename T, std::size_t sz>
-    inline typename array_traits<T[sz]>::size_type
-    size(T (&a)[sz]) { return array_traits<T[sz]>::size(a); }
-  
-  // --- Apparently the compilers also need some specific help, ---------------
-
-  // --- EDG-2.39 wants to pass around pointers in some contexts --------------
-#ifdef __EDG__
-  template <typename T>
-    struct array_traits<T*>
-    {
-      typedef T*     iterator;
-      typedef iterator iter_type; // just for backward compatibility
-      typedef std::size_t size_type;
-    };
-#endif
-
-  // --- egcs-1998-11-22 apparently likes an extra const version: -------------
-#ifdef __GNUG__
-  template <typename T, std::size_t sz>
-    inline typename array_traits<T const[sz]>::iterator
-    begin(T const(&a)[sz]) { return array_traits<T const[sz]>::begin(a); }
-  
-  template <typename T, std::size_t sz>
-    inline typename array_traits<T const[sz]>::iterator
-    end(T const(&a)[sz]) { return array_traits<T const[sz]>::end(a); }
-  
-  template <typename T, std::size_t sz>
-    inline typename array_traits<T const[sz]>::size_type
-    size(T const (&a)[sz]) { return array_traits<T const[sz]>::size(a); }
-#endif
-  
-}
-
-
-
-// STL algorithm extensions 
-//#include <boost/array_traits.hpp>
+#include "container_traits.hpp"
 #include <boost/concept_check.hpp>
-#include <boost/config.hpp>
-#include <boost/type_traits/function_traits.hpp>
-#include <boost/detail/iterator.hpp>
-
-#include "detail/container_algo.hpp"
-
 #include <algorithm>
+#include <cstddef>
 #include <numeric>
 
 namespace boost 
@@ -527,80 +379,42 @@ namespace boost
 #define CHECK_BINARY_PREDICATE( Pred, Container1, Container2 )
 #define CHECK_EQAULITY_COMPARABLE( T )
 
-    /////////////////////////////////////////////////////////////////////////
-    // Return type deduction
-    /////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+    // typedef to ease returning of pairs
+    ///////////////////////////////////////////////////////////////////////////
 
-    template< typename T >
-    struct mutable_return
-    {
-        typedef typename T::iterator  iterator;
-        typedef typename std::iterator_traits<iterator>::difference_type
-        diff_type; 
-    };
-
-    template< typename T >
-    struct mutable_return< std::pair<T,T> >
-    {
-        typedef T  iterator;
-        typedef typename std::iterator_traits<iterator>::difference_type
-        diff_type; 
-    };
-
-    template< typename T >
-    struct mutable_return< const std::pair<T,T> >
-    : public mutable_return< std::pair<T,T> >
-    {
-    };
-
-    template< typename T, size_t sz >
-    struct mutable_return< T[sz] >
-    {
-        typedef typename array_traits<T[sz]>::iterator  iterator;
-        typedef size_t                                  diff_type;
-    };
-
-    template< typename T >
-    struct const_return
-    {
-        typedef typename T::const_iterator  iterator;
-    };
-
-    template< typename T >
-    struct const_return< std::pair<T,T> >
-    {
-        typedef T iterator;
-    };
-
-    template< typename T >
-    struct const_return< const std::pair<T,T> >
-    : public const_return< std::pair<T,T> >
-    {
-    };
-
-    template< typename T, size_t sz >
-    struct const_return< T[sz] >
-    {
-        typedef typename array_traits<const T[sz]>::iterator  iterator;
-    };
-
-
-
-    template< typename T1, typename T2 >
+    template< typename C1, typename C2 >
     struct pair_return
     {
-        typedef typename std::pair< typename mutable_return<T1>::iterator,
-        typename mutable_return<T2>::iterator > mutable_pair;
+        typedef typename std::pair
+	< 
+	    typename container_traits<C1>::iterator,
+	    typename container_traits<C2>::iterator 
+	> 
+	mutable_pair;
 
-        typedef typename std::pair< typename mutable_return<T1>::iterator,
-        typename const_return<T2>::iterator > mutable_const_pair;
+        typedef typename std::pair
+	<
+	    typename container_traits<C1>::iterator,
+	    typename container_traits<C2>::const_iterator 
+	>                                          
+	mutable_const_pair;
 
-        typedef typename std::pair< typename const_return<T1>::iterator,
-        typename mutable_return<T2>::iterator > const_mutable_pair;
+        typedef typename std::pair
+	< 
+	    typename container_traits<C1>::const_iterator,
+	    typename container_traits<C2>::iterator 
+	>                                         
+	const_mutable_pair;
 
-        typedef typename std::pair< typename const_return<T1>::iterator,
-        typename const_return<T2>::iterator > const_pair;
-    };
+        typedef typename std::pair
+	< 
+	    typename container_traits<C1>::const_iterator,
+	    typename container_traits<C2>::const_iterator 
+	>                                       
+	const_pair;
+
+    }; // 'pair_return'
 
     /////////////////////////////////////////////////////////////////////////
     // Nonmodifying Sequence Operations
@@ -615,15 +429,19 @@ namespace boost
 
 
 
+#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
+
     template< typename Container, typename T >
-    inline typename mutable_return<Container>::iterator 
+    inline typename container_traits<Container>::iterator 
     find( Container& c, const T& value )
     {
         return std::find( begin( c ), end( c ), value );
     }
 
+#endif // BOOST_NO_FUNCTION_TEMPLATE_ORDERING
+
     template< typename Container, typename T >
-    inline typename const_return<Container>::iterator 
+    inline typename container_traits<Container>::const_iterator 
     find( const Container& c, const T& value )
     {
         return std::find( begin( c ), end( c ), value );
@@ -631,71 +449,93 @@ namespace boost
 
 
 
+#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
+
     template< typename Container, typename Predicate >
-    inline typename mutable_return<Container>::iterator 
+    inline typename container_traits<Container>::iterator 
     find_if( Container& c, Predicate pred )
     {
         return std::find_if( begin( c ), end( c ), pred );
     }
 
+#endif // BOOST_NO_FUNCTION_TEMPLATE_ORDERING
+
     template< typename Container, typename Predicate >
-    inline typename const_return<Container>::iterator
+    inline typename container_traits<Container>::const_iterator
     find_if( const Container& c, Predicate pred )
     {
         return std::find_if( begin( c ), end( c ), pred );
     }   
 
 
-
-    template< typename Container >
-    inline typename mutable_return<Container>::iterator
-    adjacent_find( Container& c )
+    namespace ext
     {
-        return std::adjacent_find( begin( c ), end( c ) );
-    }
 
-    template< typename Container >
-    inline typename const_return<Container>::iterator
-    adjacent_find( const Container& c )
-    {
-        return std::adjacent_find( begin( c ), end( c ) );
-    }
+#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
 
-    template< typename Container, typename Binary_predicate >
-    inline typename mutable_return<Container>::iterator 
-    adjacent_find_( Container& c, Binary_predicate pred )
-    {
-        return std::adjacent_find( begin( c ), end( c ), pred );
-    }
+	template< typename Container >
+	inline typename container_traits<Container>::iterator
+	adjacent_find( Container& c )
+	{
+	    return std::adjacent_find( begin( c ), end( c ) );
+	}
 
-    template< typename Container, typename Binary_predicate >
-    inline typename const_return<Container>::iterator 
-    adjacent_find_( const Container& c, Binary_predicate pred )
-    {
-        return std::adjacent_find( begin( c ), end( c ), pred );
-    }
+#endif // BOOST_NO_FUNCTION_TEMPLATE_ORDERING
+	
+	template< typename Container >
+	inline typename container_traits<Container>::const_iterator
+	adjacent_find( const Container& c )
+	{
+	    return std::adjacent_find( begin( c ), end( c ) );
+	}
+
+#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
+	
+	template< typename Container, typename Binary_predicate >
+	inline typename container_traits<Container>::iterator 
+	adjacent_find( Container& c, Binary_predicate pred )
+	{
+	    return std::adjacent_find( begin( c ), end( c ), pred );
+	}
+
+#endif // BOOST_NO_FUNCTION_TEMPLATE_ORDERING
+	
+	template< typename Container, typename Binary_predicate >
+	inline typename container_traits<Container>::const_iterator 
+	adjacent_find( const Container& c, Binary_predicate pred )
+	{
+	    return std::adjacent_find( begin( c ), end( c ), pred );
+	}
+
+    } // namespace 'ext'
 
 
+
+#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
 
     template< typename Container1, typename Container2 >
-    inline typename mutable_return<Container1>::iterator 
+    inline typename container_traits<Container1>::iterator 
     find_first_of( Container1& c1, const Container2& c2 )
     {
         return std::find_first_of( begin( c1 ), end( c1 ), 
 				   begin( c2 ), end( c2 ) );
     }
 
+#endif // BOOST_NO_FUNCTION_TEMPLATE_ORDERING
+
     template< typename Container1, typename Container2 >
-    inline typename const_return<Container1>::iterator 
+    inline typename container_traits<Container1>::const_iterator 
     find_first_of( const Container1& c1, const Container2& c2 )
     {
         return std::find_first_of( begin( c1 ), end( c1 ), 
 				   begin( c2 ), end( c2 ) );
     }
 
+#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
+
     template< typename Container1, typename Container2, 
     typename Binary_predicate >
-    inline typename mutable_return<Container1>::iterator 
+    inline typename container_traits<Container1>::iterator 
     find_first_of( Container1& c1, const Container2& c2, 
                    Binary_predicate pred )
     {
@@ -703,9 +543,11 @@ namespace boost
 				   begin( c2 ), end( c2 ), pred );
     }
 
+#endif // BOOST_NO_FUNCTION_TEMPLATE_ORDERING
+
     template< typename Container1, typename Container2, 
     typename Binary_predicate >
-    inline typename const_return<Container1>::iterator 
+    inline typename container_traits<Container1>::const_iterator 
     find_first_of( const Container1& c1, const Container2& c2, 
                    Binary_predicate pred )
     {
@@ -716,7 +558,7 @@ namespace boost
 
 
     template< typename Container, typename T >
-    inline typename mutable_return<Container>::diff_type
+    inline typename container_traits<Container>::difference_type
     count( const Container& c, const T& value )
     {
         return std::count( begin( c ), end( c ), value );
@@ -725,7 +567,7 @@ namespace boost
 
 
     template< typename Container, typename Predicate >
-    inline typename mutable_return<Container>::diff_type
+    inline typename container_traits<Container>::difference_type
     count_if( const Container& c, Predicate pred )
     {
         return std::count_if( begin( c ), end( c ), pred );
@@ -817,14 +659,14 @@ namespace boost
 
 
     template< typename Container1, typename Container2 >
-    inline typename mutable_return<Container1>::iterator 
+    inline typename container_traits<Container1>::iterator 
     search( Container1& c1, const Container2& c2 )
     {
         return std::search( begin( c1 ), end( c1 ), begin( c2 ), end( c2 ) );
     }
 
     template< typename Container1, typename Container2 >
-    inline typename const_return<Container1>::iterator 
+    inline typename container_traits<Container1>::const_iterator 
     search( const Container1& c1, const Container2& c2 )
     {
         return std::search( begin( c1 ), end( c1 ), begin( c2 ), end( c2 ) );
@@ -832,7 +674,7 @@ namespace boost
 
     template< typename Container1, typename Container2,
     typename Binary_predicate >
-    inline typename mutable_return<Container1>::iterator
+    inline typename container_traits<Container1>::iterator
     search( Container1& c1, const Container2& c2, Binary_predicate pred )
     {
         return std::search( begin( c1 ), end( c1 ), 
@@ -841,7 +683,7 @@ namespace boost
 
     template< typename Container1, typename Container2,
     typename Binary_predicate >
-    inline typename const_return<Container1>::iterator
+    inline typename container_traits<Container1>::const_iterator
     search( const Container1& c1, const Container2& c2, Binary_predicate pred )
     {
         return std::search( begin( c1 ), end( c1 ), 
@@ -854,14 +696,14 @@ namespace boost
     {
 
 	template< typename Container, typename Integer, typename T >
-	inline typename mutable_return<Container>::iterator 
+	inline typename container_traits<Container>::iterator 
 	search_n( Container& c, Integer count, const T& value )
 	{
 	    return std::search_n( begin( c ), end( c ), count, value );
 	}
 
 	template< typename Container, typename Integer, typename T >
-	inline typename const_return<Container>::iterator 
+	inline typename container_traits<Container>::const_iterator 
 	search_n( const Container& c, Integer count, const T& value )
 	{
 	    return std::search_n( begin( c ), end( c ), count, value );
@@ -869,7 +711,7 @@ namespace boost
 
 	template< typename Container, typename Integer, 
 		  typename T, typename Binary_predicate >
-	inline typename mutable_return<Container>::iterator
+	inline typename container_traits<Container>::iterator
 	search_n( Container& c, Integer count, const T& value,
 		   Binary_predicate pred )
 	{
@@ -878,7 +720,7 @@ namespace boost
 
 	template< typename Container, typename Integer, 
 		  typename T, typename Binary_predicate >
-	inline typename const_return<Container>::iterator
+	inline typename container_traits<Container>::const_iterator
 	search_n( const Container& c, Integer count, const T& value,
 		   Binary_predicate pred )
 	{
@@ -889,7 +731,7 @@ namespace boost
 
 
     template< typename Container1, typename Container2 >
-    typename mutable_return<Container1>::iterator 
+    typename container_traits<Container1>::iterator 
     find_end( Container1& c1, const Container2& c2 )
     {
         return std::find_end( begin( c1 ), end( c1 ),
@@ -897,7 +739,7 @@ namespace boost
     }
 
     template< typename Container1, typename Container2 >
-    typename const_return<Container1>::iterator 
+    typename container_traits<Container1>::const_iterator 
     find_end( const Container1& c1, const Container2& c2 )
     {
         return std::find_end( begin( c1 ), end( c1 ),
@@ -906,7 +748,7 @@ namespace boost
 
     template< typename Container1, typename Container2,
     typename Binary_predicate >
-    typename mutable_return<Container1>::iterator 
+    typename container_traits<Container1>::iterator 
     find_end( Container1& c1, const Container2& c2, Binary_predicate pred )
     {
         return std::find_end( begin( c1 ), end( c1 ), 
@@ -915,7 +757,7 @@ namespace boost
 
     template< typename Container1, typename Container2,
     typename Binary_predicate >
-    typename const_return<Container1>::iterator 
+    typename container_traits<Container1>::const_iterator 
     find_end( const Container1& c1, const Container2& c2, 
               Binary_predicate pred )
     {
@@ -928,7 +770,7 @@ namespace boost
     /////////////////////////////////////////////////////////////////////////
 
     template< typename Container1, typename Container2 >
-    inline typename mutable_return<Container2>::iterator
+    inline typename container_traits<Container2>::iterator
     copy( const Container1& c1, Container2& c2 )
     {
         return std::copy( begin( c1 ), end( c1 ), begin( c2 ) );
@@ -938,7 +780,7 @@ namespace boost
 
     template< typename Container1, typename Container2 > 
     //BidirectionalIterator> inline BidirectionalIterator
-    inline typename mutable_return<Container2>::iterator
+    inline typename container_traits<Container2>::iterator
     copy_backward( const Container1& c1, Container2& c2 ) 
     {
         return std::copy_backward( begin( c1 ), end( c1 ), end( c2 ) ); 
@@ -947,7 +789,7 @@ namespace boost
 
 
     template< typename Container1, typename Container2 >
-    inline typename mutable_return<Container2>::iterator 
+    inline typename container_traits<Container2>::iterator 
     swap_ranges( Container1& c1, Container2& c2 ) //ForwardIterator out);
     {
         return std::swap_ranges( begin( c1 ), end( c1 ), begin( c2 ) );
@@ -957,7 +799,7 @@ namespace boost
 
     template< typename Container1, typename Container2, 
     typename Unary_function > 
-    inline typename mutable_return<Container2>::iterator
+    inline typename container_traits<Container2>::iterator
     transform( const Container1& c1, Container2& c2, Unary_function fun )
     {
         return std::transform( begin( c1 ), end( c1 ), begin( c2 ), fun );
@@ -965,7 +807,7 @@ namespace boost
 
     template< typename Container1, typename Container2,
     typename Container3, typename Binary_function >
-    inline typename mutable_return<Container3>::iterator
+    inline typename container_traits<Container3>::iterator
     transform_( const Container1& c1, const Container2& c2, Container3& c3,   
                 Binary_function fun )
     {
@@ -995,7 +837,7 @@ namespace boost
 
     template< typename Container1, typename Container2, // OutputIterator, 
     typename T > 
-    inline typename mutable_return<Container2>::iterator
+    inline typename container_traits<Container2>::iterator
     replace_copy( const Container1& c1, Container2& c2, 
                   const T& what, const T& with_what )
     {
@@ -1007,7 +849,7 @@ namespace boost
 
     template< typename Container1, typename Container2, //OutputIterator, 
     typename Predicate, typename T >
-    inline typename mutable_return<Container2>::iterator
+    inline typename container_traits<Container2>::iterator
     replace_copy_if( const Container1& c1, Container2& c2,
                      Predicate pred, const T& value)
     {
@@ -1027,7 +869,7 @@ namespace boost
 
 
     template< typename Container, typename Integer, typename T >
-    inline typename mutable_return<Container>::iterator
+    inline typename container_traits<Container>::iterator
     fill_n_( Container& c, Integer size, const T& value )
     {
         return std::fill_n( begin( c ), size, value );
@@ -1048,7 +890,7 @@ namespace boost
     {
 
 	template< typename Container, typename Integer, typename Generator >
-	inline typename mutable_return<Container>::iterator
+	inline typename container_traits<Container>::iterator
 	generate_n( Container& c, Integer size, Generator gen )
 	{
 	    return std::generate_n( begin( c ), size, gen );
@@ -1059,7 +901,7 @@ namespace boost
 
 
     template< typename Container, typename T >
-    inline typename mutable_return<Container>::iterator
+    inline typename container_traits<Container>::iterator
     remove( Container& c, const T& what )
     {
         return std::remove( begin( c ), end( c ), what );
@@ -1068,7 +910,7 @@ namespace boost
 
 
     template< typename Container, typename Predicate >
-    inline typename mutable_return<Container>::iterator
+    inline typename container_traits<Container>::iterator
     remove_if( Container& c, Predicate pred )
     {
         return std::remove_if( begin( c ), end( c ), pred );
@@ -1077,7 +919,7 @@ namespace boost
 
 
     template< typename Container1, typename Container2, typename T >
-    inline typename mutable_return<Container2>::iterator
+    inline typename container_traits<Container2>::iterator
     remove_copy( const Container1& c1, Container2& c2, const T& value )
     {
         return std::remove_copy( begin( c1 ), end( c1 ), begin( c2 ), value );
@@ -1086,7 +928,7 @@ namespace boost
 
 
     template< typename Container1, typename Container2, typename Predicate >
-    inline typename mutable_return<Container2>::iterator
+    inline typename container_traits<Container2>::iterator
     remove_copy_if( const Container1& c1, Container2& c2, Predicate pred )
     {
         return std::remove_copy_if( begin( c1 ), end( c1 ), 
@@ -1096,14 +938,14 @@ namespace boost
 
 
     template< typename Container >
-    inline typename mutable_return<Container>::iterator
+    inline typename container_traits<Container>::iterator
     unique( Container& c )
     {
         return std::unique( begin( c ), end( c ) );
     }
 
     template< typename Container, typename Binary_predicate >
-    inline typename mutable_return<Container>::iterator
+    inline typename container_traits<Container>::iterator
     unique_( Container& c, Binary_predicate pred )
     {
         return std::unique( begin( c ), end( c ), pred );
@@ -1112,7 +954,7 @@ namespace boost
 
 
     template< typename Container1, typename Container2 >
-    inline typename mutable_return<Container2>::iterator
+    inline typename container_traits<Container2>::iterator
     unique_copy( const Container1& c1, Container2& c2 )
     {
         return std::unique_copy( begin( c1 ), end( c1 ), begin( c2 ) );
@@ -1120,7 +962,7 @@ namespace boost
 
     template< typename Container1, typename Container2, 
     typename Binary_predicate >
-    inline typename mutable_return<Container2>::iterator
+    inline typename container_traits<Container2>::iterator
     unique_copy_( const Container1& c1, Container2& c2, Binary_predicate pred )
     {
         return std::unique_copy( begin( c1 ), end( c1 ), begin( c2 ), pred );
@@ -1138,7 +980,7 @@ namespace boost
 
 
     template< typename Container1, typename Container2 >
-    inline typename mutable_return<Container2>::iterator
+    inline typename container_traits<Container2>::iterator
     reverse_copy( const Container1& c1, Container2& c2 )
     {
         return std::reverse_copy( begin( c1 ), end( c1 ), begin( c2 ) );
@@ -1147,8 +989,8 @@ namespace boost
 
 
     template< typename Container > 
-    inline typename mutable_return<Container>::iterator
-    rotate( Container& c, typename mutable_return<Container>::iterator middle )
+    inline typename container_traits<Container>::iterator
+    rotate( Container& c, typename container_traits<Container>::iterator middle )
     {
         return std::rotate( begin( c ), middle, end( c ) );
     }
@@ -1156,18 +998,18 @@ namespace boost
 
 
     template< typename Container1, typename Container2 >
-    inline typename mutable_return<Container2>::iterator
+    inline typename container_traits<Container2>::iterator
     rotate_copy( Container1& c1, 
-                 typename mutable_return<Container2>::iterator middle, 
+                 typename container_traits<Container2>::iterator middle, 
                  Container2& c2 ) 
     {
         return std::rotate_copy( begin( c1 ), middle, end( c1 ), begin( c2 ) );
     }
 
     template< typename Container1, typename Container2 >
-    inline typename const_return<Container2>::iterator
+    inline typename container_traits<Container2>::const_iterator
     rotate_copy( const Container1& c1, 
-                 typename const_return<Container2>::iterator middle, 
+                 typename container_traits<Container2>::const_iterator middle, 
                  Container2& c2 ) 
     {
         return std::rotate_copy( begin( c1 ), middle, end( c1 ), begin( c2 ) );
@@ -1228,7 +1070,7 @@ namespace boost
     template< typename Container >
     inline void
     partial_sort( Container& c, 
-                  typename mutable_return<Container>::iterator middle )
+                  typename container_traits<Container>::iterator middle )
     {
         std::partial_sort( begin( c ), middle, end( c ) );
     }
@@ -1236,7 +1078,7 @@ namespace boost
     template< typename Container, typename Compare >
     inline void
     partial_sort_( Container& c, 
-                   typename mutable_return<Container>::iterator middle,
+                   typename container_traits<Container>::iterator middle,
                    Compare comp )
     {
         std::partial_sort( begin( c ), middle, end( c ), comp );
@@ -1245,7 +1087,7 @@ namespace boost
 
 
     template< typename Container1, typename Container2 >
-    inline typename mutable_return<Container2>::iterator
+    inline typename container_traits<Container2>::iterator
     partial_sort_copy( const Container1& c1, Container2& c2 )
     {
         return std::partial_sort_copy( begin( c1 ), end( c1 ), 
@@ -1253,7 +1095,7 @@ namespace boost
     }
 
     template< typename Container1, typename Container2, typename Compare >
-    inline typename mutable_return<Container2>::iterator
+    inline typename container_traits<Container2>::iterator
     partial_sort_copy( const Container1& c1, Container2& c2, Compare comp )
     {
         return std::partial_sort_copy( begin( c1 ), end( c1 ), 
@@ -1265,7 +1107,7 @@ namespace boost
     template< typename Container >
     inline void
     nth_element( Container& c, 
-                 typename mutable_return<Container>::iterator nth )
+                 typename container_traits<Container>::iterator nth )
     {
         std::nth_element( begin( c ), nth, end( c ) );
     }
@@ -1273,7 +1115,7 @@ namespace boost
     template< typename Container, typename Compare >
     inline void
     nth_element_( Container& c, 
-                  typename mutable_return<Container>::iterator nth, 
+                  typename container_traits<Container>::iterator nth, 
                   Compare comp )
     {
         std::nth_element( begin( c ), nth, end( c ), comp );
@@ -1282,28 +1124,28 @@ namespace boost
 
 
     template< typename Container, typename T >
-    inline typename mutable_return<Container>::iterator
+    inline typename container_traits<Container>::iterator
     lower_bound( Container& c, const T& value )
     {
         return std::lower_bound( begin( c ), end( c ), value );
     }
 
     template< typename Container, typename T >
-    inline typename const_return<Container>::iterator
+    inline typename container_traits<Container>::const_iterator
     lower_bound( const Container& c, const T& value )
     {
         return std::lower_bound( begin( c ), end( c ), value );
     }
 
     template< typename Container, typename T, typename Compare >
-    inline typename mutable_return<Container>::iterator
+    inline typename container_traits<Container>::iterator
     lower_bound_( Container& c, const T& value, Compare comp )
     {
         return std::lower_bound( begin( c ), end( c ), value, comp );
     }
 
     template< typename Container, typename T, typename Compare >
-    inline typename const_return<Container>::iterator
+    inline typename container_traits<Container>::const_iterator
     lower_bound_( const Container& c, const T& value, Compare comp )
     {
         return std::lower_bound( begin( c ), end( c ), value, comp );
@@ -1312,28 +1154,28 @@ namespace boost
 
 
     template< typename Container, typename T >
-    inline typename mutable_return<Container>::iterator
+    inline typename container_traits<Container>::iterator
     upper_bound( Container& c, const T& value )
     {
         return std::upper_bound( begin( c ), end( c ), value );
     }
 
     template< typename Container, typename T >
-    inline typename const_return<Container>::iterator
+    inline typename container_traits<Container>::const_iterator
     upper_bound( const Container& c, const T& value )
     {
         return std::upper_bound( begin( c ), end( c ), value );
     }
 
     template< typename Container, typename T, typename Compare >
-    inline typename mutable_return<Container>::iterator
+    inline typename container_traits<Container>::iterator
     upper_bound_( Container& c, const T& value, Compare comp )
     {
         return std::upper_bound( begin( c ), end( c ), value, comp );
     }
 
     template< typename Container, typename T, typename Compare >
-    inline typename const_return<Container>::iterator
+    inline typename container_traits<Container>::const_iterator
     upper_bound_( const Container& c, const T& value, Compare comp )
     {
         return std::upper_bound( begin( c ), end( c ), value, comp );
@@ -1388,7 +1230,7 @@ namespace boost
 
 
     template< typename Container1, typename Container2, typename Container3 > 
-    inline typename mutable_return<Container3>::iterator
+    inline typename container_traits<Container3>::iterator
     merge( const Container1& c1, const Container2& c2, Container3& c3 )
     {
         return std::merge( begin( c1 ), end( c1 ), begin( c2 ), 
@@ -1397,7 +1239,7 @@ namespace boost
 
     template< typename Container1, typename Container2, typename Container3, 
     typename Compare >
-    inline typename mutable_return<Container3>::iterator
+    inline typename container_traits<Container3>::iterator
     merge( const Container1& c1, const Container2& c2, Container3& c3,
            Compare comp )
     {
@@ -1410,7 +1252,7 @@ namespace boost
     template< typename Container >
     inline void
     inplace_merge( Container& c, 
-                   typename mutable_return<Container>::iterator middle )
+                   typename container_traits<Container>::iterator middle )
     {
         std::inplace_merge( begin( c ), middle, end( c ) );
     }
@@ -1418,7 +1260,7 @@ namespace boost
     template< typename Container, typename Compare >
     inline void
     inplace_merge_( Container& c,
-                    typename mutable_return<Container>::iterator middle, 
+                    typename container_traits<Container>::iterator middle, 
                     Compare comp )
     {
         std::inplace_merge( begin( c ), middle, end( c ), comp );
@@ -1427,7 +1269,7 @@ namespace boost
 
 
     template< typename Container, typename Predicate >
-    inline typename mutable_return<Container>::iterator
+    inline typename container_traits<Container>::iterator
     partition( Container& c, Predicate pred )
     {
         return std::partition( begin( c ), end( c ), pred );
@@ -1436,7 +1278,7 @@ namespace boost
 
 
     template< typename Container, typename Predicate >
-    inline typename mutable_return<Container>::iterator
+    inline typename container_traits<Container>::iterator
     stable_partition( Container& c, Predicate pred )
     {
         return std::stable_partition( begin( c ), end( c ), pred );
@@ -1465,7 +1307,7 @@ namespace boost
 
 
     template< typename Container1, typename Container2, typename Container3 > 
-    inline typename mutable_return<Container3>::iterator
+    inline typename container_traits<Container3>::iterator
     set_union( const Container1& c1, const Container2& c2, Container3& c3 )
     {
         return std::set_union( begin( c1 ), end( c1 ), begin( c2 ), end( c2 ),
@@ -1474,7 +1316,7 @@ namespace boost
 
     template<typename Container1, typename Container2, 
     typename Container3, typename Compare >
-    inline typename mutable_return<Container3>::iterator
+    inline typename container_traits<Container3>::iterator
     set_union( const Container1& c1, const Container2& c2,
                Container3 c3, Compare comp )
     {
@@ -1486,7 +1328,7 @@ namespace boost
 
     template< typename Container1, typename Container2, 
     typename Container3 > 
-    typename mutable_return<Container3>::iterator
+    typename container_traits<Container3>::iterator
     set_intersection( const Container1& c1, const Container2& c2, 
                       Container3& c3 )
     {
@@ -1497,7 +1339,7 @@ namespace boost
 
     template< typename Container1, typename Container2, 
     typename Container3, typename Compare > 
-    typename mutable_return<Container3>::iterator
+    typename container_traits<Container3>::iterator
     set_intersection( const Container1& c1,
                       const Container2& c2, Container3& c3,
                       Compare comp )
@@ -1511,7 +1353,7 @@ namespace boost
 
     template< typename Container1, typename Container2, typename 
     Container3 >
-    inline typename mutable_return<Container3>::iterator
+    inline typename container_traits<Container3>::iterator
     set_difference( const Container1& c1, const Container2& c2,  
                     Container3& c3 )
     {
@@ -1521,7 +1363,7 @@ namespace boost
 
     template< typename Container1, typename Container2, typename 
     Container3, typename Compare >
-    inline typename mutable_return<Container3>::iterator
+    inline typename container_traits<Container3>::iterator
     set_difference( const Container1& c1, const Container2& c2,  
                     Container3& c3, Compare comp )
     {
@@ -1533,7 +1375,7 @@ namespace boost
 
 
     template< typename Container1, typename Container2, typename Container3 >
-    inline typename mutable_return<Container3>::iterator
+    inline typename container_traits<Container3>::iterator
     set_symmetric_difference( const Container1& c1, const Container2& c2,
                               Container3& c3 )
     {
@@ -1545,7 +1387,7 @@ namespace boost
 
     template< typename Container1, typename Container2, 
     typename Container3, typename Compare >
-    inline typename mutable_return<Container3>::iterator
+    inline typename container_traits<Container3>::iterator
     set_symmetric_difference( const Container1& c1, const Container2& c2,
                               Container3& c3, Compare comp )
     {
@@ -1625,28 +1467,28 @@ namespace boost
     /////////////////////////////////////////////////////////////////////////
 
     template< typename Container >
-    inline typename mutable_return<Container>::iterator
+    inline typename container_traits<Container>::iterator
     min_element( Container& c )
     {
         return std::min_element( begin( c ), end( c ) );
     }
 
     template< typename Container >
-    inline typename const_return<Container>::iterator
+    inline typename container_traits<Container>::const_iterator
     min_element( const Container& c )
     {
         return std::min_element( begin( c ),end( c ) );
     }
 
     template< typename Container, typename Binary_predicate >
-    inline typename mutable_return<Container>::iterator
+    inline typename container_traits<Container>::iterator
     min_element_( Container& c, Binary_predicate pred )
     {
         return std::min_element( begin( c ), end( c ), pred );
     }
 
     template< typename Container, typename Binary_predicate >
-    inline typename const_return<Container>::iterator
+    inline typename container_traits<Container>::const_iterator
     min_element_( const Container& c, Binary_predicate pred )
     {
         return std::min_element( begin( c ), end( c ), pred );
@@ -1655,28 +1497,28 @@ namespace boost
 
 
     template< typename Container >
-    inline typename mutable_return<Container>::iterator
+    inline typename container_traits<Container>::iterator
     max_element( Container& c )
     {
         return std::max_element( begin( c ), end( c ) );
     }
 
     template< typename Container >
-    inline typename const_return<Container>::iterator
+    inline typename container_traits<Container>::const_iterator
     max_element( const Container& c )
     {
         return std::max_element( begin( c ), end( c ) );
     }
 
     template< typename Container, typename Binary_predicate >
-    inline typename mutable_return<Container>::iterator
+    inline typename container_traits<Container>::iterator
     max_element_( Container& c, Binary_predicate pred )
     {
         return std::max_element( begin( c ), end( c ), pred );
     }
 
     template< typename Container, typename Binary_predicate >
-    inline typename const_return<Container>::iterator
+    inline typename container_traits<Container>::const_iterator
     max_element_( const Container& c, Binary_predicate pred )
     {
         return std::max_element( begin( c ), end( c ), pred );
@@ -1779,7 +1621,7 @@ namespace boost
 
 
     template< typename Container1, typename Container2 >
-    inline typename mutable_return<Container2>::iterator
+    inline typename container_traits<Container2>::iterator
     partial_sum( const Container1& c, Container2& out )
     {
         return std::partial_sum( begin( c ), end( c ), begin( out ) );
@@ -1787,7 +1629,7 @@ namespace boost
 
     template< typename Container1, typename Container2, 
     typename Binary_function > 
-    inline typename mutable_return<Container2>::iterator
+    inline typename container_traits<Container2>::iterator
     partial_sum_( const Container1& c, Container2& out, Binary_function fun )
     {
         return std::partial_sum( begin( c ), end( c ), begin( out ), fun );
@@ -1796,7 +1638,7 @@ namespace boost
 
 
     template< typename Container1, typename Container2 >
-    inline typename mutable_return<Container2>::iterator
+    inline typename container_traits<Container2>::iterator
     adjacent_difference( const Container1& c, Container2& out )
     {
         return std::adjacent_difference( begin( c ), end( c ), begin( out ) );
@@ -1804,7 +1646,7 @@ namespace boost
 
 
     template<typename Container1, typename Container2, typename Predicate >
-    inline typename mutable_return<Container2>::iterator
+    inline typename container_traits<Container2>::iterator
     adjacent_difference_( const Container1& c, Container2& out, 
                           Predicate pred )
     {
