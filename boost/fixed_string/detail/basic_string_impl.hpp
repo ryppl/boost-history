@@ -116,7 +116,7 @@
             {
                return( *static_cast< const string_type * >( this ));
             }
-            inline const char_type *             offset( size_type pos )
+            inline char_type *                   offset( size_type pos )
             {
                return( &*( begin() + pos ));
             }
